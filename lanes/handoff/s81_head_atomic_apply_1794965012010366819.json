@@ -1,0 +1,74 @@
+{
+ "die": "s81_head",
+ "prior": {
+  "src": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_d0ee4a2afb10_nf15d2_pgr1_d1",
+  "event": "head_rp21z20NF15d2r1",
+  "plan": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_d0ee4a2afb10_nf15d2_pgr1_d1/physical/die_plan/s81_head/prep/NF15d2/prep/source_plan.json",
+  "plan_sha256": "47948a9f7ee996d8c678c45772ab2cda8434f444ff75b0406c3398a075e3d05b",
+  "kit_rtl": {
+   "mode": "script",
+   "script": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_8569788b0328_nf15f_d2/physical/die_plan/s81_head/kit_wave/kit_rtl.sh",
+   "note": "KIT-OPS-5 HEAD NF13a (HEAD-100 READY+ADOPT 19:00 (COORD r206 ADOPT-OK, per-family kit_rtl smoke 8/8 PASS): G0 1 info, bind PASS, cohort 26/26, LATCHECK 329/329; plan 810a66fa536a; wave_prepare.json republished for the edited plan) | KIT-OPS-5 HEAD NF12 (HEAD-100 READY+ADOPT 17:42: G0 1 info, bind PASS, cohort 26/26, LATCHECK 329/329; plan 129319e1cb0b; wave_prepare.json republished for the edited plan) | KIT-OPS-5 HEAD NF6 (HEAD-100 READY+ADOPT 08:10, COORD r109: G0 1 info error, bind PASS, cohort 26/26, LATCHECK 329/329; plan c7d50e195bdc, tree head-99/prep21z20NF6/prep; la300 rides in the die clock run) | HEAD-98 11-13 rp21z4 FINAL event: snapshot of epyc7 wt/head-97-rp20 @fb5f5a8 (main + REACH-TOOL-3 + head-97-xohop + rules-flow-1), prepared tree head-98/prep21z4/prep"
+  }
+ },
+ "marker": {
+  "die": "s81_head",
+  "tree": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_8569788b0328_nf15f_d2",
+  "manifest_hash": "06dc156835027e6245d2c85a8982b6dc3b2ae9d580bebc9c1cd3c76edb4033f1",
+  "src_manifest_sha": "06dc156835027e6245d2c85a8982b6dc3b2ae9d580bebc9c1cd3c76edb4033f1",
+  "tools_sha": "8569788b0328435dd8d1e53007e9fbdac869f56c",
+  "hosts": [
+   "epyc9",
+   "epyc8",
+   "epyc10",
+   "intel1"
+  ],
+  "smoke": "PASS",
+  "smoke_detail": "HEAD-PLAN-R4 NF15f (rs8 = g1e + c3 stage rects + KCRED 28 + RXH + r564 rows + grid straps; NF15f clock GEN tree2) on main 8569788b. Smoke on this exact tree: publish_gate static schema/PRE/G0/hashes/contained PASS (G0 0 errors, receipt results/head_native_release_nf15f), strict bind PASS (nested unbound 0), cohort 26/26 equal, LATCHECK 329/329 delta {}, kit_rtl.sh hd_lep0N 32 / hd_mesh 23 / hd_serdes 21 files PASS; src_manifest OK 06dc1568 on epyc8/epyc9/epyc10/intel1.",
+  "plan": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_8569788b0328_nf15f_d2/physical/die_plan/s81_head/prep/NF15f/prep/source_plan.json",
+  "plan_sha256": "de6c7105afeff824b4029ebf66e02255ca31294b29d243544a7d77e08b422e0e",
+  "plan_canonical_sha256": "5108da57617cb99c22a703cc495c64b0bb1357bc87f26fd8f4bd3f7bd2de7135",
+  "sidecar": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_8569788b0328_nf15f_d2/physical/die_plan/s81_head/prep/NF15f/prep/source_sidecar.json",
+  "sidecar_sha256": "6fcd1d3dfc43434bcbf774528cbaefa2ccb2fce156d0ada588297637fb793f0e",
+  "frozen_kit_tree": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_8569788b0328_nf15f_d2/physical/die_plan/s81_head/prep/NF15f/die_clock/kit_tree.json",
+  "physical_qualified": false,
+  "preserve_holds": "all inherited s81_head hold_records kept; physical_qualified false; pilots hd_lep0N + hd_mesh (COORD)",
+  "config": {
+   "event": "head_rp21z20NF15f",
+   "tools_sha": "8569788b0328435dd8d1e53007e9fbdac869f56c",
+   "gen_host": "epyc9",
+   "gen_hosts": [
+    "epyc9",
+    "epyc8",
+    "epyc10",
+    "intel1"
+   ],
+   "kit_rtl": {
+    "mode": "script",
+    "script": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_8569788b0328_nf15f_d2/physical/die_plan/s81_head/kit_wave/kit_rtl.sh"
+   },
+   "gen_args": [
+    "--clock-landing",
+    "/srv/opentallas-scratch2/claude/kw45/src_head_pin_8569788b0328_nf15f_d2/physical/die_plan/s81_head/prep/NF15f/prep/source_sidecar.json",
+    "--hold-ff-margin",
+    "0"
+   ]
+  },
+  "written_by": "root-authorized lane atomic apply",
+  "native_reset_receipt": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_8569788b0328_nf15f_d2/results/head_native_release_nf15f/native_release_receipt.json",
+  "status": "ADOPTED reviewed tuple",
+  "_path": "/home/ubuntu/coord/lanes/handoff/tree_switch_s81_head_nf15f.json"
+ },
+ "published_gen_import": {
+  "status": "NORMAL-GEN",
+  "why": "generation tool closure differs"
+ },
+ "pilot": {
+  "item": "hd_lep0N",
+  "hold_added": true,
+  "retired": [],
+  "release": "gen_pilot:s81_head:06dc15683502"
+ },
+ "guard": "/home/ubuntu/coord/autopilot/tree_checks/27482c5c0de3a4ccad05c68b5ebeb2a27a216feb24519a447d1fe85ac5645549/result.json",
+ "candidate": "/home/ubuntu/coord/lanes/handoff/tree_switch_s81_head_nf15f.json"
+}
