@@ -6808,6 +6808,11 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         ft_kit_slots = list(t.get("ft_slots", []) or [])
         ft_spread_ledger = [dict(form="clump", reason=f"ft_spread error {type(ex).__name__}: {ex}")]
         print(f"[gen] {tn}: FT_SPREAD ADVISORY {type(ex).__name__}: {ex} (plan sites only)")
+    # FIX-S81-VPW 11-17 (FABLE-CLOSURE-STRATEGY lever 6.2): explicit sites on the kit core site/row grid by construction
+    from ft_bit_sites import snap_slots as ft_bit_sites_snap
+    ft_kit_slots, ft_snapped = ft_bit_sites_snap(ft_kit_slots, kit_core_area(t)[:2])
+    if ft_snapped:
+        print(f"[gen] {tn}: FT_SITE_SNAP {ft_snapped} explicit bit sites snapped to the core site/row grid")
     (kd / "ft_bit_sites.tcl").write_text(ft_bit_sites_table(ft_kit_slots))
     if ft_kit_slots:
         try:                                 # advisory report only: never a gen failure

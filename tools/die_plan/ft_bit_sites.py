@@ -25,6 +25,35 @@ def validate_slot(slot):
             raise ValueError('bit_sites_um coordinates must be finite x/y pairs')
 
 
+def snap_slots(slots, origin, site_w=0.054, row_h=0.27):
+    """FIX-S81-VPW 11-17 (FABLE-CLOSURE-STRATEGY lever 6.2): snap every explicit bit site (cell lower-left) to the
+    nearest site column / row of the core grid starting at origin (kit core xMin/yMin, um).  A re-sited plan stage
+    (S81 leaf t7 ft3 82.9376 176.8544, t53 ft0 9.3393 1032.3389) was off the grid, which face_flops.tcl refuses
+    ("explicit FT site is not on a row/site").  A move is at most half a site in x and half a row in y; two sites of
+    the type that snap onto one grid point raise.  -> (slots, moved count); slots without bit_sites_um unchanged."""
+    x0, y0 = map(float, origin)
+    out, moved, seen = [], 0, {}
+    for slot in slots:
+        if not slot.get('bit_sites_um'):
+            out.append(slot)
+            continue
+        stages = []
+        for j, stage in enumerate(slot['bit_sites_um']):
+            st = []
+            for bit, (x, y) in enumerate(stage):
+                c, r = round((float(x) - x0) / site_w), round((float(y) - y0) / row_h)
+                q = [round(x0 + c * site_w, 6), round(y0 + r * row_h, 6)]
+                if abs(q[0] - x) > 5e-4 or abs(q[1] - y) > 5e-4:   # > half a dbu: a real move, not float noise
+                    moved += 1
+                if (c, r) in seen:
+                    raise ValueError(f"FT bit sites {seen[(c, r)]} and {slot['name']},{j},{bit} snap to one site {q}")
+                seen[(c, r)] = f"{slot['name']},{j},{bit}"
+                st.append(q)
+            stages.append(st)
+        out.append(dict(slot, bit_sites_um=stages))
+    return out, moved
+
+
 def table(slots):
     lines = ['# Generated explicit FT cell lower-left sites (um); stage j starts at 1.',
              'set ff_bit_sites {}', 'set ff_bit_site_cells {}']

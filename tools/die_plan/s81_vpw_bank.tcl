@@ -1,7 +1,22 @@
 # Opt-in S81 form-B VPW bank-end placement. Source AFTER face_flops.tcl,
-# before GPL. No netlist edits. All matched FFs stay within 100um of the
-# two real SRAM boxes, and blocked/occupied sites are excluded explicitly.
+# before GPL. No netlist edits. Matched FFs go FIRM on the free legal sites
+# nearest to either real SRAM box (blocked/occupied sites excluded).
+# FIX-S81-VPW 11-17 (FABLE-CLOSURE-STRATEGY lever 6.1):
+#  - a block with no VP SRAM macros and no VPW FFs (col, non-VP types) is
+#    skipped with a no-op clock record instead of failing;
+#  - sites are ordered by distance to the NEAREST bank box, not to the
+#    centroid of both banks (t10/t74 banks ~420 um apart: every centroid site
+#    was > 100 um from both banks, so the first FF failed);
+#  - under R-MINIMAL an FF with no site within 100 um is a WARN and is left
+#    to GPL (not FIRM), never a place stop.
+proc vb_noop_clock {why} {
+  set f [open /work/vpw_bank_clock.tcl w]
+  puts $f "# OT_VPW_BANK skipped: $why (no tap group)"
+  close $f
+  puts "OT_VPW_BANK SKIP $why"
+}
 uplevel #0 {
+set vb_skip ""
 set vb_b [ord::get_db_block]
 set vb_u [[ord::get_db_tech] getDbUnitsPerMicron]
 set vb_core [$vb_b getCoreArea]
@@ -19,6 +34,8 @@ foreach i [$vb_b getInsts] {
     dict set vb_groups $group 1
   }
 }
+if {![llength $vb_banks] && ![llength $vb_ffs]} {set vb_skip "no VP SRAM macros and no VPW FFs in this block"}
+if {$vb_skip eq ""} {
 if {[llength $vb_banks] != 2} {error "OT_VPW_BANK needs exactly two real VP SRAM macros, got [llength $vb_banks]"}
 if {![llength $vb_ffs]} {error "OT_VPW_BANK found no VPW FFs; hierarchy/RTL mismatch"}
 if {[dict size $vb_groups]!=1} {error "OT_VPW_BANK needs one leaf write-port group"}
@@ -66,15 +83,19 @@ foreach r [$vb_b getRows] {
       if {$px<$c && $a<$px+$vb_maxw && $y<$d && $b<$y+$vb_maxh} {set blocked 1;break}
     }
     if {$blocked} continue
-    set dist [expr {abs($px+$vb_maxw/2.0-$vb_cx)+abs($y+$vb_maxh/2.0-$vb_cy)}]
+    set dist 1e30
+    foreach bi $vb_banks {
+      set q [$bi getBBox]
+      set dist [expr {min($dist,max(0,[$q xMin]-$px,$px-[$q xMax])+max(0,[$q yMin]-$y,$y-[$q yMax]))}]
+    }
     lappend vb_rows [list $dist $px $y [$r getOrient]]
   }
 }
 set vb_rows [lsort -real -index 0 $vb_rows]
-if {[llength $vb_rows]<[llength $vb_ffs]} {error "OT_VPW_BANK insufficient legal bank sites [llength $vb_rows] for [llength $vb_ffs] FFs"}
 set vb_out [open /work/vpw_bank_sites.tsv w];puts $vb_out "inst\tx_um\ty_um\tbank_distance_um"
-set vb_n 0;set vb_worst 0
+set vb_n 0;set vb_worst 0;set vb_gpl 0
 foreach i [lsort -command {apply {{a b} {string compare [$a getName] [$b getName]}}} $vb_ffs] {
+  if {$vb_n>=[llength $vb_rows]} {incr vb_gpl;continue}
   lassign [lindex $vb_rows $vb_n] dist x y orient
   set bd 1e30
   foreach bi $vb_banks {
@@ -82,12 +103,13 @@ foreach i [lsort -command {apply {{a b} {string compare [$a getName] [$b getName
     set d [expr {max(0,[$q xMin]-$x,$x-[$q xMax])+max(0,[$q yMin]-$y,$y-[$q yMax])}]
     set bd [expr {min($bd,$d)}]
   }
-  if {$bd>100*$vb_u} {close $vb_out;error "OT_VPW_BANK distance exceeds100um at [$i getName]"}
+  if {$bd>100*$vb_u} {incr vb_gpl;continue}
   $i setPlacementStatus PLACED;$i setOrient $orient;$i setLocation $x $y;$i setPlacementStatus FIRM
   puts $vb_out "[$i getName]\t[expr {$x/double($vb_u)}]\t[expr {$y/double($vb_u)}]\t[expr {$bd/double($vb_u)}]"
   set vb_worst [expr {max($vb_worst,$bd)}];incr vb_n
 }
 close $vb_out
+if {$vb_gpl} {puts "OT_VPW_BANK WARN $vb_gpl of [llength $vb_ffs] FFs have no free site within 100um of a bank; left to GPL"}
 # Persist a standard-tap group for the later CTS process. Core taps clk_c*
 # have early hard-macro contracts and are never candidates.
 set vb_tap {};set vb_td 1e30
@@ -105,4 +127,5 @@ puts $vb_clk "set ::env(OT_TAP_GROUP_FIXED) {$vb_group:$vb_tap}"
 close $vb_clk
 puts "OT_VPW_BANK_CLOCK $vb_tap at [expr {$vb_td/double($vb_u)}]um from bank centroid"
 puts "OT_VPW_BANK placed $vb_n FFs FIRM, nearest-bank max [expr {$vb_worst/double($vb_u)}]um; legal sites [llength $vb_rows]; bounds [list [expr {$vb_rx0/$vb_u}] [expr {$vb_ry0/$vb_u}] [expr {$vb_rx1/$vb_u}] [expr {$vb_ry1/$vb_u}]]"
+} else {vb_noop_clock $vb_skip}
 }
