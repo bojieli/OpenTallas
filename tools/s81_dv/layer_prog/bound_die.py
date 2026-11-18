@@ -3,6 +3,14 @@
 No legacy die.v geometry or link-age table is read. Local unit timing remains a
 separate source-qualified contract; this adapter never substitutes historical
 seq_host, ring-stop or XRT latency for a missing receipt.
+
+S81-D8E-LAT 11-18: a bind's DECLARED core-input pipes (bind_core_input_pipe.json:
+relay_depth u_y_xd_* stages, core_link_pipe, NK lockup pipes; {"<leaf>.<port>[bit]"
+or "<leaf>.<port>": D}) sit in front of the sink pin and are NOT in the bind_sinks
+age (that is the as-built source count).  Every route adds the declared D of each
+target bit, exactly as bind_verify does, and records the pipe digest
+(lane_asbuilt_latency.internal_pipe_digest) so a plan's latency.internal_pipe_ack
+can name the compiler run that carried those cycles.  No record = unchanged.
 """
 from __future__ import annotations
 import hashlib
@@ -17,6 +25,11 @@ def file_sha(path):
         for chunk in iter(lambda: f.read(8 << 20), b''):
             h.update(chunk)
     return h.hexdigest()
+
+
+def pipe_digest(rec):
+    """sha256[:16] of the canonical bind_core_input_pipe.json record (== lane_asbuilt_latency.internal_pipe_digest)"""
+    return hashlib.sha256(json.dumps(rec, sort_keys=True, separators=(',', ':')).encode()).hexdigest()[:16]
 
 
 def object_items(path, chunk_size=1 << 20):
@@ -103,6 +116,15 @@ class BoundDie:
                                conns={p: '@' + name + '.' + p for p in u['ports']})
                      for name, u in self.units.items()}
         self.sinks = sinks
+        pf = self.bound / 'bind_core_input_pipe.json'
+        self.pipe = json.loads(pf.read_text()) if pf.is_file() else {}
+        if any(type(v) is not int or v < 0 for v in self.pipe.values()):
+            raise ValueError('bind_core_input_pipe.json carries a non-integer or negative declared depth')
+        self.pipe_digest = pipe_digest(self.pipe) if self.pipe else None
+
+    def declared_pipe(self, target_pin):
+        """declared core-input pipe stages in front of one leaf input bit (per-bit record first, then whole port)"""
+        return self.pipe.get(target_pin) or self.pipe.get(target_pin.rsplit('[', 1)[0]) or 0
 
     def strap(self, inst, port):
         bits = self.units[inst]['ports'][port]['bits']
@@ -138,7 +160,7 @@ class BoundDie:
             raise ValueError('transport subword is outside its actual source interface')
         source_bits = src['bits'][source_lsb:source_lsb+width]
         target_bits = dst['bits'][target_lsb:target_lsb+width]
-        ages, drivers, checked, constant = set(), [], 0, []
+        ages, drivers, checked, constant, piped = set(), [], 0, [], {}
         for bit, (sn, dn) in enumerate(zip(source_bits, target_bits)):
             if isinstance(sn, str) or isinstance(dn, str):
                 if sn != dn or sn not in ('0', '1'):
@@ -165,7 +187,10 @@ class BoundDie:
                 age = desc[2]
                 if type(age) is not int or age < 0:
                     raise ValueError(f'transport bit{bit}: missing exact bound age')
-                ages.add(age)
+                d = self.declared_pipe(target_pin)
+                if d:
+                    piped[target_pin] = d
+                ages.add(age + d)
                 checked += 1
             drivers.append(source_pin)
         if len(ages) != 1:
@@ -174,7 +199,9 @@ class BoundDie:
                     width=width, source_lsb=source_lsb, target_lsb=target_lsb,
                     age_edges=ages.pop(), checked_leaf_inputs=checked,
                     source_pins=drivers, constant_bits=constant, die_sha256=self.die_sha,
-                    basis='current bound per-bit source identity and transport stages; no local unit latency')
+                    declared_pipe_bits=len(piped), declared_pipe_edges=sorted(set(piped.values())),
+                    basis='current bound per-bit source identity and transport stages + declared core-input pipe '
+                          '(bind_core_input_pipe.json); no local unit latency')
 
 
 def main():
@@ -196,6 +223,7 @@ def main():
         except (KeyError, ValueError) as exc:
             routes.append(dict(status='BLOCKED', request=req, reason=str(exc)))
     rec = dict(schema='opentallas.s81.bound_routes.v1', die_sha256=die.die_sha,
+               core_input_pipe=dict(digest=die.pipe_digest, sink_bits=len(die.pipe)),
                routes=routes, scope='actual transport only; local unit timing and token remain separate')
     a.out.write_text(json.dumps(rec, indent=1)+'\n')
     print(json.dumps(dict(routes=len(routes), blocked=sum(r['status'] != 'PASS' for r in routes))))

@@ -73,3 +73,37 @@ def test_explicit_subword_keeps_its_own_coherence_gate(tmp_path):
     assert die.route('host','o','slice','i',1,1,1)['age_edges']==8
     with pytest.raises(ValueError,match='outside'):
         die.route('host','o','slice','i',1,1,2)
+
+
+def test_declared_core_input_pipe_adds_to_route_age(tmp_path):
+    """S81-D8E-LAT 11-18: relay_depth / core_link_pipe stages (bind_core_input_pipe.json) are in front of the sink pin,
+    not in the bind_sinks age; the compiler's route age must carry them (bind_verify's rule)."""
+    inv, sinks = example(tmp_path)
+    (tmp_path/'bind_core_input_pipe.json').write_text(json.dumps({'slice.i[0]': 2, 'slice.i[1]': 2}))
+    die = BoundDie(tmp_path, inv, sinks=sinks)
+    route = die.route('host', 'o', 'slice', 'i')
+    assert route['age_edges'] == 9 and route['declared_pipe_bits'] == 2 and route['declared_pipe_edges'] == [2]
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'die_plan'))
+    import lane_asbuilt_latency as LAL
+    assert die.pipe_digest == LAL.internal_pipe_digest({'slice.i[0]': 2, 'slice.i[1]': 2})
+
+
+def test_declared_whole_port_pipe(tmp_path):
+    inv, sinks = example(tmp_path)
+    (tmp_path/'bind_core_input_pipe.json').write_text(json.dumps({'slice.i': 1}))
+    assert BoundDie(tmp_path, inv, sinks=sinks).route('host', 'o', 'slice', 'i')['age_edges'] == 8
+
+
+def test_partial_declared_pipe_is_mixed_age(tmp_path):
+    """a pipe on some bits of a word only: the word arrives on two edges, the compiler must refuse it"""
+    inv, sinks = example(tmp_path)
+    (tmp_path/'bind_core_input_pipe.json').write_text(json.dumps({'slice.i[1]': 1}))
+    with pytest.raises(ValueError, match='mixed'):
+        BoundDie(tmp_path, inv, sinks=sinks).route('host', 'o', 'slice', 'i')
+
+
+def test_no_pipe_record_unchanged(tmp_path):
+    inv, sinks = example(tmp_path)
+    die = BoundDie(tmp_path, inv, sinks=sinks)
+    r = die.route('host', 'o', 'slice', 'i')
+    assert die.pipe_digest is None and r['age_edges'] == 7 and r['declared_pipe_bits'] == 0
