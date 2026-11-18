@@ -23,3 +23,15 @@ Gate (epyc2, not epyc7): test_capskew_eco_run, test_hold_eco_internal_run, test_
 - The tool adds cells only (no re-fill / abstract); a kit flow that wants fill after the ECO must run its fill stage on the output DB.
 - Not built: GRT-stage derate for saturated nets (the -16 vs -106 gap), per FABLE-FIX-HEAD-SD9F.
 - Cleanup: replay1/replay2 (~15 GB each) under epyc7 capskew-eco; ot-delete after the merge.
+
+# HOLD-MARGIN-FAMILY (CAPSKEW-ECO lane, FABLE-CLOSURE-STRATEGY 17:2x lever 1)
+Branch claude/hold-margin-fam-1117 @54e6039579b9 (base main 26f27e903e; gate main 41129805aac GREEN 94/94, record ~/merge-queue/gates/54e6039579b9....json). Lane clone epyc7 capskew-eco/repo.
+- tools/die_plan/hold_margin_family.py: QC/KV/HEAD type kits (plan dies qwen_compute, qwen_kvsys, s81_head) 40 ps; every core_flow.apply kit (svc + hard cores) 15 ps; S81/HBM unchanged.
+  Overrides: die.hold_ff_margin_ps, type hold_ff_margin_ps (plan), per-item env OT_HOLD_FF_MARGIN_PS (wins), gen env OT_HOLD_FAMILY_MARGIN=0 (off).
+- Reaches the kit: config.mk OT_HOLD_FF_MARGIN = max(caller, family) (GRT FF repair), OT_PREGRT_HOLD_R2R_MARGIN (new reg-to-reg pass in pregrt_ff_hold, ports excepted; only when pregrt is on for the type),
+  OT_HOLD_FAMILY_MARGIN_PS (evidence), OT_HOLD_SETUP_GUARD_PS=0 (hold_guard_grt.tcl: chunked GRT hold repair stops when worst setup < min(before, 0); pregrt keeps its own TT fail-safe at the -42 ps gate).
+- VERIFIED on a real generated QC type (gen.py phys qwen_compute die_plan cbf_q00, epyc7 capskew-eco/genchk*): OT_HOLD_FF_MARGIN = 40, FAMILY 40, SETUP_GUARD 0; with OT_PREGRT_FF_HOLD_AUTO=1 also R2R 40 and `all rr xt` in the kit tcl.
+  `python3 tools/die_plan/hold_margin_family.py check KITDIR qwen_compute|qwen_kvsys|s81_head|core` reads config.mk back: run it on the first kit of each wave (exit 1 = the tools tree predates the knob; kits built from rt/<sha> only get it after this merges and ot-tools-sync materializes it).
+- NOT done: replay on a routed QC L2 kit's pre-route DB (no 4_cts.odb of a QC L2 kit found quickly; GRT repair at 40 ps not measured: HB4 count, TT setup on padded ends, routed internal hold are the lever-1 item 4 read on the first kit).
+  QC types where pregrt is neither plan-enabled nor AUTO get only the GRT margin (40), not the pre-route r2r pass. S81 col keeps its own 10 (OT_HOLD_FF_MARGIN_PS).
+- Cleanup: epyc7 capskew-eco/genchk, genchk2 (+ .log).
