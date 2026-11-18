@@ -5414,7 +5414,9 @@ def load_asbuilt_netlist(out):
     raise BindError(f"{out}: no asbuilt.json or asbuilt.json.gz (run bind.py elab, or stage the packaged cached elaboration)")
 
 
-def cmd_bind(a):
+def _bind_through_landings(a):
+    """cmd_bind up to and including align_landings (R8 table read): -> (raw, out dir, Binder, yjs, input_topology).  Shared by `bind` and
+    `r8-prepass` (BIND-SPEED-1118).  Also returns the elab netlist and the input topology the rest of `bind` still reads."""
     raw = load_plan(a.plan)
     _write_provenance(a, "bind")
     out = Path(a.out)
@@ -5468,6 +5470,12 @@ def cmd_bind(a):
     if getattr(B, 'reset_carriers', None):
         (out / "bind_reset_carriers.json").write_text(json.dumps(B.reset_carriers, indent=1) + "\n")
     B.align_landings()
+    return raw, out, B, yjs, input_topology
+
+
+def cmd_bind(a):
+    import kit_topology
+    raw, out, B, yjs, input_topology = _bind_through_landings(a)
     B.uniform_inner()
     B.regen_params()
     try:
@@ -5674,6 +5682,40 @@ def cmd_bind(a):
     for e in B.errors[:30]:
         print("  ", e)
     return 1 if (B.errors and a.strict) else 0
+
+
+def cmd_r8_prepass(a):
+    """BIND-SPEED-1118: the R8 table is a function of the bind (land_r8_derive.py), and the R8 table is read right after the
+    bus build; everything after it (param_regen, check_types, emit of every type, reports) never changes a bound depth.  So
+    the compose step 1 of land_r8_derive (a strict bind that fails R8_STALE) does not need the whole bind: run the head
+    (map_cells .. align_landings), write OUT/bus_groups.json exactly as a bind does, derive the table from it with the options of
+    the current table, write it to --r8-out (atomic, new inode), print what changed.  Non-R8 errors seen in the head (UNPLANNED,
+    POSITION_BANK ...) are printed too: the full bind would fail on them as well.  Exit 0 = derived, 3 = head errors that no
+    table can fix."""
+    import land_r8_derive as DR
+    raw, out, B, _yjs, _topology = _bind_through_landings(a)
+    st = getattr(B, "pad_stats", {}) or {}
+    bg = B.bus_groups()
+    (out / "bus_groups.json").write_text(json.dumps(bg, indent=0))
+    if st.get("mode") != "r8":
+        print("r8-prepass: asbuilt.land_align is not r8; nothing to derive")
+        return 0
+    like = Path(st["table"])
+    old = json.loads(like.read_text())
+    text, sm = DR.derive(raw, bg, DR.options(old))
+    new = json.loads(text)
+    d = DR.diff(old, new)
+    target = Path(a.r8_out) if getattr(a, "r8_out", None) else out / "r8_derived.json"
+    DR.write_atomic(target, text)
+    r8err = [e for e in B.errors if e.startswith(("R8_STALE", "R8_UNCOVERED", "R8_TABLE"))]
+    other = [e for e in B.errors if e not in r8err]
+    print(json.dumps(dict(r8_table=str(like), derived=str(target), members_old=d["members_old"], members_new=d["members_new"],
+                          changed=d["changed"], added=d["added"], removed=d["removed"], equal=d["equal"],
+                          head_r8_errors=len(r8err),
+                          stale=st.get("stale", 0), uncovered=st.get("uncovered", 0), other_errors=len(other))))
+    for e in other[:30]:
+        print("  ", e)
+    return 3 if other else 0
 
 
 def declared_strap_file(out, top):
@@ -7104,7 +7146,11 @@ def _plan_gate_pre(a):
     except (OSError, ValueError):
         pass
     try:
-        fs = G.check(E.REPO, a.plan, asbuilt=a.asbuilt, baseline=base, skip=() if base else ("ROWS", "GEOM"))
+        # BIND-SPEED-1118: the elab output of this run (OUT/asbuilt.json) lets the row checks (ROWSINK, MODULES) run here too;
+        # a tool older than the live tree is a warning in a bind (an event may pin its tools), a FAIL in bind_fast.py precheck
+        fs = G.check(E.REPO, a.plan, asbuilt=a.asbuilt, baseline=base, skip=() if base else ("ROWS", "GEOM"),
+                     elab_dir=a.out, ref_tools=os.environ.get("OT_BIND_REF_TOOLS", "auto"),
+                     toolstale_level="WARN")
     except (OSError, ValueError) as e:
         print(f"bind: plan_gate_pre could not read its inputs: {e}")
         return 0 if mode == "warn" else 2
@@ -7149,10 +7195,11 @@ def main(argv=None):
     c.add_argument("--bind-context")
     c.add_argument("--asbuilt")
     c.add_argument("--receipt", required=True, help="new local report outside the original bind directory")
-    for n in ("elab", "bind", "verify", "all", "portbind"):
+    for n in ("elab", "bind", "verify", "all", "portbind", "r8-prepass"):
         s = sub.add_parser(n)
         s.add_argument("plan")
         s.add_argument("--out", required=True)
+        s.add_argument("--r8-out", help="r8-prepass: where to write the derived land_r8 table (default OUT/r8_derived.json)")
         s.add_argument("--mem", type=int, default=32)
         s.add_argument("--strict", action="store_true")
         s.add_argument("--all-gaps", action="store_true",
@@ -7168,7 +7215,7 @@ def main(argv=None):
     # KW-FIX-45 11-12 (COORD): a plan's sibling files (cores, cells, census, die_io.json, macro_pins, sink_bins, r8) resolve
     # relative to the plan folder; links into other lanes' trees made binds depend on foreign files.  OT_BIND_PLAN_PACKAGE:
     # require = refuse, warn (default) = one warning line, off.  Package a plan with tools/die_plan/plan_package.py.
-    if getattr(a, "plan", None) and a.cmd in ("elab", "bind", "verify", "all", "portbind", "kit-rtl"):
+    if getattr(a, "plan", None) and a.cmd in ("elab", "bind", "verify", "all", "portbind", "kit-rtl", "r8-prepass"):
         try:
             import plan_package as _PP
             _ok, _msg = _PP.gate(a.plan)
@@ -7207,6 +7254,8 @@ def main(argv=None):
             return cmd_elab(a)
         if a.cmd == "bind":
             return cmd_bind(a)
+        if a.cmd == "r8-prepass":
+            return cmd_r8_prepass(a)
         if a.cmd == "portbind":
             return cmd_portbind(a)
         if a.cmd == "verify":

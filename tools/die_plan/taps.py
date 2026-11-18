@@ -29,7 +29,9 @@ from collections import OrderedDict
 import hashlib
 import json
 import math
+import os
 import sys
+from pathlib import Path
 from threading import RLock
 
 TAP_MARGIN_UM = 17.28          # keep the interior tap pins off the face pin bands
@@ -75,19 +77,63 @@ def _density_key(P, tn, control, pts, taken, boxes):
     return hashlib.sha256(text.encode()).digest()
 
 
+def _disk_path(key):
+    """BIND-SPEED-1118: density_taps is a pure function of `key` (a sha256 of every resolved input) and of this planner's code; it took
+    ~10 of the 13 min of the QC N4 bind head (Binder.__init__ -> taps.place -> schema.tap_clear, run again by every bind, kit-rtl and
+    G0 process).  The in-memory cache above dies with the process; this one persists it per (key, sha of taps / schema / gen_phys /
+    placement_obstacles) in $OT_BIND_GATE_CACHE (default /var/tmp/ot-bind-gate-<uid>; `off` = none).  Unchanged types of the next
+    plan event cost a file read."""
+    if key is None or os.environ.get("OT_BIND_GATE_CACHE", "") == "off":
+        return None
+    global _CODE_SHA
+    if _CODE_SHA is None:
+        h = hashlib.sha256()
+        here = Path(__file__).resolve().parent
+        for n in ("taps.py", "schema.py", "gen_phys.py", "placement_obstacles.py"):
+            try:
+                h.update((here / n).read_bytes())
+            except OSError:
+                _CODE_SHA = ""
+                return None
+        _CODE_SHA = h.hexdigest()[:16]
+    if not _CODE_SHA:
+        return None
+    d = Path(os.environ.get("OT_BIND_GATE_CACHE") or f"/var/tmp/ot-bind-gate-{os.getuid()}")
+    return d / f"density-{key.hex()[:40]}-{_CODE_SHA}.json"
+
+
+_CODE_SHA = None
+
+
 def _density_cached(key):
     with _DENSITY_CACHE_LOCK:
         value = _DENSITY_CACHE.get(key) if key is not None else None
-        if value is None:
+        if value is not None:
+            _DENSITY_CACHE.move_to_end(key)
+            return list(value[0])
+    f = _disk_path(key)
+    if f is not None:
+        try:
+            rows = json.loads(f.read_text())
+            return [tuple(r) for r in rows]
+        except (OSError, ValueError):
             return None
-        _DENSITY_CACHE.move_to_end(key)
-    return list(value[0])
+    return None
 
 
 def _density_remember(key, result):
     global _DENSITY_CACHE_BYTES
     if key is None:
         return
+    f = _disk_path(key)
+    if f is not None:
+        try:
+            f.parent.mkdir(parents=True, exist_ok=True)
+            tmp = f.with_name(f".{f.name}.{os.getpid()}.tmp")
+            tmp.write_text(json.dumps([list(r) for r in result]))
+            os.replace(tmp, f)
+        except (OSError, TypeError, ValueError):
+            pass
     value = tuple(tuple(row) for row in result)
     # Conservative deep size, including scalar values and container overhead.
     size = (256 + sys.getsizeof(key) + sys.getsizeof(value)

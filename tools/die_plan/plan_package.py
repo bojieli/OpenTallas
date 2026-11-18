@@ -13,7 +13,7 @@ refuse a plan whose siblings resolve outside its folder.
 
 bind.py gate: env OT_BIND_PLAN_PACKAGE = require (bind refuses such a plan) | warn (default: one warning line) | off.
 """
-import hashlib, json, os, shutil, sys, time
+import hashlib, json, os, re, shutil, sys, time
 from pathlib import Path
 
 SCHEMA = "opentallas.plan_package.v1"
@@ -75,26 +75,73 @@ def abs_path_values(obj, _path="$"):
 MAX_JSON_BYTES = 300 * 2**20
 
 
+_ABS_RX = re.compile(r'"\\?/(?:srv|home|tmp|mnt|data|opt|work|var)\\?/')    # a string value starting with an ABS_PREFIXES root
+
+
+def _abs_problems_one(args):
+    """[(file:jsonpath, msg)] of one json / json.gz of the folder (a process-pool worker: the files are independent).  A file whose text
+    has no `"/srv/`-style string start cannot hold an absolute path value: the slow recursive json walk is skipped (the 70 MB
+    plans of a plan folder almost never carry one).  Per-file cache on (path, size, mtime_ns): a new plan event adds ONE
+    70 MB plan to a folder of unchanged older ones."""
+    import gzip
+    f, d = Path(args[0]), Path(args[1])
+    try:
+        st = f.stat()
+        if st.st_size > MAX_JSON_BYTES:
+            return []
+    except OSError:
+        return []
+    rel = f.relative_to(d)
+    fkey = None if os.environ.get("OT_BIND_GATE_CACHE", "") == "off" else \
+        "f-" + hashlib.sha256(f"{f}\0{st.st_size}\0{st.st_mtime_ns}".encode()).hexdigest()[:40]
+    if fkey:
+        try:
+            return [(x, y) for x, y in json.loads((_cache_dir() / f"{fkey}.json").read_text())]
+        except (OSError, ValueError):
+            pass
+    try:
+        text = gzip.open(f, "rt").read() if f.name.endswith(".gz") else f.read_text()
+        res = [(f"{rel}:{jp}", f"absolute path {v}") for jp, v in abs_path_values(json.loads(text))] if _ABS_RX.search(text) else []
+    except (OSError, ValueError, EOFError):
+        return []
+    if fkey:
+        try:
+            c = _cache_dir()
+            c.mkdir(parents=True, exist_ok=True)
+            tmp = c / f".{fkey}.{os.getpid()}.tmp"
+            tmp.write_text(json.dumps(res))
+            os.replace(tmp, c / f"{fkey}.json")
+        except OSError:
+            pass
+    return res
+
+
 def package_abs_problems(d, plan_name=None):
     """absolute paths in EVERY json / json.gz of the package folder (plan, as-built, sidecar, pads, composition ...), not just the
     plan (KW-FIX-45 11-12 COORD: KV vN's as-built named 5 files outside the package; cleanup deleted two and killed a bind).
-    [(file:jsonpath, 'absolute path ...')]"""
-    import gzip
-    d = Path(d); out = []
+    [(file:jsonpath, 'absolute path ...')].  BIND-SPEED-1118: the files are parsed in a process pool (QC N4: eight 70 MB plans, one
+    core = ~9 min); the result order is the sorted walk order, as before."""
+    d = Path(d)
+    files = []
     for dp, dn, fn in os.walk(d, followlinks=False):
         dn[:] = sorted(x for x in dn if x not in SKIP_DIRS)
-        for name in sorted(fn):
-            if name == "PACKAGE.json" or not name.endswith((".json", ".json.gz")):
-                continue
-            f = Path(dp) / name
-            try:
-                if f.stat().st_size > MAX_JSON_BYTES:
-                    continue
-                raw = json.loads(gzip.open(f, "rt").read() if name.endswith(".gz") else f.read_text())
-            except (OSError, ValueError, EOFError):
-                continue
-            rel = f.relative_to(d)
-            out += [(f"{rel}:{jp}", f"absolute path {v}") for jp, v in abs_path_values(raw)]
+        files += [(str(Path(dp) / name), str(d)) for name in sorted(fn)
+                  if name != "PACKAGE.json" and name.endswith((".json", ".json.gz"))]
+    out = []
+    n = min(len(files), int(os.environ.get("OT_BIND_GATE_JOBS", "") or min(16, os.cpu_count() or 1)))
+    if n > 1 and len(files) > 1:
+        import concurrent.futures as cf
+        try:
+            import multiprocessing as mp           # fork: the worker is this module already imported (forkserver, the 3.14 default, re-imports
+            #                                         it by name and fails under python -I, where tools/die_plan is not on sys.path)
+            with cf.ProcessPoolExecutor(n, mp_context=mp.get_context("fork")) as ex:
+                for r in ex.map(_abs_problems_one, files, chunksize=1):
+                    out += r
+            return out
+        except (OSError, RuntimeError):
+            out = []                                    # no fork / pool: the serial path below
+    for a in files:
+        out += _abs_problems_one(a)
     return out
 
 
@@ -201,6 +248,60 @@ def gate(plan, mode=None):
     if mode == "off":
         return True, ""
     d = os.path.dirname(os.path.abspath(plan))
+    key = _gate_key(d, mode)
+    hit = _gate_cache_get(key)
+    if hit is not None:
+        return hit
+    res = _gate_uncached(d, mode)
+    _gate_cache_put(key, res)
+    return res
+
+
+def _gate_key(d, mode):
+    """BIND-SPEED-1118: the gate parsed EVERY json of the plan folder (QC N4: eight 70 MB plans + inputs, KV: 280k entries) before every
+    elab / bind / kit-rtl, ~10 min of single-threaded python per call, and again for each of the kit-rtl types.  Its verdict is a
+    function of the folder's files, so it is cached on (folder, mode, every entry's size + mtime_ns) in $OT_BIND_GATE_CACHE
+    (default /var/tmp/ot-bind-gate-<uid>; `off` = no cache).  Any file added / removed / rewritten changes the key."""
+    if os.environ.get("OT_BIND_GATE_CACHE", "") == "off":
+        return None
+    h = hashlib.sha256(f"{d}\0{mode}\0".encode())
+    try:
+        for p in _walk(d):
+            st = os.lstat(p)
+            h.update(f"{os.path.relpath(p, d)}\0{st.st_size}\0{st.st_mtime_ns}\0".encode())
+    except OSError:
+        return None
+    return h.hexdigest()[:40]
+
+
+def _cache_dir():
+    return Path(os.environ.get("OT_BIND_GATE_CACHE") or f"/var/tmp/ot-bind-gate-{os.getuid()}")
+
+
+def _gate_cache_get(key):
+    if not key:
+        return None
+    try:
+        r = json.loads((_cache_dir() / f"{key}.json").read_text())
+        return bool(r["ok"]), str(r["msg"])
+    except (OSError, ValueError, KeyError):
+        return None
+
+
+def _gate_cache_put(key, res):
+    if not key:
+        return
+    try:
+        c = _cache_dir()
+        c.mkdir(parents=True, exist_ok=True)
+        tmp = c / f".{key}.{os.getpid()}.tmp"
+        tmp.write_text(json.dumps(dict(ok=res[0], msg=res[1])))
+        os.replace(tmp, c / f"{key}.json")
+    except OSError:
+        pass
+
+
+def _gate_uncached(d, mode):
     bad = outside_entries(d) + [(r, "abs", w) for r, w in package_abs_problems(d)]
     if (Path(d) / "PACKAGE.json").exists():
         bad += [(r, w) for r, w in verify(d) if not any(r == b[0] for b in bad)]

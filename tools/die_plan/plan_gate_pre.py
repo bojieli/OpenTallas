@@ -35,6 +35,11 @@ overlay.  Five classes, each finding line starts `FAIL <CLASS> ...`:
            the --baseline-plan (the adopted plan) need none.  QC-SC-ROWS' reset rows had never been dry-run: 9/9 types
            rejected at bind, after 1-2 h.
 
+BIND-SPEED-1118 adds four classes (bind_rowcheck.py; run inside `bind` after the elab, and by `bind_fast.py precheck`):
+  FIXEDCYC lane fixed_cycles vs its latency row (double-counted / stale table); ROWSINK R8 table rows whose sink / port is no leaf of
+  the elaborated die (names compared in u_r0_u_x instance form too; --elab-dir OUT); MODULES modules named by asbuilt.substitute_inst /
+  substitute / sub_core_leaf that exist nowhere; TOOLSTALE tools/die_plan files older than the live tree (--ref-tools, $OT_RT_CURRENT).
+
 Exit 0 = clean, 1 = at least one FAIL, 2 = usage / unreadable input.  Library: check(...) returns (findings, info).
 """
 import argparse
@@ -51,7 +56,7 @@ from pathlib import Path
 PROOF_SCHEMA = "opentallas.rows_proof.v1"
 ROWS_KEY = "consumer_localization"
 LIST_KEYS = ("files", "prefer", "netlist", "rtl_roots", "hard_params")
-CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT")
+CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE")
 # GEOM scope.  Stations of the adopted plans already lie over planned cores (KV 7u: 335 sites over head/pvg cores; S81 B6gE 51,
 # QC S4q7e 24: through-stations over native / lane cores), and G0 accepts them, so a plain "no site inside any core" would refuse
 # every adopted plan.  Default: refuse the overlaps with the landing ring cores the ring split adds (instance name cl_*), the
@@ -586,7 +591,8 @@ def check_geom(plan, halo=0.0, strict_cores=False, baseline=None, refuse=REFUSE_
 
 # ---------------------------------------------------------------- driver
 def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=None, proofs=(), rows_files=(),
-          skip=(), want_list=False, require_asbuilt=False, strict_cores=False, halo=0.0):
+          skip=(), want_list=False, require_asbuilt=False, strict_cores=False, halo=0.0, elab_dir=None, ref_tools=None,
+          toolstale_level="FAIL"):
     findings = []
     skip = {s.upper() for s in skip}
     if "SCHEMA" not in skip:
@@ -603,6 +609,10 @@ def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=No
         sys.path.insert(0, str(Path(__file__).resolve().parent))          # -I drops the script dir
         import kit_fit as KF
         findings += ["FAIL " + m for m in KF.findings((_load(plan) or {}).get("partition_types") or {}, halo)]
+    if not set(skip) >= {"FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE"}:       # BIND-SPEED-1118: bind_rowcheck.py, seconds
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        import bind_rowcheck as RC
+        findings += RC.check_all(tree, plan, _load(plan), asbuilt, elab_dir, ref_tools, skip, toolstale_level)
     return findings
 
 
@@ -622,6 +632,8 @@ def main(argv=None):
     c.add_argument("--require-asbuilt", action="store_true", help="a plan without an as-built section is a FAIL")
     c.add_argument("--strict-cores", action="store_true", help="GEOM: also refuse sites over the planned head/pvg cores")
     c.add_argument("--site-halo-um", type=float, default=0.0, help="GEOM: grow every core box by this margin")
+    c.add_argument("--elab-dir", help="bind OUT dir holding the elab's asbuilt.json (enables ROWSINK / the elab half of MODULES)")
+    c.add_argument("--ref-tools", help="live reference tree for TOOLSTALE; \"auto\" = $OT_RT_CURRENT or <scratch>/claude/rt/current (default: not run)")
     c.add_argument("--list", action="store_true", help="print the resolved input paths (cleanup keep set)")
     c.add_argument("--json")
     c.add_argument("--quiet", action="store_true")
@@ -640,7 +652,7 @@ def main(argv=None):
         return 0
     try:
         f = check(a.tree, a.plan, a.sidecar, a.asbuilt, a.compose_tree, a.baseline_plan, a.rows_proof, a.rows, a.skip,
-                  a.list, a.require_asbuilt, a.strict_cores, a.site_halo_um)
+                  a.list, a.require_asbuilt, a.strict_cores, a.site_halo_um, a.elab_dir, a.ref_tools)
     except (OSError, ValueError) as e:
         print(f"plan_gate_pre: cannot read input: {e}", file=sys.stderr)
         return 2

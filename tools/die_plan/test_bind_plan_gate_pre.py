@@ -19,7 +19,7 @@ def fake(monkeypatch, tmp_path):
     calls = []
     mod = types.ModuleType("plan_gate_pre")
 
-    def check(tree, plan, asbuilt=None, baseline=None, skip=()):
+    def check(tree, plan, asbuilt=None, baseline=None, skip=(), **_kw):
         calls.append(dict(tree=tree, plan=plan, baseline=baseline, skip=skip))
         return list(mod.findings)
 
