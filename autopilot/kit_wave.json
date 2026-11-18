@@ -5995,7 +5995,10 @@
     "KV-HG5"
    ],
    "tools_refresh_bind_cmd": "mkdir -p {out}/bind {out}/tmp {out}/home && zcat physical/die_plan/qwen_kvsys/plan_of_record/inputs/bind9_asbuilt.json.gz > {out}/bind/asbuilt.json && OT_HEAVY_PRIO=die ot-heavy --mem 96 -- env OT_HCPARAM_ALL=1 PYTHONDONTWRITEBYTECODE=1 TMPDIR={out}/tmp HOME={out}/home python3 -I -B tools/die_plan/bind.py bind physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json --out {out}/bind --asbuilt physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json --mem 48 --strict --all-gaps > {out}/bind.log 2>&1",
-   "tools_refresh_bind_sub": "bind"
+   "tools_refresh_bind_sub": "bind",
+   "gen_env_outside_allow": [
+    "OT_SIGNED_VIEW_SHA"
+   ]
   },
   "s81": {
    "enabled": true,
