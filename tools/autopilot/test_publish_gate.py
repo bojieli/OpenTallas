@@ -315,3 +315,106 @@ class RowsProof(unittest.TestCase):
             PG.static_remote = orig
         self.assertEqual(seen.get("rows_proofs"), ["plan_of_record/zz.rows_proof.json"])
         self.assertEqual(rec["rows_proofs"], ["plan_of_record/zz.rows_proof.json"])
+
+
+class ForeignTree(unittest.TestCase):
+    """FOREIGN-TREE (QC N1B 11-17, KV D22 11-18): kit_rtl.bind_out, asbuilt base / land_r8 or a named path outside the tree
+    being published is an ADVISORY finding of the gate: reported, never part of the verdict (r693/r704)"""
+    def setUp(self):
+        self.td = Path(tempfile.mkdtemp(prefix="pgft-"))
+        self.tree = self.td / "src_x_d2"; self.old = self.td / "src_x"
+        for t in (self.tree, self.old):
+            (t / "rtl").mkdir(parents=True)
+            (t / ".src-manifest.sha256").write_text("ab" * 32 + "\n")
+        self.bind = self.td / "bind_out"; self.bind.mkdir()
+        self.mirror = self.td / "lane" / "mirror"; (self.mirror / "por").mkdir(parents=True)   # another lane's scratch mirror: no manifest
+
+    def test_stale_tree_name_in_bind_f_is_a_finding(self):
+        (self.bind / "bind.f").write_text(f"{self.tree}/rtl/a.sv\n{self.old}/rtl/b.sv\n/opt/pdk/asap7/lib.v\n{self.bind}/x.sv\n")
+        f = PG.check_foreign_trees(self.tree, [str(self.bind / "bind.f")])
+        self.assertEqual(len(f), 1, f)
+        self.assertIn(str(self.old / "rtl/b.sv"), f[0])
+
+    def test_missing_sibling_tree_name_is_a_finding(self):
+        (self.bind / "bind.f").write_text(f"{self.td}/src_x_gone/rtl/c.sv\n{self.bind}/y.sv\n")
+        f = PG.check_foreign_trees(self.tree, [str(self.bind / "bind.f")])
+        self.assertEqual(len(f), 1, f)
+        self.assertIn("missing", f[0])
+
+    def test_own_tree_and_non_tree_paths_pass(self):
+        plan = self.tree / "plan.json"
+        plan.write_text(json.dumps({"a": f"{self.tree}/rtl/a.sv", "b": "/srv/lane/side.json", "c": "rel/x.json"}))
+        ab = self.tree / "asbuilt.json"
+        ab.write_text(json.dumps({"base": str(self.tree), "land_r8": f"{self.tree}/por/r8.json", "clock_landing_table": "por/t.json"}))
+        self.assertEqual(PG.check_foreign_trees(self.tree, [str(plan), None, str(self.td / "missing.f"), str(ab)], [str(ab), None],
+                                                str(self.tree / "bind")), [])
+
+    def test_asbuilt_base_and_land_r8_in_a_scratch_mirror_are_findings(self):
+        """KV D22: the as-built manifest's base and land_r8 pointed at the composer's mirror (not a published tree)"""
+        ab = self.tree / "asbuilt.json"
+        ab.write_text(json.dumps({"base": str(self.mirror), "land_r8": f"{self.mirror}/por/r8.json"}))
+        f = PG.check_foreign_trees(self.tree, [str(ab)], [str(ab)])
+        self.assertEqual(len(f), 2, f)                       # each path once: the text scan does not repeat a named field
+        self.assertTrue(any(" base = " in x for x in f) and any(" land_r8 = " in x for x in f), f)
+
+    def test_bind_out_outside_the_tree_is_a_finding(self):
+        f = PG.check_foreign_trees(self.tree, [], [], str(self.bind))
+        self.assertEqual(len(f), 1, f)
+        self.assertIn("kit_rtl.bind_out", f[0])
+
+    def _static(self, **kw):
+        plan = self.tree / "plan.json"; plan.write_text("{}")
+        orig = PG._sub
+        PG._sub = lambda argv, cwd, timeout=None: (0, "")
+        try:
+            return PG.run_static(self.tree, plan, None, "0" * 64, tempfile.mkdtemp(prefix="pgftw-"), **kw)
+        finally:
+            PG._sub = orig
+
+    def test_run_static_reports_it_as_advisory_and_contained_stays_pass(self):
+        (self.bind / "bind.f").write_text(f"{self.old}/rtl/b.sv\n")
+        res = self._static(scan=[str(self.bind / "bind.f")], bind_out=str(self.bind))
+        self.assertEqual(res["contained"]["verdict"], "PASS", res["contained"])
+        self.assertEqual(res["foreign_tree"]["verdict"], "ADVISORY")
+        self.assertEqual(res["foreign_tree"]["n"], 2)
+        self.assertTrue(all(x.startswith("FOREIGN-TREE") for x in res["foreign_tree"]["findings"]))
+        self.assertEqual(self._static()["foreign_tree"]["verdict"], "PASS")
+        self.assertNotIn("foreign_tree", PG.CHECKS)
+
+    def test_static_remote_ships_the_scan_inputs(self):
+        got = {}
+
+        class R:
+            stdout, stderr, returncode = "PG_STATIC {}", "", 0
+
+        def runner(argv, **kw):
+            got["cmd"] = argv[-1]
+            return R()
+        PG.static_remote("hostx", "/tmp/w", "/t", "/t/p.json", None, "0" * 64, runner=runner, scan=["/b/bind.f"], scan_asbuilt=["/b/inj.json"],
+                         bind_out="/b")
+        for want in ("--scan /b/bind.f", "--scan-asbuilt /b/inj.json", "--bind-out /b"):
+            self.assertIn(want, got["cmd"])
+
+    def test_run_gate_passes_with_a_foreign_tree_finding_and_lists_it_as_advisory(self):
+        c = mk_coord(str(self.td))
+        tree, plan = mk_tree(tempfile.mkdtemp(prefix="pgftt-"))
+        seen = {}
+        orig = PG.static_remote
+
+        def fake(host, work_dir, t, p, ab, ps, **kw):
+            seen.update(kw)
+            st = {k: {"verdict": "PASS"} for k in ("schema", "pre_g0", "hashes", "contained")}
+            st["foreign_tree"] = {"verdict": "ADVISORY", "advisory": True, "n": 1, "findings": ["FOREIGN-TREE kit_rtl.bind_out /b/out is outside"]}
+            return st
+        PG.static_remote = fake
+        try:
+            obj = dict(cand(tree, plan), sidecar="/s/side.json", config={"kit_rtl": {"bind_out": "/b/out", "asbuilt": "/a/ab.json"}})
+            rec = PG.run_gate(c, obj, "/x/old", "E0", dry_fn=dry_pass, TC=TC)
+        finally:
+            PG.static_remote = orig
+        self.assertEqual(seen.get("bind_out"), "/b/out")
+        self.assertEqual(seen.get("scan"), ["/s/side.json", "/a/ab.json", "/b/out/bind.f", "/b/out/asbuilt_manifest_injected.json"])
+        self.assertEqual(seen.get("scan_asbuilt"), ["/a/ab.json", "/b/out/asbuilt_manifest_injected.json"])
+        self.assertEqual(rec["verdict"], "PASS", rec["checks"])            # advisory: the finding does not block
+        self.assertEqual(rec["advisory"], ["foreign_tree"])
+        self.assertEqual(PG.require_pass(c, rec["die"], rec["tree"], rec["manifest_hash"], rec["plan_sha256"]), "")

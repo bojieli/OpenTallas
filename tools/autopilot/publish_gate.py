@@ -14,6 +14,11 @@ PRE/G0 accept them.  This gate runs, on the gen host that holds the tree and bef
   dry_gen  kit_wave.py run-item with spec dry_gen on ONE representative item of the die (the pilot item): kit_snap, kit_rtl,
            gen, gen_lint and kit preflight, the same code and the cfg the apply would write; it stops before place (no P&R)
 
+  foreign_tree (ADVISORY, never part of the verdict; r693/r704) the candidate's inputs point outside the tree being published:
+           kit_rtl.bind_out, the as-built manifest's base / land_r8, or any absolute path in the plan, asbuilt, sidecar, bind.f and
+           injected manifest that lies in ANOTHER published tree or in a missing sibling of the candidate tree (QC N1B pre-rename
+           tree 11-17; KV D22 11-18: asbuilt base + land_r8 still named the composer's scratch mirror, one gate run lost)
+
 and writes autopilot/publish_gate/<die>/<tree manifest sha>.json = verdict PASS | FAIL with the four check results.  The apply
 script refuses without a PASS record whose die, tree, manifest sha and plan sha256 match the candidate (require_pass()).
 
@@ -245,7 +250,86 @@ def check_proofs_contained(tree, rows_proofs):
     return out
 
 
-def run_static(tree, plan, asbuilt=None, plan_sha256=None, work=None, g0_baseline=None, rows_proofs=None):
+_PATH_RE = re.compile(r"/[A-Za-z0-9_.+@=-]+(?:/[A-Za-z0-9_.+@=-]+)+")
+ASBUILT_PATH_KEYS = ("base", "land_r8")
+
+
+def check_foreign_trees(tree, files, asbuilts=(), bind_out=None, max_depth=12):
+    """-> findings (ADVISORY: reported in the record, never part of the gate verdict).  The inputs of a publish must lie in the
+    tree being published, or a host that holds only that tree cannot reproduce the bind / kit RTL:
+      (a) named fields: kit_rtl.bind_out and each as-built manifest's base / land_r8, when absolute, resolve inside TREE
+          (KV D22 11-18: base + land_r8 still pointed at the composer's scratch mirror);
+      (b) every absolute path in FILES (plan, asbuilt, sidecar, bind_out bind.f / injected manifest) is resolved to the nearest
+          ancestor holding .src-manifest.sha256: another published tree is a finding, and so is a sibling of TREE that is
+          missing on this host (FABLE-FLOW-1700 11-17, QC N1B: stale pre-rename tree names).  Other paths (lane dirs, PDK) pass."""
+    root = os.path.realpath(str(tree))
+    roots, out, seen = {}, [], set()
+
+    def inside(path):
+        rp = os.path.realpath(path)
+        return rp == root or rp.startswith(root + os.sep)
+
+    if bind_out and str(bind_out).startswith("/") and not inside(str(bind_out)):
+        out.append(f"FOREIGN-TREE kit_rtl.bind_out {bind_out} is outside the candidate tree {root}")
+        seen.add(str(bind_out))
+    for ab in asbuilts or []:
+        try:
+            obj = json.loads(Path(str(ab)).read_text())
+        except (OSError, ValueError, TypeError):
+            continue
+        for k in ASBUILT_PATH_KEYS:
+            v = obj.get(k) if isinstance(obj, dict) else None
+            if isinstance(v, str) and v.startswith("/") and not inside(v):
+                out.append(f"FOREIGN-TREE asbuilt {ab} {k} = {v} is outside the candidate tree {root}")
+                seen.add(v)
+
+    def tree_of(path):
+        d = os.path.dirname(path)
+        chain = []
+        for _ in range(max_depth):
+            if d in roots:
+                hit = roots[d]
+                break
+            chain.append(d)
+            if os.path.isfile(os.path.join(d, ".src-manifest.sha256")):
+                hit = d
+                break
+            nd = os.path.dirname(d)
+            if nd == d:
+                hit = None
+                break
+            d = nd
+        else:
+            hit = None
+        for c in chain:
+            roots[c] = hit
+        return hit
+
+    parent = os.path.dirname(root) + os.sep
+    for f in files or []:
+        if not f or not os.path.isfile(str(f)):
+            continue
+        try:
+            txt = Path(str(f)).read_text(errors="replace")
+        except OSError:
+            continue
+        for m in sorted(set(_PATH_RE.findall(txt))):
+            if m == root or m.startswith(root + os.sep) or m in seen:
+                continue
+            seen.add(m)
+            t = tree_of(m)
+            if t and os.path.realpath(t) != root:
+                out.append(f"FOREIGN-TREE {f} names {m} (published tree {t}, not the candidate tree {root})")
+            elif not t and m.startswith(parent):
+                # a sibling of the candidate tree that does not exist here = a stale tree name (renamed / not replicated)
+                top = parent + m[len(parent):].split(os.sep, 1)[0]
+                if not os.path.exists(top):
+                    out.append(f"FOREIGN-TREE {f} names {m} (sibling {top} of the candidate tree is missing on this host)")
+    return sorted(out)
+
+
+def run_static(tree, plan, asbuilt=None, plan_sha256=None, work=None, g0_baseline=None, rows_proofs=None, scan=None, scan_asbuilt=None,
+               bind_out=None):
     """-> {schema, pre_g0, hashes: {verdict, ...}}.  Uses the TREE's own tools (the ones PRE/G0/bind will run), python3 -I."""
     tree, plan = str(tree), str(plan)
     work = work or tempfile.mkdtemp(prefix="pubgate-")
@@ -281,12 +365,15 @@ def run_static(tree, plan, asbuilt=None, plan_sha256=None, work=None, g0_baselin
                      **({"why": "no landing_evidence view found under the tree"} if not n and not finds else {})}
     cf = check_contained(tree, plan) + check_proofs_contained(tree, rows_proofs)
     res["contained"] = {"verdict": "PASS" if not cf else "FAIL", "findings": cf}
+    # ADVISORY (r693/r704: the gate is a report): not in CHECKS, so it never changes the verdict; the record's advisory list names it
+    ft = check_foreign_trees(tree, [plan, asbuilt] + list(scan or []), [asbuilt] + list(scan_asbuilt or []), bind_out)
+    res["foreign_tree"] = {"verdict": "PASS" if not ft else "ADVISORY", "advisory": True, "n": len(ft), "findings": ft[:40]}
     return res
 
 
 # --------------------------------------------------------------------------------------------------- orchestration (hub)
 def static_remote(host, work_dir, tree, plan, asbuilt, plan_sha256, runner=subprocess.run, hub_names=("localhost",), g0_baseline=None,
-                  rows_proofs=None):
+                  rows_proofs=None, scan=None, scan_asbuilt=None, bind_out=None):
     """runs the static checks ON the gen host that holds the tree: this file is shipped inline (python3 -I -c, the host has no checkout
     of the tool).  Read-only, ~20 s of one core (PRE imports the tree's tool modules), so plain ssh under nice, not an ot-run job:
     ot-run refuses a job that names a 300k-file tree outside its --dir and would SPILL-copy it."""
@@ -294,7 +381,9 @@ def static_remote(host, work_dir, tree, plan, asbuilt, plan_sha256, runner=subpr
     cmd = (f"mkdir -p {q(work_dir)} && nice -n 10 python3 -I -c {q(Path(__file__).read_text())} static --tree {q(tree)} --plan {q(plan)} "
            f"--plan-sha256 {q(plan_sha256)}" + (f" --asbuilt {q(asbuilt)}" if asbuilt else "") + f" --work {q(work_dir)}"
            + (f" --g0-baseline-json {q(json.dumps(g0_baseline))}" if g0_baseline is not None else "")
-           + "".join(f" --rows-proof {q(str(rp))}" for rp in rows_proofs or []))
+           + "".join(f" --rows-proof {q(str(rp))}" for rp in rows_proofs or [])
+           + "".join(f" --scan {q(str(x))}" for x in scan or []) + "".join(f" --scan-asbuilt {q(str(x))}" for x in scan_asbuilt or [])
+           + (f" --bind-out {q(str(bind_out))}" if bind_out else ""))
     argv = ["bash", "-c", cmd] if host in hub_names else ["ssh", "-n", "-o", "BatchMode=yes", "-o", "ControlPath=none", host, "bash -c " + q(cmd)]
     p = runner(argv, capture_output=True, text=True, timeout=3 * STEP_TIMEOUT_S + 600)
     txt = (p.stdout or "") + (p.stderr or "")
@@ -407,6 +496,16 @@ def run_gate(C, obj, expect_source, expect_event, item=None, kind="type", work=N
         baseline = load_g0_baseline(marker.get("g0_baseline") or obj.get("g0_baseline"))
         rows_proofs = list(marker.get("rows_proofs") or obj.get("rows_proofs") or [])
         rec["rows_proofs"] = rows_proofs
+        # FOREIGN-TREE (advisory): what the candidate's kit RTL will read besides the plan and the marker asbuilt
+        kr = (marker.get("config") or {}).get("kit_rtl") or {}
+        bind_out = marker.get("bind_out") or kr.get("bind_out")
+        scan_ab = [x for x in (kr.get("asbuilt"),) if x and x != marker.get("asbuilt")]
+        scan = [x for x in (marker.get("sidecar"),) if x] + scan_ab
+        if bind_out:
+            inj = os.path.join(bind_out, "asbuilt_manifest_injected.json")
+            scan += [os.path.join(bind_out, "bind.f"), inj]
+            scan_ab.append(inj)
+        rec["foreign_tree_scan"] = {"bind_out": bind_out, "files": scan, "asbuilts": scan_ab}
         # LATENCY-R 11-18: the static checks (PRE + G0: 13-39 min) and the dry gen (13-53 min) ran one after the other (QC M5 gate 92 min, S81 D7w 34 min).
         # They read the same published tree and write separate dirs, so they now run at the same time; the gate takes the longer of the two.  A failed
         # static check no longer skips the dry gen: both verdicts are recorded (the verdict rule is unchanged: every check must PASS).
@@ -421,7 +520,8 @@ def run_gate(C, obj, expect_source, expect_event, item=None, kind="type", work=N
             fut = ex.submit(_dry)
             t0 = time.time()
             st = (static_fn or (lambda h, t, p, ab, ps: static_remote(h, wr + "/pubgate", t, p, ab, ps, hub_names=("localhost", hub), g0_baseline=baseline,
-                                                                       rows_proofs=rows_proofs)))(
+                                                                       rows_proofs=rows_proofs, scan=scan, scan_asbuilt=scan_ab,
+                                                                       bind_out=bind_out)))(
                 static_host or hosts[0], tree, plan, marker.get("asbuilt"), plan_sha)
             rec["checks"].update(st)
             rec["static_s"] = round(time.time() - t0, 1)
@@ -459,6 +559,9 @@ def main(argv=None):
     s.add_argument("--work")
     s.add_argument("--g0-baseline-json", help="pinned review record (normally shipped by run from candidate.g0_baseline)")
     s.add_argument("--rows-proof", action="append", default=[], help="rows proof file inside the tree for PRE (normally shipped by run from candidate.rows_proofs)")
+    s.add_argument("--scan", action="append", default=[], help="extra input file scanned for paths in another published tree (sidecar, bind.f ...); advisory")
+    s.add_argument("--scan-asbuilt", action="append", default=[], help="extra as-built manifest whose base / land_r8 must lie in the tree; advisory")
+    s.add_argument("--bind-out", help="kit_rtl.bind_out of the candidate; outside the tree = advisory FOREIGN-TREE finding")
     c = sub.add_parser("check")
     c.add_argument("--coord", default=os.path.expanduser("~/coord"))
     c.add_argument("--die", required=True)
@@ -468,7 +571,7 @@ def main(argv=None):
     a = P.parse_args(argv)
     if a.cmd == "static":
         print("PG_STATIC " + json.dumps(run_static(a.tree, a.plan, a.asbuilt, a.plan_sha256, a.work, json.loads(a.g0_baseline_json) if a.g0_baseline_json else None,
-                                                   rows_proofs=a.rows_proof)))
+                                                   rows_proofs=a.rows_proof, scan=a.scan, scan_asbuilt=a.scan_asbuilt, bind_out=a.bind_out)))
         return 0
     if a.cmd == "check":
         why = require_pass(a.coord, a.die, a.tree, a.manifest, a.plan_sha256)
