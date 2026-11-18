@@ -1007,3 +1007,5 @@
   COORD APPROVED: claude/pubgate-rows-proof-1117 @2a4ae43799373267cbc189246e48b1ad28ad5957
 - 2026-11-17 16:02 PST RULING r628 [COORD -> WAVE-FLOW-R2, MERGE-QUEUE] tools_lag maps rulings to shas from COORD APPROVED lines and tests ancestry against each die tree's tools base (no commit-message parsing). Merge first of the stack.
   COORD APPROVED: claude/wave-flow-r2-lagshas-1117 @4222e6d5553927badc77eaeb5678af1b8293971a
+- 2026-11-17 16:02 PST RULING r629 [COORD -> WAVE-FLOW-R2, MERGE-QUEUE] Hold release terms tree_has:<rNNN> / tree_has_sha:<sha>: true only when the die's current tree tools contain it; unknown keeps the hold. Stacked after r628.
+  COORD APPROVED: claude/wave-flow-r2-treehas-1117 @7232afe4c9ef9386a7f0d2ce3f42a5eeb497d104
