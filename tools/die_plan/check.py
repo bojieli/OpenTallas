@@ -2876,7 +2876,7 @@ def _plan_geom_default():
 def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, core_conns=None, completeness=False,
         clock_builds=None, core_macros=None, strict_core_pg=False, plan_geom=None, native_reset_receipt=None,
         seam_hop="warn", core_shape_index=None, m8_grant_lock=None, m8_grant_guide=None, full_cut="verdict", tap_sink_cap="warn",
-        street_rule="off", r8_strap_pads=False, timing_audit="warn", repo_root=None, tap_sinks=()):
+        street_rule="off", r8_strap_pads=False, timing_audit="warn", repo_root=None, tap_sinks=(), routed_reach=None):
     R = Report(completeness)
     io_src = "plan" if raw.get("die", {}).get("io") else None
     sc = Path(plan_dir) / "die_io.json" if plan_dir else None
@@ -2923,6 +2923,11 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
     # fix = reach_rules.py fix
     import reach_rules as RRL
     summ["r_reach"] = RRL.check_plan(P, R)
+    # ROUTED-REACH (KV-PV-RIDER 11-18, FABLE-PD-KV-2200 #1): internal_stations hops measured ROUND the hard cores whose
+    # LEF OBS reaches the partition signal ceiling (routed_reach.py); WARN by default, --routed-reach / budgets.routed_reach
+    # "error" makes a hop over the reach an ERROR, "off" skips
+    import routed_reach as RRCH
+    summ["routed_reach"] = RRCH.check_plan(P, R, mode=routed_reach, root=repo_root)
     summ["g0c"] = g0c_summary(P, R)
     summ["geometry"] = check_geometry(P, R)
     summ["kit_fit"] = check_kit_core_fit(P, R)          # KITFIT-1116: boxes at the kit's real offsets, every type
@@ -3093,6 +3098,10 @@ def main(argv=None):
                     help="PLAN TIMING AUDIT (plan_timing_audit.py): lane hops priced in ps against period - setup - 150, and the "
                          "MEASURED core clock depth / boundary arcs against the type clock budget; warn = WARN per failing type, "
                          "error = ERROR (UNMEASURED cores never fail; reported with the LIB fallback depth); default warn (COORD 11-15; flip to error per die after its next plan event)")
+    ap.add_argument("--routed-reach", choices=("warn", "error", "off"), default=None,
+                    help="ROUTED-REACH (routed_reach.py): internal_stations hops routed round the hard cores whose LEF OBS "
+                         "reaches the partition signal ceiling; a hop over the reach is a WARN (default, or budgets."
+                         "routed_reach), error = ERROR, off = skipped")
     ap.add_argument("--repo-root", help="checkout holding the core views for --timing-audit (default: this checkout)")
     a = ap.parse_args(argv)
     raw = S.load(a.plan)
@@ -3104,7 +3113,7 @@ def main(argv=None):
                   completeness=a.completeness, clock_builds=a.clock_build,
                   core_macros=a.core_macros, strict_core_pg=a.strict_core_pg, native_reset_receipt=a.native_reset_receipt, seam_hop=a.seam_hop, tap_sink_cap=a.tap_sink_cap, tap_sinks=a.tap_sinks, core_shape_index=a.core_shape_index,
                   m8_grant_lock=a.m8_grant_lock, m8_grant_guide=a.m8_grant_guide,
-                  full_cut=a.full_cut, street_rule=a.street_rule, timing_audit=a.timing_audit, repo_root=a.repo_root,
+                  full_cut=a.full_cut, street_rule=a.street_rule, timing_audit=a.timing_audit, repo_root=a.repo_root, routed_reach=a.routed_reach,
                   plan_geom=(a.plan_geom or _plan_geom_default()) if a.completeness else None)
     ne = len(R.errors())
     npv = len(R.pendings())

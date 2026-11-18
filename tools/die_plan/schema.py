@@ -1663,6 +1663,9 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["r
 SCHEMA["properties"]["budgets"]["properties"]["relay_hop_fail"] = {"type": "boolean"}
 SCHEMA["properties"]["budgets"]["properties"]["relay_hop_fail_types"] = {"type": "array", "items": {"type": "string"}}
 SCHEMA["properties"]["budgets"]["properties"]["r_reach"] = {"enum": ["error", "warn", "off"]}
+# ROUTED-REACH (KV-PV-RIDER 11-18, routed_reach.py): G0 severity of check "routed_reach" (internal_stations hops routed
+# round the hard cores whose LEF OBS reaches partition_signal_max); default warn
+SCHEMA["properties"]["budgets"]["properties"]["routed_reach"] = {"enum": ["error", "warn", "off"]}
 SCHEMA["properties"]["budgets"]["properties"]["r_reach_even"] = {"type": "boolean"}   # R-REACH-5 default chains (gen_phys)
 SCHEMA["properties"]["budgets"]["properties"]["r_dly_spread"] = {"anyOf": [{"type": "boolean"}, {"type": "array", "items": {"type": "string", "minLength": 1}}]}   # DLY-SPREAD G8: true | [type base names] (gen_phys dly_spread.tcl)
 # W1 forwarded-writer START (DIE-HEAD-38): W relays before the FSTART face flop of the listed output rings;
