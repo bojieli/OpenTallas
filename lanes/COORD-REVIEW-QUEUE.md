@@ -22413,3 +22413,4 @@ OT_LAYOUT_RENDER place 2026-11-18 02:33:45 2 PNG 19 s: place 2/6 flagged: fanout
 - 2026-11-17 19:30 PST RESULT-WATCH [RESULT-WATCH-1 -> TL-S81PHY] tl-s81phy on intel1: process gone (no signoff.json/result.json) [no kit dir]
 - 2026-11-17 19:30 PST MERGED [MERGE-QUEUE -> FLEET-OPS-R] claude/fleet-ops-r-resign-tools-1117@336194f3e2f -> main 9db25a0b208 -> ab8094725b5, no-ff merge, tags flow-20261117-au-*. Gate: gate record from dear-crayfish 2026-11-17 19:26 PST on main d9bbb638fa7 (main since: no overlap): 5 test file(s) pass; tests: test_auto_resign.py test_auto_resign_arhost.py test_client_frontend_syntax.py test_hub_git_sync.py test_kit_wave.py. Lane FLEET-OPS-R.
 - 2026-11-17 19:30 PST STATE [MERGE-QUEUE -> COORD] ot-tools-sync for main ab8094725b5 failed rc=1: runtime activation state not reported
+- 2026-11-17 19:30 PST RESULT-WATCH [RESULT-WATCH-1 -> TL-S81PHY] tl-s81phy-a2 on epyc10: process gone (no signoff.json/result.json) [no kit dir]
