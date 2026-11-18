@@ -1254,7 +1254,11 @@ def minimal_auto_retry(state, die, ev, d, retry, plan_types=None, log=print, cfg
 # list.  No retry key.  The kit_resume 'nochange' refusal still stops an identical relaunch; INFRA (own resubmit), the die's
 # hold_items, the RETRY_CAP block and the plan-block filter are unchanged and still apply in select().
 REARM_LED = "rearm_tools"             # state ledger {die|item: {"a": attempt, "tools": digest at first sight}}
-REARM_CLASSES = ("HUNG", "WAIT-FORM")
+REARM_CLASSES = ("HUNG", "WAIT-FORM", "HELD-STOP")
+# S81-COL-FLOW-1118: a row COORD cancelled for an infrastructure cause (retire infra-src: dies.s81 src pointed at a lane run copy;
+# infra-clean: gen tree hollowed by a cleanup) or one stopped while a hold stood (HELD-STOP) has no design verdict either.  Their
+# block is unchanged on the new tree, so before this they stayed CANCELLED for good (seqhost__t1, ot_s81sl_leaf__t65, ...).
+REARM_RETIRE = ("infra-src", "infra-clean")
 _TOOLS_DIGEST = {}
 
 
@@ -1383,10 +1387,12 @@ def flow_regen(AP, cfg, st, notices):
 
 
 def rearm_failed(rec):
-    """a row that ended without a verdict worth waiting on: FAIL, queue FAIL, CANCELLED-HUNG / WAIT-FORM"""
+    """a row that ended without a verdict worth waiting on: FAIL, queue FAIL, CANCELLED-HUNG / WAIT-FORM / HELD-STOP, or
+    CANCELLED with an infrastructure retire mark"""
     if rec.get("status") == "FAIL" or (rec.get("status") == "ENQUEUED" and rec.get("q_status") == "FAIL"):
         return True
-    return rec.get("status") == "CANCELLED" and str(rec.get("class") or "") in REARM_CLASSES
+    return rec.get("status") == "CANCELLED" and (str(rec.get("class") or "") in REARM_CLASSES
+                                                or str(rec.get("retire") or "") in REARM_RETIRE)
 
 
 def rearm_candidates(state, cfg, die, d, log=None):
