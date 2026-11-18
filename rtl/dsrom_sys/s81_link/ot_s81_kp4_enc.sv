@@ -38,6 +38,13 @@
 //   p_v / p_d / fault are cycle-identical to the define-off module: NO extra latency (pin cycles +0).
 //   Bench tb_kp4_enc_la.sv (lock-step vs the define-off copy); mutants: OT_S81_KP4_ENC_LA_MUTPOW (D = alpha^(51 j)),
 //   RCKRF_MUT_LA_LANE (S_0 lane fed from S_1's D row).
+// OT_S81_KP4_ENC_PW16 (opt-in define, FABLE-FIX-HEAD-SD9F 11-18; undefined = the forms above, netlist unchanged; PPCYC 0
+//   only): the window rank ch_q -> pp0/pp1 (two 260-input rows per output = an 8-level XOR tree, the one failing routed
+//   setup family of hd_serdes: sd9f -105.9 ps, sd9g3 -184.1 ps, 7.7 levels / 507-590 ps of logic in the stage) is cut into
+//   16 registered partials pw[k] (ch_q[33 k +: 33], <= 26 inputs = 5 levels; ot_s81_kp4_enc[_la]_mat_w16.svh,
+//   tools/s81_link/split_kp4_window_n.py) and wb <= XOR of the 16 (the stage that had one XOR level).  pw sits in the
+//   pp stage and wb in the wb stage: p_v / p_d / fault are cycle-identical to the define-off module, NO extra latency.
+//   Bench run_kp4_enc_la_bench.sh (lock-step vs the define-off copy); mutant RCKRF_MUT_PW16 (partial 5 dropped).
 // ---------------------------------------------------------------------------------------------------------------
 module ot_s81_kp4_enc #(parameter integer MUT = 0, parameter integer PIN_FAULT = 0, parameter integer H0_SEQ_ONLY = 0,
     parameter integer PPCYC = 0) (
@@ -135,10 +142,12 @@ module ot_s81_kp4_enc #(parameter integer MUT = 0, parameter integer PIN_FAULT =
     (* keep *) reg [3:0] f0w;            // chunk-0 flag at the wb stage, 4 copies (75 rem bits each)
     always @(posedge clk) begin
         ch_q <= ch_n;
-        wb <= pp0 ^ pp1;
+        wb <= wb_n;
     end
+    wire [299:0] wb_n;
     generate if (PPCYC != 0) begin : g_ppc
         // +1 pin cycle: four registered partial products, one per 130-bit ch_q select copy
+        assign wb_n = pp0 ^ pp1;
         wire [299:0] e_q0, e_q1, e_q2, e_q3;
 `ifdef OT_S81_KP4_ENC_LA
 `ifdef OT_S81_KP4_ENC_LA_MUTPOW
@@ -158,7 +167,33 @@ module ot_s81_kp4_enc #(parameter integer MUT = 0, parameter integer PIN_FAULT =
             pp0 <= pq0 ^ pq1; pp1 <= pq2 ^ pq3;
 `endif
         end
+`ifdef OT_S81_KP4_ENC_PW16
+    end else if (1) begin : g_pw
+        // 0 cycles: 16 registered partials in the pp stage, their XOR in the wb stage (pp0 / pp1 unused)
+        wire [16*300-1:0] e_w;
+`ifdef OT_S81_KP4_ENC_LA
+`include "ot_s81_kp4_enc_la_mat_w16.svh"
+`else
+`include "ot_s81_kp4_enc_mat_w16.svh"
+`endif
+        reg  [16*300-1:0] pw;
+        always @(posedge clk) pw <= e_w;
+        genvar gw;
+        for (gw = 0; gw < 300; gw = gw + 1) begin : g_wb
+            wire [15:0] t;
+            genvar gp;
+            for (gp = 0; gp < 16; gp = gp + 1) begin : g_t
+`ifdef RCKRF_MUT_PW16
+                assign t[gp] = (gp == 5) ? 1'b0 : pw[gp * 300 + gw];        // bench mutant: partial 5 dropped
+`else
+                assign t[gp] = pw[gp * 300 + gw];
+`endif
+            end
+            assign wb_n[gw] = ^t;
+        end
+`endif
     end else begin : g_pp
+        assign wb_n = pp0 ^ pp1;
         always @(posedge clk) begin pp0 <= e_p0; pp1 <= e_p1; end
     end endgenerate
     always @(posedge clk)
