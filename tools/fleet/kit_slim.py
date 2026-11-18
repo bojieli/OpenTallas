@@ -205,7 +205,8 @@ def signed_not_in_store(tree, ids):
         if (n != "signoff.json" and not n.endswith(".signoff.json")) or st.st_size > 8e6:
             continue
         try:
-            t = open(p, errors="replace").read()
+            with open(p, errors="replace") as fh:
+                t = fh.read()
             if json.loads(t).get("verdict") != "SIGNED":
                 continue
         except (OSError, ValueError, AttributeError):
@@ -216,24 +217,44 @@ def signed_not_in_store(tree, ids):
 
 
 def candidates(state_items, now, roots=()):
-    """-> [(attempt_dir, 'old'|'finished')] from kit_wave_state rows: non-HBM, FAIL/CANCELLED/SUPERSEDED, dir exists here, updated > 6 h ago"""
-    rows, newest = {}, {}
+    """-> [(attempt_dir, 'old'|'finished')], exact paths from kit_wave_state rows, non-HBM only, dir exists on this host, older than 6 h:
+    a row FAIL/CANCELLED/SUPERSEDED names its own attempt dir (work); a row also supersedes every LOWER attempt_k of its item dir (a state row holds only the
+    latest attempt of its key, so attempt_1..n-1 have no row of their own: SUPERSEDED by the counter).  'old' = a newer attempt exists."""
+    latest, own = {}, {}
     for k, v in state_items.items():
         w = v.get("work") if isinstance(v, dict) else None
         m = re.search(r"^(.*)/attempt_(\d+)$", w or "")
-        if not m:
+        if not m or is_hbm(w) or str(v.get("die") or "").lower() == "hbm":
             continue
-        newest[m.group(1)] = max(newest.get(m.group(1), 0), int(m.group(2)))
-        if str(v.get("status")) in OLD_STATUS and not is_hbm(w) and (v.get("die") or "").lower() != "hbm":
+        item, n = m.group(1), int(m.group(2))
+        latest[item] = max(latest.get(item, 0), n)
+        if str(v.get("status")) in OLD_STATUS:
+            own[w] = (item, n, float(v.get("updated") or 0))
+    out, seen = [], set()
+    for item, top in latest.items():
+        try:
+            names = os.listdir(item)
+        except OSError:
+            continue
+        top_fs = max([int(x[8:]) for x in names if ATTEMPT.match(x)] + [top])
+        for x in names:
+            m = ATTEMPT.match(x)
+            if not m:
+                continue
+            n, p = int(m.group(1)), os.path.join(item, x)
+            if p in seen:
+                continue
+            seen.add(p)
             try:
-                if now - float(v.get("updated") or 0) > OLD_AFTER_S and os.path.isdir(w):
-                    rows[w] = (m.group(1), int(m.group(2)))
-            except ValueError:
-                pass
-    out = []
-    for w, (item, n) in rows.items():
-        sib = [int(x[8:]) for x in (os.listdir(item) if os.path.isdir(item) else []) if ATTEMPT.match(x)]
-        out.append((w, "old" if max(sib + [newest.get(item, 0)]) > n else "finished"))
+                mt = os.stat(p).st_mtime
+            except OSError:
+                continue
+            if p in own:
+                mt = own[p][2]                     # a FAIL/CANCELLED row: its own update time
+            elif n >= top:
+                continue                                   # the latest attempt without a FAIL/CANCELLED row is the live one
+            if now - mt > OLD_AFTER_S:
+                out.append((p, "old" if n < top_fs else "finished"))
     return out
 
 

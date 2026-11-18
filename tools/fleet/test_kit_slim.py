@@ -75,6 +75,13 @@ class Strip(unittest.TestCase):
         self.assertFalse(os.path.exists(o + "/gen/6_final.odb"))
         self.assertTrue(os.path.exists(o + "/gen/x.log") and os.path.exists(o + "/s.json") and os.path.exists(n + "/gen/6_final.odb"))
 
+    def test_lower_attempts_superseded_by_the_row_counter(self):
+        o, n = self.att(3), self.att(7)
+        mk(o + "/g/6_final.odb", b"a" * (9 * K.MB)); mk(n + "/g/6_final.odb", b"a" * (9 * K.MB))
+        os.utime(o, (self.now - 99999, self.now - 99999))
+        K.run_strip({"k": dict(work=n, status="RUNNING", die="s81", updated=str(self.now))}, ctx())
+        self.assertFalse(os.path.exists(o + "/g/6_final.odb")); self.assertTrue(os.path.exists(n + "/g/6_final.odb"))
+
     def test_finished_newest_only_substage(self):
         n = self.att(1)
         mk(n + "/b/2_1_floorplan.odb", b"1"); mk(n + "/b/2_floorplan.odb", b"2", age=100); mk(n + "/b/6_final.odb", b"a" * (9 * K.MB))
