@@ -127,6 +127,12 @@ def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=
         d.update(src=tree, src_manifest=True, src_manifest_hash=want, plan=marker["plan"], plan_sha256=marker["plan_sha256"], gen_hosts=hosts,
                  gen_host=mc.get("gen_host") or (d.get("gen_host") if keep and d.get("gen_host") in hosts else hosts[0]),
                  cancel_superseded=False)
+        # WAVE-FLOW-R2 11-17 (COORD): an applied event is a plan of record by definition; the wave gate() rejects an event outside GATE_EVENTS / gate_events_extra and the
+        # die went OFF silently after NF15d2r1 (08:13) and NF15f (17:24, no HEAD item launched for 3 h).  The apply adds the label in the same atomic write.
+        if d.get("event"):
+            ge = list(d.get("gate_events_extra") or [])
+            if d["event"] not in ge:
+                d["gate_events_extra"] = ge + [d["event"]]
         d.setdefault("src_sha", main)
         d.setdefault("queue_src", "main@" + main)
         if "src_sha" not in mc:
