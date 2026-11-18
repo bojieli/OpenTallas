@@ -1,25 +1,26 @@
 {
  "die": "qwen_kvsys",
- "tree": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg8_e21a54ae_teefb7e3_d23f",
- "manifest_hash": "ec75f13b9d2be6ec0773c553cf1a13a9f59506661eb9d5fa23708f0f1e9eeb55",
- "src_manifest_sha": "ec75f13b9d2be6ec0773c553cf1a13a9f59506661eb9d5fa23708f0f1e9eeb55",
+ "tree": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg8_aa3f08ac_t0c3fb15_d23h2",
+ "manifest_hash": "dd671e40812735675bd96e59575d665129458b2705c5e2c8fa45216833f79bd0",
+ "src_manifest_sha": "dd671e40812735675bd96e59575d665129458b2705c5e2c8fa45216833f79bd0",
  "tools_sha": "eb1e73448bd042684261a13c50cd0fb5ce21a513",
  "hosts": [
   "epyc7",
+  "epyc8",
   "epyc9",
   "epyc10"
  ],
  "smoke": "PASS",
- "smoke_detail": "KV-D23f gate epyc7 d23fgate: PRE PASS; G0 0 errors/2444 warn; strict bind 0 errors (160 part/2545 crossings/429530 bits); R8 recheck changed 0; R8 vs D16 0 diff lines; LATCHECK 2404/2404; tail split 16/16 PV; strap audit PASS; BOUND-PARAM PASS; tree_check full_ok epyc7,epyc9,epyc10 (epyc8 refused: disk floor)",
- "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg8_e21a54ae_teefb7e3_d23f/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
- "plan_sha256": "e21a54aebe16bc32397e04914d71b5c525e8af585f50394b34e6072891020199",
- "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg8_e21a54ae_teefb7e3_d23f/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
- "asbuilt_sha256": "da56e1cd818c337f4173df101eb30e0c3c8ae814d2ac22fe5fa88946308f83fd",
- "bind_out": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg8_e21a54ae_teefb7e3_d23f/physical/die_plan/qwen_kvsys/plan_of_record/bind_of_record",
- "sidecar": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg8_e21a54ae_teefb7e3_d23f/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json",
+ "smoke_detail": "KV-D23h2 gate epyc7 d23h2gate: PRE PASS; G0 0 errors/2444 warn; strict bind 0 errors (160 part/2545 crossings/429530 bits); R8 recheck changed 0; R8 vs D16 0 diff lines; LATCHECK 2404/2404; tail split 16/16 PV; strap audit PASS; BOUND-PARAM PASS (568 params); tree_check epyc7,epyc8,epyc9,epyc10",
+ "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg8_aa3f08ac_t0c3fb15_d23h2/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+ "plan_sha256": "aa3f08ac415900d2058c3c52a81d171f03781d10977bb59133dc7a37d00302cc",
+ "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg8_aa3f08ac_t0c3fb15_d23h2/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
+ "asbuilt_sha256": "13856c4e71b76600c49d2a232d8a9eba0ec32286efa3e256c43b6a4fbbd8ada1",
+ "bind_out": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg8_aa3f08ac_t0c3fb15_d23h2/physical/die_plan/qwen_kvsys/plan_of_record/bind_of_record",
+ "sidecar": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg8_aa3f08ac_t0c3fb15_d23h2/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json",
  "sidecar_sha256": "9704beb258d4e0357316596e9b28acc54cf7f0c5416f7ea431b0f8a8b5983930",
  "die_gen_env": {
-  "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg8_e21a54ae_teefb7e3_d23f/physical/die_plan/qwen_kvsys/plan_of_record/signed_view_sha_kv.json",
+  "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg8_aa3f08ac_t0c3fb15_d23h2/physical/die_plan/qwen_kvsys/plan_of_record/signed_view_sha_kv.json",
   "OT_PLACE_MAX_FANOUT": "64",
   "OT_GRT_NONPORT_HOLD": "1",
   "OT_CORE_TAP_REACH_UM": "0",
@@ -36,13 +37,14 @@
   "OT_PG_PIN_CHECK": "1"
  },
  "config": {
-  "event": "KV-D23",
+  "event": "KV-D23H",
   "src_sha": "eb1e73448bd042684261a13c50cd0fb5ce21a513",
-  "tools_sha": "eefb7e36eb62235059453d7a90e60c3ef953d80f",
+  "tools_sha": "0c3fb152c30a12118c648990ccba676f098f6504",
   "queue_src": "main@eb1e73448bd042684261a13c50cd0fb5ce21a513",
-  "plan_sha256": "e21a54aebe16bc32397e04914d71b5c525e8af585f50394b34e6072891020199",
+  "plan_sha256": "aa3f08ac415900d2058c3c52a81d171f03781d10977bb59133dc7a37d00302cc",
   "gen_hosts": [
    "epyc7",
+   "epyc8",
    "epyc9",
    "epyc10"
   ],
@@ -51,18 +53,18 @@
    "--hold-ff-margin",
    "0",
    "--clock-landing",
-   "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg8_e21a54ae_teefb7e3_d23f/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json"
+   "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg8_aa3f08ac_t0c3fb15_d23h2/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json"
   ],
   "kit_rtl": {
    "mode": "bind",
-   "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg8_e21a54ae_teefb7e3_d23f/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
-   "bind_out": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg8_e21a54ae_teefb7e3_d23f/physical/die_plan/qwen_kvsys/plan_of_record/bind_of_record"
+   "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg8_aa3f08ac_t0c3fb15_d23h2/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
+   "bind_out": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg8_aa3f08ac_t0c3fb15_d23h2/physical/die_plan/qwen_kvsys/plan_of_record/bind_of_record"
   },
   "gate": {
    "g0c": "PASS",
    "bind": "PASS",
    "clock": "PASS",
-   "evidence": "KV-D23f gate epyc7 d23fgate: PRE PASS; G0 0 errors/2444 warn; strict bind 0 errors (160 part/2545 crossings/429530 bits); R8 recheck changed 0; R8 vs D16 0 diff lines; LATCHECK 2404/2404; tail split 16/16 PV; strap audit PASS; BOUND-PARAM PASS; tree_check full_ok epyc7,epyc9,epyc10 (epyc8 refused: disk floor)"
+   "evidence": "KV-D23h2 gate epyc7 d23h2gate: PRE PASS; G0 0 errors/2444 warn; strict bind 0 errors (160 part/2545 crossings/429530 bits); R8 recheck changed 0; R8 vs D16 0 diff lines; LATCHECK 2404/2404; tail split 16/16 PV; strap audit PASS; BOUND-PARAM PASS (568 params); tree_check epyc7,epyc8,epyc9,epyc10"
   },
   "planned_events": [
    "KV-7uh",
@@ -74,11 +76,12 @@
    "kvgeom7yhr",
    "KV-HG3",
    "KV-HG5",
-   "KV-D22"
+   "KV-D22",
+   "KV-D23"
   ],
   "gen_env_outside_allow": [],
   "die_gen_env": {
-   "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg8_e21a54ae_teefb7e3_d23f/physical/die_plan/qwen_kvsys/plan_of_record/signed_view_sha_kv.json",
+   "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg8_aa3f08ac_t0c3fb15_d23h2/physical/die_plan/qwen_kvsys/plan_of_record/signed_view_sha_kv.json",
    "OT_PLACE_MAX_FANOUT": "64",
    "OT_GRT_NONPORT_HOLD": "1",
    "OT_CORE_TAP_REACH_UM": "0",
