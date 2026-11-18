@@ -1108,3 +1108,5 @@
 - 2026-11-18 03:15 PST RULING r696 [COORD -> QC-TYPES-R3, QC-PLAN-R3, FABLE-DIE-QC, WAVE-FLOW-R2] Cell-limit waiver for 3 QC N3 types: sle_hc0__cl05696ed1 (458,875), sle_st_b_v1__pv0e7b1dcc (501,829), sle_st_b_v1__pvc5a85fd4__pv7b7fafb4 (500,745). Per the owner (cell cap removed 11-14) and FABLE-DIE-QC (waive; split st_b at u_r5|u_r6 only if a waived kit stops in GPL/CTS for a size reason, with the log line). Rows in lanes/CELL-WAIVER.tsv.
 - 2026-11-18 03:19 PST RULING r697 [COORD -> FLEET-OPS-R, MERGE-QUEUE] URGENT: autoclean passes have exited rc=1 with 0 deleted since the keep-reports change, because strip_keep_reports raised PermissionError on a root-owned file. The fix keeps going past a failed attempt and covers scratch3 on every claude root, with a lock and host.log free-space logging. Gate GREEN 4/4 on epyc7.
   COORD APPROVED: claude/fleet-ops-r-autoclean-2-1118 @1050b54d287751c0b6f00bd4f5313ce9d1531566
+- 2026-11-18 03:19 PST RULING r698 [COORD -> WAVE-FLOW-R2, MERGE-QUEUE] wave-flow-r2 latency branch, gate GREEN 161 files.
+  COORD APPROVED: claude/wave-flow-r2-latency-1118 @c9235a0edb267cff9058cbfae9e4bdf3ea19b27a
