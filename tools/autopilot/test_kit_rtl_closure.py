@@ -163,3 +163,17 @@ def test_bind_metadata_copy_is_hash_checked(tmp_path):
     p=Path(meta['bind_out'])/'bind_report.json'
     p.write_text('{"errors":["stale count"]}')
     assert any('metadata content mismatch' in e for e in L.kit_rtl_paths(kd)[0])
+
+
+def test_die_wide_sinks_file_is_not_copied_into_the_attempt(tmp_path):
+    src,bind,kd=vehicle(tmp_path)
+    (bind/'bind_sinks.json').write_text('{"a": 1}')
+    (bind/'bind_names.json').write_text('{}')
+    C.package(kd,src)
+    receipt(kd)
+    out=kd/'closure'/'bind'
+    assert not (out/'bind_sinks.json').exists() and (out/'bind_names.json').is_file()
+    note=json.loads((out/'bind_sinks.omitted.json').read_text())
+    assert note['original']==str(bind/'bind_sinks.json') and note['size']==8
+    assert 'closure/bind/bind_sinks.json' not in json.loads((kd/'kit_rtl.json').read_text())['input_closure']['files']
+    assert L.kit_rtl_paths(kd)==([],True)

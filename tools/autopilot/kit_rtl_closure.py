@@ -7,6 +7,9 @@ import shutil
 from pathlib import Path
 
 
+OMIT_SIDECARS=('bind_sinks.json',)
+
+
 def digest(p):
     return hashlib.sha256(p.read_bytes()).hexdigest()
 
@@ -116,6 +119,12 @@ def seal(directory):
         # preparation proofs. The full asbuilt netlist is not a GEN input.
         for p in original.glob('*.json'):
             if p.name=='asbuilt.json':continue
+            if p.name in OMIT_SIDECARS:
+                # KIT-SLIM-1118 (COORD): the die-wide sinks file (2.36 GB, copied into EVERY attempt = 60% of the live kit disk) is read by no kit step
+                # (GEN, preflight, kit lint, LEC read bind_report / native_topology / parent_id_straps; bind_verify and type_split read the die bind out).
+                # It stays at its read-only die-level origin; no copy and no origin entry (the lint hashes every entry).
+                (bo/(p.stem+'.omitted.json')).write_text(json.dumps(dict(original=str(p),size=p.stat().st_size,reason='die-level, read-only; no kit step reads it'))+'\n')
+                continue
             shutil.copyfile(p,bo/p.name)
             origins[str((bo/p.name).relative_to(kd))]=dict(original=str(p),sha256=digest(bo/p.name))
     meta['bind_out']=str(bo);meta['input_closure']['sealed']=True
