@@ -26,3 +26,7 @@ def test_fail_exit():
 
 def test_proof_clock_tree():
     assert "cp $K/clock/tree.json $K/clock/ctree.v $D/proof/clk/" in SRC
+
+
+def test_proof_arrivals():
+    assert "cp $D/grt_st_$C/arr_$C.txt $D/proof/out_$C/" in SRC
