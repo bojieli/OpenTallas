@@ -160,3 +160,4 @@
   NO-PROGRESS epyc8 slw_st_a_v1__clb036e152 5_1_grt stage 9.6 h job 9.9 h: repair_Viol best 2143 last 2143 rows 1890 window-gain 0.0%; stagnant 7.6 h; last event 0.0 h ago, log write 0.0 h ago (2894 lines)
 - 2026-11-17 23:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-17 23:52 PST: 123 running jobs, PROGRESSING 111, SLOW 11, NO-PROGRESS 1 (advisory, no cancel); table lanes/NOPROG.tsv
   NO-PROGRESS epyc2 cbn_q11__cl5cc92dfe 5_1_grt stage 34.4 h job 36.2 h: repair_Viol best 908 last 908 rows 207 window-gain 0.0%; stagnant 6.0 h; last event 0.1 h ago, log write 0.0 h ago (1137 lines)
+- 2026-11-18 00:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-18 00:52 PST: 127 running jobs, PROGRESSING 120, SLOW 7, NO-PROGRESS 0 (advisory, no cancel); table lanes/NOPROG.tsv
