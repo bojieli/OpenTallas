@@ -2032,7 +2032,10 @@ def plan_drift_step(AP, cfg, st):
 # verdict DEDUP and is credited when the owner signs (signed.tsv / unversioned.tsv clones + dedup_members.tsv).  A different
 # hash = a distinct kit = built on its own.  Die option kit_dedup [item globs] (default s81: col_h*; [] = off), kit_dedup_cancel
 # false = never cancel an in-flight duplicate.
-DEDUP_DEFAULT = {"s81": ["col_h*"]}
+# S81-COL-FLOW-1118 (OWNER r703 / r705: kit dedupe removed): no die dedupes by default; dies.<die>.kit_dedup (a list of item globs)
+# opts a die back in.  Legacy DEDUP / DEDUP-WAIT records of a die without dedup are released by dedup_step (DEDUP OFF RELEASE)
+# and launch on their own; the per-item fail key (identical full input digest) still refuses an unchanged relaunch.
+DEDUP_DEFAULT = {}
 PV_RE = re.compile(r"^(?P<base>.+)__pv[0-9a-f]{6,}$")
 IDENT_FILE = os.environ.get("KW_IDENT_FILE") or os.path.expanduser("~/coord/autopilot/kit_identity.json")
 DEDUP_MEMBERS = "dedup_members.tsv"
@@ -2487,6 +2490,15 @@ def dedup_step(AP, cfg, st, notices, ap_dir):
         orecs = [r for r in items.values() if r.get("die") == die and r.get("item") == owner and r is not rec]
         orec = max(orecs, key=lambda r: float(r.get("updated") or 0), default=None)
         group, h = f"{die}|{PV_RE.match(rec['item']).group('base')}" if PV_RE.match(rec.get("item", "")) else "", rec.get("dedup_hash")
+        if not dedup_group(cfg, die, rec.get("item")) and not (orec is not None and (orec.get("q_status") in SIGNED_Q or orec.get("status") in SIGNED_Q)):
+            # S81-COL-FLOW-1118 (OWNER r703 / r705): dedup is off for this item: a held member (DEDUP behind a live owner, DEDUP-WAIT behind a failed one)
+            # goes back to the normal launch path at once; a member whose owner already signed off keeps the credit path below
+            AP.log(f"KIT-WAVE DEDUP OFF RELEASE {die}/{rec['item']}: was {rec.get('status')} behind {owner}; kit dedup removed (r703/r705), launches on its own inputs")
+            (st.get("dedup_released") or {}).pop(f"{die}|{rec['item']}", None)
+            if group and h:
+                ident_release(group, h)
+            items.pop(key, None)
+            continue
         if orec is not None and (orec.get("status") in ("FAIL", "CANCELLED") or orec.get("q_status") in ("FAIL", "CANCELLED")):
             # FABLE-FLOW-0015 (c): 23 S81 col members were released every tick (12,776 DEDUP RELEASE lines): the owner failed on a stored fail key, the member
             # relaunched into the same kit identity, got DEDUP again and was released again.  Terminal state DEDUP-WAIT until the owner's key can change.
@@ -9455,6 +9467,9 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
             AP.log(f"KIT-WAVE LAUNCH-HELD {die}/{r.get('item')}: FLOW-GUARD class open ({_hk[:100]})")
             return None
         _dr = None if _so else (st.get("dedup_released") or {}).get(f"{die}|{r.get('item')}")
+        if _dr and not dedup_group(cfg, die, r.get("item")):
+            (st.get("dedup_released") or {}).pop(f"{die}|{r.get('item')}", None)      # S81-COL-FLOW-1118: dedup off, no DEDUP terminal hold
+            _dr = None
         if _dr:
             _o = max([x for x in (st.get("items") or {}).values() if x.get("die") == die and x.get("item") == _dr.get("owner")],
                      key=lambda x: float(x.get("updated") or 0), default=None)

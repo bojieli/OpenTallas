@@ -1,6 +1,7 @@
 """WAVE-PILOT-FIX 11-18 (OWNER order via COORD: remove all safety stops): with cfg stops_off no hold record, class breaker, dedupe hold, pilot gate, retry probe or
 tree-switch marker blocks a launch.  Infra rails (ot-run admission, disk floor, delete guard, OOM) are not touched."""
 import sys, unittest
+import unittest.mock
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import flow_guard as FG  # noqa: E402
@@ -80,7 +81,8 @@ class StopsOff(unittest.TestCase):
             if off:
                 c["stops_off"] = True
             try:
-                KW.launch(ap, c, dict(st, dedup_released={"s81|m": {"owner": "o", "sig": "FAIL/None/3"}}), "s81", {"item": "m", "kind": "type"}, "hub")
+                with unittest.mock.patch.object(KW, "dedup_group", lambda *a: "s81|m"):      # S81-COL-FLOW-1118: dedup is opt-in; this item is a member
+                    KW.launch(ap, c, dict(st, dedup_released={"s81|m": {"owner": "o", "sig": "FAIL/None/3"}}), "s81", {"item": "m", "kind": "type"}, "hub")
             except Exception:
                 pass
             self.assertEqual(any("DEDUP terminal" in m for m in logs), not off)

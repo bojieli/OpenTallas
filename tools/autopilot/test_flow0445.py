@@ -47,10 +47,10 @@ class AP:
 def test_5_dedup_release_is_logged_once_and_the_member_waits_for_its_owner(monkeypatch, tmp_path):
     ap = AP()
     ap.AP_DIR, ap.DRY = tmp_path, False
-    st = {"items": {"d|own|e|b": {"die": "d", "item": "col_a__t1__clx__pv11111111", "status": "CANCELLED", "q_status": "RUNNING", "updated": 5, "attempt": 3},
+    st = {"items": {"d|own|e|b": {"die": "d", "item": "col_a__t1__clx__pv11111111", "status": "FAIL", "class": "FLOW", "q_status": None, "updated": 5, "attempt": 3},
                     "d|mem|e|b": {"die": "d", "item": "col_a__t1__cly__pv22222222", "status": "DEDUP", "dedup_owner": "col_a__t1__clx__pv11111111"}}}
     monkeypatch.setattr(KW, "fail_key_gate", lambda *a, **k: (False, "", []))
-    c = {"dies": {"d": {"enabled": True, "event": "e"}}}
+    c = {"dies": {"d": {"enabled": True, "event": "e", "kit_dedup": ["col_*"]}}}     # S81-COL-FLOW-1118: dedup is opt-in now
     for _ in range(3):                                   # the member is re-created as DEDUP each tick (it relaunches into the same identity)
         st["items"]["d|mem|e|b"] = {"die": "d", "item": "col_a__t1__cly__pv22222222", "status": "DEDUP", "dedup_owner": "col_a__t1__clx__pv11111111"}
         KW.dedup_step(ap, c, st, {}, str(tmp_path))

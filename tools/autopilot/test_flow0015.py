@@ -105,6 +105,7 @@ def test_c_dedup_members_wait_in_a_terminal_state_while_the_owner_key_stands(mon
                     "s81|mem|e|b": {"die": "s81", "item": "col_h9_r2__t1__clb8d86cd5__pvf0595d0f", "status": "DEDUP",
                                     "dedup_owner": "col_h9_r2__t1__clb8d86cd5__pv8d57997d"}}}
     monkeypatch.setattr(KW, "fail_key_gate", lambda *a, **k: (True, "same key", []))
+    monkeypatch.setattr(KW, "DEDUP_DEFAULT", {"s81": ["col_h*"]})      # S81-COL-FLOW-1118: dedup is opt-in now (r703 / r705)
     notices = {}
     KW.dedup_step(AP_, cfg(), st, notices, str(tmp_path))
     KW.dedup_step(AP_, cfg(), st, notices, str(tmp_path))

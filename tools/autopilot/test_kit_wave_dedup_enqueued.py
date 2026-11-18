@@ -4,6 +4,9 @@ from unittest import mock
 
 import kit_wave as K
 
+# S81-COL-FLOW-1118: dedup is off by default (r703 / r705); these tests opt S81 col types in explicitly
+DEDUP_ON = {"dies": {"s81": {"kit_dedup": ["col_h*"]}}}
+
 
 class AP:
     DRY = False
@@ -36,7 +39,7 @@ def test_enqueued_duplicates_are_stopped_by_exact_unit_and_keeper_stays(tmp_path
     ap, notes = AP(), {}
     with mock.patch.object(K, "IDENT_FILE", str(tmp_path / "ident.json")), \
             mock.patch.object(K.WJ, "stop_on_fleet", lambda *x, **k: {}):
-        n = K.dedup_enqueued(ap, {"dies": {}}, st, notes, {}, lambda r: hashes[r["item"]])
+        n = K.dedup_enqueued(ap, DEDUP_ON, st, notes, {}, lambda r: hashes[r["item"]])
     assert n == 3
     kept = [r for r in a if r["status"] == "ENQUEUED"]
     assert [r["item"] for r in kept] == [a[2]["item"]]
@@ -51,7 +54,7 @@ def test_different_identities_are_all_kept(tmp_path):
     a = [row(f"col_h9_r0_p6__t1__pv{i:08x}", f"job{i}", "QUEUED", now + i) for i in range(1, 4)]
     st = {"items": {r["item"]: r for r in a}}
     with mock.patch.object(K, "IDENT_FILE", str(tmp_path / "ident.json")):
-        n = K.dedup_enqueued(AP(), {"dies": {}}, st, {}, {}, lambda r: r["item"].ljust(64, "x"))
+        n = K.dedup_enqueued(AP(), DEDUP_ON, st, {}, {}, lambda r: r["item"].ljust(64, "x"))
     assert n == 0 and all(r["status"] == "ENQUEUED" for r in a)
 
 
@@ -62,5 +65,37 @@ def test_registry_owner_is_kept_even_when_queued(tmp_path):
     (tmp_path / "ident.json").write_text(json.dumps({"s81|col_h9_r0_p6__t1|" + "h" * 64: {"owner": a[2]["item"]}}))
     st = {"items": {r["item"]: r for r in a}}
     with mock.patch.object(K, "IDENT_FILE", str(tmp_path / "ident.json")), mock.patch.object(K.WJ, "stop_on_fleet", lambda *x, **k: {}):
-        K.dedup_enqueued(AP(), {"dies": {}}, st, {}, {}, lambda r: "h" * 64)
+        K.dedup_enqueued(AP(), DEDUP_ON, st, {}, {}, lambda r: "h" * 64)
     assert [r["item"] for r in a if r["status"] == "ENQUEUED"] == [a[2]["item"]]
+
+
+def test_dedup_off_by_default():
+    assert K.dedup_group({"dies": {"s81": {}}}, "s81", "col_h9_r0_p6__t1__pv00000001") == ""
+    assert K.dedup_group(DEDUP_ON, "s81", "col_h9_r0_p6__t1__pv00000001") == "s81|col_h9_r0_p6__t1"
+
+
+def _dstate(owner_status):
+    return {"items": {
+        "o": {"die": "s81", "item": "col_h9_r2__t1__pv000000aa", "status": owner_status, "updated": 1},
+        "w": {"die": "s81", "item": "col_h9_r2__t1__pv000000bb", "status": "DEDUP-WAIT", "dedup_owner": "col_h9_r2__t1__pv000000aa",
+              "dedup_hash": "h" * 64, "updated": 2},
+        "d": {"die": "s81", "item": "col_h9_r2__t1__pv000000cc", "status": "DEDUP", "dedup_owner": "col_h9_r2__t1__pv000000aa",
+              "dedup_hash": "h" * 64, "updated": 2}}, "dedup_released": {"s81|col_h9_r2__t1__pv000000bb": {"sig": "x"}}}
+
+
+def test_dedup_off_releases_wait_and_held_members(tmp_path):
+    ap = AP(); ap.AP_DIR = str(tmp_path)
+    st = _dstate("FAIL")
+    with mock.patch.object(K, "IDENT_FILE", str(tmp_path / "ident.json")):
+        K.dedup_step(ap, {"dies": {"s81": {}}}, st, {}, str(tmp_path))
+    assert set(st["items"]) == {"o"}
+    assert sum("DEDUP OFF RELEASE" in m for m in ap.logs) == 2
+    assert "s81|col_h9_r2__t1__pv000000bb" not in st["dedup_released"]
+
+
+def test_dedup_on_keeps_wait_member_behind_failed_owner(tmp_path):
+    ap = AP(); ap.AP_DIR = str(tmp_path)
+    st = _dstate("RUNNING")
+    with mock.patch.object(K, "IDENT_FILE", str(tmp_path / "ident.json")):
+        K.dedup_step(ap, DEDUP_ON, st, {}, str(tmp_path))
+    assert set(st["items"]) == {"o", "w", "d"} and not any("DEDUP OFF" in m for m in ap.logs)
