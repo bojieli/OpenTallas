@@ -229,3 +229,11 @@ NEXT
 - Decisions: register stage after u_cmem read (+1 cycle, LATCHECK); rck: post-route clock ECO on extracted arrivals (CAPSKEW-ECO tool)
   + centre-root trunk plan row with the t42 four-tap split; r692 hold repair after; SRAM-write hold open.
 - Pilot rebuild only after the S81 event carries: cmem register, centre trunk, t42 split, the 4 defines + RTL files (D8d).
+
+## State 03:55 PST 11-18
+- Flow item GRT-CLOCK-OPTIMISM posted to FABLE-FLOW (03:1x).
+- Capskew ECO proof on H17 copy (epyc9 .../capskew/eco1): REFUSED, predicted gain 25.6 ps (-117.5 -> -91.8). 32 worst lpl_0_r.o capture
+  flops are setup -80..-92 with 9-13 ps hold room: launch-branch skew window, not fixable per flop. r692 hold repair not run (no setup room).
+- Decision 2a (per-flop clock ECO) withdrawn. Needed: branch-level rck rebalance on extracted arrivals (tool does not exist) + centre trunk.
+- Pilot waits for the S81 event: cmem read register (+1 cycle), centre rck trunk, t42 four-tap split, D8d defines/RTL.
+- Not run: forced ECO (--min-gain-frac 0) to count what remains after the 306 flops; ~3 h on epyc9, command in capskew/run_dry.sh.
