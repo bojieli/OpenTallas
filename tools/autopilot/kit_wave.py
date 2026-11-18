@@ -8770,6 +8770,28 @@ def tools_refresh_decide(ent, attempt, crashes, now, unit_alive, in_flight_s=900
     return "spawn", "", dict(ent or {}, t=int(now))
 
 
+def tools_refresh_pass_live(ap_dir, die):
+    """COORD 11-17: a pass of this die is live while a process holds tools_refresh_<die>.lock (the unit's single-flight flock).  The tick used to spawn a new unit for
+    every new (pin, rulings) key while one ran (10+ BUSY units for s81_head); it now waits.  Never creates the lock file; unreadable = not live."""
+    import fcntl
+    p = Path(ap_dir) / f"tools_refresh_{die}.lock"
+    try:
+        fh = open(p, "a")
+    except OSError:
+        return False
+    try:
+        fcntl.flock(fh, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except BlockingIOError:
+        return True
+    except OSError:
+        return False
+    else:
+        fcntl.flock(fh, fcntl.LOCK_UN)
+        return False
+    finally:
+        fh.close()
+
+
 def tools_refresh_tick(AP, cfg, st):
     """WAVE-FLOW-R2 11-17 (COORD FABLE-FLOW-1500 A, r615): for every die with dies.<die>.tools_refresh (true = apply, "dry") whose TOOLS-LAG names a die-tool ruling
     missing from its current tree, start tools_refresh.py (tools-only delta tree -> overlay classify -> guard -> strict bind -> apply, or NEEDS-LANE) per
@@ -8791,6 +8813,8 @@ def tools_refresh_tick(AP, cfg, st):
         key = f"{die}|{lag.get('pin')}|{','.join(lag['missing'])}"
         stp = (ustate.get("stopped") or {}).get(die)
         if stp and stp.get("fp") == tools_refresh_stop_fp(d):       # stopped on a structural exit: no start until the tree or the bind recipe changes
+            continue
+        if tools_refresh_pass_live(AP.AP_DIR, die):                 # a pass holds the die's lock: spawn nothing (the key stays unstarted and is decided when it ends)
             continue
         ent = started.get(key)
         alive = False

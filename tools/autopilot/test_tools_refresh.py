@@ -366,3 +366,31 @@ def test_apply_rekeys_pilot_and_tree_manifest_holds_atomically():
     assert recs[2] == other
     # no tree-keyed record: no hold_records op
     assert "/dies/kv/hold_records" not in {o["path"] for o in run(d=die(hold_records=[other]))[2][0][0]}
+
+
+def test_tick_spawns_nothing_while_a_pass_holds_the_die_lock(tmp_path):
+    import fcntl
+    import kit_wave as KW
+    launched = []
+
+    class AP:
+        DRY = False
+        AP_DIR = str(tmp_path)
+        log = staticmethod(lambda m: None)
+        launch_unit = staticmethod(lambda unit, logf, argv: launched.append(unit))
+    KW.TOOLS_LAG_CACHE["raw"] = {"kv": dict(LAG)}
+    cfg = {"dies": {"kv": {"enabled": True, "tools_refresh": True}}}
+    st = {}
+    held = open(tmp_path / "tools_refresh_kv.lock", "a")
+    fcntl.flock(held, fcntl.LOCK_EX | fcntl.LOCK_NB)                      # a live pass
+    assert KW.tools_refresh_pass_live(str(tmp_path), "kv")
+    KW.tools_refresh_tick(AP, cfg, st)
+    KW.tools_refresh_tick(AP, cfg, st)
+    assert launched == [] and not st.get("tools_refresh_started")         # nothing spawned, nothing recorded as started
+    fcntl.flock(held, fcntl.LOCK_UN)
+    held.close()
+    assert not KW.tools_refresh_pass_live(str(tmp_path), "kv")           # pass ended: the next tick starts it
+    KW.tools_refresh_tick(AP, cfg, st)
+    assert len(launched) == 1
+    assert not KW.tools_refresh_pass_live(str(tmp_path / "none"), "kv")  # no lock file: not live, and none is created
+    assert not (tmp_path / "none").exists()
