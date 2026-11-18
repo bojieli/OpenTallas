@@ -322,21 +322,23 @@ def post(text):
     subprocess.run(['bash', os.path.join(HOME, 'coord/bin/post.sh'), LANE, text], timeout=300)
 
 
-def collect(hosts, scan, rows, L):
-    """-> candidate units (dicts) from spools (+ scans), deduped by ODB path."""
-    cands = []
-    for h in hosts:
+def collect(hosts, scan):
+    """-> candidate units (dicts) from spools (+ scans), all hosts in parallel."""
+    import concurrent.futures as cf
+
+    def one(h):
+        out = []
         try:
             for u in probe(h, 'spool', {}):
-                u['host'], u['via'] = h, 'spool'
-                cands.append(u)
+                out.append(dict(u, host=h, via='spool'))
             if scan:
                 for u in probe(h, 'scan', dict(hours=WINDOW_H, roots=ROOTS), timeout=3 * 3600):
-                    u['host'], u['via'] = h, 'scan'
-                    cands.append(u)
+                    out.append(dict(u, host=h, via='scan'))
         except Exception as e:
             say('host %s: %s' % (h, e))
-    return cands
+        return out
+    with cf.ThreadPoolExecutor(len(hosts)) as ex:
+        return [u for part in ex.map(one, hosts) for u in part]
 
 
 def drain(a):
@@ -382,7 +384,8 @@ def drain(a):
         post('\n'.join(lines))
     # 2. collect new candidates
     scan = a.scan or (time.time() - L.get('last_scan', 0) > SCAN_H * 3600)
-    cands = collect(hosts, scan, rows, L)
+    cands = collect(hosts, scan)
+    t1 = time.time()
     if scan and not a.list_only and not a.hosts:
         L['last_scan'] = t0
     seen, todo = set(), []
@@ -401,7 +404,7 @@ def drain(a):
     say('%d candidate DBs (%d from spool), scan=%s' % (len(todo), sum(u['via'] == 'spool' for u in todo), scan))
     listed = []
     for u in todo:
-        if time.time() - t0 > a.budget_s:
+        if time.time() - t1 > a.budget_s:
             say('budget reached; rest next tick')
             break
         try:
