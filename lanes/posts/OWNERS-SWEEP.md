@@ -9,3 +9,4 @@
   QC: UNOWNED 12, FAILED 1 (slw_hc0__cl1bc59e1c), STALE 48, DEAD-OWNER 2 (cbn_q01, cbn_q11 on FABLE-FIX-QC-N) (was 13/5/50).
   KV: UNOWNED 0, STALE 11, DEAD 0 (was 3/11/7); all cancelled-superseded 11 h, owners KV-D22-ROWS/KV-HG-OPUS alive.
   HEAD 0 flagged.
+- 2026-11-18 07:50 PST S81 0/0/0/0; HEAD 0; QC UNOWNED 4 FAILED 2 STALE 10 DEAD 0; KV STALE 4 (kv3_hg_v1p6, kv3_hgi_v2 x2). QC unowned: slw_fe_v2__clf110fab2, slw_stm_v2__cl1ca9c415, slw_hc0__cl1bc59e1c. Failed-no-relaunch: slw_hc0, sle_ctl. 481/496 rows unflagged.
