@@ -2,6 +2,13 @@
 
 Work dir epyc9 /srv/opentallas-scratch2/claude/fable-fix-kv-hg3 (sc/ = STA dumps, rm/ = relay proof kits, wt/ = lane clone). Hub logs intel2 ~/tmp/ffkhg3.
 
+## RESULT 11-18 09:35 PST: proof p2 (hgi_v1__cl141fc26e, HG6 kit + relay chain keys), post-CTS TT, same STA script as the base
+- failing setup ends 1,450 -> 290; tns -123,329 -> -24,581; hst_t2->head (673 ends) and lpad->hst_g (477 ends) = 0 left.
+- wns -309 -> -402: the reset rs_ri -> core rst_n class moved (27 ends); kp core->core 192+ ends at -251. These two classes are all that is left.
+- Flow note: GOAL=cts on a copied kit re-ran floorplan after CTS (stage ODBs pruned, make chain); I stopped my container after
+  4_cts.odb (17:20Z) and dumped a snapshot: epyc9 fable-fix-kv-hg3/sc/p2/out/ends.tsv. No routed result; nothing to export.
+- Next owner step (KV-D23-COMPOSE / KV-HG-OPUS): section A keys in D23c for 17 hg/hgi types; D24 = kp core stations realized + reset rows.
+
 ## STATE 11-18 08:40 PST
 - 0710 headline 6 is wrong: KV kits reach CTS. Route-goal jobs run in sealed dirs <host>:/srv/opentallas-scratch2/claude/ot-jobs/kv3_*-route-*/work.
   23 HG6 kits past CTS, in GRT. Post-CTS TT setup: io_cor +156, hroot +3; hgi -268..-792; hg -502..-864; pc -468..-1486.
