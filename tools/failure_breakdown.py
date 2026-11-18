@@ -244,7 +244,7 @@ def main():
             import sys
             sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
             import stale_list
-            out += stale_list.section(cache, rows, DIES, plan_die=PLAN_DIE)
+            out += stale_list.section(cache, rows, DIES, plan_die=PLAN_DIE, write=False)   # FLEET-OPS-R 11-17 (FABLE-FLOW-1900 E): lanes/STALE.tsv is written + committed only by wave-ops-1/stale_cron.sh; this hourly run left it dirty -> HUB-SYNC-FAILED
         except Exception as e:                       # the breakdown is still written; the failure is named in it
             out.append('### STALE · not computed: %s: %s' % (type(e).__name__, str(e)[:200]))
     # WAVE-FLOW-R2 11-17 (COORD FABLE-FLOW-1300 item 2): TOOLS-LAG per die = approved die-tool fixes (ruling rNNN on a die_plan / flow path) missing from
