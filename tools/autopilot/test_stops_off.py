@@ -508,3 +508,47 @@ class StaleEnqueued(unittest.TestCase):
         self.assertEqual(self.run_it(self.row(ev="NEW"))["status"], "ENQUEUED")
         self.assertEqual(self.run_it(self.row(die="hbm"))["status"], "ENQUEUED")
         self.assertEqual(self.run_it(self.row(status="ROUTE-HELD"))["status"], "ROUTE-HELD")
+
+
+class EnvHashExcludesInjected(unittest.TestCase):
+    """COORD FLOW-1400 (1): launch-injected env (OT_FLOW_TAG, OT_CELL_WAIVER) and rt-tree values are not inputs: the failed attempt spec and the config side must hash the same"""
+
+    def test_injected_and_rt_values_are_dropped(self):
+        env = {"OT_FLOW_TAG": "flow-x", "OT_CELL_WAIVER": "r703", "OT_TOOLS": "/srv/o/claude/rt/8958d3e8a4e7/tools", "OT_A": "1"}
+        self.assertEqual(KW.input_env(env), {"OT_A": "1"})
+
+    def test_attempt_spec_env_equals_config_env_digest(self):
+        d = {"die_gen_env": {"OT_A": "1"}}
+        spec_env = {"OT_A": "1", "OT_FLOW_TAG": "flow-20261108", "OT_CELL_WAIVER": "r703"}
+        self.assertEqual(KW.gen_env_digest(d, {"gen_env": spec_env}, "x"), KW.gen_env_digest(d, {}, "x"))
+        self.assertNotEqual(KW.gen_env_digest(d, {"gen_env": dict(spec_env, OT_A="2")}, "x"), KW.gen_env_digest(d, {}, "x"))
+
+    def test_changed_key_is_named(self):
+        self.assertEqual({k for k, v in KW.env_hash_map({"OT_A": "1", "OT_B": "2"}).items() if v != KW.env_hash_map({"OT_A": "1", "OT_B": "3"})[k]}, {"OT_B"})
+
+
+class StructStop(unittest.TestCase):
+    """COORD FLOW-1400 (3): structural verdicts are data keyed by plan block; one force = one launch, nothing standing"""
+
+    def logs_ap(self):
+        logs = []
+        return type("AP", (), {"log": staticmethod(logs.append)})(), logs
+
+    def st(self):
+        return {"struct_stops": {"s81|col_h9_r1__*|bABCDEF123456": {"die": "s81", "item": "col_h9_r1__*", "block": "ABCDEF123456", "verdict": "EXHAUSTED", "owner": "S81-COL-FLOW", "why": "GRT-0116", "force_once": False}}}
+
+    def test_same_block_refused_other_block_and_other_item_pass(self):
+        st, cfg = self.st(), {"dies": {"s81": {}}}
+        self.assertIn("STRUCT-STOP EXHAUSTED", KW.struct_stop_gate(None, cfg, st, "s81", "col_h9_r1__t1", "ABCDEF123456789"))
+        self.assertEqual(KW.struct_stop_gate(None, cfg, st, "s81", "col_h9_r1__t1", "999999999999"), "")
+        self.assertEqual(KW.struct_stop_gate(None, cfg, st, "s81", "other__t1", "ABCDEF123456789"), "")
+        self.assertEqual(KW.struct_stop_gate(None, cfg, st, "s81", "col_h9_r1__t1", None), "")
+
+    def test_force_is_one_launch_and_stop_stands_again(self):
+        ap, logs = self.logs_ap()
+        st, cfg = self.st(), {"dies": {"s81": {}}}
+        next(iter(st["struct_stops"].values()))["force_once"] = True
+        self.assertEqual(KW.struct_stop_gate(None, cfg, st, "s81", "col_h9_r1__t1", "ABCDEF123456"), "")          # select sees the force: not refused
+        self.assertEqual(KW.struct_stop_gate(ap, cfg, st, "s81", "col_h9_r1__t1", "ABCDEF123456", consume=True), "")   # the launch spends it
+        self.assertTrue(any("STRUCT-FORCE" in m for m in logs))
+        self.assertIn("STRUCT-STOP", KW.struct_stop_gate(None, cfg, st, "s81", "col_h9_r1__t1", "ABCDEF123456"))     # and the next launch is refused again

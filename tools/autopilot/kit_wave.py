@@ -2929,6 +2929,8 @@ def select(rows, cfg, die, state, plan_types=None):
         elif rec and rec.get("q_status") in ("SIGNED", "SIGNED-LINKED"):
             # SIGNED-TERMINAL-1115: a signed R-MINIMAL record on this plan block is terminal, flow tag or not, retry key or not
             why = "signed off on this plan block (terminal; a missing flow tag is bookkeeping, never a build)"
+        elif struct_stop_gate(None, cfg, state, die, r["item"], blk(r["item"])):
+            why = struct_stop_gate(None, cfg, state, die, r["item"], blk(r["item"]))
         elif rec and FG.stops_off_die(cfg, die) and so_failed(rec) and f"{r['item']}@{rec.get('attempt')}" not in retry and so_same_input(cfg, die, r, rec):
             why = "SKIP-SAME-INPUT: full input hash equals the attempt that failed (rt sha, design snapshot, spec digest, env keys); any code / plan / env change releases it"
         elif rec and rec.get("status") == "ENQUEUED" and not (
@@ -9513,6 +9515,82 @@ def tool_skew_refuse(AP, cfg, st, die):
     return bool(res) and not res["ok"] and opt(cfg, die, "tool_skew") != "warn"
 
 
+# COORD FABLE-FLOW-1400 (3): a structural verdict (eco_loop EXHAUSTED, GEOMETRY + REDESIGN, a Fable stop list) is DATA the wave reads, not a sentence in a post.  It is stored in
+# state struct_stops keyed "<die>|<item>|b<plan block sha[:12]>" (item may be an fnmatch glob): the same plan block cannot relaunch; a changed block (the rows changed) is a different key and
+# launches by itself.  A force (struct-force) is ONE launch of that block and leaves nothing standing (no only_items entry).
+STRUCT_VERDICTS = ("EXHAUSTED", "GEOMETRY", "REDESIGN", "FABLE-STOP", "STRUCTURAL")
+
+
+def struct_stop_for(st, die, item, block_sha):
+    """-> (key, entry) of the structural stop that names this die / item / plan block, else (None, None)"""
+    if not block_sha:
+        return None, None
+    b12 = str(block_sha)[:12]
+    for k, e in (st.get("struct_stops") or {}).items():
+        if e.get("die") == die and e.get("block") == b12 and fnmatch.fnmatchcase(str(item), str(e.get("item"))):
+            return k, e
+    return None, None
+
+
+def struct_stop_gate(AP, cfg, st, die, item, block_sha, consume=False):
+    """-> a refusal text when a structural stop holds this block (consume=True: a pending force is spent and the launch goes ahead), else ''"""
+    k, e = struct_stop_for(st, die, item, block_sha)
+    if not e:
+        return ""
+    if e.get("force_once"):
+        if consume:
+            e["force_once"] = False
+            e["forced_at"] = time.time()
+            e["forced_n"] = int(e.get("forced_n") or 0) + 1
+            AP.log(f"KIT-WAVE STRUCT-FORCE {die}/{item} block {e.get('block')}: one launch released by {e.get('forced_by') or 'a lane'}; the stop stands again after it")
+        return ""
+    return (f"STRUCT-STOP {e.get('verdict')} [owner {e.get('owner') or die_owner(cfg, die)[0]}]: {str(e.get('why'))[:160]} (plan block {e.get('block')}; "
+            f"released by a changed block, or one launch by `kit_wave.py struct-force`)")
+
+
+def struct_cmd(a):
+    """kit_wave.py struct-stop / struct-force / struct-release / struct-list: edit state struct_stops under kit_wave.lock (blocking wait)"""
+    ap_dir = Path(a.ap_dir or AP_DIR)
+    lk = lock_take(ap_dir / "kit_wave.lock", wait_s=900)
+    if lk is None:
+        print("struct: kit_wave.lock busy for 15 min; nothing written")
+        return 1
+    try:
+        st = load_state(ap_dir)
+        stops = st.setdefault("struct_stops", {})
+        if a.cmd == "struct-list":
+            for k, e in sorted(stops.items()):
+                print(k, e.get("verdict"), e.get("owner"), "force_once" if e.get("force_once") else "", str(e.get("why"))[:100])
+            return 0
+        rows = [r for r in (st.get("items") or {}).values() if r.get("die") == a.die and fnmatch.fnmatchcase(str(r.get("item")), a.item) and r.get("block_sha")]
+        cfg = load_config(Path(a.config).read_text()) if getattr(a, "config", None) else None
+        cur = ((cfg or {}).get("dies") or {}).get(a.die, {}).get("event") if cfg else None
+        blocks = {}
+        if a.block and a.block != "current":
+            blocks = {(a.item, a.block[:12]): a.item}
+        else:
+            for r in rows:
+                if cur is None or r.get("event") == cur:
+                    blocks[(r["item"], str(r["block_sha"])[:12])] = r["item"]
+        n = 0
+        for (item, b12) in sorted(blocks):
+            key = f"{a.die}|{item}|b{b12}"
+            if a.cmd == "struct-stop":
+                stops[key] = {"die": a.die, "item": item, "block": b12, "verdict": a.verdict, "owner": a.owner, "why": a.why, "ts": time.time(), "force_once": False}
+                n += 1
+            elif a.cmd == "struct-force" and key in stops:
+                stops[key].update(force_once=True, forced_by=a.owner or "", force_ts=time.time())
+                n += 1
+            elif a.cmd == "struct-release" and key in stops:
+                del stops[key]
+                n += 1
+        save_state(st, ap_dir)
+        print(f"{a.cmd}: {n} plan block(s) of {a.die}/{a.item}")
+        return 0
+    finally:
+        lk.close()
+
+
 def _fk_same(cfg, st, die, r):
     """the full input hash when this launch is byte-identical to the attempt that last failed in the tool (stored fail_keys.full_hash), else ''"""
     prev = (st.get("fail_keys") or {}).get(f"{die}|{r.get('item')}") or {}
@@ -9542,6 +9620,13 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
     if hub_launch_held(cfg, die, r.get("item")):          # WAVE-FLOW-R 11-17: the hub floor holds hub writers only
         return None
     if tool_skew_refuse(AP, cfg, st, die):
+        return None
+    _ss = struct_stop_gate(AP, cfg, st, die, r.get("item"), r.get("block_sha"), consume=True)
+    if _ss:
+        _k, _e = struct_stop_for(st, die, r.get("item"), r.get("block_sha"))
+        if time.time() - float(_e.get("logged") or 0) > 6 * 3600:
+            _e["logged"] = time.time()
+            AP.log(f"KIT-WAVE {die}/{r.get('item')}: {_ss}")
         return None
     try:                                                    # PUBTREE-1116: a "require" die runs only on its published marker tree
         import adopt_guard as _AG
@@ -9615,7 +9700,8 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
             return None
         (st.get("refused_once") or {}).pop(f"{die}|{r.get('item')}", None)
         if _chg:
-            AP.log(f"KIT-WAVE RELAUNCH-ON-FIX {die}/{r.get('item')}: changed {'+'.join(_chg)}")
+            AP.log(f"KIT-WAVE RELAUNCH-ON-FIX {die}/{r.get('item')}: changed {'+'.join(_chg)}"
+                   + (f" (env keys: {','.join(getattr(fail_key_gate, 'last_env_keys', []) or [])})" if "env" in _chg and getattr(fail_key_gate, "last_env_keys", None) else ""))
     arm = r.get("arm") if isinstance(r.get("arm"), dict) else None      # KW-FIX-44 GRTARM_1111
     key = arm["key"] if arm else item_key(die, cfg["dies"][die]["event"], r["item"], r.get("block_sha"))
     prev = st["items"].get(key) or {}
@@ -11179,6 +11265,21 @@ def view_inputs(cfg, die, item):
     return out
 
 
+# COORD FABLE-FLOW-1400 (1): env values the launch injects or that name the runtime tree are not inputs of the kit.  The failed attempt's spec gen_env carries OT_FLOW_TAG (flow tag of the
+# launch day) and OT_CELL_WAIVER (stops_off), the config side does not: every comparison read "changed env" and released 38 relaunches that failed identically.
+NON_INPUT_ENV = ("OT_FLOW_TAG", "OT_CELL_WAIVER")
+_RT_VAL = re.compile(r"/rt/[0-9a-f]{12}\b|/rt/current\b")
+
+
+def input_env(env):
+    """the env of a kit minus launch-injected keys and values that name the rt tree (a sha / path that moves with every rt sync)"""
+    return {k: v for k, v in (env or {}).items() if k not in NON_INPUT_ENV and not _RT_VAL.search(str(v))}
+
+
+def env_hash_map(env):
+    return {k: hashlib.sha1(str(v).encode()).hexdigest()[:8] for k, v in sorted(input_env(env).items())}
+
+
 def gen_env_digest(d, sp, item):
     """FABLE-FLOW-0010 / COORD (S81 t37: OT_GPL_HPWL_RATIO 1.5 added to its item_env after a PLACE-HPWL 1.40 > 1.3 fail never relaunched it, the key held no env): sha1[:16] of the
     gen env an attempt runs with (die_gen_env + the item's item_env; the attempt's own spec gen_env when it is a failed attempt), '' without an item"""
@@ -11188,6 +11289,7 @@ def gen_env_digest(d, sp, item):
         env = sp.get("gen_env") if sp and isinstance(sp.get("gen_env"), dict) else item_env(d, item)
     except Exception:
         return ""
+    env = input_env(env)
     return hashlib.sha1(json.dumps(env, sort_keys=True, default=str).encode()).hexdigest()[:16] if env else ""
 
 
@@ -11214,7 +11316,7 @@ def kit_digest_parts(cfg, die, rec=None, group="", files=None):
             "bind_context": bind_context_digest(cfg, die, kr),
             "views": hashlib.sha1(json.dumps(view_inputs(cfg, die, (rec or {}).get("item")), sort_keys=True).encode()).hexdigest()[:16]
             if view_inputs(cfg, die, (rec or {}).get("item")) else "",
-            "env": gen_env_digest(d, sp, (rec or {}).get("item"))}
+            "env": gen_env_digest(d, sp, (rec or {}).get("item")), "env_v": 2}
 
 
 _EXEC_TOOLS = {}
@@ -11370,6 +11472,7 @@ def input_parts(cfg, die, item, block_sha=None):
         for k in ("gen_env", "die_gen_env"):
             env.update({str(a): str(b) for a, b in (d.get(k) or {}).items()})
         env.update({str(a): str(b) for a, b in (item_env(d, item) or {}).items()})
+        env = input_env(env)
         spec.pop("tools", None)                               # the stage's executed files are hashed per family (exec_family_digests), not the whole gen / bind closure
         body = {"snapshot": str(d.get("src_manifest_hash") or ""), "spec": spec}
         return {"v": 2, "noenv": hashlib.sha1(json.dumps(body, sort_keys=True, default=str).encode()).hexdigest()[:20], "env": env, "fam": exec_family_digests()}
@@ -11474,6 +11577,11 @@ def note_fail_key(cfg, st, rec, cls, why):
                 "tools_group": group, "tool_files": tfiles, "sig": sig, "sig_n": sig_n,
                 "type": typed_class(cls, rec.get("stage"), why), "missing": missing_paths(why),
                 "read_sha": {p: file_sha(cfg, rec["die"], p) for p in stage_reads(why)}}
+    try:
+        _sp = json.loads((Path(rec["dir"]) / "spec.json").read_text()) if rec.get("dir") else {}
+        store[k]["env_map"] = env_hash_map(_sp.get("gen_env") if isinstance(_sp.get("gen_env"), dict) else item_env((cfg.get("dies") or {}).get(rec["die"]) or {}, rec["item"]))
+    except Exception:
+        pass
     rec["fail_key"] = key
     if rec.get("full_hash"):                         # WAVE-PILOT-FIX 11-18: the full input hash of the attempt that failed (stored at launch)
         store[k]["full_hash"] = rec["full_hash"]
@@ -11724,7 +11832,16 @@ def fail_key_gate(cfg, st, die, item, block_sha=None):
     # WAVE-FLOW-R2 11-17 (KV-R3): staged child-view files (receipt / LEF / libs of prov_view_sources) are item inputs; keys stored before this field exist release only
     # on a real change of the files (a key without "views" is not released by their absence)
     views_changed = "views" in (prev.get("parts") or {}) and now.get("views") != (prev.get("parts") or {}).get("views")
-    env_changed = "env" in (prev.get("parts") or {}) and now.get("env") != (prev.get("parts") or {}).get("env")     # keys stored before this part exist are not released by its absence
+    env_changed = ("env" in (prev.get("parts") or {}) and (prev.get("parts") or {}).get("env_v") == 2
+                   and now.get("env") != (prev.get("parts") or {}).get("env"))      # keys stored before this part (or before the injected keys were excluded) are not released by its absence
+    fail_key_gate.last_env_keys = []
+    if env_changed:
+        try:
+            _old_map = prev.get("env_map") or {}
+            _now_map = env_hash_map(item_env(d, item))
+            fail_key_gate.last_env_keys = sorted(k for k in set(_old_map) | set(_now_map) if _old_map.get(k) != _now_map.get(k))[:8]
+        except Exception:
+            fail_key_gate.last_env_keys = []
     # FABLE-FLOW-0015 (a): a missing-input fail releases only when what failed changes: the named input appears, or the plan block / src / overlay
     # (a repointed config) changes.  A tool merge that does not touch it is no reason (slice_station__t51 failed twice on the same missing input
     # after the 23:29 tool merge re-armed it)
@@ -14629,6 +14746,14 @@ def main(argv=None):
     rc_.add_argument("--write", action="store_true", help="update the state + kit_wave_stages.tsv (under kit_wave.lock)")
     rc_.add_argument("--ap-dir", help="state dir (default AP_DIR)")
     rc_.add_argument("--quiet", action="store_true", help="histogram only")
+    for _nm in ("struct-stop", "struct-force", "struct-release", "struct-list"):
+        sp_ = sub.add_parser(_nm, help="COORD FLOW-1400 (3): structural verdict stops keyed by plan block (state struct_stops)")
+        sp_.add_argument("--ap-dir"); sp_.add_argument("--config", help="kit_wave.json (needed to pick the current event for --block current)")
+        if _nm != "struct-list":
+            sp_.add_argument("--die", required=True); sp_.add_argument("--item", required=True, help="item or fnmatch glob")
+            sp_.add_argument("--block", default="current", help="plan block sha (12+ chars) or current = the block of every current-event row of the item")
+            sp_.add_argument("--owner", default="", help="the lane that owns the verdict"); sp_.add_argument("--verdict", default="STRUCTURAL", choices=STRUCT_VERDICTS)
+            sp_.add_argument("--why", default="")
     rd_ = sub.add_parser("reap-dead", help="KW-FIX-46: dry-run list of rows the REAP-DEAD sweep would reap (read-only)")
     rd_.add_argument("--config", help="kit_wave.json file instead of coord/state autopilot/kit_wave.json")
     rd_.add_argument("--minutes", type=float, default=REAP_DEAD_MIN)
@@ -14676,6 +14801,8 @@ def main(argv=None):
             print(f"{rec.get('status', ''):<12} {rec.get('class', ''):<6} {k:<60} {rec.get('stage', '')} {rec.get('unit', '')} "
                   f"{(rec.get('reason') or rec.get('evidence') or '')[:120]}")
         return 0
+    if a.cmd.startswith("struct-"):
+        return struct_cmd(a)
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     import autopilot as AP
     if a.cmd == "reap-dead":
