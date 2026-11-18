@@ -192,3 +192,17 @@ def test_moved_and_infrastructure_lanes_are_never_idle_candidates(tmp_path):
         mk(c, n + "/x", OLD)
     got = [os.path.basename(p) for p, _ in AR.lane_candidates(c, NOW, 12.0, mtime=lambda p, cut: OLD)]
     assert "other" in got and not {"moved", "hub-coord", "rt"} & set(got)
+
+
+def test_a_dir_that_a_symlink_under_home_points_into_is_never_retired(tmp_path):
+    home = tmp_path / "home"; home.mkdir()
+    c = str(tmp_path / "claude"); os.makedirs(c)
+    keep = mk(c, "relocated/home__x", OLD); other = mk(c, "other/y", OLD)
+    os.symlink(keep, str(home / "OpenTallas"))
+    os.makedirs(str(home / ".cache2")); os.symlink(c + "/relocated/zz", str(home / ".cache2" / "c"))
+    targets = AR.home_link_targets(str(home))
+    assert AR.link_hit(c + "/relocated", targets) and AR.link_hit(keep, targets) and not AR.link_hit(c + "/other", targets)
+    seen = []
+    res = AR.run_lanes(c, set(), lambda p: None, seen.append, 10**9, apply=False, now=NOW, idle_h=12.0, mtime=lambda p, cut: OLD, git_check=None, links=targets)
+    by = {os.path.relpath(r["tree"], c): r["result"] for r in res if r.get("tree")}
+    assert by["other"] == "WOULD-DELETE" and by["relocated"].startswith("REFUSED") and by["relocated/home__x"].startswith("REFUSED")

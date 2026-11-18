@@ -174,6 +174,31 @@ def git_unsafe(path, timeout=60):
     return ""
 
 
+def home_link_targets(home=None, depth=2):
+    """COORD 11-18: realpaths that a symlink under ~ (depth <= 2, not entering skyhum-work / .claude / .codex) points to; a lane dir that is, contains or lies inside one of them is never retired"""
+    home = home or os.path.expanduser("~")
+    out = set()
+    for r, ds, fs in os.walk(home):
+        rel = r[len(home):].count(os.sep)
+        ds[:] = [d for d in ds if d not in ("skyhum-work", ".claude", ".codex", ".git") and rel < depth and not os.path.islink(os.path.join(r, d))]
+        for n in fs + [d for d in os.listdir(r) if os.path.islink(os.path.join(r, d))]:
+            q = os.path.join(r, n)
+            if os.path.islink(q):
+                try:
+                    out.add(os.path.realpath(q)); out.add(os.path.normpath(os.path.join(os.path.dirname(q), os.readlink(q))))
+                except OSError:
+                    pass
+    return out
+
+
+def link_hit(path, targets):
+    p = path.rstrip("/")
+    for t in targets:
+        if t == p or t.startswith(p + "/") or p.startswith(t + "/"):
+            return t
+    return ""
+
+
 def post_text_hit(path, posts):
     """a lane tree named in a hub post of the last 24 h (the posts file is built by the hub driver) is in use by somebody"""
     return bool(posts) and re.search(re.escape(path.rstrip("/")) + r"(?![A-Za-z0-9_.-])", posts) is not None
@@ -261,10 +286,11 @@ def lane_candidates(claude, now=None, idle_h=24.0, skip=LANE_SKIP, mtime=newest_
     return res
 
 
-def run_lanes(claude, ids, refuse, log, target_gb, apply=False, delete=None, free=None, now=None, idle_h=24.0, mtime=newest_mtime, posts="", git_check=git_unsafe):
+def run_lanes(claude, ids, refuse, log, target_gb, apply=False, delete=None, free=None, now=None, idle_h=24.0, mtime=newest_mtime, posts="", git_check=git_unsafe, links=None):
     """retire idle lane dirs (and claude/wt children) through the guard, ingest-first, oldest first, stop at target_gb free.  A parent already removed or
     refused as a whole is retried through its children (level 2 is in the candidate list)."""
     free = free or (lambda: free_gb(claude)); res = []; gone = []
+    links = home_link_targets() if links is None else links
     for p, idle in lane_candidates(claude, now, idle_h, mtime=mtime):
         if free() >= target_gb:
             res.append(dict(stop="target", free=round(free(), 1))); break
@@ -272,6 +298,8 @@ def run_lanes(claude, ids, refuse, log, target_gb, apply=False, delete=None, fre
             continue
         rec = dict(tree=p, t=time.strftime("%F %T"), idle_h=round(idle / 3600, 1), kind="lane")
         why = refuse(p)
+        if not why and link_hit(p, links):
+            why = "a symlink under ~ points into it (%s)" % link_hit(p, links)
         if not why and post_text_hit(p, posts):
             why = "named in a hub post of the last 24 h"
         if not why:
