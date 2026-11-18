@@ -58,3 +58,17 @@ def test_self_pass(tmp_path):
     (out / "bind_report.json").write_text(json.dumps({"rtl": f"{bind}/rtl/tk.sv"}))
     RB.main(["self", str(bind), str(bind), str(out)])
     assert str(out) in (out / "bind_report.json").read_text() and RB.receipt_errors(out) == []
+
+
+def test_tree_writes_given_path_not_realpath_and_also_prefix(tmp_path):
+    """epyc2 N4 11-18: kw45 was a symlink to scratch3; the bind must name the fleet-wide (given) path, and kit_rtl lists that
+    used the realpath spelling of the previous tree are rewritten via --also."""
+    real = tmp_path / "s3"; real.mkdir(); link = tmp_path / "s2"; link.symlink_to(real)
+    old, new, bind = _fixture(real)
+    prev = real / "prev"; (prev / "rtl").mkdir(parents=True); (prev / "rtl" / "leaf.sv").write_text("module leaf; endmodule\n")
+    (bind / "kit.f").write_text(f"{prev}/rtl/leaf.sv\n")            # realpath spelling of an earlier tree
+    out = link / "out"
+    RB.main(["tree", str(old), str(link / "new"), str(bind), str(out), "--also", str(prev)])
+    txt = (real / "out" / "bind.f").read_text() + (real / "out" / "kit.f").read_text()
+    assert str(link / "new") + "/rtl/leaf.sv" in txt and str(real / "new") not in txt and str(prev) not in txt
+    assert RB.receipt_errors(real / "out") == []

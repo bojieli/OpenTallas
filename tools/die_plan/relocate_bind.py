@@ -3,7 +3,7 @@
 tree/directory without re-binding.  Shared tool for every die (was private relocate_bind_x.py / rebind_self.py).
 
     relocate_bind.py refsha OLD_TREE BIND_OUT REF.json         sha256 of every OLD_TREE path BIND_OUT names (run where OLD_TREE is)
-    relocate_bind.py tree OLD_TREE NEW_TREE BIND_OUT OUT [--refsha REF.json] [--alias OLD_REL=NEW_REL ...]
+    relocate_bind.py tree OLD_TREE NEW_TREE BIND_OUT OUT [--refsha REF.json] [--alias OLD_REL=NEW_REL ...] [--also OLD2 ...]
         OUT = copy of BIND_OUT (hard links for untouched files), every text file naming OLD_TREE/ rewritten to NEW_TREE/.
         Refuses unless EVERY rewritten path exists in NEW_TREE with the bytes it had in OLD_TREE (REF.json, or OLD_TREE read
         directly when it is local).  --alias maps an OLD_TREE file that is not in NEW_TREE (e.g. an absolute-path bind
@@ -18,7 +18,10 @@ its reset receipt (rtl/<module>.reset_tree.json bound_rtl_sha256, bound_reset_co
 every old-path occurrence sits in a // comment (yosys source-location notes) is left byte-identical (path not checked either:
 comments do not elaborate).  An HDL file naming the old path in code is rewritten and each receipt that hashed its old bytes is
 re-hashed to the new bytes (write+rename).  Both modes end with check-receipts on OUT and fail (tree: OUT not created) on any
-mismatch.  Writes/extends OUT/RELOCATED.json."""
+mismatch.  Writes/extends OUT/RELOCATED.json.
+Paths written into the bind are NEW_TREE / OUT as given (abspath), never their realpath: a host-local symlink (epyc2 kw45 ->
+scratch3) must not leak into a bind that is copied to other hosts.  --also adds more old prefixes (e.g. the realpath
+spelling of an earlier tree that kit_rtl file lists use), byte-checked against that prefix and rewritten to NEW_TREE."""
 import argparse, hashlib, json, os, re, shutil, sys
 from pathlib import Path
 
@@ -80,7 +83,7 @@ def _rehash(out, rewritten_hdl, log):
 
 
 def cmd_refsha(a):
-    old = os.path.realpath(a.old_tree); pat = _pat(old); ref = {}
+    old = a.old_tree.rstrip("/"); pat = _pat(old); ref = {}
     for dp, _, fns in os.walk(a.bind_out):
         for fn in fns:
             s = os.path.join(dp, fn)
@@ -100,21 +103,28 @@ def cmd_refsha(a):
 
 
 def cmd_tree(a):
-    old = a.old_tree.rstrip("/"); new, src, out = (os.path.realpath(x) for x in (a.new_tree, a.bind_out, a.out))
+    # paths written into the bind stay as given (abspath, never realpath): a tree reached through a host-local symlink
+    # (epyc2 kw45 -> scratch3) must keep its fleet-wide name, or the bind breaks on every other host
+    olds = [a.old_tree.rstrip("/")] + [x.rstrip("/") for x in a.also]
+    new, out = os.path.abspath(a.new_tree), os.path.abspath(a.out); src = os.path.realpath(a.bind_out)
     if a.refsha:
-        ref = json.load(open(a.refsha)); assert ref["old"] == old, (ref["old"], old); ref = ref["paths"]
+        assert not a.also, "--refsha covers OLD_TREE only; --also prefixes must be local"
+        ref = json.load(open(a.refsha)); assert ref["old"] == olds[0], (ref["old"], olds[0]); ref = ref["paths"]
     else:
-        assert os.path.isdir(old), "OLD_TREE not local: pass --refsha (relocate_bind.py refsha on its host)"
+        assert os.path.isdir(olds[0]), "OLD_TREE not local: pass --refsha (relocate_bind.py refsha on its host)"
         ref = None
+    for o in olds[1:]:
+        assert os.path.isdir(o), f"--also {o} is not local"
+    olds.sort(key=len, reverse=True)          # longest prefix first (one old may be a prefix of another)
     alias = dict(x.split("=", 1) for x in a.alias)
     assert not os.path.exists(out), f"REFUSE existing {out}"
-    pat = _pat(old); bad, checked, rewritten, kept, hdl = [], {}, [], [], []
+    pats = {o: _pat(o) for o in olds}; bad, checked, rewritten, kept, hdl = [], {}, [], [], []
     tmp = out + ".tmp.%d" % os.getpid()
 
-    def want_of(rel):
-        if ref is not None:
+    def want_of(o, rel):
+        if ref is not None and o == a.old_tree.rstrip("/"):
             return ref.get(rel, "MISSING")
-        p = os.path.join(old, rel)
+        p = os.path.join(o, rel)
         return sha(p) if os.path.isfile(p) else ("DIR" if os.path.isdir(p) else "MISSING")
 
     for dp, _, fns in os.walk(src):
@@ -126,26 +136,29 @@ def cmd_tree(a):
             if os.path.islink(s):
                 os.symlink(os.readlink(s), t); continue
             data = open(s, "rb").read()
-            if old.encode() not in data:
+            hit = [o for o in olds if o.encode() in data]
+            if not hit:
                 os.link(s, t); continue
             txt = data.decode("utf-8")
-            if fn.endswith(HDL) and comment_only(txt, old):
+            if fn.endswith(HDL) and all(comment_only(txt, o) for o in hit):
                 os.link(s, t); kept.append(rel_f); continue
-            for m in set(pat.findall(txt)):
-                sub = m.strip("/").rstrip(".")
-                if sub in checked:
-                    continue
-                if sub in alias:
-                    n = os.path.join(new, alias[sub]); w = sha(n) if os.path.isfile(n) else "MISSING"
-                else:
-                    n = os.path.join(new, sub); w = want_of(sub)
-                ok = w != "MISSING" and (os.path.isdir(n) if w == "DIR" else (os.path.isfile(n) and sha(n) == w))
-                checked[sub] = ok
-                if not ok:
-                    bad.append(sub or "/")
-            for o, n in alias.items():
-                txt = txt.replace(old + "/" + o, new + "/" + n)
-            txt = txt.replace(old + "/", new + "/").replace('"' + old + '"', '"' + new + '"')
+            for o in hit:
+                for m in set(pats[o].findall(txt)):
+                    sub = m.strip("/").rstrip(".")
+                    if (o, sub) in checked:
+                        continue
+                    if sub in alias:
+                        n = os.path.join(new, alias[sub]); w = sha(n) if os.path.isfile(n) else "MISSING"
+                    else:
+                        n = os.path.join(new, sub); w = want_of(o, sub)
+                    ok = w != "MISSING" and (os.path.isdir(n) if w == "DIR" else (os.path.isfile(n) and sha(n) == w))
+                    checked[(o, sub)] = ok
+                    if not ok:
+                        bad.append(f"{o}/{sub}")
+            for o in hit:
+                for ao, an in alias.items():
+                    txt = txt.replace(o + "/" + ao, new + "/" + an)
+                txt = txt.replace(o + "/", new + "/").replace('"' + o + '"', '"' + new + '"')
             open(t, "w").write(txt); os.chmod(t, os.stat(s).st_mode & 0o777)
             after = sha(t); rewritten.append(dict(file=rel_f, sha_before=hashlib.sha256(data).hexdigest(), sha_after=after))
             if fn.endswith(HDL):
@@ -159,7 +172,7 @@ def cmd_tree(a):
     if rbad:
         shutil.rmtree(tmp)
         print(f"REFUSE {len(rbad)} reset receipt(s) do not match the relocated RTL: {rbad[:5]}"); sys.exit(3)
-    json.dump(dict(tool="relocate_bind.py tree", old_tree=old, new_tree=new, source=src, alias=alias, paths_checked=len(checked),
+    json.dump(dict(tool="relocate_bind.py tree", old_tree=olds, new_tree=new, source=src, alias=alias, paths_checked=len(checked),
                    rewritten=rewritten, hdl_comment_only_kept=kept, receipts_rehashed=rehashed,
                    receipts_checked=len(list(Path(tmp, "rtl").glob("*.reset_tree.json")))),
               open(os.path.join(tmp, "RELOCATED.json"), "w"), indent=1)
@@ -169,7 +182,7 @@ def cmd_tree(a):
 
 
 def cmd_self(a):
-    old = a.old_bind.rstrip("/"); raw, out = os.path.realpath(a.raw), os.path.realpath(a.out)
+    old = a.old_bind.rstrip("/"); raw, out = os.path.realpath(a.raw), os.path.abspath(a.out)
     pat = _pat(old); bad, checked, rew, kept, hdl = [], set(), [], [], []
     for dp, _, fns in os.walk(out):
         for fn in fns:
@@ -225,7 +238,9 @@ def main(argv=None):
     sp = ap.add_subparsers(dest="cmd", required=True)
     p = sp.add_parser("refsha"); p.add_argument("old_tree"); p.add_argument("bind_out"); p.add_argument("ref"); p.set_defaults(f=cmd_refsha)
     p = sp.add_parser("tree"); p.add_argument("old_tree"); p.add_argument("new_tree"); p.add_argument("bind_out"); p.add_argument("out")
-    p.add_argument("--refsha"); p.add_argument("--alias", action="append", default=[]); p.set_defaults(f=cmd_tree)
+    p.add_argument("--refsha"); p.add_argument("--alias", action="append", default=[])
+    p.add_argument("--also", action="append", default=[], help="another local old-tree prefix (e.g. the realpath spelling) rewritten to NEW_TREE")
+    p.set_defaults(f=cmd_tree)
     p = sp.add_parser("self"); p.add_argument("old_bind"); p.add_argument("raw"); p.add_argument("out"); p.set_defaults(f=cmd_self)
     p = sp.add_parser("check-receipts"); p.add_argument("bind_out"); p.set_defaults(f=cmd_check)
     a = ap.parse_args(argv); a.f(a)
