@@ -34,6 +34,12 @@ proc tb_begin {} { global tb_grt; if {$tb_grt} { global_route -start_incremental
 proc tb_end {placed} {
   global tb_grt
   if {$placed} { detailed_placement }
+  # CLK-OBS-HALO 11-18 (COORD lever 7; HEAD hd_mesh mesh_w1 DRT-0255 on clk_t41_tb0_tree): the delay chain is seeded at the tap
+  # port, inside the reserved clock-entry site, so the legalizer leaves it on the obstruction edge.  Clock buffers inside the
+  # halo of an M1 route obstruction move to the nearest free site outside it (clk_obs_halo.tcl; OT_CLK_OBS_HALO=0 = off).
+  # Fail-open: a kit without the file, or an error in the pass, changes nothing.
+  set tb_halo [file join [file dirname [info script]] clk_obs_halo.tcl]
+  if {$placed && [file exists $tb_halo]} { if {[catch { source $tb_halo; ::ot_clk_halo::apply } tb_herr]} { puts "OT_CLK_OBS_HALO WARN pass skipped: $tb_herr" } }
   # -resistance_aware as ORFS global_route.tcl when tapbal_grt.tcl set it (same clock-net layers as the GRT step)
   # DH58-TAPBAL 11-03: after the raw odb clock edits above, the -resistance_aware slack query ran OpenSTA's incremental
   # required pass on stale tag groups and aborted in sta::RequiredCmp::requiredSet (vector index assert; HEAD l48h0

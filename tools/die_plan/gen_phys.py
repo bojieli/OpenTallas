@@ -6787,7 +6787,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     if os.environ.get("OT_GRT_NONPORT_HOLD", "1") == "1":      # DEFAULT ON for every die (lever 3, 11-18; OT_GRT_NONPORT_HOLD=0 opts out); chained after any macro-FF wrapper written above
         grt_nonport_hold_chain(kd, required=os.environ.get("OT_GRT_NONPORT_HOLD") == "1")
     for f in ("face_flops.tcl", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl", "ft_polarity_local.tcl",
-              "clock_taps.tcl", "cell_census.tcl", "tap_chain_affinity.tcl", "tap_pair_affinity.tcl", "tap_reset_affinity.tcl", "tap_pair_plan.tcl", "tap_balance.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "core_clock_band.py", "partition_clock_binding.py", "grt_pre.tcl",
+              "clock_taps.tcl", "cell_census.tcl", "tap_chain_affinity.tcl", "tap_pair_affinity.tcl", "tap_reset_affinity.tcl", "tap_pair_plan.tcl", "tap_balance.tcl", "clk_obs_halo.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "core_clock_band.py", "partition_clock_binding.py", "grt_pre.tcl",
               "grt_post.tcl", "cts_post.tcl", "tap_insertion.tcl", "leaf_affinity.tcl", "cts_tap_centroid.tcl", "tapbal_grt.tcl", "subtree_balance.tcl", "rck_balance.tcl", "sstn_m5_block.tcl", "pinreg_pad.tcl",
               "pinreg_measure.tcl", "keepout_phys.tcl", "cts_repair_protect.tcl", "pg_connect.tcl", "hold_guard_grt.tcl", "grt_layers.tcl", "pg_track_truth.tcl", "pg_cell_keepout.tcl", "rc_signal_adjust.tcl", "pg_row_guides.tcl"):
         shutil.copyfile(Path(__file__).with_name(f), kd / f)
