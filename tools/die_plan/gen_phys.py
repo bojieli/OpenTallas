@@ -3580,6 +3580,16 @@ def tap_group_exports(t):
             raise ValueError("clock.tap_group.fixed_taps uses unsafe group or port name")
     if fixed:
         out.append("export OT_TAP_GROUP_FIXED = " + ",".join(f"{g}:{fixed[g]}" for g in sorted(fixed)))
+    # HEAD-TYPES-OPUS 11-18 (hd_mesh mesh_w1 -> mesh_w2, FABLE-DIE-HEAD 05:42): group mode also turns on the reset-relay
+    # follower rule (clock_taps.tcl default u_rrl_<k>), which re-hung 20 relays onto remote taps and left 5 taps with a late
+    # branch the balancer cannot pad.  follow_re (default absent = the clock_taps default) sets OT_TAP_FOLLOW_RE; "" = off.
+    if "follow_re" in clock["tap_group"]:
+        fr = clock["tap_group"]["follow_re"]
+        if not isinstance(fr, str) or any(c in fr for c in "#$ \t\n"):
+            raise ValueError("clock.tap_group.follow_re must be a string without '#', '$' or whitespace")
+        if fr:
+            _re.compile(fr)
+        out.append(f"export OT_TAP_FOLLOW_RE = {fr}".rstrip() if fr else "export OT_TAP_FOLLOW_RE =")
     return out
 
 

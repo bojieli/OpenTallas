@@ -701,6 +701,7 @@ SCHEMA = {
                         # tap nearest the group centroid.  KW-FIX-45 11-12: the key was emitted but not in the schema.
                         "tap_group": {"type": "object", "additionalProperties": False, "required": ["re"],
                             "properties": {"re": {"type": "string", "minLength": 3}, "note": {"type": "string"},
+                                "follow_re": {"type": "string"},
                                 "fixed_taps": {"type": "object", "propertyNames": {"pattern": "^[A-Za-z0-9_./-]+$"},
                                     "additionalProperties": _name}}},
                         # Default-off (HEAD-SERDES-1115 11-15, gen_phys.private_leaf_exports -> OT_PRIVATE_LEAF_LIKE/RE,

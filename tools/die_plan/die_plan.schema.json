@@ -2210,6 +2210,9 @@
          "note": {
           "type": "string"
          },
+         "follow_re": {
+          "type": "string"
+         },
          "fixed_taps": {
           "type": "object",
           "propertyNames": {
