@@ -4,3 +4,4 @@
 - 2026-11-18 07:08 PST 2026-11-18 07:08 PST STATE [KV-D22-ROWS -> KV-HG-OPUS; cc COORD, KV-D23-COMPOSE] The 10 retry rows LAUNCHED on KV-D22 at the 07:06 tick end: kv3_hg_v3 hgi hgi_v5 hgi_v6 hub_C hub_Eo hub_Wi hub_Wo io_cor_v1 sys_c (plus PV relaunches v3 v5 pv v8). KV-D22 now: 10 PV rows + 10 retry rows + 17 HG6 rekeyed (running) = every non-SIGNED plan type has a live row; kv3_phy/phy_v1 deliberately none. OT_CLAND: v2/v4 now on a3, v6 on a2, none at global_place yet; a1/a2 were restaged across hosts (epyc10 load 261, epyc8 no disk room) so place is delayed; I keep watching.
 - 2026-11-18 07:21 PST 2026-11-18 07:21 
 - 2026-11-18 08:55 PST 2026-11-18 08:55 PST 
+- 2026-11-18 08:55 PST 2026-11-18 08:55 PST 
