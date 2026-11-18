@@ -879,7 +879,18 @@ proc ot_repair_hold_guarded {rt_args} {
       puts "OT_HOLD_MARGINS met-first pass applied margin 0 (asked $hm_asked, guard $hm)"
     }
     if {[lindex $prev 0] >= 0} {
-      puts [format "OT_HOLD_GUARD: hold met (ws %.2f >= 0) at HM 0 after a margin flood (asked %g, auto %g); margin chase skipped, stop" [lindex $prev 0] $hm_asked $hm]
+      # HOLD-MARGIN-FAMILY 11-17 (COORD, smc_mm3b: asked 30, auto 19, met-first stopped at ws 0.00 and the routed kit read -10.6): ws 0 on the estimate is
+      # not the asked margin.  Area growth is pre-approved, so the margin pass runs once at the ASKED margin (OT_HOLD_FLOOD_MET_FIRST_STOP=1 = the old stop).
+      if {[ot_env_num OT_HOLD_FLOOD_MET_FIRST_STOP 0] != 0 || ![llength [info commands ot_hold_final_retry]]} {
+        puts [format "OT_HOLD_GUARD: hold met (ws %.2f >= 0) at HM 0 after a margin flood (asked %g, auto %g); margin chase skipped, stop" [lindex $prev 0] $hm_asked $hm]
+        return
+      }
+      puts [format "OT_HOLD_GUARD: hold met (ws %.2f >= 0) at HM 0 after a margin flood (asked %g, auto %g); margin pass at the asked margin follows" [lindex $prev 0] $hm_asked $hm]
+      set ia [lsearch -exact $rt_args0 -hold_margin]
+      set aargs [lreplace [lsearch -all -inline -not -exact $rt_args0 -hold] 0 -1]
+      if {[catch {log_cmd repair_timing {*}$aargs -hold} err opts]} { if {![regexp {RSZ-0060|Max buffer count} $err]} { return -options $opts $err } }
+      puts "OT_HOLD_MARGINS met-first margin 0 then asked-margin pass $hm_asked (guard $hm skipped)"
+      ot_hold_final_retry $rt_args0 $hm_asked $hm_asked
       return
     }
   }
