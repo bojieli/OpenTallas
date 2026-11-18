@@ -97,7 +97,7 @@ _PLAIN_GROUP_WORD = re.compile(r'[A-Za-z0-9_]+')
 
 
 def _group_line(p, r, tag):
-    """One cland_groups entry.  HEAD-LEP0N-OPUS 11-17: a non-plain prefix (a native_stage_groups regex such as
+    r"""One cland_groups entry.  HEAD-LEP0N-OPUS 11-17: a non-plain prefix (a native_stage_groups regex such as
     u_core\.u\.g_plw\.g_s\\\[0\\\][/.].*) is written as a braced Tcl word.  Unbraced, the placement loop's lassign
     backslash-substituted it (\. -> ., \\ -> \, \[ -> [), so it no longer equalled its braced ::cland_native_leaf_regex
     key and fell to the generic regexp, which matches nothing: hd_lep0N NF15f GPL stopped at "OT_CLAND no mapped cells
