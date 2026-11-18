@@ -38067,6 +38067,28 @@
      "release": [
       "result:S81-DIE-R3:ft-channel-d7"
      ]
+    },
+    {
+     "id": "s81-fix-s81-vpw-1117",
+     "plan_sha": "2125354ef9404d35ba9b525254b719916e0938b5605bc2389c6b86e37d9305fa",
+     "reason": "FIX-S81-VPW: leaf place stops with unchanged relaunches (t10/t45/t74/t31/t75 OT_VPW_BANK distance >100um up to attempt 9, t7/t53__clb66fa5cb FT site off the row/site grid, t37 GPL diverged); FIX-S81-VPW owns the Tcl fix and posts the release RESULT itself (COORD 11-17 22:2x).",
+     "release": [
+      "result:FIX-S81-VPW:vpw-fix"
+     ],
+     "migrated": true,
+     "carry": true,
+     "keys": [
+      "ot_s81sl_leaf__t10",
+      "ot_s81sl_leaf__t45",
+      "ot_s81sl_leaf__t74",
+      "ot_s81sl_leaf__t31",
+      "ot_s81sl_leaf__t7",
+      "ot_s81sl_leaf__t37",
+      "ot_s81sl_leaf__t75",
+      "ot_s81sl_leaf__t53__clb66fa5cb"
+     ],
+     "cause": "measured shared place-stage defects in the S81 leaf kits: VPW bank site selection (OT_VPW_BANK >100 um) and FT sites off the row/site grid",
+     "owner": "FIX-S81-VPW"
     }
    ],
    "planned_events": [
