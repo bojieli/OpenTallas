@@ -203,6 +203,9 @@ if {[info exists hg_txt]} {
 set pg_pm [expr {[info exists ::env(OT_PREGRT_HOLD_PORT_MARGIN)] && [string is double -strict $::env(OT_PREGRT_HOLD_PORT_MARGIN)] ? $::env(OT_PREGRT_HOLD_PORT_MARGIN) : 5.0}]
 set pg_in [all_inputs -no_clocks]; set pg_out [all_outputs]
 set pg_dg [expr {$pg_guard - $pg_pm}]
+# HOLD-MARGIN-FAMILY 11-17: extra REG-TO-REG pass to OT_PREGRT_HOLD_R2R_MARGIN (die family value, 0 = off); ports excepted, so the port seam
+# margin above is unchanged.  Same fail-safe as the rest of the build (TT setup is judged after the whole build, pg_verdict).
+set pg_rm [expr {[info exists ::env(OT_PREGRT_HOLD_R2R_MARGIN)] && [string is double -strict $::env(OT_PREGRT_HOLD_R2R_MARGIN)] ? $::env(OT_PREGRT_HOLD_R2R_MARGIN) : 0.0}]
 if {[catch {
   # (A) every hold path, ports included, to the base margin (OT_PREGRT_HOLD_PORT_MARGIN, 5): the seam contract
   #     (in_min / out_min) and same-tap pairs are padded as the GRT repair would pad them, with no route guard: port
@@ -213,7 +216,14 @@ if {[catch {
   # (B) CROSS-TAP pairs only, to the route guard: port hold is excepted and the early source latency of every tap
   #     port (the kit tap window W_p) is widened by guard - base margin for the pass, then restored.  OpenSTA credits
   #     the widening back to same-port pairs (CRPR at the common tap port), so only a pair on two tap ports sees it.
-  foreach pg_tag {all xt} {
+  foreach pg_tag {all rr xt} {
+    set pg_mrg $pg_pm
+    if {$pg_tag eq "rr"} {
+      if {$pg_rm <= $pg_pm} { continue }
+      if {[llength $pg_in]} { set_false_path -hold -from $pg_in }
+      if {[llength $pg_out]} { set_false_path -hold -to $pg_out }
+      set pg_mrg $pg_rm
+    }
     if {$pg_tag eq "xt"} {
       if {![dict size $pg_taps] || $pg_dg <= 0} {
         puts "OT_PREGRT_FF_HOLD cross-tap guard not applied ([expr {$pg_dg <= 0 ? {guard <= base margin} : {no tap window lines in the kit SDC}}])"
@@ -225,12 +235,15 @@ if {[catch {
     }
     for {set pg_ps 1} {$pg_ps <= 6} {incr pg_ps} {
       set pg_wp [pg_hold]; set pg_np [sta::endpoint_violation_count min]
-      if {$pg_wp >= $pg_pm} break
-      repair_timing -hold -hold_margin $pg_pm -max_buffer_percent 100
+      if {$pg_wp >= $pg_mrg} break
+      repair_timing -hold -hold_margin $pg_mrg -max_buffer_percent 100
       set pg_wq [pg_hold]
-      puts "OT_PREGRT_FF_HOLD pass $pg_tag $pg_ps margin $pg_pm[expr {$pg_tag eq {xt} ? " + cross-tap $pg_dg" : {}}] wns $pg_wq endpoints [sta::endpoint_violation_count min] insts [llength [$pg_blk getInsts]]"
+      puts "OT_PREGRT_FF_HOLD pass $pg_tag $pg_ps margin $pg_mrg[expr {$pg_tag eq {xt} ? " + cross-tap $pg_dg" : {}}] wns $pg_wq endpoints [sta::endpoint_violation_count min] insts [llength [$pg_blk getInsts]]"
       # lever 3: a pass that still removes >= 5 % of the violating endpoints is progress, whatever the worst endpoint does
-      if {$pg_wq >= $pg_pm || ($pg_wq - $pg_wp < 1.0 && [sta::endpoint_violation_count min] > 0.95 * $pg_np)} break
+      if {$pg_wq >= $pg_mrg || ($pg_wq - $pg_wp < 1.0 && [sta::endpoint_violation_count min] > 0.95 * $pg_np)} break
+    }
+    if {$pg_tag eq "rr"} {
+      if {[llength $pg_in]} { unset_path_exceptions -hold -from $pg_in }; if {[llength $pg_out]} { unset_path_exceptions -hold -to $pg_out }
     }
     if {$pg_tag eq "xt"} {
       set pg_xt [expr {[pg_hold] + $pg_dg}]

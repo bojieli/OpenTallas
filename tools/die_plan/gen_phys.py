@@ -5776,6 +5776,12 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     _pm = os.environ.get("OT_GRT_PORT_HOLD_MARGIN_PS", "").strip()
     if _pm:
         hold_ff_margin = max(float(_pm), hold_ff_margin if hold_ff_margin is not None else 0.0)
+    # HOLD-MARGIN-FAMILY 11-17 (COORD, FABLE-CLOSURE-STRATEGY lever 1): reg-to-reg hold repair target per die family (QC / KV / HEAD 40 ps;
+    # die.hold_ff_margin_ps / type hold_ff_margin_ps override); an explicit per-item OT_HOLD_FF_MARGIN_PS above wins; OT_HOLD_FAMILY_MARGIN=0 = off
+    import hold_margin_family as _HMF
+    _fam = None if _hm else _HMF.family_margin(P.name, getattr(P, "die", None), t)
+    if hold_ff_margin is not None and _fam is not None:
+        hold_ff_margin = max(float(hold_ff_margin), _fam)
     margins = rflow_margins(margins, P.name)    # R-FLOW defaults per kit class (explicit arguments win)
     max_wire_um = rflow_max_wire_um(max_wire_um, P.name)
     macro_moves = macro_move_table(t, tn)
@@ -6387,6 +6393,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     import pregrt_ff_hold as _pregrt_ff_hold
     _pregrt_ff_hold.set_die_clock(getattr(P, "clock", None))      # QC s29 overlay: die-level default, type-level wins
     cfg += _pregrt_ff_hold.config_lines(t)
+    if hold_ff_margin is not None:
+        cfg += _HMF.config_lines(_fam, pregrt=_pregrt_ff_hold.enabled(t))     # HOLD-MARGIN-FAMILY: evidence + pre-route r2r target + setup guard
     cfg += tap_chain_affinity_exports(t)
     cfg += tap_pair_affinity_exports(t)
     if t.get("clock", {}).get("tap_reset_affinity") is True:        # S81-SEAM-RST-1115, opt-in, clock pin only

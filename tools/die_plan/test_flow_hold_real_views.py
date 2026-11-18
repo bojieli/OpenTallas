@@ -170,8 +170,9 @@ def test_hold_ff_margin_default_is_0_everywhere(tmp_path):
     assert core_flow.HOLD_FF_MARGIN_DEFAULT == gen_phys.HOLD_FF_MARGIN_DEFAULT == 10.0   # OWNER 11-02 (was 10)
     b = core_flow.binding(250.0, 202.5)
     cfg = core_flow.apply(tmp_path, b, "x", rc_cal=False)
-    assert "export OT_HOLD_FF_MARGIN = 10" in cfg
+    assert "export OT_HOLD_FF_MARGIN = 15" in cfg           # HOLD-MARGIN-FAMILY 11-17: core kits repair to the 15 ps family value (OT_HOLD_FAMILY_MARGIN=0 = the 10 default)
     assert "export OT_HOLD_FF_MARGIN = 15" in core_flow.apply(tmp_path, b, "x", rc_cal=False, hold_ff_margin=15.0)
+    assert "export OT_HOLD_FF_MARGIN = 25" in core_flow.apply(tmp_path, b, "x", rc_cal=False, hold_ff_margin=25.0)
     root = Path(core_flow.__file__).resolve().parents[2] / "physical" / "die_plan"
     for f, needle in (("qwen_compute/cores/legacy/gen_core_kit_qc.py", 'rec.get("hold_ff_margin", core_flow.HOLD_FF_MARGIN_DEFAULT)'),
                       ("s81/cores/legacy/gen_core_kit_legacy.py", 'rec.get("hold_ff_margin", core_flow.HOLD_FF_MARGIN_DEFAULT)'),

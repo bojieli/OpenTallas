@@ -56,6 +56,10 @@ if {[llength [info procs ::repair_timing_helper]] && ![llength [info procs ::ot_
     set maxs [expr {[::ot_hg_num OT_HOLD_MAX_HOURS 3.0] * 3600}]
     set nb [expr {max($bmin, 0.0025 * $inst0)}]
     set t0 [clock seconds]; set wt $t0; set wstat $prev; set capped 0
+    # HOLD-MARGIN-FAMILY 11-17: setup guard of the raised reg-to-reg target.  OT_HOLD_SETUP_GUARD_PS (config.mk, family kits) = floor G: the repair
+    # stops when the worst setup slack falls below min(setup before the repair, G).  Unset = no check (kits without a family value).
+    set sg ""; if {[info exists ::env(OT_HOLD_SETUP_GUARD_PS)] && [string is double -strict $::env(OT_HOLD_SETUP_GUARD_PS)]} { set sg $::env(OT_HOLD_SETUP_GUARD_PS) }
+    set sg0 ""; if {$sg ne ""} { if {[catch {set sg0 [worst_slack -max]}]} { set sg "" } }
     puts [format "OT_HOLD_GUARD_GRT start: hold ws %.2f tns %.1f viol %d, margin %g, %d instances, budget %g %%" \
       {*}$prev $hm $inst0 $tot]
     for {set k 1} {1} {incr k} {
@@ -79,6 +83,12 @@ if {[llength [info procs ::repair_timing_helper]] && ![llength [info procs ::ot_
       puts [format "OT_HOLD_GUARD_GRT chunk %d: hold ws %.2f (%+.2f) tns %.1f viol %d, +%d buffers (cap %.0f), %d s" \
         $k $cw $dw $ct $cv $added $nb $dt]
       set prev $cur
+      if {$sg ne ""} {
+        if {![catch {set sgw [worst_slack -max]}] && $sgw < [expr {min($sg0, $sg) - 0.5}]} {
+          puts [format "OT_HOLD_SETUP_GUARD stop: worst setup %.2f < min(before %.2f, floor %g); hold ws %.2f" $sgw $sg0 $sg [lindex $cur 0]]
+          break
+        }
+      }
       if {[lindex $cur 0] >= $hm} { break }
       if {[lindex $cur 0] >= 0 && $dw < 1.0} { puts "OT_HOLD_GUARD_GRT: hold met (ws >= 0), margin chase stalled, stop"; break }
       if {$added <= 0} { puts "OT_HOLD_GUARD_GRT: chunk added no buffer, stop"; break }
