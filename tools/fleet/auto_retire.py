@@ -356,6 +356,33 @@ def attempt_candidates(claude, cfg, state, refs, now=None, quiet_s=ATTEMPT_QUIET
     return out
 
 
+KEEP_NAMES = ("reports", "logs", "REPORTS-KEPT.txt")      # COORD 11-18: reports/ (and bind inputs, via the guard's protected list) survive a cleanup
+
+
+def strip_keep_reports(p, rm=None):
+    """delete an attempt dir's contents except reports/, logs/ and REPORTS-KEPT.txt (the dir itself stays when one of them exists); a dir with none of them goes whole.
+    The guard check happened on the dir before; every entry removed here is below it.  No rm: shutil only, symlinks unlinked, never followed."""
+    names = os.listdir(p)
+    keep = [n for n in names if n in KEEP_NAMES]
+    if not keep:
+        (rm or shutil.rmtree)(p)
+        return
+    for n in names:
+        if n in KEEP_NAMES:
+            continue
+        q = os.path.join(p, n)
+        if os.path.islink(q) or not os.path.isdir(q):
+            os.unlink(q)
+        else:
+            os.system("find " + shlex_quote(q) + " -type d -exec chmod u+w {} +")
+            (rm or shutil.rmtree)(q)
+
+
+def shlex_quote(x):
+    import shlex
+    return shlex.quote(x)
+
+
 def eco_marker(p):
     import subprocess
     r = subprocess.run(["find", p, "-maxdepth", "3", "(", "-iname", "*hold*eco*", "-o", "-iname", "eco_hold*", ")", "-mtime", "-7", "-print", "-quit"], capture_output=True, text=True)
@@ -390,8 +417,9 @@ def run_attempts(claude, cfg, state, refs, ids, g, prot, log, apply=False, delet
             rec["result"] = "WOULD-DELETE"
         else:
             b = free()
-            (delete or (lambda q: (os.system("find " + q + " -type d -exec chmod u+w {} +"), shutil.rmtree(q, ignore_errors=True))))(p)
-            rec.update(result="DELETED" if not os.path.exists(p) else "FAILED", free_before=round(b, 1), free_after=round(free(), 1))
+            (delete or strip_keep_reports)(p)
+            left = os.listdir(p) if os.path.isdir(p) else []
+            rec.update(result="DELETED" if not left or all(n in KEEP_NAMES for n in left) else "FAILED", free_before=round(b, 1), free_after=round(free(), 1))
         log(rec); res.append(rec)
     return res
 

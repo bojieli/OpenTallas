@@ -79,6 +79,19 @@ def test_run_attempts_writes_exact_allows_and_never_falls_back_to_rm_on_refusal(
     assert len(lines) == 3 and all(l.split("\t")[1] == str(int(NOW + 3600)) for l in lines)
 
 
+def test_attempt_cleanup_keeps_reports_and_logs(tmp_path):
+    p = mk(str(tmp_path), "a/attempt_3", OLD)
+    for n in ("reports", "logs"):
+        os.makedirs(os.path.join(p, n)); open(os.path.join(p, n, "r.txt"), "w").write("keep")
+    os.makedirs(os.path.join(p, "gen", "big")); open(os.path.join(p, "gen", "big", "x.odb"), "w").write("x" * 100)
+    os.symlink("/nonexistent", os.path.join(p, "lnk"))
+    AR.strip_keep_reports(p)
+    assert sorted(os.listdir(p)) == ["logs", "reports"] and open(os.path.join(p, "reports", "r.txt")).read() == "keep"
+    q = mk(str(tmp_path), "b/attempt_1", OLD)
+    AR.strip_keep_reports(q)
+    assert not os.path.exists(q)                                                        # no reports/logs: the dir goes whole
+
+
 def git(*a, cwd):
     subprocess.run(["git", "-c", "user.email=a@b", "-c", "user.name=a", *a], cwd=cwd, check=True, capture_output=True)
 
