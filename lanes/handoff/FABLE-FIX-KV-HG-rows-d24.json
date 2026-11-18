@@ -195,8 +195,14 @@
    {
     "id": "W4",
     "note": "ft2 (W->E, 1,056 bits, cl_ft2_i in the e2/e4 channel) left as planned; re-read after W1-W3"
+   },
+   {
+    "id": "W5",
+    "needs_bind": false,
+    "row": "i_ectl_Q_N_eN (32 bits): W-face pins + u_bin in the SW corner (y 17-26), one GPL-placed pad stage u_pd1_i_ectl_Q_N_eN_<b>, then hst2_g. With g in the middle channel the lane is 1,250 um in two hops: site the 32 pad flops FIRM at (45.0, 560.0) (is_place {*u_pd1_i_ectl_Q_N_eN_*[./]*}); generator form = an internal_stations site for the existing per-bit pad stage, 0 cycles. Proof kit k5 = k4 + W5 on epyc8 fable-fix-kv-hg3/k5."
    }
   ],
-  "proof": "private kit k4 = k3 + W2 + W3 (no W1): epyc9 fable-fix-kv-hg3/k4/gen, route goal launched 14:1x PST, log intel2 ~/tmp/ffkhg3/k4_route.log. Read congestion-5.rpt west band vs 44,172 (k3) / 41,652 (base)."
+  "proof": "private kit k4 = k3 + W2 + W3 (no W1): epyc9 fable-fix-kv-hg3/k4/gen, route goal launched 14:1x PST, log intel2 ~/tmp/ffkhg3/k4_route.log. Read congestion-5.rpt west band vs 44,172 (k3) / 41,652 (base).",
+  "HOLD": "COORD 1530 lever 6: do NOT take W2 / W3 into an event before kit k5 gives a post-CTS number. k4 (W2 + W3) lost setup: +0.43 (k3) -> -145.5 / 8 ends."
  }
 }
