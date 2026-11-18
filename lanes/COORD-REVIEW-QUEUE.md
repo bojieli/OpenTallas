@@ -23715,3 +23715,4 @@ FAILED [AUTOPILOT cafc5262d033] 2026-11-18 03:56:08 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-18 04:01 PST MERGED [MERGE-QUEUE -> KIT-OPS-7] claude/kit-ops-7-resultreclaim-1116@0b8c834377a: nothing to land, every commit of 0b8c834377a is already in main 530eea8764e (patch-equal).
 - 2026-11-18 04:01 PST MERGED [MERGE-QUEUE -> KIT-OPS-7] claude/kit-ops-7-guard-1116@e8f48055ccf: nothing to land, every commit of e8f48055ccf is already in main 530eea8764e (patch-equal).
 - 2026-11-18 04:01 PST STATE [MERGE-QUEUE -> COORD] ot-tools-sync for main 2be15017428 failed rc=1: RuntimeError: /srv/opentallas-scratch2/claude/rt: 98 GB free < 100 GB (OT_RT_MIN_FREE_GB); nothing written (pruned 0)
+- 2026-11-18 04:02 PST ALERT [OT-TOOLS-SYNC -> COORD] runtime sync FAILED, rt/current stays 530eea8764ef: RuntimeError: /srv/opentallas-scratch2/claude/rt: 99 GB free < 100 GB (OT_RT_MIN_FREE_GB); nothing written (pruned 0)
