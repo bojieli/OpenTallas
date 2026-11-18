@@ -830,12 +830,12 @@ def result_posts(lines):
 
 
 def result_pass_fn(lines):
-    """result:<lane>:<tag>: true when a RESULT post sent by the lane (header 'RESULT [LANE ->') carries '<tag>' followed within 60
+    """result:<lane>:<tag>: true when a RESULT post sent by the lane (header 'RESULT [LANE ->' or 'RESULT [LANE]': S81-DIE-R3 / S81-TYPES-R3 posted without the arrow and 213 col keys stayed held) carries '<tag>' followed within 60
     characters by PASS (a lane that writes 'svc-ready NOT yet, FAIL' does not release; a post that only cc's the lane does not)."""
     posts = result_posts(lines)
 
     def f(lane, tag):
-        pat = re.compile(RESULT_POST + re.escape(lane) + r"\s*->[^\n]*?(?<![\w.-])" + re.escape(tag) + r"(?![\w.-])[^\n]{0,60}?\bPASS\b")
+        pat = re.compile(RESULT_POST + re.escape(lane) + r"\s*(?:->|\])[^\n]*?(?<![\w.-])" + re.escape(tag) + r"(?![\w.-])[^\n]{0,60}?\bPASS\b")
         return any(pat.match(ln) for ln in posts)
     return f
 
@@ -2201,8 +2201,24 @@ def retire_superseded_rows(AP, cfg, st, now=None):
             r.update(status="CANCELLED", **{"class": "SUPERSEDED"}, retire="dedup", updated=now,
                      reason=f"SUPERSEDED: DEDUP member of {r.get('dedup_owner')} on " + (f"event {r.get('event')} (die is on {d['event']})" if old else "a retired owner row"))
             dedup += 1
-    if (retired or relaunched or dedup) and AP is not None:
-        AP.log(f"KIT-WAVE RETIRE-SUPERSEDED retired {retired} (type has a current-event row), relaunch-on-current {relaunched}, dedup members {dedup}")
+    stale = 0
+    names_of = {}
+    for r in items.values():                             # STALE-PLAN-1117 (COORD, S81 col after D6z): a FAIL row of an item the current plan no longer names, on another plan sha
+        die = r.get("die")
+        d = (cfg.get("dies") or {}).get(die) or {}
+        if r.get("status") != "FAIL" or not d.get("enabled"):
+            continue
+        if die not in names_of:
+            names_of[die] = set(plan_names_from_cache(st, d)) if d.get("plan") and d.get("gen_host") else set()
+        cur = str(d.get("plan_sha256") or d.get("_plan_sha") or "").lower()
+        old = str(r.get("plan_sha") or "").lower()
+        if not names_of[die] or not cur or not old or old == cur or r.get("item") in names_of[die]:
+            continue
+        r.update(status="CANCELLED", **{"class": "SUPERSEDED"}, retire="stale-plan", updated=now,
+                 reason=f"SUPERSEDED: {r.get('item')} is not an item of the current plan ({cur[:12]}) and the row's plan block is {old[:12]}; the type relaunches under its current name")
+        stale += 1
+    if (retired or relaunched or dedup or stale) and AP is not None:
+        AP.log(f"KIT-WAVE RETIRE-SUPERSEDED retired {retired} (type has a current-event row), relaunch-on-current {relaunched}, dedup members {dedup}, stale-plan FAIL rows {stale}")
     return retired, relaunched
 
 
