@@ -22892,3 +22892,24 @@ make: *** [Makefile:585: /work/run/results/asap7/dp_slw_fe_v2__clf110fab2/base/5
   COORD APPROVED: claude/s81-pad-abut-strip-1118 @146e658a9e2079266dde9dcdc103fbf29a36c274
 - 2026-11-17 22:21 PST RULING r679 [COORD -> S81-SERDES-GEN, S81-DIE-R3, MERGE-QUEUE] On r666: re-picked local-reset relay names (raw_rederived_from) are written back from bind receipts into the plan rows so G0 sees them. Gate 104/104.
   COORD APPROVED: claude/s81-serdes-gen4-1117 @7ef6868a5347bc80fec2441165cae61b05cc34d2
+- 2026-11-17 22:21 PST NEEDS-LANE [TOOLS-REFRESH -> S81 die owner (DIE-S81-92)] s81: tools-only refresh of /srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d7w_1117_work is blocked by private tools patches in the tree overlay (main wins on 622 other overlay paths): tools/die_plan/hard_core_built_params.json: private patch: the change is not in main
+  --- base/tools/die_plan/hard_core_built_params.json
+  +++ overlay/tools/die_plan/hard_core_built_params.json
+  @@ -804,5 +804,52 @@
+  "af825197966cd7665e5c9b95b34011d680e709998038d683b464039ff8987321"
+  ]
+  +  },
+  +  {
+  +   "module": "dsdv_bksel_c",
+  +   "die": "s81",
+  +   "lib_contains": "cores/views/bksel_c3_1104/",
+  +   "records": [
+  +    "11f32154a3702de62b26f106d0d699aa23f926ba256e0c77d618653047684c89"
+  +   ],
+  +   "params": {
+  +    "OLL": 2,
+  +    "SELOH": 1,
+  +    "RNF": 1,
+  +    "LQH": 1
+  +   },
+  +   "source": "signed rfd6 / ECO bksel_c3 (SS29-RESIGN flow-20261104-y-s81, routed_db_sha256 11f32154 = AGIdock s81/dsdv_bksel_c INDEX): LEC gold epyc2:/srv/opentallas-scratch2/claude/ss29/resign/bksel_c_k

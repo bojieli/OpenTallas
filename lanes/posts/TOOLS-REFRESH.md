@@ -38,3 +38,24 @@
   intel1: OK; stopped (no retry); free the host named or exclude it, then change the die tree or recipe settings to resume
 - 2026-11-17 21:42 PST TOOLS-REFRESH s81_head: switched to /srv/opentallas-scratch2/claude/kw45/src_head_pin_8569788b0328_nf15f_d2_t86a9d26_d1_t58211f4 (rulings r656, r657, r658, r659, r660, r661, r662, r663, r664, r665, r666, r667); plan and RTL byte-identical, strict bind unchanged
 - 2026-11-17 22:11 PST TOOLS-REFRESH s81_head: switched to /srv/opentallas-scratch2/claude/kw45/src_head_pin_8569788b0328_nf15f_d2_t86a9d26_d1_t58211f4_t30393b4 (rulings r668, r669, r670); plan and RTL byte-identical, strict bind unchanged
+- 2026-11-17 22:21 PST NEEDS-LANE [TOOLS-REFRESH -> S81 die owner (DIE-S81-92)] s81: tools-only refresh of /srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d7w_1117_work is blocked by private tools patches in the tree overlay (main wins on 622 other overlay paths): tools/die_plan/hard_core_built_params.json: private patch: the change is not in main
+  --- base/tools/die_plan/hard_core_built_params.json
+  +++ overlay/tools/die_plan/hard_core_built_params.json
+  @@ -804,5 +804,52 @@
+  "af825197966cd7665e5c9b95b34011d680e709998038d683b464039ff8987321"
+  ]
+  +  },
+  +  {
+  +   "module": "dsdv_bksel_c",
+  +   "die": "s81",
+  +   "lib_contains": "cores/views/bksel_c3_1104/",
+  +   "records": [
+  +    "11f32154a3702de62b26f106d0d699aa23f926ba256e0c77d618653047684c89"
+  +   ],
+  +   "params": {
+  +    "OLL": 2,
+  +    "SELOH": 1,
+  +    "RNF": 1,
+  +    "LQH": 1
+  +   },
+  +   "source": "signed rfd6 / ECO bksel_c3 (SS29-RESIGN flow-20261104-y-s81, routed_db_sha256 11f32154 = AGIdock s81/dsdv_bksel_c INDEX): LEC gold epyc2:/srv/opentallas-scratch2/claude/ss29/resign/bksel_c_k
