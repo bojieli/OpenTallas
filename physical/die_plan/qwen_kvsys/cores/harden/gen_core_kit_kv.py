@@ -1155,6 +1155,10 @@ def main():
     ap.add_argument("--head-port-regs", action="store_true",
                     help="even head_eighth cores (e0/e2/e4/e6): frontq PORT_REGS=1 + fault-pin flop (+124FF, 0 cycles), e0 also "
                          "ktree_lk PORT_REGS=1 (+31FF, +1 parent fault edge, COORD ruling 2); leaves from this repo")
+    ap.add_argument("--head-kst", type=int, default=0, metavar="N",
+                    help="kv3_head_eighth_e0: N kt input station stages (ot_qkh_head_kst_native u_g_t_<t>_u_kst0 / _kst1) on the "
+                         "two in-core lanes between their stk and the K-tree, uniform with the 14 parent lanes (KV-KT-E0 11-18, "
+                         "head_kst_core.py; 0 = the core of record, no ports or pins change)")
     ap.add_argument("--head-lane-ltcopy", action="store_true",
                     help="head_eighth cores: ot_qkh_lane8 LT_COPY=1 (per-lane last decision-word flop, +63 FF/lane8, "
                          "0 cycles, COORD ruling 5); odd heads refresh only the LT-copy leaf; even heads need --head-port-regs")
@@ -1318,6 +1322,8 @@ def main():
                                     and (a.head_port_regs or mod[-1] in "1357")):
         raise SystemExit("--head-strap-direct: head_eighth cores with --head-lane-ltcopy (+ --head-port-regs on even heads), "
                          "so the STRAP_DIRECT / STRAP_SAMPLE leaves come from this repo")
+    if a.head_kst and mod != "kv3_head_eighth_e0":
+        raise SystemExit("--head-kst only applies to kv3_head_eighth_e0 (the eighth that holds the K-tree and lanes 0, 1)")
     if a.head_port_regs and not re.fullmatch(r"kv3_head_eighth_e[0246]", mod):
         raise SystemExit("--head-port-regs only applies to the even head_eighth cores (e0/e2/e4/e6)")
     is_even_head = bool(re.fullmatch(r"kv3_head_eighth_e[0246]", mod))
@@ -1394,6 +1400,19 @@ def main():
             dst.write_text(transform(dst.read_text()))
         if a.head_port_regs and dst.stem == mod:
             dst.write_text(head_port_regs(dst.read_text(), mod, kd))
+        if a.head_kst and dst.stem == mod:
+            import sys
+            if str(HERE) not in sys.path:      # python3 -I: the script directory is not on the path
+                sys.path.insert(0, str(HERE))
+            import head_kst_core
+            try:
+                kst_text, kst_rec = head_kst_core.transform(dst.read_text(), a.head_kst)
+            except ValueError as e:
+                raise SystemExit(f"{mod}: --head-kst: {e}")
+            dst.write_text(kst_text)
+            shutil.copyfile(REPO / head_kst_core.LEAF, kd / "rtl" / Path(head_kst_core.LEAF).name)
+            srcs.append(f"/work/rtl/{Path(head_kst_core.LEAF).name}")
+            (kd / "head_kst_delta.json").write_text(json.dumps(kst_rec, indent=1) + "\n")
         if a.head_strap_odd and dst.stem == mod:
             import head_strap_odd
             dst.write_text(head_strap_odd.master(dst.read_text()))

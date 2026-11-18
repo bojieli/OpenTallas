@@ -5,6 +5,9 @@
 // needs no RTL edit, only a rebuild with -GQK_ISSUE_AGE / -GRESPONSE_LAT (core.json params) and CORE_QK / CORE_RL below
 // set to the values of the signed views.  A parent value other than the views' still fails elaboration (no silent
 // latency change); the bind param_regen (kv_regen ECTL) sets the parent values.
+// KV-KT-E0 11-18: HXK (the score tag depth) is a parameter of qkd_ectlk_reference / qkd_ectlk_q0..q3 too (default 13 = the
+// views of record); CORE_HXK below follows the signed views (ectlk_hxk.py --set N rewrites the five defaults and CORE_HXK
+// together; the head kt input stations of KV event D25 need 15 = re-hardened q0..q3).
 `default_nettype none
 module qkd_ectl3_kiss_st_cols #(
     parameter integer HXK = 13,
@@ -23,8 +26,9 @@ module qkd_ectl3_kiss_st_cols #(
     // the values the hardened qkd_ectlk_q0..q3 views of record were built at (one pair, edited only with a new signed set)
     localparam integer CORE_QK = 37;
     localparam integer CORE_RL = 26;
+    localparam integer CORE_HXK = 13;
     generate
-        if (HXK != 13 || MUT != 0 || QK_ISSUE_AGE != CORE_QK || RESPONSE_LAT != CORE_RL) begin : g_param_mismatch
+        if (HXK != CORE_HXK || MUT != 0 || QK_ISSUE_AGE != CORE_QK || RESPONSE_LAT != CORE_RL) begin : g_param_mismatch
             qkd_ectl3_kiss_st_cols__columns_built_for_other_params u_param_mismatch ();
         end
     endgenerate

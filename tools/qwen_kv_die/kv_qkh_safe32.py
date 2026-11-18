@@ -10,6 +10,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import kv_expand_parameters as EP
+import kv_head_kst as KST
 
 FLAG = 'OT_KV_QKH_SAFE32'
 TARGETS = {
@@ -36,12 +37,13 @@ def data_edges():
 def capture_hxk():
     # Real ECTL current-GEN9 component: HXK15 retires all256 tags at age82;
     # HXK14/13 causally fail at175/174 versus expected176.
-    return 13 + data_edges()
+    # KV-KT-E0 11-18: + the head kt input stations (OT_KV_HEAD_KST, kv_head_kst.py; default 0)
+    return KST.hxk(13 + data_edges())
 
 
 def calendar_d_qk(issue_age, base_consume=34):
     # Fetch/issue age is unchanged. Only the post-issue score path moves.
-    return issue_age - base_consume + data_edges()
+    return KST.d_qk(issue_age - base_consume + data_edges())
 
 
 def configure(views, rtl):
