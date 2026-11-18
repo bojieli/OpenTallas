@@ -24602,3 +24602,60 @@ FAILED [AUTOPILOT bc901b1e7f7a] 2026-11-18 09:47:25 PST AUTOPILOT -> KIT-WAVE-3:
 read_liberty -corner bc /work/nomcap/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib.gz
 read_db /work/run/results/asap7/dp_slice_station__t41/base/3_2_place_iop.odb
 read_sdc /work/run/results/asap7/dp_s | kit epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/slice_station__t41/attempt_7/gen/slice_station__t41 src main@3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6 | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+FAILED [AUTOPILOT bda7a4185cdb] 2026-11-18 09:47:26 PST AUTOPILOT -> KIT-WAVE-3: FAILED bda7a4185cdb s81/ot_s81sl_leaf__t74 (CRASH/flow-error):  OK
+OT_TAP_CORE u_bound.u_u_lf4_u_vp_g_ln_13_u_l/clk tap clk_c12 pin 197 + internal 260 = effective 456 ps (target 450, window 20) OK
+OT_TAP_CORE u_bound.u_u_lf4_u_vp_g_ln_14_u_l/clk tap clk_c13 pin 187 + internal 260 = effective 446 ps (target 450, window 20) OK
+OT_TAP_CORE u_bound.u_u_lf4_u_vp_g_l | kit epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/ot_s81sl_leaf__t74/attempt_5/gen/ot_s81sl_leaf__t74 src main@3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6 | review no review bundle | run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+FAILED [AUTOPILOT c0c916f2051e] 2026-11-18 09:47:32 PST AUTOPILOT -> KIT-WAVE-3: FAILED c0c916f2051e s81/slice_station__t31 (CRASH/flow-error): exit 1 | kit epyc10:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/slice_station__t31/attempt_8/gen/slice_station__t31 src main@3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6 | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+FAILED [AUTOPILOT c4750bfadccc] 2026-11-18 09:47:33 PST AUTOPILOT -> KIT-WAVE-3: FAILED c4750bfadccc s81/slice_station__t24__cl64811a5d (CRASH/flow-error): default vias:
+  Layer V2
+    default via: VIA23
+  Layer V3
+    default via: VIA34
+  Layer V4
+    default via: VIA45
+  Layer V5
+    default via: VIA56
+  Layer V6
+    default via: VIA67
+  Layer V7
+    default via: VIA78
+  Layer V8
+    default via: VIA89
+  Layer V9
+    default via: VIA9Pad
+[INFO DRT-01 | kit epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/slice_station__t24__cl64811a5d/attempt_4/gen/slice_station__t24__cl64811a5d src main@3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6 | review no review bundle | run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+FAILED [AUTOPILOT c7f63547b25d] 2026-11-18 09:47:35 PST AUTOPILOT -> KIT-WAVE-3: FAILED c7f63547b25d s81/slice_station__t30__clcedefe91 (CRASH/flow-error):  4893.9 u
+average displacement        0.0 u
+max displacement            2.7 u
+original HPWL         1359294.3 u
+legalized HPWL        1361105.2 u
+delta HPWL                    0 %
+
+Took 12 seconds: detailed_placement -use_diamond_legalizer -max_displacement "1443 1227"
+improve_placement -max_displac | kit epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/slice_station__t30__clcedefe91/attempt_9/gen/slice_station__t30__clcedefe91 src main@3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6 | review no review bundle | run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+FAILED [AUTOPILOT ca5446181961] 2026-11-18 09:47:36 PST AUTOPILOT -> KIT-WAVE-3: FAILED ca5446181961 s81/slice_station__t44 (CRASH/flow-error): 4% |       0 |   14332 |         14327 |     44629
+    85000 |     +9.4% |       0 |   14332 |         14327 |     43629
+    86000 |     +9.4% |       0 |   14344 |         14339 |     42629
+    87000 |     +9.4% |       0 |   14344 |         14339 |     41629
+    88000 |     +9.4% |       0 |   143 | kit epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/slice_station__t44/attempt_7/gen/slice_station__t44 src main@3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6 | review no review bundle | run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+FAILED [AUTOPILOT d601c3a7946a] 2026-11-18 09:47:38 PST AUTOPILOT -> KIT-WAVE-3: FAILED d601c3a7946a s81/slice_station__t7__cl503f4913 (CRASH/flow-error): ================
+global route report_design_area
+--------------------------------------------------------------------------
+Design area 11124 um^2 1% utilization.
+[INFO FLW-0007] clock clk period 833.000000
+[WARNING FLW-0010] more than one clock found. Skipping sdc update.
+[INFO FLW-0011] Path endpo | kit epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/slice_station__t7__cl503f4913/attempt_8/gen/slice_station__t7__cl503f4913 src main@3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6 | review no review bundle | run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+FAILED [AUTOPILOT dfe28cadf2a6] 2026-11-18 09:47:39 PST AUTOPILOT -> KIT-WAVE-3: FAILED dfe28cadf2a6 s81/ot_s81sl_leaf__t45 (CRASH/flow-error): exit 1 | kit epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/ot_s81sl_leaf__t45/attempt_10/gen/ot_s81sl_leaf__t45 src main@3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6 | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+FAILED [AUTOPILOT e3fcbb31a5fb] 2026-11-18 09:47:40 PST AUTOPILOT -> KIT-WAVE-3: FAILED e3fcbb31a5fb s81/slice_station__t27 (CRASH/flow-error): 18-270,1251) clk_t59=249(234-255,412) clk_t6=254(244-271,270) clk_t60=248(235-254,393) clk_t7=261(230-300,1500) clk_t8=246(229-275,647) clk_t9=243(240-248,428)
+[INFO DPL-0006] Core area: 1933126.04 um^2
+[INFO DPL-0007] Movable instances area: 26732.02 um^2
+[INFO DPL-0008] Fixed instances area within | kit epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/slice_station__t27/attempt_5/gen/slice_station__t27 src main@3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6 | review no review bundle | run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+FAILED [AUTOPILOT f7fc89027c45] 2026-11-18 09:47:42 PST AUTOPILOT -> KIT-WAVE-3: FAILED f7fc89027c45 s81/ot_s81sl_leaf__t73 (CRASH/flow-error): 7218
+   116900 |     -1.0% |   31317 |    19841 |     50518
+   133600 |     -1.3% |   41536 |    25438 |     33818
+   150300 |     -1.3% |   41992 |    25861 |     17118
+   167000 |     -1.3% |   43535 |    26486 |       418
+    final |     -1.3% |   43535 |    26486 |         0
+-------------------- | kit epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/ot_s81sl_leaf__t73/attempt_7/gen/ot_s81sl_leaf__t73 src main@3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6 | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+- 2026-11-18 09:47 PST FINDING [FABLE-FIX-KV-HG -> COORD, KV-HG-OPUS, KV-D23-COMPOSE] Fix #2 root cause (why the 16 core: kt station rows per head never materialize). (1) Flow: kit_istations.core_stations only maps core<->core rows onto S81 leaf CS_* classes (core_class, pattern core:u_lf.); every KV row lands in the receipt as core_unmapped and nothing is built. (2) Generator: the rows are a DEMAND note (KV-102 kvgeom7d, +2 cycles uniform on all 16 t inputs) that no RTL carries: the bound parent wires stk kp_o/kpv_o/gf_o straight to u_kt pins. (3) Structural catch: only 14 of the 16 t inputs per head cross the parent (28 wires on hgi_v1). The 2 lanes of e0 itself reach u_kt INSIDE hard core kv3_head_eighth_e0, and ot_qkh_ktree takes its valid from lane 0 (kpv_k[0]), which is one of them. So parent stations alone would skew 14 lanes by +2 against lane 0: the fix needs BOTH 2 parent stages on the 14 exported lanes AND +2 stk stages on the two local lanes inside kv3_head_eighth_e0 (core RTL + re-harden of that one core; e1..e7 unchanged), plus +2 on the head score path in the latency table. D24 item, not a kit-only key. Private timing proof running now (epyc7 fable-fix-kv-hg3/k3 -> epyc9): kit RTL from the KV-D23-REACH mirror_ab bind (fix #3: ot_dp_rsync + ot_dp_rtail D=3 per core) + 28 x 2 parent kt stages (1,904 flops, FIRM at the plan regs_um) + relay chain keys (fix #1). Parent timing does not depend on the e0-internal stages, so the proof is valid for timing; it is NOT functionally complete until the e0 core change exists. COORD data on pv_v12 noted: same reset class (u_rs_ri_pv_u_g0_j_rst_n -> pv_pair rst_n) = the same rtail rows in D23c; vport fault / out_v_hi stations go into the D24 list.
