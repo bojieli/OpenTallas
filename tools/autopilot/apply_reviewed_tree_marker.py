@@ -147,7 +147,8 @@ def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=
     with (C / ".coord.lock").open("a") as lock:
         fcntl.flock(lock, fcntl.LOCK_EX)
         cfgpath = C / "autopilot/kit_wave.json"
-        cfg = json.loads(cfgpath.read_text())
+        _cfg_base_text = cfgpath.read_text()
+        cfg = json.loads(_cfg_base_text)
         d = cfg["dies"][die]
         assert d["src"] == expect_source and d["event"] == expect_event, "die changed since reviewed candidate"
         if keep:
@@ -230,7 +231,11 @@ def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=
                              guard=str(TC.location(C / "autopilot/tree_checks", ident) / "result.json"), candidate=str(obj.get("_path", "")),
                              optimistic=optimistic, warnings=warnings))
         atomic(C / HR.tree_marker_rel(die), marker)
-        atomic(cfgpath, cfg)
+        try:
+            import kit_wave_edit as _KWE
+            _KWE.cas_write(C, cfg, _cfg_base_text)          # lock + compare-and-swap: a config that moved during the apply is never overwritten with this stale copy
+        except ImportError:
+            atomic(cfgpath, cfg)
         return dict(applied=die, event=d.get("event"), source=tree, receipt=str(receipt), holds_preserved=True, optimistic=optimistic, warnings=warnings, gen_hosts=hosts,
                     pilot=(dict(item=pilot, release="gen_pilot:%s:%s" % (die, want[:12]), hold_added=pilot_added) if pilot else "NONE"))
 

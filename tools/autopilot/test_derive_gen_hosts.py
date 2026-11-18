@@ -93,3 +93,15 @@ def test_per_host_min_free_floor_drops_a_host_until_it_has_the_room():
     assert out["s81"][0] == ["a"] and any("b: 137 GB free < 150" in w for w in out["s81"][1])
     pr2 = lambda host, tree: ("h", False, {"a": 100.0, "b": 160.0}[host])
     assert D.derive(cfg, hosts=("a", "b"), prober=pr2, checker=lambda h, need: [])["s81"][0] == ["a", "b"]
+
+
+class Cas(unittest.TestCase):
+    def test_cas_write_refuses_a_moved_file_and_writes_an_unmoved_one(self):
+        import kit_wave_edit as KE
+        c = tempfile.mkdtemp(); os.makedirs(c + "/autopilot")
+        p = c + "/autopilot/kit_wave.json"; base = KE.dump({"dies": {"a": 1}}); open(p, "w").write(base)
+        KE.cas_write(c, {"dies": {"a": 2}}, base)
+        self.assertEqual(json.load(open(p))["dies"]["a"], 2)
+        with self.assertRaises(SystemExit):
+            KE.cas_write(c, {"dies": {"a": 3}}, base)                 # base is stale now
+        self.assertEqual(json.load(open(p))["dies"]["a"], 2)

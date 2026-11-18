@@ -165,6 +165,36 @@ def edit(coord, ops, message, dry=False, commit_cmd=None):
         lock.close()
 
 
+def cas_write(coord, new_obj, base_text, wait_s=120):
+    """COORD 11-18 (a writer holding a stale snapshot overwrote kit_wave.json 70 s after a commit and blocked every kit_wave_edit): the whole-file writers
+    (apply_reviewed_tree_marker) write through this: take kit_wave_edit.lock (blocking up to wait_s, so no edit is in flight), compare the file with the text this writer READ at its start
+    (compare-and-swap) and write atomically only when equal.  A moved file raises SystemExit, nothing written: rerun the apply on the new content.  The caller commits."""
+    import time
+    coord = Path(coord)
+    gd = git(coord, "rev-parse", "--absolute-git-dir", check=False).stdout.strip() or str(coord)      # a non-git coord dir (tests): the lock file sits beside the config
+    lock = open(Path(gd) / "kit_wave_edit.lock", "a+")
+    t0 = time.time()
+    while True:
+        try:
+            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            break
+        except OSError:
+            if time.time() - t0 > wait_s:
+                lock.seek(0)
+                raise SystemExit(f"kit_wave_edit: lock held {wait_s}s by: {lock.read().strip() or 'unknown'}; nothing written")
+            time.sleep(1)
+    try:
+        lock.seek(0); lock.truncate(); lock.write(f"pid={os.getpid()} cmd=cas_write {' '.join(sys.argv)[:160]}\n"); lock.flush()
+        p = coord / REL
+        if p.read_text() != base_text:
+            raise SystemExit(f"kit_wave_edit: {REL} changed while this writer worked (compare-and-swap failed); nothing written, rerun on the new content")
+        tmp = p.with_name(p.name + f".tmp.cas.{os.getpid()}")
+        tmp.write_text(dump(new_obj))
+        os.replace(tmp, p)
+    finally:
+        lock.close()
+
+
 def blob_sha(coord):
     return git(coord, "rev-parse", f"HEAD:{REL}").stdout.strip()
 

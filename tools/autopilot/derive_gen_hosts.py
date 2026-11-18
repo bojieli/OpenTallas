@@ -107,19 +107,33 @@ def derive(cfg, hosts=HOSTS, prober=probe, floor=None, checker=host_requires):
 
 
 def apply(coord, result, run=subprocess.run):
-    p = os.path.join(coord, "autopilot/kit_wave.json"); changed = []
-    with open(os.path.join(coord, ".coord.lock"), "a") as lk:
-        fcntl.flock(lk, fcntl.LOCK_EX)
-        c = json.load(open(p))
-        for die, (new, why) in result.items():
-            d = c["dies"][die]
-            if new and new != d["gen_hosts"]:
-                d["prev_gen_hosts_derive"] = list(d["gen_hosts"]); d["gen_hosts"] = new; changed.append(f"{die}={','.join(new)}")
-        if changed:
-            shutil.copy(p, p + ".bak-derive-gen-hosts")
-            tmp = p + ".tmp.derive"; open(tmp, "w").write(json.dumps(c, indent=1)); os.replace(tmp, p)
-    if changed:
+    """COORD 11-18: through kit_wave_edit (lock + compare-and-swap on the committed sha + its own commit), never a whole-file rewrite of a copy read earlier"""
+    c = json.load(open(os.path.join(coord, "autopilot/kit_wave.json")))
+    ops, changed = [], []
+    for die, (new, why) in result.items():
+        d = c["dies"][die]
+        if new and new != d["gen_hosts"]:
+            ops.append({"op": "add" if "prev_gen_hosts_derive" not in d else "replace", "path": f"/dies/{die}/prev_gen_hosts_derive", "value": list(d["gen_hosts"])})
+            ops.append({"op": "replace", "path": f"/dies/{die}/gen_hosts", "value": list(new)})
+            changed.append(f"{die}={','.join(new)}")
+    if changed and not os.path.exists(os.path.join(coord, ".git")):       # not a git checkout (tests): locked in-place write + the old commit call
+        with open(os.path.join(coord, ".coord.lock"), "a") as lk:
+            fcntl.flock(lk, fcntl.LOCK_EX)
+            c2 = json.load(open(os.path.join(coord, "autopilot/kit_wave.json")))
+            for die, (new, why) in result.items():
+                d2 = c2["dies"][die]
+                if new and new != d2["gen_hosts"]:
+                    d2["prev_gen_hosts_derive"] = list(d2["gen_hosts"]); d2["gen_hosts"] = new
+            tmp = os.path.join(coord, "autopilot/kit_wave.json.tmp.derive"); open(tmp, "w").write(json.dumps(c2, indent=1)); os.replace(tmp, os.path.join(coord, "autopilot/kit_wave.json"))
         run(["bash", os.path.join(coord, "bin/coord-commit.sh"), "derive_gen_hosts: " + " ".join(changed), "autopilot/kit_wave.json"], cwd=coord, capture_output=True, text=True)
+        return changed
+    if changed:
+        here = os.path.dirname(os.path.abspath(__file__))
+        r = run([sys.executable, "-I", os.path.join(here, "kit_wave_edit.py"), "--coord", coord, "--message", "derive_gen_hosts: " + " ".join(changed), "--patch", json.dumps(ops)],
+                capture_output=True, text=True)
+        if r.returncode:
+            print("derive_gen_hosts: kit_wave_edit refused:", (r.stdout + r.stderr)[-300:])
+            return []
     return changed
 
 
