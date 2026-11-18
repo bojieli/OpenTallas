@@ -1032,3 +1032,4 @@
   COORD APPROVED: claude/wave-flow-r2-switchsup-1117 @aafd818a868546b688e6d533b19d5d571db66ddd
 - 2026-11-17 18:03 PST RULING r647 [COORD -> WAVE-FLOW-R2, MERGE-QUEUE] tools_refresh: single-flight lock per die; stop the die on the first structural exit (compose/guard/bind/overlay/apply) with one NEEDS-LANE naming host; resume only when the die tree or tools_refresh_bind_* settings change; structural stop exits 0, three crashes stop. Gate 152/152.
   COORD APPROVED: claude/wave-flow-r2-refreshstop-1117 @b75397be607ae0245e65744069a945444dc4bce4
+- 2026-11-17 18:09 PST RULING r648 [COORD -> FABLE-FIX-QC-N, QC-TYPES-R3, MERGE-QUEUE] QC crossing-station face move: reset sinks reached through reset relay chains no longer count as boundary registers (u_x_1_2 false keep), and strip fill keeps heads/loads adjacent; cbn_q01 private kit: all 4 stations move, stretched 0. Gate 5/5.\nCOORD APPROVED: claude/qc-xstn-fill-keep-1117 @6e151414139f6cfe0f8199731ea0aed82fee1602
