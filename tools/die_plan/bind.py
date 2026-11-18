@@ -917,6 +917,23 @@ def core_link_src_depth(plan, tn, module, port, bit):
     return 0
 
 
+def relay_depth_map(plan, tn):
+    """S81-COLGEN-3 11-17 (S81-TYPES-R3: polyline relay chains over hard macros with hops above the 405-um reach): plan
+    partition_types[tn].relay_depth = [{"inst": <source leaf name inside the partition, e.g. u_y_rt_20a_3>, "port": "o",
+    "D": 1..4, "path_um": .., "note": ..}] -> {(inst, port): D}.  Every internal sink the port feeds gets D extra register
+    stages (one ot_dp_dly D=1 per stage, instance u_y_xd_*: a relay-named flop group, so relay_mid.tcl spreads each stage along
+    the chain's polyline), DECLARED per sink bit in bind_core_input_pipe.json like core_link_pipe (bind_verify, compiler / TOK).
+    Absent = no stage, byte-identical RTL."""
+    t = ((plan or {}).get("partition_types") or {}).get(tn) or {}
+    out = {}
+    for row in t.get("relay_depth") or []:
+        k = (row["inst"], row.get("port", "o"))
+        if k in out:
+            raise BindError(f"relay_depth {tn}: {k[0]}.{k[1]} listed twice")
+        out[k] = int(row["D"])
+    return out
+
+
 def ft_hop_lockup_cell():
     """gen_rtl's ot_dp_lk module text, verbatim (keep attributes included)."""
     import gen_rtl
@@ -4340,12 +4357,19 @@ class Binder:
                             e = [lk]
                     lpd = core_link_pipe_bits(self.plan, tn, c.module, pn, len(bits)) \
                         if core_link_pipe(self.plan, tn, c.module, pn) else None
-                    if (self.plan.get("clock") or {}).get("core_link_pipe", {}).get("sources"):
+                    rdm = relay_depth_map(self.plan, tn)
+                    rdo = [0] * len(bits)               # S81-COLGEN-3: bits whose depth comes from relay_depth (instance-level)
+                    if (self.plan.get("clock") or {}).get("core_link_pipe", {}).get("sources") or rdm:
                         sd = []
                         for i_ in range(len(bits)):
                             dd_ = self.sinks[(ci, pn, i_)]
-                            sd.append(core_link_src_depth(self.plan, tn, F.cells[dd_[1]].module, dd_[2], dd_[3])
-                                      if dd_[0] == "int" else 0)
+                            x_ = core_link_src_depth(self.plan, tn, F.cells[dd_[1]].module, dd_[2], dd_[3]) \
+                                if dd_[0] == "int" else 0
+                            y_ = rdm.get((self.rel_of(dd_[1]), dd_[2]), 0) if dd_[0] == "int" else 0
+                            if x_ and y_:
+                                raise BindError(f"relay_depth {tn}: {self.rel_of(dd_[1])}.{dd_[2]} also has a core_link_pipe source depth")
+                            sd.append(x_ or y_)
+                            rdo[i_] = 1 if y_ else 0
                         if any(sd):
                             lpd = lpd or [0] * len(bits)
                             for i_, x_ in enumerate(sd):
@@ -4355,14 +4379,28 @@ class Binder:
                                 lpd[i_] = lpd[i_] or x_
                     if lpd and any(lpd):
                         e = list(e)
-                        for k_, depth in enumerate(sorted(set(lpd) - {0})):
-                            idx = [i_ for i_, x_ in enumerate(lpd) if x_ == depth]
+                        for k_, (depth, rd_) in enumerate(sorted({(x_, rdo[i_]) for i_, x_ in enumerate(lpd) if x_})):
+                            idx = [i_ for i_, x_ in enumerate(lpd) if x_ == depth and rdo[i_] == rd_]
                             lp = short_id(f"lp_{sv_id(r)}_{pn}_{k_}", 100)
                             decl.append(f"    wire [{len(idx) - 1}:0] {lp};")
-                            body.append(f"    ot_dp_dly #(.W({len(idx)}), .D({depth})) "
-                                        f"{short_id('u_pc_lp_' + sv_id(r) + '_' + pn + '_' + str(k_), 100)} (.clk(clk), "
-                                        f".d({_concat([e[i_] for i_ in idx])}), .q({lp}));  "
-                                        f"// core_link_pipe: +{depth} DECLARED cycle(s) on bits {idx[0]}..{idx[-1]}")
+                            if rd_:
+                                # relay_depth: D separate single-stage instances (u_y_xd_*), each its own relay_mid group
+                                prev = _concat([e[i_] for i_ in idx])
+                                for s_ in range(depth):
+                                    last = s_ == depth - 1
+                                    qn = lp if last else short_id(f"{lp}_s{s_}", 100)
+                                    if not last:
+                                        decl.append(f"    wire [{len(idx) - 1}:0] {qn};")
+                                    body.append(f"    ot_dp_dly #(.W({len(idx)}), .D(1)) "
+                                                f"{short_id('u_y_xd_' + sv_id(r) + '_' + pn + '_' + str(k_) + '_' + str(s_), 100)} "
+                                                f"(.clk(clk), .d({prev}), .q({qn}));  "
+                                                f"// relay_depth: stage {s_ + 1}/{depth} DECLARED on bits {idx[0]}..{idx[-1]}")
+                                    prev = qn
+                            else:
+                                body.append(f"    ot_dp_dly #(.W({len(idx)}), .D({depth})) "
+                                            f"{short_id('u_pc_lp_' + sv_id(r) + '_' + pn + '_' + str(k_), 100)} (.clk(clk), "
+                                            f".d({_concat([e[i_] for i_ in idx])}), .q({lp}));  "
+                                            f"// core_link_pipe: +{depth} DECLARED cycle(s) on bits {idx[0]}..{idx[-1]}")
                             for j_, i_ in enumerate(idx):
                                 e[i_] = f"{lp}[{j_}]"
                                 self.declare_core_input_pipe(tn, p, ci, pn, depth + int(core_input_pipe(

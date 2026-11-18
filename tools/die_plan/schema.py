@@ -1511,6 +1511,14 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["r
                        "grid_um": {"type": "number", "exclusiveMinimum": 0}, "optional": {"type": "boolean"}, "min_loads": {"type": "integer", "minimum": 0},
                        # FABLE-DIE-S81 11-16: private k-flop copy chain per region out of the driver's own depth (0 added cycles)
                        "copy_depth": {"type": "integer", "minimum": 1}}}}
+# S81-COLGEN-3 11-17 (S81-TYPES-R3 col relay chains over hard macros, hops > 405 um): per-type relay depth rows read by
+# bind.relay_depth_map: D (1..4) extra relay-named register stages (u_y_xd_*) after the named source leaf's output port, declared
+# in bind_core_input_pipe.json.  Written by relay_depth.py from the bound module + plan geometry.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["relay_depth"] = {
+    "type": "array", "items": {"type": "object", "additionalProperties": False, "required": ["inst", "D"],
+        "properties": {"inst": {"type": "string", "minLength": 1}, "port": {"type": "string"},
+                       "D": {"type": "integer", "minimum": 1, "maximum": 4}, "path_um": {"type": "number"},
+                       "stages_existing": {"type": "integer", "minimum": 0}, "note": {"type": "string"}}}}
 # Opt-in: realize the already priced internal stations in logical and physical source alike.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["realize_internal_stations"] = {"type": "boolean"}
 # TYPE-SAFE-2 11-06: gen-time ft station spread opt-out (ft_spread.py; absent = on)
@@ -1642,6 +1650,9 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["r
                                               "to": {"type": "string", "minLength": 1},
                                               "bits": {"type": "integer", "minimum": 1},
                                               "note": {"type": "string"}}}}
+# S81-COLGEN-3 11-17: relay_mid.tcl fails a relay chain hop > 405 um (gen_phys._relay_hop_fail; off = advisory WARN as before)
+SCHEMA["properties"]["budgets"]["properties"]["relay_hop_fail"] = {"type": "boolean"}
+SCHEMA["properties"]["budgets"]["properties"]["relay_hop_fail_types"] = {"type": "array", "items": {"type": "string"}}
 SCHEMA["properties"]["budgets"]["properties"]["r_reach"] = {"enum": ["error", "warn", "off"]}
 SCHEMA["properties"]["budgets"]["properties"]["r_reach_even"] = {"type": "boolean"}   # R-REACH-5 default chains (gen_phys)
 SCHEMA["properties"]["budgets"]["properties"]["r_dly_spread"] = {"anyOf": [{"type": "boolean"}, {"type": "array", "items": {"type": "string", "minLength": 1}}]}   # DLY-SPREAD G8: true | [type base names] (gen_phys dly_spread.tcl)
