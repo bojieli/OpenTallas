@@ -866,6 +866,41 @@ CORE_INPUT_PLACE_ANCHOR = "\n# QC-NK-HOLD A+P: core-input lockup latches + pipe 
 CORE_INPUT_PLACE_CHAIN = "\n# QC-NK-HOLD A+P: feeding register chains spread to the pipe register (macro-avoiding route)\nsource /work/core_input_chain.tcl\n"
 
 
+TAIL_COPY_SITE_HOOK = ("\n# KV-HG-OPUS-SITE 11-18: bind tail-split copies (land_pad_tail_split) FIRM on the trunk-end -> core-pin line\n"
+                       "uplevel #0 {source /work/tail_copy_anchor.tcl}\n")
+_TAIL_COPY_RE = re.compile(r"\bot_dp_dly(?:_keep)?\s*#\(\s*\.W\(1\)\s*,\s*\.D\((\d+)\)\s*\)\s+(u_pd\w+)\s*\(\s*\.clk\(\w+\)\s*,\s*"
+                           r"\.d\(([^()]*)\)\s*,\s*\.q\(\w+\)\s*\)\s*;\s*//\s*landing pad tail copy for core (\S+?):")
+
+
+def tail_copy_rows(rtl_dir):
+    """[(copy inst, K, group, core tag)] of every bind tail-split copy in the kit RTL; group = <d source>/<K> (the copies of one
+    pad: same trunk, or same in-flop and K = pad when the trunk is empty).  bind.py emits each one
+    as `ot_dp_dly_keep #(.W(1), .D(K)) u_pd<K>_.. (.clk, .d(<trunk q or in-flop q>), .q(..));  // landing pad tail copy for core <tag>:`)."""
+    rows = {}
+    for f in sorted(Path(rtl_dir).glob("*.sv")) + sorted(Path(rtl_dir).glob("*.v")):
+        for m in _TAIL_COPY_RE.finditer(f.read_text(errors="replace")):
+            rows.setdefault(m.group(2), (m.group(2), int(m.group(1)), f"{m.group(3).strip()}/{m.group(1)}", m.group(4)))
+    return list(rows.values())
+
+
+def tail_copy_place(kd):
+    """KV-HG-OPUS-SITE 11-18 (TAIL-COPY-SITE): automatic when the kit RTL holds bind tail-split copies, else nothing.  Writes
+    kd/tail_copies.tsv, copies tail_copy_anchor.tcl and sources it at the end of face_flops.tcl (PRE_GLOBAL_PLACE, after the
+    landing placement and core_input_anchor): copy last stage 1.5 um off its core pin, stages 1..K-1 evenly on the line from
+    the trunk end (L1 centre of the group's consumer pins), the trunk's last stage at the trunk end, FIRM through GPL and
+    released for DPL (ot_face_flops.txt).  QC st_a proof: the split without siting moved nothing (wns -901 -> -912 ps).
+    Returns the number of copies listed."""
+    rows = tail_copy_rows(Path(kd) / "rtl")
+    if not rows:
+        return 0
+    kd = Path(kd)
+    shutil.copyfile(Path(__file__).with_name("tail_copy_anchor.tcl"), kd / "tail_copy_anchor.tcl")
+    (kd / "tail_copies.tsv").write_text("# copy\tK\tgroup (d source/K)\tcore\n" + "".join(f"{c}\t{k}\t{g}\t{t}\n" for c, k, g, t in rows))
+    with (kd / "face_flops.tcl").open("a") as f_:
+        f_.write(TAIL_COPY_SITE_HOOK)
+    return len(rows)
+
+
 LP_EVEN_HOOK = "\n# KV-PVGEN: core_link_pipe stages (u_pc_lp_*) spread to equal hops between their driver and loads\nsource /work/lp_even.tcl\n"
 
 
@@ -6676,6 +6711,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
             raise ValueError(f"core_input_place: PRE_RESIZE_TCL {m_.group(1)} is not a kit file")
         else:
             (kd / "config.mk").write_text(mk.rstrip("\n") + "\nexport PRE_RESIZE_TCL = /work/core_input_chain.tcl\n")
+    tail_copy_place(kd)
     if core_link_pipe_place(P.raw, tn):
         shutil.copyfile(Path(__file__).with_name("lp_even.tcl"), kd / "lp_even.tcl")
         mk = (kd / "config.mk").read_text()
