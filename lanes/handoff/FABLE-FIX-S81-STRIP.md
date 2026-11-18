@@ -153,3 +153,8 @@ E = epyc10 /srv/opentallas-scratch2/claude/s81-b3-clk/rows/f2s5_S81-DIE-R (S81-D
 - t27 class table (1,475 ep): VPW wdo_q 256/-515, VP write ctl 60/-494, VP driver/coef 1,008/-358, reset into 19 core rst pins (vsw -416) + 22 flops, istation/relay 78/-156. Tool: epyc10 W/gate_cls.tcl + gate_cls.sh, work W/t27sta.
 - Asked S81-DIE-R3: XR on all leaves + cfr-with-xr + reset relay rows in the next event. NO strip relaunch before that tree. tt_setup_repair RSZ-0074 crash (t15/t16/t26) reported to WAVE-FLOW-R2.
 - Open waits: t25_ns2 pilot (watcher), route hold tree_check (S81-DIE-R3/WAVE-FLOW-R2), t37 calibration launch (S81-TYPES-R3).
+
+## 2026-11-18 05:2x PST t25_ns2 result
+- GRT 0 with stride 2 (21 iters) vs 1,022; kit then DPL-0033 after GRT repair (place53892/place53728 overlap) = flow class, same as t51 -> WAVE-FLOW-R2.
+- D8e row handed to S81-DIE-R3: budgets.face_flop_ns_types {ot_s81sl_leaf: {row_stride 2, inset_rows 0}}.
+- Branch claude/s81-face-ns-dense-1118 @3bab6c734a3 (default-on rule) NOT gated: fires on 387/395 S81 types (all buses 4.6-4.8 pins/um). Asked COORD (a) leaf row only [rec] or (b) default-on. Lane clone is on that branch.
