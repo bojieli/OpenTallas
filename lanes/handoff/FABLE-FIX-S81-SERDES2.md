@@ -247,3 +247,12 @@ NEXT
 - Dry run: 293 pairs, span -> 49; FF hold <0 182 -> 498 (worst -55.85 -> -38.81); TT setup < -42 284 -> 206. Not a closure.
 - Running: nominal-pin-cap census (option 2 for the owner question): epyc9 drtx/census/{tt,ff}_spef_nr.tsv, logs census-nr-*.out.
 - Next: slack-aware plan; data fix for lpl_r.rc->o (row for S81-DIE-R3); insert step.
+
+## State 07:05 PST 11-18
+- Option 2 (nominal pin caps, lib copies without *_capacitance_range on INVBUF + SEQ CLK) measured on H17: TT setup -117.47 -> -69.66,
+  below -42: 284 -> 2; TT hold -42.15 -> -1.06 (134 -> 2); FF hold internal 258 -> 20 (worst -55.85 -> -15.88); ports 1273 -> 493.
+  COORD took the policy question to the owner; sign-off NOT changed. Files epyc9 drtx/census/*_spef_nr.*, drtx/nr_{tt,ff}/, drtx/nrcmp.py.
+- Rows posted to S81-DIE-R3 for D8e: (1) u_cmem read register (+1 cycle), (2) centre rck trunk, (3) define OT_S81_LPL_CHUNK on the 11 serdes
+  types (zero-cycle fix for lpl_r.rc -> o; exists on main since 89ff4780ef7, proofs results/s81_rck_10_vj_1107). No confirmation seen yet.
+- Rebalance insert step PAUSED (COORD) until the owner rules on option 2. Slack-aware plan not started.
+- Pilot rebuild after D8e: t13 from generated kit (S81-SERDES-GEN), then route with the hooks, sign-off, exports. Nothing exported.
