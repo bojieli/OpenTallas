@@ -7308,7 +7308,7 @@
     "__batch_s81colflow_resetempty_0750": "46 col rows FAIL place reset_chain_spread 'RESET v5 refuses empty explicit buffer set' -> fixed 235d4be8301 (no buffer = nothing to prune), in rt/current; S81-COL-FLOW-1118 per COORD",
     "__batch_s81colflow_resetempty_0810": "45 col rows FAIL place reset_chain_spread 'RESET v5 refuses empty explicit buffer set' -> fixed 235d4be8301 (no buffer = nothing to prune), in rt/current; S81-COL-FLOW-1118 per COORD",
     "__batch_s81colflow_resetempty_0830": "2 col rows FAIL place reset_chain_spread 'RESET v5 refuses empty explicit buffer set' -> fixed 235d4be8301 (no buffer = nothing to prune), in rt/current; S81-COL-FLOW-1118 per COORD",
-    "__batch_s81colflow_relaymid_0850": "1 col rows FAIL place reset_chain_spread 'RESET v5 OT_HOOK_COVERAGE relay_mid' -> fixed 235d4be8301 (no buffer = nothing to prune), in rt/current; S81-COL-FLOW-1118 per COORD"
+    "__batch_s81colflow_relaymid_0850": "1 col row FAIL place OT_HOOK_COVERAGE relay_mid site-space fallback (even hop within 405 um) -> fixed 096be78133f (only depth fallbacks fail closed) + kit copies patched; S81-COL-FLOW-1118"
    },
    "place_spill": true,
    "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
