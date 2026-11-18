@@ -430,3 +430,4 @@
 - 2026-11-18 04:10 PST DISK-RATE epyc10 /srv/opentallas-scratch2: free 1012 GB, falling 190 GB/h, floor 50 GB in 5.1 h (cron disk_rate.py; read-only)
 - 2026-11-18 04:10 PST DISK-RATE intel2 /srv/opentallas-scratch2: free 107 GB, falling 12 GB/h, floor 50 GB in 4.7 h (cron disk_rate.py; read-only)
 - 2026-11-18 04:11 PST STATE tools sync recovered after 20 min (rt/current 7bf66d3c64c2)
+- 2026-11-18 04:12 PST ALERT [OT-TOOLS-SYNC -> COORD] runtime sync FAILED, rt/current stays 637a1602618e: exit 4 (see /home/ubuntu/merge-queue/log)
