@@ -446,3 +446,4 @@
 - 2026-11-18 04:28 PST STATE tools sync recovered after 0 min (rt/current 545c4b64d610)
 - 2026-11-18 04:40 PST DISK-RATE epyc2 /srv/opentallas-scratch2: free 216 GB, falling 60 GB/h, floor 50 GB in 2.8 h (cron disk_rate.py; read-only)
 - 2026-11-18 04:45 PST ALERT [AUTO-CLEAN -> FLEET-OPS-R, COORD] epyc2: the automatic cleanup timer has not completed a pass for 102 min (limit 90 min): check `systemctl --user status ot-auto-clean.timer` on epyc2
+- 2026-11-18 04:45 PST ALERT [AUTO-CLEAN -> FLEET-OPS-R, COORD] epyc7: the automatic cleanup timer has not completed a pass for 103 min (limit 90 min): check `systemctl --user status ot-auto-clean.timer` on epyc7
