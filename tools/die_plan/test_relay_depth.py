@@ -238,3 +238,17 @@ def test_lane_fifo_outputs_stay_aligned(monkeypatch):
     rows, rep = RD.type_rows(raw, "t", text)
     assert [(r["inst"], r["port"], r["bits"], r["D"]) for r in rows] == [("u_t0", "cci", [0, 0], 1), ("u_t0", "xai", [0, 1], 1)]
     assert len(rep["aligned_groups"]) == 2 and rep["unfixed"] == []
+
+
+def test_rows_match_dotted_leaf_names():
+    """FABLE-FIX-S81-BANKLEAF 11-18: a leaf under a content instance has the rel u_r0.u_sink and the instance name
+    u_u_r0_u_sink; relay_depth.py rows carry the instance-name form (u_r0_u_sink) and must match it"""
+    b, part = vehicle([{"inst": "u_r0_u_sink", "port": "i", "side": "sink", "bits": [0, 1], "D": 1},
+                       ])
+    b.rel_of = lambda ci: ("u_r0.u_y_rt_1", "u_r0.u_sink")[ci]
+    text, _ = b.emit_type("src", part)
+    assert len(re.findall(r"ot_dp_dly #\(\.W\(2\), \.D\(1\)\) u_y_xd_u_r0_u_sink_i_0_0 ", text)) == 1
+    b2, part2 = vehicle([{"inst": "u_r0_u_y_rt_1", "D": 1}])
+    b2.rel_of = lambda ci: ("u_r0.u_y_rt_1", "u_r0.u_sink")[ci]
+    text2, _ = b2.emit_type("src", part2)
+    assert "u_y_xd_" in text2

@@ -930,7 +930,7 @@ def relay_depth_map(plan, tn):
     for row in t.get("relay_depth") or []:
         if row.get("side") == "sink":
             continue
-        k = (row["inst"], row.get("port", "o"))
+        k = (sv_id(row["inst"]), row.get("port", "o"))      # leaf names compare in instance-name form (u_r0.u_cf == u_r0_u_cf)
         if k in out:
             raise BindError(f"relay_depth {tn}: {k[0]}.{k[1]} listed twice")
         out[k] = int(row["D"])
@@ -948,7 +948,7 @@ def relay_depth_sink_map(plan, tn):
         if row.get("side") != "sink":
             continue
         lo, hi = (row.get("bits") or [0, None])
-        runs = out.setdefault((row["inst"], row.get("port", "i")), [])
+        runs = out.setdefault((sv_id(row["inst"]), row.get("port", "i")), [])
         for d0, l0, h0 in runs:
             if lo <= (10 ** 9 if h0 is None else h0) and l0 <= (10 ** 9 if hi is None else hi):
                 raise BindError(f"relay_depth {tn}: sink {row['inst']}.{row.get('port', 'i')} bit runs overlap")
@@ -4710,7 +4710,7 @@ class Binder:
                     lpd = core_link_pipe_bits(self.plan, tn, c.module, pn, len(bits)) \
                         if core_link_pipe(self.plan, tn, c.module, pn) else None
                     rdm = relay_depth_map(self.plan, tn)
-                    rds = relay_depth_sink_map(self.plan, tn).get((r, pn), [])
+                    rds = relay_depth_sink_map(self.plan, tn).get((sv_id(r), pn), [])
                     rdo = [0] * len(bits)               # S81-COLGEN-3: bits whose depth comes from relay_depth (instance-level)
                     if (self.plan.get("clock") or {}).get("core_link_pipe", {}).get("sources") or rdm or rds:
                         sd = []
@@ -4718,17 +4718,17 @@ class Binder:
                             dd_ = self.sinks[(ci, pn, i_)]
                             x_ = core_link_src_depth(self.plan, tn, F.cells[dd_[1]].module, dd_[2], dd_[3]) \
                                 if dd_[0] == "int" else 0
-                            y_ = rdm.get((self.rel_of(dd_[1]), dd_[2]), 0) if dd_[0] == "int" else 0
+                            y_ = rdm.get((sv_id(self.rel_of(dd_[1])), dd_[2]), 0) if dd_[0] == "int" else 0
                             if x_ and y_:
                                 raise BindError(f"relay_depth {tn}: {self.rel_of(dd_[1])}.{dd_[2]} also has a core_link_pipe source depth")
                             z_ = next((d_ for d_, l_, h_ in rds if i_ >= l_ and (h_ is None or i_ <= h_)), 0)
                             if z_ and (x_ or y_):
                                 raise BindError(f"relay_depth {tn}: sink {r}.{pn}[{i_}] also has a source-level pipe")
-                            self.__dict__.setdefault("_rd_used", set()).add((tn, r, pn)) if z_ else None
+                            self.__dict__.setdefault("_rd_used", set()).add((tn, sv_id(r), pn)) if z_ else None
                             sd.append(x_ or y_ or z_)
                             rdo[i_] = 1 if (y_ or z_) else 0
                             if y_:
-                                self.__dict__.setdefault("_rd_used", set()).add((tn, self.rel_of(dd_[1]), dd_[2]))
+                                self.__dict__.setdefault("_rd_used", set()).add((tn, sv_id(self.rel_of(dd_[1])), dd_[2]))
                         if any(sd):
                             lpd = lpd or [0] * len(bits)
                             for i_, x_ in enumerate(sd):
@@ -4837,7 +4837,7 @@ class Binder:
         if t.get("relay_depth"):
             used = getattr(self, "_rd_used", set())
             miss = [f"{row['inst']}.{row.get('port', 'i' if row.get('side') == 'sink' else 'o')}" for row in t["relay_depth"]
-                    if (tn, row["inst"], row.get("port", "i" if row.get("side") == "sink" else "o")) not in used]
+                    if (tn, sv_id(row["inst"]), row.get("port", "i" if row.get("side") == "sink" else "o")) not in used]
             if miss:      # a row that names no leaf / drives no internal sink would silently leave a hop over the reach
                 raise BindError(f"relay_depth {tn}: {len(miss)} row(s) matched no internal sink: {miss[:6]}")
         text = head + f"module {mod}{pblock} (\n" + "\n".join(_strip_comment_comma(ports)) + "\n);\n" + "\n".join(decl) + \
