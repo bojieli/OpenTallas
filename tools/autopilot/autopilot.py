@@ -1195,6 +1195,10 @@ def classify(c, client):
         return "CRASH", "infra-lost", client.get("msg", "ot-run NOT COMPLETED")
     if c.get("oom"):
         return "CRASH", "infra-oom", c["oom"]
+    # FABLE-FLOW-1000 (1): 30 stage jobs died with ENOSPC in one hour and were filed CRASH -> structural.tsv; a full disk is the HOST's failure, the job resubmits (ot-run places it on a host with room)
+    _txt = " ".join(str(x) for x in (c.get("orfs_error"), c.get("runlog_tail"), client.get("msg")) if x)
+    if re.search(r"No space left on device|ENOSPC|disk quota exceeded", _txt, re.I):
+        return "CRASH", "infra-disk", "no space left on device: " + (re.search(r".{0,120}(?:No space left on device|ENOSPC|disk quota exceeded).{0,60}", _txt, re.I).group(0).strip())
     if client.get("exit") in (137, 143) and client.get("watchdog"):
         w = client["watchdog"]
         why = w.split(" why ", 1)[1] if " why " in w else "reason not logged (WATCHDOG.txt of that tick)"
@@ -1223,7 +1227,7 @@ def classify(c, client):
     return "CRASH", "flow-error", c.get("orfs_error") or (c.get("runlog_tail") or "")[-300:] or f"exit {client.get('exit')}"
 
 
-INFRA_KINDS = ("infra-oom", "infra-lost", "infra-notrun", "infra-orphan")
+INFRA_KINDS = ("infra-oom", "infra-lost", "infra-notrun", "infra-orphan", "infra-disk")
 
 
 def parse_client_log(text):
