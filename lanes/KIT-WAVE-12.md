@@ -1146,3 +1146,7 @@ OT_LAYOUT_RENDER place 2026-11-18 11:48:10 2 PNG 16 s: place 2/6 flagged: fanout
 make[1]: *** [Makefile:585: do-5_1_grt] Error 1
 make: *** [Makefile:585: /work/run/results/asap7/dp_sle_st_a_v1__cl989804f6__cl18eece69/base/5_1_grt.odb] Error 2
  | kit epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N1B/items/sle_st_a_v1__cl989804f6__cl18eece69/attempt_2/gen/sle_st_a_v1__cl989804f6__cl18eece69 src main@eb1e73448bd042684261a13c50cd0fb5ce21a513 | review no review bundle | run data kept: cleanup deferred; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-18 04:50:17 PST AUTOPILOT -> KIT-WAVE-12: FAILED f7c089d835cf qwen_compute/sle_sc_v3 (CRASH/flow-error): _LAYOUT_RENDER place 2026-11-18 12:34:29 2 PNG 17 s: place 1/6 flagged: local_density=0.911 | not computable: opposite_face_pins,channel_tracks,clock,fanout_spread
+make[1]: *** [Makefile:585: do-5_1_grt] Error 1
+make: *** [Makefile:585: /work/run/results/asap7/dp_sle_sc_v3/base/5_1_grt.odb] Error 2
+ | kit epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N3/items/sle_sc_v3/attempt_2/gen/sle_sc_v3 src main@eb1e73448bd042684261a13c50cd0fb5ce21a513 | review no review bundle | run data kept: cleanup deferred; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
