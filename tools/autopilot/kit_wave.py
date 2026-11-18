@@ -790,6 +790,20 @@ def release_pilot_failed(rows, die, item, t0):
     return bool(failed) and pilot_fail_scope(last) != "shared"
 
 
+def tree_has_term(cfg, die, token):
+    """WAVE-FLOW-R2 11-17 (FABLE-FLOW-1700 item 2): tree_has:<rNNN> / tree_has_sha:<sha> is true only when the die's CURRENT tree tools contain that ruling / commit
+    (tools_lag ancestry against the tree's tools base: tools_sha, marker main_sha, src_sha); unknown / unreadable = False (the hold stays)"""
+    try:
+        spec = _ilu.spec_from_file_location("tools_lag", str(Path(__file__).resolve().parents[1] / "tools_lag.py"))
+        TL = _ilu.module_from_spec(spec)
+        spec.loader.exec_module(TL)
+        d = (cfg.get("dies") or {}).get(die) or {}
+        pin = TL.pin_of(d)
+        return bool(pin) and TL.tree_has(cfg.get("tools_lag_repo") or TL.DEFAULT_REPO, pin, token, main_ref=cfg.get("tools_lag_main") or "main")
+    except Exception:
+        return False
+
+
 def hold_ctx(cfg, is_merged=None, tree_fn=None, marker_fn=None):
     import hold_records as HR
     cells = cfg.get("_item_cells") or {}
@@ -798,6 +812,7 @@ def hold_ctx(cfg, is_merged=None, tree_fn=None, marker_fn=None):
                   kit_snap_fn=lambda c, die: bool(opt(c, die, "kit_snap")),
                   cells_fn=lambda die, item: cells.get((die, item)),
                   proof_fn=proof_pass_fn(proofs),
+                  tree_has_fn=lambda die, token: tree_has_term(cfg, die, token),
                   tree_fn=tree_fn, marker_fn=marker_fn, result_fn=result_pass_fn(cfg.get("_result_lines") or []), lint_fn=lambda die, item: lint_clean_item(cfg, die, item),
                   pilot_fn=lambda die, sha12: sha12 in ((cfg.get("_pilot_passed") or {}).get(die) or []),
                   release_pilot_fn=lambda die, item, t0: release_pilot_passed(cfg.get("_item_rows") or [], die, item, t0, cfg),
