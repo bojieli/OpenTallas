@@ -89,7 +89,26 @@ def test_opt_out_restores_the_plain_path():
     assert "grow" not in out and "ERR OT_CLAND no legal" in out, out
 
 
-def test_dispatch_routes_only_start_tags_to_the_start_grow():
-    assert ("elseif {[string match {reader-start:*} $tag] || [string match {writer-start:*} $tag]} "
+def test_dispatch_routes_only_start_tags_to_the_start_grow():  # KVHG-FACEGROW: incl. writer-face
+    assert ("elseif {[string match {reader-start:*} $tag] || [string match {writer-start:*} $tag] || "
+            "[string match {writer-face:*} $tag]} "
             "{ cland_avoid_rings $prefix {cland_put_start $i $rect $tag} } else { cland_put $i $rect $tag }") in TCL
     assert "if {$coll} { cland_put_collector $i $rect $tag } elseif {$tag eq \"local-reset\"}" in TCL
+
+
+@needs_tcl
+def test_writer_face_on_a_full_out_face_register_grows():
+    """KVHG-FACEGROW 11-18 (kv3_pv_v2 fstart_ft26_o): a writer-face window whose rows are all FIRM grows like START."""
+    out = _run(17000, 23000, tag="writer-face:ft26_o")
+    assert "OT_CLAND start grow u_cland_writer_start_x_o_0/q (writer-face:ft26_o): window x2" in out and "LOC" in out, out
+
+
+@needs_tcl
+def test_free_writer_face_window_is_unchanged():
+    out = _run(0, 0, tag="writer-face:ft0_o")
+    x = int(re.search(r"LOC (\d+) (\d+)", out).group(1))
+    assert 17840 <= x <= 22160 - 108 and "grow" not in out
+
+
+def test_writer_face_band_bound_skipped_like_start():
+    assert ("[string match {writer-start:*} $tag]\n     || [string match {writer-face:*} $tag]) && [cland_start_grows $rect])") in TCL
