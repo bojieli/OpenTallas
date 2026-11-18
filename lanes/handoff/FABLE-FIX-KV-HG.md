@@ -2,6 +2,20 @@
 
 Work dir epyc9 /srv/opentallas-scratch2/claude/fable-fix-kv-hg3 (sc/ = STA dumps, rm/ = relay proof kits, wt/ = lane clone). Hub logs intel2 ~/tmp/ffkhg3.
 
+## STATE 11-18 10:25 PST: fixes #1+#2+#3 together, private kit k3 (COORD order 09:4x)
+- Kit epyc9 /srv/opentallas-scratch2/claude/fable-fix-kv-hg3/k3/gen/kv3_hgi_v1__cl141fc26e (built on epyc7 k3/: kitrtl.sh, gen3.sh, kt_stations.py).
+  = kit RTL from the KV-D23-REACH mirror_ab bind (fix #3: ot_dp_rsync S=2 + ot_dp_rtail D=3 per core, tail_copy_anchor.tcl)
+  + kt_stations.py: 28 x 2 parent stages u_ist_kt_head<h>_e<e>_t<t>_<j> (ot_dp_dly W=34), FIRM at the plan regs_um via istations.tcl (fix #2)
+  + GEN env relay chain keys (fix #1), tools = main 0c3fb152c3 (lane clone epyc7 wt7).
+- Running: ot-run route goal, 64 GB / 16 thr, log intel2 ~/tmp/ffkhg3/k3_route.log. Watcher intel2 ~/tmp/ffkhg3/chain_k3.sh posts the CTS TT
+  number and the end of the run by itself (AUTO posts under this lane). DO_NOT_COUNT, no export.
+- Fix #2 root cause: kit_istations.core_stations maps core: rows only to S81 leaf classes (KV rows = core_unmapped); the rows are a DEMAND
+  that no RTL carries; and only 14 of 16 t inputs per head cross the parent: the two lanes of e0 (incl. lane 0 = ktree valid) reach u_kt
+  inside kv3_head_eighth_e0. Real fix (D24): parent stages on the 14 lanes (bind) + 2 stk stages on the 2 local lanes in the e0 core RTL
+  + re-harden e0 + head score latency +2. kt_stations.py is the parent half in kit-edit form; it is NOT on main.
+- If k3 fails early: read k3 run_route.log; is_place misses on u_ist_kt_* mean Yosys renamed the ot_dp_dly flops (GENBUG-1 note in
+  istations.tcl: use is_place_alt with the q[ form).
+
 ## RESULT 11-18 09:35 PST: proof p2 (hgi_v1__cl141fc26e, HG6 kit + relay chain keys), post-CTS TT, same STA script as the base
 - failing setup ends 1,450 -> 290; tns -123,329 -> -24,581; hst_t2->head (673 ends) and lpad->hst_g (477 ends) = 0 left.
 - wns -309 -> -402: the reset rs_ri -> core rst_n class moved (27 ends); kp core->core 192+ ends at -251. These two classes are all that is left.
