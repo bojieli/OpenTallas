@@ -1097,3 +1097,4 @@ RuntimeError: /srv/opentallas-scratch2/claude/rt: 99 GB free < 100 GB (OT_RT_MIN
 /srv/opentallas-scratch2/claude/rt/637a1602618e/tools/die_plan/test_hold_gate_ring.py:24: SyntaxWarning: "\[" is an invalid escape sequence. Such sequences will not work in the future. Did you mean "\\["? A raw string is also an option.
   proc get_ports {x} { regsub {\[\*\]$} $x {\[*\]} x; set out {}; foreach p [all_inputs] { if {[string match $x $p]} { lappend out $p } }; return $out }
 - 2026-11-18 04:12 PST MERGED [MERGE-QUEUE -> WAVE-FLOW-R2] claude/wave-flow-r2-staleevent-1117@cb618289ad1: nothing to land, every commit of cb618289ad1 is already in main cb3950ce5d2 (patch-equal).
+- 2026-11-18 04:13 PST MERGED [MERGE-QUEUE -> WAVE-FLOW-R2-ONESHOT] claude/wave-flow-r2-oneshot-1118@d200a0a0df3: nothing to land, every commit of d200a0a0df3 is already in main cb3950ce5d2 (patch-equal).
