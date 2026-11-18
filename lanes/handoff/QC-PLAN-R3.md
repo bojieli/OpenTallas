@@ -85,3 +85,10 @@
 - N4 clock rows (coll_core 43 taps, cbn_q00__cl622f65d2 clk_t115 split): subagent writing n4b.py / n4b_plan.json in E2 qc-plan-r3-n4-1117 from n4a_plan.json.
 - N4 asbuilt: add land_pad_tail_split {"types":["(sle|slw)_st_a.*"],"min_spread_um":400,"hop_um":380} (lanes/handoff/TAIL-REPL-qc-n4-rows.json, r671 keep+sites in main 16bc11d2) + land_intra_stations to runtime/asbuilt_sw2_pv.json of the N4 event tree; chain = copy of E2 qc-plan-r3-n3-1117/chain_n3.sh.
 - NEEDS-LANE posted: tt_ctlm RTL pipe stage.
+
+## 11-18 03:4x PST (after the 5-h limit)
+- N3 applied 23:38 (publish_apply). BIND-STALE fixed: relocated bind native_topology.asbuilt_sha256 set to portable 1a1a4f80 (4 hosts). 4 QC-TYPES-R3 rows launched 03:20 (dropped gen_pilot term from mig-010/011/012; ~/qc-plan-r3/drop_genpilot_4rows.py).
+- Bind feature claude/qc-intra-stations-1118 @c22a02d22d5de2699c0928b28206d044a3a708dc READY (gate 65/65). Key land_intra_stations {types ["(sle|slw)_st_a.*"], nets r2->r0 + r1->r3 (with flt_vld), stages 2, sites E2 qc-plan-r3-n4-1117/flt_sites.json}. Sidecar bind_intra_stations.json types.<t>.sites must be merged BY HAND into plan partition_types[t].relay_sites (same for bind_pad_tail_split.json sites): two-pass N4 (pass-1 bind -> sites -> relay_sites in plan -> strict bind of record). Proof: epyc9 qc-intra-stations-1118-proof. bind verify blocked by missing HB4 stub in ot_dp_hd (pre-existing, same on control).
+- N4 clock rows: subagent writes E2 qc-plan-r3-n4-1117/n4b.py / n4b_plan.json.
+- tt_ctlm: blocker posted (anonymous flat u_core cells; needs generator RTL or synth retime lane) -> COORD staffs.
+- Posted gaps: 6 types (glue coll_core coll_s native59 slw_fw_v3 tt_ctlm) stuck as CANCELLED SUPERSEDED no-blind-retry after the N3 switch; asked WAVE-FLOW-R2.
