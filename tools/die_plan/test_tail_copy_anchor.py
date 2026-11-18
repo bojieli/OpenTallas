@@ -151,3 +151,37 @@ def test_kit_writer_wiring_and_hook_contract():
     assert "setPlacementStatus FIRM" in run and "ot_face_flops.txt" in run          # FIRM at GPL, released for DPL
     assert "/work/tail_copies.tsv" in run and run.rstrip().endswith("tcs_run")
     assert "[llength $macs] != 1" in run and "[llength $ffs] != $k" in run          # merged / shared copies are left alone
+
+
+# ---- KV-D23-REACH 11-18: pipe copies and reset spine relay copies ride the same hook ------------------------------------------
+BOUND_D23 = """module ts_bound(input clk);
+    ot_dp_dly #(.W(512), .D(56)) u_d60_vport_W_out_v_hi_t (.clk(clk), .d(w_vport_W_out_v_hi), .q(d60_vport_W_out_v_hi_t));  // pipe trunk: shared stages of the 60-stage pipe (tail split)
+    ot_dp_dly_keep #(.W(1), .D(4)) u_pd4_d60_vport_W_out_v_hi_7_pvg0_p2_60 (.clk(clk), .d(d60_vport_W_out_v_hi_t[7]), .q(pd4_d60_vport_W_out_v_hi_7_pvg0_p2_60));  // landing pad tail copy for core pvg0_p2: pipe tail, as-built relative timing
+    ot_dp_rsync #(.W(1), .S(2)) u_rs_ri_pv_u_g0_j_rst_n (.clk(clk), .a(ri_pv_u_g0_j_rst_n), .q(ri_pv_u_g0_j_rst_n_q));  // KV-D23-REACH: synchroniser, 4 relay stage(s) replicated per region
+    ot_dp_rtail #(.D(4)) u_rs_ri_pv_u_g0_j_rst_n_r3 (.clk(clk), .a(ri_pv_u_g0_j_rst_n), .d(ri_pv_u_g0_j_rst_n_q[0]), .q(rs_ri_pv_u_g0_j_rst_n_r3[0]));  // landing pad tail copy for core u_pvg0_p2: reset spine relay (2 load(s)); 6 stage(s) total
+endmodule
+"""
+
+
+def test_gen_phys_lists_pipe_and_reset_copies(tmp_path):
+    kd = _kit(tmp_path, BOUND_D23)
+    assert G.tail_copy_place(kd) == 2
+    rows = [ln.split("\t") for ln in (kd / "tail_copies.tsv").read_text().splitlines() if not ln.startswith("#")]
+    assert rows == [["u_pd4_d60_vport_W_out_v_hi_7_pvg0_p2_60", "4", "d60_vport_W_out_v_hi_t[7]/4", "pvg0_p2"],
+                    ["u_rs_ri_pv_u_g0_j_rst_n_r3", "4", "ri_pv_u_g0_j_rst_n_q[0]/4", "u_pvg0_p2"]]
+
+
+@needs_tclsh
+def test_hook_names_reset_copies_and_pipe_trunks(tmp_path):
+    out = tcl(tmp_path, ["tcs_copy_of", "tcs_is_trunk"], r"""
+set c [dict create u_rs_ri_pv_u_g0_j_rst_n_r3 {4 g} u_pd4_d60_vport_W_out_v_hi_7_pvg0_p2_60 {4 h}]
+foreach n [list {u_bound.u_rs_ri_pv_u_g0_j_rst_n_r3.r[2]$_DFF_PN0_} {u_bound.u_rs_ri_pv_u_g0_j_rst_n_r4.r[2]$_DFF_PN0_} \
+              {u_bound.u_rs_ri_pv_u_g0_j_rst_n.b[0].r[1]$_DFF_PN0_} {u_bound.u_pd4_d60_vport_W_out_v_hi_7_pvg0_p2_60.r[3]$_DFF_P_}] {
+  set r [tcs_copy_of $n $c]; puts [expr {$r eq "" ? "-" : $r}]
+}
+foreach n [list {u_bound.u_d60_vport_W_out_v_hi_t.r[55][7]$_DFF_P_} {u_bound.u_pd26_a_0_t_29.q$_DFF_P_} {u_bound.u_d60_vport_W_out_v_hi.r[59][7]$_DFF_P_} \
+              {u_bound.u_pd3_a_0_pvg0_p0_29.q$_DFF_P_} {u_bound.u_d60_x_t_y.r[1]$_DFF_P_}] {
+  puts [tcs_is_trunk $n]
+}
+""")
+    assert out == ["u_rs_ri_pv_u_g0_j_rst_n_r3", "-", "-", "u_pd4_d60_vport_W_out_v_hi_7_pvg0_p2_60", "1", "1", "0", "0", "0"]

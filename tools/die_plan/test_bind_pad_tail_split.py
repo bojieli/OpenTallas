@@ -184,3 +184,121 @@ def test_keep_cell_and_site_rows():
     assert T.site_rows("u_pd2_x_0_u_r0_5", 2, (1.0004, 2.0)) == {"u_pd2_x_0_u_r0_5.r[0]": [1.0, 2.0], "u_pd2_x_0_u_r0_5.q": [1.0, 2.0]}
     assert T.site_rows("u_p", 1, (3, 4)) == {"u_p.q": [3.0, 4.0]}
     assert T.centroids({"a": [(0, 0), (10, 20)]}) == {"a": (5.0, 10.0)}
+
+
+# ---- KV-D23-REACH 11-18: pipe tail split (sub-key "pipes") ------------------------------------------------------------------
+SPAR_PIPE = """`timescale 1ns/1ps
+module mrly (input wire ck, input wire [7:0] a, output reg [7:0] b);
+    always @(posedge ck) b <= a;
+endmodule
+module spar (input wire ck, input wire flt, input wire [7:0] a, input wire [7:0] b, output wire [8:0] q0,
+             output wire [8:0] q1);
+    wire [7:0] m; wire [7:0] m1; wire [7:0] m2; wire [7:0] m3; wire mf;
+    lf_b_nid u_m (.clk(ck), .i(b), .o(m), .flt(mf));
+    mrly u_r0 (.ck(ck), .a(m), .b(m1));
+    mrly u_r1 (.ck(ck), .a(m1), .b(m2));
+    mrly u_r2 (.ck(ck), .a(m2), .b(m3));
+    lf_sink u_s0 (.clk(ck), .flt(flt), .d0(a), .d1(m3), .q(q0));
+    lf_sink u_s1 (.clk(ck), .flt(flt), .d0(a), .d1(m3), .q(q1));
+endmodule
+"""
+
+
+def _plan_pipe(tmp_path, opt, gap=1000.0, tag="p"):
+    """the sink partition holds a source leaf u_m whose output reaches d1 of BOTH cores through 3 as-built relay stages:
+    bind keeps them as ONE intra-partition pipe ot_dp_dly #(.W(8), .D(3)) u_d3_u_m_o read by 16 pins on two cores"""
+    src = tmp_path / "srcp"
+    if not src.exists():
+        shutil.copytree(EX, src)
+        die = (src / "die.v").read_text()
+        die = die.replace("wire [8:0] sq;", "wire [8:0] sq; wire [8:0] sq1;")
+        die = die.replace("lf_sink snk (.clk(ck), .flt(fo), .d0(y0), .d1(y1), .q(sq));",
+                          "spar snk (.ck(ck), .flt(fo), .a(y0), .b(y1), .q0(sq), .q1(sq1));")
+        assert "spar snk" in die
+        (src / "die.v").write_text(die)
+        (src / "spar.sv").write_text(SPAR_PIPE)
+    p = json.loads((EX / "die_plan_lanes.json").read_text())
+    ab = p["asbuilt"]
+    ab["base"] = str(src)
+    ab["files"] = ab["files"] + ["spar.sv"]
+    ab["dissolve"] = ab["dissolve"] + ["spar"]
+    ab["transport"] = ab["transport"] + [{"module": "mrly", "map": {"b": "a"}, "drop_in": ["ck"], "stages": 1}]
+    ts = p["partition_types"]["ts"]
+    for b in ts["buses"]:
+        b["leaf"] = "u_m.i" if b["name"] == "d1_i" else b["leaf"].replace("core.d0", "u_s0.d0").replace("core.", "u_s0.")
+    ts["outline_um"] = [2000.0, 100.0]
+    ts["hard_cores"] = [dict(inst="u_s0", module="lf_sink", origin_um=[0.0, 0.0], outline_um=[20.0, 40.0], pins=_pins(1.0)),
+                        dict(inst="u_s1", module="lf_sink", origin_um=[gap, 0.0], outline_um=[20.0, 40.0], pins=_pins(1.0))]
+    if opt is not None:
+        ab["land_pad_tail_split"] = dict(types=["ts"], min_spread_um=400, hop_um=380, **opt)
+    f = tmp_path / f"plan_{tag}.json"
+    f.write_text(json.dumps(p))
+    return f
+
+
+def test_pipe_rule():
+    cfg = TS.config({"land_pad_tail_split": {"types": ["kv3_pv.*"], "pipes": True}})
+    assert cfg["pipes"] is True and TS.config({"land_pad_tail_split": {"types": ["x"]}})["pipes"] is False
+    assert TS.pipe_depth(60, [2804.3, 900.0], cfg) == 4          # ceil(1402 / 380), one K per pipe = the widest split bit
+    assert TS.pipe_depth(3, [1000.0], cfg) == 2
+    assert TS.pipe_depth(2, [2804.3], cfg) == 1                  # one trunk stage always stays: K <= N - 1
+    assert TS.pipe_depth(1, [2804.3], cfg) == 0 and TS.pipe_depth(9, [], cfg) == 0
+    with pytest.raises(ValueError):
+        TS.config({"land_pad_tail_split": {"types": ["x"], "pipes": 1}})
+
+
+@needs_yosys
+def test_pipes_key_absent_identical_and_key_on_splits_the_pipe(tmp_path, monkeypatch):
+    monkeypatch.setenv("OT_HCPARAM_ALL", "0")
+    base, pads, split = tmp_path / "base", tmp_path / "pads", tmp_path / "split"
+    assert _bind(_plan_pipe(tmp_path, None, tag="b"), base, "elab", "bind", "verify") == 0
+    assert _bind(_plan_pipe(tmp_path, {}, tag="k"), pads, "elab", "bind") == 0
+    assert _bind(_plan_pipe(tmp_path, {"pipes": True}, tag="s"), split, "elab", "bind", "verify") == 0
+    rtl_b = (base / "rtl" / "bt_ts.sv").read_text()
+    rtl_s = (split / "rtl" / "bt_ts.sv").read_text()
+    # base: ONE 8-bit 3-stage pipe from the source leaf, read by d1 of both cores (16 pins)
+    assert re.findall(r"ot_dp_dly #\(\.W\((\d+)\), \.D\((\d+)\)\) u_(d\d+_\w+) ", rtl_b) == [("8", "3", "d3_u_m_o")]
+    assert rtl_b.count(".d1(d3_u_m_o[7:0])") == 2
+    # the pad key without "pipes" changes nothing in the RTL (pipes are opt-in) and writes no pipe record
+    assert (pads / "rtl" / "bt_ts.sv").read_text() == rtl_b
+    assert "pipes_split" not in json.loads((pads / "bind_pad_tail_split.json").read_text())["types"]["ts"]
+    # pipes on: trunk D = 3 - 2, no shared tail (every reader is split), 8 bits x 2 cores kept 2-stage copies
+    assert re.findall(r"ot_dp_dly #\(\.W\((\d+)\), \.D\((\d+)\)\) u_(d\d+_\w+) ", rtl_s) == [("8", "1", "d3_u_m_o_t")]
+    cp = re.findall(r"ot_dp_dly_keep #\(\.W\(1\), \.D\((\d+)\)\) u_(pd\w+) \(\.clk\(clk\), \.d\((\S+?)\), \.q\((\w+)\)\);"
+                    r"  // landing pad tail copy for core (\w+):", rtl_s)
+    assert len(cp) == 16 and {c[0] for c in cp} == {"2"}
+    assert sorted(c[2] for c in cp) == sorted(f"d3_u_m_o_t[{i}]" for i in range(8) for _ in range(2))
+    assert sum(c[4] == "u_s0" for c in cp) == 8 and sum(c[4] == "u_s1" for c in cp) == 8
+    for _d, nm, _src, q, core in cp:
+        assert nm == q and re.fullmatch(r"pd2_d3_u_m_o_\d_" + core + "_3", nm) and rtl_s.count(f"{nm}[0]") == 1
+    assert not re.search(r"\bd3_u_m_o\[", rtl_s)                    # no pin reads the shared wire any more
+    for n in (0, 1):                                                  # each core reads its own copies, in bit order
+        blk = re.search(r"lf_sink u_u_s%d \((.*?)\n    \);" % n, rtl_s, re.S).group(1)
+        assert re.search(r"\.d1\(\{" + ", ".join(f"pd2_d3_u_m_o_{i}_u_s{n}_3\\[0\\]" for i in range(7, -1, -1)) + r"\}\)", blk), blk
+    rec = json.loads((split / "bind_pad_tail_split.json").read_text())["types"]["ts"]["pipes_split"]
+    assert rec["pipes"] == 1 and rec["split_pipes"] == 1 and rec["split_bits"] == 8 and rec["copies"] == 16
+    assert rec["extra_flops"] == 16 and rec["tail_depths"] == {"2": 1} and rec["shared_tail_pipes"] == 0
+    assert rec["max_spread_um"] == 1000.0 and rec["not_covered"] == dict(depth1=0, inner_strap=0, port_pipe=0, registered=0)
+    assert len(rec["sites"]) == 16 * 2
+    # same traced depth per sink: the proof passes on both; sink / latency records are identical
+    assert json.loads((base / "verify_report.json").read_text())["verdict"] == "PASS"
+    assert json.loads((split / "verify_report.json").read_text())["verdict"] == "PASS"
+    fb, fs = _files(base), _files(split)
+    for k in ("bind_sinks.json", "bind_latency.json", "bus_groups.json"):
+        assert k in fb and fb[k] == fs[k], k
+    changed = {k for k in set(fb) | set(fs) if fb.get(k) != fs.get(k)}
+    assert all(not k.startswith("rtl/") or k in ("rtl/bt_ts.sv", "rtl/bind_cells.sv") for k in changed), changed
+    # the siting hook lists the pipe copies with the pad-copy rule (same line form, u_pd<K>_ names), grouped per trunk bit
+    import gen_phys
+    rows = gen_phys.tail_copy_rows(split / "rtl")
+    assert len(rows) == 16 and {r[1] for r in rows} == {2} and len({r[2] for r in rows}) == 8
+
+
+@needs_yosys
+def test_pipe_cores_inside_the_spread_are_not_split(tmp_path, monkeypatch):
+    monkeypatch.setenv("OT_HCPARAM_ALL", "0")
+    base, near = tmp_path / "base", tmp_path / "near"
+    assert _bind(_plan_pipe(tmp_path, None, gap=100.0, tag="b"), base, "elab", "bind") == 0
+    assert _bind(_plan_pipe(tmp_path, {"pipes": True}, gap=100.0, tag="n"), near, "elab", "bind") == 0
+    assert (base / "rtl" / "bt_ts.sv").read_bytes() == (near / "rtl" / "bt_ts.sv").read_bytes()
+    assert json.loads((near / "bind_pad_tail_split.json").read_text())["types"]["ts"]["pipes_split"]["split_pipes"] == 0

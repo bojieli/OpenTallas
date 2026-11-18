@@ -257,3 +257,205 @@ def test_copy_depth_cycle_equivalence_iverilog(tmp_path):
 def test_copy_depth_schema():
     props = schema.SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["reset_replicate"]["items"]["properties"]
     assert props["copy_depth"] == {"type": "integer", "minimum": 1}
+
+
+# ---- KV-D23-REACH 11-18: reset spine landing driver (form rsync) -------------------------------------------------------------
+RS_CELLS = """module ot_dp_rsync #(parameter integer W = 1, parameter integer S = 2) (input wire clk, input wire [W-1:0] a, output wire [W-1:0] q);
+    genvar g;
+    generate for (g = 0; g < W; g = g + 1) begin : b
+        reg [S-1:0] r;
+        always @(posedge clk or negedge a[g]) if (!a[g]) r <= {S{1'b0}}; else r <= {r[S-2:0], 1'b1};
+        assign q[g] = r[S-1];
+    end endgenerate
+endmodule
+module rcore (input wire clk, input wire s0__rst_n, input wire s1__rst_n, output wire [1:0] o);
+    assign o = {s1__rst_n, s0__rst_n};
+endmodule
+"""
+
+
+def rs_mod(S):
+    return f"""module top (input wire clk, input wire [0:0] ri_pv_rst_n, output wire [6:0] o);
+    wire [0:0] ri_pv_rst_n_q;
+    wire glue_rst;
+    ot_dp_rsync #(.W(1), .S({S})) u_rs_ri_pv_rst_n (.clk(clk), .a(ri_pv_rst_n), .q(ri_pv_rst_n_q));
+    assign glue_rst = ri_pv_rst_n_q[0];
+    // as-built pvg0.p0
+    rcore u_pvg0_p0 (
+        .clk(clk),
+        .s0__rst_n(ri_pv_rst_n_q[0]),
+        .s1__rst_n(ri_pv_rst_n_q[0]),
+        .o(o[1:0])
+    );
+    rcore u_pvg0_p1 (
+        .clk(clk),
+        .s0__rst_n(ri_pv_rst_n_q[0]),
+        .s1__rst_n(ri_pv_rst_n_q[0]),
+        .o(o[3:2])
+    );
+    rcore u_pvg3_p2 (
+        .clk(clk),
+        .s0__rst_n(ri_pv_rst_n_q[0]),
+        .s1__rst_n(ri_pv_rst_n_q[0]),
+        .o(o[5:4])
+    );
+    assign o[6] = glue_rst;
+endmodule
+"""
+
+
+RS_SPEC = [dict(form="rsync", driver_re=r"u_rs_ri_.*rst_n", region_re="^(.*)$", copy_depth=4)]
+
+
+def test_rsync_s2_has_no_relay_stage_and_is_unchanged():
+    """the default landing is the two synchroniser flops: nothing to copy, the row says so (stages come from sink_stages)"""
+    new, rep = RR.apply(rs_mod(2), RS_SPEC)
+    assert new == rs_mod(2) and rep[0]["copies"] == 0 and rep[0]["form"] == "rsync" and "S = 2" in rep[0]["note"]
+
+
+def test_rsync_copies_only_the_post_sync_stages():
+    new, rep = RR.apply(rs_mod(6), RS_SPEC)
+    r = rep[0]
+    assert r["depth"] == 6 and r["common_depth"] == 2 and r["copy_depth"] == 4 and r["form"] == "rsync"
+    assert r["region_names"] == ["rest", "u_pvg0_p0", "u_pvg0_p1", "u_pvg3_p2"] and r["chain_flops"] == 16
+    # the synchroniser stays ONE 2-stage ot_dp_rsync on the spine; every copy is cleared by the same async spine
+    assert "ot_dp_rsync #(.W(1), .S(2)) u_rs_ri_pv_rst_n (.clk(clk), .a(ri_pv_rst_n), .q(ri_pv_rst_n_q));" in new
+    cp = re.findall(r"ot_dp_rtail #\(\.D\((\d+)\)\) (u_rs_ri_pv_rst_n_r\d) \(\.clk\(clk\), \.a\((\w+)\), \.d\(([^()]+)\), \.q\(([^()]+)\)\);"
+                    r"  // landing pad tail copy for core (\S+?):", new)
+    assert len(cp) == 4 and {c[0] for c in cp} == {"4"} and {c[2] for c in cp} == {"ri_pv_rst_n"}
+    assert {c[3] for c in cp} == {"ri_pv_rst_n_q[0]"} and {c[5] for c in cp} == set(r["region_names"])
+    # both pins of one core read that core's copy; the glue assign reads the rest copy; nothing but the copies reads the sync q
+    for inst, w in (("u_pvg0_p0", "rs_ri_pv_rst_n_r1"), ("u_pvg0_p1", "rs_ri_pv_rst_n_r2"), ("u_pvg3_p2", "rs_ri_pv_rst_n_r3")):
+        blk = re.search(r"rcore " + inst + r" \((.*?)\n    \);", new, re.S).group(1)
+        assert blk.count(f"({w}[0])") == 2 and "ri_pv_rst_n_q" not in blk
+    assert "assign glue_rst = rs_ri_pv_rst_n_r0[0];" in new
+    assert new.count("ri_pv_rst_n_q[0]") == 4
+
+
+def test_rsync_copy_depth_capped_at_the_relay_stages():
+    new, rep = RR.apply(rs_mod(3), RS_SPEC)                 # S = 3: one relay stage, the 2 sync flops are never taken
+    assert rep[0]["copy_depth"] == 1 and rep[0]["common_depth"] == 2
+    assert ".S(2)) u_rs_ri_pv_rst_n" in new and new.count("ot_dp_rtail #(.D(1))") == 4
+
+
+def test_rsync_driver_needs_the_form_and_form_is_checked():
+    with pytest.raises(RR.ReplicateError, match="no ot_dp_dly"):
+        RR.apply(rs_mod(6), [dict(driver_re=r"u_rs_ri_.*rst_n")])           # no form: the ot_dp_dly rule, as before
+    with pytest.raises(RR.ReplicateError, match="no ot_dp_rsync"):
+        RR.apply(mod(7), [dict(form="rsync", driver="u_d7_6_Y")])
+    with pytest.raises(RR.ReplicateError, match="expected"):
+        RR.apply(rs_mod(6), [dict(form="x", driver_re=r"u_rs_.*")])
+    new, rep = RR.apply(rs_mod(6), [dict(form="rsync", driver="u_nope", optional=True)])
+    assert new == rs_mod(6) and rep[0]["copies"] == 0
+
+
+def test_rtail_cell_schema_and_plan_switch():
+    assert "module ot_dp_rtail" in RR.TAIL_CELL and "(* keep *) reg [D-1:0] r;" in RR.TAIL_CELL
+    assert "posedge clk or negedge a" in RR.TAIL_CELL
+    props = schema.SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["reset_replicate"]["items"]["properties"]
+    assert props["form"] == {"enum": ["rsync"]}
+    assert RR.uses_rtail({"partition_types": {"a": {"reset_replicate": RS_SPEC}}})
+    assert not RR.uses_rtail({"partition_types": {"a": {"reset_replicate": SPEC}, "b": {}}})
+    import bind_verify
+    rule = [x for x in bind_verify.VERIFY_RULES["transport"] if x["module"] == "ot_dp_rtail"]
+    assert rule == [{"module": "ot_dp_rtail", "map": {"q": "d"}, "drop_in": ["clk", "a"], "stages": 1, "stages_param": "D"}]
+    assert "ot_dp_rtail" in bind_verify.BIND_CELLS
+
+
+@pytest.mark.skipif(not shutil.which("iverilog"), reason="iverilog")
+def test_rsync_copies_same_function_async_assert_iverilog(tmp_path):
+    """one 6-stage synchroniser vs synchroniser + per-core relay copies: every load sees the same level at every half step,
+    with the spine asserted between clock edges (asynchronous assert) and released at random"""
+    new, _ = RR.apply(rs_mod(6), RS_SPEC)
+    (tmp_path / "old.v").write_text(RS_CELLS + rs_mod(6).replace("module top", "module top_old"))
+    (tmp_path / "new.v").write_text(RR.TAIL_CELL + new.replace("module top", "module top_new"))
+    tb = """module tb; reg clk=0; reg a=0; wire [6:0] x, y; integer i, bad=0, low=0, high=0; reg [31:0] r = 32'h2468ace;
+      top_old o(.clk(clk), .ri_pv_rst_n(a), .o(x)); top_new n(.clk(clk), .ri_pv_rst_n(a), .o(y));
+      initial begin for (i = 0; i < 4000; i = i + 1) begin r = r * 1103515245 + 12345;
+          if (r[20:16] == 0) a = 0; else if (r[19:16] == 1) a = 1;
+          #1 if (x !== y) bad = bad + 1; if (&y) high = high + 1; if (~|y) low = low + 1;
+          if (i % 2) clk = ~clk; end
+        $display("BAD=%0d HIGH=%0d LOW=%0d", bad, high, low); $finish; end endmodule"""
+    (tmp_path / "tb.v").write_text(tb)
+    subprocess.run(["iverilog", "-o", str(tmp_path / "s"), str(tmp_path / "old.v"), str(tmp_path / "new.v"), str(tmp_path / "tb.v")], check=True)
+    out = subprocess.run(["vvp", str(tmp_path / "s")], capture_output=True, text=True, check=True).stdout
+    m = re.search(r"BAD=(\d+) HIGH=(\d+) LOW=(\d+)", out)
+    assert m and m.group(1) == "0" and int(m.group(2)) > 50 and int(m.group(3)) > 50, out
+
+
+def _spine_plan(tmp_path, tag, sink_stages=None, row=None):
+    """bind_tiny with a sink partition of two leaves (u_s0 / u_s1) whose flt pins hang directly on the reset spine p1.u_b.flt"""
+    import json
+    import test_bind_pad_tail_split as TT
+    src = tmp_path / "srcs"
+    if not src.exists():
+        shutil.copytree(TT.EX, src)
+        die = (src / "die.v").read_text()
+        die = die.replace("wire [8:0] sq;", "wire [8:0] sq; wire [8:0] sq1;")
+        die = die.replace("lf_sink snk (.clk(ck), .flt(fo), .d0(y0), .d1(y1), .q(sq));",
+                          "spar snk (.ck(ck), .flt(f1), .a(y0), .b(y1), .q0(sq), .q1(sq1));")
+        assert "spar snk" in die
+        (src / "die.v").write_text(die)
+        (src / "spar.sv").write_text(TT.SPAR)
+    p = json.loads((TT.EX / "die_plan_lanes.json").read_text())
+    ab = p["asbuilt"]
+    ab.update(base=str(src), files=ab["files"] + ["spar.sv"], dissolve=ab["dissolve"] + ["spar"])
+    p["ports"] = [x for x in p["ports"] if x["id"] not in ("a1f__0", "a0f__0")]
+    p["lanes"] = [x for x in p["lanes"] if x["id"] not in ("a1f", "a0f")]
+    for x in p["ports"]:
+        if x["id"] == "a1s__0":
+            x["width"] = 16
+    for b in p["partition_types"]["ta"]["buses"]:
+        if b["name"] == "ys_o":
+            b["width"] = 16
+    ts = p["partition_types"]["ts"]
+    ts["buses"] = [b for b in ts["buses"] if b["name"] not in ("f0_i", "f1_i")]
+    for b in ts["buses"]:
+        if b["name"] == "d1_i":
+            b["width"] = 16
+        b["leaf"] = b["leaf"].replace("core.", "u_s0.")
+    ab["reset_spines"] = [{"pin": r"p1\.u_b\.flt", "sync_stages": 2}]
+    if sink_stages:
+        ab["reset_spines"][0]["sink_stages"] = sink_stages
+    if row:
+        ts["reset_replicate"] = [row]
+    f = tmp_path / f"plan_{tag}.json"
+    f.write_text(json.dumps(p))
+    return f
+
+
+def test_bind_spine_sink_stages_and_per_core_relay_copies(tmp_path, monkeypatch):
+    """asbuilt.reset_spines[].sink_stages raises the landing depth on the listed sink types only; the rsync row then hands the
+    stages past the two synchroniser flops out per consumer core.  Absent keys = byte-identical bind output."""
+    import json
+    import test_bind_pad_tail_split as TT
+    if not TT.HAVE_YOSYS:
+        pytest.skip("no Yosys")
+    monkeypatch.setenv("OT_HCPARAM_ALL", "0")
+    row = dict(form="rsync", driver_re="u_rs_.*", region_re="^(.*)$", copy_depth=2)
+    base, norow, other, on = (tmp_path / x for x in ("base", "norow", "other", "on"))
+    assert TT._bind(_spine_plan(tmp_path, "b"), base, "elab", "bind", "verify") == 0
+    assert TT._bind(_spine_plan(tmp_path, "r", row=row), norow, "elab", "bind") == 0
+    assert TT._bind(_spine_plan(tmp_path, "o", [{"types": ["ta"], "sync_stages": 4}]), other, "elab", "bind") == 0
+    assert TT._bind(_spine_plan(tmp_path, "n", [{"types": ["t[s]"], "sync_stages": 4}], row), on, "elab", "bind", "verify") == 0
+    rb = (base / "rtl" / "bt_ts.sv").read_text()
+    m = re.search(r"ot_dp_rsync #\(\.W\(1\), \.S\(2\)\) (u_rs_\w+) \(\.clk\(clk\), \.a\((\w+)\), \.q\((\w+)\)\);", rb)
+    assert m and rb.count(f"({m.group(3)}[0])") == 2                      # one landing, both cores read its q
+    # S = 2: the row alone changes no RTL (no post-sync stage); stages listed for another sink type change nothing here
+    assert (norow / "rtl" / "bt_ts.sv").read_text() == rb and (other / "rtl" / "bt_ts.sv").read_text() == rb
+    assert "ot_dp_rtail" not in (base / "rtl" / "bind_cells.sv").read_text()
+    ro = (on / "rtl" / "bt_ts.sv").read_text()
+    assert f"ot_dp_rsync #(.W(1), .S(2)) {m.group(1)} (.clk(clk), .a({m.group(2)}), .q({m.group(3)}));" in ro
+    cp = re.findall(r"ot_dp_rtail #\(\.D\(2\)\) (\w+) \(\.clk\(clk\), \.a\((\w+)\), \.d\(([^()]+)\), \.q\(([^()]+)\)\);"
+                    r"  // landing pad tail copy for core (\w+):", ro)
+    assert len(cp) == 2 and {c[1] for c in cp} == {m.group(2)} and {c[2] for c in cp} == {f"{m.group(3)}[0]"}
+    assert {c[4] for c in cp} == {"u_u_s0", "u_u_s1"}
+    for _i, _a, _d, q, core in cp:
+        blk = re.search(r"lf_sink " + core + r" \((.*?)\n    \);", ro, re.S).group(1)
+        assert f".flt({q})" in blk
+    assert "module ot_dp_rtail" in (on / "rtl" / "bind_cells.sv").read_text()
+    assert "released after 4 clocks" in ro and "released after 2 clocks" in rb
+    assert json.loads((base / "verify_report.json").read_text())["verdict"] == "PASS"
+    assert json.loads((on / "verify_report.json").read_text())["verdict"] == "PASS"
+    import gen_phys
+    assert sorted(r[3] for r in gen_phys.tail_copy_rows(on / "rtl")) == ["u_u_s0", "u_u_s1"]

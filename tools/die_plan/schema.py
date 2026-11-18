@@ -1510,7 +1510,9 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["r
         "properties": {"driver": {"type": "string"}, "driver_re": {"type": "string"}, "region_re": {"type": "string"},
                        "grid_um": {"type": "number", "exclusiveMinimum": 0}, "optional": {"type": "boolean"}, "min_loads": {"type": "integer", "minimum": 0},
                        # FABLE-DIE-S81 11-16: private k-flop copy chain per region out of the driver's own depth (0 added cycles)
-                       "copy_depth": {"type": "integer", "minimum": 1}}}}
+                       "copy_depth": {"type": "integer", "minimum": 1},
+                       # KV-D23-REACH 11-18: the driver is a reset spine landing (ot_dp_rsync); copies only from the stages after the 2 sync flops
+                       "form": {"enum": ["rsync"]}}}}
 # Opt-in: realize the already priced internal stations in logical and physical source alike.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["realize_internal_stations"] = {"type": "boolean"}
 # TYPE-SAFE-2 11-06: gen-time ft station spread opt-out (ft_spread.py; absent = on)

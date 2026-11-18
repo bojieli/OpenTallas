@@ -872,13 +872,20 @@ _TAIL_COPY_RE = re.compile(r"\bot_dp_dly(?:_keep)?\s*#\(\s*\.W\(1\)\s*,\s*\.D\((
                            r"\.d\(([^()]*)\)\s*,\s*\.q\(\w+\)\s*\)\s*;\s*//\s*landing pad tail copy for core (\S+?):")
 
 
+# KV-D23-REACH 11-18: reset spine relay copies (reset_replicate form rsync), same marker: `ot_dp_rtail #(.D(K)) u_rs_.._r<i>
+# (.clk, .a(<spine>), .d(<synchroniser q>), .q(..));  // landing pad tail copy for core <region>:`
+_TAIL_RST_RE = re.compile(r"\bot_dp_rtail\s*#\(\s*\.D\((\d+)\)\s*\)\s+(u_\w+)\s*\(\s*\.clk\(\w+\)\s*,\s*\.a\([^()]*\)\s*,\s*"
+                          r"\.d\(([^()]*)\)\s*,\s*\.q\([^()]*\)\s*\)\s*;\s*//\s*landing pad tail copy for core (\S+?):")
+
+
 def tail_copy_rows(rtl_dir):
     """[(copy inst, K, group, core tag)] of every bind tail-split copy in the kit RTL; group = <d source>/<K> (the copies of one
     pad: same trunk, or same in-flop and K = pad when the trunk is empty).  bind.py emits each one
     as `ot_dp_dly_keep #(.W(1), .D(K)) u_pd<K>_.. (.clk, .d(<trunk q or in-flop q>), .q(..));  // landing pad tail copy for core <tag>:`)."""
     rows = {}
     for f in sorted(Path(rtl_dir).glob("*.sv")) + sorted(Path(rtl_dir).glob("*.v")):
-        for m in _TAIL_COPY_RE.finditer(f.read_text(errors="replace")):
+        txt = f.read_text(errors="replace")
+        for m in list(_TAIL_COPY_RE.finditer(txt)) + list(_TAIL_RST_RE.finditer(txt)):
             rows.setdefault(m.group(2), (m.group(2), int(m.group(1)), f"{m.group(3).strip()}/{m.group(1)}", m.group(4)))
     return list(rows.values())
 
