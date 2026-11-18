@@ -152,3 +152,4 @@
 - 2026-11-17 16:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-17 16:52 PST: 94 running jobs, PROGRESSING 88, SLOW 6, NO-PROGRESS 0 (advisory, no cancel); table lanes/NOPROG.tsv
 - 2026-11-17 17:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-17 17:52 PST: 107 running jobs, PROGRESSING 102, SLOW 5, NO-PROGRESS 0 (advisory, no cancel); table lanes/NOPROG.tsv
 - 2026-11-17 18:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-17 18:52 PST: 102 running jobs, PROGRESSING 97, SLOW 5, NO-PROGRESS 0 (advisory, no cancel); table lanes/NOPROG.tsv
+- 2026-11-17 19:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-17 19:52 PST: 75 running jobs, PROGRESSING 70, SLOW 5, NO-PROGRESS 0 (advisory, no cancel); table lanes/NOPROG.tsv
