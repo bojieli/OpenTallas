@@ -179,3 +179,43 @@ G4 CTS r5 exit 0 (E8); post-CTS census running: E8 unit oth-ubuntu-763446-179490
   t13 shore-band form (keepout bottom 681.372, SRAM pair re-placed under it, taps in y 238..681); NEEDS-LANE under S81-DIE-R2.
 - Watch: H5/H6 4_cts.odb -> run_cts_worst.sh census (copy probes to epyc2 probes_fable_1117; h_worst.tcl + h_parse.py live in E8 probes_serdes_r_1116),
   then GRT TT (grt_policy.json, never 5_1_grt.json), DRT. Not sure yet which of 0.30 / 0.20 keeps TT; kit config lines for the siblings follow the winner.
+
+# FABLE-FIX-S81-SERDES handoff (new lane of 11-18; owner of the 11 S81 serdes types)
+
+## State 2026-11-18 12:40 PST
+Nothing is signed off or exported. The clock form is decided and measured at CTS only.
+
+**Form: matched-leg star trunk on io_pma_rck** (main bd76ec2856c: tools/die_plan/rck_star.py, rck_star.tcl, test_rck_star.py; plan key
+clock.pad_clock.pins[].star = {evidence, optional max_sinks 200, max_extent_um 100, hop_um 92, cell}; PRE_CTS, planned on the placed
+sinks, so one identical row serves all 11 types; absent key = kit byte-identical). Keep OT_S81_RCK_BALANCE on. No rck_island fence
+and no type split for the clock. Row posted to S81-DIE-R3 (12:35) for the delta after D8e; not acknowledged.
+
+**Evidence (serdes__t13, kit flow, placement RC TT):**
+- H18 single tree: rck p1..p99 172, spread 405; after STB span 109.5 with 1,012 pads. STOPPED FAIL_POSTCTS (TT -191.7 at GRT).
+- H20 = H18 placed db + star (stage resume at CTS): 207 entries, 13 x 92 um legs, 14-station feeder (pad x 332); p1..p99 40 before
+  balance (spread 576 from outliers), span 65.2 with 689 pads after. Insertion still 1.65-1.9 ns (feeder; the D8e centre pin removes it).
+  CTS FF hold screen -374 / 7,390 ends (H18 5,563): no gain shown there. Census 376k non-tap at CTS.
+- H19 (S81-CORES-OPUS, km16, no balance): rck still 1.72-1.77 ns at the two flops I read; no rck span line in its log.
+- H18 and H19 worst path is ONE recovery endpoint, g_locksafe.u_boot_release.g_stage[0].rq QN -> g_stage[1].rq RESETN (data about 900 ps
+  for 363 um; H19 -134.8 post-CTS, H18 -153.5 / gate -191.7). Not the tap band. Fix directed to S81-CORES-OPUS (10:2x, 12:35), no ack yet.
+- WITHDRAWN: my km16/km32 harness numbers (-clk_nets builds only the named net). The E/ harness is valid only for geometry dumps and
+  read-only STA; clock forms must be measured in the kit (stage resume at CTS, about 35 min).
+
+**Running:** H20 route, epyc9 unit oth-ubuntu-2947704-1795033956, kit /srv/opentallas-scratch2/claude/fable-fix-s81-serdes3/H20/serdes__t13/gen/serdes__t13,
+client intel2 ~/fable-fix-s81-serdes3/H20-route-1118.out. It carries the boot-release endpoint: expect FAIL_POSTCTS near -150 at the GRT
+gate unless the star skew gain (H18 launch was 90 ps late) keeps it above the triage. Read OT_POSTCTS_GATE, hold cell count, then routed
+pair skew. H20 is evidence only (H18 pin and taps, not the D8e form): never export it.
+
+**Blocked:** D8e has NOT applied. Control bind on a30d6c6f (epyc2, 12:33 S81-GEOM-OPUS) is BIND_RC=1: LF_CS_DEPTH 30, RESET_ANCHOR 10,
+LOCAL_RESET_RAW 2 on serdes t15 / t1. The countable kits need: D8e applied, the star row, the boot_release fix in the generator.
+
+**Next, in order:**
+1. H20 gate result -> post. If it stops on the boot-release endpoint only, that is the expected stop, not a verdict on the star.
+2. Boot-release fix: if S81-CORES-OPUS has not posted a generator change, do it here (serdes_boot_release_local.tcl: stage 0 and 1 as
+   one cohort, or RESETN of stage 1 on its own short branch); prove on an H20 copy resumed at placement.
+3. After D8e (or its successor) applies with the star row: generate serdes__t13 from the plan, route, r708 sign-off
+   (signoff.py run, nomcap recipe as in lanes/handoff/S81-CORES-OPUS.md), AUTO-EXPORT; then the other 10 types in parallel.
+4. Open clk-domain item: north taps / u_txl.g_reg (-49.7, 22 ends in H18); H19 carries the north-strip tap move, read its tap lines.
+
+Files: epyc9 /srv/opentallas-scratch2/claude/fable-fix-s81-serdes3/{E (harness, sta18, sta19, dump), H20}; lane clone intel2
+/srv/opentallas-scratch2/claude/fable-fix-s81-serdes3/wt (cone tools, physical/common_flow, rtl, physical/die_plan/s81).
