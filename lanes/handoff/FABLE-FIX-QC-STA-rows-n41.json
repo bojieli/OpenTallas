@@ -1,0 +1,443 @@
+{
+ "schema": "fable-fix-qc-sta.n41_rows.v1",
+ "base_plan": "zz_s29_qc103_s4q9n4.json sha256 488b62fe (published N4)",
+ "source_plan": "epyc2 fable-fix-qc-n/n41/plan_n41d.json sha256 2cca2e631be5 (QC-N-OPUS; bind n41d 0 errors, LATCHECK 1921/1921)",
+ "note": "Plan rows to ADD on top of the published N4 plan. N4-only content (ft bit_sites dedupe, signed view lef/lib, notes) is not touched: 4352 such paths of the raw diff are left out. latency.note of plan_n41d is NOT a row (schema refuses it).",
+ "plan_rows": [
+  {
+   "path": "$.lanes[id=sl_E0_st_a__x_st_a_fe].fixed_cycles",
+   "n4": 6,
+   "n41": 7
+  },
+  {
+   "path": "$.lanes[id=sl_E1_st_a__x_st_a_fe].fixed_cycles",
+   "n4": 6,
+   "n41": 7
+  },
+  {
+   "path": "$.lanes[id=sl_E2_st_a__x_st_a_fe].fixed_cycles",
+   "n4": 6,
+   "n41": 7
+  },
+  {
+   "path": "$.lanes[id=sl_E3_st_a__x_st_a_fe].fixed_cycles",
+   "n4": 6,
+   "n41": 7
+  },
+  {
+   "path": "$.lanes[id=sl_E4_st_a__x_st_a_fe].fixed_cycles",
+   "n4": 6,
+   "n41": 7
+  },
+  {
+   "path": "$.lanes[id=sl_E5_st_a__x_st_a_fe].fixed_cycles",
+   "n4": 6,
+   "n41": 7
+  },
+  {
+   "path": "$.lanes[id=sl_W0_st_a__x_st_a_fe].fixed_cycles",
+   "n4": 6,
+   "n41": 7
+  },
+  {
+   "path": "$.lanes[id=sl_W1_st_a__x_st_a_fe].fixed_cycles",
+   "n4": 7,
+   "n41": 8
+  },
+  {
+   "path": "$.lanes[id=sl_W2_st_a__x_st_a_fe].fixed_cycles",
+   "n4": 6,
+   "n41": 7
+  },
+  {
+   "path": "$.lanes[id=sl_W3_st_a__x_st_a_fe].fixed_cycles",
+   "n4": 7,
+   "n41": 8
+  },
+  {
+   "path": "$.lanes[id=sl_W4_st_a__x_st_a_fe].fixed_cycles",
+   "n4": 6,
+   "n41": 7
+  },
+  {
+   "path": "$.lanes[id=sl_W5_st_a__x_st_a_fe].fixed_cycles",
+   "n4": 7,
+   "n41": 8
+  },
+  {
+   "path": "$.latency.lanes.sl_E0_st_a__x_st_a_fe.cycles",
+   "n4": 33,
+   "n41": 34
+  },
+  {
+   "path": "$.latency.lanes.sl_E0_st_a__x_st_a_fe.fixed",
+   "n4": 6,
+   "n41": 7
+  },
+  {
+   "path": "$.latency.lanes.sl_E0_st_a__x_st_a_fe.natural",
+   "n4": 33,
+   "n41": 34
+  },
+  {
+   "path": "$.latency.lanes.sl_E1_st_a__x_st_a_fe.cycles",
+   "n4": 33,
+   "n41": 34
+  },
+  {
+   "path": "$.latency.lanes.sl_E1_st_a__x_st_a_fe.fixed",
+   "n4": 6,
+   "n41": 7
+  },
+  {
+   "path": "$.latency.lanes.sl_E1_st_a__x_st_a_fe.natural",
+   "n4": 33,
+   "n41": 34
+  },
+  {
+   "path": "$.latency.lanes.sl_E2_st_a__x_st_a_fe.cycles",
+   "n4": 33,
+   "n41": 34
+  },
+  {
+   "path": "$.latency.lanes.sl_E2_st_a__x_st_a_fe.fixed",
+   "n4": 6,
+   "n41": 7
+  },
+  {
+   "path": "$.latency.lanes.sl_E2_st_a__x_st_a_fe.natural",
+   "n4": 33,
+   "n41": 34
+  },
+  {
+   "path": "$.latency.lanes.sl_E3_st_a__x_st_a_fe.cycles",
+   "n4": 33,
+   "n41": 34
+  },
+  {
+   "path": "$.latency.lanes.sl_E3_st_a__x_st_a_fe.fixed",
+   "n4": 6,
+   "n41": 7
+  },
+  {
+   "path": "$.latency.lanes.sl_E3_st_a__x_st_a_fe.natural",
+   "n4": 33,
+   "n41": 34
+  },
+  {
+   "path": "$.latency.lanes.sl_E4_st_a__x_st_a_fe.cycles",
+   "n4": 33,
+   "n41": 34
+  },
+  {
+   "path": "$.latency.lanes.sl_E4_st_a__x_st_a_fe.fixed",
+   "n4": 6,
+   "n41": 7
+  },
+  {
+   "path": "$.latency.lanes.sl_E4_st_a__x_st_a_fe.natural",
+   "n4": 33,
+   "n41": 34
+  },
+  {
+   "path": "$.latency.lanes.sl_E5_st_a__x_st_a_fe.cycles",
+   "n4": 32,
+   "n41": 33
+  },
+  {
+   "path": "$.latency.lanes.sl_E5_st_a__x_st_a_fe.fixed",
+   "n4": 6,
+   "n41": 7
+  },
+  {
+   "path": "$.latency.lanes.sl_E5_st_a__x_st_a_fe.natural",
+   "n4": 32,
+   "n41": 33
+  },
+  {
+   "path": "$.latency.lanes.sl_W0_st_a__x_st_a_fe.cycles",
+   "n4": 24,
+   "n41": 25
+  },
+  {
+   "path": "$.latency.lanes.sl_W0_st_a__x_st_a_fe.fixed",
+   "n4": 6,
+   "n41": 7
+  },
+  {
+   "path": "$.latency.lanes.sl_W0_st_a__x_st_a_fe.natural",
+   "n4": 24,
+   "n41": 25
+  },
+  {
+   "path": "$.latency.lanes.sl_W1_st_a__x_st_a_fe.cycles",
+   "n4": 23,
+   "n41": 24
+  },
+  {
+   "path": "$.latency.lanes.sl_W1_st_a__x_st_a_fe.fixed",
+   "n4": 7,
+   "n41": 8
+  },
+  {
+   "path": "$.latency.lanes.sl_W1_st_a__x_st_a_fe.natural",
+   "n4": 23,
+   "n41": 24
+  },
+  {
+   "path": "$.latency.lanes.sl_W2_st_a__x_st_a_fe.cycles",
+   "n4": 23,
+   "n41": 24
+  },
+  {
+   "path": "$.latency.lanes.sl_W2_st_a__x_st_a_fe.fixed",
+   "n4": 6,
+   "n41": 7
+  },
+  {
+   "path": "$.latency.lanes.sl_W2_st_a__x_st_a_fe.natural",
+   "n4": 23,
+   "n41": 24
+  },
+  {
+   "path": "$.latency.lanes.sl_W3_st_a__x_st_a_fe.cycles",
+   "n4": 24,
+   "n41": 25
+  },
+  {
+   "path": "$.latency.lanes.sl_W3_st_a__x_st_a_fe.fixed",
+   "n4": 7,
+   "n41": 8
+  },
+  {
+   "path": "$.latency.lanes.sl_W3_st_a__x_st_a_fe.natural",
+   "n4": 24,
+   "n41": 25
+  },
+  {
+   "path": "$.latency.lanes.sl_W4_st_a__x_st_a_fe.cycles",
+   "n4": 23,
+   "n41": 24
+  },
+  {
+   "path": "$.latency.lanes.sl_W4_st_a__x_st_a_fe.fixed",
+   "n4": 6,
+   "n41": 7
+  },
+  {
+   "path": "$.latency.lanes.sl_W4_st_a__x_st_a_fe.natural",
+   "n4": 23,
+   "n41": 24
+  },
+  {
+   "path": "$.latency.lanes.sl_W5_st_a__x_st_a_fe.cycles",
+   "n4": 23,
+   "n41": 24
+  },
+  {
+   "path": "$.latency.lanes.sl_W5_st_a__x_st_a_fe.fixed",
+   "n4": 7,
+   "n41": 8
+  },
+  {
+   "path": "$.latency.lanes.sl_W5_st_a__x_st_a_fe.natural",
+   "n4": 23,
+   "n41": 24
+  },
+  {
+   "path": "$.partition_types.sle_ctl__cl503337ff.r8_strap_pad_max",
+   "n4": 25,
+   "n41": 26
+  },
+  {
+   "path": "$.partition_types.sle_ctl__cl67434795.r8_strap_pad_max",
+   "n4": null,
+   "n41": 16
+  },
+  {
+   "path": "$.partition_types.sle_st_a_v1__cl67389ecd.hard_cores[inst=u_bound.u_u_btab.u_bt.u_core.g_btb[0].u_m].origin_um[1]",
+   "n4": 120.96,
+   "n41": 328.32
+  },
+  {
+   "path": "$.partition_types.sle_st_a_v1__cl67389ecd.hard_cores[inst=u_bound.u_u_btab.u_bt.u_core.g_btb[3].u_m].origin_um[1]",
+   "n4": 1123.2,
+   "n41": 959.04
+  },
+  {
+   "path": "$.partition_types.sle_st_a_v1__cl989804f6__cl18eece69.hard_cores[inst=u_bound.u_u_btab.u_bt.u_core.g_btb[0].u_m].origin_um[1]",
+   "n4": 120.96,
+   "n41": 328.32
+  },
+  {
+   "path": "$.partition_types.sle_st_a_v1__cl989804f6__cl18eece69.hard_cores[inst=u_bound.u_u_btab.u_bt.u_core.g_btb[3].u_m].origin_um[1]",
+   "n4": 1123.2,
+   "n41": 959.04
+  },
+  {
+   "path": "$.partition_types.sle_st_a_v1__cl989804f6__cled3c1d7b.hard_cores[inst=u_bound.u_u_btab.u_bt.u_core.g_btb[0].u_m].origin_um[1]",
+   "n4": 120.96,
+   "n41": 328.32
+  },
+  {
+   "path": "$.partition_types.sle_st_a_v1__cl989804f6__cled3c1d7b.hard_cores[inst=u_bound.u_u_btab.u_bt.u_core.g_btb[3].u_m].origin_um[1]",
+   "n4": 1123.2,
+   "n41": 959.04
+  },
+  {
+   "path": "$.partition_types.sle_st_a_v2__pv30dda31f__pv88773f93.hard_cores[inst=u_bound.u_u_btab.u_bt.u_core.g_btb[0].u_m].origin_um[1]",
+   "n4": 120.96,
+   "n41": 328.32
+  },
+  {
+   "path": "$.partition_types.sle_st_a_v2__pv30dda31f__pv88773f93.hard_cores[inst=u_bound.u_u_btab.u_bt.u_core.g_btb[3].u_m].origin_um[1]",
+   "n4": 1123.2,
+   "n41": 959.04
+  },
+  {
+   "path": "$.partition_types.sle_st_a_v2__pv30dda31f__pvd2ec7769.hard_cores[inst=u_bound.u_u_btab.u_bt.u_core.g_btb[0].u_m].origin_um[1]",
+   "n4": 120.96,
+   "n41": 328.32
+  },
+  {
+   "path": "$.partition_types.sle_st_a_v2__pv30dda31f__pvd2ec7769.hard_cores[inst=u_bound.u_u_btab.u_bt.u_core.g_btb[3].u_m].origin_um[1]",
+   "n4": 1123.2,
+   "n41": 959.04
+  },
+  {
+   "path": "$.partition_types.sle_st_a_v2__pv4242de79.hard_cores[inst=u_bound.u_u_btab.u_bt.u_core.g_btb[0].u_m].origin_um[1]",
+   "n4": 120.96,
+   "n41": 328.32
+  },
+  {
+   "path": "$.partition_types.sle_st_a_v2__pv4242de79.hard_cores[inst=u_bound.u_u_btab.u_bt.u_core.g_btb[3].u_m].origin_um[1]",
+   "n4": 1123.2,
+   "n41": 959.04
+  },
+  {
+   "path": "$.partition_types.slw_st_a_v1__clb036e152.hard_cores[inst=u_bound.u_u_btab.u_bt.u_core.g_btb[0].u_m].origin_um[1]",
+   "n4": 120.96,
+   "n41": 328.32
+  },
+  {
+   "path": "$.partition_types.slw_st_a_v1__clb036e152.hard_cores[inst=u_bound.u_u_btab.u_bt.u_core.g_btb[3].u_m].origin_um[1]",
+   "n4": 1123.2,
+   "n41": 959.04
+  },
+  {
+   "path": "$.partition_types.slw_st_a_v1__clfc5867a6__pvdf8e5ca4.hard_cores[inst=u_bound.u_u_btab.u_bt.u_core.g_btb[0].u_m].origin_um[1]",
+   "n4": 120.96,
+   "n41": 328.32
+  },
+  {
+   "path": "$.partition_types.slw_st_a_v1__clfc5867a6__pvdf8e5ca4.hard_cores[inst=u_bound.u_u_btab.u_bt.u_core.g_btb[3].u_m].origin_um[1]",
+   "n4": 1123.2,
+   "n41": 959.04
+  },
+  {
+   "path": "$.partition_types.slw_st_a_v1__clfc5867a6__pvf82a6c28.hard_cores[inst=u_bound.u_u_btab.u_bt.u_core.g_btb[0].u_m].origin_um[1]",
+   "n4": 120.96,
+   "n41": 328.32
+  },
+  {
+   "path": "$.partition_types.slw_st_a_v1__clfc5867a6__pvf82a6c28.hard_cores[inst=u_bound.u_u_btab.u_bt.u_core.g_btb[3].u_m].origin_um[1]",
+   "n4": 1123.2,
+   "n41": 959.04
+  },
+  {
+   "path": "$.partition_types.slw_st_a_v2__cl9f076a5c.hard_cores[inst=u_bound.u_u_btab.u_bt.u_core.g_btb[0].u_m].origin_um[1]",
+   "n4": 120.96,
+   "n41": 328.32
+  },
+  {
+   "path": "$.partition_types.slw_st_a_v2__cl9f076a5c.hard_cores[inst=u_bound.u_u_btab.u_bt.u_core.g_btb[3].u_m].origin_um[1]",
+   "n4": 1123.2,
+   "n41": 959.04
+  },
+  {
+   "path": "$.partition_types.slw_st_a_v2__clf4365a62.hard_cores[inst=u_bound.u_u_btab.u_bt.u_core.g_btb[0].u_m].origin_um[1]",
+   "n4": 120.96,
+   "n41": 328.32
+  },
+  {
+   "path": "$.partition_types.slw_st_a_v2__clf4365a62.hard_cores[inst=u_bound.u_u_btab.u_bt.u_core.g_btb[3].u_m].origin_um[1]",
+   "n4": 1123.2,
+   "n41": 959.04
+  }
+ ],
+ "asbuilt_land_keys": {
+  "land_pad_tail_split": {
+   "types": [
+    "(sle|slw)_st_a.*"
+   ],
+   "min_spread_um": 400,
+   "hop_um": 380,
+   "wire_leaves": [
+    "qfd_dv_s8_frs"
+   ]
+  },
+  "land_intra_stations": {
+   "types": [
+    "(sle|slw)_st_a.*"
+   ],
+   "nets": [
+    {
+     "src": "u_r2.flt_bank_o",
+     "dst": "u_r0.flt_bank_i",
+     "with": [
+      [
+       "u_r2.flt_vld_o",
+       "u_r0.flt_vld_i"
+      ]
+     ],
+     "stages": 2
+    },
+    {
+     "src": "u_r1.flt_bank_o",
+     "dst": "u_r3.flt_bank_i",
+     "with": [
+      [
+       "u_r1.flt_vld_o",
+       "u_r3.flt_vld_i"
+      ]
+     ],
+     "stages": 2
+    },
+    {
+     "src": "u_r0.nb_od",
+     "dst": "bus:x_fe_o",
+     "with": [
+      [
+       "u_r0.nb_oc",
+       "bus:x_fe_o"
+      ]
+     ],
+     "stages": 1
+    },
+    {
+     "src": "u_r1.nb_od",
+     "dst": "bus:x_fe_o",
+     "stages": 1
+    },
+    {
+     "src": "u_r2.nb_od",
+     "dst": "bus:x_fe_o",
+     "stages": 1
+    },
+    {
+     "src": "u_r3.nb_od",
+     "dst": "bus:x_fe_o",
+     "stages": 1
+    }
+   ],
+   "sites": "physical/die_plan/qwen_compute/qc_start_1106/runtime/n41_sites.json"
+  }
+ },
+ "asbuilt_sites_file": {
+  "path": "physical/die_plan/qwen_compute/qc_start_1106/runtime/n41_sites.json",
+  "sha256": "b06acfb0134c28f0b52e43a7af22e648dfba3626ff770497c29c20222c77b127",
+  "copy": "intel2 /srv/opentallas-scratch2/claude/fable-fix-qc-sta/n41/tree/physical/die_plan/qwen_compute/qc_start_1106/runtime/n41_sites.json"
+ },
+ "after_bind": "relay_sites of bind_pad_tail_split.json + bind_intra_stations.json (pass-1 bind receipts) go into partition_types[t].relay_sites, as in N4",
+ "tools": "on main since ddb40b6929 (bin copies past wire leaves, bus:x_fe_o intra stations, cland_fclk_target in gen)"
+}
