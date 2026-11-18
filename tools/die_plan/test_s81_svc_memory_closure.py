@@ -208,3 +208,20 @@ def test_cur_ref_selects_reference_by_stage_digest(monkeypatch, tmp_path):
     assert c.cur_ref(bound('a' * 12))[1] == dict(tag='ref_a_main')
     assert c.cur_ref(bound('c' * 12))[1] == dict(tag='ref_a_main')      # unknown digest: CUR_REF as before
     assert c.cur_ref()[1] == dict(tag='ref_a_main')
+
+
+def test_cur_ref_finds_reference_shipped_with_tools(monkeypatch, tmp_path):
+    """S81-KITRTL-NETMAP-1118: a die tree cut before a bind's reference was regenerated has no results/ref_<bind>; the tools carry it."""
+    import gzip, json
+    def mk(root, name, digest):
+        d = root / name; d.mkdir(parents=True)
+        s = 'x  // structural_full/%s_dsdv_svc_att.sv:1.1-1.2\n' % digest
+        (d / 'ref_t7_bound.sv.gz').write_bytes(gzip.compress(s.encode()))
+        (d / 'ref_map.json').write_text(json.dumps(dict(reference=c.sha(s), map=dict(tag=name))))
+        return d
+    res = tmp_path / 'results'; tools = tmp_path / 'refs'
+    cur = mk(res, 'ref_a_main', 'a' * 12); mk(tools, 'ref_b_main', 'b' * 12)
+    monkeypatch.setattr(c, 'CUR_REF', cur); monkeypatch.setattr(c, 'REF_ROOT', res); monkeypatch.setattr(c, 'TOOL_REFS', tools)
+    bound = lambda g: 'y  // structural_full/%s_dsdv_svc_att.sv:9.1-9.2\n' % g
+    assert c.cur_ref(bound('b' * 12))[1] == dict(tag='ref_b_main')
+    assert c.cur_ref(bound('a' * 12))[1] == dict(tag='ref_a_main')

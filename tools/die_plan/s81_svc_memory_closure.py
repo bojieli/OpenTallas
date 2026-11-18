@@ -199,6 +199,7 @@ def port_source(src, tn, nmap, ref_head='u_rsv_14_'):
 
 RE_STAGE = re.compile(r'structural_full/([0-9a-f]{12})_dsdv_svc_att\.sv')
 REF_ROOT = CUR_REF.parent
+TOOL_REFS = Path(__file__).resolve().parent / 's81_svc_refs'   # references shipped with the tools (rt snapshots carry no results/)
 
 
 def stage_digest(bound_text):
@@ -210,8 +211,13 @@ def stage_digest(bound_text):
 
 def ref_dirs():
     """Every regenerated reference in the fit directory (ref_*/ref_map.json + ref_t7_bound.sv.gz), CUR_REF first."""
-    d = [p for p in sorted(REF_ROOT.glob('ref_*'), reverse=True)
-         if p != CUR_REF and (p / 'ref_map.json').exists() and (p / 'ref_t7_bound.sv.gz').exists()]
+    # S81-KITRTL-NETMAP-1118: a kit launches with the tools of an rt snapshot and the results/ of its (older) die tree, so a reference
+    # regenerated after that tree was cut (ref_1117_d7w_main) was invisible and cur_ref fell back to a bound of another digest
+    # ('reference net 673_Y not structurally mapped').  References are also kept beside the tools (TOOL_REFS), found in every tree.
+    ok = lambda p: (p / 'ref_map.json').exists() and (p / 'ref_t7_bound.sv.gz').exists()
+    tool = [p for p in sorted(TOOL_REFS.glob('ref_*'), reverse=True) if p.name != CUR_REF.name and ok(p)]
+    names = {p.name for p in tool}
+    d = [p for p in sorted(REF_ROOT.glob('ref_*'), reverse=True) if p != CUR_REF and p.name not in names and ok(p)] + tool
     return ([CUR_REF] if (CUR_REF / 'ref_map.json').exists() else []) + d
 
 
