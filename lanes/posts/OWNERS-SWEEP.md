@@ -4,3 +4,8 @@
   FAILED no relaunch >1h: S81 234, KV 4 (CLAND kv3_pv_v*), QC 2 (sle_hc0, sle_sc_v3).
   STALE >3h: S81 219, QC 48, KV 13; 19 S81 + 4 QC plan types have no kit-wave row (not enumerable).
 - 2026-11-18 05:50 PST 05:50 sweep, 471 rows. S81: UNOWNED 37 (was 83), FAILED-no-relaunch 241 (234), STALE 220 (219), DEAD-OWNER 45 NEW (col_h10/h9 owners). QC: UNOWNED 13 (26), STALE 50 (48), FAILED-no-relaunch 5. KV: UNOWNED 3 (3), FAILED 0 (4), STALE 11 (13), DEAD-OWNER 7 NEW (kv3_hg_v1p6, kv3_hg_v3, kv3_hgi). KV-TYPES-SWEEP has no row and no agent id: not an owner. NOMCAP-1118 owns 73 rows but alive is blank (not in the id list).
+- 2026-11-18 06:50 PST 06:50 sweep, 495 rows, 429 unflagged.
+  S81: UNOWNED 2, STALE 5, FAILED 0, DEAD 0 (was 37/220/241/45); e.g. dsdv_slice_lepe_mu_LP__t2, seqhost__t1, s81sl_leaf__t65. col_h9_r2__t1 x2 only owner is Fable BANKLEAF (dead), co-owners S81-DIE-R3 alive.
+  QC: UNOWNED 12, FAILED 1 (slw_hc0__cl1bc59e1c), STALE 48, DEAD-OWNER 2 (cbn_q01, cbn_q11 on FABLE-FIX-QC-N) (was 13/5/50).
+  KV: UNOWNED 0, STALE 11, DEAD 0 (was 3/11/7); all cancelled-superseded 11 h, owners KV-D22-ROWS/KV-HG-OPUS alive.
+  HEAD 0 flagged.
