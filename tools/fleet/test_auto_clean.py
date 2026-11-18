@@ -218,3 +218,25 @@ def test_a_pass_stops_at_its_deadline_and_a_stuck_git_check_is_short(tmp_path):
     import inspect
     assert inspect.signature(AR.git_unsafe).parameters["timeout"].default <= 15
     assert "-uno" in inspect.getsource(AR.git_unsafe)
+
+
+def test_lane_scan_stops_at_the_deadline_and_continues_next_pass(tmp_path):
+    c = str(tmp_path / "claude"); os.makedirs(c)
+    for n in "abcd":
+        mk(c, n + "/x", OLD)
+    sf = str(tmp_path / "scan.json")
+    calls = []
+    def slow(p, cut):
+        calls.append(p); return OLD
+    # deadline already passed after the first lane: only one lane scanned, the next pass starts with the others
+    t0 = time.time()
+    first = AR.lane_candidates(c, NOW, 12.0, mtime=slow, deadline=t0 - 1, scan_state=sf)
+    assert first == [] and calls == []
+    got = AR.lane_candidates(c, NOW, 12.0, mtime=slow, deadline=None, scan_state=sf)
+    assert len(got) >= 4
+    scanned_first = list(calls); calls.clear()
+    st = json.load(open(sf)); assert all(k in st for k in scanned_first)
+    # least recently scanned first: touch a's timestamp as newest, it is scanned last
+    st[os.path.join(c, "a")] = time.time() + 100; json.dump(st, open(sf, "w"))
+    AR.lane_candidates(c, NOW, 12.0, mtime=slow, deadline=None, scan_state=sf)
+    assert calls.index(os.path.join(c, "a")) > calls.index(os.path.join(c, "b"))

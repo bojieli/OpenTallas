@@ -263,7 +263,10 @@ def newest_mtime(path, stop_after=None):
         return best
 
 
-def lane_candidates(claude, now=None, idle_h=24.0, skip=LANE_SKIP, mtime=newest_mtime, depth=2):
+SCAN_STATE = os.path.expanduser("~/.local/state/ot-auto-retire/scan.json")
+
+
+def lane_candidates(claude, now=None, idle_h=24.0, skip=LANE_SKIP, mtime=newest_mtime, depth=2, deadline=None, scan_state=None):
     """FABLE-FLOW-0700 (1): idle lane dirs.  -> [(path, idle seconds)] oldest first.  Level 1 = claude/<lane>, plus (when the lane is claude/wt, or a lane the guard
     refuses as a whole) level 2 = claude/<lane>/<child>.  Idle = nothing under it modified in idle_h hours (24 h rule)."""
     now = now or time.time(); cut = now - idle_h * 3600; out = []
@@ -277,21 +280,40 @@ def lane_candidates(claude, now=None, idle_h=24.0, skip=LANE_SKIP, mtime=newest_
                 out += [os.path.join(p, c) for c in sorted(os.listdir(p)) if os.path.isdir(os.path.join(p, c)) and not os.path.islink(os.path.join(p, c))]
             except OSError:
                 pass
+    # 11-18: the idle check walks every file of every lane (3.4 TB on epyc2: 15+ min, the whole pass never reached a delete).  Candidates are scanned least-recently-scanned
+    # first, the scan stops at the deadline, and the next pass continues where this one stopped (scan_state).
+    st = {}
+    sf = SCAN_STATE if scan_state is None else scan_state
+    if sf:
+        try:
+            st = json.load(open(sf))
+        except (OSError, ValueError):
+            st = {}
+    out.sort(key=lambda p: st.get(p, 0))
     res = []
     for p in out:
+        if deadline and time.time() > deadline:
+            break
         m = mtime(p, cut)
+        st[p] = time.time()
         if m <= cut:
             res.append((p, now - m))
+    if sf:
+        try:
+            os.makedirs(os.path.dirname(sf), exist_ok=True)
+            json.dump({k: v for k, v in st.items() if os.path.exists(k)}, open(sf + ".tmp", "w")); os.replace(sf + ".tmp", sf)
+        except OSError:
+            pass
     res.sort(key=lambda x: -x[1])
     return res
 
 
-def run_lanes(claude, ids, refuse, log, target_gb, apply=False, delete=None, free=None, now=None, idle_h=24.0, mtime=newest_mtime, posts="", git_check=git_unsafe, links=None, deadline=None):
+def run_lanes(claude, ids, refuse, log, target_gb, apply=False, delete=None, free=None, now=None, idle_h=24.0, mtime=newest_mtime, posts="", git_check=git_unsafe, links=None, deadline=None, scan_state=""):
     """retire idle lane dirs (and claude/wt children) through the guard, ingest-first, oldest first, stop at target_gb free.  A parent already removed or
     refused as a whole is retried through its children (level 2 is in the candidate list)."""
     free = free or (lambda: free_gb(claude)); res = []; gone = []
     links = home_link_targets() if links is None else links
-    for p, idle in lane_candidates(claude, now, idle_h, mtime=mtime):
+    for p, idle in lane_candidates(claude, now, idle_h, mtime=mtime, deadline=deadline, scan_state=scan_state):
         if deadline and time.time() > deadline:            # 11-18: a pass must END (epyc2 sat 15+ min in git status of 50 GB trees, no host.log line for 100 min): the rest is next pass
             res.append(dict(stop="deadline")); log(dict(stop="deadline", t=time.strftime("%F %T"))); break
         if free() >= target_gb:
