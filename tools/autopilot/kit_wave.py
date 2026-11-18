@@ -2916,7 +2916,7 @@ def select(rows, cfg, die, state, plan_types=None):
         elif rec and rec.get("q_status") in ("SIGNED", "SIGNED-LINKED"):
             # SIGNED-TERMINAL-1115: a signed R-MINIMAL record on this plan block is terminal, flow tag or not, retry key or not
             why = "signed off on this plan block (terminal; a missing flow tag is bookkeeping, never a build)"
-        elif rec and FG.stops_off_die(cfg, die) and so_failed(rec) and so_same_input(cfg, die, r, rec):
+        elif rec and FG.stops_off_die(cfg, die) and so_failed(rec) and f"{r['item']}@{rec.get('attempt')}" not in retry and so_same_input(cfg, die, r, rec):
             why = "SKIP-SAME-INPUT: full input hash equals the attempt that failed (rt sha, design snapshot, spec digest, env keys); any code / plan / env change releases it"
         elif rec and rec.get("status") == "ENQUEUED" and not (
                 rec.get("q_status") == "FAIL" and (f"{r['item']}@{rec.get('attempt')}" in retry or (FG.stops_off_die(cfg, die) and so_failed(rec)))):
@@ -11241,28 +11241,74 @@ def so_failed(rec):
 
 
 def stale_cancel(rec, d):
-    """WAVE-PILOT-FIX 11-18 (COORD durable class fix): a CANCELLED row (SUPERSEDED or any other class) left by an event that is not the die's current one, on a plan block that
-    did not change, is not 'already in the wave': no live row exists for the type on the current event, so the type relaunches (a cancelled volume row keeps its own rule)"""
-    return (rec.get("status") == "CANCELLED" and not rec.get("volume")
-            and bool(d.get("event")) and rec.get("event") not in (None, "", d.get("event")))
+    """WAVE-PILOT-FIX 11-18 (COORD durable class fix, FLOW-1000 (2)): a CANCELLED row (SUPERSEDED, HUNG, QUEUE-CANCELLED ...: no verdict) is not 'already in the wave', whatever its event:
+    the type relaunches under stops_off without a retry key (a cancelled volume row keeps its own rule)"""
+    return rec.get("status") == "CANCELLED" and not rec.get("volume")
 
 
 def so_same_input(cfg, die, r, rec):
     """under stops_off a failed row relaunches on its own (no retry key, no NEEDS-LANE) unless the full input hash equals the hash its failed attempt launched on.  An attempt with no
     stored hash (launched before the hash existed) relaunches once; its new attempt then records the hash"""
     ip = rec.get("input_parts") or {}
-    if ip.get("noenv"):                                # COORD class C: the env is compared for the failing stage only, never the whole die-wide env
+    if ip.get("noenv"):                                # COORD class C / FLOW-1000 (2): the failing stage's executed files and env are compared, never the die-wide env or the whole tree
+        if ip.get("v") != 2:
+            return False                               # an attempt stamped by the older hash format relaunches once; its new attempt records v2
         now = input_parts(cfg, die, r.get("item"), r.get("block_sha") or rec.get("block_sha"))
         if not now or now.get("noenv") != ip["noenv"]:
             return False
         stage = rec.get("stage") or FG.fail_stage(rec.get("reason") or "")
         why = rec.get("reason") or ""
+        fam = stage_family(stage)
+        if (now.get("fam") or {}).get(fam) != (ip.get("fam") or {}).get(fam):
+            return False                               # an executed file of this stage changed: relaunch
         return stage_env(now.get("env"), stage, why) == stage_env(ip.get("env"), stage, why)
     fh = rec.get("full_hash") or ""
     if not fh:
         return False
     now = full_input_hash(cfg, die, r.get("item"), r.get("block_sha") or rec.get("block_sha"))
     return bool(now) and now == fh
+
+
+_FAMILY = {}
+
+
+def stage_family(stage):
+    """COORD FABLE-FLOW-1000 (2): which executed files a failing stage runs: gen -> gen / gen_phys closure; bind -> bind closure; kit_* / elab stages -> the kit_rtl steps (kit_*.py + hooks)
+    + the bind closure; every later flow stage (place, route, cts, sta, reset ...) -> the tcl / sh of the physical flow; unknown -> all executed files"""
+    st_ = str(stage or "").strip().lower()
+    if not st_:
+        return "all"
+    if st_ == "gen":
+        return "gen"
+    if st_ in BIND_STAGES or st_.startswith("kit_") or st_ == "kit_snap":
+        return "kit"
+    return "flow"
+
+
+def exec_family_digests(root=None):
+    """the content digest of the tool files each stage family executes (stage_family).  Cached per process and tree"""
+    root = Path(root) if root else Path(__file__).resolve().parents[2]
+    k = str(root)
+    if k in _FAMILY:
+        return _FAMILY[k]
+    files = exec_tools_files(root)
+    def dig(paths):
+        h = hashlib.sha1()
+        for p in sorted(paths):
+            try:
+                h.update(str(p.relative_to(root)).encode()); h.update(p.read_bytes())
+            except (OSError, ValueError):
+                h.update(b"missing")
+        return h.hexdigest()[:16]
+    kitp = [f for f in files if f.name.startswith("kit_") or f.parent.name == "kit_rtl_post.d"]
+    flowp = [f for f in files if f.suffix in (".tcl", ".sh") and f.parent.name != "kit_rtl_post.d"] + [f for f in files if "nomcap_libs" in f.parts]
+    out = {"gen": stage_tools_digest(str(root), group="gen"),
+           "bind": stage_tools_digest(str(root), group="bind"),
+           "kit": hashlib.sha1((dig(kitp) + stage_tools_digest(str(root), group="bind")).encode()).hexdigest()[:16],
+           "flow": dig(flowp),
+           "all": dig(files)}
+    _FAMILY[k] = out
+    return out
 
 
 def input_parts(cfg, die, item, block_sha=None):
@@ -11276,8 +11322,9 @@ def input_parts(cfg, die, item, block_sha=None):
         for k in ("gen_env", "die_gen_env"):
             env.update({str(a): str(b) for a, b in (d.get(k) or {}).items()})
         env.update({str(a): str(b) for a, b in (item_env(d, item) or {}).items()})
-        body = {"rt": exec_tools_digest(), "snapshot": str(d.get("src_manifest_hash") or ""), "spec": spec}
-        return {"noenv": hashlib.sha1(json.dumps(body, sort_keys=True, default=str).encode()).hexdigest()[:20], "env": env}
+        spec.pop("tools", None)                               # the stage's executed files are hashed per family (exec_family_digests), not the whole gen / bind closure
+        body = {"snapshot": str(d.get("src_manifest_hash") or ""), "spec": spec}
+        return {"v": 2, "noenv": hashlib.sha1(json.dumps(body, sort_keys=True, default=str).encode()).hexdigest()[:20], "env": env, "fam": exec_family_digests()}
     except Exception:
         return {}
 

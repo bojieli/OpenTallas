@@ -351,25 +351,25 @@ if __name__ == "__main__":
 
 
 class StaleCancel(unittest.TestCase):
-    """COORD 11-18: a CANCELLED / SUPERSEDED row of an older event on an unchanged plan block is not 'already in the wave'"""
+    """COORD 11-18: a CANCELLED / SUPERSEDED row is not 'already in the wave'; no retry key needed"""
 
-    def test_cancelled_row_of_another_event_is_not_in_the_wave(self):
+    def test_cancelled_rows_are_not_in_the_wave(self):
         d = {"event": "N1B"}
         self.assertTrue(KW.stale_cancel({"status": "CANCELLED", "class": "SUPERSEDED", "event": "L2"}, d))
-        self.assertTrue(KW.stale_cancel({"status": "CANCELLED", "class": "INFRA", "event": "L2"}, d))
+        self.assertTrue(KW.stale_cancel({"status": "CANCELLED", "class": "INFRA", "event": "N1B"}, d))
+        self.assertTrue(KW.stale_cancel({"status": "CANCELLED", "class": "HUNG", "event": "N1B"}, {}))
 
-    def test_current_event_volume_and_live_rows_keep_their_rules(self):
+    def test_volume_and_live_rows_keep_their_rules(self):
         d = {"event": "N1B"}
-        self.assertFalse(KW.stale_cancel({"status": "CANCELLED", "class": "SUPERSEDED", "event": "N1B"}, d))
         self.assertFalse(KW.stale_cancel({"status": "CANCELLED", "volume": "v", "event": "L2"}, d))
         self.assertFalse(KW.stale_cancel({"status": "RUNNING", "event": "L2"}, d))
         self.assertFalse(KW.stale_cancel({"status": "FAIL", "event": "L2"}, d))
-        self.assertFalse(KW.stale_cancel({"status": "CANCELLED", "event": "L2"}, {}))
 
     def test_select_relaunches_it_only_under_stops_off(self):
         src = open(KW.__file__).read()
         self.assertIn("(so_failed(rec) or stale_cancel(rec, d))", src)
         self.assertIn("stale_cancel(its[item_key(die, ev, c, blk(c))], d)", src)
+        self.assertIn("not in retry and so_same_input(cfg, die, r, rec)", src)          # a retry key forces a relaunch past SKIP-SAME-INPUT
 
 
 class StageScopedInput(unittest.TestCase):
@@ -444,3 +444,40 @@ class ReapProbeAsync(unittest.TestCase):
                 KW.subprocess.Popen = orig
             self.assertIn("probe-pending", res.unreadable)
             self.assertNotIn("/srv/b", res)
+
+
+class ExecutedFileHash(unittest.TestCase):
+    """COORD FLOW-1000 (2): the stage's executed files are the stage input: a changed one relaunches, an unchanged family skips"""
+
+    def cfg(self):
+        return {"dies": {"s81": {"event": "E", "gen_host": "h", "gen_hosts": ["h"], "src_manifest_hash": "snap1", "gen_env": {}, "_plan_sha": "p1"}}, "stops_off": True}
+
+    def run_cmp(self, stage, old_fam, new_fam):
+        c = self.cfg()
+        orig = KW.exec_family_digests
+        KW.exec_family_digests = lambda root=None: old_fam
+        rec = {"status": "FAIL", "stage": stage, "reason": "x", "block_sha": "blk", "input_parts": KW.input_parts(c, "s81", "x", "blk")}
+        KW.exec_family_digests = lambda root=None: new_fam
+        try:
+            return KW.so_same_input(c, "s81", {"item": "x", "block_sha": "blk"}, rec)
+        finally:
+            KW.exec_family_digests = orig
+
+    FAM = {"gen": "g1", "bind": "b1", "kit": "k1", "flow": "f1", "all": "a1"}
+
+    def test_stage_families(self):
+        self.assertEqual(KW.stage_family("gen"), "gen")
+        self.assertEqual(KW.stage_family("kit_rtl"), "kit")
+        self.assertEqual(KW.stage_family("route"), "flow")
+        self.assertEqual(KW.stage_family(""), "all")
+
+    def test_unchanged_family_skips_changed_one_relaunches(self):
+        self.assertTrue(self.run_cmp("kit_rtl", self.FAM, dict(self.FAM, flow="f2", gen="g2")))      # other families moved: the kit_rtl failure is the same input
+        self.assertFalse(self.run_cmp("kit_rtl", self.FAM, dict(self.FAM, kit="k2")))
+        self.assertFalse(self.run_cmp("route", self.FAM, dict(self.FAM, flow="f2")))
+        self.assertFalse(self.run_cmp("", self.FAM, dict(self.FAM, all="a2")))
+
+    def test_old_format_attempt_relaunches_once(self):
+        c = self.cfg()
+        rec = {"status": "FAIL", "stage": "route", "reason": "x", "input_parts": {"noenv": "abc", "env": {}}}
+        self.assertFalse(KW.so_same_input(c, "s81", {"item": "x", "block_sha": "blk"}, rec))

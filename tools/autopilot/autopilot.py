@@ -1380,7 +1380,7 @@ def hub_procs(path):
     for line in out.splitlines():
         f = line.split(None, 2)
         if len(f) == 3 and f[0].isdigit() and int(f[0]) != me and "autopilot" not in f[2] \
-                and not f[2].startswith(("ssh ", "python3 -I -")) and process_uses_kit(f[2], path):
+                and not f[2].startswith(("ssh ", "python3 -I -")) and "/stage_odb_cap.py --watch" not in f[2] and process_uses_kit(f[2], path):
             res.append((int(f[0]), int(f[1])))
     return res
 
