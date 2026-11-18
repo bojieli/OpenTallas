@@ -150,7 +150,7 @@ def test_kit_rtl_inputs_all_present_in_the_tree():
 
 
 def test_kit_rtl_proceeds_when_inputs_present(monkeypatch, tmp_path):
-    called = _kit_rtl_main(monkeypatch, tmp_path, ref_text=lambda p=None: 'ref', cur_ref=lambda: ('cur', {}))
+    called = _kit_rtl_main(monkeypatch, tmp_path, ref_text=lambda p=None: 'ref', cur_ref=lambda b=None: ('cur', {}))
     c.main()
     assert called == ['apply_kit']
 
@@ -190,3 +190,21 @@ def test_kit_rtl_no_helpers_needs_no_reference_assets(monkeypatch, tmp_path, cap
     c.main()
     assert 'NOT_APPLICABLE' in capsys.readouterr().out
     assert {p.name: p.read_bytes() for p in tmp_path.iterdir()} == before
+
+
+def test_cur_ref_selects_reference_by_stage_digest(monkeypatch, tmp_path):
+    """FABLE-FIX-S81-SVC2 11-17: one reference per bind; the bound's staged-file digest picks it, CUR_REF otherwise."""
+    import gzip, json
+    def mk(name, digest):
+        d = tmp_path / name; d.mkdir()
+        s = 'x  // structural_full/%s_dsdv_svc_att.sv:1.1-1.2\n' % digest
+        (d / 'ref_t7_bound.sv.gz').write_bytes(gzip.compress(s.encode()))
+        (d / 'ref_map.json').write_text(json.dumps(dict(reference=c.sha(s), map=dict(tag=name))))
+        return d
+    cur = mk('ref_a_main', 'a' * 12); mk('ref_b_main', 'b' * 12); (tmp_path / 'ref_old_src').mkdir()
+    monkeypatch.setattr(c, 'CUR_REF', cur); monkeypatch.setattr(c, 'REF_ROOT', tmp_path)
+    bound = lambda g: 'y  // structural_full/%s_dsdv_svc_att.sv:9.1-9.2\n' % g
+    assert c.cur_ref(bound('b' * 12))[1] == dict(tag='ref_b_main')
+    assert c.cur_ref(bound('a' * 12))[1] == dict(tag='ref_a_main')
+    assert c.cur_ref(bound('c' * 12))[1] == dict(tag='ref_a_main')      # unknown digest: CUR_REF as before
+    assert c.cur_ref()[1] == dict(tag='ref_a_main')

@@ -197,12 +197,43 @@ def port_source(src, tn, nmap, ref_head='u_rsv_14_'):
     return out, used
 
 
-def cur_ref():
-    """(current T7 bound, token map), or (None, None) before a reference is regenerated."""
-    if not (CUR_REF / 'ref_map.json').exists(): return None, None
-    j = json.loads((CUR_REF / 'ref_map.json').read_text()); s = gzip.decompress((CUR_REF / 'ref_t7_bound.sv.gz').read_bytes()).decode()
+RE_STAGE = re.compile(r'structural_full/([0-9a-f]{12})_dsdv_svc_att\.sv')
+REF_ROOT = CUR_REF.parent
+
+
+def stage_digest(bound_text):
+    """Staged-file digest the bind gave dsdv_svc_att.sv (bind_elab.stage_keyer): it names every src_<hash> net of the
+    bound, so a reference only maps bounds of a bind with the same digest."""
+    m = RE_STAGE.search(bound_text or '')
+    return m.group(1) if m else None
+
+
+def ref_dirs():
+    """Every regenerated reference in the fit directory (ref_*/ref_map.json + ref_t7_bound.sv.gz), CUR_REF first."""
+    d = [p for p in sorted(REF_ROOT.glob('ref_*'), reverse=True)
+         if p != CUR_REF and (p / 'ref_map.json').exists() and (p / 'ref_t7_bound.sv.gz').exists()]
+    return ([CUR_REF] if (CUR_REF / 'ref_map.json').exists() else []) + d
+
+
+def load_ref(d):
+    j = json.loads((d / 'ref_map.json').read_text()); s = gzip.decompress((d / 'ref_t7_bound.sv.gz').read_bytes()).decode()
     if sha(s) != j['reference']: raise ValueError('regenerated reference hash')
     return s, j['map']
+
+
+def cur_ref(bound_text=None):
+    """(current T7 bound, token map), or (None, None) before a reference is regenerated.
+    FABLE-FIX-S81-SVC2 11-17 (D7w kit_rtl 'reference net 673_Y not structurally mapped'): one reference per BIND.  With
+    a bound, the reference whose T7 bound carries the bound's stage digest is taken (each bind event adds its own
+    ref_<event> directory with s81_svc_ref_regen2.py; older binds keep theirs); without a match, CUR_REF as before."""
+    dirs = ref_dirs()
+    if not dirs: return None, None
+    want = stage_digest(bound_text)
+    if want:
+        for d in dirs:
+            s, m = load_ref(d)
+            if stage_digest(s) == want: return s, m
+    return load_ref(dirs[0]) if dirs[0] == CUR_REF else (None, None)
 
 
 def rebase_source(src, rm):
@@ -407,13 +438,16 @@ def main():
                     cd = Path(a.closed_dir); gz = cd / "closed" / (b.name + ".gz")
                     closed = gzip.decompress(gz.read_bytes()).decode() if gz.exists() else (cd / b.name).read_text()
                     if sha(closed) != r['after_sha256']: sys.exit('closed bound sha mismatch ' + t)
-            print(d, json.dumps({k: v for k, v in apply_kit(d, cur_s or ref_s, closed, a.form, rm).items() if k in ('status', 'after_sha256')}), flush=True)
+            kr_d = json.loads((Path(d) / 'kit_rtl.json').read_text()); b_d = Path(d) / (kr_d['bound_module'] + '.sv')
+            if not b_d.exists(): b_d = Path(d) / ('s81p_%s_bound.sv' % kr_d['bound_type'])
+            cur_d, rm_d = cur_ref(b_d.read_text())          # the reference of THIS kit's bind (stage digest)
+            print(d, json.dumps({k: v for k, v in apply_kit(d, cur_d or ref_s, closed, a.form, rm_d).items() if k in ('status', 'after_sha256')}), flush=True)
         return
     out = Path(a.out)
     if out.exists(): sys.exit('refusing existing ' + str(out))
     out.mkdir(parents=True)
     jobs = [(str(ref_s_path), ref_s) for ref_s_path in []]
-    todo = ([] if a.skip_self_check else [(a.ref, ref_s, None)]) + [(f, cur_s or ref_s, rm) for f in a.bound]
+    todo = ([] if a.skip_self_check else [(a.ref, ref_s, None)]) + [(f,) + (lambda c: (c[0] or ref_s, c[1]))(cur_ref(Path(f).read_text())) for f in a.bound]
     with ProcessPoolExecutor(max_workers=a.jobs) as ex:
         res = list(ex.map(_one, todo))
     report = dict(types={})
