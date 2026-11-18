@@ -154,3 +154,17 @@ def test_cores_inside_the_spread_keep_the_shared_pad(tmp_path, monkeypatch):
     assert _bind(_plan(tmp_path, True, gap=100.0), near, "elab", "bind") == 0
     assert (base / "rtl" / "bt_ts.sv").read_bytes() == (near / "rtl" / "bt_ts.sv").read_bytes()
     assert json.loads((near / "bind_pad_tail_split.json").read_text())["types"]["ts"]["split_pads"] == 0
+
+
+def test_leaf_xy_groups_hard_cores_of_a_soft_leaf():
+    """QC st_a: the consumer leaf u_r0 is soft, its SRAM cores are plan rows u_bound.u_u_r0.*; one consumer at their centroid"""
+    hc = [dict(inst="u_bound.u_u_r0.u_h9.u_m", origin_um=[0, 0], outline_um=[10, 10]),
+          dict(inst="u_bound.u_u_r0.u_hb.u_m", origin_um=[100, 0], outline_um=[10, 10]),
+          dict(inst="u_bound.u_u_r1.u_h9.u_m", origin_um=[0, 900], outline_um=[10, 10])]
+    t = TS.leaf_table(hc)
+    assert TS.leaf_xy(t, "u_r0") == ("u_r0", (55.0, 5.0))
+    assert TS.leaf_xy(t, "u_r1") == ("u_r1", (5.0, 905.0))
+    assert TS.leaf_xy(t, "u_r2") == (None, None)
+    by = {"u_r0": [(55.0, 5.0)], "u_r1": [(5.0, 905.0)]}
+    cfg = dict(min_spread_um=400.0, hop_um=380.0)
+    assert TS.tail_depth(5, by, cfg) == (2, 950.0)

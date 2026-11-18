@@ -4217,6 +4217,7 @@ class Binder:
             raise BindError(str(exc)) from exc
         if ts_cfg is not None and TS.selected(ts_cfg, tn):
             ts_tab = TS.pin_table(t.get("hard_cores"), self.plan_dir)
+            ts_ltab = TS.leaf_table(t.get("hard_cores"))
             ts_r8 = getattr(self, "r8sp", {})
             ts_cons, ts_other = defaultdict(list), defaultdict(list)
 
@@ -4245,6 +4246,8 @@ class Binder:
                 by, per = {}, {}
                 for ci, pn, i in us:
                     inst, xy = TS.pin_xy(ts_tab, self.rel_of(ci), pn, i, len(F.cells[ci].ports[pn]))
+                    if inst is None:
+                        inst, xy = TS.leaf_xy(ts_ltab, self.rel_of(ci))
                     if inst is not None:
                         by.setdefault(inst, []).append(xy)
                         per[ci] = inst

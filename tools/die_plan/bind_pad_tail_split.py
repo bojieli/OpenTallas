@@ -19,7 +19,8 @@ S / 2 is the longest branch when the trunk ends at the L1 centre of the consumer
 track_offset + orient(pin)), hop_um the register reach.  The depth per sink stays `pad`: only the emitted instances
 change, the sink descriptors (R8 table, bind_latency / lane as-built records, LATCHECK input) are untouched.
 
-Not covered (left as emitted today, counted in bind_pad_tail_split.json): R8 strap-count banks (ot_dp_dly_cnt),
+A consumer that is a soft leaf (no plan pin xy) holding plan hard cores counts as ONE consumer at the centroid of those
+cores (leaf_xy).  Not covered (left as emitted today, counted in bind_pad_tail_split.json): R8 strap-count banks (ot_dp_dly_cnt),
 PAD_TREE types, position-bank members, registered-pin hard partitions; consumers that are not plan hard cores (or have
 no plan pin xy) keep reading the shared full-depth pad.
 """
@@ -68,6 +69,23 @@ def pin_table(hard_cores, plan_dir):
             tx, ty = CK._orient_pt(o, w, h, x, y)
             t.setdefault(pn, {})[bit.rstrip("]")] = (hc["origin_um"][0] + dx + tx, hc["origin_um"][1] + dy + ty)
     return tab
+
+
+def leaf_table(hard_cores):
+    """{core inst: (cx, cy)} (box centres) for the leaf fallback"""
+    return {h["inst"]: (h["origin_um"][0] + h["outline_um"][0] / 2.0, h["origin_um"][1] + h["outline_um"][1] / 2.0)
+            for h in hard_cores or []}
+
+
+def leaf_xy(ltab, rel):
+    """(leaf rel, centroid of its hard cores) for a SOFT consumer leaf that holds plan hard cores (QC st_a station rows:
+    u_r0..u_r3 hold the SRAM cores `u_bound.u_<rel>.*`), else (None, None).  The leaf's own flops are placed next to
+    its cores, so the centroid of those cores stands for the pin position."""
+    pre = tuple(f"{b}{rel}." for b in ("u_bound.u_", "u_bound.", "u_", ""))
+    pts = [xy for inst, xy in ltab.items() if inst.startswith(pre)]
+    if not pts:
+        return None, None
+    return rel, (sum(p[0] for p in pts) / len(pts), sum(p[1] for p in pts) / len(pts))
 
 
 def pin_xy(tab, rel, pn, i, width):
