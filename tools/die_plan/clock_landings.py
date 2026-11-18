@@ -696,6 +696,37 @@ def requirements(plan, table):
                          "update lane/R8/calendar price", "emit actual landing RTL", "ring window STA and token pass"])
 
 
+
+LOCAL_RESET_REACH_UM = 405.0
+_BOUND_RELAY_SITE = re.compile(r"\bot_dp_rrelay(?:_nl)?\s+\w+\s*\([^;]*?\.q\(\s*(rst_rl_\d+)\s*\)[^;]*\);[ \t]*//[^\n]*?"
+                               r"depth\s+(\d+)\s+@\s+\(([-\d.]+),\s*([-\d.]+)\)")
+
+
+def bound_relay_sites(rtl_text):
+    """{rst_rl_<k>: (depth, (x_um, y_um))} of the generated relays in a bound body (reset_tree comments each 'depth D @ (x, y)')"""
+    return {m.group(1): (int(m.group(2)), (float(m.group(3)), float(m.group(4)))) for m in _BOUND_RELAY_SITE.finditer(rtl_text)}
+
+
+def pick_local_reset_raw(raw, xy, need_depth, relays, ported, reach_um):
+    """-> (raw, was).  raw is kept when it is a relay of the regenerated set at need_depth, not ported, within reach_um of xy.
+    It is re-picked (nearest such relay within reach_um, ties by name; was = the old name) when it is GONE from the set (a tap event
+    renumbered the tree) or is a right-depth relay farther than reach_um.  A name that exists at the WRONG depth is kept: that is a
+    plan error the caller fails closed on (release edge would move).  Nothing within reach: raw kept (caller / G0 R-REACH-5 judge).
+    An empty relay set (a body without relay site comments) keeps raw."""
+    if not relays:
+        return raw, None
+    dist = lambda q: abs(relays[q][1][0] - xy[0]) + abs(relays[q][1][1] - xy[1])   # noqa: E731
+    here = isinstance(raw, str) and raw in relays
+    if here and (relays[raw][0] != need_depth or raw in ported):
+        return raw, None
+    if here and dist(raw) <= reach_um:
+        return raw, None
+    cand = sorted((dist(q), q) for q, (d, _p) in relays.items() if d == need_depth and q not in ported)
+    if cand and cand[0][0] <= reach_um:
+        return cand[0][1], raw
+    return raw, None
+
+
 class LandingError(ValueError):
     pass
 
@@ -908,6 +939,7 @@ class Landings:
         self.forwarded_clock_only_inputs = {}
         self.emitted_top = False
         self.reset_placements = {}
+        self.local_reset_rederived = {}    # LOCAL-RESET-RAW-1: {type: [{name, was, raw}]} raw names re-picked on the regenerated relay set
         declared = table.get("part_region")   # DIE-S81-92 ca_region_table.py: declared regions, boxes may overlap
         for pn, p in self.parts.items():
             if declared is not None:
@@ -2355,6 +2387,16 @@ class Landings:
         if bad:
             raise LandingError(f"{tn}: landing_status_anchors names {bad}, not an emitted agg/loc status stage")
 
+    @staticmethod
+    def _local_reset_old(cons, text):
+        """the reset net of the first consumer of a landing_local_resets row (its shared reset before the copy), or None"""
+        m = [x for x in re.finditer(r"(\b\w[\w#().,\s]*?\s)(" + re.escape(cons[0]) + r")(\s*\()([^;]*?)(\);)", text, re.S)
+             if not re.search(r"\.\s*$", x.group(1))]
+        if len(m) != 1:
+            return None
+        pins = list(re.finditer(r"\.(rst_n|rst_raw_n)\(\s*(\w+)\s*\)", m[0].group(4)))
+        return pins[0].group(2) if len(pins) == 1 else None
+
     def _local_resets(self, tn, key, body, logic):
         """DIE-HEAD-38 R1 (plan clock.landing_local_resets, opt-in): each listed copy is a kept ot_dp_rrelay
         u_cland_lrst_<name> (d = a registered wavefront raw relay Q) and the listed landing consumers take its Q
@@ -2390,6 +2432,8 @@ class Landings:
                 d = depth(a.group(1), seen + (net,))
             memo[net] = d
             return d
+        relays = bound_relay_sites(allrtl)
+        ported = set(re.findall(r"\bassign\s+rst_o_\w+\s*=\s*(\w+)\s*;", allrtl))
         rec, used, decl = [], set(), []
         for r in cfg:
             name, raw = r.get("name"), r.get("raw")
@@ -2399,6 +2443,17 @@ class Landings:
             if (not isinstance(xy, list) or len(xy) != 2 or
                     any(isinstance(v, bool) or not isinstance(v, (int, float)) or not math.isfinite(v) for v in xy)):
                 raise LandingError(f"{tn}: landing_local_resets.{name} needs finite xy_um")
+            # LOCAL-RESET-RAW-1 (S81-SERDES-GEN 11-17, FABLE-PD-S81-2100 finding 2): the saved raw name is never trusted.  A plan event
+            # that adds taps renumbers rst_rl_<k>; the name then points at nothing or at a far relay (serdes t1 rst_rl_170 gone,
+            # t15 rst_rl_244 690 um from its leaf).  The regenerated relay set decides: a name that still exists at the needed
+            # depth and within reach of the leaf site stays (kits are byte-identical); otherwise the nearest non-ported relay of
+            # the needed depth within reach is taken, and the receipt says so.  Nothing in reach: the error below / G0 R-REACH-5.
+            was = None
+            first_old = self._local_reset_old(r.get("consumers"), text) if isinstance(r.get("consumers"), list) and r.get("consumers") and r["consumers"][0] not in used else None
+            if first_old is not None:
+                raw, was = pick_local_reset_raw(raw, xy, depth(first_old) - 1, relays, ported, LOCAL_RESET_REACH_UM)
+                if was is not None:
+                    self.__dict__.setdefault("local_reset_rederived", {}).setdefault(tn, []).append(dict(name=name, was=was, raw=raw))
             if not isinstance(raw, str) or not re.search(r"\bot_dp_rrelay(?:_nl)?\s+\w+\s*\([^;]*?\.q\(\s*" + re.escape(raw) +
                                                           r"\s*\)[^;]*?\);", allrtl, re.S):
                 raise LandingError(f"{tn}: landing_local_resets.{name}: raw {raw!r} has no registered wavefront driver")
@@ -2430,7 +2485,7 @@ class Landings:
                      f'    (* keep = "true" *) ot_dp_rrelay {inst} (.clk(clk), .d({raw}), .q({net}));  '
                      f"// local same-cycle reset copy (depth {depth(raw) + 1})"]
             rec.append(dict(name=name, instance=inst, net=net, raw=raw, depth=depth(raw) + 1, xy_um=list(xy),
-                            replaced=olds, added_flops=1, added_cycles=0))
+                            replaced=olds, added_flops=1, added_cycles=0, **({"raw_rederived_from": was} if was else {})))
         self.reset_placements.setdefault(tn, {}).setdefault("local_resets", []).extend(rec)
         return decl + [text]
 
