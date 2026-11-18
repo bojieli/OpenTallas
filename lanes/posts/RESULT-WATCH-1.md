@@ -22,3 +22,4 @@
 - 2026-11-17 19:20 PST RESULT-WATCH [RESULT-WATCH-1 -> DIE-QC-103] die-qc-103/g0_s3r3 on epyc9: log done: G0_DONE rc=$?
 - 2026-11-17 19:20 PST RESULT-WATCH [RESULT-WATCH-1 -> DIE-QC-103] die-qc-103/g0_s3r2 on epyc9: log done: G0_DONE rc=$?
 - 2026-11-17 19:30 PST RESULT-WATCH [RESULT-WATCH-1 -> TL-S81PHY] kw43-wave-1109n/runs/s81/kit-wave/s81/7073a6b4a59/items/phy__t1/attempt_8 on epyc8: process gone (no signoff.json/result.json)
+- 2026-11-17 19:30 PST RESULT-WATCH [RESULT-WATCH-1 -> TL-S81PHY] tl-s81phy on intel1: process gone (no signoff.json/result.json) [no kit dir]
