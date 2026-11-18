@@ -1926,6 +1926,86 @@ def plan_core_not_in_only(d, plan_types):
                    if c not in allowed and (plan_types is None or c in plan_types)})
 
 
+def item_key_matches(key, name):
+    """a config key (exact item, fnmatch glob, or a base whose class/instance variants are '<key>__...') names the plan item"""
+    key, name = str(key), str(name)
+    return key == "*" or key == name or name.startswith(key + "__") or (bool(re.search(r"[*?\[]", key)) and fnmatch.fnmatchcase(name, key))
+
+
+def plan_config_drift(d, names):
+    """FLOW-R2 11-17 (COORD, S81 col after D6z): the plan names col_h9_r2__t1 while only_items / item_env / hold keys named the old suffixed
+    variants, and the wave dropped the rows as 'outside configured only_items' without a word.  -> {only: [plan items no only_items entry covers],
+    env: [item_env keys matching no plan item], hold: [hold key / record key matching no plan item]}; {} when only_items is not a list or the plan is unknown."""
+    names = sorted(set(names or []))
+    if not names:
+        return {}
+    out = {}
+    only = d.get("only_items")
+    if isinstance(only, list):
+        out["only"] = [n for n in names if not any(item_key_matches(o, n) for o in only)]
+        out["only_unmatched"] = [o for o in only if not any(item_key_matches(o, n) for n in names)]
+    out["env"] = sorted(k for k in (d.get("item_env") or {}) if not any(item_key_matches(k, n) for n in names))
+    keys = set(k for k in (d.get("hold_items") or {}))
+    for rec in d.get("hold_records") or []:
+        keys.update(str(x) for f in ("keys", "items", "patterns") for x in rec.get(f) or [])
+    out["hold"] = sorted(k for k in keys if not any(item_key_matches(k, n) for n in names))
+    return {k: v for k, v in out.items() if v}
+
+
+def only_items_extend(d, names):
+    """die option only_items_extend_families: true -> plan names whose family (text before the first '__') already appears in only_items are
+    appended to only_items in memory (the file is not edited).  -> the names added"""
+    only = d.get("only_items")
+    if not d.get("only_items_extend_families") or not isinstance(only, list):
+        return []
+    fams = {str(o).split("__")[0] for o in only}
+    add = [n for n in sorted(set(names or [])) if n.split("__")[0] in fams and not any(item_key_matches(o, n) for o in only)]
+    d["only_items"] = list(only) + add
+    return add
+
+
+def plan_names_from_cache(st, d):
+    c = (st.get("plans") or {}).get(f"{d.get('gen_host')}:{d.get('plan')}|{d.get('event')}") or {}
+    return list(c.get("types") or [])
+
+
+def plan_drift_step(AP, cfg, st):
+    """after every compile (adopt / tree switch / config edit changes the signature): extend only_items for opted-in dies, post ONE ALERT per
+    change listing plan items outside only_items and config keys matching no plan item.  Names come from the plan cache; no probe here."""
+    sigs = st.setdefault("plan_drift_sig", {})
+    cfg["_plan_item_names"] = {}
+    for die, d in (cfg.get("dies") or {}).items():
+        if not isinstance(d, dict) or not d.get("enabled"):
+            continue
+        names = plan_names_from_cache(st, d)
+        if not names:
+            continue
+        cfg["_plan_item_names"][die] = names
+        added = only_items_extend(d, names)
+        if added:
+            AP.log(f"KIT-WAVE ONLY-ITEMS-EXTEND {die}: {len(added)} plan item(s) of a listed family added in memory: " + " ".join(added[:20]))
+        dr = plan_config_drift(d, names)
+        sig = hashlib.sha1(json.dumps([d.get("src"), d.get("event"), sorted((k, v[:80]) for k, v in dr.items())]).encode()).hexdigest()[:12] if dr else ""
+        if sig == sigs.get(die, ""):
+            continue
+        if not sig:
+            sigs.pop(die, None)
+            continue
+        sigs[die] = sig
+        parts = []
+        if dr.get("only"):
+            parts.append(f"{len(dr['only'])} plan item(s) outside only_items (rows dropped, never launch): " + " ".join(dr["only"][:25]))
+        if dr.get("only_unmatched"):
+            parts.append(f"{len(dr['only_unmatched'])} only_items name(s) match no plan item: " + " ".join(dr["only_unmatched"][:15]))
+        if dr.get("env"):
+            parts.append(f"item_env keys matching no plan item: " + " ".join(dr["env"][:15]))
+        if dr.get("hold"):
+            parts.append(f"hold keys matching no plan item: " + " ".join(dr["hold"][:15]))
+        AP.log(f"KIT-WAVE PLAN-CONFIG-DRIFT {die}: " + "; ".join(parts)[:600])
+        AP.coord_append("lanes/COORD-REVIEW-QUEUE.md", f"- {now_s()} ALERT [PLAN-CONFIG-DRIFT -> {d.get('owner_lane') or 'COORD'}] {die} plan {os.path.basename(str(d.get('plan')))} / "
+                        f"tree {os.path.basename(str(d.get('src')))}: " + "; ".join(parts)[:1500] + ". Fix: kit_wave_edit only_items / item_env / hold keys to the plan names (or set dies.%s.only_items_extend_families)." % die)
+
+
 # WF-1 11-14 (COORD friction 7, FABLE-REVIEW-COL step A): S81 col types are mostly duplicate kits.  "pv" is a per-instance ROM image
 # parameter: item <base>__pv<hash> kits of one base are byte-identical (netlist, io.tcl, macro_place.tcl, SDC) -> 216 types, about
 # 95 distinct kits.  After kit_rtl / gen / lint / preflight the unit hashes the kit identity (io.tcl, macro_place.tcl, constraint.sdc,
@@ -12144,6 +12224,7 @@ def _step(AP, ap_dir):
         _PA.step_cfg(AP, cfg, ap_dir)
         _before = len(cfg.get("_hold_auto_released") or [])
         _tf, _mf = tree_gate(AP, cfg)
+        plan_drift_step(AP, cfg, st)                    # names first: the hold audit counts zero matches against the CURRENT plan
         compile_hold_records(cfg, None, _tf, _mf)
         log_hold_releases(AP, ap_dir, (cfg.get("_hold_auto_released") or [])[_before:], "release terms met", reset=True,
                           summary_total=len(cfg.get("_hold_auto_released") or []))

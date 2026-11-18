@@ -600,6 +600,17 @@ def record_expired(rec, cfg, now=None, hours=None):
     return f"EXPIRED: owner lane {owner} silent > {HOLD_TTL_H:g} h ({since}); renew with owner/renewed_at"
 
 
+def key_in_names(key, names):
+    key = str(key)
+    return key == "*" or any(n == key or n.startswith(key + "__") or (GLOB.search(key) and fnmatch.fnmatchcase(n, key)) for n in names)
+
+
+def zero_vs_plan(rec, names):
+    """COORD 11-17: a record none of whose keys / items / patterns matches an item of the CURRENT plan (names = the plan's item names; [] = unknown, never zero)"""
+    raw = [str(x) for f in ("keys", "items", "patterns") for x in rec.get(f) or []]
+    return bool(names) and bool(raw) and not any(key_in_names(k, names) for k in raw)
+
+
 def compile_holds(cfg, ctx=None):
     """expand every die's hold_records into cfg dies.<die>.hold_items (appended after any legacy key, never overriding one), dropping
     keys whose release terms are all met.  Fills cfg['_hold_compiled'][die] = {key: record id}, cfg['_hold_rec_info'][die] = [info],
@@ -649,6 +660,8 @@ def compile_holds(cfg, ctx=None):
                     stuck_all.append((die, rec.get("id"), k))
             rel = [str(t) for t in rec.get("release") or [] if str(t).strip()]
             zero = (not rec.get("migrated")) and bool(rec.get("patterns")) and not keys
+            zero_plan = zero_vs_plan(rec, (cfg.get("_plan_item_names") or {}).get(die) or [])
+            zero = zero or zero_plan
             held = 0
             tname = "route_hold_items" if rec.get("route") else "hold_items"       # route: true = a ROUTE-HOLD (place/CTS/GRT still run)
             hold = d[tname]
@@ -702,7 +715,7 @@ def compile_holds(cfg, ctx=None):
                 comp.setdefault(die, {})[k] = rec.get("id")
                 held += 1
             info.setdefault(die, []).append({"id": rec.get("id"), "plan_sha": sha, "stale": stale, "rebound": rebound,
-                                             "zero": zero, "keys": len(keys), "held": held, "release": rel, "expired": exp,
+                                             "zero": zero, "zero_plan": zero_plan, "keys": len(keys), "held": held, "release": rel, "expired": exp,
                                              "migrated": bool(rec.get("migrated"))})
     cfg["_hold_compiled"], cfg["_hold_rec_info"], cfg["_hold_rec_dies"] = comp, info, rec_dies
     cfg["_hold_proof_stuck"] = stuck_all
@@ -731,7 +744,7 @@ def audit(cfg, launched=()):
             if inf["stale"]:
                 add("HOLD-SUPERSEDED", die, rid, f"bound to plan {inf['plan_sha'][:12]}, die plan is {plan_id(cfg['dies'][die])[:12]}")
             if inf["zero"]:
-                add("HOLD-ZERO-MATCH", die, rid, "patterns match no item of the plan item list")
+                add("HOLD-ZERO-MATCH", die, rid, "no key matches an item of the current plan" if inf.get("zero_plan") else "patterns match no item of the plan item list")
             for t in inf["release"]:
                 why = unreachable_why(t, die, cfg)
                 if why:
