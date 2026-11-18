@@ -1,24 +1,23 @@
 {
  "die": "qwen_kvsys",
- "tree": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg6_2433b9c2_t24c7347c_d21b",
- "manifest_hash": "79bf6f8a4d40b2378464dddd2f48ebce1bc9706acdd27d8fbae660c9ea6e14fd",
- "src_manifest_sha": "79bf6f8a4d40b2378464dddd2f48ebce1bc9706acdd27d8fbae660c9ea6e14fd",
+ "tree": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg7_23c87c42_t5144e08_d22",
+ "manifest_hash": "d988db9486e20684b4f2358bbb4f101e201e58cca4d2d6dcb7e15c22fb975efb",
+ "src_manifest_sha": "d988db9486e20684b4f2358bbb4f101e201e58cca4d2d6dcb7e15c22fb975efb",
  "tools_sha": "eb1e73448bd042684261a13c50cd0fb5ce21a513",
  "hosts": [
-  "epyc10",
   "epyc7",
   "epyc8",
   "epyc9",
-  "intel1"
+  "epyc10"
  ],
  "smoke": "PASS",
- "smoke_detail": "Fresh D21b PRE/G0/strict bind 0/R8 table == derivation/LAT2404 on the final tree: D16 (manifest d9187b9c24f1, applied KV-HG5) + HG6 v6 plan 2433b9c21c26 (v5 + kv3_hroot raw-branch stage off the reserved clock rect; PC bays carve + ring->bin FIRM stations on kv3_pc_v1, one k per R8 bundle, rq unstationed, +1296 lane-cycles) + r8_ev.json ad024d0bb7d3 re-derived on the v5 bind (516 members bound/landed moved, pads kept) + tools/ and shared flow files of main 24c7347cc887 (602 files, FABLE-FLOW-1300).",
- "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg6_2433b9c2_t24c7347c_d21b/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
- "plan_sha256": "2433b9c21c2686bc2c8eb32b931da9b14c100ed882cff41361e2ad1023c8b262",
- "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg6_2433b9c2_t24c7347c_d21b/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
- "asbuilt_sha256": "b885026c19a2db2f033c8e2664a21cbedaf010586b7ffa68081c95188e43d026",
- "bind_out": "/srv/opentallas-scratch2/claude/fable-fix-kv-hg2/d21bgate/bind",
- "sidecar": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg6_2433b9c2_t24c7347c_d21b/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json",
+ "smoke_detail": "D22 gate of record on the final tree (epyc7 fable-fix-kv-hg3/d22gate/gate.out): PRE PASS, G0 0 errors, strict bind 0 errors 160/56/2545/429530, R8 recheck 0, LATCHECK 2404/2404, strap audit PASS 580.",
+ "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg7_23c87c42_t5144e08_d22/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+ "plan_sha256": "23c87c42a4e9b78d44123bd65aaa4b2c3a75d02870d566a7e0f82a993817d58b",
+ "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg7_23c87c42_t5144e08_d22/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
+ "asbuilt_sha256": "efad37e95d459cbb4e0fdd1c8f21a0bdacb1f1ff2d9be51796aaf43f8fa0fed9",
+ "bind_out": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg7_23c87c42_t5144e08_d22/physical/die_plan/qwen_kvsys/plan_of_record/bind_of_record",
+ "sidecar": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg7_23c87c42_t5144e08_d22/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json",
  "sidecar_sha256": "e8b77b956217b60c2c62f9f24b8e95264c49ba18437a9ada5d7652704d23ee1e",
  "die_gen_env": {
   "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kit-ops-6/signed_view_sha_kv.json",
@@ -38,35 +37,34 @@
   "OT_PG_PIN_CHECK": "1"
  },
  "config": {
-  "event": "KV-HG6",
+  "event": "KV-D22",
   "src_sha": "eb1e73448bd042684261a13c50cd0fb5ce21a513",
-  "tools_sha": "eb1e73448bd042684261a13c50cd0fb5ce21a513",
+  "tools_sha": "5144e086700c48ccb3d2fc495e62d9699bac4a8f",
   "queue_src": "main@eb1e73448bd042684261a13c50cd0fb5ce21a513",
-  "plan_sha256": "2433b9c21c2686bc2c8eb32b931da9b14c100ed882cff41361e2ad1023c8b262",
+  "plan_sha256": "23c87c42a4e9b78d44123bd65aaa4b2c3a75d02870d566a7e0f82a993817d58b",
   "gen_hosts": [
-   "epyc10",
    "epyc7",
    "epyc8",
    "epyc9",
-   "intel1"
+   "epyc10"
   ],
-  "gen_host": "epyc10",
+  "gen_host": "epyc7",
   "gen_args": [
    "--hold-ff-margin",
    "0",
    "--clock-landing",
-   "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg6_2433b9c2_t24c7347c_d21b/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json"
+   "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg7_23c87c42_t5144e08_d22/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json"
   ],
   "kit_rtl": {
    "mode": "bind",
-   "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg6_2433b9c2_t24c7347c_d21b/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
-   "bind_out": "/srv/opentallas-scratch2/claude/fable-fix-kv-hg2/d21bgate/bind"
+   "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg7_23c87c42_t5144e08_d22/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
+   "bind_out": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg7_23c87c42_t5144e08_d22/physical/die_plan/qwen_kvsys/plan_of_record/bind_of_record"
   },
   "gate": {
    "g0c": "PASS",
    "bind": "PASS",
    "clock": "PASS",
-   "evidence": "Fresh E10 fable-fix-kv-hg2/d21bgate/gate.out PRE0/G0errors0/strictbind0/R8_RECHECK 0/LAT2404/2404 + r8pad strap audit; r8.py check = D16 baseline 64/2/6; reach c1 2/205.1 c2 1 c4 0 (= D16)."
+   "evidence": "epyc7 fable-fix-kv-hg3/d22gate/gate.out PRE0/G0 0 err/strict bind 0/R8_RECHECK 0/LAT 2404/2404; plan 23c87c42a4e9 = D21b + 6 PV band rows + 189 PV stage rows + pc tap_skip/spill + r8_strap_pad_max 31 on kv3_pc_v1__cl7f648944; asbuilt land_pad_tail_split ^kv3_pv; signed_view_sha_kv.json + bind_of_record in-tree."
   },
   "planned_events": [
    "KV-7uh",
@@ -78,7 +76,25 @@
    "kvgeom7yhr",
    "KV-HG3",
    "KV-HG5"
-  ]
+  ],
+  "gen_env_outside_allow": [],
+  "die_gen_env": {
+   "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg7_23c87c42_t5144e08_d22/physical/die_plan/qwen_kvsys/plan_of_record/signed_view_sha_kv.json",
+   "OT_PLACE_MAX_FANOUT": "64",
+   "OT_GRT_NONPORT_HOLD": "1",
+   "OT_CORE_TAP_REACH_UM": "0",
+   "OT_PREGRT_FF_HOLD_AUTO": "-1",
+   "OT_MAX_BUFFER_PERCENT": "100",
+   "OT_GRT_POST_MAX_S": "0",
+   "OT_HOLD_STOP_PS": "-1000000",
+   "OT_GRT_ALLOW_CONGESTION": "1",
+   "OT_CLAND_STRIP_DENS": "1.0",
+   "OT_TT_SETUP_REPAIR": "both",
+   "OT_PG_DIE_PHASE": "1",
+   "OT_PGCAP": "1",
+   "OT_PG_TRACK_TRUTH": "1",
+   "OT_PG_PIN_CHECK": "1"
+  }
  },
  "written_by": "root-authorized lane atomic apply",
  "status": "ADOPTED reviewed tuple"
