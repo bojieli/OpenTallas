@@ -85,7 +85,11 @@
    "why": "the score tag depth HXK is hard inside the quarter cores (ot_qkd_ectl_part SCD = KDEPTH(HXK) + 8: u_tag 11 b + u_scv 1 b delay lines). 13 -> 15 = two more stages on those lines",
    "how": "HXK is now a parameter of qkd_ectlk_reference / qkd_ectlk_q0..q3 (default 13, like QK_ISSUE_AGE / RESPONSE_LAT). Rebuild the four quarters with -GHXK=15 (core.json params / VERILOG_TOP_PARAMS), then in the event that adopts the signed views run `python3 -I physical/die_plan/qwen_kvsys/cores/harden/ectlk_hxk.py --set 15` (rewrites the five defaults + CORE_HXK in qkd_ectl3_kiss_st_cols.sv; until then a parent HXK 15 fails elaboration by design). No pin change expected (interface is unchanged); which quarters actually differ after synthesis was not measured.",
    "started": null,
-   "status": "NOT STARTED: ordered by COORD 15:3x, but no kit input exists. The quarter core jsons (qkd_ectlk_q<k>_core.json, Codex ectlk_quarter_cores.py output, input of ectlk_q_corejson.py) are in no repo tree and on no fleet host (find on intel2 / epyc8 / epyc9 / epyc10), and the 37/26 kit dirs (intel2 kv-ectlk-rl-cores37/q0,q1,q3; fable-fix-kv-pv-ectlk) keep only run/ + views. Needs the owner of the 37/26 kits (KV-ECTLK-RL / FABLE-FIX-KV-PV) or the AGIdock archive of those kits; then VERILOG_TOP_PARAMS += HXK 15 on the same kit."
+   "status": "NOT STARTED, BLOCKED on kit inputs (checked 11-18 after the FABLE-FIX-KV-HG leads). The signed 37/26 kits were hand-lineage copies of older kit dirs (handoff KV-ECTLK-RL.md: q0 die-kv-56 q0g_hA, q1 die-kv-51 q1r_p2, q2 die-kv-61 q2r_c, q3 kv-q3-2 q3e/kit, with kit-local island-ft edits on q0/q2 and core_sink_grow.json on q3), not a generator run at main, so there is no pins.json to diff: the generator cannot be run at all. Missing: config.mk / pins.json / core.json of each kit (rtx-pro signed-export-1114/qwen_kvsys/qkd_ectlk_q<k>__r37_* holds only their sha256 in KIT_PROVENANCE.json plus odb/def/v/lef/lib); those sha256 are in no kit-store blob dir on epyc8/9/10; every source kit dir is deleted (intel2 kv-ectlk-rl-cores37/q0,q1,q3 keep run/ + views only). The producer ectlk_quarter_cores.py exists only at a1841bc785 (intel2 clone /srv/opentallas-scratch2/claude/kv-ectlk-rl) and needs --hg / --live / --template and results/arch/kv_plan_1025/ectlk_columns that I did not find. AGIdock archive not reachable from this session (not checked).",
+   "ways_forward": [
+    "restore one kit dir per quarter from the AGIdock archive (files must match the KIT_PROVENANCE sha256), then VERILOG_TOP_PARAMS += HXK 15, fresh route",
+    "or rebuild kit inputs from the signed 6_final.def (pin sites) + 6_final.sdc + plan pins files pins/qkd_ectlk_q<k>_pins_*.json with gen_core_kit_kv.py and a re-made core.json: a new kit lineage that needs its own pin-identity check against the signed LEFs"
+   ]
   }
  ],
  "latency_delta": {
@@ -111,5 +115,6 @@
    "relay_mid siting of the 56 parent station cells a partition: regex only, no placed view",
    "ECTLK q0..q3 at HXK 15: RTL parameter + tile lock-step (HXK 8 -> 10 on the same ot_qkd_ectl_part), no kit"
   ]
- }
+ },
+ "event_scope_note": "W-face / latency items are D25 (FABLE-FIX-KV-HG 11-18): they ride the same event as these rows."
 }
