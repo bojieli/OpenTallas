@@ -20,3 +20,8 @@
   epyc9: OK
   intel1: refuse (free 66 GB + part 0 - tree 47 = 58 GB after the copy < floor 50 + 20 GB); stopped (no retry); free the host named or exclude it, then change the die tree or recipe settings to resume
 - 2026-11-17 20:15 PST TOOLS-REFRESH s81_head: switched to /srv/opentallas-scratch2/claude/kw45/src_head_pin_8569788b0328_nf15f_d2_t86a9d26 (rulings r618, r620, r621, r622, r623, r624, r625, r626, r627, r628, r629, r630); plan and RTL byte-identical, strict bind unchanged
+- 2026-11-17 20:35 PST NEEDS-LANE [TOOLS-REFRESH -> HEAD die owner (HEAD-100)] s81_head: tools-only tree /srv/opentallas-scratch2/claude/kw45/src_head_pin_8569788b0328_nf15f_d2_t86a9d26_t25194ae could not be composed or replicated: replicate: rc 1: epyc8: linked from src_head_pin_8569788b0328_nf15f_d2_t86a9d26
+  epyc8: OK
+  epyc10: linked from src_head_pin_8569788b0328_nf15f_d2_t86a9d26
+  epyc10: OK
+  intel1: refuse (free 36 GB + part 0 - tree 47 = 28 GB after the copy < floor 50 + 20 GB); stopped (no retry); free the host named or exclude it, then change the die tree or recipe settings to resume
