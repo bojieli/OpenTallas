@@ -1,0 +1,68 @@
+{
+ "advisory": [
+  "dry_gen"
+ ],
+ "checks": {
+  "contained": {
+   "findings": [],
+   "verdict": "PASS"
+  },
+  "dry_gen": {
+   "dir": "/home/ubuntu/.local/state/publish-gate/qwen_compute/99b525f8dfc6/sle_st_a_v2__pv4242de79",
+   "gen_host": "epyc9",
+   "item": "sle_st_a_v2__pv4242de79",
+   "kind": "type",
+   "origin": "/home/ubuntu/.local/state/publish-gate/qwen_compute/99b525f8dfc6/sle_st_a_v2__pv4242de79/published_gen_origin.json",
+   "origin_sha256": "c60a5119185188cae274ff90c0e796b359ea544831959b09ce6dbc61f25b48c9",
+   "published_gen_import_declined": "dry GEN did not finish",
+   "rc": 1,
+   "result": "FAIL",
+   "spec_sha256": "396a0509397032456abea2514ab0eedb7121b3a56592fdc5e6b0b570d92d9c59",
+   "spec_src": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9n3",
+   "stage": "kit_topology",
+   "verdict": "FAIL",
+   "why": "stage kit_topology: Traceback (most recent call last):\nValueError: KIT_TOPOLOGY_BIND_STALE: regenerate the canonical native bind for this full plan/asbuilt context"
+  },
+  "hashes": {
+   "findings": [],
+   "verdict": "PASS",
+   "views": 33
+  },
+  "pre_g0": {
+   "baseline": {
+    "inherited": false,
+    "verdict": "PASS"
+   },
+   "g0_rc": 0,
+   "g0_report": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/pubgate/g0-sbbcl41p/g0_report.json",
+   "pre_rc": 0,
+   "tail": "PRE: PLAN-GATE-PRE PASS tree=/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9n3 plan=/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9n3/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9n2b.json findings=0\n\nG0: G0C per type: 96/133 types clean (G3-eligible: 96); die-level {}; reported as WARN (run --completeness)\nG0 PASS: 0 errors, 0 pending-view, 491 warnings; 133 types / 377 partitions (105 in near-duplicate groups); worst cut {'ratio': 0.2369, 'at': 'horizontal@13750'}, worst partition segment {'ratio': 0.5336, 'at': 'horizontal@11500:sl_W3_su_l1'}; report /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/pubgate/g0-sbbcl41p/g0_report.json\n",
+   "verdict": "PASS"
+  },
+  "schema": {
+   "rc": 0,
+   "tail": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9n3/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9n2b.json: PASS (0 errors)\n",
+   "verdict": "PASS"
+  }
+ },
+ "die": "qwen_compute",
+ "gate_s": 2550.5,
+ "hosts": [
+  "epyc9",
+  "epyc8",
+  "intel1",
+  "epyc2"
+ ],
+ "item": "sle_st_a_v2__pv4242de79",
+ "manifest_hash": "99b525f8dfc6f02828cfada6e49f9e21e3db0d08505d509895b500bff85cb42d",
+ "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9n3/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9n2b.json",
+ "plan_sha256": "25f8809745530334726e14f4ea9086542a539b974a7024b4d96c92d055842e1b",
+ "rows_proofs": [
+  "physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9n2b.rows_proof.json"
+ ],
+ "schema": "opentallas.publish_gate.v1",
+ "static_s": 2550.5,
+ "t": 1794987520.657483,
+ "tree": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9n3",
+ "verdict": "FAIL"
+}
