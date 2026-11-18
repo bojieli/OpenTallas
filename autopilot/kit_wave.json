@@ -52147,6 +52147,20 @@
       "event_adopt:s29q103S4Q9N3"
      ],
      "reason": "QC-PLAN-R3 11-17 20:0x (COORD): cb/cbn/cbf/cbx core tap[0] pad chains are unsited on N1B tools (cbn_q01 N1B pilot CTS -200 ps: u_pc_nk_u_t_0_2_tap.q[0] -> 3 HB4 487 ps -> u_t02/tap[0]); r650 (pad siting) fixes this and lands only with N3 (N2B plan + main d9bbb638 tools). No new cb launch on N1B; running attempts finish. Releases at the N3 apply (event s29q103S4Q9N3). All other families keep launching on N1B."
+    },
+    {
+     "id": "qc-cldbcda913-tapoff-n3-1117",
+     "plan_sha": "cefb89af5f81983063bf53d1aeaabfba3b476e79a95e01469604cd5efe7002d1",
+     "owner": "QC-PLAN-R3",
+     "renewed_at": "2026-11-17 19:46",
+     "carry": true,
+     "keys": [
+      "cbn_q00__cldbcda913"
+     ],
+     "release": [
+      "result:QC-PLAN-R3:qc-cldbcda913-tapoff"
+     ],
+     "reason": "QC-PLAN-R3 11-17 20:1x (COORD, FABLE-PD-QC-1938 item cbn_q00__cldbcda913): its 122 clock.tap_offset.per_port_ps rows were measured on the old NB core site and the pre-R-REACH-4 fclk sources. The NB die clock proof (FABLE-DIE-QC-R s4q9n_nb 02:25) already failed TAP-OFFSET-GATE on this type (2485/84502 taps out; re-sign list names it). The N3 landing_contract (reach4) differs from NB as well, so neither table is valid. Released (result qc-cldbcda913-tapoff) only after the tap-offset gate passes or the rows are re-measured on the N3 geometry."
     }
    ],
    "planned_events": [
