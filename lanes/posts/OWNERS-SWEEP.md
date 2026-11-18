@@ -18,3 +18,4 @@
   S81 unowned: svc_hi_dsdv_svc_rs__t1, __t5, svc_lo_dsdv_svc_rs__t2
   no kit-wave row: S81 1, QC 14, KV 0, HEAD 0 (not reported)
   rows 493, no flag 436
+- 2026-11-18 12:51 PST 12:5x sweep 494 rows; script fixed (newer LAUNCH/RELAUNCH-ON-FIX = relaunched). S81 UNOWNED0 FAILED10 STALE9 DEAD4; HEAD 0; KV 0. QC UNOWNED6 FAILED9 STALE16 DEAD8. DEAD owners QC-STRAGGLERS/S81-NORELAUNCH/FABLE-FIX-QC-STA last posted 09:52-10:22 (pre-limit). No-kit-wave-row: QC 14, S81 -1.
