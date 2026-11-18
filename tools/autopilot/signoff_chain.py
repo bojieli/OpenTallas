@@ -124,8 +124,24 @@ def eco_receipt(res):
     return out
 
 
+KFR = "/srv/opentallas-scratch2/claude/rt/current/tools/autopilot/kit_flow_refresh.py"
+
+
+def flow_refresh(kit, goal, script=KFR):
+    """TOOLS-DECOUPLE class fix (COORD 11-18): before the physical runner, the kit's verbatim copies of main flow scripts are replaced by
+    the worker's rt/current versions (record KIT/flow_refresh.jsonl), so a fix on main reaches every stage this job has not run yet.
+    Never fails the job; OT_FLOW_REFRESH=0 or KIT/.no_flow_refresh turns it off."""
+    if os.environ.get("OT_FLOW_REFRESH", "1") == "0" or not os.path.isfile(script):
+        return None
+    try:
+        return subprocess.call([sys.executable, "-I", script, "--kit", str(kit), "--stage", str(goal)], timeout=600)
+    except Exception as e:                                      # noqa: BLE001
+        print(f"KIT_FLOW_REFRESH skipped: {type(e).__name__}: {e}", flush=True)
+        return None
+
+
 def continue_kit(kit, runner, goal, mem, threads, run=subprocess.call, preflight=None, proof_only=False, lec=None,
-                 late=True, eco_loop=late_eco, plan_dir=None):
+                 late=True, eco_loop=late_eco, plan_dir=None, refresh=flow_refresh):
     kit = Path(kit).resolve()
     started = time.time()
     prior = {str(p): (p.stat().st_mtime_ns, p.stat().st_size)
@@ -150,6 +166,8 @@ def continue_kit(kit, runner, goal, mem, threads, run=subprocess.call, preflight
         if rc:
             print("KIT_PREFLIGHT FAIL: autopilot stopped before physical runner", flush=True)
             return rc
+    if not proof_only and refresh:
+        refresh(kit, goal)
     rc = 0 if proof_only else run(["bash", runner, str(kit), goal, str(mem), str(threads)])
     if goal in ("cts", "grt"):
         return rc

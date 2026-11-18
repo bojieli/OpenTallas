@@ -295,6 +295,51 @@ def smoke(d, tests=True):
     return bad
 
 
+FLOW_BLOB_DIRS = ("tools/die_plan", "physical/common_flow")
+FLOW_BLOB_DAYS = int(os.environ.get("OT_RT_FLOW_BLOB_DAYS", "30"))
+FLOW_BLOB_REL = "tools/.flow_blobs.json"
+
+
+def flow_blobs(full, days=FLOW_BLOB_DAYS):
+    """{rel: [git blob ids]} of every .tcl/.py/.sh under FLOW_BLOB_DIRS at `full` plus every version main had in the last `days`:
+    kit_flow_refresh.py replaces a kit's verbatim copy of an older version by the current one (COORD 11-18 flow-script class fix)"""
+    ext = (".tcl", ".py", ".sh")
+    out = {}
+    for ln in git("ls-tree", "-r", full, "--", *FLOW_BLOB_DIRS).splitlines():
+        meta, _, rel = ln.partition("\t")
+        if rel.endswith(ext) and meta.split()[1] == "blob":
+            out.setdefault(rel, set()).add(meta.split()[2])
+    for ln in git("log", f"--since={days}.days", "--format=", "--raw", "--no-abbrev", "--no-renames", full, "--", *FLOW_BLOB_DIRS,
+                  timeout=1200).splitlines():
+        if not ln.startswith(":"):
+            continue
+        meta, _, rel = ln.partition("\t")
+        f = meta.split()
+        if rel.endswith(ext):
+            for b in (f[2], f[3]):
+                if set(b) != {"0"}:
+                    out.setdefault(rel, set()).add(b)
+    return {k: sorted(v) for k, v in sorted(out.items())}
+
+
+def write_flow_blobs(d, full):
+    try:
+        blobs = flow_blobs(full)
+    except Exception as e:                                 # noqa: BLE001 - an index failure never blocks the rt version
+        log(f"flow blob index skipped: {type(e).__name__}: {e}")
+        return
+    try:                                                   # untracked in the worktree: keep the smoke's clean-tree check quiet
+        ex = Path(git("rev-parse", "--git-common-dir", cwd=d).strip())
+        ex = (ex if ex.is_absolute() else d / ex) / "info" / "exclude"
+        ex.parent.mkdir(parents=True, exist_ok=True)
+        if "/" + FLOW_BLOB_REL not in (ex.read_text() if ex.exists() else ""):
+            with open(ex, "a") as f:
+                f.write("/" + FLOW_BLOB_REL + "\n")
+    except Exception as e:                                 # noqa: BLE001
+        log(f"flow blob exclude: {type(e).__name__}: {e}")
+    (d / FLOW_BLOB_REL).write_text(json.dumps({"sha": full, "days": FLOW_BLOB_DAYS, "blobs": blobs}, sort_keys=True))
+
+
 def materialize(full):
     """hub: RT/<sha12> as a detached sparse worktree, files read-only, manifest beside it -> dir"""
     name = sha12(full)
@@ -322,6 +367,7 @@ def materialize(full):
     head = git("rev-parse", "HEAD", cwd=d).strip()
     if head != full:
         raise RuntimeError(f"{d} HEAD {head} != {full}")
+    write_flow_blobs(d, full)
     run(["chmod", "-R", "a-w", "--", *[str(x) for x in d.iterdir() if x.name != ".git"]])
     m = manifest(str(d))
     t = RT / f".{name}.manifest.tmp"
