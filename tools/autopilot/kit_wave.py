@@ -12295,6 +12295,27 @@ STEP_TIMED = ("load_config", "merge_auto_views", "merge_src_overlay", "load_stat
               "reap_orphan_waiters", "save_state", "write_stages", "infra_relaunch_due", "launch_safe", "ensure_plan_view", "plan_dies",
               "auto_views_step", "write_redesign", "write_blocked", "grt_arm_launches", "prov_resign_step", "protect_sources")
 STEP_T = {}
+STEP_START = [0.0]
+STEP_BUDGET_S = float(os.environ.get("KW_STEP_BUDGET_S", "300"))     # FLOW-2200 G: the wave step should not take more than this; the heavy fleet-wide reaps are deferred past it
+HEAVY_REAPS = ("reap_dead", "reap_stale_attempts", "orphan_sweep")   # ssh scans of the whole fleet: 379 s / 245 s / ... of a 1200 s step
+
+
+def heavy_due(st, name, now=None, start=None):
+    """FLOW-2200 G: reap_dead / reap_stale_attempts / orphan_sweep each run on their own pass (pass_n mod 3), so one tick carries at most one of them, and a heavy reap is
+    skipped when the step is already past STEP_BUDGET_S (deferred at most 2 passes in a row, then it runs).  -> bool"""
+    if name not in HEAVY_REAPS:
+        return True
+    d = st.setdefault("heavy_deferred", {})
+    mine = int(st.get("pass_n") or 0) % len(HEAVY_REAPS) == HEAVY_REAPS.index(name)
+    over = ((now or time.time()) - (STEP_START[0] if start is None else start)) > STEP_BUDGET_S
+    if mine and not over:
+        d[name] = 0
+        return True
+    if mine and over:
+        d[name] = d.get(name, 0) + 1
+    elif d.get(name, 0) >= 2:
+        return True                                     # starved twice in a row: run now
+    return False
 
 
 def _instrument_step():
@@ -12327,6 +12348,7 @@ def step(AP, ap_dir=None):
     _instrument_step()
     STEP_T.clear()
     t_step = time.time()
+    STEP_START[0] = t_step
     try:
         return _step_locked(AP, ap_dir)
     finally:
@@ -12604,7 +12626,8 @@ def _step(AP, ap_dir):
     prune_stale_retries(cfg, st, notices, AP.log)
     collect(AP, cfg, st, notices)
     try:                                                 # KW-FIX-46 REAP-DEAD: under the wave lock, right after collect
-        reap_dead(AP, cfg, st, notices)
+        if heavy_due(st, "reap_dead"):
+            reap_dead(AP, cfg, st, notices)
     except Exception as e:                              # a sweep never stops the tick
         AP.log(f"KIT-WAVE REAP-DEAD skipped: {type(e).__name__}: {e}")
     retry_enqueue(AP, cfg, st, notices)
@@ -12659,9 +12682,11 @@ def _step(AP, ap_dir):
         rekey_adopted(AP, cfg, st)                           # WAVE-LONGRUN-1 (a): adoption re-keys unchanged live rows
     except Exception as e:
         AP.log(f"KIT-WAVE REKEY skipped: {type(e).__name__}: {e}")
-    reap_stale_attempts(AP, cfg, st, notices, ap_dir)      # KW-FIX-45: stop the gen-host work of replaced/cancelled attempts
+    if heavy_due(st, "reap_stale_attempts"):
+        reap_stale_attempts(AP, cfg, st, notices, ap_dir)      # KW-FIX-45: stop the gen-host work of replaced/cancelled attempts
     try:
-        orphan_sweep(AP, cfg, st)                            # WAVE-LONGRUN-1: scopes of older attempts nobody tracks
+        if heavy_due(st, "orphan_sweep"):
+            orphan_sweep(AP, cfg, st)                            # WAVE-LONGRUN-1: scopes of older attempts nobody tracks
     except Exception as e:
         AP.log(f"KIT-WAVE ORPHAN skipped: {type(e).__name__}: {e}")
     try:                                        # KW-FIX-44 GRTARM_1111: arm arbitration / stop rule / class stop

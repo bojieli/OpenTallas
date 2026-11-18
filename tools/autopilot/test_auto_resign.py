@@ -969,6 +969,19 @@ def test_prestage_exports_newest_tag_on_every_host_once(ap, tmp_path, monkeypatc
     assert sorted(staged) == sorted((h, str(root), "flow-20261107-dj-kv") for h in ("epyc2", "intel1", "localhost"))
 
 
+def test_prestage_survives_items_that_never_launched_have_no_tag(ap, tmp_path, monkeypatch):
+    """FLOW-2200 G: KeyError 'tag' x6 turned re-sign prestage off (a WAIT item has no tag)"""
+    root = tmp_path / "scr"
+    (root / "claude").mkdir(parents=True)
+    monkeypatch.setattr(AR, "ROOTS", (str(root),))
+    monkeypatch.setattr(AR, "stage_tools", lambda AP, host, r, tag, s: ("%s/t/%s" % (r, tag), ""))
+    ap.sh = lambda cmd, timeout=300, input=None: (0, "ot-run status: intel1 admits 257 GB load 76/112", "")
+    ctx = dict(tag=lambda die: "flow-x" if die == "s81" else None, tool_key=lambda t: "k", shas={"flow-x": {"tools/die_plan/signoff.py": "0" * 64}})
+    st = {"items": {"a": {"status": "WAIT", "die": "s81"}, "b": {"status": "RUNNING", "die": "s81", "tag": "flow-y"}, "c": {"status": "RUNNING"}}}
+    AR.prestage(ap, st, ctx)                                                      # no KeyError
+    assert st["prestaged"]
+
+
 def test_prestage_budget_dry_off_and_no_root(ap, tmp_path, monkeypatch):
     staged = []
     monkeypatch.setattr(AR, "stage_tools", lambda AP, host, r, tag, s: staged.append(host) or ("/d", ""))
