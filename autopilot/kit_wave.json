@@ -39750,7 +39750,14 @@
     "sle_st_b_v2__cl14c98df5__pv41c959f3@5",
     "sle_st_b_v2__cl14c98df5__pvcd986c42@4",
     "sle_st_b_v2__cl14c98df5__pvcd986c42@6",
-    "sle_ctl__cla4f6f12f@1"
+    "sle_ctl__cla4f6f12f@1",
+    "slw_stm_v2__cl1ca9c415@2",
+    "slw_stm_v2__cl9beb65e6@2",
+    "slw_stm_v1__cl05fc43f7__cl2086fa2c@2",
+    "slw_stm_v1__cl05fc43f7__cl389df4e9@2",
+    "slw_fe_v2__clf110fab2@1",
+    "slw_hc2__cla3497502__cl16607c7a@4",
+    "sle_fe_v1__cl8210183c@3"
    ],
    "queue_src": "main@eb1e73448bd042684261a13c50cd0fb5ce21a513",
    "type_args": {
@@ -40139,7 +40146,7 @@
     "sle_ctl__cl67434795@3": "KW-FIX-19 21:0x GEN-HOST-DEPS: bind sources die-s81-59/wc1/rtl, dq78/wt/rtl + 740 ref paths copied to epyc5/epyc6",
     "sle_ctl__cla4f6f12f@3": "KW-FIX-19 21:0x GEN-HOST-DEPS: bind sources die-s81-59/wc1/rtl, dq78/wt/rtl + 740 ref paths copied to epyc5/epyc6",
     "sle_fe_v1__cl1cbb7497@3": "KW-FIX-19 21:0x GEN-HOST-DEPS: bind sources die-s81-59/wc1/rtl, dq78/wt/rtl + 740 ref paths copied to epyc5/epyc6",
-    "sle_fe_v1__cl8210183c@3": "KW-FIX-19 21:0x GEN-HOST-DEPS: bind sources die-s81-59/wc1/rtl, dq78/wt/rtl + 740 ref paths copied to epyc5/epyc6",
+    "sle_fe_v1__cl8210183c@3": "QC-STRAGGLERS-1118: attempt 3 ended CANCELLED/SUPERSEDED on an older event (late-ECO rc137 stopped from outside / orphan, no design result); type is in the current plan zz_s29_qc103_s4q9n2b and only_items; relaunch on event s29q103S4Q9N3.",
     "sle_fw_v1__cl9d029624@4": "KW-FIX-19 21:0x GEN-HOST-DEPS: bind sources die-s81-59/wc1/rtl, dq78/wt/rtl + 740 ref paths copied to epyc5/epyc6",
     "sle_fw_v2__cl6740750e@4": "KW-FIX-19 21:0x GEN-HOST-DEPS: bind sources die-s81-59/wc1/rtl, dq78/wt/rtl + 740 ref paths copied to epyc5/epyc6",
     "sle_fw_v2__cl69f5e854@6": "KW-FIX-19 21:0x GEN-HOST-DEPS: bind sources die-s81-59/wc1/rtl, dq78/wt/rtl + 740 ref paths copied to epyc5/epyc6",
@@ -40512,7 +40519,13 @@
     "slw_hc1__cl68f9248e__cl144ee7b3@2": "FLOW-FIX QC-PLAN-R3: kit_rtl \"N filelist path(s) outside the kit source tree\" on D2/D3: L2BQ bind.f names 50 files of the old pin tree src_qc_pin_eb1e73448bd0_s4q9l2 and the pin bind.py did not rebase foreign-tree paths; D4 bind.py = pin + merged 3d763393b4 (KITRTL-PATHS) rebases them into the kit tree (real-case repro rc0); relaunch on D4.",
     "slw_hc2__cla3497502__cl16607c7a@3": "FLOW-FIX QC-PLAN-R3: kit_rtl \"N filelist path(s) outside the kit source tree\" on D2/D3: L2BQ bind.f names 50 files of the old pin tree src_qc_pin_eb1e73448bd0_s4q9l2 and the pin bind.py did not rebase foreign-tree paths; D4 bind.py = pin + merged 3d763393b4 (KITRTL-PATHS) rebases them into the kit tree (real-case repro rc0); relaunch on D4.",
     "slw_st_a_v1__clfc5867a6__pvdf8e5ca4@2": "FLOW-FIX QC-PLAN-R3: kit_rtl \"N filelist path(s) outside the kit source tree\" on D2/D3: L2BQ bind.f names 50 files of the old pin tree src_qc_pin_eb1e73448bd0_s4q9l2 and the pin bind.py did not rebase foreign-tree paths; D4 bind.py = pin + merged 3d763393b4 (KITRTL-PATHS) rebases them into the kit tree (real-case repro rc0); relaunch on D4.",
-    "tt_ctlm@3": "FLOW-FIX QC-PLAN-R3: kit_rtl \"N filelist path(s) outside the kit source tree\" on D2/D3: L2BQ bind.f names 50 files of the old pin tree src_qc_pin_eb1e73448bd0_s4q9l2 and the pin bind.py did not rebase foreign-tree paths; D4 bind.py = pin + merged 3d763393b4 (KITRTL-PATHS) rebases them into the kit tree (real-case repro rc0); relaunch on D4."
+    "tt_ctlm@3": "FLOW-FIX QC-PLAN-R3: kit_rtl \"N filelist path(s) outside the kit source tree\" on D2/D3: L2BQ bind.f names 50 files of the old pin tree src_qc_pin_eb1e73448bd0_s4q9l2 and the pin bind.py did not rebase foreign-tree paths; D4 bind.py = pin + merged 3d763393b4 (KITRTL-PATHS) rebases them into the kit tree (real-case repro rc0); relaunch on D4.",
+    "slw_stm_v2__cl1ca9c415@2": "QC-STRAGGLERS-1118: attempt 2 ended CANCELLED/SUPERSEDED on an older event (late-ECO rc137 stopped from outside / orphan, no design result); type is in the current plan zz_s29_qc103_s4q9n2b and only_items; relaunch on event s29q103S4Q9N3.",
+    "slw_stm_v2__cl9beb65e6@2": "QC-STRAGGLERS-1118: attempt 2 ended CANCELLED/SUPERSEDED on an older event (late-ECO rc137 stopped from outside / orphan, no design result); type is in the current plan zz_s29_qc103_s4q9n2b and only_items; relaunch on event s29q103S4Q9N3.",
+    "slw_stm_v1__cl05fc43f7__cl2086fa2c@2": "QC-STRAGGLERS-1118: attempt 2 ended CANCELLED/SUPERSEDED on an older event (late-ECO rc137 stopped from outside / orphan, no design result); type is in the current plan zz_s29_qc103_s4q9n2b and only_items; relaunch on event s29q103S4Q9N3.",
+    "slw_stm_v1__cl05fc43f7__cl389df4e9@2": "QC-STRAGGLERS-1118: attempt 2 ended CANCELLED/SUPERSEDED on an older event (late-ECO rc137 stopped from outside / orphan, no design result); type is in the current plan zz_s29_qc103_s4q9n2b and only_items; relaunch on event s29q103S4Q9N3.",
+    "slw_fe_v2__clf110fab2@1": "QC-STRAGGLERS-1118: attempt 1 ended CANCELLED/SUPERSEDED on an older event (late-ECO rc137 stopped from outside / orphan, no design result); type is in the current plan zz_s29_qc103_s4q9n2b and only_items; relaunch on event s29q103S4Q9N3.",
+    "slw_hc2__cla3497502__cl16607c7a@4": "QC-STRAGGLERS-1118: attempt 4 ended CANCELLED/SUPERSEDED on an older event (late-ECO rc137 stopped from outside / orphan, no design result); type is in the current plan zz_s29_qc103_s4q9n2b and only_items; relaunch on event s29q103S4Q9N3."
    },
    "gen_hosts": [
     "epyc9",
