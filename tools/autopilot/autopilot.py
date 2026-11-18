@@ -460,7 +460,7 @@ B = os.path.join(K, "run", "results", "asap7", "*", "base")
 ROUTED = re.compile(r"^(?:5_route|5_2_route|5_3_fillcell|6_[0-9A-Za-z_]+)\.odb$")
 out["routed"] = sorted({os.path.basename(p) for p in glob.glob(os.path.join(B, "*.odb"))
                         if ROUTED.match(os.path.basename(p))})
-out["fail_marks"] = [f for f in ("FAIL_PREFLOOR", "FAIL_POSTCTS") if os.path.exists(os.path.join(K, f))]
+out["fail_marks"] = [f for f in ("FAIL_PREFLOOR", "FAIL_POSTCTS", "FAIL_route") if os.path.exists(os.path.join(K, f))]
 # S81-OTHERFAIL-1 11-07: the marker's own text (e.g. a late async 'LEC NOT EQUIVALENT') goes into the REJECT reason
 def _mark_text(f):
     try:
@@ -674,7 +674,7 @@ if so:
                 + "; STA-only re-sign on the signed child libs owed (KW-PROV-1)")
             s_.update(verdict="LOCAL_PASS_NEEDS_PARENT", local_verdict="SIGNED", release_qualified=False,
                       reasons=list(s_.get("reasons") or []) + [why[:400]])
-for f in ("FAIL_PREFLOOR", "FAIL_POSTCTS"):
+for f in ("FAIL_PREFLOOR", "FAIL_POSTCTS", "FAIL_route"):
     p = os.path.join(K, f)
     if os.path.isfile(p) and os.path.getmtime(p) >= since:
         out[f] = rd(p)[-400:].strip()
@@ -1154,6 +1154,12 @@ def classify(c, client):
         return "STRUCTURAL", "routed-not-signed", reasons
     if c.get("FAIL_PREFLOOR"):
         return "STRUCTURAL", "preflight", "FAIL_PREFLOOR " + c["FAIL_PREFLOOR"]
+    if c.get("FAIL_route"):
+        fr = c["FAIL_route"]
+        if re.search(r"DRT-0255", fr):
+            net = re.search(r"path of net (\S+)", fr)
+            return "STRUCTURAL", "drt-nopath", f"DRT-NOPATH net {net.group(1) if net else '?'}: {fr[:260]}"
+        return "CRASH", "route-make-fail", fr[:300]
     # DIE-HBM-97 11-10 (COORD): a global placement that stopped at the per-pass Nesterov cap above overflow 0.1 is the
     # cause of what follows it (kv_line vC: 459k resizer buffers, DPL-0038 at 153%), not a crash or a congestion row
     gpl = KW.gpl_cap_noconverge(c.get("gpl_cap") or "")

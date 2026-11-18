@@ -8013,6 +8013,12 @@ if [ -n "$GRTM" ] && [ $rc = 0 ]; then GL=$(ls "$K"/run/logs/asap7/*/base/5_1_gr
 fi  # GRTM
 docker run --rm -v "$K":/work "$IMAGE" chown -R $(id -u):$(id -g) /work >/dev/null 2>&1
 tail -5 "$K/run_$GOAL.log"
+# FABLE-FIX-HEAD-MESH 11-18: detail route that dies on [ERROR DRT-0255] / 'make do-5_2_route Error 1' left no FAIL_* marker (a silent stop: only the make error in run_route.log).  Any non-zero make exit
+# with no FAIL_* marker of this run writes FAIL_route carrying the first DRT error line (or the make exit), so the autopilot / wave classify it (DRT-0255 -> class DRT-NOPATH with the net name).
+if [ $rc != 0 ] && ! ls "$K"/FAIL_* >/dev/null 2>&1; then
+  FE=$(grep -hE '\[ERROR DRT-[0-9]+\]' "$K"/run/logs/asap7/*/base/5_2_route.log "$K/run_$GOAL.log" 2>/dev/null | head -1 | cut -c1-300)
+  echo "FAIL_route ${FE:-make exit $rc (see run_$GOAL.log)}" | tee -a "$K/FAIL_route"
+fi
 # Route success alone is not sign-off. Preserve previous failed verdicts.
 if [ $rc = 0 ] && { [ $GOAL = route ] || [ $GOAL = finish ]; }; then
   SO="$K/signoff"; [ ! -e "$SO/signoff.json" ] || SO="$K/signoff_$(date +%Y%m%d_%H%M%S)_$$"
