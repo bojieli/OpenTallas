@@ -5647,6 +5647,58 @@ def ft_keep_firm_exports(t):
     return ["export OT_FT_KEEP_FIRM = " + " ".join(names)] if names else []
 
 
+SERDES_H_DENSITY = 0.30
+SERDES_H_LEAF_SLEW_PS = 165
+SERDES_H_FILES = ("h4_meta_reflow.tcl", "serdes_boot_release_local.tcl", "serdes_pre_drt.tcl", "pad_in_direct.tcl",
+                  "pg_pin_notch.tcl", "pg_row_guides.tcl")
+
+
+def serdes_phy_region(kd):
+    """True when the kit has a PHY supply region (phy_pg.json with at least one domain, written by write_type_kit before the hooks)."""
+    f = Path(kd) / "phy_pg.json"
+    try:
+        return bool(json.loads(f.read_text()))
+    except (OSError, ValueError):
+        return False
+
+
+def serdes_h_post_gpl(kd, names, post_gpl):
+    """S81-SERDES-GEN 11-17 (H17 lineage, FABLE-FIX-S81-SERDES2): BOOT_RELEASE3 types run the anchor-aware boot-release placement
+    after the transport/RM hooks (the hand kit's post_global_boot3.tcl).  Returns the POST_GLOBAL_PLACE script name."""
+    if "OT_S81_SERDES_BOOT_RELEASE3" not in names:
+        return post_gpl
+    shutil.copyfile(Path(__file__).with_name("serdes_boot_release_local.tcl"), Path(kd) / "serdes_boot_release_local.tcl")
+    (Path(kd) / "post_global_boot3.tcl").write_text(f"source /work/{post_gpl}\nsource /work/serdes_boot_release_local.tcl\n")
+    return "post_global_boot3.tcl"
+
+
+def serdes_pre_drt_lines(cfg, kd):
+    """PRE_DETAIL_ROUTE chain of a PHY-region serdes kit: netlist ECO (pad_in_direct), PG notch at macro pins, then the M6 guide
+    move (the hook chain that gave the first DRC-0 serdes route).  A kit config that already has its own hook keeps it."""
+    if any(re.match(r"(override\s+)?export\s+PRE_DETAIL_ROUTE_TCL\b", c) for c in cfg):
+        return []
+    for f in ("pad_in_direct.tcl", "pg_pin_notch.tcl", "pg_row_guides.tcl", "serdes_pre_drt.tcl"):
+        shutil.copyfile(Path(__file__).with_name(f), Path(kd) / f)
+    return ["# SERDES-H-FORM: pre-detail-route chain pad_in_direct -> pg_pin_notch -> pg_row_guides (serdes_pre_drt.tcl)",
+            "export PRE_DETAIL_ROUTE_TCL = /work/serdes_pre_drt.tcl"]
+
+
+def serdes_h_lines(cfg, kd, names, env, post_gpl):
+    """Serdes family form of the H17 lineage, keyed on a PHY supply region + the RCK4 source profile (never a type name):
+    spread placement (PLACE_DENSITY 0.30: 0.5 clumped the XOR plates, DRT-0255), AM metadata reflow before resize
+    (h4_meta_reflow.tcl, sources gp_noconverge_gate itself), clock leaf slew 165 ps, boot release placed locally.  Gen env
+    OT_SERDES_H_FORM=0 opts out; an explicit PRE_RESIZE_TCL in the kit config is kept."""
+    out = [f"# SERDES-H-FORM: PHY-region serdes placement form (H17 lineage)",
+           f"export PLACE_DENSITY = {SERDES_H_DENSITY:g}",
+           f"export OT_CLK_LEAF_SLEW_PS = {SERDES_H_LEAF_SLEW_PS}"]
+    if not any(re.match(r"\s*(?:override\s+)?export\s+PRE_RESIZE_TCL\b", c) for c in cfg):
+        shutil.copyfile(Path(__file__).with_name("h4_meta_reflow.tcl"), Path(kd) / "h4_meta_reflow.tcl")
+        out.append("export PRE_RESIZE_TCL = /work/h4_meta_reflow.tcl")
+    if "OT_S81_SERDES_BOOT_RELEASE3" in names:
+        out.append("export OT_SERDES_BOOT_RELEASE_LOCAL = 1")
+    return out
+
+
 def txl_mid_exports(cfg, kd, env=None, defines=()):
     """KW-FIX-43 11-10 (DIE-S81-85 serdes TXL4, COORD): opt-in at generation (OT_TXL_MID=1; OT_TXL_MID_CHAINS = instance
     chains, spaces or commas, default u_txl in the hook): copy txl_mid.tcl into the kit and run it as POST_GLOBAL_PLACE_TCL
@@ -5684,6 +5736,9 @@ def txl_mid_exports(cfg, kd, env=None, defines=()):
         post_gpl = "serdes_post_gpl.tcl"
     if am_clock:
         shutil.copyfile(Path(__file__).with_name("rck_am_cohort.tcl"), Path(kd) / "rck_am_cohort.tcl")
+    serdes_h = rck4 and serdes_phy_region(kd) and env.get("OT_SERDES_H_FORM") != "0"
+    if serdes_h:
+        post_gpl = serdes_h_post_gpl(kd, names, post_gpl)
     return ["# DIE-S81-85 serdes TXL4: per-hop spacing of the relay rows (txl_mid.tcl)", "export OT_TXL_MID = 1",
             *([f"export OT_TXL_MID_CHAINS = {chains}"] if chains else []),
             *(["# SERDES-TXPIPE: macro-face rows at their PMA pins", "export OT_TXL_MID_FACE = 1"] if pipe else []),
@@ -5695,7 +5750,9 @@ def txl_mid_exports(cfg, kd, env=None, defines=()):
             # at span 214 ps, 16 reach 70-75 ps on serdes__t13); gen env OT_S81_RCK_BALANCE=0 opts out, =1 forces it on other kits
             *(["export OT_S81_RCK_BALANCE = 1", "export OT_STB_ROUNDS = 16"]
               if env.get("OT_S81_RCK_BALANCE") == "1" or (rck4 and env.get("OT_S81_RCK_BALANCE") != "0") else []),
-            *(pg_row_guides_lines(cfg) if env.get("OT_PG_ROW_GUIDES") != "0" else []),
+            *(serdes_pre_drt_lines(cfg, kd) if serdes_h and env.get("OT_PG_ROW_GUIDES") != "0" else
+              pg_row_guides_lines(cfg) if env.get("OT_PG_ROW_GUIDES") != "0" else []),
+            *(serdes_h_lines(cfg, kd, names, env, post_gpl) if serdes_h else []),
             *(["export OT_SERDES_RM_LOCAL = 1",
                "export OT_SERDES_RM_LOCAL_EMPTY8 = " + ("1" if "OT_S81_SERDES_RM_LOCAL_EMPTY8" in names else "0")] if rm_local else []),
             "export POST_GLOBAL_PLACE_TCL = /work/" + post_gpl]
