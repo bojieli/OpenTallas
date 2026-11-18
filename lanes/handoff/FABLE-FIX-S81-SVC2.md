@@ -111,3 +111,11 @@ A: hold ECO hslice_mm4 passed the limits (plan made, ECO route running); mergex_
 - Hook proved on the D7w T7 bound in overlay trees (epyc7 fable-fix-s81-svc2/ref_d7w/tree, tree2): HAVE path, and regenerate path = byte-identical ref_map.json. NOT proved: the kit-rtl step inside the hook (run with --bound), and nobody CALLS the hook yet: S81-DIE-R3 runs it in each bind event (D8d: --tag d8d) until it is wired into the event script.
 - Still open: tools_refresh of the D7w tree + relaunch of the four svc_lo kits (WAVE-FLOW-R2), Verilator fit gate not rerun.
 - Overlay/test dirs epyc7 fable-fix-s81-svc2/ref_d7w (300 MB) are deletable after the merge (ot-delete).
+
+## 11-18 03:1x PST (resume after the 5-h limit): five hold jobs read
+- hslice_mm4 post-route ECO: FAILED exit 3 "incremental route failed" (epyc7 fable-fix-s81-svc2/eco/hslice_mm4/ins/route.log; 1092 negative endpoints, 7 plan rows). Not signed.
+- mergex_mm3b post-route ECO: REFUSED exit 4, padded_ends 1031 > 100 (1567 negative endpoints). The ECO form is closed for mergex.
+- hslice_mm7 (50 ps): FAILED at CTS, DPL-0038 utilization > 100 % after 53,294 hold buffers (25,588 + 27,702 + 4). 50 ps does not fit the 77.76x175.39 outline. Closed.
+- hslice_mm6 (30 ps, uncapped): ALIVE in detailed route (5_2_route.tmp.log 11:06 UTC, 671 violations at 90 %); pre-route FF r2r hold reached 30.00 after 30,153 + 356 buffers.
+- mergex_mm6 (30 ps, uncapped): ALIVE in CTS hold repair since ~07:34 UTC (36,993 endpoints under margin, 29.7k buffers so far, +10.3 % area).
+- Fallback (r692 merged, CAPSKEW-ECO orfs_hold_mm.tcl, 30 ps bounded re-repair): not launched; use it for a core whose mm6 fails.
