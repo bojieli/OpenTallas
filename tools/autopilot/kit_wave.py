@@ -7166,6 +7166,19 @@ def run_item(spec_path):
     def remote(cmd):                                     # ssh joins argv with spaces: send ONE quoted command
         return _ssh(G, hub) + ["bash -c " + shlex.quote(cmd)] if _ssh(G, hub) else ["bash", "-c", cmd]
 
+    def flow_refresh(stage):
+        """FABLE-FLOW-1000 (TOOLS-DECOUPLE): the kit K gets this attempt's rt flow scripts (verbatim older main copies replaced,
+        KIT/flow_refresh.jsonl); one KIT_FLOW_REFRESH line per stage (gen right after the kit is written, place before PLACE),
+        a loud SKIPPED line when it cannot run"""
+        if not sp.get("tools_rt"):
+            print(f"KIT_FLOW_REFRESH SKIPPED: stage {stage}: {T} spec has no tools_rt (not an rt-tools launch)", flush=True)
+            return
+        _kfr = f"{tsrc}/tools/autopilot/kit_flow_refresh.py"
+        run("flow_refresh" if stage == "place" else f"flow_refresh_{stage}",
+            remote(f"if [ -f {q(_kfr)} ]; then python3 -I {q(_kfr)} --kit {q(K)} --stage {q(stage)} --rt {q(tsrc)} "
+                   f"--sha {q(sp.get('tools_sha') or '')}; else echo 'KIT_FLOW_REFRESH SKIPPED: stage {stage}: '{q(_kfr)}' missing on this host'; fi"),
+            idempotent=True)
+
     def otrun(mem, thr, d, cmd, hosts, allow_hub=False, roam=True):  # ot-run names the hub itself 'localhost'
         hosts = target_hosts(hosts, hub, allow_hub)       # KW-FIX-45 11-12: only the place stage may target the hub (capped by ot-run), never gen
         if not hosts:
@@ -7519,6 +7532,7 @@ def run_item(spec_path):
         K = (kt.strip().splitlines() or [""])[-1].strip()
         if rc or not K.startswith(f"{W}/gen/"):
             return fail("gen", txt + "\nGEN_NO_KIT: core generator exit 0 but wrote no kit (freeze.json) under W/gen")
+        flow_refresh("gen")
     elif kr.get("mode") == "bind":
         a = kr["asbuilt"]
         if kr.get("bind_out"):
@@ -7664,6 +7678,7 @@ def run_item(spec_path):
         rc, _ = run("gen_kit", idempotent=True, argv=remote(f"test -f {q(K)}/config.mk || test -f {q(K)}/freeze.json"))
         if rc:
             return fail("gen", txt + "\nGEN_NO_KIT: gen.py exit 0 but wrote no kit for this type (hard type? see gen --hard-wrappers)")
+        flow_refresh("gen")
     if sp.get("prov_views"):
         # KW-PROV-1 marker: the kit carries provisional_views.json (autopilot classify turns its SIGNED into
         # LOCAL_PASS_NEEDS_PARENT = WAIT-PARENT until every child view is FINAL) and W/gen/PROVENANCE.json says
@@ -7837,13 +7852,7 @@ def run_item(spec_path):
             print(f"KW_SELFCONT_SKIP {_e}", flush=True)
         # FABLE-FLOW-1000 A (TOOLS-DECOUPLE): the kit (fresh gen, or a relaunch that restored items/<item>/gen) gets the current flow
         # scripts of this attempt's rt tools before PLACE: verbatim copies of older main versions are replaced (KIT/flow_refresh.jsonl).
-        if sp.get("tools_rt"):
-            _kfr = f"{tsrc}/tools/autopilot/kit_flow_refresh.py"
-            run("flow_refresh", remote(f"if [ -f {q(_kfr)} ]; then python3 -I {q(_kfr)} --kit {q(K)} --stage place --rt {q(tsrc)} "
-                                       f"--sha {q(sp.get('tools_sha') or '')}; else echo 'KIT_FLOW_REFRESH SKIPPED: '{q(_kfr)}' missing on this host'; fi"),
-                idempotent=True)
-        else:
-            print(f"KIT_FLOW_REFRESH SKIPPED: {T} spec has no tools_rt (not an rt-tools launch)", flush=True)
+        flow_refresh("place")
         asy = False
         if sp.get("place_async", True) and G in sp["hosts"] + ["localhost", hub]:
             _, at = run("place_mode", idempotent=True, argv=remote(
