@@ -185,3 +185,7 @@
 - 2026-11-18 09:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-18 09:52 PST: 284 running jobs, PROGRESSING 277, SLOW 5, NO-PROGRESS 2 (advisory, no cancel); table lanes/NOPROG.tsv
   NO-PROGRESS epyc2 kit drt_TT stage 26.1 h job 26.1 h: drt_violations best 14445 last 14445 rows 3 window-gain 0.6%; stagnant 8.7 h; last event 1.5 h ago, log write 1.5 h ago (1548 lines)
   NO-PROGRESS epyc9 serdes__t13 signoff_meas_072023 stage 10.5 h job 11.7 h: no new meaningful log line for 10.1 h; last: - hold_ff: FAIL WNS -55.85 ps < 0
+- 2026-11-18 10:53 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-18 10:52 PST: 301 running jobs, PROGRESSING 294, SLOW 4, NO-PROGRESS 3 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc8 svc_hi_dsdv_svc_rs__t3 4_1_cts stage 27.5 h job 40.9 h: no new meaningful log line for 6.5 h; last: [WARNING STA-0450] virtual clock vclk can not be propagated.
+  NO-PROGRESS epyc2 kit drt_TT stage 27.1 h job 27.1 h: drt_violations best 14445 last 14445 rows 3 window-gain 0.6%; stagnant 9.7 h; last event 2.2 h ago, log write 0.2 h ago (1550 lines)
+  NO-PROGRESS epyc9 serdes__t13 signoff_meas_072023 stage 11.5 h job 12.7 h: no new meaningful log line for 11.1 h; last: - hold_ff: FAIL WNS -55.85 ps < 0
