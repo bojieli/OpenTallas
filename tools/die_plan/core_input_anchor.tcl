@@ -2,7 +2,8 @@
 # that feeds it (u_pc_nk_*) right outside the NK pin it drives, FIRM before global placement (like face_flops.tcl pin
 # registers), released to PLACED for DPL by face_flops_release.tcl (names appended to ot_face_flops.txt).  The long
 # fabric wire then lands on the pipeline register (full cycle) and reg -> latch -> NK pin is a few-um hop.
-set nka_blk [ord::get_db_block]
+set ::nka_blk [ord::get_db_block]   ;# QC-FLOW-1118: source runs inside a proc scope in ORFS; procs read the global
+set nka_blk $::nka_blk
 set nka_lat 0; set nka_reg 0; set nka_miss 0; set nka_pipe_miss 0
 set nka_out [open $::env(RESULTS_DIR)/ot_face_flops.txt a]
 proc nka_place {inst x y} {

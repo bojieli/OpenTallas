@@ -3249,6 +3249,9 @@ RULES = [
     ("INFRA", None, r"LEC_ASYNC cannot migrate", "infra (stale lec_async proof state, exit 11; the retry starts the proof afresh)"),
     # KIT-FIX-F 11-13 (option kit_snap): first, because the reason quotes input paths whose words later rules key on
     # (outline, blocked, ...).  A named input that no die host holds is FLOW (never the INFRA auto-retry loop).
+    # QC-FLOW-1118 (FABLE 0510): the measured-hold bind error is the decisive line of its kit; the advisory layout render that runs at
+    # flow exit printed after it and hid the class (sle_sc_v3 read _LAYOUT_RENDER local_density).
+    ("FLOW", None, r"OT_VCLK_MEASURED_HOLD: pin-register mean unavailable[^\n]*", "measured-hold bind: pin-register clock-arrival mean unavailable (flow tool, not a design verdict)"),
     ("FLOW", r"^kit_snap$", r"KIT_INPUT_MISSING[^\n]*", "KIT_INPUT_MISSING: a kit input exists on no die host; restore it or repoint the die config"),
     ("INFRA-SSH", r"^kit_snap$", SSH_DROP.pattern, "infra (ssh transport)"),
     ("FLOW", r"^kit_snap$", r"KIT-SNAP[^\n]*", "kit snapshot could not be built, copied or verified"),

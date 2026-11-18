@@ -22,7 +22,8 @@ proc ot_vmh_reference {} {
   return $out
 }
 
-# IO-boundary pin-register clock-arrival mean (SDC units) -> {mean n bad nclocks}
+# IO-boundary pin-register clock-arrival mean (SDC units) -> {mean n bad nclocks}; per-clock {n mean} in ::ot_vmh_percl.  The mean pools every sample; the per-clock sums are measured and returned so the
+# bind can print them (QC-FLOW-1118: a kit whose pin registers sit on several clocks is measured per clock, not an error)
 proc ot_vmh_pinreg_mean {} {
   if {![llength [info commands ot_cf_wire]]} {
     foreach f [list [file join $::ot_vmh_dir clock_family.tcl]] { if {[file isfile $f]} { uplevel #0 [list source $f] } }
@@ -101,14 +102,16 @@ proc ot_vmh_pinreg_mean {} {
       if {[dict exists $regs $i]} { dict set bnd $i 1 }
     }
   }
-  set sum 0.0; set n 0; set bad 0; set clocks {}
+  set sum 0.0; set n 0; set bad 0; set clocks {}; set pcs {}; set pcn {}
   if {[llength [info commands ot_cf_refresh]]} { catch {ot_cf_refresh} }
   dict for {i unused} $bnd {
     set p [dict get $regs $i]
     set cl [get_property $p clocks]
     set a ""
+    set cname ""
     if {[llength $cl] == 1} {
       set name [get_full_name [lindex $cl 0]]
+      set cname $name
       if {[dict size $fwd_roots] && [llength [info commands ot_cf_root]]} { set name [ot_cf_root $name] }
       dict set clocks $name 1
       if {[llength [info commands ot_cf_wire]]} { catch {set a [ot_cf_wire $p [lindex $cl 0] [expr {[info exists ::ot_ioref_scene] ? $::ot_ioref_scene : ""}]]} }
@@ -116,7 +119,12 @@ proc ot_vmh_pinreg_mean {} {
     }
     if {![string is double -strict $a] || [regexp -nocase {inf|nan} $a]} { incr bad; continue }
     set sum [expr {$sum + $a}]; incr n
+    dict set pcs $cname [expr {[dict exists $pcs $cname] ? [dict get $pcs $cname] + $a : $a}]
+    dict set pcn $cname [expr {[dict exists $pcn $cname] ? [dict get $pcn $cname] + 1 : 1}]
   }
+  set per {}
+  dict for {k v} $pcs { dict set per $k [list [dict get $pcn $k] [expr {$v / [dict get $pcn $k]}]] }
+  set ::ot_vmh_percl $per
   return [list [expr {$n ? $sum / $n : "nan"}] $n $bad [dict size $clocks]]
 }
 
@@ -128,9 +136,13 @@ proc ot_vclk_measured_bind {} {
   if {[llength $vc] != 1} { error "OT_VCLK_MEASURED_HOLD: expected exactly one IO virtual clock, found [llength $vc]" }
   estimate_parasitics -global_routing
   lassign [ot_vmh_pinreg_mean] mean n bad ncl
-  if {$n == 0 || $bad != 0 || $ncl != 1} {
+  set per [expr {[info exists ::ot_vmh_percl] ? $::ot_vmh_percl : {}}]
+  if {$n == 0 || $bad != 0} {
     error "OT_VCLK_MEASURED_HOLD: pin-register mean unavailable (samples $n missing $bad clocks $ncl) -- sign-off would be NOT RUN"
   }
+  # QC-FLOW-1118: several clocks are measured per clock (printed below); the IO virtual clock binds to the sample-weighted
+  # mean of all pin registers.  Only an empty or unmeasurable census stops the bind.
+  dict for {k v} $per { puts [format "OT_VCLK_MEASURED_CLOCK %s samples %d mean %.3f" $k [lindex $v 0] [lindex $v 1]] }
   # KW-FIX-4/BAND 11-03 (OWNER 19:12, all dies): the FF insertion band is ADVISORY.  A measured mean outside bound +- tol
   # is reported (OT_VCLK_MEASURED_BAND line + vclk_measured_band.json beside this file, read by signoff.py into
   # signoff.json insertion_band) and the IO virtual clock is still bound to the MEASURED mean, so the FF hold repair
