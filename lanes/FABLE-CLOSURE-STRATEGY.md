@@ -1,3 +1,140 @@
+# FABLE-CLOSURE-STRATEGY 2026-11-18 07:10 PST (0710): delta on 05:10
+
+Reviewer: CLOSURE-STRATEGY-0710 (Opus; Fable is at its weekly limit). Read-only: no jobs launched, nothing killed or deleted. Technical PD only. HBM parked.
+Gate (R-MINIMAL): DRC 0, routed TT >= -42 ps, internal reg-to-reg FF hold >= 0, die bind + LATCHECK. r708: clock pin cap is nominal at sign-off.
+Marking: **V** = I opened the file or log this round (07:10 to 07:40 PST). **R** = reported by the named lane, not opened. **P** = my proposal or estimate.
+
+Signed (V, failure_breakdown 07:10): S81 42/394, HEAD 24/26, QC 25/130, KV 6/56. S81 kit rows: 316 running, **27 other flow error** (back up from 0 at 06:25), 5 cancelled, 3 kit input missing.
+
+## 0. Headline
+
+1. **D8e has not been bound. Its 05:41 rebind ended at about 06:13 with 80 errors, and nobody has posted about it (V).** epyc8 `s81-die-r3-e8/d8e/r3/bind.log` reports `errors 80`. One is an EMIT error: `relay_depth col_h10_r0_p1__t1__cl574cc59d__pv3d0d4d97: 3 row(s) matched no internal sink ['u_r0_u_y_cc_1_0.o','u_r0_u_y_cc_3_0.o','u_r0_u_y_x2_3_0.o']`. The other 79 are leaf / kv_leaf `LF_CS_DEPTH ... no bound module file`. `leaf_cs_depth.py` reads `s81p_<type>.sv`, and the failed emit never wrote those files, so the 79 are a cascade. G0 RC 1 with 2 errors (the D8d control errors). The bind ran on tools `74354c18`, which do not contain b8f543dd448: S81-GEOM-OPUS pushed that fix (relay_depth compared by sv_id, `u_r0.u_x == u_r0_u_x`) at 05:5x for exactly this error. Nothing has been written in r3 since 06:32, no bind is running on epyc8, and S81-DIE-R3 has not posted since 05:41. The 07:40 apply ETA will not hold. Everything on S81 that depends on the plan is waiting on this bind: XR, reset relays, leaf stride, the serdes rck pin, the face-clear rows and the 15 setup stops.
+2. **27 S81 col kits fail at `3_4_place_resized` on one reset-tool assert (V).** `reset_chain_spread.tcl` line 87 in the d8t tree, `tools/die_plan` (header `PRIVATE CANDIDATE v5`; the file is not on main): `RESET v5 refuses empty explicit buffer set`. Split: col_h9_r2 clce45cab5 11, col_h9_r1 cl49d7a23e 10, col_h9_r2 clb8d86cd5 3, col_h9_r2 clc9ad8f7e 2, col_h10_r1 cl95b37463 1. Each one fails 15 min into resize.
+3. **The routed col pilot is still on disk, and nobody has taken it (V).** On epyc10, both `/srv/opentallas-scratch{,2}/.../3fa87b84b18/items/col_h9_r2__t1__cl774acf45__pv11b6518d/attempt_2` hold `6_final.odb` (01:03 PST) and `signoff/signoff.json` (TT -46.87, DRC 2, hold 5 ends at -5.07, per 0510). Because of the DRC 2 the r708 sweep skipped it. The wave has relaunched the type from scratch (attempt 5, in gen on d8t).
+4. **hd_mesh: tap balance worked (399 to 462, spread 63 ps, was 128), but hold demand barely moved (V).** mesh_w2 `pregrt_ff_hold.log`: RSZ sees 22,446 hold endpoints, WNS -141.74, TNS -447,851. OT_HOLD_GATE: 15,380 ends, 1,036 forwarded ring inputs on 2 clocks, contract in_min -90, structural limit -183. Repair has run since 06:05. The 0510 premise ("the 128 ps tap spread is the hold demand") was only partly right.
+5. **Serdes H18 rck tree closes at placement (V).** epyc9 H18 `4_1_cts.log`: `OT_STB_SPAN io_pma_rck[0] sinks 26277 min 1948.4 max 2058.0 span 109.5 limit 110.0 PASS`, using 1,012 delay inverter pairs. It is now in GRT (`5_1_grt.tmp.log` 07:19).
+6. **KV still has no CTS number (V).** I found no `4_1_cts.log` under `runs/qwen_kvsys` on epyc7 / epyc9 in the last 15 h. The last HG6 PV kits stopped at `3_5_place_dp` (02:4x to 03:1x) and were then superseded. The 10 retry rows launched at 07:06 on D22 are at kit_rtl (V, wave state).
+7. **QC: the measured-hold fix is in code but not yet proven on a kit (R + V).** QC-FLOW-1118 e1ce3e0b234 (05:53): per-clock means, IO vclk bound to the pooled mean, `::nka_blk` made global. Wave state: sle_sc_v3 a3 at place, cbx_q10 a4 at place, sle_sc_v1 a2 enqueued. No stage pass yet.
+
+## 1. Levers ranked by closure impact
+
+| # | die | lever | unblocks | owner |
+|---|---|---|---|---|
+| 1 | S81 | Rebind D8e (plan d396b7d6) on tools >= b8f543dd448, then LATCHECK / G0 / apply | leaf 75 + kv_leaf 5, serdes 11 rows, face-clear rows, 15 setup stops | S81-DIE-R3 (no post since 05:41) |
+| 2 | S81 | `reset_chain_spread.tcl` v5: an empty BUF set is a no-op, not an error | 27 col kits (5 type groups) | S81-COL-FLOW-1118, S81-TYPES-R3 |
+| 3 | S81 | ECO the routed col_h9_r2 pv11b6518d (2 DRC + 5 hold ends + TT 4.87 ps), r708 re-sign; route the bank-leaf proof kit | col 215 (family proof) | S81-TYPES-R3 + CAPSKEW-ECO; S81-GEOM-OPUS |
+| 4 | QC | N4 apply (N4D derived-R8 pass 2) -> N4.1 kit k2 to routed sign-off; read the 6 measured-hold relaunches at GRT | st_a 11; sc/su/fe/fw up to 29; cbx | QC-PLAN-R3, QC-N-OPUS, QC-TYPES-R3 |
+| 5 | HEAD | hd_mesh: read mesh_w2 after repair (TT, cell count); if TT < -42, take a launch/capture class table of the hold ends before any padding | hd_mesh | HEAD-TYPES-OPUS |
+| 6 | KV | First hg/hgi CTS read on D22; D23 -> D23b apply; CLAND facegrow read on pv_v2/v4/v6 at 3_3 | pv 16, pc 6; first evidence for hg/hgi 19 | KV-HG-OPUS, KV-D23-COMPOSE, KV-D22-ROWS |
+| 7 | S81 | Serdes H18 to routed + r708; pad-clock trunk rows in the D8e rebind | serdes 11 | S81-CORES-OPUS, S81-DIE-R3 |
+| 8 | S81 | mergex_mm3b: r583 internal hold ECO on the routed DB (FF -3.45, 62 ends) | svc 16 (last core) | S81-CORES-OPUS |
+
+### Lever 1. S81 D8e bind
+
+**Evidence (V).** As in headline 1. `r3/pre.out` reads PLAN-GATE-PRE PASS, findings 0 (06:32), with 50 inherited station/relay sites over hard cores. `bind.log` is 42 lines long: 1 EMIT error, 29 LF_CS_DEPTH lines shown (80 in the count), 10 RESET_ANCHOR info lines. `TOOLS_SHA` = 74354c18d2f9.
+
+**Root cause.** bind.py on 74354c18 matches `relay_depth` rows by dotted instance name. Bound r0 col instances are flattened (`u_r0_u_y_cc_1_0`), so the 3 u_r0 rows match no sink. Emit stops, no bound module is written, and leaf_cs_depth then fails every XR leaf type. P: there is one real error, not 80.
+
+**Fix.**
+1. S81-DIE-R3: re-run the D8e bind on the same plan d396b7d6 with tools at or after b8f543dd448 (on main). The alternative is to drop the u_r0 `*.o` rows. Do not strip the XR rows.
+2. After the bind, check that LF_CS_DEPTH reads 0 on all 80 leaf / kv_leaf types. If it does not, it is a second class (plan stage vs bound RTL stage depth), and leaf_cs_depth names the class per type.
+3. In the same rebind: the pad-clock trunk rows for the moved `io_pma_rck` pin (lever 7), plus S81-GEOM-OPUS `rows_face_clear_d8e.json` (de8ad49d0f1b: t40 fc6, t29 fc5, 0 cycles). Both are row-only and were proven on D8e (R). If adding them would restart the bind proof, they go in as the first delta after apply instead.
+
+### Lever 2. Col reset-chain spread v5 assert
+
+**Evidence (V).** epyc2 kit `col_h10_r1__t1__cl95b37463__pve28d14fa/attempt_5`, `3_4_place_resized.log`: PLACE-HPWL 1.002, NOCONVERGE OK, then the assert. `config.mk` sets `OT_RESET_CHAIN_SPREAD = 1` (reset_replicate copy-depth chains). The script walks from each chain root through BUF/INV cells and collects only the BUF cells that GPL inserted. It errors when it finds none (line 87). Also in the same log: OT_PLACE_WIRE_RATIO 14 violations, worst 28.07, all on the `u_bound.u_d11_11_Y_r*_s0` reset copy stages (21 um direct, 589 um built). This is the chain that the spread step exists to fix.
+
+**Root cause.** The v5 candidate assumes that GPL buffered every reset root. On these col types the copy-depth roots have low fanout, so GPL inserted no BUF, and the "nothing to prune" case becomes a hard error.
+
+**Fix.** An empty `rc_bufs` logs `RESET v5 no GPL buffers: nothing to prune` and goes on to the spread. Keep the CLOCK-net error and the INV preservation. Put the fix in the tree tools / rt, and land the candidate on main with a test for the empty case (test_reset_chain_spread.py exists in the tree). Then relaunch the 27 rows. P: after the spread, the u_d11 wire-ratio paths are what the TT gate should be read on.
+
+### Lever 3. Col family proof by ECO
+
+**Evidence (V).** As in headline 3. The kit DB includes `5_1_grt.odb`, `6_final.{odb,def,spef,v}`, the LEF and the typ lib. R (S81-GEOM-OPUS 07:10): bank-leaf gate_bl1 / bl2 PASS (bind 0, LATCHECK 873/873, G0 0 new). The proof kit col_h9_r0_p2 cl0045af7b (r0 worst 1,740 um family + ROM move) is at kit gen on epyc8. The rt4 probe on the attempt_5 floorplan is reading the u_y_rt_4a_0 / 4b_0 sources so that FIRM relay_sites can be placed (0 cycles).
+
+**Fix.**
+1. S81-TYPES-R3 (+ CAPSKEW-ECO form): on the existing attempt_2 routed DB, name and fix the 2 DRCs (detail-route ECO). Then run the capture-skew / hold-pad ECO on the 5 hold ends and the worst TT ends (core to core `u_u_e*_u_w -> u_u_bn*`), and re-sign under r708. That is about 5 ps of TT and 5 ends of hold. No rebuild is needed.
+2. S81-GEOM-OPUS: take the bank-leaf proof kit to routed sign-off; put the rt4 FIRM relay_sites rows on both cl0045af7b and cl9f71e63d.
+3. P: a signed r2 plus a signed r0_p2 proves both col sub-families on d8t rows. The other 50+ placed col kits then need the same ECO, not new rows.
+
+### Lever 4. QC N4 / N4.1 and the measured-hold relaunches
+
+**Evidence (R).** N4: the N4C LANE_ASBUILT error (delivered 10 vs 7) was fixed by setting `lanes[].fixed_cycles 3` on sl_W0/W2/W4_fw__x_fw_st_a. The N4D pass-1 bind is clean apart from the expected 30 R8_STALE. Derived-R8 pass 2 has run since 06:48; publish + apply around 07:45 (QC-PLAN-R3 06:56). N4.1: n41b has 15 errors: R8_STRAP_PAD 12 on sle_ctl__cl503337ff (26 > 25) and __cl67434795 (16 > 15), TYPE_SPLIT 2 and EMIT 1. The x_fe_o +1 station moves R8 by one cycle at ctl. n41d (r8_strap_pad_max 26 / 16) is running (QC-N-OPUS 06:3x). V: the measured-hold relaunches are in place / gen; sle_ctl__cla4f6f12f FAILs kit_rtl with `captured reset identity` on N3.
+
+**Fix.**
+1. QC-PLAN-R3: apply N4 as composed.
+2. QC-N-OPUS: rebase n41d onto the N4 tree. Raising the ctl strap pad limit is a real +1 R8 on two ctl types: check the receiver latency in LATCHECK rather than only raising the limit. Then take kit k2 to routed sign-off under r708.
+3. QC-TYPES-R3: read `OT_VCLK_MEASURED_CLOCK` and the hold_ws line in `5_1_grt.log` of sle_sc_v3 / slw_fw_v3 / sle_sc_v1 / sle_su_l1 / slw_fe_v2 when they reach GRT. Three of them were at CTS wns 0.00 / -5.29 / -33.43, so they are the next sign-off candidates on QC.
+
+### Lever 5. hd_mesh hold after tap balance
+
+**Evidence (V).** As in headline 4. CTS took 20 min; the repair log stops at iteration 0. R (HEAD-TYPES-OPUS 06:30): TT at CTS -1.45 (7 cells), cross_tap 10,130 of 15,372 ends.
+
+**Root cause (P).** With 63 ps of tap spread, -141.74 cannot come from tap skew alone. The remaining about 80 ps is either the forwarded ring input class (1,036 inputs on 2 clocks, contract in_min -90) or same-clock short paths in `u_core.u_la.u_ln.u.u_ep.xpn_f` (the worst endpoint). Padding 15 k ends is the cost profile of mesh_w1, which lost TT -49.56 -> -68.34 on 37,912 cells.
+
+**Fix.** HEAD-TYPES-OPUS: let the repair finish and read routed TT and the inserted cell count. If TT >= -42 and hold >= 0, sign and export. If not, before any new form: take the hold ends from `4_cts.odb` (launch tap, capture tap/clock, path depth), bin them, and fix the largest bin at its source. For the ring class that means a capture-side offset on the forwarded ring clock. For xpn_f it means 1 to 2 min-delay cells at the D pin in RTL synth constraints. Do not pad. Keep mesh_w1 alive until mesh_w2 has a routed number.
+
+### Lever 6. KV first timing evidence
+
+**Evidence.** V: no KV CTS log (headline 6). R: D23 strict bind since 06:20 (plan add04d1e8a2d: tail split `kv3_pv.*`, 68 pc taps, efault, hub_Wo 11 cores). D23b = D23 + 59 PV raw-stage band rows, already binding. D23c = D23b + reach rows + lite+narrow rings on all 5 hubs (hub_C 357,873 -> 238,112 cells, proven formally and in lock-step). Its bind waits on the reach code landing on main. hub_Wi host split: gate clean, shell 299,999 cells. hub_C clock-node move BLOCKED: the e9 die clock tree source (`kv-clk-r2/runs/e9`) was deleted, so the reserved-rect collision on pvfin_hi stays at 1.
+
+**Fix.**
+1. KV-D22-ROWS: as soon as one of the 10 retry rows (hg_v3, hgi, hgi_v5, hgi_v6) reaches CTS, read the OT_TAP_BALANCE and wns lines. This is the first KV evidence and it decides D24.
+2. KV-D23-COMPOSE: apply D23, then D23b, each as soon as it is green. Read OT_CLAND for the two writer-face START windows on pv_v2/v4/v6 (the first run with facegrow 58211f43d07). If they fail, the fix is in the facegrow law (tools), not in plan rows.
+3. hub_C node move: rebuild the e9 die clock kit (the inputs are gone) before any node re-site. e9 is an x-mirrored DME template, so check the mirror instances in the same run. Do not hand-edit the rect.
+
+### Lever 7. Serdes H18 and the die trunk
+
+**Evidence.** V: headline 5. R: H18 rail check 6,726 rows, 0 bad. H17 under r708: TT -69.66, FF -17.09, not signed. The die trunk (about 1,115 um, 3 hops <= 405 um, M8/M9) still has no plan field.
+
+**Fix.** S81-CORES-OPUS: route H18, then run in-flow sign-off + the r708 re-sign. If TT is within about 30 ps, use the sd9he ECO form on the routed DB. S81-DIE-R3: put the trunk in as explicit die clock rows in the D8e rebind (lever 1.3). Compare the measured rck insertion at the sinks (1,948 to 2,058 ps from the pin) with the die trunk arrival budget before export.
+
+### Lever 8. mergex
+
+**Evidence (R).** mm3b r708: NOT SIGNED, TT +161.72, FF -3.45, 62 internal violators. mm6 in detailed route (iter0 20 k violations). mm3r at CTS hold margin (HM 30, 36,994 ends). mm15r in GRT.
+
+**Fix.** S81-CORES-OPUS: the r583 internal hold ECO on the mm3b routed DB has 161 ps of TT slack to spend on 62 ends, so it should close. Run it now in parallel with mm3r / mm6, and stop mm15r.
+
+## 2. Stop list (the 05:10 list stands, except where struck below, plus these)
+
+1. Do not treat D8e as "binding / applying ~07:40". The bind failed at about 06:13. No publish from r3, and no partial apply that leaves out the leaf XR rows.
+2. Do not read the d8t leaf / kv_leaf / iqf kits relaunched at 06:04 as evidence. They have no XR and will stop again at -260 to -734 ps post-CTS TT. Do not re-triage them.
+3. Do not relaunch the 27 RESET v5 col rows before the empty-set fix: each one refails in 15 min.
+4. Do not treat a fresh attempt 5 as the only path for col_h9_r2 pv11b6518d. The routed DB exists. Do not delete or clean epyc10 attempt_2.
+5. hd_mesh: no second pre-GRT hold padding round, and no new mesh form before mesh_w2 has a routed number.
+6. mergex: stop mm15r (the 15 ps form; hslice showed there is no room).
+7. KV: no hand edit of the hub_C clock rect; no D24 ring decision before one KV CTS number.
+8. QC: no N4.1 rows into N4. Do not raise the ctl R8 strap pad limit without a LATCHECK of the receivers.
+9. Serdes: still no `serdes_shore_delta.py` rerun on D8e.
+
+## 3. The 0510 levers: done, stale or wrong
+
+| 0510 # | status | note |
+|---|---|---|
+| 1 col ROM rows | **DONE** (rows) / **STALE** (ECO) | 1,140 rows stripped 05:41 (R, S81-DIE-R3). 149 one-ROM moves gate PASS, `read_loop_place.py` on main 4ce3ad6120c (R). The col_h9_r2 ECO was not started (V); now lever 3. |
+| 2 leaf D8e + interior class | **BLOCKED** / **partly answered** | D8e bind failed (lever 1). Interior windows: t40 and t29 are the face-window class, closed by 0-cycle face-clear rows fc6 / fc5 (R). fc2 / vp1-3 not applied: the t25__cl55642d17 ft0 reg cannot be re-sited, so it is still open. t24 / t68 not imaged. |
+| 3 QC measured hold | **DONE in code** | e1ce3e0b234 + the nka_blk global (R). Kit proof pending (lever 4). |
+| 4 KV D23 | **IN PROGRESS** / **STALE** | D23 / D23b binding. "Read hg/hgi at CTS now" could not happen: no KV kit has reached CTS (V). |
+| 5 QC N4 / N4.1 | **SLIPPED** | Apply 05:30 -> about 07:45 (LANE_ASBUILT fixed_cycles, then R8 pass 2). The N4.1 k1 kit failed kit-rtl on the 34-error bind; n41d is pending. |
+| 6 serdes | **ADVANCED** | H18 rck span PASS, in GRT (V). The die trunk field is still open. |
+| 7 HEAD | **PREMISE WRONG** (hd_mesh) / **ADVANCED** (lep0N) | Taps were balanced to a 63 ps spread, yet hold is still -141.74 on 15 k ends (V), so tap spread was not the main hold source. hd_lep0N: RTL fix 0dcc215 is building as lep_p3 on epyc9 (moved from epyc10 when the docker create stalled, R). |
+| 8 svc mergex | **STALE** | mm3b r708 NOT SIGNED -3.45. mm15r still running against the 0510 stop (R). |
+| 0510 headline 4 (QC kits hidden as `_LAYOUT_RENDER`) | **DONE** | The classifier now files it as FLOW (R, QC-FLOW-1118). |
+
+Also: r708 was approved for all four dies at 06:02 (COORD). The 07:10 TOOLS-LAG still lists r708 as missing on the s81, s81_head and qwen_kvsys trees (it is not named for qwen_compute: 141 more not shown). So in-flow hold repair on those kits still runs against range clock-pin caps while sign-off uses nominal ones (V, breakdown). P: expect small hold over-fix and small setup loss until the trees carry ad8672055e3. Re-sign remains the rescue path.
+
+## 4. Not checked
+
+- Whether LF_CS_DEPTH clears once emit succeeds (lever 1, P).
+- The routed col_h9_r2 DRC names; the bank-leaf proof kit beyond gen.
+- mesh_w2 repair outcome; lep_p3 beyond synth start.
+- N4D pass 2, n41d, D23 / D23b bind results.
+- Any measured-hold relaunch at GRT; H18 GRT overflow.
+- dsdv_slice (20), slice_station t6, bk_sel / eng / gunit / iqf / seqhost: wave rows only.
+- Die STA on the real clock (S81, HEAD): unchanged, 0 measured hold pairs (R).
+
+---
+
 # FABLE-CLOSURE-STRATEGY 2026-11-18 05:10 PST (0510): delta on 03:20
 
 Reviewer: FABLE-CLOSURE-STRATEGY-0510 (Fable). Read-only: no jobs launched, nothing killed or deleted. Technical PD only. HBM parked.
