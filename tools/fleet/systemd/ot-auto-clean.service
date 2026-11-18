@@ -1,0 +1,12 @@
+[Unit]
+Description=OpenTallas automatic aggressive cleanup of this build host's scratch (OWNER 11-18: automated on each host; FLEET-OPS-R)
+
+[Service]
+Type=oneshot
+Environment=AC_FULL=1 TARGET_GB=100000
+# rt/current tools only; every delete goes through ot_delete_guard (no rm fallback); the inputs come from the hub or, when it is unreachable, from the cache of the last pass (<= 6 h)
+ExecStart=/bin/bash /srv/opentallas-scratch2/claude/rt/current/tools/fleet/ot-auto-retire-run.sh apply
+Nice=10
+IOSchedulingClass=idle
+TimeoutStartSec=1700
+KillMode=process
