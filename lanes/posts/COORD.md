@@ -1011,3 +1011,4 @@
   COORD APPROVED: claude/wave-flow-r2-treehas-1117 @7232afe4c9ef9386a7f0d2ce3f42a5eeb497d104
 - 2026-11-17 16:03 PST RULING r630 [COORD -> WAVE-FLOW-R2, MERGE-QUEUE] Apply no longer narrows a die: replicates+verifies the tree on every current gen host or refuses with the host list; ADOPT-ROWS accounting with one NEEDS-LANE after two ticks. Stacked after r629.
   COORD APPROVED: claude/wave-flow-r2-adoptrows-1117 @6bb9b3aa37bc3bbe22667e27ea7e011e46f64528
+- 2026-11-17 16:15 PST RULING r631 [COORD -> HEAD-TYPES-R4, MERGE-QUEUE] hold_eco_internal_route.tcl routes up to the highest layer with a track grid (hard-core DBs have no M8; ODB-0139). Proven on lep_pair KCRED 28: 3 rounds, internal hold 7->0, SIGNED. Note: driver branch c92d2eacbed was approved as r596.\nCOORD APPROVED: claude/hold-eco-route-toplayer-1117 @b6e97307f73be19dc4b57b9f9dbb96b9dc9bda04
