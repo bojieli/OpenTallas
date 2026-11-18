@@ -63,3 +63,11 @@
 - N3 tree: E2 /srv/opentallas-scratch3/claude/qc-plan-r3-n3-1117/event_tree_N3 = N2B _d3 + rt d9bbb638fa79 tools/common_flow (r641/648/649/650).
 - Stations: R8 is sink pads only. Mid-hop stations go in partition_types.<t>.internal_stations[] (regs_um). Mechanism A (internal_stations): su_l1 lane7 flt_su_c_i (+1 regs_um point), fw_v1 rd_wi->x_st_a_o (new conn bus:x_st_a_o entry; pd3 site from the routed L2 kit). Mechanism B (landing contract): su_l1 cland_rsn ring, sc_v1 cland_collect_rst_n_t13 -> cland_up_ready, shared cland_origin -> cland_rstart_tx. Proposed: B moves to N4 with coll_core (posted 19:xx; default if no answer).
 - N4: coll_core bins epyc8 qc-plan-r3-n3-1117/coll_core.json, radius 230 / cap 4800 / 43 taps. Re-solve collector_tree with reset_tree, republish into plan + sidecar collector.types[coll_core].tree, renumber the consumers (see added_tap_recentre.py GUARD_KEYS).
+
+## 2026-11-17 19:5x N3 = N2B plan + main tools (FABLE-CLOSURE-STRATEGY 19:2x)
+- N2B NOT applied; its gate was stopped (rc 143, no record). N3 = plan 25f88097 + d9bbb638fa79 tools. Tree E2 /srv/opentallas-scratch3/claude/qc-plan-r3-n3-1117/event_tree_N3 (no .src-manifest yet).
+- N3 bind chain: intel2 ~/qc-plan-r3/chain_n3.{log,rc}; ot-run oth-ubuntu-1970052-1794972267 on epyc2; out $W/bind/bind_s29q103S4Q9N3BR, gates $W/gates (final_bind_S4Q9N3.txt, latcheck, g0_S4Q9N3, cb16_qual).
+- Next: on CHAIN_DONE, publish the tree (src_manifest publish + replicate --link-from to epyc9/epyc8), relocate the bind (relocate_bind.py), candidate QC_S4Q9N3_ADOPT (expect-source N1B _d2, expect-event s29q103S4Q9N1B), gate, apply. Then 44f07b1a: point bind_out at the relocated N3 bind, FOREIGN 0, re-post READY.
+- 21:00: hold new QC launches until the N3 apply (proposed in post 19:5x, default yes).
+- st_a_v1 family hold qc-sta-tail-repl-n4-1117 (release result:QC-PLAN-R3:qc-sta-tail-repl-n4 once TAIL-REPL + the N4 st_a core-core station land).
+- N4 scope: coll_core 43-tap (r230/cap4800, epyc8 qc-plan-r3-n3-1117/n3_taps3.py); group A (su_l1 lane7 +1 regs_um; fw_v1 bus:x_st_a_o, from pd3 (293.4,917.9) to the N window, 1 reg at ~(420,1375); dump epyc7 /srv/opentallas-scratch2/claude/qc-plan-r3-n3-1117/fw_dump.txt); group B (3 landing-contract hops); st_a core-core station; cbn tap split clk_t50/clk_t115; tt_ctlm.
