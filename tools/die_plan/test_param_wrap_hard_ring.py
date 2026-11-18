@@ -201,3 +201,39 @@ def test_signed_hard_d8_keeps_read_and_write_chunks(fanout, read_chunk):
     _, receipt, sources = param_wrap.wrap_bound(rtl, hcs)
     assert receipt[0]['cycles_changed'] == 0
     assert param_wrap.param_text(params) in sources['b_cland_y']
+
+
+def test_reach_signed_hard_ring_keeps_parent_reach_stage():
+    """KV-D24-HUBC 11-18 (kv3_hub_C split, gate_b EMIT ft14_i: bound ring lacked .RSTREP(11) of its signed child): a wide
+    soft strap ring signed in its parent's reach form (one reader-START stage, RSTREP copies) and then realised as a hard
+    child keeps that ONE parent stage, so the bound ring equals the signed child and strap K / boot are unchanged."""
+    import count_align_bind as CAB
+    from test_cland_slew_reach import _wide, _wide_band
+
+    def wide():
+        p, t = strap_vehicle()
+        body = _wide(p, t, 567)
+        _wide_band(p, 567)
+        return p, t, body
+
+    p, t, body = wide()
+    k_soft = CAB.strap_ties(t["count_aligned"], p)["instances"]["b"]["values"]["strap_ca_k_y"]
+    base, params = _params(Landings(p, t).type_rtl("B", body))
+    assert params["RSTREP"] == 19                                    # the signed child's context: reach stage + copies
+    p, t, body = wide()
+    hcs = _hard(p, base, params)
+    # the hard child keeps its writer WREG through the explicit plan key (rows3 clock.landing_ring_wreg form)
+    p["partition_types"]["B"]["clock"]["landing_ring_wreg"] = dict(buses=["y"], dsrep=8, write_chunk=16)
+    assert CL.reader_start_reach(p, "B") == 1
+    lg = Landings(p, t)
+    rtl = lg.type_rtl("B", body)
+    assert _params(rtl) == (base, params)
+    assert "ot_dp_landing_relay_rep #(.N(19)) u_cland_reader_start_y_0 (" in rtl
+    assert ".d(cland_start), .q(cland_reader_start_y_0), .qx(cland_reader_start_y_0_x));" in rtl
+    assert CAB.strap_ties(t["count_aligned"], p)["instances"]["b"]["values"]["strap_ca_k_y"] == k_soft
+    bound, receipt, srcs = param_wrap.wrap_bound(rtl, hcs)
+    assert "    b_cland_y u_cland_y (" in bound and receipt[0]["cycles_changed"] == 0
+    # a hard ring signed WITHOUT RSTREP keeps the legacy rule: no parent reach stage
+    p, t, body = wide()
+    _hard(p, base, {k: v for k, v in params.items() if k != "RSTREP"})
+    assert CL.reader_start_reach(p, "B") == 0 and CAB.reader_start_depth(p, "B") == 0

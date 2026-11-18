@@ -228,15 +228,22 @@ def reader_start_reach(plan, tn):
     count_align_bind.reader_start_depth, boot +1, data unchanged) whose last stage is RSTREP with per-chunk copies
     (ring_reset_copies_reach; RSTH-1: 2 per 64-bit chunk at D4 DSREP 8).  -> 1 or 0.  0 for: an explicit
     landing_reader_start (its own depth), a type with
-    any signed hard-child ring (its K is fixed in the child), no wide soft band, or clock.landing_reader_start_reach
+    signed hard-child rings none of which carries RSTREP (a hard ring signed with RSTREP > 0 keeps its
+    parent's reach stage: 1), no wide soft band, or clock.landing_reader_start_reach
     false (opt-out).  Plan-only: the generator, strap K (strap_ties / verify strap_k) and the table K read this."""
     pt = (plan or {}).get("partition_types", {})
     t = pt.get(tn) or pt.get(tn.split("__")[0]) or {}
     c = t.get("clock") or {}
     if c.get("landing_reader_start") is not None or c.get("landing_reader_start_reach") is False:
         return 0
-    if any((hc.get("param_wrap") or {}).get("base") in HARD_RING_BASES for hc in t.get("hard_cores", []) or []):
-        return 0
+    hard = [hc for hc in t.get("hard_cores", []) or [] if (hc.get("param_wrap") or {}).get("base") in HARD_RING_BASES]
+    if hard:
+        # KV-D24-HUBC 11-18 (kv3_hub_C split, gate_b EMIT ft14_i): a ring signed off inside its soft parent's reach form
+        # carries RSTREP > 0: its rst_xn copies are the parent's reach reader-START stage.  When that ring becomes a
+        # hard child the parent keeps the same ONE stage (same K, boot and RSTREP as the signed context), else the bound
+        # ring loses RSTREP and differs from its signed child.  Hard rings without RSTREP keep 0 (unchanged).
+        return 1 if any(int(((hc.get("param_wrap") or {}).get("params") or {}).get("RSTREP", 0) or 0) > 0
+                        for hc in hard) else 0
     return 1 if _soft_wide_bands(plan, tn) else 0
 
 
