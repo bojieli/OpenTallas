@@ -28,6 +28,7 @@ VERIFY_RULES = {
     "transport": [
         {"module": "ot_dp_st", "map": {"q": "d", "eq": "ea"}, "drop_in": ["clk", "rst_n"], "stages": 1},
         {"module": "ot_dp_dly", "map": {"q": "d"}, "drop_in": ["clk"], "stages": 1, "stages_param": "D"},
+        {"module": "ot_dp_dly_keep", "map": {"q": "d"}, "drop_in": ["clk"], "stages": 1, "stages_param": "D"},
         {"module": "ot_dp_dly_cnt", "map": {"q": "d"}, "drop_in": ["clk", "strap_cnt"],
          "stages": 0, "stages_port": "strap_cnt"},
         {"module": "ot_dp_rsync", "map": {"q": "a"}, "drop_in": ["clk"], "stages": 2, "stages_param": "S"},
@@ -79,7 +80,7 @@ DIRECTIVES = {"define", "undef", "undefineall", "ifdef", "ifndef", "elsif", "els
               "end_keywords", "unconnected_drive", "nounconnected_drive", "__FILE__", "__LINE__", "protect",
               "endprotect", "verilator_config", "systemc_header", "systemc_interface", "systemc_imp_header",
               "systemc_implementation", "systemc_ctor", "systemc_dtor"}
-BIND_CELLS = {"ot_dp_st", "ot_dp_dly", "ot_dp_or", "ot_dp_and", "ot_dp_rsync", "ot_reset_sync", "ot_dp_rrelay", "ot_dp_rrelay_nl", "ot_dp_rgate",
+BIND_CELLS = {"ot_dp_st", "ot_dp_dly", "ot_dp_dly_keep", "ot_dp_or", "ot_dp_and", "ot_dp_rsync", "ot_reset_sync", "ot_dp_rrelay", "ot_dp_rrelay_nl", "ot_dp_rgate",
               "ot_dp_rsync_s2", "ot_dp_rsync_s3", "ot_dp_lockq"}
 
 

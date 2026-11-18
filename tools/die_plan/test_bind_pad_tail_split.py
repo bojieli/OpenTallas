@@ -115,7 +115,7 @@ def test_key_absent_identical_and_key_on_splits(tmp_path, monkeypatch):
     rtl_b = (base / "rtl" / "bt_ts.sv").read_text()
     rtl_s = (split / "rtl" / "bt_ts.sv").read_text()
     pad_b = re.findall(r"ot_dp_dly #\(\.W\(1\), \.D\((\d+)\)\) u_(pd\w+) \(\.clk\(clk\), \.d\((\S+?)\), \.q\((\w+)\)\);", rtl_b)
-    pad_s = re.findall(r"ot_dp_dly #\(\.W\(1\), \.D\((\d+)\)\) u_(pd\w+) \(\.clk\(clk\), \.d\((\S+?)\), \.q\((\w+)\)\);", rtl_s)
+    pad_s = re.findall(r"ot_dp_dly(?:_keep)? #\(\.W\(1\), \.D\((\d+)\)\) u_(pd\w+) \(\.clk\(clk\), \.d\((\S+?)\), \.q\((\w+)\)\);", rtl_s)
     # base: one shared 3-stage pad per padded bit, read by both cores
     assert len(pad_b) == 5 and {d for d, *_ in pad_b} == {"3"} and "bind_pad_tail_split.json" not in _files(base)
     for _d, nm, _src, _q in pad_b:
@@ -125,12 +125,20 @@ def test_key_absent_identical_and_key_on_splits(tmp_path, monkeypatch):
     tails = [x for x in pad_s if "_t_" not in x[1]]
     assert len(trunk) == 5 and {d for d, *_ in trunk} == {"1"} and all(src.endswith("]") and "_q[" in src for _d, _n, src, _q in trunk)
     assert len(tails) == 10 and {d for d, *_ in tails} == {"2"}
+    # the copies are (* keep *) modules (opt_merge would fold them back into one flop); trunk and base pads are plain
+    assert rtl_s.count("ot_dp_dly_keep #(") == 10 and "ot_dp_dly_keep" not in rtl_b
+    cells_s = (split / "rtl" / "bind_cells.sv").read_text()
+    assert "module ot_dp_dly_keep" in cells_s and "(* keep *) reg [W-1:0] r [0:D-1];" in cells_s
+    assert "ot_dp_dly_keep" not in (base / "rtl" / "bind_cells.sv").read_text()
     assert {src for _d, _n, src, _q in tails} == {f"{q}[0]" for _d, _n, _s, q in trunk}
     assert sum("_u_s0_" in n for _d, n, *_ in tails) == 5 and sum("_u_s1_" in n for _d, n, *_ in tails) == 5
     for _d, nm, _src, _q in tails:
         assert rtl_s.count(f"{nm}[0]") == 1 and re.fullmatch(r"pd\d+_\w+_\d+", nm)   # still a pad-stage name (R-REACH-5)
     rec = json.loads((split / "bind_pad_tail_split.json").read_text())["types"]["ts"]
     assert rec["split_pads"] == 5 and rec["copies"] == 10 and rec["extra_flops"] == 10 and rec["tail_depths"] == {"2": 5}
+    # pre-GPL anchors: one site row per copy stage, at the centroid of the consumer core's pins, type_relay_sites key form
+    assert len(rec["sites"]) == 10 * 2 and all(k.endswith((".q", ".r[0]")) for k in rec["sites"])
+    assert all(isinstance(v, list) and len(v) == 2 for v in rec["sites"].values())
     assert rec["not_covered"] == dict(r8_strap=0, registered=0, pad_tree=0, position_bank=0) and rec["shared_readers"] == 0
     # same traced depth per sink: the proof passes on both and every record but the split RTL / record is identical
     vb = json.loads((base / "verify_report.json").read_text())
@@ -143,7 +151,7 @@ def test_key_absent_identical_and_key_on_splits(tmp_path, monkeypatch):
     assert {sinks[f"snk.u_s{n}.d0[{i}]"][2] for n in (0, 1) for i in range(8)} == {5}
     changed = {k for k in set(fb) | set(fs) if fb.get(k) != fs.get(k)}
     assert "rtl/bt_ts.sv" in changed and "bind_pad_tail_split.json" in changed
-    assert all(not k.startswith("rtl/") or k == "rtl/bt_ts.sv" for k in changed), changed
+    assert all(not k.startswith("rtl/") or k in ("rtl/bt_ts.sv", "rtl/bind_cells.sv") for k in changed), changed
 
 
 @needs_yosys
@@ -168,3 +176,11 @@ def test_leaf_xy_groups_hard_cores_of_a_soft_leaf():
     by = {"u_r0": [(55.0, 5.0)], "u_r1": [(5.0, 905.0)]}
     cfg = dict(min_spread_um=400.0, hop_um=380.0)
     assert TS.tail_depth(5, by, cfg) == (2, 950.0)
+
+
+def test_keep_cell_and_site_rows():
+    import bind_pad_tail_split as T
+    assert "(* keep *)" in T.KEEP_CELL and "module ot_dp_dly_keep" in T.KEEP_CELL
+    assert T.site_rows("u_pd2_x_0_u_r0_5", 2, (1.0004, 2.0)) == {"u_pd2_x_0_u_r0_5.r[0]": [1.0, 2.0], "u_pd2_x_0_u_r0_5.q": [1.0, 2.0]}
+    assert T.site_rows("u_p", 1, (3, 4)) == {"u_p.q": [3.0, 4.0]}
+    assert T.centroids({"a": [(0, 0), (10, 20)]}) == {"a": (5.0, 10.0)}

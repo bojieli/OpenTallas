@@ -296,7 +296,7 @@ def trace(plan, tn, text, repo=None):
         # DIE-S81-92 r228: seam WRITE sides are wiring to the out face flop: ot_pl_seam_w_pl = per-chunk AND gate
         # (0 stages, i->q), ot_pl_seam_w_plr = one ot_pl_seam_cq register (1 stage, ir->q)
         seamw = mod in ('ot_pl_seam_w_pl', 'ot_pl_seam_w_plr')
-        if mod in ('ot_dp_st','ot_dp_dly') or relay or seam or seamw:
+        if mod in ("ot_dp_st","ot_dp_dly","ot_dp_dly_keep") or relay or seam or seamw:
             qport,dport=('o','i') if relay else ('o','d') if seam else ('q','i') if mod=='ot_pl_seam_w_pl' else ('q','ir') if seamw else ('q','d')
             q,_ = bits(ports.get(qport,''), inst+'.'+qport)
             d,sgn = bits(ports.get(dport,''), inst+'.'+dport)
@@ -316,7 +316,7 @@ def trace(plan, tn, text, repo=None):
                     if '.K' in params.get(inst,'') and km is None:
                         warnings.append(dict(where=inst,reason='nonliteral seam K'));continue
                     stages=max(2,int(km[1]) if km else 2)-1
-                elif mod=='ot_dp_dly':
+                elif mod in ("ot_dp_dly","ot_dp_dly_keep"):
                     if D is None and '.D' in params.get(inst,''):
                         warnings.append(dict(where=inst,reason='nonliteral delay D'));continue
                     stages=D if D is not None else 1
