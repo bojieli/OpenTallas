@@ -24123,3 +24123,5 @@ make: *** [Makefile:585: /work/run/results/asap7/dp_sle_st_a_v1__cl989804f6__cle
   QC: UNOWNED 12, FAILED 1 (slw_hc0__cl1bc59e1c), STALE 48, DEAD-OWNER 2 (cbn_q01, cbn_q11 on FABLE-FIX-QC-N) (was 13/5/50).
   KV: UNOWNED 0, STALE 11, DEAD 0 (was 3/11/7); all cancelled-superseded 11 h, owners KV-D22-ROWS/KV-HG-OPUS alive.
   HEAD 0 flagged.
+- 2026-11-18 06:53 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-18 06:52 PST: 126 running jobs, PROGRESSING 122, SLOW 3, NO-PROGRESS 1 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc9 serdes__t13 signoff_meas_072023 stage 7.5 h job 8.7 h: no new meaningful log line for 7.1 h; last: - hold_ff: FAIL WNS -55.85 ps < 0
