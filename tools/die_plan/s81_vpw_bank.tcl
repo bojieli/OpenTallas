@@ -10,7 +10,7 @@
 #  - under R-MINIMAL an FF with no site within 100 um is a WARN and is left
 #    to GPL (not FIRM), never a place stop.
 # XR-MID-1 (S81-GEOM-OPUS 11-18, FABLE-PD-S81-0855 fix 2): OT_S81_VPW_XR_MID=MIN:D (plan budgets.vpw_xr_mid_types).
-# When W = VS core box (nearest point) to the far VP bank centre (Manhattan) is over MIN um, the XR cohort (write-port flops under g_xr) is taken
+# When W = VS core centre to the far VP bank centre (Manhattan) is over MIN um, the XR cohort (write-port flops under g_xr) is taken
 # out of the bank set and placed FIRM on free sites nearest the point at min(D, W/2) um from the VS core along the
 # VS-to-bank line, so the first cycle carries d um of wire and the second W-d; the tap group excludes g_xr (those
 # flops take their nearest tap).  0 cycles, no RTL change.  Unset = the bank form unchanged.
@@ -77,13 +77,13 @@ if {[info exists ::env(OT_S81_VPW_XR_MID)] && $::env(OT_S81_VPW_XR_MID) ne ""} {
     puts "OT_VPW_XR_MID SKIP vs_cores=[llength $vb_vs] xr_ffs=[llength $vb_xr]"
   } else {
     set q [[lindex $vb_vs 0] getBBox]
-    # far bank centre (the worst first-cycle wire; FABLE-PD-S81-0855 measured VS to far bank) and the point of the VS
-    # core box nearest to it (the write-pin side)
+    # VS centre to far bank centre, the metric FABLE-PD-S81-0855 matched against the stopped kits (t11 643 um -289 ps ..
+    # t53 707 um -892 ps); the XR cohort serves both banks, so the far bank is the worst write
     set vb_W -1
     foreach bi $vb_banks {
       set r [$bi getBBox]
       set bx [expr {([$r xMin]+[$r xMax])/2.0}];set by [expr {([$r yMin]+[$r yMax])/2.0}]
-      set ax [expr {min(max($bx,[$q xMin]),[$q xMax])}];set ay [expr {min(max($by,[$q yMin]),[$q yMax])}]
+      set ax [expr {([$q xMin]+[$q xMax])/2.0}];set ay [expr {([$q yMin]+[$q yMax])/2.0}]
       set w [expr {abs($ax-$bx)+abs($ay-$by)}]
       if {$w > $vb_W} {set vb_W $w;set vb_pa [list $ax $ay];set vb_pb [list $bx $by]}
     }

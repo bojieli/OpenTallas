@@ -113,21 +113,21 @@ mkrows 0 480000
 
 
 def test_xr_mid_places_cohort_on_the_vs_to_bank_line(tmp_path):
-    """XR-MID-1 (S81-GEOM-OPUS 11-18): VS box point (900,50) to the far bank centre (5,425) = 1270 um, MIN 600 / D 500 ->
-    the 4 g_xr flops go to 500 um from VS along that line (target ~(548,198)), the 2 other write-port flops stay at
+    """XR-MID-1 (S81-GEOM-OPUS 11-18): VS centre (925,25) to the far bank centre (5,425) = 1320 um, MIN 600 / D 500 ->
+    the 4 g_xr flops go to 500 um from VS along that line (target ~(576,177)), the 2 other write-port flops stay at
     the bank; the tap group excludes g_xr"""
     r = _run(tmp_path, XR_FAR, {"OT_S81_VPW_XR_MID": "600:500"})
     assert r.returncode == 0, r.stdout + r.stderr
     assert "OT_VPW_XR_MID placed 4 of 4" in r.stdout, r.stdout
     mid = [ln.split("\t") for ln in (tmp_path / "vpw_xr_mid_sites.tsv").read_text().splitlines()[1:]]
-    assert len(mid) == 4 and all(abs(float(x[1]) - 547.6) + abs(float(x[2]) - 197.6) <= 10 for x in mid), mid
+    assert len(mid) == 4 and all(abs(float(x[1]) - 576.5) + abs(float(x[2]) - 176.5) <= 10 for x in mid), mid
     bank = [ln.split("\t") for ln in (tmp_path / "vpw_bank_sites.tsv").read_text().splitlines()[1:]]
     assert len(bank) == 2 and all("g_xr" not in x[0] for x in bank) and max(float(x[3]) for x in bank) <= 100.0
     assert "(?!g_xr[._/])" in (tmp_path / "vpw_bank_clock.tcl").read_text()
 
 
 def test_xr_mid_keeps_bank_form_under_min(tmp_path):
-    r = _run(tmp_path, XR_FAR, {"OT_S81_VPW_XR_MID": "1300:500"})
+    r = _run(tmp_path, XR_FAR, {"OT_S81_VPW_XR_MID": "1400:500"})
     assert r.returncode == 0, r.stdout + r.stderr
     assert "OT_VPW_XR_MID KEEP" in r.stdout and "PLACED 6" in r.stdout
     assert "(?!g_xr" not in (tmp_path / "vpw_bank_clock.tcl").read_text()
