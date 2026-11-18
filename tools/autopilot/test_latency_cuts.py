@@ -52,3 +52,10 @@ def test_do_yosys_stop_inside_place_is_synth():
     cls, why = KW.classify("place", txt)
     assert cls == "FLOW" and "synth (yosys)" in why
     assert "synth" not in KW.classify("place", "ERROR: TCL interpreter returned an error: child process exited abnormally")[1]
+
+
+def test_grt_setup_repair_rsz0074_is_a_flow_error_and_the_kit_labels_ff():
+    cls, why = KW.classify("place", "ERROR: OT_TT_SETUP_REPAIR crashed with RSZ-0074 (x): the kit GRT setup repair did NOT run and 5_1_grt.odb is UNREPAIRED\n")
+    assert cls == "FLOW" and "RSZ-0074" in why
+    gen = (Path(__file__).resolve().parents[1] / "die_plan" / "gen_phys.py").read_text()
+    assert "FAIL_TT_SETUP_REPAIR" in gen and "rc=7" in gen and "OT_GRT_REPORT_CORNER FF" in gen
