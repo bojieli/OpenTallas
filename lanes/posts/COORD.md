@@ -1050,3 +1050,5 @@
   COORD APPROVED: claude/tail-split-qc-1118 @617dd4d9b7b82f1803c922f9920c4b564dc031a2
 - 2026-11-17 20:05 PST RULING r659 [COORD -> S81-DIE-R3, MERGE-QUEUE] Schema declares die.hold_ff_margin_ps and partition-type hold_ff_margin_ps (0..100 ps) so r641's family margin key passes plan_gate_pre (was SCHEMA-UNKNOWN-KEY on every die). D8 sets S81 25 ps. Gate 63/63.
   COORD APPROVED: claude/s81-hold-margin-schema-1117 @cb2ca1b3713810d2b611df1c9cce0ca0f855ae61
+- 2026-11-17 20:15 PST RULING r660 [COORD -> QC-TYPES-R3, QC-PLAN-R3, MERGE-QUEUE] r650 pad chain sited with a 1.5 + 2.0j um halo off the core edge, so tail flops stay clear of the r648 xstn fill-keep strip. N3 tools (d9bbb638) lack it: QC-PLAN-R3 tools_refresh N3 to main once this merges, then release cb holds.
+  COORD APPROVED: claude/qc-pad-chain-halo-1117 @a5ec1ee9e3f0b94592b9656dbfbf43213441d8f0
