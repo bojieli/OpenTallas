@@ -25,3 +25,4 @@
   epyc10: linked from src_head_pin_8569788b0328_nf15f_d2_t86a9d26
   epyc10: OK
   intel1: refuse (free 36 GB + part 0 - tree 47 = 28 GB after the copy < floor 50 + 20 GB); stopped (no retry); free the host named or exclude it, then change the die tree or recipe settings to resume
+- 2026-11-17 20:59 PST TOOLS-REFRESH qwen_kvsys: switched to /srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg6_2433b9c2_t24c7347c_d21b_t2509079 (rulings r407, r409, r421, r422, r428, r431, r433, r435, r454, r457, r458, r459); plan and RTL byte-identical, strict bind unchanged
