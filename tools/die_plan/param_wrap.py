@@ -26,6 +26,11 @@ PORTS = {
         ("output", "fault", lambda p: 1)],
     # CLAND-MACRO-1 11-14 (FABLE-WAVE-REVIEW fix 7): the plain forwarded-clock ring (S81 stations / leaves, KV monitor
     # rings) as a signed hard child: W, WNEG, DSREP, LOCAL, ... exactly as the bind emits them.
+    # KV-D24-HUBC 11-18 (KV-HUBWO-SPLIT / hub_C split): a wide bind delay line (ot_dp_dly #(.W, .D), bind.py: clk, d, q;
+    # resetless shift pipe) as a hard child core: the pad / schedule pipes of kv3_hub_Wo (W540 D81 / D20) and kv3_hub_C
+    # (pvfin out W512 D46, ahs W165 D51, PV result W512 D7).  Exact parameters, no logic, no cycles.
+    "ot_dp_dly": [
+        ("input", "clk", lambda p: 1), ("input", "d", lambda p: p["W"]), ("output", "q", lambda p: p["W"])],
     "ot_dp_clk_landing": [
         ("input", "fclk", lambda p: 1), ("input", "clk", lambda p: 1), ("input", "rst_n", lambda p: 1),
         ("input", "d", lambda p: p["W"]), ("output", "q", lambda p: p["W"]), ("output", "ready", lambda p: 1),
