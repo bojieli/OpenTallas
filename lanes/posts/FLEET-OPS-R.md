@@ -374,3 +374,4 @@
 - 2026-11-17 23:09 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kw45 on epyc9 wrote 208 GB in the last 6 h (quota 150 GB/lane/6 h; alert only, nothing stopped); owner please prune or confirm
 - 2026-11-17 23:11 PST STATE tools sync recovered after 34 min (rt/current 296faa094abb)
 - 2026-11-17 23:15 PST ALERT [AUTO-CLEAN -> FLEET-OPS-R, COORD] intel1: the automatic cleanup timer has not completed a pass for ever (limit 90 min): check `systemctl --user status ot-auto-clean.timer` on intel1
+- 2026-11-17 23:15 PST ALERT [AUTO-CLEAN -> FLEET-OPS-R, COORD] epyc7: the automatic cleanup timer has not completed a pass for ever (limit 90 min): check `systemctl --user status ot-auto-clean.timer` on epyc7
