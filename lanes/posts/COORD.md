@@ -1009,3 +1009,5 @@
   COORD APPROVED: claude/wave-flow-r2-lagshas-1117 @4222e6d5553927badc77eaeb5678af1b8293971a
 - 2026-11-17 16:02 PST RULING r629 [COORD -> WAVE-FLOW-R2, MERGE-QUEUE] Hold release terms tree_has:<rNNN> / tree_has_sha:<sha>: true only when the die's current tree tools contain it; unknown keeps the hold. Stacked after r628.
   COORD APPROVED: claude/wave-flow-r2-treehas-1117 @7232afe4c9ef9386a7f0d2ce3f42a5eeb497d104
+- 2026-11-17 16:03 PST RULING r630 [COORD -> WAVE-FLOW-R2, MERGE-QUEUE] Apply no longer narrows a die: replicates+verifies the tree on every current gen host or refuses with the host list; ADOPT-ROWS accounting with one NEEDS-LANE after two ticks. Stacked after r629.
+  COORD APPROVED: claude/wave-flow-r2-adoptrows-1117 @6bb9b3aa37bc3bbe22667e27ea7e011e46f64528
