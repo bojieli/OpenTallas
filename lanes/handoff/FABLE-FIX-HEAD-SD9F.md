@@ -105,3 +105,17 @@ Gates R-MINIMAL: DRC 0, routed TT >= -42, internal FF hold >= 0 (port hold advis
   <kit>/run/results/asap7/dp_hd_serdes/base, sig <kit>/signoff_fable/signoff.json) + post SIGNED; stop the other forms by unit.
   Internal hold short only: tools/die_plan/hold_eco_internal_run.py (r583).  TT short < 60: capture-skew ECO (r614 or us_eco.tcl).
   Expectation: (a)/(b) alone leave the other family failing; (c) and (d) are the candidates; (d) adds no latency.
+## 11-18 04:10 PST -- four forms routed, ECOs running (LANE10 = E10 /srv/opentallas-scratch2/claude/fable-fix-head-sd9h)
+- Routed sign-off (LANE10/<tag>_gen/hd_serdes/signoff_fable): sd9h (d) DRC 0 TT -45.34 (119) hold -31.02 (63); sd9pa (a) DRC 0 TT -49.62 (8)
+  hold -33.39 (71); sd9pb2 (b) TT -92.27 hold -46.66; sd9pc2 (c) RETIRED (DRT-0255 no path net _172833_). GRT gate read -0.24 / -10.89 /
+  -0.89 / +0.67: 39-91 ps optimistic, judge routed only.  Branch claude/head-serdes-kp4-pw-1118@fb361b03 GATE main=e44e83ac900 5/5 GREEN.
+- sd9h: encoder family closed (clk +4.35).  Left: u_syn.S_q -> u_bm d/thq/gm/kc (pma_rck) = S_q fanout TRANSPORT 303-478 ps (split.py on
+  LANE10/h_paths_tt/max_full.rpt), not the PW8 XOR.  Structural fallback (NOT built): kept S_q copies per BM unit.
+- ECO (capture skew on CLK + hold pads at D; us_eco.tcl, us_guides.py, drt_x.tcl; lists by mk_eco_list_r25.py from run_q.sh q3 reports;
+  wrapper run_eco_h.sh SRC ECO LIST = copy kit -> insert -> DPL -> DRT -> fill/final/abstract/antenna -> signoff_fable):
+  sd9he from sd9h: list ecoh_list2 (15 CK flops / 20 cells, 113 pads / 114 cells), insert done 0 cells moved, in DRT; client log intel2
+  ~/fable-fix-head-sd9f-logs/sd9he_eco.log, LANE10/sd9he/eco.log, kit LANE10/sd9he_gen/hd_serdes.  What-if TT -26.47.
+  sd9pae from sd9pa: list ecopa_list (2 CK flops, 173 pads), client log sd9pae_eco.log.
+  NOTE: the q4 what-if uses set_assigned_delay, which REPLACES the net arc delay; hold pads on long nets read pessimistic in the what-if.
+  NEXT: first signoff_fable.log with SIGNED -> ffht_export.sh epyc10 hd_serdes__<tag>_1118 <kit>/run/results/asap7/dp_hd_serdes/base
+  <kit>/signoff_fable/signoff.json + SIGNED post.  A few hold ends left: rerun q3 on the new signoff, second list, run_eco_h.sh on the ECO kit.
