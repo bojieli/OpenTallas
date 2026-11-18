@@ -294,7 +294,7 @@ SCRATCH_FREE_SH = ("rd=$(stat -c %d /); for r in " + " ".join(SCRATCH_ROOTS) + "
                    "echo OT_DIR_REAL $(readlink -f \"$t\" 2>/dev/null); "
                    # FABLE-FLOW-1900 (C): the measured scratch2 fall rate (GB/h, epoch) that disk_rate.py pushes every 10 min
                    "echo OT_DISK_ETA $(cat $HOME/.local/state/disk_eta 2>/dev/null); "
-                   "sed 's/^/OT_LANE_HOLD /' $HOME/.local/state/disk_eta_lanes 2>/dev/null; ")
+                   "{ sed 's/^/OT_LANE_HOLD /' $HOME/.local/state/disk_eta_lanes 2>/dev/null || true; }; ")
 SCRATCH_OWN_FLOOR_GB = int(os.environ.get("OT_RUN_SCRATCH_OWN_FLOOR_GB", "10"))
 # v13: on a host with a separate scratch disk, new work goes ONLY there; below this free space the host admits nothing
 # (NOT RUN / placed elsewhere) instead of falling back to the root fs.
