@@ -34,6 +34,7 @@ import time
 BREAKER_N = 5
 BREAKER_WINDOW_S = 1800
 BREAKER_COOLDOWN_S = 1800
+PROBES_FAIL_SHUT = 2          # WAVE-PILOT-FIX 11-18 (COORD FABLE-FLOW-0010 A): two failed probes of one class shut it die-wide until the cause changes
 PROBES_PER_CLASS = 3            # WAVE-PILOT-FIX 11-17 (COORD, owner r556 against single-pilot holds): three probes per class, not one
 PROBE_PASS_AFTER_S = 3600       # a probe RUNNING this long without a result counts as a pass for releasing its siblings
 PROBATION_N = 2
@@ -409,6 +410,17 @@ print("AP_JSON " + json.dumps(out))
 
 # ---------------------------------------------------------------- state
 
+STOPS_OFF_EXCLUDE = ("hbm",)     # OWNER 11-18 (via COORD): HBM is parked; the stops_off switch never releases it
+
+
+def stops_off_die(cfg, die):
+    """WAVE-PILOT-FIX 11-18: True when the global stops_off switch applies to DIE (cfg stops_off true, DIE not in cfg stops_off_exclude, default hbm)"""
+    if (cfg or {}).get("stops_off") is not True:
+        return False
+    excl = (cfg or {}).get("stops_off_exclude")
+    return str(die) not in tuple(STOPS_OFF_EXCLUDE if excl is None else excl)
+
+
 def fg_state(st):
     g = st.setdefault("flow_guard", {})
     for k, v in (("fails", []), ("open", {}), ("last", {}), ("pf_posted", {}), ("paths", {}), ("trees", {}), ("refused", []),
@@ -672,7 +684,7 @@ def probe_result(st, die, item, stage, passed, failed_stage=False, required_stag
             failed = e.setdefault("probes_failed", [])
             if item not in failed:
                 failed.append(item)
-            if all(i in failed for i in probe_items(e)):     # every claimed probe failed (none left running): shut until the inputs change again
+            if len(failed) >= PROBES_FAIL_SHUT or all(i in failed for i in probe_items(e)):     # two failed probes (or every claimed one): shut until the cause (inputs) changes
                 e["state"], e["probe"], e["probes"], e["probes_failed"], e["probe_t"] = "shut", {}, [], [], {}
                 e["inp"] = e.get("inp_probe") or e.get("inp")
                 out.append((key, f"probe {item} failed again at {stage} (all {len(failed)} claimed probe(s) failed): class stays shut until the inputs change again"))

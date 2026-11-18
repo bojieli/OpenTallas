@@ -2445,6 +2445,12 @@ def dedup_step(AP, cfg, st, notices, ap_dir):
         if orec is None or orec.get("status") in ("FAIL", "CANCELLED") or orec.get("q_status") in ("FAIL", "CANCELLED"):
             sig = f"{(orec or {}).get('status')}/{(orec or {}).get('q_status')}/{(orec or {}).get('attempt')}"
             led = st.setdefault("dedup_released", {})
+            if dedup_owner_not_a_verdict(orec):                  # WAVE-PILOT-FIX 11-18: a CANCELLED / INFRA owner is no design verdict: no hold, release at once
+                led.pop(f"{die}|{rec['item']}", None)
+                if group and h:
+                    ident_release(group, h)
+                items.pop(key, None)
+                continue
             if (led.get(f"{die}|{rec['item']}") or {}).get("sig") != sig:        # FABLE-FLOW-0445 #5: logged once per owner state, not every tick
                 AP.log(f"KIT-WAVE DEDUP RELEASE {die}/{rec['item']}: owner {owner} did not sign off (status "
                        f"{(orec or {}).get('status')}/{(orec or {}).get('q_status')}); relaunches on the normal path")
@@ -2834,9 +2840,9 @@ def select(rows, cfg, die, state, plan_types=None):
             why = NEEDS_LANE                         # WAVE-RECIPE-1: design FAIL, same kit inputs -> a lane, not a re-key
         elif rec and cfg.get("hold_unchanged") and not minimal_profile() and unchanged_fail(cfg, state, die, r["item"], rec, r.get("parent_item"), r.get("kind")):
             why = HOLD_UNCHANGED
-        elif rec and cfg.get("form_gate", True) and not minimal_profile() and form_wait(cfg, state, die, r["item"], rec, r.get("parent_item"), r.get("kind")):
+        elif rec and not FG.stops_off_die(cfg, die) and cfg.get("form_gate", True) and not minimal_profile() and form_wait(cfg, state, die, r["item"], rec, r.get("parent_item"), r.get("kind")):
             why = WAIT_FORM
-        elif rec and cfg.get("flow_repeat_gate", True) and not minimal_profile() and flow_repeat(cfg, state, die, r["item"], rec, r.get("parent_item"), r.get("kind")):
+        elif rec and not FG.stops_off_die(cfg, die) and cfg.get("flow_repeat_gate", True) and not minimal_profile() and flow_repeat(cfg, state, die, r["item"], rec, r.get("parent_item"), r.get("kind")):
             why = FLOW_REPEAT
         elif r["live_job"] not in ("", "none") and not _own_wave_unit(r):
             why = "live job (another lane)"
@@ -2941,7 +2947,8 @@ def select(rows, cfg, die, state, plan_types=None):
             return 0
     unlocks = blocked_parents(d)
     picked.sort(key=lambda r: (-unlocks.get(core_module(r["item"]), 0), 0 if r["kind"] == "core" else 1, -rep(r), r["item"]))
-    picked = pilot_gate(picked, skip, d, die, state)
+    if not FG.stops_off_die(cfg, die):                           # OWNER 11-18: no pilot gating (hbm excluded)
+        picked = pilot_gate(picked, skip, d, die, state)
     return picked, skip
 
 
@@ -3146,6 +3153,20 @@ def place_rc0_no_odb(text):
     return ""
 
 
+DIE_TOOL_EXC_RE = re.compile(r"^(ValueError|KeyError): (.+)$", re.M)
+
+
+def die_tool_exception(s):
+    """the 'ValueError: ...' / 'KeyError: ...' line of a Traceback whose frames are in a die tool (tools/die_plan, tools/...), else None"""
+    if "Traceback (most recent call last)" not in (s or ""):
+        return None
+    ms = list(DIE_TOOL_EXC_RE.finditer(s))
+    if not ms or not re.search(r'File "[^"]*(?:die_plan|/tools/)[^"]*"', s):
+        return None
+    m = ms[-1]
+    return f"{m.group(1)}: {m.group(2)[:260]}"
+
+
 # WAVE-PILOT-FIX 11-17 (COORD FABLE-FLOW-1900 C): a missing container image / PDK / docker tool / full disk on ONE host is host infrastructure, never a design
 # verdict: class INFRA (retries elsewhere, never counts in the breaker, no same-fail-key refusal), and infra_key carries the host.
 HOST_ENV_RE = re.compile(r"No such image|Unable to find image|image not found|pull access denied|manifest unknown|"
@@ -3344,6 +3365,9 @@ RULES = [
     # schema = 66 % of a night's FAILs, none with design content): a Python exception (or the generator's plan-schema refusal)
     # at kit_rtl / gen that no rule above names as PLAN / RTL is the tool or source skew, not the design.  INFRA: resubmitted on
     # its own up to infra_attempts, never counted by RETRY_CAP, and revived by the input-change re-arm (minimal_auto_retry)
+    # WAVE-PILOT-FIX 11-18 (COORD FABLE-FLOW-0010 D: the S81 svc kit_rtl 'ValueError: reference net ... not structurally mapped' was keyed INFRA, but it is a
+    # design-input error fixed by r695): a ValueError / KeyError raised by a die tool is the design input's, keyed FLOW with the message (never INFRA)
+    ("FLOW", r"^(?:kit_rtl|gen)$", die_tool_exception, "die tool refused its input"),
     ("INFRA", r"^(?:kit_rtl|gen)$", r"Traceback \(most recent call last\)|KeyError|TypeError|AttributeError|"
                                     r"gen phys: ERROR plan invalid",
      "infra (python exception / plan-schema refusal in the kit tool: tool or source skew)"),
@@ -6099,6 +6123,41 @@ def note_fail_sig(st, rec, cls, why, now=None, inp=None):
     return c
 
 
+CFG_KEY_RE = re.compile(r"\bOT_[A-Z0-9_]{3,}\b")
+
+
+def die_cfg_has_key(cfg, die, tok):
+    """is the env key TOK (as named in a class text, e.g. OT_VPW_BANK) set in the die's gen / item env?  A config key OT_S81_VPW_BANK carries the
+    stem VPW_BANK of the tool's message token OT_VPW_BANK"""
+    d = (cfg.get("dies") or {}).get(die) or {}
+    blob = json.dumps([d.get("gen_env"), d.get("die_gen_env"), d.get("item_env"), d.get("type_args"), d.get("gen_args")], default=str)
+    stem = tok[3:]
+    return any(c == tok or c.endswith("_" + stem) for c in CFG_KEY_RE.findall(blob))
+
+
+def note_class_cfg_keys(cfg, st, die, item):
+    """right after a fail: the open classes of this item record which of their OT_* tokens are config keys of the die now (cfg_keys)"""
+    g = FG.fg_state(st)
+    for key in {(g.get("last") or {}).get(f"{die}/{item}"), (g.get("last2") or {}).get(f"{die}/{item}")}:
+        e = g["open"].get(key) if key else None
+        if e and "cfg_keys" not in e:
+            e["cfg_keys"] = sorted(t for t in set(CFG_KEY_RE.findall(key)) if die_cfg_has_key(cfg, e.get("die") or die, t))
+
+
+def close_removed_key_classes(AP, cfg, st):
+    """WAVE-PILOT-FIX 11-18 (COORD): an open breaker class whose cause is a config key (recorded in cfg_keys when it opened) that no longer exists in the
+    die's env is closed: the cause is gone.  -> [(die, key)] closed"""
+    g = FG.fg_state(st)
+    out = []
+    for key, e in list(g["open"].items()):
+        ck = e.get("cfg_keys") or []
+        if ck and not e.get("kind") and not any(die_cfg_has_key(cfg, e.get("die"), t) for t in ck):
+            FG.close(st, key)
+            out.append((e.get("die"), key))
+            AP.log(f"KIT-WAVE FLOW-GUARD RELEASE '{key[:120]}': the config key(s) {ck} that caused it are no longer set on {e.get('die')}: class closed")
+    return out
+
+
 def prune_stale_fail_entries(cfg, st):
     """WAVE-PILOT-FIX 11-17 (COORD, QC slw_fw/slw_hc1 never relaunched on N1B): fail_keys / fail_sigs hold the failure of an OLD event whose source paths are
     gone for good, so the input digest never changes and the no-unchanged-relaunch rule never re-arms.  An entry whose recorded failure events are
@@ -8476,7 +8535,7 @@ def flow_preflight(AP, cfg, st, die, rows, now=None, rpy=None):
     """{item: (kind, {host: why})} for rows that NO candidate host can serve (not launched).  Hosts that lack an input of an item
     are written to cfg _item_incomplete (gen_hosts / roam_hosts then leave them out); an unreachable host is unknown = launch."""
     d = cfg["dies"][die]
-    if d.get("flow_guard") is False or not rows:
+    if d.get("flow_guard") is False or not rows or FG.stops_off_die(cfg, die):     # stops_off: OWNER 11-18, the class breaker / input preflight hold nothing
         return {}
     now = time.time() if now is None else float(now)
     g = FG.fg_state(st)
@@ -8707,7 +8766,7 @@ def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
                                 skip.setdefault(scst[r["item"]], []).append(r["item"])
                         go = [r for r in go if r["item"] not in scst]
                         AP.log(f"KIT-WAVE SIDECAR-STALE {die}: {len(scst)} row(s) not launched: " + " ".join(sorted(scst)[:40]))
-                if AP and probe and d.get("flow_guard") is not False and (go or any(FG.held_key(st, die, r["item"]) for r in picks)):
+                if AP and probe and d.get("flow_guard") is not False and not FG.stops_off_die(cfg, die) and (go or any(FG.held_key(st, die, r["item"]) for r in picks)):
                     try:
                         go = flow_guard_gate(AP, cfg, st, die, go, picks, skip)
                     except Exception as e:                 # a guard never stops the plan (unknown = launch)
@@ -8929,7 +8988,7 @@ def retry_probe_defer(cfg, st, die, r):
     RETRY (a row whose last attempt FAILed or was CANCELLED) of a die launches at most RETRY_PROBES at a time until one attempt of the cohort
     gets past place (ENQUEUED / signed).  '' = launch; else why it waits.  A first attempt is never limited.  Die option retry_probe false = off."""
     d = (cfg.get("dies") or {}).get(die) or {}
-    if d.get("retry_probe") is False or cfg.get("retry_probe") is False:
+    if d.get("retry_probe") is False or cfg.get("retry_probe") is False or FG.stops_off_die(cfg, die):     # stops_off: OWNER 11-18
         return ""
     items = st.get("items") or {}
     prev = [x for x in items.values() if x.get("die") == die and x.get("item") == r.get("item")]
@@ -9351,6 +9410,26 @@ def tool_skew_refuse(AP, cfg, st, die):
     return bool(res) and not res["ok"] and opt(cfg, die, "tool_skew") != "warn"
 
 
+def _fk_same(cfg, st, die, r):
+    """the full input hash when this launch is byte-identical to the attempt that last failed in the tool (stored fail_keys.full_hash), else ''"""
+    prev = (st.get("fail_keys") or {}).get(f"{die}|{r.get('item')}") or {}
+    fh = prev.get("full_hash") or ""
+    if not fh:
+        return ""
+    now = full_input_hash(cfg, die, r.get("item"), r.get("block_sha"))
+    return now if now and now == fh else ""
+
+
+def dedup_owner_not_a_verdict(orec):
+    """WAVE-PILOT-FIX 11-18 (COORD): a dedupe member waits only for an owner that FAILed on a design verdict; an owner that was CANCELLED, or whose
+    failure is INFRA, says nothing about the shared kit"""
+    if not orec:
+        return False
+    if orec.get("status") == "CANCELLED" or orec.get("q_status") == "CANCELLED":
+        return True
+    return str(orec.get("class") or "") == "INFRA" or str(orec.get("q_class") or "") == "INFRA"
+
+
 def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
     if not scheduler_current(AP):
         return None
@@ -9377,16 +9456,19 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
                    f"(move the file into the tree and apply it; or dies.{die}.gen_env_outside_allow for a key; recorded once)")
         return None
     if cfg["dies"][die].get("flow_guard") is not False:                                            # FLOW-HEALTH-1: open class / same fail key, any launch path
-        _hk = FG.held_key(st, die, r.get("item"), claim=True)
+        _so = FG.stops_off_die(cfg, die)                        # OWNER 11-18 (hbm excluded) (via COORD): no class-breaker hold, no dedupe hold, no pilot gating
+        _hk = "" if _so else FG.held_key(st, die, r.get("item"), claim=True)
         if _hk:
             AP.log(f"KIT-WAVE LAUNCH-HELD {die}/{r.get('item')}: FLOW-GUARD class open ({_hk[:100]})")
             return None
-        _dr = (st.get("dedup_released") or {}).get(f"{die}|{r.get('item')}")
+        _dr = None if _so else (st.get("dedup_released") or {}).get(f"{die}|{r.get('item')}")
         if _dr:
             _o = max([x for x in (st.get("items") or {}).values() if x.get("die") == die and x.get("item") == _dr.get("owner")],
                      key=lambda x: float(x.get("updated") or 0), default=None)
             _sig = f"{(_o or {}).get('status')}/{(_o or {}).get('q_status')}/{(_o or {}).get('attempt')}"
-            if _sig == _dr.get("sig"):
+            if dedup_owner_not_a_verdict(_o):                                    # WAVE-PILOT-FIX 11-18: CANCELLED / INFRA owner: drop the hold
+                (st.get("dedup_released") or {}).pop(f"{die}|{r.get('item')}", None)
+            elif _sig == _dr.get("sig"):
                 if not _dr.get("held_logged"):
                     _dr["held_logged"] = time.time()
                     AP.log(f"KIT-WAVE LAUNCH-HELD {die}/{r.get('item')}: kit identical to {_dr.get('owner')} whose attempt failed ({_sig}); waits for its owner to change (DEDUP terminal)")
@@ -9395,12 +9477,23 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
         _rb, _rwhy, _rrel = RS.gate(st, die, r.get("item"), repeat_inputs_now(cfg, st, die, r.get("item"), r.get("block_sha")), cfg.get("_unblocks") or ())
         if _rrel:
             AP.log(f"KIT-WAVE REPEAT-STOP RELEASE {die}/{r.get('item')}: {_rrel}")
-        if _rb:
+        if _so and (_rb or _fk_same(cfg, st, die, r)):            # OWNER 11-18 (r705 (2)): a relaunch is skipped ONLY on the full input hash of a failed attempt
+            _same = _fk_same(cfg, st, die, r)
+            if _same:
+                AP.log(f"KIT-WAVE SKIP-SAME-INPUT {die}/{r.get('item')} [owner {die_owner(cfg, die)[0]}]: full input hash {_same} equals the attempt that failed in the tool "
+                       f"(rt sha, design snapshot, spec digest, env keys); any code / plan / env change releases it")
+                return None
+        if _rb and _so:                                          # OWNER 11-18 (r704): stops_off: otherwise an unchanged relaunch is logged for its owner, never refused
+            AP.log(f"KIT-WAVE REPEAT {die}/{r.get('item')} [owner {die_owner(cfg, die)[0]}]: unchanged relaunch after a repeated failure ({str(_rwhy)[:200]})")
+        elif _rb:
             if not (st.get("repeat_ledger") or {}).get(f"{die}|{r.get('item')}", {}).get("held_logged"):
                 st["repeat_ledger"][f"{die}|{r.get('item')}"]["held_logged"] = time.time()
                 AP.log(f"KIT-WAVE LAUNCH-HELD {die}/{r.get('item')}: {_rwhy[:260]}")
             return None
         _bl, _why, _chg = fail_key_gate(cfg, st, die, r.get("item"), r.get("block_sha"))
+        if _bl and _so:                                          # OWNER 11-18 (r704): same-fail-key refusal off; REPEAT line names the owner lane
+            AP.log(f"KIT-WAVE REPEAT {die}/{r.get('item')} [owner {die_owner(cfg, die)[0]}]: relaunch with an unchanged fail key ({str(_why)[:200]})")
+            _bl = False
         if _bl:
             _rk = (st.get("fail_keys") or {}).get(f"{die}|{r.get('item')}", {}).get("key", "")
             _led = st.setdefault("refused_once", {})
@@ -9528,6 +9621,7 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
            "unit": unit, "dir": str(jd), "volume": r.get("volume") or "",
            "gen_host": sp.get("gen_host"), "work": sp.get("work"),        # GENHOST-REC-1116: the host this attempt generated on; later stages / controllers read it, never the die's current gen_host
            "status": "RUNNING" if ok else "FAIL", "class": "" if ok else "INFRA", "replicas": r.get("replicas"),
+           "full_hash": full_input_hash(cfg, die, r["item"], r.get("block_sha")),
            "reason": "" if ok else "systemd-run failed", "started": time.time(), "updated": time.time(),
            # INFRA budget counts INFRA attempts since the last design verdict (KIT-TRIAGE-1 11-01): an item that had
            # design FAILs before must still get its infra_attempts after a class fix relaunch
@@ -10619,6 +10713,7 @@ def collect(AP, cfg, st, notices):
                                inp=breaker_inputs(cfg, rec["die"]))
                 for _k, _what in FG.probe_result(st, rec["die"], rec["item"], _stg, passed=False, failed_stage=True):
                     AP.log(f"KIT-WAVE FLOW-GUARD PROBE {rec['die']}/{rec['item']}: {_what}")
+                note_class_cfg_keys(cfg, st, rec["die"], rec["item"])
                 note_fail_key(cfg, st, rec, cls, why)
                 if not is_host_fail(cls, why) or RS.is_oom(cls, why):          # REPEAT-STOP ledger: gen / kit / route outcomes, OOM kills
                     _ev = RS.record(st, rec["die"], rec["item"], rec.get("attempt"), _stg or rec.get("stage") or "gen", cls, why, inputs=repeat_inputs(cfg, rec, why))
@@ -10940,6 +11035,20 @@ def kit_digest_parts(cfg, die, rec=None, group="", files=None):
             "env": gen_env_digest(d, sp, (rec or {}).get("item"))}
 
 
+def full_input_hash(cfg, die, item, block_sha=None):
+    """WAVE-PILOT-FIX 11-18 (COORD r705 (2)): the FULL input hash of a launch = rt tools sha (the runtime digest), design snapshot hash (src manifest hash),
+    spec digest (plan block, src, overlay, stage tools, bind context, staged views) and the env keys (die gen env, item env).  Any code, plan or env
+    change moves it.  '' when it cannot be computed (never skips on an unknown)"""
+    try:
+        d = (cfg.get("dies") or {}).get(die) or {}
+        spec = kit_digest_parts(cfg, die, dict(item=item, **({"block_sha": block_sha} if block_sha else {})))
+        env = {"gen_env": d.get("gen_env") or {}, "die_gen_env": d.get("die_gen_env") or {}, "item_env": item_env(d, item) or {}}
+        body = {"rt": rt_tools_digest(), "snapshot": str(d.get("src_manifest_hash") or ""), "spec": spec, "env": env}
+        return hashlib.sha1(json.dumps(body, sort_keys=True, default=str).encode()).hexdigest()[:20]
+    except Exception:
+        return ""
+
+
 def fail_key(parts, cls, why):
     """FABLE-FLOWCLASS-RETRY-2030 P2: one key = kit input digest + masked first error (item / type names stripped)"""
     dig = hashlib.sha1(json.dumps(parts, sort_keys=True).encode()).hexdigest()[:16]
@@ -10971,6 +11080,8 @@ def note_fail_key(cfg, st, rec, cls, why):
                 "type": typed_class(cls, rec.get("stage"), why), "missing": missing_paths(why),
                 "read_sha": {p: file_sha(cfg, rec["die"], p) for p in stage_reads(why)}}
     rec["fail_key"] = key
+    if rec.get("full_hash"):                         # WAVE-PILOT-FIX 11-18: the full input hash of the attempt that failed (stored at launch)
+        store[k]["full_hash"] = rec["full_hash"]
     return key
 
 
@@ -11709,6 +11820,8 @@ def launch_held(cfg, rec):
 
 def route_hold_reason(cfg, rec):
     """An optional die-owned hold on new ROUTE submissions, never on an admitted unit."""
+    if FG.stops_off_die(cfg, rec.get("die")):      # OWNER 11-18 (hbm excluded): owner-review route holds (route_hold_items, WAIT-VISUAL / WAIT-FORM) hold nothing; visual review is advisory
+        return None
     d = (cfg.get("dies") or {}).get(rec["die"]) or {}
     why = next((str(why) for pat, why in (d.get("route_hold_items") or {}).items()
                 if why and fnmatch.fnmatchcase(rec["item"], pat)), None)
@@ -12915,6 +13028,10 @@ def _step(AP, ap_dir):
     except Exception as e:                               # a sign-off log read never blocks the wave
         AP.log(f"KIT-WAVE LEAFSLEW step skipped: {type(e).__name__}: {e}")
     prune_stale_retries(cfg, st, notices, AP.log)          # KW-FIX-23: pending / LEAFSLEW entries too
+    try:
+        close_removed_key_classes(AP, cfg, st)
+    except Exception as _e:
+        AP.log(f"KIT-WAVE FLOW-GUARD removed-key check skipped: {type(_e).__name__}: {_e}")
     try:
         _nk, _ns = prune_stale_fail_entries(cfg, st)
         if _nk or _ns:

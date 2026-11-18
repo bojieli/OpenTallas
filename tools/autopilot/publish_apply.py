@@ -28,6 +28,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import apply_reviewed_tree_marker as A  # noqa: E402
+import flow_guard as FG  # noqa: E402
 import hold_records as HR  # noqa: E402
 
 
@@ -92,6 +93,45 @@ def bind_fail_record(d, types, lane, ident, reason):
             "release": [f"result:{lane}:{ident}"]}
 
 
+def owner_lane_of(d, fallback):
+    if d.get("die_owner"):
+        return str(d["die_owner"])
+    m = re.search(r"\(([A-Z][A-Z0-9-]+)\)", str(d.get("owner_lane") or ""))
+    return m.group(1) if m else fallback
+
+
+SSH = ["ssh", "-n", "-o", "BatchMode=yes", "-o", "ControlPath=none", "-o", "ConnectTimeout=10"]
+
+
+def running_rows(state, die, types):
+    """the wave rows of DIE whose type is named and whose kit is running (RUNNING / LAUNCHING unit, or an ENQUEUED job that is running / queued)"""
+    out = []
+    for r in (state.get("items") or {}).values():
+        if r.get("die") != die or r.get("item") not in types:
+            continue
+        if r.get("status") in ("RUNNING", "LAUNCHING") or (r.get("status") == "ENQUEUED" and r.get("q_status") in ("RUNNING", "QUEUED", "STARTING", "WAIT-GEOM")):
+            out.append(r)
+    return out
+
+
+def cancel_running_kits(rows, run=subprocess.run):
+    """OWNER r705 (1): cancel the running kits of the named types by EXACT unit: the ot-heavy scope(s) of the attempt on its host (resolved with a dry run of ot-heavy-stop
+    --match <attempt dir>, then stopped one by one with --unit) and the wave's own hub unit.  -> [(item, where, unit)]"""
+    done = []
+    for r in rows:
+        host, _, kit = str(r.get("kit") or "").partition(":")
+        adir = kit.rsplit("/gen/", 1)[0] if kit else ""
+        if host and adir:
+            q = run([*SSH, host, f"ot-heavy-stop --match {adir} --dry-run 2>&1 | grep -o 'oth-[A-Za-z0-9-]*' | sort -u"], capture_output=True, text=True, timeout=120)
+            for u in [x for x in (q.stdout or "").split() if x.startswith("oth-")]:
+                run([*SSH, host, f"ot-heavy-stop --unit {u}"], capture_output=True, text=True, timeout=120)
+                done.append((r.get("item"), host, u))
+        if r.get("unit") and r.get("status") in ("RUNNING", "LAUNCHING"):
+            run(["systemctl", "--user", "stop", str(r["unit"])], capture_output=True, text=True, timeout=120)
+            done.append((r.get("item"), "hub", str(r["unit"])))
+    return done
+
+
 def cmd_bind_fail(a, run=subprocess.run):
     C = Path(a.coord)
     cfg = json.loads((C / "autopilot/kit_wave.json").read_text())
@@ -101,6 +141,23 @@ def cmd_bind_fail(a, run=subprocess.run):
     if not types:
         print("BIND-FAIL: no plan type named in the failure; nothing held (hold the die by hand if the failure is die-wide)")
         return 2
+    if FG.stops_off_die(cfg, a.die):
+        # OWNER r705 (1): under stops_off a bind / LATCHECK failure holds NOTHING: the running kits of the named types are cancelled by exact unit and ONE line names the owner lane
+        owner = owner_lane_of(d, a.lane)
+        st = {}
+        try:
+            st = json.loads((C / "autopilot/kit_wave_state.json").read_text())
+        except (OSError, ValueError):
+            pass
+        rows = running_rows(st, a.die, set(types))
+        if a.dry:
+            print(json.dumps({"cancel": [(r.get("item"), r.get("unit"), r.get("kit")) for r in rows], "owner": owner}, indent=1))
+            return 0
+        done = cancel_running_kits(rows, run=run)
+        post(C, a.lane, f"BIND-FAIL-CANCEL [{a.lane} -> {owner}] {a.die}: strict bind/LATCHECK failed for {len(types)} type(s): {', '.join(types)[:600]}; cancelled {len(rows)} running "
+                        f"kit(s) by exact unit ({len(done)} unit(s)); nothing is held (stops_off), the types relaunch on the next change", run=run)
+        print(json.dumps({"cancelled": done, "owner": owner}))
+        return 0
     rec = bind_fail_record(d, types, a.lane, a.id, a.reason or (a.log or "explicit types"))
     probe = json.loads(json.dumps(cfg))
     HR.add_record(probe, a.die, dict(rec))          # validation only: unknown item / lane / term -> ValueError, nothing written

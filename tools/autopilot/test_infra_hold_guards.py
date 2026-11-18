@@ -295,5 +295,55 @@ class OrphanStopAndDriftOwner(unittest.TestCase):
         holder.wait()
 
 
+class DieToolErrorsAndDedupe(unittest.TestCase):
+    TB = ('Traceback (most recent call last):\n  File "/srv/x/tools/die_plan/bind.py", line 10, in kit_rtl\n    raise\n'
+          'ValueError: reference net u_a/b not structurally mapped\n')
+
+    def test_a_die_tool_value_error_is_flow_with_the_message(self):
+        cls, why = KW.classify("kit_rtl", self.TB)
+        self.assertEqual(cls, "FLOW")
+        self.assertIn("reference net u_a/b not structurally mapped", why)
+        cls2, _ = KW.classify("gen", self.TB.replace("ValueError", "KeyError"))
+        self.assertEqual(cls2, "FLOW")
+
+    def test_other_python_exceptions_and_foreign_tracebacks_stay_as_before(self):
+        cls, _ = KW.classify("kit_rtl", self.TB.replace("ValueError", "AttributeError"))
+        self.assertEqual(cls, "INFRA")                                                  # tool skew: unchanged
+        cls, _ = KW.classify("kit_rtl", "Traceback (most recent call last):\n  File \"/usr/lib/x.py\", line 1\nValueError: boom\n")
+        self.assertNotEqual(cls, "FLOW")                                                # not raised in a die tool: no change here
+
+    def test_dedupe_ignores_cancelled_and_infra_owners(self):
+        self.assertTrue(KW.dedup_owner_not_a_verdict({"status": "CANCELLED"}))
+        self.assertTrue(KW.dedup_owner_not_a_verdict({"status": "FAIL", "class": "INFRA"}))
+        self.assertTrue(KW.dedup_owner_not_a_verdict({"status": "ENQUEUED", "q_status": "FAIL", "q_class": "INFRA"}))
+        self.assertFalse(KW.dedup_owner_not_a_verdict({"status": "FAIL", "class": "FLOW"}))
+        self.assertFalse(KW.dedup_owner_not_a_verdict(None))
+
+
+class RemovedKeyClassClose(unittest.TestCase):
+    KEY = "CLASS s81|place|FLOW: tool / Tcl error @place: Error: <id>.tcl, N OT_VPW_BANK needs exactly two real VP SRAM macros, got N"
+
+    def setUp(self):
+        self.st = {"flow_guard": {"open": {self.KEY: {"die": "s81", "state": "probe", "kind": "", "n": 9, "fams": ["col"], "probe": {}}},
+                                  "last": {"s81/col_x": self.KEY}, "last2": {"s81/col_x": self.KEY}, "probation": {}, "fails": [], "pf_posted": {}, "paths": {}, "trees": {}, "refused": []}}
+        self.ap = type("AP", (), {"log": staticmethod(lambda m: None)})()
+
+    def test_class_closes_when_its_config_key_is_removed(self):
+        cfg = {"dies": {"s81": {"gen_env": {"OT_S81_VPW_BANK": "1"}}}}
+        KW.note_class_cfg_keys(cfg, self.st, "s81", "col_x")
+        self.assertEqual(self.st["flow_guard"]["open"][self.KEY]["cfg_keys"], ["OT_VPW_BANK"])
+        self.assertEqual(KW.close_removed_key_classes(self.ap, cfg, self.st), [])        # key still set: stays open
+        cfg["dies"]["s81"]["gen_env"] = {}                                                  # r687: the marker is removed
+        self.assertEqual(len(KW.close_removed_key_classes(self.ap, cfg, self.st)), 1)
+        self.assertNotIn(self.KEY, self.st["flow_guard"]["open"])
+
+    def test_a_class_whose_token_was_never_a_config_key_is_not_touched(self):
+        cfg = {"dies": {"s81": {"gen_env": {}}}}
+        KW.note_class_cfg_keys(cfg, self.st, "s81", "col_x")
+        self.assertEqual(self.st["flow_guard"]["open"][self.KEY]["cfg_keys"], [])
+        self.assertEqual(KW.close_removed_key_classes(self.ap, cfg, self.st), [])
+        self.assertIn(self.KEY, self.st["flow_guard"]["open"])
+
+
 if __name__ == "__main__":
     unittest.main()

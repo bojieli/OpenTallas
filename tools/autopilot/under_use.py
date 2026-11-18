@@ -13,6 +13,7 @@ THR_RE = re.compile(r"\bthreads (\d+)/(\d+)\b")
 EXCLUDE = {"localhost"}          # by rule no heavy jobs on localhost: not an idle-capacity signal
 ELIGIBLE = ("ENQUEUED",)         # waiting for a launch
 HELD = ("ROUTE-HELD",)           # placed, route held
+SIGNED_Q = ("SIGNED", "SIGNED-LINKED", "SIGNED-UNVERSIONED", "ARCHIVED")
 
 
 def host_idle(status_text, exclude=EXCLUDE):
@@ -45,6 +46,8 @@ def row_classes(items, cfg):
         st = rec.get("status")
         if st not in ELIGIBLE + HELD:
             continue
+        if str(rec.get("q_status") or "").upper() in SIGNED_Q or st in ("DEDUP-CREDITED",):
+            continue        # WAVE-PILOT-FIX 11-18 (WAVE-FLOW-R2 census: 20 signed rows counted as waiting): a signed row is done, not waiting for a launch
         d = dies.get(rec.get("die")) or {}
         if st not in HELD and str(rec.get("q_status") or "").upper() == "SIGNED":
             continue                         # FABLE-FLOW-0010 H: a SIGNED job is a result, not a row waiting to launch; 66 of the 98 'superseded-event' rows were these

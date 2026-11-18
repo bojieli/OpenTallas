@@ -32,6 +32,8 @@ import re
 import sys
 import time
 
+from flow_guard import stops_off_die
+
 TYPED = ("event_adopt", "lint_clean", "input_staged", "kit_snap", "digest_changed", "proof", "census_lt", "tree_ready", "tree_has", "tree_has_sha", "result", "gen_pilot")
 LEGACY_OK = ("merge",)          # still evaluated (ancestor of origin/main); accepted in new records too
 GLOB = re.compile(r"[*?\[]")
@@ -637,13 +639,15 @@ def compile_holds(cfg, ctx=None):
                 h.pop(k, None)
     cfg["_hold_added"] = added = {}
     cfg["_pilot_deadlock"] = []
+    # OWNER 11-18 (via COORD, 'remove all safety stops'): on a die where stops_off applies (every die but hbm) no hold record blocks anything; the records stay in the file
+    skip_dies = {x for x in (cfg.get("dies") or {}) if stops_off_die(cfg, x)}
     if cfg.get("_hold_auto_released"):
         cfg["_hold_auto_released"] = [r for r in cfg["_hold_auto_released"] if r[0] not in (cfg.get("_hold_rec_dies") or ())]
     rec_dies = set()
     stuck_all = []
     for die, d in (cfg.get("dies") or {}).items():
         recs = d.get("hold_records")
-        if not isinstance(recs, list) or not recs:
+        if not isinstance(recs, list) or not recs or die in skip_dies:
             continue
         cur = plan_id(d)
         lists = d.get("hold_event_items") or {}
@@ -685,7 +689,8 @@ def compile_holds(cfg, ctx=None):
             dl = pilot_deadlock(cfg, die, d, rec) or (unreachable_event_expiry(rec, die, cfg) if not rec.get("keep_unreachable") else "")
             if dl:
                 exp = dl
-                cfg.setdefault("_pilot_deadlock", []).append((die, rec.get("id"), dl))
+                _freed = [str(k) for k in keys if k != "*"] if "*" not in keys else [str(i) for i in (lists.get(use) or lists.get(sha) or lists.get(cur) or [])]
+                cfg.setdefault("_pilot_deadlock", []).append((die, rec.get("id"), dl, _freed))
             ready = [k for k in keys if exp or (rel and all(term_met(t, rec, die, k, cfg, ctx) for t in rel))]
             gate = {}
             store = cfg.get("_release_pilot")
@@ -784,8 +789,12 @@ def audit(cfg, launched=()):
         loose = [k for k in loose if k not in {x for n, x in (cfg.get("_hold_added") or {}).get(die, []) if n == "hold_items"}]
         if loose and die != "hbm":
             add("LEGACY-HOLD", die, "-", f"{len(loose)} hold_items key(s) with no record / typed release: {','.join(loose[:4])}", n=len(loose))
-    for die, rid, why in cfg.get("_pilot_deadlock") or []:
-        add("PILOT-DEADLOCK", die, rid, why[:200])                                   # released by compile_holds the same pass
+    for die, rid, why, its in cfg.get("_pilot_deadlock") or []:                      # released by compile_holds the same pass; WAVE-PILOT-FIX 11-18: names the freed items
+        if its:
+            for it in its:
+                add("PILOT-DEADLOCK", die, rid, why[:200], item=it)
+        else:
+            add("PILOT-DEADLOCK", die, rid, why[:200])
     for die, rid, k in cfg.get("_hold_proof_stuck") or []:
         add("PROOF-HELD", die, rid, f"pattern {k!r} still covers a proof item (no item list to carve it)")
     for die, item in launched:
@@ -980,6 +989,8 @@ def pilot_item_for(cfg, die, d):
 
 
 def add_pilot_hold(cfg, die, d, marker):
+    if stops_off_die(cfg, die):      # OWNER 11-18: no tree-switch pilot marker (hbm excluded)
+        return False
     """PILOT wave mode (FLEET-OPS-R, COORD r393): after a tree switch the die is held (hold_items['*']) except ONE pilot item; the hold is
     released when `gen_pilot:<die>:<manifest sha[:12]>` is met = one GEN pilot built from the new tree passed GEN + preflight.  Fails OPEN:
     no resolvable pilot item (or pilot_after_switch: false) adds no hold, so the die can never deadlock.  Superseded auto-pilots are retired only after a valid replacement is resolved;

@@ -70,14 +70,21 @@ def test_bind_unchanged_applies_the_tools_only_tree():
     assert run(state=state)[0]["status"] == "SKIP"
 
 
-def test_bind_changed_posts_needs_lane_and_applies_nothing():
+def test_bind_changed_switches_with_a_warning():
+    """OWNER 11-18 (via COORD): no strict-bind gate; a changed bind of record is a WARNING to the die owner and the switch is applied"""
     rec, posts, edits, _ = run(ops=FakeOps(bind=(True, False, "bind native_topology CHANGED")))
-    assert rec["status"] == "BIND-CHANGED" and not edits
-    assert posts[0].startswith("NEEDS-LANE [TOOLS-REFRESH -> KV-R3]") and "change the bind of record" in posts[0]
+    assert rec["status"] == "APPLIED" and edits and "bind native_topology CHANGED" in rec["bind_warning"]
+    assert posts[0].startswith("WARNING [TOOLS-REFRESH -> KV-R3]") and "change the bind of record" in posts[0] and "switching anyway" in posts[0]
+
+
+def test_bind_that_did_not_run_also_switches_with_a_warning():
+    rec, posts, edits, _ = run(ops=FakeOps(bind=(False, False, "boom")))
+    assert rec["status"] == "APPLIED" and edits and "did not run" in rec["bind_warning"]
+    assert posts[0].startswith("WARNING [TOOLS-REFRESH")
 
 
 def test_failures_never_apply():
-    for kw, st in ((dict(compose=False), "COMPOSE-FAIL"), (dict(guard=False), "GUARD-FAIL"), (dict(bind=(False, False, "boom")), "BIND-FAIL")):
+    for kw, st in ((dict(compose=False), "COMPOSE-FAIL"), (dict(guard=False), "GUARD-FAIL")):
         rec, posts, edits, _ = run(ops=FakeOps(**kw))
         assert rec["status"] == st and not edits
     assert len(run(ops=FakeOps(compose=False))[1]) == 1                   # FABLE-FLOW-1900 B: a compose failure is structural: one NEEDS-LANE, no retry loop
@@ -308,11 +315,11 @@ def test_a_structural_exit_stops_the_die_until_the_tree_or_recipe_changes():
     """FABLE-FLOW-1900 B: KV ran 9 passes, 7 exited 1 (the same compose / bind failures every time a ruling merged)"""
     d = die()
     state = {}
-    rec, posts, edits, _ = run(d=d, ops=FakeOps(bind=(False, False, "no recipe")), state=state)
-    assert rec["status"] == "BIND-FAIL" and state["stopped"]["kv"]["status"] == "BIND-FAIL" and len(posts) == 1
+    rec, posts, edits, _ = run(d=d, ops=FakeOps(guard=False), state=state)
+    assert rec["status"] == "GUARD-FAIL" and state["stopped"]["kv"]["status"] == "GUARD-FAIL" and len(posts) == 1
     for new_lag in (LAG, dict(LAG, missing=["r535", "r554", "r637"])):                  # a new main / new ruling does not retry
         rec2, posts2, _, _ = run(d=d, ops=FakeOps(), lag=new_lag, state=state)
-        assert rec2["status"] == "SKIP" and "stopped on BIND-FAIL" in rec2["why"] and not posts2
+        assert rec2["status"] == "SKIP" and "stopped on GUARD-FAIL" in rec2["why"] and not posts2
     d2 = dict(d, tools_refresh_bind_cmd="x")                                              # the owner gave a recipe: resumes
     assert run(d=d2, ops=FakeOps(), lag=dict(LAG, missing=["r535", "r554", "r637"]), state=state)[0]["status"] == "APPLIED"
     d3 = dict(d, src="/x/new_tree")                                                       # or a new tree was applied

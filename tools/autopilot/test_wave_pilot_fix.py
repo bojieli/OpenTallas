@@ -186,7 +186,9 @@ class PilotDeadlock(unittest.TestCase):
         HR.compile_holds(c)
         self.assertEqual(c["dies"]["s81"]["hold_items"], {})
         self.assertEqual(c["_pilot_deadlock"][0][0:2], ("s81", "pilot-s81-aaaaaaaaaaaa"))
-        self.assertIn("PILOT-DEADLOCK", [f["code"] for f in HR.audit(c)])
+        f = [x for x in HR.audit(c) if x["code"] == "PILOT-DEADLOCK"][0]
+        self.assertEqual(sorted(f["items"]), ["gunit__t1", "t2", "t3", "t4", "t5"])                      # WAVE-PILOT-FIX 11-18: the freed items are named
+        self.assertEqual(f["n"], 5)
 
     def test_later_attempt_running_is_not_a_deadlock(self):
         c = self.cfg(rows=[{"die": "s81", "item": "gunit__t1", "status": "FAIL", "attempt": 6},

@@ -93,8 +93,7 @@ def test_p4_family_breaker_holds_unfailed_siblings_and_releases_by_probe():
     assert FG.held_key(st, "s81", "slice_station__t6", claim=True)                   # the rest of the family waits
     # every claimed probe fails again at the same stage: shut until the inputs change again
     FG.probe_result(st, "s81", "slice_station__t7", "gen", passed=False)
-    FG.probe_result(st, "s81", "slice_station__t8", "gen", passed=False)
-    out = FG.probe_result(st, "s81", "slice_station__t5", "gen", passed=False)
+    out = FG.probe_result(st, "s81", "slice_station__t8", "gen", passed=False)           # the second failed probe shuts the class (WAVE-PILOT-FIX 11-18)
     assert out and FG.held_key(st, "s81", "slice_station__t6")
     assert FG.breaker_tick(st, now=7000, inputs={"s81": "digest-2"}) == []           # same inputs as the failed probe: still shut
     FG.breaker_tick(st, now=8000, inputs={"s81": "digest-3"})

@@ -30,16 +30,19 @@ class Probes(unittest.TestCase):
         FG.probe_result(st, "qwen_compute", "b__t1", "place", passed=True)
         self.assertEqual(st["flow_guard"]["open"], {})
 
-    def test_failures_shut_only_after_all_three_failed(self):
+    def test_two_failed_probes_shut_the_class_die_wide_until_the_cause_changes(self):
         st = state()
         for f in "abc":
             FG.held_key(st, "qwen_compute", f"{f}__t1", claim=True)
         FG.probe_result(st, "qwen_compute", "a__t1", "kit_rtl", passed=False, failed_stage=True)
+        self.assertEqual(st["flow_guard"]["open"][KEY]["state"], "probe")                 # one failed probe: the others still run
         FG.probe_result(st, "qwen_compute", "b__t1", "kit_rtl", passed=False, failed_stage=True)
-        self.assertEqual(st["flow_guard"]["open"][KEY]["state"], "probe")        # c__t1 still runs
-        FG.probe_result(st, "qwen_compute", "c__t1", "kit_rtl", passed=False, failed_stage=True)
-        self.assertEqual(st["flow_guard"]["open"][KEY]["state"], "shut")
-        self.assertEqual(FG.held_key(st, "qwen_compute", "d__t1", claim=True), KEY)
+        self.assertEqual(st["flow_guard"]["open"][KEY]["state"], "shut")                  # two failed probes: shut (WAVE-PILOT-FIX 11-18)
+        for f in "abcd":                                                                 # die-wide: every family, the third probe included
+            self.assertEqual(FG.held_key(st, "qwen_compute", f"{f}__t9", claim=True), KEY)
+        self.assertEqual(FG.breaker_tick(st, 1.0, {"qwen_compute": "i2"}), [])             # same inputs as the failed probes: stays shut
+        rel = FG.breaker_tick(st, 2.0, {"qwen_compute": "i3"})                             # the cause changed: a new probe window
+        self.assertTrue(rel and "PROBE" in rel[0][1])
 
     def test_probe_running_60_min_is_not_a_pass(self):
         st = state()
