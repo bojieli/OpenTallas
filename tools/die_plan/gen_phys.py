@@ -4061,6 +4061,45 @@ def pinband_macros(P, tn, macros, root=None, check_only=False):
     return [(i, m, l, b, x, ny.get(i, y), o) for i, m, l, b, x, y, o in macros], rep
 
 
+MACRO_HALO_PROC = """proc ot_macro_halo {name h_um} {
+  set b [ord::get_db_block]; set u [[ord::get_db_tech] getDbUnitsPerMicron]; set ca [$b getCoreArea]
+  set i [$b findInst $name]
+  if {$i eq "NULL"} {error "OT_MACRO_HALO no instance $name"}
+  set q [$i getBBox]; set h [expr {round($h_um*$u)}]
+  set x0 [$q xMin]; set y0 [$q yMin]; set x1 [$q xMax]; set y1 [$q yMax]
+  set n 0
+  foreach r [list [list [expr {$x0-$h}] [expr {$y0-$h}] [expr {$x1+$h}] $y0] [list [expr {$x0-$h}] $y1 [expr {$x1+$h}] [expr {$y1+$h}]] \\
+                  [list [expr {$x0-$h}] $y0 $x0 $y1] [list $x1 $y0 [expr {$x1+$h}] $y1]] {
+    lassign $r a c d e
+    set a [expr {max($a,[$ca xMin])}]; set c [expr {max($c,[$ca yMin])}]; set d [expr {min($d,[$ca xMax])}]; set e [expr {min($e,[$ca yMax])}]
+    if {$d > $a && $e > $c} {odb::dbBlockage_create $b $a $c $d $e; incr n}
+  }
+  puts "OT_MACRO_HALO $name ${h_um}um placement blockages $n"
+}"""
+
+
+def macro_halo_lines(t, placed):
+    """HALO-1 (S81-GEOM-OPUS 11-18, col_h9_r0_p6 DRT): hard_cores[].halo_um > 0 -> a permanent placement-blockage ring of
+    that width round the placed macro (clipped to the core area), written after place_macro.  The p6 kit (MACRO_PLACE_HALO
+    0, no halos) ended detailed route at 25 M5 shorts, all inside hard-core OBS 3-12 um from an edge (u_u_cf 21, u_u_t0 4):
+    repair buffers sat 2-3 um outside the macro edge, so their N-S crossings dropped vias inside the edge gcells.  The ring
+    keeps standard cells off the edge strip, so the descent lands outside the OBS.  No key = byte-identical kit."""
+    halo = {}
+    for c in t.get("hard_cores", []):
+        h = float(c.get("halo_um") or 0.0)
+        if h > 0:
+            pinst = content_physical_identity(c)[0] if ("physical_inst" in c or "physical_master" in c) else c["inst"]
+            halo[pinst] = h
+    rows = [q for q in placed if q["inst"] in halo]
+    miss = sorted(set(halo) - {q["inst"] for q in rows})
+    if miss:                                   # fail closed: a halo row that names no placed macro is a plan error
+        raise ValueError(f"HALO-1: hard_cores halo_um on {miss} matches no placed macro ({len(placed)} placed)")
+    if not rows:
+        return []
+    return ["# HALO-1: hard_cores[].halo_um placement-blockage rings", MACRO_HALO_PROC,
+            *[f"ot_macro_halo {{{q['inst_db']}}} {halo[q['inst']]:g}" for q in rows]]
+
+
 def type_macros(P, tn):
     """content macros of a type the kit must place (COORD 10-23): hard_cores[] and contents[] that carry a hardened
     view (lef).  [(inst, module, lef, lib, x, y, orient)], type frame, origin + track offset.  A macro view without a
@@ -6131,6 +6170,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         for q in placed:
             mplace.append(f"place_macro -macro_name {{{q['inst_db']}}} -location {{{q['x']:.4f} {q['y']:.4f}}} "
                           f"-orientation {q['o']} -exact")
+        mplace += macro_halo_lines(t, placed)
         # KW6-CODE 11-04: advisory LEF/lib compare; a view with no LEF of its own gets its staged copy pruned to the lib's
         # ports.  Clean masters stay byte-identical.  bump kits keep the plain copy (bump pins are on the macro LEF).
         import view_lef as _VL
