@@ -138,3 +138,103 @@ def test_sink_side_rows_direct_wire_and_fail_closed():
                                                    {"inst": "s", "port": "i", "side": "sink", "bits": [3, 5], "D": 2}]}}}
     with pytest.raises(bind.BindError, match="overlap"):
         bind.relay_depth_sink_map(p, "t")
+
+
+def _rows_vehicle(monkeypatch, cores, paths, pins, text):
+    import core_conns_from_bind as CC
+    import relay_depth as RD
+    monkeypatch.setattr(CC, "trace", lambda plan_, tn, text_, repo=None: {"paths": paths})
+    monkeypatch.setattr(RD, "_pin_table", lambda hc, plan_dir: pins[hc["inst"]])
+    raw = {"partition_types": {"t": {"outline_um": [1200.0, 400.0], "hard_cores": [
+        dict(inst=i, origin_um=[x, y], outline_um=[w, h], pins=1) for i, (x, y, w, h) in cores.items()]}}}
+    return RD.type_rows(raw, "t", text)
+
+
+def test_rows_use_bound_leaf_name_with_content_prefix(monkeypatch):
+    """FABLE-FIX-S81-BANKLEAF 11-18: col r0 p1/p2/p4/p5 keep the content instance in the bound leaf name (u_u_r0_u_t0); a direct
+    macro-to-macro wire there is a sink row on u_r0_u_t0, not `unfixed`; the _nx form (u_u_t0) still gives u_t0"""
+    cores = {"u_r0.u_cf": (0.0, 0.0, 40.0, 40.0), "u_r0.u_t0": (900.0, 0.0, 40.0, 40.0)}
+    pins = {"u_r0.u_cf": {"xa": {"0": (40.0, 20.0)}}, "u_r0.u_t0": {"xai": {"0": (900.0, 20.0)}}}
+    paths = [dict(dir="in", core="u_r0.u_t0", port="xai", partner="u_r0.u_cf.xa", bit_ranges=[[0, 0]], stages_existing=0, via=[])]
+    for inst, want in (("u_u_r0_u_t0", "u_r0_u_t0"), ("u_u_t0", "u_t0")):
+        text = f"module t;\n    cf {inst.replace('t0', 'cf')} (.xa(n));\n    st #(.A(1)) {inst} (.xai(n));\nendmodule\n"
+        rows, rep = _rows_vehicle(monkeypatch, cores, paths, pins, text)
+        assert rep["unfixed"] == [] and rows == [dict(inst=want, port="xai", side="sink", bits=[0, 0], D=2,
+                                                       path_um=rows[0]["path_um"], stages_existing=0)]
+        assert rows[0]["path_um"] == 860.0
+    rows, rep = _rows_vehicle(monkeypatch, cores, paths, pins, "module t;\n    big u_u_r0 (.x(n));\nendmodule\n")
+    assert rows == [] and len(rep["unfixed"]) == 1 and "sub-cores" in rep["unfixed"][0]["reason"]
+
+
+def test_direct_wire_is_flight_and_read_loops_get_no_row(monkeypatch):
+    """a direct wire crosses the cores (flight length): a halo-closed channel needs no station; a cfg ROM read loop never
+    gets a row (a stage on one ROM breaks the sequencer's fixed read latency) and is `unfixed` only over the reach"""
+    cores = {"u_a": (100.0, 100.0, 400.0, 100.0), "u_b": (100.0, 212.0, 400.0, 100.0),
+             "u_s": (60.0, 204.0, 20.0, 4.0), "u_k": (540.0, 204.0, 20.0, 4.0)}
+    pins = {"u_s": {"o": {"0": (300.0, 206.0)}, "a": {"0": (80.0, 206.0)}},
+            "u_k": {"i": {"0": (480.0, 206.0)}, "addr_in": {"0": (540.0, 206.0)}}, "u_a": {}, "u_b": {}}
+    paths = [dict(dir="in", core="u_k", port="i", partner="u_s.o", bit_ranges=[[0, 0]], stages_existing=0, via=[])]
+    text = "module t;\n    s u_u_s (.o(n));\n    k u_u_k (.i(n));\nendmodule\n"
+    rows, rep = _rows_vehicle(monkeypatch, cores, paths, pins, text)
+    assert rows == [] and rep["unfixed"] == []
+    assert rep["flight_measured"] == [dict(core="u_k", port="i", partner="u_s.o", path_um=180.0, padded_um=None)]
+    import relay_depth as RD
+    assert RD._is_read_loop("ot_s81_cfg7_seq", "a", "ot_rom_4096x72_m8", "addr_in")
+    assert RD._is_read_loop("ot_s81_cfg7_seq_bfp", "ce6", "ot_rom_4096x72_m8", "ce_in")
+    assert RD._is_read_loop("ot_rom_4096x72_m8", "rd_out", "ot_s81_cfg7_seq", "q5")
+    assert not RD._is_read_loop("ot_s81_cfg7_seq", "st", "ot_s81_sstn_base566", "c0")
+    loop = [dict(dir="in", core="u_k", port="addr_in", partner="u_s.a", bit_ranges=[[0, 0]], stages_existing=0, via=[])]
+    for kx, n_unfixed in ((540.0, 1), (300.0, 0)):
+        cores2 = dict(cores, u_k=(kx, 204.0, 20.0, 4.0))
+        pins2 = dict(pins, u_k={"addr_in": {"0": (kx, 206.0)}})
+        monkeypatch.setattr(RD, "_pin_table", lambda hc, plan_dir: pins2[hc["inst"]])
+        import core_conns_from_bind as CC
+        monkeypatch.setattr(CC, "trace", lambda plan_, tn, text_, repo=None: {"paths": loop})
+        raw = {"partition_types": {"t": {"outline_um": [1200.0, 400.0], "hard_cores": [
+            dict(inst=i, origin_um=[x, y], outline_um=[w, h], pins=1,
+                 module={"u_s": "ot_s81_cfg7_seq", "u_k": "ot_rom_4096x72_m8"}.get(i, "core"))
+            for i, (x, y, w, h) in cores2.items()]}}}
+        rows, rep = RD.type_rows(raw, "t", text)
+        assert rows == [] and len(rep["read_loops"]) == 1 and len(rep["unfixed"]) == n_unfixed
+
+
+def test_merge_equalise_per_content_module():
+    import relay_depth as RD
+    raw = {"partition_types": {"a": {"contents": [{"module": "m"}]}, "b": {"contents": [{"module": "m"}], "relay_depth": [{"inst": "old", "D": 1}]},
+                               "c": {"contents": [{"module": "n"}], "relay_depth": [{"inst": "stale", "D": 1}]}}}
+    rep = [dict(type="a", rows_data=[dict(inst="u_y_r", port="o", D=1, path_um=500.0),
+                                     dict(inst="u_t0", port="xai", side="sink", bits=[0, 3], D=1, path_um=420.0)]),
+           dict(type="b", rows_data=[dict(inst="u_y_r", port="o", D=2, path_um=900.0)]),
+           dict(type="c", rows_data=[])]
+    import copy
+    p1 = copy.deepcopy(raw)
+    assert RD.apply_reports(p1, [rep]) == 3 and len(p1["partition_types"]["b"]["relay_depth"]) == 1
+    assert "relay_depth" not in p1["partition_types"]["c"]
+    p2 = copy.deepcopy(raw)
+    assert RD.apply_reports(p2, [rep], equalise=True) == 4
+    a, b = p2["partition_types"]["a"]["relay_depth"], p2["partition_types"]["b"]["relay_depth"]
+    assert a == b and [(x["inst"], x["D"]) for x in a] == [("u_y_r", 2), ("u_t0", 1)]
+    rep[1]["rows_data"].append(dict(inst="u_t0", port="xai", side="sink", bits=[2, 5], D=1, path_um=1.0))
+    with pytest.raises(ValueError, match="bit runs"):
+        RD.apply_reports(copy.deepcopy(raw), [rep], equalise=True)
+
+
+def test_lane_fifo_outputs_stay_aligned(monkeypatch):
+    """cf.cc -> t0.cci is over the reach, cf.xa -> t0.xai is not: both get the stage (payload and control on one edge)"""
+    cores = {"u_cf": (0.0, 0.0, 40.0, 40.0), "u_t0": (500.0, 0.0, 40.0, 40.0)}
+    pins = {"u_cf": {"cc": {"0": (0.0, 20.0)}, "xa": {"0": (40.0, 20.0), "1": (40.0, 22.0)}, "st": {"0": (40.0, 30.0)}},
+            "u_t0": {"cci": {"0": (540.0, 20.0)}, "xai": {"0": (430.0, 20.0), "1": (430.0, 22.0)}, "so": {"0": (430.0, 30.0)}}}
+    paths = [dict(dir="in", core="u_t0", port="cci", partner="u_cf.cc", bit_ranges=[[0, 0]], stages_existing=0, via=[]),
+             dict(dir="in", core="u_t0", port="xai", partner="u_cf.xa", bit_ranges=[[0, 1]], stages_existing=0, via=[]),
+             dict(dir="in", core="u_cf", port="st", partner="u_t0.so", bit_ranges=[[0, 0]], stages_existing=0, via=[])]
+    text = "module t;\n    cf u_u_cf (.cc(n));\n    st u_u_t0 (.cci(n));\nendmodule\n"
+    import core_conns_from_bind as CC
+    import relay_depth as RD
+    monkeypatch.setattr(CC, "trace", lambda plan_, tn, text_, repo=None: {"paths": paths})
+    monkeypatch.setattr(RD, "_pin_table", lambda hc, plan_dir: pins[hc["inst"]])
+    raw = {"partition_types": {"t": {"outline_um": [1200.0, 400.0], "hard_cores": [
+        dict(inst=i, origin_um=[x, y], outline_um=[w, h], pins=1, module={"u_cf": "dsfd_cfifo_crs4"}.get(i, "ot_s81_sstn_base566"))
+        for i, (x, y, w, h) in cores.items()]}}}
+    rows, rep = RD.type_rows(raw, "t", text)
+    assert [(r["inst"], r["port"], r["bits"], r["D"]) for r in rows] == [("u_t0", "cci", [0, 0], 1), ("u_t0", "xai", [0, 1], 1)]
+    assert len(rep["aligned_groups"]) == 2 and rep["unfixed"] == []

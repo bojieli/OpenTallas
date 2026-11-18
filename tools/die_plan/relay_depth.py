@@ -19,9 +19,17 @@ What this does, per plan type (read-only on the bound module and the plan; write
      bit in bind_core_input_pipe.json (bind_verify, compiler / TOK).  Several paths through one relay: the largest D.
 Cycles are the owner's pre-approved cost (S81-TYPES-R3 / COORD 11-17).  A path whose nearest-sink stage is not a relay leaf
 (only seams / kept delays on it) is listed as `unfixed` -- never silently dropped.
+FABLE-FIX-S81-BANKLEAF 11-18: (a) the leaf name of a row is the bound instance name (bind rel_of), with or without the content
+instance (u_r0_u_cf / u_cf) -- macro-to-macro wires of the r0 bank leaves get sink rows like every other direct wire;
+(b) a DIRECT core-to-core wire is measured as the flight between the pin centroids (the wire crosses the cores above
+their obs_max; report key flight_measured lists every one whose round-the-halo length is over the reach); (c) sequencer <-> cfg
+ROM read loops (fixed latency inside ot_s81_cfg7_seq) never get a row: report key read_loops, over the reach = `unfixed`
+(core placement); (d) the direct sinks of the lane FIFO's xa / xb / x2 / cc carry ONE depth (report key aligned_groups), so
+payload and control stay on the same edge.  Relay chains are unchanged (polyline round the halos, as relay_mid.tcl places them).
 usage: relay_depth.py PLAN.json TYPE_RE BOUND_DIR [--repo REPO] [--limit 405] [--out-plan OUT.json] [--report REPORT.json]
        BOUND_DIR holds <TYPE>_bound.sv or <TYPE>.sv (a bind out/rtl).  Without --out-plan nothing is written.
-       relay_depth.py merge PLAN.json OUT.json REPORT.json ...   (rows of several --report runs, e.g. one per family, into a plan)"""
+       relay_depth.py merge PLAN.json OUT.json REPORT.json ... [--equalise]   (rows of several --report runs, e.g. one per
+       family, into a plan; --equalise = one row set per content module, the largest D; a measured type with no row loses its rows)"""
 import json
 import math
 import re
@@ -35,6 +43,21 @@ sys.path.insert(0, str(HERE))
 LIMIT = 405.0
 GRID_UM = 4.0
 PAD_UM = 6.5
+# a fixed-latency read loop: (source module, source port) -> (sink module, sink port); never pipelined by a row
+READ_LOOP = ((re.compile(r"^ot_s81_cfg7_seq"), re.compile(r"^(a|ce\d+)$"), re.compile(r"^ot_rom_"), re.compile(r"^(addr_in|ce_in)$")),
+             (re.compile(r"^ot_rom_"), re.compile(r"^rd_out$"), re.compile(r"^ot_s81_cfg7_seq"), re.compile(r"^q\d+$")))
+
+
+# aligned source groups: (source module, ports whose direct sinks must carry one common depth)
+ALIGN_GROUP = ((re.compile(r"^dsfd_cfifo_crs"), re.compile(r"^(xa|xb|x2|cc)$")),)
+
+
+def _align_group(src_mod, src_port):
+    return any(a.search(src_mod) and b.search(src_port) for a, b in ALIGN_GROUP)
+
+
+def _is_read_loop(src_mod, src_port, sink_mod, sink_port):
+    return any(a.search(src_mod) and b.search(src_port) and c.search(sink_mod) and d.search(sink_port) for a, b, c, d in READ_LOOP)
 RELAY_MOD = re.compile(r"^(ot_s81_rly|dsfd_rly_\d+_[A-Z]+)$")
 
 
@@ -122,6 +145,24 @@ def type_rows(plan, tn, text, repo=None, plan_dir=None, limit=LIMIT):
     router = Router(t)
     # one candidate per (partner pair, via): the longest bit
     rows, unfixed, seen, direct, srcdirect = {}, [], 0, {}, {}
+    leaf_cache, loops, flight, agroup, aligned = {}, [], [], defaultdict(list), []
+
+    def leaf_rel(core):
+        """bound leaf name (bind rel_of: the instance of the type module minus its u_) of hard core `core`, None when the core
+        is not an instance of the type module.  FABLE-FIX-S81-BANKLEAF 11-18: bind keeps the content instance in the leaf name
+        of some types (col_h9_r0_p1/p2/p4/p5, col_h10_r0_p1/p4: u_u_r0_u_cf) and drops it in others (the _nx contents of
+        col_h9_r0_p3/p6, r1, r2: u_u_cf).  Only the dropped form was tried, so every DIRECT macro-to-macro wire of the first
+        group (515 paths, 440..1740 um) was reported `unfixed` as a sub-core although both ends are leaves with a port."""
+        if core not in leaf_cache:
+            cands = [core] + ([core.split(".", 1)[1]] if "." in core else [])
+            hit = None
+            for c_ in cands:
+                n_ = re.sub(r"_+", "_", re.sub(r"[^A-Za-z0-9_]", "_", c_)).strip("_")
+                if re.search(r"\n\s*\w+\s*(?:#\([^;]*?\))?\s*u_" + re.escape(n_) + r"\s*\(", text):
+                    hit = n_
+                    break
+            leaf_cache[core] = hit
+        return leaf_cache[core]
     for p in res["paths"]:
         if p["dir"] != "in" or "partner" not in p:
             continue
@@ -144,33 +185,56 @@ def type_rows(plan, tn, text, repo=None, plan_dir=None, limit=LIMIT):
             continue
         a = (sum(x for x, _ in spts) / len(spts), sum(y for _, y in spts) / len(spts))
         b = (sum(x for x, _ in kpts) / len(kpts), sum(y for _, y in kpts) / len(kpts))
-        worst, wbits = router.length(a, b), 1
-        if not wbits:
-            continue
+        relay = [v for v in p["via"] if _is_relay_inst(text, v)]
         seen += 1
+        if relay:
+            # a relay chain: its stations are cells, relay_mid.tcl spreads them along the polyline round the core halos
+            worst = router.length(a, b)
+        else:
+            # FABLE-FIX-S81-BANKLEAF 11-18, a DIRECT core-to-core wire: no cell on it, and every col hard core stops below
+            # the routing top (obs_max M4..M6, MAX_ROUTING_LAYER M8), so the wire crosses the cores: its length is the flight
+            # (Manhattan) between the pin centroids, not the path round the 6.5-um station halos (which closes the 22-um gaps
+            # between the ROMs on the 4-um grid: u_s2.a -> u_c2_5.addr_in 408 um round, 254 um flight; u_e4.st -> u_t2.nf
+            # 1736 um round, 227 um flight).  The round-the-halo length stays in the report (padded_um) for audit.
+            worst = abs(a[0] - b[0]) + abs(a[1] - b[1])
+            padded = router.length(a, b)
+            loop = _is_read_loop(hcs[src_core].get("module", ""), src_port, hcs[p["core"]].get("module", ""), p["port"])
+            if _align_group(hcs[src_core].get("module", ""), src_port) and leaf_rel(p["core"]) is not None:
+                agroup[src_core].append((leaf_rel(p["core"]), p["port"], p["bit_ranges"], round(worst, 1)))
+            if loop or padded > limit:
+                (loops if loop else flight).append(dict(
+                    core=p["core"], port=p["port"], partner=p["partner"], path_um=round(worst, 1),
+                    padded_um=None if padded == float("inf") else round(padded, 1)))
+            if loop:
+                # a sequencer <-> cfg ROM read loop has a FIXED latency inside the sequencer (ot_s81_cfg7_seq: a / ce out
+                # flop -> ROM -> q in flop, capture DL edges later, bank select registered with the read): a stage on one
+                # ROM's address, enable or data makes the sequencer capture the wrong word (tb_ot_s81_cfg7_seq + one stage
+                # on ROM 5 / 6: FAIL).  Never a row; over the reach = a core placement item, listed as unfixed.
+                if worst > limit:
+                    unfixed.append(dict(core=p["core"], port=p["port"], partner=p["partner"], path_um=round(worst, 1), extra=0,
+                                        reason="fixed-latency ROM read loop over the reach: move the sequencer / ROM "
+                                               "(core placement), a pipeline stage here is a functional error"))
+                continue
         need = max(0, math.ceil(worst / limit) - 1) if worst != float("inf") else 0
         extra = need - int(p["stages_existing"])
         if extra <= 0:
             continue
-        relay = [v for v in p["via"] if _is_relay_inst(text, v)]
         if not relay:
             # a DIRECT core-to-core wire (nothing relay-like on it): stages in front of the sink input bits (side "sink"),
             # placed between the two pins by relay_mid.tcl like a relay chain
-            rel = p["core"].split(".", 1)[1] if "." in p["core"] else p["core"]
-            def is_leaf(core):
-                r_ = core.split(".", 1)[1] if "." in core else core
-                return bool(re.search(r"\n\s*\w+\s*(?:#\([^;]*?\))?\s*u_" + re.escape(re.sub(r"[^A-Za-z0-9_]", "_", r_)) + r"\s*\(", text))
-            if not is_leaf(p["core"]):
+            rel = leaf_rel(p["core"])
+            if rel is None:
                 # the sink is a macro inside a bigger bound leaf (r0 ROM banks): no sink port to delay.  Delay the SOURCE leaf's
                 # output port instead (every internal sink of that port gets the same D: a bank's ROMs stay aligned)
-                if is_leaf(src_core):
-                    srel = src_core.split(".", 1)[1] if "." in src_core else src_core
+                srel = leaf_rel(src_core)
+                if srel is not None:
                     cur = srcdirect.setdefault((srel, src_port), dict(D=0, path_um=0.0))
                     if extra > cur["D"]:
                         cur.update(D=extra, path_um=round(worst, 1))
                     continue
                 unfixed.append(dict(core=p["core"], port=p["port"], partner=p["partner"], path_um=round(worst, 1),
-                                    extra=extra, reason="neither end is a bound leaf of this type (sub-cores): no row"))
+                                    extra=extra, reason="neither end is a bound leaf of this type (sub-cores): no row; "
+                                    "fix in the leaf: tools/s81_dv/frame_colrelay_depth.py form or core placement"))
                 continue
             for lo, hi in p["bit_ranges"]:
                 for bit in range(lo, hi + 1):
@@ -183,6 +247,21 @@ def type_rows(plan, tn, text, repo=None, plan_dir=None, limit=LIMIT):
         r = rows.setdefault(key, dict(inst=rel, port="o", D=0, path_um=0.0, stages_existing=int(p["stages_existing"])))
         if extra > r["D"]:
             r.update(D=extra, path_um=round(worst, 1), stages_existing=int(p["stages_existing"]))
+    # FABLE-FIX-S81-BANKLEAF 11-18, aligned source groups: the lane FIFO hands the frame its payload (xa, xb, x2) and the
+    # control word (cc) of the SAME edge; a stage on one of them alone shifts payload against control for every consumer
+    # behind.  When any link of the group needs D stages, every link of the group gets D: the frame sees one stream D edges
+    # later (the same as a D-deeper landing), aligned as built.
+    for src_core, links in sorted(agroup.items()):
+        dmax = max((d for rel, port, _br, _l in links for d, _ in direct.get((rel, port), {}).values()), default=0)
+        if not dmax:
+            continue
+        for rel, port, br, L in links:
+            cur = direct.setdefault((rel, port), {})
+            for lo, hi in br:
+                for bit in range(lo, hi + 1):
+                    if cur.get(bit, (0, 0))[0] < dmax:
+                        cur[bit] = (dmax, L)
+            aligned.append(dict(source=src_core, sink=rel, port=port, D=dmax, path_um=L))
     out = sorted(rows.values(), key=lambda r: r["inst"])
     for (rel, port), v in sorted(srcdirect.items()):
         out.append(dict(inst=rel, port=port, side="source", D=v["D"], path_um=v["path_um"], stages_existing=0))
@@ -201,6 +280,7 @@ def type_rows(plan, tn, text, repo=None, plan_dir=None, limit=LIMIT):
             unfixed.append(dict(inst=r["inst"], reason=f"D={r['D']} > 4 (schema max)", path_um=r["path_um"]))
             r["D"] = 4
     return out, dict(type=tn, paths_measured=seen, rows=len(out), extra_cycles=sum(r["D"] for r in out), unfixed=unfixed,
+                     read_loops=loops, flight_measured=flight, aligned_groups=aligned,
                      inf_routes=sum(1 for v in router.cache.values() if v == float("inf")))
 
 
@@ -209,23 +289,54 @@ def _is_relay_inst(text, inst):
     return bool(m and RELAY_MOD.match(m.group(1)))
 
 
-def apply_reports(plan, reports):
-    """merge the rows_data of one or more --report files into plan (partition_types[T].relay_depth); returns rows written"""
+def apply_reports(plan, reports, equalise=False):
+    """merge the rows_data of one or more --report files into plan (partition_types[T].relay_depth); returns rows written.
+    equalise (FABLE-FIX-S81-BANKLEAF 11-18): every type that binds the same content module (col_h9_l4_lp_r0: p1/p2/p4/p5) gets
+    the union of that module's rows at the largest D, so all frames of one master carry ONE depth per link and one compiler
+    frame schedule covers them (tools/s81_dv/frame_schedule_asb.py refuses depths that differ between frame instances); a stage
+    on the shorter copy of a link is only a flop.  Types without rows in the reports are left alone unless their module has rows."""
     n = 0
-    for rep in reports:
-        for r in rep:
-            if r.get("rows_data"):
-                plan["partition_types"][r["type"]]["relay_depth"] = [dict(x) for x in r["rows_data"]]
-                n += len(r["rows_data"])
+    pt = plan["partition_types"]
+    per = {r["type"]: [dict(x) for x in r["rows_data"]] for rep in reports for r in rep if "rows_data" in r}
+    if equalise:
+        def mod(tn):
+            c = pt[tn].get("contents") or []
+            return c[0].get("module") if len(c) == 1 else None
+        groups = defaultdict(dict)
+        for tn, rows in per.items():
+            for x in rows:
+                k = (x["inst"], x["port"], x.get("side", "relay"), tuple(x.get("bits") or ()))
+                cur = groups[mod(tn) or tn].setdefault(k, dict(x))
+                if x["D"] > cur["D"] or (x["D"] == cur["D"] and x.get("path_um", 0) > cur.get("path_um", 0)):
+                    cur.update(x)
+        for g, rows in groups.items():
+            runs = defaultdict(list)
+            for (inst, port, side, bits) in rows:
+                if side == "sink" and bits:
+                    runs[(inst, port)].append(bits)
+            for k, v in runs.items():
+                v.sort()
+                if any(a[1] >= b[0] for a, b in zip(v, v[1:])):
+                    raise ValueError(f"equalise {g}: sink bit runs of {k[0]}.{k[1]} differ between types: {v}")
+        for tn in list(per):
+            g = mod(tn) or tn
+            per[tn] = [dict(x) for _k, x in sorted(groups[g].items(), key=lambda kv: (kv[0][2] != "relay", kv[0]))]
+    for tn, rows in per.items():
+        if rows:
+            pt[tn]["relay_depth"] = rows
+            n += len(rows)
+        elif "relay_depth" in pt[tn]:
+            del pt[tn]["relay_depth"]             # a type the report measured clean must not keep stale rows
     return n
 
 
 def main(argv):
     if len(argv) > 1 and argv[1] == "merge":          # relay_depth.py merge PLAN.json OUT.json REPORT.json [REPORT.json ...]
         plan = json.loads(Path(argv[2]).read_text())
-        n = apply_reports(plan, [json.loads(Path(f).read_text()) for f in argv[4:]])
+        eq = "--equalise" in argv
+        n = apply_reports(plan, [json.loads(Path(f).read_text()) for f in argv[4:] if f != "--equalise"], eq)
         Path(argv[3]).write_text(json.dumps(plan, indent=1))
-        print(f"relay_depth merge: {n} rows into {argv[3]}")
+        print(f"relay_depth merge: {n} rows into {argv[3]}{' (equalised per content module)' if eq else ''}")
         return 0
     import argparse
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
