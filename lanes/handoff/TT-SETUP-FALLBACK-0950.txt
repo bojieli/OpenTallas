@@ -1,18 +1,19 @@
-intel2:/srv/opentallas-scratch2/claude/autopilot/closed/s81_head/hd_spn_eshim_tx__8569788b03/kit
-intel2:/srv/opentallas-scratch2/claude/autopilot/closed/s81_head/hd_spn_wshim_tx__8569788b03/kit
-intel1:/srv/opentallas-scratch2/claude/ot-jobs/sle_sc_v3-route-key-cardinal-2416242-1795017691/work
-epyc2:/srv/opentallas-scratch2/claude/ot-jobs/col_h9_r2__t1__cl774acf45__pvf8d9f9e5-route-dear-crayfish-827874-1795021600/work
-epyc2:/srv/opentallas-scratch2/claude/ot-jobs/ot_s81sl_leaf__t25__cl55642d17-route-dear-crayfish-3402303-1795018987/work
-epyc2:/srv/opentallas-scratch2/claude/ot-jobs/ot_s81sl_leaf__t29-route-dear-crayfish-3999897-1795019761/work
-epyc2:/srv/opentallas-scratch2/claude/ot-jobs/ot_s81sl_leaf__t4-route-dear-crayfish-4009526-1795019769/work
-epyc2:/srv/opentallas-scratch2/claude/ot-jobs/ot_s81sl_leaf__t53__clb66fa5cb-route-dear-crayfish-4010320-1795019769/work
-epyc2:/srv/opentallas-scratch2/claude/ot-jobs/slice_station__t28-route-dear-crayfish-3404739-1795018989/work
-epyc2:/srv/opentallas-scratch2/claude/ot-jobs/slice_station__t29__cl2e5c855a-route-dear-crayfish-3407300-1795018991/work
-epyc2:/srv/opentallas-scratch2/claude/ot-jobs/slice_station__t46-route-dear-crayfish-3411953-1795018996/work
-epyc2:/srv/opentallas-scratch3/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/ot_s81sl_leaf__t27/attempt_5
-epyc2:/srv/opentallas-scratch3/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/ot_s81sl_leaf__t68/attempt_5
-epyc2:/srv/opentallas-scratch3/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/slice_station__t22/attempt_25
-epyc2:/srv/opentallas-scratch3/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/slice_station__t24__cl64811a5d/attempt_4
-epyc2:/srv/opentallas-scratch3/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/slice_station__t44/attempt_7
-epyc2:/srv/opentallas-scratch3/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/slice_station__t48/attempt_6
-epyc2:/srv/opentallas-scratch3/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/slice_station__t7__cl503f4913/attempt_8
+# TT-SETUP-FALLBACK: kits that ran without the GRT/CTS TT setup repair (tt_setup_repair.tcl syntax error 04:19-09:5x, fixed 922c27887ac). COORD 10:4x: gate is TT >= -42, none cancelled; a kit that FAILS or ends below -42 relaunches with the fixed file (executed-file hash, 5394ba84c20). Triage: a failure here at setup/TT may be the missing repair, not the design.
+intel2:/srv/opentallas-scratch2/claude/autopilot/closed/s81_head/hd_spn_eshim_tx__8569788b03/kit	[fallback: live, not cancelled]
+intel2:/srv/opentallas-scratch2/claude/autopilot/closed/s81_head/hd_spn_wshim_tx__8569788b03/kit	[fallback: live, not cancelled]
+intel1:/srv/opentallas-scratch2/claude/ot-jobs/sle_sc_v3-route-key-cardinal-2416242-1795017691/work	[fallback: live, not cancelled]
+epyc2:/srv/opentallas-scratch2/claude/ot-jobs/col_h9_r2__t1__cl774acf45__pvf8d9f9e5-route-dear-crayfish-827874-1795021600/work	[fallback: live, not cancelled]
+epyc2:/srv/opentallas-scratch2/claude/ot-jobs/ot_s81sl_leaf__t25__cl55642d17-route-dear-crayfish-3402303-1795018987/work	[fallback: live, not cancelled]
+epyc2:/srv/opentallas-scratch2/claude/ot-jobs/ot_s81sl_leaf__t29-route-dear-crayfish-3999897-1795019761/work	[fallback: live, not cancelled]
+epyc2:/srv/opentallas-scratch2/claude/ot-jobs/ot_s81sl_leaf__t4-route-dear-crayfish-4009526-1795019769/work	[fallback: live, not cancelled]
+epyc2:/srv/opentallas-scratch2/claude/ot-jobs/ot_s81sl_leaf__t53__clb66fa5cb-route-dear-crayfish-4010320-1795019769/work	[fallback: live, not cancelled]
+epyc2:/srv/opentallas-scratch2/claude/ot-jobs/slice_station__t28-route-dear-crayfish-3404739-1795018989/work	[fallback: live, not cancelled]
+epyc2:/srv/opentallas-scratch2/claude/ot-jobs/slice_station__t29__cl2e5c855a-route-dear-crayfish-3407300-1795018991/work	[fallback: live, not cancelled]
+epyc2:/srv/opentallas-scratch2/claude/ot-jobs/slice_station__t46-route-dear-crayfish-3411953-1795018996/work	[fallback: live, not cancelled]
+epyc2:/srv/opentallas-scratch3/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/ot_s81sl_leaf__t27/attempt_5	[fallback: live, not cancelled]
+epyc2:/srv/opentallas-scratch3/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/ot_s81sl_leaf__t68/attempt_5	[fallback: live, not cancelled]
+epyc2:/srv/opentallas-scratch3/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/slice_station__t22/attempt_25	[fallback: live, not cancelled]
+epyc2:/srv/opentallas-scratch3/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/slice_station__t24__cl64811a5d/attempt_4	[fallback: live, not cancelled]
+epyc2:/srv/opentallas-scratch3/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/slice_station__t44/attempt_7	[fallback: live, not cancelled]
+epyc2:/srv/opentallas-scratch3/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/slice_station__t48/attempt_6	[fallback: live, not cancelled]
+epyc2:/srv/opentallas-scratch3/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/slice_station__t7__cl503f4913/attempt_8	[fallback: live, not cancelled]
