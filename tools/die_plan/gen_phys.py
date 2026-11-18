@@ -5665,6 +5665,11 @@ def macro_param_blackboxes(macros, rtl_files, rtl_dir, root=None, physical_ft=()
             # multi-module source that the kit does not stage (every module in it is a hard core) and that is not named
             # after the module.  Last resort: the tree file that declares it.  Two different headers stop the kit.
             found = _tree_module_headers(Path(root) / "rtl", mod)
+            # S81-COL-FLOW-1118 (COORD: S81 LP types gen 'ot_s81_mu72_lnland_nst ... no RTL header'): the bind keeps the
+            # wrapper modules it adds in physical/die_plan/<die>/bind/source_modules (mu72_abi_extensions.sv), outside rtl/
+            if not found:
+                for sm in sorted((Path(root) / "physical/die_plan").glob("*/bind/source_modules")):
+                    found += _tree_module_headers(sm, mod)
             if len({" ".join(h.split()) for h, _c in found}) > 1:
                 raise ValueError(f"macro {mod}: {len(found)} tree files declare it with different headers "
                                  f"({', '.join(str(c) for _h, c in found[:4])}); stage the one the view was built from")

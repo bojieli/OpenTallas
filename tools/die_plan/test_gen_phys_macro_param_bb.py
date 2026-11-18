@@ -54,6 +54,18 @@ class MacroParamBB(unittest.TestCase):
         self.assertTrue(out[0].read_text().endswith(");\nendmodule\n"))
         self.assertNotIn("localparam", out[0].read_text())
 
+    def test_header_from_bind_source_modules(self):
+        # S81 LP: ot_s81_mu72_lnland_nst is declared only in physical/die_plan/s81/bind/source_modules/mu72_abi_extensions.sv
+        sm = self.t / "root" / "physical/die_plan/s81/bind/source_modules"
+        sm.mkdir(parents=True)
+        (sm / "mu72_abi_extensions.sv").write_text("module m_ext #(parameter integer MUT = 0) (input wire ck);\nendmodule\n")
+        (self.t / "root" / "rtl").mkdir(parents=True, exist_ok=True)
+        top = self.t / "src" / "t4.sv"
+        top.write_text("module t4(input wire c); m_ext #(.MUT(1)) u_e(.ck(c)); endmodule\n")
+        out = G.macro_param_blackboxes([("u_e", "m_ext", "", "", 0, 0, "N")], [top], self.t / "kit", self.t / "root")
+        self.assertEqual(len(out), 1)
+        self.assertIn("module m_ext", out[0].read_text())
+
     def test_nonliteral_override_takes_built_spec_value(self):
         # FORM-IDX 11-05 bk_sel__t2: .SRAM_MACRO(TX_SRAM) said nothing, header stayed 0 against a view built with 1
         top = self._spec_kit(".V(V), .SRAM(TS)")
