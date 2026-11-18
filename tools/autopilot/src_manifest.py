@@ -173,7 +173,7 @@ def verify(root, expect="", ro=False, full=False):
             errs.append(f"SRC_MANIFEST DRIFT {rel} (modified: not the manifest content)")
         elif ro and writable(p):
             errs.append(f"SRC_MANIFEST DRIFT {rel} (writable: published trees are read-only)")
-        elif ro and not os.path.islink(p) and os.lstat(p).st_nlink > 1 and not shares_with_base(p, rel, lbase):
+        elif ro and not lbase and not os.path.islink(p) and os.lstat(p).st_nlink > 1 and not shares_with_base(p, rel, lbase):   # a link-published tree (.link-base) shares inodes with its base and with children linked from it; content hash matched above and the file is read-only (COORD 11-18)
             errs.append(f"SRC_MANIFEST DRIFT {rel} (hardlinked, nlink {os.lstat(p).st_nlink}: a write or chmod elsewhere reaches this file)")
     nshared = sum(1 for e in errs if "hardlinked, nlink" in e)
     if nshared:
@@ -263,6 +263,16 @@ def shared_inodes(root, limit=0):
     occurrence: S81 cmp_B6gF2s, HEAD fable-fix-head-serdes/tree5)."""
     out = []
     lbase = link_base(root)
+    # COORD 11-18 (S81 D7w on epyc10 / intel1: nlink 3 files, same manifest): the link FORM is not the question.  A file with other names is accepted when it is read-only and its CONTENT
+    # hash equals the manifest's; the hash is computed once per (inode, size, mtime) and remembered in ~/.cache/src-manifest/linkok_<md5(root)>.json, so later checks stay stat-only.
+    # A writable shared file, or one whose content differs from the manifest, is still reported.
+    man = (load_manifest(root) or {}).get("files") or {}
+    cf = os.path.join(CACHE_DIR, "linkok_" + hashlib.md5(os.path.realpath(root).encode()).hexdigest() + ".json")
+    try:
+        ok_cache = json.load(open(cf))
+    except (OSError, ValueError):
+        ok_cache = {}
+    dirty = False
     for dp, dn, fn in os.walk(root):
         dn[:] = [d for d in dn if d not in SKIP_DIRS]
         for f in fn:
@@ -272,9 +282,29 @@ def shared_inodes(root, limit=0):
             except OSError:
                 continue
             if stat.S_ISREG(st.st_mode) and st.st_nlink > 1 and not shares_with_base(p, os.path.relpath(p, root), lbase):
-                out.append((os.path.relpath(p, root), st.st_nlink))
+                rel = os.path.relpath(p, root)
+                if lbase and not st.st_mode & (stat.S_IWUSR | stat.S_IWGRP | stat.S_IWOTH) and rel in man:
+                    sig = f"{st.st_ino}:{st.st_size}:{st.st_mtime_ns}"
+                    if ok_cache.get(rel) == sig:
+                        continue
+                    try:
+                        if sha256_file(p) == man[rel]:
+                            ok_cache[rel] = sig
+                            dirty = True
+                            continue
+                    except OSError:
+                        pass
+                out.append((rel, st.st_nlink))
                 if limit and len(out) >= limit:
                     return out
+    if dirty:
+        try:
+            os.makedirs(CACHE_DIR, exist_ok=True)
+            tmp = cf + f".{os.getpid()}.tmp"
+            json.dump(ok_cache, open(tmp, "w"))
+            os.replace(tmp, cf)
+        except OSError:
+            pass
     return out
 
 

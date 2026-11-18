@@ -201,6 +201,31 @@ class Publish(Base):
         self.assertTrue(any("tools/die_plan/a.py (hardlinked" in e for e in errs), errs)
 
 
+class LinkedChild(Base):
+    def test_a_link_published_tree_may_have_a_child_linked_from_it(self):
+        """COORD 11-18: d7w (.link-base d6z) on a host gained a refresh child linked from it: nlink 3, same manifest, read-only: not drift; an unlinked tree keeps the strict check"""
+        self.build()
+        SM.publish(self.out, "")
+        a = self.out + "/tools/die_plan/a.py"
+        child = self.t + "/child_a.py"
+        os.link(a, child)
+        errs, _ = SM.verify(self.out, ro=True, full=True)
+        self.assertTrue(any("hardlinked" in e for e in errs), errs)                    # unlinked tree: still refused
+        self.assertTrue(SM.shared_inodes(self.out))
+        base = self.t + "/basetree"
+        os.makedirs(base)
+        open(base + "/.src-manifest.json", "w").write("{}")
+        os.chmod(self.out, 0o755)
+        SM.write_link_base(self.out, base)                                              # now a link-published tree
+        os.chmod(self.out, 0o555)
+        errs, _ = SM.verify(self.out, ro=True, full=True)
+        self.assertFalse(any("hardlinked" in e for e in errs), errs)
+        self.assertEqual([x for x in SM.shared_inodes(self.out) if x[0].endswith("a.py")], [])
+        os.chmod(self.out + "/tools/die_plan", 0o755)
+        os.chmod(a, 0o644)                                                             # a writable shared file is still reported
+        self.assertTrue([x for x in SM.shared_inodes(self.out) if x[0].endswith("a.py")])
+
+
 class Derive(Base):
     def test_derive_lists_live_edits_with_sha(self):
         self.build()
