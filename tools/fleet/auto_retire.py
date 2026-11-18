@@ -314,7 +314,7 @@ def attempt_candidates(claude, cfg, state, refs, now=None, quiet_s=ATTEMPT_QUIET
     for v in items.values():
         if isinstance(v, dict):
             by.setdefault((v.get("die"), str(v.get("event")), v.get("item")), []).append(v)
-    out, kinds = [], {}
+    out, allf = [], {}
     for p in sorted((globber or (lambda: glob.glob(os.path.join(claude, ATTEMPT_GLOB))))()):
         if not os.path.isdir(p) or os.path.islink(p):
             continue
@@ -328,7 +328,6 @@ def attempt_candidates(claude, cfg, state, refs, now=None, quiet_s=ATTEMPT_QUIET
         if any(str(v.get("status")) in LIVE_ROW for v in cand):
             continue
         mine = [v for v in cand if v.get("attempt") == n]
-        failed_row = False
         sib = [int(x.split("_", 1)[1]) for x in os.listdir(os.path.dirname(p)) if x.startswith("attempt_") and x.split("_", 1)[1].isdigit()]
         newer = any((v.get("attempt") or 0) > n for v in cand) or (sib and max(sib) > n)
         incur = cur.get(die) == event
@@ -337,7 +336,11 @@ def attempt_candidates(claude, cfg, state, refs, now=None, quiet_s=ATTEMPT_QUIET
             if "q_signoff" in json.dumps(row) or "carry" in json.dumps(row).lower():
                 continue
             failed = str(row.get("status")) in ("FAIL", "CANCELLED") or row.get("class") == "SUPERSEDED"
-            failed_row = failed
+            if failed:
+                try:
+                    allf.setdefault((die, event, row.get("parent_item") or item), []).append((os.lstat(p).st_mtime, n, p))
+                except OSError:
+                    pass
             if failed and (newer or not incur):
                 why, win = "failed/cancelled/superseded attempt, %s" % ("newer attempt exists" if newer else "event not current"), quiet_s
             elif not incur:
@@ -356,18 +359,14 @@ def attempt_candidates(claude, cfg, state, refs, now=None, quiet_s=ATTEMPT_QUIET
         if mtime(p, now - win) > now - win:
             continue
         out.append((p, why))
-        kinds[p] = (die, event, (mine[0].get("parent_item") if mine else None) or item, failed_row)
-    # COORD 11-18 (the Fable lane could diagnose 1 of 11 setup-stopped strip DBs): the NEWEST failed attempt of each TYPE keeps its final DB (odb + reports, the whole dir) for
-    # KEEP_FAILED_H after it last changed; older attempts of the type go as before.  Type = state parent_item, else the item.
+    # COORD 11-18 (the Fable lane could diagnose 1 of 11 setup-stopped strip DBs): the NEWEST failed attempt of each TYPE (over ALL its failed attempts, retired or not) keeps its final DB
+    # (the whole attempt dir) for KEEP_FAILED_H after it last changed; older attempts of the type go as before.  Type = state parent_item, else the item.
     keep_cut = now - KEEP_FAILED_H * 3600
-    newest = {}
-    for p, (die, event, typ, failed_row) in kinds.items():
-        if not failed_row:
-            continue
-        m = mtime(p, keep_cut)
-        if m > keep_cut and m >= newest.get((die, event, typ), (0, ""))[0]:
-            newest[(die, event, typ)] = (m, p)
-    keep = {v[1] for v in newest.values()}
+    keep = set()
+    for grp in allf.values():
+        m, n, p = max(grp)
+        if m > keep_cut:
+            keep.add(p)
     return [(p, why) for p, why in out if p not in keep]
 
 
