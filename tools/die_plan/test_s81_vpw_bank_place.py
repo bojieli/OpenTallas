@@ -58,12 +58,12 @@ mkrows 0 480000
 '''
 
 
-def _run(tmp_path, body):
+def _run(tmp_path, body, env=None):
     if not shutil.which("tclsh"):
         pytest.skip("no tclsh")
     src = MOCK + body + f"\nsource {TCL}\nputs \"PLACED [llength $::placed] $::placed\"\n"
     src = "if {[catch {\n" + src + "\n} e]} {puts stderr $e; exit 1}\n"
-    r = subprocess.run(["tclsh"], input=src, text=True, capture_output=True, env={"VB_DIR": str(tmp_path)})
+    r = subprocess.run(["tclsh"], input=src, text=True, capture_output=True, env={"VB_DIR": str(tmp_path), **(env or {})})
     return r
 
 
@@ -88,3 +88,54 @@ def test_vp_block_with_banks_but_no_ffs_still_fails(tmp_path):
     body = FAR.replace("for {set i 0} {$i < 6}", "for {set i 0} {$i < 0}")
     r = _run(tmp_path, body)
     assert r.returncode != 0 and "no VPW FFs" in r.stderr + r.stdout
+
+
+XR_FAR = r'''
+mkbox b0box 0 0 10000 10000
+mkbox b1box 0 420000 10000 430000
+mkbox vsbox 900000 0 950000 50000
+mkinst b0 u_bound.u_u_lf4_u_vp_u_b0 sram b0box FIRM
+mkinst b1 u_bound.u_u_lf4_u_vp_u_b1 sram b1box FIRM
+mkinst vs u_bound.u_u_lf4_u_vs sram vsbox FIRM
+lappend ::insts b0 b1 vs
+for {set i 0} {$i < 4} {incr i} {
+  mkbox xb$i 0 0 0 0
+  mkinst x$i "u_bound.u_u_lf4_u_vp_g_wr1_u_w.g_xr.wa_q\[$i\]\$_DFF_P_" dff xb$i PLACED
+  lappend ::insts x$i
+}
+for {set i 0} {$i < 2} {incr i} {
+  mkbox fb$i 0 0 0 0
+  mkinst f$i "u_bound.u_u_lf4_u_vp_g_wr1_u_w.wa0\[$i\]\$_DFF_P_" dff fb$i PLACED
+  lappend ::insts f$i
+}
+mkrows 0 480000
+'''
+
+
+def test_xr_mid_places_cohort_on_the_vs_to_bank_line(tmp_path):
+    """XR-MID-1 (S81-GEOM-OPUS 11-18): VS 890 um from the near bank, MIN 600 / D 500 -> the 4 g_xr flops go to
+    min(500, 890/2) = 445 um from VS (x ~455 um), the 2 other write-port flops stay at the bank; the tap group
+    excludes g_xr"""
+    r = _run(tmp_path, XR_FAR, {"OT_S81_VPW_XR_MID": "600:500"})
+    assert r.returncode == 0, r.stdout + r.stderr
+    assert "OT_VPW_XR_MID placed 4 of 4" in r.stdout, r.stdout
+    mid = [ln.split("\t") for ln in (tmp_path / "vpw_xr_mid_sites.tsv").read_text().splitlines()[1:]]
+    assert len(mid) == 4 and all(400 <= float(x[1]) <= 510 for x in mid), mid
+    bank = [ln.split("\t") for ln in (tmp_path / "vpw_bank_sites.tsv").read_text().splitlines()[1:]]
+    assert len(bank) == 2 and all("g_xr" not in x[0] for x in bank) and max(float(x[3]) for x in bank) <= 100.0
+    assert "(?!g_xr[._/])" in (tmp_path / "vpw_bank_clock.tcl").read_text()
+
+
+def test_xr_mid_keeps_bank_form_under_min(tmp_path):
+    r = _run(tmp_path, XR_FAR, {"OT_S81_VPW_XR_MID": "1000:500"})
+    assert r.returncode == 0, r.stdout + r.stderr
+    assert "OT_VPW_XR_MID KEEP" in r.stdout and "PLACED 6" in r.stdout
+    assert "(?!g_xr" not in (tmp_path / "vpw_bank_clock.tcl").read_text()
+
+
+def test_vpw_xr_mid_types_exports_only_listed_types():
+    import gen_phys
+    b = {"vpw_xr_mid_types": {"ot_s81sl_leaf__t3": {"min_um": 600, "d_um": 500}}}
+    assert gen_phys._vpw_xr_mid(b, "ot_s81sl_leaf__t3") == ["export OT_S81_VPW_XR_MID = 600:500"]
+    assert gen_phys._vpw_xr_mid(b, "ot_s81sl_leaf__t4") == []
+    assert gen_phys._vpw_xr_mid({}, "ot_s81sl_leaf__t3") == []

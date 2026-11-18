@@ -8218,6 +8218,23 @@
      "type": "number",
      "minimum": 0
     },
+    "vpw_xr_mid_types": {
+     "type": "object",
+     "additionalProperties": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+       "min_um": {
+        "type": "number",
+        "minimum": 0
+       },
+       "d_um": {
+        "type": "number",
+        "exclusiveMinimum": 0
+       }
+      }
+     }
+    },
     "face_flop_ns_types": {
      "type": "object",
      "additionalProperties": {

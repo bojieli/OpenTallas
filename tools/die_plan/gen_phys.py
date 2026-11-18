@@ -420,6 +420,18 @@ def _face_flop_ns_config(budgets, tn, pins=None):
         v = {"row_stride": 2, "inset_rows": 0}
     return [f"export OT_FF_NS_ROW_STRIDE = {int(v.get('row_stride', 1))}",
             f"export OT_FF_NS_INSET_ROWS = {int(v.get('inset_rows', 0))}"]
+def _vpw_xr_mid(budgets, tn):
+    """XR-MID-1 (S81-GEOM-OPUS 11-18, FABLE-PD-S81-0855 fix 2) opt-in: budgets.vpw_xr_mid_types {type or base:
+    {min_um, d_um}} -> OT_S81_VPW_XR_MID=min:d for s81_vpw_bank.tcl.  When the VS-to-bank distance is over min_um the
+    XR cohort (g_xr flops of the VPW write port) is placed FIRM on the VS-to-bank line at min(d_um, W/2) from the VS
+    core instead of at the bank, and is clocked by its nearest tap (0 cycles, no RTL change).  [] = unchanged kit."""
+    per = budgets.get("vpw_xr_mid_types") or {}
+    v = per.get(tn, per.get(tn.split("__")[0])) if tn is not None else None
+    if not v:
+        return []
+    return [f"export OT_S81_VPW_XR_MID = {float(v.get('min_um', 600)):g}:{float(v.get('d_um', 500)):g}"]
+
+
 def _face_flop_ew(budgets, tn):
     """QC-S28-VISFORM 11-12 opt-in (FW-EFACE-BIN): budgets.face_flop_ew_types {type, base or family prefix: {cpitch_sites,
     row_stride}} -> the face_flops.tcl E/W band form (OT_FF_EW_CPITCH_SITES column pitch in sites, default 40;
@@ -6400,6 +6412,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            *([f"export OT_CLAND_STRIP_DENS = {_cland_strip_density(P.budgets, tn):g}"] if _cland_strip_density(P.budgets, tn) else []),
            # QC-S28-VISFORM 11-12 opt-in budgets.face_flop_ew_types: E/W face pin-register band pitch / row spread
            *_face_flop_ew(P.budgets, tn),
+           *_vpw_xr_mid(P.budgets, tn),
            "export LEC_CHECK = 0",
            # COORD ruling 4 (10-25): the platform adder map with every DONT_USE cell (HAxp5) as generic logic; run_kit.sh
            # generates it in the image before synth (adder_map_dontuse.py gen) and FAILs a netlist with a DONT_USE cell

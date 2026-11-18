@@ -1369,6 +1369,10 @@ SCHEMA = {
             core_internal_reach_um=_pos,
             # Explicit NS face-register geometry; per exact/unsplit type, default unchanged.
             face_flop_ns_dense_pins_per_um={"type": "number", "minimum": 0},
+            # XR-MID-1 (S81-GEOM-OPUS 11-18) opt-in: VPW XR cohort mid-wire placement per type/base (s81_vpw_bank.tcl)
+            vpw_xr_mid_types={"type": "object", "additionalProperties": {
+                "type": "object", "additionalProperties": False, "properties": {
+                    "min_um": {"type": "number", "minimum": 0}, "d_um": {"type": "number", "exclusiveMinimum": 0}}}},
             face_flop_ns_types={"type": "object", "additionalProperties": {
                 "type": "object", "additionalProperties": False, "properties": {
                     "row_stride": {"type": "integer", "minimum": 1, "maximum": 16},

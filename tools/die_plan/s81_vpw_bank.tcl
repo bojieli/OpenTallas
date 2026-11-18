@@ -9,6 +9,11 @@
 #    was > 100 um from both banks, so the first FF failed);
 #  - under R-MINIMAL an FF with no site within 100 um is a WARN and is left
 #    to GPL (not FIRM), never a place stop.
+# XR-MID-1 (S81-GEOM-OPUS 11-18, FABLE-PD-S81-0855 fix 2): OT_S81_VPW_XR_MID=MIN:D (plan budgets.vpw_xr_mid_types).
+# When the VS core to nearest VP bank distance W is over MIN um, the XR cohort (write-port flops under g_xr) is taken
+# out of the bank set and placed FIRM on free sites nearest the point at min(D, W/2) um from the VS core along the
+# VS-to-bank line, so the first cycle carries d um of wire and the second W-d; the tap group excludes g_xr (those
+# flops take their nearest tap).  0 cycles, no RTL change.  Unset = the bank form unchanged.
 proc vb_noop_clock {why} {
   set f [open /work/vpw_bank_clock.tcl w]
   puts $f "# OT_VPW_BANK skipped: $why (no tap group)"
@@ -53,12 +58,81 @@ set vb_rx1 [expr {min([$vb_core xMax],$vb_x1+$vb_margin)}]
 set vb_ry0 [expr {max([$vb_core yMin],$vb_y0-$vb_margin)}]
 set vb_ry1 [expr {min([$vb_core yMax],$vb_y1+$vb_margin)}]
 set vb_own {};foreach i $vb_ffs {dict set vb_own $i 1}
+set vb_allffs $vb_ffs
 # Real placement obstructions and fixed cells, including die-clock reserves.
 foreach q [$vb_b getBlockages] {set r [$q getBBox];lappend vb_blocks [list [$r xMin] [$r yMin] [$r xMax] [$r yMax]]}
 foreach i [$vb_b getInsts] {
   if {[dict exists $vb_own $i] || [$i getPlacementStatus] ni {FIRM LOCKED}} continue
   if {[[$i getMaster] isBlock]} continue
   set q [$i getBBox];lappend vb_blocks [list [$q xMin] [$q yMin] [$q xMax] [$q yMax]]
+}
+set vb_xr_n 0
+if {[info exists ::env(OT_S81_VPW_XR_MID)] && $::env(OT_S81_VPW_XR_MID) ne ""} {
+  lassign [split $::env(OT_S81_VPW_XR_MID) :] vb_xmin vb_xd
+  set vb_vs {}
+  foreach i [$vb_b getInsts] {if {[[$i getMaster] isBlock] && [regexp {(^|[._/])u_vs$} [$i getName]]} {lappend vb_vs $i}}
+  set vb_xr {};set vb_rest {}
+  foreach i $vb_ffs {if {[regexp {[._/]g_xr[._/]} [$i getName]]} {lappend vb_xr $i} else {lappend vb_rest $i}}
+  if {[llength $vb_vs]!=1 || ![llength $vb_xr]} {
+    puts "OT_VPW_XR_MID SKIP vs_cores=[llength $vb_vs] xr_ffs=[llength $vb_xr]"
+  } else {
+    set q [[lindex $vb_vs 0] getBBox]
+    set vb_W 1e30
+    foreach bi $vb_banks {
+      set r [$bi getBBox]
+      set pa {};set pb {}
+      foreach {lo0 hi0 lo1 hi1} [list [$q xMin] [$q xMax] [$r xMin] [$r xMax] [$q yMin] [$q yMax] [$r yMin] [$r yMax]] {
+        if {$hi0 < $lo1} {lappend pa $hi0;lappend pb $lo1} elseif {$hi1 < $lo0} {lappend pa $lo0;lappend pb $hi1} else {
+          set m [expr {(max($lo0,$lo1)+min($hi0,$hi1))/2}];lappend pa $m;lappend pb $m}
+      }
+      set w [expr {abs([lindex $pa 0]-[lindex $pb 0])+abs([lindex $pa 1]-[lindex $pb 1])}]
+      if {$w < $vb_W} {set vb_W $w;set vb_pa $pa;set vb_pb $pb}
+    }
+    if {$vb_W <= $vb_xmin*$vb_u} {
+      puts "OT_VPW_XR_MID KEEP bank form: VS-to-bank [expr {$vb_W/double($vb_u)}]um <= $vb_xmin um"
+    } else {
+      set vb_d [expr {min($vb_xd*$vb_u, $vb_W/2.0)}]
+      set f [expr {$vb_d/double($vb_W)}]
+      set vb_tx [expr {[lindex $vb_pa 0]+([lindex $vb_pb 0]-[lindex $vb_pa 0])*$f}]
+      set vb_ty [expr {[lindex $vb_pa 1]+([lindex $vb_pb 1]-[lindex $vb_pa 1])*$f}]
+      set vb_win [expr {120*$vb_u}]
+      set vb_mid {};set mw 0;set mh 0
+      foreach i $vb_xr {set m [$i getMaster];set mw [expr {max($mw,[$m getWidth])}];set mh [expr {max($mh,[$m getHeight])}]}
+      foreach r [$vb_b getRows] {
+        lassign [$r getOrigin] x y
+        set st [$r getSite];set sw [$st getWidth];set rh [$st getHeight]
+        if {$rh!=$mh || abs($y-$vb_ty)>$vb_win} continue
+        set rr [$r getBBox]
+        set x0 [expr {max([$rr xMin],$vb_tx-$vb_win)}];set x1 [expr {min([$rr xMax],$vb_tx+$vb_win)}]
+        set pitch [expr {int(ceil(2.0*$mw/$sw))*$sw}]
+        set x0 [expr {$x+int(ceil(double($x0-$x)/$sw))*$sw}]
+        for {set px $x0} {$px+$mw<=$x1} {incr px $pitch} {
+          set blocked 0
+          foreach bq $vb_blocks {
+            lassign $bq a b c d
+            if {$px<$c && $a<$px+$mw && $y<$d && $b<$y+$mh} {set blocked 1;break}
+          }
+          if {$blocked} continue
+          lappend vb_mid [list [expr {abs($px-$vb_tx)+abs($y-$vb_ty)}] $px $y [$r getOrient]]
+        }
+      }
+      set vb_mid [lsort -real -index 0 $vb_mid]
+      set vb_xo [open /work/vpw_xr_mid_sites.tsv w];puts $vb_xo "inst\tx_um\ty_um\ttarget_distance_um"
+      set k 0;set vb_xworst 0;set vb_xgpl 0
+      foreach i [lsort -command {apply {{a b} {string compare [$a getName] [$b getName]}}} $vb_xr] {
+        if {$k>=[llength $vb_mid]} {incr vb_xgpl;continue}
+        lassign [lindex $vb_mid $k] dd x y orient
+        $i setPlacementStatus PLACED;$i setOrient $orient;$i setLocation $x $y;$i setPlacementStatus FIRM
+        lappend vb_blocks [list $x $y [expr {$x+$mw}] [expr {$y+$mh}]]
+        puts $vb_xo "[$i getName]\t[expr {$x/double($vb_u)}]\t[expr {$y/double($vb_u)}]\t[expr {$dd/double($vb_u)}]"
+        set vb_xworst [expr {max($vb_xworst,$dd)}];incr k
+      }
+      close $vb_xo
+      set vb_xr_n $k
+      set vb_ffs $vb_rest
+      puts "OT_VPW_XR_MID placed $k of [llength $vb_xr] XR FFs FIRM at [expr {$vb_d/double($vb_u)}]um from VS (VS-to-bank [expr {$vb_W/double($vb_u)}]um), target ([expr {$vb_tx/double($vb_u)}],[expr {$vb_ty/double($vb_u)}]) worst [expr {$vb_xworst/double($vb_u)}]um; left to GPL $vb_xgpl"
+    }
+  }
 }
 set vb_keep {}
 foreach q $vb_blocks {
@@ -122,7 +196,7 @@ foreach bt [$vb_b getBTerms] {
 if {$vb_tap eq ""} {error "OT_VPW_BANK no standard clock tap"}
 set vb_clk [open /work/vpw_bank_clock.tcl w]
 puts $vb_clk {if {[info exists ::env(OT_TAP_GROUP_RE)] && $::env(OT_TAP_GROUP_RE) ne "" && $::env(OT_TAP_GROUP_RE) ne {^(.*[._/]vp[._/]g_wr1[._/]u_w)[._/]}} {error "OT_VPW_BANK conflicts with an existing clock group; combine groups explicitly"}}
-puts $vb_clk {set ::env(OT_TAP_GROUP_RE) {^(.*[._/]vp[._/]g_wr1[._/]u_w)[._/]}}
+if {$vb_xr_n} {puts $vb_clk {set ::env(OT_TAP_GROUP_RE) {^(.*[._/]vp[._/]g_wr1[._/]u_w)[._/](?!g_xr[._/])}}} else {puts $vb_clk {set ::env(OT_TAP_GROUP_RE) {^(.*[._/]vp[._/]g_wr1[._/]u_w)[._/]}}}
 puts $vb_clk "set ::env(OT_TAP_GROUP_FIXED) {$vb_group:$vb_tap}"
 close $vb_clk
 puts "OT_VPW_BANK_CLOCK $vb_tap at [expr {$vb_td/double($vb_u)}]um from bank centroid"
