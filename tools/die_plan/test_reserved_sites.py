@@ -54,7 +54,8 @@ def test_bank_release_finds_blockages_in_the_odb_not_a_tcl_variable():
     assert "if {$rs_n != 2}" in rel and "of 2 ring-bank blockages" in rel
 
 
-def test_channel_keepout_is_a_hard_blockage():
+def test_channel_keepout_is_gpl_only_released_before_dpl():
     pre, post, rel = GP.reserved_sites_tcl(plan([dict(rect_um=[40, 5, 60, 45], kind="channel_keepout")]), "T")
-    assert "odb::dbBlockage_create $rs_b [expr {round(40*$rs_u)}]" in pre
-    assert "ot_clear_keepout_physical" in pre and post == "" and rel == ""
+    assert pre == ""
+    assert "odb::dbBlockage_create $rs_b [expr {round(40*$rs_u)}]" in post
+    assert "odb::dbBlockage_destroy" in rel
