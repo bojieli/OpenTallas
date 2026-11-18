@@ -105,6 +105,25 @@ def registry():
     return reg
 
 
+LAUNCH = re.compile(r'^(\d{4}-\d\d-\d\d \d\d:\d\d):\d\d \w+ AUTOPILOT: KIT-WAVE (?:LAUNCH|RELAUNCH-ON-FIX) (\w+)/(\S+?)(?:[:@ ]|$)')
+
+
+def load_launches(tail=48 << 20):
+    """(die, item) -> newest LAUNCH / RELAUNCH-ON-FIX time in autopilot/log.txt (LAUNCH-KEEP is not matched)"""
+    out = {}
+    try:
+        with open(os.path.join(COORD, 'autopilot/log.txt'), 'rb') as f:
+            f.seek(0, 2); f.seek(max(0, f.tell() - tail))
+            for l in f.read().decode('utf-8', 'replace').split('\n'):
+                m = LAUNCH.match(l)
+                if m:
+                    t = ts(m.group(1)); k = (m.group(2), m.group(3).split('#')[0])
+                    if t > out.get(k, 0): out[k] = t
+    except OSError:
+        pass
+    return out
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--agent-ids'); ap.add_argument('--out', default=os.path.join(COORD, 'lanes/OWNERS-SWEEP.tsv'))
@@ -129,7 +148,7 @@ def main():
             continue
         last[(r['die'], r['item'])] = r
     fb.LAST.clear(); fb.LAST.update(last)
-    holds = fb.die_holds(); reg = registry()
+    holds = fb.die_holds(); reg = registry(); launches = load_launches()
     out = []; notes = []
     for die, tag in DIES:
         plan = next(p for k, p in cache['plans'].items() if fb.PLAN_DIE.get(k.split('/')[0]) == die)
@@ -184,6 +203,9 @@ def main():
                 else:
                     flags.append('UNOWNED')
             failed = lab not in NOT_FAILED
+            lt = launches.get((die, item.split('#')[0]), 0)
+            if failed and lt > upd:
+                age = (now - lt) / 3600; failed = False; lab = 'relaunched (LAUNCH %s)' % fmt_t(lt)
             if failed and age is not None and age > 1: flags.append('FAILED-NO-RELAUNCH')
             if not running and age is not None and age > 3: flags.append('STALE')
             state = lab if not failed else 'FAILED ' + lab
