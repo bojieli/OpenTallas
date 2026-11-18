@@ -39871,7 +39871,7 @@
     {
      "id": "pilot-s81_head-06dc15683502",
      "plan_sha": "de6c7105afeff824b4029ebf66e02255ca31294b29d243544a7d77e08b422e0e",
-     "reason": "PILOT after tree switch: one GEN pilot (hd_lep0N) from tree 06dc15683502 must pass GEN + preflight first",
+     "reason": "PILOT after tree switch: one GEN pilot (hd_lep0N) from tree 06dc15683502 must pass GEN + preflight first | HEAD-PLAN-R4 (COORD): two GEN pilots hd_lep0N + hd_mesh launch in parallel; the first gen_pilot pass releases the rest (gen only, never sign-off)",
      "release": [
       "gen_pilot:s81_head:06dc15683502"
      ],
@@ -39879,7 +39879,8 @@
       "*"
      ],
      "pilot_items": [
-      "hd_lep0N"
+      "hd_lep0N",
+      "hd_mesh"
      ],
      "follow_plan": true,
      "auto_pilot": true
