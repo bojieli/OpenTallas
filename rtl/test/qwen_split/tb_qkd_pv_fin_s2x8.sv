@@ -14,6 +14,11 @@
 // was seen since the last product beat (out_data has no reset in either design), and all three on every out_valid beat.
 // +SHIFT=0 / +SHIFT=2 (a wrongly declared 0 / +2 cycles) must FAIL; MUT 1..3 (in the slices) and
 // -DOT_PVFIN_S2X8_MUTANT_LANESWAP must FAIL.
+// KV-PVFIN-CAL 11-18 (D24 hub_C, opt-in; both 0 = the bench above, the DUT on the gold pins): +RZ_ST=k puts k registered
+// stations (the FIRM ahub.fr -> pvfin.rz stations; valid bit reset-landed) on the DUT's {rz_valid, rz_epoch, rz} only, and
+// +FR_LEAD=j launches that DUT stream j edges before the gold R slot (the hub exporting j edges early: qkd_kvs_attn_r17
+// FR_LEAD = j hands the hub R - j).  The gold keeps rz on R.  +RZ_ST=2 +FR_LEAD=2 must PASS lock-step (no fault, same
+// results); +RZ_ST=2 +FR_LEAD=0 (stations without the calendar lead) and +RZ_ST=0 +FR_LEAD=2 must FAIL.
 module tb_qkd_pv_fin_s2x8;
  parameter integer MUT=0;
  parameter integer SKEW=1;
@@ -21,13 +26,21 @@ module tb_qkd_pv_fin_s2x8;
  reg ck=0,rst_n=0;always #1 ck=~ck;
  reg start=0;reg [15:0] epoch=0;reg [47:0] cal=0;
  reg p0v=0,p1v=0,rv=0;reg [4:0] p0b=0,p1b=0;reg [15:0] p0e=0,p1e=0,rep=0;reg [511:0] p0d=0,p1d=0;reg [127:0] rz=0;
+ // DUT reciprocal path (KV-PVFIN-CAL): source stream (FR_LEAD edges early) -> RZ_ST station flops -> DUT pins
+ integer RZ_ST=0,FR_LEAD=0;
+ reg rv_s=0;reg [15:0] rep_s=0;
+ reg [144:0] rly[0:7];reg [7:0] rly_v=0;
+ integer q_;
+ always @(posedge ck or negedge rst_n)if(!rst_n)rly_v<=0;else rly_v<={rly_v[6:0],rv_s};
+ always @(posedge ck)begin rly[0]<={rz,rep_s,rv_s};for(q_=1;q_<8;q_=q_+1)rly[q_]<=rly[q_-1];end
+ wire [144:0] rz_dut=(RZ_ST==0)?{rz,rep_s,rv_s}:{rly[RZ_ST-1][144:1],rly_v[RZ_ST-1]};
  wire gv,gf,dv,df;wire [4:0] gb,db;wire [15:0] ge,de;wire [511:0] gd,dd;
  qkd_pv_fin_s #(.SKEW(SKEW),.MUT(0)) u_gold(.ck(ck),.rst_n(rst_n),.start(start),.epoch(epoch),.cal(cal),
   .p0_valid(p0v),.p0_beat(p0b),.p0_epoch(p0e),.p0_data(p0d),.p1_valid(p1v),.p1_beat(p1b),.p1_epoch(p1e),.p1_data(p1d),
   .rz_valid(rv),.rz_epoch(rep),.rz(rz),.out_valid(gv),.out_beat(gb),.out_epoch(ge),.out_data(gd),.fault(gf));
  qkd_pv_fin_s2x8 #(.SKEW(SKEW),.MUT(MUT),.IN_STAGE(IN_STAGE)) u_dut(.ck(ck),.rst_n(rst_n),.start(start),.epoch(epoch),.cal(cal),
   .p0_valid(p0v),.p0_beat(p0b),.p0_epoch(p0e),.p0_data(p0d),.p1_valid(p1v),.p1_beat(p1b),.p1_epoch(p1e),.p1_data(p1d),
-  .rz_valid(rv),.rz_epoch(rep),.rz(rz),.out_valid(dv),.out_beat(db),.out_epoch(de),.out_data(dd),.fault(df));
+  .rz_valid(rz_dut[0]),.rz_epoch(rz_dut[16:1]),.rz(rz_dut[144:17]),.out_valid(dv),.out_beat(db),.out_epoch(de),.out_data(dd),.fault(df));
  // ---------------- checker ----------------
  // The DUT is declared +IN_STAGE cycles (stage-i input flops): at edge t it must equal gold at edge t - SHIFT, SHIFT =
  // IN_STAGE by default.
@@ -72,7 +85,7 @@ module tb_qkd_pv_fin_s2x8;
    endcase
   end
  endfunction
- task idle_inputs;begin p0v=0;p1v=0;rv=0;start=0;end endtask
+ task idle_inputs;begin p0v=0;p1v=0;rv=0;rv_s=0;start=0;end endtask
  task warm_reset;begin @(negedge ck);idle_inputs;rst_n=0;repeat(1+($random(seed)&3))@(negedge ck);rst_n=1;repeat(2)@(negedge ck);end endtask
  task one(input integer c);
   integer a0,a1,ar,last,kend,k,b,l,e,inj,at,lane0,sl;
@@ -83,6 +96,7 @@ module tb_qkd_pv_fin_s2x8;
    last=(a0>a1)?a0:a1;ar=1+(($random(seed)&255)%last);
    if(STRETCH!=0&&c%3==1)ar=last+1+(($random(seed)&255)%8);
    if(STRETCH!=0&&c%3==2)ar=last+9+(($random(seed)&16'hffff)%1100);
+   if(FR_LEAD>0&&ar<=FR_LEAD)ar=FR_LEAD+1;                   // the early source edge must follow the start edge
    kend=((ar>last)?ar:last)+7+2+6+32+4;
    e=$random(seed)&16'hffff;
    if(inj==6)begin case($random(seed)&3) 0:a0=0; 1:a1=a0+SKEW+1; 2:ar=0; default:ar=16'hfff0; endcase end
@@ -100,7 +114,7 @@ module tb_qkd_pv_fin_s2x8;
     if(inj==8)for(b=0;b<16;b=b+1)if(b/8==sl)begin w0[32*b+:32]=32'h7e800000;w1[32*b+:32]=32'h7e800000;end
     p0v=(k>=a0&&k<a0+32);p0b=5'(k-a0);p0e=e;p0d=w0;
     p1v=(k>=a1&&k<a1+32);p1b=5'(k-a1);p1e=e;p1d=w1;
-    rv=(k==ar);rep=e;
+    rv=(k==ar);rep=e;rv_s=(k==ar-FR_LEAD);rep_s=e;
     if(inj==1&&k==a0+(at%32))p0b=p0b+5'd3;
     if(inj==2&&k==a1+(at%32))p1e=e^16'h40;
     if(inj==3&&k==a0+(at%32))p0v=0;
@@ -108,6 +122,7 @@ module tb_qkd_pv_fin_s2x8;
     if(inj==5&&k==at)start=1;
     if(inj==7&&k==a0+(at%32))p0d[32*lane0+:32]=32'h7f800000|{9'd0,23'($random(seed)&1)};   // inf / NaN in one lane
     if(inj==10&&k==ar)rep=e^16'h1;
+    if(inj==10&&k==ar-FR_LEAD)rep_s=e^16'h1;
     if(inj==9&&k==at)begin warm_reset;k=kend+1;end
     else begin @(negedge ck);start=0;end
    end
@@ -122,13 +137,15 @@ module tb_qkd_pv_fin_s2x8;
   for(i=0;i<=10;i=i+1)kinds[i]=0;
   if($value$plusargs("SEED=%d",seed));if($value$plusargs("N=%d",NCMD));if($value$plusargs("SHIFT=%d",SHIFT));
   if($value$plusargs("STRETCH=%d",STRETCH));
+  if($value$plusargs("RZ_ST=%d",RZ_ST));if($value$plusargs("FR_LEAD=%d",FR_LEAD));
+  if(RZ_ST<0||RZ_ST>8||FR_LEAD<0)begin $display("PVFIN_S2X8 FAIL bad RZ_ST/FR_LEAD");$finish;end
   repeat(3)@(negedge ck);rst_n=1;repeat(2)@(negedge ck);
   for(cmd=0;cmd<NCMD;cmd=cmd+1)one(cmd);
   repeat(20)@(negedge ck);
   $display("COVER healthy %0d inj1..10 %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d edges %0d valid_beats %0d payload_edges %0d",
    okc,kinds[1],kinds[2],kinds[3],kinds[4],kinds[5],kinds[6],kinds[7],kinds[8],kinds[9],kinds[10],edges,vbeats,pay_edges);
-  if(errs==0&&okc>=NCMD/3&&vbeats>=32*okc)$display("PVFIN_S2X8 PASS mut=%0d skew=%0d in_stage=%0d seed=%0d shift=%0d",MUT,SKEW,IN_STAGE,seed,SHIFT);
-  else $display("PVFIN_S2X8 FAIL mut=%0d skew=%0d in_stage=%0d seed=%0d shift=%0d errs=%0d",MUT,SKEW,IN_STAGE,seed,SHIFT,errs);
+  if(errs==0&&okc>=NCMD/3&&vbeats>=32*okc)$display("PVFIN_S2X8 PASS mut=%0d skew=%0d in_stage=%0d seed=%0d shift=%0d rz_st=%0d fr_lead=%0d",MUT,SKEW,IN_STAGE,seed,SHIFT,RZ_ST,FR_LEAD);
+  else $display("PVFIN_S2X8 FAIL mut=%0d skew=%0d in_stage=%0d seed=%0d shift=%0d rz_st=%0d fr_lead=%0d errs=%0d",MUT,SKEW,IN_STAGE,seed,SHIFT,RZ_ST,FR_LEAD,errs);
   $finish;
  end
 endmodule

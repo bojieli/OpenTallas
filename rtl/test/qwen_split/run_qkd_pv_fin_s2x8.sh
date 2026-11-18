@@ -5,6 +5,9 @@
 # PASS (exit 0, one line "PVFIN_S2X8_KIT PASS ...") only if: SKEW 1 (the kit) and SKEW 2, 3 seeds each, all PASS; and every
 # negative control FAILS: slice MUT 1 / 2 / 3, the lane-swap wiring mutant, the R-RTL-6 row-short mutant
 # (pair-0 data not moved with its valid), and +SHIFT=0 / +SHIFT=2 (wrong N); the IN_STAGE 0 default form also PASSes at 0 cycles.
+# KV-PVFIN-CAL 11-18 (D24 hub_C): 2 FIRM stations on the DUT's rz path with the hub-side calendar lead (+RZ_ST=2 +FR_LEAD=2,
+# = qkd_kvs_attn_r17 FR_LEAD 2) PASS lock-step on 3 seeds; the stations without the lead (+RZ_ST=2 +FR_LEAD=0) and the lead
+# without the stations (+RZ_ST=0 +FR_LEAD=2) FAIL.
 set -u
 O=$1; mkdir -p "$O"
 V=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
@@ -29,6 +32,11 @@ for sh in 0 2; do
   r=$(run s1 +SEED=3 +N=60 +SHIFT=$sh); echo "$r"
   if grep -q '^PVFIN_S2X8 FAIL' <<< "$r"; then echo "NEGCTRL_CAUGHT shift=$sh"; else echo "NEGCTRL_SURVIVED shift=$sh"; ok=0; fi
 done
+for sd in 3 11 29; do r=$(run s1 +SEED=$sd +N=300 +RZ_ST=2 +FR_LEAD=2); echo "$r"; grep -q '^PVFIN_S2X8 PASS' <<< "$r" || ok=0; done
+for c in "2 0" "0 2"; do set -- $c
+  r=$(run s1 +SEED=3 +N=60 +RZ_ST=$1 +FR_LEAD=$2); echo "$r"
+  if grep -q '^PVFIN_S2X8 FAIL' <<< "$r"; then echo "NEGCTRL_CAUGHT rz_st=$1 fr_lead=$2"; else echo "NEGCTRL_SURVIVED rz_st=$1 fr_lead=$2"; ok=0; fi
+done
 for m in 1 2 3; do
   build m$m 1 $m || { ok=0; continue; }
   r=$(run m$m +SEED=3 +N=60); echo "$r"
@@ -42,5 +50,5 @@ r=$(run z0 +SEED=11 +N=300); echo "$r"; grep -q '^PVFIN_S2X8 PASS' <<< "$r" || o
 build swap 1 0 -DOT_PVFIN_S2X8_MUTANT_LANESWAP || ok=0
 r=$(run swap +SEED=3 +N=30); echo "$r"
 if grep -q '^PVFIN_S2X8 FAIL' <<< "$r"; then echo "MUTANT_CAUGHT laneswap"; else echo "MUTANT_SURVIVED laneswap"; ok=0; fi
-if [ $ok = 1 ]; then echo "PVFIN_S2X8_KIT PASS lockstep vs qkd_pv_fin_s SKEW 1+2 x 3 seeds x 300 cmds, IN_STAGE 1 (declared +1 cycle) + IN_STAGE 0 (0 cycles); negatives shift0 shift2 mut1-3 rowshort laneswap caught"; exit 0; fi
+if [ $ok = 1 ]; then echo "PVFIN_S2X8_KIT PASS lockstep vs qkd_pv_fin_s SKEW 1+2 x 3 seeds x 300 cmds, IN_STAGE 1 (declared +1 cycle) + IN_STAGE 0 (0 cycles); negatives shift0 shift2 mut1-3 rowshort laneswap caught; rz 2 stations + FR_LEAD 2 x 3 seeds PASS, rz2/lead0 and rz0/lead2 caught"; exit 0; fi
 echo "PVFIN_S2X8_KIT FAIL"; exit 1

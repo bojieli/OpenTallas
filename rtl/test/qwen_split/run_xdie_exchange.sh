@@ -31,6 +31,9 @@ CUR=${XQ_CUR:-'2,2,2,3,2,2/11,11,9,9,9,9,9'}          # QW-XDIE: g5r2b compute (
 D22BU='2,2,2,3,2,2/13,13,9,9,9,11,11'                 # KV d22bu as-built (relay_check: rx_record 13, tx_slot 9, tx_record 11)
 CUR_LAW='--c-real 1 --k-real 3 --kv-codec 2 --attn-tx-shift 1 --status-delay 213'
 CUR_G='-GC_REAL=1 -GK_REAL=4 -GK_NTX=3 -GPOS_P=255 -DXQ_K_SFM'
+# KV-PVFIN-CAL 11-18: the D24 hub_C frame (K_REAL=5: hub io + FIRM fr stations + hub_C pvfin pair; D23 depths pvfst 45 / ahs 51 /
+# fin 46, FR_OFS -7, ZB_ADD 83, boot D_QK 3 / D_RL 235 / F_DLY 2 + 45 + 46 + 2 = 95) on the cur_pair link
+HUBC_G='-GC_REAL=1 -GK_REAL=5 -GK_NTX=3 -GPOS_P=255 -DXQ_K_SFM -GK_DQ=3 -GK_DR=235 -GK_FD=95'
 # name | expect (PASS | FAIL | BUILD_FAIL) | calendar flags | bench -G flags [| source mod: face4 = vendored kvs_attn face MUT 4]
 CONFIGS=(
  "vc|PASS|--c-real 1 --k-real 0 --stages $PLAN|-GC_REAL=1 -GK_REAL=0"
@@ -99,6 +102,13 @@ CONFIGS=(
  # KV d22bu as-built seam (route A D2D_PINS: K.rx_record 13 / K.tx_record 11) with the bound TXDP_K 22, and route R (compiled 24)
  "cur_kseam_d22bu_bound|FAIL|$CUR_LAW --stages $D22BU --masters-txdp 8,3,1,10/22,4,3,3|$CUR_G"
  "cur_kseam_d22bu_route_r|PASS|$CUR_LAW --stages $D22BU|$CUR_G"
+ # KV-PVFIN-CAL 11-18 (D24): 2 FIRM stations on ahub.fr -> pvfin.rz absorbed by the tile's FR_LEAD 2 (the hub exports 2 edges
+ # early; pvfin / face / calendar / link unchanged = 0 cycles); stations without the lead and the lead without the stations fault
+ "hubc_frame|PASS|$CUR_LAW --stages $CUR|$HUBC_G"
+ "hubc_rz2_lead2|PASS|$CUR_LAW --stages $CUR|$HUBC_G -GK_RZST=2 -GK_FRL=2"
+ "hubc_rz2_lead2_t4096|PASS|$CUR_LAW --stages $CUR|$HUBC_G -GK_RZST=2 -GK_FRL=2 -GPOS_P=4095"
+ "hubc_rz2_lead0|FAIL|$CUR_LAW --stages $CUR|$HUBC_G -GK_RZST=2"
+ "hubc_rz0_lead2|FAIL|$CUR_LAW --stages $CUR|$HUBC_G -GK_FRL=2"
  # positive-vehicle negatives on cur_pair
  "cur_mut_txdp_c_off1|FAIL|$CUR_LAW --stages $CUR --masters-txdp 9,3,1,10/22,4,3,3|$CUR_G"
  "cur_mut_status_done|FAIL|$CUR_LAW --stages $CUR|$CUR_G -GMUT=8"
@@ -115,7 +125,7 @@ SRC_COMMON=("rtl/lib/ot_rst_pipe.sv" "$S/ot_qwen_crc_parallel.sv" "$S/ot_qwen_st
  "$Q/qfd_native59_static_service.sv" "$Q/qfd_native59_record_endpoint.sv" "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv"
  "$S/qkd_native_attention_programme.sv" "$S/qkd_native59_descriptor_producer.sv" "$S/qkd_native_attention_static_ctl.sv"
  "$S/qkd_native59_command_guard.sv" "$S/qkd_attn_cal_gen.sv" "$S/qkd_attn_service_root.sv" "$S/qkd_attn_result_face_s.sv"
- "$S/qkd_pv_fin_s.sv" "rtl/hdc/ot_hdc_fp32_add_lat.sv" "rtl/hdc/ot_hdc_fp32_mul_lat.sv" "rtl/hdc/ot_hdc_prefix.sv" "rtl/hdc/ot_hdc_fastfp.sv"
+ "$S/qkd_pv_fin_s.sv" "$S/qkd_pv_fin_s8.sv" "$S/qkd_pv_fin_s8_pin_physical_model.sv" "rtl/hdc/nearhbm/qkd_ahub_static_dw.sv" "rtl/hdc/ot_hdc_fp32_add_lat.sv" "rtl/hdc/ot_hdc_fp32_mul_lat.sv" "rtl/hdc/ot_hdc_prefix.sv" "rtl/hdc/ot_hdc_fastfp.sv"
  "rtl/lib/ot_pin_land.sv" "rtl/lib/face_land/qkd_kvs_attn_fl_r17.sv" "rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r17.sv"
  "$D/ot_qwen_d2d_safe_fo.sv" "$D/ot_qwen_d2d_sfm.sv"
  "physical/asap7_memory_macros_v2/d2d_sram_1r1w_64x137_m1_r2c2_p288/d2d_sram_1r1w_64x137_m1_r2c2_p288.v"

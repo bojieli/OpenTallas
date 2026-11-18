@@ -703,7 +703,13 @@ module qkd_attn_fault_root_r17 #(parameter integer ND=8,parameter integer NC=4,p
 endmodule
 
 // The tile core (ports = qkd_kvs_attn_ba5 + the issue landing copies from the face wrapper).
-module qkd_kvs_attn_r17 #(parameter integer MUT=0,parameter integer NIS=24,parameter integer RETIRE_STATIC=0,parameter integer STATUS_DELAY=0,parameter integer ZB_ADD=0)(
+// KV-PVFIN-CAL 11-18 (KV-HG-OPUS ruling option 1, D24 hub_C): FR_LEAD = k (opt-in, default 0 = the as-built ahs word, flop for
+// flop) hands the attention hub R - k instead of R in ahs[164:149], so qkd_ahub_static_dw (signed, FR_OFS fixed) exports fr k edges
+// EARLIER while pvfin (pvfst R), the result face and the calendar keep R: k registered stations on ahub.fr -> pvfin.rz then land
+// on pvfin's unchanged R slot.  0 cycles: no command, result, STATUS or retire age moves.  Legal while the hub export stays after
+// its rz_publish (PV_START + R - k + FR_OFS >= HUB_PUB + 3; R is stretched to the link slot, so the margin is hundreds of
+// edges) -- the hub io faults otherwise.  Law: FR_OFS = D(pvfst) - PV_LEAD - D(ahfr) - D(ahs) - 1 + FR_LEAD.
+module qkd_kvs_attn_r17 #(parameter integer MUT=0,parameter integer NIS=24,parameter integer RETIRE_STATIC=0,parameter integer STATUS_DELAY=0,parameter integer ZB_ADD=0,parameter integer FR_LEAD=0)(
     input wire ck,
     input wire rst_n,
     input wire [0:0] ufs_WS,
@@ -801,7 +807,11 @@ module qkd_kvs_attn_r17 #(parameter integer MUT=0,parameter integer NIS=24,param
         .cycles(), .local_fault(w_root__local_fault), .io_fault(w_root__io_fault));
     assign pvst = {w_root__ep, w_root__ctx, w_root__start_pv};
     assign pvfst = {w_root__cal[175:128], w_root__ep, w_root__start_pv};
+    generate if (FR_LEAD == 0) begin : g_ahs
     assign ahs = {w_root__cal[175:160], w_root__cal[127:16], w_root__ctx, w_root__layer, w_root__ep, w_root__start_qk};
+    end else begin : g_ahs_fr_lead
+    assign ahs = {16'(w_root__cal[175:160] - 16'(FR_LEAD)), w_root__cal[127:16], w_root__ctx, w_root__layer, w_root__ep, w_root__start_qk};
+    end endgenerate
     assign acal_WS = {w_root__cal[15:0], w_root__cal[47:32], w_root__cal[31:16]};
     assign acal_WN = {w_root__cal[15:0], w_root__cal[47:32], w_root__cal[31:16]};
     assign acal_ES = {w_root__cal[15:0], w_root__cal[47:32], w_root__cal[31:16]};

@@ -48,6 +48,12 @@
 //      no KV-internal relays, so PV_LEAD 0 / F_DLY 2 = pvfin -> fin land 1 -> face); i_ctl is driven one edge early
 //      (the wrapper lands it).  `define XQ_K_SFM: the KV D2D master is the die's bound qkd_d2d_static_sfm (r7w_sfm2:
 //      NL 2, NTX K_NTX, SAFE_RC 1, SRAMV 2, FEG 1) instead of qkd_d2d_static.
+// KV-PVFIN-CAL 2026-11-18: K_REAL=5 = the D24 hub_C frame around the K_REAL=4 tile (+ ZB_ADD K_ZB, FR_LEAD K_FRL): ahs ->
+//      K_DAHS relays -> the REAL hub io qkd_ahub_static_io (FR_OFS K_FROFS; the sealed hub core is modelled by its rz_publish
+//      edge at io age HUB_PUB and a constant reciprocal vector) -> fr -> K_RZST FIRM stations -> the REAL hub_C pvfin pair
+//      qkd_pv_fin_s2x8_pin_i1_rst2 (+2 out) <- pvfst after K_DPVF relays; fin -> K_DFIN relays -> the tile (F_DLY K_FD =
+//      2 + K_DPVF + K_DFIN + 2).  Law: FR_OFS = K_DPVF - PV_LEAD - K_RZST - K_DAHS - 1 + K_FRL.  The hub io faults on an
+//      export before its rz_publish (XQ_HUBC prints the margin), pvfin faults on rz off its R slot.
 // QXF-LINK 2026-10-18: the die masters take TXDP from the compiler (xdie_params.svh P_TXDP_C / P_TXDP_K = the calendar's
 //      TXD; F4), STATUS words come from qkd_native_status_word (F2), QGAP default 0 = the compiler's CMD->Q law (F1).
 // =====================================================================================================================
@@ -67,6 +73,8 @@ module tb_xdie_qwen_exchange;
     parameter integer MUT = 0, C_REAL = 1, K_REAL = 1, NL = 35, QGAP = 0, POS_P = 255, FIN_MUT = 0, K_TEAR = 0;
     parameter integer K_NTX = 4;           // Q-XDIE-GEN 10-18: KV die binds qkd_d2d_static .NTX(3) (S-QTIES QC-12, kvs14p)
     parameter integer K_RS = 1, K_SD = 213, K_PL = 0, K_FD = 2, K_DQ = 57, K_DR = 91;   // K_REAL=4 (d22bu: RS 1, SD 213, DQ 57, DR 91)
+    // K_REAL=5 hub_C frame (KV-PVFIN-CAL): hub_C D23 depths pvfst 45 / ahs 51 / fin 46, ahub FR_OFS -7, ZB_ADD 83
+    parameter integer K_ZB = 83, K_FRL = 0, K_RZST = 0, K_DPVF = 45, K_DAHS = 51, K_DFIN = 46, K_FROFS = -7;
     parameter integer XQ_SKIP_BASE = 0;
     parameter integer XQ_TXDP_UNSET = 0;   // F4 witness: build the masters without the compiled TXDP (must not elaborate)
     parameter CALDIR = "cal";
@@ -480,6 +488,82 @@ module tb_xdie_qwen_exchange;
             $display("XQ_K17 layer 1: first att_tx_slot at the tile pins rel %0d programme age %0d (tile tx_first %0d)", rel,
                 u_kattn.u_core.u_attn.ctl.age, u_kattn.u_core.w_attn_cal__tx_first); end
         always @(posedge ck) if (rst_n && act && (uff || k_face_rf || k_cal_f || k_root_lf || k_root_iof)) err("pvfin / result face / calendar / root fault");
+    end else if (K_REAL == 5) begin : g_khc
+        // KV-PVFIN-CAL 11-18: the hub_C frame (header): K_REAL=4 tile + hub io + FIRM fr stations + hub_C pvfin pair + relays
+        wire [30:0] pvst; wire [64:0] pvfst; wire [164:0] ahs; wire [536:0] prg; wire [47:0] ac0, ac1, ac2, ac3; wire [7:0] arh;
+        wire kv_go_e = act && rel == P_KV_RUN - 31 + (MUT == 1 ? 1 : 0);
+        wire kv_issue_e = act && rel == P_KV_RUN - 9 + (MUT == 1 ? 1 : 0);
+        wire kv_run_e = act && rel == P_KV_RUN - 1 + (MUT == 1 ? 1 : 0);
+        wire [108:0] i_ctl = {TOK, kv_go_e, stage, 18'(POS), EP, 14'(POS + 1), kv_run_e, kv_issue_e, 1'b1, 1'b1,
+                              8'(K_DR), 8'(K_DQ), 8'(K_FD), 8'(K_PL)};
+        wire [521:0] srx = {512'd0, 5'd0, 4'd0, a_rxe};
+        wire [533:0] fin; wire uff;
+        wire h_start, h_fault, fr_v; wire [15:0] h_ep, fr_e; wire [5:0] h_l; wire [13:0] h_t; wire [191:0] h_cal;
+        wire [63:0] h_sie; wire [23:0] h_sil; wire [127:0] fr_rz;
+        qkd_kvs_attn_fl #(.MUT(0), .RETIRE_STATIC(K_RS), .STATUS_DELAY(K_SD), .ZB_ADD(K_ZB), .FR_LEAD(K_FRL)) u_kattn (.ck(ck), .rst_n(rst_n),
+            .ufs_WS(1'b0), .ufs_WN(1'b0), .ufs_ES(1'b0), .ufs_EN(1'b0), .ufh(h_fault),
+            .ufp0(1'b0), .ufp1(1'b0), .uff(uff), .ufk_WS(1'b0), .ufk_WN(1'b0), .ufk_ES(1'b0), .ufk_EN(1'b0),
+            .d2d__srx(srx), .d2d__rx_payload(a_rxp), .d2d__att_tx_slot(a_txs), .d2d__att_tx_kind(a_tk), .d2d__att_tx_beat(a_tb),
+            .fin(fin), .attn__tx_valid(a_tv), .attn__tx_payload(a_tp), .pvst(pvst), .pvfst(pvfst), .ahs(ahs), .prg(prg),
+            .acal_WS(ac0), .acal_WN(ac1), .acal_ES(ac2), .acal_EN(ac3), .arh(arh), .i_ctl(i_ctl));
+        // die relays of the hub_C type (kept stages): pvfst -> pvfin, ahs -> ahub
+        wire [64:0] pvfst_d; wire [164:0] ahs_d;
+        xq_dly #(65, K_DPVF) d_pvf (.ck(ck), .a(pvfst), .b(pvfst_d));
+        xq_dly #(165, K_DAHS) d_ahs (.ck(ck), .a(ahs), .b(ahs_d));
+        // the REAL hub io (export fr at io age PV_START + R_hub + FR_OFS); hub core = its rz_publish edge at io age HUB_PUB
+        wire [127:0] rzw = {1'b0, 8'd123, 23'd0, 1'b0, 8'd124, 23'd0, 1'b0, 8'd125, 23'd0, 1'b0, 8'd126, 23'd0};
+        wire h_pub = u_hio.active && u_hio.age == h_cal[191:176];
+        qkd_ahub_static_io #(.AP_OFS({4{16'd2}}), .FR_OFS(K_FROFS), .WF_RLY(0), .MUT(0)) u_hio (.ck(ck), .rst_n(rst_n),
+            .hs_start(ahs_d[0]), .hs_ep(ahs_d[16:1]), .hs_layer(ahs_d[22:17]), .hs_ctx(ahs_d[36:23]), .hs_cal_lo(ahs_d[148:37]),
+            .hs_cal_r(ahs_d[164:149]), .start(h_start), .epoch(h_ep), .layer(h_l), .T(h_t), .hub_cal(h_cal), .si_epoch(h_sie),
+            .si_layer(h_sil), .rz_publish(h_pub), .rz_epoch(h_sie[15:0]), .rz_vector(rzw), .hub_fault(1'b0),
+            .fr_valid(fr_v), .fr_epoch(fr_e), .fr_rz(fr_rz), .fault(h_fault));
+        // ahub.fr -> pvfin.rz: K_RZST FIRM stations
+        wire [144:0] fr_d;
+        xq_dly #(145, K_RZST) d_fr (.ck(ck), .a({fr_rz, fr_e, fr_v}), .b(fr_d));
+        // pair streams on pvfin's compiled slots (stimuli, relative to the start pvfin samples)
+        integer fk = -1; reg [15:0] s_p0 = 0, s_p1 = 0, s_r = 0, s_ep = 0;
+        always @(posedge ck) if (rst_n) begin
+            if (pvfst_d[0]) begin fk <= 1; s_p0 <= pvfst_d[32:17]; s_p1 <= pvfst_d[48:33]; s_r <= pvfst_d[64:49]; s_ep <= pvfst_d[16:1]; end
+            else if (fk >= 1 && fk < 20000) fk <= fk + 1;
+        end
+        wire f0v = fk >= 1 && fk >= s_p0 && fk < s_p0 + 32, f1v = fk >= 1 && fk >= s_p1 && fk < s_p1 + 32;
+        wire [4:0] f0b = 5'(fk - s_p0), f1b = 5'(fk - s_p1);
+        wire fo_v; wire [4:0] fo_b; wire [15:0] fo_e; wire [511:0] fo_d;
+        qkd_pv_fin_s2x8_pin_i1_rst2 #(.ADD_LAT(7), .MUL_LAT(6), .SKEW(1), .MUT(0)) u_fin (.ck(ck), .rst_n(rst_n),
+            .start(pvfst_d[0]), .epoch(pvfst_d[16:1]), .cal(pvfst_d[64:17]),
+            .p0_valid(f0v), .p0_beat(f0b), .p0_epoch(s_ep), .p0_data(f0v ? pbeat(f0b, lay) : 512'd0),
+            .p1_valid(f1v), .p1_beat(f1b), .p1_epoch(s_ep), .p1_data(f1v ? pbeat(f1b, lay) : 512'd0),
+            .rz_valid(fr_d[0]), .rz_epoch(fr_d[16:1]), .rz(fr_d[144:17]),
+            .out_valid(fo_v), .out_beat(fo_b), .out_epoch(fo_e), .out_data(fo_d), .fault(uff));
+        xq_dly #(534, K_DFIN) d_fin (.ck(ck), .a({fo_d, fo_e, fo_b, fo_v}), .b(fin));
+        wire [175:0] fcal = u_kattn.u_core.w_root__cal;
+        wire [15:0] fpv = fcal[127:112], fp0 = fcal[143:128], fp1 = fcal[159:144], fr = fcal[175:160], fhp = fcal[95:80];
+        assign kq_v = prg[19]; assign kq_b = prg[24:20]; assign kq_d = prg[536:25];
+        assign kreq_v = prg[0];
+        wire k_face_rf = u_kattn.u_core.u_attn_face.result_fault, k_root_lf = u_kattn.u_core.w_root__local_fault,
+             k_root_iof = u_kattn.u_core.w_root__io_fault, k_cal_f = u_kattn.u_core.u_attn_cal.fault;
+        assign k_pf = u_kattn.u_core.u_attn.fault;
+        // hub export witness: io ages of rz_publish and of the fr export, pvfin age of the rz landing (= R on the slot)
+        integer pub_age = -1, exp_age = -1, rz_pv_age = -1; reg hl = 0, fl = 0, sf = 0;
+        always @(posedge ck) if (rst_n) begin
+            if (h_start) begin pub_age <= -1; exp_age <= -1; end
+            if (h_pub) pub_age <= u_hio.age;
+            if (u_hio.em_w) exp_age <= u_hio.age;
+            if (pvfst_d[0]) rz_pv_age <= -1; else if (fr_d[0]) rz_pv_age <= fk;
+        end
+        always @(posedge ck) if (rst_n && act && fo_v && fo_b == 0 && !fl) begin fl <= 1;
+            $display("XQ_HUBC layer %0d T %0d: hub R %0d (root R %0d, FR_LEAD %0d) rz_publish io age %0d, fr export io age %0d -> margin %0d edges; fr stations %0d, rz at pvfin age %0d (pvfin R %0d); PV %0d P0 %0d P1 %0d HUB_PUB %0d",
+                lay, POS + 1, ahs[164:149], fr, K_FRL, pub_age, exp_age, exp_age - pub_age, K_RZST, rz_pv_age, s_r, fpv, fp0, fp1, fhp);
+            $display("XQ_FIN layer %0d T %0d: pvfin beat0 at root age %0d = PV %0d + max(P0 %0d, P1 %0d, R %0d) + 17 + D(pvfst) %0d + 2 -> %0d | programme tx_first %0d end %0d (RETIRE_STATIC %0d STATUS_DELAY %0d)",
+                lay, POS + 1, u_kattn.u_core.w_root__age, fpv, fp0, fp1, fr, K_DPVF,
+                fpv + ((fp0 > fp1) ? ((fp0 > fr) ? fp0 : fr) : ((fp1 > fr) ? fp1 : fr)) + 17 + K_DPVF + 2, u_kattn.u_core.w_attn_cal__tx_first,
+                u_kattn.u_core.w_attn_cal__end_age, K_RS, K_SD); end
+        always @(posedge ck) if (rst_n && (k_pf || k_face_rf || uff || h_fault || k_root_lf || k_root_iof || k_cal_f) && !sf) begin sf <= 1;
+            $display("XQ_CAUSE hubc kvs_attn_r17+ahub_io+pvfin cyc %0d rel %0d age %0d: ctl local %0d record %0d | face result_fault %0d | root lf %0d iof %0d | cal fault %0d | hub io fault %0d (pub io age %0d export io age %0d) | pvfin fault %0d (rz at pvfin age %0d, R slot %0d) | cal P0 %0d P1 %0d PV %0d R %0d",
+                cyc, rel, u_kattn.u_core.u_attn.ctl.age, u_kattn.u_core.u_attn.ctl.local_fault, u_kattn.u_core.u_attn.ctl.record_fault,
+                k_face_rf, k_root_lf, k_root_iof, k_cal_f, h_fault, pub_age, exp_age, uff, rz_pv_age, s_r, fp0, fp1, fpv, fr); end
+        always @(posedge ck) if (rst_n && act && (uff || h_fault || k_face_rf || k_cal_f || k_root_lf || k_root_iof)) err("hubc: pvfin / hub io / result face / calendar / root fault");
     end else begin : g_kstub
         wire r_ev = act && (rel >= P_RS && rel < P_RS + 32 || rel == P_RE);
         wire [3:0] r_kind = rel == P_RE ? 4'd4 : 4'd3;
