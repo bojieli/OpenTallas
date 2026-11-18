@@ -1,11 +1,5 @@
-# HEAD die route units, recipe run nf13s (NF13a plan, SIGNED hd_tile view 717.12 b54b ECO i1, plan abstract hd_st_n4 993.6) (cut-abstracts-under-clock + tap snap + DROP_GRT_OBS), auto-updated 2026-11-17 19:48:37 PST by intel2 ~/tmp/head100_utable.sh
-# DONE 49, DONE with DRC>0: 0, DONE with RSS>20 GB: 1; fields: host unit state drc rss_mb(DRT hwm) wall; independent per-unit run (earlier-pass nets fixed, unrouted), unstamped NC tree
-civil-redfish u048_b DONE drc=0 rss_mb=12137 wall=18:36.92 [INFO DRT-0199]   Number of violations =
-civil-redfish u060_b DONE drc=0 rss_mb=11611 wall=27:26.19 [INFO DRT-0199]   Number of violations =
-civil-redfish u062_b DONE drc=0 rss_mb=10406 wall=23:43.03 [INFO DRT-0199]   Number of violations =
-civil-redfish u063_b DONE drc=0 rss_mb=11325 wall=23:19.01 [INFO DRT-0199]   Number of violations =
-civil-redfish u069_b DONE drc=0 rss_mb=9802 wall=28:03.36 [INFO DRT-0199]   Number of violations =
-civil-redfish u070_b DONE drc=0 rss_mb=10934 wall=17:28.79 [INFO DRT-0199]   Number of violations =
+# HEAD die route units, recipe run nf13s (NF13a plan, SIGNED hd_tile view 717.12 b54b ECO i1, plan abstract hd_st_n4 993.6) (cut-abstracts-under-clock + tap snap + DROP_GRT_OBS), auto-updated 2026-11-17 20:03:47 PST by intel2 ~/tmp/head100_utable.sh
+# DONE 31, DONE with DRC>0: 0, DONE with RSS>20 GB: 1; fields: host unit state drc rss_mb(DRT hwm) wall; independent per-unit run (earlier-pass nets fixed, unrouted), unstamped NC tree
 key-cardinal u085_b DONE drc=0 rss_mb=11331 wall=34:26.72 [INFO DRT-0199]   Number of violations =
 key-cardinal u086_b DONE drc=0 rss_mb=11047 wall=45:51.03 [INFO DRT-0199]   Number of violations =
 key-cardinal u087_b DONE drc=0 rss_mb=11179 wall=42:09.48 [INFO DRT-0199]   Number of violations =
@@ -36,16 +30,4 @@ key-cardinal u185_b DONE drc=0 rss_mb=9858 wall=27:52.90 [INFO DRT-0199]   Numbe
 key-cardinal u186_b DONE drc=0 rss_mb=11080 wall=29:38.91 [INFO DRT-0199]   Number of violations =
 key-cardinal u187_b DONE drc=0 rss_mb=10555 wall=35:15.02 [INFO DRT-0199]   Number of violations =
 key-cardinal u188_b DONE drc=0 rss_mb=11115 wall=39:10.87 [INFO DRT-0199]   Number of violations =
-civil-redfish u233_b DONE drc=0 rss_mb=11248 wall=14:42.59 [INFO DRT-0199]   Number of violations =
-civil-redfish u269_b DONE drc=0 rss_mb=11392 wall=12:31.95 [INFO DRT-0199]   Number of violations =
-civil-redfish u270_b DONE drc=0 rss_mb=11161 wall=19:02.77 [INFO DRT-0199]   Number of violations =
-civil-redfish u271_b DONE drc=0 rss_mb=10044 wall=9:22.39 [INFO DRT-0199]   Number of violations =
-civil-redfish u272_b DONE drc=0 rss_mb=10699 wall=16:19.74 [INFO DRT-0199]   Number of violations =
-civil-redfish u293_b DONE drc=0 rss_mb=10096 wall=9:58.84 [INFO DRT-0199]   Number of violations =
-civil-redfish u294_b DONE drc=0 rss_mb=11245 wall=15:44.34 [INFO DRT-0199]   Number of violations =
-civil-redfish u295_b DONE drc=0 rss_mb=11468 wall=15:11.53 [INFO DRT-0199]   Number of violations =
-civil-redfish u296_b DONE drc=0 rss_mb=12131 wall=15:29.20 [INFO DRT-0199]   Number of violations =
-civil-redfish u297_b DONE drc=0 rss_mb=10715 wall=15:47.24 [INFO DRT-0199]   Number of violations =
-civil-redfish u298_b DONE drc=0 rss_mb=12068 wall=15:24.18 [INFO DRT-0199]   Number of violations =
-civil-redfish u299_b DONE drc=0 rss_mb=10713 wall=12:30.93 [INFO DRT-0199]   Number of violations =
 key-cardinal u300_b DONE drc=0 rss_mb=11682 wall=20:47.29 [INFO DRT-0199]   Number of violations =
