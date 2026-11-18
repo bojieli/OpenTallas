@@ -126,3 +126,10 @@ A: hold ECO hslice_mm4 passed the limits (plan made, ECO route running); mergex_
 - hslice_mm7 (50 ps) already failed and is closed; no run above 30 exists.
 - Launched the lower-margin form now, in parallel: hslice_mm15r + mergex_mm15r = r692 tree, guards on, HM 0.015 (epyc7 svc_r692/route_r692_hm15.sh, exit files svc_r692/<core>_mm15r.exit, client logs intel2 ~/fable-fix-s81-svc2/<core>_mm15r.out).
 - Live: hslice_mm6 detailed route (violations 471 -> 223, falling), mergex_mm6 CTS hold repair, hslice_mm3r CTS, mergex_mm3r synth. No waiter armed on the mm15r pair yet.
+
+## 11-18 04:3x PST: six forms read, none finished; DBs handed to NOMCAP-1118 (r708)
+- No exit file on any of hslice_mm6 / mergex_mm6 (epyc10), hslice_mm3r / mergex_mm3r / hslice_mm15r / mergex_mm15r (epyc7): the three hslice runs are in detailed route, the three mergex runs in CTS hold repair. Nothing new signed; cores 4 of 6.
+- Finished routed DBs (DRC 0) handed to NOMCAP-1118 for the r708 re-sign, epyc7 /srv/opentallas-scratch2/claude/s81-fix-opus/svc/build:
+  hslice_mm4/work/orfs (results/asap7/opentallas_ot_hdc_v41x_idx_hslice_asap7_ref_hslice_mm4/base/6_final.odb; sdc hslice_mm4/signoff.sdc; sign-off TT +175.5 / FF -6.15, routed sta r2r -3.27) = best hslice; hslice_mm3b (r2r -5.92) second.
+  mergex_mm3b/work/orfs (…attn_merge_x_asap7_ref_mergex_mm3b/base/6_final.odb; sdc mergex_mm3b/signoff.sdc; TT +97.83, r2r -6.93) = only finished mergex.
+- If NOMCAP signs one under r708: export it as s81/ot_s81_svc_<core>__h16<run>_1118 (rtx-pro + AGIdock + INDEX row) and stop the remaining runs of that core by exact unit (ot-heavy-stop --match <run dir> after a dry run).
