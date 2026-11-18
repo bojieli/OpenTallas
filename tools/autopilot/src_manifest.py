@@ -34,6 +34,8 @@ import tempfile
 
 MANIFEST = ".src-manifest.json"
 HASHFILE = ".src-manifest.sha256"
+SNAPGROUP = ".snap-group"        # TOOLS-DECOUPLE phase 2 (live_tree.py): a snapshot of the die's live tree; its files share inodes with the live tree and the
+                                 # die's other snapshots by design (read-only files, rename-only writes), so the shared-inode check does not apply
 LINKBASE = ".link-base"          # STAGE A (COORD 11-17, QC D-steps wrote 57 GB each): text file naming the published base tree whose inodes this tree shares
 DEFAULT_SCOPE = ["tools", "rtl", "physical", "plans"]
 SKIP_DIRS = ("__pycache__", ".git", ".pytest_cache")
@@ -68,7 +70,7 @@ def walk_tree(root):
         for f in sorted(fn):
             p = os.path.join(dp, f)
             rel = os.path.relpath(p, root)
-            if rel in (MANIFEST, HASHFILE, LINKBASE) or skipped(rel):
+            if rel in (MANIFEST, HASHFILE, LINKBASE, SNAPGROUP) or skipped(rel):
                 continue
             out[rel] = p
     return out
@@ -152,6 +154,14 @@ def shares_with_base(path, rel, base):
         return False
 
 
+def snap_group(root):
+    """the live tree a live_tree.py snapshot was taken from ('' = not a snapshot)"""
+    try:
+        return open(os.path.join(root, SNAPGROUP)).read().strip()
+    except OSError:
+        return ""
+
+
 def load_manifest(root):
     try:
         with open(os.path.join(root, MANIFEST)) as f:
@@ -192,6 +202,7 @@ def verify(root, expect="", ro=False, full=False):
     have = walk_tree(root)
     lbase = link_base(root)
     kids = linked_children(root)
+    snap = bool(snap_group(root))
     for rel in sorted(want):
         p = have.get(rel)
         if p is None:
@@ -200,7 +211,7 @@ def verify(root, expect="", ro=False, full=False):
             errs.append(f"SRC_MANIFEST DRIFT {rel} (modified: not the manifest content)")
         elif ro and writable(p):
             errs.append(f"SRC_MANIFEST DRIFT {rel} (writable: published trees are read-only)")
-        elif ro and not os.path.islink(p) and os.lstat(p).st_nlink > 1 and not shares_with_base(p, rel, lbase) \
+        elif ro and not snap and not os.path.islink(p) and os.lstat(p).st_nlink > 1 and not shares_with_base(p, rel, lbase) \
                 and not links_accounted(p, rel, os.lstat(p), lbase, kids):
             errs.append(f"SRC_MANIFEST DRIFT {rel} (hardlinked, nlink {os.lstat(p).st_nlink}: a write or chmod elsewhere reaches this file)")
     nshared = sum(1 for e in errs if "hardlinked, nlink" in e)
@@ -265,6 +276,7 @@ def cached_receipt(root, expect=""):
     if set(have) != set(want):
         errs.append("SRC_MANIFEST CACHE MISS current inventory differs from verified manifest")
     paths = [root, os.path.join(root, MANIFEST), os.path.join(root, HASHFILE)] + list(have.values())
+    snap = bool(snap_group(root))
     lbase = link_base(root)                                     # a link-published tree: inodes shared with exactly its declared base are intended (as verify)
     for dp, dn, _fn in os.walk(root):
         dn[:] = [d for d in dn if d not in SKIP_DIRS]
@@ -274,7 +286,7 @@ def cached_receipt(root, expect=""):
             st = os.lstat(q)
             if not stat.S_ISLNK(st.st_mode) and st.st_mode & (stat.S_IWUSR | stat.S_IWGRP | stat.S_IWOTH):
                 errs.append(f"SRC_MANIFEST CACHE MISS writable {os.path.relpath(q, root)}")
-            if stat.S_ISREG(st.st_mode) and st.st_nlink > 1 and not shares_with_base(q, os.path.relpath(q, root), lbase):
+            if stat.S_ISREG(st.st_mode) and st.st_nlink > 1 and not snap and not shares_with_base(q, os.path.relpath(q, root), lbase):
                 errs.append(f"SRC_MANIFEST CACHE MISS shared inode {os.path.relpath(q, root)} nlink={st.st_nlink}")
         except OSError as e:
             errs.append(f"SRC_MANIFEST CACHE MISS stat {q}: {e}")
