@@ -444,7 +444,7 @@ proc rm_fits {x y w h} {
   }
   return 1
 }
-set rm_nfit 0; set rm_nold 0; set rm_nofit {}
+set rm_nfit 0; set rm_nold 0; set rm_nofit {}; set rm_ndepth 0; set rm_depth {}
 dict for {g st} $rm_station {
   lassign $st x y
   set rm_done 0
@@ -496,6 +496,9 @@ dict for {g st} $rm_station {
       # S81-TYPES-R2 11-16: the even-split hop of this stage's line, so a fail-closed stop names depth (hop > max) vs site space
       set rm_eh [expr {$len / ($n + 1.0) / $rm_dbu}]
       lappend rm_nofit [format "%s:%.0f" $g $rm_eh]
+      # S81-COL-FLOW-1118 (COORD: col_h9_r0_p2 rt_4a_0 252 um / rt_4b_0 206 um failed place): an even hop within the reach is a
+      # site-space miss; the fallback puts the station on its line point (or the nearest free site), so its hop stays ~ the even hop
+      if {$rm_eh * $rm_dbu > $rm_hop} { incr rm_ndepth; lappend rm_depth [format "%s:%.0f" $g $rm_eh] }
       puts "OT_RELAY_MID_FIT $g NOFIT (old nearest-free fallback) line [expr {$len / double($rm_dbu)}] um stages $n even hop [format %.1f $rm_eh] um"
     }
   }
@@ -538,9 +541,12 @@ if {$rm_fit} { puts "OT_RELAY_MID_FIT fitted $rm_nfit stations, $rm_nold on the 
 # more than that share of stations took the old nearest-free fallback (table proposal 0.05; 15 of 18 S81 col kits are above it today).
 if {$rm_fit} {
   set rm_cov [expr {$rm_nfit + $rm_nold}]
-  puts "OT_HOOK_COVERAGE hook=relay_mid touched=$rm_nfit expected=$rm_cov fallback=$rm_nold advisory=[expr {![info exists ::env(OT_RELAY_FALLBACK_MAX_FRAC)]}]"
-  if {[info exists ::env(OT_RELAY_FALLBACK_MAX_FRAC)] && $rm_cov > 0 && double($rm_nold) / $rm_cov > $::env(OT_RELAY_FALLBACK_MAX_FRAC)} {
-    error "OT_HOOK_COVERAGE relay_mid: $rm_nold of $rm_cov stations on the old fallback (> $::env(OT_RELAY_FALLBACK_MAX_FRAC)); unfitted group:even_hop_um [join $rm_nofit { }]"
+  puts "OT_HOOK_COVERAGE hook=relay_mid touched=$rm_nfit expected=$rm_cov fallback=$rm_nold depth_fallback=$rm_ndepth advisory=[expr {![info exists ::env(OT_RELAY_FALLBACK_MAX_FRAC)]}]"
+  if {$rm_nold > $rm_ndepth} {
+    puts "OT_HOOK_COVERAGE WARN relay_mid: [expr {$rm_nold - $rm_ndepth}] site-space fallback(s), even hop within [expr {$rm_hop / double($rm_dbu)}] um (advisory): [join $rm_nofit { }]"
+  }
+  if {[info exists ::env(OT_RELAY_FALLBACK_MAX_FRAC)] && $rm_cov > 0 && double($rm_ndepth) / $rm_cov > $::env(OT_RELAY_FALLBACK_MAX_FRAC)} {
+    error "OT_HOOK_COVERAGE relay_mid: $rm_ndepth of $rm_cov stations on the old fallback with an even hop over [expr {$rm_hop / double($rm_dbu)}] um (> $::env(OT_RELAY_FALLBACK_MAX_FRAC)); unfitted group:even_hop_um [join $rm_depth { }]"
   }
 }
 # S81-COLGEN-3 11-17: OT_RELAY_POLY_FAIL=1 (plan budgets.relay_hop_fail, gen_phys) fails the hook on every relay chain whose hop

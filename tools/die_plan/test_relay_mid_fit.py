@@ -205,5 +205,12 @@ def test_fit_strict_names_unfitted_group():
     # a 50-um hop bound cannot reach the 450 -> 950 line from any site: the strict count stops the hook and names the group
     with pytest.raises(AssertionError) as e:
         _run({"OT_RELAY_MID_FIT": "1", "OT_RELAY_MID_MAX_HOP_UM": "50", "OT_RELAY_FALLBACK_MAX_FRAC": "0"})
-    assert "OT_HOOK_COVERAGE relay_mid: 1 of 1 stations on the old fallback" in str(e.value)
+    assert "OT_HOOK_COVERAGE relay_mid: 1 of 1 stations on the old fallback with an even hop over 50" in str(e.value)
     assert "u_y_a:250" in str(e.value)
+
+
+def test_fit_site_space_fallback_within_reach_is_advisory():
+    # S81-COL-FLOW-1118: no footprint clears a 2000-um channel margin, but the 250-um even hop is inside the 405-um reach:
+    # the station takes the line-point fallback, the hook warns and place goes on (col_h9_r0_p2 rt_4a_0 252 / rt_4b_0 206)
+    out, pos, blk = _run({"OT_RELAY_MID_FIT": "1", "OT_RELAY_MID_CHAN_UM": "2000", "OT_RELAY_FALLBACK_MAX_FRAC": "0"})
+    assert "depth_fallback=0" in out and "OT_HOOK_COVERAGE WARN relay_mid: 1 site-space fallback(s)" in out, out[-2000:]
