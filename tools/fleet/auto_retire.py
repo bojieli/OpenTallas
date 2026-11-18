@@ -149,7 +149,7 @@ def signed_not_in_store(tree, ids):
     return n, miss
 
 
-def git_unsafe(path, timeout=60):
+def git_unsafe(path, timeout=15):
     """clean3 lesson (CLEAN-3 11-13 deleted .git of idle clones with unpushed work + bare repos): a tree that holds a git work tree with uncommitted changes or commits on no remote, or a
     bare repo, is never an idle-lane candidate.  -> reason or ''.  Looks for .git / bare repos to depth 3."""
     import subprocess
@@ -163,7 +163,7 @@ def git_unsafe(path, timeout=60):
             return "bare git repo at " + r
     for r in cands:
         try:
-            dirty = subprocess.run(["git", "-C", r, "status", "--porcelain"], capture_output=True, text=True, timeout=timeout).stdout.strip()
+            dirty = subprocess.run(["git", "-C", r, "status", "--porcelain", "-uno", "--ignore-submodules"], capture_output=True, text=True, timeout=timeout).stdout.strip()
             ahead = subprocess.run(["git", "-C", r, "log", "--branches", "--not", "--remotes", "--oneline", "-n", "1"], capture_output=True, text=True, timeout=timeout).stdout.strip()
         except Exception as e:
             return "git state unreadable at %s (%s)" % (r, type(e).__name__)
@@ -286,12 +286,14 @@ def lane_candidates(claude, now=None, idle_h=24.0, skip=LANE_SKIP, mtime=newest_
     return res
 
 
-def run_lanes(claude, ids, refuse, log, target_gb, apply=False, delete=None, free=None, now=None, idle_h=24.0, mtime=newest_mtime, posts="", git_check=git_unsafe, links=None):
+def run_lanes(claude, ids, refuse, log, target_gb, apply=False, delete=None, free=None, now=None, idle_h=24.0, mtime=newest_mtime, posts="", git_check=git_unsafe, links=None, deadline=None):
     """retire idle lane dirs (and claude/wt children) through the guard, ingest-first, oldest first, stop at target_gb free.  A parent already removed or
     refused as a whole is retried through its children (level 2 is in the candidate list)."""
     free = free or (lambda: free_gb(claude)); res = []; gone = []
     links = home_link_targets() if links is None else links
     for p, idle in lane_candidates(claude, now, idle_h, mtime=mtime):
+        if deadline and time.time() > deadline:            # 11-18: a pass must END (epyc2 sat 15+ min in git status of 50 GB trees, no host.log line for 100 min): the rest is next pass
+            res.append(dict(stop="deadline")); log(dict(stop="deadline", t=time.strftime("%F %T"))); break
         if free() >= target_gb:
             res.append(dict(stop="target", free=round(free(), 1))); break
         if any(p == g or p.startswith(g + "/") for g in gone) or not os.path.isdir(p):
@@ -438,7 +440,7 @@ def eco_marker(p):
     return bool(r.stdout.strip())
 
 
-def run_attempts(claude, cfg, state, refs, ids, g, prot, log, apply=False, delete=None, free=None, now=None, **kw):
+def run_attempts(claude, cfg, state, refs, ids, g, prot, log, apply=False, delete=None, free=None, now=None, deadline=None, **kw):
     """delete attempt_candidates through the guard.  The kit_wave work root (runs/<die>/kit-wave) is a protected ANCESTOR of every attempt, so each listed attempt gets an exact
     allow entry (1 h, written here, reason cites COORD 11-18): it skips protected ancestors only, never a protected path inside, a live process or the signed-store check."""
     free = free or (lambda: free_gb(claude)); res = []
@@ -451,6 +453,8 @@ def run_attempts(claude, cfg, state, refs, ids, g, prot, log, apply=False, delet
             for p, _ in cands:
                 f.write("%s\t%d\tauto_retire attempts (COORD 11-18 aggressive cleanup)\n" % (p, exp))
     for p, why0 in cands:
+        if deadline and time.time() > deadline:
+            res.append(dict(stop="deadline")); break
         rec = dict(tree=p, t=time.strftime("%F %T"), kind="attempt", why=why0)
         why = refuse_attempt(g, p, prot)
         if not why and eco_marker(p):
@@ -491,6 +495,7 @@ def main(argv=None):
     ap.add_argument("--apply", action="store_true")
     ap.add_argument("--lanes", action="store_true", help="also retire idle lane dirs and claude/wt children, after the source trees (idle window --idle-h, default 12)")
     ap.add_argument("--idle-h", type=float, default=12.0)
+    ap.add_argument("--max-s", type=float, default=float(os.environ.get("AC_MAX_S", "900")), help="wall seconds per claude root; the pass stops starting new candidates after this and finishes (0 = no limit)")
     ap.add_argument("--attempts", action="store_true", help="retire finished kit-wave attempt dirs (failed/cancelled/superseded at once, old-event attempts after --idle-h)")
     ap.add_argument("--refs", default="", help="file: AUTO-RESIGN state + COUNT-DIRECT + ... text; an attempt named there is kept")
     ap.add_argument("--posts", default="", help="file: hub post text of the last 24 h; a lane tree named there is kept")
@@ -505,12 +510,13 @@ def main(argv=None):
     with open(a.log, "a") as lf:
         res = run(a.root, json.loads(cfgt), texts, ids, lambda t: g.refuse(t, prot), lambda r: lf.write(json.dumps(r) + "\n"), a.target, a.apply)
         claude = os.path.dirname(a.root.rstrip("/"))
+        deadline = time.time() + a.max_s if a.max_s else None
         posts = open(a.posts, errors="replace").read() if a.posts else ""
         if a.attempts:                                  # attempts first (the biggest, most certain dead weight), then idle lanes
             res += run_attempts(claude, json.loads(cfgt), json.loads(texts[1]), open(a.refs, errors="replace").read() if a.refs else "", ids, g, prot,
-                                lambda r: lf.write(json.dumps(r) + "\n"), a.apply, old_idle_h=a.idle_h)
+                                lambda r: lf.write(json.dumps(r) + "\n"), a.apply, old_idle_h=a.idle_h, deadline=deadline)
         if a.lanes:
-            res += run_lanes(claude, ids, lambda t: g.refuse(t, prot), lambda r: lf.write(json.dumps(r) + "\n"), a.target, a.apply, idle_h=a.idle_h, posts=posts)
+            res += run_lanes(claude, ids, lambda t: g.refuse(t, prot), lambda r: lf.write(json.dumps(r) + "\n"), a.target, a.apply, idle_h=a.idle_h, posts=posts, deadline=deadline)
     for r in res:
         print(r.get("result") or r)
     return 0
