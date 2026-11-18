@@ -217,15 +217,20 @@ def die_of_tokens(text):
 def infer(u, rows):
     """-> (die, element, kind, how)."""
     hint = u.get('hint') or {}
-    el = hint.get('element') or u.get('top') or u.get('name') or 'unknown'
+    # the wave's item name is the element the count and the lanes use (hd_st_str, not its module ot_s81hd_st_str)
+    w = (re.search(r'/kit-wave/([a-z0-9_]+)/[^/]+/items/([^/]+)/', u['signoff'])
+         or re.search(r'/autopilot/closed/([a-z0-9_]+)/(.+?)__[0-9a-f]{10}/', u['signoff']))
+    el = hint.get('element') or (w and w.group(2)) or u.get('top') or u.get('name') or 'unknown'
     el = re.sub(r'[^A-Za-z0-9_.-]', '_', el)
     by_el = collections.Counter((r[0], r[2]) for r in rows if r[1] == el and r[0] in DIES)
     kind = hint.get('kind') or (by_el.most_common(1)[0][0][1] if by_el else ('c' if re.search(r'core', u['signoff']) else 't'))
     if hint.get('die'):
         return hint['die'], el, kind, 'hint'
+    if w and w.group(1) in DIES:
+        return w.group(1), el, kind, 'wave path'
     m = re.search(r'/runs/([a-z0-9_]+)/kit-wave/|/kit-wave/([a-z0-9_]+)/', u['signoff'])
     if m and (m.group(1) or m.group(2)) in DIES:
-        return m.group(1) or m.group(2), el, kind, 'kit-wave path'
+        return m.group(1) or m.group(2), el, kind, 'wave path'
     if by_el:
         return by_el.most_common(1)[0][0][0], el, kind, 'INDEX element'
     m = re.search(r'/claude/([^/]+)/', u['signoff'])

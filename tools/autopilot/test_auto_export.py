@@ -76,7 +76,9 @@ def test_infer_order_and_row():
     u = dict(signoff='/srv/s/claude/kv-lane/a/signoff.json', top='hd_serdes', hint={})
     assert AE.infer(u, rows)[0] == 's81_head'          # INDEX element beats the lane dir
     u = dict(signoff='/srv/s/claude/w/runs/qwen_kvsys/kit-wave/qwen_kvsys/e/items/i/attempt_1/signoff/signoff.json', top='m', hint={})
-    assert AE.infer(u, rows)[:1] == ('qwen_kvsys',)
+    assert AE.infer(u, rows)[:2] == ('qwen_kvsys', 'i')
+    u = dict(signoff='/srv/s/claude/autopilot/closed/s81_head/hd_st_str__8569788b03/kit/signoff/signoff.json', top='ot_s81hd_st_str', hint={})
+    assert AE.infer(u, rows)[:2] == ('s81_head', 'hd_st_str')
     u = dict(signoff='/srv/s/claude/zz/signoff.json', top='zz_m', hint={'die': 'hbm', 'kind': 'c'})
     assert AE.infer(u, rows) == ('hbm', 'zz_m', 'c', 'hint')
     u = dict(die='s81', unit='m__ax_0123456789', element='m', kind='t', record='r' * 64, odb_size=5, odb_sha='a' * 64, src='s')
