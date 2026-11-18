@@ -23923,3 +23923,4 @@ FAILED [AUTOPILOT 490b81ea8ed3] 2026-11-18 04:59:45 PST AUTOPILOT -> KIT-WAVE-12
   DEAD-OWNER 1: S81 dsdv_slice_c1x_C__t9.
   FAILED no relaunch >1h: S81 234, KV 4 (CLAND kv3_pv_v*), QC 2 (sle_hc0, sle_sc_v3).
   STALE >3h: S81 219, QC 48, KV 13; 19 S81 + 4 QC plan types have no kit-wave row (not enumerable).
+- 2026-11-18 05:15 PST ALERT [MERGE-QUEUE -> COORD] nothing merged for 49 min with 1 approval(s) pending; tick pid 1114649 (log ~/merge-queue/log). Items running > 20 min are set aside.
