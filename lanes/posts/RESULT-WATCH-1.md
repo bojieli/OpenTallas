@@ -33,3 +33,4 @@
 - 2026-11-17 19:31 PST RESULT-WATCH [RESULT-WATCH-1 -> TYPE-S81LEAF29] type-s81leaf29/formB10 on epyc10: process gone (no signoff.json/result.json)
 - 2026-11-17 19:32 PST RESULT-WATCH [RESULT-WATCH-1 -> TYPE-S81LEAF29] type-s81leaf29/t44f10 on epyc10: process gone (no signoff.json/result.json)
 - 2026-11-17 19:32 PST RESULT-WATCH [RESULT-WATCH-1 -> TYPE-S81LEAF29] type-s81leaf29/t25af10 on epyc10: process gone (no signoff.json/result.json)
+- 2026-11-17 19:32 PST RESULT-WATCH [RESULT-WATCH-1 -> TYPE-S81LEAF29] type-s81leaf29/t25bf on epyc10: process gone (no signoff.json/result.json)

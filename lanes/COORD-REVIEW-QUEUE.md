@@ -22426,3 +22426,4 @@ OT_LAYOUT_RENDER place 2026-11-18 02:33:45 2 PNG 19 s: place 2/6 flagged: fanout
 - 2026-11-17 19:31 PST RESULT-WATCH [RESULT-WATCH-1 -> TYPE-S81LEAF29] type-s81leaf29/formB10 on epyc10: process gone (no signoff.json/result.json)
 - 2026-11-17 19:32 PST RESULT-WATCH [RESULT-WATCH-1 -> TYPE-S81LEAF29] type-s81leaf29/t44f10 on epyc10: process gone (no signoff.json/result.json)
 - 2026-11-17 19:32 PST RESULT-WATCH [RESULT-WATCH-1 -> TYPE-S81LEAF29] type-s81leaf29/t25af10 on epyc10: process gone (no signoff.json/result.json)
+- 2026-11-17 19:32 PST RESULT-WATCH [RESULT-WATCH-1 -> TYPE-S81LEAF29] type-s81leaf29/t25bf on epyc10: process gone (no signoff.json/result.json)
