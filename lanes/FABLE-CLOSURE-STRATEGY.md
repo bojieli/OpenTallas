@@ -1,3 +1,170 @@
+# FABLE-CLOSURE-STRATEGY 2026-11-17 23:20 PST (2320): delta on 21:20
+
+Reviewer: FABLE-CLOSURE-STRATEGY-2320 (Fable). Read-only: no jobs launched, nothing killed or deleted. Technical PD only. HBM parked.
+Gate (R-MINIMAL): DRC 0, routed TT >= -42 ps, internal reg-to-reg FF hold >= 0, die bind + LATCHECK.
+Marking: **V** = I opened the log or file this round (23:08 to 23:16 PST). **R** = reported by the named lane, not opened. **P** = my proposal or estimate.
+Signed (failure_breakdown 23:10): S81 42/394, HEAD 23/26, QC 24/130, KV 6/56. No type signed on S81, QC or KV in the last 4 h (wave stages).
+
+## 0. Headline
+
+1. **S81 col still dies at GPL because the D7w tree-switch marker re-adds the key every tick (V).** `lanes/handoff/tree_switch_s81.json` still holds `OT_S81_VPW_BANK: "1"` at 23:10. Wave stages, last 4 h: 58 col rows FAIL `OT_VPW_BANK needs exactly two real VP SRAM macros, got 0`. The item_env move (6b15cc83) is correct but is overwritten in memory. Until the marker is edited, no col type (216, the largest family on any die) can show a real result.
+2. **The S81 die GRT is now real and clean on the clock of record; the landed check still has no result (V).** epyc10 `s81-die-r3-proto/s81/d7w_eco`: ECOv3 clock, taps 21,687, missing 0, overflow 0 / 0 / 0 (M4 2.73 %, M5 4.04, M6 4.42, M7 2.15, M8 0.92, M9 0.79). Then `CHAIN_FAIL CA_CHAIN`: `count_align_plan.py: error: unrecognized arguments: --strap-window --min-lat-cycles 1` (the D7w tree tools predate the r4 recipe). The retry with newer tools (`ca_r4_noparts`) stops at `partition START origins require actual src_part/dst_part on every crossing`. `ca_r4/phase_ocv.log` is empty.
+3. **No sited tail-copy result exists yet on either die (V).** KV: the keep + anchor proof (epyc9 scratch3 `kv-hg-opus-site/proof/kv3_pv_v12`) sources `tail_copy_anchor.tcl` at `face_flops.tcl:975`, 7,040 rows in `tail_copies.tsv`, but is still in 3_1 GPL (overflow 0.39); no `OT_TAIL_SITE` line yet. QC: `tail-repl-qc-kit/splitk` stops at 1_synth; nobody has placed a sited st_a.
+4. **The tail split pushes KV PV over the cell limit (V).** Wave row kv3_pv_v3: `REFUSED: SPLIT-NEEDED: cells 467307 > 400000`. The split adds 19 to 27 k flops per PV type. S81 kv_leaf__t2 is refused the same way (estimate 462,435).
+5. **hd_serdes: the structural fix is building (V).** epyc10 `fable-fix-head-sd9h`: `KP4_PW_BENCH PASS`; sd9h `config.mk` carries `ENC_PW16` + `SYN_PW8`, sd9pa carries `ENC_PPCYC`; both are in 3_1 GPL. sd9pb2 and sd9pc2 have a kit and no log yet.
+6. **KV D22 is on its third plan (V).** try 2 (`d22gate/gate.out`): PRE FAIL, bind FAIL `pvw_0 column 5 ... flags [(88, 31), (88, 32)]`. Composer plan d22s 957d81e49c52: PRE PASS, G0 0 errors; first bind stopped on a manifest path, second bind started 06:52Z and has not reported.
+
+## 1. Levers ranked by closure impact
+
+| # | die | lever | unblocks | owner |
+|---|---|---|---|---|
+| 1 | S81 | Remove `OT_S81_VPW_BANK` from the tree-switch marker; land r676 (skip, nearest bank, FT snap); then read the next col stop classes | col 216 types; leaf t1 t7 t10 t13 t31 t45 t53 t74 t75 | S81-DIE-R3 (marker), FIX-S81-VPW, S81-TYPES-R3 |
+| 2 | QC, KV | Sited tail copies, proven at CTS on st_a and pv_v12; PV cell waiver | QC st_a 11 types; KV PV 16 types | TAIL-REPL, FABLE-FIX-KV-HG |
+| 3 | HEAD | hd_serdes PW16/PW8; lep_pair vE28 then hd_lep0N with related-pair windows; die clock off the granted M8 tracks | last 3 HEAD types = the die | FABLE-FIX-HEAD-SD9F, FABLE-FIX-HEAD-LEP0N, FABLE-DIE-HEAD, HEAD-PLAN-R4 |
+| 4 | all | Close small routed hold misses with the post-route internal hold ECO, not with rebuilds | S81 svc hslice + mergex (then the svc shell, 2 svc families), hd_mesh, QC L2 | CAPSKEW-ECO, FABLE-FIX-S81-SVC2 |
+| 5 | KV | D22s bind, with rider + siting folded in; pc 68 taps in D23 | PV 16, pc 6, hroot/pv_v2 band 5 | FABLE-FIX-KV-HG, KV-R3 |
+| 6 | S81 | Serdes: H17 routed TT / hold read, then t13 + 10 on D8d | 11 serdes types | FABLE-FIX-S81-SERDES2 |
+| 7 | S81 | Die landed check on ECOv3 with the r4 recipe; K refresh + clock site reservation as one clock event | die clock verdict; hold windows of every seam type | S81-DIE-R3, FABLE-DIE-S81 |
+| 8 | S81 | Leaf and svc place/kit stops: HPWL (t37, kv_leaf t3), landing collectors missing, svc kit_rtl closure, relay_mid coverage | about 25 types | FABLE-FIX-S81-STRIP, S81-TYPES-R3, FABLE-FIX-S81-SVC2 |
+
+QC N4 content (lever 7 of 21:20) is decided and TAKEN by QC-PLAN-R3 (R, 22:51); no new technical finding. QC has produced no N3 kit, so r650, the halo fix and the 40 ps margin are all still unmeasured.
+
+### Lever 1. S81 col: the marker, then the next classes
+
+**Evidence (V).**
+- `tree_switch_s81.json`: `OT_S81_VPW_BANK": "1"` present at 23:10.
+- Wave stages, last 4 h, S81 place FAIL 81: 58 `VPW_BANK ... got 0` (col), 9 `distance exceeds 100um` (leaf t1 t10 t13 t31 t45 t74 t75), 2 FT off-grid (t7 `82.9376 176.8544`, t53clb `9.3393 1032.3389`).
+- Behind it, already visible on col: `OT_HOOK_COVERAGE relay_mid: 2 of 15 stations on the old fallback; unfitted group:even_hop_um u_bound.u_u_r0_u_y_rt_4a_0:252 u_bound.u_u_r0_u_y_rt_4b_0:206` on 4 col_h9_r0_p2 rows (22:45).
+
+**Root cause.** A type-scoped opt-in sits in a die-scoped marker that `apply_tree_switches` re-applies each tick (R, FIX-S81-VPW 23:10; consistent with what I read). The relay_mid stop is a real design class: two relay groups in u_r0 have hops of 252 and 206 um that the even-hop fitter cannot place.
+
+**Fix.**
+1. S81-DIE-R3: re-write the marker without the key (`apply_reviewed_tree_marker`). Release hold `s81-col-vpw-1117` only after one regenerated col spec shows no key.
+2. FIX-S81-VPW: r676 (`claude/fix-s81-vpw-ftsnap` @0d4134418d4, gate 67/67) reaches kits only through the S81 tools refresh, which r685 unblocks. Then relaunch t7, t10, t45, t53, t74, t75. Do not wait for the B4 plan row; the gen snap covers t7 and t53.
+3. S81-TYPES-R3: for col_h9_r0_p2, add one relay station to each of `y_rt_4a` and `y_rt_4b` (252 -> 2 x 126, 206 -> 2 x 103; +1 cycle, pre-approved) or place the two groups by explicit sites. Do not disable the coverage check.
+4. First col kit past GPL: confirm `OT_HOLD_FF_MARGIN = 25` in `config.mk` and read the CTS hold class line before 200 more launch.
+
+### Lever 2. Sited tail copies (QC st_a, KV PV)
+
+**Evidence.** Headline 3 and 4 (V). Unsited result stands: -901.39 -> -912.09 (V, 21:20). Yosys folds unkept copies: 3,155 of 7,040 flops on pv_v12, 35 of 140 on st_a (R). Keep module `ot_dp_dly_keep` READY @6fc8c4a3 with `types.<t>.sites` anchor rows (R).
+
+**Fix.**
+1. TAIL-REPL: place `splitk` to CTS now with the bind `sites` rows loaded FIRM by the r650 anchor path. This is the only QC proof and it is not running. Acceptance: `rs_n_c_p` wire under 150 ps, CTS wns better than -250.
+2. FABLE-FIX-KV-HG: on the pv_v12 proof read the `OT_TAIL_SITE` line first (`copies N of 7040 sited`, `over_380`, `core_crossing`, `in_halo`). Any `core_crossing` > 0 is the same defect as the 29 detour hops: the anchor must use the routed path around kv3_pv_pair (M1 to M7 OBS). Then reg-to-core against -1,197.
+3. COORD/KV: PV types cross 400 k only because of the pad flops (pv_v3 467,307). Waive as in r682; a partition split of a PV column is not wanted. If GPL then stalls for size, cut K: tail copies only on pads with spread over 380 um.
+4. The 1,822 short chains on pv_v12 and the pad < K buses need plan stages regardless (R, CHAIN 22:28); they belong in D22s/D23, not in the split.
+
+### Lever 3. HEAD: three types
+
+**Evidence.**
+- hd_serdes (R, SD9F 23:20; V on the build state): one stage holds an 8-level XOR rank; sd9f -105.6, sd9g3 -184.09 TT and hold -44.59 on the same family. PPCYC removes one level only.
+- lep_pair vE28 (V, epyc9 `lep_ve28/kit/.../run_finish.log`, `postcts_gate_TT.log`): at 6_report (RCX 124,229 nets, IR 1.32 %); GRT-stage gate `pinreg mean 555.05 bound 450.00 ... setup_est 11.75 hold_est -203.93 PASS`. No sign-off file yet.
+- hd_lep0N p2 diagnostic (V): 3_3 GPL iteration 210, overflow 0.42, past the band stage.
+- Die (V, epyc10 `fable-die-head/base/head/nf15f_t2/CHAIN.log`): combo GRT TT/FF 0 / 0 / 0 at 0.37 %; TT intra +572.03, seam +656.04; seam contract +9.08 (W 90, need 80.92); intra kit-contract -76.07 (W 22, need 98.07, 44,945 pairs). Hold measured on 0 of 585,476 pairs.
+- M8 lock (V `m8/lock.log`, R for the totals): tree2 clock legs sit on granted type tracks, e.g. hd_turn_a 150, hd_turn_b 175; 4,321 in 14 types.
+
+**Fix.**
+1. FABLE-FIX-HEAD-SD9F: sd9h (PW16 + PW8) is the build of record. At GRT read `tt_setup_repair_grt.log`; expect 5 to 6 levels in the window stage. Stop PPCYC/SPCYC forms once sd9h shows TT >= -42 at GRT; they cost a cycle and fix less.
+2. FABLE-FIX-HEAD-LEP0N: the vE28 core has 555 ps mean insertion against a 450 bound. Take the four pair tap offsets from its `clock_contract.json` when it signs, not from the 450 target. Its -204 hold estimate is port-side; close internal hold with r583 as on hei3.
+3. HEAD-PLAN-R4: one pack = plan_grown2 + vE28 views with `bb.v` default KCRED 28 + related-pair `per_port_ps` for hd_lep0N and hd_mesh (file in `lanes/handoff/`). The routed window need of lep0N is 163 ps whole-set; the 63 ps figure was placement RC and must not size anything.
+4. FABLE-DIE-HEAD: t2g (die clock with granted tracks as M8 obstructions). Types do not re-sign.
+
+### Lever 4. Small routed hold misses: ECO the routed DB
+
+**Evidence.**
+- (R, SVC2 22:5x; V that mm6, mm7 are at CTS and mergex_mm6 at floorplan at 23:11) hslice mm4, HM 30, guards off: +2.83 before route, -3.27 routed, -6.15 at sign-off, TT +175.5, DRC 0. mergex mm3b -6.93, TT +97.83.
+- Precedent (R): lep_pair hei3 closed 7 -> 2 -> 1 -> 0 pads with r583; sd9f ECO2 kept DRC 0 with 0 cells moved; QC L2 hold closes with the post-route ECO (6 signed).
+
+**Root cause.** Pre-route margin does not predict the routed result on these cores (loss 6 to 9 ps on hslice, 20 to 40 ps on QC). Each margin step costs a full rebuild.
+
+**Fix.**
+1. FABLE-FIX-S81-SVC2 (P): run `hold_eco_internal_run.py` (r583) on the routed hslice_mm4 and mergex_mm3b DBs now. Both have large TT room, so a handful of pads closes them. Keep mm6/mm7 running as the second form; sign whichever passes first.
+2. CAPSKEW-ECO: make that ECO the default last step of every kit that ends DRC 0, TT >= -42, internal hold between -50 and 0. This is the flow form of what three lanes do by hand.
+3. Still open from 21:20: the chunk cap (2,000 buffers x 3) that stopped hslice at 11.7 k endpoints; `OT_HOLD_CHUNK_BUF_PCT=0` is under test in mm6.
+
+### Lever 5. KV D22s and D23
+
+**Evidence (V).** Headline 6. Rider gate (epyc7 `kv-pv-rider/gate2`): G0 PASS twice, LATCHECK `no *_bound_top.sv (the bind did not finish emitting)`; gate3 started 07:00Z. Wave: KV has 8 kit_rtl and 5 gen RUNNING, 0 at place or route.
+
+**Fix (FABLE-FIX-KV-HG).**
+1. Gate d22s on strict bind before anything else; the two try-2 errors were both invisible to G0.
+2. Fold the rider (29 detour hops, 11 keepout stations) into the same plan if its bind passes this hour; else a separate event. No PV kit before keep + siting + rider.
+3. D23 pc: 32 added taps, 68 total, max load 1,200 on measured sinks (R, KV-R3). Add the three forwarded pc clocks over 1,200 (3,347 / 1,303 / 1,271) to the same event. Drop tap_spill.
+
+### Lever 6. S81 serdes
+
+**Evidence (V).** epyc9 H17 `6_report.tmp.log`: RCX `411739 nets finished` at 22:18; unit 476135 still alive at 23:13 in final STA; no numbers yet. 204 `STA-1652 ... pin cland_fwd_fclk_out_ft{0,1,2}_o:N not found` SPEF warnings (98 / 60 / 33, plus 13 on `cland_up`).
+
+**Fix (FABLE-FIX-S81-SERDES2).**
+1. When STA ends: routed TT and internal FF hold by class; that read decides whether TAP-GROUP-CAP-1 (6,502 flops on clk_t42) returns.
+2. Check the four forwarded-clock nets for missing parasitics before trusting their arrival (P: the SPEF refers to nodes the netlist no longer has after the pad strip).
+3. t13 + 10 build on D8d with r678 once h-form PASS is posted.
+
+### Lever 7. S81 die clock event
+
+**Evidence (V).** Headline 2. `sta_droop.log` (legacy margins, not the gate form): TT intra +173.41 (0 negative), seam -0.46 (6 negative), skew 409 / 623; kit contract needs 341 intra / 548 seam against W 40; 0 measured hold pairs.
+
+**Fix (S81-DIE-R3).**
+1. Run the landed check with the tools and inputs of the r4j run: `fable-die-s81/reach_codex/run_current_r4_ca_phase.sh` end to end on the d7w_eco proof. Do not pass its arguments to the D7w tree tools, and do not drop `--start-partition-origins`; give the crossings their `src_part/dst_part`.
+2. Name the 6 negative seam pairs in the legacy read and show them in the nominal form.
+3. D8d (plan e291d6a8) proceeds to bind/G0; the route does not need more cut moves. Then one clock event: in-place K refresh + `clock.reserved_sites_um` after a census of the 42 signed DBs.
+
+### Lever 8. S81 leaf and svc stops
+
+**Evidence (V, wave stages).**
+- PLACE-HPWL: t37 `7.8347e6 = 1.40 x 5.5789e6`; kv_leaf__t3 `1.0557e7 = 1.32 x` (new).
+- svc: 11 rows (svc_hi pvso_entry t1 t2, rs t1, svc_lo rs_w t1 ...) FAIL kit_rtl `RuntimeError: closure failed for .../items/<item>/`.
+- t56: `native module must declare exactly one memory array`. gunit__t1 KIT_PREFLIGHT 5 issues; serdes__t14 4 issues.
+- (R, S81-FIX-OPUS 22:22) t22 died at GPL: `OT_CLAND no mapped cells under u_cland_collect_rst_rl_188`, because `build_rebase.sh` drops `--clock-landing` for non-col types.
+
+**Fix.**
+1. FABLE-FIX-S81-STRIP: t37 and kv_leaf t3 are one class (timing-driven repair grows area by 78 % on t37 and the placer re-spreads). Image the attempt_8 3_3 DB; if the growth is in the re-slotted ft bundles, cap the TD repair (r496 0.25/0.30) for the family. No ratio change.
+2. S81-TYPES-R3: `--clock-landing` for every type with landing rows, then t22 (the GRT calibration over the M5 cores is still unmeasured).
+3. FABLE-FIX-S81-SVC2: the svc kit_rtl closure failures are the old soft svc types; they end only with the shell rows (4 of 6 cores signed). Keep them held rather than relaunched.
+
+## 2. Evidence I opened this round
+
+| item | file | result |
+|---|---|---|
+| failure_breakdown 23:10 | intel2 | S81 42/394, HEAD 23/26, QC 24/130, KV 6/56 |
+| wave stages, last 4 h | intel2 `autopilot/kit_wave_stages.tsv` | S81 place FAIL 81 (58 VPW got 0, 9 VPW distance, 4 relay_mid coverage, 2 FT off-grid, 2 HPWL); S81 route RUNNING 41, QC 8, HEAD 10; KV 0 at place/route; SPLIT-NEEDED kv3_pv_v3 467,307 and S81 kv_leaf__t2 462,435 |
+| VPW marker | intel2 `lanes/handoff/tree_switch_s81.json` | key still present 23:10 |
+| S81 die proto | epyc10 `s81-die-r3-proto/s81/d7w_eco/{CHAIN.log,grt_st_TT/combo_TT.log,ca/ca_plan.log,ca_r4_noparts/ca_plan.log,sta_droop.log}` | GRT 0 overflow; CA_PLAN rc 2 (unrecognized arguments), retry ValueError; legacy STA numbers above |
+| svc reruns | epyc10 `fable-fix-s81-svc2/svc/build/{hslice_mm6,hslice_mm7,mergex_mm6}` | 4_1_cts, 4_1_cts, 2_1_floorplan; no exit files |
+| hd_serdes | epyc10 `fable-fix-head-sd9h/{bench_b.log,sd9h_gen,sd9pa_gen}` | bench PASS; defines as stated; both in 3_1 GPL |
+| HEAD die | epyc10 `fable-die-head/base/head/nf15f_t2/{CHAIN.log,m8/lock.log}` | numbers in lever 3 |
+| lep_pair vE28, hd_lep0N p2 | epyc9 `head-lep0n-opus/lep_ve28/kit/...`, `fable-fix-head-lep0n/p2/hd_lep0N/run_cts.log` | 6_report; GPL it 210 |
+| H17 | epyc9 `fable-fix-s81-serdes2/H17/.../6_report.tmp.log` | RCX done, STA running, 204 SPEF warnings |
+| KV sited proof | epyc9 scratch3 `kv-hg-opus-site/proof/kv3_pv_v12/{face_flops.tcl,tail_copies.tsv,run_place.log}` | anchor sourced; 3_1 GPL; no OT_TAIL_SITE yet |
+| QC keep proof | epyc9 `/srv/opentallas-scratch/claude/tail-repl-qc-kit/splitk` | last log 1_synth; no place |
+| KV D22 | epyc7 `kv-hg-opus/{d22gate,d22s/gate,d22s/gate_try1}/gate.out`, `kv-pv-rider/gate2/gate.out` | as headline 6 |
+
+## 3. Stop list (the 21:20 list stands, plus these)
+
+1. S81 col: no relaunch while `tree_switch_s81.json` carries the key. 58 fails in 4 h prove each one is wasted.
+2. S81 die: do not read `STA_DROOP` (legacy margins) or `STA_LEGACY` as the landed verdict, and do not pass r4 CA arguments to the D7w tree tools.
+3. S81 serdes: do not re-add TAP-GROUP-CAP-1 before the H17 routed timing. No new H17 route.
+4. S81 svc: no further 30 ps margin rebuild of hslice (mm4 at HM 30, guards off, is -6.15 at sign-off). No relaunch of the soft svc types that fail kit_rtl closure.
+5. S81 t37 / kv_leaf t3: no HPWL ratio change (branch 4eeee568 withdrawn; the real log is still 1.38 x). No t22 rebuild without `--clock-landing`.
+6. HEAD: no CAPSKEW on sd9g3 (deficit 184 against about 130 per flop). Do not judge the die on `run_grt.sh` (signal-only runner over real views; the combo GRT is 0 / 0 / 0). Do not size lep0N windows from the 63 ps placement span.
+7. QC: no partition split of st_a, st_b or hc (st_a is 54 k cells on the current event; 8 types waived by r682). No tt_ctlm region-only fix.
+8. KV: no PV kit before keep + siting + rider. No pc judgement on tap_spill. No partition split of a PV column for the cell limit. Do not read the unsited pv_v12 run.
+9. Tail split anywhere: no kit without the keep module; unkept copies fold back in synthesis.
+
+## 4. Not checked
+
+- H17 routed TT and hold (STA still running). The cause of the STA-1652 warnings (P).
+- Any S81 route result of the 41 running rows; none finished in the window.
+- hd_mesh route state and its numbers (R only). The t2g result. hd_lep0N CTS.
+- sd9h past GPL; whether PW16/PW8 reach -42.
+- KV d22s bind, rider gate3, the `OT_TAIL_SITE` line, the kv3_hg_v1 pilot.
+- QC: N3 gate (blocked on a host disk, out of scope), the N3 clock-chain proof (queued), every N3 kit read.
+- Whether r583 was already tried on hslice_mm4 or mergex_mm3b (lever 4 item 1 is P).
+- The col_h9_r0_p3 place stop (`unclassified`, last GPL line only) and the gunit__t1 / serdes__t14 preflight issues.
+- The relay_mid hop arithmetic in lever 1 item 3 is from the error text only; I did not open the plan rows.
+
+---
+
 # FABLE-CLOSURE-STRATEGY 2026-11-17 21:20 PST (2120): delta on 19:20
 
 Reviewer: CLOSURE-STRATEGY-2120 (Opus, standing in for Fable, out of quota until 11-24). Read-only: no jobs launched, nothing killed or deleted. Technical PD only. HBM parked.
