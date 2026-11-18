@@ -511,6 +511,7 @@ def test_needs_lane_goes_to_a_live_owner_never_a_dead_lane():
     now = time.time()
     act = {"S81-DIE-R3": now - 3600, "DIE-S81-92": now - 40 * 3600}
     assert TR.live_owner("s81", {"owner_lane": "DIE-S81-92"}, act, now) == "S81-DIE-R3"
-    assert TR.live_owner("s81", {"owner_lane": "DIE-S81-92", "refresh_owner": "DIE-S81-92"}, {}, now) == "COORD"
+    assert TR.live_owner("s81", {"owner_lane": "DIE-S81-92", "refresh_owner": "DIE-S81-92"}, {"OTHER": now}, now) == "COORD"
+    assert TR.live_owner("s81", {"owner_lane": "DIE-S81-92"}, {}, now) == "DIE-S81-92"           # no queue readable: the configured owner, nothing invented
     assert TR.live_owner("s81", {"owner_lane": "S81-DIE-R3"}, {"S81-DIE-R3": now - 100}, now) == "S81-DIE-R3"
     assert TR.live_owner("qwen_compute", {}, {"QC-PLAN-R3": now}, now) == "QC-PLAN-R3"
