@@ -127,14 +127,28 @@ def eco_receipt(res):
 KFR = "/srv/opentallas-scratch2/claude/rt/current/tools/autopilot/kit_flow_refresh.py"
 
 
-def flow_refresh(kit, goal, script=KFR):
+def flow_refresh(kit, goal, script=KFR, bundle=None):
     """TOOLS-DECOUPLE class fix (COORD 11-18): before the physical runner, the kit's verbatim copies of main flow scripts are replaced by
-    the worker's rt/current versions (record KIT/flow_refresh.jsonl), so a fix on main reaches every stage this job has not run yet.
-    Never fails the job; OT_FLOW_REFRESH=0 or KIT/.no_flow_refresh turns it off."""
-    if os.environ.get("OT_FLOW_REFRESH", "1") == "0" or not os.path.isfile(script):
+    the current versions (record KIT/flow_refresh.jsonl), so a fix on main reaches every stage this job has not run yet.
+    FABLE-FLOW-1000 A: the job is sealed (bwrap: rt/current is not visible), so the refresher, the flow blob index and the current
+    scripts come from the admission bundle this chain runs from (die_plan/__flow__); rt/current only when the bundle has none.
+    Never fails the job; a skip prints one KIT_FLOW_REFRESH SKIPPED line.  OT_FLOW_REFRESH=0 or KIT/.no_flow_refresh turns it off."""
+    b = Path(bundle) if bundle else Path(__file__).resolve().parent
+    fl = b / "die_plan" / "__flow__"
+    if os.environ.get("OT_FLOW_REFRESH", "1") == "0":
+        print("KIT_FLOW_REFRESH SKIPPED: OT_FLOW_REFRESH=0", flush=True)
+        return None
+    if (fl / "kit_flow_refresh.py").is_file() and (fl / "flow_blobs.json").is_file():
+        argv = [sys.executable, "-I", str(fl / "kit_flow_refresh.py"), "--kit", str(kit), "--stage", str(goal),
+                "--index", str(fl / "flow_blobs.json"), "--src", f"tools/die_plan={b / 'die_plan'}",
+                "--src", f"physical/common_flow={fl / 'common_flow'}", "--rt", str(b)]
+    elif os.path.isfile(script):
+        argv = [sys.executable, "-I", script, "--kit", str(kit), "--stage", str(goal)]
+    else:
+        print(f"KIT_FLOW_REFRESH SKIPPED: no refresher in the admission bundle {fl} and {script} is not visible in this job", flush=True)
         return None
     try:
-        return subprocess.call([sys.executable, "-I", script, "--kit", str(kit), "--stage", str(goal)], timeout=600)
+        return subprocess.call(argv, timeout=600)
     except Exception as e:                                      # noqa: BLE001
         print(f"KIT_FLOW_REFRESH skipped: {type(e).__name__}: {e}", flush=True)
         return None

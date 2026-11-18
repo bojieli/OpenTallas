@@ -7798,6 +7798,15 @@ def run_item(spec_path):
                     return fail("selfcontained", "KIT_NOT_SELF_CONTAINED: a path outside the kit could not be copied in:\n" + "\n".join((_bad or _rows)[:40]))
         except Exception as _e:
             print(f"KW_SELFCONT_SKIP {_e}", flush=True)
+        # FABLE-FLOW-1000 A (TOOLS-DECOUPLE): the kit (fresh gen, or a relaunch that restored items/<item>/gen) gets the current flow
+        # scripts of this attempt's rt tools before PLACE: verbatim copies of older main versions are replaced (KIT/flow_refresh.jsonl).
+        if sp.get("tools_rt"):
+            _kfr = f"{tsrc}/tools/autopilot/kit_flow_refresh.py"
+            run("flow_refresh", remote(f"if [ -f {q(_kfr)} ]; then python3 -I {q(_kfr)} --kit {q(K)} --stage place --rt {q(tsrc)} "
+                                       f"--sha {q(sp.get('tools_sha') or '')}; else echo 'KIT_FLOW_REFRESH SKIPPED: '{q(_kfr)}' missing on this host'; fi"),
+                idempotent=True)
+        else:
+            print(f"KIT_FLOW_REFRESH SKIPPED: {T} spec has no tools_rt (not an rt-tools launch)", flush=True)
         asy = False
         if sp.get("place_async", True) and G in sp["hosts"] + ["localhost", hub]:
             _, at = run("place_mode", idempotent=True, argv=remote(

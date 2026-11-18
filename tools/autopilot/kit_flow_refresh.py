@@ -10,6 +10,9 @@ the last weeks.  A generated or edited kit file matches no blob and is never tou
 its inode).  Every call appends one record to K/flow_refresh.jsonl {stage, rt, sha, host, replaced, kept}.
 
   kit_flow_refresh.py --kit K --stage GOAL [--rt /srv/opentallas-scratch2/claude/rt/current] [--dry]
+  kit_flow_refresh.py --kit K --stage GOAL --index FILE --src tools/die_plan=DIR --src physical/common_flow=DIR --sha SHA
+      (a staged copy instead of an rt tree: the autopilot admission bundle, visible inside the sealed stage job)
+A skipped refresh always prints one KIT_FLOW_REFRESH SKIPPED line (FABLE-FLOW-1000: it used to return silently).
 Opt-out: K/.no_flow_refresh or OT_FLOW_REFRESH=0.  Never fails the stage: any error is logged and exit 0.
 """
 import argparse
@@ -31,20 +34,26 @@ def blob_id(data):
     return hashlib.sha1(b"blob %d\0" % len(data) + data).hexdigest()
 
 
-def refresh(kit, stage, rt=RT, dry=False):
+def refresh(kit, stage, rt=RT, dry=False, index=None, src=None, sha=None):
     rtr = os.path.realpath(rt)
+    roots = dict(src or {})                              # rel dir -> directory holding its current files (default rt/<rel dir>)
     rec = {"t": time.strftime("%Y-%m-%d %H:%M:%S %Z"), "stage": stage, "rt": rtr, "host": socket.gethostname().split(".")[0],
            "replaced": [], "kept_old": [], "note": ""}
+    if sha:
+        rec["sha"] = sha
+    else:
+        try:
+            rec["sha"] = json.load(open(rtr + ".manifest.json")).get("sha", "")
+        except (OSError, ValueError):
+            rec["sha"] = os.path.basename(rtr)
+    ip = index or os.path.join(rtr, INDEX)
     try:
-        man = json.load(open(rtr + ".manifest.json"))
-        rec["sha"] = man.get("sha", "")
+        idx = json.load(open(ip))
     except (OSError, ValueError):
-        rec["sha"] = os.path.basename(rtr)
-    try:
-        idx = json.load(open(os.path.join(rtr, INDEX)))
-    except (OSError, ValueError):
-        rec["note"] = f"no {INDEX} in {rtr}: nothing replaced"
+        rec["note"] = f"SKIPPED: no flow blob index {ip}: nothing replaced"
         return rec
+    if idx.get("sha") and not sha:
+        rec["sha"] = idx["sha"]
     known = idx.get("blobs") or {}                       # rel -> [blob ids on main]
     by_name = {}
     for rel in known:
@@ -61,7 +70,8 @@ def refresh(kit, stage, rt=RT, dry=False):
         rel = next((r for r in rels if b in known[r]), None)
         if rel is None:
             continue                                     # generated or edited at gen: not a copy of main
-        cur = os.path.join(rtr, rel)
+        d = os.path.dirname(rel)
+        cur = os.path.join(roots[d], os.path.basename(rel)) if d in roots else os.path.join(rtr, rel)
         if not os.path.isfile(cur):
             rec["kept_old"].append(f"{name} ({rel} gone from main)")
             continue
@@ -85,13 +95,16 @@ def main(argv=None):
     ap.add_argument("--stage", default="")
     ap.add_argument("--rt", default=RT)
     ap.add_argument("--dry", action="store_true")
+    ap.add_argument("--index", default="", help="flow blob index (default RT/tools/.flow_blobs.json)")
+    ap.add_argument("--src", action="append", default=[], help="REL_DIR=DIR: current files of REL_DIR are in DIR (a staged copy)")
+    ap.add_argument("--sha", default="")
     a = ap.parse_args(argv)
     kit = os.path.abspath(a.kit)
     if os.environ.get("OT_FLOW_REFRESH", "1") == "0" or os.path.exists(os.path.join(kit, ".no_flow_refresh")):
-        print("KIT_FLOW_REFRESH off")
+        print("KIT_FLOW_REFRESH SKIPPED: off (OT_FLOW_REFRESH=0 or KIT/.no_flow_refresh)", flush=True)
         return 0
     try:
-        rec = refresh(kit, a.stage, a.rt, a.dry)
+        rec = refresh(kit, a.stage, a.rt, a.dry, index=a.index or None, src=dict(x.split("=", 1) for x in a.src), sha=a.sha or None)
     except Exception as e:                               # noqa: BLE001 - never fails the stage
         rec = {"t": time.strftime("%Y-%m-%d %H:%M:%S %Z"), "stage": a.stage, "error": f"{type(e).__name__}: {e}"}
     if not a.dry:
@@ -101,7 +114,7 @@ def main(argv=None):
         except OSError:
             pass
     print(f"KIT_FLOW_REFRESH stage {a.stage} rt {str(rec.get('sha'))[:12]} replaced {len(rec.get('replaced') or [])}: "
-          + " ".join(r["file"] for r in rec.get("replaced") or []) + (f" ({rec.get('note') or rec.get('error')})" if rec.get("note") or rec.get("error") else ""))
+          + " ".join(r["file"] for r in rec.get("replaced") or []) + (f" ({rec.get('note') or 'SKIPPED: ' + str(rec.get('error'))})" if rec.get("note") or rec.get("error") else ""), flush=True)
     return 0
 
 

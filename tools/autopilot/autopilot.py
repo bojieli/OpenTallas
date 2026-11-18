@@ -1661,6 +1661,16 @@ def stage_admission_tools(source_chain=None, source_tools=None, root=None):
         if not clock_family.is_file():
             raise ValueError("admission tools incomplete: missing physical/common_flow/clock_family.tcl")
         payload[Path("clock_family.tcl")] = clock_family.read_bytes()
+    # FABLE-FLOW-1000 A: the per-stage flow refresh runs INSIDE the sealed stage job, where rt/current is not visible: the refresher,
+    # the flow blob index of this scheduler rt and the current physical/common_flow scripts travel in the bundle (die_plan/__flow__).
+    kfr = Path(__file__).with_name("kit_flow_refresh.py")
+    blobs = tools.parent / ".flow_blobs.json"
+    if kfr.is_file() and blobs.is_file():
+        payload[Path("__flow__/kit_flow_refresh.py")] = kfr.read_bytes()
+        payload[Path("__flow__/flow_blobs.json")] = blobs.read_bytes()
+        for cf in sorted((tools.parents[1] / "physical/common_flow").glob("*")):
+            if cf.is_file() and cf.suffix in (".tcl", ".py", ".sh"):
+                payload[Path("__flow__/common_flow") / cf.name] = cf.read_bytes()
     digest = hashlib.sha256(chain_bytes)
     for relative, content in payload.items():
         digest.update(str(relative).encode()+b"\0")

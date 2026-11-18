@@ -54,3 +54,26 @@ def test_blob_id_matches_git():
     p = Path(d) / "f"
     p.write_bytes(b"hello\n")
     assert K.blob_id(b"hello\n") == subprocess.run(["git", "hash-object", str(p)], capture_output=True, text=True).stdout.strip()
+
+
+def test_bundle_layout_from_signoff_chain(capsys):
+    """FABLE-FLOW-1000 A: inside the sealed job the chain runs from the admission bundle: refresher + index + scripts are there"""
+    import shutil, subprocess
+    tmp = Path(tempfile.mkdtemp())
+    rt, kit = setup(tmp)
+    b = tmp / "bundle"
+    (b / "die_plan/__flow__/common_flow").mkdir(parents=True)
+    shutil.copy(rt / "tools/die_plan/vclk_measured_hold.tcl", b / "die_plan/vclk_measured_hold.tcl")
+    shutil.copy(rt / "tools/.flow_blobs.json", b / "die_plan/__flow__/flow_blobs.json")
+    shutil.copy(Path(K.__file__), b / "die_plan/__flow__/kit_flow_refresh.py")
+    import signoff_chain as SC
+    SC.flow_refresh(kit, "route", script="/nonexistent", bundle=b)
+    assert (kit / "vclk_measured_hold.tcl").read_bytes() == b"puts fixed\n"
+    assert json.loads((kit / "flow_refresh.jsonl").read_text().splitlines()[-1])["stage"] == "route"
+
+
+def test_skip_is_loud(capsys):
+    import signoff_chain as SC
+    tmp = Path(tempfile.mkdtemp())
+    SC.flow_refresh(tmp, "route", script="/nonexistent", bundle=tmp)
+    assert "KIT_FLOW_REFRESH SKIPPED" in capsys.readouterr().out
