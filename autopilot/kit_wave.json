@@ -40475,6 +40475,17 @@
       "proof:head-serdes-fanout"
      ],
      "reason": "HOLDGEN-1115 2026-11-16 (COORD stop list): the wave relaunched hd_serdes at 03:04 on unchanged RTL after a -261 ps read. No unchanged relaunch until HEAD-SERDES-O posts a RESULT PASS naming head-serdes-fanout. Running attempts finish."
+    },
+    {
+     "id": "s81_head-hold-hdlep0N-ve28-1117",
+     "plan_sha": "de6c7105afeff824b4029ebf66e02255ca31294b29d243544a7d77e08b422e0e",
+     "items": [
+      "hd_lep0N"
+     ],
+     "release": [
+      "proof:head-lep0n-ve28-pack"
+     ],
+     "reason": "FABLE-FIX-HEAD-LEP0N 2026-11-17 23:3x (COORD ask): wave attempts 3 and 4 both stopped in synth after 2.3 min (do-yosys, OT_SIGNED_PARAM_SERIALIZE: u_pair .KCRED(28) != signed header default 12); the tree binds the KCRED12 lep_pair view. No relaunch until the plan revision carries the lep_pair vE28 views (lef/lib/bb.v default 28) + plan_grown2 bands on a tree with r668; FABLE-FIX-HEAD-LEP0N or HEAD-PLAN-R4 then posts RESULT PASS naming head-lep0n-ve28-pack, or deletes this record."
     }
    ],
    "proof_items": {
