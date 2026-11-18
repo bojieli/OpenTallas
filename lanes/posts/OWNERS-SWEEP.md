@@ -19,3 +19,4 @@
   no kit-wave row: S81 1, QC 14, KV 0, HEAD 0 (not reported)
   rows 493, no flag 436
 - 2026-11-18 12:51 PST 12:5x sweep 494 rows; script fixed (newer LAUNCH/RELAUNCH-ON-FIX = relaunched). S81 UNOWNED0 FAILED10 STALE9 DEAD4; HEAD 0; KV 0. QC UNOWNED6 FAILED9 STALE16 DEAD8. DEAD owners QC-STRAGGLERS/S81-NORELAUNCH/FABLE-FIX-QC-STA last posted 09:52-10:22 (pre-limit). No-kit-wave-row: QC 14, S81 -1.
+- 2026-11-18 13:50 PST 13:50 sweep 503 rows, 484 unflagged. S81 UNOWNED 0 / FAILED 10 / STALE 10 / DEAD 5. QC UNOWNED 0 / FAILED 4 (sle_su_l1, slw_su_l1; owned) / STALE 9 / DEAD 0. KV 0, HEAD 0. No-kit-wave-row: S81 -1, QC 4, KV 1. col_h9_r1 + QC cbx_q10 = HELD-INTENTIONAL (D8e, N4.1p).
