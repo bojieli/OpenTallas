@@ -394,3 +394,15 @@ def test_tick_spawns_nothing_while_a_pass_holds_the_die_lock(tmp_path):
     assert len(launched) == 1
     assert not KW.tools_refresh_pass_live(str(tmp_path / "none"), "kv")  # no lock file: not live, and none is created
     assert not (tmp_path / "none").exists()
+
+
+def test_apply_moves_the_tools_pin_so_the_lag_check_stops_seeing_the_same_lag():
+    d = die(tools_sha="8569788b0328")
+    rec, posts, edits, state = run(d=d)
+    assert rec["status"] == "APPLIED"
+    byp = {o["path"]: o for o in edits[0][0]}
+    assert byp["/dies/kv/tools_sha"]["op"] == "replace" and byp["/dies/kv/tools_sha"]["value"] == SHA
+    import tools_lag as TL
+    assert TL.pin_of(dict(d, tools_sha=byp["/dies/kv/tools_sha"]["value"])) == SHA          # the reader returns the new pin
+    d2 = die()
+    assert {o["path"]: o for o in run(d=d2)[2][0][0]}["/dies/kv/tools_sha"]["op"] == "add"     # a die with no pin gets one
