@@ -1209,7 +1209,10 @@ def minimal_auto_retry(state, die, ev, d, retry, plan_types=None, log=print, cfg
         return retry
     led = state.setdefault(MINIMAL_RETRY, {})
     out = set(retry)
-    if d.get("auto_rearm", True) is not False and isinstance(d.get("src_sha"), str):       # WF-1 11-14: input-change re-arm
+    # S81-COL-FLOW-1118 (COORD FABLE-FLOW-0600 class B): the die key auto_rearm is gone.  dies.s81.auto_rearm=false (WAVE-HOLDS-1115) kept 398 S81
+    # FAIL rows from ever re-arming after their inputs changed (src f2s4/d7w -> d8t, restored view inputs, tool fixes).  A failed row re-arms whenever an
+    # input changed since its attempt; an identical relaunch is still refused on the full input hash (fail key / SKIP-SAME-INPUT).
+    if isinstance(d.get("src_sha"), str):       # WF-1 11-14: input-change re-arm
         try:
             cand = rearm_candidates(state, cfg or {}, die, d)
             out |= set(cand)
