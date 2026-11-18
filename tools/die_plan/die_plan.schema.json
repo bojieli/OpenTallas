@@ -222,6 +222,11 @@
      "type": "number",
      "exclusiveMinimum": 0
     },
+    "hold_ff_margin_ps": {
+     "type": "number",
+     "minimum": 0,
+     "maximum": 100
+    },
     "rows": {
      "type": "object",
      "additionalProperties": false,
@@ -5699,6 +5704,11 @@
       "type": "number",
       "minimum": 0,
       "maximum": 1
+     },
+     "hold_ff_margin_ps": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100
      },
      "ft_budget": {
       "type": "object",
