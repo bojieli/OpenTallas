@@ -461,3 +461,4 @@
 - 2026-11-18 06:05 PST ALERT [OT-TOOLS-SYNC -> COORD] runtime sync FAILED, rt/current stays 8e0ef289b877: exit 3 (see /home/ubuntu/merge-queue/log)
 - 2026-11-18 06:12 PST STATE [OT-TOOLS-SYNC -> AUTO-EXPORT-1118] AUTO-REVERT main commit 293dda051c0 ('AUTO-EXPORT-1118: rtx-pro leg holds a unit when the root disk would drop below 1'): tools smoke failed on it; revert pushed to main @f7967434932. Fix and push again with ot-push-main. Running kits keep their old rt/<sha>.
 - 2026-11-18 06:23 PST STATE tools sync recovered after 18 min (rt/current 0243da7a7830)
+- 2026-11-18 06:30 PST DISK-RATE epyc2 /srv/opentallas-scratch: free 1249 GB, falling 231 GB/h, floor 50 GB in 5.2 h (cron disk_rate.py; read-only)
