@@ -671,7 +671,75 @@ def follow(hosts=True):
         if not cur_full or S.run(["git", "-C", str(REPO), "merge-base", "--is-ancestor", cur_full, full]).returncode != 0:
             log(f"follow: origin/main {sha12(full)} does not contain rt/current {cur}; not fast-forward, skipped")
             return 0
-    return sync_guarded(full, hosts, False)
+    rc = sync_guarded(full, hosts, False)
+    if rc == 3 and not (RT / f".reverted-{sha12(full)}").exists():
+        (RT / f".reverted-{sha12(full)}").write_text("")
+        try:
+            auto_revert(cur_full, full)
+        except Exception as e:                             # noqa: BLE001 - reported, never raised into the timer
+            log(f"auto-revert failed: {type(e).__name__}: {str(e)[:300]}")
+    return rc
+
+
+def commit_lane(c):
+    subj = git("log", "-1", "--format=%s", c).strip()
+    m = re.match(r"\[?([A-Za-z0-9][\w.-]{1,40})[\]:]", subj)
+    if m and m.group(1).lower() not in ("merge", "fix", "revert", "add", "update"):
+        return m.group(1).upper()
+    return git("log", "-1", "--format=%an", c).strip() or ALERT_LANE
+
+
+def auto_revert(cur_full, full):
+    """OWNER 11-18 / FABLE-WORKFLOW-0400: the smoke of a new main failed.  Find the commits (first-parent, after the running rt/current) whose own tree fails
+    the smoke and push a REVERT commit of each (never a force push; a merge is reverted with -m 1), post it to the author lane.  A running kit keeps its
+    old rt/<sha>; the next follow materializes the reverted main."""
+    rng = f"{cur_full}..{full}" if cur_full else full
+    commits = git("rev-list", "--first-parent", "--reverse", rng).split()
+    bad = []
+    for c in commits:
+        d = materialize(c)
+        if smoke(d, tests=False):
+            bad.append(c)                                  # the FIRST failing commit is the offender; later ones fail by inheriting its tree
+            break
+    if not bad:
+        log(f"auto-revert: smoke of {sha12(full)} failed but no single commit of {len(commits)} fails alone; not reverting")
+        return []
+    wt = RT / f".revert-wt-{os.getpid()}"
+    git("fetch", "-q", REMOTE, "+refs/heads/main:refs/remotes/origin/main", timeout=300)
+    git("worktree", "add", "-q", "--detach", str(wt), "origin/main", timeout=900)
+    done = []
+    try:
+        for c in reversed(bad):                            # newest first
+            par = git("rev-list", "--parents", "-n", "1", c).split()
+            args = ["revert", "--no-edit"] + (["-m", "1"] if len(par) > 2 else []) + [c]
+            p = run(["git", "-c", "user.name=OT-TOOLS-SYNC", "-c", "user.email=tools-sync@opentallas.invalid", *args], cwd=wt, timeout=600)
+            if p.returncode:
+                run(["git", "revert", "--abort"], cwd=wt)
+                log(f"auto-revert of {c[:11]} failed: {(p.stderr or p.stdout).strip()[-200:]}")
+                continue
+            msg = run(["git", "log", "-1", "--format=%B"], cwd=wt).stdout.rstrip() + \
+                "\n\nAuto-revert: the tools smoke of this commit failed (ot-tools-sync follow).\n\nCo-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>\n"
+            run(["git", "-c", "user.name=OT-TOOLS-SYNC", "-c", "user.email=tools-sync@opentallas.invalid", "commit", "-q", "--amend", "-m", msg], cwd=wt)
+            ok = False
+            for _ in range(3):
+                if run(["git", "push", "-q", REMOTE, "HEAD:refs/heads/main"], cwd=wt, timeout=900).returncode == 0:
+                    ok = True
+                    break
+                run(["git", "fetch", "-q", REMOTE, "+refs/heads/main:refs/remotes/origin/main"], cwd=wt, timeout=300)
+                if run(["git", "rebase", "origin/main"], cwd=wt, timeout=300).returncode:
+                    run(["git", "rebase", "--abort"], cwd=wt)
+                    break
+            lane = commit_lane(c)
+            line = (f"STATE [OT-TOOLS-SYNC -> {lane}] AUTO-REVERT main commit {c[:11]} ('{git('log', '-1', '--format=%s', c).strip()[:80]}'): tools smoke failed on it; "
+                    + (f"revert pushed to main @{git('-C', str(wt), 'rev-parse', 'HEAD').strip()[:11]}" if ok else "revert could NOT be pushed")
+                    + ". Fix and push again with ot-push-main. Running kits keep their old rt/<sha>.")
+            log(line)
+            run(["bash", POST, ALERT_LANE, line], timeout=120)
+            if ok:
+                done.append(c)
+    finally:
+        run(["git", "worktree", "remove", "--force", str(wt)], cwd=REPO, timeout=300)
+    return done
 
 
 def main():
