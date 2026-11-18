@@ -10,7 +10,7 @@ Rule, applied to NEW stage writes only (a watcher inside the kit; never a sweep 
   has its directory as cwd or open file.  Every deletion is logged (name, size) to stderr; nothing outside <base>/<stage>.odb names is touched.
 usage: stage_odb_cap.py --watch RESULTS_ROOT [--kit DIR] [--interval 60] [--max-hours 36]      (RESULTS_ROOT = <kit>/run/results/asap7)
        stage_odb_cap.py --once BASE_DIR                                                           (one pass, prints what it would delete with --dry)"""
-import argparse, glob, os, re, sys, time
+import argparse, glob, gzip, os, re, shutil, sys, time
 
 MIN_AGE_S = 120
 RULES = (  # (regex of the victim, successor file that must exist)
@@ -23,6 +23,9 @@ RULES = (  # (regex of the victim, successor file that must exist)
     (re.compile(r"^6_1_fill\.odb$"), "6_final.odb"),
 )
 EXTRA_SUCCESSOR = {"5_route.odb": "6_final.v", "6_1_fill.odb": "6_final.v"}
+FINISH = ("5_3_fillcell.odb", "5_route.odb", "6_1_fill.odb", "6_final.odb")      # the finish stages write byte-identical ODBs (KIT-SLIM-1118)
+LOG_GZ_BYTES = 100 << 20
+LOG_TAIL_BYTES = 20 << 20
 BUSY_CMD = re.compile(r"eco|kit_resume|resume\.json", re.I)
 
 
@@ -98,6 +101,85 @@ def plan(base, now=None, open_files=(), min_age=MIN_AGE_S):
     return out
 
 
+def _same(a, b, chunk=8 << 20):
+    with open(a, "rb") as fa, open(b, "rb") as fb:
+        while True:
+            x, y = fa.read(chunk), fb.read(chunk)
+            if x != y:
+                return False
+            if not x:
+                return True
+
+
+def link_dups(base, now=None, open_files=(), min_age=MIN_AGE_S):
+    """KIT-SLIM-1118 (COORD): right after a finish stage wrote its ODB, the previous finish-stage ODB with the same bytes becomes a hardlink of it
+    (5_3_fillcell -> 5_route -> 6_1_fill -> 6_final, each name kept, no space).  Only files older than min_age, not open, not already one inode.
+    -> [(path, size)] linked"""
+    now = now or time.time()
+    got = []
+    have = []
+    for n in FINISH:
+        p = os.path.join(base, n)
+        try:
+            st = os.lstat(p)
+        except OSError:
+            continue
+        if st.st_size > 0 and not os.path.islink(p) and p not in open_files and now - st.st_mtime >= min_age:
+            have.append((p, st))
+    for (pa, sa), (pb, sb) in zip(have, have[1:]):          # older stage a, newer stage b: a becomes a link of b
+        if sa.st_size != sb.st_size or (sa.st_dev, sa.st_ino) == (sb.st_dev, sb.st_ino):
+            continue
+        try:
+            if not _same(pa, pb):
+                continue
+            tmp = pa + ".kslink"
+            os.link(pb, tmp)
+            os.replace(tmp, pa)
+            got.append((pa, sa.st_size if sa.st_nlink == 1 else 0))
+        except OSError:
+            try:
+                os.unlink(pa + ".kslink")
+            except OSError:
+                pass
+    return got
+
+
+def gzip_logs(kit, now=None, open_files=(), min_age=MIN_AGE_S, big=None, tail=None):
+    """KIT-SLIM-1118 (COORD): a run_*.log over 100 MB whose stage has ended (not open, quiet for min_age) is gzipped whole to run_*.log.gz; the log itself
+    keeps its last 20 MB behind a one-line pointer, so the failure classifier / tail readers still see the end.  -> [(path, bytes saved)]"""
+    now = now or time.time()
+    big = LOG_GZ_BYTES if big is None else big
+    tail = LOG_TAIL_BYTES if tail is None else tail
+    out = []
+    for p in glob.glob(os.path.join(kit, "**", "run_*.log"), recursive=True):
+        try:
+            st = os.lstat(p)
+        except OSError:
+            continue
+        if st.st_size <= big or os.path.islink(p) or p in open_files or now - st.st_mtime < min_age or os.path.exists(p + ".gz"):
+            continue
+        try:
+            with open(p, "rb") as f, gzip.open(p + ".gz.tmp", "wb", 3) as g:
+                shutil.copyfileobj(f, g, 1 << 20)
+            with open(p, "rb") as f:
+                f.seek(max(0, st.st_size - tail))
+                data = f.read()
+            if os.stat(p).st_mtime != st.st_mtime:               # written meanwhile: leave it
+                os.unlink(p + ".gz.tmp"); continue
+            with open(p + ".new", "wb") as f:
+                f.write(("[KIT-SLIM: head gzipped in %s; last %d MB below]\n" % (os.path.basename(p) + ".gz", tail >> 20)).encode() + data)
+            os.replace(p + ".gz.tmp", p + ".gz")
+            os.replace(p + ".new", p)
+            out.append((p, st.st_size - os.path.getsize(p)))
+        except OSError:
+            for x in (p + ".gz.tmp", p + ".new"):
+                try:
+                    os.unlink(x)
+                except OSError:
+                    pass
+    return out
+
+
 def once(base, kit=None, dry=False, now=None, log=print, scan=open_procs, alive=lambda: True):
     why = kept_by_env(kit or base)
     if why:
@@ -116,6 +198,9 @@ def once(base, kit=None, dry=False, now=None, log=print, scan=open_procs, alive=
             os.unlink(p); done.append((p, size)); log("STAGE-CAP deleted %s %d" % (p, size))
         except OSError as e:
             log("STAGE-CAP keep %s: %s" % (p, e))
+    if not dry:       # what the deletion rules do not remove yet (successor still being written): identical finish ODBs share one inode meanwhile
+        for p, size in link_dups(base, now, files):
+            log("STAGE-CAP linked %s (%d bytes shared)" % (p, size))
     return done
 
 
@@ -140,6 +225,9 @@ def watch(root, kit, interval, max_hours, log=print, parent=None):
             return
         for base in glob.glob(os.path.join(root, "*", "base")):
             once(base, kit, False, log=log, alive=lambda: parent_alive(parent))
+            if kit:
+                for p, n in gzip_logs(kit, open_files=open_procs(kit)[0]):
+                    log("STAGE-CAP gzipped %s (-%d bytes)" % (p, n))
             # finished: the final is old and everything beyond it is gone -> nothing more to do for this kit
         time.sleep(interval)
 
