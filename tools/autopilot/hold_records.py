@@ -553,6 +553,18 @@ def pilot_deadlock(cfg, die, d, rec):
     return ""
 
 
+def unreachable_event_expiry(rec, die, cfg):
+    """WAVE-PILOT-FIX 11-17 (COORD FABLE-FLOW-2200 F): at an adopt the hold whose event_adopt term names an event that is neither the die's current,
+    a previous nor a planned one can never be met (S81 went from 0 to 74 held at the 21:08 tree switch).  '' = the term is reachable"""
+    for t in rec.get("release") or []:
+        if split_term(str(t))[0] != "event_adopt":
+            continue
+        why = unreachable_why(str(t), die, cfg)
+        if why and why.startswith("no such event"):
+            return f"UNREACHABLE: {t}: {why}; dropped at adopt (re-key the hold to a real event to keep it)"
+    return ""
+
+
 def rec_owner(rec):
     """the lane that owns a hold record: its 'owner' field, else the lane of its first result: term, else '' (a legacy record with no owner never expires)"""
     if rec.get("owner"):
@@ -670,7 +682,7 @@ def compile_holds(cfg, ctx=None):
             # types released, all 34 launched on an unfixed tree, 33 failed kit_rtl in 11 minutes.  State per record in
             # cfg['_release_pilot'] (kit_wave persists it): {pilot, t, passed}.  Fails open: glob-only keys, no state store.
             exp = record_expired(rec, cfg) if rel is not None else ""
-            dl = pilot_deadlock(cfg, die, d, rec)
+            dl = pilot_deadlock(cfg, die, d, rec) or (unreachable_event_expiry(rec, die, cfg) if not rec.get("keep_unreachable") else "")
             if dl:
                 exp = dl
                 cfg.setdefault("_pilot_deadlock", []).append((die, rec.get("id"), dl))

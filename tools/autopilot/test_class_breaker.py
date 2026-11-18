@@ -3,21 +3,21 @@ import flow_guard as FG
 import kit_wave as KW
 
 
-def test_ten_fails_in_an_hour_across_items_open_the_class_and_hold_fresh_launches():
+def test_three_fails_in_an_hour_across_items_open_the_class_and_hold_fresh_launches():   # WAVE-PILOT-FIX 11-17: CLASS_N 10 -> 3
     st = {}
-    for i in range(9):
+    for i in range(FG.CLASS_N - 1):
         FG.record_fail(st, "qc", f"it{i}", "FLOW", f"timing closure failed @place: slack -{i} ps", now=1000 + i * 300, legacy=False, stage="place")
     assert FG.held_key(st, "qc", "it0") == ""
-    FG.record_fail(st, "qc", "it9", "FLOW", "timing closure failed @place: slack -9 ps", now=1000 + 9 * 300, legacy=False, stage="place")
-    assert FG.held_key(st, "qc", "it3").startswith("CLASS qc|place|")
-    assert FG.held_key(st, "kv", "it3") == ""                       # another die is another key
+    FG.record_fail(st, "qc", "it9", "FLOW", "timing closure failed @place: slack -9 ps", now=1000 + 2 * 300, legacy=False, stage="place")
+    assert FG.held_key(st, "qc", "it0").startswith("CLASS qc|place|")
+    assert FG.held_key(st, "kv", "it0") == ""                       # another die is another key
     assert len(FG.alert_lines(st, "x")) == 1 and FG.alert_lines(st, "x") == []
 
 
 def test_fails_spread_over_more_than_an_hour_do_not_open():
     st = {}
     for i in range(10):
-        FG.record_fail(st, "qc", f"it{i}", "FLOW", "same @place: x", now=i * 500, legacy=False, stage="place")
+        FG.record_fail(st, "qc", f"it{i}", "FLOW", "same @place: x", now=i * 2000, legacy=False, stage="place")   # 2000 s apart: never 3 inside the 3600 s window
     assert FG.held_key(st, "qc", "it9") == ""
 
 

@@ -120,6 +120,30 @@ def git(coord, *args, check=True):
     return p
 
 
+def _event_terms(rel):
+    return sorted(t for t in (rel or []) if str(t).startswith("event_adopt:"))
+
+
+def release_repoint_errors(old_doc, new_doc, ops):
+    """WAVE-PILOT-FIX 11-17 (COORD FABLE-FLOW-1900 D): a hold's release term changes only when its CAUSE changes.  A patch that changes the event_adopt
+    term of a hold record must also set that record's release_changed_because (the named cause change) in the same patch; a bulk re-point of
+    many records to one event is refused (QC st_a was released by a bulk re-point to event_adopt:N1B while its fix is in N2B)."""
+    errs, changed = [], []
+    for die, d in (new_doc.get("dies") or {}).items():
+        old = {r.get("id"): r for r in ((old_doc.get("dies") or {}).get(die) or {}).get("hold_records") or []}
+        for r in d.get("hold_records") or []:
+            o = old.get(r.get("id"))
+            if o is None or _event_terms(o.get("release")) == _event_terms(r.get("release")):
+                continue
+            changed.append((die, r.get("id"), tuple(_event_terms(r.get("release")))))
+            if not str(r.get("release_changed_because") or "").strip() or r.get("release_changed_because") == o.get("release_changed_because"):
+                errs.append(f"{die}/{r.get('id')}: event term {_event_terms(o.get('release'))} -> {_event_terms(r.get('release'))} without a new release_changed_because (the cause that changed)")
+    targets = {c[2] for c in changed}
+    if len(changed) > 3 and len(targets) == 1:
+        errs.append(f"bulk re-point refused: {len(changed)} hold records moved to the same event term; keep each hold's cause-specific term")
+    return errs
+
+
 def edit(coord, ops, message, dry=False, commit_cmd=None):
     """patch the committed config and commit it; returns the new text.  commit_cmd(message, rel) overrides coord-commit.sh (tests)"""
     coord = Path(coord)
@@ -131,6 +155,26 @@ def edit(coord, ops, message, dry=False, commit_cmd=None):
         lock.seek(0)
         raise SystemExit(f"kit_wave_edit: another edit holds kit_wave_edit.lock: {lock.read().strip() or 'unknown'}")
     lock.seek(0); lock.truncate(); lock.write(f"pid={os.getpid()} cmd={' '.join(sys.argv)[:200]}\n"); lock.flush()
+    try:
+        for _try in range(5):
+            res = _edit_once(coord, ops, message, dry, commit_cmd)
+            if res != "retry":
+                return res
+        raise SystemExit("kit_wave_edit: the file kept moving under the edit (5 compare-and-swap retries); nothing left half-written")
+    finally:
+        lock.close()
+
+
+def blob_sha(coord):
+    return git(coord, "rev-parse", f"HEAD:{REL}").stdout.strip()
+
+
+def _edit_once(coord, ops, message, dry, commit_cmd):
+    """one read-modify-write.  WAVE-PILOT-FIX 11-17 (COORD, 17:5x: a patch applied to a copy of HEAD read minutes earlier reverted another lane's
+    commit): the base is the blob sha of HEAD:file read just now; before the commit it is compared again (compare-and-swap) and the patch is
+    re-applied to the new HEAD when it moved; after the commit the commit's PARENT blob must equal the base, else the commit overwrote a commit
+    that slipped in while coord-commit waited for its lock, and the patch is re-applied on top of that parent immediately (repair)."""
+    base = blob_sha(coord)
     head = git(coord, "show", f"HEAD:{REL}").stdout
     work_p = coord / REL
     work = work_p.read_text() if work_p.exists() else head
@@ -138,7 +182,12 @@ def edit(coord, ops, message, dry=False, commit_cmd=None):
         raise SystemExit(f"kit_wave_edit: {REL} in {coord} differs from HEAD (an uncommitted edit by someone else); "
                          f"commit or discard it first: git -C {coord} diff {REL}")
     try:
-        new = dump(apply_patch(json.loads(head), ops))
+        _old = json.loads(head)
+        _newdoc = apply_patch(_old, ops)
+        _errs = release_repoint_errors(_old, _newdoc, ops)
+        if _errs:
+            raise PatchError("; ".join(_errs[:6]))
+        new = dump(_newdoc)
     except (PatchError, ValueError) as e:
         raise SystemExit(f"kit_wave_edit: patch refused, nothing written: {e}")
     if new == head:
@@ -148,6 +197,8 @@ def edit(coord, ops, message, dry=False, commit_cmd=None):
         import difflib
         sys.stdout.writelines(difflib.unified_diff(head.splitlines(True), new.splitlines(True), "HEAD:" + REL, "patched", n=1))
         return new
+    if blob_sha(coord) != base:                          # compare-and-swap: HEAD moved while the patch was computed
+        return "retry"
     tmp = work_p.with_name(work_p.name + f".edit{os.getpid()}")
     tmp.write_text(new)
     os.replace(tmp, work_p)                            # atomic: a reader never sees half a file
@@ -162,8 +213,26 @@ def edit(coord, ops, message, dry=False, commit_cmd=None):
     if git(coord, "show", f"HEAD:{REL}").stdout != new:
         work_p.write_text(git(coord, "show", f"HEAD:{REL}").stdout)
         raise SystemExit("kit_wave_edit: coord-commit did not leave the patched config at HEAD; working file restored")
+    parent = git(coord, "rev-parse", f"HEAD~1:{REL}", check=False).stdout.strip()
+    if parent and parent != base:                        # a commit slipped in between our read and our commit and was overwritten: put it back
+        print(f"kit_wave_edit: CAS repair: parent blob {parent[:12]} != base {base[:12]}, re-applying the patch on the parent")
+        old_parent = git(coord, "show", f"HEAD~1:{REL}").stdout
+        try:
+            fixed = dump(apply_patch(json.loads(old_parent), ops))
+        except (PatchError, ValueError) as e:
+            raise SystemExit(f"kit_wave_edit: CAS repair failed, the committed file lost another commit's change; fix by hand: {e}")
+        tmp2 = work_p.with_name(work_p.name + f".repair{os.getpid()}")
+        tmp2.write_text(fixed)
+        os.replace(tmp2, work_p)
+        if commit_cmd:
+            commit_cmd(message + " (CAS repair: keeps the commit that landed in between)", REL)
+        else:
+            subprocess.run(["bash", os.path.expanduser("~/coord/bin/coord-commit.sh"), message + " (CAS repair: keeps the commit that landed in between)", REL], check=True, timeout=600)
+        new = fixed
     print(f"kit_wave_edit: committed {REL} at {git(coord, 'rev-parse', 'HEAD').stdout.strip()}")
     return new
+
+
 
 
 def main(argv=None):
