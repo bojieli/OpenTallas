@@ -11,8 +11,15 @@ close $fh
 read_db $::env(OT_HEI_IN)
 set blk [ord::get_db_block]
 set_thread_count [expr {[info exists ::env(OT_HEI_THREADS)] ? $::env(OT_HEI_THREADS) : 4}]
-set_routing_layers -signal M2-M8 -clock M2-M8
-set_global_routing_layer_adjustment M2-M8 0.25
+# top routing layer = the highest routing layer that has a track structure in this DB (a hard-core kit has no M8 tracks:
+# ODB-0139 "Missing track structure for layer M8" on lep_pair); M8 when present, as before.
+set hei_top M8
+set hei_best 0
+foreach hei_l [[ord::get_db_tech] getLayers] {
+  if {[$hei_l getType] eq "ROUTING" && [$blk findTrackGrid $hei_l] ne "NULL" && [$hei_l getRoutingLevel] > $hei_best} { set hei_best [$hei_l getRoutingLevel]; set hei_top [$hei_l getName] }
+}
+set_routing_layers -signal M2-$hei_top -clock M2-$hei_top
+set_global_routing_layer_adjustment M2-$hei_top 0.25
 set fh [open $::env(OT_HEI_CELLS) r]; set names {}
 foreach ln [lrange [split [read $fh] \n] 1 end] { if {$ln ne ""} { lappend names [lindex [split $ln \t] 2] } }
 close $fh
