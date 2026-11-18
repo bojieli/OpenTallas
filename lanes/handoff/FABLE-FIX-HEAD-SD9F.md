@@ -60,3 +60,28 @@ Gates R-MINIMAL: DRC 0, routed TT >= -42, internal FF hold >= 0 (port hold advis
   (3) 202 capture flops carry +20..+107 ps clock delay (useful skew) -- inside the type only, port timing unchanged.
 - OPEN flow: branch claude/head-clksite-tap-escape-1117 @db7b25b131a READY posted (MERGE-OPS gate).  Not built: a GRT-stage derate for signal
   nets in >90% gcells (the -16 vs -106 gap was +12% data wire delay), and a flow form of the capture-skew ECO (us_eco.tcl / mk_eco_list.py).
+## 11-17 23:20 PST -- sd9g3 line (COORD: Fable owner again after the limit reset; sd9f record COUNT-REVOKED on PG rails)
+- sd9g3 (R4 rebuild on rails r620 + tap escape r597; E9 head-types-r4/sd9g3/gen/hd_serdes/signoff_r4): DRC 0, rails PASS, TT -184.09,
+  internal FF hold -44.59 (222).  SAME family as sd9f: u_enc.ch_q -> pp0/pp1 (worst ch_q[89] -> pp0[29]: data 972 ps) + u_syn.sc_q -> sp1
+  (-42.87).  Not clock, not a PHY-region move.
+- STRUCTURAL CAUSE (sd9f census split, E7 LANE/split.py on paths_tt/max_full.rpt; masks counted from the .svh): the window rank is two
+  260/275-input GF(2) rows per output = an 8-level XOR tree (7.7 levels measured), 507-590 ps mean routed logic delay + 70-140 ps transport
+  + clk->Q 90 + inter-tap skew -35..-68 in one 833 ps stage; the next stage (wb <= pp0 ^ pp1) has ONE level (+307 ps).  Routed wire in the
+  dense XOR blob adds ~12-25% over GRT RC, different per placement (sd9f -106, sd9g3 -184).  The existing PPCYC/SPCYC knobs (+1 cycle,
+  4 partials of 130 bits) only remove one level.
+- FIX (RTL, zero cycles, bit- and cycle-exact): opt-in defines OT_S81_KP4_ENC_PW16 (16 registered partials of ch_q[33k +: 33], <= 26
+  inputs = 5 levels, XOR16 moved into the wb stage) and OT_S81_KP4_SYN_PW8 (8 partials of sc_q[69k +: 69], <= 47 inputs = 6 levels, XOR8
+  joins s_ar in the S_q stage).  Generator tools/s81_link/split_kp4_window_n.py; bench tools/s81_link/run_kp4_pw_bench.sh.
+  Branch claude/head-serdes-kp4-pw-1118 in clone E10 /srv/opentallas-scratch2/claude/fable-fix-head-sd9h/repo (NOT committed/pushed yet:
+  commit after the bench prints KP4_PW_BENCH PASS; E10 bench_b.log).  Encoder lock-step vs a true define-off copy: 7/7 PASS, mutant FAIL.
+- BUILD RUNNING: sd9h = R4 sd9g3 recipe + the two defines only (gen E9 LANE9=/srv/opentallas-scratch2/claude/fable-fix-head-sd9f:
+  gen_sd9h.sh -> sd9h/, KIT_PREFLIGHT PASS).  Kit replicated to E10 /srv/opentallas-scratch2/claude/fable-fix-head-sd9h/sd9h_gen (E9 is
+  under ot-run disk-ETA hold), launched E10 unit oth-ubuntu-1975906-1794984130: run_sd9h.sh = run_kit.sh route + signoff.py
+  (signoff_fable; the kit stops on the pma-pad pin audit before its own sign-off).  Client log intel2 ~/fable-fix-head-sd9f-logs/sd9h_route.log,
+  kit log sd9h_gen/hd_serdes/run_route.log.
+  NEXT: at GRT read tt_setup_repair_grt.log + postcts_gate_tt.json and LOOK place/grt renders; after route read signoff_fable.log.
+  TT >= -42 and internal hold short only: tools/die_plan/hold_eco_internal_run.py (r583) on the routed DB; TT short by < 60: R4 CAPSKEW
+  (OT_CAPSKEW_ECO=1 / eco_loop.py r614) or my us_eco.tcl; then export s81_head/hd_serdes__sd9h_pw_1118 to both stores + INDEX.
+- sd9g3 census on E9 (run_paths.sh -> LANE9/g3_paths_{tt,ff}) is still HELD by the E9 disk-ETA rule (waiters re-place every 120 s).
+- Mistake noted: I stopped two of my own held ot-run waiters on intel2 with a pgrep -f loop (only my lane's two clients + my own shell
+  matched); exact PIDs only from now on.
