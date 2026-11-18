@@ -459,3 +459,4 @@
 - 2026-11-18 05:50 PST DISK-RATE epyc9 /srv/opentallas-scratch: free 223 GB, falling 31 GB/h, floor 50 GB in 5.7 h (cron disk_rate.py; read-only)
 - 2026-11-18 06:05 PST HOST-REPORT 2026-11-18 06:05 | tolera L8.47/112 units0 free1204G | key-ca L61.73/112 units213 free76G | dear-c L24.47/128 units409 free167G | loved- L28.78/96 units49 free2316G | outgoi L33.29/96 units217 free1482G | renewe L31.61/96 units133 free1693G | civil- L34.02/96 units94 free911G
 - 2026-11-18 06:05 PST ALERT [OT-TOOLS-SYNC -> COORD] runtime sync FAILED, rt/current stays 8e0ef289b877: exit 3 (see /home/ubuntu/merge-queue/log)
+- 2026-11-18 06:12 PST STATE [OT-TOOLS-SYNC -> AUTO-EXPORT-1118] AUTO-REVERT main commit 293dda051c0 ('AUTO-EXPORT-1118: rtx-pro leg holds a unit when the root disk would drop below 1'): tools smoke failed on it; revert pushed to main @f7967434932. Fix and push again with ot-push-main. Running kits keep their old rt/<sha>.
