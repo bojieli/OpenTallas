@@ -32,6 +32,9 @@ set ::cells {}; set ::nets {}
 proc mk {name master x y {status PLACED}} { dict set ::cells $name [list $master $x $y $status]; return $name }
 proc conn {net drv args} { dict set ::nets $net [list $drv $args] }
 proc iterm {inst net dir} { return [list $inst $net $dir] }
+# pin name of an iterm: D for an input and Y for an output unless "pin inst net NAME" says otherwise
+set ::pins {}
+proc pin {inst net name} { dict set ::pins $inst,$net $name }
 proc cell_master {n} { return [lindex [dict get $::cells $n] 0] }
 # object commands: instance "I:name", iterm "T:inst:net:dir", net "N:name", master "M:name"
 rename unknown ::unk_orig
@@ -48,7 +51,9 @@ proc unknown {cmd args} {
               foreach s $sinks { if {$s eq $a} { lappend r "T:$a:$n:in" } } }; return $r } } }
     M { switch [lindex $args 0] { getName { return $a } isBlock { return [string match "BLK*" $a] } } }
     T { switch [lindex $args 0] { isOutputSignal { return [expr {$c eq "out"}] } isInputSignal { return [expr {$c eq "in"}] }
-          getInst { return "I:$a" } getNet { return "N:$b" } } }
+          getInst { return "I:$a" } getNet { return "N:$b" }
+          getMTerm { if {[dict exists $::pins $a,$b]} { return "P:[dict get $::pins $a,$b]" }; return [expr {$c eq "out" ? "P:Y" : "P:D"}] } } }
+    P { switch [lindex $args 0] { getName { return $a } } }
     N { switch [lindex $args 0] { getITerms { lassign [dict get $::nets $a] drv sinks; set r [list "T:$drv:$a:out"]
           foreach s $sinks { lappend r "T:$s:$a:in" }; return $r } getSigType { return SIGNAL } } }
     B { set x [lindex [dict get $::cells $a] 1]; set y [lindex [dict get $::cells $a] 2]
@@ -58,7 +63,8 @@ proc unknown {cmd args} {
 }
 proc nc_mov {inst} { return [expr {[$inst getPlacementStatus] ni {FIRM LOCKED COVER}}] }
 '''
-PROCS = ["nc_isbuf", "nc_ctr", "nc_join_cone", "nc_stretched", "nc_tree_stretch"]
+PROCS = ["nc_isbuf", "nc_ctr", "nc_load_terms", "nc_data_pin", "nc_median_pt", "nc_clamp_box", "nc_buf_neigh", "nc_join_cone",
+         "nc_stretched", "nc_tree_stretch"]
 
 
 def run(body):
@@ -139,3 +145,93 @@ def test_check_prints_and_stops_with_the_documented_names():
     assert 'error "OT_XSTN_STRETCH' in SRC[i:i + 900]
     # the old direct-load-only test is gone
     assert "set ok 1; set nl 0" not in SRC
+
+
+# FLOW-QC-N 11-17 (FABLE-FIX-QC-N, cbn_q01 n1b): reset-relay sinks are not boundary registers; filled buffers sit with their nets
+def test_data_pin_excludes_clock_and_async_reset_set():
+    out = run(r"""
+puts "P [nc_data_pin D] [nc_data_pin RESETN] [nc_data_pin SETN] [nc_data_pin CLK] [nc_data_pin A]"
+""")
+    assert "P 1 0 0 0 1" in out
+
+
+def test_an_outside_register_reached_at_resetn_blocks_the_join_and_a_member_does_not():
+    out = run(r"""
+mk m1 DFFASRHQNx1 600 700; mk r1 BUFx6f 610 720; mk r2 BUFx6f 598 758; mk far DFFASRHQNx1 18 217; mk o DFFHQNx1 40 2101
+conn n1 r1 m1; pin m1 n1 RESETN
+conn n2 r2 far; pin far n2 RESETN
+set nx_in [dict create m1 1]
+puts "OWN [llength [nc_join_cone I:r1 $nx_in]]"
+puts "RELAY [llength [nc_join_cone I:r2 $nx_in]]"
+mk d1 BUFx3 1 1; conn n4 d1 o
+puts "DATA [llength [nc_join_cone I:d1 $nx_in]]"
+""")
+    assert "OWN 1" in out        # a reset buffer that feeds only members still joins
+    assert "RELAY 0" in out      # the relay towards another block's reset pins does not
+    assert "DATA 1" in out       # an outside flop at its D pin is the output pipe: joinable as before
+
+
+def test_load_terms_keep_the_pin_through_buffers():
+    out = run(r"""
+mk s DFFHQNx1 0 0; mk b BUFx3 1 1; mk i INVx1 2 2; mk f1 DFFASRHQNx1 3 3; mk f2 DFFHQNx1 4 4; mk g NAND2x1 5 5
+conn q s b g; conn n1 b i f2; conn n2 i f1; pin f1 n2 RESETN; pin g q B
+set r {}; foreach t [nc_load_terms I:s] { lappend r "[[$t getInst] getName]/[[$t getMTerm] getName]" }
+puts "LT [lsort $r]"
+""")
+    assert "LT f1/RESETN f2/D g/B" in out
+
+
+def test_median_point_and_clamp():
+    out = run(r"""
+puts "M3 [nc_median_pt {{1167 1923} {1164 1965} {1204 2272}}]"
+puts "M2 [nc_median_pt {{0 0} {10 4}}]"
+puts "M4 [nc_median_pt {{0 0} {10 4} {2 8} {4 100}}]"
+puts "M0 [llength [nc_median_pt {}]]"
+puts "C [nc_clamp_box 5 50 10 20 30 40] [nc_clamp_box 15 25 10 20 30 40]"
+""")
+    assert "M3 1167 1965" in out
+    assert "M2 5.0 2.0" in out
+    assert "M4 3.0 6.0" in out
+    assert "M0 0" in out
+    assert "C 10 40 15 25" in out
+
+
+# the cbn_q01 x_1_3 b_d[383] shape (um): the fill put the QN inverter 51 um east of its head and of its NAND load
+B383 = r"""
+set nc_blk "K:blk"
+set nc_dbu 1
+proc K:blk {m} { set r {}; dict for {n v} $::cells { lappend r I:$n }; return $r }
+mk x.u_st.b_d\[383\] DFFHQNx1 1167 1923; mk inv INVx1 1218 1951; mk nand NAND2x1 1164 1965; mk and3 AND3x1 1158 1947
+mk ist DFFHQNx2 1204 2272 FIRM
+conn qn x.u_st.b_d\[383\] inv and3; conn n1 inv nand ist
+"""
+
+
+def test_filled_inverter_at_the_median_of_driver_and_loads_removes_the_stretch():
+    out = run(B383 + r"""
+puts "BEFORE [nc_tree_stretch]"
+puts "NEIGH [lsort [nc_buf_neigh I:inv]]"
+lassign [nc_median_pt [nc_buf_neigh I:inv]] x y
+lassign [nc_clamp_box $x $y 1158 1757 1231 2065] x y
+puts "AT $x $y"
+dict set ::cells inv [list INVx1 $x $y PLACED]
+puts "AFTER [nc_tree_stretch]"
+""")
+    assert "BEFORE 3 1 1" in out             # 147 built for a 45 pair
+    assert "NEIGH {1164 1965} {1167 1923} {1204 2272}" in out
+    assert "AT 1167 1965" in out
+    assert "AFTER 3 0 0" in out
+
+
+def test_fill_second_pass_and_reset_sink_count_are_wired_and_printed():
+    i = SRC.index("nc_put $i $x $y; incr nx_cells; incr nx_k")
+    j = SRC.index("set nx_far {}", i)
+    assert "set nx_pts [nc_buf_neigh $i]" in SRC[i:j] and "nc_median_pt $nx_pts" in SRC[i:j]
+    assert "nc_clamp_box $x $y $wx0 $wy0 $wx1 $wy1" in SRC[i:j]
+    k = SRC.index("OT_XSTN_KEEP $nx_cl")
+    assert "reset_sinks_excluded $nx_rst" in SRC[k:k + 300]
+    k = SRC.index('puts "OT_XSTN_SITE xstn')
+    assert "fill_bufs_resited $nx_rebuf reset_sinks_excluded $nx_rst_all" in SRC[k:k + 500]
+    # a boundary register needs the D pin, direct or through buffers
+    assert SRC.count("if {[nc_data_pin [[$l getMTerm] getName]]} { lappend nx_bnd $li } else { incr nx_rst }") == 1
+    assert SRC.count("if {[nc_data_pin [[$xt getMTerm] getName]]} { lappend nx_bnd $xi } else { incr nx_rst }") == 1
