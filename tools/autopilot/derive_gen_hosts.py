@@ -10,7 +10,17 @@ HASHFILE = ".src-manifest.sha256"
 HARD_FLOOR, MARGIN = 50, 20
 # COORD 11-17: ~/.local/opentallas-pdk-asap7 (the legacy PDK root ref_tile.py gen routes use) existed on intel1 and epyc2 only, so svc core routes failed on epyc8.  A host that lacks a required
 # tool path is not a gen host.  Per die: kit_wave.json dies.<die>.host_requires (list, [] = none); default for every die = REQUIRES_DEFAULT.
-REQUIRES_DEFAULT = ("~/.local/opentallas-pdk-asap7/lib",)
+def flow_images(kind="require"):
+    """names in tools/fleet/flow_images.txt with the given keyword"""
+    try:
+        txt = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "fleet", "flow_images.txt")).read()
+    except OSError:
+        return ()
+    return tuple(l.split(None, 1)[1].strip() for l in txt.splitlines() if l.split(None, 1)[:1] == [kind] and len(l.split(None, 1)) == 2)
+
+
+# a `docker-image:NAME` entry means the docker image must exist on the host (COORD 11-17: epyc7 lacked opentallas/orfs:asap7lock-grtoff -> FAIL_PREFLOOR)
+REQUIRES_DEFAULT = ("~/.local/opentallas-pdk-asap7/lib",) + tuple("docker-image:" + i for i in flow_images("require"))
 
 
 def probe(host, tree, run=subprocess.run):
@@ -33,7 +43,12 @@ def probe(host, tree, run=subprocess.run):
 
 def host_requires(host, paths, run=subprocess.run):
     """-> [paths missing on host] (ssh test -e per path; a host that does not answer is reported missing for all)"""
-    cmd = "; ".join("[ -e %s ] || echo MISSING %s" % (p.replace("~", "$HOME", 1), shlex.quote(p)) for p in paths)
+    def one(p):
+        if p.startswith("docker-image:"):
+            n = shlex.quote(p[len("docker-image:"):])
+            return "(docker image inspect %s || sudo -n docker image inspect %s) >/dev/null 2>&1 || echo MISSING %s" % (n, n, shlex.quote(p))
+        return "[ -e %s ] || echo MISSING %s" % (p.replace("~", "$HOME", 1), shlex.quote(p))
+    cmd = "; ".join(one(p) for p in paths)
     try:
         r = run(["ssh", "-n", "-o", "BatchMode=yes", "-o", "ControlPath=none", "-o", "ConnectTimeout=15", host, cmd], capture_output=True, text=True, timeout=60)
     except Exception:
