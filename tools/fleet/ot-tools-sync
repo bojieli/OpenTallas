@@ -35,7 +35,10 @@ MQ = Path(os.environ.get("MQ_HOME", HOME / "merge-queue"))
 PY = os.environ.get("MQ_PYTHON", str(MQ / "venv/bin/python"))
 REMOTE = os.environ.get("MQ_REMOTE", "origin")
 HOSTS = os.environ.get("OT_RT_HOSTS", "intel1 epyc2 epyc7 epyc8 epyc9 epyc10").split()
-HOST_PATHS = os.environ.get("OT_RT_HOST_PATHS", "tools/fleet").split()          # what ot-run / ot-heavy use on a host
+# FABLE-FLOW-0600 class D (17 of 32 kit failures: rt incomplete on gen hosts): every host gets what a kit launch tree needs (rt_launch_tree.sh
+# hardlinks tools/ and physical/common_flow), not only tools/fleet, and the flip waits for a smoke of that copy on one gen host.
+HOST_PATHS = os.environ.get("OT_RT_HOST_PATHS", "tools physical/common_flow").split()
+GEN_SMOKE_HOSTS = os.environ.get("OT_RT_GEN_SMOKE_HOSTS", "epyc9 epyc10 epyc8 epyc2").split()   # tried in order: the first one reached judges
 SPARSE = os.environ.get("MQ_SPARSE", "/*,!/*/,/tools/,/physical/common_flow/,/rtl/lib/,/rtl/common/").split(",")
 SMOKE_TESTS = os.environ.get("OT_RT_SMOKE_TESTS", "tools/autopilot/test_kit_wave.py").split()
 LEGACY = [p for p in os.environ.get("OT_RT_LEGACY", "/srv/opentallas-scratch2/claude/kw38/rt").split() if p]
@@ -327,8 +330,47 @@ def materialize(full):
     return d
 
 
-def host_sync(host, name, prev):
-    """copy RT/<name> (HOST_PATHS) to host, smoke it there (parse), flip host RT/current -> (ok, note)"""
+GEN_SMOKE_SH = r'''
+set -u
+R="$1"; T=$(mktemp -d "${TMPDIR:-/tmp}/rt-gen-smoke.XXXXXX") || exit 2
+trap 'chmod -R u+w "$T" 2>/dev/null; rm -rf "$T"' EXIT
+bad=0
+for f in $(find "$R/tools" "$R/physical/common_flow" -name "*.sh" -type f 2>/dev/null); do bash -n "$f" 2>/dev/null || { echo "RED bash -n ${f#$R/}"; bad=1; }; done
+mkdir -p "$T/src/physical/die_plan" "$T/src/rtl" && echo x > "$T/src/physical/die_plan/p.json"
+bash "$R/tools/autopilot/rt_launch_tree.sh" "$T/src" "$R" "$T/L" >/dev/null 2>"$T/err" || { echo "RED rt_launch_tree rc $?: $(tail -c 300 "$T/err")"; bad=1; }
+for x in tools/autopilot/kit_wave.py tools/autopilot/rt_launch_tree.sh tools/die_plan physical/common_flow physical/die_plan/p.json .rt_launch_ok; do
+  [ -e "$T/L/$x" ] || { echo "RED launch tree lacks $x"; bad=1; }; done
+( cd "$T/L" && python3 -I -c "import sys; sys.path[:0]=['tools/autopilot']; import src_manifest, live_tree" ) 2>"$T/err" || { echo "RED import: $(tail -c 300 "$T/err")"; bad=1; }
+[ $bad = 0 ] && echo GEN-SMOKE-OK
+'''
+
+
+def gen_smoke(host, root):
+    """-> (verdict, note): verdict 'ok' | 'red' (the copy on a gen host cannot compose or run a kit launch tree) | 'infra' (host not reached)"""
+    r = run(SSH + [host, "bash", "-s", "--", shlex.quote(str(root))], input=GEN_SMOKE_SH, timeout=900)
+    out = (r.stdout or "") + (r.stderr or "")
+    if "GEN-SMOKE-OK" in out:
+        return "ok", "ok"
+    reds = [l for l in out.splitlines() if l.startswith("RED ")]
+    if reds:
+        return "red", " | ".join(reds[:5])[:400]
+    return "infra", f"rc={r.returncode}: {out.strip()[-200:]}"
+
+
+def gen_red(name):
+    """True when the first reachable gen smoke host judges RT/<name> red (copied there, not flipped)"""
+    for gh in GEN_SMOKE_HOSTS:
+        ok, note = host_sync(gh, name, current() or "", do_flip=False, smoke_here=True)
+        if ok:
+            return False
+        if note.startswith("RED "):
+            return True
+    return False
+
+
+def host_sync(host, name, prev, do_flip=True, smoke_here=False):
+    """copy RT/<name> (HOST_PATHS) to host, check it there (manifest + parse; with smoke_here also gen_smoke), flip host RT/current -> (ok, note).
+    A note starting 'RED ' means the content is wrong (not the host)."""
     r = run(SSH + [host, f"test -f {RT}/{name}.manifest.json && echo HAVE || df -BG --output=avail {RT}/.. | tail -n1"], input="")
     if r.returncode == 0 and "HAVE" not in r.stdout:
         try:
@@ -375,12 +417,22 @@ print(json.dumps(bad[:20]))
         except (ValueError, IndexError):
             return False, f"remote check failed rc={r.returncode}: {(r.stderr or r.stdout).strip()[:200]}"
         if bad:
-            return False, f"remote copy differs: {bad[:5]}"
+            return False, f"RED remote copy differs: {bad[:5]}"
+        if smoke_here:
+            v, note = gen_smoke(host, RT / f".{name}.partial")
+            if v != "ok":
+                return False, ("RED gen smoke: " if v == "red" else "gen smoke not run: ") + note
         m = json.dumps({"sha": man["sha"], "made": man["made"], "files": sub})
         r = run(SSH + [host, f"chmod -R a-w {RT}/.{name}.partial/* && mv -T {RT}/.{name}.partial {RT}/{name} && "
                              f"cat > {RT}/.{name}.m.tmp && mv {RT}/.{name}.m.tmp {RT}/{name}.manifest.json"], input=m)
         if r.returncode:
             return False, f"install: {(r.stderr or r.stdout).strip()[:200]}"
+    elif smoke_here:                                       # copied by an earlier sync: smoke the installed copy
+        v, note = gen_smoke(host, RT / name)
+        if v != "ok":
+            return False, ("RED gen smoke: " if v == "red" else "gen smoke not run: ") + note
+    if not do_flip:
+        return True, "smoked"
     r = run(SSH + [host, f"cd {RT} && ln -sfn {name} .current.$$ && mv -T .current.$$ current && readlink current"], input="")
     if r.returncode or r.stdout.strip() != name:
         return False, f"flip: {(r.stderr or r.stdout).strip()[:200]}"
@@ -402,6 +454,23 @@ def sync(sha, hosts=True, tests=True):
             (RT / f"{name}.smoke-failed").write_text("\n".join(bad) + "\n")
             print(f"SMOKE-FAIL rt {name}: {bad[:3]}")
             return 3
+        if hosts and GEN_SMOKE_HOSTS:                       # FABLE-FLOW-0600 D: smoke the gen-host copy BEFORE anything flips; red = nothing flips (revert)
+            verdict, gnote, gh = "infra", "no gen smoke host", "-"
+            for gh in GEN_SMOKE_HOSTS:
+                ok, gnote = host_sync(gh, name, prev if prev and prev != name else "", do_flip=False, smoke_here=True)
+                if ok:
+                    verdict = "ok"
+                    break
+                if gnote.startswith("RED "):
+                    verdict = "red"
+                    break
+                log(f"{name}: gen smoke on {gh} not run ({gnote[:160]}); next host")
+            if verdict != "ok":
+                log(f"{name}: GEN SMOKE {verdict.upper()} on {gh}, current stays {prev or '-'} on hub and hosts: {gnote}")
+                (RT / f"{name}.smoke-failed").write_text(f"gen smoke {verdict} {gh}: {gnote}\n")
+                print(f"GEN-SMOKE-{verdict.upper()} rt {name} {gh}: {gnote[:300]}")
+                return 3 if verdict == "red" else 5
+            log(f"{name}: gen smoke ok on {gh}")
         flip(RT, name)
         with open(RT / "history.log", "a") as f:
             f.write(f"{now().isoformat(timespec='seconds')} hub current {prev or '-'} -> {name} ({full})\n")
@@ -675,7 +744,7 @@ def follow(hosts=True):
     if rc == 3 and not (RT / f".reverted-{sha12(full)}").exists():
         (RT / f".reverted-{sha12(full)}").write_text("")
         try:
-            auto_revert(cur_full, full)
+            auto_revert(cur_full, full, hosts)
         except Exception as e:                             # noqa: BLE001 - reported, never raised into the timer
             log(f"auto-revert failed: {type(e).__name__}: {str(e)[:300]}")
     return rc
@@ -689,7 +758,7 @@ def commit_lane(c):
     return git("log", "-1", "--format=%an", c).strip() or ALERT_LANE
 
 
-def auto_revert(cur_full, full):
+def auto_revert(cur_full, full, hosts=True):
     """OWNER 11-18 / FABLE-WORKFLOW-0400: the smoke of a new main failed.  Find the commits (first-parent, after the running rt/current) whose own tree fails
     the smoke and push a REVERT commit of each (never a force push; a merge is reverted with -m 1), post it to the author lane.  A running kit keeps its
     old rt/<sha>; the next follow materializes the reverted main."""
@@ -698,7 +767,7 @@ def auto_revert(cur_full, full):
     bad = []
     for c in commits:
         d = materialize(c)
-        if smoke(d, tests=False):
+        if smoke(d, tests=False) or (hosts and gen_red(sha12(c))):
             bad.append(c)                                  # the FIRST failing commit is the offender; later ones fail by inheriting its tree
             break
     if not bad:

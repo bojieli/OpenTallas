@@ -9367,113 +9367,6 @@ def tools_lag_rows(AP, cfg, ttl=1800):
     return rows
 
 
-def tools_refresh_stop_fp(d):
-    """same fingerprint as tools_refresh.stop_fp (test_tools_refresh keeps them equal)"""
-    import hashlib
-    keys = ("src", "tools_refresh", "tools_refresh_bind_cmd", "tools_refresh_bind_sub", "tools_refresh_bind_pass")
-    return hashlib.sha1(json.dumps({x: d.get(x) for x in keys}, sort_keys=True, default=str).encode()).hexdigest()[:16]
-
-
-def tools_refresh_decide(ent, attempt, crashes, now, unit_alive, in_flight_s=900, max_crashes=3):
-    """WAVE-FLOW-R2 11-17 (COORD r615): -> (action, why, new_ent), action spawn | skip | stop.  ent = the wave's record of the last start ({t, unit, crashes} or None),
-    attempt = the unit's own record once compose started (tools_refresh_state.json attempts[key]), crashes = the crash count the unit wrote.
-    A pass that crashes before its first step leaves no attempt record: it is retried and counted, three crashes stop it.  A pass whose compose started
-    and ended (any status but CRASH) is final for this (pin, main, rulings)."""
-    ent = dict(ent) if isinstance(ent, dict) else ({"t": int(ent), "crashes": 0} if ent else None)
-    if attempt and attempt.get("status") not in ("CRASH",):
-        return "skip", "attempted: " + str(attempt.get("status")), ent
-    n = int(crashes or 0) + int((ent or {}).get("crashes") or 0)
-    if n >= max_crashes:
-        return "stop", f"{n} crashed passes", ent
-    if ent:
-        if unit_alive or now - int(ent.get("t") or 0) < in_flight_s:
-            return "skip", "in flight", ent
-        if not attempt:                           # the unit ended without ever starting compose: a crash before its first step
-            ent["crashes"] = int(ent.get("crashes") or 0) + 1
-            if n + 1 >= max_crashes:
-                return "stop", f"{n + 1} crashed passes", ent
-    return "spawn", "", dict(ent or {}, t=int(now))
-
-
-def tools_refresh_pass_live(ap_dir, die):
-    """COORD 11-17: a pass of this die is live while a process holds tools_refresh_<die>.lock (the unit's single-flight flock).  The tick used to spawn a new unit for
-    every new (pin, rulings) key while one ran (10+ BUSY units for s81_head); it now waits.  Never creates the lock file; unreadable = not live."""
-    import fcntl
-    p = Path(ap_dir) / f"tools_refresh_{die}.lock"
-    try:
-        fh = open(p, "a")
-    except OSError:
-        return False
-    try:
-        fcntl.flock(fh, fcntl.LOCK_EX | fcntl.LOCK_NB)
-    except BlockingIOError:
-        return True
-    except OSError:
-        return False
-    else:
-        fcntl.flock(fh, fcntl.LOCK_UN)
-        return False
-    finally:
-        fh.close()
-
-
-def tools_refresh_tick(AP, cfg, st):
-    """WAVE-FLOW-R2 11-17 (COORD FABLE-FLOW-1500 A, r615): for every die with dies.<die>.tools_refresh (true = apply, "dry") whose TOOLS-LAG names a die-tool ruling
-    missing from its current tree, start tools_refresh.py (tools-only delta tree -> overlay classify -> guard -> strict bind -> apply, or NEEDS-LANE) per
-    (pin, rulings).  The key is marked attempted only by the unit itself once compose has started (tools_refresh_state.json attempts); a crash before that
-    is retried, counted, and stops at 3 with a NEEDS-LANE"""
-    raw = TOOLS_LAG_CACHE.get("raw") or {}
-    started = st.setdefault("tools_refresh_started", {})
-    script = str(Path(__file__).resolve().with_name("tools_refresh.py"))
-    try:
-        ustate = json.loads((Path(AP.AP_DIR) / "tools_refresh_state.json").read_text())
-    except (OSError, ValueError):
-        ustate = {}
-    for die, d in (cfg.get("dies") or {}).items():
-        if not isinstance(d, dict) or not d.get("enabled") or d.get("tools_refresh") not in (True, "dry"):
-            continue
-        if rt_tools_fields(cfg, die):           # TOOLS-DECOUPLE-1118: the die's kits run rt/<sha> tools; no tools-only tree is composed
-            if not (st.setdefault("tools_refresh_retired", {})).get(die):
-                st["tools_refresh_retired"][die] = time.time()
-                AP.log(f"KIT-WAVE TOOLS-REFRESH RETIRED {die}: kits take tools from rt/<sha> at launch (TOOLS-DECOUPLE-1118); no refresh pass")
-            continue
-        lag = raw.get(die) or {}
-        if not lag.get("missing") or lag.get("n_commits") is None or AP.DRY:
-            continue
-        key = f"{die}|{lag.get('pin')}|{','.join(lag['missing'])}"
-        stp = (ustate.get("stopped") or {}).get(die)
-        if stp and stp.get("fp") == tools_refresh_stop_fp(d):       # stopped on a structural exit: no start until the tree or the bind recipe changes
-            continue
-        if tools_refresh_pass_live(AP.AP_DIR, die):                 # a pass holds the die's lock: spawn nothing (the key stays unstarted and is decided when it ends)
-            continue
-        ent = started.get(key)
-        alive = False
-        if isinstance(ent, dict) and ent.get("unit"):
-            alive = subprocess.run(["systemctl", "--user", "is-active", "--quiet", ent["unit"]]).returncode == 0
-        action, why, new = tools_refresh_decide(ent, (ustate.get("attempts") or {}).get(key), (ustate.get("crashes") or {}).get(key), int(time.time()), alive)
-        if new is not None:
-            started[key] = new
-        if action == "stop":
-            if not (new or {}).get("stop_logged"):
-                (new or {})["stop_logged"] = True
-                AP.log(f"KIT-WAVE TOOLS-REFRESH {die}: stopped, {why} for {', '.join(lag['missing'][:12])}")
-                AP.coord_append("lanes/COORD-REVIEW-QUEUE.md", f"- {now_s()} NEEDS-LANE [TOOLS-REFRESH -> {d.get('owner_lane') or die}] {die}: tools_refresh stopped after {why} "
-                                f"(see autopilot/tools_refresh_{die}.log)")
-            continue
-        if action != "spawn":
-            continue
-        _last = st.setdefault("tools_refresh_last", {})
-        _gap = float(d.get("tools_refresh_min_gap_s") or cfg.get("tools_refresh_min_gap_s") or 1800)
-        if time.time() - float(_last.get(die) or 0) < _gap:           # FABLE-FLOW-0010 C: every new ruling used to start another pass; at most one pass per die per 30 min
-            started.pop(key, None)                                    # the key is decided on a later tick (it is not an attempt)
-            continue
-        _last[die] = time.time()
-        unit = f"kw-toolsrefresh-{die}-{int(time.time())}"
-        started[key]["unit"] = unit
-        AP.log(f"KIT-WAVE TOOLS-REFRESH {die}: starting {unit} for {', '.join(lag['missing'][:12])}")
-        AP.launch_unit(unit, Path(AP.AP_DIR) / f"tools_refresh_{die}.log", [sys.executable, "-I", script, "--die", die] + (["--dry"] if d.get("tools_refresh") == "dry" else []))
-
-
 def tool_skew_measure_all(AP, cfg, st, ap_dir):
     """every enabled die, every tick, independent of launches (a held die such as S81 or KV launches nothing and used to have no
     reading); writes kit_wave_tool_skew.json = the numbers the SKEW table and NEEDS-LANE posts quote"""
@@ -9486,8 +9379,7 @@ def tool_skew_measure_all(AP, cfg, st, ap_dir):
             continue
         rows[die] = dict(mode=str(opt(cfg, die, "tool_skew")), tree=d.get("src"), measured=res["measured"], n_differ=len(res["refused"]),
                          n_closure=res.get("n_closure", 0), pin=res.get("pin"), modules=sorted(res["refused"])[:60])
-    lag_rows = tools_lag_rows(AP, cfg)
-    tools_refresh_tick(AP, cfg, st)
+    lag_rows = tools_lag_rows(AP, cfg)                    # tools_refresh deleted (TOOLS-DECOUPLE-1118 / FABLE-FLOW-0600 D): kits run rt/<sha> tools
     for die, ln in lag_rows.items():
         rows.setdefault(die, {})["tools_lag"] = ln
     if rows and not AP.DRY:

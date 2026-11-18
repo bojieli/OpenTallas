@@ -156,19 +156,5 @@ class LaunchTree(unittest.TestCase):
         self.assertFalse((Path(self.L) / "junk").exists())
 
 
-class RefreshRetired(unittest.TestCase):
-    def test_tick_starts_nothing_for_rt_dies(self):
-        AP = mock.Mock()
-        AP.AP_DIR = tempfile.mkdtemp()
-        AP.DRY = False
-        cfg = {"dies": {"s81": {"enabled": True, "tools_refresh": True, "src": "/s"}}}
-        KW.TOOLS_LAG_CACHE["raw"] = {"s81": {"missing": ["r700"], "n_commits": 5, "pin": "x"}}
-        st = {}
-        with mock.patch.object(KW, "scheduler_rt", return_value=("/r/rt/0d6591bd9617", SHA)):
-            KW.tools_refresh_tick(AP, cfg, st)
-        AP.launch_unit.assert_not_called()
-        self.assertIn("s81", st["tools_refresh_retired"])
-
-
 if __name__ == "__main__":
     unittest.main()
