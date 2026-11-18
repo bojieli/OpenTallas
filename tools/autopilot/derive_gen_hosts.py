@@ -19,8 +19,14 @@ def flow_images(kind="require"):
     return tuple(l.split(None, 1)[1].strip() for l in txt.splitlines() if l.split(None, 1)[:1] == [kind] and len(l.split(None, 1)) == 2)
 
 
+def pinned_images():
+    """[(name, id)] of the `pin NAME ID` lines"""
+    return tuple((p[0], p[1]) for p in (x.split() for x in flow_images("pin")) if len(p) == 2)
+
+
 # a `docker-image:NAME` entry means the docker image must exist on the host (COORD 11-17: epyc7 lacked opentallas/orfs:asap7lock-grtoff -> FAIL_PREFLOOR)
-REQUIRES_DEFAULT = ("~/.local/opentallas-pdk-asap7/lib",) + tuple("docker-image:" + i for i in flow_images("require"))
+REQUIRES_DEFAULT = ("~/.local/opentallas-pdk-asap7/lib",) + tuple("docker-image:" + i for i in flow_images("require")) \
+    + tuple("docker-id:%s=%s" % p for p in pinned_images())
 
 
 def probe(host, tree, run=subprocess.run):
@@ -44,6 +50,9 @@ def probe(host, tree, run=subprocess.run):
 def host_requires(host, paths, run=subprocess.run):
     """-> [paths missing on host] (ssh test -e per path; a host that does not answer is reported missing for all)"""
     def one(p):
+        if p.startswith("docker-id:"):       # a pinned NAME must resolve to exactly this id on the host (an unpinned/foreign :latest drops the host)
+            n, i = p[len("docker-id:"):].split("=", 1)
+            return "[ \"$(docker image inspect --format '{{.Id}}' %s 2>/dev/null || sudo -n docker image inspect --format '{{.Id}}' %s 2>/dev/null)\" = %s ] || echo MISSING %s" % (shlex.quote(n), shlex.quote(n), shlex.quote(i), shlex.quote(p))
         if p.startswith("docker-image:"):
             n = shlex.quote(p[len("docker-image:"):])
             return "(docker image inspect %s || sudo -n docker image inspect %s) >/dev/null 2>&1 || echo MISSING %s" % (n, n, shlex.quote(p))
