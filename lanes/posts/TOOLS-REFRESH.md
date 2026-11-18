@@ -93,3 +93,4 @@
   epyc7: linked from src_s81_pin_3c913dbdfb23_d7w_1117_work
   epyc7: OK
   epyc2: refuse (free 42 GB + part 0 - tree 53 = 34 GB after the copy < floor 50 + 20 GB); stopped (no retry); free the host named or exclude it, then change the die tree or recipe settings to resume
+- 2026-11-18 00:02 PST NEEDS-LANE [TOOLS-REFRESH -> QC die owner (DIE-QC-103)] qwen_compute: strict bind on /srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9n3_t5144e08 did not run: the delta touches bind.py's import closure (67: tools/die_plan/band_capacity.py, tools/die_plan/bind.py, tools/die_plan/bind_elab.py, tools/die_plan/bind_pad_tail_split.py, tools/die_plan/bind_verify.py, tools/die_plan/bound_groups.py, tools/die_plan/bound_macro_paths.py, tools/die_plan/cap_estimate.py) and dies.<die>.tools_refresh_bind_cmd names no strict-bind recipe to re-run (a bind recipe is per die: env such as OT_HCPARAM_ALL, packaged elaboration): the die owner gives it
