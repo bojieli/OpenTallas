@@ -243,8 +243,7 @@ if {[catch {
       if {$pg_wq >= $pg_mrg || ($pg_wq - $pg_wp < 1.0 && [sta::endpoint_violation_count min] > 0.95 * $pg_np)} break
     }
     if {$pg_tag eq "rr"} {
-      if {[llength $pg_in]} { unset_path_exceptions -hold -from $pg_in }
-      if {[llength $pg_out]} { unset_path_exceptions -hold -to $pg_out }
+      if {[llength $pg_in]} { unset_path_exceptions -hold -from $pg_in }; if {[llength $pg_out]} { unset_path_exceptions -hold -to $pg_out }
     }
     if {$pg_tag eq "xt"} {
       set pg_xt [expr {[pg_hold] + $pg_dg}]
