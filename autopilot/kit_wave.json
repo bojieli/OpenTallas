@@ -5981,7 +5981,11 @@
     "epyc8",
     "epyc9"
    ],
-   "tools_refresh": "dry"
+   "tools_refresh": "dry",
+   "event_lineage": [
+    "KV-HG1",
+    "kvgeom7yhr"
+   ]
   },
   "s81": {
    "enabled": true,
@@ -37700,6 +37704,10 @@
    "prev_gen_hosts_derive": [
     "epyc8",
     "epyc2"
+   ],
+   "event_lineage": [
+    "B6gF2s3",
+    "B6gF2s4tapfix1"
    ]
   },
   "s81_head": {
@@ -39941,6 +39949,14 @@
    "prev_gen_hosts_derive": [
     "epyc8",
     "epyc9"
+   ],
+   "event_lineage": [
+    "head_rp21z20NF13a",
+    "head_rp21z20NF15b",
+    "head_rp21z20NF15c",
+    "l48ui",
+    "hcut1111",
+    "head_rp18_1112"
    ]
   },
   "qwen_compute": {
@@ -51631,7 +51647,17 @@
    ],
    "tools_refresh": false,
    "plan_event": "s29q103S4Q9M5",
-   "pilot_item": "sle_st_a_v2__pv4242de79"
+   "pilot_item": "sle_st_a_v2__pv4242de79",
+   "event_lineage": [
+    "S4q6d",
+    "s29q103S4Q6D",
+    "s29q103S4Q9KF",
+    "S4q9l2",
+    "s29q103S4Q9L2",
+    "S4q9m",
+    "s29q103S4Q9M",
+    "s29q103S4Q9M5"
+   ]
   },
   "hbm": {
    "enabled": true,
