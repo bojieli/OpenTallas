@@ -4889,6 +4889,9 @@ def heal_stop_note(AP, tries, key, what):
         AP.log("KIT-WAVE %s: STOPPED after %d self-heal tries (needs an owner)" % (what, SELF_HEAL_MAX_TRIES))
 
 
+ITEM_SYNC_BACKOFF_S = 1800
+
+
 def sync_item_inputs(AP, cfg, run=None):
     """FIX-SELFCONT 11-14 (COORD fail class KIT_NOT_SELF_CONTAINED / 'landed_sidecar_aor3.json missing'): an item's own input
     (type_args --clock-landing sidecar, item_env file, item plan) existed on ONE gen host (epyc7); every other host was
@@ -4915,6 +4918,8 @@ def sync_item_inputs(AP, cfg, run=None):
                     p = part.split(": ")[0].replace(" missing", "").strip()
                     if not _ITEM_SYNC_OK.match(p) or ".." in p or len(done) >= ITEM_SYNC_MAX_PER_TICK:
                         continue
+                    if h not in (cfg["dies"][die].get("gen_hosts") or []):
+                        continue                                  # FLOW-2200 E: never sync an item input to a host outside the die's gen_hosts (QC items spilled to epyc2 retried for hours)
                     hk = "item|%s|%s|%s|%s" % (h, die, item, p)
                     live.add(hk)
                     if heal_blocked(tries, hk):
@@ -4924,17 +4929,23 @@ def sync_item_inputs(AP, cfg, run=None):
                                 and p not in str((inc[g].get(die) or {}).get(item) or "")), None)
                     if not src:
                         continue
+                    bo = "bo|%s|%s|%s" % (src, h, p)             # FLOW-2200 E: backoff keyed by (src, dst, path): a failed copy is not repeated for ITEM_SYNC_BACKOFF_S
+                    if tries.get(bo) and time.time() - float(tries[bo]) < ITEM_SYNC_BACKOFF_S:
+                        live.add(bo)
+                        continue
                     q = shlex.quote(p)
                     pipe = (f"{' '.join(ssh)} {src} 'test -e {q} && [ $(du -sm {q} | cut -f1) -le {ITEM_SYNC_MAX_MB} ] && "
                             f"tar -C / -cf - {shlex.quote(p.lstrip('/'))}' | "
                             f"{' '.join(ssh).replace('-n ', '')} {h} 'mkdir -p {shlex.quote(os.path.dirname(p))} && "
                             f"tar -C / -xf - --keep-old-files'")
                     try:
-                        for _try in range(5):                   # sshd MaxStartups / banner timeouts are transient
+                        for _try in range(5):                   # sshd MaxStartups / banner timeouts are transient (rc 255 only: a copy that failed on the source / size / disk is permanent)
                             rc = run(["bash", "-c", "set -o pipefail; " + pipe])
-                            if rc == 0:
+                            if rc == 0 or rc != 255:
                                 break
                             time.sleep(8 + 8 * _try)
+                        if rc != 0:
+                            tries[bo] = time.time(); live.add(bo)
                     except Exception as e:
                         AP.log(f"KIT-WAVE ITEM-SYNC {src}->{h} {p}: skipped: {e}")
                         continue
