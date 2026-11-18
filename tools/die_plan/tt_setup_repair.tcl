@@ -79,7 +79,7 @@ proc ot_tt_est_after_repair {} {
   if {![catch {ot_tt_est} err]} { return }
   if {![string match "*RSZ-0074*" $err]} { error $err }
   puts "OT_TT_SETUP_REPAIR WARNING RSZ-0074 after the repair ($err): re-routing the repaired nets"
-  if {![catch {global_route -start_incremental -allow_congestion; global_route -end_incremental -allow_congestion; ot_tt_est} err2]} {
+  if {![catch {global_route -allow_congestion -start_incremental; global_route -allow_congestion -end_incremental; ot_tt_est} err2]} {
     puts "OT_TT_SETUP_REPAIR RSZ-0074 cleared by an incremental re-route"
     return
   }
