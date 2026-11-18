@@ -75,6 +75,21 @@ class Strip(unittest.TestCase):
         self.assertFalse(os.path.exists(o + "/gen/6_final.odb"))
         self.assertTrue(os.path.exists(o + "/gen/x.log") and os.path.exists(o + "/s.json") and os.path.exists(n + "/gen/6_final.odb"))
 
+    def test_routed_dbs_of_old_attempt_kept_until_newer_routed_attempt_or_signed(self):
+        o, n = self.att(3), self.att(7)
+        b = "/gen/run/results/asap7/x/base"
+        mk(o + b + "/6_final.odb", b"r" * (9 * K.MB)); mk(o + b + "/3_place.odb", b"p" * (9 * K.MB)); mk(o + b + "/5_2_route.odb", b"q" * (9 * K.MB))
+        mk(n + b + "/3_place.odb", b"p" * (9 * K.MB))          # newer attempt has NOT routed
+        os.utime(o, (self.now - 99999, self.now - 99999))
+        st = {"k": dict(work=n, status="RUNNING", die="s81", updated=str(self.now))}
+        x = ctx(); K.run_strip(st, x)
+        self.assertTrue(os.path.exists(o + b + "/6_final.odb") and os.path.exists(o + b + "/5_2_route.odb"))
+        self.assertFalse(os.path.exists(o + b + "/3_place.odb"))                  # unrouted heavy still goes
+        mk(n + b + "/6_final.odb", b"r" * (9 * K.MB))                              # now the newer attempt routed
+        x = ctx(); K.run_strip(st, x)
+        self.assertFalse(os.path.exists(o + b + "/6_final.odb") or os.path.exists(o + b + "/5_2_route.odb"))
+        self.assertTrue(any("6_final.odb" in l for l in x.log))
+
     def test_lower_attempts_superseded_by_the_row_counter(self):
         o, n = self.att(3), self.att(7)
         mk(o + "/g/6_final.odb", b"a" * (9 * K.MB)); mk(n + "/g/6_final.odb", b"a" * (9 * K.MB))

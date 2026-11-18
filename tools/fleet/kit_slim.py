@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""kit_slim.py [--apply] [--link ROOT...] [--strip ROOT...] [--state kit_wave_state.json --ids store_ids.txt [--agi-index INDEX.tsv]] [--min-age-s N]
+"""kit_slim.py [--apply] [--link ROOT...] [--strip ROOT...] [--state kit_wave_state.json --ids store_ids.txt [--agi-index INDEX.tsv]] [--log deleted.tsv] [--min-age-s N]
 KIT-SLIM-1118 (OWNER: live kit builds took 2.2 TB on epyc10; COORD 11-18 decision: the delete guard stays as it is).
 
 Measured: 55-70% of a kit attempt is bind_sinks.json (2.36 GB, one fresh copy per attempt), then identical final ODBs, 2_x/3_x sub-stage ODBs, eco copies.
@@ -26,6 +26,7 @@ LINK_EXT = (".odb", ".def", ".spef", ".lib")
 YOSYS_META = "1_2_yosys_native_metadata.json"
 KEEP_EXT = (".log", ".rpt")
 ATTEMPT = re.compile(r"^attempt_(\d+)$")
+ROUTED = re.compile(r"^(5_2_route|5_3_fillcell|5_route|6_[0-9A-Za-z_]+)\.[A-Za-z0-9.]+$")   # routed / finish-stage results: ODB, DEF, SPEF, v, sdc
 OLD_STATUS = frozenset({"FAIL", "CANCELLED", "SUPERSEDED"})
 OLD_AFTER_S = 6 * 3600
 BIG_JSON = 256 * MB
@@ -45,7 +46,7 @@ class Ctx:
     def __init__(self, apply=False, guard=None, protected=None, ptext="", min_age=600, ids=None, now=None):
         self.apply, self.g, self.protected, self.ptext, self.min_age = apply, guard, protected, ptext or "", min_age
         self.ids, self.now = ids, now or time.time()
-        self.freed, self.skipped = {}, []
+        self.freed, self.skipped, self.log = {}, [], []
 
     def credit(self, cls, n):
         self.freed[cls] = self.freed.get(cls, 0) + n
@@ -258,6 +259,44 @@ def candidates(state_items, now, roots=()):
     return out
 
 
+def has_routed(attempt):
+    """the attempt wrote a routed result (5_route.odb / 6_final.odb)"""
+    for dp, dns, fns in os.walk(attempt):
+        if "5_route.odb" in fns or "6_final.odb" in fns:
+            return True
+    return False
+
+
+def routed_removable(attempt, ctx):
+    """COORD 11-18: routed DBs of an attempt may go only when a NEWER attempt of the same item has routed, or the attempt is SIGNED with every
+    SIGNED signoff.json in the ledger (store + AGIdock INDEX).  Anything else keeps them."""
+    item, n = os.path.split(attempt)
+    m = ATTEMPT.match(n)
+    if m:
+        try:
+            for x in os.listdir(item):
+                mm = ATTEMPT.match(x)
+                if mm and int(mm.group(1)) > int(m.group(1)) and has_routed(os.path.join(item, x)):
+                    return True
+        except OSError:
+            pass
+    return signed_count(attempt) > 0 and signed_not_in_store(attempt, ctx.ids or set()) == 0
+
+
+def signed_count(tree):
+    n = 0
+    for p, st in files(tree):
+        b = os.path.basename(p)
+        if (b == "signoff.json" or b.endswith(".signoff.json")) and st.st_size <= 8e6:
+            try:
+                with open(p, errors="replace") as fh:
+                    if json.load(fh).get("verdict") == "SIGNED":
+                        n += 1
+            except (OSError, ValueError, AttributeError):
+                pass
+    return n
+
+
 def strip_files(attempt, kind, ctx):
     allf = list(files(attempt))
     fl = [(p, st) for p, st in allf if ctx.now - st.st_mtime >= ctx.min_age]
@@ -271,6 +310,7 @@ def strip_files(attempt, kind, ctx):
             except OSError:
                 return
         ctx.credit(cls, st.st_size if st.st_nlink == 1 else 0)
+        ctx.log.append("%s\t%d\t%s" % (p, st.st_size, cls))
     for p, st in fl:
         if os.path.basename(p) == YOSYS_META and st.st_size >= 64 * MB and kind != "old":
             if ctx.apply:
@@ -286,9 +326,16 @@ def strip_files(attempt, kind, ctx):
                 n = st.st_size // 10
             ctx.credit("yosys_meta_gzip", max(0, st.st_size - n))
     if kind == "old":
+        rm_ok = None
         for p, st in fl:
             n = os.path.basename(p)
             if st.st_size >= 8 * MB and not n.endswith(KEEP_EXT) and not n.endswith(".gz"):
+                if ROUTED.match(n) or n == "config.mk":
+                    if rm_ok is None:
+                        rm_ok = routed_removable(attempt, ctx)
+                    if not rm_ok:
+                        ctx.credit("kept_routed_not_superseded", st.st_size if st.st_nlink == 1 else 0)
+                        continue
                 drop(p, st, "old_attempt_heavy")
         return
     for d, nm in names.items():
@@ -372,6 +419,9 @@ def main(argv):
         if opts.get("--agi-index"):                         # AGIdock INDEX.tsv (read-only copy): its "record" column is the signoff sha256 too
             ctx.ids |= agi_records(opts["--agi-index"])
         run_strip(json.load(open(opts["--state"]))["items"], ctx)
+    if opts.get("--log"):
+        with open(opts["--log"], "a") as lf:
+            lf.write("".join(x + "\n" for x in ctx.log))
     for p, why in ctx.skipped[:40]:
         print("SKIP %s: %s" % (p, why))
     print(json.dumps({"apply": ctx.apply, "freed_gb": {k: round(v / 1e9, 2) for k, v in sorted(ctx.freed.items())},
