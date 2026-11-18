@@ -61,3 +61,35 @@ def test_probe_normalizes_tree_paths_and_hashes_file_content(tmp_path):
     assert a["blocks"]["t"] != b["blocks"]["t"] and a["norm_blocks"]["t"] == b["norm_blocks"]["t"]
     (tmp_path / "src_x_b" / "plan" / "sink.json").write_text("different")
     assert run("src_x_b")["norm_blocks"]["t"] != a["norm_blocks"]["t"]
+
+
+def test_remote_stop_is_detached_and_config_autocommit_commits_a_dirty_valid_file(tmp_path):
+    import subprocess as sp, json as _j
+    started = []
+    class A:
+        DRY = False
+        HUB_NAME = "hub"
+        AP_DIR = str(tmp_path)
+        COORD = str(tmp_path)
+        log = staticmethod(lambda m: None)
+    orig = KW.subprocess.Popen
+    KW.subprocess.Popen = lambda *a, **k: started.append((a, k))
+    try:
+        assert KW.stop_on_fleet_bg(A, ["/r/a", "/r/a", ""]) == {}
+    finally:
+        KW.subprocess.Popen = orig
+    assert len(started) == 1 and started[0][1]["start_new_session"] and "stop-bg" in started[0][0][0] and _j.loads(started[0][0][0][-2]) == ["/r/a"]
+    calls = []
+    def run(cmd, **k):
+        calls.append(cmd)
+        class R:
+            returncode = 1 if "diff" in cmd else 0
+            stdout = "/git"
+            stderr = ""
+        return R
+    (tmp_path / KW.CFG_REL).parent.mkdir(parents=True, exist_ok=True)
+    (tmp_path / KW.CFG_REL).write_text("{}")
+    assert KW.auto_commit_config(A, run=run) == "committed" and any("coord-commit.sh" in str(c) for c in calls)
+    (tmp_path / KW.CFG_REL).write_text("{bad")
+    calls.clear()
+    assert KW.auto_commit_config(A, run=run).startswith("skipped") and not any("coord-commit.sh" in str(c) for c in calls)

@@ -9,6 +9,7 @@ A job's identity comes from its kit-wave path, also under a wave root such as co
 Attempts compare only within one (die, event, item).  A variant or form has another item name or event, so it is never
 superseded by the other (owner: in-flight variants may finish).
 """
+import sys
 import csv, json, os, re, shlex
 from concurrent.futures import ThreadPoolExecutor
 
@@ -285,3 +286,26 @@ def stopped_names(res):
     return ['%s:%s' % (h, c) for h, v in sorted(res.items()) for c in (v.get('containers') or [])]
 
 
+
+
+def _cli(argv):
+    """python3 -I wave_jobs.py stop-bg <hub> <json roots> [log]: the fleet stop of the wave, run detached from the tick (G, FABLE-FLOW-0600: remote stops and ssh timeouts inside the tick made it 463-688 s)"""
+    import subprocess as _sp, time as _t
+    def sh(cmd, timeout=300, input=None):
+        try:
+            r = _sp.run(cmd, capture_output=True, text=True, timeout=timeout, input=input)
+            return r.returncode, r.stdout, r.stderr
+        except _sp.TimeoutExpired:
+            return 124, "", "timeout"
+    hub, roots = argv[1], json.loads(argv[2])
+    res = stop_on_fleet(sh, hub, roots)
+    line = "%s stop-bg %d root(s): %s%s" % (_t.strftime("%F %T"), len(roots), " ".join(stopped_names(res))[:400] or "none running",
+                                          "".join("; %s not checked: %s" % (h, v["error"]) for h, v in res.items() if v.get("error")))
+    if len(argv) > 3:
+        with open(argv[3], "a") as f:
+            f.write(line + "\n")
+    print(line)
+
+
+if __name__ == "__main__" and len(sys.argv) > 1 and sys.argv[1] == "stop-bg":
+    _cli(sys.argv[1:])

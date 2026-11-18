@@ -2434,8 +2434,8 @@ def supersede_on_switch(AP, cfg, st, notices, ap_dir=None, window_ticks=3):
             AP.log(f"KIT-WAVE SWITCH-SUPERSEDE {die}/{item}@{r.get('attempt')} event {r.get('event')} -> {d['event']}: {what} stopped, units {units}")
             n += 1
     if roots:
-        res = WJ.stop_on_fleet(AP.sh, AP.HUB_NAME, roots)
-        AP.log(f"KIT-WAVE SWITCH-SUPERSEDE remote stop: {' '.join(WJ.stopped_names(res))[:600] or 'none running'}"
+        res = stop_on_fleet_bg(AP, roots)
+        AP.log(f"KIT-WAVE SWITCH-SUPERSEDE remote stop: {' '.join(WJ.stopped_names(res))[:600] or 'queued in background (autopilot/remote_stops.log)'}"
                + "".join(f"; {h} not checked: {v['error']}" for h, v in res.items() if v.get("error")))
     return n
 
@@ -10585,8 +10585,8 @@ def reap_dead(AP, cfg, st, notices, now=None):
         AP.log(f"KIT-WAVE REAP-DEAD {rec['die']}/{rec['item']}@{rec.get('attempt')} {kind}: {why}")
         n += 1
     if roots:
-        res = WJ.stop_on_fleet(AP.sh, AP.HUB_NAME, roots)
-        AP.log(f"KIT-WAVE REAP-DEAD remote stop: {' '.join(WJ.stopped_names(res))[:400] or 'none running'}")
+        res = stop_on_fleet_bg(AP, roots)
+        AP.log(f"KIT-WAVE REAP-DEAD remote stop: {' '.join(WJ.stopped_names(res))[:400] or 'queued in background (autopilot/remote_stops.log)'}")
     if not AP.DRY:
         for key, w in marks.items():                      # HUNG-WATCH: the CPU mark of each judged row
             if key in st["items"] and st["items"][key].get("status") in ("RUNNING", "LAUNCHING"):
@@ -12441,6 +12441,22 @@ def attempt_root(r):
         return (r.get("kit") or "").partition(":")[2]
 
 
+def stop_on_fleet_bg(AP, roots):
+    """G (FABLE-FLOW-0600): the fleet stop (one ssh per host, timeouts up to 240 s) no longer runs inside the tick: a detached process does it and appends its result to autopilot/remote_stops.log.
+    -> {} (callers log 'queued').  Option cfg stops_inline true is not offered: a missed host is the watchdog's job as before.  AP.DRY: nothing."""
+    roots = sorted({x for x in roots if x})
+    if not roots or AP.DRY:
+        return {}
+    if not hasattr(AP, "AP_DIR"):                     # a bare AP (unit tests, tools) has nowhere to log a background result: stop inline
+        return WJ.stop_on_fleet(AP.sh, AP.HUB_NAME, roots)
+    try:
+        subprocess.Popen([sys.executable, "-I", str(Path(__file__).resolve().with_name("wave_jobs.py")), "stop-bg", str(AP.HUB_NAME), json.dumps(roots),
+                          str(Path(AP.AP_DIR) / "remote_stops.log")], stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
+    except OSError as e:
+        AP.log(f"KIT-WAVE remote stop not started: {e}")
+    return {}
+
+
 def hold_cancel_running(cfg, die, item):
     """LATENCY-R 11-17: the item is a key of a hold record with cancel_running: true (cfg['_hold_cancel_running'][die] = keys / globs, set by compile_holds)"""
     return any(fnmatch.fnmatchcase(str(item), pat) for pat in ((cfg.get("_hold_cancel_running") or {}).get(die) or ()))
@@ -12513,8 +12529,8 @@ def cancel_held_running(AP, cfg, st, notices, ap_dir=None):
         AP.log(f"KIT-WAVE HELD-STOP {die}/{item}@{r.get('attempt')} {what} units {units}")
         n += 1
     if roots:
-        res = WJ.stop_on_fleet(AP.sh, AP.HUB_NAME, [x for x in roots if x])
-        AP.log(f"KIT-WAVE HELD-STOP remote stop: {' '.join(WJ.stopped_names(res))[:400] or 'none running'}")
+        res = stop_on_fleet_bg(AP, [x for x in roots if x])
+        AP.log(f"KIT-WAVE HELD-STOP remote stop: {' '.join(WJ.stopped_names(res))[:400] or 'queued in background (autopilot/remote_stops.log)'}")
     return n
 
 
@@ -12613,8 +12629,8 @@ def cancel_superseded(AP, cfg, st, notices, ap_dir=None):
         n += 1
     if roots:
         # the units above are hub clients; ot-run leaves a started command running on its host (HUNG-1103)
-        res = WJ.stop_on_fleet(AP.sh, AP.HUB_NAME, roots)
-        AP.log(f"KIT-WAVE CANCEL-SUPERSEDED remote stop: {' '.join(WJ.stopped_names(res))[:600] or 'none running'}"
+        res = stop_on_fleet_bg(AP, roots)
+        AP.log(f"KIT-WAVE CANCEL-SUPERSEDED remote stop: {' '.join(WJ.stopped_names(res))[:600] or 'queued in background (autopilot/remote_stops.log)'}"
                + "".join(f"; {h} not checked: {v['error']}" for h, v in res.items() if v.get("error")))
     return n
 
@@ -12740,7 +12756,7 @@ def reap_stale_attempts(AP, cfg, st, notices, ap_dir=None):
         n += 1
     if roots:
         res = WJ.stop_on_fleet(AP.sh, AP.HUB_NAME, roots)
-        AP.log(f"KIT-WAVE REAP remote stop: {' '.join(WJ.stopped_names(res))[:600] or 'none running'}"
+        AP.log(f"KIT-WAVE REAP remote stop: {' '.join(WJ.stopped_names(res))[:600] or 'queued in background (autopilot/remote_stops.log)'}"
                + "".join(f"; {h} not checked: {v['error']}" for h, v in res.items() if v.get("error")))
         if any(v.get("error") for v in res.values()):    # WAVE-LONGRUN-1: a host that could not be reached means "not stopped": retry next tick
             for r in marked:
@@ -12921,6 +12937,27 @@ def drift_dies(work, orig):
     return sorted(d for d in set(w) | set(o) if w.get(d) != o.get(d))
 
 
+def auto_commit_config(AP, run=subprocess.run):
+    """E (FABLE-FLOW-0600): lanes edit kit_wave.json in place and the hub checkout stays dirty (HUB-SYNC failed 05:24-05:5x).  When the working file differs from HEAD, is valid JSON and
+    no kit_wave_edit holds its lock, the tick commits it through coord-commit.sh.  -> 'committed' / 'clean' / reason"""
+    coord = Path(getattr(AP, "COORD", "") or "")
+    if AP.DRY or not coord:
+        return "dry"
+    try:
+        if run(["git", "-C", str(coord), "diff", "--quiet", "HEAD", "--", CFG_REL], timeout=60).returncode == 0:
+            return "clean"
+        json.loads((coord / CFG_REL).read_text())
+        gd = run(["git", "-C", str(coord), "rev-parse", "--absolute-git-dir"], capture_output=True, text=True, timeout=30).stdout.strip()
+        if gd and (Path(gd) / "kit_wave_edit.lock").exists():
+            return "editor holds the lock"
+        p = run(["bash", os.path.expanduser("~/coord/bin/coord-commit.sh"), "WAVE auto-commit of an in-place kit_wave.json edit (hub checkout dirty)", CFG_REL],
+                capture_output=True, text=True, timeout=300)
+        AP.log(f"KIT-WAVE CONFIG-AUTOCOMMIT {CFG_REL}: {(p.stdout or p.stderr).strip()[-120:]}")
+        return "committed" if p.returncode == 0 else "commit failed"
+    except (OSError, ValueError, subprocess.SubprocessError) as e:
+        return f"skipped: {type(e).__name__}"
+
+
 def config_drift(AP, st, now=None, origin_ref="origin/coord/state", read_origin=None, cfg=None):
     """FLOW-HEALTH-1 11-15 (FABLE-FLOW-0815 item 5): the working kit_wave.json is what this wave runs on, origin/coord/state is what the
     coordinator and the other hosts see.  A working copy that differs from origin for more than one tick is unpushed config (a failed
@@ -13074,6 +13111,7 @@ def _step(AP, ap_dir):
     except Exception as e:                                       # unknown = launch
         AP.log(f"KIT-WAVE hub disk check skipped: {type(e).__name__}: {e}")
     try:
+        auto_commit_config(AP)
         config_drift(AP, st, cfg=cfg)
     except Exception as e:
         AP.log(f"KIT-WAVE config drift check skipped: {type(e).__name__}: {e}")
