@@ -53,12 +53,13 @@ def main():
             out['closed_generated'] = d.get('generated_at')
         except Exception as e:
             out['closed_error'] = str(e)
+    # INGEST-FIX 11-17: _view-packs/objects holds 2.3M files; listing it made the JSON 180 MB and the 60 s scp to the hub failed (listing stale 6 h): pruned.
     # AGIdock /archive/opentallas-signed-1114: the archive of record for the count (owner 2026-11-14).  Listing + INDEX.tsv only.
     if a.agidock:
         import subprocess
         ssh = ['ssh', '-n', '-i', os.path.expanduser(a.key), '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=15', '-o', 'ControlPath=none', a.agidock]
         try:
-            cmd = "cd " + a.agiroot + " && find . -mindepth 3 -maxdepth 4 -type f -printf '%P|%s\\n'; echo ---INDEX---; cat INDEX.tsv 2>/dev/null; true"
+            cmd = "cd " + a.agiroot + " && find . -maxdepth 4 -path ./_view-packs/objects -prune -o -type f -printf '%P|%s\\n'; echo ---INDEX---; cat INDEX.tsv 2>/dev/null; true"
             r = subprocess.run(ssh + [cmd], capture_output=True, text=True, timeout=300)
             if r.returncode: raise RuntimeError(r.stderr.strip()[-200:])
             listing, _, index = r.stdout.partition('---INDEX---\n'); ent = {}
