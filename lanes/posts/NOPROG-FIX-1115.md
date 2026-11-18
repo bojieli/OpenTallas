@@ -161,3 +161,5 @@
 - 2026-11-17 23:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-17 23:52 PST: 123 running jobs, PROGRESSING 111, SLOW 11, NO-PROGRESS 1 (advisory, no cancel); table lanes/NOPROG.tsv
   NO-PROGRESS epyc2 cbn_q11__cl5cc92dfe 5_1_grt stage 34.4 h job 36.2 h: repair_Viol best 908 last 908 rows 207 window-gain 0.0%; stagnant 6.0 h; last event 0.1 h ago, log write 0.0 h ago (1137 lines)
 - 2026-11-18 00:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-18 00:52 PST: 127 running jobs, PROGRESSING 120, SLOW 7, NO-PROGRESS 0 (advisory, no cancel); table lanes/NOPROG.tsv
+- 2026-11-18 01:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-18 01:52 PST: 123 running jobs, PROGRESSING 109, SLOW 13, NO-PROGRESS 1 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc2 kv3_pc_v1__cl4ea58a5c pregrt_ff_hold stage 6.3 h job 8.5 h: no new meaningful log line for 6.2 h; last: 0 |       0 |       0 |            0 |    +0.0% | -278.803 | -2768225.750 | u_bound.u_hsl2.u_slice.u
