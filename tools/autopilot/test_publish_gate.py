@@ -418,3 +418,16 @@ class ForeignTree(unittest.TestCase):
         self.assertEqual(rec["verdict"], "PASS", rec["checks"])            # advisory: the finding does not block
         self.assertEqual(rec["advisory"], ["foreign_tree"])
         self.assertEqual(PG.require_pass(c, rec["die"], rec["tree"], rec["manifest_hash"], rec["plan_sha256"]), "")
+
+
+
+def test_check_bound_params_flags_a_parameter_the_tree_rtl_lacks(tmp_path):
+    """BOUND-PARAM-1: advisory finding when a bound part passes a parameter no tree definition declares."""
+    (tmp_path / "rtl").mkdir()
+    (tmp_path / "rtl" / "ring.sv").write_text("module ring #(parameter W = 1) (input wire clk); endmodule\n")
+    bo = tmp_path / "bind_out" / "rtl"
+    bo.mkdir(parents=True)
+    (bo / "t_part.sv").write_text("module t_part(input wire clk); ring #(.W(2), .LITE(1)) u_r (.clk(clk)); endmodule\n")
+    f = PG.check_bound_params(tmp_path, tmp_path / "bind_out")
+    assert len(f) == 1 and "ring.LITE" in f[0]
+    assert PG.check_bound_params(tmp_path, None) == []

@@ -328,6 +328,22 @@ def check_foreign_trees(tree, files, asbuilts=(), bind_out=None, max_depth=12):
     return sorted(out)
 
 
+def check_bound_params(tree, bind_out):
+    """-> findings (ADVISORY, BOUND-PARAM-1 11-18): every parameter the bound parts (BIND_OUT/rtl) pass to a module is declared
+    by a definition of that module in TREE (KV D23g: plan key landing_ring_lite emitted .LITE(1) rings, the tree kept the ring
+    RTL without LITE; bind/G0/LATCHECK passed, kit elaboration would fail).  Uses this checkout's tools/die_plan/bound_param_check.py."""
+    rtl = os.path.join(str(bind_out or ""), "rtl")
+    if not bind_out or not os.path.isdir(rtl):
+        return []
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "die_plan"))
+    try:
+        import bound_param_check as BPC
+    finally:
+        sys.path.pop(0)
+    r = BPC.check(str(tree), rtl)
+    return list(r["errors"])
+
+
 def run_static(tree, plan, asbuilt=None, plan_sha256=None, work=None, g0_baseline=None, rows_proofs=None, scan=None, scan_asbuilt=None,
                bind_out=None):
     """-> {schema, pre_g0, hashes: {verdict, ...}}.  Uses the TREE's own tools (the ones PRE/G0/bind will run), python3 -I."""
@@ -368,6 +384,8 @@ def run_static(tree, plan, asbuilt=None, plan_sha256=None, work=None, g0_baselin
     # ADVISORY (r693/r704: the gate is a report): not in CHECKS, so it never changes the verdict; the record's advisory list names it
     ft = check_foreign_trees(tree, [plan, asbuilt] + list(scan or []), [asbuilt] + list(scan_asbuilt or []), bind_out)
     res["foreign_tree"] = {"verdict": "PASS" if not ft else "ADVISORY", "advisory": True, "n": len(ft), "findings": ft[:40]}
+    bp = check_bound_params(tree, bind_out)
+    res["bound_params"] = {"verdict": "PASS" if not bp else "ADVISORY", "advisory": True, "n": len(bp), "findings": bp[:40]}
     return res
 
 
