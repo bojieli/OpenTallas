@@ -19,7 +19,12 @@ def raw_full_checkout(cmd):
     return any((rx.search(seg) and not SAFE_FLAGS.search(seg)) for seg in re.split(r"[;&|\n]", cmd) for rx in (GIT_CLONE, GIT_WT))
 
 
+DOCKER_PRUNE_ALL = re.compile(r"\bdocker\s+(?:image|system)\s+prune\b[^;&|\n]*\s(?:-[a-zA-Z]*a[a-zA-Z]*|--all)\b")
+
+
 def blocked(cmd):
+    if DOCKER_PRUNE_ALL.search(cmd):
+        return True
     if raw_full_checkout(cmd):
         return True
     if "ot-delete" in cmd.split() and not RM_R.search(cmd):
@@ -34,6 +39,9 @@ def main():
         return 0
     cmd = str((d.get("tool_input") or {}).get("command", ""))
     if blocked(cmd):
+        if DOCKER_PRUNE_ALL.search(cmd):
+            print("BLOCKED: `docker image/system prune -a` removes flow images (epyc7 lost asap7lock-grtoff). Use tools/fleet/ot-docker-prune.", file=sys.stderr)
+            return 2
         print("BLOCKED: raw recursive delete on /srv/opentallas-scratch*. Use `ot-delete TREE...` (ot_delete_guard: protected / live trees are skipped, "
               "whole trees only, df before/after).", file=sys.stderr)
         return 2
