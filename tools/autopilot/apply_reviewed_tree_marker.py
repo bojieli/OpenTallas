@@ -25,6 +25,33 @@ def atomic(path, data):
     os.replace(tmp, path)
 
 
+def ensure_tree_on_hosts(tree, want, current_hosts, hosts, rt, run=None, link_from=""):
+    """WAVE-FLOW-R2 11-17 (FABLE-FLOW-1700 item 3): the apply must not narrow the die to the hosts the candidate happens to list.  Every host that serves the die today
+    (current_hosts) and is not in the candidate list gets the tree replicated (src_manifest replicate --link-from) and verified (hosts --expect); any failure refuses with
+    the host list.  -> (hosts the die will have = candidate + verified extras, [detail lines])"""
+    extra = [h for h in current_hosts if h not in hosts]
+    if not extra:
+        return list(hosts), []
+    import shlex
+    import subprocess
+    sm = str(Path(rt) / "src_manifest.py")
+
+    def sh(cmd):
+        if run:
+            return run(cmd)
+        r = subprocess.run(["bash", "-c", cmd], capture_output=True, text=True, timeout=3600)
+        return r.returncode, (r.stdout + r.stderr).strip()
+    csv = ",".join(extra)
+    rep = f"python3 -I {shlex.quote(sm)} replicate {shlex.quote(tree)} --hosts {shlex.quote(csv)}" + (f" --link-from {shlex.quote(link_from)}" if link_from else "")
+    rc, out = sh(rep)
+    if rc:
+        raise SystemExit(f"REPLICATE: the tree is not on every current gen host and replication to {csv} failed (rc {rc}: {out[-300:]}); nothing applied")
+    rc, out = sh(f"python3 -I {shlex.quote(sm)} hosts {shlex.quote(tree)} --hosts {shlex.quote(csv)} --expect {shlex.quote(want)}")
+    if rc:
+        raise SystemExit(f"REPLICATE: verification of the tree on {csv} failed (rc {rc}: {out[-300:]}); nothing applied")
+    return list(hosts) + extra, [f"replicated and verified on {csv}"]
+
+
 def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=False, TC=None, rt=None, keep_gen_hosts=False, PG=None):
     C = Path(C)
     marker = dict(obj.get("marker", obj))
@@ -41,6 +68,12 @@ def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=
         mc.pop("gen_hosts", None)
         mc.pop("gen_host", None)
     assert hosts and marker.get("smoke") == "PASS" and marker.get("plan") and marker.get("plan_sha256")
+    replicated = []
+    if not keep:
+        _cfg0 = json.loads((C / "autopilot/kit_wave.json").read_text())
+        _cur = [h for h in (_cfg0["dies"][die].get("gen_hosts") or []) if h not in (_cfg0.get("retired_hosts") or [])]
+        hosts, replicated = ensure_tree_on_hosts(tree, want, _cur, hosts, rt or HERE, link_from=os.path.basename(str(_cfg0["dies"][die].get("src") or "")))
+        mc.pop("gen_hosts", None) if replicated else None
     # PUBLISH-GATE-1116: no switch without a PASS record of the pre-apply gate (schema, PRE/G0, provenance hashes, dry gen) keyed to
     # this tree manifest sha.  PG=False is only publish_gate.project_cfg() projecting the apply on a scratch copy.
     if PG is not False:

@@ -2126,6 +2126,48 @@ def retire_superseded_rows(AP, cfg, st, now=None):
     return retired, relaunched
 
 
+def adopt_rows_tick(AP, cfg, st, now=None, alert_after=2):
+    """WAVE-FLOW-R2 11-17 (FABLE-FLOW-1700 item 3): after a die tree switch (apply) account for the current-event rows of every plan type: one ADOPT-ROWS line per tick
+    (n/m types have a row; old-event rows that were superseded and have no current row), and one NEEDS-LANE when rows < plan types after `alert_after` ticks, naming the
+    missing types, so a switch that leaves 90 superseded rows unlaunched (QC N1B) is seen at once.  -> {die: (n, m, missing list)} for dies still being watched"""
+    now = time.time() if now is None else now
+    seen = st.setdefault("adopt_seen", {})
+    items = list((st.get("items") or {}).values())
+    out = {}
+    for die, d in (cfg.get("dies") or {}).items():
+        if not isinstance(d, dict) or not d.get("enabled") or not d.get("src"):
+            continue
+        rec, src = seen.get(die), d["src"]
+        if rec is None:
+            seen[die] = dict(src=src, t=now, switched=False)
+            continue
+        if rec.get("src") != src:
+            seen[die] = dict(src=src, was=rec.get("src"), t=now, switched=True, ticks=0, alerted=False)
+            AP.log(f"KIT-WAVE ADOPT-ROWS {die}: tree switched {os.path.basename(str(rec.get('src')))} -> {os.path.basename(str(src))}")
+            continue
+        if not rec.get("switched") or rec.get("done"):
+            continue
+        types = set(d.get("_plan_types") or [])
+        if not types or not d.get("event"):
+            continue
+        rec["ticks"] = int(rec.get("ticks") or 0) + 1
+        mine = [r for r in items if r.get("die") == die]
+        have = {r.get("item") for r in mine if r.get("event") == d["event"]}
+        old_only = {r.get("item") for r in mine if r.get("event") != d["event"] and r.get("class") == "SUPERSEDED"} - have
+        missing = sorted(types - have)
+        n, m = len(types & have), len(types)
+        out[die] = (n, m, missing)
+        AP.log(f"KIT-WAVE ADOPT-ROWS {die}: {n}/{m} plan types have a row on event {d['event']} (tick {rec['ticks']}); {len(old_only & set(missing))} superseded on the old tree and not relaunched")
+        if not missing:
+            rec["done"] = True
+        elif rec["ticks"] >= alert_after and not rec.get("alerted") and not AP.DRY:
+            rec["alerted"] = True
+            AP.coord_append("lanes/COORD-REVIEW-QUEUE.md", f"- {now_s()} NEEDS-LANE [ADOPT-ROWS -> {d.get('owner_lane') or die}] {die}: tree switch {rec['ticks']} ticks ago, "
+                            f"only {n}/{m} plan types have a row on {d['event']}; missing e.g. {', '.join(missing[:12])}; {len(old_only & set(missing))} of them were superseded "
+                            f"on the old tree. Check the pilot hold, the hold records' event terms and the fail keys of these items")
+    return out
+
+
 def name_stuck_retry_infra(AP, cfg, st, now=None, grace_s=1200):
     """FABLE-FLOW-0445 #5: a RETRY-INFRA row not relaunched within ~2 ticks takes the name of what stops it: SUPERSEDED (its event is not the die's current
     one: terminal CANCELLED), HELD:<class key> (open breaker class), FAIL-KEY (standing fail key), NO-HOST:<why>, else UNEXPLAINED.  Returns {name: n}."""
@@ -8164,6 +8206,7 @@ def ensure_plan_view(AP, st, d):
     d["_prov_keys"] = pn.get("prov_keys") or {}
     d["_prov_bound"] = pn.get("bound") or {}
     d["_plan_dir"] = pn.get("plan_dir") or ""
+    d["_plan_types"] = pn.get("types") or []
     return True
 
 
@@ -12017,6 +12060,7 @@ def _step(AP, ap_dir):
     try:
         name_stuck_retry_infra(AP, cfg, st)
         retire_superseded_rows(AP, cfg, st)
+        adopt_rows_tick(AP, cfg, st)
         import pending_actions as _PA2
         _PA2.step_rows(AP, st, ap_dir)
         config_key_check(AP, cfg, st)
