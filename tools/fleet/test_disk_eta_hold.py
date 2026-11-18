@@ -49,17 +49,42 @@ def test_disk_rate_pushes_the_rate_and_stops_the_top_lane_only_inside_the_stop_h
     assert stopped == ["epyc9"]                                                   # 340 -> 100 GB in an hour: floor in < 1 h
 
 
-def test_top_writer_skips_infrastructure_and_stop_uses_cancel_dir(tmp_path):
+def test_top_writer_skips_infrastructure_and_the_hold_never_cancels(tmp_path):
     out = json.dumps({"rt": 90, "autopilot": 80, "qc-types-r": 41.2, "kv-102": 12})
     calls = []
 
     def run(argv, **k):
         calls.append(argv)
-        return types.SimpleNamespace(returncode=0, stdout=out if "lane_quota" in str(argv) else "cancelled 3 clients", stderr="")
+        return types.SimpleNamespace(returncode=0, stdout=out if "lane_quota" in str(argv) else "", stderr="")
     assert D.top_writer_lane("epyc9", run=run) == ("qc-types-r", 41.2)
-    txt = D.stop_top_lane("epyc9", run=run, switch_off=str(tmp_path / "none"))
-    assert "STOP-LANE qc-types-r" in txt
-    cancel = calls[-1]
-    assert cancel[1] == "--cancel-dir" and cancel[2].endswith("/claude/qc-types-r") and "disk-ETA" in cancel[4]
+    txt = D.hold_top_lane("epyc9", run=run, switch_off=str(tmp_path / "none"))
+    assert "ALERT top writer lane qc-types-r" in txt and "/claude/qc-types-r" in txt and "running units untouched" in txt
+    flat = " ".join(" ".join(map(str, c)) for c in calls)
+    assert "--cancel" not in flat and "ot-heavy-stop" not in flat and "kill" not in flat       # no cancel of any running unit
+    assert "disk_eta_lanes" in flat
     (tmp_path / "OFF").write_text("")
-    assert "disabled" in D.stop_top_lane("epyc9", run=run, switch_off=str(tmp_path / "OFF"))
+    assert "disabled" in D.hold_top_lane("epyc9", run=run, switch_off=str(tmp_path / "OFF"))
+
+
+def test_lane_hold_refuses_new_admission_under_the_lane_dir_only():
+    r = dict(disk_gb=500, lane_holds=[(NOW - 60, "/srv/opentallas-scratch2/claude/qc-types-r")])
+    assert m.lane_hold_refusal(r, "/srv/opentallas-scratch2/claude/qc-types-r/x/y", NOW).startswith("disk-ETA lane hold")
+    assert m.lane_hold_refusal(r, "/srv/opentallas-scratch2/claude/kv-102/x", NOW) == ""
+    assert m.lane_hold_refusal(r, "/srv/opentallas-scratch2/claude/qc-types-r2/x", NOW) == ""     # prefix of the name is not under it
+    assert m.lane_hold_refusal(dict(r, lane_holds=[(NOW - 9000, r["lane_holds"][0][1])]), "/srv/opentallas-scratch2/claude/qc-types-r/x", NOW) == ""   # stale hold ends
+    ok = {"a": r, "b": dict(disk_gb=500)}
+    out, held = m.drop_eta(ok, 20, now=NOW, d="/srv/opentallas-scratch2/claude/qc-types-r/x")
+    assert list(out) == ["b"] and list(held) == ["a"]
+    out, held = m.drop_eta(ok, 20, now=NOW, d="/srv/opentallas-scratch2/claude/qc-types-r/x", plan=True)
+    assert sorted(out) == ["a", "b"] and not held                                           # --priority plan jobs are never held
+
+
+def test_lane_hold_probe_lines_and_recovery_clears_the_file(tmp_path):
+    probe = f"OT_SCRATCH_FREE /srv/opentallas-scratch2 400 0\nOT_ROOTFS 9 500\nOT_LANE_HOLD {int(NOW)} /srv/opentallas-scratch2/claude/a\n"
+    assert m.scratch_disk({"disk_gb": 400}, None, probe, host="epyc2")["lane_holds"] == [(NOW, "/srv/opentallas-scratch2/claude/a")]
+    D.HIST = str(tmp_path / "h.json")
+    cleared = []
+    D.sample = lambda host: {"/srv/opentallas-scratch2": 400e9}
+    D.HOSTS = ["epyc9"]
+    D.main(post=False, now=NOW, pusher=lambda *a: None, stopper=lambda h: " X", clearer=lambda h: cleared.append(h))
+    assert cleared == ["epyc9"]

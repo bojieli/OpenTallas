@@ -293,7 +293,8 @@ SCRATCH_FREE_SH = ("rd=$(stat -c %d /); for r in " + " ".join(SCRATCH_ROOTS) + "
                    # KW-FIX-43 11-09 ROOTREAL: the real path of the --dir (symlinked scratch2 lane -> scratch3)
                    "echo OT_DIR_REAL $(readlink -f \"$t\" 2>/dev/null); "
                    # FABLE-FLOW-1900 (C): the measured scratch2 fall rate (GB/h, epoch) that disk_rate.py pushes every 10 min
-                   "echo OT_DISK_ETA $(cat $HOME/.local/state/disk_eta 2>/dev/null); ")
+                   "echo OT_DISK_ETA $(cat $HOME/.local/state/disk_eta 2>/dev/null); "
+                   "sed 's/^/OT_LANE_HOLD /' $HOME/.local/state/disk_eta_lanes 2>/dev/null; ")
 SCRATCH_OWN_FLOOR_GB = int(os.environ.get("OT_RUN_SCRATCH_OWN_FLOOR_GB", "10"))
 # v13: on a host with a separate scratch disk, new work goes ONLY there; below this free space the host admits nothing
 # (NOT RUN / placed elsewhere) instead of falling back to the root fs.
@@ -369,6 +370,11 @@ def scratch_disk(row, d, out, host=None):
             extra["dir_onroot"] = f[1] == "1"
         elif len(f) == 2 and f[0] == "OT_DIR_REAL":
             extra["dir_real"] = f[1]
+        elif len(f) == 3 and f[0] == "OT_LANE_HOLD" and f[2].startswith("/"):
+            try:
+                extra.setdefault("lane_holds", []).append((float(f[1]), f[2]))
+            except ValueError:
+                pass
         elif len(f) == 3 and f[0] == "OT_DISK_ETA":
             try:
                 extra["disk_rate_gb_h"], extra["disk_rate_t"] = float(f[1]), float(f[2])
@@ -768,11 +774,23 @@ def eta_refusal(row, need_gb, now=None):
     return ""
 
 
-def drop_eta(ok, need_gb, say=None, now=None):
-    """-> (hosts that stay, {host: why held})"""
+def lane_hold_refusal(row, d, now=None):
+    """a job whose --dir lies under a directory disk_rate.py put on the lane hold on this host (top writer lane) is not admitted there"""
+    if not d or not isinstance(row, dict):
+        return ""
+    for t, p in row.get("lane_holds") or ():
+        if (now or time.time()) - t <= ETA_MAX_AGE_S and (os.path.abspath(d) == p or os.path.abspath(d).startswith(p.rstrip("/") + "/")):
+            return f"disk-ETA lane hold: {p} is this host's top writer and its scratch falls to the floor within the hour; no new admission under it (running units untouched)"
+    return ""
+
+
+def drop_eta(ok, need_gb, say=None, now=None, d=None, plan=False):
+    """-> (hosts that stay, {host: why held}); --priority plan jobs are never held"""
     out, held = dict(ok), {}
+    if plan:
+        return out, held
     for h, r in ok.items():
-        why = eta_refusal(r, need_gb, now)
+        why = lane_hold_refusal(r, d, now) or eta_refusal(r, need_gb, now)
         if why:
             out.pop(h); held[h] = why
             if say:
@@ -1793,7 +1811,7 @@ def main():
             hosts = gate_hosts(cmd, [h for h in HOSTS if h not in held]) or hosts
         raw = place(hosts, d, disk, mem, quiet=not first)
         ok = drop_low_disk(raw, die, disk, say if first else None)
-        ok, eta_held = drop_eta(ok, disk, say if first else None)
+        ok, eta_held = drop_eta(ok, disk, say if first else None, d=d, plan="OT_HEAVY_PRIO=plan" in os.environ.get("OT_RUN_PRIO_ENV", ""))
         if eta_held and not ok:
             # every candidate would cross its floor within the horizon: a HOLD, not a failure -- wait and re-place (NOT-RUN only when --max-wait ends)
             _el = time.time() - t0
