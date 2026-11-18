@@ -2453,7 +2453,7 @@ class Landings:
             if first_old is not None:
                 raw, was = pick_local_reset_raw(raw, xy, depth(first_old) - 1, relays, ported, LOCAL_RESET_REACH_UM)
                 if was is not None:
-                    self.__dict__.setdefault("local_reset_rederived", {}).setdefault(tn, []).append(dict(name=name, was=was, raw=raw))
+                    self.__dict__.setdefault("local_reset_rederived", {}).setdefault(key, []).append(dict(name=name, was=was, raw=raw))
             if not isinstance(raw, str) or not re.search(r"\bot_dp_rrelay(?:_nl)?\s+\w+\s*\([^;]*?\.q\(\s*" + re.escape(raw) +
                                                           r"\s*\)[^;]*?\);", allrtl, re.S):
                 raise LandingError(f"{tn}: landing_local_resets.{name}: raw {raw!r} has no registered wavefront driver")

@@ -49,3 +49,19 @@ def test_renumbering_does_not_change_the_picked_site():
     raw_old, _ = CL.pick_local_reset_raw("rst_rl_5", (120.0, 190.0), 3, old, set(), 405.0)
     raw_new, was = CL.pick_local_reset_raw(raw_old, (120.0, 190.0), 3, new, set(), 405.0)
     assert was == "rst_rl_5" and new[raw_new][1] == old[raw_old][1]
+
+
+def test_writeback_rewrites_only_matching_rows(tmp_path):
+    import json
+    import local_reset_writeback as W
+    plan = {"partition_types": {"t1": {"clock": {"landing_local_resets": [
+        {"name": "a", "raw": "rst_rl_170"}, {"name": "b", "raw": "rst_rl_9"}]}}, "t2": {"clock": {}}}}
+    rec = {"t1": [{"name": "a", "was": "rst_rl_170", "raw": "rst_rl_5"}, {"name": "b", "was": "rst_rl_1", "raw": "rst_rl_2"}],
+           "tx": [{"name": "a", "was": "x", "raw": "y"}]}
+    assert W.apply(plan, rec) == 1
+    assert [r["raw"] for r in plan["partition_types"]["t1"]["clock"]["landing_local_resets"]] == ["rst_rl_5", "rst_rl_9"]
+    p, r, o = tmp_path / "p.json", tmp_path / "r.json", tmp_path / "o.json"
+    p.write_text(json.dumps({"partition_types": {"t1": {"clock": {"landing_local_resets": [{"name": "a", "raw": "rst_rl_170"}]}}}}))
+    r.write_text(json.dumps({"t1": [{"name": "a", "was": "rst_rl_170", "raw": "rst_rl_5"}]}))
+    assert W.main(["x", str(p), str(r), str(o)]) == 0
+    assert json.loads(o.read_text())["partition_types"]["t1"]["clock"]["landing_local_resets"][0]["raw"] == "rst_rl_5"
