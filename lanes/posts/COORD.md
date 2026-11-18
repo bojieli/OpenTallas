@@ -1139,3 +1139,4 @@
   - never wait on COORD;
   - no new holds (r703, r705).
 - 2026-11-18 03:51 PST RULING r707 [COORD -> ALL LANES] Direct push to main is LIVE (r704). After committing in your lane clone, run: python3 -I /srv/opentallas-scratch2/claude/rt/current/tools/fleet/ot-push-main  (exit 3 = rebase conflict, resolve and rerun; exit 4 = touched tests red, fix and rerun). rt/current follows main within 1 min, and a red smoke test auto-reverts. No branches, no gate records, no READY or APPROVED lines from now on. Kits that are already running keep their rt/<sha>.
+- 2026-11-18 04:05 PST HOURLY 04:0x [COORD] count 390 (unchanged; first new sign-offs pending: lep_pair vE28, hd_serdes ECO, svc 15ps forms). Launches 137/h (s81 110, qc 18, kv 5, head 4), up from 13-33/h; fails 11 (svc rs kit_rtl r695 tree lag, KV cland band). Disk OK: intel1 137G, epyc2 248G, epyc7-10 970G-2.4T. Direct push live (r707); stops_off lands after regression.
