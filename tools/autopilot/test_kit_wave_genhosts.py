@@ -808,3 +808,13 @@ def test_item_inputs_type_overlay_reaches_spec_and_probe_for_listed_item_only(tm
     assert "type_overlay" not in other
     assert any(i["role"] == "type_overlay" for i in K.ks_inputs(sp, sp["plan"]))
     assert not any(i["role"] == "type_overlay" for i in K.ks_inputs(other, other["plan"]))
+
+
+def test_item_inputs_skip_revert_records():
+    """QC-STRAGGLERS 11-18: kit_rtl_prev_* / prev_* revert records are not required item inputs"""
+    import kit_wave as KW
+    cfg = {"dies": {"d": {"item_inputs": {"a": {"kit_rtl_prev_x": {"bind_out": "/srv/opentallas-scratch2/claude/old/bind"},
+                                                 "prev_y": "/srv/opentallas-scratch2/claude/old2",
+                                                 "kit_rtl": {"bind_out": "/srv/opentallas-scratch2/claude/new/bind"}}}}}}
+    got = KW.item_inputs(cfg, "d")
+    assert got == {"a": ["/srv/opentallas-scratch2/claude/new/bind"]}, got

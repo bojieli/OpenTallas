@@ -4814,7 +4814,9 @@ def item_inputs(cfg, die):
     for key in ("item_env", "type_args", "item_inputs"):
         for item, v in ((d.get(key) or {}) if isinstance(d.get(key), dict) else {}).items():
             if isinstance(v, dict):
-                v = {k: x for k, x in v.items() if not str(k).startswith("note")}
+                # QC-STRAGGLERS 11-18: a revert record (kit_rtl_prev_<tag>, prev_<tag>) names the OLD inputs; it is not read by
+                # the build, so it is not a required input (16 QC rows were never launched for a missing old L2BQ bind)
+                v = {k: x for k, x in v.items() if not str(k).startswith(("note", "prev")) and "_prev" not in str(k)}
             ps = abs_paths(v)
             # WAVE-OPS-1 11-10 (COORD, HBM-CORES-B q_hub_ne/epyc8): the plan's dir too (its pins_file / views are
             # relative to it); the deep probe samples one pins_file of each probed plan json (ckp)
