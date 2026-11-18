@@ -214,7 +214,7 @@ def test_a_pass_stops_at_its_deadline_and_a_stuck_git_check_is_short(tmp_path):
         mk(c, n + "/x", OLD)
     seen = []
     res = AR.run_lanes(c, set(), lambda p: None, seen.append, 10**9, apply=False, now=NOW, idle_h=12.0, mtime=lambda p, cut: OLD, git_check=None, links=set(), deadline=time.time() - 1)
-    assert res == [{"stop": "deadline"}] and seen and seen[0]["stop"] == "deadline"            # nothing started past the deadline, the stop is logged
+    assert res == [] and seen == []                                                          # past the deadline nothing is scanned or started
     import inspect
     assert inspect.signature(AR.git_unsafe).parameters["timeout"].default <= 15
     assert "-uno" in inspect.getsource(AR.git_unsafe)
