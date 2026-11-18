@@ -12674,15 +12674,15 @@ def cancel_superseded(AP, cfg, st, notices, ap_dir=None):
 
 
 def orphan_rows(st, now=None, window_h=48):
-    """{"die|event|item": [[attempt, started, status], ...]} of the rows touched in the last window_h h with >= 2 attempts known"""
+    """{"die|event|item": [[attempt, started, status, updated], ...]} of the rows touched in the last window_h h (single-attempt rows included: a FAIL row's own scope is an orphan too)"""
     now = now or time.time()
     by = {}
     for r in (st.get("items") or {}).values():
         if now - max(float(r.get("updated") or 0), float(r.get("started") or 0)) > window_h * 3600:
             continue
         by.setdefault(f"{r.get('die')}|{r.get('event')}|{r.get('item')}", []).append(
-            [int(r.get("attempt") or 0), float(r.get("started") or 0), r.get("status")])
-    return {k: v for k, v in by.items() if len(v) > 1}
+            [int(r.get("attempt") or 0), float(r.get("started") or 0), r.get("status"), float(r.get("updated") or 0)])
+    return by
 
 
 def orphan_sweep(AP, cfg, st):

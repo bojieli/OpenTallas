@@ -241,6 +241,26 @@ for u in units:
     if not rows:
         continue
     newer = [r for r in rows if r[0] > n and r[1] > t0]
+    own = [r for r in rows if r[0] == n and r[2] in ('FAIL', 'CANCELLED', 'DEDUP') and len(r) > 3 and r[3] > t0 + 60]
+    if own and not newer:
+        # FABLE-FLOW-0800 B: the attempt's own row is terminal (recorded FAIL / CANCELLED after this scope started) but its scope lives on.  Stop it unless it still burns CPU (two samples 1 s apart).
+        def ticks():
+            t = 0
+            for p in pids:
+                try:
+                    f = open('/proc/%d/stat' % p).read().rsplit(')', 1)[1].split()
+                    t += int(f[11]) + int(f[12])
+                except (OSError, IndexError, ValueError):
+                    pass
+            return t
+        t1 = ticks(); time.sleep(1); busy = (ticks() - t1) / (1.0 * os.sysconf('SC_CLK_TCK'))
+        if busy > 0.3:
+            continue
+        why = 'attempt %d of %s/%s is recorded %s but its scope lives on (cpu %.2f cores)' % (n, die, item, own[0][2], busy)
+        if not dry:
+            subprocess.run(['ot-heavy-stop', '--unit', u], capture_output=True, timeout=300)
+        out.append({'unit': u, 'why': why, 'age_h': round((now - t0) / 3600, 1)})
+        continue
     if not newer:
         continue
     why = 'attempt %d of %s/%s older than attempt %d started %d s after it' % (n, die, item, max(r[0] for r in newer), int(max(r[1] for r in newer) - t0))
@@ -256,11 +276,12 @@ def orphan_scopes(sh, hub, rows, hosts=None, dry=False, min_age=1800, cap=40):
     args = json.dumps({'rows': rows, 'dry': bool(dry), 'min_age': min_age, 'cap': cap})
 
     def one(h):
-        cmd = ['python3', '-I', '-', args] if h in ('localhost', hub, os.uname().nodename) else \
+        # the args (every recent row) are sent on stdin with the script: they no longer fit argv (E2BIG once single-attempt rows were included)
+        cmd = ['python3', '-I', '-'] if h in ('localhost', hub, os.uname().nodename) else \
             ['ssh', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=15', '-o', 'ControlPath=none', h,
-             'python3', '-I', '-', shlex.quote(args)]
+             'python3', '-I', '-']
         try:
-            rc, out, err = sh(cmd, timeout=600, input=ORPHAN_SCAN)
+            rc, out, err = sh(cmd, timeout=600, input='import sys\nsys.argv[1:2] = [%r]\n' % args + ORPHAN_SCAN)
             if rc != 0 or not (out or '').strip():
                 return h, {'error': 'rc %s %s' % (rc, (err or '')[-160:])}
             return h, json.loads(out.strip().splitlines()[-1])

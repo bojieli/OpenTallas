@@ -43,7 +43,7 @@ class AP:
         if input and "me = str(os.getpid())" in input:
             return 0, json.dumps(self.live) + "\n", ""
         if input and "ORPHAN_SCAN" not in input and "orphans" in input:
-            self.orphan_args.append(json.loads(cmd[-1].strip("'")))
+            self.orphan_args.append(json.loads(__import__("ast").literal_eval(input.split("\n")[1].split(" = ",1)[1])[0]))
             return 0, json.dumps({"orphans": [{"unit": "oth-ubuntu-1-1", "why": "attempt 1 older", "age_h": 9.0}]}) + "\n", ""
         return 0, '{"containers": [], "scopes": []}\n', ""
 
@@ -252,25 +252,25 @@ class Orphans(unittest.TestCase):
     def test_scan_script_compiles(self):
         compile(WJ.ORPHAN_SCAN, "ORPHAN_SCAN", "exec")
 
-    def test_rows_with_two_attempts_only(self):
+    def test_recent_rows_include_single_attempt_rows(self):
         now = time.time()
         st = {"items": {"x": dict(die="d", event="e", item="t", attempt=1, started=now - 100, status="FAIL"),
                         "y": dict(die="d", event="e", item="t", attempt=2, started=now - 50, status="RUNNING"),
                         "z": dict(die="d", event="e", item="u", attempt=1, started=now - 50, status="RUNNING"),
                         "o": dict(die="d", event="e", item="v", attempt=1, started=now - 99 * 3600, status="FAIL"),
                         "p": dict(die="d", event="e", item="v", attempt=2, started=now - 98 * 3600, status="FAIL")}}
-        self.assertEqual(sorted(KW.orphan_rows(st, now)), ["d|e|t"])
+        self.assertEqual(sorted(KW.orphan_rows(st, now)), ["d|e|t", "d|e|u"])         # FABLE-FLOW-0800 B: a FAIL row alone can own an orphan scope; rows older than the window are out
 
     def test_sweep_logs_would_stop_by_default_and_stops_when_live(self):
         now = time.time()
         st = {"items": {"x": dict(die="d", event="e", item="t", attempt=1, started=now - 100, status="FAIL"),
                         "y": dict(die="d", event="e", item="t", attempt=2, started=now - 50, status="RUNNING")}}
         ap = AP()
-        self.assertEqual(KW.orphan_sweep(ap, {}, st), 1)
+        self.assertEqual(KW.orphan_sweep(ap, {"orphan_sweep_live": False}, st), 1)        # the stop is enforced by default since 11-17; false = log only
         self.assertTrue(any("would stop" in m for m in ap.logs))
         self.assertTrue(ap.orphan_args[-1]["dry"])
         ap = AP()
-        KW.orphan_sweep(ap, {"orphan_sweep_live": True}, st)
+        KW.orphan_sweep(ap, {}, st)
         self.assertFalse(ap.orphan_args[-1]["dry"])
         self.assertTrue(any("stopped" in m for m in ap.logs))
         self.assertEqual(KW.orphan_sweep(AP(), {"orphan_sweep": False}, st), 0)
