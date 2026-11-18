@@ -211,15 +211,37 @@ def check_modules(plan_path, plan, ab, ab_path, elab_dir, yjs=None):
     for r in ab.get("substitute_inst") or []:
         if isinstance(r, dict) and r.get("module"):
             names.setdefault(r["module"], f"asbuilt.substitute_inst {r.get('inst')}")
-    for k in ("substitute", "sub_core_leaf"):
-        v = ab.get(k)
-        if isinstance(v, dict):
-            for a, b in v.items():
-                for x in (b if isinstance(b, list) else [b]):
-                    if isinstance(x, str) and re.fullmatch(r"[A-Za-z_]\w*", x):
-                        names.setdefault(x, f"asbuilt.{k} {a}")
+    v = ab.get("substitute")
+    if isinstance(v, dict):
+        for a, b in v.items():
+            for x in (b if isinstance(b, list) else [b]):
+                if isinstance(x, str) and re.fullmatch(r"[A-Za-z_]\w*", x):
+                    names.setdefault(x, f"asbuilt.substitute {a}")
+    # KV-D24 11-18: asbuilt.sub_core_leaf is {plan parent: BOUND LEAF} (parent_id_straps.sub_core_bound_leaf, exact table): its
+    # values are leaf INSTANCE names, not modules.  They are checked against the elaborated leaf paths (full path, the
+    # u_r0_u_x form, or one path component); without the elab netlist they are not decidable here (WARN, never FAIL).
+    leaves = {}
+    v = ab.get("sub_core_leaf")
+    if isinstance(v, dict):
+        for a, x in v.items():
+            if isinstance(x, str) and x:
+                leaves.setdefault(x, f"asbuilt.sub_core_leaf {a}")
+    out = []
+    if leaves:
+        ep0 = Path(elab_dir) / "asbuilt.json" if elab_dir else None
+        if yjs is None and ep0 is not None and ep0.is_file():
+            yjs = json.loads(ep0.read_text())
+        if yjs is None:
+            out.append(f"WARN MODULES sub_core_leaf leaves {sorted(leaves)} not checked (leaf instance names: needs the elab netlist, --elab-dir)")
+        else:
+            paths = leaf_paths(yjs, ab.get("top") or next(iter(yjs["modules"])), ab.get("parent_variants") or ())
+            forms = set()
+            for p in paths:
+                forms.add(p); forms.add(p.replace(".", "_")); forms.update(p.split("."))
+            lost = sorted(x for x in leaves if x not in forms)
+            out += [f"FAIL MODULES sub_core_leaf {x} ({leaves[x]}) is no leaf instance of the elaborated die" for x in lost]
     if not names:
-        return []
+        return out
     base = _base(plan_path, ab, ab_path)
     have = set()
     ep = Path(elab_dir) / "asbuilt.json" if elab_dir else None
@@ -235,12 +257,12 @@ def check_modules(plan_path, plan, ab, ab_path, elab_dir, yjs=None):
             have |= set(E.module_index(ab.get("rtl_roots", ["rtl"]), ab.get("files", []) + ab.get("prefer", []), base))
         except Exception as exc:                  # noqa: BLE001  (an unreadable root is plan_gate_pre INPUT's finding)
             if yjs is None:
-                return [f"WARN MODULES not checked: {exc}"]
+                return out + [f"WARN MODULES not checked: {exc}"]
     if not have:
-        return []
+        return out
     miss = sorted(n for n in names if n not in have and not any(h.endswith(n) for h in have if "$paramod" in h))
-    return _cap([f"FAIL MODULES module {n} ({names[n]}) is in neither the RTL index nor the elaborated netlist" for n in miss],
-                len(miss), "modules") if miss else []
+    return out + (_cap([f"FAIL MODULES module {n} ({names[n]}) is in neither the RTL index nor the elaborated netlist" for n in miss],
+                       len(miss), "modules") if miss else [])
 
 
 def check_all(tree, plan_path, plan_raw, asbuilt=None, elab_dir=None, ref_tools=None, skip=(), toolstale_level="FAIL"):

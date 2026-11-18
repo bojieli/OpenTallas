@@ -116,6 +116,19 @@ def test_modules(tmp_path):
     assert len(f) == 1 and "lost_mod" in f[0] and f[0].startswith("FAIL MODULES")
 
 
+
+def test_modules_sub_core_leaf_is_a_leaf_instance(tmp_path):
+    """KV-D24: asbuilt.sub_core_leaf values are bound leaf INSTANCE names (KV hub_C {"pvfin": "pvfin"}), never modules"""
+    (tmp_path / "rtl").mkdir()
+    (tmp_path / "rtl" / "a.sv").write_text("module have_mod(input a); endmodule\n")
+    ab = {"base": str(tmp_path), "rtl_roots": ["rtl"], "top": "top", "sub_core_leaf": {"pa": "u_core", "pb": "u_r0_u_x", "pc": "u_x"}}
+    assert RC.check_modules("plan.json", {}, ab, None, None, yjs=_yjs()) == []
+    ab["sub_core_leaf"]["pd"] = "u_gone"
+    f = RC.check_modules("plan.json", {}, ab, None, None, yjs=_yjs())
+    assert len(f) == 1 and f[0].startswith("FAIL MODULES sub_core_leaf u_gone")
+    f = RC.check_modules("plan.json", {}, dict(ab, sub_core_leaf={"pvfin": "pvfin"}), None, None)   # no elab: not decidable
+    assert f and all(x.startswith("WARN") for x in f)
+
 # ------------------------------------------------------------------ TOOLSTALE
 def test_toolstale(tmp_path):
     tree, ref = tmp_path / "tree", tmp_path / "ref"
