@@ -63,3 +63,9 @@ Work dirs: E2 /srv/opentallas-scratch3/claude/qc-plan-r3-n-1117 (handed over; my
 ## 18:3x PST sle_sc_v1__cl115da35f 44 x Lef58EolKeepOut M5
 - Decision posted: no sc core abstract change. Reason: slw_sc_v2 and slw_sc_v1__cl63e5a7a2 route DRC 0 with the SAME abstract (qfd_dv_s5_sc2_leaf, cores/sc/qfd_dv_s5_sc2_leaf_h1_pins.json) at the SAME origin (302.4, 984.96). S-face row: 107 M5 input pins at local y 0.048 (red_data 32, red_addr 24, dn_i 48, red_we, ck, rst_n), pitch 0.288 (56 gaps) and 0.144 (47 gaps, dn_i). Shared by 7 types (h1) + slw_sc_v3 (up0, same row); sle_sc_v3 (dn0) has no dn_i (59 pins, 0.288 only).
 - Open: the 22 net names and the two M5 shapes of one violation (asked QC-TYPES-R3); the type is rebuilt on N2B (sc ft sites change) before any route-side fix.
+
+## 22:3x PST resumed after the usage limit (QC-N-OPUS covered 19:4x-20:14; no HANDBACK line from it yet)
+- The 3 hc sign-offs (sle_hc2__cl9c4c4509__cl3edce1b8 a2, slw_hc3__clccfc3e6b a10, slw_hc3__cld86a7ad4 a15; epyc7 .../s29q103S4Q9L2/items/<item>/attempt_N/gen/<item>/eco_*/i1/signoff/signoff.json, verdict SIGNED read by me) were direct-only records; COORD says exported now.
+- N3 strict bind ended 20:49: 0 errors, CM/KP 0 (epyc2 qc-plan-r3-n3-1117/bind/bind_s29q103S4Q9N3BR.log, fresh elab). Chain unit still active at 22:27 (post-bind steps). Live QC is still N1B d2.
+- N4 scope is with QC-PLAN-R3 (clk_t115 split, tt_ctlm pipe stage, st_a flt_bank 2 stations, 7 types > 400k split, coll_core 43 taps after the clock-chain inputs are regenerated). I do not have the clock-chain input generator recipe.
+- Waiting runs I own the read of: first cbn_q01 kit with r650 + halo a5ec1ee9 on N3 (DPL of u_hdly_lk_*, OT_XSTN_STRETCH, CTS tap[0], routed TT/FF); first N3 hc and su_l1 kits at the 40 ps margin (HB4 count, TT on padded ends, routed hold); first N3 sle_sc_v1 route (M5 EOL row); first place of slw_st_a_v1__clfc5867a6__pvf82a6c28.
