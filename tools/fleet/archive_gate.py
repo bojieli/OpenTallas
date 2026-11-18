@@ -87,7 +87,7 @@ class Gate:
             for d in EXPORT_DIES.get(die, (die,)):
                 r = self.index.get((d, nm))
                 if not r: continue
-                if (r.get('status') or '').startswith('ARCHIVED-BOTH'): return 'INDEX.tsv ' + r['status'], None
+                if (r.get('status') or '').startswith(('ARCHIVED-BOTH', 'RTX-FULL-AGI-META')): return 'INDEX.tsv ' + r['status'], None   # OWNER split 11-18: full DB on rtx-pro, metadata on AGIdock
                 miss = dict(missing=['db'] if 'NO-DB' in (r.get('status') or '') else ['db', 'metadata'], path=r.get('db') or None, index_status=r.get('status'))
         for nm in names:
             for d in EXPORT_DIES.get(die, (die,)):

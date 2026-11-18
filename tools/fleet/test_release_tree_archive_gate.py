@@ -75,3 +75,12 @@ def test_index_tsv_newest_row_per_element_wins(tmp_path):
     c = G.apply(cache(), G.Gate(listing=listing(tmp_path, [], tsv=tsv), store=tmp_path / 'nostore')); e = c['plans']['s81/p.json']
     assert 't_fleet' in e['signed_types'], 'older NO-DB row then ARCHIVED-BOTH: the later row decides'
     assert 't_zero' in e['pending_archive_types'], 'the later row decides also when it is the worse one'
+
+
+def test_metadata_only_drops_routed_db_files(monkeypatch):
+    import signed_store_ingest as si
+    monkeypatch.delenv("OT_INGEST_FULL_DB", raising=False)
+    fs = [["a/6_final.odb", 5], ["a/6_final.odb.zst", 5], ["a/signoff.json", 1], ["a/6_final.def", 2]]
+    assert [f[0] for f in si.metadata_only(fs)] == ["a/signoff.json"]
+    monkeypatch.setenv("OT_INGEST_FULL_DB", "1")
+    assert len(si.metadata_only(fs)) == 4

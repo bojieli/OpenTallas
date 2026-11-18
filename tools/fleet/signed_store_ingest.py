@@ -184,6 +184,16 @@ def host_tool(h):
     return SHIP_TOOL
 
 
+# OWNER split 11-18: the full routed DB lives on rtx-pro only; AGIdock gets metadata (sign-off, provenance, logs, reports).  OT_INGEST_FULL_DB=1 restores the old full copy.
+DB_FILE = re.compile(r'\.(odb|def|gds|gds2|oas)(\.(zst|gz))?$')
+
+
+def metadata_only(files):
+    """[(path, size, ...)] without the routed-DB files, unless OT_INGEST_FULL_DB is set"""
+    if os.environ.get('OT_INGEST_FULL_DB'): return list(files)
+    return [f for f in files if not DB_FILE.search(f[0])]
+
+
 def archive_host(h, cands, fails):
     """-> {path: {file: sha}} for the records whose every file is on the archive and equal to the host copy"""
     try:
@@ -193,7 +203,9 @@ def archive_host(h, cands, fails):
     r = run(host_cmd(h, 'python3 -I -c ' + shlex.quote(PROBE) + ' ' + tool), '\n'.join(sorted({c[0]['path'] for c in cands})) + '\n', 1800)
     P = {}
     for ln in r.stdout.splitlines():
-        o = json.loads(ln); P[o['path']] = o
+        o = json.loads(ln)
+        if 'files' in o: o['files'] = metadata_only(o['files'])
+        P[o['path']] = o
     files = {}
     for c in cands:
         o = P.get(c[0]['path'])
