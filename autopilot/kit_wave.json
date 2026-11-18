@@ -51490,6 +51490,21 @@
       "event_adopt:s29q103S4Q9N"
      ],
      "reason": "QC-PLAN-R3 11-17 16:5x (COORD): MPL-0034 on N1B (pvdf8e5ca4 failed 16:46): hard core cl_b_hw_ctl_hc0_i sits 12 nm past the core edge in N1B; the st_a core-edge move (x 570.24 -> 561.6) is only in N2B. No N1B attempt can pass. Releases at the N2B apply (event s29q103S4Q9N, FABLE-FIX-QC-N). Running attempts finish."
+    },
+    {
+     "id": "qc-sta-tail-repl-n4-1117",
+     "plan_sha": "cefb89af5f81983063bf53d1aeaabfba3b476e79a95e01469604cd5efe7002d1",
+     "owner": "QC-PLAN-R3",
+     "renewed_at": "2026-11-17 19:21",
+     "carry": true,
+     "keys": [
+      "sle_st_a_v1__*",
+      "slw_st_a_v1__*"
+     ],
+     "release": [
+      "result:QC-PLAN-R3:qc-sta-tail-repl-n4"
+     ],
+     "reason": "QC-PLAN-R3 11-17 19:3x (COORD / FABLE-CLOSURE-STRATEGY 19:2x (2)): st_a boundary nets, 6 of 6 kits fail TT -266..-671 ps at CTS: ONE pad tail drives all four hard rows (fan-out structure, not a flow setting). No unchanged relaunch. Release (QC-PLAN-R3 writes result qc-sta-tail-repl-n4) when BOTH land: TAIL-REPL generator feature (tail copy per core, TAIL-REPL lane) AND the N4 station on the st_a core-to-core buses. Running attempts finish."
     }
    ],
    "planned_events": [
