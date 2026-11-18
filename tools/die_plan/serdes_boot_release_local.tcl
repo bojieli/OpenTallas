@@ -127,8 +127,10 @@ namespace eval ot_reset_anchor {
 }
 
 
-# Apply only to the unchanged t13 outline with a legal north pocket and the
-# modelled PMA-pair Y-27 translation. M6/M7 carry reset; M8 stays clock/PG.
+# S81-SERDES-GEN 11-17: the three stage sites are DERIVED from the DB (ot_serdes_boot_sites), not t13 constants: evenly along the
+# Manhattan path from the FIRM authority anchor (g_locksafe.u_hold DFF) to the centroid of the u_core.rs_[rt] sync FFs, each hop
+# <= 405 um.  Gen env OT_BOOT_RELEASE_SITES="x,y;x,y;x,y" (um; plan key serdes_boot_release_sites) wins.  A site on a macro/halo
+# goes to the nearest free site within 100 um.  M6/M7 carry reset; M8 stays clock/PG.
 # Yosys preserves final rq as a net alias but may name its physical DFF
 # released_n. Select the exact kept stage identity, never arbitrary rq nets.
 proc ot_serdes_boot_release_registers {b} {
@@ -243,10 +245,52 @@ proc ot_serdes_boot_path_local {b d ff macs core} {
  puts "OT_BOOT_PATH private_data_only [llength $plans] cells; $summaries; zero_added_cells_cycles; FF/clock/nets unchanged"
 }
 
+proc ot_serdes_boot_sites {b d} {
+ if {[info exists ::env(OT_BOOT_RELEASE_SITES)] && $::env(OT_BOOT_RELEASE_SITES) ne ""} {
+  set t {}
+  foreach s [split $::env(OT_BOOT_RELEASE_SITES) ";"] {lassign [split $s ","] x y;lappend t [list $x $y]}
+  if {[llength $t]!=3} {error "OT_BOOT_RELEASE OT_BOOT_RELEASE_SITES needs 3 x,y sites"}
+  return $t
+ }
+ set an {};set an0 {};set sy {}
+ foreach i [$b getInsts] {
+  set n [$i getName]
+  if {![string match DFF* [[$i getMaster] getName]]} continue
+  if {[string first {g_locksafe.u_hold.} $n]>=0 && [$i getPlacementStatus] in {FIRM LOCKED COVER}} {
+   lappend an0 [$i getLocation]
+   # the boundary authority anchor of the boot transport step (serdes_boot_transport_local.tcl): lock_sync[1]
+   if {[regexp {g_locksafe[.]u_hold[.]lock_sync.*1.*DFF} $n]} {lappend an [$i getLocation]}
+  }
+  if {[regexp {u_core[.]rs_[rt]\\?\[} $n]} {lappend sy [$i getLocation]}
+ }
+ if {![llength $an]} {set an $an0}
+ if {![llength $an] || ![llength $sy]} {error "OT_BOOT_RELEASE cannot derive sites: [llength $an] FIRM authority anchors, [llength $sy] sync FFs"}
+ set ax 0.;set ay 0.;foreach p $an {set ax [expr {$ax+[lindex $p 0]/double([llength $an])/$d}];set ay [expr {$ay+[lindex $p 1]/double([llength $an])/$d}]}
+ set sx 0.;set sY 0.;foreach p $sy {set sx [expr {$sx+[lindex $p 0]/double([llength $sy])/$d}];set sY [expr {$sY+[lindex $p 1]/double([llength $sy])/$d}]}
+ set hop [expr {(abs($sx-$ax)+abs($sY-$ay))/4.0}]
+ if {$hop>405.0} {error "OT_BOOT_RELEASE derived hop $hop um exceeds 405 (anchor $ax,$ay sync $sx,$sY)"}
+ set t {}
+ for {set k 1} {$k<=3} {incr k} {lappend t [list [expr {$ax+($sx-$ax)*$k/4.0}] [expr {$ay+($sY-$ay)*$k/4.0}]]}
+ puts "OT_BOOT_RELEASE derived sites $t hop_um $hop anchor $ax,$ay sync_centroid $sx,$sY"
+ return $t
+}
+
+proc ot_serdes_boot_free_site {x y m macs core d} {
+ for {set rad 0} {$rad<=100} {set rad [expr {$rad+2.16}]} {
+  foreach dx [list 0 $rad [expr {-$rad}]] {
+   foreach dy [list 0 $rad [expr {-$rad}]] {
+    set px [expr {round(($x+$dx)/0.054)*0.054*$d}];set py [expr {round(($y+$dy)/0.27)*0.27*$d}]
+    if {[ot_reset_anchor::free [list $px $py [expr {$px+[$m getWidth]}] [expr {$py+[$m getHeight]}]] $macs $core]} {return [list $px $py]}
+   }
+  }
+ }
+ return {}
+}
+
 proc ot_serdes_boot_release_local {} {
  set b [ord::get_db_block];set d [expr {double([$b getDbUnitsPerMicron])}]
  set ff [ot_serdes_boot_release_registers $b]
- set target {{1656.72 905.85} {1450.008 750.06} {1235.034 625.05}}
+ set target [ot_serdes_boot_sites $b $d]
  set ca [$b getCoreArea];set core [list [$ca xMin] [$ca yMin] [$ca xMax] [$ca yMax]]
  set macs {};set halo [expr {8.64*$d}]
  foreach i [$b getInsts] {
@@ -256,8 +300,15 @@ proc ot_serdes_boot_release_local {} {
  set moves {}
  for {set k 0} {$k<3} {incr k} {
   set i [dict get $ff $k];lassign [lindex $target $k] x y
-  set x [expr {round($x/0.054)*0.054*$d}];set y [expr {round($y/0.27)*0.27*$d}]
-  set m [$i getMaster];set r [list $x $y [expr {$x+[$m getWidth]}] [expr {$y+[$m getHeight]}]]
+  set m [$i getMaster]
+  if {[$i getPlacementStatus] in {FIRM LOCKED COVER}} {
+   set x [expr {round($x/0.054)*0.054*$d}];set y [expr {round($y/0.27)*0.27*$d}]
+  } else {
+   set fs [ot_serdes_boot_free_site $x $y $m $macs $core $d]
+   if {![llength $fs]} {error "OT_BOOT_RELEASE stage$k no macro/halo/core-free site within 100um of target"}
+   lassign $fs x y
+  }
+  set r [list $x $y [expr {$x+[$m getWidth]}] [expr {$y+[$m getHeight]}]]
   if {![ot_reset_anchor::free $r $macs $core]} {error "OT_BOOT_RELEASE stage$k target intersects macro/halo/core"}
   if {[$i getPlacementStatus] in {FIRM LOCKED COVER}} {
    lassign [$i getLocation] ox oy
