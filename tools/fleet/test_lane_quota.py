@@ -39,3 +39,13 @@ class Tiers(unittest.TestCase):
             posts.append(cmd[-1]); return types.SimpleNamespace(stdout="")
         out = Q.hub(["bad", "good"], coord, run=run, state=os.path.join(coord, "s.json"))
         self.assertEqual(len(out), 1); self.assertIn("laneX on good", out[0])
+
+
+def test_remote_scan_is_idle_io_and_time_capped():
+    seen = []
+    import types
+    def run(cmd, **k):
+        seen.append(cmd[-1]); return types.SimpleNamespace(stdout="{}", stderr="", returncode=0)
+    import tempfile, os
+    Q.hub(["h1"], tempfile.mkdtemp(), run=run, state=tempfile.mkdtemp() + "/s.json")
+    assert "ionice -c3" in seen[0] and "timeout 600" in seen[0] and "rt/current/tools/fleet/lane_quota.py" in seen[0]

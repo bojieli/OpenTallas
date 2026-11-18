@@ -47,6 +47,7 @@ def scan(root, window_h=WINDOW_H, quota_gb=QUOTA_GB, now=None, skip=SKIP):
     return over
 
 
+# 11-18: the scan walks every file of every lane (3 TB): it ran 52 min in D state on epyc7 and its IO pressure stalled container creation (overlay umount -> syncfs).  Idle IO class, hard 600 s cap on the host.
 def hub(hosts, coord, run=subprocess.run, state=None, now=None):
     """-> list of posted lines.  state = json file with {host/lane: day} so a lane alerts once per day"""
     now = now or time.time(); day = time.strftime("%F", time.localtime(now))
@@ -56,7 +57,7 @@ def hub(hosts, coord, run=subprocess.run, state=None, now=None):
     posted = []
     for h in hosts:
         try:                      # one slow or dead host must not abort the other hosts (epyc7 timed out and no alert was ever posted)
-            r = run(["ssh", "-n", "-o", "BatchMode=yes", "-o", "ControlPath=none", h, "nice -n 19 python3 -I /srv/opentallas-scratch2/claude/fleet-ops-r/lane_quota.py scan"],
+            r = run(["ssh", "-n", "-o", "BatchMode=yes", "-o", "ControlPath=none", h, "ionice -c3 nice -n 19 timeout 600 python3 -I /srv/opentallas-scratch2/claude/rt/current/tools/fleet/lane_quota.py scan"],
                     capture_output=True, text=True, timeout=900)
             over = json.loads(r.stdout.strip().splitlines()[-1])
         except Exception:
