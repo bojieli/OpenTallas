@@ -58,6 +58,7 @@ sys.path.insert(0, str(HERE))
 import bind_elab as E  # noqa: E402
 import bind_position_bank as PB  # noqa: E402
 import bind_pad_tail_split as TS  # noqa: E402
+import bind_intra_stations as IS  # noqa: E402
 
 SCHEMA = "opentallas.die_plan.bind.v1"
 
@@ -3454,6 +3455,12 @@ class Binder:
             cells += "\n" + ft_hop_lockup_cell()
         if self.ab.get(TS.KEY) is not None and f"module {TS.KEEP_MODULE} " not in cells:
             cells += "\n" + TS.KEEP_CELL                  # tail copies must survive opt_merge
+        lis_cfg = self._lis_config()
+        if lis_cfg is not None:
+            if not any(IS.selected(lis_cfg, tn) for tn in self.by_type):
+                raise BindError(f"{IS.KEY}: types {[x.pattern for x in lis_cfg['types']]} match no bound type")
+            if f"module {TS.KEEP_MODULE} " not in cells:
+                cells += "\n" + TS.KEEP_CELL              # intra stations: keep stage regs (same cell as the tail split)
         import gen_rtl
         if any(t.get("reset_replicate") for t in (self.plan.get("partition_types") or {}).values()) \
                 and "module ot_dp_rrelay " not in cells:      # S81-COLGEN-1: the kept 1-bit copy cell
@@ -3632,6 +3639,11 @@ class Binder:
             (out.parent / "bind_pad_tail_split.json").write_text(json.dumps(dict(
                 schema="opentallas.die_plan.bind_pad_tail_split.v1", option=self.ab[TS.KEY],
                 types=dict(sorted(getattr(self, "_pad_tail_split", {}).items()))), indent=1) + "\n")
+        if self.ab.get(IS.KEY) is not None:
+            # LAND-INTRA-STATIONS receipt: per type the stationed nets, cells, flops and the pre-GPL site rows
+            (out.parent / "bind_intra_stations.json").write_text(json.dumps(dict(
+                schema="opentallas.die_plan.bind_intra_stations.v1", option=self.ab[IS.KEY],
+                types=dict(sorted(getattr(self, "_intra_stations", {}).items()))), indent=1) + "\n")
         if rows:
             (out.parent / "strap_ties_check.tcl").write_text(STR.tie_check_tcl(rows))
         return files
@@ -3640,6 +3652,17 @@ class Binder:
         if k[0] == "param":
             return short_id(f"P_{k[1]}__{k[2]}", 80)
         return short_id(f"S_{k[1]}__{k[2]}", 80)
+
+    def _lis_config(self):
+        """asbuilt.land_intra_stations, checked once (bind_intra_stations.config); None when absent"""
+        if self.ab.get(IS.KEY) is None:
+            return None
+        if "_lis_cfg" not in self.__dict__:
+            try:
+                self._lis_cfg = IS.config(self.ab, self.base)
+            except ValueError as exc:
+                raise BindError(str(exc)) from exc
+        return self._lis_cfg
 
     def emit_type(self, tn, p):
         t = self.types[tn]
@@ -4097,6 +4120,8 @@ class Binder:
             nonlocal need_rst
             k = d[0]
             if k == "int":
+                if (ci, pn, i) in lis:          # LAND-INTRA-STATIONS: the load reads its own station chain
+                    return lis[(ci, pn, i)]
                 sp = getattr(self, "isp", {}).get((ci, pn, i))
                 if sp is not None:              # INNER strap site (COORD 10-28 21:38): fixed base + strap-count bank
                     site, base, span, _cnt = sp
@@ -4382,6 +4407,66 @@ class Binder:
                 if TS.tail_depth(1, by, ts_cfg) is not None:
                     ts_row["not_covered"][key[0]] += 1
             self.__dict__.setdefault("_pad_tail_split", {})[tn] = ts_row
+        # LAND-INTRA-STATIONS (opt-in asbuilt.land_intra_stations, bind_intra_stations.py; absent = nothing here runs):
+        # per bit of a named intra-partition driver -> load net (and its `with` companions) one ot_dp_dly_keep of D
+        # stages, sited from the sites file; the D cycles are DECLARED per sink bit (bind_core_input_pipe.json, which
+        # bind_verify adds to the as-built depth).  self.sinks is not touched.
+        lis = {}
+        lis_cfg = self._lis_config()
+        if lis_cfg is not None and IS.selected(lis_cfg, tn):
+            try:
+                lis_nets = IS.type_sites(lis_cfg, tn)
+            except ValueError as exc:
+                raise BindError(str(exc)) from exc
+            if reg:
+                raise BindError(f"{IS.KEY} {tn}: registered_pins partition {p}: stations need flops a bare macro lacks")
+
+            def lis_leaf(name, what):
+                hit = [ci for ci in self.members[p]
+                       if IS.leaf_match(name, self.rel_of(ci), short_id("u_" + self.rel_of(ci), 90))]
+                if len(hit) != 1:
+                    raise BindError(f"{IS.KEY} {tn}: {what} leaf {name}: {len(hit)} bound leaves in partition {p}")
+                return hit[0]
+
+            lis_row = dict(nets=[], stages={}, cells=0, flops=0, sites={})
+            lis_names = set()
+            for n, regs in lis_nets:
+                D = n["stages"]
+                lis_row["stages"][n["label"]] = D
+                for (si, sp_), (di, dp) in n["members"]:
+                    cs, cd = lis_leaf(si, "src"), lis_leaf(di, "dst")
+                    lbl = f"{si}.{sp_}->{di}.{dp}"
+                    if G.dirs[cs].get(sp_) != "output" or G.dirs[cd].get(dp) != "input":
+                        raise BindError(f"{IS.KEY} {tn}: {lbl}: not a leaf output -> leaf input pin pair")
+                    md = F.cells[cd].module
+                    if dp in core_input_lockup(self.plan, tn, md) or core_link_pipe(self.plan, tn, md, dp):
+                        raise BindError(f"{IS.KEY} {tn}: {lbl}: the load port already carries core_input_lockup / "
+                                        "core_link_pipe")
+                    width = len(F.cells[cd].ports[dp])
+                    cells = []
+                    for i in range(width):
+                        d = self.sinks[(cd, dp, i)]
+                        if d[0] != "int" or d[1] != cs or d[2] != sp_ or d[4] or (cd, dp, i) in getattr(self, "isp", {}):
+                            raise BindError(f"{IS.KEY} {tn}: {lbl}[{i}] is not a direct driver -> load net "
+                                            f"(load reads {d[0]}{'' if d[0] != 'int' else ' ' + self.rel_of(d[1]) + '.' + d[2]})")
+                        if core_link_src_depth(self.plan, tn, F.cells[cs].module, sp_, d[3]):
+                            raise BindError(f"{IS.KEY} {tn}: {lbl}[{i}]: the driver bit already carries a core_link_pipe")
+                        nm = short_id(f"lis{D}_{self.rel_of(cd)}__{dp}_{i}", 100)
+                        if nm in lis_names:
+                            raise BindError(f"{IS.KEY} {tn}: station name {nm} collides")
+                        lis_names.add(nm)
+                        decl.append(f"    wire [0:0] {nm};")
+                        body.append(f"    {TS.KEEP_MODULE} #(.W(1), .D({D})) u_{nm} (.clk(clk), .d({drv_w[(cs, sp_)]}[{d[3]}]), "
+                                    f".q({nm}));  // intra station {lbl}[{i}]: +{D} DECLARED cycle(s)")
+                        lis[(cd, dp, i)] = f"{nm}[0]"
+                        self.declare_core_input_pipe(tn, p, cd, dp, D, bit=i)
+                        lis_row["sites"].update(IS.site_rows(f"u_{nm}", regs))
+                        cells.append(f"u_{nm}")
+                    lis_row["nets"].append(dict(src=f"{si}.{sp_}", dst=f"{di}.{dp}", group=n["label"], width=width,
+                                                stages=D, cells=cells))
+                    lis_row["cells"] += width
+                    lis_row["flops"] += width * D
+            self.__dict__.setdefault("_intra_stations", {})[tn] = lis_row
         insts = []
         for ci in sorted(self.members[p], key=lambda ci: self.rel_of(ci)):
             c = F.cells[ci]
