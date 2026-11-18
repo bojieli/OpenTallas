@@ -113,6 +113,12 @@ def unit(so, hint=None):
         o["err"] = "record of host %%s (copy)" %% rec.get("host"); return o
     inp = rec.get("inputs") or {}
     odb = inp.get("odb") or (inp.get("base") and os.path.join(inp["base"], "6_final.odb"))
+    if not odb or not os.path.isfile(odb):          # autopilot relocated copy: <dest>/kit/<signoff dir>/ next to <dest>/base/
+        d = os.path.dirname(so)
+        for _ in range(3):
+            d = os.path.dirname(d)
+            if os.path.isfile(os.path.join(d, "base", "6_final.odb")):
+                odb = os.path.join(d, "base", "6_final.odb"); break
     if not odb or not os.path.isfile(odb) or os.path.getsize(odb) < 1 << 20:
         o["err"] = "no routed DB %%s" %% odb; return o
     dbd, sod = os.path.dirname(os.path.realpath(odb)), os.path.dirname(so)

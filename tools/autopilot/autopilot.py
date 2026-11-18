@@ -912,6 +912,27 @@ out["files"] = len(lines)
 done()
 '''
 
+PROBE_AUTO_EXPORT = r'''
+import hashlib, json, os, socket, sys, time
+a = json.loads(sys.argv[1]); out = {}
+so = a["signoff"] if os.path.isfile(a["signoff"]) else a.get("fallback")
+try:
+    raw = open(so, "rb").read(); rec = json.loads(raw)
+    if rec.get("profile") == "minimal" and rec.get("verdict") == "SIGNED":
+        sha = hashlib.sha256(raw).hexdigest(); sp = os.path.expanduser("~/.local/state/ot-auto-export/spool")
+        os.makedirs(sp, exist_ok=True)
+        row = dict(schema="opentallas.auto_export.spool.v1", signoff=os.path.realpath(so), record=sha, host=socket.gethostname(),
+                   name=rec.get("name"), generated=rec.get("generated"), queued=time.strftime("%Y-%m-%dT%H:%M:%S%z"),
+                   die=a.get("die"), element=a.get("element"), kind=None, via="autopilot")
+        p = os.path.join(sp, sha[:16] + ".json"); t = p + ".tmp%d" % os.getpid()
+        open(t, "w").write(json.dumps(row)); os.replace(t, p); out["queued"] = p
+    else:
+        out["error"] = "not R-MINIMAL SIGNED (%s/%s)" % (rec.get("profile"), rec.get("verdict"))
+except Exception as e:
+    out["error"] = "%s: %s" % (type(e).__name__, str(e)[:160])
+print("AP_JSON " + json.dumps(out))
+'''
+
 PROBE_VIEW_READ = r"""
 import json, os, sys, glob, hashlib
 a = json.loads(sys.argv[1]); K = a["kit"]; B = a["base"]; S = a["signoff_dir"]; out = {}
@@ -3034,14 +3055,12 @@ def archive(st, j):
         if j.get("status") != "SIGNED-NOT-ARCHIVED":
             set_status(st, j, "SIGNED", "archive pending")
         return
-    mhost = MIRROR.get(host, MIRROR_DEFAULT)
-    pdir = os.path.dirname(dest)
-    rc, _, err = sh(["bash", "-c",
-                     f"ssh -o BatchMode=yes -o ControlPath=none {host} tar -C {shlex.quote(pdir)} -cf - "
-                     f"{shlex.quote(os.path.basename(dest))} | ssh -o BatchMode=yes -o ControlPath=none {mhost} "
-                     f"'mkdir -p {shlex.quote(pdir)} && tar -C {shlex.quote(pdir)} -xf -'"], timeout=7200)
-    m = rpy(mhost, PROBE_MD5CHECK, {"dest": dest}, timeout=3600) if rc == 0 else {"ok": False, "bad": [err[-200:]]}
-    mirror = f"{mhost}:{dest}" if m.get("ok") else f"MIRROR-FAILED({(m.get('bad') or m.get('error'))})"
+    # AUTO-EXPORT-1118 (FABLE-FLOW-0800 class H, OWNER r711): the fleet mirror copy is gone; the signed-store export is
+    # AUTO-EXPORT alone (full record to rtx-pro, metadata + display to AGIdock, INDEX rows).  The dest above stays: it is
+    # the wave's local relocation of the kit and its bind view, not an export.  The record is spooled on the host.
+    q = rpy(host, PROBE_AUTO_EXPORT, {"signoff": os.path.join(dest, "kit", os.path.basename(os.path.dirname(so["path"])), "signoff.json"),
+                                      "fallback": so["path"], "die": j.get("die"), "element": j.get("type")}, timeout=120)
+    mirror = "AUTO-EXPORT " + (q.get("queued") or "NOT QUEUED (%s); the hub scan picks it up" % (q.get("error") or "?"))[:200]
     j["archive"] = f"{host}:{dest}"
     j["mirror"] = mirror
     apply_legacy(j)
@@ -3054,7 +3073,8 @@ def archive(st, j):
                      f"{now_s()}\tAUTOPILOT +1 {j['die']}/{j['type']} signed off (signoff + routed LEC EQUIVALENT "
                      f"all_shown) archive {j['archive']} view {r.get('view') or 'none'}"
                      f"{' INCOMPLETE ' + '; '.join(j.get('view_problems') or []) if j.get('view_problems') else ''}")
-    log(f"ARCHIVED {j['id']} {j['die']}/{j['type']} -> {j['archive']} ({r.get('files')} files, MD5SUMS) mirror {mirror}"
+    log(f"RELOCATED {j['id']} {j['die']}/{j['type']} -> {j['archive']} "
+        + ("(already there)" if r.get("exists") else f"({r.get('files')} files, MD5SUMS)") + f"; export {mirror}"
         + (f" src {j['src_commit'][:12]} flow {j['flow_tag']}" if versioned else
            f" -- SIGNED-UNVERSIONED, not counted as signed off: {j['prov_error'][:200]}"))
 
