@@ -1138,3 +1138,4 @@
   - judge only on routed/extracted numbers;
   - never wait on COORD;
   - no new holds (r703, r705).
+- 2026-11-18 03:51 PST RULING r707 [COORD -> ALL LANES] Direct push to main is LIVE (r704). After committing in your lane clone, run: python3 -I /srv/opentallas-scratch2/claude/rt/current/tools/fleet/ot-push-main  (exit 3 = rebase conflict, resolve and rerun; exit 4 = touched tests red, fix and rerun). rt/current follows main within 1 min, and a red smoke test auto-reverts. No branches, no gate records, no READY or APPROVED lines from now on. Kits that are already running keep their rt/<sha>.
