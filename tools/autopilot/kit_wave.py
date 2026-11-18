@@ -2296,6 +2296,19 @@ def adopt_rows_tick(AP, cfg, st, now=None, alert_after=2):
     return out
 
 
+def row_inputs_unchanged(cfg, die, r, item, cur_blocks):
+    """OWNER 11-18 (why does each apply cancel all builds?): a live row keeps running when ITS inputs are unchanged on the new tree: the item's plan block sha equals the row's and its staged
+    views digest equals what a launch would use now.  The tree path, tools sha and die-global bind / event keys are deliberately NOT inputs (they do not change the type's netlist or geometry)."""
+    if not r.get("block_sha") or cur_blocks.get(die, {}).get(item) != r.get("block_sha"):
+        return False
+    try:
+        old = kit_digest_parts(cfg, die, r).get("views")
+        now = kit_digest_parts(cfg, die, dict(item=item, block_sha=r.get("block_sha"))).get("views")
+    except Exception:
+        return True
+    return (old or "") == (now or "")
+
+
 def supersede_on_switch(AP, cfg, st, notices, ap_dir=None, window_ticks=3):
     """WAVE-FLOW-R2 11-17 (COORD, HEAD NF15f pilots could not launch: the wave allows ONE live attempt per item and an NF13a hd_lep0N in GRT for 29 h and an NF15d2r1 hd_mesh
     were still running): when a die's tree or event / plan_event switches (apply), every live attempt (wave unit RUNNING / LAUNCHING, queue job of an ENQUEUED row) whose
@@ -2316,6 +2329,11 @@ def supersede_on_switch(AP, cfg, st, notices, ap_dir=None, window_ticks=3):
         rec = seen.get(die) or {}
         if not isinstance(d, dict) or not rec.get("switched") or d.get("supersede_on_switch") is False or not d.get("event"):
             continue
+        if die not in cur_blocks:                       # the new plan's probe is not cached yet: nothing can be judged unchanged, so nothing is cancelled (49 QC / 12 KV rows with an UNCHANGED block were)
+            if not rec.get("defer_logged"):
+                rec["defer_logged"] = True
+                AP.log(f"KIT-WAVE SWITCH-SUPERSEDE {die}: current plan blocks not probed yet, cancelling nothing this tick")
+            continue
         rec["sup_ticks"] = int(rec.get("sup_ticks") or 0) + 1
         if rec["sup_ticks"] > window_ticks:
             continue
@@ -2325,7 +2343,7 @@ def supersede_on_switch(AP, cfg, st, notices, ap_dir=None, window_ticks=3):
             item = r.get("item") or ""
             held = next((str(w) for pat, w in (d.get("hold_items") or {}).items()
                          if fnmatch.fnmatchcase(item, pat) and hold_protects_running(cfg, d, r, str(w))), None)
-            same = bool(r.get("block_sha")) and cur_blocks.get(die, {}).get(item) == r.get("block_sha")
+            same = row_inputs_unchanged(cfg, die, r, item, cur_blocks)
             if held is not None or same:
                 why = f"hold_items: {held[:120]}" if held is not None else f"own plan block {str(r.get('block_sha'))[:12]} is the item's block in the current plan"
                 if r.get("switch_kept") != why:
@@ -12339,7 +12357,7 @@ def cancel_superseded(AP, cfg, st, notices, ap_dir=None):
             item = r.get("item") or ""
             held = next((str(w) for pat, w in (d.get("hold_items") or {}).items()
                          if fnmatch.fnmatchcase(item, pat) and hold_protects_running(cfg, d, r, str(w))), None)
-            same = bool(r.get("block_sha")) and cur_blocks.get(die, {}).get(item) == r.get("block_sha")
+            same = row_inputs_unchanged(cfg, die, r, item, cur_blocks)
             if held is not None or same:
                 why = (f"hold_items: {held[:160]}" if held is not None else
                        f"own plan block {str(r.get('block_sha'))[:12]} unchanged in the current plan")
