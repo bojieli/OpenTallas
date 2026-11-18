@@ -6139,7 +6139,28 @@
     "col_h9_r0_p3__t1__cl8ce97bcb__pvc11684b5@4",
     "col_h9_r0_p3__t1__cl0cd90c0e__pvcb7f0079@3",
     "col_h9_r0_p3__t1__cl8ce97bcb__pvc11684b5@4",
-    "col_h9_r0_p2__t1__cl0045af7b__pvd86cb19a@5"
+    "col_h9_r0_p2__t1__cl0045af7b__pvd86cb19a@5",
+    "col_h10_r0_p1__t1__cl911743eb@6",
+    "col_h10_r0_p4__t1__pvd11cc58b@4",
+    "col_h10_r2__t1__cl1f5d6c2a__pv0c1de895@10",
+    "col_h10_r2__t1__cl1f5d6c2a__pvcd889288@3",
+    "col_h10_r2__t1__cl1f5d6c2a__pvf1512c16@3",
+    "col_h10_r2__t1__cl99efd374__pv7a8a5452@3",
+    "col_h9_r0_p1__t1__pvb3e2a60a@5",
+    "col_h9_r0_p1__t1__pvf9acce4c@4",
+    "col_h9_r0_p3__t1__cl8ce97bcb__pvcd8810ba@4",
+    "col_h9_r0_p4__t1__cl8ef405e8__pv89bf360c@3",
+    "col_h9_r0_p5__t1__pvc6e5797f@3",
+    "col_h9_r0_p5__t1__pvc93af856@3",
+    "col_h9_r0_p5__t1__pvf731e6ec@3",
+    "col_h9_r0_p6__t1__pv082a7609@7",
+    "col_h9_r1__t1__cl49d7a23e__pv11dcdcd2@3",
+    "col_h9_r1__t1__cl49d7a23e__pvadbd1880@4",
+    "col_h9_r1__t1__cl49d7a23e__pvafa6f454@5",
+    "col_h9_r2__t1__cl774acf45__pv11b6518d@5",
+    "col_h9_r2__t1__clce45cab5__pv8b5a5980@6",
+    "col_h9_r2__t1__clce45cab5__pvb3f647ea@5",
+    "col_h9_r2__t1__clce45cab5__pve0486b40@6"
    ],
    "take_states": [
     "*"
@@ -7384,7 +7405,8 @@
     "svc_lo_dsdv_svc_rs__t6@6": "FLOW-FIX: S81-KITRTL-NETMAP-1118 main 06497d041d2 (svc per-bind reference shipped in tools/die_plan/s81_svc_refs, ref_1117_d7w_main for d233b310c719) and c2c35717a15 (kit_ln_copies word-masked native + replicated-bus lane reset, t56); verified on the d8t bound/bind",
     "svc_lo_dsdv_svc_rs__t7@8": "FLOW-FIX: S81-KITRTL-NETMAP-1118 main 06497d041d2 (svc per-bind reference shipped in tools/die_plan/s81_svc_refs, ref_1117_d7w_main for d233b310c719) and c2c35717a15 (kit_ln_copies word-masked native + replicated-bus lane reset, t56); verified on the d8t bound/bind",
     "svc_lo_dsdv_svc_rs_w__t1@6": "FLOW-FIX: S81-KITRTL-NETMAP-1118 main 06497d041d2 (svc per-bind reference shipped in tools/die_plan/s81_svc_refs, ref_1117_d7w_main for d233b310c719) and c2c35717a15 (kit_ln_copies word-masked native + replicated-bus lane reset, t56); verified on the d8t bound/bind",
-    "ot_s81sl_leaf__t56@6": "FLOW-FIX: S81-KITRTL-NETMAP-1118 main 06497d041d2 (svc per-bind reference shipped in tools/die_plan/s81_svc_refs, ref_1117_d7w_main for d233b310c719) and c2c35717a15 (kit_ln_copies word-masked native + replicated-bus lane reset, t56); verified on the d8t bound/bind"
+    "ot_s81sl_leaf__t56@6": "FLOW-FIX: S81-KITRTL-NETMAP-1118 main 06497d041d2 (svc per-bind reference shipped in tools/die_plan/s81_svc_refs, ref_1117_d7w_main for d233b310c719) and c2c35717a15 (kit_ln_copies word-masked native + replicated-bus lane reset, t56); verified on the d8t bound/bind",
+    "__batch_s81colflow_resetempty_0910": "21 col rows FAIL place reset_chain_spread 'RESET v5 refuses empty explicit buffer set' -> fixed 235d4be8301 (no buffer = nothing to prune), in rt/current; S81-COL-FLOW-1118 per COORD"
    },
    "place_spill": true,
    "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
