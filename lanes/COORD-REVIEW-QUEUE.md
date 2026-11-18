@@ -23375,3 +23375,4 @@ OT_LAYOUT_RENDER place 2026-11-18 09:02:02 2 PNG 12 s: place 1/6 flagged: local_
 make[1]: *** [Makefile:585: do-5_1_grt] Error 1
 make: *** [Makefile:585: /work/run/results/asap7/dp_sle_fe_v1__cl8210183c/base/5_1_grt.odb] Error 2
  | kit epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N1B/items/sle_fe_v1__cl8210183c/attempt_2/gen/sle_fe_v1__cl8210183c src main@eb1e73448bd042684261a13c50cd0fb5ce21a513 | review no review bundle | run data kept: cleanup deferred; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+- 2026-11-18 01:07 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kw43-wave-1109n on epyc10 wrote 396 GB in the last 6 h (quota 150 GB/lane/6 h; alert only, nothing stopped); owner please prune or confirm

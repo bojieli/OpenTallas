@@ -402,3 +402,4 @@
 - 2026-11-18 00:57 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kw43-wave-1109n on epyc9 wrote 211 GB in the last 6 h (quota 150 GB/lane/6 h; alert only, nothing stopped); owner please prune or confirm
 - 2026-11-18 00:57 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kw45 on epyc9 wrote 505 GB in the last 6 h (quota 150 GB/lane/6 h; alert only, nothing stopped); owner please prune or confirm
 - 2026-11-18 01:05 PST HOST-REPORT 2026-11-18 01:05 | tolera L3.61/112 units0 free115G | key-ca L46.60/112 units202 free245G | dear-c L22.54/128 units405 free221G | loved- L36.17/96 units51 free2010G | outgoi L45.94/96 units213 free1178G | renewe L54.83/96 units119 free2227G | civil- L34.27/96 units75 free1140G
+- 2026-11-18 01:07 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kw43-wave-1109n on epyc10 wrote 396 GB in the last 6 h (quota 150 GB/lane/6 h; alert only, nothing stopped); owner please prune or confirm
