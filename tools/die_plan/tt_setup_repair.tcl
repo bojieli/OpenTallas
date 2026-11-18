@@ -131,7 +131,8 @@ if {$w0 < $mg || $ot_tt_design} {
     ot_grt_pg_replay_end
   }
   ot_tt_est_after_repair
-  if {$ot_tt_rc eq "grt" && [info exists ::env(OT_TT_SETUP_GUIDE)] && $::env(OT_TT_SETUP_GUIDE) ne ""} { write_guides $::env(OT_TT_SETUP_GUIDE) }     # after any re-route, so the guide holds the final routes
+  # after any re-route, so the guide holds the final routes  (a comment may NOT trail an if body on the same line: Tcl reads it as extra if-arguments and the whole step dies)
+  if {$ot_tt_rc eq "grt" && [info exists ::env(OT_TT_SETUP_GUIDE)] && $::env(OT_TT_SETUP_GUIDE) ne ""} { write_guides $::env(OT_TT_SETUP_GUIDE) }
 }
 lassign [ot_tt_wns after] w1 t1
 puts "OT_TT_SETUP_REPAIR cells [expr {[llength [get_cells *]] - $n0}] added; wns [format %.2f $w0] -> [format %.2f $w1] tns [format %.2f $t0] -> [format %.2f $t1]"
