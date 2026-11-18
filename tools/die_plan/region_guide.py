@@ -55,8 +55,18 @@ LIMIT = G.R2R_MAX
 MARGIN = 45.0
 PIN_DEPTH = G.PINREG_DEPTH
 BCAST_MAX = 16          # one register in more failing pairs than this = a broadcast, not a bit slice
-BOX_DENSITY = 0.30       # guided register area / box area
-BOX_MIN_SIDE = 8.0
+# QC slw_st_b_v1__cle6023ec2 11-17 (GPL-0305): 15 boxes at fill 0.21 and 9-18 um sides (247 registers in 18.4 x 18.4 um, fixed) made RePlAce
+# diverge (an exponentially growing term, then Inf/NaN) while the same kit without guides placed.  The box is now sized from the group's
+# cell area at a LOW fill target tied to the kit's target utilisation (<= UTIL_FILL x PLACE_DENSITY, 0.4 x 0.5 = 0.20) and has a larger
+# minimum side; GPL still removes region area from the top level, so the boxes stay far below a tile.
+BOX_DENSITY = 0.20       # guided register area / box area (was 0.30)
+BOX_MIN_SIDE = 16.0      # um (was 8)
+UTIL_FILL = 0.4          # box fill target <= UTIL_FILL x the kit's PLACE_DENSITY
+
+
+def box_density(target_util=None):
+    """fill target of a guide box: BOX_DENSITY, or lower when the kit's target utilisation (PLACE_DENSITY) says so"""
+    return BOX_DENSITY if not target_util else min(BOX_DENSITY, UTIL_FILL * float(target_util))
 BOX_HALO = 2.0           # um kept from hard macros
 PIN_FANOUT = 8          # a pin register path is a bus bit, not a broadcast (reset/enable) tree
 FIXED = {"FIRM", "LOCKED", "COVER"}
@@ -182,7 +192,7 @@ def clamp_cell(c, box):
     return (c[0], c[1], x - w / 2, y - h / 2, x + w / 2, y + h / 2, c[6])
 
 
-def plan(D, limit=LIMIT, margin=MARGIN, tile_um=None, rounds=3, bcast_max=None):
+def plan(D, limit=LIMIT, margin=MARGIN, tile_um=None, rounds=3, bcast_max=None, target_util=None):
     """D = geom_rules.Design -> spec dict (regions [] when r2r already passes)"""
     if not 0 <= margin < limit:
         raise ValueError("margin must be in [0, limit)")
@@ -249,7 +259,7 @@ def plan(D, limit=LIMIT, margin=MARGIN, tile_um=None, rounds=3, bcast_max=None):
         for t, pts in t_anchor.items():
             area = sum((orig[m][4] - orig[m][2]) * (orig[m][5] - orig[m][3]) for m, tt in assign.items() if tt == t)
             boxes[t] = guide_box(tile_box(core, g, *t), (sum(p[0] for p in pts) / len(pts), sum(p[1] for p in pts) / len(pts)),
-                                 area, macros)
+                                 area, macros, density=box_density(target_util))
         # prediction: guided cells clamped into their box; everything else where the last placement put it
         cells = dict(orig)
         for m, t in assign.items():
@@ -376,6 +386,7 @@ def main(argv=None):
     a.add_argument("--tile-um", type=float, default=None)
     a.add_argument("--rounds", type=int, default=3)
     a.add_argument("--bcast-max", type=int, default=BCAST_MAX)
+    a.add_argument("--target-util", type=float, default=None, help="the kit's PLACE_DENSITY: the box fill target is at most %g x this" % UTIL_FILL)
     a.add_argument("--force", action="store_true", help="plan even when auto_geom.json shows no r2r FAIL")
     b = sub.add_parser("measure")
     b.add_argument("--geom-dir", required=True)
@@ -396,7 +407,7 @@ def main(argv=None):
     if not (gd / "geom.tsv").is_file():
         print(f"REGION_GUIDE_ERROR {gd}/geom.tsv missing")
         return 2
-    spec = plan(load_design(gd), a_.limit, a_.margin, a_.tile_um, a_.rounds, a_.bcast_max)
+    spec = plan(load_design(gd), a_.limit, a_.margin, a_.tile_um, a_.rounds, a_.bcast_max, a_.target_util)
     spec["source"] = dict(geom_dir=str(gd.resolve()), geom_tsv_sha256=sha256(gd / "geom.tsv"),
                           auto_geom_line=ag.get("line", "")[:300])
     if not spec["regions"]:
