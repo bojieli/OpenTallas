@@ -51,6 +51,37 @@ class Gc(unittest.TestCase):
         self.assertFalse(S.have(self.store, dead))
         self.assertEqual(open(r["log"]).read().split("\t")[0], dead)              # manifest of what went
 
+    def test_old_artifact_record_stops_pinning_its_tree_unless_it_holds_a_signed_signoff(self):
+        import json
+        def tree(name, files):
+            d = os.path.join(self.t, name); os.makedirs(d)
+            for k, v in files.items():
+                with open(os.path.join(d, k), "w") as fh: fh.write(v)
+            return d
+        plain = tree("plain", {"a.txt": "plain-object"})
+        signed = tree("signed", {"signoff.json": json.dumps({"verdict": "SIGNED"}), "b.txt": "signed-object"})
+        recs = []
+        for d, nm in ((plain, "plain"), (signed, "signed")):
+            rec = S.publish(self.store, d, nm, producer={"cmd": ["x"]})
+            recs.append(rec)
+        for sub in (plain, signed):                         # age every object past the young hold
+            for dp, _d, fs in os.walk(os.path.join(self.store, "objects")):
+                for f in fs: os.utime(os.path.join(dp, f), (OLD, OLD))
+        old = time.time() - 5 * 86400
+        orig = S.records
+        S.records = lambda st: [dict(e, published=old) for e in orig(st)]
+        try:
+            res = S.gc(self.store, apply=False)
+            dele = set(res["delete"])
+            plain_sha = S.sha_file(os.path.join(plain, "a.txt")) if hasattr(S, "sha_file") else None
+            self.assertTrue(S.closure(self.store, recs[0]["sha"]) <= dele)   # the plain record's whole tree is no longer pinned
+            keep_signed = S.closure(self.store, recs[1]["sha"])
+            self.assertFalse(keep_signed & dele)            # the SIGNED one stays
+        finally:
+            S.records = orig
+        res = S.gc(self.store, apply=False)                 # with the records young again nothing of the tree is deleted
+        self.assertFalse(S.closure(self.store, recs[0]["sha"]) & set(res["delete"]))
+
     def test_gc_waits_for_staging_and_spares_a_dedup_put(self):
         """the 0.3 s race: a job dedups onto an OLD unreferenced object, then writes its ref"""
         old = self.put("o", "kit input")

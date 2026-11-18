@@ -56,6 +56,7 @@ TREE_SCHEMA = "opentallas.ot_store.tree.v1"
 ARTIFACT_SCHEMA = "opentallas.ot_store.artifact.v1"
 REF_SCHEMA = "opentallas.ot_store.ref.v1"
 KEEP_YOUNG_S = 24 * 3600            # OWNER 11-08: hosts volatile, every hold/lifetime is 24 h
+RECORD_AGE_S = float(os.environ.get("OT_STORE_RECORD_AGE_H", "48")) * 3600   # 11-18 (COORD, owner aggressive cleanup): an artifact record older than this no longer keeps its tree
 LOCK_NAME = ".gc.lock"
 SCRATCH_STORES = ("/srv/opentallas-scratch2/ot-store", "/srv/opentallas-scratch3/ot-store")
 BUF = 1 << 20
@@ -388,13 +389,36 @@ def gc(store, counted_store=None, apply=False, now=None, young_s=KEEP_YOUNG_S, l
         return _gc(store, counted_store, True, now, young_s, log)
 
 
+def _record_keeps(store, e, now):
+    """True when the artifact record still pins its tree: younger than RECORD_AGE_S, or its tree holds a signoff*.json whose verdict is SIGNED (exported or not: the counted
+    signed-store files are kept separately by counted_shas).  Jobs that are alive hold their inputs through job-* refs, not through records."""
+    try:
+        pub = float(e.get("published") or 0)
+    except (TypeError, ValueError):
+        return True
+    if pub and now - pub < RECORD_AGE_S:
+        return True
+    t = read_tree(store, e["sha"]) if have(store, e["sha"]) else None
+    for rel, v in ((t or {}).get("files") or {}).items():
+        if rel.endswith("signoff.json") and have(store, v[0]):
+            try:
+                with open(obj_path(store, v[0]), errors="replace") as f:
+                    if '"SIGNED"' in f.read(8 << 20):
+                        return True
+            except OSError:
+                return True
+    return False
+
+
 def _gc(store, counted_store, apply, now, young_s, log):
     now = now or time.time()
     keep = set(counted_shas(counted_store))
     for r in refs(store).values():
         for s in r.get("shas", []):
             keep |= closure(store, s, missing_ok=True)
-    for e in records(store):                       # every artifact record of this store keeps its whole tree
+    for e in records(store):                       # every artifact record of this store keeps its whole tree ... while it is younger than RECORD_AGE_S, or holds a SIGNED signoff
+        if RECORD_AGE_S > 0 and not _record_keeps(store, e, now):
+            continue
         keep |= closure(store, e["sha"], missing_ok=True)
     dele, freed, n = [], 0, 0
     od = os.path.join(store, "objects")
