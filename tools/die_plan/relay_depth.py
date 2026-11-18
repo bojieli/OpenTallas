@@ -121,7 +121,7 @@ def type_rows(plan, tn, text, repo=None, plan_dir=None, limit=LIMIT):
     pins = {}
     router = Router(t)
     # one candidate per (partner pair, via): the longest bit
-    rows, unfixed, seen, direct = {}, [], 0, {}
+    rows, unfixed, seen, direct, srcdirect = {}, [], 0, {}, {}
     for p in res["paths"]:
         if p["dir"] != "in" or "partner" not in p:
             continue
@@ -157,9 +157,20 @@ def type_rows(plan, tn, text, repo=None, plan_dir=None, limit=LIMIT):
             # a DIRECT core-to-core wire (nothing relay-like on it): stages in front of the sink input bits (side "sink"),
             # placed between the two pins by relay_mid.tcl like a relay chain
             rel = p["core"].split(".", 1)[1] if "." in p["core"] else p["core"]
-            if not re.search(r"\n\s*\w+\s*(?:#\([^;]*?\))?\s*u_" + re.escape(re.sub(r"[^A-Za-z0-9_]", "_", rel)) + r"\s*\(", text):
+            def is_leaf(core):
+                r_ = core.split(".", 1)[1] if "." in core else core
+                return bool(re.search(r"\n\s*\w+\s*(?:#\([^;]*?\))?\s*u_" + re.escape(re.sub(r"[^A-Za-z0-9_]", "_", r_)) + r"\s*\(", text))
+            if not is_leaf(p["core"]):
+                # the sink is a macro inside a bigger bound leaf (r0 ROM banks): no sink port to delay.  Delay the SOURCE leaf's
+                # output port instead (every internal sink of that port gets the same D: a bank's ROMs stay aligned)
+                if is_leaf(src_core):
+                    srel = src_core.split(".", 1)[1] if "." in src_core else src_core
+                    cur = srcdirect.setdefault((srel, src_port), dict(D=0, path_um=0.0))
+                    if extra > cur["D"]:
+                        cur.update(D=extra, path_um=round(worst, 1))
+                    continue
                 unfixed.append(dict(core=p["core"], port=p["port"], partner=p["partner"], path_um=round(worst, 1),
-                                    extra=extra, reason="sink is not a bound leaf of this type (sub-core): no row"))
+                                    extra=extra, reason="neither end is a bound leaf of this type (sub-cores): no row"))
                 continue
             for lo, hi in p["bit_ranges"]:
                 for bit in range(lo, hi + 1):
@@ -173,6 +184,8 @@ def type_rows(plan, tn, text, repo=None, plan_dir=None, limit=LIMIT):
         if extra > r["D"]:
             r.update(D=extra, path_um=round(worst, 1), stages_existing=int(p["stages_existing"]))
     out = sorted(rows.values(), key=lambda r: r["inst"])
+    for (rel, port), v in sorted(srcdirect.items()):
+        out.append(dict(inst=rel, port=port, side="source", D=v["D"], path_um=v["path_um"], stages_existing=0))
     for (rel, port), per in sorted(direct.items()):
         runs, bits = [], sorted(per)
         for b in bits:
