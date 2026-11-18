@@ -80,3 +80,10 @@ Action: epyc7 scratch2 is at 99 % and ot-run HOLDs admission there, so I copied 
 - smc_mm5 signoff.py run (tt,ff) unit oth-ubuntu-1836393-1794983787 -> build/smc_mm5/signoff/signoff.json; then export as s81/ot_s81_svc_smc__h16mm5_1117 (rtx-pro + AGIdock + INDEX.tsv row).
 Not mine, left alone: S81-FIX-OPUS waiters on intel2 PIDs 2988420 (hslice_mm4 signoff, futile: FF -3.27) and 3309613 (smc_mm5 signoff, duplicate of mine once admitted).
 Shell: draft rows intel2 ~/s81-fix-opus/svc_shell_rows_draft_1117.json (A provider cores, B out_w keep, C tile regions, D tap groups, E reset stages, F ring macros, G outline). OPEN before the rows are firm: W5 census of hi/pvso (no result on record), ring macro kits (not generated), hslice + mergex sign-off, final outline. No shell kit exists.
+
+## 11-17 22:5x PST
+- smc SIGNED R-MINIMAL + exported (s81/ot_s81_svc_smc__h16mm5_1117, rtx-pro + AGIdock + INDEX rows; odb sha 367de661a137). 4 of 6 cores signed.
+- W5 done by me (RTLIL instance count): hi3 uses the same masters (same paramod hashes) sml 16 / smd 8 / mergex 4 / smc 1 / smr 1, NO hslice, 6 rings. lo t1-t6, rs_w, pvso NOT measured.
+- Shell rows v2: lanes/handoff/FABLE-FIX-S81-SVC2-shell-rows.json (handed to S81-DIE-R3). lo outline 1598.4 x 2980.8; hi +86.4 X estimate.
+- Waiting: hslice_mm6, mergex_mm6 on epyc10 (build/<core>_mm6.exit). On pass: signoff.py run --run-dir <run>/work/orfs --kit same --sdc <run>/signoff.sdc --name s81svc_h16_<core> --out <run>/signoff --corners tt,ff ; export 6_final.{def,odb,sdc,spef,v} + physical.json + signoff.json + corner_sta.json(as corner_sta_ref.json) to rtx-pro /home/ubuntu/signed-export-1114/s81/<elem> and AGIdock /archive/opentallas-signed-1114/s81/<elem>, append the 12-column INDEX.tsv row on both under flock.
+- NOT started: ring macro kits, shell kit (blocked on out_w keep in the generator + plan rows bound by S81-DIE-R3).

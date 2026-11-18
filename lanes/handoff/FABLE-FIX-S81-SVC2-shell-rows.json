@@ -1,0 +1,148 @@
+{
+ "schema": "s81_svc_shell_rows/2",
+ "status": "ROWS v2 for S81-DIE-R3 (FABLE-FIX-S81-SVC2 11-17 22:5x PST): core outlines are BUILT outlines; 4 of 6 cores SIGNED; hslice + mergex outlines are final unless mm6 fails; not bound, not gated",
+ "scope_types": [
+  "svc_lo_dsdv_svc_rs__t1..t7",
+  "svc_lo_dsdv_svc_rs_w__t1",
+  "svc_hi_dsdv_svc_rs__t1..t6",
+  "svc_hi_dsdv_svc_pvso_entry__t1..t2"
+ ],
+ "measured_on": "lo7 kit epyc8 /srv/opentallas-scratch3/claude/fable-fix-s81-svc/lo7_floorplan_fix1117 (bound RTL s81p_svc_lo_dsdv_svc_rs__t7_bound.sv); hi/pvso types must be re-checked for the same masters (W5 census) before bind",
+ "rows": {
+  "A_provider_cores": {
+   "rule": "new hard_cores entries in each svc type (provider form), cores built by physical/ref_tile/s81svc_h16_<core> (lo7 RTL params), outlines = built kit outlines",
+   "cores": [
+    {
+     "core": "sml",
+     "module": "dsfd_su_t_sml",
+     "parent": "u_u_rsv_14_u_u_sms.u_smh.u_q[*].u_sml (4 per smhq)",
+     "outline_um": [
+      86.4,
+      241.92
+     ],
+     "status": "SIGNED TT+182.78 FF+7.05 s81/ot_s81_svc_sml__h16mm3b_1117",
+     "count_lo": 16,
+     "count_hi": 16
+    },
+    {
+     "core": "smd",
+     "module": "dsfd_su_t_smd",
+     "parent": "u_u_rsv_14_u_u_sms.u_smh.u_q[*].u_smd (2 per smhq)",
+     "outline_um": [
+      86.4,
+      186.19
+     ],
+     "status": "SIGNED TT+148.45 FF+4.41 s81/ot_s81_svc_smd__h16mm3b_1117",
+     "count_lo": 8,
+     "count_hi": 8
+    },
+    {
+     "core": "smc",
+     "module": "dsfd_su_t_smc",
+     "parent": "smhr u_smc",
+     "outline_um": [
+      86.4,
+      150.77
+     ],
+     "status": "SIGNED TT+145.26 internal FF hold 0 violators s81/ot_s81_svc_smc__h16mm5_1117",
+     "count_lo": 1,
+     "count_hi": 1
+    },
+    {
+     "core": "smr",
+     "module": "dsfd_su_t_smr",
+     "parent": "smhr u_smr",
+     "outline_um": [
+      86.4,
+      104.11
+     ],
+     "status": "SIGNED TT+142.31 FF+8.57 s81/ot_s81_svc_smr__h16mm3b_1117",
+     "count_lo": 1,
+     "count_hi": 1
+    },
+    {
+     "core": "hslice",
+     "module": "ot_hdc_v41x_idx_hslice",
+     "parent": "u_u_irg_07 (dsdv_idx_rg3_nq_fit PR=1) -> 4 PR groups x 8 u_s",
+     "outline_um": [
+      77.76,
+      175.39
+     ],
+     "status": "NOT SIGNED: mm4 DRC0 TT+115.5 FF r2r -3.27; mm6 (unbounded hold chunk) running epyc10",
+     "count_lo": 32,
+     "count_hi": 0
+    },
+    {
+     "core": "mergex",
+     "module": "ot_hdc_v41x_attn_merge_x",
+     "parent": "u_u_rsv_14_u_u_att_u_eng_g_m_[0..3]_g_real_g_x_u_m",
+     "outline_um": [
+      259.2,
+      264.38
+     ],
+     "pin_regs": "in +1 / out +1 edge (latency rows below)",
+     "status": "NOT SIGNED: mm3b DRC0 TT+97.83 FF r2r -6.93; mm6 running epyc10",
+     "count_lo": 4,
+     "count_hi": 4
+    }
+   ],
+   "latency_rows": "mergex pin_regs add 1 in + 1 out edge on the merge path: add +2 cycles to the attn merge lane rows (pre-approved cycle cost); hslice / sm* ports registered in their kits (pin_audit_core) - check per-port before bind",
+   "census": "W5 measured by FABLE-FIX-S81-SVC2 from canonical RTLIL (epyc8 scratch3 claude/fable-fix-s81-svc2/census/rtlil_inst.py): lo7 = hslice 32, sml 16, smd 8, mergex 4, smc 1, smr 1, 14 landing_cas rings, 64 hcore, 8 hrow, 4 load_stage; hi3 = NO hslice, sml 16, smd 8, mergex 4, smc 1, smr 1 with the SAME paramod hashes as lo7 (same masters), 6 landing_cas rings, 64 hcore, 8 hrow, 4 load_stage. NOT measured: lo t1-t6 / rs_w (t6 uses dsdv_idx_rg3 not nq: hslice params must be checked), pvso_entry t1-t2."
+  },
+  "B_out_w_keep": {
+   "rule": "item_env OT_KEEP_WIRES = ot_s81c_hcore_load_stage:out_w (also out_bank out_mode out_grp if the census shows merges) on all 16 svc items; gen_phys replica_keep_wires writes the kit line",
+   "evidence": "lo7 1_synth_odb.v keeps out_w flops only for tile g_t_3 (1024 of 4096): opt_merge folded tiles 0-2",
+   "owner": "S81-TYPES-R3 (wave item_env), asked 20:0x"
+  },
+  "C_load_stage_regions": {
+   "rule": "one region per tile: u_u_rsv_14_u_u_att_u_eng_g_t_<k>_g_ts_u_t_u_hc_u_load_stage placed with its 16 hcores (g_h_0..15) of tile k, k = 0..3; region box = bbox of the 16 hcore sites + 20 um",
+   "count": 4
+  },
+  "D_hcore_tap_group": {
+   "rule": "the 64 ot_s81c_attn_hcore clk pins form their own tap group(s), launched early by the lib insertion: min/max_clock_tree_path 328.8 / 376.3 ps (ot_s81c_attn_hcore_tt.lib); target tap arrival = shell register tap target - 352 ps (mid), one group per tile (16 sinks), never mixed with the shell register taps",
+   "same_rule_for": "every provider core above: its tap group from its own lib/view insertion (measure from the signed views: sml/smd/smc/smr/hslice/mergex insertion TT/FF in signoff.json core_latency)",
+   "shell_taps_after_split": "shell keeps ~0.1M registers -> taps <= 1500 sinks each (TAP-GROUP-CAP-1 cap 1700 applies)"
+  },
+  "E_reset_stages": {
+   "rule": "one registered relay stage (64-edge S81 reset contract) per region: per hcore tile row (4), per provider group (sms 1, irg PR group 4, mergex 4), per landing ring (14); each core keeps its own entry register; no single shell-wide recovery net (the 15,395-fanout net goes into the cores)",
+   "count_estimate": 27
+  },
+  "F_ring_macros": {
+   "rule": "the 14 ot_dp_clk_landing_cas rings become hard ring macros (KV CLAND-MACRO-1 mkmacro pattern), placed at their face",
+   "instances": [
+    "u_cland_attn_i0",
+    "u_cland_attnh_i0",
+    "u_cland_unit_i0",
+    "u_cland_unit_i1",
+    "u_cland_vid_i0",
+    "u_cland_flt_i0",
+    "u_cland_idx_i0",
+    "u_cland_hbm_i0",
+    "u_cland_hbmrd_i0",
+    "u_cland_ft0_i",
+    "u_cland_ft1_i",
+    "u_cland_ft2_i",
+    "u_cland_ft3_i",
+    "u_cland_ft4_i"
+   ],
+   "size": "129,277 generic cells total (~9k each)",
+   "note": "face_guard has no cas/WREG land form today (see S81-FIX-OPUS CAUSE post on t22); a ring macro removes the face_guard question for these buses",
+   "hi": "hi3 has 6 landing_cas rings (names from its bound RTL at bind)",
+   "status": "ring macro kits NOT generated yet"
+  },
+  "G_outline": {
+   "lo": "1442.88 -> 1598.4 x 2980.8 (+155.52 um X = 18 x 8.64, Y unchanged). Arithmetic: built core boxes lo = 16x86.4x241.92 + 8x86.4x186.19 + 86.4x150.77 + 86.4x104.11 + 32x77.76x175.39 + 4x259.2x264.38 = 1.196M um2, x1.15 channels = 1.375M, + shell ~0.47M cells at 0.5 fill ~0.12M = 1.50M vs 1.138M free today -> +0.36M um2 / 2980.8 = +121 um, rounded up to +155.52",
+   "hi": "ESTIMATE ONLY: core boxes hi (no hslice) 0.760M um2 x1.15 = 0.874M; hi free area not measured by me; plan +86.4 um X (10 x 8.64) until the hi3 floorplan numbers are read",
+   "growth": "pre-approved (owner 11-12)",
+   "shell_cells_after_split": "~0.47M mapped with A only; < 0.4M after F (rings), ESTIMATE"
+  }
+ },
+ "open": [
+  "hslice + mergex sign-off (mm6)",
+  "ring macro kits (14 lo / 6 hi) and their outlines",
+  "census of lo t1-t6, rs_w, pvso_entry",
+  "hi free area -> hi outline",
+  "exact generate paths at bind",
+  "mergex pin_regs +1 in / +1 out edge: latency rows +2 on the merge lane"
+ ]
+}
