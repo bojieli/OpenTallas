@@ -12966,7 +12966,9 @@ STEP_TIMED = ("load_config", "merge_auto_views", "merge_src_overlay", "load_stat
               # WAVE-PILOT-FIX 11-18 (COORD class F: ~200 s of the step untimed): the setup and per-tick sweeps that had no timer
               "tree_gate", "plan_drift_step", "compile_hold_records", "hub_disk_gate", "auto_commit_config", "config_drift", "tool_skew_measure_all",
               "repeat_queue_outcomes", "dedup_step", "name_stuck_retry_infra", "retire_superseded_rows", "adopt_rows_tick", "config_key_check",
-              "rejudge_place_nodb", "cancel_held_running", "orphan_sweep", "fleet_probe")
+              "rejudge_place_nodb", "cancel_held_running", "orphan_sweep", "fleet_probe",
+              # FABLE-FLOW-1000 (3): the rest of the untimed 37-665 s
+              "tools_refresh_tick", "tools_lag_rows", "hold_audit_step", "supersede_on_switch", "rekey_adopted", "backfill_norm_blocks", "host_disk_fall", "reclaim_terminal_sweep", "verified_source_probes")
 STEP_T = {}
 STEP_START = [0.0]
 STEP_BUDGET_S = float(os.environ.get("KW_STEP_BUDGET_S", "300"))     # FLOW-2200 G: the wave step should not take more than this; the heavy fleet-wide reaps are deferred past it
