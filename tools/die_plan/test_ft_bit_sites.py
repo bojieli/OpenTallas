@@ -42,3 +42,24 @@ def test_explicit_stage_zero_keeps_legacy_internal_only_table_identical():
     slot = copy.deepcopy(GOOD)
     slot['explicit_stage0'] = True
     assert table([slot]) == table([GOOD])
+
+
+def test_snap_moves_offgrid_stage_onto_core_grid():
+    from ft_bit_sites import snap_slots
+    slot = copy.deepcopy(GOOD)
+    slot['bit_sites_um'] = [[[82.9376, 176.8544], [82.9376, 177.1244]]]
+    out, moved = snap_slots([slot, dict(name='old', width=1)], (4.32, 4.32))
+    assert moved == 2
+    assert out[0]['bit_sites_um'] == [[[82.944, 176.85], [82.944, 177.12]]]
+    assert out[1] == dict(name='old', width=1)
+    assert slot['bit_sites_um'][0][0] == [82.9376, 176.8544]
+
+
+def test_snap_keeps_ongrid_sites_and_refuses_collisions():
+    from ft_bit_sites import snap_slots
+    out, moved = snap_slots([GOOD], (4.32, 4.32))
+    assert moved == 0 and out[0]['bit_sites_um'] == GOOD['bit_sites_um']
+    slot = copy.deepcopy(GOOD)
+    slot['bit_sites_um'] = [[[4.32, 4.32], [4.33, 4.33]]]
+    with pytest.raises(ValueError, match='snap to one site'):
+        snap_slots([slot], (4.32, 4.32))
