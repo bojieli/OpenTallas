@@ -69,3 +69,17 @@ class ResultHeader(unittest.TestCase):
         self.assertTrue(f("S81-TYPES-R3", "col-wave2"))
         self.assertFalse(f("S81-FOO", "foo-tag"))                # a cc'd lane is not the sender
         self.assertFalse(f("S81-DIE-R3", "col-wave2"))
+
+
+class StaleEvent(unittest.TestCase):
+    def test_fail_rows_on_an_old_event_are_history(self):
+        cfg = {"dies": {"d": {"enabled": True, "event": "e2"}, "p": {"enabled": True, "event": "x", "retire_stale_event_fails": False}}}
+        st = {"items": {"a": {"die": "d", "item": "a", "event": "e1", "status": "FAIL", "reason": "boom"},
+                        "b": {"die": "d", "item": "b", "event": "e2", "status": "FAIL"},
+                        "c": {"die": "d", "item": "c", "event": "e1", "status": "SIGNED"},
+                        "e": {"die": "p", "item": "e", "event": "old", "status": "FAIL"}}}
+        KW.retire_superseded_rows(None, cfg, st, now=3)
+        got = {k: (r["status"], r.get("retire")) for k, r in st["items"].items()}
+        self.assertEqual(got["a"], ("CANCELLED", "stale-event"))
+        self.assertIn("boom", st["items"]["a"]["reason"])
+        self.assertEqual([got[k][0] for k in "bce"], ["FAIL", "SIGNED", "FAIL"])
