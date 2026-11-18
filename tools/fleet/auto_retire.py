@@ -217,7 +217,7 @@ def run(root, cfg, texts, ids, refuse, log, target_gb, apply=False, delete=None,
     return res
 
 
-LANE_SKIP = frozenset({"kw45", "rt", "hub-coord", "mq1", "mq-gate", "git", "clean-all-1115", "tools-converge", "fleet-ops-r", "signed-store", "autopilot"})
+LANE_SKIP = frozenset({"kw45", "rt", "hub-coord", "mq1", "mq-gate", "git", "clean-all-1115", "tools-converge", "fleet-ops-r", "signed-store", "autopilot", "moved"})   # moved: ~/.cache and ~/OpenTallas link into it (COORD 11-18)
 
 
 def newest_mtime(path, stop_after=None):

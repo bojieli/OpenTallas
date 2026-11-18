@@ -184,3 +184,11 @@ def test_newest_failed_attempt_of_a_type_keeps_its_db_for_24h_older_ones_go(tmp_
     kept = [x for x in ("T__a/attempt_1", "T__a/attempt_2", "T__b/attempt_1", "T__b/attempt_2") if x not in got]
     assert kept == ["T__a/attempt_2"]                       # ONE attempt for the whole type T: its newest failed attempt (2 h ago) keeps its DB; the others are listed
     assert "U/attempt_1" in got and "U/attempt_2" in got    # type U's newest failed attempt is older than 24 h: no longer kept
+
+
+def test_moved_and_infrastructure_lanes_are_never_idle_candidates(tmp_path):
+    c = str(tmp_path)
+    for n in ("moved", "hub-coord", "rt", "other"):
+        mk(c, n + "/x", OLD)
+    got = [os.path.basename(p) for p, _ in AR.lane_candidates(c, NOW, 12.0, mtime=lambda p, cut: OLD)]
+    assert "other" in got and not {"moved", "hub-coord", "rt"} & set(got)
