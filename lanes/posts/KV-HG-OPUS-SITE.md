@@ -1,0 +1,1 @@
+- 2026-11-17 21:23 PST STATE start: die-agnostic tail-copy siting hook (tail_copy_anchor.tcl, r650/r660 pattern) for bind land_pad_tail_split copies; proof on kv3_pv_v12 private kit copy epyc7:/srv/opentallas-scratch2/claude/kv-hg-opus-site (186G free). Branch claude/kv-tail-copy-site-1118.
