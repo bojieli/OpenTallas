@@ -3411,6 +3411,21 @@
        "landing_ring_narrow": {
         "type": "boolean"
        },
+       "landing_ring_lite": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+         "max_width": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 64
+         },
+         "monitors": {
+          "type": "integer",
+          "minimum": 1
+         }
+        }
+       },
        "landing_ring_wreg": {
         "type": "object",
         "additionalProperties": false,

@@ -1,0 +1,77 @@
+# RING-LITE-1 (KV-RING2-LIGHT) evidence 2026-11-18T13:42:27Z, epyc7 via ot-run, base origin/main aed901b33a6
+## run.sh (verilator lock-step LITE 1 vs 0: q identical every clk edge; lite status as declared)
+LINT ot_dp_clk_landing_ca W=2 LITE=0 warnings=10 errors=1
+LINT ot_dp_clk_landing_ca W=2 LITE=1 warnings=9 errors=1
+LINT ot_dp_clk_landing_cas W=2 LITE=0 warnings=11 errors=1
+LINT ot_dp_clk_landing_cas W=2 LITE=1 warnings=10 errors=1
+PASS_RUNS 11 of 11; MISMATCH_LINES 0
+LITE_PASS phase=0 shift=0 ready_word_checks=402136 nonzero=334935
+LITE_PASS phase=41 shift=0 ready_word_checks=390418 nonzero=325017
+LITE_PASS phase=83 shift=0 ready_word_checks=390418 nonzero=325017
+LITE_PASS phase=125 shift=0 ready_word_checks=390418 nonzero=325017
+LITE_PASS phase=208 shift=0 ready_word_checks=390418 nonzero=325017
+LITE_PASS phase=400 shift=0 ready_word_checks=390418 nonzero=325017
+LITE_PASS phase=416 shift=0 ready_word_checks=390418 nonzero=325017
+LITE_PASS phase=433 shift=0 ready_word_checks=401166 nonzero=333457
+LITE_PASS phase=624 shift=0 ready_word_checks=401166 nonzero=333457
+LITE_PASS phase=791 shift=0 ready_word_checks=401166 nonzero=333457
+LITE_PASS phase=830 shift=0 ready_word_checks=401166 nonzero=333457
+NEGCTRL_CAUGHT shift=1 (1054239 mismatch lines)
+MUTANT_CAUGHT LITE (1055353 mismatch lines)
+RC 0
+## eq.sh (yosys equiv_simple + equiv_induct -seq 4)
+A_cas_w2_d4 rc=0 Of those cells 1477 are proven and 0 are unproven
+A_cas_w2_d4_kv rc=0 Of those cells 1521 are proven and 0 are unproven
+A_cas_w2_d4_kv_narrow rc=0 Of those cells 343 are proven and 0 are unproven
+A_cas_w2_d8 rc=0 Of those cells 2406 are proven and 0 are unproven
+A_cas_w33_d4_dsrep_wreg rc=0 Of those cells 1589 are proven and 0 are unproven
+A_cas_w129_d4 rc=0 Of those cells 4324 are proven and 0 are unproven
+A_cas_w64_csc rc=0 Of those cells 1719 are proven and 0 are unproven
+A_ca_w2_d4 rc=0 Of those cells 1471 are proven and 0 are unproven
+A_ca_w33_d4 rc=0 Of those cells 1534 are proven and 0 are unproven
+B_cas_w2_d4_kv rc=0 Of those cells 30 are proven and 0 are unproven
+NEG_cas_w2_d4_kv rc=1 Of those cells 26 are proven and 4 are unproven
+NEGCTRL_CAUGHT cas_w2_d4_kv
+B_cas_w2_d4 rc=0 Of those cells 29 are proven and 0 are unproven
+NEG_cas_w2_d4 rc=1 Of those cells 25 are proven and 4 are unproven
+NEGCTRL_CAUGHT cas_w2_d4
+B_cas_w1_d4_kv rc=0 Of those cells 24 are proven and 0 are unproven
+NEG_cas_w1_d4_kv rc=1 Of those cells 20 are proven and 4 are unproven
+NEGCTRL_CAUGHT cas_w1_d4_kv
+B_cas_w4_d4_kv rc=0 Of those cells 42 are proven and 0 are unproven
+NEG_cas_w4_d4_kv rc=1 Of those cells 38 are proven and 4 are unproven
+NEGCTRL_CAUGHT cas_w4_d4_kv
+B_cas_w2_d8_kv rc=0 Of those cells 44 are proven and 0 are unproven
+NEG_cas_w2_d8_kv rc=1 Of those cells 36 are proven and 8 are unproven
+NEGCTRL_CAUGHT cas_w2_d8_kv
+B_cas_w4_d4_wreg_freg rc=0 Of those cells 58 are proven and 0 are unproven
+NEG_cas_w4_d4_wreg_freg rc=1 Of those cells 54 are proven and 4 are unproven
+NEGCTRL_CAUGHT cas_w4_d4_wreg_freg
+B_cas_w32_d4_kv rc=0 Of those cells 210 are proven and 0 are unproven
+NEG_cas_w32_d4_kv rc=1 Of those cells 206 are proven and 4 are unproven
+NEGCTRL_CAUGHT cas_w32_d4_kv
+B_ca_w2_d4_k2 rc=0 Of those cells 29 are proven and 0 are unproven
+NEG_ca_w2_d4_k2 rc=1 Of those cells 27 are proven and 2 are unproven
+NEGCTRL_CAUGHT ca_w2_d4_k2
+B_ca_w4_d4_k3 rc=0 Of those cells 41 are proven and 0 are unproven
+NEG_ca_w4_d4_k3 rc=1 Of those cells 39 are proven and 2 are unproven
+NEGCTRL_CAUGHT ca_w4_d4_k3
+STAT cas W=1 DEPTH=4 sreg greg wfall pad cells=1134
+STAT cas W=1 DEPTH=4 sreg greg wfall narrow cells=378
+STAT cas W=1 DEPTH=4 sreg greg wfall lite cells=48
+STAT cas W=2 DEPTH=4 sreg greg wfall pad cells=1134
+STAT cas W=2 DEPTH=4 sreg greg wfall narrow cells=390
+STAT cas W=2 DEPTH=4 sreg greg wfall lite cells=60
+STAT cas W=4 DEPTH=4 sreg greg wfall pad cells=1134
+STAT cas W=4 DEPTH=4 sreg greg wfall narrow cells=414
+STAT cas W=4 DEPTH=4 sreg greg wfall lite cells=84
+RC 0
+## ASAP7 RVT TT mapped cells, ot_dp_clk_landing_cas W 2 DEPTH 4 STATUS_REG GUARD_REG WFALL (kept hierarchy / flat)
+TOTAL pad_w2 hier cells=1760 flops=433 comb=1327
+TOTAL pad_w2 flat cells=753 flops=185 comb=568
+TOTAL narrow_w2 hier cells=453 flops=123 comb=330
+TOTAL narrow_w2 flat cells=440 flops=123 comb=317
+TOTAL lite_w2 hier cells=84 flops=18 comb=66
+TOTAL lite_w2 flat cells=83 flops=18 comb=65
+TOTAL lite_w4 hier cells=127 flops=28 comb=99
+TOTAL lite_w4 flat cells=125 flops=28 comb=97
