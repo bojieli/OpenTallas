@@ -373,7 +373,9 @@ def internal_pipe_check(plan, bind_dir):
     on a frame wire, invisible to the boundary lane count above) would silently break the static schedule.  When the plan carries
     any partition_types[*].relay_depth row, the declared record must be acknowledged: plan latency.internal_pipe_ack.digest ==
     internal_pipe_digest(record), written by the S81 event only after the token sim / compiler ran WITH those cycles.
-    No relay_depth row = no check (byte-identical behaviour).  Returns (errors, info)."""
+    OWNER r703/r704 (no stops; bind and LATCHECK are post-change warnings): the finding is a WARNING naming S81-DIE-R3, who owns
+    the token-sim / compiler step and the ack in its next S81 event; it never fails a bind or LATCHECK.
+    No relay_depth row = no check (byte-identical behaviour).  Returns (warnings, info)."""
     has = any(t.get("relay_depth") for t in (plan.get("partition_types") or {}).values())
     if not has:
         return [], {}
@@ -384,7 +386,7 @@ def internal_pipe_check(plan, bind_dir):
     info = dict(sink_bits=len(rec), cycles=sum(int(v) for v in rec.values()), digest=dig, ack=ack)
     if ack == dig:
         return [], info
-    return [f"LANE_ASBUILT INTERNAL_PIPE_UNACKED: {len(rec)} declared internal-pipe sink bits (+{info['cycles']} cycles summed over "
+    return [f"LANE_ASBUILT WARN INTERNAL_PIPE_UNACKED (owner S81-DIE-R3, next S81 event): {len(rec)} declared internal-pipe sink bits (+{info['cycles']} cycles summed over "
             f"bits) in bind_core_input_pipe.json, digest {dig}, plan latency.internal_pipe_ack = {ack}: the token sim / compiler must "
             "run with these cycles and the event record the digest"], info
 
@@ -412,8 +414,9 @@ def main(argv=None):
         else:
             mode = a.pricing
     recs, errs = check(plan, rows, module_of, ptype_of, types, landing_of, pricing=mode)
-    ip_errs, ip_info = internal_pipe_check(plan, a.bind_dir)
-    errs = list(errs) + ip_errs
+    ip_warn, ip_info = internal_pipe_check(plan, a.bind_dir)
+    for w in ip_warn:
+        print(w)
     sm = summary(recs)
     if ip_info:
         sm["internal_pipe"] = ip_info

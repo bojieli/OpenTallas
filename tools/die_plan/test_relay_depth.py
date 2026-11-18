@@ -103,7 +103,7 @@ def test_depth_arithmetic_rule():
 
 
 def test_latcheck_internal_pipe_gate(tmp_path):
-    """relay_depth rows -> bind_core_input_pipe.json must be acknowledged (compiler / TOK do not read it); no rows = no check"""
+    """relay_depth rows -> bind_core_input_pipe.json ack is a WARNING naming S81-DIE-R3 (r703/r704); no rows = no check"""
     import lane_asbuilt_latency as LAL
     rec = {"x.u_sink.i[0]": 2, "x.u_sink.i[1]": 2}
     (tmp_path / "bind_core_input_pipe.json").write_text(json.dumps(rec))
@@ -111,7 +111,7 @@ def test_latcheck_internal_pipe_gate(tmp_path):
     assert LAL.internal_pipe_check(off, tmp_path) == ([], {})
     on = {"partition_types": {"t": {"relay_depth": [{"inst": "u_y_a", "D": 2}]}}}
     errs, info = LAL.internal_pipe_check(on, tmp_path)
-    assert len(errs) == 1 and "INTERNAL_PIPE_UNACKED" in errs[0] and info["cycles"] == 4 and info["sink_bits"] == 2
+    assert len(errs) == 1 and "INTERNAL_PIPE_UNACKED" in errs[0] and "S81-DIE-R3" in errs[0] and "WARN" in errs[0] and info["cycles"] == 4 and info["sink_bits"] == 2
     on["latency"] = {"internal_pipe_ack": {"digest": LAL.internal_pipe_digest(rec)}}
     assert LAL.internal_pipe_check(on, tmp_path)[0] == []
     rec["x.u_sink.i[2]"] = 1                                           # a changed record is no longer acknowledged

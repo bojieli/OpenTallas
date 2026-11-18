@@ -5158,10 +5158,10 @@ def cmd_bind(a):
         (out / "bind_lane_asbuilt.json").write_text(json.dumps(dict(summary=la_sum, lanes=la_recs), indent=1) + "\n")
         rep["lane_asbuilt"] = la_sum
         B.errors.extend(la_errs)
-        ip_errs, ip_info = LAL.internal_pipe_check(raw, out)      # S81-COLGEN-3: relay_depth cycles must be acknowledged
+        ip_warn, ip_info = LAL.internal_pipe_check(raw, out)      # S81-COLGEN-3: relay_depth cycles: WARNING naming S81-DIE-R3
         if ip_info:
             rep["lane_asbuilt"]["internal_pipe"] = ip_info
-        B.errors.extend(ip_errs)
+        B.warns.extend(ip_warn)
         if la_errs:
             B.errors.append(f"LANE_ASBUILT_TOTAL {len(la_errs)} of {la_sum['lanes']} lanes deliver off the latency table "
                             f"(classes {la_sum['classes']}; full list bind_lane_asbuilt.json)")
