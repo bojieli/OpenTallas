@@ -147,3 +147,22 @@ def test_installer_refuses_on_hub_and_localhost_and_unit_runs_the_full_pass():
     svc = (H / "systemd" / "ot-auto-clean.service").read_text(); tm = (H / "systemd" / "ot-auto-clean.timer").read_text()
     assert "AC_FULL=1" in svc and "rt/current/tools/fleet/ot-auto-retire-run.sh apply" in svc and "rm -rf" not in svc
     assert "OnCalendar=*:0/30" in tm
+
+
+def test_a_permission_error_inside_an_attempt_never_ends_the_pass(tmp_path):
+    cfg, st = base(tmp_path); c = tree(tmp_path)
+    g = types.SimpleNamespace(ALLOW_EXACT=str(tmp_path / "allow.txt"), refuse=lambda p, prot=None: None)
+    def boom(p):
+        raise PermissionError(13, "Permission denied", p)
+    seen = []
+    res = AR.run_attempts(c, cfg, st, "", set(), g, set(), seen.append, apply=True, delete=boom, now=NOW)
+    assert res and all(r["result"] == "FAILED" and r["error"].startswith("PermissionError") for r in res)       # every candidate was tried, none raised
+    p = mk(str(tmp_path), "z/attempt_1", OLD)
+    os.makedirs(os.path.join(p, "gen")); os.chmod(os.path.join(p, "gen"), 0o555)
+    AR.strip_keep_reports(p)                                                                                    # read-only dir: no exception
+    assert not os.path.exists(os.path.join(p, "gen")) or os.listdir(p) == ["gen"]
+
+
+def test_runner_covers_scratch3_and_never_overlaps():
+    r = (H / "ot-auto-retire-run.sh").read_text()
+    assert "/srv/opentallas-scratch3/claude" in r and "--root \"$R/kw45\"" in r and "flock -n 8" in r and "scratch3_free_gb" in r

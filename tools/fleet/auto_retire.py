@@ -362,20 +362,27 @@ KEEP_NAMES = ("reports", "logs", "REPORTS-KEPT.txt")      # COORD 11-18: reports
 def strip_keep_reports(p, rm=None):
     """delete an attempt dir's contents except reports/, logs/ and REPORTS-KEPT.txt (the dir itself stays when one of them exists); a dir with none of them goes whole.
     The guard check happened on the dir before; every entry removed here is below it.  No rm: shutil only, symlinks unlinked, never followed."""
+    # 11-18: a PermissionError (a root-owned file inside) used to escape and end the whole pass with rc 1 on all six hosts (0 deleted, every 30 min): errors are skipped here and the
+    # attempt is reported FAILED by the caller when something is left.
+    rm = rm or (lambda q: shutil.rmtree(q, ignore_errors=True))
     names = os.listdir(p)
     keep = [n for n in names if n in KEEP_NAMES]
     if not keep:
-        (rm or shutil.rmtree)(p)
+        os.system("find " + shlex_quote(p) + " -type d -exec chmod u+w {} +")
+        rm(p)
         return
     for n in names:
         if n in KEEP_NAMES:
             continue
         q = os.path.join(p, n)
-        if os.path.islink(q) or not os.path.isdir(q):
-            os.unlink(q)
-        else:
-            os.system("find " + shlex_quote(q) + " -type d -exec chmod u+w {} +")
-            (rm or shutil.rmtree)(q)
+        try:
+            if os.path.islink(q) or not os.path.isdir(q):
+                os.unlink(q)
+            else:
+                os.system("find " + shlex_quote(q) + " -type d -exec chmod u+w {} +")
+                rm(q)
+        except OSError:
+            pass
 
 
 def shlex_quote(x):
@@ -417,7 +424,10 @@ def run_attempts(claude, cfg, state, refs, ids, g, prot, log, apply=False, delet
             rec["result"] = "WOULD-DELETE"
         else:
             b = free()
-            (delete or strip_keep_reports)(p)
+            try:
+                (delete or strip_keep_reports)(p)
+            except Exception as e:                      # one attempt never ends the pass
+                rec["error"] = "%s: %s" % (type(e).__name__, str(e)[:100])
             left = os.listdir(p) if os.path.isdir(p) else []
             rec.update(result="DELETED" if not left or all(n in KEEP_NAMES for n in left) else "FAILED", free_before=round(b, 1), free_after=round(free(), 1))
         log(rec); res.append(rec)
