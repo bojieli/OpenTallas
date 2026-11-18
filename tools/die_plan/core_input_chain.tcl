@@ -393,7 +393,13 @@ foreach nx_cl [lsort [dict keys $nx_sinks]] {
   foreach i [$nc_blk getInsts] { if {[nc_cluster $i] eq $nx_cl && ![[$i getMaster] isBlock] && [nc_mov $i]} { lappend nx_mem $i; dict set nx_in [$i getName] 1 } }
   # the xstn's anonymous logic (generic gates and buffers between its registers): every cell next to a member whose
   # loads are all members joins it, to a fixpoint (a gate that also feeds the outside world stays where it is)
-  for {set nx_r 0} {$nx_r < 4} {incr nx_r} {
+  # FLOW-QC-CB 11-17 (cbn_q01 tap_d[431/439/442/465], cap[10] at -42 .. -47.5): the join ran 4 rounds although its comment says
+  # "to a fixpoint"; a buffer chain of 8-10 cells between b_d and the gate cone joins one cell per round from the member
+  # side, so 4-6 cells of it stayed at their GPL positions (path 1,010-1,040 um built for 140-210 um direct, buffers 515-560
+  # of ~800 ps).  The limit is now OT_NK_XSTN_JOIN_ROUNDS (default 32); the loop still stops as soon as no cell joins.
+  set nx_rounds 32
+  if {[info exists ::env(OT_NK_XSTN_JOIN_ROUNDS)] && [string is integer -strict $::env(OT_NK_XSTN_JOIN_ROUNDS)]} { set nx_rounds $::env(OT_NK_XSTN_JOIN_ROUNDS) }
+  for {set nx_r 0} {$nx_r < $nx_rounds} {incr nx_r} {
     set nx_add {}
     foreach i $nx_mem {
       foreach t [$i getITerms] {
