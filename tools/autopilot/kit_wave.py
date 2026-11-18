@@ -2924,7 +2924,7 @@ def select(rows, cfg, die, state, plan_types=None):
             pass        # queued volume cancelled by a failed pilot: class now proven, or no class FAIL stands any more
         elif rec and is_wait_dep(rec) and not rec.get("provisional") and prov_item(d, r["item"]):
             pass        # KW-PROV-1: a gen-time WAIT-DEP stop (child view missing) relaunches on provisional child views
-        elif rec and f"{r['item']}@{rec.get('attempt')}" not in retry and not (FG.stops_off_die(cfg, die) and so_failed(rec)):
+        elif rec and f"{r['item']}@{rec.get('attempt')}" not in retry and not (FG.stops_off_die(cfg, die) and (so_failed(rec) or stale_cancel(rec, d))):
             why = f"wave {rec.get('status')} {rec.get('class', '')} on this plan block (no blind retry)".replace("  ", " ")
         elif rec and not FG.stops_off_die(cfg, die) and needs_lane(cfg, state, die, r["item"], rec, r.get("parent_item"), r.get("kind")):
             why = NEEDS_LANE                         # WAVE-RECIPE-1: design FAIL, same kit inputs -> a lane, not a re-key
@@ -2972,6 +2972,7 @@ def select(rows, cfg, die, state, plan_types=None):
             todo = [c for c in cls if not cls_live(c) and (not only_retry or released(c))
                     and (not its.get(item_key(die, ev, c, blk(c)))
                     or f"{c}@{its[item_key(die, ev, c, blk(c))].get('attempt')}" in retry
+                    or (FG.stops_off_die(cfg, die) and stale_cancel(its[item_key(die, ev, c, blk(c))], d))
                     or (is_wait_dep(its[item_key(die, ev, c, blk(c))]) and not its[item_key(die, ev, c, blk(c))].get("provisional")
                         and prov_item(d, c)))]
             nlh = [c for c in todo if needs_lane(cfg, state, die, c, its.get(item_key(die, ev, c, blk(c))), r["item"], r.get("kind"))]
@@ -11137,6 +11138,13 @@ def exec_tools_digest(root=None):
 def so_failed(rec):
     """WAVE-PILOT-FIX 11-18 (OWNER r705 (2), COORD: S81 FAIL rows / queue-FAIL rows were never re-armed): a row whose attempt failed in the tool (FAIL, or ENQUEUED with a queue FAIL)"""
     return rec.get("status") == "FAIL" or (rec.get("status") == "ENQUEUED" and rec.get("q_status") == "FAIL")
+
+
+def stale_cancel(rec, d):
+    """WAVE-PILOT-FIX 11-18 (COORD durable class fix): a CANCELLED row (SUPERSEDED or any other class) left by an event that is not the die's current one, on a plan block that
+    did not change, is not 'already in the wave': no live row exists for the type on the current event, so the type relaunches (a cancelled volume row keeps its own rule)"""
+    return (rec.get("status") == "CANCELLED" and not rec.get("volume")
+            and bool(d.get("event")) and rec.get("event") not in (None, "", d.get("event")))
 
 
 def so_same_input(cfg, die, r, rec):

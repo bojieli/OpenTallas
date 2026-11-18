@@ -348,3 +348,25 @@ class ExecToolsDigest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class StaleCancel(unittest.TestCase):
+    """COORD 11-18: a CANCELLED / SUPERSEDED row of an older event on an unchanged plan block is not 'already in the wave'"""
+
+    def test_cancelled_row_of_another_event_is_not_in_the_wave(self):
+        d = {"event": "N1B"}
+        self.assertTrue(KW.stale_cancel({"status": "CANCELLED", "class": "SUPERSEDED", "event": "L2"}, d))
+        self.assertTrue(KW.stale_cancel({"status": "CANCELLED", "class": "INFRA", "event": "L2"}, d))
+
+    def test_current_event_volume_and_live_rows_keep_their_rules(self):
+        d = {"event": "N1B"}
+        self.assertFalse(KW.stale_cancel({"status": "CANCELLED", "class": "SUPERSEDED", "event": "N1B"}, d))
+        self.assertFalse(KW.stale_cancel({"status": "CANCELLED", "volume": "v", "event": "L2"}, d))
+        self.assertFalse(KW.stale_cancel({"status": "RUNNING", "event": "L2"}, d))
+        self.assertFalse(KW.stale_cancel({"status": "FAIL", "event": "L2"}, d))
+        self.assertFalse(KW.stale_cancel({"status": "CANCELLED", "event": "L2"}, {}))
+
+    def test_select_relaunches_it_only_under_stops_off(self):
+        src = open(KW.__file__).read()
+        self.assertIn("(so_failed(rec) or stale_cancel(rec, d))", src)
+        self.assertIn("stale_cancel(its[item_key(die, ev, c, blk(c))], d)", src)
