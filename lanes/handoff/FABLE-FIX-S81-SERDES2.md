@@ -204,3 +204,19 @@ I took the H lineage over at H12 and never generated the base kit, so (1) and (2
   This is the first run that can reach the kit finish / sign-off steps: expect further latent blockers there. MEASUREMENT ONLY.
 - S81-SERDES-GEN is alive: r638 (part 1) merged, part 2 READY claude/s81-serdes-gen2-1117 @e5e787f0642d; it has NOT posted h-form PASS.
   Asked it to wait for branch 3.
+
+## State 23:55 PST 11-17 (resumed 22:26 after the Fable limit; S81-FIX-OPUS covered 20:00-22:27 and keeps svc/strip)
+- H17 r3: DRC 0, antenna 0, 5_2_route + 6_final written; RCX passes with pad_abut_strip.tcl (PRE_FINAL_REPORT; r678 =
+  claude/s81-pad-abut-strip-1118 @146e658a9e20, same file as the kit copy). 6_report then stops in the inline PSM check (rail defect, expected).
+- H17 ROUTED STA (kit signoff.py, epyc9 H17 kit signoff_meas_072023/): NOT SIGNED. TT setup -117.47 / 430 ends / TNS -24248;
+  FF hold -55.85, 258 internal reg-to-reg + 33 ports; TT hold -42.15 / 134. Worst: setup u_dec.u_out.u_cmem -> u_out.bsrc[0][476];
+  hold u_dec.u_lpl_2_w.wc[1] -> b[2][32]. GRT had said -27.17 / +0.12: the GRT read was 90 ps / 56 ps optimistic. Cause NOT known.
+- SPEF: 204 pin-not-found = 4 forwarded-clock output nets aliased to ports by assign in 6_final.v; not the strip; port timing only.
+- SPCYC/SYN_LOCAL: not set in H17, the wave kits or the D6z kit; D8d plan file not opened.
+- h-form FAILs on D6z (4 defines + 17 RTL files missing in the plan tree); S81-DIE-R3 carries them in D8d. 11 serdes stay held on
+  result:S81-SERDES-GEN:h-form.
+NEXT
+1. Endpoint census on H17 6_final.odb + spef (my ttsk.tcl crashed OpenSTA twice on the GRT DB: use report_checks -group_path_count N
+   -format json or the signoff session.tcl frame instead): classes, counts, launch/capture clock arrivals; compare the same paths at GRT.
+2. Per class: capture-skew ECO (CAPSKEW-ECO tools/die_plan/capskew_eco_run.py), GRT hold margin, or plan (D8d t42 split).
+3. Rebuild t13 from D8d generated kits (rail clean), then the other 10; sign-off, export AGIdock + rtx-pro + INDEX. Nothing exported so far.
