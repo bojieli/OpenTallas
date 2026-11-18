@@ -26,8 +26,11 @@ def test_run_gets_pull_never_and_a_pinned_id_for_an_unpinned_tag(tmp_path):
 def test_bare_name_and_asap7lock_are_pinned_other_images_untouched(tmp_path):
     _, out, _ = shim(tmp_path, "run", "openroad/orfs", "true")
     assert PIN in out
-    _, out, _ = shim(tmp_path, "run", "python:3", "true")
-    assert "python:3" in out and "--pull=never" in out and PIN not in out
+    argv = ["run", "--rm", "-it", "-v", "/a:/b", "-e", "X=1", "python:3", "python", "-c", "print(1)"]
+    rc, out, _ = shim(tmp_path, *argv)
+    assert rc == 0 and out == argv                                  # any image outside the pinned set: every argument passed through unchanged
+    for argv in (["create", "ubuntu:24.04", "true"], ["run", "--pull=always", "alpine:3"], ["run", "verilator/verilator:v5.032", "x"], ["build", "-t", "x", "."]):
+        assert shim(tmp_path, *argv)[1] == argv, argv
 
 
 def test_an_explicit_pull_policy_is_respected_and_other_commands_pass_through(tmp_path):
@@ -70,3 +73,9 @@ def test_no_launcher_pulls_a_flow_image():
                 if "docker pull" in ln and ("orfs" in ln or "verilator" in ln) and not ln.lstrip().startswith("#"):
                     bad.append("%s: %s" % (p.relative_to(H.parent), ln.strip()[:100]))
     assert not [b for b in bad if "ot-docker" not in b], bad
+
+
+def test_install_refuses_on_the_hub_and_localhost():
+    for hn in ("tolerant-swine", "ubuntu"):
+        r = subprocess.run(["bash", "-c", "hostname() { echo %s; }; export -f hostname; bash %s" % (hn, H / "install_docker_shim.sh")], capture_output=True, text=True, timeout=30)
+        assert r.returncode == 64 and "build hosts only" in r.stderr, hn
