@@ -148,7 +148,23 @@ def patch_session(text, corner):
     """the sign-off session plus the endpoint dump (FF: hold violators with their start kind; TT: setup of every endpoint)"""
     if text.count(MARK) != 1:
         raise SystemExit("sign-off session.tcl has no unique %r marker (signoff.py version mismatch)" % MARK)
+    if "/out/ep_%s.tsv" % corner in text:
+        return text                      # ROUTE-LOSS 11-18: a current signoff.py writes the table itself (signoff.ep_dump_tcl)
     return text.replace(MARK, (FF_BLOCK if corner == "ff" else TT_BLOCK) + MARK)
+
+
+def native_tables(so):
+    """ROUTE-LOSS 11-18: True when the sign-off dir already holds both endpoint tables of its own sessions (ff/ep_ff.tsv, tt/ep_tt.tsv,
+    each newer than its sta.log start = written by that session), so the two dump sessions are not run again"""
+    so = Path(so)
+    for c in ("ff", "tt"):
+        f = so / c / ("ep_%s.tsv" % c)
+        try:
+            if not f.is_file() or len(f.read_text().splitlines()) < 1 or "SO EP_DUMP %s " % c not in (so / c / "sta.log").read_text(errors="replace"):
+                return False
+        except OSError:
+            return False
+    return True
 
 
 def retarget_cmd(cmd, old_dir, new_dir, tag):
@@ -251,10 +267,16 @@ def main(argv=None):
         (out / "ins" / "libs.txt").write_text("\n".join(libs_all) + "\n")
         (out / "ins" / "libs_std.txt").write_text("\n".join(libs_std) + "\n")
 
-    # 2. endpoint dump from the sign-off's own sessions
+    # 2. endpoint dump from the sign-off's own sessions (ROUTE-LOSS 11-18: a current sign-off already wrote both tables)
     procs = []
+    native = (not dry) and native_tables(so1)
+    res["steps"]["endpoint_tables"] = "signoff" if native else "dump"
     for c in ("ff", "tt"):
         d = out / "dump" / c
+        if native:
+            d.mkdir(parents=True, exist_ok=True)
+            shutil.copy(so1 / c / ("ep_%s.tsv" % c), d / ("ep_%s.tsv" % c))
+            continue
         if not dry:
             shutil.copytree(so1 / c, d)
             (d / "session.tcl").write_text(patch_session((so1 / c / "session.tcl").read_text(), c))

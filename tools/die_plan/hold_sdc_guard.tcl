@@ -105,6 +105,14 @@ proc ::ot_hsg_signal_ff {} {
   if {![info exists ::env(OT_VCLK_CORNER)] || $::env(OT_VCLK_CORNER) ne "ff"} { return }
   if {![info exists ::env(CORNER)] || [string toupper $::env(CORNER)] ne "BC"} { return }
   if {![info exists ::env(OT_RC_SIGNAL)] || $::env(OT_RC_SIGNAL) ne "1"} { return }
+  # ROUTE-LOSS 11-18 (FABLE-FIX-ROUTE-LOSS): OT_RC_SIGNAL_HOLD = 0 (config.mk / item env) keeps the kit's clock-calibrated layer table for the
+  # FF hold repair.  Measured on QC sle_hc0__cl38badc56 (same DB at GRT and routed, sign-off frame): on the signal table x1.25 every clock
+  # arrival is 26-50 ps late vs routed RCX (kit table: +8) and the 152 routed hold failures read 7 ps better than on the kit table
+  # (route minus GRT -21.0 vs -13.9 ps; bulk p05 -6.5 vs -2.6).  Default unchanged (signal table) until a second kit confirms.
+  if {[info exists ::env(OT_RC_SIGNAL_HOLD)] && $::env(OT_RC_SIGNAL_HOLD) eq "0"} {
+    puts "OT_RC_SIGNAL hold repair keeps the kit layer table (OT_RC_SIGNAL_HOLD=0)"
+    return
+  }
   set helper [file join $::ot_hsg_dir rc_signal_adjust.tcl]
   if {![file isfile $helper]} { error "OT_HOLD_SDC configured signal RC helper missing: $helper" }
   if {![info exists ::env(LAYER_PARASITICS_FILE)] || ![file isfile $::env(LAYER_PARASITICS_FILE)]} { error "OT_HOLD_SDC configured signal RC layer table missing" }

@@ -1208,6 +1208,50 @@ def ft_fill_model(decl, model, corners):
     return model
 
 
+# ROUTE-LOSS 11-18 (FABLE-FIX-ROUTE-LOSS): every sign-off writes the per-endpoint tables the post-route internal hold insert needs
+# (hold_eco_internal: FF hold violators with start / end kind, TT setup room per capture pin), in the sign-off frame itself.  Measured on QC
+# sle_hc0__cl38badc56: the 152 routed FF hold failures are a 0.3 % tail made by per-leaf clock arrival error (capture clock 18 ps later
+# routed than at GRT), not a signal RC bias (bulk -0.9 ps); a GRT margin that covers them lifts 46,487 ends, the post-route insert pads 152.
+# The insert was sized blind in single-mode kits (the FF ECO session read its TT room at the FF corner) or needed a second full sign-off
+# session per corner only to write these files (hold_eco_internal_run.py).  Same text as that tool's dump blocks; the TT table stops at
+# EP_TT_SLACK_MAX_PS (an end above it pays the 4-cell cap anyway).  A failure prints SO EP_DUMP error and never stops the session.
+EP_MARK = "# ---- KW-FIX-24 11-06: STD hold violators by startpoint kind"
+EP_TT_SLACK_MAX_PS = 600
+EP_FF_TCL = r"""if {[catch {
+  set fh [open /out/ep_ff.tsv w]
+  puts $fh "endpoint\tstartpoint\tstart_kind\tend_kind\tff_hold_slack_ps"
+  set so_ep_n 0
+  foreach pe [find_timing_paths -path_delay min -slack_max 0 -group_path_count 1000000 -unique_paths_to_endpoint -sort_by_slack] {
+    set e [get_property $pe endpoint]; set s [get_property $pe startpoint]
+    set en [get_full_name $e]
+    set sk [expr {[llength [get_ports -quiet [get_full_name $s]]] ? "port" : "reg"}]
+    set ek [expr {[llength [get_ports -quiet $en]] ? "port" : "reg"}]
+    puts $fh "$en\t[get_full_name $s]\t$sk\t$ek\t[so_ps [get_property $pe slack]]"; incr so_ep_n
+  }
+  close $fh
+  so EP_DUMP ff $so_ep_n
+} so_ep_msg]} { so EP_DUMP error $so_ep_msg }
+"""
+EP_TT_TCL = r"""if {[catch {
+  set fh [open /out/ep_tt.tsv w]
+  puts $fh "endpoint\ttt_setup_slack_ps"
+  set so_ep_n 0
+  foreach pe [find_timing_paths -path_delay max -slack_max @EP_TT_MAX@ -group_path_count 1000000 -unique_paths_to_endpoint -sort_by_slack] {
+    puts $fh "[get_full_name [get_property $pe endpoint]]\t[so_ps [get_property $pe slack]]"; incr so_ep_n
+  }
+  close $fh
+  so EP_DUMP tt $so_ep_n slack_max_ps @EP_TT_MAX@
+} so_ep_msg]} { so EP_DUMP error $so_ep_msg }
+"""
+
+
+def ep_dump_tcl(corner):
+    """the corner's endpoint-table block ('' for a corner the insert does not read)"""
+    if os.environ.get("OT_SIGNOFF_EP_DUMP", "1").strip() == "0":
+        return ""
+    return {"ff": EP_FF_TCL, "tt": EP_TT_TCL.replace("@EP_TT_MAX@", str(EP_TT_SLACK_MAX_PS))}.get(corner, "")
+
+
 def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FANOUT_MAX, odb="6_final.odb",
                 ff_vclk="sdc", ff_bound_ps=None, hold_in_min=None, hold_out_min=None, hold_in_min_ports=None, core_taps_ff=False, hold_out_min_ports=None,
                 ft_decl=None, tap_window=None, droop=None, pair_targets=False, fwd_ring=None, margin_policy=None,
@@ -1324,6 +1368,9 @@ def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FA
                    "  puts \"CHILD_CLOCK_WITNESS_FAILED $so_witness_error\"\n}\n"
                    "unset -nocomplain ::ot_ps_retained_pairs ::ot_ps_retained_counts ::ot_ps_retain_graph ::ot_ps_parent_targets ::ot_ps_parent_relations\n")
         t = t.replace("so PAIR_DONE 1\n", "so PAIR_DONE 1\n" + capture, 1)
+    ep = ep_dump_tcl(corner)
+    if ep and t.count(EP_MARK) == 1:
+        t = t.replace(EP_MARK, ep + EP_MARK)
     return t
 
 

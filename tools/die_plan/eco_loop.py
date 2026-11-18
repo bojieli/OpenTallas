@@ -189,6 +189,46 @@ def targeted_hold_case(base_signoff):
         return False
 
 
+_BASE_SIGNOFF = ContextVar("late_eco_base_signoff", default=None)
+
+
+def static_hold_plan(kit, base_signoff, out_dir, tools=HERE):
+    """ROUTE-LOSS 11-18 (FABLE-FIX-ROUTE-LOSS): the targeted internal hold insert of a SINGLE-MODE kit, priced in both sign-off corners.
+    The b<N> pass is an FF-only session, so the in-session planner (hold_eco_internal_plan.tcl) read the 'TT setup room' of every capture
+    pin at the FF corner: far too large, and a pad on a TT-critical pin then cost setup unseen (QC sle_hc1: FF hold fixed, TT -59.5 -> -141).
+    When the base sign-off wrote its endpoint tables (signoff.ep_dump_tcl: ff/ep_ff.tsv, tt/ep_tt.tsv) the plan is made here from them
+    (hold_eco_internal.py plan: FF hold slack and TT setup slack of the sign-off frame) and handed to the pass as OT_PRD_HOLD_PLAN.
+    -> {plan, endpoints, rows, summary} or None (two-mode kit, tables missing / unreadable, or nothing selected: the caller keeps the
+    in-session planner)."""
+    if hold_mm(kit) or not base_signoff:
+        return None
+    so = Path(base_signoff).parent
+    if not ((so / "ff" / "ep_ff.tsv").is_file() and (so / "tt" / "ep_tt.tsv").is_file()):
+        return None
+    try:
+        import importlib.util
+        mods = {}
+        for name in ("hold_eco_internal", "hold_eco_internal_run"):
+            spec = importlib.util.spec_from_file_location(name + "_eco_loop", Path(tools) / (name + ".py"))
+            mods[name] = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(mods[name])
+        out_dir = Path(out_dir)
+        out_dir.mkdir(parents=True, exist_ok=True)
+        n = mods["hold_eco_internal_run"].merge_endpoints(so, out_dir / "hold_endpoints.tsv")
+        hei = mods["hold_eco_internal"]
+        p = hei.plan(hei.read_endpoints((out_dir / "hold_endpoints.tsv").read_text()))
+        hei.write_plan(p, str(out_dir / "plan.tsv"))
+        rows = [ln for ln in (out_dir / "plan.tsv").read_text().splitlines() if ln and not ln.startswith("#")]
+    except Exception as e:                                      # noqa: BLE001  a planning failure keeps the in-session planner
+        print(f"OT_ECO_HOLD_PLAN fallback (in-session planner): {type(e).__name__}: {e}", flush=True)
+        return None
+    if not rows:
+        return None
+    print(f"OT_ECO_HOLD_PLAN sign-off priced: {n} negative FF hold ends, {len(rows)} capture pins padded "
+          f"({json.dumps(p.get('summary', {}), sort_keys=True)})", flush=True)
+    return dict(plan=str(out_dir / "plan.tsv"), endpoints=n, rows=len(rows), summary=p.get("summary", {}))
+
+
 def late_hold_scope(kit):
     """Late ECO defaults to core-owned paths: exclude input starts AND output ends.
 
@@ -889,7 +929,14 @@ def iterate(n, src, root, kit, runner, so, mode, hm, mem, cpus, run, image=IMAGE
         if repair_rc:
             env["OT_PRD_REPAIR_RC"] = repair_rc
         if _HOLD_TARGETED.get() and v[0] in "mb":
-            env["OT_PRD_HOLD_TARGETED"] = "1"      # the hold pass of a hold-only case: targeted internal insert (HOLD-FLOW-R)
+            # ROUTE-LOSS 11-18: a single-mode b pass gets the plan priced in the sign-off's own FF and TT frames (static_hold_plan);
+            # no tables (older sign-off) or a two-mode kit = the in-session planner as before
+            hp = static_hold_plan(kit, _BASE_SIGNOFF.get(), Path(root) / f"i{n}{tag}_holdplan") if v[0] == "b" else None
+            if hp:
+                env["OT_PRD_HOLD_PLAN"] = hp["plan"]
+                it["hold_plan"] = hp
+            else:
+                env["OT_PRD_HOLD_TARGETED"] = "1"      # the hold pass of a hold-only case: targeted internal insert (HOLD-FLOW-R)
         # KIT-OPS-4: no OT_VCLK_CORNER override here: a TT-only pass must not see ff (kit_modes), the b pass gets ff from variant.env (prd_mk.sh)
         stag = "" if len(vs) == 1 else "_" + v[0]
         if step("prd_mk" + stag, ["bash", PRD / "prd_mk.sh", s, pd, v, so], env=env):
@@ -1089,9 +1136,11 @@ def run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold_
         return _run_loop(**options)
     token = _LATE_HOLD_SCOPE.set(late_hold_scope(kit))
     t2 = _HOLD_TARGETED.set(targeted_hold_case(base_signoff))
+    t3 = _BASE_SIGNOFF.set(str(base_signoff))
     try:
         return _run_loop(**options)
     finally:
+        _BASE_SIGNOFF.reset(t3)
         _HOLD_TARGETED.reset(t2)
         _LATE_HOLD_SCOPE.reset(token)
 
