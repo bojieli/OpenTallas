@@ -4099,7 +4099,10 @@ class Binder:
                             nm = short_id(f"pd{kd}_{L['iname']}_{j}_{sv_id(tag)}_{d[7]}", 100)
                             pads[bkey] = nm
                             decl.append(f"    wire [0:0] {nm};")
-                            body.append(f"    ot_dp_dly #(.W(1), .D({kd})) u_{nm} (.clk(clk), .d({src}), "
+                            # keep_hierarchy (KV-HG-OPUS-SITE 11-18): the copies of one bus bit at equal depth are identical
+                            # flops and Yosys opt_merge folded them back into one chain (kv3_pv_v12: 3,155 of 22,620 copy flops
+                            # left, every core of a pad read one flop again); a kept instance is never merged
+                            body.append(f"    (* keep_hierarchy *) ot_dp_dly #(.W(1), .D({kd})) u_{nm} (.clk(clk), .d({src}), "
                                         f".q({nm}));  // landing pad tail copy for core {tag}: as-built relative timing")
                         return f"{pads[bkey]}[0]"
                     if key not in pads:

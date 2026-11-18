@@ -125,6 +125,8 @@ def test_key_absent_identical_and_key_on_splits(tmp_path, monkeypatch):
     tails = [x for x in pad_s if "_t_" not in x[1]]
     assert len(trunk) == 5 and {d for d, *_ in trunk} == {"1"} and all(src.endswith("]") and "_q[" in src for _d, _n, src, _q in trunk)
     assert len(tails) == 10 and {d for d, *_ in tails} == {"2"}
+    # KV-HG-OPUS-SITE 11-18: every copy is a kept instance (else Yosys opt_merge folds equal-depth copies of one bit back)
+    assert rtl_s.count("(* keep_hierarchy *) ot_dp_dly #") == 10 and "keep_hierarchy *) ot_dp_dly" not in rtl_b
     assert {src for _d, _n, src, _q in tails} == {f"{q}[0]" for _d, _n, _s, q in trunk}
     assert sum("_u_s0_" in n for _d, n, *_ in tails) == 5 and sum("_u_s1_" in n for _d, n, *_ in tails) == 5
     for _d, nm, _src, _q in tails:
