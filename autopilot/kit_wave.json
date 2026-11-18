@@ -6186,7 +6186,9 @@
     "col_h9_r2__t1__cl774acf45__pve3ab90e7@4",
     "col_h9_r2__t1__clce45cab5__pv8b5a5980@6",
     "col_h9_r2__t1__clce45cab5__pvb3f647ea@5",
-    "col_h9_r2__t1__clce45cab5__pve0486b40@6"
+    "col_h9_r2__t1__clce45cab5__pve0486b40@6",
+    "dsdv_slice_lepe_mu_LP__t2@16",
+    "dsdv_slice_lepe_nh_mus_LP__t1@22"
    ],
    "take_states": [
     "*"
@@ -7439,7 +7441,8 @@
     "svc_hi_dsdv_svc_rs__t4@8": "FLOW-FIX: S81-KITRTL-NETMAP-1118 main c2c35717a15 (t56 kit_ln_copies), 6f3e1709216 (svc apply_kit resolved bound path); verified on the d8t bind (svc closure 4 steps pass, t56 kit-rtl completes)",
     "svc_lo_dsdv_svc_rs__t1@7": "FLOW-FIX: S81-KITRTL-NETMAP-1118 main c2c35717a15 (t56 kit_ln_copies), 6f3e1709216 (svc apply_kit resolved bound path); verified on the d8t bind (svc closure 4 steps pass, t56 kit-rtl completes)",
     "svc_lo_dsdv_svc_rs__t3@7": "FLOW-FIX: S81-KITRTL-NETMAP-1118 main c2c35717a15 (t56 kit_ln_copies), 6f3e1709216 (svc apply_kit resolved bound path); verified on the d8t bind (svc closure 4 steps pass, t56 kit-rtl completes)",
-    "svc_lo_dsdv_svc_rs__t6@7": "FLOW-FIX: S81-KITRTL-NETMAP-1118 main c2c35717a15 (t56 kit_ln_copies), 6f3e1709216 (svc apply_kit resolved bound path); verified on the d8t bind (svc closure 4 steps pass, t56 kit-rtl completes)"
+    "svc_lo_dsdv_svc_rs__t6@7": "FLOW-FIX: S81-KITRTL-NETMAP-1118 main c2c35717a15 (t56 kit_ln_copies), 6f3e1709216 (svc apply_kit resolved bound path); verified on the d8t bind (svc closure 4 steps pass, t56 kit-rtl completes)",
+    "__batch_s81colflow_lpbbhdr_0925": "2 LP rows FAIL gen macro_param_blackboxes no RTL header for ot_s81_mu72_lnland_nst -> fixed c860f199a9c (header found in bind source_modules), in rt/current; S81-COL-FLOW-1118 per COORD"
    },
    "place_spill": true,
    "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
