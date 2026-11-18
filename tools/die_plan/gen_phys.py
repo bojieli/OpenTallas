@@ -1783,6 +1783,20 @@ def pad_abut_wire_config(mk, kd):
     return mk[:m.start()] + m.group(1) + "/work/post_drt_chain.tcl" + mk[m.end():]
 
 
+def pad_abut_strip_config(mk, kd):
+    """PAD-ABUT-STRIP-1 (S81-FIX-OPUS 11-17, lever 5): config.mk text with PRE_FINAL_REPORT_TCL = pad_abut_strip.tcl, the partner of
+    pad_abut_wire.tcl: the in-pin pad segments are removed again before OpenRCX (ODB-0420 tilepin inside iterm).  An existing
+    PRE_FINAL_REPORT_TCL is kept working through a chain file that sources the strip first."""
+    m = re.search(r"^((?:override\s+)?export\s+PRE_FINAL_REPORT_TCL\s*=\s*)(\S+)\s*$", mk, re.M)
+    if not m:
+        return mk.rstrip("\n") + "\nexport PRE_FINAL_REPORT_TCL = /work/pad_abut_strip.tcl\n"
+    if m.group(2) in ("/work/pad_abut_strip.tcl", "/work/pre_final_chain.tcl"):
+        return mk
+    (Path(kd) / "pre_final_chain.tcl").write_text("# GENERATED (PAD-ABUT-STRIP-1): PRE_FINAL_REPORT steps in order\n"
+                                                  f"source /work/pad_abut_strip.tcl\nsource {m.group(2)}\n")
+    return mk[:m.start()] + m.group(1) + "/work/pre_final_chain.tcl" + mk[m.end():]
+
+
 def pad_bump_dt_tcl(bumps):
     """S81-PMATX-DT: PRE_GLOBAL_PLACE Tcl marking the nets of the macro_pin pads dont_touch.  A marked net must be
     the direct pad net (its port BTerm + exactly one ITerm of the pad's macro master, an output for an output pad and an
@@ -6612,6 +6626,9 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         shutil.copyfile(Path(__file__).with_name("pad_abut_wire.tcl"), kd / "pad_abut_wire.tcl")
         mk = (kd / "config.mk").read_text()
         (kd / "config.mk").write_text(pad_abut_wire_config(mk, kd))
+        # PAD-ABUT-STRIP-1: OpenRCX stops (ODB-0420) on that same metal inside the macro pin; strip it before final_report
+        shutil.copyfile(Path(__file__).with_name("pad_abut_strip.tcl"), kd / "pad_abut_strip.tcl")
+        (kd / "config.mk").write_text(pad_abut_strip_config((kd / "config.mk").read_text(), kd))
     if t.get("chain_even"):
         # S81-RCK-4 11-07: register chains get equal hops after GPL, LAST in the release hook (before DPL); no netlist change
         shutil.copyfile(Path(__file__).with_name("chain_even.tcl"), kd / "chain_even.tcl")
