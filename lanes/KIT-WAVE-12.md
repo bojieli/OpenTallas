@@ -1223,3 +1223,16 @@ make: *** [Makefile:585: /work/run/results/asap7/dp_slw_st_b_v1__cl6357f1cc__pv6
 make[1]: *** [Makefile:585: do-5_1_grt] Error 1
 make: *** [Makefile:585: /work/run/results/asap7/dp_sle_sc_v1__cl115da35f/base/5_1_grt.odb] Error 2
  | kit epyc8:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N3/items/sle_sc_v1__cl115da35f/attempt_3/gen/sle_sc_v1__cl115da35f src main@eb1e73448bd042684261a13c50cd0fb5ce21a513 | review no review bundle | run data kept: cleanup deferred; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-18 10:59:05 PST AUTOPILOT -> KIT-WAVE-12: FAILED 6a5b534116fd qwen_compute/cbx_q10__cl94a12200_h (CRASH/flow-error):   78633
+    65500 |     -0.1% |   10113 |     6260 |     65533
+    78600 |     -0.2% |   19937 |    13400 |     52433
+    91700 |     -0.2% |   20486 |    13674 |     39333
+   104800 |     -0.2% |   22916 |    15664 |     26233
+   117900 |     -0.2% |   25997 |    17380 |     13133
+   131000 |     - | kit epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N3/items/cbx_q10__cl94a12200_h/attempt_4/gen/cbx_q10__cl94a12200_h src main@eb1e73448bd042684261a13c50cd0fb5ce21a513 | review no review bundle | run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-18 10:59:40 PST AUTOPILOT -> KIT-WAVE-12: FAILED c9e2d6b21599 qwen_compute/slw_st_b_v2__pva66d0f22__pvb80e2003 (CRASH/flow-error):  |     +0.0% |       0 |       0 |             0 |    360849
+    final |     +9.9% |    5526 |   23421 |         11940 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0034] Found 10034 slew violations.
+[INFO RSZ-0036] Found 157 capacitance violations.
+[INF | kit epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N3/items/slw_st_b_v2__pva66d0f22__pvb80e2003/gen/slw_st_b_v2__pva66d0f22__pvb80e2003 src main@eb1e73448bd042684261a13c50cd0fb5ce21a513 | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
