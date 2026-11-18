@@ -37,7 +37,9 @@ grt(){ # tag corner [image] [mode]
 grt st TT & grt st FF & grt off TT $GOFF off & wait
 for t in st_TT st_FF off_TT; do log "GRT_$t $(grep -h -E 'EXIT|Total overflow|GRT-9103|Maximum resident' $D/grt_$t/combo_*.log 2>/dev/null | tr '\n' ' ')"
   grep -qx "EXIT 0" $D/grt_$t/combo_*.log 2>/dev/null || echo "GRT_$t" >> $D/FAILS; done
-mkdir -p $D/proof
+mkdir -p $D/proof/clk
+# CA steps (landed_phase_ocv) read RUN/clk/tree.json: the die_trial kit clock tree is the proof clock (S81-DIE-R3 11-17)
+cp $K/clock/tree.json $K/clock/ctree.v $D/proof/clk/ || echo PROOF_CLK >> $D/FAILS
 for C in TT FF; do python3 -s $S/trial_tap_arrivals.py $K/clock/tree.json $D/grt_st_$C/arr_$C.txt $C $D/proof/tap_arrivals_$C.json --physical-paths > $D/tta_$C.log 2>&1; rc=$?; log "TTA_$C $rc $(tail -n 1 $D/tta_$C.log)"; [ $rc = 0 ] || echo "TTA_$C" >> $D/FAILS; done
 # KIT-OPS-6 11-15: CA steps always run (landed_phase_ocv, count_align_plan/bind, die_sta_related --count-align); legacy T/2 run kept as sta_legacy (LEGACY)
 # HEAD-DIE-R 11-16 (COORD r400): the CA steps run on the tools of the plan's OWN published source tree (the nearest parent

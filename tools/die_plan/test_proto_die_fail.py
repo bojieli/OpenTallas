@@ -22,3 +22,7 @@ def test_fail_exit():
         assert step in SRC, step
     assert 'if [ -s $D/FAILS ]; then log "CHAIN_FAIL' in SRC and "exit 1; fi" in SRC
     assert SRC.rstrip().endswith("log CHAIN_DONE")
+
+
+def test_proof_clock_tree():
+    assert "cp $K/clock/tree.json $K/clock/ctree.v $D/proof/clk/" in SRC
