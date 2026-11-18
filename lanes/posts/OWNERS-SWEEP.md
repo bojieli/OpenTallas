@@ -10,3 +10,6 @@
   KV: UNOWNED 0, STALE 11, DEAD 0 (was 3/11/7); all cancelled-superseded 11 h, owners KV-D22-ROWS/KV-HG-OPUS alive.
   HEAD 0 flagged.
 - 2026-11-18 07:50 PST S81 0/0/0/0; HEAD 0; QC UNOWNED 4 FAILED 2 STALE 10 DEAD 0; KV STALE 4 (kv3_hg_v1p6, kv3_hgi_v2 x2). QC unowned: slw_fe_v2__clf110fab2, slw_stm_v2__cl1ca9c415, slw_hc0__cl1bc59e1c. Failed-no-relaunch: slw_hc0, sle_ctl. 481/496 rows unflagged.
+- 2026-11-18 08:50 PST S81 0/0/0/8 (U/F/S/D); QC 5/2/11/0; KV 0/0/4/1; HEAD 0
+  vs 07:50: S81 +8 DEAD-OWNER (col_h10_r0_p4__t1, col_h9_r0_p1__t1 pv variants); QC U+1 F0 S+1
+  KV +1 DEAD (kv3_pc__cl5a95b461); rows no flag 474/497
