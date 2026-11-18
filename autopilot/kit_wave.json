@@ -51405,6 +51405,21 @@
       "tt_ctlm"
      ],
      "carry": false
+    },
+    {
+     "id": "qc-sta-mpl0034-n2b-1117",
+     "plan_sha": "cefb89af5f81983063bf53d1aeaabfba3b476e79a95e01469604cd5efe7002d1",
+     "owner": "QC-PLAN-R3",
+     "renewed_at": "2026-11-17 17:05",
+     "carry": false,
+     "keys": [
+      "slw_st_a_v1__clfc5867a6__pvdf8e5ca4",
+      "slw_st_a_v1__clfc5867a6__pvf82a6c28"
+     ],
+     "release": [
+      "event_adopt:s29q103S4Q9N"
+     ],
+     "reason": "QC-PLAN-R3 11-17 16:5x (COORD): MPL-0034 on N1B (pvdf8e5ca4 failed 16:46): hard core cl_b_hw_ctl_hc0_i sits 12 nm past the core edge in N1B; the st_a core-edge move (x 570.24 -> 561.6) is only in N2B. No N1B attempt can pass. Releases at the N2B apply (event s29q103S4Q9N, FABLE-FIX-QC-N). Running attempts finish."
     }
    ],
    "planned_events": [
