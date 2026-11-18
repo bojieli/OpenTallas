@@ -60,3 +60,19 @@ def test_tcl_tail_law_is_opt_in():
     k = s.index("dict set rm_station $c [list [expr {int($ax + ($bx - $ax) * $j / $rm_den)}]")
     assert i < j < k
     assert "* $j / ($n + 1.0))}] [expr {int($ay" not in s      # no second, unguarded copy of the old law
+
+
+def test_soft_frac_selection(monkeypatch):
+    monkeypatch.delenv("OT_RELAY_MID_SOFT_FRAC", raising=False)
+    assert gen_phys._relay_mid_soft_frac({}, "kv3_hgi_v4") is None
+    assert gen_phys._relay_mid_soft_frac({"relay_mid_soft_frac": 0.05}, "kv3_hgi_v4") == 0.05
+    b = {"relay_mid_soft_frac": 0.05, "relay_mid_soft_frac_types": {"kv3_hgi_v1": 0.1}}
+    assert gen_phys._relay_mid_soft_frac(b, "kv3_hgi_v1__cl141fc26e") == 0.1
+    monkeypatch.setenv("OT_RELAY_MID_SOFT_FRAC", "0.03")
+    assert gen_phys._relay_mid_soft_frac(b, "kv3_hgi_v1__cl141fc26e") == 0.03
+
+
+def test_tcl_soft_frac_default_unchanged():
+    s = open(os.path.join(HERE, "relay_mid.tcl")).read()
+    assert "double($::env(OT_RELAY_MID_SOFT_FRAC)) : 0.02}]" in s
+    assert s.count("$rm_softf * (") == 2 and "0.02 * (" not in s

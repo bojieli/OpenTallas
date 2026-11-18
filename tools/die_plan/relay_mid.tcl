@@ -332,6 +332,17 @@ if {$rm_poly} {
 }
 set rm_station {}
 set rm_seg {}
+# OT_RELAY_MID_SOFT_FRAC (FABLE-FIX-KV-HG 11-18, default 0.02 = unchanged): the share of soft (GPL-placed) endpoints a group may
+# have next to its fixed ones.  KV hst2_g: 1,543 fixed lane-pad sources + 32 soft pd1 pad-chain bits = 2.07 %, so the whole
+# g/t1/t2 chain of head 2 was left to GPL while the head 3 chain (16 soft bits) was placed.
+set rm_softf [expr {[info exists ::env(OT_RELAY_MID_SOFT_FRAC)] && $::env(OT_RELAY_MID_SOFT_FRAC) ne "" ? double($::env(OT_RELAY_MID_SOFT_FRAC)) : 0.02}]
+# OT_RELAY_MID_DEBUG=1: one line per relay group (why a group is, or is not, a chain member)
+if {[info exists ::env(OT_RELAY_MID_DEBUG)] && $::env(OT_RELAY_MID_DEBUG) eq "1"} {
+  dict for {g inf} $rm_info {
+    lassign $inf sp sg kp kg soft
+    puts "OT_RELAY_MID_DEBUG $g flops [llength [dict get $rm_grp $g]] fixed_src [llength $sp] src_groups {$sg} fixed_sink [llength $kp] sink_groups {$kg} soft $soft (soft_frac $rm_softf)"
+  }
+}
 set rm_polybad {}
 dict for {g inf} $rm_info {
   lassign $inf sp sg kp kg soft
@@ -343,7 +354,7 @@ dict for {g inf} $rm_info {
   if {$wpk ne {}} {
     if {[llength $sg] > 0 || [llength $sp] > 0} { set wpk {} }
   }
-  if {$wpk eq {} && ($soft > 0.02 * ([llength $sp] + [llength $kp]) || [llength $sp] == 0 || [llength $sg] > 0)} continue
+  if {$wpk eq {} && ($soft > $rm_softf * ([llength $sp] + [llength $kp]) || [llength $sp] == 0 || [llength $sg] > 0)} continue
   if {$wpk ne {} && [llength $sp] == 0} { set sp [list [list [expr {int([lindex $wpk 0] * $rm_dbu)}] [expr {int([lindex $wpk 1] * $rm_dbu)}]]] }
   set chain [list $g]; set cur $g
   while {1} {
@@ -352,7 +363,7 @@ dict for {g inf} $rm_info {
     if {[llength $ckg] != 1 || [llength $ckp] > 0} { set chain {}; break }
     set nx [lindex $ckg 0]
     lassign [dict get $rm_info $nx] nsp nsg nkp nkg nsoft
-    if {$nsoft > 0.02 * ([llength $nsp] + [llength $nkp] + 1) || [llength $nsp] > 0 || [llength $nsg] != 1 || [lsearch $chain $nx] >= 0} { set chain {}; break }
+    if {$nsoft > $rm_softf * ([llength $nsp] + [llength $nkp] + 1) || [llength $nsp] > 0 || [llength $nsg] != 1 || [lsearch $chain $nx] >= 0} { set chain {}; break }
     lappend chain $nx; set cur $nx
   }
   if {$chain eq {}} continue

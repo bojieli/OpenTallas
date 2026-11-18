@@ -247,6 +247,22 @@ def _relay_mid_tail(budgets, tn):
     return tn is not None and (tn in on or tn.split("__")[0] in on)
 
 
+def _relay_mid_soft_frac(budgets, tn):
+    """FABLE-FIX-KV-HG 11-18 (relay_mid.tcl OT_RELAY_MID_SOFT_FRAC, default 0.02 in the script): GEN env OT_RELAY_MID_SOFT_FRAC
+    (item_env), per type budgets.relay_mid_soft_frac_types {type or unsplit base name: fraction}, plan-wide
+    budgets.relay_mid_soft_frac; None = no export (unchanged kits)."""
+    e = os.environ.get("OT_RELAY_MID_SOFT_FRAC")
+    if e:
+        return float(e)
+    per = budgets.get("relay_mid_soft_frac_types") or {}
+    if tn is not None:
+        for k in (tn, tn.split("__")[0]):
+            if k in per:
+                return float(per[k])
+    v = budgets.get("relay_mid_soft_frac")
+    return None if v is None else float(v)
+
+
 def _relay_hop_fail(budgets, tn):
     """S81-COLGEN-3 11-17 (S81-TYPES-R3): relay_mid.tcl fails on a relay chain hop above 405 um (OT_RELAY_POLY_FAIL) -- plan-wide
     budgets.relay_hop_fail, per type budgets.relay_hop_fail_types (types or unsplit base names), or GEN env
@@ -6510,6 +6526,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
               "export BC_LIB_FILES = $(BC_NLDM_LIB_FILES)"] if not macros else []),
            *([f"export OT_RELAY_MID_RE = {_relay_mid_re(P.budgets, tn)}"] if macros else []),
            *(["export OT_RELAY_MID_TAIL = 1"] if macros and _relay_mid_tail(P.budgets, tn) else []),
+           *([f"export OT_RELAY_MID_SOFT_FRAC = {_relay_mid_soft_frac(P.budgets, tn):g}"]
+             if macros and _relay_mid_soft_frac(P.budgets, tn) is not None else []),
            # S81-TYPES-5 11-07 (opt-in plan budgets, absent = unchanged kits): relay clusters fit outside narrow
            # channels (relay_mid.tcl FIT) and macro gaps < gutter_block_um get placement blockages (gutter_block.tcl)
            *(["export OT_RELAY_MID_FIT = 1"] if macros and _relay_mid_fit(P.budgets, tn) else []),
