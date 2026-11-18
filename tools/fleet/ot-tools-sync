@@ -378,7 +378,7 @@ def host_sync(host, name, prev, do_flip=True, smoke_here=False):
         except (ValueError, IndexError):
             hf = None
         if hf is not None and hf < HOST_MIN_FREE_GB:
-            return False, f"{hf:.0f} GB free < {HOST_MIN_FREE_GB:g} GB (OT_RT_HOST_MIN_FREE_GB); not copied"
+            return False, f"SKIP {hf:.0f} GB free < {HOST_MIN_FREE_GB:g} GB (OT_RT_HOST_MIN_FREE_GB); not copied"      # SKIP = a low-disk host is a warning, not a failed sync (11-18)
         r = run(SSH + [host, f"mkdir -p {RT}/.{name}.partial"], input="")
     if r.returncode:
         return False, f"ssh: {(r.stderr or r.stdout).strip()[:160]}"
@@ -478,9 +478,12 @@ def sync(sha, hosts=True, tests=True):
     if hosts:
         for h in HOSTS:
             ok, note = host_sync(h, name, prev if prev and prev != name else "")
-            notes.append(f"{h}:{'ok' if ok else 'FAIL ' + note}")
+            skipped = (not ok) and note.startswith("SKIP ")
+            notes.append(f"{h}:{'ok' if ok else ('SKIP ' + note[5:] if skipped else 'FAIL ' + note)}")
             with open(RT / "history.log", "a") as f:
-                f.write(f"{now().isoformat(timespec='seconds')} {h} {'current -> ' + name if ok else 'FAILED ' + note}\n")
+                f.write(f"{now().isoformat(timespec='seconds')} {h} {'current -> ' + name if ok else ('SKIPPED (low disk) ' + note[5:] if skipped else 'FAILED ' + note)}\n")
+            if skipped:
+                log(f"WARNING {h} skipped, stays on its old rt/current: {note[5:]}")
     try:
         man_now = json.loads((RT / f"{name}.manifest.json").read_text()).get("files", {})
         diffs = installed_diffs(man_now) if hosts else []
@@ -505,7 +508,8 @@ def sync(sha, hosts=True, tests=True):
             log(f"prune skipped: {type(e).__name__}: {e}")
     log(f"rt/current -> {name} (was {prev or '-'}); hosts {' '.join(notes) or 'skipped'}")
     print(f"rt/current -> {name} (was {prev or '-'}); hosts {' '.join(notes) or 'skipped'}")
-    return 0 if all(":ok" in n for n in notes) else 4
+    # FLOW-0800 (COORD 11-18): a host skipped for low disk is a WARNING (the follower retries it on the next change), not exit 4 for the whole sync
+    return 0 if all(":ok" in n or ":SKIP " in n for n in notes) else 4
 
 
 # ---------------------------------------------------------------- drift (live-only check)

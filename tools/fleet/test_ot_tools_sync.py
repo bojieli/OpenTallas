@@ -245,3 +245,11 @@ class PruneRefs(unittest.TestCase):
         self.assertNotIn(names[1], gone)                                          # named by the launch script body
         self.assertEqual({n for n in names[-3:]} & set(gone), set())               # OT_RT_KEEP=1 still keeps the newest three
         self.assertIn(names[0], gone)
+
+
+class LowDiskHostIsAWarning(unittest.TestCase):
+    def test_low_disk_note_is_a_skip_and_the_sync_still_exits_0(self):
+        src = open(P).read()
+        self.assertIn('return False, f"SKIP {hf:.0f} GB free', src)
+        self.assertIn('":SKIP " in n', src)
+        self.assertIn("WARNING {h} skipped", src)
