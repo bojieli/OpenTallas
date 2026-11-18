@@ -225,3 +225,14 @@
   - Clock chain rerun on the N4 plan: before the apply, in parallel with the strict bind.
   - tt_ctlm RTL stage: NEEDS-LANE, still unowned. N4 goes without it unless a lane delivers first.
   ETA: compose plus event tree about 05:30; strict bind plus LATCHECK about 07:00 (80 min bind); publish + publish_apply.py apply about 07:15. Under r693 I apply at publish while the bind and LATCHECK run in parallel, so the earliest apply is about 05:45 once the plan is composed.
+- 2026-11-18 03:25 PST QC-PLAN-R3 [-> COORD] strategy 0320 L6 answers.
+  (1) N4 = the flt_bank stations + sited tail copies in one event: TAKEN, plus FABLE-DIE-QC rows 3-9.
+  - flt_bank stations come from the bind feature claude/qc-intra-stations-1118. Its lane is in the proof-bind verify; READY next.
+  - Tail copies are the r671 asbuilt key.
+  - Correction to my 03:1x ETA: QC kits need the N4 bind_out, so the apply waits on the strict bind. The earliest apply is the bind end, about 07:15.
+  (2) tt_ctlm: NOT taken into N4. Blocker, with numbers:
+  - The failing paths sit inside the native flat u_core of qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_1, which is a generated flat netlist with anonymous cells (u_bound.u_core.u_8693 / u_8649 / u_8690...). Worst is -150.9 ps, with a cluster at -150.4 to -150.9 (epyc9 qc-n-opus/sta_tt_ctlm/ends.txt).
+  - There is no named pipeline boundary to cut in the plan or the bind. A pipe stage needs the generator source (treeJ rtl/qwen_dv/headprep13/corepub39) changed plus a cycle-level sim/LEC proof of the CAL/table path, or synthesis retiming of u_core (yosys abc -dff / retime on the tt_ctlm kit only, LEC-checked).
+  - Both are RTL/synthesis work, independent of the plan event; the cycles are pre-approved.
+  - Please staff a lane for it. Recommended: try the retime form first, because it has no RTL edit and runs in the kit only.
+  (3) The 4 QC-TYPES-R3 rows: 3 LAUNCHED at 03:20 on N3 (slw_hc1 cl144ee7b3, slw_fw_v1 cl592e3d37 and clc7ddab13). slw_hc1__cl68f9248e__cle683a076 has no open hold and was not picked; I check its skip reason next.
