@@ -566,5 +566,27 @@ class RealDocker(Sealed):
         self.assertEqual(r.returncode, SHIM.REFUSE, "calling /usr/bin/docker by path must hit the shim too")
 
 
+class Slim(Tmp):
+    """KIT-SLIM-1118: stage ODBs stay out of the store; dead jobs' input refs are dropped"""
+
+    def test_publish_leaves_stage_odbs_out_of_the_store(self):
+        self.mk("run/6_final.odb", "db"); self.mk("run/3_place.odb", "db2"); self.mk("run/run_place.log", "log"); self.mk("run/sub/x.json", "{}")
+        rec = S.publish(self.store, os.path.join(self.t, "run"), "route", {}, link=True, exclude=JOB.DEFAULT_PUBLISH_EXCLUDE)
+        self.assertEqual(sorted(f[0] if isinstance(f, list) else f for f in rec["files"]), ["run_place.log", "sub/x.json"])
+        self.assertEqual(S.verify(self.store, rec["sha"]), [])
+        rec2 = S.publish(self.store, os.path.join(self.t, "run"), "all", {}, link=True)
+        self.assertEqual(len(rec2["files"]), 4)
+
+    def test_stale_job_refs_of_dead_jobs_are_unref_ed(self):
+        names = ("job-x-99999991-1700000000", "job-y-99999993-1700000001", "job-z-99999992-1700000002")
+        for n in names:
+            S.ref(self.store, n, ["a" * 64])
+        for n in names[:2]:
+            os.utime(os.path.join(self.store, "refs", n + ".json"), (1, 1))
+        got = JOB.reap_stale_refs(self.store, ["t-99999993-1700000001"], say_=lambda m: None)   # y still has a job dir
+        self.assertEqual(got, [names[0]])
+        self.assertEqual(sorted(S.refs(self.store)), sorted(names[1:]))
+
+
 if __name__ == "__main__":
     unittest.main()

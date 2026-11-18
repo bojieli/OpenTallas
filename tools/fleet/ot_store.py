@@ -35,6 +35,7 @@ second hardlink (still staged in a job dir).  gc --apply writes the deleted list
 """
 import argparse
 import contextlib
+import fnmatch
 import fcntl
 import gzip
 import hashlib
@@ -162,9 +163,9 @@ def _inside(rel_dir, target):
     return not (n == ".." or n.startswith("../"))
 
 
-def put_tree(store, root, link=False):
+def put_tree(store, root, link=False, exclude=()):
     """-> tree sha.  Keeps relative links that stay inside and absolute links that resolve inside (stored relative);
-    refuses links that leave the tree, and special files."""
+    refuses links that leave the tree, and special files.  exclude = fnmatch patterns of file names left out (KIT-SLIM-1118: stage ODBs stay in the kit dir)."""
     files, links, dirs = {}, {}, []
     root = os.path.abspath(root)
     for dp, dns, fns in os.walk(root, followlinks=False):
@@ -180,6 +181,8 @@ def put_tree(store, root, link=False):
             p = os.path.join(dp, fn)
             rel = os.path.normpath(os.path.join(rd, fn))
             st = os.lstat(p)
+            if exclude and not stat.S_ISLNK(st.st_mode) and any(fnmatch.fnmatch(fn, x) for x in exclude):
+                continue
             if stat.S_ISLNK(st.st_mode):
                 t = os.readlink(p)
                 if os.path.isabs(t):
@@ -212,10 +215,10 @@ def read_tree(store, sha):
     return t if isinstance(t, dict) and t.get("schema") == TREE_SCHEMA else None
 
 
-def put(store, path, link=False):
-    """-> (kind, sha)"""
+def put(store, path, link=False, exclude=()):
+    """-> (kind, sha); exclude applies to a directory's files"""
     if os.path.isdir(path) and not os.path.islink(path):
-        return "tree", put_tree(store, path, link=link)
+        return "tree", put_tree(store, path, link=link, exclude=exclude)
     if os.path.isfile(path) and not os.path.islink(path):
         return "file", put_file(store, path, link=link)
     raise StoreError(f"{path}: not a regular file or directory (a symlink is a reference, name its target)")
@@ -304,14 +307,14 @@ def lock(store, exclusive=False):
         os.close(fd)
 
 
-def publish(store, path, name, producer=None, link=False):
+def publish(store, path, name, producer=None, link=False, exclude=()):
     """put PATH, write an immutable artifact record naming its producer; -> the record"""
     with lock(store):
-        return _publish(store, path, name, producer, link)
+        return _publish(store, path, name, producer, link, exclude)
 
 
-def _publish(store, path, name, producer, link):
-    kind, sha = put(store, path, link=link)
+def _publish(store, path, name, producer, link, exclude=()):
+    kind, sha = put(store, path, link=link, exclude=exclude)
     bad = verify(store, sha)
     if bad:
         raise StoreError(f"publish {path}: store verify failed: {bad[:3]}")

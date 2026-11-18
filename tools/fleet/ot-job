@@ -46,6 +46,8 @@ import fcntl
 import json
 import os
 import shutil
+import atexit
+import re
 import signal
 import socket
 import subprocess
@@ -80,6 +82,8 @@ HOME_ALLOW = (".local", "bin", ".docker", ".gitconfig", "opentallas-tools")
 SYSTEM_RW = ("/var/tmp/ot-heavy",)       # fleet admission state: a nested ot-heavy (lec_async LEC unit) must see it
 PUBLISH_FAIL = 98
 KEEP_FAILED_S = 24 * 3600
+DEFAULT_PUBLISH_EXCLUDE = ("*.odb",)   # KIT-SLIM-1118 (COORD): the store keeps reports, logs and small artifacts; stage ODBs stay in the kit dir (return copy) and export reads them there
+STALE_REF_S = 24 * 3600
 LOCK_PROTO = 1            # .ot-isolated.json "lock": J holds J/.ot-job/lock while its ot-job lives
 STOP_SIGNALS = (signal.SIGTERM, signal.SIGINT, signal.SIGHUP)
 STOP_GRACE_S = 20         # under systemd's 90 s stop timeout, so publish / return / delete still run
@@ -329,6 +333,14 @@ def ot_job_alive(pid):
         return False
 
 
+def _drop_ref(job):
+    """the reaped job's live-input ref goes with it (the ot-job that wrote it was killed before its own unref)"""
+    try:
+        S.unref(job.get("store") or S.default_store(job["J"]), "job-" + job["tag"])
+    except (KeyError, OSError, S.StoreError):
+        pass
+
+
 def reap(roots, now=None, say_=None):
     """delete each J under ROOTS whose ot-job is gone: a lock-protocol J with a free lock (stop its containers first);
     a J kept after a publish failure only after KEEP_FAILED_S; never keep=true, never a J without the ot-job marker,
@@ -357,6 +369,7 @@ def reap(roots, now=None, say_=None):
                     ids = stop_containers(J)
                     try:
                         remove_job(J)
+                        _drop_ref(job)
                         out["reaped"].append(J)
                         say_(f"reaped legacy {J} (ot-job pid {job['pid']} gone; {len(ids)} container(s) stopped)")
                     except (JobError, OSError) as e:
@@ -388,10 +401,45 @@ def reap(roots, now=None, say_=None):
                 except (JobError, OSError) as e:
                     say_(f"reap {J}: {e}")
                     continue
+                _drop_ref(job)
                 out["reaped"].append(J)
                 say_(f"reaped {J} (no live ot-job; {len(ids)} container(s) stopped)")
             finally:
                 os.close(fd)
+        try:
+            reap_stale_refs(S.default_store(root), names, say_=say_)
+        except (OSError, S.StoreError):
+            pass
+    return out
+
+
+def reap_stale_refs(store, jobdirs, now=None, say_=None):
+    """KIT-SLIM-1118: unref every job-<tag> ref older than STALE_REF_S whose ot-job pid is gone and that has no job dir left (killed jobs leaked 78 GB of
+    input refs on epyc2).  -> [names]"""
+    now = now or time.time()
+    say_ = say_ or say
+    out = []
+    d = os.path.join(store, "refs")
+    try:
+        names = sorted(os.listdir(d))
+    except OSError:
+        return out
+    for fn in names:
+        if not (fn.startswith("job-") and fn.endswith(".json")):
+            continue
+        n = fn[:-5]
+        m = re.search(r"-(\d+)-(\d{10})$", n)
+        try:
+            age = now - os.stat(os.path.join(d, fn)).st_mtime
+        except OSError:
+            continue
+        if not m or age < STALE_REF_S or ot_job_alive(m.group(1)):
+            continue
+        if any(x.endswith("-%s-%s" % (m.group(1), m.group(2))) for x in jobdirs):
+            continue
+        S.unref(store, n)
+        out.append(n)
+        say_(f"unref stale {n} (age {int(age / 3600)} h, ot-job pid gone, no job dir)")
     return out
 
 
@@ -425,6 +473,7 @@ def run(spec, tag, cmd, bwrap=True):
             remove_job(J)                        # nothing ran and nothing was published: the dir is ours alone
             raise
         S.ref(store, "job-" + tag, shas, note=f"live inputs of ot-job {J} on {host}")
+        atexit.register(S.unref, store, "job-" + tag)      # any exit path (crash, exception) drops the live-input ref; SIGKILL is the reaper's
     return run_sealed(spec, meta, J, store, tag, cmd, maps, staged, work_at, bwrap)
 
 
@@ -540,7 +589,8 @@ def _finish(spec, meta, J, store, tag, rc):
                 errors.append(f"required output {p['path']} missing")
             continue
         try:
-            pub.append(S.publish(store, src, p["name"], producer, link=True))
+            excl = () if p.get("keep_odb") else tuple(p.get("exclude", DEFAULT_PUBLISH_EXCLUDE))
+            pub.append(S.publish(store, src, p["name"], producer, link=True, exclude=excl))
         except (S.StoreError, OSError) as e:
             errors.append(f"publish {p['path']}: {e}")
     for r in pub:
