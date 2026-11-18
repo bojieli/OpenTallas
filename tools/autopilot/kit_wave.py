@@ -295,7 +295,7 @@ print("SELFCONT_COUNT %d BAD %d" % (len(seen), bad))
 # 12 QC rows were charged to RETRY-INFRA although no command ran.  An ot-run / ot-heavy 'NOT RUN' (admission refusal, usage text,
 # held host) means the command never started: such an attempt is no attempt.  The row waits NO_HOST_RETRY_S and is relaunched;
 # NOT_RUN_FREE_MAX bounds the free tries of one row, then the budget is charged as before (a permanent tool fault still ends).
-NOT_RUN_LINE = re.compile(r"(?m)^\s*(?:ot-run|ot-heavy|ot-job): NOT RUN\b|^\s*(?:usage|Usage): ot-run\b|ot-run: unknown option|ot-run: unrecognized")
+NOT_RUN_LINE = re.compile(r"(?m)^NOT-RUN\b|^\s*(?:ot-run|ot-heavy|ot-job): NOT RUN\b|^\s*(?:usage|Usage): ot-run\b|ot-run: unknown option|ot-run: unrecognized")
 NOT_RUN_FREE_MAX = 8
 
 
