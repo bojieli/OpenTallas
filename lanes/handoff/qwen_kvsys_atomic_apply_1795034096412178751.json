@@ -1,0 +1,126 @@
+{
+ "die": "qwen_kvsys",
+ "prior": {
+  "src": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg7_23c87c42_t5144e08_d22",
+  "event": "KV-D22",
+  "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg7_23c87c42_t5144e08_d22/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+  "plan_sha256": "23c87c42a4e9b78d44123bd65aaa4b2c3a75d02870d566a7e0f82a993817d58b",
+  "kit_rtl": {
+   "mode": "bind",
+   "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg8_e21a54ae_teefb7e3_d23f/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
+   "bind_out": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg8_e21a54ae_teefb7e3_d23f/physical/die_plan/qwen_kvsys/plan_of_record/bind_of_record",
+   "note": "KIT-OPS-5 KV kvgeom7uh (KV-102 READY+ADOPT 23:13: plan_c 68a458bd5824, strict bind 0 with OT_HCPARAM_ALL=1, R8 0, LATCHECK 2404/2404; src/plan/asbuilt/landing/bind all on the c1 tree: the old kvbind_kvgeom7u/out + src_kv_kvgeom7u paths named kv102t18 files = fail classes 4a41d4597f/54b807b7fa) | WAVE-HOLDS-1115 2026-11-15 15:19 PST KV kvgeom7u (KV-102 READY+ADOPT 14:47, COORD r168: plan_c b7156937f334, G0 0, pinned strict bind 0, LATCHECK 2404/2404, 56 types CHANGED; src = kv102t18_kvgeom7u + main replica_keep.py/gen_phys.py/ot_keep_regs.tcl + kvgeom7q_views). Revert: dies.qwen_kvsys.prev_wavehold1115_kvgeom6 | KIT-OPS-5 KV kvgeom6 (KV-102 READY+ADOPT 22:10: G0 0, strict bind 0 160/56/2545, LATCHECK 2404/2404; kvgeom5 + early core taps on 7 kv3_pc types + tap_pair_affinity on kv3_io_ft,"
+  }
+ },
+ "marker": {
+  "die": "qwen_kvsys",
+  "tree": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg8_e21a54ae_teefb7e3_d23f",
+  "manifest_hash": "ec75f13b9d2be6ec0773c553cf1a13a9f59506661eb9d5fa23708f0f1e9eeb55",
+  "src_manifest_sha": "ec75f13b9d2be6ec0773c553cf1a13a9f59506661eb9d5fa23708f0f1e9eeb55",
+  "tools_sha": "eb1e73448bd042684261a13c50cd0fb5ce21a513",
+  "hosts": [
+   "epyc7",
+   "epyc9",
+   "epyc10"
+  ],
+  "smoke": "PASS",
+  "smoke_detail": "KV-D23f gate epyc7 d23fgate: PRE PASS; G0 0 errors/2444 warn; strict bind 0 errors (160 part/2545 crossings/429530 bits); R8 recheck changed 0; R8 vs D16 0 diff lines; LATCHECK 2404/2404; tail split 16/16 PV; strap audit PASS; BOUND-PARAM PASS; tree_check full_ok epyc7,epyc9,epyc10 (epyc8 refused: disk floor)",
+  "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg8_e21a54ae_teefb7e3_d23f/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+  "plan_sha256": "e21a54aebe16bc32397e04914d71b5c525e8af585f50394b34e6072891020199",
+  "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg8_e21a54ae_teefb7e3_d23f/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
+  "asbuilt_sha256": "da56e1cd818c337f4173df101eb30e0c3c8ae814d2ac22fe5fa88946308f83fd",
+  "bind_out": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg8_e21a54ae_teefb7e3_d23f/physical/die_plan/qwen_kvsys/plan_of_record/bind_of_record",
+  "sidecar": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg8_e21a54ae_teefb7e3_d23f/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json",
+  "sidecar_sha256": "9704beb258d4e0357316596e9b28acc54cf7f0c5416f7ea431b0f8a8b5983930",
+  "die_gen_env": {
+   "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg8_e21a54ae_teefb7e3_d23f/physical/die_plan/qwen_kvsys/plan_of_record/signed_view_sha_kv.json",
+   "OT_PLACE_MAX_FANOUT": "64",
+   "OT_GRT_NONPORT_HOLD": "1",
+   "OT_CORE_TAP_REACH_UM": "0",
+   "OT_PREGRT_FF_HOLD_AUTO": "-1",
+   "OT_MAX_BUFFER_PERCENT": "100",
+   "OT_GRT_POST_MAX_S": "0",
+   "OT_HOLD_STOP_PS": "-1000000",
+   "OT_GRT_ALLOW_CONGESTION": "1",
+   "OT_CLAND_STRIP_DENS": "1.0",
+   "OT_TT_SETUP_REPAIR": "both",
+   "OT_PG_DIE_PHASE": "1",
+   "OT_PGCAP": "1",
+   "OT_PG_TRACK_TRUTH": "1",
+   "OT_PG_PIN_CHECK": "1"
+  },
+  "config": {
+   "event": "KV-D23",
+   "src_sha": "eb1e73448bd042684261a13c50cd0fb5ce21a513",
+   "tools_sha": "eefb7e36eb62235059453d7a90e60c3ef953d80f",
+   "queue_src": "main@eb1e73448bd042684261a13c50cd0fb5ce21a513",
+   "plan_sha256": "e21a54aebe16bc32397e04914d71b5c525e8af585f50394b34e6072891020199",
+   "gen_hosts": [
+    "epyc7",
+    "epyc9",
+    "epyc10"
+   ],
+   "gen_host": "epyc7",
+   "gen_args": [
+    "--hold-ff-margin",
+    "0",
+    "--clock-landing",
+    "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg8_e21a54ae_teefb7e3_d23f/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json"
+   ],
+   "kit_rtl": {
+    "mode": "bind",
+    "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg8_e21a54ae_teefb7e3_d23f/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
+    "bind_out": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg8_e21a54ae_teefb7e3_d23f/physical/die_plan/qwen_kvsys/plan_of_record/bind_of_record"
+   },
+   "gate": {
+    "g0c": "PASS",
+    "bind": "PASS",
+    "clock": "PASS",
+    "evidence": "KV-D23f gate epyc7 d23fgate: PRE PASS; G0 0 errors/2444 warn; strict bind 0 errors (160 part/2545 crossings/429530 bits); R8 recheck changed 0; R8 vs D16 0 diff lines; LATCHECK 2404/2404; tail split 16/16 PV; strap audit PASS; BOUND-PARAM PASS; tree_check full_ok epyc7,epyc9,epyc10 (epyc8 refused: disk floor)"
+   },
+   "planned_events": [
+    "KV-7uh",
+    "KV-7y",
+    "KV-HG1",
+    "KV-PCDELTA",
+    "KV-PCV3-R8",
+    "KV-PVSPLIT",
+    "kvgeom7yhr",
+    "KV-HG3",
+    "KV-HG5",
+    "KV-D22"
+   ],
+   "gen_env_outside_allow": [],
+   "die_gen_env": {
+    "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg8_e21a54ae_teefb7e3_d23f/physical/die_plan/qwen_kvsys/plan_of_record/signed_view_sha_kv.json",
+    "OT_PLACE_MAX_FANOUT": "64",
+    "OT_GRT_NONPORT_HOLD": "1",
+    "OT_CORE_TAP_REACH_UM": "0",
+    "OT_PREGRT_FF_HOLD_AUTO": "-1",
+    "OT_MAX_BUFFER_PERCENT": "100",
+    "OT_GRT_POST_MAX_S": "0",
+    "OT_HOLD_STOP_PS": "-1000000",
+    "OT_GRT_ALLOW_CONGESTION": "1",
+    "OT_CLAND_STRIP_DENS": "1.0",
+    "OT_TT_SETUP_REPAIR": "both",
+    "OT_PG_DIE_PHASE": "1",
+    "OT_PGCAP": "1",
+    "OT_PG_TRACK_TRUTH": "1",
+    "OT_PG_PIN_CHECK": "1"
+   }
+  },
+  "written_by": "root-authorized lane atomic apply",
+  "status": "ADOPTED reviewed tuple"
+ },
+ "published_gen_import": {
+  "status": "NORMAL-GEN"
+ },
+ "pilot": "NONE",
+ "guard": "/home/ubuntu/coord/autopilot/tree_checks/e70850d77bd5ba5b8589ca59d7b5c8fc95bfe261e28d5b30062b7a8f04e73e9e/result.json",
+ "candidate": "/home/ubuntu/tmp/kvd23c/cand_d23f.json",
+ "optimistic": true,
+ "warnings": [
+  "DROPPED epyc8: replicate/verify rc 1: not a manifest tree",
+  "ADVISORY publish_gate: publish gate: no PASS record /home/ubuntu/coord/autopilot/publish_gate/qwen_kvsys/ec75f13b9d2be6ec0773c553cf1a13a9f59506661eb9d5fa23708f0f1e9eeb55.json (run tools/autopilot/publish_gate.py run on this candidate first)"
+ ]
+}
