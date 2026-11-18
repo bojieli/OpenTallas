@@ -1,11 +1,9 @@
-# HEAD die route units, recipe run nf13r (NF13a plan, plan abstracts for hd_tile 717.12 / hd_st_n4 993.6) (cut-abstracts-under-clock + tap snap + DROP_GRT_OBS), auto-updated 2026-11-17 19:51:56 PST by intel2 ~/tmp/head100_utable.sh
-# DONE 150, DONE with DRC>0: 2, DONE with RSS>20 GB: 5; fields: host unit state drc rss_mb(DRT hwm) wall; independent per-unit run (earlier-pass nets fixed, unrouted), unstamped NC tree
+# HEAD die route units, recipe run nf13r (NF13a plan, plan abstracts for hd_tile 717.12 / hd_st_n4 993.6) (cut-abstracts-under-clock + tap snap + DROP_GRT_OBS), auto-updated 2026-11-17 20:07:12 PST by intel2 ~/tmp/head100_utable.sh
+# DONE 109, DONE with DRC>0: 2, DONE with RSS>20 GB: 4; fields: host unit state drc rss_mb(DRT hwm) wall; independent per-unit run (earlier-pass nets fixed, unrouted), unstamped NC tree
 key-cardinal u001_b DONE drc=0 rss_mb=10632 wall=1:13:57 [INFO DRT-0199]   Number of violations =
 key-cardinal u002_b DONE drc=0 rss_mb=11211 wall=1:32:01 [INFO DRT-0199]   Number of violations =
 key-cardinal u004_b DONE drc=0 rss_mb=8452 wall=14:53.32 [INFO DRT-0199]   Number of violations =
 key-cardinal u006_b DONE drc=0 rss_mb=8292 wall=10:31.48 [INFO DRT-0199]   Number of violations =
-civil-redfish u008_b DONE drc=0 rss_mb=8908 wall=6:01.26 [INFO DRT-0199]   Number of violations =
-civil-redfish u009_b DONE drc=0 rss_mb=9600 wall=6:12.59 [INFO DRT-0199]   Number of violations =
 key-cardinal u015_b DONE drc=0 rss_mb=10147 wall=40:34.49 [INFO DRT-0199]   Number of violations =
 key-cardinal u016_b DONE drc=0 rss_mb=10130 wall=43:55.53 [INFO DRT-0199]   Number of violations =
 key-cardinal u020_b DONE drc=0 rss_mb=9967 wall=16:32.26 [INFO DRT-0199]   Number of violations =
@@ -13,10 +11,8 @@ key-cardinal u026_b DONE drc=1 rss_mb=55983 wall=2:16:06 [INFO DRT-0199]   Numbe
 key-cardinal u028_b DONE drc=0 rss_mb=11058 wall=1:36:23 [INFO DRT-0199]   Number of violations =
 key-cardinal u029_b DONE drc=1 rss_mb=55034 wall=2:10:12 [INFO DRT-0199]   Number of violations =
 key-cardinal u031_b DONE drc=0 rss_mb=10077 wall=28:34.59 [INFO DRT-0199]   Number of violations =
-civil-redfish u034_b DONE drc=0 rss_mb=9589 wall=13:03.89 [INFO DRT-0199]   Number of violations =
 key-cardinal u051_b DONE drc=0 rss_mb=9154 wall=20:16.14 [INFO DRT-0199]   Number of violations =
 key-cardinal u052_b DONE drc=0 rss_mb=9440 wall=25:49.08 [INFO DRT-0199]   Number of violations =
-civil-redfish u058_b DONE drc=0 rss_mb=9767 wall=14:36.29 [INFO DRT-0199]   Number of violations =
 key-cardinal u063_b DONE drc=0 rss_mb=9484 wall=24:45.05 [INFO DRT-0199]   Number of violations =
 key-cardinal u064_b DONE drc=0 rss_mb=9163 wall=28:43.24 [INFO DRT-0199]   Number of violations =
 key-cardinal u065_b DONE drc=0 rss_mb=9321 wall=23:58.59 [INFO DRT-0199]   Number of violations =
@@ -27,17 +23,9 @@ key-cardinal u069_b DONE drc=0 rss_mb=9596 wall=22:11.83 [INFO DRT-0199]   Numbe
 key-cardinal u070_b DONE drc=0 rss_mb=9413 wall=19:04.74 [INFO DRT-0199]   Number of violations =
 key-cardinal u073_b DONE drc=0 rss_mb=9803 wall=28:13.09 [INFO DRT-0199]   Number of violations =
 key-cardinal u074_b DONE drc=0 rss_mb=9847 wall=34:51.35 [INFO DRT-0199]   Number of violations =
-civil-redfish u077_b DONE drc=0 rss_mb=10417 wall=12:00.96 [INFO DRT-0199]   Number of violations =
-civil-redfish u078_b DONE drc=0 rss_mb=8838 wall=24:49.66 [INFO DRT-0199]   Number of violations =
-civil-redfish u079_b DONE drc=0 rss_mb=9394 wall=13:30.43 [INFO DRT-0199]   Number of violations =
-civil-redfish u080_b DONE drc=0 rss_mb=8991 wall=14:37.71 [INFO DRT-0199]   Number of violations =
 key-cardinal u082_b DONE drc=0 rss_mb=11083 wall=27:57.63 [INFO DRT-0199]   Number of violations =
 key-cardinal u083_b DONE drc=0 rss_mb=9594 wall=22:38.79 [INFO DRT-0199]   Number of violations =
-civil-redfish u094_b DONE drc=0 rss_mb=9991 wall=1:13:29 [INFO DRT-0199]   Number of violations =
 key-cardinal u095_b DONE drc=0 rss_mb=9426 wall=30:50.92 [INFO DRT-0199]   Number of violations =
-civil-redfish u097_b DONE drc=0 rss_mb=10161 wall=10:46.20 [INFO DRT-0199]   Number of violations =
-civil-redfish u100_b DONE drc=0 rss_mb=9235 wall=42:16.24 [INFO DRT-0199]   Number of violations =
-civil-redfish u102_b DONE drc=0 rss_mb=9616 wall=1:06:44 [INFO DRT-0199]   Number of violations =
 key-cardinal u114_b DONE drc=0 rss_mb=9332 wall=18:19.73 [INFO DRT-0199]   Number of violations =
 key-cardinal u115_b DONE drc=0 rss_mb=10961 wall=30:21.34 [INFO DRT-0199]   Number of violations =
 key-cardinal u118_b DONE drc=0 rss_mb=11068 wall=29:31.38 [INFO DRT-0199]   Number of violations =
@@ -51,10 +39,7 @@ key-cardinal u140_b DONE drc=0 rss_mb=9173 wall=27:42.08 [INFO DRT-0199]   Numbe
 key-cardinal u141_b DONE drc=0 rss_mb=9769 wall=30:15.26 [INFO DRT-0199]   Number of violations =
 key-cardinal u144_b DONE drc=0 rss_mb=8971 wall=31:18.71 [INFO DRT-0199]   Number of violations =
 key-cardinal u145_b DONE drc=0 rss_mb=9367 wall=26:26.53 [INFO DRT-0199]   Number of violations =
-civil-redfish u150_b DONE drc=0 rss_mb=9215 wall=13:05.70 [INFO DRT-0199]   Number of violations =
-civil-redfish u151_b DONE drc=0 rss_mb=8866 wall=10:54.59 [INFO DRT-0199]   Number of violations =
 key-cardinal u152_b DONE drc=0 rss_mb=8898 wall=29:28.24 [INFO DRT-0199]   Number of violations =
-civil-redfish u153_b DONE drc=0 rss_mb=9778 wall=13:52.44 [INFO DRT-0199]   Number of violations =
 key-cardinal u154_b DONE drc=0 rss_mb=9993 wall=40:01.95 [INFO DRT-0199]   Number of violations =
 key-cardinal u155_b DONE drc=0 rss_mb=9480 wall=30:55.66 [INFO DRT-0199]   Number of violations =
 key-cardinal u157_b DONE drc=0 rss_mb=9285 wall=45:33.02 [INFO DRT-0199]   Number of violations =
@@ -66,27 +51,15 @@ key-cardinal u168_b DONE drc=0 rss_mb=9896 wall=23:59.64 [INFO DRT-0199]   Numbe
 key-cardinal u169_b DONE drc=0 rss_mb=10190 wall=23:52.48 [INFO DRT-0199]   Number of violations =
 key-cardinal u172_b DONE drc=0 rss_mb=8343 wall=37:34.45 [INFO DRT-0199]   Number of violations =
 key-cardinal u173_b DONE drc=0 rss_mb=9760 wall=41:43.70 [INFO DRT-0199]   Number of violations =
-civil-redfish u175_b DONE drc=0 rss_mb=9686 wall=14:07.86 [INFO DRT-0199]   Number of violations =
-civil-redfish u178_b DONE drc=0 rss_mb=10228 wall=13:56.78 [INFO DRT-0199]   Number of violations =
 key-cardinal u179_b DONE drc=0 rss_mb=9957 wall=19:28.03 [INFO DRT-0199]   Number of violations =
 key-cardinal u181_b DONE drc=0 rss_mb=9184 wall=37:20.35 [INFO DRT-0199]   Number of violations =
 key-cardinal u182_b DONE drc=0 rss_mb=10302 wall=40:50.31 [INFO DRT-0199]   Number of violations =
 key-cardinal u183_b DONE drc=0 rss_mb=9381 wall=30:47.83 [INFO DRT-0199]   Number of violations =
 key-cardinal u184_b DONE drc=0 rss_mb=10360 wall=36:45.17 [INFO DRT-0199]   Number of violations =
 key-cardinal u185_b DONE drc=0 rss_mb=9993 wall=38:01.02 [INFO DRT-0199]   Number of violations =
-civil-redfish u186_b DONE drc=0 rss_mb=10018 wall=15:10.77 [INFO DRT-0199]   Number of violations =
-civil-redfish u187_b DONE drc=0 rss_mb=9437 wall=16:40.79 [INFO DRT-0199]   Number of violations =
-civil-redfish u188_b DONE drc=0 rss_mb=10661 wall=23:30.41 [INFO DRT-0199]   Number of violations =
-civil-redfish u192_b DONE drc=0 rss_mb=10323 wall=10:22.78 [INFO DRT-0199]   Number of violations =
-civil-redfish u193_b DONE drc=0 rss_mb=10183 wall=22:03.03 [INFO DRT-0199]   Number of violations =
 key-cardinal u197_b DONE drc=0 rss_mb=9492 wall=18:03.55 [INFO DRT-0199]   Number of violations =
 key-cardinal u202_b DONE drc=0 rss_mb=9787 wall=19:15.72 [INFO DRT-0199]   Number of violations =
-civil-redfish u204_b DONE drc=0 rss_mb=9764 wall=27:11.75 [INFO DRT-0199]   Number of violations =
-civil-redfish u205_b DONE drc=0 rss_mb=8892 wall=27:40.60 [INFO DRT-0199]   Number of violations =
-civil-redfish u206_b DONE drc=0 rss_mb=9605 wall=36:25.49 [INFO DRT-0199]   Number of violations =
-civil-redfish u207_b DONE drc=0 rss_mb=53809 wall=30:39.03 [INFO DRT-0199]   Number of violations =
 key-cardinal u215_b DONE drc=0 rss_mb=9370 wall=25:15.71 [INFO DRT-0199]   Number of violations =
-civil-redfish u222_b DONE drc=0 rss_mb=10062 wall=32:57.66 [INFO DRT-0199]   Number of violations =
 key-cardinal u225_b DONE drc=0 rss_mb=9922 wall=33:33.62 [INFO DRT-0199]   Number of violations =
 key-cardinal u226_b DONE drc=0 rss_mb=9423 wall=36:08.48 [INFO DRT-0199]   Number of violations =
 key-cardinal u227_b DONE drc=0 rss_mb=9863 wall=20:19.07 [INFO DRT-0199]   Number of violations =
@@ -100,7 +73,6 @@ key-cardinal u234_b DONE drc=0 rss_mb=10149 wall=38:28.70 [INFO DRT-0199]   Numb
 key-cardinal u235_b DONE drc=0 rss_mb=10332 wall=37:24.78 [INFO DRT-0199]   Number of violations =
 key-cardinal u236_b DONE drc=0 rss_mb=10369 wall=27:32.16 [INFO DRT-0199]   Number of violations =
 key-cardinal u240_b DONE drc=0 rss_mb=10024 wall=13:39.70 [INFO DRT-0199]   Number of violations =
-civil-redfish u244_b DONE drc=0 rss_mb=10343 wall=27:17.80 [INFO DRT-0199]   Number of violations =
 key-cardinal u245_b DONE drc=0 rss_mb=9744 wall=19:41.76 [INFO DRT-0199]   Number of violations =
 key-cardinal u247_b DONE drc=0 rss_mb=10063 wall=36:27.07 [INFO DRT-0199]   Number of violations =
 key-cardinal u248_b DONE drc=0 rss_mb=8955 wall=35:23.54 [INFO DRT-0199]   Number of violations =
@@ -110,10 +82,8 @@ key-cardinal u258_b DONE drc=0 rss_mb=10403 wall=26:04.65 [INFO DRT-0199]   Numb
 key-cardinal u261_b DONE drc=0 rss_mb=10190 wall=20:47.65 [INFO DRT-0199]   Number of violations =
 key-cardinal u262_b DONE drc=0 rss_mb=10301 wall=15:50.67 [INFO DRT-0199]   Number of violations =
 key-cardinal u263_b DONE drc=0 rss_mb=9864 wall=18:15.15 [INFO DRT-0199]   Number of violations =
-civil-redfish u264_b DONE drc=0 rss_mb=10423 wall=1:11:17 [INFO DRT-0199]   Number of violations =
 key-cardinal u265_b DONE drc=0 rss_mb=9419 wall=13:50.83 [INFO DRT-0199]   Number of violations =
 key-cardinal u266_b DONE drc=0 rss_mb=9550 wall=19:28.15 [INFO DRT-0199]   Number of violations =
-civil-redfish u267_b DONE drc=0 rss_mb=9839 wall=26:56.32 [INFO DRT-0199]   Number of violations =
 key-cardinal u268_b DONE drc=0 rss_mb=9317 wall=15:47.94 [INFO DRT-0199]   Number of violations =
 key-cardinal u270_b DONE drc=0 rss_mb=9305 wall=44:41.42 [INFO DRT-0199]   Number of violations =
 key-cardinal u271_b DONE drc=0 rss_mb=8686 wall=20:14.33 [INFO DRT-0199]   Number of violations =
@@ -125,9 +95,7 @@ key-cardinal u276_b DONE drc=0 rss_mb=9760 wall=29:49.77 [INFO DRT-0199]   Numbe
 key-cardinal u277_b DONE drc=0 rss_mb=10343 wall=34:03.29 [INFO DRT-0199]   Number of violations =
 key-cardinal u278_b DONE drc=0 rss_mb=10445 wall=39:28.52 [INFO DRT-0199]   Number of violations =
 key-cardinal u279_b DONE drc=0 rss_mb=9600 wall=33:49.01 [INFO DRT-0199]   Number of violations =
-civil-redfish u280_b DONE drc=0 rss_mb=9965 wall=1:09:08 [INFO DRT-0199]   Number of violations =
 key-cardinal u285_b DONE drc=0 rss_mb=9936 wall=30:02.56 [INFO DRT-0199]   Number of violations =
-civil-redfish u287_b DONE drc=0 rss_mb=9393 wall=25:25.93 [INFO DRT-0199]   Number of violations =
 key-cardinal u288_b DONE drc=0 rss_mb=54484 wall=30:05.56 [INFO DRT-0199]   Number of violations =
 key-cardinal u289_b DONE drc=0 rss_mb=9643 wall=27:55.93 [INFO DRT-0199]   Number of violations =
 key-cardinal u291_b DONE drc=0 rss_mb=10031 wall=33:17.28 [INFO DRT-0199]   Number of violations =
@@ -138,15 +106,6 @@ key-cardinal u300_b DONE drc=0 rss_mb=9498 wall=25:51.46 [INFO DRT-0199]   Numbe
 key-cardinal u303_b DONE drc=0 rss_mb=7824 wall=18:11.16 [INFO DRT-0199]   Number of violations =
 key-cardinal u306_b DONE drc=0 rss_mb=7858 wall=17:43.77 [INFO DRT-0199]   Number of violations =
 key-cardinal u308_b DONE drc=0 rss_mb=17182 wall=3:33:27 [INFO DRT-0199]   Number of violations =
-civil-redfish u309_b DONE drc=0 rss_mb=7967 wall=9:15.97 [INFO DRT-0199]   Number of violations =
 key-cardinal u310_b DONE drc=0 rss_mb=8155 wall=8:19.20 [INFO DRT-0199]   Number of violations =
-civil-redfish u311_b DONE drc=0 rss_mb=7924 wall=36:12.83 [INFO DRT-0199]   Number of violations =
-civil-redfish u312_b DONE drc=0 rss_mb=8267 wall=9:39.03 [INFO DRT-0199]   Number of violations =
-civil-redfish u313_b DONE drc=0 rss_mb=6925 wall=4:49.36 [INFO DRT-0199]   Number of violations =
 key-cardinal u314_b DONE drc=0 rss_mb=8038 wall=12:36.93 [INFO DRT-0199]   Number of violations =
-civil-redfish u315_b DONE drc=0 rss_mb=8288 wall=13:17.02 [INFO DRT-0199]   Number of violations =
-civil-redfish u318_b DONE drc=0 rss_mb=8432 wall=14:59.14 [INFO DRT-0199]   Number of violations =
-civil-redfish u321_b DONE drc=0 rss_mb=7891 wall=28:26.16 [INFO DRT-0199]   Number of violations =
-civil-redfish u323_b DONE drc=0 rss_mb=8695 wall=10:43.76 [INFO DRT-0199]   Number of violations =
-civil-redfish u324_b DONE drc=0 rss_mb=7553 wall=7:05.35 [INFO DRT-0199]   Number of violations =
 key-cardinal u325_b DONE drc=0 rss_mb=7028 wall=11:17.02 [INFO DRT-0199]   Number of violations =
