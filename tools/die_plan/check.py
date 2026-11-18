@@ -1288,6 +1288,15 @@ def cut_child_ports(P):
     return out
 
 
+def _cut_lanes(hits, lo, hi):
+    """[lane, bits] of the crossings inside [lo, hi] on one cut line, most bits first (CUT-SEGMENTS-1)."""
+    acc = {}
+    for y, w, lid in hits:
+        if lo - EPS <= y <= hi + EPS:
+            acc[lid] = acc.get(lid, 0) + w
+    return sorted(([k, v] for k, v in acc.items()), key=lambda t: (-t[1], str(t[0])))
+
+
 def check_cuts(P, R, geo, full_cut="verdict"):
     """full_cut: verdict (default) = a full-line cut over cut_ratio_max is an ERROR; band (GRT-CALIB-1, COORD 11-11) =
     it is a die-band WARN [cuts_full_band] only: the full line assumes perfect spreading along the line and predicted
@@ -1315,10 +1324,11 @@ def check_cuts(P, R, geo, full_cut="verdict"):
         w = P.ports[P.lanes[lid]["ports"][0]]["width"]
         tags = owned.get(lid) or {}
         for i, (p, q) in enumerate(zip(pts, pts[1:])):
-            segs.append((p, q, w, tags.get(i)))
+            segs.append((p, q, w, tags.get(i), lid))
     carried = {}
     rects = {n: P.rect(n) for n in P.parts}
     worst_full, worst_loc = (0, None), (0, None)
+    over_segs = []
     for orient, D, along in (("vertical", P.W, P.H), ("horizontal", P.H, P.W)):
         wire_dir = "H" if orient == "vertical" else "V"     # wires crossing a vertical line run horizontally
         dl = [n for n in die_l if P.layers[n]["dir"] == wire_dir]
@@ -1330,7 +1340,7 @@ def check_cuts(P, R, geo, full_cut="verdict"):
             if c >= D - EPS:
                 break
             hits = []
-            for p, q, w, own in segs:
+            for p, q, w, own, lid in segs:
                 a, b = (p[0], q[0]) if orient == "vertical" else (p[1], q[1])
                 if min(a, b) < c - EPS and max(a, b) > c + EPS:
                     y_ = p[1] if orient == "vertical" else p[0]
@@ -1344,11 +1354,12 @@ def check_cuts(P, R, geo, full_cut="verdict"):
                         carried.setdefault((orient, c, ch), 0)
                         carried[(orient, c, ch)] += w
                         continue
-                    hits.append((y_, w))
-            bits = sum(w for _, w in hits)
+                    hits.append((y_, w, lid))
+            bits = sum(w for _, w, _ in hits)
             cap = along * die_den
             parts_cap = 0.0
             loc = []
+            seg_lanes = {}
             for pn, r in rects.items():
                 lo, hi, a0, a1 = (r[1], r[3], r[0], r[2]) if orient == "vertical" else (r[0], r[2], r[1], r[3])
                 if not (a0 < c - EPS and a1 > c + EPS):
@@ -1368,9 +1379,10 @@ def check_cuts(P, R, geo, full_cut="verdict"):
                             ((cr[0]+EPS<c<cr[2]-EPS) if orient=="vertical" else (cr[1]+EPS<c<cr[3]-EPS))]
                     seg_cap+=cut_interval_tracks(lo,hi,P.layers[L]["pitch_um"],frac,obs,reserved,derate)
                 parts_cap+=seg_cap
-                sb = sum(w for y, w in hits if lo - EPS <= y <= hi + EPS)
+                sb = sum(w for y, w, _ in hits if lo - EPS <= y <= hi + EPS)
                 if sb:
                     loc.append((sb / seg_cap if seg_cap else math.inf, pn, sb, seg_cap))
+                    seg_lanes[pn] = _cut_lanes(hits, lo, hi)
             for ch in P.die.get("channels", []):          # planned channels: their own layers are die-route tracks
                 if "ports" not in ch:
                     continue
@@ -1382,7 +1394,7 @@ def check_cuts(P, R, geo, full_cut="verdict"):
                            and L not in dl)
                 seg_cap = (hi - lo) * (cden + die_den)
                 parts_cap += (hi - lo) * cden
-                sb = sum(w for y, w in hits if lo - EPS <= y <= hi + EPS)
+                sb = sum(w for y, w, _ in hits if lo - EPS <= y <= hi + EPS)
                 if sb:
                     loc.append((sb / seg_cap if seg_cap else math.inf, f"channel:{ch.get('name', '?')}", sb, seg_cap))
             cap += parts_cap
@@ -1395,6 +1407,20 @@ def check_cuts(P, R, geo, full_cut="verdict"):
                 if lr > lim + EPS:
                     R.err("cuts", f"{orient} cut at {c:g}: {lp} segment carries {lb} bits on {lc:.0f} tracks "
                           f"= {lr:.2f} > {lim}", part=lp)
+                # CUT-SEGMENTS-1 (S81-DIE-R3 11-17, COORD): the ERROR above names the worst segment of the cut only;
+                # every other segment of the same cut over the limit is listed too (WARN cuts_segments + summary
+                # over_segments, with its lanes and every segment of the line), so a plan event sees the full set.
+                over = [x for x in loc if x[0] > lim + EPS]
+                if over:
+                    line = [dict(part=p_, ratio=round(r_, 4), bits=b_, tracks=round(c_), slack_bits=int(lim * c_ - b_))
+                            for r_, p_, b_, c_ in sorted(loc, key=lambda x: -x[0])]
+                    for r_, p_, b_, c_ in sorted(over, key=lambda x: -x[0]):
+                        if p_ != lp:
+                            R.warn("cuts_segments", f"{orient} cut at {c:g}: {p_} segment carries {b_} bits on {c_:.0f} "
+                                   f"tracks = {r_:.2f} > {lim} (not the worst segment of this cut)", part=p_)
+                        over_segs.append(dict(orient=orient, at_um=c, part=p_, ratio=round(r_, 4), bits=b_,
+                                              tracks=round(c_), need_bits=int(math.ceil(b_ - lim * c_)),
+                                              worst_of_cut=p_ == lp, lanes=seg_lanes.get(p_, []), line=line))
                 if lr > worst_loc[0]:
                     worst_loc = (lr, f"{orient}@{c:g}:{lp}")
             if ratio > lim + EPS:
@@ -1414,6 +1440,7 @@ def check_cuts(P, R, geo, full_cut="verdict"):
                   "signal ports")
     out["child_carried"] = [dict(orient=o, at_um=c, child=ch, bits=b) for (o, c, ch), b in sorted(carried.items())]
     out["worst_partition_segment"] = dict(ratio=round(worst_loc[0], 4), at=worst_loc[1])
+    out["over_segments"] = over_segs
     out["model"] = dict(partition_ft_layers=PART_FT_LAYERS, ft_track_frac_default=FT_TRACK_FRAC,
                         die_layers=die_l, cut_avail=avail, step_um=step,
                         core_obs="declared/routed union", ft_bands="piecewise per-layer reserved shares")
