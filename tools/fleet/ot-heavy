@@ -35,6 +35,33 @@ ot_heavy_thread_cap_factor() {
   fi
 }
 
+# STALE-LOCK (COORD 11-18): admission sat ~70 min on admit.lock whose holder had exited: a flock lives as long as ANY process holds the inherited fd 8 (a child of the
+# holder outlived it).  The holder writes its pid to admit.lock.pid after taking the lock; a waiter that has waited OT_HEAVY_LOCK_WAIT_S (30) and finds that pid gone replaces
+# the lock FILE (a new inode: the leaked fd keeps the dead inode) under a short break guard, and logs it.  A live holder is waited for as before.
+ot_heavy_admit_lock() {
+  local _w="${OT_HEAVY_LOCK_WAIT_S:-30}" _hp _ino
+  exec 8>>"$D/admit.lock"
+  if ! flock -w "$_w" 8; then
+    _hp=$(cat "$D/admit.lock.pid" 2>/dev/null)
+    if [ -z "$_hp" ] || ! kill -0 "$_hp" 2>/dev/null; then
+      _ino=$(stat -c %i "$D/admit.lock" 2>/dev/null)
+      exec 7>>"$D/admit.break"
+      if flock -n 7; then
+        if [ "$(stat -c %i "$D/admit.lock" 2>/dev/null)" = "$_ino" ]; then
+          echo "$(date -Is) $UNIT STALE-LOCK holder pid ${_hp:-none} is gone but admit.lock is still held (leaked fd): replacing the lock file" >> "$D/admit.log"
+          rm -f "$D/admit.lock"
+        fi
+        flock -u 7; exec 7>&-
+      else
+        exec 7>&-
+      fi
+      exec 8>>"$D/admit.lock"
+    fi
+    flock 8
+  fi
+  echo $$ > "$D/admit.lock.pid" 2>/dev/null
+}
+
 MEM=""; TAG=""; MAXWAIT=""
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -59,7 +86,7 @@ if /usr/local/bin/ot-heavy-reconcile --is-die -- "$@" || /usr/local/bin/ot-prote
 elif [ "${OT_HEAVY_PRIO:-}" != plan ] && /usr/local/bin/ot-heavy-reconcile --is-plan -- "$@"; then export OT_HEAVY_PRIO=plan; fi   # PLANBYPASS_1114
 while :; do
   [ -f "${OT_HEAVY_CONF:-/etc/ot-heavy.conf}" ] && . "${OT_HEAVY_CONF:-/etc/ot-heavy.conf}"   # v5: every attempt, so a headroom change reaches queued waiters
-  exec 8>>"$D/admit.lock"; flock 8
+  ot_heavy_admit_lock
   # v8: the gate decides (class size of the request, charge of every running unit, the 25 % rule, the real floor)
   GATE=$(timeout 30 /usr/local/bin/ot-heavy-reconcile --gate "$MEM" -- "$@" 2>/dev/null)
   V=${GATE%% *}; R=${GATE#* }; RES=${R%% *}; R=${R#* }; CLS=${R%% *}; WHY=${GATE#*| }
