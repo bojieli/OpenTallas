@@ -206,3 +206,15 @@ def test_a_dir_that_a_symlink_under_home_points_into_is_never_retired(tmp_path):
     res = AR.run_lanes(c, set(), lambda p: None, seen.append, 10**9, apply=False, now=NOW, idle_h=12.0, mtime=lambda p, cut: OLD, git_check=None, links=targets)
     by = {os.path.relpath(r["tree"], c): r["result"] for r in res if r.get("tree")}
     assert by["other"] == "WOULD-DELETE" and by["relocated"].startswith("REFUSED") and by["relocated/home__x"].startswith("REFUSED")
+
+
+def test_a_pass_stops_at_its_deadline_and_a_stuck_git_check_is_short(tmp_path):
+    c = str(tmp_path)
+    for n in ("a", "b", "c"):
+        mk(c, n + "/x", OLD)
+    seen = []
+    res = AR.run_lanes(c, set(), lambda p: None, seen.append, 10**9, apply=False, now=NOW, idle_h=12.0, mtime=lambda p, cut: OLD, git_check=None, links=set(), deadline=time.time() - 1)
+    assert res == [{"stop": "deadline"}] and seen and seen[0]["stop"] == "deadline"            # nothing started past the deadline, the stop is logged
+    import inspect
+    assert inspect.signature(AR.git_unsafe).parameters["timeout"].default <= 15
+    assert "-uno" in inspect.getsource(AR.git_unsafe)
