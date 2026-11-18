@@ -172,5 +172,31 @@
   },
   "hooks": "OT_ISTATIONS 3463 FIRM 0 missing; OT_RELAY_MID 9450 flops / 6 stations; OT_TAIL_SITE 16 of 18 copies sited (bad_out 2), max_hop 324.6 um",
   "status": "in GRT 12:30 PST; DO_NOT_COUNT until kv3_head_eighth_e0 carries +2 kt stages on its 2 local lanes"
+ },
+ "E_west_band_hgi": {
+  "finding": "NOT caused by fixes 1-3: the BASE HG6 kit of kv3_hgi_v1__cl141fc26e has the same GRT overflow and never clears it (congestion-5/10/15/20/25.rpt, capped report: 49,234 / 46,156 / 41,038 / 41,656 / 43,691; west band x 0-200 y 400-1200: 41,652 .. 35,984; base in GRT > 12 h). 97 % of the base west overflow is at y 1000-1200, x 0-180, on the i_ectl_Q_N_tN lane.",
+  "cause": "W face pins of i_ectl_Q_N_tN are at y 1048-1472, but hard core cl_i_ectl_Q_N_tN (kv_cland_w1560_ew, d pins W / q pins E) is at y 760-1078: 1,560 wires run 180-500 um down a 17-um strip, and the lane-pad station regs_um (133, 1164.095) lies ON head2_e6 (77.76-293.76 x 1002.24-1218.24): the flops land at (99.4, 1166) and the 1,560-bit bus crosses the core. With fix 1 the head-2 chain adds hst2_t1 at (68, 687) in the same west channel.",
+  "rows": [
+   {
+    "id": "W1",
+    "needs_bind": true,
+    "row": "hard_cores cl_i_ectl_Q_N_tN origin_um [17.28, 760.32] -> [17.28, 1097.28] (+336.96 = 39 x 8.64; under its own pins) + clock.taps xy of that core + reset collector tree re-solve. GEN refuses it on the old bind (physical collector_tree differs from captured bound reset identity) = same class as the hub_Wo split, so it must ride a plan event. Check hgi_v2..v8 and hgi for the same offset."
+   },
+   {
+    "id": "W2",
+    "needs_bind": false,
+    "row": "internal_stations bus:i_ectl_Q_N_tN regs_um [[133.0, 1164.095]] -> [[100.0, 950.4]] (channel e4/e6 west end, off the core; with W1 use [133.0, 1270.08])"
+   },
+   {
+    "id": "W3",
+    "needs_bind": false,
+    "row": "relay_polylines [{group_re: u_hst2_g$, polyline_um: [[340.0, 950.4], [340.0, 618.0]]}]: head-2 gather chain down the middle channel (x 294-388), tail at the sink centroid; needs relay_mid tail-on-polyline (lane clone wt2, push pending)"
+   },
+   {
+    "id": "W4",
+    "note": "ft2 (W->E, 1,056 bits, cl_ft2_i in the e2/e4 channel) left as planned; re-read after W1-W3"
+   }
+  ],
+  "proof": "private kit k4 = k3 + W2 + W3 (no W1): epyc9 fable-fix-kv-hg3/k4/gen, route goal launched 14:1x PST, log intel2 ~/tmp/ffkhg3/k4_route.log. Read congestion-5.rpt west band vs 44,172 (k3) / 41,652 (base)."
  }
 }
