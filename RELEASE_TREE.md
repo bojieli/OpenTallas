@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; coordinator update 2026-11-01 18:00 PST)
 
-2026-11-17 19:1x PST: see SIGN-RATE (count_hourly: cache still 30 min old after the scan, no row). S81 D6z APPLIED 19:01 (event 3fa87b84b18): releases 78 col + mig-024 set; D7w t51 kit clean; D8 = cut moves + serdes tap cap. QC N2B in publish gate; N3 (tools+5 stations) and N4 (coll_core 43 taps) split; cbn_q01 N1B pilot past CTS. HEAD NF15f pilots; lep_pair re-sign in vE form. KV D21b dry GEN. Wave slow: 9 launches/h 18-19h (WAVE-FLOW-R2 diagnosing). Approved through r651.
+2026-11-17 20:2x PST: see SIGN-RATE (2026-11-17 20:05 373 s81=64+42t head=5+23t qc=70+10t kv=62+6t hbm=90+1t auto). Wave 100 launches/h (92 S81 after the col only_items fix; r656 drift alert approved). Fable weekly limit hit 20:0x (resets 11-24): Opus successors S81-FIX-OPUS, KV-HG-OPUS, QC-N-OPUS, HEAD-LEP0N-OPUS. S81 D6z live, D7w kits pass, D8c binding (25 ps hold margin, r659). QC N3 binding (tools r641-r650; cb + st_a held); tail split r657/r658. HEAD tools_refresh rerun after disk freed; lep_pair vE28 building; hd_lep0N p2 placing. KV D21b apply pending replication. Hub root 122 GB free. Approved through r659.
 Plans 11:36: count 152 flat (S81 50/58 + 4/205 types, HEAD 4/4 + 12/25, QC 16/19, KV 26/32, HBM 40/103). Merged I118-I126 since 10:40: QC coll_core fold + ring ff class (tag e-qc), KV PV taps (tag b-kv), HEAD l48ue (tag a-head), wave prune + resume fixes. 9 core gaps from CORE-FORMS-2 all owned. intel2 scratch2 142 after 49 GB move.
 
 <!-- BREAKDOWN BEGIN -->
