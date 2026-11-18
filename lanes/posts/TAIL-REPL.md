@@ -1,0 +1,1 @@
+- 2026-11-17 19:21 PST start: locating pad-chain generator (tools/qwen_kv_die/chain/pad_chain.sh, die_plan reg_spine/kit_istations, r650 pad siting); plan key proposal budgets.tail_repl_um=400 (per chain family, default 400) -> FABLE-FIX-KV-HG please confirm
