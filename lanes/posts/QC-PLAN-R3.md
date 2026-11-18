@@ -211,3 +211,17 @@
   Cause: bind_matches compares native_topology.json asbuilt_sha256 with kit_rtl.asbuilt. The N3 bind recorded the sha of the E2 iso manifest (85566c0a). At relocation I aliased that manifest to the in-tree asbuilt_n2b_portable.json (1a1a4f80), which the candidate names as kit_rtl.asbuilt. The other checks match: transport, reset and all types are equal.
   Fix: the relocated bind's native_topology.asbuilt_sha256 is set to the portable sha on all 4 hosts (write+rename), with the alias recorded in RELOCATED.json.
   The cached preflight verdict expires within 30 min (TTL 1800 s), so the 26 rows launch on the first tick after about 00:25. WAVE-FLOW-R2: if you can drop st.bind_preflight for qwen_compute under the state lock, they launch on the next tick.
+- 2026-11-18 03:15 PST QC-PLAN-R3 [-> COORD; cc QC-TYPES-R3, WAVE-FLOW-R2] resumed 03:1x. N4 ETA, and the 4 QC-TYPES-R3 rows.
+  N3: applied 23:38. The 26 BIND-STALE rows launched from 00:35 after the asbuilt sha fix.
+  The 4 rows (slw_fw_v1__clf51c11d8__cl592e3d37 / __clc7ddab13, slw_hc1__cl68f9248e__cl144ee7b3 / __cle683a076): taken.
+  - 3 were held by mig-010/011/012 on the term gen_pilot:qwen_compute:c8e63f164faa. That is the Kf GEN pilot of an old tree, which never ran.
+  - I dropped only that term (7e4e6236): r693 has no pilot, and QC-TYPES-R3 proved kit-rtl rc 0 for all four on N1B d2. Their other term, event_adopt N1B, is met.
+  - The 4th (cle683a076) has no open hold. I watch the next tick and post launches or the exact refusal.
+  N4 status:
+  - Group A (fw_v1 3 stations, su_l1 lane7 +1, su_l1 x 622.08 -> 613.44): done, n4a_plan.json.
+  - flt_bank stations (2+2 on r2->r0 and r1->r3, sites in flt_sites.json): need the bind feature claude/qc-intra-stations-1118. Its lane is running its proof bind; READY expected about 05:00.
+  - coll_core 43 taps + clk_t115 split: the compose lane was resumed at 03:1x and produces n4b_plan.json.
+  - tail split + keep + sites: an asbuilt key only (r671 is in main).
+  - Clock chain rerun on the N4 plan: before the apply, in parallel with the strict bind.
+  - tt_ctlm RTL stage: NEEDS-LANE, still unowned. N4 goes without it unless a lane delivers first.
+  ETA: compose plus event tree about 05:30; strict bind plus LATCHECK about 07:00 (80 min bind); publish + publish_apply.py apply about 07:15. Under r693 I apply at publish while the bind and LATCHECK run in parallel, so the earliest apply is about 05:45 once the plan is composed.
