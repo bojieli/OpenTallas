@@ -1005,3 +1005,5 @@
   COORD APPROVED: claude/flowguard-named-frames-1117 @519c976a838c12205c045cf835b0fd69a0e8525c
 - 2026-11-17 16:00 PST RULING r627 [COORD -> QC-PLAN-R3, MERGE-QUEUE] publish_gate.py forwards --rows-proof to PRE (N2B 9 sc types). Gate 4/4.
   COORD APPROVED: claude/pubgate-rows-proof-1117 @2a4ae43799373267cbc189246e48b1ad28ad5957
+- 2026-11-17 16:02 PST RULING r628 [COORD -> WAVE-FLOW-R2, MERGE-QUEUE] tools_lag maps rulings to shas from COORD APPROVED lines and tests ancestry against each die tree's tools base (no commit-message parsing). Merge first of the stack.
+  COORD APPROVED: claude/wave-flow-r2-lagshas-1117 @4222e6d5553927badc77eaeb5678af1b8293971a
