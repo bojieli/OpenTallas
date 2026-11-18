@@ -46,6 +46,8 @@ def row_classes(items, cfg):
         if st not in ELIGIBLE + HELD:
             continue
         d = dies.get(rec.get("die")) or {}
+        if st not in HELD and str(rec.get("q_status") or "").upper() == "SIGNED":
+            continue                         # FABLE-FLOW-0010 H: a SIGNED job is a result, not a row waiting to launch; 66 of the 98 'superseded-event' rows were these
         if st in HELD:
             why = str(rec.get("route_hold") or rec.get("reason") or "")
             out[key] = "tree_switch" if re.search(r"tree[_-]switch", why, re.I) else "route_hold:" + kind(why)

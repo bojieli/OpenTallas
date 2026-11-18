@@ -83,3 +83,19 @@ class StaleEvent(unittest.TestCase):
         self.assertEqual(got["a"], ("CANCELLED", "stale-event"))
         self.assertIn("boom", st["items"]["a"]["reason"])
         self.assertEqual([got[k][0] for k in "bce"], ["FAIL", "SIGNED", "FAIL"])
+
+
+class SignedAndOldPlan(unittest.TestCase):
+    def test_old_plan_route_hold_is_retired_and_signed_rows_are_not_counted_as_waiting(self):
+        import under_use as UU
+        cfg = {"dies": {"d": {"enabled": True, "event": "e2"}}}
+        st = {"items": {"a": {"die": "d", "item": "a", "event": "e1", "status": "ROUTE-HELD", "route_hold": "SKIP-OLDPLAN: attempt of plan x"},
+                        "b": {"die": "d", "item": "b", "event": "e1", "status": "ROUTE-HELD", "route_hold": "WAIT-FORM: visual"}}}
+        KW.retire_superseded_rows(None, cfg, st, now=4)
+        self.assertEqual((st["items"]["a"]["status"], st["items"]["a"]["retire"]), ("CANCELLED", "oldplan-route-hold"))
+        self.assertEqual(st["items"]["b"]["status"], "ROUTE-HELD")                     # an owner-review hold stays
+        items = {"s": {"die": "d", "item": "s", "event": "e1", "status": "ENQUEUED", "q_status": "SIGNED"},
+                 "w": {"die": "d", "item": "w", "event": "e2", "status": "ENQUEUED", "q_status": "QUEUED"}}
+        cls = UU.row_classes(items, cfg)
+        self.assertNotIn("s", cls)
+        self.assertIn("w", cls)

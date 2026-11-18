@@ -2218,6 +2218,13 @@ def retire_superseded_rows(AP, cfg, st, now=None):
         r.update(status="CANCELLED", **{"class": "SUPERSEDED"}, retire="stale-plan", updated=now,
                  reason=f"SUPERSEDED: {r.get('item')} is not an item of the current plan ({cur[:12]}) and the row's plan block is {old[:12]}; the type relaunches under its current name")
         stale += 1
+    for r in items.values():                             # FABLE-FLOW-0010 H: a ROUTE-HELD row the wave itself parked on an old plan (SKIP-OLDPLAN) is history on the next tick
+        d = (cfg.get("dies") or {}).get(r.get("die")) or {}
+        if r.get("status") == "ROUTE-HELD" and d.get("enabled") and d.get("event") and r.get("event") and r["event"] != d["event"] \
+                and str(r.get("route_hold") or "").startswith("SKIP-OLDPLAN"):
+            r.update(status="CANCELLED", **{"class": "SUPERSEDED"}, retire="oldplan-route-hold", updated=now,
+                     reason=f"SUPERSEDED: ROUTE-HELD on event {r.get('event')} (die is on {d['event']}); was: " + str(r.get("route_hold"))[:160])
+            stale += 1
     old_ev = 0
     for r in items.values():                             # STALE-EVENT-1117 (COORD failure_breakdown 22:30): a FAIL row on an event that is not the die's current one is history, not a type failure:
         d = (cfg.get("dies") or {}).get(r.get("die")) or {}          # the item launches on the current event on its own key; the breakdown counted 40+ such rows per die as open failures
@@ -9155,6 +9162,12 @@ def tools_refresh_tick(AP, cfg, st):
             continue
         if action != "spawn":
             continue
+        _last = st.setdefault("tools_refresh_last", {})
+        _gap = float(d.get("tools_refresh_min_gap_s") or cfg.get("tools_refresh_min_gap_s") or 1800)
+        if time.time() - float(_last.get(die) or 0) < _gap:           # FABLE-FLOW-0010 C: every new ruling used to start another pass; at most one pass per die per 30 min
+            started.pop(key, None)                                    # the key is decided on a later tick (it is not an attempt)
+            continue
+        _last[die] = time.time()
         unit = f"kw-toolsrefresh-{die}-{int(time.time())}"
         started[key]["unit"] = unit
         AP.log(f"KIT-WAVE TOOLS-REFRESH {die}: starting {unit} for {', '.join(lag['missing'][:12])}")

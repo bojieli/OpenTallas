@@ -109,8 +109,11 @@ def test_ops_compose_stops_at_the_first_failing_step(monkeypatch):
 
     def run_(host, cmd, timeout=0):
         seen.append((host, cmd))
+        if "REUSE_PROBE" in cmd:
+            return 1, ""
         return (1, "boom") if "delta-apply" in cmd else (0, "hash")
     ok, detail, h = TR.Ops(die(), "/r", SHA, run=run_).compose(OLD, "/n")
+    seen[:] = [x for x in seen if "REUSE_PROBE" not in x[1]]
     assert not ok and len(seen) == 2 and "rc 1" in detail and seen[0][0] is None and seen[1][0] == "epyc10"
     seen.clear()
     ok, detail, h = TR.Ops(die(), "/r", SHA, run=lambda host, cmd, timeout=0: (3, "no sha")).compose(OLD, "/n")
@@ -135,6 +138,7 @@ def test_wave_tick_starts_one_refresh_per_key(monkeypatch):
     assert [u.split("-")[2] for u, _ in launched] == ["kv"]              # s81 off, hbm has nothing missing
     assert "--die" in launched[0][1] and "--dry" not in launched[0][1]
     KW.TOOLS_LAG_CACHE["raw"]["kv"] = {"pin": "abc", "n_commits": 20, "missing": ["r535", "r554", "r600"]}
+    st["tools_refresh_last"]["kv"] -= 3600                             # the 30-min coalescing gap has passed
     KW.tools_refresh_tick(AP, cfg, st)                                   # a new ruling = a new key
     assert len(launched) == 2
 
@@ -152,10 +156,10 @@ def test_main_wins_overlays_are_dropped_and_logged(monkeypatch):
     seen = []
     import overlay_classify as OC
     monkeypatch.setattr(OC, "classify_die", lambda repo, d, main, prefixes=None: {"tools/a.py": {"cls": "a", "why": "x"}, "tools/b.py": {"cls": "b", "why": "y"}})
-    o = TR.Ops(die(), "/r", SHA, run=lambda host, cmd, timeout=0: (seen.append(cmd) or (0, "h")))
+    o = TR.Ops(die(), "/r", SHA, run=lambda host, cmd, timeout=0: (seen.append(cmd) or ((1, "") if "REUSE_PROBE" in cmd else (0, "h"))))
     ok, detail, h = o.compose(OLD, "/n")
     assert ok and o.overlay_report == {"tools/a.py": "a", "tools/b.py": "b"}
-    assert "--drop-overlay tools/a.py tools/b.py" in seen[0]                      # the pack drops exactly the main-wins overlays
+    assert "--drop-overlay tools/a.py tools/b.py" in [c for c in seen if "REUSE_PROBE" not in c][0]                      # the pack drops exactly the main-wins overlays
     monkeypatch.setattr(OC, "classify_die", lambda repo, d, main, prefixes=None: {"tools/c.py": {"cls": "c", "why": "private patch", "diff": "+X"}})
     ok, detail, h = TR.Ops(die(), "/r", SHA, run=lambda *a, **k: (0, "")).compose(OLD, "/n")
     assert not ok and detail.startswith("OVERLAY-PRIVATE") and "+X" in detail
@@ -439,3 +443,53 @@ def test_refresh_records_dropped_hosts_and_narrows():
     rec, posts, edits, _ = run(ops=Drop())
     assert rec["status"] == "APPLIED" and rec["dropped_hosts"] == {"epyc8": "refuse"}
     assert {"op": "replace", "path": "/dies/kv/gen_hosts", "value": ["epyc10"]} in edits[0][0]
+
+
+def test_compose_reuses_a_verified_tree_and_replicates_per_host_in_parallel(monkeypatch):
+    import overlay_classify as OC
+    monkeypatch.setattr(OC, "classify_die", lambda repo, d, main, prefixes=None: {})
+    seen = []
+
+    def run_(host, cmd, timeout=0):
+        seen.append((host, cmd))
+        if "delta.json" in cmd and "cat " in cmd:
+            return 0, json.dumps({"add": {"tools/x.py": 1}})
+        if " replicate " in cmd:
+            h = cmd.split("--hosts ")[1].split()[0].strip("'")
+            return 0, f"{h}: OK"
+        return 0, "newhash"
+    ops = TR.Ops(die(), "/r", SHA, run=run_)
+    ok, detail, h = ops.compose(OLD, "/n")
+    cmds = [c for _, c in seen]
+    assert ok and h == "newhash"
+    assert not any("delta-make" in c or "delta-apply" in c or " publish " in c for c in cmds)      # the tree was reused
+    reps = [c for c in cmds if " replicate " in c]
+    assert len(reps) == 1 and "--hosts epyc8" in reps[0] and "--link-from" in reps[0]           # gen_hosts epyc10 (host), epyc8: one command per OTHER host
+    d3 = die(gen_hosts=["epyc10", "epyc8", "epyc9", "intel1"])
+    seen.clear()
+    ok, _, _ = TR.Ops(d3, "/r", SHA, run=run_).compose(OLD, "/n")
+    reps = [c for c in [c for _, c in seen] if " replicate " in c]
+    assert ok and len(reps) == 3 and all("--link-from" in c for c in reps)
+    assert sorted(c.split("--hosts ")[1].split()[0].strip("'") for c in reps) == ["epyc8", "epyc9", "intel1"]
+    assert ops.hosts == ["epyc10", "epyc8"]
+
+
+def test_tick_starts_at_most_one_pass_per_die_per_30_minutes(monkeypatch, tmp_path):
+    import kit_wave as KW
+    launched = []
+
+    class AP:
+        DRY = False
+        AP_DIR = str(tmp_path)
+        log = staticmethod(lambda m: None)
+        launch_unit = staticmethod(lambda unit, logf, argv: launched.append(unit))
+    cfg = {"dies": {"kv": {"enabled": True, "tools_refresh": True}}}
+    st = {}
+    KW.TOOLS_LAG_CACHE["raw"] = {"kv": {"pin": "abc", "n_commits": 5, "missing": ["r1"]}}
+    KW.tools_refresh_tick(AP, cfg, st)
+    KW.TOOLS_LAG_CACHE["raw"] = {"kv": {"pin": "abc", "n_commits": 6, "missing": ["r1", "r2"]}}      # a new ruling: a new key
+    KW.tools_refresh_tick(AP, cfg, st)
+    assert len(launched) == 1                                            # coalesced
+    st["tools_refresh_last"]["kv"] -= 1900
+    KW.tools_refresh_tick(AP, cfg, st)
+    assert len(launched) == 2 and "r1,r2" in " ".join(st["tools_refresh_started"])
