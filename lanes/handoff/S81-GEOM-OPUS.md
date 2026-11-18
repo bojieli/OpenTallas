@@ -45,3 +45,8 @@ Owns S81 strip-leaf congestion and the col bank-leaf reach. Rows go to S81-DIE-R
 - kv_leaf t1/t3 item_env OT_GPL_HPWL_RATIO 1.5 (kit_wave_edit 08e1120d228); t37 a9 already runs with 1.5. phy__t1 a13 and t29 a22 relaunched at 06:08 on d8t: read their GRT.
 - Strip proof (Next 2 above) waits for the D8e apply.
 - 07:2x bank proof kit generated (KIT_RTL/PREPARE/GEN 0, GEN_LINT PASS, 11 u_y_xd relay stages in bound RTL); route-to-sign-off launched: ot-run epyc8, log intel2 ~/s81-geom-opus-bl2-route.log, kit B/gate_bl2/kits/col_h9_r0_p2__t1__cl0045af7b__pv622a6f97/gen (watch OT_RELAY_MID_FIT rt_4a_0/rt_4b_0 in run_place.log: same NOFIT class expected until the relay_sites row).
+- 07:4x RELAYSITE-1 row built: epyc8 /srv/opentallas-scratch2/claude/fable-fix-s81-strip/rows_relaysite_h9r0p2.json (5 cl0045af7b types, 128 keys: u_u_r0_u_y_rt_4a_0/4b_0 .u.o[0..62] + .u.g_rsreg.rq at 476,886 / 476,892.48).
+  Source = u_r0_u_bn2.d_r0 (x 149-204, y 872.6). The sites clear halo + 20 um. Hops: source->_0 335/299, _0->_1 75/37. relay_mid failed only because it also wants the IDEAL next point within 405.
+  cl9f71e63d (7 types) is not probed yet: rerun rt4.tcl on one of its attempt DBs (epyc10 3fa87b84b18 items ...cl9f71e63d__pv2744f675/attempt_4).
+- Proof: private gate_bl2 plan patched with the row (private copy). Kit regen log intel2 ~/s81-geom-opus-kits_bl2b.log; hub chain ~/s81-geom-opus-chain.sh starts the route (log ~/s81-geom-opus-bl2-route.log).
+- MY ERROR 07:3x: docker stop hit the WAVE place container of the same type (sealed ot-jobs mount). ALERT posted for a relaunch. Match containers by mount path.
