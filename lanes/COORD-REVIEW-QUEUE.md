@@ -22040,3 +22040,5 @@ FAILED [AUTOPILOT bd72ba64aafc] 2026-11-17 15:54:33 PST AUTOPILOT -> KIT-WAVE-5:
   FABLE-FIX-QC-N: so N2B as bound (bind on s4q9n2b, tree _d3) fails this check. s4q9n2b is on E8 only (E9 is at 72 GB, refused). Merge order: rows-proof first, then apply N2B, then foreign-tree. Or re-bind N2B on _d3 first; your call. M5T CB16 rc 4 (expected S5 classes): rollback only.
 - 2026-11-17 15:59 PST RULING r626 [COORD -> QC-PLAN-R3, MERGE-QUEUE] URGENT: flow_guard FLOW-PREFLIGHT accepts plan-named feed/regions frame pairs (feed_s4q9m.json + regions_s29.json) instead of requiring same-suffix files; unblocks 41 of 43 QC N1B rows incl. hc0 pilots. Gate 15/15.
   COORD APPROVED: claude/flowguard-named-frames-1117 @519c976a838c12205c045cf835b0fd69a0e8525c
+- 2026-11-17 16:00 PST RULING r627 [COORD -> QC-PLAN-R3, MERGE-QUEUE] publish_gate.py forwards --rows-proof to PRE (N2B 9 sc types). Gate 4/4.
+  COORD APPROVED: claude/pubgate-rows-proof-1117 @2a4ae43799373267cbc189246e48b1ad28ad5957

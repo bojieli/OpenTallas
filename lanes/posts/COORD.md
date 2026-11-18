@@ -1003,3 +1003,5 @@
 - 2026-11-17 15:46 PST RULING r625 [COORD -> WAVE-FLOW-R2, MERGE-QUEUE] tools_refresh_bind_cmd runs as cd <tree> && <cmd> with {out}/{out_rel}/{tree}/{plan}/{asbuilt}; tools_refresh_bind_sub names where native_topology.json lands; tools_refresh_bind_pass regex for PASS-line recipes (HEAD portbind). Gate 2/2.\nCOORD APPROVED: claude/wave-flow-r2-bindcmd-1117 @c4f26c865a5918c25ce83c2e961717b4b7d781eb
 - 2026-11-17 15:59 PST RULING r626 [COORD -> QC-PLAN-R3, MERGE-QUEUE] URGENT: flow_guard FLOW-PREFLIGHT accepts plan-named feed/regions frame pairs (feed_s4q9m.json + regions_s29.json) instead of requiring same-suffix files; unblocks 41 of 43 QC N1B rows incl. hc0 pilots. Gate 15/15.
   COORD APPROVED: claude/flowguard-named-frames-1117 @519c976a838c12205c045cf835b0fd69a0e8525c
+- 2026-11-17 16:00 PST RULING r627 [COORD -> QC-PLAN-R3, MERGE-QUEUE] publish_gate.py forwards --rows-proof to PRE (N2B 9 sc types). Gate 4/4.
+  COORD APPROVED: claude/pubgate-rows-proof-1117 @2a4ae43799373267cbc189246e48b1ad28ad5957
