@@ -1,0 +1,69 @@
+{
+ "checks": {
+  "contained": {
+   "findings": [],
+   "verdict": "PASS"
+  },
+  "dry_gen": {
+   "dir": "/home/ubuntu/.local/state/publish-gate/s81/0ce242a95176/bk_sel__t2",
+   "gen_host": "epyc8",
+   "item": "bk_sel__t2",
+   "kind": "type",
+   "origin": "/home/ubuntu/.local/state/publish-gate/s81/0ce242a95176/bk_sel__t2/published_gen_origin.json",
+   "origin_sha256": "053925cb4ffc1245749a824fc67dc710630a71690ce727d6844d23275a5dcdaa",
+   "preflight_fail_advisory": null,
+   "proof_kind": "published-gen",
+   "rc": 0,
+   "result": "DRY-PASS",
+   "result_sha256": "cd6dafa630cf884165ae36570971f915a8fead79d2192708bc7e2f73d1128542",
+   "spec_sha256": "ce0870ec88631d92316f00d31cdc166bcb3e1102fb25306285f7e40a55dbecc2",
+   "spec_src": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d6z_1117_work",
+   "stage": "preflight",
+   "unit_log_sha256": "a4afa00fee933314a69902796f3490e8b31cddb76a47924fb587b4faf3d8a9d3",
+   "verdict": "PASS"
+  },
+  "hashes": {
+   "findings": [],
+   "verdict": "PASS",
+   "views": 31
+  },
+  "pre_g0": {
+   "baseline": {
+    "accepted": 30,
+    "errors": 30,
+    "inherited": true,
+    "record_sha256": "6f412682602ddc66ba6b7244997c9c307ecfb3cb789dbfa6d80199b270e37696",
+    "review": "S81-DIE-R3 2026-11-17: D6z (plan 30c40fae) on main 53e4ff8612 tools. G0 ERROR set = 30: the 5 die-cut identities of the reviewed D6 baseline (S81-D6R3-G0-BASELINE-1117, C4r3 588c4714), unchanged, plus 25 ft_channel_tracks identities. The ft_channel_tracks check came with main tools (r581). Those 25 are exactly the 25 channels of the 20 types held by hold_record s81-ft-channel-d6z-1117; D7 (strip rows) clears them, and D7z shows ft_channel_tracks 0. Cut fix = D8 (rigid macro moves, COORD-approved). 0 new identities otherwise.",
+    "reviewed_g0_sha256": "d8756ddc436db57f50eb3c1e0ab6b642fe43c7ba7f9a483d46d3150e2c4e7278",
+    "reviewed_plan_sha256": "30c40fae8ab285d621fec957020b73e8ea4087ffa6eb08625b703e23df10c91b",
+    "verdict": "PASS"
+   },
+   "g0_rc": 1,
+   "g0_report": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/pubgate/g0-g7dvett9/g0_report.json",
+   "pre_rc": 0,
+   "tail": "PRE: PLAN-GATE-PRE PASS tree=/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d6z_1117_work plan=/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d6z_1117_work/physical/die_plan/s81/plan_h2_2249.json findings=0\n\nG0: 40 load=0/1500, radius=0/100.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO svc_lo_dsdv_svc_rs_w__t1: explicit tap clk_t41 load=0/1500, radius=0/100.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO svc_lo_dsdv_svc_rs_w__t1: explicit tap clk_t42 load=0/1500, radius=0/100.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO svc_lo_dsdv_svc_rs_w__t1: explicit tap clk_t43 load=0/1500, radius=0/100.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO svc_lo_dsdv_svc_rs_w__t1: explicit tap clk_t44 load=0/1500, radius=0/100.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO svc_lo_dsdv_svc_rs_w__t1: explicit tap clk_t45 load=0/1500, radius=0/100.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO svc_lo_dsdv_svc_rs_w__t1: explicit tap clk_t47 load=0/1500, radius=0/100.0, empty=True (info, LIMIT-BIND-1: not blocking)\n",
+   "verdict": "PASS"
+  },
+  "schema": {
+   "rc": 0,
+   "tail": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d6z_1117_work/physical/die_plan/s81/plan_h2_2249.json: PASS (0 errors)\n",
+   "verdict": "PASS"
+  }
+ },
+ "die": "s81",
+ "hosts": [
+  "epyc8",
+  "epyc2",
+  "epyc10",
+  "intel1"
+ ],
+ "item": "bk_sel__t2",
+ "manifest_hash": "0ce242a95176a332df5e26d747ee9d492b015bc02f9295768d170b775534715d",
+ "plan": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d6z_1117_work/physical/die_plan/s81/plan_h2_2249.json",
+ "plan_sha256": "30c40fae8ab285d621fec957020b73e8ea4087ffa6eb08625b703e23df10c91b",
+ "rows_proofs": [],
+ "schema": "opentallas.publish_gate.v1",
+ "t": 1794968339.2826529,
+ "tree": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d6z_1117_work",
+ "verdict": "PASS"
+}
