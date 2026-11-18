@@ -1,26 +1,19 @@
 # S81-DIE-R3 handoff (Opus, succeeded S81-DIE-R2 / Codex 05:03 packet)
-E = /srv/opentallas-scratch2/claude/s81-b3-clk/rows/f2s5_S81-DIE-R on epyc10; K = /srv/opentallas-scratch2/claude/kw45. Hub logs ~/s81-die-r/.
+E = epyc10 /srv/opentallas-scratch2/claude/s81-b3-clk/rows/f2s5_S81-DIE-R; E8 = epyc8 /srv/opentallas-scratch2/claude/s81-die-r3-e8;
+K = /srv/opentallas-scratch2/claude/kw45 (on epyc2 a link to scratch3). Hub logs ~/s81-die-r/ and (intel2 root full 11-17 19:0x) /srv/opentallas-scratch2/claude/s81-die-r3-hub/.
 
-## State 2026-11-17 late PST
-- APPLIED (live): D5e-r3b, K/src_s81_pin_3c913dbdfb23_f2s4_cohort_d5e (20ee0959), receipt lanes/handoff/s81_atomic_apply_1794932780359983736.json.
-  C4r3 apply was never committed (old apply wrote kit_wave without commit) -> superseded; gates run with --expect-source cohort_d5e.
-- D6b-r3 PUBLISHED on epyc10/epyc8/intel1 at K/src_s81_pin_3c913dbdfb23_d6_1117_work, manifest 6a822ce6 (link-apply on D5c; pack E/d6/r579pack)
-  = D6-r3 bind products (plan 0126890b, asbuilt c3e05b8d, sidecar 98aa35e5; strict bind 0/395/873, LAT 873/873, G0 5 = C4r3, bench_sel PASS)
-  + r563 bksel merge + r579 (s81-col-prd-obs @45f27bd7d6dd) + r584 (s81-grt-port-hold @28fbfce61ed4) tools. Old D6 (99b883f8) moved to ..._work_r563only.
-  Candidate lanes/handoff/S81_D6BR3_source_candidate_1117.json (hold_record s81-ft-channel-d6b-1117: 20 ft-channel types, release
-  result:S81-DIE-R3:ft-channel-d7), G0 baseline S81-D6R3-G0-BASELINE-1117.json (7a27aa7d). Guard launched (checker = rt/current src_manifest.py).
-  NEXT: col kit proof (tools/col_proof_d6b.sh -> E/d6/colproof2, type col_h10_r2__t1__cl99efd374__pv9ae398c2; grep config.mk for
-  OT_HOLD_FF_MARGIN=10 / PREGRT_HOLD_PORT_MARGIN 25 / OT_S81_SSTN_M5_BLOCK=1 / OT_GRT_PORT_HOLD_INCLUDE=1) -> publish_gate --item bk_sel__t2
-  --expect-source cohort_d5e -> apply --pilot-item bk_sel__t2 -> post.
-  Knob gap posted: only 76/236 col item_env rows carry the 3 knobs, 0/236 OT_GRT_PORT_HOLD_MARGIN_PS (S81-TYPES-R3/COORD).
-- D7: r2 (K/..._d7_1117_work, E/d7/r2) = D6-r3 + strip rows plan c80a518b + blocking ft_channel_tracks check (e845ba4c97bd, merged main 147b9727c1);
-  informational only (no col tools, no t51 repoint). D7b r3 (K/..._d7b_1117_work, E/d7/r3, tools/build_d7_r3.sh) = D6b pack + overlay3
-  (strip plan + t51 repoint, plan 65db2877 + check.py + test) -> elab/bind/LAT/G0/PRE + kits slice_station__t51, t34, t22. D7 overlay G0 check:
-  0 channels over 0.70 (worst 0.695). After r3: publish at same path (move aside), candidate (no ft hold), G0 baseline (ft_channel 0, others
-  = baseline; dn_s_7S_L3 +1 cycle must pass LAT), guard, gate, apply, then post "RESULT [S81-DIE-R3] ft-channel-d7" (lifts hold).
-- t51 native_e REPOINT (COORD 11-17, in D7b): plan hard_core lef/lib -> cores/views/s81p_slice_station__t51_ot_s81_station_t51_native_e_recon_r1116
-  (r1116 archive view, AGIdock/rtx-pro signed-export-1114 ..._r1116_hold5_m7, odb ad355978; own provenance.json + REPOINT_1117.json
-  stand-in disclosure), pins_file -> inputs/core_pins/..._native_e_rphase1116.json (== r1116 view pins.json; 43 M7 clock roots +0.020 um x),
-  41 clock landings moved, 38 taps insertion 256.22/196.02 -> 254.88/195.31 (r1116 core_latency.measured). Patcher E/tools/t51_repoint.py.
-- eco3 bksel waits on dsdv_bksel_c_rfdq QRX re-sign + quarter LEC (S81-CORES-R3).
-- Disk: epyc10 scratch2 ~186 GB free, epyc8/intel1 ~113 GB.
+## State 2026-11-17 19:20 PST
+- APPLIED (live): D6z, K/src_s81_pin_3c913dbdfb23_d6z_1117_work, manifest 0ce242a9, plan 30c40fae (gate ab239565, apply e013593d,
+  RESULT d6b-applied PASS 14827634). On all 4 gen hosts (epyc8 built; epyc10/intel1 D5c pack; epyc2 D5e pack E8/d6z/pack_d5e with
+  overlay_drop fix E8/d6z/fix_overlay.py). Hold s81-ft-channel-d6z-1117 (20 types) still on until D7w.
+- D7w (E8/d7w/r1, K/..._d7w_1117_work, plan 1698c515 = D6z + D7 strip rows + t51 native_w signed rc51f repoint): strict bind 0, LAT 873/873,
+  G0 5 cuts (ft_channel 0), PRE PASS, t51 kit GEN+lint PASS. Baseline lanes/handoff/S81-D7W-G0-BASELINE-1117.json committed.
+  Chain RUNNING: hub/d7w_chain.sh (out hub/d7w_chain.out): waits build -> E8/d6z/publish_w.sh (pack on D6z, all 4 hosts) -> hub/mk_cand_d7w.py
+  -> commit -> guard -> publish_gate (--expect-source D6z) -> apply --keep-gen-hosts -> posts RESULT ft-channel-d7 PASS. On CHAIN_STOP: fix, rerun stages by hand.
+- D8 (plan posted ffc70d19): D7w plan + TAP-GROUP-CAP-1 (E/tools/tap_split_family.py, 11 serdes, cap 1700) + CUT-WALL 12 rigid y moves
+  (E8/d8/cut_wall_fix.py, log E8/d8/cut_try2.log): census 0 segments > 0.58, KITFIT 0, taps legal. Plan c9a952e0 (added_taps notes stripped:
+  schema). Build d8b RUNNING (E8/d8b/r1, log ~/s81-die-r/build_d8b_e8.log; kits bk_sel__t2, t51, serdes t13/t2, leaf t43/t2).
+  Then: G0 expect 0 ERRORs; publish on D7w after D7w applies (publish_w.sh with base D7w), candidate, gate, apply.
+  d8 r1 tree (K/..._d8_1117_work) failed PRE on the note keys: superseded.
+- Tools on main: claude/s81-cut-census-t51w-1117 @cf133c2b62c0 (cut_census, CUT-SEGMENTS-1 G0 list, t51w repoint), READY.
+- Superseded trees (D6b/D6c/D6x/D7/D7c/D7x/D7z/d8) -> FLEET-OPS-R after 24 h.
