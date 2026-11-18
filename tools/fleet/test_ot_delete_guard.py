@@ -77,3 +77,24 @@ class Integration(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def test_work_root_history_keys_and_notes_do_not_protect_trees_but_hbm_history_does(tmp_path):
+    import json as _j
+    import ot_delete_guard as G
+    c = tmp_path / "coord"
+    (c / "autopilot").mkdir(parents=True)
+    (c / "lanes/handoff").mkdir(parents=True)
+    cfg = {"dies": {
+        "s81": {"src": "/srv/opentallas-scratch2/claude/kw45/src_s81_cur", "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave",
+                "src_prev_x": "/srv/opentallas-scratch2/claude/kw35/src_old1", "note_src": "tree /srv/opentallas-scratch2/claude/kw35/src_old2 was used",
+                "prov_view_sources": {"v": [{"dir": "/srv/opentallas-scratch3/claude/kw40/views_ev/aa/v", "job": "COUNTED intel1:/srv/opentallas-scratch2/claude/kw35/src_old3/x"}]},
+                "gate": {"evidence": "see /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave/s81_head/head_old"}},
+        "hbm": {"src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_cur", "src_prev_kw43": "/srv/opentallas-scratch2/claude/kw45/src_hbm_parked"}}}
+    (c / "autopilot/kit_wave.json").write_text(_j.dumps(cfg))
+    s = G.build_protected(str(c), str(c / "lanes/handoff"))
+    assert "/srv/opentallas-scratch2/claude/kw45/src_s81_cur" in s and "/srv/opentallas-scratch2/claude/kw40/views_ev/aa/v" in s    # live: current src, view dir
+    assert "/srv/opentallas-scratch2/claude/kw45/src_hbm_parked" in s                                                             # HBM history stays protected
+    joined = "\n".join(s)
+    for gone in ("kit-wave", "src_old1", "src_old2", "src_old3", "head_old"):
+        assert gone not in joined, gone

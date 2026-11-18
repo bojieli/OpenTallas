@@ -93,8 +93,9 @@ def derive(cfg, hosts=HOSTS, prober=probe, floor=None, checker=host_requires):
             if partial:
                 if h in d["gen_hosts"]: why.append(f"{h}: partial copy beside it")
                 continue
-            if free is None or free < base + MARGIN:
-                if h in d["gen_hosts"]: why.append(f"{h}: {free if free is None else round(free)} GB free < {base + MARGIN}")
+            need_free = max(base + MARGIN, int((d.get("gen_host_min_free_gb") or {}).get(h) or 0))     # COORD 11-18: per-host floor above the common one (intel1 150 GB for S81 col)
+            if free is None or free < need_free:
+                if h in d["gen_hosts"]: why.append(f"{h}: {free if free is None else round(free)} GB free < {need_free}")
                 continue
             keep.append(h)
         if not keep:
