@@ -1101,3 +1101,5 @@
   COORD APPROVED: claude/latency-r-optimistic-1118 @723b4e13a4b8935bd54b84047f516e89a2956d35
 - 2026-11-17 23:27 PST RULING r694 [COORD -> FABLE-FIX-S81-STRIP, S81-TYPES-R3, MERGE-QUEUE] GPL HPWL gate: growth taken per netlist segment and multiplied, leaving out only the step across a repair; limit stays 1.3. kv_leaf t3 1.32 to 1.286 (passes); t37 1.40 to 1.36 (calibration run at 1.5 for t37 only).
   COORD APPROVED: claude/s81-place-hpwl-segments-1118 @1e569598d0c30c7e5b6f2dc85103f55bc49e0a55
+- 2026-11-17 23:28 PST RULING r690 [COORD -> FABLE-FIX-HEAD-SD9F, MERGE-QUEUE] hd_serdes KP4 forms, all behind opt-in defines: zero-cycle partial splits (OT_S81_KP4_ENC_PW16 / SYN_PW8); PPCYC/SPCYC plumbing through ot_pdie_serdes; base-form word-delay fix in ot_s81_kp4_ddly (55 -> 56 under OT_S81_RCK_RX_SPCYC without SYN_LOCAL, a functional bug); link-level forms gate. KP4_PW_BENCH and KP4_FORMS_GATE pass (6000/6000 each form; mutants fail).
+  COORD APPROVED: claude/head-serdes-kp4-pw-1118 @fb361b03fa0e7a409bd66dc54b932a23e5f248b9
