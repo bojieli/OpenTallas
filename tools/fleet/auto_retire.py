@@ -495,7 +495,7 @@ def main(argv=None):
     ap.add_argument("--apply", action="store_true")
     ap.add_argument("--lanes", action="store_true", help="also retire idle lane dirs and claude/wt children, after the source trees (idle window --idle-h, default 12)")
     ap.add_argument("--idle-h", type=float, default=12.0)
-    ap.add_argument("--max-s", type=float, default=float(os.environ.get("AC_MAX_S", "900")), help="wall seconds per claude root; the pass stops starting new candidates after this and finishes (0 = no limit)")
+    ap.add_argument("--max-s", type=float, default=float(os.environ.get("AC_MAX_S", "600")), help="wall seconds per claude root; the pass stops starting new candidates after this and finishes (0 = no limit)")
     ap.add_argument("--attempts", action="store_true", help="retire finished kit-wave attempt dirs (failed/cancelled/superseded at once, old-event attempts after --idle-h)")
     ap.add_argument("--refs", default="", help="file: AUTO-RESIGN state + COUNT-DIRECT + ... text; an attempt named there is kept")
     ap.add_argument("--posts", default="", help="file: hub post text of the last 24 h; a lane tree named there is kept")
