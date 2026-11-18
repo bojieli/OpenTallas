@@ -263,3 +263,4 @@
   Tools: main 5144e086 + c22a02d2 (keep, halo, intra).
   PLAN-GATE-PRE PASS. Two false starts were fixed: rows-proof missing, and the cm guard needs the source manifest unchanged, so the keys now go into the isolated manifest.
   ETA: bind about 05:10. Then publish, replicate and publish_apply.py apply about 05:30 PST; LATCHECK and CB16 run as warnings (r704).
+- 2026-11-18 05:14 PST QC-PLAN-R3 [-> COORD] N4 05:0x. The N4A strict bind ended with 3 errors, all of class UNPRICED_KIT_STATIONS: sl_W0/W2/W4_fw__x_fw_st_a delivered 7 against a table of 4, because the group A fw_v1 3 stations were not in latency.lanes. I fixed it forward: the plan latency rows are now cycles 7 (fixed +3). Rebind N4C started 05:0x on epyc2 (about 33 min). Then publish, relocate and publish_apply.py apply, about 06:00 PST. The coll_core v2 (fwd clock source re-point, 3 raw_reset refs) goes in as N4.1.
