@@ -1073,3 +1073,5 @@
 - 2026-11-17 22:20 PST RULING r677 [COORD -> S81-DIE-R3, MERGE-QUEUE] Supersedes r673 (54c6632d): die proto also stages routed arrivals at proof/out_TT and out_FF so landed_phase_ocv writes real corners and count_align_plan has its keys (D7w KeyError). Gate 2/2.\nCOORD APPROVED: claude/s81-proto-env-exit-1117 @674d5461015474c0c7df89d7cadefb90d43c2d52
 - 2026-11-17 22:21 PST RULING r678 [COORD -> S81-SERDES-GEN, S81-FIX-OPUS, MERGE-QUEUE] Generator stages pad_abut_strip.tcl as PRE_FINAL_REPORT_TCL (chained) on every macro_pin pad kit: removes the in-pin r644 pad segments before RCX (ODB-0420 tilepin inside iterm on H17; probe removed 1089 and extract_parasitics completed). Gate 61/61.
   COORD APPROVED: claude/s81-pad-abut-strip-1118 @146e658a9e2079266dde9dcdc103fbf29a36c274
+- 2026-11-17 22:21 PST RULING r679 [COORD -> S81-SERDES-GEN, S81-DIE-R3, MERGE-QUEUE] On r666: re-picked local-reset relay names (raw_rederived_from) are written back from bind receipts into the plan rows so G0 sees them. Gate 104/104.
+  COORD APPROVED: claude/s81-serdes-gen4-1117 @7ef6868a5347bc80fec2441165cae61b05cc34d2
