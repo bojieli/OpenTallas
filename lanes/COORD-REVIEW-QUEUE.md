@@ -22913,3 +22913,4 @@ make: *** [Makefile:585: /work/run/results/asap7/dp_slw_fe_v2__clf110fab2/base/5
   +    "LQH": 1
   +   },
   +   "source": "signed rfd6 / ECO bksel_c3 (SS29-RESIGN flow-20261104-y-s81, routed_db_sha256 11f32154 = AGIdock s81/dsdv_bksel_c INDEX): LEC gold epyc2:/srv/opentallas-scratch2/claude/ss29/resign/bksel_c_k
+- 2026-11-17 22:22 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kw43-wave-1109n on intel1 wrote 515 GB in the last 6 h (quota 150 GB/lane/6 h; alert only, nothing stopped); owner please prune or confirm
