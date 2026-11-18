@@ -147,3 +147,9 @@ E = epyc10 /srv/opentallas-scratch2/claude/s81-b3-clk/rows/f2s5_S81-DIE-R (S81-D
   GRT 0 -> plan rows budgets.face_flop_ns_types {type: {row_stride: 2}} for strip leaves with dense N/S bus windows (compute pins/um from plan) -> S81-DIE-R3; plus generator default. t29 is the landing-ring variant (u_cland_ft2_i, OT_CLAND_STRIP_DENS / cland_strip_rows).
 - NEXT after pilot: endpoint class table of the 12 SETUP_TRIAGE types (t15: u_vsw/rst_n -297.8, tt_setup_repair RSZ-0074 crash; kit GRT wns only -17.6 vs gate est -350: find what the estimate adds).
 - t37 calibration (item_env 1.5 set by S81-TYPES-R3 8c5db64e) never launched as of 03:08.
+
+## 2026-11-18 04:5x PST gap + class table posted
+- t15 gap closed: kit 5_global_route.rpt is the FF corner (last make is grt CORNER=BC); gate TT estimate is right. t27 same DB: TT+RC table -515, TT stock RC -397, FF gate -298, kit rpt -202.
+- t27 class table (1,475 ep): VPW wdo_q 256/-515, VP write ctl 60/-494, VP driver/coef 1,008/-358, reset into 19 core rst pins (vsw -416) + 22 flops, istation/relay 78/-156. Tool: epyc10 W/gate_cls.tcl + gate_cls.sh, work W/t27sta.
+- Asked S81-DIE-R3: XR on all leaves + cfr-with-xr + reset relay rows in the next event. NO strip relaunch before that tree. tt_setup_repair RSZ-0074 crash (t15/t16/t26) reported to WAVE-FLOW-R2.
+- Open waits: t25_ns2 pilot (watcher), route hold tree_check (S81-DIE-R3/WAVE-FLOW-R2), t37 calibration launch (S81-TYPES-R3).
