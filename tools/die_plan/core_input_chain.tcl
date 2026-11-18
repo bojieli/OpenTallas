@@ -114,6 +114,48 @@ proc nc_load_insts {inst} {
   return $n
 }
 proc nc_loads {inst} { return [llength [nc_load_insts $inst]] }
+# FLOW-QC-N 11-17 (FABLE-FIX-QC-N, cbn_q01 n1b): the same walk, returning the terminal load ITERMS (the pin matters: a register
+# reached at RESETN / SETN / CLK is not a data load of the xstn)
+proc nc_load_terms {inst} {
+  set n {}
+  foreach t [$inst getITerms] { if {[$t isOutputSignal] && [$t getNet] ne "NULL"} {
+    set front [list [$t getNet]]
+    for {set d 0} {$d < 40 && [llength $front]} {incr d} { set nf {}
+      foreach net $front { foreach x [$net getITerms] { if {![$x isInputSignal]} continue; set xi [$x getInst]
+        if {![[$xi getMaster] isBlock] && [nc_isbuf $xi]} { foreach o [$xi getITerms] { if {[$o isOutputSignal] && [$o getNet] ne "NULL"} { lappend nf [$o getNet] } } } else { lappend n $x } } }
+      set front $nf }
+  } }
+  return $n
+}
+# data pin of a register (pure): the clock and the asynchronous reset / set pins are not data
+proc nc_data_pin {pin} { return [expr {$pin ni {CLK RESETN SETN}}] }
+# coordinate-wise median of points {{x y} ...} (pure): the place of a buffer between its driver and its loads that adds no
+# detour to any of them when there are three, and the least total wire otherwise; two points give their midpoint
+proc nc_median_pt {pts} {
+  set n [llength $pts]; if {!$n} { return {} }
+  set out {}
+  foreach k {0 1} {
+    set v {}; foreach p $pts { lappend v [lindex $p $k] }
+    set v [lsort -real $v]
+    if {$n % 2} { lappend out [lindex $v [expr {$n/2}]] } else { lappend out [expr {([lindex $v [expr {$n/2-1}]] + [lindex $v [expr {$n/2}]]) / 2.0}] }
+  }
+  return $out
+}
+# a point clamped into the box x0 y0 x1 y1 (pure)
+proc nc_clamp_box {x y x0 y0 x1 y1} { return [list [expr {max($x0, min($x1, $x))}] [expr {max($y0, min($y1, $y))}]] }
+# centres of the direct driver and the direct loads of a buffer/inverter (blocks excluded)
+proc nc_buf_neigh {inst} {
+  set pts {}
+  foreach t [$inst getITerms] {
+    set net [$t getNet]; if {$net eq "NULL" || $net eq "" || [$net getSigType] ne "SIGNAL"} continue
+    foreach x [$net getITerms] {
+      if {[$t isInputSignal] ? ![$x isOutputSignal] : !([$t isOutputSignal] && [$x isInputSignal])} continue
+      set xi [$x getInst]; if {$xi eq $inst || [[$xi getMaster] isBlock]} continue
+      lappend pts [nc_ctr $xi]
+    }
+  }
+  return $pts
+}
 # every non-buffer load of inst sits in xstn cluster cl (a register that feeds only its own xstn counts as a stage)
 proc nc_loads_in_cluster {inst cl} { if {$cl eq ""} { return 0 }; foreach x [nc_load_insts $inst] { if {[nc_cluster $x] ne $cl} { return 0 } }; return 1 }
 proc nc_dpin {inst} { foreach t [$inst getITerms] { if {[[$t getMTerm] getName] eq "D"} { return $t } }; return "" }
@@ -146,7 +188,7 @@ proc nc_headhop_plan {lc hx hy route hops} {
   return $out
 }
 # join cone of candidate cell c (FLOW-QC-CB 11-17): every terminal load reached THROUGH buffers/inverters must be a member or a
-# flop (a block or other logic = not joinable); returns {c + the movable pass-through buffers} or {} when c cannot join.
+# flop at its D pin (a block, other logic or an outside flop's reset/set/clock pin = not joinable); returns {c + the movable pass-through buffers} or {} when c cannot join.
 proc nc_join_cone {c nx_in} {
   set cone [list $c]; set seen [dict create [$c getName] 1]; set front [list $c]; set nterm 0
   for {set d 0} {$d < 40 && [llength $front]} {incr d} {
@@ -161,7 +203,12 @@ proc nc_join_cone {c nx_in} {
         if {[nc_isbuf $li]} {
           if {![nc_mov $li]} { return {} }
           if {![dict exists $seen $ln]} { dict set seen $ln 1; lappend cone $li; lappend nf $li }
-        } elseif {[string match "DFF*" [[$li getMaster] getName]]} { incr nterm } else { return {} }
+        } elseif {[string match "DFF*" [[$li getMaster] getName]]} {
+          # FLOW-QC-N 11-17: an OUTSIDE register reached at RESETN / SETN / CLK is a reset-relay sink, not this xstn's data
+          # (cbn_q01 x_1_2: the place1438xx reset relay joined and 21 of its 22 "boundary" registers were RESETN sinks)
+          if {![nc_data_pin [[$l getMTerm] getName]]} { return {} }
+          incr nterm
+        } else { return {} }
       }
     } }
     set front $nf
@@ -317,7 +364,7 @@ foreach nx_pc [$nc_blk getInsts] {
   if {$nx_cl eq ""} continue
   dict lappend nx_sinks $nx_cl [list $nx_pc $nx_di $nx_bufs]
 }
-set nx_keep_ext 0; set nx_moved {}; set nx_cells 0; set nx_seen 0; set nx_kept 0; set nx_before 0.0; set nx_after 0.0
+set nx_rst_all 0; set nx_rebuf 0; set nx_keep_ext 0; set nx_moved {}; set nx_cells 0; set nx_seen 0; set nx_kept 0; set nx_before 0.0; set nx_after 0.0
 foreach nx_cl [lsort [dict keys $nx_sinks]] {
   incr nx_seen
   set nx_list [dict get $nx_sinks $nx_cl]
@@ -370,17 +417,18 @@ foreach nx_cl [lsort [dict keys $nx_sinks]] {
   # A xstn whose registers also drive the outside (its a_d output to a port register or any non-pipe cell across the tile)
   # would trade the 508 tap nets for those nets: count the member output nets that reach a non-member, non-pipe,
   # non-pipe-register load; more than OT_NK_XSTN_EXT_MAX (default 20) leaves the xstn where it is (needs a plan event).
-  set nx_ext 0; set nx_bnd {}
+  set nx_ext 0; set nx_bnd {}; set nx_rst 0
   foreach i $nx_mem { foreach t [$i getITerms] {
     if {![$t isOutputSignal] || [$t getNet] eq "NULL"} continue
     set hit 0
     foreach l [[$t getNet] getITerms] { if {![$l isInputSignal]} continue; set li [$l getInst]; set ln [$li getName]
       if {[dict exists $nx_in $ln] || [regexp {u_pc_nk_|u_d[0-9]+_} $ln]} continue
-      if {[string match "DFF*" [[$li getMaster] getName]]} { lappend nx_bnd $li; continue }
+      # FLOW-QC-N 11-17: a boundary register is one the xstn reaches at its D pin; reset / set / clock sinks are counted apart
+      if {[string match "DFF*" [[$li getMaster] getName]]} { if {[nc_data_pin [[$l getMTerm] getName]]} { lappend nx_bnd $li } else { incr nx_rst }; continue }
       if {[nc_isbuf $li] && ![[$li getMaster] isBlock]} { set bo 0
-        foreach xi [nc_load_insts $li] { set xn [$xi getName]
+        foreach xt [nc_load_terms $li] { set xi [$xt getInst]; set xn [$xi getName]
           if {[dict exists $nx_in $xn] || [regexp {u_pc_nk_|u_d[0-9]+_} $xn]} continue
-          if {[string match "DFF*" [[$xi getMaster] getName]]} { lappend nx_bnd $xi; continue }
+          if {[string match "DFF*" [[$xi getMaster] getName]]} { if {[nc_data_pin [[$xt getMTerm] getName]]} { lappend nx_bnd $xi } else { incr nx_rst }; continue }
           set bo 1 }
         if {!$bo} continue }
       set hit 1 }
@@ -391,7 +439,8 @@ foreach nx_cl [lsort [dict keys $nx_sinks]] {
   foreach b $nx_bnd { lassign [nc_ctr $b] bx by
     set dd [expr {(max($wx0-$bx, 0, $bx-$wx1) + max($wy0-$by, 0, $by-$wy1))/double($nc_dbu)}]; set nx_bmax [expr {max($nx_bmax, $dd)}] }
   if {$nx_bmax > 405.0} { set nx_ext [expr {$nx_ext + 1000000}] }
-  if {$nx_ext > $nx_ext_max} { puts "OT_XSTN_KEEP $nx_cl face $nx_face external_nets $nx_ext > $nx_ext_max boundary_reg_um [format %.0f $nx_bmax] (an output of the xstn leaves across the tile; plan event needed)"; incr nx_keep_ext; continue }
+  incr nx_rst_all $nx_rst
+  if {$nx_ext > $nx_ext_max} { puts "OT_XSTN_KEEP $nx_cl face $nx_face external_nets $nx_ext > $nx_ext_max boundary_reg_um [format %.0f $nx_bmax] reset_sinks_excluded $nx_rst (an output of the xstn leaves across the tile; plan event needed)"; incr nx_keep_ext; continue }
   # distance of a cell to the strip (0 inside)
   set nx_far {}
   foreach i $nx_mem { lassign [nc_ctr $i] x y
@@ -425,6 +474,19 @@ foreach nx_cl [lsort [dict keys $nx_sinks]] {
     }
     nc_put $i $x $y; incr nx_cells; incr nx_k
   }
+  # FLOW-QC-N 11-17 (FABLE-FIX-QC-N, cbn_q01 n1b x_1_3 b_d[383]): the fill orders the cells by their old y and wraps the
+  # column over the whole strip width, so a buffer/inverter landed in a column unrelated to its driver and loads (INV 51.5 um
+  # east of both: 147.5 um built for a 44.4 um pair, the one stretched b_d path that stopped the kit).  Second pass: every
+  # filled buffer/inverter goes to the coordinate-wise median of its driver and its direct loads, inside the strip.
+  for {set nx_r 0} {$nx_r < 2} {incr nx_r} {
+    foreach i $nx_rest {
+      if {![nc_isbuf $i]} continue
+      set nx_pts [nc_buf_neigh $i]; if {[llength $nx_pts] < 2} continue
+      lassign [nc_median_pt $nx_pts] x y
+      lassign [nc_clamp_box $x $y $wx0 $wy0 $wx1 $wy1] x y
+      nc_put $i $x $y; if {!$nx_r} { incr nx_rebuf }
+    }
+  }
   set nx_far {}
   foreach i $nx_mem { lassign [nc_ctr $i] x y
     lappend nx_far [expr {(max($wx0-$x, 0, $x-$wx1) + max($wy0-$y, 0, $y-$wy1))/double($nc_dbu)}] }
@@ -440,7 +502,7 @@ if {[dict size $nx_moved]} {
   }
   set nx_spread [expr {$nc_chains - $nc_chains_before}]
 }
-puts "OT_XSTN_SITE xstn $nx_seen kept $nx_kept kept_external $nx_keep_ext moved [dict size $nx_moved] cells_moved $nx_cells p90_um_from_face_strip_before [format %.0f $nx_before] after [format %.0f $nx_after] reach_um $nx_reach_um a_d_chains_spread $nx_spread faces [dict values $nx_moved]"
+puts "OT_XSTN_SITE xstn $nx_seen kept $nx_kept kept_external $nx_keep_ext moved [dict size $nx_moved] cells_moved $nx_cells p90_um_from_face_strip_before [format %.0f $nx_before] after [format %.0f $nx_after] reach_um $nx_reach_um a_d_chains_spread $nx_spread faces [dict values $nx_moved] fill_bufs_resited $nx_rebuf reset_sinks_excluded $nx_rst_all"
 catch {puts "OT_NK_HEADHOP_RESITE shared_hops $nc_hh_shared shared_hop_cells_resited $nc_hh_shared_moved shared_hops_checked $nc_hh_seen path_over_3x_direct_after $nc_hh_stretch"}
 # FLOW-QC-CB 11-17 (FABLE-PD-QC-0600): the check above counts shared head hops only and printed 0 with 81 stretched b_d paths
 # present.  Count every b_d-rooted buffer tree to all its terminal loads and stop at 3_4 (before repair_design) when the count is
