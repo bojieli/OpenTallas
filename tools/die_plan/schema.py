@@ -245,6 +245,9 @@ SCHEMA = {
                 "reach_um": _pos,                    # one-cycle signal hop: 405 (M4-M7; larger values are capped, G0 WARN)
                 "rep_um": _pos,                      # repeater spacing (450)
                 "grid_um": _pos,                     # the die lattice: partition origins + outlines (8.64)
+                # HOLD-MARGIN-FAMILY 11-17 (hold_margin_family.py): die-wide reg-to-reg FF hold repair TARGET (ps, 0..100) for
+                # every type kit of this die (a type hold_ff_margin_ps wins; per-item OT_HOLD_FF_MARGIN_PS wins over both)
+                "hold_ff_margin_ps": {"type": "number", "minimum": 0, "maximum": 100},
                 "rows": {"type": "object", "additionalProperties": False,
                          "properties": {"site": _name, "height_um": _pos, "site_w_um": _pos}},
                 "layers": {"type": "array", "items": {
@@ -1025,6 +1028,8 @@ SCHEMA = {
                         "type": "object", "required": ["rect_um", "reason"], "additionalProperties": False,
                         "properties": {"rect_um": _rect, "reason": {"type": "string", "minLength": 3}}}},
                     "ft_track_frac": {"type": "number", "minimum": 0, "maximum": 1},
+                    # HOLD-MARGIN-FAMILY 11-17: reg-to-reg FF hold repair TARGET of this type (ps, 0..100), over die.hold_ff_margin_ps
+                    "hold_ff_margin_ps": {"type": "number", "minimum": 0, "maximum": 100},
                     # PLAN-TOOL5 (e): share of the M4-M7 tracks across this type given to ft (default the type's
                     # ft_track_frac); M8 / M9 keys are G0 ERRORs (m89_signals: no over-the-top ft)
                     "ft_budget": {"type": "object", "additionalProperties": {"type": "number", "minimum": 0,
