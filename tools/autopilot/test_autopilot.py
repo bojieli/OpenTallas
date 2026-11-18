@@ -2210,3 +2210,14 @@ class SealedWatchdogStopTest(unittest.TestCase):
                 self.assertIsNone(ap.watchdog_stop("oth-ubuntu-1-2", 0))
             finally:
                 ap.WATCHDOG_LOG = old
+
+
+class HubProcsJanitor(Base):
+    """COORD FLOW-1000 (4): a stage_odb_cap.py --watch janitor naming the kit dir is not a kit job (orphans kept 5 queue rows 'kit busy' for 10 h)"""
+
+    def test_stage_odb_cap_watcher_is_not_a_kit_process(self):
+        kit = "/srv/x/runs/s81/items/t17/attempt_5/gen/t17"
+        ps = (f"  101 40000 python3 -I {kit}/stage_odb_cap.py --watch {kit}/run/results/asap7 --kit {kit} --max-hours 36\n"
+              f"  102 500 ot-run --mem 24 -- bash {kit}/run_kit.sh\n")
+        self.ap.sh = lambda cmd, timeout=0, **k: (0, ps, "")
+        self.assertEqual([p for p, _ in self.ap.hub_procs(kit)], [102])
