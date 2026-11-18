@@ -1129,8 +1129,8 @@ proc cland_start_grows {rect} {
 # Rings, status and every other band are checked as before.
 proc cland_band_fit {prefix rect tag} {
  global ff_blk ff_x0 ff_y0 ff_x1 ff_y1 ff_rh ff_sw ff_dbu ff_orient cland_occ cland_done
- if {$tag eq "local-reset" || (([string match {reader-start:*} $tag] || [string match {writer-start:*} $tag])
-     && [cland_start_grows $rect]) || ($tag eq "literal-local-reset" && [info exists ::env(OT_LAND_RESERVE)]
+ if {$tag eq "local-reset" || (([string match {reader-start:*} $tag] || [string match {writer-start:*} $tag]
+     || [string match {writer-face:*} $tag]) && [cland_start_grows $rect]) || ($tag eq "literal-local-reset" && [info exists ::env(OT_LAND_RESERVE)]
      && $::env(OT_LAND_RESERVE) eq "1")} return
  set sp 1.0; regexp {^ring:[^@]*@([0-9.]+)$} $tag -> sp
  set need 0.0; set maxrw 0; set minw {}; set n 0
@@ -1521,9 +1521,13 @@ foreach spec $cland_groups {
   if {[[$i getMaster] isBlock]} { error "OT_CLAND unexpected macro in landing $nm" }
   # DQ87 11-07 (QC slw_fe_v1): a 4.32-um local reset window can be all FIRM face flops; this one-load flop may stand further off.
   # DIE-QC-97 11-09: reader/writer START relay windows take the status/collector grow (cland_put_start).
+  # KVHG-FACEGROW 11-18 (KV-HG5 kv3_pv_v2/v2n "BAND FAIL u_cland_fstart_ft26_o (writer-face:ft26_o)", kv3_pv_v6 ft0_o): the
+  # final writer-face relay window (fstart pin +-4.32, slid into the core) lies on the out-face register of a landed FT
+  # slot (face_flops.tcl ff_put_near: kv3_pv_v2 u_ft_ft26_o_5 = 1057 FIRM DFF over x 490..626, the top 33 rows), which no
+  # plan geometry describes, so it had no site for the relay Q.  It takes the same START grow (x1 = the plain scan).
   # KW43 LAND-RESERVE (opt-in OT_LAND_RESERVE=1): a literal local reset window grows like local-reset; the dispatch below is unchanged
  if {!$coll && $tag eq "literal-local-reset" && [info exists ::env(OT_LAND_RESERVE)] && $::env(OT_LAND_RESERVE) eq "1"} { cland_avoid_rings $prefix {cland_put_grow $i $rect $tag literal-reset}; incr hit; continue }
- if {$coll} { cland_put_collector $i $rect $tag } elseif {$tag eq "local-reset"} { cland_avoid_rings $prefix {cland_put_grow $i $rect $tag local-reset} } elseif {[string match {reader-start:*} $tag] || [string match {writer-start:*} $tag]} { cland_avoid_rings $prefix {cland_put_start $i $rect $tag} } else { cland_put $i $rect $tag };incr hit
+ if {$coll} { cland_put_collector $i $rect $tag } elseif {$tag eq "local-reset"} { cland_avoid_rings $prefix {cland_put_grow $i $rect $tag local-reset} } elseif {[string match {reader-start:*} $tag] || [string match {writer-start:*} $tag] || [string match {writer-face:*} $tag]} { cland_avoid_rings $prefix {cland_put_start $i $rect $tag} } else { cland_put $i $rect $tag };incr hit
  }
  if {!$hit} { error "OT_CLAND no mapped cells found under $prefix" }
  } cland_err cland_opts]
