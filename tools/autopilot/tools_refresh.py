@@ -185,6 +185,12 @@ class Ops:
 
     @staticmethod
     def _run(host, cmd, timeout=3600):
+        if host not in (None, "", "localhost", "hub") and f"python3 -I {shlex.quote(SM)}" in cmd:
+            # gen hosts keep only rt/current/tools/fleet, so src_manifest.py is not on them: ship the (standalone) script text with -c (as the wave's own hosts check does)
+            try:
+                cmd = cmd.replace(f"python3 -I {shlex.quote(SM)}", "python3 -I -c " + shlex.quote(open(SM).read()))
+            except OSError:
+                pass
         argv = ["bash", "-c", cmd] if host in (None, "", "localhost", "hub") else ["ssh", "-n", "-o", "ControlPath=none", "-o", "BatchMode=yes", host, cmd]
         try:
             r = subprocess.run(argv, capture_output=True, text=True, timeout=timeout)
