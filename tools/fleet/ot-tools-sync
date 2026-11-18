@@ -638,6 +638,8 @@ def sync_guarded(sha, hosts, tests):
         reason = "exit %s (see %s)" % (rc, MQ / "log")
     except Exception as e:
         rc, reason = 1, "%s: %s" % (type(e).__name__, str(e)[:500])
+    if rc != 0:
+        log(f"FAILED {reason}")            # stdout: ot-merge-queue's note shows the real reason (the hub free-GB floor) instead of "state not reported"
     sync_alert(rc == 0, reason)
     if rc != 0 and not isinstance(rc, int):
         rc = 1
