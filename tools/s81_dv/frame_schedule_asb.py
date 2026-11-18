@@ -311,6 +311,18 @@ def bound_seam_depths(plan, master, frame_parts=None):
     return {k: v.pop() for k, v in sorted(by.items())}
 
 
+def relay_depth_rows(plan, master, frame_parts=None):
+    """S81-D8E-LAT 11-18: the plan's relay_depth rows (tools/die_plan/relay_depth.py: D extra u_y_xd_* stages in front of
+    a core inside a band type, declared in bind_core_input_pipe.json) on this master's band types.  The tracer reads the
+    as-built frame RTL, which has no such stages, so a schedule of a plan carrying them would time those core inputs
+    D edges early: they are reported as a FAIL of this check (never silently scheduled).  [(type, row), ...]"""
+    if frame_parts is not None:
+        types = {p['type'] for p in plan['partitions'] if p['name'] in frame_parts}
+    else:
+        types = {t for t in plan.get('partition_types', {}) if t.startswith(master + '_r')}
+    return [(t, r) for t in sorted(types) for r in (plan.get('partition_types', {}).get(t, {}).get('relay_depth') or [])]
+
+
 def trace(yjs, top, seam_extra=None):
     mod = yjs['modules'][top]
     xbits = seam_extra_bits(mod, seam_extra) if seam_extra else {}
@@ -826,10 +838,12 @@ def main():
             SEAM_EXTRA[s] = SEAM_EXTRA.get(s, 0) + int(n)
             if SEAM_EXTRA[s] < 0:
                 raise ValueError('control offset below the as-built seam')
+        rd_rows = relay_depth_rows(plan_raw, m, set(frame_parts.values()) if frame_parts else None)
         os.environ['OT_S81_FRAME_PLAN'] = str(a.bound_plan.resolve())
         bound = dict(plan=str(a.bound_plan), plan_sha256=hashlib.sha256(braw).hexdigest(), seam_depths=depths,
                      seam_extra_stages=dict(SEAM_EXTRA), control_seam_offset=a.control_seam_offset or None,
                      frame_instance=a.frame_instance, frame_parts=frame_parts, frame_master=ab_top,
+                     relay_depth_rows=len(rd_rows), relay_depth_cycles=sum(int(r.get('D', 0)) for _, r in rd_rows),
                      basis='as-built s81b_fint seam + (plan depth - 2) whole-bus stages on its q '
                            '(tools/die_plan/ts_relay_miter.py: bound lane == as-built lane delayed by k)')
     # (1) validation: tracer on the LP seam twin at the LP schedule's own revision (all its source hashes match)
@@ -892,6 +906,10 @@ def main():
     if a.source_root is not None:
         sched['source_root'] = str(sroot())
     fails += pf
+    if bound is not None and bound['relay_depth_rows']:
+        fails.append(f"RELAY_DEPTH_UNSCHEDULED {bound['relay_depth_rows']} relay_depth rows (+{bound['relay_depth_cycles']} "
+                     f"stages) on {m} band types are in the bound plan but not in the traced as-built frame: the frame "
+                     "schedule does not carry them (S81-D8E-LAT 11-18)")
     schedule_name = ab_top + ('__' + a.frame_cohort if internal_profile is not None else '')
     sp = a.out / f'{schedule_name}_schedule.json'
     sp.write_text(json.dumps(sched, indent=1) + '\n')

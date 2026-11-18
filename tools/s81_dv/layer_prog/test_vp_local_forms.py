@@ -128,3 +128,48 @@ def test_gate_form_cli(tmp_path):
                         str(tmp_path / 'e.json'), '--params', str(tmp_path / 'a.json'), '--out', str(tmp_path / 'o2'),
                         '--form', 'quad'], capture_output=True, text=True)
     assert r.returncode != 0 and "die_sha256" in r.stderr     # passes the form audit, stops at the image check
+
+
+# S81-D8E-LAT 11-18: the XR write-port stage (s81_vp_xr_overlay, LF_VP_XR on every D8e leaf) is its own measured form
+def test_xr_forms():
+    assert form_of(effective(dict(QUAD_OVR, XR=1))) == 'quad_xr'
+    assert form_of(effective(dict(CS_HI_D=1, CS_HO_D=1, XR=1))) == 'kv_lane_xr'
+    assert form_of(effective(dict(QUAD_OVR, XR=0))) == 'quad'        # overlay present, XR off = the plain form
+    assert effective(dict(XR=0)) == DEFAULT and form_of(dict(DEFAULT, XR=0)) == 'default'
+    assert FORMS['quad_xr'] == dict(FORMS['quad'], XR=1)
+
+
+def test_xr_vp_needs_xr_proof(world):
+    inv = copy.deepcopy(world['inv'])
+    for u in inv['units'].values():
+        u['params'] = dict(u['params'], XR=1)
+    with pytest.raises(ValueError, match='no qualified proof of their form'):
+        run(world, [world['proof']('default'), world['proof']('quad')], inv)     # XR=0 proofs cannot vouch for XR vps
+    r = run(world, [world['proof']('default_xr', 21), world['proof']('quad_xr', 23)], inv)
+    assert r['vp_local_intake']['forms'] == {'default_xr': 5, 'quad_xr': 75}
+    by = {x['vp']: x for x in r['leaves']}
+    assert by['u_s0.u_lf0.u_vp']['local_vp_store_commit_edges'] == 23
+
+
+def test_gate_xr_tb_patch(tmp_path):
+    import importlib.util
+    spec = importlib.util.spec_from_file_location('vp_local_gate', HERE.parent / 'vp_local_1026' / 'gate.py')
+    G = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(G)
+    assert G.tb_for(FORMS['quad'], tmp_path).name == 'tb_vp_local.sv' and not (tmp_path / 'tb_vp_local.sv').exists()
+    t = G.tb_for(FORMS['quad_xr'], tmp_path).read_text()
+    assert 'HQX = 0, XR = 0);' in t and '.HQX(HQX),.XR(XR)) u_vp(' in t
+
+
+def test_gate_xr_form_refuses_source_without_overlay(tmp_path):
+    audit = dict(units={f'u{i}': FORMS['quad_xr'] for i in range(80)}, source_top_sha256='x', source_asbuilt_sha256='y')
+    (tmp_path / 'a.json').write_text(json.dumps(audit))
+    rows = [dict(sid=0, leaf=0, row=r, data128='0' * 32) for r in list(range(32)) + list(range(64, 80)) + [1008]]
+    (tmp_path / 'e.json').write_text(json.dumps(dict(die_sha256='x', fixture_meta_sha256='f', writes=rows)))
+    src = tmp_path / 'src' / 'rtl/dsrom_sys/s81_dv/slice'
+    src.mkdir(parents=True)
+    (src / 'ot_s81sl_vp.sv').write_text('module ot_s81sl_vp; endmodule\n')
+    r = subprocess.run([sys.executable, '-I', str(HERE.parent / 'vp_local_1026' / 'gate.py'), '--entry-rows',
+                        str(tmp_path / 'e.json'), '--params', str(tmp_path / 'a.json'), '--out', str(tmp_path / 'o'),
+                        '--form', 'quad_xr', '--source-root', str(tmp_path / 'src')], capture_output=True, text=True)
+    assert r.returncode != 0 and 'S81-STRIP-XR' in r.stderr
