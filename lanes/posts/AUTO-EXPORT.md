@@ -1,0 +1,1 @@
+- 2026-11-18 06:31 PST AUTO-EXPORT s81_head/ot_s81hd_spn_wshim_tx (scan intel1:/srv/opentallas-scratch2/claude/nomcap-1118/resign/s81_head__dp_hd_spn_wshim_tx__597fe35a/signoff.json) ARCHIVED-BOTH AGIdock+rtx-pro s81_head/ot_s81hd_spn_wshim_tx__ax_4d2773a688, ODB sha 4d2773a688cf, record 69fb951aa455, TT 209.12 FF -20.97, INDEX rows on both
