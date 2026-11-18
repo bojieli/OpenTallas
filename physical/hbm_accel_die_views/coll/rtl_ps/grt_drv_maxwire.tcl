@@ -10,7 +10,15 @@
 source /src/physical/abi3/v41x_karb_repair_buffer_cap.tcl
 # el1011-hbm-coll 2026-10-11 (child_lint check f, before the hfd_coll cluster): with OT_PK_FRAC set, the face-pin
 # access keepout (stn_pin_keepout.tcl; the same file runs as POST_DETAIL_ROUTE and removes it) = pin_access_pregrt.tcl.
-if {[info exists ::env(OT_PK_FRAC)]} { source /src/physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl }
+if {[info exists ::env(OT_PK_FRAC)]} {
+  # WAVE-FLOW-R2 11-17: the kit carries stn_pin_keepout.tcl (kit_common_files); /src has it only in a full checkout (a sparse lane clone failed GRT here: 6 svc cores).
+  # Kit copy first, then /src; with neither the keepout is skipped LOUDLY (no stations to protect), never a silent half run.
+  set ot_pk_done 0
+  foreach ot_pk_f [list [file join [file dirname [info script]] stn_pin_keepout.tcl] /work/stn_pin_keepout.tcl /src/physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl] {
+    if {[file exists $ot_pk_f]} { source $ot_pk_f; set ot_pk_done 1; break }
+  }
+  if {!$ot_pk_done} { puts "OT_PK WARNING: OT_PK_FRAC is set but stn_pin_keepout.tcl is in neither the kit nor /src: the face-pin keepout is skipped" }
+}
 if {[info procs repair_design_helper] ne "" && [info procs ot_orig_repair_design_helper] eq ""} {
   rename repair_design_helper ot_orig_repair_design_helper
   proc repair_design_helper {} {
