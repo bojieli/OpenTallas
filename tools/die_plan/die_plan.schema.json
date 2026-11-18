@@ -8246,6 +8246,13 @@
       "off"
      ]
     },
+    "routed_reach": {
+     "enum": [
+      "error",
+      "warn",
+      "off"
+     ]
+    },
     "r_reach_even": {
      "type": "boolean"
     },
