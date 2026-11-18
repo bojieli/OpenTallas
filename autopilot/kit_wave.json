@@ -291,7 +291,12 @@
     "kv3_hgi_v5@2",
     "kv3_hgi_v6@2",
     "kv3_hub_Wo@13",
-    "kv3_sys_c@2"
+    "kv3_sys_c@2",
+    "kv3_pv_v4@3",
+    "kv3_pv_v8@1",
+    "kv3_pv_v3@1",
+    "kv3_pv_v5@1",
+    "kv3_pv@1"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -667,12 +672,10 @@
     "kv3_hroot": "KW-FIX-42 03:05 COORD NEWFAIL: GRT congestion (d2a1629e48b0); owner decides the form, no unchanged relaunch | DIE-KV-97 02:24 KEEP running | RELEASED KW-FIX-42 11-09 04:38: plan_zb6 geometry (SD macro origin [6.48,58.32] + E/S pin spread; hroot S-face pin spread), COORD 04:4x"
    },
    "hosts": [
-    "intel1",
     "epyc8",
     "epyc10",
     "epyc9",
-    "epyc2",
-    "intel2"
+    "epyc7"
    ],
    "gen_hosts": [
     "epyc7",
@@ -681,13 +684,10 @@
     "epyc10"
    ],
    "place_prefer": [
-    "intel1",
     "epyc8",
     "epyc10",
     "epyc9",
-    "epyc7",
-    "intel2",
-    "epyc2"
+    "epyc7"
    ],
    "item_env": {
     "kv3_phy": {
