@@ -7206,9 +7206,23 @@ def run_item(spec_path):
             return fail("src_manifest", _why, f"{G}:{src}")
         print("KW_SRC_MANIFEST ok " + (_mtxt or "")[-200:].strip(), flush=True)
     if sp.get("tools_rt"):
-        rc, txt = run("rt_tools", remote(rt_tree_cmd(sp) + f"cat {q(tsrc)}/.rt_launch_ok"), idempotent=True)
-        if rc:
-            return fail("rt_tools", "KW_RT_TOOLS FAIL: launch tree of rt snapshot not composed\n" + txt, f"{G}:{tsrc}")
+        # the hub pushes its rt/<sha> tools to the gen host (and each roam host) and composes the launch tree there
+        for _h in [G] + [h for h in roamer.others if h != G]:
+            _ra = (lambda c, _h=_h: remote_argv(_h, hub, c))
+            _pp, _rs, _fin = rt_mirror_cmds(sp, _h, hub)
+            rc, txt = run(f"rt_mirror_{_h}", _ra(_pp), idempotent=True)
+            if rc == 0 and "KW_RT_MIRROR_HAVE" not in txt:
+                _pv = (re.findall(r"KW_RT_MIRROR_PREV (\S*)", txt) or [""])[-1]
+                rc, txt = run(f"rt_mirror_copy_{_h}", _rs(_pv), idempotent=True)
+                if rc == 0:
+                    rc, txt = run(f"rt_mirror_fin_{_h}", _ra(_fin), idempotent=True)
+            if rc == 0:
+                rc, txt = run(f"rt_tools_{_h}" if _h != G else "rt_tools", _ra(rt_tree_cmd(sp) + f"cat {q(tsrc)}/.rt_launch_ok"), idempotent=True)
+            if rc and _h == G:
+                return fail("rt_tools", "KW_RT_TOOLS FAIL: launch tree of rt snapshot not composed\n" + txt, f"{G}:{tsrc}")
+            if rc:                                   # a roam host without the launch tree never runs a stage of this attempt
+                roamer.others = [h for h in roamer.others if h != _h]
+                print(f"KW_RT_TOOLS roam host {_h} dropped: launch tree not composed (rc {rc})", flush=True)
         print(f"KW_RT_TOOLS {sp.get('tools_sha')} {tsrc}", flush=True)
     plan0 = plan                                          # the die's plan of record (shared die bind prep, kit RTL)
     kr = sp["kit_rtl"]
@@ -9105,18 +9119,51 @@ def rt_launch_path(src, rt):
     return f"{os.path.dirname(s)}/rt_tools_launch/{os.path.basename(s)}@{os.path.basename(str(rt).rstrip('/'))}"
 
 
+def rt_mirror_path(src, rt):
+    """the host-local copy of the hub's rt/<sha12> tools (fleet hosts get only tools/fleet from ot-tools-sync): pushed by the rt_tools stage"""
+    s = str(src).rstrip("/")
+    return f"{os.path.dirname(s)}/rt_tools_launch/.rt/{os.path.basename(str(rt).rstrip('/'))}"
+
+
 def rt_tree_cmd(sp):
-    """shell prefix that makes sure the launch tree exists on the host running the command ('' when the spec has no tools_rt).  Waits up to
-    10 min for the rt snapshot (ot-tools-sync lag after a flip); exit 97 when it never arrives"""
+    """shell prefix that makes sure the launch tree exists on the host running the command ('' when the spec has no tools_rt).  The tree is
+    composed from the host's own full rt/<sha12> when it has one, else from the mirror the rt_tools stage pushed; exit 97 when neither exists"""
     if not sp.get("tools_rt"):
         return ""
     q = shlex.quote
     rt = str(sp["tools_rt"]).rstrip("/")
-    sh = f"{rt}/tools/autopilot/rt_launch_tree.sh"
+    M = rt_mirror_path(sp["src"], rt)
     L = rt_launch_path(sp["src"], rt)
-    # a made tree needs nothing from rt any more (hardlinks): a later stage still runs after ot-tools-sync pruned rt/<sha>
-    return (f"[ -f {q(L + '/.rt_launch_ok')} ] || {{ for _i in $(seq 60); do [ -f {q(sh)} ] && break; sleep 10; done; "
-            f"bash {q(sh)} {q(str(sp['src']).rstrip('/'))} {q(rt)} {q(L)} || exit 97; }}; ")
+    sh = "tools/autopilot/rt_launch_tree.sh"
+    # a made tree needs nothing from rt any more (hardlinks): a later stage still runs after rt/<sha> or the mirror was pruned
+    return (f"[ -f {q(L + '/.rt_launch_ok')} ] || {{ R={q(rt)}; [ -f \"$R\"/{sh} ] || R={q(M)}; "
+            f"[ -f \"$R\"/{sh} ] || {{ echo \"KW_RT_TOOLS FAIL: no rt tools {rt} or mirror on $(hostname -s)\" >&2; exit 97; }}; "
+            f"bash \"$R\"/{sh} {q(str(sp['src']).rstrip('/'))} \"$R\" {q(L)} || exit 97; }}; ")
+
+
+def rt_mirror_cmds(sp, host, hub, tag=""):
+    """(prep shell cmd, rsync argv builder, finish shell cmd) that copy the hub's rt/<sha12> tools/ + physical/common_flow to host's mirror, with
+    --link-dest on the newest older mirror (only changed files move) into a private <mirror>.part<tag> and a rename, so a reader never sees half
+    a mirror and two attempts never write the same dir.  The prep prints KW_RT_MIRROR_HAVE when the mirror is there, else KW_RT_MIRROR_PREV <dir>."""
+    q = shlex.quote
+    rt = str(sp["tools_rt"]).rstrip("/")
+    M = rt_mirror_path(sp["src"], rt)
+    par, part = os.path.dirname(M), f"{M}.part{tag or os.getpid()}"
+    done = q(M + "/tools/autopilot/rt_launch_tree.sh")
+    olds = f"ls -dt {q(par)}/*/ 2>/dev/null | grep -v -F .part"
+    prep = (f"mkdir -p {q(par)} && if [ -f {done} ]; then echo KW_RT_MIRROR_HAVE; else "
+            f"P=$({olds} | head -1); echo \"KW_RT_MIRROR_PREV ${{P%/}}\"; fi")
+    dest = f"{part}/" if host in ("localhost", hub) else f"{host}:{part}/"
+
+    def rs(prev):
+        return (["rsync", "-aR", "--delete"] + ([f"--link-dest={prev}"] if prev else [])
+                + ["-e", "ssh -o BatchMode=yes -o ControlPath=none", f"{rt}/./tools", f"{rt}/./physical/common_flow", dest])
+    fin = (f"if [ -f {done} ]; then chmod -R u+w {q(part)} 2>/dev/null; rm -rf {q(part)}; else mv -T {q(part)} {q(M)} 2>/dev/null; fi; "
+           f"if [ -d {q(part)} ]; then chmod -R u+w {q(part)}; rm -rf {q(part)}; fi; "
+           # keep the 12 newest mirrors (a made launch tree holds its own hardlinks, so pruning a mirror never breaks one)
+           f"for o in $({olds} | tail -n +13); do chmod -R u+w \"$o\" && rm -rf \"$o\"; done; test -f {done}")
+    return prep, rs, fin
+
 
 
 TOOLS_LAG_CACHE = {"t": 0.0, "rows": {}}

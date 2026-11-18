@@ -44,11 +44,10 @@ class SchedulerRt(unittest.TestCase):
     def test_launch_path_and_cmd(self):
         sp = {"src": "/s/kw45/src_s81_x/", "tools_rt": "/s/rt/0d6591bd9617"}
         self.assertEqual(KW.rt_launch_path(sp["src"], sp["tools_rt"]), "/s/kw45/rt_tools_launch/src_s81_x@0d6591bd9617")
+        self.assertEqual(KW.rt_mirror_path(sp["src"], sp["tools_rt"]), "/s/kw45/rt_tools_launch/.rt/0d6591bd9617")
         c = KW.rt_tree_cmd(sp)
-        self.assertIn("/s/rt/0d6591bd9617/tools/autopilot/rt_launch_tree.sh /s/kw45/src_s81_x /s/rt/0d6591bd9617 "
-                      "/s/kw45/rt_tools_launch/src_s81_x@0d6591bd9617 || exit 97; }; ", c)
         self.assertTrue(c.startswith("[ -f /s/kw45/rt_tools_launch/src_s81_x@0d6591bd9617/.rt_launch_ok ] || {"))
-
+        self.assertIn("R=/s/kw45/rt_tools_launch/.rt/0d6591bd9617", c)
         self.assertEqual(KW.rt_tree_cmd({"src": "/s/x"}), "")
 
     def test_run_item_runs_tools_from_tsrc(self):
@@ -58,7 +57,7 @@ class SchedulerRt(unittest.TestCase):
         self.assertEqual(cds, ["for"], cds)            # only the legacy KITRTL farm (tree-own tools, never reached with rt tools)
         self.assertIn("--rtl-root {q(src)}", body)
         self.assertIn('--src-tree {q(src)} ', body)
-        self.assertIn('run("rt_tools"', body)
+        self.assertIn('"rt_tools"', body)
 
 
 class LaunchTree(unittest.TestCase):
@@ -112,8 +111,38 @@ class LaunchTree(unittest.TestCase):
         c = KW.rt_tree_cmd({"src": str(self.src), "tools_rt": str(self.rt)})
         r = subprocess.run(["bash", "-c", c + f"cat {self.L}/tools/die_plan/gen.py"], capture_output=True, text=True, timeout=20)
         self.assertEqual((r.returncode, r.stdout), (0, "main"))
-        self.rt.mkdir(parents=True)
         (self.rt / "tools/die_plan").mkdir(parents=True)
+
+    def test_mirror_push_and_compose(self):
+        """fleet hosts carry only tools/fleet of rt: the hub-side mirror copy (local rsync here) feeds the launch tree"""
+        sp = {"src": str(self.src), "tools_rt": str(self.rt)}
+        rtfake = Path(self.t.name) / "rt/aaaaaaaaaaaa"            # the 'rt' the prefix looks at first does not exist on this host
+        sp2 = dict(sp, tools_rt=str(rtfake))
+        import shutil
+        shutil.copytree(self.rt, rtfake)
+        (rtfake / "tools/autopilot").mkdir(parents=True)
+        shutil.copy(SH, rtfake / "tools/autopilot/rt_launch_tree.sh")
+        prep, rs, fin = KW.rt_mirror_cmds(sp2, "localhost", "intel2", tag="t1")
+        r = subprocess.run(["bash", "-c", prep], capture_output=True, text=True)
+        self.assertIn("KW_RT_MIRROR_PREV", r.stdout)
+        self.assertEqual(subprocess.run(rs(""), capture_output=True, text=True).returncode, 0)
+        self.assertEqual(subprocess.run(["bash", "-c", fin], capture_output=True, text=True).returncode, 0)
+        M = Path(KW.rt_mirror_path(self.src, rtfake))
+        self.assertEqual((M / "tools/die_plan/gen.py").read_text(), "main")
+        self.assertFalse(list(M.parent.glob("*.part*")))
+        subprocess.run(["chmod", "-R", "u+w", str(rtfake)]); shutil.rmtree(rtfake)       # the host has no full rt: the mirror is used
+        c = KW.rt_tree_cmd(sp2)
+        L = KW.rt_launch_path(self.src, rtfake)
+        r = subprocess.run(["bash", "-c", c + f"cat {L}/tools/die_plan/gen.py"], capture_output=True, text=True, timeout=30)
+        self.assertEqual((r.returncode, r.stdout.splitlines()[-1]), (0, "main"), r.stderr)
+        r = subprocess.run(["bash", "-c", prep], capture_output=True, text=True)
+        self.assertIn("KW_RT_MIRROR_HAVE", r.stdout)
+
+    def test_no_tools_anywhere_is_97_fast(self):
+        c = KW.rt_tree_cmd({"src": str(self.src), "tools_rt": str(self.rt) + "x"})
+        r = subprocess.run(["bash", "-c", c + "echo RAN"], capture_output=True, text=True, timeout=20)
+        self.assertEqual(r.returncode, 97)
+        self.assertNotIn("RAN", r.stdout)
 
     def test_missing_rt_is_97(self):
         r = subprocess.run(["bash", str(SH), str(self.src), str(self.rt) + "x", self.L + "x"], capture_output=True, text=True)
