@@ -28,6 +28,19 @@ proc cft_delay {pin edge} {
   if {[llength $clocks] != 1} { error "OT_CLAND_FCLK: missing unique clock at [get_full_name $pin]" }
   return [ot_cf_wire_transition $pin [lindex $clocks 0] $edge]
 }
+# FABLE-FIX-QC-STA 11-18: measured data.  The table delay assumes the cland d pins sit at their ports (45 ps data).  QC
+# slw_st_a_v2 u_cland_b_hw_ctl_hc0_i (N-pin master, ports on the E face 175-372 um away) has 236 ps of port -> pin data:
+# 1,574 d pins at -177 ps with the table delay met.  The delay a pin needs is the larger of the table value and what the
+# worst d pin still lacks (arrival a - worst setup slack + 5 ps), capped at the table value + OT_CLAND_FCLK_DATA_CAP_PS (208).
+proc cft_need {need a ds cap} {
+  if {$ds eq "" || $ds >= 0} { return $need }
+  return [expr {min($need + $cap, max($need, $a - $ds + 5.0))}]
+}
+proc cft_dslack {inst} {
+  if {[catch {set pins [get_pins -quiet "$inst/d\[*\]"]}] || ![llength $pins]} { return "" }
+  if {[catch {set pe [find_timing_paths -path_delay max -to $pins -group_path_count 1 -sort_by_slack]}] || ![llength $pe]} { return "" }
+  return [sta::time_sta_ui [[lindex $pe 0] slack]]
+}
 proc cft_run {path} {
   global tb_added
   set rows [cft_rows $path]
@@ -35,6 +48,7 @@ proc cft_run {path} {
   set blk [ord::get_db_block]
   set tol [expr {[info exists ::env(OT_CLAND_FCLK_TOL_PS)] ? $::env(OT_CLAND_FCLK_TOL_PS) : 3.0}]
   set stage {}; set first {}; set cells {}; set last {}
+  set needx {}; set dcap [expr {[info exists ::env(OT_CLAND_FCLK_DATA_CAP_PS)] ? $::env(OT_CLAND_FCLK_DATA_CAP_PS) : 208.0}]
   for {set ps 0} {$ps < 5} {incr ps} {
     set_propagated_clock [all_clocks]
     estimate_parasitics -placement
@@ -58,6 +72,8 @@ proc cft_run {path} {
         dict set stage $p [cft_stage [expr {$a - $a0}] $nb0 [dict get $stage $p]]
       }
       dict set last $p [list $a 0]
+      set need [cft_need $need $a [cft_dslack $inst] $dcap]
+      dict set needx $p $need
       set d [expr {$need - $a}]
       if {$d <= $tol} continue
       set nb [cft_cells $d [dict get $stage $p]]
@@ -77,6 +93,7 @@ proc cft_run {path} {
     lassign $r inst pin port need target edge
     set p "$inst/$pin"
     set a [lindex [dict get $last $p] 0]
+    if {[dict exists $needx $p]} { set need [dict get $needx $p] }
     set st OK
     if {$a < $need - $tol} { set st "WARN short by [format %.1f [expr {$need - $a}]] ps"; incr short }
     puts "OT_CLAND_FCLK_TARGET $inst [format %.1f $target] pin_delay [format %.1f [dict get $first $p]] -> [format %.1f $a] ps (need [format %.1f $need], +[dict get $cells $p] cells) $st"

@@ -192,3 +192,15 @@ def test_tcl_pads_in_front_of_the_pin_with_the_tap_balance_helpers_and_never_rem
     assert "if {$d <= $tol} continue" in run and "set_propagated_clock [all_clocks]" in run
     assert not re.search(r"dbInst_destroy|dbNet_destroy|\bdisconnect\b", SRC)
     assert 'puts "OT_CLAND_FCLK_TARGET $inst [format %.1f $target] ' in run
+
+
+@needs_tclsh
+def test_tcl_raises_the_delay_to_what_the_worst_d_pin_lacks_up_to_the_cap(tmp_path):
+    # FABLE-FIX-QC-STA 11-18: slw_st_a_v2 b_hw_ctl_hc0_i, table need 64.1 met at 73.9 but the d pins are at -177.4
+    out = tcl(tmp_path, ["cft_need"], """
+puts [cft_need 64.1 73.9 -177.4 208.0]
+puts [cft_need 64.1 73.9 12.0 208.0]
+puts [cft_need 64.1 73.9 "" 208.0]
+puts [cft_need 64.1 73.9 -400.0 208.0]
+""")
+    assert [round(float(v), 1) for v in out if v] == [256.3, 64.1, 64.1, 272.1]

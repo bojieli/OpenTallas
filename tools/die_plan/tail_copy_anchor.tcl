@@ -118,6 +118,20 @@ proc tcs_along {route k} {
   }
   return $out
 }
+# FABLE-FIX-QC-STA 11-18: the point at fraction f of a route {length hits pts..} (f 0 = start, 1 = end)
+proc tcs_frac {route f} {
+  set len [lindex $route 0]; set pts [lrange $route 2 end]
+  set want [expr {double($len) * $f}]; set acc 0.0
+  for {set i 1} {$i < [llength $pts]} {incr i} {
+    set a [lindex $pts [expr {$i - 1}]]; set b [lindex $pts $i]; set d [tcs_md $a $b]
+    if {$acc + $d >= $want - 1e-6 || $i == [llength $pts] - 1} {
+      set g [expr {$d > 0 ? max(0.0, min(1.0, ($want - $acc) / $d)) : 1.0}]
+      return [list [expr {round([lindex $a 0] + ([lindex $b 0] - [lindex $a 0]) * $g)}] [expr {round([lindex $a 1] + ([lindex $b 1] - [lindex $a 1]) * $g)}]]
+    }
+    set acc [expr {$acc + $d}]
+  }
+  return [lindex $pts end]
+}
 proc tcs_md {a b} { return [expr {abs([lindex $a 0] - [lindex $b 0]) + abs([lindex $a 1] - [lindex $b 1])}] }
 # copy instance name of an odb cell name (`<path>.u_pdK_..._<pad>/<leaf>` kept, `<path>.u_pdK_..._<pad>.<leaf>` flat), or "".
 # KV-D23-REACH: any listed u_* instance (reset spine relay copies u_rs_.._r<i> of reset_replicate form rsync are listed too).
@@ -153,6 +167,23 @@ proc tcs_out {i} {
 }
 proc tcs_dnet {i} {
   foreach it [$i getITerms] { if {[[$it getMTerm] getName] eq "D"} { return [$it getNet] } }
+  return ""
+}
+# FABLE-FIX-QC-STA 11-18: the hard-macro output pin that drives net n (through up to 6 repeaters), or "" (flop / logic driver)
+proc tcs_macro_src {n} {
+  for {set h 0} {$h < 6} {incr h} {
+    if {$n eq "" || $n eq "NULL"} { return "" }
+    set drv ""
+    foreach it [$n getITerms] { if {[[$it getMTerm] getIoType] eq "OUTPUT"} { set drv $it } }
+    if {$drv eq ""} { return "" }
+    set di [$drv getInst]
+    if {[[$di getMaster] isBlock]} { return $drv }
+    if {![tcs_isrep $di]} { return "" }
+    set ins {}
+    foreach it [$di getITerms] { if {[[$it getMTerm] getIoType] eq "INPUT"} { set x [$it getNet]; if {$x ne "" && $x ne "NULL"} { lappend ins $x } } }
+    if {[llength $ins] != 1} { return "" }
+    set n [lindex $ins 0]
+  }
   return ""
 }
 proc tcs_sinks {n} {
@@ -270,6 +301,7 @@ proc tcs_run {} {
     foreach it $s { dict lappend gpins $g [tcs_pin_xy $it] }
   }
   set out [open $::env(RESULTS_DIR)/ot_face_flops.txt a]
+  set nsrc 0; set sfrac [expr {[info exists ::env(OT_TAIL_SRC_FRAC)] ? $::env(OT_TAIL_SRC_FRAC) : 0.6}]
   set ncopy 0; set ncell 0; set ntrunk 0; set maxhop 0; set over 0; set inside 0; set maxrhop 0; set rover 0; set crossing 0
   set tends [dict create]
   dict for {g pts} $gpins {
@@ -292,10 +324,22 @@ proc tcs_run {} {
     set tg [tcs_along $route $k]
     set rh [expr {[lindex $route 0] / double($k) / $dbu}]
     if {$rh > $maxrhop} { set maxrhop $rh }; if {$rh > $hop_um} { incr rover }
+    # FABLE-FIX-QC-STA 11-18: a single-stage copy fed straight by a hard macro (QC st_a rs_s control copies: cland q -> copy -> row
+    # pin) has no trunk end; at the pin the whole source -> pin run is ONE hop behind a slow macro output (slw_st_a_v2 r3: cland
+    # clk->q 393 ps + 880 ps of wire = -232 ps, while the copy -> pin hop had +590).  The copy goes to OT_TAIL_SRC_FRAC (0.6) of the
+    # routed source -> pin path: the macro launches about 250 ps before the copy clock, so the first hop carries the longer share.
+    set srcp ""
+    if {$k == 1} { set ms [tcs_macro_src [tcs_dnet [lindex $chain 0]]]; if {$ms ne ""} { set srcp [tcs_pin_xy $ms] } }
     set pts {}
     for {set s_ 0} {$s_ < $k} {incr s_} {
       set f [lindex $chain $s_]
-      if {$s_ == $k - 1} {
+      if {$s_ == $k - 1 && $srcp ne ""} {
+        lassign [tcs_frac [tcs_route $srcp $l $raw $halo] $sfrac] x y
+        lassign [tcs_push_out $x $y $boxes $sw] x y clear
+        if {!$clear} { incr inside }
+        set p [tcs_snap $x $y $core $ox $oy $sw $sh]
+        incr nsrc
+      } elseif {$s_ == $k - 1} {
         set p $l
       } else {
         lassign [lindex $tg $s_] x y
@@ -309,7 +353,7 @@ proc tcs_run {} {
         tcs_unfix $cell; $cell setLocation {*}$p; $cell setPlacementStatus FIRM; puts $out [$cell getName]; incr ncell
       }
     }
-    set q $t
+    set q [expr {$srcp ne "" ? $srcp : $t}]
     foreach p $pts { set h [expr {[tcs_md $q $p] / double($dbu)}]; if {$h > $maxhop} { set maxhop $h }; if {$h > $hop_um} { incr over }; set q $p }
     incr ncopy
     # trunk last stage: the flop that feeds this copy's first stage, when it is a trunk stage (u_pdN_..._t_<pad>) GPL owns
@@ -329,6 +373,7 @@ proc tcs_run {} {
     }
   }
   close $out
+  if {$nsrc} { puts "OT_TAIL_SITE $nsrc single-stage copies fed by a hard macro sited at $sfrac of the source -> pin route" }
   if {$::tcs_refix} { puts "OT_TAIL_SITE re-sited $::tcs_refix cell(s) an earlier hook had FIRM" }
   puts [format "OT_TAIL_SITE copies %d of %d sited (%d cells, %d trunk ends, %d groups) merged %d no_cells %d bad_out %d max_hop %.1f um routed_hop %.1f um over_%g %d core_crossing %d in_halo %d (FIRM, released for DPL)" \
           $ncopy [dict size $copies] $ncell $ntrunk [dict size $gpins] $merged $nocell $badout $maxhop $maxrhop $hop_um $rover $crossing $inside]
