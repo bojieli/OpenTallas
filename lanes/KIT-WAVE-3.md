@@ -1849,3 +1849,142 @@ FAIL_POSTCTS final GRT released TT/FF policy (grt_policy.json) | kit epyc9:/srv/
 2026-11-18 09:31:50 PST AUTOPILOT -> KIT-WAVE-3: FAILED a87c810e7ac5 s81/col_h9_r1__t1__cl49d7a23e__pv88891f20 (FAIL/grt-overflow): GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer. | kit epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/col_h9_r1__t1__cl49d7a23e__pv88891f20/attempt_2/gen/col_h9_r1__t1__cl49d7a23e__pv88891f20 src main@3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6 | review no review bundle | run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
 2026-11-18 09:31:55 PST AUTOPILOT -> KIT-WAVE-3: FAILED a9903756e0c5 s81/col_h9_r1__t1__cl49d7a23e__pvcb813ee7 (FAIL/grt-overflow): GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer. | kit epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/col_h9_r1__t1__cl49d7a23e__pvcb813ee7/gen/col_h9_r1__t1__cl49d7a23e__pvcb813ee7 src main@3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6 | review no review bundle | run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
 2026-11-18 09:32:00 PST AUTOPILOT -> KIT-WAVE-3: FAILED ac373b3277fd s81/col_h9_r1__t1__cl49d7a23e__pv70f04488 (FAIL/grt-overflow): GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer. | kit epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/col_h9_r1__t1__cl49d7a23e__pv70f04488/attempt_2/gen/col_h9_r1__t1__cl49d7a23e__pv70f04488 src main@3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6 | review no review bundle | run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-18 09:46:30 PST AUTOPILOT -> KIT-WAVE-3: FAILED 01acc6c1908b s81/ot_s81sl_leaf__t10 (CRASH/flow-error):       0 %
+
+[WARNING STA-0450] virtual clock vclk can not be propagated.
+OT_TAP_BALANCE it3 target 450: clk=453(430-482,7) clk_c0=452(452-452,1) clk_c1=450(450-450,1) clk_c10=461(461-461,1) clk_c11=460(460-460,1) clk_c12=456(456-456,1) clk_c13=458(458-458,1) clk_c14=443(443-443,1) clk_c15=458(458-458 | kit epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/ot_s81sl_leaf__t10/attempt_10/gen/ot_s81sl_leaf__t10 src main@3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6 | review no review bundle | run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-18 09:46:31 PST AUTOPILOT -> KIT-WAVE-3: FAILED 0b271ce2b576 s81/slice_station__t6__cl54a9ceeb (CRASH/flow-error): ON tap=clk_t22 sinks=738 ins_ps=276.9 skew_ps=34.1
+OT_TAP_INSERTION tap=clk_t23 sinks=9 ins_ps=252.4 skew_ps=1.1
+OT_TAP_INSERTION tap=clk_t24 sinks=428 ins_ps=267.8 skew_ps=25.5
+OT_TAP_INSERTION tap=clk_t25 sinks=123 ins_ps=246.9 skew_ps=6.4
+OT_TAP_INSERTION tap=clk_t26 sinks=278 ins_ps=272.2 skew_p | kit epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/slice_station__t6__cl54a9ceeb/attempt_11/gen/slice_station__t6__cl54a9ceeb src main@3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6 | review no review bundle | run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-18 09:46:33 PST AUTOPILOT -> KIT-WAVE-3: FAILED 19919ca72786 s81/ot_s81sl_leaf__t27 (CRASH/flow-error):  port_out 0 ws 0.00
+OT_PREGRT_FF_HOLD after wns 2.635031092750027 endpoints 0 cross_tap_wns 45.00602339361353 tap_ports 29 hold_cells 7750 insts 168086 setup_wns -1012.9320756009841 (before -1012.9320756009841) guard 45 locked 13976 secs 326
+/work/grt183_make.sh: line 177: /work/resume.json: No such | kit epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/ot_s81sl_leaf__t27/attempt_5/gen/ot_s81sl_leaf__t27 src main@3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6 | review no review bundle | run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-18 09:46:34 PST AUTOPILOT -> KIT-WAVE-3: FAILED 220efcf7e746 s81/slice_station__t50__cld84c9e24 (CRASH/flow-error): lector grow u_bound.u_cland_collect_rst_rl_2/ready_o$_SDFF_PN0_ (collector:rst_rl_2): window x2 (+-4.32 um)
+OT_CLAND collector grow u_bound.u_cland_collect_rst_rl_3/_6_ (collector:rst_rl_3): window x2 (+-4.32 um)
+OT_CLAND collector grow u_bound.u_cland_collect_rst_rl_3/_7_ (collector:rst_rl_3): wind | kit epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/slice_station__t50__cld84c9e24/attempt_8/gen/slice_station__t50__cld84c9e24 src main@3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6 | review no review bundle | run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-18 09:46:37 PST AUTOPILOT -> KIT-WAVE-3: FAILED 24d8fef3ec50 s81/ot_s81sl_leaf__t37 (CRASH/flow-error): cts.tcl
+OT_CLOCK_TAPS core tap clk_c0 <- u_bound.u_u_ve_u_m/clk: 1 clock pin(s)
+OT_CLOCK_TAPS core tap clk_c1 <- u_bound.u_u_vsw/clk: 1 clock pin(s)
+OT_CLOCK_TAPS core tap clk_c2 <- u_bound.u_u_vn_u_b/clk: 1 clock pin(s)
+OT_CLOCK_TAPS core tap clk_c3 <- u_bound.u_u_vn_u_a/clk: 1 clock pin(s)
+OT_CLOC | kit epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/ot_s81sl_leaf__t37/attempt_9/gen/ot_s81sl_leaf__t37 src main@3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6 | review no review bundle | run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-18 09:46:39 PST AUTOPILOT -> KIT-WAVE-3: FAILED 3e6e1ce178cb s81/phy__t1 (CRASH/flow-error): ge_gate.tcl
+estimate_parasitics -placement
+Perform buffer insertion and gate resizing...
+repair_design -verbose -cap_margin 20 -slew_margin 50
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     + | kit epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/phy__t1/attempt_13/gen/phy__t1 src main@3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6 | review no review bundle | run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-18 09:46:42 PST AUTOPILOT -> KIT-WAVE-3: FAILED 4348f5239c41 s81/ot_s81sl_leaf__t68 (CRASH/flow-error): -642.51 tns -212555.82
+OT_TT_SETUP_REPAIR FALLBACK step rc 1 (tt_setup_repair.log): 4_cts.odb unchanged
+OT_HOLD_GATE forwarded ring inputs 1476 on 3 clock(s), min 80.0000
+OT_HOLD_GATE structural limit -193.0 (contract in_min -40.0000, tap window 93.0000, endpoint cap none)
+OT_HOLD_GATE PASS FF wns_p | kit epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/ot_s81sl_leaf__t68/attempt_5/gen/ot_s81sl_leaf__t68 src main@3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6 | review no review bundle | run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-18 09:46:45 PST AUTOPILOT -> KIT-WAVE-3: FAILED 7120a1a32f70 s81/slice_station__t23 (CRASH/flow-error): exit 1 | kit epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/slice_station__t23/attempt_7/gen/slice_station__t23 src main@3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6 | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-18 09:46:47 PST AUTOPILOT -> KIT-WAVE-3: FAILED 87aa7f9b8c8f s81/ot_s81sl_leaf__t35 (CRASH/flow-error): _t28": 1498, "clk_t29": 371, "clk_t3": 45, "clk_t30": 18, "clk_t31": 881, "clk_t32": 1103, "clk_t33": 88, "clk_t34": 21, "clk_t35": 58, "clk_t36": 316, "clk_t37": 1500, "clk_t4": 1333, "clk_t5": 779, "clk_t6": 670, "clk_t7": 27, "clk_t8": 302, "clk_t9": 47; dropped (no sinks): 0 
+OT_CLAND_EXPORT fcl | kit epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/ot_s81sl_leaf__t35/attempt_16/gen/ot_s81sl_leaf__t35 src main@3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6 | review no review bundle | run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-18 09:46:48 PST AUTOPILOT -> KIT-WAVE-3: FAILED 890ba36665e6 s81/slice_station__t22 (CRASH/flow-error): 02] Maximum degree: 65
+
+[INFO GRT-0053] Routing resources analysis:
+          Routing      Original      Derated      Resource
+Layer     Direction    Resources     Resources    Reduction (%)
+---------------------------------------------------------------
+M1         Vertical            0              | kit epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/slice_station__t22/attempt_25/gen/slice_station__t22 src main@3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6 | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-18 09:46:49 PST AUTOPILOT -> KIT-WAVE-3: FAILED 895557377388 s81/ot_s81sl_leaf__t7 (CRASH/flow-error): 450] virtual clock vclk can not be propagated.
+[WARNING STA-0450] virtual clock vclk can not be propagated.
+OT_TAP_CORE u_bound.u_u_lf0_u_ve_u_m/clk tap clk_c0 pin 68 + internal 384 = effective 452 ps (target 450, window 20) OK
+OT_TAP_CORE u_bound.u_u_lf0_u_vsw/clk tap clk_c1 pin 82 + internal 366 = | kit epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/ot_s81sl_leaf__t7/attempt_6/gen/ot_s81sl_leaf__t7 src main@3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6 | review no review bundle | run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-18 09:46:50 PST AUTOPILOT -> KIT-WAVE-3: FAILED 8a026456da2b s81/slice_station__t37 (CRASH/flow-error): ldm_211120.lib.gz
+read_liberty -corner bc /work/nomcap/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib.gz
+read_db /work/run/results/asap7/dp_slice_station__t37/base/3_2_place_iop.odb
+read_sdc /work/run/results/asap7/dp_slice_station__t37/base/2_floorplan.sdc
+source /work/setRC_rcx.tcl
+source /work/cons_gpl_p | kit epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/slice_station__t37/attempt_7/gen/slice_station__t37 src main@3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6 | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-18 09:46:52 PST AUTOPILOT -> KIT-WAVE-3: FAILED 8cde8f564c27 s81/slice_station__t49 (CRASH/flow-error): ess:        0 (  0.00% of diamond failures)
+Rip-up and replace Failure:        0
+Total Placement Failures:          0
+---------------------------------------
+[INFO DPL-0500] Runtime: 16.89s
+Placement Analysis
+---------------------------------
+total displacement      30500.1 u
+average displacement    | kit epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/slice_station__t49/attempt_3/gen/slice_station__t49 src main@3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6 | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-18 09:47:11 PST AUTOPILOT -> KIT-WAVE-3: FAILED 8d3e0a2cee94 s81/ot_s81sl_leaf__t30 (CRASH/flow-error): exit 1 | kit epyc8:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/ot_s81sl_leaf__t30/attempt_8/gen/ot_s81sl_leaf__t30 src main@3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6 | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-18 09:47:15 PST AUTOPILOT -> KIT-WAVE-3: FAILED 93e8143702f6 s81/ot_s81sl_leaf__t54__cl501e5681 (CRASH/flow-error): exit 1 | kit epyc8:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/ot_s81sl_leaf__t54__cl501e5681/attempt_16/gen/ot_s81sl_leaf__t54__cl501e5681 src main@3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6 | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-18 09:47:17 PST AUTOPILOT -> KIT-WAVE-3: FAILED a0d0da04eeed s81/ot_s81sl_leaf__t43 (CRASH/flow-error): LK_LEAF_REPEAT pass 1 net net161522 est slew 104.8 ps > 80, 1 loads
+OT_CLK_LEAF_REPEAT pass 1 net net161525 est slew 184.6 ps > 80, 1 loads
+OT_CLK_LEAF_REPEAT pass 1 net net161526 est slew 251.2 ps > 80, 1 loads
+OT_CLK_LEAF_REPEAT pass 1 net net161527 est slew 157.2 ps > 80, 1 loads
+OT_CLK_LEAF_REPE | kit epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/ot_s81sl_leaf__t43/attempt_17/gen/ot_s81sl_leaf__t43 src main@3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6 | review no review bundle | run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-18 09:47:18 PST AUTOPILOT -> KIT-WAVE-3: FAILED ad706824ceb5 s81/ot_s81sl_leaf__t9 (CRASH/flow-error): exit 1 | kit epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/ot_s81sl_leaf__t9/attempt_6/gen/ot_s81sl_leaf__t9 src main@3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6 | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-18 09:47:19 PST AUTOPILOT -> KIT-WAVE-3: FAILED ae0e591d5855 s81/iqf__t1 (CRASH/flow-error): exit 1 | kit epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/iqf__t1/attempt_9/gen/iqf__t1 src main@3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6 | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-18 09:47:21 PST AUTOPILOT -> KIT-WAVE-3: FAILED ae7ac48f3d27 s81/slice_station__t14 (CRASH/flow-error): 1001] Global placement finished at iteration 447
+[INFO GPL-1002] Placed Cell Area            15727.3824
+[INFO GPL-1003] Available Free Area         1743233.9929
+[INFO GPL-1004] Minimum Feasible Density        0.0100 (cell_area / free_area)
+[INFO GPL-1006]   Suggested Target Densities:
+[INFO GPL-1007 | kit epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/slice_station__t14/attempt_8/gen/slice_station__t14 src main@3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6 | review no review bundle | run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-18 09:47:23 PST AUTOPILOT -> KIT-WAVE-3: FAILED b0d02d858df0 s81/slice_station__t42__cl4bd1432c (CRASH/flow-error): 50] virtual clock vclk can not be propagated.
+OT_TAP_BALANCE it1 target 250: clk=208(195-268,1030) clk_t1=257(252-265,597) clk_t10=261(259-278,342) clk_t11=239(230-243,340) clk_t12=240(231-245,335) clk_t13=241(231-245,342) clk_t14=239(235-244,405) clk_t15=247(240-255,562) clk_t16=245(238-252,485) cl | kit epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/slice_station__t42__cl4bd1432c/attempt_31/gen/slice_station__t42__cl4bd1432c src main@3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6 | review no review bundle | run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-18 09:47:25 PST AUTOPILOT -> KIT-WAVE-3: FAILED bc901b1e7f7a s81/slice_station__t41 (CRASH/flow-error): orner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner bc /work/nomcap/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib.gz
+read_db /work/run/results/asap7/dp_slice_station__t41/base/3_2_place_iop.odb
+read_sdc /work/run/results/asap7/dp_s | kit epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/slice_station__t41/attempt_7/gen/slice_station__t41 src main@3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6 | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-18 09:47:26 PST AUTOPILOT -> KIT-WAVE-3: FAILED bda7a4185cdb s81/ot_s81sl_leaf__t74 (CRASH/flow-error):  OK
+OT_TAP_CORE u_bound.u_u_lf4_u_vp_g_ln_13_u_l/clk tap clk_c12 pin 197 + internal 260 = effective 456 ps (target 450, window 20) OK
+OT_TAP_CORE u_bound.u_u_lf4_u_vp_g_ln_14_u_l/clk tap clk_c13 pin 187 + internal 260 = effective 446 ps (target 450, window 20) OK
+OT_TAP_CORE u_bound.u_u_lf4_u_vp_g_l | kit epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/ot_s81sl_leaf__t74/attempt_5/gen/ot_s81sl_leaf__t74 src main@3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6 | review no review bundle | run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-18 09:47:32 PST AUTOPILOT -> KIT-WAVE-3: FAILED c0c916f2051e s81/slice_station__t31 (CRASH/flow-error): exit 1 | kit epyc10:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/slice_station__t31/attempt_8/gen/slice_station__t31 src main@3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6 | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-18 09:47:33 PST AUTOPILOT -> KIT-WAVE-3: FAILED c4750bfadccc s81/slice_station__t24__cl64811a5d (CRASH/flow-error): default vias:
+  Layer V2
+    default via: VIA23
+  Layer V3
+    default via: VIA34
+  Layer V4
+    default via: VIA45
+  Layer V5
+    default via: VIA56
+  Layer V6
+    default via: VIA67
+  Layer V7
+    default via: VIA78
+  Layer V8
+    default via: VIA89
+  Layer V9
+    default via: VIA9Pad
+[INFO DRT-01 | kit epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/slice_station__t24__cl64811a5d/attempt_4/gen/slice_station__t24__cl64811a5d src main@3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6 | review no review bundle | run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-18 09:47:35 PST AUTOPILOT -> KIT-WAVE-3: FAILED c7f63547b25d s81/slice_station__t30__clcedefe91 (CRASH/flow-error):  4893.9 u
+average displacement        0.0 u
+max displacement            2.7 u
+original HPWL         1359294.3 u
+legalized HPWL        1361105.2 u
+delta HPWL                    0 %
+
+Took 12 seconds: detailed_placement -use_diamond_legalizer -max_displacement "1443 1227"
+improve_placement -max_displac | kit epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/slice_station__t30__clcedefe91/attempt_9/gen/slice_station__t30__clcedefe91 src main@3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6 | review no review bundle | run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-18 09:47:36 PST AUTOPILOT -> KIT-WAVE-3: FAILED ca5446181961 s81/slice_station__t44 (CRASH/flow-error): 4% |       0 |   14332 |         14327 |     44629
+    85000 |     +9.4% |       0 |   14332 |         14327 |     43629
+    86000 |     +9.4% |       0 |   14344 |         14339 |     42629
+    87000 |     +9.4% |       0 |   14344 |         14339 |     41629
+    88000 |     +9.4% |       0 |   143 | kit epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/slice_station__t44/attempt_7/gen/slice_station__t44 src main@3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6 | review no review bundle | run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-18 09:47:38 PST AUTOPILOT -> KIT-WAVE-3: FAILED d601c3a7946a s81/slice_station__t7__cl503f4913 (CRASH/flow-error): ================
+global route report_design_area
+--------------------------------------------------------------------------
+Design area 11124 um^2 1% utilization.
+[INFO FLW-0007] clock clk period 833.000000
+[WARNING FLW-0010] more than one clock found. Skipping sdc update.
+[INFO FLW-0011] Path endpo | kit epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/slice_station__t7__cl503f4913/attempt_8/gen/slice_station__t7__cl503f4913 src main@3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6 | review no review bundle | run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-18 09:47:39 PST AUTOPILOT -> KIT-WAVE-3: FAILED dfe28cadf2a6 s81/ot_s81sl_leaf__t45 (CRASH/flow-error): exit 1 | kit epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/ot_s81sl_leaf__t45/attempt_10/gen/ot_s81sl_leaf__t45 src main@3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6 | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-18 09:47:40 PST AUTOPILOT -> KIT-WAVE-3: FAILED e3fcbb31a5fb s81/slice_station__t27 (CRASH/flow-error): 18-270,1251) clk_t59=249(234-255,412) clk_t6=254(244-271,270) clk_t60=248(235-254,393) clk_t7=261(230-300,1500) clk_t8=246(229-275,647) clk_t9=243(240-248,428)
+[INFO DPL-0006] Core area: 1933126.04 um^2
+[INFO DPL-0007] Movable instances area: 26732.02 um^2
+[INFO DPL-0008] Fixed instances area within | kit epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/slice_station__t27/attempt_5/gen/slice_station__t27 src main@3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6 | review no review bundle | run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-18 09:47:42 PST AUTOPILOT -> KIT-WAVE-3: FAILED f7fc89027c45 s81/ot_s81sl_leaf__t73 (CRASH/flow-error): 7218
+   116900 |     -1.0% |   31317 |    19841 |     50518
+   133600 |     -1.3% |   41536 |    25438 |     33818
+   150300 |     -1.3% |   41992 |    25861 |     17118
+   167000 |     -1.3% |   43535 |    26486 |       418
+    final |     -1.3% |   43535 |    26486 |         0
+-------------------- | kit epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/ot_s81sl_leaf__t73/attempt_7/gen/ot_s81sl_leaf__t73 src main@3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6 | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit

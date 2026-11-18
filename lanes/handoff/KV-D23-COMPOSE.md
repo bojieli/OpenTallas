@@ -27,3 +27,19 @@ D23/D23b FAIL: 1 EMIT kv3_hub_Wo raw Q rst_rl_214 (hub_Wo cores change the solve
 In flight (epyc7, no hub_Wo, NO_WO=1 build_d23.py): D23e (D23 minus hub_Wo, tools eefb7e3), D23f (band + rider), D23g (band + rider + reach + ring2 keys, main e8731b01bcf).
 D24 prep on main: 05f7de74d0c (hard RSTREP rings keep reach reader START), db1854527ce (clksite_resite.py; hub_C S 68.31 um).
 hub_C pre-proof gate: epyc7 kv-d23-compose/hubc/gate_c (rows4 = KV-D23-HUBC rows3 + resite, D22 mirror, tools main e8731b01bcf).
+## Status 18:00Z
+Gates (epyc7, all PRE PASS, strict binds running, ot-run --crit since 17:07Z): d23egate, d23fgate, d23ggate, d23hgate (D23h = D23g + FABLE-FIX-KV-HG
+relay_mid keys on 17 hg/hgi types, main 0c3fb152c30, tree kw45/src_kv_pin_eb1e73448bd0_hg8_aa3f08ac_t0c3fb15_d23h plan aa3f08ac4159), hubc/gate_c.
+Apply rule: most complete green of g > f > e first (expect-source D22, expect-event KV-D22), then D23h on top (expect-source = applied tree).
+pvfin (RULING KV-HG-OPUS 18:0x): NO pvfin station rows from this lane. ahub fr_rz -> pvfin rz is 0 kept stages, per-bit 1,084 / 1,176 um
+(lo / hi, needs k=2 at 405 um), but pvfin faults on an rz off its calendar slot (qkd_pv_fin_s8 l.144) and pvfin sits in the u_kvs_attn
+static loop (pvfst D45 -> pvfin -> fin D46, RETIRE_STATIC). Lane KV-PVFIN-CAL moves the attn_root calendar R slot +2 + 2 rz stations and
+writes ~/coord/lanes/handoff/KV-PVFIN-CAL-d24.json; it drops into D24 last. Fallback re-floor next to ahub: 0 free sites <= 500 um today
+(blocked by taps / internal station regs / collector relays; epyc7 kv-d23-compose/hubc/pvsite*.py).
+pc RTL (D24): sources already in every tree (results/kv_host_regen_1/rtl_rf3/<m>/<m>.sv, on main); the gap is only asbuilt portbind_files.
+Proof: epyc8 /srv/opentallas-scratch2/claude/kv-d23-compose8/pcpb (strict portbind on D22 + 4 pc tops in portbind_files; ot-run from intel2).
+D24 recipe (base = applied D23 tree): hub_C rows (re-run kv-d23-hubc/d23_hubc_rows.py on the applied plan + tools/die_plan/clksite_resite.py)
++ hub_C clock.landing_ring_lite/narrow (KV-RING2-LIGHT-keys-d24.json; hard rings are wide, LITE only <= 4 bits, NARROW keeps hard params)
++ hub_Wi host rows (KV-HUBWI-HOST-rows-d23.json apply_recipe, writer main 04df4c77f065, views epyc9 kv-d23-hubwi/views_src)
++ 4 pc portbind_files + hub_Wo (KV-HUBWO-RESET-d23.json when green) + pvfin (KV-PVFIN-CAL-d24.json) last.
+HUBC leftovers now mine: 6 exported ring/dly masters, kv_dly_w512_d46_b4fbd in GRT (KV-D23-HUBC dead).
