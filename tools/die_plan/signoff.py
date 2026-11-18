@@ -2799,6 +2799,7 @@ def cmd_run(a):
             rec["child_clock_witness"] = {"status": "FAILED", "error": str(exc), "qualification": "NOT_ASSERTED"}
             print(f"CHILD_CLOCK_WITNESS FAILED: {exc}")
     (out / "signoff.json").write_text(json.dumps(rec, indent=1) + "\n")
+    auto_export_enqueue(out / "signoff.json", rec)
     print("SIGNOFF " + summary_line(rec))
     for r in rec["reasons"]:
         print(f"  - {r}")
@@ -2819,6 +2820,36 @@ def droop_check_tcl(disc, margins_path=None):
                 fractions=fr, wire_class=None if cls is None else {k: v for k, v in cls.items() if k != "wire"},
                 wire_instances_sample=None if cls is None else cls["wire"][:20])
     return DD.derate_tcl(fr, cls["wire"] if cls else ()), info
+
+
+def auto_export_enqueue(signoff, rec):
+    """AUTO-EXPORT-1118 (OWNER r711): an R-MINIMAL SIGNED record is spooled for the hub export to AGIdock + rtx-pro
+    (tools/autopilot/auto_export.py drain).  Inline, not a bundle import, so every kit copy of signoff.py carries it.
+    One small file in ~/.local/state/ot-auto-export/spool/; never fails or changes the sign-off.  OT_AUTO_EXPORT=0
+    turns it off; OT_EXPORT_DIE / OT_EXPORT_ELEMENT / OT_EXPORT_KIND are hints for the INDEX row."""
+    try:
+        if rec.get("profile") != "minimal" or rec.get("verdict") != "SIGNED" or os.environ.get("OT_AUTO_EXPORT", "1") == "0":
+            return None
+        if "PYTEST_CURRENT_TEST" in os.environ and not os.environ.get("OT_AUTO_EXPORT_SPOOL"):
+            return None
+        import socket
+        signoff = os.path.realpath(str(signoff))
+        sha = hashlib.sha256(Path(signoff).read_bytes()).hexdigest()
+        spool = os.environ.get("OT_AUTO_EXPORT_SPOOL") or os.path.expanduser("~/.local/state/ot-auto-export/spool")
+        os.makedirs(spool, exist_ok=True)
+        row = dict(schema="opentallas.auto_export.spool.v1", signoff=signoff, record=sha, host=socket.gethostname(),
+                   name=rec.get("name"), generated=rec.get("generated"), queued=datetime.datetime.now().astimezone().isoformat(),
+                   die=os.environ.get("OT_EXPORT_DIE") or None, element=os.environ.get("OT_EXPORT_ELEMENT") or None,
+                   kind=os.environ.get("OT_EXPORT_KIND") or None)
+        p = os.path.join(spool, sha[:16] + ".json")
+        tmp = "%s.tmp%d" % (p, os.getpid())
+        Path(tmp).write_text(json.dumps(row))
+        os.replace(tmp, p)
+        print(f"AUTO_EXPORT queued {p}")
+        return p
+    except Exception as exc:  # the export is downstream; a spool problem never touches the verdict
+        print(f"AUTO_EXPORT not queued: {exc}")
+        return None
 
 
 def _git_head():
