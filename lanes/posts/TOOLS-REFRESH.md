@@ -81,3 +81,4 @@
   +    "LQH": 1
   +   },
   +   "source": "signed rfd6 / ECO bksel_c3 (SS29-RESIGN flow-20261104-y-s81, routed_db_sha256 11f32154 = AGIdock s81/dsdv_bksel_c INDEX): LEC gold epyc2:/srv/opentallas-scratch2/claude/ss29/resign/bksel_c_k
+- 2026-11-17 23:29 PST TOOLS-REFRESH s81_head: switched to /srv/opentallas-scratch2/claude/kw45/src_head_pin_8569788b0328_nf15f_d2_t86a9d26_d1_t58211f4_t30393b4_t296faa0 (rulings r671, r672, r673, r674, r675, r676, r677, r678, r679, r680, r681, r684); plan and RTL byte-identical, strict bind unchanged
