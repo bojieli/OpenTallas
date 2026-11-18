@@ -1,12 +1,16 @@
 #!/bin/bash
 # ot-gate-remote (MERGE-QUEUE-1, COORD 11-15 15:1x): the queue's own gate (`ot-merge-queue gate`, main's rt/current code) on a
 # BUILD host, in its own blobless clone of the lane mirror, so gates run in parallel instead of one at a time on the hub.
-# usage (on the build host, normally via ot-run): ot-gate-remote claude/<branch>@<sha> [threads]
+# usage (on the build host, normally via ot-run): ot-gate-remote [--merge] claude/<branch>@<sha> [threads]
+# --merge needs the FULL sha, the branch pushed to the mirror, and a GREEN gate; exit = the merge-now result (0 = MERGED/ALREADY)
 # Prints the gate output; GREEN ends with `GATE main=<sha> pass=N/N`.  Clone slots: /srv/opentallas-scratch2/claude/mq-gate/slot<i>.
 set -u
 cd /
+# --merge (MERGE-AUTO-1118, OWNER 11-18: nobody waits for approval): after a GREEN gate, land the SAME sha at once with `ot-merge-queue merge-now` on the hub
+MERGE=0
+if [ "${1:-}" = --merge ]; then MERGE=1; shift; fi
 # FABLE-FLOW-1900 (E): a gate runs on a BUILD host only.  `ot-gate-remote --help` once started a real gate on the hub and a second hub gate ran at 17:43.
-usage() { echo "usage: ot-gate-remote claude/<branch>@<sha> [threads]   (build host only, normally via ot-run; refuses on the hub intel2 and on localhost)" >&2; exit 2; }
+usage() { echo "usage: ot-gate-remote [--merge] claude/<branch>@<sha> [threads]   (build host only, normally via ot-run; refuses on the hub intel2 and on localhost)" >&2; exit 2; }
 HN=${OT_GATE_HOSTNAME:-$(hostname -s)}
 case "$HN" in
   tolerant-swine|ubuntu|intel2|localhost|rtx-pro) echo "ot-gate-remote: REFUSED on $HN: gates run on build hosts (epyc2, epyc7..epyc10, intel1) through ot-run, never on the hub or localhost" >&2; exit 64;;
@@ -80,5 +84,12 @@ d = json.load(open(sys.argv[1])); d["host"] = sys.argv[2]; print(json.dumps(d, i
 PY
     if [ "$(hostname -s)" = intel2 ]; then cp $r ~/merge-queue/gates/; else scp -q -o BatchMode=yes $r intel2:merge-queue/gates/ && echo "record -> intel2:~/merge-queue/gates/${r##*/}"; fi
   fi
+fi
+if [ $rc -eq 0 ] && [ $MERGE = 1 ]; then
+  br=${1%@*}; sha=${1#*@}
+  [ ${#sha} -eq 40 ] || { echo "ot-gate-remote --merge: need the FULL 40-hex sha (got '$sha')"; exit 2; }
+  MQ=/srv/opentallas-scratch2/claude/rt/current/tools/fleet/ot-merge-queue
+  if [ "$(hostname -s)" = intel2 ]; then python3 -I $MQ merge-now "$br" "$sha"; else ssh -n -o BatchMode=yes intel2 "python3 -I $MQ merge-now '$br' '$sha'"; fi
+  exit $?
 fi
 exit $rc
