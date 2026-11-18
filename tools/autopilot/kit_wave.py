@@ -10756,6 +10756,18 @@ def view_inputs(cfg, die, item):
     return out
 
 
+def gen_env_digest(d, sp, item):
+    """FABLE-FLOW-0010 / COORD (S81 t37: OT_GPL_HPWL_RATIO 1.5 added to its item_env after a PLACE-HPWL 1.40 > 1.3 fail never relaunched it, the key held no env): sha1[:16] of the
+    gen env an attempt runs with (die_gen_env + the item's item_env; the attempt's own spec gen_env when it is a failed attempt), '' without an item"""
+    if not item:
+        return ""
+    try:
+        env = sp.get("gen_env") if sp and isinstance(sp.get("gen_env"), dict) else item_env(d, item)
+    except Exception:
+        return ""
+    return hashlib.sha1(json.dumps(env, sort_keys=True, default=str).encode()).hexdigest()[:16] if env else ""
+
+
 def kit_digest_parts(cfg, die, rec=None, group="", files=None):
     """what a (re)launch of an item builds on: plan block sha, src sha, source content hash, the stage tools closure.  From the attempt's own spec.json
     when rec is a failed attempt (what it ran on), else from the die config (what a launch would run on)."""
@@ -10778,7 +10790,8 @@ def kit_digest_parts(cfg, die, rec=None, group="", files=None):
             "tools": stage_tools_digest(group=group, files=files),
             "bind_context": bind_context_digest(cfg, die, kr),
             "views": hashlib.sha1(json.dumps(view_inputs(cfg, die, (rec or {}).get("item")), sort_keys=True).encode()).hexdigest()[:16]
-            if view_inputs(cfg, die, (rec or {}).get("item")) else ""}
+            if view_inputs(cfg, die, (rec or {}).get("item")) else "",
+            "env": gen_env_digest(d, sp, (rec or {}).get("item"))}
 
 
 def fail_key(parts, cls, why):
@@ -11019,8 +11032,8 @@ def release_parts(prev):
     stage = str(prev.get("stage") or "")
     why = str(prev.get("why") or "")
     if stage in CELL_STAGES or re.search(r"SPLIT-NEEDED|cells? (?:cap|count|limit)|std cells >", why, re.I):
-        return set(DESIGN_PARTS) - {"tools"} | ({"tools"} if prev.get("tool_files") else set())
-    parts = set(DESIGN_PARTS)
+        return set(DESIGN_PARTS) - {"tools"} | ({"tools"} if prev.get("tool_files") else set()) | {"env"}
+    parts = set(DESIGN_PARTS) | {"env"}
     if stage in BIND_STAGES:
         parts.add("bind_context")
     if stage.startswith("prov_") or (stage in BIND_STAGES and VIEW_FAIL_RE.search(why)):
@@ -11057,6 +11070,7 @@ def fail_key_gate(cfg, st, die, item, block_sha=None):
     # WAVE-FLOW-R2 11-17 (KV-R3): staged child-view files (receipt / LEF / libs of prov_view_sources) are item inputs; keys stored before this field exist release only
     # on a real change of the files (a key without "views" is not released by their absence)
     views_changed = "views" in (prev.get("parts") or {}) and now.get("views") != (prev.get("parts") or {}).get("views")
+    env_changed = "env" in (prev.get("parts") or {}) and now.get("env") != (prev.get("parts") or {}).get("env")     # keys stored before this part exist are not released by its absence
     # FABLE-FLOW-0015 (a): a missing-input fail releases only when what failed changes: the named input appears, or the plan block / src / overlay
     # (a repointed config) changes.  A tool merge that does not touch it is no reason (slice_station__t51 failed twice on the same missing input
     # after the 23:29 tool merge re-armed it)
@@ -11083,6 +11097,8 @@ def fail_key_gate(cfg, st, die, item, block_sha=None):
         changed.append("bind_context")
     if views_changed and "views" not in changed:
         changed.append("views")
+    if env_changed and "env" not in changed:
+        changed.append("env")
     # WAVE-FLOW-R2 11-17 (COORD FABLE-FLOW-1500 C): per-class input parts.  A fail key is released only by an input its failure class depends on:
     # staged views / bind context do not release a cell-cap or other design failure (kv3_hub_Wo relaunched 4 times in 46 min after r589)
     allow = release_parts(prev)
