@@ -65,6 +65,21 @@ class Apply(unittest.TestCase):
         self.assertNotIn("retired_pilots", after)
         self.assertNotIn("retired_pilots", after["dies"]["kv"])
 
+    def test_apply_records_the_replaced_event_in_the_event_lineage(self):
+        """r631: event_adopt terms of any ancestor stay met, so each apply that changes the event appends the one it replaces"""
+        c = mk()
+        c1 = dict(cand(), config={"event": "E1"})
+        apply(c, c1, "/x/old", "E0", pilot_item="t1", TC=TC)
+        d = json.loads((c / "autopilot/kit_wave.json").read_text())["dies"]["kv"]
+        self.assertEqual((d["event"], d["event_lineage"]), ("E1", ["E0"]))
+        c2 = dict(cand(), tree="/x/new2", config={"event": "E2"}, manifest_hash="aa" * 32)
+        apply(c, c2, "/x/new", "E1", pilot_item="t1", TC=TC)
+        d = json.loads((c / "autopilot/kit_wave.json").read_text())["dies"]["kv"]
+        self.assertEqual((d["event"], d["event_lineage"]), ("E2", ["E0", "E1"]))
+        c3 = mk()
+        apply(c3, cand(), "/x/old", "E0", pilot_item="t1", TC=TC)                      # the event did not change: no lineage entry
+        self.assertNotIn("event_lineage", json.loads((c3 / "autopilot/kit_wave.json").read_text())["dies"]["kv"])
+
     def test_default_pilot_item_is_the_smallest_known_item(self):
         c = mk()
         apply(c, cand(), "/x/old", "E0", TC=TC)

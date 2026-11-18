@@ -958,7 +958,7 @@ def _hold_term_met(term, die_cfg, is_merged):
         import hold_records as _HR
         if not _HR.event_name_ok(name):                  # r252: one trailing * = prefix (B6gG3* = B6gG3, B6gG3b)
             return False
-        return _HR._event_token_in(name, _HR.adopted_events(die_cfg))
+        return _HR._event_token_in(name, _HR.released_events(die_cfg))
     if kind == "merge":
         ref = val.split()[0] if val else ""
         try:
