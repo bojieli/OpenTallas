@@ -23,6 +23,17 @@ A consumer that is a soft leaf (no plan pin xy) holding plan hard cores counts a
 cores (leaf_xy).  Not covered (left as emitted today, counted in bind_pad_tail_split.json): R8 strap-count banks (ot_dp_dly_cnt),
 PAD_TREE types, position-bank members, registered-pin hard partitions; consumers that are not plan hard cores (or have
 no plan pin xy) keep reading the shared full-depth pad.
+
+BIN-COPY (FABLE-FIX-QC-N N4.1 11-18), optional sub-key "wire_leaves": [as-built leaf module, ..] (absent = nothing below
+runs, byte-identical output).  An in-boundary flop bit (u_bin_<bus> q[j], pad 0) whose value reaches the pins of several
+far hard cores THROUGH a pure-wiring leaf (QC st_a: u_bin_rs_s0/1 q[513:512] -> u_frs.rs_s_c -> rs_s_c_p of the four station
+rows, 1,000 um apart, -272 ps at CTS; a register on the leaf output would add a cycle) gets one kept copy of that flop
+per consumer core: `ot_dp_dly_keep #(.W(1), .D(1))` on the bin flop's own d bit, read by that core's pins instead of the
+leaf output.  Same split rule (>= 2 plan hard cores, spread over min_spread_um), same site rows (consumer pin centroid),
+same `landing pad tail copy for core` marking, 0 added cycles: the copy captures the edge the bin flop captures.  The
+leaf must be proven pure wiring from its RTL (bind_wire_leaf.wire_map, fail closed); bind_bin_copies.json lists every
+re-pointed sink with the leaf output it bypasses and the leaf input that carries the same bit, and bind_verify proves
+the wiring again from the RTL and then requires the sink to see exactly the source and depth of that leaf input.
 """
 import math
 import re
@@ -70,10 +81,13 @@ def config(ab):
     if c is None:
         return None
     if not isinstance(c, dict) or not isinstance(c.get("types"), list) or not c["types"] or \
-            set(c) - {"types", "min_spread_um", "hop_um"}:
-        raise ValueError(f"asbuilt.{KEY}: expected {{types: [regex..], min_spread_um, hop_um}}")
+            set(c) - {"types", "min_spread_um", "hop_um", "wire_leaves"}:
+        raise ValueError(f"asbuilt.{KEY}: expected {{types: [regex..], min_spread_um, hop_um[, wire_leaves]}}")
+    wl = c.get("wire_leaves", [])
+    if not isinstance(wl, list) or not all(isinstance(x, str) and x for x in wl) or ("wire_leaves" in c and not wl):
+        raise ValueError(f"asbuilt.{KEY}.wire_leaves: expected a non-empty list of as-built leaf module names")
     out = dict(types=[re.compile(x) for x in c["types"]], min_spread_um=float(c.get("min_spread_um", 400.0)),
-               hop_um=float(c.get("hop_um", 380.0)))
+               hop_um=float(c.get("hop_um", 380.0)), wire_leaves=frozenset(wl))
     if out["hop_um"] <= 0 or out["min_spread_um"] < 0:
         raise ValueError(f"asbuilt.{KEY}: hop_um must be > 0 and min_spread_um >= 0")
     return out
@@ -153,3 +167,12 @@ def tail_depth(pad, by_core, cfg):
     if s <= cfg["min_spread_um"]:
         return None
     return min(pad, max(1, math.ceil((s / 2.0) / cfg["hop_um"]))), s
+
+
+def bin_spread(by_core, cfg):
+    """BIN-COPY: the pin spread S of an in-boundary flop bit whose consumer pins are {core inst: [(x, y)..]}, or None
+    when it keeps the one flop (fewer than two cores, or inside min_spread_um)"""
+    if len(by_core) < 2:
+        return None
+    s = spread([xy for v in by_core.values() for xy in v])
+    return s if s > cfg["min_spread_um"] else None

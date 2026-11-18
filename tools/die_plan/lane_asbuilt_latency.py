@@ -11,6 +11,8 @@ Per plan lane (spine lanes skipped), the delivered stage count is read from the 
 WILL insert, predicted from the plan's internal_stations exactly as kit_istations.py does it:
   source  : u_bout_<o> (1; a registered hard pin = the macro register, 1) + u_bout_<o>_pad<j> + u_ist_<o>_<j> already
             in the bound RTL (native stations) + one core pin-face chain u_ist_<o>__<cores>_<g>_<j> (bound or kit)
+            + the bound out-bus station chain u_lob_<o>__<leaf>__<port>_<bit>_<k> (asbuilt.land_intra_stations "bus:<o>"
+            nets, bind_intra_stations.py: every bit of the bus carries the same depth)
             + KIT bus chain: depth(bus:<o>) - (pads + bound u_ist), never below 0
   ft      : u_ft_<ob>_<k> + u_fx_<ob>_<k> (cross-tap hop flops) in every feedthrough partition of the lane
   landing : the bound clock-landing cycles of the lane (sum over its crossings; a count-aligned ring is priced at its
@@ -40,7 +42,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import core_latency as CL  # noqa: E402  (declared hard-core cycles, CORE-LAT-1)
 
-INST_RX = re.compile(r"^[ \t]*(\w+)[ \t]*(#\((?:[^()]|\((?:[^()]|\([^()]*\))*\))*\))?\s*(u_(?:bout|bin|lpad|ist|ft|fx|rs)_\w+)\s*\(",
+INST_RX = re.compile(r"^[ \t]*(\w+)[ \t]*(#\((?:[^()]|\((?:[^()]|\([^()]*\))*\))*\))?\s*(u_(?:bout|bin|lpad|ist|lob|ft|fx|rs)_\w+)\s*\(",
                      re.M)
 D_RX = re.compile(r"\.D\(\s*(\d+)\s*\)")
 HDR_RX = re.compile(r"partition type (\S+?)\.\s")
@@ -72,6 +74,16 @@ class ModuleIndex:
     def ist(self, n):
         rx = re.compile(rf"u_ist_{re.escape(n)}_(\d+)")
         return sorted(int(m.group(1)) for k in self.inst for m in [rx.fullmatch(k)] if m)
+
+    def lob_depth(self, n):
+        """depth of the bound out-bus station chains u_lob_<n>__<leaf>__<port>_<bit>_<k> (one depth per bus)"""
+        rx = re.compile(rf"u_lob_{re.escape(n)}__(\w+)_(\d+)")
+        by = defaultdict(set)
+        for k in self.inst:
+            m = rx.fullmatch(k)
+            if m:
+                by[m.group(1)].add(int(m.group(2)))
+        return max((len(v) for v in by.values()), default=0)
 
     def core_chain_depth(self, n):
         """deepest per-core pin-face chain u_ist_<n>__<tag>_<j> (every chain of one bus has one depth)"""
@@ -129,7 +141,10 @@ def side_stages(ix, typ, bus, side, reg_hard, lpad_override=None):
             prob.append(f"bound {have} pad/station stages > {kdep} planned (kit_istations refuses)")
     det.update(face=face, pads=len(pads), bound_ist=len(ist), core_chain=bound_core or kit_core, lpad=lp,
                kit_ist=kit_bus + kit_core)
-    return face + len(pads) + len(ist) + (bound_core or kit_core) + lp + kit_bus, det, prob
+    lob = ix.lob_depth(n) if side == "out" else 0
+    if lob:
+        det.update(bound_lob=lob)                    # N4.1: bound out-bus stations (land_intra_stations bus nets)
+    return face + len(pads) + len(ist) + (bound_core or kit_core) + lp + kit_bus + lob, det, prob
 
 
 def plan_hops(plan):

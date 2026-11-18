@@ -773,6 +773,44 @@ def cmd_verify(a):
     _pf = out / "bind_core_input_pipe.json"
     core_pipe = json.loads(_pf.read_text()) if _pf.is_file() else {}
     cnt_pipe = 0
+    # BIN-COPY (N4.1, asbuilt.land_pad_tail_split.wire_leaves): sinks the bind re-pointed from a pure-wiring leaf output
+    # to a kept copy of the in-boundary flop feeding that leaf (bind_bin_copies.json).  Accepted only when (1) the
+    # as-built driver of the sink IS the recorded leaf output with 0 stages, (2) the leaf module is pure wiring and maps
+    # that output bit to the recorded input bit -- proven HERE from the RTL (bind_wire_leaf), not from the record -- and
+    # (3) the sink then sees exactly the source and stage count of that leaf input bit (its own bind_sinks row).
+    _bf = out / "bind_bin_copies.json"
+    bin_copies = json.loads(_bf.read_text()).get("sinks", {}) if _bf.is_file() else {}
+    bin_want, bin_bad = {}, []
+    if bin_copies:
+        import bind_wire_leaf as WL
+        from bind import plan_base as _pb
+        _base = _pb(a.plan, raw)
+        _idx = E.module_index(raw["asbuilt"].get("rtl_roots", ["rtl"]), raw["asbuilt"].get("files", []), _base)
+        leaf_mod = {names[c.path]: c.module for c in F.cells if c.path in names}
+        _maps = {}
+        rx_pin = re.compile(r"(.+)\.(\w+)\[(\d+)\]")
+        for key, r in sorted(bin_copies.items()):
+            mt, ml = rx_pin.fullmatch(r.get("through", "")), rx_pin.fullmatch(r.get("leaf_in", ""))
+            mod = leaf_mod.get(mt.group(1)) if mt and ml and mt.group(1) == ml.group(1) else None
+            if mod is None:
+                bin_bad.append((key, "record does not name one bound leaf"))
+                continue
+            if mod not in _maps:
+                try:
+                    _maps[mod] = WL.leaf_map(raw["asbuilt"], _base, mod, _idx)
+                except ValueError as exc:
+                    _maps[mod] = str(exc)
+            wm = _maps[mod]
+            if isinstance(wm, str):
+                bin_bad.append((key, wm))
+            elif wm.get((mt.group(2), int(mt.group(3)))) != (ml.group(2), int(ml.group(3))):
+                bin_bad.append((key, f"{mod}: {mt.group(2)}[{mt.group(3)}] is not wired from {ml.group(2)}[{ml.group(3)}]"))
+            elif list((sinks.get(key) or [None] * 4)[:4]) != ["pin", r["through"], 0, False]:
+                bin_bad.append((key, f"as-built driver is not {r['through']} with 0 stages"))
+            elif not sinks.get(r["leaf_in"]):
+                bin_bad.append((key, f"{r['leaf_in']} has no as-built sink row"))
+            else:
+                bin_want[key] = sinks[r["leaf_in"]]
     reg_parts = {sv_id(p) for p in rep.get("registered_pins", {})}
     cnt = dict(compared=0, matched=0, mismatched=0, glue_unmatched=0, unbound=0, tied=0, undriven=0, multiply_driven=0, plan_driven=0)
     mism, tied_ex = [], []
@@ -799,7 +837,7 @@ def cmd_verify(a):
                 continue
             for i, b in enumerate(bits):
                 key = f"{ap}.{pn}[{i}]"
-                want = sinks.get(key)
+                want = bin_want.get(key) or sinks.get(key)
                 dpipe = core_pipe.get(f"{ap}.{pn}[{i}]") or core_pipe.get(f"{ap}.{pn}")    # KV-PVGEN: per-bit records
                 if want and want[0] == "pin" and dpipe:
                     want = list(want[:2]) + [want[2] + int(dpipe)] + list(want[3:])
@@ -867,6 +905,9 @@ def cmd_verify(a):
                     if len(mism) < 200:
                         mism.append((key, want, got) + ((dict(kit_source_credit=kc, raw=raw_got),) if kc else ()))
     cnt["pipe_declared"] = cnt_pipe   # sinks compared with a declared +D core-input pipe (bind_core_input_pipe.json)
+    if bin_copies:
+        cnt["bin_copy"] = len(bin_want)   # sinks compared as their pure-wiring leaf's input bit (bind_bin_copies.json)
+        errs.extend(f"BIN_COPY {k}: {why}" for k, why in bin_bad[:50])
     kit._memo.clear()                 # per-net credit cache: free it before the multi-job lint (S81 memcg 230 GB)
     del sinks
     missing = sorted(set(names.values()) - seen)

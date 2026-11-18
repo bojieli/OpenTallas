@@ -187,3 +187,96 @@ def test_fail_closed(tmp_path, monkeypatch, capsys, key, msg):
     errs = json.loads(rep.read_text()).get("errors") if rep.is_file() else []
     assert rc != 0 or errs
     assert msg in txt.out + txt.err + json.dumps(errs), (txt.out[-2000:], txt.err[-2000:])
+
+
+# ---- OUT-BUS nets (FABLE-FIX-QC-N N4.1): dst "bus:<out bus>" --------------------------------------------------------
+BREGS = [[50.0, 60.0]]
+BNET = {"src": "u_b.o", "dst": "bus:ys_o", "stages": 1}
+BSITES = {"ta": [{"src": "u_b.o", "dst": "bus:ys_o", "regs_um": BREGS}]}
+
+
+def _plan_bus(tmp_path, key, name, price=1):
+    """bind_tiny lanes a0s / a1s (A0 / A1 ys_o -> S d0_i / d1_i, 2 cycles); price = cycles the plan adds to both"""
+    p = json.loads((EX / "die_plan_lanes.json").read_text())
+    p["asbuilt"]["base"] = str(_src(tmp_path))
+    if key is not None:
+        p["asbuilt"][IS.KEY] = key
+    for ln in p["lanes"]:
+        if ln["id"] in ("a0s", "a1s") and price:
+            ln["fixed_cycles"] = price
+            p["latency"]["lanes"][ln["id"]]["cycles"] += price
+            p["latency"]["lanes"][ln["id"]]["fixed"] = price
+    f = tmp_path / name
+    f.write_text(json.dumps(p))
+    return f
+
+
+def test_bus_net_config_and_sites():
+    cfg = IS.config({IS.KEY: {"types": ["ta"], "nets": [NET, BNET], "sites": dict(ta=SITES["ta"] + BSITES["ta"])}})
+    n = cfg["nets"][1]
+    assert n["bus"] == "ys_o" and n["members"] == [(("u_b", "o"), ("bus:", "ys_o"))] and cfg["nets"][0]["bus"] is None
+    assert cfg["bus_depth"] == {"ys_o": 1}
+    assert IS.type_sites(cfg, "ta")[1] == (n, BREGS)
+    assert IS.bus_stage_rows("u_lob_x__u_b__o_3_0", (1.0004, 2)) == {"u_lob_x__u_b__o_3_0.q": [1.0, 2.0]}
+    two = [{"src": "u_a.o", "dst": "bus:ys_o", "stages": 1}, {"src": "u_b.o", "dst": "bus:ys_o", "stages": 2}]
+    for nets in (two,                                                                   # one bus = one latency
+                 [{"src": "u_b.o", "dst": "bus:ys_o", "with": [["u_a.v", "u_b.v"]], "stages": 1}],  # mixed companions
+                 [{"src": "u_b.o", "dst": "bus:ys_o", "with": [["u_a.v", "bus:y_o"]], "stages": 1}],  # two buses
+                 [{"src": "u_b.o", "dst": "bus:", "stages": 1}], [BNET, BNET]):
+        with pytest.raises(ValueError):
+            IS.config({IS.KEY: {"types": ["ta"], "nets": nets, "sites": BSITES}})
+
+
+@needs_yosys
+def test_bus_net_stations_are_lane_cycles(tmp_path, monkeypatch):
+    """u_b.o -> u_bout_ys_o gets one station per bit; the lane (priced +1 in the plan) carries it as a source cycle:
+    the receiver gets no pad, LATCHECK counts the u_lob_ chain, the proof passes at the priced depth"""
+    monkeypatch.setenv("OT_HCPARAM_ALL", "0")
+    base, on = tmp_path / "base", tmp_path / "on"
+    key = {"types": ["ta"], "nets": [BNET], "sites": BSITES}
+    assert _bind(_plan_bus(tmp_path, None, "plan_b0.json", price=0), base, "elab", "bind", "verify") == 0
+    assert _bind(_plan_bus(tmp_path, key, "plan_b1.json"), on, "elab", "bind", "verify") == 0
+    rtl_b, rtl = (base / "rtl" / "bt_ta.sv").read_text(), (on / "rtl" / "bt_ta.sv").read_text()
+    st = re.findall(r"ot_dp_dly_keep #\(\.W\(1\), \.D\(1\)\) u_(lob_\w+) \(\.clk\(clk\), \.d\((\S+?)\), \.q\((\w+)\)\);", rtl)
+    assert sorted(nm for nm, _s, _q in st) == sorted(f"lob_ys_o__u_b__o_{i}_0" for i in range(8))
+    assert all(re.fullmatch(r"w_u_b_o\[[0-7]\]", src) for _n, src, _q in st) and "lob_" not in rtl_b
+    bout = re.search(r"u_bout_ys_o \(.*?\.d\(([^)]*)\)", rtl).group(1)
+    assert all(f"lob_ys_o__u_b__o_{i}_0[0]" in bout for i in range(8)) and "w_u_b" not in bout
+    # the other out bus of the same leaf output keeps its direct register; the receiver lands no pad for the new cycle
+    assert re.search(r"u_bout_y_o \(.*?\.d\(([^)]*)\)", rtl).group(1) == re.search(r"u_bout_y_o \(.*?\.d\(([^)]*)\)", rtl_b).group(1)
+    assert "u_lpad_" not in (on / "rtl" / "bt_ts.sv").read_text()
+    rec = json.loads((on / "bind_intra_stations.json").read_text())["types"]["ta"]
+    assert rec["out_bus"] == {"ys_o": 1} and rec["cells"] == 8 and rec["flops"] == 8
+    assert rec["nets"][0]["dst"] == "bus:ys_o" and rec["nets"][0]["width"] == 8
+    assert rec["sites"] == {f"u_lob_ys_o__u_b__o_{i}_0.q": BREGS[0] for i in range(8)}
+    assert not (on / "bind_core_input_pipe.json").exists()             # lane cycles, not core-input cycles
+    lat = {r["lane"]: r for r in json.loads((on / "bind_latency.json").read_text())["buses"]}
+    assert lat["a0s"]["bound_cycles"] == 3 if "bound_cycles" in lat["a0s"] else True
+    sb = json.loads((base / "bind_sinks.json").read_text())
+    so = json.loads((on / "bind_sinks.json").read_text())
+    assert sb["snk.d0[3]"][2] + 1 == so["snk.d0[3]"][2] and sb["snk.d0[3]"][:2] == so["snk.d0[3]"][:2]
+    assert json.loads((on / "verify_report.json").read_text())["verdict"] == "PASS"
+    rep = json.loads((on / "bind_report.json").read_text())
+    assert not rep["errors"]
+    la = json.loads((on / "bind_lane_asbuilt.json").read_text())
+    rows = {r["lane"]: r for r in la["lanes"]}
+    assert rows["a0s"]["verdict"] == "PASS" and rows["a0s"]["source"]["bound_lob"] == 1 and rows["a0s"]["delivered"] == 3
+
+
+@needs_yosys
+@pytest.mark.parametrize("key,price,msg", [
+    ({"types": ["ta"], "nets": [BNET], "sites": BSITES}, 0, "LAND_INTRA_LATENCY a0s"),          # plan does not price it
+    ({"types": ["ta"], "nets": [{"src": "u_a.o", "dst": "bus:ys_o", "stages": 1}],
+      "sites": {"ta": [{"src": "u_a.o", "dst": "bus:ys_o", "regs_um": BREGS}]}}, 1, "feeds no bit of out bus ys_o"),
+    ({"types": ["ta"], "nets": [{"src": "u_b.o", "dst": "bus:nope_o", "stages": 1}],
+      "sites": {"ta": [{"src": "u_b.o", "dst": "bus:nope_o", "regs_um": BREGS}]}}, 1, "no plain out bus nope_o"),
+])
+def test_bus_net_fail_closed(tmp_path, monkeypatch, capsys, key, price, msg):
+    monkeypatch.setenv("OT_HCPARAM_ALL", "0")
+    out = tmp_path / "x"
+    rc = _bind(_plan_bus(tmp_path, key, "plan_bx.json", price=price), out, "elab", "bind")
+    txt = capsys.readouterr()
+    rep = out / "bind_report.json"
+    errs = json.loads(rep.read_text()).get("errors") if rep.is_file() else []
+    assert rc != 0 or errs
+    assert msg in txt.out + txt.err + json.dumps(errs), (txt.out[-2000:], txt.err[-2000:])

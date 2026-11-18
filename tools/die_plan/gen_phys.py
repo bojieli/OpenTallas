@@ -7071,6 +7071,10 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         import hard_landing
         land_slots = hard_landing.emit(t, land_slots, kd,
                                       Path(root) if root else Path(__file__).resolve().parents[2])
+        # FABLE-FIX-QC-N N4.1 (D) 11-18: hard cland write clock insertion target = ring input max + 45 ps + cland lib
+        # setup; a row + POST_CTS hook only where the capture edge alone does not give it (cland_fclk_target.py)
+        import cland_fclk_target
+        cland_fclk_target.emit(P, tn, land_slots, kd, unit_ps=LIB_TIME_UNIT_PS)
     if land_slots is not None:                  # face_guard reads it beside pins.json (count-aligned landing rings)
         (kd / "land_slots.json").write_text(json.dumps(land_slots, indent=1) + "\n")
     port_pins = port_bind_pin_records(P, tn, pins, bump_ports)

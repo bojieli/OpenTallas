@@ -69,6 +69,20 @@ class LaneAsBuilt(unittest.TestCase):
         self.assertEqual(len(errs), 1)
         self.assertIn("LANE_ASBUILT L0: delivered 17 != latency table 15 (+2", errs[0])
 
+    def test_bound_out_bus_stations_count_at_the_source(self):
+        # N4.1 (land_intra_stations "bus:<o>" nets): per-bit u_lob_<o>__<leaf>__<port>_<bit>_<k> chains before u_bout_<o>
+        # are one source stage per chain depth, whatever the bit count; the plan prices them as lane fixed cycles
+        lob = "".join(f"    ot_dp_dly_keep #(.W(1), .D(1)) u_lob_o__u_r{r}__nb_od_{b}_{k} (.clk(clk), .d(a), .q(c));\n"
+                      for r in (0, 3) for b in range(3) for k in range(2))
+        recs, errs = run(plan(table=8, fixed=2, src_regs=0, landing=4), src_rtl() + lob, dst_rtl())
+        self.assertEqual((recs[0]["source"]["bound_lob"], recs[0]["delivered"], recs[0]["verdict"], errs), (2, 8, "PASS", []))
+        recs, errs = run(plan(table=6, fixed=0, src_regs=0, landing=4), src_rtl() + lob, dst_rtl())   # unpriced: long by 2
+        self.assertEqual((recs[0]["delivered"], recs[0]["verdict"], len(errs)), (8, "FAIL", 1))
+        recs, _ = run(plan(table=6, fixed=0, src_regs=0, landing=4), src_rtl(), dst_rtl())            # none: key absent
+        self.assertNotIn("bound_lob", recs[0]["source"])
+        self.assertEqual(LAL.ModuleIndex(lob).lob_depth("o"), 2)
+        self.assertEqual(LAL.ModuleIndex(lob).lob_depth("x"), 0)
+
     def test_qc_double_pad_with_switch_on_passes(self):
         # same lane bound with kit_source_station_pricing on: the bind lands D7 (9 - 2 source stations)
         recs, errs = run(plan(), src_rtl(), dst_rtl(D=7))

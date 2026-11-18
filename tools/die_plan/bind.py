@@ -2088,6 +2088,7 @@ class Binder:
         native_istations.annotate(self)
         native_istations.annotate_kit(self)     # QC-BIND-IST-PAD 11-12: kit-built source stations are not padded twice
         native_istations.annotate_kit_dest(self)  # QC-SU-LPAD-1 11-13: kit core pin-face chains are not padded twice
+        self._lob_annotate()                      # N4.1: land_intra_stations out-bus stations are lane source cycles
 
     def _route(self, srcs, dst, keys, out_of, heapq, only=None):
         """fewest-hop lane path from any partition holding `keys` to dst over lanes with room for the bits they do not
@@ -3653,6 +3654,62 @@ class Binder:
             return short_id(f"P_{k[1]}__{k[2]}", 80)
         return short_id(f"S_{k[1]}__{k[2]}", 80)
 
+    def _lob_annotate(self):
+        """LAND-INTRA-STATIONS out-bus nets ("bus:<o>"): the D bound stations before u_bout_<o> are SOURCE cycles of
+        the lane leaving that bus (like native internal stations): lane_pad() must not land them again at the receiver
+        and the bound stage count carries them.  The plan must price them (lane fixed_cycles and latency row): a lane
+        whose table is too short for 2 + ft + landing + source stations is a LAND_INTRA_LATENCY error."""
+        cfg = self._lis_config()
+        if cfg is None or not cfg["bus_depth"]:
+            return
+        lanes = {x["id"]: x for x in self.plan.get("lanes", [])}
+        for part, pr in self.parts.items():
+            if not IS.selected(cfg, pr.get("type", "")):
+                continue
+            for L in self.out_bus.get(part, []):
+                D = cfg["bus_depth"].get(L.get("oname"))
+                if not D or not L.get("lane") or L.get("spine"):
+                    continue
+                have = int(L.get("internal_source_cycles", 0)) + int(L.get("internal_kit_source_cycles", 0))
+                base = 2 + sum(h["stations"] for h in L.get("ft", [])) + int(L.get("clock_landing_cycles", 0)) + have
+                fixed = int(lanes.get(L["lane"], {}).get("fixed_cycles", 0))
+                if int(L.get("cycles", 0)) < base + D or fixed < have + D:
+                    self.errors.append(f"LAND_INTRA_LATENCY {L['lane']}: {part}.{L['oname']} carries {D} bound out-bus "
+                                       f"station(s) but the plan prices cycles {L.get('cycles')} (need >= {base}+{D}) "
+                                       f"fixed_cycles {fixed} (need >= {have}+{D}): add them to the lane")
+                    continue
+                L["internal_source_cycles"] = int(L.get("internal_source_cycles", 0)) + D
+
+    def _wire_leaf(self, module):
+        """BIN-COPY: {(out port, bit): (in port, bit)} of a declared pure-wiring leaf module, proven from its RTL
+        (bind_wire_leaf); BindError when it is not pure wiring"""
+        cache = self.__dict__.setdefault("_wire_leaf_maps", {})
+        if module not in cache:
+            import bind_wire_leaf as WL
+            if "_wire_leaf_index" not in self.__dict__:
+                self._wire_leaf_index = E.module_index(self.ab.get("rtl_roots", ["rtl"]), self.ab.get("files", []), self.base)
+            try:
+                cache[module] = WL.leaf_map(self.ab, self.base, module, self._wire_leaf_index)
+            except ValueError as exc:
+                raise BindError(f"land_pad_tail_split wire_leaves: {exc}") from exc
+        return cache[module]
+
+    def declare_bin_copy(self, tn, p, ci, pn, i, wl, op, ob, ip, ib):
+        """BIN-COPY record (bind_bin_copies.json, read by bind_verify): sink leaf ci pin pn[i] no longer reads output
+        op[ob] of the pure-wiring leaf wl but a copy of the in-boundary flop that feeds wl's input ip[ib]; for EVERY die
+        instance of type tn (emit_type writes the module once), keyed by as-built path like the core-input pipe."""
+        r, rw = self.rel_of(ci), self.rel_of(wl)
+        rec = self.__dict__.setdefault("bin_copy_sinks", {})
+        for q in (getattr(self, "by_type", {}) or {}).get(tn) or [p]:
+            hit = [cq for cq in self.members[q] if self.rel_of(cq) == r]
+            hw = [cq for cq in self.members[q] if self.rel_of(cq) == rw]
+            if len(hit) != 1 or len(hw) != 1:
+                raise BindError(f"land_pad_tail_split bin copy {tn}: leaves {r} / {rw} found {len(hit)}x / {len(hw)}x in "
+                                f"partition {q} (type members must match its first partition {p})")
+            wp = self.F.cells[hw[0]].path
+            rec[f"{self.F.cells[hit[0]].path}.{pn}[{i}]"] = dict(through=f"{wp}.{op}[{ob}]", leaf_in=f"{wp}.{ip}[{ib}]",
+                                                              module=self.F.cells[hw[0]].module)
+
     def _lis_config(self):
         """asbuilt.land_intra_stations, checked once (bind_intra_stations.config); None when absent"""
         if self.ab.get(IS.KEY) is None:
@@ -4024,6 +4081,10 @@ class Binder:
                                   {L["oname"]: L["width"] for L in obus if L.get("plan")}, drv_w,
                                   {self.rel_of(ci): ci for ci in self.members[p]}, decl, body, ub)
         obus_tree = []
+        # LAND-INTRA-STATIONS out-bus nets (asbuilt.land_intra_stations "bus:<o>"; absent = both stay empty)
+        lob_cfg = self._lis_config()
+        lob_bus = dict(lob_cfg["bus_depth"]) if lob_cfg is not None and IS.selected(lob_cfg, tn) else {}
+        obus_lob = {}
         for L in obus:
             n, W = L["oname"], L["width"]
             ports.append(f"    output wire [{W}:0] {n}   // {W} data + epoch [{W}]: {_bus_note(L, 'out')}")
@@ -4042,6 +4103,12 @@ class Binder:
                 d = _concat([f"{drv_w[(it[1], it[2])]}[{it[3]}]" for it in L["items"]])
                 body.append(f"    assign {n} = {{rst_n, {d}}};  // registered hard pin: the macro's output register is "
                             f"the boundary register; epoch [{W}] = the delivered reset level (no flop here)")
+                continue
+            if n in lob_bus:
+                # LAND-INTRA-STATIONS out-bus nets: u_bout_<n> is emitted with its station chains (below)
+                if getattr(self, "ptree", None) is not None:
+                    raise BindError(f"{IS.KEY} {tn}: out bus {n}: stations on a PAD_TREE bus are not supported")
+                obus_lob[n] = L
                 continue
             if getattr(self, "ptree", None) is not None:
                 obus_tree.append(L)          # PAD_TREE: emitted after the tap helpers exist (below)
@@ -4122,6 +4189,8 @@ class Binder:
             if k == "int":
                 if (ci, pn, i) in lis:          # LAND-INTRA-STATIONS: the load reads its own station chain
                     return lis[(ci, pn, i)]
+                if (ci, pn, i) in bcopy:        # BIN-COPY: the core reads its own copy of the in-boundary flop
+                    return bcopy[(ci, pn, i)]
                 sp = getattr(self, "isp", {}).get((ci, pn, i))
                 if sp is not None:              # INNER strap site (COORD 10-28 21:38): fixed base + strap-count bank
                     site, base, span, _cnt = sp
@@ -4345,6 +4414,7 @@ class Binder:
         # plan hard cores more than min_spread_um apart.  Only the emitted pad instances change; self.sinks is not touched.
         tsplit = {}
         ts_cent = {}
+        bcopy = {}
         try:
             ts_cfg = TS.config(self.ab)
         except ValueError as exc:
@@ -4407,6 +4477,64 @@ class Binder:
                 if TS.tail_depth(1, by, ts_cfg) is not None:
                     ts_row["not_covered"][key[0]] += 1
             self.__dict__.setdefault("_pad_tail_split", {})[tn] = ts_row
+            if ts_cfg["wire_leaves"]:
+                # BIN-COPY (N4.1, land_pad_tail_split.wire_leaves): an in-boundary flop bit (pad 0) that reaches the pins
+                # of several far hard cores through a proven pure-wiring leaf gets one kept copy of that flop per core
+                # (same d bit, same edge: 0 added cycles); the core pin reads its copy instead of the leaf output.
+                import gen_rtl as _GR
+                bc_cons, bc_via = defaultdict(list), {}
+                for cj in self.members[p]:
+                    if self.rel_of(cj) in invalid_id_leaves:
+                        continue
+                    for pn, bits in F.cells[cj].ports.items():
+                        if G.dirs[cj].get(pn) != "input":
+                            continue
+                        for i in range(len(bits)):
+                            d = self.sinks[(cj, pn, i)]
+                            if d[0] != "int" or d[4] or F.cells[d[1]].module not in ts_cfg["wire_leaves"] or \
+                                    (cj, pn, i) in getattr(self, "isp", {}):
+                                continue
+                            wl = d[1]
+                            src = self._wire_leaf(F.cells[wl].module).get((d[2], d[3]))
+                            if src is None:
+                                continue
+                            ds = self.sinks[(wl, src[0], src[1])]
+                            if ds[0] != "x" or len(ds) > 7 or (wl, src[0], src[1]) in ts_r8 or reg or PT is not None \
+                                    or PB.spec(self, wl, src[0]):
+                                continue
+                            L, j = self.bitpos[(ds[1], p, ds[2], ds[3], ds[4])]
+                            if L.get("spine") or L.get("plan") or lane_pad(L) > 0 or _GR.hold_hb4(t, L["iname"]):
+                                continue                       # the leaf does not read the in-boundary flop itself
+                            bc_cons[(L["iname"], j)].append((cj, pn, i))
+                            bc_via[(cj, pn, i)] = (wl, d[2], d[3], src[0], src[1])
+                bc_row = dict(bits=0, copies=0, sinks=0, max_spread_um=0.0)
+                for key in sorted(bc_cons):
+                    by, per = ts_cores(bc_cons[key])
+                    s_um = TS.bin_spread(by, ts_cfg)
+                    if s_um is None:
+                        continue
+                    cent = TS.centroids(by)
+                    names = {}
+                    for tag in sorted(by):
+                        nm = short_id(f"pd1_{key[0]}_{key[1]}_{sv_id(tag)}_0", 100)
+                        if nm in pads.values() or nm in names.values():
+                            raise BindError(f"land_pad_tail_split {tn}: bin copy name {nm} collides")
+                        names[tag] = nm
+                        decl.append(f"    wire [0:0] {nm};")
+                        body.append(f"    {TS.KEEP_MODULE} #(.W(1), .D(1)) u_{nm} (.clk(clk), .d({key[0]}[{key[1]}]), "
+                                    f".q({nm}));  // landing pad tail copy for core {tag}: copy of the in-boundary flop "
+                                    f"u_bin_{key[0]} q[{key[1]}] (BIN-COPY, 0 added cycles)")
+                        ts_row.setdefault("sites", {}).update(TS.site_rows(f"u_{nm}", 1, cent[tag]))
+                    for cj, pn, i in bc_cons[key]:
+                        if cj not in per:
+                            continue                           # not a plan hard core: keeps reading the leaf output
+                        bcopy[(cj, pn, i)] = f"{names[per[cj]]}[0]"
+                        self.declare_bin_copy(tn, p, cj, pn, i, *bc_via[(cj, pn, i)])
+                        bc_row["sinks"] += 1
+                    bc_row["bits"] += 1
+                    bc_row["copies"] += len(by)
+                    bc_row["max_spread_um"] = max(bc_row["max_spread_um"], round(s_um, 3))
+                ts_row["bin_copies"] = bc_row
         # LAND-INTRA-STATIONS (opt-in asbuilt.land_intra_stations, bind_intra_stations.py; absent = nothing here runs):
         # per bit of a named intra-partition driver -> load net (and its `with` companions) one ot_dp_dly_keep of D
         # stages, sited from the sites file; the D cycles are DECLARED per sink bit (bind_core_input_pipe.json, which
@@ -4430,9 +4558,50 @@ class Binder:
 
             lis_row = dict(nets=[], stages={}, cells=0, flops=0, sites={})
             lis_names = set()
+            lob = {}
             for n, regs in lis_nets:
                 D = n["stages"]
                 lis_row["stages"][n["label"]] = D
+                if n["bus"] is not None:
+                    # OUT-BUS net: `D` chained D=1 stations per bus bit fed by the named leaf output, before u_bout_<bus>
+                    L = obus_lob.get(n["bus"])
+                    if L is None:
+                        raise BindError(f"{IS.KEY} {tn}: {n['label']}: partition {p} has no plain out bus {n['bus']} "
+                                        "(spine / plan-cell / registered-pin buses carry no stations)")
+                    for (si, sp_), _bus in n["members"]:
+                        cs = lis_leaf(si, "src")
+                        lbl = f"{si}.{sp_}->{IS.BUS}{n['bus']}"
+                        if G.dirs[cs].get(sp_) != "output":
+                            raise BindError(f"{IS.KEY} {tn}: {lbl}: not a leaf output")
+                        cells = []
+                        for k, it in enumerate(L["items"]):
+                            if it[0] != "leaf" or it[1] != cs or it[2] != sp_:
+                                continue
+                            if (n["bus"], k) in lob:
+                                raise BindError(f"{IS.KEY} {tn}: {lbl}: bus bit {k} is stationed twice")
+                            if core_link_src_depth(self.plan, tn, F.cells[cs].module, sp_, it[3]):
+                                raise BindError(f"{IS.KEY} {tn}: {lbl}[{it[3]}]: the driver bit already carries a core_link_pipe")
+                            prev = f"{drv_w[(cs, sp_)]}[{it[3]}]"
+                            for kk in range(D):
+                                # LATCHECK reads the chain by this name (u_lob_<bus>__<tag>_<k>): no short_id (it folds __)
+                                nm = f"lob_{sv_id(n['bus'])}__{sv_id(self.rel_of(cs))}__{sv_id(sp_)}_{it[3]}_{kk}"
+                                if nm in lis_names or len(nm) > 100:
+                                    raise BindError(f"{IS.KEY} {tn}: station name {nm} collides / is not a chain name")
+                                lis_names.add(nm)
+                                decl.append(f"    wire [0:0] {nm};")
+                                body.append(f"    {TS.KEEP_MODULE} #(.W(1), .D(1)) u_{nm} (.clk(clk), .d({prev}), .q({nm}));  "
+                                            f"// out-bus station {lbl}[{it[3]}] stage {kk}: +1 lane cycle (lane fixed_cycles)")
+                                lis_row["sites"].update(IS.bus_stage_rows(f"u_{nm}", regs[kk]))
+                                cells.append(f"u_{nm}")
+                                prev = f"{nm}[0]"
+                            lob[(n["bus"], k)] = prev
+                        if not cells:
+                            raise BindError(f"{IS.KEY} {tn}: {lbl}: the leaf output feeds no bit of out bus {n['bus']}")
+                        lis_row["nets"].append(dict(src=f"{si}.{sp_}", dst=IS.BUS + n["bus"], group=n["label"],
+                                                    width=len(cells) // D, stages=D, cells=cells))
+                        lis_row["cells"] += len(cells)
+                        lis_row["flops"] += len(cells)
+                    continue
                 for (si, sp_), (di, dp) in n["members"]:
                     cs, cd = lis_leaf(si, "src"), lis_leaf(di, "dst")
                     lbl = f"{si}.{sp_}->{di}.{dp}"
@@ -4466,6 +4635,18 @@ class Binder:
                                                 stages=D, cells=cells))
                     lis_row["cells"] += width
                     lis_row["flops"] += width * D
+            for bn, L in sorted(obus_lob.items()):
+                W = L["width"]
+                miss = [k for k in range(len(L["items"])) if (bn, k) not in lob]
+                if miss:
+                    raise BindError(f"{IS.KEY} {tn}: out bus {bn}: {len(miss)} d bit(s) carry no station, e.g. item "
+                                    f"{miss[0]} (one bus = one latency: every bit must be covered)")
+                body.append(f"    ot_dp_st #(.W({W})) u_bout_{bn} (.clk(clk), .rst_n(rst_n), "
+                            f".d({_concat([lob[(bn, k)] for k in range(len(L['items']))])}), .ea(rst_n), "
+                            f".q({bn}[{W - 1}:0]), .eq({bn}[{W}]));  // d through {lob_bus[bn]} out-bus station stage(s)")
+                lis_row.setdefault("out_bus", {})[bn] = lob_bus[bn]
+            if any(bc in lis for bc in bcopy):
+                raise BindError(f"{IS.KEY} {tn}: a stationed load pin is also a land_pad_tail_split bin-copy sink")
             self.__dict__.setdefault("_intra_stations", {})[tn] = lis_row
         insts = []
         for ci in sorted(self.members[p], key=lambda ci: self.rel_of(ci)):
@@ -5290,6 +5471,9 @@ def cmd_bind(a):
     (out / "bind_sinks.json").write_text(json.dumps(sinks))
     if getattr(B, "core_input_pipe", None):      # QC-NK-HOLD A+P: declared added cycles (bind_verify / compiler / TOK)
         (out / "bind_core_input_pipe.json").write_text(json.dumps(B.core_input_pipe, indent=1, sort_keys=True) + "\n")
+    if getattr(B, "bin_copy_sinks", None):       # BIN-COPY (N4.1): sinks re-pointed past a pure-wiring leaf (bind_verify)
+        (out / "bind_bin_copies.json").write_text(json.dumps(dict(
+            schema="opentallas.die_plan.bind_bin_copies.v1", sinks=B.bin_copy_sinks), indent=1, sort_keys=True) + "\n")
     bg = B.bus_groups()
     rep["bus_groups"] = bg["summary"]
     # DIE-HBM-92-LCHK F4: R8 on every bind + declared fixed-latency contracts vs the landed deltas (bind correctness)

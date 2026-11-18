@@ -184,3 +184,138 @@ def test_keep_cell_and_site_rows():
     assert T.site_rows("u_pd2_x_0_u_r0_5", 2, (1.0004, 2.0)) == {"u_pd2_x_0_u_r0_5.r[0]": [1.0, 2.0], "u_pd2_x_0_u_r0_5.q": [1.0, 2.0]}
     assert T.site_rows("u_p", 1, (3, 4)) == {"u_p.q": [3.0, 4.0]}
     assert T.centroids({"a": [(0, 0), (10, 20)]}) == {"a": (5.0, 10.0)}
+
+
+# ---- BIN-COPY (FABLE-FIX-QC-N N4.1): land_pad_tail_split.wire_leaves -------------------------------------------------
+SPW = """`timescale 1ns/1ps
+module wlf (input wire ck, input wire [7:0] a, output wire [3:0] c, output wire [3:0] r);
+    assign c = {a[7:6], a[1:0]};   // pure wiring (QC st_a qfd_dv_s8_frs form)
+    assign r = a[5:2];
+endmodule
+module lf_c (input wire clk, input wire [3:0] c, input wire [3:0] r, output reg [7:0] q);
+    always @(posedge clk) q <= {c, r};
+endmodule
+module spw (input wire ck, input wire flt, input wire [7:0] a, input wire [7:0] b, output wire [8:0] q0,
+            output wire [7:0] q1, output wire [7:0] q2);
+    wire [3:0] c; wire [3:0] r;
+    wlf u_w (.ck(ck), .a(a), .c(c), .r(r));
+    lf_sink u_s0 (.clk(ck), .flt(flt), .d0(a), .d1(b), .q(q0));
+    lf_c u_c0 (.clk(ck), .c(c), .r(r), .q(q1));
+    lf_c u_c1 (.clk(ck), .c(c), .r(r), .q(q2));
+endmodule
+"""
+
+
+def _plan_bin(tmp_path, wire_leaves, name, gap=1000.0, wlf=None):
+    src = tmp_path / ("src_" + name)
+    shutil.copytree(EX, src)
+    die = (src / "die.v").read_text()
+    die = die.replace("wire [8:0] sq;", "wire [8:0] sq; wire [7:0] sq1; wire [7:0] sq2;")
+    die = die.replace("lf_sink snk (.clk(ck), .flt(fo), .d0(y0), .d1(y1), .q(sq));",
+                      "spw snk (.ck(ck), .flt(fo), .a(y0), .b(y1), .q0(sq), .q1(sq1), .q2(sq2));")
+    assert "spw snk" in die
+    (src / "die.v").write_text(die)
+    (src / "spw.sv").write_text(SPW if wlf is None else SPW.replace("assign r = a[5:2];", wlf))
+    p = json.loads((EX / "die_plan_lanes.json").read_text())
+    ab = p["asbuilt"]
+    ab["base"] = str(src)
+    ab["files"] = ab["files"] + ["spw.sv"]
+    ab["dissolve"] = ab["dissolve"] + ["spw"]
+    ts = p["partition_types"]["ts"]
+    for b in ts["buses"]:
+        b["leaf"] = b["leaf"].replace("core.", "u_s0.")
+    ts["outline_um"] = [2000.0, 100.0]
+    cpins = [dict(name=f"c[{i}]", layer="M4", xy=[1.0 + i, 10.0]) for i in range(4)]
+    ts["hard_cores"] = [dict(inst="u_c0", module="lf_c", origin_um=[0.0, 0.0], outline_um=[20.0, 40.0], pins=cpins),
+                        dict(inst="u_c1", module="lf_c", origin_um=[gap, 0.0], outline_um=[20.0, 40.0], pins=cpins)]
+    ab["land_pad_tail_split"] = dict(types=["ts"], min_spread_um=400, hop_um=380)
+    if wire_leaves:
+        ab["land_pad_tail_split"]["wire_leaves"] = wire_leaves
+    f = tmp_path / f"plan_{name}.json"
+    f.write_text(json.dumps(p))
+    return f
+
+
+def test_bin_copy_config_and_rule():
+    cfg = TS.config({"land_pad_tail_split": {"types": ["t"], "wire_leaves": ["wlf"]}})
+    assert cfg["wire_leaves"] == frozenset({"wlf"})
+    assert TS.config({"land_pad_tail_split": {"types": ["t"]}})["wire_leaves"] == frozenset()
+    for bad in ([], "wlf", [1], [""]):
+        with pytest.raises(ValueError):
+            TS.config({"land_pad_tail_split": {"types": ["t"], "wire_leaves": bad}})
+    two = {"a": [(0.0, 0.0)], "b": [(1000.0, 0.0)]}
+    assert TS.bin_spread(two, cfg) == 1000.0
+    assert TS.bin_spread({"a": [(0.0, 0.0), (1000.0, 0.0)]}, cfg) is None          # one core
+    assert TS.bin_spread({"a": [(0.0, 0.0)], "b": [(400.0, 0.0)]}, cfg) is None      # inside the spread limit
+
+
+@needs_yosys
+def test_bin_copy_per_core_and_verify(tmp_path, monkeypatch):
+    """u_bin_d0_i q[0,1,6,7] reach u_c0 / u_c1 (1,000 um apart) through the pure-wiring leaf u_w: one kept copy of the
+    in-boundary flop per core, 0 added cycles; key without wire_leaves = byte-identical bind; verify proves the wiring"""
+    monkeypatch.setenv("OT_HCPARAM_ALL", "0")
+    base, on = tmp_path / "base", tmp_path / "on"
+    assert _bind(_plan_bin(tmp_path, None, "base"), base, "elab", "bind", "verify") == 0
+    assert _bind(_plan_bin(tmp_path, ["wlf"], "on"), on, "elab", "bind", "verify") == 0
+    rtl_b = (base / "rtl" / "bt_ts.sv").read_text()
+    rtl_o = (on / "rtl" / "bt_ts.sv").read_text()
+    assert "ot_dp_dly_keep" not in rtl_b and "bind_bin_copies.json" not in _files(base)
+    cp = re.findall(r"ot_dp_dly_keep #\(\.W\(1\), \.D\(1\)\) u_(pd1_\w+) \(\.clk\(clk\), \.d\((\S+?)\), \.q\((\w+)\)\);  "
+                    r"// landing pad tail copy for core (\w+):", rtl_o)
+    assert sorted((nm, src, tag) for nm, src, _q, tag in cp) == sorted(
+        (f"pd1_d0_i_{j}_{c}_0", f"d0_i[{j}]", c) for j in (0, 1, 6, 7) for c in ("u_c0", "u_c1"))
+    for nm, _src, _q, _tag in cp:
+        assert rtl_o.count(f"{nm}[0]") == 1                           # read by its own core pin only
+    # the cores read their copies, never the leaf output; the leaf itself and its other readers are unchanged
+    for c in ("u_c0", "u_c1"):
+        m = re.search(r"\.c\(([^)]*)\)", rtl_o[rtl_o.index(f"u_{c} ("):])
+        assert m and all(f"pd1_d0_i_{j}_{c}_0[0]" in m.group(1) for j in (0, 1, 6, 7)) and "w_u_w" not in m.group(1)
+    assert re.search(r"\.r\(w_u_w_r", rtl_o[rtl_o.index("u_u_c0 ("):]) and "wlf u_u_w (" in rtl_o
+    # the gen_phys tail-copy siting hook lists them (same marking as the pad tail copies)
+    import gen_phys
+    rows = gen_phys.tail_copy_rows(on / "rtl")
+    assert len(rows) == 8 and {k for _c, k, _g, _t in rows} == {1} and {t for *_x, t in rows} == {"u_c0", "u_c1"}
+    assert len({g for _c, _k, g, _t in rows}) == 4                   # one group per in-boundary flop bit
+    rec = json.loads((on / "bind_pad_tail_split.json").read_text())["types"]["ts"]
+    assert rec["bin_copies"] == dict(bits=4, copies=8, sinks=8, max_spread_um=1000.0) and rec["split_pads"] == 0
+    assert len(rec["sites"]) == 8 and rec["sites"]["u_pd1_d0_i_0_u_c1_0.q"] == [1001.0, 10.0] and rec["sites"]["u_pd1_d0_i_6_u_c0_0.q"] == [3.0, 10.0]
+    bc = json.loads((on / "bind_bin_copies.json").read_text())["sinks"]
+    assert len(bc) == 8 and bc["snk.u_c1.c[2]"] == dict(through="snk.u_w.c[2]", leaf_in="snk.u_w.a[6]", module="wlf")
+    vb = json.loads((base / "verify_report.json").read_text())
+    vo = json.loads((on / "verify_report.json").read_text())
+    assert vb["verdict"] == "PASS" and vo["verdict"] == "PASS" and vo["counts"]["bin_copy"] == 8
+    assert "bin_copy" not in vb["counts"] and vo["counts"]["mismatched"] == 0
+    fb, fo = _files(base), _files(on)
+    for k in ("bind_sinks.json", "bind_latency.json", "bus_groups.json"):
+        assert fb[k] == fo[k], k                                      # 0 added cycles: every record unchanged
+    changed = {k for k in set(fb) | set(fo) if fb.get(k) != fo.get(k)}
+    assert all(not k.startswith("rtl/") or k in ("rtl/bt_ts.sv", "rtl/bind_cells.sv") for k in changed), changed
+    # the proof does not trust the record: a record naming another leaf input bit is a BIN_COPY error + mismatch
+    bad = json.loads((on / "bind_bin_copies.json").read_text())
+    bad["sinks"]["snk.u_c1.c[2]"]["leaf_in"] = "snk.u_w.a[5]"
+    (on / "bind_bin_copies.json").write_text(json.dumps(bad))
+    assert _bind(_plan_bin(tmp_path, ["wlf"], "on2"), on, "verify") != 0
+    vr = json.loads((on / "verify_report.json").read_text())
+    assert vr["verdict"] == "FAIL" and any("BIN_COPY snk.u_c1.c[2]" in e for e in vr["graph_errors"])
+    # without the record the re-pointed sinks are plain as-built mismatches
+    (on / "bind_bin_copies.json").unlink()
+    assert _bind(_plan_bin(tmp_path, ["wlf"], "on3"), on, "verify") != 0
+    assert json.loads((on / "verify_report.json").read_text())["counts"]["mismatched"] == 8
+
+
+@needs_yosys
+def test_bin_copy_near_cores_and_impure_leaf(tmp_path, monkeypatch, capsys):
+    monkeypatch.setenv("OT_HCPARAM_ALL", "0")
+    base, near, imp = tmp_path / "base", tmp_path / "near", tmp_path / "imp"
+    assert _bind(_plan_bin(tmp_path, None, "base", gap=100.0), base, "elab", "bind") == 0
+    assert _bind(_plan_bin(tmp_path, ["wlf"], "near", gap=100.0), near, "elab", "bind") == 0
+    assert (base / "rtl" / "bt_ts.sv").read_bytes() == (near / "rtl" / "bt_ts.sv").read_bytes()
+    assert not (near / "bind_bin_copies.json").exists()
+    assert json.loads((near / "bind_pad_tail_split.json").read_text())["types"]["ts"]["bin_copies"]["copies"] == 0
+    # a declared wire leaf that holds logic is refused (fail closed), never bypassed
+    rc = _bind(_plan_bin(tmp_path, ["wlf"], "imp", wlf="assign r = ~a[5:2];"), imp, "elab", "bind")
+    txt = capsys.readouterr()
+    rep = imp / "bind_report.json"
+    errs = json.loads(rep.read_text()).get("errors") if rep.is_file() else []
+    assert rc != 0 or errs
+    assert "wire_leaves" in txt.out + txt.err + json.dumps(errs) and "not a plain input port reference" in txt.out + txt.err + json.dumps(errs)
