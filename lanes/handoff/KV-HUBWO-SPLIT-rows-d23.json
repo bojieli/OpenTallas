@@ -1,0 +1,346 @@
+{
+ "schema": "kv_hubc_split_rows.v1",
+ "base": "D22 plan_c.json sha256 ff1b34cdc3c1 (/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg6_f9eeac83_t2509079_d22)",
+ "type": "kv3_hub_Wo",
+ "note": "ESTIMATE rows, not applied to any live tree. 9 ring hard cores with SIGNED CLAND-MACRO-1 masters (kv_cland_w1119_ew_86ca8 x2, w300_ew_ebc75 x2, w268_ns_6081a x2, w257_ew_aee53; w292_ew_abd47 x2 was RUNNING at the 11-15 23:46 status, confirm SIGNED before apply) + 2 pad delay-line hard cores (ot_dp_dly W=540 D=81 and D=20, generated param wraps, NEW masters UNSIGNED, outline ESTIMATE at 0.45 util; need ot_dp_dly in tools/die_plan/param_wrap.py PORTS = clk, d[W], q[W], and child core kits). Placement: 8.64 grid, nearest to bus pin (rings) or to the consuming astk core (dly), clear of hard-core halos, ft station bit sites and station regs, internal station regs, clock taps/added taps/edge clock taps, reset taps/in site, landing start/raw reset stages and reserved die_clock_tree rects (grid check at 1.08 um, independently re-checked). Measured basis: kvgeom7uh attempt_6 synth_stat 419,971 cells (rings 58 = 181,472; ot_dp_dly 561 = 57,649 flops ~115k cells, of which u_d81_seq_g_fan_0_u_fan_aq W540 D81 = 43,740 flops and u_d20_seq_g_fan_1_u_fan_aq W540 D20 = 10,800 flops; ot_dp_st 324 = 59k). Rings alone leave 308,956 synth = place 399,654 (NEAR), so the two dly cores are needed. Not done: AHUB/param recapture, ring pin-to-core wire timing, master builds for dly, ring pins from KV-HG5 attempt_2 pins.json (11,870 pins, same as D22 budget).",
+ "add_hard_cores": [
+  {
+   "inst": "cl_ft2_i",
+   "module": "kv_cland_w1119_ew_86ca8",
+   "origin_um": [
+    1140.48,
+    492.48
+   ],
+   "outline_um": [
+    43.632,
+    230.256
+   ],
+   "orient": "MY",
+   "physical_inst": "u_bound.u_cland_ft2_i",
+   "physical_master": "kv_cland_w1119_ew_86ca8",
+   "param_wrap": {
+    "base": "ot_dp_clk_landing_cas",
+    "params": {
+     "W": 1119,
+     "DEPTH": 4,
+     "STATUS_REG": 1,
+     "GUARD_REG": 1,
+     "WFALL": 1,
+     "WREG": 1,
+     "DSREP": 8,
+     "WRITE_CHUNK": 16,
+     "RSTREP": 37
+    }
+   },
+   "cells": 28470,
+   "note": "KV-HUBWO-SPLIT: hub ring u_cland_ft2_i as hard ring child core (master kv_cland_w1119_ew_86ca8, exact parent params, 0 added cycles); placed clear of halos, ft stations/bit sites, taps, reset sites, reserved sites"
+  },
+  {
+   "inst": "cl_ft3_i",
+   "module": "kv_cland_w1119_ew_86ca8",
+   "origin_um": [
+    1192.32,
+    803.52
+   ],
+   "outline_um": [
+    43.632,
+    230.256
+   ],
+   "orient": "MY",
+   "physical_inst": "u_bound.u_cland_ft3_i",
+   "physical_master": "kv_cland_w1119_ew_86ca8",
+   "param_wrap": {
+    "base": "ot_dp_clk_landing_cas",
+    "params": {
+     "W": 1119,
+     "DEPTH": 4,
+     "STATUS_REG": 1,
+     "GUARD_REG": 1,
+     "WFALL": 1,
+     "WREG": 1,
+     "DSREP": 8,
+     "WRITE_CHUNK": 16,
+     "RSTREP": 37
+    }
+   },
+   "cells": 28470,
+   "note": "KV-HUBWO-SPLIT: hub ring u_cland_ft3_i as hard ring child core (master kv_cland_w1119_ew_86ca8, exact parent params, 0 added cycles); placed clear of halos, ft stations/bit sites, taps, reset sites, reserved sites"
+  },
+  {
+   "inst": "cl_ft16_i",
+   "module": "kv_cland_w300_ew_ebc75",
+   "origin_um": [
+    86.4,
+    725.76
+   ],
+   "outline_um": [
+    41.04,
+    67.824
+   ],
+   "orient": "R0",
+   "physical_inst": "u_bound.u_cland_ft16_i",
+   "physical_master": "kv_cland_w300_ew_ebc75",
+   "param_wrap": {
+    "base": "ot_dp_clk_landing_cas",
+    "params": {
+     "W": 300,
+     "DEPTH": 4,
+     "STATUS_REG": 1,
+     "GUARD_REG": 1,
+     "WFALL": 1,
+     "WREG": 1,
+     "DSREP": 8,
+     "WRITE_CHUNK": 16,
+     "RSTREP": 11
+    }
+   },
+   "cells": 8023,
+   "note": "KV-HUBWO-SPLIT: hub ring u_cland_ft16_i as hard ring child core (master kv_cland_w300_ew_ebc75, exact parent params, 0 added cycles); placed clear of halos, ft stations/bit sites, taps, reset sites, reserved sites"
+  },
+  {
+   "inst": "cl_ft21_i",
+   "module": "kv_cland_w300_ew_ebc75",
+   "origin_um": [
+    69.12,
+    872.64
+   ],
+   "outline_um": [
+    41.04,
+    67.824
+   ],
+   "orient": "R0",
+   "physical_inst": "u_bound.u_cland_ft21_i",
+   "physical_master": "kv_cland_w300_ew_ebc75",
+   "param_wrap": {
+    "base": "ot_dp_clk_landing_cas",
+    "params": {
+     "W": 300,
+     "DEPTH": 4,
+     "STATUS_REG": 1,
+     "GUARD_REG": 1,
+     "WFALL": 1,
+     "WREG": 1,
+     "DSREP": 8,
+     "WRITE_CHUNK": 16,
+     "RSTREP": 11
+    }
+   },
+   "cells": 8023,
+   "note": "KV-HUBWO-SPLIT: hub ring u_cland_ft21_i as hard ring child core (master kv_cland_w300_ew_ebc75, exact parent params, 0 added cycles); placed clear of halos, ft stations/bit sites, taps, reset sites, reserved sites"
+  },
+  {
+   "inst": "cl_ft0_i",
+   "module": "kv_cland_w292_ew_abd47",
+   "origin_um": [
+    1200.96,
+    328.32
+   ],
+   "outline_um": [
+    41.04,
+    66.096
+   ],
+   "orient": "MY",
+   "physical_inst": "u_bound.u_cland_ft0_i",
+   "physical_master": "kv_cland_w292_ew_abd47",
+   "param_wrap": {
+    "base": "ot_dp_clk_landing_cas",
+    "params": {
+     "W": 292,
+     "DEPTH": 4,
+     "STATUS_REG": 1,
+     "GUARD_REG": 1,
+     "WFALL": 1,
+     "WREG": 1,
+     "DSREP": 8,
+     "WRITE_CHUNK": 16,
+     "RSTREP": 11
+    }
+   },
+   "cells": 7887,
+   "note": "KV-HUBWO-SPLIT: hub ring u_cland_ft0_i as hard ring child core (master kv_cland_w292_ew_abd47, exact parent params, 0 added cycles); placed clear of halos, ft stations/bit sites, taps, reset sites, reserved sites"
+  },
+  {
+   "inst": "cl_ft1_i",
+   "module": "kv_cland_w292_ew_abd47",
+   "origin_um": [
+    1149.12,
+    362.88
+   ],
+   "outline_um": [
+    41.04,
+    66.096
+   ],
+   "orient": "MY",
+   "physical_inst": "u_bound.u_cland_ft1_i",
+   "physical_master": "kv_cland_w292_ew_abd47",
+   "param_wrap": {
+    "base": "ot_dp_clk_landing_cas",
+    "params": {
+     "W": 292,
+     "DEPTH": 4,
+     "STATUS_REG": 1,
+     "GUARD_REG": 1,
+     "WFALL": 1,
+     "WREG": 1,
+     "DSREP": 8,
+     "WRITE_CHUNK": 16,
+     "RSTREP": 11
+    }
+   },
+   "cells": 7887,
+   "note": "KV-HUBWO-SPLIT: hub ring u_cland_ft1_i as hard ring child core (master kv_cland_w292_ew_abd47, exact parent params, 0 added cycles); placed clear of halos, ft stations/bit sites, taps, reset sites, reserved sites"
+  },
+  {
+   "inst": "cl_i_astk_WN__u_strip_u_strip_g_ep_N__u_ep_xo",
+   "module": "kv_cland_w268_ns_6081a",
+   "origin_um": [
+    285.12,
+    1598.4
+   ],
+   "outline_um": [
+    47.952,
+    50.112
+   ],
+   "orient": "MX",
+   "physical_inst": "u_bound.u_cland_i_astk_WN__u_strip_u_strip_g_ep_N__u_ep_xo",
+   "physical_master": "kv_cland_w268_ns_6081a",
+   "param_wrap": {
+    "base": "ot_dp_clk_landing_cas",
+    "params": {
+     "W": 268,
+     "DEPTH": 4,
+     "STATUS_REG": 1,
+     "GUARD_REG": 1,
+     "WFALL": 1,
+     "WREG": 1,
+     "DSREP": 8,
+     "WRITE_CHUNK": 16,
+     "RSTREP": 11
+    }
+   },
+   "cells": 7481,
+   "note": "KV-HUBWO-SPLIT: hub ring u_cland_i_astk_WN__u_strip_u_strip_g_ep_N__u_ep_xo as hard ring child core (master kv_cland_w268_ns_6081a, exact parent params, 0 added cycles); placed clear of halos, ft stations/bit sites, taps, reset sites, reserved sites"
+  },
+  {
+   "inst": "cl_i_astk_WS__u_strip_u_strip_g_ep_N__u_ep_xo",
+   "module": "kv_cland_w268_ns_6081a",
+   "origin_um": [
+    276.48,
+    43.2
+   ],
+   "outline_um": [
+    47.952,
+    50.112
+   ],
+   "orient": "R0",
+   "physical_inst": "u_bound.u_cland_i_astk_WS__u_strip_u_strip_g_ep_N__u_ep_xo",
+   "physical_master": "kv_cland_w268_ns_6081a",
+   "param_wrap": {
+    "base": "ot_dp_clk_landing_cas",
+    "params": {
+     "W": 268,
+     "DEPTH": 4,
+     "STATUS_REG": 1,
+     "GUARD_REG": 1,
+     "WFALL": 1,
+     "WREG": 1,
+     "DSREP": 8,
+     "WRITE_CHUNK": 16,
+     "RSTREP": 11
+    }
+   },
+   "cells": 7481,
+   "note": "KV-HUBWO-SPLIT: hub ring u_cland_i_astk_WS__u_strip_u_strip_g_ep_N__u_ep_xo as hard ring child core (master kv_cland_w268_ns_6081a, exact parent params, 0 added cycles); placed clear of halos, ft stations/bit sites, taps, reset sites, reserved sites"
+  },
+  {
+   "inst": "cl_i_kvs_attn_prg",
+   "module": "kv_cland_w257_ew_aee53",
+   "origin_um": [
+    1149.12,
+    60.48
+   ],
+   "outline_um": [
+    41.04,
+    59.616
+   ],
+   "orient": "MY",
+   "physical_inst": "u_bound.u_cland_i_kvs_attn_prg",
+   "physical_master": "kv_cland_w257_ew_aee53",
+   "param_wrap": {
+    "base": "ot_dp_clk_landing_cas",
+    "params": {
+     "W": 257,
+     "DEPTH": 4,
+     "STATUS_REG": 1,
+     "GUARD_REG": 1,
+     "WFALL": 1,
+     "WREG": 1,
+     "DSREP": 8,
+     "WRITE_CHUNK": 16,
+     "RSTREP": 11
+    }
+   },
+   "cells": 7293,
+   "note": "KV-HUBWO-SPLIT: hub ring u_cland_i_kvs_attn_prg as hard ring child core (master kv_cland_w257_ew_aee53, exact parent params, 0 added cycles); placed clear of halos, ft stations/bit sites, taps, reset sites, reserved sites"
+  },
+  {
+   "inst": "dly_d81_seq_g_fan_0_u_fan_aq",
+   "module": "kv_dly_w540_d81_a26d9",
+   "origin_um": [
+    388.8,
+    34.56
+   ],
+   "outline_um": [
+    172.8,
+    190.08
+   ],
+   "orient": "R0",
+   "physical_inst": "u_bound.u_d81_seq_g_fan_0_u_fan_aq",
+   "physical_master": "kv_dly_w540_d81_a26d9",
+   "param_wrap": {
+    "base": "ot_dp_dly",
+    "params": {
+     "W": 540,
+     "D": 81
+    }
+   },
+   "cells": 87480,
+   "note": "KV-HUBWO-SPLIT: pad delay line u_d81_seq_g_fan_0_u_fan_aq (ot_dp_dly W=540 D=81 = 43740 flops, flop+inverter ~2 cells/flop in synth) as hard child core feeding astk_WS; exact parent params, 0 added cycles; NEW generated master, UNSIGNED, outline is an ESTIMATE (0.45 util), needs ot_dp_dly in param_wrap.PORTS (clk, d[W], q[W]) and a child core kit; placed clear of halos, ft stations/bit sites, taps, reset sites"
+  },
+  {
+   "inst": "dly_d20_seq_g_fan_1_u_fan_aq",
+   "module": "kv_dly_w540_d20_0a0cd",
+   "origin_um": [
+    311.04,
+    1486.08
+   ],
+   "outline_um": [
+    86.4,
+    103.68
+   ],
+   "orient": "R0",
+   "physical_inst": "u_bound.u_d20_seq_g_fan_1_u_fan_aq",
+   "physical_master": "kv_dly_w540_d20_0a0cd",
+   "param_wrap": {
+    "base": "ot_dp_dly",
+    "params": {
+     "W": 540,
+     "D": 20
+    }
+   },
+   "cells": 21600,
+   "note": "KV-HUBWO-SPLIT: pad delay line u_d20_seq_g_fan_1_u_fan_aq (ot_dp_dly W=540 D=20 = 10800 flops, flop+inverter ~2 cells/flop in synth) as hard child core feeding astk_WN; exact parent params, 0 added cycles; NEW generated master, UNSIGNED, outline is an ESTIMATE (0.45 util), needs ot_dp_dly in param_wrap.PORTS (clk, d[W], q[W]) and a child core kit; placed clear of halos, ft stations/bit sites, taps, reset sites"
+  }
+ ],
+ "set_content_module": null,
+ "cells_removed_estimate": {
+  "rings_ge250_cells": 111015,
+  "rings_ge250_bits": 4215,
+  "dly_cells": 109080,
+  "total": 220095,
+  "synth_before": 419971,
+  "synth_after": 199876,
+  "place_estimate_before": 502850,
+  "place_estimate_after": 292312
+ }
+}
