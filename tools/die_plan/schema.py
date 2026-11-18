@@ -1566,6 +1566,13 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
             # PLAN-READERS-1 11-14 (pad_clock.ENTRY_OPT): the entry's macro pins are clocked at least this long before the
             # earliest register clock pin, no delaybuf chain (u_chn >= 175 ps); rck_early.txt, report only at the post-CTS gate
             "min_early_ps": {"type": "number", "minimum": 0}}}}
+# FABLE-FIX-S81-SERDES 11-18 (opt-in): matched-leg star trunk of an input pad clock, planned on the placed sinks at PRE_CTS
+# (pad_clock.star, rck_star.tcl / rck_star.py).  Absent = kit unchanged.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["pad_clock"]["properties"]["pins"]["items"]["properties"]["star"] = {
+    "type": "object", "required": ["evidence"], "additionalProperties": False,
+    "properties": {"evidence": {"type": "string", "minLength": 1}, "max_sinks": {"type": "integer", "minimum": 16, "maximum": 4000},
+                   "max_extent_um": {"type": "number", "minimum": 20, "maximum": 1000},
+                   "hop_um": {"type": "number", "minimum": 20, "maximum": 100}, "cell": {"type": "string", "minLength": 1}}}
 # S81 LEAF-CLKENTRY-1109 (opt-in): core-clock REGIONAL entries of a tapped type.  Each is the RCK2 trunk form sourced at
 # an existing die-spine tap port (tap: clk / clk_t<k>): stations_um (one cell per station, hops <= 405 um) to an entry
 # driver at xy_um whose net takes the std-cell sinks inside region_um that the nearest-tap split left on any tap port of

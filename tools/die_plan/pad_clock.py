@@ -58,7 +58,7 @@ def pins(P, tn):
     periods.update({n: float(P.die['period_ps']) for n, *_ in gen_phys.clock_pins(P, tn) + gen_phys.core_tap_pins(P, tn)})
     periods.update({n: float(P.die['period_ps']) * m for n, _x, _y, m in gen_phys.edge_clock_pins(P, tn)})
     for p in c['pins']:
-        if not isinstance(p, dict) or required - set(p) or set(p) - required - {'source_clock_port', 'sink_pins', 'cdc', 'cdc_evidence', 'data_inputs', 'data_outputs', 'entries'}:
+        if not isinstance(p, dict) or required - set(p) or set(p) - required - {'source_clock_port', 'sink_pins', 'cdc', 'cdc_evidence', 'data_inputs', 'data_outputs', 'entries', 'star'}:
             raise ValueError(f'{tn}: pad_clock pin requires name/dir/period_ps/source/layer/xy_um')
         n = p['name']; pad = pads.get(n)
         if not isinstance(n, str) or not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', n) or n in seen:
@@ -202,6 +202,60 @@ def check_entries(tn, t, p, port_names):
                 raise ValueError(f'{tn}.{n}.{en}: entry sink pin {key} is not a declared pad sink or is claimed twice')
             taken.add(key)
     return rows
+
+
+STAR_KEYS = {'evidence'}
+STAR_OPT = {'max_sinks': (16, 4000), 'max_extent_um': (20.0, 1000.0), 'hop_um': (20.0, 100.0)}
+STAR_DEFAULT = {'max_sinks': 200, 'max_extent_um': 100.0, 'hop_um': 92.0, 'cell': 'BUFx24_ASAP7_75t_R'}
+
+
+def star(P, tn):
+    """[(pad clock name, star row with defaults)] of the type's matched-leg star trunks (FABLE-FIX-S81-SERDES 11-18, opt-in
+    pad_clock pins[].star = {"evidence": ..., optional max_sinks / max_extent_um / hop_um / cell}): the PRE_CTS hook rck_star.tcl
+    cuts the PLACED sinks of that pad clock into compact regions and feeds one entry driver per region through its own leg of
+    equal stage count and equal length (rck_star.py).  Nothing is plan-placed, so the same row
+    serves every type of a family.  Fail closed: input pad clock only, not together with plan-placed entries, hop <= 100 um
+    (the kit max-wire length: a longer hop would get an unplanned repeater), at most one star per type."""
+    out = []
+    for p in pins(P, tn):
+        if 'star' not in p:
+            continue
+        r = p['star']
+        n = p['name']
+        if p['dir'] != 'in' or 'entries' in p:
+            raise ValueError(f'{tn}.{n}: star needs an input pad clock without plan-placed entries')
+        if not isinstance(r, dict) or not (STAR_KEYS <= set(r) <= STAR_KEYS | set(STAR_OPT) | {'cell'}):
+            raise ValueError(f'{tn}.{n}: star requires evidence and only the optional {sorted(set(STAR_OPT) | {"cell"})}')
+        if not isinstance(r['evidence'], str) or not r['evidence'].strip():
+            raise ValueError(f'{tn}.{n}: star evidence required')
+        for k, (lo, hi) in STAR_OPT.items():
+            if k in r and (isinstance(r[k], bool) or not isinstance(r[k], (int, float)) or not math.isfinite(r[k])
+                           or not lo <= r[k] <= hi):
+                raise ValueError(f'{tn}.{n}: star {k} must be a number in {lo:g}..{hi:g}')
+        if 'max_sinks' in r and not isinstance(r['max_sinks'], int):
+            raise ValueError(f'{tn}.{n}: star max_sinks must be an integer')
+        if 'cell' in r and (not isinstance(r['cell'], str) or not re.fullmatch(r'[A-Za-z0-9_]+', r['cell'])):
+            raise ValueError(f'{tn}.{n}: star cell must be one library cell name')
+        out.append((n, {**STAR_DEFAULT, **r}))
+    if len(out) > 1:
+        raise ValueError(f'{tn}: at most one star pad clock per type')
+    return out
+
+
+def star_exports(P, tn):
+    """config.mk lines of the star trunk ([] when the key is absent)."""
+    rows = star(P, tn)
+    if not rows:
+        return []
+    n, r = rows[0]
+    return ['# FABLE-FIX-S81-SERDES 11-18 (plan clock.pad_clock pins[].star): matched-leg star trunk on the placed sinks (rck_star.tcl)',
+            f'export OT_RCK_STAR_PORT = {n}', f'export OT_RCK_STAR_MAX_SINKS = {int(r["max_sinks"])}',
+            f'export OT_RCK_STAR_MAX_EXTENT_UM = {float(r["max_extent_um"]):g}', f'export OT_RCK_STAR_HOP_UM = {float(r["hop_um"]):g}',
+            f'export OT_RCK_STAR_CELL = {r["cell"]}']
+
+
+STAR_HOOK = 'uplevel #0 {source /work/rck_star.tcl}\n'
+STAR_FILES = ("rck_star.tcl", "rck_star.py")
 
 
 def entries(P, tn):

@@ -6368,6 +6368,12 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     if pce_hook:
         shutil.copyfile(Path(__file__).with_name("pad_clock_entry.tcl"), kd / "pad_clock_entry.tcl")
         pce_hook = "\n" + pce_hook
+    # FABLE-FIX-S81-SERDES 11-18 (opt-in plan clock.pad_clock pins[].star): matched-leg star trunk planned on the placed sinks
+    # (rck_star.tcl + rck_star.py); absent = pre_cts.tcl byte-identical, no file in the kit.
+    if PC.star(P, tn):
+        for f in PC.STAR_FILES:
+            shutil.copyfile(Path(__file__).with_name(f), kd / f)
+        pce_hook += "\n" + PC.STAR_HOOK
     # VSN6-B 11-11 S7: post-place non-tap census + max-wire buffer estimate (cell_census.tcl), loud against 400k
     cc_hook = ("\nif {[file exists /work/cell_census.tcl]} {uplevel #0 {source /work/cell_census.tcl}; ot_cell_census place}"
                " else {puts \"OT_CELL_CENSUS WARN stage=place: cell_census.tcl is not in the kit, no recount\"}\n")
@@ -6720,6 +6726,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     cfg += private_leaf_exports(t)
     cfg += rck_band_exports(P, tn)
     cfg += rck_island_exports(P, tn)
+    import pad_clock as _PCS
+    cfg += _PCS.star_exports(P, tn)
     cfg += rck_early_exports(P, tn)
     import pad_clock as PC
     PC.write_contract(P, tn, kd)

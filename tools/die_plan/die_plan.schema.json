@@ -3104,6 +3104,38 @@
               }
              }
             },
+            "star": {
+             "type": "object",
+             "required": [
+              "evidence"
+             ],
+             "additionalProperties": false,
+             "properties": {
+              "evidence": {
+               "type": "string",
+               "minLength": 1
+              },
+              "max_sinks": {
+               "type": "integer",
+               "minimum": 16,
+               "maximum": 4000
+              },
+              "max_extent_um": {
+               "type": "number",
+               "minimum": 20,
+               "maximum": 1000
+              },
+              "hop_um": {
+               "type": "number",
+               "minimum": 20,
+               "maximum": 100
+              },
+              "cell": {
+               "type": "string",
+               "minLength": 1
+              }
+             }
+            },
             "data_outputs": {
              "type": "array",
              "minItems": 1,

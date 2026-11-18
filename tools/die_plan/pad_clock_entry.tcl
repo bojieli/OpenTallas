@@ -72,7 +72,12 @@ foreach pce_e $::pce_entries {
   }
   set sinks {}
   foreach sn $srcnets {
-    foreach it [$sn getITerms] { if {[$it isInputSignal] || [[$it getMTerm] getSigType] eq "CLOCK"} { lappend sinks $it } }
+    foreach it [$sn getITerms] {
+      # FABLE-FIX-S81-SERDES 11-18: the trunk cells of EARLIER entries hang on the same root net; a later entry whose region
+      # holds one of them took it as a sink and chained the trunks (star1 probe: 22,993 sinks behind one driver).
+      if {[string match pce_* [[$it getInst] getName]]} continue
+      if {[$it isInputSignal] || [[$it getMTerm] getSigType] eq "CLOCK"} { lappend sinks $it }
+    }
   }
   set src $root; set k 0; set pts [concat $stations [list $exy]]; set first ""
   foreach pt $pts {
