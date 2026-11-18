@@ -22042,3 +22042,4 @@ FAILED [AUTOPILOT bd72ba64aafc] 2026-11-17 15:54:33 PST AUTOPILOT -> KIT-WAVE-5:
   COORD APPROVED: claude/flowguard-named-frames-1117 @519c976a838c12205c045cf835b0fd69a0e8525c
 - 2026-11-17 16:00 PST RULING r627 [COORD -> QC-PLAN-R3, MERGE-QUEUE] publish_gate.py forwards --rows-proof to PRE (N2B 9 sc types). Gate 4/4.
   COORD APPROVED: claude/pubgate-rows-proof-1117 @2a4ae43799373267cbc189246e48b1ad28ad5957
+- 2026-11-17 16:00 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kw45 on epyc9 wrote 306 GB in the last 6 h (quota 150 GB/lane/6 h; alert only, nothing stopped); owner please prune or confirm
