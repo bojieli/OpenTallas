@@ -729,6 +729,12 @@ def compile_holds(cfg, ctx=None):
             info.setdefault(die, []).append({"id": rec.get("id"), "plan_sha": sha, "stale": stale, "rebound": rebound,
                                              "zero": zero, "zero_plan": zero_plan, "keys": len(keys), "held": held, "release": rel, "expired": exp,
                                              "migrated": bool(rec.get("migrated"))})
+    cr = {}
+    for die_, d_ in (cfg.get("dies") or {}).items():          # LATENCY-R: keys of records with cancel_running: true (their running builds are stopped, not protected)
+        for rec_ in (d_.get("hold_records") or []) if isinstance(d_, dict) else []:
+            if rec_.get("cancel_running"):
+                cr.setdefault(die_, []).extend(rec_keys(rec_, (d_.get("hold_event_items") or {}).get(str(rec_.get("plan_sha") or "")) or (d_.get("hold_event_items") or {}).get(plan_id(d_)) or []))
+    cfg["_hold_cancel_running"] = cr
     cfg["_hold_compiled"], cfg["_hold_rec_info"], cfg["_hold_rec_dies"] = comp, info, rec_dies
     cfg["_hold_proof_stuck"] = stuck_all
     if released:

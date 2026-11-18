@@ -8,6 +8,7 @@ RT=$C/rt/current/tools; HUB=ubuntu@185.8.106.226; HC=$C/hub-coord
 G=$RT/fleet/ot_delete_guard.py; AR=$RT/fleet/auto_retire.py
 L=$HOME/.local/state/ot-delete-guard/protected_struct.txt
 D=$HOME/.local/state/ot-auto-retire; mkdir -p "$D"
+exec 8>"$D/lock"; flock -n 8 || { echo "another cleanup pass is running: skipped"; exit 0; }   # timer and manual passes never overlap
 W=$(mktemp -d); trap 'rm -rf "$W"' EXIT
 CACHE=$D/inputs; mkdir -p "$CACHE"; CACHE_MAX_S=${AC_CACHE_MAX_S:-21600}
 [ -f "$AR" ] && [ -f "$G" ] || { echo "auto_retire.py / guard missing in rt/current: nothing done" >&2; exit 3; }
@@ -50,16 +51,25 @@ fi
 MODE=""; [ "${1:-}" = apply ] && MODE=--apply
 FB=$(df -BG --output=avail $C | tail -n 1 | tr -dc 0-9)
 echo "df before: ${FB}G"
-OUT=$W/out.txt
-python3 -I "$AR" --kit-wave "$W/kit_wave.json" --state "$W/kit_wave_state.json" --markers "$W/markers.json" --store-ids "$W/ids.txt" \
-  --guard-module "$G" --list "$L" --log "$D/log.jsonl" --target "${TARGET_GB:-350}" $EXTRA $MODE | tee "$OUT"
-rc=${PIPESTATUS[0]}
+OUT=$W/out.txt; : > "$OUT"
+# COORD 11-18: every claude root of this host: scratch2 and, where scratch3 is its own directory (on epyc2 / intel1 / epyc7 / epyc9 / epyc10 it sits on the ROOT disk), scratch3 as well
+ROOTS="$C"
+S3=/srv/opentallas-scratch3/claude
+if [ -d "$S3" ] && [ "$(readlink -f $S3)" != "$(readlink -f $C)" ]; then ROOTS="$C $S3"; fi
+rc=0
+for R in $ROOTS; do
+  echo "== root $R"
+  python3 -I "$AR" --kit-wave "$W/kit_wave.json" --state "$W/kit_wave_state.json" --markers "$W/markers.json" --store-ids "$W/ids.txt" \
+    --guard-module "$G" --list "$L" --log "$D/log.jsonl" --target "${TARGET_GB:-350}" --root "$R/kw45" $EXTRA $MODE | tee -a "$OUT"
+  r1=${PIPESTATUS[0]}; [ "$r1" = 0 ] || rc=$r1
+done
 FA=$(df -BG --output=avail $C | tail -n 1 | tr -dc 0-9)
 echo "df after: ${FA}G"
 if [ "${AC_FULL:-0}" = 1 ] && [ "$MODE" = --apply ]; then
   AD=$HOME/.local/state/auto-clean; mkdir -p "$AD"
   now=$(date +%s)
-  echo "$(date '+%F %T') $(hostname -s) rc=$rc deleted=$(grep -c '^DELETED' "$OUT") refused=$(grep -c '^REFUSED' "$OUT") failed=$(grep -c '^FAILED' "$OUT") before_gb=$FB free_gb=$FA" >> "$AD/host.log"
+  F3=$(df -BG --output=avail /srv/opentallas-scratch3 2>/dev/null | tail -n 1 | tr -dc 0-9)
+  echo "$(date '+%F %T') $(hostname -s) rc=$rc deleted=$(grep -c '^DELETED' "$OUT") refused=$(grep -c '^REFUSED' "$OUT") failed=$(grep -c '^FAILED' "$OUT") before_gb=$FB free_gb=$FA scratch3_free_gb=$F3" >> "$AD/host.log"
   echo "$now" > "$AD/last-pass"
 fi
 exit $rc
