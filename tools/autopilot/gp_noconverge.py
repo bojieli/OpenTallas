@@ -98,22 +98,57 @@ def gate(text, overflow=NOCONV_OVERFLOW):
     return "OK", f"{capped} capped pass(es), none above overflow {overflow:g}"
 
 
+REPAIR = re.compile(r"GPL-0100\]?\s+Timing-driven iteration \d+/\d+, virtual: false")
+
+
 def hpwl_min(text):
     """lowest HPWL (um) printed in the Nesterov tables of one global-place log (every pass), or None"""
     vals = [float(m.group(1)) for m in map(ROW_HPWL.match, (text or "").splitlines()) if m]
     return min(vals) if vals else None
 
 
+def hpwl_segments(text):
+    """[[HPWL rows], ...] of one global-place log, one list per netlist: a non-virtual timing-driven repair (GPL-0100
+    virtual: false) inserts buffers, so the rows after it measure another netlist than the rows before it."""
+    segs = [[]]
+    for line in (text or "").splitlines():
+        if REPAIR.search(line):
+            segs.append([])
+            continue
+        m = ROW_HPWL.match(line)
+        if m:
+            segs[-1].append(float(m.group(1)))
+    return [s for s in segs if s]
+
+
+def hpwl_growth(text, exit_hpwl):
+    """(ratio, parts): growth of HPWL after its minimum, with the netlist change of each repair taken out.  Per netlist
+    segment the growth is (last row, or the measured exit HPWL for the last segment) / (lowest row of that segment);
+    the ratio is the product.  The step from the last row before a repair to the first row after it (the buffer nets)
+    is not counted.  One segment = exit / run minimum, the old reading."""
+    segs = hpwl_segments(text)
+    if not segs:
+        return None, []
+    parts = [(exit_hpwl if k == len(segs) - 1 else s[-1]) / min(s) for k, s in enumerate(segs)]
+    r = 1.0
+    for q in parts:
+        r *= max(q, 1.0)
+    return r, parts
+
+
 def hpwl_gate(text, exit_hpwl, ratio=HPWL_RATIO):
-    """(verdict, why): STOP when the measured GPL-exit HPWL exceeds ratio x the run's own table minimum"""
+    """(verdict, why): STOP when the HPWL growth after the minimum (hpwl_growth) exceeds ratio"""
     lo = hpwl_min(text)
     if not lo or exit_hpwl is None or exit_hpwl <= 0:
         return "OK", "no HPWL table or no exit HPWL: not judged"
-    r = exit_hpwl / lo
+    r, parts = hpwl_growth(text, exit_hpwl)
+    seg = " x ".join(f"{q:.3f}" for q in parts)
     if r > ratio:
         return "STOP", (f"{HPWL_CLASS}: global placement left at HPWL {exit_hpwl:.4e} um = {r:.2f} x the run minimum "
-                        f"{lo:.4e} um (limit {ratio:g}); the placement diverged after it had converged")
-    return "OK", f"exit HPWL {exit_hpwl:.4e} um = {r:.3f} x run minimum {lo:.4e} um (limit {ratio:g})"
+                        f"{lo:.4e} um (limit {ratio:g}; per netlist segment {seg}, repair steps not counted); "
+                        f"the placement diverged after it had converged")
+    return "OK", (f"exit HPWL {exit_hpwl:.4e} um = {r:.3f} x run minimum {lo:.4e} um (limit {ratio:g}; per netlist "
+                  f"segment {seg}, repair steps not counted)")
 
 
 def hpwl_gate_main(log, exit_hpwl, ratio, marker=None):

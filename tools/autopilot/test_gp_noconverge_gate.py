@@ -121,3 +121,23 @@ def test_gen_installs_the_gate_once(tmp_path):
     other = tmp_path / "o"; other.mkdir()
     assert gen_phys.install_gp_noconverge_gate(other, ["export PRE_RESIZE_TCL = /work/mine.tcl"]) == []
     assert not (other / "gp_noconverge_gate.tcl").exists()
+
+
+def test_hpwl_growth_takes_the_repair_step_out():
+    """S81 leaf t37 attempt 8: buffers of the non-virtual repair add 3 % (6.671e6 -> 6.914e6); growth on each netlist
+    is 1.196 and 1.133.  The repair step is not growth; spreading before the repair still is."""
+    import gp_noconverge as G
+    row = lambda i, o, h: "%9d |   %.4f |  %.6e |   +0.00%% |  1.0e-08 |      " % (i, o, h)
+    pre = [row(0, 0.7515, 5.578922e6), row(310, 0.5144, 5.660772e6), row(360, 0.3358, 6.671055e6)]
+    rep = "[INFO GPL-0100] Timing-driven iteration 2/2, virtual: false."
+    virt = "[INFO GPL-0100] Timing-driven iteration 1/2, virtual: true."
+    post = [row(370, 0.3872, 6.913760e6), row(385, 0.2393, 7.834546e6)]
+    log = "\n".join(pre[:2] + [virt] + pre[2:] + [rep] + post) + "\n"
+    r, parts = G.hpwl_growth(log, 7.8347e6)
+    assert len(parts) == 2 and abs(parts[0] - 1.1958) < 1e-3 and abs(parts[1] - 1.1332) < 1e-3 and abs(r - 1.355) < 2e-3
+    assert G.hpwl_gate(log, 7.8347e6)[0] == "STOP"                       # 1.36 x: over on spreading alone
+    assert G.hpwl_gate(log, 7.2e6)[0] == "OK"                            # 1.196 x 1.041 = 1.245
+    one = "\n".join(pre + post) + "\n"                                  # no repair: exit / run minimum as before
+    assert abs(G.hpwl_growth(one, 7.8347e6)[0] - 7.8347e6 / 5.578922e6) < 1e-9
+    drift = "\n".join(pre[:2] + [rep, row(370, 0.39, 5.8e6), row(400, 0.25, 9.0e6)]) + "\n"
+    assert G.hpwl_gate(drift, 9.0e6)[0] == "STOP"                        # drift after the last repair is still caught
