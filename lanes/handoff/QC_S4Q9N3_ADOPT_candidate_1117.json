@@ -1,0 +1,82 @@
+{
+ "marker": {
+  "die": "qwen_compute",
+  "tree": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9n3",
+  "manifest_hash": "99b525f8dfc6f02828cfada6e49f9e21e3db0d08505d509895b500bff85cb42d",
+  "src_manifest_sha": "99b525f8dfc6f02828cfada6e49f9e21e3db0d08505d509895b500bff85cb42d",
+  "tools_sha": "eb1e73448bd042684261a13c50cd0fb5ce21a513",
+  "hosts": [
+   "epyc9",
+   "epyc8"
+  ],
+  "smoke": "PASS",
+  "smoke_detail": "N3 = N2B plan 25f88097 (byte-identical) + main d9bbb638fa79 tools/ + physical/common_flow (r641 r644 r648 r649 r650). Strict bind s29q103S4Q9N3BR on the E2 event tree (fresh elab, bind.py 22aaef86): 0 errors, CM 0, KP 0; LATCHECK, hcparam 0 mismatches; G0 PASS 0 err; PRE PASS; CB16 S2-S4 0. Published as data_pack+delta_apply --link of _d3 + 136 checksum-differing files; bind relocated E2 tree -> published tree (relocate_bind_x.py, byte-checked).",
+  "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9n3/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9n2b.json",
+  "plan_sha256": "25f8809745530334726e14f4ea9086542a539b974a7024b4d96c92d055842e1b",
+  "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9n3/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_n2b_portable.json",
+  "asbuilt_sha256": "1a1a4f80f298d6cf620a3e70e0f9ab62ccd04c220cb8ebdde116b1942f7bf077",
+  "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind_pin_eb1e73448bd0_s4q9n3/bind_s29q103S4Q9N3BR",
+  "sidecar": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9n3/physical/die_plan/qwen_compute/qc_start_1106/runtime/zz_sidecar_s29q103S4Q9N3BR.json",
+  "die_gen_env": {
+   "OT_PLACE_MAX_FANOUT": "64",
+   "OT_GRT_NONPORT_HOLD": "1",
+   "OT_CORE_TAP_REACH_UM": "0",
+   "OT_PREGRT_FF_HOLD_AUTO": "-1",
+   "OT_MAX_BUFFER_PERCENT": "100",
+   "OT_GRT_POST_MAX_S": "0",
+   "OT_HOLD_STOP_PS": "-1000000",
+   "OT_GRT_ALLOW_CONGESTION": "1",
+   "OT_TT_SETUP_REPAIR": "both",
+   "OT_PG_DIE_PHASE": "1",
+   "OT_PGCAP": "1",
+   "OT_PG_TRACK_TRUTH": "1",
+   "OT_PG_PIN_CHECK": "1",
+   "OT_GPL_SPARSE_UTIL": "0.10"
+  },
+  "config": {
+   "event": "s29q103S4Q9N3",
+   "plan_event": "s29q103S4Q9N1B",
+   "gen_hosts": [
+    "epyc9",
+    "epyc8"
+   ],
+   "gen_host": "epyc9",
+   "gen_args": [
+    "--hold-ff-margin",
+    "0",
+    "--max-wire-um",
+    "120",
+    "--clock-landing",
+    "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9n3/physical/die_plan/qwen_compute/qc_start_1106/runtime/zz_sidecar_s29q103S4Q9N3BR.json"
+   ],
+   "kit_rtl": {
+    "mode": "bind",
+    "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9n3/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_n2b_portable.json",
+    "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind_pin_eb1e73448bd0_s4q9n3/bind_s29q103S4Q9N3BR"
+   },
+   "cancel_superseded": false,
+   "planned_events": [
+    "S4q6d",
+    "S4q6e",
+    "S4q7h",
+    "S4q8",
+    "S4q9l2",
+    "S4q9l2d",
+    "S4q9m",
+    "s29q103S4Q9L2",
+    "s29q103S4Q9M",
+    "s29q103S4Q9N1B"
+   ]
+  },
+  "rows_proofs": [
+   "physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9n2b.rows_proof.json"
+  ],
+  "bind_out_relocation": {
+   "from": "epyc2:/srv/opentallas-scratch3/claude/qc-plan-r3-n3-1117/bind/bind_s29q103S4Q9N3BR",
+   "to": "/srv/opentallas-scratch2/claude/kw45/qcbind_pin_eb1e73448bd0_s4q9n3/bind_s29q103S4Q9N3BR",
+   "receipt": "/srv/opentallas-scratch2/claude/kw45/qcbind_pin_eb1e73448bd0_s4q9n3/bind_s29q103S4Q9N3BR/RELOCATED.json"
+  }
+ },
+ "keep_gen_hosts": false,
+ "note": "QC-PLAN-R3 N3 adopt (COORD 19:2x / FABLE-CLOSURE-STRATEGY (1)): N2B folded into N3 (N2B never applied). Event s29q103S4Q9N3 releases the N3 holds (cb tap0 also needs qc-n3-halo-refresh, st_a mpl0034, nb-slot, sc street); plan_event N1B keeps the N1B releases."
+}
