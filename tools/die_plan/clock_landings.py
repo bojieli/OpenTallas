@@ -2449,7 +2449,7 @@ class Landings:
             # depth and within reach of the leaf site stays (kits are byte-identical); otherwise the nearest non-ported relay of
             # the needed depth within reach is taken, and the receipt says so.  Nothing in reach: the error below / G0 R-REACH-5.
             was = None
-            first_old = self._local_reset_old(r.get("consumers"), text) if isinstance(r.get("consumers"), list) and r.get("consumers") else None
+            first_old = self._local_reset_old(r.get("consumers"), text) if isinstance(r.get("consumers"), list) and r.get("consumers") and r["consumers"][0] not in used else None
             if first_old is not None:
                 raw, was = pick_local_reset_raw(raw, xy, depth(first_old) - 1, relays, ported, LOCAL_RESET_REACH_UM)
                 if was is not None:
