@@ -765,7 +765,7 @@ def prestage(AP, st, ctx, hosts=None):
             out.append((host, tag, d or err))
     for host, tag, what in out:
         AP.log("AUTO-RESIGN PRESTAGE %s %s: %s" % (host, tag, what))
-    keep = {it["tag"] for it in st.get("items", {}).values() if it.get("status") in ("RUNNING", "ECO", "WAIT", "QUEUED")}
+    keep = {it.get("tag") for it in st.get("items", {}).values() if it.get("status") in ("RUNNING", "ECO", "WAIT", "QUEUED") and it.get("tag")}   # FLOW-2200 G: items that never launched have no tag
     keep |= {ctx["tag"](die) for die in PRESTAGE_DIES if ctx["tag"](die)}
     ra, now = st.setdefault("retired_at", {}), time.time()
     for host in hosts:
@@ -1056,6 +1056,13 @@ def _step(AP, ap_dir):
                     prestage(AP, st, ctx)
                 except Exception as e:                   # tool export is a convenience; it never stops the pass
                     AP.log("AUTO-RESIGN PRESTAGE skipped: %s: %s" % (type(e).__name__, e))
+                    # FLOW-2200 G: a skip is never silent again (re-sign prestage sat off for hours after KeyError 'tag'): one queue ALERT per hour
+                    if time.time() - float(st.get("prestage_alert_t") or 0) > 3600:
+                        st["prestage_alert_t"] = time.time()
+                        try:
+                            AP.coord_append("lanes/COORD-REVIEW-QUEUE.md", "- %s ALERT [AUTO-RESIGN -> FLEET-OPS-R] PRESTAGE skipped (re-sign tool export is OFF this pass): %s: %s" % (AP.now_s(), type(e).__name__, str(e)[:200]))
+                        except Exception:
+                            pass
     finally:                                         # a raise outside the rows still keeps what this pass started and collected
         save_state(ap_dir, st)
         if notices and not AP.DRY:
