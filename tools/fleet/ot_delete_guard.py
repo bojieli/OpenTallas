@@ -10,6 +10,7 @@ impossible.  refuse(target) -> None (may delete) or the reason string.  A target
   4. it is a STRICT DESCENDANT of a source tree root (<lane>/kw45/<tree>/x, <lane>/src_*/x): trees are deleted WHOLE or not at all.
 The protected list is built on the hub (build_protected) and pushed to every host as protected.txt (header '# built <epoch>'); a missing
 or older-than-MAX_AGE_H list fails CLOSED for any tree root.  usage: ot_delete_guard.py build COORD_DIR OUT | check PATH [LIST]"""
+import re
 import glob, json, os, re, sys, time
 
 DEFAULT_LIST = os.path.expanduser("~/.local/state/ot-delete-guard/protected.txt")
@@ -30,13 +31,21 @@ def _add(s, p):
         s.add(canon(os.path.dirname(p)) if os.path.basename(p) in ("bind_report.json", "asbuilt.json", "asbuilt_sources.json") else canon(p))
 
 
-def _walk_paths(s, o):
+# COORD 11-18 (intel1 scratch2 at 5 GB, cleanup refused everything): a path in a die's work_root (a container of every attempt dir) or in free-text / history keys (note_*, *_prev*, evidence, gate,
+# hold reasons: provenance prose and revert notes) is NOT a live owner of a tree.  Those keys are skipped, except for dies named in HISTORY_KEEP_DIES (HBM stays parked: its src_prev_* trees are wanted).
+HISTORY_KEY = re.compile(r"^(work_root|job|dir_prev.*|note.*|.*_note|.*_notes|evidence|reason|enable_note|plan_note|tools_note|gate|retry_fix|hold_items.*|src_prev.*|queue_src_prev.*|plan_prev.*|gen_host_prev.*|.*_prev_.*|.*_prev|prev_.*)$")
+HISTORY_KEEP_DIES = ("hbm",)
+
+
+def _walk_paths(s, o, skip_history=False):
     if isinstance(o, dict):
-        for v in o.values():
-            _walk_paths(s, v)
+        for k, v in o.items():
+            if skip_history and HISTORY_KEY.match(str(k)):
+                continue
+            _walk_paths(s, v, skip_history)
     elif isinstance(o, list):
         for v in o:
-            _walk_paths(s, v)
+            _walk_paths(s, v, skip_history)
     elif isinstance(o, str):
         for m in SRV.finditer(o):
             t = m.group().rstrip("/.-")
@@ -71,13 +80,13 @@ def build_protected(coord, marker_dir=None):
     # superseded_trees is the recognized retirement queue, not a live owner.
     # Drop only a well-formed direct die queue; other/nested keys stay protected.
     # Manual protected paths are never subtracted from an existing list.
-    for d in cfg.values():
+    for name, d in cfg.items():
         paths = d
         if isinstance(d, dict):
             queue = d.get("superseded_trees")
             if isinstance(queue, list) and all(isinstance(p, str) and os.path.isabs(p) for p in queue):
                 paths = {k: v for k, v in d.items() if k != "superseded_trees"}
-        _walk_paths(s, paths)
+        _walk_paths(s, paths, skip_history=(name not in HISTORY_KEEP_DIES))
     for f in glob.glob(os.path.join(marker_dir or os.path.join(coord, "lanes/handoff"), "tree_switch_*.json")):
         try:
             _add(s, json.load(open(f)).get("tree"))

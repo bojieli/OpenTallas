@@ -83,3 +83,13 @@ class Requires(unittest.TestCase):
         self.assertEqual(G.host_requires("h", ("~/.local/opentallas-pdk-asap7/lib",), run=run), ["~/.local/opentallas-pdk-asap7/lib"])
         bad = lambda cmd, **k: (_ for _ in ()).throw(OSError("down"))
         self.assertEqual(G.host_requires("h", ("~/a", "~/b"), run=bad), ["~/a", "~/b"])
+
+
+def test_per_host_min_free_floor_drops_a_host_until_it_has_the_room():
+    import derive_gen_hosts as D
+    cfg = {"dies": {"s81": {"src": "/t", "src_manifest_hash": "h", "gen_hosts": ["a", "b"], "gen_host_min_free_gb": {"b": 150}}}}
+    pr = lambda host, tree: ("h", False, {"a": 100.0, "b": 137.0}[host])
+    out = D.derive(cfg, hosts=("a", "b"), prober=pr, checker=lambda h, need: [])
+    assert out["s81"][0] == ["a"] and any("b: 137 GB free < 150" in w for w in out["s81"][1])
+    pr2 = lambda host, tree: ("h", False, {"a": 100.0, "b": 160.0}[host])
+    assert D.derive(cfg, hosts=("a", "b"), prober=pr2, checker=lambda h, need: [])["s81"][0] == ["a", "b"]
