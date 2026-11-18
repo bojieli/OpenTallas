@@ -3341,7 +3341,7 @@ RULES = [
                     # S81-OTHERFAIL-1 11-07: host earlyoom SIGTERMs yosys (epyc2 16:01/16:09 PST, mem 3%): the synth make
                     # reports 'Error 241' (256-15), selrange 'yosys exit -15', rtl_lint/selrange the KILLED marker
                     # KW-FIX-43 11-09: make Error 247 = 256-9, a SIGKILL (q_su20 cgroup kill was labelled PLAN off [INFO PDN-0001])
-                    r"\] Error 24[17]\b|yosys exit -15\b|FAIL_PREFLOOR \w+ KILLED \(yosys signal", "infra"),
+                    r"\] Error 24[17]\b|yosys exit -15\b|FAIL_PREFLOOR \w+ KILLED \(yosys signal|KW_RT_TOOLS FAIL", "infra"),   # KW_RT_TOOLS FAIL: the stage landed on a host without the tree / rt tools: retry (spec_for re-picks among the tree hosts)
     # transport only: an ssh drop BEFORE the command ran.  When ot-run reports 'RAN on <host>' the command ran and its
     # own error decides the class (a probe of another host that failed is not the item's failure)
     ("INFRA-SSH", None, r"ssh: connect to host|Connection (?:reset|refused|closed)|kex_exchange_identification|"
@@ -3975,6 +3975,18 @@ def spec_retired(cfg, sp):
     return retired_src_hit(cfg, [sp.get("src"), sp.get("plan")] + abs_paths(sp.get("kit_rtl") or {}))
 
 
+def tree_hosts(cfg, die, item, listed, keep_order=False):
+    """COORD class fix (KV D22 rc97 'die tree missing'): a stage may run only on a host that HOLDS the die's current src tree = the die's gen_hosts (derive_gen_hosts writes exactly the hosts
+    whose tree hash matches).  dies.<die>.hosts / place_prefer are static lists and listed intel1, epyc2 and the hub without the tree; the effective lists are built from gen_hosts, the static
+    list only orders them.  A die without gen_hosts keeps its list.  die option hosts_static true = off."""
+    d = (cfg.get("dies") or {}).get(die) or {}
+    gh = gen_hosts(cfg, die, item) if d.get("gen_hosts") and d.get("hosts_static") is not True else []
+    if not gh:
+        return list(listed)
+    order = [h for h in listed if h in gh]
+    return order if keep_order else order + [h for h in gh if h not in order]
+
+
 def roam_hosts(cfg, die, item=None):
     """WAVE-BALANCE-1 11-14 (OWNER: never pin a kit to one host): the hosts a stage of this item may run on = the die's gen
     hosts that hold its src and are not under the work-root floor or SPILL-marked; [] (stage pinned to the gen host) when
@@ -4045,7 +4057,7 @@ def spec_for(cfg, die, item, hub, parent=None, kind="type"):
             # COORD 10-30 23:1x (GEOM-84 ring key order): every wave kit places landing-ring slot flops in pin order
             # (gen phys --cland-pinslot; a kit without ring bands is unchanged).  Die opt-out: cland_pinslot false.
             "cland_pinslot": cland_pinslot_arg(d),
-            "hosts": [h for h in opt(cfg, die, "hosts")], "hub": hub, "place_prefer": list(opt(cfg, die, "place_prefer") or []),
+            "hosts": tree_hosts(cfg, die, item, opt(cfg, die, "hosts")), "hub": hub, "place_prefer": tree_hosts(cfg, die, item, opt(cfg, die, "place_prefer") or [], keep_order=True),
             "place_mem_gb": place_mem_gb(cfg, die, item), "place_threads": int(opt(cfg, die, "place_threads")),
             "kit_self_contained": str((d.get("kit_self_contained_by_item") or {}).get(item) or opt(cfg, die, "kit_self_contained") or cfg.get("kit_self_contained") or "list"),
             "geom_mem_gb": int(opt(cfg, die, "geom_mem_gb")), "geom_grt_wall_s": int(opt(cfg, die, "geom_grt_wall_s")), "gen_mem_gb": int(opt(cfg, die, "gen_mem_gb")),
