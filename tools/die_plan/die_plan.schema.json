@@ -5942,6 +5942,11 @@
         "copy_depth": {
          "type": "integer",
          "minimum": 1
+        },
+        "form": {
+         "enum": [
+          "rsync"
+         ]
         }
        }
       }

@@ -119,10 +119,11 @@ proc tcs_along {route k} {
   return $out
 }
 proc tcs_md {a b} { return [expr {abs([lindex $a 0] - [lindex $b 0]) + abs([lindex $a 1] - [lindex $b 1])}] }
-# copy instance name of an odb cell name (`<path>.u_pdK_..._<pad>/<leaf>` kept, `<path>.u_pdK_..._<pad>.<leaf>` flat), or ""
+# copy instance name of an odb cell name (`<path>.u_pdK_..._<pad>/<leaf>` kept, `<path>.u_pdK_..._<pad>.<leaf>` flat), or "".
+# KV-D23-REACH: any listed u_* instance (reset spine relay copies u_rs_.._r<i> of reset_replicate form rsync are listed too).
 proc tcs_copy_of {nm copies} {
   set nm [string map {\\ {}} $nm]
-  if {![regexp {(?:^|[.])(u_pd[0-9]+_[A-Za-z0-9_]+)[./][^./]+$} $nm -> c]} { return "" }
+  if {![regexp {(?:^|[.])(u_[A-Za-z0-9_]+)[./][^./]+$} $nm -> c]} { return "" }
   if {[dict exists $copies $c]} { return $c }
   return ""
 }
@@ -139,6 +140,11 @@ proc tcs_read_tsv {path} {
   return $out
 }
 
+# 1 when the flop name is a trunk stage GPL owns: a pad trunk u_pdN_.._t_<pad> or (KV-D23-REACH) a pipe trunk u_dN_.._t
+proc tcs_is_trunk {nm} {
+  set nm [string map {\\ {}} $nm]
+  return [expr {[regexp {(?:^|[.])u_pd[0-9]+_[A-Za-z0-9_]*_t_[0-9]+[./][^./]+$} $nm] || [regexp {(?:^|[.])u_d[0-9]+_[A-Za-z0-9_]*_t[./][^./]+$} $nm]}]
+}
 proc tcs_isff {i} { return [regexp {^(DFF|SDF)} [[$i getMaster] getName]] }
 proc tcs_isrep {i} { set m [$i getMaster]; return [expr {![$m isBlock] && [regexp {^(BUF|INV|HB)} [$m getName]]}] }
 proc tcs_out {i} {
@@ -304,7 +310,7 @@ proc tcs_run {} {
       set d [tcs_ffdriver [tcs_dnet [lindex $chain 0]]]
       if {[llength $d]} {
         lassign $d tf treps
-        if {[regexp {(?:^|[.])u_pd[0-9]+_[A-Za-z0-9_]*_t_[0-9]+[./][^./]+$} [string map {\\ {}} [$tf getName]]] &&
+        if {[tcs_is_trunk [$tf getName]] &&
             [$tf getPlacementStatus] ni {FIRM LOCKED COVER}} {
           foreach cell [concat [list $tf] $treps] {
             $cell setLocation {*}$t; $cell setPlacementStatus FIRM; puts $out [$cell getName]; incr ncell

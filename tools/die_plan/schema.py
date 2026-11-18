@@ -1519,7 +1519,9 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["r
         "properties": {"driver": {"type": "string"}, "driver_re": {"type": "string"}, "region_re": {"type": "string"},
                        "grid_um": {"type": "number", "exclusiveMinimum": 0}, "optional": {"type": "boolean"}, "min_loads": {"type": "integer", "minimum": 0},
                        # FABLE-DIE-S81 11-16: private k-flop copy chain per region out of the driver's own depth (0 added cycles)
-                       "copy_depth": {"type": "integer", "minimum": 1}}}}
+                       "copy_depth": {"type": "integer", "minimum": 1},
+                       # KV-D23-REACH 11-18: the driver is a reset spine landing (ot_dp_rsync); copies only from the stages after the 2 sync flops
+                       "form": {"enum": ["rsync"]}}}}
 # S81-COLGEN-3 11-17 (S81-TYPES-R3 col relay chains over hard macros, hops > 405 um): per-type relay depth rows read by
 # bind.relay_depth_map: D (1..4) extra relay-named register stages (u_y_xd_*) after the named source leaf's output port, declared
 # in bind_core_input_pipe.json.  Written by relay_depth.py from the bound module + plan geometry.

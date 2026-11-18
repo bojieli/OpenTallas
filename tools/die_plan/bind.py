@@ -1981,6 +1981,25 @@ class Binder:
         # data-lane width here or in pass 2b: unless a name-affine lane carries it (1a/2a) it rides the spine.
         spines = [(re.compile(x["pin"]), int(x.get("sync_stages", 2))) for x in self.ab.get("reset_spines", [])]
         spine_of = lambda sci, spn: next((ns for rx, ns in spines if rx.fullmatch(f"{F.cells[sci].path}.{spn}")), None)
+        # KV-D23-REACH 11-18: reset_spines[i].sink_stages = [{"types": [regex..], "sync_stages": n}] sets the landing depth
+        # of that spine in the listed SINK partition types only (n >= 2; first matching row; absent = sync_stages).  The
+        # stages past the two synchroniser flops are what reset_replicate (form rsync) hands out per consumer core.
+        sink_st = []
+        for x in self.ab.get("reset_spines", []):
+            rows = x.get("sink_stages") or []
+            if not isinstance(rows, list) or any(not isinstance(y, dict) or set(y) - {"types", "sync_stages", "note"}
+                                                 or not isinstance(y.get("types"), list) or not y["types"]
+                                                 or not isinstance(y.get("sync_stages"), int) or y["sync_stages"] < 2
+                                                 for y in rows):
+                raise BindError("asbuilt.reset_spines[].sink_stages: expected [{types: [regex..], sync_stages: int >= 2}]")
+            sink_st.append((re.compile(x["pin"]), [([re.compile(z) for z in y["types"]], y["sync_stages"]) for y in rows]))
+
+        def spine_sink_stages(sci, spn, dp, ns):
+            pin, tn_ = f"{F.cells[sci].path}.{spn}", self.parts[dp]["type"]
+            for rx, rows in sink_st:
+                if rx.fullmatch(pin):
+                    return next((n for ts_, n in rows if any(z.fullmatch(tn_) for z in ts_)), ns)
+            return ns
         for sp, dp, sci, spn, rest, other in pend2:
             rest = [b for b in rest if (dp, sci, spn, b) not in recv]
             for L in (other if spine_of(sci, spn) is None else []):
@@ -1997,7 +2016,7 @@ class Binder:
                 rest = forward(sp, dp, sci, spn, rest)
             if rest and sx is not None:
                 # a plan reset spine (asbuilt.reset_spines): async to the sink partition, released by its own clock
-                spine.append((sp, dp, sci, spn, rest, sx))
+                spine.append((sp, dp, sci, spn, rest, spine_sink_stages(sci, spn, dp, sx)))
                 self.spine_bits[f"{F.cells[sci].path}.{spn}"] += len(rest)
                 continue
             if rest:
@@ -3466,6 +3485,9 @@ class Binder:
         if any(t.get("reset_replicate") for t in (self.plan.get("partition_types") or {}).values()) \
                 and "module ot_dp_rrelay " not in cells:      # S81-COLGEN-1: the kept 1-bit copy cell
             cells += "\n" + wavefront_cells_text_only(["ot_dp_rrelay"])
+        import reset_replicate as RRP
+        if RRP.uses_rtail(self.plan) and f"module {RRP.TAIL} " not in cells:
+            cells += "\n" + RRP.TAIL_CELL                # KV-D23-REACH: reset spine relay copies (rsync form rows only)
         if (gen_rtl.uses_hold_hb4(self.plan) or core_input_uses_pad(self.plan)) and "module ot_dp_hd " not in cells:
             cells += "\n" + gen_rtl.HOLD_CELLS     # HOLDFORM-1 hold pads / latch_except_hb4 (absent = byte-identical cell file)
         (out / "bind_cells.sv").write_text(cells)
@@ -4149,11 +4171,99 @@ class Binder:
                     body.append(f"    ot_dp_lk #(.W({W + 1})) u_fl_{o}_{k} (.clk(clk), .d({nxt}), .q({nxt}_l));")
                     prev = f"{nxt}_l"
         # intra-partition kept transport stages
+        # KV-PAD-TAIL-SPLIT option (asbuilt.land_pad_tail_split, bind_pad_tail_split.py; absent = nothing below runs)
+        try:
+            ts_cfg = TS.config(self.ab)
+        except ValueError as exc:
+            raise BindError(str(exc)) from exc
+        ts_on = ts_cfg is not None and TS.selected(ts_cfg, tn)
+        ts_tab = TS.pin_table(t.get("hard_cores"), self.plan_dir) if ts_on else {}
+        ts_ltab = TS.leaf_table(t.get("hard_cores")) if ts_on else {}
+        # KV-D23-REACH pipe tail split (sub-key "pipes": true): an intra-partition pipe whose last flop feeds pins of
+        # several hard cores more than min_spread_um apart -> trunk D = N - K, the old name as the D = K tail of the readers
+        # that are not split, one kept K-stage copy per (bit, consumer core).  Depth per sink stays N; self.sinks untouched.
+        psplit, psink, pcopies, ps_row = {}, {}, {}, None
+        if ts_on and ts_cfg["pipes"]:
+            ps_row = dict(pipes=len(self.intra_dly[p]), split_pipes=0, split_bits=0, copies=0, extra_flops=0,
+                          max_spread_um=0.0, tail_depths={}, shared_tail_pipes=0,
+                          not_covered=dict(depth1=0, inner_strap=0, port_pipe=0, registered=0))
+            ps_cons, ps_all = defaultdict(list), defaultdict(int)
+            ps_isp = getattr(self, "isp", {})
+            ps_srcpipe = bool((self.plan.get("clock") or {}).get("core_link_pipe", {}).get("sources"))
+            ps_bad = defaultdict(set)
+            ps_rdm, ps_rds = relay_depth_map(self.plan, tn), relay_depth_sink_map(self.plan, tn)   # S81-COLGEN-3 stages
+            for ci in self.members[p]:
+                if self.rel_of(ci) in invalid_id_leaves:
+                    continue
+                cm = F.cells[ci].module
+                for pn, bits in F.cells[ci].ports.items():
+                    if G.dirs[ci].get(pn) != "input":
+                        continue
+                    piped = pn in core_input_lockup(self.plan, tn, cm) or bool(core_link_pipe(self.plan, tn, cm, pn)) \
+                        or (self.rel_of(ci), pn) in ps_rds
+                    for i in range(len(bits)):
+                        d = self.sinks[(ci, pn, i)]
+                        if d[0] != "int" or not d[4]:
+                            continue                         # only a pin whose sink IS the pipe (not through an OR / AND)
+                        pk = (d[1], d[2], d[4])
+                        ps_all[pk] += 1
+                        why = ("registered" if reg else "inner_strap" if (ci, pn, i) in ps_isp else "port_pipe" if piped
+                               or (ps_srcpipe and core_link_src_depth(self.plan, tn, F.cells[d[1]].module, d[2], d[3]))
+                               or (self.rel_of(d[1]), d[2]) in ps_rdm
+                               else "depth1" if d[4] < 2 else None)
+                        if why is None:
+                            ps_cons[pk + (d[3],)].append((ci, pn, i))
+                        else:
+                            ps_bad[why].add(pk + (d[3],))
+            ps_bits = defaultdict(dict)                     # pipe -> {bit: (spread, {consumer ci: core}, {core: centroid})}
+            for key in sorted(ps_cons, key=lambda k: (F.cells[k[0]].path, k[1], k[2], k[3])):
+                by, per = {}, {}
+                for ci, pn, i in ps_cons[key]:
+                    inst, xy = TS.pin_xy(ts_tab, self.rel_of(ci), pn, i, len(F.cells[ci].ports[pn]))
+                    if inst is None:
+                        inst, xy = TS.leaf_xy(ts_ltab, self.rel_of(ci))
+                    if inst is not None:
+                        by.setdefault(inst, []).append(xy)
+                        per[(ci, pn, i)] = inst
+                ks = TS.tail_depth(1, by, ts_cfg)           # (1, spread) when the bit's pins are on >= 2 cores far apart
+                if ks is not None:
+                    ps_bits[key[:3]][key[3]] = (ks[1], per, TS.centroids(by))
+            for why, keys in ps_bad.items():
+                ps_row["not_covered"][why] = len(keys)
+            for pk in sorted(ps_bits, key=lambda k: (F.cells[k[0]].path, k[1], k[2])):
+                kd = TS.pipe_depth(pk[2], [v[0] for v in ps_bits[pk].values()], ts_cfg)
+                if not kd:
+                    continue
+                nsplit = sum(len(v[1]) for v in ps_bits[pk].values())
+                ncopy = sum(len(v[2]) for v in ps_bits[pk].values())
+                shared = ps_all[pk] > nsplit                # some reader keeps the shared tail
+                psplit[pk] = dict(k=kd, shared=shared, cent={b: v[2] for b, v in ps_bits[pk].items()})
+                for b, v in ps_bits[pk].items():
+                    for u, inst in v[1].items():
+                        psink[u] = (pk, b, inst)
+                W = len(F.cells[pk[0]].ports[pk[1]])
+                ps_row["split_pipes"] += 1
+                ps_row["split_bits"] += len(ps_bits[pk])
+                ps_row["copies"] += ncopy
+                ps_row["extra_flops"] += ncopy * kd - (0 if shared else kd * W)
+                ps_row["shared_tail_pipes"] += int(shared)
+                ps_row["max_spread_um"] = max(ps_row["max_spread_um"], round(max(v[0] for v in ps_bits[pk].values()), 3))
+                ps_row["tail_depths"][str(kd)] = ps_row["tail_depths"].get(str(kd), 0) + 1
         dly_w = {}
         for (sci, spn, st) in sorted(self.intra_dly[p], key=lambda x: (F.cells[x[0]].path, x[1], x[2])):
             W = len(F.cells[sci].ports[spn])
             nm = short_id(f"d{st}_{self.rel_of(sci)}__{spn}", 90)
             dly_w[(sci, spn, st)] = nm
+            sp = psplit.get((sci, spn, st))
+            if sp is not None:
+                decl.append(f"    wire [{W - 1}:0] {nm}_t;")
+                body.append(f"    ot_dp_dly #(.W({W}), .D({st - sp['k']})) u_{nm}_t (.clk(clk), .d({drv_w[(sci, spn)]}), "
+                            f".q({nm}_t));  // pipe trunk: shared stages of the {st}-stage pipe (tail split)")
+                if sp["shared"]:
+                    decl.append(f"    wire [{W - 1}:0] {nm};")
+                    body.append(f"    ot_dp_dly #(.W({W}), .D({sp['k']})) u_{nm} (.clk(clk), .d({nm}_t), .q({nm}));  "
+                                f"// pipe tail of the readers that are not split ({st} stages with the trunk)")
+                continue
             decl.append(f"    wire [{W - 1}:0] {nm};")
             body.append(f"    ot_dp_dly #(.W({W}), .D({st})) u_{nm} (.clk(clk), .d({drv_w[(sci, spn)]}), .q({nm}));")
         orn = {}
@@ -4214,6 +4324,21 @@ class Binder:
                         r8banks[site] = (nb, sb)
                     nb, sb = r8banks[site]
                     return f"{nb}[{sb.index(i)}]"
+                ps = psink.get((ci, pn, i))
+                if ps is not None and d[4] and (d[1], d[2], d[4]) == ps[0] and d is self.sinks[(ci, pn, i)]:
+                    # KV-D23-REACH pipe tail split: this pin reads the K-stage copy of its own core (trunk + copy = d[4])
+                    pk, pbit, tag = ps
+                    ckey = (pk, pbit, tag)
+                    if ckey not in pcopies:
+                        kd, wn = psplit[pk]["k"], dly_w[pk]
+                        nm = short_id(f"pd{kd}_{wn}_{pbit}_{sv_id(tag)}_{pk[2]}", 100)
+                        pcopies[ckey] = nm
+                        decl.append(f"    wire [0:0] {nm};")
+                        if tag in psplit[pk]["cent"].get(pbit, {}):
+                            ps_row.setdefault("sites", {}).update(TS.site_rows(f"u_{nm}", kd, psplit[pk]["cent"][pbit][tag]))
+                        body.append(f"    {TS.KEEP_MODULE} #(.W(1), .D({kd})) u_{nm} (.clk(clk), .d({wn}_t[{pbit}]), "
+                                    f".q({nm}));  // landing pad tail copy for core {tag}: pipe tail, as-built relative timing")
+                    return f"{pcopies[ckey]}[0]"
                 w = dly_w[(d[1], d[2], d[4])] if d[4] else drv_w[(d[1], d[2])]
                 return f"{w}[{d[3]}]"
             if k == "x":
@@ -4415,13 +4540,7 @@ class Binder:
         tsplit = {}
         ts_cent = {}
         bcopy = {}
-        try:
-            ts_cfg = TS.config(self.ab)
-        except ValueError as exc:
-            raise BindError(str(exc)) from exc
-        if ts_cfg is not None and TS.selected(ts_cfg, tn):
-            ts_tab = TS.pin_table(t.get("hard_cores"), self.plan_dir)
-            ts_ltab = TS.leaf_table(t.get("hard_cores"))
+        if ts_on:
             ts_r8 = getattr(self, "r8sp", {})
             ts_cons, ts_other = defaultdict(list), defaultdict(list)
 
@@ -4476,6 +4595,8 @@ class Binder:
                 by, _per = ts_cores(ts_other[key])
                 if TS.tail_depth(1, by, ts_cfg) is not None:
                     ts_row["not_covered"][key[0]] += 1
+            if ps_row is not None:
+                ts_row["pipes_split"] = ps_row               # KV-D23-REACH: only with the "pipes" sub-key
             self.__dict__.setdefault("_pad_tail_split", {})[tn] = ts_row
             if ts_cfg["wire_leaves"]:
                 # BIN-COPY (N4.1, land_pad_tail_split.wire_leaves): an in-boundary flop bit (pad 0) that reaches the pins
@@ -4804,6 +4925,8 @@ class Binder:
             insts.append(f"    // as-built {c.path}\n    {c.module}{pstr} {short_id('u_' + r, 90)} (\n{cs}\n    );")
         if tsplit and len(set(pads.values())) != len(pads):
             raise BindError(f"land_pad_tail_split {tn}: landing pad wire names collide")
+        if pcopies and (len(set(pcopies.values())) != len(pcopies) or set(pcopies.values()) & set(pads.values())):
+            raise BindError(f"land_pad_tail_split {tn}: pipe tail copy wire names collide")
         if core_reset_rows:
             self.__dict__.setdefault("_bound_core_resets", {})[tn] = [
                 dict(inst=i, leaf=short_id("u_" + self.rel_of(k[0]), 90), pin=k[1], reset=core_reset[k])
@@ -6763,7 +6886,7 @@ def cmd_kit_rtl(a):
     idx = E.module_index(ab0.get("rtl_roots", ["rtl"]), [rebase(x) for x in ab0.get("files", [])] + [rebase(x) for x in rep.get("extra_lib", [])], base)
     leafm = sorted(set(re.findall(r"^\s+(\w+)\s+(?:#\(.*?\)\s+)?u_\w+\s*\(", btxt, re.M)) -
                    set(re.findall(r"^module\s+(\w+)", btxt, re.M)) -
-                   {"ot_dp_st", "ot_dp_dly", "ot_dp_dly_keep", "ot_dp_or", "ot_dp_and", "ot_dp_rsync", "ot_reset_sync", "ot_dp_rrelay", "ot_dp_rrelay_nl", "ot_dp_rgate", "ot_dp_rsync_s2", "ot_dp_rsync_s3", "ot_dp_lockq"})
+                   {"ot_dp_st", "ot_dp_dly", "ot_dp_dly_keep", "ot_dp_or", "ot_dp_and", "ot_dp_rsync", "ot_reset_sync", "ot_dp_rrelay", "ot_dp_rrelay_nl", "ot_dp_rgate", "ot_dp_rsync_s2", "ot_dp_rsync_s3", "ot_dp_lockq", "ot_dp_rtail"})
     if spb_geometry:
         leafm = [name for name in leafm if name != 'ot_hbm_spb0_regs']
     picks = {}

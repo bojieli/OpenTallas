@@ -19,6 +19,24 @@ S / 2 is the longest branch when the trunk ends at the L1 centre of the consumer
 track_offset + orient(pin)), hop_um the register reach.  The depth per sink stays `pad`: only the emitted instances
 change, the sink descriptors (R8 table, bind_latency / lane as-built records, LATCHECK input) are untouched.
 
+Pipes (KV-D23-REACH 11-18, opt-in sub-key "pipes": true; absent or false = byte-identical): the same rule for an
+INTRA-partition kept transport pipe `ot_dp_dly #(.W(W), .D(N)) u_d<N>_<leaf>_<port>` (bind.py "intra-partition kept
+transport stages") whose last flop feeds pins of several hard cores (kv3_pv_v12: u_d60_vport_*_out_v_hi.q -> kv3_pv_pair
+s1__pv2, 1,447 endpoints, -683 ps at placement).  For a pipe with at least one bit whose consumer pins sit on two or more
+plan hard cores more than min_spread_um apart:
+
+    trunk   ot_dp_dly #(.W(W), .D(N - K)) u_d<N>_.._t          shared stages, all bits
+    tail    ot_dp_dly #(.W(W), .D(K))     u_d<N>_..            the old name and wire, for readers that are not split
+                                                               (absent when every reader of the pipe is split)
+    copy    ot_dp_dly_keep #(.W(1), .D(K)) u_pd<K>_d<N>_.._<bit>_<core>_<N>    one per split (bit, consumer core)
+
+    K = min(N - 1, max(1, ceil((S / 2) / hop_um))),  S = the largest spread over the split bits of the pipe
+
+One K per pipe (the trunk is one module); N = 1 pipes are not split (no stage to take the copy from).  The copy lines carry
+the pad tail-copy marker and a u_pd<K>_ name, so the siting hook (gen_phys.tail_copy_place, tail_copy_anchor.tcl) lists and
+sites them like pad copies.  Only a pin whose sink IS the pipe is split: readers through a re-emitted OR / AND, INNER strap
+banks and ports with a declared core-input pipe / lockup keep the shared tail (counted in the record).
+
 A consumer that is a soft leaf (no plan pin xy) holding plan hard cores counts as ONE consumer at the centroid of those
 cores (leaf_xy).  Not covered (left as emitted today, counted in bind_pad_tail_split.json): R8 strap-count banks (ot_dp_dly_cnt),
 PAD_TREE types, position-bank members, registered-pin hard partitions; consumers that are not plan hard cores (or have
@@ -81,13 +99,13 @@ def config(ab):
     if c is None:
         return None
     if not isinstance(c, dict) or not isinstance(c.get("types"), list) or not c["types"] or \
-            set(c) - {"types", "min_spread_um", "hop_um", "wire_leaves"}:
-        raise ValueError(f"asbuilt.{KEY}: expected {{types: [regex..], min_spread_um, hop_um[, wire_leaves]}}")
+            set(c) - {"types", "min_spread_um", "hop_um", "wire_leaves", "pipes"} or not isinstance(c.get("pipes", False), bool):
+        raise ValueError(f"asbuilt.{KEY}: expected {{types: [regex..], min_spread_um, hop_um[, wire_leaves][, pipes: bool]}}")
     wl = c.get("wire_leaves", [])
     if not isinstance(wl, list) or not all(isinstance(x, str) and x for x in wl) or ("wire_leaves" in c and not wl):
         raise ValueError(f"asbuilt.{KEY}.wire_leaves: expected a non-empty list of as-built leaf module names")
     out = dict(types=[re.compile(x) for x in c["types"]], min_spread_um=float(c.get("min_spread_um", 400.0)),
-               hop_um=float(c.get("hop_um", 380.0)), wire_leaves=frozenset(wl))
+               hop_um=float(c.get("hop_um", 380.0)), wire_leaves=frozenset(wl), pipes=bool(c.get("pipes", False)))
     if out["hop_um"] <= 0 or out["min_spread_um"] < 0:
         raise ValueError(f"asbuilt.{KEY}: hop_um must be > 0 and min_spread_um >= 0")
     return out
@@ -176,3 +194,11 @@ def bin_spread(by_core, cfg):
         return None
     s = spread([xy for v in by_core.values() for xy in v])
     return s if s > cfg["min_spread_um"] else None
+
+
+def pipe_depth(n, spreads, cfg):
+    """K (tail-copy stages) of an n-stage intra-partition pipe whose split bits have the consumer pin spreads `spreads`
+    (each already over min_spread_um), or 0 when the pipe is not split: one trunk stage always stays"""
+    if n < 2 or not spreads:
+        return 0
+    return min(n - 1, max(1, math.ceil((max(spreads) / 2.0) / cfg["hop_um"])))

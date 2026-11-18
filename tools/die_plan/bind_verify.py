@@ -33,6 +33,8 @@ VERIFY_RULES = {
          "stages": 0, "stages_port": "strap_cnt"},
         {"module": "ot_dp_rsync", "map": {"q": "a"}, "drop_in": ["clk"], "stages": 2, "stages_param": "S"},
         {"module": "ot_dp_rrelay", "map": {"q": "d"}, "drop_in": ["clk"], "stages": 1},
+        # KV-D23-REACH reset spine relay copy (reset_replicate form rsync): D stages after the synchroniser, traced through d
+        {"module": "ot_dp_rtail", "map": {"q": "d"}, "drop_in": ["clk", "a"], "stages": 1, "stages_param": "D"},
         # CLK form #7 lockup relay: posedge state + negedge re-launch = still ONE cycle
         {"module": "ot_dp_rrelay_nl", "map": {"q": "d"}, "drop_in": ["clk"], "stages": 1},
         # TYPE-SAFE-1 11-06 ft hop lockup latch (bind.ft_hop_lockup): transparent-low after a station flop = 0 cycles
@@ -81,7 +83,7 @@ DIRECTIVES = {"define", "undef", "undefineall", "ifdef", "ifndef", "elsif", "els
               "endprotect", "verilator_config", "systemc_header", "systemc_interface", "systemc_imp_header",
               "systemc_implementation", "systemc_ctor", "systemc_dtor"}
 BIND_CELLS = {"ot_dp_st", "ot_dp_dly", "ot_dp_dly_keep", "ot_dp_or", "ot_dp_and", "ot_dp_rsync", "ot_reset_sync", "ot_dp_rrelay", "ot_dp_rrelay_nl", "ot_dp_rgate",
-              "ot_dp_rsync_s2", "ot_dp_rsync_s3", "ot_dp_lockq"}
+              "ot_dp_rsync_s2", "ot_dp_rsync_s3", "ot_dp_lockq", "ot_dp_rtail"}
 
 
 def declared_missing(ab0, base):
