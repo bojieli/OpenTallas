@@ -1,0 +1,39 @@
+{
+ "accepted_errors": [
+  {
+   "check": "cuts",
+   "level": "ERROR",
+   "msg": "horizontal cut at 10500: s_0S_L0 segment carries 4464 bits on 6686 tracks = 0.67 > 0.6",
+   "part": "s_0S_L0"
+  },
+  {
+   "check": "cuts",
+   "level": "ERROR",
+   "msg": "horizontal cut at 10750: s_6S_L0 segment carries 4186 bits on 6672 tracks = 0.63 > 0.6",
+   "part": "s_6S_L0"
+  },
+  {
+   "check": "cuts",
+   "level": "ERROR",
+   "msg": "horizontal cut at 12500: s_0S_L1 segment carries 3654 bits on 5560 tracks = 0.66 > 0.6",
+   "part": "s_0S_L1"
+  },
+  {
+   "check": "cuts",
+   "level": "ERROR",
+   "msg": "horizontal cut at 12750: s_0S_L1 segment carries 3654 bits on 5965 tracks = 0.61 > 0.6",
+   "part": "s_0S_L1"
+  },
+  {
+   "check": "cuts",
+   "level": "ERROR",
+   "msg": "horizontal cut at 20000: s_4N_L1 segment carries 3750 bits on 4064 tracks = 0.92 > 0.6",
+   "part": "s_4N_L1"
+  }
+ ],
+ "review": "S81-DIE-R3 2026-11-17: D7w (plan 1698c515 = D6z + D7 strip rows + t51 native_w signed rc51f repoint) on main 53e4ff8612 tools. G0 ERROR set = 5: the 5 die-cut identities (s_0S_L0@10500, s_6S_L0@10750, s_0S_L1@12500/12750, s_4N_L1@20000) carried since the D6 baseline. The 25 ft_channel_tracks identities of D6z are GONE (ft_channel_tracks over 0, worst 0.695 < 0.7), which clears hold s81-ft-channel-d6z-1117. 0 new identities. Cut fix = D8 (12 rigid y moves, posted; census 0 segments > 0.58).",
+ "reviewed_g0_sha256": "40601c860089f42a5fe6e968c49b944758de3285b76c3ec1ffbd150e8142ec87",
+ "reviewed_g0_source": "epyc8:/srv/opentallas-scratch2/claude/s81-die-r3-e8/d7w/r1/g0/g0_report.json",
+ "reviewed_plan_sha256": "1698c515003deb5469521f7811ef6d644438c10f741ceef7c4bbacf72e8876c9",
+ "schema": "opentallas.publish_gate.g0_baseline.v1"
+}
