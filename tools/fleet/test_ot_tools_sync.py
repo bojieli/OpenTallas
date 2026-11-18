@@ -168,6 +168,17 @@ class SyncAlert(unittest.TestCase):
         self.assertEqual(m.sync_guarded("", True, False), 1)
         self.assertEqual(posted[0][0], False); self.assertIn("93 GB free", posted[0][1])
 
+    def test_sync_guarded_prints_the_failure_reason_for_the_merge_queue_note(self):
+        import io, contextlib
+        m = self.load()
+        m.sync = lambda *a, **k: (_ for _ in ()).throw(RuntimeError("/rt: 62 GB free < 100 GB (OT_RT_MIN_FREE_GB)"))
+        m.sync_alert = lambda *a, **k: None
+        m.MQ = pathlib.Path(tempfile.mkdtemp())
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            m.sync_guarded("", True, False)
+        self.assertIn("SYNC FAILED RuntimeError: /rt: 62 GB free < 100 GB", out.getvalue())
+
 
 class PruneRefs(unittest.TestCase):
     def load(self):

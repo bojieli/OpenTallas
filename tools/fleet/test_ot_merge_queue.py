@@ -43,6 +43,14 @@ class SyncReporting(unittest.TestCase):
         self.assertIn("rt/current unchanged: smoke failed before activation", note)
         self.assertIn("stderr context", note)
 
+    def test_floor_refusal_is_the_note_not_the_last_prune_line(self):
+        r = subprocess.CompletedProcess([], 1,
+            "2026-11-17 20:40:39 SYNC pruned 1 old snapshots (kept 10 newest + current): e757ea57282d\n"
+            "2026-11-17 20:40:40 SYNC FAILED RuntimeError: /srv/opentallas-scratch2/claude/rt: 62 GB free < 100 GB (OT_RT_MIN_FREE_GB); nothing written (pruned 1)\n", "")
+        note = M.sync_hook_note(r)
+        self.assertTrue(note.startswith("RuntimeError: /srv/opentallas-scratch2/claude/rt: 62 GB free < 100 GB"))
+        self.assertNotIn("not reported", note)
+
     def test_unreported_state_never_claims_current_unchanged(self):
         note = M.sync_hook_note(subprocess.CompletedProcess([], 1, "", "Traceback: failed after flip"))
         self.assertIn("activation state not reported", note)

@@ -1382,11 +1382,14 @@ def sync_hook_note(result):
     lines = [line.strip() for line in (result.stdout or "").splitlines() if line.strip()]
     current = next((line for line in reversed(lines) if line.startswith("rt/current -> ")), "")
     smoke = next((line for line in lines if line.startswith("SMOKE-FAIL ")), "")
+    failed = next((line for line in reversed(lines) if " SYNC FAILED " in line), "")     # ot-tools-sync sync_guarded: the exception text (e.g. hub free GB < OT_RT_MIN_FREE_GB)
     if current:
         parts = [current]
         parts += [line for line in lines if line.startswith("ALERT ")]
     elif smoke:
         parts = [smoke, "rt/current unchanged: smoke failed before activation"]
+    elif failed:
+        parts = [failed.split(" SYNC FAILED ", 1)[1].strip()] + [line for line in lines[-3:] if line != failed and " SYNC " in line]
     else:
         parts = lines[-3:] or ["runtime activation state not reported"]
     note = " ; ".join(parts)[:1600]
