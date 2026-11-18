@@ -42,6 +42,8 @@ import time
 KW45 = "/srv/opentallas-scratch2/claude/kw45"
 MANIFEST, HASHFILE, LINKBASE, SNAPGROUP = ".src-manifest.json", ".src-manifest.sha256", ".link-base", ".snap-group"
 SSH = ["ssh", "-o", "BatchMode=yes", "-o", "ControlPath=none"]
+FLEET = os.environ.get("OT_LIVE_HOSTS", "intel1 epyc2 epyc7 epyc8 epyc9 epyc10").split()   # --hosts fleet
+FLOOR_GB = float(os.environ.get("OT_LIVE_FLOOR_GB", "100"))     # r709 disk floor: a host keeps this much free after the copy
 
 
 def live_path(die, root=KW45):
@@ -253,9 +255,51 @@ def rewrite_candidate(old, old_tree, new_tree, new_hash, event="", pack_shas=Non
     return c
 
 
+def host_state(h, live):
+    """-> (has_live, free_gb, live_gb or None)"""
+    cmd = (f"test -d {shlex.quote(live)} && echo HAVE $(du -sB1G {shlex.quote(live)} | cut -f1) || echo NONE; "
+           f"df -BG --output=avail {shlex.quote(os.path.dirname(live))} | tail -n1")
+    p = subprocess.run(SSH + [h, cmd], capture_output=True, text=True, timeout=1800)
+    ln = p.stdout.split()
+    if p.returncode or len(ln) < 2:
+        return None, 0.0, None
+    free = float(ln[-1].rstrip("G"))
+    return (ln[0] == "HAVE"), free, (float(ln[1]) if ln[0] == "HAVE" else None)
+
+
+def replicate(hosts, live):
+    """FABLE-FLOW-0800 E: every build host with room gets the live tree (host-to-host rsync from a host that has it, ONCE per host;
+    later changes travel as packs).  -> hosts that have it now.  A host without room (free - tree < FLOOR_GB) is skipped and named."""
+    st = dict(zip(hosts, fanout(hosts, lambda h: host_state(h, live)).values()))
+    have = [h for h in hosts if st[h][0]]
+    if not have:
+        raise SystemExit(f"LIVE_TREE FAIL: no host of {hosts} has {live} (seed it first)")
+    size = max(st[h][2] or 0 for h in have)
+    src = have[0]
+    todo = [h for h in hosts if st[h][0] is False]
+
+    def copy(h):
+        free = st[h][1]
+        if free - size < FLOOR_GB:
+            return False, f"{free:.0f} GB free, tree {size:.0f} GB, floor {FLOOR_GB:.0f}: not copied"
+        part = live + ".seeding"
+        cmd = (f"mkdir -p {shlex.quote(os.path.dirname(live))} && rm -rf {shlex.quote(part)} && "
+               f"rsync -a -e 'ssh -o BatchMode=yes -o ControlPath=none' {shlex.quote(src)}:{shlex.quote(live)}/ {shlex.quote(part)}/ && "
+               f"mv -T {shlex.quote(part)} {shlex.quote(live)}")
+        p = subprocess.run(SSH + [h, cmd], capture_output=True, text=True, timeout=6 * 3600)
+        return p.returncode == 0, (p.stderr or p.stdout).strip()[-300:] or "ok"
+    for h, (ok, note) in zip(todo, fanout(todo, copy).values()) if todo else []:
+        print(f"[{h}] replicate {'ok' if ok else 'SKIPPED'} from {src}: {note}")
+        if ok:
+            have.append(h)
+    return [h for h in hosts if h in have]
+
+
 def hub_apply(a, pack):
-    hosts = [h for h in a.hosts.split(",") if h]
+    hosts = [h for h in a.hosts.split(",") if h] if a.hosts != "fleet" else list(FLEET)
     live, snaps = live_path(a.die, a.root), snap_root(a.die, a.root)
+    if a.replicate or a.hosts == "fleet":
+        hosts = replicate(hosts, live)
     name = a.name or snap_name(a.die, pack)
     stage = f"{a.root}/live_packs/{name}" if pack else ""
 
@@ -325,6 +369,7 @@ def main(argv=None):
             p.add_argument("--candidate", default="")
             p.add_argument("--out", default="")
             p.add_argument("--event", default="")
+            p.add_argument("--replicate", action="store_true", help="first copy the live tree to every listed host that lacks it and has room")
     a = ap.parse_args(argv)
     if a.cmd == "reloc-pack":
         reloc_pack(a.tree, a.old, a.new, [f for f in a.files.split(",") if f], a.out, a.digest)

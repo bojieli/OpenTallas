@@ -135,6 +135,22 @@ class LiveTree(unittest.TestCase):
         m1 = json.load(open(os.path.join(new, SM.MANIFEST)))
         self.assertEqual(SM.verify(new, expect=m1["manifest_hash"], ro=True, full=True)[0], [])
 
+    def test_replicate_copies_only_where_room(self):
+        st = {"h1": (True, 500.0, 49.0), "h2": (False, 400.0, None), "h3": (False, 120.0, None), "h4": (None, 0.0, None)}
+        ran = []
+        orig_hs, orig_run = LT.host_state, LT.subprocess.run
+        LT.host_state = lambda h, live: st[h]
+
+        class P:
+            returncode, stdout, stderr = 0, "", ""
+        LT.subprocess.run = lambda argv, **k: ran.append(argv[-2]) or P()
+        try:
+            got = LT.replicate(["h1", "h2", "h3", "h4"], "/k/live_d")
+        finally:
+            LT.host_state, LT.subprocess.run = orig_hs, orig_run
+        self.assertEqual(got, ["h1", "h2"])                        # h3: 120 - 49 < 100 floor; h4 unreachable
+        self.assertEqual(ran, ["h2"])
+
     def test_rewrite_candidate(self):
         old = {"tree": "/k/src_r3c", "manifest_hash": "x", "src_manifest_sha": "x", "plan": "/k/src_r3c/physical/p.json",
                "config": {"event": "e3", "gen_args": ["--c", "/k/src_r3c/s.json"], "gen_hosts": ["h1", "h2"], "gen_host": "h1"}}
