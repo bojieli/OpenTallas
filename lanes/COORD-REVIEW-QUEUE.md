@@ -26173,3 +26173,6 @@ FAILED [AUTOPILOT d095964b0830] 2026-11-19 00:48:55 PST AUTOPILOT -> KIT-WAVE-5:
   STALE>3H 2 (KV kv3_hgi_v3, kv3_pv), both family-covered (FABLE-FIX-KV-HG, KV-HUBPV-1118).
   Largest owners: KIT-WAVE(auto) 170, FABLE-FIX-S81-COLH9R1 83, WAVE-PILOT-FIX 74, FABLE-FIX-QC 30.
   Nothing needs a new lane.
+- 2026-11-19 00:53 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-19 00:52 PST: 439 running jobs, PROGRESSING 433, SLOW 4, NO-PROGRESS 2 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc8 svc_hi_dsdv_svc_rs__t3 4_1_cts stage 41.5 h job 54.9 h: no new meaningful log line for 11.4 h; last: [WARNING STA-0450] virtual clock vclk can not be propagated.
+  NO-PROGRESS epyc9 serdes__t13 signoff_meas_072023 stage 25.5 h job 26.7 h: no new meaningful log line for 25.1 h; last: - hold_ff: FAIL WNS -55.85 ps < 0
