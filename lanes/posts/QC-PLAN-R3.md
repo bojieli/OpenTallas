@@ -549,3 +549,12 @@
   - n46ct_e on epyc10 -> qc-plan-r3-wf/n46ct_e.
   - Both logs confirm CA_WRITE_EDGE --ca-write-fall with the original plan shas, e5278ab8ecab and 95ff32087292.
   - I will post the fall-write STA_C TT/FF (fails, worst lo/hi) against the rise numbers, and patch chain_qc.sh to pass the write edge from the plan for later runs.
+- 2026-11-19 13:42 PST QC-PLAN-R3 binds N46J..N46N (epyc9 W9):
+  - n46j (f3, cbf_q00_s2 own START + landing_remap + anchor re-record): BIND_ERRORS 0, LATCHECK 1921/1921, G0 = control (4 KITFIT only). RESET_ANCHOR fixed.
+  - n46k: green, same G0.
+  - n46m (f4a = cbn_q11 b_d re-site + cbf_q00 bc_i stations, 0 cycles, no bcf lane +1): BIND_ERRORS 0, LATCHECK 1921/1921, G0 = control (kit_fit only). GREEN.
+  - n46l (f4 with bcf 3->4) and n46n (e4 on f4): FAIL PARAM_REGEN "coll_regen W5 S: no column pad up to 9 balances the tree" (+ cascaded HARD_CORE_PARAM_WRAP). The bcf +1 breaks coll tree balance. Dropped; f4a carries the fixes without it.
+  - New form N46P = f4a + e4 (x_fw_ctl stations, footprint-checked; b_tw bin bits 29..1079) + e5 (b_tw bits 0..28 bin/pd1 re-site, legs <=362 um) + FAIL-CLASS 9f0aa8e166 fix (sle_su_l0__cl7a55c676 core taps -> parent_budget, tap check OK). Plan 49494531985e; compose-check dedupe: 0 new collisions. Bind + G0 launched.
+  - Kits (gated on bind green): pk46_s2b cbf_q00_s2 CTS TT on n46m (FABLE stop-list prerequisite for f3/f4); pk46_ctl5 control sle_st_a_v2__pv30dda31f__pvd2ec7769 GRT on n46m; pk46_e6 same type on n46p (A/B for box B1/B2).
+  - coll_core wall rows: will compose onto n46m (the green one) when the coll_core lane hands them over.
+  - Re-time (fall-write STA_C) for n43cb/n46ct_e still running; post follows.
