@@ -1,0 +1,12 @@
+{
+ "lane": "FABLE-TYPE-REDUCE-QC",
+ "die": "qwen_compute",
+ "base_plan": "zz_s29_qc103_s4q9n43.json (snap qwen_compute_n43_s1)",
+ "kind": "free type merge (stale pv split); apply with the next st_a event and its bind",
+ "evidence": {"bound_rtl_sha_name_stripped": "9ef6a8b653", "plan_leaves_equal": "7247 of 7255; the 8 are module, note, param_base_type, collector_tree.type, 4 hard_cores[].note"},
+ "rows": [
+  {"op": "set", "path": "partitions[name=sl_E3_st_a].type", "from": "sle_st_a_v2__pv4242de79", "to": "sle_st_a_v2__pv30dda31f__pvd2ec7769"},
+  {"op": "delete", "path": "partition_types.sle_st_a_v2__pv4242de79"}
+ ],
+ "check": "bind: rtl/sle_st_a_v2__pv30dda31f__pvd2ec7769.sv unchanged; param_class_split must not re-split (instance params of sl_E1_st_a and sl_E3_st_a are equal on N4.3)"
+}
