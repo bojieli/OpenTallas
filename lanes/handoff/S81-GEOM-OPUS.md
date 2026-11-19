@@ -80,3 +80,16 @@ Owns S81 strip-leaf congestion and the col bank-leaf reach. Rows go to S81-DIE-R
 - Rows handed to S81-DIE-R3 (epyc2 /srv/opentallas-scratch3/claude/s81-geom-opus-e2/): plan_combo.json 709df38dfbe0 (fc2 + all rows), rows_h9r1_p6halo_d8e.json 9f7e40e70f45 (H9R1-FRAME-1 o0+i0 in 60 types, p6 cf/t0 halo), rows_halo_col_d8e.json e8737c5c328a (class halo in 216 col types). The t40 v2 type entry is in plan_combo; epyc8 rows_face_clear_d8e_v2.json is c654144fe132.
 - p6 halo route proof is blocked: bind.py kit-rtl refuses a kit from a failing global bind ("needs an explicit verified LOCAL component proof"). Kit gen script epyc2 .../s81-geom-opus-e2/kits_combo.sh; the gate_combo/src tools carry the HALO-1 patch. Rerun it on the first D8e bind with BIND_RC=0.
 - Bank proof kit (epyc2 /srv/opentallas-scratch3/claude/s81-geom-opus-bank): place OK (RELAY_SITES 127/128, MID_FIT 3, RESET_V5 nothing to prune), CTS done, in GRT now; route chain ~/s81-geom-opus-chain3.sh.
+
+## 2026-11-18 14:xx col_h10_r1 d1 site + col_h9_r2 bank move (handed to S81-DIE-R3)
+- H10R1-D1-1 rows: epyc2 /srv/opentallas-scratch3/claude/s81-geom-opus-e2/rows_h10r1_d1_d8e.json (f8bd29e2d308), 12 col_h10_r1 types, relay_sites u_d1_11_Y.q = (716.04, 483.12).
+  - Path: lpad frame_int_i1 bit 819 -> u_d1_11_Y -> u_ist_frame_int_o0_0 bit 1229.
+  - Kit pv86f5e3b9: pad bit (1228,301), the GPL-placed d1 was 1,274 um away, the station bit is at (207,665).
+  - The midpoint gives 693 um per cycle; siting at the pad bit would put 1,388 um into the next cycle.
+  - col_h10_r2 has no such flop; its wns is the cfg relay class (tns -7 ns), so no row.
+  - Gate h10: same errors as control, LATCHECK 873/873, G0 0 NEW.
+- H9R2-BANK-1 rows: rows_h9r2_bank_d8e.json (e6fc4426740b), 60 col_h9_r2 types.
+  - Pilot TT -59.45 is the ROM u_e11_u_w pval (falling-edge half-cycle launch, 610 ps clk->Q) -> u_bn11 e_r0, 259 um of wire. Not lpad->d1 and not frame-station. The second path (-25.82) is the frame_int_i0 input port IO budget.
+  - Move bn11 x 1140.48 -> 1046.088 and bn12 x 155.52 -> 201.528, to the midpoint of the u_w / u_e pval rows (e_r0 and e_r1 both at 151-160 um, was 245/206 and ~40).
+  - Gate h9r2 (plan_combo_h10_r2.json bb0d0d1e95b2, includes all my rows): same errors as control, LATCHECK 873/873, G0 0 NEW.
+- Est. bn11 slack after the move is about +13 ps (wire 0.76 ps/um), so a kit proof is needed. It is blocked like p6: kit-rtl refuses a failing global bind.
