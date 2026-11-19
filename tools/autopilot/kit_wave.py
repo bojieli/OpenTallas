@@ -2366,7 +2366,7 @@ def backfill_norm_blocks(AP, cfg, st, die, max_probes=3):
     probes = 0
     for r in (st.get("items") or {}).values():
         signed = str(r.get("q_status") or "").upper() in ("SIGNED", "SIGNED-LINKED")
-        if r.get("die") != die or r.get("norm_block") or not r.get("block_sha") or not (signed or (r.get("status") in ("RUNNING", "LAUNCHING", "ENQUEUED") and r.get("event") != d.get("event"))):
+        if r.get("die") != die or (r.get("norm_block") and r.get("norm_v") == PROBE_V) or not r.get("block_sha") or not (signed or (r.get("status") in ("RUNNING", "LAUNCHING", "ENQUEUED") and r.get("event") != d.get("event"))):
             continue
         try:
             plan = json.loads((Path(r["dir"]) / "spec.json").read_text()).get("plan")
@@ -2374,7 +2374,7 @@ def backfill_norm_blocks(AP, cfg, st, die, max_probes=3):
             continue
         if not plan:
             continue
-        key = f"{d.get('gen_host')}:{plan}"
+        key = f"{d.get('gen_host')}:{plan}|v{PROBE_V}"
         if key not in cache:
             if probes >= max_probes or AP.DRY:
                 continue
@@ -2387,6 +2387,7 @@ def backfill_norm_blocks(AP, cfg, st, die, max_probes=3):
         c = cache[key]
         if c["blocks"].get(r.get("item")) == r.get("block_sha") and c["norm"].get(r.get("item")):
             r["norm_block"] = c["norm"][r["item"]]
+            r["norm_v"] = PROBE_V
 
 
 def row_inputs_unchanged(cfg, die, r, item, cur_blocks, cur_norm=None):
@@ -8481,7 +8482,7 @@ def _descends(AP):
     return f
 
 
-PROBE_V = 8   # DIE-KV-62/types 11-02: bump when the probe output changes (a cached older probe is re-run); 3 = KW-FIX-4 lint
+PROBE_V = 9   # DIE-KV-62/types 11-02: bump when the probe output changes (a cached older probe is re-run); 3 = KW-FIX-4 lint
 #              4 = KW-PROV-1 prov_deps (every planned + noview child of a type) + bound (signed lef/lib per module)
 #              5 = DIE-HBM-89-TGEN unbound (plan buses with no leaf binding: the plan-wrapper gen cannot bind them)
 PROBE_PLAN = Path(BI.__file__).read_text().rsplit("\nif __name__", 1)[0] + f"\nPROBE_V = {PROBE_V}\n" + r'''
@@ -8505,33 +8506,8 @@ try:
     blocks = {name: value["block_sha"] for name, value in ids.items()}
     # OWNER 11-18: a type node holds absolute paths WITH the tree name (clock.sink_bins_file ...), so every tree rename changes the raw hash.  norm_blocks = the same profiles hashed with every
     # path under a src_* tree rewritten to a tree-relative path plus the sha1 of the referenced file's CONTENT.  The raw block_sha (row identity / item key) is unchanged.
-    _TR = re.compile(r"(/[^\"\s]*?/)(src_[A-Za-z0-9_.+-]+)(/[^\"\s]*)?")
-    _FH = {}
-    def _norm_s(s):
-        def rep(m):
-            rest = m.group(3) or ""
-            out = "<tree>" + rest
-            if rest:
-                f = m.group(1) + m.group(2) + rest
-                if f not in _FH:
-                    try:
-                        _FH[f] = hashlib.sha1(open(f, "rb").read()).hexdigest() if os.path.isfile(f) and os.path.getsize(f) < (64 << 20) else ""
-                    except OSError:
-                        _FH[f] = ""
-                if _FH[f]:
-                    out += "#" + _FH[f]
-            return out
-        return _TR.sub(rep, s)
-    def _norm(o):
-        if isinstance(o, str):
-            return _norm_s(o)
-        if isinstance(o, dict):
-            return {kk: _norm(v) for kk, v in o.items()}
-        if isinstance(o, list):
-            return [_norm(v) for v in o]
-        return o
     try:
-        norm_blocks = {name: H(_norm(prof["legacy_node"])) for name, prof in profiles(p).items()}
+        norm_blocks = {name: H(norm_tree_paths(prof["legacy_node"])) for name, prof in profiles(p).items()}
     except Exception:
         norm_blocks = {}
     baseline = None
@@ -10161,6 +10137,7 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
     _nb = current_norm_blocks(cfg, st).get(die, {}).get(r["item"])
     if _nb:
         rec["norm_block"] = _nb
+        rec["norm_v"] = PROBE_V
     st["items"][key] = rec
     # KW-FIX-46 11-12 (COORD: 'event e9eda32d41c' read as the old S81 plan after the ready12 switch): the event is the row
     # identity key (work dir, item key), not the plan; the line names the plan file and its sha so the log is honest

@@ -9,6 +9,8 @@ remote kit-wave plan probe.
 import copy
 import hashlib
 import json
+import os
+import re
 from pathlib import Path
 
 RAW = 'raw'
@@ -45,6 +47,43 @@ def normalize_pins(node, plan_path, cache=None):
         return out
     normalized=visit(node,[])
     return normalized,receipts
+
+
+# COORD 11-18 (FABLE-FIX-HEAD-MESH): a type node embeds absolute paths that carry the name of the tree / snapshot the plan was solved in (clock.sink_bins_file ...).  Every new live-tree snapshot
+# (<root>/snap_<die>/<die>_rN_sM, or a src_* tree) therefore moved every raw block hash and relaunched every type, signed ones included.  The path-normalized hash replaces the tree root of every
+# such path by a token and appends the sha1 of the referenced file's CONTENT, so two snapshots of one plan give the same per-type hashes.  The raw block_sha (row identity) is unchanged.
+TREE_RE = re.compile(r'(/[^"\s]*?/)((?:src_[A-Za-z0-9_.+-]+)|(?:[A-Za-z0-9_.+-]+_s\d+(?=/(?:physical|tools|rtl)/|(?![A-Za-z0-9_.+/-]))))(/[^"\s]*)?')
+_FILE_SHA = {}
+
+
+def _file_sha(path):
+    if path not in _FILE_SHA:
+        try:
+            _FILE_SHA[path] = hashlib.sha1(open(path, 'rb').read()).hexdigest() if os.path.isfile(path) and os.path.getsize(path) < (64 << 20) else ''
+        except OSError:
+            _FILE_SHA[path] = ''
+    return _FILE_SHA[path]
+
+
+def norm_tree_paths(value):
+    """a copy of `value` with every snapshot / src tree root in its strings replaced by <tree> and the referenced file content hashed in"""
+    def rep(m):
+        rest = m.group(3) or ''
+        out = '<tree>' + rest
+        if rest:
+            sha = _file_sha(m.group(1) + m.group(2) + rest)
+            if sha:
+                out += '#' + sha
+        return out
+    def visit(o):
+        if isinstance(o, str):
+            return TREE_RE.sub(rep, o)
+        if isinstance(o, dict):
+            return {k: visit(v) for k, v in o.items()}
+        if isinstance(o, list):
+            return [visit(v) for v in o]
+        return o
+    return visit(value)
 
 
 def profiles(plan):

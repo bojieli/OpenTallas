@@ -7,6 +7,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import flow_guard as FG  # noqa: E402
 import hold_records as HR  # noqa: E402
 import kit_wave as KW  # noqa: E402
+import plan_block_identity as BI  # noqa: E402
 
 PLAN = "p" * 64
 
@@ -754,3 +755,44 @@ class CliUnderIsolatedPython(unittest.TestCase):
             self.assertEqual(p.returncode, 0, p.stderr[-400:])
             self.assertIn("1 UNCLASSIFIED row(s)", p.stdout)
             self.assertEqual(_j.loads(Path(tmp, KW.STATE_FILE).read_text())["items"]["a"]["class"], "PLAN")
+
+
+class SnapshotNeutralBlockHash(unittest.TestCase):
+    """COORD 11-18 (FABLE-FIX-HEAD-MESH): two snapshots of the same plan give the same per-type normalized hashes"""
+
+    def node(self, root):
+        return {"type": {"clock": {"sink_bins_file": f"{root}/physical/die_plan/s81_head/prep/NF6/assets/sink_bins_1.json",
+                                   "lef": f"{root}/physical/die_plan/s81_head/prep/views/x.lef"}, "n": 3}, "budget": None}
+
+    def test_same_plan_in_two_snapshots_same_hash(self):
+        import tempfile, os
+        with tempfile.TemporaryDirectory() as tmp:
+            roots = []
+            for name in ("snap_s81_head/s81_head_r4_s0", "snap_s81_head/s81_head_r5_s0", "src_s81_pin_abc123_work"):
+                r = f"{tmp}/{name}"
+                os.makedirs(f"{r}/physical/die_plan/s81_head/prep/NF6/assets")
+                os.makedirs(f"{r}/physical/die_plan/s81_head/prep/views")
+                open(f"{r}/physical/die_plan/s81_head/prep/NF6/assets/sink_bins_1.json", "w").write("{\"bins\": 1}")
+                open(f"{r}/physical/die_plan/s81_head/prep/views/x.lef", "w").write("LEF")
+                roots.append(r)
+            h = [BI.fingerprint(BI.norm_tree_paths(self.node(r))) for r in roots]
+            self.assertEqual(len(set(h)), 1)
+            raw = [BI.fingerprint(self.node(r)) for r in roots]
+            self.assertEqual(len(set(raw)), 3)                                  # the raw hash moves with the snapshot name
+
+    def test_changed_content_changes_the_hash(self):
+        import tempfile, os
+        with tempfile.TemporaryDirectory() as tmp:
+            hs = []
+            for name, body in (("snap_x/x_r1_s0", "a"), ("snap_x/x_r2_s0", "b")):
+                r = f"{tmp}/{name}"
+                os.makedirs(f"{r}/physical/die_plan/s81_head/prep/NF6/assets")
+                os.makedirs(f"{r}/physical/die_plan/s81_head/prep/views")
+                open(f"{r}/physical/die_plan/s81_head/prep/NF6/assets/sink_bins_1.json", "w").write(body)
+                open(f"{r}/physical/die_plan/s81_head/prep/views/x.lef", "w").write("LEF")
+                hs.append(BI.fingerprint(BI.norm_tree_paths(self.node(r))))
+            self.assertNotEqual(hs[0], hs[1])
+
+    def test_probe_uses_the_shared_normalizer(self):
+        self.assertIn("norm_tree_paths(prof[", KW.PROBE_PLAN)
+        self.assertEqual(KW.PROBE_V, 9)
