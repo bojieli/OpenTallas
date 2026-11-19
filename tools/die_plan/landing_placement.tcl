@@ -336,13 +336,24 @@ proc cland_put {i rect tag {sp {}} {cur 0}} {
   }
   continue
  }
- if {$cur && [info exists ::cland_grp] && [dict exists $::cland_grp $name] && [llength $cland_cursor]==2} {
-  # CLAND-RING-GROUP: the group's first cell; if its cells do not fit the rest of this row, start the next row
+ if {$cur && !$cland_pass && [info exists ::cland_grp] && ![info exists ::cland_grp_busy] && [dict exists $::cland_grp $name] && [llength $cland_cursor]==2} {
+  # CLAND-RING-GROUP: dry-place the group from the cursor; next row while its cells do not stay on one row
+  set gmem [dict get $::cland_grp $name]
   set gsp $sp; if {$gsp eq {}} { set gsp 1.0; regexp {^ring:[^@]*@([0-9.]+)$} $tag -> gsp }
-  set grw [expr {int(ceil(max(double($w)/0.4*$gsp,$fw)/$ff_sw))*$ff_sw}]
-  set gneed [expr {[dict get $::cland_grp $name]*$grw}]
-  lassign $cland_cursor gcy gcx
-  if {$gcx+$gneed > $bx && $gneed <= $bx-$startx} { set cland_cursor [list [expr {$gcy+$ff_rh}] 0] }
+  set gpitch [expr {int(ceil(max(double($w)/0.4*$gsp,$fw)/$ff_sw))*$ff_sw}]
+  for {set gatt 0} {$gatt < 12} {incr gatt} {
+   set gsaved [list $cland_occ $cland_done $cland_n $cland_cursor]
+   set ghad [info exists ::cland_fill_dry]; set ::cland_fill_dry 1; set ::cland_grp_busy 1
+   set grows {}; set gxe {}
+   set grc [catch { foreach gm $gmem { cland_put $gm $rect $tag $sp 1; lassign $cland_cursor gyy gxx; lappend grows $gyy; lappend gxe $gxx } } gerr]
+   unset ::cland_grp_busy; if {!$ghad} { unset ::cland_fill_dry }
+   lassign $gsaved cland_occ cland_done cland_n cland_cursor
+   if {$grc} break
+   set gok [expr {[llength [lsort -unique $grows]] == 1 && [lindex $gxe end]-[lindex $gxe 0] <= ([llength $gmem]-1+2)*$gpitch}]
+   if {$gok} break
+   lassign $cland_cursor gcy gcx
+   set cland_cursor [list [expr {$gcy+$ff_rh}] 0]
+  }
  }
  if {!$cland_pass && $cur && [llength $cland_cursor]==2} { lassign $cland_cursor cy cx; if {$cy>$starty} { set starty $cy } } else { set cy {} }
  for {set y $starty} {$y+$h<=$by} {incr y $ff_rh} {
@@ -712,27 +723,29 @@ proc cland_dsel_wch {names} {
 # fill at sp (no DB move, no record); if it does not fit, shrink the spread in 3/4 steps down to 1.0 and place at the
 # first spread at which the whole ring fits.  A ring that fits at sp keeps sp (placement unchanged); a ring that fits at
 # no spread keeps sp and fails closed exactly as before.  OT_CLAND_SPREAD_FIT=0 turns the dry run off (old behaviour).
-# CLAND-RING-GROUP (SONNET-FIX-QC 11-19, lever 6; opt-in OT_CLAND_GROUP_ROW=1): a bit's ring cells (its storage slots, its read
-# register and the control cells keyed with it: same key prefix "base|bit|") are filled left to right on ONE row.  A row of
-# 371 um holds 137 flops, so a 5-flop bit group that straddles the row end put its first slots at x 382-388 and the rest at
-# x 17-20 of the next row (coll_ftc tl_st_wi_i bit 223: slot flops 365 um apart, read mux 270 um from both, 540 um round trip,
-# -67 ps).  With the option, a group of 2..16 cells that does not fit the rest of the row starts the next row instead (the
-# row tail stays empty: <= 15 cells per row).  cland_group_prepare fills ::cland_grp {cell name -> group size} on the group's
-# FIRST cell only; absent = byte-identical fill.
+# CLAND-RING-GROUP (SONNET-FIX-QC 11-19, lever 6; OT_CLAND_GROUP_ROW=1): a bit's ring cells (its storage slots, its read
+# register and the control cells keyed with it: same key prefix "base|bit|") stay together.  A 371-um ring row holds 137 flops, so
+# a 5-cell bit group that straddles the row end, or runs into an obstacle at the row end, put its first slots at x 382-388 and the
+# rest at x 17-38 of the next row (coll_ftc tl_st_wi_i: slot flops 365 um apart, read mux 270 um from both, -67 ps).  With the
+# option, the group's FIRST cell dry-places the whole group (the ::cland_fill_dry mode, state saved and restored); when the cells
+# do not stay on one row within (n + 1) pitches, the cursor moves to the next row and the check repeats (<= 12 rows).  A group
+# of 2..16 cells only; absent / unset = byte-identical fill.  cland_group_prepare fills ::cland_grp {first cell name -> members}.
 proc cland_group_prepare {ordered} {
  unset -nocomplain ::cland_grp
  if {![info exists ::env(OT_CLAND_GROUP_ROW)] || $::env(OT_CLAND_GROUP_ROW) ne "1"} return
- set g [dict create]; set last {}; set first {}; set n 0
+ set g [dict create]; set last {}; set first {}; set mem {}
  foreach pr $ordered {
   set f [split [lindex $pr 0] |]
   set gid {}
   if {[llength $f] >= 3} { set gid "[lindex $f 0]|[lindex $f 1]" }
   if {$gid eq {} || $gid ne $last} {
-   if {$first ne {} && $n >= 2 && $n <= 16} { dict set g $first $n }
-   set first [expr {$gid eq {} ? {} : [[lindex $pr 1] getName]}]; set n [expr {$gid eq {} ? 0 : 1}]; set last $gid
-  } else { incr n }
+   if {$first ne {} && [llength $mem] >= 2 && [llength $mem] <= 16} { dict set g $first $mem }
+   set first {}; set mem {}
+   if {$gid ne {}} { set first [[lindex $pr 1] getName]; set mem [list [lindex $pr 1]] }
+   set last $gid
+  } else { lappend mem [lindex $pr 1] }
  }
- if {$first ne {} && $n >= 2 && $n <= 16} { dict set g $first $n }
+ if {$first ne {} && [llength $mem] >= 2 && [llength $mem] <= 16} { dict set g $first $mem }
  if {[dict size $g]} { set ::cland_grp $g }
 }
 proc cland_fill_spread {ordered rect tag sp} {
@@ -1075,7 +1088,7 @@ proc cland_place_ff {prefix rect tag} {
  set sp [expr {max(1.0,$cland_ff_fill*$barea*$ff_dbu*$ff_dbu/$need)}]
  set cland_cursor {};set cland_col_cursor {}
  set ordered [lsort -dictionary -index 0 $ffs]
- cland_group_prepare $ordered
+ if {[llength [info commands cland_group_prepare]]} { cland_group_prepare $ordered }
  set pinx {}
  if {[string match {ring:*+x+ff*} $tag] && [info exists ::env(OT_CLAND_PINSLOT)] && $::env(OT_CLAND_PINSLOT) eq "1"
      && !([info exists ::cland_multi] && [dict exists $::cland_multi $tag])

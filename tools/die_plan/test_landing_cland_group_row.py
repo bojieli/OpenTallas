@@ -15,6 +15,7 @@ def test_default_off_and_call_sites():
     assert 'if {![info exists ::env(OT_CLAND_GROUP_ROW)] || $::env(OT_CLAND_GROUP_ROW) ne "1"} return' in TCL
     assert TCL.count("cland_group_prepare $ordered") == 1
     assert "dict exists $::cland_grp $name" in TCL
+    assert "set ::cland_fill_dry 1; set ::cland_grp_busy 1" in TCL
 
 
 def _proc():
@@ -33,7 +34,7 @@ def test_group_prepare_marks_first_cell_of_each_bit_group(tmp_path):
     ordered = " ".join("{{%s} %s}" % (k, n) for k, n in keys)
     body = _proc() + "foreach n {" + names + "} { proc $n {m} \"return $n\" }\n"
     body += "set ::env(OT_CLAND_GROUP_ROW) 1\ncland_group_prepare {" + ordered + "}\n"
-    body += "puts [lsort [dict get $::cland_grp c0_0]]\nputs [dict get $::cland_grp c1_0]\n"
+    body += "puts [llength [dict get $::cland_grp c0_0]]\nputs [llength [dict get $::cland_grp c1_0]]\n"
     body += "puts [dict size $::cland_grp]\nputs [dict exists $::cland_grp c0_1]\n"
     body += "set ::env(OT_CLAND_GROUP_ROW) 0\ncland_group_prepare {" + ordered + "}\nputs [info exists ::cland_grp]\n"
     f = tmp_path / "t.tcl"
