@@ -145,3 +145,13 @@
 - 11-18 13:0x N4 BIND-STALE x56 = my asbuilt_n4_portable (named N2BBR sidecar/r8/extra). Fixed: live pack -> snap qwen_compute_n4_s1 (asbuilt_n4b_portable 8fbbbc4e) + bind DBQ2 (asbuilt ref repointed), applied (receipt ..._1795035378699494014). Wave launching again.
 - cbx_q10 x4 HELD (bind-fail id cbxq10-sidx-1118, release result:DIE-QC-103:cbxq10-sidx-1118) until N4.1p lands.
 - N4.1p running: epyc9 W=/srv/opentallas-scratch2/claude/qc-plan-r3-n41p (chain_n41p.sh via ot-run; rc intel2 ~/qc-plan-r3/chain_n41p.rc). Plan 887c1eda = n4_s1 + cbx sidx sites at stations + sle_stm_v3 x_fe_o 3 stations (lane sl_E5_stm__x_stm_fe 9->12) + ft_site_macro (su_l1 x4, fixes the 4 N4 G0 errors from my ft_site_dedupe). NEXT: bind PASS -> G0 on it -> live pack (plan + runtime tagged files) -> publish_apply -> release cbx hold. so_e pin band NOT moved (abuts sc x_stm_fe ft; would push the hop into sc).
+
+## 11-19 N4.5 (in flight)
+- N4.4 bind GREEN s29q103S4Q9N44BBR (chain_n44.log). Not applied separately; N4.5 will carry it.
+- N4.5 plan epyc9 /srv/opentallas-scratch2/claude/qc-plan-r3-n41p/n45/plan_n45_b.json (b27995d3) = plan_n44_b + n45_coll.py (coll_core rx relay_sites + tx bus stations) + bank_reset_delta (116 types) + n45_fold.py (tap_max_sinks 1000 x129, 52 ft slots) + glue verilog_defines OT_QC_SF_PROG_RELAY.
+- Event tree: tools bind/schema/reset_port_relays/relay_branch synced from rt 913e191a0b77 (pre_sync_* copies in n45/); lctx3_core.sv = main 5a45c6152e06.
+- Bind: chain_n45.sh tag S4Q9N45B (intel2 ~/qc-plan-r3/chain_n45.{log,rc}); G0/PRE n45/g0pre.sh (g0pre_n45.{log,rc}); outputs n45/g0_n4{4,5}, n45/pre_n4{4,5}.
+- Next: G0 vs control -> pack (mkpack_n43b pattern, vs live n43_s2) -> live_tree apply -> reloc -> publish_apply (expect-source qwen_compute_n43_s2, expect-event s29q103S4Q9N43G) -> proof kits pk_coll (coll_core) + cbx_q10__cl89936551.
+- Proof kits: pk_sta3 (sle_st_a_v2__pv30dda31f__pvd2ec7769, N43BQ, baseline GRT -445) relaunched after my cancel killed pk_sta; pk_coll2 running (baseline CTS -575.8).
+- LESSON: ot-run --cancel stops every scope whose --dir matches; give each job its own --dir.
+- tt_ctlm: owned by FABLE-FIX-S81-GLUE (resynth + fence); take their result.
