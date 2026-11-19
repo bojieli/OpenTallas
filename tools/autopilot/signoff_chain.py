@@ -138,7 +138,7 @@ def late_eco(kit, record, runner, mem, threads, run=subprocess.call, current=cur
     """KW-ECO-1: the late-stage ECO loop on the kit's routed DB -> eco_loop result dict (None: tool missing)"""
     tool, why = current() if current else (None, "off")
     if tool:
-        print(f"LATE_ECO_TOOLS rt {why}: eco_loop.py + post_route_drv from rt/current ({tool.parent})", flush=True)
+        print(f"LATE_ECO_TOOLS rt {why}: eco_loop.py + post_route_drv from rt/current ({tool.parent}); ECO sign-off signoff.py {_sha(tool.parent / 'signoff.py')}", flush=True)
     else:
         tool = eco_tool()
         print(f"LATE_ECO_TOOLS SKIPPED rt/current ({why}); using the admission bundle copy {tool}", flush=True)
@@ -192,8 +192,72 @@ def flow_refresh(kit, goal, script=KFR, bundle=None):
         return None
 
 
+def _sha(path):
+    import hashlib
+    try:
+        return hashlib.sha256(Path(path).read_bytes()).hexdigest()[:12]
+    except OSError:
+        return "-"
+
+
+def signoff_tool_source(bundle=None):
+    """-> (die_plan dir, label): rt/current when visible, else the admission bundle this chain runs from (die_plan/), else None"""
+    cur = Path(RT_ROOT) / "current" / "tools" / "die_plan"
+    if (cur / "signoff.py").is_file():
+        return cur.resolve(), "rt " + os.path.basename(os.path.realpath(Path(RT_ROOT) / "current"))
+    b = Path(bundle) if bundle else Path(__file__).resolve().parent
+    if (b / "die_plan" / "signoff.py").is_file():
+        return b / "die_plan", "admission bundle " + b.name[:20]
+    return None, "no rt/current and no admission bundle die_plan"
+
+
+def stage_signoff_tool(kit, bundle=None, source=None):
+    """FABLE-CLOSURE 1935 lever 5 (COORD 11-18): the sign-off (the runner's signoff.py run, the chain's fallback run, and so every
+    route / finish verdict) uses the CURRENT signoff.py family, not the kit's gen-time copy (hc0: kit copy vs rt differed by 11 ps TT,
+    8.6 ps hold).  kit_flow_refresh replaces only verbatim main copies inside its blob window; this stages the whole SIGNOFF_BUNDLE
+    (signoff.py bundle, so the family stays API-consistent) from rt/current or the admission bundle into a temp dir, then copy +
+    rename into the kit.  One SIGNOFF_TOOL line + KIT/signoff_tool.jsonl name the sha used.  Opt-out: KIT/.keep_kit_signoff."""
+    kit = Path(kit)
+    if (kit / ".keep_kit_signoff").exists() or os.environ.get("OT_SIGNOFF_FROM_RT", "1") == "0":
+        print(f"SIGNOFF_TOOL KIT copy kept (opt-out): signoff.py {_sha(kit / 'signoff.py')}", flush=True)
+        return None
+    src, label = (Path(source), "given") if source else signoff_tool_source(bundle)
+    if src is None:
+        print(f"SIGNOFF_TOOL SKIPPED ({label}): kit copy signoff.py {_sha(kit / 'signoff.py')}", flush=True)
+        return None
+    old = _sha(kit / "signoff.py")
+    tmp = Path(tempfile.mkdtemp(prefix=".so_stage.", dir=str(kit)))
+    try:
+        r = subprocess.run([sys.executable, "-I", str(src / "signoff.py"), "bundle", str(tmp)],
+                           stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=300)
+        if r.returncode:
+            print(f"SIGNOFF_TOOL SKIPPED (bundle from {src} rc {r.returncode}: {r.stderr.strip()[-200:]}): kit copy signoff.py {old}", flush=True)
+            return None
+        names = []
+        for f in sorted(tmp.iterdir()):
+            if not f.is_file():
+                continue
+            t = kit / f.name
+            if t.is_file() and t.read_bytes() == f.read_bytes():
+                continue
+            os.replace(f, t)
+            names.append(f.name)
+        rec = {"t": time.strftime("%Y-%m-%d %H:%M:%S %Z"), "source": str(src), "label": label, "signoff_py": _sha(kit / "signoff.py"),
+               "kit_copy_was": old, "replaced": names}
+        with open(kit / "signoff_tool.jsonl", "a") as fh:
+            fh.write(json.dumps(rec) + "\n")
+        print(f"SIGNOFF_TOOL {label}: signoff.py {rec['signoff_py']} (kit copy was {old}); replaced {len(names)}: {' '.join(names)}", flush=True)
+        return rec
+    except (OSError, subprocess.SubprocessError) as e:
+        print(f"SIGNOFF_TOOL SKIPPED ({type(e).__name__}: {e}): kit copy signoff.py {old}", flush=True)
+        return None
+    finally:
+        import shutil
+        shutil.rmtree(tmp, ignore_errors=True)
+
+
 def continue_kit(kit, runner, goal, mem, threads, run=subprocess.call, preflight=None, proof_only=False, lec=None,
-                 late=True, eco_loop=late_eco, plan_dir=None, refresh=flow_refresh):
+                 late=True, eco_loop=late_eco, plan_dir=None, refresh=flow_refresh, so_tool=stage_signoff_tool):
     kit = Path(kit).resolve()
     started = time.time()
     prior = {str(p): (p.stat().st_mtime_ns, p.stat().st_size)
@@ -220,6 +284,8 @@ def continue_kit(kit, runner, goal, mem, threads, run=subprocess.call, preflight
             return rc
     if not proof_only and refresh:
         refresh(kit, goal)
+    if not proof_only and so_tool and goal not in ("cts", "grt"):
+        so_tool(kit)
     rc = 0 if proof_only else run(["bash", runner, str(kit), goal, str(mem), str(threads)])
     if goal in ("cts", "grt"):
         return rc
