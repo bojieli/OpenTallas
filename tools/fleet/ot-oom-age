@@ -91,6 +91,17 @@ def stage_adj(cmdline, age_adj):
     return age_adj
 
 
+LATE_ECO_CONTAINER = re.compile(r"^prd-")
+
+
+def late_eco_container(name):
+    """11-18 (FABLE-FLOW-1750 C, COORD): the late ECO's containers (prd_run.sh: prd-<kit>-<pass>-<pid>, prd-fin-, prd-count-, prd-preclean-)
+    work on a routed DB, the sunk work of the whole route attempt, so they rank as a late stage (adj 0): never the PLANGUARD victim, last for
+    earlyoom.  Their openroad is a fresh process in a fresh container, so age + stage gave 300 at GRT, and the largest-RSS PLANGUARD rule
+    picked it first: hd_host_n (epyc10 00:23:54, RSS 14.5 GB) died at repair_antennas with make 'Error 247' (= SIGKILL) 494 s into its ECO."""
+    return bool(name) and bool(LATE_ECO_CONTAINER.match(name))
+
+
 def victim_adj(cmdline, age_s, rss_gb):
     """VICTIM_RSS_1114 (COORD 11-14): killing a 4 GB job frees nothing, so earlyoom kept killing small young jobs until it reached a big one (10 h of victims: 40 percent
     of openroad kills under 8 GB, 115 of 156 young).  Early-stage jobs younger than YOUNG_S get adj 520 + 10 per GB of RSS (max 799): the largest young process dies first and
@@ -316,6 +327,8 @@ def main(argv=None):
             except (OSError, AttributeError, ValueError):
                 _rss = 0.0
             want = victim_adj(open(f"/proc/{p}/cmdline").read().replace("\0", " "), _age, _rss)
+            if late_eco_container(names.get(container_id(p) or "")):
+                want = 0
             seen += 1
             if want != cur:
                 if not a.dry_run:

@@ -209,3 +209,12 @@ class Guard(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def test_late_eco_containers_rank_late_stage():
+    """FABLE-FLOW-1750 C: prd_run.sh containers (late ECO on the routed DB) get adj 0, so PLANGUARD (0 < adj) never picks them"""
+    for n in ("prd-gen-i1-1782271", "prd-fin-4242", "prd-count-i1t-77", "prd-preclean-9"):
+        assert M.late_eco_container(n)
+    for n in (None, "", "dpkit-slice_station__t40-123", "otc-2068972-23088"):
+        assert not M.late_eco_container(n)
+    assert M.guard_victim([(1, "openroad", 0, 900, 14.5), (2, "openroad", 300, 400, 2.0)]) == 2
