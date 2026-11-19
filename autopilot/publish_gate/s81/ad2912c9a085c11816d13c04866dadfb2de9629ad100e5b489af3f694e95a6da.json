@@ -1,0 +1,24 @@
+{
+ "advisory": [
+  "gate"
+ ],
+ "checks": {
+  "gate": {
+   "verdict": "FAIL",
+   "why": "AssertionError: exact current normal source guard is not ready"
+  }
+ },
+ "die": "s81",
+ "hosts": [
+  "epyc8",
+  "epyc10",
+  "intel1"
+ ],
+ "manifest_hash": "ad2912c9a085c11816d13c04866dadfb2de9629ad100e5b489af3f694e95a6da",
+ "plan": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8e_1117_work/physical/die_plan/s81/plan_h2_2249.json",
+ "plan_sha256": "df7446e48ba9bece5d421ec7c76809095050087a88760f625029336981f2c3ef",
+ "schema": "opentallas.publish_gate.v1",
+ "t": 1795052190.9396281,
+ "tree": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8e_1117_work",
+ "verdict": "FAIL"
+}
