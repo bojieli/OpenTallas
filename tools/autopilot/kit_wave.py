@@ -11815,6 +11815,7 @@ def reap_ghost_rows(AP, cfg, st, notices, now=None, minutes=GHOST_MIN, jobs=None
 
 
 UNREADABLE_HOST_H = 2.0
+UNREADABLE_MIRROR_H = 1.0      # one rt-tools mirror stage that long is stuck on any host
 
 
 def unreadable_host_rows(AP, cfg, st, notices, now=None, hours=UNREADABLE_HOST_H):
@@ -11843,7 +11844,10 @@ def unreadable_host_rows(AP, cfg, st, notices, now=None, hours=UNREADABLE_HOST_H
         # COORD 11-19 (139 S81 rows parked in rt_mirror_copy_epyc7, no kit started): a row stuck in the rt tools mirror of a host that is unreadable or over 2x its cores
         # moves after 30 min (nothing of the kit exists there yet): the mirror to that host is the stage that never ends
         mh = re.match(r"rt_mirror(?:_copy|_fin)?_(.+)$", str(r.get("stage") or ""))
-        mirror_bad = bool(mh and mh.group(1) not in (hub, "localhost") and queued_host_bad(stt, mh.group(1), hub) and age_h >= 0.5)
+        # 12:50 sweep: epyc7 had a status row again (load under 2x) but 156 rows still sat 1.7 h in rt_mirror_copy_epyc7: a tools mirror never takes an hour, so the same mirror stage for 1 h
+        # moves the row whatever the host status says (the host is also dropped from the new pick by restage_host != host)
+        mirror_bad = bool(mh and mh.group(1) not in (hub, "localhost")
+                          and ((queued_host_bad(stt, mh.group(1), hub) and age_h >= 0.5) or age_h >= UNREADABLE_MIRROR_H))
         if not mirror_bad:
             if not host or host in (hub, "localhost") or stt.get(host):
                 continue

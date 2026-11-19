@@ -329,7 +329,7 @@ def test_row_stuck_in_the_rt_mirror_of_a_bad_host_moves_after_30_minutes(tmp_pat
         assert KW.unreadable_host_rows(ap, cfg, st, {}, now=now) == 0           # only 10 min
         st = {"items": {"x": dict(row)}}
         assert KW.unreadable_host_rows(ap, cfg, st, {}, now=now) == 1 and st["items"]["x"]["status"] == "RETRY-INFRA"
-        st = {"items": {"x": dict(row, stage="rt_mirror_copy_epyc9")}}
+        st = {"items": {"x": dict(row, stage="rt_mirror_copy_epyc9", updated=now - 2400, started=now - 2400)}}
         assert KW.unreadable_host_rows(ap, cfg, st, {}, now=now) == 0           # a healthy host's mirror is left alone
 
 
@@ -419,3 +419,19 @@ def test_live_source_sync_copies_run_in_detached_units_and_never_wait():
     KW.sync_die_inputs(ap, cfg)
     assert len(launched) == 1 and launched[0][0].startswith("ss-") and "tar -C / --hard-dereference -cf -" in launched[0][1][-1]
     assert not any(c and c[0] == "bash" for c in shs)          # nothing ran inline
+
+
+def test_rt_mirror_stage_older_than_an_hour_moves_even_when_the_host_status_is_fine(tmp_path):
+    import unittest.mock as M
+    ap = type("AP", (), {"DRY": False, "log": staticmethod(lambda m: None), "sh": staticmethod(lambda c, timeout=0, input=None: (0, "", ""))})()
+    d = tmp_path / "a1"
+    d.mkdir()
+    (d / "spec.json").write_text(json.dumps({"gen_host": "epyc8"}))
+    now = 1e9
+    row = {"die": "s81", "item": "t1", "status": "RUNNING", "unit": "u", "dir": str(d), "stage": "rt_mirror_copy_epyc7", "updated": now - 1.7 * 3600, "started": now - 1.7 * 3600, "attempt": "1"}
+    cfg = {"dies": {"s81": {}}, "_hub": "intel2", "_otrun_status": {"epyc7": {"load": 50, "cores": 96}, "epyc8": {"load": 10, "cores": 96}}}   # epyc7 healthy by status
+    with M.patch.object(KW, "pick_gen_host", return_value="epyc8"):
+        st = {"items": {"x": dict(row)}}
+        assert KW.unreadable_host_rows(ap, cfg, st, {}, now=now) == 1 and st["items"]["x"]["status"] == "RETRY-INFRA"
+        st = {"items": {"x": dict(row, updated=now - 1200, started=now - 1200)}}
+        assert KW.unreadable_host_rows(ap, cfg, st, {}, now=now) == 0
