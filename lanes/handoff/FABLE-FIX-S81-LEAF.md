@@ -194,3 +194,6 @@ OWNER FABLE-FIX-S81-LEAF owns s81sl_leaf__t* and s81sl_kv_leaf__t* (all), listed
   _clock_taps; gen_phys emits rt_consumer_taps_um (nearest reset leaf, existing reset_taps.tcl path) when the key is set; reach_fix writes the key before it appends taps;
   schema + json; test_reset_consumer_sites.py (6 tests pass). End-to-end check on t16 running: bin/rk_check.sh -> tapsK/result.txt (FIX_RC, GEN_RC), proof/ab/b16/gen3.log.
   Push after that check shows the tool wrote the key and gen passed the reset identity.
+
+## 11-19 04:5x PST: RESET-KEY pushed (see post). Proof = S81-DIE-R3 t16 generation with main tools; then regenerate tap rows with the patched reach_fix
+(they then carry reset.consumer_sites_um and need no bind). Pitfall found: the key must hold EXACT floats (rounding 901.8000000000001 -> 901.8 broke the identity).
