@@ -2221,3 +2221,31 @@ class HubProcsJanitor(Base):
               f"  102 500 ot-run --mem 24 -- bash {kit}/run_kit.sh\n")
         self.ap.sh = lambda cmd, timeout=0, **k: (0, ps, "")
         self.assertEqual([p for p, _ in self.ap.hub_procs(kit)], [102])
+
+
+class ResumePin(Base):
+    """COORD 11-19: an infra-retry resubmit is pinned to the host the killed attempt ran on (it holds the run dir checkpoint)"""
+
+    def run_submit(self, **extra):
+        (j,) = self.ap.parse_queue("\t".join(ROW)).values()
+        j.update(extra)
+        seen = []
+        self.ap.launch_unit = lambda unit, logfile, argv: seen.append(argv) or True
+        self.ap.submit({"jobs": {}}, j)
+        return j, seen[0]
+
+    def test_first_submit_is_not_pinned(self):
+        j, argv = self.run_submit()
+        self.assertNotIn("--hosts", argv)
+
+    def test_infra_retry_is_pinned_to_the_killed_host_twice_at_most(self):
+        j, argv = self.run_submit(infra_retry=True, ran_on="epyc10")
+        self.assertEqual(argv[argv.index("--hosts") + 1], "epyc10")
+        self.assertEqual(j["resume_pins"], 1)
+        j, argv = self.run_submit(infra_retry=True, ran_on="epyc10", resume_pins=2)
+        self.assertNotIn("--hosts", argv)
+
+    def test_no_pin_for_the_hub_or_an_unknown_host(self):
+        for ro in ("localhost", "intel2.local", "", self.ap.HUB_NAME):
+            j, argv = self.run_submit(infra_retry=True, ran_on=ro)
+            self.assertNotIn("--hosts", argv)
