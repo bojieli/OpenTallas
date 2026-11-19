@@ -86,6 +86,44 @@ def norm_tree_paths(value):
     return visit(value)
 
 
+# COORD 11-18 (QC N4.2): the per-type block holds the type node and its budget only.  Die-level plan keys a type CONSUMES (clock.seam_hold resolved for the type incl. per_type_ps, tap window,
+# landing network, droop / tap pitch / insertion, reset, die outline settings) are outside it, so a die-wide change left the block unchanged and live kits were kept as "plan block unchanged"
+# on a changed contract (six slw_stm / slw_fe_v1 kits kept seam_hold_ps 160 under N4.2's 110).  die_ctx() is the sha of those resolved values for one type; it is stored beside the block
+# (the raw block_sha, the item key and every old record stay as they are) and compared wherever a row is kept or counted as unchanged.
+VARIANT_SUFFIX = re.compile(r'__(a\d+_\d{4}|legalrows_\d+)$')
+
+
+def seam_for(plan, name):
+    sh = ((plan.get('clock') or {}).get('seam_hold'))
+    if not isinstance(sh, dict):
+        return None
+    pt = sh.get('per_type_ps') or {}
+    seam = sh.get('seam_ps')
+    for k in (str(name), VARIANT_SUFFIX.sub('', str(name))):
+        if k in pt:
+            seam = pt[k]
+            break
+    return {'sender_ps': sh.get('sender_ps'), 'seam_ps': seam}
+
+
+def _no_notes(o):
+    if isinstance(o, dict):
+        return {k: _no_notes(v) for k, v in o.items() if not (k == 'note' or k.endswith('_note') or k == 'notes')}
+    if isinstance(o, list):
+        return [_no_notes(v) for v in o]
+    return o
+
+
+def die_ctx(plan, name):
+    """sha256 of the die-level values type/core `name` reads: clock (seam_hold replaced by the value resolved for this type, notes dropped), reset, die, latency.
+    Not part of it: census, ports, lanes, partitions, other types, free-text notes"""
+    clock = dict(plan.get('clock') or {})
+    clock.pop('seam_hold', None)
+    body = {'clock': _no_notes(clock), 'seam': seam_for(plan, name), 'reset': _no_notes(plan.get('reset')), 'die': _no_notes(plan.get('die')),
+            'latency': _no_notes(plan.get('latency'))}
+    return fingerprint(body)
+
+
 def profiles(plan):
     types=plan.get('partition_types') or {};bud=plan.get('budgets')
     bud=bud if isinstance(bud,dict) else {}

@@ -795,4 +795,43 @@ class SnapshotNeutralBlockHash(unittest.TestCase):
 
     def test_probe_uses_the_shared_normalizer(self):
         self.assertIn("norm_tree_paths(prof[", KW.PROBE_PLAN)
-        self.assertEqual(KW.PROBE_V, 9)
+        self.assertEqual(KW.PROBE_V, 10)
+
+
+class DieContextHash(unittest.TestCase):
+    """COORD 11-18 (QC N4.2): a die-level change a type consumes changes its die_ctx; an unrelated die key does not"""
+
+    def plan(self, **clock):
+        c = {"insertion_ps": 100, "seam_hold": {"sender_ps": 25, "seam_ps": 110, "per_type_ps": {"slw_hc1": 160}}, "tap_window": {"window_ps": 20}}
+        c.update(clock)
+        return {"partition_types": {"slw_stm": {"x": 1}, "slw_hc1": {"x": 1}, "slw_hc1__a1_0001": {"x": 1}}, "clock": c, "reset": {"n": 1}, "die": {"w": 5},
+                "census": [1], "ports": [1, 2], "note": "free text"}
+
+    def test_die_seam_change_hits_types_on_the_die_value_not_per_type_overridden(self):
+        a, b = self.plan(), self.plan(seam_hold={"sender_ps": 25, "seam_ps": 100, "per_type_ps": {"slw_hc1": 160}})
+        self.assertNotEqual(BI.die_ctx(a, "slw_stm"), BI.die_ctx(b, "slw_stm"))
+        self.assertEqual(BI.die_ctx(a, "slw_hc1"), BI.die_ctx(b, "slw_hc1"))              # its per_type_ps 160 did not move
+        self.assertEqual(BI.die_ctx(a, "slw_hc1__a1_0001"), BI.die_ctx(b, "slw_hc1__a1_0001"))   # variant-stripped name resolves too
+
+    def test_per_type_override_change_hits_only_that_type(self):
+        a, b = self.plan(), self.plan(seam_hold={"sender_ps": 25, "seam_ps": 110, "per_type_ps": {"slw_hc1": 110}})
+        self.assertNotEqual(BI.die_ctx(a, "slw_hc1"), BI.die_ctx(b, "slw_hc1"))
+        self.assertNotEqual(BI.die_ctx(a, "slw_hc1__a1_0001"), BI.die_ctx(b, "slw_hc1__a1_0001"))
+        self.assertEqual(BI.die_ctx(a, "slw_stm"), BI.die_ctx(b, "slw_stm"))
+
+    def test_other_clock_keys_change_every_type_unrelated_keys_none(self):
+        a = self.plan()
+        self.assertNotEqual(BI.die_ctx(a, "slw_stm"), BI.die_ctx(self.plan(tap_window={"window_ps": 30}), "slw_stm"))
+        b = self.plan(); b["census"] = [9]; b["ports"] = [3]; b["note"] = "other"; b["clock"]["seam_hold"]["note"] = "text"; b["partition_types"]["other"] = {"y": 2}
+        self.assertEqual(BI.die_ctx(a, "slw_stm"), BI.die_ctx(b, "slw_stm"))
+
+    def test_row_kept_only_when_die_ctx_matches(self):
+        cur = {"qwen_compute": {"t": "NEW"}}
+        self.assertTrue(KW.ctx_changed(cur, "qwen_compute", {"item": "t", "die_ctx": "OLD"}))
+        self.assertFalse(KW.ctx_changed(cur, "qwen_compute", {"item": "t", "die_ctx": "NEW"}))
+        self.assertFalse(KW.ctx_changed(cur, "qwen_compute", {"item": "t"}))               # unknown stays as before
+        self.assertFalse(KW.ctx_changed({}, "qwen_compute", {"item": "t", "die_ctx": "OLD"}))
+
+    def test_probe_emits_die_ctx(self):
+        self.assertIn("die_ctx(p, name)", KW.PROBE_PLAN)
+        self.assertEqual(KW.PROBE_V, 10)
