@@ -45,3 +45,26 @@
 - Posted to QC-PLAN-R3 (23:4x): fw_v2 flt_wo hop 1,247 um (2 stations), st_b_v2 cland_origin -> cland_rstart_tx 1,075 um (2 stations).
 - Not owned, facts for the st_b owner: slw_st_b_v1__cle6023ec2 -210.4 = SRAM u_u_r4.u_scale_wait.u_m.g_bank[0].u_m rd_out (clk->q 255 ps)
   + 276 ps wire + 22 logic levels into g_sc[1].u_mul...u_d.u_741 (122 ends); the other st_b types are +2..+44 at CTS.
+
+## 11-19 00:3x PST (fix on main, proof kit in GPL, watcher armed)
+- ON MAIN f6b105fc5d (ot-push-main, touched tests pass): pad_chain_site.tcl + gen_phys.pad_chain_site_place + rs_place_all separator-blind
+  keys. rt/current on the hub = rt/f6b105fc5def (carries it). Lane clone needs cone tools + physical/common_flow + rtl for the gen_phys tests.
+- p1 passed the hook in 3_3 at 00:09: "OT_PAD_CHAIN_SITE mode auto chains 2387 of 2393 sited (39775 cells, 530 stale plan-sited re-sited)
+  kept_plan_sited 6 ... max_hop 401.5 um | x_fw_i 401, x_st_a_i 17, flt_hc1_i 182, flt_hc2_i 268, x_fw_p1_i 114, b_tw_data_i 255".
+  Expected stages (wave kit timing of the same type): 3_5 about 01:45, CTS + TT repair about 04:20, GRT TT hours later (the wave kit was
+  still in GRT 7 h after launch).
+- Detached watcher W/autopost.sh p1 (pid via pgrep -af "autopost.sh p1"): posts "AUTO p-kit CTS TT", "AUTO p-kit GRT TT" and
+  "AUTO p-kit ended" lines to lanes/posts/FABLE-FIX-QC.md by itself. Log W/logs/autopost_p1.log.
+- The wave job of sle_ctl__cl372cea1c on epyc9 (the base kit) ended before 00:15 (job dir gone; stages table still says RUNNING). Base
+  numbers stay: CTS TT -97.91 / tns -19,117 / 757 negative ends (W/k/ctl372/out/census_4_cts.odb.log).
+- WAVE STEP (NOT DONE; waits for the p1 read per r712): dry run passed for
+  python3 -I /srv/opentallas-scratch2/claude/rt/current/tools/autopilot/kit_wave_edit.py -m "FABLE-FIX-QC: sle_ctl x7 OT_PAD_CHAIN_SITE=auto (PAD-CHAIN-SITE f6b105fc5d)" \
+    --set /dies/qwen_compute/item_env/sle_ctl__cl372cea1c/OT_PAD_CHAIN_SITE=\"auto\"   (run in ~/coord; one --set per item)
+  Items with an item_env object: cl372cea1c, cl503337ff, cl67434795, cla4f6f12f. Without one (set the object:
+  --set /dies/qwen_compute/item_env/<item>={"OT_PAD_CHAIN_SITE":"auto"}): cl503337ff__padE0, cl503337ff__padE4, cl67434795__padW5.
+  Decision rule: p1 CTS TT >= -42 -> apply to all 7 at once; between -42 and -98 -> apply (still better than base) and census p1 for the
+  next class; worse than base -> do not apply, census p1 (ln -s the kit dir to W/k/p1/work, census.sh p1 4_cts.odb placement).
+- su_c x3 (sle_su_c, slw_su_c__cl19bb38ef, slw_su_c__cl92142dac): the separator fix reaches them on their next kit generation (tools from
+  rt/current); expect "OT_RELAY_SITES placed 1034 flops FIRM (plan keys unmatched: 0 of 1034)".
+- Checked, not a family: cbf_q00__cl870de686 CTS -300.7 = 13 ends, pipe u_d6_u_fab_u_x_1_0_a_d.r[2] -> r[3] on two BUFx8 with 289 + 534 ps
+  of unbuffered wire at placement RC; the GRT max-wire pass (120 um) is the step that buffers it. Read its GRT TT before any row.
