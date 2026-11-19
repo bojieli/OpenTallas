@@ -473,8 +473,14 @@ wait)
   fi
   # Unit form: the LEC has its own admitted unit, so this container need not stay alive for it.
   [ "$(cat "$K/lec_async.mode" 2>/dev/null)" != unit ] || exit 0
-  while [ -f "$K/lec_async.on" ] && [ -f "$K/lec_async.ready" ] && [ ! -f "$K/lec_async.rc" ]; do
+  # FABLE-FLOW-2355 B: the wait ended only on lec_async.rc, so a watcher that died (or aborted, or finished with no rc) left this container holding its slot for 2.5-13 h.  It ends on ANY
+  # terminal marker (rc, abort, done: the watcher's EXIT trap writes done; start clears all markers) or when the watcher pid is gone.
+  WP=$(cat "$K/lec_async.pid" 2>/dev/null || true)
+  while [ -f "$K/lec_async.on" ] && [ -f "$K/lec_async.ready" ] && [ ! -f "$K/lec_async.rc" ] \
+        && [ ! -f "$K/lec_async.abort" ] && [ ! -f "$K/lec_async.done" ] \
+        && { [ -z "$WP" ] || kill -0 "$WP" 2>/dev/null; }; do
     sleep "${OT_LEC_ASYNC_POLL:-5}"
+    [ -n "$WP" ] || WP=$(cat "$K/lec_async.pid" 2>/dev/null || true)
   done
   ;;
 finish)

@@ -3546,7 +3546,7 @@ RULES = [
     ("PLAN", None, r"PORT_BIND FAIL|port_bind[^\n]*FAIL|FAIL_PREFLOOR port_bind", "port bind (plan pins)"),
     ("PLAN", None, r"LEF master \S+ not found|ORD-2013", "macro not declared in the plan type"),
     ("PLAN", None, r"is blocked|fails? closed|no legal site|DPL-0033|DPL-0036|not in plan|unknown (?:partition )?type|"
-                   r"outline|utili[sz]ation .* exceeds|\[ERROR PDN-0\d+|Error:[^\n]*PDN-0\d+", "plan geometry / site"),
+                   r"(?:ERROR|Error|error|FAIL)[^\n]*\boutline\b|utili[sz]ation .* exceeds|\[ERROR PDN-0\d+|Error:[^\n]*PDN-0\d+", "plan geometry / site"),   # FABLE-FLOW-2355: bare "outline" matched the info line "GRTM mode edge_outline image"
     ("PLAN", r"^geom$", r"FAIL", "AUTO-GEOM rule FAIL (geometry)"),
     ("PLAN", r"^kit_topology$", r"KIT_TOPOLOGY_(?:BIND_STALE|CONTEXT|REGENERATE|SOURCE)",
      "native source stage/reset realization differs: regenerate the canonical bind/kit"),
@@ -9199,8 +9199,24 @@ def prev_on_current_plan(prev, d):
     return not ev or not d.get("event") or str(ev) == str(d.get("event"))
 
 
-def kill_pin(prev, sp):
-    """pin sp's source inputs to the killed attempt's spec (in place) -> '' or why not pinned (spec unreadable / incomplete)"""
+def tree_manifest_hash(AP, host, tree):
+    """the adopted manifest hash a source tree carries on `host` (<tree>/.src-manifest.sha256), '' when unreadable"""
+    path = f"{str(tree).rstrip('/')}/.src-manifest.sha256"
+    if host in ("localhost", getattr(AP, "HUB_NAME", None)):
+        cmd = ["cat", path]
+    else:
+        cmd = ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=15", "-o", "ControlPath=none", host, "cat", shlex.quote(path)]
+    try:
+        rc, out, _ = AP.sh(cmd, timeout=60)
+    except Exception:
+        return ""
+    return (out or "").split()[0] if rc == 0 and (out or "").strip() else ""
+
+
+def kill_pin(prev, sp, manifest_of=None, live_src=None):
+    """pin sp's source inputs to the killed attempt's spec (in place) -> '' or why not pinned (spec unreadable / incomplete / the pinned tree no longer is what the attempt ran on).
+    FABLE-FLOW-2355 D: `_work` trees are edited in place, so a pin by tree NAME does not pin content (dsdv_slice_c1x_C__t9 was pinned to an old d8t _work tree that fails SRC_MANIFEST DRIFT).
+    A pin onto a tree other than the live one is kept only when manifest_of(tree) equals the manifest hash recorded in the attempt's spec; otherwise the relaunch is an ordinary one on the live tree."""
     try:
         old = json.loads((Path(prev["dir"]) / "spec.json").read_text())
     except (OSError, ValueError, KeyError, TypeError) as e:
@@ -9208,6 +9224,11 @@ def kill_pin(prev, sp):
     miss = [k for k in GRT_ARM_PIN_REQUIRED if not old.get(k)]
     if miss:
         return f"spec lacks {','.join(miss)}"
+    if manifest_of is not None and live_src and str(old.get("src")) != str(live_src):
+        want, have = str(old.get("src_manifest_hash") or ""), manifest_of(old["src"])
+        if not want or not have or have != want:
+            return (f"pinned tree {old['src']} is not the live tree {live_src} and its manifest hash {have[:12] or 'unreadable'} is not the recorded {want[:12] or 'none'}: "
+                    f"relaunching on the live tree")
     for k in GRT_ARM_PIN:
         if k in old:
             sp[k] = old[k]
@@ -10112,7 +10133,7 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
                 and prev_on_current_plan(prev, cfg["dies"][die])):
             sp["resume_from"] = resume_source(AP, prev)
             if not arm and opt_get(cfg, die, "kill_pin") is not False and killed_attempt(prev):
-                _pw = kill_pin(prev, sp)                # WAVE-RECIPE-1 FIX 2: same inputs -> resume at the checkpoint
+                _pw = kill_pin(prev, sp, manifest_of=lambda t: tree_manifest_hash(AP, sp.get("gen_host"), t), live_src=cfg["dies"][die].get("src"))   # WAVE-RECIPE-1 FIX 2: same inputs -> resume at the checkpoint
                 AP.log(f"KIT-WAVE KILL-PIN {die}/{r['item']}@{attempt}: " + (f"pinned to attempt {prev.get('attempt')} inputs "
                        f"(src_sha {str(sp.get('src_sha'))[:12]}), resumes its checkpoint" if not _pw else f"not pinned: {_pw}"))
         # FLOW-23 class D: a relaunch after an AUTO-GEOM FAIL plans soft region guides from that result (written only
@@ -10852,6 +10873,8 @@ def hung_judge(prev, prog, hub_newest, now, minutes, cpu_s=None, dead_min=None):
     if dm > 0:
         cpu = float(prog.get("cpu") or 0)
         dcpu_s = max(HUNG_CPU_S, HUNG_BUSY_FRAC * dm * 60.0)
+        if "dt" in pw and 0 < float(pw.get("dcpu", 0)) - cpu < dcpu_s:
+            pw["dcpu"] = cpu                               # a small dip (an exited child) keeps the dead-watch clock
         if "dt" not in pw or cpu - float(pw.get("dcpu", 0)) >= dcpu_s or cpu < float(pw.get("dcpu", 0)):
             pw["dcpu"], pw["dt"] = cpu, now
         w["dcpu"], w["dt"] = pw["dcpu"], pw["dt"]
@@ -10870,7 +10893,11 @@ def _hung_judge(prev, prog, hub_newest, now, minutes, cpu_s=None):
     if cpu_s is None:        # busy = more than HUNG_BUSY_FRAC of one core over the watch window (>= HUNG_CPU_S): ~0 CPU only
         cpu_s = max(HUNG_CPU_S, HUNG_BUSY_FRAC * minutes * 60.0)
     w = dict(prev or {})
-    if not w or cpu - float(w.get("cpu", 0)) >= cpu_s or cpu < float(w.get("cpu", 0)):
+    if w and float(w.get("cpu", 0)) - cpu >= cpu_s:       # a real restart (CPU fell by more than the busy threshold): new mark
+        w = {}
+    elif w and cpu < float(w.get("cpu", 0)):              # FABLE-FLOW-2355 B: a small dip is a child process that exited, not a restart: lower the baseline, keep the clock
+        w["cpu"] = cpu
+    if not w or cpu - float(w.get("cpu", 0)) >= cpu_s:
         w = {"cpu": cpu, "t": now}
     logt = max(float(prog.get("log") or 0), float(hub_newest or 0))
     cpu_m = (now - float(w["t"])) / 60.0
@@ -11747,11 +11774,17 @@ def so_same_input(cfg, die, r, rec):
         if ip.get("v") != 2:
             return False                               # an attempt stamped by the older hash format relaunches once; its new attempt records v2
         now = input_parts(cfg, die, r.get("item"), r.get("block_sha") or rec.get("block_sha"))
-        if not now or now.get("noenv") != ip["noenv"]:
-            return False
         stage = rec.get("stage") or FG.fail_stage(rec.get("reason") or "")
         why = rec.get("reason") or ""
         fam = stage_family(stage)
+        if not now:
+            return False
+        if now.get("noenv") != ip["noenv"]:
+            # FABLE-FLOW-2355 C: the merged src OVERLAY moves with every signed child view of the die (it changed between ticks), so one whole-hash compare never matched and a deterministic place
+            # failure reran in 71 min.  A flow-stage (place / route / cts ...) failure compares the components it consumes: block, src, snapshot, bind_context, views; the overlay alone is no release.
+            a_, b_ = now.get("pc"), ip.get("pc")
+            if not (fam == "flow" and a_ and b_ and all(a_.get(k) == b_.get(k) for k in ("block", "src", "snapshot", "bind_context", "views"))):
+                return False
         if (now.get("fam") or {}).get(fam) != (ip.get("fam") or {}).get(fam):
             return False                               # an executed file of this stage changed: relaunch
         return stage_env(now.get("env"), stage, why) == stage_env(ip.get("env"), stage, why)
@@ -11816,9 +11849,11 @@ def input_parts(cfg, die, item, block_sha=None):
             env.update({str(a): str(b) for a, b in (d.get(k) or {}).items()})
         env.update({str(a): str(b) for a, b in (item_env(d, item) or {}).items()})
         env = input_env(env)
+        pc = {k: str(spec.get(k) or "") for k in ("block", "src", "overlay", "bind_context", "views")}
+        pc["snapshot"] = str(d.get("src_manifest_hash") or "")
         spec.pop("tools", None)                               # the stage's executed files are hashed per family (exec_family_digests), not the whole gen / bind closure
         body = {"snapshot": str(d.get("src_manifest_hash") or ""), "spec": spec}
-        return {"v": 2, "noenv": hashlib.sha1(json.dumps(body, sort_keys=True, default=str).encode()).hexdigest()[:20], "env": env, "fam": exec_family_digests()}
+        return {"v": 2, "noenv": hashlib.sha1(json.dumps(body, sort_keys=True, default=str).encode()).hexdigest()[:20], "env": env, "fam": exec_family_digests(), "pc": pc}
     except Exception:
         return {}
 

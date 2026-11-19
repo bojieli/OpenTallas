@@ -977,3 +977,51 @@ class FixesItems(unittest.TestCase):
         KW.fixes_release(ap, cfg, st, {}, rt_sha="0" * 12)
         self.assertEqual(KW.fixes_release(ap, cfg, st, {}, rt_sha="1" * 12), 0)
         self.assertEqual(st["fixes_seen"], "0" * 12)
+
+
+class FlowFixes2355(unittest.TestCase):
+    """FABLE-FLOW-2355: kill-pin onto a changed tree, overlay-only drift at a flow stage, classifier on info lines, HUNG-WATCH small dips"""
+
+    def prev(self, tmp, src="/t/old", mh="HASH1"):
+        import json as _j
+        Path(tmp, "spec.json").write_text(_j.dumps({"src": src, "plan": "p.json", "src_manifest_hash": mh, "gen_env": {}}))
+        return {"dir": tmp, "attempt": 3}
+
+    def test_kill_pin_relaunches_on_the_live_tree_when_the_pinned_tree_changed(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as tmp:
+            prev = self.prev(tmp)
+            sp = {}
+            why = KW.kill_pin(prev, sp, manifest_of=lambda t: "OTHER", live_src="/t/live")
+            self.assertIn("relaunching on the live tree", why)
+            self.assertNotIn("kill_pin", sp)
+            sp = {}
+            self.assertEqual(KW.kill_pin(prev, sp, manifest_of=lambda t: "HASH1", live_src="/t/live"), "")      # same content: pinned
+            self.assertEqual(sp["src"], "/t/old")
+            sp = {}
+            self.assertEqual(KW.kill_pin(self.prev(tmp, src="/t/live"), sp, manifest_of=lambda t: "x", live_src="/t/live"), "")   # the live tree itself: no check
+            prev = self.prev(tmp)
+            self.assertIn("unreadable", KW.kill_pin(prev, {}, manifest_of=lambda t: "", live_src="/t/live"))
+
+    def test_overlay_only_drift_does_not_defeat_skip_at_a_flow_stage(self):
+        cfg = {"dies": {"s81": {"event": "E", "src_manifest_hash": "snap", "gen_env": {}, "_plan_sha": "p", "_src_overlay": "OV1"}}}
+        ip = KW.input_parts(cfg, "s81", "x", "blk")
+        rec = {"status": "FAIL", "stage": "place", "reason": "r", "block_sha": "blk", "input_parts": ip}
+        cfg["dies"]["s81"]["_src_overlay"] = "OV2"
+        self.assertTrue(KW.so_same_input(cfg, "s81", {"item": "x", "block_sha": "blk"}, rec))
+        rec["stage"] = "kit_rtl"                                                         # a bind-stage failure reads the overlay: still a release
+        self.assertFalse(KW.so_same_input(cfg, "s81", {"item": "x", "block_sha": "blk"}, rec))
+        rec["stage"] = "place"
+        cfg["dies"]["s81"]["src_manifest_hash"] = "snap2"
+        self.assertFalse(KW.so_same_input(cfg, "s81", {"item": "x", "block_sha": "blk"}, rec))
+
+    def test_info_line_with_outline_is_not_a_plan_geometry_error(self):
+        self.assertNotEqual(KW.classify("place", "GRTM mode edge_outline image /x/y.png written\nKW_PLACE_RC=1\n")[1].split(" @")[0], "plan geometry / site")
+        self.assertEqual(KW.classify("place", "Error: placement failed: macro outside the die outline\n")[0], "PLAN")
+
+    def test_hung_watch_small_cpu_dip_keeps_the_clock(self):
+        t0 = 100000.0
+        hung, w, _ = KW.hung_judge({"cpu": 500.0, "t": t0}, {"cpu": 480.0, "log": t0 - 9999}, t0 - 9999, t0 + 130 * 60, 120)
+        self.assertTrue(hung)                     # CPU dipped by 20 s (an exited child): the 120-min clock was not reset
+        hung, w, _ = KW.hung_judge({"cpu": 5000.0, "t": t0}, {"cpu": 100.0, "log": t0 - 9999}, t0 - 9999, t0 + 130 * 60, 120)
+        self.assertFalse(hung)                    # a real restart (CPU fell by thousands of seconds) restarts the clock
