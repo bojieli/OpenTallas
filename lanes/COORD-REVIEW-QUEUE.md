@@ -27131,3 +27131,4 @@ FAILED [AUTOPILOT 70d28d7b8580] 2026-11-19 05:38:28 PST AUTOPILOT -> KIT-WAVE-3:
   (3) A 44 ps fallback hurts. Remeasured ports, not a blanket 60.
   Step 2 is running now: a region-DME die clock (g03c3_rt4 form via ot_clk, map398 + feed_sb6_h2_2249) on D8g, with die proto + die_sta_related --kit-window-out. Rows follow from it. Evidence: epyc8/9/10 /srv/opentallas-scratch2/claude/s81-clock-window/<kit>/{tt,ff}.log.
 - 2026-11-19 05:40 PST DISK-RATE epyc2 /srv/opentallas-scratch2: free 129 GB, falling 17 GB/h, floor 50 GB in 4.6 h (cron disk_rate.py; read-only)
+- 2026-11-19 05:40 PST STATE 13:40 UTC: coll_core attempt_7 GRT still running (10.5 h), no TT report. Container log 5_1_grt.tmp.log last write 13:14 (25 min ago, under 60 min), 59 extra-iteration lines, at 19/30 of a round; slow but moving, not cancelled. Waiter 2 timed out; re-armed waiter 3 (3 h). N4.6 tx rows and the pending srr_cone note are already posted.
