@@ -201,6 +201,62 @@ proc ot_serdes_boot_private_chain {src dst} {
   lappend chain $drv;set pin [lindex $ins 0]
  }
 }
+# Site for a chain cell at arc fraction f of the guide polyline (dbu points): the nearest macro/halo/core-free site within
+# 20 um (rows 0.27 um, sites 0.054 um); {} when none.
+proc ot_serdes_boot_guide_site {guide f m d macs core} {
+ set L 0.;foreach a [lrange $guide 0 end-1] b [lrange $guide 1 end] {set L [expr {$L+abs([lindex $b 0]-[lindex $a 0])+abs([lindex $b 1]-[lindex $a 1])}]}
+ set s [expr {$L*$f}];lassign [lindex $guide end] bx by
+ foreach a [lrange $guide 0 end-1] b [lrange $guide 1 end] {
+  set l [expr {abs([lindex $b 0]-[lindex $a 0])+abs([lindex $b 1]-[lindex $a 1])}]
+  if {$s<=$l} {set t [expr {$l>0 ? $s/$l : 0.}];set bx [expr {[lindex $a 0]+([lindex $b 0]-[lindex $a 0])*$t}];set by [expr {[lindex $a 1]+([lindex $b 1]-[lindex $a 1])*$t}];break}
+  set s [expr {$s-$l}]
+ }
+ foreach dy {0 5 -5 10 -10 20 -20} {
+  foreach dx {0 5 -5 10 -10 20 -20} {
+   set x [expr {round(($bx/$d+$dx)/0.054)*0.054*$d}];set y [expr {round(($by/$d+$dy)/0.27)*0.27*$d}]
+   if {[ot_reset_anchor::free [list $x $y [expr {$x+[$m getWidth]}] [expr {$y+[$m getHeight]}]] $macs $core]} {return [list [expr {int($x)}] [expr {int($y)}]]}
+  }
+ }
+ return {}
+}
+# Shortest rectilinear macro/halo-free route from (sx,sy) to (tx,ty) (dbu) on a 4.32-um grid inside the core, within 300 um
+# of their box (BFS; a grid point is free when a 6.48 x 1.08 um box there is free).  Returns the corner points; error if none.
+proc ot_serdes_boot_detour {sx sy tx ty d macs core} {
+ set g [expr {4.32*$d}];set pad [expr {300.0*$d}];lassign $core cx0 cy0 cx1 cy1
+ set x0 [expr {max($cx0,min($sx,$tx)-$pad)}];set y0 [expr {max($cy0,min($sy,$ty)-$pad)}]
+ set x1 [expr {min($cx1,max($sx,$tx)+$pad)}];set y1 [expr {min($cy1,max($sy,$ty)+$pad)}]
+ set nx [expr {int(($x1-$x0)/$g)}];set ny [expr {int(($y1-$y0)/$g)}]
+ set w [expr {6.48*$d}];set h [expr {1.08*$d}]
+ set a [list [expr {max(0,min($nx,round(($sx-$x0)/$g)))}] [expr {max(0,min($ny,round(($sy-$y0)/$g)))}]]
+ set z [list [expr {max(0,min($nx,round(($tx-$x0)/$g)))}] [expr {max(0,min($ny,round(($ty-$y0)/$g)))}]]
+ set par [dict create $a {}];set q [list $a];set qi 0
+ while {$qi<[llength $q]} {
+  set c [lindex $q $qi];incr qi
+  if {$c eq $z} break
+  lassign $c i j
+  foreach {di dj} {1 0 -1 0 0 1 0 -1} {
+   set u [expr {$i+$di}];set v [expr {$j+$dj}]
+   if {$u<0 || $v<0 || $u>$nx || $v>$ny || [dict exists $par [list $u $v]]} continue
+   set px [expr {$x0+$u*$g}];set py [expr {$y0+$v*$g}]
+   if {[list $u $v] ne $z && ![ot_reset_anchor::free [list [expr {$px-$w/2}] [expr {$py-$h/2}] [expr {$px+$w/2}] [expr {$py+$h/2}]] $macs $core]} continue
+   dict set par [list $u $v] $c;lappend q [list $u $v]
+  }
+ }
+ if {![dict exists $par $z]} {error "OT_BOOT_PATH no macro-free detour between ([expr {$sx/$d}], [expr {$sy/$d}]) and ([expr {$tx/$d}], [expr {$ty/$d}])"}
+ set cells {};set c $z
+ while {$c ne {}} {set cells [linsert $cells 0 $c];set c [dict get $par $c]}
+ set pts [list [list $sx $sy]]
+ foreach c [lrange $cells 1 end-1] {lassign $c u v;lappend pts [list [expr {$x0+$u*$g}] [expr {$y0+$v*$g}]]}
+ lappend pts [list $tx $ty]
+ # keep only the corners
+ set out [list [lindex $pts 0]]
+ for {set k 1} {$k<[llength $pts]-1} {incr k} {
+  lassign [lindex $pts [expr {$k-1}]] ax ay;lassign [lindex $pts $k] bx by;lassign [lindex $pts [expr {$k+1}]] ex ey
+  if {!(($ax==$bx && $bx==$ex) || ($ay==$by && $by==$ey))} {lappend out [list $bx $by]}
+ }
+ lappend out [lindex $pts end]
+ return $out
+}
 proc ot_serdes_boot_path_plan {ff d macs core} {
  set plans {};set summaries {}
  for {set k 0} {$k<2} {incr k} {
@@ -208,22 +264,29 @@ proc ot_serdes_boot_path_plan {ff d macs core} {
   set chain [ot_serdes_boot_private_chain $src $dst]
   lassign [$src getLocation] sx sy;lassign [$dst getLocation] tx ty
   set prev [list $sx $sy];set before 0.;set after 0.;set maxhop 0.;set next {}
+  foreach i $chain {
+   lassign [$i getLocation] ox oy;lassign $prev px py
+   set before [expr {$before+abs($ox-$px)+abs($oy-$py)}];set prev [list $ox $oy]
+  }
+  set guide [list [list $sx $sy] [list $tx $ty]];set detour 0
   set j 0;set n [llength $chain]
   foreach i $chain {
-   incr j;lassign [$i getLocation] ox oy;lassign $prev px py
-   set before [expr {$before+abs($ox-$px)+abs($oy-$py)}];set prev [list $ox $oy]
-   set bx [expr {$sx+($tx-$sx)*double($j)/($n+1)}];set by [expr {$sy+($ty-$sy)*double($j)/($n+1)}]
-   set found 0;set m [$i getMaster]
-   foreach dy {0 5 -5 10 -10 20 -20} {
-    foreach dx {0 5 -5 10 -10 20 -20} {
-     set x [expr {round(($bx/$d+$dx)/0.054)*0.054*$d}];set y [expr {round(($by/$d+$dy)/0.27)*0.27*$d}]
-     set r [list $x $y [expr {$x+[$m getWidth]}] [expr {$y+[$m getHeight]}]]
-     if {[ot_reset_anchor::free $r $macs $core]} {set found 1;break}
+   incr j
+   set m [$i getMaster]
+   set site [ot_serdes_boot_guide_site $guide [expr {double($j)/($n+1)}] $m $d $macs $core]
+   if {![llength $site] && !$detour} {
+    # S81 serdes__t1 11-19: stage k and k+1 sit on opposite sides of a macro (the derived sites cross u_cmem), so the
+    # straight line runs through the macro: re-plan this stage's chain cells along a macro/halo-free rectilinear detour.
+    set guide [ot_serdes_boot_detour $sx $sy $tx $ty $d $macs $core];set detour 1;set next {};set j 0
+    foreach i2 [lrange $chain 0 end] {
+     incr j;set site [ot_serdes_boot_guide_site $guide [expr {double($j)/($n+1)}] [$i2 getMaster] $d $macs $core]
+     if {![llength $site]} {error "OT_BOOT_PATH no macro-free path site [$i2 getName] (detour)"}
+     lappend next [list $i2 {*}$site]
     }
-    if {$found} break
+    break
    }
-   if {!$found} {error "OT_BOOT_PATH no macro-free path site [$i getName]"}
-   lappend next [list $i [expr {int($x)}] [expr {int($y)}]]
+   if {![llength $site]} {error "OT_BOOT_PATH no macro-free path site [$i getName]"}
+   lappend next [list $i {*}$site]
   }
   lassign $prev px py;set before [expr {($before+abs($tx-$px)+abs($ty-$py))/$d}]
   set prev [list $sx $sy]
