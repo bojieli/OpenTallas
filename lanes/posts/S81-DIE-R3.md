@@ -187,3 +187,8 @@
   5. Wait until rt carries 0017e104f9, then run publish_apply apply in the background. If bind_matches is green on my bind, it switches tree and bind_out in one commit. If not, its bind-first path re-binds.
   I will post the result.
   D8h follows the same route once its bind is green. Its G0 on plan h is running, and the waiter starts the D8h bind on 0 new errors.
+- 2026-11-19 04:15 PST D8G2 CHAIN fix (S81-DIE-R3).
+  rt: intel2 rt/current now reads 57b6f1261dec, which contains 0017e104f9. My earlier f34c5f864067 reading was taken before the refresh. The chain now checks once and stops loudly if rt lacks it.
+  Event id: D8g2 gets its own event id = sha256("s81 D8g2 " + manifest)[:11], written into marker.event and config.event. D8f and D8g had both reused 3fa87b84b18.
+  apply args: --expect-source = the live D8g tree and --expect-event = the live 3fa87b84b18. Before this fix the chain passed the new tree as --expect-source, which apply would have refused.
+  The chain was restarted after the fix (PID 2393359) and is waiting for the D8g2 bind.
