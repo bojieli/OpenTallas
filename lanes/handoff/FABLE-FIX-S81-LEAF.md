@@ -240,3 +240,13 @@ QC / KV / HEAD CBC counts need a re-run by CBC-RULES-1119 with main >= 01360b438
 - SECOND GAP, NOT FIXED: on the 36 leaf types of my SWR rows the tool lists the vsw -> vs link on only 5 (rows t21 / t60, unfixed t27 / t71 "neither end is a bound leaf
   (sub-cores)", flight-only kv_leaf t1); 31 are not listed at all although pin to pin is 203..794 um (t31 591, t10 / t74 695, t4 794). Suspect: plan core inst u_lf.u_vsw vs
   bound instance u_u_lf<N>_u_vsw name mapping in core_conns_from_bind.trace / relay_depth leaf_rel. Next step: compare trace paths of t60 (works) and t31 (missing).
+
+## 11-19 10:5x PST: CORRECTION (my error) + D8i hand-off files
+- The "36 types without a vsw -> vs station" was WRONG. 31 of them already have one: the plan declares it as core:u_lf.u_vs.sw_ri|core:u_lf.u_vsw (I only searched the
+  core:u_lf.u_vsw.o_*|core:u_lf.u_vs form) and the bound RTL carries the cst_swr stage. Only 5 lack it: kv_leaf__t1, leaf t21, t27, t60 (2 stations), t71.
+  So "22 types 471..980 um unstationed" is withdrawn, and there is NO second trace-mapping gap on leaf: the tool was right not to list those 31.
+  t31 has the station; its -1,116 was attributed by matching value only and is NOT explained (t60 was measured). The old file is epyc10 swr/S81-LEAF-SWR-STATION-ROWS.WRONG36.json.
+- D8i files on the hub: lanes/handoff/S81-LEAF-SWR-STATION-ROWS.json (5 types, 6 stations) and lanes/handoff/S81-D8I-RELAY-DEPTH-ROWS.json (73 types, 354 rows, +354 stages;
+  apply with relay_depth.py merge; the vs.sw_* rows of t21 / t60 are left to the station rows). Merged plan: epyc10 proof/g0/plandir/plan_d8i_rows2.json.
+  G0 on it: running (intel2 g0_d8i2.otrun.log; epyc10 proof/g0/status_d8i2.txt, g0_d8i2/g0_report.json); control = g0_ctl (2 errors). g0_d8i (first, with the wrong 36) is void.
+- Trace-mapping task (COORD): the S81 leaf vsw case is not a mapping bug. Still to do: the QC flattened-tile case (48 blind types) and the 18 S81 blind types; then four-die re-runs.
