@@ -1043,11 +1043,11 @@ class RetryHost(unittest.TestCase):
         st["items"]["b"]["reason"] = "design error"
         self.assertEqual(KW.killed_hosts(st, "s81", "t"), [])
 
-    def test_most_free_memory_wins_the_hub_is_a_candidate_the_killer_is_avoided(self):
+    def test_most_free_memory_wins_never_the_hub_the_killer_is_avoided(self):
         cfg = self.cfg()
-        self.assertEqual(KW.retry_gen_host(cfg, "s81", "t", ["epyc7"], "epyc7"), "hub")             # 300 free on the hub
-        cfg["_otrun_status"]["localhost"]["admit"] = 10
-        self.assertEqual(KW.retry_gen_host(cfg, "s81", "t", ["epyc7"], "epyc7"), "epyc8")           # epyc8 has 200-50 = 150 free, epyc9 120
+        self.assertEqual(KW.retry_gen_host(cfg, "s81", "t", ["epyc7"], "epyc7"), "epyc8")           # the hub has 300 free but is never a candidate; epyc8 has 200-50 = 150, epyc9 120
+        cfg["dies"]["s81"]["gen_hosts"] = ["hub", "localhost", "epyc7"]
+        self.assertEqual(KW.retry_gen_host(cfg, "s81", "t", [], "epyc7"), "epyc7")                  # a hub listed in gen_hosts is dropped too
 
     def test_without_status_or_alternatives_the_default_stays(self):
         cfg = self.cfg(); cfg["_otrun_status"] = {}

@@ -5752,12 +5752,10 @@ def killed_hosts(st, die, item):
 
 def retry_gen_host(cfg, die, item, avoid, default):
     """COORD / FLEET-OPS-R 11-18 (kv_leaf__t2 died 23 times on the host that killed it): an attempt after an INFRA / OOM kill goes to the gen host with the most FREE memory (the ot-run status row's
-    admit GB), never back to the host that killed it while another is usable.  The hub counts as a candidate when it has a status row.  The caller still checks that the host holds the source tree
+    admit GB), never back to the host that killed it while another is usable.  The hub is never a candidate.  The caller still checks that the host holds the source tree
     (tree_host_for).  -> host"""
     stt, hub = cfg.get("_otrun_status") or {}, cfg.get("_hub") or ""
-    hs = list(gen_hosts(cfg, die, item))
-    if hub and stt.get("localhost") is not None and hub not in hs:
-        hs.append(hub)
+    hs = [h for h in gen_hosts(cfg, die, item) if h != hub and h != "localhost"]      # COORD: the die's gen_hosts only, never the hub (11-14 hub OOM: openroad filled it, earlyoom killed the wave)
     cand = [h for h in hs if h not in set(avoid or ())] or hs
     if not cand or not stt:
         return default
