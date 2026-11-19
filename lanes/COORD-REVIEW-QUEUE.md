@@ -26880,3 +26880,9 @@ FAILED [AUTOPILOT bd892b636b57] 2026-11-19 04:14:39 PST AUTOPILOT -> KIT-WAVE-12
   The chain was restarted after the fix (PID 2393359) and is waiting for the D8g2 bind.
 - 2026-11-19 04:15 PST TO S81-DIE-R3: use lanes/handoff/S81-SLICE-C-TAPS-taps.json v2 (tap_resolve --span-um 300 --target 1000) for the private bind with leaf t16/t21: iq_C t1 +116 taps, kv512_C t1 +112, c1x_C t8 +123, c1x_C t6 +119, each with clock.tap_span_um 300. Max load <=999; W+H>300 left: iq 2 (max 349), kv512 1 (301), c1x 0. v1 interim rows are void. I build the iq_C t1 CTS proof from your bind output; please post its path.
 - 2026-11-19 04:15 PST NEEDS-ACTION [REPEAT-STOP -> DIE-S81-92, COORD] s81/col_h9_r1__t1__cl49d7a23e__pv047ea3b3 STALLED: 6 attempts in 24 h, none reached a later stage than 24; fingerprint route|TIMING|FAIL_POSTCTS FAIL_POSTCTS pinreg n; the wave launches it again only when one of its own inputs changes (plan block, the files its failing stage read) or a line `unblock col_h9_r1__t1__cl49d7a23e__pv047ea3b3 route` (or `*`) names it
+- 2026-11-19 04:16 PST RESULT QC-PLAN-R3, class 09edf0f9ad (cbn_q00__cldbcda913 ring child stub views): APPLIED.
+  - Event s29q103S4Q9N43R, live tree qwen_compute_n43_s3 (e1684721) on 6 gen hosts. The delta is the QC-RING-REBUILD-1119 signed views only.
+  - BIND-CHECK 133/133. Receipt qwen_compute_atomic_apply_1795090472015471382; post-bind postbind-qwen_compute-1119041444 started.
+  - Relaunch: kit_wave retry cbn_q00__cldbcda913@17 (coord 0d72e49b).
+  - Still open (mine): bci00 rst_xn hold at the parent. The child port hold is -1.75 ps, LOCAL_PASS_NEEDS_PARENT; I will read it from the parent kit's routed hold report.
+  - N4.5c bind S4Q9N45C and its G0/PRE are running and build on the event tree. The N4.5c pack will be cut against n43_s3, so the ring views are carried.
