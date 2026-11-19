@@ -4,7 +4,7 @@
  "for": "S81-DIE-R3",
  "status": "rows from tools/die_plan/tap_resolve.py --span-um 300 --target 1000 (main f34c5f86406); replaces the interim v1 rows. Not yet proven: private CTS kit pending the private bind.",
  "row": "per type: APPEND added_taps to partition_types[T].clock.taps (existing keep name/xy) and SET clock.tap_span_um = 300. Solved on placed registers (iq_C t1 epyc10; kv512_C t1, c1x_C t8, c1x_C t6 epyc8), plan = lepe proof plan_h2_2249.",
- "residual": "W+H>300 after: iq 2 taps (max 349), kv512 1 (301), c1x_t8 0, c1x_t6 0; max load <=999. c1x t1,t3,t4,t5,t7,t9,t10 not solved (no placed DB).",
+ "residual": "W+H>300 after: iq 2 taps (max 349), kv512 1 (301), c1x_t8 0, c1x_t6 0; max load <=999. c1x t1,t3,t4,t5,t7,t9,t10 not solved (no placed DB). | v2.1: c1x t1,t3,t4,t5,t7,t9,t10 = span-only rows (t5 and t7 share one layout; neither is placed, so no table).",
  "types": {
   "dsdv_slice_iq_C__t1": {
    "append_to": "clock.taps",
@@ -3365,6 +3365,55 @@
     "fastest": "clk_t112",
     "tol_ps": 0.0
    }
+  },
+  "dsdv_slice_c1x_C__t1": {
+   "set": {
+    "clock.tap_span_um": 300
+   },
+   "added_taps": [],
+   "note": "span-only row: no placed DB; hard-core layout differs from t6/t8 (plan check: hard_cores signature equal only t5==t7), so no table reused; kit pair planner enforces W+H<=300 at build"
+  },
+  "dsdv_slice_c1x_C__t3": {
+   "set": {
+    "clock.tap_span_um": 300
+   },
+   "added_taps": [],
+   "note": "span-only row: no placed DB; hard-core layout differs from t6/t8 (plan check: hard_cores signature equal only t5==t7), so no table reused; kit pair planner enforces W+H<=300 at build"
+  },
+  "dsdv_slice_c1x_C__t4": {
+   "set": {
+    "clock.tap_span_um": 300
+   },
+   "added_taps": [],
+   "note": "span-only row: no placed DB; hard-core layout differs from t6/t8 (plan check: hard_cores signature equal only t5==t7), so no table reused; kit pair planner enforces W+H<=300 at build"
+  },
+  "dsdv_slice_c1x_C__t5": {
+   "set": {
+    "clock.tap_span_um": 300
+   },
+   "added_taps": [],
+   "note": "span-only row: no placed DB; hard-core layout differs from t6/t8 (plan check: hard_cores signature equal only t5==t7), so no table reused; kit pair planner enforces W+H<=300 at build"
+  },
+  "dsdv_slice_c1x_C__t7": {
+   "set": {
+    "clock.tap_span_um": 300
+   },
+   "added_taps": [],
+   "note": "span-only row: no placed DB; hard-core layout differs from t6/t8 (plan check: hard_cores signature equal only t5==t7), so no table reused; kit pair planner enforces W+H<=300 at build"
+  },
+  "dsdv_slice_c1x_C__t9": {
+   "set": {
+    "clock.tap_span_um": 300
+   },
+   "added_taps": [],
+   "note": "span-only row: no placed DB; hard-core layout differs from t6/t8 (plan check: hard_cores signature equal only t5==t7), so no table reused; kit pair planner enforces W+H<=300 at build"
+  },
+  "dsdv_slice_c1x_C__t10": {
+   "set": {
+    "clock.tap_span_um": 300
+   },
+   "added_taps": [],
+   "note": "span-only row: no placed DB; hard-core layout differs from t6/t8 (plan check: hard_cores signature equal only t5==t7), so no table reused; kit pair planner enforces W+H<=300 at build"
   }
  }
 }
