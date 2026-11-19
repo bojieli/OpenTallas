@@ -64,3 +64,11 @@ Work dir: epyc2 /srv/opentallas-scratch3/claude/fable-fix-s81-colh9r1 (L). Tools
 - Rows handed to S81-DIE-R3 for D8h: L/mk_rows_h9r1.py (rows L/rows_h9r1_i1trunk_v1.json 795d7be5c3d5).
 - Kit relaunched 06:2x to goal route (log intel2 ~/fable-fix-s81-colh9r1/kit_v1_route.out): first DRT + sign-off read of the family.
 - Next owner steps: (1) read DRT DRC and routed TT / FF hold on this kit; (2) port-hold class: check sign-off hold frame (IO in_min -40) before any row; (3) s5/q6 and bs7/i_x1 are the next setup classes if routed TT falls below -42.
+
+## 2026-11-19 06:30 hold class + route relaunch
+- COORD: input-port-start hold is advisory under R-MINIMAL; no row for it. GRT evidence (V, kit 5_global_route.rpt, FF): worst reg-to-reg hold +1.71 MET; the violated
+  group starts at input ports (frame_int_i1[860] -66.53). At TT (L/sta/g1.hold.txt) all 1,392 failing ends are bin_frame_int_i0/i1 face flops. Confirm again on the sign-off hold report.
+- The route relaunch (06:1x) did NOT resume: goal route re-ran the make chain from 2_1_floorplan (no resume.json). It is a full rebuild of the same kit, about 5 h to DRT;
+  5_1_grt.odb of the proof gets overwritten (proof numbers are in run_grt.log and L/sta/g1.*). Left running; waiter on kit exit / FAIL_*.
+- This kit was generated before 6038c66927 / eb10738511, so its hold repair still includes port starts.
+- Asked S81-DIE-R3 to carry OT_MAXWIRE_POST_SKIP for every col_h9 / col_h10 type in D8h.
