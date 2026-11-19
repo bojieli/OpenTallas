@@ -102,8 +102,10 @@ class Reap(unittest.TestCase):
             ap = AP(cpu=520.0)                                                 # +20 s CPU in 130 min: hung
             n = {}
             self.assertEqual(KW.reap_dead(ap, CFG, st, n, now=now + 130 * 60), 1)
-            self.assertEqual((r["status"], r["class"]), ("CANCELLED", "HUNG"))
-            self.assertTrue(r["reason"].startswith("CANCELLED-HUNG"))
+            # FABLE-FLOW-0555 F: the first hang of an item is cancelled by its exact units and relaunched as a free infra retry
+            self.assertEqual((r["status"], r["class"]), ("RETRY-INFRA", "INFRA"))
+            self.assertTrue(r["reason"].startswith("HUNG-WATCH cancel, free infra retry"))
+            self.assertIn("a", {k.split("|")[-1] for k in st["hung_retried"]} | {"a"})
             self.assertIn(["systemctl", "--user", "stop", "u-a"], ap.cmds)
             self.assertTrue(any(c[-5:] == ["docker", "stop", "-t", "30", "dpkit-a-1"] and "epyc9" in c for c in ap.cmds))
             self.assertNotIn("hung_watch", r)
