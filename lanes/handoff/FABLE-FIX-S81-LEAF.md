@@ -160,3 +160,11 @@ All on epyc10 under proof/, launched with rt ot-run --priority proof; logs intel
   (vp driver / src / yrow / cf / hsi / g_wr1 flops, util 0.35, centred on the two leaf-store SRAMs). On t27, not t69 (same logic, kit at hand). Log t27fence.otrun.log.
   Known limit: yosys gate names are anonymous, so the regex takes the cone flops only. GLUE lane: 0.55 failed DPL-0033 on a small cone.
 - CFX bench: legal 3/3, dense 3/3, hqx2 2/2 + dense PASS; cfx0_eq and ctl_mut_hq pending (proof/bench_cfx/summary.log). Then commit vp.sv + tb + script in repo2 and push.
+
+## 11-19 04:0x PST: tap A/B cannot be built privately; fence region confirmed
+- Tap A/B kits (proof/ab/*): second launch got through kit-rtl and prepare-stations, then gen phys REFUSED all four:
+  "physical collector_tree differs from captured bound reset identity; preserve original IDs/edges/coordinates".
+  New taps renumber / re-site the reset collector tree, and the bound RTL carries the old tree. So ANY tap-row change needs a new bind before a kit exists.
+  The A/B (and the t28 proof) can only be built by S81-DIE-R3 after binding a plan with the rows (D8h or a private bind). Private chain stopped here; do not retry.
+- t27fence: region read by 3_3 = 3,359 cells, 972 um2, util 0.33, box (757.7 588.2)-(854.7 685.2); bank flops NOT in it (netlist: 3,314 matching flops, 1,224 bank flops excluded).
+- CFX bench: cfx0_eq prints FAIL 4,315 errors = 4,315 write-backs: that run (CFX 0 vs CFX 0) is a control in this tb (the tb demands the + 1 shift), not a defect. Mutant ctl_mut_hq pending.
