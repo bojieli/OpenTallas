@@ -229,11 +229,14 @@ def run_tool(args, log):
     return r.returncode
 
 
-def relay_rows(plan_path, type_re, bound, work, hop):
-    """relay_branch (0 cycles first) then relay_depth on the branch-applied plan (cycles for what is left)"""
+def relay_rows(plan_path, type_re, bound, work, hop, fix=(), legs=()):
+    """relay_branch (0 cycles first) then relay_depth on the branch-applied plan (cycles for what is left).
+    COORD 11-19 05:55: relay_branch writes a reach fix only for a NAMED bus / relay (fix: TYPE:NAME) with a MEASURED placed
+    leg (legs: TYPE=placed_hops.json); no whole-type mode, no whole-type centroid aim -- everything else is a candidate."""
     br_plan, br_rep = Path(work) / "plan_branch.json", Path(work) / "relay_branch.json"
+    extra = [y for f in fix for y in ("--fix", f)] + [y for g in legs for y in ("--legs", g)]
     rc1 = run_tool([HERE / "relay_branch.py", plan_path, type_re, bound, "--plan-dir", Path(plan_path).resolve().parent,
-                    "--limit", hop, "--out-plan", br_plan, "--report", br_rep], Path(work) / "relay_branch.log")
+                    "--limit", hop, "--out-plan", br_plan, "--report", br_rep] + extra, Path(work) / "relay_branch.log")
     base = br_plan if rc1 == 0 and br_plan.is_file() else plan_path
     dp_rep = Path(work) / "relay_depth.json"
     rc2 = run_tool([HERE / "relay_depth.py", base, type_re, bound, "--limit", hop, "--report", dp_rep],
@@ -246,9 +249,14 @@ def relay_rows(plan_path, type_re, bound, work, hop):
 def summarise_relays(rel):
     out = dict(copies=0, far_copies=0, joins=0, trunks=0, depth_rows=0, depth_cycles=0, unfixed=[], read_loops=[], per_type={},
                branch_stages_added=0, far_need_stages=0)
+    out.update(candidates=dict(relay_branch=0, joins=0, trunks=0), emitted=0, not_emitted=0)
     for r in rel["branch"]:
         if r.get("error"):
             continue
+        for k, v in (r.get("candidates") or {}).items():
+            out["candidates"][k] = out["candidates"].get(k, 0) + v
+        out["emitted"] += sum(1 for g in r.get("gate") or [] if g.get("emitted"))
+        out["not_emitted"] += sum(1 for g in r.get("gate") or [] if not g.get("emitted"))
         cp = [c for x in r.get("relay_branch") or [] for c in x["copies"]]
         out["copies"] += len(cp)
         out["far_copies"] += sum(1 for c in cp if c.get("D"))
@@ -457,6 +465,8 @@ def main(argv=None):
     ap.add_argument("--types", default=".*", help="regex over type names")
     ap.add_argument("--depth", help="precheck_synth DEPTH tsv: type, endpoint, levels")
     ap.add_argument("--skip", default="", help="comma list of relay,reset,taps")
+    ap.add_argument("--fix", action="append", default=[], help="TYPE:NAME bus / relay to fix (relay_branch --fix)")
+    ap.add_argument("--legs", action="append", default=[], help="TYPE=placed_hops.json measured legs (relay_branch --legs)")
     ap.add_argument("--cycles-per-token", type=float)
     ap.add_argument("--layers", type=int, default=1)
     ap.add_argument("--freq-hz", type=float)
@@ -483,7 +493,7 @@ def main(argv=None):
     kd = k_deltas(P, ftr)
     rel = None
     if a.rtl and "relay" not in skip:
-        rel = relay_rows(a.plan, a.types, bound, out, th["hop_um"])
+        rel = relay_rows(a.plan, a.types, bound, out, th["hop_um"], a.fix, a.legs)
         rows["relays"] = summarise_relays(rel)
         rows["relays"]["bound_types"] = n_bound
     if "taps" not in skip:
@@ -515,7 +525,9 @@ def main(argv=None):
          f"ft slots re-stationed: {len(rows['ft_stations'])} (families {sorted({family(r['type']) for r in rows['ft_stations']})[:12]})",
          f"- core-to-core relay_depth rows after 0-cycle fixes: {rl.get('depth_rows', 0)} (max D {rl.get('depth_cycles', 0)}; "
          "internal pipe cycles, bind_core_input_pipe / compiler, not plan lanes)" if rel else "- relays: not run (no --rtl)",
-         f"- relay fixes in plan_branch.json: {rl.get('copies', 0)} branch copies, {rl.get('joins', 0)} station joins, "
+         f"- reach fix candidates (relay_branch, NOT written unless a named bus with a measured leg -- COORD 11-19 05:55, no "
+         f"whole-type mode / centroid aim): {rl.get('candidates')}; emitted {rl.get('emitted', 0)}, not emitted {rl.get('not_emitted', 0)}" if rel else "",
+         f"- relay fixes written to plan_branch.json: {rl.get('copies', 0)} branch copies, {rl.get('joins', 0)} station joins, "
          f"{rl.get('trunks', 0)} trunk re-aims; internal stages these rows ADD: {rl.get('branch_stages_added', 0)} "
          f"(0 = stage count kept, the 0-cycle form); far branches left over the reach (need stages, not emitted): "
          f"{rl.get('far_need_stages', 0)}; leaves matched: S81 ot_s81_rly*/dsfd_rly_* and ot_dp_dly/ot_dp_dly_keep" if rel else "",

@@ -127,15 +127,18 @@ def run_placed(kit, odb, out_json, mem_gb=14):
     return r.returncode
 
 
+LEG_RULE = "pin2pin-nocore-nostrap-1119"   # summaries of another rule are re-summarised from the stored raw scan
+
+
 def summarise_placed(kit, ph, reach=CBC.REACH_UM_PER_HOP):
     """legs over reach by class (cbc_rules.classify_leg: core / channel / logic; strap/tie legs excluded)"""
     legs, by_class = [], collections.Counter()
     for r in ph.get("legs", []):
         if r[0] <= reach:
             continue
-        c = CBC.classify_leg(r[2], r[3], r[5], r[6], ph.get("macros") or [])
-        by_class[c] += 1
-        if c != "strap":
+        by_class[CBC.classify_leg(r[2], r[3], r[5], r[6], ph.get("macros") or [])] += 1     # every class, for the record
+        c = CBC.reach_leg(r, ph.get("macros") or [], reach)    # COORD 11-19 05:55: pin-to-pin, not over a core, not strap/tie
+        if c:
             legs.append(r + [c])
     pairs = collections.defaultdict(lambda: [0, 0.0, None])
     for st, acc, a, b, pin, la, lb, c in legs:
@@ -151,7 +154,7 @@ def summarise_placed(kit, ph, reach=CBC.REACH_UM_PER_HOP):
         mem = assign_taps(taps, [tuple(r) for r in ph["regs"]], int(min(cap or CBC.TAP_MAX_SINKS, CBC.TAP_MAX_SINKS)), CBC.TAP_RADIUS_UM)
         skew = {n: (skew_estimate(d), len(d)) for n, d in mem.items() if len(d) >= MIN_TAP_SINKS}
     worst = max((v[0] for v in skew.values()), default=None)
-    return dict(legs_over=len(legs), by_class=dict(by_class), pairs=[[a, b, n, round(w, 1), ex, c] for (c, a, b), (n, w, ex) in top[:40]],
+    return dict(leg_rule=LEG_RULE, legs_over=len(legs), by_class=dict(by_class), pairs=[[a, b, n, round(w, 1), ex, c] for (c, a, b), (n, w, ex) in top[:40]],
                 skew_worst_ps=worst, taps_over_pass=sorted([n for n, v in skew.items() if v[0] >= CBC.TAP_SKEW_PASS_PS]),
                 taps_over_fail=sorted([n for n, v in skew.items() if v[0] >= CBC.TAP_SKEW_FAIL_PS]),
                 skew=skew, n_regs=ph.get("n_regs"))
@@ -184,6 +187,15 @@ def scan_kit(kit, do_post=False, mem_gb=14):
     odb = stage_file(kit, "3_place.odb")
     prev = json.loads(sp.read_text()) if sp.exists() else None
     retry = prev is not None and prev.get("status") != "OK" and int(prev.get("attempts", 1)) < MAX_ATTEMPTS
+    raw0 = STATE / f"{kit.name}.placed_raw.json"
+    if prev and prev.get("status") == "OK" and prev.get("leg_rule") != LEG_RULE and raw0.exists():
+        try:                             # same scan, the counted-leg rule changed: no new docker run
+            s = summarise_placed(kit, json.loads(raw0.read_text()))
+            s.update(rc=0, status="OK", attempts=prev.get("attempts", 1))
+            sp.write_text(json.dumps(s, indent=1))
+            prev = s
+        except (OSError, ValueError):
+            pass
     if odb and (prev is None or retry):
         raw = STATE / f"{kit.name}.placed_raw.json"
         rc = run_placed(kit, odb, raw, mem_gb)
@@ -194,8 +206,8 @@ def scan_kit(kit, do_post=False, mem_gb=14):
             sp.write_text(json.dumps(s, indent=1))
             if s["legs_over"]:
                 bc = s["by_class"]
-                msgs.append(f"PLACED {s['legs_over']} legs > {CBC.REACH_UM_PER_HOP:.0f} um (core {bc.get('core', 0)}, "
-                            f"channel {bc.get('channel', 0)}, logic {bc.get('logic', 0)}; strap/tie {bc.get('strap', 0)} excluded): "
+                msgs.append(f"PLACED {s['legs_over']} legs pin-to-pin > {CBC.REACH_UM_PER_HOP:.0f} um (channel > {CBC.REACH_BUFFERED_UM:.0f}) counted; over the reach by class: core {bc.get('core', 0)} (not counted), "
+                            f"channel {bc.get('channel', 0)}, logic {bc.get('logic', 0)}, strap/tie {bc.get('strap', 0)} (not counted): "
                             + "; ".join(f"[{c}] {a} -> {b} x{n} (max {w} um)" for a, b, n, w, _ex, c in s["pairs"][:4]))
         else:
             err = ""

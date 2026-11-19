@@ -344,3 +344,17 @@ def test_hier_pin_view_nested_and_alias():
     rows, drows, rep = RB.branch_rows(plan, "q", HIER, None, 405.0)
     assert [r["inst"] for r in rows] == ["pd_x"] and drows == []
     assert {tuple(c["sinks"]) for c in rows[0]["copies"]} <= {("u_r4",), ("u_r7",)}
+
+
+def test_gate_named_bus_with_measured_leg_only():
+    # COORD 11-19 05:55: no whole-type mode -- a candidate is written only when named and a measured leg supports it
+    rows = [dict(inst="r0_u_y_xa_1_0", copies=[dict(name="r0_u_y_xa_1_bs0_0")]), dict(inst="r1_u_z_0", copies=[dict(name="r1_u_z_bs0_0")])]
+    trunks = {"bus:frame_i": {"regs_um": []}}
+    legs = {"T": [(900.0, "u_bound.u_r0_u_y_xa_1_0.q_reg[3]", "u_bound.u_core.d", "logic"),
+                  (700.0, "u_bound.u_lpad_frame_i.r[0][1]", "u_bound.u_c2.d", "channel")]}
+    r, j, t, rep = RB.gate("T", set(), legs, rows, {}, trunks)
+    assert r == [] and t == {} and all(not g["emitted"] for g in rep)
+    r, j, t, rep = RB.gate("T", {("T", "r0_u_y_xa_1_0"), ("T", "r1_u_z_0"), ("T", "frame_i")}, legs, rows, {}, trunks)
+    assert [x["inst"] for x in r] == ["r0_u_y_xa_1_0"] and list(t) == ["bus:frame_i"]
+    assert any(g["name"] == "r1_u_z_0" and "no measured leg" in g["why"] for g in rep if not g["emitted"])
+    assert RB.leg_for(legs["T"], RB._names("r0_u_y_xa_1")) is None          # a prefix of another relay is not it

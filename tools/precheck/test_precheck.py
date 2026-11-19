@@ -257,3 +257,24 @@ endmodule
     rows, mx = DS.levels(nl, 1)
     d = dict(rows)
     assert mx == 3 and d["r1.D"] == 3 and d["u_rom.addr"] == 2 and "r0.D" not in d
+
+
+def test_reach_leg_pin_to_pin_no_core_no_strap():
+    # COORD 11-19 05:55: count only pin-to-pin legs over the reach that do not span a core and are no strap / tie
+    import cbc_rules as R
+    core = [[100, -50, 400, 50]]
+    assert R.reach_leg([500, 500, "u_a.q", "u_b.d", "D", [0, 0], [500, 0]], core) is None           # over a core
+    assert R.reach_leg([500, 500, "u_a.q", "u_b.d", "D", [0, 100], [500, 100]], core) == "logic"
+    assert R.reach_leg([500, 500, "u_tie_x.q", "u_b.d", "D", [0, 100], [500, 100]], core) is None   # strap / tie
+    assert R.reach_leg([500, 500, "port:x_i", "u_b.d", "D", [0, 100], [500, 100]], core) is None    # channel <= 550
+    assert R.reach_leg([600, 600, "port:x_i", "u_b.d", "D", [0, 100], [600, 100]], core) == "channel"
+    assert R.reach_leg([400, 900, "u_a.q", "u_b.d", "D", [0, 100], [400, 100]], core) is None       # pin-to-pin <= reach
+
+
+def test_kit_scan_counts_reach_legs_only():
+    import kit_scan as KS
+    ph = dict(macros=[[100, -50, 400, 50]], legs=[[500, 500, "u_a.q", "u_b.d", "D", [0, 0], [500, 0]],
+                                                  [500, 500, "u_a.q", "u_c.d", "D", [0, 100], [500, 100]],
+                                                  [500, 500, "u_strap_id.q", "u_c.d", "D", [0, 100], [500, 100]]])
+    s = KS.summarise_placed(Path("/nonexistent/kit"), ph)
+    assert s["legs_over"] == 1 and s["by_class"] == {"core": 1, "logic": 1, "strap": 1} and s["leg_rule"] == KS.LEG_RULE

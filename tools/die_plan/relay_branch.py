@@ -29,7 +29,14 @@ Two generator rules, fixed once for every type instead of hand rows per type:
    reset capture) is re-sited on the L path from_um -> bit-weighted centroid of the majority sink cluster; the minority bits keep
    the old sites through per-flop relay_sites (u_lpad_<bus>.r[j][b], last stage .q[b]).  0 cycles, no RTL (trunk_rows()).
 
-usage: relay_branch.py PLAN.json TYPE_RE BOUND_DIR [--plan-dir DIR] [--limit 405] [--out-plan OUT.json] [--report REP.json]
+EMISSION (COORD 11-19 05:55, FABLE-CLOSURE-STRATEGY stop list): whole-type auto-siting and centroid aim made kits worse
+(QC sle_ctl -98 -> -183, leaf t27 relay -407 vs -230) while single-bus relay and re-aim fixes worked.  So the three rules
+above only FIND candidates; a fix is written to the plan only for a NAMED bus / relay (--fix TYPE:NAME, NAME = relay leaf,
+copy source, bus name or conn) that a MEASURED placed leg supports (--legs TYPE=placed_hops.json from a kit scan: a leg
+counted by cbc_rules.reach_leg -- pin-to-pin over the reach, not over a core, not strap / tie -- that launches or captures
+at that relay / bus).  There is no whole-type mode: without --fix nothing is written, every candidate is reported.
+
+usage: relay_branch.py PLAN.json TYPE_RE BOUND_DIR [--fix TYPE:NAME ...] [--legs TYPE=PLACED.json ...] [--plan-dir DIR] [--limit 405] [--out-plan OUT.json] [--report REP.json]
        BOUND_DIR holds <TYPE>_bound.sv or <TYPE>.sv (a bind out/rtl).  Without --out-plan nothing is written.
 """
 import json
@@ -771,6 +778,55 @@ def trunk_rows(plan, tn, text, plan_dir=None, limit=LIMIT, halo=5.0):
     return out, rep
 
 
+def measured_legs(path, macros=None):
+    """counted legs (cbc_rules.reach_leg) of a placed_hops scan JSON: [(straight, launch, capture, class)]"""
+    import cbc_rules as RULES
+    ph = json.loads(Path(path).read_text())
+    mac = ph.get("macros") or [] if macros is None else macros
+    out = []
+    for r in ph.get("legs", []):
+        c = RULES.reach_leg(r, mac)
+        if c:
+            out.append((r[0], str(r[2]), str(r[3]), c))
+    return out
+
+
+def _names(name):
+    """instance name forms of a relay leaf / bus in a flat kit netlist"""
+    n = sid(str(name).split(":", 1)[-1])
+    return {n, "u_" + n, "u_lpad_" + n, "u_ist_" + n, "u_bin_" + n, "u_bout_" + n}
+
+
+def leg_for(legs, names):
+    """the longest measured leg launching or capturing at one of names (prefix of a flat instance path), or None"""
+    pat = re.compile(r"(^|[/.\\])(" + "|".join(re.escape(x) for x in sorted(names, key=len, reverse=True)) + r")($|[/.\\\[ ])")
+    hit = [g for g in legs if pat.search(g[1]) or pat.search(g[2])]
+    return max(hit, default=None)
+
+
+def gate(tn, fix, legs, rows, joins, trunks):
+    """COORD 11-19 05:55: keep only fixes on a named bus / relay with a measured leg; -> (rows, joins, trunks, report)"""
+    names = {n for (t_, n) in fix if t_ == tn}
+    tl = legs.get(tn) or []
+    rep = []
+
+    def ok(kind, key, extra=()):
+        named = [n for n in names if sid(n) == sid(key) or sid(n) in {sid(x) for x in extra}]
+        if not named:
+            rep.append(dict(candidate=kind, name=key, emitted=False, why="not named (--fix): no whole-type mode"))
+            return False
+        g = leg_for(tl, _names(key) | {y for x in extra for y in _names(x)})
+        if g is None:
+            rep.append(dict(candidate=kind, name=key, emitted=False, why="named, but no measured leg over the reach at it (--legs)"))
+            return False
+        rep.append(dict(candidate=kind, name=key, emitted=True, leg_um=g[0], leg=[g[1], g[2]], leg_class=g[3]))
+        return True
+    rows = [r for r in rows if ok("relay_branch", r["inst"], [c["name"] for c in r["copies"]])]
+    joins = {c: v for c, v in joins.items() if ok("join", c, [c.split(":", 1)[-1]])}
+    trunks = {c: v for c, v in trunks.items() if ok("trunk", c, [c.split(":", 1)[-1]])}
+    return rows, joins, trunks, rep
+
+
 def main(argv):
     import argparse
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
@@ -783,7 +839,14 @@ def main(argv):
     ap.add_argument("--report")
     ap.add_argument("--add-cycles", action="store_true",
                     help="emit relay_depth sink stages for far copies (adds internal cycles; default keeps the stage count)")
+    ap.add_argument("--fix", action="append", default=[], help="TYPE:NAME (comma lists ok): the named bus / relay to fix")
+    ap.add_argument("--legs", action="append", default=[], help="TYPE=placed_hops.json: measured legs of a kit of TYPE")
     a = ap.parse_args(argv[1:])
+    fix = {tuple(x.split(":", 1)) for f in a.fix for x in f.split(",") if ":" in x}
+    legs = {}
+    for x in a.legs:
+        t_, _, pth = x.partition("=")
+        legs.setdefault(t_, []).extend(measured_legs(pth))
     plan = json.loads(Path(a.plan).read_text())
     plan_dir = Path(a.plan_dir or Path(a.plan).resolve().parent)
     reports = []
@@ -799,11 +862,18 @@ def main(argv):
         rows, drows, rep = branch_rows(plan, tn, text, plan_dir, a.limit, add_cycles=a.add_cycles)
         joins, jrep = join_rows(plan, tn, text, plan_dir, a.limit)
         trunks, trep = trunk_rows(plan, tn, text, plan_dir, a.limit)
+        cand = dict(relay_branch=len(rows), joins=sum(len(v) for v in joins.values()), trunks=len(trunks))
+        rows, joins, trunks, grep_ = gate(tn, fix, legs, rows, joins, trunks)
+        if not rows:
+            drows = []
+        else:
+            keep = {c["name"] for r in rows for c in r["copies"]}
+            drows = [d for d in drows if any(k in str(d.get("inst", "")) for k in keep)]
         if a.out_plan:
-            if rows:
-                t["relay_branch"] = rows
-            else:
-                t.pop("relay_branch", None)
+            if rows:                    # merge by relay: rows already in the plan (earlier named fixes) are kept
+                cur = {r["inst"]: r for r in t.get("relay_branch") or []}
+                cur.update({r["inst"]: r for r in rows})
+                t["relay_branch"] = list(cur.values())
             if drows:
                 cur = t.setdefault("relay_depth", [])
                 keys = {(sid(r["inst"]), r.get("port"), r.get("side")) for r in cur}
@@ -820,7 +890,7 @@ def main(argv):
                     t.setdefault("relay_sites", {}).update(tr["relay_sites"])
         reports.append(dict(type=tn, relay_branch=rows, relay_depth_sink=drows, joins=joins,
                             trunks={c: dict((k, v) for k, v in r.items() if k != "relay_sites") for c, r in trunks.items()},
-                            detail=rep + jrep + trep))
+                            candidates=cand, gate=grep_, detail=rep + jrep + trep))
         nc = sum(len(r["copies"]) for r in rows)
         print(f"{tn}: {len(rows)} relay(s) split, {nc} cop(ies) ({sum(1 for r in rows for c in r['copies'] if c['D'])} far, "
               f"+cycles), {sum(len(v) for v in joins.values())} station join(s)")

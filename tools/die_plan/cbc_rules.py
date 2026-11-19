@@ -70,3 +70,18 @@ def classify_leg(launch, capture, la, lb, macro_rects):
     if (launch or "").startswith("port:") or (capture or "").startswith("port:"):
         return "channel"
     return "logic"
+
+
+def reach_leg(leg, macro_rects=(), reach=REACH_UM_PER_HOP):
+    """COORD 11-19 05:55 (FABLE-CLOSURE-STRATEGY stop list): the reach estimator counts a placed leg only when its
+    PIN-TO-PIN straight Manhattan distance (placed_hops leg [straight, acc, launch, capture, pin, la, lb]: macro ends sit at
+    the macro pin) is over the reach, it does not span a hard core, and it is no strap / tie leg; a channel leg (a block
+    port end: a buffered register-to-pin leg) is counted only over REACH_BUFFERED_UM.  -> its class, or None (not counted)"""
+    if leg[0] <= reach:
+        return None
+    c = classify_leg(leg[2], leg[3], leg[5], leg[6], list(macro_rects or []))
+    if c in ("strap", "core"):
+        return None
+    if c == "channel" and leg[0] <= REACH_BUFFERED_UM:
+        return None
+    return c
