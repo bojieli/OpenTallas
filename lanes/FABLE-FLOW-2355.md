@@ -17,7 +17,7 @@ Fleet: about 690 running jobs on 624 threads, UNDER-USE idle 0. Waste shares are
 - Build hosts admit 0-15 GB each (available memory 5-9% of 1007 GB). ot-run shows `reserve 0, fresh 0`, so a job is
   admitted on current free memory while already-admitted young jobs are still growing. The host then crosses 5%
   and the guard kills the youngest process.
-- The wave saw 12 of these as INFRA fails. The costly ones are long single-thread synth runs of svc types:
+- The wave saw 9 of these as INFRA fails. The costly ones are long single-thread synth runs of svc types:
   svc_lo_dsdv_svc_rs__t5 yosys was killed on epyc7 at 23:24 after about 6 h (22.7 GB RSS). A relaunched long job
   is always the youngest on its host, so it is the first victim again: ot_s81sl_kv_leaf__t2 is at attempt 23
   and svc_hi_dsdv_svc_rs__t1 at attempt 10. KILL-PIN "resumes its checkpoint", but yosys has none.
@@ -75,7 +75,7 @@ Fleet: about 690 running jobs on 624 threads, UNDER-USE idle 0. Waste shares are
 
 ### E. Smaller items (each under 0.2%)
 - epyc4 is terminated and its address answers with another host key: 74 strict-host-key failures in the window.
-  It is still in the ot-run host list and in 8 autopilot state files. Fix: one fleet host file, and a retire
+  It is still in the ot-run host list and in at least 8 autopilot state files. Fix: one fleet host file, and a retire
   step that removes the host from it. Owner FLEET-OPS-R.
 - KV source-follow bind: 127 identical tracebacks ("cached elaboration source changed: bind/kv45/
   group_r2c_native.sv") and 22 missing `kv3/pv_col_pads_*b.json`, all in the first third of the window. Whether
