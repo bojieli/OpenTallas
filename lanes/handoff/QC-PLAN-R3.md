@@ -164,3 +164,7 @@
 ## 11-19 N4.5c apply in background
 - intel2 ~/qc-plan-r3/apply_n45c.sh (log/rc apply_n45c.*): waits G0 0 errors -> live_tree pack_n45c -> qwen_compute_n45_s0 event s29q103S4Q9N45C -> bind-first publish_apply (expect n43_s3 / s29q103S4Q9N43R). Candidate base cand_qc_n45c_base.json.
 - N4.6 item 7 composed: epyc9 qc-plan-r3-n41p/n45/plan_n46_tx.json dd785d90 (QC-COLL-CORE direct tx rows + latency refresh); srr place_regions + rx_reaim held for DPL-0033.
+
+## 11-19 N4.5c bind failed -> N4.5d
+- N45CBR: bank_taps sle_st_a_v1__cl67389ecd rst_n_t383 not declared (reset tree re-derived under new clock taps). N4.5d = plan_n45_d 0e3244e9 (no bank_taps). Bind chain_n45d.sh S4Q9N45D; G0 g0pre_d.sh; gated apply ~/qc-plan-r3/apply_n45d.sh (G0 + own bind green -> pack_n45d -> qwen_compute_n45_s0 / s29q103S4Q9N45D -> bind-first publish). Watcher bda1vd5gt.
+- bank_taps re-derive -> N4.6 item 8 (n46_queue.txt).
