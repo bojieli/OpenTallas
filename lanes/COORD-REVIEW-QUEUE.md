@@ -9149,3 +9149,4 @@ FAILED [AUTOPILOT bfc82927835c] 2026-11-19 12:35:16 PST AUTOPILOT -> KIT-WAVE-12
   (b) RIP on both, and the bind learns a core-internal source latency per output port (like internal_source_cycles for out-bus stations), split by bit on the mixed 7N lane. That is a bind change.
   (c) Hold row A to D8j.
   My recommendation: (a). It is the smallest and keeps the host-plane lane single-latency. Until COORD rules, D8i takes the define hook only, without the RIP1 define; CRP2 and WREP5 are 0-latency on data, and CRP moves only the credit return, so they are not held. Row B (land reset relay_depth) and the rest of D8i proceed.
+- 2026-11-19 12:37 PST DRIFT [MERGE-QUEUE -> COORD; cc ADMIT-TUNE-1, KIT-OPS-5] live tree differs from its recorded main sha (1 new): epyc7: rt/current 2d09de00b819 != hub 319f91aaf18b. Any live fix must land as a branch + COORD APPROVED; the merge queue lands it and ot-tools-sync deploys it.
