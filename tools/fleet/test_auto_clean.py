@@ -284,3 +284,15 @@ def test_latest_attempt_of_an_unsigned_type_is_kept_whatever_its_age(tmp_path):
     state["items"]["b"]["status"] = "SIGNED"
     got = [os.path.basename(p) for p, _ in AR.attempt_candidates(str(claude), cfg, state, "", now=time.time())]
     assert "attempt_26" in got
+
+
+def test_die_clock_of_record_and_proto_kits_are_never_retired(tmp_path):
+    """KEEP-KITS-1119: kit_d7w_ecov3 under s81-die-r3-proto went to a lane pass; name matches (also nested, depth 3) keep the tree"""
+    a = tmp_path / "s81-die-r3-proto" / "kit_d7w_ecov3"; a.mkdir(parents=True)
+    assert AR.keep_kit_hit(str(a)) == str(a)
+    assert AR.keep_kit_hit(str(tmp_path / "s81-die-r3-proto")) == str(a)                 # the PARENT holds one: not retirable either
+    b = tmp_path / "lane" / "x" / "7yhr_tail"; b.mkdir(parents=True)
+    assert AR.keep_kit_hit(str(tmp_path / "lane")) == str(b)
+    c = tmp_path / "plain" / "k"; c.mkdir(parents=True)
+    assert AR.keep_kit_hit(str(tmp_path / "plain")) == ""
+    assert AR.refuse_attempt(types.SimpleNamespace(refuse=lambda p, prot=None: None), str(a), set()).startswith("die clock-of-record")

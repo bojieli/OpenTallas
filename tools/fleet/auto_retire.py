@@ -199,6 +199,31 @@ def link_hit(path, targets):
     return ""
 
 
+KEEP_KITS_RE = re.compile(r"(?i)(die[_-]?proto|clk[_-]?of[_-]?record|clock[_-]?of[_-]?record|ECOv3|link_htree|7yhr|(?:^|[_/-])M4[_-]?clock|clock[_-]?kit)")
+
+
+def keep_kit_hit(path, depth=3, rx=None):
+    """KEEP-KITS-1119 (COORD: the S81 ECOv3 die clock-of-record kit, s81-die-r3-proto/kit_d7w_ecov3, went to a lane pass at 20 h idle): die clock-of-record / die-proto kits are kept like signed
+    records: the path itself, or any directory up to `depth` levels inside it, whose NAME matches.  -> the matching path or ''"""
+    rx = rx or KEEP_KITS_RE
+    base = path.rstrip("/")
+    if rx.search(os.path.basename(base)):
+        return base
+    n0 = base.count("/")
+    try:
+        for dp, dn, fn in os.walk(base):
+            if dp.count("/") - n0 >= depth:
+                dn[:] = []
+                continue
+            dn[:] = [d for d in dn if d not in (".git", "objects", "__pycache__")]
+            for d in dn:
+                if rx.search(d):
+                    return os.path.join(dp, d)
+    except OSError:
+        pass
+    return ""
+
+
 def post_text_hit(path, posts):
     """a lane tree named in a hub post of the last 24 h (the posts file is built by the hub driver) is in use by somebody"""
     return bool(posts) and re.search(re.escape(path.rstrip("/")) + r"(?![A-Za-z0-9_.-])", posts) is not None
@@ -401,6 +426,8 @@ def run_lanes(claude, ids, refuse, log, target_gb, apply=False, delete=None, fre
             why = "a symlink under ~ points into it (%s)" % link_hit(p, links)
         if not why and post_text_hit(p, posts):
             why = "named in a hub post of the last 24 h"
+        if not why and keep_kit_hit(p):
+            why = "die clock-of-record / die-proto kit kept (%s)" % keep_kit_hit(p)
         if not why:
             why = git_check(p) if git_check else ""
         if not why:
@@ -598,6 +625,8 @@ def run_attempts(claude, cfg, state, refs, ids, g, prot, log, apply=False, delet
 
 
 def refuse_attempt(g, p, prot, live=None):
+    if keep_kit_hit(p):
+        return "die clock-of-record / die-proto kit kept (%s)" % keep_kit_hit(p)
     if live and live.hit(p):
         return "live input: a running process / queued job names " + live.hit(p)
     try:
