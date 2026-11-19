@@ -41,7 +41,8 @@ class SimpleAdmit(unittest.TestCase):
     def test_free_is_light_and_never_reads_the_unit_books(self):
         # FREE_LIGHT_1114: --free under SIMPLE_ADMIT must not call read_units (one systemctl per unit; 326 piled-up probes hung epyc10)
         with patch.dict(os.environ, self.env), patch.object(R, "sizes", return_value=T), patch.object(R, "meminfo", return_value=(1000.0, 300.0)), \
-                patch.object(R, "waiters", return_value=([10], [10])), patch.object(R, "read_units", side_effect=AssertionError("books read")):
+                patch.object(R, "waiters", return_value=([10], [10])), patch.object(R, "read_units", side_effect=AssertionError("books read")), \
+                patch.object(R, "measured_gap_gb", return_value=0.0), patch.object(R, "plan_gap_gb", return_value=0.0), patch.object(R, "peak_gap_gb", return_value=0.0):   # host-independent: the real units of the machine running the test must not charge
             out = io.StringIO()
             with contextlib.redirect_stdout(out):
                 R.free("/")
