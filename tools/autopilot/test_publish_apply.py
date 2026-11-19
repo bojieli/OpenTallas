@@ -418,3 +418,27 @@ def test_bind_first_seals_and_replicates_the_output_before_returning(tmp_path):
     assert dest == "/x/new_bind_0101"
     assert calls[0][:2] == ["bash", "-c"] and "plan-job bind" in calls[0][2] and "POSTBIND_COPY" in calls[0][2]
     assert any("rsync" in x[-1] and "epyc10:/x/new_bind_0101/" in x[-1] for x in calls if x[0] == "ssh")
+
+
+def test_bind_env_passes_the_die_bind_env_and_bind_first_has_no_fixed_wall_cap(tmp_path):
+    """COORD 11-19 KV: the strict bind gets the die's OT_* (live die_gen_env + bind_env, marker wins); no 4 h cap, a no-progress watch instead"""
+    t = tmp_path / "T"
+    cand = bind_candidate(t)
+    live = {"die_gen_env": {"OT_KV_HEAD_KST": "2", "OT_X": "live", "NOT_OT": "1"}, "bind_env": {"OT_HCPARAM_ALL": "1"}}
+    m = cand.get("marker", cand)
+    m.setdefault("die_gen_env", {})["OT_X"] = "plan"
+    s = PA.postbind_spec(cand, "1118", live=live)
+    assert s["env"]["OT_KV_HEAD_KST"] == "2" and s["env"]["OT_HCPARAM_ALL"] == "1" and s["env"]["OT_X"] == "plan" and "NOT_OT" not in s["env"]
+    assert s["env"]["OT_NATIVE_RESET_SCOPE"] == "die"
+    sh = PA.postbind_run_sh(s)
+    assert "export OT_HCPARAM_ALL=1" in sh and "export OT_KV_HEAD_KST=2" in sh
+    seen = {}
+    (tmp_path / "autopilot").mkdir()
+    (tmp_path / "autopilot/kit_wave.json").write_text(json.dumps({"dies": {"s81": {}}}))
+
+    def fake(argv, **k):
+        if not seen:
+            seen.update(k, body=argv[-1])
+        return types.SimpleNamespace(returncode=0, stdout="", stderr="")
+    PA.bind_first(tmp_path, cand, "L", "s81", run=fake, host="epyc8", stamp="1", log_dir=tmp_path / "ld")
+    assert seen["timeout"] is None and "BIND-NO-PROGRESS" in seen["body"] and "kill $pid" in seen["body"]

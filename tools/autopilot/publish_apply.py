@@ -198,14 +198,37 @@ def _rel(p, tree):
     return p if not os.path.isabs(p) else tree_rel(p, [tree])
 
 
-def postbind_spec(obj, stamp, host=""):
+BIND_NO_PROGRESS_S = int(os.environ.get("OT_BIND_NO_PROGRESS_S", "3600"))
+
+
+def bind_env_of(obj, live=None):
+    """COORD 11-19 (KV): the env the die's strict bind needs = every OT_* of the live die config (die_gen_env, bind_env) under the candidate marker's own
+    die_gen_env / bind_env (the plan's values win).  The bind reads e.g. OT_KV_HEAD_KST, OT_HCPARAM_ALL, OT_NATIVE_RESET_SCOPE from the environment."""
+    m = obj.get("marker", obj)
+    env = {}
+    for src in (live or {}, m):
+        for blk in ("die_gen_env", "bind_env"):
+            for k, v in (src.get(blk) or {}).items():
+                if str(k).startswith("OT_") and isinstance(v, (str, int, float)) and not isinstance(v, bool):
+                    env[str(k)] = str(v)
+    return env
+
+
+def live_die_cfg(C, die):
+    try:
+        return (json.loads((Path(C) / "autopilot/kit_wave.json").read_text()).get("dies") or {}).get(die) or {}
+    except (OSError, ValueError):
+        return {}
+
+
+def postbind_spec(obj, stamp, host="", live=None):
     """-> {host, tree, copy, plan, asbuilt, env, run_dir} for a bind-mode candidate (paths in the copy tree-relative), None when it builds no bind"""
     args, hosts = candidate_bind_args(obj)
     if not args or not (host or hosts):
         return None
     tree = args["src"].rstrip("/")
     return {"host": host or hosts[0], "tree": tree, "copy": f"{tree}_postbind_{stamp}", "plan": _rel(args["plan"], tree),
-            "asbuilt": _rel(args["asbuilt"], tree) if args["asbuilt"] else "", "env": {"OT_NATIVE_RESET_SCOPE": args["scope"]} if args["scope"] else {},
+            "asbuilt": _rel(args["asbuilt"], tree) if args["asbuilt"] else "", "env": {**bind_env_of(obj, live), **({"OT_NATIVE_RESET_SCOPE": args["scope"]} if args["scope"] else {})},
             "bind_out": args["bind_out"]}
 
 
@@ -245,7 +268,7 @@ def start_postbind(C, obj, lane, die, run=subprocess.run, host="", stamp=None, l
     """start the post-apply strict bind + LATCHECK as a hub user unit: ssh-prep the copy, ot-run the job there (plan/bind admission), post the result.
     -> (unit or None, text)"""
     stamp = stamp or time.strftime("%m%d%H%M%S")
-    s = postbind_spec(obj, stamp, host)
+    s = postbind_spec(obj, stamp, host, live_die_cfg(C, die))
     if not s:
         return None, "no bind (candidate is not kit_rtl mode bind)"
     ld = Path(log_dir or os.path.expanduser("~/.local/state/ot-postbind"))
@@ -370,7 +393,7 @@ def bind_first(C, obj, lane, die, run=subprocess.run, host="", stamp=None, log_d
     meanwhile: an ordering, not a hold), seal its output beside the tree and replicate it to the other gen hosts.  -> (dest or '', text, failing types from the bind log).  '' = no bind output:
     the caller does not switch (the tree stays as it is)"""
     stamp = stamp or time.strftime("%m%d%H%M%S")
-    s = postbind_spec(obj, stamp, host)
+    s = postbind_spec(obj, stamp, host, live_die_cfg(C, die))
     if not s:
         return "", "no bind (candidate is not kit_rtl mode bind)", []
     ld = Path(log_dir or os.path.expanduser("~/.local/state/ot-postbind"))
@@ -382,8 +405,13 @@ def bind_first(C, obj, lane, die, run=subprocess.run, host="", stamp=None, log_d
     otrun = HERE.parent / "fleet" / "ot-run"
     body = (f"cd /; {{ ssh -o BatchMode=yes -o ControlPath=none {q(s['host'])} 'bash -s' < {q(str(prep))} > {q(str(log))} 2>&1 && grep -q '^POSTBIND_COPY ' {q(str(log))}; }} || exit 3\n"
             f"{q(str(otrun))} --mem {POSTBIND_MEM} --hosts {q(s['host'])} --priority plan --plan-job bind --dir {q(s['copy'])} --stage {q(s['copy'])} "
-            f"--stage {q(s['tree'])} -- bash {q(s['copy'] + '/' + POSTBIND_DIR + '/run.sh')} >> {q(str(log))} 2>&1\n")
-    r = run(["bash", "-c", body], capture_output=True, text=True, timeout=14400)
+            f"--stage {q(s['tree'])} -- bash {q(s['copy'] + '/' + POSTBIND_DIR + '/run.sh')} >> {q(str(log))} 2>&1 &\n"
+            # no fixed wall cap (OWNER: delete conservative limits): stopped only when the job is gone or nothing changed for BIND_NO_PROGRESS_S (exact pid)
+            f"pid=$!\nwhile kill -0 $pid 2>/dev/null; do\n  sleep 60\n"
+            f"  new=$(stat -c %Y {q(str(log))} {q(s['copy'] + '/' + POSTBIND_DIR)}/*.log {q(s['copy'] + '/' + POSTBIND_DIR)}/out/* 2>/dev/null | sort -n | tail -1); now=$(date +%s)\n"
+            f"  if [ -n \"$new\" ] && [ $(( now - new )) -gt {BIND_NO_PROGRESS_S} ]; then echo \"BIND-NO-PROGRESS {BIND_NO_PROGRESS_S}s: stopping ot-run $pid\" >> {q(str(log))}; kill $pid; break; fi\ndone\n"
+            f"wait $pid\n")
+    r = run(["bash", "-c", body], capture_output=True, text=True, timeout=None)
     txt = ""
     try:
         txt = Path(log).read_text(errors="replace")
