@@ -161,7 +161,7 @@ def not_run(reason, code=NOTRUN_EXIT):
 
 
 
-HOSTS = ["epyc2", "intel1", "epyc7", "epyc8", "epyc9", "epyc10"]   # ONBOARD-EPYC10 11-13: epyc10 (Cherry 1062383 civil-redfish, 2x EPYC 7443 96T/1 TB). ONBOARD-4 11-10: epyc8 (Cherry 1058642 outgoing-giraffe, EPYC 7443 Zen 3, 96T/1 TB). KW-FIX-44 11-09 17:2x: epyc6 removed (terminated 17:17, Cherry DELETE 204; revert ot-run.bak-kw44-e6gone-1109). # KW-FIX-43 11-09: epyc5 removed (terminated 11:13). ONBOARD-4 11-09: epyc7 (Cherry 1058886 loved-redfish, EPYC 7443 Zen 3, 96T/1 TB). ONBOARD-2 11-05: epyc5 + epyc6 (EPYC 9554P, OWNER-rented). HUB_SELF_1101 (FLOW-21): the hub is intel2 = localhost; listing intel2 too made a second, unreachable copy of the hub (ssh intel2 from intel2 fails: "intel2 unreachable" in --status, 11-01 13:19). FLEET-NEW3 2026-10-24: new fleet after the rtx-pro coordinator loss (ssh aliases; measured in docs/FLEET.md).  Before: ["ot-epyc7", "ot-epyc9", "ot-gold2", "ot-gold1", "ot-pve1", "ot-agidock128"] (all gone 2026-10-23). ot-epyc5 added 2026-10-18 (FLEET-EPYC5); ot-epyc6/7 2026-10-19 (FLEET-NEW); ot-epyc8 2026-10-19 (FLEET-NEW2)
+HOSTS = ["epyc2", "intel1", "localhost", "epyc7", "epyc8", "epyc9", "epyc10"]   # ONBOARD-EPYC10 11-13: epyc10 (Cherry 1062383 civil-redfish, 2x EPYC 7443 96T/1 TB). ONBOARD-4 11-10: epyc8 (Cherry 1058642 outgoing-giraffe, EPYC 7443 Zen 3, 96T/1 TB). KW-FIX-44 11-09 17:2x: epyc6 removed (terminated 17:17, Cherry DELETE 204; revert ot-run.bak-kw44-e6gone-1109). # KW-FIX-43 11-09: epyc5 removed (terminated 11:13). ONBOARD-4 11-09: epyc7 (Cherry 1058886 loved-redfish, EPYC 7443 Zen 3, 96T/1 TB). ONBOARD-2 11-05: epyc5 + epyc6 (EPYC 9554P, OWNER-rented). HUB_SELF_1101 (FLOW-21): the hub is intel2 = localhost; listing intel2 too made a second, unreachable copy of the hub (ssh intel2 from intel2 fails: "intel2 unreachable" in --status, 11-01 13:19). FLEET-NEW3 2026-10-24: new fleet after the rtx-pro coordinator loss (ssh aliases; measured in docs/FLEET.md).  Before: ["ot-epyc7", "ot-epyc9", "ot-gold2", "ot-gold1", "ot-pve1", "ot-agidock128"] (all gone 2026-10-23). ot-epyc5 added 2026-10-18 (FLEET-EPYC5); ot-epyc6/7 2026-10-19 (FLEET-NEW); ot-epyc8 2026-10-19 (FLEET-NEW2)
 # HOST ROLES (FLEET-NEW 2026-10-19): ot-epyc7 is 2x EPYC 7443 (Zen 3, slower per thread).  A "throughput" host takes
 # tile gates / routes / benches FIRST (while its projected load <= 1.0 x cores); die-level jobs (--priority die / DIE_RE:
 # die chains, die STA) go to the other hosts and use a throughput host only when no other host admits them.
@@ -845,14 +845,20 @@ def gate_like(cmd):
     return bool(GATE_RE.search(" ".join(cmd) if isinstance(cmd, (list, tuple)) else str(cmd)))
 
 
-NO_HEAVY_HOSTS = ("localhost",)       # NOLOCALHOST-1119 (OWNER 10-23: no heavy jobs on localhost; FABLE-FIX-S81-LEAF found wave kits leaf t13 / serdes t12 run there)
+# NOLOCALHOST-1119 (OWNER 10-23: no heavy jobs on rtx-pro).  By MACHINE IDENTITY, not by the "localhost" alias: on the hub (intel2, a capped build host) "localhost" is the hub and keeps admitting
+# within its cap; on a machine named in NO_HEAVY_NODES (rtx-pro = hostname "ubuntu"; OT_RUN_NO_HEAVY_NODES overrides) "localhost" is that machine and is out of every pool.
+NO_HEAVY_NODES = tuple(x for x in os.environ.get("OT_RUN_NO_HEAVY_NODES", "ubuntu").split(",") if x)
 
 
-def drop_no_heavy(hosts):
-    """the host pool of a job without localhost.  An explicit list naming only localhost is refused by the caller; OT_RUN_ALLOW_LOCALHOST=1 (a lane's own light probe) keeps it"""
-    if os.environ.get("OT_RUN_ALLOW_LOCALHOST"):
+def this_node():
+    return socket.gethostname().split(".")[0]
+
+
+def drop_no_heavy(hosts, node=None):
+    """the host pool of a job on a no-heavy machine without localhost.  A list naming only localhost is refused by the caller; OT_RUN_ALLOW_LOCALHOST=1 (a lane's own light probe) keeps it"""
+    if os.environ.get("OT_RUN_ALLOW_LOCALHOST") or (node or this_node()) not in NO_HEAVY_NODES:
         return list(hosts)
-    return [h for h in hosts if h not in NO_HEAVY_HOSTS]
+    return [h for h in hosts if h != "localhost"]
 
 
 def gate_hosts(cmd, hosts):

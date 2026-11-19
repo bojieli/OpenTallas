@@ -399,8 +399,8 @@ class Capacity(unittest.TestCase):
         s = {"epyc2": {"admit": 10, "run": 1}, "localhost": {"admit": 47, "run": 1}}
         self.assertEqual(KW.capacity(cfg(), "qwen_kvsys", {"items": {}}, s), 0)
         self.assertEqual(KW.capacity(cfg(), "qwen_kvsys", {"items": {}}, {}), 0)  # ot-run status unavailable
-        s["localhost"]["admit"] = 480                                             # NOLOCALHOST-1119: the hub (= localhost) never counts, however much it admits
-        self.assertEqual(KW.capacity(cfg(), "qwen_kvsys", {"items": {}}, s, hub="intel2"), 0)
+        s["localhost"]["admit"] = 48                                              # intel2 = hub = localhost
+        self.assertGreater(KW.capacity(cfg(), "qwen_kvsys", {"items": {}}, s, hub="intel2"), 0)
 
 
 class Classify(unittest.TestCase):
