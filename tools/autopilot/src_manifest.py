@@ -826,6 +826,14 @@ def tree_gb(path):
     return int(out[0]) / 2**30 if out else 0.0
 
 
+def tar_copy(tree, host, part, run=subprocess.run):
+    """TAR-PIPE (COORD 11-18): `tar -C tree -cf - . | ssh host 'tar -C part -xpf -'` into the (fresh, empty) .part dir; the caller verifies the result against the manifest hash before the final rename.
+    The source's own .link-base is excluded.  pipefail: either side failing fails the copy."""
+    cmd = (f"set -o pipefail; tar -C {shlex.quote(tree)} --exclude=./{LINKBASE} -cf - . | "
+           f"{RSYNC_SSH} {shlex.quote(host)} {shlex.quote('tar -C ' + shlex.quote(part) + ' -xpf -')}")
+    return run(["bash", "-c", cmd])
+
+
 def remote_free_gb(host, directory, part):
     """(free GB of the target's disk, GB already in <part>) over ssh; (None, 0) when the host does not answer"""
     # 11-18: the target dir may not exist yet (a snap_<die>/ parent): df the nearest existing ancestor instead of reporting "cannot read the target's free space"
@@ -904,6 +912,8 @@ def main(argv=None):
     r.add_argument("--hosts", required=True)
     r.add_argument("--link-from", default="", help="basename of an earlier published tree of the same die: on each target that holds it, unchanged files are hardlinked from it (--link-dest), "
                                                    "so the copy costs the delta; the target's .link-base names it (verify accepts exactly those shared inodes)")
+    r.add_argument("--tar", action="store_true", help="stream the tree as tar over ssh instead of rsync (11-18: rsync of ~100k small files ran 3 MB/s on a busy disk, a tar stream 14 MB/s); "
+                                                      "same .part dir, same verify-before-rename; ignores --link-from")
     d = sp.add_parser("derive")
     d.add_argument("live")
     d.add_argument("--repo", required=True)
@@ -999,8 +1009,12 @@ def main(argv=None):
                     linkdir = cand
             # the source's own .link-base (it may itself be a link replica, D4 -> M5 -> M5T) names a base on the SOURCE host and is read-only:
             # never copy it; the target gets a fresh one naming its own base, written by copy+mv (11-17: the copied file made the write fail)
-            rs = subprocess.run(["rsync", "-a", "--exclude=/" + LINKBASE, *([f"--link-dest={linkdir}/"] if linkdir else []), "-e",
-                                 RSYNC_SSH, tree + "/", f"{host}:{part}/"])
+            if getattr(a, "tar", False):
+                linkdir = ""       # a tar stream copies every file; no hardlinks from an older tree
+                rs = tar_copy(tree, host, part)
+            else:
+                rs = subprocess.run(["rsync", "-a", "--exclude=/" + LINKBASE, *([f"--link-dest={linkdir}/"] if linkdir else []), "-e",
+                                     RSYNC_SSH, tree + "/", f"{host}:{part}/"])
             if rs.returncode == 0 and linkdir:
                 lw = subprocess.run(SSH + [host, f"cd {shlex.quote(part)} && chmod u+w . && readlink -f {shlex.quote(linkdir)} > {LINKBASE}.tmp && "
                                                  f"chmod a-w {LINKBASE}.tmp && mv -f {LINKBASE}.tmp {LINKBASE} && chmod a-w ."])

@@ -51,3 +51,25 @@ def test_remote_free_gb_uses_the_nearest_existing_ancestor_for_a_missing_target_
     finally:
         SM.subprocess.run = orig
     assert free == 2.0 and "dirname" in seen[0] and "while [ ! -d" in seen[0]
+
+
+def test_tar_copy_streams_a_tree_and_keeps_modes(tmp_path):
+    """TAR-PIPE: the stream reproduces the tree (files, modes, empty dirs) in the .part dir; a failing receiver fails the copy"""
+    import os, stat
+    src = tmp_path / "t"; (src / "d" / "e").mkdir(parents=True)
+    (src / "d" / "f.txt").write_text("x"); (src / "run.sh").write_text("#!/bin/sh\n"); os.chmod(src / "run.sh", 0o755)
+    (src / SM.LINKBASE).write_text("base")
+    dst = tmp_path / "t.part"; dst.mkdir()
+    old_ssh = SM.RSYNC_SSH
+    SM.RSYNC_SSH = "bash -c 'shift; eval \"$@\"' _"                      # stand-in for ssh: run the remote command locally
+    try:
+        rs = SM.tar_copy(str(src), "localhost", str(dst))
+    finally:
+        pass
+    assert rs.returncode == 0
+    assert (dst / "d" / "f.txt").read_text() == "x" and (dst / "d" / "e").is_dir()
+    assert stat.S_IMODE(os.stat(dst / "run.sh").st_mode) == 0o755 and not (dst / SM.LINKBASE).exists()
+    bad = SM.tar_copy(str(src), "localhost", str(tmp_path / "missing" / "t.part"))
+    SM.RSYNC_SSH = old_ssh
+    assert bad.returncode != 0
+
