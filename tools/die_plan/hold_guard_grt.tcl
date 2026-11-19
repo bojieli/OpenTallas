@@ -93,6 +93,9 @@ if {[llength [info procs ::repair_timing_helper]] && ![llength [info procs ::ot_
         }
       }
       if {[lindex $cur 0] >= $hm} { break }
+      # HOLD-ZERO-VIOL 11-18 (FABLE-CLOSURE 1935 lever 3): at least 20 live kits kept adding chunks at 0 violators (+0.2 .. +2.7 ps each; slw_sc_v1 14.5 h).
+      # No endpoint is below 0 any more: the repair has done its job, the margin chase stops.  OT_HOLD_ZERO_VIOL_STOP=0 restores the chase.  (n = -1: count unavailable, no stop.)
+      if {$cv == 0 && [::ot_hg_num OT_HOLD_ZERO_VIOL_STOP 1] != 0} { puts "OT_HOLD_GUARD_GRT: 0 hold violators (ws $cw >= 0), margin chase stops"; break }
       # HOLD-STALL-30 11-18 (FABLE-CLOSURE-STRATEGY 1320, COORD): stall stop floor OT_HOLD_STALL_MIN_WS, default 0 (the old behaviour; the 30 ps default of 944c7e336d1 was withdrawn by FABLE-CLOSURE-STRATEGY 1530; live kits gain only 2-3 ps per chunk, the routed tail is clock-leaf arrival, and hold closes in the post-route ECO).  A 30 ps floor would have been needed for:
       # sle_hc0__cl38badc56 stopped at +6.56 vs the 40 ps target and route then cost 28 ps of hold (routed internal FF hold -21.57 on 152 ends).
       if {[lindex $cur 0] >= [::ot_hg_num OT_HOLD_STALL_MIN_WS 0.0] && $dw < 1.0} { puts "OT_HOLD_GUARD_GRT: hold met (ws >= stall floor), margin chase stalled, stop"; break }

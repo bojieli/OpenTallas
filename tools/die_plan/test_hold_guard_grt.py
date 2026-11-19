@@ -139,3 +139,13 @@ def test_first_chunk_is_buffer_min():
     # HOLD-CHUNK-1: the first chunk is OT_HOLD_CHUNK_BUF_MIN buffers, not 0.25 % of the instances
     out = run("0.0001", {"OT_HOLD_CHUNK_BUF_MIN": "7", "OT_HOLD_MIN_GAIN_PCT": "0", "OT_HOLD_STALL_WINDOW_S": "99999"})
     assert "(cap 7)" in out
+
+
+ZV = "namespace eval sta { proc endpoint_violation_count {m} { return [expr {$::ws < 0 ? 5 : 0}] } }"
+
+
+def test_zero_violators_stops_the_margin_chase():
+    out = run("3.0", preamble=ZV)                       # -50 +3 per chunk; margin 10: stops at the first chunk with 0 violators (ws >= 0)
+    assert "0 hold violators" in out and float(out.split("WS ")[1]) < 10.0
+    off = run("3.0", {"OT_HOLD_ZERO_VIOL_STOP": "0"}, preamble=ZV)
+    assert "0 hold violators" not in off and float(off.split("WS ")[1]) >= 10.0
