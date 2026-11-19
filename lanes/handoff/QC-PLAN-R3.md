@@ -1,5 +1,13 @@
 # QC-PLAN-R3 handoff (QC die plan owner; succeeds QC-PLAN-R / FABLE-FIX-QC-PLAN / QC-CLK-R2)
 
+## 2026-11-18 18:3x PST (N4.1q APPLIED, N4.2 binding)
+- N4.1q APPLIED 18:18: event s29q103S4Q9N41Q, live tree kw45/snap_qwen_compute/qwen_compute_n41q_s0 (pack = 11 files: plan zz_s29_qc103_s4q9n41q b146b2d2, asbuilt_n41q_portable 975ec4f6, N41QBR runtime), receipt lanes/handoff/qwen_compute_atomic_apply_1795054681521023036.json, candidate intel2 ~/qc-plan-r3/cand_qc_n41q.json. Bind kw45/qcbind_pin_eb1e73448bd0_s4q9n4/bind_s29q103S4Q9N41QBR (stale 0/133, receipts 0/130). gen_hosts epyc9,epyc8,epyc2,intel1 (epyc10/epyc7 dropped: "target exists or not writable", same as before).
+- Content: FABLE-PD-QC-1240 (1) cbx_q10 x4 sidx straps at stations; (2) sle_stm_v3 x_fe_o 3 kit stations (lane sl_E5_stm__x_stm_fe fixed 5, cycles 12); su_l1 x4 FT sites off macros (epyc9 W9=/srv/opentallas-scratch2/claude/qc-plan-r3-n41p, n41p.py + ft_site_macro.py). so_e pin band NOT moved (abuts sle_sc_v3 ft into sle_fe_v3).
+- cbx_q10 hold bindfail-cbxq10-sidx-1118 RELEASED by RESULT post 6b0ebb6f (verified result_pass_fn True).
+- G0 on N4.1q (warning): epyc9 /srv/opentallas-scratch2/claude/qc-plan-r3-n4g0/g0_S4Q9N41Q.log, intel2 ~/qc-plan-r3/g0_n41q.{log,rc}.
+- N4.2 IN FLIGHT: epyc9 W9 chain_n41p.sh tag S4Q9N42 (plan_n42_b.json: clock.seam_hold seam_ps 160->110 for slw_stm_v1/v2 hold; su_l1 x4 flt_su_c_i chains uniform 5 regs; event_tree ot_qfd_xslice.sv = wep fix 1a2846af93 bytes 62b4db78 for sle_hc1). rc intel2 ~/qc-plan-r3/chain_n42.rc. NEXT when green: pack N42 files + ot_qfd_xslice.sv vs n41q manifest (adapt mkpack_n41q.py), live_tree apply -> qwen_compute_n42_s0 (--candidate cand_qc_n41q), relocate bind (reloc_n41q.sh, --also n41q_s0) + self pass, publish_apply apply --expect-source n41q_s0 --expect-event s29q103S4Q9N41Q (nohup, takes ~25 min), then tell QC-SLW-STM-1118 to relaunch slw_stm_v1/v2.
+- Later: N4.1-proper (QC-N-OPUS rows + btab/prog views) after a routed st_a kit.
+
 ## 2026-11-18 (N4 APPLIED)
 - N4 APPLIED: event s29q103S4Q9N4, receipt lanes/handoff/qwen_compute_atomic_apply_1795022519140881757.json, candidate lanes/handoff/QC_S4Q9N4_ADOPT_candidate_1118.json, tree kw45/src_qc_pin_eb1e73448bd0_s4q9n4 (056d4e67), plan zz_s29_qc103_s4q9n4.json 488b62fe, bind kw45/qcbind_pin_eb1e73448bd0_s4q9n4/bind_s29q103S4Q9N4DBQ (receipts 0/130 on epyc9/epyc8/epyc2/intel1). Post 408984dc.
 - G0+CB16 on N4 plan still running: intel2 ~/qc-plan-r3/g0_n4e.{log,rc} (outputs epyc2 W/gates/g0_S4Q9N4E, cb16_qual_N4E.txt). Advisory; fix findings forward.
