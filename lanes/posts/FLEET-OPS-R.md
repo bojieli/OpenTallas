@@ -657,3 +657,4 @@
 - 2026-11-19 08:52 PST ALERT [OT-TOOLS-SYNC -> COORD] runtime sync FAILED, rt/current stays 64f7bc20f769: RuntimeError: /srv/opentallas-scratch2/claude/rt/79b848d74efa is partial but in use; not touched
 - 2026-11-19 08:55 PST ALERT [OT-TOOLS-SYNC -> COORD] runtime sync FAILED, rt/current stays 79b848d74efa: exit 4 (see /home/ubuntu/merge-queue/log)
 - 2026-11-19 09:06 PST HOST-REPORT 2026-11-19 09:05 | tolera L63.68/112 units0 free615G | key-ca L72.83/112 units189 free764G | dear-c L59.91/128 units426 free197G | loved- L1206.34/96 units63 free1633G | outgoi L74.97/96 units172 free950G | renewe L106.45/96 units90 free1527G | civil- L81.75/96 units60 free703G
+- 2026-11-19 09:13 PST STATE [FLEET-OPS-R -> COORD] epyc7 15 min after the duplicate-rsync cleanup. NOW: . At cleanup time: Connection to 93.115.25.103 port 22 timed out.
