@@ -1,0 +1,771 @@
+{
+ "schema": "fable-fix-s81-leaf.swr_station_rows.v1",
+ "base_plan": "plan_h2_2249.json",
+ "note": "append each entry to partition_types[T].internal_stations; class swr depth 0 -> 1 (CS_SWR_D), +1 cycle on sw_vi / sw_ri / sw_fi through bind K",
+ "types": {
+  "ot_s81sl_kv_leaf__t1": {
+   "bits": 1,
+   "capture": "u_lf.u_vs.sw_v",
+   "conn": "core:u_lf.u_vsw.o_f|core:u_lf.u_vs",
+   "from_um": [
+    267.372,
+    570.282
+   ],
+   "launch": "core:u_lf.u_vsw.o_f",
+   "regs_um": [
+    [
+     293.76,
+     565.92
+    ]
+   ],
+   "to_um": [
+    293.802,
+    747.18
+   ],
+   "note": "FABLE-FIX-S81-LEAF 11-19 (r713 both-side registers, class swr): vsw -> vs return link had no station (CS_SWR_D 0); leaf t60 / t31 TT -1,115 at CTS on u_vsw/o_f -> u_vs/sw_fi; 1 FIRM station(s), +1 cycle(s); pin to pin 203 um, hops [31, 181] um"
+  },
+  "ot_s81sl_kv_leaf__t4": {
+   "bits": 1,
+   "capture": "u_lf.u_vs.sw_v",
+   "conn": "core:u_lf.u_vsw.o_f|core:u_lf.u_vs",
+   "from_um": [
+    258.732,
+    673.878
+   ],
+   "launch": "core:u_lf.u_vsw.o_f",
+   "regs_um": [
+    [
+     280.8,
+     572.4
+    ]
+   ],
+   "to_um": [
+    293.802,
+    462.42
+   ],
+   "note": "FABLE-FIX-S81-LEAF 11-19 (r713 both-side registers, class swr): vsw -> vs return link had no station (CS_SWR_D 0); leaf t60 / t31 TT -1,115 at CTS on u_vsw/o_f -> u_vs/sw_fi; 1 FIRM station(s), +1 cycle(s); pin to pin 247 um, hops [124, 123] um"
+  },
+  "ot_s81sl_leaf__t1": {
+   "bits": 1,
+   "capture": "u_lf.u_vs.sw_v",
+   "conn": "core:u_lf.u_vsw.o_f|core:u_lf.u_vs",
+   "from_um": [
+    276.012,
+    406.122
+   ],
+   "launch": "core:u_lf.u_vsw.o_f",
+   "regs_um": [
+    [
+     298.08,
+     619.92
+    ]
+   ],
+   "to_um": [
+    345.558,
+    807.66
+   ],
+   "note": "FABLE-FIX-S81-LEAF 11-19 (r713 both-side registers, class swr): vsw -> vs return link had no station (CS_SWR_D 0); leaf t60 / t31 TT -1,115 at CTS on u_vsw/o_f -> u_vs/sw_fi; 1 FIRM station(s), +1 cycle(s); pin to pin 471 um, hops [236, 235] um"
+  },
+  "ot_s81sl_leaf__t10": {
+   "bits": 1,
+   "capture": "u_lf.u_vs.sw_v",
+   "conn": "core:u_lf.u_vsw.o_f|core:u_lf.u_vs",
+   "from_um": [
+    293.292,
+    933.078
+   ],
+   "launch": "core:u_lf.u_vsw.o_f",
+   "regs_um": [
+    [
+     183.6,
+     695.52
+    ]
+   ],
+   "to_um": [
+    103.722,
+    427.86
+   ],
+   "note": "FABLE-FIX-S81-LEAF 11-19 (r713 both-side registers, class swr): vsw -> vs return link had no station (CS_SWR_D 0); leaf t60 / t31 TT -1,115 at CTS on u_vsw/o_f -> u_vs/sw_fi; 1 FIRM station(s), +1 cycle(s); pin to pin 695 um, hops [347, 348] um"
+  },
+  "ot_s81sl_leaf__t13": {
+   "bits": 1,
+   "capture": "u_lf.u_vs.sw_v",
+   "conn": "core:u_lf.u_vsw.o_f|core:u_lf.u_vs",
+   "from_um": [
+    483.372,
+    604.842
+   ],
+   "launch": "core:u_lf.u_vsw.o_f",
+   "regs_um": [
+    [
+     181.44,
+     606.96
+    ]
+   ],
+   "to_um": [
+    86.442,
+    816.3
+   ],
+   "note": "FABLE-FIX-S81-LEAF 11-19 (r713 both-side registers, class swr): vsw -> vs return link had no station (CS_SWR_D 0); leaf t60 / t31 TT -1,115 at CTS on u_vsw/o_f -> u_vs/sw_fi; 1 FIRM station(s), +1 cycle(s); pin to pin 608 um, hops [304, 304] um"
+  },
+  "ot_s81sl_leaf__t14": {
+   "bits": 1,
+   "capture": "u_lf.u_vs.sw_v",
+   "conn": "core:u_lf.u_vsw.o_f|core:u_lf.u_vs",
+   "from_um": [
+    327.852,
+    898.518
+   ],
+   "launch": "core:u_lf.u_vsw.o_f",
+   "regs_um": [
+    [
+     328.32,
+     660.96
+    ]
+   ],
+   "to_um": [
+    345.558,
+    445.14
+   ],
+   "note": "FABLE-FIX-S81-LEAF 11-19 (r713 both-side registers, class swr): vsw -> vs return link had no station (CS_SWR_D 0); leaf t60 / t31 TT -1,115 at CTS on u_vsw/o_f -> u_vs/sw_fi; 1 FIRM station(s), +1 cycle(s); pin to pin 471 um, hops [238, 233] um"
+  },
+  "ot_s81sl_leaf__t17": {
+   "bits": 1,
+   "capture": "u_lf.u_vs.sw_v",
+   "conn": "core:u_lf.u_vsw.o_f|core:u_lf.u_vs",
+   "from_um": [
+    414.252,
+    553.002
+   ],
+   "launch": "core:u_lf.u_vsw.o_f",
+   "regs_um": [
+    [
+     436.32,
+     654.48
+    ]
+   ],
+   "to_um": [
+    449.322,
+    764.46
+   ],
+   "note": "FABLE-FIX-S81-LEAF 11-19 (r713 both-side registers, class swr): vsw -> vs return link had no station (CS_SWR_D 0); leaf t60 / t31 TT -1,115 at CTS on u_vsw/o_f -> u_vs/sw_fi; 1 FIRM station(s), +1 cycle(s); pin to pin 247 um, hops [124, 123] um"
+  },
+  "ot_s81sl_leaf__t21": {
+   "bits": 1,
+   "capture": "u_lf.u_vs.sw_v",
+   "conn": "core:u_lf.u_vsw.o_f|core:u_lf.u_vs",
+   "from_um": [
+    301.932,
+    302.442
+   ],
+   "launch": "core:u_lf.u_vsw.o_f",
+   "regs_um": [
+    [
+     239.76,
+     540.0
+    ]
+   ],
+   "to_um": [
+    146.922,
+    747.18
+   ],
+   "note": "FABLE-FIX-S81-LEAF 11-19 (r713 both-side registers, class swr): vsw -> vs return link had no station (CS_SWR_D 0); leaf t60 / t31 TT -1,115 at CTS on u_vsw/o_f -> u_vs/sw_fi; 1 FIRM station(s), +1 cycle(s); pin to pin 600 um, hops [300, 300] um"
+  },
+  "ot_s81sl_leaf__t24__cl2456157b": {
+   "bits": 1,
+   "capture": "u_lf.u_vs.sw_v",
+   "conn": "core:u_lf.u_vsw.o_f|core:u_lf.u_vs",
+   "from_um": [
+    699.372,
+    907.158
+   ],
+   "launch": "core:u_lf.u_vsw.o_f",
+   "regs_um": [
+    [
+     574.56,
+     658.8
+    ]
+   ],
+   "to_um": [
+    431.958,
+    427.86
+   ],
+   "note": "FABLE-FIX-S81-LEAF 11-19 (r713 both-side registers, class swr): vsw -> vs return link had no station (CS_SWR_D 0); leaf t60 / t31 TT -1,115 at CTS on u_vsw/o_f -> u_vs/sw_fi; 1 FIRM station(s), +1 cycle(s); pin to pin 747 um, hops [373, 374] um"
+  },
+  "ot_s81sl_leaf__t24__cl81374cd8": {
+   "bits": 1,
+   "capture": "u_lf.u_vs.sw_v",
+   "conn": "core:u_lf.u_vsw.o_f|core:u_lf.u_vs",
+   "from_um": [
+    301.932,
+    639.318
+   ],
+   "launch": "core:u_lf.u_vsw.o_f",
+   "regs_um": [
+    [
+     479.52,
+     613.44
+    ]
+   ],
+   "to_um": [
+    501.078,
+    432.18
+   ],
+   "note": "FABLE-FIX-S81-LEAF 11-19 (r713 both-side registers, class swr): vsw -> vs return link had no station (CS_SWR_D 0); leaf t60 / t31 TT -1,115 at CTS on u_vsw/o_f -> u_vs/sw_fi; 1 FIRM station(s), +1 cycle(s); pin to pin 406 um, hops [203, 203] um"
+  },
+  "ot_s81sl_leaf__t27": {
+   "bits": 1,
+   "capture": "u_lf.u_vs.sw_v",
+   "conn": "core:u_lf.u_vsw.o_f|core:u_lf.u_vs",
+   "from_um": [
+    267.372,
+    406.122
+   ],
+   "launch": "core:u_lf.u_vsw.o_f",
+   "regs_um": [
+    [
+     265.68,
+     699.84
+    ]
+   ],
+   "to_um": [
+    77.802,
+    807.66
+   ],
+   "note": "FABLE-FIX-S81-LEAF 11-19 (r713 both-side registers, class swr): vsw -> vs return link had no station (CS_SWR_D 0); leaf t60 / t31 TT -1,115 at CTS on u_vsw/o_f -> u_vs/sw_fi; 1 FIRM station(s), +1 cycle(s); pin to pin 591 um, hops [295, 296] um"
+  },
+  "ot_s81sl_leaf__t31": {
+   "bits": 1,
+   "capture": "u_lf.u_vs.sw_v",
+   "conn": "core:u_lf.u_vsw.o_f|core:u_lf.u_vs",
+   "from_um": [
+    293.292,
+    362.922
+   ],
+   "launch": "core:u_lf.u_vsw.o_f",
+   "regs_um": [
+    [
+     289.44,
+     654.48
+    ]
+   ],
+   "to_um": [
+    103.722,
+    764.46
+   ],
+   "note": "FABLE-FIX-S81-LEAF 11-19 (r713 both-side registers, class swr): vsw -> vs return link had no station (CS_SWR_D 0); leaf t60 / t31 TT -1,115 at CTS on u_vsw/o_f -> u_vs/sw_fi; 1 FIRM station(s), +1 cycle(s); pin to pin 591 um, hops [295, 296] um"
+  },
+  "ot_s81sl_leaf__t33": {
+   "bits": 1,
+   "capture": "u_lf.u_vs.sw_v",
+   "conn": "core:u_lf.u_vsw.o_f|core:u_lf.u_vs",
+   "from_um": [
+    638.892,
+    881.238
+   ],
+   "launch": "core:u_lf.u_vsw.o_f",
+   "regs_um": [
+    [
+     552.96,
+     641.52
+    ]
+   ],
+   "to_um": [
+    449.322,
+    421.38
+   ],
+   "note": "FABLE-FIX-S81-LEAF 11-19 (r713 both-side registers, class swr): vsw -> vs return link had no station (CS_SWR_D 0); leaf t60 / t31 TT -1,115 at CTS on u_vsw/o_f -> u_vs/sw_fi; 1 FIRM station(s), +1 cycle(s); pin to pin 649 um, hops [326, 324] um"
+  },
+  "ot_s81sl_leaf__t34": {
+   "bits": 1,
+   "capture": "u_lf.u_vs.sw_v",
+   "conn": "core:u_lf.u_vsw.o_f|core:u_lf.u_vs",
+   "from_um": [
+    474.732,
+    647.958
+   ],
+   "launch": "core:u_lf.u_vsw.o_f",
+   "regs_um": [
+    [
+     179.28,
+     643.68
+    ]
+   ],
+   "to_um": [
+    77.802,
+    445.14
+   ],
+   "note": "FABLE-FIX-S81-LEAF 11-19 (r713 both-side registers, class swr): vsw -> vs return link had no station (CS_SWR_D 0); leaf t60 / t31 TT -1,115 at CTS on u_vsw/o_f -> u_vs/sw_fi; 1 FIRM station(s), +1 cycle(s); pin to pin 600 um, hops [300, 300] um"
+  },
+  "ot_s81sl_leaf__t37": {
+   "bits": 1,
+   "capture": "u_lf.u_vs.sw_v",
+   "conn": "core:u_lf.u_vsw.o_f|core:u_lf.u_vs",
+   "from_um": [
+    1269.612,
+    604.842
+   ],
+   "launch": "core:u_lf.u_vsw.o_f",
+   "regs_um": [
+    [
+     967.68,
+     606.96
+    ]
+   ],
+   "to_um": [
+    872.682,
+    816.3
+   ],
+   "note": "FABLE-FIX-S81-LEAF 11-19 (r713 both-side registers, class swr): vsw -> vs return link had no station (CS_SWR_D 0); leaf t60 / t31 TT -1,115 at CTS on u_vsw/o_f -> u_vs/sw_fi; 1 FIRM station(s), +1 cycle(s); pin to pin 608 um, hops [304, 304] um"
+  },
+  "ot_s81sl_leaf__t38": {
+   "bits": 1,
+   "capture": "u_lf.u_vs.sw_v",
+   "conn": "core:u_lf.u_vsw.o_f|core:u_lf.u_vs",
+   "from_um": [
+    396.972,
+    371.562
+   ],
+   "launch": "core:u_lf.u_vsw.o_f",
+   "regs_um": [
+    [
+     401.76,
+     663.12
+    ]
+   ],
+   "to_um": [
+    216.042,
+    773.1
+   ],
+   "note": "FABLE-FIX-S81-LEAF 11-19 (r713 both-side registers, class swr): vsw -> vs return link had no station (CS_SWR_D 0); leaf t60 / t31 TT -1,115 at CTS on u_vsw/o_f -> u_vs/sw_fi; 1 FIRM station(s), +1 cycle(s); pin to pin 582 um, hops [296, 296] um"
+  },
+  "ot_s81sl_leaf__t39": {
+   "bits": 1,
+   "capture": "u_lf.u_vs.sw_v",
+   "conn": "core:u_lf.u_vsw.o_f|core:u_lf.u_vs",
+   "from_um": [
+    552.492,
+    639.318
+   ],
+   "launch": "core:u_lf.u_vsw.o_f",
+   "regs_um": [
+    [
+     267.84,
+     628.56
+    ]
+   ],
+   "to_um": [
+    155.562,
+    445.14
+   ],
+   "note": "FABLE-FIX-S81-LEAF 11-19 (r713 both-side registers, class swr): vsw -> vs return link had no station (CS_SWR_D 0); leaf t60 / t31 TT -1,115 at CTS on u_vsw/o_f -> u_vs/sw_fi; 1 FIRM station(s), +1 cycle(s); pin to pin 591 um, hops [295, 296] um"
+  },
+  "ot_s81sl_leaf__t4": {
+   "bits": 1,
+   "capture": "u_lf.u_vs.sw_v",
+   "conn": "core:u_lf.u_vsw.o_f|core:u_lf.u_vs",
+   "from_um": [
+    1213.452,
+    842.358
+   ],
+   "launch": "core:u_lf.u_vsw.o_f",
+   "regs_um": [
+    [
+     1190.16,
+     600.48
+    ],
+    [
+     1041.12,
+     486.0
+    ]
+   ],
+   "to_um": [
+    838.122,
+    423.54
+   ],
+   "note": "FABLE-FIX-S81-LEAF 11-19 (r713 both-side registers, class swr): vsw -> vs return link had no station (CS_SWR_D 0); leaf t60 / t31 TT -1,115 at CTS on u_vsw/o_f -> u_vs/sw_fi; 2 FIRM station(s), +2 cycle(s); pin to pin 794 um, hops [265, 264, 265] um"
+  },
+  "ot_s81sl_leaf__t42": {
+   "bits": 1,
+   "capture": "u_lf.u_vs.sw_v",
+   "conn": "core:u_lf.u_vsw.o_f|core:u_lf.u_vs",
+   "from_um": [
+    371.052,
+    337.002
+   ],
+   "launch": "core:u_lf.u_vsw.o_f",
+   "regs_um": [
+    [
+     317.52,
+     574.56
+    ]
+   ],
+   "to_um": [
+    224.682,
+    773.1
+   ],
+   "note": "FABLE-FIX-S81-LEAF 11-19 (r713 both-side registers, class swr): vsw -> vs return link had no station (CS_SWR_D 0); leaf t60 / t31 TT -1,115 at CTS on u_vsw/o_f -> u_vs/sw_fi; 1 FIRM station(s), +1 cycle(s); pin to pin 582 um, hops [291, 291] um"
+  },
+  "ot_s81sl_leaf__t43": {
+   "bits": 1,
+   "capture": "u_lf.u_vs.sw_v",
+   "conn": "core:u_lf.u_vsw.o_f|core:u_lf.u_vs",
+   "from_um": [
+    604.332,
+    639.318
+   ],
+   "launch": "core:u_lf.u_vsw.o_f",
+   "regs_um": [
+    [
+     304.56,
+     635.04
+    ]
+   ],
+   "to_um": [
+    207.402,
+    427.86
+   ],
+   "note": "FABLE-FIX-S81-LEAF 11-19 (r713 both-side registers, class swr): vsw -> vs return link had no station (CS_SWR_D 0); leaf t60 / t31 TT -1,115 at CTS on u_vsw/o_f -> u_vs/sw_fi; 1 FIRM station(s), +1 cycle(s); pin to pin 608 um, hops [304, 304] um"
+  },
+  "ot_s81sl_leaf__t44__clf4ea6d4b": {
+   "bits": 1,
+   "capture": "u_lf.u_vs.sw_v",
+   "conn": "core:u_lf.u_vsw.o_f|core:u_lf.u_vs",
+   "from_um": [
+    1269.612,
+    613.398
+   ],
+   "launch": "core:u_lf.u_vsw.o_f",
+   "regs_um": [
+    [
+     967.68,
+     611.28
+    ]
+   ],
+   "to_um": [
+    872.682,
+    401.94
+   ],
+   "note": "FABLE-FIX-S81-LEAF 11-19 (r713 both-side registers, class swr): vsw -> vs return link had no station (CS_SWR_D 0); leaf t60 / t31 TT -1,115 at CTS on u_vsw/o_f -> u_vs/sw_fi; 1 FIRM station(s), +1 cycle(s); pin to pin 608 um, hops [304, 304] um"
+  },
+  "ot_s81sl_leaf__t44__clf6cf8492": {
+   "bits": 1,
+   "capture": "u_lf.u_vs.sw_v",
+   "conn": "core:u_lf.u_vsw.o_f|core:u_lf.u_vs",
+   "from_um": [
+    1269.612,
+    613.398
+   ],
+   "launch": "core:u_lf.u_vsw.o_f",
+   "regs_um": [
+    [
+     967.68,
+     611.28
+    ]
+   ],
+   "to_um": [
+    872.682,
+    401.94
+   ],
+   "note": "FABLE-FIX-S81-LEAF 11-19 (r713 both-side registers, class swr): vsw -> vs return link had no station (CS_SWR_D 0); leaf t60 / t31 TT -1,115 at CTS on u_vsw/o_f -> u_vs/sw_fi; 1 FIRM station(s), +1 cycle(s); pin to pin 608 um, hops [304, 304] um"
+  },
+  "ot_s81sl_leaf__t45": {
+   "bits": 1,
+   "capture": "u_lf.u_vs.sw_v",
+   "conn": "core:u_lf.u_vsw.o_f|core:u_lf.u_vs",
+   "from_um": [
+    95.508,
+    777.558
+   ],
+   "launch": "core:u_lf.u_vsw.o_f",
+   "regs_um": [
+    [
+     231.12,
+     790.56
+    ]
+   ],
+   "to_um": [
+    354.282,
+    764.46
+   ],
+   "note": "FABLE-FIX-S81-LEAF 11-19 (r713 both-side registers, class swr): vsw -> vs return link had no station (CS_SWR_D 0); leaf t60 / t31 TT -1,115 at CTS on u_vsw/o_f -> u_vs/sw_fi; 1 FIRM station(s), +1 cycle(s); pin to pin 272 um, hops [149, 149] um"
+  },
+  "ot_s81sl_leaf__t46": {
+   "bits": 1,
+   "capture": "u_lf.u_vs.sw_v",
+   "conn": "core:u_lf.u_vsw.o_f|core:u_lf.u_vs",
+   "from_um": [
+    336.492,
+    708.522
+   ],
+   "launch": "core:u_lf.u_vsw.o_f",
+   "regs_um": [
+    [
+     395.28,
+     751.68
+    ]
+   ],
+   "to_um": [
+    432.042,
+    816.3
+   ],
+   "note": "FABLE-FIX-S81-LEAF 11-19 (r713 both-side registers, class swr): vsw -> vs return link had no station (CS_SWR_D 0); leaf t60 / t31 TT -1,115 at CTS on u_vsw/o_f -> u_vs/sw_fi; 1 FIRM station(s), +1 cycle(s); pin to pin 203 um, hops [102, 101] um"
+  },
+  "ot_s81sl_leaf__t47": {
+   "bits": 1,
+   "capture": "u_lf.u_vs.sw_v",
+   "conn": "core:u_lf.u_vsw.o_f|core:u_lf.u_vs",
+   "from_um": [
+    336.492,
+    656.598
+   ],
+   "launch": "core:u_lf.u_vsw.o_f",
+   "regs_um": [
+    [
+     395.28,
+     544.32
+    ]
+   ],
+   "to_um": [
+    466.602,
+    445.14
+   ],
+   "note": "FABLE-FIX-S81-LEAF 11-19 (r713 both-side registers, class swr): vsw -> vs return link had no station (CS_SWR_D 0); leaf t60 / t31 TT -1,115 at CTS on u_vsw/o_f -> u_vs/sw_fi; 1 FIRM station(s), +1 cycle(s); pin to pin 342 um, hops [171, 171] um"
+  },
+  "ot_s81sl_leaf__t51": {
+   "bits": 1,
+   "capture": "u_lf.u_vs.sw_v",
+   "conn": "core:u_lf.u_vsw.o_f|core:u_lf.u_vs",
+   "from_um": [
+    1278.252,
+    626.442
+   ],
+   "launch": "core:u_lf.u_vsw.o_f",
+   "regs_um": [
+    [
+     982.8,
+     628.56
+    ]
+   ],
+   "to_um": [
+    872.682,
+    816.3
+   ],
+   "note": "FABLE-FIX-S81-LEAF 11-19 (r713 both-side registers, class swr): vsw -> vs return link had no station (CS_SWR_D 0); leaf t60 / t31 TT -1,115 at CTS on u_vsw/o_f -> u_vs/sw_fi; 1 FIRM station(s), +1 cycle(s); pin to pin 595 um, hops [298, 298] um"
+  },
+  "ot_s81sl_leaf__t52": {
+   "bits": 1,
+   "capture": "u_lf.u_vs.sw_v",
+   "conn": "core:u_lf.u_vsw.o_f|core:u_lf.u_vs",
+   "from_um": [
+    595.692,
+    622.038
+   ],
+   "launch": "core:u_lf.u_vsw.o_f",
+   "regs_um": [
+    [
+     628.56,
+     492.48
+    ]
+   ],
+   "to_um": [
+    699.882,
+    401.94
+   ],
+   "note": "FABLE-FIX-S81-LEAF 11-19 (r713 both-side registers, class swr): vsw -> vs return link had no station (CS_SWR_D 0); leaf t60 / t31 TT -1,115 at CTS on u_vsw/o_f -> u_vs/sw_fi; 1 FIRM station(s), +1 cycle(s); pin to pin 324 um, hops [162, 162] um"
+  },
+  "ot_s81sl_leaf__t57": {
+   "bits": 1,
+   "capture": "u_lf.u_vs.sw_v",
+   "conn": "core:u_lf.u_vsw.o_f|core:u_lf.u_vs",
+   "from_um": [
+    336.492,
+    622.122
+   ],
+   "launch": "core:u_lf.u_vsw.o_f",
+   "regs_um": [
+    [
+     375.84,
+     736.56
+    ]
+   ],
+   "to_um": [
+    449.322,
+    816.3
+   ],
+   "note": "FABLE-FIX-S81-LEAF 11-19 (r713 both-side registers, class swr): vsw -> vs return link had no station (CS_SWR_D 0); leaf t60 / t31 TT -1,115 at CTS on u_vsw/o_f -> u_vs/sw_fi; 1 FIRM station(s), +1 cycle(s); pin to pin 307 um, hops [154, 153] um"
+  },
+  "ot_s81sl_leaf__t58": {
+   "bits": 1,
+   "capture": "u_lf.u_vs.sw_v",
+   "conn": "core:u_lf.u_vsw.o_f|core:u_lf.u_vs",
+   "from_um": [
+    440.172,
+    656.598
+   ],
+   "launch": "core:u_lf.u_vsw.o_f",
+   "regs_um": [
+    [
+     520.56,
+     591.84
+    ]
+   ],
+   "to_um": [
+    544.362,
+    471.06
+   ],
+   "note": "FABLE-FIX-S81-LEAF 11-19 (r713 both-side registers, class swr): vsw -> vs return link had no station (CS_SWR_D 0); leaf t60 / t31 TT -1,115 at CTS on u_vsw/o_f -> u_vs/sw_fi; 1 FIRM station(s), +1 cycle(s); pin to pin 290 um, hops [145, 145] um"
+  },
+  "ot_s81sl_leaf__t60": {
+   "bits": 1,
+   "capture": "u_lf.u_vs.sw_v",
+   "conn": "core:u_lf.u_vsw.o_f|core:u_lf.u_vs",
+   "from_um": [
+    682.092,
+    319.722
+   ],
+   "launch": "core:u_lf.u_vsw.o_f",
+   "regs_um": [
+    [
+     362.88,
+     326.16
+    ],
+    [
+     317.52,
+     606.96
+    ]
+   ],
+   "to_um": [
+    129.642,
+    747.18
+   ],
+   "note": "FABLE-FIX-S81-LEAF 11-19 (r713 both-side registers, class swr): vsw -> vs return link had no station (CS_SWR_D 0); leaf t60 / t31 TT -1,115 at CTS on u_vsw/o_f -> u_vs/sw_fi; 2 FIRM station(s), +2 cycle(s); pin to pin 980 um, hops [326, 326, 328] um"
+  },
+  "ot_s81sl_leaf__t66": {
+   "bits": 1,
+   "capture": "u_lf.u_vs.sw_v",
+   "conn": "core:u_lf.u_vsw.o_f|core:u_lf.u_vs",
+   "from_um": [
+    595.692,
+    596.202
+   ],
+   "launch": "core:u_lf.u_vsw.o_f",
+   "regs_um": [
+    [
+     617.76,
+     736.56
+    ]
+   ],
+   "to_um": [
+    699.882,
+    816.3
+   ],
+   "note": "FABLE-FIX-S81-LEAF 11-19 (r713 both-side registers, class swr): vsw -> vs return link had no station (CS_SWR_D 0); leaf t60 / t31 TT -1,115 at CTS on u_vsw/o_f -> u_vs/sw_fi; 1 FIRM station(s), +1 cycle(s); pin to pin 324 um, hops [162, 162] um"
+  },
+  "ot_s81sl_leaf__t68": {
+   "bits": 1,
+   "capture": "u_lf.u_vs.sw_v",
+   "conn": "core:u_lf.u_vsw.o_f|core:u_lf.u_vs",
+   "from_um": [
+    250.092,
+    665.238
+   ],
+   "launch": "core:u_lf.u_vsw.o_f",
+   "regs_um": [
+    [
+     276.48,
+     635.04
+    ]
+   ],
+   "to_um": [
+    276.522,
+    453.78
+   ],
+   "note": "FABLE-FIX-S81-LEAF 11-19 (r713 both-side registers, class swr): vsw -> vs return link had no station (CS_SWR_D 0); leaf t60 / t31 TT -1,115 at CTS on u_vsw/o_f -> u_vs/sw_fi; 1 FIRM station(s), +1 cycle(s); pin to pin 238 um, hops [57, 181] um"
+  },
+  "ot_s81sl_leaf__t7": {
+   "bits": 1,
+   "capture": "u_lf.u_vs.sw_v",
+   "conn": "core:u_lf.u_vsw.o_f|core:u_lf.u_vs",
+   "from_um": [
+    1209.132,
+    548.682
+   ],
+   "launch": "core:u_lf.u_vsw.o_f",
+   "regs_um": [
+    [
+     1203.12,
+     788.4
+    ]
+   ],
+   "to_um": [
+    984.918,
+    816.3
+   ],
+   "note": "FABLE-FIX-S81-LEAF 11-19 (r713 both-side registers, class swr): vsw -> vs return link had no station (CS_SWR_D 0); leaf t60 / t31 TT -1,115 at CTS on u_vsw/o_f -> u_vs/sw_fi; 1 FIRM station(s), +1 cycle(s); pin to pin 492 um, hops [246, 246] um"
+  },
+  "ot_s81sl_leaf__t71": {
+   "bits": 1,
+   "capture": "u_lf.u_vs.sw_v",
+   "conn": "core:u_lf.u_vsw.o_f|core:u_lf.u_vs",
+   "from_um": [
+    267.372,
+    397.482
+   ],
+   "launch": "core:u_lf.u_vsw.o_f",
+   "regs_um": [
+    [
+     265.68,
+     691.2
+    ]
+   ],
+   "to_um": [
+    77.802,
+    799.02
+   ],
+   "note": "FABLE-FIX-S81-LEAF 11-19 (r713 both-side registers, class swr): vsw -> vs return link had no station (CS_SWR_D 0); leaf t60 / t31 TT -1,115 at CTS on u_vsw/o_f -> u_vs/sw_fi; 1 FIRM station(s), +1 cycle(s); pin to pin 591 um, hops [295, 296] um"
+  },
+  "ot_s81sl_leaf__t74": {
+   "bits": 1,
+   "capture": "u_lf.u_vs.sw_v",
+   "conn": "core:u_lf.u_vsw.o_f|core:u_lf.u_vs",
+   "from_um": [
+    293.292,
+    933.078
+   ],
+   "launch": "core:u_lf.u_vsw.o_f",
+   "regs_um": [
+    [
+     183.6,
+     695.52
+    ]
+   ],
+   "to_um": [
+    103.722,
+    427.86
+   ],
+   "note": "FABLE-FIX-S81-LEAF 11-19 (r713 both-side registers, class swr): vsw -> vs return link had no station (CS_SWR_D 0); leaf t60 / t31 TT -1,115 at CTS on u_vsw/o_f -> u_vs/sw_fi; 1 FIRM station(s), +1 cycle(s); pin to pin 695 um, hops [347, 348] um"
+  },
+  "ot_s81sl_leaf__t75": {
+   "bits": 1,
+   "capture": "u_lf.u_vs.sw_v",
+   "conn": "core:u_lf.u_vsw.o_f|core:u_lf.u_vs",
+   "from_um": [
+    276.012,
+    639.318
+   ],
+   "launch": "core:u_lf.u_vsw.o_f",
+   "regs_um": [
+    [
+     302.4,
+     609.12
+    ]
+   ],
+   "to_um": [
+    302.442,
+    427.86
+   ],
+   "note": "FABLE-FIX-S81-LEAF 11-19 (r713 both-side registers, class swr): vsw -> vs return link had no station (CS_SWR_D 0); leaf t60 / t31 TT -1,115 at CTS on u_vsw/o_f -> u_vs/sw_fi; 1 FIRM station(s), +1 cycle(s); pin to pin 238 um, hops [57, 181] um"
+  }
+ }
+}

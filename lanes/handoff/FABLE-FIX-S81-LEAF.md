@@ -212,3 +212,13 @@ OWNER FABLE-FIX-S81-LEAF owns s81sl_leaf__t* and s81sl_kv_leaf__t* (all), listed
 (c) Face bank: 0 rows FAILED with that text in kit_wave_stages.tsv now (the 10 are D8e / D8f stride-2 rows, superseded). Structural fix pushed anyway:
     main 0ccfdf3d150d, face_flops.tcl falls back to row stride 1 for a register the comb cannot hold (stop remains if stride 1 does not fit).
 OWNER: FABLE-FIX-S81-LEAF owns s81sl_leaf__t* and s81sl_kv_leaf__t* (all).
+
+## 11-19 08:4x PST: D8i handoff items
+- SWR station rows: lanes/handoff/S81-LEAF-SWR-STATION-ROWS.json (36 types: 34 x 1 station, t4 and t60 x 2; all hops <= 374 um). Generator epyc10 bin/swr_rows.py on the live
+  D8g plan; full plan epyc10 swr/plan_swr.json. Class swr (CS_SWR_D 0 -> len(regs_um)), + that many cycles on sw_vi / sw_ri / sw_fi, bind K.
+  Finding: 22 of the 36 are 471..980 um pin to pin (t60 980) and had NO station: the old R3 rows used stale pin points. Sites checked only against hard cores + 12 um.
+  NOT run: schema validate (import error in my call), G0, bind, any kit. kv_leaf__t2 has no vsw / vs core: skipped.
+- VPW SLR overlay: main 59024a5e802 (tools/die_plan/s81_vpw_slr_overlay.py + test + tb). Apply to the die source tree in D8i, then rebind. 0 cycles, no latency change.
+  Lock-step on the live D8g source: PASS 59,991 checks 0 errors; XR 0 control FAIL 53,438 errors. No physical result; no Fixes-Items trailer on purpose.
+- Correction: the "180 ps late launch clock" on the -840 path was my misreading (I compared the launch Q arrival with the capture clock). Launch CLK 550, capture CLK 541,
+  same tap clk_t2, CRPR 79. Nothing for S81-CLOCK-WINDOW-1119 from this path.
