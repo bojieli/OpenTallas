@@ -1,0 +1,11 @@
+{"schema": "QC-PLAN-R3-station-site.v1", "date": "2026-11-19", "for": "SONNET-FIX-QC (cbf_q00_s2 -1093: bc_o01, x_0_1 b_d -> a_d, 28-buffer chain, no internal station)",
+ "plan_base": "plan_n45_d 0e3244e9 (= live qwen_compute_n45_s1)",
+ "method": "shortest tile-free Manhattan route (halo 2 um, 2.16 um grid BFS) from the u_xstn01 site at the u_t01 (MY) west face tap pin [691.296, 688.46] (mirror of u_t00 east face [544.224, 688.46]) to the bc_o01 N-face window centre [48.912, 2531.52]; n = ceil(L/405) - 1 FIRM stations at equal arc length; sites snapped to 0.054 / 0.27",
+ "route_um": 2484.7, "legs_um": [354.2, 354.2, 354.2, 356.4, 354.2, 354.2, 354.2],
+ "row": {"op": "replace_by_conn", "path": "partition_types.cbf_q00_s2.internal_stations", "conn": "bus:bc_o01",
+         "value": {"conn": "bus:bc_o01", "from_um": [691.296, 688.46], "to_um": [48.912, 2531.52],
+                   "regs_um": [[546.48, 900.72], [529.2, 1237.68], [174.96, 1237.68], [49.68, 1468.8], [49.68, 1823.04], [49.68, 2177.28]],
+                   "bits": 516, "launch": "u_xstn01.a_d", "capture": "face flop",
+                   "note": "QC-PLAN-R3 11-19 (SONNET-FIX-QC cbf_q00_s2 -1093): 6 FIRM stations, centre street -> u_t00/u_t10 gap (y 1237.68) -> W margin x 49.68 -> N window; route 2484.7 um, legs <= 356.4 um (r713); +6 cycles counted in the lane fixed_cycles (reach_fix.sync_fixed_cycles)"}},
+ "check_please": "confirm the launch pin: u_xstn01.a_d sits at the u_t01 tap (west face, y 688.46). If your routed DB shows u_xstn01 elsewhere, send its x,y and I re-site (same script: n46/site_bco01.py).",
+ "n46d": "goes into N4.6d with your bc_o01 + cbn/cbx-class rows and the b_tw_data_i FIRM mid-run station"}
