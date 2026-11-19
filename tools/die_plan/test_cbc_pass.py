@@ -33,6 +33,7 @@ class FakeP:
 
 def test_ft_stations_and_k_deltas():
     P = FakeP()
+    P.types["t"]["hard_cores"] = [dict(inst="u_c", origin_um=[200.0, 100.0], outline_um=[400.0, 100.0])]  # a core-class leg
     rows = C.ft_station_rows(P, 405.0)
     assert list(rows) == [("t", "f")] and rows[("t", "f")]["set_stations"] == 3 and rows[("t", "f")]["delta"] == 2
     kd = C.k_deltas(P, rows)

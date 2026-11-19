@@ -110,13 +110,19 @@ def boundary_rows(P, rtl_dir=None, types=()):
 def ft_core_span(t, sl):
     """hard-core length along the slot's in-window -> out-window path, None when the slot has no windows"""
     import bank_reset_delta as B
+    rects = LC.core_rects(t)
+    if not rects:
+        return 0.0                       # no hard core in the type: nothing to span
     try:
         W, H = t["outline_um"]
-        a = B.face_point(sl["in_face"], sl["in_window_um"], W, H)
-        b = B.face_point(sl["out_face"], sl["out_window_um"], W, H)
+        def pt(face, win):               # a slot without a window: the face centre
+            win = win or ([0.0, H] if face in ("E", "W") else [0.0, W])
+            return B.face_point(face, win, W, H)
+        a = pt(sl["in_face"], sl.get("in_window_um"))
+        b = pt(sl["out_face"], sl.get("out_window_um"))
     except (KeyError, TypeError, ValueError):
         return None
-    return LC.core_span_um(a, b, LC.core_rects(t))
+    return LC.core_span_um(a, b, rects)
 
 
 def ft_station_rows(P, hop):
