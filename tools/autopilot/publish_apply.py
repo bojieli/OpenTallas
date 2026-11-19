@@ -288,6 +288,7 @@ def cmd_apply(a, run=subprocess.run, apply_fn=None, commit_fn=None):
     t0 = time.time()
     res = (apply_fn or A.apply_marker)(C, obj, a.expect_source, a.expect_event, pilot_item=a.pilot_item, optimistic=True)
     res["commit"] = (commit_fn or A.commit_apply)(C, res)
+    res["plan_probe"] = A.start_plan_probe(res) if commit_fn is None else "skipped: custom commit"      # COORD FABLE-FLOW-0200 C: the new event's plan blocks are cached before the next tick
     res["apply_s"] = round(time.time() - t0, 1)
     gate = "off"
     if not a.no_gate:

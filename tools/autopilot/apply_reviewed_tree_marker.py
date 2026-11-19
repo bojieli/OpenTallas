@@ -278,6 +278,20 @@ def commit_apply(coord, res):
     return "ok" if r.returncode == 0 else "FAILED rc %d: %s" % (r.returncode, (r.stderr or r.stdout)[-160:])
 
 
+def start_plan_probe(res):
+    """COORD FABLE-FLOW-0200 C: probe the new event's plan of record right after the apply is committed (detached `kit_wave.py probe-plan`), so the wave never sees an event with no cached
+    plan blocks.  -> 'started pid N' | 'skipped: why'"""
+    import subprocess, sys
+    if not res.get("applied"):
+        return "skipped: nothing applied"
+    try:
+        p = subprocess.Popen([sys.executable, "-I", str(Path(__file__).resolve().with_name("kit_wave.py")), "probe-plan", "--die", str(res["applied"])],
+                             stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
+    except OSError as e:
+        return "skipped: %s" % e
+    return "started pid %d" % p.pid
+
+
 def main(argv=None):
     P = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     P.add_argument("--candidate", required=True, help="JSON marker or {marker: marker, hold_record: optional_record}")
@@ -295,6 +309,7 @@ def main(argv=None):
     res = apply_marker(a.coord, obj, a.expect_source, a.expect_event, a.pilot_item, a.no_pilot, keep_gen_hosts=a.keep_gen_hosts, optimistic=True if a.optimistic else None)
     if not a.no_commit:
         res["commit"] = commit_apply(a.coord, res)
+        res["plan_probe"] = start_plan_probe(res)
     print(json.dumps(res))
 
 

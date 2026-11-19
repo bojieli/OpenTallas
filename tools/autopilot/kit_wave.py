@@ -5761,7 +5761,7 @@ def killed_hosts(st, die, item):
     return [h for h in dict.fromkeys(out) if h]
 
 
-def retry_gen_host(cfg, die, item, avoid, default):
+def retry_gen_host(cfg, die, item, avoid, default, take=0):
     """COORD / FLEET-OPS-R 11-18 (kv_leaf__t2 died 23 times on the host that killed it): an attempt after an INFRA / OOM kill goes to the gen host with the most FREE memory (the ot-run status row's
     admit GB), never back to the host that killed it while another is usable.  The hub is never a candidate.  The caller still checks that the host holds the source tree
     (tree_host_for).  -> host"""
@@ -5773,7 +5773,12 @@ def retry_gen_host(cfg, die, item, avoid, default):
     key = lambda h: stt.get("localhost" if h == hub else h) or {}
     free = lambda h: int(key(h).get("admit", 0) or 0) - int(key(h).get("wait_gb", 0) or 0)
     best = max(cand, key=lambda h: (free(h), -hs.index(h)))
-    return best if key(best) else default
+    if not key(best):
+        return default
+    if take:                                            # FABLE-FLOW-0200 A: book this retry on the host (6 retries went to intel1 in one tick): the next pick sees less free memory there
+        row = stt.get("localhost" if best == hub else best)
+        row["admit"] = int(row.get("admit", 0) or 0) - int(take)
+    return best
 
 
 def alt_charge(cfg, h):
@@ -9915,6 +9920,43 @@ def unclassified_needs_lane(AP, cfg, st):
     return n
 
 
+def probe_plan_cmd(a):
+    """kit_wave.py probe-plan --die D: probe the die's plan of record on its gen host NOW and write the result into the wave state plan cache (COORD FABLE-FLOW-0200 C).  The publish / apply tools
+    call it right after they commit a new event, so the tick never meets a new event with no cached probe ("unknown").  The probe (minutes) runs outside kit_wave.lock; the lock is taken only to
+    merge the one cache entry into the CURRENT state."""
+    import copy
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import autopilot as AP
+    cfg = load_config(Path(a.config).read_text() if a.config else read_config_text(AP))
+    d = (cfg.get("dies") or {}).get(a.die)
+    if not isinstance(d, dict) or not d.get("plan") or not d.get("event") or not d.get("gen_host"):
+        print(f"probe-plan: die {a.die} has no plan / event / gen_host in the committed config")
+        return 2
+    ap_dir = Path(a.ap_dir or AP_DIR)
+    tmp = {"plans": {}}
+    p = plan_names(AP, tmp, d)
+    if p.get("error"):
+        print(f"probe-plan: {a.die}: probe failed: {p['error']}")
+        return 1
+    key = f"{d['gen_host']}:{d['plan']}|{d['event']}"
+    entry = (tmp.get("plans") or {}).get(key)
+    if not entry:
+        print(f"probe-plan: {a.die}: block identity {d.get('block_identity')} is not cached by the wave; nothing written")
+        return 0
+    lk = lock_take(ap_dir / "kit_wave.lock", wait_s=600)
+    if lk is None:
+        print("probe-plan: kit_wave.lock busy for 10 min; the tick probes it itself")
+        return 1
+    try:
+        st = load_state(ap_dir)
+        st.setdefault("plans", {})[key] = copy.deepcopy(entry)
+        save_state(st, ap_dir)
+    finally:
+        lk.close()
+    print(f"probe-plan: {a.die}: {len(entry.get('blocks') or {})} blocks cached for {key[-70:]}")
+    return 0
+
+
 def classify_fail_cmd(a):
     """kit_wave.py classify-fail --die D --item I [--attempt N] --class C: a lane names the class of an UNCLASSIFIED FAIL row (under kit_wave.lock); FLOW / INFRA relaunch on the next tick, PLAN / RTL / STRUCTURAL
     are design verdicts (the next input change relaunches them)"""
@@ -10117,7 +10159,7 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
     if not arm:
         _kh = killed_hosts(st, die, r["item"])
         if _kh:
-            _nh = retry_gen_host(cfg, die, r["item"], _kh, sp["gen_host"])
+            _nh = retry_gen_host(cfg, die, r["item"], _kh, sp["gen_host"], take=pick_charge_gb(cfg, die, r["item"]))
             if _nh != sp["gen_host"] or sp["gen_host"] in _kh:
                 AP.log(f"KIT-WAVE RETRY-HOST {die}/{r['item']}: the last attempt was killed on {','.join(_kh)}; gen host {sp['gen_host']} -> {_nh} (most free memory)")
             sp["gen_host"] = _nh
@@ -11514,6 +11556,17 @@ GUARD_CACHE_S = 90
 GUARD_SLACK_S = 90
 
 
+class GuardKill(tuple):
+    """(epoch, pid, comm) of one GUARD SIGKILL line; .container = the container name the line names ('' when none)"""
+    container = ""
+
+
+def guard_kill_names_item(gk, item):
+    """FABLE-FLOW-0200 A: the kill matches the attempt only when the container it names carries the attempt's item name (dpkit-<item>-<pid>); a line that names no container is matched by time alone as before"""
+    c = getattr(gk, "container", "")
+    return not c or not item or f"-{item}-" in c or c.endswith(f"-{item}") or f"dpkit-{item}-" in c
+
+
 def parse_guard_kills(text):
     """'<+hhmm>\\n<kills.log lines>' (the host's UTC offset first: kills.log is stamped in the host's local time) -> [(epoch, pid, comm)]"""
     import calendar
@@ -11521,11 +11574,17 @@ def parse_guard_kills(text):
     m = re.match(r"^([+-])(\d\d)(\d\d)$", lines[0].strip())
     off = (1 if not m or m.group(1) == "+" else -1) * ((int(m.group(2)) * 3600 + int(m.group(3)) * 60) if m else 0)
     out = []
-    for ts, pid, comm in GUARD_LINE_RE.findall(lines[1] if len(lines) > 1 else ""):
+    for ln in (lines[1] if len(lines) > 1 else "").split("\n"):
+        m = GUARD_LINE_RE.match(ln)
+        if not m:
+            continue
         try:
-            out.append((calendar.timegm(time.strptime(ts, "%Y-%m-%d %H:%M:%S")) - off, int(pid), comm))
+            gk = GuardKill((calendar.timegm(time.strptime(m.group(1), "%Y-%m-%d %H:%M:%S")) - off, int(m.group(2)), m.group(3)))
         except ValueError:
             continue
+        c = re.search(r"\bcontainer (\S+)", ln)
+        gk.container = c.group(1) if c else ""
+        out.append(gk)
     return out
 
 
@@ -11564,8 +11623,9 @@ def guard_kill_for(AP, rec, why, hosts, now=None, fetch=None):
         return None
     best = None
     for h in dict.fromkeys(x for x in hosts if x):
-        for ep, pid, comm in guard_kills(AP, h, fetch):
-            if t0 - GUARD_SLACK_S <= ep <= t1 and (best is None or ep > best[1]):
+        for gk in guard_kills(AP, h, fetch):
+            ep, pid, comm = gk
+            if t0 - GUARD_SLACK_S <= ep <= t1 and (best is None or ep > best[1]) and guard_kill_names_item(gk, rec.get("item")):
                 best = (h, ep, pid, comm)
     return best
 
@@ -11897,7 +11957,11 @@ def so_same_input(cfg, die, r, rec):
             a_, b_ = now.get("pc"), ip.get("pc")
             if not ((fam == "flow" or stage == "kit_snap") and a_ and b_ and all(a_.get(k) == b_.get(k) for k in ("block", "src", "snapshot", "bind_context", "views"))):   # kit_snap (KIT_INPUT_MISSING) snapshots the original kit files: the merged overlay is not its input either
                 return False
-        if (now.get("fam") or {}).get(fam) != (ip.get("fam") or {}).get(fam):
+        sg_now, sg_old = ((now.get("stg") or {}).get(stage), (ip.get("stg") or {}).get(stage)) if fam == "flow" else (None, None)      # gen / bind / kit stages: their closure digest is already exact
+        if sg_now and sg_old:
+            if sg_now != sg_old:
+                return False                           # a tool file of THIS stage changed: relaunch (FLOW-0200 B: an rt sync touching another stage's tool does not re-arm it)
+        elif (now.get("fam") or {}).get(fam) != (ip.get("fam") or {}).get(fam):
             return False                               # an executed file of this stage changed: relaunch
         return stage_env(now.get("env"), stage, why) == stage_env(ip.get("env"), stage, why)
     fh = rec.get("full_hash") or ""
@@ -11921,6 +11985,34 @@ def stage_family(stage):
     if st_ in BIND_STAGES or st_.startswith("kit_") or st_ == "kit_snap":
         return "kit"
     return "flow"
+
+
+STAGE_TOOL_TOKENS = ("place", "cts", "grt", "route", "sta", "signoff", "geom", "kit_snap", "kit_rtl", "kit_topology", "preflight", "synth", "floorplan", "bind", "gen")
+_STAGE_FILES = {}
+
+
+def stage_tools_digests(root=None):
+    """FABLE-FLOW-0200 B: {stage: digest of the executed tool files that carry the stage's name} (a file's lower-case name contains the token; stages with no such file are absent and fall back to
+    their family digest).  A rt sync that touches one tool changes only the stages that tool belongs to, not every held row of the die."""
+    root = Path(root) if root else Path(__file__).resolve().parents[2]
+    k = str(root)
+    if k in _STAGE_FILES:
+        return _STAGE_FILES[k]
+    files = exec_tools_files(root)
+    out = {}
+    for tok in STAGE_TOOL_TOKENS:
+        mine = sorted(f for f in files if tok in f.name.lower())
+        if not mine:
+            continue
+        h = hashlib.sha1()
+        for f in mine:
+            try:
+                h.update(str(f.relative_to(root)).encode()); h.update(f.read_bytes())
+            except (OSError, ValueError):
+                h.update(b"missing")
+        out[tok] = h.hexdigest()[:16]
+    _STAGE_FILES[k] = out
+    return out
 
 
 def exec_family_digests(root=None):
@@ -11965,7 +12057,7 @@ def input_parts(cfg, die, item, block_sha=None):
         pc["snapshot"] = str(d.get("src_manifest_hash") or "")
         spec.pop("tools", None)                               # the stage's executed files are hashed per family (exec_family_digests), not the whole gen / bind closure
         body = {"snapshot": str(d.get("src_manifest_hash") or ""), "spec": spec}
-        return {"v": 2, "noenv": hashlib.sha1(json.dumps(body, sort_keys=True, default=str).encode()).hexdigest()[:20], "env": env, "fam": exec_family_digests(), "pc": pc}
+        return {"v": 2, "noenv": hashlib.sha1(json.dumps(body, sort_keys=True, default=str).encode()).hexdigest()[:20], "env": env, "fam": exec_family_digests(), "stg": stage_tools_digests(), "pc": pc}
     except Exception:
         return {}
 
@@ -15410,6 +15502,8 @@ def main(argv=None):
     rc_.add_argument("--write", action="store_true", help="update the state + kit_wave_stages.tsv (under kit_wave.lock)")
     rc_.add_argument("--ap-dir", help="state dir (default AP_DIR)")
     rc_.add_argument("--quiet", action="store_true", help="histogram only")
+    pp_ = sub.add_parser("probe-plan", help="probe a die plan of record now and cache it in the wave state (run by publish / apply right after a new event)")
+    pp_.add_argument("--die", required=True); pp_.add_argument("--config"); pp_.add_argument("--ap-dir")
     cf_ = sub.add_parser("classify-fail", help="COORD FLOW-1950 N: name the class of an UNCLASSIFIED FAIL row (releases it)")
     cf_.add_argument("--die", required=True); cf_.add_argument("--item", required=True); cf_.add_argument("--attempt", type=int)
     cf_.add_argument("--class", dest="cls", required=True, choices=("PLAN", "FLOW", "RTL", "INFRA", "STRUCTURAL")); cf_.add_argument("--owner", default=""); cf_.add_argument("--ap-dir")
@@ -15479,6 +15573,8 @@ def main(argv=None):
         return struct_cmd(a)
     if a.cmd == "classify-fail":
         return classify_fail_cmd(a)
+    if a.cmd == "probe-plan":
+        return probe_plan_cmd(a)
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     import autopilot as AP
     if a.cmd == "cancel-rows":

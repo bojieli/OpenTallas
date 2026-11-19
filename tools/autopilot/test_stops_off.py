@@ -455,14 +455,15 @@ class ExecutedFileHash(unittest.TestCase):
 
     def run_cmp(self, stage, old_fam, new_fam):
         c = self.cfg()
-        orig = KW.exec_family_digests
+        orig, orig2 = KW.exec_family_digests, KW.stage_tools_digests
+        KW.stage_tools_digests = lambda root=None: {}                 # family digests only (the per-stage digests have their own tests: StageToolsGroup)
         KW.exec_family_digests = lambda root=None: old_fam
         rec = {"status": "FAIL", "stage": stage, "reason": "x", "block_sha": "blk", "input_parts": KW.input_parts(c, "s81", "x", "blk")}
         KW.exec_family_digests = lambda root=None: new_fam
         try:
             return KW.so_same_input(c, "s81", {"item": "x", "block_sha": "blk"}, rec)
         finally:
-            KW.exec_family_digests = orig
+            KW.exec_family_digests, KW.stage_tools_digests = orig, orig2
 
     FAM = {"gen": "g1", "bind": "b1", "kit": "k1", "flow": "f1", "all": "a1"}
 
@@ -1160,3 +1161,98 @@ class ItemEnvGlob(unittest.TestCase):
         self.assertEqual(KW.item_env(d, "col_h9_r2__t1__y"), {"OT_D": "d", "OT_MAXWIRE_POST_SKIP": "1", "OT_A": "g"})
         self.assertEqual(KW.item_env(d, "col_h9_r2__t1__x")["OT_A"], "exact")
         self.assertEqual(KW.item_env(d, "col_h9_r1__t1"), {"OT_D": "d"})
+
+
+class ProbePlanCmd(unittest.TestCase):
+    """COORD FABLE-FLOW-0200 C: probe-plan writes the die plan probe into the wave state cache (lock only for the merge)"""
+
+    def test_probe_result_is_merged_into_the_current_state(self):
+        import tempfile, json as _j, argparse
+        cfgtext = _j.dumps({"enabled": True, "dies": {"qwen_compute": {"enabled": True, "event": "E2", "plan": "/p/plan.json", "gen_host": "h", "src": "/s", "src_sha": "x"}}})
+        with tempfile.TemporaryDirectory() as tmp:
+            Path(tmp, KW.STATE_FILE).write_text(_j.dumps({"items": {"k": {"die": "qwen_compute", "item": "t"}}, "plans": {"old": {"blocks": {"t": "OLD"}}}}))
+            Path(tmp, "kit_wave.json").write_text(cfgtext)
+            orig = KW.plan_names
+            def fake(AP, st, d):
+                p = {"blocks": {"t": "B1", "u": "B2"}, "probe_v": KW.PROBE_V, "t": 1.0}
+                st.setdefault("plans", {})[f"{d['gen_host']}:{d['plan']}|{d['event']}"] = p
+                return p
+            KW.plan_names = fake
+            try:
+                rc = KW.probe_plan_cmd(argparse.Namespace(die="qwen_compute", config=str(Path(tmp, "kit_wave.json")), ap_dir=tmp))
+            finally:
+                KW.plan_names = orig
+            st = _j.loads(Path(tmp, KW.STATE_FILE).read_text())
+            self.assertEqual(rc, 0)
+            self.assertEqual(st["plans"]["h:/p/plan.json|E2"]["blocks"], {"t": "B1", "u": "B2"})
+            self.assertIn("old", st["plans"])                     # the rest of the state is untouched
+            self.assertIn("k", st["items"])
+
+    def test_apply_starts_the_probe_after_the_commit(self):
+        import apply_reviewed_tree_marker as ARM
+        self.assertEqual(ARM.start_plan_probe({}), "skipped: nothing applied")
+        calls = []
+        orig = ARM.subprocess.Popen if hasattr(ARM, "subprocess") else None
+        import subprocess
+        real = subprocess.Popen
+        subprocess.Popen = lambda argv, **k: calls.append(argv) or type("P", (), {"pid": 7})()
+        try:
+            self.assertEqual(ARM.start_plan_probe({"applied": "qwen_compute"}), "started pid 7")
+        finally:
+            subprocess.Popen = real
+        self.assertEqual(calls[0][-3:], ["probe-plan", "--die", "qwen_compute"])
+
+
+class RetrySpreadAndGuardMatch(unittest.TestCase):
+    def cfg(self):
+        return {"_hub": "hub", "_otrun_status": {"epyc7": {"admit": 100, "wait_gb": 0}, "epyc8": {"admit": 90, "wait_gb": 0}, "intel1": {"admit": 130, "wait_gb": 0}},
+                "dies": {"s81": {"event": "E", "gen_host": "epyc7", "gen_hosts": ["epyc7", "epyc8", "intel1"]}}}
+
+    def test_six_retries_spread_by_the_free_memory_left(self):
+        cfg = self.cfg()
+        picks = [KW.retry_gen_host(cfg, "s81", "t%d" % i, [], "epyc7", take=40) for i in range(6)]
+        self.assertEqual(picks[0], "intel1")
+        self.assertGreaterEqual(len(set(picks)), 3)                      # not six on one host
+        self.assertLessEqual(max(picks.count(h) for h in set(picks)), 3)
+
+    def test_guard_kill_names_the_container_and_is_matched_by_item(self):
+        txt = ("+0000\n2026-11-19 08:31:00 GUARD SIGKILL 4050633 openroad RSS 21440 MiB adj 187 unit docker-x.scope container dpkit-col_h9_r2__t1__pvA-3835029 cwd /w path -: MemAvailable < 5 percent\n"
+               "2026-11-19 08:32:00 GUARD SIGKILL 99 yosys RSS 1 MiB adj 1 unit docker-y.scope container dpkit-other_item-12 cwd /w path -: x\n")
+        ks = KW.parse_guard_kills(txt)
+        self.assertEqual([(k[1], k[2], k.container) for k in ks], [(4050633, "openroad", "dpkit-col_h9_r2__t1__pvA-3835029"), (99, "yosys", "dpkit-other_item-12")])
+        self.assertTrue(KW.guard_kill_names_item(ks[0], "col_h9_r2__t1__pvA"))
+        self.assertFalse(KW.guard_kill_names_item(ks[1], "col_h9_r2__t1__pvA"))
+        self.assertTrue(KW.guard_kill_names_item(KW.GuardKill((1, 2, "x")), "anything"))          # no container on the line: time match only, as before
+
+
+class StageToolsGroup(unittest.TestCase):
+    """FABLE-FLOW-0200 B: SKIP-SAME-INPUT hashes the failed stage's tool files, not every executed file"""
+
+    def run_cmp(self, stage, old_stg, new_stg, old_fam=None, new_fam=None):
+        cfg = {"dies": {"s81": {"event": "E", "gen_host": "h", "gen_hosts": ["h"], "src_manifest_hash": "snap", "gen_env": {}, "_plan_sha": "p"}}, "stops_off": True}
+        fam = {"gen": "g", "bind": "b", "kit": "k", "flow": "f", "all": "a"}
+        o1, o2, o3 = KW.exec_family_digests, KW.stage_tools_digests, None
+        KW.exec_family_digests = lambda root=None: old_fam or fam
+        KW.stage_tools_digests = lambda root=None: old_stg
+        rec = {"status": "FAIL", "stage": stage, "reason": "x", "block_sha": "blk", "input_parts": KW.input_parts(cfg, "s81", "x", "blk")}
+        KW.exec_family_digests = lambda root=None: new_fam or old_fam or fam
+        KW.stage_tools_digests = lambda root=None: new_stg
+        try:
+            return KW.so_same_input(cfg, "s81", {"item": "x", "block_sha": "blk"}, rec)
+        finally:
+            KW.exec_family_digests, KW.stage_tools_digests = o1, o2
+
+    def test_a_tool_of_another_stage_does_not_rearm(self):
+        # family digest moved (a flow tcl changed) but the failed stage's own files did not
+        self.assertTrue(self.run_cmp("place", {"place": "P1", "route": "R1"}, {"place": "P1", "route": "R2"}, new_fam={"gen": "g", "bind": "b", "kit": "k", "flow": "f2", "all": "a2"}))
+
+    def test_a_tool_of_the_failed_stage_rearms(self):
+        self.assertFalse(self.run_cmp("place", {"place": "P1"}, {"place": "P2"}))
+
+    def test_stage_without_a_named_file_falls_back_to_its_family(self):
+        self.assertFalse(self.run_cmp("unit", {}, {}, new_fam={"gen": "g", "bind": "b", "kit": "k", "flow": "f2", "all": "a"}))
+        self.assertTrue(self.run_cmp("unit", {}, {}))
+
+    def test_real_tree_has_stage_digests(self):
+        d = KW.stage_tools_digests()
+        self.assertTrue(d.get("place") and d.get("gen") is not None or d.get("place"))
