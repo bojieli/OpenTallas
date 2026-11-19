@@ -20,6 +20,12 @@ A marked type with no bound RTL file is its own group (it builds on its own; nev
   flag    PLAN OUT GLOB [GLOB ...]                      set type_template true on the globbed types (the plan row of an event)
   credit  PLAN --bind-rtl DIR --repo SRC --rom-dir DIR --rep TYPE --signoff signoff.json --out DIR --members-tsv TSV [--lec-policy ...]
                                                         col_inherit records + inherit_members.tsv rows for every member of TYPE's group
+  rommap  PLAN --bind-rtl DIR --repo SRC [--rom-dir DIR] [--gds-dir DIR] [--all GLOB ...] --out JSON
+                                                        die assembly map: per die position the layout it instantiates (the representative's, with the
+                                                        position's origin / orient) and per ROM core the position's own image (INSTANCE string of its
+                                                        bound RTL, via map file + sha) with the core rectangle in the die frame; checks that every
+                                                        ROM core has the same module, LEF file sha, origin and orient as in the representative; exit 1
+                                                        on any mismatch
   view    --rep TYPE --member TYPE --lef F --lib F --out DIR
                                                         the member's hard view = the representative's LEF / Liberty under the member's name
                                                         (die assembly places it with the position's orientation; the ROM via map is per instance)
@@ -166,25 +172,145 @@ def flag(plan, globs):
     return sorted(done)
 
 
-def credit(plan, bind_rtl, repo, rom_dir, rep, signoff, out_dir, members_tsv=None, globs=(), lec_policy="advisory", via_policy="advisory",
-           judge=CI.judge_signoff):
-    """col_inherit records for every member of rep's template group.  The bound RTL text identity (rtl key) is the logic proof, so the
-    record carries lec EQUIVALENT by construction with the two rtl keys.  -> [(member, record path, credit)]"""
+def records(plan, bind_rtl, repo, rom_dir, rep, signoff, globs=(), lec_policy="advisory", via_policy="advisory", judge=CI.judge_signoff):
+    """col_inherit records (dicts, nothing written) for every member of rep's template group.  The bound RTL text identity (rtl key)
+    is the logic proof, so a record carries lec EQUIVALENT by construction with the rtl key."""
     g = next((x for x in groups(plan, bind_rtl, globs) if x["representative"] == rep), None)
     if g is None:
         raise KeyError("%s is not the representative of a template group" % rep)
-    res = []
+    out = []
     for m in g["members"]:
         lec = dict(verdict="EQUIVALENT", method="bound RTL text identity outside the ROM image strings (type_template rtl key)",
                    rtl_key=g["rtl_key"], template_group=g["key"])
         rec = CI.build_record(plan, rep, m, signoff, repo, rom_dir, lec=lec, lec_policy=lec_policy, via_policy=via_policy, judge=judge,
                               group=dict(verdict="OK", reasons=[], layout_key="%s|tt%s" % (g["family"], g["key"])))
+        rec["rom_images_checked"] = bool(rom_dir)
+        if not rom_dir:
+            # no image directory given: the via map files are a die assembly input (rommap checks them per position), not part of
+            # the kit the sign-off covers, so their absence here is recorded and does not refuse the credit
+            rec["credit_blockers"] = [b for b in rec["credit_blockers"] if not b.startswith("no viamap image for ")]
+            rec["credit"] = not rec["credit_blockers"]
+        out.append(rec)
+    return out
+
+
+def credit(plan, bind_rtl, repo, rom_dir, rep, signoff, out_dir, members_tsv=None, globs=(), lec_policy="advisory", via_policy="advisory",
+           judge=CI.judge_signoff):
+    """records() written as <out>/<member>/inherited.json (+ inherit_members.tsv rows for the credited ones).
+    -> [(member, record path, credit)]"""
+    res = []
+    for rec in records(plan, bind_rtl, repo, rom_dir, rep, signoff, globs, lec_policy, via_policy, judge):
+        m = rec["sibling"]
         path = CI.write_record(rec, out_dir)
         if members_tsv and rec["credit"]:
             with open(members_tsv, "a") as f:
                 f.write(CI.members_row(rec, path) + "\n")
         res.append((m, path, rec["credit"]))
     return res
+
+
+_HDR = re.compile(r"^\s*(\w+)\s*#\((.*?)\)\s*(\w+)\s*\(", re.M)
+_IMGV = re.compile(r'\.INSTANCE\s*\(\s*"([^"]*)"\s*\)')
+_FLIP = {"R0": (0, 0), "MX": (0, 1), "MY": (1, 0), "R180": (1, 1)}
+_ORI = {v: k for k, v in _FLIP.items()}
+
+
+def bound_images(text):
+    """{bound instance name: (module, image INSTANCE string)} of a bound type RTL: every instance whose parameter list carries a
+    non-empty .INSTANCE("...") (ROM macros and the element cores that hold ROMs; an empty string selects no image)"""
+    out = {}
+    for m in _HDR.finditer(_CMT.sub("", text)):
+        v = _IMGV.search(m.group(2))
+        if v and v.group(1):
+            out[m.group(3)] = (m.group(1), v.group(1))
+    return out
+
+
+def die_rect(part_origin, part_orient, type_outline, origin, outline, orient="R0"):
+    """a core rectangle of the type frame -> (lower-left xy in the die frame, orient in the die frame) for a position placed with
+    R0 / MX / MY / R180 (the S81 col positions are MX and R180).  Any other orientation raises."""
+    if part_orient not in _FLIP or orient not in _FLIP:
+        raise ValueError("orientation %s / %s is not R0, MX, MY or R180" % (part_orient, orient))
+    fx, fy = _FLIP[part_orient]
+    x = type_outline[0] - origin[0] - outline[0] if fx else origin[0]
+    y = type_outline[1] - origin[1] - outline[1] if fy else origin[1]
+    cx, cy = _FLIP[orient]
+    return [round(part_origin[0] + x, 4), round(part_origin[1] + y, 4)], _ORI[(fx ^ cx, fy ^ cy)]
+
+
+def rommap(plan, bind_rtl, repo, rom_dir=None, globs=(), gds_dir=None):
+    """the die assembly map of the template families.  -> dict(schema, positions=[...], errors=[...]).  A position row: part, type,
+    layout (= representative: the one GDS / DEF the position instantiates), origin_um, orient, roms=[dict(inst, bound, module, image,
+    viamap, viamap_sha256, lef_sha256, die_xy_um, die_orient)].  errors is empty only when, for every position, the ROM cores are the
+    representative's (same bound instances and modules, same LEF file sha, origin and orient) and every image named has its via map
+    (when rom_dir is given) and the representative's GDS exists (when gds_dir is given)."""
+    pt = CI.plan_types(plan)
+    rep_of = {}
+    for g in groups(plan, bind_rtl, globs):
+        for n in [g["representative"]] + g["members"]:
+            rep_of[n] = g["representative"]
+    lef_sha = {}
+
+    def lsha(path):
+        if path not in lef_sha:
+            lef_sha[path] = CI.sha256_file(os.path.join(repo, path)) if path else None
+        return lef_sha[path]
+
+    def cores(n):
+        """{bound instance name: plan hard core}: bind names 'u_r1.u_c5_0' u_u_c5_0 and (r0 frames) 'u_r0.u_c0_0' u_u_r0_u_c0_0"""
+        out = {}
+        for h in pt[n].get("hard_cores") or []:
+            parts = str(h.get("inst")).split(".")
+            for k in ("u_" + "_".join(parts), "u_" + "_".join(parts[1:])):
+                out.setdefault(k, h)
+        return out
+    img_cache, core_cache = {}, {}
+    names = sorted(os.listdir(rom_dir)) if rom_dir and os.path.isdir(rom_dir) else []
+    rows, errors = [], []
+    parts = plan.get("partitions") or []
+    for p in parts if isinstance(parts, list) else parts.values():
+        n = p.get("type")
+        if n not in rep_of:
+            continue
+        r = rep_of[n]
+        for x in (n, r):
+            if x not in img_cache:
+                img_cache[x] = bound_images(_rtl(bind_rtl, x) or "")
+                core_cache[x] = cores(x)
+        im, ir, cm, cr = img_cache[n], img_cache[r], core_cache[n], core_cache[r]
+        if {k: v[0] for k, v in im.items()} != {k: v[0] for k, v in ir.items()}:
+            errors.append("%s (%s): image instances / modules differ from the representative %s" % (p.get("name"), n, r))
+        if gds_dir and not os.path.isfile(os.path.join(gds_dir, r + ".gds")):
+            errors.append("%s: representative layout %s.gds is not in %s" % (p.get("name"), r, gds_dir))
+        roms = []
+        for b, (mod, image) in sorted(im.items()):
+            h, hr = cm.get(b), cr.get(b)
+            row = dict(bound=b, module=mod, image=image, inst=h and h.get("inst"))
+            if h is None or hr is None:
+                errors.append("%s (%s): image instance %s has no plan hard core" % (p.get("name"), n, b))
+            else:
+                a, c = lsha(h.get("lef")), lsha(hr.get("lef"))
+                row["lef_sha256"] = a
+                if not a or a != c or h.get("module") != hr.get("module") or h.get("module") != mod:
+                    errors.append("%s (%s): %s LEF / module is not the representative's (%s)" % (p.get("name"), n, b, r))
+                if h.get("origin_um") != hr.get("origin_um") or (h.get("orient") or "R0") != (hr.get("orient") or "R0") \
+                        or h.get("outline_um") != hr.get("outline_um"):
+                    errors.append("%s (%s): %s origin / orient / outline is not the representative's (%s)" % (p.get("name"), n, b, r))
+                try:
+                    row["die_xy_um"], row["die_orient"] = die_rect(p.get("origin_um") or [0, 0], p.get("orient") or "R0", pt[n]["outline_um"],
+                                                                   h["origin_um"], h["outline_um"], h.get("orient") or "R0")
+                except (ValueError, KeyError, TypeError) as e:
+                    errors.append("%s (%s): %s has no die rectangle: %s" % (p.get("name"), n, b, e))
+            if rom_dir:
+                rx = re.compile(r"^%s%s\.viamap\.hex$" % (re.escape(image), CI.IMAGE_SUFFIX))
+                files = [f for f in names if rx.match(f)]
+                row["viamap"] = [dict(name=f, sha256=CI.sha256_file(os.path.join(rom_dir, f))) for f in files]
+                if not files:
+                    errors.append("%s (%s): no via map for image %s" % (p.get("name"), n, image))
+            roms.append(row)
+        rows.append(dict(part=p.get("name"), type=n, layout=r, origin_um=p.get("origin_um"), orient=p.get("orient") or "R0", roms=roms))
+    return dict(schema="opentallas.type_template.rommap.v1", positions=rows, errors=errors,
+                layouts=sorted(set(rep_of.values())), images=sum(len(x["roms"]) for x in rows))
 
 
 def clone_view(rep, member, lef, lib, out_dir):
@@ -208,13 +334,15 @@ def clone_view(rep, member, lef, lib, out_dir):
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest="cmd", required=True)
-    for name in ("groups", "check", "credit"):
+    for name in ("groups", "check", "credit", "rommap"):
         s = sub.add_parser(name)
         s.add_argument("plan"); s.add_argument("--bind-rtl", required=True); s.add_argument("--all", nargs="*", default=[])
         if name != "groups":
             s.add_argument("--repo", required=True); s.add_argument("--rom-dir")
         if name == "check":
             s.add_argument("--out")
+        if name == "rommap":
+            s.add_argument("--out", required=True); s.add_argument("--gds-dir")
         if name == "credit":
             s.add_argument("--rep", required=True); s.add_argument("--signoff", required=True); s.add_argument("--out", required=True)
             s.add_argument("--members-tsv"); s.add_argument("--lec-policy", default="advisory", choices=("require", "advisory"))
@@ -246,6 +374,16 @@ def main(argv=None):
         print("TOTAL types %d templates %d" % (sum(map(sum, fam.values())), len(gs)))
         print(json.dumps(gs, indent=1))
         return 0
+    if a.cmd == "rommap":
+        r = rommap(plan, a.bind_rtl, a.repo, a.rom_dir, a.all, a.gds_dir)
+        with open(a.out + ".tmp", "w") as fo:
+            json.dump(r, fo, indent=1)
+        os.replace(a.out + ".tmp", a.out)
+        print("TYPE_TEMPLATE rommap: %d position(s), %d layout(s), %d ROM image(s), %d error(s)" % (
+            len(r["positions"]), len(r["layouts"]), r["images"], len(r["errors"])))
+        for e in r["errors"][:20]:
+            print("  ERROR " + e)
+        return 1 if r["errors"] else 0
     if a.cmd == "check":
         r = check(plan, a.bind_rtl, a.repo, a.all, a.rom_dir)
         if a.out:

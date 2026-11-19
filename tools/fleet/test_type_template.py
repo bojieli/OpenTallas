@@ -132,3 +132,51 @@ def test_clone_view_renames_one_macro(tmp_path):
     lef.write_text("MACRO other\nEND other\n")
     with pytest.raises(ValueError):
         TT.clone_view(A, B, str(lef), str(lib), str(tmp_path / "out2"))
+
+
+def test_rommap_positions_images_and_lef_check(world):
+    plan, bind, repo, tmp = world
+    for t in plan["partition_types"].values():
+        t["hard_cores"][0].update(inst="u_r1.u_c0", outline_um=[30, 60])
+    plan["partitions"] = [dict(name="pA", type=A, orient="MX", origin_um=[1000, 2000]), dict(name="pB", type=B, orient="R180", origin_um=[0, 0])]
+    rom = tmp / "rom"
+    rom.mkdir()
+    for i in ("f0.c0", "f1.c0"):
+        (rom / (i + ".viamap.hex")).write_text(i + "\n")
+    r = TT.rommap(plan, bind, repo, str(rom))
+    assert r["errors"] == [] and r["layouts"] == [A, C] and [(p["part"], p["layout"]) for p in r["positions"]] == [("pA", A), ("pB", A)]
+    a, b = r["positions"][0]["roms"][0], r["positions"][1]["roms"][0]
+    assert (a["image"], b["image"]) == ("f0.c0", "f1.c0") and a["lef_sha256"] == b["lef_sha256"] and a["viamap"][0]["sha256"] != b["viamap"][0]["sha256"]
+    assert a["die_xy_um"] == [1010, 2020] and a["die_orient"] == "MX"            # MX: y = 100 - 20 - 60
+    assert b["die_xy_um"] == [60, 20] and b["die_orient"] == "R180"              # R180: x = 100 - 10 - 30
+    os.remove(rom / "f1.c0.viamap.hex")
+    assert any("no via map" in e for e in TT.rommap(plan, bind, repo, str(rom))["errors"])
+    assert any(".gds" in e for e in TT.rommap(plan, bind, repo, None, gds_dir=str(tmp))["errors"])
+
+
+def test_rommap_refuses_other_lef_or_site(world):
+    plan, bind, repo, _tmp = world
+    for t in plan["partition_types"].values():
+        t["hard_cores"][0].update(inst="u_r1.u_c0", outline_um=[30, 60])
+    g = lambda: TT.groups(plan, bind)
+    assert TT.rommap(plan, bind, repo)["errors"] == []
+    # a member whose ROM is another LEF can only reach rommap through --all style grouping errors; force it through the map itself
+    import copy
+    p2 = copy.deepcopy(plan)
+    p2["partition_types"][B]["hard_cores"][0]["lef"] = "v/other.lef"
+    orig = TT.groups
+    TT.groups = lambda *a, **k: orig(plan, bind)
+    try:
+        assert any("LEF" in e for e in TT.rommap(p2, bind, repo)["errors"])
+    finally:
+        TT.groups = orig
+    assert TT.die_rect([0, 0], "MY", [100, 100], [10, 20], [30, 60], "MX") == ([60, 20], "R180")
+    with pytest.raises(ValueError):
+        TT.die_rect([0, 0], "R90", [100, 100], [10, 20], [30, 60])
+
+
+def test_records_do_not_write(world):
+    plan, bind, repo, tmp = world
+    judge = lambda path, repo=None: dict(path=str(path), sha256="s", verdict="SIGNED", gates={}, reasons=[], drc=0, tt_wns_ps=-1.0, ff_hold_wns_ps=1.0)
+    recs = TT.records(plan, bind, repo, None, A, "x", judge=judge)
+    assert [r["sibling"] for r in recs] == [B] and recs[0]["credit"] is True and not (tmp / "rec").exists()

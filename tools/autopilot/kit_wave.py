@@ -8750,6 +8750,95 @@ def template_member(d, item):
     return (d.get("_templates") or {}).get(item)
 
 
+PROBE_TT_CREDIT = r"""
+import json, sys
+a = json.loads(sys.argv[1])
+try:
+    sys.path.insert(0, a["tt_dir"])
+    import type_template as TT
+    recs = TT.records(json.load(open(a["plan"])), a.get("bind_rtl"), a["src"], a.get("rom_dir"), a["rep"], a["signoff"],
+                      judge=lambda path, repo=None: a["judged"])
+    out = {"records": recs}
+except Exception as e:
+    out = {"error": (type(e).__name__ + ": " + str(e))[:300]}
+print("AP_JSON " + json.dumps(out))
+"""
+INHERIT_MEMBERS = "inherit_members.tsv"
+TEMPLATE_SIGNED_JOB = ("ARCHIVED", "SIGNED-UNVERSIONED", "SIGNED", "SIGNED-LINKED")
+
+
+def template_credit_step(AP, cfg, st, notices, ap_dir, rpy=None):
+    """TYPE-TEMPLATE credit (OWNER 11-19): when the representative of a template group is signed off on the current plan block, write
+    the equivalence record of every member (tools/fleet/type_template.records on the die gen host, where the plan, the bind and the
+    tree are) under <ap_dir>/inherit_records/ and append <ap_dir>/inherit_members.tsv, which the sign-off counter reads
+    (release_tree_plan.inherit_credit).  Once per (die, representative, block); a record that says no credit is logged and not listed.
+    The sign-off verdict is the autopilot job's (already judged): no second gate.  -> number of members credited"""
+    items = st.get("items") or {}
+    try:
+        jobs = json.loads((Path(AP.AP_DIR) / "state.json").read_text()).get("jobs") or {}
+    except (OSError, ValueError):
+        jobs = {}
+    rpy = rpy or AP.rpy
+    done = st.setdefault("template_credit", {})
+    n = 0
+    for die, d in (cfg.get("dies") or {}).items():
+        if not isinstance(d, dict) or d.get("type_template") is False:
+            continue
+        pc = (st.get("plans") or {}).get(f"{d.get('gen_host')}:{d.get('plan')}|{d.get('event')}") or {}
+        tm = pc.get("templates") or {}
+        blocks = pc.get("blocks") or {}
+        for rep in sorted(set(tm.values())):
+            blk = blocks.get(rep)
+            key = f"{die}|{rep}|{str(blk)[:13]}"
+            if key in done:
+                continue
+            rec = next((r for r in items.values() if r.get("die") == die and r.get("item") == rep and r.get("q_status") in SIGNED_Q
+                        and (not blk or r.get("block_sha") == blk)), None)
+            j = jobs.get((rec or {}).get("q_id")) or {}
+            if rec is None or j.get("status") not in TEMPLATE_SIGNED_JOB:
+                continue
+            so = j.get("signoff") if isinstance(j.get("signoff"), dict) else {}
+            judged = dict(path=str(j.get("kit") or ""), sha256=str(rec.get("q_id") or ""), verdict="SIGNED", reasons=[], drc=0,
+                          gates=(j.get("chain") or {}).get("gates") if isinstance(j.get("chain"), dict) else {},
+                          tt_wns_ps=so.get("tt_wns"), ff_hold_wns_ps=so.get("ff_wns"), job=rec.get("q_id"), job_status=j.get("status"))
+            if AP.DRY:
+                continue
+            p = rpy(d.get("gen_host"), PROBE_TT_CREDIT, dict(
+                tt_dir=str(Path(__file__).resolve().parents[1] / "fleet"), plan=d.get("plan"), bind_rtl=template_bind_rtl(d),
+                src=d.get("src"), rom_dir=d.get("type_template_rom_dir"), rep=rep, signoff=judged["path"], judged=judged), timeout=900)
+            if not isinstance(p, dict) or p.get("error") or not isinstance(p.get("records"), list):
+                AP.log(f"KIT-WAVE TYPE-TEMPLATE credit {die}/{rep}: records not built ({(p or {}).get('error') if isinstance(p, dict) else p}); retried next tick"[:400])
+                continue
+            tsv = Path(ap_dir) / INHERIT_MEMBERS
+            have = set()
+            if tsv.exists():
+                have = {tuple(l.split("\t")[:3]) for l in tsv.read_text().splitlines()}
+            ok, no = [], []
+            for r in p["records"]:
+                m = r.get("sibling")
+                if r.get("credit") is not True:
+                    no.append(f"{m}: {'; '.join(map(str, r.get('credit_blockers') or []))[:120]}")
+                    continue
+                f = Path(ap_dir) / "inherit_records" / die / f"{m}__{str(blk)[:12]}" / "inherited.json"
+                raw = (json.dumps(r, indent=1, sort_keys=True) + "\n").encode()
+                if not f.exists():
+                    f.parent.mkdir(parents=True, exist_ok=True)
+                    tmp = f.with_suffix(".tmp")
+                    tmp.write_bytes(raw)
+                    os.replace(tmp, f)
+                if (die, m, rep) not in have:
+                    with open(tsv, "a") as fo:
+                        fo.write("\t".join([die, m, rep, str(f), hashlib.sha256(f.read_bytes()).hexdigest()]) + "\n")
+                ok.append(m)
+            done[key] = {"t": time.time(), "job": rec.get("q_id"), "credited": len(ok), "refused": len(no)}
+            n += len(ok)
+            AP.log(f"KIT-WAVE TYPE-TEMPLATE CREDIT {die}/{rep} job {rec.get('q_id')}: {len(ok)} member(s) credited, {len(no)} refused"
+                   + (f" ({no[0]})" if no else ""))
+            if ok:
+                notices.setdefault(die, []).append(f"{rep} signed off: {len(ok)} TYPE-TEMPLATE member(s) credited")
+    return n
+
+
 def plan_names(AP, st, d):
     """partition types + hard-core modules of the plan of record (probe on gen_host, cached by plan path + event)"""
     key = f"{d['gen_host']}:{d['plan']}|{d['event']}"
@@ -14248,6 +14337,10 @@ def _step(AP, ap_dir):
         dedup_step(AP, cfg, st, notices, ap_dir)         # WF-1 11-14 (friction 7): credit / release / cancel duplicates
     except Exception as e:
         AP.log(f"KIT-WAVE DEDUP step skipped: {type(e).__name__}: {e}")
+    try:
+        template_credit_step(AP, cfg, st, notices, ap_dir)   # TYPE-TEMPLATE (OWNER 11-19): members of a signed representative
+    except Exception as e:
+        AP.log(f"KIT-WAVE TYPE-TEMPLATE credit step skipped: {type(e).__name__}: {e}")
     try:
         name_stuck_retry_infra(AP, cfg, st)
         retire_superseded_rows(AP, cfg, st)
