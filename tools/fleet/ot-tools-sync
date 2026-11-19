@@ -627,6 +627,7 @@ def drift():
     if man:
         r = run(["python3", "-I", "-c", BACKEND_PY, want, json.dumps(BACKEND_ROOTS)], timeout=60)
         out += _backend_lines("intel2", r)
+        out += copies_diffs(man.get("files", {}))
     for h in HOSTS:
         r = run(SSH + [h, f"readlink {RT}/current"], input="")
         hc = r.stdout.strip().splitlines()[0] if r.returncode == 0 and r.stdout.strip() else ""
@@ -664,6 +665,34 @@ def _backend_lines(host, r):
             for p, v in sorted(res.items()) if v.startswith("DIFF") and "/rt/" not in p]
 
 
+# FLOW-HEALTH-1 11-19 (COORD): hub-installed COPIES of repo files that no wrapper resolves into rt/ (a unit runs the copy directly): the fail-route relay
+# ran an unmerged copy for 3 days and then the old merged one.  "installed path (~ ok) -> repo path", compared with the sha256 of rt/current's manifest.
+INSTALLED_COPIES = [x.split("=", 1) for x in os.environ.get(
+    "OT_RT_INSTALLED_COPIES", "~/.local/lib/fail-route/fail_route.py=tools/autopilot/fail_route.py "
+    "~/.local/lib/coord-guard/hooks/post-checkout=tools/fleet/coord-branch-guard/post-checkout "
+    "~/.local/lib/coord-guard/hooks/pre-push=tools/fleet/coord-branch-guard/pre-push").split()]
+
+
+def copies_diffs(man_files, copies=None, host="intel2"):
+    """-> [str] one line per installed copy whose bytes differ from main's file in rt/current (or that is missing); a repo file the manifest does not
+    list is skipped (not shipped yet)"""
+    import hashlib
+    out = []
+    for inst, rel in (INSTALLED_COPIES if copies is None else copies):
+        want = (man_files or {}).get(rel)
+        if not want or str(want).startswith("link:"):
+            continue
+        path = os.path.expanduser(inst)
+        try:
+            got = hashlib.sha256(open(path, "rb").read()).hexdigest()
+        except OSError:
+            out.append(f"{host} {inst} missing (main has {rel})")
+            continue
+        if got != want:
+            out.append(f"{host} {inst} differs from main {rel} (live-only copy)")
+    return out
+
+
 def installed_diffs(man_files, hosts=None, runner=None):
     """FLEET-OPS-R 11-17 (COORD FABLE-FLOW-0500 (2): /usr/local/bin/ot-heavy differed from rt/current on 7/7 hosts, r533 half deployed): every installed
     ot-* backend (BACKEND_ROOTS, hub + hosts) whose bytes differ from rt/current tools/fleet is an ALERT, not a note.  -> list of strings (empty = in step).
@@ -672,6 +701,7 @@ def installed_diffs(man_files, hosts=None, runner=None):
     want = json.dumps({k.split("/")[-1]: v for k, v in (man_files or {}).items()
                        if k.startswith("tools/fleet/") and k.count("/") == 2 and not v.startswith("link:")})
     out = _backend_lines("intel2", runner(["python3", "-I", "-c", BACKEND_PY, want, json.dumps(BACKEND_ROOTS)], timeout=60))
+    out += copies_diffs(man_files)
     for h in (HOSTS if hosts is None else hosts):
         r = runner(SSH + [h, "python3", "-I", "-c", shlex.quote(BACKEND_PY), shlex.quote(want), shlex.quote(json.dumps(BACKEND_ROOTS))], timeout=120, input="")
         out += _backend_lines(h, r)
