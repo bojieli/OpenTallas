@@ -98,3 +98,29 @@ def test_work_root_history_keys_and_notes_do_not_protect_trees_but_hbm_history_d
     joined = "\n".join(s)
     for gone in ("kit-wave", "src_old1", "src_old2", "src_old3", "head_old"):
         assert gone not in joined, gone
+
+
+def test_routed_unsigned_attempt_is_refused_unless_signed_or_superseded(tmp_path):
+    import json as _j
+    import ot_delete_guard as G
+    it = tmp_path / "kit-wave" / "s81" / "ev" / "items" / "t47"
+    def attempt(n, routed, signed=False):
+        b = it / f"attempt_{n}" / "gen" / "t47" / "run" / "results" / "asap7" / "dp_t47" / "base"
+        b.mkdir(parents=True)
+        (b / "3_5_place_dp.odb").write_text("x")
+        if routed:
+            (b / "5_2_route.odb").write_text("x")
+        if signed:
+            so = it / f"attempt_{n}" / "gen" / "t47" / "signoff"
+            so.mkdir()
+            (so / "signoff.json").write_text(_j.dumps({"verdict": "SIGNED"}))
+    attempt(3, True)
+    attempt(4, False)
+    assert "routed result not signed" in G.refuse(str(it / "attempt_3"), protected=set(), ptext="", allow=set())
+    assert "routed result not signed" in G.refuse(str(it / "attempt_3" / "gen" / "t47" / "run"), protected=set(), ptext="", allow=set())
+    assert G.refuse(str(it / "attempt_4"), protected=set(), ptext="", allow=set()) is None          # nothing routed there
+    attempt(5, True)
+    assert G.refuse(str(it / "attempt_3"), protected=set(), ptext="", allow=set()) is None           # superseded by a newer routed attempt
+    assert "routed result not signed" in G.refuse(str(it / "attempt_5"), protected=set(), ptext="", allow=set())
+    attempt(6, True, signed=True)
+    assert G.refuse(str(it / "attempt_6"), protected=set(), ptext="", allow=set()) is None           # SIGNED

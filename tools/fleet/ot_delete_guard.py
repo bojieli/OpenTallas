@@ -185,12 +185,47 @@ def newer_than_current(target, current=None):
     return ""
 
 
+ATTEMPT_DIR = re.compile(r"^(?P<item>.*/items/[^/]+)/attempt_(?P<n>\d+)(?:/|$)")
+ROUTED_FILES = ("5_2_route.odb", "6_final.odb")
+
+
+def _routed(attempt_dir):
+    return any(glob.glob(os.path.join(attempt_dir, "**", "run", "results", "asap7", "*", "base", f), recursive=True) for f in ROUTED_FILES)
+
+
+def routed_unsigned_refusal(t):
+    """FABLE-FLOW-1555 (B): slice_station__t47 (14:06) and hd_ctl (14:58) lost their routed results to grt_arm_reclaim / auto_retire.attempt_candidates.  The one choke point refuses any target at or inside a
+    kit-wave attempt dir that holds 5_2_route.odb or 6_final.odb, unless that attempt is SIGNED (a signoff.json with verdict SIGNED under it) or a NEWER attempt of the same item also holds routed results.
+    -> reason or None"""
+    m = ATTEMPT_DIR.match(t)
+    if not m:
+        return None
+    ad = t[:m.end()].rstrip("/")
+    if not os.path.isdir(ad) or not _routed(ad):
+        return None
+    for so in glob.glob(os.path.join(ad, "**", "signoff*.json"), recursive=True):
+        try:
+            if json.load(open(so)).get("verdict") == "SIGNED":
+                return None
+        except (OSError, ValueError, AttributeError):
+            continue
+    n = int(m.group("n"))
+    for other in glob.glob(m.group("item") + "/attempt_*"):
+        k = re.search(r"attempt_(\d+)$", other)
+        if k and int(k.group(1)) > n and _routed(other):
+            return None
+    return "routed result not signed and not superseded by a newer routed attempt (5_2_route.odb / 6_final.odb): " + os.path.basename(ad)
+
+
 def refuse(target, protected=None, ptext=None, why_list=None, current=None, allow=None):
     """None = allowed.  protected/ptext may be passed in (tests, batch callers); otherwise loaded."""
     t = canon(os.path.abspath(target))
     if os.path.islink(target) or os.path.realpath(target) != os.path.abspath(target):
         if canon(os.path.realpath(target)) != t:
             return "symlink or realpath differs"
+    rr = routed_unsigned_refusal(t)
+    if rr:
+        return rr
     m = TREE_ROOT.match(t)
     if m and m.group("rest"):
         return "partial delete inside source tree %s (whole trees only)" % os.path.basename(m.group("root"))

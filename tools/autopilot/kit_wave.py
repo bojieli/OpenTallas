@@ -5274,6 +5274,31 @@ def sync_die_inputs(AP, cfg, run=None):
     return done
 
 
+PROBE_HOST_BUDGET_S = 90
+
+
+def parallel_probe(jobs, fn, budget=None):
+    """FABLE-FLOW-1555 (E): {key: fn(key, arg)} for jobs = {key: arg}, all keys at once with a per-key time budget.  A key whose probe
+    misses the budget (or raises) is absent from the result (skipped this tick); the pool never waits for it."""
+    from concurrent.futures import ThreadPoolExecutor, TimeoutError as _TO
+    budget = PROBE_HOST_BUDGET_S if budget is None else budget
+    out = {}
+    if not jobs:
+        return out
+    ex = ThreadPoolExecutor(max_workers=max(1, min(16, len(jobs))))
+    try:
+        futs = {k: ex.submit(fn, k, a) for k, a in jobs.items()}
+        t_end = time.time() + budget
+        for k, f in futs.items():
+            try:
+                out[k] = f.result(timeout=max(0.0, t_end - time.time()))
+            except (_TO, Exception):
+                continue
+    finally:
+        ex.shutdown(wait=False, cancel_futures=True)
+    return out
+
+
 def workroot_low(AP, cfg, run=None):
     """KW-FIX-30 11-07 (COORD 13:21): {host: {die: free GB}} for the gen hosts where the disk that really holds the
     die's work_root has less than gen_disk_min_gb free.  GEN-DISK-LOW reads ot-run's scratch disk (scratch2), but the
@@ -5316,8 +5341,8 @@ def workroot_low(AP, cfg, run=None):
                 need.setdefault(h, {}).setdefault(lane, set()).add(die)
     q = shlex.quote
     out = {}
-    for h, lanes in sorted(need.items()):
-        cmd = "; ".join(f"d={q(l)}; while [ ! -e \"$d\" ] && [ \"$d\" != / ]; do d=$(dirname \"$d\"); done; "
+    def _wcmd(lanes):
+        return "; ".join(f"d={q(l)}; while [ ! -e \"$d\" ] && [ \"$d\" != / ]; do d=$(dirname \"$d\"); done; "
                         f"echo W {q(l)} $(df -BG --output=avail \"$d/\" 2>/dev/null | tail -1 | tr -dc 0-9) "
                         f"$(df --output=target \"$d/\" 2>/dev/null | tail -1 | tr -d \" \") "
                         # KW-FIX-38 11-08: scratch3 is a separate mount of the root fs on the fleet, so df's target is
@@ -5326,10 +5351,12 @@ def workroot_low(AP, cfg, run=None):
                         f"$(df -BG --output=avail {SCRATCH2_ROOT}/ 2>/dev/null | tail -1 | tr -dc 0-9) "
                         f"$(stat -Lc %d {SCRATCH2_ROOT}/ 2>/dev/null)"
                         for l in sorted(lanes))
-        try:
-            rc, o = run(h, cmd + "; true")
-        except Exception:
+    probed_w = parallel_probe({h: _wcmd(lanes) for h, lanes in need.items()}, lambda h, c: run(h, c + "; true"),
+                              cfg.get("probe_host_budget_s"))
+    for h, lanes in sorted(need.items()):
+        if h not in probed_w:
             continue
+        rc, o = probed_w[h]
         if rc != 0:
             continue
         for ln in (o or "").splitlines():
@@ -5386,12 +5413,14 @@ def spill_marked(AP, cfg):
             if h and h not in (hub, "localhost"):
                 roots.setdefault(h, set()).add(lane_root(opt(cfg, die, "work_root")))
     out = {}
-    for h, rs in sorted(roots.items()):
+
+    def _spill(h, rs):
         cmd = "; ".join(f"test -e {shlex.quote(r + '/' + SPILL_MARK)} && echo {shlex.quote(r)}" for r in sorted(rs)) + "; true"
-        rc, o, _ = AP.sh(["ssh", "-o", "ConnectTimeout=8", "-o", "BatchMode=yes", "-o", "ControlPath=none", h, cmd],
-                         timeout=60)
+        return AP.sh(["ssh", "-o", "ConnectTimeout=8", "-o", "BatchMode=yes", "-o", "ControlPath=none", h, cmd], timeout=60)
+    for h, res in sorted(parallel_probe(roots, _spill, cfg.get("probe_host_budget_s")).items()):
+        rc, o, _ = res
         if rc == 0:
-            out[h] = {x for x in o.split() if x in rs}
+            out[h] = {x for x in o.split() if x in roots[h]}
     return out
 
 
