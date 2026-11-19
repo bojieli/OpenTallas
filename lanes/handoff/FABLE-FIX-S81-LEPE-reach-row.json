@@ -1,0 +1,40 @@
+{
+ "schema": "fable-fix-s81-lepe.reach_row.v1",
+ "lane": "FABLE-FIX-S81-LEPE",
+ "for": "S81-DIE-R3",
+ "type": "dsdv_slice_lepe_mu_LP__t2 (s_7N_LP); nh_mus_LP__t1 gets the same recipe after its own placed scan",
+ "rule": "r713 amended: every PLACED leg <= 405 um; 0-cycle siting / branch copy first, +1 relay with bind K only where siting cannot reach",
+ "status": "CANDIDATE second row. Not proven on a kit: items 1 and 3 are positions-only and will be proven with gen phys --type-overlay on the next private kit after the tap proof reports GRT TT; items 2 and 4 change cycles and need the lep RTL owner + bind K.",
+ "basis": "mu att22 post-CTS TT, own STA with launch CK = capture CK (epyc10 /srv/opentallas-scratch2/claude/fable-lepe/out_mu/setup.json, ideal.py): 544 ends < -42 ps",
+ "items": [
+  {
+   "id": 1,
+   "what": "reset to the east hard cores",
+   "cycles": 0,
+   "measured": "u_rrl_11/q (652,613), the depth-6 leaf rst_n_t0, drives rs of u_ln2 (1117,856) u_ln3 (1428,856) u_lnl2 (1015,622) u_lnl3 (1326,622): legs 373..1020 um, data 1.25..1.92 ns, 4 ends -336..-775. collector_tree.core_resets is empty: the core reset pins are not consumers of the tree.",
+   "row": "declare the 8 core reset pins as collector_tree consumers (core_resets) and give the east cores two depth-6 branch copies of the tap-0 leaf, both fed by u_rrl_10 (998,626; depth 5): copy A at (1015,640) -> u_lnl2 rs_k/rs_n + u_ln2 rs (legs 18 / 318 um), copy B at (1326,640) -> u_lnl3 rs_k/rs_n + u_ln3 rs (hop in 342, legs 18 / 318 um). Same depth as every other leaf: reset release cycle unchanged, LATCHECK reset rows unchanged. Check u_ln0 rs (west, about 590 um from the leaf) the same way: it did not fail at placement RC but is over 405."
+  },
+  {
+   "id": 2,
+   "what": "land reset synchroniser",
+   "cycles": "reset-only +3 (4 hops <= 405 um)",
+   "measured": "u_u_land.u_rstr (3 flops) sits at (1433,11) beside its source u_bin_lepk_i0/q[0] (E face 1438,7); the 2,270 land registers sit at x 33..589, y 263..485 (centroid 429,345): 1,570 um, 62 ends -247..-486 (tag, cnt, rcq, ri_, fault, busy).",
+   "row": "site u_u_land.u_rstr at the land centroid (429,345) (r713 item 5: aim at the sink centroid) and carry lepk_i0[0] to it through 3 relay flops at about (1040,90) (690,180) (540,300); the land reset releases 3 cycles later than now. Reset-only path: bind K changes on the land reset release row only, no data lane latency. If the bind treats lepk_i0[0] as a data bit of the lepk lane, the alternative with 0 data change is to drive u_rstr from the type reset tree leaf rst_n_t2 / a new depth-6 leaf at (330,300): needs the lep RTL owner to say whether that in-band reset may be replaced."
+  },
+  {
+   "id": 3,
+   "what": "rx SRAM banks of one memory split across the type",
+   "cycles": 0,
+   "measured": "g_rx[1] banks at x=276,346,544,838,907 (y 294); g_rx[3] bank0 at (1322,294), bank1 (415,285), bank2-4 x=276,346,484 (y 259). rd_out -> rid / ml_wd: 132 ends, worst -472, legs to 1023 um. g_rx[0] (one stack at x 544) and g_rx[2] (one row x 976..1253) are compact and do not appear.",
+   "row": "positions only (contents origin_um, orient R0 kept): u_bound.u_u_lep.u.g_rx[3].g_sa.g_true_sram.u_rx_mem.g_bank[1].u_m -> [414.72, 259.212]; u_bound.u_u_lep.u.g_rx[3].g_sa.g_true_sram.u_rx_mem.g_bank[0].u_m -> [552.96, 259.212]; u_bound.u_u_lep.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[3].u_m -> [414.72, 293.772]; u_bound.u_u_lep.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[4].u_m -> [483.84, 293.772]. Result: g_rx[3] = one row x 276..553 at y 259, g_rx[1] = one row x 276..544 at y 294 (69.12 pitch, 13.8 um row channel as the existing rows). Slots checked against the placed macro list of att22 only; DIE-R3 macro-site / channel / PG check still applies."
+  },
+  {
+   "id": 4,
+   "what": "tx memories: every memory has its 5 banks at x=52,242,838,1028,1218",
+   "cycles": "0 if re-sited, else +1",
+   "measured": "g_mtx.wn[*] (7 flops at 670,319) -> g_tx[*].g_safe_write.g_address count_r / wp_r / valid_r: 258 ends, worst -235, legs to 787 um; lnl* -> credit_pin_r 11 ends to -479 (1458 um).",
+   "row": "0-cycle form: no free block takes 20 tx banks beside the write logic without moving the land SRAMs and g_rx[0], so siting alone does not close it. +1 form (r713): one relay stage on the tx write command group (wn with wdata and the address strobes delayed alike) at each bank column, and one on the lnl credit return; bind K +1 on the lep tx write latency and on the credit loop. The credit return is a feedback loop: r713 keeps loop forms case by case, so this item needs the lep RTL owner before it is a row."
+  }
+ ],
+ "also_open": "AP_PLACED_SCAN NEED-STATION on att22: 48 groups, 4,487 bits over 580 um (rid -> bout_lepk_o0 1007 b 1257 um, f_host -> bout_unit_o0 514 b 936 um, bin_lepk_i0 -> g_inpipe.rop 459 b 1098 um): face legs; items 3 moves rid closer to the E face only partly. Sized after the tap proof GRT TT."
+}
