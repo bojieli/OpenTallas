@@ -29,7 +29,7 @@
    "kit_rtl": {
     "mode": "bind",
     "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg10_a1e1d4d0_tb3c4d97_d25d4/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
-    "bind_out": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg10_a1e1d4d0_tb3c4d97_d25d4_bind_1119194238",
+    "bind_out": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg10_a1e1d4d0_tb3c4d97_d25d4_bind_1119143244",
     "note": "KIT-OPS-5 KV kvgeom7uh (KV-102 READY+ADOPT 23:13: plan_c 68a458bd5824, strict bind 0 with OT_HCPARAM_ALL=1, R8 0, LATCHECK 2404/2404; src/plan/asbuilt/landing/bind all on the c1 tree: the old kvbind_kvgeom7u/out + src_kv_kvgeom7u paths named kv102t18 files = fail classes 4a41d4597f/54b807b7fa) | WAVE-HOLDS-1115 2026-11-15 15:19 PST KV kvgeom7u (KV-102 READY+ADOPT 14:47, COORD r168: plan_c b7156937f334, G0 0, pinned strict bind 0, LATCHECK 2404/2404, 56 types CHANGED; src = kv102t18_kvgeom7u + main replica_keep.py/gen_phys.py/ot_keep_regs.tcl + kvgeom7q_views). Revert: dies.qwen_kvsys.prev_wavehold1115_kvgeom6 | KIT-OPS-5 KV kvgeom6 (KV-102 READY+ADOPT 22:10: G0 0, strict bind 0 160/56/2545, LATCHECK 2404/2404; kvgeom5 + early core taps on 7 kv3_pc types + tap_pair_affinity on kv3_io_ft,"
    },
    "gen_args": [
