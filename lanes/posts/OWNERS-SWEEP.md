@@ -43,3 +43,8 @@
   No DEAD-OWNER, no STALE, no failed-no-relaunch flags.
   Rows: lanes/OWNERS-SWEEP.tsv
 - 2026-11-18 23:51 PST 23:50 sweep: 508 unsigned rows S81/HEAD/QC/KV, 487 unflagged. HEAD, QC, KV: 0 flags. S81: 13 UNOWNED all s81sl_leaf__t* global_place FAILED (family covered by FABLE-FIX-S81-LEAF, so no new lane unless it lacks them). S81 FAILED-NO-RELAUNCH 11 (eng__t1, gunit__t1, leaf t40/t52/t53/t54/t61/t75...). S81 UNCLASSIFIED 2: dsdv_slice_c1x_C__t9, s81sl_leaf__t56. No DEAD-OWNER, no STALE.
+- 2026-11-19 00:51 PST 508 unsigned rows (S81 352, QC 103, KV 51, HEAD 2); HBM skipped.
+  UNOWNED 0, DEAD-OWNER 0, FAILED-NO-RELAUNCH-1H 0, UNCLASSIFIED 0.
+  STALE>3H 2 (KV kv3_hgi_v3, kv3_pv), both family-covered (FABLE-FIX-KV-HG, KV-HUBPV-1118).
+  Largest owners: KIT-WAVE(auto) 170, FABLE-FIX-S81-COLH9R1 83, WAVE-PILOT-FIX 74, FABLE-FIX-QC 30.
+  Nothing needs a new lane.
