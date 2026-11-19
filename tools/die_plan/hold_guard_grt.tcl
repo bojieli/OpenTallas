@@ -122,5 +122,44 @@ if {[llength [info procs ::repair_timing_helper]] && ![llength [info procs ::ot_
     }
     if {$capped} { puts "OT_HOLD_GUARD_GRT: chunk buffer caps reached (RSZ-0060 caught per chunk); continuing on the repaired design" }
   }
+  # HOLD-SKIP-PORTS 11-19 (COORD, R-MINIMAL: input-port hold is advisory, only internal FF hold >= 0 blocks; col_h9_r1 proof kit: 1,491 input-port ends hit the 200-buffer cap per chunk and
+  # added hours): the GRT hold repair of a kit that does NOT carry the grt_nonport_hold adapter (kits generated before it was default, or with it off) repairs internal FF-to-FF only.  The
+  # input-port DATA starts get a temporary hold false path for the repair; the full original SDC is read back afterwards (the exact restore grt_nonport_hold.tcl does), so sign-off and every
+  # report still see the port paths.  OT_HOLD_SKIP_PORTS=0 or OT_GRT_PORT_HOLD_INCLUDE=1 (an item that asks for port repair) turns it off.
+  rename ::repair_timing_helper ::ot_hg_helper_inner
+  proc ::ot_hg_skip_ports_on {} {
+    if {[info exists ::ot_grt_nonport_installed] || [info exists ::ot_hg_skip_active]} { return 0 }
+    if {[info exists ::env(OT_HOLD_SKIP_PORTS)] && $::env(OT_HOLD_SKIP_PORTS) eq "0"} { return 0 }
+    if {[info exists ::env(OT_GRT_PORT_HOLD_INCLUDE)] && $::env(OT_GRT_PORT_HOLD_INCLUDE) eq "1"} { return 0 }
+    return 1
+  }
+  proc ::repair_timing_helper {args} {
+    set has_s [expr {[lsearch -exact $args -setup] >= 0}]
+    set has_h [expr {[lsearch -exact $args -hold] >= 0}]
+    if {($has_s && !$has_h) || ![::ot_hg_skip_ports_on]} { return [::ot_hg_helper_inner {*}$args] } ;# a setup-only call has no hold repair; neither flag = both (the guard below)
+    set dir [expr {[info exists ::env(RESULTS_DIR)] ? $::env(RESULTS_DIR) : [pwd]}]
+    set stem [file join $dir ot_hg_ports_[pid]_[clock clicks]]
+    write_sdc -digits 17 -no_timestamp ${stem}_before.sdc
+    set clock_sources [dict create]
+    foreach clock [all_clocks] {
+      foreach source [get_property $clock sources] { dict set clock_sources [get_full_name $source] 1 }
+    }
+    set inputs {}
+    foreach port [all_inputs] {
+      if {![dict exists $clock_sources [get_full_name $port]]} { lappend inputs $port }
+    }
+    puts "OT_HOLD_SKIP_PORTS begin input_ports=[llength $inputs]: the GRT hold repair covers internal FF-to-FF paths only (port hold stays reported)"
+    set ::ot_hg_skip_active 1
+    try {
+      if {[llength $inputs]} { set_false_path -hold -from $inputs }
+      return [::ot_hg_helper_inner {*}$args]
+    } finally {
+      unset -nocomplain ::ot_hg_skip_active
+      if {[llength $inputs]} { unset_path_exceptions -hold -from $inputs }
+      read_sdc ${stem}_before.sdc
+      puts "OT_HOLD_SKIP_PORTS restored the full SDC (port hold visible again)"
+      if {![info exists ::env(OT_HOLD_SCOPE_KEEP_SDC)] || $::env(OT_HOLD_SCOPE_KEEP_SDC) ne "1"} { file delete ${stem}_before.sdc }
+    }
+  }
   puts "OT_HOLD_GUARD_GRT installed (single-mode GRT hold repair progress/time bound)"
 }

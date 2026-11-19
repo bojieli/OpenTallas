@@ -21,6 +21,15 @@ set ::tns -5000.0
 set ::need 1000000
 namespace eval ord { proc get_db_block {} { return ::blk } }
 proc ::blk {m} { return [lrepeat $::n x] }
+set ::sdc_log {}
+proc write_sdc {args} { lappend ::sdc_log write_sdc; set f [open [lindex $args end] w]; puts $f x; close $f }
+proc read_sdc {f} { lappend ::sdc_log read_sdc }
+proc all_clocks {} { return {clk} }
+proc get_property {o p} { return {clksrc} }
+proc get_full_name {o} { return $o }
+proc all_inputs {} { return {clksrc din0 din1} }
+proc set_false_path {args} { lappend ::sdc_log "false_path $args" }
+proc unset_path_exceptions {args} { lappend ::sdc_log "unset $args" }
 proc worst_slack {args} { return $::ws }
 proc total_negative_slack {args} { return $::tns }
 proc repair_timing_helper {args} {
@@ -38,6 +47,7 @@ proc repair_timing_helper {args} {
 %s
 %s
 repair_timing_helper -setup_margin 0 -hold_margin 10 -repair_tns 100 -skip_last_gasp -max_buffer_percent 100 -verbose
+puts "SDCLOG $::sdc_log"
 puts "NCALLS [llength $::calls]"
 foreach c $::calls { puts "CALL $c" }
 puts "WS $::ws"
@@ -149,3 +159,22 @@ def test_zero_violators_stops_the_margin_chase():
     assert "0 hold violators" in out and float(out.split("WS ")[1]) < 10.0
     off = run("3.0", {"OT_HOLD_ZERO_VIOL_STOP": "0"}, preamble=ZV)
     assert "0 hold violators" not in off and float(off.split("WS ")[1]) >= 10.0
+
+
+def sdclog(out):
+    return [l for l in out.splitlines() if l.startswith("SDCLOG")][0]
+
+
+def test_input_ports_are_excluded_from_the_hold_repair_and_the_sdc_is_restored():
+    """HOLD-SKIP-PORTS 11-19: the hold repair runs with a temporary hold false path from the input data ports (not the clock source); the original SDC is read back"""
+    out = run("20.0")
+    log = sdclog(out)
+    assert "false_path -hold -from {din0 din1}" in log and "clksrc" not in log.split("false_path")[1].split("}")[0]
+    assert log.index("write_sdc") < log.index("false_path") < log.index("unset") < log.index("read_sdc")
+    assert "OT_HOLD_SKIP_PORTS begin input_ports=2" in out and "restored the full SDC" in out
+
+
+def test_setup_only_and_opt_outs_leave_the_sdc_alone():
+    assert "false_path" not in sdclog(run("20.0", env={"OT_HOLD_SKIP_PORTS": "0"}))
+    assert "false_path" not in sdclog(run("20.0", env={"OT_GRT_PORT_HOLD_INCLUDE": "1"}))
+    assert "false_path" not in sdclog(run("20.0", preamble="set ::ot_grt_nonport_installed native\n"))      # the nonport adapter already scopes it
