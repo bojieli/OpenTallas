@@ -160,3 +160,7 @@
 - plan_n45_b WITHDRAWN (FABLE-PD-QC-0407). N4.5c = n45/plan_n45_c.json dad42b93 (n45c.py: ft_slots back to N4.4 on 49 types + reach_fix.sync_fixed_cycles vs N4.4). Bind chain_n45c.sh tag S4Q9N45C; G0/PRE n45/g0pre_c.sh at rt 913e191a0b77. Logs intel2 ~/qc-plan-r3/{chain_n45c,g0pre_n45c}.{log,rc}; watcher armed.
 - Live tree now qwen_compute_n43_s3 e1684721, event s29q103S4Q9N43R (ring views, pack_ring); kit_wave retry cbn_q00__cldbcda913@17. Cut the N4.5c pack against n43_s3 / expect-event s29q103S4Q9N43R.
 - Open: bci00 rst_xn parent hold (from the cbn_q00__cldbcda913 kit's routed hold). N4.6 queue: epyc9 qc-plan-r3-n41p/n46_queue.txt.
+
+## 11-19 N4.5c apply in background
+- intel2 ~/qc-plan-r3/apply_n45c.sh (log/rc apply_n45c.*): waits G0 0 errors -> live_tree pack_n45c -> qwen_compute_n45_s0 event s29q103S4Q9N45C -> bind-first publish_apply (expect n43_s3 / s29q103S4Q9N43R). Candidate base cand_qc_n45c_base.json.
+- N4.6 item 7 composed: epyc9 qc-plan-r3-n41p/n45/plan_n46_tx.json dd785d90 (QC-COLL-CORE direct tx rows + latency refresh); srr place_regions + rx_reaim held for DPL-0033.
