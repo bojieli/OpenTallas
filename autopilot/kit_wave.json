@@ -39131,7 +39131,7 @@
   },
   "qwen_compute": {
    "enabled": true,
-   "event": "s29q103S4Q9N43",
+   "event": "s29q103S4Q9N43G",
    "coord_enable": "COORD 00:43 + 01:0x ruling (1) to KIT-WAVE-12: QC on at the collector-fix merge 5346b95c915 (claude/die-qc-58-coll-1031@00452027cbe, strict bind 0)",
    "gate": {
     "g0c": "PASS",
@@ -39139,13 +39139,13 @@
     "clock": "PASS",
     "evidence": "DIE-QC-58 00:35/00:36: G0C PASS 0 err (die-qc-58/g0c_base); strict bind errors 0 unbound 0 (die-qc-58/bindC; KIT-WAVE-12 smoke intel1 kit-wave-12/smoke_qc on wt/kit-wave-12-qc @5346b95c915: 377 partitions, 1921 crossings, errors 0 unbound 0 CHECKED); clock = 12.25 die gate BLOCKED(kits) only (contracts 0, TT +156.79, CA 0; DIE-QC-57 staA2d) -> PASS for types per the structural reading (DIE-QC-58 00:36) | CODEX canonical read-only bind profile3_pad:377parts119types,0errors/undriven/unbound,201closedfiles. This source update does not assert a new physical clock PASS; exact SU/CB and cap holds retained. | QC1131 d90 strict119types0errors and201closedfiles; source/recipe matching pre-D13, metadata Q4 hints included. No new die-clock/current START freeze receipt claimed; existing physical/view holds unchanged. | QC4 existing-source release: explicit cached strictRC0 2026-11-07 01:31:36,119types377parts1921crossings790393bits0errors. Planv4 d6f2098a5d1a/asbuilt131abb5d4c5b, source compoundbase02909+overlayee1/tree661bf2. No new die timing claim."
    },
-   "plan": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_n43_s1/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9n43.json",
+   "plan": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_n43_s2/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9n43.json",
    "gen_host": "epyc9",
-   "src": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_n43_s1",
+   "src": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_n43_s2",
    "src_sha": "eb1e73448bd042684261a13c50cd0fb5ce21a513",
    "kit_rtl": {
     "mode": "bind",
-    "asbuilt": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_n43_s1/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_n43_portable.json",
+    "asbuilt": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_n43_s2/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_n43_portable.json",
     "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind_pin_eb1e73448bd0_s4q9n4/bind_s29q103S4Q9N43BQ",
     "note": "KIT-OPS-5 QC s29q103S4Q6D (DIE-QC-103 READY+ADOPT: bind S29Q103S4Q6DBQ errors 0, R8 0, LATCHECK 1921/1921; delta over S4q3c, 4 st_a_v2 held by exact key) | WAVE-HOLDS-1115 2026-11-15 13:06 PST QC s29q103S4Q3C (DIE-QC-103 READY+ADOPT 20:0x UTC, COORD r139 GO; bind S29Q103S4Q3CBQ errors 0, LATCHECK 1921/1921; delta over S4q3b: 4 st_a_v2 rows renamed to signed n9 masters). Revert: dies.qwen_compute.prev_wavehold1115_s4q3b | WAVE-HOLDS-1115 2026-11-15 10:52 PST QC s29q103S4Q3B (DIE-QC-103 READY+ADOPT 18:0x UTC, COORD r97: bind S29Q103S4Q3BBQ errors 0, LATCHECK 1921/1921, hard_core_param 0 mismatches; delta over S4q2: 4 st_a_v2 param_wrap rows + budgets.r_dly_spread cb; 35 S4q2 types unchanged). 15 cb types released; the 4 st_a_v2 types stay held (FAB",
     "note_codex_qc4": "Exact cached-asbuilt strict bind replay --strict RC0 01:31:36 PST,377parts119types1921crossings790393bits,n_errors0/unbound0/undriven0; no verify/elab rerun. Fresh output /srv/opentallas-scratch2/claude/codex-watch-qc-1107/bind_strict. Compound private assembly base main0290971a0fd + approved overlayee1cea45f143; resulting tree661bf2ad9c. Branch pin identifies approved event, not entire assembly. Type/module AUTO-RESIGN holds enforce uncredited status until integration/current-tag re-sign/source qualification.",
@@ -39157,7 +39157,7 @@
     "--max-wire-um",
     "120",
     "--clock-landing",
-    "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_n43_s1/physical/die_plan/qwen_compute/qc_start_1106/runtime/zz_sidecar_s29q103S4Q9N43BQ.json"
+    "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_n43_s2/physical/die_plan/qwen_compute/qc_start_1106/runtime/zz_sidecar_s29q103S4Q9N43BQ.json"
    ],
    "kinds": [
     "type"
@@ -47992,7 +47992,8 @@
     "s29q103S4Q9N4",
     "s29q103S4Q9N41Q",
     "s29q103S4Q9N42",
-    "s29q103S4Q9N43"
+    "s29q103S4Q9N43",
+    "s29q103S4Q9N43G"
    ],
    "hold_items_lifted_kitops3_qcs29": {
     "sle_sc_v3": "WAIT DIE-QC-97 core-west plan event, COORD 21:3x: 21:29 relaunch at the old core position (GRT overflow 151,554 in a 19 um channel). Revert: delete this key.",
@@ -49649,7 +49650,7 @@
     "s29q103S4Q9N1B",
     "s29q103S4Q9N3"
    ],
-   "src_manifest_hash": "d6cd055f1755fe0fc79778cec5a00506c6f52af20ab8e9c7cfa79ef7a07bbb9b",
+   "src_manifest_hash": "d80a662ddf5186e96a4cad3ff602287691372edf435a5682fc57a367becd803e",
    "tools_sha": "eb1e73448bd0",
    "only_items_prev_qcpin": [
     "cbf_q01",
@@ -49876,9 +49877,10 @@
     "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9n4",
     "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_n4_s0",
     "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_n4_s1",
-    "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_n41q_s0"
+    "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_n41q_s0",
+    "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_n42_s0"
    ],
-   "rollback_tree": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_n42_s0",
+   "rollback_tree": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_n43_s1",
    "prev_gen_hosts_derive": [
     "epyc9",
     "epyc8",
@@ -49902,7 +49904,8 @@
     "s29q103S4Q9N3",
     "s29q103S4Q9N4",
     "s29q103S4Q9N41Q",
-    "s29q103S4Q9N42"
+    "s29q103S4Q9N42",
+    "s29q103S4Q9N43"
    ],
    "breaker_fix": "QC-TYPES-R3 11-18: OWNER r703 removed all class breakers (stops_off not in code yet): probe window reopened for every open class of this die, COORD 11-18; rt_tools: TOOLS-DECOUPLE aed901b rt mirror",
    "note_only_items_qcplanr3_1118": "11-18 07:1x QC-PLAN-R3: + sle_st_a_v2__pv30dda31f__pv88773f93,sle_st_a_v2__pv30dda31f__pvd2ec7769,slw_st_b_v2__pva66d0f22__pv3d7bec84,slw_st_b_v2__pva66d0f22__pvb80e2003,sle_ctl__cl503337ff__padE0,sle_ctl__cl503337ff__padE4,sle_ctl__cl67434795__padW5 (N3 plan split children; parents in only_items are pre-split names, never selected)"
