@@ -289,6 +289,17 @@ def region_split(pts, wh=None, cap=None):
     return region_split(q[:k], wh, cap) + region_split(q[k:], wh, cap)
 
 
+def _split(pts, wh, cap):
+    """COORD 11-19: ONE implementation of the tap-region rule -- tap_resolve.py --span-um (FABLE-FIX-S81-LEPE) when it
+    offers a plan-level split (span_split(points, span_um, cap) on [(x, y, w)]); region_split() here only until it lands"""
+    try:
+        import tap_resolve as TR
+        fn = getattr(TR, "span_split", None)
+    except Exception:  # noqa: BLE001
+        fn = None
+    return fn(pts, wh, cap) if fn else region_split(pts, wh, cap)
+
+
 def tap_rows(P, cap, plan_path=None):
     import precheck as PC
     import schema as S
@@ -328,7 +339,7 @@ def tap_rows(P, cap, plan_path=None):
             load = sum(w for *_, w in pts)
             if wh <= TAP_REGION and load <= cap:
                 continue
-            regs = region_split(pts, TAP_REGION, cap)
+            regs = _split(pts, TAP_REGION, cap)
             split.append(dict(tap=n, xy=[round(v, 2) for v in xy[n]], load=round(load), region_wh_um=round(wh, 1),
                               add_taps=len(regs) - 1,
                               regions=[dict(sink_centroid=[round(c, 2) for c in centroid(r)], sinks=round(sum(w for *_, w in r)),
