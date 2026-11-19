@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; coordinator update 2026-11-01 18:00 PST)
 
-2026-11-19 00:1x PST: signed any plan  | see HANDOFF. S81 D8f publishing (apply ~00:30), D8g G0 clean (apply ~01:15). QC N4.3 bind pass 2 + G0. KV D25c. HEAD hd_mesh/hd_ctl ECO pass 1. 6 Fable fix lanes: S81 leaf (station-fold fix waits D8g), col_h9_r1, lepe, glue, QC, KV hg. FABLE-FLOW-2355 fixes dispatched (memory admission, lec wait hang, skip-same).
+2026-11-19 01:2x PST: signed any plan 450 | current 401 (flat since 17:3x). QC N4.3 APPLIED 01:03. S81 D8f still replicating, D8g next. Proof builds: S81 leaf fold fix CTS -527 -> -230 (GRT pending); col_h9_r1 stations placed (CTS ~02:15); glue record port 25 -> 13 levels on main + 6 private kits (GRT ~07:00); QC sle_ctl/st_b p1/p2. Fable limit reset ~01:00; 7 Fable lanes incl new KV-PV (pv -2024/-1703 TT post-CTS). PRECHECK-1119 + type-reduction census started (owner yes).
 Plans 11:36: count 152 flat (S81 50/58 + 4/205 types, HEAD 4/4 + 12/25, QC 16/19, KV 26/32, HBM 40/103). Merged I118-I126 since 10:40: QC coll_core fold + ring ff class (tag e-qc), KV PV taps (tag b-kv), HEAD l48ue (tag a-head), wave prune + resume fixes. 9 core gaps from CORE-FORMS-2 all owned. intel2 scratch2 142 after 49 GB move.
 
 <!-- BREAKDOWN BEGIN -->
