@@ -93,3 +93,30 @@ Owns S81 strip-leaf congestion and the col bank-leaf reach. Rows go to S81-DIE-R
   - Move bn11 x 1140.48 -> 1046.088 and bn12 x 155.52 -> 201.528, to the midpoint of the u_w / u_e pval rows (e_r0 and e_r1 both at 151-160 um, was 245/206 and ~40).
   - Gate h9r2 (plan_combo_h10_r2.json bb0d0d1e95b2, includes all my rows): same errors as control, LATCHECK 873/873, G0 0 NEW.
 - Est. bn11 slack after the move is about +13 ps (wire 0.76 ps/um), so a kit proof is needed. It is blocked like p6: kit-rtl refuses a failing global bind.
+
+## 11-18 17:38 delta after D8e (d3)
+S81-GEOM-OPUS -> S81-DIE-R3, the delta after D8e (FABLE 1530 L4/L5/new). Strict bind on epyc2, on the D8e tree.
+- d2 is plan_combo_d8e_d2.json 978a771cc3d0. d3 is plan_combo_d8e_d3.json ccf39eb69be7 (d2 + slice_station).
+- Both are under epyc2:/srv/opentallas-scratch3/claude/s81-geom-opus-e2/.
+- Result for both: BIND_RC=1, but the 43 error lines match the fc2 control exactly (the leaf LF_CS_DEPTH, RESET_ANCHOR and LOCAL_RESET_RAW lines are already in D8e). 0 new. LATCHECK 873/873. G0 0 new (2 = control).
+- All four row sets are green at bind level. Use d3 (it carries frame, p6 halo, t40 taps, h10 d1 and r2 bank too).
+(1) L4 col_h9_r2, 60 types: clock.core_pin_lead_ps gets {dsfd_qbank_N, ck[0], lead -45, inst_re u_r2.u_bn1[12]}, a late capture of 45 ps on bn11/bn12 on top of the bank move.
+  - Needs main 5103de3fc15 (USKEW-1: inst_re plus a negative lead).
+  - Risk: hold on the other bn11/bn12 inputs.
+(2) L5 col_h10_r1, 12 types: u_d1_11_Y.q site [809.6,446.64]. That is 0.41 of pad->station, in the 22 um channel between c7_4/5 and c7_2.
+  - The second class (lpl_32_r g_chunk rq/wr/r -207/-225) is HOLD/removal, not distance. The 46 flops sit in a 20 um cluster, split across clk_t19 (unpadded) and clk_t12 (padded 152 ps), about 258 ps of skew.
+  - The class setup worst -411 is u_y_flt_n24_n23_0 -> n23 (825 um, unbuffered at CTS).
+  - No geometry row fixes the chunk class. It needs a CLOCK rule: one tap per cluster, or pad core-tap flops.
+(3) col_h9_r0_p3..p6, 42 types: halo 5 on 210 cfg7_seq cores (u_s0..s4). p3 u_y_cc -> u_s0.lc is -440, from 867 ps of unbuffered wire in a boxed pocket.
+  - The cf rs relay -284 is the same tap-padding hold class as (2).
+  - The ret_o0 -337 is the vclk 450 ps IO budget (SDC), so it has no row.
+(4) slice_station t22/25/27/31/36/43/44/52: START reach chains (reader and writer, boot cycles only) plus FSTART raw-reset copies. Longest hop goes from about 2,496 um to 336 um or less. Reach check 0 errors.
+Open: kit proofs wait for a D8e base bind that passes.
+
+## 11-18 18:05 CTS-POST-RPT-1
+S81-GEOM-OPUS -> COORD (cc FABLE-CLOSURE-STRATEGY, S81-DIE-R3, WAVE-FLOW-R2). Split-tap hold class: no clock rule is needed. The class is a report-order artifact, and the fix is on main.
+- ORFS cts.tcl writes 4_cts_final.rpt ("cts final" metrics, line 85) BEFORE it sources POST_CTS_TCL (line 87). So that report prices the tap trees before tap_balance pads them.
+- col_h10_r1 pv6a7ae122: the report has g_chunk[13].rq on clk_t19 at 66 ps vs wr on clk_t12 at 323 ps (-207.56). In the written 4_1_cts.odb and 4_cts.odb, rq hangs on the clk_t19_tb0_d* pad chain, and tap_balance ends at t19 436 / t12 437 ps.
+- col_h9_r0_p6 pvb38a9d6c is the same case: t9 449 / t13 433 after the hook. CTS repair is skipped (SKIP_CTS_REPAIR_TIMING=1), so nothing acted on the false numbers.
+- Every TT/hold number read from 4_cts_final.rpt or the cts__timing metrics on tap_balance kits is pre-pad. That includes the 1530 CTS-frame col/leaf numbers. Re-read them at GRT or route.
+- Fix, main 01c4b1e891d, CTS-POST-RPT-1 (every die): cts_post.tcl now sources cts_post_report.tcl last. It logs OT_CTS_POST_TIMING (setup/hold ws and tns) and writes 4_cts_post_hook.rpt on the saved netlist. It is report only, with a test. New kits pick it up.
