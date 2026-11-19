@@ -251,7 +251,10 @@ def start_postbind(C, obj, lane, die, run=subprocess.run, host="", stamp=None, l
     q = shlex.quote
     otrun = HERE.parent / "fleet" / "ot-run"
     fail = (f"publish_apply.py bind-fail --die {die} --lane {lane} --id {unit} --log {log}")
-    body = (f"cd /; ssh -n -o BatchMode=yes -o ControlPath=none {q(s['host'])} 'bash -s' < {q(str(prep))} > {q(str(log))} 2>&1 || "
+    # the prep script goes over ssh STDIN: never `ssh -n` here (D8f 11-19: -n fed bash -s /dev/null, no copy, ot-run NOT RUN); the copy
+    # counts as made only when the script's last line POSTBIND_COPY arrived
+    body = (f"cd /; {{ ssh -o BatchMode=yes -o ControlPath=none {q(s['host'])} 'bash -s' < {q(str(prep))} > {q(str(log))} 2>&1 && "
+            f"grep -q '^POSTBIND_COPY ' {q(str(log))}; }} || "
             f"{{ bash {q(str(Path(C) / 'bin/post.sh'))} {q(lane)} \"POST-APPLY-BIND [{lane} -> COORD] {die}: the bind copy could not be made on {s['host']} "
             f"(log {log}); run publish_apply.py post-bind again\"; exit 3; }}\n"
             f"{q(str(otrun))} --mem {POSTBIND_MEM} --hosts {q(s['host'])} --priority plan --plan-job bind --dir {q(s['copy'])} --stage {q(s['copy'])} "

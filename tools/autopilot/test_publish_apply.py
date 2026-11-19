@@ -229,3 +229,31 @@ def test_apply_starts_the_post_apply_bind_in_a_copy_and_names_it(tmp_path):
     a.no_post_bind = True
     assert PA.cmd_apply(a, run=run, apply_fn=apply_fn, commit_fn=lambda C, r: "ok") == 0
     assert not [x for x in calls if x[0] == "systemd-run"]
+
+
+def test_postbind_unit_prep_line_really_makes_the_copy(tmp_path):
+    """D8f 11-19: the unit's own prep line (not the script alone) must deliver the script over ssh stdin and make the copy; a fake ssh that
+    honours -n (stdin = /dev/null) runs the host side locally"""
+    SM.CACHE_DIR = str(tmp_path / "cache")
+    t = published_tree(tmp_path)
+    fake = tmp_path / "bin"
+    fake.mkdir()
+    (fake / "ssh").write_text('#!/bin/bash\nn=0; for x in "$@"; do [ "$x" = -n ] && n=1; done\n'
+                              '[ $n = 1 ] && exec bash -s < /dev/null\nexec bash -s\n')
+    (fake / "ssh").chmod(0o755)
+    calls = []
+
+    def run(argv, **k):
+        calls.append(argv)
+        return types.SimpleNamespace(returncode=0, stdout="", stderr="")
+    try:
+        unit, txt = PA.start_postbind(str(tmp_path / "coord"), bind_candidate(t), "S81-DIE-R3", "s81", run=run, stamp="1119", log_dir=str(tmp_path / "pb"))
+        assert unit == "postbind-s81-1119"
+        body = calls[0][-1]
+        prep_line = body.split("\n")[0].replace(" || ", " && echo PREP_OK || echo PREP_FAIL #", 1)
+        p = subprocess.run(["bash", "-c", prep_line], capture_output=True, text=True, env=dict(os.environ, PATH=f"{fake}:{os.environ['PATH']}"))
+        assert "PREP_OK" in p.stdout, (p.stdout, p.stderr, (tmp_path / "pb/postbind-s81-1119.log").read_text())
+        assert (Path(f"{t}_postbind_1119") / "_postbind/run.sh").is_file()
+        assert SM.verify(str(t), ro=True, full=True)[0] == []
+    finally:
+        _chmod_back(tmp_path)
