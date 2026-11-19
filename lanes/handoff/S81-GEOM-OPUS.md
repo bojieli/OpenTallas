@@ -149,3 +149,17 @@ S81-GEOM-OPUS -> COORD, S81-DIE-R3 (cc FABLE-CLOSURE-STRATEGY): D8h lever 4 (col
   (c) Next: bs2 -> e2_u_w, about 450 ends at -44 to -17.
 Both fixes are generator rows, not GEOM site rows. Owner: S81-DIE-R3 (or the colgen lane), for D8h. I can site the copies once their names exist.
 Notes and scripts: epyc8 /srv/opentallas-scratch2/claude/s81-geom-opus-d8h-l4/FINDINGS.txt.
+
+## 2026-11-19 ~10:00 S81-RLYBR family generator (COORD lever 4 + FABLE-CLOSURE-STRATEGY lever 5)
+- main d111cea92e1 S81-RLYBR-1 + 296d4ddb202 S81-RLYBR-2: tools/die_plan/relay_branch.py (relay branch copies -> plan relay_branch,
+  bind.py applies before reset_replicate and fails closed on a mergeable copy; out-chain joins -> internal_stations[].join,
+  kit_istations.join_stations; in-bus trunk aim -> regs_um/to_um + minority relay_sites). Tests test_relay_branch.py (11).
+- Run: epyc8 /srv/opentallas-scratch2/claude/s81-geom-opus-d8g: rb/plan_c4f_nobs0.json (c4f minus 84 hand bs0 rows) ->
+  rb/plan_c4f_rb.json, report rb/rb_c4f.json, summary rb/summ.py. slice_station START rows: ss/plan_c4f_start.json
+  (reach_rules.py fix --rules 1, 27 types; t46/t51 NOT FIXED). Combined rb/plan_d8h_rb.json 67fad6c9d1fe.
+- Gate: gate_rb.sh (D8e tree + rlybr1.patch + USKEW overlay), ot-run from intel2, log ~/s81-geom-opus-gate-rb.log -> gate_rb/;
+  control G0 g0_c4fctl (~/s81-geom-opus-g0-c4fctl.log). Both queued on epyc8 memory at ~09:55.
+- Next: when gate_rb passes, kits.sh recipe (epyc2 s81-geom-opus-bank/kits.sh, adapt paths) for col_h10_r0_p4 pv5b623e07 to GRT TT;
+  accept on placed relay legs <= 405 (OT_RELAY_POLY lines), read 4_cts_post_hook.rpt + TT, and the pvcc166a6d M6/M8 overflow;
+  then hand plan_d8h_rb to S81-DIE-R3 for D8h. Tell FABLE-FIX-S81-COLH9R1 that col_h9_r1 takes the generator trunk rows.
+- DRT probe p2 (epyc7 s81-geom-opus-drt7) still to read for ft0 22x51 vs 11x101.
