@@ -38,6 +38,17 @@ module tb_s81sl_lep_mu #(parameter integer NB = 80, parameter integer S = 700, p
     reg [1103:0] a_ro = 0, b_ro = 0; reg [33:0] a_mc = 0, b_mc = 0;      // RETURN phase: dies A / B transmit to P
     wire p_mwv; wire [1103:0] p_mwd;
     wire [1103:0] p_ri, a_ri, b_ri, rp_ri, ra_ri; wire [31:0] a_rt, b_rt, p_rt; wire p_f, a_f, b_f, rp_f, ra_f;
+    // FABLE-FIX-S81-LEPE 11-19 (ruling (a)): RIP delays ri only, so the bench pairs ri with mu_rt delayed by RIP (consumer model)
+`ifdef OT_S81SL_LEP_RIP
+    localparam integer TB_RIP = `OT_S81SL_LEP_RIP;
+`else
+    localparam integer TB_RIP = 0;
+`endif
+    wire [31:0] a_rt_raw; reg [31:0] a_rt_d1; always @(posedge clk) a_rt_d1 <= a_rt_raw; assign a_rt = (TB_RIP == 0) ? a_rt_raw : a_rt_d1;
+    wire [31:0] b_rt_raw; reg [31:0] b_rt_d1; always @(posedge clk) b_rt_d1 <= b_rt_raw; assign b_rt = (TB_RIP == 0) ? b_rt_raw : b_rt_d1;
+    wire [31:0] p_rt_raw; reg [31:0] p_rt_d1; always @(posedge clk) p_rt_d1 <= p_rt_raw; assign p_rt = (TB_RIP == 0) ? p_rt_raw : p_rt_d1;
+    initial if (TB_RIP > 1) begin $display("FAIL lep: bench models RIP 0 / 1 only"); $finish; end
+
     wire [3:0] plv, plr, piv, pir; wire [4*553-1:0] pld, pid; wire [11:0] pf; wire [3:0] prxv;
     wire [4*512-1:0] ptx, prx; wire [7:0] pst; wire [4*513-1:0] ppa; wire [3:0] pta;
     // MU-S81/KIT: die P = the hardened copy A/B master ot_s81sl_lep_mu_ab (kit s81sl_lepmu; = lep_mu HOST_EN 0 AB_EN 1)
@@ -52,7 +63,7 @@ module tb_s81sl_lep_mu #(parameter integer NB = 80, parameter integer S = 700, p
         .lo0_v(plv[0]), .lo0_r(plr[0]), .lo0_d(pld[0 +: 553]), .lo1_v(plv[1]), .lo1_r(plr[1]), .lo1_d(pld[553 +: 553]),
         .li0_v(piv[0]), .li0_r(pir[0]), .li0_d(pid[0 +: 553]), .li1_v(piv[1]), .li1_r(pir[1]), .li1_d(pid[553 +: 553]),
         .rxv(prxv[1:0]), .sl_f(1'b0), .l0_f(pf[2:0]), .l1_f(pf[5:3]),
-        .mu_c(p_mc), .mu_rt(p_rt), .ml_wv(p_mwv), .ml_wd(p_mwd), .ml_rv(1'b0), .ml_rd(1104'd0), .ml_f(1'b0),
+        .mu_c(p_mc), .mu_rt(p_rt_raw), .ml_wv(p_mwv), .ml_wd(p_mwd), .ml_rv(1'b0), .ml_rd(1104'd0), .ml_f(1'b0),
         .lo2_v(plv[2]), .lo2_r(plr[2]), .lo2_d(pld[1106 +: 553]), .lo3_v(plv[3]), .lo3_r(plr[3]), .lo3_d(pld[1659 +: 553]),
         .li2_v(piv[2]), .li2_r(pir[2]), .li2_d(pid[1106 +: 553]), .li3_v(piv[3]), .li3_r(pir[3]), .li3_d(pid[1659 +: 553]),
         .rxvb(prxv[3:2]), .l2_f(pf[8:6]), .l3_f(pf[11:9]), .fault(p_f));
@@ -71,7 +82,7 @@ module tb_s81sl_lep_mu #(parameter integer NB = 80, parameter integer S = 700, p
         .lo0_v(X``lv[0]), .lo0_r(X``lr[0]), .lo0_d(X``ld[0 +: 553]), .lo1_v(X``lv[1]), .lo1_r(X``lr[1]), .lo1_d(X``ld[553 +: 553]), \
         .li0_v(X``iv[0]), .li0_r(X``ir[0]), .li0_d(X``id[0 +: 553]), .li1_v(X``iv[1]), .li1_r(X``ir[1]), .li1_d(X``id[553 +: 553]), \
         .rxv(X``rxv), .sl_f(1'b0), .l0_f(X``fl[2:0]), .l1_f(X``fl[5:3]), \
-        .mu_c(X``_mc), .mu_rt(X``_rt), .ml_wv(X``mwv), .ml_wd(X``mwd), .ml_rv(X``mrv), .ml_rd(X``mrd), .ml_f(X``mf), \
+        .mu_c(X``_mc), .mu_rt(X``_rt_raw), .ml_wv(X``mwv), .ml_wd(X``mwd), .ml_rv(X``mrv), .ml_rd(X``mrd), .ml_f(X``mf), \
         .fault(X``_f)); \
     dsdv_mu_land #(.NB(NB), .NS(1), .SRAM(1)) m``X (.clk(clk), .rst_n(rst_n), .wv(X``mwv), .wd(X``mwd), .rc(X``_rc), \
         .rv(X``mrv), .rd(X``mrd), .fault(X``mf)); \

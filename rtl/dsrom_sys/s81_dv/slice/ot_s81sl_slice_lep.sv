@@ -139,11 +139,13 @@
 `ifndef OT_S81SL_LEP_WREP
 `define OT_S81SL_LEP_WREP 1
 `endif
-// FABLE-FIX-S81-LEPE 11-19 (COORD ruling, r713 reach): RIP = relay stages on the ring output ri and its return tag mu_rt.
+// FABLE-FIX-S81-LEPE 11-19 (COORD ruling, r713 reach; ruling (a) S81-DIE-R3): RIP = relay stages on the ring output ri ONLY.
 // lepe_mu_LP__t2 full form: RX SRAM read word -> select -> rid sat 1,023 um from the bank (rid at the E face with its bus):
 // 1,278 ps of data, 4 logic cells + 13 buffers, TT -530.  With RIP 1 rid is an interior register (its only load is the relay),
-// so bank -> rid -> relay -> face are three placed legs.  ri and mu_rt move together by +RIP cycles; nothing else moves
-// (landing ml_wv / ml_wd, faults, credits unchanged).  Bind K: +RIP on the lep ring-out lane (ri, with mu_rt).  Default 0.
+// so bank -> rid -> relay -> face are three placed legs.  ONLY ri moves, by +RIP cycles.  mu_rt is NOT delayed: it returns on
+// the seqhost lanes, where the bind cannot price an internal stage; the tag of the beat that is on ri in cycle t is on mu_rt in
+// cycle t - RIP (it was t).  Landing ml_wv / ml_wd, f_host / f_ks / f_lf, faults and credits are unchanged.
+// Bind K: +RIP on the lep ring-out lane (ri) only; mu_rt lanes keep their K.  Default 0; bare selector OT_S81SL_LEP_RIP1.
 `ifndef OT_S81SL_LEP_RIP
 `define OT_S81SL_LEP_RIP 0
 `endif
@@ -177,7 +179,7 @@ module ot_s81sl_lep_core #(
     parameter integer NATIVE32 = 0,    // opt-in MU same-age bounded control replicas
     parameter integer IDX_EN = 0,      // 1 (S81/H4 10-24): index rank-tree frames tl -> link, link -> ca / cb (see g_itx)
     parameter integer WREP = `OT_S81SL_LEP_WREP, // TX tag-window state replicas (1 = the one master), see the note above the module
-    parameter integer RIP = `OT_S81SL_LEP_RIP,   // relay stages on the ring output {ri, mu_rt} (0 = none), see the note above the module
+    parameter integer RIP = `OT_S81SL_LEP_RIP,   // relay stages on the ring output ri only (0 = none; mu_rt not delayed), see the note above the module
     parameter integer CRP = `OT_S81SL_LEP_CRP, // credit-return relay stages (0..2), see the note above the module
     parameter integer IN_PIPE = 0      // 1 (LEPCAP 10-19): one registered face stage on ro / t_host / t_kd / mu_c (+1 edge on
                                        // each, same relative timing); ro[0] / t_kd[53] re-fanned by 6 KEPT copies <= 28 loads
@@ -933,21 +935,20 @@ module ot_s81sl_lep_core #(
     // S81/H4: a tree frame (type 5) is accepted on either pair at IDX_EN 1 and never reaches ri (not a ring beat)
     wire iacc = (IDX_EN != 0) && !h0[0] && h0[3:1] == 3'd5;
     reg [1103:1] rid; reg riv;
-    // RIP: ri_c / mu_rt_c are the beat and its return tag as before; RIP kept relay stages follow (same edge for both)
+    // RIP: ri_c / mu_rt_c are the beat and its return tag as before; RIP kept relay stages follow on ri ONLY (mu_rt = mu_rt_c)
     wire [1103:0] ri_c = {rid, riv}; wire [31:0] mu_rt_c;
     generate if (RIP == 0) begin : g_nrip
         assign ri = ri_c; assign mu_rt = mu_rt_c;
     end else begin : g_rip
-        (* keep = "true" *) reg [1103:1] rd_r [0:RIP-1]; (* keep = "true" *) reg [31:0] rt_r [0:RIP-1]; (* keep = "true" *) reg [RIP-1:0] rv_r;
+        (* keep = "true" *) reg [1103:1] rd_r [0:RIP-1]; (* keep = "true" *) reg [RIP-1:0] rv_r;
         integer ri_k;
         always @(posedge clk) for (ri_k = 0; ri_k < RIP; ri_k = ri_k + 1) begin               // data: no reset (as rid)
             rd_r[ri_k] <= (ri_k == 0) ? ri_c[1103:1] : rd_r[ri_k-1];
-            rt_r[ri_k] <= (ri_k == 0) ? mu_rt_c : rt_r[ri_k-1];
         end
         always @(posedge clk or negedge rn)
             if (!rn) rv_r <= {RIP{1'b0}};
             else for (ri_k = 0; ri_k < RIP; ri_k = ri_k + 1) rv_r[ri_k] <= (ri_k == 0) ? ri_c[0] : rv_r[ri_k-1];
-        assign ri = {rd_r[RIP-1], rv_r[RIP-1]}; assign mu_rt = rv_r[RIP-1] ? rt_r[RIP-1] : 32'd0;
+        assign ri = {rd_r[RIP-1], rv_r[RIP-1]}; assign mu_rt = mu_rt_c;      // COORD ruling (a) 11-19: ri only; mu_rt is NOT delayed
     end endgenerate
     wire mcol_w;                                       // MU: replay collided with a cut-through beat
     wire [1103:0] rb = {h1[H-1:0], h0[H-1:0]};          // the released frame (ring beat when bit 0)

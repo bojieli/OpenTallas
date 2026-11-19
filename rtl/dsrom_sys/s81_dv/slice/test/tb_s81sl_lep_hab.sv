@@ -24,6 +24,15 @@ module tb_s81sl_lep_hab #(parameter integer N = 400, parameter integer SEED = 3,
     reg clk = 0; always #0.4167 clk = ~clk;
     reg rst_n = 0;
     reg [1103:0] a_ro = 0; wire [1103:0] a_ri; wire a_f; reg [33:0] a_mc = 0; wire [31:0] a_rt;
+    // FABLE-FIX-S81-LEPE 11-19 (ruling (a)): RIP delays ri only, so the bench pairs ri with mu_rt delayed by RIP (consumer model)
+`ifdef OT_S81SL_LEP_RIP
+    localparam integer TB_RIP = `OT_S81SL_LEP_RIP;
+`else
+    localparam integer TB_RIP = 0;
+`endif
+    wire [31:0] a_rt_raw; reg [31:0] a_rt_d1; always @(posedge clk) a_rt_d1 <= a_rt_raw; assign a_rt = (TB_RIP == 0) ? a_rt_raw : a_rt_d1;
+    initial if (TB_RIP > 1) begin $display("FAIL lep: bench models RIP 0 / 1 only"); $finish; end
+
     reg [76:0] t_host = 0; reg [53:0] t_kd = 0; wire [514:0] f_host; wire [3:0] f_lf; wire [52:0] f_ks;
     wire [3:0] alv, alr, aiv, air; wire [4*553-1:0] ald, aid; wire [11:0] af; wire [3:0] arxv;
     wire [3:0] hlr, hiv; wire [4*553-1:0] hid; wire [11:0] hf;
@@ -38,7 +47,7 @@ module tb_s81sl_lep_hab #(parameter integer N = 400, parameter integer SEED = 3,
         .li0_v(aiv[0]), .li0_r(air[0]), .li0_d(aid[0 +: 553]), .li1_v(aiv[1]), .li1_r(air[1]), .li1_d(aid[553 +: 553]),
         .rxv(arxv[1:0]), .sl_f(1'b0), .l0_f(af[2:0]), .l1_f(af[5:3]), .l0_st(ast[1:0]), .l1_st(ast[3:2]),
         .t_host(t_host), .t_kd(t_kd), .f_host(f_host), .f_lf(f_lf), .f_ks(f_ks),
-        .mu_c(a_mc), .mu_rt(a_rt), .ml_wv(mwv), .ml_wd(mwd), .ml_rv(1'b0), .ml_rd(1104'd0), .ml_f(1'b0),
+        .mu_c(a_mc), .mu_rt(a_rt_raw), .ml_wv(mwv), .ml_wd(mwd), .ml_rv(1'b0), .ml_rd(1104'd0), .ml_f(1'b0),
         .lo2_v(alv[2]), .lo2_r(alr[2]), .lo2_d(ald[1106 +: 553]), .lo3_v(alv[3]), .lo3_r(alr[3]), .lo3_d(ald[1659 +: 553]),
         .li2_v(aiv[2]), .li2_r(air[2]), .li2_d(aid[1106 +: 553]), .li3_v(aiv[3]), .li3_r(air[3]), .li3_d(aid[1659 +: 553]),
         .rxvb(arxv[3:2]), .l2_f(af[8:6]), .l3_f(af[11:9]), .fault(a_f));
