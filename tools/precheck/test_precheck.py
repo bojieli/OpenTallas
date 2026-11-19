@@ -269,3 +269,10 @@ def test_kit_scan_hourly_digest_per_die():
 
 def test_qc_skips_tap_cover_and_plan_reach():
     assert PC.DIE_SKIP["qwen_compute"] == {"TAP-COVER", "REACH"}
+
+
+def test_low_util_flags_glue_like_partition():
+    t = {"outline_um": [777.6, 1468.8], "hard_cores": [{"outline_um": [100, 262.98]}]}
+    f = PC.util_findings(t, 164563, 0.15, [(10.0, 10.0, 1.0), (700.0, 1400.0, 1.0)])
+    assert f and 0.015 < f[0][0] < 0.03 and "fence" in f[0][1]
+    assert PC.util_findings(t, 3_000_000, 0.15) == []

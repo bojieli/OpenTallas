@@ -61,7 +61,39 @@ FF_ROW_UM = 0.27
 FF_RETENTION_UM = 27.0   # ff_put_near: |dx| + |dy| <= 27 um around the request
 FF_NEAR_FACE_UM = 10.0   # a request within 10 um of the N/S face takes the face-bank search
 FF_DEPTH_ROWS = 120
-CHECKS = ("REACH", "MISAIM", "TAP-CAP", "TAP-COVER", "TAP-EDGE", "STALE-BINS", "BOUNDARY-REG", "FACE-BANK", "RESET-FANOUT")
+CHECKS = ("REACH", "MISAIM", "TAP-CAP", "TAP-COVER", "TAP-EDGE", "STALE-BINS", "BOUNDARY-REG", "FACE-BANK", "RESET-FANOUT", "LOW-UTIL")
+CELL_AREA_UM2 = 0.14    # mean ASAP7 std-cell area: QC tt_ctlm 204k cells = 27.4k um2 (0.134); glue 164,563 cells at 2.2 % (0.149)
+LOW_UTIL = 0.15         # COORD 11-19: glue (2.2 %) and tt_ctlm (~10 %) fail by one cone scattering over an empty partition
+# NOT PREDICTIVE on the 11-19 plans: at < 15 % it flags 572 of 610 types incl. every signed S81 / QC type and 22 of 26
+# signed HEAD types (col_h9_r2 0.4 %, signed sle_fw_v3 2.1 % with 170k cells = glue's 2.1 % / 165k).  Opt-in only
+# (--checks LOW-UTIL); the cone spread has to be measured after placement (kit_scan flop bbox), not from the plan.
+OPT_IN = {"LOW-UTIL"}
+
+
+def util_findings(t, cells, util=LOW_UTIL, sinks=None):
+    """[(utilisation, detail)]: std-cell area (cells x CELL_AREA_UM2) over outline minus hard-core area, below util;
+    the detail adds the planned flop bounding box (sink sites) as a fraction of the outline when the plan has them"""
+    if not cells or not t.get("outline_um"):
+        return []
+    w, h = t["outline_um"]
+    mac = sum(c["outline_um"][0] * c["outline_um"][1] for c in t.get("hard_cores") or [] if c.get("outline_um"))
+    free = w * h - mac
+    if free <= 0:
+        return []
+    u = cells * CELL_AREA_UM2 / free
+    if u >= util:
+        return []
+    spread = ""
+    if sinks:
+        xs = sorted(x for x, _y, _w in sinks)
+        ys = sorted(y for _x, y, _w in sinks)
+        q = lambda v, f: v[int(f * (len(v) - 1))]  # noqa: E731
+        bw, bh = q(xs, 0.98) - q(xs, 0.02), q(ys, 0.98) - q(ys, 0.02)
+        spread = f"; planned flops span {bw:.0f} x {bh:.0f} um ({bw * bh / (w * h):.0%} of the outline)"
+    need = cells * CELL_AREA_UM2 / 0.55
+    return [(round(u, 4), f"{cells} cells ~{cells * CELL_AREA_UM2 / 1e3:.1f}k um2 over {free / 1e6:.3f} mm2 free "
+             f"({w}x{h} minus {mac / 1e6:.3f} mm2 macros) = {u:.1%}{spread}; a fence/region of ~{need / 1e3:.0f}k um2 "
+             f"(55 %) around the main core keeps the cone together")]
 STALE_FRAC = CBC.SINK_BINS_STALE_FRAC
 # COORD 11-19: checks that do not predict on a die (they flag signed types there) are off for it.  QC: TAP-COVER flagged
 # 15 of 27 signed, plan-coordinate REACH 6 of 27 -> QC reach comes from the placed-hop kit scan (kit_scan.py) only.
@@ -486,6 +518,17 @@ def type_findings(ctx, tn, checks, opts):
     if "BOUNDARY-REG" in checks and not t.get("hard"):
         for v, d in boundary_findings(ctx, tn, opts.boundary_um):
             add("BOUNDARY-REG", v, opts.boundary_um, d)
+    if "LOW-UTIL" in checks and not t.get("hard"):
+        cells = t.get("cells") or (getattr(opts, "cells_map", None) or {}).get(tn)
+        snk = None
+        if cells:
+            try:
+                with contextlib.redirect_stdout(io.StringIO()):
+                    snk = taps_and_sinks(ctx, tn)[1]
+            except Exception:  # noqa: BLE001
+                snk = None
+        for v, d in util_findings(t, int(cells or 0), opts.low_util, snk):
+            add("LOW-UTIL", v, opts.low_util, d)
     if "FACE-BANK" in checks:
         r = face_bank_check(ctx, tn, opts.bank_density, opts.bank_gap_um)
         if r:
@@ -581,6 +624,11 @@ def suggested_rows(findings, raw):
                 rows.append(dict(check=check, family=fam, types=[f["type"]], path=f"partition_types.{f['type']}.buses",
                                  action=f"register every port within {BOUNDARY_UM:.0f} um of its pin (CBC both-side boundary)",
                                  detail=f["detail"]))
+        elif check == "LOW-UTIL":
+            for f in fs:
+                rows.append(dict(check=check, family=fam, types=[f["type"]], path=f"partition_types.{f['type']}.regions",
+                                 action="add a fence/region row around the main core (target ~55 % local utilisation)",
+                                 detail=f["detail"]))
         elif check == "STALE-BINS":
             rows.append(dict(check=check, family=fam, types=types, path="partition_types.<type>.clock.sink_bins_file",
                              action="regenerate the sink bins from the newest placed kit (all_registers -clock clk), then re-run taps",
@@ -637,7 +685,7 @@ def main(argv=None):
     ap.add_argument("--types", default="*", help="glob over type names (comma-separated globs allowed)")
     ap.add_argument("--out", required=True)
     ap.add_argument("--tools", default=str(HERE.parent / "die_plan"), help="die_plan tools dir (schema, taps, gen_phys)")
-    ap.add_argument("--checks", default=",".join(CHECKS))
+    ap.add_argument("--checks", default=",".join(c for c in CHECKS if c not in OPT_IN))
     ap.add_argument("--reach", type=float, default=REACH_UM)
     ap.add_argument("--tap-cap", type=int, default=TAP_CAP)
     ap.add_argument("--tap-radius", type=float, default=TAP_RADIUS_UM)
@@ -648,9 +696,12 @@ def main(argv=None):
     ap.add_argument("--bank-gap-um", type=float, default=45.0, help="face-to-hard-core gap under the dense columns")
     ap.add_argument("--reset-flops", type=int, default=RESET_FLOPS)
     ap.add_argument("--boundary-um", type=float, default=BOUNDARY_UM)
+    ap.add_argument("--low-util", type=float, default=LOW_UTIL)
+    ap.add_argument("--cells", default="", help="JSON {type: cells} for types whose plan has no cells (kit synth counts)")
     ap.add_argument("--kit-sinks", default="", help="kit_sinks.py JSON file(s), comma-separated (STALE-BINS)")
     ap.add_argument("--stale-frac", type=float, default=STALE_FRAC)
     a = ap.parse_args(argv)
+    a.cells_map = json.loads(Path(a.cells).read_text()) if a.cells else {}
     a.kit_sinks_map = {}
     for f in [x for x in a.kit_sinks.split(",") if x]:
         try:
