@@ -19,3 +19,11 @@ Scope: 4 qkd_kvs_pc* rows + 13 kv3_hgi_v1/v2 cl* and kv3_hgi_v3 rows (OWNERS-SWE
 ## pcc/pcf hard cores (COORD 05:xx)
 Status: BUILT and SIGNED (DRC 0) already; "lef/lib pending" = plan rows only. View packs from the signed DBs (FABLE-FIX-KV-PV rows/E2, epyc7 fable-fix-kv-pv-1119/rows/E2/views) reproduce records. Measured TT clock insertion ck[0] (view max): pcc 318, pcc_h_head_p 320, pcf 196, pcf_h_head_p 193 ps (kit SDCs assume 250). Matches the declared 318/193. Rows (48 hard_cores rows, 6 pc types) unproved in a kit; fold into D25e via KV-D23-COMPOSE. Advisory: child_lint face-pin access fails 63/4094 pcc, 37/2952 pcc_h, 15/630 pcf_h.
 kv3_pc synth (kv3_pc_hgi, ot-run, ~/kvpchgi_synth.log on intel2) running; lockstep landing_cal 0 mismatches.
+## KV UNOWNED / DEAD-OWNER rows (sweep, STALE-KV-FALLBACK) - classification, launches off until WAVE-PILOT-FIX clears env_unknown on D24c
+- hgi_v2__cle0015330, hgi_v4, hgi_v5, hgi_v7: last attempt KV-HG1 gen, plan contract metadata missing (old plan, superseded). No design number. -> FABLE-FIX-KV-HG
+- pv_v5 (kvN2 place superseded, plan_current=no), pv_v1n (KV-HG6 place superseded): no design number. pv_v4n: KV-D23H 3_place geom FAIL fill 0.057. -> FABLE-FIX-KV-PV
+- hg_v1: kit_rtl bind of record names pruned HDL (stale bind). hg_v1p2: WAIT-FORM visual BAD. hg_v1p3: kvgeom5 r2r 2733 ps / 6337 paths, pin_reg_max 482. hg_v1p4: D23H r2r 1791 / 4674, relay_collapse 280. hg_v1p5: infra RETRY kvgeom6. hg_v1p6: D22 r2r 1771 / 5047. -> FABLE-FIX-KV-HG
+- hub_Ei: D23H 3_place geom FAIL fill 0.030, empty 0.82, r2r 1230 ps (14 paths), pin_reg_max 263. Mine: hub family with KV-D23-COMPOSE hub rows.
+- io_cor_v1: infra (place RC 0, no 3_place.odb, ot-run moved job). Relaunch via wave.
+- core qkd_pv_fin_s8_pin: KV-D24 FAIL core view has no recipe / ambiguous por; FABLE-FIX-KV-PV row E (pvfin view from signed DB) fixes no_recipe.
+Wave: all rows are item names of the current plan; BOUND-FALLBACK launches them on D24c once env known. D24c is env_unknown (WAVE-PILOT-FIX c91be64820): KV-D23-COMPOSE must post die_gen_env/bind_env of D24c.
