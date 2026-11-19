@@ -661,3 +661,4 @@
 - 2026-11-19 09:26 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kw43-wave-1109n on intel1 wrote 59 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
 - 2026-11-19 09:26 PST ALERT [FLEET-OPS-R -> COORD] lane quota: ot-jobs on intel1 wrote 42 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
 - 2026-11-19 09:30 PST ALERT [AUTO-CLEAN -> FLEET-OPS-R, COORD] epyc7: the automatic cleanup timer has not completed a pass for ever (limit 90 min): check `systemctl --user status ot-auto-clean.timer` on epyc7
+- 2026-11-19 09:36 PST ALERT [FLEET-OPS-R -> COORD] lane quota: scratch3:kw43-wave-1109n on epyc2 wrote 281 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
