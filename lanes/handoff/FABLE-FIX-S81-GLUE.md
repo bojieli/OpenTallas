@@ -1,74 +1,59 @@
-# FABLE-FIX-S81-GLUE handoff (glue = QC die qwen_compute, design dp_glue / qfd_qc_glue_part)
+# FABLE-TYPE-REDUCE-QC handoff (owner order 11-19: cut QC types only where closure gets faster)
 
-Last update: 2026-11-19 01:10 PST. All kits survived the Fable limit (checked 00:57: 5 ot-run clients alive).
+## 11-19 01:5x PST  Step 0 speed test: NO QC family passes as a template build now. One free merge found.
 
-## State in one paragraph
-Gate read of wave glue attempt_6 (s29q103S4Q9N3): TT -130.39 / 648 ends at GRT. 385 ends = u_record logic depth: FIXED and on
-main. 263 ends are register placement / distance, NOT fixed yet: 5 private kits are testing placement keys. Nothing is adopted
-in the QC wave tree yet; no wave row was touched.
+Inputs: live plan N4.3 (epyc9 kw45/snap_qwen_compute/qwen_compute_n43_s1, zz_s29_qc103_s4q9n43.json), bind
+kw45/qcbind_pin_eb1e73448bd0_s4q9n4/bind_s29q103S4Q9N43BQ, census_qc.json, kit_wave status 01:2x, fleet TT scan 01:2x
+(/tmp/ffq_all.sh /tmp/ffq_c3.sh on intel2, 89 live route jobs), AGIdock index. My scripts were short read-only plan/bind diffs
+(rtx-pro session scratchpad); rewrite from this note if needed.
 
-## Done (main)
-- 8f62c2edcaad: rtl/qwen_split/qfd_sys_face_record_port_n32.sv regenerated (sha256 919f726936a6), depth 25 -> 13 levels,
-  0 cycles, identical ports (36 source copies, 54 reset leaves), so NO bind / LATCHECK change. Readable source
-  qfd_sys_face_record_port_bal.sv; generator command `bash tools/qwen_split/record32/regen_n32.sh --install`.
-  Proof: one-edge transition + output SAT of the EMITTED graph vs the original source (2018 comparisons, PASS; 3 gate mutants
-  refuted), Verilator lockstep 53,803 checks incl 48 protocol episodes PASS, 3 mutants FAIL. Evidence
-  results/arch/qw_record32_bal_1119.
-- 92b29f6c5791: qfd_sys_face_lctx3_core.sv tcyc + 1 / pos + 1 with kept byte carries (sha256 8fc1850d23f9), proven equal
-  (tools/qwen_split/sysface32/prove_inc_bytes.sh); kept nets survive kit synth (kit C 1_2_yosys.v).
-- Brief corrections: the kit binds the n32 file, not _opt; the digest round is 2 XOR levels, the depth was wide zero checks
-  and 64/80-bit compares in front of priority muxes.
+### What the 133 -> 73 census number is made of (measured on N4.3)
+39 families hold 104 types = 44 (logic, outline). Three split mechanisms, none is pins / faces / orientation:
+- __cl (clock_landing_plan.py:1051 and 1222; cohort signature = landed in/out sets, monitor children xy, up seam, ca_relay, CA mask):
+  about 85 types. Plan pins and outline are identical in a family, but the bound wrappers are NOT near-identical: sle_ctl cohorts
+  differ in 1,900-6,600 of 6,300-9,000 wrapper statements (reset collector tree relays, cland monitor bands 2 vs 3 vs 0, rst_o
+  exports, strap ports, and the landing pad chains u_pd<D>_<bus>_<bit> whose depth D is baked per position: cl372cea1c 11/14/7/6 vs
+  padE0 10/25/8/5). n_pad differs per cohort (sle_fe_v1 207 vs 188, slw_hc1 217 vs 233). cbn_q00 cohorts also differ in cland
+  hard-core modules and tap mode.
+- __pv (param_class_split.py; logic parameter values per instance, HI_PAD / RD_PAD pad depths): 15 types in 6 st_a/st_b families.
+- __pad (r8_strap_pad_max, sle_ctl x3): same plan, pad depths differ in the bound RTL.
+So the position-specific part is pad depth (lane latency) + reset/monitor tree, inside the type. QC is abutted: there is no street to
+move the pad flops into (slw_fw 56 k) without a re-floor.
 
-## Open classes (wave attempt_6 GRT DB, exact gate frame; intel2 /srv/opentallas-scratch2/claude/fable-fix-s81-glue-sta/out)
-Every one of the 263 flops has +295..+760 ps on its Q side (balance.txt): placement, not logic.
-- (a) rom_qr -> tt_pw / dh_prog, 68 ends, -130: ROM at y 450, pin registers at y 1463, tt_pw / dh_prog sit next to the pin
-  registers, one 1.1 mm hop.
-- (b) u_embed_prov.g_rope rope FF memory: mem 104 at -52, rq 38 at -82 (3 HB4 hold buffers on the setup path), u_bout
-  embed_code_q 35 at -50.
-- (c) sys_face obs_fault -116 (1 mm hop). (d) tcyc -92, pos -24 (fixed by 92b29f6c5791). (e) ctx_x 7 at -16,
-  emb_word_data 3 at -13.
-- The wave kit's GRT-basis TT repair died with RSZ-0074 (tt_setup_repair.tcl line 136) at -105.9, so the gate read the
-  unrepaired DB.
+### State now
+- Signed, any plan: about 30 QC types (103 unsigned at 23:18). They keep counting.
+- All 133 types have a live N4.x wave row (ENQUEUED/RUNNING). About 27 are in detail route or abstract with TT >= -42
+  (hc0 x3, sc x8, hc1 x2, st_b x6, su_l1 x4, su_l0, fw x2, coll_s, glue); about 16 more are in GRT with clean CTS TT.
+- Siblings pass or fail together (TT ps): sc +2..+62; hc0 +17..+25; hc1 -3..+6; slw_st_b +10..+38 (one outlier cle6023ec2 -210, a
+  type with no param_set, owner FABLE-FIX-QC); st_a x11 -167..-273 (N4.3 rows just applied); sle_ctl x7 -86..-109 (pad-chain hook
+  just relaunched); cbx +11..+25 (one -15). No family has one clean variant the others could reuse.
 
-## Running: private kits, intel2, goal grt, ot-run 64 GB / 16 thr, started 00:20-00:45
-Base = wave glue attempt_6 gen copy (epyc9 kw43-wave-1109n/.../items/glue/attempt_6/gen). Dirs
-/srv/opentallas-scratch2/claude/fable-fix-s81-glue-kit{,b,c,d,e}/gen/glue, log run_grt.log, README.txt in each.
-- A  kit   record n32 only
-- B  kitb  + OT_GPL_SPARSE_OVERFLOW=0.25
-- C  kitc  B + core incrementers
-- D  kitd  record + incrementers + GLOBAL_PLACEMENT_ARGS reweight {79 64 49 29 21 15}, net weight max 8
-- E  kite  record + incrementers + sparse exit 0.25 + reweight {79 64 49 40 32}, weight max 8
-Wave timing for reference: place ~1 h after synth, CTS TT read ~3 h, GRT ~6-7 h. Expect GRT TT 07:00-08:00.
-Read: postcts_gate_tt.json (setup_wns_est_ps, parasitics global_routing = the GRT gate), tt_setup_measure.log.
-Probe tools: fable-fix-s81-glue-sta/probe/{run.sh,probe.tcl,sum.py} (class table + register positions of any stage ODB);
-keep33.sh keeps each kit's 3_3_place_gp.odb there; balance.tcl = prototype that moves a failing flop toward its source by
-(sQ - sD)/2 (mechanics tested only, numbers not yet meaningful).
+### Speed verdict per family group
+| group | types -> est | verdict | reason |
+|---|---|---|---|
+| sc, hc0-3, su_l0/l1, fe, stm, st_b (22 families, about 52 types) | -> about 24 | SKIP | setup-clean, in route / near gate or signed; a template renames the types, changes the die transport fingerprint (BIND-CHECK 133/133, as on N4.3) and restarts every kit (8-20 h each) for no fix |
+| cbf/cbn/cbx (5 families, 14 types, 143 inst) | -> 6 | SKIP | CTS +17..+30, in GRT; cohorts differ in cland cores, taps (density vs explicit), monitor bands; a superset is a new clock design on the largest kits |
+| sle_ctl (7) | -> 1..4 | SKIP now | all 7 share one failure class and one fix (OT_PAD_CHAIN_SITE, relaunched 00:5x); cohort wrappers differ 25-75 %; a merge needs strap-selected pad depth on every pad bus (RTL + bind) |
+| st_a (4 families, 11 types) | -> 7 | SKIP template, 1 FREE MERGE | N4.3 st_a rows applied 01:03, kits relaunching, proof kit pk_sta running; a second event now restarts them again |
+| fw (sle/slw fw_v1/v2, 9 types) | -> 4 | SKIP | flt_wo rows are already one row set per family, next delta; cohorts differ in 20 k pad chains |
+| su_c, coll_ft | | SKIP | 2 types each; coll_ft has two outlines; su_c in flight with a fix |
 
-## Relay form (COORD order 01:0x: prepare in parallel, first form at GRT TT >= -42 wins)
-- F  kitf  record n32 + RELAY-FORM core + mid_place.tcl + D placement keys, launched 01:08, goal grt.
-  Core variant epyc9 fable-fix-s81-glue-work/lctx3_core.relay.sv (sha256 645ae0a06a54, NOT on main): row decode registers
-  tt_pw_a / dh_prog_a, then tt_pw / dh_prog as a plain relay (+1 cycle on TT pw and seq_dh program rows; only the 3 valid
-  bits reset, rst_bpay region stays 218). Kit-private hook gen/glue/mid_place.tcl (sourced after relay_mid in
-  face_flops.tcl): the relay flops FIRM at the mid-point ROM <-> u_bout pin registers, released with ot_relay_mid.txt.
-  First check: 3_3_place_gp.log line OT_MID_PLACE (a Tcl error there fails the place stage: fix the hook, relaunch).
-- NOT done for the relay form: (1) latency proof: +1 cycle on tt_pw / seq_dh[186:44] program rows vs prog_busy / the receipt
-  ledgers (self-timed by program_obs2, so expected benign, unproven) with the sys_face bench
-  (rtl/test/qwen_split/run_sys_face_native32_protocol.sh needs the INTERMEDIATE wrappers); (2) bind / LATCHECK rows for the
-  two ports; (3) obs_fault relay (the flop is in the bound wrapper, a bind / plan row for QC-PLAN-R3); (4) the mid-point
-  hook as a gen_phys opt-in if F wins. Do not push the relay core before (1) and (2).
-- QC-PLAN-R3 adopts the two pushed RTL files (COORD 01:0x).
+Cost, template path: generator (cohort superset + role-named taps + strap pad depth) + bind + G0/LATCHECK + die clock rows, about
+1-2 days, then a die-wide strict bind (two-pass, hours) and a restart of every merged family, plus new risk in the superset (max pad
+chains and all monitor bands in every instance). Per-type path: kits already in flight, fixes already applied per family by regex /
+item_env; the QC kit count is not what limits the fleet. A template saves compute per round (about 60 kits), not closure time.
+Not faster -> not built.
 
-## Next
-1. Per kit at 3_3 / CTS / GRT: class table + where tt_pw / dh_prog / obs_fault landed (probe/run.sh KIT STAGE_ODB RCMODE).
-2. Post GRT TT per kit. Adopt the winning keys for glue with kit_wave_edit item_env (candidates OT_GPL_SPARSE_OVERFLOW,
-   GLOBAL_PLACEMENT_ARGS).
-3. Adoption of the two RTL files in the QC live tree is the die owner's step (DIE-QC-103): src_manifest delta-make to
-   92b29f6c5791 or later -> live_tree.py apply --die qwen_compute; files rtl/qwen_split/qfd_sys_face_record_port_n32.sv and
-   qfd_sys_face_lctx3_core.sv. Then glue retry (kit_wave_edit). Sign-off export is automatic (auto_export.py).
-4. If (a) / (c) stay after D / E: a placement rule (register between a macro-side source and a FIRM pin register goes to the
-   mid-point; relay_mid.tcl cannot do it, the D side is logic) or one relay stage; (b) needs the hold pads off the common
-   tail of the rope read mux.
+### Free merge (no build, no template)
+sle_st_a_v2__pv4242de79 (sl_E3_st_a) == sle_st_a_v2__pv30dda31f__pvd2ec7769 (sl_E1_st_a): bound RTL identical after the type name
+(sha 9ef6a8b653, 284 k chars); plan record identical in 7,247 of 7,255 leaves, the 8 others are names and notes. The pv split is
+stale. Rows: lanes/handoff/FABLE-TYPE-REDUCE-QC-rows.json. For QC-PLAN-R3 with the next st_a event (it changes the type list, so it
+rides on the bind of that event; no event for this alone). Until then a sign-off of either one is the same layout; pk_sta
+(pvd2ec7769) proves both.
 
-## Clones / paths
-Lane clone epyc9 /srv/opentallas-scratch2/claude/fable-fix-s81-glue (HEAD = main 92b29f6c5791, clean except bench/).
-Work files epyc9 /srv/opentallas-scratch2/claude/fable-fix-s81-glue-work. Posts lanes/posts/FABLE-FIX-S81-GLUE.md.
+### When a template does pay (for QC-PLAN-R3 / COORD; not started)
+At the next event that restarts all QC kits anyway (re-floor or freeze event): (1) pad depth by parent-tied strap on every landing pad
+bus (removes __pad and most __pv: about 18 types); (2) cohort superset where cohorts differ only in monitor-band count and rst_o
+exports (hc*, sc, su_l*, fe, fw: about 25 types). Flag name reserved: partition_types.<family>.type_template: true. Nothing on main.
+
+NEXT: nothing running, no waiter, no kit or wave row touched. Reopen only if COORD orders a die-wide QC restart event.
