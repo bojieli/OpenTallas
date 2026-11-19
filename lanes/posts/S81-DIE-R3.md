@@ -218,3 +218,10 @@
   The leaf region-rule tables (about 200-239 per leaf) are not in my hand yet; plan h's leaf taps are the cap1000 rows (65-122). Scaling the worst shared leaf by 2.5x gives about 7 %, still far under.
   So no --target 1500 re-solve is needed for track capacity.
   The binding limit is elsewhere: the leaf driver fanout of 50 taps per 600 um leaf. That is die-clock timing, not tracks, and the die STA / die_trial clock step reads it.
+- 2026-11-19 04:55 PST D8H col rows B withdrawn (S81-DIE-R3).
+  - What failed: the private leaf form-(b) bind on plan h failed. bind ERROR clock landing col_h10_r0_p1__t1__cl574cc59d__pvb095fa2f: "declare count strap strap_ca_k_ft0_i[7] in types[].count_straps".
+  - Cause: B (one ring depth) raises the ring depth in the sidecar (4 -> 8, 63 ports), but count_straps only follows in a CA compose step, and I did not run that step.
+  - B also merges nothing without C: plan h's 42 layouts all come from A.
+  - So D8h takes A only (reset keep-outs union: 128 types, +326 outs). The plan is unchanged (8a8ab3e67df7 = A; B is sidecar-only), and the original landed sidecar 98aa35e5a944 is reinstalled in the D8h tree and in the leaf copy.
+  - B and C go back to FABLE-TYPE-REDUCE-S81-COL as one row with its CA compose.
+  - Reruns: G0 on h2 (g0_h2) is running and the waiter starts the D8h bind on 0 new errors. The leaf form-(b) bind is relaunched with its own job dir (leafB/jobdir_r2).
