@@ -1,0 +1,1 @@
+- 2026-11-19 03:41 PST took over from Fable; kit pv36da905c still in GRT on epyc2 (run_kit alive 03:40); waiter PID file kit/waiter.pid watching 5_global_route.tt.rpt/FAIL/exit; will hand rows to S81-DIE-R3 if TT>=-42, resubmit --priority proof with OT_MAXWIRE_POST_SKIP=1 if guard-killed
