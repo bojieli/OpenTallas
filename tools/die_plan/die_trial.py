@@ -1290,6 +1290,11 @@ def reach_detour(site, a, b, reach, step=5.4, margin=600.0, turn_um=20.0, max_ex
     return out
 
 
+# S81-CLOCK-WINDOW-1119: search boxes (leg bbox + margin, um) of the reach detour, widened in turn until a route admits
+# a reach-legal placement.  The first value is the former fixed margin, so a leg that fixed before fixes identically.
+REACH_DETOUR_MARGINS = (600.0, 1200.0, 2400.0, 4800.0)
+
+
 def reach_fix_leg(site, p, nd, poly, chain, reach, rep_um, even):
     """CLK-TOOL-4: (points, poly, info) re-placing one leg whose snapped chain has a span > reach (see REP_REACH_MAX_UM);
     raises ValueError when neither the leg's own path nor a reach detour admits a placement"""
@@ -1306,7 +1311,24 @@ def reach_fix_leg(site, p, nd, poly, chain, reach, rep_um, even):
         # detour, then require the same reach/parity placement proof below.
         searches.append(("site_detour", None))
     for kind, cands in searches:
-        if cands is None:
+        if cands is None and kind == "reach_detour":
+            # S81-CLOCK-WINDOW-1119 (node 942, D8g): the leg bbox + 600 um can lie wholly inside a PHY wall whose legal
+            # street is just outside the box (serdes lk_ES1: wall x 26.0-29.7 mm, box edge 29.56 mm), so the search sees
+            # no path although an off-path legal detour exists.  Widen the box in turn (REACH_DETOUR_MARGINS) and take the
+            # first route that admits a reach-legal placement; the placement rule below is unchanged.
+            route = None
+            for mg in REACH_DETOUR_MARGINS:
+                route = reach_detour(site, a, b, reach, margin=mg)
+                if route is None:
+                    tried.append(f"reach_detour@{mg:g}")
+                    continue
+                nmin = max(0, int(math.ceil(polyline_points(route, [])[1] / rep_um)) - 1)
+                if reach_place(site, route, reach, nmin, even) is not None:
+                    break
+                tried.append(f"reach_detour@{mg:g}:no_placement")
+                route = None
+            cands = [route] if route is not None else []
+        elif cands is None:
             route = legal_detour(site, a, b) if kind == "site_detour" else reach_detour(site, a, b, reach)
             cands = [route] if route is not None else []
         res = []

@@ -217,6 +217,12 @@ def test_adaptive_reach_escapes_wide_phy_wall(monkeypatch):
     site = D.SiteMap(Phy())
     a, b = (1600., 1550.), (1600., 450.)
     p, n = dict(x=a[0], y=a[1]), dict(id=248, x=b[0], y=b[1])
+    # S81-CLOCK-WINDOW-1119: the widened reach-detour box (REACH_DETOUR_MARGINS) now finds the off-path route without
+    # the adaptive flag; with the box held at the former fixed 600 um the leg still fails closed.
+    pts0, _, info0 = D.reach_fix_leg(site, p, n, None, [a, b], 405., 250., True)
+    assert info0['kind'] == 'reach_detour' and 'route_source' not in info0
+    assert max(D.chain_spans([a] + pts0 + [b])) <= 405. + 1e-6
+    monkeypatch.setattr(D, 'REACH_DETOUR_MARGINS', (600.,))
     with pytest.raises(ValueError, match='no legal repeater placement'):
         D.reach_fix_leg(site, p, n, None, [a, b], 405., 250., True)
     monkeypatch.setattr(D, 'DETOUR_ADAPTIVE', True)
