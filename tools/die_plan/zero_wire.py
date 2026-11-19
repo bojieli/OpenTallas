@@ -108,7 +108,7 @@ def _strip_buffers(L, stats):
     for _c, _i, _h, pins, _e in cells:
         for _p, (_k, e) in pins.items():
             whole[e] += 1
-    text = "\n".join(L)
+    text = "\n".join(ln for ln in L if not re.match(r"^\s*(wire|reg|input|output|inout)\b", ln))   # uses, not declarations
     alias, drop = {}, set()
     for c, _i, h, pins, e in cells:
         if not BUF_CELL.match(c) or "A" not in pins or "Y" not in pins:

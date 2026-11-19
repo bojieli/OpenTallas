@@ -83,6 +83,9 @@ def test_synthesis_buffers_removed_before_bounding():
     text = """module t (x, q);
   input x;
   output q;
+  wire n1;
+  wire n2;
+  wire n3;
   BUFx2_ASAP7_75t_R _b1_ (
     .A(x),
     .Y(n1)
