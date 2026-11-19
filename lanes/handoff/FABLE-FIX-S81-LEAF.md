@@ -103,3 +103,10 @@ Growth counted from the first row at overflow <= 0.30 or the first non-virtual r
 t47 still STOP at 2.22. Trailer Fixes-Items: s81/ot_s81sl_leaf__*, s81/ot_s81sl_kv_leaf__*.
 Note: that trailer relaunches the family before D8g: the 14 face-bank rows will fail again on stride 2 until D8g applies (told COORD).
 Fold commit (repo/, f25c... amended with trailers): still NOT pushed; rule unchanged (t27keep GRT TT + D8g APPLIED).
+
+## 11-19 03:4x PST: loop-gap classes answered
+- t58 place "RuntimeError: reentrant call inside" (class 28712c48d9): the job got signal 15 (stopped) and ot-job crashed in its own stop handler
+  (print to buffered stderr inside a signal handler). Not a design fail. Fix on main ca589f7daf0b (os.write in the handler); hosts need the ot-job install.
+  Who sent the SIGTERM at 00:27 PST on epyc8 is NOT identified. t58 already relaunched (a6).
+- t54__cl706d9749 PLACE-HPWL 1.61 (a12, epyc2, 01:51): same measurement class. Fixed gate on its real 3_3_place_gp.log: 1.111, OK
+  (HPWL flat 5.5e6 down to overflow 0.49, 8.0e6 at the first converged row 0.2446, exit 8.883e6; no non-virtual repair in the log). Cleared by bfc57007db14.
