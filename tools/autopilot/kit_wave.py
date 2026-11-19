@@ -1664,11 +1664,18 @@ def _overlay_cache_load():
         pass
 
 
+import threading as _thr_ovl
+_OVL_LOCK = _thr_ovl.Lock()
+
+
 def _overlay_cache_save():
+    # WAVE-TICK-1119: callable from the merge_src_overlay worker threads: one writer at a time, a snapshot of the dict, a per-thread tmp name
     try:
-        tmp = OVERLAY_CACHE_FILE + ".tmp"
-        open(tmp, "w").write(json.dumps({f"{h}|{s}": list(v) for (h, s), v in SRC_OVERLAY_CACHE.items()}))
-        os.replace(tmp, OVERLAY_CACHE_FILE)
+        with _OVL_LOCK:
+            snap = {f"{h}|{s}": list(v) for (h, s), v in list(SRC_OVERLAY_CACHE.items())}
+            tmp = f"{OVERLAY_CACHE_FILE}.tmp{os.getpid()}.{_thr_ovl.get_ident()}"
+            open(tmp, "w").write(json.dumps(snap))
+            os.replace(tmp, OVERLAY_CACHE_FILE)
     except OSError:
         pass
 SRC_OVERLAY_TIMEOUT_S = 420            # full content hash of a ~30k-file tree on a loaded gen host (was 90 s: S81 unreadable 27 ticks)
@@ -1709,12 +1716,20 @@ def src_overlay_hash(src, host, hub, timeout=None):
 
 
 def merge_src_overlay(cfg, hub, log=None):
-    """set each enabled die's in-memory _src_overlay, once per pass"""
-    for die, d in (cfg.get("dies") or {}).items():
-        if isinstance(d, dict) and d.get("enabled") and d.get("src") and d.get("gen_host"):
-            d["_src_overlay"] = src_overlay_hash(d["src"], d["gen_host"], hub)
-            if log and not d["_src_overlay"]:
-                log(f"KIT-WAVE src_overlay: {die} unreadable on {d['gen_host']}; hold compares without it")
+    """set each enabled die's in-memory _src_overlay, once per pass.  WAVE-TICK-1119: the per-die ssh signature probes run in parallel
+    (they were serial: 33 s of a 480 s wave step); results are applied in die order, so the log is unchanged."""
+    from concurrent.futures import ThreadPoolExecutor
+    todo = [(die, d) for die, d in (cfg.get("dies") or {}).items()
+            if isinstance(d, dict) and d.get("enabled") and d.get("src") and d.get("gen_host")]
+    if not todo:
+        return
+    _overlay_cache_load()
+    with ThreadPoolExecutor(max_workers=min(8, len(todo))) as ex:
+        hashes = list(ex.map(lambda x: src_overlay_hash(x[1]["src"], x[1]["gen_host"], hub), todo))
+    for (die, d), h in zip(todo, hashes):
+        d["_src_overlay"] = h
+        if log and not h:
+            log(f"KIT-WAVE src_overlay: {die} unreadable on {d['gen_host']}; hold compares without it")
 
 
 def merge_auto_views(cfg, ap_dir, log=None):
@@ -5167,7 +5182,14 @@ def src_incomplete(AP, cfg, run=None):
     counts, missing, deep, nmiss, probed = {}, {}, {}, {}, {}
     pkgbad = {}
 
-    def _cmd_of(h, ds):
+    _cmd_memo = {}
+
+    def _cmd_of(h, ds):                                  # WAVE-TICK-1119: built once per host (it was built twice: 52 s of CPU per tick)
+        if h not in _cmd_memo:
+            _cmd_memo[h] = _cmd_build(h, ds)
+        return _cmd_memo[h]
+
+    def _cmd_build(h, ds):
         trees = sorted({t for die in ds for t in src_inputs(cfg, die)[0]})
         files = sorted({f for die in ds for f in src_inputs(cfg, die)[1]})
         dps = sorted({p for die in ds for p in deep_inputs(cfg, die)}
@@ -9688,10 +9710,11 @@ def tool_skew_measure(AP, cfg, st, die):
     try:
         pin = d.get("tools_sha")
         main_m = None if pin else cache.setdefault("_main", {}).setdefault(str(main_root), TS.manifest(main_root))
-        res = TS.check_die(die, d["src"], main_root, TS.load_allow(main_root / TS.ALLOW_REL),
-                           host=d.get("gen_host"), main_m=main_m, tools_sha=pin,
-                           rt_root=d.get("tools_rt_root") or TS.RT_ROOT, strict=mode == "refuse",
-                           only=None if pin else tool_skew_closure(cfg, main_root))
+        res = cache.pop("_pre_" + die, None) or TS.check_die(
+            die, d["src"], main_root, TS.load_allow(main_root / TS.ALLOW_REL),
+            host=d.get("gen_host"), main_m=main_m, tools_sha=pin,
+            rt_root=d.get("tools_rt_root") or TS.RT_ROOT, strict=mode == "refuse",
+            only=None if pin else tool_skew_closure(cfg, main_root))
     except Exception as e:                               # a broken check never stops the wave
         AP.log(f"KIT-WAVE tool_skew {die} not checked: {type(e).__name__}: {e}")
         res = dict(ok=True, measured=False, refused={}, allowed={}, expired={}, n_closure=0)
@@ -9825,13 +9848,37 @@ def tools_lag_rows(AP, cfg, ttl=1800):
     return rows
 
 
+def _measure_quiet(AP, cfg, st, die):
+    """worker thread: the measurement only (no log line, no post), parked in cfg['_tool_skew']['_pre_<die>'] for tool_skew_measure"""
+    d = (cfg.get("dies") or {}).get(die) or {}
+    mode = opt(cfg, die, "tool_skew")
+    cache = cfg.setdefault("_tool_skew", {})
+    if mode is False or not d.get("src") or die in cache:
+        return
+    main_root = Path(d.get("tool_skew_main") or Path(__file__).resolve().parents[2])
+    try:
+        pin = d.get("tools_sha")
+        main_m = None if pin else cache.setdefault("_main", {}).setdefault(str(main_root), TS.manifest(main_root))
+        cache["_pre_" + die] = TS.check_die(die, d["src"], main_root, TS.load_allow(main_root / TS.ALLOW_REL),
+                                            host=d.get("gen_host"), main_m=main_m, tools_sha=pin,
+                                            rt_root=d.get("tools_rt_root") or TS.RT_ROOT, strict=mode == "refuse",
+                                            only=None if pin else tool_skew_closure(cfg, main_root))
+    except Exception:
+        pass                                             # the in-order pass measures it again and logs the failure
+
+
 def tool_skew_measure_all(AP, cfg, st, ap_dir):
     """every enabled die, every tick, independent of launches (a held die such as S81 or KV launches nothing and used to have no
     reading); writes kit_wave_tool_skew.json = the numbers the SKEW table and NEEDS-LANE posts quote"""
     rows = {}
-    for die, d in (cfg.get("dies") or {}).items():
-        if not isinstance(d, dict) or not d.get("enabled"):
-            continue
+    dies = [(die, d) for die, d in (cfg.get("dies") or {}).items() if isinstance(d, dict) and d.get("enabled")]
+    # WAVE-TICK-1119: the per-die measurements (a tree read, often over ssh) run in parallel; the results are consumed in die order below
+    # (log lines, posts and the table are unchanged)
+    from concurrent.futures import ThreadPoolExecutor
+    if len(dies) > 1:
+        with ThreadPoolExecutor(max_workers=min(8, len(dies))) as ex:
+            list(ex.map(lambda x: _measure_quiet(AP, cfg, st, x[0]), dies))
+    for die, d in dies:
         res = tool_skew_measure(AP, cfg, st, die)
         if res is None:
             continue

@@ -1385,10 +1385,26 @@ def process_uses_kit(argv, path):
     return roots is None or any(path.startswith(root + "/") for root in roots)
 
 
+PS_CACHE = {"t": 0.0, "out": ""}
+PS_TTL_S = 20.0
+
+
+def hub_ps_text(now=None):
+    """WAVE-TICK-1119: one `ps` of the hub per PS_TTL_S, not one per job (hub_procs is asked for every job in poll / retry / admit: about 75 s
+    of a 900 s tick on a hub at load 240).  A process that ended in the last 20 s counts as live one more tick; a failed ps is not cached."""
+    now = time.time() if now is None else now
+    if PS_CACHE["out"] and 0 <= now - PS_CACHE["t"] < PS_TTL_S:
+        return PS_CACHE["out"]
+    rc, out, _ = sh(["ps", "-eo", "pid=,etimes=,args="], timeout=60)
+    if rc == 0 and out:
+        PS_CACHE.update(t=now, out=out)
+    return out
+
+
 def hub_procs(path):
     """processes on the hub (ot-run clients, local docker run / run_kit.sh) whose command line names the kit dir
     -> [(pid, elapsed_s)]; ot-run clients always run here, also when the job itself spilled to another host"""
-    rc, out, _ = sh(["ps", "-eo", "pid=,etimes=,args="], timeout=60)
+    out = hub_ps_text()
     me = os.getpid()
     res = []
     for line in out.splitlines():
