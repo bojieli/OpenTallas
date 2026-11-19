@@ -84,3 +84,12 @@ bash tools/fleet/col_template_rows.sh TREE BASE_PLAN SIDECAR OUT [--all-members]
 - Open: (1) array origin inside the ROM macro is assumed (decoder width, 0) and the via sits at the cell centre: no base ROM layout
   exists to check it against; (2) the 8 element cores per type hold their ROMs inside the core layout: counted, not stamped;
   (3) no real die GDS was merged (overlay-only stream).
+
+## 11-19 03:3x PST
+- p1 (sle_ctl) in 4_1_cts at 03:19, no TT number yet; watcher alive. Wave: all 7 sle_ctl relaunched 01:19-01:56 on N4.3 / N4.3G (place).
+- p2 was NOT a proof: st_b u_cland_origin is plan-sited (landing_placement.tcl rect from clock...origin_rect_um, landing_place.py 572-597);
+  the hook kept it ("origins 1 sited 0 kept_firm 1"). p2 stopped 03:24 (run_p.sh pid 1032744, container d8e1a5d32291, watcher 1093956).
+  The item_env on the two st_b wave items is a no-op for this class (harmless).
+- Real fix = plan row: lanes/handoff/FABLE-FIX-QC-rows-stb-origin.json (origin_rect_um -> [219.96,786.26,237.24,803.54] for sle_st_b).
+- p3 = same type as p2, landing_placement.tcl origin rect edited to that value (copy+mv before launch); started 03:25; watcher autopost.sh p3.
+  Read: OT_CLAND / landing placement lines in 3_3, then CTS TT, then GRT TT end u_cland_rstart_tx/q (base -106.24 on the sibling).
