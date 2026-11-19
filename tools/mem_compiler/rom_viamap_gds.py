@@ -20,6 +20,14 @@ never held in memory):
   verify   --die-gds out.gds --top TOP --def placed.def --macro M.json
            --manifest ... --viamap-dir D        (reads the vias back, compares)
   readback --gds I.gds --macro M.json --viamap I.viamap.hex
+  merge-map  --rommap R.json --macro M.json --viamap-dir D --top TOP --out out.gds [--die-gds in.gds] [--parts P ...] [--allow-missing]
+  verify-map --rommap R.json --macro M.json --viamap-dir D --top TOP --die-gds out.gds [--parts P ...] [--allow-missing]
+           TYPE-TEMPLATE die assembly (tools/fleet/type_template.py rommap): the die stream instantiates ONE representative
+           layout per template group, so no DEF names the ROMs of a position.  The map gives, per die position, every ROM
+           macro's die-frame lower-left corner, orientation and the position's own image; merge-map stamps that image's
+           overlay there, verify-map reads every one back.  Without --die-gds the output is an overlay-only stream (TOP holds
+           only the SREFs) for a later stream merge.  Rows of another macro (element cores) are counted, not stamped: their
+           ROMs sit inside the core layout.
 
 Geometry (macro-local, rom_gen orientation: physical column c at x, row r at y):
 V1 centre = origin + (c*col_pitch + col_pitch/2, r*row_pitch + row_pitch/2),
@@ -302,9 +310,91 @@ def instance_rows(manifest: Path, viamap_dir: Path, m: Macro) -> dict[str, list[
 # merge
 # ---------------------------------------------------------------------------
 
+MAP_ORIENT = {"R0": "N", "MX": "FS", "MY": "FN", "R180": "S"}
+
+
+def image_file(viamap_dir: Path, image: str) -> Path | None:
+    """<image>.viamap.hex, else the flattened frame form of the 10-20 S81 exports ('u_f_0L01.u_r0.u_c1_5' -> u_f_0L01_c1_5)"""
+    for name in (image, re.sub(r"\.u_r\d+\.u_", "_", image)):
+        f = viamap_dir / f"{name}.viamap.hex"
+        if f.is_file():
+            return f
+    return None
+
+
+def map_inputs(rommap: Path, viamap_dir: Path, m: Macro, parts: list[str] | None = None,
+               allow_missing: bool = False) -> tuple[dict[str, list[int]], dict[str, tuple[float, float, str]], dict[str, Any]]:
+    """type_template rommap -> (imgs {key: rows}, placed {key: (x_um, y_um, DEF orient)}, info); key = '<part>/<bound instance>'.
+    A map with errors is refused.  A ROM of this macro with no via map file is an error unless allow_missing (then counted)."""
+    r = json.loads(rommap.read_text())
+    if r.get("errors"):
+        raise ValueError(f"{rommap.name}: the map has {len(r['errors'])} error(s), e.g. {r['errors'][0]}")
+    imgs: dict[str, list[int]] = {}
+    placed: dict[str, tuple[float, float, str]] = {}
+    other, missing, files = 0, [], {}
+    for pos in r["positions"]:
+        if parts and pos["part"] not in parts:
+            continue
+        for x in pos["roms"]:
+            if x["module"] != m.name:
+                other += 1
+                continue
+            key = f"{pos['part']}/{x['bound']}"
+            f = image_file(viamap_dir, x["image"])
+            if f is None:
+                missing.append(f"{key} ({x['image']})")
+                continue
+            if x.get("die_orient") not in MAP_ORIENT or not x.get("die_xy_um"):
+                raise ValueError(f"{key}: no die rectangle / orientation {x.get('die_orient')}")
+            if x.get("viamap") and x["viamap"][0].get("sha256") and f.name == x["viamap"][0]["name"] \
+                    and hashlib.sha256(f.read_bytes()).hexdigest() != x["viamap"][0]["sha256"]:
+                raise ValueError(f"{f}: SHA-256 differs from the map")
+            imgs[key] = read_viamap(f, m)
+            files[key] = f.name
+            placed[key] = (float(x["die_xy_um"][0]), float(x["die_xy_um"][1]), MAP_ORIENT[x["die_orient"]])
+    if missing and not allow_missing:
+        raise ValueError(f"{len(missing)} {m.name} position(s) have no via map in {viamap_dir}, e.g. {missing[:3]}")
+    if not placed:
+        raise ValueError("no ROM position selected")
+    return imgs, placed, {"positions_selected": len({k.split('/')[0] for k in placed}), "other_macro_rows": other,
+                          "missing_viamap": len(missing), "image_files": len(set(files.values()))}
+
+
+def empty_stream(out: Path, top: str, dbu_per_um: float = 1000.0) -> None:
+    out.write_bytes(lib_header(dbu_per_um, top) + rec(BGNSTR, 2, i2(*([1970, 1, 1, 0, 0, 0] * 2))) + rec(STRNAME, 6, top.encode())
+                    + rec(ENDSTR, 0) + rec(ENDLIB, 0))
+
+
+def merge_map(die: Path | None, top: str, rommap: Path, m: Macro, viamap_dir: Path, out: Path, parts: list[str] | None = None,
+              allow_missing: bool = False, dbu_per_um: float = 1000.0) -> dict[str, Any]:
+    imgs, placed, info = map_inputs(rommap, viamap_dir, m, parts, allow_missing)
+    src = die
+    if src is None:
+        src = out.with_suffix(out.suffix + ".empty")
+        empty_stream(src, top, dbu_per_um)
+    try:
+        res = merge_placed(src, top, m, imgs, placed, out)
+    finally:
+        if die is None:
+            src.unlink()
+    return dict(res, **info, overlay_only=die is None)
+
+
+def verify_map(die: Path, top: str, rommap: Path, m: Macro, viamap_dir: Path, parts: list[str] | None = None,
+               allow_missing: bool = False) -> dict[str, Any]:
+    imgs, placed, info = map_inputs(rommap, viamap_dir, m, parts, allow_missing)
+    return dict(verify_placed(die, top, m, imgs, placed), **info)
+
+
 def merge(die: Path, top: str, def_path: Path, m: Macro, manifest: Path, viamap_dir: Path, out: Path) -> dict[str, Any]:
     imgs = instance_rows(manifest, viamap_dir, m)
     _u, placed = parse_def(def_path, m.name)
+    return merge_placed(die, top, m, imgs, placed, out)
+
+
+def merge_placed(die: Path, top: str, m: Macro, imgs: dict[str, list[int]], placed: dict[str, tuple[float, float, str]],
+                 out: Path) -> dict[str, Any]:
+    """one overlay structure per unique image appended to the stream, one SREF per placed instance inside ``top``"""
     missing = sorted(set(placed) - set(imgs))
     if missing:
         raise ValueError(f"{len(missing)} placed {m.name} instance(s) have no via map, e.g. {missing[:3]}")
@@ -350,12 +440,16 @@ def verify(die: Path, top: str, def_path: Path, m: Macro, manifest: Path, viamap
     """Read every placed instance's vias back out of the die GDS (un-transforming the SREF) and compare with the hex."""
     imgs = instance_rows(manifest, viamap_dir, m)
     _u, placed = parse_def(def_path, m.name)
+    return verify_placed(die, top, m, imgs, placed)
+
+
+def verify_placed(die: Path, top: str, m: Macro, imgs: dict[str, list[int]], placed: dict[str, tuple[float, float, str]]) -> dict[str, Any]:
     dbu, st = read_structures(die)
     if top not in st:
         raise ValueError(f"top {top} not in {die}")
     by_pos: dict[tuple[int, int], tuple[str, bool, int]] = {}
     for nm, x, y, refl, ang in st[top]["srefs"]:
-        if nm in st and st[nm]["rects"]:
+        if nm in st and (st[nm]["rects"] or nm.startswith(m.name + "__VIA1_")):      # an all-zero image is an overlay with no via
             by_pos[(x, y)] = (nm, refl, int(round(ang)))
     bad, checked = [], 0
     for inst, (x, y, orient) in sorted(placed.items()):
@@ -389,7 +483,7 @@ def verify(die: Path, top: str, def_path: Path, m: Macro, manifest: Path, viamap
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     sub = ap.add_subparsers(dest="cmd", required=True)
-    for n in ("overlay", "merge", "verify", "readback"):
+    for n in ("overlay", "merge", "verify", "readback", "merge-map", "verify-map"):
         s = sub.add_parser(n)
         s.add_argument("--macro", type=Path, required=True, help="macro datasheet JSON from rom_gen compile")
         s.add_argument("--array-origin-um", type=float, nargs=2, default=None)
@@ -408,6 +502,16 @@ def main() -> int:
             s.add_argument("--viamap-dir", type=Path, required=True)
         if n == "merge":
             s.add_argument("--out", type=Path, required=True)
+        if n in ("merge-map", "verify-map"):
+            s.add_argument("--rommap", type=Path, required=True, help="tools/fleet/type_template.py rommap output")
+            s.add_argument("--viamap-dir", type=Path, required=True)
+            s.add_argument("--top", required=True)
+            s.add_argument("--die-gds", type=Path, required=n == "verify-map")
+            s.add_argument("--parts", nargs="*", default=None, help="die positions (default: all of the map)")
+            s.add_argument("--allow-missing", action="store_true", help="skip (and count) ROMs with no via map file")
+        if n == "merge-map":
+            s.add_argument("--out", type=Path, required=True)
+            s.add_argument("--dbu-per-um", type=float, default=1000.0)
     a = ap.parse_args()
     m = Macro(a.macro, tuple(a.array_origin_um) if a.array_origin_um else None)
     if a.cmd == "overlay":
@@ -417,6 +521,13 @@ def main() -> int:
         ok = readback_overlay(m, a.gds) == read_viamap(a.viamap, m)
         print("PASS" if ok else "FAIL")
         return 0 if ok else 1
+    if a.cmd == "merge-map":
+        print(json.dumps(merge_map(a.die_gds, a.top, a.rommap, m, a.viamap_dir, a.out, a.parts, a.allow_missing, a.dbu_per_um), indent=1))
+        return 0
+    if a.cmd == "verify-map":
+        res = verify_map(a.die_gds, a.top, a.rommap, m, a.viamap_dir, a.parts, a.allow_missing)
+        print(json.dumps(res, indent=1))
+        return 0 if res["verdict"] == "PASS" else 1
     if a.cmd == "merge":
         print(json.dumps(merge(a.die_gds, a.top, a.def_path, m, a.manifest, a.viamap_dir, a.out), indent=1))
         return 0

@@ -447,11 +447,24 @@ def main() -> int:
     p.add_argument("--ecc", choices=("none", "secded"), default="none")
     p.add_argument("--instance-prefix", required=True)
     p.add_argument("--out", type=Path, required=True)
+    g = sub.add_parser("gds", help="the content mask of ONE image: its VIA1 programming overlay as GDS (rom_viamap_gds.py)")
+    g.add_argument("--macro", type=Path, required=True, help="the macro's datasheet JSON")
+    g.add_argument("--viamap", type=Path, required=True, help="<INSTANCE>.viamap.hex")
+    g.add_argument("--out", type=Path, required=True)
+    g.add_argument("--dbu-per-um", type=float, default=1000.0)
     v = sub.add_parser("verify", help="per-content functional/LEC check: via maps against the weight image")
     v.add_argument("--manifest", type=Path, required=True, help="<prefix>.personalisation.json")
     v.add_argument("--image", type=Path, default=None, help="the content file (default: the manifest's)")
     v.add_argument("--macro", type=Path, default=None, help="datasheet JSON of a shape not in physical/ (fresh compile)")
     args = ap.parse_args()
+    if args.cmd == "gds":
+        import rom_viamap_gds as VG
+        m = VG.Macro(args.macro)
+        name = VG.write_overlay(m, args.viamap, args.out, args.dbu_per_um)
+        ok = VG.readback_overlay(m, args.out) == VG.read_viamap(args.viamap, m)       # the stream is read back before it is reported
+        print(json.dumps({"structure": name, "gds": str(args.out), "layer": [VG.V1_LAYER, VG.V1_DT], "readback": "PASS" if ok else "FAIL",
+                          "array_origin_um": list(m.origin), "array_origin_assumed": m.origin_assumed}))
+        return 0 if ok else 1
     if args.cmd == "verify":
         res = verify_personalisation(args.manifest, args.image, args.macro)
         print(json.dumps(res, indent=1, sort_keys=True))
