@@ -97,7 +97,9 @@ class Identity(unittest.TestCase):
                 with patch.object(K,'collect'),patch.object(K,'plan_dies',return_value=([],[])):
                     result=K.step(ap)
                 self.assertEqual(len(ap.units),expected)
-                if mode==B.PINS:self.assertEqual(next(iter(result['items'].values())),rec)
+                if mode==B.PINS:
+                    row=dict(next(iter(result['items'].values())));row.pop('retry_stop',None)    # name_stuck_retry_infra labels a held RETRY-INFRA row (FLOW-0445 #5); nothing else may change
+                    self.assertEqual(row,rec)
 
     def test_malformed_receipt_config_holds_instead_of_crashing_tick(self):
         current=self.ids();blocks={'x':current['x']['block_sha']}
