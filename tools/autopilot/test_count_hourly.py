@@ -133,3 +133,11 @@ def test_any_plan_extra_classifies_by_plan_name():
     r = CH.any_plan_extra(c, rows, by_die=True)
     assert r == {"defer": {"s81": 2}, "retired": {"s81": 1, "qc": 1}}      # t_open (variant-stripped) and its module name m2 are separate units
     assert CH.any_plan_extra(c, rows) == 4
+
+
+def test_repeat_run_in_the_hour_still_prints_the_summary(env, capsys):
+    put(env, NOW - 60)
+    (env / CH.RATE).write_text("2026-11-04 07:01 90 s81=37 head=4+5t qc=12 kv=20 hbm=12 any=90\n")
+    assert CH.run(NOW, None, lambda: pytest.fail("committed")) == 0
+    out = capsys.readouterr().out
+    assert "already holds these counts" in out and "count_hourly: signed any plan" in out

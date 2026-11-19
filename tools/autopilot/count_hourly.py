@@ -191,6 +191,7 @@ def run(now=None, scan=None, commit=None, force=None):
         return 1
     if same_hour_same_counts(p.read_text() if p.exists() else "", row):
         print("count_hourly: this hour already holds these counts: " + row)
+        print("count_hourly: " + headline(row))             # WAVE-PILOT-FIX 11-19: the summary line also on a repeat run (it ended at the 'already holds' line, which read as a crash)
         return 0
     with open(p, "a") as f:
         f.write(row + "\n")
