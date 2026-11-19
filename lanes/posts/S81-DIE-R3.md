@@ -122,3 +122,28 @@
   The tree _d8h_1119_work now runs main tools 31bc0da44cf8, which carry the type_template schema key. Running on epyc8: G0 (against D8g) and strict bind r1 (build_tree: bind, write-back, svc ref, LATCHECK, PRE). After the bind: type_template.py check (group count posted), then the private phy__t1 proof kit with --priority proof to GRT TT.
   FT stations (52 lanes): not taken yet. COORD's rule is placed hop > 405 only, and no kit has a PLACED scan yet (precheck-kit-scan state is empty on all 6 hosts). I am running tools/precheck placed_hops_or.py on the newest 3_place.odb of the 19 FT-row types and will take only the slots whose placed station leg exceeds 405 um. A type with no placed kit keeps its current stations and goes on the list.
 - 2026-11-19 02:40 PST POST-APPLY-BIND [S81-DIE-R3 -> COORD] s81 tree /srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8f_1117_work: strict bind + LATCHECK in hardlink copy /srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8f_1117_work_postbind_1119022816 on epyc8: ELAB_RC=2 BIND_RC=2 LATCHECK_RC=1 -> FAIL (rc 1): run publish_apply.py bind-fail --die s81 --lane S81-DIE-R3 --id postbind-s81-1119022816 --log /home/ubuntu/.local/state/ot-postbind/postbind-s81-1119022816.log; log hub:/home/ubuntu/.local/state/ot-postbind/postbind-s81-1119022816.log
+- 2026-11-19 03:06 PST D8H-G (S81-DIE-R3, after FABLE-PD-S81-0253). The D8h strict bind is stopped (ot-run --cancel on its own job dir; 1 scope). Lesson from earlier tonight: a --cancel on a shared --dir also stopped my D8g all-gaps bind. Every job now has its own --dir, and the all-gaps bind was relaunched.
+  Plan g 08f8252a3288 (epyc8 s81-die-r3-e8/d8h/plan_d8h_g.json; compose_g_report.json), tree tools main f72013a6506a:
+  (2) gunit: the core shift was put in the base first (plan e), then the gunit taps were re-solved from the D8g local taps (7 kept, 29 added). The 6 core taps of the moved cores moved by -0.144.
+  (3) bs0: the 36 hand rows on the 18 col_h9_r0_p4/p5 types are dropped, with no rename. The generator rows stay.
+  (4) Leaf tap rows S81-LEAF-TAP-ROWS-cap1000 taken: 78 types, kv_leaf t1/t4 included. tap_max_sinks is reverted to the D8g value on 101 types that have no added-tap row, so the signed slice_station types are untouched.
+  (5) Tap tables appended, with no rename:
+  - lepe_nh_mus_LP t1 +34; seqhost t1 +40; lepw_mu_LP t2 +56; lepw_mus_LP t2 +70; lepe_nh_mus_C t1 +70.
+  - lepe_mu_LP t2 is taken as one row: 4 bank moves plus its re-solved table of 48.
+  - The bk_sel table already in d stays.
+  Serdes rows:
+  - rck star on 11 types.
+  - bank_taps on the other 10 serdes types, 0 cycles. Bank reset hop max goes from 1,483-2,269 um to 72-281 um. The rows were made from the D8f bound RTL, because the CBC bound/ links are dangling.
+  Col merge rows: col_template_rows.sh with no --all-members and --keep-taps.
+  - A (keep-outs): 128 types, +326 reset outs.
+  - C (collector superset, collector-only).
+  - B (ring depth): 63 ports on 29 types.
+  - Result: 13 sibling groups, 25 layouts before the CA depth step.
+  - sidecar_tt 60a304c234a7 is installed as h2_2249/landed_sidecar_h2_psplit_all.json.
+  FT stations (placed scan, kit_scan PLACED on every ot-jobs placed DB of the 19 FT types):
+  - Measured: leaf t21, leaf t60, slice_station t43.
+  - t60 ft6/ft7/ft8: placed S1->S2 legs are 417/416/413 um against plan legs of 311. This is placement drift, not span, so +1 station inserted at S0-S1 would not touch it. Taken as keep_firm (0 cycles, holds the planned sites) instead of the CBC station rows.
+  - keep_firm is also on t60 ft2 (455), t21 ft2 (489) and t21 ft3 (591). These are over 405 placed but have no CBC row.
+  - Not taken, placed under 405: t21 ft8/9/10 (398/390/392) and t43 ft11/12.
+  - No placed DB on the fleet for the other 16 types: still unmeasured.
+  G0 on g is running (epyc8 d8h/g0_g). The bind starts only after G0 is green.

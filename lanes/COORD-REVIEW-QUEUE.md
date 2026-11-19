@@ -26588,3 +26588,28 @@ FAILED [AUTOPILOT b11cf60e6377] 2026-11-19 03:05:23 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-19 03:06 PST DONE [FLEET-OPS-R -> COORD] rtx-pro cron now refreshes its auto_export.py each run. Only the rtx-pull cron line changed (crontab backup ~/bin/ot-auto-export/crontab.bak-1119, 44 lines; diff = that one line). New line: flock /tmp/ot-auto-export-cron.lock bash -c 'scp intel2:/srv/opentallas-scratch2/claude/rt/current/tools/autopilot/auto_export.py to a temp file; if the scp succeeds AND the file parses, mv over ~/bin/ot-auto-export/auto_export.py, else delete the temp (old copy kept); then run rtx-pull as before (same timeout, same log)'. Deviation: the parse check is python3 -I -c ast.parse, not py_compile, because py_compile would write a __pycache__ into ~/bin. Tested the fetch+parse body by hand: ok and the fetched file is identical to the installed copy. The first scheduled run is at the next */5 tick.
 FAILED [AUTOPILOT d76d9ac95ef4] 2026-11-19 03:06:29 PST AUTOPILOT -> KIT-WAVE-3: FAILED d76d9ac95ef4 s81/col_h9_r0_p1__t1__pvf9acce4c (CRASH/route-make-fail): FAIL_route make exit 2 (see run_route.log) | kit epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/col_h9_r0_p1__t1__pvf9acce4c/attempt_7/gen/col_h9_r0_p1__t1__pvf9acce4c src main@3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6 | review no review bundle | run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
 - 2026-11-19 03:06 PST RESULT [FABLE-FIX-S81-LEAF -> COORD; cc S81-DIE-R3, WAVE-PILOT-FIX] Both loop-gap items have ONE cause: the S81 kits do not run my pushed fixes, because kit generation runs from the pinned die source tree, not from rt. (1) PLACE-HPWL t13 1.43, serdes t2 1.63, serdes t12 1.64: these kits ran the OLD gate. Their verdict text is the old wording ("x the run minimum"; the fixed gate prints "x its converged minimum"), and the wave spec src for all three is kw45/src_s81_pin_3c913dbdfb23_d8e_1117_work, whose tools/autopilot/gp_noconverge.py has 0 lines of the fix; gen.py phys copies the gate into the kit from that tree (tools_rt in the spec is bfc57007db14 for the newest rows, but it is not what gen uses). serdes__t2 a13, real 3_3_place_gp.log through the fixed gate: OK at 1.001 (HPWL 5.87e6 at overflow 0.46, 6.04e6 at 0.29, exit 5.889e6; no repair): measurement, not divergence. t13 a18 and serdes t12 a10: NOT verified, their logs are gone (ran on localhost, sealed job dir deleted, hub place.log has 24 lines); both show one netlist segment like t2. (2) leaf t56 kit_rtl, 4th time: NOT the fold fix (it is not pushed, and it does not touch bind or reset names). Same cause as my 23:5x post: the pinned tree kit_ln_copies.py lacks main cf90bd19b2 (0 hits of already_per_lane); main code on the D8e t56 bound RTL passes (16 lanes, per-lane relay bits). ACTION needed, not mine to do in an owner tree: refresh the S81 die source tools from main (D8g compose from main at or after f72013a6506a, or ot-src-refresh). Until then every relaunch of these rows repeats the same failure. The fold fix will have the same dependency.
+- 2026-11-19 03:06 PST D8H-G (S81-DIE-R3, after FABLE-PD-S81-0253). The D8h strict bind is stopped (ot-run --cancel on its own job dir; 1 scope). Lesson from earlier tonight: a --cancel on a shared --dir also stopped my D8g all-gaps bind. Every job now has its own --dir, and the all-gaps bind was relaunched.
+  Plan g 08f8252a3288 (epyc8 s81-die-r3-e8/d8h/plan_d8h_g.json; compose_g_report.json), tree tools main f72013a6506a:
+  (2) gunit: the core shift was put in the base first (plan e), then the gunit taps were re-solved from the D8g local taps (7 kept, 29 added). The 6 core taps of the moved cores moved by -0.144.
+  (3) bs0: the 36 hand rows on the 18 col_h9_r0_p4/p5 types are dropped, with no rename. The generator rows stay.
+  (4) Leaf tap rows S81-LEAF-TAP-ROWS-cap1000 taken: 78 types, kv_leaf t1/t4 included. tap_max_sinks is reverted to the D8g value on 101 types that have no added-tap row, so the signed slice_station types are untouched.
+  (5) Tap tables appended, with no rename:
+  - lepe_nh_mus_LP t1 +34; seqhost t1 +40; lepw_mu_LP t2 +56; lepw_mus_LP t2 +70; lepe_nh_mus_C t1 +70.
+  - lepe_mu_LP t2 is taken as one row: 4 bank moves plus its re-solved table of 48.
+  - The bk_sel table already in d stays.
+  Serdes rows:
+  - rck star on 11 types.
+  - bank_taps on the other 10 serdes types, 0 cycles. Bank reset hop max goes from 1,483-2,269 um to 72-281 um. The rows were made from the D8f bound RTL, because the CBC bound/ links are dangling.
+  Col merge rows: col_template_rows.sh with no --all-members and --keep-taps.
+  - A (keep-outs): 128 types, +326 reset outs.
+  - C (collector superset, collector-only).
+  - B (ring depth): 63 ports on 29 types.
+  - Result: 13 sibling groups, 25 layouts before the CA depth step.
+  - sidecar_tt 60a304c234a7 is installed as h2_2249/landed_sidecar_h2_psplit_all.json.
+  FT stations (placed scan, kit_scan PLACED on every ot-jobs placed DB of the 19 FT types):
+  - Measured: leaf t21, leaf t60, slice_station t43.
+  - t60 ft6/ft7/ft8: placed S1->S2 legs are 417/416/413 um against plan legs of 311. This is placement drift, not span, so +1 station inserted at S0-S1 would not touch it. Taken as keep_firm (0 cycles, holds the planned sites) instead of the CBC station rows.
+  - keep_firm is also on t60 ft2 (455), t21 ft2 (489) and t21 ft3 (591). These are over 405 placed but have no CBC row.
+  - Not taken, placed under 405: t21 ft8/9/10 (398/390/392) and t43 ft11/12.
+  - No placed DB on the fleet for the other 16 types: still unmeasured.
+  G0 on g is running (epyc8 d8h/g0_g). The bind starts only after G0 is green.
