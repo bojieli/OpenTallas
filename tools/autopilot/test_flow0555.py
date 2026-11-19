@@ -289,3 +289,14 @@ def test_running_row_on_an_unreadable_host_is_unknown_for_two_hours_then_infra_d
         cfg["_otrun_status"] = {}
         st = {"items": {"x": row(9.0)}}
         assert KW.unreadable_host_rows(ap, cfg, st, {}, now=now) == 0                       # no status at all: nothing known
+
+
+def test_gen_host_choice_drops_an_unreadable_or_overloaded_host_while_another_stays():
+    cfg = {"dies": {"s81": {"gen_host": "epyc7", "gen_hosts": ["epyc7", "epyc8", "epyc9"], "work_root": "/srv/x/claude/l"}}, "_hub": "intel2",
+           "_otrun_status": {"epyc8": {"load": 90, "cores": 96}, "epyc9": {"load": 400, "cores": 96}}}
+    got = KW.gen_hosts(cfg, "s81", "t1")
+    assert got == ["epyc8"]                                   # epyc7 has no status row, epyc9 is over 2x cores
+    cfg["_otrun_status"] = {}
+    assert "epyc7" in KW.gen_hosts(cfg, "s81", "t1")          # nothing known: nothing dropped
+    cfg["_otrun_status"] = {"epyc7": {"load": 900, "cores": 96}, "epyc8": {"load": 900, "cores": 96}, "epyc9": {"load": 900, "cores": 96}}
+    assert len(KW.gen_hosts(cfg, "s81", "t1")) == 3           # every host bad: the list is unchanged

@@ -4907,6 +4907,10 @@ def gen_hosts(cfg, die, item=None):
     res = ([h for h in hs if lane not in marked.get(h, ()) and die not in bad.get(h, {}) and die not in low.get(h, {})]
            or [h for h in hs if lane not in marked.get(h, ()) and die not in bad.get(h, {})]
            or [h for h in hs if lane not in marked.get(h, ())] or [d["gen_host"]])
+    # COORD 11-19 (TimeoutExpired fails after the snapshot fix: 95 of 109 snapshot copies targeted epyc7, unreachable and at load 965): a host that is over 2x its cores or has no
+    # ot-run status row is no gen host while another stays (queued_host_bad); no status at all = nothing known, nothing dropped
+    _stt, _hub = cfg.get("_otrun_status") or {}, cfg.get("_hub") or ""
+    res = [h for h in res if not queued_host_bad(_stt, h, _hub)] or res
     # KIT-OPS-4 11-14 (COORD): the free INFRA retry of an earlyoom / signal kill leaves the host that killed it while another stays
     av = (cfg.get("_avoid_host") or {}).get((die, item)) if item else None
     return [h for h in res if h != av] or res if av else res
