@@ -2096,7 +2096,9 @@ def reset_resel(P, Q, names, plan_path, near_um=25.0):
     every reset_start_raw_exports entry -> the new start relay of the same role + depth nearest its old xy (entries
     sharing an old instance share the new one), its landing_contract pin source follows (pin offset kept); every
     landing_{reader,writer}_start stage raw_reset and landing_local_resets raw keeps its Q if that relay survives at
-    the same depth within near_um of the best, else the nearest relay of that depth.  Returns {type: record}."""
+    the same depth within near_um of the best, else the nearest relay of that depth.  A name that is not a relay of the
+    OLD tree (landing_raw_branches base / stage original, START raw_reset, local reset raw) is never rewritten: it is
+    listed in record["kept"] as [where, name].  Returns {type: record}."""
     import math
     import schema as SC
     import reset_tree as RT
@@ -2116,7 +2118,7 @@ def reset_resel(P, Q, names, plan_path, near_um=25.0):
     for tn in names:
         t = Q["partition_types"][tn]
         ck = t.get("clock") or {}
-        rec = dict(exports=[], raw=[], skipped=[])
+        rec = dict(exports=[], raw=[], skipped=[], kept=[])
         try:
             ta, tb = RT.for_type(PA, tn), RT.for_type(PB, tn)
             lc = ck.get("landing_contract") or {}
@@ -2185,6 +2187,12 @@ def reset_resel(P, Q, names, plan_path, near_um=25.0):
             # collector re-solve.  Depth/nearest-child alone can select a sibling
             # consumer at a fork (KV sys_c ft1_o: rst_n_t31 became rst_n_t11).
             plain_q = {r["q"]: r for r in rb_plain}
+            # FABLE-FIX-KV-HG 11-19 (kv3_hgi_v1 d25d): only a name that IS a relay of the OLD tree is a tree reference.
+            # A literal branch may end on landing-side relays of the bound RTL (cland_reset_ft0_i, the ring reset
+            # relay registered by RawBranches.baseline_relay); the nearest-child walk used to rewrite such a stage to
+            # a tap output of the new tree (rst_n_t35) and the strict bind failed "raw Q rst_n_t35: exactly one
+            # same-clk plain relay required".  Such names stay as they are and are listed in rec["kept"].
+            old_q = set(ra_q) | {r["q"] for r in ta.get("relays", [])}
             old_branches = {b.get("name"): b for b in
                             (P["partition_types"][tn].get("clock") or {}).get("landing_raw_branches", [])}
             for bi, br in enumerate(ck.get("landing_raw_branches") or []):
@@ -2213,7 +2221,19 @@ def reset_resel(P, Q, names, plan_path, near_um=25.0):
                     for st, row in zip(stages, chain):
                         st["original"] = row["q"]
                     continue
+                ntree = 0
+                while ntree < len(stages) and stages[ntree].get("original") in old_q:
+                    ntree += 1
+                if any(st.get("original") in old_q for st in stages[ntree:]):
+                    raise ValueError("landing_raw_branches.%d (%s): tree relay after a non-tree stage" % (bi, br.get("name")))
+                walk = stages[:ntree]               # the D-chain inside the reset tree; the rest is not ours to rename
+                kept = [["landing_raw_branches.%d.stages.%d" % (bi, i), stages[i].get("original")]
+                        for i in range(ntree, len(stages))]
                 ob = ra_q.get(br.get("base"))
+                if br.get("base") not in old_q and br.get("base") not in rb_q and not walk:
+                    # nothing of this branch is in the tree (e.g. base rst_n of a hard wrapper): all names kept
+                    rec["kept"] += [["landing_raw_branches.%d.base" % bi, br.get("base")]] + kept
+                    continue
                 if ob is None or rb_q.get(br.get("base"), {}).get("xy") == ob.get("xy"):
                     nb = rb_q.get(br.get("base"))
                 else:
@@ -2225,9 +2245,9 @@ def reset_resel(P, Q, names, plan_path, near_um=25.0):
                     continue
                 b0 = base_by_name.get(br.get("name")) or (base_br[bi] if bi < len(base_br) else br)
                 goal = ((b0.get("stages") or [{}])[-1] or {}).get("original") if b0.get("stages") else None
-                path = _tree_path(kids, nb["q"], goal, len(br.get("stages") or [])) if goal else None
+                path = _tree_path(kids, nb["q"], goal, len(walk)) if goal and not kept else None
                 chain, prev, ok = path or [], nb, True
-                for st in (br.get("stages") or []) if path is None else ():
+                for st in walk if path is None else ():
                     c = kids.get(prev["q"]) or []
                     if not c:
                         ok = False
@@ -2239,15 +2259,18 @@ def reset_resel(P, Q, names, plan_path, near_um=25.0):
                 if not ok:
                     rec["skipped"].append("landing_raw_branches.%d (%s): chain ends" % (bi, br.get("name")))
                     continue
-                if br.get("base") != nb["q"] or [st.get("original") for st in br["stages"]] != [r["q"] for r in chain]:
+                if br.get("base") != nb["q"] or [st.get("original") for st in walk] != [r["q"] for r in chain]:
                     rec["raw"].append(["landing_raw_branches.%d" % bi, br.get("base"), nb["q"]])
                 br["base"] = nb["q"]
-                for st, r in zip(br["stages"], chain):
+                for st, r in zip(walk, chain):
                     st["original"] = r["q"]
+                rec["kept"] += kept
             for tag, obj, fld in refs:
                 q = obj.get(fld)
                 o = ra_q.get(q)
                 if o is None:
+                    if isinstance(q, str) and q:        # not a relay of the OLD tree: left as named
+                        rec["kept"].append([tag, q])
                     continue
                 pt = obj.get("xy_um") or o["xy"]
                 same = [r for r in rb_all if r.get("depth") == o.get("depth") and r.get("role") == o.get("role")]

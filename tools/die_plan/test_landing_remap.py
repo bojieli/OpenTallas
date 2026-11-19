@@ -169,3 +169,39 @@ def test_resel_keeps_pin_sites_and_fails_closed_on_far_relay():
     moved = mk()
     LR.remap_plan(mk(), moved, HERE, HERE, resets="resel", resel_fn=moving, keep_xy=False)
     assert moved["partition_types"]["T"]["reset_start_raw_exports"][0]["xy_um"] == [300.0, 0.0]
+
+
+def test_resel_keeps_non_tree_raw_branch_original_and_reports_it(monkeypatch, tmp_path, capsys):
+    """FABLE-FIX-KV-HG 11-19 (kv3_hgi_v1 d25d): default --resets resel through the real street_rule.reset_resel; the
+    landing-side relay cland_reset_ft0_i named by the last raw-branch stage is not a relay of the OLD tree and must
+    stay (it was rewritten to the tap output rst_n_t35), while the tree relays follow their sites."""
+    import json
+    import types
+    import schema
+    import reset_tree
+    R = lambda q, d, depth, xy: dict(name="u_" + q, q=q, d=d, depth=depth, xy=xy)  # noqa: E731
+    trees = {"old": dict(relays=[R("rst_rl_127", "rst_rl_1", 2, [600.0, 557.0]), R("rst_rl_128", "rst_rl_127", 3, [555.0, 557.0]),
+                                 R("rst_rl_129", "rst_rl_128", 4, [345.0, 557.0]), R("rst_n_t35", "rst_rl_129", 5, [298.0, 395.0])]),
+             "new": dict(relays=[R("rst_rl_124", "rst_rl_1", 2, [600.0, 557.0]), R("rst_rl_125", "rst_rl_124", 3, [555.0, 557.0]),
+                                 R("rst_rl_126", "rst_rl_125", 4, [345.0, 557.0]), R("rst_n_t35", "rst_rl_126", 5, [298.0, 395.0])])}
+    monkeypatch.setattr(schema, "Plan", lambda raw, path=None: types.SimpleNamespace(tag=raw["tag"]))
+    monkeypatch.setattr(reset_tree, "for_type", lambda PP, tn: trees[PP.tag])
+
+    def mk(tag):
+        st = [dict(original=q, xy_um=xy) for q, xy in (("rst_rl_128", [554.752, 557.28]), ("rst_rl_129", [345.184, 557.28]),
+                                                       ("cland_reset_ft0_i", [298.08, 394.816]))]
+        return {"tag": tag, "partition_types": {"T": {"clock": {
+            "landing_raw_branches": [dict(name="o", base="rst_rl_127", stages=st, consumers=["origin"])]}}}}
+    old, new = mk("old"), mk("new")
+    rec = LR.remap_plan(old, new, HERE, tmp_path)
+    br = new["partition_types"]["T"]["clock"]["landing_raw_branches"][0]
+    assert br["base"] == "rst_rl_124"
+    assert [s["original"] for s in br["stages"]] == ["rst_rl_125", "rst_rl_126", "cland_reset_ft0_i"]
+    assert rec["resets"][0]["kept"] == [["landing_raw_branches.0.stages.2", "cland_reset_ft0_i"]]
+    o, n, out, rc = tmp_path / "o.json", tmp_path / "n.json", tmp_path / "out.json", tmp_path / "rc.json"
+    o.write_text(json.dumps(mk("old"))); n.write_text(json.dumps(mk("new")))
+    assert LR.main(["landing_remap.py", str(o), str(n), str(out), "--receipt", str(rc)]) == 0
+    got = json.loads(out.read_text())["partition_types"]["T"]["clock"]["landing_raw_branches"][0]
+    assert got["stages"][-1]["original"] == "cland_reset_ft0_i"
+    assert json.loads(rc.read_text())["resets"][0]["kept"] == [["landing_raw_branches.0.stages.2", "cland_reset_ft0_i"]]
+    assert "kept T: landing_raw_branches.0.stages.2 = cland_reset_ft0_i" in capsys.readouterr().out

@@ -13,7 +13,9 @@ Identity, not index:
     group overlaps most with a new tap's group is its successor (injective, greedy by overlap); no overlap -> nearest
     new tap by Manhattan distance within tap_radius_um; none -> fail closed.
 Only density-mode types carry generated tap names (explicit taps are named by the plan).  A type whose references
-still resolve to the same relay / tap is left byte-identical.  Output: the new plan with every reference rewritten
+still resolve to the same relay / tap is left byte-identical.  A reference that is not a relay of the OLD tree (e.g. a
+landing_raw_branches stage on the landing-side relay cland_reset_<bus>) is never rewritten; the receipt lists it under
+resets[].kept.  Output: the new plan with every reference rewritten
 plus a receipt (old -> new, moved um, overlap).
 
   python3 landing_remap.py OLD_PLAN NEW_PLAN OUT [--types T1,T2] [--root DIR] [--receipt FILE] [--keep-anchor]
@@ -294,6 +296,8 @@ def main(argv):
     print(f"landing_remap: {nr} relay name(s), {nt} tap name(s) rewritten; skipped {len(rec['skipped'])}")
     for r in rec["resets"]:
         print(f"  reset {r['type']}: " + json.dumps({k: (len(v) if isinstance(v, list) else v) for k, v in r.items() if k != 'type'}))
+        for where, name in r.get("kept") or []:
+            print(f"  kept {r['type']}: {where} = {name} (not a relay of the OLD tree)")
     for r in rec["taps"]:
         for m in r["remaps"]:
             print(f"  tap {r['type']}: {m['name']} -> {m['to']} ({m['moved_um']} um, {m['shared_sinks']} shared sinks)")

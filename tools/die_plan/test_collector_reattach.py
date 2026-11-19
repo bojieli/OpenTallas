@@ -169,3 +169,64 @@ def test_rerooted_collector_unchanged_root_reattaches():
     assert lc["collector_root_node"] == "rst_n_t0" and "rerooted" not in rep["reattached"]["ctl"]
     assert lc["collector_local_sources"][0]["node"] == "rst_n_t0"
     assert rep["over"] == {} and rep["reattached"]["ctl"]["added_collector_cycles"] == 0
+
+
+def _moved_core_plans():
+    # FABLE-FIX-KV-HG 11-19 (kv3_hgi_v1__cl141fc26e d25d): the NEW plan moved a hard ring core (band rect + pin site)
+    # and re-solved the tree; BASE still holds the old band.  rst_n_t1 moved away, so the child re-attaches to t0.
+    band = lambda y: {"rect_um": [17.28, y, 54.0, y + 317.52], "instance": "u_cland_x"}  # noqa: E731
+    src = lambda y: [{"name": "x_i", "tap": 0, "node": "rst_n_t0", "xy_um": [300.0, 110.0], "band": band(y),  # noqa: E731
+                      "max_pin_to_band_hop_um": 47.52 if y < 1000 else 51.84}]
+    kid = lambda: [{"part": "pv_S_0", "node": "rst_n_t1", "tap": 1, "xy_um": [310.0, 120.0], "index": 0}]  # noqa: E731
+    base = _plan(_tree([450.0, 0.0]), src(760.32))
+    cand = _plan(_tree([0.0, 900.0]), src(1097.28))
+    for p in (base, cand):
+        p["partition_types"]["ctl"]["clock"]["landing_contract"]["collector_children"] = kid()
+    return base, cand
+
+
+def test_geometry_stays_as_in_cand_only_names_are_written():
+    base, cand = _moved_core_plans()
+    before = copy.deepcopy(cand)
+    rep = CR.reattach_plan(base, cand)
+    lc = cand["partition_types"]["ctl"]["clock"]["landing_contract"]
+    src, kid = lc["collector_local_sources"][0], lc["collector_children"][0]
+    assert src["band"]["rect_um"] == [17.28, 1097.28, 54.0, 1414.8]            # NOT base's 760.32 / 1077.84
+    assert src["max_pin_to_band_hop_um"] == 51.84
+    assert (kid["node"], kid["tap"]) == ("rst_n_t0", 0)
+    assert rep["reattached"]["ctl"]["written"] == [["collector_children[0].node", "rst_n_t1", "rst_n_t0"],
+                                                   ["collector_children[0].tap", 1, 0]]
+    # the report is complete: undoing exactly the listed writes gives CAND back
+    blc = before["partition_types"]["ctl"]["clock"]["landing_contract"]
+    kid.update(node="rst_n_t1", tap=1)
+    assert lc == blc and cand == before
+
+
+def test_report_lists_written_fields_in_file(tmp_path):
+    base, cand = _moved_core_plans()
+    b, c = tmp_path / "b.json", tmp_path / "c.json"
+    b.write_text(json.dumps(base)); c.write_text(json.dumps(cand))
+    out, rep = tmp_path / "o.json", tmp_path / "r.json"
+    assert CR.main([str(b), str(c), str(out), str(rep)]) == 0
+    got = json.loads(out.read_text())["partition_types"]["ctl"]["clock"]["landing_contract"]
+    assert got["collector_local_sources"][0]["band"]["rect_um"][1::2] == [1097.28, 1414.8]
+    assert [w[0] for w in json.loads(rep.read_text())["reattached"]["ctl"]["written"]] == \
+        ["collector_children[0].node", "collector_children[0].tap"]
+
+
+def test_source_reattaches_from_its_cand_site():
+    # the source's own site moved with the core: the relay is picked from CAND's site, not the BASE one
+    base = _plan(_tree([450.0, 0.0]), [{"name": "cws1_i", "xy_um": [500.0, 0.0], "tap": 1}])
+    cand = _plan(_tree([450.0, 5.0]), [{"name": "cws1_i", "xy_um": [300.0, 480.0], "tap": 1}])   # t1 is 630 um away
+    rep = CR.reattach_plan(base, cand)
+    src = cand["partition_types"]["ctl"]["clock"]["landing_contract"]["collector_local_sources"][0]
+    assert src["node"] == "rst_n_t0" and src["xy_um"] == [300.0, 480.0] and rep["over"] == {}
+
+
+def test_cand_source_without_base_counterpart_fails_closed(tmp_path):
+    base, cand = _moved_core_plans()
+    cand["partition_types"]["ctl"]["clock"]["landing_contract"]["collector_local_sources"][0]["name"] = "new_i"
+    b, c = tmp_path / "b.json", tmp_path / "c.json"
+    b.write_text(json.dumps(base)); c.write_text(json.dumps(cand))
+    out, rep = tmp_path / "o.json", tmp_path / "r.json"
+    assert CR.main([str(b), str(c), str(out), str(rep)]) == 1 and not out.exists()

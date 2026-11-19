@@ -1037,3 +1037,74 @@ def test_raw_branch_keeps_consumer_terminal_at_new_fork(monkeypatch, tmp_path):
     assert branch["base"] == "correct_base"
     assert branch["stages"] == [dict(original="target", xy_um=[10, 0])]
     assert any("terminal" in r[0] for r in rec["raw"])
+
+
+def _hg_trees():
+    """kv3_hgi_v1 d25d shape: a hard core move re-solves the tree, rst_rl_127/128/129 -> rst_rl_124/125/126 at the
+    same sites; the tap rst_n_t35 hangs off the last relay."""
+    R = lambda q, d, depth, xy: dict(name="u_" + q, q=q, d=d, depth=depth, xy=xy)  # noqa: E731
+    return {"base": dict(relays=[R("rst_rl_127", "rst_rl_1", 2, [600.0, 557.0]), R("rst_rl_128", "rst_rl_127", 3, [555.0, 557.0]),
+                                 R("rst_rl_129", "rst_rl_128", 4, [345.0, 557.0]), R("rst_n_t35", "rst_rl_129", 5, [298.0, 395.0])]),
+            "new": dict(relays=[R("rst_rl_124", "rst_rl_1", 2, [600.0, 557.0]), R("rst_rl_125", "rst_rl_124", 3, [555.0, 557.0]),
+                                R("rst_rl_126", "rst_rl_125", 4, [345.0, 557.0]), R("rst_n_t35", "rst_rl_126", 5, [298.0, 395.0])])}
+
+
+def _hg_type():
+    st = [dict(original=q, xy_um=xy) for q, xy in (("rst_rl_128", [554.752, 557.28]), ("rst_rl_129", [345.184, 557.28]),
+                                                   ("cland_reset_ft0_i", [298.08, 394.816]))]
+    return {"clock": {"landing_raw_branches": [dict(name="o", base="rst_rl_127", stages=st, consumers=["origin"]),
+                                               dict(name="w", base="rst_n", consumers=["fstart:w"],
+                                                    stages=[dict(original="cland_reset_ft1_i", xy_um=[10.0, 10.0])])],
+                      "landing_reader_start": {"branches": {"b": {"stages": [
+                          dict(xy_um=[345.0, 557.0], raw_reset="rst_rl_129"),
+                          dict(xy_um=[298.0, 395.0], raw_reset="cland_reset_ft0_i")]}}},
+                      "landing_local_resets": [dict(name="l0", raw="cland_reset_ft0_i", xy_um=[298.0, 395.0])]}}
+
+
+def test_reset_resel_keeps_names_that_are_not_old_tree_relays_kv_hg(monkeypatch, tmp_path):
+    """FABLE-FIX-KV-HG 11-19 (kv3_hgi_v1__cl141fc26e d25d): the last literal stage cland_reset_ft0_i is a landing-side
+    relay of the bound RTL, not a reset-tree node; the nearest-child walk rewrote it to the tap rst_n_t35 and the
+    strict bind failed 'raw Q rst_n_t35: exactly one same-clk plain relay required'."""
+    import types as _t
+    import schema
+    import reset_tree
+    trees = _hg_trees()
+    monkeypatch.setattr(schema, "Plan", lambda raw, path=None: _t.SimpleNamespace(tag=raw["tag"]))
+    monkeypatch.setattr(reset_tree, "for_type", lambda PP, tn: trees[PP.tag])
+    t = _hg_type()
+    P = {"tag": "base", "partition_types": {"x": json.loads(json.dumps(t))}}
+    Q = {"tag": "new", "partition_types": {"x": t}}
+    rec = SR.reset_resel(P, Q, ["x"], tmp_path / "plan.json")["x"]
+    assert "error" not in rec and not rec["skipped"], rec
+    ck = t["clock"]
+    br, w = ck["landing_raw_branches"]
+    assert br["base"] == "rst_rl_124"                                           # tree names still follow their sites
+    assert [s["original"] for s in br["stages"]] == ["rst_rl_125", "rst_rl_126", "cland_reset_ft0_i"]
+    assert (w["base"], w["stages"][0]["original"]) == ("rst_n", "cland_reset_ft1_i")   # non-tree base + stage untouched
+    stg = ck["landing_reader_start"]["branches"]["b"]["stages"]
+    assert [s["raw_reset"] for s in stg] == ["rst_rl_126", "cland_reset_ft0_i"]
+    assert ck["landing_local_resets"][0]["raw"] == "cland_reset_ft0_i"
+    assert sorted(rec["kept"]) == sorted([
+        ["landing_raw_branches.0.stages.2", "cland_reset_ft0_i"], ["landing_raw_branches.1.base", "rst_n"],
+        ["landing_raw_branches.1.stages.0", "cland_reset_ft1_i"], ["landing_reader_start.b.1", "cland_reset_ft0_i"],
+        ["landing_local_resets.0", "cland_reset_ft0_i"]])
+    assert ["landing_raw_branches.0", "rst_rl_127", "rst_rl_124"] in rec["raw"]
+    # unchanged tree: nothing rewritten, the kept names are still reported
+    t2 = _hg_type()
+    P2 = {"tag": "base", "partition_types": {"x": json.loads(json.dumps(t2))}}
+    rec2 = SR.reset_resel(P2, {"tag": "base", "partition_types": {"x": t2}}, ["x"], tmp_path / "plan.json")["x"]
+    assert t2 == P2["partition_types"]["x"] and rec2["raw"] == [] and len(rec2["kept"]) == 5
+
+
+def test_reset_resel_tree_relay_after_non_tree_stage_fails_closed(monkeypatch, tmp_path):
+    import types as _t
+    import schema
+    import reset_tree
+    trees = _hg_trees()
+    monkeypatch.setattr(schema, "Plan", lambda raw, path=None: _t.SimpleNamespace(tag=raw["tag"]))
+    monkeypatch.setattr(reset_tree, "for_type", lambda PP, tn: trees[PP.tag])
+    t = _hg_type()
+    t["clock"]["landing_raw_branches"][0]["stages"].append(dict(original="rst_rl_129", xy_um=[1.0, 1.0]))
+    P = {"tag": "base", "partition_types": {"x": json.loads(json.dumps(t))}}
+    rec = SR.reset_resel(P, {"tag": "new", "partition_types": {"x": t}}, ["x"], tmp_path / "plan.json")["x"]
+    assert "tree relay after a non-tree stage" in rec.get("error", "")

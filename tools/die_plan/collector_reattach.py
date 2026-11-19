@@ -14,7 +14,10 @@ For every type whose collector_tree differs between BASE and CAND this calls lan
 tree -> new tree), which keeps each source's depth (no collector cycle change unless the tree depth changed, then
 reported) and picks the nearest same-depth relay within reach.  Afterwards EVERY type's sources are reach-checked
 against their own collector_tree (<= reach_um, the bind's landing_collector.build_local rule); any miss -> exit 1 and
-no output.  Types whose collector_tree is unchanged are byte-identical; the output keeps CAND's JSON style.
+no output.  BASE is a reference only (old tree + the node each source had on it): the tool writes nothing but the
+node / tap of collector sources and children and collector_root_node; band rects, pin sites and every other field stay
+as CAND has them, each source is reattached from CAND's own site, and the report lists every written field
+(reattached[type].written).  A CAND source with no BASE counterpart (name / child index) -> exit 1.  Types whose collector_tree is unchanged are byte-identical; the output keeps CAND's JSON style.
 
 --sidecar: the strict bind reads the collector SOURCES from the asbuilt clock_landing_table (sidecar
 collector.types[tn].local_sources / children), not from the plan; only the tree comes from the plan
@@ -99,8 +102,57 @@ def _reroot(blc, lc, reach_um):
     return dict(old_node=root, node=best[0][1], shift_um=round(best[0][0], 3), site_um=list(oxy), depth=depth)
 
 
+OWNED = ("node", "tap")          # the only per-source fields this tool writes (plus collector_root_node)
+
+
+def _rows(tn, blc, lc):
+    """CAND's own collector sources / children (geometry, bands, pins: all as in CAND) carrying the reset node they
+    had in BASE (the identity on the old tree): sources matched by name, children by index; mismatch fails closed."""
+    by = {}
+    for s in blc.get("collector_local_sources") or []:
+        if s.get("name") in by:
+            raise ValueError(f"{tn}: duplicate base collector source {s.get('name')}")
+        by[s.get("name")] = s
+    srcs, kids = lc.get("collector_local_sources") or [], lc.get("collector_children") or []
+    bk = blc.get("collector_children") or []
+    missing = [s.get("name") for s in srcs if s.get("name") not in by]
+    if missing:
+        raise ValueError(f"{tn}: collector source(s) {missing[:8]} absent from the base plan")
+    if len(bk) != len(kids):
+        raise ValueError(f"{tn}: {len(kids)} collector children, base {len(bk)}")
+    out = []
+    for grp, pairs in (("local_sources", [(s, by[s.get("name")]) for s in srcs]), ("children", list(zip(kids, bk)))):
+        rows = []
+        for s, b in pairs:
+            c = copy.deepcopy(s)
+            for k in OWNED:
+                c.pop(k, None)
+                if k in b:
+                    c[k] = b[k]
+            rows.append(c)
+        out.append(rows)
+    return out
+
+
+def _write_owned(lc, grp, rows, written):
+    """copy only OWNED fields of the reattached rows into CAND's rows; every write -> written [path, was, now]"""
+    for i, (s, c) in enumerate(zip(lc.get(grp) or [], rows)):
+        for k in OWNED:
+            was, now = s.get(k), c.get(k)
+            if k in c and (k not in s or was != now):
+                s[k] = now
+            elif k not in c and k in s:
+                del s[k]
+            else:
+                continue
+            written.append([f"{grp}[{i}].{k}", was, now])
+
+
 def reattach_plan(base, cand, reach_um=405):
-    """in place on cand -> report {reattached: {type: ...}, over: {type: [(name, node, hop)]}}"""
+    """in place on cand -> report {reattached: {type: ...}, over: {type: [(name, node, hop)]}}.  BASE supplies only
+    the old tree and each source's old node; nothing else is copied from it (FABLE-FIX-KV-HG 11-19: the whole BASE
+    source rows used to replace CAND's, which put the band rect of a moved hard core back at its old place).
+    reattached[type].written lists every field written as [path under landing_contract, was, now]."""
     rep = {"reattached": {}, "over": {}}
     for tn in sorted(cand.get("partition_types") or {}):
         lc = _lc(cand, tn)
@@ -109,21 +161,21 @@ def reattach_plan(base, cand, reach_um=405):
         blc = _lc(base, tn)
         if blc is not None and blc["collector_tree"] != lc["collector_tree"]:
             reroot = _reroot(blc, lc, reach_um)
-            info = dict(tree=copy.deepcopy(blc["collector_tree"]),
-                        local_sources=copy.deepcopy(blc.get("collector_local_sources") or []),
-                        children=copy.deepcopy(blc.get("collector_children") or []),
+            srcs, kids = _rows(tn, blc, lc)
+            info = dict(tree=copy.deepcopy(blc["collector_tree"]), local_sources=srcs, children=kids,
                         # the root (rst_root_n or a local relay) is validated by _reroot above: kept at its name and
                         # site, or re-picked at the old site; the sources then follow the tree from the delivered root.
                         # QC-VIS-RESITE 11-12: an UNCHANGED local root used to fall through to reattach_sources' blanket
                         # "rerooted collector" refusal (slw_stm_v1__cle34a73c3, rst_n_t8) while a MOVED one passed.
                         collector_root_node="rst_root_n")
             r = LCO.reattach_sources(info, lc["collector_tree"], reach_um=reach_um)
-            lc["collector_local_sources"] = info["local_sources"]
-            if "collector_children" in lc or info["children"]:
-                lc["collector_children"] = info["children"]
+            written = []
+            _write_owned(lc, "collector_local_sources", info["local_sources"], written)
+            _write_owned(lc, "collector_children", info["children"], written)
             if reroot:
+                written.append(["collector_root_node", lc.get("collector_root_node"), reroot["node"]])
                 lc["collector_root_node"] = reroot["node"]
-            rep["reattached"][tn] = dict(added_collector_cycles=r["added_collector_cycles"],
+            rep["reattached"][tn] = dict(added_collector_cycles=r["added_collector_cycles"], written=written,
                                          max_source_hop_um=r["max_source_hop_um"],
                                          moved=[x for x in r["sources"] if x["old_node"] != x["node"]],
                                          **(dict(rerooted=reroot) if reroot else {}))
@@ -197,6 +249,9 @@ def main(argv=None):
         rep["sidecar_sha256"] = hashlib.sha256(Path(a.sidecar[1]).read_bytes()).hexdigest()
     rep["sha256"] = hashlib.sha256(Path(a.out).read_bytes()).hexdigest()
     Path(a.report).write_text(json.dumps(dict(rep, verdict="PASS"), indent=1) + "\n")
+    for t, v in rep["reattached"].items():
+        for path, was, now in v["written"]:
+            print(f"  wrote {t}: {path} {was} -> {now}")
     print("COLLECTOR_REATTACH PASS " + " ".join(f"{t}:moved{len(v['moved'])}/+{v['added_collector_cycles']}cyc/"
                                                 f"max{v['max_source_hop_um']:.1f}um" for t, v in rep["reattached"].items())
           + f" sha {rep['sha256'][:12]}")
