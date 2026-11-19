@@ -1,95 +1,97 @@
-# FABLE-TYPE-REDUCE-S81-REST handoff (started 11-19 01:16 PST)
+# FABLE-FIX-S81-GLUE handoff (glue = QC die qwen_compute, design dp_glue / qfd_qc_glue_part)
 
-Scope: S81 families leaf, slice_station, serdes, dsdv_slice_c1x_C, svc_lo/hi_dsdv_svc_rs, kv_leaf (col families: FABLE-TYPE-REDUCE-S81-COL).
-Lane dir: epyc9 /srv/opentallas-scratch2/claude/fable-type-reduce-s81-rest (a2..a12.py analysis scripts, census_*_v2.json, dedup_d8f.json, repo/ lane clone).
+Last update: 2026-11-19 01:10 PST. All kits survived the Fable limit (checked 00:57: 5 ot-run clients alive).
 
-## State 11-19 01:5x PST: Step 0 done, no family passes, nothing running
-- Posts: STEP0 01:2x (serdes PASS and leaf "faster" lines are WITHDRAWN) and RESULT 01:5x (final).
-- Pushed: main f5f0d744f8, tools/precheck/type_census.py + 4 tests (bound RTL by plan module name; traffic_classes, landing_classes,
-  estimate_no_reroute). No plan flag `type_template`, no generator change, no kit, no waiter.
+## State in one paragraph
+Gate read of wave glue attempt_6 (s29q103S4Q9N3): TT -130.39 / 648 ends at GRT. 385 ends = u_record logic depth: FIXED and on
+main. 263 ends are register placement / distance, NOT fixed yet: 5 private kits are testing placement keys. Nothing is adopted
+in the QC wave tree yet; no wave row was touched.
 
-## Why (measured on D8f plan_h2_2249.json, D8e bind RTL, registry 01:17)
-- S81 types split on three position axes: (a) die traffic through the type as ft_slots (no streets; 73 of 75 leaves carry foreign lanes),
-  (b) clock landing cohort (landing_contract + count-aligned strap set), (c) wrapper extras (rst_o export, sid parameter default, tap names).
-- A pin template removes only window positions. Classes with windows re-slotted, no lane moved: leaf 65, slice_station 39, serdes 4,
-  c1x_C 9, svc 13, kv_leaf 5. With the landing cohort: leaf 74, serdes 11, slice_station 46. S81 395 -> 274 (lower bound 51).
-- schema.py ("bus is unbound ... tie-offs are not allowed") blocks a superset FT template until bind / landing / K-strap code supports it.
-- Signed now: slice_station 35 of 46 (7 route, 4 pre-route); every other family here 0.
-- serdes chain facts (for a later event): 4 shore chains; E-form types t2 t14 (0 FT), t1 x2 t16 (2 FT), t3 t15 x2 (4 FT), own bus on slot
-  0 / 1 / 2 of the inner face, FT straight with 8 stations; S-form ends t4 t12 t13. A shift form (own bus on slot 1, W slot 1 -> E slot 0,
-  W slot 0 -> E slot 2) keeps t12 / t13 and the slice_station pins, permutes the W slots of t4, and needs 9 stations on the 450 um jog.
-- leaf floorplan check (a10.py): cores are 34 % of the leaf area; t69's core placement clears the FT station sites of 11 of 75 types, t27's 7.
+## Done (main)
+- 8f62c2edcaad: rtl/qwen_split/qfd_sys_face_record_port_n32.sv regenerated (sha256 919f726936a6), depth 25 -> 13 levels,
+  0 cycles, identical ports (36 source copies, 54 reset leaves), so NO bind / LATCHECK change. Readable source
+  qfd_sys_face_record_port_bal.sv; generator command `bash tools/qwen_split/record32/regen_n32.sh --install`.
+  Proof: one-edge transition + output SAT of the EMITTED graph vs the original source (2018 comparisons, PASS; 3 gate mutants
+  refuted), Verilator lockstep 53,803 checks incl 48 protocol episodes PASS, 3 mutants FAIL. Evidence
+  results/arch/qw_record32_bal_1119.
+- 92b29f6c5791: qfd_sys_face_lctx3_core.sv tcyc + 1 / pos + 1 with kept byte carries (sha256 8fc1850d23f9), proven equal
+  (tools/qwen_split/sysface32/prove_inc_bytes.sh); kept nets survive kit synth (kit C 1_2_yosys.v).
+- Brief corrections: the kit binds the n32 file, not _opt; the digest round is 2 XOR levels, the depth was wide zero checks
+  and 64/80-bit compares in front of priority muxes.
 
-## Open decision (COORD / owner), not started
-S81 slice re-floor with street columns: leaf 75 + c1x_C 9 + kv_leaf 5 -> about 8 types + about 16 FT-only street types; street about 240 um
-(0.6 track use), die x about +6 %, 35 signed slice_station types get new pins, one landing contract per template; 3 to 5 days before the
-first template kit. Recommendation: decide at the first D8g leaf GRT TT read; start only if the FT-heavy leaves (t8 t72 t3 t75 t67) fail on
-congestion classes after the common-logic fixes.
+## Open classes (wave attempt_6 GRT DB, exact gate frame; intel2 /srv/opentallas-scratch2/claude/fable-fix-s81-glue-sta/out)
+Every one of the 263 flops has +295..+760 ps on its Q side (balance.txt): placement, not logic.
+- (a) rom_qr -> tt_pw / dh_prog, 68 ends, -130: ROM at y 450, pin registers at y 1463, tt_pw / dh_prog sit next to the pin
+  registers, one 1.1 mm hop.
+- (b) u_embed_prov.g_rope rope FF memory: mem 104 at -52, rq 38 at -82 (3 HB4 hold buffers on the setup path), u_bout
+  embed_code_q 35 at -50.
+- (c) sys_face obs_fault -116 (1 mm hop). (d) tcyc -92, pos -24 (fixed by 92b29f6c5791). (e) ctx_x 7 at -16,
+  emb_word_data 3 at -13.
+- The wave kit's GRT-basis TT repair died with RSZ-0074 (tt_setup_repair.tcl line 136) at -105.9, so the gate read the
+  unrepaired DB.
 
-## Next for a successor
-- Nothing is pending. If the re-floor is approved: rows = street column per slice half in gen_plan_v2.py, ft_channel_route with "no foreign
-  FT in leaf", uniform landing contract for the leaf template, then one template kit to GRT TT (r712) before the bind.
+## Running: private kits, intel2, goal grt, ot-run 64 GB / 16 thr, started 00:20-00:45
+Base = wave glue attempt_6 gen copy (epyc9 kw43-wave-1109n/.../items/glue/attempt_6/gen). Dirs
+/srv/opentallas-scratch2/claude/fable-fix-s81-glue-kit{,b,c,d,e}/gen/glue, log run_grt.log, README.txt in each.
+- A  kit   record n32 only
+- B  kitb  + OT_GPL_SPARSE_OVERFLOW=0.25
+- C  kitc  B + core incrementers
+- D  kitd  record + incrementers + GLOBAL_PLACEMENT_ARGS reweight {79 64 49 29 21 15}, net weight max 8
+- E  kite  record + incrementers + sparse exit 0.25 + reweight {79 64 49 40 32}, weight max 8
+Wave timing for reference: place ~1 h after synth, CTS TT read ~3 h, GRT ~6-7 h. Expect GRT TT 07:00-08:00.
+Read: postcts_gate_tt.json (setup_wns_est_ps, parasitics global_routing = the GRT gate), tt_setup_measure.log.
+Probe tools: fable-fix-s81-glue-sta/probe/{run.sh,probe.tcl,sum.py} (class table + register positions of any stage ODB);
+keep33.sh keeps each kit's 3_3_place_gp.odb there; balance.tcl = prototype that moves a failing flop toward its source by
+(sQ - sD)/2 (mechanics tested only, numbers not yet meaningful).
 
-## Re-verify after the census s81p_ fix (COORD 11-19, posted)
-- col is bound as rtl/<type>.sv (0 s81p_col* files, 216 present); not affected.
-- Per family: FT slots, buses, internal stations, taps = 1 variant each. Landing contracts differ per position in 10 of 12 families
-  (h9_r2 7, h9_r1 4, p2 4, h10_r1 3, h10_r2 3, p3 3, others 2; p5 and p6 1); count_straps in 5 families; reset tree by position.
-- 0 of 51 template groups mix landing contracts or FT slots. Speed verdict: 51 kits per event vs 216 (4.2x), every family faster.
+## Relay form (COORD order 01:0x: prepare in parallel, first form at GRT TT >= -42 wins)
+- F  kitf  record n32 + RELAY-FORM core + mid_place.tcl + D placement keys, launched 01:08, goal grt.
+  Core variant epyc9 fable-fix-s81-glue-work/lctx3_core.relay.sv (sha256 645ae0a06a54, NOT on main): row decode registers
+  tt_pw_a / dh_prog_a, then tt_pw / dh_prog as a plain relay (+1 cycle on TT pw and seq_dh program rows; only the 3 valid
+  bits reset, rst_bpay region stays 218). Kit-private hook gen/glue/mid_place.tcl (sourced after relay_mid in
+  face_flops.tcl): the relay flops FIRM at the mid-point ROM <-> u_bout pin registers, released with ot_relay_mid.txt.
+  First check: 3_3_place_gp.log line OT_MID_PLACE (a Tcl error there fails the place stage: fix the hook, relaunch).
+- NOT done for the relay form: (1) latency proof: +1 cycle on tt_pw / seq_dh[186:44] program rows vs prog_busy / the receipt
+  ledgers (self-timed by program_obs2, so expected benign, unproven) with the sys_face bench
+  (rtl/test/qwen_split/run_sys_face_native32_protocol.sh needs the INTERMEDIATE wrappers); (2) bind / LATCHECK rows for the
+  two ports; (3) obs_fault relay (the flop is in the bound wrapper, a bind / plan row for QC-PLAN-R3); (4) the mid-point
+  hook as a gen_phys opt-in if F wins. Do not push the relay core before (1) and (2).
+- QC-PLAN-R3 adopts the two pushed RTL files (COORD 01:0x).
 
-## Code state (all on main 994caa6f8c05; off unless a plan sets type_template)
-- tools/fleet/type_template.py: groups / check / flag / credit / records / rommap / view (+ tests). kit_wave: plan probe (PROBE_V 11),
-  select() member skip, template_credit_step (every tick). col_inherit group=. Schema key type_template. tools/fleet/col_template_rows.sh.
-- Push 083b4e3849 ran the whole touched test set green (the 2 enqueue_skip tests pass on current main).
-- Automatic credit: a representative SIGNED on the current block -> records built on the die gen host -> hub
-  ~/coord/autopilot/inherit_records/<die>/<member>__<block>/inherited.json + autopilot/inherit_members.tsv (the counter's file).
-  With no image dir (die option type_template_rom_dir) the via map check is recorded as not done; it does not refuse the credit.
-- rommap on D8e: 216 positions, 51 layouts, 9372 ROM images (35 ROM macros + 8 element cores per col_h9_r1 type), 0 errors
-  (W/rommap_d8e.json). It is a map + check; the via-map-to-GDS writer itself still does not exist (rom_gen emits no GDS).
+## CURRENT STATE 2026-11-19 03:55 PST (rebuilt: between 01:32 and 03:45 this file was overwritten with other lanes'
+## handoffs by a shared scratch file name; the sections above are the 01:01 text, this section replaces everything later)
 
-## Merge rows below 51 (plan level, measured on D8e df7446e48ba9; W/rows/d8e_tt = plan_tt.json 944ba058bbe2, sidecar_tt.json 60a304c234a7)
-bash tools/fleet/col_template_rows.sh TREE BASE_PLAN SIDECAR OUT [--all-members]
-- A reset keep-outs union (col_typemerge keepouts): 128 types get 326 more reset outs (max 4 per type), left open and declared. 51 -> 42.
-- C collector superset, collector-form members only, --keep-taps (cland_col_superset): one landing contract per family, unused children tied.
-  -> 25 plan layouts. Without --keep-taps the tap union gives 10 schema errors (added tap spacing, col_h9_r2 / p2), so taps stay per type.
-- B one ring depth per sibling group and bus: 63 ports raised (depth 4 -> 8) on 29 r0 types; count_straps width follows at CA compose. -> 20.
-- --all-members (plain tiles take the family contract too, R3b): 20 plan layouts, 15 after B. Costs landing pins/cells on 150+ plain tiles: not for D8h.
-- Left after A+B+C: h9_r2 4, h9_r1 2, h10_r1 2, h10_r2 2, h10_r0_p1 2, p2 2 (two core placements), others 1.
-- Schema validate of the result: 0 errors. NOT run: CA compose, bind, G0, LATCHECK, any kit. The bound-RTL key can only be counted after the
-  bind; 20 is the plan-layout count and assumes the keep-outs union makes the reset trees equal (the only RTL difference found inside a layout
-  today, plus one cland monitor in col_h10_r2 that the superset covers).
-- Cost of the rows for closure: 0 cycles; more reset out pads and tied monitor pins on 128 / 78 types; deeper CA rings on 29 types (more slot flops).
+### On main
+- 8f62c2edcaad record port n32 depth 25 -> 13 (0 cycles). 92b29f6c5791 lctx3 core tcyc / pos kept-byte-carry incrementers.
+- 5a45c6152e06 lctx3 core program-row relay behind define OT_QC_SF_PROG_RELAY (default off). Proof
+  tools/qwen_split/sysface32/prove_relay.sh OLD_CORE GLUE_KIT_RTL_DIR: off == old core, on == old core + one-cycle relay on
+  tt_pw and seq_dh[186:44]; both SAT no model. No lane K change (latency.lanes.glue__tt_pw_pw / glue__seq_dh_dh stay 9).
+  Row + package: lanes/handoff/FABLE-FIX-S81-GLUE-relay/ (also the obs_fault row request). With QC-PLAN-R3 for N4.5.
+- 1fd3d8bd5139 PLACE-REGION: plan key partition_types.<type>.place_regions [{name, inst_re, util 0.55, centre_um | near_re}],
+  gen_phys install_place_regions, tools/die_plan/place_regions.tcl, test_place_regions.py. Default util STILL 0.55.
+  Pushed --no-test (test_gen_phys_cap_budget ...explicit_cells... already fails on main; WAVE-PILOT has it).
 
-## For S81-DIE-R3 (D8h)
-1. Tree tools at main 994caa6f8c05 or later.
-2. Rows: col_template_rows.sh TREE <D8g plan + trunk rows> <its landed sidecar> OUT  -> plan_tt.json + sidecar_tt.json; then the normal
-   CA compose, strict bind, LATCHECK, G0 vs control. (Flag only, no merge: type_template.py flag BASE OUT "col_h*".)
-3. After the bind: type_template.py check plan --bind-rtl <bind>/rtl --repo TREE  (expect 216 positions, 0 FAILED; groups = kits to build)
-   and type_template.py rommap ... --out rommap.json (0 errors).
-4. r712 proof kit: one representative of the largest group (col_h9_r1) to GRT TT.
-5. Wave: 216 col rows become one per group; members show as skip "TYPE-TEMPLATE member"; credit is automatic.
+### Glue private kits (intel2 /srv/opentallas-scratch2/claude/fable-fix-s81-glue-kit{,d,e,f}; goal grt)
+- A (record only, control): post-CTS TT measure -24.02 / tns -72. D, E (timing-driven keys), F (always-on relay form +
+  mid-point hook; the WINNER at placement: pre-CTS estimate -10 ps, no tt_pw / dh_prog / u_record end left): all in CTS,
+  no TT read yet. Cancel D and E at their first CTS read unless it beats F (COORD).
+- Cancelled: B, C (sparse exit: no gain), G. FAILED: H (two 55 % regions) at 3_5 DPL-0033 on ~34 u_record cells; regions
+  were sized before the place resize. LEAF / COLL-CORE lanes warned to use util 0.35-0.40.
+- The wave glue attempt_6 gen dir on epyc9 is gone: build new glue kits from an existing private kit's gen files.
+- Read: postcts_gate_tt.json (parasitics global_routing = the GRT gate), tt_setup_measure.log. Probe tools:
+  fable-fix-s81-glue-sta/probe/{probe.tcl,sum.py,p_any.sh}.
 
-## ROM via map to GDS at die assembly (main e1f0efbdd62d) - lane closed here
-- The writer already existed (tools/mem_compiler/rom_viamap_gds.py, 8dfe82f36f: VIA1 21/0 overlay per unique image, merge by DEF);
-  my earlier "no tool" line was wrong. Added: merge-map / verify-map (driven by type_template rommap, for one representative layout
-  per group), rom_gen.py gds (one image, read back), all-zero image verify fix.
-- Die assembly: type_template.py rommap ... --out R.json ; rom_viamap_gds.py merge-map --rommap R.json --macro <ROM datasheet json>
-  --viamap-dir D --top TOP [--die-gds in.gds] --out out.gds ; verify-map the same with --die-gds out.gds (exit 1 on any difference).
-- Check (no col layout is signed, so not against a signed layout): D8e map, frame u_f_0L01 at fW0_p1_b0/b1/b2 (col_h10_r0_p1, r1, r2
-  templates, MX), 112 ROM macros, images = results/arch/s81_rate3_admission_1020/aproj_slice_frames/u_f_0L01/gold: merged 112,
-  18 unique overlays, readback PASS 112/112. epyc9 W/gds/s81_0L01_via1.gds.
-- Where images are: rom_gen personalise / rom_content.write_viamap write <INSTANCE>.viamap.hex. In the S81 tree only that 10-20
-  slice-frame run has them (7 frames of 72, about 295 files each, named u_f_0L01_c1_5 for die instance u_f_0L01.u_r0.u_c1_5; the tool
-  accepts both names). They are sparse test content (frame 0L01: 82 of 112 all zero, 120 vias). The release weight images for the 72
-  frames are not in the tree: someone must export them before a real die merge.
-- Open: (1) array origin inside the ROM macro is assumed (decoder width, 0) and the via sits at the cell centre: no base ROM layout
-  exists to check it against; (2) the 8 element cores per type hold their ROMs inside the core layout: counted, not stamped;
-  (3) no real die GDS was merged (overlay-only stream).
+### tt_ctlm (QC type) private kits (intel2 fable-fix-s81-ttctlm-kit{a,b}; --priority proof; in 3_5 detailed placement)
+- a = u_core fence (180,30)-(400,258) um + timing-driven keys; b = a + ABC-resynthesised u_core netlist
+  (fable-fix-s81-glue-sta/ttctlm/regen/new.sv sha256 c5017230f4ed, 16 levels, abc cec equivalent to c09b67b7cc1c, all
+  20,478 flop lines verbatim; tools tojson.py / abc_s8.script / regen.py / tocomb.py there, NOT in the repo).
+  Zero-wire STA: base +18 ps, resynth +346..+402. Fence honoured at global placement (99.2 % inside).
+- QC-PLAN-R3 (03:5x): the QC partition is 31 % utilised (my 10 % figure was std cells over the whole kit area), attempts
+  5 / 7 failed the pre-route check on port-register clock latency 290-294 vs 250 ps (2,734 port registers), attempt 8 died
+  in GRT exit 247. So read pinreg_mean_ps in postcts_gate_tt.json of kits a / b first; a fence does not address it.
+- Winner -> main: replace rtl/qwen_dv/headprep13/corepub39/qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_1.sv, pin the sha in
+  tools/qwen_split/headprep_corepub_source.py CONTRACTS, add the regen tools, trailer Fixes-Items: qwen_compute/tt_ctlm*.
 
-## 11-19 03:3x PST
-- p1 (sle_ctl) in 4_1_cts at 03:19, no TT number yet; watcher alive. Wave: all 7 sle_ctl relaunched 01:19-01:56 on N4.3 / N4.3G (place).
-- p2 was NOT a proof: st_b u_cland_origin is plan-sited (landing_placement.tcl rect from clock...origin_rect_um, landing_place.py 572-597);
-  the hook kept it ("origins 1 sited 0 kept_firm 1"). p2 stopped 03:24 (run_p.sh pid 1032744, container d8e1a5d32291, watcher 1093956).
-  The item_env on the two st_b wave items is a no-op for this class (harmless).
-- Real fix = plan row: lanes/handoff/FABLE-FIX-QC-rows-stb-origin.json (origin_rect_um -> [219.96,786.26,237.24,803.54] for sle_st_b).
-- p3 = same type as p2, landing_placement.tcl origin rect edited to that value (copy+mv before launch); started 03:25; watcher autopost.sh p3.
-  Read: OT_CLAND / landing placement lines in 3_3, then CTS TT, then GRT TT end u_cland_rstart_tx/q (base -106.24 on the sibling).
+### Clones
+Lane clone epyc9 /srv/opentallas-scratch2/claude/fable-fix-s81-glue (HEAD = my last push 1fd3d8bd5139 line). Work dir
+epyc9 fable-fix-s81-glue-work (relayproof2/, kitrtl/). Local scratch files of this lane live under scratchpad/fxglue/ only.
