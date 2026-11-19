@@ -197,3 +197,18 @@ OWNER FABLE-FIX-S81-LEAF owns s81sl_leaf__t* and s81sl_kv_leaf__t* (all), listed
 
 ## 11-19 04:5x PST: RESET-KEY pushed (see post). Proof = S81-DIE-R3 t16 generation with main tools; then regenerate tap rows with the patched reach_fix
 (they then carry reset.consumer_sites_um and need no bind). Pitfall found: the key must hold EXACT floats (rounding 901.8000000000001 -> 901.8 broke the identity).
+
+## 11-19 07:5x PST (COORD 07:50 items a, b, c)
+(a) reach_fix re-records clock.reset_tree_anchor for every changed type: main 0d74b55b8937. Real run on D8e t47 / t75 (epyc10 taps47c/): both applied,
+    anchor re-recorded (t47 5 relays, 4 moved; t75 6 relays, 6 moved), no error. D8h already carries S81-DIE-R3 own anchor fix (plan h3); my rows file is NOT regenerated.
+    t16 reset-key generation: identity passes on the D8e tree with main tools (04:5x); a full kit still needs a tree whose views match main tools (D8g2 / D8h).
+(b) Lever 8 repeating values (my STA on the wave 4_cts.odb, TT, placement RC; epyc10 proof/l8_t60, proof/l8_t74):
+    about -1,115 (t60 -1115.15; t31 same value): u_vsw/o_f -> u_vs/sw_fi (and o_d[*] -> sw_ri[*], 64 ends, -1090): core vsw output straight into core vs input,
+      596 um, NO station (cst_swr is depth 0 in the bound RTL: plain wire), launch at 633 ps inside vsw, arrival 2,076. Fix = one station on the swr link (plan
+      internal_stations core:vsw.o -> core:vs.sw_ri, +1 cycle, bind K), as t25 / t27 have (u_cst_swr_gd_s_0).
+    about -840 (t74 -844.55; t2 / t6 -837): vp write port XR stage, u_vp.g_wr1.u_w.g_xr.sw_a_q[0] -> wdo_q[*][*] (246 ends on t74, median -647): the address
+      register decodes into the 2 x 128 write-data registers; start and end 35 um apart but 1,570 ps of data path, plus 180 ps launch-late clock (641 vs 462).
+      Path detail not printed yet (run report_checks -to that endpoint).
+(c) Face bank: 0 rows FAILED with that text in kit_wave_stages.tsv now (the 10 are D8e / D8f stride-2 rows, superseded). Structural fix pushed anyway:
+    main 0ccfdf3d150d, face_flops.tcl falls back to row stride 1 for a register the comb cannot hold (stop remains if stride 1 does not fit).
+OWNER: FABLE-FIX-S81-LEAF owns s81sl_leaf__t* and s81sl_kv_leaf__t* (all).
