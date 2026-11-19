@@ -593,9 +593,15 @@ proc ff_put_near {f x y} {
     # NS-BANK-FALLBACK 11-19 (FABLE-FIX-S81-LEAF; S81 leaf D8e: 14 types stopped here at row stride 2, all placed at stride 1):
     # the staggered comb is a congestion aid, never a reason to stop.  A register that finds no comb cell inside the pin
     # retention takes the nearest free cell of the full grid (stride 1) of the same three columns; counted in ff_ns_fallback.
+    # NS-BANK-WIDE 11-19 (FABLE-FIX-S81-LEAF; S81 leaf t14 / t28 / t67 on D8g stopped here even at stride 1): three columns are
+    # a preference, not the retention.  When they hold no free cell, a last pass takes the nearest free stride-1 cell of up to
+    # 12 columns either side, still inside the same 27-um pin retention; counted in ff_ns_wide.  Kits that place in the first
+    # two passes are unchanged.
+    foreach ff_try_cols [list {0 1 -1} {2 -2 3 -3 4 -4 5 -5 6 -6 7 -7 8 -8 9 -9 10 -10 11 -11 12 -12}] {
     foreach ff_try_stride [expr {$ff_ns_stride > 1 ? [list $ff_ns_stride 1] : [list $ff_ns_stride]}] {
+    if {[llength $ff_try_cols] > 3 && $ff_ns_stride > 1 && $ff_try_stride != 1} continue
     for {set depth $ff_ns_inset} {$depth < 120} {incr depth} {
-      foreach dc {0 1 -1} {
+      foreach dc $ff_try_cols {
         set c [expr {$c0+$dc}];set r [expr {$nsface eq "N" ? $rmax-$depth : $depth}]
         if {$c<0 || $c>$cmax || $r<0 || $r>$rmax || ($depth-$ff_ns_inset+$c)%$ff_try_stride || [dict exists $ff_gocc "$c,$r"] || [ff_pair_row_blocked $r]} continue
         set cx [expr {$ff_x0+$c*$ff_cpitch}];set cy [expr {$ff_y0+$r*$ff_rh}]
@@ -607,8 +613,11 @@ proc ff_put_near {f x y} {
         $f setLocation $cx $cy;$f setPlacementStatus FIRM
         if {$ff_try_stride != $ff_ns_stride} { global ff_ns_fallback; if {![info exists ff_ns_fallback]} { set ff_ns_fallback 0 }; incr ff_ns_fallback
           if {$ff_ns_fallback == 1} { puts "OT_FACE_FLOPS NS bank fallback: row stride $ff_ns_stride has no cell within the pin retention for [$f getName]; using stride 1 for such registers" } }
+        if {[llength $ff_try_cols] > 3} { global ff_ns_wide; if {![info exists ff_ns_wide]} { set ff_ns_wide 0 }; incr ff_ns_wide
+          if {$ff_ns_wide == 1} { puts "OT_FACE_FLOPS NS bank wide: no free cell in the 3 pin columns within the pin retention for [$f getName]; using up to 12 columns either side for such registers" } }
         return [list $cx $cy]
       }
+    }
     }
     }
     error "NS face bank cannot fit within 30um pin retention: [$f getName]"
