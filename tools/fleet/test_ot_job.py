@@ -590,3 +590,8 @@ class Slim(Tmp):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def test_default_root_in_a_spec_is_re_picked_by_free_space():
+    src = open(os.path.join(os.path.dirname(__file__), "ot-job")).read()
+    assert "if os.path.normpath(root) == DEFAULT_ROOT:" in src and "root = best_job_root(DEFAULT_ROOT)[0]" in src.split("if os.path.normpath(root) == DEFAULT_ROOT:")[1][:400]

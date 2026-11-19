@@ -446,6 +446,8 @@ def reap_stale_refs(store, jobdirs, now=None, say_=None):
 def run(spec, tag, cmd, bwrap=True):
     host = socket.gethostname()
     root = spec.get("root") or os.environ.get("OT_JOB_ROOT") or best_job_root(DEFAULT_ROOT)[0]
+    if os.path.normpath(root) == DEFAULT_ROOT:      # JOBROOT-S3 11-18: the default scratch2 root written into queued specs (ot-run-sealed before the fix, kits queued for hours) is a preference, not a pin:
+        root = best_job_root(DEFAULT_ROOT)[0]       # a job STARTING now takes the root with the most usable space (scratch2 stays unless scratch3 has 20 GB more); an explicit other root is kept
     J = os.path.join(os.path.realpath(root), f"{spec['name']}-{tag}")
     store = S.default_store(J)
     if os.path.isdir(os.path.realpath(root)):
