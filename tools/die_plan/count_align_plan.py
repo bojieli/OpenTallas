@@ -340,6 +340,13 @@ def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edg
         for x, v in par.items():
             if v and v[1]["_nv"] == 1 and v[1]["_dist"] - sync_ap < smax:
                 v[1]["_nv"] = 2
+                if v[1]["_edge"] == "fall":
+                    # KV-CROSSING-1119: an ambiguous start edge is read on the RISE sample (die_sta_related fails an
+                    # ambiguous fall-edge tree crossing closed: its window assumes fall = rise + T/2)
+                    _r = v[1]
+                    _r["_edge"], _r["_off"] = "rise", 0.0
+                    _r["_dist"] = boundary_dist(_r["lo"], _r["hi"], T, 0.0)
+                    _r["_s"] = (_r["lo"], _r["hi"], _r.get("d_ps", 0.5 * (_r["lo"] + _r["hi"])))
     # BFS order down the tree
     kids = defaultdict(list)
     for x, v in par.items():
