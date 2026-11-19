@@ -604,6 +604,17 @@ module qfd_sys_face_lctx3_core #(
     // ================================================================ token loop
     reg  [17:0] tok, pos;
     reg  [31:0] tcyc;
+    // FABLE-FIX-S81-GLUE 11-19: tcyc + 1 and pos + 1 with the byte all-ones terms and the byte carries on kept nets.
+    // The mapped QC glue netlist rippled the whole 32-bit carry behind the run enable (11 OR gates + XOR, TT -92 ps on
+    // tcyc[31:27], -24 ps on pos[17:16]); a kept net is a mapping boundary, so the longest carry is now one byte.
+    // Same value: the carry into byte k is every lower byte all ones (tools/qwen_split/sysface32/prove_inc_bytes.sh).
+    (* keep *) wire [2:0] tcyc_b1 = {&tcyc[23:16], &tcyc[15:8], &tcyc[7:0]};
+    (* keep *) wire [3:1] tcyc_c  = {&tcyc_b1[2:0], &tcyc_b1[1:0], tcyc_b1[0]};
+    wire [31:0] tcyc_inc = {tcyc[31:24] + {7'd0, tcyc_c[3]}, tcyc[23:16] + {7'd0, tcyc_c[2]},
+                            tcyc[15:8] + {7'd0, tcyc_c[1]}, tcyc[7:0] + 8'd1};
+    (* keep *) wire [1:0] pos_b1 = {&pos[15:8], &pos[7:0]};
+    (* keep *) wire [2:1] pos_c  = {&pos_b1, pos_b1[0]};
+    wire [17:0] pos_inc = {pos[17:16] + {1'b0, pos_c[2]}, pos[15:8] + {7'd0, pos_c[1]}, pos[7:0] + 8'd1};
     reg         armed_fault;
     wire        face_fault;
     // QC-CBGLUE-1116: the token go's own copy of the face fault (face_fault_go == face_fault every cycle; see cal_fault_go)
@@ -636,13 +647,13 @@ module qfd_sys_face_lctx3_core #(
             if (t_go) begin t_running_q <= 1'b1; tcyc <= 32'd0; end
             else begin
                 if (ev_end || halt) t_running_q <= 1'b0;
-                if (t_running_q) tcyc <= tcyc + 32'd1;
+                if (t_running_q) tcyc <= tcyc_inc;
             end
             if (ev_end && t_run) armed_fault <= 1'b1;                // END must be the token calendar's last entry
             if (t_running_q && !t_run && !ev_end && !t_go && !halt && tstart_q == 2'd0) armed_fault <= 1'b1;   // T stopped without END
             // context receive (record port registers it one edge after the slot): HOST token / position
             if (ctx_slot_q && host_epoch_valid) begin tok <= host_tag[36:19]; pos <= {5'd0, host_tag[18:6]}; end
-            else if (ev_res) begin tok <= seq_dc[49:32]; pos <= pos + 18'd1; end
+            else if (ev_res) begin tok <= seq_dc[49:32]; pos <= pos_inc; end
         end
     end
 
