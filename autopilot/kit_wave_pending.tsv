@@ -80,3 +80,14 @@ c92647a21554	src	s81_head	hd_host@2	KW-FIX-22	KW-FIX-22 10:3x COORD 10:2x (5): s
 3761570a71ce	src	qwen_compute	sle_su_c@6	KW-FIX-22	KW-FIX-22 11:2x BIND_STALE class fix: canonical native re-bind bind_qc_g (native_topology.json) -> ONE QC batch
 3761570a71ce	src	qwen_compute	slw_stm_v1__cl05fc43f7__cl389df4e9@13	KW-FIX-22	KW-FIX-22 11:2x BIND_STALE class fix: canonical native re-bind bind_qc_g (native_topology.json) -> ONE QC batch
 3761570a71ce	src	qwen_compute	slw_stm_v3@8	KW-FIX-22	KW-FIX-22 11:2x BIND_STALE class fix: canonical native re-bind bind_qc_g (native_topology.json) -> ONE QC batch
+22c217df540	hub	s81	col_h10_r0_p1__t1__cl574cc59d__pv67036687@10	S81-FAILED-TRIAGE-1119	S81-FAILED-TRIAGE-1119 11-19: queue FAIL rc 247 (killed mid-stage, no design error in log): infra relaunch
+22c217df540	hub	s81	col_h10_r0_p1__t1__cl574cc59d__pvf60ac9dc@12	S81-FAILED-TRIAGE-1119	S81-FAILED-TRIAGE-1119 11-19: queue FAIL rc 247 (killed mid-stage, no design error in log): infra relaunch
+22c217df540	hub	s81	col_h10_r0_p1__t1__cl911743eb@8	S81-FAILED-TRIAGE-1119	S81-FAILED-TRIAGE-1119 11-19: queue FAIL rc 247 (killed mid-stage, no design error in log): infra relaunch
+22c217df540	hub	s81	col_h9_r0_p1__t1__pvb3e2a60a@8	S81-FAILED-TRIAGE-1119	S81-FAILED-TRIAGE-1119 11-19: queue FAIL rc 247 (killed mid-stage, no design error in log): infra relaunch
+22c217df540	hub	s81	col_h9_r0_p1__t1__pvf9acce4c@7	S81-FAILED-TRIAGE-1119	S81-FAILED-TRIAGE-1119 11-19: queue FAIL rc 247 (killed mid-stage, no design error in log): infra relaunch
+22c217df540	hub	s81	col_h9_r1__t1__cl49d7a23e__pv5bdf9f51@3	S81-FAILED-TRIAGE-1119	S81-FAILED-TRIAGE-1119 11-19: queue FAIL rc 247 (killed mid-stage, no design error in log): infra relaunch
+22c217df540	hub	s81	dsdv_slice_lepw_mus_LP__t2@27	S81-FAILED-TRIAGE-1119	S81-FAILED-TRIAGE-1119 11-19: queue FAIL rc 247 (killed mid-stage, no design error in log): infra relaunch
+22c217df540	hub	s81	ot_s81sl_kv_leaf__t3@11	S81-FAILED-TRIAGE-1119	S81-FAILED-TRIAGE-1119 11-19: queue FAIL rc 247 (killed mid-stage, no design error in log): infra relaunch
+22c217df540	hub	s81	ot_s81sl_leaf__t22@9	S81-FAILED-TRIAGE-1119	S81-FAILED-TRIAGE-1119 11-19: queue FAIL rc 247 (killed mid-stage, no design error in log): infra relaunch
+22c217df540	hub	s81	ot_s81sl_leaf__t46@9	S81-FAILED-TRIAGE-1119	S81-FAILED-TRIAGE-1119 11-19: queue FAIL rc 247 (killed mid-stage, no design error in log): infra relaunch
+22c217df540	hub	s81	ot_s81sl_leaf__t70@10	S81-FAILED-TRIAGE-1119	S81-FAILED-TRIAGE-1119 11-19: queue FAIL rc 247 (killed mid-stage, no design error in log): infra relaunch
