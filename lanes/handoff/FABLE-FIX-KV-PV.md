@@ -1,3 +1,21 @@
+# FABLE-FIX-KV-PV handoff, status 2026-11-19 16:25Z (newest first; SUPERSEDES the 13:40Z and 12:55Z sections below)
+## One timing-only kv3_pv_v8 proof kit RUNNING. All private die binds RED (4 pv errors fixed on main, 2 hgi_v1 errors are in the control too). No TT number.
+- Private trees epyc7 + epyc10 /srv/opentallas-scratch2/claude/fable-fix-kv-pv-1119/compose/: tree2 dense 300-um +843 (plan 3e5f74e1cf88),
+  tree3 route-priced +500 (6f99ce9d8336, bound only), tree4 = D25e form from cbc-rules kv_pv_p2p.json, 128 lanes +464, astk lanes 0,
+  pads 10/10, V-D-H 0 (a04c96f9ee3a). All PRE + G0 0 errors vs D25c. tree4 G0 has +32 hop>405 warnings from the file counts.
+- Binds: tree2 and tree4 RED with 6 EMIT: 4 pv "reset relay rst_n_t<N> not found" (v2, v5n, v6n, v7) = emitter gap of
+  reset.consumer_sites_um, FIXED on main 83494dde2c1 (lane clone epyc10 fable-fix-kv-pv-resetkey); 2 kv3_hgi_v1 raw Q errors = same as
+  the D25c control (not ours; fix = d25d4 with FABLE-FIX-KV-HG / KV-D23-COMPOSE). R8 FAIL = control baseline, line-identical.
+  LATCHECK cannot run on any KV bind until the hgi_v1 errors are gone.
+- Kit v8b (dense form), TIMING-ONLY, die bind RED: ot-run unit oth-ubuntu-796442-1795105396 on epyc8, --priority proof, goal grt, kit dir
+  compose/kit/v8b/gen/kv3_pv_v8 (written files return to epyc10), client log intel2 ~/tmp/ffkpv/compose/kit_v8b.log. Built from a
+  PRIVATE bind copy (error list emptied, stub bound top) because the component-proof path refuses a red bind.
+- Kit v8d (tree4, D25e form): kit-rtl running on epyc10 since 16:19:59Z, launches by itself.
+- Rebind of tree4 with 83494dde2c1 ported: epyc10, gate compose/bindgate4b, since 16:19:59Z; expect 2 hgi_v1 errors left.
+- Read results only from tt_setup_measure logs, 4_cts_post_hook.rpt, 5_global_route.tt.rpt; read GRT markers near cl_ft0_i (1978-2160, 237-432).
+- Handover pack compose/pack (tree4 form) is NOT to be taken yet: G0-clean, not bind-clean, unproved. T/C/D tool patch not on main.
+- Next: rebase the D25e form on d25d4 when live; rebind; LATCHECK; hand over; push T/C/D patch; then family kits, sign-off, export.
+
 # FABLE-FIX-KV-PV handoff, status 2026-11-19 13:40Z (newest first; SUPERSEDES the 12:55Z section below: tree/plan 85a1a20ea9b7 is dead)
 ## Proof tree = compose/tree2 (reset.consumer_sites_um form). PRE + G0 PASS. Bind RUNNING. Kit NOT started. No TT number.
 - epyc7 /srv/opentallas-scratch2/claude/fable-fix-kv-pv-1119/compose/tree2: plan 3e5f74e1cf88, asbuilt 044908412a29, built from live D25c
