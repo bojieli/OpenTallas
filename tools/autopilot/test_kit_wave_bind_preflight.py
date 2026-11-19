@@ -65,7 +65,8 @@ def test_reset_scope_is_forwarded():
     assert p.calls[0]["scope"] == "selected"
 
 
-def test_probe_code_runs_the_source_kit_topology(tmp_path):
+def test_probe_code_runs_the_source_kit_topology(tmp_path, monkeypatch):
+    monkeypatch.setenv("OT_BIND_PROBE_RT", str(tmp_path / "no_rt"))      # no rt copy on this host: the die src tree is used
     dp = tmp_path / "src" / "tools" / "die_plan"
     dp.mkdir(parents=True)
     (dp / "kit_topology.py").write_text(

@@ -334,3 +334,9 @@ def test_wave_eco_prints_one_summary_line_per_pass():
     assert len(lines) == 1 and "1 candidate(s)" in lines[0] and "no tag tools" in lines[0]
     AR.eco_summary(ap, {}, [])
     assert "0 DONE-NEAR-MISS candidates" in lines[1]
+
+
+def test_bind_preflight_probes_import_the_rt_launch_trees_kit_topology():
+    assert "rt/current/tools/die_plan" in KW.PROBE_BIND and "kit_topology.py" in KW.PROBE_BIND
+    assert KW.PROBE_BIND.index("rt/current") < KW.PROBE_BIND.index("import kit_topology")      # rt copy first, die src tree only as the fallback
+    assert "rt/current/tools/die_plan/kit_topology.py" in KW.PROBE_BIND_SIG                    # the verdict cache follows the same file

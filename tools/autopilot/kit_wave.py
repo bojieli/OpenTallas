@@ -9121,7 +9121,10 @@ try:
         os.environ["OT_NATIVE_RESET_SCOPE"] = a["scope"]
     if a.get("producer"):
         os.environ["OT_NATIVE_PRODUCER_CONTEXT"] = a["producer"]
-    sys.path.insert(0, str(Path(a["src"]) / "tools" / "die_plan"))
+    # COORD 11-19 (FABLE-FLOW-1150 D: 76 kit_topology BIND_STALE fails / 75 items, all on d8g, preflight green): the kit_topology STAGE runs the rt launch tree's kit_topology.py,
+    # not the die src tree's; the preflight imports the same copy (rt/current) when it exists on the host, else the die src tree
+    _rt = os.environ.get("OT_BIND_PROBE_RT") or "/srv/opentallas-scratch2/claude/rt/current/tools/die_plan"      # rt/current/tools/die_plan
+    sys.path.insert(0, _rt if os.path.isfile(_rt + "/kit_topology.py") else str(Path(a["src"]) / "tools" / "die_plan"))
     import kit_topology as kt
     raw = json.loads(Path(a["plan"]).read_text())
     ab = a.get("asbuilt") or None
@@ -9139,7 +9142,8 @@ from pathlib import Path
 a = json.loads(sys.argv[1])
 h = hashlib.sha1()
 try:
-    paths = [a["plan"], str(Path(a["src"]) / "tools" / "die_plan" / "kit_topology.py"), a["bind_out"], a.get("asbuilt") or ""]
+    _rt = (os.environ.get("OT_BIND_PROBE_RT") or "/srv/opentallas-scratch2/claude/rt/current/tools/die_plan") + "/kit_topology.py"      # rt/current/tools/die_plan/kit_topology.py
+    paths = [a["plan"], _rt if os.path.isfile(_rt) else str(Path(a["src"]) / "tools" / "die_plan" / "kit_topology.py"), a["bind_out"], a.get("asbuilt") or ""]
     n = 0
     for p in paths:
         if not p:
