@@ -4,49 +4,7 @@
  "date": "2026-11-19",
  "measured_on": "cbf_q00_s2 kit intel1 .../s29q103S4Q9N4/items/cbf_q00_s2/attempt_2/gen/cbf_q00_s2/run/results/asap7/dp_cbf_q00_s2/base/4_cts.odb (TT -1093.18 worst u_bout_bc_o01/q[162])",
  "cause": "no station on the b_d -> bc_o01 path: x_0_1 u_st.b_d[162] at (547.6,923.0) to u_bout_bc_o01/q[162] at (28.1,2524.1), 2107 um Manhattan, 28 repair buffers, 1,820 ps",
- "plan_rows": [
-  {
-   "op": "append",
-   "path": "partition_types.cbf_q00_s2.internal_stations",
-   "value": {
-    "conn": "bus:bc_o01",
-    "from_um": [
-     547.6,
-     923.0
-    ],
-    "to_um": [
-     48.9,
-     2531.52
-    ],
-    "regs_um": [
-     [
-      240.7,
-      967.3
-     ],
-     [
-      83.5,
-      1161.3
-     ],
-     [
-      82.5,
-      1511.5
-     ],
-     [
-      81.4,
-      1861.6
-     ],
-     [
-      80.4,
-      2211.8
-     ]
-    ],
-    "bits": 516,
-    "launch": "u_u_fab_u_x_0_1.u_st.b_d",
-    "capture": "u_bout_bc_o01",
-    "note": "SONNET-FIX-QC lever 6: 5 FIRM stations, hops 351 um (<=405); +5 lane cycles on bc_o01, counted in fixed_cycles (plan latency row for the bc_o01 lane is needed)"
-   }
-  }
- ],
+ "plan_rows": [],
  "hops_um": 351.2,
  "waypoints_um": [
   [
@@ -69,5 +27,24 @@
  "not_verified": [
   "route waypoints read from the repair-buffer chain positions (wire308515 83.8,986; wire289768 78.8,1018; wire289763 78.6,1488; wire289754 65.5,2336); site free of hard cores NOT checked; lane latency / LATCHECK for bc_o01 not run",
   "bit 162 only was traced; same b_d[*] -> bout path is 516 bits wide (tap_d[0] of x_0_1 is -777 on the same class and is a second path, not covered by this row)"
- ]
+ ],
+ "status": "WITHDRAWN 11-19 (COORD): QC-PLAN-R3 plan-based bc_o01 sites (6 FIRM stations, handoff 83276542 / post fa6cd31d) are the ones for N4.6d. This file keeps only the measured launch point.",
+ "measured_launch_um": {
+  "u_u_fab_u_x_0_1.u_st.b_d[162]": [
+   547.6,
+   923.0
+  ],
+  "u_x_0_1.u_st.tap_d[0]": [
+   593.8,
+   636.5
+  ],
+  "u_x_0_0.u_st.b_d[162]": [
+   594.6,
+   722.9
+  ],
+  "sink u_bout_bc_o01/q[162]": [
+   28.1,
+   2524.1
+  ]
+ }
 }
