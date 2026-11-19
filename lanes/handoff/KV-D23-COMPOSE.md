@@ -2,7 +2,33 @@
 
 Work dir epyc7 /srv/opentallas-scratch2/claude/kv-d23-compose (lane clone wt/ = sparse main worktree). Hub logs intel2 ~/tmp/kvd23c.
 
-## Status 2026-11-19 15:15Z (read this first; supersedes 14:10Z)
+## Status 2026-11-19 21:30Z (read this first; supersedes 15:15Z)
+LIVE = KV-D25d = d25d4, applied bind-first 20:39Z. Receipt: lanes/handoff/qwen_kvsys_atomic_apply_1795120745379255041.json.
+- Bind of record: kw45/src_kv_pin_eb1e73448bd0_hg10_a1e1d4d0_tb3c4d97_d25d4_bind_1119194238. It is sealed and on epyc7/8/9/10, intel1 and epyc2.
+- gen_hosts: epyc8, epyc9, epyc10, intel1, epyc2 (commit 932697f4bae; COORD dropped epyc7).
+- bound_trees = [KV-D24 D24c]. The stray KV-D25c entry, which paired the D25c plan with the D24c bind, was removed (110b93ab684).
+- Driver: intel2 ~/tmp/kvd23c/apply_d25.sh (env HOSTS, BGH, BIND_DEST, RT; rt/0017 is gone, use rt/dcd56363d450).
+
+D25e: STAGED, G0 running (W8/d25eg0gate, baseline d25d4).
+- Tree kw45/src_kv_pin_eb1e73448bd0_hg11_a5a8c6b9_tdcd5636_d25e, plan a5a8c6b96e5f, tools main dcd56363d450 (includes 041f1eefb09 and 83494dde2c1).
+- Builder: W8/build_d25e.py, run with SKIP_BINS=1 CT_PC_FROM=W8/d25e_in/coretap_pc/rows.json RD_REPORT=W8/d25e_in/relay_depth/report.json. Log W8/build_d25e.log; report W8/d25e/build_report.json.
+- Contents:
+  - E2: lef/lib of the signed pc masters on 48 kv3_pc* rows (views installed under kv_pcsplit_views_1119).
+  - CORETAP: 140 core taps CHANGE, re-derived on d25d4.
+    - The 48 pc rows come from DIE-CORETAP's record rows, i.e. the signed-DB 318/320/196/193 values that the pcsink_fix tree delivers.
+    - The E2 liberty mean (pcc 279.5) is not used.
+  - RD: relay_depth 285 rows / +330 stages on 15 pv types.
+    - The other 258 rows of the 543-row recount (19 hg/hgi types, kt paths) are already carried by KST2 on d25d4.
+  - RAWB: hgi_v1 raw branches re-selected with landing_remap resel: rst_rl_124 and rst_rl_117.
+  - TAPWIN: KV-CROSSING kv_tile_window_pcsink.json, 4284 rows raise-only, cap 130; 358 ports remain unmet.
+  - Latency: 0 lanes moved.
+- Not in D25e:
+  - BINS: landing_remap has no tap successor for clk_t1 / clk_t19 within 200 um; COORD did not list sink bins.
+  - P4 crossing rows: they need a START-TREE-1 sidecar for root pc_WS_2. KV-CROSSING is building it, and COORD said to keep the d25d4 sidecar for now.
+  - pv +500 rows: waiting for FABLE-FIX-KV-PV.
+- Next: G0 green -> seal + replicate (SEAL_G0=1 seal_rep_d24.sh d25e d24c) -> bind copy on epyc10 -> gate_bind_d25.sh -> R8 refresh if R8_STALE -> sealed bind dest -> apply_d25.sh d25e KV-D25e (LIVE = d25d4, LIVE_EV = KV-D25d).
+
+## Status 2026-11-19 15:15Z (supersedes 14:10Z)
 LIVE = KV-D25c, still with no bind of record.
 - Wave unblocked (commits 48493e9a566 and 5baac307032): bound_trees = [D24c entry], and kit_rtl.bind_out = the D24c bind_of_record.
   - Before the switch every gen host was SRC-INCOMPLETE. The 07:07 PST tick passes them.
