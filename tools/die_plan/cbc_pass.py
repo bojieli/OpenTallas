@@ -45,7 +45,8 @@ sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(HERE.parent / "precheck"))
 
 # ONE threshold set, shared with tools/precheck (PRECHECK-1119): import these, do not copy the numbers
-import cbc_rules as RULES   # COORD 11-19: every threshold from the shared rule module (PRECHECK-1119 imports it too)
+import cbc_rules as RULES
+import leg_class as LC   # COORD 11-19: every threshold from the shared rule module (PRECHECK-1119 imports it too)
 HOP_UM = RULES.REACH_UM_PER_HOP
 DEPTH_LEVELS = RULES.DEPTH_LEVELS_MAX      # pre-screen only; rule 3 is RULES.LOGIC_PS_MAX (zero_wire.py)
 TAP_SINKS = RULES.TAP_MAX_SINKS
@@ -106,6 +107,18 @@ def boundary_rows(P, rtl_dir=None, types=()):
     return rows
 
 
+def ft_core_span(t, sl):
+    """hard-core length along the slot's in-window -> out-window path, None when the slot has no windows"""
+    import bank_reset_delta as B
+    try:
+        W, H = t["outline_um"]
+        a = B.face_point(sl["in_face"], sl["in_window_um"], W, H)
+        b = B.face_point(sl["out_face"], sl["out_window_um"], W, H)
+    except (KeyError, TypeError, ValueError):
+        return None
+    return LC.core_span_um(a, b, LC.core_rects(t))
+
+
 def ft_station_rows(P, hop):
     """ft slots whose crossing exceeds stations x hop: stations -> ceil(span / hop) (+delta cycles on every crossing lane).
     Stations already built (built_station_extra) and cross-tap hop stations (ft_hop_xtap) count, as in schema.lane_natural."""
@@ -119,10 +132,16 @@ def ft_station_rows(P, hop):
             except Exception:  # noqa: BLE001 -- a fake plan in tests has no raw
                 pass
             span = ft_span(t, sl)
-            need = max(1, math.ceil(span / hop - 1e-9))
+            # COORD 11-19 (FABLE-CLOSURE-STRATEGY 03:30): no +cycle from distance alone -- an ft slot is a pure register
+            # chain, so it is priced by what it spans: over REACH_CORE_SPAN_UM of hard core at the reach, else as a buffered
+            # leg at REACH_BUFFERED_UM; strap / tie slots never count (leg_class.py)
+            core = ft_core_span(t, sl)
+            cls, hops = LC.classify(span, core if core is not None else RULES.REACH_CORE_SPAN_UM + 1, name=sl["name"])
+            need = hops if cls in ("static", "buffered") else max(1, math.ceil(span / hop - 1e-9))
             if need > k:
                 rows[(tn, sl["name"])] = dict(type=tn, slot=sl["name"], stations=k, set_stations=need, delta=need - k,
-                                              span_um=round(span, 1), width=sl.get("width"))
+                                              span_um=round(span, 1), width=sl.get("width"), leg_class=cls,
+                                              core_span_um=None if core is None else round(core, 1))
     return rows
 
 
@@ -232,6 +251,38 @@ def tree_root(plan_path):
     return Path(s.split("/physical/", 1)[0]) if "/physical/" in s else None
 
 
+TAP_REGION = RULES.TAP_REGION_WH_UM
+
+
+def region_wh(pts):
+    xs, ys = [p[0] for p in pts], [p[1] for p in pts]
+    return (max(xs) - min(xs)) + (max(ys) - min(ys))
+
+
+def centroid(pts):
+    sw = sum(w for *_, w in pts) or 1.0
+    return (sum(x * w for x, _, w in pts) / sw, sum(y * w for _, y, w in pts) / sw)
+
+
+def region_split(pts, wh=None, cap=None):
+    """[(x, y, w)] -> regions each with W + H <= wh and sink weight <= cap: weighted-median bisection on the longer axis
+    (a single bin over the cap stays one region)"""
+    wh = TAP_REGION if wh is None else wh
+    cap = RULES.TAP_MAX_SINKS if cap is None else cap
+    if len(pts) <= 1 or (region_wh(pts) <= wh and sum(w for *_, w in pts) <= cap):
+        return [pts]
+    xs, ys = [p[0] for p in pts], [p[1] for p in pts]
+    ax = 0 if max(xs) - min(xs) >= max(ys) - min(ys) else 1
+    q = sorted(pts, key=lambda p: p[ax])
+    half, acc, k = sum(w for *_, w in q) / 2.0, 0.0, 1
+    for k, p in enumerate(q, 1):
+        acc += p[2]
+        if acc >= half:
+            break
+    k = min(max(k, 1), len(q) - 1)
+    return region_split(q[:k], wh, cap) + region_split(q[k:], wh, cap)
+
+
 def tap_rows(P, cap, plan_path=None):
     import precheck as PC
     import schema as S
@@ -254,23 +305,33 @@ def tap_rows(P, cap, plan_path=None):
             continue
         if not grid or not sinks:
             continue
-        load = PC.tap_assign(grid, sinks)
-        over = PC.tap_rebalance(grid, load, cap, TAP_RADIUS_UM)
+        # COORD 11-19 (FABLE-CLOSURE-STRATEGY 03:30): PRIMARY rule = one tap's sink region W + H <= TAP_REGION_WH_UM on
+        # nearest-tap sinks with NO spill; TAP_MAX_SINKS stays as the secondary cap.  A tap over either is split by
+        # region_split() and every extra region asks for a tap at its sink centroid.
+        mine = {n: [] for n, *_ in grid}
+        for x, y, w in sinks:
+            mine[min(grid, key=lambda g: (g[1] - x) ** 2 + (g[2] - y) ** 2)[0]].append((x, y, w))
         cur = int(ck.get("tap_max_sinks") or 0)
-        if not over and cur and cur <= cap:
-            continue
-        split = []
+        split, worst = [], 0.0
         xy = {n: (x, y) for n, x, y in grid}
-        for n, ex in sorted(over.items(), key=lambda kv: -kv[1]):
-            k = math.ceil((ex + cap) / cap) - 1          # added taps next to this one
-            mine = [(x, y, w) for x, y, w in sinks if min(grid, key=lambda g: (g[1] - x) ** 2 + (g[2] - y) ** 2)[0] == n]
-            sw = sum(w for *_, w in mine) or 1.0
-            cx = sum(x * w for x, _, w in mine) / sw
-            cy = sum(y * w for _, y, w in mine) / sw
-            split.append(dict(tap=n, xy=[round(v, 2) for v in xy[n]], load=round(ex + cap), add_taps=k,
-                              sink_centroid=[round(cx, 2), round(cy, 2)]))
+        for n, pts in sorted(mine.items()):
+            if not pts:
+                continue
+            wh = region_wh(pts)
+            worst = max(worst, wh)
+            load = sum(w for *_, w in pts)
+            if wh <= TAP_REGION and load <= cap:
+                continue
+            regs = region_split(pts, TAP_REGION, cap)
+            split.append(dict(tap=n, xy=[round(v, 2) for v in xy[n]], load=round(load), region_wh_um=round(wh, 1),
+                              add_taps=len(regs) - 1,
+                              regions=[dict(sink_centroid=[round(c, 2) for c in centroid(r)], sinks=round(sum(w for *_, w in r)),
+                                            region_wh_um=round(region_wh(r), 1)) for r in regs]))
+        if not split and cur and cur <= cap:
+            continue
         rows.append(dict(type=tn, family=family(tn), tap_mode=ck.get("tap_mode"), set={"clock.tap_max_sinks": cap},
-                         was_tap_max_sinks=cur or None, taps=len(grid), planned_sinks=round(sum(load.values())), split=split))
+                         was_tap_max_sinks=cur or None, taps=len(grid), planned_sinks=round(sum(w for *_, w in sinks)),
+                         worst_region_wh_um=round(worst, 1), split=split))
     return rows, errs
 
 
@@ -409,7 +470,7 @@ def main(argv=None):
          f"- boundary rows {len(rows['boundary'])}; depth rows {len(rows['depth'])} (needs precheck_synth DEPTH)" ,
          "", "## Taps (cap " + str(th["tap_sinks"]) + ")",
          f"- {len(rows.get('taps') or [])} types need tap_max_sinks {th['tap_sinks']}; "
-         f"{sum(1 for r in rows.get('taps') or [] if r['split'])} with over-cap taps after rebalance, "
+         f"{sum(1 for r in rows.get('taps') or [] if r['split'])} with taps over the region (W+H > {TAP_REGION:.0f} um, no spill) or the {RULES.TAP_MAX_SINKS}-sink cap, "
          f"{sum(s['add_taps'] for r in rows.get('taps') or [] for s in r['split'])} added taps", ""]
     if cost:
         L += ["## Token cost", f"- base {cost['base_tok_s']} tok/s ({cost['cycles_per_token']:.0f} cycles/token, {cost['layers']} traversals); "

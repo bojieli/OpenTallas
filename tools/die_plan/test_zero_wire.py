@@ -40,7 +40,7 @@ def test_rule_constants():
 
 
 def test_bound_fanout_tree_and_untouched_other_sinks():
-    out, st = ZW.bound_fanout(NET, bound=8)
+    out, st = ZW.bound_fanout(NET, bound=8, strip=False)
     assert st == dict(nets_bounded=1, buffers_added=3)        # 20 sinks -> 3 buffers of <= 8, all on n0
     loads = {}
     for m in re.finditer(r"\.A\(([^)]*)\)", out):
@@ -49,14 +49,14 @@ def test_bound_fanout_tree_and_untouched_other_sinks():
     assert loads["n0"] == 3                                    # the driver now sees 3 buffers (+ the submodule port)
     assert "sub u_s (.a(n0), .y(q));" in out                   # a submodule sink stays on the net
     assert ".D(d)" in out and ".QN(n0)" in out                 # outputs and other inputs untouched
-    assert ZW.bound_fanout(NET, bound=32)[1] == dict(nets_bounded=0, buffers_added=0)
+    assert ZW.bound_fanout(NET, bound=32, strip=False)[1] == dict(nets_bounded=0, buffers_added=0)
 
 
 def test_deep_tree_recurses():
     big = NET.replace("range(20)", "")
     text = "module t (x);\n  input x;\n" + "".join(
         f"  INVx1_ASAP7_75t_R _i{k}_ (\n    .A(x),\n    .Y(o{k})\n  );\n" for k in range(100)) + "endmodule\n"
-    out, st = ZW.bound_fanout(text, bound=8)
+    out, st = ZW.bound_fanout(text, bound=8, strip=False)
     assert st["buffers_added"] == 13 + 2                       # 100 -> 13 -> 2 buffers; x drives 2
     assert len(re.findall(r"\.A\(x\)", out)) == 2
 
@@ -75,5 +75,35 @@ def test_top_module_and_tcl_and_parse():
 def test_escaped_net_keeps_its_terminating_space():
     text = "module t (x);\n  input x;\n" + "".join(
         f"  INVx1_ASAP7_75t_R _i{k}_ (\n    .A(\\r_oh[2] ),\n    .Y(o{k})\n  );\n" for k in range(9)) + "endmodule\n"
-    out, st = ZW.bound_fanout(text, bound=8)
+    out, st = ZW.bound_fanout(text, bound=8, strip=False)
     assert st["buffers_added"] == 2 and out.count("(.A(\\r_oh[2] ), ") == 2
+
+
+def test_synthesis_buffers_removed_before_bounding():
+    text = """module t (x, q);
+  input x;
+  output q;
+  BUFx2_ASAP7_75t_R _b1_ (
+    .A(x),
+    .Y(n1)
+  );
+  BUFx2_ASAP7_75t_R _b2_ (
+    .A(n1),
+    .Y(n2)
+  );
+  INVx1_ASAP7_75t_R _i1_ (
+    .A(n2),
+    .Y(q)
+  );
+  BUFx2_ASAP7_75t_R _b3_ (
+    .A(x),
+    .Y(n3)
+  );
+  sub u_s (.a({n3, x}));
+endmodule
+"""
+    out, st = ZW.bound_fanout(text, bound=8)
+    assert st["buffers_removed"] == 2 and "_b1_" not in out and "_b2_" not in out
+    assert re.search(r"_i1_ \(\n    \.A\(x\),", out)                  # the inverter reads x through the removed chain
+    assert "_b3_" in out                                                  # read inside a concatenation: kept
+    assert "sta_recovery_removal_checks_enabled 0" in ZW.sta_tcl("/zw/zw.v", "t", 600.0, 5)

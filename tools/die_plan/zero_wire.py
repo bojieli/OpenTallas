@@ -40,12 +40,12 @@ INST_ANY = re.compile(r"^\s*(\\\S+|[A-Za-z_][A-Za-z0-9_$]*)\s+(\\\S+|[A-Za-z_][A
 KEYWORDS = {"module", "input", "output", "inout", "wire", "reg", "assign", "endmodule", "always", "if", "else", "begin", "end"}
 
 
-def bound_fanout(text, bound=RULES.FANOUT_BOUND, buf=BUF):
+def bound_fanout(text, bound=RULES.FANOUT_BOUND, buf=BUF, strip=True):
     """-> (text, stats): every net with more than `bound` standard-cell input sinks inside one module gets a buffer tree
     (groups of `bound` sinks per buffer, recursively), so no driver sees more than `bound` cell loads.  Sinks that are not
     standard-cell pins (submodule ports, assigns, module outputs) stay on the original net."""
     lines = text.split("\n")
-    out, i, stats = [], 0, dict(nets_bounded=0, buffers_added=0)
+    out, i, stats = [], 0, dict(nets_bounded=0, buffers_added=0, **({"buffers_removed": 0} if strip else {}))
     while i < len(lines):
         m = MOD_HDR.match(lines[i])
         if not m:
@@ -55,14 +55,89 @@ def bound_fanout(text, bound=RULES.FANOUT_BOUND, buf=BUF):
         j = i
         while j < len(lines) and not re.match(r"^\s*endmodule\b", lines[j]):
             j += 1
-        out += _bound_module(lines[i:j], bound, buf, stats)
+        out += _bound_module(lines[i:j], bound, buf, stats, strip)
         if j < len(lines):
             out.append(lines[j])
         i = j + 1
     return "\n".join(out), stats
 
 
-def _bound_module(L, bound, buf, stats):
+BUF_CELL = re.compile(r"^(BUFx\w+|HB\dx\w+)_ASAP7_75t_[A-Z]+$")
+PORT_DECL = re.compile(r"^\s*(input|output|inout)\b[^;]*?(\\\S+|[A-Za-z_][A-Za-z0-9_$]*)\s*;")
+
+
+def _fmt(net):
+    return net + " " if net.startswith("\\") else net          # an escaped identifier ends at white space
+
+
+def _base(e):
+    return re.sub(r"\s*\[[^\]]*\]\s*$", "", e.strip()) if not e.strip().startswith("\\") else e.strip().split(" ")[0]
+
+
+def _cells(L):
+    """[(cell, inst, header line, {pin: (line, expr)}, end line)] of the instance blocks of one module"""
+    out, cur = [], None
+    for k, ln in enumerate(L):
+        h = CELL_HDR.match(ln)
+        if h and h.group(2) not in KEYWORDS:
+            cur = [h.group(2), h.group(3), k, {}, None]
+            continue
+        if cur is not None:
+            p = PIN_LINE.match(ln)
+            if p:
+                cur[3][p.group(2)] = (k, p.group(3).strip())
+                continue
+            if ln.strip().startswith(");"):
+                cur[4] = k
+                out.append(tuple(cur))
+                cur = None
+    return out
+
+
+def _strip_buffers(L, stats):
+    """the flow removes the synthesis buffers before placement (ORFS remove_buffers) and re-buffers by load: drop every
+    standard buffer whose output is no module port and is read only as a whole pin expression, its readers move to its
+    input net"""
+    ports = {m.group(2) for m in (PORT_DECL.match(ln) for ln in L) if m}
+    for ln in L:
+        m = re.match(r"^\s*(input|output|inout)\b(.*);", ln)
+        if m:
+            ports |= {x.strip().split()[-1] for x in m.group(2).split(",") if x.strip()}
+    cells = _cells(L)
+    whole = defaultdict(int)
+    for _c, _i, _h, pins, _e in cells:
+        for _p, (_k, e) in pins.items():
+            whole[e] += 1
+    text = "\n".join(L)
+    alias, drop = {}, set()
+    for c, _i, h, pins, e in cells:
+        if not BUF_CELL.match(c) or "A" not in pins or "Y" not in pins:
+            continue
+        a, y = pins["A"][1], pins["Y"][1]
+        if not a or not y or re.match(r"^\d+'", a) or _base(y) in ports or y.startswith("{") or a.startswith("{"):
+            continue
+        n_txt = text.count(y) if y.startswith("\\") else len(re.findall(r"(?<![\w$\\.])" + re.escape(y) + r"(?![\w$\[])", text))
+        if n_txt != whole[y]:
+            continue                                          # read inside a concatenation / assign: keep the buffer
+        alias[y] = a
+        drop.update(range(h, e + 1))
+    def res(x, d=0):
+        return res(alias[x], d + 1) if x in alias and d < 64 else x
+    out = []
+    for k, ln in enumerate(L):
+        if k in drop:
+            continue
+        p = PIN_LINE.match(ln)
+        if p and p.group(3).strip() in alias:
+            ln = f"{p.group(1)}.{p.group(2)}({_fmt(res(p.group(3).strip()))}){p.group(4)}"
+        out.append(ln)
+    stats["buffers_removed"] = stats.get("buffers_removed", 0) + len(alias)
+    return out
+
+
+def _bound_module(L, bound, buf, stats, strip=True):
+    if strip:
+        L = _strip_buffers(L, stats)
     sinks = defaultdict(list)          # net expr -> [line index of a std-cell input pin reading it]
     cell = None
     for k, ln in enumerate(L):
@@ -103,7 +178,7 @@ def _bound_module(L, bound, buf, stats):
             items = nxt
         for kind, x in items:
             if kind == "buf":
-                src[x] = net + " " if net.startswith("\\") else net     # an escaped identifier ends at white space
+                src[x] = _fmt(net)
     stats["buffers_added"] += len(bufs)
     body = [edits.get(k, ln) for k, ln in enumerate(L)]
     return body + decl + [f"  {buf} {b} (.A({src[b]}), .Y({w}));" for b, w in bufs.items()]
@@ -122,6 +197,7 @@ read_verilog {netlist}
 link_design {top}
 set cks [get_ports -quiet {{clk ck clk_* ck_*}}]
 create_clock -name zw -period {limit_ps} $cks
+set sta_recovery_removal_checks_enabled 0
 set ins {{}}
 foreach p [all_inputs] {{ if {{![regexp {{^(clk|ck)(_.*)?$}} [get_full_name $p]]}} {{ lappend ins $p }} }}
 if {{[llength $ins]}} {{ set_input_delay 0 -clock zw $ins }}

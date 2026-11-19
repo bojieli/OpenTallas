@@ -87,3 +87,26 @@ def test_stage_rtl_several_binders_and_name_forms(tmp_path):
     assert (d / 'hub.sv').resolve() == (b / 'hub.sv').resolve()      # exact stem beats a _part form
     assert (d / 'tile.sv').read_text().startswith('module tile')
     assert (d / 'pv.sv').exists() and not (d / 'none.sv').exists()
+
+
+def test_ft_priced_by_leg_class():
+    # COORD 11-19: no +cycle from distance alone -- a pure ft chain over no core is a buffered leg (550 um per hop)
+    P = FakeP()
+    f = P.types['t']['ft_slots'][0]
+    f.update(in_window_um=[140, 160], out_window_um=[140, 160])
+    r = C.ft_station_rows(P, 405.0)[('t', 'f')]
+    assert r['leg_class'] == 'buffered' and r['core_span_um'] == 0 and r['set_stations'] == 2 and r['delta'] == 1
+    P.types['t']['hard_cores'] = [dict(inst='u_c', origin_um=[200.0, 100.0], outline_um=[400.0, 100.0])]
+    r = C.ft_station_rows(P, 405.0)[('t', 'f')]
+    assert r['leg_class'] == 'core' and r['core_span_um'] == 400 and r['set_stations'] == 3
+    f['name'] = 'strap_ca_f'
+    assert ('t', 'strap_ca_f') not in C.ft_station_rows(P, 405.0)
+
+
+def test_region_split_wh_and_cap():
+    pts = [(float(x), 0.0, 1.0) for x in range(0, 1000, 10)]          # 990 um wide row of 100 sinks
+    regs = C.region_split(pts, 300.0, 1000)
+    assert all(C.region_wh(r) <= 300.0 for r in regs) and sum(len(r) for r in regs) == 100 and len(regs) == 4
+    dense = [(0.0, 0.0, 600.0), (10.0, 0.0, 600.0)]                    # tiny region, 1,200 sinks: the cap splits it
+    assert len(C.region_split(dense, 300.0, 1000)) == 2
+    assert C.region_split([(0.0, 0.0, 5.0)], 300.0, 1000) == [[(0.0, 0.0, 5.0)]]

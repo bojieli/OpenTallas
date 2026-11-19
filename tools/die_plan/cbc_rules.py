@@ -14,8 +14,15 @@ LOGIC_PS_MAX = 600.0            # rule 3 (COORD 11-19): zero-wire logic delay pe
                                 # TT NLDM, pin loads only, fanout bounded) above this is flagged: leaves ~230 ps for wire + clock
 FANOUT_BOUND = 8                # zero-wire STA: every net over this many cell sinks gets a buffer tree first (the
                                 # FABLE-FIX-S81-GLUE method: driver copies at 8), as placement repair would
-TAP_MAX_SINKS = 1000            # clock sinks per tap (a plan's lower clock.tap_max_sinks wins)
-TAP_RADIUS_UM = 200.0           # kit clock_taps.tcl rebalance reach
+REACH_CORE_SPAN_UM = 200.0       # COORD 11-19 (FABLE-CLOSURE-STRATEGY 03:30): a leg over REACH_UM_PER_HOP takes +cycle stations
+                                # only if its path spans more than this much hard core (no buffers over a core) or carries logic
+REACH_BUFFERED_UM = 550.0       # ... otherwise it is a buffered register-to-pin leg: closes to ~550 um (col_h9_r2 30 / 30 at 491-550)
+STATIC_LEG_RE = r"(^|[._])(strap|tie|id_strap|cfg_strap)[_a-z0-9]*"   # static strap / tie legs: never a reach cycle
+TAP_REGION_WH_UM = 300.0        # COORD 11-19 tap rule, PRIMARY: one tap's sink region W + H <= 300 um (placed sinks); 3,476 taps:
+                                # 450-600 um regions give 40-80 % of taps over 100 ps
+TAP_SPILL = False               # a tap that reaches TAP_MAX_SINKS asks for another tap in its region, never spills to a farther one
+TAP_MAX_SINKS = 1000            # SECONDARY cap (COORD 11-19): clock sinks per tap (a plan's lower clock.tap_max_sinks wins)
+TAP_RADIUS_UM = 200.0           # kit clock_taps.tcl rebalance reach (superseded by TAP_REGION_WH_UM; kept for old callers)
 RESET_LEAF_MAX_FANOUT = 32      # flops per reset relay leaf
 BOUNDARY_REG_UM = 50.0          # every block port has a register within this distance of its pin (both sides)
 AIM_MIN_BIT_FRAC = 0.10         # a receiver chain aimed at a capture holding < 10 % of the bus bits is mis-aimed

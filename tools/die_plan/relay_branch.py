@@ -387,6 +387,8 @@ class Geometry:
                 self.hc[inst] = hs[0]["_alias"]          # the bound instance IS the plan core under another name
                 del self.nest[inst]
         self._pins = {}
+        import leg_class as LC
+        self.rects = LC.core_rects(self.t)
 
     def pin(self, inst, port):
         """pin centroid of hard-core instance `inst` port (type frame), the core centre without pins, None if not a core"""
@@ -508,10 +510,19 @@ def branch_rows(plan, tn, text, plan_dir=None, limit=LIMIT, add_cycles=False):
             near = sp is not None and not (far & set(c)) and _box_ok([sp] + [pts[n] for n in c], limit)
             # a relay_depth row on the relay (its stages follow the copy's readers) already pays part of the way
             D = 0 if near or sp is None else max(0, max(1, math.ceil(L / limit) - 2) - have_rd.get((sid(rel), OUT), 0))
+            cls = None
+            if D:
+                # COORD 11-19 (FABLE-CLOSURE-STRATEGY 03:30): no +cycle from distance alone -- a relay leg is pure wire, so
+                # it needs stages only over REACH_CORE_SPAN_UM of hard core; otherwise it is a buffered leg (REACH_BUFFERED_UM)
+                import leg_class as LC
+                core = max(LC.core_span_um(sp, pts[n_], G.rects) for n_ in c)
+                cls, hops = LC.classify(L, core)
+                if cls != "core":
+                    D = max(0, hops - 2 - have_rd.get((sid(rel), OUT), 0))
             span = max(_flight(pts[a], pts[b]) for a in c for b in c)
             if D and not add_cycles:
-                rep.append(dict(relay=S["inst"], copy=name, need_D=D, path_um=round(L, 1),
-                                unfixed=f"far branch needs {D} stage(s): not emitted (0-cycle mode, stage count kept)"))
+                rep.append(dict(relay=S["inst"], copy=name, need_D=D, path_um=round(L, 1), leg_class=cls,
+                                unfixed=f"far branch needs {D} stage(s) ({cls} leg): not emitted (0-cycle mode, stage count kept)"))
                 D = 0
             copies.append(dict(name=name, sinks=sorted(n[2:] for n in c), D=D, span_um=round(span, 1), path_um=round(L, 1)))
             if D:
