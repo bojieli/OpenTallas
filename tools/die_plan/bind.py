@@ -7021,6 +7021,9 @@ def cmd_kit_rtl(a):
     if src_tree:
         outside = kit_filelist_outside(fl, [Path(base), out, kd])
         if outside:
+            # S81-FAILS-1118: not a design verdict (the kit tree lacks the file, or was retired): the wave classifies it FLOW
+            print(f"OT_CLASS: flow kit-rtl {tn}: {len(outside)} filelist path(s) outside the kit source tree {base}"
+                  + (" (tree missing)" if not Path(base).is_dir() else ""), file=sys.stderr)
             raise BindError(f"kit-rtl {tn}: {len(outside)} filelist path(s) outside the kit source tree {base} (and the bind "
                             f"out / kit dir): {outside[:5]}")
         src_moved = kit_src_moved_rows(src_moved, fl)

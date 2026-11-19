@@ -6977,7 +6977,9 @@ def src_manifest_verdict(sp, rc, txt):
         return "", f"KW_NOTE src_manifest: {sp.get('src')} has no manifest (not a built tree); not judged in mode {mode}"
     lines = [ln for ln in txt.splitlines() if ln.startswith("SRC_MANIFEST")] or [txt[-600:] or f"verifier rc {rc}"]
     return (f"SRC_MANIFEST FAIL {sp.get('src')}: tree is not main {sp.get('src_sha', '')[:12]} + its overlay manifest "
-            f"({len(lines)} finding(s); first: {lines[0][:300]})\n" + "\n".join(lines[:20])), ""
+            f"({len(lines)} finding(s); first: {lines[0][:300]})\n" + "\n".join(lines[:20])
+            + ("\nOT_CLASS: flow src_manifest: published tree shares inodes with another path (cp -al copy); unshare it"
+               if "SRC_MANIFEST NOT-READY" in txt else "")), ""
 
 
 def placed_scan_line(txt):

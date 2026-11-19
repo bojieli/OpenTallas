@@ -128,3 +128,9 @@ def test_kit_rtl_rebases_with_keep_and_records_foreign_moves():
     t = Path(B.__file__).read_text()
     assert "kit_rebase_path(p, old_base, st, keep=(out, kd), moved=src_moved)" in t
     assert '"src_rebased_foreign": src_moved' in t
+
+
+def test_outside_error_carries_flow_class_marker():
+    """S81-FAILS-1118: the bind's outside-the-kit-tree refusal names its class so the wave never files it UNCLASSIFIED"""
+    src = Path(B.__file__).read_text()
+    assert re.search(r'OT_CLASS: flow kit-rtl .*outside the kit source tree', src)

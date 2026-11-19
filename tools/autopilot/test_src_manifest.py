@@ -256,6 +256,14 @@ class KitWave(Base):
         self.assertTrue(why.startswith("SRC_MANIFEST FAIL"))
         self.assertIn("tools/die_plan/a.py", why)
 
+
+    def test_shared_inode_refusal_is_flow(self):
+        txt = "SRC_MANIFEST NOT-READY 4 file(s) share an inode with another path (cp -al copy elsewhere): x\nSRC_MANIFEST DRIFT a (hardlinked, nlink 2)\n"
+        why, _n = KW.src_manifest_verdict(self.sp(), 1, txt)
+        self.assertEqual(KW.classify("src_manifest", why)[0], "FLOW")
+        other, _n = KW.src_manifest_verdict(self.sp(), 1, "SRC_MANIFEST DRIFT a (modified: not the manifest content)\n")
+        self.assertNotIn("OT_CLASS", other)
+
     def test_clean_tree_passes(self):
         self.build()
         p = subprocess.run(KW.src_manifest_cmd(self.sp()), shell=True, capture_output=True, text=True)
