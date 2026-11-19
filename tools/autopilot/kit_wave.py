@@ -11794,11 +11794,18 @@ def unreadable_host_rows(AP, cfg, st, notices, now=None, hours=UNREADABLE_HOST_H
             host = json.loads((Path(r["dir"]) / "spec.json").read_text()).get("gen_host") or ""
         except (OSError, ValueError, KeyError, TypeError):
             continue
-        if not host or host in (hub, "localhost") or stt.get(host):
-            continue
         age_h = (now - max(float(r.get("updated") or 0), float(r.get("started") or 0))) / 3600.0
-        if age_h < hours:
-            continue
+        # COORD 11-19 (139 S81 rows parked in rt_mirror_copy_epyc7, no kit started): a row stuck in the rt tools mirror of a host that is unreadable or over 2x its cores
+        # moves after 30 min (nothing of the kit exists there yet): the mirror to that host is the stage that never ends
+        mh = re.match(r"rt_mirror(?:_copy|_fin)?_(.+)$", str(r.get("stage") or ""))
+        mirror_bad = bool(mh and mh.group(1) not in (hub, "localhost") and queued_host_bad(stt, mh.group(1), hub) and age_h >= 0.5)
+        if not mirror_bad:
+            if not host or host in (hub, "localhost") or stt.get(host):
+                continue
+            if age_h < hours:
+                continue
+        elif not host:
+            host = mh.group(1)
         if not AP.DRY:
             AP.sh(["systemctl", "--user", "stop", r["unit"]], timeout=180)
             try:

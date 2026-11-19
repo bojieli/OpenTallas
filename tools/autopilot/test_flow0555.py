@@ -300,3 +300,21 @@ def test_gen_host_choice_drops_an_unreadable_or_overloaded_host_while_another_st
     assert "epyc7" in KW.gen_hosts(cfg, "s81", "t1")          # nothing known: nothing dropped
     cfg["_otrun_status"] = {"epyc7": {"load": 900, "cores": 96}, "epyc8": {"load": 900, "cores": 96}, "epyc9": {"load": 900, "cores": 96}}
     assert len(KW.gen_hosts(cfg, "s81", "t1")) == 3           # every host bad: the list is unchanged
+
+
+def test_row_stuck_in_the_rt_mirror_of_a_bad_host_moves_after_30_minutes(tmp_path):
+    import unittest.mock as M
+    ap = type("AP", (), {"DRY": False, "log": staticmethod(lambda m: None), "sh": staticmethod(lambda c, timeout=0, input=None: (0, "", ""))})()
+    d = tmp_path / "a1"
+    d.mkdir()
+    (d / "spec.json").write_text(json.dumps({"gen_host": "epyc9"}))      # the gen host is fine; the MIRROR to roam host epyc7 hangs
+    now = 1e9
+    row = {"die": "s81", "item": "t1", "status": "RUNNING", "unit": "u", "dir": str(d), "stage": "rt_mirror_copy_epyc7", "updated": now - 3600, "started": now - 3600, "attempt": "1"}
+    cfg = {"dies": {"s81": {}}, "_hub": "intel2", "_otrun_status": {"epyc9": {"load": 10, "cores": 96}, "epyc8": {"load": 10, "cores": 96}}}
+    with M.patch.object(KW, "pick_gen_host", return_value="epyc8"):
+        st = {"items": {"x": dict(row, updated=now - 600, started=now - 600)}}
+        assert KW.unreadable_host_rows(ap, cfg, st, {}, now=now) == 0           # only 10 min
+        st = {"items": {"x": dict(row)}}
+        assert KW.unreadable_host_rows(ap, cfg, st, {}, now=now) == 1 and st["items"]["x"]["status"] == "RETRY-INFRA"
+        st = {"items": {"x": dict(row, stage="rt_mirror_copy_epyc9")}}
+        assert KW.unreadable_host_rows(ap, cfg, st, {}, now=now) == 0           # a healthy host's mirror is left alone
