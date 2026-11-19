@@ -1,0 +1,655 @@
+{
+ "schema": "fable-fix-s81-lepe.tap_candidates.v1",
+ "status": "CANDIDATE plan row, NOT yet a plan row (r712): private proof kit of dsdv_slice_lepe_mu_LP__t2 with these taps is queued to GRT TT on epyc10; do not apply before FABLE-FIX-S81-LEPE posts PROVEN.",
+ "lane": "FABLE-FIX-S81-LEPE",
+ "for": "S81-DIE-R3",
+ "cause": "clock.tap_mode explicit tables of the lepe LP types were solved on the planned face/ft sinks only: taps sit on the type perimeter + 3 interior spine taps, while 52,986 (mu) / 41,738 (nh) placed registers sit in the lep band. mu att22: clk_t6 22,199 sinks, per-tap mean TT insertion 221..532 ps (target 250); nh att27: clk_t13 11,519, 239..544 ps. Cross-tap FF hold -442/-462, TT -797/-925.",
+ "row": "per type: APPEND the added_taps below to partition_types[T].clock.taps (existing clk..clk_tN keep name and xy; no rename, collector_tree tap indexes unchanged); then die clock spine feeds the new M9 drops and clock.tap_window.per_port_ps is re-measured for them (kit uses the 44 ps fallback until then).",
+ "solver": "epyc10:/srv/opentallas-scratch2/claude/fable-lepe/solve_taps.py SRC PLAN TYPE REGS.json OUT.json 1400 160 (nearest-tap split on the placed register dump of att22/att27 4_cts_pre_tt.odb; legal vs explicit_tap_sites rules: outline, tap_clear halo of hard cores + placed SRAM macros, tap spacing)",
+ "private_plan": "epyc10:/srv/opentallas-scratch2/claude/fable-lepe/proof/s81/plan_h2_2249.json (d8e plan + the two tables; sibling inputs symlinked)",
+ "types": {
+  "dsdv_slice_lepe_mu_LP__t2": {
+   "registers": 52986,
+   "added": 48,
+   "max_load": 1382,
+   "added_taps": [
+    {
+     "name": "clk_t23",
+     "xy": [
+      434.16,
+      371.52
+     ]
+    },
+    {
+     "name": "clk_t24",
+     "xy": [
+      267.84,
+      289.44
+     ]
+    },
+    {
+     "name": "clk_t25",
+     "xy": [
+      1023.84,
+      496.8
+     ]
+    },
+    {
+     "name": "clk_t26",
+     "xy": [
+      827.28,
+      455.76
+     ]
+    },
+    {
+     "name": "clk_t27",
+     "xy": [
+      43.2,
+      406.08
+     ]
+    },
+    {
+     "name": "clk_t28",
+     "xy": [
+      1036.8,
+      319.68
+     ]
+    },
+    {
+     "name": "clk_t29",
+     "xy": [
+      1211.76,
+      496.8
+     ]
+    },
+    {
+     "name": "clk_t30",
+     "xy": [
+      425.52,
+      432.0
+     ]
+    },
+    {
+     "name": "clk_t31",
+     "xy": [
+      311.04,
+      1103.76
+     ]
+    },
+    {
+     "name": "clk_t32",
+     "xy": [
+      896.4,
+      550.8
+     ]
+    },
+    {
+     "name": "clk_t33",
+     "xy": [
+      423.36,
+      319.68
+     ]
+    },
+    {
+     "name": "clk_t34",
+     "xy": [
+      397.44,
+      578.88
+     ]
+    },
+    {
+     "name": "clk_t35",
+     "xy": [
+      311.04,
+      639.36
+     ]
+    },
+    {
+     "name": "clk_t36",
+     "xy": [
+      235.44,
+      496.8
+     ]
+    },
+    {
+     "name": "clk_t37",
+     "xy": [
+      86.4,
+      563.76
+     ]
+    },
+    {
+     "name": "clk_t38",
+     "xy": [
+      1175.04,
+      319.68
+     ]
+    },
+    {
+     "name": "clk_t39",
+     "xy": [
+      108.0,
+      162.0
+     ]
+    },
+    {
+     "name": "clk_t40",
+     "xy": [
+      721.44,
+      187.92
+     ]
+    },
+    {
+     "name": "clk_t41",
+     "xy": [
+      535.68,
+      427.68
+     ]
+    },
+    {
+     "name": "clk_t42",
+     "xy": [
+      1030.32,
+      619.92
+     ]
+    },
+    {
+     "name": "clk_t43",
+     "xy": [
+      336.96,
+      289.44
+     ]
+    },
+    {
+     "name": "clk_t44",
+     "xy": [
+      1028.16,
+      211.68
+     ]
+    },
+    {
+     "name": "clk_t45",
+     "xy": [
+      535.68,
+      317.52
+     ]
+    },
+    {
+     "name": "clk_t46",
+     "xy": [
+      704.16,
+      406.08
+     ]
+    },
+    {
+     "name": "clk_t47",
+     "xy": [
+      155.52,
+      289.44
+     ]
+    },
+    {
+     "name": "clk_t48",
+     "xy": [
+      531.36,
+      371.52
+     ]
+    },
+    {
+     "name": "clk_t49",
+     "xy": [
+      829.44,
+      362.88
+     ]
+    },
+    {
+     "name": "clk_t50",
+     "xy": [
+      535.68,
+      477.36
+     ]
+    },
+    {
+     "name": "clk_t51",
+     "xy": [
+      483.84,
+      311.04
+     ]
+    },
+    {
+     "name": "clk_t52",
+     "xy": [
+      967.68,
+      319.68
+     ]
+    },
+    {
+     "name": "clk_t53",
+     "xy": [
+      501.12,
+      432.0
+     ]
+    },
+    {
+     "name": "clk_t54",
+     "xy": [
+      235.44,
+      319.68
+     ]
+    },
+    {
+     "name": "clk_t55",
+     "xy": [
+      406.08,
+      285.12
+     ]
+    },
+    {
+     "name": "clk_t56",
+     "xy": [
+      43.2,
+      295.92
+     ]
+    },
+    {
+     "name": "clk_t57",
+     "xy": [
+      1244.16,
+      319.68
+     ]
+    },
+    {
+     "name": "clk_t58",
+     "xy": [
+      481.68,
+      371.52
+     ]
+    },
+    {
+     "name": "clk_t59",
+     "xy": [
+      604.8,
+      427.68
+     ]
+    },
+    {
+     "name": "clk_t60",
+     "xy": [
+      829.44,
+      408.24
+     ]
+    },
+    {
+     "name": "clk_t61",
+     "xy": [
+      1105.92,
+      308.88
+     ]
+    },
+    {
+     "name": "clk_t62",
+     "xy": [
+      1010.88,
+      496.8
+     ]
+    },
+    {
+     "name": "clk_t63",
+     "xy": [
+      125.28,
+      496.8
+     ]
+    },
+    {
+     "name": "clk_t64",
+     "xy": [
+      1036.8,
+      300.24
+     ]
+    },
+    {
+     "name": "clk_t65",
+     "xy": [
+      453.6,
+      432.0
+     ]
+    },
+    {
+     "name": "clk_t66",
+     "xy": [
+      535.68,
+      354.24
+     ]
+    },
+    {
+     "name": "clk_t67",
+     "xy": [
+      207.36,
+      319.68
+     ]
+    },
+    {
+     "name": "clk_t68",
+     "xy": [
+      488.16,
+      295.92
+     ]
+    },
+    {
+     "name": "clk_t69",
+     "xy": [
+      1036.8,
+      311.04
+     ]
+    },
+    {
+     "name": "clk_t70",
+     "xy": [
+      343.44,
+      496.8
+     ]
+    }
+   ]
+  },
+  "dsdv_slice_lepe_nh_mus_LP__t1": {
+   "registers": 41738,
+   "added": 34,
+   "max_load": 1397,
+   "added_taps": [
+    {
+     "name": "clk_t21",
+     "xy": [
+      531.36,
+      721.44
+     ]
+    },
+    {
+     "name": "clk_t22",
+     "xy": [
+      829.44,
+      816.48
+     ]
+    },
+    {
+     "name": "clk_t23",
+     "xy": [
+      241.92,
+      721.44
+     ]
+    },
+    {
+     "name": "clk_t24",
+     "xy": [
+      1034.64,
+      680.4
+     ]
+    },
+    {
+     "name": "clk_t25",
+     "xy": [
+      90.72,
+      719.28
+     ]
+    },
+    {
+     "name": "clk_t26",
+     "xy": [
+      1213.92,
+      725.76
+     ]
+    },
+    {
+     "name": "clk_t27",
+     "xy": [
+      533.52,
+      609.12
+     ]
+    },
+    {
+     "name": "clk_t28",
+     "xy": [
+      425.52,
+      786.24
+     ]
+    },
+    {
+     "name": "clk_t29",
+     "xy": [
+      745.2,
+      829.44
+     ]
+    },
+    {
+     "name": "clk_t30",
+     "xy": [
+      1105.92,
+      818.64
+     ]
+    },
+    {
+     "name": "clk_t31",
+     "xy": [
+      488.16,
+      930.96
+     ]
+    },
+    {
+     "name": "clk_t32",
+     "xy": [
+      617.76,
+      827.28
+     ]
+    },
+    {
+     "name": "clk_t33",
+     "xy": [
+      1131.84,
+      239.76
+     ]
+    },
+    {
+     "name": "clk_t34",
+     "xy": [
+      695.52,
+      840.24
+     ]
+    },
+    {
+     "name": "clk_t35",
+     "xy": [
+      347.76,
+      30.24
+     ]
+    },
+    {
+     "name": "clk_t36",
+     "xy": [
+      99.36,
+      36.72
+     ]
+    },
+    {
+     "name": "clk_t37",
+     "xy": [
+      1142.64,
+      470.88
+     ]
+    },
+    {
+     "name": "clk_t38",
+     "xy": [
+      438.48,
+      719.28
+     ]
+    },
+    {
+     "name": "clk_t39",
+     "xy": [
+      829.44,
+      727.92
+     ]
+    },
+    {
+     "name": "clk_t40",
+     "xy": [
+      667.44,
+      810.0
+     ]
+    },
+    {
+     "name": "clk_t41",
+     "xy": [
+      535.68,
+      786.24
+     ]
+    },
+    {
+     "name": "clk_t42",
+     "xy": [
+      425.52,
+      30.24
+     ]
+    },
+    {
+     "name": "clk_t43",
+     "xy": [
+      38.88,
+      30.24
+     ]
+    },
+    {
+     "name": "clk_t44",
+     "xy": [
+      792.72,
+      820.8
+     ]
+    },
+    {
+     "name": "clk_t45",
+     "xy": [
+      334.8,
+      650.16
+     ]
+    },
+    {
+     "name": "clk_t46",
+     "xy": [
+      1019.52,
+      725.76
+     ]
+    },
+    {
+     "name": "clk_t47",
+     "xy": [
+      604.8,
+      784.08
+     ]
+    },
+    {
+     "name": "clk_t48",
+     "xy": [
+      479.52,
+      786.24
+     ]
+    },
+    {
+     "name": "clk_t49",
+     "xy": [
+      386.64,
+      62.64
+     ]
+    },
+    {
+     "name": "clk_t50",
+     "xy": [
+      125.28,
+      28.08
+     ]
+    },
+    {
+     "name": "clk_t51",
+     "xy": [
+      71.28,
+      62.64
+     ]
+    },
+    {
+     "name": "clk_t52",
+     "xy": [
+      760.32,
+      41.04
+     ]
+    },
+    {
+     "name": "clk_t53",
+     "xy": [
+      43.2,
+      829.44
+     ]
+    },
+    {
+     "name": "clk_t54",
+     "xy": [
+      714.96,
+      805.68
+     ]
+    }
+   ]
+  }
+ },
+ "residual_reach_after_equal_clocks": {
+  "note": "mu att22 post-CTS TT, placement RC, slack recomputed with launch CK = capture CK: 544 ends < -42 ps remain; these are data reach, a second row (macro re-site / relay / +1 cycle), sized after the proof GRT TT",
+  "classes": [
+   {
+    "from": "u_bound.u_rrl_11/q",
+    "to": "u_ln2 u_ln3 u_lnl2 u_lnl3 rs pins",
+    "ends": 4,
+    "worst_ps": -775,
+    "data_ps": 1925,
+    "dist_um": 1020,
+    "fix": "reset relay station next to the east cores (collector_tree relay)"
+   },
+   {
+    "from": "u_u_land.u_rstr.rst_n",
+    "to": "u_u_land.* (tag, cnt, rcq ...)",
+    "ends": 62,
+    "worst_ps": -486,
+    "dist_um": 1570,
+    "fix": "land reset synchroniser sits at (1433,12), its logic at (157,294): site the synchroniser with its logic"
+   },
+   {
+    "from": "lep g_rx[*] SRAM rd_out",
+    "to": "lep.rid[*] / ml_wd[*]",
+    "ends": 132,
+    "worst_ps": -472,
+    "dist_um": 1023,
+    "fix": "rx banks of one memory are up to 1046 um apart (g_rx[3] bank0 x=1322, bank1-4 x=276..484; g_rx[1] x=276..907): re-site each memory as one block, or register rd_out per bank (+1 cycle)"
+   },
+   {
+    "from": "lep.g_mtx.wn[*]",
+    "to": "g_tx[*].g_safe_write.g_address count_r / wp_r",
+    "ends": 258,
+    "worst_ps": -235,
+    "dist_um": 787,
+    "fix": "tx banks of each memory sit at x=52,242,838,1028,1218 (1166 um): compact the tx memories or replicate/pipeline wn"
+   },
+   {
+    "from": "u_lnl* outputs",
+    "to": "lep g_tx credit_pin_r, g_rx dq",
+    "ends": 11,
+    "worst_ps": -479,
+    "dist_um": 1458,
+    "fix": "station on the lnl->lep credit return"
+   },
+   {
+    "from": "lep.g_inpipe.rop / g_tx.g_rp.odr",
+    "to": "lep.roq / lo3_d",
+    "ends": 61,
+    "worst_ps": -118,
+    "dist_um": 1530,
+    "fix": "AP_PLACED_SCAN NEED-STATION groups (48 groups, 4,487 bits > 580 um): rid->bout_lepk_o0 1007b 1257 um, f_host->bout_unit_o0 514b 936 um, bin_lepk_i0->g_inpipe.rop 459b 1098 um"
+   }
+  ]
+ },
+ "evidence": "epyc10:/srv/opentallas-scratch2/claude/fable-lepe/out_mu/{ff.log,tt.log,hold.json,setup.json}; ana.py geo.py ideal.py"
+}
