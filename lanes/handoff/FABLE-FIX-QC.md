@@ -109,3 +109,4 @@ bash tools/fleet/col_template_rows.sh TREE BASE_PLAN SIDECAR OUT [--all-members]
 - p1 sle_ctl (CTS, base -97.91) and p3 (origin-only, route) both still running on intel2 (run_p.sh p1/p3, autopost watchers 578596 / 519870 alive). NEXT: read p1 CTS TT, p3 CTS/GRT TT; after N4.5 bind, private kit sle_st_b_v2__cl14c98df5__pvcd986c42 (form A) to GRT TT.
 - Lane clone: intel2 /srv/opentallas-scratch2/claude/sonnet-fix-qc-repo
 - COORD 11-19: st_b form A rows go into N4.6 (not N4.5); the form A kit waits for the N4.6 bind. Keep p1/p3 watchers, post CTS TT when they land.
+- COORD N4.6a fix: rebuilt sidecar by patching N4.5d table with relay_extra(plan_n46_a): epyc9 qc-plan-r3-n41p/n46/sidecar_n46c.json (+sidecar_relay_extra_patch.py); 12 regions stages 4, 36 K re-referenced; not yet bound. fable-die-qc-r (scratch3) dir is gone; asked FLEET-OPS-R.
