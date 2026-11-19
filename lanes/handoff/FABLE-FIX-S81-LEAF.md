@@ -110,3 +110,12 @@ Fold commit (repo/, f25c... amended with trailers): still NOT pushed; rule uncha
   Who sent the SIGTERM at 00:27 PST on epyc8 is NOT identified. t58 already relaunched (a6).
 - t54__cl706d9749 PLACE-HPWL 1.61 (a12, epyc2, 01:51): same measurement class. Fixed gate on its real 3_3_place_gp.log: 1.111, OK
   (HPWL flat 5.5e6 down to overflow 0.49, 8.0e6 at the first converged row 0.2446, exit 8.883e6; no non-virtual repair in the log). Cleared by bfc57007db14.
+
+## 11-19 02:3x PST: COORD ruling, option 2
+PUSH THE FOLD FIX AS SOON AS S81-DIE-R3 POSTS D8g APPLIED (CTS evidence is enough; GRT TT no longer gates it):
+  epyc10: cd /srv/opentallas-scratch2/claude/fable-fix-s81-leaf/repo && git stash is FORBIDDEN; repo/ has an UNCOMMITTED vp.sv CFP edit + bench script:
+  revert or commit those separately first (git checkout -- rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv if form A is dropped), then
+  python3 -I /srv/opentallas-scratch2/claude/rt/current/tools/fleet/ot-push-main
+Proof kits run with proof priority: path regex fable-fix-s81-leaf/proof/ is in epyc10 /var/tmp/ot-heavy/prio_proof.re; new launches use
+  python3 -I rt/current/tools/fleet/ot-run --priority proof. t27keep = intel2 t27keep.otrun3.log (queued, covered by the regex), t27stb = t27stb.otrun2.log.
+If the guard kills one again: post the kills.log line to FLEET-OPS-R (bug).
