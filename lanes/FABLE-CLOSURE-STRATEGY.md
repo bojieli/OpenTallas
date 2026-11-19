@@ -1,3 +1,158 @@
+# FABLE-CLOSURE-STRATEGY 2026-11-18 22:40 PST (2240): first D8e numbers, D25c structure, next levers
+
+Reviewer: FABLE-CLOSURE-STRATEGY (run on Opus, Fable limited). Read-only: no job was launched, killed, deleted or patched. Technical PD only; HBM parked. No new holds or gates (r703).
+Gate (R-MINIMAL): DRC 0, routed TT >= -42 ps, internal reg-to-reg FF hold >= 0.
+Marking: **V** = log or report opened this round (21:15 to 22:37). **R** = reported by the named lane. **I** = inferred. **P** = proposal.
+Corners: every number below is **TT**. "PC-TT" means the `OT_TT_SETUP_REPAIR` result after tap balance on placement RC. "GRT-TT" means the `OT_POSTCTS_GATE TT (global_routing)` line or the TT sign-off frame of `OT_GRT_FRAMES`. Path detail comes from `4_cts_post_hook.rpt`. I quote no `4_cts_final.rpt` or `5_global_route.rpt` number. The endpoint names in lever 4 and lever 8 come from the `tt_setup_repair.log` final row.
+
+Signed (V, failure_breakdown 21:17): S81 43/394, HEAD 24/26, QC 27/130, KV 6/56. No change since 15:30.
+Method (V): one scan of every route job on epyc8, epyc10, intel1, epyc2, epyc9 and epyc7 with `run_route.log` written in the last 3 h (261 jobs; last `OT_TT_SETUP_REPAIR`, GRT gate, `OT_GRT_FRAMES` and `OT_HOLD_GUARD_GRT` lines). `kit_wave_state.json` (21:03). Two `4_cts_post_hook.rpt` reads. Posts since 19:35 from 13 lanes.
+
+## 0. Headline
+
+1. **No D8e, N4.1q/N4.2 or D24c kit has a GRT number yet (V).** The first D8e numbers are PC-TT only, from 164 S81 rows in place/route. Two QC N4.1q kits are at GRT: coll_ft x2 have GRT-TT +19.03 and +27.08 (PASS), with hold FF est -124.17 / -162.52 before repair. D24c applied at 21:04 and has no kit past gen.
+2. **D8e sorts S81 into three groups (V, PC-TT):**
+   - Near (D8f also touches these): col_h9_r2 has 7 kits at -13.57 to -13.63 and one at +0.02 (pv7a260fc0). It was -96.71 GRT-TT before.
+   - Clean slice_station: t24 x2 at +152.85 / +155.20, t50 at +165.24 (was -42.69), t29 cl2e5c855a at +44.48.
+   - Broken in families that D8f and D8g do not touch:
+     - leaf t25: -775.90, tns -2,166,466, 7,817 violators.
+     - col_h9_r1: -277.82, tns -69,621, 641 violators.
+     - col_h10_r0_p4 x3: -309.66 (was -473.83).
+3. **The col_h9_r1 class is clock latency plus one unbuffered leg (V, post_hook TT).** The path is `u_lpl_9_r.u_y_q.g_chunk[1].r[23]` -> `u_t3_payload/i[47]` (sstn_payload536), with launch clock 452.22 ps against capture `ck` 151.21 ps. That is 301 ps of skew against setup. The data leg is one INVx4 into 98.86 fF, then 717.76 ps of wire delay. Slack is -297.57. Repair stalls at -278.0 after 4,092 iterations.
+4. **The 1935 lever 2 was a corner error, now withdrawn.** The -44.50 ROM -> bn0 path was FF (from `5_global_route.rpt`). At TT on GRT RC all ROM -> bn ends pass (+27 to +84; R, S81-GEOM-OPUS 20:48). The real p3..p6 class is the y_xa/xb relay legs, which D8g c4c fixes.
+5. **KV D25c is D25b with two notes renamed (R).** It still lacks F2 (K1), the W3 polyline move (K5) and hgi_v8 (K8). The 8 hg types sit at PC-TT -852 to -898 on D23H, and repair adds 0 ps. Their section B rows are in no event.
+6. **Serdes (R, FABLE-FIX-S81-SERDES 22:36):**
+   - H19 (k-means roots) routed with DRC 0, and `6_final` + spef are written. The make stopped at `6_report` on a flow guard (partition IR deferral refuses `PRE_FINAL_REPORT_TCL`); it is not a design fault.
+   - H20 (star) failed detailed route with DRT-0255 after 99.5k iteration-0 violations.
+   - **P:** pick k-means as the serdes form for the D8g host=type trunk rows now. Run `signoff.py` (TT/FF) on the H19 `6_final` without waiting for H21.
+
+## 1. Outcome of the 1935 levers
+
+| 1935 # | Lever | Outcome (22:37) |
+|---|---|---|
+| 1 | D8f clean landing | Not landed. Bind r3 died at 19:57 because ot-auto-retire deleted the S81-DIE-R3 gitshim. r4 elab passed at 20:59 and is in strict bind; apply about 22:45. The D8e reads asked for (leaf, col_h9_r1) are in this section: both are broken. |
+| 2 | ROM -> bank late capture | WITHDRAWN (FF corner; see 0.4). Replaced by D8g c4c relay_sites, now handed to S81-DIE-R3. |
+| 3 | GRT hold guard stop at met | f2c9d5f37f3 is in rt. New kits print `installed (single-mode GRT hold repair progress/time bound)`, but no kit has shown the stop yet. Old kits still chunk at 0 violators: sle_hc0 cl38badc56 chunk 4 (+1.15), cl4baa7c9c chunk 4 (+6.84), sle_hc0 cl05696ed1 chunk 3, slw_st_b_v2 chunk 3, slice_station t41 chunk 6 at ws +20.47 (+1.21). |
+| 4 | QC st_a rows + coll_core lane | Rows requested at 19:26 (FABLE-FIX-QC-STA) and not in N4.2. The 8 N4 st_a kits are still -159.90 to -288.18 PC-TT. A coll_core lane exists (QC-COLL-CORE-1118): NEED-STATION, 106 groups. No N4.3 yet. |
+| 5 | Sign-off from the bundle | rt fd8cedab is live, but nothing has signed since, so it is untested. |
+| 6 | KV W1 + hgi reads | D24c applied at 21:04. The F2 rule is on main aae3f7b5ec6. D25b went RED at PRE (SCHEMA); D25c is building. See lever 5. |
+| 7 | S81 tail | S81-TAIL classified the tail types: glue is an RTL OR chain; pvso_entry t1/t2 need macro-path rows (31+31); leaf t56 is an RTL reset width. seqhost and dsdv_slice still have no cause. |
+| 8 | HEAD hd_mesh | The 16 DRC come from 2 stale reserved clock rows plus 2 tap-site slivers (R, 20:51 / 21:01). r5 deletes them; the mesh_pa2 route-keeping ECO is running. mesh_w1 is dropped. |
+| 9 | p2 throat | In D8g c4c (MX flip, frame hops <= 405, ft0 22x51). The DRT-0352 probe is being retried. |
+
+## 2. Levers ranked by closure impact
+
+| # | die | lever | unblocks | owner |
+|---|---|---|---|---|
+| 1 | S81 | leaf: name the `u_lf4_u_vs/sw_fi` class (7,817 ends) and write rows for D8h | leaf family about 77 | S81-LEAF-D8E-1118 (read), S81-DIE-R3 (rows) |
+| 2 | S81 | col_h9_r1: t3_payload `ck` lead (about 300 ps) + relay site on the `u_lpl_9_r.u_y_q` -> t3 leg | col_h9_r1 60 | S81-GEOM-OPUS (rows), S81-DIE-R3 (D8h) |
+| 3 | S81 | D8g c4c bind with the bs0 branch relay cycle row in the same delta | col_h9_r0_p2..p6 54 | S81-DIE-R3 |
+| 4 | S81 | col_h10_r0: frame_int_o0 face hop (worst `u_ist_frame_int_o0_0/q[1156]`, 905 ends), using the c4c p2 frame-hop form | col_h10_r0 p1..p6 | S81-GEOM-OPUS |
+| 5 | KV | D25c lacks F2, the K5 polyline, K8 hgi_v8 and the hg section B rows: put them in D25d, not volume on D25c | hgi 11, hg 8 | KV-D23-COMPOSE, FABLE-FIX-KV-HG |
+| 6 | QC | N4.3 = st_a rows (72 paths, 0 conflicts on live) + coll_core bound record-bus stations | st_a about 11, coll_core 1 | QC-PLAN-R3, QC-COLL-CORE-1118 |
+| 7 | S81 | serdes form = k-means (H19 DRC 0); sign off H19 now; host=type trunk rows in D8g/D8h | serdes 11 | FABLE-FIX-S81-SERDES, S81-DIE-R3 |
+| 8 | S81 | phy__t1 reset recovery: -2,467.98 PC-TT, worst end `u_bin_dfi_i0/eq` RESETN, 2,101 ends | phy 1+ | NEEDS-LANE |
+
+### Lever 1. leaf `sw_fi` (S81, about 77 types)
+**Evidence.**
+- V: epyc10 `ot_s81sl_leaf__t25__cl431c660f` (D8e), `tt_setup_repair.log`. PC-TT went -1,113.81 -> -775.90, tns -2,495,882 -> -2,166,466, with +1,990 cells. The repair stalls at -765.907 for its last 100 iterations. The final row has 7,817 violators, worst end `u_bound.u_u_lf4_u_vs/sw_fi`. Placement density is 0.25.
+- R: the other leaf kits (t24, t40, t44) are still running. Of the 3 leaf kits that reached place in 6 h, t54 failed on the NS face bank (the `face_flop_ns_types row_stride 2` row, S81-DIE-R3 19:51).
+
+**Root cause.** Not read. A -766 ps wns with a stalled repair and 7.8k ends looks like a structural class, not a tail (I). It is not XR (S81-DIE-R3 19:51).
+
+**Fix.**
+1. S81-LEAF-D8E-1118: open `4_cts_post_hook.rpt` on this kit, or the first leaf kit that has one, and name the start of the `sw_fi` path. Say whether it is distance (station/relay row), clock (core pin lead) or logic depth (RTL).
+2. S81-DIE-R3: one class row for D8h. Also revert or widen `row_stride 2` for the t54 face bank.
+
+### Lever 2. col_h9_r1 (S81, 60 types)
+**Evidence (V, epyc2 `col_h9_r1__t1__cl49d7a23e__pv36da905c`, D8e, `4_cts_post_hook.rpt`, TT).**
+- Worst path: `u_lpl_9_r.u_y_q.g_chunk[1].r[23]` (clock 452.22) -> INVx4 (fanout 1, 98.86 fF) -> `u_t3_payload/i[47]` (`ot_s81_sstn_payload536`). Arrival 1,374.60; `ck` at 151.21 ps; required 1,077.03; slack -297.57.
+- `r[2]` -> `i[26]` gives -290.15; the next end is -284.63.
+- The repair ends at -278.008, 641 violators, worst end `t3_payload/i[47]`.
+
+**Root cause (I).** Two terms:
+- (a) The hard core's `ck` is 301 ps earlier than the launching relay flops, so the capture clock is early against setup.
+- (b) The last relay leg is one unbuffered wire of 718 ps (about 600 um by the 98.86 fF).
+
+This is the same class S81-GEOM-OPUS named for p3..p6 (y_xa/xb last relay into sstn t1/t2, -64/-35/-23), but far larger here because of term (a).
+
+**Fix.**
+1. S81-GEOM-OPUS: `clock.core_pin_lead_ps` on `u_t3_payload` (the D8f key). Size it from the measured skew, less the hold room on the other t3 inputs.
+2. A relay_site that puts `u_lpl_9_r.u_y_q` within 405 um of t3 (0 cycles, c4c form).
+3. Both go in the delta after D8g (D8h) and cover all 60 col_h9_r1 types.
+
+### Lever 3. D8g c4c (S81, 54 types)
+**Evidence (R, S81-GEOM-OPUS 22:35).**
+- c4c (ad60aa762ac9) on D8f c4 changes p2 (12 types) and p3..p6 (42 types).
+- G0 shows 2 errors against 2 in the control, 0 new. Strict bind on c3 gave 0 errors and LATCHECK 873/873.
+- bs0.i_x0/i_x1 are single-cycle (TT setup -154 / hold +179 against `ck[0]`). Their relay -> bs0 legs are 918 to 972 um (FABLE-PD-STRUCT-2053 S1).
+
+**Fix.** S81-DIE-R3 binds c4c together with the bs0 branch relay cycle row (xa_1_bs0_0 / xb_1_bs0_0, 283 + 266 bits, bs3 form) and the S81-FAILS rows (station t51 native_w/_e paths, eng t1 engram closure). The S81-TAIL pvso_entry 31+31 renames (`lanes/handoff/S81-TAIL-1118-pvso-macro-rows.json`) belong in the same delta.
+
+Without the bs0 row, all 42 p3..p6 types fail on bs0 at GRT (I, from S1). The 12-type cf lattice WARN is advisory; take c4d (origin 604.8 + track_offset) only if the bind complains.
+
+### Lever 4. col_h10_r0 (S81)
+**Evidence (V, PC-TT).**
+- p4 pv5b623e07 / pvc9270d09 / pvd11cc58b (D8e): -524.98 -> -309.66, tns -453,854 -> -25,037, +4,744 cells. 905 violators, worst end `u_ist_frame_int_o0_0/q[1156]` D.
+- The d8t p4 kit was -473.83.
+
+**Root cause (I).** This is the frame_int_o0 face-bank hop that c4c fixed on p2 (446 -> <= 405 um). col_h10_r0 has no such row.
+
+**Fix.** S81-GEOM-OPUS: measure the frame_int_o0 hops on the h10_r0 plan and site regs as on p2. Put this in D8h.
+
+### Lever 5. KV D25c against FABLE-PD-STRUCT-2053 K1-K9
+
+D25c = D25b with the two SCHEMA annotation keys folded into the note (R, KV-D23-COMPOSE 22:34). The gate is on epyc8. Per item:
+
+| K | 2053 risk | In D25c? | Read |
+|---|---|---|---|
+| K1 | F2 writer-start stages 6/7 reset tap | **NO** | The rule has been on main since aae3f7b5ec6 (21:04, `start_stage_raw_resite.py`, plan-rule form: 342 START stages on hgi_v3..v7, median 764 um, worst 2,611 um). D25b/c are built on tools d6a5a52. hgi_v4..v7 keep PC-TT -571.30 / -595.44 / -802.28 / -890.39 (V, D23H). Run the resite after the W1 tree re-solve and use `--check` on the bind. |
+| K2 | kt stations | PARTLY | The 16 sited rows per type (304) are kept, so the 2053 line-siting risk is gone. But no generator places the kst cells at those sites (`kit_istations` maps `core:` rows to S81 classes only), so the cells are GPL-placed. The k3 proof used plan sites, so the proof does not carry over. |
+| K3 | second band rect copy | YES | Both copies, the core and the tap are shifted by the same amount. |
+| K4 | 16.4 um E gap, about 595 of 1,560 q wires | n/a | Read GRT overflow at x 61..78, y 1097..1218 on the first hgi_v1 kit. |
+| K5 | W3 polyline on the ft2 stations | **NO** | It is still [[340, 950.4], [340, 618]], 16 to 25 um from the ft2 stations. The 2053 fix was x about 312 with the tail ending at y about 660. This is what fails next on hgi_v1 after W1 (k4: new overflow of 12,000 at x 0..400, y 400..600). |
+| K6 | W5 two-hop pad (580 + 670 um) | as is | 0 cycles at (45, 560). Expect a small negative at GRT; the fallback is a second pad stage (+1 cycle). |
+| K7 | W2 with W1 untested | as is | The proof kit decides. |
+| K8 | hgi_v8 core at y 924.48 | **NO** | FABLE-FIX-KV-HG gave the row at 21:04 ([25.92, 924.48] -> [25.92, 1097.28]). hgi_v8 PC-TT is -294.85 (V, D23H). |
+| K9 | 5 unsigned cores (e0, ectlk q0..q3) | rule taken | No hg/hgi kit counts until these sign. |
+
+**Also absent: hg section B (V + 2053).**
+- 8 hg types on D23H: hg_v1p2..p6 and hg_v3 at PC-TT -851.75 to -897.59. Repair adds 0 ps (wns unchanged in -> out); tns -169k to -286k. kv3_hg is at -235.00.
+- These are the ectl q0 eN -> `u_bout_o_ectl_Q_N_eN` legs (-837, 2,540 um), tN, ring dsel and astk ep -> er rows. No event carries them.
+
+**P (no hold).** Let D25c apply if green; it is W1/W2/W3/W5 on hgi_v1 only. Do not read hgi_v4..v8 or hg kits on D25c as a result. Compose D25d now on D25c: F2 resite after the W1 re-solve, K5 polyline at x 312 / tail 660, K8 hgi_v8 +172.8, and the hg section B rows (FABLE-FIX-KV-HG has them in `lanes/handoff/FABLE-FIX-KV-HG-rows-d24.json` section B).
+
+### Lever 6. QC N4.3
+**Evidence.**
+- V, N4 kits, PC-TT: sle_st_a_v1 -166.94 / -208.31; sle_st_a_v2 -198.80 / -214.34 / -186.80; slw_st_a_v1 -272.62 / -288.18; slw_st_a_v2 -159.90 / -167.95.
+- V: coll_core -575.77, tns -656,572. cbx_q10 -730.88 (repair made wns worse). sle_ctl x3 -85.79 to -109.28. cbf_q01_s2 -214.21.
+- R (QC-COLL-CORE-1118 19:31): coll_core is NEED-STATION. Bound record buses: qdata -> bout_rec_tx_s0 427 bits at 851 um; dsel -> bin_rec_rx_s2_i 331 bits at 1,298 um; bin_rec_rx -> coll.srr about 297 bits at 1,500 um.
+- R (FABLE-FIX-QC-STA 19:26): 72 st_a row paths resolve on live N4.1q with 0 conflicts, and N4.2 touches none of them.
+
+**Fix.** QC-PLAN-R3 composes N4.3 on N4.2 now with the st_a rows + asbuilt edits (and the R8 re-derive), plus the coll_core station rows when QC-COLL-CORE posts them. Do not wait for a routed st_a kit.
+
+### Lever 7. serdes form
+H19 k-means: routed, DRC 0, `6_final` written (R). H20 star: DRT-0255. H21 (star + boot fix) is in GRT.
+
+**P.** FABLE-FIX-S81-SERDES runs main `signoff.py` TT/FF on the H19 `6_final` now, and takes k-means for the serdes die_trunk host=type rows that S81-DIE-R3 carries in D8g/D8h. The 6_report stop is a flow guard: WAVE-FLOW-R2 lets `final_report.tcl` accept `pad_abut_strip.tcl` as a pre-final hook, or skips the IR deferral for that hook.
+
+### Lever 8. Smaller, one lane each
+- **phy__t1** (intel1, -2,467.98 PC-TT, tns -456,368, 2,101 ends, worst end `u_bin_dfi_i0/eq$_DFF_PN0_/RESETN`): a reset recovery class. Reset is not staged to the dfi bank. NEEDS-LANE.
+- **slice_station t43** (-587.65, 31 ends, `cland_reader_start_ft18_i` g_x[0]) and **t29 clc7772371** (-345.20, 32 ends, `cland_fstart_ft3_o`): START-hop ends. Confirm that D8f's 8 START rows cover ft18 and ft3. If not, S81-DIE-R3 adds them to D8h.
+- **HEAD:** hd_ctl -184.99 PC-TT on 1 end (tns equals wns): one routed setup ECO, owner HEAD types lane. hd_mesh via r5 + mesh_pa2. These two take HEAD to 26/26.
+- **hold guard** (WAVE-FLOW-R2): show one `OT_HOLD_GUARD_GRT` stop line on a post-f2c9 kit. Until then, the 22 old kits keep chunking.
+
+## 3. Stop list
+- Do not read setup from `5_global_route.rpt` (FF) or `4_cts_final.rpt` (pre-tap-balance). The 1935 lever 2 was wrong for this reason.
+- No late-capture rows for col_h9_r0 ROM -> bn (all pass at TT).
+- Do not expect D8f or D8g to move leaf, col_h9_r1 or col_h10_r0 (they touch none of them). Read their D8e kits now and do not wait for D8f GRT.
+- No p3..p6 D8g kit counts as proof before the bs0 row is in and S1/S2 are read at TT on GRT.
+- Do not treat D25c as carrying F2, K5 or K8, and do not launch hgi_v4..v8 or hg volume to prove it. No hg/hgi kit counts before e0 and ectlk q0..q3 sign.
+- No unchanged relaunch of leaf t54 (face bank), leaf t56 (RTL rst_n), pvso_entry t1/t2 (macro paths), gunit t1 (module closure) or eng t1 (engram closure).
+- No more H20 star route attempts; H21 is the last star read.
+- No pc rows from HG6-era kits.
+- No hold chunks after 0 violators (rule exists; prove it fires).
+
 # FABLE-CLOSURE-STRATEGY 2026-11-18 19:35 PST (1935): what fails next on D8e / N4.x / D24
 
 Reviewer: FABLE-CLOSURE-STRATEGY-1935. Read-only: no job launched, killed, deleted or patched. Technical PD only. HBM parked.
