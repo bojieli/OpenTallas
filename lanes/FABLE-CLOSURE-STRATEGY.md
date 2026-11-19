@@ -1,3 +1,151 @@
+# FABLE-CLOSURE-STRATEGY 2026-11-19 03:30 PST (0330): what the tap rows and the +cycle rows will not fix
+
+Reviewer: FABLE-CLOSURE-STRATEGY-04xx (Fable). Read-only: no job launched, killed or patched. Technical PD only; HBM parked.
+Gate (R-MINIMAL): DRC 0, routed TT >= -42 ps, internal FF hold >= 0, bind + lane latency.
+Marking: **V** = I opened the log or file this round. **R** = reported by the named lane. **I** = inferred. **P** = proposal.
+Not re-proposed (owned since 02:00, evidence read): col_h9_r1 trunk (CTS -278 -> -14), glue relay core, tt_ctlm resynth + fence, lepe taps / CRP / WREP,
+leaf fold + cap-1,000 rows + CFX, seqhost u_win, hd_mesh ECO, QC N4.4 / N4.5, KV hgi t2 split, col templates, the pinned-tree tool lag.
+Rule set r713 as in `tools/die_plan/cbc_rules.py`. Nothing below is a hold (r703); every item is an estimator, a recipe change or a row.
+
+## 0. Headline
+
+1. **The leaf in-tap skew is a few far, small sink clusters per tap, and the cap-1,000 rows do not remove it (V).** Non-leaf taps follow the size of
+   the tap's sink region; leaf taps read 100 ps or more even when small and compact. Lever 1.
+2. **The cap pass itself is a cause (V).** Taps sitting exactly at the cap are 2 to 6 times more often over 100 ps than larger, uncapped taps. Lever 1.
+3. **Kit synthesis is flat and ABC gets no delay target (V command line, R mechanism).** Depth fixed in RTL comes back relaxed. 63 of 95 scanned types
+   have cones over 13 cells and only seqhost, glue and tt_ctlm have an owner for it. Lever 2.
+4. **The placed-leg reach estimator returns nothing on 3 of 4 hosts and over-flags where it works (V).** Its digest line "legs>405 in 0" is a failed
+   scan, not a clean kit; col_h9_r2 has about 3,400 legs over 405 um and passes 30 of 30. Cycle rows sized from distance alone are too many. Lever 3.
+5. **About 1,000 lane-cycles of new rows (KV pv, KV hg, QC ft, S81 far copies) have no token run and no die-level STA / GRT on the plan that
+   carries them (R, V by absence).** Lever 4.
+
+## 1. Levers ranked by closure impact
+
+| # | die | lever | types | owner |
+|---|---|---|---|---|
+| 1 | S81, KV | tap assignment by compact sink region, no cap spill; CTS-only A/B on two leaf DBs | leaf 75, kv_leaf 5, iq_C, kv512_C, c1x_C 43, lepe / lepw, KV hg 8, pv 16 | WAVE-FLOW-R2 (clock_taps.tcl), FABLE-FIX-S81-LEAF (A/B), CBC-RULES-1119 (rule constant) |
+| 2 | all | synthesis recipe: delay target in the ABC script, or keep_hierarchy per bound sub-module | 63 types with cones over 13 cells (svc_hi / svc_lo, kv3_pc 4, iq_C, kv_leaf, kv512_C, kv3_hg 8, serdes) | WAVE-FLOW-R2 (recipe), FABLE-FIX-S81-SEQHOST (measure); svc depth NEEDS-LANE |
+| 3 | all | reach estimator: retry failed scans, drop strap legs, classify a leg by macro span and logic, then size cycle rows | every type with a +cycle row | PRECHECK-1119, CBC-RULES-1119 |
+| 4 | KV, QC, S81 | token run + die crossing STA / GRT on the composed plan before the bind is published | KV 56, QC 130, S81 394 | KV-D23-COMPOSE, QC-PLAN-R3, S81-DIE-R3 (one worker each); token run NEEDS-LANE |
+| 5 | S81, QC | region for every scattered soft block (0 cycles) before its +1 cycle form | leaf 75 (vp glue), coll_core, lepe, glue-like partitions | FABLE-FIX-S81-GLUE (tool), FABLE-FIX-S81-LEAF, QC-PLAN-R3 |
+| 6 | S81 | col_h9_r2 FAIL_route and the 162 far branches left over 405 um | 60 + col families | WAVE-FLOW-R2, S81-GEOM-OPUS |
+
+### Lever 1. In-tap skew: far small clusters, and the cap spill
+**Evidence (V).** `OT_TAP_INSERTION` joined with the TritonCTS lines of the same `4_1_cts.log` (sink region `CTS-0025/26`, buffers in path `CTS-0013`),
+taps of >= 100 sinks, every route kit under `ot-jobs` on epyc8 (61 kits, 2,461 taps) and epyc10 (37 kits, 1,015 taps). Share of taps with skew >= 100 ps:
+
+| | non-leaf, epyc8 / epyc10 | leaf + kv_leaf, epyc8 / epyc10 |
+|---|---|---|
+| sink region W+H < 150 um | 2 % / 6 % | 55 % / 54 % |
+| 150 to 300 | 4 % / 9 % | 48 % / 35 % |
+| 300 to 450 | 29 % / 25 % | 73 % / 74 % |
+| 450 to 600 | 80 % / 40 % | 92 % / 88 % |
+| >= 600 | 75 % / none | 100 % / 100 % |
+| 100 to 500 sinks | 2 % / 8 % | 63 % / 52 % |
+| 1,000 to 1,500 sinks | 6 % / 13 % | 75 % / 70 % |
+| buffers in path >= 8 | 79 % / 33 % | 92 % / 89 % |
+
+- Sink count hardly matters outside leaf. Region size does: W+H under 300 um keeps a tap under 100 ps in 91 to 98 % of cases.
+- Taps at the cap (1,500 to 1,651 sinks, all families) are over 100 ps in 45 % (epyc8, 126 taps) and 71 % (epyc10, 49 taps). Larger uncapped taps
+  (1,651 to 5,000): 20 % and 12 %. `clock_taps.tcl` line 477 moves the cheapest sinks of an over-full tap to the next-nearest tap with room.
+- Leaf, per sink (`fable-fix-s81-leaf/t27d8e` and `t69d8e/leafclk_cts.tsv`, 26 taps): spread inside one clock leaf net is 1 ps. The spread is between
+  leaf nets of one tap: median 117 ps (t27) and 92 ps (t69). No register class or flop master is early or late (class medians within 15 ps).
+  The latest cluster holds 2 to 8 sinks in 19 of 26 taps, and cluster arrival follows distance from the tap's sink centroid (correlation >= +0.5 in
+  15 of 26 taps, up to +0.97). `tap_balance.tcl` then pads the tap to that latest cluster, which leaves the bulk early (clk_t14: 159 ps).
+- Worst taps: leaf t21 clk_t12, 1,500 sinks (1,942 before the cap pass), insertion 756 ps against the 450 target, skew 345; leaf t16 clk_t9, 1,499
+  sinks, 685 / 257. Kit config: `OT_TAP_PITCH_UM = 400`, `OT_TAP_MAX_SINKS = 1500`, pair radius 200; CTS is one buffer type (BUFx24) with default clustering.
+- Families outside the tap lanes with the same reading: dsdv_slice_iq_C 20 of 45 taps over 100 ps (insertion to 863; the 02:00 "iqf taps clean"
+  line is withdrawn), kv512_C 18 of 40 (819), c1x_C 8 of 46 (650), lepe_nh_mus_C 15 of 39, kv_leaf 25 of 29 (1,020). KV from the kit scan (R):
+  kv3_hg family 102 to 207 ps on 8 types, pv_v1 288 with 14 taps over.
+- Not fatal alone: col_h9_r1 has 61 of 494 taps over 100 ps and its proof kit reads -13.6.
+
+**Root cause.** Two terms. (a) Region: a tap that serves sinks over more than about 300 um of W+H gets 6 to 14 buffer levels and unequal branches.
+(b) Stragglers: scattered soft logic, the cap spill and the group / pair passes hang a few sinks 200 to 300 um from the tap's bulk; the tree
+reaches them late and the pad follows them. (I) for which pass produces each straggler: not traced sink by sink.
+
+**What the dispatched rows do.** The 78 leaf rows use cap 1,000 and `tap_radius_um` 200 (`S81-LEAF-TAP-ROWS-cap1000.json`, V); 24 types keep taps
+at exactly 1,000, the spill form. `cbc_rules.TAP_RADIUS_UM = 200` allows W+H up to 800. They will shorten the deepest trees; they do not address (b),
+and leaf taps of 100 to 500 sinks already fail in over half the cases.
+
+**Fix (P).**
+1. FABLE-FIX-S81-LEAF: CTS-only A/B from the existing `3_place.odb` of leaf t21 and t16 (about 30 min each, no GRT), read `OT_TAP_INSERTION`:
+   A nearest-tap only (cap pass off); B = A + `-sink_clustering_size 20 -sink_clustering_max_diameter 50 -balance_levels`; C = A + pad to the
+   95th-percentile sink, not the latest. Accept: 90 % of taps under 60 ps and no tap insertion over the target.
+2. WAVE-FLOW-R2: whichever form wins becomes the kit default; the cap becomes a reason to ask for a tap (WARN with the site), never a move to a farther tap.
+3. CBC-RULES-1119 / PRECHECK-1119: the tap rule is "sink region W+H <= 300 um", checked on placed sinks; drop radius 200. tap_resolve.py and
+   reach_fix.py take the same criterion. Die owners price the added M9 drops (about 150 um pitch on leaf free area, roughly twice the rows posted).
+4. The t27stb kit (GRT pre-pass) stays as it is; it balances subtrees and may cover (b). Read it before choosing between A, B and C if it lands first.
+
+### Lever 2. Flat synthesis with no delay target
+**Evidence.** V: `1_2_yosys.log` of leaf t27keep: `abc -script /OpenROAD-flow-scripts/flow/scripts/abc_speed.script ...`, `SYNTH_HIERARCHICAL = 0`.
+R (FABLE-FIX-S81-SEQHOST 03:20): the script maps with `&nf` and never references the period, so area recovery relaxes every cone toward the deepest
+cone of the type; a 32-bit lookahead incrementer came back as a 16-stage OR chain (640 of 833 ps) and a 14-buffer serial chain.
+R (PRECHECK depth scan, mapped cells, 95 types): 63 have cones over 13: svc_hi_dsdv_svc_rs t2 37 (69k ends), svc_lo t7 34 (83k), kv3_pc x4 26 to 29,
+hd_ctl 23, iq_C 21, kv_leaf 20 to 21, kv512_C 18, serdes 17 to 18, kv3_hg family 15 to 18, glue 16.
+**Root cause.** The mapper has no timing budget and one flat netlist; hand netlists (glue, tt_ctlm) and RTL rewrites (seqhost) each work around it.
+**Fix (P).** WAVE-FLOW-R2: a kit-owned ABC script that uses the target (`&nf` then `buffer -c`, `upsize {D}`, `dnsize {D}`), target = 600 ps zero-wire
+(the r713 depth rule), selected by one kit key. Proof is synthesis only: zero-wire STA (the seqhost frame) on svc_hi t2, kv3_pc and iq_C, old
+script against new, count of ends over 600 ps and cell count. Until it lands: `(* keep_hierarchy *)` on each bound sub-module with a state loop
+(seqhost kit3 is the test). svc_hi / svc_lo depth has no lane: NEEDS-LANE, and it shares a cause with the open over-cell-count class
+(svc_lo_dsdv_svc_rs_w__t1, 450 min unanswered): buffer chains.
+
+### Lever 3. Reach estimator: blind on three hosts, strap legs, distance without wire class
+**Evidence (V).** `~/.local/state/precheck-kit-scan/*.placed.json`: epyc7 about 50 of 50 kits have a result; epyc8 0 of 73, epyc9 0 of 49, epyc10 1 of 68
+hold `{"rc": 1}`. `kit_scan.py` writes the failure once and never retries (`if not sp.exists()`). The hourly digest then prints "legs>405 in 0".
+- Where it works, slice_station's top legs are all `port:strap_ca_*` (static straps, 1.2 to 2.0 mm), and kv3_hub_Ei's is a strap at 2,254 um.
+- col_h9_r2: 3,413 and 3,424 legs over 405 um (`u_y_xa/xb.o -> u_bs / u_t` core pins, 491 to 550 um, 1,132 + 1,064 + 370 bits). The family passes
+  30 of 30 at TT -24 or better. col_h9_r1 has the same legs and failed only on the 652 to 729 um leg that crosses the ROM columns (718 ps unbuffered, R).
+- Real, undeclared legs it does show: kv3_hg x8 `hst_t2.ti_b -> head_e` 1,582 bits at 600 to 691 um and `ectl columns -> hst0_g` 1,559 bits at 835;
+  kv3_hgi x7 546 to 601; kv3_pv x9 `u_pvgN_pN -> u_pv_u_gN_j` 2,052 bits x 4 groups at 569 to 596; QC sle / slw_su_l1 `u_ist_x_su_c -> u_lane` 599 bits
+  at 488 to 564; lepe `rid -> bout` 1,041 bits at 1,257.
+**Root cause.** A buffered register-to-pin leg with no logic closes to about 550 um; a leg over a hard core cannot be buffered and fails near 400.
+The estimator and the CBC rows price both the same.
+**Fix (P).** PRECHECK-1119: retry `rc != 0`, exclude false-path and strap ports, and print per leg the span over hard cores and the zero-wire logic
+delay. CBC-RULES-1119 and the die owners: a +cycle row is taken for a leg over 405 um only if it spans more than about 200 um of core or carries
+logic; otherwise it is left to repair or gets a re-site. Applies now to: the 162 S81 far branches (03:17), QC ft re-station (+1 to +4 on 119
+lanes, upper bound), KV pv class C (+843 cycles on 132 lanes, max +10) and class D (+12 on 64 columns).
+
+### Lever 4. Cycle rows without a token run or a die-level proof
+**Evidence.** R: KV pv C +843 cycles / 132 lanes, D +12 on all 64 command columns, pe2 to +11; KV hg section B +6 on 56 lanes; QC ft +1 to +4 on 119
+lanes, slw_fw +3 on 5; S81 bs0 +1 on 2 buses. V by absence: no post since 11-18 16:00 reports a die GRT or crossing STA; the last are S81 D7w,
+QC N3, KV HG1A, each 3 to 5 events old. Token cost per die is still not computed.
+**Fix (P).** Each die owner runs its existing die GRT0 + crossing STA chain on the composed plan in parallel with the strict bind (KV: 25 min, R),
+and one lane runs the token sim on the KV D25e and QC N4.5 cycle rows before publish. Advisory for count, but it is the only check of lane latency
+at die level, which is a blocking gate. HEAD's three die items (M8 grant lock on 14 types, hold on real views, stale reservations) are unchanged.
+
+### Lever 5. A region for scattered soft logic before a cycle
+**Evidence.** V: leaf t69 placed scan, 3,766 legs over 405 um: `cst_hi -> lane macro` 1,193 to 830 um, `driver_xwd_c -> xwd_q` 241 to 765,
+`vq -> u_ist_leafup` 278 at 619, `driver_hw_d -> u_vn` 256 at 594. Kit `PLACE_DENSITY = 0.25` on partitions PRECHECK measures at 0.4 to 2 % used.
+R: t27keep's remaining class is vp glue with 600 to 800 um legs (336 + 122 ends) and "no region"; glue `u_record` stays 300 x 400 um without a fence;
+the tt_ctlm fence holds 99.2 % of cells; coll_core `bin / lpad / srr` scattered over 700 to 1,100 um.
+**Root cause.** In a nearly empty partition global placement has no reason to keep a block compact; its registers land hundreds of um apart.
+**Fix (P).** FABLE-FIX-S81-GLUE turns its fence recipe into a generator rule: each bound sub-module above a cell threshold gets a region at about
+55 % utilisation at the centroid of its core pins and face registers (0 cycles). FABLE-FIX-S81-LEAF runs it on t27 for the vp controller before
+CFX / form B are bound; QC-PLAN-R3 on coll_core `srr` beside its ring SRAMs. Cycles are then added only for legs the region leaves over.
+
+### Lever 6. col_h9_r2 route and the far branches (carried over, no new evidence)
+R: the 02:00 item (21 of 63 kits FAIL_route in the post-GRT max-wire repair) has no cause posted; WAVE-PILOT-FIX notes only that
+`OT_MAXWIRE_POST_SKIP` is not set. coll_core GRT ran 7 h 50 min in extra iterations with the clock NDR dropped (R). Both need one read of
+`5_1_grt.tmp.log`; neither is a timing verdict.
+
+## 2. Stop list (the 02:00 list stands, plus these)
+- Do not expect the cap-1,000 rows to remove leaf skew, and do not enforce a cap by moving sinks to a farther tap.
+- Do not quote "legs>405 in 0" from the kit scan on epyc8, epyc9 or epyc10, and do not count `strap_ca` legs as reach.
+- No +cycle row from distance alone: col_h9_r2 passes with 3,400 legs at 491 to 550 um.
+- No RTL tree-balancing as a depth fix without `keep_hierarchy` or the recipe change; the mapper undoes it.
+- No per-type hand netlist for depth after glue and tt_ctlm; fix the recipe.
+- No +1 cycle on a block whose registers have no region yet (leaf vp, coll_core).
+- No middle-channel (x 310 / 340) trunk in KV hg (R: overflow moves, 43,904 against 45,119).
+- No utilisation threshold as a flag (R: 572 of 610 types flagged).
+- No tap table solved before the core or bank moves of the same event (FABLE-PD-S81-0253).
+
+## 3. Not checked
+- Which pass creates each leaf straggler; KV and QC taps on epyc7 / epyc9 (the tap join ran on epyc8 and epyc10 only).
+- Whether variants A to C close the leaf TT; the share of leaf TT that is clock is still unmeasured, and t27stb has no result.
+- The `&nf` behaviour itself (read from the seqhost post, not from the script: it lives in the flow image).
+- Why the placed scan returns rc 1 on three hosts.
+- col_h9_r2 FAIL_route, HEAD die items, any KV hg channel capacity number.
+
 # FABLE-CLOSURE-STRATEGY 2026-11-19 02:00 PST (0200): cross-family causes, reach rule, die readiness
 
 Reviewer: FABLE-CLOSURE-STRATEGY-01xx (Fable). Read-only: no job was launched, killed, deleted or patched. Technical PD only; HBM parked.
