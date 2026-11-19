@@ -28,3 +28,8 @@
   NEW: KV 6 DEAD-OWNER, owner KV-D23-COMPOSE last post 14:48 (kv3_hub_C/Wo, kv3_pv_v1n/v2n/v3/v3n).
   Revived DEAD: none (0 DEAD on S81/QC).
 - 2026-11-18 18:50 PST 18:50 vs 17:50 (U/F/S/D): S81 0/0/0/0 (was 6/11/11/0), QC 0/6/9/0 (was 2/5/9/0), KV 1/6+1/0/0 (was 1/2/0/6), HEAD 0. S81 leaf rows mapped to owners. QC STALE 9 are owned rows (FE/HC2/STM). QC su_l1 x4 FAILED-NO-RELAUNCH under PLAN-R3/FAIL-ROUTE-1115. KV hub/pv 7 FAILED-NO-RELAUNCH, kv3_hub_Wi has no owner row.
+- 2026-11-18 19:50 PST 1950 sweep: 507 unsigned rows (S81 352, QC 103, KV 50, HEAD 2) in lanes/OWNERS-SWEEP.tsv.
+  UNOWNED 0, DEAD-OWNER 0, STALE>3h 0.
+  FAILED-NO-RELAUNCH: KV kv3_pv, kv3_pv_v8 (other flow error, 2.4h, owner KV-D23-COMPOSE alive).
+  505 rows unflagged; S81 D8e relaunches running; S81 plan 394 types, 43 signed.
+  Action: KV-D23-COMPOSE to relaunch kv3_pv/kv3_pv_v8.
