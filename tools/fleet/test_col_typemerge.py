@@ -120,3 +120,39 @@ def test_superset_collector_only_keeps_plain_and_own_tree():
     assert [c["xy_um"] for c in a["collector_children"]] == [c["xy_um"] for c in b["collector_children"]] and len(a["collector_children"]) == 2
     assert a["collector_tree"] == "T1" and b["collector_tree"] == "T2"               # trees not copied from the template
     assert [t["index"] for t in a["tieable_children"]] == [0, 1]
+
+
+def test_superset_keeps_own_up_pin_when_template_up_is_far():
+    """S81-GEOM-OPUS 11-19 (D8h g fE4_p1_b0 1,045 um): a member keeps its own up pins when the template's would put
+    its up edge over max_hop; a member whose up edge stays short takes the template contract."""
+    import cland_col_superset as SS
+    UPN = ("cland_up_ready", "cland_up_fault", "fclk_out_cland_up")
+
+    def lc(children, upxy):
+        pins = [dict(name=n, xy_um=list(upxy)) for n in UPN]
+        pins += [dict(name=n % c["index"], xy_um=c["xy_um"]) for c in children for n in ("cland_dn_ready_%d", "cland_dn_fault_%d")]
+        return dict(collector_children=children, pins=pins, bands={})
+    ch = lambda i, xy: dict(index=i, xy_um=list(xy), seam=False, node="n%d" % i)
+    pt = {
+        # template (2 children) has its up pin on the E face; pv2 has it on the N face, right under its parent's dn child
+        "col_h9_r0_p1__t1__pv1": dict(outline_um=[1000, 1000], clock=dict(edge_clocks=[], added_taps=[],
+                                      landing_contract=lc([ch(0, (5, 300)), ch(1, (5, 700))], (995, 500)))),
+        "col_h9_r0_p1__t1__pv2": dict(outline_um=[1000, 1000], clock=dict(edge_clocks=[], added_taps=[],
+                                      landing_contract=lc([ch(0, (5, 700))], (500, 995)))),
+        "col_h9_r1__t1__pvP": dict(outline_um=[1000, 1000], clock=dict(edge_clocks=[], added_taps=[],
+                                   landing_contract=lc([ch(0, (500, 5))], (5, 5)))),
+    }
+    parts = [dict(name="a", type="col_h9_r0_p1__t1__pv1", origin_um=[0, 0], orient="R0"),
+             dict(name="b", type="col_h9_r0_p1__t1__pv2", origin_um=[2000, 0], orient="R0"),
+             dict(name="pa", type="col_h9_r1__t1__pvP", origin_um=[0, 1000], orient="R0"),
+             dict(name="pb", type="col_h9_r1__t1__pvP", origin_um=[2000, 1000], orient="R0")]
+    edges = [dict(id="mon_%s" % s, src=dict(part=s, bus="cland_up_ready"), dst=dict(part=d, bus="cland_dn_ready_0"), max_hop_um=405)
+             for s, d in (("a", "pa"), ("b", "pb"))]
+    plan = dict(partition_types=pt, partitions=parts, clock=dict(landing_network=dict(edges=edges)))
+    side = dict(collector=dict(types={}, edges=[]))
+    rep = SS.build(plan, side, fam_re="col_h9_r0_p1", collector_only=True, keep_taps=True)
+    up = lambda k: next(p["xy_um"] for p in pt[k]["clock"]["landing_contract"]["pins"] if p["name"] == "cland_up_ready")
+    assert list(rep["_up_kept"]) == ["col_h9_r0_p1__t1__pv2"]
+    assert up("col_h9_r0_p1__t1__pv2") == [500, 995] and up("col_h9_r0_p1__t1__pv1") == [995, 500]
+    assert len(pt["col_h9_r0_p1__t1__pv2"]["clock"]["landing_contract"]["collector_children"]) == 2   # dn union kept
+    assert SS.die_xy(dict(origin_um=[10, 20], orient="R180"), dict(outline_um=[100, 50]), (1, 2)) == (109, 68)

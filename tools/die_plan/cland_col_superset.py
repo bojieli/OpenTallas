@@ -40,6 +40,7 @@ def build(plan, side, fam_re=None, collector_only=False, keep_tree=False, keep_t
     fam = collections.defaultdict(list)
     for k in P:
         if re.match(r"col_h(9|10)_", k): fam[k.split("__")[0]].append(k)
+    own_up = {}                      # type -> (its own up pins, its own up edge clocks) before the template copy
     oldmap = {}                      # type -> {old index: key}
     newidx = {}                      # type -> {old index: union index}
     sidetypes = side["collector"]["types"]
@@ -99,7 +100,10 @@ def build(plan, side, fam_re=None, collector_only=False, keep_tree=False, keep_t
         for k in main: newidx[k] = {old: idx[key] for old, key in oldmap[k].items()}
         stT = copy.deepcopy(sidetypes.get(tmpl_k))
         for k in members:
-            ck = P[k]["clock"]; lc = json.loads(json.dumps(T).replace(tmpl_k, k))
+            ck = P[k]["clock"]; old_lc = ck.get("landing_contract") or {}
+            own_up[k] = ([copy.deepcopy(p) for p in old_lc.get("pins", []) if p["name"] in UP],
+                         [copy.deepcopy(e) for e in ck.get("edge_clocks", []) if e["port"] in UP])
+            lc = json.loads(json.dumps(T).replace(tmpl_k, k))
             lc.update(pins=copy.deepcopy(newpins), collector_children=copy.deepcopy(rows), bands=copy.deepcopy(bands),
                       tieable_children=copy.deepcopy(tie), registered_monitor=True)
             if any(r["seam"] for r in rows): lc["forwarded_clock_only_inputs"] = True
@@ -125,7 +129,48 @@ def build(plan, side, fam_re=None, collector_only=False, keep_tree=False, keep_t
         tn = part_type.get(e["dst"])
         if tn in newidx: e["dst_index"] = newidx[tn][e["dst_index"]]; n_se += 1
     rep["_edges"] = dict(plan=n_pe, sidecar=n_se)
+    rep["_up_kept"] = keep_own_up(plan, own_up)
     return rep
+
+
+def die_xy(part, t, xy):
+    """Die point of a type-local point (partition origin + orient over the type outline)."""
+    (ox, oy), (w, h), (x, y) = part["origin_um"], t["outline_um"], xy
+    o = part.get("orient", "R0")
+    if o in ("MY", "R180"): x = w - x
+    if o in ("MX", "R180"): y = h - y
+    return ox + x, oy + y
+
+
+def _pin_xy(t, name):
+    p = next((q for q in (t["clock"].get("landing_contract") or {}).get("pins", []) if q["name"] == name), None)
+    return p.get("xy_um") if p else None
+
+
+def keep_own_up(plan, own_up):
+    """S81-GEOM-OPUS 11-19 (D8h plan g, fE4_p1_b0 1,045 um): the family contract copies the TEMPLATE member's up pins
+    (cland_up_ready / _fault / fclk_out_cland_up) onto every member, but a member's up edge goes to its own parent, so
+    the template position can sit on another face, far from it. Per member, keep its own up pins (and up edge clock)
+    when the template position puts any of its up edges over the edge max hop and the own position is shorter.
+    The dn side needs no rule: re-indexed edges land on the union child with the member's own key (same xy)."""
+    parts = {p["name"]: p for p in plan["partitions"]}; PT = plan["partition_types"]; kept = {}
+    for e in plan["clock"]["landing_network"]["edges"]:
+        sp, dp = parts.get(e["src"]["part"]), parts.get(e["dst"]["part"])
+        if e["src"]["bus"] not in UP or not sp or not dp or sp["type"] not in own_up or sp["type"] in kept: continue
+        k = sp["type"]; st, dt = PT[k], PT[dp["type"]]
+        own = {p["name"]: p.get("xy_um") for p in own_up[k][0]}
+        a, b, d = _pin_xy(st, e["src"]["bus"]), own.get(e["src"]["bus"]), _pin_xy(dt, e["dst"]["bus"])
+        if a is None or b is None or d is None or "origin_um" not in sp or "origin_um" not in dp: continue
+        D = die_xy(dp, dt, d)
+        hop = lambda xy: abs(die_xy(sp, st, xy)[0] - D[0]) + abs(die_xy(sp, st, xy)[1] - D[1])
+        lim = e.get("max_hop_um", REACH_UM)
+        if hop(a) > lim and hop(b) < hop(a):
+            kept[k] = dict(edge=e["id"], template_hop_um=round(hop(a), 1), own_hop_um=round(hop(b), 1))
+    for k in kept:
+        ck = PT[k]["clock"]; lc = ck["landing_contract"]; pins, ecl = own_up[k]
+        lc["pins"] = copy.deepcopy(pins) + [p for p in lc["pins"] if p["name"] not in UP]
+        ck["edge_clocks"] = copy.deepcopy(ecl) + [x for x in ck.get("edge_clocks", []) if x["port"] not in UP]
+    return kept
 
 
 def identities(plan, rx=r"^col_", ignore=("param_set", "module", "note", "param_base_type")):
