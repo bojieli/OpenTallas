@@ -1956,6 +1956,9 @@ SCHEMA["properties"]["die"]["properties"]["channels"]["items"]["properties"]["cl
 # parameter values each clone binds; provenance only, gen ignores them.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["param_base_type"] = {"type": "string", "minLength": 1}
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["param_set"] = {"type": "object", "additionalProperties": {"type": ["integer", "string", "boolean", "number"]}}
+# TYPE-TEMPLATE (OWNER 11-19, tools/fleet/type_template.py): the type shares its kit with every marked type of equal plan layout key and
+# bound RTL key; the wave builds one representative per group.  Provenance for the wave and the counter only: gen and bind ignore it.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["type_template"] = {"type": "boolean"}
 # DIE-KV-59 10-31 (opt-in): FIRM sites of existing RTL stage flops, {flop name below the bound inst: [x_um, y_um]}
 # DIE-HEAD-79 11-07: registered hops that cross a hard core: one strong driver, no repair on the net (kit_istations.py)
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["macro_cross"] = {"type": "array", "items": {"type": "object", "additionalProperties": False, "required": ["sink_glob", "sink_pin", "cell"], "properties": {"sink_glob": {"type": "string"}, "sink_pin": {"type": "string"}, "cell": {"type": "string"}}}}
