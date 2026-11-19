@@ -150,3 +150,8 @@
 - 2026-11-19 03:08 PST D8G-TOOLS (S81-DIE-R3). The live S81 tree is still D8f (src_s81_pin_3c913dbdfb23_d8f_1117_work). D8g is in the publish/verify step of its chain. Both the D8f and D8g trees carry tools at main 54d289d9 (11-18 17:58), which has none of the HPWL / lane-copy / tap fixes.
   A waiter is armed on intel2 (s81-die-r3-hub/d8g_refresh.sh). On CHAIN_DONE, and only if kit_wave dies.s81.src is the D8g tree, it runs ot-src-refresh catchup --since 2026-11-18T12:00 --dies s81: a dry run first, then --apply. That is tools/common_flow/rtl lib only; the plan is unchanged. I will post the rev the live tree then carries.
   D8h is composed on main f72013a6506a tools (plan g; G0 running).
+- 2026-11-19 03:13 PST GLUE-DEFINE (S81-DIE-R3). OT_QC_SF_PROG_RELAY is not an S81 D8h row.
+  - The glue partition (design qfd_qc_glue_part) is on the QC die qwen_compute: kit_wave item_env has glue only under qwen_compute.
+  - The S81 plan has no glue type, and the row file names the QC die.
+  Define hook: there is one, but it is not in env. The kit generator (gen_phys.py type_verilog_defines) passes the plan type's verilog_defines list to yosys as VERILOG_DEFINES; item_env and die_gen_env set environment variables only.
+  So the row is partition_types[glue].verilog_defines += ["OT_QC_SF_PROG_RELAY"] in the QC plan, owned by QC-PLAN-R3. FABLE-FIX-S81-GLUE does not need a new hook.
