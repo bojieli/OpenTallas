@@ -8,6 +8,7 @@ import argparse
 import json
 import os
 import subprocess
+import tempfile
 import sys
 import time
 from pathlib import Path
@@ -101,9 +102,46 @@ def late_eco_enabled(kit, flag=True):
     return bool(flag) and os.environ.get("OT_LATE_ECO", "1") != "0" and not (Path(kit) / "late_eco.off").exists()
 
 
-def late_eco(kit, record, runner, mem, threads, run=subprocess.call):
+RT_ROOT = "/srv/opentallas-scratch2/claude/rt"
+
+
+def current_eco_tool(dest=None, host=None, run=subprocess.run, local=True):
+    """FABLE-FLOW-1555 (C): the late ECO reads eco_loop.py + post_route_drv (prd_mk.sh ...) from rt/current AT RUN TIME, not from the admission
+    bundle frozen at submit (4 of 4 late ECOs of jobs submitted before 8f3d1679753 died on the old prd_mk).  rt/current is read directly when it is
+    visible, else (sealed job: /srv is hidden) tools/die_plan + physical/common_flow of the hub's rt/current are fetched over ssh
+    (as the admission bootstrap fetches its bundle) into a job-local repo-shaped tree.  -> (eco_loop.py path, rt sha) or (None, why)"""
+    cur = Path(RT_ROOT) / "current"
+    if local and (cur / "tools/die_plan/eco_loop.py").is_file():
+        return (cur / "tools/die_plan/eco_loop.py").resolve(), os.path.basename(os.path.realpath(cur))
+    host = host or os.environ.get("AP_ADMISSION_HUB", "hub")
+    dest = Path(dest or tempfile.mkdtemp(prefix="eco-rt-", dir=os.environ.get("TMPDIR") or "/tmp"))
+    rt = RT_ROOT
+    cmd = (f"cd {rt} && s=$(readlink current) && cd current && echo RT_SHA=$s >&2 && "
+           "tar -cf - --exclude=__pycache__ --exclude='test_*' tools/die_plan physical/common_flow")
+    try:
+        src = subprocess.Popen(["ssh", "-n", "-o", "BatchMode=yes", "-o", "ControlPath=none", "-o", "ConnectTimeout=15", host, cmd],
+                               stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        ex = run(["tar", "-C", str(dest), "-xf", "-"], stdin=src.stdout)
+        src.stdout.close()
+        err = src.stderr.read().decode(errors="replace")
+        rc = src.wait()
+    except (OSError, subprocess.SubprocessError) as e:
+        return None, f"fetch from {host} failed: {e}"
+    sha = (err.split("RT_SHA=", 1)[1].split()[0] if "RT_SHA=" in err else "?")
+    tool = dest / "tools/die_plan/eco_loop.py"
+    if rc or getattr(ex, "returncode", 1) or not tool.is_file():
+        return None, f"fetch from {host} rc {rc}: {err.strip()[-200:]}"
+    return tool, sha
+
+
+def late_eco(kit, record, runner, mem, threads, run=subprocess.call, current=current_eco_tool):
     """KW-ECO-1: the late-stage ECO loop on the kit's routed DB -> eco_loop result dict (None: tool missing)"""
-    tool = eco_tool()
+    tool, why = current() if current else (None, "off")
+    if tool:
+        print(f"LATE_ECO_TOOLS rt {why}: eco_loop.py + post_route_drv from rt/current ({tool.parent})", flush=True)
+    else:
+        tool = eco_tool()
+        print(f"LATE_ECO_TOOLS SKIPPED rt/current ({why}); using the admission bundle copy {tool}", flush=True)
     if tool is None:
         return dict(verdict="ERROR", reason="eco_loop.py not staged with the chain")
     import importlib.util
