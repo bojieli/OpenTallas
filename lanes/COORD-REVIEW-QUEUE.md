@@ -8952,3 +8952,17 @@ FAILED [AUTOPILOT dd299c4439a7] 2026-11-19 11:39:56 PST AUTOPILOT -> KIT-WAVE-12
   STALE >3 h: S81 179 (was 38; the 07:39 relaunch wave has crossed 3 h, still RUNNING route), KV 43 (was 41), HEAD 0 (was 1, hd_mesh no longer listed). STALE-EPYC7: KV kv3_hub_Ei 1 (was 2). WAIT-BIND KV 7 unchanged; CBC-FALLBACK S81 serdes 11 unchanged.
   Suggested owners: leaf_t72 -> S81-OWN-1119; pvso_entry__t1 -> S81-CORES-2 relaunch; S81 stale col_h9/h10 -> S81-OWN-1119 + TYPE-S81-FLOWERR; KV stale kv3_hg*/pv*/pc* -> KV-SYSC-1119 / KV-PC-HGI-1119; serdes CBC -> CBC-RULES-1119.
   Table lanes/OWNERS-SWEEP.tsv committed.
+- 2026-11-19 11:46 PST QC-PLAN-R3 11-19: resumed. Watcher results, then N4.6f composed and launched.
+  - N4.6c PUBLISHED: live qwen_compute_n46_s0, hash 557ce55d. Bind-first strict bind + LATCHECK rc 0; bind matches the candidate on 133/133 types. Receipt: lanes/handoff/qwen_compute_atomic_apply_1795108733472383400.json.
+  - N4.6d-b (tag N46E, plan_n46_d_b 5652a070): BIND_ERRORS 0, LATCHECK 1921/1921 PASS, hcparam 0 mismatches. G0 has 4 errors, all kit_fit, the same set as control g0_n45dctl. These are the known KITFIT-OUTLINE false positives. No new errors.
+  - n43cb CA chain: CA_C/CA_D 2993 crossings, 0 fails, worst lo/hi 105.1/114.2 ps, MC 300 chips with 0 violations. STA_C COUNT-ALIGN TT PASS. REG_STA TAP-OFFSET-GATE: 7114/84412 outside, advisory only.
+  - pk45_coll and pk45_cbx (proof kits of N4.5 at GRT TT): still running on epyc9, about 4 h so far. coll_core is in 5_1_grt; cbx_q10 has rendered GRT. pk_coll2 (the older kit) has had no log since 02:55; pk45_coll supersedes it.
+  - N4.6f = N4.6d-b + cbf_q00_s2 swaps u_t01/u_t10 back to the family arrangement of cbf_q00__cl1b5a6458. plan_n46_f.json a1683d7a2a8b.
+  - Only u_t01/u_t10 differ in hard_cores; asserted before copying.
+  - Copied from the family: hard_cores, internal_stations (only bus:bc_i10 changed), clock taps, landing reader/writer start for the 8 tile buses, and landing_local_resets.
+  - consumer_sites were re-derived from tap_grid (147). 29 stale bank_taps rows were dropped; they are re-derived after bind. sync_fixed_cycles: no deltas.
+  - Before/after legs:
+  - cbf_q00_s2 bc_o01: 2484.7 um pin-to-pin, 2109.9 um placed (about 1.8 ns of wire buffers, no station) -> 653.0 um, the same as the family. The 5 FIRM stations of item (a) are no longer needed and are not added.
+  - d6 u_d6_u_fab_u_x_0_0_a_d (x_0_0 -> x_0_1): 145.4 um pin-to-pin but 1687.7 um placed -> 1692.0 um routed on the swapped geometry. The 6 existing stages are sited along it, with legs <= 241.9 um (limit 405). Still 0 cycles. The swap does not shorten this path, so the existing stages are still needed.
+  - Launched via ot-run on epyc9: chain_n46f.sh (tag N46F, SIDE + R8 seed N46CBQ) and g0pre_n46f.sh. Results go to ~/qc-plan-r3/chain_n46f.log and g0pre_n46f.log.
+  - Next: if the bind is green and G0 matches control, re-derive the s2 bank_taps on the bound RTL and publish N4.6f as a delta on n46_s0. N4.6e is waiting for the core-clear x_fw_ctl sites and the b_tw_data_i station from SONNET-FIX-QC. Item 10 is still held.
