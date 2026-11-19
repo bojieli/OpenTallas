@@ -163,3 +163,9 @@ Notes and scripts: epyc8 /srv/opentallas-scratch2/claude/s81-geom-opus-d8h-l4/FI
   accept on placed relay legs <= 405 (OT_RELAY_POLY lines), read 4_cts_post_hook.rpt + TT, and the pvcc166a6d M6/M8 overflow;
   then hand plan_d8h_rb to S81-DIE-R3 for D8h. Tell FABLE-FIX-S81-COLH9R1 that col_h9_r1 takes the generator trunk rows.
 - DRT probe p2 (epyc7 s81-geom-opus-drt7) still to read for ft0 22x51 vs 11x101.
+
+## 11-19 ~11:30 (FABLE-PD-S81-0253 items)
+- Rows to R3: epyc8 /srv/opentallas-scratch2/claude/s81-geom-opus-d8g/rows_d8h_geom_1119.json (3d2322476d6d) + apply_rows_d8h_geom.py.
+  col_h10_r1 frame_int_i0 equal-arc respace 422.6 -> 394.3 (12 types), col_h9_r0_p4..p6 frame_int_i0 406.1 -> 404.1 (30), 0 cycles; t51 natives dropped, taps back to pre-split sites.
+- G0 (g0main.sh, main 0c281312e1 tools in main_tools.tgz, D8g tree): geom 143952af592b 2 err = control plan_d8h_f 2 err (die cuts), 0 new.
+- Stopped my gate_rb (stale c4f base). Open: col_h10_r0_p4 proof kit on R3 D8h bound out; t51 bind result in R3 r1.
