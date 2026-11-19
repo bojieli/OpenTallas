@@ -33,9 +33,11 @@ def test_frozen_sites_are_the_reset_view_clock_taps_stay_real(monkeypatch):
     assert RT._clock_taps(Q, "t") == more and len(more) == 7           # clock ports / landings: every tap
 
 
-def test_clock_landing_reads_the_clock_taps():
+def test_ring_reset_index_space_is_the_reset_view():
+    # RING-RESET-KEY: clock_landings.ring_taps is the index space of rst_n_t<i> (ring raw resets), so it reads the reset view;
+    # behaviour is tested on the emitter in test_ring_reset_frozen.py
     src = (HERE / "clock_landings.py").read_text()
-    assert "RT._clock_taps(e[1], tn)" in src and "RT._taps(e[1], tn)" not in src
+    assert "RT._taps(e[1], tn)" in src and "RT._clock_taps(e[1], tn)" not in src
 
 
 def test_kit_reset_hook_uses_nearest_reset_leaf_when_frozen():

@@ -512,7 +512,12 @@ def ring_taps(plan, tn):
     e = _RING_PLAN.get(id(plan))
     if e is None or e[0] is not plan:
         e = _RING_PLAN[id(plan)] = (plan, schema.Plan(plan))
-    return [(x, y) for _, x, y in RT._clock_taps(e[1], tn)]      # the real clock taps (RESET-KEY: never the frozen reset view)
+    # RING-RESET-KEY 11-19 (FABLE-FIX-KV-PV, KV pv strict bind: "kv3_pv_v2.ft26_i: timed local wavefront reset relay rst_n_t393
+    # not found" on 4 types): this list is the index space of rst_n_t<i>, so it is the RESET view (reset_tree._taps): with
+    # reset.consumer_sites_um that is the frozen consumer site list, the only sites that have a relay.  RESET-KEY read the
+    # clock taps here; a ring whose nearest clock tap was one appended after the freeze then named a relay that does not
+    # exist (or, below the frozen count, another relay than the bound one).  Without the key both views are one table.
+    return [(x, y) for _, x, y in RT._taps(e[1], tn)]
 
 
 def network_lane_cycles(plan):
