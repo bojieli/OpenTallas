@@ -135,3 +135,29 @@ def test_only_internal_ends_count_toward_max_ends_and_setup_room(tmp_path):
     p.write_text("a/D\t1\n" + "".join("# skipped p%d/D: port path: the parent's, no cell\n" % i for i in range(150))
                  + '# summary {"partial": 0, "skipped": 150, "nets_left_unpadded": 0}\n')
     assert H.check_limits(e, p, max_ends=100, hb4_tt_ps=132.8) == []      # 150 port ends, 10 ps of TT setup: none of it counts
+
+
+def test_ep_tables_are_real_ps_and_legacy_x1e12_tables_still_merge(tmp_path):
+    """EP-PS-UNIT 11-19: the dump prints get_property <path end> slack as is (already ps; so_ps converted it a second time, x1e12:
+    serdes__t13 H19 ep_tt.tsv read -155709000622182.47 for -155.71 ps).  merge_endpoints reads both table forms the same."""
+    import shutil
+    import subprocess
+    import signoff
+    for block in (H.FF_BLOCK, H.TT_BLOCK, signoff.EP_FF_TCL, signoff.EP_TT_TCL):
+        assert "[so_ep_ps [get_property $pe slack]]" in block and "so_ps [get_property $pe slack]" not in block
+    tclsh = shutil.which("tclsh")
+    if tclsh:
+        proc = signoff.EP_FF_TCL.split("\n", 1)[0]
+        script = proc + '\nputs [so_ep_ps -155.709000622]\nputs [so_ep_ps 12]\nputs [so_ep_ps INF]\n'
+        out = subprocess.run([tclsh], input=script, text=True, capture_output=True).stdout.split()
+        assert out == ["-155.71", "12.00", "nan"]
+    for scale in (1.0, 1e12):
+        d = tmp_path / str(int(scale))
+        (d / "ff").mkdir(parents=True)
+        (d / "tt").mkdir()
+        (d / "ff" / "ep_ff.tsv").write_text("endpoint\tstartpoint\tstart_kind\tend_kind\tff_hold_slack_ps\n"
+                                            "u/a/D\tu/b/QN\treg\treg\t%r\nu/c/D\tu/d/QN\treg\treg\t%r\n" % (-17.56 * scale, -0.0 * scale))
+        (d / "tt" / "ep_tt.tsv").write_text("endpoint\ttt_setup_slack_ps\nu/a/D\t%r\nu/c/D\t%r\n" % (-34.35 * scale, 0.5 * scale))
+        assert H.merge_endpoints(d, d / "m.tsv") == 2
+        rows = [ln.split("\t") for ln in (d / "m.tsv").read_text().splitlines()[1:]]
+        assert [(r[0], round(float(r[4]), 2), round(float(r[5]), 2)) for r in rows] == [("u/a/D", -17.56, -34.35), ("u/c/D", 0.0, 0.5)]

@@ -28,6 +28,7 @@ automatic fallback after a routed FF-hold FAIL only inside these):
                                                temporary PG-track obstructions must all be gone)
 A violation prints OT_LIMIT <name> ..., is written to RESULT.json and the exit code is 4.
 """
+import math
 import argparse
 import json
 import os
@@ -39,21 +40,23 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 MARK = "# ---- KW-FIX-24 11-06: STD hold violators by startpoint kind"
-FF_BLOCK = r'''set fh [open /out/ep_ff.tsv w]
+FF_BLOCK = r'''proc so_ep_ps {t} { if {$t eq "" || [regexp -nocase {inf|nan} $t]} { return "nan" }; return [format %.2f $t] }
+set fh [open /out/ep_ff.tsv w]
 puts $fh "endpoint\tstartpoint\tstart_kind\tend_kind\tff_hold_slack_ps"
 foreach pe [find_timing_paths -path_delay min -slack_max 0 -group_path_count 1000000 -unique_paths_to_endpoint -sort_by_slack] {
   set e [get_property $pe endpoint]; set s [get_property $pe startpoint]
   set en [get_full_name $e]
   set sk [expr {[llength [get_ports -quiet [get_full_name $s]]] ? "port" : "reg"}]
   set ek [expr {[llength [get_ports -quiet $en]] ? "port" : "reg"}]
-  puts $fh "$en\t[get_full_name $s]\t$sk\t$ek\t[so_ps [get_property $pe slack]]"
+  puts $fh "$en\t[get_full_name $s]\t$sk\t$ek\t[so_ep_ps [get_property $pe slack]]"
 }
 close $fh
 '''
-TT_BLOCK = r'''set fh [open /out/ep_tt.tsv w]
+TT_BLOCK = r'''proc so_ep_ps {t} { if {$t eq "" || [regexp -nocase {inf|nan} $t]} { return "nan" }; return [format %.2f $t] }
+set fh [open /out/ep_tt.tsv w]
 puts $fh "endpoint\ttt_setup_slack_ps"
 foreach pe [find_timing_paths -path_delay max -group_path_count 1000000 -unique_paths_to_endpoint -sort_by_slack] {
-  puts $fh "[get_full_name [get_property $pe endpoint]]\t[so_ps [get_property $pe slack]]"
+  puts $fh "[get_full_name [get_property $pe endpoint]]\t[so_ep_ps [get_property $pe slack]]"
 }
 close $fh
 '''
@@ -176,22 +179,38 @@ def retarget_cmd(cmd, old_dir, new_dir, tag):
     return re.sub(r"--name \S+", "--name " + tag, out, count=1)
 
 
-def merge_endpoints(dump, out_tsv):
-    tt = {}
-    for i, line in enumerate((dump / "tt" / "ep_tt.tsv").read_text().splitlines()):
+EP_LEGACY_SCALE_ABOVE = 1e6     # a table holding any |value| above this is a pre-EP-PS-UNIT one (ps x 1e12)
+
+
+def ep_scale(values):
+    """1e-12 for a legacy endpoint table (slack printed through so_ps twice: ps x 1e12), else 1.0 (real ps).  Per file: a
+    real ps table never holds 1e6 ps, a legacy one holds |slack| x 1e12 on every row with |slack| >= 1e-6 ps."""
+    return 1e-12 if any(math.isfinite(v) and abs(v) > EP_LEGACY_SCALE_ABOVE for v in values) else 1.0
+
+
+def _ep_rows(path, nfield):
+    out = []
+    for i, line in enumerate(path.read_text().splitlines()):
         p = line.split("\t")
-        if i and len(p) == 2:
+        if i and len(p) >= nfield:
             try:
-                tt[p[0]] = float(p[1]) * 1e-12
+                out.append((p, float(p[nfield - 1])))
             except ValueError:
                 pass
+    return out
+
+
+def merge_endpoints(dump, out_tsv):
+    ttr = [(p, v) for p, v in _ep_rows(dump / "tt" / "ep_tt.tsv", 2) if len(p) == 2]
+    k = ep_scale([v for _p, v in ttr])
+    tt = {p[0]: v * k for p, v in ttr}
     rows = ["endpoint\tstartpoint\tstart_kind\tend_kind\tff_hold_slack_ps\ttt_setup_slack_ps"]
     n = 0
-    for i, line in enumerate((dump / "ff" / "ep_ff.tsv").read_text().splitlines()):
-        p = line.split("\t")
-        if i and len(p) >= 5:
-            rows.append("\t".join(p[:4]) + "\t%.3f\t%.3f" % (float(p[4]) * 1e-12, tt.get(p[0], 1e6)))
-            n += 1
+    ffr = _ep_rows(dump / "ff" / "ep_ff.tsv", 5)
+    k = ep_scale([v for _p, v in ffr])
+    for p, v in ffr:
+        rows.append("\t".join(p[:4]) + "\t%.3f\t%.3f" % (v * k, tt.get(p[0], 1e6)))
+        n += 1
     out_tsv.write_text("\n".join(rows) + "\n")
     return n
 

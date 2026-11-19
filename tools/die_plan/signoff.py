@@ -1215,9 +1215,13 @@ def ft_fill_model(decl, model, corners):
 # The insert was sized blind in single-mode kits (the FF ECO session read its TT room at the FF corner) or needed a second full sign-off
 # session per corner only to write these files (hold_eco_internal_run.py).  Same text as that tool's dump blocks; the TT table stops at
 # EP_TT_SLACK_MAX_PS (an end above it pays the 4-cell cap anyway).  A failure prints SO EP_DUMP error and never stops the session.
+# EP-PS-UNIT 11-19 (FABLE-FIX-S81-SERDES-O): get_property <path end> slack is already in the user time unit (ps, as the
+# ft_arcs note above says); so_ps converted it again (x1e12) and the *_slack_ps columns read e.g. -155709000622182.47 for
+# -155.71 ps.  so_ep_ps prints the property as is; hold_eco_internal_run.merge_endpoints reads both forms.
 EP_MARK = "# ---- KW-FIX-24 11-06: STD hold violators by startpoint kind"
 EP_TT_SLACK_MAX_PS = 600
-EP_FF_TCL = r"""if {[catch {
+EP_FF_TCL = r"""proc so_ep_ps {t} { if {$t eq "" || [regexp -nocase {inf|nan} $t]} { return "nan" }; return [format %.2f $t] }
+if {[catch {
   set fh [open /out/ep_ff.tsv w]
   puts $fh "endpoint\tstartpoint\tstart_kind\tend_kind\tff_hold_slack_ps"
   set so_ep_n 0
@@ -1226,18 +1230,19 @@ EP_FF_TCL = r"""if {[catch {
     set en [get_full_name $e]
     set sk [expr {[llength [get_ports -quiet [get_full_name $s]]] ? "port" : "reg"}]
     set ek [expr {[llength [get_ports -quiet $en]] ? "port" : "reg"}]
-    puts $fh "$en\t[get_full_name $s]\t$sk\t$ek\t[so_ps [get_property $pe slack]]"; incr so_ep_n
+    puts $fh "$en\t[get_full_name $s]\t$sk\t$ek\t[so_ep_ps [get_property $pe slack]]"; incr so_ep_n
   }
   close $fh
   so EP_DUMP ff $so_ep_n
 } so_ep_msg]} { so EP_DUMP error $so_ep_msg }
 """
-EP_TT_TCL = r"""if {[catch {
+EP_TT_TCL = r"""proc so_ep_ps {t} { if {$t eq "" || [regexp -nocase {inf|nan} $t]} { return "nan" }; return [format %.2f $t] }
+if {[catch {
   set fh [open /out/ep_tt.tsv w]
   puts $fh "endpoint\ttt_setup_slack_ps"
   set so_ep_n 0
   foreach pe [find_timing_paths -path_delay max -slack_max @EP_TT_MAX@ -group_path_count 1000000 -unique_paths_to_endpoint -sort_by_slack] {
-    puts $fh "[get_full_name [get_property $pe endpoint]]\t[so_ps [get_property $pe slack]]"; incr so_ep_n
+    puts $fh "[get_full_name [get_property $pe endpoint]]\t[so_ep_ps [get_property $pe slack]]"; incr so_ep_n
   }
   close $fh
   so EP_DUMP tt $so_ep_n slack_max_ps @EP_TT_MAX@
