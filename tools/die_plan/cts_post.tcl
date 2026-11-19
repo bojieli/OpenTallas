@@ -38,3 +38,5 @@ if {[file exists [file join $cp_dir landing_export_check.tcl]]} { uplevel #0 [li
 if {[file exists [file join $cp_dir cell_census.tcl]]} {
   uplevel #0 [list source [file join $cp_dir cell_census.tcl]]; ot_cell_census cts
 } else { puts "OT_CELL_CENSUS WARN stage=cts: cell_census.tcl is not in the kit, no recount" }
+# CTS-POST-RPT-1 11-19: CTS-stage timing on the post-hook netlist (4_cts_final.rpt is written before this hook)
+if {[file exists [file join $cp_dir cts_post_report.tcl]]} { uplevel #0 [list source [file join $cp_dir cts_post_report.tcl]] }
