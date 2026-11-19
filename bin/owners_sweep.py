@@ -222,6 +222,7 @@ def main():
     for die, tag in DIES:
         plan = next(p for k, p in cache['plans'].items() if fb.PLAN_DIE.get(k.split('/')[0]) == die)
         designs = plan['designs']; signed = set(plan.get('signed_designs') or {})
+        ptypes = set(plan.get('plan_types') or ())
         core_mods = set(m.split('#')[0] for m in designs); stset = set(plan.get('signed_types') or {})
         items = []
         for m in designs:
@@ -236,6 +237,8 @@ def main():
                 lab = 'held by die owner (plan event pending)'
             if lab in ('signed (count pending)', 'needs parent receipt (re-sign)') and (item.split('#')[0] in stset or fb.short(item) in stset):
                 continue
+            if ptypes and item.split('#')[0] not in ptypes and fb.short(item) not in ptypes:
+                lab = 'NOT-IN-PLAN'      # COORD 11-19: a row whose type is not an item of the die's current plan is classed, not flagged
             items.append(('type', fb.short(item), item, r, lab))
         ntypes = plan['types'] if isinstance(plan['types'], int) else len(plan['types'])
         nt = sum(1 for i in items if i[0] == 'type')
@@ -271,13 +274,15 @@ def main():
                     owner = 'KIT-WAVE(auto)'; match = 'autopilot'; al = True
                 else:
                     flags.append('UNOWNED')
-            failed = lab not in NOT_FAILED
+            notinplan = lab == 'NOT-IN-PLAN'
+            failed = lab not in NOT_FAILED and not notinplan
             lt = launches.get((die, item.split('#')[0]), 0)
             if failed and lt > upd:
                 age = (now - lt) / 3600; failed = False; lab = 'relaunched (LAUNCH %s)' % fmt_t(lt)
             if failed and age is not None and age > 1: flags.append('FAILED-NO-RELAUNCH')
             if r and failed and (r.get('class') or '') == 'UNCLASSIFIED': flags.append('UNCLASSIFIED')      # WAVE-PILOT-FIX 11-18 (COORD FLOW-1950 N): no rule names this failure; COORD starts a lane the same hour
             if not running and age is not None and age > 3: flags.append('STALE')
+            if notinplan: flags = []
             if (die, cbc_family(item)) in cbc:
                 flags.append('CBC-FALLBACK'); cbc_hit[(tag, die, cbc_family(item))].append(short)
             state = lab if not failed else 'FAILED ' + lab
