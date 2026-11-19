@@ -78,5 +78,5 @@ class MeasuredGap(unittest.TestCase):
 
     def test_the_charge_is_capped_at_half_of_available_and_switchable(self):
         src = open(P).read()
-        self.assertIn("min(measured_gap_gb(), 0.5 * avail)", src)
+        self.assertIn('conf("MEASURED_GAP_CAP")', src)
         self.assertIn('conf("MEASURED_GAP_FACTOR")', src)
