@@ -5568,7 +5568,12 @@ def sync_die_inputs(AP, cfg, run=None):
                 if detached:
                     unit = "ss-%s" % hashlib.sha1((h + "|" + names).encode()).hexdigest()[:12]
                     if not AP.unit_active(unit):
-                        AP.launch_unit(unit, Path(os.path.expanduser("~/.local/state/ap-src-sync")) / (unit + ".log"), ["bash", "-c", "set -o pipefail; " + pipe])
+                        # the copy command goes through a SCRIPT FILE: systemd expands $VAR / ${VAR} / %x in a transient unit's command line, which emptied ${r#/} in the transform and sent the
+                        # members to "/" ("tar: bindcopy_kv_d25d4/rtl: Cannot mkdir", 13:41-13:51, KV D25d never synced)
+                        sd = Path(os.path.expanduser("~/.local/state/ap-src-sync"))
+                        sd.mkdir(parents=True, exist_ok=True)
+                        (sd / (unit + ".sh")).write_text("set -o pipefail\n" + pipe + "\n")
+                        AP.launch_unit(unit, sd / (unit + ".log"), ["bash", str(sd / (unit + ".sh"))])
                         AP.log(f"KIT-WAVE SRC-SYNC {src}->{h} {die}: {len(part)} file(s) copying in detached unit {unit} (next probe verifies)")
                     ok += len(part)
                     continue

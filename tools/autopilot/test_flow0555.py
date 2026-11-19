@@ -417,7 +417,9 @@ def test_live_source_sync_copies_run_in_detached_units_and_never_wait():
     import tempfile
     os.environ["OT_SELF_HEAL_STATE"] = os.path.join(tempfile.mkdtemp(), "t.json")
     KW.sync_die_inputs(ap, cfg)
-    assert len(launched) == 1 and launched[0][0].startswith("ss-") and "tar -C / --hard-dereference -cf -" in launched[0][1][-1]
+    assert len(launched) == 1 and launched[0][0].startswith("ss-") and launched[0][1][0] == "bash" and launched[0][1][-1].endswith(".sh")
+    body = open(launched[0][1][-1]).read()                    # script file: systemd would expand ${r#/} of the transform in a transient unit command line
+    assert "tar -C / --hard-dereference -cf -" in body and "${r#/}" in body
     assert not any(c and c[0] == "bash" for c in shs)          # nothing ran inline
 
 
