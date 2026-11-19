@@ -114,3 +114,4 @@ bash tools/fleet/col_template_rows.sh TREE BASE_PLAN SIDECAR OUT [--all-members]
 - LEVER 6 11-19: GR-RC 2nd repair pass does not close (-37.52 -> -37.52), no flow change pushed; bc_o01 station rows FABLE-FIX-QC-rows-stations-n46d.json for QC-PLAN-R3 N4.6d; coll_ftc DBs found on intel1 ot-jobs.
 - LEVER 6 11-19: bc_o01 row withdrawn (QC-PLAN-R3 plan sites); tap_d row FABLE-FIX-QC-rows-stations-tapd-n46d.json; b_tw_data_i detours = congestion (same-bus + ft ctl buses); coll_ftc = ring half-cycle ends, ~12 ps CTS->GRT.
 - LEVER 6 11-19: CLAND-RING-GROUP opt-in on main d1ee896057 (row-wrap split of ring bit groups, coll_ftc tl_st_wi_i); proof (regen coll_ftc with OT_CLAND_GROUP_ROW=1, span + GRT TT) pending.
+- 11-19: ring-group v2 on main 822e8ca0f1 (dry-place group); grp2 kit running epyc8/10 (spill possible), ring_pid_grp2; v1 had broken test_landing_column_fill (fixed in v2). RSZ-0074 on net87045: read pending after grp2.
