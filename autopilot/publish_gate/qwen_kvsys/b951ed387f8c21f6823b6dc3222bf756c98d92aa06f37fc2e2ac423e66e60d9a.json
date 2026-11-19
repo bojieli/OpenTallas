@@ -1,0 +1,73 @@
+{
+ "advisory": [
+  "contained",
+  "hashes",
+  "pre_g0",
+  "schema"
+ ],
+ "checks": {
+  "contained": {
+   "verdict": "FAIL",
+   "why": "no PG_STATIC line (rc 1): ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<string>\", line 387, in run_static\n    bp = check_bound_params(tree, bind_out)\n  File \"<string>\", line 338, in check_bound_params\n    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / \"die_plan\"))\n                                ^^^^^^^^\nNameError: name '__file__' is not defined. Did you mean: '__name__'?\n"
+  },
+  "dry_gen": {
+   "dir": "/home/ubuntu/.local/state/publish-gate/qwen_kvsys/b951ed387f8c/kv3_hg_v1",
+   "gen_host": "epyc7",
+   "item": "kv3_hg_v1",
+   "kind": "type",
+   "origin": "/home/ubuntu/.local/state/publish-gate/qwen_kvsys/b951ed387f8c/kv3_hg_v1/published_gen_origin.json",
+   "origin_sha256": "53a18987ab9c5d50b8a1ef5eef8bc5d943a95a01c74060c714ba880ee3aee9dd",
+   "preflight_fail_advisory": null,
+   "proof_kind": "published-gen",
+   "rc": 0,
+   "result": "DRY-PASS",
+   "result_sha256": "e85ac02b134f279bf0a6444097504a37c82fa405cffb7102f98215b4d4b6dc19",
+   "spec_sha256": "332751725f52ca058381a3684245f8518dce79f26a8b1cb104da5a716ad9251d",
+   "spec_src": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg9_2862ed5a_tb3e667d_d24c",
+   "stage": "preflight",
+   "unit_log_sha256": "3d327209f533df4c56354596ad7870adab84cb8c15f15842619fe3004d066b3d",
+   "verdict": "PASS"
+  },
+  "hashes": {
+   "verdict": "FAIL",
+   "why": "no PG_STATIC line (rc 1): ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<string>\", line 387, in run_static\n    bp = check_bound_params(tree, bind_out)\n  File \"<string>\", line 338, in check_bound_params\n    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / \"die_plan\"))\n                                ^^^^^^^^\nNameError: name '__file__' is not defined. Did you mean: '__name__'?\n"
+  },
+  "pre_g0": {
+   "verdict": "FAIL",
+   "why": "no PG_STATIC line (rc 1): ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<string>\", line 387, in run_static\n    bp = check_bound_params(tree, bind_out)\n  File \"<string>\", line 338, in check_bound_params\n    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / \"die_plan\"))\n                                ^^^^^^^^\nNameError: name '__file__' is not defined. Did you mean: '__name__'?\n"
+  },
+  "schema": {
+   "verdict": "FAIL",
+   "why": "no PG_STATIC line (rc 1): ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<string>\", line 387, in run_static\n    bp = check_bound_params(tree, bind_out)\n  File \"<string>\", line 338, in check_bound_params\n    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / \"die_plan\"))\n                                ^^^^^^^^\nNameError: name '__file__' is not defined. Did you mean: '__name__'?\n"
+  }
+ },
+ "die": "qwen_kvsys",
+ "foreign_tree_scan": {
+  "asbuilts": [
+   "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg9_2862ed5a_tb3e667d_d24c/physical/die_plan/qwen_kvsys/plan_of_record/bind_of_record/asbuilt_manifest_injected.json"
+  ],
+  "bind_out": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg9_2862ed5a_tb3e667d_d24c/physical/die_plan/qwen_kvsys/plan_of_record/bind_of_record",
+  "files": [
+   "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg9_2862ed5a_tb3e667d_d24c/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json",
+   "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg9_2862ed5a_tb3e667d_d24c/physical/die_plan/qwen_kvsys/plan_of_record/bind_of_record/bind.f",
+   "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg9_2862ed5a_tb3e667d_d24c/physical/die_plan/qwen_kvsys/plan_of_record/bind_of_record/asbuilt_manifest_injected.json"
+  ]
+ },
+ "gate_s": 1545.1,
+ "hosts": [
+  "epyc7",
+  "epyc8",
+  "epyc9",
+  "epyc10"
+ ],
+ "item": "kv3_hg_v1",
+ "manifest_hash": "b951ed387f8c21f6823b6dc3222bf756c98d92aa06f37fc2e2ac423e66e60d9a",
+ "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg9_2862ed5a_tb3e667d_d24c/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+ "plan_sha256": "2862ed5a71bcd91b72455d66ea87adf83855839a61d961954d4c6b289ec3a1aa",
+ "rows_proofs": [],
+ "schema": "opentallas.publish_gate.v1",
+ "static_s": 1413.5,
+ "t": 1795064638.3275833,
+ "tree": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg9_2862ed5a_tb3e667d_d24c",
+ "verdict": "FAIL"
+}
