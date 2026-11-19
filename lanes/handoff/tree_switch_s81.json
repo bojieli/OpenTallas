@@ -1,9 +1,9 @@
 {
- "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8e_1117_work/physical/die_plan/s81/plan_of_record/native_bind/asbuilt_run.json",
+ "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8f_1117_work/physical/die_plan/s81/plan_of_record/native_bind/asbuilt_run.json",
  "asbuilt_sha256": "1456eca70f1e91a0de4a855723ee7f12dd88b8b87d56f329bb76f29dbfc0170d",
- "bind_out": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8e_1117_work/physical/die_plan/s81/plan_of_record/native_bind/out",
+ "bind_out": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8f_1117_work/physical/die_plan/s81/plan_of_record/native_bind/out",
  "bind_passed": true,
- "bind_run": "epyc8:/srv/opentallas-scratch2/claude/s81-die-r3-e8/d8e/r6",
+ "bind_run": "epyc8:/srv/opentallas-scratch2/claude/s81-die-r3-e8/d8f/r4",
  "bind_types": 395,
  "config": {
   "cancel_superseded": false,
@@ -14,24 +14,27 @@
    "--max-wire-um",
    "100",
    "--clock-landing",
-   "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8e_1117_work/physical/die_plan/s81/plan_of_record/sidecar_new.json"
+   "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8f_1117_work/physical/die_plan/s81/plan_of_record/sidecar_new.json"
   ],
   "gen_host": "epyc8",
   "gen_hosts": [
    "epyc8",
+   "epyc2",
+   "epyc7",
+   "epyc9",
    "epyc10",
    "intel1"
   ],
   "kit_rtl": {
-   "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8e_1117_work/physical/die_plan/s81/plan_of_record/native_bind/asbuilt_run.json",
-   "bind_out": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8e_1117_work/physical/die_plan/s81/plan_of_record/native_bind/out",
+   "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8f_1117_work/physical/die_plan/s81/plan_of_record/native_bind/asbuilt_run.json",
+   "bind_out": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8f_1117_work/physical/die_plan/s81/plan_of_record/native_bind/out",
    "mode": "bind",
-   "note": "S81-DIE-R3 2026-11-18 D8e on ad2912c9a085. Revert: rollback_tree D8t f1525f0d313e"
+   "note": "S81-DIE-R3 2026-11-18 D8f on f749d8b4fb33. Revert: rollback_tree D8e ad2912c9a085"
   },
-  "plan_event": "D8e",
+  "plan_event": "D8f",
   "queue_src": "main@3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6",
   "src_sha": "3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6",
-  "tools_sha": "b3e667d1865fe131f69b71b3ab70321a7532bd89"
+  "tools_sha": "54d289d964aac0320f6ca5aa59f0fc386487d73e"
  },
  "die": "s81",
  "die_gen_env": {
@@ -49,37 +52,40 @@
   "OT_PLACE_MAX_FANOUT": "64",
   "OT_PREGRT_FF_HOLD_AUTO": "-1",
   "OT_S81_VPW_BANK": "1",
-  "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8e_1117_work/physical/die_plan/s81/plan_inputs/signed_view_sha_s81.json",
+  "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8f_1117_work/physical/die_plan/s81/plan_inputs/signed_view_sha_s81.json",
   "OT_TT_SETUP_REPAIR": "both"
  },
  "event": "3fa87b84b18",
  "g0_baseline": {
-  "path": "/home/ubuntu/coord/lanes/handoff/S81-D8E-G0-BASELINE-1118.json",
-  "sha256": "ca19dc8780ceec18586d7a72735783643cb117048e440552ff635692f8eb75be"
+  "path": "/home/ubuntu/coord/lanes/handoff/S81-D8F-G0-BASELINE-1118.json",
+  "sha256": "a1719d278e9ab316d557eb34a24f06ad4da1b9b4d9d952942740b633f835f1f3"
  },
  "hosts": [
   "epyc8",
+  "epyc2",
+  "epyc7",
+  "epyc9",
   "epyc10",
   "intel1"
  ],
  "keep_gen_hosts": true,
- "latcheck": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8e_1117_work/physical/die_plan/s81/plan_of_record/latcheck.json",
+ "latcheck": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8f_1117_work/physical/die_plan/s81/plan_of_record/latcheck.json",
  "latcheck_passed": 873,
- "manifest_hash": "ad2912c9a085c11816d13c04866dadfb2de9629ad100e5b489af3f694e95a6da",
+ "manifest_hash": "f749d8b4fb33becdb795acaaa73f568bf7871b6ba31dd6f3effe4cb2f05ddec8",
  "physical_qualified": false,
- "plan": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8e_1117_work/physical/die_plan/s81/plan_h2_2249.json",
- "plan_event": "D8e",
- "plan_sha256": "df7446e48ba9bece5d421ec7c76809095050087a88760f625029336981f2c3ef",
+ "plan": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8f_1117_work/physical/die_plan/s81/plan_h2_2249.json",
+ "plan_event": "D8f",
+ "plan_sha256": "548e251fe47b3769fcaa484b52ce301d699e00903e37b4401fc2c658d5552552",
  "preserve_holds": "All inherited holds preserved (strip-leaf s81-strip-gpl-d5, col waves, SerDes, t37 station-start); event key kept 3fa87b84b18 per FABLE-PLAN-S81-B6gF2s5f s7 (only plan_event changes), so no event-term carry",
- "sidecar": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8e_1117_work/physical/die_plan/s81/plan_of_record/sidecar_new.json",
+ "sidecar": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8f_1117_work/physical/die_plan/s81/plan_of_record/sidecar_new.json",
  "sidecar_sha256": "98aa35e5a944ceba9dd92c7c7232143a29ef3fdbcbf216c37a20b58b054239ff",
  "smoke": "PASS",
  "source_causal_bound_qualified": false,
- "src_manifest_sha": "ad2912c9a085c11816d13c04866dadfb2de9629ad100e5b489af3f694e95a6da",
+ "src_manifest_sha": "f749d8b4fb33becdb795acaaa73f568bf7871b6ba31dd6f3effe4cb2f05ddec8",
  "src_sha": "3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6",
  "status": "ADOPTED reviewed tuple",
  "tools_note": "tools = main 53e4ff86122a (incl r572/r573 hold_eco, r579/r584 col, r581 ft_channel, r585/r588 shared kit files incl hold_sdc_guard.tcl, KITFIT-1116, r599 QRX) + registry hard_core_built_params.json eco3 quarter entry (scoped by lib_contains)",
- "tools_sha": "b3e667d1865fe131f69b71b3ab70321a7532bd89",
- "tree": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8e_1117_work",
+ "tools_sha": "54d289d964aac0320f6ca5aa59f0fc386487d73e",
+ "tree": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8f_1117_work",
  "written_by": "root-authorized lane atomic apply"
 }

@@ -5782,15 +5782,15 @@
     "clock": "PASS",
     "evidence": "KIT-OPS-1 2026-11-12 21:46: ready12b-A = events/s81_ready12bA_1112 (train 23) + fin rtl (train 25), plan 18c864518844, strict bind rc 0 on main 7073a6b4a599 (KIT-OPS-1 rebind, bound rtl = out_r12bA_dst). | DIE-S81-70 12:4x (COORD 12:1x ftkeep relaunch): plan = main e9eda32d41c plan_h2_2249 (ftcorr/ftkeep a80a1ab90cc, ctree, hcov) + claude/die-s81-70-t24tap-1106@4390efd070 (t24__cl2456157b clk_t20 y 632.88->667.44; strict bind error radius 216.3>200 -> 199.1, grid_explicit_taps PASS) sha256 1cbd9e04577052a4, hardlink sidecars of src_28fc7; vs old wave plan only 10 partition_types differ, no other key; G0C 64/1543 = base, 0 new/0 gone [CHECKED epyc5 die-s81-70/chk_t24]; strict bind on main plan: 1 error = that t24 tap (die-s81-70/kvb2) | prev: KIT-WAVE-12 04:1x PST: main e8cbe5f6c70 plan 381e75b001cd = DIE-S81-46 kva3 407b175146b (COORD 03:16 APPROVED, ROOT-MERGE-AL 03:51): G0C 18 = base, 0 new; die clock GRT 0 ov, TT +49.70, CA 0/2330; strict bind die-s81-46/bind_g3tag2 errors 0 unbound 0 (plan 1064f31a3d21 = 381e minus 22 SDC-only cdc keys, DIE-S81-47 CHECKED) | prev: KIT-WAVE-9 19:5x: main bfdc480ffc7 plan a6320661bc9e = bfe27b2c00be + serdes__t13/serdes__t4 lots (DIE-S81-44 bccb99bde74, G0C 18 = base, 0 new; COORD 16:5x/ROOT-MERGE-AL 17:24; DIE-S81-45 18:03 request); bind = bindm (strict 0) via bindm9 | KIT-WAVE-8 18:0x: main f1a8dcffa6e plan bfe27b2c00be = cb76a9754330 (DIE-S81-43 ring-hold stack 5a/rt4/ringfall, COORD 15:56 (2)) + S81-SERDES-PHY-3 eb964df6dd4 (8 serdes types only; G0C 19/1865 = main, 0 new; block-identity diff CHECKED: only those 8 blocks changed); strict bind bindm BIND_RC 0 (VERIFY died without RC, see lane) | COORD 10-31 08:46 APPROVED DIE-S81-42 claude/die-s81-42-band-1031@e6e75a4ea7e (plan bfa0a6902dd9 -> a83e52c0ae4e, sidecar db92d7423d2c): G0C 19 = base 19, 0 new; strict bind BIND_RC 0 errors 0 + VERIFY_RC 0 (DIE-S81-43 12:18 CHECKED); die clock GRT 0 ov, TT setup +9.22. Merged main 96420e84b92 (ROOT-MERGE-AK). | prev: COORD RULING 10-31 04:07: DIE-S81-39 variant A claude/die-s81-39-geom-1030@54dda45985a (grid+explicit taps, plan 84fc22ab807d -> 7515f32564e8 taps only) APPROVED: G0C 18=18 0 new, strict bind BIND_RC 0 errors 0 (intel1 die-s81-39/gbind), die clock ckclk3 GRT 0 ov, CA PASS; exceptions 1 (57 plan_geom residuals) + 2 (7 pre-existing neg TT setup pairs bk_sel__t2, NOT waived, DIE-S81-41) accepted; COORD 04:4x: S81 plan of record on main = 7515f32564e8 | COORD 10-31: DIE-S81-41 daaa48cc29b per-type station tap window on main 41b02d873, plan bfa0a6902dd9 strict bind BIND_RC 0 errors 0 (intel1 die-s81-41/sbind, DIE-S81-42 07:21). | CODEX1131/root approved composed1cd on mainb1: G0C0 errors, bind_ev2 strict0 11:40, clock GRT0 TT+49.70 CA0/2330 unchanged, 17 reset-safe bands independently rendered/reviewed. Provisional views remain provisional; normal kit physical gates retained."
    },
-   "plan": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8e_1117_work/physical/die_plan/s81/plan_h2_2249.json",
+   "plan": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8f_1117_work/physical/die_plan/s81/plan_h2_2249.json",
    "gen_host": "epyc8",
-   "src": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8e_1117_work",
+   "src": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8f_1117_work",
    "src_sha": "3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6",
    "kit_rtl": {
     "mode": "bind",
-    "bind_out": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8e_1117_work/physical/die_plan/s81/plan_of_record/native_bind/out",
-    "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8e_1117_work/physical/die_plan/s81/plan_of_record/native_bind/asbuilt_run.json",
-    "note": "S81-DIE-R3 2026-11-18 D8e on ad2912c9a085. Revert: rollback_tree D8t f1525f0d313e"
+    "bind_out": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8f_1117_work/physical/die_plan/s81/plan_of_record/native_bind/out",
+    "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8f_1117_work/physical/die_plan/s81/plan_of_record/native_bind/asbuilt_run.json",
+    "note": "S81-DIE-R3 2026-11-18 D8f on f749d8b4fb33. Revert: rollback_tree D8e ad2912c9a085"
    },
    "gen_args": [
     "--hold-ff-margin",
@@ -5798,7 +5798,7 @@
     "--max-wire-um",
     "100",
     "--clock-landing",
-    "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8e_1117_work/physical/die_plan/s81/plan_of_record/sidecar_new.json"
+    "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8f_1117_work/physical/die_plan/s81/plan_of_record/sidecar_new.json"
    ],
    "owner_lane": "S81 die owner (DIE-S81-92)",
    "lane": "KIT-WAVE-3",
@@ -7062,11 +7062,11 @@
    "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
    "gen_hosts": [
     "epyc8",
-    "epyc10",
-    "intel1",
     "epyc2",
+    "epyc7",
     "epyc9",
-    "epyc7"
+    "epyc10",
+    "intel1"
    ],
    "gen_hosts_note": "KW-FIX-4 20:4x: intel1 scratch2 2 GB free (restage epyc4->intel1 + INFRA churn: mkdir ENOSPC) -> S81 gen/restage epyc4 only until intel1 >300 GB | KW-FIX-4 11:1x (COORD 11:00 + FLEET-BAL-1): S81 gen inputs on epyc4 + intel2 at the same paths (wt/kw-fix-4-s81g17 d7a13f9fef6, wt/kit-wave-15-s81b, die-s81-47/bind_ev2/out, kit-wave/s81/{bind_kw15d,asbuilt_kw15d.json,kit_rtl_kw15d.sh}); intel1 added 11:4x (FLEET-BAL-1 STAGED intel1 11:46, worktree verified); epyc2 skipped (scratch2 96 GB free, root under the 500 GB floor). place_spill true; restage_waiters moves unstarted epyc4 waiters.",
    "note_gen_hosts_1103": "2026-11-03 16:36 KW-FIX-4 (COORD 16:3x: epyc4 0 waiters at load 78/256, localhost 19/858 GB, intel1 12): s81 gen_hosts [epyc4,intel1,intel2] -> [epyc4] (interim, new + restaged s81 attempts gen/stage/queue on epyc4) until epyc4 holds >=10 waiters; restore [epyc4,intel1,intel2] then (code fix host fill targets follows). | 16:46 place_spill false (interim): spillable PLACE waiters of epyc4-gen kits queued on intel2 (ot-run queues on the most planned-free host), so s81 PLACE is pinned to its gen host epyc4 until epyc4 holds >=10 waiters; restore place_spill true with gen_hosts. | 17:03 COORD 17:0x (epyc2 admits 154 GB, intel1 103 GB, 0 waiters): gen_hosts [intel1, epyc4, intel2] + place_spill true restored (PLACE spills to epyc2/intel1 when they admit). | 17:58 COORD 17:5x intel2 scratch2 95% (191 GB free): gen_hosts [epyc4, intel1] (no new intel2 gen/run dirs) until intel2 > 300 GB free.",
@@ -23077,10 +23077,10 @@
     "serdes__t2": "copy",
     "serdes__t15__cla2127225": "copy"
    },
-   "plan_sha256": "df7446e48ba9bece5d421ec7c76809095050087a88760f625029336981f2c3ef",
+   "plan_sha256": "548e251fe47b3769fcaa484b52ce301d699e00903e37b4401fc2c658d5552552",
    "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.s81.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT.",
    "die_gen_env": {
-    "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8e_1117_work/physical/die_plan/s81/plan_inputs/signed_view_sha_s81.json",
+    "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8f_1117_work/physical/die_plan/s81/plan_inputs/signed_view_sha_s81.json",
     "OT_PLACE_MAX_FANOUT": "64",
     "OT_GRT_NONPORT_HOLD": "1",
     "OT_PREGRT_FF_HOLD_AUTO": "-1",
@@ -36698,8 +36698,8 @@
     },
     "src_manifest": "verify"
    },
-   "src_manifest_hash": "ad2912c9a085c11816d13c04866dadfb2de9629ad100e5b489af3f694e95a6da",
-   "tools_sha": "b3e667d1865fe131f69b71b3ab70321a7532bd89",
+   "src_manifest_hash": "f749d8b4fb33becdb795acaaa73f568bf7871b6ba31dd6f3effe4cb2f05ddec8",
+   "tools_sha": "54d289d964aac0320f6ca5aa59f0fc386487d73e",
    "proof_items": {
     "svc-ready": [
      "svc_hi_dsdv_svc_rs__t3",
@@ -36837,7 +36837,7 @@
     ],
     "gen_host": "epyc9"
    },
-   "plan_event": "D8e",
+   "plan_event": "D8f",
    "cancel_superseded": false,
    "prev_gen_hosts_fleetopsr1116": [
     "epyc10"
@@ -36849,7 +36849,8 @@
     "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_f2s4_cohort_d5e",
     "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d6z_1117_work",
     "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d7w_1117_work",
-    "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8dr2_1117_work"
+    "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8dr2_1117_work",
+    "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8t_1117_work"
    ],
    "pilot_item": "bk_sel__t2",
    "prev_gen_hosts_fleetopsr1116c": [
@@ -36883,7 +36884,7 @@
     "epyc8"
    ],
    "note_col_defaults_1117": "FABLE-FIX-S81-COL 11-17 03:3x (strategy 03:20): col_h* item_env OT_RELAY_POLY=1 (auto wall-avoiding relay path; pg3 col_h9_r2: 12 chains hop 184-326 um, GRT TT -34.0 vs pg1 routed -138.1); OT_PGCAP=1 stays die-wide (pg1: DRT-0255 -> DRC 0). Ordered station rows need tree commit e943f1f62f4 (not an env). Revert: delete the key from the col_h* item_env entries.",
-   "rollback_tree": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8t_1117_work",
+   "rollback_tree": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8e_1117_work",
    "prev_gen_hosts_derive": [
     "epyc8",
     "epyc10",
