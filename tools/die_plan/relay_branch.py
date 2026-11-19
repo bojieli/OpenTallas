@@ -273,13 +273,13 @@ def _flight(a, b):
     return abs(a[0] - b[0]) + abs(a[1] - b[1])
 
 
-def cluster(src, sinks, limit=LIMIT):
+def cluster(src, sinks, limit=LIMIT, far=frozenset()):
     """sinks {name: (x, y)} -> [[names]]: agglomerative, a cluster is 'near' when it fits one reach box with the source;
     two clusters merge when the union stays near (or, for two far clusters, fits a box by itself), smallest union first"""
     cl = [[n] for n in sorted(sinks)]
 
     def near(c):
-        return src is not None and _box_ok([src] + [sinks[n] for n in c], limit)
+        return src is not None and not (far & set(c)) and _box_ok([src] + [sinks[n] for n in c], limit)
 
     while len(cl) > 1:
         best = None
@@ -368,6 +368,7 @@ def branch_rows(plan, tn, text, plan_dir=None, limit=LIMIT):
     G = Geometry(plan, tn, N, plan_dir)
     rows, drows, rep = [], [], []
     taken = {s["inst"][2:] for s in N.st if s["kind"] != "assign"}
+    router = None
     have_rd = {(sid(r["inst"]), r.get("port", "o")): int(r["D"]) for r in G.t.get("relay_depth") or [] if r.get("side") != "sink"}
     for k, S in enumerate(N.st):
         if S["kind"] != "inst" or not RELAY_MOD.match(S["mod"]):
@@ -392,23 +393,33 @@ def branch_rows(plan, tn, text, plan_dir=None, limit=LIMIT):
         src = G.source(S["ports"].get("i", ""))
         sp = src[1] if src else None
         allp = list(pts.values()) + ([sp] if sp else [])
-        if _box_ok(allp, limit):
+        # the relay legs run round the hard macros (relay_mid polyline): a sink whose routed length from the source is over
+        # two reaches cannot share a 0-cycle relay site, whatever the flight box says (bs0 on col_h9_r0_p3..p6: 918-972 um)
+        rlen = {}
+        if sp is not None:
+            if router is None:
+                import relay_depth as RD
+                router = RD.Router(G.t)
+            rlen = {n: router.length(sp, q) for n, q in pts.items()}
+        rlen = {n: L_ for n, L_ in rlen.items() if L_ != float("inf")}      # closed route = unknown, flight decides
+        far = frozenset(n for n, L_ in rlen.items() if L_ > 2 * limit)
+        if not far and _box_ok(allp, limit):
             continue
-        cl = cluster(sp, pts, limit)
+        cl = cluster(sp, pts, limit, far)
         if len(cl) < 2:
             rep.append(dict(relay=S["inst"], unfixed="sinks fit no common box but do not split", sinks=sorted(pts)))
             continue
         # the relay keeps the cluster with the most sinks (ties: nearest the source); soft sinks always stay on it
         def key(c):
-            return (-len(c), min(_flight(sp, pts[n]) for n in c) if sp else 0.0, c)
+            return (bool(far & set(c)), -len(c), min(_flight(sp, pts[n]) for n in c) if sp else 0.0, c)
         cl.sort(key=key)
         rel = S["inst"][2:]
         copies = []
         for c in cl[1:]:
             tag = sid(re.split(r"_u_|^u_", c[0][2:])[-1]) or "br"
             name = _copy_name(rel, tag, taken)
-            L = max(_flight(sp, pts[n]) for n in c) if sp else 0.0
-            near = sp is not None and _box_ok([sp] + [pts[n] for n in c], limit)
+            L = max(max(_flight(sp, pts[n]), rlen.get(n, 0.0)) for n in c) if sp else 0.0
+            near = sp is not None and not (far & set(c)) and _box_ok([sp] + [pts[n] for n in c], limit)
             # a relay_depth row on the relay (its stages follow the copy's readers) already pays part of the way
             D = 0 if near or sp is None else max(0, max(1, math.ceil(L / limit) - 2) - have_rd.get((sid(rel), "o"), 0))
             span = max(_flight(pts[a], pts[b]) for a in c for b in c)

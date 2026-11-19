@@ -232,3 +232,16 @@ def test_trunk_rows_reaim_majority_minority_keeps_old_sites():
         assert not (595 < x < 625 and 35 < y < 65)
     p["partition_types"]["t"]["internal_stations"][0]["regs_um"] = [[300.0, 0.0], [450.0, 0.0], [560.0, 0.0]]
     assert RB.trunk_rows(p, "t", INBUS)[0] == {}                                 # already aimed at the majority
+
+
+def test_branch_rows_routed_length_makes_a_branch_far():
+    """bs0 class: flight fits one box, the route round a macro wall does not -> the far sink gets its copy + 1 stage"""
+    p = plan_geo((560.0, 560.0))
+    t = p["partition_types"]["t"]
+    t["hard_cores"][1]["origin_um"] = [300.0, 480.0]                       # bs3 pin (310, 490): 220 um flight from t2
+    t["hard_cores"][1]["pins"] = [{"name": "i_x0", "layer": "M4", "xy": [10.0, 0.0]}]     # pins on the core edge
+    t["hard_cores"][0]["pins"] = [{"name": "xa", "layer": "M4", "xy": [10.0, 0.0]}]
+    t["hard_cores"][2]["pins"] = [{"name": p_, "layer": "M4", "xy": [10.0, 0.0]} for p_ in ("xai", "cc")]
+    t["hard_cores"].append({"inst": "u_wall", "module": "w", "origin_um": [400.0, 0.0], "outline_um": [20.0, 1300.0]})
+    rows, _d, _r = RB.branch_rows(p, "t", TEXT)
+    assert rows and rows[0]["copies"][0]["sinks"] == ["u_r0_u_bs3"] and rows[0]["copies"][0]["D"] >= 1
