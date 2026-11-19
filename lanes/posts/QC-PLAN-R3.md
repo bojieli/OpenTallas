@@ -474,3 +474,7 @@
   - Both use the same script (kit_n46x.sh: same wave env, same rt/current launch tree, plan sha guarded), so the only difference is the N4.6e rows.
   - Each kit starts by itself once its chain is green: rc 0, BIND_ERRORS 0, LATCHECK PASS (gate_kit46.sh on intel2). It does not start if its chain is red.
   - Comparison will cover GRT overflow in the btb / b_tw_data_i box, b_tw_data_i detours, worst setup/hold and the sle_st_a_v2 -108 ps.
+- 2026-11-19 12:01 PST QC-PLAN-R3 11-19: correction. The N4.6e bind (tag N46G) failed at plan_gate_pre with SCHEMA-UNKNOWN-KEY 'notes'. My compose script had added a top-level notes key. That was my error, not the content.
+  - Fix: the note moved into each type's note field. Content is otherwise unchanged. The plan is now plan_n46_g.json d75befa6f935; e25793c68228 is withdrawn.
+  - Rebound as tag N46H (chain_n46h.sh + n46/g0pre_n46h.sh, ot-run on epyc9). A new tag avoids clobbering the leftover N46GBR files. I will remove those via ot-delete after N46H finishes.
+  - The N4.6e test kit is now pk46_e2 (kit_n46x.sh n46h, sha guarded). It starts by itself when N46H is green. The control kit pk46_ctl is still gated on the N4.6f bind, which is running.
