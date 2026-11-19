@@ -625,7 +625,8 @@
     "epyc9",
     "epyc10",
     "intel1",
-    "epyc2"
+    "epyc2",
+    "epyc7"
    ],
    "place_prefer": [
     "epyc8",
@@ -5700,7 +5701,9 @@
    "prev_gen_hosts_derive": [
     "epyc8",
     "epyc9",
-    "epyc10"
+    "epyc10",
+    "intel1",
+    "epyc2"
    ],
    "tools_refresh": true,
    "event_lineage": [
