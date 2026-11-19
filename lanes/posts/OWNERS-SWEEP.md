@@ -22,3 +22,8 @@
 - 2026-11-18 13:50 PST 13:50 sweep 503 rows, 484 unflagged. S81 UNOWNED 0 / FAILED 10 / STALE 10 / DEAD 5. QC UNOWNED 0 / FAILED 4 (sle_su_l1, slw_su_l1; owned) / STALE 9 / DEAD 0. KV 0, HEAD 0. No-kit-wave-row: S81 -1, QC 4, KV 1. col_h9_r1 + QC cbx_q10 = HELD-INTENTIONAL (D8e, N4.1p).
 - 2026-11-18 14:50 PST 14:50 sweep: S81 UNOWNED0/FAILED10/STALE10/DEAD5 (leaf t25,t54,t43; was 0/10/10/5). QC 0/0/9/0 (FAILED 4->0; STALE 9 sle_hc1, slw_stm_v1 x2). KV 0, HEAD 0. No NEW group. No-kit-wave-row: S81 -1, QC 4, KV/HEAD 0. 484 rows unflagged.
 - 2026-11-18 15:51 PST S81 U0/F11/S11/D6 (was 0/10/10/5); QC U2/F0/S9/D6 (was 0/0/9/0); KV 0; HEAD 0. New: QC UNOWNED slw_hc2 x2, QC DEAD slw_stm_v1/v2. No-kit-wave-row: S81 -1, QC 4.
+- 2026-11-18 17:50 PST 1750 U/F/S/D: S81 6/11/11/0, QC 2/5/9/0, KV 1/2/0/6, HEAD 0.
+  S81 leaf rows (t25,t54,t43) still FAILED-NO-RELAUNCH+STALE; D8e relaunch not yet visible.
+  QC FAILED: sle_su_l1 x2, slw_su_l1; STALE slw_stm/sle_hc1; UNOWNED sle_fe_v1, slw_fe_v2.
+  NEW: KV 6 DEAD-OWNER, owner KV-D23-COMPOSE last post 14:48 (kv3_hub_C/Wo, kv3_pv_v1n/v2n/v3/v3n).
+  Revived DEAD: none (0 DEAD on S81/QC).
