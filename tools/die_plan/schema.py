@@ -1555,6 +1555,15 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["r
                                "span_um": {"type": "number"}, "path_um": {"type": "number"}}}}}}}
 # Opt-in: realize the already priced internal stations in logical and physical source alike.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["realize_internal_stations"] = {"type": "boolean"}
+# PLACE-REGION ("region before cycle", FABLE-CLOSURE-STRATEGY lever 5, 11-19; absent = unchanged kit): one placement region per
+# named logic cone of the type, sized for a target utilisation (place_regions.tcl).  centre_um or near_re (centroid of the
+# matching instances) sites it; with neither it sits at the cone's own macros, else the core centre.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["place_regions"] = {
+    "type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": False, "required": ["name", "inst_re"],
+    "properties": {"name": {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]*$"}, "inst_re": {"type": "string", "minLength": 1},
+                   "util": {"type": "number", "minimum": 0.1, "maximum": 0.9},
+                   "centre_um": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "number"}},
+                   "near_re": {"type": "string", "minLength": 1}, "note": {"type": "string"}}}}
 # TYPE-SAFE-2 11-06: gen-time ft station spread opt-out (ft_spread.py; absent = on)
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["ft_spread"] = {"type": "boolean"}
 # FT-HOP-M2-WIRE 11-12 (GEN-CLASS-1): per-type repeater pitch of the ft-station hop nets (gen_phys FT_HOP_MAXWIRE_UM; 0 = off)

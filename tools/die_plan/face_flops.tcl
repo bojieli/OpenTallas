@@ -888,6 +888,8 @@ if {[file exists /work/relay_mid.tcl] && [info exists ::env(OT_RELAY_MID_RE)]} {
 if {[file exists /work/gutter_block.tcl] && [info exists ::env(OT_GUTTER_BLOCK_UM)]} { source /work/gutter_block.tcl }
 # DIE-HEAD-69 11-05: core-output landing flops at their hard-core pins (kits with hard cores; gen_phys copies it)
 if {[file exists /work/core_out_land.tcl]} { source /work/core_out_land.tcl }
+# PLACE-REGION 11-19 (lever 5, plan key partition_types.<type>.place_regions): one placement region per named logic cone
+if {[file exists /work/place_regions_data.tcl] && [file exists /work/place_regions.tcl]} { source /work/place_regions_data.tcl; source /work/place_regions.tcl }
 # DIE-HBM-92 11-08: optional FT polarity placement (OT_FT_POLARITY_LOCAL=1); before the GPL guard, which stays last
 if {[file exists /work/ft_polarity_local.tcl]} {source /work/ft_polarity_local.tcl}
 # VSN6-B 11-11 S7: loud non-tap cell census against the 400k run cap (cell_census.tcl, ADVISORY)
