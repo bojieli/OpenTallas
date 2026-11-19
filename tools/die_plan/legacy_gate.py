@@ -277,26 +277,74 @@ ORFS_WS_RE = re.compile(r"report_worst_slack\n-+\nworst slack max\s+(-?[0-9.]+)"
 ORFS_TNS_RE = re.compile(r"report_tns\n-+\ntns max\s+(-?[0-9.]+)")
 
 
-def grt_frames(kit, result):
+CORNER_NAME = {"bc": "ff", "tc": "tt", "wc": "ss"}
+
+
+def orfs_corners(kit):
+    """FABLE-FLOW-1950 class O: the corner(s) of the kit's ORFS sessions (5_global_route.rpt): config.mk CORNERS (multi-corner, worst over
+    all), else CORNER, as tt / ff / ss.  None when config.mk names neither."""
+    try:
+        text = (Path(kit) / "config.mk").read_text(errors="replace")
+    except OSError:
+        return None
+    for key in ("CORNERS", "CORNER"):
+        m = re.findall(rf"^export\s+{key}\s*\??=\s*(.+?)\s*$", text, re.M)
+        if m:
+            names = [CORNER_NAME.get(c.lower(), c.lower()) for c in m[-1].split()]
+            return names or None
+    return None
+
+
+def _rpt_text(tns, ws, head):
+    return f"{head}\nreport_tns\n----\ntns max {tns if tns is not None else 'n/a'}\n\nreport_worst_slack\n----\nworst slack max {ws}\n"
+
+
+def grt_frames(kit, result, corners=None):
     """WAVE-FLOW-R2 11-17 (COORD lever 8): the GRT setup number in both frames.  kit_orfs = the ORFS 5_global_route.rpt read (kit session, vclk at the
     kit SDC value); signoff_frame = this policy session (golden SDC, nominal uncertainty policy, vclk bound to the routed pin-flop mean, TT setup /
-    FF hold, no derate) on global-route RC.  The remaining gap to routed sign-off is the extraction (OpenRCX on the detailed route)."""
+    FF hold, no derate) on global-route RC.  The remaining gap to routed sign-off is the extraction (OpenRCX on the detailed route).
+    FABLE-FLOW-1950 class O: the ORFS report is the kit session's corner (most kits read_liberty -corner bc only = FF; CORNERS 'tc bc' = worst
+    of TT and FF), never "TT".  Its corner goes into a labelled copy 5_global_route.<corner>.rpt (first line '# corner: ...'), the policy TT
+    setup is written as 5_global_route.tt.rpt when the ORFS report is not TT, and delta_ps compares the policy session IN THE SAME CORNER(S)
+    as the ORFS report (TT-vs-TT setup is signoff_frame.setup_tt_wns_ps)."""
     kit = Path(kit)
+    corners = corners if corners is not None else (result.get("corners") or {})
+    oc = orfs_corners(kit) or ["ff"]
+    label = "+".join(oc)
     orfs = None
+    chk = result.get("checks") or {}
+    st, hf = chk.get("setup_tt") or {}, chk.get("hold_ff") or {}
     for rpt in sorted(kit.glob("run/reports/*/*/base/5_global_route.rpt")):
         text = rpt.read_text(errors="replace")
         w, t = ORFS_WS_RE.search(text), ORFS_TNS_RE.search(text)
         if w:
-            orfs = dict(worst_slack_ps=float(w.group(1)), tns_ps=float(t.group(1)) if t else None, report=str(rpt))
-    chk = result.get("checks") or {}
-    st, hf = chk.get("setup_tt") or {}, chk.get("hold_ff") or {}
+            orfs = dict(worst_slack_ps=float(w.group(1)), tns_ps=float(t.group(1)) if t else None, report=str(rpt), corner=label)
+            head = (f"# corner: {label} (ORFS GRT session, config.mk corners {' '.join(oc)}; this setup is {label.upper()}, not TT "
+                    f"unless the corner says tt; legacy_gate FABLE-FLOW-1950 O)")
+            lab = rpt.parent / f"5_global_route.{label}.rpt"
+            tmp = rpt.parent / f".{lab.name}.{os.getpid()}"
+            tmp.write_text(head + "\n" + text)
+            os.replace(tmp, lab)
+            orfs["labelled_report"] = str(lab)
+            if label != "tt" and st.get("wns_ps") is not None:
+                tt = rpt.parent / "5_global_route.tt.rpt"
+                tmp = rpt.parent / f".{tt.name}.{os.getpid()}"
+                tmp.write_text(_rpt_text(st.get("tns_ps"), st.get("wns_ps"),
+                                         "# corner: tt (G2 policy session on global-route RC: golden SDC, nominal uncertainty, vclk TT bound; "
+                                         "legacy_gate FABLE-FLOW-1950 O)"))
+                os.replace(tmp, tt)
+                orfs["tt_report"] = str(tt)
+    same = [corners.get(c, {}).get("std_wns_max") for c in oc]
+    same_ps = min(float(v) for v in same) if same and all(v is not None for v in same) else None
     return dict(kit_orfs=orfs,
                 signoff_frame=dict(setup_tt_wns_ps=st.get("wns_ps"), setup_tt_tns_ps=st.get("tns_ps"), hold_ff_wns_ps=hf.get("wns_ps"),
+                                   setup_same_corner_wns_ps=same_ps, same_corner=label,
                                    parasitics="global_routing", corners="TT setup / FF hold", derate="none",
                                    sdc="golden SDC + nominal uncertainty policy + standard boundary-hold overlay (in_min/out_min)",
                                    vclk=st.get("vclk_reference")),
                 signoff_extraction="OpenRCX on the detailed route (not available at GRT)",
-                delta_ps=None if not orfs or st.get("wns_ps") is None else round(float(st["wns_ps"]) - orfs["worst_slack_ps"], 2))
+                delta_corner=label,
+                delta_ps=None if not orfs or same_ps is None else round(same_ps - orfs["worst_slack_ps"], 2))
 
 
 def run(kit, stage, netlist=None, execute=subprocess.run):
@@ -411,10 +459,11 @@ def run(kit, stage, netlist=None, execute=subprocess.run):
             corners[corner.lower()] = parsed
         result = policy_record(corners, policy, hold_ff_blocks(kit), setup_continue_ps(kit))
         try:
-            result["frames"] = grt_frames(kit, result)
+            result["frames"] = grt_frames(kit, result, corners)
             fr = result["frames"]
-            print(f'OT_GRT_FRAMES setup: kit ORFS read {(fr["kit_orfs"] or {}).get("worst_slack_ps")} ps, sign-off frame (policy session, GR RC) '
-                  f'{fr["signoff_frame"]["setup_tt_wns_ps"]} ps, delta {fr["delta_ps"]}; hold FF {fr["signoff_frame"]["hold_ff_wns_ps"]} ps')
+            print(f'OT_GRT_FRAMES setup ({fr["delta_corner"].upper()} both sides): kit ORFS read {(fr["kit_orfs"] or {}).get("worst_slack_ps")} ps, '
+                  f'policy session {fr["signoff_frame"]["setup_same_corner_wns_ps"]} ps, delta {fr["delta_ps"]}; '
+                  f'TT setup (policy, GR RC) {fr["signoff_frame"]["setup_tt_wns_ps"]} ps; hold FF {fr["signoff_frame"]["hold_ff_wns_ps"]} ps')
         except (OSError, ValueError, KeyError, TypeError, AttributeError) as error:      # advisory record: never fails the gate
             result["frames"] = dict(error=f"{type(error).__name__}: {error}")
         timing_receipt.write_text(json.dumps(result, indent=1) + '\n')

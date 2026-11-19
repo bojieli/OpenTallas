@@ -416,12 +416,30 @@ def test_grt_gate_layer_mismatch_stops_before_openroad(tmp_path):
 
 
 def test_grt_frames_reports_both_numbers(tmp_path):
-    """WAVE-FLOW-R2 11-17: the GRT setup number in the kit ORFS frame and in the sign-off frame (policy session)"""
+    """WAVE-FLOW-R2 11-17 + FABLE-FLOW-1950 O: the ORFS GRT report is labelled with its corner (FF here), the policy TT setup gets its
+    own 5_global_route.tt.rpt, and the delta compares the same corner (FF policy vs FF ORFS), never FF vs TT"""
     rpt = tmp_path / "run/reports/asap7/d/base"
     rpt.mkdir(parents=True)
+    (tmp_path / "config.mk").write_text("export CORNER = BC\n")
     (rpt / "5_global_route.rpt").write_text("report_tns\n----\ntns max 0.00\n\nreport_worst_slack\n----\nworst slack max 89.51\n")
     res = {"checks": {"setup_tt": {"wns_ps": -16.3, "tns_ps": -42.4, "vclk_reference": "applied"}, "hold_ff": {"wns_ps": 3.0}}}
-    fr = gate.grt_frames(tmp_path, res)
-    assert fr["kit_orfs"]["worst_slack_ps"] == 89.51
-    assert fr["signoff_frame"]["setup_tt_wns_ps"] == -16.3 and fr["delta_ps"] == -105.81
+    corners = {"tt": {"std_wns_max": -16.3}, "ff": {"std_wns_max": 80.0}}
+    fr = gate.grt_frames(tmp_path, res, corners)
+    assert fr["kit_orfs"]["worst_slack_ps"] == 89.51 and fr["kit_orfs"]["corner"] == "ff"
+    assert fr["delta_corner"] == "ff" and fr["delta_ps"] == -9.51
+    assert fr["signoff_frame"]["setup_tt_wns_ps"] == -16.3
+    assert (rpt / "5_global_route.ff.rpt").read_text().startswith("# corner: ff")
+    tt = (rpt / "5_global_route.tt.rpt").read_text()
+    assert tt.startswith("# corner: tt") and "worst slack max -16.3" in tt
     assert gate.grt_frames(tmp_path / "none", res)["kit_orfs"] is None
+
+
+def test_grt_frames_multi_corner_kit(tmp_path):
+    """CORNERS = tc bc: ORFS reads the worst of TT and FF, so the delta compares min(policy TT, policy FF)"""
+    rpt = tmp_path / "run/reports/asap7/d/base"
+    rpt.mkdir(parents=True)
+    (tmp_path / "config.mk").write_text("export CORNER = TC\nexport CORNERS = tc bc\n")
+    (rpt / "5_global_route.rpt").write_text("report_worst_slack\n----\nworst slack max -5.00\n")
+    fr = gate.grt_frames(tmp_path, {"checks": {"setup_tt": {"wns_ps": -20.0}}}, {"tt": {"std_wns_max": -20.0}, "ff": {"std_wns_max": 30.0}})
+    assert fr["delta_corner"] == "tt+ff" and fr["delta_ps"] == -15.0
+    assert (rpt / "5_global_route.tt+ff.rpt").is_file() and (rpt / "5_global_route.tt.rpt").is_file()
