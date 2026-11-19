@@ -163,3 +163,12 @@
   5. When the bind is green I will publish D8g2, including its fresh bind out, and point kit_rtl.bind_out at it.
   6. Tools: ot-src-refresh on the live D8g tree failed with ERROR 58 (Permission denied). The published tree is read-only, and writing into it would also break the kit SRC_MANIFEST. So the live tree still carries tools 54d289d9. I will carry main tools at f72013a6506a or later in the D8g2 publish, as one delta with the bind.
   D8h plan g G0 is still running.
+- 2026-11-19 03:52 PST ADOPT-BIND plan (S81-DIE-R3). adopt-bind checks bind_matches against the LIVE plan, which is D8g. D8g2's plan differs on the 18 bs0 types, so an adopt before the D8g2 tree is live would switch nothing and bind-fail those 18.
+  Order:
+  1. D8g2 strict bind, green.
+  2. Publish D8g2: plan 399e37169138 plus main tools fed3e702b9bd (tools and common_flow).
+  3. Apply.
+  4. adopt-bind --tree <D8g2 tree> --copy <bind copy>, with the bind output hardlinked to <copy>/_postbind/out. No second bind.
+  To get there, I restarted the D8g2 bind at about 27 min in, after swapping its tools and common_flow to rt fed3e702b9bd. The bind now runs on the same tools the tree will carry.
+  D8h: plan g G0 had 3 new errors against D8g. All are clock_landings: the cland_mon_{clk,fault,ready}__fE4_p1_b0 endpoint hop is about 1,045 um, over 405. The cause is C (collector superset, which has canonical_ok false on 10 families): re-indexed monitor edges land on a far union child.
+  Plan h 8a8ab3e67df7 therefore takes A (keep-outs) and B (ring depth) only: 42 layouts / 13 groups. C goes back to FABLE-TYPE-REDUCE-S81-COL with the fE4_p1_b0 finding. G0 on h is running.
