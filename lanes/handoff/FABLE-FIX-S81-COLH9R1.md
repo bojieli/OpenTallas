@@ -55,3 +55,12 @@ Work dir: epyc2 /srv/opentallas-scratch3/claude/fable-fix-s81-colh9r1 (L). Tools
       intel1 kit was already in "Repair antennas" (GRT done) when killed.
 - Guard kills 11-18/19 of dpkit-col_h9_r2: intel1 16, epyc10 5, epyc8 1, epyc2 1; of dpkit-col_h9_r1: epyc2 15, epyc8 9, epyc10 6, intel1 1.
 - Not read: which net repair_design hangs on.
+
+## 2026-11-19 06:20 proof kit GRT read (V) and HANDOFF D8h
+- pv36da905c private kit, GRT exit 0 at 04:23 PST. Attempt 1 hit the max-wire repair_design stall (flat 1813 s at 16k nets), attempt 2 (repair skipped) passed.
+- OT_GRT_FRAMES: TT setup -41.49 (sign-off frame, GR RC), 48 ends, worst u_s5/q6[40] (cfg7_seq; not a t3 end). Kit ORFS FF-session read -72.73. Margin to -42 is 0.5 ps.
+  Before the GRT TT repair: -137.25 at bs7/i_x1 (1,649 ends); the repair added 3,696 cells. My own frame (L/sta/g1.*, no policy derates): -8.90, 4 ends, all s5/q6.
+- FF hold -63.77, 1,392 ends, all input-port face flops (bin_frame_int_i1 q 1072, i0 q 318, 2 eq). GRT hold repair stopped on its setup guard and 200-buffer cap. Same class on unchanged kits. OPEN for sign-off.
+- Rows handed to S81-DIE-R3 for D8h: L/mk_rows_h9r1.py (rows L/rows_h9r1_i1trunk_v1.json 795d7be5c3d5).
+- Kit relaunched 06:2x to goal route (log intel2 ~/fable-fix-s81-colh9r1/kit_v1_route.out): first DRT + sign-off read of the family.
+- Next owner steps: (1) read DRT DRC and routed TT / FF hold on this kit; (2) port-hold class: check sign-off hold frame (IO in_min -40) before any row; (3) s5/q6 and bs7/i_x1 are the next setup classes if routed TT falls below -42.
