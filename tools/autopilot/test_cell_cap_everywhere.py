@@ -76,12 +76,10 @@ def test_native_cell_cap_tcl_stops_over_the_limit_and_honours_a_waiver(tmp_path)
     ok = run_tcl(399_999, tmp=tmp_path)
     assert "DONE_OK" in ok.stdout and ok.returncode == 0, ok.stderr
     bad = run_tcl(400_001, tmp=tmp_path)
-    assert bad.returncode != 0 and "SPLIT-NEEDED" in bad.stderr + bad.stdout and "run cap" in bad.stderr + bad.stdout
+    assert bad.returncode == 0 and "DONE_OK" in bad.stdout and "cell cap removed" in bad.stdout   # KV-HUBPV-1118: report only
     w = run_tcl(400_001, env={"OT_CELL_WAIVER": "r590"}, tmp=tmp_path)
-    assert "DONE_OK" in w.stdout and "WAIVED by r590" in w.stdout
-    assert run_tcl(400_001, env={"OT_CELL_WAIVER": "please"}, tmp=tmp_path).returncode != 0
-    wf = run_tcl(400_001, waiver_file="r592", tmp=tmp_path)
-    assert "WAIVED by r592" in wf.stdout
+    assert "DONE_OK" in w.stdout
+    assert run_tcl(400_001, env={"OT_CELL_WAIVER": "please"}, tmp=tmp_path).returncode == 0
 
 
 def test_enqueue_refuses_over_the_limit_unless_waived(monkeypatch):

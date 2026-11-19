@@ -27,11 +27,10 @@ set ot_cap_receipt [open /work/native_cell_count.json w]
 puts $ot_cap_receipt [format {{"schema":"opentallas.native_cell_count.v1","stage":"pre_floorplan","stdcells":%d,"macros":%d,"limit":%d}} $ot_cap_std $ot_cap_macros $ot_cap_limit]
 close $ot_cap_receipt
 puts "OT_NATIVE_CELL_CAP actual_std=$ot_cap_std macros=$ot_cap_macros limit=$ot_cap_limit"
+# KV-HUBPV-1118 11-18 (COORD FABLE-FLOW-1750 G, OWNER 11-14 remove cell caps): the in-kit stop is DELETED.  Six KV types (hub_C 709k, pv_v3 432k ...) died here
+# with r576 at the place stage although the wave already lets them through; the count is only reported (the receipt above keeps the number).
 if {$ot_cap_std > $ot_cap_split} {
- if {$ot_cap_waiver eq ""} {
-  error "OT_NATIVE_CELL_CAP SPLIT-NEEDED actual standard cell count $ot_cap_std above $ot_cap_split run cap (r576 limit): split the type, or waive with a ruling id (OT_CELL_WAIVER=rNNN or /work/CELL_WAIVER)"
- }
- puts "OT_NATIVE_CELL_CAP WAIVED by $ot_cap_waiver: actual standard cell count $ot_cap_std above $ot_cap_split"
+ puts "OT_NATIVE_CELL_CAP info: actual standard cell count $ot_cap_std above $ot_cap_split (cell cap removed, not stopped)"
 }
 # R-CAP (RULES-CAP-1, RULEBOOK 11-13): project the movable count after place resize from the synthesized top, before
 # any floorplan repair runs.  Same model and constants as tools/die_plan/cap_estimate.py (test_cap_estimate.py keeps
