@@ -54,6 +54,25 @@ def bits(text,expr):
     return expand(expr)
 
 
+LOB_MODULE='ot_dp_dly_keep'
+
+
+def trace_lob(text,bit):
+    """D8i SEQHOST-REACH-1 (S81-DIE-R3 11-19): an out-bus bit stationed by the binder (bind_intra_stations OUT-BUS,
+    chain u_lob_<bus>__<leaf>__<port>_<bit>_<k>, ot_dp_dly_keep W 1 D 1) is followed back to the leaf output bit it
+    carries -> ((wire, bit), stages).  A bit with no chain returns 0 stages (the unstationed form is unchanged)."""
+    name,i=bit;stages=0
+    while name.startswith('lob_'):
+        cell=instance(text,'u_'+name)
+        if cell['module']!=LOB_MODULE or cell['params'].get('W')!='1' or cell['params'].get('D')!='1' or i!=0:
+            raise ValueError('actual out-bus station primitive differs '+name)
+        d=bits(text,cell['ports']['d'])
+        if len(d)!=1:raise ValueError('out-bus station is not one bit '+name)
+        name,i=d[0];stages+=1
+        if stages>64:raise ValueError('out-bus station chain does not end '+bit[0])
+    return (name,i),stages
+
+
 def extract(bind,mutate_source_bit=False):
     bind=Path(bind);rtl=bind/'rtl'
     latency=json.loads((bind/'bind_latency.json').read_text())
@@ -74,20 +93,23 @@ def extract(bind,mutate_source_bit=False):
             raise ValueError('actual native boundary register primitive differs')
         emitted=bits(source,bout['ports']['d']);lep=instance(text,'u_u_lep');land=instance(text,'u_u_land')
         consumer={0:bits(text,lep['ports']['mu_c']),1:bits(text,land['ports']['rc'])}
-        qname=bin_['ports']['q'];mapped=[]
+        qname=bin_['ports']['q'];mapped=[];lob_stages=set()
         for kind,port,width in [(0,'mu_c_'+endpoint,34),(1,'mu_rc_'+endpoint,11)]:
             indices=[]
             for bit in range(width):
                 found=[i for i,s in enumerate(bus['source_bits'])if s==['leaf','u_seqhost.u_seqhost',port,bit]]
                 if len(found)!=1:raise ValueError('actual source bit missing/duplicated')
                 i=found[0];indices.append(i)
-                if emitted[i] != ('w_u_seqhost_'+port,bit)or consumer[kind][bit]!=(qname,i):
-                    raise ValueError('actual source/consumer pin bit differs: '+repr((endpoint,kind,bit,i,emitted[i],consumer[kind][bit],qname)))
+                src,st=trace_lob(source,emitted[i]);lob_stages.add(st)
+                if src != ('w_u_seqhost_'+port,bit)or consumer[kind][bit]!=(qname,i):
+                    raise ValueError('actual source/consumer pin bit differs: '+repr((endpoint,kind,bit,i,emitted[i],src,consumer[kind][bit],qname)))
             mapped.append(dict(kind=kind,source_port=port,bits=width,active_bus_indices=indices,
                 consumer_module=lep['module']if kind==0 else land['module'],
                 consumer_params=lep['params']if kind==0 else land['params'],
                 consumer_port='mu_c'if kind==0 else'rc'))
+        if len(lob_stages)!=1:raise ValueError('out-bus stations differ across the bits of one endpoint '+endpoint)
         routes.append(dict(endpoint=endpoint,partition=bus['dst'],lane=bus['lane'],source_bus=bus['bus_out'],
+                           source_side_out_bus_stations=lob_stages.pop(),
                            consumer_bus=bus['bus_in'],declared_bound_stages=bus['bound_stages'],
                            actual_source_boundary=bout['module'],actual_consumer_boundary=bin_['module'],
                            consumer_boundary_D=bin_['ports']['d'],fields=mapped,
