@@ -124,3 +124,17 @@ def test_gen_phys_kit_has_every_file():
     a = t.index("\ndef write_type_kit(")
     b = t.find("\ndef ", a + 1)
     assert "kit_common_files.stage(kd)" in t[a:b if b > 0 else None]
+
+
+def test_stage_carries_the_gen_env_cell_waiver_into_the_kit(tmp_path):
+    """FABLE-FLOW-1555 G: the wave's OT_CELL_WAIVER (gen env) must reach /work/CELL_WAIVER, the file native_cell_cap.tcl reads in the job"""
+    import kit_common_files as KCF
+    import cap_estimate as CE
+    for env, want in (({"OT_CELL_WAIVER": "r703"}, "r703"), ({}, ""), ({"OT_CELL_WAIVER": "please"}, ""), ({"OT_CELL_WAIVER": " r576 "}, "r576")):
+        kd = tmp_path / ("k" + str(abs(hash(str(env)))))
+        kd.mkdir()
+        assert KCF.stage_cell_waiver(kd, env) == want
+        assert (kd / "CELL_WAIVER").exists() == bool(want)
+        assert CE.cell_waiver(kit=kd, env={}) == want
+    tcl = (Path(KCF.__file__).with_name("native_cell_cap.tcl")).read_text()
+    assert "/work/CELL_WAIVER" in tcl and "OT_CELL_WAIVER" in tcl

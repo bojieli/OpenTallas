@@ -18,6 +18,8 @@ helpers several writers already copied.  Not listed on purpose: names a writer s
 (hold_gate.tcl: hbm_arch_cores has its own; signoff.py stages tools' copy by dependency), generator-specific hooks,
 and helpers whose mere presence switches a kit step on (adder_map_dontuse.py, stage_odb_cap.py, partition_ir.py)."""
 import importlib.util
+import os
+import re
 import shutil
 from pathlib import Path
 
@@ -78,11 +80,28 @@ def _git_file(rel, repo):
     return out
 
 
-def stage(kd, repo=REPO):
-    """copy every shared helper into kit dir kd; returns the kit file names"""
+WAIVER_RE = re.compile(r"r\d{3,4}")     # the ruling-id form native_cell_cap.tcl and cap_estimate.cell_waiver accept
+
+
+def stage_cell_waiver(kd, env=None):
+    """FABLE-FLOW-1555 class G (KV-D23-COMPOSE 11-19): the in-kit cell cap (native_cell_cap.tcl) runs in the ot-run job, which
+    never sees the gen env; it reads env OT_CELL_WAIVER or /work/CELL_WAIVER.  The wave puts the waiver in gen_env
+    (stops_off_cell_env, OWNER r703), so without this file the waiver stopped at gen: 14 KV FAILs at floorplan on 401-709k
+    types, re-learned on every plan event.  A valid ruling id in the gen env is written to KIT/CELL_WAIVER; no env value
+    (HBM, stops_off false) writes nothing and the kit stops as before.  Returns the ruling id written, or ''."""
+    v = str((os.environ if env is None else env).get("OT_CELL_WAIVER", "")).strip()
+    if not WAIVER_RE.fullmatch(v):
+        return ""
+    (Path(kd) / "CELL_WAIVER").write_text(v + "\n")
+    return v
+
+
+def stage(kd, repo=REPO, env=None):
+    """copy every shared helper into kit dir kd (and the gen env's cell waiver, stage_cell_waiver); returns the kit file names"""
     kd = Path(kd)
     for name in FILES:
         shutil.copyfile(source(name, repo), kd / name)
+    stage_cell_waiver(kd, env)
     return sorted(FILES)
 
 
