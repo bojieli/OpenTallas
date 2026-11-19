@@ -1,0 +1,28 @@
+{
+ "schema": "opentallas.plan_row_request.v1",
+ "owner": "FABLE-FIX-S81-GLUE",
+ "for": ["S81-DIE-R3", "QC-PLAN-R3"],
+ "event": "D8h (QC die qwen_compute, partition glue, design qfd_qc_glue_part)",
+ "class": "r713 relay stage: program rows of the system face, +1 cycle inside the source core",
+ "rtl": {
+  "file": "rtl/qwen_split/qfd_sys_face_lctx3_core.sv",
+  "new": "lanes/handoff/FABLE-FIX-S81-GLUE-relay/qfd_sys_face_lctx3_core.relay.sv",
+  "new_sha256": "6749f2e756f355e93b6cc6d832997597ad6aa967bff390297a6c5c0822b6917a",
+  "base_sha256": "8fc1850d23f9781164f05fb6b7807879447021f813a16411a9b343db942f9796 (main 92b29f6c5791)",
+  "change": "row decode registers renamed tt_pw_a / dh_prog_a; tt_pw and dh_prog (= seq_dh[186:44]) are a plain relay of them (+1 cycle); 3 valid bits keep the rst_bpay reset, 215 data bits have no reset; seq_dh[43:0] (dh_run) unchanged",
+  "on_main": false
+ },
+ "proof": {
+  "core_itself": "prove_relay.py on qfd_sys_face_lctx3_core, every submodule / macro a blackbox: one-step induction miter, 5709 comparisons over 4793 free bits (1257 registers paired by name, 59 blackboxes, every other output and every submodule input compared), yosys sat: no model = NEW equals OLD with a one-cycle relay on tt_pw and seq_dh[186:44] only, for every state and input. The relay shape (plain D flop of the _a register, no enable, same clock, no other reader) is checked structurally. Negative controls: a relay bit wired to the wrong _a bit is refused; a changed replay condition gives a SAT model.",
+  "closed_loop": "ancestor qfd_sys_face with the same edit: rtl/test/qwen_split/run_sys_face_bench.sh MUT 0 PASS (1024 PW + 8 DW, 1512 events exact, commit, token run), mutants 1..5 FAIL; baseline identical. Limit: the bench models the remote observation path.",
+  "why_safe": "the receipt ledgers time themselves from the observed writes (program_obs2 / descriptor_obs); both program copies move by the same cycle, so the PW / DW order and spacing each ledger sees is unchanged; program_ready is derived from the ledgers, so t_go still cannot precede the last write. prog_busy drops one cycle before the last row leaves the core: a BEGIN in that cycle faults in the ledger (state WRITES) instead of in the core FSM, a fault either way.",
+  "physical": "private kit F (intel2 fable-fix-s81-glue-kitf): at global placement no tt_pw / dh_prog / u_record end violates on the placement-RC estimate (worst -10 ps elsewhere); GRT TT pending"
+ },
+ "rows": [
+  {"path": "latency.lanes.glue__tt_pw_pw", "set": {}, "meaning": "NO change: cycles 9 (stations 3, boundary 2, faces 2, clock_landing 4) is the transport from the glue pin register; the relay is inside the source core in front of that pin register"},
+  {"path": "latency.lanes.glue__seq_dh_dh", "set": {}, "meaning": "NO change, and it must not be raised: the lane also carries seq_dh[43:0] (run bundle: h_start / stage / token / position), which is NOT relayed. Only the program rows [186:44] arrive one cycle later relative to the run bundle."},
+  {"path": "LATCHECK", "set": {}, "meaning": "no lane row changes, so LATCHECK inputs are unchanged. To confirm in the D8h bind run: nothing at die level prices the program-row source latency as a fixed cycle (grep of tools/die_plan for tt_pw / seq_dh finds no such term; the token calendar starts after program_ready)."},
+  {"path": "kit placement (advisory, if kit F / G wins)", "set": {"mid_place": ["u_ot_pr_core.tt_pw[*]", "u_ot_pr_core.seq_dh[186:44]"]}, "meaning": "the relay flops FIRM half way between u_ot_pr_core.u_rom and the u_bout_sys_face__tt_pw / __seq_dh pin registers (kit-private hook mid_place.tcl in kit F / G); kit F closed the class with only tt_pw pinned, so this row may prove unnecessary"}
+ ],
+ "open": ["obs_fault relay in the bound wrapper (lpad ctlm_flt_i -> u_sys_face obs_fault flop, 1 mm): not part of this RTL", "kit F / G GRT TT", "push to main after the D8h bind check, or on your go"]
+}
