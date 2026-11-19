@@ -258,7 +258,9 @@ def wave_candidates(jobs, kits, core_module=lambda x: x):
             continue
         so = j.get("signoff") or {}
         kit = str(j.get("path") or j.get("kit") or "").split(":", 1)[-1]
-        if not so.get("path") or kits.get(kit) != "yes":
+        # COORD 11-19 (wave-eco: 0 of 130 DONE-NEAR-MISS jobs were candidates): 105 of their kits are not in kit_wave_stages.tsv at all (older events) and 25 read plan_current no / empty.  The
+        # near-miss ECO is for ANY plan (OWNER 11-19: a type signed off on whichever plan counts), so the plan_current gate applies to the re-sign rows only
+        if not so.get("path") or (kits.get(kit) != "yes" and not eco):
             continue
         out.append(dict(die=j.get("die"), name=j.get("type"), module=core_module(j.get("type")),
                         host=j.get("probe") or j.get("host"), path=os.path.dirname(os.path.dirname(so["path"])),
@@ -1028,7 +1030,7 @@ def try_eco(AP, c, ctx, it, cid, ap_dir, eco_running, notices):
     mem = it.get("eco_mem", WAVE_ECO_MEM_GB if c.get("source") == "wave-eco" else ECO_MEM_GB)
     unit = "ae-%s-a%d" % (cid, n)
     logf = Path(ap_dir) / "auto_resign_jobs" / (unit + ".log")
-    anyhost = wave_eco and host_overloaded(getattr(AP, "_otrun_status_cache", None) or otrun_status(AP), c["host"])
+    anyhost = wave_eco and (AP.ssh_host(c["host"]) == "localhost" or host_overloaded(getattr(AP, "_otrun_status_cache", None) or otrun_status(AP), c["host"]))   # never pinned to the hub
     if not AP.launch_unit(unit, logf, eco_argv(AP, c, e, d, out, mem, anyhost)):
         it.update(status="WAIT", why="systemd-run failed")
         return False

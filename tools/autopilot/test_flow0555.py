@@ -205,7 +205,10 @@ def test_wave_near_miss_job_is_an_eco_candidate_with_the_routed_kit_memory():
             "j3": {"id": "j3", "status": "WAIT-PARENT", "die": "hd", "type": "y", "host": "h", "path": "h:/k/a3", "signoff": {"path": "/k/a3/s/signoff.json"}}}
     kits = {"/k/a1/gen/hd_mesh": "yes", "/k/a2": "yes", "/k/a3": "yes"}
     out = {c["name"]: c for c in AR.wave_candidates(jobs, kits)}
-    assert set(out) == {"hd_mesh", "y"} and out["hd_mesh"]["source"] == "wave-eco" and out["y"]["source"] == "wave"
+    assert set(out) == {"hd_mesh", "y"}
+    old = {c["name"] for c in AR.wave_candidates(jobs, {"/k/a1/gen/hd_mesh": "no"})}               # plan_current no / absent kit: still a wave-eco candidate (any plan counts)
+    assert old == {"hd_mesh"}
+    assert "y" not in {c["name"] for c in AR.wave_candidates(jobs, {})}                              # a re-sign row still needs plan_current yes and out["hd_mesh"]["source"] == "wave-eco" and out["y"]["source"] == "wave"
     assert AR.WAVE_ECO_MEM_GB == 24
 
 
