@@ -13,7 +13,7 @@ seen on 11-18:
               that carries a small fraction of the bus bits (col_h9_r1 frame_int_i1 -> 1-bit u_bn5.rs, 1,100 bits end
               at t3_payload): the chain heads to the wrong sink centroid.
   TAP-CAP     planned clock sinks (taps.sink_sites: face / ft / station registers, plus the plan's sink bins) on the
-              nearest tap above the CTS cap (clock.tap_max_sinks, else 1200).
+              nearest tap above the CTS cap (min of clock.tap_max_sinks and cbc_rules.TAP_MAX_SINKS = 1,000).
   TAP-COVER   free area (outline minus hard cores) farther than clock.tap_radius_um (200) from every tap: GPL can put
               flops there and they stay on the root tap (KV kv3_pv_v8: clk keeps 10,056 sinks, clk_t34 10,234).
   TAP-EDGE    the non-core taps sit on one or two edges only and none in the interior (S81 leaf t25: 9 taps on W/S).
@@ -26,7 +26,7 @@ seen on 11-18:
               the new flops land on the root tap (KV kv3_pv_v8: bins 99,260, kit 120,625 -> clk 10,056, clk_t34 10,234).
   BOUNDARY-REG (CBC r713) a port bit with no planned register (taps.planned_sinks) within 50 um of its pin.
   Thresholds come from tools/die_plan/cbc_rules.py (owner r713 close-by-construction), shared with the CBC generator:
-  reach 300 um per hop, tap <= 1,000 sinks, reset leaf <= 32, boundary register <= 50 um, aim >= 10 % of the bus bits,
+  reach 405 um per placed hop, tap <= 1,000 sinks, reset leaf <= 32, boundary register <= 50 um, aim >= 10 % of the bus bits,
   depth <= 13 levels (precheck_synth).
   FOLD / DEPTH (precheck_synth.py, optional): station registers merged by synthesis; logic depth per D cone.
 
@@ -53,7 +53,7 @@ sys.path.pop(0)
 REACH_UM = CBC.REACH_UM_PER_HOP
 TAP_CAP = CBC.TAP_MAX_SINKS
 TAP_RADIUS_UM = CBC.TAP_RADIUS_UM
-RESET_FLOPS = 2000
+RESET_FLOPS = CBC.RESET_LEAF_MAX_FANOUT     # CBC: a raw reset over one 32-pin leaf needs a relay tree
 RESET_LEAF = CBC.RESET_LEAF_MAX_FANOUT
 BOUNDARY_UM = CBC.BOUNDARY_REG_UM
 FF_CPITCH_UM = 2.16      # face_flops.tcl ff_cpitch = 40 sites x 0.054 um
@@ -639,7 +639,7 @@ def suggested_rows(findings, raw):
         elif check == "RESET-FANOUT":
             for f in fs:
                 rows.append(dict(check=check, family=fam, types=[f["type"]], path=f"partition_types.{f['type']}.reset",
-                                 set={"local_relay_tree": True, "relay_um": 405, "max_fanout": 32}, detail=f["detail"]))
+                                 set={"local_relay_tree": True, "relay_um": CBC.REACH_UM_PER_HOP, "max_fanout": CBC.RESET_LEAF_MAX_FANOUT}, detail=f["detail"]))
         elif check == "MISAIM":
             for f in fs:
                 rows.append(dict(check=check, family=fam, types=[f["type"]], path=f"partition_types.{f['type']}.internal_stations",
