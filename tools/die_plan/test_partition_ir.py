@@ -68,8 +68,10 @@ def run_tcl(tmp_path, scripts, *, defer=False, sidecar=False, fail=False, hook=F
                OT_PARTITION_IR_STATUS=str(tmp_path / 'sidecar.status'))
     if fail:
         env['TEST_IR_FAIL'] = '1'
-    if hook:
+    if hook is True:
         env['PRE_FINAL_REPORT_TCL'] = '/custom/unknown_pdnsim_state.tcl'
+    elif hook:
+        env['PRE_FINAL_REPORT_TCL'] = str(hook)
     return subprocess.run(['tclsh', str(command)], cwd=tmp_path, env=env,
                           text=True, capture_output=True)
 
@@ -156,3 +158,28 @@ def test_generated_run_kit_defers_partition_ir():
     assert subprocess.run(['bash', '-n'], input=rk, text=True).returncode == 0
     src = (Path(__file__).with_name('gen_phys.py')).read_text()
     assert 'with_name("partition_ir.py"), kd / "partition_ir.py"' in src
+
+
+def test_ir_neutral_pad_abut_strip_hook_defers(tmp_path):
+    """The generator's pad_abut_strip.tcl (alone or through pre_final_chain.tcl of such hooks) sets no solver state."""
+    real = Path(__file__).parent / 'pad_abut_strip.tcl'
+    hooks = tmp_path / 'hooks'
+    hooks.mkdir()
+    strip = hooks / 'pad_abut_strip.tcl'
+    strip.write_text('# ' + real.read_text().splitlines()[0] + '\nputs "OT_PAD_ABUT_STRIP 0 in-pin pad segments removed"\n')
+    assert 'OT_PAD_ABUT_STRIP' in real.read_text()
+    chain = hooks / 'pre_final_chain.tcl'
+    chain.write_text(f'# chain\nsource {strip}\n')
+    for h in (strip, chain):
+        run = run_tcl(tmp_path, stage(tmp_path / h.stem), defer=True, hook=h)
+        assert 'cannot capture arbitrary' not in run.stderr, run.stderr
+    # a chain that also sources an unknown hook, or a strip-named file that touches PDNSim, is still refused
+    other = hooks / 'other.tcl'
+    other.write_text('set_pdnsim_net_voltage -net VDD -voltage 0.6\n')
+    chain.write_text(f'source {strip}\nsource {other}\n')
+    bad = hooks / 'b' / 'pad_abut_strip.tcl'
+    bad.parent.mkdir()
+    bad.write_text('puts OT_PAD_ABUT_STRIP\nset ::env(PWR_NETS_VOLTAGES) {VDD 0.6}\n')
+    for h in (chain, bad):
+        run = run_tcl(tmp_path, stage(tmp_path / ('x' + h.parent.name + h.stem)), defer=True, hook=h)
+        assert run.returncode != 0 and 'cannot capture arbitrary PRE_FINAL_REPORT_TCL' in run.stderr
