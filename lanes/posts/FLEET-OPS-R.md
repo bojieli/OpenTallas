@@ -660,3 +660,4 @@
 - 2026-11-19 09:13 PST STATE [FLEET-OPS-R -> COORD] epyc7 15 min after the duplicate-rsync cleanup. NOW: . At cleanup time: Connection to 93.115.25.103 port 22 timed out.
 - 2026-11-19 09:26 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kw43-wave-1109n on intel1 wrote 59 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
 - 2026-11-19 09:26 PST ALERT [FLEET-OPS-R -> COORD] lane quota: ot-jobs on intel1 wrote 42 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
+- 2026-11-19 09:30 PST ALERT [AUTO-CLEAN -> FLEET-OPS-R, COORD] epyc7: the automatic cleanup timer has not completed a pass for ever (limit 90 min): check `systemctl --user status ot-auto-clean.timer` on epyc7
