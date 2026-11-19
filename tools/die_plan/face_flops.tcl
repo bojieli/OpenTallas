@@ -590,10 +590,14 @@ proc ff_put_near {f x y} {
   if {$nsface ne ""} {
     # A face bank searches nearby columns then inward rows; a spiral can drift tens of um along the face.
     set c0 [expr {max(0,min($cmax,$c0))}]
+    # NS-BANK-FALLBACK 11-19 (FABLE-FIX-S81-LEAF; S81 leaf D8e: 14 types stopped here at row stride 2, all placed at stride 1):
+    # the staggered comb is a congestion aid, never a reason to stop.  A register that finds no comb cell inside the pin
+    # retention takes the nearest free cell of the full grid (stride 1) of the same three columns; counted in ff_ns_fallback.
+    foreach ff_try_stride [expr {$ff_ns_stride > 1 ? [list $ff_ns_stride 1] : [list $ff_ns_stride]}] {
     for {set depth $ff_ns_inset} {$depth < 120} {incr depth} {
       foreach dc {0 1 -1} {
         set c [expr {$c0+$dc}];set r [expr {$nsface eq "N" ? $rmax-$depth : $depth}]
-        if {$c<0 || $c>$cmax || $r<0 || $r>$rmax || ($depth-$ff_ns_inset+$c)%$ff_ns_stride || [dict exists $ff_gocc "$c,$r"] || [ff_pair_row_blocked $r]} continue
+        if {$c<0 || $c>$cmax || $r<0 || $r>$rmax || ($depth-$ff_ns_inset+$c)%$ff_try_stride || [dict exists $ff_gocc "$c,$r"] || [ff_pair_row_blocked $r]} continue
         set cx [expr {$ff_x0+$c*$ff_cpitch}];set cy [expr {$ff_y0+$r*$ff_rh}]
         if {abs($x-($cx+$w/2))+abs($y-($cy+$ff_rh/2))>27*$ff_dbu} continue
         if {[llength [info commands ff_hits_explicit]] && [ff_hits_explicit $cx $cy $w [[$f getMaster] getHeight]]} continue
@@ -601,8 +605,11 @@ proc ff_put_near {f x y} {
         if {[$f getPlacementStatus] eq "FIRM"} { $f setPlacementStatus PLACED }
         if {[dict exists $ff_orient $cy]} { $f setOrient [dict get $ff_orient $cy] }
         $f setLocation $cx $cy;$f setPlacementStatus FIRM
+        if {$ff_try_stride != $ff_ns_stride} { global ff_ns_fallback; if {![info exists ff_ns_fallback]} { set ff_ns_fallback 0 }; incr ff_ns_fallback
+          if {$ff_ns_fallback == 1} { puts "OT_FACE_FLOPS NS bank fallback: row stride $ff_ns_stride has no cell within the pin retention for [$f getName]; using stride 1 for such registers" } }
         return [list $cx $cy]
       }
+    }
     }
     error "NS face bank cannot fit within 30um pin retention: [$f getName]"
   }
