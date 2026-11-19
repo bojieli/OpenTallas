@@ -77,3 +77,8 @@
   Suggested owners: leaf_t72 -> S81-OWN-1119; pvso_entry__t1 -> S81-CORES-2 relaunch; S81 stale col_h9/h10 -> S81-OWN-1119 + TYPE-S81-FLOWERR; KV stale kv3_hg*/pv*/pc* -> KV-SYSC-1119 / KV-PC-HGI-1119; serdes CBC -> CBC-RULES-1119.
   Table lanes/OWNERS-SWEEP.tsv committed.
 - 2026-11-19 11:52 PST 11-19 12:0x sweep 477 rows. STALE split (was KV 43, S81 179): KV NOLOG 35 + NOKIT 8; S81 NOLOG 28 + NOKIT(rt_mirror_copy_epyc7, no log) 139, ROUTE-LONG 2, LOGFRESH 1. STALE-EPYC7 KV 32 (was 1), S81 4. DEAD-OWNER S81 2 (t72, pvso_entry), QC 1 (cbn_q11 cl49ae4555), LIMIT-PAUSE S81 5 unchanged. CBC-FALLBACK 11, WAIT-BIND KV 7, UNCLASSIFIED 1 unchanged. NOLOG jobs possible ghosts: kv3_hg family since 11-18 17:00.
+- 2026-11-19 12:50 PST 12:50 sweep, 476 rows. S81: NOKIT 140 (was 139, none moved), STALE-NOLOG 24, ROUTE-LONG 5, UNOWNED/LIMIT-PAUSE 5, CBC-FALLBACK 11, DEAD-OWNER 2.
+  KV: STALE-NOLOG 35->16, 19 now STALE-LOGFRESH (relaunched after KV-PC-HGI cancels), NOKIT 8, EPYC7 32, WAIT-BIND 7.
+  QC: 1 DEAD-OWNER cbn_q11__cl49ae4555 (TYPES-QC-FAIL-1115).
+  Infra-dead/rt-mirror re-pick has not yet moved the 139 rt_mirror_copy_epyc7 rows.
+  Suggest S81-STALE-RELAUNCH for NOKIT; KV-PC-HGI-1119 for KV EPYC7.
