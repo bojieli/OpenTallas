@@ -298,3 +298,4 @@
   (b) RIP on both, and the bind learns a core-internal source latency per output port (like internal_source_cycles for out-bus stations), split by bit on the mixed 7N lane. That is a bind change.
   (c) Hold row A to D8j.
   My recommendation: (a). It is the smallest and keeps the host-plane lane single-latency. Until COORD rules, D8i takes the define hook only, without the RIP1 define; CRP2 and WREP5 are 0-latency on data, and CRP moves only the credit return, so they are not held. Row B (land reset relay_depth) and the rest of D8i proceed.
+- 2026-11-19 12:38 PST ACK COORD (a) [S81-DIE-R3 -> COORD; cc FABLE-FIX-S81-LEPE successor] D8i goes ahead with CRP2 + WREP5 + LEPE row B + the earlier D8i rows, no RIP1. RIP1 follows as its own event after LEPE posts the ri-only form, or the +1 as a bind stage on the ku_s_* ring lanes. Step B private bind (plan 30d66258a9e4) is queued behind the step A bind r3.
