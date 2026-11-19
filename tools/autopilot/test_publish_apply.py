@@ -73,3 +73,34 @@ def test_apply_is_optimistic_commits_starts_the_advisory_gate_and_posts(tmp_path
     assert gc["optimistic"] is True
     p = [x for x in calls if x[0] == "bash"][0]
     assert p[2] == "QC-PLAN-R3" and "APPLIED-OPTIMISTIC" in p[3] and "advisory warning" in p[3]
+
+
+def test_apply_starts_background_precheck_on_first_gen_host(tmp_path):
+    """PRECHECK-1119: the estimator runs after the apply on the die's first gen host; --no-precheck turns it off"""
+    obj = {"die": "qc", "tree": "/x/new", "plan": "physical/p.json", "hosts": ["epyc9"]}
+    res = {"applied": "qc", "event": "N3", "gen_hosts": ["epyc8", "epyc9"]}
+    pa = PA.precheck_argv(obj, res, "QC-PLAN-R3", now=5)
+    assert pa[:7] == ["timeout", "60", "ssh", "-n", "-o", "ControlPath=none", "epyc8"] and "systemd-run" in pa
+    assert pa[pa.index("--plan") + 1] == "/x/new/physical/p.json" and pa[pa.index("--tools") + 1] == "/x/new/tools/die_plan"
+    assert pa[pa.index("--owner") + 1] == "QC-PLAN-R3" and pa[pa.index("--unit") + 1] == "precheck-qc-5"
+    assert PA.precheck_argv({"die": "qc"}, {}, "L") is None
+    c = coord(tmp_path)
+    cand = tmp_path / "cand.json"
+    cand.write_text(json.dumps(dict(obj, manifest_hash="a" * 64, plan_sha256="s2")))
+
+    def apply_fn(C, o, src, ev, pilot_item=None, optimistic=None):
+        rcpt = Path(C) / "lanes/handoff/qc_atomic_apply_2.json"
+        rcpt.write_text("{}")
+        return dict(res, source="/x/new", receipt=str(rcpt), warnings=[])
+    for off in (False, True):
+        calls = []
+
+        def run(argv, **k):
+            calls.append(argv)
+            return types.SimpleNamespace(returncode=0, stdout="", stderr="")
+        a = types.SimpleNamespace(coord=str(c), candidate=str(cand), expect_source="/x/old", expect_event="E0", lane="QC-PLAN-R3",
+                                  pilot_item=None, no_gate=True, no_precheck=off, skip_bind_check=True)
+        assert PA.cmd_apply(a, run=run, apply_fn=apply_fn, commit_fn=lambda C, r: "ok") == 0
+        assert bool([x for x in calls if x[0] == "timeout" and "precheck_hook.py" in " ".join(x)]) is (not off)
+        post = [x for x in calls if x[0] == "bash"][0][3]
+        assert ("precheck precheck-qc-" in post) is (not off) and ("precheck off" in post) is off

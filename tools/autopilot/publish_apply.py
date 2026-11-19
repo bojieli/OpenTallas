@@ -72,6 +72,27 @@ print("AP_JSON " + json.dumps(out))
 """
 
 
+# PRECHECK-1119 (owner 11-19): after each apply the static pre-build estimator (tools/precheck) runs in the background on
+# the die's first gen host and posts its family summary to the applying lane.  It never blocks (owner r703/r704).
+PRECHECK_RT = "/srv/opentallas-scratch2/claude/rt/current"
+
+
+def precheck_argv(obj, res, lane, now=None):
+    """the background precheck launch (ssh + systemd-run on the first gen host), or None when the candidate names no plan/tree/host"""
+    m = obj.get("marker", obj)
+    mc = m.get("config") or {}
+    hosts = list(res.get("gen_hosts") or mc.get("gen_hosts") or m.get("hosts") or [])
+    tree, plan = m.get("tree") or res.get("source"), m.get("plan")
+    if not hosts or not tree or not plan:
+        return None
+    plan = plan if os.path.isabs(plan) else str(Path(tree) / plan)
+    die = m.get("die") or res.get("applied")
+    unit = "precheck-%s-%d" % (die, int(now or time.time()))
+    return ["timeout", "60", "ssh", "-n", "-o", "ControlPath=none", hosts[0], "systemd-run", "--user", "--unit", unit, "--collect", "--quiet",
+            "--nice=15", "python3", "-I", PRECHECK_RT + "/tools/precheck/precheck_hook.py", "--die", str(die), "--plan", plan,
+            "--tools", str(Path(tree) / "tools/die_plan"), "--event", str(res.get("event")), "--owner", lane]
+
+
 def candidate_bind_args(obj):
     """-> (probe args, hosts) of a bind-mode candidate, (None, []) when the candidate builds no bind"""
     m = obj.get("marker", obj)
@@ -178,9 +199,19 @@ def cmd_apply(a, run=subprocess.run, apply_fn=None, commit_fn=None):
                 capture_output=True, text=True, timeout=120)
         gate = unit if r.returncode == 0 else "not started (rc %d: %s)" % (r.returncode, (r.stderr or r.stdout)[-160:])
     res["advisory_gate"] = gate
+    pc = "off"
+    if not getattr(a, "no_precheck", False):
+        pa = precheck_argv(obj, res, a.lane)
+        if pa:
+            try:
+                r = run(pa, capture_output=True, text=True, timeout=120)
+                pc = pa[pa.index("--unit") + 1] + "@" + pa[6] if r.returncode == 0 else "not started (rc %d)" % r.returncode
+            except Exception as e:  # noqa: BLE001 -- an estimator launch never fails the apply
+                pc = "not started (%s)" % type(e).__name__
+    res["precheck"] = pc
     w = res.get("warnings") or []
     post(C, a.lane, f"APPLIED-OPTIMISTIC [{a.lane} -> COORD; cc WAVE-FLOW-R2] {res['applied']} event {res.get('event')} tree {res.get('source')}: every type launches on the "
-                    f"next wave pass (no pilot); apply {res['apply_s']} s; advisory gate {gate}; gen_hosts {','.join(res.get('gen_hosts') or [])}; "
+                    f"next wave pass (no pilot); apply {res['apply_s']} s; advisory gate {gate}; precheck {pc}; gen_hosts {','.join(res.get('gen_hosts') or [])}; "
                     f"{len(w)} advisory warning(s){': ' + ' | '.join(w)[:900] if w else ''}. Strict bind + LATCHECK stay blocking: on a failure run "
                     f"publish_apply.py bind-fail (holds only the named types).", run=run)
     print(json.dumps(res))
@@ -335,6 +366,7 @@ def main(argv=None):
     p.add_argument("--pilot-item")
     p.add_argument("--coord", default=os.path.expanduser("~/coord"))
     p.add_argument("--no-gate", action="store_true", help="do not start the advisory publish gate")
+    p.add_argument("--no-precheck", action="store_true", help="do not start the background PRECHECK-1119 estimator")
     p.add_argument("--skip-bind-check", action="store_true", help="apply although kit_topology.bind_matches says the bind does not match the candidate")
     dv = sp.add_parser("derive-asbuilt", help="write the kit asbuilt the bind was made with (tables from bind/INPUTS_ISOLATED.json)")
     dv.add_argument("--bind", required=True)
