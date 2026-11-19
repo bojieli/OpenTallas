@@ -21,6 +21,12 @@ target, or while >= FAR_MIN of its sinks are beyond --radius-um; a new tap goes 
 by the explicit-table rules (outline, tap_clear halo of hard cores, placed macros and keepouts, tap spacing), then all
 added taps relax to the medians of their sinks.  A split that does not reduce the total excess is undone.
 
+SINK REGION RULE (COORD 11-19: tap sink region W + H <= 300 um, no spill; --span-um 300).  The sink region of a tap is the
+bounding box of the registers it takes in the nearest-tap split.  With --span-um the solver also splits every tap whose
+region has W + H over the limit, at the geometric middle of the longer side (the half away from the tap gets the new tap),
+and taps of a few sinks are allowed (--min-new, default 8 in this mode): far stragglers get their own tap instead of
+spilling into a neighbour's region.  The report prints each tap's W + H and the count of taps still over the limit.
+
 Register dump: `openroad -python tap_resolve.py --dump` with env ODB, OUT (cells: [name, x0, y0, x1, y1, master],
 macros, outline; um), the format of taps.py bins.
 """
@@ -83,7 +89,8 @@ def tap_stats(taps, pts, radius):
     out = []
     for (x, y), s in zip(taps, assign(taps, pts)):
         ds = sorted(abs(pts[i][0] - x) + abs(pts[i][1] - y) for i in s) or [0.0]
-        out.append((len(s), sum(1 for v in ds if v > radius), ds[int(0.95 * (len(ds) - 1))], ds[-1]))
+        span = (max(pts[i][0] for i in s) - min(pts[i][0] for i in s)) + (max(pts[i][1] for i in s) - min(pts[i][1] for i in s)) if s else 0.0
+        out.append((len(s), sum(1 for v in ds if v > radius), ds[int(0.95 * (len(ds) - 1))], ds[-1], span))
     return out
 
 
@@ -127,7 +134,7 @@ def legalize(x, y, taken, legal):
     raise ValueError("tap_resolve: no legal tap site")
 
 
-def solve(exist, pts, legal, target, radius, core=(), max_add=80, min_new=40):
+def solve(exist, pts, legal, target, radius, core=(), max_add=80, min_new=40, span=None):
     """exist: [(x, y)] kept taps; pts: [(x, y)] registers; -> added [(x, y)]."""
     exist = [tuple(map(float, p)) for p in exist]; core = list(core); added = []
     med = lambda idx, k: st.median(pts[i][k] for i in idx)
@@ -142,18 +149,27 @@ def solve(exist, pts, legal, target, radius, core=(), max_add=80, min_new=40):
             added = new
 
     def excess(s_):
-        return sum(max(0, n - target) for n, _, _, _ in s_) + sum(f for _, f, _, _ in s_ if f >= FAR_MIN)
+        if span:
+            return sum(max(0, q[0] - target) for q in s_) + sum(max(0.0, q[4] - span) for q in s_)
+        return sum(max(0, q[0] - target) for q in s_) + sum(q[1] for q in s_ if q[1] >= FAR_MIN)
 
     fails = 0
     while len(added) < max_add and fails < 6:
         T = exist + added; g = assign(T, pts); s_ = tap_stats(T, pts, radius)
-        sc = [max(n / target, 1.0 + f / FAR_MIN if f >= FAR_MIN else 0.0) for n, f, _, _ in s_]
+        sc = [max(q[0] / target, (q[4] / span) if span else (1.0 + q[1] / FAR_MIN if q[1] >= FAR_MIN else 0.0)) for q in s_]
         order = sorted(range(len(T)), key=lambda i: -sc[i])
         k = order[min(fails, len(order) - 1)]
         if sc[k] <= 1.0:
             break
         s = g[k]; x, y = T[k]; n, f = s_[k][0], s_[k][1]
-        if f >= FAR_MIN and 1.0 + f / FAR_MIN >= n / target:
+        if span and s_[k][4] / span >= n / target:
+            xs = [pts[i][0] for i in s]; ys = [pts[i][1] for i in s]
+            ax = 0 if (max(xs) - min(xs)) >= (max(ys) - min(ys)) else 1
+            v = xs if ax == 0 else ys; mid = (max(v) + min(v)) / 2.0
+            lo = [i for i in s if pts[i][ax] <= mid]; hi = [i for i in s if pts[i][ax] > mid]
+            far = hi if abs(((x, y)[ax]) - max(v)) >= abs(((x, y)[ax]) - min(v)) else lo
+            if not far: far = hi or lo
+        elif (not span) and f >= FAR_MIN and 1.0 + f / FAR_MIN >= n / target:
             far = [i for i in s if abs(pts[i][0] - x) + abs(pts[i][1] - y) > radius]
         else:
             ax = 0 if (max(pts[i][0] for i in s) - min(pts[i][0] for i in s)) >= (max(pts[i][1] for i in s) - min(pts[i][1] for i in s)) else 1
@@ -181,6 +197,7 @@ def main(argv=None):
     ap.add_argument("--cts-log", help="kit 4_1_cts.log: measured per-tap insertion")
     ap.add_argument("--target", type=int); ap.add_argument("--radius-um", type=float)
     ap.add_argument("--tol-ps", type=float); ap.add_argument("--min-share", type=float, default=0.01)
+    ap.add_argument("--span-um", type=float, help="tap sink region W + H limit (300)"); ap.add_argument("--min-new", type=int)
     ap.add_argument("--max-add", type=int, default=80); ap.add_argument("-o", "--out", required=True)
     a = ap.parse_args(argv)
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -215,18 +232,21 @@ def main(argv=None):
     target = a.target or max(int(0.8 * cap), min(cap, max(ok_loads)) * 14 // 15 if ok_loads else 0)
     print(f"TAP_RESOLVE {a.type}: {len(pts)} registers, {len(exist)} taps, criterion {basis} spread {crit['spread_ps']} ps over {crit['material_taps']} material taps "
           f"(tol {tol}) -> {crit['verdict']}; target {target} sinks/tap, radius {radius} um")
-    added = solve(exist, pts, legal, target, radius, core, a.max_add) if crit["verdict"] == "SPLIT" else []
+    over0 = sum(1 for q in s0 if a.span_um and q[4] > a.span_um)
+    min_new = a.min_new if a.min_new is not None else (8 if a.span_um else 40)
+    added = solve(exist, pts, legal, target, radius, core, a.max_add, min_new, a.span_um) if (crit["verdict"] == "SPLIT" or over0) else []
     T = exist + added; s1 = tap_stats(T, pts, radius)
     allnames = names + [f"clk_t{len(exist) + i}" for i in range(len(added))]
     after = criterion({n: predicted_ps(q[0], q[2]) for n, q in zip(allnames, s1)}, {n: q[0] for n, q in zip(allnames, s1)}, tol, a.min_share)
     for n, (x, y), q in zip(allnames, T, s1):
         m = f" measured {means[n]:.0f} ps" if basis == "MEASURED" and n in means else ""
-        print(f"  {n:8s} ({x:8.2f},{y:8.2f}) sinks {q[0]:6d} beyond-radius {q[1]:5d} p95 {q[2]:5.0f} um{m}{'  ADDED' if n not in names else ''}")
-    print(f"TAP_RESOLVE {a.type}: added {len(added)}, max load {max(q[0] for q in s1)}, sinks beyond radius {sum(q[1] for q in s1)}, predicted spread after {after['spread_ps']} ps")
+        print(f"  {n:8s} ({x:8.2f},{y:8.2f}) sinks {q[0]:6d} beyond-radius {q[1]:5d} p95 {q[2]:5.0f} um W+H {q[4]:5.0f}{m}{'  ADDED' if n not in names else ''}")
+    print(f"TAP_RESOLVE {a.type}: added {len(added)}, max load {max(q[0] for q in s1)}, sinks beyond radius {sum(q[1] for q in s1)}, predicted spread after {after['spread_ps']} ps" + (f"; sink region W+H > {a.span_um:g} um: {over0} taps before, {sum(1 for q in s1 if q[4] > a.span_um)} after (max {max(q[4] for q in s1):.0f})" if a.span_um else ""))
     json.dump({"schema": "opentallas.tap_resolve.v1", "type": a.type, "plan": a.plan, "regs": a.regs, "registers": len(pts), "criterion": crit,
                "predicted_after": after, "target_sinks": target, "radius_um": radius, "append_to": "clock.taps" if mode == "explicit" else "clock.added_taps",
                "added_taps": [{"name": f"clk_t{len(exist) + i}", "xy": [x, y]} for i, (x, y) in enumerate(added)],
-               "load": {n: q[0] for n, q in zip(allnames, s1)}}, open(a.out, "w"), indent=1)
+               "load": {n: q[0] for n, q in zip(allnames, s1)}, "span_um": {n: round(q[4], 1) for n, q in zip(allnames, s1)},
+               "span_limit_um": a.span_um, "taps_over_span": [n for n, q in zip(allnames, s1) if a.span_um and q[4] > a.span_um]}, open(a.out, "w"), indent=1)
     return 0
 
 

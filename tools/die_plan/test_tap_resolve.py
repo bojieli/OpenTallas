@@ -38,3 +38,15 @@ def test_solver_appends_legal_taps_and_keeps_existing():
 def test_solver_is_a_no_op_when_taps_fit():
     pts = [(100.0 + i % 10, 100.0 + i // 10) for i in range(200)]
     assert TR.solve([(105.0, 110.0)], pts, TR.make_legal((400.0, 400.0), 8.64, []), target=1400, radius=160.0) == []
+
+
+def test_span_rule_splits_wide_regions_and_keeps_stragglers_local():
+    rnd = random.Random(3)
+    pts = [(rnd.uniform(100, 700), rnd.uniform(100, 140)) for _ in range(900)] + [(900.0 + i, 300.0) for i in range(12)]
+    legal = TR.make_legal((1000.0, 400.0), 8.64, [])
+    exist = [(400.0, 120.0)]
+    assert TR.tap_stats(exist, pts, 160.0)[0][4] > 300
+    added = TR.solve(exist, pts, legal, target=1400, radius=160.0, min_new=8, span=300.0)
+    s = TR.tap_stats(exist + added, pts, 160.0)
+    assert added and max(q[4] for q in s) <= 300.0          # every sink region inside W + H 300, the 12 stragglers on their own tap
+    assert TR.solve(exist, [(400.0 + i % 20, 120.0 + i // 20) for i in range(200)], legal, 1400, 160.0, min_new=8, span=300.0) == []
