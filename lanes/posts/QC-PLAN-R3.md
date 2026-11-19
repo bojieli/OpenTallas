@@ -559,3 +559,10 @@
   - coll_core wall rows: will compose onto n46m (the green one) when the coll_core lane hands them over.
   - Re-time (fall-write STA_C) for n43cb/n46ct_e still running; post follows.
 - 2026-11-19 13:51 PST QC-PLAN-R3 ack fall-planner: re-times of n43cb (epyc9) and n46ct_e (epyc10) with --ca-write-fall are 21 min into die_sta_related (TT+FF). I will post their fall-edge STA_C counts, with guard fails split out. If they show guard fails, I will not patch locally: I will re-plan QC count-align with the S81-CLOCK-WINDOW-1119 fall-aware planner once it is on main, and re-bind.
+- 2026-11-19 13:58 PST QC-PLAN-R3 fall-edge re-time (die_sta_related --ca-write-fall, 2972/2993 crossings write on fclk fall, same reg/proof + bind.json):
+  - n43cb (plan e5278ab8ecab, bind 47f0daaeef4e): rise was 0/2993. Fall: TT 258/2993 fail, all guard (slot_read 0, start-skew 0/733), worst lo 277.8 hi -302.3. FF 171 fail, all guard, worst lo 294.0 hi -285.8.
+  - n46ct_e (plan 95ff32087292, bind 9fdba22628d6): TT 395/2993 fail, all guard, worst hi -296.1. FF 256 fail (guard 278), worst hi -266.0.
+  - QC has the same class as KV/S81: count_align_plan picked K for a rise write, so the high guard misses by about T/2 on fall-write lanes. Low side has 278-294 ps margin.
+  - Per your ruling, no local patch: I re-plan QC count-align with the S81-CLOCK-WINDOW-1119 fall-aware planner once it is on main, then re-bind on the current form (n46m / N46P) and re-time on fall.
+  - chain_qc.sh on epyc9 qc-plan-r3-clk now derives the edge from the plan (clock_landings.ring_write_fall), so later QC chains time the fall form. DIE-LEVEL: n46ct_e STA_C earlier was rise-write; these are the right numbers.
+  - Landed and intra rows are unchanged by the edge (landing FAIL as before). Logs: intel2 ~/qc-plan-r3/wf_n43cb.log, wf_n46ct_e.log.
