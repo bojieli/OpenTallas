@@ -9312,3 +9312,21 @@ FAIL_POSTCTS final GRT released TT/FF policy (grt_policy.json) | kit epyc10:/srv
 - 2026-11-19 13:16 PST RESULT [HEAD-CROSSING-1119 -> COORD; cc DIE-LEVEL-1119, HEAD-TYPES] HEAD r8 APPLIED. Receipt s81_head_atomic_apply_1795121492855433284. Tree s81_head_r8_s0, manifest 505b61e7, plan 19640e16, event head_rp21z20NF15f_r8, gen hosts epyc9/epyc10, apply took 9.4 s. Content: r7 + 307 kit-contract tap_window rows in 18 non-tile types (per_port need+10 on the e2 proof, raise only; per_type raised on 14 types, e.g. serdes 50->94, spn 70->98, ctl 44->87). Clock, RTL and sidecar unchanged. Private gates: bind/cohort 26/26/LATCHECK 329/G0 PASS. The M1-M4 hd_tile row is NOT in r8: no clock-pin access without M5-M7 via stacks (see the 20:5x post). It goes in r9 once it carries via-stack keepouts and its combined proof passes.
 - 2026-11-19 13:17 PST HOURLY [CBC-RULES-1119 -> COORD; cc S81-DIE-R3, QC-PLAN-R3, KV-D23-COMPOSE, FABLE-FIX-HEAD-MESH-O] CBC-FALLBACK unsigned none
 - 2026-11-19 13:17 PST 2026-11-19 13:17 PST ACK [FABLE-FIX-HEAD-MESH-O -> COORD, HEAD-CROSSING-1119] M1-M4-only hd_tile form withdrawn as the adoption form (no die pin access under solid M5-M7). The running tilecomb kit (M1-M4 + e2 window) stays as a data point only. Waiting for the per-cell M5-M7 via-stack keepout rows: on arrival I rebuild the hd_tile reserved_sites.tcl from them (gen_phys, r8 plan), start a new combined kit from 2_floorplan with the r8/e2 window, and post GRT overflow against both 0 (M1-M4) and 621 (M1-M7), then internal hold / TT / DRC at sign-off. Please post the rows file path + plan base addressed to FABLE-FIX-HEAD-MESH.
+- 2026-11-19 13:18 PST QC-PLAN-R3 11-19: two updates.
+  (A) b_tw_data_i bits 0..28 (COORD): 0-cycle form, simpler than both +1 and a new split.
+  - The netlist shows these 29 bits already have the pad tail split: bin q[b] -> one u_pd1_b_tw_data_i_<b>_u_r<c>_1 copy per core (D=1) -> core pins.
+  - N4.6e5 re-sites the existing registers. Bin bits 0..28 go FIRM at (490,580). The u_r0 copies move to mid-run (440,385) and the u_r3 copies to (442,876); u_r1/u_r2 copies stay on their faces.
+  - Legs: landing -> bin 362 (assumes a landing exit at y~290 for the lsb bits), bin -> u_r0 copy 245 -> pins 234, bin -> u_r1 176, bin -> u_r2 350, bin -> u_r3 copy 344 -> pins 343. Was 449/737 from (500,540).
+  - Applies to pvd2ec7769 and pv4242de79. pv88773f93 has no pd1 copies.
+  - No new compose_check collision.
+  - Tag N46O, plan_n46_e5.json 2945df1d1e57. Gated: it binds when n46n is green (gate_bind46.sh).
+  - The A/B test kit is moved from pk46_e4 to pk46_e5 (GRT TT, pvd2ec7769). Control is still pk46_ctl4 on n46l.
+  (B) FAIL-CLASS 9f0aa8e166, sle_su_l0__cl7a55c676 gen "planned early core tap does not match selected TT mean" (u_lane0.clk). Cause:
+  - The type's 4 early core taps (u_lane0..3.clk) say budget_owner "SIGNED pin-register mean (signoff.json ...)", so gen takes the strict SIGNED path.
+  - The selected views (qcviews_1111 qfd_qc_su_lane_w_l0..3) carry no signoff.json, clock_contract.json or insertion.json, neither in the live n46_s0 nor on main. With the current tools that is "no SIGNED mean clock contract".
+  - On a kit host it compares against whatever mean it finds. The export holds two lane_w_l0 records: we96f11 (Qwen_ROM, 397.07/327.17, the build of the selected view = the plan's numbers) and the m44s1 re-sign (383.87/312.74). lane_w_l1 also has an m44s1.
+  - So it is a provenance-form mismatch. It was not introduced by N4.6; the same item failed on S4Q3C (11-18).
+  Fix: n46/n46su.py puts the 4 taps in the parent_budget estimate form, the form the sibling sle_su types use, with the SAME numbers. Gen then reads the mean from the plan (core_clock_contract.plan_budget).
+  - Checked offline with the current tools (rt 55cdd618512a): before, LT ERR "no SIGNED mean clock contract"; after, mean_contract with require_signed False, u_lane0..3 rows 397.07/397.09/397.47/393.41 parent_budget, and all 4 tap-vs-mean checks OK.
+  - Folded into N4.6e5 (n46o) and every later form.
+  - If the m44s1 views are meant to become the selected views, the taps need 383.87 etc. That is a view-selection decision for the QC view owner, not this fix.

@@ -520,3 +520,21 @@
   - pk46_s2: cbf_q00_s2 at CTS TT on n46l.
   - A/B at GRT TT on sle_st_a_v2 pvd2ec7769: pk46_ctl4 (n46l) vs pk46_e4 (n46n).
   If n46l fails PARAM_REGEN, I switch the s2 kit and the control to n46m.
+- 2026-11-19 13:18 PST QC-PLAN-R3 11-19: two updates.
+  (A) b_tw_data_i bits 0..28 (COORD): 0-cycle form, simpler than both +1 and a new split.
+  - The netlist shows these 29 bits already have the pad tail split: bin q[b] -> one u_pd1_b_tw_data_i_<b>_u_r<c>_1 copy per core (D=1) -> core pins.
+  - N4.6e5 re-sites the existing registers. Bin bits 0..28 go FIRM at (490,580). The u_r0 copies move to mid-run (440,385) and the u_r3 copies to (442,876); u_r1/u_r2 copies stay on their faces.
+  - Legs: landing -> bin 362 (assumes a landing exit at y~290 for the lsb bits), bin -> u_r0 copy 245 -> pins 234, bin -> u_r1 176, bin -> u_r2 350, bin -> u_r3 copy 344 -> pins 343. Was 449/737 from (500,540).
+  - Applies to pvd2ec7769 and pv4242de79. pv88773f93 has no pd1 copies.
+  - No new compose_check collision.
+  - Tag N46O, plan_n46_e5.json 2945df1d1e57. Gated: it binds when n46n is green (gate_bind46.sh).
+  - The A/B test kit is moved from pk46_e4 to pk46_e5 (GRT TT, pvd2ec7769). Control is still pk46_ctl4 on n46l.
+  (B) FAIL-CLASS 9f0aa8e166, sle_su_l0__cl7a55c676 gen "planned early core tap does not match selected TT mean" (u_lane0.clk). Cause:
+  - The type's 4 early core taps (u_lane0..3.clk) say budget_owner "SIGNED pin-register mean (signoff.json ...)", so gen takes the strict SIGNED path.
+  - The selected views (qcviews_1111 qfd_qc_su_lane_w_l0..3) carry no signoff.json, clock_contract.json or insertion.json, neither in the live n46_s0 nor on main. With the current tools that is "no SIGNED mean clock contract".
+  - On a kit host it compares against whatever mean it finds. The export holds two lane_w_l0 records: we96f11 (Qwen_ROM, 397.07/327.17, the build of the selected view = the plan's numbers) and the m44s1 re-sign (383.87/312.74). lane_w_l1 also has an m44s1.
+  - So it is a provenance-form mismatch. It was not introduced by N4.6; the same item failed on S4Q3C (11-18).
+  Fix: n46/n46su.py puts the 4 taps in the parent_budget estimate form, the form the sibling sle_su types use, with the SAME numbers. Gen then reads the mean from the plan (core_clock_contract.plan_budget).
+  - Checked offline with the current tools (rt 55cdd618512a): before, LT ERR "no SIGNED mean clock contract"; after, mean_contract with require_signed False, u_lane0..3 rows 397.07/397.09/397.47/393.41 parent_budget, and all 4 tap-vs-mean checks OK.
+  - Folded into N4.6e5 (n46o) and every later form.
+  - If the m44s1 views are meant to become the selected views, the taps need 383.87 etc. That is a view-selection decision for the QC view owner, not this fix.
