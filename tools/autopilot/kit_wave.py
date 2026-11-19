@@ -3973,7 +3973,16 @@ def save_state(st, ap_dir=None):
     except (OSError, ValueError):
         disk = {}
     mine = st.setdefault("items", {})
-    lost = [k for k in disk if k not in mine]
+    # WAVE-TICK-1119 (COORD 5): a row prune_terminal archived is removed on purpose (st["pruned"] = {key: t}); the guard must not carry it back.
+    # The pruned map is merged with the disk copy's so a stale writer cannot forget a prune.
+    try:
+        _dp = json.loads(p.read_text()).get("pruned") or {}
+    except (OSError, ValueError):
+        _dp = {}
+    pruned = st.setdefault("pruned", {})
+    for _k, _t in _dp.items():
+        pruned.setdefault(_k, _t)
+    lost = [k for k in disk if k not in mine and k not in pruned]
     if disk and not mine:
         print(f"KW_STATE_GUARD refused: empty state over {len(disk)} rows", flush=True)
         return
@@ -3989,6 +3998,55 @@ def save_state(st, ap_dir=None):
     tmp = p.with_suffix(f".{os.getpid()}")
     tmp.write_text(json.dumps(st, indent=1, sort_keys=True))
     os.replace(tmp, p)
+
+
+ARCHIVE_FILE = "kit_wave_archive.jsonl"
+PRUNE_AGE_S = 24 * 3600
+PRUNED_KEEP_S = 30 * 24 * 3600
+
+
+def prune_terminal(AP, cfg, st, ap_dir, now=None, age_s=PRUNE_AGE_S):
+    """WAVE-TICK-1119 (COORD 5): CANCELLED rows (4,445 of 5,244 and 87% of the state bytes; every load and save of the 44 MB file pays for them) move to an append-only
+    archive (<ap_dir>/kit_wave_archive.jsonl, one {key, t, row} per line, written and fsynced BEFORE the row leaves the state) once they are older than
+    PRUNE_AGE_S.  Kept: the highest attempt of every (die, event, item) (launch numbers attempts across all rows), every row of a die with
+    max_items_total (its lifetime cap counts rows), and every row that is not CANCELLED.  st['pruned'] = {key: t} is what save_state's guard accepts as a deliberate
+    removal.  -> number pruned"""
+    now = time.time() if now is None else now
+    items = st.get("items") or {}
+    pruned = st.setdefault("pruned", {})
+    newest = {}
+    for k, r in items.items():
+        g = (r.get("die"), r.get("event"), r.get("item"))
+        a = int(r.get("attempt") or 0)
+        if g not in newest or a > newest[g]:
+            newest[g] = a
+    capped = {die for die, d in (cfg.get("dies") or {}).items() if isinstance(d, dict) and d.get("max_items_total")}
+    move = []
+    for k, r in items.items():
+        if r.get("status") != "CANCELLED" or r.get("die") in capped:
+            continue
+        if int(r.get("attempt") or 0) >= newest[(r.get("die"), r.get("event"), r.get("item"))]:
+            continue
+        if now - float(r.get("updated") or r.get("started") or 0) < age_s:
+            continue
+        move.append(k)
+    for k in [k for k, t in pruned.items() if now - float(t or 0) > PRUNED_KEEP_S]:
+        del pruned[k]
+    if not move or getattr(AP, "DRY", False):
+        return 0
+    path = Path(ap_dir) / ARCHIVE_FILE
+    with open(path, "a") as f:
+        for k in move:
+            if k in pruned:                              # a stale writer put an archived row back: it is already in the archive
+                continue
+            f.write(json.dumps({"key": k, "t": now, "row": items[k]}, sort_keys=True) + "\n")
+        f.flush()
+        os.fsync(f.fileno())
+    for k in move:
+        del items[k]
+        pruned[k] = now
+    AP.log(f"KIT-WAVE PRUNE {len(move)} CANCELLED row(s) older than {age_s // 3600} h archived to {ARCHIVE_FILE} ({len(items)} rows stay)")
+    return len(move)
 
 
 # ------------------------------------------------------------------------------------------------ item pipeline
@@ -11525,6 +11583,14 @@ def host_input_gap(st, rec, spec_host):
 
 
 def collect(AP, cfg, st, notices):
+    cfg["_enqueue_defer"] = []                           # WAVE-TICK-1119: rows that pass this tick are published together
+    try:
+        return _collect_body(AP, cfg, st, notices)
+    finally:
+        flush_enqueues(AP, cfg, st, notices)
+
+
+def _collect_body(AP, cfg, st, notices):
     for key, rec in st["items"].items():
         if rec.get("status") != "RUNNING" or AP.unit_active(rec["unit"]):
             if rec.get("status") == "RUNNING":
@@ -13279,8 +13345,52 @@ def enqueue_pass(AP, cfg, st, rec, notices):
         return
     if cfg.get("_enqueue_down"):                         # the coord remote failed earlier this tick: do not repeat the backoff
         rc, out, err = 1, "", "enqueue: NOT SUBMITTED: " + cfg["_enqueue_down"]
+    elif cfg.get("_enqueue_defer") is not None:          # WAVE-TICK-1119: collect / retry_enqueue publish all their rows in ONE coord commit
+        cfg["_enqueue_defer"].append((rec, argv))
+        return
     else:
         rc, out, err = AP.sh(argv, timeout=300)
+    _enqueue_finish(AP, cfg, st, rec, notices, rc, out, err)
+
+
+def flush_enqueues(AP, cfg, st, notices):
+    """WAVE-TICK-1119 (COORD): the rows enqueue_pass deferred go out in one `enqueue.py --batch` publish (about 8 s per row serial before: 99 s of a tick).
+    One row alone takes the single-row path.  A publish failure leaves every row PASS / enqueue_pending exactly as a single failure does."""
+    pend = cfg.pop("_enqueue_defer", None) or []
+    if not pend:
+        return 0
+    if len(pend) == 1:
+        rc, out, err = AP.sh(pend[0][1], timeout=300)
+        _enqueue_finish(AP, cfg, st, pend[0][0], notices, rc, out, err)
+        return 1
+    import tempfile
+    script = pend[0][1][1]
+    with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False) as f:
+        json.dump([a[2:] for _, a in pend], f)
+        tmp = f.name
+    try:
+        rc, out, err = AP.sh(["python3", script, "--batch", tmp], timeout=60 + 40 * len(pend))
+    finally:
+        try:
+            os.unlink(tmp)
+        except OSError:
+            pass
+    res = {}
+    for ln in (out or "").splitlines():
+        m = re.match(r"ROW (\d+) (OK|ERR) ?(.*)$", ln)
+        if m:
+            res[int(m.group(1))] = (m.group(2), m.group(3))
+    for i, (rec, argv) in enumerate(pend):
+        if rc == 0 and i in res and res[i][0] == "OK":
+            _enqueue_finish(AP, cfg, st, rec, notices, 0, f"enqueue: id {res[i][1]} PUBLISHED (batch)", "")
+        elif rc == 0 and i in res:
+            _enqueue_finish(AP, cfg, st, rec, notices, 1, res[i][1], "")
+        else:                                            # the whole publish failed: rc 124 / 'NOT SUBMITTED' keeps the row PASS
+            _enqueue_finish(AP, cfg, st, rec, notices, rc or 1, out or "", err or "enqueue: NOT SUBMITTED: batch produced no result")
+    return len(pend)
+
+
+def _enqueue_finish(AP, cfg, st, rec, notices, rc, out, err):
     if rc and (rc == 124 or "NOT SUBMITTED" in f"{err}{out}"):
         # KW6-CODE 11-04: the row did not reach coord/state (a transport error, not a verdict on the kit). The kit
         # stays PASS and retry_enqueue() sends it on a later tick; publish is idempotent, so a lost reply cannot
@@ -13328,6 +13438,14 @@ def enqueue_pass(AP, cfg, st, rec, notices):
 
 
 def retry_enqueue(AP, cfg, st, notices):
+    cfg["_enqueue_defer"] = []
+    try:
+        return _retry_enqueue_body(AP, cfg, st, notices)
+    finally:
+        flush_enqueues(AP, cfg, st, notices)
+
+
+def _retry_enqueue_body(AP, cfg, st, notices):
     """send the kits enqueue_pass() kept PASS on a transport failure. Only records it marked: old FAIL FLOW rows whose
     reason reads NOT SUBMITTED stay with the operator (some hold kits older than a class fix). A die stop or a
     hold_items match waits; a block that left the current plan is closed, not sent. ROUTE-HELD records resume
@@ -14018,7 +14136,9 @@ STEP_TIMED = ("load_config", "merge_auto_views", "merge_src_overlay", "load_stat
               "repeat_queue_outcomes", "dedup_step", "name_stuck_retry_infra", "retire_superseded_rows", "adopt_rows_tick", "config_key_check",
               "rejudge_place_nodb", "cancel_held_running", "orphan_sweep", "fleet_probe",
               # FABLE-FLOW-1000 (3): the rest of the untimed 37-665 s
-              "tools_refresh_tick", "tools_lag_rows", "hold_audit_step", "supersede_on_switch", "rekey_adopted", "backfill_norm_blocks", "host_disk_fall", "reclaim_terminal_sweep", "verified_source_probes")
+              "tools_refresh_tick", "tools_lag_rows", "hold_audit_step", "supersede_on_switch", "rekey_adopted", "backfill_norm_blocks", "host_disk_fall", "reclaim_terminal_sweep", "verified_source_probes",
+              # WAVE-TICK-1119: what plan_dies spends its 190-200 s on
+              "plan_names", "prelint", "flow_guard_gate", "bind_preflight", "sidecar_preflight", "select", "spill_marked", "record_lint")
 STEP_T = {}
 STEP_START = [0.0]
 STEP_BUDGET_S = float(os.environ.get("KW_STEP_BUDGET_S", "300"))     # FLOW-2200 G: the wave step should not take more than this; the heavy fleet-wide reaps are deferred past it
@@ -14298,6 +14418,10 @@ def _step(AP, ap_dir):
     # NEAR-COUNT (COORD 11-01 KIT-WAVE-16 (6)): items in lanes/NEAR-COUNT.tsv launch with --priority die --crit
     cfg["_near_count"] = AP.parse_near_count(AP.read_coord(AP.NEAR_COUNT_FILE)) if hasattr(AP, "parse_near_count") else set()
     st = load_state(ap_dir)
+    try:
+        prune_terminal(AP, cfg, st, ap_dir)
+    except Exception as e:                               # a prune problem never stops the wave
+        AP.log(f"KIT-WAVE PRUNE skipped: {type(e).__name__}: {e}")
     try:                                                 # HOLDGEN-1115 r252: proof: / census_lt: terms need the queue and the rows
         cfg["_item_cells"] = {(r.get("die"), r.get("item")): int(float(r["cells"])) for r in (st.get("items") or {}).values()
                               if str(r.get("cells") or "").replace(".", "", 1).isdigit()}

@@ -32,6 +32,7 @@ mode trial (closure order rule 1, owner 2026-10-25): a part of a path whose die 
 Publication uses a temporary git index and a queue-only remote commit; the shared coord checkout/index is untouched.
 """
 import argparse
+import json
 import os
 import subprocess
 import sys
@@ -43,7 +44,51 @@ import autopilot as AP  # noqa: E402
 COORD = Path(os.environ.get("AP_COORD", str(Path.home() / "coord")))
 
 
-def main(argv=None):
+def batch_main(path):
+    """WAVE-TICK-1119: one publish (one coord commit) for many rows.  FILE = JSON list of argv lists (each as for a single enqueue, without
+    python3 / this script).  Prints one 'ROW <i> OK <id>' or 'ROW <i> ERR <why>' per entry; exit 0 when every valid row is published (or
+    already there), 1 with 'enqueue: NOT SUBMITTED: <why>' when the publish failed (no row published; the caller keeps them PASS)."""
+    import io
+    import contextlib
+    rows = json.loads(Path(path).read_text())
+    lines, ids, results = [], {}, {}
+    for i, args in enumerate(rows):
+        err, buf = io.StringIO(), io.StringIO()
+        try:
+            with contextlib.redirect_stderr(err), contextlib.redirect_stdout(buf):
+                line, r, a = build_row(args)
+        except SystemExit as e:
+            results[i] = "ERR " + str(e.code if isinstance(e.code, str) else (err.getvalue() or f"rc {e.code}")).strip()[:300]
+            continue
+        lines.append(line)
+        ids[i] = (r["id"], a)
+    if lines:
+        from queue_publish import publish
+        try:
+            sha = publish(COORD, "\n".join(lines), f"AUTOPILOT enqueue batch of {len(lines)}")
+        except RuntimeError as e:
+            print(f"enqueue: NOT SUBMITTED: {e}")
+            return 1
+        print(f"enqueue: {len(lines)} row(s) PUBLISHED coord/state@{sha[:12]}")
+    for i in range(len(rows)):
+        print(f"ROW {i} " + (results[i] if i in results else f"OK {ids[i][0]}"))
+    return 0
+
+
+def build_row(argv):
+    ap = _parser()
+    a = ap.parse_args(argv)
+    row = [a.die, a.type, a.kit, a.src, a.geom, a.geom_ref, a.mem, a.cells, a.lane, a.goal, a.runner, a.threads, a.mode, a.canary_fix, a.flow]
+    if any("\t" in x or "\n" in x for x in row):
+        sys.exit("enqueue: no tabs/newlines in fields")
+    line = "\t".join(row).rstrip("\t")
+    (r,) = AP.parse_queue(line).values()
+    if r["error"]:
+        sys.exit(f"enqueue: REFUSED: {r['error']}")
+    return line, r, a
+
+
+def _parser():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     for k in ("die", "type", "kit", "src", "geom", "geom-ref", "mem", "cells", "lane"):
         ap.add_argument("--" + k, required=True)
@@ -55,14 +100,14 @@ def main(argv=None):
     ap.add_argument("--canary-fix", default="", help="explicit corrective kit: newest canary SRC_COMMIT@/abs/run/canary.json")
     ap.add_argument("--flow", default="", help="flow release tag flow-YYYYMMDD-a|b the kit used (default: derived)")
     ap.add_argument("--no-commit", action="store_true")
-    a = ap.parse_args(argv)
-    row = [a.die, a.type, a.kit, a.src, a.geom, a.geom_ref, a.mem, a.cells, a.lane, a.goal, a.runner, a.threads, a.mode, a.canary_fix, a.flow]
-    if any("\t" in x or "\n" in x for x in row):
-        sys.exit("enqueue: no tabs/newlines in fields")
-    line = "\t".join(row).rstrip("\t")
-    (r,) = AP.parse_queue(line).values()
-    if r["error"]:
-        sys.exit(f"enqueue: REFUSED: {r['error']}")
+    return ap
+
+
+def main(argv=None):
+    argv = list(sys.argv[1:] if argv is None else argv)
+    if argv[:1] == ["--batch"] and len(argv) == 2:
+        return batch_main(argv[1])
+    line, r, a = build_row(argv)
     if r["geom"].upper() == "AUTO":
         print("enqueue: NOTE geom AUTO: measured checks when the hub enables AP_AUTO_GEOM_ALL=1, otherwise registered "
               "template replicas only; every rule FAIL and 1-in-5 PASS sample request visual review")

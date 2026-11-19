@@ -1339,7 +1339,35 @@ def signals_cancel(j):
 
 
 # ------------------------------------------------------------------------------------------------ units
+UNIT_CACHE = {"t": 0.0, "set": None}
+UNIT_TTL_S = 15.0
+
+
+def active_unit_set(now=None):
+    """WAVE-TICK-1119 (COORD 4): ONE `systemctl --user list-units` per UNIT_TTL_S names every active unit; unit_active used to start one systemctl per row
+    (hundreds per tick).  None when the listing failed (callers fall back to the per-unit call)."""
+    now = time.time() if now is None else now
+    if UNIT_CACHE["set"] is not None and 0 <= now - UNIT_CACHE["t"] < UNIT_TTL_S:
+        return UNIT_CACHE["set"]
+    rc, out, _ = sh(["systemctl", "--user", "list-units", "--state=active,activating,reloading", "--no-legend", "--plain", "--no-pager"], timeout=60)
+    if rc != 0:
+        return None
+    names = set()
+    for ln in out.splitlines():
+        f = ln.split()
+        if f:
+            names.add(f[0])
+            names.add(re.sub(r"\.(service|scope)$", "", f[0]))
+    UNIT_CACHE.update(t=now, set=names)
+    return names
+
+
 def unit_active(unit):
+    """a unit in the cached active set is active (at most UNIT_TTL_S stale: a unit that just ended counts for one more tick); anything else is asked
+    individually, so a unit started after the listing is never judged ended"""
+    s = active_unit_set()
+    if s is not None and unit in s:
+        return True
     rc, out, _ = sh(["systemctl", "--user", "is-active", unit], timeout=30)
     return out.strip() in ("active", "activating", "reloading")
 
@@ -3403,6 +3431,36 @@ def _rp(name, t0):
     a[1] += time.time() - t0
 
 
+POLL_TIMED = ("poll_pending_proofs", "poll_physical_completion", "poll_adopted", "probe_job", "finish", "hub_procs", "unit_active", "stop_cancelled",
+              "signals_cancel", "orphan_is_dead", "job_alive_remote", "parse_client_log")
+
+
+def instrument_poll():
+    """WAVE-TICK-1119: per-call wall timers of what poll_running calls, one POLL-TIMES line per tick (top consumers).  Idempotent."""
+    g = globals()
+    for name in POLL_TIMED:
+        fn = g.get(name)
+        if fn is None or getattr(fn, "_poll_timed", False):
+            continue
+
+        def mk(name, fn):
+            def timed(*a, **k):
+                t0 = time.time()
+                try:
+                    return fn(*a, **k)
+                finally:
+                    _rp("poll:" + name, t0)
+            timed._poll_timed = True
+            timed.__wrapped__ = fn
+            return timed
+        g[name] = mk(name, fn)
+
+
+def poll_times_line():
+    top = sorted(((k, v) for k, v in RP_T.items() if k.startswith("poll:")), key=lambda kv: -kv[1][1])[:8]
+    return "POLL-TIMES " + " ".join(f"{k[5:]}={v[0]}x/{v[1]:.0f}s" for k, v in top)
+
+
 def retry_pending(st):
     released = failure_resolutions()
     budget = MINIMAL_REJUDGE_PER_TICK
@@ -3489,7 +3547,9 @@ def tick(args):
     _mark("geom")
     load_closure()
     apply_evac(st)
+    instrument_poll()
     poll_running(st)
+    log(poll_times_line())
     _mark("poll_running")
     _t = time.time()
     poll_reviews(st)
