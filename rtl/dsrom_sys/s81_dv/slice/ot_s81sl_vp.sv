@@ -51,6 +51,22 @@
 `else
 `define OT_S81SL_VP_SR_DEFAULT 0
 `endif
+// CFX (FABLE-FIX-S81-LEAF 11-19, r713 close by construction; S81 leaf vp-glue TT class): ONE more cycle on the hc_post POST path so
+// the coefficient rows are written register to register.  Measured on leaf t27 (D8e, station fold fixed, TT): the q0 / q1 row mux
+// (one dodd flop) and the 5 cfs flops drive the 640 cf flops, which sit at the group HI stations 600 to 800 um from the store
+// (390 failing ends, worst -227 ps).  With CFX = 1:
+//   cf is written one edge later, from yrow_d[0] (= q1r one edge later, a flop beside the store) under cfs one edge later;
+//   the POST lanes issue one edge later (lane_v, ly from the y-row line one stage deeper, lr from hq held one edge);
+//   the write-back tag waits one edge more.  hr (the vn read request) and the pin-time fault terms keep their cycle.
+// Contract: ot_s81sl_vp #(.CFX(1)) == ot_s81sl_vp #(.CFX(0)) with the hc_post write-back (hw_v / hw_j / hw_hf / hw_d of a lane result)
+// exactly one clk later and every other output in the same cycle, for EVERY input stream: a lane issued at T + 1 reads
+// cf_new(T + 1) = cf(T), ly and lr of T.  Only a write-back that collides with an HLOAD (already a fault at CFX 0) can differ.
+// The parent pays the cycle on the POST write-back (compiler pin-cycle table: vp hc_post write-back latency + 1).
+`ifdef OT_S81SL_VP_CFX
+`define OT_S81SL_VP_CFX_DEFAULT 1
+`else
+`define OT_S81SL_VP_CFX_DEFAULT 0
+`endif
 module ot_s81sl_vp #(
     parameter integer ML = 7,
     parameter integer AL = 6,
@@ -72,6 +88,7 @@ module ot_s81sl_vp #(
     parameter integer CS_HO_GS = 0,
     parameter integer CS_H_G = 4,
     parameter integer HQX = 0,
+    parameter integer CFX = `OT_S81SL_VP_CFX_DEFAULT,  // +1 cycle on the hc_post POST path, cf written register to register (see CFX above)
     parameter integer SR = `OT_S81SL_VP_SR_DEFAULT, parameter integer CFR = 0  // CFR (TYPE-SAFE-5 11-10): the SR cf row-select flops alone (0 cycles; see g_cfs)
 ) (
     input  wire          clk,
@@ -283,10 +300,11 @@ module ot_s81sl_vp #(
             assign cfs[j] = dv && dop == OP_POST && dsi == j;
         end
     end endgenerate
+    wire [4:0] cfw; wire [127:0] cfd;                         // CFX: the select and the row one edge later (g_cfx below)
     always @(posedge clk)
         for (int i = 0; i < 4; i = i + 1) begin
-            if (cfs[0]) cf[16 + i] <= q1r[32 * i +: 32];
-            for (int j = 1; j < 5; j = j + 1) if (cfs[j]) cf[4 * (j - 1) + i] <= q1r[32 * i +: 32];
+            if (cfw[0]) cf[16 + i] <= cfd[32 * i +: 32];
+            for (int j = 1; j < 5; j = j + 1) if (cfw[j]) cf[4 * (j - 1) + i] <= cfd[32 * i +: 32];
         end
 `else
     always @(posedge clk)
@@ -300,13 +318,33 @@ module ot_s81sl_vp #(
     // S81-PLAN R3: the leaf's vn seam stations add HQX edges to the hr -> hq trip: the y row waits HQX more (YA)
     // SR: the y row is at q one edge later while hq is unchanged (hr is not delayed): it waits one edge less
     localparam integer YA = 2 + HQX - (SR != 0 ? 1 : 0);
-    reg [127:0] yrow_d [0:YA]; reg [YA:0] ydv;
+    localparam integer YL = YA + (CFX != 0 ? 1 : 0);         // CFX: the lanes issue one edge later (hq still arrives with ydv[YA])
+    reg [127:0] yrow_d [0:YL]; reg [YL:0] ydv;
     integer yj;
-    always @(posedge clk or negedge rs_p) if (!rs_p) ydv <= {(YA + 1){1'b0}};
-        else ydv <= {ydv[YA - 1:0], dv && dop == OP_POST && dsi >= 8'd5};
+    always @(posedge clk or negedge rs_p) if (!rs_p) ydv <= {(YL + 1){1'b0}};
+        else ydv <= {ydv[YL - 1:0], dv && dop == OP_POST && dsi >= 8'd5};
     always @(posedge clk) begin
-        yrow_d[0] <= q1r; for (yj = 1; yj <= YA; yj = yj + 1) yrow_d[yj] <= yrow_d[yj - 1];
+        yrow_d[0] <= q1r; for (yj = 1; yj <= YL; yj = yj + 1) yrow_d[yj] <= yrow_d[yj - 1];
     end
+    initial if (CFX != 0 && CFX != 1) $fatal(1, "ot_s81sl_vp: CFX must be 0 or 1");
+    wire [255:0] hqd_l;                                       // the h half row the lanes capture (CFX: held one edge)
+`ifndef OT_S81SL_VP_MUT_POSTLAST
+    generate if (CFX != 0) begin : g_cfx
+        reg [4:0] cfs_x; reg [255:0] hqd_x;
+        always @(posedge clk or negedge rs_s) if (!rs_s) cfs_x <= 5'd0; else cfs_x <= cfs;
+        always @(posedge clk) hqd_x <= hqd_c;
+        assign cfw = cfs_x; assign cfd = yrow_d[0];
+`ifndef OT_S81SL_VP_MUT_CFXHQ
+        assign hqd_l = hqd_x;
+`else
+        assign hqd_l = hqd_c;                  // bench mutant: the h half row is not held with the later lane issue
+`endif
+    end else begin : g_ncfx
+        assign cfw = cfs; assign cfd = q1r; assign hqd_l = hqd_c;
+    end endgenerate
+`else
+    assign hqd_l = hqd_c;
+`endif
     // lanes: r0..r3 = h copies (BF16 -> FP32 pattern), y = y[e], c_j = comb[j][k] (word 4j + k), p = post[k]
     wire [15:0] lv, lf; wire [31:16] lo [0:15];   // lane o[15:0] is constant 0: not a lane pin (OWNER DECISION 8)
     reg  lane_v; reg [31:0] lr [0:15][0:3]; reg [31:0] ly [0:15];
@@ -366,16 +404,16 @@ module ot_s81sl_vp #(
         assign lo[gl] = ho_g[18 * gl +: 16]; assign lv[gl] = ho_g[18 * gl + 16]; assign lf[gl] = ho_g[18 * gl + 17];
     end endgenerate
     // the h half row of POST step s (requested with the y read: hq arrives aligned with ydv[2])
-    always @(posedge clk or negedge rs_p) if (!rs_p) lane_v <= 1'b0; else lane_v <= ydv[YA];
+    always @(posedge clk or negedge rs_p) if (!rs_p) lane_v <= 1'b0; else lane_v <= ydv[YL];
     always @(posedge clk) begin : b_lr
         integer i, k;
         for (k = 0; k < 4; k = k + 1)
             for (i = 0; i < 4; i = i + 1) begin
-                lr[4 * k + i][0] <= {hqd_c[(4 * 0 + i) * 16 +: 16], 16'd0};
-                lr[4 * k + i][1] <= {hqd_c[(4 * 1 + i) * 16 +: 16], 16'd0};
-                lr[4 * k + i][2] <= {hqd_c[(4 * 2 + i) * 16 +: 16], 16'd0};
-                lr[4 * k + i][3] <= {hqd_c[(4 * 3 + i) * 16 +: 16], 16'd0};
-                ly[4 * k + i] <= yrow_d[YA][32 * i +: 32];
+                lr[4 * k + i][0] <= {hqd_l[(4 * 0 + i) * 16 +: 16], 16'd0};
+                lr[4 * k + i][1] <= {hqd_l[(4 * 1 + i) * 16 +: 16], 16'd0};
+                lr[4 * k + i][2] <= {hqd_l[(4 * 2 + i) * 16 +: 16], 16'd0};
+                lr[4 * k + i][3] <= {hqd_l[(4 * 3 + i) * 16 +: 16], 16'd0};
+                ly[4 * k + i] <= yrow_d[YL][32 * i +: 32];
             end
     end
     // write-back tag: the half-row index rides a delay line of the lane latency
@@ -386,7 +424,7 @@ module ot_s81sl_vp #(
     end
     wire [3:0] widx; wire wvl;
     // S81-PLAN R3: + the lane station depths (both directions); the tag also waits the vn seam's HQX (lane_v does)
-    ot_hdc_delay #(.W(4), .D(HPL + HQX + CS_HI_D + CS_HO_D + SRO)) u_wi (.clk(clk), .rst_n(rs_p), .d(pidx), .q(widx));
+    ot_hdc_delay #(.W(4), .D(HPL + HQX + CS_HI_D + CS_HO_D + SRO + (CFX != 0 ? 1 : 0))) u_wi (.clk(clk), .rst_n(rs_p), .d(pidx), .q(widx));
     ot_hdc_delay #(.W(1), .D(HPL + CS_HI_D + CS_HO_D + SRO), .RESET(1)) u_wv (.clk(clk), .rst_n(rs_p), .d(lane_v), .q(wvl));
 
     // ---------------------------------------------------------------- vn seam (registered outputs)
