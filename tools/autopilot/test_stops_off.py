@@ -997,12 +997,11 @@ class FlowFixes2355(unittest.TestCase):
             self.assertIn("relaunching on the live tree", why)
             self.assertNotIn("kill_pin", sp)
             sp = {}
-            self.assertEqual(KW.kill_pin(prev, sp, manifest_of=lambda t: "HASH1", live_src="/t/live"), "")      # same content: pinned
-            self.assertEqual(sp["src"], "/t/old")
+            self.assertIn("relaunching on the live tree", KW.kill_pin(prev, sp, manifest_of=lambda t: "HASH1", live_src="/t/live"))   # a retired tree is never pinned, even when it still matches its own record
             sp = {}
             self.assertEqual(KW.kill_pin(self.prev(tmp, src="/t/live"), sp, manifest_of=lambda t: "x", live_src="/t/live"), "")   # the live tree itself: no check
             prev = self.prev(tmp)
-            self.assertIn("unreadable", KW.kill_pin(prev, {}, manifest_of=lambda t: "", live_src="/t/live"))
+            self.assertIn("relaunching on the live tree", KW.kill_pin(prev, {}, manifest_of=lambda t: "", live_src="/t/live"))
 
     def test_overlay_only_drift_does_not_defeat_skip_at_a_flow_stage(self):
         cfg = {"dies": {"s81": {"event": "E", "src_manifest_hash": "snap", "gen_env": {}, "_plan_sha": "p", "_src_overlay": "OV1"}}}

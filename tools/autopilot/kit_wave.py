@@ -9400,11 +9400,12 @@ def kill_pin(prev, sp, manifest_of=None, live_src=None):
     miss = [k for k in GRT_ARM_PIN_REQUIRED if not old.get(k)]
     if miss:
         return f"spec lacks {','.join(miss)}"
-    if manifest_of is not None and live_src and str(old.get("src")) != str(live_src):
-        want, have = str(old.get("src_manifest_hash") or ""), manifest_of(old["src"])
-        if not want or not have or have != want:
-            return (f"pinned tree {old['src']} is not the live tree {live_src} and its manifest hash {have[:12] or 'unreadable'} is not the recorded {want[:12] or 'none'}: "
-                    f"relaunching on the live tree")
+    if live_src and str(old.get("src")) != str(live_src):
+        # COORD 11-19 (D8f applied: svc_hi_dsdv_svc_rs__t5 a12 pinned to the retired d8e tree, which the launch verify refuses against the die's adopted hash): a pin onto a tree that is not the
+        # die's live tree is never kept.  (The earlier rule kept it when the old tree still matched its own recorded manifest, which every retired tree does.)
+        want, have = str(old.get("src_manifest_hash") or ""), (manifest_of(old["src"]) if manifest_of is not None else "")
+        if True:
+            return (f"pinned tree {old['src']} is not the live tree {live_src} (its manifest {have[:12] or 'unread'}, recorded {want[:12] or 'none'}): relaunching on the live tree")
     for k in GRT_ARM_PIN:
         if k in old:
             sp[k] = old[k]

@@ -232,14 +232,13 @@ def check_kit(kit, synth=None):
     e["synth_basis"] = basis
     # WAVE-FLOW-R2 11-17 (COORD FABLE-FLOW-1500 D): a kit whose flat estimate / measured synth is over the r576 limit is refused whatever launched it, unless a
     # ruling id waives it (OT_CELL_WAIVER or KIT/CELL_WAIVER).  svc lo7 ran 7.7 h at 5.69M.
+    # WAVE-PILOT-FIX 11-19 (OWNER 11-14 "remove conservative limits", COORD loop-gap: svc_lo_dsdv_svc_rs_w__t1 stopped on the cell cap): the preflight REFUSAL is DELETED, as the in-kit stop
+    # was (54d289d964).  The estimate stays in the receipt (split_needed, cell_waiver) and the caller logs it; nothing stops a kit for its size.
     w = cell_waiver(kit)
     if s is not None and s > SPLIT_CELLS:
         e["split_needed"] = True
         if w:
             e["cell_waiver"] = w
-        else:
-            return [f"SPLIT-NEEDED: kit flat standard cells {int(s)} > {SPLIT_CELLS} ({basis}); split the type, or waive with a ruling id "
-                    f"(OT_CELL_WAIVER=rNNN or KIT/CELL_WAIVER)"], e
     return [], e
 
 

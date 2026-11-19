@@ -34,12 +34,12 @@ def test_one_number_everywhere():
 def test_kit_preflight_refuses_over_the_limit_unless_a_ruling_waives(tmp_path, monkeypatch):
     monkeypatch.delenv("OT_CELL_WAIVER", raising=False)
     err, est = CE.check_kit(kit(tmp_path, 5_690_000))
-    assert err and "SPLIT-NEEDED" in err[0] and est["split_needed"]
+    assert err == [] and est["split_needed"]                                            # WAVE-PILOT-FIX 11-19: the refusal is deleted; the estimate stays
     assert CE.check_kit(kit(tmp_path, 399_000))[0] == []
-    assert CE.check_kit(kit(tmp_path, 5_690_000, "r590"))[0] == []                     # ruling id in KIT/CELL_WAIVER
-    assert CE.check_kit(kit(tmp_path, 5_690_000, "because"))[0]                         # not a ruling id: no waiver
+    assert CE.check_kit(kit(tmp_path, 5_690_000, "r590"))[1]["cell_waiver"] == "r590"    # ruling id in KIT/CELL_WAIVER is still recorded
+    assert "cell_waiver" not in CE.check_kit(kit(tmp_path, 5_690_000, "because"))[1]      # not a ruling id: no waiver
     monkeypatch.setenv("OT_CELL_WAIVER", "r591")
-    assert CE.check_kit(kit(tmp_path, 5_690_000))[0] == []                              # or the environment
+    assert CE.check_kit(kit(tmp_path, 5_690_000))[1]["cell_waiver"] == "r591"
 
 
 def run_tcl(n_std, env=None, waiver_file=None, tmp=None):
