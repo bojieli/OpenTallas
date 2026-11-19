@@ -23,7 +23,13 @@ so they keep their as-built relative timing (fail closed if a bank's bc and its 
 DIE-KV-19 (b2): the lc bank tile (ot_qwen_tp8_pv_slice_lc_t) has copy pins bcx = bc[18] x3, bc[17] x3 from the same
 command word -> its bcx member is one more column command member and takes the same pad (absent on non-lc binds).
 The RTL parameters follow from the padded bind through the param hook kv_pv_col_regen.py (same law, fail closed).
-Not covered (reported, not padded): V words vport -> bank pv2 and ASTK response -> bank pe2 (see estimate.md)."""
+Not covered (reported, not padded): V words vport -> bank pv2 and ASTK response -> bank pe2 (see estimate.md).
+--min-pad N (FABLE-FIX-KV-PV class D 11-19; 0 = the table above): C = max_s (landed - as-built) + N, so EVERY column
+command pad is at least N stages: the registered fan-out of the command inside a pv partition (landing-pad tail split:
+shared trunk to the centre of the consumer cores + one copy chain per core, one stage per hop) needs a pad of
+trunk + tail stages (bind_pad_tail_split.py REACH, pad_reach_census.py), and the column at the end of the command chain
+has pad 0 by construction of the minimum law.  One shift for all 64 columns: the law, TRUNK_D / FLAG_D (+N each) and the
+V-word / pe2 tables (kv_pv_v_pads.py) follow; the param hook sees a uniform landed - as-built and needs no option."""
 import argparse
 import hashlib
 import json
@@ -52,9 +58,10 @@ def _col(path):
     return int(re.search(r"_s(\d+)_[jb]", path).group(1))
 
 
-def plan(B):
+def plan(B, min_pad=0):
     """per-column depths on the bind -> shift C, per-side flag totals, per-member target landed depth.
-    B: regen_constants.Bound (generator) or LegView (bind param hook); both give members() and asbuilt_param()."""
+    B: regen_constants.Bound (generator) or LegView (bind param hook); both give members() and asbuilt_param().
+    min_pad (generator only): the smallest command pad any column may get (C grows by it)."""
     TD = B.asbuilt_param(r"pvw_\d__u_ctl$", "TRUNK_D", module=CTL_MODULE)
     FD = B.asbuilt_param(r"pvw_\d__u_ctl$", "FLAG_D", module=CTL_MODULE)
     if TD is None or FD is None:
@@ -82,7 +89,9 @@ def plan(B):
             v.update(cmd_asb=ca, cmd_landed=cl, flag_asb=fa, flag_landed=fl, dcmd=cl - ca)
         c0 = cols[min(cols)]
         sides[side] = dict(pvw=pvw, cols=cols, k0=c0["cmd_asb"] + c0["flag_asb"] - FD - TD)
-    C = max(v["dcmd"] for s in sides.values() for v in s["cols"].values())
+    if int(min_pad) < 0:
+        raise SystemExit("--min-pad must be >= 0")
+    C = max(v["dcmd"] for s in sides.values() for v in s["cols"].values()) + int(min_pad)
     # flag total each side must reach: every column after its command pad, then one FLAG_D for both sides
     need = {k: max(v["cmd_asb"] + C + v["flag_landed"] for v in s["cols"].values()) for k, s in sides.items()}
     trunk = TD + C
@@ -130,9 +139,11 @@ class LegView:
         return vals.pop()
 
 
-def pads(bind_dir, r8):
+def pads(bind_dir, r8, min_pad=0):
     B = RC.Bound(bind_dir)
-    law, members = plan(B)
+    law, members = plan(B, min_pad)
+    if min_pad:
+        law["min_pad"] = int(min_pad)
     by_key = defaultdict(list)
     for x in r8["members"]:
         by_key[(x["sink"], x["sink_port"], x["source"])].append(x)
@@ -174,8 +185,9 @@ def main(argv=None):
     ap.add_argument("bind_dir")
     ap.add_argument("r8", help="the land_r8 table the bind used (members carry pad / landed)")
     ap.add_argument("out")
+    ap.add_argument("--min-pad", type=int, default=0, help="smallest command pad of any column (stages; default 0)")
     a = ap.parse_args(argv)
-    t = pads(a.bind_dir, json.load(open(a.r8)))
+    t = pads(a.bind_dir, json.load(open(a.r8)), a.min_pad)
     Path(a.out).write_text(json.dumps(t, indent=1) + "\n")
     print(json.dumps(t["summary"]))
     return 0

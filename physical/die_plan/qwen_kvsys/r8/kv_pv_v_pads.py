@@ -18,7 +18,10 @@ ASTK response -> pe2: the astk owner launch is free in the PV schedule (KV-P6-PV
 one e = dpe2 - dcmd per astk source (pads lift every bank to the source's max e).
 Pads only ADD stages on the V / pe2 member (sink-partition entry; bind.py shares one ot_dp_dly per (in-lane bit, pad)
 inside a partition, so the 8 banks of a column and the columns of one pv partition that need the same pad share it).
-Fails closed: a member that would need a negative pad (V later than its command) or an R8 row that is not this bind's."""
+Fails closed: a member that would need a negative pad (V later than its command) or an R8 row that is not this bind's.
+pads --e-min-pad M (FABLE-FIX-KV-PV class D 11-19; 0 = the table above): every pe2 member ends with a landing pad of at
+least M stages (R8 pad + this table): the whole astk source is lifted by one more constant (its e stays ONE value per
+source, which is the rule; the launch is free), so the registered pe2 fan-out inside a pv partition has its stages."""
 import argparse
 import collections
 import hashlib
@@ -39,8 +42,9 @@ def _bits(sb):
     return sum(abs(b - a) + 1 for a, b in sb)
 
 
-def rule(B):
-    """per-member target landed depth from the bind (no pads applied by this table yet)."""
+def rule(B, e_min_pad=0):
+    """per-member target landed depth from the bind (no pads applied by this table yet).  e_min_pad: the smallest
+    landing pad (landed target - bound) a pe2 member may end with; a source below it is lifted as a whole."""
     cmd = {}
     for m in B.members(source=r"^pvw_\d__u_ctl\.cmd$", sink=BANK, port=r"^bc$"):
         d = m["landed"] - m["asb"]
@@ -64,9 +68,15 @@ def rule(B):
     emax = collections.defaultdict(lambda: -10 ** 9)
     for m in es:
         emax[m["source"]] = max(emax[m["source"]], (m["landed"] - m["asb"]) - cmd[m["sink"]])
+    lift = collections.defaultdict(int)
+    if e_min_pad:
+        for m in es:
+            e = (m["landed"] - m["asb"]) - cmd[m["sink"]]
+            lift[m["source"]] = max(lift[m["source"]], int(e_min_pad) - (m["landed"] + emax[m["source"]] - e - m["bound"]))
     for m in es:
         e = (m["landed"] - m["asb"]) - cmd[m["sink"]]
-        rows.append(dict(m, kind="E", vdh=e - emax[m["source"]], target=m["landed"] + emax[m["source"]] - e))
+        rows.append(dict(m, kind="E", vdh=e - emax[m["source"]],
+                         target=m["landed"] + emax[m["source"]] - e + lift[m["source"]]))
     return rows
 
 
@@ -83,9 +93,9 @@ def check(B):
     return s, dict(sorted(((f"{k}:{v}", n) for (k, v), n in by.items())))
 
 
-def pads(bind_dir, r8):
+def pads(bind_dir, r8, e_min_pad=0):
     B = RC.Bound(bind_dir)
-    rows = rule(B)
+    rows = rule(B, e_min_pad)
     by_key = collections.defaultdict(list)
     for x in r8["members"]:
         by_key[(x["sink"], x["sink_port"], x["source"])].append(x)
@@ -123,10 +133,11 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sp = ap.add_subparsers(dest="cmd", required=True)
     p = sp.add_parser("pads"); p.add_argument("bind_dir"); p.add_argument("r8"); p.add_argument("out")
+    p.add_argument("--e-min-pad", type=int, default=0, help="smallest landing pad of any pe2 member (stages; default 0)")
     c = sp.add_parser("check"); c.add_argument("bind_dir"); c.add_argument("--json")
     a = ap.parse_args(argv)
     if a.cmd == "pads":
-        t = pads(a.bind_dir, json.load(open(a.r8)))
+        t = pads(a.bind_dir, json.load(open(a.r8)), a.e_min_pad)
         Path(a.out).write_text(json.dumps(t, indent=1) + "\n")
         print(json.dumps(t["summary"]))
         return 0

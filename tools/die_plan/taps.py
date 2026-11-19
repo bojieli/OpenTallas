@@ -62,7 +62,10 @@ def _clear_density_cache():
 def _density_key(P, tn, control, pts, taken, boxes):
     import schema
     import gen_phys
-    inputs = dict(type_name=tn, type=P.types[tn], control=control,
+    typ = P.types[tn]
+    if "added_taps" in (typ.get("clock") or {}):    # class T: added taps never enter the density solve
+        typ = dict(typ, clock={k: v for k, v in typ["clock"].items() if k != "added_taps"})
+    inputs = dict(type_name=tn, type=typ, control=control,
                   sinks=pts, reserved=taken, boxes=boxes,
                   layers=getattr(P, "layers", None), layer_budget=getattr(P, "layer_budget", None),
                   grid=getattr(P, "grid", None), core_margin=gen_phys.CORE_MARGIN_UM,
@@ -1178,6 +1181,50 @@ def _memo_snap(snap):
 
 
 def density_taps(P, tn, control=True):
+    """clock.tap_mode "density" taps: the sink-density taps (_density_base, unchanged names / sites / order) followed by
+    the plan's clock.added_taps [{name, xy}] (FABLE-FIX-KV-PV class T 11-19, OWNER r713 <= ~1000 sinks per tap): explicit
+    taps sized from a kit's PLACED flop census where the stale sink bins left a tap over the cap.  Names continue the
+    density numbering (clk_t<n_density + i>, in order), so no existing tap, reset relay or landing name moves.  Every
+    added tap is checked like an explicit endpoint (outline, core / keepout halo, spacing to every other tap and early
+    core tap); nothing is moved or dropped here.  Its planned load / radius come from the kit split (assign) over all
+    taps; the density rows keep their own values."""
+    base = _density_base(P, tn, control)
+    table = P.types[tn].get("clock", {}).get("added_taps") or []
+    if not table:
+        return base
+    import schema
+    t = P.types[tn]
+    ck = t["clock"]
+    names = [p["name"] for p in table]
+    expected = [f"clk_t{len(base) + i}" for i in range(len(table))]
+    if names != expected:
+        raise ValueError(f"{tn}: density added tap names/order must be {expected[0]}..{expected[-1]} (density gives {len(base)} taps)")
+    eps = 1e-8
+    w, h = t["outline_um"]
+    clear = schema.type_tap_clear(t)
+    from placement_obstacles import placement_boxes
+    boxes = list(placement_boxes(t, halo=clear).values())
+    boxes += [(a - clear, b - clear, c + clear, d + clear) for a, b, c, d in ck.get("keepouts_um", [])]
+    taken = [(x, y) for _, x, y, _ in schema.core_taps(P, tn)] + [(x, y) for _, x, y, _, _ in base]
+    sites = []
+    for p in table:
+        x, y = map(float, p["xy"])
+        legal = (clear - eps <= x <= w - clear + eps and clear - eps <= y <= h - clear + eps
+                 and not any(abs(x - a) < clear - eps and abs(y - b) < clear - eps for a, b in taken)
+                 and not any(a + eps < x < c - eps and b + eps < y < d - eps for a, b, c, d in boxes))
+        if not legal:
+            raise ValueError(f"{tn}: density added tap {p['name']} violates outline/halo/tap spacing")
+        sites.append((p["name"], x, y))
+        taken.append((x, y))
+    radius = float(ck.get("tap_radius_um", 200.0))
+    load, far, _ = assign([(n, x, y) for n, x, y, _, _ in base] + sites,
+                          sink_sites(P, tn, bool(control and ck.get("control_sinks"))),
+                          int(ck.get("tap_max_sinks", 1500)), radius, max_distance_um=radius)
+    return list(base) + [(n, x, y, int(round(load[len(base) + i])), round(far[len(base) + i], 1))
+                         for i, (n, x, y) in enumerate(sites)]
+
+
+def _density_base(P, tn, control=True):
     """OWNER decision 5 (10-24, industry multi-source CTS): partition clock taps placed by SINK DENSITY.
 
     The sinks (sink_sites: face / ft registers + the internal inventory) are split by weighted median bisection into

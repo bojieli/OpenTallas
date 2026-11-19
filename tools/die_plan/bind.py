@@ -4553,6 +4553,23 @@ class Binder:
         if ts_on:
             ts_r8 = getattr(self, "r8sp", {})
             ts_cons, ts_other = defaultdict(list), defaultdict(list)
+            # REACH (class D 11-19, sub-keys "route" / "require_reach"; both absent = nothing below changes)
+            ts_reach_on = ts_cfg["route"] or ts_cfg["require_reach"]
+            ts_boxes = TS.core_boxes(t.get("hard_cores")) if ts_cfg["route"] else None
+            ts_zero, ts_reach = defaultdict(list), {}
+            ts_lpad = {L["iname"]: lane_pad(L) for L in self.in_bus[p] if not L.get("spine")} if ts_reach_on else {}
+
+            def ts_reach_row(key, by):
+                if not by or key[0] not in ts_lpad:
+                    return
+                have = key[2] + ts_lpad[key[0]]
+                rr = TS.reach(have, by, ts_cfg, TS.src_xy(t, key[0]), ts_boxes)
+                e = ts_reach.setdefault(key[0], dict(pads=0, need=0, min_pad=have, short=0, short_pads=0))
+                e["pads"] += 1
+                e["need"] = max(e["need"], rr["need"])
+                e["min_pad"] = min(e["min_pad"], have)
+                e["short"] = max(e["short"], rr["short"])
+                e["short_pads"] += 1 if rr["short"] else 0
 
             def ts_walk(d, ci, pn, i):
                 if d[0] in ("or", "and"):
@@ -4566,6 +4583,11 @@ class Binder:
                         ts_cons[(L["iname"], j, d[7])].append((ci, pn, i))
                     else:
                         ts_other[(cls, L["iname"], j)].append((ci, pn, i))
+                elif d[0] == "x" and ts_reach_on and not reg and PT is None and \
+                        (d[1], p, d[2], d[3], d[4]) in self.bitpos:
+                    # REACH record only: a crossing bit read with no landing pad (the in-boundary flop itself)
+                    L, j = self.bitpos[(d[1], p, d[2], d[3], d[4])]
+                    ts_zero[(L["iname"], j, 0)].append((ci, pn, i))
 
             for ci in self.members[p]:
                 if self.rel_of(ci) in invalid_id_leaves:
@@ -4588,9 +4610,14 @@ class Binder:
 
             ts_row = dict(pads=len(ts_cons), split_pads=0, copies=0, extra_flops=0, max_spread_um=0.0, tail_depths={},
                           shared_readers=0, not_covered=dict(r8_strap=0, registered=0, pad_tree=0, position_bank=0))
+            for key in sorted(ts_zero):
+                if key not in ts_cons:
+                    ts_reach_row(key, ts_cores(ts_zero[key])[0])
             for key in sorted(ts_cons):
                 by, per = ts_cores(ts_cons[key])
-                ks = TS.tail_depth(key[2], by, ts_cfg)
+                if ts_reach_on:
+                    ts_reach_row(key, by)
+                ks = TS.tail_depth(key[2], by, ts_cfg, ts_boxes)
                 if ks is None:
                     continue
                 tsplit[key] = (ks[0], per)
@@ -4607,7 +4634,16 @@ class Binder:
                     ts_row["not_covered"][key[0]] += 1
             if ps_row is not None:
                 ts_row["pipes_split"] = ps_row               # KV-D23-REACH: only with the "pipes" sub-key
+            if ts_reach_on:
+                ts_row["reach"] = dict(hop_um=ts_cfg["hop_um"], route=ts_cfg["route"],
+                                       buses=dict(sorted(ts_reach.items())))
             self.__dict__.setdefault("_pad_tail_split", {})[tn] = ts_row
+            ts_short = {b: e["short"] for b, e in sorted(ts_reach.items()) if e["short"]}
+            if ts_cfg["require_reach"] and ts_short:
+                raise BindError(f"land_pad_tail_split {tn}: landing pad shorter than the reach needs at hop "
+                                f"{ts_cfg['hop_um']:g} um (bus: stages short) {ts_short}: raise the pad where its law "
+                                "lives (R8 owner table, KV PV kv_pv_col_pads.py --min-pad / kv_pv_v_pads.py "
+                                "--e-min-pad) or add lane cycles")
             if ts_cfg["wire_leaves"]:
                 # BIN-COPY (N4.1, land_pad_tail_split.wire_leaves): an in-boundary flop bit (pad 0) that reaches the pins
                 # of several far hard cores through a proven pure-wiring leaf gets one kept copy of that flop per core

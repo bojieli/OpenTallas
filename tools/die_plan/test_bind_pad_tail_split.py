@@ -186,6 +186,87 @@ def test_keep_cell_and_site_rows():
     assert T.centroids({"a": [(0, 0), (10, 20)]}) == {"a": (5.0, 10.0)}
 
 
+# ---- REACH (FABLE-FIX-KV-PV class D 11-19): sub-keys route / require_reach ------------------------------------------------
+def test_reach_rule():
+    cfg = TS.config({"land_pad_tail_split": {"types": ["t"], "min_spread_um": 400, "hop_um": 300, "route": True,
+                                             "require_reach": True}})
+    assert cfg["route"] is True and cfg["require_reach"] is True
+    off = TS.config({"land_pad_tail_split": {"types": ["t"]}})
+    assert off["route"] is False and off["require_reach"] is False
+    for bad in ({"route": 1}, {"require_reach": "yes"}):
+        with pytest.raises(ValueError):
+            TS.config({"land_pad_tail_split": {"types": ["t"], **bad}})
+    two = {"a": [(0.0, 0.0)], "b": [(1000.0, 0.0)]}
+    assert TS.l1_centre([(0.0, 0.0), (1000.0, 0.0)]) == (500.0, 0.0)
+    assert TS.hops(50.0, cfg) == 0 and TS.hops(300.0, cfg) == 1 and TS.hops(301.0, cfg) == 2
+    # split pad: trunk src -> T (1,200 um = 4 hops) + tail T -> pin (500 um = 2 hops)
+    r = TS.reach(1, two, cfg, src=(-700.0, 0.0))
+    assert r == dict(need=6, trunk=4, tail=2, short=5, split=True)
+    assert TS.reach(6, two, cfg, src=(-700.0, 0.0))["short"] == 0
+    assert TS.reach(1, two, cfg)["need"] == 2                       # unknown source: only the tail is priced
+    # shared pad (one core): pad + 1 hops between the in-boundary flop and the pin
+    one = {"a": [(2000.0, 0.0), (1990.0, 0.0)]}
+    assert TS.reach(0, one, cfg, src=(0.0, 0.0)) == dict(need=6, trunk=6, tail=0, short=6, split=False)
+    assert TS.reach(6, one, cfg, src=(0.0, 0.0))["short"] == 0
+    # route: a hard core on the straight T -> pin line makes the run a Z through the channel beside it
+    wall = [(600.0, -100.0, 800.0, 100.0)]
+    assert TS.route_len((500.0, 0.0), (1000.0, 0.0), [])[0] == 500.0
+    ln, crossed = TS.route_len((500.0, 0.0), (1000.0, 0.0), wall)
+    assert crossed == 0 and ln == 500.0 + 2 * (100.0 + TS.HALO_UM)
+    assert TS.tail_need(two, cfg, wall) == 3 and TS.tail_need(two, cfg) == 2
+    assert TS.tail_depth(5, two, cfg, wall) == (3, 1000.0) and TS.tail_depth(5, two, cfg) == (2, 1000.0)
+    assert TS.tail_depth(5, two, off, wall) == (2, 1000.0)          # "route" off: the boxes are ignored (S / 2 at 380)
+    # a pin on its own core edge is not a crossing; a trunk end inside a core is pushed out to its halo
+    assert TS.route_len((0.0, 50.0), (500.0, 50.0), [(500.0, 0.0, 700.0, 100.0)]) == (500.0, 0)
+    assert TS.push_out((650.0, 10.0), wall) == (600.0 - TS.HALO_UM, 10.0)
+    assert TS.core_boxes([dict(origin_um=[10, 20], outline_um=[100, 40], orient="R90")]) == [(10.0, 20.0, 50.0, 120.0)]
+    # source point: relay_sites of the in-boundary flop, else the landing band centre
+    typ = dict(clock=dict(landing_contract=dict(bands=dict(b_i=dict(rect_um=[0, 0, 20, 10])))),
+               relay_sites={"u_bin_c_i.q[0]": [100.0, 50.0], "u_bin_c_i.q[1]": [102.0, 50.0], "u_bin_c_ix.q[0]": [0.0, 0.0]})
+    assert TS.src_xy(typ, "b_i") == (10.0, 5.0) and TS.src_xy(typ, "c_i") == (101.0, 50.0) and TS.src_xy(typ, "zz") is None
+
+
+def _reach_plan(tmp_path, name, far=False, **opt):
+    f = _plan(tmp_path, True)
+    p = json.loads(f.read_text())
+    p["asbuilt"]["land_pad_tail_split"] = dict(types=["ts"], min_spread_um=400, hop_um=380, **opt)
+    if far:   # the in-boundary flops of both in buses sited at the far end of the type: a 4-hop trunk the pad 3 cannot hold
+        ts = p["partition_types"]["ts"]
+        ts["relay_sites"] = {f"u_bin_{b['name']}.q[{j}]": [1990.0, 90.0] for b in ts["buses"] if b["dir"] == "in"
+                             for j in range(b["width"])}
+    g = tmp_path / name
+    g.write_text(json.dumps(p))
+    return g
+
+
+@needs_yosys
+def test_reach_record_and_fail_closed(tmp_path, monkeypatch):
+    monkeypatch.setenv("OT_HCPARAM_ALL", "0")
+    plain, rec, bad = tmp_path / "plain", tmp_path / "rec", tmp_path / "bad"
+    assert _bind(_plan(tmp_path, True), plain, "elab", "bind", "verify") == 0
+    assert _bind(_reach_plan(tmp_path, "plan_rec.json", route=True), rec, "elab", "bind", "verify") == 0
+    # no hard core in the way: same RTL as the plain split, plus the reach record
+    assert (rec / "rtl" / "bt_ts.sv").read_bytes() == (plain / "rtl" / "bt_ts.sv").read_bytes()
+    assert "reach" not in json.loads((plain / "bind_pad_tail_split.json").read_text())["types"]["ts"]
+    rr = json.loads((rec / "bind_pad_tail_split.json").read_text())["types"]["ts"]["reach"]
+    assert rr["hop_um"] == 380 and rr["route"] is True
+    # every bit feeds both cores 1,000 um apart: tail 2 (no source point: trunk not priced).  The 5 padded bits (pad 3) have
+    # the stages; the bits of d1_i both cores read with NO landing pad are short by those 2 stages
+    assert max(e["need"] for e in rr["buses"].values()) == 2
+    assert rr["buses"]["d1_i"]["min_pad"] == 0 and rr["buses"]["d1_i"]["short"] == 2 and rr["buses"]["d1_i"]["short_pads"] > 0
+    # the in-boundary flops planned ~1,560 um from the trunk end: trunk 5 + tail 2
+    assert _bind(_reach_plan(tmp_path, "plan_far.json", far=True, route=True), rec, "elab", "bind") == 0
+    rr = json.loads((rec / "bind_pad_tail_split.json").read_text())["types"]["ts"]["reach"]["buses"]
+    assert max(e["need"] for e in rr.values()) == 7 and max(e["short"] for e in rr.values()) == 7
+    # require_reach: a short pad is a bind error (EMIT error: no bound RTL for the type, verify fails)
+    try:
+        rc = _bind(_reach_plan(tmp_path, "plan_bad.json", require_reach=True), bad, "elab", "bind", "verify")
+    except Exception as exc:          # BindError raised through main
+        rc = 1
+        assert "shorter than the reach" in str(exc)
+    assert rc != 0
+
+
 # ---- BIN-COPY (FABLE-FIX-QC-N N4.1): land_pad_tail_split.wire_leaves -------------------------------------------------
 SPW = """`timescale 1ns/1ps
 module wlf (input wire ck, input wire [7:0] a, output wire [3:0] c, output wire [3:0] r);

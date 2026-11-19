@@ -170,8 +170,10 @@ class Netlist:
                 if in_bounds and all(widths) and sum(widths) == self.width[m.group(1)]:
                     self.src[m.group(1)] = its
         for ln in txt.split("\n"):
-            dm = re.match(r"^\s*ot_dp_dly\s+#\(.*?\)\s+u_\w+\s+\(.*?\.d\(([^()]*)\),\s*\.q\(([^()]*)\)\)\s*;", ln)
+            dm = re.match(r"^\s*ot_dp_dly(?:_keep)?\s+#\(.*?\)\s+u_\w+\s+\(.*?\.d\(([^()]*)\),\s*\.q\(([^()]*)\)\)\s*;", ln)
             if dm:      # landing-pad delay: a pass-through (same bits, D cycles later), one bit per cell in the bound RTL
+                        # FFKPV-C 11-19: also the (* keep *) tail copies (land_pad_tail_split ot_dp_dly_keep), so a bit read only
+                        # through per-core tail copies resolves to those cores instead of the merged pile
                 its = _items(dm.group(1).strip())
                 q = ITEM.match(dm.group(2).strip())
                 if its is not None and q and q.group(1) not in self.src:

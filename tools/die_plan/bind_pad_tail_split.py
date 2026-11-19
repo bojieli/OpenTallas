@@ -52,6 +52,24 @@ same `landing pad tail copy for core` marking, 0 added cycles: the copy captures
 leaf must be proven pure wiring from its RTL (bind_wire_leaf.wire_map, fail closed); bind_bin_copies.json lists every
 re-pointed sink with the leaf output it bypasses and the leaf input that carries the same bit, and bind_verify proves
 the wiring again from the RTL and then requires the sink to see exactly the source and depth of that leaf input.
+
+REACH (FABLE-FIX-KV-PV class D 11-19), optional sub-keys "route": true and "require_reach": true (absent or false =
+byte-identical output).  Measured on kv3_pv_v8 (pv_N_0, the end of the PV command chain: column pads 0 / 1): K is capped
+by the pad, so 1,474 copy hops were over 380 um (max 870) and the pad-0 consumers read the in-boundary flop over 2.5 mm.
+The pad a (bus bit, pad) needs is a function of geometry alone:
+
+    split pad   need = trunk + tail,  tail = max(1, ceil(R / hop_um)),  trunk = ceil(|src - T|_1 / hop_um)
+                T = L1 centre of the consumer pins, R = the longest T -> pin run: S / 2, and with "route" the Manhattan
+                route round the plan hard cores (the L / Z rule of tail_copy_anchor.tcl tcs_route) when that is longer
+    shared pad  need = ceil(|src - farthest pin|_1 / hop_um) - 1        (pad + 1 hops: bin flop -> pad stages -> pin)
+    src         = the in-boundary flop of the bus: its plan relay_sites site (u_bin_<bus>.q[j]), else the centre of the
+                  bus clock-landing band (clock.landing_contract.bands.<bus>.rect_um); unknown = trunk 0 / need 0
+
+"route" sizes K from R instead of S / 2 (K = min(pad, tail)).  With either sub-key the bind records, per in bus of a
+selected type, `reach.buses.<bus>` = {pads, need, min_pad, short, short_pads} (pad = the landing pad + the lane pad of
+the bus; short = need - pad when positive) in bind_pad_tail_split.json; "require_reach" makes a short pad a bind error
+(the pad is then raised where its law lives: the R8 owner tables -- KV PV kv_pv_col_pads.py --min-pad /
+kv_pv_v_pads.py --e-min-pad -- or lane cycles).  pad_reach_census.py runs the same rule on a bound kit RTL + the plan.
 """
 import math
 import re
@@ -99,13 +117,15 @@ def config(ab):
     if c is None:
         return None
     if not isinstance(c, dict) or not isinstance(c.get("types"), list) or not c["types"] or \
-            set(c) - {"types", "min_spread_um", "hop_um", "wire_leaves", "pipes"} or not isinstance(c.get("pipes", False), bool):
+            set(c) - {"types", "min_spread_um", "hop_um", "wire_leaves", "pipes", "route", "require_reach"} or \
+            not all(isinstance(c.get(k, False), bool) for k in ("pipes", "route", "require_reach")):
         raise ValueError(f"asbuilt.{KEY}: expected {{types: [regex..], min_spread_um, hop_um[, wire_leaves][, pipes: bool]}}")
     wl = c.get("wire_leaves", [])
     if not isinstance(wl, list) or not all(isinstance(x, str) and x for x in wl) or ("wire_leaves" in c and not wl):
         raise ValueError(f"asbuilt.{KEY}.wire_leaves: expected a non-empty list of as-built leaf module names")
     out = dict(types=[re.compile(x) for x in c["types"]], min_spread_um=float(c.get("min_spread_um", 400.0)),
-               hop_um=float(c.get("hop_um", 380.0)), wire_leaves=frozenset(wl), pipes=bool(c.get("pipes", False)))
+               hop_um=float(c.get("hop_um", 380.0)), wire_leaves=frozenset(wl), pipes=bool(c.get("pipes", False)),
+               route=bool(c.get("route", False)), require_reach=bool(c.get("require_reach", False)))
     if out["hop_um"] <= 0 or out["min_spread_um"] < 0:
         raise ValueError(f"asbuilt.{KEY}: hop_um must be > 0 and min_spread_um >= 0")
     return out
@@ -177,14 +197,146 @@ def spread(pts):
     return max(max(a) - min(a), max(b) - min(b))
 
 
-def tail_depth(pad, by_core, cfg):
-    """(K, S) for a pad whose consumer pins are {core inst: [(x, y)..]}, or None when it is not split"""
+def tail_depth(pad, by_core, cfg, boxes=None):
+    """(K, S) for a pad whose consumer pins are {core inst: [(x, y)..]}, or None when it is not split.  `boxes` (plan
+    hard-core boxes, core_boxes()) are used only with the "route" sub-key: K from the routed T -> pin run."""
     if pad < 1 or len(by_core) < 2:
         return None
     s = spread([xy for v in by_core.values() for xy in v])
     if s <= cfg["min_spread_um"]:
         return None
-    return min(pad, max(1, math.ceil((s / 2.0) / cfg["hop_um"]))), s
+    return min(pad, tail_need(by_core, cfg, boxes)), s
+
+
+# ---- REACH (class D 11-19): the pad a bus bit needs from geometry ------------------------------------------------------
+HALO_UM = 9.0          # tail_copy_anchor.tcl: macro halo of the copy sites and the channel offset of a Z route
+PIN_INSET_UM = 3.0     # a pin sits on (or just inside) its core edge: boxes shrink by this for the crossing test
+
+
+def md(a, b):
+    return abs(a[0] - b[0]) + abs(a[1] - b[1])
+
+
+def l1_centre(pts):
+    """the point with the smallest largest Manhattan distance to pts (tail_copy_anchor.tcl tcs_l1_centre)"""
+    u = [x + y for x, y in pts]
+    v = [x - y for x, y in pts]
+    uu, vv = (min(u) + max(u)) / 2.0, (min(v) + max(v)) / 2.0
+    return ((uu + vv) / 2.0, (uu - vv) / 2.0)
+
+
+def core_boxes(hard_cores):
+    """[(x0, y0, x1, y1)] of the plan hard cores (outline swapped for the 90-degree orients)"""
+    out = []
+    for h in hard_cores or []:
+        w, hh = h["outline_um"]
+        if str(h.get("orient", "R0")) in ("R90", "R270", "MXR90", "MYR90"):
+            w, hh = hh, w
+        x, y = h["origin_um"]
+        out.append((float(x), float(y), float(x) + float(w), float(y) + float(hh)))
+    return out
+
+
+def _seg_hits(a, b, boxes):
+    hit = []
+    for bx in boxes:
+        x0, y0, x1, y1 = bx[0] + PIN_INSET_UM, bx[1] + PIN_INSET_UM, bx[2] - PIN_INSET_UM, bx[3] - PIN_INSET_UM
+        if a[1] == b[1]:
+            if y0 < a[1] < y1 and max(a[0], b[0]) > x0 and min(a[0], b[0]) < x1:
+                hit.append(bx)
+        elif a[0] == b[0]:
+            if x0 < a[0] < x1 and max(a[1], b[1]) > y0 and min(a[1], b[1]) < y1:
+                hit.append(bx)
+    return hit
+
+
+def _path_hits(pts, boxes):
+    hit = []
+    for i in range(1, len(pts)):
+        for bx in _seg_hits(pts[i - 1], pts[i], boxes):
+            if bx not in hit:
+                hit.append(bx)
+    return hit
+
+
+def push_out(p, boxes, halo=HALO_UM):
+    """p moved to the nearest edge of the (halo-grown) core box it lies in, a few rounds (tcs_push_out)"""
+    x, y = p
+    for _ in range(8):
+        inside = [b for b in boxes if b[0] - halo < x < b[2] + halo and b[1] - halo < y < b[3] + halo]
+        if not inside:
+            break
+        x0, y0, x1, y1 = inside[0][0] - halo, inside[0][1] - halo, inside[0][2] + halo, inside[0][3] + halo
+        _d, x, y = min((x - x0, x0, y), (x1 - x, x1, y), (y - y0, x, y0), (y1 - y, x, y1))
+    return (x, y)
+
+
+def route_len(t, l, boxes, step=HALO_UM):
+    """(length, cores crossed) of the Manhattan route t -> l round the hard cores: the two L shapes, then a Z through the
+    channel beside every core an L crosses; fewest crossings, then shortest (tail_copy_anchor.tcl tcs_route)"""
+    cands = [[t, (l[0], t[1]), l], [t, (t[0], l[1]), l]]
+    hit = []
+    for c in list(cands):
+        for bx in _path_hits(c, boxes):
+            if bx not in hit:
+                hit.append(bx)
+    for x0, y0, x1, y1 in hit:
+        for xc in (x0 - step, x1 + step):
+            cands.append([t, (xc, t[1]), (xc, l[1]), l])
+        for yc in (y0 - step, y1 + step):
+            cands.append([t, (t[0], yc), (l[0], yc), l])
+    best = None
+    for c in cands:
+        n = len(_path_hits(c, boxes))
+        ln = sum(md(c[i - 1], c[i]) for i in range(1, len(c)))
+        if best is None or (n, ln) < best:
+            best = (n, ln)
+    return best[1], best[0]
+
+
+def hops(d, cfg):
+    """register hops a run of d um needs (a run under a quarter hop needs no stage of its own)"""
+    return 0 if d <= cfg["hop_um"] / 4.0 else int(math.ceil(d / cfg["hop_um"] - 1e-9))
+
+
+def tail_need(by_core, cfg, boxes=None):
+    """copy stages K the consumer pins {core inst: [(x, y)..]} need: ceil(R / hop_um), R = S / 2, or with the "route"
+    sub-key and core boxes the longest routed trunk-end -> pin run when that is longer"""
+    pts = [xy for v in by_core.values() for xy in v]
+    r = spread(pts) / 2.0
+    if cfg.get("route") and boxes:
+        t = push_out(l1_centre(pts), boxes)
+        r = max(r, max(route_len(t, p, boxes)[0] for p in set(pts)))
+    return max(1, int(math.ceil(r / cfg["hop_um"] - 1e-9)))
+
+
+def src_xy(typ, bus):
+    """the plan point of the in-boundary flop of in bus `bus` of partition type dict `typ`: the mean of its relay_sites
+    u_bin_<bus>.q[j] rows, else the centre of its clock-landing band, else None"""
+    rs = [v for k, v in (typ.get("relay_sites") or {}).items() if k.startswith(f"u_bin_{bus}.q[")]
+    if rs:
+        return (sum(v[0] for v in rs) / len(rs), sum(v[1] for v in rs) / len(rs))
+    band = (((typ.get("clock") or {}).get("landing_contract") or {}).get("bands") or {}).get(bus) or {}
+    r = band.get("rect_um")
+    if r:
+        return ((r[0] + r[2]) / 2.0, (r[1] + r[3]) / 2.0)
+    return None
+
+
+def reach(pad, by_core, cfg, src=None, boxes=None):
+    """dict(need, trunk, tail, short, split) of a (bus bit, pad) whose consumer pins are {core inst: [(x, y)..]} and whose
+    in-boundary flop sits at src (None = unknown: the source run is not priced)"""
+    pts = [xy for v in by_core.values() for xy in v]
+    split = len(by_core) >= 2 and spread(pts) > cfg["min_spread_um"]
+    if split:
+        tail = tail_need(by_core, cfg, boxes)
+        t = l1_centre(pts) if not boxes else push_out(l1_centre(pts), boxes)
+        trunk = 0 if src is None else hops(md(src, t), cfg)
+    else:
+        tail = 0
+        trunk = 0 if src is None else max(0, int(math.ceil(max(md(src, p) for p in pts) / cfg["hop_um"] - 1e-9)) - 1)
+    need = trunk + tail
+    return dict(need=need, trunk=trunk, tail=tail, short=max(0, need - int(pad)), split=split)
 
 
 def bin_spread(by_core, cfg):

@@ -90,6 +90,25 @@ def test_v_after_command_fails_closed():
             raise AssertionError("negative pad not refused")
 
 
+def test_e_min_pad_lifts_the_whole_source():
+    """pads --e-min-pad M (class D 11-19): every pe2 member ends with a pad >= M, one e per source kept (check PASS)"""
+    with tempfile.TemporaryDirectory() as t:
+        t = Path(t)
+        g = landing()
+        base = P.pads(str(write(t / "b0", g)), table(g))
+        ex = P.pads(str(t / "b0"), table(g), 5)
+        pe = {x["sink"]: x for x in ex["members"] if x["sink_port"] == "pe2"}
+        assert len(pe) == 4 and min(x["landed"] - x["bound"] for x in pe.values()) == 5
+        assert {k: x["pv_v_pad"] for k, x in pe.items()} == {f"pvw_0__u_s0_b{b}": 5 + b for b in range(4)}
+        v = lambda tab: {x["id"]: x["landed"] for x in tab["members"] if x["sink_port"] == "pv2"}
+        assert v(ex) == v(base)                                        # the V words do not move
+        s, _ = P.check(RC.Bound(str(write(t / "b1", apply(g, ex)))))
+        assert s["verdict"] == "FAIL" or s["bad"] == 0                 # 4 banks only: verdict needs 512, the rule has no bad row
+        assert s["bad"] == 0
+
+
+# FABLE-FIX-KV-PV class D 11-19
+
 if __name__ == "__main__":
     test_fail_pad_pass_mutant()
     test_v_after_command_fails_closed()

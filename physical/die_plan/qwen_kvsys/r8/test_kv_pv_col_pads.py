@@ -184,3 +184,33 @@ def test_import_leaves_sys_path_unchanged():
     spec.loader.exec_module(m)
     assert sys.path == before
     assert hasattr(m.RC, "Bound")
+
+
+def test_min_pad_lifts_every_column_and_keeps_the_law():
+    """--min-pad N (class D 11-19): C grows by N, the smallest command pad is N, the law stays exact and the hook agrees"""
+    with tempfile.TemporaryDirectory() as t:
+        g = landing()
+        write_bind(Path(t) / "b0", g)
+        base = P.pads(Path(t) / "b0", r8_table(g))
+        tab = P.pads(Path(t) / "b0", r8_table(g), 7)
+        s = tab["summary"]
+        assert s["C"] == base["summary"]["C"] + 7 and s["TRUNK_D"] == base["summary"]["TRUNK_D"] + 7
+        assert s["FLAG_D"] == base["summary"]["FLAG_D"] and tab["law"]["min_pad"] == 7 and "min_pad" not in base["law"]
+        assert min(r["cmd_pad"] for r in tab["law"]["columns"].values()) == 7
+        assert {k: r["cmd_pad"] - 7 for k, r in tab["law"]["columns"].items()} == \
+            {k: r["cmd_pad"] for k, r in base["law"]["columns"].items()}
+        g2 = apply(landing(), tab)
+        write_bind(Path(t) / "b1", g2, dict(TRUNK_D=s["TRUNK_D"], FLAG_D=s["FLAG_D"]))
+        tr, fl = law(Path(t) / "b1")
+        assert (tr["status"], fl["status"]) == ("OK", "OK") and (tr["value"], fl["value"]) == (s["TRUNK_D"], s["FLAG_D"])
+        assert P.pads(Path(t) / "b1", r8_table(g2))["summary"]["pad_flops"] == 0      # the padded bind owes nothing at N = 0
+        assert P.main([str(Path(t) / "b0"), _w(Path(t) / "r8.json", r8_table(g)), str(Path(t) / "o.json"), "--min-pad", "7"]) == 0
+        assert json.loads((Path(t) / "o.json").read_text())["summary"]["C"] == s["C"]
+
+
+def _w(f, obj):
+    f.write_text(json.dumps(obj))
+    return str(f)
+
+
+# FABLE-FIX-KV-PV class D 11-19
