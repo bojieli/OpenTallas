@@ -6987,6 +6987,75 @@ def restage_waiters(AP, cfg, st, notices):
     return n
 
 
+QUEUED_WAIT_STATUS = ("QUEUED", "WAITING", "WAIT-GEOM")
+QUEUE_REPICK_LOAD_X = 2.0
+
+
+def queued_host_bad(stt, host, hub=""):
+    """COORD 11-19 (34 KV units queued on epyc7, load 965, ssh refused): the host is over 2x its cores, or has no ot-run status row (unreadable).  No status at all = unknown, not bad"""
+    if not stt:
+        return ""
+    v = stt.get("localhost" if host == hub else host)
+    if not v:
+        return f"{host} unreadable (no ot-run status row)"
+    n = float(v.get("cores") or 0)
+    if n and float(v.get("load") or 0) > QUEUE_REPICK_LOAD_X * n:
+        return f"{host} load {v.get('load'):g}/{int(n)} is over {QUEUE_REPICK_LOAD_X:g}x its cores"
+    return ""
+
+
+def repick_queued_waits(AP, cfg, st, notices, jobs=None, now=None):
+    """COORD 11-19 (KV-D23-COMPOSE, all dies): an ENQUEUED row whose queue job has NOT started (QUEUED / WAITING / WAIT-GEOM) on a host that is over 2x its cores or unreadable
+    is re-picked: the exact queued job is cancelled (ot-run --cancel-dir of its kit) and the row goes to RETRY-INFRA, so the INFRA relaunch path starts it again on the
+    load-aware gen host (restage_host); the move is not charged to the infra budget.  A job that started is never touched.  Waits at least restage_min_wait_s since the
+    row started (no ping-pong); at most restage_max_per_tick rows; cfg or die restage_waiters false opts out.  -> n rows moved"""
+    if cfg.get("restage_waiters") is False:
+        return 0
+    stt, hub = cfg.get("_otrun_status") or {}, cfg.get("_hub") or ""
+    now = time.time() if now is None else now
+    if jobs is None:
+        try:
+            jobs = json.loads((Path(AP.AP_DIR) / "state.json").read_text()).get("jobs") or {}
+        except (OSError, ValueError, AttributeError):
+            jobs = {}
+    cap, n = int(cfg.get("restage_max_per_tick", 60)), 0
+    for r in (st.get("items") or {}).values():
+        if n >= cap:
+            break
+        d = (cfg.get("dies") or {}).get(r.get("die")) or {}
+        if r.get("status") != "ENQUEUED" or not r.get("q_id") or d.get("restage_waiters") is False:
+            continue
+        j = jobs.get(r["q_id"]) or {}
+        if str(j.get("status") or "").upper() not in QUEUED_WAIT_STATUS or j.get("started") or j.get("run_started"):
+            continue
+        if now - float(r.get("started") or 0) < float(cfg.get("restage_min_wait_s", 1800)):
+            continue
+        host = AP.ssh_host(j.get("host") or "") if hasattr(AP, "ssh_host") else (j.get("host") or "")
+        host = "localhost" if host == hub else host
+        why = queued_host_bad(stt, host, hub)
+        if not why:
+            continue
+        kit = str(j.get("kit") or r.get("kit") or "").partition(":")[2]
+        if not AP.DRY:
+            if kit:
+                AP.sh([OT_RUN, "--cancel-dir", kit, "--reason", f"queued wait re-pick: {why}"], timeout=60)
+        try:
+            best = pick_gen_host(cfg, r["die"], item=r.get("item"))
+        except Exception:
+            best = ""
+        if best and best == host:
+            best = ""
+        r["infra_base"] = int(r.get("infra_base") or 0) + max(1, infra_used(r) - infra_attempts(cfg, r["die"]) + 1)
+        r.update(status="RETRY-INFRA", **{"class": "INFRA"}, updated=now, reason=f"queued wait re-picked: {why} (the queued job was cancelled)")
+        if best:
+            r["restage_host"] = best
+        r["restage_n"] = int(r.get("restage_n") or 0) + 1
+        notices.setdefault(r["die"], []).append(f"{r['item']} queued wait RE-PICKED ({why})")
+        AP.log(f"KIT-WAVE QUEUE-REPICK {r['die']}/{r['item']} job {r['q_id']} [{j.get('status')}]: {why}; cancelled, relaunches on {best or 'the load-aware gen host'}")
+        n += 1
+    return n
+
+
 OT_TAG_RE = re.compile(r"--tag (otrun-(\S+)-(\d+)-\d+)\s")
 
 
@@ -14931,6 +15000,10 @@ def _step(AP, ap_dir):
         AP.log(f"KIT-WAVE src probe skipped: {e}")
     load_counter_signed(cfg)
     restage_waiters(AP, cfg, st, notices)
+    try:
+        repick_queued_waits(AP, cfg, st, notices)
+    except Exception as e:                               # a re-pick sweep never stops the tick
+        AP.log(f"KIT-WAVE QUEUE-REPICK skipped: {type(e).__name__}: {e}")
     try:                                                 # WAVE-RECIPE-1 FIX 5: unstarted stale kits regenerate
         flow_regen(AP, cfg, st, notices)
     except Exception as e:                               # a regen sweep never stops the tick

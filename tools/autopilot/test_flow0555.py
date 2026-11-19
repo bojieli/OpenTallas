@@ -216,3 +216,28 @@ def test_wave_eco_orders_smallest_miss_first_has_no_inflight_cap_and_unpins_an_o
     free = AR.eco_argv(A, c, e, "/d", "/out", 24, anyhost=True)
     assert "--hosts" in pinned and "--hosts" not in free and "--stage" in free and "24" in free
     assert AR.MAX_ECO_INFLIGHT == 4                          # the cap still binds the registry rows
+
+
+def test_queued_wait_on_an_overloaded_or_unreadable_host_is_repicked_for_every_die(tmp_path):
+    import unittest.mock as M
+    logs, shs = [], []
+    ap = type("AP", (), {"DRY": False, "AP_DIR": str(tmp_path), "log": staticmethod(logs.append),
+                         "sh": staticmethod(lambda cmd, timeout=0, input=None: (shs.append(cmd) or (0, "", ""))),
+                         "ssh_host": staticmethod(lambda h: h)})()
+    cfg = {"dies": {"qwen_kvsys": {}, "s81": {}}, "_otrun_status": {"epyc7": {"load": 965, "cores": 96}, "epyc8": {"load": 80, "cores": 96}}}
+    mk = lambda die, q: {"die": die, "item": "i_" + die, "status": "ENQUEUED", "q_id": q, "started": 1.0, "attempt": "1"}
+    st = {"items": {"a": mk("qwen_kvsys", "j1"), "b": mk("s81", "j2"), "c": mk("s81", "j3"), "d": mk("s81", "j4")}}
+    st["items"]["c"]["item"], st["items"]["d"]["item"] = "i_c", "i_d"
+    jobs = {"j1": {"status": "WAIT-GEOM", "host": "epyc7", "kit": "epyc7:/k/1"},
+            "j2": {"status": "QUEUED", "host": "gone9", "kit": "gone9:/k/2"},          # unreadable: no status row
+            "j3": {"status": "RUNNING", "host": "epyc7", "kit": "epyc7:/k/3"},        # started: never touched
+            "j4": {"status": "QUEUED", "host": "epyc8", "kit": "epyc8:/k/4"}}         # healthy host
+    notices = {}
+    with M.patch.object(KW, "pick_gen_host", return_value="epyc8"):
+        n = KW.repick_queued_waits(ap, cfg, st, notices, jobs=jobs, now=1e9)
+    assert n == 2
+    assert st["items"]["a"]["status"] == "RETRY-INFRA" and st["items"]["a"]["restage_host"] == "epyc8" and st["items"]["a"]["class"] == "INFRA"
+    assert st["items"]["b"]["status"] == "RETRY-INFRA"
+    assert st["items"]["c"]["status"] == "ENQUEUED" and st["items"]["d"]["status"] == "ENQUEUED"
+    assert sum(1 for c in shs if "--cancel-dir" in c) == 2 and any("/k/1" in c for c in shs)
+    assert KW.queued_host_bad({}, "epyc7") == ""            # no status at all: unknown, not bad
