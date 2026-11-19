@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; coordinator update 2026-11-01 18:00 PST)
 
-2026-11-19 11:5x PST: signed any plan 471 | current 405 | backlog (deferred re-sign) s81 0, head 3, qc 3, kv 0 (hbm 1; retired-plan 59). Per die signed types+cores: s81 64+44, head 5+25, qc 70+29, kv 68+6, hbm 90+4 (any +11 vs 08:09 row 460, current +1 vs 404; SIGN-RATE row 11:45; retired-plan 49 -> 59, s81 12 -> 22). Fleet: epyc2 scratch2 394 GB, epyc8 90% (803 GB free), epyc10 scratch2 93% (578 GB); all scratch2 >= 150 GB; epyc7 load 1072/96 admits 0.
+2026-11-19 12:1x PST: signed any plan 471 | current 405 | backlog (deferred re-sign) s81 0, head 3, qc 3, kv 0 (hbm 1; retired-plan 59). Per die signed types+cores: s81 64+44, head 5+25, qc 70+29, kv 68+6, hbm 90+4 (any flat vs 11:45 row 471, current flat vs 405; SIGN-RATE row 12:05). Fleet 12:07 ot-run: epyc2 load 296/128 root 82% scratch 392 GB, epyc7 admits 0 (load 627/96), intel1 614 GB, localhost 542 GB, epyc8 781 GB, epyc9 1447 GB, epyc10 549 GB; next 16-thread job -> epyc9.
 Plans 11:36: count 152 flat (S81 50/58 + 4/205 types, HEAD 4/4 + 12/25, QC 16/19, KV 26/32, HBM 40/103). Merged I118-I126 since 10:40: QC coll_core fold + ring ff class (tag e-qc), KV PV taps (tag b-kv), HEAD l48ue (tag a-head), wave prune + resume fixes. 9 core gaps from CORE-FORMS-2 all owned. intel2 scratch2 142 after 49 GB move.
 
 <!-- BREAKDOWN BEGIN -->
