@@ -230,3 +230,16 @@ Files: epyc9 /srv/opentallas-scratch2/claude/fable-fix-s81-serdes3/{E (harness, 
   Read: OT_BOOT_PATH line at global place, OT_RCK_STAR + OT_STB_SPAN at CTS, OT_POSTCTS_GATE, route DRC, sign-off line; then r708 re-sign.
   Evidence only (H18 pin/taps): no export. Expect about 6-7 h.
 - H20 (no boot fix) keeps running to its GRT gate as the star-only comparison; a background watch in my session reports it.
+
+## State 2026-11-18 17:55 PST (D8e live since 17:37, event 3fa87b84b18, plan df7446e48ba9; no star row in it)
+- H19 (km16, no STB, no boot fix): PASSED the GRT gate TT -108.47 / hold -20.48; pre-GRT hold cells 14,776; GRT census 410.3k; in detail
+  route (first pass 88k violations). S81-CORES-OPUS reports its routed result.
+- H20 (star, no boot fix): CTS span 65.2; post-CTS TT -147.83 (the one boot endpoint); pre-GRT hold cells 19,280 (H18 16,652, H19 14,776);
+  GRT hold +919; GRT census 421.1k. GRT TT repair running, gate verdict pending (may stop near -150 on the boot endpoint).
+  The star has NOT reduced hold cells so far; its case rests on routed skew, not shown yet.
+- H21 first launch FAILED at global place: the current main hook derives the boot stage sites from the DB and got a 413 um hop (> 405) on
+  the H18 floorplan (anchor 1769,1222 north strip). Relaunched 17:45 with OT_BOOT_RELEASE_SITES = the H18 sites; client log
+  intel2 ~/fable-fix-s81-serdes3/H21-route-1118-r2.out. WATCH the D8e wave kits for the same "derived hop exceeds 405" error.
+- D8e wave: fresh attempts are being generated now (serdes__t12 attempt_7 01:31 UTC has OT_SERDES_BOOT_PATH_LOCAL); older attempt dirs in
+  3fa87b84b18 are pre-apply and say nothing. Items: <gen host>/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/serdes__t*.
+- Next delta rows (S81-DIE-R3): star row on the 11 io_pma_rck pins; die-level rck trunk field (asked 17:55, not designed).
