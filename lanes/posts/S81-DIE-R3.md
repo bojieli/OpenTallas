@@ -192,3 +192,29 @@
   Event id: D8g2 gets its own event id = sha256("s81 D8g2 " + manifest)[:11], written into marker.event and config.event. D8f and D8g had both reused 3fa87b84b18.
   apply args: --expect-source = the live D8g tree and --expect-event = the live 3fa87b84b18. Before this fix the chain passed the new tree as --expect-source, which apply would have refused.
   The chain was restarted after the fix (PID 2393359) and is waiting for the D8g2 bind.
+- 2026-11-19 04:52 PST TAP DROP CAPACITY (S81-DIE-R3). Plan h plus the newest region-rule tables (S81-SLICE-C-TAPS, LEPE lepwmus/nh_C, LEPE mu banks+taps): no type exceeds the die clock track capacity. Worst is 2.9 %.
+  How I measured it:
+  - Model: die_trial clock_taps plus build_htree (the kit's die clock: leaf regions of 600 um). Each leaf driver wires each tap at NDR_TRACKS 5 on die M8/M9.
+  - Demand: wires crossing the leaf's worst mid-cut.
+  - Capacity: 600 um / 0.08 pitch x PG-free 0.889 (die M8/M9 PG grid 2 x 0.48 per 8.64) / 5 = 1,333 wires per leaf cut.
+  - The plan's layer_budget.die_use is clock_spine + pg with cut_avail 0, so no die signals compete for M8/M9.
+  - Tool: epyc8 s81-die-r3-e8/d8h/tap_drop_cap.py. Output tap_drop_cap_h.json, with every type.
+  Die totals: 23,794 taps, 3,827 leaves. Types with tables applied: iq_C t1 175, kv512_C t1 162, c1x_C t8 184, c1x_C t6 174, lepw_mus_LP t2 138, lepe_nh_mus_C t1 184, lepe_mu_LP t2 134.
+  Per type, worst leaf (taps in leaf, M9 / M8 wires against 1,333 each):
+  
+  | type | type taps | leaf taps | M9 / M8 wires | load |
+  |---|---|---|---|---|
+  | leaf t66 + lepe_nh_C t1 (shared leaf) | 91 / 184 | 50 | 27 / 39 | 2.9 % |
+  | leaf t57 + c1x_C t8 | 86 / 184 | 50 | 26 / 38 | 2.8 % |
+  | c1x_C t6 + leaf t46 | 174 / 102 | 34 | 27 / 19 | 2.0 % |
+  | iq_C t1 | 175 | 28 | 17 / 27 | 2.0 % |
+  | lepe_mu_LP t2 | 134 | 30 | 19 / 23 | 1.7 % |
+  | lepw_mus_LP t2 | 138 | 21 | 21 / 14 | 1.6 % |
+  | kv512_C t1 | 162 | 34 | 21 / 18 | 1.6 % |
+  | kv_leaf t2 | 133 | 21 | - | 1.4 % |
+  | svc_hi_rs t1 | 181 | 17 | - | 1.3 % |
+  
+  Every other type is at or under 1.3 %.
+  The leaf region-rule tables (about 200-239 per leaf) are not in my hand yet; plan h's leaf taps are the cap1000 rows (65-122). Scaling the worst shared leaf by 2.5x gives about 7 %, still far under.
+  So no --target 1500 re-solve is needed for track capacity.
+  The binding limit is elsewhere: the leaf driver fanout of 50 taps per 600 um leaf. That is die-clock timing, not tracks, and the die STA / die_trial clock step reads it.
