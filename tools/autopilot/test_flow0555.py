@@ -122,7 +122,11 @@ def test_fallback_launch_uses_the_bound_trees_own_gen_env_and_skips_unknown_env(
     stale = KW.bind_preflight(a, cfg, st, "s81", rows)
     assert KW.bound_fallback(a, cfg, st, "s81", rows, stale) == {"t1": "/old"}
     env = KW.item_env(d, "t1")
-    assert env["OT_KV_HEAD_KST"] == "1" and env["OT_KEEP"] == "k"          # the fallback tree's env, the rest of the die env kept
+    assert env["OT_KV_HEAD_KST"] == "1" and "OT_KEEP" not in env          # the tree's own env replaces the die default as a whole
+    d["bound_trees"][1]["gen_env"] = {"OT_KEEP": "k"}                       # tree bound WITHOUT OT_KV_HEAD_KST: the die default is removed for that launch
+    d.pop("item_env", None)
+    KW.bound_fallback(FakeAP("/old"), cfg, {}, "s81", rows, KW.bind_preflight(FakeAP("/old"), cfg, {}, "s81", rows))
+    assert "OT_KV_HEAD_KST" not in KW.item_env(d, "t1") and KW.item_env(d, "t1")["OT_KEEP"] == "k"          # the fallback tree's env, the rest of the die env kept
     a, st, cfg = FakeAP("/old"), {}, cfg0()
     cfg["dies"]["s81"]["bound_trees"][1]["env_unknown"] = True
     stale = KW.bind_preflight(a, cfg, st, "s81", rows)

@@ -4186,6 +4186,7 @@ def item_env(d, item):
     # env of EVERY item of the die (no per-type opt-in); the item's own item_env wins
     env = dict(d.get("die_gen_env") or {})
     env.update(item_env_entry(d, item))
+    env = {k: v for k, v in env.items() if v is not None}          # a null item_env value REMOVES the die default (a fallback tree bound without that key)
     for k, v in env.items():
         capture_path = (k == "OT_NATIVE_PRODUCER_CONTEXT" and isinstance(v, str)
                         and re.fullmatch(r"/[A-Za-z0-9_./-]+", v))
@@ -9121,7 +9122,7 @@ def bound_fallback(AP, cfg, st, die, rows, stale, now=None, rpy=None):
             ii.update(json.loads(json.dumps(ent)))
             if genv:                                     # the tree's OWN gen env (die_gen_env + bind_env in force when it was applied) wins over the die's current one
                 ie = d.setdefault("item_env", {})
-                ie[r["item"]] = {**item_env_entry(d, r["item"]), **{k: v for k, v in genv.items()}}
+                ie[r["item"]] = {**{k: None for k in (d.get("die_gen_env") or {}) if k not in genv}, **item_env_entry(d, r["item"]), **genv}
             rescued[r["item"]] = bt["src"]
             for h in set([x for x in list(d.get("gen_hosts") or []) + [d.get("gen_host")] if x]) - set(holders):      # the launch goes only to hosts that hold the tree
                 cfg.setdefault("_item_incomplete", {}).setdefault(h, {}).setdefault(die, {})[r["item"]] = f"bound tree {bt['src']} not on {h}"
