@@ -8,3 +8,6 @@ Scope: 4 qkd_kvs_pc* rows + 13 kv3_hgi_v1/v2 cl* and kv3_hgi_v3 rows (OWNERS-SWE
 ## Next
 1. After D25d apply (KV-D23-COMPOSE): wave retry kv3_hgi_v3 + any cl* item present in plan; list verdicts.
 2. If kv3_hgi_v3 on D25d fails design: fix row for D25e / private proof kit (ot-run --priority proof).
+## 11-19 04:0x update
+- owners_sweep.py patched (a7f9e366): type rows not in plan_types of the die current plan = state NOT-IN-PLAN, no flags. Tested: 4 qkd_kvs_pc rows left UNOWNED,STALE. NOTE correction: the 13 kv3_hgi rows ARE plan items (plan_types has all), so they stay STALE until relaunched.
+- Waiter ~/tmp/kvpchgi/wait_d25d.sh (PID in wait.pid): polls kit_wave.json dies.qwen_kvsys.event for D25d; +10 min checks kv3_hgi_v3 rows on that event, posts. Wave relaunches on current event automatically; if no row, retry via kit_wave_edit.
