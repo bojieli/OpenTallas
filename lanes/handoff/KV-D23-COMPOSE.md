@@ -2,6 +2,17 @@
 
 Work dir epyc7 /srv/opentallas-scratch2/claude/kv-d23-compose (lane clone wt/ = sparse main worktree). Hub logs intel2 ~/tmp/kvd23c.
 
+## Status 2026-11-19 05:05Z (read this first; supersedes 03:25Z)
+LIVE = KV-D24 (applied 04:5xZ): kw45/src_kv_pin_eb1e73448bd0_hg9_2862ed5a_tb3e667d_d24c, manifest b951ed387f8c, plan 2862ed5a71bc
+(receipt lanes/handoff/qwen_kvsys_atomic_apply_1795064629906020025.json). D24n (no PVFIN) is green too and is not needed.
+D25b gate running on epyc8 (ot-run plan bind, about 2.5 h): tree kw45/src_kv_pin_eb1e73448bd0_hg10_7402c516_td6a5a52_d25b, plan 7402c516a256,
+gate W8/d25bgate (gate_d25.sh: baseline KV-D24, OT_KV_HEAD_KST=2). D25a (plan 5801ea964612) was killed before its bind (FABLE-PD-STRUCT K2/K3).
+D25b = KV-KT-E0 (kst2 netlist/map/compose, HXK 15, kv_head_kst asbuilt record, 16 sited kt rows a type KEPT, relay regex unchanged)
++ kv3_hgi_v1 x2 W1 (core + 2 band rects + tap), W2, W3, W5 (relay_sites). NOT in it: F2 (K1), which waits on FABLE-FIX-KV-HG's writer-start emitter rule on main -> D25c.
+When green: seal_rep_d24.sh d25b <d24c basename> (seal_d24.py now enters every bind file; bind_sinks.json may need cp -p + mv
+unshare, see d24c), guard_d23.py, mk_candidate_d24.py cand_d24c.json <d24c tree> KV-D24 ..., publish_apply --expect-event KV-D24.
+Stop list (COORD): count no hg/hgi kit before e0 and ECTLK q0-q3 are signed off; write no pc rows from HG6-era kits.
+
 ## Status 2026-11-19 03:25Z (read this first)
 LIVE = KV-D23H: kw45/src_kv_pin_eb1e73448bd0_hg8_aa3f08ac_t0c3fb15_d23h2 (manifest dd671e408127, plan aa3f08ac4159).
 D24b NOT applied: strict bind EMIT land_intra_stations dst pvfin_lo has 0 bound leaves (pvfin_lo/hi are inside ONE bound leaf u_pvfin).
