@@ -2870,6 +2870,10 @@ DME_STREET_GAP_UM = 200.0
 # M7, ~2x the modelled leg delay).  DME_STREET_VGAPS = sorted gap centres (set from the plan in clock_kit).
 DME_STREET_COLUMN = False
 DME_STREET_VLAYER = None
+# DIE-CORETAP-1119 opt-in --region-dme-sink-offsets FILE (FABLE-CLOSURE-STRATEGY lever 2): per-PORT core tap delivery
+# offsets {"t_<part>__<port>" | "<part>/<port>": ps TT, + = early, - = late} as DME sink delays (early mode merge), in place
+# of the plan-derived early of every core tap: only the listed ports move, never a whole region over mixed core types.
+DME_SINK_OFFSETS = None
 STAMPED_TREE_JSON = None      # CLKSITE-RESERVE-1115 opt-in (kit --tree-json): replace the built die clock tree by a stamped tree.json
 DME_STREET_VGAPS = None
 # HBM-CLKLOC-5: half width of the narrowest PG-free gap of DME_STREET_VLAYER (M9 on HBM d44f: 17.28-um stripe pitch,
@@ -4101,6 +4105,25 @@ def load_stamped_tree(path, site=None, rep_um=150.0):
     return nodes, [(t["part"], t["tap"], t["xy"][0], t["xy"][1]) for t in T["taps"]]
 
 
+def sink_offsets_model(path, P, ratio=1.0):
+    """{(part, kit port): model ps} of a --region-dme-sink-offsets file; keys t_<part>__<port> or <part>/<port>.
+    A key naming no plan part fails (no silent drop)."""
+    raw = json.loads(Path(path).read_text())
+    raw = raw.get("offsets_ps", raw)
+    out = {}
+    for k, v in raw.items():
+        if k.startswith("t_") and "__" in k:
+            part, port = k[2:].rsplit("__", 1)
+        elif "/" in k:
+            part, port = k.split("/", 1)
+        else:
+            raise ValueError(f"--region-dme-sink-offsets key {k!r}: t_<part>__<port> or <part>/<port>")
+        if part not in P.parts:
+            raise ValueError(f"--region-dme-sink-offsets key {k!r}: part {part} not in the plan")
+        out[(part, port)] = float(v) / ratio
+    return out
+
+
 def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_slide=False, regions=None, tree_form="htree",
               tree_opts=None, slice_spine=False, spine_top_leaf_um=50.0, slice_rows=None, tap_pad=None, clock_rc="ndr",
               slice_balance=False, region_dme=False, region_dme_only=None, region_dme_early=None,
@@ -4122,8 +4145,10 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
         raise ValueError("--region-dme-early-ff needs --region-dme-early")
     if region_dme_early_mode not in ("hang", "merge"):
         raise ValueError("--region-dme-early-mode: hang | merge")
-    if region_dme_early_mode != "hang" and not region_dme_early:
-        raise ValueError("--region-dme-early-mode merge needs --region-dme-early")
+    if region_dme_early_mode != "hang" and not (region_dme_early or DME_SINK_OFFSETS):
+        raise ValueError("--region-dme-early-mode merge needs --region-dme-early or --region-dme-sink-offsets")
+    if DME_SINK_OFFSETS and region_dme_early_mode != "merge":
+        raise ValueError("--region-dme-sink-offsets needs --region-dme-early-mode merge")
     if region_dme_early_merge_only and not region_dme_early:
         raise ValueError("--region-dme-early-merge-only needs --region-dme-early")
     if region_dme_snake and not (region_dme == "delay" and tree_form == "link_htree" and site_slide and not slice_spine):
@@ -4148,6 +4173,8 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
                     if region_dme_early_ff:   # DIE-QC-9 opt-in: corner-averaged target (TT and FF in model ps)
                         dme_early[(n, port)] = 0.5 * (dme_early[(n, port)]
                                                       + S.core_tap_early_ps(P, tp, "FF", P.types[p["type"]]) / float(region_dme_early_ff))
+    if DME_SINK_OFFSETS:     # DIE-CORETAP-1119: per-port offsets REPLACE the plan-derived early (model ps = ps / RATIO)
+        dme_early = sink_offsets_model(DME_SINK_OFFSETS, P, float(region_dme_early or 1.0))
     if slice_spine and tree_form != "htree":
         raise ValueError("--slice-spine and --tree-form %s are exclusive opt-ins" % tree_form)
     site = None
@@ -6539,6 +6566,10 @@ def main(argv=None):
     k.add_argument("--region-dme-workers", type=int, default=1, metavar="N",
                    help="DIE-QC-20 opt-in: compute the region DME trees in N fork workers (same trees, attached in the "
                         "same order; default 1 = serial)")
+    k.add_argument("--region-dme-sink-offsets", default=None, metavar="FILE",
+                   help="DIE-CORETAP-1119 opt-in (with --region-dme delay --region-dme-early-mode merge): JSON per-port core "
+                        "tap offsets {t_<part>__<port> | <part>/<port>: ps TT (+ early, - late)} as DME sink delays, in "
+                        "place of the plan-derived early of every core tap (divided by --region-dme-early RATIO, default 1)")
     k.add_argument("--region-dme-early-merge-only", default=None, metavar="REGIONS",
                    help="DIE-QC-19 opt-in (with --region-dme-early): comma list of regions that use early mode 'merge' "
                         "(core sink delay = declared early, so the region tree is rooted at the core entry and the glue "
@@ -6764,6 +6795,8 @@ def main(argv=None):
     global DME_STREET_COLUMN, DME_STREET_VLAYER
     DME_STREET_COLUMN = bool(getattr(a, "region_dme_street_column", False))
     DME_STREET_VLAYER = getattr(a, "region_dme_street_vlayer", None)
+    global DME_SINK_OFFSETS
+    DME_SINK_OFFSETS = getattr(a, "region_dme_sink_offsets", None)
     global DME_STREET_COL_SNAKE, DME_PHYS_FALLBACK_CHUNK
     DME_PHYS_FALLBACK_CHUNK = getattr(a, "region_dme_physical_fallback", None)
     if DME_PHYS_FALLBACK_CHUNK is not None and DME_PHYS_FALLBACK_CHUNK < 1:

@@ -21,6 +21,9 @@ delivers even less early-ness than the plan declares.  This die-agnostic tool fi
         (constraint.sdc TT, core_taps_ff.sdc FF) must equal -new early, and a clock.tap_offset per-port row on a core
         tap port must be re-measured (its o_p carries the old early delivery).
 
+    core_tap_retarget.py delivery TARGETS.json NEWPROOF [--tol 25]   tap-delivery table: planned vs delivered per core
+        tap of a die proof built with the targets (die_trial --region-dme-sink-offsets = rows' sink_offsets.json);
+        a row is adoptable only when every port is within tol.
     core_tap_retarget.py pairs ROWS.json STA.json [STA.json ...]   which worst die STA pairs (intra/seam hold, setup,
         skew per corner) have an endpoint on an UNSIGNED core tap (declared insertion), a SIGNED core tap, or a regular
         tap; plus per-module counts of unsigned early core taps.
@@ -265,6 +268,10 @@ def cmd_rows(a):
     if a.proof:
         tg = tap_targets(rows, P, a.proof, a.late, set(a.modules.split(",")) if a.modules else None)
         (od / "tap_targets.json").write_text(json.dumps(dict(meta, proof=str(a.proof), targets=tg), indent=1))
+        # die_trial --region-dme-sink-offsets (ot_clk region.sink_offsets): per-port planned delivery, TT ps (+ early)
+        (od / "sink_offsets.json").write_text(json.dumps(dict(
+            note="DIE-CORETAP-1119 per-port core tap DME sink offsets (TT ps, + early / - late) from tap_targets.json",
+            offsets_ps={p: v["TT"]["target_early"] for p, v in sorted(tg.items()) if "TT" in v}), indent=1))
         for c in ("TT", "FF"):
             v = [x[c]["retarget_ps"] for x in tg.values() if c in x]
             if v:
@@ -331,6 +338,39 @@ def cmd_shift(a):
 
 
 _LAT = re.compile(r"set_clock_latency\s+-source\s+-clock\s+clk\s+(-?[0-9.]+)\s+\[get_ports\s+(\S+?)\]")
+
+
+def delivery_table(targets, proof, tol_ps=25.0):
+    """[(port, corner, planned, delivered, diff, ok)] of every target port in a NEW proof: delivered = the partition's
+    regular-tap mean - the core tap arrival.  Adoption gate (FABLE-CLOSURE-STRATEGY lever 2): every |diff| <= tol."""
+    out = []
+    for c in ("TT", "FF"):
+        f = Path(proof) / f"tap_arrivals_{c}.json"
+        if not f.is_file():
+            continue
+        taps = json.loads(f.read_text())["taps"]
+        reg = defaultdict(list)
+        for t in taps:
+            if "__clk_t" in t["port"]:
+                reg[t["part"]].append(t["late_ps"])
+        arr = {t["port"]: t for t in taps}
+        for port, e in sorted(targets.items()):
+            if c not in e or port not in arr or not reg.get(e["part"]):
+                continue
+            de = st.mean(reg[e["part"]]) - arr[port]["late_ps"]
+            pl = float(e[c]["target_early"])
+            out.append((port, c, round(pl, 1), round(de, 1), round(de - pl, 1), abs(de - pl) <= tol_ps))
+    return out
+
+
+def cmd_delivery(a):
+    tg = json.loads(Path(a.targets).read_text())["targets"]
+    res = delivery_table(tg, a.proof, a.tol)
+    for r in res:
+        print("\t".join(map(str, r)))
+    bad = sum(not r[5] for r in res)
+    print("DELIVERY", "PASS" if res and not bad else "FAIL", "ports", len(res), "outside", bad, "tol", a.tol)
+    return 0 if res and not bad else 1
 
 
 def kit_check(kit, rows, tn, unit_ps=1.0, offsets=None):
@@ -443,11 +483,15 @@ def main(argv=None):
     k.add_argument("--type", required=True)
     k.add_argument("--plan")
     k.add_argument("--unit-ps", type=float, default=1.0, help="ps per SDC time unit (ASAP7 kits: 1)")
+    dv = sp.add_parser("delivery")
+    dv.add_argument("targets")
+    dv.add_argument("proof")
+    dv.add_argument("--tol", type=float, default=25.0)
     q = sp.add_parser("pairs")
     q.add_argument("rows")
     q.add_argument("sta", nargs="+")
     a = ap.parse_args(argv)
-    return dict(rows=cmd_rows, apply=cmd_apply, shift=cmd_shift, kitcheck=cmd_kitcheck, pairs=cmd_pairs)[a.cmd](a)
+    return dict(rows=cmd_rows, apply=cmd_apply, shift=cmd_shift, kitcheck=cmd_kitcheck, pairs=cmd_pairs, delivery=cmd_delivery)[a.cmd](a)
 
 
 if __name__ == "__main__":

@@ -140,3 +140,15 @@ def test_late_target_region_local_and_record_signed(tmp_path):
     tg = RT.tap_targets(rows, P, proof, late=True)
     assert tg["t_pfa__clk_c0"]["TT"]["retarget_ps"] == -67.0          # deliver 57 ps late from 10 ps early
     assert RT.tap_targets(rows, P, proof, late=True, modules={"other"}) == {}
+
+
+def test_delivery_table_gate(tmp_path):
+    tg = {"t_pfa__clk_c0": {"part": "pfa", "TT": {"target_early": 68.0}}}
+    proof = tmp_path / "p"
+    proof.mkdir()
+    taps = [dict(port="t_pfa__clk_t0", part="pfa", late_ps=1000.0), dict(port="t_pfa__clk_c0", part="pfa", late_ps=940.0)]
+    (proof / "tap_arrivals_TT.json").write_text(json.dumps(dict(taps=taps)))
+    assert RT.delivery_table(tg, proof)[0][3:] == (60.0, -8.0, True)
+    taps[1]["late_ps"] = 990.0
+    (proof / "tap_arrivals_TT.json").write_text(json.dumps(dict(taps=taps)))
+    assert RT.delivery_table(tg, proof)[0][5] is False

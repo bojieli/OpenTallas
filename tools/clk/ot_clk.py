@@ -381,6 +381,10 @@ def kit_argv(cfg, out, stage_cal_path=None, workers=None, plan=None, region_map=
             a += ["--region-dme-early-ff", _fmt(e["ff"])]
         if e.get("mode", "hang") != "hang":
             a += ["--region-dme-early-mode", e["mode"]]
+        if reg.get("sink_offsets"):     # DIE-CORETAP-1119: per-port core tap DME sink offsets (die_trial)
+            a += ["--region-dme-sink-offsets", str(reg["sink_offsets"])]
+            if e.get("mode", "hang") != "merge":
+                a += ["--region-dme-early-mode", "merge"]
         mo = region_list(e.get("merge_only"), cfg)
         if mo:
             a += ["--region-dme-early-merge-only", ",".join(mo)]
