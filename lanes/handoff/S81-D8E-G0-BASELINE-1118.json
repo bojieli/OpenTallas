@@ -1,0 +1,21 @@
+{
+ "schema": "opentallas.publish_gate.g0_baseline.v1",
+ "accepted_errors": [
+  {
+   "check": "cuts",
+   "level": "ERROR",
+   "msg": "horizontal cut at 10500: s_0S_L0 segment carries 4464 bits on 6686 tracks = 0.67 > 0.6",
+   "part": "s_0S_L0"
+  },
+  {
+   "check": "cuts",
+   "level": "ERROR",
+   "msg": "horizontal cut at 10750: s_6S_L0 segment carries 4186 bits on 6672 tracks = 0.63 > 0.6",
+   "part": "s_6S_L0"
+  }
+ ],
+ "review": "S81-DIE-R3 2026-11-18: D8e keeps only the 2 D8d cut ERRORs as accepted; any other G0 ERROR is new and is posted, not baselined.",
+ "reviewed_g0_sha256": "62614369cf3f0e0cd39bc3ade270f59cba71c6f9d6fb162c2eb86bedea988168",
+ "reviewed_g0_source": "epyc8:/srv/opentallas-scratch2/claude/s81-die-r3-e8/d8e/r6/g0/g0_report.json",
+ "reviewed_plan_sha256": "df7446e48ba9bece5d421ec7c76809095050087a88760f625029336981f2c3ef"
+}
