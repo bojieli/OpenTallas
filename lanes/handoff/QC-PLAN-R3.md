@@ -155,3 +155,8 @@
 - Proof kits: pk_sta3 (sle_st_a_v2__pv30dda31f__pvd2ec7769, N43BQ, baseline GRT -445) relaunched after my cancel killed pk_sta; pk_coll2 running (baseline CTS -575.8).
 - LESSON: ot-run --cancel stops every scope whose --dir matches; give each job its own --dir.
 - tt_ctlm: owned by FABLE-FIX-S81-GLUE (resynth + fence); take their result.
+
+## 11-19 later: N4.5c + ring views
+- plan_n45_b WITHDRAWN (FABLE-PD-QC-0407). N4.5c = n45/plan_n45_c.json dad42b93 (n45c.py: ft_slots back to N4.4 on 49 types + reach_fix.sync_fixed_cycles vs N4.4). Bind chain_n45c.sh tag S4Q9N45C; G0/PRE n45/g0pre_c.sh at rt 913e191a0b77. Logs intel2 ~/qc-plan-r3/{chain_n45c,g0pre_n45c}.{log,rc}; watcher armed.
+- Live tree now qwen_compute_n43_s3 e1684721, event s29q103S4Q9N43R (ring views, pack_ring); kit_wave retry cbn_q00__cldbcda913@17. Cut the N4.5c pack against n43_s3 / expect-event s29q103S4Q9N43R.
+- Open: bci00 rst_xn parent hold (from the cbn_q00__cldbcda913 kit's routed hold). N4.6 queue: epyc9 qc-plan-r3-n41p/n46_queue.txt.
