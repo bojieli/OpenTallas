@@ -168,3 +168,6 @@ All on epyc10 under proof/, launched with rt ot-run --priority proof; logs intel
   The A/B (and the t28 proof) can only be built by S81-DIE-R3 after binding a plan with the rows (D8h or a private bind). Private chain stopped here; do not retry.
 - t27fence: region read by 3_3 = 3,359 cells, 972 um2, util 0.33, box (757.7 588.2)-(854.7 685.2); bank flops NOT in it (netlist: 3,314 matching flops, 1,224 bank flops excluded).
 - CFX bench: cfx0_eq prints FAIL 4,315 errors = 4,315 write-backs: that run (CFX 0 vs CFX 0) is a control in this tb (the tb demands the + 1 shift), not a defect. Mutant ctl_mut_hq pending.
+
+## OWNER LINE (repeat in every hourly post; COORD 03:5x)
+OWNER FABLE-FIX-S81-LEAF owns s81sl_leaf__t* and s81sl_kv_leaf__t* (all), listed by name, with the blocker per group.
