@@ -14181,6 +14181,35 @@ def _row_live(r, jobs):
     return r.get("status") == "ENQUEUED" and bool(r.get("q_id")) and (jobs.get(r["q_id"]) or {}).get("status") in REAP_LIVE_Q
 
 
+def superseded_live_job(cfg, r, jobs):
+    """COORD 11-19 (REAP stopped epyc2/epyc10 dpkit units of s81 col_h9_r1 rows cancelled SUPERSEDED at 02:46, before OLD-PLAN-FINISHES): the queue job of a row that
+    was cancelled only for supersede while it was already past synthesis (stops_off, not HBM).  -> the job id or ''"""
+    if r.get("status") != "CANCELLED" or str(r.get("class") or "") != "SUPERSEDED" or "STRUCT" in str(r.get("reason") or "").upper():
+        return ""
+    if not FG.stops_off_die(cfg, r.get("die")) or str(r.get("stage") or "") not in POST_SYNTH_STAGES:
+        return ""
+    tag = f"/items/{r.get('item')}/attempt_{r.get('attempt')}/"
+    for jid, j in (jobs or {}).items():
+        if j.get("status") in REAP_LIVE_Q and tag in str(j.get("kit") or "") + "/":
+            return jid
+    return ""
+
+
+def revive_superseded_running(AP, cfg, st, jobs):
+    """rows cancelled for supersede whose queue job is still live and past synthesis are revived (ENQUEUED, queue job attached); REAP never stops their units"""
+    n = 0
+    for r in (st.get("items") or {}).values():
+        jid = superseded_live_job(cfg, r, jobs)
+        if jid:
+            r.update(status="ENQUEUED", q_id=jid, updated=time.time(), reason="REVIVED: cancelled only for supersede while past synthesis; its queue job still runs and finishes (OWNER 11-19)")
+            r.pop("class", None)
+            r.pop("reaped", None)
+            if AP:
+                AP.log(f"KIT-WAVE REAP-REVIVE {r.get('die')}/{r.get('item')}@{r.get('attempt')}: cancelled for supersede, queue job {jid} still live past synthesis: row revived, units kept")
+            n += 1
+    return n
+
+
 def reap_stale_attempts(AP, cfg, st, notices, ap_dir=None):
     """KW-FIX-45 11-11 (COORD, epyc4 leaf t9 ran four times; 369 zombie ot-job/container instances found across the fleet):
     when the wave replaces or cancels an attempt it must also stop that attempt's started work on the gen host and drop its
@@ -14200,6 +14229,7 @@ def reap_stale_attempts(AP, cfg, st, notices, ap_dir=None):
     except (OSError, ValueError):
         jobs = {}
     cap = int(cfg.get("reap_max_per_tick") or 40)
+    revive_superseded_running(AP, cfg, st, jobs)
     items = st.get("items") or {}
     now = time.time()
     by = {}

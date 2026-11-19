@@ -98,3 +98,16 @@ def test_host_kill_fail_with_stored_flow_class_is_infra_for_rule_c():
 def test_so_same_input_never_blocks_a_host_kill_fail():
     rec = {"status": "FAIL", "class": "FLOW", "reason": "make Error 247", "input_parts": {"v": 2, "noenv": "N", "env": {}, "fam": {}, "stg": {}}}
     assert KW.so_same_input({"dies": {"d": {}}}, "d", {"item": "i"}, rec) is False
+
+
+def test_reap_revives_a_supersede_cancelled_row_whose_job_is_live_past_synthesis():
+    kit = "epyc7:/r/items/it/attempt_4/gen/it"
+    cfg = {"dies": {"s81": {"_stops_off": True}}}
+    row = {"die": "s81", "item": "it", "attempt": "4", "status": "CANCELLED", "class": "SUPERSEDED", "stage": "geom", "reaped": 1, "reason": "x"}
+    jobs = {"j1": {"status": "RUNNING", "kit": kit}, "j2": {"status": "DONE-CRASH", "kit": kit}}
+    st = {"items": {"k": row, "s": dict(row, item="it", attempt="2", class_="x", **{"class": "STRUCT-STOP"})}}
+    import unittest.mock as M
+    with M.patch.object(KW.FG, "stops_off_die", return_value=True):
+        assert KW.revive_superseded_running(None, cfg, st, jobs) == 1
+    assert row["status"] == "ENQUEUED" and row["q_id"] == "j1" and "class" not in row and "reaped" not in row
+    assert st["items"]["s"]["status"] == "CANCELLED"
