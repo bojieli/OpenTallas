@@ -1,3 +1,163 @@
+# FABLE-CLOSURE-STRATEGY 2026-11-19 02:00 PST (0200): cross-family causes, reach rule, die readiness
+
+Reviewer: FABLE-CLOSURE-STRATEGY-01xx (Fable). Read-only: no job was launched, killed, deleted or patched. Technical PD only; HBM parked.
+Gate (R-MINIMAL): DRC 0, routed TT >= -42 ps, internal FF hold >= 0.
+Marking: **V** = log opened this round (01:15 to 01:55). **R** = reported by the named lane. **I** = inferred. **P** = proposal.
+Signed (V, failure_breakdown 01:12): S81 43/394, HEAD 24/26, QC 27/130, KV 6/56. No change since 15:30 on 11-18.
+Method (V): three scans of every wave kit with `run_route.log` written in the last 15 h on epyc8, epyc10, intel1, epyc2, epyc9, epyc7. KV wave kits are not under the scanned path (2 KV kits only), so KV is R.
+"TT" below is the last `OT_TT_SETUP_REPAIR` line of `run_route.log`. That mixes placement-RC and GRT-RC reads, so use it for pass/fail counts and family ranking, not as a number of record.
+Tonight's owned items (leaf fold, col_h9_r1 trunk, RLYBR, glue, lepe, serdes, QC pad chains, KV pv/hgi, HEAD ECOs, type reduction) are not re-proposed. Section 3 says which of them the scans agree with.
+
+## 0. Headline
+
+1. **Clock skew inside one tap is the best predictor of closure, and nothing in the flow removes it (V).** Sink-weighted skew inside a tap (`OT_TAP_INSERTION skew_ps`, taps of >= 100 sinks, 171 kits with a TT number):
+
+   | skew inside a tap | kits | TT >= -42 | median TT |
+   |---|---|---|---|
+   | < 60 ps | 111 | 58 | -15 |
+   | 60 to 100 ps | 37 | 5 | -290 |
+   | 100 to 150 ps | 19 | 0 | -538 |
+   | >= 150 ps | 4 | 0 | -732 |
+
+   The tap balance pads each tap by its latest sink, so a tap with a few late sinks leaves its other sinks early. The GRT-RC pass that balances subtrees (`tapbal_grt.tcl` + `subtree_balance.tcl`) is opt-in and off in every kit I opened. Lever 1.
+2. **Six S81 families are in that class and five have no clock diagnosis: leaf, kv_leaf, lepw LP, seqhost, bk_sel (about 85 types with lepe).** seqhost and lepw LP have the lepe signature (one tap with 25,794 and 13,284 sinks). Lever 2.
+3. **The reach rule works as it stands at 405 um, where the placed hop obeys it (V).** Col kits whose largest placed relay hop (`OT_RELAY_POLY`) is <= 405 um: 30 of 30 at TT >= -42 (all col_h9_r2, largest hop 340). Col kits with a hop over 405: 13 of 62. The plan check cannot see this: PRECHECK REACH flags 6 of 395 S81 types. Section 2.
+4. **col_h9_r2 (60 types) is clean on timing and dies in GRT (V).** 21 of 63 live kits are FAIL_route. One kit that got through reads GRT TT setup_est -21.51, hold_est +2.20. Lever 3.
+5. **No die is ready to freeze on its own rule.** The last die GRT + crossing STA are on plans 2 to 4 events old (S81 D7w, QC N3, KV HG1A). Section 4.
+
+## 1. Levers ranked by closure impact
+
+| # | die | lever | types | owner |
+|---|---|---|---|---|
+| 1 | S81 (all) | balance inside the tap: proof kit with the GRT tap pre-pass on, or pad on the bulk of the sinks | leaf 75, kv_leaf 5 | FABLE-FIX-S81-LEAF (proof), WAVE-FLOW-R2 (default) |
+| 2 | S81, KV, QC | re-solve taps on placed registers, criterion = insertion, for the over-loaded families | seqhost 1, lepw LP, bk_sel 1, kv_leaf 5, KV pv 17, kv3_sys_SD 2 | FABLE-FIX-S81-LEPE (solver), S81-DIE-R3, KV-D23-COMPOSE |
+| 3 | S81 | col_h9_r2 GRT: post-GRT max-wire repair stalls, the retry is killed | 60 | WAVE-FLOW-R2 |
+| 4 | S81 | relay generator (S81-RLYBR-1) on every col family in one D8h listing, judged on the placed hop | about 156 col | S81-GEOM-OPUS, S81-DIE-R3 |
+| 5 | S81 | slice_station START reader hop rows | up to 46 (12 of 23 kits fail) | NEEDS-LANE |
+| 6 | QC | tt_ctlm: depth rewrite with the glue tool | 1, plus the glue tool reuse | FABLE-FIX-S81-GLUE |
+| 7 | all | placed-hop scan as the reach estimator (section 2) | all reach families | PRECHECK-1119 |
+
+### Lever 1. Skew inside a tap (S81 leaf 75, kv_leaf 5)
+**Evidence (V).**
+- epyc10 `ot_s81sl_leaf__t16` attempt_8, no tap over the 1,500 cap. Raw CTS (`OT_TAP_BALANCE it0`): clk_t28 mean 223 ps, range 207 to 440, 535 sinks; clk_t22 mean 104, range 97 to 111. After balancing (target 450): clk_t22 450 (444 to 457), clk_t28 261 (245 to 478), clk_t36 316 (298 to 482), clk_t26 355 (342 to 497). Tap means span 261 to 477 (spread 216). TT -1,102.83.
+- `ot_s81sl_leaf__t50` attempt_8, no tap over cap: tap means 336 to 639 (spread 303), clk_t42 `skew_ps` 180, clk_t9 214. TT -986.68.
+- Family medians of the sink-weighted skew: lepe_nh LP 165, kv_leaf 150, bk_sel 144, lepw LP 141, leaf 130 (18 kits, largest tap skew 367, 0 of 17 pass), seqhost 115. For comparison: col_h9_r2 56 (29 of 29 pass), slice_station 31, QC st_a 18 to 27.
+- Tap-mean spread gives the same split on 188 kits: < 80 ps 56 of 80 pass; 80 to 150 13 of 52; 150 to 250 3 of 40; >= 250 2 of 16.
+- `gen_phys.py` (rt 0fe81af067d5): `TAP_GRT_PRE_DEFAULT = False`. `config.mk` of leaf t16, col_h9_r2, seqhost, QC sle_hc0 x3 and HEAD hd_turn_a has no `OT_TAP_GRT_PRE`; no `OT_STB` line exists in any log of the leaf kits.
+
+**Root cause.** TritonCTS leaves 130 to 230 ps between sinks of one tap on these types. `tap_balance.tcl` adds delay at the tap root only, up to the latest sink, so the bulk of such a tap stays 100 to 190 ps early against its neighbours. Which sinks are the late ones is not read (I: sinks re-assigned by the cap rebalance to a tap 200 um away, or sinks behind leaf repeaters).
+
+**What this does not show.** It is a correlation. The leaf fold (FABLE-FIX-S81-LEAF) is proven on its own and its proof went -527 to -230 with the clock untouched. The share of the remaining -230 that is clock is not measured.
+
+**Fix.**
+1. FABLE-FIX-S81-LEAF, on the t27keep DB: split the remaining ends by launch-clock minus capture-clock arrival. If the 336 `driver_dodd_q` ends carry more than 100 ps of it, the 600 to 800 um relay form is the wrong fix for them.
+2. One private kit of leaf t16 or t50 (clean test: no over-cap tap) generated with `OT_GEN_TAP_GRT_PRE=1` (type key `clock.tap_grt_pre`), to GRT TT. Raise `OT_STB_ROUNDS` from 8: serdes H12 was still converging at round 8 (span 399 to 214, R 11-17).
+3. If the late sinks are a small named set, the cheaper form is in `tap_balance.tcl`: pad to the median and re-hang the late sinks on their own chain.
+
+### Lever 2. Over-loaded taps (seqhost, lepw LP, bk_sel, kv_leaf, KV pv)
+**Evidence (V unless marked).**
+- seqhost__t1 (epyc7 attempt_21): 29 taps, 46,198 sinks, one tap 25,794; spread 302; TT -538.36, GRT -570.57 on 12,107 ends, worst `u_win.mu_c[126]`. S81-TAIL filed it as data or depth; the tap table says clock first.
+- dsdv_slice_lepw_mu_LP__t2 (epyc7 attempt_24): 21 taps, 52,142 sinks, one tap 13,284; spread 315; TT -1,890.29. Same form as the lepe LP pair, not in that lane's scope.
+- kv_leaf t3 / t4: one tap 8,317 / 11,095; spread 276 / 309; TT -320.47 / -280.89.
+- bk_sel__t2: 8 taps for 8,600 sinks on a 4,329 x 1,227 um outline (PRECHECK TAP-EDGE: 0% of the height); spread 451; TT -5,299.75.
+- R: KV pv / pv_v8 one tap 10,339 / 10,234, TT -2,024 / -1,703; kv3_sys_SD x2 have 87% of free area over 200 um from any tap (PRECHECK).
+
+**Sink count is not the criterion.** QC sle_hc0 has a tap with 13,082 sinks and reads +6.81 (spread 70). Leaf t16 has no tap over 1,500 and reads spread 216. What matters is the tap's raw insertion against the target, which is set by extent (FABLE-DIE-QC row 6 found the same on cbn_q00).
+
+**Fix.** FABLE-FIX-S81-LEPE generalises its solver (taps from the placed register inventory of the latest `3_place.odb`, existing taps keep name and xy) into one tool with the rule "raw tap insertion <= target and sinks within 200 um", and runs it on seqhost, lepw LP, kv_leaf and bk_sel for D8h. KV-D23-COMPOSE runs the same tool for the pv family and sys_SD in D25d and drops the stale sink bins. Die owners confirm the spine can take the added M9 drops before the rows go in.
+
+### Lever 3. col_h9_r2 GRT (60 types)
+**Evidence (V).** 63 live kits: 21 FAIL_route, 30 of 30 with a TT number at -23.71 or better, hold FF estimate -68 to -85 before repair. Nine kits show one sequence: `OT_GRT_REPAIR_NO_PROGRESS ... flat 1,815 to 1,853 s inside the post-GRT repair_design (nets_done 10,000 to 14,000, remaining 70,602 to 75,694)`, stage stopped (rc 137 or 143); the retry with max-wire skipped ends `make Error 247` in GRT extra iteration 3/30 after 38 min (clce45cab5 pvf9c773d5, peak 15.7 GB). `col_h9_r2__t1__cl774acf45__pvea45273b` reached 6_report: GRT TT setup_est -21.51, hold_est +2.20.
+
+**Root cause.** Not read. (I) `repair_design -max_wire_length 100` visits about 86,000 nets and its progress line goes flat past the 1,800 s watchdog; Error 247 on the retry is a kill, either the host memory guard or the same watchdog. The other 12 FAIL_route kits are not classified.
+
+**Fix.** WAVE-FLOW-R2: read `5_1_grt.tmp.log` of one of the nine for what the repair is doing when the line goes flat, and name the killer of the retry. Then either restrict the max-wire pass to nets over the limit, or make the watchdog count buffers, not log lines. No unchanged relaunch of the 21.
+
+### Lever 4. Relay generator on every col family
+**Evidence (V).** Largest placed hop and pass count per family: col_h9_r1 729 um (49 of 49 kits over 405; 9 of 38 pass), col_h10_r1 867 (0 of 2), col_h10_r0_p1 746, col_h10_r0_p4 672 (0 of 4), col_h9_r0_p5 593 (1 of 6), p6 485 (3 of 5), p1 478 (0 of 1), col_h10_r2 446 (0 of 6), col_h9_r2 340 (30 of 30).
+**Fix.** S81-GEOM-OPUS's all-col c4f listing is the right vehicle. Acceptance per family is the kit line: no `OT_RELAY_POLY` hop over 405 on the proof kit. Hand rows (col_h9_r1 trunk, bs0) fold into the generator output.
+
+### Lever 5. slice_station START reader hop
+**Evidence (V).** 12 of 23 kits fail (-139.85 to -874.87) with small tns (1,451 to 50,348), taps clean (skew 31, spread 56). The three worst ends I could read are one class: `u_cland_reader_start_ft18_i_0/g_x[0].u_r/q` (t43, 31 ends, -587.65), `..._ft0_i_0/g_x[4]` (t31, 90 ends at GRT, -344.07), `..._ft4_i_0/g_x[7]` (t48, 12 ends, -163.54). The 11 passing kits read -9.55 to +192.83.
+**Fix.** One lane reads the START source of those three paths and checks them against the 8 START rows of D8f. If the rows miss ft0 / ft4 / ft18, the rule is the KV F2 one: the reader-start stage takes the nearest tap of the same depth (`start_stage_raw_resite.py`, 0 cycles).
+
+### Lever 6. tt_ctlm
+**Evidence (V).** epyc7 attempt_7: TT -266.85, GRT -279.37 on 4,845 ends, worst `u_core.u_8648/Q`; taps clean (largest 1,200, skew 31). (I) A flat generated netlist with a depth class, as glue was.
+**Fix.** FABLE-FIX-S81-GLUE reads its cone depth histogram and runs `depth_opt.py` on it if the generator is the same.
+
+## 2. Would "register both sides, hop <= 300 um" close the reach families?
+
+**The rule is already right at 405 um. What is missing is where it is checked.**
+- Both sides of every boundary are registered today (face registers, pin registers, landings). No change needed.
+- Plan-declared hops obey 405 (6 of 395 S81 types flagged). Every reach failure found tonight is a leg the plan does not declare:
+  1. a relay with sinks in two directions (bs0 918 to 972 um, col_h10_r0 t2 -> t3 at 1,035);
+  2. a trunk aimed at a minority sink (col_h9_r1, 2,135 um tour; 156 col types + 61 dsdv_slice flagged MISAIM);
+  3. a second source into a station (col_h10_r0 bn3, 1,448 um);
+  4. the last leg into a hard-core pin on the far face (t3_payload 718 ps, QC rom_qr 1.1 mm, KV ectl 2,540 um);
+  5. pad chains placed by GPL (QC: 0% sited outside sle_ctl and st_a; 651 um last hop on sle_ctl);
+  6. reset relay to core reset pins (lepe 700 to 1,000 um, phy 19.9k bits, KV writer-start 2.1 mm).
+- Do not lower the limit to 300: col_h9_r2 passes 30 of 30 with a 340 um hop, and more stations cost face-bank room (the leaf NS bank already fails at stride 2). Use 300 only for a leg that ends on a hard-core pin with library setup over 100 ps or starts at an SRAM / ROM output (bs0 setup 154 ps; st_b SRAM clk-to-q 255 ps + 276 ps wire).
+
+**P: the rule as one check.** After placement, list every register-to-register, register-to-core-pin and reset-relay-to-sink leg over the limit (the wave already prints `OT_RELAY_POLY`; the placed scan QC-COLL-CORE used gives the rest). Fix in this order: re-aim, branch copy, join at the nearest station, site the pad chain (all 0 cycles), then one relay stage (+1 cycle).
+
+**Lane-latency cost known so far (R).**
+
+| die | rows | cycles |
+|---|---|---|
+| S81 | trunk aim, branch copies, join, tap rows | 0 |
+| S81 | bs0 branch relay, 42 p3..p6 types | +1 on 2 buses |
+| QC | pad-chain siting, st_b origin | 0 |
+| QC | slw_fw flt_wo, 5 types | +3 on 5 lanes (4 -> 7, W2 5 -> 8) |
+| QC | st_a rows (in N4.3) | 12 lanes changed |
+| QC | glue relay core (kit F), coll_core stations | +1 on 2 program rows; coll_core not sized |
+| KV | hg section B, 7 types | +6 on 56 lanes |
+| KV | hgi K6 | +1 on 2 lanes |
+| HEAD | none open | 0 |
+
+Token cost per die is **not computed**: no lane ran the token sim on these rows. S81 is nearly free (one +1). KV hg +6 on 56 lanes is the only large item and needs the sim before D25d binds.
+
+**What the rule does not close.** The clock class (levers 1 and 2, about 85 S81 types + KV pv 17), depth in state loops (glue, tt_ctlm, leaf vp 28 levels on 92 um, st_b multiplier 22 levels) and col_h9_r2 GRT.
+
+## 3. Tonight's findings against the scans
+
+| finding | scan |
+|---|---|
+| col_h9_r1 trunk aim | agrees: 49 of 49 kits have a placed hop over 405 (max 729) |
+| col_h10_r1 / r2 same pattern (not measured by the lane) | agrees: 867 and 446 um, 0 of 8 pass |
+| leaf fold | not re-checked; lever 1 adds a clock term the fold does not cover |
+| leaf TAP-CAP 11 types | 13 of 25 leaf kits have a tap over 1,650, but leaf kits with no such tap fail the same way |
+| lepe tap tables | agrees; lepw LP, seqhost, kv_leaf and bk_sel show the same signature |
+| seqhost "pin-register / data" (S81-TAIL) | refuted as first cause: one tap holds 56% of the sinks |
+| KV pv 10k-sink taps | not checked (KV kits outside the scan) |
+| QC st_a | agrees on N4 kits (-318 to -445); no N4.3 kit has a number yet |
+
+## 4. Die-level readiness for freeze (GRT0 + crossing STA rule)
+
+| die | last die GRT | last crossing STA | changed since | open at die level |
+|---|---|---|---|---|
+| S81 | D7w, 11-17: overflow 0, M4-M7 use 2.7 to 4.4% (R) | D7w: 993 of 993 pass, worst +217.6 TT (R) | D8c to D8g: 9 rigid moves, 3 flips, bs0 +1 cycle | re-run both on D8g; nothing else known |
+| QC | N3: overflow 0 (R) | N3: 2,993 crossings, 0 fail, 105 / 112 ps (R) | N4 to N4.3 changed lane transport on all 133 types | re-run crossing STA on N4.3 |
+| KV | HG1A, 11-16: overflow 0 (R) | 3,915 of 3,915, worst +177.7 (R) | D21 to D24c: hub_C split; D25 adds kst depth 2 and +6 on 56 lanes | re-run both after D25d |
+| HEAD | NF15f: overflow 0, use 0.37% (R) | tree2: intra +572, seam +656 (R) | r5 touches hd_mesh rows only | M8 grant lock: 4,321 die tracks on type tracks in 14 types; hold on real views 0 of 585,476 pairs measured; reservations stale (hd_tile 856 clock sites over placed logic) |
+
+Reading: die routing is not the constraint on any die (overflow 0 everywhere measured). S81, QC and KV need a re-run of their existing proof chain on the current plan (KV: 25 min, R). It can start now and need not wait for type closure. HEAD is the only die with real die-level work left, and it is the three items in its row, not its two unsigned types.
+
+## 5. Stop list (the 22:40 list stands, plus these)
+- Do not judge taps by sink count alone (sle_hc0 passes with 13,082 on one tap; leaf fails with none over 1,500).
+- No landing or pin-register rows for seqhost before its taps are re-solved.
+- No lowering of the hop limit to 300 die-wide.
+- No more hand relay rows per col family; use the generator and accept on the placed hop.
+- Do not read col_h9_r2 FAIL_route as a timing verdict, and no unchanged relaunch of those kits.
+- No +1 register stage for the depth classes in state loops (glue, tt_ctlm); rewrite depth.
+- PRECHECK REACH on plan hops is not evidence that a family is inside reach.
+
+## 6. Not checked
+- Which sinks are late inside a leaf tap, and how much of the leaf TT is clock.
+- The killer behind `make Error 247`, and the 12 other col_h9_r2 FAIL_route kits.
+- KV kits (not under the scanned path), iqf (-336.95, taps clean, no end read), cbx_q10, su_c x3 and cbf_q01_s2 worst ends.
+- Token cost of any cycle row.
+- Whether `tapbal_grt.tcl` converges on a leaf (it has only run on cores and one serdes pilot).
+
 # FABLE-CLOSURE-STRATEGY 2026-11-18 22:40 PST (2240): first D8e numbers, D25c structure, next levers
 
 Reviewer: FABLE-CLOSURE-STRATEGY (run on Opus, Fable limited). Read-only: no job was launched, killed, deleted or patched. Technical PD only; HBM parked. No new holds or gates (r703).
