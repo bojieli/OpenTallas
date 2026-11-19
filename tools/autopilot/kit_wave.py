@@ -60,6 +60,7 @@ import hashlib
 import fnmatch
 import math
 import json
+import tempfile
 import os
 import random
 import re
@@ -5506,11 +5507,17 @@ def sync_die_inputs(AP, cfg, run=None):
                 names = " ".join(shlex.quote(p.lstrip("/")) for p in part)
                 pipe = (f"{' '.join(ssh)} {src} 'cd / && for f in {names}; do test -e \"$f\" || exit 3; done; tar -C / -cf - {names}' | "
                         f"{' '.join(ssh).replace('-n ', '')} {h} 'tar -C / -xf - --keep-old-files'")
+                errf = os.path.join(tempfile.gettempdir(), "srcsync-err-%d-%s.txt" % (os.getpid(), h))
                 try:
-                    rc = run(["bash", "-c", "set -o pipefail; " + pipe])
+                    rc = run(["bash", "-c", "set -o pipefail; { " + pipe + "; } 2>" + shlex.quote(errf)])
                 except Exception as e:
                     AP.log(f"KIT-WAVE SRC-SYNC {src}->{h} {die}: skipped: {e}")
                     continue
+                try:                                                  # SRCSYNC-ERR-1119 (FABLE-FLOW-0555 D): the first stderr line of a failed copy goes into the log
+                    errl = next((l.strip() for l in open(errf, errors="replace") if l.strip()), "")
+                    os.unlink(errf)
+                except OSError:
+                    errl = ""
                 # 11-18 (FABLE-FLOW-0010 F): rc 2 is also what tar prints when the destination write fails (epyc2's root was full): "229 files copied" three times with no
                 # directory there.  rc 0 or 2 only counts after every path of the batch is verified to EXIST on the target.
                 if rc in (0, 2):
@@ -5522,7 +5529,7 @@ def sync_die_inputs(AP, cfg, run=None):
                     if vrc == 0:
                         ok += len(part)
                     else:
-                        AP.log(f"KIT-WAVE SRC-SYNC {src}->{h} {die}: copy rc={rc} but the files are NOT on {h} (destination write failed? disk full?); not counted")
+                        AP.log(f"KIT-WAVE SRC-SYNC {src}->{h} {die}: copy rc={rc} but the files are NOT on {h} (destination write failed? disk full?); not counted; first error: {errl[:200] or 'none'}")
             heal_count(tries, hk)
             if ok:
                 AP.log(f"KIT-WAVE SRC-SYNC {die}: {ok} missing input file(s) copied {src}->{h} (self-heal SRC-HEAL-1116: its probe is whole there); re-probe follows")

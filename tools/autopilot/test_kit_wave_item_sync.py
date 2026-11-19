@@ -52,3 +52,26 @@ def test_src_sync_counts_a_batch_only_when_the_files_exist_on_the_target(tmp_pat
     a = A2()
     done = KW.sync_die_inputs(a, cfg, run=run_factory(0))                             # rc 2 because the files already existed, verified: counted
     assert done and done[0][:3] == ("epyc2", "qwen_compute", 1)
+
+
+def test_src_sync_logs_the_first_stderr_line_of_a_failed_copy(tmp_path, monkeypatch):
+    """SRCSYNC-ERR-1119: the log names the copy's error, and the 2-try stop is the existing heal_blocked"""
+    monkeypatch.setattr(KW, "_heal_path", lambda: str(tmp_path / "heal.json"))
+    P1 = "/srv/opentallas-scratch2/claude/x/bind_a/f1.sv"
+    cfg = {"dies": {"qwen_compute": {"gen_hosts": ["epyc9", "epyc2"]}}, "_src_incomplete": {"epyc2": {"qwen_compute": P1 + " missing"}, "epyc9": {}}}
+    class A2:
+        def __init__(self): self.logs = []
+        def log(self, m): self.logs.append(m)
+    def run(argv, inp=None):
+        if "tar -C / -cf -" in argv[-1]:
+            errf = argv[-1].rsplit("2>", 1)[1].strip().strip("'")
+            open(errf, "w").write("tar: x: Cannot write: No space left on device\n")
+            return 2
+        return 1
+    a = A2()
+    KW.sync_die_inputs(a, cfg, run=run)
+    assert any("first error: tar: x: Cannot write: No space left on device" in l for l in a.logs)
+    a2 = A2()
+    KW.sync_die_inputs(a2, cfg, run=run)
+    KW.sync_die_inputs(a2, cfg, run=run)                                              # third call: blocked after 2 tries
+    assert any("STOPPED after 2" in l for l in a2.logs)
