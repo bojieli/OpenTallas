@@ -4,7 +4,7 @@ Run on the hub:  python3 -I ~/coord/bin/owners_sweep.py [--agent-ids FILE|-] [--
   --agent-ids  lane<TAB>agent-id file from the rtx-pro localhost (pipe it in with '-': ssh intel2 '... --agent-ids -' < agent_ids.tsv)
 Rows come from tools/failure_breakdown.py (same label()/signed logic) over autopilot/kit_wave_stages.tsv; owners from lane mentions
 in lanes/posts/*.md entries (stamp in the last --hours) and lanes/handoff/*.md (mtime in the last --hours), plus the registry owner in
-autopilot/OWNERS.tsv when it names a lane.  Flags: UNOWNED, DEAD-OWNER, FAILED-NO-RELAUNCH (>1 h), STALE (>3 h).  stdlib only, read-only
+autopilot/OWNERS.tsv when it names a lane.  Flags: UNOWNED, DEAD-OWNER, FAILED-NO-RELAUNCH (>1 h), STALE (>3 h), UNCLASSIFIED (failure no rule names).  stdlib only, read-only
 except the output file.  Prints per-die/flag counts.  Stamps are America/Los_Angeles."""
 import argparse, collections, csv, glob, json, os, re, sys, time
 
@@ -207,6 +207,7 @@ def main():
             if failed and lt > upd:
                 age = (now - lt) / 3600; failed = False; lab = 'relaunched (LAUNCH %s)' % fmt_t(lt)
             if failed and age is not None and age > 1: flags.append('FAILED-NO-RELAUNCH')
+            if r and failed and (r.get('class') or '') == 'UNCLASSIFIED': flags.append('UNCLASSIFIED')      # WAVE-PILOT-FIX 11-18 (COORD FLOW-1950 N): no rule names this failure; COORD starts a lane the same hour
             if not running and age is not None and age > 3: flags.append('STALE')
             state = lab if not failed else 'FAILED ' + lab
             if age is not None and age > 3 and not running: state += ' (stale %.1fh)' % age
