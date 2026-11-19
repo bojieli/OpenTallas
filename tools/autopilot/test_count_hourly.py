@@ -115,12 +115,21 @@ def test_any_plan_extra_counts_old_plan_names_not_variants():
     c = {"plans": {"q": {"die": "qwen_compute", "plan_types": {"coll_ucie": "qfd_coll"}, "hard_cores": ["m1"], "signed_types": {"coll_ucie": ["r"]}}}}
     rows = [("qwen_compute", "coll_ucie__legalrows_1117", "t"), ("qwen_compute", "sta_old_a", "t"), ("qwen_compute", "sta_old_a__a2_1117", "t"),
             ("qwen_compute", "m1", "c"), ("s81", "ot_s81_svc_x", "c")]
-    assert CH.any_plan_extra(c, rows) == 2
+    assert CH.any_plan_extra(c, rows) == 3          # sta_old_a, ot_s81_svc_x retired; m1 = current-plan hard core, not signed = deferred
 
 
-def test_headline_and_per_die_deferred_backlog():
-    row = CH.rate_row(cache(0), "2026-11-04 05:36", {"s81": 3, "qc": 2})
-    assert row.endswith("any=95 defer=qc:2,s81:3 auto")
-    assert CH.headline(row) == "signed any plan 95 | current plan 90 | deferred re-sign 5 (qc 2, s81 3)"
-    assert CH.headline(CH.rate_row(cache(0), "2026-11-04 05:36")) == "signed any plan 90 | current plan 90 | deferred re-sign 0"
-    assert CH.last_total(row) == 90 and CH.counts_of(row).endswith("defer=qc:2,s81:3")
+def test_headline_splits_deferred_resign_from_retired_plan():
+    row = CH.rate_row(cache(0), "2026-11-04 05:36", {"defer": {"s81": 1}, "retired": {"qc": 2, "s81": 2}})
+    assert row.endswith("any=95 defer=s81:1 retired=qc:2,s81:2 auto")
+    assert CH.headline(row) == "signed any plan 95 | current plan 90 | deferred re-sign 1 (s81 1) | retired-plan 4 (qc 2, s81 2)"
+    assert CH.headline(CH.rate_row(cache(0), "2026-11-04 05:36")) == "signed any plan 90 | current plan 90 | deferred re-sign 0 | retired-plan 0"
+    assert CH.last_total(row) == 90
+
+
+def test_any_plan_extra_classifies_by_plan_name():
+    c = cache(0)
+    c["plans"]["a"].update(plan_types={"t_signed": "m1", "t_open": "m2"}, signed_types={"t_signed": ["r"]})
+    rows = [("s81", "t_signed", "type"), ("s81", "t_open__a1_0101", "type"), ("s81", "m2", "type"), ("s81", "old_svc_x", "type"), ("qwen_compute", "gone", "type")]
+    r = CH.any_plan_extra(c, rows, by_die=True)
+    assert r == {"defer": {"s81": 2}, "retired": {"s81": 1, "qc": 1}}      # t_open (variant-stripped) and its module name m2 are separate units
+    assert CH.any_plan_extra(c, rows) == 4

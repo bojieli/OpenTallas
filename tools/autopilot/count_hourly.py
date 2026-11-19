@@ -50,31 +50,36 @@ def index_rows(index_json):
 
 
 def any_plan_extra(cache, rows, by_die=False):
-    """signed units on SOME plan that the current plan does not hold: distinct archived (die, element) whose name is no plan type / type module /
-    hard core / counted type / core of that die's counted plan, and not a suffix variant of one that is.  COUNT-DIAG-1118: the last 80 INDEX rows
-    were old-plan names (QC sta_region_nb0_*, S81 ot_s81_svc_*, KV hub-C split children) that count for no current plan but are signed."""
-    known = {}
+    """archived (AGIdock INDEX) units that the current plan's signed set does not hold, split (COORD r711 correction 11-18):
+    deferred = name or VARIANT-stripped name is a type / type module / hard core of that die's current plan that is NOT signed there (the re-sign backlog);
+    retired  = no current-plan name at all (old-plan units: QC sta_region_nb0_*, S81 ot_s81_svc_*, KV hub-C split children) that will never be re-signed.
+    Units already signed on the current plan are in neither.  -> total int, or with by_die {"defer": {short: n}, "retired": {short: n}}"""
+    plan_k, signed_k = {}, {}
     for e in (cache.get("plans") or {}).values():
-        k = known.setdefault(e.get("die"), set())
+        k = plan_k.setdefault(e.get("die"), set())
+        sk = signed_k.setdefault(e.get("die"), set())
         for t, m in (e.get("plan_types") or {}).items():
             k.add(t); k.add(m)
         for x in (e.get("hard_cores") or []):
             k.add(x)
-        for x in list(e.get("signed_types") or {}) + list(e.get("signed_cores") or {}):
-            k.add(x)
-    seen = set()
+        for x in list(e.get("signed_types") or {}) + list(e.get("signed_cores") or {}) + list(e.get("signed_designs") or {}):
+            sk.add(x)
+    dfr, ret = set(), set()
     for die, el, kind in rows:
-        k = known.get(die, set())
-        if el in k or VARIANT.sub("", el) in k:
+        base = VARIANT.sub("", el)
+        sk, pk = signed_k.get(die, set()), plan_k.get(die, set())
+        if el in sk or base in sk:
             continue
-        seen.add((die, VARIANT.sub("", el)))
-    if by_die:
-        short = dict(DIES)
-        out = {}
-        for die, _ in seen:
-            out[short.get(die, die)] = out.get(short.get(die, die), 0) + 1
-        return out
-    return len(seen)
+        (dfr if (el in pk or base in pk) else ret).add((die, base))
+    if not by_die:
+        return len(dfr) + len(ret)
+    short = dict(DIES)
+    out = {"defer": {}, "retired": {}}
+    for key, st in (("defer", dfr), ("retired", ret)):
+        for die, _ in st:
+            n = short.get(die, die)
+            out[key][n] = out[key].get(n, 0) + 1
+    return out
 
 
 def rate_row(cache, stamp, extra=0):
@@ -83,7 +88,7 @@ def rate_row(cache, stamp, extra=0):
     real-inputs test as WAVE-FLOW-R2 row_inputs_unchanged).  any=N adds the signed modules whose records exist but whose pins/outline no longer
     match a current plan design (design_unmatched): signed on some plan.  COORD r711 11-18: both numbers on every run and in every row."""
     by = extra if isinstance(extra, dict) else {}
-    extra = sum(by.values()) if isinstance(extra, dict) else extra
+    extra = sum(sum(v.values()) for v in by.values()) if isinstance(extra, dict) else extra
     total, any_extra, parts = 0, extra, []
     for die, short in DIES:
         d = t = 0
@@ -93,22 +98,29 @@ def rate_row(cache, stamp, extra=0):
                 t += len(e.get("signed_types") or {})
         total += d + t
         parts.append("%s=%d%s" % (short, d, "+%dt" % t if t else ""))
-    dfr = " defer=" + ",".join("%s:%d" % (k, v) for k, v in sorted(by.items()) if v) if any(by.values()) else ""
+    dfr = "".join(" %s=%s" % (key, ",".join("%s:%d" % (k, v) for k, v in sorted((by.get(src) or {}).items()) if v))
+                  for key, src in (("defer", "defer"), ("retired", "retired")) if any((by.get(src) or {}).values()))
     return "%s %d %s any=%d%s auto" % (stamp, total, " ".join(parts), total + any_extra, dfr)
 
 
 def headline(row):
-    """COORD r711: 'signed any plan 450 | current plan 395 | deferred re-sign 55 (s81 n, qc n)' from a SIGN-RATE row; the deferred backlog =
-    signed on an older plan block, superseded on the current plan, not re-signed (per die from the AGIdock INDEX, the source of truth)"""
+    """COORD r711: 'signed any plan 450 | current plan 395 | deferred re-sign K (s81 n, ..) | retired-plan N (qc n, ..)' from a SIGN-RATE row.
+    deferred re-sign = archived on an older block, name still in the current plan, not signed there; retired-plan = old-plan units never re-signed"""
     m = re.match(r"^\S+ \S+\s+(\d+)\s", row or "")
     a = re.search(r"\bany=(\d+)", row or "")
     if not m:
         return ""
     cur = int(m.group(1))
     anyn = int(a.group(1)) if a else cur
-    d = re.search(r"\bdefer=(\S+)", row or "")
-    per = ", ".join(x.replace(":", " ") for x in d.group(1).split(",")) if d else ""
-    return "signed any plan %d | current plan %d | deferred re-sign %d%s" % (anyn, cur, anyn - cur, " (%s)" % per if per else "")
+
+    def part(key):
+        d = re.search(r"\b%s=(\S+)" % key, row or "")
+        items = [x.split(":") for x in d.group(1).split(",")] if d else []
+        n = sum(int(v) for _, v in items)
+        return n, (" (%s)" % ", ".join("%s %s" % (k, v) for k, v in items) if items else "")
+    kd, dt = part("defer")
+    nr, rt = part("retired")
+    return "signed any plan %d | current plan %d | deferred re-sign %d%s | retired-plan %d%s" % (anyn, cur, kd, dt, nr, rt)
 
 
 def counts_of(row):
