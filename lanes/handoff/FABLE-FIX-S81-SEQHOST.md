@@ -56,3 +56,15 @@ Existing benches on the new source: run_mu_hwin_bench.sh, tools/s81_dv/hwin_even
   epyc8 lane dir dsdv_mu_hwin.formc.sv, NOT committed yet). Pick the form by the CTS / GRT TT read, amend the commit if C wins, then push.
 - Proof state: lockstep 5.3M edges full size + 12.4M small tables equal (eqbig/), age induction SUCCESS, MU_HWIN_GATE PASS, SEQHOST_MU_GATE PASS,
   hwin_events EV_RC=0, check_ledger PASS. Bounded miter (yosys sat -seq 12 / 20) still solving on epyc8 (eq3_12, eq3_20); if it does not finish, say so.
+
+## State 11-19 04:5x PST: PUSHED main @8e20268b5d83 (form C = keep_hierarchy, file sha bc4a800c)
+- COORD 03:30 stop-list check done on the kit 1_2_yosys.v (tools/precheck/synth_depth.py NETLIST MODULE_RE END_RE; gates into u_win flop D pins, buffers apart):
+  control (wave attempt_22) max 30 gates + 10 buf, 4,180 ends >= 16; kit2 flat max 18, 350 ends >= 16; kit3 (kept) max 13 in dsdv_mu_hwin, 5 in dsdv_mu_hwin_age.
+- kit1 CANCELLED 04:4x (ot-run --cancel; scope stopped; first form, superseded). kit2 (flat form) and kit3 (pushed form) run, both in place / floorplan.
+- kit3 zero-wire synth STA shows 147 u_win ends below 0 = one unbuffered INVx1 with 377 loads (crlm1 -> 47 age cells; ABC does not buffer across
+  kept modules) + the reset net; logic behind it is 5 gates. Placement repair_design buffers it; check it on the placed DB.
+- Bounded SAT miter (eq3_12 / eq3_20 on epyc8, yosys sat, 770k variables) had not returned; no result claimed. They read the pre-keep file; rerun with
+  STEPS=3 BMC_STEPS=12 bash repo/rtl/dsrom_sys/s81_dv/unit/test/run_mu_hwin_eq.sh OUT if wanted.
+- Adoption for S81-DIE-R3: rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv from main 8e20268b5d83 (+ tools/s81_dv/layer_prog/native_hwin_calendar.py for the sha).
+  Instance names inside u_win now carry "/" (u_win/..., u_win/g_en[i].u_a/...); no kit tcl / sdc names u_win.
+- Next: kit3 CTS / GRT TT read (waiter in the Fable session; else read epyc7 kit3/seqhost__t1/run/logs and the *.tt.rpt), then post the TT line.
