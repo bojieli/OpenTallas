@@ -1536,6 +1536,32 @@ def _row_job(tn):
         return dict(type=tn, error="%s: %s" % (type(e).__name__, str(e)[:200]), viol=-1)
 
 
+def rerecord_reset_anchor(Q, tn, plan_path, rec, plan_fn=None):
+    """ANCHOR 11-19 (S81 D8h strict bind stopped on RESET_ANCHOR for leaf t47 / t75: rst_rl_601 / 652 / 720 and 6 more): a fix that
+    changes the taps or re-picks reset relays leaves clock.reset_tree_anchor describing the OLD tree, and the bind fails closed on
+    it.  Every type this tool changed that carries an anchor is recorded again against the reset tree of the FIXED plan
+    (reset_anchor.record, same tol_um), so the row set is self-consistent.  A type without an anchor, or whose anchor already
+    equals the new record, is untouched; a record that cannot be made is reported in rec['reset_anchor_error'], never guessed."""
+    t = Q["partition_types"][tn]
+    old = (t.get("clock") or {}).get("reset_tree_anchor")
+    if not old or not isinstance(rec, dict) or rec.get("error"):
+        return
+    import reset_anchor as RA
+    import reset_tree as RT
+    import taps as TP
+    try:
+        PQ = (plan_fn or plan_obj)(Q, plan_path)
+        _reset_caches(PQ)
+        new = RA.record(t, RT.for_type(PQ, tn), TP._root(), old.get("tol_um", RT.relay_um(PQ)))
+    except Exception as e:  # noqa: BLE001
+        rec["reset_anchor_error"] = "%s: %s" % (type(e).__name__, str(e)[:200])
+        return
+    if new != old:
+        t["clock"]["reset_tree_anchor"] = new
+        rec["reset_anchor"] = dict(relays=len(new["relays"]), moved=sorted(
+            n for n in new["relays"] if new["relays"][n] != (old.get("relays") or {}).get(n)))
+
+
 def _fix_job(tn):
     P, raw, a, base = _JOB["P"], _JOB["raw"], _JOB["a"], _JOB["base"]
     import io
@@ -1547,6 +1573,7 @@ def _fix_job(tn):
     try:
         with contextlib.redirect_stdout(buf):
             rec = fix_type(P, Q, tn, set(a.classes.split(",")), base[tn], a.cap, a.radius, a.reach, a.span, P.path)
+            rerecord_reset_anchor(Q, tn, P.path, rec)
             PQ = plan_obj(Q, P.path)
             _reset_caches(PQ)
             after = type_row(PQ, tn, a.cap, a.radius, a.reach, a.span)

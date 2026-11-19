@@ -501,3 +501,40 @@ def test_tap_fix_refused_only_on_reset_is_retried_with_class_5(monkeypatch):
     seen.clear()
     assert RF._retry_with_reset(argparse.Namespace(classes="1,2,5", jobs=1), res, base) == (res, []) and not seen
     assert RF._retry_with_reset(argparse.Namespace(classes="4", jobs=1), res, base) == (res, []) and not seen
+
+
+def test_changed_type_gets_its_reset_anchor_recorded_again(monkeypatch):
+    """ANCHOR 11-19 (S81 D8h, leaf t47 / t75 RESET_ANCHOR): the fix records the anchor against the fixed plan's tree; a type
+    without an anchor, an unchanged record and a failed record are left alone / reported."""
+    import reach_fix as RF
+    import reset_anchor as RA
+    import reset_tree as RT
+    old = {"inputs": {"taps": "a"}, "tol_um": 12.5, "relays": {"rst_rl_601": {"depth": 13, "xy": [1.0, 2.0]}}}
+    new = {"inputs": {"taps": "b"}, "tol_um": 12.5, "relays": {"rst_rl_601": {"depth": 13, "xy": [9.0, 2.0]}}}
+    Q = {"partition_types": {"t": {"clock": {"reset_tree_anchor": dict(old)}}, "u": {"clock": {}}}}
+    seen = {}
+    monkeypatch.setattr(RF, "_reset_caches", lambda p: None)
+    monkeypatch.setattr(RT, "for_type", lambda p, tn: {"relays": []})
+    monkeypatch.setattr(RT, "relay_um", lambda p: 405.0)
+
+    def record(t, tree, root, tol):
+        seen["tol"] = tol
+        return dict(new)
+    monkeypatch.setattr(RA, "record", record)
+    rec = {"changes": []}
+    RF.rerecord_reset_anchor(Q, "t", "plan.json", rec, plan_fn=lambda q, p: object())
+    assert Q["partition_types"]["t"]["clock"]["reset_tree_anchor"] == new and seen["tol"] == 12.5
+    assert rec["reset_anchor"] == {"relays": 1, "moved": ["rst_rl_601"]}
+    rec2 = {}
+    RF.rerecord_reset_anchor(Q, "t", "plan.json", rec2, plan_fn=lambda q, p: object())      # already current
+    assert "reset_anchor" not in rec2
+    RF.rerecord_reset_anchor(Q, "u", "plan.json", rec2, plan_fn=lambda q, p: object())      # no anchor on the type
+    assert "reset_tree_anchor" not in Q["partition_types"]["u"]["clock"] and not rec2
+
+    def boom(t, tree, root, tol):
+        raise RA.AnchorError("1 referenced relay(s) not in the tree")
+    monkeypatch.setattr(RA, "record", boom)
+    Q["partition_types"]["t"]["clock"]["reset_tree_anchor"] = dict(old)
+    rec3 = {}
+    RF.rerecord_reset_anchor(Q, "t", "plan.json", rec3, plan_fn=lambda q, p: object())
+    assert "AnchorError" in rec3["reset_anchor_error"] and Q["partition_types"]["t"]["clock"]["reset_tree_anchor"] == old
