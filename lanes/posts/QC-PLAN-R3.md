@@ -387,3 +387,14 @@
   - Relaunch: kit_wave retry cbn_q00__cldbcda913@17 (coord 0d72e49b).
   - Still open (mine): bci00 rst_xn hold at the parent. The child port hold is -1.75 ps, LOCAL_PASS_NEEDS_PARENT; I will read it from the parent kit's routed hold report.
   - N4.5c bind S4Q9N45C and its G0/PRE are running and build on the event tree. The N4.5c pack will be cut against n43_s3, so the ring views are carried.
+- 2026-11-19 04:25 PST QC-PLAN-R3 ACK:
+  (1) N4.6 queue item 7 is QC-COLL-CORE-1118's direct-path tx rows. Composed as n45/plan_n46_tx.json (dd785d90) on N4.5c.
+  - Stations: rec_tx_s0 1, rec_tx_s2 0 (row deleted), out_data 1.
+  - latency.lanes regenerated with reach_fix.sync_fixed_cycles: out_data_rd_wi 17->16; crec_tx_s0, coll_n crec_rx_s0, fltk, fltv 23->22; crec_tx_s1/s2, coll_s crec_rx_s1/s2, fltk, fltv 22->21.
+  - crec_tx_s2 is back to no fixed_cycles, the N4.4 form.
+  - Held: the srr place_regions row and rx_reaim, until FABLE-FIX-S81-GLUE fixes DPL-0033.
+  (2) The N4.5c apply runs in the background on intel2 (~/qc-plan-r3/apply_n45c.sh):
+  - It waits for the N4.5c G0 to report 0 errors (N4.4 control: G0 PASS 0 errors).
+  - Then live_tree apply of pack_n45c (6 files: plan zz_s29_qc103_s4q9n45.json dad42b93, lctx3_core 5a45c6152e06, tools bind/schema/reset_port_relays/relay_branch at 913e191a0b77; each live file checked against its expected predecessor) on 6 gen hosts -> qwen_compute_n45_s0, event s29q103S4Q9N45C.
+  - Then bind-first publish_apply (rt 5990546bfe29): expect-source n43_s3, expect-event s29q103S4Q9N43R.
+  - My own chain bind S4Q9N45C keeps running alongside for comparison.
