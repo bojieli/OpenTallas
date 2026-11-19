@@ -126,7 +126,10 @@ namespace eval ::ot_tap_pair {
    foreach e $pairs { puts $df "P\t[lindex $e 1]\t[lindex $e 2]\t[lindex $e 0]" }
    close $df
   }
-  set result [plan $regs $pairs $tapxy $load $cap $rad $gmax $maxp $mlim $shp $grow]
+  # sink region rule (plan clock.tap_span_um -> OT_TAP_SPAN_UM; unset / 0 = off): see tap_pair_plan.tcl span_ok
+  set span_um [expr {[info exists ::env(OT_TAP_SPAN_UM)] && [string is double -strict $::env(OT_TAP_SPAN_UM)] ? $::env(OT_TAP_SPAN_UM) : 0}]
+  if {$span_um > 0} { puts "OT_TAP_PAIR sink region rule: a tap admits a component only inside W+H <= $span_um um (or with no growth of its box)" }
+  set result [plan $regs $pairs $tapxy $load $cap $rad $gmax $maxp $mlim $shp $grow [expr {$span_um*$dbu}]]
   puts "OT_TAP_PAIR coherent components [dict get $result components], largest [dict get $result largest], frozen oversized [dict get $result frozen], taps above cap $cap at start [dict get $result overfull] (donate only unless overfull grow $grow)"
   foreach row [dict get $result passes] {
    lassign $row pass groups pins cross

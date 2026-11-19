@@ -11,7 +11,7 @@ TCLSH = shutil.which('tclsh')
 pytestmark = pytest.mark.skipif(TCLSH is None, reason='tclsh not installed')
 
 
-def run(regs, pairs, taps, load=None, cap=100, radius=10**6, limit=64, passes=20, merge=0, shift=0, grow=0):
+def run(regs, pairs, taps, load=None, cap=100, radius=10**6, limit=64, passes=20, merge=0, shift=0, grow=0, span=0):
     """regs {name: (x, y, tap)}; pairs [(a, b)]; taps {tap: (x, y)} -> ({name: tap}, passes)."""
     load = load or {k: sum(1 for r in regs.values() if r[2] == k) for k in taps}
     r = ' '.join(f'{{{n}}} {{opaque {x} {y} {tp}}}' for n, (x, y, tp) in regs.items())
@@ -20,7 +20,7 @@ def run(regs, pairs, taps, load=None, cap=100, radius=10**6, limit=64, passes=20
     ld = ' '.join(f'{k} {v}' for k, v in load.items())
     script = (f'source {{{PLAN}}}\n'
               f'set res [::ot_tap_pair::plan [dict create {r}] [list {p}] [dict create {tx}] [dict create {ld}] '
-              f'{cap} {radius} {limit} {passes} {merge} {shift} {grow}]\n'
+              f'{cap} {radius} {limit} {passes} {merge} {shift} {grow} {span}]\n'
               'dict for {n row} [dict get $res regs] {puts "REG $n [lindex $row 3]"}\n'
               'puts "PASSES [dict get $res passes]"\n')
     res = subprocess.run([TCLSH], input=script, capture_output=True, text=True, check=True)
@@ -459,3 +459,42 @@ def test_macro_follow_and_pair_cap_are_in_the_tool():
     assert 'proc macro_follow' in text and 'OT_TAP_PAIR_MACRO' in text and 'OT_TAP_PAIR_CAP' in text
     # default off: the follow pass runs only under its own switch, after the pair pass
     assert 'if {[info exists ::env(OT_TAP_PAIR_MACRO)] && $::env(OT_TAP_PAIR_MACRO) eq "1"} { ::ot_tap_pair::macro_follow }' in text
+
+
+def test_span_rule_keeps_pair_moves_inside_the_tap_sink_region():
+    """COORD 11-19: tap sink region W + H <= span.  Without the rule the pair a1 - b is joined across 350 um
+    (inside the radius); with span 300 either move would stretch a sink box past the limit, so nothing moves; a move that keeps the box inside does go."""
+    taps = {'t0': (0, 0), 't1': (400, 0)}
+    regs = {'a0': (0, 0, 't0'), 'a1': (50, 0, 't0'), 'b': (400, 0, 't1'), 'c': (450, 0, 't1'), 'd': (460, 0, 't1')}
+    pairs = [('a1', 'b'), ('a0', 'a1'), ('c', 'd')]
+    free, _ = run(regs, pairs, taps, merge=8)
+    assert free['b'] == free['a1']                          # the pair is joined (either side may move)
+    held, _ = run(regs, pairs, taps, merge=8, span=300)
+    assert held == {n: r[2] for n, r in regs.items()}
+    near = dict(regs, b=(200, 0, 't1'))                     # box of t0 would be 200 wide: admitted
+    ok, _ = run(near, pairs, taps, merge=8, span=300)
+    assert ok['b'] == 't0'
+
+
+def test_span_rule_lets_an_over_limit_tap_take_sinks_inside_its_box_only():
+    taps = {'t0': (0, 0), 't1': (10, 0)}
+    regs = {'a0': (0, 0, 't0'), 'a1': (500, 0, 't0'), 'in': (250, 0, 't1'), 'out': (600, 0, 't1'), 'k': (10, 0, 't1'), 'k2': (11, 0, 't1')}
+    pairs = [('a0', 'in'), ('a1', 'out'), ('k', 'k2')]
+    lab, _ = run(regs, pairs, taps, span=300)
+    assert lab['in'] == 't0' and lab['out'] == 't1'         # inside the existing 500-wide box: no growth; outside it: refused
+
+
+def test_span_export_and_schema_key_are_opt_in():
+    sys.path.insert(0, str(Path(__file__).parent))
+    import gen_phys, schema, os
+    old = os.environ.pop('OT_TAP_SPAN_UM', None)
+    try:
+        assert gen_phys.tap_span_exports({'clock': {}}) == []
+        assert gen_phys.tap_span_exports({'clock': {'tap_span_um': 300}}) == ['export OT_TAP_SPAN_UM = 300']
+        os.environ['OT_TAP_SPAN_UM'] = '250'
+        assert gen_phys.tap_span_exports({'clock': {}}) == ['export OT_TAP_SPAN_UM = 250']
+    finally:
+        os.environ.pop('OT_TAP_SPAN_UM', None)
+        if old is not None:
+            os.environ['OT_TAP_SPAN_UM'] = old
+    assert 'tap_span_um' in Path(schema.__file__).read_text()

@@ -732,6 +732,9 @@ SCHEMA = {
                         # merges whole into its nearest tap within tap_radius_um (clock_taps.tcl POST_MIN).
                         "tap_post_merge_min_sinks": {"type": "integer", "minimum": 1, "maximum": 1200},
                         "tap_max_sinks": {"type": "integer", "minimum": 1},
+                        # COORD 11-19 sink region rule (opt-in): W + H limit (um) of a tap's sink box; the kit's pair planner keeps
+                        # every move inside it (OT_TAP_SPAN_UM) and clock_taps.tcl reports the as-built boxes against it
+                        "tap_span_um": _pos,
                         # KV-PC-DELTA-1115 (opt-in): second cap-pass reach (um) of clock_taps.tcl for a tap with no room within
                         # half a pitch; and no grid tap over a hard macro (the tap takes no sink, is dropped when empty)
                         "tap_spill_um": {"type": "number", "exclusiveMinimum": 0},

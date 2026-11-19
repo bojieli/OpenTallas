@@ -3740,6 +3740,18 @@ def private_leaf_exports(t):
     return [f"export OT_PRIVATE_LEAF_LIKE = {like}", f"export OT_PRIVATE_LEAF_RE = {rx}"]
 
 
+def tap_span_exports(t):
+    """COORD 11-19 sink region rule: plan clock.tap_span_um (or the gen env OT_TAP_SPAN_UM, which wins, as OT_TAP_MAX_SINKS does)
+    -> config.mk OT_TAP_SPAN_UM.  Neither set: no line, kits unchanged (clock_taps.tcl then only REPORTS against 300 um)."""
+    v = os.environ.get("OT_TAP_SPAN_UM", "") or (t.get("clock") or {}).get("tap_span_um")
+    if v in (None, ""):
+        return []
+    v = float(v)
+    if not (math.isfinite(v) and v > 0):
+        raise ValueError("clock.tap_span_um / OT_TAP_SPAN_UM must be a positive number")
+    return [f"export OT_TAP_SPAN_UM = {v:g}"]
+
+
 def tap_pair_affinity_exports(t):
     """QC-TYPES-6 11-07: default-off pre-CTS short-pair tap affinity (clock_taps.tcl -> tap_pair_affinity.tcl).
     Clock pins only; radius and group bounded by the declared tap radius and capacity."""
@@ -6843,6 +6855,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         cfg += _HMF.config_lines(_fam, pregrt=_pregrt_ff_hold.enabled(t))     # HOLD-MARGIN-FAMILY: evidence + pre-route r2r target + setup guard
     cfg += tap_chain_affinity_exports(t)
     cfg += tap_pair_affinity_exports(t)
+    cfg += tap_span_exports(t)
     if t.get("clock", {}).get("tap_reset_affinity") is True:        # S81-SEAM-RST-1115, opt-in, clock pin only
         cfg.append("export OT_TAP_RESET_AFFINITY = 1")
     cfg += tap_post_merge_exports(t)

@@ -18,7 +18,38 @@ namespace eval ::ot_tap_pair {
   if {[lindex $a 1]!=[lindex $b 1]} {return [expr {[lindex $a 1]<[lindex $b 1] ? -1 : 1}]}
   return [string compare [lindex $a 2] [lindex $b 2]]
  }
- proc plan {regs pairs tapxy load cap radius limit maxpasses {mergelimit 0} {shift 0} {grow 0}} {
+ # FABLE-FIX-S81-LEPE 11-19 SINK REGION RULE (COORD: tap sink region W + H <= 300 um, no spill; span > 0, plan clock.tap_span_um ->
+ # OT_TAP_SPAN_UM): the pair moves were free to put a component on any tap within the radius, so they stretched the sink regions
+ # the tap table was solved for (S81 lepe_mu_LP__t2: 4,950 of 52k clock pins moved).  With span > 0 a tap admits a component only
+ # if its sink box (the registers given to the planner) stays within W + H <= span, or does not grow at all (a tap that starts
+ # over the limit only takes sinks inside its box).  box_var: tap -> {x0 y0 x1 y1}, updated on every admitted move; the donor's
+ # box is kept (an upper bound).  span 0 = unchanged.
+ proc span_ok {box_var tap members regs span} {
+  if {$span<=0} {return 1}
+  upvar 1 $box_var box
+  if {![dict exists $box $tap]} {set x0 {};set y0 {};set x1 {};set y1 {}} else {lassign [dict get $box $tap] x0 y0 x1 y1}
+  set a0 $x0;set b0 $y0;set a1 $x1;set b1 $y1
+  foreach v $members {
+   lassign [dict get $regs $v] it x y t
+   if {$a0 eq {} || $x<$a0} {set a0 $x};if {$a1 eq {} || $x>$a1} {set a1 $x}
+   if {$b0 eq {} || $y<$b0} {set b0 $y};if {$b1 eq {} || $y>$b1} {set b1 $y}
+  }
+  if {$x0 ne {} && $a0==$x0 && $b0==$y0 && $a1==$x1 && $b1==$y1} {return 1}
+  expr {($a1-$a0)+($b1-$b0)<=$span}
+ }
+ proc span_add {box_var tap members regs} {
+  upvar 1 $box_var box
+  foreach v $members {
+   lassign [dict get $regs $v] it x y t
+   if {![dict exists $box $tap]} {dict set box $tap [list $x $y $x $y];continue}
+   lassign [dict get $box $tap] x0 y0 x1 y1
+   dict set box $tap [list [expr {min($x0,$x)}] [expr {min($y0,$y)}] [expr {max($x1,$x)}] [expr {max($y1,$y)}]]
+  }
+ }
+ proc plan {regs pairs tapxy load cap radius limit maxpasses {mergelimit 0} {shift 0} {grow 0} {span 0}} {
+  if {![string is double -strict $span] || $span<0} {error "OT_TAP_PAIR invalid sink-region span $span"}
+  set box {}
+  dict for {name row} $regs {span_add box [lindex $row 3] [list $name] $regs}
   if {$cap<1 || $radius<=0 || $limit<2 || $limit>$cap || $maxpasses<1} {
    error "OT_TAP_PAIR invalid capacity/radius/group/passes"
   }
@@ -97,7 +128,7 @@ namespace eval ::ot_tap_pair {
       if {$d>$radius} {set good 0;break}
       set sum [expr {$sum+$d}]
      }
-     if {!$good} continue
+     if {!$good || ![span_ok box $tap $members $regs $span]} continue
      if {$best eq {} || $count>$score || ($count==$score && $sum<$cost)} {
       set best $tap;set score $count;set cost $sum
      }
@@ -107,6 +138,7 @@ namespace eval ::ot_tap_pair {
      set row [dict get $regs $v];lset row 3 $best;dict set regs $v $row
     }
     dict incr load $old -$n;dict incr load $best $n
+    span_add box $best $members $regs
     incr pm $n;incr gm
    }
    set cross 0
@@ -158,7 +190,7 @@ namespace eval ::ot_tap_pair {
       if {$d>$radius} {set good 0;break}
       set sum [expr {$sum+$d}]
      }
-     if {!$good || [dict get $load $tap]+$n-$c>[dict get $lim $tap]} continue
+     if {!$good || [dict get $load $tap]+$n-$c>[dict get $lim $tap] || ![span_ok box $tap $members $regs $span]} continue
      lappend cands [list $c $sum $tap]
     }
     if {![llength $cands]} continue
@@ -169,6 +201,7 @@ namespace eval ::ot_tap_pair {
      lset row 3 $best;dict set regs $v $row
      dict incr load $old -1;dict incr load $best 1;incr mergemoves
     }
+    span_add box $best $members $regs
     incr merged
    }
    set cross 0
@@ -220,11 +253,12 @@ namespace eval ::ot_tap_pair {
        lassign [dict get $regs $v] it x y t
        if {abs($x-$tx)+abs($y-$ty)>$radius} {set good 0;break}
       }
-      if {$good} {set best $tap;set bs $s}
+      if {$good && [span_ok box $tap $members $regs $span]} {set best $tap;set bs $s}
      }
      if {$best eq {}} continue
      foreach v $members {set row [dict get $regs $v];lset row 3 $best;dict set regs $v $row}
      dict incr load $old -$n;dict incr load $best $n;incr sm
+     span_add box $best $members $regs
     }
     incr shifts $sm
     if {!$sm} break

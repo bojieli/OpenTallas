@@ -915,6 +915,27 @@ if {[llength $ct_taps] >= 2} {
     close $fh
   }
   puts "OT_CLOCK_TAPS per-tap sinks: [join $ct_js {, }]; dropped (no sinks): [llength $ct_empty] [join $ct_empty { }]"
+  # FABLE-FIX-S81-LEPE 11-19 (COORD sink region rule): the AS-BUILT sink box of every tap after all the passes above (nearest split,
+  # cap pass, pair / chain / reset affinity, hop latches), register clock pins only.  Report, never a stop; fail-open.
+  if {[catch {
+    set ct_sl [expr {[info exists ::env(OT_TAP_SPAN_UM)] && [string is double -strict $::env(OT_TAP_SPAN_UM)] ? $::env(OT_TAP_SPAN_UM) : 300.0}]
+    set ct_so {}; set ct_sm 0.0
+    foreach tp $ct_taps {
+      set x0 {}; set y0 {}; set x1 {}; set y1 {}
+      foreach it [[lindex $tp 1] getITerms] {
+        if {[[$it getMTerm] getIoType] ne "INPUT"} continue
+        set ci [$it getInst]; if {[[$ci getMaster] isBlock] || ![string match {DFF*} [[$ci getMaster] getName]]} continue
+        set bb [$ci getBBox]; set cx [expr {([$bb xMin] + [$bb xMax]) / 2.0}]; set cy [expr {([$bb yMin] + [$bb yMax]) / 2.0}]
+        if {$x0 eq {} || $cx < $x0} { set x0 $cx }; if {$x1 eq {} || $cx > $x1} { set x1 $cx }
+        if {$y0 eq {} || $cy < $y0} { set y0 $cy }; if {$y1 eq {} || $cy > $y1} { set y1 $cy }
+      }
+      if {$x0 eq {}} continue
+      set sp [expr {(($x1 - $x0) + ($y1 - $y0)) / $ct_dbu}]
+      if {$sp > $ct_sm} { set ct_sm $sp }
+      if {$sp > $ct_sl} { lappend ct_so "[lindex $tp 0]=[format %.0f $sp]" }
+    }
+    puts "OT_TAP_SPAN limit [format %g $ct_sl] um (W+H of the as-built register sink box): [llength $ct_so] of [llength $ct_taps] taps over, max [format %.0f $ct_sm] um[expr {[llength $ct_so] ? ": [join $ct_so { }]" : ""}]"
+  } ct_se]} { puts "OT_TAP_SPAN report skipped: $ct_se" }
   # VSN6-B 11-11 S7: the final count never passes silently over the cap
   if {[llength $ct_oc]} { puts "OT_CLOCK_TAPS WARN OVER_CAP [llength $ct_oc] taps > cap $ct_cap sinks in the final assignment: [join $ct_oc { }]" }
 }
