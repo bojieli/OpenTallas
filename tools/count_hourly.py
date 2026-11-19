@@ -49,26 +49,37 @@ def index_rows(index_json):
     return rows
 
 
-def any_plan_extra(cache, rows):
-    """signed units on SOME plan that the current plan does not hold: distinct archived (die, element) whose name is no plan type / type module /
-    hard core / counted type / core of that die's counted plan, and not a suffix variant of one that is.  COUNT-DIAG-1118: the last 80 INDEX rows
-    were old-plan names (QC sta_region_nb0_*, S81 ot_s81_svc_*, KV hub-C split children) that count for no current plan but are signed."""
-    known = {}
+def any_plan_extra(cache, rows, by_die=False):
+    """archived (AGIdock INDEX) units that the current plan's signed set does not hold, split (COORD r711 correction 11-18):
+    deferred = name or VARIANT-stripped name is a type / type module / hard core of that die's current plan that is NOT signed there (the re-sign backlog);
+    retired  = no current-plan name at all (old-plan units: QC sta_region_nb0_*, S81 ot_s81_svc_*, KV hub-C split children) that will never be re-signed.
+    Units already signed on the current plan are in neither.  -> total int, or with by_die {"defer": {short: n}, "retired": {short: n}}"""
+    plan_k, signed_k = {}, {}
     for e in (cache.get("plans") or {}).values():
-        k = known.setdefault(e.get("die"), set())
+        k = plan_k.setdefault(e.get("die"), set())
+        sk = signed_k.setdefault(e.get("die"), set())
         for t, m in (e.get("plan_types") or {}).items():
             k.add(t); k.add(m)
         for x in (e.get("hard_cores") or []):
             k.add(x)
-        for x in list(e.get("signed_types") or {}) + list(e.get("signed_cores") or {}):
-            k.add(x)
-    seen = set()
+        for x in list(e.get("signed_types") or {}) + list(e.get("signed_cores") or {}) + list(e.get("signed_designs") or {}):
+            sk.add(x)
+    dfr, ret = set(), set()
     for die, el, kind in rows:
-        k = known.get(die, set())
-        if el in k or VARIANT.sub("", el) in k:
+        base = VARIANT.sub("", el)
+        sk, pk = signed_k.get(die, set()), plan_k.get(die, set())
+        if el in sk or base in sk:
             continue
-        seen.add((die, VARIANT.sub("", el)))
-    return len(seen)
+        (dfr if (el in pk or base in pk) else ret).add((die, base))
+    if not by_die:
+        return len(dfr) + len(ret)
+    short = dict(DIES)
+    out = {"defer": {}, "retired": {}}
+    for key, st in (("defer", dfr), ("retired", ret)):
+        for die, _ in st:
+            n = short.get(die, die)
+            out[key][n] = out[key].get(n, 0) + 1
+    return out
 
 
 def rate_row(cache, stamp, extra=0):
@@ -76,6 +87,8 @@ def rate_row(cache, stamp, extra=0):
     (the counter matches type names against the counted plan and keeps a renamed type whose plan block digest is unchanged, the same
     real-inputs test as WAVE-FLOW-R2 row_inputs_unchanged).  any=N adds the signed modules whose records exist but whose pins/outline no longer
     match a current plan design (design_unmatched): signed on some plan.  COORD r711 11-18: both numbers on every run and in every row."""
+    by = extra if isinstance(extra, dict) else {}
+    extra = sum(sum(v.values()) for v in by.values()) if isinstance(extra, dict) else extra
     total, any_extra, parts = 0, extra, []
     for die, short in DIES:
         d = t = 0
@@ -85,7 +98,29 @@ def rate_row(cache, stamp, extra=0):
                 t += len(e.get("signed_types") or {})
         total += d + t
         parts.append("%s=%d%s" % (short, d, "+%dt" % t if t else ""))
-    return "%s %d %s any=%d auto" % (stamp, total, " ".join(parts), total + any_extra)
+    dfr = "".join(" %s=%s" % (key, ",".join("%s:%d" % (k, v) for k, v in sorted((by.get(src) or {}).items()) if v))
+                  for key, src in (("defer", "defer"), ("retired", "retired")) if any((by.get(src) or {}).values()))
+    return "%s %d %s any=%d%s auto" % (stamp, total, " ".join(parts), total + any_extra, dfr)
+
+
+def headline(row):
+    """COORD r711: 'signed any plan 450 | current plan 395 | deferred re-sign K (s81 n, ..) | retired-plan N (qc n, ..)' from a SIGN-RATE row.
+    deferred re-sign = archived on an older block, name still in the current plan, not signed there; retired-plan = old-plan units never re-signed"""
+    m = re.match(r"^\S+ \S+\s+(\d+)\s", row or "")
+    a = re.search(r"\bany=(\d+)", row or "")
+    if not m:
+        return ""
+    cur = int(m.group(1))
+    anyn = int(a.group(1)) if a else cur
+
+    def part(key):
+        d = re.search(r"\b%s=(\S+)" % key, row or "")
+        items = [x.split(":") for x in d.group(1).split(",")] if d else []
+        n = sum(int(v) for _, v in items)
+        return n, (" (%s)" % ", ".join("%s %s" % (k, v) for k, v in items) if items else "")
+    kd, dt = part("defer")
+    nr, rt = part("retired")
+    return "signed any plan %d | current plan %d | deferred re-sign %d%s | retired-plan %d%s" % (anyn, cur, kd, dt, nr, rt)
 
 
 def counts_of(row):
@@ -145,7 +180,7 @@ def run(now=None, scan=None, commit=None, force=None):
     if now - float(cache.get("generated") or 0) >= FRESH_S:
         print("count_hourly: cache still %d min old after the scan, no row" % ((now - float(cache.get("generated") or 0)) / 60), file=sys.stderr)
         return 1
-    row = rate_row(cache, time.strftime("%Y-%m-%d %H:%M", time.localtime(now)), any_plan_extra(cache, index_rows(CACHE.with_name("agidock_archive_index.json"))))
+    row = rate_row(cache, time.strftime("%Y-%m-%d %H:%M", time.localtime(now)), any_plan_extra(cache, index_rows(CACHE.with_name("agidock_archive_index.json")), by_die=True))
     p = COORD / RATE
     last = last_total(p.read_text() if p.exists() else "")
     total = int(row.split(" ")[2])
@@ -160,7 +195,7 @@ def run(now=None, scan=None, commit=None, force=None):
     with open(p, "a") as f:
         f.write(row + "\n")
     print(row)
-    print("count_hourly: signed matching the current plan %s, signed on any plan %s" % (row.split(" ")[2], re.search(r"any=(\d+)", row).group(1)))
+    print("count_hourly: " + headline(row))
     return (commit or _commit)()
 
 
