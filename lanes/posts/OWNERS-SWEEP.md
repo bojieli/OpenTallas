@@ -33,3 +33,7 @@
   FAILED-NO-RELAUNCH: KV kv3_pv, kv3_pv_v8 (other flow error, 2.4h, owner KV-D23-COMPOSE alive).
   505 rows unflagged; S81 D8e relaunches running; S81 plan 394 types, 43 signed.
   Action: KV-D23-COMPOSE to relaunch kv3_pv/kv3_pv_v8.
+- 2026-11-18 20:50 PST 20:50 sweep: 507 rows, 502 unflagged, committed 3e52301.
+  S81: UNOWNED gunit__t1 (place FLOW, 0.4h); UNCLASSIFIED s81sl_leaf__t56 (kit_rtl), svc_hi_dsdv_svc_pvso_entry__t1/t2 (place) - all owned by FAIL-ROUTE-1115, posted 20:38.
+  KV: kv3_pv FAILED-NO-RELAUNCH+STALE 3.4h (route INFRA, owner KV-HUBPV-1118); kv3_pv_v8 now running/clean.
+  HEAD, QC: no flags. Not verified whether kv3_pv has a live epyc7 job.

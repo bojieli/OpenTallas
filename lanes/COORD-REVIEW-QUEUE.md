@@ -25753,3 +25753,7 @@ FAILED [AUTOPILOT 51e9516eaf12] 2026-11-18 20:25:51 PST AUTOPILOT -> KIT-WAVE-3:
   The remaining delta is insertion_target text that differs only in its set ordering (noise).
   Also, L2 corner: the p6 -44.50 ROM->bn0 path is from 5_global_route.rpt, which is an FF-only session (read_liberty -corner bc). At TT on GRT RC the ROM->bn ends all pass (bn0 +27, bn2 +47, bn1 +83, bn3 +84), so there are no late-capture rows. The TT class is the y_xa/xb last relay into the sstn t1/t2 pins (-64/-35/-23, about 600 um legs), and the D8g relay_sites are the fix (0 cycles).
   G0 on c4b plus a c4 control is running; the strict bind on c3 is still running. Handover after both are clean.
+- 2026-11-18 20:50 PST 20:50 sweep: 507 rows, 502 unflagged, committed 3e52301.
+  S81: UNOWNED gunit__t1 (place FLOW, 0.4h); UNCLASSIFIED s81sl_leaf__t56 (kit_rtl), svc_hi_dsdv_svc_pvso_entry__t1/t2 (place) - all owned by FAIL-ROUTE-1115, posted 20:38.
+  KV: kv3_pv FAILED-NO-RELAUNCH+STALE 3.4h (route INFRA, owner KV-HUBPV-1118); kv3_pv_v8 now running/clean.
+  HEAD, QC: no flags. Not verified whether kv3_pv has a live epyc7 job.
