@@ -4,7 +4,10 @@ Run on the hub:  python3 -I ~/coord/bin/owners_sweep.py [--agent-ids FILE|-] [--
   --agent-ids  lane<TAB>agent-id file from the rtx-pro localhost (pipe it in with '-': ssh intel2 '... --agent-ids -' < agent_ids.tsv)
 Rows come from tools/failure_breakdown.py (same label()/signed logic) over autopilot/kit_wave_stages.tsv; owners from lane mentions
 in lanes/posts/*.md entries (stamp in the last --hours) and lanes/handoff/*.md (mtime in the last --hours), plus the registry owner in
-autopilot/OWNERS.tsv when it names a lane.  Flags: UNOWNED, DEAD-OWNER, FAILED-NO-RELAUNCH (>1 h), STALE (>3 h), UNCLASSIFIED (failure no rule names).  stdlib only, read-only
+autopilot/OWNERS.tsv when it names a lane.  Flags: UNOWNED, DEAD-OWNER, FAILED-NO-RELAUNCH (>1 h), STALE (>3 h), UNCLASSIFIED (failure no rule names),
+CBC-FALLBACK (COORD r713 fallback, CBC-RULES-1119: the type's family failed on >= 2 plan events with a DESIGN failure -- timing,
+route, place, CTS, structural stop -- i.e. 2 normal fix rounds; the family's next event takes the close-by-construction form:
+tools/die_plan/cbc_pass.py rows).  --cbc-post prints one post line of the CBC-FALLBACK families (hourly cron posts it as CBC-RULES-1119).  stdlib only, read-only
 except the output file.  Prints per-die/flag counts.  Stamps are America/Los_Angeles."""
 import argparse, collections, csv, glob, json, os, re, sys, time
 
@@ -95,6 +98,40 @@ def keys(item):
     return ks
 
 
+CBC_FAMILY = re.compile(r'__(?:t\d+|cl[0-9a-f]{6,}|pv[0-9a-f]{6,})')
+CBC_DESIGN = re.compile(r'TIMING|ROUTING|ROUTE|PLACE|CTS|GRT|DRC|STRUCT|setup|hold|overflow|wns|tns|-\d+(?:\.\d+)? ?(?:ps|ns)|congest', re.I)
+CBC_NOT = re.compile(r'INFRA|FLOW|SOURCE|SRC_MANIFEST|KIT_NOT_SELF|kit-RTL|bind: ERROR|missing|LINT|queue|drained|LEAK-CANCEL|SUPERSEDED by attempt', re.I)
+CBC_EVENT = re.compile(r'FAIL on event (\S+)')
+
+
+def cbc_family(item):
+    return CBC_FAMILY.split(item.split('#')[0])[0]
+
+
+def cbc_failed_rounds(rows, since=0.0):
+    """(die, family) -> sorted plan events on which a type of the family had a DESIGN failure (current FAIL row, a FAIL row
+    superseded by a later event, or a STRUCT-STOP); infra / flow / source / lint / queue failures are not fix rounds."""
+    ev = collections.defaultdict(set)
+    for r in rows:
+        if since and ts(r.get('updated') or '') < since:
+            continue
+        why = r.get('reason') or ''
+        st, cl = r['status'], r.get('class') or ''
+        if st == 'FAIL':
+            txt = cl + ' ' + why
+        elif cl == 'STRUCT-STOP':
+            txt = 'STRUCT ' + why
+        elif 'FAIL' in why and ('SUPERSEDED: FAIL' in why or 'was FAIL' in why):
+            txt = why.split('was', 1)[-1]
+        else:
+            continue
+        if CBC_NOT.search(txt.split('@')[0][:120]) or not CBC_DESIGN.search(txt):
+            continue
+        m = CBC_EVENT.search(why)
+        ev[(r['die'], cbc_family(r['item']))].add(m.group(1) if m else r.get('event') or '?')
+    return {k: sorted(v) for k, v in ev.items() if len(v) >= 2}
+
+
 def registry():
     reg = {}
     try:
@@ -128,6 +165,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--agent-ids'); ap.add_argument('--out', default=os.path.join(COORD, 'lanes/OWNERS-SWEEP.tsv'))
     ap.add_argument('--hours', type=float, default=6); ap.add_argument('--alive-hours', type=float, default=2)
+    ap.add_argument('--cbc-days', type=float, default=0.0, help='count only kit_wave_stages rows updated in the last N days (0 = all; a superseded FAIL row is re-stamped when superseded)')
+    ap.add_argument('--cbc-post', action='store_true', help='print the CBC-FALLBACK post line (families, events, unsigned types)')
     a = ap.parse_args()
     now = time.time(); win = a.hours * 3600
     ids = {}
@@ -149,6 +188,7 @@ def main():
         last[(r['die'], r['item'])] = r
     fb.LAST.clear(); fb.LAST.update(last)
     holds = fb.die_holds(); reg = registry(); launches = load_launches()
+    cbc = cbc_failed_rounds(rows, now - a.cbc_days * 86400 if a.cbc_days else 0.0); cbc_hit = collections.defaultdict(list)
     out = []; notes = []
     for die, tag in DIES:
         plan = next(p for k, p in cache['plans'].items() if fb.PLAN_DIE.get(k.split('/')[0]) == die)
@@ -209,6 +249,8 @@ def main():
             if failed and age is not None and age > 1: flags.append('FAILED-NO-RELAUNCH')
             if r and failed and (r.get('class') or '') == 'UNCLASSIFIED': flags.append('UNCLASSIFIED')      # WAVE-PILOT-FIX 11-18 (COORD FLOW-1950 N): no rule names this failure; COORD starts a lane the same hour
             if not running and age is not None and age > 3: flags.append('STALE')
+            if (die, cbc_family(item)) in cbc:
+                flags.append('CBC-FALLBACK'); cbc_hit[(tag, die, cbc_family(item))].append(short)
             state = lab if not failed else 'FAILED ' + lab
             if age is not None and age > 3 and not running: state += ' (stale %.1fh)' % age
             kit = '%s %s %s' % (r['status'], r['stage'], r.get('class') or '') if r else 'no row'
@@ -226,6 +268,15 @@ def main():
     print('rows %d' % len(out)); [print(n) for n in notes]
     for (d, fl), n in sorted(cnt.items()): print('%s %s %d e.g. %s' % (d, fl, n, ', '.join(ex[(d, fl)][:3])))
     print('rows with no flag: %d' % sum(1 for r in out if not r[13]))
+    if a.cbc_post:
+        fams = sorted(cbc_hit.items(), key=lambda kv: (kv[0][0], -len(kv[1])))
+        if fams:
+            print('CBC-POST CBC-FALLBACK (r713: >= 2 failed design fix rounds -> close-by-construction form; die owner folds '
+                  'tools/die_plan/cbc_pass.py rows into the next event): ' + '; '.join(
+                      '%s %s: %d unsigned (%s), events %s' % (tag, fam, len(v), ','.join(sorted(v)[:3]), ','.join(cbc[(die, fam)][-4:]))
+                      for (tag, die, fam), v in fams[:30]))
+        else:
+            print('CBC-POST none')
 
 
 if __name__ == '__main__':
