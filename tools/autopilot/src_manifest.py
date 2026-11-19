@@ -830,7 +830,7 @@ def tar_copy(tree, host, part, run=subprocess.run):
     """TAR-PIPE (COORD 11-18): `tar -C tree -cf - . | ssh host 'tar -C part -xpf -'` into the (fresh, empty) .part dir; the caller verifies the result against the manifest hash before the final rename.
     The source's own .link-base is excluded.  pipefail: either side failing fails the copy."""
     cmd = (f"set -o pipefail; tar -C {shlex.quote(tree)} --exclude=./{LINKBASE} -cf - . | "
-           f"{RSYNC_SSH} {shlex.quote(host)} {shlex.quote('tar -C ' + shlex.quote(part) + ' -xpf -')}")
+           f"{RSYNC_SSH} {shlex.quote(host)} {shlex.quote('mkdir -p ' + shlex.quote(part) + ' && tar -C ' + shlex.quote(part) + ' -xpf -')}")
     return run(["bash", "-c", cmd])
 
 

@@ -69,7 +69,8 @@ def test_tar_copy_streams_a_tree_and_keeps_modes(tmp_path):
     assert rs.returncode == 0
     assert (dst / "d" / "f.txt").read_text() == "x" and (dst / "d" / "e").is_dir()
     assert stat.S_IMODE(os.stat(dst / "run.sh").st_mode) == 0o755 and not (dst / SM.LINKBASE).exists()
-    bad = SM.tar_copy(str(src), "localhost", str(tmp_path / "missing" / "t.part"))
+    (tmp_path / "t.part2").mkdir(); (tmp_path / "t.part2").chmod(0o500)
+    bad = SM.tar_copy(str(tmp_path / "nosuchtree"), "localhost", str(tmp_path / "t.part3"))
     SM.RSYNC_SSH = old_ssh
     assert bad.returncode != 0
 
