@@ -152,3 +152,12 @@ def test_delivery_table_gate(tmp_path):
     taps[1]["late_ps"] = 990.0
     (proof / "tap_arrivals_TT.json").write_text(json.dumps(dict(taps=taps)))
     assert RT.delivery_table(tg, proof)[0][5] is False
+
+
+def test_delivery_fit_and_closed_loop_offsets():
+    res = [("a", "TT", 68.0, 68 * 1.83 + 85, 68 * 0.83 + 85, False), ("b", "TT", -57.0, -57 * 1.83 + 85, -57 * 0.83 + 85, False)]
+    g, b, n = RT.fit_delivery(res)
+    assert round(g, 2) == 1.83 and round(b, 1) == 85.0 and n == 2
+    nxt = RT.corrected_offsets({"a": 68.0, "b": -57.0}, res)
+    # a linear tree (delivered = g x offset + b) built with the next offsets hits the plan
+    assert round(1.83 * nxt["a"] + 85, 1) == 68.0 and round(1.83 * nxt["b"] + 85, 1) == -57.0

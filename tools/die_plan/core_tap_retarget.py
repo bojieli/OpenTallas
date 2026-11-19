@@ -363,12 +363,42 @@ def delivery_table(targets, proof, tol_ps=25.0):
     return out
 
 
+def fit_delivery(res, corner="TT"):
+    """least-squares delivered = gain x planned + bias over the ports of one corner -> (gain, bias, n)."""
+    xy = [(r[2], r[3]) for r in res if r[1] == corner]
+    if len(xy) < 2:
+        return 1.0, 0.0, len(xy)
+    mx, my = st.mean(x for x, _ in xy), st.mean(y for _, y in xy)
+    sxx = sum((x - mx) ** 2 for x, _ in xy)
+    g = sum((x - mx) * (y - my) for x, y in xy) / sxx if sxx > 1e-9 else 1.0
+    return g, my - g * mx, len(xy)
+
+
+def corrected_offsets(offsets, res, corner="TT", gain=None):
+    """next-pass per-port sink offsets: offset - (delivered - planned) / gain (closed loop over the built tree; gain =
+    the fitted tree gain, so one pass removes both the gain and the bias of the region DME model)."""
+    g = gain or fit_delivery(res, corner)[0]
+    g = g if abs(g) > 0.2 else 1.0
+    d = {r[0]: r[4] for r in res if r[1] == corner}
+    return {p: round(v - d.get(p, 0.0) / g, 2) for p, v in offsets.items()}
+
+
 def cmd_delivery(a):
     tg = json.loads(Path(a.targets).read_text())["targets"]
     res = delivery_table(tg, a.proof, a.tol)
     for r in res:
         print("\t".join(map(str, r)))
     bad = sum(not r[5] for r in res)
+    for c in ("TT", "FF"):
+        g, b, n = fit_delivery(res, c)
+        print(f"FIT {c} delivered = {g:.3f} x planned + {b:.1f} ps (n {n})")
+    if a.offsets and a.next_out:
+        o = json.loads(Path(a.offsets).read_text())
+        cur = o.get("offsets_ps", o)
+        nxt = corrected_offsets(cur, res)
+        Path(a.next_out).write_text(json.dumps(dict(note="core_tap_retarget delivery: next-pass offsets = offset - "
+                                                        "(delivered - planned)_TT / fitted gain", offsets_ps=nxt), indent=1))
+        print("NEXT offsets ->", a.next_out)
     print("DELIVERY", "PASS" if res and not bad else "FAIL", "ports", len(res), "outside", bad, "tol", a.tol)
     return 0 if res and not bad else 1
 
@@ -487,6 +517,8 @@ def main(argv=None):
     dv.add_argument("targets")
     dv.add_argument("proof")
     dv.add_argument("--tol", type=float, default=25.0)
+    dv.add_argument("--offsets", help="the sink offsets file the tree was built with")
+    dv.add_argument("--next-out", help="write next-pass corrected offsets here (closed loop)")
     q = sp.add_parser("pairs")
     q.add_argument("rows")
     q.add_argument("sta", nargs="+")
