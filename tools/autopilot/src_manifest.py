@@ -30,6 +30,7 @@ import shutil
 import stat
 import subprocess
 import sys
+import time
 import tempfile
 
 MANIFEST = ".src-manifest.json"
@@ -849,12 +850,13 @@ def tar_copy(tree, host, part, run=subprocess.run):
     return run(["bash", "-c", cmd])
 
 
-def remote_free_gb(host, directory, part, run=subprocess.run, tries=3, sleep=time.sleep):
+def remote_free_gb(host, directory, part, run=None, tries=3, sleep=time.sleep):
     """(free GB of the target's disk, GB already in <part>) over ssh; (None, 0) when the host does not answer.
     RETRY-1119 (QC N4.5f: epyc7 'cannot read its free space' at load 473/96 and the apply DROPPED the host): the df read is retried (timeouts 40 / 80 / 160 s, 5 s apart) and the size of an
     existing .part (du, slow on a 58 GB tree under IO load) is a SEPARATE best-effort call, so a slow du never costs the free-space answer."""
     cmd = (f"d={shlex.quote(directory)}; while [ ! -d \"$d\" ] && [ \"$d\" != / ]; do d=$(dirname \"$d\"); done; "
            f"nice df -BM --output=avail \"$d\" | tail -n1 | tr -dc 0-9; echo")
+    run = run or subprocess.run
     free = None
     for k in range(tries):
         try:
