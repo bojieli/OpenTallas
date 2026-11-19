@@ -36,3 +36,12 @@ Work dir: epyc2 /srv/opentallas-scratch3/claude/fable-fix-s81-colh9r1 (L). Tools
 - Read on arrival: run_place.log OT_ISTATIONS / OT_RELAY_SITES (unmatched keys must be 0) / OT_RELAY_POLY lpl_6..9_r (hops) / OT_RESET_TREE PASS;
   then 4_cts_post_hook.rpt and 5_global_route.tt.rpt (L/tools/runsta.sh gives the per-endpoint table).
 - If the kit passes TT >= -42 at GRT: post HANDOFF to S81-DIE-R3 with mk_rows_h9r1.py (apply on the D8g plan: it asserts the old sites, so it is safe to re-run).
+
+## 2026-11-19 02:45 proof kit CTS read (V, pv36da905c private kit, placement RC, 4_cts.odb)
+- TT setup: -15.44 before TT repair, -13.62 after (was -297.57 / -277.82). 20 ends, all u_bn6/e_r (old class, inside -42). t3_payload/i and t3 ends: 0 (were 536 + 87).
+- "hold after CTS" in failure_breakdown is not a tap class: OT_HOLD_GATE PASS (FF -82.77, limit -140). OT_PREGRT_FF_HOLD class after: same_tap 0, cross_tap 0,
+  port_in 1491 ws -78.15 FF. The 1491 ends are the face flops fed by input ports (bin_frame_int_i1 q 1167, bin_frame_int_i0 q 321, 2 eq, rst_in): the IO
+  contract in_min -40 class. The D8e wave kits have the same 1491 ends (TT -80.28 / -70.55), so my rows did not add it. No OT_TAP_GRT_PRE change, no tap row.
+- Kit continues: in 5_1_grt since about 02:15 (GRT hold repair includes port starts, OT_GRT_PORT_HOLD_INCLUDE=1). Waiter on 5_global_route.tt.rpt / FAIL_*.
+- This private kit wrote no 4_cts_post_hook.rpt (D8e tree tools); CTS numbers above are from run_grt.log and L/tools/runsta.sh (L/sta/p1.*).
+- lpl_6/8/9_r have no relay_mid station line (span under 200 um, left to GPL); lpl_7_r at (661,28), hop 117 um.
