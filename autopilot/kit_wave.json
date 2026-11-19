@@ -621,7 +621,6 @@
     "epyc7"
    ],
    "gen_hosts": [
-    "epyc7",
     "epyc8",
     "epyc9",
     "epyc10"
@@ -5696,6 +5695,7 @@
    ],
    "prev_gen_hosts_derive": [
     "epyc7",
+    "epyc8",
     "epyc9",
     "epyc10"
    ],
@@ -7100,7 +7100,6 @@
    "gen_hosts": [
     "epyc8",
     "epyc2",
-    "epyc7",
     "epyc9",
     "epyc10",
     "intel1"
@@ -36937,10 +36936,11 @@
    "rollback_tree": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8f_1117_work",
    "prev_gen_hosts_derive": [
     "epyc8",
-    "epyc10",
-    "intel1",
     "epyc2",
-    "epyc9"
+    "epyc7",
+    "epyc9",
+    "epyc10",
+    "intel1"
    ],
    "event_lineage": [
     "B6gF2s3",
