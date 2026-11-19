@@ -661,3 +661,21 @@ def test_region_early_default_on_plans_with_early_core_taps(tmp_path):
     assert "--region-dme-early" not in flags(O.kit_argv(c, "OUT", "CAL", None, plan=_plan(tmp_path, early=False)))
     c["region"]["early"] = False                 # explicit opt-out
     assert "--region-dme-early" not in flags(O.kit_argv(c, "OUT", "CAL", None, plan=_plan(tmp_path)))
+
+
+def test_early_core_regions_join_region_dme_only(tmp_path):
+    ck = {"core_taps": "early", "taps": [{"name": "u_c.clk", "kind": "core", "xy": [1, 1], "insertion_ps": 400}]}
+    late = {"core_taps": "early", "taps": [{"name": "u_d.clk", "kind": "core", "xy": [1, 1], "insertion_ps": 240}]}
+    p = tmp_path / "plan.json"
+    p.write_text(json.dumps({"clock": {"insertion_ps": 250}, "partition_types": {"t": {"clock": ck}, "u": {"clock": late}},
+                             "partitions": [{"name": "a", "type": "t"}, {"name": "b", "type": "u"}]}))
+    m = tmp_path / "map.json"
+    m.write_text(json.dumps({"part_region": {"a": "r_core", "b": "r_late"}}))
+    assert O.early_core_regions(str(p), str(m)) == ["r_core"]
+    c = cfg("qc")
+    c["region"].pop("early", None)
+    c["region"]["only"] = ["r_x"]
+    f = flags(O.kit_argv(c, "OUT", "CAL", None, plan=str(p), region_map=str(m)))
+    assert f["--region-dme-only"] == "r_x,r_core" and f["--region-dme-early"] == "1"
+    c["region"]["early_regions"] = "config"
+    assert flags(O.kit_argv(c, "OUT", "CAL", None, plan=str(p), region_map=str(m)))["--region-dme-only"] == "r_x"
