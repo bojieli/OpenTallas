@@ -355,3 +355,16 @@ def test_tar_extract_resolves_a_cross_device_symlink_top_directory(tmp_path):
     assert KW.tar_extract_cmd(["/tmp/not/srv"]) .startswith("T=''; eval tar -C / -xf -")
     src = open(KW.__file__).read()
     assert "tar -C / -xf - --keep-old-files'" not in src
+
+
+def test_self_heal_source_sync_skips_bad_hosts_both_ways():
+    runs = []
+    ap = type("AP", (), {"log": staticmethod(lambda m: None), "sh": staticmethod(lambda c, timeout=0, input=None: (runs.append(c) or (0, "", "")))})()
+    cfg = {"dies": {"s81": {"gen_hosts": ["epyc7", "epyc8", "epyc9"], "gen_host": "epyc8"}}, "_hub": "intel2",
+           "_otrun_status": {"epyc8": {"load": 10, "cores": 96}, "epyc9": {"load": 10, "cores": 96}},        # epyc7: no status row = unreadable
+           "_src_incomplete": {"epyc7": {"s81": "/srv/opentallas-scratch2/claude/x/a.sv missing"}, "epyc9": {"s81": "/srv/opentallas-scratch2/claude/x/a.sv missing"}}}
+    import tempfile
+    os.environ["OT_SELF_HEAL_STATE"] = os.path.join(tempfile.mkdtemp(), "t.json")
+    KW.sync_die_inputs(ap, cfg, run=lambda argv, inp=None: (runs.append(argv) or 0))
+    joined = " ".join(" ".join(map(str, c)) for c in runs)
+    assert "epyc7" not in joined                              # neither a destination nor a donor

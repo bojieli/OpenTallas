@@ -5534,7 +5534,10 @@ def sync_die_inputs(AP, cfg, run=None):
             return AP.sh(argv, timeout=1800)[0]
     ssh = ["ssh", "-n", "-o", "ConnectTimeout=8", "-o", "BatchMode=yes", "-o", "ControlPath=none"]
     tries, live = heal_tries_load(), set()
+    stt_, hub_ = cfg.get("_otrun_status") or {}, cfg.get("_hub") or ""
     for h in sorted(inc):
+        if queued_host_bad(stt_, h, hub_):               # COORD 11-19 (FLOW-1150 B: one tick took 2,581 s blocked on epyc7): no self-heal copy to or from an unreadable / over-2x host
+            continue
         for die, why in sorted(inc[h].items()):
             d = (cfg.get("dies") or {}).get(die) or {}
             if d.get("src_sync") is False:
@@ -5550,7 +5553,7 @@ def sync_die_inputs(AP, cfg, run=None):
             if not paths:
                 continue
             hosts = [x for x in list(d.get("gen_hosts") or []) + [d.get("gen_host")] if x]
-            src = next((g for g in sorted(set(hosts)) if g != h and die not in (inc.get(g) or {})), None)
+            src = next((g for g in sorted(set(hosts)) if g != h and die not in (inc.get(g) or {}) and not queued_host_bad(stt_, g, hub_)), None)
             if not src:
                 continue                                         # no host whose copy verifies: nothing to copy from
             ok = 0
