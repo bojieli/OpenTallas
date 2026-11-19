@@ -552,7 +552,7 @@ def check_kit_core_fit(P, R):
     """KITFIT-1116 (S81 F2s3: 372 half pairs overlapping by 1.116 um at their kit offsets passed G0): every hard core placed at origin_um +
     track_offset_um as gen_phys.type_macros places it; an overlap, a halo breach (type macro_halo_um) or a box outside the outline is an ERROR"""
     import kit_fit as KF
-    msgs = KF.findings(P.types)
+    msgs = KF.findings(P.types, core_margin=KF.CORE_MARGIN_UM)
     for m in msgs:
         R.err("kit_fit", m)
     return dict(findings=len(msgs))

@@ -32,7 +32,10 @@ def placed_boxes(t):
     return out
 
 
-def findings(types, halo=0.0, max_msgs=40):
+CORE_MARGIN_UM = 4.32      # gen_phys.CORE_MARGIN_UM (row 0.27 / site 0.054 aligned)
+
+
+def findings(types, halo=0.0, max_msgs=40, core_margin=None):
     """-> [str]: 'KITFIT-OVERLAP|HALO|OUTLINE type T: ...' lines, at most max_msgs plus one count line; [] = clean"""
     out, n = [], 0
     for tn, t in sorted((types or {}).items()):
@@ -40,6 +43,16 @@ def findings(types, halo=0.0, max_msgs=40):
             continue
         h = float(t.get("macro_halo_um", halo) or 0.0)
         bx = placed_boxes(t)
+        # S81-TAIL-1118 (gunit__t1 MPL-0034): the kit floorplan CORE_AREA is the outline inset by gen_phys.CORE_MARGIN_UM; a core
+        # placed at origin + track_offset past it stops the place stage (u_ahi top 1222.572 vs core top 1222.56) and passed G0
+        ow = t.get("outline_um")
+        if core_margin is not None and ow and len(ow) == 2:
+            for a, ax0, ay0, ax1, ay1 in bx:
+                over = max(core_margin - ax0, core_margin - ay0, ax1 - (ow[0] - core_margin), ay1 - (ow[1] - core_margin))
+                if over > 1e-6:
+                    n += 1
+                    out.append(f"KITFIT-OUTLINE type {tn}: {a} placed [{ax0:g},{ay0:g}]-[{ax1:g},{ay1:g}] is {over:.4g} um outside the "
+                               f"core area (outline {ow[0]:g} x {ow[1]:g} inset {core_margin:g}): place_macro MPL-0034")
         for i, (a, ax0, ay0, ax1, ay1) in enumerate(bx):
             for b, bx0, by0, bx1, by1 in bx[i + 1:]:
                 dx = min(ax1, bx1) - max(ax0, bx0)

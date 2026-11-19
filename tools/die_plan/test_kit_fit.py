@@ -48,3 +48,13 @@ class Gates(unittest.TestCase):
         self.assertEqual(len(f), 1, f)
         self.assertTrue(f[0].startswith("FAIL KITFIT-OVERLAP type t"))
         self.assertEqual(G.check(str(tree), str(p), skip=("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT")), [])
+
+
+class Outline(unittest.TestCase):
+    def test_outline_core_margin(self):
+        t = {"outline_um": [2885.76, 1226.88], "hard_cores": [core("u_ahi", 17.28, 1071.36, 432.0, 151.2, (0.108, 0.012))]}
+        f = KF.findings({"t": t}, core_margin=KF.CORE_MARGIN_UM)
+        self.assertEqual(len(f), 1, f)
+        self.assertTrue(f[0].startswith("KITFIT-OUTLINE type t: u_ahi") and "0.012" in f[0], f)
+        t["hard_cores"][0]["origin_um"][1] = 1071.216
+        self.assertEqual(KF.findings({"t": t}, core_margin=KF.CORE_MARGIN_UM), [])
