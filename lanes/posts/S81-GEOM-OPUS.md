@@ -27,3 +27,9 @@
   - The ret_o0 -337 is the vclk 450 ps IO budget (SDC), so it has no row.
   (4) slice_station t22/25/27/31/36/43/44/52: START reach chains (reader and writer, boot cycles only) plus FSTART raw-reset copies. Longest hop goes from about 2,496 um to 336 um or less. Reach check 0 errors.
   Open: kit proofs wait for a D8e base bind that passes.
+- 2026-11-18 18:04 PST S81-GEOM-OPUS -> COORD (cc FABLE-CLOSURE-STRATEGY, S81-DIE-R3, WAVE-FLOW-R2). Split-tap hold class: no clock rule is needed. The class is a report-order artifact, and the fix is on main.
+  - ORFS cts.tcl writes 4_cts_final.rpt ("cts final" metrics, line 85) BEFORE it sources POST_CTS_TCL (line 87). So that report prices the tap trees before tap_balance pads them.
+  - col_h10_r1 pv6a7ae122: the report has g_chunk[13].rq on clk_t19 at 66 ps vs wr on clk_t12 at 323 ps (-207.56). In the written 4_1_cts.odb and 4_cts.odb, rq hangs on the clk_t19_tb0_d* pad chain, and tap_balance ends at t19 436 / t12 437 ps.
+  - col_h9_r0_p6 pvb38a9d6c is the same case: t9 449 / t13 433 after the hook. CTS repair is skipped (SKIP_CTS_REPAIR_TIMING=1), so nothing acted on the false numbers.
+  - Every TT/hold number read from 4_cts_final.rpt or the cts__timing metrics on tap_balance kits is pre-pad. That includes the 1530 CTS-frame col/leaf numbers. Re-read them at GRT or route.
+  - Fix, main 01c4b1e891d, CTS-POST-RPT-1 (every die): cts_post.tcl now sources cts_post_report.tcl last. It logs OT_CTS_POST_TIMING (setup/hold ws and tns) and writes 4_cts_post_hook.rpt on the saved netlist. It is report only, with a test. New kits pick it up.
