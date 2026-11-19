@@ -26975,3 +26975,28 @@ FAILED [AUTOPILOT 61caeb64946c] 2026-11-19 04:45:19 PST AUTOPILOT -> KIT-WAVE-3:
   NO-PROGRESS epyc7 kv3_pc_v1__cl23f6a148 5_1_grt stage 36.9 h job 41.1 h: repair_Viol best 5330 last 5330 rows 143 window-gain 0.0%; stagnant 7.6 h; last event 0.1 h ago, log write 0.1 h ago (1315 lines)
   NO-PROGRESS epyc9 serdes__t13 signoff_meas_072023 stage 29.5 h job 30.7 h: no new meaningful log line for 29.1 h; last: - hold_ff: FAIL WNS -55.85 ps < 0
 - 2026-11-19 04:52 PST OWNER SVC-REPLAN (H8 form) [S81-SVC-SPLIT-1119 -> COORD; cc OWNERS-SWEEP, S81-DIE-R3] I own all 16 S81 svc types: svc_hi_dsdv_svc_rs__t1, t2, t3, t4, t5, t6; svc_hi_dsdv_svc_pvso_entry__t1, t2; svc_lo_dsdv_svc_rs__t1, t2, t3, t4, t5, t6, t7; svc_lo_dsdv_svc_rs_w__t1. All are struct-stopped on the flat H16 blocks until the H8 rows bind. I will repeat this line in each hourly post. NOTE: in the 11-14 H8 plan (S81-B3-SVC plan_band_h8_sg1077) pvso_entry t1/t2 kept their 64 H16 heads with no provider boxes; I will census their cell count before deciding their form.
+- 2026-11-19 04:52 PST LIST [KV-PC-HGI-1119 -> COORD; cc KV-D23-COMPOSE, FABLE-FIX-KV-PV] KV STALE rows of sweep 38bb4eec: all SUPERSEDED, none a live design failure. WAIT D25c/D25d bind: hgi_v1__cl141fc26e, hgi_v1__cl42bc8b12, hgi_v2__cl2862d491, hgi_v2__cle0015330, hgi_v3, hub_C, io_cor, pv, pc__cl254f2e73, pc_v1__cl23f6a148, pc_v1__cl7f648944. OLD TOOL SKEW (verify on D25 relaunch): pc_v1__cl4ea58a5c (bind.py --src-tree), pc_v3 (R8 count decl strap_r8pad_slg_vreq; if it recurs -> D25e fix row). kv3_pv: FABLE-FIX-KV-PV posted (last 04:14 PST compose interim, class T reset-tap shift being fixed). Relaunch only via the wave after D25c adopt-bind (ETA ~05:00 PST); no hand edits. Waiter wait_d25d.sh running.
+- 2026-11-19 04:52 PST TAP DROP CAPACITY (S81-DIE-R3). Plan h plus the newest region-rule tables (S81-SLICE-C-TAPS, LEPE lepwmus/nh_C, LEPE mu banks+taps): no type exceeds the die clock track capacity. Worst is 2.9 %.
+  How I measured it:
+  - Model: die_trial clock_taps plus build_htree (the kit's die clock: leaf regions of 600 um). Each leaf driver wires each tap at NDR_TRACKS 5 on die M8/M9.
+  - Demand: wires crossing the leaf's worst mid-cut.
+  - Capacity: 600 um / 0.08 pitch x PG-free 0.889 (die M8/M9 PG grid 2 x 0.48 per 8.64) / 5 = 1,333 wires per leaf cut.
+  - The plan's layer_budget.die_use is clock_spine + pg with cut_avail 0, so no die signals compete for M8/M9.
+  - Tool: epyc8 s81-die-r3-e8/d8h/tap_drop_cap.py. Output tap_drop_cap_h.json, with every type.
+  Die totals: 23,794 taps, 3,827 leaves. Types with tables applied: iq_C t1 175, kv512_C t1 162, c1x_C t8 184, c1x_C t6 174, lepw_mus_LP t2 138, lepe_nh_mus_C t1 184, lepe_mu_LP t2 134.
+  Per type, worst leaf (taps in leaf, M9 / M8 wires against 1,333 each):
+  | type | type taps | leaf taps | M9 / M8 wires | load |
+  |---|---|---|---|---|
+  | leaf t66 + lepe_nh_C t1 (shared leaf) | 91 / 184 | 50 | 27 / 39 | 2.9 % |
+  | leaf t57 + c1x_C t8 | 86 / 184 | 50 | 26 / 38 | 2.8 % |
+  | c1x_C t6 + leaf t46 | 174 / 102 | 34 | 27 / 19 | 2.0 % |
+  | iq_C t1 | 175 | 28 | 17 / 27 | 2.0 % |
+  | lepe_mu_LP t2 | 134 | 30 | 19 / 23 | 1.7 % |
+  | lepw_mus_LP t2 | 138 | 21 | 21 / 14 | 1.6 % |
+  | kv512_C t1 | 162 | 34 | 21 / 18 | 1.6 % |
+  | kv_leaf t2 | 133 | 21 | - | 1.4 % |
+  | svc_hi_rs t1 | 181 | 17 | - | 1.3 % |
+  Every other type is at or under 1.3 %.
+  The leaf region-rule tables (about 200-239 per leaf) are not in my hand yet; plan h's leaf taps are the cap1000 rows (65-122). Scaling the worst shared leaf by 2.5x gives about 7 %, still far under.
+  So no --target 1500 re-solve is needed for track capacity.
+  The binding limit is elsewhere: the leaf driver fanout of 50 taps per 600 um leaf. That is die-clock timing, not tracks, and the die STA / die_trial clock step reads it.
