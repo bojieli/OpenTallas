@@ -171,3 +171,10 @@ def test_ft_slot_without_windows_is_unplaced():
     del t["ft_slots"][0]["in_window_um"]
     r = B.type_delta("s", t, SOFT)
     assert r["unplaced"] == ["u_ft_f_o_0"] and all("u_ft_f_o_0" not in x["sinks"] for x in r["rows"])
+
+
+def test_bus_without_face_window_is_unplaced():
+    t = soft_t()
+    del t["buses"][0]["face"]
+    r = B.type_delta("s", t, SOFT)
+    assert "u_bin_a" in r["unplaced"]

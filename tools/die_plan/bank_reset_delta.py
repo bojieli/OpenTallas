@@ -76,6 +76,8 @@ def bank_xy(t, inst):
     m = re.fullmatch(r"u_b(?:in|out)_(\w+)", inst)
     if m and m.group(1) in buses:
         b = buses[m.group(1)]
+        if not (b.get("face") and b.get("window_um")):
+            return None                            # a bus sited per port (no type face window): position unknown here
         return face_point(b["face"], b["window_um"], w, h)
     m = re.fullmatch(r"u_ft_(\w+?)_o_(\d+)", inst)
     if m:
