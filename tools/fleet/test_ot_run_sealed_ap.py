@@ -174,9 +174,9 @@ def test_holder_that_admits_is_preferred_over_the_first_host(tmp_path, monkeypat
     assert why == f"SEALED on epyc2: {K}" and "copy_back" not in spec_of(out)
 
 
-def test_job_root_shell_picks_first_root_with_room():
+def test_job_root_shell_picks_root_with_most_usable_space():
     assert M.JOB_ROOTS[0].startswith("/srv/opentallas-scratch2/") and M.JOB_ROOTS[1].startswith("/srv/opentallas-scratch3/")
-    assert "-ge 60" in M.JOB_ROOT_SH and "JOBROOT=" in M.JOB_ROOT_SH and "break" in M.JOB_ROOT_SH
+    assert "-ge 60" in M.JOB_ROOT_SH and "JOBROOT=" in M.JOB_ROOT_SH and "bf+20" in M.JOB_ROOT_SH      # JOBROOT-S3 11-18: most usable space, scratch2 kept unless scratch3 is 20 GB larger
 
 
 def test_not_admitted_signature():
