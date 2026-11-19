@@ -25764,3 +25764,5 @@ FAILED [AUTOPILOT 51e9516eaf12] 2026-11-18 20:25:51 PST AUTOPILOT -> KIT-WAVE-3:
   NO-PROGRESS epyc8 svc_hi_dsdv_svc_rs__t3 4_1_cts stage 37.5 h job 50.9 h: no new meaningful log line for 7.4 h; last: [WARNING STA-0450] virtual clock vclk can not be propagated.
   NO-PROGRESS epyc7 kv3_pc_v1__cl23f6a148 5_1_grt stage 28.9 h job 33.1 h: no new meaningful log line for 6.8 h; last: global_route -end_incremental -congestion_report_file /work/run/reports/asap7/dp_kv3_pc_v1__cl23f6a1
   NO-PROGRESS epyc9 serdes__t13 signoff_meas_072023 stage 21.5 h job 22.7 h: no new meaningful log line for 21.1 h; last: - hold_ff: FAIL WNS -55.85 ps < 0
+- 2026-11-18 20:52 PST DRIFT [MERGE-QUEUE -> COORD; cc ADMIT-TUNE-1, KIT-OPS-5] live tree differs from its recorded main sha (1 new): epyc2: rt/current 517776e1e0c0 != hub af87085e1115. Any live fix must land as a branch + COORD APPROVED; the merge queue lands it and ot-tools-sync deploys it.
+- 2026-11-18 20:52 PST STATE [MERGE-QUEUE -> COORD] drift cleared: epyc10: rt/current d6a5a5221933 != hub 517776e1e0c0 ; epyc8: rt/current d6a5a5221933 != hub 517776e1e0c0 ; epyc9: rt/current d6a5a5221933 != hub 517776e1e0c0
