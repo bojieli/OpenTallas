@@ -10059,6 +10059,11 @@ def grt_arm_reclaim(AP, rec, hosts):
     cmd = (f"W=$(readlink -f {shlex.quote(w)}) || exit 0; [ -d \"$W\" ] || {{ echo KW_RECLAIM_SKIP absent; exit 0; }}; "
            f"case \"$W\" in *{shlex.quote(want)}) ;; *) echo KW_RECLAIM_SKIP resolves elsewhere; exit 0;; esac; "
            f"if find \"$W\" -name signoff.json -print -quit | grep -q .; then echo KW_RECLAIM_SKIP signoff.json; exit 0; fi; "
+           # FABLE-FLOW-1555 (B): the external guard copy predates the routed-unsigned rule, so the same rule is checked here: routed results (5_2_route.odb / 6_final.odb) are kept unless a NEWER attempt of
+           # the item also holds routed results (a signoff.json under the dir was refused above)
+           f"if find \"$W\" -name 5_2_route.odb -o -name 6_final.odb | grep -q .; then nw=0; for d in \"$(dirname \"$W\")\"/attempt_*; do n=${{d##*_}}; "
+           f"[ \"$n\" -gt {int(rec.get('attempt') or 0)} ] 2>/dev/null && find \"$d\" -name 5_2_route.odb -o -name 6_final.odb | grep -q . && nw=1; done; "
+           f"[ $nw = 1 ] || {{ echo KW_RECLAIM_SKIP routed result unsigned, not superseded; exit 0; }}; fi; "
            f"G={shlex.quote(RECLAIM_GUARD)}; L=$HOME/.local/state/ot-delete-guard/protected.txt; "
            f"if [ ! -f \"$G\" ] || [ ! -f \"$L\" ]; then echo KW_RECLAIM_SKIP delete guard missing; exit 0; fi; "
            f"if ! gr=$(python3 -I \"$G\" check \"$W\" \"$L\" 2>&1); then echo KW_RECLAIM_SKIP guard ${{gr:0:80}}; exit 0; fi; "
