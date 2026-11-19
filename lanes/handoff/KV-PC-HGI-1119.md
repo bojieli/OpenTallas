@@ -27,3 +27,8 @@ kv3_pc synth (kv3_pc_hgi, ot-run, ~/kvpchgi_synth.log on intel2) running; lockst
 - io_cor_v1: infra (place RC 0, no 3_place.odb, ot-run moved job). Relaunch via wave.
 - core qkd_pv_fin_s8_pin: KV-D24 FAIL core view has no recipe / ambiguous por; FABLE-FIX-KV-PV row E (pvfin view from signed DB) fixes no_recipe.
 Wave: all rows are item names of the current plan; BOUND-FALLBACK launches them on D24c once env known. D24c is env_unknown (WAVE-PILOT-FIX c91be64820): KV-D23-COMPOSE must post die_gen_env/bind_env of D24c.
+## 11-19 12:xx KV stale route rows: CPU sample 2 min on 6 hosts (docker cgroup usage; containers are dpkit-<type>-<pid>; the wave unit names kw-qwenkv-* match no container)
+- 44 KV containers sampled: progressing 39 (CPU 50-300%, mostly one thread at 100% = routing/lint), frozen 4 (0.0-0.1%): epyc7 pv_v3, pv_v7, pv_v12, pv_v6n (16-20 h old).
+- Cancelled: ot-run --cancel on the exact --dir of pv_v12, pv_v6n, pv_v7 (client SIGTERM, 1 client each); pv_v3 had no live client -> ot-run --cancel-dir (autopilot marks CANCELLED next poll). ot-heavy-stop found 0 scopes, so the dpkit containers themselves still exist on epyc7 at 0 CPU; not killed by me (wave/reaper).
+- Ghost (stale row, no container on any host): kv3_hub_Wo, kv3_pv_v1n, kv3_pv_v2n; plus 4 hgi_v1/v2 clone rows (cl141fc26e, cl42bc8b12, cl2862d491, cle0015330) have containers but wave row had no running attempt (duplicates on epyc7/epyc10).
+- Not cancelled: 30 kv3_hg/hgi/pc/pv on epyc7 at 100% CPU for 16-35 h. CPU alone does not show progress; GRT overflow trend not read yet.
