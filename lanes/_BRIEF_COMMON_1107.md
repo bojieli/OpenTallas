@@ -19,3 +19,8 @@ Kit-wave and lane src trees are staged as hard-link copies. On several hosts a s
 - Before `cp -al`, run `test -L <src>`; always copy the REALPATH: `R=$(readlink -f <src>); cp -al "$R" <new>` (or `cp -al "$R/." <new>/`), never a symlink. Check that <new> itself and no path component of it is a link before the first write.
 - Shared src trees are READ-ONLY after staging: `chmod -R a-w <tree>`. Never write into one; a permission error is the guard working, not a bug to chmod away.
 - A private tree = `cp -al <realpath> <new>` then `find <new> -type d -exec chmod u+w {} +`. Files stay hard links to the shared inodes (still read-only), so write NEW files only: `rm -f <new>/<f>` then write/copy the new file (never edit or `>`/`cp` over a linked file in place).
+
+## Scripts under ot-run: use --snapshot-dir (FLEET-OPS-R 11-19)
+When a job runs a script that you (or another lane) may edit, rsync over or re-generate while the job runs (proto_die_l.sh, die_rerun*, chain/bind wrappers), submit it as
+`ot-run --snapshot-dir ... -- bash /abs/dir/script.sh args`: ot-run copies that directory (files up to 8 MB, 256 MB total) into a private temp dir on the host and runs the copy, so an in-place
+edit cannot reach the running job (S81 l1119b exited 2 that way). Keep big data out of the script dir. Needs rt >= the --snapshot-dir commit.

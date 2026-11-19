@@ -28,3 +28,8 @@
 
 14. (10-26) Physical rules: ~/coord/METHODOLOGY.md section 12 is canonical (layers incl. leftover M8/M9 for die-top signals, ft pushdown, islands = clock/reset only, repeater bays, common core clock latency, mesh CPPR, sufficiency gates). Read it first; never revive superseded lines in 12.6.
 10. (23:45 10-26) EPYC1-RETIRE: epyc1 is deleted 10-27 05:25 PDT. ot-run = `ssh -o ControlPath=none intel2 ~/.local/bin/ot-run ...`; autopilot, ~/coord hub mirror, merge.lock and flow-canary now run on intel2 (read OWNERS.tsv etc. from intel2 ~/coord/autopilot). Never create worktrees/run dirs on epyc1; use intel2/intel1 /srv/opentallas-scratch2. Map of moved dirs: lanes/EPYC1-RETIRE.md.
+
+## Scripts under ot-run: use --snapshot-dir (FLEET-OPS-R 11-19)
+When a job runs a script that you (or another lane) may edit, rsync over or re-generate while the job runs (proto_die_l.sh, die_rerun*, chain/bind wrappers), submit it as
+`ot-run --snapshot-dir ... -- bash /abs/dir/script.sh args`: ot-run copies that directory (files up to 8 MB, 256 MB total) into a private temp dir on the host and runs the copy, so an in-place
+edit cannot reach the running job (S81 l1119b exited 2 that way). Keep big data out of the script dir. Needs rt >= the --snapshot-dir commit.
