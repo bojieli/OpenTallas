@@ -2,6 +2,18 @@
 
 Work dir epyc9 /srv/opentallas-scratch2/claude/fable-fix-kv-hg3 (sc/ = STA dumps, rm/ = relay proof kits, wt/ = lane clone). Hub logs intel2 ~/tmp/ffkhg3.
 
+## STATE 11-18 17:45 PST (read this first)
+- On main from this lane: a572716aa09 relay chain keys; e788528ae26 tail_copy_anchor re-site (ODB-0359); ef4eb6eb679 tail law on polylines.
+  Fixes #1 and #3 are live in KV-D23H (D23h2). Fix #2 = lane KV-KT-E0 (main 4e588e5fda), event D25, rows lanes/handoff/KV-KT-E0-rows-d25.json.
+- Proof kits (all stopped, DO_NOT_COUNT, no export): k3 epyc9 (fixes 1-3) post-CTS +0.43; k4 epyc9 (+W2 +W3) -145.5; k5 epyc8 (+W5) +0.46.
+  GRT iteration 5 overflow: base 49,234 capped / west 41,652; k3 49,153 / 44,172; k5 45,119 / 28,820. No hgi kit routes without W1.
+- Rows: lanes/handoff/FABLE-FIX-KV-HG-rows-d24.json (A relay keys, B plan rows incl. pv, C other families, D k3, E west band W1-W5).
+- Open, in order: (1) W1 landing core move in a bound event (KV-D23-COMPOSE), then W2 + W3 + W5 with it, then a routed hgi_v1;
+  (2) KV-KT-E0: five core kits on epyc9 (e0 in GRT, ectlk q0-q2 launched 17:37, q3 pending; new kit lineage: read the pin-identity
+  report first), KV token sim, strict bind on the derived netlist, D_QK +2, relay regex for the parent kst cells;
+  (3) W5 generator form: an internal_stations site for the per-bit pad stage u_pd1_<bus>_<b> (today a kit-local is_place line).
+- Do not: add GRT iterations on k3-class kits; pad the port_in hold ends; take W2 / W3 without W5.
+
 ## STATE 11-18 10:25 PST: fixes #1+#2+#3 together, private kit k3 (COORD order 09:4x)
 - Kit epyc9 /srv/opentallas-scratch2/claude/fable-fix-kv-hg3/k3/gen/kv3_hgi_v1__cl141fc26e (built on epyc7 k3/: kitrtl.sh, gen3.sh, kt_stations.py).
   = kit RTL from the KV-D23-REACH mirror_ab bind (fix #3: ot_dp_rsync S=2 + ot_dp_rtail D=3 per core, tail_copy_anchor.tcl)
