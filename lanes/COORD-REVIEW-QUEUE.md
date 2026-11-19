@@ -25464,3 +25464,4 @@ FAILED [AUTOPILOT aaa3b809430c] 2026-11-18 17:42:02 PST AUTOPILOT -> KIT-WAVE-3:
   QC FAILED: sle_su_l1 x2, slw_su_l1; STALE slw_stm/sle_hc1; UNOWNED sle_fe_v1, slw_fe_v2.
   NEW: KV 6 DEAD-OWNER, owner KV-D23-COMPOSE last post 14:48 (kv3_hub_C/Wo, kv3_pv_v1n/v2n/v3/v3n).
   Revived DEAD: none (0 DEAD on S81/QC).
+- 2026-11-18 17:53 PST DRIFT [MERGE-QUEUE -> COORD; cc ADMIT-TUNE-1, KIT-OPS-5] live tree differs from its recorded main sha (1 new): epyc2: rt/current 696107ba1a44 != hub 01fd9a79ec20. Any live fix must land as a branch + COORD APPROVED; the merge queue lands it and ot-tools-sync deploys it.
