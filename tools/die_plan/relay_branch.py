@@ -326,6 +326,48 @@ def cluster(src, sinks, limit=LIMIT, far=frozenset()):
     return cl
 
 
+def _centre(h):
+    dx, dy = h.get("track_offset_um", [0.0, 0.0])
+    return (h["origin_um"][0] + dx + h["outline_um"][0] / 2, h["origin_um"][1] + dy + h["outline_um"][1] / 2)
+
+
+def _squash(s):
+    return re.sub(r"[^0-9a-z]", "", str(s).lower())
+
+
+def hier_cores(t, N, matched=frozenset()):
+    """CBC-RULES-1119 11-19 (COORD: QC hard cores sit inside soft wrappers): {bound instance: [plan hard cores]} for the plan
+    hard cores that are no direct instance of the bound module.
+      - nested: plan inst u_bound.<X>.<path> (or <X>.<path>) with X (or u_X) a bound instance -> the core sits inside X
+      - alias: the bound instance whose `// as-built ...` tail (or its own name) squashes to the plan inst (QC cbf u_t00 =
+        as-built c16_E0_0.u_t_0_0): one core marked {"_alias": core}
+    Ambiguous squash matches are left out."""
+    tails = {}
+    for st in N.st:
+        if st["kind"] == "assign":
+            continue
+        j = st["lines"][0] - 1
+        m = re.match(r"^\s*// as-built (\S+)", N.lines[j]) if j >= 0 else None
+        for key in {_squash(st["inst"]), _squash(st["inst"][2:])} | ({_squash(m.group(1).split(".")[-1])} if m else set()):
+            tails.setdefault(key, set()).add(st["inst"])
+    out = {}
+    for h in t.get("hard_cores", []):
+        if "origin_um" not in h or "outline_um" not in h or id(h) in matched:
+            continue
+        seg = h["inst"].split(".")
+        if seg[0] == "u_bound":
+            seg = seg[1:]
+        if len(seg) > 1:
+            hit = next((c for c in (seg[0], "u_" + sid(seg[0])) if c in N.by_inst), None)
+            if hit:
+                out.setdefault(hit, []).append(h)
+            continue
+        hits = tails.get(_squash(seg[0]), set())
+        if len(hits) == 1:
+            out.setdefault(next(iter(hits)), []).append({"_alias": h})
+    return out
+
+
 class Geometry:
     def __init__(self, plan, tn, N, plan_dir=None):
         self.t = plan["partition_types"][tn]
@@ -339,13 +381,24 @@ class Geometry:
                 if "u_" + sid(c) in N.by_inst:
                     self.hc["u_" + sid(c)] = h
                     break
+        self.nest = hier_cores(self.t, N, set(id(h) for h in self.hc.values()))
+        for inst, hs in list(self.nest.items()):
+            if len(hs) == 1 and hs[0].get("_alias"):
+                self.hc[inst] = hs[0]["_alias"]          # the bound instance IS the plan core under another name
+                del self.nest[inst]
         self._pins = {}
 
     def pin(self, inst, port):
         """pin centroid of hard-core instance `inst` port (type frame), the core centre without pins, None if not a core"""
         h = self.hc.get(inst)
         if h is None:
-            return None
+            hs = self.nest.get(inst)
+            if not hs:
+                return None
+            # CBC-RULES-1119 hierarchical pin view: a soft wrapper of the bound module (QC qfd_*: hard cores placed inside
+            # it, plan inst u_bound.<wrapper>.<path>) reads at the centroid of its cores
+            cs = [_centre(x) for x in hs]
+            return (sum(x for x, _ in cs) / len(cs), sum(y for _, y in cs) / len(cs))
         if inst not in self._pins:
             import relay_depth as RD
             try:

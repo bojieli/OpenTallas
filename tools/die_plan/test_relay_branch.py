@@ -302,3 +302,45 @@ def test_branch_rows_default_keeps_stage_count():
     rows, drows, rep = RB.branch_rows(far, "t", text2)
     assert drows == [] and all(c["D"] == 0 for r in rows for c in r["copies"])
     assert [r["need_D"] for r in rep if "need_D" in r] == [1]
+
+
+# CBC-RULES-1119 hierarchical pin view (QC: hard cores inside soft wrappers)
+HIER = """module q (
+    input wire clk
+);
+    wire [3:0] s1_q;
+    wire [3:0] w_a_x;
+    // as-built c16_E0_0.u_t_0_0
+    qfd_tile u_u_t_0_0 (
+        .ck(clk),
+        .x(w_a_x)
+    );
+    ot_dp_dly #(.W(4), .D(1)) u_pd_x (.clk(clk), .d(w_a_x), .q(s1_q));
+    // as-built dvs_W0.u_core.u_sub.u_r4
+    qfd_station u_u_r4 (
+        .ck(clk),
+        .xi(s1_q[3:0])
+    );
+    // as-built dvs_W0.u_core.u_sub.u_r7
+    qfd_station u_u_r7 (
+        .ck(clk),
+        .xi(s1_q[3:0])
+    );
+endmodule
+"""
+
+
+def test_hier_pin_view_nested_and_alias():
+    hc = [dict(inst="u_t00", module="qfd_tile_a", origin_um=[0, 0], outline_um=[100, 100]),
+          dict(inst="u_bound.u_u_r4.u_h9.u_m.g_bank[0].u_m", module="sram", origin_um=[1000, 0], outline_um=[20, 20]),
+          dict(inst="u_bound.u_u_r4.u_hb.u_m.g_bank[0].u_m", module="sram", origin_um=[1040, 0], outline_um=[20, 20]),
+          dict(inst="u_bound.u_u_r7.u_h9.u_m.g_bank[0].u_m", module="sram", origin_um=[1900, 1500], outline_um=[20, 20])]
+    plan = {"partition_types": {"q": {"outline_um": [2000, 2000], "hard_cores": hc}}}
+    G = RB.Geometry(plan, "q", RB.Netlist(HIER))
+    assert G.pin("u_u_t_0_0", "x") == (50.0, 50.0)                    # alias by the as-built tail u_t_0_0 = u_t00
+    assert G.pin("u_u_r4", "xi") == (1030.0, 10.0)                    # centroid of the two cores inside u_u_r4
+    assert G.pin("u_u_r7", "xi") == (1910.0, 1510.0)
+    assert G.pin("u_pd_x", "d") is None
+    rows, drows, rep = RB.branch_rows(plan, "q", HIER, None, 405.0)
+    assert [r["inst"] for r in rows] == ["pd_x"] and drows == []
+    assert {tuple(c["sinks"]) for c in rows[0]["copies"]} <= {("u_r4",), ("u_r7",)}
