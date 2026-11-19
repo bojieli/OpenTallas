@@ -26,3 +26,13 @@ Work dir: epyc2 /srv/opentallas-scratch3/claude/fable-fix-s81-colh9r1 (L). Tools
   4_cts_post_hook.rpt and 5_global_route.tt.rpt, then HANDOFF to S81-DIE-R3 for D8h.
 - Same misdirected-trunk pattern exists in the plan for col_h10_r1 (frame_int_i1 -> bn6.rs), col_h10_r2 (frame_int_i0 -> bn11.rs),
   col_h9_r2 (frame_int_i0 -> bn10.rs). Not mine; told S81-GEOM-OPUS.
+
+## 2026-11-19 00:35 gate green, proof kit launched
+- gate_v1 (plan b6a116853371 on D8e df7446e48ba9): strict bind BIND_RC=0, bind_report errors 0; LATCHECK 873/873 PASS; G0 ERROR 2 = control 2, 0 new
+  (control = L/gate_ctl, the unchanged applied plan). WARN 11222 = 11222 (46 differ only by path / set order).
+- Kit gen (L/kits_h9.sh, wave gen env): KIT_RTL 0, PREPARE 0, GEN 0, GEN_LINT PASS. istations.tcl carries the 5 new sites and the 335 relay_sites keys.
+- Proof kit pv36da905c: launched 00:31 from intel2 (ot-run --hosts epyc2, goal grt, 48 GB / 8 thr); log intel2 ~/fable-fix-s81-colh9r1/kit_v1_run.out;
+  kit epyc2 L/gate_v1/kits/col_h9_r1__t1__cl49d7a23e__pv36da905c/gen/<type>. Expect CTS about 02:15, GRT TT about 04:30.
+- Read on arrival: run_place.log OT_ISTATIONS / OT_RELAY_SITES (unmatched keys must be 0) / OT_RELAY_POLY lpl_6..9_r (hops) / OT_RESET_TREE PASS;
+  then 4_cts_post_hook.rpt and 5_global_route.tt.rpt (L/tools/runsta.sh gives the per-endpoint table).
+- If the kit passes TT >= -42 at GRT: post HANDOFF to S81-DIE-R3 with mk_rows_h9r1.py (apply on the D8g plan: it asserts the old sites, so it is safe to re-run).
