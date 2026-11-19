@@ -22,6 +22,8 @@ LIVE = KV-D25c, still with no bind of record.
   - COORD lever 7: d25d4 becomes the bind of record as soon as it is green (bind-first apply), or D25d-prime if that lands first.
   - FABLE H: the t2 split and west-channel chain. The k6 form is a bound-RTL hand edit (fable-fix-kv-hg3/k6/split_t2.py). land_pad_tail_split does not cover the qkh_head_gather_stage, so this needs generator code plus a proof on a d25d4-bound kit.
   - sink bins (W8/d25e_in/sink_bins) and K6.
+  - COORD lever 2 (FABLE-PD-KV-0845): E2 pc view rows (epyc7 fable-fix-kv-pv-1119/rows/E2, rows.py apply + --install; lef/lib for 48 kv3_pc hard_cores rows). Purpose: die STA hold measured on the signed pc views.
+  - COORD lever 1: KV-PC-HGI-1119 type hold-window rows, taken when they post.
 - Open finding (FABLE-FIX-KV-PV, 05:38 PST): pv_v_pads_7p in the live plan is stale by +5 on 488 members, which is likely a lane defect. It is fixed with the pv rows.
 
 ## Status 2026-11-19 14:10Z (supersedes 10:50Z)
