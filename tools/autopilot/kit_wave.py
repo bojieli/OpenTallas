@@ -9716,6 +9716,89 @@ def cancel_rows_core(AP, cfg, st, die, item_glob, why, owner, verdict, jobs, dry
     return stops, done
 
 
+QJOB_TERMINAL = ("CANCELLED", "SIGNED", "TRIAL-SIGNED", "ARCHIVED", "REJECTED", "WITHDRAWN", "CRASH", "ORPHAN", "DONE", "REVIEW")
+CANCEL_COPY_FIELDS = ("status", "class", "updated", "reason", "stopped_containers", "reclaim")
+
+
+def close_queue_job(AP, rec, why):
+    """FABLE-FLOW-1950 (M): a cancel stops the unit / containers itself, so the autopilot queue job of the row would stay RUNNING with no client and the reaper
+    classified it CRASH infra-orphan (175 rows).  Close that job as CANCELLED (cls cancelled, not resubmitted) right after the stop.  -> a short note"""
+    qid = rec.get("q_id")
+    if not qid:
+        return "no queue job"
+    try:
+        ast = AP.load_state()
+        j = (ast.get("jobs") or {}).get(qid)
+        if not j:
+            return "queue job absent"
+        if str(j.get("status") or "").startswith(QJOB_TERMINAL):
+            return "queue job already " + str(j.get("status"))
+        j.update(cls="CANCELLED", kind="cancelled", reasons=why[:600], finished=time.time())
+        AP.set_status(ast, j, "CANCELLED", "kit_wave cancel: " + why[:200])
+        return "queue job closed"
+    except Exception as e:                                # noqa: the row is already CANCELLED; the job close is best effort
+        return "queue job close failed: %r" % (e,)
+
+
+def cancel_rows_phased(AP, cfg, ap_dir, die, item_glob, why, owner, verdict, dry=False, old_plans_only=False, lock=None):
+    """FABLE-FLOW-1950 (L): cancel-rows held kit_wave.lock 17:58-18:47 (seven wave steps skipped, nothing launched for 71 min) because the unit / container stops ran under it.
+    Now: (1) lock only to read the state and place the structural stops; (2) stops, withdrawals and container stops OUTSIDE the lock, on copies of the rows;
+    (3) lock again only to write the results into the CURRENT state (CAS: a row whose attempt or live status changed meanwhile is left alone); then the queue jobs are closed (M).
+    -> (stops, [(key, item, attempt, status)] cancelled, [skipped keys])"""
+    import copy
+    def take():
+        lk = (lock or lock_take)(Path(ap_dir) / "kit_wave.lock", wait_s=60)
+        if lk is None:
+            raise RuntimeError("kit_wave.lock busy for 60 s")
+        return lk
+    lk = take()
+    try:
+        st = load_state(ap_dir)
+        try:
+            jobs = json.loads((Path(ap_dir) / "state.json").read_text()).get("jobs") or {}
+        except (OSError, ValueError):
+            jobs = {}
+        stops, done = cancel_rows_core(AP, cfg, st, die, item_glob, why, owner, verdict, jobs, dry=True, old_plans_only=old_plans_only)
+        if not dry:
+            stops = 0
+            for k, r in sorted((st.get("items") or {}).items()):
+                if any(k == d[0] for d in done):
+                    b12 = str(r.get("block_sha") or "")[:12]
+                    key = f"{die}|{r['item']}|b{b12}"
+                    if b12 and key not in st.setdefault("struct_stops", {}):
+                        st["struct_stops"][key] = {"die": die, "item": r["item"], "block": b12, "verdict": verdict, "owner": owner, "why": why, "ts": time.time(), "force_once": False}
+                        stops += 1
+            save_state(st, ap_dir)
+        work = {k: copy.deepcopy(st["items"][k]) for k, _i, _a, _s in done}
+    finally:
+        lk.close()
+    if dry:
+        return stops, done, []
+    notices, results = {}, {}
+    for k, r in work.items():
+        grt_arm_cancel(AP, cfg, r, f"STRUCT-STOP {verdict} [owner {owner}]: {why}", "STRUCT-STOP", jobs, notices, reclaim=False)
+        results[k] = r
+    skipped = []
+    lk = take()
+    try:
+        st = load_state(ap_dir)
+        for k, r in results.items():
+            cur = (st.get("items") or {}).get(k)
+            if cur and cur.get("attempt") == r.get("attempt") and cur.get("status") in ("RUNNING", "LAUNCHING", "ENQUEUED", "CANCELLED"):
+                for f in CANCEL_COPY_FIELDS:
+                    if f in r:
+                        cur[f] = r[f]
+            else:
+                skipped.append(k)
+        save_state(st, ap_dir)
+    finally:
+        lk.close()
+    for k, r in results.items():
+        if k not in skipped:
+            AP.log("KIT-WAVE CANCEL-ROWS " + f"{r['die']}/{r['item']}@{r.get('attempt')}: " + close_queue_job(AP, r, f"STRUCT-STOP {verdict} [owner {owner}]: {why}"))
+    return stops, done, skipped
+
+
 def struct_cmd(a):
     """kit_wave.py struct-stop / struct-force / struct-release / struct-list: edit state struct_stops under kit_wave.lock (blocking wait)"""
     ap_dir = Path(a.ap_dir or AP_DIR)
@@ -15052,33 +15135,26 @@ def main(argv=None):
     if a.cmd == "cancel-rows":
         ap_dir = Path(a.ap_dir or AP_DIR)
         cfg = load_config(Path(a.config).read_text() if a.config else read_config_text(AP))
-        lk = lock_take(ap_dir / "kit_wave.lock", wait_s=900)
-        if lk is None:
-            print("cancel-rows: kit_wave.lock busy for 15 min; nothing done")
-            return 1
+        st = load_state(ap_dir)
+        AP.DRY = bool(a.dry_run)
+        n_state = len(st.get("items") or {})
+        mine = [r for r in (st.get("items") or {}).values() if r.get("die") == a.die and fnmatch.fnmatchcase(str(r.get("item")), a.item)]
+        print(f"cancel-rows: state {ap_dir / STATE_FILE} ({n_state} rows); {len(mine)} row(s) of {a.die}/{a.item} in any status "
+              f"({', '.join(f'{k} {v}' for k, v in sorted(__import__('collections').Counter(str(r.get('status')) for r in mine).items())) or 'none'}); "
+              f"die plan sha {str(((cfg.get('dies') or {}).get(a.die) or {}).get('plan_sha256') or '')[:12] or '-'}; old-plans-only {bool(a.old_plans_only)}")
+        if not n_state:
+            print("cancel-rows: the state file is empty or missing here; run this on the hub (intel2) or pass --ap-dir")
+            return 2
         try:
-            st = load_state(ap_dir)
-            try:
-                jobs = json.loads((ap_dir / "state.json").read_text()).get("jobs") or {}
-            except (OSError, ValueError):
-                jobs = {}
-            AP.DRY = bool(a.dry_run)
-            n_state = len(st.get("items") or {})
-            mine = [r for r in (st.get("items") or {}).values() if r.get("die") == a.die and fnmatch.fnmatchcase(str(r.get("item")), a.item)]
-            print(f"cancel-rows: state {ap_dir / STATE_FILE} ({n_state} rows); {len(mine)} row(s) of {a.die}/{a.item} in any status "
-                  f"({', '.join(f'{k} {v}' for k, v in sorted(__import__('collections').Counter(str(r.get('status')) for r in mine).items())) or 'none'}); "
-                  f"die plan sha {str(((cfg.get('dies') or {}).get(a.die) or {}).get('plan_sha256') or '')[:12] or '-'}; old-plans-only {bool(a.old_plans_only)}")
-            if not n_state:
-                print("cancel-rows: the state file is empty or missing here; run this on the hub (intel2) or pass --ap-dir")
-                return 2
-            stops, done = cancel_rows_core(AP, cfg, st, a.die, a.item, a.why, a.owner, a.verdict, jobs, dry=a.dry_run, old_plans_only=a.old_plans_only)
-            if not a.dry_run:
-                save_state(st, ap_dir)
-            for x in done:
-                print("CANCEL" if not a.dry_run else "WOULD-CANCEL", *x)
-            print(f"cancel-rows: {len(done)} live row(s), {stops} new struct stop(s)" + (" (dry run)" if a.dry_run else ""))
-        finally:
-            lk.close()
+            stops, done, skipped = cancel_rows_phased(AP, cfg, ap_dir, a.die, a.item, a.why, a.owner, a.verdict, dry=a.dry_run, old_plans_only=a.old_plans_only)
+        except RuntimeError as e:
+            print(f"cancel-rows: {e}; nothing done")
+            return 1
+        for x in done:
+            print("CANCEL" if not a.dry_run else "WOULD-CANCEL", *x)
+        for k in skipped:
+            print("CANCEL-SKIPPED (row changed while the stops ran)", k)
+        print(f"cancel-rows: {len(done)} live row(s), {stops} new struct stop(s)" + (" (dry run)" if a.dry_run else ""))
         return 0
     if a.cmd == "reap-dead":
         AP.DRY = True
