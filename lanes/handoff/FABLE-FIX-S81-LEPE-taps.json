@@ -651,5 +651,8 @@
    }
   ]
  },
- "evidence": "epyc10:/srv/opentallas-scratch2/claude/fable-lepe/out_mu/{ff.log,tt.log,hold.json,setup.json}; ana.py geo.py ideal.py"
+ "evidence": "epyc10:/srv/opentallas-scratch2/claude/fable-lepe/out_mu/{ff.log,tt.log,hold.json,setup.json}; ana.py geo.py ideal.py",
+ "superseded": {
+  "dsdv_slice_lepe_mu_LP__t2": "use FABLE-FIX-S81-LEPE-mu-banks-plus-taps.json (bank moves + re-solved taps as one row); this table is valid only if the rx banks do NOT move"
+ }
 }

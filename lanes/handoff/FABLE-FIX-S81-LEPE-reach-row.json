@@ -26,7 +26,8 @@
    "what": "rx SRAM banks of one memory split across the type",
    "cycles": 0,
    "measured": "g_rx[1] banks at x=276,346,544,838,907 (y 294); g_rx[3] bank0 at (1322,294), bank1 (415,285), bank2-4 x=276,346,484 (y 259). rd_out -> rid / ml_wd: 132 ends, worst -472, legs to 1023 um. g_rx[0] (one stack at x 544) and g_rx[2] (one row x 976..1253) are compact and do not appear.",
-   "row": "positions only (contents origin_um, orient R0 kept): u_bound.u_u_lep.u.g_rx[3].g_sa.g_true_sram.u_rx_mem.g_bank[1].u_m -> [414.72, 259.212]; u_bound.u_u_lep.u.g_rx[3].g_sa.g_true_sram.u_rx_mem.g_bank[0].u_m -> [552.96, 259.212]; u_bound.u_u_lep.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[3].u_m -> [414.72, 293.772]; u_bound.u_u_lep.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[4].u_m -> [483.84, 293.772]. Result: g_rx[3] = one row x 276..553 at y 259, g_rx[1] = one row x 276..544 at y 294 (69.12 pitch, 13.8 um row channel as the existing rows). Slots checked against the placed macro list of att22 only; DIE-R3 macro-site / channel / PG check still applies."
+   "row": "positions only (contents origin_um, orient R0 kept): u_bound.u_u_lep.u.g_rx[3].g_sa.g_true_sram.u_rx_mem.g_bank[1].u_m -> [414.72, 259.212]; u_bound.u_u_lep.u.g_rx[3].g_sa.g_true_sram.u_rx_mem.g_bank[0].u_m -> [552.96, 259.212]; u_bound.u_u_lep.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[3].u_m -> [414.72, 293.772]; u_bound.u_u_lep.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[4].u_m -> [483.84, 293.772]. Result: g_rx[3] = one row x 276..553 at y 259, g_rx[1] = one row x 276..544 at y 294 (69.12 pitch, 13.8 um row channel as the existing rows). Slots checked against the placed macro list of att22 only; DIE-R3 macro-site / channel / PG check still applies.",
+   "superseded": "never apply alone: use FABLE-FIX-S81-LEPE-mu-banks-plus-taps.json"
   },
   {
    "id": 4,

@@ -515,88 +515,6 @@
     }
    ]
   },
-  "bk_sel__t2": {
-   "registers": 12219,
-   "criterion": {
-    "verdict": "SPLIT",
-    "spread_ps": 451.0,
-    "material_taps": 7,
-    "slowest": "clk",
-    "fastest": "clk_t2",
-    "tol_ps": 80.0,
-    "basis": "MEASURED"
-   },
-   "append_to": "clock.taps",
-   "target_sinks": 1400,
-   "added": 9,
-   "max_load_after": 1050,
-   "predicted_spread_after_ps": 79.7,
-   "added_taps": [
-    {
-     "name": "clk_t8",
-     "xy": [
-      2041.2,
-      47.52
-     ]
-    },
-    {
-     "name": "clk_t9",
-     "xy": [
-      2479.68,
-      95.04
-     ]
-    },
-    {
-     "name": "clk_t10",
-     "xy": [
-      2257.2,
-      84.24
-     ]
-    },
-    {
-     "name": "clk_t11",
-     "xy": [
-      1296.0,
-      32.4
-     ]
-    },
-    {
-     "name": "clk_t12",
-     "xy": [
-      1265.76,
-      30.24
-     ]
-    },
-    {
-     "name": "clk_t13",
-     "xy": [
-      1408.32,
-      32.4
-     ]
-    },
-    {
-     "name": "clk_t14",
-     "xy": [
-      1332.72,
-      34.56
-     ]
-    },
-    {
-     "name": "clk_t15",
-     "xy": [
-      1235.52,
-      34.56
-     ]
-    },
-    {
-     "name": "clk_t16",
-     "xy": [
-      2168.64,
-      84.24
-     ]
-    }
-   ]
-  },
   "dsdv_slice_lepe_nh_mus_C__t1": {
    "registers": 94997,
    "criterion": {
@@ -1106,5 +1024,8 @@
     }
    ]
   }
+ },
+ "withdrawn": {
+  "bk_sel__t2": "WITHDRAWN 11-19 per COORD: the table already in D8h d collides on 9 of 9 names; D8h d stays"
  }
 }

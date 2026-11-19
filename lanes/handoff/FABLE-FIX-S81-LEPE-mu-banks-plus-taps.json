@@ -1,0 +1,368 @@
+{
+ "schema": "fable-fix-s81-lepe.combined_row.v1",
+ "lane": "FABLE-FIX-S81-LEPE",
+ "for": "S81-DIE-R3",
+ "type": "dsdv_slice_lepe_mu_LP__t2",
+ "status": "CANDIDATE, ONE ROW: apply the bank moves and this tap table together or neither (COORD / FABLE-PD-S81-0253: 4 taps of the earlier table land in or beside the moved banks; my own kit gen confirmed it: clk_t33 illegal). Supersedes, for this type, the mu table in FABLE-FIX-S81-LEPE-taps.json and item 3 of FABLE-FIX-S81-LEPE-reach-row.json. Proof: private kit epyc9 /srv/opentallas-scratch2/claude/fable-lepe/proof2 submitted to GRT; no result yet.",
+ "limits": "taps re-solved on the att22 register placement with only the 4 macro boxes moved (registers will follow the banks): 692 sinks beyond the 160 um radius, predicted spread 89 ps vs 80 tol. Re-run tools/die_plan/tap_resolve.py on the placed DB of the first kit with the moved banks before freezing the table.",
+ "bank_moves_origin_um": {
+  "u_bound.u_u_lep.u.g_rx[3].g_sa.g_true_sram.u_rx_mem.g_bank[1].u_m": [
+   414.72,
+   259.212
+  ],
+  "u_bound.u_u_lep.u.g_rx[3].g_sa.g_true_sram.u_rx_mem.g_bank[0].u_m": [
+   552.96,
+   259.212
+  ],
+  "u_bound.u_u_lep.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[3].u_m": [
+   414.72,
+   293.772
+  ],
+  "u_bound.u_u_lep.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[4].u_m": [
+   483.84,
+   293.772
+  ]
+ },
+ "append_to": "clock.taps",
+ "target_sinks": 1400,
+ "added": 48,
+ "max_load_after": 1382,
+ "added_taps": [
+  {
+   "name": "clk_t23",
+   "xy": [
+    429.84,
+    371.52
+   ]
+  },
+  {
+   "name": "clk_t24",
+   "xy": [
+    267.84,
+    289.44
+   ]
+  },
+  {
+   "name": "clk_t25",
+   "xy": [
+    1023.84,
+    496.8
+   ]
+  },
+  {
+   "name": "clk_t26",
+   "xy": [
+    827.28,
+    455.76
+   ]
+  },
+  {
+   "name": "clk_t27",
+   "xy": [
+    43.2,
+    406.08
+   ]
+  },
+  {
+   "name": "clk_t28",
+   "xy": [
+    1036.8,
+    319.68
+   ]
+  },
+  {
+   "name": "clk_t29",
+   "xy": [
+    1211.76,
+    496.8
+   ]
+  },
+  {
+   "name": "clk_t30",
+   "xy": [
+    425.52,
+    432.0
+   ]
+  },
+  {
+   "name": "clk_t31",
+   "xy": [
+    311.04,
+    1103.76
+   ]
+  },
+  {
+   "name": "clk_t32",
+   "xy": [
+    896.4,
+    550.8
+   ]
+  },
+  {
+   "name": "clk_t33",
+   "xy": [
+    336.96,
+    289.44
+   ]
+  },
+  {
+   "name": "clk_t34",
+   "xy": [
+    397.44,
+    576.72
+   ]
+  },
+  {
+   "name": "clk_t35",
+   "xy": [
+    311.04,
+    639.36
+   ]
+  },
+  {
+   "name": "clk_t36",
+   "xy": [
+    233.28,
+    496.8
+   ]
+  },
+  {
+   "name": "clk_t37",
+   "xy": [
+    86.4,
+    563.76
+   ]
+  },
+  {
+   "name": "clk_t38",
+   "xy": [
+    1175.04,
+    319.68
+   ]
+  },
+  {
+   "name": "clk_t39",
+   "xy": [
+    108.0,
+    162.0
+   ]
+  },
+  {
+   "name": "clk_t40",
+   "xy": [
+    721.44,
+    187.92
+   ]
+  },
+  {
+   "name": "clk_t41",
+   "xy": [
+    535.68,
+    427.68
+   ]
+  },
+  {
+   "name": "clk_t42",
+   "xy": [
+    1030.32,
+    619.92
+   ]
+  },
+  {
+   "name": "clk_t43",
+   "xy": [
+    406.08,
+    319.68
+   ]
+  },
+  {
+   "name": "clk_t44",
+   "xy": [
+    1028.16,
+    211.68
+   ]
+  },
+  {
+   "name": "clk_t45",
+   "xy": [
+    535.68,
+    324.0
+   ]
+  },
+  {
+   "name": "clk_t46",
+   "xy": [
+    704.16,
+    406.08
+   ]
+  },
+  {
+   "name": "clk_t47",
+   "xy": [
+    155.52,
+    289.44
+   ]
+  },
+  {
+   "name": "clk_t48",
+   "xy": [
+    535.68,
+    477.36
+   ]
+  },
+  {
+   "name": "clk_t49",
+   "xy": [
+    475.2,
+    311.04
+   ]
+  },
+  {
+   "name": "clk_t50",
+   "xy": [
+    829.44,
+    362.88
+   ]
+  },
+  {
+   "name": "clk_t51",
+   "xy": [
+    529.2,
+    371.52
+   ]
+  },
+  {
+   "name": "clk_t52",
+   "xy": [
+    967.68,
+    319.68
+   ]
+  },
+  {
+   "name": "clk_t53",
+   "xy": [
+    483.84,
+    432.0
+   ]
+  },
+  {
+   "name": "clk_t54",
+   "xy": [
+    235.44,
+    319.68
+   ]
+  },
+  {
+   "name": "clk_t55",
+   "xy": [
+    406.08,
+    285.12
+   ]
+  },
+  {
+   "name": "clk_t56",
+   "xy": [
+    43.2,
+    295.92
+   ]
+  },
+  {
+   "name": "clk_t57",
+   "xy": [
+    1244.16,
+    319.68
+   ]
+  },
+  {
+   "name": "clk_t58",
+   "xy": [
+    604.8,
+    427.68
+   ]
+  },
+  {
+   "name": "clk_t59",
+   "xy": [
+    829.44,
+    408.24
+   ]
+  },
+  {
+   "name": "clk_t60",
+   "xy": [
+    477.36,
+    371.52
+   ]
+  },
+  {
+   "name": "clk_t61",
+   "xy": [
+    1105.92,
+    308.88
+   ]
+  },
+  {
+   "name": "clk_t62",
+   "xy": [
+    1010.88,
+    496.8
+   ]
+  },
+  {
+   "name": "clk_t63",
+   "xy": [
+    475.2,
+    295.92
+   ]
+  },
+  {
+   "name": "clk_t64",
+   "xy": [
+    125.28,
+    496.8
+   ]
+  },
+  {
+   "name": "clk_t65",
+   "xy": [
+    1036.8,
+    300.24
+   ]
+  },
+  {
+   "name": "clk_t66",
+   "xy": [
+    535.68,
+    354.24
+   ]
+  },
+  {
+   "name": "clk_t67",
+   "xy": [
+    313.2,
+    496.8
+   ]
+  },
+  {
+   "name": "clk_t68",
+   "xy": [
+    207.36,
+    319.68
+   ]
+  },
+  {
+   "name": "clk_t69",
+   "xy": [
+    1036.8,
+    311.04
+   ]
+  },
+  {
+   "name": "clk_t70",
+   "xy": [
+    447.12,
+    432.0
+   ]
+  }
+ ]
+}
