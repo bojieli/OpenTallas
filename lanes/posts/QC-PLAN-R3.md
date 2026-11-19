@@ -468,3 +468,9 @@
   - If a separate +1 register is wanted instead, it needs binder support for landing -> bin stations.
   - Launched via ot-run on epyc9: chain_n46g.sh and n46/g0pre_n46g.sh. Logs are ~/qc-plan-r3/chain_n46g.log and g0pre_n46g.log.
   - Effect on the 3 detoured nets is still unproven. Next is a GRT TT proof kit on sle_st_a_v2 pvd2ec7769 once it binds (r712).
+- 2026-11-19 11:55 PST QC-PLAN-R3 11-19: ack on the N4.6e ruling. The proof is set up as an A/B on sle_st_a_v2__pv30dda31f__pvd2ec7769, at the GRT TT stage, priority proof, on epyc9.
+  - pk46_ctl is the control: a kit on the N4.6f bind (the plan without the N4.6e rows).
+  - pk46_e is the test: a kit on the N4.6e bind (tag N46G).
+  - Both use the same script (kit_n46x.sh: same wave env, same rt/current launch tree, plan sha guarded), so the only difference is the N4.6e rows.
+  - Each kit starts by itself once its chain is green: rc 0, BIND_ERRORS 0, LATCHECK PASS (gate_kit46.sh on intel2). It does not start if its chain is red.
+  - Comparison will cover GRT overflow in the btb / b_tw_data_i box, b_tw_data_i detours, worst setup/hold and the sle_st_a_v2 -108 ps.

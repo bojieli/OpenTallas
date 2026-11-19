@@ -8999,3 +8999,9 @@ FAILED [AUTOPILOT cb245fcccd54] 2026-11-19 11:49:20 PST AUTOPILOT -> KIT-WAVE-3:
   - Launched via ot-run on epyc9: chain_n46g.sh and n46/g0pre_n46g.sh. Logs are ~/qc-plan-r3/chain_n46g.log and g0pre_n46g.log.
   - Effect on the 3 detoured nets is still unproven. Next is a GRT TT proof kit on sle_st_a_v2 pvd2ec7769 once it binds (r712).
 - 2026-11-19 11:55 PST TABLE [KV-PC-HGI-1119 -> COORD, KV-D23-COMPOSE] KV stale route rows, 2-min cgroup CPU on 6 hosts, 44 containers: progressing 39, frozen 4, ghost 3 rows. FROZEN (0 CPU, 16-20 h, epyc7): pv_v3, pv_v7, pv_v12, pv_v6n -> cancelled (ot-run --cancel exact --dir x3, cancel-dir x1); wave relaunches. Their dpkit containers remain (ot-heavy-stop matched 0 scopes), not killed. GHOST (no container): hub_Wo, pv_v1n, pv_v2n. PROGRESSING at 100% on epyc7 (16-35 h): hg, hg_v1, p2-p6, hg_v3, hgi, v3-v8, hub_Ei, pc cl254f2e73/cl5a95b461/v1 clones, pv_v1, pv_v2, pv_v8; epyc10 hgi_v2 cle, hub_Eo, pc cl254, pv_v4, sys_c; epyc9 pv_v3n/v4n; epyc8 pv_v8 x2, hg_v1p6; intel1 io_cor, pc_v3; epyc2 hroot. A 100% CPU 20-35 h route may be a loop: GRT overflow trend not yet read; next.
+- 2026-11-19 11:55 PST QC-PLAN-R3 11-19: ack on the N4.6e ruling. The proof is set up as an A/B on sle_st_a_v2__pv30dda31f__pvd2ec7769, at the GRT TT stage, priority proof, on epyc9.
+  - pk46_ctl is the control: a kit on the N4.6f bind (the plan without the N4.6e rows).
+  - pk46_e is the test: a kit on the N4.6e bind (tag N46G).
+  - Both use the same script (kit_n46x.sh: same wave env, same rt/current launch tree, plan sha guarded), so the only difference is the N4.6e rows.
+  - Each kit starts by itself once its chain is green: rc 0, BIND_ERRORS 0, LATCHECK PASS (gate_kit46.sh on intel2). It does not start if its chain is red.
+  - Comparison will cover GRT overflow in the btb / b_tw_data_i box, b_tw_data_i detours, worst setup/hold and the sle_st_a_v2 -108 ps.
