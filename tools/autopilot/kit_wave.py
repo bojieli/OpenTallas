@@ -5483,7 +5483,7 @@ def sync_item_inputs(AP, cfg, run=None):
                     pipe = (f"{' '.join(ssh)} {src} 'test -e {q} && [ $(du -sm {q} | cut -f1) -le {ITEM_SYNC_MAX_MB} ] && "
                             f"tar -C / --hard-dereference -cf - {shlex.quote(p.lstrip('/'))}' | "
                             f"{' '.join(ssh).replace('-n ', '')} {h} 'mkdir -p {shlex.quote(os.path.dirname(p))} && "
-                            f"tar -C / -xf - --keep-old-files'")
+                            f"{tar_extract_cmd([p])}'")
                     try:
                         for _try in range(5):                   # sshd MaxStartups / banner timeouts are transient
                             rc = run(["bash", "-c", "set -o pipefail; " + pipe])
@@ -5508,6 +5508,15 @@ def sync_item_inputs(AP, cfg, run=None):
 
 
 SRC_SYNC_BATCH = 100
+
+
+def tar_extract_cmd(paths):
+    """COORD 11-19 (FABLE-FLOW-1150 E: the hard-link fix did not help, 30/30 still failed): REAL CAUSE, found with strace on epyc2: GNU tar 1.35 refuses to extract through a symlink that crosses
+    filesystems (/srv/opentallas-scratch2/claude/kw45 -> /srv/opentallas-scratch3/claude/kw45): 'Cannot open: Invalid cross-device link' before any mkdir.  The destination command resolves the
+    symlinked top directory (readlink -f of the first 5 path components) and renames the members onto the real path (--transform), so tar never crosses a symlink.  -> the tar -x command text"""
+    tops = sorted({"/".join(str(p).split("/")[:5]) for p in paths if str(p).startswith("/srv/")})
+    pre = "".join(f"r=$(readlink -f {shlex.quote(t)}); [ \"$r\" = {shlex.quote(t)} ] || T=\"$T --transform \\\"s|^{t.lstrip('/')}/|${{r#/}}/|\\\"\"; " for t in tops)
+    return f"T=''; {pre}eval tar -C / -xf - --keep-old-files $T"
 
 
 def sync_die_inputs(AP, cfg, run=None):
@@ -5549,7 +5558,7 @@ def sync_die_inputs(AP, cfg, run=None):
                 part = paths[i:i + SRC_SYNC_BATCH]
                 names = " ".join(shlex.quote(p.lstrip("/")) for p in part)
                 pipe = (f"{' '.join(ssh)} {src} 'cd / && for f in {names}; do test -e \"$f\" || exit 3; done; tar -C / --hard-dereference -cf - {names}' | "
-                        f"{' '.join(ssh).replace('-n ', '')} {h} 'tar -C / -xf - --keep-old-files'")
+                        f"{' '.join(ssh).replace('-n ', '')} {h} {shlex.quote(tar_extract_cmd(part))}")
                 errf = os.path.join(tempfile.gettempdir(), "srcsync-err-%d-%s.txt" % (os.getpid(), h))
                 try:
                     rc = run(["bash", "-c", "set -o pipefail; { " + pipe + "; } 2>" + shlex.quote(errf)])

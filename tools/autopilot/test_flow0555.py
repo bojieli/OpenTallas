@@ -340,3 +340,18 @@ def test_bind_preflight_probes_import_the_rt_launch_trees_kit_topology():
     assert "rt/current/tools/die_plan" in KW.PROBE_BIND and "kit_topology.py" in KW.PROBE_BIND
     assert KW.PROBE_BIND.index("rt/current") < KW.PROBE_BIND.index("import kit_topology")      # rt copy first, die src tree only as the fallback
     assert "rt/current/tools/die_plan/kit_topology.py" in KW.PROBE_BIND_SIG                    # the verdict cache follows the same file
+
+
+def test_tar_extract_resolves_a_cross_device_symlink_top_directory(tmp_path):
+    import subprocess
+    real = tmp_path / "scratch3" / "claude" / "kw45"
+    real.mkdir(parents=True)
+    claude = tmp_path / "scratch2" / "claude"
+    claude.mkdir(parents=True)
+    os.symlink(real, claude / "kw45")
+    top = "/srv/x"                                                       # the command only treats /srv/... tops; emulate with a tmp path rewrite
+    cmd = KW.tar_extract_cmd(["/srv/opentallas-scratch2/claude/kw45/a/b/f.sv"])
+    assert "readlink -f /srv/opentallas-scratch2/claude/kw45" in cmd and "--transform" in cmd and cmd.endswith("$T")
+    assert KW.tar_extract_cmd(["/tmp/not/srv"]) .startswith("T=''; eval tar -C / -xf -")
+    src = open(KW.__file__).read()
+    assert "tar -C / -xf - --keep-old-files'" not in src
