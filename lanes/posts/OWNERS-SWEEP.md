@@ -61,3 +61,8 @@
   HEAD: hd_mesh CBC-FALLBACK only; QC: 0 flags
   KV: 15 stale rows tagged WAIT-BIND (no bind of record; owners FABLE-FIX-KV-HG / KV-D23-COMPOSE), 0 UNOWNED
   owners_sweep.py extended with KV WAIT-BIND; DEAD-OWNER 0; file lanes/OWNERS-SWEEP.tsv committed
+- 2026-11-19 06:52 PST 06:52 sweep 509 rows (S81 351, QC 101, KV 55, HEAD 2); UNOWNED 0, DEAD-OWNER 0, FAILED-NO-RELAUNCH 0, STALE 0 (outside WAIT-BIND).
+  WAIT-BIND rule had been lost from owners_sweep.py (TSV only had old tags); re-added: KV not-running UNOWNED/DEAD-OWNER/STALE -> WAIT-BIND, owner FABLE-FIX-KV-HG / KV-D23-COMPOSE. KV WAIT-BIND 17.
+  S81: 301 KIT-WAVE LAUNCH + 58 RELAUNCH-ON-FIX since 06:40 (BOUND-FALLBACK 06:40:52 on D8f tree); 349 rows running; 11 CBC-FALLBACK families flagged.
+  40 S81 hold-after-CTS rows owned by S81-CLOCK-WINDOW-1119 (running, no flag). HEAD 2 running (hd_mesh CBC-FALLBACK); QC 101 running.
+  Committed lanes/OWNERS-SWEEP.tsv + bin/owners_sweep.py
