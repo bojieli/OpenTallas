@@ -474,3 +474,30 @@ def test_hard_wrapper_empty_tap_fixed(tmp_path):
     assert got
     out2, ev2 = _fix(tmp_path, out, "hw2", "--types", "^sink$")                     # idempotent
     assert ev2["applied"] == 0 and out2.read_text() == out.read_text()
+
+
+def test_tap_fix_refused_only_on_reset_is_retried_with_class_5(monkeypatch):
+    """FABLE-FIX-S81-LEAF 11-19 (S81 leaf t47 / t75): a --classes 1,2 result whose only regression is the reset tree it moved
+    (class 5 worse and / or depth_drift) is run again with class 5; other refusals and runs that already carry class 5 are not."""
+    import argparse
+    import reach_fix as RF
+    base = {"a": {"c1": 9, "c2": 3, "c5": 4}, "b": {"c1": 9, "c2": 3, "c5": 0}, "c": {"c1": 9, "c2": 3, "c5": 0}}
+    res = [("a", {"depth_drift": [["x", "r", 13, 17]]}, {"c1": 0, "c2": 1, "c5": 7}, {"n": 1}),
+           ("b", {}, {"c1": 0, "c2": 9, "c5": 0}, {"n": 1}),            # class 2 worse: not a reset-only refusal
+           ("c", {}, {"c1": 0, "c2": 0, "c5": 0}, {"n": 1})]            # clean
+    assert RF._reset_only_worse(*res[0][:3], base) and not RF._reset_only_worse(*res[1][:3], base)
+    assert not RF._reset_only_worse(*res[2][:3], base)
+    seen = {}
+
+    def pool(fn, names, jobs):
+        seen["names"], seen["classes"] = list(names), RF._JOB["a"].classes
+        return [(n, {}, {"c1": 0, "c2": 1, "c5": 1}, {"n": 2}) for n in names]
+    monkeypatch.setattr(RF, "_pool", pool)
+    a = argparse.Namespace(classes="1,2", jobs=1)
+    RF._JOB["a"] = a
+    out, again = RF._retry_with_reset(a, res, base)
+    assert again == ["a"] and seen == {"names": ["a"], "classes": "1,2,5"} and RF._JOB["a"] is a and a.classes == "1,2"
+    assert out[0][3] == {"n": 2} and out[1] is res[1] and out[2] is res[2]
+    seen.clear()
+    assert RF._retry_with_reset(argparse.Namespace(classes="1,2,5", jobs=1), res, base) == (res, []) and not seen
+    assert RF._retry_with_reset(argparse.Namespace(classes="4", jobs=1), res, base) == (res, []) and not seen

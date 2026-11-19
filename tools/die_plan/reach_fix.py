@@ -1662,6 +1662,40 @@ def cmd_check(a):
     return fail_loud("check", {r["type"]: r["error"] for r in rows if r.get("error")})
 
 
+def _reset_only_worse(tn, rec, after, base):
+    """True when a tap fix (classes 1 / 2) would be refused ONLY because it moved the reset tree: class 5 worse and / or a raw
+    reset reference at another release depth (depth_drift), no other class worse, no new error."""
+    b = base[tn]
+    if after is None or after.get("error") or b.get("error"):
+        return False
+    worse = [c for c in CLASSES if (after.get("c" + c) or 0) > (b.get("c" + c) or 0)]
+    return (worse == ["5"] or (not worse and bool((rec or {}).get("depth_drift")))
+            or (worse == ["5"] and bool((rec or {}).get("depth_drift"))))
+
+
+def _retry_with_reset(a, res, base):
+    """FABLE-FIX-S81-LEAF 11-19 (S81 leaf t47 / t75 left at 11 / 20 taps over cap, max 1,809 / 2,752 sinks): added taps re-site the
+    reset relays (a relay is a tap sink and the relay tree is solved from the taps), so a tap-only run (--classes 1,2) moved raw
+    reset references to another release depth, and the whole type was refused and kept its over-full taps.  Those types are run
+    again with class 5 (street_rule.reset_resel: every raw reference re-selected at its base depth within reach); the second
+    result replaces the first and is judged by the same rules.  A run that already has class 5 is unchanged."""
+    cl = [c for c in a.classes.split(",") if c]
+    if "5" in cl or not ({"1", "2"} & set(cl)):
+        return res, []
+    again = [tn for tn, rec, after, _ in res if _reset_only_worse(tn, rec, after, base)]
+    if not again:
+        return res, []
+    a2 = copy.copy(a)
+    a2.classes = ",".join(cl + ["5"])
+    _JOB["a"] = a2
+    try:
+        second = {r[0]: r for r in _pool(_fix_job, again, a.jobs)}
+    finally:
+        _JOB["a"] = a
+    print("REACH-FIX reset retry (classes %s): %s" % (a2.classes, " ".join(again)), file=sys.stderr)
+    return [second.get(r[0], r) for r in res], again
+
+
 def cmd_fix(a):
     set_repo(a.repo)
     raw, sha = load_raw(a.plan)
@@ -1674,6 +1708,7 @@ def cmd_fix(a):
     todo = [r["type"] for r in base_rows if r.get("viol")]
     _JOB["base"] = base
     res = _pool(_fix_job, todo, a.jobs)
+    res, reset_retry = _retry_with_reset(a, res, base)
     lr = landed_rows(raw, a.landed_hops, a.landed_window) if a.landed_hops and "6" in a.classes.split(",") else []
     Q = copy.deepcopy(raw) if (res or any(not r.get("ok") and r.get("target") is not None for r in lr)) else raw
     landed_done = fix_landed(Q, lr) if lr else {}
