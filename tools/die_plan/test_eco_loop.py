@@ -241,12 +241,15 @@ def far(**kw):
     (dict(tt=5, ff=-5, ff_n=101), False, "hold 101 endpoints"),
     (dict(tt=-5, ff=5, drc=50), False, "DRC 50"),
 ])
-def test_near_miss_numbers(kw, near, word):
+def test_near_miss_numbers(kw, near, word, monkeypatch):
+    # the legacy near-miss window; under R-MINIMAL (the default profile) WF-1 sends every routed small-DRC miss to the ECO
+    monkeypatch.setenv("OT_SIGNOFF_PROFILE", "legacy")
     ok, beyond, _ = E.near_miss(far(**kw))
     assert ok == near and (not word or word in "; ".join(beyond))
 
 
-def test_large_miss_stops_before_any_pnr_unless_owner_override(tmp_path):
+def test_large_miss_stops_before_any_pnr_unless_owner_override(tmp_path, monkeypatch):
+    monkeypatch.setenv("OT_SIGNOFF_PROFILE", "legacy")       # the legacy window; R-MINIMAL: see the test below
     k = kit(tmp_path)
     b = base_rec(k, far(tt=-45, ff=-3, tt_n=5, ff_n=500))
     f = Fake([rec(1, 2)])
@@ -256,6 +259,19 @@ def test_large_miss_stops_before_any_pnr_unless_owner_override(tmp_path):
     r = E.run_loop(k, b, run=f, mem=8, cpus=2, owner_override=True)
     assert r["verdict"] == "PASS" and f.calls and r["near_miss"]["owner_override"]
 
+
+def test_minimal_profile_large_miss_is_an_eco_case(tmp_path, monkeypatch):
+    """WF-1 / HEAD 11-19: under R-MINIMAL a routed miss beyond the legacy window (hd_ctl a1: TT -34 pass, reg2reg hold on 20 ends;
+    hd_mesh mesh_pa: DRC 16, internal hold -22.59 on 39 ends) runs the one-iteration ECO without --owner-override."""
+    monkeypatch.setenv("OT_SIGNOFF_PROFILE", "minimal")
+    big = far(tt=-45, ff=-3, tt_n=5, ff_n=500)
+    ok, beyond, warn = E.near_miss(big)
+    assert ok and not beyond and "R-MINIMAL" in warn[0]
+    k = kit(tmp_path)
+    f = Fake([rec(1, 2)])
+    r = E.run_loop(k, base_rec(k, big), run=f, mem=8, cpus=2)
+    assert r["verdict"] == "PASS" and f.calls
+    assert not E.near_miss(far(tt=-5, ff=5, drc=51))[0]      # beyond DRC_SMALL stays a routing problem
 
 def test_slew_counts_nets_and_pins_are_advisory(tmp_path, capsys):
     r = far(tt=-5, ff=5, slew=166)
