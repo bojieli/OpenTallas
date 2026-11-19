@@ -57,3 +57,17 @@ def test_without_wrapper_behaviour_unchanged(tmp_path):
     out = run(tmp_path, BASE)
     assert "WRAP_ENTER" not in out and "ORIG_BASE" not in out
     assert "OT_MAXWIRE repair_design" in out and "-max_wire_length 100" in out
+
+
+@needs_tclsh
+def test_post_skip_env_skips_the_repair_from_the_first_run(tmp_path):
+    """OT_MAXWIRE_POST_SKIP=1: no repair_design, same as the no-progress marker (a requeued route job loses the marker with its job dir)"""
+    out = run(tmp_path, BASE + 'set ::env(OT_MAXWIRE_POST_SKIP) 1\n')
+    assert "OT_MAXWIRE_PASS post skipped" in out and "OT_MAXWIRE repair_design" not in out and "LOG repair_design" not in out
+
+
+@needs_tclsh
+def test_post_skip_unset_or_zero_still_repairs(tmp_path):
+    for pre in ("", 'set ::env(OT_MAXWIRE_POST_SKIP) 0\n'):
+        out = run(tmp_path, BASE + pre)
+        assert "OT_MAXWIRE repair_design" in out and "post skipped" not in out

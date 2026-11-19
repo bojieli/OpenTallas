@@ -30,8 +30,12 @@ if {[info procs $ot_mw_target] ne "" && [info procs ot_orig_repair_design_helper
     # re-runs the stage once with this marker: the post-GRT repair_design is skipped, so the stage keeps the full route's
     # result and goes on to timing repair.  Max slew / cap DRV are advisory in the R-MINIMAL profile (OWNER 11-13) and stay
     # visible in the sign-off DRV report.
-    if {[info exists ::env(RESULTS_DIR)] && [file exists $::env(RESULTS_DIR)/5_1_grt.repair_nostall.json]} {
-      puts "OT_MAXWIRE_PASS post skipped: no-progress stop in attempt 1 (5_1_grt.repair_nostall.json); full-route result kept, stage continues (max slew / cap DRV advisory)"
+    # OT_MAXWIRE_POST_SKIP=1 (item_env / die_gen_env, WAVE-PILOT-FIX 11-19): the same skip from the first run on.  The nostall marker above lives in the job's results dir, and a route job that
+    # is killed after its stall retry (ot-oom-age GUARD SIGKILL, make Error 247 / 241) is requeued with a fresh job dir: the marker is gone and the repair stalls again for 30 min before the
+    # next retry.  A type known to stall sets this and never enters the single-thread incremental-FastRoute repair.
+    if {([info exists ::env(OT_MAXWIRE_POST_SKIP)] && $::env(OT_MAXWIRE_POST_SKIP) eq "1") ||
+        ([info exists ::env(RESULTS_DIR)] && [file exists $::env(RESULTS_DIR)/5_1_grt.repair_nostall.json])} {
+      puts "OT_MAXWIRE_PASS post skipped: no-progress stop in attempt 1 (5_1_grt.repair_nostall.json) or OT_MAXWIRE_POST_SKIP=1; full-route result kept, stage continues (max slew / cap DRV advisory)"
       return
     }
     puts "OT_MAXWIRE repair_design $args"
