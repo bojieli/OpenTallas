@@ -80,6 +80,25 @@ def _class_first(reason):
     return (reason + ' ' + ' '.join(tags)).strip() if tags else reason
 
 
+def count_headline():
+    """COORD r711 11-18: signed any plan | current plan | deferred re-sign (per die), from the last lanes/SIGN-RATE.tsv row (count_hourly keeps it from the AGIdock INDEX)"""
+    import re
+    try:
+        rows = [l for l in open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'lanes', 'SIGN-RATE.tsv')).read().splitlines()
+                if re.match(r'^\d{4}-\d\d-\d\d \d\d:\d\d\s+\d+\s+s81=', l)]
+    except OSError:
+        return ''
+    if not rows:
+        return ''
+    row = rows[-1]
+    cur = int(re.match(r'^\S+ \S+\s+(\d+)', row).group(1))
+    a = re.search(r'\bany=(\d+)', row)
+    anyn = int(a.group(1)) if a else cur
+    d = re.search(r'\bdefer=(\S+)', row)
+    per = ', '.join(x.replace(':', ' ') for x in d.group(1).split(',')) if d else ''
+    return 'signed any plan %d | current plan %d | deferred re-sign %d%s' % (anyn, cur, anyn - cur, ' (%s)' % per if per else '')
+
+
 def signed_type(item, stset):
     """a type already in the plan's signed_types: never a failure row (kv3_phy / kv3_phy_v1 showed failed while signed)"""
     return item.split('#')[0] in stset or short(item) in stset
@@ -197,6 +216,9 @@ def main():
     LAST.clear(); LAST.update(last)
     holds = die_holds()
     out = [BEGIN, '## FAILURES · unsigned cores and types by class (auto, %s)' % time.strftime('%Y-%m-%d %H:%M %Z')]
+    hl = count_headline()
+    if hl:
+        out.append('count_hourly: ' + hl)
     for die, tag in DIES:
         plan = next(p for k, p in cache['plans'].items() if PLAN_DIE.get(k.split('/')[0]) == die)
         designs = plan['designs']
