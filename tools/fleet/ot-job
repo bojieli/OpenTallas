@@ -545,7 +545,14 @@ def run_sealed(spec, meta, J, store, tag, cmd, maps, staged, work_at, bwrap):
 
     def stop(sig, _frame):
         if not got:
-            say(f"signal {sig}: stopping the command; the job end (publish, return, delete) follows")
+            # FABLE-FIX-S81-LEAF 11-19 (class 28712c48d9, 'RuntimeError: reentrant call inside <_io.BufferedWriter name=<stderr>>'): a stop
+            # signal that lands while the main thread (or an earlier stop) is inside a buffered stderr write must not print through the same
+            # buffer: the handler raised, the job died with a Python traceback and the wave read a tool error at place instead of a stop.
+            # os.write on fd 2 takes no Python buffer lock.
+            try:
+                os.write(2, f"ot-job: signal {sig}: stopping the command; the job end (publish, return, delete) follows\n".encode())
+            except OSError:
+                pass
             import threading
             k = threading.Timer(STOP_GRACE_S, group, (signal.SIGKILL,))
             k.daemon = True
