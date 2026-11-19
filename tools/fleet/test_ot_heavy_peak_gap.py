@@ -43,3 +43,25 @@ class PeakGap(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class PlanGap(unittest.TestCase):
+    def test_plan_job_charges_its_unreached_peak(self):
+        import subprocess
+        d = tempfile.mkdtemp()
+        sl = subprocess.Popen(["sleep", "30"])
+        try:
+            open(f"{d}/plan.job.{sl.pid}", "w").close()
+            open(f"{d}/res.oth-u-{sl.pid}-1795000000", "w").write(f"oth-u-{sl.pid}-1795000000 40\n")
+            gap = R.plan_gap_gb(d)
+            self.assertGreater(gap, 39.0)                    # a sleep holds ~0 GB: the whole 40 GB charge is still to come
+            self.assertLessEqual(gap, 40.0)
+            os.unlink(f"{d}/plan.job.{sl.pid}")
+            self.assertEqual(R.plan_gap_gb(d), 0.0)          # no plan marker: nothing charged
+        finally:
+            sl.kill(); sl.wait()
+
+    def test_the_charge_is_capped_and_switchable(self):
+        src = open(P).read()
+        self.assertIn("min(plan_gap_gb(), 0.25 * avail)", src)
+        self.assertIn('conf("PLAN_GAP_FACTOR")', src)
