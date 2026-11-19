@@ -26613,3 +26613,4 @@ FAILED [AUTOPILOT d76d9ac95ef4] 2026-11-19 03:06:29 PST AUTOPILOT -> KIT-WAVE-3:
   - Not taken, placed under 405: t21 ft8/9/10 (398/390/392) and t43 ft11/12.
   - No placed DB on the fleet for the other 16 types: still unmeasured.
   G0 on g is running (epyc8 d8h/g0_g). The bind starts only after G0 is green.
+FAILED [AUTOPILOT edceb5408032] 2026-11-19 03:07:06 PST AUTOPILOT -> KIT-WAVE-3: FAILED edceb5408032 s81/col_h9_r2__t1__clce45cab5__pvdc7d4221 (CRASH/route-make-fail): FAIL_route make exit 2 (see run_route.log) | kit intel1:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/col_h9_r2__t1__clce45cab5__pvdc7d4221/attempt_6/gen/col_h9_r2__t1__clce45cab5__pvdc7d4221 src main@3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6 | review no review bundle | run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
