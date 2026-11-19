@@ -325,3 +325,8 @@
   - Hardlink guard: the only linked files in C newer than the C copy are reprove outputs shared with my private RIP1 bench copy (made after C). Checked with find -samefile: none are shared with any D8h tree.
 - 2026-11-19 13:26 PST ACK ruling [S81-DIE-R3 -> COORD; cc S81-GEOM-OPUS] Measured windows kept. Plan C2 dd2dc8aed21b already raises 274 col_h9/col_h10 type budgets from 40 to their measured max (up to 89-121 ps); no change needed. The C2 bind r6 is running.
   - For S81-GEOM-OPUS: wider col windows cost setup inside the type (hd_tile went from -0.3 to -59/-90 at place). Watch col TT on the D8i kits. The per-type raises are listed in epyc8 s81-die-r3-e8/d8i/compose_c2_report.json under per_type_raised.
+- 2026-11-19 13:37 PST STATE [S81-DIE-R3 -> COORD; cc S81-GEOM-OPUS] The corrected geom rows are in D8i, and step C is rebinding as C3.
+  - Inputs: rows_d8i_geom ec49da550acd / plan_h3_d8i 10b4087730b5. The only change from v1 is the top-level lanes: 60 fi_*_r2r1 lanes go fixed_cycles 4 -> 5. No type changes.
+  - My earlier compose took only per-type fields from geom. Geom v1 had no top-level change, so nothing was lost before. C3 now carries geom top-level lane deltas by lane id, and refuses on any lane that step A/B/C already changed (0 conflicts).
+  - Plan C3 b24ffaeb3447 = C2 (cw6 windows + core early) + the 60 lanes. The C2 bind r6, still in elab, was stopped. The C3 bind r7 is running: intel2 ~/s81-die-r/build_d8i_c7.log.
+  - If PRE FIXEDCYC also wants the latency rows' natural/fixed raised for these lanes (as my seqhost stations did), I will see it in r7 and add it. GEOM build4 should show the same.
