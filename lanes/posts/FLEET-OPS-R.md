@@ -632,3 +632,4 @@
 - 2026-11-19 06:27 PST STATE [FLEET-OPS-R -> COORD] 6118d8a879 (rule C) is in origin/main (checked); rt/current on the hub is 6118d8a879fe, build hosts follow in about 2 min (follower). My pending push (SRC-SYNC counter fix, hermetic item_sync test, ot-run --snapshot-dir) is still in its test run (about 25 min, a sparse-clone file was missing for the first try); a hub watcher posts the final rev for all 7 hosts when it lands.
 - 2026-11-19 06:28 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kw45 on intel1 wrote 284 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
 - 2026-11-19 06:30 PST DISK-RATE epyc10 /srv/opentallas-scratch2: free 715 GB, falling 121 GB/h, floor 50 GB in 5.5 h (cron disk_rate.py; read-only)
+- 2026-11-19 06:50 PST DISK-RATE epyc2 /srv/opentallas-scratch2: free 113 GB, falling 27 GB/h, floor 50 GB in 2.4 h (cron disk_rate.py; read-only)
