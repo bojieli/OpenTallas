@@ -203,6 +203,20 @@
    }
   ],
   "proof": "private kit k4 = k3 + W2 + W3 (no W1): epyc9 fable-fix-kv-hg3/k4/gen, route goal launched 14:1x PST, log intel2 ~/tmp/ffkhg3/k4_route.log. Read congestion-5.rpt west band vs 44,172 (k3) / 41,652 (base).",
-  "HOLD": "COORD 1530 lever 6: do NOT take W2 / W3 into an event before kit k5 gives a post-CTS number. k4 (W2 + W3) lost setup: +0.43 (k3) -> -145.5 / 8 ends."
+  "HOLD": "LIFTED 11-18 17:40 PST: k5 (W2 + W3 + W5) post-CTS TT setup -16.95 / 1 end before the TT repair step, +0.46 / 0.00 after (k3 +0.43). W2 + W3 + W5 go together, never W2 / W3 without W5.",
+  "k5": {
+   "kit": "epyc8:/srv/opentallas-scratch2/claude/fable-fix-kv-hg3/k5/gen/kv3_hgi_v1__cl141fc26e",
+   "post_cts": [
+    -16.95,
+    0.46
+   ],
+   "grt_iter5": {
+    "overflow": 45119,
+    "gcells": 18517,
+    "west": 28820,
+    "west_y1000_1200": 15441
+   },
+   "verdict": "setup clean; west band -35 % but not clear: W1 (landing core move, bound event) is required for a routed hgi type"
+  }
  }
 }
