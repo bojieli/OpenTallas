@@ -15,7 +15,7 @@ def test_ot_run_accepts_priority_proof_and_passes_it_to_ot_heavy():
 def test_ot_heavy_writes_a_proof_marker_and_reconcile_orders_proof_like_die():
     assert 'proof.job.$$' in (H / "ot-heavy").read_text()
     r = (H / "ot-heavy-reconcile").read_text()
-    assert '"OT_HEAVY_PRIO=proof" in environment.split' in r and 'in ("die", "proof")' in r
+    assert 'proof_like(a[a.index("--") + 1:], cwd' in r and "proof_like(argv, os.getcwd()" in r
     assert "ot-protect-die --pid" in (H / "ot-heavy").read_text()          # protection (-999) stays die-only
 
 
