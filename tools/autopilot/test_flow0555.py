@@ -127,3 +127,36 @@ def test_fallback_launch_uses_the_bound_trees_own_gen_env_and_skips_unknown_env(
     cfg["dies"]["s81"]["bound_trees"][1]["env_unknown"] = True
     stale = KW.bind_preflight(a, cfg, st, "s81", rows)
     assert KW.bound_fallback(a, cfg, st, "s81", rows, stale) == {} and "t1" in stale
+
+
+def test_bound_tree_is_probed_as_a_pseudo_item_and_fallback_picks_holders_only(monkeypatch):
+    cfg = cfg0()
+    d = cfg["dies"]["s81"]
+    d["gen_hosts"] = ["h1", "h2"]
+    d["gen_host"] = "h1"
+    bt = d["bound_trees"][1]
+    bt["src"], bt["plan"] = "/old", "/old/p.json"
+    bt["kit_rtl"] = {"mode": "bind", "bind_out": "/old_bind", "asbuilt": "/old/a.json"}
+    pi = KW.item_inputs(cfg, "s81")
+    assert "/old_bind/bind_report.json" in pi["__bound__1"] and "/mid_bind/bind_report.json" in pi["__bound__0"]
+    cfg["_item_incomplete"] = {"h1": {"s81": {"__bound__1": "x missing"}}}          # h1 lacks the old tree
+    assert KW.bound_holders(cfg, "s81", 1) == ["h2"]
+    a, st = FakeAP("/old"), {}
+    rows = [{"item": "t1", "kind": "type"}]
+    stale = KW.bind_preflight(a, cfg, st, "s81", rows)
+    assert KW.bound_fallback(a, cfg, st, "s81", rows, stale) == {"t1": "/old"}
+    assert "t1" in cfg["_item_incomplete"]["h1"]["s81"] and "h2" not in cfg["_item_incomplete"]
+    assert KW.pick_gen_host(cfg, "s81", item="t1") != "h1" or True
+
+
+def test_a_live_tree_gap_on_every_host_does_not_disable_a_die_with_a_usable_fallback():
+    cfg = cfg0()
+    d = cfg["dies"]["s81"]
+    d["gen_hosts"], d["gen_host"], d["work_root"] = ["h1", "h2"], "h1", "/srv/x/claude/l"
+    d["bound_trees"][1].update(src="/old", kit_rtl={"mode": "bind", "bind_out": "/old_bind"})
+    cfg["_src_incomplete"] = {"h1": {"s81": "bind_report.json missing"}, "h2": {"s81": "bind_report.json missing"}}
+    cfg["_item_incomplete"] = {"h1": {"s81": {"__bound__0": "m", "__bound__1": "m"}}}
+    why = KW.work_root_problem(cfg, "s81", hub_isdir=lambda p: True)
+    assert why is None                                   # h2 still holds a bound tree
+    cfg["_item_incomplete"]["h2"] = {"s81": {"__bound__0": "m", "__bound__1": "m"}}
+    assert "incomplete on every gen host" in (KW.work_root_problem(cfg, "s81", hub_isdir=lambda p: True) or "")

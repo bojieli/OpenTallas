@@ -5060,6 +5060,34 @@ def deep_inputs(cfg, die):
     return list(dict.fromkeys(ps))
 
 
+BOUND_KEY = "__bound__"
+
+
+def bound_tree_inputs(d):
+    """{"__bound__<i>": [paths]} for the die's usable bound_trees entries (a bind, not env_unknown): the tree's required files, its plan dir, its bind report and as-built"""
+    out = {}
+    for i, bt in enumerate((d.get("bound_trees") or []) if isinstance(d, dict) else []):
+        kr = bt.get("kit_rtl") or {}
+        if not bt.get("src") or not kr.get("bind_out") or bt.get("env_unknown"):
+            continue
+        ps = [os.path.join(bt["src"], r) for r in SRC_REQUIRED + SRC_ITEM_REQUIRED]
+        if str(bt.get("plan") or "").startswith("/"):
+            ps.append(os.path.dirname(bt["plan"]))
+        ps.append(os.path.join(kr["bind_out"], "bind_report.json"))
+        if str(kr.get("asbuilt") or "").startswith("/"):
+            ps.append(kr["asbuilt"])
+        out[f"{BOUND_KEY}{i}"] = list(dict.fromkeys(ps))
+    return out
+
+
+def bound_holders(cfg, die, i):
+    """the die's gen hosts that hold bound tree i completely (probe known and clean); an unprobed host counts as a holder (unknown = launch)"""
+    d = cfg["dies"][die]
+    imiss = cfg.get("_item_incomplete") or {}
+    hs = [h for h in list(d.get("gen_hosts") or []) + [d.get("gen_host")] if h]
+    return [h for h in dict.fromkeys(hs) if f"{BOUND_KEY}{i}" not in (imiss.get(h) or {}).get(die, {})]
+
+
 def item_inputs(cfg, die):
     """{item: [absolute paths]} named by the die's item_env, type_args and item_inputs ({plan, kit_rtl{...}}) for that
     item.  KW-FIX-44 11-10 (COORD, t42 bind10_ctap): item_inputs was not probed, so an item's own kit_rtl script (and the
@@ -5087,6 +5115,9 @@ def item_inputs(cfg, die):
             if ps:
                 out.setdefault(item, [])
                 out[item] += [p for p in ps if p not in out[item]]
+    # COORD 11-19 (KV D24c, SRC-INCOMPLETE on the fallback tree): every usable bound tree is probed as a pseudo item, so a host that lacks it is known
+    for key, ps in bound_tree_inputs(d).items():
+        out[key] = ps
     # WAVE-OPS-1 11-10 (COORD, HBM-CORES-B svgr_top/epyc4 p6_relay/core_clock_regions.json): per-core kit args
     # (core_kit.item_args {core module: [...]}, e.g. --clock-regions <json>) are that core's own inputs too
     ck = d.get("core_kit") if isinstance(d.get("core_kit"), dict) else {}
@@ -5704,7 +5735,8 @@ def work_root_problem(cfg, die, hub_isdir=os.path.isdir):
     marked = cfg.get("_spill_marked") or {}
     hs = [h for h in list(d.get("gen_hosts") or []) + [d.get("gen_host")] if h]
     bad = cfg.get("_src_incomplete") or {}
-    if hs and all(die in bad.get(h, {}) for h in hs):
+    usable_fb = any(bound_holders(cfg, die, i) for i in range(len(d.get("bound_trees") or [])) if f"{BOUND_KEY}{i}" in bound_tree_inputs(d))
+    if hs and all(die in bad.get(h, {}) for h in hs) and not usable_fb:      # a live-tree gap does not turn off a die that has a usable fallback tree
         return ("src/plan inputs incomplete on every gen host (KW-FIX-24 SRC-INCOMPLETE): "
                 + "; ".join(f"{h}: {bad[h][die]}" for h in sorted(set(hs))) + "; sync the copies or set gen_hosts")
     if hs and all(lane in marked.get(h, ()) for h in hs):
@@ -9062,14 +9094,18 @@ def bound_fallback(AP, cfg, st, die, rows, stale, now=None, rpy=None):
     d = cfg["dies"][die]
     rescued = {}
     todo = [r for r in rows if r["item"] in stale]
-    for bt in list(d.get("bound_trees") or [])[:BOUND_TREE_TRIES]:
+    for bi, bt in enumerate(list(d.get("bound_trees") or [])[:BOUND_TREE_TRIES]):
         if not todo or not bt.get("src") or not (bt.get("kit_rtl") or {}).get("bind_out"):
+            continue
+        holders = bound_holders(cfg, die, bi)
+        if not holders:                                  # no gen host holds this tree: nothing can launch on it
             continue
         if bt.get("env_unknown"):                        # COORD 11-19 (KV D24c, OT_KV_HEAD_KST): the env this tree bound under is not recorded yet: no fallback on it
             continue
         ent = {k: bt[k] for k in BOUND_TREE_KEYS if bt.get(k)}
         ent["kit_rtl"] = dict(bt["kit_rtl"])
         cfg2 = copy.deepcopy(cfg)                      # cfg carries sets / runtime keys: no json round trip
+        cfg2["dies"][die]["gen_host"] = holders[0]       # the bind probe runs where the tree is
         ii2 = cfg2["dies"][die].setdefault("item_inputs", {})
         for r in todo:
             ii2[r["item"]] = dict(ii2.get(r["item"]) or {}, **json.loads(json.dumps(ent)))
@@ -9087,6 +9123,8 @@ def bound_fallback(AP, cfg, st, die, rows, stale, now=None, rpy=None):
                 ie = d.setdefault("item_env", {})
                 ie[r["item"]] = {**item_env_entry(d, r["item"]), **{k: v for k, v in genv.items()}}
             rescued[r["item"]] = bt["src"]
+            for h in set([x for x in list(d.get("gen_hosts") or []) + [d.get("gen_host")] if x]) - set(holders):      # the launch goes only to hosts that hold the tree
+                cfg.setdefault("_item_incomplete", {}).setdefault(h, {}).setdefault(die, {})[r["item"]] = f"bound tree {bt['src']} not on {h}"
             stale.pop(r["item"], None)
         todo = [r for r in todo if r["item"] in bad]
     return rescued
