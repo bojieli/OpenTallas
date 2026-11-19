@@ -835,3 +835,48 @@ class DieContextHash(unittest.TestCase):
     def test_probe_emits_die_ctx(self):
         self.assertIn("die_ctx(p, name)", KW.PROBE_PLAN)
         self.assertEqual(KW.PROBE_V, 10)
+
+
+class DieContextTypeScoped(unittest.TestCase):
+    """COORD 11-18: die_ctx is type-scoped: a per-type clock / reset / latency row change for A moves A only"""
+
+    def plan(self):
+        names = ["A", "B"] + ["T%d" % i for i in range(14)]
+        return {"partition_types": {n: {"x": 1} for n in names},
+                "clock": {"insertion_ps": 100, "tap_pitch_um": 40, "seam_hold": {"sender_ps": 25, "seam_ps": 110},
+                          "tap_window": {"window_ps": 20, "per_type_ps": {"A": 30, "B": 40}},
+                          "spine": {"layers": ["M6", "M7"], "feed": {"A": {"um": 5}, "B": {"um": 6}}},
+                          "landing_network": {"edges": [{"from": "A", "to": "T0", "ps": 10}, {"from": "T1", "to": "T2", "ps": 12}]},
+                          "pad_clock": {"pins": [{"type": "A", "pin": "p0"}, {"type": "B", "pin": "p1"}]}},
+                "reset": {"sync_stages": 2, "in_sites": {n: [1, 2] for n in ["A", "B"] + ["T%d" % i for i in range(14)]}},
+                "die": {"period_ps": 400, "channels": [{"reason": "x", "rect_um": [1, 2]}]},
+                "latency": {"lanes": {"lane%d" % i: {"d": i, "recv": ("A" if i == 0 else "T%d" % (i % 14))} for i in range(20)}}}
+
+    def mod(self, f):
+        p = self.plan()
+        f(p)
+        return p
+
+    def test_per_type_clock_row_change_for_a_moves_a_only(self):
+        base = self.plan()
+        for f in (lambda p: p["clock"]["tap_window"]["per_type_ps"].update(A=35),
+                  lambda p: p["clock"]["pad_clock"]["pins"][0].update(pin="p9"),
+                  lambda p: p["clock"]["spine"]["feed"]["A"].update(um=9),
+                  lambda p: p["clock"]["landing_network"]["edges"][0].update(ps=11),
+                  lambda p: p["reset"]["in_sites"].update(A=[1, 2, 3]),
+                  lambda p: p["latency"]["lanes"]["lane0"].update(d=99)):
+            q = self.mod(f)
+            self.assertNotEqual(BI.die_ctx(base, "A"), BI.die_ctx(q, "A"))
+            self.assertEqual(BI.die_ctx(base, "B"), BI.die_ctx(q, "B"))
+            self.assertEqual(BI.die_ctx(base, "T3"), BI.die_ctx(q, "T3"))
+
+    def test_die_wide_scalar_moves_every_type_other_types_rows_move_none(self):
+        base = self.plan()
+        q = self.mod(lambda p: p["clock"].update(tap_pitch_um=50))
+        for n in ("A", "B", "T3"):
+            self.assertNotEqual(BI.die_ctx(base, n), BI.die_ctx(q, n))
+        q = self.mod(lambda p: (p["clock"]["landing_network"]["edges"][1].update(ps=99), p["die"]["channels"].append({"reason": "y"})))
+        for n in ("A", "B"):
+            self.assertEqual(BI.die_ctx(base, n), BI.die_ctx(q, n))
+        q = self.mod(lambda p: p["clock"]["seam_hold"].update(seam_ps=100))
+        self.assertNotEqual(BI.die_ctx(base, "A"), BI.die_ctx(q, "A"))

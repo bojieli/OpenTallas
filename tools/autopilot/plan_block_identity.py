@@ -106,21 +106,81 @@ def seam_for(plan, name):
     return {'sender_ps': sh.get('sender_ps'), 'seam_ps': seam}
 
 
-def _no_notes(o):
+_TOKEN = re.compile(r'[A-Za-z0-9_]+')
+TABLE_MIN = 13          # a dict with more entries than this is a per-entry table (reset.in_sites, latency.lanes, per_port_ps ...), not a die-wide section
+_CTX_CACHE = {}
+
+
+def _owner_of(token, names):
+    """the plan type / core a token names: the token itself, its variant-stripped form, or a prefix before '__' (an instance of the type); None otherwise"""
+    t = token
+    while True:
+        if t in names:
+            return t
+        u = VARIANT_SUFFIX.sub('', t)
+        if u != t and u in names:
+            return u
+        if '__' not in t:
+            return None
+        t = t.rsplit('__', 1)[0]
+
+
+def _owners(o, names, memo):
+    key = id(o)
+    got = memo.get(key)
+    if got is None:
+        owners = set()
+        for tok in _TOKEN.findall(json.dumps(o, sort_keys=True, default=str)):
+            w = _owner_of(tok, names)
+            if w:
+                owners.add(w)
+        got = memo[key] = (o, frozenset(owners))      # keep o alive so id() stays unique
+    return got[1]
+
+
+def _scoped(o, name, names, memo):
+    """the part of a plan section that concerns `name`: die-wide scalars (numbers, strings, bools, lists of them) and nested die-wide dicts as they are; of every per-entry table or list of
+    rows only the entries that name this type or one of its instances (an entry naming only OTHER types or nothing typed is not this type's input); free-text notes dropped"""
     if isinstance(o, dict):
-        return {k: _no_notes(v) for k, v in o.items() if not (k == 'note' or k.endswith('_note') or k == 'notes')}
+        table = len(o) >= TABLE_MIN
+        out = {}
+        for k, v in o.items():
+            if k == 'note' or k == 'notes' or str(k).endswith('_note'):
+                continue
+            kown = _owner_of(str(k), names)
+            if kown is not None:
+                if kown == name:
+                    out[k] = _scoped(v, name, names, memo)
+                continue
+            if table:
+                if name in _owners(v, names, memo) or name in _owners(k, names, memo):
+                    out[k] = _scoped(v, name, names, memo)
+                continue
+            r = _scoped(v, name, names, memo)
+            if r not in ({}, [], None) or not isinstance(v, (dict, list)):
+                out[k] = r
+        return out
     if isinstance(o, list):
-        return [_no_notes(v) for v in o]
+        if all(not isinstance(v, (dict, list)) for v in o):
+            return o
+        return [_scoped(v, name, names, memo) for v in o if isinstance(v, (dict, list)) and name in _owners(v, names, memo)] + \
+               [v for v in o if not isinstance(v, (dict, list))]
     return o
 
 
 def die_ctx(plan, name):
-    """sha256 of the die-level values type/core `name` reads: clock (seam_hold replaced by the value resolved for this type, notes dropped), reset, die, latency.
-    Not part of it: census, ports, lanes, partitions, other types, free-text notes"""
+    """sha256 of the die-level values type/core `name` reads (COORD 11-18: type-scoped, so a plan event that moves some other type's clock / reset / latency rows leaves it alone):
+    clock.seam_hold resolved for this type (per_type_ps, variant-stripped name), then _scoped() of clock, reset, die and latency.  Not part of it: census, ports, lanes, partitions,
+    other types' entries, entries naming no type of this plan, free-text notes"""
+    cache = _CTX_CACHE.get(id(plan))
+    if cache is None or cache[0] is not plan:
+        names = set(profiles(plan))
+        cache = _CTX_CACHE.clear() or _CTX_CACHE.setdefault(id(plan), (plan, names, {}))
+    _, names, memo = cache
     clock = dict(plan.get('clock') or {})
     clock.pop('seam_hold', None)
-    body = {'clock': _no_notes(clock), 'seam': seam_for(plan, name), 'reset': _no_notes(plan.get('reset')), 'die': _no_notes(plan.get('die')),
-            'latency': _no_notes(plan.get('latency'))}
+    body = {'seam': seam_for(plan, name), 'clock': _scoped(clock, name, names, memo), 'reset': _scoped(plan.get('reset'), name, names, memo),
+            'die': _scoped(plan.get('die'), name, names, memo), 'latency': _scoped(plan.get('latency'), name, names, memo)}
     return fingerprint(body)
 
 
