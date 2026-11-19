@@ -839,3 +839,20 @@ def test_relay_tx_stages_emit_a_chain_and_need_the_matching_bind_role():
     p["partition_types"]["B"]["landing_relay_tx_stages"] = "2"
     with pytest.raises(LandingError, match="landing_relay_tx_stages"):
         Landings(p, t)
+
+
+def test_relay_tx_stage_reset_is_local_to_its_plan_site():
+    """r713 (SONNET-FIX-QC 11-19): a tx stage with a plan relay site takes the raw copy nearest that site; over 405 um a midpoint
+    reset relay is added; a stage without a site keeps the tx raw."""
+    p, t = ca_relay_vehicle()
+    p["partition_types"]["B"]["landing_relay_tx_stages"] = 2
+    t["count_aligned"]["parts"]["c"]["stages"] = 4
+    c = Landings(p, t)
+    c.types["B"]["relay_sites"] = {"u_cland_rstart_tx_p0/q": [30.0, 1700.0], "u_cland_rstart_tx_p1/q": [900.0, 900.0]}
+    c.reset_placements["b"] = {"P": dict(xy_um=[24.8, 1763.1]), "Q": dict(xy_um=[600.0, 900.0])}
+    rl = []
+    r0 = c._tx_raw("b", "B", "P", {"P": "raw_a", "Q": "raw_b"}, rl, sfx="_p0", at=[30.0, 1700.0], limit=405.0)
+    r1 = c._tx_raw("b", "B", "P", {"P": "raw_a", "Q": "raw_b"}, rl, sfx="_p1", at=[900.0, 900.0], limit=405.0)
+    assert r0 == "raw_a" and r1 == "raw_b" and rl == []
+    r2 = c._tx_raw("b", "B", "P", {"P": "raw_a"}, rl, sfx="_p1", at=[900.0, 900.0], limit=405.0)
+    assert r2 == "cland_reset_tx_p1" and any("u_cland_rst_tx_p1 (.clk(clk), .d(raw_a)" in x for x in rl)

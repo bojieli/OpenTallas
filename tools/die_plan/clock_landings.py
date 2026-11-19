@@ -2214,7 +2214,7 @@ class Landings:
     TX_RAW_WARN_UM = 800.0    # a generator-placed flop pair longer than this is reported (WARN, never blocking)
     TX_RAW_RELAY_UM = 600.0   # FABLE-TYPES-QC-WEST cause A: one raw-reset wire may not run farther than this
 
-    def _tx_raw(self, tn, key, raw, ca_raw, raw_logic, pin="cland_rstart_out", sfx=""):
+    def _tx_raw(self, tn, key, raw, ca_raw, raw_logic, pin="cland_rstart_out", sfx="", at=None, limit=None):
         """FABLE-TYPES-QC-WEST cause A (-162..-276 ps): the tx flop u_cland_rstart_tx sits at the cland_rstart_out pin, and
         its raw reset used to be the FIRST raw copy in dict order (1.3-1.4 mm away).  Use the raw copy nearest to that pin;
         when even that copy is over TX_RAW_RELAY_UM away add one ot_dp_rrelay at the midpoint (a reset level: one more
@@ -2222,6 +2222,8 @@ class Landings:
         pins = list(self.types.get(key, {}).get("pins", [])) + list(
             self.types.get(key, {}).get("clock", {}).get("landing_contract", {}).get("pins", []))
         tx = next((p.get("xy_um") for p in pins if p.get("name") == pin and p.get("xy_um")), None)
+        if at is not None:   # RELAY-TX-STAGES: a stage flop at a plan relay site, not at the tx pin
+            tx = list(at)
         if tx is None:   # plan bus form: pin on a face, window centre (same rule as the ring receiver site)
             t = self.types.get(key, {})
             bus = next((b for b in t.get("buses", []) if b.get("name") == pin), None)
@@ -2244,7 +2246,7 @@ class Landings:
             best = raw
         d = dist(sites[best])
         rec = dict(raw=best, dist_um=round(d, 3), tx_xy=list(tx), first_copy=raw, relay=False)
-        if d > self.TX_RAW_RELAY_UM:
+        if d > (limit if limit is not None else self.TX_RAW_RELAY_UM):
             mid = [round((sites[best][0] + tx[0]) / 2, 3), round((sites[best][1] + tx[1]) / 2, 3)]
             new = "cland_reset_tx" + sfx
             raw_logic.extend([f"    wire {new};",
@@ -2252,7 +2254,7 @@ class Landings:
             rec.update(relay=True, relay_xy_um=mid, relay_net=new)
             best = new
         hop = d / 2 if rec["relay"] else d
-        if hop > self.TX_RAW_WARN_UM:   # WARN only (owner: no new blocking gates)
+        if hop > (limit if limit is not None else self.TX_RAW_WARN_UM):   # WARN only (owner: no new blocking gates)
             rec["warn"] = f"{tn}: tx raw-reset hop {hop:.0f} um > {self.TX_RAW_WARN_UM:.0f} um"
             import sys
             print("WARN clock_landings " + rec["warn"], file=sys.stderr)
@@ -2342,8 +2344,13 @@ class Landings:
             # RELAY-TX-STAGES: n same-clock relay stages between the origin start and the tx flop(s); same raw reset as the tx flop
             tx_d = "cland_start"
             for i in range(_relay_tx_extra_stages(getattr(self, "types", {}).get(type_key or tn))):
+                # r713 (SONNET-FIX-QC 11-19): a stage takes its raw reset from the raw copy nearest ITS plan site (relay_sites
+                # u_cland_rstart_tx_p<i>/q), via a midpoint reset relay when that copy is over LOCAL_RESET_REACH_UM away; no site = tx raw
+                site = ((getattr(self, "types", {}).get(type_key or tn) or {}).get("relay_sites") or {}).get(f"u_cland_rstart_tx_p{i}/q")
+                rawp = raw if site is None else self._tx_raw(tn, type_key or tn, raw0, ca_raw, raw_logic, sfx=f"_p{i}", at=site,
+                                                             limit=LOCAL_RESET_REACH_UM)
                 logic.append(f"    wire cland_rstart_p{i};")
-                logic.append(f"    ot_dp_landing_relay u_cland_rstart_tx_p{i} (.clk(clk), .rst_raw_n({raw}), .d({tx_d}), "
+                logic.append(f"    ot_dp_landing_relay u_cland_rstart_tx_p{i} (.clk(clk), .rst_raw_n({rawp}), .d({tx_d}), "
                              f".q(cland_rstart_p{i}));")
                 tx_d = f"cland_rstart_p{i}"
             logic.append(f"    ot_dp_landing_relay u_cland_rstart_tx (.clk(clk), .rst_raw_n({raw}), .d({tx_d}), "
