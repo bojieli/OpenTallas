@@ -1,6 +1,6 @@
 # FABLE-FIX-S81-GLUE handoff (glue = QC die qwen_compute, design dp_glue / qfd_qc_glue_part)
 
-Last update: 2026-11-19 01:00 PST. All kits survived the Fable limit (checked 00:57: 5 ot-run clients alive).
+Last update: 2026-11-19 01:10 PST. All kits survived the Fable limit (checked 00:57: 5 ot-run clients alive).
 
 ## State in one paragraph
 Gate read of wave glue attempt_6 (s29q103S4Q9N3): TT -130.39 / 648 ends at GRT. 385 ends = u_record logic depth: FIXED and on
@@ -43,6 +43,20 @@ Read: postcts_gate_tt.json (setup_wns_est_ps, parasitics global_routing = the GR
 Probe tools: fable-fix-s81-glue-sta/probe/{run.sh,probe.tcl,sum.py} (class table + register positions of any stage ODB);
 keep33.sh keeps each kit's 3_3_place_gp.odb there; balance.tcl = prototype that moves a failing flop toward its source by
 (sQ - sD)/2 (mechanics tested only, numbers not yet meaningful).
+
+## Relay form (COORD order 01:0x: prepare in parallel, first form at GRT TT >= -42 wins)
+- F  kitf  record n32 + RELAY-FORM core + mid_place.tcl + D placement keys, launched 01:08, goal grt.
+  Core variant epyc9 fable-fix-s81-glue-work/lctx3_core.relay.sv (sha256 645ae0a06a54, NOT on main): row decode registers
+  tt_pw_a / dh_prog_a, then tt_pw / dh_prog as a plain relay (+1 cycle on TT pw and seq_dh program rows; only the 3 valid
+  bits reset, rst_bpay region stays 218). Kit-private hook gen/glue/mid_place.tcl (sourced after relay_mid in
+  face_flops.tcl): the relay flops FIRM at the mid-point ROM <-> u_bout pin registers, released with ot_relay_mid.txt.
+  First check: 3_3_place_gp.log line OT_MID_PLACE (a Tcl error there fails the place stage: fix the hook, relaunch).
+- NOT done for the relay form: (1) latency proof: +1 cycle on tt_pw / seq_dh[186:44] program rows vs prog_busy / the receipt
+  ledgers (self-timed by program_obs2, so expected benign, unproven) with the sys_face bench
+  (rtl/test/qwen_split/run_sys_face_native32_protocol.sh needs the INTERMEDIATE wrappers); (2) bind / LATCHECK rows for the
+  two ports; (3) obs_fault relay (the flop is in the bound wrapper, a bind / plan row for QC-PLAN-R3); (4) the mid-point
+  hook as a gen_phys opt-in if F wins. Do not push the relay core before (1) and (2).
+- QC-PLAN-R3 adopts the two pushed RTL files (COORD 01:0x).
 
 ## Next
 1. Per kit at 3_3 / CTS / GRT: class table + where tt_pw / dh_prog / obs_fault landed (probe/run.sh KIT STAGE_ODB RCMODE).
