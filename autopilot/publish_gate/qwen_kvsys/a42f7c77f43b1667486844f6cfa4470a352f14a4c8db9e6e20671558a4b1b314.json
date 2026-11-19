@@ -1,0 +1,87 @@
+{
+ "advisory": [
+  "dry_gen"
+ ],
+ "checks": {
+  "bound_params": {
+   "advisory": true,
+   "findings": [],
+   "n": 0,
+   "verdict": "PASS"
+  },
+  "contained": {
+   "findings": [],
+   "verdict": "PASS"
+  },
+  "dry_gen": {
+   "dir": "/home/ubuntu/.local/state/publish-gate/qwen_kvsys/a42f7c77f43b/kv3_hg_v1",
+   "gen_host": "epyc7",
+   "item": "kv3_hg_v1",
+   "kind": "type",
+   "origin_capture_error": "generation input hash unavailable",
+   "published_gen_import_declined": "[Errno 2] No such file or directory: '/home/ubuntu/.local/state/publish-gate/qwen_kvsys/a42f7c77f43b/kv3_hg_v1/published_gen_origin.json'",
+   "rc": 1,
+   "result": "FAIL",
+   "spec_src": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg10_4a40f1db_tb3c4d97_d25c",
+   "stage": "bind",
+   "verdict": "FAIL",
+   "why": "stage bind: Traceback (most recent call last):\nFileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg10_4a40f1db_tb3c4d97_d25c/physical/die_plan/qwen_kvsys/plan_of_record/bind_of_record/bind_report.json'"
+  },
+  "foreign_tree": {
+   "advisory": true,
+   "findings": [],
+   "n": 0,
+   "verdict": "PASS"
+  },
+  "hashes": {
+   "findings": [],
+   "verdict": "PASS",
+   "views": 59
+  },
+  "pre_g0": {
+   "baseline": {
+    "inherited": false,
+    "verdict": "PASS"
+   },
+   "g0_rc": 0,
+   "g0_report": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/pubgate/g0-ash3eg28/g0_report.json",
+   "pre_rc": 0,
+   "tail": "PRE: PLAN-GATE-PRE PASS tree=/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg10_4a40f1db_tb3c4d97_d25c plan=/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg10_4a40f1db_tb3c4d97_d25c/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json findings=0\n\nG0: -TARGET kv3_hg_v1p5: grid+explicit tap clk_t48 radius=271.964/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_hg_v1p6: grid+explicit tap clk_t42 radius=215.716/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_hgi_v1__cl141fc26e: grid+explicit tap clk_t40 radius=203.216/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_hgi_v1__cl42bc8b12: grid+explicit tap clk_t39 radius=203.216/200.0 (advisory)\nTAP-LIMIT-INFO kv3_hgi_v2__cl2862d491: grid+explicit tap clk_t33 load=269/1200, radius=264.832/200.0, empty=False (info: not blocking; routed timing decides)\nTAP-RADIUS-TARGET kv3_hgi_v2__cl2862d491: grid+explicit tap clk_t33 radius=264.832/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_hgi_v2__cle0015330: grid+explicit tap clk_t34 radius=213.248/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_hgi_v8: grid+explicit tap clk_t22 radius=202.148/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_hub_C: grid+explicit tap clk_t90 radius=208.28/200.0 (advisory)\n",
+   "verdict": "PASS"
+  },
+  "schema": {
+   "rc": 0,
+   "tail": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg10_4a40f1db_tb3c4d97_d25c/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json: PASS (0 errors)\n",
+   "verdict": "PASS"
+  }
+ },
+ "die": "qwen_kvsys",
+ "foreign_tree_scan": {
+  "asbuilts": [
+   "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg10_4a40f1db_tb3c4d97_d25c/physical/die_plan/qwen_kvsys/plan_of_record/bind_of_record/asbuilt_manifest_injected.json"
+  ],
+  "bind_out": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg10_4a40f1db_tb3c4d97_d25c/physical/die_plan/qwen_kvsys/plan_of_record/bind_of_record",
+  "files": [
+   "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg10_4a40f1db_tb3c4d97_d25c/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json",
+   "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg10_4a40f1db_tb3c4d97_d25c/physical/die_plan/qwen_kvsys/plan_of_record/bind_of_record/bind.f",
+   "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg10_4a40f1db_tb3c4d97_d25c/physical/die_plan/qwen_kvsys/plan_of_record/bind_of_record/asbuilt_manifest_injected.json"
+  ]
+ },
+ "gate_s": 1444.3,
+ "hosts": [
+  "epyc7",
+  "epyc8",
+  "epyc9",
+  "epyc10"
+ ],
+ "item": "kv3_hg_v1",
+ "manifest_hash": "a42f7c77f43b1667486844f6cfa4470a352f14a4c8db9e6e20671558a4b1b314",
+ "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg10_4a40f1db_tb3c4d97_d25c/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+ "plan_sha256": "4a40f1dbe86de8e77058f9874996ad26c0f43f19bc5d0d265a5b68ac1a5a301a",
+ "rows_proofs": [],
+ "schema": "opentallas.publish_gate.v1",
+ "static_s": 1444.3,
+ "t": 1795081796.0095806,
+ "tree": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg10_4a40f1db_tb3c4d97_d25c",
+ "verdict": "FAIL"
+}
