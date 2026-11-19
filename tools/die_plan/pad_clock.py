@@ -656,7 +656,15 @@ def write_contract(P, tn, kit):
     path = Path(kit) / 'pad_clock.json'
     ps = pins(P, tn)
     if ps:
-        path.write_text(json.dumps(dict(schema='opentallas.pad_clock.v1', pins=ps), indent=1) + '\n')
+        # xy_um in the sidecar = the physical kit port (port_xy: from_xy_um for a die_trunk host "type" row), the position
+        # io_tcl places and kit_contract clock_pin_geometry checks; the plan trunk end stays as plan_xy_um.
+        side = []
+        for p in ps:
+            q = dict(p); q['xy_um'] = port_xy(p)
+            if q['xy_um'] != list(p['xy_um']):
+                q['plan_xy_um'] = list(p['xy_um'])
+            side.append(q)
+        path.write_text(json.dumps(dict(schema='opentallas.pad_clock.v1', pins=side), indent=1) + '\n')
     else:
         path.unlink(missing_ok=True)
     owned = [Path(kit) / 'phy_clock_export.tcl', Path(kit) / 'phy_clock_export_source.tcl']

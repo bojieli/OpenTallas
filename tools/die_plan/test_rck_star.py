@@ -186,3 +186,35 @@ def test_host_type_trunk_moves_the_kit_port_and_emits_the_hook():
     # a station-less host-type row moves the port but builds nothing
     p, pin = tplan(host='type')
     assert PC.trunk_tcl(p, 'mid') == '' and PC.port_xy(pin) == pin['die_trunk']['from_xy_um']
+
+
+def test_host_type_kit_port_is_one_position_for_io_sidecar_and_pin_records(tmp_path):
+    """FABLE-FIX-S81-SERDES-O 11-18 audit: every reader of the physical pad-clock port (io.tcl place_pin, the pad_clock.json
+    sidecar that kit_contract clock_pin_geometry compares io.tcl against, gen_phys.plan_pin_records -> freeze.json / die
+    abstracts) sees from_xy_um for a die_trunk host "type" row; the plan trunk end stays in the sidecar as plan_xy_um."""
+    import json
+    import gen_phys as GP
+    import landing_contract as LC
+    p, pin = tplan()
+    x, y = pin['xy_um']
+    w = p.types['mid']['outline_um'][0]
+    step = 200.0 if x + 400.0 <= w else -200.0
+    fx, fy = LC.on_track(p, pin['layer'], x + 2 * step, y)
+    p, pin = tplan(host='type', from_xy_um=[fx, fy], stations_um=[[x + step, y]], cell='BUFx24_ASAP7_75t_R')
+    name = pin['name']
+    io = PC.io_tcl(p, 'mid')
+    m = re.search(r'-pin_name \{%s\[0\]\} -layer \S+ -location \{(\S+) (\S+)\}' % name, io)
+    assert m and abs(float(m.group(1)) - fx) < 1e-4 and abs(float(m.group(2)) - fy) < 1e-4
+    PC.write_contract(p, 'mid', tmp_path)
+    side = {q['name']: q for q in json.loads((tmp_path / 'pad_clock.json').read_text())['pins']}
+    assert side[name]['xy_um'] == [fx, fy] and side[name]['plan_xy_um'] == [x, y]
+    recs = {r['name']: r for r in GP.plan_pin_records(p, 'mid', GP.type_pins(p, 'mid'))}
+    r = recs[name + '[0]']
+    assert abs(float(r['x']) - fx) < 1e-4 and abs(float(r['y']) - fy) < 1e-4
+    # host die: all three keep the declared xy_um and the sidecar has no plan_xy_um
+    p, pin = tplan()
+    PC.write_contract(p, 'mid', tmp_path)
+    side = {q['name']: q for q in json.loads((tmp_path / 'pad_clock.json').read_text())['pins']}
+    assert side[name]['xy_um'] == [x, y] and 'plan_xy_um' not in side[name]
+    r = {r['name']: r for r in GP.plan_pin_records(p, 'mid', GP.type_pins(p, 'mid'))}[name + '[0]']
+    assert abs(float(r['x']) - x) < 1e-4 and abs(float(r['y']) - y) < 1e-4

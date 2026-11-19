@@ -885,7 +885,7 @@ def plan_pin_records(P, tn, pins, bump_sites=()):
         add(f'{name}[{i}]', ln, x, y)
     import pad_clock as PC
     for p in PC.pins(P, tn):
-        add(p['name'] + '[0]', p['layer'], *p['xy_um'])
+        add(p['name'] + '[0]', p['layer'], *PC.port_xy(p))     # physical kit port (die_trunk host type: from_xy_um), as io_tcl
     return list(recs.values())
 
 
