@@ -5860,7 +5860,7 @@ def pick_gen_host(cfg, die, take=0, threads=0, item=None):
         uncapped = [h for h in hs if key(h) and not over_load_cap(key(h)) and not die_disk_low(cfg, die, h, key(h))
                     and die not in low.get(h, {})]
         best = (min(fits, key=lambda h: load_rank(cfg, h, key(h)) + (-hs.index(h),)) if fits
-                else max(room or uncapped or hs, key=lambda h: (sc(h) * host_share(cfg, h), -hs.index(h))))
+                else min(room or uncapped or hs, key=lambda h: load_rank(cfg, h, key(h)) + (-hs.index(h),)))   # LOADRANK-NOFIT-1119 (COORD: 325 launches in 1 h onto epyc7 at 473/96 while no host admitted): with no host fitting, the burst still goes to the LEAST LOADED candidate, not the best memory score
     if key(best) is not None and len(hs) >= 2 and take:
         charge(key(best), take)
     alt_charge(cfg, best)
