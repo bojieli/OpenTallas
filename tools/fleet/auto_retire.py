@@ -442,6 +442,25 @@ def attempt_candidates(claude, cfg, state, refs, now=None, quiet_s=ATTEMPT_QUIET
         if isinstance(v, dict):
             by.setdefault((v.get("die"), str(v.get("event")), v.get("item")), []).append(v)
     out, allf = [], {}
+    latest = {}                  # KEEP-LATEST-1119: (die, type) -> newest attempt dir of ANY event/status; kept until the type is signed
+    signed_types = set()
+    for p in sorted((globber or (lambda: glob.glob(os.path.join(claude, ATTEMPT_GLOB))))()):
+        if not os.path.isdir(p) or os.path.islink(p) or "/runs/" not in p:
+            continue
+        pp = p.split("/runs/", 1)[1].split("/")
+        if len(pp) < 7:
+            continue
+        rows = by.get((pp[0], pp[3], pp[5]), [])
+        ty = (pp[0], next((v.get("parent_item") for v in rows if v.get("parent_item")), None) or pp[5])
+        if any("q_signoff" in json.dumps(v) or str(v.get("status")) == "SIGNED" for v in rows):
+            signed_types.add(ty)
+        try:
+            k = (os.lstat(p).st_mtime, p)
+        except OSError:
+            continue
+        if ty not in latest or k > latest[ty][0]:
+            latest[ty] = (k, p)
+    keep_latest = {v[1] for t, v in latest.items() if t not in signed_types}
     for p in sorted((globber or (lambda: glob.glob(os.path.join(claude, ATTEMPT_GLOB))))()):
         if not os.path.isdir(p) or os.path.islink(p):
             continue
@@ -494,7 +513,7 @@ def attempt_candidates(claude, cfg, state, refs, now=None, quiet_s=ATTEMPT_QUIET
         m, n, p = max(grp)
         if m > keep_cut:
             keep.add(p)
-    return [(p, why) for p, why in out if p not in keep]
+    return [(p, why) for p, why in out if p not in keep and p not in keep_latest]
 
 
 KEEP_NAMES = ("reports", "logs", "REPORTS-KEPT.txt")      # COORD 11-18: reports/ (and bind inputs, via the guard's protected list) survive a cleanup

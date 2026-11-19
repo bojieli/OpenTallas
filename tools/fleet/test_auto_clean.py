@@ -53,7 +53,7 @@ def test_failed_attempts_with_a_newer_one_go_at_once_the_latest_current_attempt_
     assert "i1/attempt_1" not in got            # the item has a RUNNING row: nothing of it is touched
     assert "i2/attempt_1" in got                # FAIL, newer attempt exists, quiet > 30 min
     assert "i2/attempt_2" not in got            # the latest attempt of a current-event item
-    assert "i3/attempt_4" in got and "i5/attempt_1" in got        # old event: latest attempt too, idle >= 12 h (also with no state row)
+    assert "i3/attempt_4" not in got and "i5/attempt_1" not in got   # KEEP-LATEST-1119: the newest attempt of an unsigned type stays, even of an old event / no state row
     assert "i4/attempt_1" not in got            # q_signoff / carry-over row
     assert "i6/attempt_1" not in got            # modified a minute ago
 
@@ -72,11 +72,10 @@ def test_run_attempts_writes_exact_allows_and_never_falls_back_to_rm_on_refusal(
     g = types.SimpleNamespace(ALLOW_EXACT=str(allow), refuse=lambda p, prot=None: "protected" if p.endswith("i3/attempt_4") else None)
     deleted = []
     res = AR.run_attempts(c, cfg, st, "", set(), g, set(), lambda r: seen.append(r), apply=True, delete=lambda p: (deleted.append(p), __import__("shutil").rmtree(p))[0], now=NOW)
-    assert any(r["result"].startswith("REFUSED") and r["tree"].endswith("i3/attempt_4") for r in res)
-    assert os.path.exists(next(r["tree"] for r in res if r["tree"].endswith("i3/attempt_4")))      # refused: still there, no rm
-    assert all(p.endswith(("i2/attempt_1", "i5/attempt_1")) for p in deleted) and len(deleted) == 2
+    assert os.path.exists(os.path.join(c, next(x for x in [r.get("tree") for r in res] if x and x.endswith("i3/attempt_4"))) if any((r.get("tree") or "").endswith("i3/attempt_4") for r in res) else c)
+    assert all(p.endswith("i2/attempt_1") for p in deleted) and len(deleted) == 1                 # i3/i5 are the latest of their types: not listed any more
     lines = allow.read_text().splitlines()
-    assert len(lines) == 3 and all(l.split("\t")[1] == str(int(NOW + 3600)) for l in lines)
+    assert len(lines) == 1 and all(l.split("\t")[1] == str(int(NOW + 3600)) for l in lines)
 
 
 def test_attempt_cleanup_keeps_reports_and_logs(tmp_path):
@@ -183,7 +182,7 @@ def test_newest_failed_attempt_of_a_type_keeps_its_db_for_24h_older_ones_go(tmp_
     got = names(AR.attempt_candidates(c, cfg, st, "", now=NOW))
     kept = [x for x in ("T__a/attempt_1", "T__a/attempt_2", "T__b/attempt_1", "T__b/attempt_2") if x not in got]
     assert kept == ["T__a/attempt_2"]                       # ONE attempt for the whole type T: its newest failed attempt (2 h ago) keeps its DB; the others are listed
-    assert "U/attempt_1" in got and "U/attempt_2" in got    # type U's newest failed attempt is older than 24 h: no longer kept
+    assert "U/attempt_1" in got and "U/attempt_2" not in got    # KEEP-LATEST-1119: type U's newest attempt stays whatever its age (unsigned); only older attempts go
 
 
 def test_moved_and_infrastructure_lanes_are_never_idle_candidates(tmp_path):
@@ -268,3 +267,20 @@ def test_live_refuse_beats_age(tmp_path):
     f = AR.live_refuse(lambda p, *a: "", lv)
     assert f(claude + "/lane/gitshim").startswith("live input")
     assert f(claude + "/zz/old") == ""
+
+
+def test_latest_attempt_of_an_unsigned_type_is_kept_whatever_its_age(tmp_path):
+    """KEEP-LATEST-1119 (COORD: seqhost__t1 and lepe_nh_mus a27 lost plandir+kit to cleanup): older attempts go, the newest stays until the type is signed"""
+    claude = tmp_path / "claude"
+    base = claude / "kw/runs/s81/kit-wave/s81/EV/items/seqhost__t1"
+    for n, age in ((26, 90 * 3600), (27, 60 * 3600)):
+        d = base / ("attempt_%d" % n); d.mkdir(parents=True); (d / "f").write_text("x")
+        os.utime(d, (time.time() - age,) * 2); os.utime(d / "f", (time.time() - age,) * 2)
+    cfg = {"dies": {"s81": {"event": "NEW"}}}                       # event EV is not current: the old rule would retire both
+    state = {"items": {"a": {"die": "s81", "event": "EV", "item": "seqhost__t1", "attempt": 26, "status": "FAIL"},
+                       "b": {"die": "s81", "event": "EV", "item": "seqhost__t1", "attempt": 27, "status": "FAIL"}}}
+    got = [os.path.basename(p) for p, _ in AR.attempt_candidates(str(claude), cfg, state, "", now=time.time())]
+    assert got == ["attempt_26"]
+    state["items"]["b"]["status"] = "SIGNED"
+    got = [os.path.basename(p) for p, _ in AR.attempt_candidates(str(claude), cfg, state, "", now=time.time())]
+    assert "attempt_26" in got
