@@ -36937,6 +36937,19 @@
     "eng__t1@16",
     "gunit__t1@19",
     "ot_s81sl_leaf__t56@19"
+   ],
+   "bound_trees": [
+    {
+     "src": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8f_1117_work",
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8f_1117_work/physical/die_plan/s81/plan_h2_2249.json",
+     "src_manifest_hash": "f749d8b4fb33becdb795acaaa73f568bf7871b6ba31dd6f3effe4cb2f05ddec8",
+     "kit_rtl": {
+      "mode": "bind",
+      "bind_out": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8f_1117_work_bind_1119024528",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8f_1117_work/physical/die_plan/s81/plan_of_record/native_bind/asbuilt_run.json",
+      "note": "S81-DIE-R3 11-19: D8f post-apply strict bind (green: elab 0 bind 0 LATCHECK 873/873; bind_matches 395/395 both reset scopes), sealed + replicated to the 6 gen hosts"
+     }
+    }
    ]
   },
   "s81_head": {
