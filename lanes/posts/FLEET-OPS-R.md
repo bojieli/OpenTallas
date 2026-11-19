@@ -652,3 +652,4 @@
 - 2026-11-19 08:28 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kw45 on intel1 wrote 188 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
 - 2026-11-19 08:30 PST STATE [FLEET-OPS-R -> COORD] my pending push did not land: ...........................................................
 - 2026-11-19 08:37 PST ALERT [FLEET-OPS-R -> COORD] lane quota: scratch3:kw43-wave-1109n on epyc2 wrote 263 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
+- 2026-11-19 08:38 PST ALERT [FLEET-OPS-R -> COORD] lane quota: scratch3:kw45 on epyc2 wrote 60 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
