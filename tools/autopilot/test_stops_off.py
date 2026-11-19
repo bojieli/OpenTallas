@@ -639,9 +639,10 @@ class SupersedeUnderStopsOff(unittest.TestCase):
         return st["items"]["s81|E|t|bOLD"]
 
     def test_done_or_running_queue_job_row_on_a_dead_block_is_retired(self):
-        for q in ("RUNNING", "DONE-CRASH", "ORPHAN"):
+        for q in ("DONE-CRASH", "ORPHAN"):
             r = self.run_it(q)
             self.assertEqual((r["status"], r["class"]), ("CANCELLED", "SUPERSEDED"), q)
+        self.assertEqual(self.run_it("RUNNING")["status"], "ENQUEUED")          # OWNER 11-19: a RUNNING queue job of an older plan finishes (finishes_on_old_plan)
 
     def test_opt_out_still_holds_without_stops_off(self):
         self.assertEqual(self.run_it("RUNNING", opt_out=True, so=False)["status"], "ENQUEUED")
@@ -1313,3 +1314,40 @@ class FlowFixes0358(unittest.TestCase):
             KW.write_blocked(cfg, st, tmp)
             lines = Path(tmp, KW.BLOCKED_FILE).read_text().splitlines()
             self.assertEqual(len(lines), 2)
+
+
+class OldPlanFinishes(unittest.TestCase):
+    """OWNER 11-19: a kit past synthesis on an older plan is never cancelled for a newer plan; only queued / not-started rows are superseded"""
+
+    def run_it(self, row, die="s81", switch=False):
+        import tempfile, json as _j
+        cfg = {"stops_off": True, "supersede_max_per_tick": 1000, "dies": {die: {"event": "E", "enabled": True, "plan": "p", "gen_host": "h"}}}
+        r = dict({"die": die, "item": "t", "event": "E", "block_sha": "OLD", "attempt": 1, "dir": "/x", "q_id": "j"}, **row)
+        st = {"items": {f"{die}|E|t|bOLD": r}, "plans": {"h:p|E": {"blocks": {"t": "NEW"}}}}
+        logs = []
+        ap = type("AP", (), {"DRY": False, "HUB_NAME": "hub", "log": staticmethod(logs.append), "sh": staticmethod(lambda *a, **k: (0, "", ""))})()
+        with tempfile.TemporaryDirectory() as tmp:
+            Path(tmp, "state.json").write_text(_j.dumps({"jobs": {"j": {"status": row.get("q_status") or "QUEUED"}}}))
+            orig = KW.stop_on_fleet_bg
+            KW.stop_on_fleet_bg = lambda AP, roots: {}
+            try:
+                if switch:
+                    st["adopt_seen"] = {die: {"src": "a", "sig": "b", "switched": True, "sup_ticks": 0}}
+                    cfg["dies"][die]["src"] = "c"
+                    KW.supersede_on_switch(ap, cfg, st, {}, tmp)
+                else:
+                    KW.cancel_superseded(ap, cfg, st, {}, tmp)
+            finally:
+                KW.stop_on_fleet_bg = orig
+        return r["status"]
+
+    def test_running_past_synthesis_and_running_queue_job_finish(self):
+        for row in ({"status": "RUNNING", "stage": "place"}, {"status": "RUNNING", "stage": "grt"}, {"status": "ENQUEUED", "q_status": "RUNNING"}):
+            self.assertIn(self.run_it(row), ("RUNNING", "ENQUEUED"), row)
+            self.assertIn(self.run_it(row, switch=True), ("RUNNING", "ENQUEUED"), row)
+
+    def test_not_started_rows_are_still_superseded_and_hbm_is_unchanged(self):
+        self.assertEqual(self.run_it({"status": "ENQUEUED", "q_status": "QUEUED"}), "CANCELLED")
+        self.assertEqual(self.run_it({"status": "RUNNING", "stage": "kit_rtl"}), "CANCELLED")          # before synthesis: not started
+        self.assertEqual(self.run_it({"status": "RUNNING", "stage": "gen"}), "CANCELLED")
+        self.assertFalse(KW.finishes_on_old_plan({"stops_off": True, "dies": {"hbm": {}}}, "hbm", {"status": "RUNNING", "stage": "place"}, {}))

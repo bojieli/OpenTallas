@@ -2421,6 +2421,20 @@ def ctx_changed(cur_ctx, die, r):
     return bool(cc) and bool(r.get("die_ctx")) and r["die_ctx"] != cc
 
 
+POST_SYNTH_STAGES = ("place", "cts", "grt", "route", "sta", "signoff", "geom")
+
+
+def finishes_on_old_plan(cfg, die, r, jobs):
+    """OWNER 11-19 05:2x (\"do not freeze ... we count types signed off for whichever plan of the die\"): a kit already past synthesis (a wave row in place / cts / grt / route ..., or a queue
+    job that is RUNNING) is never cancelled because a newer plan exists, even when its replacement can launch: both run, whichever signs first counts.  Only queued, not-started rows are
+    superseded.  Not HBM (parked; keeps its holds).  Memory admission stays the only limit."""
+    if not FG.stops_off_die(cfg, die):
+        return False
+    if r.get("status") in ("RUNNING", "LAUNCHING"):
+        return str(r.get("stage") or "") in POST_SYNTH_STAGES
+    return past_place(r, jobs)
+
+
 def past_place(r, jobs):
     """the row is beyond gen / place: its queue job (route, CTS, sign-off) is running.  A RUNNING wave row is in gen / place by construction; an ENQUEUED row whose job has not started is still waiting"""
     if r.get("status") != "ENQUEUED":
@@ -2496,8 +2510,10 @@ def supersede_on_switch(AP, cfg, st, notices, ap_dir=None, window_ticks=3):
             same = row_inputs_unchanged(cfg, die, r, item, cur_blocks, cur_norm, cur_ctx)
             ctxk = (not same) and ctx_only_keep(cfg, die, r, item, cur_blocks, cur_norm, cur_ctx, jobs)
             rbk = (not same) and FG.stops_off_die(cfg, die) and replacement_blocked(st, die, item)
-            if held is not None or same or ctxk or rbk:
+            fin = (not same) and finishes_on_old_plan(cfg, die, r, jobs)
+            if held is not None or same or ctxk or rbk or fin:
                 why = (f"hold_items: {held[:120]}" if held is not None else
+                       "already past synthesis on an older plan: it finishes, whichever plan signs first counts (OWNER 11-19)" if fin else
                        f"die-level contract changed but the row is past place (queue job running): finishes, relaunches on the new block only if it fails" if ctxk else
                        f"its replacement cannot launch (bind preflight: BIND-STALE on the current tree): kept, cancelled when the replacement launches (FABLE-FLOW-0358 A)" if rbk else
                        f"own plan block {str(r.get('block_sha'))[:12]} is the item's block in the current plan")
@@ -14002,8 +14018,10 @@ def cancel_superseded(AP, cfg, st, notices, ap_dir=None):
             same = row_inputs_unchanged(cfg, die, r, item, cur_blocks, cur_norm, cur_ctx)
             ctxk = (not same) and ctx_only_keep(cfg, die, r, item, cur_blocks, cur_norm, cur_ctx, jobs)
             rbk = (not same) and so and replacement_blocked(st, die, item)
-            if held is not None or same or ctxk or rbk:
+            fin = (not same) and finishes_on_old_plan(cfg, die, r, jobs)
+            if held is not None or same or ctxk or rbk or fin:
                 why = (f"hold_items: {held[:160]}" if held is not None else
+                       "already past synthesis on an older plan: it finishes, whichever plan signs first counts (OWNER 11-19)" if fin else
                        f"die-level contract changed but the row is past place (queue job running): finishes, relaunches on the new block only if it fails" if ctxk else
                        f"its replacement cannot launch (bind preflight: BIND-STALE on the current tree): kept, cancelled when the replacement launches (FABLE-FLOW-0358 A)" if rbk else
                        f"own plan block {str(r.get('block_sha'))[:12]} unchanged in the current plan")
