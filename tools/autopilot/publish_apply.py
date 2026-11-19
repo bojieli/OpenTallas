@@ -14,11 +14,15 @@ the moment its tree is PUBLISHED:
 
     publish_apply.py apply --candidate JSON --expect-source OLD_TREE --expect-event OLD_EVENT --lane LANE [--coord ~/coord] [--no-gate]
     publish_apply.py bind-fail --die DIE --lane LANE --id ID (--types t1,t2 | --log FILE) [--reason TEXT] [--coord ~/coord] [--dry]
+    publish_apply.py derive-asbuilt --bind BIND_DIR --asbuilt KIT_ASBUILT --tree TREE --out NEW_ASBUILT
+  apply first runs kit_topology.bind_matches on the candidate on a candidate host (FABLE-FLOW-1400): a bind that does not match refuses (rc 4).
+  bind-fail writes dies.<die>.bind_fail {id, bind, items} first: the wave books those rows FAIL class BIND-FAIL until the bind changes.
 """
 import argparse
 import json
 import os
 import re
+import shlex
 import subprocess
 import sys
 import tempfile
@@ -41,12 +45,125 @@ def gate_argv(C, cand_path, tree, event):
     return [sys.executable, "-I", str(HERE / "publish_gate.py"), "run", "--candidate", str(cand_path), "--expect-source", tree,
             "--expect-event", str(event), "--coord", str(C), "--commit"]
 
+# FABLE-FLOW-1400 (1): QC sat 3.2 h on 56 BIND-STALE rows because the candidate's kit_rtl.asbuilt named the N2BBR clock table while its bind was made
+# on N4DBQ.  apply now runs kit_topology.bind_matches (the wave's own bind preflight) on the candidate, on a host that holds the tree, BEFORE the switch.
+PROBE_CAND = r"""
+import json, os, sys
+from pathlib import Path
+a = json.loads(sys.argv[1])
+try:
+    if a.get("scope"):
+        os.environ["OT_NATIVE_RESET_SCOPE"] = a["scope"]
+    sys.path.insert(0, str(Path(a["src"]) / "tools" / "die_plan"))
+    import kit_topology as kt
+    raw = json.loads(Path(a["plan"]).read_text())
+    ab = a.get("asbuilt") or None
+    types = [t for t in (raw.get("partition_types") or {}) if kt.has_topology(raw, t, ab)]
+    stale = [t for t in types if not kt.bind_matches(raw, t, a["bind_out"], ab, a["plan"])]
+    diff = {}
+    if stale:
+        old = json.loads((Path(a["bind_out"]) / "native_topology.json").read_text())
+        new = kt.native_contract(raw, ab, a["plan"])
+        diff = {k: [str(old.get(k))[:16], str(new.get(k))[:16]] for k in ("clock_table_sha256", "reset", "transport", "ownership") if old.get(k) != new.get(k)}
+    out = {"checked": len(types), "stale": stale, "diff": diff}
+except Exception as e:
+    out = {"error": (type(e).__name__ + ": " + str(e))[:300]}
+print("AP_JSON " + json.dumps(out))
+"""
+
+
+def candidate_bind_args(obj):
+    """-> (probe args, hosts) of a bind-mode candidate, (None, []) when the candidate builds no bind"""
+    m = obj.get("marker", obj)
+    mc = m.get("config") or {}
+    kr = mc.get("kit_rtl") or {}
+    if kr.get("mode") != "bind" or not kr.get("bind_out"):
+        return None, []
+    env = dict(m.get("die_gen_env") or {})
+    return (dict(src=m["tree"], plan=m["plan"], bind_out=kr["bind_out"], asbuilt=kr.get("asbuilt") or "", scope=env.get("OT_NATIVE_RESET_SCOPE") or ""),
+            list(mc.get("gen_hosts") or m.get("hosts") or []))
+
+
+def bind_check(obj, run=subprocess.run):
+    """-> (ok, text).  ok None = not a bind candidate; the probe runs on the first candidate host that answers"""
+    args, hosts = candidate_bind_args(obj)
+    if not args:
+        return None, "no bind"
+    err = []
+    for h in hosts:
+        p = run(["ssh", "-n", "-o", "BatchMode=yes", "-o", "ControlPath=none", "-o", "ConnectTimeout=15", h,
+                 "python3 -I -c " + shlex.quote(PROBE_CAND) + " " + shlex.quote(json.dumps(args))], capture_output=True, text=True, timeout=900)
+        line = [x for x in (p.stdout or "").splitlines() if x.startswith("AP_JSON ")]
+        if not line:
+            err.append(f"{h}: rc {p.returncode} {(p.stderr or '')[-160:]}")
+            continue
+        r = json.loads(line[-1][8:])
+        if r.get("error"):
+            return False, f"bind check on {h} could not run: {r['error']}"
+        if r["stale"]:
+            return False, (f"bind {args['bind_out']} does not match the candidate on {len(r['stale'])}/{r['checked']} types ({h}): differs {r['diff']}; "
+                           f"e.g. {', '.join(r['stale'][:6])}.  A clock_table_sha256-only difference = the asbuilt names other tables than the bind used: "
+                           f"derive it from the bind (publish_apply.py derive-asbuilt --bind {args['bind_out']} --asbuilt {args['asbuilt']} --tree {args['src']} --out NEW)")
+        return True, f"bind matches the candidate on {r['checked']}/{r['checked']} types ({h})"
+    return False, "bind check: no candidate host answered: " + "; ".join(err)[:400]
+
+
+def tree_rel(path, tree_roots):
+    """an absolute file path inside one of the tree roots (or any tree: from physical/ / tools/ / rtl/ on) -> tree-relative"""
+    for t in tree_roots:
+        t = t.rstrip("/") + "/"
+        if path.startswith(t):
+            return path[len(t):]
+    for marker in ("/physical/", "/tools/", "/rtl/"):
+        if marker in path:
+            return path[path.index(marker) + 1:]
+    raise ValueError(f"{path}: not inside a source tree")
+
+
+def derive_asbuilt(bind, asbuilt, tree, out):
+    """FABLE-FLOW-1400 (1): the kit asbuilt the bind was ACTUALLY made with: asbuilt's clock_landing_table / land_r8 / land_r8_extra replaced by the
+    sidecar / r8 / extra tables bind/INPUTS_ISOLATED.json records (tree-relative, each sha-checked in tree).  Never hand-edited.  -> the written dict"""
+    import hashlib
+    iso = json.loads((Path(bind) / "INPUTS_ISOLATED.json").read_text())
+    a = json.loads(Path(asbuilt).read_text())
+
+    def rel_checked(pth, sha):
+        r = tree_rel(pth, [tree])
+        got = hashlib.sha256((Path(tree) / r).read_bytes()).hexdigest()
+        if sha and got != sha:
+            raise SystemExit(f"DERIVE refuse: {r} in {tree} is {got[:12]}, the bind used {str(sha)[:12]}")
+        return r
+    if iso.get("sidecar"):
+        a["clock_landing_table"] = rel_checked(iso["sidecar"], iso.get("sidecar_sha256"))
+    if iso.get("r8"):
+        a["land_r8"] = rel_checked(iso["r8"], iso.get("r8_sha256"))
+    if iso.get("extra_tables"):
+        a["land_r8_extra"] = [rel_checked(x["copy"], x.get("sha256")) for x in iso["extra_tables"]]
+    a["derived_from_bind"] = {"bind": str(bind), "tool": "publish_apply.py derive-asbuilt (FABLE-FLOW-1400)"}
+    tmp = Path(out).with_suffix(".tmp")
+    tmp.write_text(json.dumps(a, indent=1) + "\n")
+    os.replace(tmp, out)
+    return a
+
+
+def cmd_derive(a):
+    d = derive_asbuilt(a.bind, a.asbuilt, a.tree, a.out)
+    print(json.dumps({k: d.get(k) for k in ("clock_landing_table", "land_r8", "land_r8_extra")}, indent=1))
+    print(f"DERIVED {a.out}: add it to the tree (live-tree pack), point kit_rtl.asbuilt at it; the bind receipt's asbuilt_sha256 names the asbuilt the bind was run with")
+    return 0
+
 
 def cmd_apply(a, run=subprocess.run, apply_fn=None, commit_fn=None):
     C = Path(a.coord)
     obj = json.loads(Path(a.candidate).read_text())
     obj["optimistic"] = True
     obj["_path"] = a.candidate
+    if not getattr(a, "skip_bind_check", False):
+        ok, txt = (getattr(a, "bind_check_fn", None) or bind_check)(obj, run=run)
+        print(f"BIND-CHECK {txt}", flush=True)
+        if ok is False:
+            print("APPLY REFUSED: the candidate's bind does not match it (the wave would hold every type BIND-STALE); fix the candidate or pass --skip-bind-check")
+            return 4
     t0 = time.time()
     res = (apply_fn or A.apply_marker)(C, obj, a.expect_source, a.expect_event, pilot_item=a.pilot_item, optimistic=True)
     res["commit"] = (commit_fn or A.commit_apply)(C, res)
@@ -91,6 +208,18 @@ def bind_fail_record(d, types, lane, ident, reason):
     return {"id": f"bindfail-{ident}", "plan_sha": d.get("plan_sha256"), "items": list(types), "owner": lane, "carry": True, "cancel_running": True,
             "reason": f"LATENCY-R optimistic launch: strict bind/LATCHECK failed on these types only ({reason})"[:900],
             "release": [f"result:{lane}:{ident}"]}
+
+
+def bind_fail_records(cfg, die, types, lane, ident, now=None):
+    """one bind_fail record per bind the named types build on now (item kit_rtl over die kit_rtl): {id, bind, items, at, lane}"""
+    import kit_wave as KW
+    by = {}
+    for t in types:
+        b = KW.item_bind_out(cfg, die, t)
+        if b:
+            by.setdefault(b, []).append(t)
+    at = time.time() if now is None else now
+    return [{"id": f"bindfail-{ident}", "bind": b, "items": sorted(ts), "at": at, "lane": lane} for b, ts in sorted(by.items())]
 
 
 def owner_lane_of(d, fallback):
@@ -150,9 +279,24 @@ def cmd_bind_fail(a, run=subprocess.run):
         except (OSError, ValueError):
             pass
         rows = running_rows(st, a.die, set(types))
+        # FABLE-FLOW-1400 (3): the cancelled rows were read as OOM and resubmitted at x1.5 memory on the failed bind (QC cbx_q10).  A bind_fail
+        # record (bind id + the bind each type builds on) is written FIRST: the wave books those rows FAIL class BIND-FAIL and launches the
+        # types again only when their bind_out changes (kit_wave.bind_fail_active).
+        recs = bind_fail_records(cfg, a.die, types, a.lane, a.id)
         if a.dry:
-            print(json.dumps({"cancel": [(r.get("item"), r.get("unit"), r.get("kit")) for r in rows], "owner": owner}, indent=1))
+            print(json.dumps({"cancel": [(r.get("item"), r.get("unit"), r.get("kit")) for r in rows], "owner": owner, "bind_fail": recs}, indent=1))
             return 0
+        if recs:
+            patch = [{"op": "add", "path": f"/dies/{a.die}/bind_fail", "value": list(d.get("bind_fail") or []) + recs}] if not d.get("bind_fail") else \
+                [{"op": "add", "path": f"/dies/{a.die}/bind_fail/-", "value": x} for x in recs]
+            with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False) as f:
+                json.dump(patch, f)
+            r = run([sys.executable, "-I", str(HERE / "kit_wave_edit.py"), "--coord", str(C), "--message",
+                     f"{a.lane}: bind-fail {a.id} ({len(types)} types, class BIND-FAIL)", "--patch-file", f.name], capture_output=True, text=True, timeout=600)
+            os.unlink(f.name)
+            if r.returncode:
+                print("BIND-FAIL: the bind_fail record was not written; nothing cancelled: " + (r.stdout + r.stderr)[-400:])
+                return 1
         done = cancel_running_kits(rows, run=run)
         post(C, a.lane, f"BIND-FAIL-CANCEL [{a.lane} -> {owner}] {a.die}: strict bind/LATCHECK failed for {len(types)} type(s): {', '.join(types)[:600]}; cancelled {len(rows)} running "
                         f"kit(s) by exact unit ({len(done)} unit(s)); nothing is held (stops_off), the types relaunch on the next change", run=run)
@@ -191,6 +335,12 @@ def main(argv=None):
     p.add_argument("--pilot-item")
     p.add_argument("--coord", default=os.path.expanduser("~/coord"))
     p.add_argument("--no-gate", action="store_true", help="do not start the advisory publish gate")
+    p.add_argument("--skip-bind-check", action="store_true", help="apply although kit_topology.bind_matches says the bind does not match the candidate")
+    dv = sp.add_parser("derive-asbuilt", help="write the kit asbuilt the bind was made with (tables from bind/INPUTS_ISOLATED.json)")
+    dv.add_argument("--bind", required=True)
+    dv.add_argument("--asbuilt", required=True)
+    dv.add_argument("--tree", required=True)
+    dv.add_argument("--out", required=True)
     b = sp.add_parser("bind-fail")
     b.add_argument("--die", required=True)
     b.add_argument("--lane", required=True)
@@ -201,7 +351,7 @@ def main(argv=None):
     b.add_argument("--coord", default=os.path.expanduser("~/coord"))
     b.add_argument("--dry", action="store_true")
     a = P.parse_args(argv)
-    return cmd_apply(a) if a.cmd == "apply" else cmd_bind_fail(a)
+    return cmd_apply(a) if a.cmd == "apply" else cmd_derive(a) if a.cmd == "derive-asbuilt" else cmd_bind_fail(a)
 
 
 if __name__ == "__main__":

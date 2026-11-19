@@ -197,10 +197,10 @@ def test_ensure_tree_drops_a_host_that_cannot_take_the_tree():
 
     def run(cmd):
         cmds.append(cmd)
-        return (1, "intel1: refuse (free 0 GB)") if "intel1" in cmd else (0, "OK")
+        return (1, "intel1: refuse (free 0 GB)") if "replicate" in cmd and "--hosts intel1" in cmd else (0, "OK")
     hosts, notes = A.ensure_tree_on_hosts("/t", "h", ["epyc9", "intel1", "epyc8"], ["epyc9"], "/rt", run=run)
     assert hosts == ["epyc9", "epyc8"]
-    assert any(n.startswith("DROPPED intel1") for n in notes) and notes[0].startswith("replicated and verified on epyc8")
+    assert any(n.startswith("DROPPED intel1") for n in notes) and notes[0].startswith("replicated from epyc9 and verified on epyc8")
 
 
 def test_optimistic_apply_is_advisory_and_launches_every_type():

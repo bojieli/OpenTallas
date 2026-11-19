@@ -11006,7 +11006,7 @@ def collect(AP, cfg, st, notices):
                 note_class_cfg_keys(cfg, st, rec["die"], rec["item"])
                 note_fail_key(cfg, st, rec, cls, why)
                 if not is_host_fail(cls, why) or RS.is_oom(cls, why):          # REPEAT-STOP ledger: gen / kit / route outcomes, OOM kills
-                    _ev = RS.record(st, rec["die"], rec["item"], rec.get("attempt"), _stg or rec.get("stage") or "gen", cls, why, inputs=repeat_inputs(cfg, rec, why))
+                    _ev = None if bind_fail_active(cfg, rec["die"], rec["item"]) else RS.record(st, rec["die"], rec["item"], rec.get("attempt"), _stg or rec.get("stage") or "gen", cls, why, inputs=repeat_inputs(cfg, rec, why))
                     if _ev:
                         repeat_event(AP, cfg, st, rec, _ev)
                 for _k, _line in FG.alert_lines(st, now_s()):          # the ALERT goes out when the class opens, not at the next launch gate
@@ -11776,6 +11776,8 @@ def repeat_queue_outcomes(AP, cfg, st):
                 # INFRA_KILLED at the route stage too: the job ended in the last 30 min on a host whose kills.log has a plan-guard line
                 rec["kill_kind"] = "guard"
                 continue                                 # INFRA_KILLED (plan guard SIGKILL): says nothing about the design, never a repeat-stop input
+            elif bind_fail_active(cfg, rec["die"], rec["item"]):
+                continue                                 # FABLE-FLOW-1400 (3): a bind-fail cancel is not an OOM / design result
             elif not is_host_fail(cls, why) or RS.is_oom(cls, why):
                 ev = RS.record(st, rec["die"], rec["item"], rec.get("attempt"), stage, cls, why, inputs=repeat_inputs(cfg, rec, why))
                 if ev:
@@ -11825,10 +11827,54 @@ def release_parts(prev):
     return parts
 
 
+def item_bind_out(cfg, die, item):
+    """the bind_out a row of item builds on now (item kit_rtl over the die kit_rtl), '' when none"""
+    d = (cfg.get("dies") or {}).get(die) or {}
+    ii = (d.get("item_inputs") or {}).get(item) or {}
+    kr = dict(d.get("kit_rtl") or {}, **((ii.get("kit_rtl") or {}) if isinstance(ii, dict) else {}))
+    return str(kr.get("bind_out") or "")
+
+
+def bind_fail_active(cfg, die, item):
+    """FABLE-FLOW-1400 (3): a publish_apply bind-fail record (dies.<die>.bind_fail: {id, bind, items, at, lane}) that names item AND the bind it
+    builds on now -> the record, else None.  A changed bind_out (new bind, repointed item) makes the record inert: the row launches again."""
+    d = (cfg.get("dies") or {}).get(die) or {}
+    recs = d.get("bind_fail") or []
+    if not recs:
+        return None
+    bo = item_bind_out(cfg, die, item)
+    for r in recs:
+        if isinstance(r, dict) and item in (r.get("items") or []) and str(r.get("bind") or "") == bo:
+            return r
+    return None
+
+
+def mark_bind_fail_rows(cfg, st, log=None, now=None):
+    """FABLE-FLOW-1400 (3): rows of a bind-failed type that ended after the bind-fail record (the cancel publish_apply bind-fail made, or any other end)
+    are FAIL class BIND-FAIL with the bind id, never INFRA / OOM: no x1.5 memory resubmit, no INFRA retry.  -> rows marked"""
+    now = time.time() if now is None else now
+    n = 0
+    for r in (st.get("items") or {}).values():
+        if r.get("status") not in ("CANCELLED", "FAIL", "RETRY-INFRA") or r.get("class") in ("BIND-FAIL", "SUPERSEDED"):
+            continue
+        bf = bind_fail_active(cfg, r.get("die"), r.get("item"))
+        if not bf or float(r.get("updated") or now) < float(bf.get("at") or 0) - 60:
+            continue
+        r.update(status="FAIL", **{"class": "BIND-FAIL"}, bind_fail=bf.get("id"), updated=now,
+                 reason=f"BIND-FAIL {bf.get('id')}: strict bind / LATCHECK failed on bind {bf.get('bind')}; relaunched when the bind changes")
+        n += 1
+        if log:
+            log(f"KIT-WAVE BIND-FAIL {r.get('die')}/{r.get('item')}@{r.get('attempt')}: {bf.get('id')} (bind {os.path.basename(str(bf.get('bind') or ''))}); not relaunched until the bind changes")
+    return n
+
+
 def fail_key_gate(cfg, st, die, item, block_sha=None):
     """the ONE check every launch path goes through (pick, RETRY-INFRA, re-arm, retry key, breaker release): -> (blocked, why, changed).
     blocked: the last non-HOST fail of this item has the same kit input digest, so the launch would fail the same way.
     changed: what differs since that fail (the RELAUNCH-ON-FIX reason), [] when nothing was stored"""
+    bf = bind_fail_active(cfg, die, item)               # FABLE-FLOW-1400 (3): a failed bind blocks every launch path until the bind changes
+    if bf:
+        return True, f"BIND-FAIL {bf.get('id')}: bind {bf.get('bind')} failed for {item}; relaunched when the bind changes", []
     prev = (st.get("fail_keys") or {}).get(f"{die}|{item}")
     if not prev:
         return False, "", []
@@ -13608,6 +13654,10 @@ def _step(AP, ap_dir):
     except Exception as e:                               # a sign-off log read never blocks the wave
         AP.log(f"KIT-WAVE LEAFSLEW step skipped: {type(e).__name__}: {e}")
     prune_stale_retries(cfg, st, notices, AP.log)          # KW-FIX-23: pending / LEAFSLEW entries too
+    try:
+        mark_bind_fail_rows(cfg, st, AP.log)                  # FABLE-FLOW-1400 (3)
+    except Exception as e:
+        AP.log(f"KIT-WAVE bind-fail rows skipped: {type(e).__name__}: {e}")
     try:
         cell_big_note(AP, cfg, st)
     except Exception as _e:

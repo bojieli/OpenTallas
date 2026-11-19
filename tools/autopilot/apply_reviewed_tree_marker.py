@@ -46,17 +46,31 @@ def ensure_tree_on_hosts(tree, want, current_hosts, hosts, rt, run=None, link_fr
     # whole apply.  Each extra host is replicated + verified on its own; a host that fails is DROPPED from the die's gen_hosts for this tree (named in the detail
     # lines; derive_gen_hosts adds it back hourly once it holds the tree).  The candidate's own hosts are kept: their guard already covered them.
     kept, notes = [], []
+    # FABLE-FLOW-1400 (2): the apply runs on the hub, which holds no tree ("not a manifest tree" dropped epyc10 at QC N4 s1).  The copy is made FROM
+    # the first candidate host that holds the tree and verifies it against the manifest hash, over ssh on that host; no verified source = every
+    # extra host is DROPPED (named), never a copy of an unverified tree.
+    src = ""
+    for s in hosts:
+        rc, out = sh(f"python3 -I {shlex.quote(sm)} hosts {shlex.quote(tree)} --hosts {shlex.quote(s)} --expect {shlex.quote(want)}")
+        if not rc:
+            src = s
+            break
+        notes.append(f"source {s} not verified: {out[-160:]}")
+    if not src:
+        return list(hosts), [f"DROPPED {h}: no candidate host holds a verified copy of {tree} to replicate from" for h in extra] + notes
+    ssh = "ssh -n -o BatchMode=yes -o ControlPath=none -o ConnectTimeout=15 "
     for h in extra:
         rep = f"python3 -I {shlex.quote(sm)} replicate {shlex.quote(tree)} --hosts {shlex.quote(h)}" + (f" --link-from {shlex.quote(link_from)}" if link_from else "")
-        rc, out = sh(rep)
+        rc, out = sh(ssh + shlex.quote(src) + " " + shlex.quote(rep))
         if not rc:
             rc, out = sh(f"python3 -I {shlex.quote(sm)} hosts {shlex.quote(tree)} --hosts {shlex.quote(h)} --expect {shlex.quote(want)}")
         if rc:
             notes.append(f"DROPPED {h}: replicate/verify rc {rc}: {out[-200:]}")
         else:
             kept.append(h)
+    notes = [n for n in notes if not n.startswith("source ")] + [n for n in notes if n.startswith("source ")]
     if kept:
-        notes.insert(0, f"replicated and verified on {','.join(kept)}")
+        notes.insert(0, f"replicated from {src} and verified on {','.join(kept)}")
     return list(hosts) + kept, notes
 
 

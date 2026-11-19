@@ -18,15 +18,19 @@ def test_apply_replicates_to_the_current_gen_hosts_the_candidate_drops():
         return 0, "ok"
     hosts, info = AM.ensure_tree_on_hosts("/t/new", "h" * 64, ["epyc8", "epyc9", "epyc10"], ["epyc9", "epyc8"], "/rt", run=run, link_from="old")
     assert hosts == ["epyc9", "epyc8", "epyc10"] and info                                  # never narrowed: epyc10 stays, after replicate + verify
-    assert "replicate /t/new --hosts epyc10 --link-from old" in calls[0] and "hosts /t/new --hosts epyc10 --expect " + "h" * 64 in calls[1]
+    assert "hosts /t/new --hosts epyc9 --expect " + "h" * 64 in calls[0]                    # FABLE-FLOW-1400 (2): the source is verified first
+    assert calls[1].startswith("ssh ") and " epyc9 " in calls[1] and "replicate /t/new --hosts epyc10 --link-from old" in calls[1]   # and the copy runs ON it
+    assert "hosts /t/new --hosts epyc10 --expect " + "h" * 64 in calls[2]
     assert AM.ensure_tree_on_hosts("/t/new", "h", ["epyc9"], ["epyc9", "epyc8"], "/rt", run=run) == (["epyc9", "epyc8"], [])      # nothing dropped: no work
 
 
 def test_apply_drops_a_host_whose_replication_or_verification_fails():
     # LATENCY-R 11-18: a host that cannot take the tree is dropped from the die (named DROPPED), not a refusal of the whole apply
-    hosts, notes = AM.ensure_tree_on_hosts("/t/n", "h", ["epyc10"], ["epyc9"], "/rt", run=lambda c: (1, "disk full"))
+    hosts, notes = AM.ensure_tree_on_hosts("/t/n", "h", ["epyc10"], ["epyc9"], "/rt", run=lambda c: (0, "") if "--hosts epyc9 " in c else (1, "disk full"))
     assert hosts == ["epyc9"] and notes and notes[0].startswith("DROPPED epyc10") and "disk full" in notes[0]
-    seq = iter([(0, ""), (1, "hash differs")])
+    hosts, notes = AM.ensure_tree_on_hosts("/t/n", "h", ["epyc10"], ["epyc9"], "/rt", run=lambda c: (1, "not a manifest tree"))
+    assert hosts == ["epyc9"] and notes[0].startswith("DROPPED epyc10: no candidate host holds a verified copy")
+    seq = iter([(0, ""), (0, ""), (1, "hash differs")])
     hosts, notes = AM.ensure_tree_on_hosts("/t/n", "h", ["epyc10"], ["epyc9"], "/rt", run=lambda c: next(seq))
     assert hosts == ["epyc9"] and "hash differs" in notes[0]
 
@@ -63,3 +67,16 @@ def test_adopt_rows_accounting_and_alert_after_two_ticks():
     assert KW.adopt_rows_tick(AP, cfg("/k/d2"), st)["qc"] == (3, 3, [])                     # every type has a current row: done, no more lines
     n = len(AP.logs)
     assert KW.adopt_rows_tick(AP, cfg("/k/d2"), st) == {} and len(AP.logs) == n
+
+
+def test_replicate_never_runs_from_the_hub():
+    """FABLE-FLOW-1400 (2): every replicate command runs over ssh on a verified candidate host"""
+    calls = []
+
+    def run(cmd):
+        calls.append(cmd)
+        return (1, "not a manifest tree") if "--hosts epyc8 --expect" in cmd and "replicate" not in cmd and len(calls) == 1 else (0, "ok")
+    hosts, notes = AM.ensure_tree_on_hosts("/t/n", "h", ["epyc10"], ["epyc8", "epyc9"], "/rt", run=run)
+    assert hosts == ["epyc8", "epyc9", "epyc10"]
+    rep = [c for c in calls if " replicate " in c]
+    assert rep and all(c.startswith("ssh ") and " epyc9 " in c for c in rep) and "replicated from epyc9" in notes[0]
