@@ -63,3 +63,12 @@ Kits: t25__cl431c660f a7 (-778.07, 7,981 ends below -42), t27 a7 (-526.93, 1,172
    Running on the whole family against the D8e plan (read-only) -> epyc10 taps/plan_leaf_taps.json, event_leaf_taps.json, fix_leaf.tsv, fix_leaf.log.
    t28 / t29 are plain tap_mode grid with 16 taps (c2 12 taps over, max 7,156 sinks; t29 3 over, 3,156). t27 is not a tap-cap type, so a tap proof needs
    a kit regenerated from the new plan (kit-rtl wrapper carries the tap ports): that is the die lane event_kits recipe, not a hand patch.
+
+## 11-19 01:5x PST: COORD r713 rulings
+- Tap re-derive at cap 1,000 (not 1,500). Cap-1500 run killed; cap-1000 run -> epyc10 taps1000/ (plan_leaf_taps.json, event_leaf_taps.json, fix_leaf.tsv, fix_leaf.log).
+  Post the rows per outline; S81-DIE-R3 builds the t28 tap proof kit with its event-kit recipe. Do NOT replicate the gen chain privately.
+- Close by construction (+cycles) is the default: form B (+1 cycle, bind K) is the default. Form A (CFP, 0 cycles) is kept ONLY if its bench passes on ALL
+  streams (the dense / overlapping-POST control too) and it is not slower at GRT; else drop it and revert the uncommitted vp.sv edit in repo/.
+  If A is dropped, the cf path needs a +cycle form: candidate = one more group HI station (existing CS_HI_GS depth, sited store-side) so cf sits at the store,
+  hc_post write-back + 1 through bind K. Not designed in detail yet.
+- Kill slip: my pgrep -f pattern matched my own ssh shell (only my own reach_fix run + shell died). Use ps | grep "[r]each_fix" form.
