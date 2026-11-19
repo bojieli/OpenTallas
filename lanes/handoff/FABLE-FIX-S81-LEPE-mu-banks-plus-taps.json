@@ -1,10 +1,12 @@
 {
- "schema": "fable-fix-s81-lepe.combined_row.v1",
+ "schema": "fable-fix-s81-lepe.combined_row.v2",
  "lane": "FABLE-FIX-S81-LEPE",
- "for": "S81-DIE-R3",
+ "for": "S81-DIE-R3 (D8h)",
  "type": "dsdv_slice_lepe_mu_LP__t2",
- "status": "CANDIDATE, ONE ROW: apply the bank moves and this tap table together or neither (COORD / FABLE-PD-S81-0253: 4 taps of the earlier table land in or beside the moved banks; my own kit gen confirmed it: clk_t33 illegal). Supersedes, for this type, the mu table in FABLE-FIX-S81-LEPE-taps.json and item 3 of FABLE-FIX-S81-LEPE-reach-row.json. Proof: private kit epyc9 /srv/opentallas-scratch2/claude/fable-lepe/proof2 submitted to GRT; no result yet.",
- "limits": "taps re-solved on the att22 register placement with only the 4 macro boxes moved (registers will follow the banks): 692 sinks beyond the 160 um radius, predicted spread 89 ps vs 80 tol. Re-run tools/die_plan/tap_resolve.py on the placed DB of the first kit with the moved banks before freezing the table.",
+ "status": "CANDIDATE, ONE ROW, REPLACES the 71-tap row and v1 of this file: (a) 4 rx bank moves, (b) clock.taps += added_taps (existing 23 keep name + xy), (c) clock.tap_span_um = 300 (kit pair planner + cap pass keep the regions; needs main >= 57b6f1261de in the die tools), (d) lep switches OT_S81SL_LEP_CRP=2 + OT_S81SL_LEP_WREP=5 (main >= 31fcf236383). Apply together.",
+ "proof": "tap class proven at CTS on the 71-tap private kit (tap mean spread 311 -> 93 ps, TT -797.6 -> -506.75). THIS 122-tap table has no kit yet; the full-form kit (proof4) carries the older 71-tap banks table, not this one.",
+ "limits": "solved from the 23 original taps on the 71-tap kit placement with only the 4 macro boxes moved; nearest-tap split, not as-built; one tap stays over the 1000 target (see taps_over_1000) and over the 1500 cap if listed there.",
+ "tool": "main tools/die_plan/tap_resolve.py --span-um 300 --target 1000 --min-new 1 --max-add 400",
  "bank_moves_origin_um": {
   "u_bound.u_u_lep.u.g_rx[3].g_sa.g_true_sram.u_rx_mem.g_bank[1].u_m": [
    414.72,
@@ -23,44 +25,70 @@
    293.772
   ]
  },
+ "clock_tap_span_um": 300,
+ "registers": 52986,
+ "criterion": {
+  "verdict": "SPLIT",
+  "spread_ps": 288.6,
+  "material_taps": 17,
+  "slowest": "clk_t6",
+  "fastest": "clk_t3",
+  "tol_ps": 80.0,
+  "basis": "PREDICTED"
+ },
  "append_to": "clock.taps",
- "target_sinks": 1400,
- "added": 48,
- "max_load_after": 1382,
+ "target_sinks": 1000,
+ "span_limit_um": 300.0,
+ "taps_over_span": [],
+ "max_span_um": 293.7,
+ "added": 99,
+ "taps_total": 122,
+ "max_load_after": 1590,
+ "taps_over_1000": [
+  [
+   "clk_t28",
+   1590
+  ],
+  [
+   "clk_t42",
+   1006
+  ]
+ ],
+ "predicted_spread_after_ps": 66.9,
  "added_taps": [
   {
    "name": "clk_t23",
    "xy": [
-    429.84,
-    371.52
+    406.08,
+    319.68
    ]
   },
   {
    "name": "clk_t24",
    "xy": [
-    267.84,
-    289.44
+    43.2,
+    380.16
    ]
   },
   {
    "name": "clk_t25",
    "xy": [
-    1023.84,
-    496.8
+    492.48,
+    371.52
    ]
   },
   {
    "name": "clk_t26",
    "xy": [
-    827.28,
-    455.76
+    425.52,
+    432.0
    ]
   },
   {
    "name": "clk_t27",
    "xy": [
-    43.2,
-    406.08
+    829.44,
+    362.88
    ]
   },
   {
@@ -73,64 +101,64 @@
   {
    "name": "clk_t29",
    "xy": [
-    1211.76,
-    496.8
+    237.6,
+    319.68
    ]
   },
   {
    "name": "clk_t30",
    "xy": [
-    425.52,
-    432.0
+    1023.84,
+    496.8
    ]
   },
   {
    "name": "clk_t31",
    "xy": [
-    311.04,
-    1103.76
+    535.68,
+    425.52
    ]
   },
   {
    "name": "clk_t32",
    "xy": [
-    896.4,
-    550.8
+    239.76,
+    496.8
    ]
   },
   {
    "name": "clk_t33",
    "xy": [
-    336.96,
-    289.44
+    427.68,
+    177.12
    ]
   },
   {
    "name": "clk_t34",
    "xy": [
-    397.44,
-    576.72
+    336.96,
+    285.12
    ]
   },
   {
    "name": "clk_t35",
    "xy": [
-    311.04,
-    639.36
+    1028.16,
+    213.84
    ]
   },
   {
    "name": "clk_t36",
    "xy": [
-    233.28,
-    496.8
+    535.68,
+    324.0
    ]
   },
   {
    "name": "clk_t37",
    "xy": [
-    86.4,
-    563.76
+    829.44,
+    462.24
    ]
   },
   {
@@ -143,225 +171,582 @@
   {
    "name": "clk_t39",
    "xy": [
-    108.0,
-    162.0
+    708.48,
+    403.92
    ]
   },
   {
    "name": "clk_t40",
    "xy": [
-    721.44,
-    187.92
+    535.68,
+    462.24
    ]
   },
   {
    "name": "clk_t41",
    "xy": [
-    535.68,
-    427.68
+    112.32,
+    177.12
    ]
   },
   {
    "name": "clk_t42",
-   "xy": [
-    1030.32,
-    619.92
-   ]
-  },
-  {
-   "name": "clk_t43",
-   "xy": [
-    406.08,
-    319.68
-   ]
-  },
-  {
-   "name": "clk_t44",
-   "xy": [
-    1028.16,
-    211.68
-   ]
-  },
-  {
-   "name": "clk_t45",
-   "xy": [
-    535.68,
-    324.0
-   ]
-  },
-  {
-   "name": "clk_t46",
-   "xy": [
-    704.16,
-    406.08
-   ]
-  },
-  {
-   "name": "clk_t47",
-   "xy": [
-    155.52,
-    289.44
-   ]
-  },
-  {
-   "name": "clk_t48",
-   "xy": [
-    535.68,
-    477.36
-   ]
-  },
-  {
-   "name": "clk_t49",
    "xy": [
     475.2,
     311.04
    ]
   },
   {
-   "name": "clk_t50",
+   "name": "clk_t43",
    "xy": [
-    829.44,
-    362.88
+    155.52,
+    291.6
    ]
   },
   {
-   "name": "clk_t51",
+   "name": "clk_t44",
    "xy": [
-    529.2,
-    371.52
+    1209.6,
+    496.8
    ]
   },
   {
-   "name": "clk_t52",
+   "name": "clk_t45",
+   "xy": [
+    397.44,
+    619.92
+   ]
+  },
+  {
+   "name": "clk_t46",
    "xy": [
     967.68,
     319.68
    ]
   },
   {
-   "name": "clk_t53",
+   "name": "clk_t47",
    "xy": [
-    483.84,
-    432.0
+    369.36,
+    496.8
    ]
   },
   {
-   "name": "clk_t54",
+   "name": "clk_t48",
    "xy": [
-    235.44,
-    319.68
+    1032.48,
+    617.76
    ]
   },
   {
-   "name": "clk_t55",
+   "name": "clk_t49",
    "xy": [
-    406.08,
-    285.12
+    535.68,
+    386.64
    ]
   },
   {
-   "name": "clk_t56",
+   "name": "clk_t50",
    "xy": [
-    43.2,
-    295.92
+    86.4,
+    548.64
    ]
   },
   {
-   "name": "clk_t57",
+   "name": "clk_t51",
    "xy": [
     1244.16,
     319.68
    ]
   },
   {
+   "name": "clk_t52",
+   "xy": [
+    822.96,
+    427.68
+   ]
+  },
+  {
+   "name": "clk_t53",
+   "xy": [
+    498.96,
+    432.0
+   ]
+  },
+  {
+   "name": "clk_t54",
+   "xy": [
+    941.76,
+    632.88
+   ]
+  },
+  {
+   "name": "clk_t55",
+   "xy": [
+    267.84,
+    287.28
+   ]
+  },
+  {
+   "name": "clk_t56",
+   "xy": [
+    1036.8,
+    306.72
+   ]
+  },
+  {
+   "name": "clk_t57",
+   "xy": [
+    43.2,
+    291.6
+   ]
+  },
+  {
    "name": "clk_t58",
    "xy": [
-    604.8,
-    427.68
+    1432.08,
+    639.36
    ]
   },
   {
    "name": "clk_t59",
    "xy": [
-    829.44,
-    408.24
+    840.24,
+    194.4
    ]
   },
   {
    "name": "clk_t60",
    "xy": [
-    477.36,
-    371.52
+    719.28,
+    198.72
    ]
   },
   {
    "name": "clk_t61",
    "xy": [
-    1105.92,
-    308.88
+    406.08,
+    289.44
    ]
   },
   {
    "name": "clk_t62",
    "xy": [
-    1010.88,
-    496.8
+    1209.6,
+    594.0
    ]
   },
   {
    "name": "clk_t63",
    "xy": [
     475.2,
-    295.92
+    300.24
    ]
   },
   {
    "name": "clk_t64",
    "xy": [
-    125.28,
-    496.8
+    898.56,
+    552.96
    ]
   },
   {
    "name": "clk_t65",
    "xy": [
-    1036.8,
-    300.24
+    1105.92,
+    313.2
    ]
   },
   {
    "name": "clk_t66",
    "xy": [
-    535.68,
-    354.24
+    1071.36,
+    267.84
    ]
   },
   {
    "name": "clk_t67",
    "xy": [
-    313.2,
-    496.8
+    235.44,
+    574.56
    ]
   },
   {
    "name": "clk_t68",
    "xy": [
-    207.36,
-    319.68
+    425.52,
+    371.52
    ]
   },
   {
    "name": "clk_t69",
    "xy": [
-    1036.8,
-    311.04
+    529.2,
+    617.76
    ]
   },
   {
    "name": "clk_t70",
    "xy": [
-    447.12,
+    1036.8,
+    298.08
+   ]
+  },
+  {
+   "name": "clk_t71",
+   "xy": [
+    909.36,
+    114.48
+   ]
+  },
+  {
+   "name": "clk_t72",
+   "xy": [
+    915.84,
+    235.44
+   ]
+  },
+  {
+   "name": "clk_t73",
+   "xy": [
+    1306.8,
+    632.88
+   ]
+  },
+  {
+   "name": "clk_t74",
+   "xy": [
+    604.8,
+    427.68
+   ]
+  },
+  {
+   "name": "clk_t75",
+   "xy": [
+    721.44,
+    738.72
+   ]
+  },
+  {
+   "name": "clk_t76",
+   "xy": [
+    267.84,
+    319.68
+   ]
+  },
+  {
+   "name": "clk_t77",
+   "xy": [
+    1015.2,
+    496.8
+   ]
+  },
+  {
+   "name": "clk_t78",
+   "xy": [
+    1092.96,
+    617.76
+   ]
+  },
+  {
+   "name": "clk_t79",
+   "xy": [
+    762.48,
+    108.0
+   ]
+  },
+  {
+   "name": "clk_t80",
+   "xy": [
+    1166.4,
+    617.76
+   ]
+  },
+  {
+   "name": "clk_t81",
+   "xy": [
+    1168.56,
+    1103.76
+   ]
+  },
+  {
+   "name": "clk_t82",
+   "xy": [
+    203.04,
+    319.68
+   ]
+  },
+  {
+   "name": "clk_t83",
+   "xy": [
+    972.0,
+    261.36
+   ]
+  },
+  {
+   "name": "clk_t84",
+   "xy": [
+    535.68,
+    360.72
+   ]
+  },
+  {
+   "name": "clk_t85",
+   "xy": [
+    829.44,
+    406.08
+   ]
+  },
+  {
+   "name": "clk_t86",
+   "xy": [
+    991.44,
+    285.12
+   ]
+  },
+  {
+   "name": "clk_t87",
+   "xy": [
+    157.68,
+    496.8
+   ]
+  },
+  {
+   "name": "clk_t88",
+   "xy": [
+    671.76,
+    304.56
+   ]
+  },
+  {
+   "name": "clk_t89",
+   "xy": [
+    1019.52,
+    278.64
+   ]
+  },
+  {
+   "name": "clk_t90",
+   "xy": [
+    693.36,
+    436.32
+   ]
+  },
+  {
+   "name": "clk_t91",
+   "xy": [
+    535.68,
+    341.28
+   ]
+  },
+  {
+   "name": "clk_t92",
+   "xy": [
+    43.2,
+    453.6
+   ]
+  },
+  {
+   "name": "clk_t93",
+   "xy": [
+    1131.84,
+    565.92
+   ]
+  },
+  {
+   "name": "clk_t94",
+   "xy": [
+    462.24,
     432.0
+   ]
+  },
+  {
+   "name": "clk_t95",
+   "xy": [
+    237.6,
+    162.0
+   ]
+  },
+  {
+   "name": "clk_t96",
+   "xy": [
+    1233.36,
+    1103.76
+   ]
+  },
+  {
+   "name": "clk_t97",
+   "xy": [
+    1313.28,
+    313.2
+   ]
+  },
+  {
+   "name": "clk_t98",
+   "xy": [
+    626.4,
+    833.76
+   ]
+  },
+  {
+   "name": "clk_t99",
+   "xy": [
+    604.8,
+    319.68
+   ]
+  },
+  {
+   "name": "clk_t100",
+   "xy": [
+    1434.24,
+    477.36
+   ]
+  },
+  {
+   "name": "clk_t101",
+   "xy": [
+    1127.52,
+    639.36
+   ]
+  },
+  {
+   "name": "clk_t102",
+   "xy": [
+    457.92,
+    371.52
+   ]
+  },
+  {
+   "name": "clk_t103",
+   "xy": [
+    1036.8,
+    270.0
+   ]
+  },
+  {
+   "name": "clk_t104",
+   "xy": [
+    1006.56,
+    285.12
+   ]
+  },
+  {
+   "name": "clk_t105",
+   "xy": [
+    1343.52,
+    570.24
+   ]
+  },
+  {
+   "name": "clk_t106",
+   "xy": [
+    386.64,
+    1103.76
+   ]
+  },
+  {
+   "name": "clk_t107",
+   "xy": [
+    1427.76,
+    587.52
+   ]
+  },
+  {
+   "name": "clk_t108",
+   "xy": [
+    440.64,
+    432.0
+   ]
+  },
+  {
+   "name": "clk_t109",
+   "xy": [
+    51.84,
+    23.76
+   ]
+  },
+  {
+   "name": "clk_t110",
+   "xy": [
+    475.2,
+    285.12
+   ]
+  },
+  {
+   "name": "clk_t111",
+   "xy": [
+    336.96,
+    317.52
+   ]
+  },
+  {
+   "name": "clk_t112",
+   "xy": [
+    1054.08,
+    54.0
+   ]
+  },
+  {
+   "name": "clk_t113",
+   "xy": [
+    228.96,
+    319.68
+   ]
+  },
+  {
+   "name": "clk_t114",
+   "xy": [
+    129.6,
+    1216.08
+   ]
+  },
+  {
+   "name": "clk_t115",
+   "xy": [
+    41.04,
+    38.88
+   ]
+  },
+  {
+   "name": "clk_t116",
+   "xy": [
+    889.92,
+    1103.76
+   ]
+  },
+  {
+   "name": "clk_t117",
+   "xy": [
+    406.08,
+    311.04
+   ]
+  },
+  {
+   "name": "clk_t118",
+   "xy": [
+    231.12,
+    496.8
+   ]
+  },
+  {
+   "name": "clk_t119",
+   "xy": [
+    812.16,
+    859.68
+   ]
+  },
+  {
+   "name": "clk_t120",
+   "xy": [
+    47.52,
+    1110.24
+   ]
+  },
+  {
+   "name": "clk_t121",
+   "xy": [
+    1252.8,
+    54.0
    ]
   }
  ]
