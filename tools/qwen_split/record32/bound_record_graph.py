@@ -70,7 +70,64 @@ def balance_chains(cells,ports,nextbit,types=('$_OR_','$_AND_','$_XOR_')):
   trees+=1;rewired+=len(absorbed)
  return nextbit,trees,rewired
 
-def build(raw,top,new,drop=(),collapse=False,load_cap=32,transparent_inverters=False,retain_mux=False,shared_helpers=False,retain_bits=(),retain_all_comb=False,fuse_ao=False,retain_keep=False,balance=False):
+def fit_shape(cells,ports,input_copies,reset_leaves,shape,top_ports,nextbit,input_cap=32,leaf_cap=24):
+ """--port-shape (FABLE-FIX-S81-GLUE 11-19): keep the port shape a parent already binds.  shape = the committed interfaces.json
+ of the netlist being replaced: input_copies [{index, source [port, i]}], reset_leaves [{index, source_group [port, i]}].
+ The regenerated graph may need fewer copies of an input or fewer leaves of a reset group than the parent provides (never
+ more: that is an error, the parent would have to change).  Every provided copy and leaf is used: direct sinks of the most
+ loaded net of an input move to a still-unloaded copy, and the flops of a reset group are spread evenly over all of its
+ leaves.  Copies of one input are the same value at the same edge and leaves of one group are the same reset, so the function
+ is unchanged (prove_rewrite.py checks the emitted graph with these bindings).  -> (input_copies, reset_leaves, nextbit)"""
+ def obit(src):
+  port,i=src;return top_ports[port]['bits'][i]
+ want=defaultdict(list)
+ for c in sorted(shape['input_copies'],key=lambda c:c['index']):want[obit(c['source'])].append(c['index'])
+ have=defaultdict(list)
+ for c in input_copies:have[c['original_bit']].append(c['copy_bit'])
+ for ob,bits in have.items():
+  if len(bits)>len(want.get(ob,())):raise ValueError(f'input bit {ob} needs {len(bits)} copies, the parent provides {len(want.get(ob,()))}')
+ def direct(bit):
+  return [(n,p,i) for n,c in cells.items() for p,bs in c['connections'].items() if c['port_directions'][p]=='input' and p!='C' for i,b in enumerate(bs) if b==bit]
+ newcopies=[None]*len(shape['input_copies'])
+ for ob,idxs in want.items():
+  nets=[ob]+have.get(ob,[])
+  while len(nets)<1+len(idxs):nets.append(nextbit);nextbit+=1
+  sinks={b:direct(b) for b in nets}
+  while True:
+   empty=[b for b in nets if not sinks[b]];big=max(nets,key=lambda b:len(sinks[b]))
+   if not empty or len(sinks[big])<2:break
+   moved=sinks[big][len(sinks[big])//2:];sinks[big]=sinks[big][:len(sinks[big])//2];sinks[empty[0]]=moved
+   for n,p,i in moved:cells[n]['connections'][p][i]=empty[0]
+  for idx,b in zip(idxs,nets[1:]):newcopies[idx]={'copy_bit':b,'original_bit':ob,'index':idx,'direct_sinks':len(sinks[b])}
+ assert all(c is not None for c in newcopies)
+ # terminal loads (through inverters) of every input net stay within the input cap
+ users=defaultdict(list)
+ for n,c in cells.items():
+  for p,bs in c['connections'].items():
+   if c['port_directions'][p]=='input' and p not in ('C','R'):
+    for b in bs:users[b].append(n)
+ def term(b,seen=()):
+  return sum(term(cells[n]['connections']['Y'][0]) if cells[n]['type']=='$_NOT_' else 1 for n in users.get(b,()))
+ for b in [c['copy_bit'] for c in newcopies]+[x for v in top_ports.values() if v['direction']=='input' for x in v['bits'] if isinstance(x,int)]:
+  if term(b)>input_cap:raise ValueError(f'input net {b} has {term(b)} loads > {input_cap} after the shape fit')
+ groups=defaultdict(list)
+ for r in sorted(shape['reset_leaves'],key=lambda r:r['index']):groups[obit(r['source_group'])].append(r['index'])
+ flops=defaultdict(list)
+ for r in reset_leaves:flops[r['original_reset_bit']].extend(r['cells'])
+ newleaves=[None]*len(shape['reset_leaves'])
+ for rb,names in flops.items():
+  idxs=groups.get(rb,[])
+  if not idxs or -(-len(names)//len(idxs))>leaf_cap:raise ValueError(f'reset bit {rb}: {len(names)} flops do not fit {len(idxs)} leaves of {leaf_cap}')
+  base,extra=divmod(len(names),len(idxs));at=0
+  for k,idx in enumerate(idxs):
+   size=base+(1 if k<extra else 0);chunk=names[at:at+size];at+=size
+   nb=nextbit;nextbit+=1
+   for n in chunk:cells[n]['connections']['R']=[nb]
+   newleaves[idx]={'bit':nb,'index':idx,'original_reset_bit':rb,'cells':chunk}
+ assert all(r is not None and r['cells'] for r in newleaves),'a provided reset leaf has no flop'
+ return newcopies,newleaves,nextbit
+
+def build(raw,top,new,drop=(),collapse=False,load_cap=32,transparent_inverters=False,retain_mux=False,shared_helpers=False,retain_bits=(),retain_all_comb=False,fuse_ao=False,retain_keep=False,balance=False,port_shape=None):
  if not 1 <= load_cap <= 32:raise ValueError("load_cap must be1..32")
  design=json.loads(raw);m=copy.deepcopy(design['modules'][top]);cells=m['cells'];ports=m['ports']
  # --retain-keep (QW-SLICE7 10-20): every (* keep *) net of the flattened source (e.g. the Kogge-Stone prefix levels of
@@ -284,6 +341,9 @@ def build(raw,top,new,drop=(),collapse=False,load_cap=32,transparent_inverters=F
    for n in chunk:cells[n]['connections']['R']=[nb]
    reset_leaves.append({'bit':nb,'index':len(reset_leaves),'original_reset_bit':rb,'cells':chunk})
  assert len(reset_leaves)<=128,len(reset_leaves)
+ if port_shape is not None:
+  input_copies,reset_leaves,nextbit=fit_shape(cells,ports,input_copies,reset_leaves,port_shape,design['modules'][top]['ports'],nextbit)
+  ports['source_copies']={'direction':'input','bits':[c['copy_bit'] for c in input_copies]}
  del ports['rst_rn'];ports['rst_leaf']={'direction':'input','bits':[r['bit'] for r in reset_leaves]}
  extras={'origins':origins,'input_copies':input_copies,'reset_leaves':reset_leaves,'graph':{'ports':ports,'cells':cells},'original_ports':design['modules'][top]['ports']}
  def bit(b):
@@ -326,6 +386,6 @@ def build(raw,top,new,drop=(),collapse=False,load_cap=32,transparent_inverters=F
  return '\n'.join(lines)+'\n',helpers,dict(**extras,source_synth_cells_before_fusion=pre_fusion_cells,fused_ao_pairs=ao_fusions,balanced_trees=balanced[0],balanced_gates=balanced[1],original_cells=original,original_by_type=original_types,final_by_type=dict(Counter(c['type'] for c in cells.values())),unconsumed_cells_removed=removed,dropped_outputs=list(drop),unused_inputs_removed=unused_inputs,holding_chain_count=len(delay_chains),holding_ring_groups=ring_groups,actual_final_rings=[{'W':c['width'],'D':c['depth']} for c in cells.values() if c['type']=='$_QFD_RING_'],ring_input_load_contract='D%3==0 writer4slots=>4loads/bit; otherwise one prefix D; R drives one local reset branch',retention='FF cells and added combinational cone copies retain hierarchy; ordinary logic stays available for native technology mapping',transparent_inverters=transparent_inverters,retain_mux=retain_mux,shared_helpers=shared_helpers,final_cells=len(cells),added_by_type=dict(added),passes=iteration,input_sha256=hashlib.sha256(raw).hexdigest(),max_data_reset_loads=32,internal_load_cap=load_cap,input_load_cap=32,clock_only_excluded=True,output_boundary_assumptions={'valid_rep_each':16,'valid_out':5,'data_error_each':1},qualification='STRUCTURAL_CONSTRUCTION_ONLY; exact equivalence and mapped clocks/timing/area required')
 
 def main():
- p=argparse.ArgumentParser();p.add_argument('json');p.add_argument('--top',required=True);p.add_argument('--name',required=True);p.add_argument('--out',required=True);p.add_argument('--helpers',required=True);p.add_argument('--record',required=True);p.add_argument('--drop-output',action='append',default=[]);p.add_argument('--collapse-delays',action='store_true');p.add_argument('--load-cap',type=int,default=32);p.add_argument('--transparent-inverters',action='store_true');p.add_argument('--retain-mux',action='store_true');p.add_argument('--shared-helpers',action='store_true');p.add_argument('--retain-bit',type=int,action='append',default=[]);p.add_argument('--retain-all-comb',action='store_true');p.add_argument('--fuse-ao',action='store_true');p.add_argument('--balance-chains',action='store_true');p.add_argument('--retain-keep',action='store_true');a=p.parse_args()
- s,h,r=build(Path(a.json).read_bytes(),a.top,a.name,a.drop_output,a.collapse_delays,a.load_cap,a.transparent_inverters,a.retain_mux,a.shared_helpers,a.retain_bit,a.retain_all_comb,a.fuse_ao,a.retain_keep,a.balance_chains);r['retained_driver_bits']=a.retain_bit;r['retained_all_combinational_operators']=a.retain_all_comb;r['retained_keep_nets']=a.retain_keep;Path(a.out).write_text(s);Path(a.helpers).write_text('\n'.join(h)+'\n');Path(a.record).write_text(json.dumps(r,indent=2)+'\n');print(json.dumps(r,indent=2))
+ p=argparse.ArgumentParser();p.add_argument('json');p.add_argument('--top',required=True);p.add_argument('--name',required=True);p.add_argument('--out',required=True);p.add_argument('--helpers',required=True);p.add_argument('--record',required=True);p.add_argument('--drop-output',action='append',default=[]);p.add_argument('--collapse-delays',action='store_true');p.add_argument('--load-cap',type=int,default=32);p.add_argument('--transparent-inverters',action='store_true');p.add_argument('--retain-mux',action='store_true');p.add_argument('--shared-helpers',action='store_true');p.add_argument('--retain-bit',type=int,action='append',default=[]);p.add_argument('--retain-all-comb',action='store_true');p.add_argument('--fuse-ao',action='store_true');p.add_argument('--balance-chains',action='store_true');p.add_argument('--retain-keep',action='store_true');p.add_argument('--port-shape',help='interfaces.json of the netlist being replaced: keep its source_copies / rst_leaf port shape');a=p.parse_args()
+ s,h,r=build(Path(a.json).read_bytes(),a.top,a.name,a.drop_output,a.collapse_delays,a.load_cap,a.transparent_inverters,a.retain_mux,a.shared_helpers,a.retain_bit,a.retain_all_comb,a.fuse_ao,a.retain_keep,a.balance_chains,json.loads(Path(a.port_shape).read_text()) if a.port_shape else None);r['retained_driver_bits']=a.retain_bit;r['retained_all_combinational_operators']=a.retain_all_comb;r['retained_keep_nets']=a.retain_keep;Path(a.out).write_text(s);Path(a.helpers).write_text('\n'.join(h)+'\n');Path(a.record).write_text(json.dumps(r,indent=2)+'\n');print(json.dumps(r,indent=2))
 if __name__=='__main__':main()

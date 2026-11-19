@@ -5,7 +5,7 @@ oldff={n:c for n,c in orig['cells'].items() if c['type'].startswith('$_DFF')}
 statebits={c['connections']['Q'][0] for c in oldff.values()}
 inputs={b for v in orig['ports'].values() if v['direction']=='input' for b in v['bits'] if isinstance(b,int)}
 vars=sorted(statebits|inputs);vid={b:i for i,b in enumerate(vars)}
-exprs={'$_AND_':'A & B','$_OR_':'A | B','$_XOR_':'A ^ B','$_NOT_':'~A','$_MUX_':'S ? B : A'}
+exprs={'$_AND_':'A & B','$_OR_':'A | B','$_XOR_':'A ^ B','$_NOT_':'~A','$_MUX_':'S ? B : A','$_XNOR_':'~(A ^ B)','$_NAND_':'~(A & B)','$_NOR_':'~(A | B)','$_ANDNOT_':'A & ~B','$_ORNOT_':'A | ~B'}
 lines=[f'module record32_transition(input [{len(vars)-1}:0] v, output bad);'];bad=[]
 def bn(pre,b):return f'{pre}{b}' if isinstance(b,int) else "1'b"+b
 def emit(m,pre,aliases):

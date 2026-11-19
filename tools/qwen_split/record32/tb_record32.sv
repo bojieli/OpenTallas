@@ -156,6 +156,64 @@ function automatic[63:0]pwdata(input integer i);pwdata=(i==1023)?64'h58504631000
 function automatic[63:0]dwdata(input integer i);dwdata=64'h9876543212345600 ^ 64'(i);endfunction
 function automatic[63:0]upd(input[63:0]d,input[63:0]data,input bit desc,input integer addr);upd={d[56:0],d[63:57]}^data^{53'd0,desc,10'(addr)};endfunction
 reg[63:0]dig;reg[547:0]rec;integer i,j;
+// Protocol episodes (FABLE-FIX-S81-GLUE 11-19): a full 1024 PW + 8 DW program per episode with a random epoch, image and
+// idle gaps and one deviation kind per episode; every edge is still compared in lockstep against the original source.
+//  0 clean  1 BEGIN reserved bit  2 AUTH epoch  3 AUTH digest  4 late second control store  5 one PW data bit
+//  6 PW not a full word (sink 1)  7 PW address (sink 0)  8 execution active on a write  9 DW not a full word
+//  10 DW address  11 clean program, HOST context for another image epoch (odd rounds)
+integer ep,goodeps=0;
+function automatic[63:0]epw(input[63:0]s,input integer i);epw=(i==1023)?64'h5850463100001006:(s^(64'(i)*64'h9e3779b97f4a7c15));endfunction
+function automatic[63:0]edw(input[63:0]s,input integer i);edw={s[31:0],s[63:32]}^(64'(i)*64'hc2b2ae3d27d4eb4f);endfunction
+task automatic gap;begin repeat($urandom%3)step();end endtask
+task automatic episode(input integer e);
+ integer k,i2,bad_i;reg[63:0]d,seed,w;reg[15:0]epo;
+ begin
+ k=e%12;seed={$urandom,$urandom};epo=16'($urandom);bad_i=$urandom%1032;
+ rst_rn=0;execution_active=0;cfg_image_ready=0;program_obs2=0;descriptor_obs=0;auth_slot=0;context_slot=0;witness_slot=0;rx_v=0;head_context_v=0;
+ repeat(2)step();rst_rn=63;step();
+ d=64'h51484f5354505247;
+ for(i2=0;i2<1024;i2++)d=upd(d,epw(seed,i2),0,i2);
+ for(i2=0;i2<8;i2++)d=upd(d,edw(seed,i2),1,i2);
+ rx_record={5'd0,4'd13,6'd63,epo,5'd0,495'd0,4'd8,11'd1024,2'd1};
+ if(k==1)rx_record[200+($urandom%300)]=1'b1;
+ auth_slot=1;rx_v=1;step();auth_slot=0;rx_v=0;gap();step();
+ rx_record={5'd0,4'd13,6'd63,(k==2?16'(epo+1):epo),5'd0,446'd0,(k==3?d^(64'd1<<($urandom%64)):d),2'd2};
+ auth_slot=1;rx_v=1;step();auth_slot=0;rx_v=0;gap();step();
+ cfg_image_ready=(k==4)?2'd1:2'd3;
+ for(i2=0;i2<1024;i2++)begin
+  w=epw(seed,i2);
+  if(k==5&&i2==bad_i%1024)w=w^(64'd1<<($urandom%64));
+  program_obs2={{1'b1,(k==6&&i2==bad_i%1024)?1'b0:1'b1,10'(i2),w},{1'b1,1'b1,10'((k==7&&i2==bad_i%1024)?i2+1:i2),w}};
+  if(k==8&&i2==bad_i%1024)execution_active=1;
+  step();execution_active=0;
+  if(($urandom%64)==0)begin program_obs2=0;gap();end
+ end
+ program_obs2=0;
+ for(i2=0;i2<8;i2++)begin
+  descriptor_obs={1'b1,(k==9&&i2==bad_i%8)?1'b0:1'b1,3'((k==10&&i2==bad_i%8)?i2+1:i2),edw(seed,i2)};step();
+  if(($urandom%4)==0)begin descriptor_obs=0;gap();end
+ end
+ descriptor_obs=0;repeat(10)step();
+ if(k==4)begin
+  if(program_ready)begin $display("BAD_EPISODE_EARLY_READY %0d",e);$fatal;end
+  cfg_image_ready=3;repeat(6)step();
+ end
+ if(k==0||k==4||k==11)begin
+  if(!program_ready||!installed_fusedcap||program_epoch!=epo||program_digest!=d||fault)begin $display("BAD_EPISODE_READY %0d kind %0d",e,k);$fatal;end
+  goodeps=goodeps+1;
+ end else if(program_ready||!fault)begin $display("BAD_EPISODE_NOT_REFUSED %0d kind %0d",e,k);$fatal;end
+ rx_record=0;rx_record[542:539]=12;rx_record[538:533]=63;rx_record[532:517]=16'(e+1);
+ rx_record[58:43]=16'(e+1);rx_record[36:19]=18'($urandom%151936);rx_record[18:6]=13'($urandom);rx_record[60:59]=2'($urandom);rx_record[61]=installed_fusedcap;
+ rx_record[77:62]=(k==11&&e[4])?16'(epo+1):epo;rx_record[141:78]=d;
+ context_slot=1;rx_v=1;step();context_slot=0;rx_v=0;gap();
+ head_context_v=1;head_stage=6'(1+$urandom%36);head_token=rx_record[36:19];head_position={5'd0,rx_record[18:6]};step();head_context_v=0;
+ witness_slot=1;step();witness_slot=0;repeat(2)step();
+ if((k==0||k==4||(k==11&&!e[4]))&&(!host_epoch_valid||fault))begin $display("BAD_EPISODE_CONTEXT %0d kind %0d",e,k);$fatal;end
+ if(k==11&&e[4]&&(host_epoch_valid||!fault))begin $display("BAD_EPISODE_CONTEXT_NOT_REFUSED %0d",e);$fatal;end
+ rx_record={5'd0,4'd13,6'd63,16'(epo+2),5'd0,495'd0,4'd8,11'd1024,2'd1};execution_active=e[3];
+ auth_slot=1;rx_v=1;step();auth_slot=0;rx_v=0;repeat(3)step();witness_slot=1;step();witness_slot=0;step();execution_active=0;
+ end
+endtask
 initial begin
 repeat(3)step();rst_rn=6'b111111;step();
 dig=64'h51484f5354505247;
@@ -183,8 +241,9 @@ for(i=0;i<100;i++)begin
 rx_record={$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
 auth_slot=1'($urandom);context_slot=1'($urandom);witness_slot=1'($urandom);rx_v=1'($urandom);execution_active=1'($urandom);program_obs2={$urandom,$urandom,$urandom,$urandom,$urandom};descriptor_obs={$urandom,$urandom,$urandom};step();end
 end
-if(begins<1||auths<1||commits<1||contexts<1||witnesses<1)$fatal;
-$display("RECORD32_PASS checks=%0d begins=%0d auth=%0d commit=%0d context=%0d witness=%0d",checks,begins,auths,commits,contexts,witnesses);$finish;
+for(ep=0;ep<48;ep++)episode(ep);
+if(begins<1||auths<1||commits<1||contexts<1||witnesses<1||goodeps!=12)$fatal;
+$display("RECORD32_PASS checks=%0d begins=%0d auth=%0d commit=%0d context=%0d witness=%0d episodes=%0d",checks,begins,auths,commits,contexts,witnesses,ep);$finish;
 end
 endmodule
 
