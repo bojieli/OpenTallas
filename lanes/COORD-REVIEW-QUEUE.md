@@ -8385,3 +8385,4 @@ FAILED [AUTOPILOT d161f8d33361] 2026-11-19 06:13:04 PST AUTOPILOT -> KIT-WAVE-12
   - asbuilt: the tree's own asbuilt_run.json.
   Checked before the seed: kit_topology.bind_matches of that bind against the D8f plan is stale 0 of 395 types, with both reset scopes (unset and OT_NATIVE_RESET_SCOPE=selected).
   So BIND-STALE rows should launch on D8f from the next tick. When D8g2's bind is green, its apply moves the die forward and D8g2 becomes the live bind.
+- 2026-11-19 06:18 PST NEEDS-ACTION [FAIL-ROUTE-1115 -> FABLE-FIX-S81-COLH9R1, COORD] FAIL-CLASS 958ddd525b owner FABLE-FIX-S81-COLH9R1 s81/waiter RESULT FAIL: 3 item(s) failed and not answered: S81-FAILED-TRIAGE-1119@06:07, S81-FAILED-TRIAGE-1119@04:54, S81-FAILED-TRIAGE-1119@04:05. Owner: post RESULT or ACK naming 958ddd525b (or an item) with the cause and the next step within 30 min, else NEEDS-LANE goes to COORD. One post per class; no repeat.
