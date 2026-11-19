@@ -301,13 +301,15 @@ def judge_signoff(signoff_path, repo=None):
 
 
 def build_record(plan, rep, sib, signoff_path, repo, rom_dir, lec=None, via=None, lec_policy="require", via_policy="advisory",
-                 judge=judge_signoff):
+                 judge=judge_signoff, group=None):
+    """group: a layout group the caller already proved for (rep, sib) (tools/fleet/type_template.py: layout key + bound RTL key);
+    default = the (family, clock class, clock key) group of this plan."""
     pt = plan_types(plan)
     blockers = []
     pr, ps = parse_identity(rep), parse_identity(sib)
     if rep not in pt or sib not in pt:
         raise KeyError("identity not in plan")
-    g = group_of(plan, rep, sib)
+    g = group if group is not None else group_of(plan, rep, sib)
     if not pr or not ps or g is None:
         blockers.append("sibling and representative are not in the same layout (family, clock class, clock key)")
     elif g["verdict"] != "OK":

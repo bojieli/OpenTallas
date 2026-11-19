@@ -3014,6 +3014,9 @@ def select(rows, cfg, die, state, plan_types=None):
         if counted_now(cfg, state, die, r["item"], blk(r["item"])):
             skip.setdefault("counted by the sign-off counter", []).append(r["item"])
             continue
+        if template_member(d, r["item"]):
+            skip.setdefault(TYPE_TEMPLATE_MEMBER, []).append(r["item"])
+            continue
         rec = (state.get("items") or {}).get(item_key(die, ev, r["item"], blk(r["item"])))
         bw = blocked_why(cfg, state, die, r["item"], blk(r["item"]))
         if bw:
@@ -3108,6 +3111,10 @@ def select(rows, cfg, die, state, plan_types=None):
             for c in cls:
                 if c not in blocked and counted_now(cfg, state, die, c, blk(c)):
                     skip.setdefault("counted by the sign-off counter", []).append(c)
+                    blocked.append(c)
+            for c in cls:
+                if c not in blocked and template_member(d, c):
+                    skip.setdefault(TYPE_TEMPLATE_MEMBER, []).append(c)
                     blocked.append(c)
             cls = [c for c in cls if c not in blocked]
             # KW-FIX-8 11-04: a class in flight is never picked again.  Without this a retry row naming the live attempt
@@ -4563,6 +4570,7 @@ def prov_census(AP, cfg, st):
             out[die] = {"error": f"probe {pn['error'][:80]} "}
             continue
         d["_plan_flags"] = pn.get("flags") or {}
+        d["_templates"] = pn.get("templates") or {}
         pdeps = pn.get("prov_deps") or {}
         types = sorted(t for t in d["_plan_flags"] if prov_item(d, t))
         mods = sorted({m for t in types for m in pdeps.get(t) or []})
@@ -8557,7 +8565,7 @@ def _descends(AP):
     return f
 
 
-PROBE_V = 10   # DIE-KV-62/types 11-02: bump when the probe output changes (a cached older probe is re-run); 3 = KW-FIX-4 lint
+PROBE_V = 11   # DIE-KV-62/types 11-02: bump when the probe output changes (a cached older probe is re-run); 3 = KW-FIX-4 lint
 #              4 = KW-PROV-1 prov_deps (every planned + noview child of a type) + bound (signed lef/lib per module)
 #              5 = DIE-HBM-89-TGEN unbound (plan buses with no leaf binding: the plan-wrapper gen cannot bind them)
 PROBE_PLAN = Path(BI.__file__).read_text().rsplit("\nif __name__", 1)[0] + f"\nPROBE_V = {PROBE_V}\n" + r'''
@@ -8687,10 +8695,20 @@ try:
             flags[t] = "contract"
     for t in split:
         flags.setdefault(t, "split")
+    # TYPE-TEMPLATE (OWNER 11-19): plan types marked type_template true that are the same kit (plan layout key + bound RTL key,
+    # tools/fleet/type_template.py) -> {member: representative}.  An error = no template (every type builds on its own).
+    templates, templates_error = {}, ""
+    if a.get("tt_dir") and any(isinstance(v, dict) and v.get("type_template") is True for v in pt.values()):
+        try:
+            sys.path.insert(0, a["tt_dir"])
+            import type_template as _TT
+            templates = _TT.member_map(json.loads(raw), a.get("bind_rtl"))
+        except Exception as e:
+            templates, templates_error = {}, f"{type(e).__name__}: {e}"[:300]
     out = {"mtime": st.st_mtime, "plan_sha": hashlib.sha256(raw).hexdigest(), "types": sorted(pt), "flags": flags,
            "cores": sorted(set(blocks) - set(pt)), "blocks": blocks, "norm_blocks": norm_blocks, "die_ctx": die_ctxs, "deps": deps, "lint": lint, "probe_v": PROBE_V,
            "prov_deps": pdeps, "prov_keys": pkeys, "bound": bound, "plan_dir": os.path.dirname(os.path.abspath(a["plan"])),
-           "unbound": unbound}
+           "unbound": unbound, "templates": templates, "templates_error": templates_error}
     if a.get("core_views"):
         # AUTOBUILD-PIPE-2: pin tables per hard-core module (sha256[:12] of the plan pins_file = views_b2r2 view key)
         cv = {}
@@ -8709,6 +8727,29 @@ print("AP_JSON " + json.dumps(out))
 '''
 
 
+TYPE_TEMPLATE_MEMBER = ("TYPE-TEMPLATE member: the same kit as its representative (plan type_template; built once, "
+                        "counted by the equivalence record, tools/fleet/type_template.py)")
+
+
+def template_bind_rtl(d):
+    """the bound RTL directory the template probe reads (kit_rtl mode bind), else None = no bound RTL = no members"""
+    kr = d.get("kit_rtl") or {}
+    return os.path.join(str(kr["bind_out"]), "rtl") if kr.get("mode") == "bind" and kr.get("bind_out") else None
+
+
+def template_member(d, item):
+    """OWNER 11-19 (FABLE-TYPE-REDUCE-S81-COL): the representative whose kit this plan type shares, else None.  The plan marks the
+    family (type_template true); the probe groups the marked types by plan layout key + bound RTL key.  A member gets no wave row of
+    its own: nothing is held, there is nothing separate to build.  Die options: type_template false = off (every type builds);
+    type_template_build [item globs] = members that build on their own anyway."""
+    if d.get("type_template") is False:
+        return None
+    import fnmatch
+    if any(fnmatch.fnmatchcase(item, g) for g in d.get("type_template_build") or []):
+        return None
+    return (d.get("_templates") or {}).get(item)
+
+
 def plan_names(AP, st, d):
     """partition types + hard-core modules of the plan of record (probe on gen_host, cached by plan path + event)"""
     key = f"{d['gen_host']}:{d['plan']}|{d['event']}"
@@ -8717,7 +8758,8 @@ def plan_names(AP, st, d):
     if mode == "raw" and c and c.get("blocks") and c.get("probe_v") == PROBE_V and time.time() - c.get("t", 0) < 6 * 3600:
         return c
     args = {"plan": d["plan"], "core_views": bool(d.get("core_kit")), "cells_max": SPLIT_CELLS, "cells_dir": str(Path(__file__).resolve().parents[1] / "die_plan"),
-            "block_ignore": d.get("block_ignore")}
+            "block_ignore": d.get("block_ignore"), "tt_dir": str(Path(__file__).resolve().parents[1] / "fleet"),
+            "bind_rtl": template_bind_rtl(d)}
     if mode != "raw":
         args.update(block_identity=mode, identity_baseline_plan=d.get("identity_baseline_plan"))
     p = AP.rpy(d["gen_host"], PROBE_PLAN, args, timeout=600)
@@ -9040,6 +9082,7 @@ def ensure_plan_view(AP, st, d):
         return False
     d["_plan_sha"] = pn.get("plan_sha")
     d["_plan_flags"] = pn.get("flags") or {}
+    d["_templates"] = pn.get("templates") or {}
     d["_plan_unbound"] = pn.get("unbound") or {}
     d["_plan_deps"] = pn.get("deps") or {}
     d["_prov_deps"] = pn.get("prov_deps") or {}
@@ -9100,6 +9143,7 @@ def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
                     names = dict(pn.get("blocks") or {}) or (set(pn.get("types") or []) | set(pn.get("cores") or []))
                     d["_plan_sha"] = pn.get("plan_sha")
                     d["_plan_flags"] = pn.get("flags") or {}
+                    d["_templates"] = pn.get("templates") or {}
                     d["_plan_unbound"] = pn.get("unbound") or {}
                     d["_plan_deps"] = pn.get("deps") or {}
                     d["_plan_lint"] = pn.get("lint") or {}
