@@ -379,7 +379,7 @@ def materialize(full):
 GEN_SMOKE_SH = r'''
 set -u
 R="$1"; T=$(mktemp -d "${R%/*}/.rt-gen-smoke.XXXXXX") || exit 2      # same filesystem as rt (a kit's launch tree hardlinks rt)
-trap 'chmod -R u+w "$T" 2>/dev/null; rm -rf "$T"' EXIT
+trap 'find "$T" -type d -exec chmod u+w {} + 2>/dev/null; rm -rf "$T"' EXIT
 bad=0
 for f in $(find "$R/tools" "$R/physical/common_flow" -name "*.sh" -type f 2>/dev/null); do bash -n "$f" 2>/dev/null || { echo "RED bash -n ${f#$R/}"; bad=1; }; done
 mkdir -p "$T/src/physical/die_plan" "$T/src/rtl" && echo x > "$T/src/physical/die_plan/p.json"
