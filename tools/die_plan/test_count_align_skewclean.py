@@ -122,3 +122,16 @@ def test_tree_parent_override_and_loop_refusal():
         CAP.plan([dict(r) for r in rs], T, AP, 0.0, SAP, 0, None, SKEW, tree_parent={"b": "cb", "c": "bc"})
     with pytest.raises(ValueError, match="not a crossing"):
         CAP.plan([dict(r) for r in rs], T, AP, 0.0, SAP, 0, None, SKEW, tree_parent={"c": "ab"})
+
+
+def test_skew_clean_rereads_fall_edge_as_rise():
+    """KV-CROSSING-1119: a CLEAN start edge on the FALL sample (fall dist 113 < 26.5 + 87.5, rise ambiguous) that
+    --start-skew-clean re-reads as AMBIGUOUS must be read on the RISE sample: die_sta_related fails an ambiguous
+    fall-edge tree crossing closed (its sync window assumes fall = rise + T/2), so EDGE_FALL must not survive."""
+    rows = [row("ab", "a", "b", T / 2 + 113.0, 800.0), row("ba", "b", "a", -500.0, -60.0)]
+    e0 = edge(doc(rows))
+    assert e0["sync_values"] == 1 and e0["edge"] == "fall" and e0["rtl"]["EDGE_FALL"] == 1
+    p1 = doc(rows, skew_clean=True)
+    e1 = edge(p1)
+    assert e1["sync_values"] == 2 and e1["edge"] == "rise" and e1["rtl"]["EDGE_FALL"] == 0
+    assert CB.bind(p1)["regions"]["b"]["edge_fall"] is False
