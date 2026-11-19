@@ -76,3 +76,12 @@ Kits: t25__cl431c660f a7 (-778.07, 7,981 ends below -42), t27 a7 (-526.93, 1,172
 ## Kill / waiter rule (COORD 11-19 02:0x)
 Never pattern-kill. `ps -o pid,ppid,cmd -p <PID>`, confirm, kill that one PID (or ot-run --cancel). Waiters match a PID file, never a command-line grep.
 PID files: epyc10 taps1000/fix.pid = 3046128 (reach_fix cap 1000). Proof kits: watch the report file / FAIL_* marker and the ot-run unit, not pgrep.
+
+## 11-19 02:1x PST: proofs
+- t27keep: GRT SIGKILLed 01:23 by the epyc10 plan guard (kills.log, MemAvailable < 5 percent), relaunched from 4_cts.odb (intel2 t27keep.otrun2.log). INFRA, not design.
+- t27stb (third kit, COORD 02:0x): copy of t27keep at 3_place + `export OT_TAP_GRT_PRE = 1` (tapbal_grt.tcl + subtree_balance.tcl GRT-RC pre-pass), goal grt,
+  intel2 t27stb.otrun.log. config.mk mtime kept (touch -r) so the kit resumes from place. Compare with t27keep: bin/leaf_tcl.sh <kit copy> 4_cts.odb <tag> leaf_clk.tcl,
+  then bin/tap_skew.py leafclk_<tag>.tsv (in-tap span per tap) and the TT numbers.
+  Baseline, control t27 a7 at CTS, TT, placement RC: 29 taps, in-tap span max 166 ps, median 37; 7 taps >= 100 ps, 3 in 60..100, 19 < 60;
+  worst clk_t14 (median sink 159 ps earlier than the latest), clk_t9 139, clk_t10 119.
+- t27relay: in place.
