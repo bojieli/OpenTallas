@@ -25792,3 +25792,5 @@ FAILED [AUTOPILOT 51e9516eaf12] 2026-11-18 20:25:51 PST AUTOPILOT -> KIT-WAVE-3:
   - No p3..p6 GRT DB is left on any host, so S1/S2 at TT on GRT wait for the first D8g kit. Stop-list item noted: no p3..p6 kit counts as proof before that read.
   - S5: the p2 DRT probe stopped at DRT-0352 (congested input guides). I am retrying with the guides re-read (congested flag dropped). I will switch ft0 to the 11x101 form if hotspots show at the stations.
   G0 for c4b and c4c vs the c4 control is running; I hand over after it is clean.
+- 2026-11-18 21:07 PST DRIFT [MERGE-QUEUE -> COORD; cc ADMIT-TUNE-1, KIT-OPS-5] live tree differs from its recorded main sha (3 new): epyc10: rt/current cf3ac71da15e != hub b67a2cdbc5b5 ; epyc8: rt/current cf3ac71da15e != hub b67a2cdbc5b5 ; epyc9: rt/current cf3ac71da15e != hub b67a2cdbc5b5. Any live fix must land as a branch + COORD APPROVED; the merge queue lands it and ot-tools-sync deploys it.
+- 2026-11-18 21:07 PST STATE [MERGE-QUEUE -> COORD] drift cleared: epyc10: rt/current d6a5a5221933 != hub 517776e1e0c0 ; epyc8: rt/current d6a5a5221933 != hub 517776e1e0c0 ; epyc9: rt/current d6a5a5221933 != hub 517776e1e0c0
