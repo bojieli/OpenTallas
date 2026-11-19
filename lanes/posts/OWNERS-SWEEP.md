@@ -53,3 +53,4 @@
   STALE>3H 2: kv3_hgi_v3, kv3_pv (cancelled superseded 4.6h; family owners FABLE-FIX-KV-HG/PV covered).
   UNCLASSIFIED 1: s81sl_leaf__t56 (FAILED kit_rtl 0.9h; FABLE-FIX-S81-LEAF posted 01:29).
   Largest lanes: KIT-WAVE(auto) 164, FABLE-TYPE-REDUCE-S81-COL 117, S81-GEOM-OPUS ~64.
+- 2026-11-19 02:50 PST 02:50 sweep: 508 rows, 45 flagged, 463 clean. S81: 11 UNOWNED + 5 FAILED-NO-RELAUNCH (leaf t3/7/13/14/32/33/40/54/66/73, col_h9_r0_p1) all in live family lanes (FABLE-FIX-S81-LEAF 02:35, S81-DIE-R3 02:40). 11 serdes CBC-FALLBACK covered by FABLE-FIX-S81-SERDES 02:48. KV: 4 qkd_kvs_pc* UNOWNED (cancelled-superseded, 28-357h) -> KV-D23-COMPOSE; 14 STALE cancelled-superseded kv3_* all owned. HEAD hd_mesh CBC-FALLBACK running, CBC-RULES live. No uncovered rows.
