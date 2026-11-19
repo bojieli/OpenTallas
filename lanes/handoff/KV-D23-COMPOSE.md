@@ -2,7 +2,21 @@
 
 Work dir epyc7 /srv/opentallas-scratch2/claude/kv-d23-compose (lane clone wt/ = sparse main worktree). Hub logs intel2 ~/tmp/kvd23c.
 
-## Status 2026-11-19 09:55Z (read this first; supersedes 07:30Z)
+## Status 2026-11-19 10:50Z (read this first; supersedes 09:55Z)
+LIVE = KV-D25c (unchanged; see 09:55Z). D25d is now rebuilt as tag d25d3. d25d and d25d2 are superseded: do not apply them.
+- d25d3 = D25d (K1 342 + K8 + W2 + K2 + section B 56 lanes +6) + PROVFIX, without K5. Base D24c, main b3c4d97, built by build_d25.py with D25D=1.
+  - PROVFIX (KV-HUBPV 11-19): kvd23_hr_views_1118/<view>/provenance.json no longer carries any absolute original-kit path.
+    - A receipt with sha == export.signoff_sha256 is copied to <view>/receipt/signoff/signoff.json. Only qkd_hr_cdc_hi and phy_pad have one.
+    - Every other path is kept as "orig-kit:srv/...", with a provenance_fix note.
+    - kit_store.view_refs(kv3_hub_Wi): 22 present / 14 missing on d25d, 0 / 0 on d25d2.
+  - K5 (relay_polylines x 310) is DROPPED (COORD / FABLE-FIX-KV-HG k6: middle-channel overload). It is opt-in with D25D_K5=1.
+    It is read only by gen_phys, never by bind, R8 or LATCHECK, so the strict bind on bindcopy_kv_d25d (K5 plan 2030743e) stands as the bind proof.
+- Next steps:
+  1. G0 on the d25d3 final path (W8/d25d3g0gate).
+  2. SKIP_SEAL=0 LIVE=<D25c tree> LIVE_EV=KV-D25c BC=d25d bash ~/tmp/kvd23c/apply_d25.sh d25d3 KV-D25d (intel2), after the private hgi_v1 kit.
+- D25e: W3 x 340 + K5 are replaced by the west-channel form (FABLE rows section H), plus sink bins, PV tap split and K6.
+
+## Status 2026-11-19 09:55Z (supersedes 07:30Z)
 LIVE = KV-D25c, applied on G0 per r712 at 09:50Z. Tree kw45/src_kv_pin_eb1e73448bd0_hg10_4a40f1db_tb3c4d97_d25c, manifest a42f7c77f43b,
 plan 4a40f1dbe86d, tools b3c4d97 (rt/current). Receipt lanes/handoff/qwen_kvsys_atomic_apply_1795081781159010419.json.
 Gate of record: W8/d25cg0gate, G0 0 errors / 2446 warnings. Candidate W8/cand_d25c.json (mk_candidate_g0.py), driver intel2 ~/tmp/kvd23c/apply_d25.sh TAG EVENT.
