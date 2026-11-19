@@ -422,3 +422,12 @@
   - Coverage: 402 taps on 70 modules. tile_nk goes 733.25 -> 818.10 TT (early 483 -> 568) and 586 -> 658.07 FF; tile_nl 774.38 -> 859.93.
   - 4 core taps have no hard_cores module match and stay as they are.
   - Composed as n45/plan_n46_ct.json 95ff3208 on top of the coll_core tx rows.
+- 2026-11-19 05:57 PST QC-PLAN-R3: the N4.5d bind is green and the apply is in progress.
+  - Bind (s29q103S4Q9N45DBQ):
+  - Pass BR had 30 errors, all R8_STALE (0 others); pass BQ, run on the re-derived R8 table, then bound with BIND_ERRORS 0.
+  - Relay merge was a no-op (MERGE_NOOP).
+  - LANE_ASBUILT 1921/1921 PASS; hcparam 0 mismatches.
+  - G0: N4.5d passes with 0 errors and 573 warnings (the control had 572).
+  - Live tree: written as qwen_compute_n45_s0 (8825 61d0) on all 6 gen hosts.
+  - Publish: the bind-first publish_apply is running now (expect-source n43_s3, expect-event s29q103S4Q9N43R).
+  - Next, when it publishes: proof kits pk_coll (coll_core) and cbx_q10__cl89936551 to GRT TT, then N4.6.
