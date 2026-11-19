@@ -1,3 +1,252 @@
+# FABLE-CLOSURE-STRATEGY 2026-11-19 11:45 PST (1145): the fixes exist and are not on a tree; routed kits fail on hold, not setup
+
+Reviewer: FABLE-CLOSURE-STRATEGY-12xx (Fable). Read-only: no job launched, killed or patched. Technical PD only; HBM parked.
+Gate (R-MINIMAL): DRC 0, routed TT >= -42 ps, internal FF hold >= 0, bind + lane latency.
+Marking: **V** = I opened the log or file this round. **R** = reported by the named lane. **I** = inferred. **P** = proposal.
+State (V, failure_breakdown 11:44): types signed S81 44 / 394, QC 29 / 130, KV 6 / 56, HEAD 25 / 26. Lanes were limited from about 09:56 to 11:40;
+most posts below are from before 09:56 or from 11:42. Nothing below is a hold (r703).
+
+## 0. Headline
+
+1. **S81 D8h is bound and not applied (V).** `d8h_chain.out`: ELAB 0, BIND 0, LATCHECK 0, G0 new 0, type template 216 / 216, sealed 08:50,
+   then `CHAIN_STOP bind_repl_epyc7` at 09:51. `tree_switch_s81.json` still names D8g. Every S81 wave number today is on a tree with none of
+   the fixes: col_h9_r1 -278.6, leaf -44 to -874, slice C -1,307 to -4,306, phy__t1 -2,468 at CTS (V, 5 hosts). Lever 1.
+2. **Routed QC kits pass setup and fail on internal hold by 7 to 26 ps (V).** 9 routed kits on epyc8 / epyc9: `hold_ff` -6.7 to -26.5 on 23 to
+   143 ends is the only failed reason on 8 of them. The pre-route hold pass repairs to a 5 ps margin. Lever 2.
+3. **The S81 col families fail on core-to-core legs the reach checker did not see (R).** 354 depth rows on 73 types, 216 of them on
+   col_h9_r0 and 90 on col_h10; G0-clean at 11:42. This is the "one shared path per family" of 07:50. Lever 3.
+4. **Die hold is floored by the regular tap spread, not the core taps (R, FABLE-PD-KV-0845; R, DIE-LEVEL 11:43).** KV with the unit repair:
+   delivery 238 / 256 ports inside 25 ps, hold still -282 / -263 (droop class). QC with 28 early regions: -334.7 -> -267.9. Lever 4.
+5. **Slice C spends 8 to 9 h in hold repair on kits that are 1,500 to 4,300 ps from setup (V).** Lever 5.
+
+## 1. Levers ranked by closure impact
+
+| # | die | lever | types | owner |
+|---|---|---|---|---|
+| 1 | S81 | apply D8h with epyc7 dropped; D8i composed on it now | leaf 78, slice C 11, lepe / lepw, col_h9_r1 60, seqhost; D8i +73 types, svc 16 | S81-DIE-R3 |
+| 2 | QC, S81, HEAD | pre-route internal hold margin 5 -> 30 ps on low-utilisation types; ECO retry for the kits already routed | 8 QC types seen + slice_station; every short QC type next | FABLE-FLOW (flow), WAVE-FLOW-R2, SONNET-FIX-QC |
+| 3 | S81 | D8i depth rows (354 + 6) for col_h9_r0, col_h10, leaf; close the two remaining trace gaps | col_h9_r0 p1 / p2 / p4 / p5, col_h10_r0 / r1 (about 150 col members), leaf 12 + 5; QC 48 blind | FABLE-FIX-S81-LEAF, S81-DIE-R3, CBC-RULES-1119 |
+| 4 | KV, QC, HEAD | type-kit hold window from the real cross-tap path list; region DME on regular taps; no more core-tap offset passes | KV 50 unsigned (pc, pv, hg, hgi first), QC tile_nk_a0c, HEAD 264 tile regions | KV-PC-HGI-1119, KV-CROSSING-1119, QC-PLAN-R3, HEAD-CROSSING-1119 |
+| 5 | S81 | slice C: no hold repair before setup structure; tap tables first (D8h), then the split | dsdv_slice C 10 kits read (12 types) | S81-DIE-R3, FABLE-FIX-S81-LEPE |
+| 6 | QC | landing ring and single boundary ends between CTS and route; cbf_q00_s2 tile swap (N4.6f) | coll_ftc, fw, stm, st_b (ring types), cbf_q00_s2 | SONNET-FIX-QC, QC-PLAN-R3 |
+| 7 | KV | D25e in one event: E2 pc views, pv +500 set, sys_c stations + dcal RTL, hgi_v1 raw branch | KV 50 unsigned | KV-D23-COMPOSE, FABLE-FIX-KV-PV, KV-SYSC-1119, FABLE-FIX-KV-HG |
+| 8 | S81 | clock of record: all 6 local-tree stations under the reach bound before the build; serdes H22 | window rows for leaf 75 / slice C / lepe; serdes 11 | S81-CLOCK-WINDOW-1119, FABLE-FIX-S81-SERDES |
+
+### Lever 1. S81: D8h on the tree, D8i behind it
+**Evidence (V).** `d8h_chain.out` (intel2 s81-die-r3-hub): BIND_RC 0, LATCHECK_RC 0, `G0_ERRORS control(D8g) 2 d8h 2 new 0`,
+`TYPE_TEMPLATE check: 216 position(s), 42 group(s), 216 equivalent, 0 FAILED`, SEALED `..._d8h_1117_work_bind_11190850`, `BIND_REPL epyc2 OK`,
+`CHAIN_STOP bind_repl_epyc7`. No S81-DIE-R3 post after 09:51. Wave kits at CTS on D8g / D8f (V, `tt_setup_measure.log`, last 8 h):
+
+| family | CTS TT | note |
+|---|---|---|
+| col_h9_r1 pv87d52780 | -278.6 | no trunk row on this tree; proof with the row was -41.49 at GRT (R 06:12) |
+| leaf t2 / t12 / t26 / t43 / t24 / t71 / t11 / t44 / t25 | -837 / -499 / -492 / -479 / -310 / -195 / -172 / -125 / -44 | kv_leaf t5 -874 on two hosts |
+| slice C: iq / c1x t4, t5, t7, t10 / lepe_nh / lepw / kv512 / c3x / c1x t8 | -1,308 / -1,412 to -1,526 / -1,533 / -1,529 / -1,556 / -1,686 / -4,306 | Lever 5 |
+| phy__t1 | -2,468 | D8h proof kit never started (the chain stopped before publish) |
+
+**Root cause.** The apply step replicates the sealed bind to every gen host and stops on the first host that fails. epyc7 is not a usable
+gen host today. The HEAD r6e apply met the same host and went through with `DROPPED epyc7` (R 07:00).
+**Fix (P).**
+1. S81-DIE-R3: resume the chain from the replicate step with epyc7 out of the host list (the publish_apply form HEAD used). No re-bind:
+   the sealed bind and plan h3 8dfedade987b are unchanged.
+2. First reads on D8h, unchanged from 07:50: iq_C t1 CTS, leaf t16 / t27 CTS, col_h9_r1 route, phy__t1.
+3. D8i on the D8h plan, one event: 354 depth rows + 6 station rows (Lever 3), svc H8 rows for 16 types with the 10 signed provider views
+   (R 09:03), seqhost reach stations (R 07:19), col B + C merge, `clock.insertion_ps 306` on the lepe / lepw LP types. Its private bind
+   can start on the sealed D8h copy now; it does not need the apply.
+4. Lepe proof kits (R 09:13 to 09:56): both forms end at `DRT-0073 No access point for u_bound.u_u_ln0/ck[0] (dsfd_coll_lane_e_safe8_ntf)`.
+   That is a core clock pin with no routable access, a pin or halo defect of the view, not timing. One owner line is missing for it;
+   FABLE-FIX-S81-LEPE names the blocked layer at that pin before the D8h lepe kits reach DRT.
+
+### Lever 2. Routed hold misses of 7 to 26 ps: margin before route, ECO after
+**Evidence (V, `signoff/signoff.json` written in the last 8 h on epyc8 / epyc9 / intel1; `reasons` and `internal_hold`).**
+
+| kit | failed reasons | internal hold ends |
+|---|---|---|
+| slw_st_b_v2 pvc2ec5bfb | hold_ff -6.73 | 23 |
+| slice_station t8 (S81) | hold_ff -8.34 | 4 |
+| slw_hc0 cl1bc59e1c | hold_ff -13.26 | 97 |
+| slw_st_b_v1 pvffd43fdc | hold_ff -13.30 | 59 |
+| sle_hc0 cl05696ed1 | hold_ff -15.10 | 28 |
+| slw_hc1 cl3449ea95 | hold_ff -16.04 | 143 |
+| sle_stm_v1 cl27746664 | hold_ff -18.52 | 75 |
+| sle_stm_v3 | hold_ff -23.43 | 67 |
+| slw_st_b_v1 pv6ace3e48 | hold_ff -26.46, drc 1 | 119 |
+| slw_fw_v1 cl592e3d37 | setup_tt -65.57 (1 end, `u_bout_flt_wo/q`), hold_ff -12.29 | 31 |
+| coll_ftc | setup_tt -217.80 (`u_cland_tl_st_wi_i/u_ring.dch[4].u_dsel/y[17]`) | 0 |
+
+- V (slw_hc1, sle_stm_v1 `pregrt_ff_hold.log`): `OT_PREGRT_FF_HOLD pass all 1 margin 5.0 wns 5.000 endpoints 0`; class after: same_tap 0,
+  cross_tap 0. So the kit leaves the pre-route pass with every internal end at +5 ps on placement RC, and the route moves 23 to 143 of
+  them under 0. `config.mk` carries `OT_PREGRT_HOLD_R2R_MARGIN = 40` and `OT_HOLD_FAMILY_MARGIN_PS = 40`, but the pass prints 5.0.
+- V: every kit in the table has an `eco_20261119_*` directory. The ECO retry class is running on them; none has finished.
+- R (FABLE-FIX-HEAD-MESH-O): one ECO iteration on hd_ctl took 28,928 s.
+
+**Root cause.** A 5 ps internal hold margin at placement RC is smaller than the placement-to-route delay shift (13 to 26 ps here). The
+kits are at 5 to 24 % utilisation, so the padding area is free. The declared 40 ps margin does not reach the pass that decides (I: the
+40 is applied to the cross-tap term only; the lepe log prints `margin 5.0 + cross-tap 40.0`).
+**Fix (P).**
+1. FABLE-FLOW: the same-tap / reg-to-reg margin of `OT_PREGRT_FF_HOLD` reads `OT_PREGRT_HOLD_R2R_MARGIN` (30 to 40 ps) on types under
+   30 % utilisation. Expected cost: tens to hundreds of hold cells per kit (slw_st_b p3 closed with 202 added, R 11:09).
+2. Wave owners: the 10 kits above stay in the ECO loop; do not relaunch them. Read the first ECO result on slw_st_b_v2 (23 ends) as the
+   test of the class.
+3. Not read: whether the routed violators are same-tap or cross-tap ends. `signoff/ff/ep_ff.tsv` has start and end kinds; one read on
+   slw_hc1 decides which margin to raise.
+
+### Lever 3. S81 depth rows: the col families' shared path
+**Evidence (R, FABLE-FIX-S81-LEAF 09:01, 09:04, 11:42).** With the fixed trace call the D8g core-to-core recount measures 71,796 paths
+where the CBC run measured 0. 73 types need 354 rows (+354 stages): col_h9_r0_p2 72, col_h9_r0_p5 72, col_h9_r0_p1 36, p4 36 (legs to
+674 um), col_h10_r0_p1 36 (515 um), col_h10_r0_p4 30, col_h10_r1 24 (562 um), leaf 32 rows on 12 types. Plus 6 stations on 5 types
+(kv_leaf t1, leaf t21, t27, t71, t60). G0 of D8g + both row files: 2 errors, the same 2 cut errors as the control.
+- V (07:50 round): col_h9_r0 p1 / p4 / p5 read -331 / -334 / -335 and four col_h10_r1 kits -382.18. Equal wns across layouts fits a
+  fixed over-reach leg between two cores (I). No kit with the rows exists.
+- R: the 36-row station file of 09:01 was wrong for 31 types and is withdrawn; leaf t31 (-1,116) is unexplained.
+- R: two blind classes remain: bk_sel (the bound module keeps the wrapper as one instance, so the plan cores are not visible) and
+  svc_rs (2,518 non-wiring assigns between cores). QC flattened tiles: 48 types still blind.
+
+**Fix (P).**
+1. S81-DIE-R3: both row files into D8i; bind and lane latency for the +354 stages are the open check.
+2. One private proof kit each on col_h9_r0_p1 and col_h10_r1 with the rows, to CTS TT (r712). A value near -330 after the rows means
+   the leg is not the wns path and the family needs the endpoint read that 07:50 asked for.
+3. FABLE-FIX-S81-LEAF: bk_sel and QC tile mapping on main, then CBC-RULES-1119 re-runs QC. Until then the QC "12 lanes +1" count is a floor.
+4. Leaf: 13 types still stop in global placement (V, breakdown: `global_place error 13 (s81sl_leaf__t14, +12)`). The 07:50 face-bank item
+   has no post. It is a pin-bank fit, not timing, and no depth row touches it.
+
+### Lever 4. Die hold: the kit window, on three dies
+**Evidence (R unless marked).**
+- KV (FABLE-PD-KV-0845, computed from the tap arrival files): the "1.83 x planned + 85" was `die_trial` leaf() reading the leaf leg in um
+  as ps (pcc 136.6, pcf 47.4). Regular-tap spread alone: pc median 117.5 / max 180.4, pv 122.8 / 185.7, hg 106.6 / 148.4. With exact
+  core delivery the hold is about -170 to -186 TT. Core taps are worth 25 to 50 of the 222 ps.
+- KV (DIE-LEVEL 11:43): `pcsink_fix` delivery 238 / 256 inside 25 ps; droop-class hold -282.0 / -262.9 (before -297.8 / -273.5);
+  CA plan 26 / 3,915 fail with 35 ambiguous edges; nominal class not measured. k1 died.
+- QC (DIE-LEVEL 09:04, 11:43): n46ct_e, 28 added early regions, record recipe: crossings 0 / 2,993 TT + FF, MC 0 / 300; intra hold
+  -334.7 / -323.2 -> -267.9 / -263.4; kit-contract -93.0 -> -213.9 (W 10).
+- HEAD: r6e e3 -92.6 / -104.5 stands; tile leaf spread p90 86 ps; no new run.
+- V: KV-PC-HGI-1119 last post 07:56; the "count real cross-tap paths on kv3_pc_v1" step (rank 1 of 0845) has no post.
+
+**Root cause.** The all-pairs number assumes a zero-delay path between every tap pair of a partition. The tree cannot deliver under
+about 110 ps even for taps 150 um apart (KV). Kits were signed against W 36 (KV) and W 10 (QC). The gap is a kit hold contract,
+not a tree defect; the per-port offset work moved 20 to 60 ps of it.
+**Fix (P).**
+1. KV-PC-HGI-1119 (or a successor lane, since it is silent): `kit_tap_related_pairs.tcl` on signed kv3_pc_v1: the count of real cross-tap
+   register paths and their min data delay. That number sizes the window; nobody has it. 2 h, no build.
+2. Then one pilot per die with the window as a kit row: kv3_pc_v1 at W about 200, qfd_tile_nk_a0c (QC, 720 taps), one HEAD tile type at
+   W 96. Judge on added hold cells and routed TT. The S81 lepe kits paid 19 k to 27 k cells for a comparable window, so price it first.
+3. In parallel, cut the need: region DME on all KV pc / pv / hg / hgi regions (DME pc parts median 77 against 119 on link_htree, R) and
+   HEAD tile-region DME. QC: adopt the 28 early regions only together with the kit window, because they improve hold by 67 and cost
+   121 on the kit contract.
+4. KV crossings: `pcsink_fix` lost 26 crossings. Re-derive the A4 rows on the tree that is adopted, once, after step 3.
+5. KV-D23-COMPOSE: E2 pc lib / lef rows in D25e so pc pairs leave BLOCKED(kits).
+
+### Lever 5. S81 slice C: hold repair is running ahead of the structure
+**Evidence (V, `pregrt_ff_hold.log` / `run_route.log` on epyc8).**
+
+| kit | hold pass | result | setup |
+|---|---|---|---|
+| c1x_C t8 | 74,551 hold cells, 718,094 insts, 27,919 s | cross-tap -54.2 on 72 ends | -4,305.8 before and after |
+| kv512_C t1 | 64,730 hold cells, 741,660 insts, 31,872 s | cross-tap -294.4 on 207 ends | -1,556.4 before and after |
+| c3x_C t1 | before: cross-tap 41,575 ends at -354.9, same-tap 97 at -172.9 | pass running | -1,686 |
+
+- V: `OT_TAP_CHECK` c1x_C t8: clk 650, clk_t21 565, clk_t28 465 against the rest at 276 to 316; kv512_C clk 819, t33 618, t28 616;
+  c3x_C clk_t20 674. `OT_HOLD_GATE structural limit` -240 to -308 (tap window 140 to 208). Census: 520 k to 549 k non-tap cells at CTS,
+  max-wire projection +136 k to +167 k, against a 400 k target.
+- The diamond legaliser is the fallback on both finished passes (`DPL-0033`, then 0 overlaps).
+
+**Root cause.** A few taps per kit carry 150 to 370 ps more insertion than the rest, so the window is 140 to 208 and the cross-tap hold
+population is 40 k ends. The repair adds 65 k to 75 k cells to a kit already over the cell target, and setup is untouched because
+its miss (zero-wire 668 to 724 ps, R 07:50) is depth plus the same tap tree.
+**Fix (P).**
+1. The D8h slice C tap tables (Lever 1) are the fix for the outlier taps; iq_C t1 on D8h is the first read.
+2. FABLE-FLOW: `OT_PREGRT_FF_HOLD` is skipped when post-CTS TT is below about -1,000 ps; the kit continues to GRT for its congestion and
+   reach data. That saves 8 to 9 h per C kit and changes no verdict.
+3. If the D8h read still shows more than 500 k cells, the C types need the split that svc got (H8 form), not more rows. Owner to name: none today.
+
+### Lever 6. QC: where the route loses setup
+**Evidence (V).**
+- CTS / GRT TT on 30 QC kits: 24 are at 0 to +71 at CTS. GRT: sle_fw_v2 -37.1 (3 ends) / -19.1 (2), sle_stm_v1 -28.8 (1) / -105.8,
+  slw_hc1 -5.7 (4) / -15.4 (15), slw_st_b_v1 -7.6 (5) / -14.1 (2), slw_sc_v1 -12.6 (215) / -31.3 (1,232), slw_fw_v1 -118.7 / -112.1 /
+  -85.1, slw_st_b_v2 -105.8 / -119.6 / -53.1, sle_stm_v2 -85.2, sle_stm_v3 -62.8, cbn_q01 -60.9.
+- slw_fw_v1 cl592e3d37: GRT wns -118.66 = tns -118.66, one end; routed -65.57 on `u_bout_flt_wo/q`. `OT_TAP_RC sink insertion 188..322
+  ps (partition skew 134)`, pinreg mean 292.4 against the 250 vclk.
+- Routed worst setup ends on the kits of Lever 2 are landing-ring slots: `u_cland_*/u_ring.dch[k].sd_c[n]`, `u_ring.s_d`, and
+  `u_cland_rstart_tx/q`. They are inside the gate there.
+- Ring-group proof (epyc8 `sonnet-fix-qc-ring`): control CTS -54.76, GRT -126.52; `OT_CLAND_GROUP_ROW = 1` copy CTS -55.18, GRT not
+  printed yet. The fix does not show at CTS; only the GRT line decides it.
+- R (QC-PLAN-R3 09:03, 09:19): N4.6c applied 09:19. N4.6d bind failed: +5 stations on one Morton tree leg cannot be balanced by column
+  pads. Structural cause: cbf_q00_s2 has u_t01 / u_t10 swapped against its family (bc_o01 launch 2.1 mm from the window, d6 path 1.7 mm).
+
+**Root cause.** Two classes, both narrow. (a) Ring read mux far from its slot flops (row-wrap split, SONNET-FIX-QC). (b) Single
+boundary ends that see the tap insertion spread once the clock is on global-route RC (I, from the one-end tns and the 134 ps skew;
+the clock arrivals of that path are not read).
+**Fix (P).**
+1. SONNET-FIX-QC: post the GRT TT of the group-row copy against -126.52. If it holds, the row goes to every ring type, not only coll_ftc.
+2. SONNET-FIX-QC: on slw_fw_v1, read launch and capture clock arrival of `u_bout_flt_wo/q` at GRT RC. If the loss is tap skew, the
+   fix is the GRT-RC tap balance on boundary flops (`tap_balance_grt.tcl` is in the kit), not data-path sizing.
+3. QC-PLAN-R3: N4.6f = tile swap in cbf_q00_s2 to the family arrangement (move, no re-shape). It removes the +5 stations and the
+   -1,093 CTS of that type in one row. Do not retry the station form.
+4. coll_core: CTS -575.8 (V). Its N4.6 tx station rows are in; the srr_cone region row waits on the DPL-0033 place_regions fix.
+
+### Lever 7. KV: one D25e
+**Evidence.** V, wave kits at CTS on the old tree: kv3_pc_v3 -1,486, hg_v1p6 -865, sys_c -845, hub_Eo -827, pv_v4 -541, pc -468,
+hgi_v2 -319; kv3_io_cor +156, hroot +6.7. R: d25d4 is applied (KV-D23-COMPOSE 08:44). D25e-form rebind: the 4 pv reset-relay errors are
+gone, 2 hgi_v1 raw Q errors remain (FABLE-FIX-KV-PV 11:43). pv proof kits placed: tail hops 870 um -> 382 (dense) / 412 (D25e form),
+worst tap 10,234 -> 1,444 / 1,061 sinks; 519 k / 501 k movable cells; in CTS, no TT. kv3_sys_c: zero-wire 873.8 ps in the dcal
+sequencer; 0-cycle RTL fix on main 107c4654a35e with a lockstep miter (KV-SYSC 08:17); its wave kit is dead before CTS.
+**Fix (P).**
+1. KV-D23-COMPOSE: D25e = E2 pc views + pv route-priced +500 set + sys_c station rows + the dcal core + the hgi_v1 raw-branch regen
+   (FABLE-FIX-KV-HG named the two landing_remap defects). The 2 raw Q errors are the only bind blockers left.
+2. kv3_sys_c proof kit on a private bound copy now (the pv proof kits used a stub bound top the same way); it does not wait for D25e.
+3. kv3_pv at 500 k cells is over every size that closed. Read the first pv CTS TT before deciding on a pv split.
+
+### Lever 8. S81 clock of record and serdes
+**Evidence (R, S81-CLOCK-WINDOW 11:42; V on the run list cw4 / cw5 / cw6).** cw2 and cw3 failed on node 942 (994 um leg inside the
+serdes PHY wall); fixed on main 64f7bc20f76 (detour box 600 -> 4,800). cw5 failed at the post-build guard: 3 of 21,734 tap edges over
+405 um, all in station s_7N_x13 (local H-tree form, leaf drivers to 477 um). cw6 is running. Each attempt costs about 1 h of DME before
+the guard speaks. No window rows exist; S81 die hold is unmeasured.
+Serdes (R 07:42, 08:07): the one-hub star died in DRT twice (DRT-0255, about 200 legs through one hub). H22 two-level tree: 194 entries
+under 14 sub-hubs, 31 stages per entry, built in CTS. V: the H22 log is in a repair table at wns about -7; no GRT line of its own that
+I could separate from the H21 copy.
+**Fix (P).**
+1. S81-CLOCK-WINDOW-1119: run `OT_CLOCK_ACTUAL_REACH` on the station and region lists before the DME (it needs only sites and taps),
+   and put all 6 REGTREE-1 stations under `--region-dme-actual-max 405`. One failure per hour-long build is the present loop.
+2. FABLE-FIX-S81-SERDES: H22 row to D8i only on DRC 0; the 11 serdes types stay on H18 in D8h and will miss (R).
+
+## 2. The 07:50 levers: outcome
+
+| 07:50 lever | outcome |
+|---|---|
+| 1 col named-bus rows | **Stuck on the apply.** Rows are in D8h. The recount found the family paths (354 rows). `OT_MAXWIRE_POST_SKIP` is live (V: `post skipped` on col_h9_r1 / r2 kits). col_h9_r2: 4 kits at GRT -18.3 to -28.5 on 48 to 51 ends, inside the gate (V). |
+| 2 per-port core-tap targets | **Built, and worth less than I ranked it.** Unit error found and repaired; delivery passes; hold moves 16 ps. The floor is the regular tap spread. The 25 ps delivery gate I proposed fails on port scatter alone (sd 20 to 31 ps) and should not be an adoption gate. |
+| 3 D8h bound and applied | **Bound 08:50, not applied.** Reset-anchor re-record in the row writer: no post. The "tap rows without a bind" question is still open. |
+| 4 measured per-port windows from cw3 | **Stuck.** cw3 and cw5 failed, cw6 running. |
+| 5 route-keeping ECO as a standard step | **Wired** (V: eco directories on 10 routed kits). No result yet. |
+| 6 QC CTS-to-GRT loss | **Partly answered.** Ring row-wrap on coll_ftc; one-end misses on fw; the routed failure is hold (Lever 2). My "+50 CTS repair target" is withdrawn: setup passes after route on 8 of 9 kits. cbf_q00_s2 has an owner and a cause. |
+| 7 KV bind of record, pv +500 | **d25d4 applied.** pv proof kits in CTS. sys_c has a cause and an RTL fix. |
+| 8 leaf and slice C first reads | **Wrong in part.** The two repeating leaf values are not one bus each: only 5 leaf types lack the station and t31 is unexplained. No D8h CTS exists. |
+
+## 3. Stop list (the 07:50 list stands, plus these)
+- Do not re-bind D8h for a host that cannot take the replica; drop the host.
+- Do not relaunch a routed kit whose only failed reason is internal hold above -30 ps; it is in the ECO loop.
+- Do not leave the pre-route internal hold margin at 5 ps on a kit under 30 % utilisation.
+- Do not run more KV core-tap feedback passes (k2, k3), and do not use the 25 ps per-port delivery table as a gate.
+- Do not adopt the QC 28 early regions without the kit window: hold +67, kit contract -121.
+- Do not drive the all-pairs zero-delay hold number to 0 with tree offsets; count the real cross-tap paths first.
+- Do not run pre-route hold repair on a slice C kit that is below -1,000 ps at CTS (74,551 cells and 7.8 h for no setup change).
+- Do not add stations to a Morton fabric tree leg (QC bc_o01); move the tile.
+- Do not apply the 36-row leaf station file of 09:01; the hub file now holds 5 types.
+- Do not judge the ring group-row fix at CTS (-54.76 against -55.18).
+- Do not start another S81 clock kit before the reach guard has run on its station list.
+- Do not read the D8g / D8f leaf, col_h9_r1, col_h9_r0, col_h10 or slice C numbers as a test of any fix (repeats 07:50; still true at 11:45).
+
+## 4. Not checked
+- The col_h9_r1 GRT congestion strip at x 701 to 758 / y 1,214 to 1,218 (named in my brief): I did not open that kit's congestion
+  report. Before any row: list the instances in the strip. If they are the i1 trunk station bank (D8h aims 1,100 bits at one centroid),
+  the bank needs spreading along the trunk; that is a guess until the list is read.
+- Which routed hold violators are same-tap or cross-tap (Lever 2); where the 40 ps config margin is dropped.
+- The launch and capture clock of the slw_fw_v1 one-end miss; the tap-skew reading in Lever 6 is inferred.
+- Any ECO result; the group-row GRT; cw6; H22 past CTS; pv proof TT; N46E (N4.6d-b) bind; the D8i bind with +354 stages.
+- epyc7 kits (unreachable); epyc2 and epyc10 had no sign-off written in the last 8 h under the job root I read.
+- The cost in cells of a 200 ps kit hold window on KV or QC: no measurement exists.
+- N4.6f and the dsdv_slice split are proposals; neither has a plan file.
+
 # FABLE-CLOSURE-STRATEGY 2026-11-19 07:50 PST (0750): the tree has to deliver what the plan declares; which 05:55 levers held
 
 Reviewer: FABLE-CLOSURE-STRATEGY-07xx (Fable). Read-only: no job launched, killed or patched. Technical PD only; HBM parked.
