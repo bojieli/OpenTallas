@@ -10,7 +10,20 @@ modules), and which plan fields differ among types that share one RTL hash:
   pins (buses face/window/width), stations (internal_stations, relay_sites, ft_slots),
   taps (clock.taps), outline, orient (instance orientations), cores (hard core placement).
 Estimate = distinct (logic id, outline up to rotation) per family: one canonical pin template,
-position-specific relays in the streets, mirrored/rotated views reused.
+position-specific relays in the streets, mirrored/rotated views reused.  It is a LOWER bound: it needs a street
+for every relay and one clock landing contract per family.
+
+Three more counts say what a pin template alone gives when the die has no street (FABLE-TYPE-REDUCE-S81-REST 11-19:
+S81 lanes cross the types as ft_slots, the leaves are the slice streets):
+  traffic_classes     distinct (logic, outline, bus faces, ft-slot population = multiset of in face, out face, width)
+                      up to the four mirror views.  Types of one class become one type by re-slotting windows only:
+                      no lane re-route, no unbound slot (schema: an unbound bus is an error), no latency change.
+  landing_classes     distinct clock landing contract (clock.landing_contract with tap names and coordinates
+                      stripped, plus the set of count-aligned strap pins): the cohort a wrapper is generated for.
+  estimate_no_reroute distinct (traffic class, landing class): what window re-slotting reaches with today's die
+                      routes and today's landing cohorts.  The gap to `estimate_canonical` is the work a re-floor
+                      (streets) or a uniform landing contract has to do.
+Bound RTL is looked up by the type's plan `module` name first (S81: s81p_<type>.sv), then by the type name.
 Read-only; prints a JSON record.
 """
 import argparse
@@ -61,6 +74,46 @@ def logic_id(t):
     return h([sorted(cont), cores])
 
 
+_MIRRORS = (
+    {"N": "N", "S": "S", "E": "E", "W": "W"},
+    {"N": "S", "S": "N", "E": "E", "W": "W"},
+    {"N": "N", "S": "S", "E": "W", "W": "E"},
+    {"N": "S", "S": "N", "E": "W", "W": "E"},
+)
+
+
+def traffic_class(t):
+    """logic + outline + bus faces + ft-slot population, the same for a type and its mirror views."""
+    forms = []
+    for fm in _MIRRORS:
+        ft = sorted((fm.get(s.get("in_face"), "?"), fm.get(s.get("out_face"), "?"), s.get("width") or 0)
+                    for s in (t.get("ft_slots") or []))
+        bus = sorted((b.get("name"), b.get("dir"), b.get("width"), fm.get(b.get("face"), "?")) for b in (t.get("buses") or []))
+        forms.append(json.dumps([ft, bus]))
+    ol = t.get("outline_um") or [0, 0]
+    return h([logic_id(t), [round(x, 2) for x in ol], min(forms)])
+
+
+_TAPNAME = re.compile(r"clk_t\d+")
+_NUM = re.compile(r"-?\d+\.\d+")
+
+
+def landing_class(t):
+    """clock landing cohort: the landing contract without tap names / coordinates, and the count-aligned strap set."""
+    lc = (t.get("clock") or {}).get("landing_contract")
+    s = _NUM.sub("F", _TAPNAME.sub("clk_tN", json.dumps(lc, sort_keys=True, default=str)))
+    straps = sorted((c.get("name"), c.get("width")) for c in (t.get("count_straps") or []))
+    return h([s, straps])
+
+
+def rtl_file(rtl, tn, t):
+    """bound RTL of a type: <module>.sv (S81 binds s81p_<type>), else <type>.sv; None when neither exists."""
+    for stem in ((t or {}).get("module"), tn):
+        if stem and (rtl / f"{stem}.sv").is_file():
+            return rtl / f"{stem}.sv", stem
+    return None, tn
+
+
 def aspects(t, orients):
     ck = t.get("clock") or {}
     return {
@@ -92,12 +145,14 @@ def main():
     rtl = Path(a.bind_rtl) if a.bind_rtl else None
     fam = collections.defaultdict(list)
     for tn, t in pt.items():
-        rh = rtl_hash(rtl / f"{tn}.sv", tn) if rtl else None
-        rhi = rtl_hash(rtl / f"{tn}.sv", tn, True) if rtl else None
+        rf, stem = rtl_file(rtl, tn, t) if rtl else (None, tn)
+        rh = rtl_hash(rf, stem) if rf else None
+        rhi = rtl_hash(rf, stem, True) if rf else None
         ol = t.get("outline_um") or [0, 0]
         fam[family(tn)].append({
             "type": tn, "instances": inst.get(tn, 0), "rtl": rh, "rtl_rom": rhi, "logic": logic_id(t),
             "outline_rot": h(sorted(round(x, 2) for x in ol)), "aspects": aspects(t, orients.get(tn, set())),
+            "traffic": traffic_class(t), "landing": landing_class(t),
         })
     out = {"die": a.die, "plan": a.plan, "bind_rtl": a.bind_rtl, "families": {}}
     for f, rows in sorted(fam.items()):
@@ -126,8 +181,12 @@ def main():
             "shared_logic_groups": shared_groups,
             "types_in_shared_logic_groups_differing_by": dict(diff),
             "estimate_canonical": est,
+            "traffic_classes": len({r["traffic"] for r in rows}),
+            "landing_classes": len({r["landing"] for r in rows}),
+            "estimate_no_reroute": len({(r["traffic"], r["landing"]) for r in rows}),
         }
-    tot = {k: sum((v[k] or 0) for v in out["families"].values()) for k in ("types", "distinct_rtl", "distinct_rtl_mod_rom_instance", "distinct_logic", "estimate_canonical")}
+    tot = {k: sum((v[k] or 0) for v in out["families"].values()) for k in ("types", "distinct_rtl", "distinct_rtl_mod_rom_instance", "distinct_logic", "estimate_canonical",
+                                                                       "traffic_classes", "estimate_no_reroute")}
     out["total"] = tot
     Path(a.out).write_text(json.dumps(out, indent=1, sort_keys=True))
     print(json.dumps(tot))

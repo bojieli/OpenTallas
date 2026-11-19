@@ -129,6 +129,52 @@ def test_census_rtl_hash_strips_type_name_and_rom_instance(tmp_path):
     assert TC.rtl_hash(a, a.stem, True) == TC.rtl_hash(b, b.stem, True)
 
 
+def test_census_rtl_file_prefers_plan_module_name(tmp_path):
+    (tmp_path / "s81p_leaf__t1.sv").write_text("module s81p_leaf__t1 (); endmodule\n")
+    (tmp_path / "leaf__t2__clabcdef01.sv").write_text("module leaf__t2__clabcdef01 (); endmodule\n")
+    f, stem = TC.rtl_file(tmp_path, "leaf__t1", {"module": "s81p_leaf__t1"})
+    assert f.name == "s81p_leaf__t1.sv" and stem == "s81p_leaf__t1"
+    f, stem = TC.rtl_file(tmp_path, "leaf__t2__clabcdef01", {"module": "s81p_leaf__t2__clabcdef01"})
+    assert f.name == "leaf__t2__clabcdef01.sv" and stem == "leaf__t2__clabcdef01"
+    assert TC.rtl_file(tmp_path, "leaf__t3", {"module": "s81p_leaf__t3"})[0] is None
+
+
+def _census_type(face, ft, landing=None, straps=()):
+    return dict(outline_um=[100.0, 50.0], contents=[dict(inst="u", module="m")], hard_cores=[],
+                buses=[dict(name="dn_i0", dir="in", width=8, face=face, window_um=[1.0, 2.0])],
+                ft_slots=[dict(name=f"ft{i}", in_face=a, out_face=b, width=w, in_window_um=[i, i + 1], out_window_um=[i, i + 1])
+                          for i, (a, b, w) in enumerate(ft)],
+                clock=dict(landing_contract=landing), count_straps=[dict(name=n, width=6) for n in straps])
+
+
+def test_census_traffic_class_merges_mirrors_and_windows_not_ft_population():
+    a = _census_type("N", [("N", "S", 276), ("W", "E", 70)])
+    b = _census_type("S", [("S", "N", 276), ("W", "E", 70)])      # MX view of a, other windows
+    b["buses"][0]["window_um"] = [30.0, 31.0]
+    c = _census_type("N", [("N", "S", 276)])                      # one lane less passes through
+    d = _census_type("N", [("N", "S", 276), ("W", "E", 71)])      # other lane width
+    assert TC.traffic_class(a) == TC.traffic_class(b)
+    assert len({TC.traffic_class(x) for x in (a, c, d)}) == 3
+
+
+def test_census_landing_class_ignores_tap_names_and_coordinates():
+    a = _census_type("N", [], dict(pins=[dict(tap="clk_t12", xy=[1.5, 2.25])]), ("strap_ca_k_dn_i0",))
+    b = _census_type("N", [], dict(pins=[dict(tap="clk_t40", xy=[9.5, 7.25])]), ("strap_ca_k_dn_i0",))
+    c = _census_type("N", [], dict(pins=[dict(tap="clk_t40", xy=[9.5, 7.25])]), ())   # this input is not count-aligned here
+    assert TC.landing_class(a) == TC.landing_class(b) != TC.landing_class(c)
+
+
+def test_census_main_counts_no_reroute_estimate(tmp_path):
+    types = {"f__t1": _census_type("N", [("N", "S", 276)]), "f__t2": _census_type("S", [("S", "N", 276)]),
+             "f__t3": _census_type("N", [("N", "S", 276), ("W", "E", 70)])}
+    plan = dict(partition_types=types, partitions=[dict(name=f"p{i}", type=tn, orient="R0") for i, tn in enumerate(types)])
+    (tmp_path / "plan.json").write_text(json.dumps(plan))
+    sys.argv = ["type_census.py", "--die", "x", "--plan", str(tmp_path / "plan.json"), "--out", str(tmp_path / "o.json")]
+    TC.main()
+    f = json.loads((tmp_path / "o.json").read_text())["families"]["f"]
+    assert (f["types"], f["estimate_canonical"], f["traffic_classes"], f["estimate_no_reroute"]) == (3, 1, 2, 2)
+
+
 def test_tap_rebalance_moves_excess_within_radius_only():
     taps = [("a", 0.0, 0.0), ("b", 150.0, 0.0), ("c", 900.0, 0.0)]
     assert PC.tap_rebalance(taps, {"a": 2000, "b": 100, "c": 0}, 1200, 200) == {}
