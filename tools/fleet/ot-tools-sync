@@ -26,6 +26,7 @@ import re
 import shlex
 import subprocess as S
 import sys
+import time
 from pathlib import Path
 
 HOME = Path.home()
@@ -485,6 +486,34 @@ print(json.dumps(bad[:20]))
     return True, "ok"
 
 
+def sync_hosts(name, prev, hosts=None, fn=None, record=None):
+    """PARALLEL-SYNC-1119 (COORD, FABLE-FLOW-0755 B: epyc8/9/10 sat 77 min behind across four promotions because the hosts were pushed one after another and one slow host held the rest):
+    every host is pushed AT THE SAME TIME; one result line per host (with its duration) goes to the log as soon as it is known.  -> notes [h:ok | h:SKIP .. | h:FAIL ..] in HOSTS order."""
+    import concurrent.futures as cf
+    fn = fn or host_sync
+    hs = list(HOSTS if hosts is None else hosts)
+
+    def one(h):
+        t0 = time.time()
+        try:
+            ok, note = fn(h, name, prev)
+        except Exception as e:
+            ok, note = False, f"{type(e).__name__}: {e}"
+        log(f"{h}: {'ok' if ok else note[:160]} in {time.time() - t0:.0f}s")
+        return h, ok, note
+    with cf.ThreadPoolExecutor(max_workers=max(1, len(hs))) as ex:
+        res = list(ex.map(one, hs))
+    notes = []
+    for h, ok, note in res:
+        skipped = (not ok) and note.startswith("SKIP ")
+        notes.append(f"{h}:{'ok' if ok else ('SKIP ' + note[5:] if skipped else 'FAIL ' + note)}")
+        if record:
+            record(h, ok, skipped, note)
+        if skipped:
+            log(f"WARNING {h} skipped, stays on its old rt/current: {note[5:]}")
+    return notes
+
+
 def sync(sha, hosts=True, tests=True):
     if not sha:
         git("fetch", "-q", REMOTE, "+refs/heads/main:refs/remotes/origin/main", timeout=300)
@@ -522,14 +551,10 @@ def sync(sha, hosts=True, tests=True):
             f.write(f"{now().isoformat(timespec='seconds')} hub current {prev or '-'} -> {name} ({full})\n")
     notes = []
     if hosts:
-        for h in HOSTS:
-            ok, note = host_sync(h, name, prev if prev and prev != name else "")
-            skipped = (not ok) and note.startswith("SKIP ")
-            notes.append(f"{h}:{'ok' if ok else ('SKIP ' + note[5:] if skipped else 'FAIL ' + note)}")
+        def _rec(h, ok, skipped, note):
             with open(RT / "history.log", "a") as f:
                 f.write(f"{now().isoformat(timespec='seconds')} {h} {'current -> ' + name if ok else ('SKIPPED (low disk) ' + note[5:] if skipped else 'FAILED ' + note)}\n")
-            if skipped:
-                log(f"WARNING {h} skipped, stays on its old rt/current: {note[5:]}")
+        notes = sync_hosts(name, prev if prev and prev != name else "", record=_rec)
     try:
         man_now = json.loads((RT / f"{name}.manifest.json").read_text()).get("files", {})
         diffs = installed_diffs(man_now) if hosts else []

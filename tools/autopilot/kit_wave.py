@@ -3488,6 +3488,10 @@ RULES = [
     # flow exit printed after it and hid the class (sle_sc_v3 read _LAYOUT_RENDER local_density).
     ("FLOW", None, r"OT_VCLK_MEASURED_HOLD: pin-register mean unavailable[^\n]*", "measured-hold bind: pin-register clock-arrival mean unavailable (flow tool, not a design verdict)"),
     ("FLOW", r"^kit_snap$", r"KIT_INPUT_MISSING[^\n]*", "KIT_INPUT_MISSING: a kit input exists on no die host; restore it or repoint the die config"),
+    # COPY-INFRA-1119 (COORD, FABLE-FLOW-0755: 244 of 247 wave FAILs were kit-store snapshot rsync timeouts): a snapshot copy that timed out, was killed by its own timeout (rc 124/137) or lost its lock wait is
+    # the transport / host load, never a design verdict: INFRA retry
+    ("INFRA", None, r"KIT-SNAP FETCH failed|KW_ROAM \w+: \S+ dropped \(sync rc (?:124|137|255|30|12|23|10)\b|rsync error: (?:timeout|unexplained error|error in rsync protocol)|flock: .*timed out",
+     "infra (kit snapshot copy timed out or was killed: transport / host load, not a design failure)"),
     ("INFRA-SSH", r"^kit_snap$", SSH_DROP.pattern, "infra (ssh transport)"),
     ("FLOW", r"^kit_snap$", r"KIT-SNAP[^\n]*", "kit snapshot could not be built, copied or verified"),
     # DIE-HBM-97 11-10 (COORD): before INFRA and the PLAN geometry rules.  The capped unconverged placement is the cause;

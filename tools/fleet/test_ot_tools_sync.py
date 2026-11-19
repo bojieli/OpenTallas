@@ -253,3 +253,22 @@ class LowDiskHostIsAWarning(unittest.TestCase):
         self.assertIn('return False, f"SKIP {hf:.0f} GB free', src)
         self.assertIn('":SKIP " in n', src)
         self.assertIn("WARNING {h} skipped", src)
+
+
+def test_hosts_are_pushed_in_parallel_with_one_result_line_each():
+    """PARALLEL-SYNC-1119: four 0.4 s pushes finish in about 0.4 s, not 1.6 s; a failing host does not stop the others"""
+    import importlib.machinery, importlib.util, os, time
+    ld = importlib.machinery.SourceFileLoader("ots_par", os.path.join(os.path.dirname(os.path.abspath(__file__)), "ot-tools-sync"))
+    m = importlib.util.module_from_spec(importlib.util.spec_from_loader("ots_par", ld)); ld.exec_module(m)
+    lines = []
+    m.log = lambda s: lines.append(s)
+    def fake(h, name, prev):
+        time.sleep(0.4)
+        if h == "h3":
+            raise RuntimeError("ssh refused")
+        return (h != "h2"), ("SKIP low disk" if h == "h2" else "ok")
+    t0 = time.time()
+    notes = m.sync_hosts("abc", "", hosts=["h1", "h2", "h3", "h4"], fn=fake)
+    assert time.time() - t0 < 1.0
+    assert notes[0] == "h1:ok" and notes[1].startswith("h2:SKIP") and notes[2].startswith("h3:FAIL") and notes[3] == "h4:ok"
+    assert sum(1 for l in lines if l.startswith(("h1:", "h2:", "h3:", "h4:"))) == 4

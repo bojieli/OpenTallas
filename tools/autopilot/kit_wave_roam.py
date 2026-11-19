@@ -11,9 +11,11 @@ later reader, result.json and the place stage still look at G:W).  Any copy fail
 other host the stage is pinned to G exactly as before.  Only stages whose --dir is W roam (never the shared lane root).
 """
 import re
+import shlex
 
 RAN_RE = re.compile(r"(?m)^ot-run: RAN on ([^\s:]+)")
 MAX_MB = 3000
+COPY_TIMEOUT_S = 2400
 
 
 class Ops:
@@ -34,18 +36,25 @@ class Ops:
                             f"rsync -a {flag}-e 'ssh -o BatchMode=yes -o ControlPath=none' {path}/ {dst}:{path}/")
 
 
+    SSH = "ssh -o BatchMode=yes -o ControlPath=none"
+
     def ensure_snap(self, src, dst, sd, verify_cmd):
         """KIT-OPS-5 11-15 (COORD r241): the verified kit snapshot directory sd is present on dst, replicated from src first when it is
         not.  A roam stage reads kit inputs through snapshot paths; a host that never received the snapshot raised FileNotFoundError.
-        Present = sd/.verified exists on dst (written only by a passing verify).  -> (rc, text); rc 0 = present and verified."""
+        Present = sd/.verified exists on dst (written only by a passing verify).  -> (rc, text); rc 0 = present and verified.
+        COPY-DEDUPE-1119 (COORD: 74 identical rsyncs of ONE snapshot, 213 in all, from 5 hosts into epyc7 for 65 min, epyc7 at load 700): every roaming kit ran its own copy because the
+        snapshot stays unverified until the first copy ends.  Now ONE copy per (snapshot, destination) runs at a time: the check + rsync + verify run under an flock on the SOURCE host
+        (<sd>.push-<dst>.lock); a kit that waited finds .verified on dst afterwards and returns at once (no second copy, no second verify)."""
         rc, _ = self.sh(dst, f"test -f {sd}/.verified")
         if rc == 0:
             return 0, ""
-        rc, txt = self.sh(src, f"ssh -o BatchMode=yes -o ControlPath=none {dst} mkdir -p {sd} && "
-                               f"rsync -a --exclude .verified --exclude .used -e 'ssh -o BatchMode=yes -o ControlPath=none' {sd}/ {dst}:{sd}/")
-        if rc:
-            return rc, txt
-        return self.sh(dst, verify_cmd(sd))
+        lock = f"{sd}.push-{dst}.lock"
+        body = (f"{self.SSH} {dst} test -f {sd}/.verified && exit 0; "
+                f"{self.SSH} {dst} mkdir -p {sd} && "
+                f"rsync -a --exclude .verified --exclude .used -e '{self.SSH}' {sd}/ {dst}:{sd}/ && "
+                f"{self.SSH} {dst} {shlex.quote(verify_cmd(sd))}")
+        # COPY-TIMEOUT-1119: the copy runs under `timeout -k 30 COPY_TIMEOUT_S` (own process group: on expiry the bash, its rsync and its ssh are all killed), so a timed-out copy cannot keep running after its row gave up
+        return self.sh(src, f"flock -w 7200 {shlex.quote(lock)} timeout -k 30 {COPY_TIMEOUT_S} bash -c {shlex.quote(body)}")
 
 
 class RoamArgv(list):
