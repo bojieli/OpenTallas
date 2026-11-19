@@ -188,6 +188,28 @@ def guard_victim(procs):
     return max(cand, key=lambda x: (round(x[4] * 2), x[2], x[3]))[0] if cand else None
 
 
+def victim_ident(pid, names):
+    """who a guard victim was, for kills.log (11-18 FABLE-FLOW-1950: three kills could not be told prd-* from other jobs): systemd unit, container name, cwd and the first path in its cmdline; read before the kill"""
+    unit = cont = cwd = path = "-"
+    try:
+        cg = open(f"/proc/{pid}/cgroup").read()
+        m = re.search(r"([^/\n]+\.(?:scope|service))\s*$", cg, re.M)
+        unit = m.group(1) if m else "-"
+        cont = names.get(container_id(pid) or "", "-")
+    except OSError:
+        pass
+    try:
+        cwd = os.readlink(f"/proc/{pid}/cwd")
+    except OSError:
+        pass
+    try:
+        args = open(f"/proc/{pid}/cmdline", "rb").read().decode("utf-8", "replace").split("\0")
+        path = next((a for a in args if a.startswith("/srv/") or a.startswith("/home/")), "-")
+    except OSError:
+        pass
+    return f"unit {unit} container {cont} cwd {cwd} path {path}"
+
+
 def guard(seconds, pct, dry=False, kill=os.kill, log=None, sleep=time.sleep, meminfo=None):
     """PLANGUARD_1114 (COORD 11-14, B4L4 yosys lost at 2.6 percent free): while a plan job runs on this host and MemAvailable < pct percent, kill the largest young non-plan build
     process NOW (SIGKILL; earlyoom's SIGTERM line is 3 percent and a victim may need 10+ s to go), one per 10 s, so the plan job's memory growth never reaches the kernel's line"""
@@ -214,10 +236,11 @@ def guard(seconds, pct, dry=False, kill=os.kill, log=None, sleep=time.sleep, mem
                     killed += 1
                     if not dry:
                         try:
+                            who = victim_ident(v, names)
                             kill(v, signal.SIGKILL)
                             os.makedirs(os.path.dirname(log), exist_ok=True)
                             x = next(t for t in procs if t[0] == v)
-                            open(log, "a").write(f"{time.strftime('%F %T')} GUARD SIGKILL {v} {x[1]} RSS {x[4]*1024:.0f} MiB adj {x[2]}: MemAvailable < {pct:g} percent with a plan job running\n")
+                            open(log, "a").write(f"{time.strftime('%F %T')} GUARD SIGKILL {v} {x[1]} RSS {x[4]*1024:.0f} MiB adj {x[2]} {who}: MemAvailable < {pct:g} percent with a plan job running\n")
                         except OSError:
                             pass
                     sleep(10)

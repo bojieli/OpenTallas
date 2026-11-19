@@ -218,3 +218,12 @@ def test_late_eco_containers_rank_late_stage():
     for n in (None, "", "dpkit-slice_station__t40-123", "otc-2068972-23088"):
         assert not M.late_eco_container(n)
     assert M.guard_victim([(1, "openroad", 0, 900, 14.5), (2, "openroad", 300, 400, 2.0)]) == 2
+
+
+def test_victim_ident_names_unit_container_cwd_path():
+    import importlib.machinery, importlib.util, os
+    ld = importlib.machinery.SourceFileLoader("oomage_vi", os.path.join(os.path.dirname(__file__), "ot-oom-age"))
+    sp = importlib.util.spec_from_loader("oomage_vi", ld); m = importlib.util.module_from_spec(sp); ld.exec_module(m)
+    out = m.victim_ident(os.getpid(), {})
+    assert out.startswith("unit ") and " container " in out and " cwd " in out and " path " in out
+    assert m.victim_ident(2**30, {}) == "unit - container - cwd - path -"
