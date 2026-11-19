@@ -1,0 +1,21 @@
+{
+ "schema": "opentallas.publish_gate.g0_baseline.v1",
+ "accepted_errors": [
+  {
+   "check": "cuts",
+   "level": "ERROR",
+   "msg": "horizontal cut at 10500: s_0S_L0 segment carries 4464 bits on 6686 tracks = 0.67 > 0.6",
+   "part": "s_0S_L0"
+  },
+  {
+   "check": "cuts",
+   "level": "ERROR",
+   "msg": "horizontal cut at 10750: s_6S_L0 segment carries 4186 bits on 6672 tracks = 0.63 > 0.6",
+   "part": "s_6S_L0"
+  }
+ ],
+ "review": "S81-DIE-R3 2026-11-19: D8h = D8g + gunit core shift and re-solved gunit taps, bs0 hand rows dropped, leaf tap rows, LEPE/seqhost/lepw tap tables, serdes rck star + bank taps, col merge rows A, t47/t75 reset anchors re-recorded, keep_firm FT slots on t60/t21, main tools f72013a6506a; same 2 accepted ERRORs, any other G0 ERROR is new.",
+ "reviewed_g0_sha256": "2f68fd2b65ef7cd2baa06df781efe76f5cc4dfc996b4551d9f2244d352df08f6",
+ "reviewed_g0_source": "epyc8:/srv/opentallas-scratch2/claude/s81-die-r3-e8/d8h/r1/g0/g0_report.json",
+ "reviewed_plan_sha256": "8dfedade987b6045cf1304a311107bfdd3c9ad8996bd4a9a8cf3602412367ed4"
+}
