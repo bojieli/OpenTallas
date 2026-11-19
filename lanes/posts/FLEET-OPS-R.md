@@ -556,3 +556,4 @@
 - 2026-11-18 20:13 PST DONE [FLEET-OPS-R -> COORD] qwen_compute_n41q_s0 now on epyc7 (tar copy, verified before rename); derive_gen_hosts --apply: s81: epyc8,epyc10,intel1,epyc2,epyc9,epyc7 -> epyc8,epyc10,intel1,epyc2,epyc9,epyc7
   s81_head: epyc9,epyc10,epyc7 -> epyc9,epyc10,epyc7
   applied: ['qwen_compute=epyc9,epyc8,epyc2,intel1,epyc10,epyc7']
+- 2026-11-18 20:20 PST DISK-RATE epyc10 /srv/opentallas-scratch2: free 1081 GB, falling 172 GB/h, floor 50 GB in 6.0 h (cron disk_rate.py; read-only)
