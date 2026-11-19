@@ -10,11 +10,11 @@
  ],
  "status": "TWO ROWS for D8i, candidates: RTL of row A benched and on main; neither row has a kit; die G0 vs control NOT run by this lane (apply-first step on the die side).",
  "row_A_ring_out_relay": {
-  "what": "+1 registered stage on the lep ring output (ri with mu_rt)",
-  "switch": "+define+OT_S81SL_LEP_RIP=1 on the lep core of all four types (main >= 3367432685d, both lep copies); default 0",
-  "bind_K": "+1 on the lep ring-out lane (the ri bus of the lep instance, with mu_rt) of each of the four types; no other lane",
+  "what": "+1 registered stage on the lep ring output ri ONLY (COORD ruling (a)); mu_rt is not delayed",
+  "switch": "bare define OT_S81SL_LEP_RIP1 (with OT_S81SL_LEP_CRP2, OT_S81SL_LEP_WREP5) in the type verilog_defines of all four types; main >= aec264abc80, both lep copies",
+  "bind_K": "+1 on the lep ring-out lane (ri) of each of the four types ONLY. mu_rt lanes (seqhost HWIN), f_host / f_ks / f_lf, landing ml_wv / ml_wd: K unchanged. Consequence the compiler must date: the tag of the beat on ri in cycle t is on mu_rt in cycle t-1 (it was t).",
   "why": "mu full form post-CTS: RX SRAM read word -> select -> rid 1,023 um, 1,278 ps data (4 logic cells + 13 buffers), TT -530; 342 of the 400 worst clk ends are reach, 0 logic depth",
-  "proof": "run_lep_hab_bench ab/pab/hab (CRP 2, WREP 5, group assert) + run_lep_mu_bench regr: every gate PASS at RIP 0 and RIP 1, 12 PASS runs each, 4 mutants still FAIL; latency-user identity holds because the reference top shares the core",
+  "proof": "ri-only form: run_lep_hab_bench ab/pab/hab (CRP 2, WREP 5, group assert) + run_lep_mu_bench regr, every gate PASS at RIP 0 and RIP 1, 12 PASS runs each, 4 mutants still FAIL; the benches pair ri with mu_rt delayed by RIP (consumer model). Run with the valued define RIP=0/1, not with the bare selector.",
   "limit": "rid then sits between its sources: pair-A and pair-B rx memories are ~430-700 um apart for the low half of the word, so about 215-350 um per leg expected; not measured. Apply together with OT_S81SL_LEP_CRP=2 and OT_S81SL_LEP_WREP=5."
  },
  "row_B_land_reset": {
