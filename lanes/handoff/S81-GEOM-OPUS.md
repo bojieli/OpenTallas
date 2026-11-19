@@ -139,3 +139,13 @@ Rows for the same delta (S81-DIE-R3):
 Open:
 - S1/S2 TT read on the first p3..p6 D8g kit at GRT (stop list).
 - p2 DRT probe (S5 decides ft0 22x51 vs 11x101).
+
+## 11-18 23:02 D8h lever 4
+S81-GEOM-OPUS -> COORD, S81-DIE-R3 (cc FABLE-CLOSURE-STRATEGY): D8h lever 4 (col_h10_r0) is NOT the frame_int_o0 hop class, so no hop row and no kit.
+- Plan hops (base c4c): p4 x6 runs cf.rs (1428,518) -> 5 regs -> (141,1296), every hop 344 um; p1 x6 hops are 325-351. None is over 405.
+- Kit read, pv5b623e07 4_cts.odb after repair, TT placement RC: -309.66, 906 ends.
+  (a) The worst end (2 ends) starts at u_r0_u_bn3/d_st[1:0] -> u_ist_frame_int_o0_0/q[1156]. bn3's pin at (308,1253) is a SECOND source into station 0 near (1394,891), 1448 um away; the station model has only cf. No reg re-site can fix it, because any reg0 within 405 of cf is about 1450 from bn3. Fix (generator, 0 cycles): merge the bn3 bits at station 4, behind 4 local flops.
+  (b) Most ends: the t2->t3 relays y_xa/xb/cc_3_0, 320 ends at -231 / -98 / -70. These relays also feed bs3 or s3/s4, about 1035 um from t3, so no single site is better than about 518 um to each sink (the same class as p3..p6 bs0). Fix (generator, 0 cycles): one relay copy per branch.
+  (c) Next: bs2 -> e2_u_w, about 450 ends at -44 to -17.
+Both fixes are generator rows, not GEOM site rows. Owner: S81-DIE-R3 (or the colgen lane), for D8h. I can site the copies once their names exist.
+Notes and scripts: epyc8 /srv/opentallas-scratch2/claude/s81-geom-opus-d8h-l4/FINDINGS.txt.
