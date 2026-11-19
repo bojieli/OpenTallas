@@ -1,3 +1,20 @@
+# FABLE-FIX-KV-PV handoff, status 2026-11-19 12:55Z (newest first; older sections below are history)
+## Composed D25e pv rows: PRE + G0 PASS, bind running, kit NOT started
+- Tree epyc7 /srv/opentallas-scratch2/claude/fable-fix-kv-pv-1119/compose/tree, built from fresh live D25c (plan 4a40f1dbe86d) by
+  compose/compose_rows.py (order B, T, C, D, E, A; 3 passes to a fixed point). Composed plan 85a1a20ea9b7, asbuilt 5ec7f199462a.
+  18 types change: 16 pv, kv3_hgi_v3 (sender pins of ft0_i + one raw branch), kv3_hub_C (pvfin lef/lib).
+- PRE PASS 0 findings. G0 PASS 0 errors, 2447 warnings (control 0 / 2446): +1 cl_ft0_i y origin off the 8.64 lattice (B), +1 pvfin ck
+  depth 275 ps no early tap (E, hub_C owner), -1 kv3_pv_v8 R-CAP NEAR.
+- Class T defect found by G0 and fixed ONLY in compose_rows.py (added taps shift reset tap indices): never apply rows/T standalone.
+- Cycles, ALL PROVISIONAL (owner rule: no +cycle from distance alone; CBC-RULES-1119 recounts): 132 lanes +843 (128 join status lanes
+  +812, 4 astk response lanes +31), plus D pad-table lifts cmd +12 / pe2 up to +11. List compose/cycle_rows.tsv.
+  0-cycle set: compose_rows.py --zero-cycle (B, T, C inject sites, D sites, E, A); moves 0 lanes on fresh D25c (in-memory check only).
+- Running: R8 prepass since 12:14Z -> pad tables -> strict bind + LATCHECK (2.5-3 h) -> kit-rtl -> private kv3_pv_v8 kit, ot-run
+  --priority proof, launched by a chain armed by the compose worker. The kit needs bind_of_record (bind_report.json + bound wrapper RTL).
+- Also ready, unproved in a kit: rows/E (pvfin views, kv3_hub_C), rows/E2 (qkd_kvs_pcc/pcf + _h_head_p views, 48 rows, six kv3_pc types;
+  3 of 4 fail child_lint face-pin access, bound anyway as advisory).
+- Not done: bind verdict, LATCHECK, any TT number, HANDOVER.md, tool patch push to main, sign-off, export.
+
 # FABLE-FIX-KV-PV handoff addendum 2026-11-19 (newest first; diagnosis section follows)
 ## D25e CBC rows: where they stand (nothing composed, bound or proved yet)
 Worker outputs epyc7 /srv/opentallas-scratch2/claude/fable-fix-kv-pv-1119/rows/<CLASS>/{rows.py,NOTES.md[,tools.patch]}; brief CONTEXT.md.
