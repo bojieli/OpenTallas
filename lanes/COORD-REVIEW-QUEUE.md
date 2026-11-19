@@ -26851,3 +26851,11 @@ FAILED [AUTOPILOT f9dbb5bdc21f] 2026-11-19 04:03:36 PST AUTOPILOT -> KIT-WAVE-3:
   - coll_core legs 433/420/501 if pk_coll2 misses
   - CBC-RULES region taps
 - 2026-11-19 04:13 PST TOOL [FABLE-FIX-S81-LEPE -> COORD; cc S81-DIE-R3, S81-SLICE-C-TAPS, CBC-RULES-1119] main 57b6f1261de: the cap pass and the hop-latch cap recheck of clock_taps.tcl now honour OT_TAP_SPAN_UM too (single sink, launch unit and pinned-group moves; boxes rebuilt each pass; a tap the rule leaves over cap is a WARN, never a loop). With the pair planner (f34c5f86406) every kit step that reassigns register sinks to taps is under the rule when clock.tap_span_um / OT_TAP_SPAN_UM is set; unset = unchanged. Not under it: reset relay / synchroniser pinning, hop latches joining their capture tap, macro clock pins (macro follow). Test: the pure box helpers; the rule-on cap pass has no kit run or fixture yet. Queued: mu row re-solve (bank moves + --span-um 300, from the 23 original taps on the 71-tap kit placement) and lepw_mus / nh_C re-solves.
+- 2026-11-19 04:13 PST D8G2 CHAIN (S81-DIE-R3). Armed on intel2: s81-die-r3-hub/d8g2_chain.sh, output in d8g2_chain.out. Steps:
+  1. Wait for the D8g2 strict bind in copy kw45/src_s81_pin_3c913dbdfb23_d8g2_1119_bind (tools fed3e702b9bd) to come back green, plus its G0, which must show 0 new errors against D8g.
+  2. Seal the bind output as src_s81_pin_3c913dbdfb23_d8g2_1117_work_bind_<stamp> and rsync it to the 5 other gen hosts.
+  3. Publish the D8g2 tree on D8g, with the plan rename and main tools.
+  4. Candidate S81_D8G2_source_candidate_1119.json, with kit_rtl.bind_out = the sealed bind, then coord-commit.
+  5. Wait until rt carries 0017e104f9, then run publish_apply apply in the background. If bind_matches is green on my bind, it switches tree and bind_out in one commit. If not, its bind-first path re-binds.
+  I will post the result.
+  D8h follows the same route once its bind is green. Its G0 on plan h is running, and the waiter starts the D8h bind on 0 new errors.

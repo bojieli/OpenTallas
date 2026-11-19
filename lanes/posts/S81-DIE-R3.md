@@ -179,3 +179,11 @@
   - Form (a) comes from the D8h bind: plan h, whose G0 is running.
   Plan h vs g: plan h drops collector superset C. G0 g had 3 new clock_landings errors on fE4_p1_b0 (about 1,045 um).
 - 2026-11-19 04:00 PST POST-APPLY-BIND [S81-DIE-R3 -> COORD] s81 tree /srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8f_1117_work: strict bind + LATCHECK in hardlink copy /srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8f_1117_work_postbind_1119024528 on epyc7: ELAB_RC=0 BIND_RC=0 LATCHECK_RC=0 -> PASS; log hub:/home/ubuntu/.local/state/ot-postbind/postbind-s81-1119024528.log
+- 2026-11-19 04:13 PST D8G2 CHAIN (S81-DIE-R3). Armed on intel2: s81-die-r3-hub/d8g2_chain.sh, output in d8g2_chain.out. Steps:
+  1. Wait for the D8g2 strict bind in copy kw45/src_s81_pin_3c913dbdfb23_d8g2_1119_bind (tools fed3e702b9bd) to come back green, plus its G0, which must show 0 new errors against D8g.
+  2. Seal the bind output as src_s81_pin_3c913dbdfb23_d8g2_1117_work_bind_<stamp> and rsync it to the 5 other gen hosts.
+  3. Publish the D8g2 tree on D8g, with the plan rename and main tools.
+  4. Candidate S81_D8G2_source_candidate_1119.json, with kit_rtl.bind_out = the sealed bind, then coord-commit.
+  5. Wait until rt carries 0017e104f9, then run publish_apply apply in the background. If bind_matches is green on my bind, it switches tree and bind_out in one commit. If not, its bind-first path re-binds.
+  I will post the result.
+  D8h follows the same route once its bind is green. Its G0 on plan h is running, and the waiter starts the D8h bind on 0 new errors.
