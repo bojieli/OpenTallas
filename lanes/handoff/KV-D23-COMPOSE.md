@@ -2,6 +2,25 @@
 
 Work dir epyc7 /srv/opentallas-scratch2/claude/kv-d23-compose (lane clone wt/ = sparse main worktree). Hub logs intel2 ~/tmp/kvd23c.
 
+## Status 2026-11-19 07:30Z (read this first; supersedes 05:05Z)
+LIVE = KV-D24 (d24c, manifest b951ed387f8c, plan 2862ed5a71bc). W8 = epyc8 /srv/opentallas-scratch2/claude/kv-d23-compose8.
+- D25b red at PRE: SCHEMA-UNKNOWN-KEY. I had added note keys to relay_polylines and relay_sites_note. Not a design finding.
+- D25c, first build: mis-staged. The foreground ssh died mid-build, and the rerun copied the base INTO the leftover staging dir, so
+  the tree had a nested d24c and no tools/s81_head. PRE caught it (TOOLS-SKEW). I cancelled the gate and moved the tree to
+  kw45/broken_d25c_nested_0702 (ot-delete refuses: newer than live).
+- D25c rebuilt clean (same plan 937d2422ed53): kw45/src_kv_pin_eb1e73448bd0_hg10_937d2422_td6a5a52_d25c. Gate W8/d25cgate
+  (ot-run plan bind, started 07:23Z). PRECHECK 1 = TOOLSTALE only.
+- D25d build (W8/build_d25.py with D25D=1, MAIN d43ef10787 incl. aae3f7b5ec6) adds on top of D25c:
+  K5 W3b polyline x 310 (all hgi_v1 west band types); K8 hgi_v8 cl_i_ectl_Q_N_tN +172.8 (band rects + tap follow);
+  W2 lane-pad station off head2_e6 on the other 8 hgi types; K2 relay_sites for the kst parent cells at the 14 kt row
+  sites (u_head<h>_g_t_<t>_u_kst<k>.{kp_o[b],kpv_o,gf_o} plus the g_r.r[b] form; unmatched keys are report-only);
+  section B on the 7 hg variants (v1, v1p2..p6, v3): eN 6 stations (y 1270 street, E channel x 1235, face pins at (1279,22)) and
+  tN 6 stations (y 1270). Lanes eN 0->6 and tN 1->7, so eN stays 1 cycle ahead of tN as built: the hgi pd1 and R8 pads do not move.
+  K1/F2 start_stage_raw_resite.py runs on the base bind trees; gen.py latency --inplace (asserts exactly 56 lanes +6).
+- K6 is NOT in D25d. The extra hgi stage needs the pad name and order. The binder lands landing pads (u_pd1) after the ring, and
+  receiver pads as u_bin_*_pad. Read them from the D25d private hgi_v1 kit, then site the stage in D25e.
+- r712: apply on G0. The apply candidate needs bind_out, so the kits wait BIND-STALE until the bind exists.
+
 ## Status 2026-11-19 05:05Z (read this first; supersedes 03:25Z)
 LIVE = KV-D24 (applied 04:5xZ): kw45/src_kv_pin_eb1e73448bd0_hg9_2862ed5a_tb3e667d_d24c, manifest b951ed387f8c, plan 2862ed5a71bc
 (receipt lanes/handoff/qwen_kvsys_atomic_apply_1795064629906020025.json). D24n (no PVFIN) is green too and is not needed.
