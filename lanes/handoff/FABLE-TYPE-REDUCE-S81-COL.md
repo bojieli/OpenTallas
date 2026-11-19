@@ -67,3 +67,20 @@ bash tools/fleet/col_template_rows.sh TREE BASE_PLAN SIDECAR OUT [--all-members]
    and type_template.py rommap ... --out rommap.json (0 errors).
 4. r712 proof kit: one representative of the largest group (col_h9_r1) to GRT TT.
 5. Wave: 216 col rows become one per group; members show as skip "TYPE-TEMPLATE member"; credit is automatic.
+
+## ROM via map to GDS at die assembly (main e1f0efbdd62d) - lane closed here
+- The writer already existed (tools/mem_compiler/rom_viamap_gds.py, 8dfe82f36f: VIA1 21/0 overlay per unique image, merge by DEF);
+  my earlier "no tool" line was wrong. Added: merge-map / verify-map (driven by type_template rommap, for one representative layout
+  per group), rom_gen.py gds (one image, read back), all-zero image verify fix.
+- Die assembly: type_template.py rommap ... --out R.json ; rom_viamap_gds.py merge-map --rommap R.json --macro <ROM datasheet json>
+  --viamap-dir D --top TOP [--die-gds in.gds] --out out.gds ; verify-map the same with --die-gds out.gds (exit 1 on any difference).
+- Check (no col layout is signed, so not against a signed layout): D8e map, frame u_f_0L01 at fW0_p1_b0/b1/b2 (col_h10_r0_p1, r1, r2
+  templates, MX), 112 ROM macros, images = results/arch/s81_rate3_admission_1020/aproj_slice_frames/u_f_0L01/gold: merged 112,
+  18 unique overlays, readback PASS 112/112. epyc9 W/gds/s81_0L01_via1.gds.
+- Where images are: rom_gen personalise / rom_content.write_viamap write <INSTANCE>.viamap.hex. In the S81 tree only that 10-20
+  slice-frame run has them (7 frames of 72, about 295 files each, named u_f_0L01_c1_5 for die instance u_f_0L01.u_r0.u_c1_5; the tool
+  accepts both names). They are sparse test content (frame 0L01: 82 of 112 all zero, 120 vias). The release weight images for the 72
+  frames are not in the tree: someone must export them before a real die merge.
+- Open: (1) array origin inside the ROM macro is assumed (decoder width, 0) and the via sits at the cell centre: no base ROM layout
+  exists to check it against; (2) the 8 element cores per type hold their ROMs inside the core layout: counted, not stamped;
+  (3) no real die GDS was merged (overlay-only stream).
