@@ -111,3 +111,19 @@ def test_reap_revives_a_supersede_cancelled_row_whose_job_is_live_past_synthesis
         assert KW.revive_superseded_running(None, cfg, st, jobs) == 1
     assert row["status"] == "ENQUEUED" and row["q_id"] == "j1" and "class" not in row and "reaped" not in row
     assert st["items"]["s"]["status"] == "CANCELLED"
+
+
+def test_fallback_launch_uses_the_bound_trees_own_gen_env_and_skips_unknown_env():
+    a, st, cfg = FakeAP("/old"), {}, cfg0()
+    d = cfg["dies"]["s81"]
+    d["die_gen_env"] = {"OT_KV_HEAD_KST": "2", "OT_KEEP": "k"}
+    d["bound_trees"][1]["gen_env"] = {"OT_KV_HEAD_KST": "1"}
+    rows = [{"item": "t1", "kind": "type"}]
+    stale = KW.bind_preflight(a, cfg, st, "s81", rows)
+    assert KW.bound_fallback(a, cfg, st, "s81", rows, stale) == {"t1": "/old"}
+    env = KW.item_env(d, "t1")
+    assert env["OT_KV_HEAD_KST"] == "1" and env["OT_KEEP"] == "k"          # the fallback tree's env, the rest of the die env kept
+    a, st, cfg = FakeAP("/old"), {}, cfg0()
+    cfg["dies"]["s81"]["bound_trees"][1]["env_unknown"] = True
+    stale = KW.bind_preflight(a, cfg, st, "s81", rows)
+    assert KW.bound_fallback(a, cfg, st, "s81", rows, stale) == {} and "t1" in stale

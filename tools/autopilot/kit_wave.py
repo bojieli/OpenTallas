@@ -9065,6 +9065,8 @@ def bound_fallback(AP, cfg, st, die, rows, stale, now=None, rpy=None):
     for bt in list(d.get("bound_trees") or [])[:BOUND_TREE_TRIES]:
         if not todo or not bt.get("src") or not (bt.get("kit_rtl") or {}).get("bind_out"):
             continue
+        if bt.get("env_unknown"):                        # COORD 11-19 (KV D24c, OT_KV_HEAD_KST): the env this tree bound under is not recorded yet: no fallback on it
+            continue
         ent = {k: bt[k] for k in BOUND_TREE_KEYS if bt.get(k)}
         ent["kit_rtl"] = dict(bt["kit_rtl"])
         cfg2 = copy.deepcopy(cfg)                      # cfg carries sets / runtime keys: no json round trip
@@ -9077,9 +9079,13 @@ def bound_fallback(AP, cfg, st, die, rows, stale, now=None, rpy=None):
             AP.log(f"KIT-WAVE BOUND-FALLBACK {die} {bt.get('src')} skipped: {e}")
             continue
         ok = [r for r in todo if r["item"] not in bad]
+        genv = {str(k): str(v) for k, v in (bt.get("gen_env") or {}).items()}
         for r in ok:
             ii = d.setdefault("item_inputs", {}).setdefault(r["item"], {})
             ii.update(json.loads(json.dumps(ent)))
+            if genv:                                     # the tree's OWN gen env (die_gen_env + bind_env in force when it was applied) wins over the die's current one
+                ie = d.setdefault("item_env", {})
+                ie[r["item"]] = {**item_env_entry(d, r["item"]), **{k: v for k, v in genv.items()}}
             rescued[r["item"]] = bt["src"]
             stale.pop(r["item"], None)
         todo = [r for r in todo if r["item"] in bad]

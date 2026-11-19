@@ -178,6 +178,8 @@ def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=
         old_bt = {k: d.get(k) for k in ("src", "plan", "plan_sha256", "src_sha", "queue_src", "src_manifest_hash") if d.get(k)}
         old_bt["kit_rtl"] = {k: v for k, v in (d.get("kit_rtl") or {}).items() if k in ("mode", "bind_out", "asbuilt")}
         old_bt["event"] = d.get("event")
+        old_bt["gen_env"] = {str(k): str(v) for blk in ("die_gen_env", "bind_env") for k, v in (d.get(blk) or {}).items()
+                             if str(k).startswith("OT_") and isinstance(v, (str, int, float)) and not isinstance(v, bool)}
         # decide the pilot BEFORE any write: a refusal leaves everything untouched
         pilot = ""
         if not no_pilot:
