@@ -6,6 +6,9 @@ never chooses resource allocations, clocks, resets, KS dates or consumer dates.
 
 SOURCE = 'rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv'
 MEASURED_SOURCE_SHA256 = 'fe83722aed98be5c319ebc7c2b63514b75016add0dfa7522e878c907f6bfee49'
+# FABLE-FIX-S81-SEQHOST 11-19: 0-cycle restructure of dsdv_mu_hwin (same output on every edge: unit/test/run_mu_hwin_eq.sh;
+# hwin_events_1113/run.sh re-run on it).  Both sources carry the measured event dates.
+MEASURED_SOURCE_SHA256S = (MEASURED_SOURCE_SHA256, 'bc4a800c8c1bf30dd5e8fde847af98a735eb42022de493fda13ba82e23a3e316')
 ENDPOINTS = ('s_7N', 's_7S', 's_0N', 's_0S')
 
 
@@ -18,7 +21,7 @@ def event_ledger(mu, descriptor, ks_sampling_edge):
     """
     if mu.get('selected_params') != dict(HOSTB_ENABLE=0, STATIC_KS6=0, STATIC_KS_SPAN=0, STATIC_KS_GRAPH_TAG=0, FMUT=0):
         raise ValueError('selected direct source variant required; no HBE/static/RF input delay inferred')
-    if mu.get('hwin_source_sha256') != MEASURED_SOURCE_SHA256:
+    if mu.get('hwin_source_sha256') not in MEASURED_SOURCE_SHA256S:
         raise ValueError('actual HWIN timing source differs from measured full47/eight-row vehicle')
     if type(ks_sampling_edge) is not int or ks_sampling_edge < 0:
         raise ValueError('actual KS input sampling edge required')
