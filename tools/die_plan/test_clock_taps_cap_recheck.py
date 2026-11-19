@@ -195,3 +195,28 @@ def test_under_cap_prints_recheck_pass(tmp_path):
     out, nets, js = run(tmp_path, body, 'set ::env(OT_TAP_PITCH_UM) 1000')
     assert 'cap recheck after hop latches: all 2 taps <= cap 3000' in out, out
     assert js['over_cap'] == [] and 'WARN' not in out
+
+
+def test_span_helpers_admit_only_inside_the_limit_or_without_growth():
+    """COORD 11-19 sink region rule in the cap pass / cap recheck: the two pure helpers of clock_taps.tcl (CT_SPAN block)."""
+    import re, shutil, subprocess
+    from pathlib import Path
+    tclsh = shutil.which('tclsh')
+    if tclsh is None:
+        import pytest; pytest.skip('tclsh not installed')
+    src = Path(__file__).with_name('clock_taps.tcl').read_text()
+    block = re.search(r'# CT_SPAN_BEGIN.*?# CT_SPAN_END', src, re.S).group(0)
+    script = block + """
+puts [ct_span_fits {0 0 100 100} {{250 0}} 300]
+puts [ct_span_fits {0 0 100 100} {{50 50}} 300]
+puts [ct_span_fits {0 0 100 100} {{150 60}} 300]
+puts [ct_span_fits {0 0 500 100} {{250 50}} 300]
+puts [ct_span_fits {0 0 500 100} {{501 50}} 300]
+puts [ct_span_fits {} {{10 10} {200 50}} 300]
+puts [ct_span_fits {0 0 100 100} {{9000 9000}} 0]
+puts [ct_span_grow {0 0 100 100} {{150 -20} {60 130}}]
+"""
+    out = subprocess.run([tclsh], input=script, capture_output=True, text=True, check=True).stdout.split('\n')
+    # 250 wide + 100 high = 350: refused; inside: ok; 150+100 = 250: ok; over-limit box takes a sink inside it only; empty box; off
+    assert out[:7] == ['0', '1', '1', '1', '0', '1', '1'] and out[7] == '0 -20 150 130'
+    assert src.count('ct_span_fits [dict get $ct_sbox') >= 5      # single sink, group, sequential move, recheck candidate, recheck move

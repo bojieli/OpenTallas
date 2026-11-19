@@ -485,6 +485,44 @@ set ct_dbu [[ord::get_db_tech] getDbUnitsPerMicron]
 set ct_maxx [expr {0.5 * ([info exists ::env(OT_TAP_PITCH_UM)] ? $::env(OT_TAP_PITCH_UM) : 600.0) * $ct_dbu}]
 # density taps (decision 5, gen.py phys OT_TAP_REASSIGN_UM = clock.tap_radius_um): no pitch; the cluster radius bounds it
 if {[info exists ::env(OT_TAP_REASSIGN_UM)]} { set ct_maxx [expr {$::env(OT_TAP_REASSIGN_UM) * $ct_dbu}] }
+# CT_SPAN_BEGIN  FABLE-FIX-S81-LEPE 11-19 (COORD sink region rule, plan clock.tap_span_um -> OT_TAP_SPAN_UM; unset / 0 = off):
+# the cap pass and the hop-latch cap recheck below move sinks to a tap with room; with the rule on, a tap takes a sink (or a
+# whole unit / group) only if its sink box stays within W + H <= span, or does not grow.  Boxes are the instance locations of
+# the non-macro clock sinks in ct_by, rebuilt at the top of every pass and grown with each accepted move inside a pass.
+proc ct_span_fits {box pts span} {
+  if {$span <= 0} { return 1 }
+  if {$box eq {}} { set a0 {}; set b0 {}; set a1 {}; set b1 {} } else { lassign $box a0 b0 a1 b1 }
+  set x0 $a0; set y0 $b0; set x1 $a1; set y1 $b1
+  foreach p $pts {
+    lassign $p x y
+    if {$x0 eq {} || $x < $x0} { set x0 $x }; if {$x1 eq {} || $x > $x1} { set x1 $x }
+    if {$y0 eq {} || $y < $y0} { set y0 $y }; if {$y1 eq {} || $y > $y1} { set y1 $y }
+  }
+  if {$a0 ne {} && $x0 == $a0 && $y0 == $b0 && $x1 == $a1 && $y1 == $b1} { return 1 }
+  expr {($x1 - $x0) + ($y1 - $y0) <= $span}
+}
+proc ct_span_grow {box pts} {
+  if {$box eq {}} { set x0 {}; set y0 {}; set x1 {}; set y1 {} } else { lassign $box x0 y0 x1 y1 }
+  foreach p $pts {
+    lassign $p x y
+    if {$x0 eq {} || $x < $x0} { set x0 $x }; if {$x1 eq {} || $x > $x1} { set x1 $x }
+    if {$y0 eq {} || $y < $y0} { set y0 $y }; if {$y1 eq {} || $y > $y1} { set y1 $y }
+  }
+  list $x0 $y0 $x1 $y1
+}
+# CT_SPAN_END
+proc ct_span_pts {its} { set l {}; foreach it $its { lappend l [[$it getInst] getLocation] }; return $l }
+proc ct_span_init {by} {
+  set d {}
+  dict for {tap its} $by { dict set d $tap [ct_span_grow {} [ct_span_pts $its]] }
+  return $d
+}
+set ct_span 0
+if {[info exists ::env(OT_TAP_SPAN_UM)] && [string is double -strict $::env(OT_TAP_SPAN_UM)] && $::env(OT_TAP_SPAN_UM) > 0} {
+  set ct_span [expr {$::env(OT_TAP_SPAN_UM) * $ct_dbu}]
+  puts "OT_CLOCK_TAPS sink region rule: cap pass and cap recheck keep every receiving tap inside W+H <= $::env(OT_TAP_SPAN_UM) um"
+}
+set ct_span_refused 0
 if {[llength $ct_taps] >= 2} {
   set ct_by {}
   foreach tp $ct_taps {
@@ -508,6 +546,7 @@ if {[llength $ct_taps] >= 2} {
     }
     if {$over eq ""} break
     set on [lindex $over 0]
+    set ct_sbox [expr {$ct_span > 0 ? [ct_span_init $ct_by] : {}}]
     # KV-PC-DELTA-1115: opt-in OT_TAP_SPILL_UM: a tap that found no room within half a pitch retries with this reach
     set ct_lim [expr {$on in $ct_spilled ? $ct_spill : $ct_maxx}]
     set excess [expr {[llength [dict get $ct_by $on]] - $ct_cap}]
@@ -522,6 +561,7 @@ if {[llength $ct_taps] >= 2} {
         if {[lindex $tp 0] eq $on || [llength [dict get $ct_by [lindex $tp 0]]] >= $ct_cap} continue
         set d [expr {abs($x - [lindex $tp 2]) + abs($y - [lindex $tp 3]) - $d0}]
         if {[info exists ::env(OT_TAP_REASSIGN_UM)] && $d+$d0 > $ct_lim} continue
+        if {$ct_span > 0 && ![ct_span_fits [dict get $ct_sbox [lindex $tp 0]] [list [list $x $y]] $ct_span]} { incr ct_span_refused; continue }
         if {$best eq "" || $d < $bd} { set best $tp; set bd $d }
       }
       if {$best ne "" && $bd <= $ct_lim} { lappend cand [list $bd $it $best] }
@@ -548,6 +588,7 @@ if {[llength $ct_taps] >= 2} {
             }
             if {$far} continue
           }
+          if {$ct_span > 0 && ![ct_span_fits [dict get $ct_sbox [lindex $tp 0]] [ct_span_pts $its] $ct_span]} { incr ct_span_refused; continue }
           if {$d <= $ct_maxx && ($gbest eq "" || $d < $gbd)} { set gbest $g; set gbd $d; set gtgt $tp }
         }
       }
@@ -583,6 +624,11 @@ if {[llength $ct_taps] >= 2} {
       if {$n >= $excess || $n >= $room} break
       if {[lindex $c 2 0] ne $tn} continue
       set it [lindex $c 1]
+      if {$ct_span > 0} {
+        set ct_sp [ct_span_pts [list $it]]
+        if {![ct_span_fits [dict get $ct_sbox $tn] $ct_sp $ct_span]} { incr ct_span_refused; continue }
+        dict set ct_sbox $tn [ct_span_grow [dict get $ct_sbox $tn] $ct_sp]
+      }
       $it disconnect; $it connect [lindex $tgt 1]
       set keep [lsearch -all -inline -not -exact $keep $it]
       lappend add $it
@@ -590,6 +636,7 @@ if {[llength $ct_taps] >= 2} {
     }
     dict set ct_by $on $keep; dict set ct_by $tn $add
     incr ct_moves $n
+    if {$n == 0} { lappend ct_stuck $on; puts "OT_CLOCK_TAPS WARN $on keeps [llength $keep] sinks > cap $ct_cap: the sink region rule admits no further move" }
   }
   set l {}
   foreach tp $ct_taps { lappend l "[lindex $tp 0] [llength [dict get $ct_by [lindex $tp 0]]]" }
@@ -846,6 +893,7 @@ if {[llength $ct_taps] >= 2 && $ct_cap > 0} {
     }
     if {$over eq ""} break
     set on [lindex $over 0]
+    set ct_sbox [expr {$ct_span > 0 ? [ct_span_init $ct_by] : {}}]
     set excess [expr {[llength [dict get $ct_by $on]] - $ct_cap}]
     set cand {}
     foreach it [dict get $ct_by $on] {
@@ -863,6 +911,7 @@ if {[llength $ct_taps] >= 2 && $ct_cap > 0} {
         if {[lindex $tp 0] eq $on || [llength [dict get $ct_by [lindex $tp 0]]] + $sz > $ct_cap} continue
         set d [expr {abs($x - [lindex $tp 2]) + abs($y - [lindex $tp 3]) - $d0}]
         if {[info exists ::env(OT_TAP_REASSIGN_UM)] && $d+$d0 > $ct_maxx} continue
+        if {$ct_span > 0 && ![ct_span_fits [dict get $ct_sbox [lindex $tp 0]] [ct_span_pts $mem] $ct_span]} { incr ct_span_refused; continue }
         if {$best eq "" || $d < $bd} { set best $tp; set bd $d }
       }
       if {$best ne "" && $bd <= $ct_maxx} { lappend cand [list $bd $mem $best] }
@@ -881,6 +930,11 @@ if {[llength $ct_taps] >= 2 && $ct_cap > 0} {
       if {[lindex $c 2 0] ne $tn} continue
       set mem [lindex $c 1]
       if {[llength $mem] > $room - $n} continue
+      if {$ct_span > 0} {
+        set ct_sp [ct_span_pts $mem]
+        if {![ct_span_fits [dict get $ct_sbox $tn] $ct_sp $ct_span]} { incr ct_span_refused; continue }
+        dict set ct_sbox $tn [ct_span_grow [dict get $ct_sbox $tn] $ct_sp]
+      }
       foreach it $mem { $it disconnect; $it connect [lindex $tgt 1]; dict set gone $it 1 }
       incr n [llength $mem]
     }
@@ -888,6 +942,7 @@ if {[llength $ct_taps] >= 2 && $ct_cap > 0} {
     foreach it [dict get $ct_by $on] { if {![dict exists $gone $it]} { lappend keep $it } }
     dict set ct_by $on $keep; dict set ct_by $tn [concat [dict get $ct_by $tn] [dict keys $gone]]
     incr ct_rmv $n
+    if {$n == 0} { lappend ct_rstuck $on; puts "OT_CLOCK_TAPS WARN CAP_AFTER_HOP_LATCH $on keeps [llength $keep] sinks > cap $ct_cap: the sink region rule admits no further move" }
   }
   set ct_over {}
   foreach tp $ct_taps { set n [llength [dict get $ct_by [lindex $tp 0]]]; if {$n > $ct_cap} { lappend ct_over "[lindex $tp 0] $n" } }
