@@ -124,10 +124,11 @@ def chain_hops(points):
 
 
 WIDE_BITS = 256
-# CBC r713: one flat limit per hop (CBC.REACH_UM_PER_HOP = 300).  The 11-19 calibration on the pre-CBC 405-um plans
-# (>= 256-bit chains 405 x 1.085, narrower x 1.25) is kept for --legacy-reach only.
-WIDE_MARGIN = 1.0
-NARROW_MARGIN = 1.0
+# Reach is 405 um on PLACED hops (CBC.REACH_UM_PER_HOP; placed_hops.py measures it on 3_place.odb).  On PLAN
+# coordinates the limit carries the 11-19 calibration on 43 signed S81 types: widest signed hop on a >= 256-bit chain
+# 436.8 um (slice_station t27/t37) -> x 1.085; narrow chains up to 501.9 um (t37 ft7, 32 b) -> x 1.25.
+WIDE_MARGIN = 1.085
+NARROW_MARGIN = 1.25
 
 
 def reach_findings(t, reach=REACH_UM, margin=None):

@@ -159,7 +159,67 @@ def reg_class(sig):
     return re.sub(r"_\d+_", "_N_", s)[-80:]
 
 
+# the ORFS synth folds that matter: coarse synth (opt_dff, memory_dff absorbing read-data registers into the memory,
+# wreduce) then opt_merge.  proc + opt_merge alone does NOT fold the S81 leaf hig stations (8,200 -> 6 lost), the kit
+# netlist does (8,200 -> 2,048): being calibrated 11-19 on leaf t27 (kit 1_2_yosys.v).
+FOLD_PASSES = "synth -run coarse:fine\nmemory_map\nopt -full\nopt_merge -share_all\nopt_clean\n"
+
+
+def kit_inputs(kit_work):
+    """(verilog files, defines, liberty files, top) of a kit work dir's config.mk (/work -> kit_work): the kit's own
+    synthesis input set (bound RTL, real sub-module RTL, *_bb.v macro models, macro .lib), FABLE-FIX-S81-LEAF's method"""
+    kw = Path(kit_work)
+    cfg = (kw / "config.mk").read_text(errors="replace")
+
+    def var(n):
+        m = re.search(r"^export\s+" + n + r"\s*\??=\s*(.*)$", cfg, re.M)
+        return m.group(1).split() if m else []
+    fix = lambda f: str(kw / f[len("/work/"):]) if f.startswith("/work/") else f  # noqa: E731
+    files = [fix(f) for f in var("VERILOG_FILES")]
+    libs = [fix(f) for f in var("ADDITIONAL_LIBS")]
+    defs = [d for d in var("VERILOG_DEFINES") if d.startswith("-D")]
+    top = (var("DESIGN_NAME") or [None])[0]
+    return files, defs, libs, top
+
+
+def run_kit(a):
+    """FOLD on the kit's synthesis inputs: flops after proc/flatten vs after opt -full + opt_merge -share_all"""
+    work = Path(a.work)
+    work.mkdir(parents=True, exist_ok=True)
+    files, defs, libs, top = kit_inputs(a.kit_work)
+    tn = a.type or top
+    pre, post, dpre, dpost, ltp = (work / f"{tn}.{k}" for k in ("pre.stat", "post.stat", "pre.il", "post.il", "ltp.txt"))
+    ys = work / f"{tn}.kit.ys"
+    d = " ".join(defs)
+    ys.write_text("".join(f"read_liberty -lib {f}\n" for f in libs)
+                  + f"read_verilog -sv {d} " + " ".join(files) + "\n"
+                  + f"hierarchy -top {top}\nproc\nflatten\nopt_clean\ntee -q -o {pre} stat\nselect -set ff t:$*dff*\n"
+                  f"tee -q -o {dpre} dump @ff\n{FOLD_PASSES}tee -q -o {post} stat\n"
+                  f"select -set ff2 t:$*dff*\ntee -q -o {dpost} dump @ff2\n"
+                  + ("" if a.no_depth else f"synth -flatten -run coarse:\nabc -g AND,NAND,OR,NOR,XOR,XNOR,MUX\nopt_clean\ntee -q -o {ltp} ltp -noff\n"))
+    r = subprocess.run([a.yosys, "-q", "-s", str(ys)], capture_output=True, text=True, timeout=a.timeout)
+    return finish(a, tn, work, r, dpre, dpost, ltp, mode="kit")
+
+
+def finish(a, tn, work, r, dpre, dpost, ltp, mode):
+    rec = dict(type=tn, mode=mode, rc=r.returncode, err=(r.stderr or "")[-400:])
+    if r.returncode == 0:
+        b0, b1 = dff_bits_by_name(dpre), dff_bits_by_name(dpost)
+        lost = {k: b0[k] - b1.get(k, 0) for k in b0 if b0[k] > b1.get(k, 0)}
+        rec.update(dff_bits_pre=sum(b0.values()), dff_bits_post=sum(b1.values()),
+                   fold_classes=sorted(lost.items(), key=lambda kv: -kv[1])[:20])
+        if ltp.is_file():
+            ls = [int(x) for x in re.findall(r"Longest topological path in \S+ \(length=(\d+)\)", ltp.read_text())]
+            rec["depth_generic"] = max(ls) if ls else None
+            rec["depth_limit"] = a.depth_limit
+    (work / f"{tn}.synth.json").write_text(json.dumps(rec, indent=1))
+    print(json.dumps({k: rec.get(k) for k in ("type", "mode", "rc", "dff_bits_pre", "dff_bits_post", "depth_generic")}))
+    return 0 if r.returncode == 0 else 1
+
+
 def run(a):
+    if a.kit_work:
+        return run_kit(a)
     bo = Path(a.bind_out)
     work = Path(a.work)
     work.mkdir(parents=True, exist_ok=True)
@@ -173,7 +233,7 @@ def run(a):
     reads = f"read_verilog -sv {stub}\n" + (f"read_verilog -sv {cells}\n" if cells.is_file() else "") + f"read_verilog -sv {sv}\n"
     ys = work / f"{a.type}.ys"
     ys.write_text(reads + f"hierarchy -top {top}\nproc\nflatten\nopt_clean\ntee -q -o {pre} stat\nselect -set ff t:$*dff*\n"
-                  f"tee -q -o {dpre} dump @ff\nopt -full\nopt_merge -share_all\nopt_clean\ntee -q -o {post} stat\nselect -set ff2 t:$*dff*\n"
+                  f"tee -q -o {dpre} dump @ff\n{FOLD_PASSES}tee -q -o {post} stat\nselect -set ff2 t:$*dff*\n"
                   f"tee -q -o {dpost} dump @ff2\n"
                   + ("" if a.no_depth else f"synth -flatten -run coarse:\nabc -g AND,NAND,OR,NOR,XOR,XNOR,MUX\nopt_clean\ntee -q -o {ltp} ltp -noff\n"))
     r = subprocess.run([a.yosys, "-q", "-s", str(ys)], capture_output=True, text=True, timeout=a.timeout)
@@ -194,8 +254,9 @@ def run(a):
 
 def main(argv=None):
     ap = argparse.ArgumentParser()
-    ap.add_argument("--bind-out", required=True)
-    ap.add_argument("--type", required=True)
+    ap.add_argument("--bind-out", default="")
+    ap.add_argument("--kit-work", default="", help="a kit work dir (config.mk): synthesise the kit's own input set")
+    ap.add_argument("--type", default="")
     ap.add_argument("--work", required=True)
     ap.add_argument("--yosys", default=YOSYS)
     ap.add_argument("--no-depth", action="store_true")

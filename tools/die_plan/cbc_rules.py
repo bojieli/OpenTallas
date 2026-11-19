@@ -3,7 +3,9 @@
 
 Units: um, clock sinks, flops, logic levels.  ASAP7, 833 ps clock.
 """
-REACH_UM_PER_HOP = 300.0        # longest Manhattan wire between two registers (station hop, ft hop, pin -> first register)
+REACH_UM_PER_HOP = 405.0        # FABLE-CLOSURE-STRATEGY 11-19 02:00 (amends r713's 300): longest Manhattan distance between
+                                # launch and capture register of any leg, measured on PLACED hops (placed_hops.py on
+                                # 3_place.odb, every leg incl. undeclared ones); plan coordinates are an estimate of it
 DEPTH_LEVELS_TARGET = 12        # logic levels per register D cone the generator aims for
 DEPTH_LEVELS_MAX = 13           # above this a cone is flagged
 TAP_MAX_SINKS = 1000            # clock sinks per tap (a plan's lower clock.tap_max_sinks wins)
@@ -13,6 +15,9 @@ BOUNDARY_REG_UM = 50.0          # every block port has a register within this di
 AIM_MIN_BIT_FRAC = 0.10         # a receiver chain aimed at a capture holding < 10 % of the bus bits is mis-aimed
 AIM_MIN_BITS = 64               # ... checked on buses of at least this width
 SINK_BINS_STALE_FRAC = 0.10     # plan sink bins vs the newest kit sink count
+TAP_SKEW_PASS_PS = 60.0         # in-tap skew (sink latency spread within one tap): < 60 ps 58 of 111 kits closed
+TAP_SKEW_FAIL_PS = 100.0        # >= 100 ps: 0 of 23 closed (FABLE-CLOSURE-STRATEGY 11-19)
+TAP_SKEW_PS_PER_UM = 0.25       # estimate: skew ~ this x the spread (p98 - p2) of sink distance to the tap; UNCALIBRATED
 
 
 def rules():

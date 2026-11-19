@@ -24,10 +24,9 @@ def test_reach_flags_long_station_hop_only():
         {"conn": "bus:b", "bits": 8, "from_um": [0, 0], "regs_um": [[100, 0]], "to_um": [100, 500]}]}   # hop 500
     f = PC.reach_findings(t, 405, margin=1.0)
     assert len(f) == 1 and f[0][0] == 500 and "bus:b" in f[0][1]
-    f = PC.reach_findings(t)                                # CBC r713: 300 um per hop, any width
-    assert len(f) == 1 and f[0][0] == 500
-    t["internal_stations"][0]["regs_um"] = [[310, 0]]
-    assert len(PC.reach_findings(t)) == 2
+    assert PC.reach_findings(t) == []                       # plan coordinates: an 8-bit chain may hop up to 506 um
+    t["internal_stations"][1]["bits"] = 512
+    assert len(PC.reach_findings(t)) == 1                   # a 512-bit chain only up to 439 um
 
 
 def test_reach_ft_slot_uses_window_centres_and_regs():
@@ -170,8 +169,9 @@ def test_stale_bins_flags_kit_count_far_from_plan_bins(tmp_path):
 
 def test_cbc_rules_shared_constants():
     import cbc_rules as CBC
-    assert (CBC.REACH_UM_PER_HOP, CBC.TAP_MAX_SINKS, CBC.RESET_LEAF_MAX_FANOUT, CBC.BOUNDARY_REG_UM, CBC.DEPTH_LEVELS_MAX) == (300.0, 1000, 32, 50.0, 13)
-    assert PC.REACH_UM == 300.0 and PC.TAP_CAP == 1000 and PC.RESET_LEAF == 32
+    assert (CBC.REACH_UM_PER_HOP, CBC.TAP_MAX_SINKS, CBC.RESET_LEAF_MAX_FANOUT, CBC.BOUNDARY_REG_UM, CBC.DEPTH_LEVELS_MAX) == (405.0, 1000, 32, 50.0, 13)
+    assert (CBC.TAP_SKEW_PASS_PS, CBC.TAP_SKEW_FAIL_PS) == (60.0, 100.0)
+    assert PC.REACH_UM == 405.0 and PC.TAP_CAP == 1000 and PC.RESET_LEAF == 32
 
 
 def test_boundary_unregistered_ports():
@@ -183,3 +183,31 @@ def test_boundary_unregistered_ports():
 def test_reset_leaf_fanout_over_cbc():
     assert PC.reset_findings({"reset": {"max_fanout": 64, "relay_um": 100}})[0][0] == 64
     assert PC.reset_findings({"reset": {"max_fanout": 32, "relay_um": 100}}) == []
+
+
+def test_synth_kit_inputs_map_work_paths(tmp_path):
+    import precheck_synth as PS
+    (tmp_path / "config.mk").write_text("export DESIGN_NAME = top_t1\nexport VERILOG_FILES = /work/rtl/a.sv /work/rtl/b_bb.v\n"
+                                        "export VERILOG_DEFINES = -DSYNTHESIS -DX\nexport ADDITIONAL_LIBS = /work/macros/m_tt.lib\n")
+    files, defs, libs, top = PS.kit_inputs(tmp_path)
+    assert files == [str(tmp_path / "rtl/a.sv"), str(tmp_path / "rtl/b_bb.v")] and libs == [str(tmp_path / "macros/m_tt.lib")]
+    assert defs == ["-DSYNTHESIS", "-DX"] and top == "top_t1"
+
+
+def test_kit_scan_tap_assign_skew_and_class():
+    import kit_scan as KS
+    taps = [("clk", 0.0, 0.0), ("clk_t1", 100.0, 0.0)]
+    regs = [(1.0, 0.0)] * 5 + [(90.0, 0.0)] * 3
+    m = KS.assign_taps(taps, regs, 4, 200.0)
+    assert len(m["clk"]) == 4 and len(m["clk_t1"]) == 4
+    assert KS.skew_estimate([0.0] * 10 + [400.0] * 10) == 100.0
+    assert KS.reg_class("g_u_lf0_u_vp_g_ln_3_u_cst_hi_gd_s_0_u_src_bdbec6ef94848d02f109_q\\[65\\]$_DFF_P_") == "g_u_lf0_u_vp_g_ln_N_u_cst_hi_gd_s_N_u_src_H_q"
+    assert KS.kit_type("/x/ot_s81sl_leaf__t27-route-civil-redfish-2152390-1795068054") == "ot_s81sl_leaf__t27"
+
+
+def test_fold_scan_declared_vs_netlist():
+    import fold_scan as FS
+    dec = FS.declared(["reg [255:0] g_u_vp_g_hig_0_u_cst_gd_s_0_u_src_abcdef0123456789_q;\nreg [255:0] g_u_vp_g_hig_1_u_cst_gd_s_0_u_src_abcdef0123456789_q;\n"])
+    assert dec["g_u_vp_g_hig_N_u_cst_gd_s_N_u_src_H_q"] == 512
+    nl = "".join(f"  DFFHQNx1_ASAP7_75t_R \\\\u_bound.g_u_vp_g_hig_0_u_cst_gd_s_0_u_src_abcdef0123456789_q[{i}]$_DFF_P_ (\n" for i in range(128))
+    assert FS.netlist_flops(nl)["g_u_vp_g_hig_N_u_cst_gd_s_N_u_src_H_q"] == 128
