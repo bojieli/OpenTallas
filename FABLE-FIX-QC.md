@@ -1,0 +1,1 @@
+- LEVER 6 11-19: ft congestion row analysis (FABLE-FIX-QC-rows-ftcongestion-n46d.json, sites not final); coll_ftc ring ends = mux 270 um from both flops (placement), no RTL change.

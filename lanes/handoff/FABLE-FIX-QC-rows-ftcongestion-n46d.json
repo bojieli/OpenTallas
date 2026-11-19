@@ -1,0 +1,77 @@
+{
+ "schema": "SONNET-FIX-QC-rows-ftcongestion.v1",
+ "for": "QC-PLAN-R3 (N4.6d)",
+ "date": "2026-11-19",
+ "type": "sle_st_a_v2 family (pk_sta3 pvd2ec7769, outline 622.08 x 1339.2)",
+ "status": "ANALYSIS + RECOMMENDED ROW, sites NOT final: needs ft_channel_route (QC-PLAN-R3 tool); no free column proven by me",
+ "box_um": [
+  450,
+  320,
+  615,
+  645
+ ],
+ "measured": {
+  "guide_rects_in_box_pre_repair": {
+   "total_other_nets": 11865,
+   "ft_x_fw_ctl_o": 2746,
+   "ft_x_ctl_fw_o": 1564,
+   "same_bus_cland_b_tw_data_i": 891,
+   "b_tw_data_i_q": 577,
+   "u_bin_internal": 2449
+  },
+  "removing_both_ft_buses_takes_out_rects": 4310,
+  "leftover_rects": 7555,
+  "leftover_share": "64 %",
+  "layers": "M2 29936 / M3 17656 / M4 10118 / M5 6899 / M6 4952 / M7 2258 rects in box"
+ },
+ "geometry_from_plan": {
+  "x_fw_ctl": {
+   "bits": 536,
+   "in": "S",
+   "out": "E y 622.8-715.6",
+   "stations_um": [
+    [
+     522.1,
+     1.0
+    ],
+    [
+     522.1,
+     256.7
+    ],
+    [
+     522.1,
+     512.4
+    ]
+   ],
+   "note": "column x=522 runs N-S through the whole box"
+  },
+  "x_ctl_fw": {
+   "bits": 631,
+   "in": "E",
+   "out": "S x 275.6-384.8",
+   "stations_um": [
+    [
+     621.1,
+     519.9
+    ],
+    [
+     405.0,
+     466.9
+    ],
+    [
+     330.2,
+     271.0
+    ]
+   ],
+   "note": "crosses the box W at y 467-520"
+  },
+  "other_in_box": "hard cores btb g_btb[0] (449.3,328.3)+[94.8x41.1], g_btb[1] (449.3,449.3), cl_b_tw_data_i (561.6,276.5)+[45.4x186.2]; b_tw_data_i landing E face window y 277.5-464.4 enters the box from the east",
+  "cws0": "516-bit ft runs N->S diagonal x 322-430, so the west side column x 322-430 is also an ft channel; b_hw_ctl_hc0 at x 140"
+ },
+ "recommended_row": "re-site x_fw_ctl stations 1-2 from x=522 (through the btb macros / b_tw_data_i landing) to the free column x 240-300 (west of cws0, east of b_hw_ctl_hc0 x=140): stations (300,257) (300,512) plus one added station for the 405 um hop limit from the S pin (522,1): e.g. (400,120); then out along y~640 to the E window. Price: removes 2,746 of 11,865 guide rects (23 %) from the box; hop budget +1 station (+1 cycle on x_fw_ctl lane). x_ctl_fw cannot leave the box (E face in, S face out is geometry): move its stations north of y 520 only if the b_tw_data_i landing window can move off y 277-464 (E face has x_st_b_o y 719-832 and x_ctl_o y 575-622 occupied; window y 465-575 is the only free E stretch).",
+ "leftover_demand": "estimate from guide rect counts, NOT a track map: ~64 % of the box demand stays (same-bus 3,917 + u_bin 2,449 + other). The b_tw_data_i bits that detoured (3 of 1,080 read) used M2/M3; the station on b_tw_data_i (relay_sites at the midpoint of landing -> bin) spreads 1,080 nets over 2 hops. Not priced in tracks.",
+ "not_verified": [
+  "no ft_channel_route run, no GRT with the moved stations, core clearance of (300,257) (300,512) (400,120) only checked by eye against the cores list",
+  "effect on the 3 nets is unproven: proof needs a GRT-stage kit with the new plan (r712)"
+ ]
+}
