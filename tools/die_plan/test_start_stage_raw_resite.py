@@ -31,7 +31,7 @@ def test_plan_roundtrip(tmp_path):
     plan = {"partition_types": {"t": {"clock": {"landing_writer_start": {"depth": 2, "branches": {"ft0_o": {"stages": [
         {"xy_um": [4.32, 249.536], "raw_reset": "rst_n_t7"}, {"xy_um": [4.32, 20.064], "raw_reset": "rst_n_t74"}]}}}}}}}
     p = tmp_path / "plan.json"; p.write_text(json.dumps(plan, indent=2))
-    b = tmp_path / "rtl"; b.mkdir(); (b / "t_part.reset_tree.json").write_text(json.dumps(TREE))
+    b = tmp_path / "rtl"; b.mkdir(); (b / "t_part.reset_tree.json").write_text(json.dumps(dict(TREE, plan_type="t")))
     (b / "t_part.sv").write_text("assign rst_o_0 = rst_n_t2;\n")
     out, rep = tmp_path / "o.json", tmp_path / "r.json"
     assert S.main([str(p), str(b), "--out", str(out), "--report", str(rep)]) == 0
