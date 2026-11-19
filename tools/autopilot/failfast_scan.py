@@ -20,7 +20,7 @@ import zlib
 HERE = os.path.dirname(os.path.abspath(__file__))
 RULES = os.path.join(HERE, "..", "..", "physical", "common_flow", "failfast_rules.py")
 HOSTSCAN = os.path.join(HERE, "failfast_hostscan.py")
-DEFAULT_HOSTS = "epyc2,epyc4,epyc7,epyc8,epyc9,intel1"
+DEFAULT_HOSTS = "epyc2,epyc7,epyc8,epyc9,epyc10,intel1"   # epyc4 terminated
 
 
 def payload():

@@ -19,7 +19,7 @@ import zlib
 from concurrent.futures import ThreadPoolExecutor
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-HOSTS = "epyc2,epyc4,epyc7,epyc8,epyc9,intel1"
+HOSTS = "epyc2,epyc7,epyc8,epyc9,epyc10,intel1"   # epyc4 terminated (11-13), epyc10 added 11-19
 LIVE_JOB = ("RUNNING", "LAUNCHING", "ENQUEUED", "WAIT-DEP", "WAIT-GEOM", "WAIT-PARENT")
 GENERIC = {"work", "gen", "run", "items", "kit-wave", "runs", "kits", "claude", "srv", "ot-jobs", "attempt", "base", "tmp"}
 SELF_TAGS = ("AUTOPILOT", "KIT-WAVE", "DISK-", "FAILFAST-1", "VERDICT-TRIAGE", "WATCHDOG", "COORD")
