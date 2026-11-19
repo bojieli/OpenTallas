@@ -68,6 +68,10 @@ import sys
 import time
 from pathlib import Path
 
+# python3 -I does not put the script directory on sys.path: the sibling modules below (and every CLI subcommand) need it
+if str(Path(__file__).resolve().parent) not in sys.path:
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+
 import plan_block_identity as BI
 import kit_resume as KR
 import tool_skew as TS

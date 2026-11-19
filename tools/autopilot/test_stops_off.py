@@ -740,3 +740,17 @@ class UnclassifiedFail(unittest.TestCase):
             self.assertEqual(KW.classify_fail_cmd(ns), 0)
             st = _j.loads(Path(tmp, KW.STATE_FILE).read_text())
             self.assertEqual((st["items"]["a"]["class"], st["items"]["b"]["class"]), ("PLAN", "UNCLASSIFIED"))
+
+
+class CliUnderIsolatedPython(unittest.TestCase):
+    """COORD 11-18: the kit_wave.py CLI subcommands run under python3 -I (no script dir on sys.path)"""
+
+    def test_classify_fail_runs_with_dash_I(self):
+        import subprocess, tempfile, json as _j
+        with tempfile.TemporaryDirectory() as tmp:
+            Path(tmp, KW.STATE_FILE).write_text(_j.dumps({"items": {"a": {"die": "s81", "item": "t1", "status": "FAIL", "class": "UNCLASSIFIED", "attempt": 1}}}))
+            p = subprocess.run([sys.executable, "-I", KW.__file__, "classify-fail", "--die", "s81", "--item", "t1", "--class", "PLAN", "--ap-dir", tmp],
+                               capture_output=True, text=True, timeout=120, cwd="/")
+            self.assertEqual(p.returncode, 0, p.stderr[-400:])
+            self.assertIn("1 UNCLASSIFIED row(s)", p.stdout)
+            self.assertEqual(_j.loads(Path(tmp, KW.STATE_FILE).read_text())["items"]["a"]["class"], "PLAN")
