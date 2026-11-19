@@ -281,7 +281,8 @@ def probe_base(b, live):
             except Exception: n = None
             cg.append([int(m.group(1)), n, mt(f)])
     o["congestion"] = sorted(cg)
-    for r in ("4_cts_final.rpt", "3_detailed_place.rpt"):
+    # 4_cts_final.rpt is written BEFORE the tap balance (cts_post hooks): prefer 4_cts_post_hook.rpt (01c4b1e891d), else the GRT report, then placement
+    for r in ("4_cts_post_hook.rpt", "5_1_grt.rpt", "4_cts_final.rpt", "3_detailed_place.rpt"):
         if os.path.exists(rep + "/" + r):
             o["worst"] = dict(report=r, paths=worst_paths(rep + "/" + r)); break
     return o

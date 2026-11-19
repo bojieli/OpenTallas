@@ -1224,7 +1224,9 @@ SCHEMA = {
                                          # at T/2 (landing_contract.ring_input_sdc); the real arrival is priced in die STA
                                          "ft_ring_max_ps": {"type": "number", "exclusiveMinimum": 0}}},
             "seam_hold": {"type": "object", "additionalProperties": False, "required": ["sender_ps", "seam_ps"],
-                          "properties": {"sender_ps": _nonneg, "seam_ps": _nonneg, "note": {"type": "string"}}},
+                          "properties": {"sender_ps": _nonneg, "seam_ps": _nonneg, "note": {"type": "string"},
+                                         # FABLE-PD-STRUCT-1840: {fnmatch type pattern: seam_ps} receiver override, falls back to seam_ps
+                                         "by_type": {"type": "object", "additionalProperties": _nonneg}}},
             # IO-HOLD option A (COORD 10-25 10:23, opt-in; gen_phys.input_hold_min): "sender_min" = each partition
             # input's min input delay is its driving partition's guaranteed output-min, the related tap pair skew is
             # checked at the parent (io_hold_parent.py); "legacy" / absent = the flat contract above

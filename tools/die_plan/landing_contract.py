@@ -584,7 +584,7 @@ def ring_input_sdc(P,tn):
             # STA already captures at the fall T/2 later, so the max stays the IO budget (real internal budget T/2 -
             # budget).  The old 'mx -= T/2' restored full-cycle slack: HEAD hd_turn_a kit fstart -max -249.9 passed
             # locally while the real parent (tile_p tW0o10 -> turn_a) measured TT -55.8 (kit at +166.6: ~-50).
-            mn=A[bus]["in_min_ps"] if bus in A else G.hold_in_min_ps(P)
+            mn=A[bus]["in_min_ps"] if bus in A else G.hold_in_min_ps(P, tn)
             if rh is not None:mn=ring_sender_ps(P,tn)   # measured sender guarantee (die-wide or per receiver type)
             out.append(f"set_input_delay -max {mx:.4f} -clock {ck} [get_ports {{{s}}}]")
             out.append(f"set_input_delay -min {G.t_lib(mn):.4f} -clock {ck} [get_ports {{{s}}}]")
