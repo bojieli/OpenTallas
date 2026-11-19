@@ -17,7 +17,60 @@ GATES={'$_AND_':'A & B','$_OR_':'A | B','$_XOR_':'A ^ B','$_XNOR_':'~(A ^ B)',
 FFS={'$_DFF_P_','$_DFF_PN0_','$_DFF_PP0_','$_DFF_PN1_','$_DFF_PP1_',
      '$_SDFF_PN0_','$_SDFF_PP0_','$_SDFF_PN1_','$_SDFF_PP1_'}
 
-def build(raw,top,new,drop=(),collapse=False,load_cap=32,transparent_inverters=False,retain_mux=False,shared_helpers=False,retain_bits=(),retain_all_comb=False,fuse_ao=False,retain_keep=False):
+def balance_chains(cells,ports,nextbit,types=('$_OR_','$_AND_','$_XOR_')):
+ """Re-associate single-consumer chains of one associative gate (OR/AND/XOR) into a balanced tree: same function, same
+ cycles, depth ceil(log2 leaves) instead of leaves-1 (glue u_record: 8 serial OR2 behind an XOR layer, -130 ps TT).
+ Only an interior node with exactly one user and no port use is absorbed.  -> (nextbit, trees rebuilt, gates re-wired)"""
+ users=Counter();producer={}
+ for n,c in cells.items():
+  for q,bs in c['connections'].items():
+   for b in bs:
+    if c['port_directions'][q]=='output':producer[b]=n
+    else:users[b]+=1
+ for q in ports.values():
+  if q['direction']=='output':users.update(q['bits'])
+ def interior(b,typ):
+  n=producer.get(b)
+  return n if n is not None and users[b]==1 and cells[n]['type']==typ else None
+ trees=0;rewired=0;done=set()
+ for n,c in list(cells.items()):
+  typ=c['type']
+  if typ not in types or n in done or n not in cells:continue
+  yb=c['connections']['Y'][0]
+  # a root = a gate that is not itself the single-user interior input of a same-type gate
+  if any(cells[u]['type']==typ and yb in cells[u]['connections']['A']+cells[u]['connections']['B'] for u in cells if u!=n) and users[yb]==1:continue
+  leaves=[];absorbed=[];stack=[n]
+  while stack:
+   g=stack.pop();absorbed.append(g)
+   for pin in ('B','A'):
+    b=cells[g]['connections'][pin][0];sub=interior(b,typ)
+    if sub is not None and sub not in absorbed:stack.append(sub)
+    else:leaves.append(b)
+  if len(leaves)<4:continue
+  depth_old=0
+  # chain depth of the old tree
+  def dep(g):
+   return 1+max([dep(interior(cells[g]['connections'][pin][0],typ)) if interior(cells[g]['connections'][pin][0],typ) is not None else 0 for pin in ('A','B')])
+  depth_old=dep(n)
+  import math
+  if depth_old<=math.ceil(math.log2(len(leaves))):continue
+  for g in absorbed:
+   done.add(g)
+   if g!=n:del cells[g]
+  level=list(leaves);k=0
+  while len(level)>2:
+   nxt=[]
+   for i in range(0,len(level)-1,2):
+    nb=nextbit;nextbit+=1;k+=1
+    cells[f'{n}__bal{k}']={'type':typ,'connections':{'A':[level[i]],'B':[level[i+1]],'Y':[nb]},'port_directions':{'A':'input','B':'input','Y':'output'}}
+    nxt.append(nb)
+   if len(level)%2:nxt.append(level[-1])
+   level=nxt
+  c['connections']['A']=[level[0]];c['connections']['B']=[level[1]]
+  trees+=1;rewired+=len(absorbed)
+ return nextbit,trees,rewired
+
+def build(raw,top,new,drop=(),collapse=False,load_cap=32,transparent_inverters=False,retain_mux=False,shared_helpers=False,retain_bits=(),retain_all_comb=False,fuse_ao=False,retain_keep=False,balance=False):
  if not 1 <= load_cap <= 32:raise ValueError("load_cap must be1..32")
  design=json.loads(raw);m=copy.deepcopy(design['modules'][top]);cells=m['cells'];ports=m['ports']
  # --retain-keep (QW-SLICE7 10-20): every (* keep *) net of the flattened source (e.g. the Kogge-Stone prefix levels of
@@ -80,6 +133,9 @@ def build(raw,top,new,drop=(),collapse=False,load_cap=32,transparent_inverters=F
  removed=len(cells)-len(live);cells={n:c for n,c in cells.items() if n in live}
  unused_inputs=[n for n,p in ports.items() if p['direction']=='input' and not any(b in seen for b in p['bits'])]
  for n in unused_inputs:del ports[n]
+ balanced=(0,0)
+ if balance:
+  nextbit,t_,r_=balance_chains(cells,ports,nextbit);balanced=(t_,r_)
  pre_fusion_cells=len(cells);ao_fusions=0
  if fuse_ao:
   # One-consumer boolean pairs become one retained complex operator. This
@@ -267,9 +323,9 @@ def build(raw,top,new,drop=(),collapse=False,load_cap=32,transparent_inverters=F
    event='posedge C' if typ.startswith('$_SDFF') else f'posedge C or {edge} R'
    h.append(f"always @({event}) if({test}) Q<=1'b{val};else Q<=D;")
   h.append('endmodule');helpers.append('\n'.join(h))
- return '\n'.join(lines)+'\n',helpers,dict(**extras,source_synth_cells_before_fusion=pre_fusion_cells,fused_ao_pairs=ao_fusions,original_cells=original,original_by_type=original_types,final_by_type=dict(Counter(c['type'] for c in cells.values())),unconsumed_cells_removed=removed,dropped_outputs=list(drop),unused_inputs_removed=unused_inputs,holding_chain_count=len(delay_chains),holding_ring_groups=ring_groups,actual_final_rings=[{'W':c['width'],'D':c['depth']} for c in cells.values() if c['type']=='$_QFD_RING_'],ring_input_load_contract='D%3==0 writer4slots=>4loads/bit; otherwise one prefix D; R drives one local reset branch',retention='FF cells and added combinational cone copies retain hierarchy; ordinary logic stays available for native technology mapping',transparent_inverters=transparent_inverters,retain_mux=retain_mux,shared_helpers=shared_helpers,final_cells=len(cells),added_by_type=dict(added),passes=iteration,input_sha256=hashlib.sha256(raw).hexdigest(),max_data_reset_loads=32,internal_load_cap=load_cap,input_load_cap=32,clock_only_excluded=True,output_boundary_assumptions={'valid_rep_each':16,'valid_out':5,'data_error_each':1},qualification='STRUCTURAL_CONSTRUCTION_ONLY; exact equivalence and mapped clocks/timing/area required')
+ return '\n'.join(lines)+'\n',helpers,dict(**extras,source_synth_cells_before_fusion=pre_fusion_cells,fused_ao_pairs=ao_fusions,balanced_trees=balanced[0],balanced_gates=balanced[1],original_cells=original,original_by_type=original_types,final_by_type=dict(Counter(c['type'] for c in cells.values())),unconsumed_cells_removed=removed,dropped_outputs=list(drop),unused_inputs_removed=unused_inputs,holding_chain_count=len(delay_chains),holding_ring_groups=ring_groups,actual_final_rings=[{'W':c['width'],'D':c['depth']} for c in cells.values() if c['type']=='$_QFD_RING_'],ring_input_load_contract='D%3==0 writer4slots=>4loads/bit; otherwise one prefix D; R drives one local reset branch',retention='FF cells and added combinational cone copies retain hierarchy; ordinary logic stays available for native technology mapping',transparent_inverters=transparent_inverters,retain_mux=retain_mux,shared_helpers=shared_helpers,final_cells=len(cells),added_by_type=dict(added),passes=iteration,input_sha256=hashlib.sha256(raw).hexdigest(),max_data_reset_loads=32,internal_load_cap=load_cap,input_load_cap=32,clock_only_excluded=True,output_boundary_assumptions={'valid_rep_each':16,'valid_out':5,'data_error_each':1},qualification='STRUCTURAL_CONSTRUCTION_ONLY; exact equivalence and mapped clocks/timing/area required')
 
 def main():
- p=argparse.ArgumentParser();p.add_argument('json');p.add_argument('--top',required=True);p.add_argument('--name',required=True);p.add_argument('--out',required=True);p.add_argument('--helpers',required=True);p.add_argument('--record',required=True);p.add_argument('--drop-output',action='append',default=[]);p.add_argument('--collapse-delays',action='store_true');p.add_argument('--load-cap',type=int,default=32);p.add_argument('--transparent-inverters',action='store_true');p.add_argument('--retain-mux',action='store_true');p.add_argument('--shared-helpers',action='store_true');p.add_argument('--retain-bit',type=int,action='append',default=[]);p.add_argument('--retain-all-comb',action='store_true');p.add_argument('--fuse-ao',action='store_true');p.add_argument('--retain-keep',action='store_true');a=p.parse_args()
- s,h,r=build(Path(a.json).read_bytes(),a.top,a.name,a.drop_output,a.collapse_delays,a.load_cap,a.transparent_inverters,a.retain_mux,a.shared_helpers,a.retain_bit,a.retain_all_comb,a.fuse_ao,a.retain_keep);r['retained_driver_bits']=a.retain_bit;r['retained_all_combinational_operators']=a.retain_all_comb;r['retained_keep_nets']=a.retain_keep;Path(a.out).write_text(s);Path(a.helpers).write_text('\n'.join(h)+'\n');Path(a.record).write_text(json.dumps(r,indent=2)+'\n');print(json.dumps(r,indent=2))
+ p=argparse.ArgumentParser();p.add_argument('json');p.add_argument('--top',required=True);p.add_argument('--name',required=True);p.add_argument('--out',required=True);p.add_argument('--helpers',required=True);p.add_argument('--record',required=True);p.add_argument('--drop-output',action='append',default=[]);p.add_argument('--collapse-delays',action='store_true');p.add_argument('--load-cap',type=int,default=32);p.add_argument('--transparent-inverters',action='store_true');p.add_argument('--retain-mux',action='store_true');p.add_argument('--shared-helpers',action='store_true');p.add_argument('--retain-bit',type=int,action='append',default=[]);p.add_argument('--retain-all-comb',action='store_true');p.add_argument('--fuse-ao',action='store_true');p.add_argument('--balance-chains',action='store_true');p.add_argument('--retain-keep',action='store_true');a=p.parse_args()
+ s,h,r=build(Path(a.json).read_bytes(),a.top,a.name,a.drop_output,a.collapse_delays,a.load_cap,a.transparent_inverters,a.retain_mux,a.shared_helpers,a.retain_bit,a.retain_all_comb,a.fuse_ao,a.retain_keep,a.balance_chains);r['retained_driver_bits']=a.retain_bit;r['retained_all_combinational_operators']=a.retain_all_comb;r['retained_keep_nets']=a.retain_keep;Path(a.out).write_text(s);Path(a.helpers).write_text('\n'.join(h)+'\n');Path(a.record).write_text(json.dumps(r,indent=2)+'\n');print(json.dumps(r,indent=2))
 if __name__=='__main__':main()
