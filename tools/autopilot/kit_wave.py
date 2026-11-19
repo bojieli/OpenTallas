@@ -3339,7 +3339,7 @@ def inflight(state, die=None):
 
 def capacity(cfg, die, state, status, hub="intel2", launched_now=0):
     """number of items this die may launch now"""
-    hosts = [("localhost" if h == hub else h) for h in opt(cfg, die, "hosts")]
+    hosts = [h for h in opt(cfg, die, "hosts") if h not in (hub, "localhost")]      # NOLOCALHOST-1119: the hub (ot-run \"localhost\") takes no kit, whatever the die hosts list says
     mem = int(opt(cfg, die, "place_mem_gb"))
     # OWNER 11-01 (COORD 05:3x): queue_fill keeps the ot-run queue full (waiters > 0 on every host): launch whether or
     # not a host admits the place request now; the item waits in ot-run (memory admission) instead of in the planner
