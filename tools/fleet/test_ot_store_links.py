@@ -45,3 +45,14 @@ def test_absolute_link_to_sibling_with_common_prefix_is_refused(tmp_path):
     (root / "x").symlink_to(tmp_path / "W2" / "f")
     with pytest.raises(S.StoreError, match="leaves the tree"):
         S.put_tree(str(store), str(root))
+
+
+def test_primary_store_file_reorders_the_default_only(tmp_path):
+    import ot_store as OS
+    st = ("/a/ot-store", "/b/ot-store")
+    f = tmp_path / "primary"
+    assert OS._ordered_stores(st, str(f)) == st                              # no file: unchanged
+    f.write_text("/b/ot-store\n")
+    assert OS._ordered_stores(st, str(f)) == ("/b/ot-store", "/a/ot-store")  # the named store first
+    f.write_text("/c/other\n")
+    assert OS._ordered_stores(st, str(f)) == st                              # a path that is not a known store is ignored

@@ -58,7 +58,20 @@ REF_SCHEMA = "opentallas.ot_store.ref.v1"
 KEEP_YOUNG_S = 24 * 3600            # OWNER 11-08: hosts volatile, every hold/lifetime is 24 h
 RECORD_AGE_S = float(os.environ.get("OT_STORE_RECORD_AGE_H", "48")) * 3600   # 11-18 (COORD, owner aggressive cleanup): an artifact record older than this no longer keeps its tree
 LOCK_NAME = ".gc.lock"
-SCRATCH_STORES = ("/srv/opentallas-scratch2/ot-store", "/srv/opentallas-scratch3/ot-store")
+_STORES = ("/srv/opentallas-scratch2/ot-store", "/srv/opentallas-scratch3/ot-store")
+
+
+def _ordered_stores(stores=_STORES, conf=os.path.expanduser("~/.config/ot-store/primary")):
+    """STORE-PRIMARY-1119 (COORD: epyc2 scratch2 under its floor): a host may name which store is the DEFAULT one (the first), by a one-line file ~/.config/ot-store/primary.  The per-filesystem rule is
+    unchanged: a job dir still resolves to the store of its own filesystem; only the no-job-dir default (and the gc order) changes."""
+    try:
+        p = open(conf).read().strip()
+    except OSError:
+        return tuple(stores)
+    return (p,) + tuple(x for x in stores if x != p) if p in stores else tuple(stores)
+
+
+SCRATCH_STORES = _ordered_stores()
 BUF = 1 << 20
 
 
