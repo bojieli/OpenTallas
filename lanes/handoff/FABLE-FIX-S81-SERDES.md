@@ -253,3 +253,10 @@ Files: epyc9 /srv/opentallas-scratch2/claude/fable-fix-s81-serdes3/{E (harness, 
 - Still open on real D8e kits: the derived-site 413 um hop (seen only on H21), and OT_S81_LPL_CHUNK: the 6 kits generated
   00:41-01:31 UTC (just before the 01:37 apply) have NO LPL_CHUNK define. Re-check on a post-apply kit; if absent, tell S81-DIE-R3.
 - Source fix for the next delta (S81-DIE-R3): the die bind must elaborate serdes with the type defines (or set the stage count).
+
+## State 2026-11-18 18:25 PST
+- Compare pilots at GRT / routed only (COORD, S81-GEOM 01c4b1e891d). My CTS-stage numbers were not from 4_cts_final.rpt: -134.8 / -147.8 are
+  OT_TT_SETUP_REPAIR and my own STA on 4_cts.odb (after the hooks), rck spans are the OT_STB lines (after padding) - but all placement RC.
+- GRT gate, TT setup_est / hold_est: H18 -191.68 / -5.26 STOP; H19 -108.47 / -20.48 PASS (FF +59.2 / -60.3); H20 -99.98 / -10.92 PASS (FF pending).
+  H19 and H20 are within 9 ps: no GRT-level case for the star over k-means roots. Routed pair skew and FF hold decide.
+- H19 detail route first pass 88,168 violations. H20 entering route. H21 r2 in placement.
