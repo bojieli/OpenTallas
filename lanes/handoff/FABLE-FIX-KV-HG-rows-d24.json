@@ -218,5 +218,34 @@
    },
    "verdict": "setup clean; west band -35 % but not clear: W1 (landing core move, bound event) is required for a routed hgi type"
   }
+ },
+ "F_hgi_v4_v7_on_D23H": {
+  "evidence": "per-endpoint TT setup on the D23H 4_cts.odb of hgi_v4/v5/v6/v7 (epyc9 fable-fix-kv-hg3/sc/d_v{4,5,6,7}/out/ends.tsv): 166-260 failing ends per type, tns -12,231..-23,568 (HG6: about -200,000)",
+  "answer": "NOT the landing-core distance (W1 is a routing-congestion row, no setup end sits on it). Two classes only.",
+  "classes": [
+   {
+    "id": "F1",
+    "share": "all but 2 ends, 95 % of tns",
+    "path": "u_head<h>_e6/e7 g_t_<t>_u_stk kp_o/kpv_o/gf_o -> u_head<h>_e0 u_kt pins",
+    "wns_ps": [
+     -129,
+     -302
+    ],
+    "row": "= fix 2 kt stations, already D25 (KV-KT-E0). Nothing new."
+   },
+   {
+    "id": "F2",
+    "share": "2 ends per type, sets the wns -571 / -595 / -802 / -890",
+    "path": "u_rrl_<n>/q (reset relay, boot pad tap, e.g. rst_n_t74 at (631.8, 1503.4)) -> u_cland_writer_start_<bus>_6 and _7 (ot_dp_landing_relay .rst_raw_n) at the SW corner (2.16-6.48, 17.9-22.2): 2.1 mm in one hop. Stage _5 of the same chain reads rst_n_t7.",
+    "buses": {
+     "kv3_hgi_v4": "ft0_o (u_rrl_52)",
+     "kv3_hgi_v5": "ft0_o (u_rrl_475)",
+     "kv3_hgi_v7": "ft0_o (u_rrl_201)",
+     "kv3_hgi_v6": "o_head_Q_N_N__u_fts_s_b (u_rrl_588)"
+    },
+    "row": "the last two writer-start stages take the BOOT pad tap of the reset tree instead of the tap nearest their site: point rst_raw_n of stages 6 and 7 at the reset tap that stage 5 uses (or the nearest tap to their landing_placement site). Generator rule in the clock-landing writer-start emitter, 0 cycles (reset release of two relay flops moves with the tap depth, inside rst_n >= 64 clk). Check hgi, hgi_v1..v3, v8 and the hg types for the same two stages."
+   }
+  ],
+  "pc": "all pc kits in GRT are HG6-era (launched 11-17 / 11-18 before D23): none carries the D23 pc taps, efault EQ pipe or pipes:true split, so -468..-1,486 are stale. Named causes from the HG6 pc_v1 dump stand (section B: hsl boot region 1,991 ends, phy pi d1/d2 570 ends, idpc 35 ends, kvpc1->kvpc2); pc_v3 worst = u_bin_i_host_host_rst_n -> u_u_efault.fault and pc cl254 = u_bin_i_ectl_Q_N_kf -> u_u_efault.fault, both the efault class D23 already pipes. Relaunch ONE pc kit on the live tree and re-dump before writing more pc rows."
  }
 }
