@@ -63,6 +63,9 @@ FF_NEAR_FACE_UM = 10.0   # a request within 10 um of the N/S face takes the face
 FF_DEPTH_ROWS = 120
 CHECKS = ("REACH", "MISAIM", "TAP-CAP", "TAP-COVER", "TAP-EDGE", "STALE-BINS", "BOUNDARY-REG", "FACE-BANK", "RESET-FANOUT")
 STALE_FRAC = CBC.SINK_BINS_STALE_FRAC
+# COORD 11-19: checks that do not predict on a die (they flag signed types there) are off for it.  QC: TAP-COVER flagged
+# 15 of 27 signed, plan-coordinate REACH 6 of 27 -> QC reach comes from the placed-hop kit scan (kit_scan.py) only.
+DIE_SKIP = {"qwen_compute": {"TAP-COVER", "REACH"}}
 
 
 def bins_count(ctx, ck):
@@ -667,7 +670,7 @@ def main(argv=None):
     if not any(p.get("type") for p in raw.get("partitions") or []):
         pass
     placed = {p["type"] for p in raw.get("partitions") or []}
-    checks = {c.strip().upper() for c in a.checks.split(",")}
+    checks = {c.strip().upper() for c in a.checks.split(",")} - DIE_SKIP.get(a.die, set())
     findings, errors = [], []
     for tn in types:
         if tn not in placed:

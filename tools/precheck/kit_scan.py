@@ -139,6 +139,13 @@ def post(text):
                     "bash ~/coord/bin/post.sh PRECHECK-1119 '" + text.replace("'", "'\"'\"'") + "'"], capture_output=True, text=True)
 
 
+def kit_die(kit):
+    try:
+        return json.loads(Path(kit, "work/budget.json").read_text()).get("die") or "?"
+    except (OSError, ValueError):
+        return "?"
+
+
 def scan_kit(kit, do_post=False, mem_gb=14):
     kit = Path(kit)
     STATE.mkdir(parents=True, exist_ok=True)
@@ -169,7 +176,35 @@ def scan_kit(kit, do_post=False, mem_gb=14):
             sp.write_text(json.dumps(dict(rc=rc)))
     if msgs:
         print(f"KIT-SCAN {tn} ({kit.name}): " + " | ".join(msgs))
-    return [f"{tn}: " + " | ".join(m[:220] for m in msgs)] if msgs else []
+    if sf.exists() or sp.exists():
+        f = json.loads(sf.read_text()) if sf.exists() else {}
+        p = json.loads(sp.read_text()) if sp.exists() else {}
+        return [dict(die=kit_die(kit), type=tn, kit=kit.name, fold=f.get("lost", 0), legs=p.get("legs_over"),
+                     worst_pair=(p.get("pairs") or [[None, None, 0, 0]])[0][:4], skew=p.get("skew_worst_ps"),
+                     skew60=len(p.get("taps_over_pass") or []), skew100=len(p.get("taps_over_fail") or []))] if msgs else []
+    return []
+
+
+PENDING = STATE / "pending.jsonl"
+LAST = STATE / "last_post"
+
+
+def hourly_digest(rows, now=None):
+    """one short line per die from the rows scanned since the last post"""
+    by = collections.defaultdict(list)
+    for r in rows:
+        by[r["die"]].append(r)
+    out = []
+    for die, rs in sorted(by.items()):
+        fold = [r for r in rs if r.get("fold")]
+        legs = [r for r in rs if r.get("legs")]
+        sk = [r for r in rs if (r.get("skew100") or 0) > 0]
+        w = max(legs, key=lambda r: r["legs"], default=None)
+        out.append(f"{die}: {len(rs)} kits; FOLD {len(fold)}" + (f" ({', '.join(sorted({r['type'] for r in fold})[:3])})" if fold else "")
+                   + f"; legs>405 in {len(legs)}" + (f" (worst {w['type']} {w['legs']}: {w['worst_pair'][0]} -> {w['worst_pair'][1]} "
+                                                     f"{w['worst_pair'][3]} um)" if w else "")
+                   + f"; tap skew>=100 ps in {len(sk)}")
+    return out
 
 
 def main(argv=None):
@@ -187,17 +222,23 @@ def main(argv=None):
             k = d.parent.parent
             if now - k.stat().st_mtime <= a.max_age_h * 3600:
                 kits.append(str(k))
-    lines = []
-    for k in kits:
-        try:
-            lines += scan_kit(k, a.post, a.mem_gb)
-        except Exception as e:  # noqa: BLE001 -- an estimator never stops the pass
-            print(f"KIT-SCAN {k}: {type(e).__name__}: {e}")
-    if lines and a.post:           # one digest per pass (a post per kit would flood the log)
+    STATE.mkdir(parents=True, exist_ok=True)
+    with open(PENDING, "a") as fh:
+        for k in kits:
+            try:
+                for r in scan_kit(k, a.post, a.mem_gb):
+                    fh.write(json.dumps(r) + "\n")
+            except Exception as e:  # noqa: BLE001 -- an estimator never stops the pass
+                print(f"KIT-SCAN {k}: {type(e).__name__}: {e}")
+    # COORD 11-19: stay light -- one short post per hour (per die line), from what was scanned since the last one
+    last = float(LAST.read_text()) if LAST.exists() else 0.0
+    if a.post and time.time() - last >= 3600 and PENDING.exists() and PENDING.stat().st_size:
         import socket
-        post(f"KIT-SCAN [PRECHECK-1119 -> COORD, die owners] {socket.gethostname()}: {len(lines)} kits scanned after synth/place. "
-             f"Estimator, not a gate; reach {CBC.REACH_UM_PER_HOP:.0f} um placed, in-tap skew 60/100 ps. " + " || ".join(lines[:12])
-             + (f" || +{len(lines) - 12} more" if len(lines) > 12 else "") + f". Detail {STATE} on that host.")
+        rows = [json.loads(x) for x in PENDING.read_text().splitlines() if x.strip()]
+        post(f"KIT-SCAN hourly [PRECHECK-1119 -> COORD, die owners] {socket.gethostname()}: " + " || ".join(hourly_digest(rows))
+             + f". Estimator; detail {STATE}.")
+        LAST.write_text(str(time.time()))
+        PENDING.write_text("")
     return 0
 
 

@@ -211,3 +211,15 @@ def test_fold_scan_declared_vs_netlist():
     assert dec["g_u_vp_g_hig_N_u_cst_gd_s_N_u_src_H_q"] == 512
     nl = "".join(f"  DFFHQNx1_ASAP7_75t_R \\\\u_bound.g_u_vp_g_hig_0_u_cst_gd_s_0_u_src_abcdef0123456789_q[{i}]$_DFF_P_ (\n" for i in range(128))
     assert FS.netlist_flops(nl)["g_u_vp_g_hig_N_u_cst_gd_s_N_u_src_H_q"] == 128
+
+
+def test_kit_scan_hourly_digest_per_die():
+    import kit_scan as KS
+    rows = [dict(die="s81", type="leaf__t27", fold=9670, legs=3729, worst_pair=["cst_hi", "lane", 1193, 829.8], skew100=0),
+            dict(die="s81", type="col__t1", fold=0, legs=0, worst_pair=[None, None, 0, 0], skew100=1)]
+    out = KS.hourly_digest(rows)
+    assert len(out) == 1 and out[0].startswith("s81: 2 kits; FOLD 1 (leaf__t27); legs>405 in 1") and out[0].endswith("tap skew>=100 ps in 1")
+
+
+def test_qc_skips_tap_cover_and_plan_reach():
+    assert PC.DIE_SKIP["qwen_compute"] == {"TAP-COVER", "REACH"}
