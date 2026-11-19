@@ -1,21 +1,21 @@
 {
  "die": "s81_head",
- "tree": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0",
- "manifest_hash": "81aad766ebb41c013ccdd175d6f9de68f3a6b42dd3738a0669aa3f7bf2d0b73c",
- "src_manifest_sha": "81aad766ebb41c013ccdd175d6f9de68f3a6b42dd3738a0669aa3f7bf2d0b73c",
+ "tree": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r5_s0",
+ "manifest_hash": "bd56710276dffcfc5799010255fd262a0b3e736e8ee3d6d8e97238641be351d8",
+ "src_manifest_sha": "bd56710276dffcfc5799010255fd262a0b3e736e8ee3d6d8e97238641be351d8",
  "tools_sha": "385f61b5582a91e3bf52d3bd494eebc6a64b21bb",
  "hosts": [
   "epyc10",
   "epyc9"
  ],
  "smoke": "PASS",
- "smoke_detail": "HEAD-PLAN-R4 live r4 (COORD urgent): snapshot s81_head_r4_s0 = s81_head_r3c_s1 + hd_lep0N TXI count_r/wp_r late select RTL (main 0dcc215cd62, 0 cycles, miter EQUIV per HEAD-TYPES-OPUS) + hd_lep0N clock.tap_group rows (HEAD-TYPES-OPUS lanes/handoff/HEAD-TYPES-OPUS-hd_lep0N-rows.json, follow_re empty) + schema from main 82cba2f10e2 (follow_re key) + receipt re-issued; bind/LATCHECK/kit check run in parallel after the apply (r693).",
- "plan": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0/physical/die_plan/s81_head/prep/NF15f/prep/source_plan.json",
- "plan_sha256": "37c183cd2ce7f0f726b55736d33db25237606b824f6a25f50988e08aec211930",
+ "smoke_detail": "FABLE-FIX-HEAD-MESH live r5 (COORD ruling): snapshot s81_head_r5_s0 = s81_head_r4_s0 + hd_mesh clock.reserved_sites_um 633 -> 631 (2 stale die_clock_tree rows on the north coll_oa pin row dropped; no die clock cell there) + route_layers M1-M5 / M1-M6 on the two clk tap sites; die clock tree, RTL, tools unchanged; plan keeps its r4_s0 input paths so only the hd_mesh block hash changes; receipt re-issued (head_native_release_nf15f_r5, digest 83f36456); schema validate 0 errors.",
+ "plan": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r5_s0/physical/die_plan/s81_head/prep/NF15f/prep/source_plan.json",
+ "plan_sha256": "8fef07527076a9094811ed9b4ae91bb28e636ad79c0f051e9412725a770832fe",
  "plan_canonical_sha256": "8878e583eb07681200401b9ebe1fbd3c4253c6402b19b342032c0c76c7c99c0d",
- "sidecar": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0/physical/die_plan/s81_head/prep/NF15f/prep/source_sidecar.json",
+ "sidecar": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r5_s0/physical/die_plan/s81_head/prep/NF15f/prep/source_sidecar.json",
  "sidecar_sha256": "6fcd1d3dfc43434bcbf774528cbaefa2ccb2fce156d0ada588297637fb793f0e",
- "frozen_kit_tree": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0/physical/die_plan/s81_head/prep/NF15f/die_clock/kit_tree.json",
+ "frozen_kit_tree": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r5_s0/physical/die_plan/s81_head/prep/NF15f/die_clock/kit_tree.json",
  "physical_qualified": false,
  "preserve_holds": "all inherited s81_head hold_records kept; HEAD-PLAN-R4 one plan revision (COORD r706)",
  "config": {
@@ -28,26 +28,26 @@
   ],
   "kit_rtl": {
    "mode": "script",
-   "script": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0/physical/die_plan/s81_head/kit_wave/kit_rtl.sh"
+   "script": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r5_s0/physical/die_plan/s81_head/kit_wave/kit_rtl.sh"
   },
   "gen_args": [
    "--clock-landing",
-   "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0/physical/die_plan/s81_head/prep/NF15f/prep/source_sidecar.json",
+   "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r5_s0/physical/die_plan/s81_head/prep/NF15f/prep/source_sidecar.json",
    "--hold-ff-margin",
    "0"
   ]
  },
- "native_reset_receipt": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0/results/head_native_release_nf15f_r3c/native_release_receipt.json",
+ "native_reset_receipt": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r5_s0/results/head_native_release_nf15f_r5/native_release_receipt.json",
  "status": "ADOPTED reviewed tuple",
  "written_by": "root-authorized lane atomic apply",
  "die_gen_env": {
-  "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0/physical/die_plan/s81_head/kit_wave/signed_view_sha_head.json"
+  "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r5_s0/physical/die_plan/s81_head/kit_wave/signed_view_sha_head.json"
  },
  "live_tree": {
-  "snapshot": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0",
-  "made": "2026-11-18 08:20:12 PST",
+  "snapshot": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r5_s0",
+  "made": "2026-11-18 21:10:21 PST",
   "tool": "live_tree.py (TOOLS-DECOUPLE phase 2)"
  },
  "optimistic": true,
- "_path": "/home/ubuntu/hpr4/cand_live_r4.json"
+ "_path": "/home/ubuntu/fable-fix-head-mesh/tree_switch_s81_head_r5.json"
 }
