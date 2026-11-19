@@ -9,7 +9,7 @@ import hold_margin_family as F  # noqa: E402
 
 def test_family_table():
     assert F.family_margin("qwen_compute") == F.family_margin("qwen_kvsys") == F.family_margin("s81_head") == 40.0
-    assert F.family_margin("s81") is None and F.family_margin("hbm") is None
+    assert F.family_margin("s81") == 30.0 and F.family_margin("hbm") is None
     assert F.core_margin() == 15.0
 
 
@@ -17,9 +17,9 @@ def test_plan_keys_override_and_are_range_checked():
     assert F.family_margin("qwen_compute", {"hold_ff_margin_ps": 30}) == 40.0       # die key is a floor next to the table: the larger wins
     assert F.family_margin("qwen_compute", {"hold_ff_margin_ps": 55}) == 55.0
     assert F.family_margin("qwen_compute", {"hold_ff_margin_ps": 30}, {"hold_ff_margin_ps": 20}) == 40.0
-    assert F.family_margin("s81", {"hold_ff_margin_ps": 12}) == 12.0          # a die can opt in
+    assert F.family_margin("hbm", {"hold_ff_margin_ps": 12}) == 12.0          # a die can opt in
     try:
-        F.family_margin("s81", {"hold_ff_margin_ps": 400})
+        F.family_margin("hbm", {"hold_ff_margin_ps": 400})
         raise AssertionError("must refuse")
     except ValueError:
         pass
@@ -36,7 +36,7 @@ def test_grt_margin_only_raises_never_lowers_and_keeps_none():
     assert F.grt_margin(55.0, "qwen_kvsys") == 55.0
     assert F.grt_margin(None, "qwen_kvsys") is None             # two-mode kit: unchanged
     assert F.grt_margin(10.0, core=True) == 15.0 and F.grt_margin(20.0, core=True) == 20.0
-    assert F.grt_margin(10.0, "s81") == 10.0
+    assert F.grt_margin(10.0, "hbm") == 10.0
 
 
 def test_config_lines():
@@ -51,7 +51,7 @@ def test_check_kit_reads_config_mk_back(tmp_path):
     (tmp_path / "config.mk").write_text("export OT_HOLD_FF_MARGIN = 10\n")
     bad = F.check_kit(tmp_path, "qwen_compute")
     assert len(bad) == 2 and "predates" in bad[1]
-    assert F.check_kit(tmp_path, "s81") == []                    # no family value: nothing expected
+    assert F.check_kit(tmp_path, "hbm") == []                    # no family value: nothing expected
     (tmp_path / "config.mk").write_text("export SOMETHING = 1\n")
     assert any("no OT_HOLD_FF_MARGIN" in b for b in F.check_kit(tmp_path, "qwen_kvsys"))
 
@@ -98,9 +98,9 @@ def test_gen_hold_ff_margin_0_is_raised_to_the_family_floor_but_a_plan_key_is_th
     assert F.grt_margin(0.0, "qwen_compute") == 40.0               # gen.py --hold-ff-margin 0 does not override the family
     assert F.grt_margin(5.0, "qwen_kvsys", None, None) == 40.0
     assert F.grt_margin(0.0, "qwen_compute", {"hold_ff_margin_ps": 20}) == 40.0      # a die key below the table does not lower it
-    assert F.grt_margin(0.0, "s81", {"hold_ff_margin_ps": 25}) == 25.0               # die key = floor on a die without a table value
-    assert F.grt_margin(10.0, "s81", {"hold_ff_margin_ps": 25}) == 25.0              # an item value of 10 does not beat the die's 25 (COORD)
-    assert F.grt_margin(30.0, "s81", {"hold_ff_margin_ps": 25}) == 30.0              # an item may raise it
+    assert F.grt_margin(0.0, "hbm", {"hold_ff_margin_ps": 25}) == 25.0               # die key = floor on a die without a table value
+    assert F.grt_margin(10.0, "hbm", {"hold_ff_margin_ps": 25}) == 25.0              # an item value of 10 does not beat the die's 25 (COORD)
+    assert F.grt_margin(30.0, "hbm", {"hold_ff_margin_ps": 25}) == 30.0              # an item may raise it
     assert F.grt_margin(60.0, "qwen_compute") == 60.0              # the floor never lowers a higher caller value
     assert F.grt_margin(0.0, "qwen_compute", env={"OT_HOLD_FAMILY_MARGIN": "0"}) == 0.0
     assert F.explicit({"hold_ff_margin_ps": 0}) is True and F.explicit({}) is False
@@ -197,3 +197,10 @@ def test_hold_skipped_on_setup_failure_marker():
     assert t.index("exit 0", t.index("SKIP setup")) < t.index("repair_timing -hold")
     src = (HERE / "gen_phys.py").read_text()
     assert "[ ! -f /work/HOLD_SKIPPED_SETUP ]; then HMR=" in src
+
+
+def test_s81_family_margin_is_30_and_plan_key_can_raise_it():
+    assert F.family_margin("s81") == 30.0
+    assert F.family_margin("s81", {"hold_ff_margin_ps": 35}) == 35.0
+    assert F.family_margin("s81", env={"OT_HOLD_FAMILY_MARGIN": "0"}) is None
+    assert "OT_PREGRT_HOLD_R2R_MARGIN = 30" in "".join(F.config_lines(F.family_margin("s81")))

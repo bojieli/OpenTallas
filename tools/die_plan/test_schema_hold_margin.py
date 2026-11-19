@@ -18,7 +18,7 @@ def _die_errs(d):
 
 def test_die_key_accepted():
     assert _die_errs(dict(DIE, hold_ff_margin_ps=25)) == []
-    assert F.family_margin("s81", dict(DIE, hold_ff_margin_ps=25)) == 25.0
+    assert F.family_margin("hbm", dict(DIE, hold_ff_margin_ps=25)) == 25.0
 
 
 def test_die_key_range():

@@ -7,7 +7,8 @@ now a die-family value read by the common flow:
 
     QC / KV / HEAD type kits (plan die qwen_compute, qwen_kvsys, s81_head)   40 ps
     core kits (svc and hard cores, every core_flow.apply kit)                15 ps
-    S81 / HBM type kits                                                      unchanged (S81 runs its own 10; HBM parked)
+    S81 type kits (plan die s81; slice_station -8 ps routed hold)           30 ps (HOLD-MARGIN-1119; a plan key still overrides upward)
+    HBM type kits                                                            unchanged (parked)
 
 Where it lands (all repair TARGETS; every hold GATE stays FF hold >= 0, ports unchanged):
   * GRT FF repair   config.mk  export OT_HOLD_FF_MARGIN = max(caller value, family)        (gen_phys.write_type_kit, core_flow.apply)
@@ -29,7 +30,7 @@ import re
 import sys
 from pathlib import Path
 
-FAMILY_PS = {"qwen_compute": 40.0, "qwen_kvsys": 40.0, "s81_head": 40.0}
+FAMILY_PS = {"qwen_compute": 40.0, "qwen_kvsys": 40.0, "s81_head": 40.0, "s81": 30.0}
 CORE_PS = 15.0
 SETUP_GUARD_PS = 0.0
 OFF_ENV = "OT_HOLD_FAMILY_MARGIN"
