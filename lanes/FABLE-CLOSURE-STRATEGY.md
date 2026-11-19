@@ -1,3 +1,180 @@
+# FABLE-CLOSURE-STRATEGY 2026-11-18 19:35 PST (1935): what fails next on D8e / N4.x / D24
+
+Reviewer: FABLE-CLOSURE-STRATEGY-1935. Read-only: no job launched, killed, deleted or patched. Technical PD only. HBM parked.
+Gate (R-MINIMAL): DRC 0, routed TT >= -42 ps, internal reg-to-reg FF hold >= 0. No new holds or gates (r703).
+Marking: **V** = file or log opened this round (19:10 to 19:35). **R** = reported by the named lane. **I** = inferred from V data. **P** = proposal.
+Numbers: GRT or routed only, plus `OT_TT_SETUP_REPAIR` lines (they run after tap balance, on placement RC). No `4_cts_final.rpt` number is used.
+
+Signed (V, failure_breakdown 19:10): S81 43/394, HEAD 24/26, QC 27/130, KV 6/56. No change since 15:30.
+Method (V): posts since 15:30 of 18 lanes; `kit_wave_state.json` (19:08); one scan of every route job with a log written in the last 40 min on the six build hosts (127 jobs); two kit reads (col_h9_r0_p6 on epyc10, kv3_hgi_v7 on epyc7).
+
+## 0. Headline
+
+1. **No D8e or N4.1q kit has a GRT or routed number yet (V).** D8e (df7446e48ba9): 331 rows RUNNING. 49 have been in kit gen since 17:49 to 17:55; 282 were launched at 19:08. N4.1q (b146b2d2b02a): 32 rows, all launched at 19:07. First D8e GRT lines: about 22:00 (I). Everything below is read from older-plan kits whose rows D8e / D8f / N4.x do not change, and from the private proof kits.
+2. **122 of the 282 new D8e kits are in families that D8f replaces at about 20:50 (V counts):** col_h9_r2 60, col_h10_r1 12, col_h9_r0_p3..p6 42, slice_station START types 8. They will be in gen or placement when D8f applies. The D8e reads that count are leaf (77) and col_h9_r1 (60).
+3. **col_h9_r0_p6 at GRT is -104.89 TT after repair, and its GRT report names a ROM-to-bank end (V).** `u_u_e0_u_w` (falling edge) -> `u_u_bn0`, -44.50 in `5_global_route.rpt`. This is the col_h9_r2 class (e11 -> bn11). D8f gives the 45 ps late capture to `u_r2.u_bn1[12]` only, and the p3..p6 halo buffers nothing. 42 types fail next on D8f.
+4. **The GRT hold guard is the largest avoidable cost on every die (V).** 22 live kits have 0 violators and still add chunks at +0.2 to +2.7 ps each (slw_sc_v1 x2: chunk 6 after 14.5 h in GRT). On S81 col kits the port bus is still in the repair and chunk 1 made hold worse. Both 1530 fixes are not done.
+5. **QC st_a has no row in N4.1q or N4.2 (R + V).** Eight wave st_a kits sit at -108 to -214 TT at GRT. The proven form (k5) is a handoff file.
+6. **KV: 13 hgi kits are in GRT on D23H at -208 to -890 (V), 2.5 to 24.5 h each.** W1 is in D25, not in D24c. hgi_v4..v7 and pc are two classes with no named cause.
+
+## 1. Levers ranked by closure impact
+
+| # | die | lever | unblocks | owner |
+|---|---|---|---|---|
+| 1 | S81 | D8f lands clean: tree on all six gen hosts before apply, supersede in the same tick; read leaf and col_h9_r1 first on D8e | 122 kits re-gen once, not twice; leaf 77, col_h9_r1 60 | S81-DIE-R3, WAVE-FLOW-R2, S81-LEAF-D8E-1118 |
+| 2 | S81 | ROM -> bank late capture for the col_h9_r0 banks; relay for `u_y_cc` -> `u_s0.lc` | col_h9_r0_p3..p6 42 | S81-GEOM-OPUS |
+| 3 | all | GRT hold guard: stop at met; S81 col input ports out of the repair | about 22 live kits now, 2 to 12 h each; every D8e col kit | WAVE-FLOW-R2 (tool), S81-DIE-R3 (S81 setting) |
+| 4 | QC | st_a rows (k5 form) into the next QC event; coll_core gets a lane | st_a 11; coll_core 1 | QC-PLAN-R3, FABLE-FIX-QC-STA; NEEDS-LANE coll_core |
+| 5 | QC, S81, HEAD | Sign-off and late ECO from the admission bundle, not the kit copy; post-route insert result on hc0 | every routed near miss (hc0 x2, st_b x4, slw_fe, station t50 / t41, col_h9_r2 pilot) | WAVE-FLOW-R2, FABLE-FIX-ROUTE-LOSS, QC-TYPES-R3 |
+| 6 | KV | W1 into the next bound event without a D24c wait; one read each for hgi_v4..v7 and pc | hg / hgi 17, pc 4 | KV-D23-COMPOSE, FABLE-FIX-KV-HG; NEEDS-LANE pc |
+| 7 | S81 | Tail types with tns below -30,000 and no row | about 8 types | NEEDS-LANE, one per type |
+| 8 | HEAD | mesh_pa ECO: hold pads against 14 ps of TT room; the 16 DRC are pin-edge shorts | hd_mesh 1 | FABLE-FIX-HEAD-MESH |
+
+### Lever 1. D8e reads and the D8f switch
+
+**Evidence (V, `kit_wave_state.json` 19:08).**
+- df7446e48ba9: RUNNING 331. By host: epyc8 229, epyc10 54, intel1 18, epyc2 16, epyc9 14. 49 rows at stage gen with start 17:49 to 17:55; 282 with start 19:08.
+- Old block e291d6a8e740 (d8t): 22 RUNNING, 30 ENQUEUED; ed968f4cc6e6: 11 ENQUEUED. The autopilot was cancelling these at 19:15 (`CANCELLED class SUPERSEDED`).
+- epyc8 at 19:20: 668 GB available, load 76. Memory is not the limit now.
+- R (FLEET-OPS-R 19:13): D8e replicas verified on epyc7 and epyc9; S81 gen hosts are now six.
+- R (FAIL-ROUTE-1115 19:08): leaf t56 failed at kit_rtl bind; svc_hi_dsdv_svc_rs__t4 failed on the cell cap at place.
+- R (FABLE-FIX-S81-SERDES 17:58): all 17 serdes attempts stop at `OT_BOOT_RELEASE expected3 kept stages, found 0`; fix 2551bd7f342 is not confirmed on a wave kit.
+
+**Root cause.** The wave launched the full S81 set on D8e 100 min before D8f. The event key is the same for both; only the plan block differs.
+
+**Fix (no hold).**
+1. S81-DIE-R3: replicate the D8f tree to all six gen hosts before the apply, so the relaunch does not land on epyc8 alone (229 of 331 rows are there).
+2. WAVE-FLOW-R2: on the D8f apply, cancel the rows whose block changed in the same tick as the probe (17:46 took one extra tick).
+3. S81-LEAF-D8E-1118: the first D8e numbers to post are leaf t17 / t24 / t31 / t51 at GRT (XR rows) and one col_h9_r1 kit at GRT (frame stations). These two families are 137 types and D8f does not touch them.
+4. S81-DIE-R3: the D8e tree tools are b3e667d1865. The cell-cap stop was deleted on main 54d289d964a; svc_hi_dsdv_svc_rs__t4 shows the kit still carries it. State whether kit tools come from the tree or from rt/current, and put 54d289d964a, 2551bd7f342 and 01c4b1e891d in the D8f tools.
+5. FABLE-FIX-S81-SERDES: the first D8e serdes attempt must print `OT_BOOT_RELEASE placed3`. If it prints `found 0`, 11 types fail again for the 17:58 cause.
+
+**Lost read.** The col_h9_r2 pilot pvf8d9f9e5 (GRT -96.71, in detailed route at 15:30) was cancelled as superseded at 19:15 with kit logs idle 10.2 h (V, autopilot log). The GRT-against-routed question for S81 col kits is still open; the first D8f col_h9_r2 kit answers it.
+
+### Lever 2. col_h9_r0_p3..p6: the ROM -> bank end
+
+**Evidence (V, epyc10 `ot-jobs/col_h9_r0_p6__t1__pv9da72aa7-route-civil-redfish-579642-1795043355/work`, old plan; D8e and D8f add only the halo to this family).**
+- `OT_TT_SETUP_REPAIR` at GRT: wns -143.87 -> -104.89, tns -9,618 -> -2,823. `OT_POSTCTS_GATE TT (global_routing)` setup_est -104.89. The kit is in detailed route.
+- `5_global_route.rpt`, worst setup path: `u_bound.u_u_e0_u_w` (falling edge-triggered) -> `u_bound.u_u_bn0`, data arrival 1,090.53, slack -44.50. I did not confirm the corner of this report, so the TT end at -104.89 may be another path of the same bank.
+- Sibling pv8241ebb8 (epyc8): -437.44 -> -330.33 on placement RC, max-wire pass +64,891 cells.
+- R (S81-GEOM-OPUS 17:37): p3 `u_y_cc` -> `u_s0.lc` -440, 867 ps of unbuffered wire in a boxed pocket.
+
+**Root cause (I).** Same structure as col_h9_r2: a ROM launched on the falling edge feeds a qbank core pin. The data has half a cycle less the ROM clock-to-q. D8f moves and late-clocks bn11 / bn12 in `u_r2` only.
+
+**Fix (S81-GEOM-OPUS, next delta after D8f).**
+1. Read the TT worst 20 ends on pv9da72aa7 at GRT (`tt_setup_repair_grt.log`) and name the banks. If they are ROM -> bn ends, add `clock.core_pin_lead_ps` rows for those banks (same key as D8f, value from the measured shortfall, bounded by hold on the other bank inputs).
+2. One relay or buffer site for `u_y_cc` -> `u_s0.lc` (FABLE-PD-STRUCT-1840 B6 fix 4).
+3. The first D8f col_h9_r2 kit tells what 45 ps buys at GRT. Size the r0 rows from that number, not from the estimate.
+
+### Lever 3. GRT hold guard
+
+**Evidence (V, scan; last `OT_HOLD_GUARD_GRT` line per kit).**
+- Kits with 0 violators still adding chunks: slw_sc_v1 x2 chunk 6 at ws 24.9 (+1.4 / +1.9), 14.5 and 14.8 h after launch; slw_sc_v3 chunk 4 (+2.70); sle_sc_v3 chunk 4 (+0.56); sle_sc_v2 chunk 3 (+0.38); coll_s chunk 7 (+0.19); sle_st_b x4 chunk 2 (+0.24 to +0.44); hc0 x2 (+0.17, +0.22); slw_fe_v1 (+0.18); hd_host_e chunk 8 (+0.91); hd_spn chunk 4; kv3_io_cor chunk 4; glue; slice_station t14 / t41. 22 kits.
+- R (FABLE-FIX-QC-STA 18:37): on k5 chunks 3 and 4 gained +0.80 and +0.46 ps for 2,370 s and 2,320 s; the chase to 40 costs about 2.5 h per kit after hold is met.
+- S81 col, port bus still in the repair: p6 pv9da72aa7 `OT_GRT_PORT_HOLD ... INCLUDED`; start ws -63.46 / 953 ends; chunk 1 ws -90.74 (-27.27) / 1,367 ends, +202 buffers, 2,056 s. col_h10_r0_p4: port_in 1,374 at -59.17.
+- S81-COL-FLOW-1118 has no post since 15:30.
+
+**Root cause.** The stall rule only stops at ws >= 30 (or 40), so a met design keeps buying fractions of a ps. R-MINIMAL needs >= 0, and the post-route insert pads the real tail.
+
+**Fix.**
+1. WAVE-FLOW-R2: in the guard, end the repair after the first chunk that leaves 0 violators at the kit margin (the 1530 `OT_HOLD_STALL_MIN_WS` fix, withdrawn request 1320 lever 2 fix 1). One condition; no gate.
+2. S81-DIE-R3 (the COL-FLOW lane is silent): `OT_GRT_PORT_HOLD_INCLUDE=0` for S81 col kits in the D8f gen env, the QC form. The signed col pilot carries 340 port ends and passes.
+
+### Lever 4. QC: st_a rows, and the wide kits
+
+**Evidence.**
+- V (scan, N4 wave kits at GRT, `OT_TT_SETUP_REPAIR`): sle_st_a_v1 -166.94 / -208.31; sle_st_a_v2 -198.80 / -214.34; slw_st_a_v1 -108.52 / -118.87; slw_st_a_v2 -159.90 / -167.95. tns -5,948 to -12,525.
+- R (FABLE-FIX-QC-STA 17:54): k3 (copies at the row pins) -155.38 at the GRT gate after +26,384 max-wire cells: dead. k5 (copies at 0.6 of source -> pin) +10.78 on placement RC, hold +7.82 at GRT; its TT GRT gate had not printed at 18:37. Rows: `lanes/handoff/FABLE-FIX-QC-STA-rows-n41.json`.
+- V (wave state): the 32 N4.1q launches hold no st_a item. R (QC-PLAN-R3): N4.2 is seam 110 / per-type 160, su_l1 chains, wep. No post puts the st_a rows in either event (I).
+- V: coll_core -692.43 -> -575.77, tns -656,572; no lane post names it. cbf_q01_s2 -214.21 (port_in 605 at -159.66). sle_st_b_v2 pvcd986c42 GRT gate TT -106.24, in route; its sibling classes are at -4 to -17.
+- V: cbx_q10 -730.88 and sle_stm_v3 -175.65 / tns -62,756 are N4 kits; N4.1q carries their rows (sidx straps, 3 stations). Re-read on N4.1q.
+
+**Fix.**
+1. QC-PLAN-R3: take the k5-form st_a rows into the event after N4.2 as soon as k5 prints a TT GRT gate >= -42. Do not wait for its route.
+2. FABLE-FIX-QC-STA: post the k5 `OT_POSTCTS_GATE TT (global_routing)` line.
+3. NEEDS-LANE: coll_core (read the worst 20 ends at GRT; tns -656,572 is a structure, not a tail).
+4. QC-TYPES-R3: sle_st_b_v2 pvcd986c42 at -106 against siblings at -4 to -17 is a class difference; read its worst end before a relaunch.
+
+### Lever 5. Sign-off and ECO tools from the bundle; post-route insert
+
+**Evidence.**
+- R (FABLE-FIX-ROUTE-LOSS 17:37): the wave signs with the kit-frozen `signoff.py`. Same hc0 routed DB: kit copy TT -29.85, FF -21.57 on 152 ends; main copy TT -18.81, FF -12.99 on 34 ends (nominal clock pin cap, r708). col_h9_r2 pvea45273b failed TT by 2.75 ps this way.
+- R (QC-TYPES-R3 17:55): hc0 cl38badc56, 34 HB4 at the capture pins inserted, route running; cl4baa7c9c 72 HB4 planned at the -45 limit. No sign-off result yet.
+- R (FABLE-FLOW-1750 C): the staging fault is gone for new kits; hd_host_n ran a real late ECO and failed in it (TT 53.26, FF -129.41, DRC 3).
+- V (scan, GRT gate TT / hold): sle_hc0 cl05696ed1 +5.96 / +9.08; slw_hc0 cl4f54b7a3 -1.46 / +2.82; slw_hc1 cl144ee7b3 -17.33 / +11.40; sle_st_b_v1 x2 -10.31 / -4.24; slw_st_b_v1 -16.79; slw_fe_v1 cl95cd1d0c +15.81; slice_station t14 +44.12, t7 +6.17, t50 -42.69, t41 -65.86 on one end; hd_spn +11.29. All in or near detailed route. These are the next sign-offs on every die.
+
+**Root cause.** Kits generated before ad8672055e are judged with pre-r708 caps, and their late ECO prices room with the old tool.
+
+**Fix.**
+1. WAVE-FLOW-R2: the sign-off stage and the late ECO take `signoff.py` and `eco_loop` from the admission bundle (the `SIGNOFF_BUNDLE` list the ECO already prints), not from the kit.
+2. QC-TYPES-R3: when the hc0 D-pin form returns, post TT and internal FF from the main `signoff.py`. If TT lost more than 10 ps, the branch pad on the `wd` driver is the form to build.
+3. S81: slice_station kits without a START hop are the nearest S81 count after the pilots (four at GRT TT -43 or better). t41 is one end: one routed setup ECO.
+
+### Lever 6. KV
+
+**Evidence.**
+- V (scan, epyc7 and epyc10, D23H, `OT_TT_SETUP_REPAIR` at GRT): hgi -208.16; hgi_v1 -267.91 / -309.01 (tns -54,659 / -123,836; 18.4 h); hgi_v2 -311.03 / -319.37 (24.5 h; hold start -591.08 on 1,302 ends); hgi_v3 -222.35; hgi_v8 -294.85; hgi_v4 -571.30, v5 -595.44, v6 -802.28, v7 -890.39 with tns only -12,231 to -23,568.
+- V: pc cl254f2e73 -468.20 (tns -221,370) and -814.67 (31.6 h, hold chunk 4 at -207.92 on 1,173 ends); pc cl5a95b461 -729.16; pc_v3 -1,486.48 (tns -412,788).
+- R (FABLE-FIX-KV-HG 17:38): k5 +0.46 after the pad re-site; west band 28,820 at iteration 5 (-35 %), not clear without W1; W1 needs a bound event. R (KV-D23-COMPOSE 17:56): D24c = pvfin fork nets; D25 = W1, W2 + W3 + W5, kt.
+- V (kv3_hgi_v7 `run_route.log`): `cross-tap guard not applied (no tap window lines in the kit SDC)`; port_in 815 at -80.00; no GRT report yet.
+
+**Reading (I).** v4..v7 have a wns 2 to 3 times worse than v1 / v2 with a fifth of the tns: a few ends on one long path, not the west-band class. Nobody has named it.
+
+**Fix.**
+1. KV-D23-COMPOSE: compose D25 on the D24c plan now and bind it as soon as D24c is green; D24c hgi kits cannot sign (no W1).
+2. FABLE-FIX-KV-HG: read the worst 20 TT ends of hgi_v7 and hgi_v4 from `tt_setup_repair.log` on epyc7 (read-only, 10 min) and say whether D25 covers them.
+3. NEEDS-LANE: kv3_pc (4 kits, tns -205,000 to -413,000, no post since 15:30).
+4. KV-HUBPV-1118: hub_C at 709k cells is above the largest closed run (517k); the D24 split is its only path.
+
+### Lever 7. S81 tail types
+
+**Evidence (V, scan, old plan; `OT_TT_SETUP_REPAIR` or GRT gate).** dsdv_slice_lepe_mu_LP__t2 -797.59 / tns -706,385; dsdv_slice_lepe_nh_mus_LP__t1 -925.61 / tns -834,432; seqhost__t1 -538.36 / tns -2,077,477; col_h10_r0_p4 -473.83 / tns -32,900; tt_ctlm GRT TT -285.9 (pin-register mean 294 against 250); glue GRT TT -130.39, in route 9.3 h.
+
+**Root cause.** Not read. D8e relaunched dsdv_slice, eng, gunit, iqf, svc and col_h10_r0 rows; no D8e or D8f item names any of them.
+
+**Fix.** One lane per type (owner rule 11-14): read the worst 20 ends at GRT, write a class row for the event after D8f. col_h10_r0 (p1..p6) first: it is a family.
+
+### Lever 8. HEAD hd_mesh
+
+**Evidence (R, FABLE-FIX-HEAD-MESH 17:38 / 18:47).** mesh_pa routed: TT -27.61 on 3 ends (pass), FF internal -22.59 on 39 ends, DRC 16 (12 shorts, 4 spacing; M4 / M6 at the north-edge pins x 395 to 397 and 510 to 512, y 1226.7; M6 / M7 at x 27 and 70, y 199). GRT over-reads routed tap insertion by 34 ps TT. V (19:20, `mesh_pa_eco1.log`): ECO pass dir ready (`prd pass dir ready .../eco1/i1t`), no result.
+
+**Risk (I).** TT room is 14.4 ps; the S81 r2 pilot lost 13 ps in one ECO. The shorts sit on boundary pins, so a reroute may return them.
+
+**Fix (FABLE-FIX-HEAD-MESH).** If the ECO returns DRC > 0 at the same four spots, move those pin sites one track in the plan pins (structural), not a second ECO. If TT falls below -42, pad the 39 ends at capture pins with the sign-off-priced insert only.
+
+## 2. The 1530 levers: outcome
+
+| 1530 # | outcome | note |
+|---|---|---|
+| 1 D8e | **APPLIED 17:37 (R)**; 331 rows running (V); no GRT number yet | p3..p6 "relay row" and slice_station magnitudes withdrawn or unconfirmed (pre-hook report, FABLE-PD-STRUCT-1840 C). |
+| 2 post-route insert | **PARTIAL** | Tools on main; hc0 insert routing (R). Stall stop not put back: 22 kits still chase (V). |
+| 3 S81 port hold | **NOT DONE** | Still INCLUDED; chunk 1 made p6 worse by 27 ps (V). Owner lane silent. |
+| 4 col_h9_r2 | **IN D8f** | Bank move, grid-snapped, plus 45 ps late capture (R). Owed routed read lost at 19:15 (V). |
+| 5 col_h10_r1 | **IN D8f** | Site at 0.41 (R). Second class withdrawn (report artifact). |
+| 6 KV | **HALF** | Hop fixed, k5 +0.46 (R). West band needs W1 in D25. Five cores running (R). |
+| 7 HEAD | **ROUTED, NOT SIGNED** | TT passes; FF -22.59 / 39; DRC 16; ECO running. Halo fix da13a203f90 in rt/current (R). |
+| 8 QC st_a | **HALF** | k3 dead at GRT -155.38; k5 hold met, TT gate pending (R). N4.1q applied 18:18 without st_a rows. |
+
+## 3. Stop list
+
+1. S81: reading the 122 D8e kits of col_h9_r2, col_h10_r1, col_h9_r0_p3..p6 and the 8 START slice_station types as results; D8f replaces them.
+2. S81: expecting the p3..p6 halo to move -105 at GRT; it buffers nothing.
+3. All dies: hold chunks after 0 violators (0.2 to 2.7 ps per 2,000 s chunk).
+4. S81: input ports in the col GRT hold repair.
+5. QC: more st_a wave kits on a plan without the k5-form rows (eight are at -108 to -214 now); the pin-sited st_a form.
+6. KV: hgi / hg kits on D23H or D24c as sign-off candidates; more hours for hgi_v1 (18.4 h) and hgi_v2 (24.5 h) in GRT; pc cl254f2e73 at 31.6 h.
+7. All dies: judging a routed kit with its kit-frozen `signoff.py` when the kit predates ad8672055e.
+8. HEAD: a second blind ECO on mesh_pa if the same four pin-edge shorts return.
+9. Any verdict from `4_cts_final.rpt` (unchanged from 1840).
+
+## 4. Not checked
+
+- The D8e plan content for tail types and col_h10_r0 (I read posts, not the plan diff).
+- The corner of the p6 `5_global_route.rpt` path; the TT worst-end list.
+- Whether N4.2 plan_n42_c holds st_a rows (inferred from posts only).
+- k5 TT GRT gate, hc0 ECO sign-off, mesh_pa ECO result: not printed at 19:30.
+- Whether wave kit tools come from the tree or rt/current.
+
 # FABLE-CLOSURE-STRATEGY 2026-11-18 15:30 PST (1530): delta on 13:20
 
 Reviewer: FABLE-CLOSURE-STRATEGY-1530. Read-only: no jobs launched, nothing killed, deleted or patched. Technical PD only. HBM parked.
