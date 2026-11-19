@@ -5,7 +5,7 @@ Run on the hub:  python3 -I ~/coord/bin/owners_sweep.py [--agent-ids FILE|-] [--
 Rows come from tools/failure_breakdown.py (same label()/signed logic) over autopilot/kit_wave_stages.tsv; owners from lane mentions
 in lanes/posts/*.md entries (stamp in the last --hours) and lanes/handoff/*.md (mtime in the last --hours), plus the registry owner in
 autopilot/OWNERS.tsv when it names a lane.  Flags: UNOWNED, DEAD-OWNER, FAILED-NO-RELAUNCH (>1 h), STALE (>3 h), UNCLASSIFIED (failure no rule names),
-CBC-FALLBACK (COORD r713 fallback, CBC-RULES-1119: the type's family failed on >= 2 plan events with a DESIGN failure -- timing,
+CBC-FALLBACK (COORD r713 fallback, CBC-RULES-1119: on the die's LAST 2 plan events the type's family failed >= 2 fix rounds (event x plan block), incl. the newest event, with a DESIGN failure -- timing,
 route, place, CTS, structural stop -- i.e. 2 normal fix rounds; the family's next event takes the close-by-construction form:
 tools/die_plan/cbc_pass.py rows).  --cbc-post prints one post line of the CBC-FALLBACK families (hourly cron posts it as CBC-RULES-1119).  stdlib only, read-only
 except the output file.  Prints per-die/flag counts.  Stamps are America/Los_Angeles."""
@@ -108,9 +108,31 @@ def cbc_family(item):
     return CBC_FAMILY.split(item.split('#')[0])[0]
 
 
-def cbc_failed_rounds(rows, since=0.0):
-    """(die, family) -> sorted plan events on which a type of the family had a DESIGN failure (current FAIL row, a FAIL row
-    superseded by a later event, or a STRUCT-STOP); infra / flow / source / lint / queue failures are not fix rounds."""
+def cbc_last_events(rows, n=2):
+    """die -> its last n plan events (kit_wave_stages `event`): events with a current row (plan_current yes) first, then by
+    first appearance, newest first.  A superseded row is re-stamped when superseded, so max(updated) does not order events."""
+    first, cur = {}, set()
+    for r in rows:
+        k = (r['die'], r.get('event') or '')
+        u = r.get('updated') or ''
+        if k not in first or u < first[k]:
+            first[k] = u
+        if r.get('plan_current') == 'yes':
+            cur.add(k)
+    out = collections.defaultdict(list)
+    for (die, ev), u in sorted(first.items(), key=lambda kv: ((kv[0] in cur), kv[1]), reverse=True):
+        if ev and len(out[die]) < n:
+            out[die].append(ev)
+    return out
+
+
+def cbc_failed_rounds(rows, since=0.0, n_events=2):
+    """(die, family) -> the fix rounds on which the family had a DESIGN failure (current FAIL row, a FAIL row superseded by a
+    later block, or a STRUCT-STOP), counted ONLY on the die's last n_events plan events (COORD r713 meaning, 11-19).  A round
+    = (event, plan block sha): a type's block changes on each fix, so two failed blocks inside one event are two rounds.
+    Flagged when >= 2 rounds failed AND the family failed on the die's newest event.  Infra / flow / source / lint / queue
+    failures are not fix rounds."""
+    last = cbc_last_events(rows, n_events)
     ev = collections.defaultdict(set)
     for r in rows:
         if since and ts(r.get('updated') or '') < since:
@@ -128,8 +150,15 @@ def cbc_failed_rounds(rows, since=0.0):
         if CBC_NOT.search(txt.split('@')[0][:120]) or not CBC_DESIGN.search(txt):
             continue
         m = CBC_EVENT.search(why)
-        ev[(r['die'], cbc_family(r['item']))].add(m.group(1) if m else r.get('event') or '?')
-    return {k: sorted(v) for k, v in ev.items() if len(v) >= 2}
+        e = m.group(1) if m else r.get('event') or '?'
+        if e not in last.get(r['die'], ()):
+            continue
+        ev[(r['die'], cbc_family(r['item']))].add((e, r.get('plan_sha') or ''))
+    out = {}
+    for (die, fam), v in ev.items():
+        if len(v) >= 2 and any(e == last[die][0] for e, _ in v):
+            out[(die, fam)] = sorted('%s/%s' % (e, b[:8]) for e, b in v)
+    return out
 
 
 def registry():
