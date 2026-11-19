@@ -31,6 +31,7 @@ def cfg0():
 
 def test_stale_row_launches_on_the_newest_earlier_tree_with_a_green_bind():
     a, st, cfg = FakeAP("/old"), {}, cfg0()
+    cfg["dies"]["s81"]["_stops_off"] = {"x"}; cfg["dies"]["s81"]["_runtime_set"] = {"a", "b"}      # live cfg carries sets (BOUND-FALLBACK 06:23: not JSON serializable)
     rows = [{"item": "t1", "kind": "type"}, {"item": "t2", "kind": "type"}]
     stale = KW.bind_preflight(a, cfg, st, "s81", rows)
     assert set(stale) == {"t1", "t2"}

@@ -59,6 +59,7 @@ import collections
 import hashlib
 import fnmatch
 import math
+import copy
 import json
 import tempfile
 import os
@@ -9054,7 +9055,7 @@ def bound_fallback(AP, cfg, st, die, rows, stale, now=None, rpy=None):
             continue
         ent = {k: bt[k] for k in BOUND_TREE_KEYS if bt.get(k)}
         ent["kit_rtl"] = dict(bt["kit_rtl"])
-        cfg2 = json.loads(json.dumps(cfg))
+        cfg2 = copy.deepcopy(cfg)                      # cfg carries sets / runtime keys: no json round trip
         ii2 = cfg2["dies"][die].setdefault("item_inputs", {})
         for r in todo:
             ii2[r["item"]] = dict(ii2.get(r["item"]) or {}, **json.loads(json.dumps(ent)))
