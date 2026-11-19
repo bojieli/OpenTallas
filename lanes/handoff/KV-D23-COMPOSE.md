@@ -2,7 +2,30 @@
 
 Work dir epyc7 /srv/opentallas-scratch2/claude/kv-d23-compose (lane clone wt/ = sparse main worktree). Hub logs intel2 ~/tmp/kvd23c.
 
-## Status 2026-11-19 10:50Z (read this first; supersedes 09:55Z)
+## Status 2026-11-19 14:10Z (read this first; supersedes 10:50Z)
+LIVE = KV-D25c (tree ..._4a40f1db_tb3c4d97_d25c). It still has NO usable bind, and the wave has 0 KV-D25c rows.
+- Both strict binds are RED, so do not adopt either.
+  - W8/d25cbindgate fails with 2 EMIT errors: kv3_hgi_v1__cl141fc26e raw Q rst_rl_127 and kv3_hgi_v1__cl42bc8b12 raw Q rst_rl_120.
+    The bind re-solves the hgi_v1 reset tree around the W1-moved core (258 -> 251 relays), but clock.landing_raw_branches still name D24c relays.
+  - W8/d25dbindgate fails with the same 2 EMIT errors plus 30 R8_STALE. Section B moved ectl e*/t1 from bound 5 to 11, and the r8_ev table was not refreshed.
+- Fix trees (build_d25.py options NORAWB=1, R8_FROM=<table>):
+  - d25c2 = D25c + NORAWB, plan 0b16e17d8005. This is the fallback bind for live.
+  - d25d4 = d25d3 + NORAWB + R8_FROM d25in/r8_ev_d25d_sectionB.json, plan a1e1d4d07494. The table changes 168 members, all hg ectl t1/e2/e3 sources, +6.
+- Pipeline for each tree:
+  1. G0 on its final path (W8/<tag>g0gate).
+  2. Seal and replicate.
+  3. Strict bind in a hardlink copy on epyc10 (less loaded). Scripts are staged in epyc10 kv-d23-compose8/.
+  4. seal_bind_dest.sh BC TREE writes <tree>_bind_<stamp> and replicates it.
+  5. On intel2: BIND_DEST=... LIVE=<D25c tree> LIVE_EV=KV-D25c BC=<tag> SKIP_SEAL=1 bash ~/tmp/kvd23c/apply_d25.sh <tag> <EVENT>.
+     Step 5 uses rt/0017e104f93a publish_apply. bind_matches runs, then tree and bind_out switch in one commit.
+  - Do not use 0017's own bind-first runner: its run.sh lacks OT_KV_HEAD_KST=2 and OT_HCPARAM_ALL=1, and it caps the job at 4 h.
+- Next event (D25e):
+  - Regenerate the hgi_v1 raw branches from the d25d4 bound RTL (qc_raw_branches_gen.py).
+  - Add the t2 split and the west-channel chain (FABLE rows section H), replacing W3 x340.
+  - Also: sink bins, PV tap split, K6.
+- d25d, d25d2 and d25d3 are superseded: do not apply them. Bind copies kw45/bindcopy_kv_d25c and bindcopy_kv_d25d are red; delete them after use.
+
+## Status 2026-11-19 10:50Z ( supersedes 09:55Z)
 LIVE = KV-D25c (unchanged; see 09:55Z). D25d is now rebuilt as tag d25d3. d25d and d25d2 are superseded: do not apply them.
 - d25d3 = D25d (K1 342 + K8 + W2 + K2 + section B 56 lanes +6) + PROVFIX, without K5. Base D24c, main b3c4d97, built by build_d25.py with D25D=1.
   - PROVFIX (KV-HUBPV 11-19): kvd23_hr_views_1118/<view>/provenance.json no longer carries any absolute original-kit path.
