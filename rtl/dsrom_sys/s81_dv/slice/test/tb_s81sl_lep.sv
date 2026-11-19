@@ -75,6 +75,7 @@ module tb_s81sl_lep #(parameter integer N = 1000, parameter integer SEED = 1, pa
         end
     end
     integer k, burst, f_main, ofl_seen, bad_main, ra_m, rb_m;
+    integer txc = 0, txc0 = 0; always @(posedge clk) if (a0v) txc <= txc + 1;
     initial begin
         seed = SEED; void'($urandom(seed));
         repeat (8) @(posedge clk); rst_n = 1;
@@ -92,7 +93,12 @@ module tb_s81sl_lep #(parameter integer N = 1000, parameter integer SEED = 1, pa
         repeat (50) @(posedge clk);
         f_main = a_f | b_f; bad_main = bad; ra_m = ra; rb_m = rb; chk = 0;
         // overflow phase: 3000 back-to-back beats A->B (1.0 > 0.764 sustained; 512-flit landing): overflow must be flagged
+        txc0 = txc; 
         for (k = 0; k < 3000; k = k + 1) begin @(negedge clk); a_ro = rbeat(0); end
+        // FABLE-FIX-S81-LEPE 11-19: sustained TX issue rate of lane A0 with the landing FIFO never empty (credit loop bound only)
+        $display("LEP_TXRATE lane A0 %0d beats in 3000 cycles (x1000: %0d; lane-bound 748, nominal off-die cap 764)", txc - txc0, (txc - txc0) * 1000 / 3000);
+        // measured 2,245 / 3,000 = 0.748 at CRP 0, 1 and 2 (the lane drain bounds it, not the credit loop); a credit-bound loop would read CRED / round trip
+        if ((txc - txc0) * 1000 < 745 * 3000) begin $display("FAIL lep: TX issue rate %0d / 3000 below the lane-bound rate 0.748 (credit loop too slow)", txc - txc0); $finish; end
         @(negedge clk); a_ro = 0;
         repeat (2000) @(posedge clk);
         ofl_seen = a_f;

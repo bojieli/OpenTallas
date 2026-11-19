@@ -103,6 +103,30 @@
 // (a THOST / TKD frame sent while a TX tag window is open gets the window's tag stamped).
 // S81-XDIE (10-24): parameter-free host-plane copy-A/B top ot_s81sl_lep_mu_hab (s_7N with the reserve pair B); mutant
 // OT_S81SL_LEP_MUT_HACCB (a HOST / KS frame accepted from pair B; bench tb_s81sl_lep_hab).
+// FABLE-FIX-S81-LEPE 11-19 (r713, COORD ruling: the tx credit loop takes +1 round trip): CRP = relay flops on the lane credit
+// return lo_r before every credit pin flop (cr_q and each regional credit_pin_r copy).  lepe_mu_LP__t2: the lane cores sit up to
+// 1,458 um from the regional TX state copies (5 bank columns x 52..1218), one pin flop per copy cannot land that in a cycle.
+// Each relay stage is one placed leg (<= 405 um with CRP 2 on 1,166 um).  Sizing: the credit pool stays CRED 8 (the lane's
+// hard landing depth, it cannot grow); the round trip goes ~8 -> 8 + CRP cycles, so the sustained issue rate bound is
+// CRED / (8 + CRP) = 0.889 (CRP 1) / 0.800 (CRP 2), above the off-die rate cap 0.764 that bounds every lane: throughput holds
+// without more credits or a skid.  CRP 3 would give 0.727 < 0.764: NOT allowed (elaboration error below).  Data latency
+// (issue -> lo_v) is unchanged; only the credit return is later (bind K: data 0, credit return +CRP).  Default 0 = unchanged;
+// a kit sets +define+OT_S81SL_LEP_CRP=<n> (all lep variants share this core).  Bench: tb_s81sl_lep LEP_TXRATE.
+`ifndef OT_S81SL_LEP_CRP
+`define OT_S81SL_LEP_CRP 0
+`endif
+module ot_s81sl_cr_relay #(parameter integer N = 0) (input wire clk, input wire rst_n, input wire d, output wire q);
+    generate if (N == 0) begin : g_wire
+        assign q = d;
+    end else begin : g_rl
+        (* keep = "true" *) reg [N-1:0] r;
+        integer i;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) r <= {N{1'b0}};
+            else for (i = 0; i < N; i = i + 1) r[i] <= (i == 0) ? d : r[i-1];
+        assign q = r[N-1];
+    end endgenerate
+endmodule
 module ot_s81sl_lep_core #(
     parameter integer DT = 512,        // TX landing FIFO depth per lane (flits; SRAM macro depth)
     parameter integer DR = 8,          // RX landing FIFO depth per lane (flits, flops) = the lane sender's CRED 8
@@ -117,6 +141,7 @@ module ot_s81sl_lep_core #(
     parameter integer NATIVE32_STD = 0, // separate opt-in standard bounded SRAM/control path
     parameter integer NATIVE32 = 0,    // opt-in MU same-age bounded control replicas
     parameter integer IDX_EN = 0,      // 1 (S81/H4 10-24): index rank-tree frames tl -> link, link -> ca / cb (see g_itx)
+    parameter integer CRP = `OT_S81SL_LEP_CRP, // credit-return relay stages (0..2), see the note above the module
     parameter integer IN_PIPE = 0      // 1 (LEPCAP 10-19): one registered face stage on ro / t_host / t_kd / mu_c (+1 edge on
                                        // each, same relative timing); ro[0] / t_kd[53] re-fanned by 6 KEPT copies <= 28 loads
 ) (
@@ -535,6 +560,9 @@ module ot_s81sl_lep_core #(
     wire [3:0] lo_v; wire [3:0] lo_r = {lo3_r, lo2_r, lo1_r, lo0_r};
     wire [4*(H+1)-1:0] lo_d;
     localparam integer CW = $clog2(CRED + 1);
+    generate if (CRP < 0 || CRP * 1000 > (CRED * 1000 * 1000) / 764 - 8000) begin : g_crp_bad
+        ot_s81sl_lep_crp_exceeds_rate_cap u_error ();      // CRED / (8 + CRP) must stay >= 0.764
+    end endgenerate
     genvar t;
     generate for (t = 0; t < NL; t = t + 1) begin : g_tx
         wire rt = (NXR != 0 && t >= 2) ? rr[4+NRX_RST+t-2] : rr[t % 2];
@@ -542,6 +570,7 @@ module ot_s81sl_lep_core #(
         reg inf, of, ov; reg [H:0] od;
         wire inq; wire [H:0] qd;                      // read word / valid one stage before the lo pin flops
         (* keep = "true" *) reg cr_q;                  // lo_r pin flop
+        wire lo_rl; ot_s81sl_cr_relay #(.N(CRP)) u_crl (.clk(clk), .rst_n(rt), .d(lo_r[t]), .q(lo_rl));
         wire [H:0] q;
         wire iss = n != 0 && cnt != 0;
         wire psh = (SAFE_FIFO)?push_lane[2*t+t/2]:pp[t / 2];
@@ -573,9 +602,10 @@ module ot_s81sl_lep_core #(
                 end
                 wire pointer_reset=rr[TX_RSTBASE+t*TX_RST_STRIDE+TX_NS+2*c];
                 wire state_reset=rr[TX_RSTBASE+t*TX_RST_STRIDE+TX_NS+2*c+1];
+                wire lo_rg; ot_s81sl_cr_relay #(.N(CRP)) u_crg (.clk(clk), .rst_n(state_reset), .d(lo_r[t]), .q(lo_rg));
                 always @(posedge clk or negedge state_reset)
                     if(!state_reset) begin count_r<=0;credit_r<=CW'(CRED);credit_pin_r<=0; end else begin
-                        credit_pin_r<=lo_r[t];
+                        credit_pin_r<=lo_rg;
                         credit_r<=credit_r+CW'(credit_pin_r)-CW'(rd_update);
                         count_r<=count_r+(AT+1)'(wr_update)-(AT+1)'(rd_update);
                     end
@@ -601,7 +631,7 @@ module ot_s81sl_lep_core #(
         always @(posedge clk or negedge rt)
             if (!rt) begin wp <= 0; rp <= 0; n <= 0; inf <= 1'b0; of <= 1'b0; cr_q <= 1'b0; cnt <= CW'(CRED); ov <= 1'b0; end
             else begin
-                cr_q <= lo_r[t];
+                cr_q <= lo_rl;
                 cnt <= cnt + CW'(cr_q) - CW'(iss);
                 if (wr) wp <= (wp == DT - 1) ? 0 : wp + 1'b1;
                 if (iss) rp <= (rp == DT - 1) ? 0 : rp + 1'b1;
