@@ -14,7 +14,7 @@ insertion between the taps that each clock a material share of the registers:
 The per-tap means are MEASURED when a kit CTS log is given (--cts-log: the last OT_TAP_BALANCE line); without one they are
 a PREDICTION from the nearest-tap split (levels of a fanout tree + p95 wire), good for ranking only and printed as such.
 
-SOLVER.  Existing taps keep name and xy (collector / relay tap indexes stay valid); taps are only APPENDED.  The per-tap
+SOLVER (clock.tap_mode explicit: append to clock.taps; grid+explicit: append to clock.added_taps).  Existing taps keep name and xy (collector / relay tap indexes stay valid); taps are only APPENDED.  The per-tap
 load target is the largest load of a tap that already meets the insertion band in the measurement (at least 0.8 x
 tap_max_sinks), so the added trees have the depth of the trees that work.  A tap is split while its load is over the
 target, or while >= FAR_MIN of its sinks are beyond --radius-um; a new tap goes to the median of the far half, legalised
@@ -188,14 +188,15 @@ def main(argv=None):
     from placement_obstacles import placement_boxes
     P = schema.Plan(schema.load(a.plan), a.plan)
     t = P.types[a.type]; ck = t.get("clock", {})
-    if ck.get("tap_mode") != "explicit":
-        raise SystemExit(f"tap_resolve: type {a.type} clock.tap_mode is {ck.get('tap_mode', 'grid')!r}; only explicit tables are appended to")
+    mode = ck.get("tap_mode", "grid")
+    if mode not in ("explicit", "grid+explicit"):
+        raise SystemExit(f"tap_resolve: type {a.type} clock.tap_mode is {mode!r}; taps are appended to explicit (clock.taps) or grid+explicit (clock.added_taps) tables only")
     clear = schema.type_tap_clear(t)
     d = json.load(open(a.regs))
     boxes = list(placement_boxes(t, halo=clear).values()) + [(x0 - clear, y0 - clear, x1 + clear, y1 + clear) for x0, y0, x1, y1 in ck.get("keepouts_um", [])]
     boxes += [(m[1] - clear, m[2] - clear, m[3] + clear, m[4] + clear) for m in d.get("macros", [])]
     legal = make_legal(t["outline_um"], clear, boxes)
-    ex = taps.explicit_tap_sites(P, a.type)
+    ex = taps.explicit_tap_sites(P, a.type) if mode == "explicit" else taps.grid_explicit_sites(P, a.type)
     names = [n for n, _, _ in ex]; exist = [(x, y) for _, x, y in ex]
     core = [(x, y) for _, x, y, _ in schema.core_taps(P, a.type)]
     pts = [((c[1] + c[3]) / 2, (c[2] + c[4]) / 2) for c in d["cells"]]
@@ -223,7 +224,7 @@ def main(argv=None):
         print(f"  {n:8s} ({x:8.2f},{y:8.2f}) sinks {q[0]:6d} beyond-radius {q[1]:5d} p95 {q[2]:5.0f} um{m}{'  ADDED' if n not in names else ''}")
     print(f"TAP_RESOLVE {a.type}: added {len(added)}, max load {max(q[0] for q in s1)}, sinks beyond radius {sum(q[1] for q in s1)}, predicted spread after {after['spread_ps']} ps")
     json.dump({"schema": "opentallas.tap_resolve.v1", "type": a.type, "plan": a.plan, "regs": a.regs, "registers": len(pts), "criterion": crit,
-               "predicted_after": after, "target_sinks": target, "radius_um": radius,
+               "predicted_after": after, "target_sinks": target, "radius_um": radius, "append_to": "clock.taps" if mode == "explicit" else "clock.added_taps",
                "added_taps": [{"name": f"clk_t{len(exist) + i}", "xy": [x, y]} for i, (x, y) in enumerate(added)],
                "load": {n: q[0] for n, q in zip(allnames, s1)}}, open(a.out, "w"), indent=1)
     return 0
