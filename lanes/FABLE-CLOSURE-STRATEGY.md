@@ -29,6 +29,7 @@ Method (V): posts since 15:30 of 18 lanes; `kit_wave_state.json` (19:08); one sc
 | 6 | KV | W1 into the next bound event without a D24c wait; one read each for hgi_v4..v7 and pc | hg / hgi 17, pc 4 | KV-D23-COMPOSE, FABLE-FIX-KV-HG; NEEDS-LANE pc |
 | 7 | S81 | Tail types with tns below -30,000 and no row | about 8 types | NEEDS-LANE, one per type |
 | 8 | HEAD | mesh_pa ECO: hold pads against 14 ps of TT room; the 16 DRC are pin-edge shorts | hd_mesh 1 | FABLE-FIX-HEAD-MESH |
+| 9 | S81 | col_h9_r0_p2 bank-leaf GRT stop: open the lpad_xo_i0 throat; judge GRT on the 2D report | col_h9_r0_p2 12 | S81-GEOM-OPUS, WAVE-FLOW-R2 |
 
 ### Lever 1. D8e reads and the D8f switch
 
@@ -142,6 +143,27 @@ Method (V): posts since 15:30 of 18 lanes; `kit_wave_state.json` (19:08); one sc
 
 **Fix (FABLE-FIX-HEAD-MESH).** If the ECO returns DRC > 0 at the same four spots, move those pin sites one track in the plan pins (structural), not a second ECO. If TT falls below -42, pad the 39 ends at capture pins with the sign-off-priced insert only.
 
+### Lever 9 (added 19:50, COORD input). col_h9_r0_p2 bank-leaf proof kit: GRT-0116
+
+**Evidence (V, epyc2 `s81-geom-opus-bank/gate_bl2/kits/col_h9_r0_p2__t1__cl0045af7b__pv622a6f97/gen/.../run_route.log` and `congestion*.rpt`).**
+- Layer table at the stop: total 77,186 = M8 43,074 + M6 29,732 + M4 3,624 + M5 454 + M7 301. Usage is low: M8 6.46 %, M6 18.33 %, all layers 14.47 %. M2 and M3 have 0 and 1.
+- The 2D overflow did converge. Report sizes by iteration: 5 -> 720 gcells (overflow 1,444), 10, 15, 20 shrinking, 25 -> 416 bytes, 30 -> 5 gcells (7), final `congestion.rpt` -> 2 gcells (4 tracks).
+- The two final gcells: `Vertical congestion, capacity:0`, bbox (1162.23, 671.46) and (1170.21, 671.46), nets `u_lpad_xo_i0.q[45 / 176 / 214 / 250]`.
+- At iteration 5, 1,183 of the 1,444 sat in x 1100 to 1200, y 600 to 700: `u_lpad_xo_i0.q` bits and their buffer nets, vertical, capacity 0 to 9. Neighbours (plan sites): `u_cf` (1131, 604), `u_t1_payload` (1123, 475), `u_n5` (1166, 734). Second spot: the north edge y 1250, ft0 output stations (`ft0_o_s*`), 67; `ft_track_use.json` flags ft0 `u_station 3.05, over_target`.
+- `OT_PGCAP region adjustments (adj 1.0 ...) by layer M7 331 M5 664 M6 588`; resource reduction M6 38.6 %, M7 36.0 %, M5 33.8 %, M8 29.0 %. `GRT-0297 Disabling NDR for 8 congested nets` (clock nets).
+
+**Root cause (I; the layer-assignment reading is not checked against the router source).**
+1. The stop itself is 4 tracks in two zero-capacity gcells: the `u_lpad_xo_i0` q bus leaves its landing pad through a vertical throat at x 1162 to 1171, y 671 that the pad / `u_cf` obstruction and the PG-cap regions close completely.
+2. The 77,186 is per-layer overflow after layer assignment, on the two upper horizontal layers only. M6 and M8 carry regional capacity cuts (PG-cap M6 at adj 1.0 in 588 regions; M8 grant runs) while M2 / M4 are 76 to 80 % free. The 2D router balanced the sum; the assignment put horizontal demand on M6 / M8 where they have none. This is a capacity-model effect, not a lack of tracks: 63,485 gcells over 90 % at 14 % total usage cannot be real demand.
+
+**Fix form (S81-GEOM-OPUS; rows for the delta after D8f, 12 types).**
+1. Structural: open the throat. Shift the `u_lpad_xo_i0` pad (or `u_cf`) so its q pins face a channel with vertical tracks, or give the first hop of the 251-plus q bits a relay row on the open side (same form as the D8f u_vq re-site). Check with one number: capacity > 0 in the gcells at x 1160 to 1172, y 671.
+2. ft0 north edge: spread the ft0 output stations (station use 3.05 against a 0.5 target) over two rows.
+3. Flow, WAVE-FLOW-R2: the kit should judge GRT on the 2D report (4 tracks here) and carry on to detailed route when the 2D overflow is under a few tens, as the QC kits do (`GRT congestion allowed`). The kept `5_1_grt-failed.odb` can go to detailed route as it is; that is the cheapest proof of whether the M6 / M8 figure is real.
+4. S81-GEOM-OPUS: check why PG-cap blocks M6 at adj 1.0 in 588 regions on this type; a partial adjustment restores the upper horizontal layer.
+
+Unblocks col_h9_r0_p2 12. Not checked: the bank-leaf row itself (what gate_bl2 changed against the wave kit), and whether the wave p2 kits stop the same way.
+
 ## 2. The 1530 levers: outcome
 
 | 1530 # | outcome | note |
@@ -166,6 +188,7 @@ Method (V): posts since 15:30 of 18 lanes; `kit_wave_state.json` (19:08); one sc
 7. All dies: judging a routed kit with its kit-frozen `signoff.py` when the kit predates ad8672055e.
 8. HEAD: a second blind ECO on mesh_pa if the same four pin-edge shorts return.
 9. Any verdict from `4_cts_final.rpt` (unchanged from 1840).
+10. S81: reading 77,186 on the p2 proof kit as missing tracks; the 2D overflow is 4. No outline or channel growth for it before the failed DB has been through detailed route.
 
 ## 4. Not checked
 
