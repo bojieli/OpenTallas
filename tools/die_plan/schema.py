@@ -1431,6 +1431,12 @@ SCHEMA = {
             # 0 opts a type out.  1.0 = the measured routable form (rows-1 strips are ~2.6 and jam GRT).
             cland_strip_density={"type": "number", "minimum": 0},
             cland_strip_density_types={"type": "object", "additionalProperties": {"type": "number", "minimum": 0}},
+            # KIT-SYNTH-TARGET-1119 (opt-in, absent = the default recipe): ABC recipe of the kit synthesis,
+            # physical/common_flow/abc_<name>.script (stock | kit); abc_recipe = plan-wide, abc_recipe_types = {type or base: name} wins;
+            # abc_target_ps = the script's delay target (default 600).
+            abc_recipe={"type": "string", "enum": ["stock", "kit"]},
+            abc_recipe_types={"type": "object", "additionalProperties": {"type": "string", "enum": ["stock", "kit"]}},
+            abc_target_ps={"type": "number", "minimum": 0},
             # QC-S28-VISFORM 11-12 (opt-in, absent = unchanged kits): face_flops.tcl E/W face pin-register band per type
             # or unsplit base: column pitch in sites (default 40 = 2.16 um) and the row stride s (column c takes rows (row + c) mod s = 0)
             face_flop_ew_types={"type": "object", "additionalProperties": {

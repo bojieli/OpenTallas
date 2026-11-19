@@ -8649,6 +8649,27 @@
       "minimum": 0
      }
     },
+    "abc_recipe": {
+     "type": "string",
+     "enum": [
+      "stock",
+      "kit"
+     ]
+    },
+    "abc_recipe_types": {
+     "type": "object",
+     "additionalProperties": {
+      "type": "string",
+      "enum": [
+       "stock",
+       "kit"
+      ]
+     }
+    },
+    "abc_target_ps": {
+     "type": "number",
+     "minimum": 0
+    },
     "face_flop_ew_types": {
      "type": "object",
      "additionalProperties": {

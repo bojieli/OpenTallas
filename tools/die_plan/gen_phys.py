@@ -351,6 +351,46 @@ CLAND_STRIP_ROWS_FAMILY_RE = re.compile(r"^(sle|slw)_fw_")
 CLAND_STRIP_ROWS_FAMILY_DEFAULT = 2
 
 
+ABC_RECIPES = ("stock", "kit")      # physical/common_flow/abc_<name>.script; stock = the ORFS abc_speed.script, unchanged
+ABC_RECIPE_DEFAULT = "kit"
+ABC_TARGET_PS_DEFAULT = 600
+
+
+def _abc_recipe(budgets, tn):
+    """KIT-SYNTH-TARGET-1119 (FABLE-CLOSURE-STRATEGY lever 2): the ABC recipe of type tn's kit synthesis.  Kit-owned scripts live in
+    physical/common_flow/abc_<name>.script (placeholder @D@ = the delay target, ps); `stock` leaves the ORFS abc_speed.script, which
+    carries no delay target (no {D}), alone.  A gen-environment OT_ABC_RECIPE (kit-wave item_env, per-row) wins, then
+    budgets.abc_recipe_types {type or unsplit base: name}, then budgets.abc_recipe, then ABC_RECIPE_DEFAULT.  keep_hierarchy /
+    ot_dp_dly_keep modules are untouched: the recipe replaces only the script text of the same yosys `abc` call."""
+    v = os.environ.get("OT_ABC_RECIPE", "").strip()
+    if not v:
+        per = budgets.get("abc_recipe_types") or {}
+        v = per.get(tn, per.get(tn.split("__")[0])) if tn is not None else None
+        v = v or budgets.get("abc_recipe") or ABC_RECIPE_DEFAULT
+    if v not in ABC_RECIPES:
+        raise ValueError(f"abc recipe {v!r} is not one of {ABC_RECIPES}")
+    return v
+
+
+def _abc_target_ps(budgets):
+    v = os.environ.get("OT_ABC_TARGET_PS", "").strip() or budgets.get("abc_target_ps") or ABC_TARGET_PS_DEFAULT
+    v = float(v)
+    if not v > 0:
+        raise ValueError("abc target ps must be > 0")
+    return int(v) if v == int(v) else v
+
+
+def _abc_install(budgets, tn, kd, repo):
+    """Write kd/abc_kit.script for a non-stock recipe (the run script copies it over abc_speed.script in the container)."""
+    r = _abc_recipe(budgets, tn)
+    if r == "stock":
+        return None
+    text = _common_flow_file(f"abc_{r}.script", repo).read_text().replace("@D@", str(_abc_target_ps(budgets)))
+    text = "".join(l for l in text.splitlines(True) if not l.lstrip().startswith("#"))
+    (kd / "abc_kit.script").write_text(text)
+    return r
+
+
 def _cland_strip_rows(budgets, tn):
     """DIE-QC-97 11-09 opt-in: the OT_CLAND_STRIP_ROWS of type tn from budgets.cland_strip_rows_types (type, then its
     unsplit base name) else budgets.cland_strip_rows; None (absent or 1) = unchanged kit.  landing_placement.tcl takes
@@ -6575,6 +6615,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            f"export PLACE_DENSITY = {util:g}",
            "export SYNTH_HIERARCHICAL = 0",
            *_rtl_lint_dead_output_vars(),
+           *([f"export OT_ABC_RECIPE = {_abc_recipe(P.budgets, tn)}", f"export OT_ABC_TARGET_PS = {_abc_target_ps(P.budgets)}"]
+             if _abc_recipe(P.budgets, tn) != "stock" else []),
            *_lec_frontend_vars(),
            "export SYNTH_REPEATABLE_BUILD = 1",
            # HEAD-KITS-3 10-28: OWNER D-ROM-2 declared-logic math tables (tools/mem_compiler/rom_declared_logic.json,
@@ -7333,6 +7375,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     # Copy the current shared hook and its conditional helpers beside each generated kit.
     for f in KEEP_REGS_HOOK:
         shutil.copyfile(_common_flow_file(f, Path(__file__).resolve().parents[2]), kd / f)
+    _abc_install(P.budgets, tn, kd, Path(__file__).resolve().parents[2])   # KIT-SYNTH-TARGET-1119
     # SIGNOFF 10-24: uniform sign-off as the final kit-flow step (run_kit.sh after route): signoff.py + its helpers
     from signoff import copy_signoff_bundle
     copy_signoff_bundle(kd, extra=("kit_preflight.py", "legacy_gate.py", "core_clock_band.py"))
@@ -8055,6 +8098,7 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
   -e HUID=$(id -u) -e HGID=$(id -g) "${LEC_MATCH_DOCKER[@]}" "${GRTD[@]}" -e OT_KIT_IR=${OT_KIT_IR:-defer} -e OT_LEC_HINTS_PRESEED="${OT_LEC_HINTS_PRESEED:-0}" -e OT_LEC_EARLY_COMPARE="${OT_LEC_EARLY_COMPARE:-0}" -e OT_LEC_SUPERSET_VEC="${OT_LEC_SUPERSET_VEC:-$LEC_SUPERSET_DEFAULT}" -w /OpenROAD-flow-scripts/flow "$GIMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; \
   M='make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=$CPUS'; ${KWRS_F}${KWRS_M}${KWRS_G}rc=0; if [ -f /work/orfs_hold_mm.py ] && grep -q 'def patch_intermediate_power' /work/orfs_hold_mm.py; then python3 -I /work/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts --metrics-only > /work/orfs_metrics.log 2>&1 || { cat /work/orfs_metrics.log; echo 'INTERMEDIATE_POWER optimization unavailable: full power reporting retained'; }; fi; \
   python3 -I /work/native_bb.py /OpenROAD-flow-scripts/flow/scripts/synth_preamble.tcl --physical-synth /OpenROAD-flow-scripts/flow/scripts/synth.tcl || exit 9; \
+  [ ! -f /work/abc_kit.script ] || cp /work/abc_kit.script /OpenROAD-flow-scripts/flow/scripts/abc_speed.script || exit 9; \
   if [ -f /work/partition_ir.py ] && [ \"\$OT_KIT_IR\" = defer ]; then python3 -I /work/partition_ir.py patch /OpenROAD-flow-scripts/flow/scripts && export OT_DEFER_PARTITION_IR=1 || echo 'PARTITION_IR WARNING: patch refused, kit IR runs inline in 6_report'; fi; \
   python3 -I /work/sdc_lint.py /work --liberty \$(ls /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_*RVT_*.lib* 2>/dev/null | grep -v FAKE) > /work/sdc_lint.log 2>&1; rc=\$?; tail -3 /work/sdc_lint.log; \
   if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR sdc_lint' | tee -a /work/FAIL_PREFLOOR; fi; \
