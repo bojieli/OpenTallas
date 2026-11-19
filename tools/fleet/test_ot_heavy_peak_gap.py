@@ -36,7 +36,8 @@ class PeakGap(unittest.TestCase):
 
     def test_the_status_row_reports_the_gap(self):
         src = open(P).read()
-        self.assertIn("peak_gap=round(gap, 1)", src)
+        self.assertIn("peak_gap=round(raw_gap, 1)", src)
+        self.assertIn('conf("PEAK_GAP_FACTOR")', src)               # charged only on request: the default 0 keeps the owner's light admission
         self.assertIn('avail - conf("INV_HEADROOM_GB") - gap', src)
 
 

@@ -885,7 +885,7 @@ DEFAULTS = dict(GROWTH_FACTOR=0.5, NEED_FACTOR=0.7, MIN_AVAIL_FRAC=0.05,     # v
                 OLD_MIN_SPAN_S=200,                                          # v14 OLD SLOW (SCHED-TUNE2 10-22)
                 MEASURED_RESERVE=1.0, RESERVE_K=1.5, RESERVE_HORIZON_S=1800,  # v16 MEASURED RESERVE (coordinator 10-22)
                 GROWTH_CAP_AVAIL_FRAC=0.0, DIE_HEADROOM_GB=64.0,       # OWNER 10-22 20:10: growth reservation 0 %
-                HARD_INVARIANT=1.0, INV_HEADROOM_GB=64.0, INV_PAST_PEAK_FACTOR=1.0,
+                HARD_INVARIANT=1.0, INV_HEADROOM_GB=64.0, INV_PAST_PEAK_FACTOR=1.0, PEAK_GAP_FACTOR=0.0,
                 PHASE_MARGIN=0.0, SEED_STEM_TOKENS=4.0, PHASE_CAP_AVAIL_FRAC=0.10,
                 SIMPLE_ADMIT=0.0, PLAN_BYPASS=0.0, PLAN_RESERVE=0.0, STAGE_PEAK=0.0, STAGE_LOOKAHEAD=0.0, STAGE_PEAK_FRAC=1.0, PLAN_PRIO=0.0, PLAN_MAX_RUNNING=1.0, PLAN_HOLD_MAX_S=7200.0, PLAN_DRAIN_S=0.0, PLAN_EARLY_S=0.0, SMALL_JOB_GB=0.0, SMALL_JOB_MAX=6.0, SMALL_FLOOR_GB=36.0, SIMPLE_PEAK=0.0, PEAK_FALLBACK_SHARE=1.0, PEAK_GROWTH_FRAC=0.05, PEAK_PCT=0.9, PEAK_MIN_N=3.0, SIMPLE_NEED_FACTOR=1.0, SIMPLE_FRESH_S=0.0, REAL_ADMIT=0.0, REQ_PEAK_MULT=1.1, REQ_PEAK_PAD_GB=2.0, CLASS_LOWER_MIN_N=3.0)   # REALMEM_1110 (KW-FIX-44, OWNER/COORD 11-10)  # OWNER 10-22 20:10: PHASE_MARGIN 0                      # v17.4 (coordinator 10-22)                    # v17 HARD INVARIANT (S81c/TOKc-ADM 10-22)
 
@@ -1948,7 +1948,10 @@ def free(path):
     table = sizes()
     if conf("SIMPLE_ADMIT"):   # FREE_LIGHT_1114 ADMIT-TUNE-1: SIMPLE_ADMIT needs no per-unit books; read_units() ran one `systemctl --user show` per unit and 326 piled-up probes saturated the user manager on a loaded host (epyc10 load 200: --free > 80 s, ot-run probe timeouts)
         wait, req = waiters(table)
-        gap = peak_gap_gb() * max(0.0, min(1.0, conf("INV_PAST_PEAK_FACTOR")))
+        raw_gap = peak_gap_gb()
+        # 11-18: shown in the status row ('peak N') but CHARGED only when PEAK_GAP_FACTOR (/etc/ot-heavy.conf, default 0) is set: charging the unused part of every reservation
+        # (request-sized charges of young / native jobs) took admit to 0 on 5 hosts for ~30 min.  The owner removed the reserve terms (r709 keeps memory admission, not a reserve).
+        gap = raw_gap * max(0.0, min(1.0, conf("PEAK_GAP_FACTOR")))
         can = max(0, math.floor(avail - conf("INV_HEADROOM_GB") - gap))
         try:
             v = os.statvfs(path)
@@ -1965,7 +1968,7 @@ def free(path):
                               ncpu=os.cpu_count(), running=running, fresh=0, committed_threads=committed_threads(), waiting=len(wait), waiting_gb=sum(wait),
                               waiting_req_gb=sum(req), disk_gb=disk, admit_gb=can, free_gb=can - sum(wait), die_admit_gb=can,
                               die_reserve=None, inv_free_gb=can, committed_gb=round(total - avail), inv_limit_gb=round(total - conf("INV_HEADROOM_GB")),
-                              other_gb=0, admit_gb_v16=can, inv_terms=dict(in_use=round(total - avail, 1), peak_gap=round(gap, 1), reserve=0, fresh=0, phase_extra=0, phase_raw=0),
+                              other_gb=0, admit_gb_v16=can, inv_terms=dict(in_use=round(total - avail, 1), peak_gap=round(raw_gap, 1), reserve=0, fresh=0, phase_extra=0, phase_raw=0),
                               simple_admit=True)))
         return
     rows = read_units()
