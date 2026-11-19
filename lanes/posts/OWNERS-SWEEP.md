@@ -66,3 +66,7 @@
   S81: 301 KIT-WAVE LAUNCH + 58 RELAUNCH-ON-FIX since 06:40 (BOUND-FALLBACK 06:40:52 on D8f tree); 349 rows running; 11 CBC-FALLBACK families flagged.
   40 S81 hold-after-CTS rows owned by S81-CLOCK-WINDOW-1119 (running, no flag). HEAD 2 running (hd_mesh CBC-FALLBACK); QC 101 running.
   Committed lanes/OWNERS-SWEEP.tsv + bin/owners_sweep.py
+- 2026-11-19 07:54 PST OWNERS-SWEEP-09xx 07:55: 470 unsigned rows (s81 351, qc 62, kv 55, head 2; cores 0 open except kv). Flagged: UNOWNED 105 (s81 71, qc 14, kv 10... see tsv), DEAD-OWNER 61 (mostly KIT-WAVE-1 STALE.tsv fallback), STALE s81 49 + head 1, STALE-KV-FALLBACK kv 55 (not owner faults).
+  FAILED-NO-RELAUNCH 0: 152 s81 FLOW ssh TimeoutExpired rows are 0.8 h old, inside the 1 h grace; recheck next tick.
+  Suggested owners: s81 unowned -> S81-FAILED-TRIAGE-1119 / FABLE-TYPE-REDUCE-S81-REST; qc unowned -> TYPES-QC-FAIL-1115; kv unowned -> KV-PC-HGI-1119 after WAVE-PILOT-FIX.
+  File: lanes/OWNERS-SWEEP.tsv (owner = latest 6 h post/handoff naming the item or its family).
