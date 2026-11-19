@@ -88,9 +88,11 @@ class StaleEvent(unittest.TestCase):
 class SignedAndOldPlan(unittest.TestCase):
     def test_old_plan_route_hold_is_retired_and_signed_rows_are_not_counted_as_waiting(self):
         import under_use as UU
-        cfg = {"dies": {"d": {"enabled": True, "event": "e2"}}}
-        st = {"items": {"a": {"die": "d", "item": "a", "event": "e1", "status": "ROUTE-HELD", "route_hold": "SKIP-OLDPLAN: attempt of plan x"},
-                        "b": {"die": "d", "item": "b", "event": "e1", "status": "ROUTE-HELD", "route_hold": "WAIT-FORM: visual"}}}
+        cfg = {"dies": {"d": {"enabled": True, "event": "e2", "plan": "p", "gen_host": "h"}}}
+        # WAVE-PILOT-FIX 11-19: the hold is retired only when the new event's block of the item is KNOWN to differ (an unprobed new event is not "old")
+        st = {"items": {"a": {"die": "d", "item": "a", "event": "e1", "block_sha": "OLD", "status": "ROUTE-HELD", "route_hold": "SKIP-OLDPLAN: attempt of plan x"},
+                        "b": {"die": "d", "item": "b", "event": "e1", "status": "ROUTE-HELD", "route_hold": "WAIT-FORM: visual"}},
+              "plans": {"h:p|e2": {"blocks": {"a": "NEW"}}}}
         KW.retire_superseded_rows(None, cfg, st, now=4)
         self.assertEqual((st["items"]["a"]["status"], st["items"]["a"]["retire"]), ("CANCELLED", "oldplan-route-hold"))
         self.assertEqual(st["items"]["b"]["status"], "ROUTE-HELD")                     # an owner-review hold stays

@@ -1122,3 +1122,33 @@ class CancelRowsNoStop(unittest.TestCase):
             self.assertFalse(st.get("struct_stops"))
             self.assertEqual(calls[0][0], "OPERATOR")
             self.assertEqual(st["items"]["a"]["status"], "CANCELLED")
+
+
+class OldPlanUnknownProbe(unittest.TestCase):
+    """COORD 11-19: SKIP-OLDPLAN only for a block known not to be current; an unknown (new event not probed yet) routes"""
+
+    def cfg(self):
+        return {"dies": {"qwen_compute": {"event": "N43G", "enabled": True, "plan": "p", "gen_host": "h"}}}
+
+    def rec(self):
+        return {"die": "qwen_compute", "item": "t", "event": "N42", "block_sha": "BLK1"}
+
+    def test_no_cached_probe_of_the_new_event_does_not_skip(self):
+        self.assertIsNone(KW.enqueue_skip_reason(self.cfg(), self.rec(), {"plans": {}}))
+
+    def test_known_unchanged_block_routes_known_changed_block_is_skipped(self):
+        st = {"plans": {"h:p|N43G": {"blocks": {"t": "BLK1"}}}}
+        self.assertIsNone(KW.enqueue_skip_reason(self.cfg(), self.rec(), st))
+        st = {"plans": {"h:p|N43G": {"blocks": {"t": "BLK2"}}}}
+        self.assertEqual(KW.enqueue_skip_reason(self.cfg(), self.rec(), st)[0], "SKIP-OLDPLAN")
+
+    def test_old_plan_route_hold_is_retired_only_when_the_block_is_known_changed(self):
+        def run(blocks):
+            cfg = self.cfg()
+            r = dict(self.rec(), status="ROUTE-HELD", route_hold="SKIP-OLDPLAN: x")
+            st = {"items": {"k": r}, "plans": {"h:p|N43G": {"blocks": blocks}} if blocks is not None else {}}
+            KW.retire_superseded_rows(None, cfg, st, now=1.0)
+            return r["status"]
+        self.assertEqual(run(None), "ROUTE-HELD")                  # unknown: left alone
+        self.assertEqual(run({"t": "BLK1"}), "ROUTE-HELD")         # current block: the hold is stale but nothing is cancelled
+        self.assertEqual(run({"t": "BLK2"}), "CANCELLED")
