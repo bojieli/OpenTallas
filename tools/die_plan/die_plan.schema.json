@@ -6234,6 +6234,48 @@
      "realize_internal_stations": {
       "type": "boolean"
      },
+     "place_regions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "name",
+        "inst_re"
+       ],
+       "properties": {
+        "name": {
+         "type": "string",
+         "pattern": "^[A-Za-z][A-Za-z0-9_]*$"
+        },
+        "inst_re": {
+         "type": "string",
+         "minLength": 1
+        },
+        "util": {
+         "type": "number",
+         "minimum": 0.1,
+         "maximum": 0.9
+        },
+        "centre_um": {
+         "type": "array",
+         "minItems": 2,
+         "maxItems": 2,
+         "items": {
+          "type": "number"
+         }
+        },
+        "near_re": {
+         "type": "string",
+         "minLength": 1
+        },
+        "note": {
+         "type": "string"
+        }
+       }
+      }
+     },
      "ft_spread": {
       "type": "boolean"
      },
