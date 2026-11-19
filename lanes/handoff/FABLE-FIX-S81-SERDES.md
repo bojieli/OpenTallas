@@ -260,3 +260,12 @@ Files: epyc9 /srv/opentallas-scratch2/claude/fable-fix-s81-serdes3/{E (harness, 
 - GRT gate, TT setup_est / hold_est: H18 -191.68 / -5.26 STOP; H19 -108.47 / -20.48 PASS (FF +59.2 / -60.3); H20 -99.98 / -10.92 PASS (FF pending).
   H19 and H20 are within 9 ps: no GRT-level case for the star over k-means roots. Routed pair skew and FF hold decide.
 - H19 detail route first pass 88,168 violations. H20 entering route. H21 r2 in placement.
+
+## State 2026-11-18 21:15 PST
+- Die trunk key defined: main cf3ac71da15, clock.pad_clock.pins[].die_trunk = {from_xy_um, stations_um, layer, host die|type, evidence,
+  optional cell}, type frame, hops <= 405 um, validated by pad_clock.die_trunks + schema. NO reader yet (die clock tool / kit): open work.
+  Open design point sent to S81-DIE-R3: repeater sites inside a hard type are not die-owned, so host "die" only works unrepeated
+  (stations []) or with sites outside the type; host "type" = kit builds the chain (the star feeder already does this in-kit).
+- Routed status: none routed. H19 detail route 88,168 -> 18,478 -> 11,584 violations (3 passes). H20 in detail route, no pass line yet;
+  GRT gate TT -99.98 / -10.92, FF +67.06 / -27.35. H21 (star + boot path localisation): OT_BOOT_PATH stage 0->1 1518 -> 362 um,
+  1->2 1106 -> 340 um; rck span 86.3 after STB; CTS finished 04:59 UTC, GRT gate pending.
