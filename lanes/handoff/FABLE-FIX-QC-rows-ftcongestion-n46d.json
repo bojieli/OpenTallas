@@ -3,7 +3,7 @@
  "for": "QC-PLAN-R3 (N4.6d)",
  "date": "2026-11-19",
  "type": "sle_st_a_v2 family (pk_sta3 pvd2ec7769, outline 622.08 x 1339.2)",
- "status": "ANALYSIS + RECOMMENDED ROW, sites NOT final: needs ft_channel_route (QC-PLAN-R3 tool); no free column proven by me",
+ "status": "v2: sites core-clear (see v2_core_clear_sites); effect still unproven (needs a GRT kit on the new plan)",
  "box_um": [
   450,
   320,
@@ -73,5 +73,65 @@
  "not_verified": [
   "no ft_channel_route run, no GRT with the moved stations, core clearance of (300,257) (300,512) (400,120) only checked by eye against the cores list",
   "effect on the 3 nets is unproven: proof needs a GRT-stage kit with the new plan (r712)"
- ]
+ ],
+ "v2_core_clear_sites": {
+  "x_fw_ctl": {
+   "stations_um": [
+    [
+     522.1,
+     1.0
+    ],
+    [
+     450,
+     120
+    ],
+    [
+     300,
+     257
+    ],
+    [
+     220,
+     512
+    ],
+    [
+     420,
+     640
+    ]
+   ],
+   "hops_um": [
+    191,
+    287,
+    335,
+    328,
+    231
+   ],
+   "clearance_checked": "against sle_st_a_v2 pvd2ec7769 hard_cores + halo + 2 um, plan_n46_a.json; gaps 20.2 / 17.2 / 21.9 / 88.0 um (Manhattan) to the nearest core",
+   "why_changed": "v1 sites (300,512) and (400,120) HIT hard cores u_r1 (242-404, 406-568) and u_r0 (268-430, 78-240); column x 240-300 is blocked, free gaps are x<=220 and the band y 240-406 between them",
+   "added_cycles": "+2 stations vs now (3 -> 5 incl the pin station): +2 on the x_fw_ctl lane"
+  },
+  "b_tw_data_i_station": {
+   "relay_site_um": [
+    [
+     500,
+     540
+    ]
+   ],
+   "alt_um": [
+    [
+     480,
+     560
+    ],
+    [
+     520,
+     580
+    ],
+    [
+     470,
+     600
+    ]
+   ],
+   "clearance_checked": "all clear; (500,540) gap 49.7 um to nearest core",
+   "use": "one mid-run station on b_tw_data_i landing -> bin (net distance 230 um, 20 um pin spread of the detoured nets): splits the 1,080-net run so no net has to detour 300 um"
+  }
+ }
 }
