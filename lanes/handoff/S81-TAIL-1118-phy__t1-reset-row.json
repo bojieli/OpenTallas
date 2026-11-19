@@ -1,0 +1,23 @@
+{
+ "schema": "opentallas.plan_row_request.v1",
+ "owner": "S81-TAIL-1118",
+ "for": ["S81-DIE-R3", "S81-GEOM-OPUS"],
+ "event": "S81 delta after D8f (D8g/D8h)",
+ "type": "phy__t1",
+ "class": "reset recovery (no reset staging inside a native hard partition)",
+ "evidence": {
+  "kit": "intel1 .../3fa87b84b18/items/phy__t1/attempt_14",
+  "tt_setup": {"wns_ps": -2467.98, "tns_ps": -456367.62, "ends": 2101, "worst_end": "u_bound.u_bin_dfi_i0/eq$_DFF_PN0_/RESETN"},
+  "bound": "wire rst_n = arst_n (bind.py: type is hard in wf_plan, 'delivered reset to the native hard partition'); 18 ot_dp_st banks (8 x W=1368 dfi_i, bout_*) take .rst_n(rst_n) directly; ~11k async RESETN pins on one net",
+  "path": "arst_n -> input buf -> 8 serial BUFx16f (placement wire repair, ~40 ps + 36 ps wire each) -> RESETN; vclk ideal 250 ps, period 833 ps",
+  "contrast": "gunit__t1 clock.landing_contract.collector_tree has relays/core_resets/local_reset_taps and its bound carries ot_dp_rrelay chains; phy__t1 clock has only layer, tap_*, no landing_contract; reset = {sync_stages 2, tap_um [4320,1226.88]}"
+ },
+ "rows": [
+  {"path": "partition_types.phy__t1.reset", "set": {"local_relay_tree": true, "relay_um": 405, "max_fanout": 32, "group_by": "bank (u_bin_dfi_i0..i7, u_bout_*)", "root_tap_um": [4320.0, 1226.88]},
+   "meaning": "a kept ot_dp_rrelay tree under the existing reset tap: tap -> per-bank root relay -> leaf relays of <= 32 RESETN pins within 405 um of their flops (fstart_reset_delta.py leaf model); each stage is a synchronous relay, 1 extra cycle per level (boot holds rst_n >= 64 clk, so +2..3 cycles is legal); die wf_plan hard-partition reset depth raised by the same K"},
+  {"path": "partition_types.phy__t1.clock.landing_local_resets", "set": "one row per leaf relay group as fstart_reset_delta.py writes them (D from the bound relay of equal depth)", "alternative_if_tool_cannot_target_ot_dp_st": "extend fstart_reset_delta.py INST to the ot_dp_st pin-register banks"},
+  {"path": "partition_types.phy__t1.clock.tap_max_sinks", "keep": 1500, "note": "unchanged (11-02 hold KEEP on phy__t1)"}
+ ],
+ "not_recommended": "multicycle/false path on arst_n recovery: removal on the same net fails the other way and it hides an 11k-pin net",
+ "retry": "no relaunch of phy__t1 until the plan row lands (unchanged relaunch after design fail is forbidden)"
+}
