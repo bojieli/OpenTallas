@@ -204,6 +204,81 @@ def post_text_hit(path, posts):
     return bool(posts) and re.search(re.escape(path.rstrip("/")) + r"(?![A-Za-z0-9_.-])", posts) is not None
 
 
+class LiveRefs:
+    """LIVE-INPUT GUARD (COORD 11-18: 03:11 UTC epyc8, s81-die-r3-e8/gitshim and /d8t went on age alone, gitshim was a live input of S81 D8f bind r3): every absolute path a running
+    process names - cmdline args, environment values (PATH / colon lists split), cwd, exe, root, open fd and map targets, mount sources - and so every queued ot-run job's argv and env (a waiter is a
+    process).  A candidate is live when a ref is the candidate or inside it, or when it is a direct child of a lane root (claude/<lane>/<child>) that holds any ref: the lane is in use as a whole.
+    mtime is never the reason to delete such a path.  Rescanned at most every `ttl` s (a pass is long); `proc` is a /proc stand-in for tests."""
+    def __init__(self, claude, proc="/proc", ttl=30.0, clock=time.time):
+        self.claude, self.proc, self.ttl, self.clock, self.t, self.refs = claude.rstrip("/") + "/", proc, ttl, clock, -1e9, set()
+
+    def scan(self):
+        refs, mnts = set(), set()
+        def add(v):
+            for x in re.split(r"[\0:=,;\s]+", v):
+                if x.startswith("/") and len(x) > 4:
+                    refs.add(x.rstrip("/"))
+        try:
+            pids = [p for p in os.listdir(self.proc) if p.isdigit()]
+        except OSError:
+            return refs
+        for p in pids:
+            d = f"{self.proc}/{p}"
+            for f in ("cmdline", "environ"):
+                try:
+                    add(open(f"{d}/{f}", "rb").read().decode("utf-8", "replace"))
+                except OSError:
+                    pass
+            for l in ("cwd", "exe", "root"):
+                try:
+                    add(os.readlink(f"{d}/{l}"))
+                except OSError:
+                    pass
+            try:
+                for fd in os.listdir(f"{d}/fd"):
+                    try:
+                        add(os.readlink(f"{d}/fd/{fd}"))
+                    except OSError:
+                        pass
+            except OSError:
+                pass
+            try:
+                ns = os.readlink(f"{d}/ns/mnt")
+                if ns not in mnts:
+                    mnts.add(ns)
+                    for ln in open(f"{d}/mountinfo"):
+                        f = ln.split()
+                        if len(f) > 4:
+                            add(f[3] + "\0" + f[4])
+            except OSError:
+                pass
+        return refs
+
+    def hit(self, path):
+        if self.clock() - self.t > self.ttl:
+            self.refs, self.t = self.scan(), self.clock()
+        path = path.rstrip("/")
+        for r in self.refs:
+            if r == path or r.startswith(path + "/"):
+                return r
+        if path.startswith(self.claude):
+            rel = path[len(self.claude):].split("/")
+            if len(rel) == 2:                               # claude/<lane>/<child>: any live ref inside the lane root keeps its children
+                root = self.claude + rel[0] + "/"
+                for r in self.refs:
+                    if r.startswith(root):
+                        return r
+        return ""
+
+
+def live_refuse(refuse, live):
+    """wrap a guard refuse(): a path a running process or queued job names is refused first, whatever its age"""
+    def f(*a, **k):
+        h = live.hit(a[0]) if live else ""
+        return ("live input: a running process / queued job names " + h) if h else refuse(*a, **k)
+    return f
+
+
 def free_gb(path):
     s = os.statvfs(path)
     return s.f_bavail * s.f_frsize / 1e9
@@ -466,6 +541,7 @@ def run_attempts(claude, cfg, state, refs, ids, g, prot, log, apply=False, delet
     """delete attempt_candidates through the guard.  The kit_wave work root (runs/<die>/kit-wave) is a protected ANCESTOR of every attempt, so each listed attempt gets an exact
     allow entry (1 h, written here, reason cites COORD 11-18): it skips protected ancestors only, never a protected path inside, a live process or the signed-store check."""
     free = free or (lambda: free_gb(claude)); res = []
+    live = kw.pop("live", None)
     cands = attempt_candidates(claude, cfg, state, refs, now, **kw)
     exp = int((now or time.time()) + 3600)
     allow = getattr(g, "ALLOW_EXACT", None)
@@ -478,7 +554,7 @@ def run_attempts(claude, cfg, state, refs, ids, g, prot, log, apply=False, delet
         if deadline and time.time() > deadline:
             res.append(dict(stop="deadline")); break
         rec = dict(tree=p, t=time.strftime("%F %T"), kind="attempt", why=why0)
-        why = refuse_attempt(g, p, prot)
+        why = refuse_attempt(g, p, prot, live)
         if not why and eco_marker(p):
             why = "hold ECO marker < 7 d"
         if not why:
@@ -502,7 +578,9 @@ def run_attempts(claude, cfg, state, refs, ids, g, prot, log, apply=False, delet
     return res
 
 
-def refuse_attempt(g, p, prot):
+def refuse_attempt(g, p, prot, live=None):
+    if live and live.hit(p):
+        return "live input: a running process / queued job names " + live.hit(p)
     try:
         return g.refuse(p, prot)
     except TypeError:
@@ -534,11 +612,12 @@ def main(argv=None):
         claude = os.path.dirname(a.root.rstrip("/"))
         deadline = time.time() + a.max_s if a.max_s else None
         posts = open(a.posts, errors="replace").read() if a.posts else ""
+        live = LiveRefs(claude)
         if a.attempts:                                  # attempts first (the biggest, most certain dead weight), then idle lanes
             res += run_attempts(claude, json.loads(cfgt), json.loads(texts[1]), open(a.refs, errors="replace").read() if a.refs else "", ids, g, prot,
-                                lambda r: lf.write(json.dumps(r) + "\n"), a.apply, old_idle_h=a.idle_h, deadline=deadline)
+                                lambda r: lf.write(json.dumps(r) + "\n"), a.apply, old_idle_h=a.idle_h, deadline=deadline, live=live)
         if a.lanes:
-            res += run_lanes(claude, ids, lambda t: g.refuse(t, prot), lambda r: lf.write(json.dumps(r) + "\n"), a.target, a.apply, idle_h=a.idle_h, posts=posts, deadline=deadline)
+            res += run_lanes(claude, ids, live_refuse(lambda t: g.refuse(t, prot), live), lambda r: lf.write(json.dumps(r) + "\n"), a.target, a.apply, idle_h=a.idle_h, posts=posts, deadline=deadline)
     for r in res:
         print(r.get("result") or r)
     return 0

@@ -240,3 +240,31 @@ def test_lane_scan_stops_at_the_deadline_and_continues_next_pass(tmp_path):
     st[os.path.join(c, "a")] = time.time() + 100; json.dump(st, open(sf, "w"))
     AR.lane_candidates(c, NOW, 12.0, mtime=slow, deadline=None, scan_state=sf)
     assert calls.index(os.path.join(c, "a")) > calls.index(os.path.join(c, "b"))
+
+
+def _fake_proc(tmp_path, cmd="", env="", cwd=None):
+    d = tmp_path / "proc" / "123"; d.mkdir(parents=True)
+    (d / "cmdline").write_bytes(cmd.encode().replace(b" ", b"\0"))
+    (d / "environ").write_bytes(env.encode())
+    if cwd:
+        os.symlink(cwd, d / "cwd")
+    return str(tmp_path / "proc")
+
+
+def test_live_refs_see_cmdline_env_path_and_cwd(tmp_path):
+    claude = str(tmp_path / "claude")
+    proc = _fake_proc(tmp_path, cmd="bash -c run " + claude + "/lane/in1/x", env="PATH=" + claude + "/lane/gitshim:/usr/bin\0HOME=/h", cwd=str(tmp_path))
+    lv = AR.LiveRefs(claude, proc=proc)
+    assert lv.hit(claude + "/lane/in1")                       # inside a cmdline arg
+    assert lv.hit(claude + "/lane/gitshim")                   # a PATH entry of the environment
+    assert lv.hit(claude + "/lane/d8t")                       # sibling child of a lane root that holds a live ref: the lane is in use
+    assert not lv.hit(claude + "/other/d8t")                  # another lane root: free to age out
+    assert lv.hit(claude + "/lane")                           # the lane root holds live refs: not retirable as a whole either
+
+
+def test_live_refuse_beats_age(tmp_path):
+    claude = str(tmp_path / "claude")
+    lv = AR.LiveRefs(claude, proc=_fake_proc(tmp_path, env="PATH=" + claude + "/lane/gitshim"))
+    f = AR.live_refuse(lambda p, *a: "", lv)
+    assert f(claude + "/lane/gitshim").startswith("live input")
+    assert f(claude + "/zz/old") == ""
