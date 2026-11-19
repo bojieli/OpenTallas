@@ -54,3 +54,19 @@ def classify(length_um, core_um=0.0, logic=False, name=""):
     if logic:
         return "logic", max(1, math.ceil(length_um / RULES.REACH_UM_PER_HOP - 1e-9))
     return "buffered", max(1, math.ceil(length_um / RULES.REACH_BUFFERED_UM - 1e-9))
+
+
+def classify_pts(a, b, rects, logic=False, launch="", capture=""):
+    """-> (class, hops, core_um) of a leg a -> b (um, one frame) with the SHARED class test (cbc_rules.classify_leg:
+    strap / tie excluded, 'core' when every Manhattan route crosses a hard core); a core leg is priced at the reach only
+    with more than REACH_CORE_SPAN_UM of core on its better L path, else (and for a channel leg) it is buffered"""
+    core_um = core_span_um(a, b, rects) if rects else 0.0
+    length = abs(a[0] - b[0]) + abs(a[1] - b[1])
+    c = RULES.classify_leg(launch, capture, a, b, list(rects or []))
+    if c == "strap" or STATIC.search(launch or "") or STATIC.search(capture or ""):
+        return "static", 1, core_um
+    if c == "core" and core_um > RULES.REACH_CORE_SPAN_UM:
+        return "core", max(1, math.ceil(length / RULES.REACH_UM_PER_HOP - 1e-9)), core_um
+    if logic:
+        return "logic", max(1, math.ceil(length / RULES.REACH_UM_PER_HOP - 1e-9)), core_um
+    return "buffered", max(1, math.ceil(length / RULES.REACH_BUFFERED_UM - 1e-9)), core_um

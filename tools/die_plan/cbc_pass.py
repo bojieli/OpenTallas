@@ -15,7 +15,7 @@ kit, r712).  It reuses the generators that already exist; it re-implements none 
   rule 3 DEPTH     logic levels per cycle <= 13: read from precheck_synth DEPTH output when given (--depth TSV:
                    type, endpoint, levels); rows = cones to pipeline (ceil(levels / 13) - 1 stages) for the generators.
   rule 4 TAP/RESET clock tap <= 1,000 planned sinks (clock.tap_max_sinks = 1000; over-cap taps after the kit's 200-um
-                   rebalance get split rows with the centroid of their sinks); boundary-bank reset relay tree <= 32 per
+                   rebalance get the taps to append, tap_resolve.solve with the 300-um region span); boundary-bank reset relay tree <= 32 per
                    leaf (bank_reset_delta.py: bank_taps 0 cycles on tree types, equal-depth port_relays on hard types).
   rule 5 AIM       inside rule 2 (relay_branch trunk / copies).
 Feedback loops (credit returns, state loops: relay_depth read_loops, relay_branch unfixed) keep their form and are listed.
@@ -72,10 +72,46 @@ def family(t):
 
 
 def ft_span(t, sl):
-    """check.py geometry: the crossing a ft slot's stations cover"""
+    """check.py geometry (face to face): kept for reference only -- the corner form (w + h) / 2 is NOT the crossing a lane
+    makes (FABLE-PD-QC-0407: QC cbx a22 98 um pin-to-pin priced as 1,884); ft_station_rows uses ft_pin_legs"""
     w, h = t["outline_um"]
     fs = {sl["in_face"], sl["out_face"]}
     return w if fs == {"E", "W"} else h if fs == {"N", "S"} else (w + h) / 2.0
+
+
+def _face_xy(face, c, W, H):
+    return {"N": (c, H), "S": (c, 0.0), "E": (W, c), "W": (0.0, c)}[face]
+
+
+def _slot_pin_coords(sl, stem, W, H):
+    """[coord along the face] per bit of ft slot port <slot>_i (stem in) / <slot>_o (stem out), TYPE frame: the
+    deterministic pin table (schema.pin_positions, the one gen phys and bind use, so these are the bound pin sites);
+    without layers an even spread over the window; without a window the face centre"""
+    import schema as S
+    face, n = sl[stem + "_face"], int(sl.get("width") or 1)
+    ext = H if face in ("E", "W") else W
+    win = sl.get(stem + "_window_um")
+    lays = sl.get(stem + "_layers", sl.get("layers"))
+    if win and lays:
+        try:
+            port = dict(id=f"{sl['name']}_{stem[0]}", width=n, epoch=False, face=face, window_um=list(win), layers=list(lays),
+                        order=sl.get(stem + "_order", sl.get("order", "lsb_low")))
+            got = {b: c for b, _ln, c in S.pin_positions(port, {L["name"]: L for L in S.ASAP7_LAYERS})}
+            if len(got) >= n:
+                return [got[i] for i in range(n)]
+        except (ValueError, KeyError, TypeError):
+            pass
+    lo, hi = (sorted(win) if win else (ext / 2.0, ext / 2.0))
+    if sl.get(stem + "_order", sl.get("order", "lsb_low")) == "lsb_high":
+        lo, hi = hi, lo
+    return [lo + (hi - lo) * (i + 0.5) / n for i in range(n)]
+
+
+def ft_pin_legs(t, sl):
+    """[(in pin xy, out pin xy)] per bit of an ft slot, type frame (bit i enters on <slot>_i[i], leaves on <slot>_o[i])"""
+    W, H = t["outline_um"]
+    ci, co = _slot_pin_coords(sl, "in", W, H), _slot_pin_coords(sl, "out", W, H)
+    return [(_face_xy(sl["in_face"], a, W, H), _face_xy(sl["out_face"], b, W, H)) for a, b in zip(ci, co)]
 
 
 # ------------------------------------------------------------------------------------------------ rule 1 + 2 (ft)
@@ -107,47 +143,41 @@ def boundary_rows(P, rtl_dir=None, types=()):
     return rows
 
 
-def ft_core_span(t, sl):
-    """hard-core length along the slot's in-window -> out-window path, None when the slot has no windows"""
-    import bank_reset_delta as B
-    rects = LC.core_rects(t)
-    if not rects:
-        return 0.0                       # no hard core in the type: nothing to span
-    try:
-        W, H = t["outline_um"]
-        def pt(face, win):               # a slot without a window: the face centre
-            win = win or ([0.0, H] if face in ("E", "W") else [0.0, W])
-            return B.face_point(face, win, W, H)
-        a = pt(sl["in_face"], sl.get("in_window_um"))
-        b = pt(sl["out_face"], sl.get("out_window_um"))
-    except (KeyError, TypeError, ValueError):
-        return None
-    return LC.core_span_um(a, b, rects)
-
-
 def ft_station_rows(P, hop):
-    """ft slots whose crossing exceeds stations x hop: stations -> ceil(span / hop) (+delta cycles on every crossing lane).
-    Stations already built (built_station_extra) and cross-tap hop stations (ft_hop_xtap) count, as in schema.lane_natural."""
+    """ft slots whose crossing needs more stations than it has (+delta cycles on every crossing lane).  The crossing is
+    PIN TO PIN (FABLE-PD-QC-0407 11-19): every bit's leg from its <slot>_i pin to its <slot>_o pin, priced by the shared
+    leg class (leg_class.classify_pts on cbc_rules.classify_leg): an ft slot is a pure register chain, so over
+    REACH_CORE_SPAN_UM of hard core it takes the reach (hop) per station, else it is buffered (REACH_BUFFERED_UM); strap /
+    tie slots never count.  The slot needs the worst bit's hops.  Stations already built (built_station_extra) and
+    cross-tap hop stations (ft_hop_xtap) count, as in schema.lane_natural."""
     import schema as S
     rows = {}
     for tn, t in P.types.items():
+        rects = LC.core_rects(t)
         for sl in t.get("ft_slots") or []:
             k = int(sl.get("stations", 1) or 1)
             try:
                 k += S.built_station_extra(P.raw, tn, sl["name"]) + len(S.ft_hop_xtap(P.raw, tn, sl["name"]))
             except Exception:  # noqa: BLE001 -- a fake plan in tests has no raw
                 pass
-            span = ft_span(t, sl)
-            # COORD 11-19 (FABLE-CLOSURE-STRATEGY 03:30): no +cycle from distance alone -- an ft slot is a pure register
-            # chain, so it is priced by what it spans: over REACH_CORE_SPAN_UM of hard core at the reach, else as a buffered
-            # leg at REACH_BUFFERED_UM; strap / tie slots never count (leg_class.py)
-            core = ft_core_span(t, sl)
-            cls, hops = LC.classify(span, core if core is not None else RULES.REACH_CORE_SPAN_UM + 1, name=sl["name"])
-            need = hops if cls in ("static", "buffered") else max(1, math.ceil(span / hop - 1e-9))
+            best = None
+            for a, b in ft_pin_legs(t, sl):
+                cls, hops, core = LC.classify_pts(a, b, rects, launch=f"port:{sl['name']}_i", capture=f"port:{sl['name']}_o")
+                if cls == "core" and hop != RULES.REACH_UM_PER_HOP:
+                    hops = max(1, math.ceil((abs(a[0] - b[0]) + abs(a[1] - b[1])) / hop - 1e-9))
+                L = abs(a[0] - b[0]) + abs(a[1] - b[1])
+                key = (hops, L)
+                if best is None or key > best[0]:
+                    best = (key, cls, core)
+                if cls == "static":
+                    break
+            if best is None:
+                continue
+            (need, span), cls, core = best
             if need > k:
                 rows[(tn, sl["name"])] = dict(type=tn, slot=sl["name"], stations=k, set_stations=need, delta=need - k,
-                                              span_um=round(span, 1), width=sl.get("width"), leg_class=cls,
-                                              core_span_um=None if core is None else round(core, 1))
+                                              span_um=round(span, 1), corner_span_um=round(ft_span(t, sl), 1),
+                                              width=sl.get("width"), leg_class=cls, core_span_um=round(core, 1))
     return rows
 
 
@@ -260,44 +290,55 @@ def tree_root(plan_path):
 TAP_REGION = RULES.TAP_REGION_WH_UM
 
 
+TILE_UM = 150.0           # FABLE-PD-QC-0407: a type with fewer taps than occupied 150-um sink tiles is flagged
+SOLVE_PTS_MAX = 20000     # sink points handed to tap_resolve.solve (larger types are scaled; region W + H is geometric)
+
+
 def region_wh(pts):
     xs, ys = [p[0] for p in pts], [p[1] for p in pts]
     return (max(xs) - min(xs)) + (max(ys) - min(ys))
 
 
-def centroid(pts):
-    sw = sum(w for *_, w in pts) or 1.0
-    return (sum(x * w for x, _, w in pts) / sw, sum(y * w for _, y, w in pts) / sw)
+def sink_tiles(sinks, tile=TILE_UM):
+    """occupied tile x tile um tiles of [(x, y, w)]"""
+    return len({(int(x // tile), int(y // tile)) for x, y, w in sinks if w > 0})
 
 
-def region_split(pts, wh=None, cap=None):
-    """[(x, y, w)] -> regions each with W + H <= wh and sink weight <= cap: weighted-median bisection on the longer axis
-    (a single bin over the cap stays one region)"""
-    wh = TAP_REGION if wh is None else wh
-    cap = RULES.TAP_MAX_SINKS if cap is None else cap
-    if len(pts) <= 1 or (region_wh(pts) <= wh and sum(w for *_, w in pts) <= cap):
-        return [pts]
-    xs, ys = [p[0] for p in pts], [p[1] for p in pts]
-    ax = 0 if max(xs) - min(xs) >= max(ys) - min(ys) else 1
-    q = sorted(pts, key=lambda p: p[ax])
-    half, acc, k = sum(w for *_, w in q) / 2.0, 0.0, 1
-    for k, p in enumerate(q, 1):
-        acc += p[2]
-        if acc >= half:
-            break
-    k = min(max(k, 1), len(q) - 1)
-    return region_split(q[:k], wh, cap) + region_split(q[k:], wh, cap)
-
-
-def _split(pts, wh, cap):
-    """COORD 11-19: ONE implementation of the tap-region rule -- tap_resolve.py --span-um (FABLE-FIX-S81-LEPE) when it
-    offers a plan-level split (span_split(points, span_um, cap) on [(x, y, w)]); region_split() here only until it lands"""
+def solve_taps(P, tn, t, grid, sinks, cap, span=None, radius=None):
+    """COORD 11-19: ONE implementation of the tap-region rule -- tap_resolve.solve with span (= tap_resolve.py --span-um,
+    FABLE-FIX-S81-LEPE) on the plan sink sites.  Taps are only appended (legal sites: outline, tap_clear halo of hard cores,
+    placed macros, keepouts, spacing).  -> (added [(x, y)], stats before, stats after, scale) with stats per tap
+    (load, beyond radius, p95, max, W + H) at scale (sink weights x scale)."""
+    import schema as S
+    import tap_resolve as TR
+    from placement_obstacles import placement_boxes
+    span = RULES.TAP_REGION_WH_UM if span is None else span
+    radius = RULES.TAP_RADIUS_UM if radius is None else radius
+    ck = t.get("clock") or {}
+    clear = S.type_tap_clear(t)
+    boxes = list(placement_boxes(t, halo=clear).values())
+    boxes += [(x0 - clear, y0 - clear, x1 + clear, y1 + clear) for x0, y0, x1, y1 in ck.get("keepouts_um", [])]
+    legal = TR.make_legal(t["outline_um"], clear, boxes)
     try:
-        import tap_resolve as TR
-        fn = getattr(TR, "span_split", None)
-    except Exception:  # noqa: BLE001
-        fn = None
-    return fn(pts, wh, cap) if fn else region_split(pts, wh, cap)
+        core = [(x, y) for _, x, y, _ in S.core_taps(P, tn)]
+    except Exception:  # noqa: BLE001 -- a plan without core taps
+        core = []
+    total = sum(w for *_, w in sinks) or 1.0
+    f = min(1.0, SOLVE_PTS_MAX / total)
+    pts, acc = [], 0.0
+    for x, y, w in sinks:                     # weights -> points (carry the rounding, so the count is kept)
+        acc += w * f
+        n = int(acc)
+        acc -= n
+        pts += [(x, y)] * n
+    exist = [(x, y) for _, x, y in grid]
+    target = max(1, int(cap * f))
+    s0 = TR.tap_stats(exist, pts, radius)
+    over = any(q[4] > span or q[0] > target for q in s0)
+    need = math.ceil(total / cap) + sink_tiles(sinks)
+    added = TR.solve(exist, pts, legal, target, radius, core, max_add=max(80, min(600, 2 * need)),
+                     min_new=max(1, int(8 * f)), span=span) if over else []
+    return added, s0, TR.tap_stats(exist + added, pts, radius) if added else s0, f
 
 
 def tap_rows(P, cap, plan_path=None):
@@ -323,32 +364,32 @@ def tap_rows(P, cap, plan_path=None):
         if not grid or not sinks:
             continue
         # COORD 11-19 (FABLE-CLOSURE-STRATEGY 03:30): PRIMARY rule = one tap's sink region W + H <= TAP_REGION_WH_UM on
-        # nearest-tap sinks with NO spill; TAP_MAX_SINKS stays as the secondary cap.  A tap over either is split by
-        # region_split() and every extra region asks for a tap at its sink centroid.
-        mine = {n: [] for n, *_ in grid}
-        for x, y, w in sinks:
-            mine[min(grid, key=lambda g: (g[1] - x) ** 2 + (g[2] - y) ** 2)[0]].append((x, y, w))
+        # nearest-tap sinks with NO spill; TAP_MAX_SINKS stays the secondary cap.  Solved by tap_resolve.solve (span), the
+        # same solver as tap_resolve.py --span-um: the row lists the taps to APPEND (clock.taps / clock.added_taps).
         cur = int(ck.get("tap_max_sinks") or 0)
-        split, worst = [], 0.0
-        xy = {n: (x, y) for n, x, y in grid}
-        for n, pts in sorted(mine.items()):
-            if not pts:
-                continue
-            wh = region_wh(pts)
-            worst = max(worst, wh)
-            load = sum(w for *_, w in pts)
-            if wh <= TAP_REGION and load <= cap:
-                continue
-            regs = _split(pts, TAP_REGION, cap)
-            split.append(dict(tap=n, xy=[round(v, 2) for v in xy[n]], load=round(load), region_wh_um=round(wh, 1),
-                              add_taps=len(regs) - 1,
-                              regions=[dict(sink_centroid=[round(c, 2) for c in centroid(r)], sinks=round(sum(w for *_, w in r)),
-                                            region_wh_um=round(region_wh(r), 1)) for r in regs]))
-        if not split and cur and cur <= cap:
+        tiles = sink_tiles(sinks)
+        try:
+            added, s0, s1, f = solve_taps(P, tn, t, grid, sinks, cap)
+        except Exception as e:  # noqa: BLE001 -- estimator
+            errs.append((tn, f"tap_resolve {type(e).__name__}: {str(e)[:160]}"))
             continue
-        rows.append(dict(type=tn, family=family(tn), tap_mode=ck.get("tap_mode"), set={"clock.tap_max_sinks": cap},
-                         was_tap_max_sinks=cur or None, taps=len(grid), planned_sinks=round(sum(w for *_, w in sinks)),
-                         worst_region_wh_um=round(worst, 1), split=split))
+        worst0 = max((q[4] for q in s0), default=0.0)
+        worst1 = max((q[4] for q in s1), default=0.0)
+        few = len(grid) < tiles
+        if not added and not few and cur and cur <= cap and worst0 <= TAP_REGION:
+            continue
+        mode = ck.get("tap_mode", "grid")
+        n0 = len(grid)
+        rows.append(dict(type=tn, family=family(tn), tap_mode=mode, set={"clock.tap_max_sinks": cap},
+                         was_tap_max_sinks=cur or None, taps=n0, planned_sinks=round(sum(w for *_, w in sinks)),
+                         sink_tiles_150um=tiles, taps_below_tiles=few,
+                         worst_region_wh_um=round(worst0, 1), taps_over_region=sum(1 for q in s0 if q[4] > TAP_REGION),
+                         append_to="clock.taps" if mode == "explicit" else "clock.added_taps",
+                         add_taps=[dict(name=f"clk_t{n0 + i}", xy=[round(x, 2), round(y, 2)], sinks=round(q[0] / f),
+                                        region_wh_um=round(q[4], 1)) for i, ((x, y), q) in enumerate(zip(added, s1[n0:]))],
+                         taps_after=n0 + len(added), worst_region_wh_after_um=round(worst1, 1),
+                         taps_over_region_after=sum(1 for q in s1 if q[4] > TAP_REGION),
+                         max_load_after=round(max((q[0] for q in s1), default=0) / f)))
     return rows, errs
 
 
@@ -487,8 +528,12 @@ def main(argv=None):
          f"- boundary rows {len(rows['boundary'])}; depth rows {len(rows['depth'])} (needs precheck_synth DEPTH)" ,
          "", "## Taps (cap " + str(th["tap_sinks"]) + ")",
          f"- {len(rows.get('taps') or [])} types need tap_max_sinks {th['tap_sinks']}; "
-         f"{sum(1 for r in rows.get('taps') or [] if r['split'])} with taps over the region (W+H > {TAP_REGION:.0f} um, no spill) or the {RULES.TAP_MAX_SINKS}-sink cap, "
-         f"{sum(s['add_taps'] for r in rows.get('taps') or [] for s in r['split'])} added taps", ""]
+         f"{sum(1 for r in rows.get('taps') or [] if r['add_taps'])} with taps over the region (W+H > {TAP_REGION:.0f} um, no spill) or the cap "
+         f"({sum(r['taps_over_region'] for r in rows.get('taps') or [])} taps over the region), "
+         f"{sum(len(r['add_taps']) for r in rows.get('taps') or [])} added taps (tap_resolve.solve, span {TAP_REGION:.0f}), "
+         f"{sum(r['taps_over_region_after'] for r in rows.get('taps') or [])} taps still over the region after",
+         f"- {sum(1 for r in rows.get('taps') or [] if r['taps_below_tiles'])} types with fewer taps than occupied {TILE_UM:.0f}-um sink tiles: "
+         + ", ".join(f"{r['type']} {r['taps']}<{r['sink_tiles_150um']}" for r in sorted(rows.get('taps') or [], key=lambda r: r['taps'] - r['sink_tiles_150um']) if r['taps_below_tiles'])[:1500], ""]
     if cost:
         L += ["## Token cost", f"- base {cost['base_tok_s']} tok/s ({cost['cycles_per_token']:.0f} cycles/token, {cost['layers']} traversals); "
               f"low +{cost['low']['add_cycles']} cycles -> {cost['low']['tok_s']} ({cost['low']['loss_pct']} %); "

@@ -104,10 +104,36 @@ def test_ft_priced_by_leg_class():
     assert ('t', 'strap_ca_f') not in C.ft_station_rows(P, 405.0)
 
 
-def test_region_split_wh_and_cap():
-    pts = [(float(x), 0.0, 1.0) for x in range(0, 1000, 10)]          # 990 um wide row of 100 sinks
-    regs = C.region_split(pts, 300.0, 1000)
-    assert all(C.region_wh(r) <= 300.0 for r in regs) and sum(len(r) for r in regs) == 100 and len(regs) == 4
-    dense = [(0.0, 0.0, 600.0), (10.0, 0.0, 600.0)]                    # tiny region, 1,200 sinks: the cap splits it
-    assert len(C.region_split(dense, 300.0, 1000)) == 2
-    assert C.region_split([(0.0, 0.0, 5.0)], 300.0, 1000) == [[(0.0, 0.0, 5.0)]]
+def test_ft_span_is_pin_to_pin():
+    # FABLE-PD-QC-0407: a corner slot whose pins sit near the corner is a short leg, not (w + h) / 2
+    P = FakeP()
+    P.types['t']['ft_slots'] = [dict(name='c', stations=1, in_face='W', out_face='N', width=4,
+                                     in_window_um=[280.0, 290.0], out_window_um=[5.0, 15.0])]
+    assert C.ft_station_rows(P, 405.0) == {}
+    (a, b), = C.ft_pin_legs(P.types['t'], dict(P.types['t']['ft_slots'][0], width=1))
+    assert a == (0.0, 285.0) and b == (10.0, 300.0)
+    # a W -> N slot with its pins far apart is priced on that pin distance (buffered: 550 um per hop)
+    P.types['t']['ft_slots'][0].update(in_window_um=[0.0, 10.0], out_window_um=[990.0, 1000.0])
+    r = C.ft_station_rows(P, 405.0)[('t', 'c')]
+    assert r['leg_class'] == 'buffered' and r['span_um'] > 1200 and r['corner_span_um'] == 650.0 and r['set_stations'] == 3
+
+
+def test_ft_pins_from_pin_table():
+    # the bound pin sites: schema.pin_positions on the slot's layers (both ends, bit i -> bit i)
+    t = dict(outline_um=[1000.0, 300.0])
+    sl = dict(name='f', in_face='W', out_face='E', width=4, layers=['M5'], in_window_um=[0.0, 40.0], out_window_um=[200.0, 240.0])
+    legs = C.ft_pin_legs(t, sl)
+    assert len(legs) == 4 and all(a[0] == 0.0 and b[0] == 1000.0 for a, b in legs)
+    assert all(0.0 <= a[1] <= 40.0 and 200.0 <= b[1] <= 240.0 for a, b in legs)
+    assert legs[0][0][1] < legs[3][0][1] and legs[0][1][1] < legs[3][1][1]
+
+
+def test_tap_rows_use_tap_resolve_span():
+    # one tap, 1,000 um row of sinks: tap_resolve.solve (span 300) appends taps until every region is W + H <= 300
+    class TP:
+        raw = {}
+    t = dict(outline_um=[1100.0, 100.0], clock={"tap_mode": "explicit"})
+    sinks = [(float(x), 50.0, 4.0) for x in range(50, 1050, 10)]
+    added, s0, s1, f = C.solve_taps(TP(), 't', t, [('clk_t0', 550.0, 50.0)], sinks, 1000)
+    assert s0[0][4] > 300 and added and all(q[4] <= 300.0 for q in s1) and f == 1.0
+    assert C.sink_tiles(sinks) == 7 and C.sink_tiles([(1.0, 1.0, 0.0)]) == 0

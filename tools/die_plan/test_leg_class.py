@@ -24,3 +24,13 @@ def test_classify():
     assert LC.classify(540, 250) == ("core", 2)               # over a core: +1
     assert LC.classify(540, 0, logic=True) == ("logic", 2)
     assert LC.classify(2000, 900, name="strap_ca_3") == ("static", 1)
+
+
+def test_classify_pts_uses_shared_classify_leg():
+    core = [(100.0, -50.0, 400.0, 50.0)]
+    assert LC.classify_pts((0.0, 0.0), (500.0, 0.0), core)[:2] == ('core', 2)          # 300 um of core on every L path
+    assert LC.classify_pts((0.0, 100.0), (500.0, 100.0), core)[:2] == ('buffered', 1)  # passes above it
+    small = [(100.0, -50.0, 250.0, 50.0)]                                               # crosses only 150 um of core
+    assert LC.classify_pts((0.0, 0.0), (500.0, 0.0), small)[:2] == ('buffered', 1)
+    assert LC.classify_pts((0.0, 0.0), (900.0, 0.0), core, logic=True)[:2] == ('core', 3)
+    assert LC.classify_pts((0.0, 0.0), (900.0, 0.0), [], launch='u_strap_tie.q')[:2] == ('static', 1)
