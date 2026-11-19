@@ -184,3 +184,13 @@ OWNER FABLE-FIX-S81-LEAF owns s81sl_leaf__t* and s81sl_kv_leaf__t* (all), listed
   Freezing only consumer_taps() is NOT enough (tried: identity still differs; siting reads _plan_taps and the tree records n_clock_taps).
   Open before a push: _taps is also read by clock_landings.py:515 and the n_clock_taps / clock_ports counts; kit reset_taps.tcl must give flops of a new clock tap
   the nearest reset leaf; reach_fix should write the key when it adds taps; full kit to CTS.
+
+## 11-19 04:1x PST readings
+- t27fence FAILED at detailed placement, DPL-0033 (placement check lists vp driver / src flops), region util 0.33; GPL exit HPWL 1.036 x (best of all kits).
+  Same class as glue kit H. My region also held the vp OUTPUT register flops (driver_hw_d_q, x_qd_q, ...) that belong at far cores: wrong set. Not relaunched unchanged.
+- t27relay (proxy forms A + B, HPWL gate off) at CTS after TT repair: wns -407.25 (before -426.92). WORSE than t27keep -230.33. Not explained yet;
+  read its classes with bin/leaf_tcl.sh + cls_sum.py before concluding anything about form B. Both t27keep and t27relay are in GRT now; t27stb in CTS.
+- Reset key (COORD 04:0x, three items): implemented in epyc10 repo3/ (UNCOMMITTED): reset_tree._taps = frozen view, _clock_taps = real taps; clock_landings reads
+  _clock_taps; gen_phys emits rt_consumer_taps_um (nearest reset leaf, existing reset_taps.tcl path) when the key is set; reach_fix writes the key before it appends taps;
+  schema + json; test_reset_consumer_sites.py (6 tests pass). End-to-end check on t16 running: bin/rk_check.sh -> tapsK/result.txt (FIX_RC, GEN_RC), proof/ab/b16/gen3.log.
+  Push after that check shows the tool wrote the key and gen passed the reset identity.
