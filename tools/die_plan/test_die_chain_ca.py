@@ -51,3 +51,20 @@ def test_proto_die_ca_uses_the_plan_tree_tools(tmp_path):
     r = subprocess.run(["bash", "-c", "log(){ :; }; S=/wt/tools/die_plan; P=%s\n%s\necho $CAT\n" % (loose / "p.json", blk)],
                        capture_output=True, text=True, env={k: v for k, v in os.environ.items() if k != "CA_TOOLS"})
     assert r.stdout.strip() == "/wt/tools/die_plan"
+
+
+def _wf(tmp_path, plan):
+    """Run the chain's real WF snippet against a plan file (S81-CLOCK-WINDOW-1119)."""
+    s = SH.read_text()
+    line = next(l for l in s.splitlines() if l.startswith("WF=$("))
+    pf = tmp_path / "plan.json"; pf.write_text(plan)
+    r = subprocess.run(["bash", "-c", "T=%s; PLAN=%s\n%s\necho \"[$WF]\"" % (HERE, pf, line)], capture_output=True, text=True)
+    return r.stdout.strip()
+
+
+def test_write_edge_snippet_reads_fall_plan(tmp_path):
+    assert _wf(tmp_path, '{"clock": {"ring_hold": {"write_edge": "fall"}}}') == "[--ca-write-fall]"
+
+
+def test_write_edge_snippet_rise_plan(tmp_path):
+    assert _wf(tmp_path, '{"clock": {}}') == "[]"

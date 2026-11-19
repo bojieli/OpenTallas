@@ -15,7 +15,9 @@ python3 -s "$T/count_align_bind.py" "$OUT/count_align_plan.json" ${CA_BIND_ARGS:
 # S81-DIE-R3 11-17: a plan that declares the falling-edge ring write (clock.ring_hold.write_edge fall) is timed in that
 # form (--ca-write-fall); without it the CA check times the rise-write form the die does not build (S81 D7w: -198.9 / 247
 # fail rise-write vs +217.6 / 0 fail fall-write on the same bind)
-WF=$(cd "$T" && python3 -I -c "import json,sys; sys.path.insert(0,.); import clock_landings as C; print(--ca-write-fall if C.ring_write_fall(json.load(open(sys.argv[1]))) else )" "$PLAN" 2>/dev/null)
+# S81-CLOCK-WINDOW-1119: the snippet had lost its quotes (a Python SyntaxError hidden by 2>/dev/null), so every chain
+# timed the rise-write form; single quotes keep it valid inside the bash double quotes.
+WF=$(cd "$T" && python3 -I -c "import json,sys; sys.path.insert(0,'.'); import clock_landings as C; print('--ca-write-fall' if C.ring_write_fall(json.load(open(sys.argv[1]))) else '')" "$PLAN" 2>/dev/null)
 log "CA_WRITE_EDGE ${WF:-rise}"
 if [ $rc -eq 0 ]; then
   ( cd "$T" && python3 -s die_sta_related.py "$PROOF" --plan "$PLAN" --out "$OUT/sta_ca" --corner TT --corner FF --core-insertion declared --cppr-lca --clock-cell "$CC" \
