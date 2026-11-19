@@ -139,6 +139,29 @@ def plan_pids(d=None, prefix="plan.job."):
     return out
 
 
+def proof_regex_pids(path="/var/tmp/ot-heavy/prio_proof.re"):
+    """launcher pids of ot-heavy processes whose command line / cwd matches a regex of prio_proof.re (proof kits queued before they could carry the flag)"""
+    try:
+        rx = [l.strip() for l in open(path).read().splitlines() if l.strip() and not l.startswith("#")]
+    except OSError:
+        return set()
+    out = set()
+    if not rx:
+        return out
+    for p in os.listdir("/proc"):
+        if not p.isdigit():
+            continue
+        try:
+            a = open(f"/proc/{p}/cmdline", "rb").read().decode("utf-8", "replace").split("\0")
+        except OSError:
+            continue
+        if len(a) > 3 and "/usr/local/bin/ot-heavy" in a[:3]:
+            text = " ".join(a)
+            if any(re.search(r, text) for r in rx if r):
+                out.add(p)
+    return out
+
+
 def plan_key(pid, names):
     """launcher pid of the job a process belongs to: its oth-<user>-<pid>-<t>.scope, or the otc-<pid>-<n> container it runs in; None otherwise"""
     try:
@@ -220,7 +243,7 @@ def guard(seconds, pct, dry=False, kill=os.kill, log=None, sleep=time.sleep, mem
             mi = (meminfo or (lambda: {k: int(v.split()[0]) for k, v in (l.split(":", 1) for l in open("/proc/meminfo"))}))()
             if mi["MemAvailable"] * 100.0 / mi["MemTotal"] < pct:
                 procs, spared, names = [], [], container_names()
-                proofs = plan_pids(prefix="proof.job.")      # PROOF-PRIO-1119: r712 proof kits are victims only when no wave job is
+                proofs = plan_pids(prefix="proof.job.") | proof_regex_pids()      # PROOF-PRIO-1119: r712 proof kits are victims only when no wave job is
                 for p in os.listdir("/proc"):
                     if not p.isdigit():
                         continue

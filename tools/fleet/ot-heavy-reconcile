@@ -1604,7 +1604,7 @@ def gate_locked(mem, argv):
     inv = invariant(rows, total, avail, b, table)
     can = inv_cap(can, inv)                            # v17: committed + request <= physical - 64 GB, die jobs too
     can_die = inv_cap(die_admissible(avail, b, floor, need, can), inv)
-    me_die = os.environ.get("OT_HEAVY_PRIO") in ("die", "proof") or die_like(argv, os.getcwd())      # PROOF-PRIO-1119: admitted on current memory like a die job; no protection (-999) is added
+    me_die = os.environ.get("OT_HEAVY_PRIO") == "die" or die_like(argv, os.getcwd()) or proof_like(argv, os.getcwd(), ["OT_HEAVY_PRIO=" + os.environ.get("OT_HEAVY_PRIO", "")])      # PROOF-PRIO-1119: admitted on current memory like a die job; no protection (-999) is added
     if me_die and can < res <= can_die:
         note = (note + "; " if note else "") + f"DIE: admitted on current memory ({avail:.0f} GB available, {b.get('pending', 0.0):.0f} GB pending charged, settled growth not charged)"
     ok = (can_die if me_die else can) >= res
@@ -1623,6 +1623,23 @@ def gate_locked(mem, argv):
 
 DIE_RE = re.compile(r"(?i)(die[_-]?(sta|gen\d*|grt\d*|chain|trial|place|bind)|(sta|gen\d*|grt\d*)[_-]die\b)")
 PRIO_FILE = f"{D}/prio_die.re"
+PROOF_FILE = f"{D}/prio_proof.re"      # PROOF-PRIO-1119: one regex per line; marks proof kits that are ALREADY queued / running (their env cannot change): matched on command line + cwd
+
+
+def proof_like(argv, cwd="", environ=()):
+    """r712 proof kit: OT_HEAVY_PRIO=proof (ot-run --priority proof) or a regex of PROOF_FILE on its command line / working directory"""
+    if "OT_HEAVY_PRIO=proof" in environ:
+        return True
+    text = " ".join(argv) + " " + cwd
+    for ln in rd(PROOF_FILE).splitlines():
+        ln = ln.strip()
+        if ln and not ln.startswith("#"):
+            try:
+                if re.search(ln, text):
+                    return True
+            except re.error:
+                pass
+    return False
 
 
 def die_like(argv, cwd="", environ=()):
@@ -1708,7 +1725,7 @@ def prio_waiters(table, skip=()):
         except OSError:
             cwd = ""
         environment = rd(f"/proc/{p}/environ")
-        if not (die_like(a[a.index("--") + 1:], cwd, environment.split("\0")) or "OT_HEAVY_PRIO=proof" in environment.split("\0")):   # PROOF-PRIO-1119: a proof kit waits like a die job, ahead of wave jobs
+        if not (die_like(a[a.index("--") + 1:], cwd, environment.split("\0")) or proof_like(a[a.index("--") + 1:], cwd, environment.split("\0"))):   # PROOF-PRIO-1119: a proof kit waits like a die job, ahead of wave jobs
             continue
         # A CPU-blocked normal die cannot consume its reserved memory NOW.
         # Critical/unknown waiters retain their reservation; RAM guards are unchanged.
@@ -2403,6 +2420,8 @@ if __name__ == "__main__":
         if e and e["n"] + e["live"] and mem > 2 * max(e["peak_gb"], 2):
             print(f"WARN request {mem}G is {mem / max(e['peak_gb'], 0.1):.1f}x the measured peak {e['peak_gb']}G of class "
                   f"'{cls}' (n={e['n']}+{e['live']} live); --mem {e['suggest_gb']} is enough")
+    elif sys.argv[1:2] == ["--is-proof"]:
+        sys.exit(0 if proof_like(sys.argv[3:], os.getcwd(), ["OT_HEAVY_PRIO=" + os.environ.get("OT_HEAVY_PRIO", "")]) else 1)
     elif sys.argv[1:2] == ["--gate"]:
         gate(int(sys.argv[2]), sys.argv[4:])
     elif sys.argv[1:2] == ["--die-waiters"]:

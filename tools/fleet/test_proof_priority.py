@@ -31,3 +31,12 @@ def test_plan_pids_reads_proof_markers_by_prefix():
 def test_guard_takes_a_wave_victim_before_a_proof_one():
     s = (H / "ot-oom-age").read_text()
     assert "v = guard_victim(procs)\n                if v is None:\n                    v = guard_victim(spared)" in s
+
+
+def test_proof_like_matches_env_or_the_regex_file(tmp_path):
+    R = load("recon_proof", "ot-heavy-reconcile")
+    f = tmp_path / "prio_proof.re"; f.write_text("# kits\nfable-fix-s81-leaf/proof/t27keep\n")
+    R.PROOF_FILE = str(f)
+    assert R.proof_like(["bash", "run_kit.sh", "/x/fable-fix-s81-leaf/proof/t27keep", "grt"], "/")
+    assert R.proof_like(["bash", "x"], "/", ["OT_HEAVY_PRIO=proof"])
+    assert not R.proof_like(["bash", "run_kit.sh", "/x/other/t1", "grt"], "/", ["OT_HEAVY_PRIO="])
