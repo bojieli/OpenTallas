@@ -171,3 +171,16 @@ All on epyc10 under proof/, launched with rt ot-run --priority proof; logs intel
 
 ## OWNER LINE (repeat in every hourly post; COORD 03:5x)
 OWNER FABLE-FIX-S81-LEAF owns s81sl_leaf__t* and s81sl_kv_leaf__t* (all), listed by name, with the blocker per group.
+
+## 11-19 04:3x PST: CFX pushed; reset keying finding (prototype, NOT pushed)
+- CFX on main e828eac08886 (bench all PASS, both controls FAIL as they must). As-built patch + plan switch still to do.
+- Reset tree vs taps: reset_tree.py solves ONE relay tree whose leaves are the clock taps (consumer_taps -> _taps = tap grid / added_taps), one rst_n_t<k> per tap k;
+  collector outs are rst_n_t{consumer_count + k}; face / corner / START sites avoid the tap points (_plan_taps); gen_phys.install_bound_native_reset compares
+  RT.for_type(plan) with the tree captured at bind and refuses any difference. So every added tap = new leaf + shifted indices + moved sites.
+- Prototype (epyc10 reset_key_proto.patch against main, test reset_key_test.py; working copy repo3/, UNCOMMITTED): type.reset.consumer_sites_um = frozen
+  [[name, x, y], ...] of the bound plan (bin/freeze_reset.py writes it); reset_tree._taps returns it. Result on t16 with +200 taps (main tools on the D8e tree):
+  "the current solve equals the captured bound reset tree ... 25 collectors = bound RTL" (without the key: refused). The run then stopped on an unrelated
+  STALE-CORE-VIEW gate (main tools vs D8e views), so NO kit was generated.
+  Freezing only consumer_taps() is NOT enough (tried: identity still differs; siting reads _plan_taps and the tree records n_clock_taps).
+  Open before a push: _taps is also read by clock_landings.py:515 and the n_clock_taps / clock_ports counts; kit reset_taps.tcl must give flops of a new clock tap
+  the nearest reset leaf; reach_fix should write the key when it adds taps; full kit to CTS.
