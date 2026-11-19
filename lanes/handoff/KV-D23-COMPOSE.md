@@ -2,6 +2,22 @@
 
 Work dir epyc7 /srv/opentallas-scratch2/claude/kv-d23-compose (lane clone wt/ = sparse main worktree). Hub logs intel2 ~/tmp/kvd23c.
 
+## Status 2026-11-19 03:25Z (read this first)
+LIVE = KV-D23H: kw45/src_kv_pin_eb1e73448bd0_hg8_aa3f08ac_t0c3fb15_d23h2 (manifest dd671e408127, plan aa3f08ac4159).
+D24b NOT applied: strict bind EMIT land_intra_stations dst pvfin_lo has 0 bound leaves (pvfin_lo/hi are inside ONE bound leaf u_pvfin).
+In flight on epyc8 (W8 = /srv/opentallas-scratch2/claude/kv-d23-compose8), gates are ot-run plan binds started 01:57Z, about 2.5 h each:
+- D24c kw45/src_kv_pin_eb1e73448bd0_hg9_2862ed5a_tb3e667d_d24c = D24 + PVFIN in bound-leaf form (3 nets ahub.fr_* -> pvfin.*, 2 stages
+  at shared-fork sites d24in/pvfin/pvfin_fork_sites.json, FR_LEAD hook = 2). Gate W8/d24cgate.
+- D24n kw45/src_kv_pin_eb1e73448bd0_hg9_fcea2f4a_tb3e667d_d24n = D24 without PVFIN (NO_PVFIN=1). Gate W8/d24ngate.
+- PRECHECK 1 on both = TOOLSTALE kit_common_files.py only (my main 62723dbbdd; the wave runs tools from rt/current). Not a design finding.
+Apply when green (prefer D24c): seal_rep_d24.sh TAG src_kv_pin_eb1e73448bd0_hg8_aa3f08ac_t0c3fb15_d23h2 (seal_d24.py classifies the manifest drift);
+intel2 ~/tmp/kvd23c/guard_d23.py TREE HASH epyc7,epyc8,epyc9,epyc10 MAIN; mk_candidate_d24.py cand_d23h2.json <d23h2 tree> KV-D23H TREE KV-D24 GATE ...;
+publish_apply apply --expect-source <d23h2 tree> --expect-event KV-D23H.
+Cell cap (FABLE-FLOW G): fixed on main 62723dbbdd (kit_common_files.stage writes KIT/CELL_WAIVER from the gen env); rt/current carries it.
+D25 (COORD 11-19): W8/build_d25.py BASE EVENT MAIN TAG on the applied D24 = KV-KT-E0 (kst2 netlist/map/compose, HXK 15, relay regex,
+kt DEMAND rows dropped, asbuilt kv_head_kst; OT_KV_HEAD_KST=2 needed by the boot-image compiler) + kv3_hgi_v1 W1/W2/W3/W5
+(W5 = plan relay_sites on the 32 u_pd1_i_ectl_Q_N_eN_<b>.q, an existing generator form; sites obstacle-clear). Inputs W8/d25in.
+
 ## Candidates (all built from the live D22 tree, manifest d988db9486e2, plan 23c87c42a4e9; tools/common_flow + rtl/lib/ot_dp_efault.sv from main eefb7e36eb6)
 - D23  kw45/src_kv_pin_eb1e73448bd0_hg8_add04d1e_teefb7e3_d23  plan add04d1e8a2d asbuilt da56e1cd818c; gate d23gate/
   = tail split types kv3_pv.* (only under-matching ^-string in plan+asbuilt) + KV-D23-PC composer re-run on D22 (pc/ : 68/72/72 taps,
