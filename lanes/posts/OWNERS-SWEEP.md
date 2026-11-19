@@ -48,3 +48,8 @@
   STALE>3H 2 (KV kv3_hgi_v3, kv3_pv), both family-covered (FABLE-FIX-KV-HG, KV-HUBPV-1118).
   Largest owners: KIT-WAVE(auto) 170, FABLE-FIX-S81-COLH9R1 83, WAVE-PILOT-FIX 74, FABLE-FIX-QC 30.
   Nothing needs a new lane.
+- 2026-11-19 01:52 PST 0350 sweep: 507 rows (S81 352, QC 102, KV, HEAD), 504 unflagged, 3 flagged.
+  UNOWNED 0, DEAD-OWNER 0, FAILED-NO-RELAUNCH-1H 0.
+  STALE>3H 2: kv3_hgi_v3, kv3_pv (cancelled superseded 4.6h; family owners FABLE-FIX-KV-HG/PV covered).
+  UNCLASSIFIED 1: s81sl_leaf__t56 (FAILED kit_rtl 0.9h; FABLE-FIX-S81-LEAF posted 01:29).
+  Largest lanes: KIT-WAVE(auto) 164, FABLE-TYPE-REDUCE-S81-COL 117, S81-GEOM-OPUS ~64.
