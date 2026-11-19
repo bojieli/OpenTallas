@@ -5826,6 +5826,18 @@ def load_rank(cfg, h, v):
     return (round(frac / LOAD_RANK_STEP), -free_mem * host_share(cfg, h))
 
 
+NOFIT_LOAD_X = 2.0
+
+
+def _calm(cfg, cand, key):
+    """LOADRANK-NOFIT-1119: the candidates not above NOFIT_LOAD_X x their cores (all of them when every one is)"""
+    def x(h):
+        v = key(h) or {}
+        return float(v.get("load", 0)) / max(1, int(v.get("cores") or 0))
+    calm = [h for h in cand if x(h) <= NOFIT_LOAD_X]
+    return calm or list(cand)
+
+
 def pick_gen_host(cfg, die, take=0, threads=0, item=None):
     """the gen host for a new attempt (see gen_hosts); with no cached ot-run status the configured gen_host.  take =
     GB charged to the picked host's cached admits so one tick's burst spreads once that host's headroom is used.
@@ -5860,7 +5872,7 @@ def pick_gen_host(cfg, die, take=0, threads=0, item=None):
         uncapped = [h for h in hs if key(h) and not over_load_cap(key(h)) and not die_disk_low(cfg, die, h, key(h))
                     and die not in low.get(h, {})]
         best = (min(fits, key=lambda h: load_rank(cfg, h, key(h)) + (-hs.index(h),)) if fits
-                else min(room or uncapped or hs, key=lambda h: load_rank(cfg, h, key(h)) + (-hs.index(h),)))   # LOADRANK-NOFIT-1119 (COORD: 325 launches in 1 h onto epyc7 at 473/96 while no host admitted): with no host fitting, the burst still goes to the LEAST LOADED candidate, not the best memory score
+                else max(_calm(cfg, room or uncapped or hs, key), key=lambda h: (sc(h) * host_share(cfg, h), -hs.index(h))))   # LOADRANK-NOFIT-1119: with no host fitting, hosts above NOFIT_LOAD_X x cores are skipped while a calmer one exists (epyc7 at 473/96 took 325 launches), the memory score still balances the rest
     if key(best) is not None and len(hs) >= 2 and take:
         charge(key(best), take)
     alt_charge(cfg, best)

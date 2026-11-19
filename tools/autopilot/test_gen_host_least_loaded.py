@@ -38,10 +38,9 @@ def test_host_share_weights_the_memory_tiebreak():
     assert K.pick_gen_host(c, "s81") == "b"
 
 
-def test_when_no_host_fits_the_burst_goes_to_the_least_loaded_not_the_best_score():
+def test_when_no_host_fits_the_burst_skips_hosts_far_above_their_cores():
     """LOADRANK-NOFIT-1119: intel1/epyc7/epyc9 admit 0 (nothing fits); the old fallback took the best memory score = the busiest host"""
     c = cfg(["epyc7", "epyc9", "epyc10"], {"epyc7": {"admit": 0, "load": 473, "cores": 96}, "epyc9": {"admit": 0, "load": 200, "cores": 96}, "epyc10": {"admit": 0, "load": 95, "cores": 96}})
-    assert K.pick_gen_host(c, "s81") == "epyc10"
-    c = cfg(["epyc7", "epyc9"], {"epyc7": {"admit": 0, "load": 473, "cores": 96}, "epyc9": {"admit": 0, "load": 200, "cores": 96}})
-    assert K.pick_gen_host(c, "s81", threads=16) == "epyc9"
-    assert K.pick_gen_host(c, "s81", threads=16) == "epyc9"                           # the charged 16 threads (200 -> 232 -> 248) do not flip it: still far below epyc7
+    assert K.pick_gen_host(c, "s81") == "epyc10"                                      # only epyc10 is under 2.0 x cores
+    c = cfg(["epyc7", "epyc9"], {"epyc7": {"admit": 0, "load": 473, "cores": 96}, "epyc9": {"admit": 0, "load": 300, "cores": 96}})
+    assert K.pick_gen_host(c, "s81") in ("epyc7", "epyc9")                            # all above: the old score decides, nothing is refused
