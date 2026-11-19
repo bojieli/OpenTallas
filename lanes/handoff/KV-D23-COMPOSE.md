@@ -2,7 +2,27 @@
 
 Work dir epyc7 /srv/opentallas-scratch2/claude/kv-d23-compose (lane clone wt/ = sparse main worktree). Hub logs intel2 ~/tmp/kvd23c.
 
-## Status 2026-11-19 14:10Z (read this first; supersedes 10:50Z)
+## Status 2026-11-19 15:15Z (read this first; supersedes 14:10Z)
+LIVE = KV-D25c, still with no bind of record.
+- Wave unblocked (commits 48493e9a566 and 5baac307032): bound_trees = [D24c entry], and kit_rtl.bind_out = the D24c bind_of_record.
+  - Before the switch every gen host was SRC-INCOMPLETE. The 07:07 PST tick passes them.
+  - Remove this when the d25d4 apply sets the new bind_out.
+- Trees d25d4 (manifest ee98d9f486c9) and d25c2 (manifest c81c3c85fa5c) are sealed, replicated and verified on epyc7, epyc8, epyc9 and epyc10.
+  - G0 gates: W8/d25d4g0gate (0 errors / 2456 warnings) and W8/d25c2g0gate (0 / 2446).
+- Strict binds run on epyc10 kv-d23-compose8/{d25d4,d25c2}bindgate, on the copies kw45/bindcopy_kv_{d25d4,d25c2}. They started 14:57:43Z.
+  - The first try failed at elab because the sealed tree was read-only. mk_bindcopy.sh now does chmod u+w on the directories.
+- Apply when d25d4 is green:
+  - On epyc10: REPL_HOSTS="epyc7 epyc8 epyc9" bash seal_bind_dest.sh d25d4 <d25d4 tree>. This prints BIND_DEST.
+  - On intel2: BGH=epyc10 BIND_DEST=<dest> LIVE=<D25c tree> LIVE_EV=KV-D25c BC=d25d4 SKIP_SEAL=1 bash ~/tmp/kvd23c/apply_d25.sh d25d4 KV-D25d
+  - BGH records the bind-gate host in binding_proof. Apply d25c2 as KV-D25c2 only if d25d4 is red.
+- D25e inputs, all composed onto the applied d25d4:
+  - hgi_v1 raw branches regenerated from the d25d4 bound RTL.
+  - FABLE-FIX-KV-PV pv rows: compose_rows.py TREE --zero-cycle, plus the kv_pv_p2p.json cycle rows (tree4 plan a04c96f9ee3a; their private binds are still running on epyc7).
+  - FABLE H: the t2 split and west-channel chain. The k6 form is a bound-RTL hand edit (fable-fix-kv-hg3/k6/split_t2.py). land_pad_tail_split does not cover the qkh_head_gather_stage, so this needs generator code plus a proof on a d25d4-bound kit.
+  - sink bins (W8/d25e_in/sink_bins) and K6.
+- Open finding (FABLE-FIX-KV-PV, 05:38 PST): pv_v_pads_7p in the live plan is stale by +5 on 488 members, which is likely a lane defect. It is fixed with the pv rows.
+
+## Status 2026-11-19 14:10Z (supersedes 10:50Z)
 LIVE = KV-D25c (tree ..._4a40f1db_tb3c4d97_d25c). It still has NO usable bind, and the wave has 0 KV-D25c rows.
 - Both strict binds are RED, so do not adopt either.
   - W8/d25cbindgate fails with 2 EMIT errors: kv3_hgi_v1__cl141fc26e raw Q rst_rl_127 and kv3_hgi_v1__cl42bc8b12 raw Q rst_rl_120.
