@@ -1,0 +1,18 @@
+{
+ "schema": "opentallas.plan_row_request.v1",
+ "owner": "FABLE-FIX-S81-GLUE",
+ "for": ["QC-PLAN-R3", "S81-DIE-R3"],
+ "event": "D8h (QC die qwen_compute, partition glue)",
+ "class": "wide fault OR collected across the partition into one flop (distance, not depth)",
+ "evidence": {
+  "bound": "qfd_qc_glue_part_bound.sv: ot_dp_or #(.N(82)) u_or_0 (ctlm_flt_i_q[0], coll_fltv_i_q[69:0], w_sys_face_fault[0], w_mu_dhobs_mu_fault[0], w_mu_ctxrx_mu_fault[0], w_d2d_rom_transport_fault[7:0]) -> .obs_fault((or_0) | cland_up_fault) -> u_sys_face obs_fault__ot_q (one face register)",
+  "timing": "wave attempt_6 GRT gate frame: -116.4 ps, startpoint u_lpad_ctlm_flt_i.q[0] at (273,1440) um, endpoint u_sys_face.obs_fault__ot_q at (748,899): about 1 mm through 9 buffers and 3 wide AND cells; Q side of the capture flop +522 ps",
+  "semantics": "observation only (tools/qwen_split/sysface32/add_obs_fault.py): the input is the already sticky root of the fault OR; it gates no schedule edge, so one more register stage only delays the fault report by a cycle"
+ },
+ "rows": [
+  {"path": "bind: re-emitted fault OR of partition glue (u_or_0)", "set": {"registered": true, "stages": 1},
+   "meaning": "emit the 82-input OR followed by one kept register (ot_dp_dly D=1 or a landing relay) placed by GPL between the sources and the sys_face pin register; +1 cycle on fault observation. Better form if the emitter allows it: one registered OR per source group (coll_fltv 70 bits; d2d transport 8; the rest) and a second-level OR, so no leg crosses the partition"},
+  {"path": "latency", "set": {}, "meaning": "no data lane changes; obs_fault -> fault becomes 3 edges instead of 2 (add_obs_fault.py documents 2)"}
+ ],
+ "not_done": "I did not change the bind emitter: the fault OR re-emission is shared by every die, so it needs an opt-in key from the plan owner. Kit F closed this end without it (the flop moved to x 584), so it may not be needed once the relay form is on; decide after kit F / G GRT."
+}
