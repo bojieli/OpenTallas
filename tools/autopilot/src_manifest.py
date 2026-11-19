@@ -826,6 +826,21 @@ def tree_gb(path):
     return int(out[0]) / 2**30 if out else 0.0
 
 
+def pick_link_base(tree_base, names):
+    """DELTA-PUBLISH-1119 (COORD: a D8f copy to 6 hosts took 65 min): of the sibling tree names on a target, the one most like TREE_BASE (longest common prefix >= 12 chars, newest = last in
+    NAMES order on a tie) is the hardlink base: unchanged files cost nothing, only changed files travel.  -> name or ''."""
+    best, bl = "", 11
+    for n in names:
+        if n == tree_base or n.endswith(".part") or n.endswith(".seeding"):
+            continue
+        k = 0
+        while k < min(len(n), len(tree_base)) and n[k] == tree_base[k]:
+            k += 1
+        if k >= bl and (k > bl or best):
+            best, bl = n, k
+    return best
+
+
 def tar_copy(tree, host, part, run=subprocess.run):
     """TAR-PIPE (COORD 11-18): `tar -C tree -cf - . | ssh host 'tar -C part -xpf -'` into the (fresh, empty) .part dir; the caller verifies the result against the manifest hash before the final rename.
     The source's own .link-base is excluded.  pipefail: either side failing fails the copy."""
@@ -1003,6 +1018,14 @@ def main(argv=None):
                 bad = 1
                 continue
             linkdir = ""
+            if not a.link_from and not getattr(a, "tar", False):
+                # no base named: take the most similar sibling tree the target already holds (verified trees carry MANIFEST); the copy then costs the delta, verify is unchanged
+                ls = subprocess.run(SSH + [host, f"cd {shlex.quote(os.path.dirname(tree))} && ls -1tr"], capture_output=True, text=True)
+                names = [n for n in ls.stdout.split() if n]
+                auto = pick_link_base(os.path.basename(tree), names)
+                if auto:
+                    a.link_from = auto
+                    print(f"{host}: delta against {auto} (hardlinks for unchanged files)")
             if a.link_from:
                 cand = os.path.join(os.path.dirname(tree), a.link_from)
                 if subprocess.run(SSH + [host, f"test -f {shlex.quote(cand)}/{MANIFEST} && test -d {shlex.quote(cand)}"]).returncode == 0:

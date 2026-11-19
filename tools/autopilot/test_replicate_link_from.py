@@ -74,3 +74,10 @@ def test_tar_copy_streams_a_tree_and_keeps_modes(tmp_path):
     SM.RSYNC_SSH = old_ssh
     assert bad.returncode != 0
 
+
+
+def test_pick_link_base_takes_the_most_similar_sibling_and_never_itself_or_a_part():
+    names = ["src_s81_pin_3c913dbdfb23_d8dr2_1117_work", "src_s81_pin_3c913dbdfb23_d8e_1117_work", "src_s81_pin_3c913dbdfb23_d8f_1118_work.part", "other_tree", "src_s81_pin_3c913dbdfb23_d8f_1118_work"]
+    assert SM.pick_link_base("src_s81_pin_3c913dbdfb23_d8f_1118_work", names) in ("src_s81_pin_3c913dbdfb23_d8e_1117_work", "src_s81_pin_3c913dbdfb23_d8dr2_1117_work")
+    assert SM.pick_link_base("src_s81_pin_3c913dbdfb23_d8f_1118_work", ["other_tree", "x"]) == ""
+    assert SM.pick_link_base("abc", ["abd"]) == ""
