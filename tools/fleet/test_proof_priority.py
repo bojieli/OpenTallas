@@ -40,3 +40,14 @@ def test_proof_like_matches_env_or_the_regex_file(tmp_path):
     assert R.proof_like(["bash", "run_kit.sh", "/x/fable-fix-s81-leaf/proof/t27keep", "grt"], "/")
     assert R.proof_like(["bash", "x"], "/", ["OT_HEAVY_PRIO=proof"])
     assert not R.proof_like(["bash", "run_kit.sh", "/x/other/t1", "grt"], "/", ["OT_HEAVY_PRIO="])
+
+
+def test_container_victim_is_spared_through_the_pid_in_its_name(monkeypatch):
+    O = load("oomage_cont", "ot-oom-age")
+    monkeypatch.setattr(O, "container_id", lambda pid: "abc")
+    names = {"abc": "dpkit-t27keep-4242"}
+    assert O.container_owner_in(7, names, {"4242"})                                     # the pid in the name is the marked launcher itself
+    monkeypatch.setattr(O, "plan_ancestor", lambda pid, plans, depth=12: "99" if pid == "4242" else None)
+    assert O.container_owner_in(7, names, {"99"})                                       # or descends from it
+    assert not O.container_owner_in(7, {"abc": "dpkit-other-5"}, {"99"})
+    assert not O.container_owner_in(7, {}, {"99"})

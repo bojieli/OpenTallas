@@ -176,6 +176,16 @@ def plan_key(pid, names):
     return m.group(1) if m else None
 
 
+def container_owner_in(pid, names, plans):
+    """PROOF-SPARE-1119 (epyc10: t27keep / t27stb killed although listed): the victim is an openroad INSIDE a docker container (cgroup docker-<id>.scope, name dpkit-<item>-<pid>[-lec] / kqc- / otc-<pid>-<n>); its
+    process ancestors end at containerd-shim, never at the ot-heavy launcher.  The pid carried in the container name is a host process of the job's scope: spared when it is, or descends from, a marked launcher."""
+    nm = names.get(container_id(pid) or "", "")
+    m = re.match(r"otc-(\d+)-\d+$", nm) or re.search(r"-(\d+)(?:-lec)?$", nm)
+    if not m:
+        return False
+    return m.group(1) in plans or bool(plan_ancestor(m.group(1), plans))
+
+
 def plan_ancestor(pid, plans, depth=12):
     """a build process spawned by a plan job outside its scope / container (a host-side yosys under a bind): a marked launcher among its ancestors"""
     p = str(pid)
@@ -253,7 +263,7 @@ def guard(seconds, pct, dry=False, kill=os.kill, log=None, sleep=time.sleep, mem
                             continue
                         rss = int(re.search(r"VmRSS:\s+(\d+)", open(f"/proc/{p}/status").read()).group(1)) / 1048576
                         row = (int(p), comm, int(open(f"/proc/{p}/oom_score_adj").read()), int(open(f"/proc/{p}/oom_score").read()), rss)
-                        (spared if proofs and (plan_key(p, names) in proofs or plan_ancestor(p, proofs)) else procs).append(row)
+                        (spared if proofs and (plan_key(p, names) in proofs or plan_ancestor(p, proofs) or container_owner_in(p, names, proofs)) else procs).append(row)
                     except (OSError, ValueError, AttributeError):
                         continue
                 v = guard_victim(procs)
