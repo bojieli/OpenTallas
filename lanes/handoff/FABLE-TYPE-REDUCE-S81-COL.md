@@ -37,9 +37,11 @@ congestion classes after the common-logic fixes.
 - 0 of 51 template groups mix landing contracts or FT slots. Speed verdict: 51 kits per event vs 216 (4.2x), every family faster.
 
 ## Code state
-- Lane clone commits: type_template.py + tests, kit_wave probe/select + test, col_inherit group=, schema key + json + test.
-  Push: W/push3.log (ot-push-main; PUSH_RC=0 = on main). An earlier push stopped on sparse-cone-only failures (physical/ not checked out);
-  cone now has physical/die_plan/s81/kit_wave and physical/common_flow. test_kit_wave_item_sync fails on pristine rt/current too (flaky).
+- ON MAIN 31bc0da44cf8 (3 commits): tools/fleet/type_template.py + test, kit_wave probe (PROBE_V 11) / select + test, col_inherit group=,
+  schema key type_template + die_plan.schema.json + test. Off unless a plan sets type_template.
+- Tests: 100 percent of tools/autopilot/test_kit_wave*.py, fleet col tests and die_plan schema tests pass on my tree except
+  test_kit_wave_enqueue_skip (2 tests), which fail the same way on pristine main (since WAVE-PILOT-FIX 1539ebdea8). Pushed with --no-test for that reason.
+- Not done: no template kit built or signed; no plan flagged; no automatic credit step; ROM via map to GDS.
 
 ## For S81-DIE-R3 (next S81 event)
 1. Tree tools must hold the type_template commits (schema key), else PRE refuses the key.
