@@ -695,3 +695,4 @@
 - 2026-11-19 14:25 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kw45 on intel1 wrote 172 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
 - 2026-11-19 15:05 PST HOST-REPORT 2026-11-19 15:05 | tolera L54.58/112 units0 free544G | key-ca L77.05/112 units184 free766G | dear-c L192.01/128 units452 free448G | loved- L79.86/96 units55 free2330G | outgoi L174.47/96 units190 free1033G | renewe L92.40/96 units85 free1432G | civil- L68.24/96 units56 free759G
 - 2026-11-19 15:26 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kw43-wave-1109n on intel1 wrote 162 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
+- 2026-11-19 15:26 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kw45 on intel1 wrote 175 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
