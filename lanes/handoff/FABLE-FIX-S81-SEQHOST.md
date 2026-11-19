@@ -43,3 +43,16 @@ Existing benches on the new source: run_mu_hwin_bench.sh, tools/s81_dv/hwin_even
 ## State 11-19 03:2x PST
 - Lane clone commit 87f0991319 (NOT pushed yet). kit1 past synth (262k cells class), kit2 in synth. Waiters live in the Fable session.
 - Running on epyc8: bounded miter eq3_12 / eq3_20, run_seq_host_mu_bench (bench_seqhost.log). MU_HWIN_GATE PASS, hwin_events EV_RC=0, check_ledger PASS.
+
+## State 11-19 04:1x PST: three kits, one flow finding
+- Zero-wire TT STA of the synthesised netlists (epyc7 .../sta_synth_{ctl,kit1,kit2}*, script synth_sta.sh / synth_sta2.sh, kit tt_setup_repair frame):
+  u_win D ends below 0: control 572 (worst -286, mu_c / t_wf / mu_rc) -> kit1 3, kit2 3 (the 3 = unbuffered relay reset into pin-flop valid bits, also in the control).
+  kit2 worst u_win data ends: ng[23] +75 (gx -> 14 BUFx2 chain from abc "buffer -c", removed at floorplan), age b[30] +111. Cells 262,553 -> 230,314.
+- FLOW FINDING (all types, not only seqhost): the kit synthesis is flat and uses abc_speed.script (&nf with area recovery up to the worst arrival of the
+  whole netlist, zero wire, no user required time). So every cone is relaxed toward the deepest cone of the type: my 32-bit group-lookahead incrementer
+  came back as a 16-stage OR chain (640 ps) inside the flat netlist. RTL tree structure alone is NOT kept by this flow.
+  Form C answers it: (* keep_hierarchy *) on dsdv_mu_hwin and dsdv_mu_hwin_age, so ABC bounds their depth by their own deepest cone (25 two-input levels).
+- Kits (all epyc7, --priority proof, goal grt): kit1 = first form, kit2 = lane commit 87f0991319 (sha 5de3f4aa), kit3 = kit2 RTL + keep_hierarchy (sha bc4a800c,
+  epyc8 lane dir dsdv_mu_hwin.formc.sv, NOT committed yet). Pick the form by the CTS / GRT TT read, amend the commit if C wins, then push.
+- Proof state: lockstep 5.3M edges full size + 12.4M small tables equal (eqbig/), age induction SUCCESS, MU_HWIN_GATE PASS, SEQHOST_MU_GATE PASS,
+  hwin_events EV_RC=0, check_ledger PASS. Bounded miter (yosys sat -seq 12 / 20) still solving on epyc8 (eq3_12, eq3_20); if it does not finish, say so.
