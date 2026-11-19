@@ -378,6 +378,15 @@ def run(root, cfg, texts, ids, refuse, log, target_gb, apply=False, delete=None,
     return res
 
 
+# S81-DIE-R3 11-19 (COORD): s81-die-r3-e8/tools + gitshim went at 17:38 on "idle 13.6 h" (the runner passed --idle-h 12 to the lane rule; 17:08 refused them, a live process
+# named gitshim then, 17:38 none did: a proof build between two runs).  A lane dir is in use for at least 24 h after its last write, whatever the attempts' window is.
+LANE_MIN_IDLE_H = 24.0
+
+
+def lane_idle_h(idle_h):
+    return max(float(idle_h), LANE_MIN_IDLE_H)
+
+
 LANE_SKIP = frozenset({"kw45", "rt", "hub-coord", "mq1", "mq-gate", "git", "clean-all-1115", "tools-converge", "fleet-ops-r", "signed-store", "autopilot", "moved"})   # moved: ~/.cache and ~/OpenTallas link into it (COORD 11-18)
 
 
@@ -704,7 +713,7 @@ def main(argv=None):
             res += run_attempts(claude, json.loads(cfgt), json.loads(texts[1]), open(a.refs, errors="replace").read() if a.refs else "", ids, g, prot,
                                 lambda r: lf.write(json.dumps(r) + "\n"), a.apply, old_idle_h=a.idle_h, deadline=deadline, live=live)
         if a.lanes:
-            res += run_lanes(claude, ids, live_refuse(lambda t: g.refuse(t, prot), live), lambda r: lf.write(json.dumps(r) + "\n"), a.target, a.apply, idle_h=a.idle_h, posts=posts, deadline=deadline)
+            res += run_lanes(claude, ids, live_refuse(lambda t: g.refuse(t, prot), live), lambda r: lf.write(json.dumps(r) + "\n"), a.target, a.apply, idle_h=lane_idle_h(a.idle_h), posts=posts, deadline=deadline)
     for r in res:
         print(r.get("result") or r)
     return 0

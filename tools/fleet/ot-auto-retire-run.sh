@@ -26,10 +26,10 @@ if [ "${AC_FULL:-0}" = 1 ]; then
   YD=$(date -d yesterday +%F); TD=$(date +%F)
   if [ "$(hostname -s)" = tolerant-swine ]; then
     cat $HC/autopilot/auto_resign_state.json $HC/lanes/COUNT-DIRECT.tsv $HC/lanes/AUTO-RESIGN.tsv $HC/autopilot/auto_resign.tsv $HC/lanes/AUTO-RESIGN-HOLD.tsv > "$W/refs.txt" 2>/dev/null
-    cat $HC/lanes/posts/*.md 2>/dev/null | grep -E "^- ($YD|$TD) " > "$W/posts.txt"
+    { cat $HC/lanes/posts/*.md 2>/dev/null | grep -E "^- ($YD|$TD) "; find $HC/lanes/handoff $HC/lanes -maxdepth 1 -name "*.md" -mtime -1 -exec cat {} + 2>/dev/null; } > "$W/posts.txt"   # + lane handoffs / lane files written in the last 24 h (paths they name are in use)
   else
     $SSH $HUB "cd $HC && cat autopilot/auto_resign_state.json lanes/COUNT-DIRECT.tsv lanes/AUTO-RESIGN.tsv autopilot/auto_resign.tsv lanes/AUTO-RESIGN-HOLD.tsv 2>/dev/null" > "$W/refs.txt"
-    $SSH $HUB "cat $HC/lanes/posts/*.md 2>/dev/null | grep -E '^- ($YD|$TD) '" > "$W/posts.txt"
+    $SSH $HUB "{ cat $HC/lanes/posts/*.md 2>/dev/null | grep -E '^- ($YD|$TD) '; find $HC/lanes/handoff $HC/lanes -maxdepth 1 -name '*.md' -mtime -1 -exec cat {} + 2>/dev/null; }" > "$W/posts.txt"
   fi
 fi
 }
