@@ -643,3 +643,52 @@ class SupersedeUnderStopsOff(unittest.TestCase):
 
     def test_opt_out_still_holds_without_stops_off(self):
         self.assertEqual(self.run_it("RUNNING", opt_out=True, so=False)["status"], "ENQUEUED")
+
+
+class DeferResign(unittest.TestCase):
+    """OWNER r711: superseded-signed types go last and launch only on spare capacity until plan_frozen"""
+
+    def st(self):
+        return {"items": {"s81|E|t1|bOLD": {"die": "s81", "item": "t1", "block_sha": "OLDOLDOLDOLD00", "status": "ENQUEUED", "q_status": "SIGNED"}}}
+
+    def test_index_and_predicate(self):
+        idx = KW.signed_block_index(self.st(), "s81")
+        self.assertTrue(KW.is_superseded_signed(idx, "t1", "NEWNEWNEWNEW00"))
+        self.assertFalse(KW.is_superseded_signed(idx, "t1", "OLDOLDOLDOLD00"))        # signed on this very block
+        self.assertFalse(KW.is_superseded_signed(idx, "t2", "NEWNEWNEWNEW00"))        # never signed
+        self.assertFalse(KW.is_superseded_signed(idx, "t1", None))
+
+    def test_deferred_while_another_pick_exists_and_logged_once(self):
+        logs = []
+        ap = type("AP", (), {"log": staticmethod(logs.append)})()
+        st = {}
+        per_die = [[("s81", {"item": "t1", "block_sha": "B1", "_resign": True}), ("s81", {"item": "t2", "block_sha": "B2"})]]
+        out = KW.defer_resign(ap, st, per_die, {})
+        self.assertEqual([r["item"] for _, r in out[0]], ["t2"])
+        KW.defer_resign(ap, st, per_die, {})
+        self.assertEqual(sum("DEFER-RESIGN s81 t1" in m for m in logs), 1)
+
+    def test_launches_on_spare_capacity(self):
+        per_die = [[("s81", {"item": "t1", "block_sha": "B1", "_resign": True})], [("hbm", {"item": "x", "_resign": True})]]
+        self.assertEqual(KW.defer_resign(None, {}, per_die, {}), per_die)
+
+    def test_select_tags_and_orders_last_unless_plan_frozen(self):
+        cfg = {"dies": {"s81": {"event": "E", "only_items": None}}, "stops_off": True}
+        src = open(KW.__file__).read()
+        self.assertIn("is_superseded_signed(_sidx, r[\"item\"], r.get(\"block_sha\"))", src)
+        self.assertIn("if not d.get(\"plan_frozen\"):", src)
+
+    def test_unstarted_enqueued_row_is_retired_running_is_kept(self):
+        st = self.st()
+        st["items"]["s81|E|t1|bNEW"] = {"die": "s81", "item": "t1", "block_sha": "NEWNEWNEWNEW00", "status": "ENQUEUED", "q_status": "QUEUED", "attempt": 1}
+        st["items"]["s81|E|t3|bNEW"] = {"die": "s81", "item": "t3", "block_sha": "NEWNEWNEWNEW00", "status": "ENQUEUED", "q_status": "RUNNING", "attempt": 1}
+        st["items"]["s81|E|t3|bOLD"] = {"die": "s81", "item": "t3", "block_sha": "OLD", "status": "ENQUEUED", "q_status": "SIGNED"}
+        logs = []
+        ap = type("AP", (), {"DRY": True, "log": staticmethod(logs.append)})()
+        cfg = {"stops_off": True, "dies": {"s81": {"event": "E"}}}
+        self.assertEqual(KW.retire_resign_unstarted(ap, cfg, st), 1)
+        self.assertEqual(st["items"]["s81|E|t1|bNEW"]["status"], "CANCELLED")
+        self.assertEqual(st["items"]["s81|E|t3|bNEW"]["status"], "ENQUEUED")
+        cfg["dies"]["s81"]["plan_frozen"] = True
+        st["items"]["s81|E|t1|bNEW"].update(status="ENQUEUED")
+        self.assertEqual(KW.retire_resign_unstarted(ap, cfg, st), 0)

@@ -2838,6 +2838,79 @@ def only_items_has(d, item):
     return not isinstance(oi, (list, tuple, set)) or item in oi or any(item.startswith(x + "__") for x in oi)
 
 
+SIGNED_Q = ("SIGNED", "SIGNED-LINKED")
+
+
+def signed_block_index(state, die):
+    """OWNER r711: {item: {block sha[:12]}} of the rows of `die` the queue signed off (a SIGNED record on that plan block)"""
+    idx = {}
+    for r in (state.get("items") or {}).values():
+        if r.get("die") == die and r.get("q_status") in SIGNED_Q and r.get("block_sha"):
+            idx.setdefault(r.get("item"), set()).add(str(r["block_sha"])[:12])
+    return idx
+
+
+def is_superseded_signed(idx, item, block):
+    """a SIGNED record exists on another plan block of the item and none on the block in question (superseded-signed)"""
+    signed = idx.get(item)
+    return bool(signed) and bool(block) and str(block)[:12] not in signed
+
+
+def superseded_signed_items(cfg, st):
+    """{die: [items]}: items of the current plan of record whose only SIGNED records sit on older plan blocks (per-die count for the r711 post)"""
+    out = {}
+    cb = current_blocks(cfg, st)
+    for die, blocks in cb.items():
+        idx = signed_block_index(st, die)
+        mine = sorted(i for i, b in blocks.items() if is_superseded_signed(idx, i, b))
+        if mine:
+            out[die] = mine
+    return out
+
+
+def defer_resign(AP, st, per_die, cfg):
+    """OWNER r711 (global, after every die's picks are known): superseded-signed picks (tag _resign) launch only when NO other pick of any die is eligible this pass (spare capacity);
+    otherwise they are dropped from this pass and logged once per item and plan block (DEFER-RESIGN <die> <item>).  -> per_die"""
+    others = any(not r.get("_resign") for q in per_die for _, r in q)
+    if others:
+        logged = st.setdefault("defer_resign_logged", {})
+        for q in per_die:
+            for die, r in q:
+                if r.get("_resign"):
+                    k = f"{die}|{r['item']}|b{str(r.get('block_sha') or '')[:12]}"
+                    if k not in logged:
+                        logged[k] = time.time()
+                        (AP.log if AP else log)(f"KIT-WAVE DEFER-RESIGN {die} {r['item']}")
+        return [[(die, r) for die, r in q if not r.get("_resign")] for q in per_die]
+    return per_die
+
+
+def retire_resign_unstarted(AP, cfg, st):
+    """OWNER r711: an ENQUEUED row of a superseded-signed type whose queue job has not started is retired (CANCELLED SUPERSEDED, withdrawn) while the plan is not frozen; RUNNING rows finish.
+    stops_off dies only.  -> number retired"""
+    n = 0
+    sidx = {}
+    for key, r in (st.get("items") or {}).items():
+        die = r.get("die")
+        d = (cfg.get("dies") or {}).get(die) or {}
+        if r.get("status") != "ENQUEUED" or r.get("q_status") in SIGNED_Q or d.get("plan_frozen") or not FG.stops_off_die(cfg, die):
+            continue
+        if str(r.get("q_status") or "").upper() not in ("QUEUED", "STARTING", "WAITING", "WAIT-GEOM", ""):
+            continue
+        if die not in sidx:
+            sidx[die] = signed_block_index(st, die)
+        if not is_superseded_signed(sidx[die], r.get("item"), r.get("block_sha")):
+            continue
+        note = ""
+        if r.get("kit") and not AP.DRY and str(r.get("q_status") or "").upper() in ("QUEUED", "STARTING", "WAITING", "WAIT-GEOM"):
+            note = " " + grt_arm_withdraw(AP, cfg, r, "superseded-signed, plan not frozen (r711)")
+        r.update(status="CANCELLED", **{"class": "SUPERSEDED"}, retire="resign-defer", updated=time.time(),
+                 reason=f"SUPERSEDED: not started (queue {r.get('q_status') or '-'}); the type is signed on an older plan block and runs only on spare capacity until the plan is frozen (OWNER r711){note}"[:300])
+        AP.log(f"KIT-WAVE RETIRE-RESIGN {die}/{r.get('item')}@{r.get('attempt')} not started{note}")
+        n += 1
+    return n
+
+
 def select(rows, cfg, die, state, plan_types=None):
     """-> (picked rows in launch order, {reason: [items]})"""
     d = cfg["dies"][die]
@@ -3070,7 +3143,12 @@ def select(rows, cfg, die, state, plan_types=None):
         except ValueError:
             return 0
     unlocks = blocked_parents(d)
-    picked.sort(key=lambda r: (-unlocks.get(core_module(r["item"]), 0), 0 if r["kind"] == "core" else 1, -rep(r), r["item"]))
+    if not d.get("plan_frozen"):                                  # OWNER r711: a type signed on an older plan block whose current block differs goes last; plan_frozen: normal priority, one batch
+        _sidx = signed_block_index(state, die)
+        for r in picked:
+            if is_superseded_signed(_sidx, r["item"], r.get("block_sha")):
+                r["_resign"] = True
+    picked.sort(key=lambda r: (1 if r.get("_resign") else 0, -unlocks.get(core_module(r["item"]), 0), 0 if r["kind"] == "core" else 1, -rep(r), r["item"]))
     if not FG.stops_off_die(cfg, die):                           # OWNER 11-18: no pilot gating (hbm excluded)
         picked = pilot_gate(picked, skip, d, die, state)
     return picked, skip
@@ -9042,6 +9120,7 @@ def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
                     f"{(q[0][0] if q else '-')}={len(q)}" for q in per_die) + "\n")
         except OSError:
             pass
+    per_die = defer_resign(AP, st, per_die, cfg)
     room = max(0, int(cfg.get("max_inflight", DEFAULTS["max_inflight"])) - inflight(st))   # LAUNCH-ALL-1116: no per-tick cap (OWNER 11-13); only in-flight and ot-run admission
     # queued volume (pilot_mode queue) goes after every die's pilots and other picks, so it queues behind them
     lists = ([[x for x in q if not x[1].get("volume")] for q in per_die]
@@ -13757,6 +13836,10 @@ def _step(AP, ap_dir):
         AP.log(f"KIT-WAVE FAIL-STALE skipped: {type(_e).__name__}: {_e}")
     cancel_class_volume(AP, cfg, st, notices)
     cancel_superseded(AP, cfg, st, notices, ap_dir)
+    try:
+        retire_resign_unstarted(AP, cfg, st)
+    except Exception as _e:
+        AP.log(f"KIT-WAVE RETIRE-RESIGN skipped: {type(_e).__name__}: {_e}")
     try:
         cancel_held_running(AP, cfg, st, notices, ap_dir)     # LATENCY-R: hold records with cancel_running stop their running builds
     except Exception as _e:
