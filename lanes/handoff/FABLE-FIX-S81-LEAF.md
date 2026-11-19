@@ -148,3 +148,15 @@ Reaches kits only when the S81 live tree carries main tools (S81-DIE-R3: D8g2 pu
 CFX bench: legal x3, dense x3, hqx2 x2 PASS so far (proof/bench_cfx/summary.log); commit + push when the mutant control line is in.
 A/B taps (COORD 03:3x): form (b) solve running epyc10 tapsB/ (radius 75, assign nearest, t21 + t16; fix.pid); private kit chain script bin/gen_private.sh
 (kit-rtl -> prepare-stations -> gen phys from a plandir of symlinks + private plan), NOT run yet. Glue fence recipe for t69: waiting for FABLE-FIX-S81-GLUE.
+
+## 11-19 03:5x PST resume after the limit (no successor change found: hub posts, lane dirs and repo2 are as I left them)
+All on epyc10 under proof/, launched with rt ot-run --priority proof; logs intel2 ~/.local/state/fable-fix-s81-leaf/:
+- t27keep (otrun3) and t27relay (otrun2, HPWL gate off): back in global place (each relaunch redoes place). No CTS/GRT TT yet since the 00:5x CTS read.
+- t27stb (subtree balance): otrun2 died at place, earlyoom SIGTERM (make 241); relaunched otrun3.
+- Tap A/B: first launch FAILED at kit_topology KIT_TOPOLOGY_BIND_STALE (I passed my private plan as --native-plan); fixed in bin/gen_private.sh
+  (native plan = the D8e plan of record) and relaunched: proof/ab/{a16,b16,a21,b21}, logs ab_*.otrun2.log. Goal cts. Compare with bin/leaf_tcl.sh + bin/tap_skew.py.
+  (a) = taps1000 rows; (b) = tapsB (radius 75 um = sink region W+H <= 300, assign nearest = no spill; far-cluster merge NOT implemented).
+- Fence trial: proof/t27fence = t27keep from floorplan + place_regions.tcl (main 1fd3d8bd5139) hand-installed, one region vpglue
+  (vp driver / src / yrow / cf / hsi / g_wr1 flops, util 0.35, centred on the two leaf-store SRAMs). On t27, not t69 (same logic, kit at hand). Log t27fence.otrun.log.
+  Known limit: yosys gate names are anonymous, so the regex takes the cone flops only. GLUE lane: 0.55 failed DPL-0033 on a small cone.
+- CFX bench: legal 3/3, dense 3/3, hqx2 2/2 + dense PASS; cfx0_eq and ctl_mut_hq pending (proof/bench_cfx/summary.log). Then commit vp.sv + tb + script in repo2 and push.
