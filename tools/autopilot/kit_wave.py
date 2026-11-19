@@ -2409,6 +2409,12 @@ def backfill_norm_blocks(AP, cfg, st, die, max_probes=3):
                 r["die_ctx"] = c["ctx"][r["item"]]
 
 
+def replacement_blocked(st, die, item):
+    """FABLE-FLOW-0358 A (S81 d8e -> d8f -> d8g: 196 rows cancelled for replacements that failed KIT_TOPOLOGY_BIND_STALE, 259 held): the bind preflight of the last probe named this item stale, so a
+    replacement row on the new tree cannot launch.  The old row keeps running; it is cancelled in the tick where a replacement can launch"""
+    return item in set(((st or {}).get("bind_stale_items") or {}).get(die) or ())
+
+
 def ctx_changed(cur_ctx, die, r):
     """COORD 11-18 (QC N4.2): the row was built on another resolved die-level contract than the current plan gives its item (both known and different)"""
     cc = (cur_ctx or {}).get(die, {}).get(r.get("item"))
@@ -2489,9 +2495,11 @@ def supersede_on_switch(AP, cfg, st, notices, ap_dir=None, window_ticks=3):
                          if fnmatch.fnmatchcase(item, pat) and hold_protects_running(cfg, d, r, str(w))), None)
             same = row_inputs_unchanged(cfg, die, r, item, cur_blocks, cur_norm, cur_ctx)
             ctxk = (not same) and ctx_only_keep(cfg, die, r, item, cur_blocks, cur_norm, cur_ctx, jobs)
-            if held is not None or same or ctxk:
+            rbk = (not same) and FG.stops_off_die(cfg, die) and replacement_blocked(st, die, item)
+            if held is not None or same or ctxk or rbk:
                 why = (f"hold_items: {held[:120]}" if held is not None else
                        f"die-level contract changed but the row is past place (queue job running): finishes, relaunches on the new block only if it fails" if ctxk else
+                       f"its replacement cannot launch (bind preflight: BIND-STALE on the current tree): kept, cancelled when the replacement launches (FABLE-FLOW-0358 A)" if rbk else
                        f"own plan block {str(r.get('block_sha'))[:12]} is the item's block in the current plan")
                 if r.get("switch_kept") != why:
                     r["switch_kept"] = why
@@ -6124,7 +6132,7 @@ def needs_lane_post(AP, cfg, st, ap_dir, now=None):
         for e in es:
             e["posted"] = now
     cols = ["die", "item", "attempt", "cls", "stage", "first", "last", "posted", "reason"]
-    rows = sorted((e for e in led.values() if now - float(e.get("last") or 0) < 3600), key=lambda e: (e["die"], e["item"]))
+    rows = sorted((e for e in led.values() if now - float(e.get("last") or 0) < 24 * 3600), key=lambda e: (e["die"], e["item"]))      # FABLE-FLOW-0358 G: 24 h, not 1 h (the file read header-only while rows waited)
     if not AP.DRY:
         (Path(ap_dir) / NEEDS_LANE_FILE).write_text("\n".join(["\t".join(cols)] + ["\t".join(
             str(e.get(c, "")) for c in cols) for e in rows]) + "\n")
@@ -6739,6 +6747,18 @@ def blocked_rows(cfg, st, owners=None):
                         first=time.strftime("%F %T", time.localtime(float(c.get("first") or 0))),
                         last=time.strftime("%F %T", time.localtime(float(c.get("last") or 0))),
                         last_reason=c.get("reason", ""), release=f"add '{item}' to dies.{die}.unblock after the fix"))
+    seen_ = {(r["die"], r["item"]) for r in out}                       # FABLE-FLOW-0358 G: the list was header-only while rows carried rec["blocked"] (fail_sigs pruned / digest moved): list those too
+    for key, rec in sorted((st.get("items") or {}).items()):
+        die, item = rec.get("die"), rec.get("item")
+        d = (cfg.get("dies") or {}).get(die) or {}
+        if not rec.get("blocked") or rec.get("status") != "FAIL" or (die, item) in seen_ or rec.get("event") != d.get("event"):
+            continue
+        own, src = die_owner(cfg, die, owners, item)
+        out.append(dict(die=die, item=item, block=str(rec["blocked"]), n=(st.get("fail_sigs") or {}).get(f"{die}|{item}", {}).get("n", ""), owner=own, owner_source=src, item_default_owner="",
+                        stage=rec.get("stage", ""), signature="", attempts=str(rec.get("attempt")),
+                        first=time.strftime("%F %T", time.localtime(float(rec.get("started") or 0))), last=time.strftime("%F %T", time.localtime(float(rec.get("updated") or 0))),
+                        last_reason=str(rec.get("reason") or "")[:200], release=f"add '{item}' to dies.{die}.unblock after the fix"))
+        seen_.add((die, item))
     return out
 
 
@@ -9362,6 +9382,7 @@ def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
                     except Exception as e:                 # a diagnostic probe never stops the plan
                         stale = {}
                         AP.log(f"KIT-WAVE bind preflight {die} skipped: {e}")
+                    st.setdefault("bind_stale_items", {})[die] = sorted(stale or {})          # FABLE-FLOW-0358 A: the supersede steps read it (a row is cancelled only when its replacement can launch)
                     if stale:
                         for r in go:
                             if r["item"] in stale:
@@ -13940,9 +13961,11 @@ def cancel_superseded(AP, cfg, st, notices, ap_dir=None):
                                          if fnmatch.fnmatchcase(item, pat) and hold_protects_running(cfg, d, r, str(w))), None)
             same = row_inputs_unchanged(cfg, die, r, item, cur_blocks, cur_norm, cur_ctx)
             ctxk = (not same) and ctx_only_keep(cfg, die, r, item, cur_blocks, cur_norm, cur_ctx, jobs)
-            if held is not None or same or ctxk:
+            rbk = (not same) and so and replacement_blocked(st, die, item)
+            if held is not None or same or ctxk or rbk:
                 why = (f"hold_items: {held[:160]}" if held is not None else
                        f"die-level contract changed but the row is past place (queue job running): finishes, relaunches on the new block only if it fails" if ctxk else
+                       f"its replacement cannot launch (bind preflight: BIND-STALE on the current tree): kept, cancelled when the replacement launches (FABLE-FLOW-0358 A)" if rbk else
                        f"own plan block {str(r.get('block_sha'))[:12]} unchanged in the current plan")
                 if r.get("supersede_kept") != why:
                     r["supersede_kept"] = why
@@ -15375,6 +15398,27 @@ def _retry_key_migrate(tab, die, event, ia):
     return k
 
 
+def same_input_records(a, b):
+    """FABLE-FLOW-0358 C: two failed attempts built on the same stage inputs (design snapshot / plan / spec, the executed files of the failing stage, the env that stage reads)"""
+    ia, ib = a.get("input_parts") or {}, b.get("input_parts") or {}
+    if not ia.get("noenv") or ia.get("v") != 2 or ib.get("v") != 2:
+        return False
+    stage = b.get("stage") or FG.fail_stage(b.get("reason") or "")
+    why = b.get("reason") or ""
+    fam = stage_family(stage)
+    if ia.get("noenv") != ib.get("noenv"):
+        pa, pb = ia.get("pc"), ib.get("pc")
+        if not ((fam == "flow" or stage == "kit_snap") and pa and pb and all(pa.get(k) == pb.get(k) for k in ("block", "src", "snapshot", "bind_context", "views"))):
+            return False
+    sa, sb = (ia.get("stg") or {}).get(stage), (ib.get("stg") or {}).get(stage)
+    if fam == "flow" and sa and sb:
+        if sa != sb:
+            return False
+    elif (ia.get("fam") or {}).get(fam) != (ib.get("fam") or {}).get(fam):
+        return False
+    return stage_env(ia.get("env"), stage, why) == stage_env(ib.get("env"), stage, why)
+
+
 def retry_key_decision(st, die, item, n):
     """WF-1 11-14 (COORD: KW-FIX-23's first-seen epoch silently dropped item@N when attempt N launched after the key was first seen,
     and 'first seen' lingers for days: lepe@2, bk_sel@4 after 36 h).  Rule: item@N releases exactly once, when attempt N is the
@@ -15403,6 +15447,11 @@ def retry_key_decision(st, die, item, n):
     if nn < ln:
         return False, f"attempt {ln} is the latest of {item}; {item}@{nn} was consumed by its relaunch (or names an older attempt)"
     ended = last.get("status") in ("FAIL", "CANCELLED") or (last.get("status") == "ENQUEUED" and last.get("q_status") in ("FAIL", "CANCELLED"))
+    if ended and last.get("status") == "FAIL" and str(last.get("class") or "") != "INFRA":
+        prev = [r for r in recs if r is not last and r.get("status") == "FAIL" and started(r) < started(last) and r.get("input_parts")]
+        if prev and last.get("input_parts") and same_input_records(max(prev, key=started), last):
+            return False, (f"FABLE-FLOW-0358 C: attempt {nn} failed on the SAME inputs as the previous failed attempt {max(prev, key=started).get('attempt')} "
+                           f"({last.get('stage')}); {item}@{nn} stays blocked until the stage's input hash changes")
     if ended:
         return True, f"attempt {nn} is {item}'s latest and ended ({last.get('status')}/{last.get('q_status') or '-'}): released once"
     return None, ""

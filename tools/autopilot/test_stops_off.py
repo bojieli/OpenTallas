@@ -1255,3 +1255,61 @@ class StageToolsGroup(unittest.TestCase):
     def test_real_tree_has_stage_digests(self):
         d = KW.stage_tools_digests()
         self.assertTrue(d.get("place") and d.get("gen") is not None or d.get("place"))
+
+
+class FlowFixes0358(unittest.TestCase):
+    """FABLE-FLOW-0358: A (a row is cancelled only when its replacement can launch), C (a retry release stays blocked while the inputs are unchanged), G (blocked list not header-only)"""
+
+    def test_a_bind_stale_replacement_keeps_the_old_row(self):
+        cfg = {"stops_off": True, "supersede_max_per_tick": 1000, "dies": {"s81": {"event": "E", "enabled": True, "plan": "p", "gen_host": "h"}}}
+        def run(stale):
+            st = {"items": {"s81|E|t|bOLD": {"die": "s81", "item": "t", "event": "E", "block_sha": "OLD", "status": "ENQUEUED", "q_status": "QUEUED", "q_id": "j", "attempt": 1, "dir": "/x"}},
+                  "plans": {"h:p|E": {"blocks": {"t": "NEW"}}}, "bind_stale_items": {"s81": stale}}
+            import tempfile, json as _j
+            ap = type("AP", (), {"DRY": False, "HUB_NAME": "hub", "log": staticmethod(lambda m: None), "sh": staticmethod(lambda *a, **k: (0, "", ""))})()
+            with tempfile.TemporaryDirectory() as tmp:
+                Path(tmp, "state.json").write_text(_j.dumps({"jobs": {"j": {"status": "QUEUED"}}}))
+                orig = KW.stop_on_fleet_bg
+                KW.stop_on_fleet_bg = lambda AP, roots: {}
+                try:
+                    KW.cancel_superseded(ap, cfg, st, {}, tmp)
+                finally:
+                    KW.stop_on_fleet_bg = orig
+            return st["items"]["s81|E|t|bOLD"]["status"]
+        self.assertEqual(run(["t"]), "ENQUEUED")          # replacement is BIND-STALE: the old row stays
+        self.assertEqual(run([]), "CANCELLED")            # replacement can launch: cancelled as before
+        self.assertTrue(KW.replacement_blocked({"bind_stale_items": {"s81": ["t"]}}, "s81", "t"))
+
+    def parts(self, **over):
+        cfg = {"dies": {"s81": {"event": "E", "src_manifest_hash": "snap", "gen_env": {}, "_plan_sha": "p"}}}
+        ip = KW.input_parts(cfg, "s81", "x", "blk")
+        ip.update(over)
+        return ip
+
+    def test_c_retry_stays_blocked_while_inputs_are_unchanged_then_releases(self):
+        ip = self.parts()
+        def st(ip2):
+            return {"items": {
+                "a": {"die": "s81", "item": "x", "attempt": 22, "status": "FAIL", "class": "FLOW", "stage": "kit_rtl", "started": 1, "input_parts": ip},
+                "b": {"die": "s81", "item": "x", "attempt": 23, "status": "FAIL", "class": "FLOW", "stage": "kit_rtl", "started": 2, "input_parts": ip2}}}
+        ok, why = KW.retry_key_decision(st(dict(ip)), "s81", "x", 23)
+        self.assertFalse(ok); self.assertIn("stays blocked", why)
+        changed = dict(ip, noenv="other", pc=dict(ip["pc"], block="NEWBLOCK"))
+        self.assertTrue(KW.retry_key_decision(st(changed), "s81", "x", 23)[0])                      # a changed input releases it
+        s2 = st(dict(ip)); s2["items"]["b"]["class"] = "INFRA"
+        self.assertTrue(KW.retry_key_decision(s2, "s81", "x", 23)[0])                              # INFRA is never blocked by this
+        s3 = st(dict(ip)); del s3["items"]["a"]["input_parts"]
+        self.assertTrue(KW.retry_key_decision(s3, "s81", "x", 23)[0])                              # no stored parts on the previous attempt: as before
+
+    def test_g_blocked_list_lists_rows_that_carry_the_block_marker(self):
+        cfg = {"dies": {"s81": {"event": "E"}}}
+        st = {"items": {"k": {"die": "s81", "item": "t56", "event": "E", "status": "FAIL", "blocked": "BLOCKED-FLOW", "attempt": 23, "stage": "kit_rtl", "started": 1, "updated": 2, "reason": "r"},
+                        "o": {"die": "s81", "item": "old", "event": "OLD", "status": "FAIL", "blocked": "BLOCKED-FLOW", "attempt": 1}},
+              "fail_sigs": {}}
+        rows = KW.blocked_rows(cfg, st)
+        self.assertEqual([(r["die"], r["item"], r["block"]) for r in rows], [("s81", "t56", "BLOCKED-FLOW")])
+        import tempfile
+        with tempfile.TemporaryDirectory() as tmp:
+            KW.write_blocked(cfg, st, tmp)
+            lines = Path(tmp, KW.BLOCKED_FILE).read_text().splitlines()
+            self.assertEqual(len(lines), 2)

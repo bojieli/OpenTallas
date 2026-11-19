@@ -113,9 +113,14 @@ def candidate_bind_args(obj):
 
 def bind_check(obj, run=subprocess.run):
     """-> (ok, text).  ok None = not a bind candidate; the probe runs on the first candidate host that answers"""
+    return bind_check_full(obj, run)[:2]
+
+
+def bind_check_full(obj, run=subprocess.run):
+    """-> (ok, text, stale types): bind_check with the FULL list of types whose bind does not match (the text names six)"""
     args, hosts = candidate_bind_args(obj)
     if not args:
-        return None, "no bind"
+        return None, "no bind", []
     err = []
     for h in hosts:
         p = run(["ssh", "-n", "-o", "BatchMode=yes", "-o", "ControlPath=none", "-o", "ConnectTimeout=15", h,
@@ -126,13 +131,13 @@ def bind_check(obj, run=subprocess.run):
             continue
         r = json.loads(line[-1][8:])
         if r.get("error"):
-            return False, f"bind check on {h} could not run: {r['error']}"
+            return False, f"bind check on {h} could not run: {r['error']}", []
         if r["stale"]:
             return False, (f"bind {args['bind_out']} does not match the candidate on {len(r['stale'])}/{r['checked']} types ({h}): differs {r['diff']}; "
                            f"e.g. {', '.join(r['stale'][:6])}.  A clock_table_sha256-only difference = the asbuilt names other tables than the bind used: "
-                           f"derive it from the bind (publish_apply.py derive-asbuilt --bind {args['bind_out']} --asbuilt {args['asbuilt']} --tree {args['src']} --out NEW)")
-        return True, f"bind matches the candidate on {r['checked']}/{r['checked']} types ({h})"
-    return False, "bind check: no candidate host answered: " + "; ".join(err)[:400]
+                           f"derive it from the bind (publish_apply.py derive-asbuilt --bind {args['bind_out']} --asbuilt {args['asbuilt']} --tree {args['src']} --out NEW)"), list(r["stale"])
+        return True, f"bind matches the candidate on {r['checked']}/{r['checked']} types ({h})", []
+    return False, "bind check: no candidate host answered: " + "; ".join(err)[:400], []
 
 
 def tree_rel(path, tree_roots):
@@ -360,6 +365,56 @@ def cmd_adopt_bind(a, run=subprocess.run, check_fn=None):
     return 0
 
 
+def bind_first(C, obj, lane, die, run=subprocess.run, host="", stamp=None, log_dir=None):
+    """COORD 11-19 (FABLE-FLOW-0358 A, other half): run the strict bind + LATCHECK of the candidate's PUBLISHED tree in its hardlink copy BEFORE the apply and wait for it (the old tree keeps building
+    meanwhile: an ordering, not a hold), seal its output beside the tree and replicate it to the other gen hosts.  -> (dest or '', text, failing types from the bind log).  '' = no bind output:
+    the caller does not switch (the tree stays as it is)"""
+    stamp = stamp or time.strftime("%m%d%H%M%S")
+    s = postbind_spec(obj, stamp, host)
+    if not s:
+        return "", "no bind (candidate is not kit_rtl mode bind)", []
+    ld = Path(log_dir or os.path.expanduser("~/.local/state/ot-postbind"))
+    ld.mkdir(parents=True, exist_ok=True)
+    unit = f"bindfirst-{die}-{stamp}"
+    prep, log = ld / f"{unit}.prep.sh", ld / f"{unit}.log"
+    prep.write_text(postbind_prep_sh(s))
+    q = shlex.quote
+    otrun = HERE.parent / "fleet" / "ot-run"
+    body = (f"cd /; {{ ssh -o BatchMode=yes -o ControlPath=none {q(s['host'])} 'bash -s' < {q(str(prep))} > {q(str(log))} 2>&1 && grep -q '^POSTBIND_COPY ' {q(str(log))}; }} || exit 3\n"
+            f"{q(str(otrun))} --mem {POSTBIND_MEM} --hosts {q(s['host'])} --priority plan --plan-job bind --dir {q(s['copy'])} --stage {q(s['copy'])} "
+            f"--stage {q(s['tree'])} -- bash {q(s['copy'] + '/' + POSTBIND_DIR + '/run.sh')} >> {q(str(log))} 2>&1\n")
+    r = run(["bash", "-c", body], capture_output=True, text=True, timeout=14400)
+    txt = ""
+    try:
+        txt = Path(log).read_text(errors="replace")
+    except OSError:
+        pass
+    fails = types_from_log(txt, set(item_names((json.loads((Path(C) / "autopilot/kit_wave.json").read_text()).get("dies") or {}).get(die) or {})))
+    plan_ = dict(out=f"{s['copy']}/{POSTBIND_DIR}/out", dest=f"{s['tree'].rstrip('/')}{BIND_DEST_SUFFIX}{stamp}", hosts=list(((obj.get("marker") or obj).get("config") or {}).get("gen_hosts") or [])[:])
+    plan_["hosts"] = [h for h in plan_["hosts"] if h != s["host"]]
+    sh = lambda host, script: run(["ssh", "-o", "BatchMode=yes", "-o", "ControlPath=none", host, "bash -s"], input=script, capture_output=True, text=True, timeout=1800)
+    seal = sh(s["host"], adopt_bind_seal_sh(plan_))
+    if seal.returncode or "ADOPT_SEAL" not in (seal.stdout or ""):
+        return "", f"bind-first: no bind output ({'bind rc ' + str(r.returncode)}; seal on {s['host']} failed): {(seal.stderr or seal.stdout)[-160:]}", fails
+    e = "ssh -o BatchMode=yes -o ControlPath=none -o ConnectTimeout=15"
+    for h in plan_["hosts"]:
+        rr = run(["ssh", "-o", "BatchMode=yes", "-o", "ControlPath=none", s["host"], f"rsync -a -e {q(e)} {q(plan_['dest'] + '/')} {h}:{q(plan_['dest'] + '/')}"], capture_output=True, text=True, timeout=1800)
+        if rr.returncode:
+            return "", f"bind-first: replicating the bind to {h} failed rc {rr.returncode}", fails
+    return plan_["dest"], f"bind-first: strict bind + LATCHECK rc {r.returncode}; output sealed as {plan_['dest']} on {s['host']},{','.join(plan_['hosts'])}", fails
+
+
+def with_bind_out(obj, dest):
+    """a copy of the candidate whose marker names `dest` as the bind (apply_marker writes kit_rtl.bind_out from marker.bind_out + asbuilt, in the same commit as the tree)"""
+    o = json.loads(json.dumps(obj))
+    m = o.get("marker", o)
+    kr = (m.setdefault("config", {}).setdefault("kit_rtl", {}))
+    kr["bind_out"] = dest
+    if kr.get("asbuilt"):
+        m["asbuilt"], m["bind_out"] = kr["asbuilt"], dest
+    return o
+
+
 def cmd_post_bind(a, run=subprocess.run):
     obj = json.loads(Path(a.candidate).read_text())
     m = obj.get("marker", obj)
@@ -373,10 +428,28 @@ def cmd_apply(a, run=subprocess.run, apply_fn=None, commit_fn=None):
     obj = json.loads(Path(a.candidate).read_text())
     obj["optimistic"] = True
     obj["_path"] = a.candidate
+    bound_dest, stale_types = "", []
     if not getattr(a, "skip_bind_check", False):
-        ok, txt = (getattr(a, "bind_check_fn", None) or bind_check)(obj, run=run)
+        chk = getattr(a, "bind_check_fn", None)
+
+        def check(o):
+            r = chk(o, run=run) if chk else bind_check_full(o, run=run)
+            return r[0], r[1], (list(r[2]) if len(r) > 2 else [])
+        ok, txt, stale_types = check(obj)
         print(f"BIND-CHECK {txt}", flush=True)
-        if ok is False:
+        if ok is False and not getattr(a, "no_bind_first", False):
+            # the candidate names a bind that does not match its plan (publish never carried the new bind): run the strict bind on the PUBLISHED new tree first, switch tree + bind in ONE commit
+            dest, btxt, fails = (getattr(a, "bind_first_fn", None) or bind_first)(C, obj, a.lane, a.die if getattr(a, "die", "") else (obj.get("die") or (obj.get("marker") or obj).get("die") or ""), run=run)
+            print(f"BIND-FIRST {btxt}", flush=True)
+            if not dest:
+                print("APPLY REFUSED: the strict bind produced no output for the new tree; the old tree keeps building (types the bind log names: " + (", ".join(fails[:20]) or "none") + ")")
+                return 4
+            obj = with_bind_out(obj, dest)
+            ok2, txt2, stale_types = check(obj)
+            print(f"BIND-CHECK (new bind) {txt2}", flush=True)
+            bound_dest = dest
+            ok = None
+        elif ok is False:
             print("APPLY REFUSED: the candidate's bind does not match it (the wave would hold every type BIND-STALE); fix the candidate or pass --skip-bind-check")
             return 4
     t0 = time.time()
@@ -384,6 +457,13 @@ def cmd_apply(a, run=subprocess.run, apply_fn=None, commit_fn=None):
     res["commit"] = (commit_fn or A.commit_apply)(C, res)
     res["plan_probe"] = A.start_plan_probe(res) if commit_fn is None else "skipped: custom commit"      # COORD FABLE-FLOW-0200 C: the new event's plan blocks are cached before the next tick
     res["apply_s"] = round(time.time() - t0, 1)
+    if bound_dest:
+        res["bind_first"] = bound_dest
+        a.no_post_bind = True                       # the bind already ran (before the switch); adopt-bind has nothing left to do
+        if stale_types:                             # the bind does not match some types: switched anyway, ONLY those are bind-failed
+            r_ = run([sys.executable, "-I", str(HERE / "publish_apply.py"), "bind-fail", "--die", res["applied"], "--lane", a.lane, "--id", "bindfirst-" + time.strftime("%m%d%H%M%S"),
+                      "--types", ",".join(stale_types), "--coord", str(C)], capture_output=True, text=True, timeout=600)
+            res["bind_failed_types"] = stale_types
     gate = "off"
     if not a.no_gate:
         # the gate's projection must see the candidate as optimistic too (guard/smoke advisory); written next to the receipt
@@ -567,6 +647,8 @@ def main(argv=None):
     p.add_argument("--no-gate", action="store_true", help="do not start the advisory publish gate")
     p.add_argument("--no-precheck", action="store_true", help="do not start the background PRECHECK-1119 estimator")
     p.add_argument("--skip-bind-check", action="store_true", help="apply although kit_topology.bind_matches says the bind does not match the candidate")
+    p.add_argument("--no-bind-first", action="store_true", help="do not run the strict bind before the apply when the candidate bind does not match (refuse instead, as before)")
+    p.add_argument("--die", default="", help="die name (default: from the candidate)")
     p.add_argument("--no-post-bind", action="store_true", help="do not start the post-apply strict bind + LATCHECK (hardlink copy of the published tree)")
     pb = sp.add_parser("post-bind", help="post-apply strict bind + LATCHECK in a hardlink copy of the candidate's published tree (apply starts it itself)")
     pb.add_argument("--candidate", required=True)

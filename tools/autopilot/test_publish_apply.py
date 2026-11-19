@@ -341,3 +341,80 @@ def test_post_bind_unit_runs_adopt_only_after_a_pass():
     seen.clear()
     PA.start_postbind("/c", obj, "L", "s81", run=lambda argv, **k: seen.append(argv) or _R(0), stamp="0102", log_dir="/tmp/pb_t", auto_adopt=False)
     assert "adopt-bind" not in seen[0][-1]
+
+
+# ---- bind-first (COORD 11-19, FABLE-FLOW-0358 A): the strict bind runs on the new tree BEFORE the apply; tree + bind switch in one commit -------------------
+def _bf_setup(tmp_path):
+    c = coord(tmp_path)
+    cand = tmp_path / "cand_bf.json"
+    cand.write_text(json.dumps({"die": "s81", "marker": {"tree": "/x/new", "plan": "/x/new/p.json", "config": {"kit_rtl": {"mode": "bind", "bind_out": "/x/oldbind", "asbuilt": "/x/new/a.json"},
+                                                                                                         "gen_hosts": ["epyc8", "epyc10"]}}}))
+    seen = {}
+
+    def apply_fn(C, o, src, ev, pilot_item=None, optimistic=None):
+        seen["obj"] = o
+        rcpt = Path(C) / "lanes/handoff/s81_atomic_apply_1.json"
+        rcpt.write_text("{}")
+        return {"applied": "s81", "event": "E2", "source": "/x/new", "receipt": str(rcpt), "warnings": [], "gen_hosts": ["epyc8"]}
+    return c, cand, seen, apply_fn
+
+
+def test_bind_first_switches_tree_with_the_new_bind_and_bind_fails_only_the_stale_types(tmp_path):
+    c, cand, seen, apply_fn = _bf_setup(tmp_path)
+    calls, order = [], []
+    a = types.SimpleNamespace(coord=str(c), candidate=str(cand), expect_source="/x/old", expect_event="E0", lane="S81-DIE-R3", pilot_item=None, no_gate=True, no_precheck=True)
+    checks = iter([(False, "bind /x/oldbind does not match", ["t1", "t2"]), (False, "new bind: 1 type differs", ["t7"])])
+    a.bind_check_fn = lambda o, run=None: next(checks)
+    a.bind_first_fn = lambda C, o, lane, die, run=None, **k: (order.append("bind") or ("/x/new_bind_0101", "bind-first ok", []))
+
+    def apply_fn2(C, o, src, ev, pilot_item=None, optimistic=None):
+        order.append("apply")
+        return apply_fn(C, o, src, ev, pilot_item, optimistic)
+
+    def run(argv, **k):
+        calls.append(argv)
+        return types.SimpleNamespace(returncode=0, stdout="", stderr="")
+    assert PA.cmd_apply(a, run=run, apply_fn=apply_fn2, commit_fn=lambda C, r: "ok") == 0
+    assert order == ["bind", "apply"]                                                                   # the bind first, the tree switch after it
+    m = seen["obj"]["marker"]
+    assert m["config"]["kit_rtl"]["bind_out"] == "/x/new_bind_0101" and m["bind_out"] == "/x/new_bind_0101"     # one candidate: tree and bind in the same commit
+    bf = [x for x in calls if "bind-fail" in x]
+    assert len(bf) == 1 and bf[0][bf[0].index("--types") + 1] == "t7"                                   # ONLY the types the NEW bind still mismatches
+    assert a.no_post_bind is True                                                                       # nothing left for the post-bind to do
+
+
+def test_bind_first_without_bind_output_refuses_and_leaves_the_old_tree(tmp_path):
+    c, cand, seen, apply_fn = _bf_setup(tmp_path)
+    a = types.SimpleNamespace(coord=str(c), candidate=str(cand), expect_source="/x/old", expect_event="E0", lane="L", pilot_item=None, no_gate=True, no_precheck=True)
+    a.bind_check_fn = lambda o, run=None: (False, "stale", ["t1"])
+    a.bind_first_fn = lambda C, o, lane, die, run=None, **k: ("", "bind-first: no bind output", ["svc_a"])
+    assert PA.cmd_apply(a, run=lambda *x, **k: types.SimpleNamespace(returncode=0, stdout="", stderr=""), apply_fn=apply_fn, commit_fn=lambda C, r: "ok") == 4
+    assert "obj" not in seen                                                                           # apply_marker never ran
+
+
+def test_no_bind_first_keeps_the_old_refusal_and_a_matching_bind_applies_directly(tmp_path):
+    c, cand, seen, apply_fn = _bf_setup(tmp_path)
+    run = lambda *x, **k: types.SimpleNamespace(returncode=0, stdout="", stderr="")
+    a = types.SimpleNamespace(coord=str(c), candidate=str(cand), expect_source="/x/old", expect_event="E0", lane="L", pilot_item=None, no_gate=True, no_precheck=True, no_bind_first=True)
+    a.bind_check_fn = lambda o, run=None: (False, "stale", ["t1"])
+    assert PA.cmd_apply(a, run=run, apply_fn=apply_fn, commit_fn=lambda C, r: "ok") == 4
+    b = types.SimpleNamespace(coord=str(c), candidate=str(cand), expect_source="/x/old", expect_event="E0", lane="L", pilot_item=None, no_gate=True, no_precheck=True)
+    b.bind_check_fn = lambda o, run=None: (True, "matches", [])
+    b.bind_first_fn = lambda *x, **k: (_ for _ in ()).throw(AssertionError("bind-first must not run when the bind matches"))
+    assert PA.cmd_apply(b, run=run, apply_fn=apply_fn, commit_fn=lambda C, r: "ok") == 0
+
+
+def test_bind_first_seals_and_replicates_the_output_before_returning(tmp_path):
+    c = coord(tmp_path)
+    obj = {"die": "s81", "marker": {"tree": "/x/new", "plan": "/x/new/p.json", "config": {"kit_rtl": {"mode": "bind", "bind_out": "/b", "asbuilt": "a.json"}, "gen_hosts": ["epyc8", "epyc10"]}}}
+    (c / "autopilot/kit_wave.json").write_text(json.dumps({"dies": {"s81": {"plan": "/x/new/p.json"}}}))
+    calls = []
+
+    def run(argv, **k):
+        calls.append(argv)
+        out = "ADOPT_SEAL /x/new_bind_0101\n" if (argv[0] == "ssh" and argv[-1] == "bash -s") else ""
+        return types.SimpleNamespace(returncode=0, stdout=out, stderr="")
+    dest, txt, fails = PA.bind_first(c, obj, "L", "s81", run=run, host="epyc8", stamp="0101", log_dir=str(tmp_path / "ld"))
+    assert dest == "/x/new_bind_0101"
+    assert calls[0][:2] == ["bash", "-c"] and "plan-job bind" in calls[0][2] and "POSTBIND_COPY" in calls[0][2]
+    assert any("rsync" in x[-1] and "epyc10:/x/new_bind_0101/" in x[-1] for x in calls if x[0] == "ssh")
