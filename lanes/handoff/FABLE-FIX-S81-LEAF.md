@@ -85,3 +85,14 @@ PID files: epyc10 taps1000/fix.pid = 3046128 (reach_fix cap 1000). Proof kits: w
   Baseline, control t27 a7 at CTS, TT, placement RC: 29 taps, in-tap span max 166 ps, median 37; 7 taps >= 100 ps, 3 in 60..100, 19 < 60;
   worst clk_t14 (median sink 159 ps earlier than the latest), clk_t9 139, clk_t10 119.
 - t27relay: in place.
+
+## 11-19 02:5x PST: HPWL gate finding (the t24 / t37 / kv_leaf t3 class) + proof states
+- t27relay FAILED the PLACE-HPWL gate at 1.39 (limit 1.3). t27keep passed the same gate at 1.275. Both ratios are 100 % pre-repair spreading
+  (segments 1.390 x 1.000 and 1.275 x 1.000): HPWL is flat at 4.33e6 from iteration 0 to overflow 0.41, then rises to 6.0e6 while overflow falls to 0.19,
+  and GPL exits one row after the non-virtual repair. The run minimum is at iteration 80, overflow 0.77. Nothing grows after convergence.
+  A 300-flop netlist change moved the ratio across the limit, so on leaf the gate is a coin flip (t24 1.36 / 1.47, t37 1.38-1.40, kv_leaf t3 1.32).
+  History: 1e569598d0c + test_hpwl_growth_takes_the_repair_step_out deliberately count spreading before the repair; strategy said no ratio change. NOT changed by me.
+  Evidence run: t27relay relaunched with OT_GPL_HPWL_RATIO = 0 in its private config.mk (intel2 t27relay.otrun2.log); compare its CTS / GRT TT with t27keep.
+  If timing is as good, propose: gate advisory on leaf (academic profile: only DRC / setup / hold / latency block) or growth measured from the first row at overflow <= 0.30.
+- Bench CFP: cfp1_legal and cfp2_legal PASS on 3 seeds each (59,959 checks, 0 errors); hqx2, cfp0_eq, dense control, mutant still running. Form A stays only if the dense control passes.
+- All three kits re-run global place on relaunch (run_kit does not skip to GRT).
