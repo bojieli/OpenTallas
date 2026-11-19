@@ -199,6 +199,8 @@ def unresolved_modules(kit):
         if m in seen:
             continue
         seen.add(m)
+        if m in cells:
+            continue          # S81-FAILS-1118: a hard macro with a macros/ liberty is a black box; a behavioural body of it (dsdv_eng_rr_h0 in dsdv_eng_rr_split.sv) is never elaborated
         if m in mods:
             f, uses = mods[m]
             for u in sorted(uses):

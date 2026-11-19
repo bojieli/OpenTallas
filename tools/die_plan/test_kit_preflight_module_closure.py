@@ -128,3 +128,13 @@ endmodule
     k = kit(tmp_path, {'top.sv': src})
     assert K.unresolved_modules(k) == []
     assert 'module sub' in K._strip_src(src) and 'keep' not in K._strip_src(src)
+
+
+def test_hard_macro_with_liberty_is_not_descended(tmp_path):
+    """S81-FAILS-1118 eng__t1: dsdv_eng_rr_h0 is a hard macro (macros/ liberty) whose behavioural body sits in the split file; its
+    undefined hash children must not fail module_closure"""
+    top = "module top(input wire c); dsdv_eng_rr_h0 u_h0 (.ck(c)); endmodule\n"
+    h0 = "module dsdv_eng_rr_h0 (input wire ck); ot_s81_engram_hash_n32_l0_pr u_hash (.clk(ck)); endmodule\n"
+    lib = 'library (x) { cell (dsdv_eng_rr_h0) { area : 1; } }\n'
+    assert any('ot_s81_engram_hash_n32_l0_pr' in e for e in K.unresolved_modules(kit(tmp_path / 'a', {'top.sv': top, 'h0.sv': h0})))
+    assert K.unresolved_modules(kit(tmp_path / 'b', {'top.sv': top, 'h0.sv': h0}, libs=[('dsdv_eng_rr_h0_tt.lib', lib)])) == []
