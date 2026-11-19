@@ -1,25 +1,25 @@
 {
  "die": "s81_head",
- "tree": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r7_s0",
- "manifest_hash": "4f7ba1f41c39246b433f86989893049f57482bff0365b17163e4f90e02eda4f0",
- "src_manifest_sha": "4f7ba1f41c39246b433f86989893049f57482bff0365b17163e4f90e02eda4f0",
+ "tree": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r8_s0",
+ "manifest_hash": "505b61e78b645550bf37ea74c79a2c65b0dfe840642c5e5317b945890f3e777c",
+ "src_manifest_sha": "505b61e78b645550bf37ea74c79a2c65b0dfe840642c5e5317b945890f3e777c",
  "tools_sha": "385f61b5582a91e3bf52d3bd494eebc6a64b21bb",
  "hosts": [
   "epyc10",
   "epyc9"
  ],
  "smoke": "PASS",
- "smoke_detail": "HEAD-CROSSING-1119 live r7 (COORD ruling e2): s81_head_r7_s0 = s81_head_r6e_s0 + die clock lep0N actual_max 300->387.72 (clock_e2.yaml, kit_tree/kit_ctree regenerated, stage_check PASS; die clock cells moved only in hd_lep0N: reserved_sites_um 19 stale dropped, 24 added, M1-M7 form) + hd_tile type-kit hold window 43 rows 84..123 ps (e2 kitwin need+10, cap 130); sidecar/RTL unchanged; receipt head_native_release_nf15f_r7; private gates: schema 0 err, strict bind PASS, cohort 26/26, LATCHECK 329/329, G0 PASS.",
- "plan": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r7_s0/physical/die_plan/s81_head/prep/NF15f/prep/source_plan.json",
- "plan_sha256": "f16e3fe71de68cf464b5ab32d063860cc9c203acc7334a08b47a636c31fe81dc",
+ "smoke_detail": "HEAD-CROSSING-1119 live r8 (COORD ruling): s81_head_r8_s0 = s81_head_r7_s0 + 307 kit-contract tap_window rows in 18 non-tile types (per_port need+10 on the e2 die proof, raise only; per_type raised to the max port window on 14 types; new per-port tables on types that had none); clock/RTL/sidecar unchanged; receipt head_native_release_nf15f_r8; private gates: schema 0 err, strict bind PASS, cohort 26/26, LATCHECK 329/329, G0 PASS.",
+ "plan": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r8_s0/physical/die_plan/s81_head/prep/NF15f/prep/source_plan.json",
+ "plan_sha256": "19640e16b717ad6fdb0447f0ec141a69bdefdf87f27d5d5758d5b5d283ed8dce",
  "plan_canonical_sha256": "8878e583eb07681200401b9ebe1fbd3c4253c6402b19b342032c0c76c7c99c0d",
- "sidecar": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r7_s0/physical/die_plan/s81_head/prep/NF15f/prep/source_sidecar.json",
+ "sidecar": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r8_s0/physical/die_plan/s81_head/prep/NF15f/prep/source_sidecar.json",
  "sidecar_sha256": "6fcd1d3dfc43434bcbf774528cbaefa2ccb2fce156d0ada588297637fb793f0e",
- "frozen_kit_tree": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r7_s0/physical/die_plan/s81_head/prep/NF15f/die_clock/kit_tree.json",
+ "frozen_kit_tree": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r8_s0/physical/die_plan/s81_head/prep/NF15f/die_clock/kit_tree.json",
  "physical_qualified": false,
  "preserve_holds": "all inherited s81_head hold_records kept; HEAD-PLAN-R4 one plan revision (COORD r706)",
  "config": {
-  "event": "head_rp21z20NF15f_r7",
+  "event": "head_rp21z20NF15f_r8",
   "tools_sha": "385f61b5582a91e3bf52d3bd494eebc6a64b21bb",
   "gen_host": "epyc9",
   "gen_hosts": [
@@ -28,26 +28,26 @@
   ],
   "kit_rtl": {
    "mode": "script",
-   "script": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r7_s0/physical/die_plan/s81_head/kit_wave/kit_rtl.sh"
+   "script": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r8_s0/physical/die_plan/s81_head/kit_wave/kit_rtl.sh"
   },
   "gen_args": [
    "--clock-landing",
-   "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r7_s0/physical/die_plan/s81_head/prep/NF15f/prep/source_sidecar.json",
+   "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r8_s0/physical/die_plan/s81_head/prep/NF15f/prep/source_sidecar.json",
    "--hold-ff-margin",
    "0"
   ]
  },
- "native_reset_receipt": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r7_s0/results/head_native_release_nf15f_r7/native_release_receipt.json",
+ "native_reset_receipt": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r8_s0/results/head_native_release_nf15f_r8/native_release_receipt.json",
  "status": "ADOPTED reviewed tuple",
  "written_by": "root-authorized lane atomic apply",
  "die_gen_env": {
-  "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r7_s0/physical/die_plan/s81_head/kit_wave/signed_view_sha_head.json"
+  "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r8_s0/physical/die_plan/s81_head/kit_wave/signed_view_sha_head.json"
  },
  "live_tree": {
-  "snapshot": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r7_s0",
-  "made": "2026-11-19 12:09:59 PST",
+  "snapshot": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r8_s0",
+  "made": "2026-11-19 12:51:32 PST",
   "tool": "live_tree.py (TOOLS-DECOUPLE phase 2)"
  },
  "optimistic": true,
- "_path": "/home/ubuntu/hc1119/s81_head_r7_s0.gate_candidate.json"
+ "_path": "/home/ubuntu/hc1119/s81_head_r8_s0.gate_candidate.json"
 }
