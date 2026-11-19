@@ -27163,3 +27163,8 @@ FAILED [AUTOPILOT 70d28d7b8580] 2026-11-19 05:38:28 PST AUTOPILOT -> KIT-WAVE-3:
   NO-PROGRESS epyc7 kv3_pc_v1__cl23f6a148 5_1_grt stage 37.9 h job 42.1 h: repair_Viol best 5330 last 5330 rows 156 window-gain 0.0%; stagnant 8.6 h; last event 0.1 h ago, log write 0.0 h ago (1328 lines)
   NO-PROGRESS epyc9 serdes__t13 signoff_meas_072023 stage 30.5 h job 31.7 h: no new meaningful log line for 30.1 h; last: - hold_ff: FAIL WNS -55.85 ps < 0
 - 2026-11-19 05:52 PST DRIFT [MERGE-QUEUE -> COORD; cc ADMIT-TUNE-1, KIT-OPS-5] live tree differs from its recorded main sha (1 new): epyc8: rt/current 5f45a94f5496 != hub 71485617054f. Any live fix must land as a branch + COORD APPROVED; the merge queue lands it and ot-tools-sync deploys it.
+- 2026-11-19 05:52 PST 11-19 05:5x sweep: 506 rows (S81 348, QC 101, KV 54, HEAD 2), 335 unflagged
+  S81: 1 UNOWNED (svc_hi_dsdv_svc_pvso_entry__t2), 99 FAILED-NO-RELAUNCH, 142 STALE, 4 UNCLASSIFIED, 18 CBC-FALLBACK
+  HEAD: hd_mesh CBC-FALLBACK only; QC: 0 flags
+  KV: 15 stale rows tagged WAIT-BIND (no bind of record; owners FABLE-FIX-KV-HG / KV-D23-COMPOSE), 0 UNOWNED
+  owners_sweep.py extended with KV WAIT-BIND; DEAD-OWNER 0; file lanes/OWNERS-SWEEP.tsv committed
