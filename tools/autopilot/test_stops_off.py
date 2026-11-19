@@ -1099,3 +1099,26 @@ class GhostRows(unittest.TestCase):
             self.assertEqual(st["items"]["q"]["status"], "ENQUEUED")
         finally:
             KW.fleet_probe, KW.close_queue_job, KW.attempt_root = orig_fp, orig_cq, orig_ar
+
+
+class CancelRowsNoStop(unittest.TestCase):
+    def test_no_stop_cancels_without_a_struct_stop(self):
+        import tempfile, json as _j
+        with tempfile.TemporaryDirectory() as tmp:
+            Path(tmp, KW.STATE_FILE).write_text(_j.dumps({"items": {"a": {"die": "qwen_compute", "item": "sle_ctl__x", "block_sha": "B" * 14, "status": "ENQUEUED", "q_status": "RUNNING", "attempt": 2, "q_id": "j1", "kit": "h:/k"}}}))
+            Path(tmp, "state.json").write_text(_j.dumps({"jobs": {"j1": {"status": "RUNNING"}}}))
+            calls = []
+            orig, ocq = KW.grt_arm_cancel, KW.close_queue_job
+            def fake(AP, cfg, rec, why, cls, jobs, notices, reclaim=True):
+                calls.append((cls, why)); rec.update(status="CANCELLED", **{"class": cls})
+            KW.grt_arm_cancel, KW.close_queue_job = fake, (lambda AP, r, w: "closed")
+            ap = type("AP", (), {"DRY": False, "log": staticmethod(lambda m: None)})()
+            try:
+                stops, done, skipped = KW.cancel_rows_phased(ap, {}, tmp, "qwen_compute", "sle_ctl__x", "env change", "WAVE-PILOT-FIX", "STRUCTURAL", no_stop=True)
+            finally:
+                KW.grt_arm_cancel, KW.close_queue_job = orig, ocq
+            st = _j.loads(Path(tmp, KW.STATE_FILE).read_text())
+            self.assertEqual((stops, len(done), skipped), (0, 1, []))
+            self.assertFalse(st.get("struct_stops"))
+            self.assertEqual(calls[0][0], "OPERATOR")
+            self.assertEqual(st["items"]["a"]["status"], "CANCELLED")

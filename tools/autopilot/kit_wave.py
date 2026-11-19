@@ -9815,7 +9815,7 @@ def close_queue_job(AP, rec, why):
         return "queue job close failed: %r" % (e,)
 
 
-def cancel_rows_phased(AP, cfg, ap_dir, die, item_glob, why, owner, verdict, dry=False, old_plans_only=False, lock=None):
+def cancel_rows_phased(AP, cfg, ap_dir, die, item_glob, why, owner, verdict, dry=False, old_plans_only=False, lock=None, no_stop=False):
     """FABLE-FLOW-1950 (L): cancel-rows held kit_wave.lock 17:58-18:47 (seven wave steps skipped, nothing launched for 71 min) because the unit / container stops ran under it.
     Now: (1) lock only to read the state and place the structural stops; (2) stops, withdrawals and container stops OUTSIDE the lock, on copies of the rows;
     (3) lock again only to write the results into the CURRENT state (CAS: a row whose attempt or live status changed meanwhile is left alone); then the queue jobs are closed (M).
@@ -9837,7 +9837,7 @@ def cancel_rows_phased(AP, cfg, ap_dir, die, item_glob, why, owner, verdict, dry
         if not dry:
             stops = 0
             for k, r in sorted((st.get("items") or {}).items()):
-                if any(k == d[0] for d in done):
+                if not no_stop and any(k == d[0] for d in done):          # --no-stop: a plain operator cancel (the rows relaunch by themselves, no structural stop)
                     b12 = str(r.get("block_sha") or "")[:12]
                     key = f"{die}|{r['item']}|b{b12}"
                     if b12 and key not in st.setdefault("struct_stops", {}):
@@ -9851,7 +9851,7 @@ def cancel_rows_phased(AP, cfg, ap_dir, die, item_glob, why, owner, verdict, dry
         return stops, done, []
     notices, results = {}, {}
     for k, r in work.items():
-        grt_arm_cancel(AP, cfg, r, f"STRUCT-STOP {verdict} [owner {owner}]: {why}", "STRUCT-STOP", jobs, notices, reclaim=False)
+        grt_arm_cancel(AP, cfg, r, (f"CANCEL [owner {owner}]: {why}" if no_stop else f"STRUCT-STOP {verdict} [owner {owner}]: {why}"), ("OPERATOR" if no_stop else "STRUCT-STOP"), jobs, notices, reclaim=False)
         results[k] = r
     skipped = []
     lk = take()
@@ -15404,6 +15404,7 @@ def main(argv=None):
     cr_.add_argument("--die", required=True); cr_.add_argument("--item", required=True); cr_.add_argument("--owner", required=True)
     cr_.add_argument("--verdict", default="STRUCTURAL", choices=STRUCT_VERDICTS); cr_.add_argument("--why", required=True)
     cr_.add_argument("--config"); cr_.add_argument("--ap-dir"); cr_.add_argument("--dry-run", action="store_true")
+    cr_.add_argument("--no-stop", action="store_true", help="plain operator cancel: no struct stop is placed, the rows relaunch by themselves")
     cr_.add_argument("--old-plans-only", action="store_true", help="skip rows launched on the die current plan of record (rows on the applied plan must run)")
     for _nm in ("struct-stop", "struct-force", "struct-release", "struct-list"):
         sp_ = sub.add_parser(_nm, help="COORD FLOW-1400 (3): structural verdict stops keyed by plan block (state struct_stops)")
@@ -15481,7 +15482,7 @@ def main(argv=None):
             print("cancel-rows: the state file is empty or missing here; run this on the hub (intel2) or pass --ap-dir")
             return 2
         try:
-            stops, done, skipped = cancel_rows_phased(AP, cfg, ap_dir, a.die, a.item, a.why, a.owner, a.verdict, dry=a.dry_run, old_plans_only=a.old_plans_only)
+            stops, done, skipped = cancel_rows_phased(AP, cfg, ap_dir, a.die, a.item, a.why, a.owner, a.verdict, dry=a.dry_run, old_plans_only=a.old_plans_only, no_stop=a.no_stop)
         except RuntimeError as e:
             print(f"cancel-rows: {e}; nothing done")
             return 1
