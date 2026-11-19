@@ -41,6 +41,9 @@ S81_RULES = ((r"^col_", "FABLE-FIX-S81-COL"), (r"^(leaf|ring)|_ring", "FABLE-FIX
 S81_ONLY = {"FABLE-FIX-S81-COL"}   # never the generic pick for non-col items
 OWNER_OK = ("FABLE-FIX-",)   # fix lanes own failures; other FABLE-* are reviewers
 VERDICT = re.compile(r"did NOT pass|FAIL|REFUSE|Traceback")
+# FABLE-FLOW-0555 I: a RESULT of a triage / review / census lane is a table about failures, not a failure of that lane's own job
+TABLE_LANES = re.compile(r"TRIAGE|REVIEW|CENSUS|AUDIT|SWEEP|SCAN")
+VERDICT_AT = 60                      # the verdict word must start the RESULT text (the waiter_fail_relay filter), not appear deep inside a table
 POST = re.compile(r"^- (?P<stamp>\d{4}-\d\d-\d\d \d\d:\d\d) (?:PST|PDT)\s+(?P<tag>[A-Z][A-Z-]*)\s+\[(?P<lane>[A-Za-z0-9][A-Za-z0-9._-]*)"
                   r"\s*->\s*(?P<to>[^\];]*)(?:;\s*cc\s*(?P<cc>[^\]]*))?\]\s*(?P<text>.*)$")
 LA = ZoneInfo("America/Los_Angeles")
@@ -163,9 +166,9 @@ def build_classes(coord, state, posts, now, window_h, live_h):
         add(die, "kit", label + " " + mask(reason)[:60], item, family(item), last,
             f"kit|{die}|{cls}|{stage}|{mask(reason)}|{forced}", forced)
     for p in posts:
-        if p["tag"] != "RESULT" or p["lane"].startswith(NOT_OWNER) or now - p["t"] > window_h * 3600:
+        if p["tag"] != "RESULT" or p["lane"].startswith(NOT_OWNER) or TABLE_LANES.search(p["lane"]) or now - p["t"] > window_h * 3600:
             continue
-        if not VERDICT.search(p["text"][:300]):
+        if not VERDICT.search(p["text"][:VERDICT_AT]):
             continue
         die = waiter_die(p["lane"], p["text"])
         name = f"{p['lane']}@{p['stamp'][11:]}"
@@ -183,13 +186,33 @@ def names_line(c):
     return s + (f", +{len(ns) - MAX_NAMES} more" if len(ns) > MAX_NAMES else "")
 
 
+def coord_closed(posts, c, after):
+    """FABLE-FLOW-0555 I: a COORD RULING / ACK / RESULT after the first post that names the class id, the class label (its key) or one of its items closes the class
+    for every owner."""
+    names = {c["cid"], c.get("label", "").split(" ")[0] if c.get("label") else "", *c["items"]}
+    for p in posts:
+        if p["lane"] == "COORD" and p["tag"] in ("RULING", "RESULT", "ACK") and p["t"] > after and any(n and n in p["text"] for n in names if len(n) >= 6):
+            return True
+    return False
+
+
+def find_rec(st, c):
+    """the state record of a class by its id, whoever the owner was when it was posted (the owner flips with lane liveness: 6 posts to 4 lanes for one class)"""
+    for k in (f"{c['owner']}|{c['cid']}", c["cid"]):
+        if k in st["classes"]:
+            return k, st["classes"][k]
+    for k, v in st["classes"].items():
+        if k.endswith("|" + c["cid"]):
+            return k, v
+    return c["cid"], {}
+
+
 def acked(posts, owner, c, after):
     """a RESULT or ACK from the owner after `after` that names the class id, an item or an item family."""
     toks = {c["cid"], *c["items"], *c["fams"]}
+    if coord_closed(posts, c, after):
+        return True
     for p in posts:
-        # a COORD ruling that names the class id closes it (FABLE-FLOW-0445 #6)
-        if p["lane"] == "COORD" and p["tag"] in ("RULING", "RESULT", "ACK") and p["t"] > after and c["cid"] in p["text"]:
-            return True
         if p["lane"] == owner and p["tag"] in ("RESULT", "ACK") and p["t"] > after and any(t and t in p["text"] for t in toks):
             return True
     return False
@@ -223,9 +246,13 @@ def run(coord, state_f, post_sh, window_h=3.0, live_h=3.0, ack_min=30, dry=False
         return (poster or _post)(post_sh, text)
 
     for ckey, c in sorted(classes.items(), key=lambda kv: -len(kv[1]["items"])):
-        rec_k = f"{c['owner']}|{c['cid']}"
-        rec = st["classes"].get(rec_k, {})
-        in_q = re.search(r"FAIL-CLASS %s owner %s\b" % (c["cid"], re.escape(c["owner"])), qtext)
+        rec_k, rec = find_rec(st, c)
+        if c["cid"] in st.setdefault("closed", {}):
+            continue
+        if rec and coord_closed(posts, c, rec.get("t", 0)):          # a COORD RULING / ACK names it: closed for good, whoever owns it now
+            st["closed"][c["cid"]] = int(now)
+            continue
+        in_q = re.search(r"FAIL-CLASS %s\b" % c["cid"], qtext)
         if not rec and in_q:                       # posted earlier, state lost
             tm = [p["t"] for p in posts if p["lane"] == LANE and f"FAIL-CLASS {c['cid']} owner {c['owner']}" in p["text"]]
             rec = {"t": min(tm) if tm else now, "items": sorted(c["items"])}

@@ -11225,7 +11225,7 @@ def newest_log(top):
     for dp, dn, fn in os.walk(top):
         dn[:] = [d for d in dn if d not in ('results', 'objects', 'reports', '_ext', 'in', 'tmp', '.ot-job')]
         for f in fn:
-            if f.endswith('.log'):
+            if f.endswith('.log') and f not in ('stage_odb_cap.log',):   # a watcher's once-a-minute 'STAGE-CAP skip' line is not stage progress
                 try:
                     best = max(best, os.stat(os.path.join(dp, f)).st_mtime)
                 except OSError:
@@ -11630,7 +11630,7 @@ def reap_dead(AP, cfg, st, notices, now=None):
             AP.log(f"KIT-WAVE REAP-DEAD would reap {key} {kind}: {why}")
             continue
         if kind == "HUNG":
-            hung_cancel(AP, rec, why, notices, (marks.pop(key, None) or {}).get("containers") or [])
+            hung_cancel(AP, rec, why, notices, (marks.pop(key, None) or {}).get("containers") or [], st=st)
             n += 1
             continue
         if kind in ("R1", "R2"):
@@ -11660,7 +11660,7 @@ def reap_dead(AP, cfg, st, notices, now=None):
     return n
 
 
-def hung_cancel(AP, rec, why, notices, containers=()):
+def hung_cancel(AP, rec, why, notices, containers=(), st=None):
     """HUNG-WATCH: stop a hung attempt by its exact units (wave unit + PLACE client), the containers under its attempt root
     (stop_on_fleet) and the containers the progress probe named (they mount its ot-run staging dir, which stop_on_fleet does not
     see), by exact name on their host.  Run dirs are kept.  The row becomes CANCELLED class HUNG."""
@@ -11688,9 +11688,21 @@ def hung_cancel(AP, rec, why, notices, containers=()):
     rec["stopped_containers"] = {"at": time.time(), "names": " ".join(stopped)[:300], "why": "HUNG-WATCH", "root": r or ""}
     rec.update(status="CANCELLED", **{"class": "HUNG"}, updated=time.time(), reason=f"CANCELLED-HUNG: {why}"[:300])
     rec.pop("hung_watch", None)
-    notices.setdefault(rec["die"], []).append(f"{rec['item']}@{rec.get('attempt')} CANCELLED-HUNG: {why[:160]}")
+    free = False
+    if st is not None:
+        # FABLE-FLOW-0555 F: a job whose CPU AND stage logs were frozen for the watch window is cancelled by its exact units and relaunched ONCE as a free
+        # infra retry (no budget, no retry key); a second hang of the same item stays CANCELLED-HUNG for a person / an input change (re-arm)
+        used = st.setdefault("hung_retried", {})
+        k = f"{rec['die']}|{rec['item']}"
+        if k not in used:
+            used[k] = {"attempt": rec.get("attempt"), "t": time.time()}
+            rec["infra_base"] = int(rec.get("infra_base") or 0) + 1
+            rec["no_host_at"] = 0
+            rec.update(status="RETRY-INFRA", **{"class": "INFRA"}, reason=f"HUNG-WATCH cancel, free infra retry: {why}"[:300])
+            free = True
+    notices.setdefault(rec["die"], []).append(f"{rec['item']}@{rec.get('attempt')} CANCELLED-HUNG{' -> free infra retry' if free else ' (second hang: no retry)'}: {why[:160]}")
     AP.log(f"KIT-WAVE HUNG-WATCH CANCEL {rec['die']}/{rec['item']}@{rec.get('attempt')} units {units} "
-           f"containers [{' '.join(stopped) or 'none'}]: {why}")
+           f"containers [{' '.join(stopped) or 'none'}]{' relaunched as a free infra retry' if free else ''}: {why}")
 
 
 def held_stop_reason(cfg, rec, res):
