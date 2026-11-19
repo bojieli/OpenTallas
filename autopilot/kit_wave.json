@@ -10901,6 +10901,12 @@
      "OT_PREGRT_HOLD_PORT_MARGIN_PS": "25",
      "OT_S81_SSTN_M5_BLOCK": "1",
      "OT_GRT_PORT_HOLD_MARGIN_PS": "10"
+    },
+    "col_h9_r1__*": {
+     "OT_MAXWIRE_POST_SKIP": "1"
+    },
+    "col_h9_r2__*": {
+     "OT_MAXWIRE_POST_SKIP": "1"
     }
    },
    "note_work_root_1105": "KW-FIX-9 01:0x COORD disk ruling: epyc4 scratch2 109 GB; new attempts go to scratch3 via symlink at this scratch2 path on epyc4, ordinary dir on other hosts. Back to scratch2 at >=250 GB; stop new epyc4 attempts at root 540.",
