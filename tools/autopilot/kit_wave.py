@@ -13041,7 +13041,7 @@ def enqueue_skip_reason(cfg, rec, st=None):
             return "SKIP-HELD", f"item held ({pat}): {str(why)[:160]}"
     ev, cur = rec.get("event"), d.get("event")
     if ev and cur and str(ev) != str(cur):
-        pc = _plan_current(cfg, st, rec) if st is not None else None
+        pc = _plan_current(cfg, st, rec) if st is not None else False      # no state passed (a bare caller): the old rule, an older event is old
         if pc is True:
             return None      # COORD 11-15 (FABLE-PD-KV-0800): the row key is its plan block sha; an unchanged block of an older event is current
         if pc is None:

@@ -37,5 +37,5 @@ def test_old_event_with_unchanged_plan_block_is_not_skipped(monkeypatch):
     assert KW.enqueue_skip_reason(CFG, row("sle_fw_v1__clf58b4dfb", event="s29q103S3R"), {}) is None
     monkeypatch.setattr(KW, "_plan_current", lambda cfg, st, rec: False)
     assert KW.enqueue_skip_reason(CFG, row("sle_fw_v1__clf58b4dfb", event="s29q103S3R"), {})[0] == "SKIP-OLDPLAN"
-    monkeypatch.setattr(KW, "_plan_current", lambda cfg, st, rec: None)
-    assert KW.enqueue_skip_reason(CFG, row("sle_fw_v1__clf58b4dfb", event="s29q103S3R"), {})[0] == "SKIP-OLDPLAN"
+    monkeypatch.setattr(KW, "_plan_current", lambda cfg, st, rec: None)      # WAVE-PILOT-FIX 11-19: an unprobed new event is unknown, not old: the row routes
+    assert KW.enqueue_skip_reason(CFG, row("sle_fw_v1__clf58b4dfb", event="s29q103S3R"), {}) is None

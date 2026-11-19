@@ -1901,27 +1901,12 @@ def stage_disk_args():
         return []
 
 
-def resume_pin_host(j):
-    """the host an infra-retry resubmit is pinned to: the host the killed attempt ran on (j['ran_on'], an epyc* / intel* alias), when the job is a retry and has been pinned fewer than twice"""
-    ro = str(j.get("ran_on") or "")
-    if not j.get("infra_retry") or int(j.get("resume_pins") or 0) >= 2 or not re.fullmatch(r"(?:epyc|intel)\d+", ro) or ro == HUB_NAME:      # never the hub (11-14 hub OOM)
-        return ""
-    return ro
-
-
 def submit(st, j, attempt_note=""):
     n = j.get("attempts", 0) + 1
     unit = f"ap-{j['id']}-a{n}"
     logf = AP_DIR / "jobs" / j["id"] / f"a{n}.log"
     kit, runner, mem, thr = j["path"], j["runner"], j["mem_gb"], j["threads"]
     argv = [OT_RUN, "--mem", str(mem), "--threads", str(thr), "--dir", kit, "--stage", kit] + stage_disk_args()
-    # COORD 11-19 (INFRA / OOM relaunch re-ran global placement for an hour): a resubmit after an infra kill resumes the run dir, but the kit exists on several hosts (earlier place / route
-    # runs left copies) and ot-run picked the one with the most free memory, whose copy stopped at floorplan.  The kill's own host holds the checkpoint (the job returned its work dir to the kit
-    # there): pin the resubmit to it, twice at most per job (a host that never admits would otherwise keep it waiting).
-    pin = resume_pin_host(j)
-    if pin:
-        argv += ["--hosts", pin]
-        j["resume_pins"] = int(j.get("resume_pins") or 0) + 1
     # NEAR-COUNT (COORD 11-01): a core/type listed in lanes/NEAR-COUNT.tsv is admitted as a die-priority crit job
     argv += near_count_args(parse_near_count(read_coord(NEAR_COUNT_FILE)), j.get("die"), j.get("type"),
                             j.get("module"), j.get("item"))
