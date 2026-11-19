@@ -5470,7 +5470,7 @@ def sync_item_inputs(AP, cfg, run=None):
                         continue
                     q = shlex.quote(p)
                     pipe = (f"{' '.join(ssh)} {src} 'test -e {q} && [ $(du -sm {q} | cut -f1) -le {ITEM_SYNC_MAX_MB} ] && "
-                            f"tar -C / -cf - {shlex.quote(p.lstrip('/'))}' | "
+                            f"tar -C / --hard-dereference -cf - {shlex.quote(p.lstrip('/'))}' | "
                             f"{' '.join(ssh).replace('-n ', '')} {h} 'mkdir -p {shlex.quote(os.path.dirname(p))} && "
                             f"tar -C / -xf - --keep-old-files'")
                     try:
@@ -5537,7 +5537,7 @@ def sync_die_inputs(AP, cfg, run=None):
             for i in range(0, len(paths), SRC_SYNC_BATCH):
                 part = paths[i:i + SRC_SYNC_BATCH]
                 names = " ".join(shlex.quote(p.lstrip("/")) for p in part)
-                pipe = (f"{' '.join(ssh)} {src} 'cd / && for f in {names}; do test -e \"$f\" || exit 3; done; tar -C / -cf - {names}' | "
+                pipe = (f"{' '.join(ssh)} {src} 'cd / && for f in {names}; do test -e \"$f\" || exit 3; done; tar -C / --hard-dereference -cf - {names}' | "
                         f"{' '.join(ssh).replace('-n ', '')} {h} 'tar -C / -xf - --keep-old-files'")
                 errf = os.path.join(tempfile.gettempdir(), "srcsync-err-%d-%s.txt" % (os.getpid(), h))
                 try:

@@ -160,3 +160,8 @@ def test_a_live_tree_gap_on_every_host_does_not_disable_a_die_with_a_usable_fall
     assert why is None                                   # h2 still holds a bound tree
     cfg["_item_incomplete"]["h2"] = {"s81": {"__bound__0": "m", "__bound__1": "m"}}
     assert "incomplete on every gen host" in (KW.work_root_problem(cfg, "s81", hub_isdir=lambda p: True) or "")
+
+
+def test_source_sync_tar_dereferences_hard_links():
+    src = open(KW.__file__).read()
+    assert "tar -C / --hard-dereference -cf - " in src and "tar -C / -cf - " not in src

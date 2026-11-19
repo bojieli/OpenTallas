@@ -16,7 +16,7 @@ def fake(have):
     def run(argv, timeout=900):
         if argv[:2] == ["bash", "-c"]:                      # the copy pipeline
             line = argv[2]
-            f = "/" + line.split("tar -C / -cf - ")[1].split()[0].strip("'")
+            f = "/" + line.split("-cf - ")[1].split()[0].strip("'")
             dst = [p for p in line.split("'")[0].split() if p in have and p != line.split("ssh")[0]]
             log.append(line)
             for h in have:

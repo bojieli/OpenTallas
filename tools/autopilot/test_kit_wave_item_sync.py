@@ -44,7 +44,7 @@ def test_src_sync_counts_a_batch_only_when_the_files_exist_on_the_target(tmp_pat
         def log(self, m): self.logs.append(m)
     def run_factory(verify_rc):
         def run(argv, inp=None):
-            return 2 if "tar -C / -cf -" in argv[-1] else verify_rc
+            return 2 if "-cf -" in argv[-1] else verify_rc
         return run
     a = A2()
     assert KW.sync_die_inputs(a, cfg, run=run_factory(1)) == []                       # copy rc 2, files not there: not counted
@@ -63,7 +63,7 @@ def test_src_sync_logs_the_first_stderr_line_of_a_failed_copy(tmp_path, monkeypa
         def __init__(self): self.logs = []
         def log(self, m): self.logs.append(m)
     def run(argv, inp=None):
-        if "tar -C / -cf -" in argv[-1]:
+        if "-cf -" in argv[-1]:
             errf = argv[-1].rsplit("2>", 1)[1].strip().strip("'")
             open(errf, "w").write("tar: x: Cannot write: No space left on device\n")
             return 2
