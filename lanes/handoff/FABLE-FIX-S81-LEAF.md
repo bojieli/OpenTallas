@@ -265,3 +265,22 @@ QC / KV / HEAD CBC counts need a re-run by CBC-RULES-1119 with main >= 01360b438
   input pin in OpenROAD tcl (bin/leaf_tcl.sh style), emit rows in the core_conns paths format so relay_depth measures them. Not started beyond this finding.
 - Proof kits: t27keep and t27stb still in GRT (relaunched after guard kills), t27relay stopped at FAIL_PLACE_HPWL.gate139 (not yet checked which gate version ran). No GRT TT read yet.
 - Open after that: one read of t31 worst CTS path (-1,116 unexplained).
+
+## 11-19 ~14:0x PST: OPUS SUCCESSOR took over (Fable weekly limit). Read handoff + posts; live jobs checked, none duplicated.
+- Live on epyc10 (all FABLE-FIX-S81-LEAF, do not relaunch): t28wide (face-bank fix proof, in 3_5 detail place), t27keep (GRT extra iter), t27relay
+  (relaunched 19:49 UTC, passed place, now GRT extra iter; the 09:47 FAIL_PLACE_HPWL.gate139 file is from the earlier run), t27stb (4_2 tapbal_grt:
+  GRT took 4h33 with congestion, single-thread subtree_balance since 16:47 UTC at 100% CPU = busy, not hung).
+- svc_rs netlist trace: svc_hi_dsdv_svc_rs__t2 standalone (core_conns_from_netlist, 10 GB RSS, 4 min): 72/72 cores found, 0 core-to-core links.
+  Every core input bit ends at logic 77,040 / constant 7,144 / top port 3,344 / clock-landing submodule 3,264. Same class as HEAD hd_ctl: no wire to
+  stage, no row. (The lane's earlier svc_rd.json 0 was this, not a tool miss.) t4..t6 are the same module, not re-run. epyc10 nl/svc_cn_t2.{json,log}.
+- QC crossing-station types (cbf/cbn/cbx, N4.6c plan zz_s29_qc103_s4q9n46c.json, live_qwen_compute tree): newest kit netlists staged to epyc9
+  nl/qc/<type>/ (SOURCE file per type; N3..N46C generations, older netlists vs N4.6c pins). relay_depth --netlist-dir: 14 types now MEASURED
+  (were blind): 177 core-to-core paths (all 177 from the netlist), 0 rows, 0 unfixed. 42 links over 405 um by flight (max 2,592 um cbn_q00__cldbcda913 cl_nb_i00.q -> u_t00.n_b),
+  each already has >= ceil(L/405)-1 flops on the netlist chain (tool stages_existing), so no row. Still blind: cbn_q00__cl622f65d2, cbx_q10__cl94a12200 (no synthesized kit found on 6 hosts);
+  cbf_q00_s2, cbf_q11 have no bound file in the stager. Report epyc9 nl/qc_cb_rd.{json,log}; script epyc9 bin/qc_cb_nl.sh.
+- t31 worst CTS path (ot_s81sl_leaf__t31 attempt 12, epyc2 kw43 3fa87b84b18, FAIL_POSTCTS setup_est -913, CTS WNS -1,263): u_vp.g_wr1.u_w
+  g_xr.sw_a_q[0] -> wmw_q[0][0], same clk_t10 tree (skew +68 ps in favour). Data 2,160 ps: 5 logic gates (AND5/AOI211/AND5/OA211/OR5, ~240 ps),
+  the rest ~40 repeaters with 11 long-wire hops (slew 150..270, ~650 ps wire RC). Cause = the WRP write-port decode (ot_s81sl_vp.sv g_wr1, 0-cycle,
+  5-writer priority select) spans the leaf from the sw pin flops to the bank write flops. Not a reach/station row: it is intra-RTL distance.
+  Fix candidates: a register on sw_a/sw_m after g_xr near the bank (+1 cycle on the vs write lane, priced) or place g_xr pin flops at the bank.
+  The -1,116 number is a different attempt; the class is the same path family.
