@@ -94,9 +94,13 @@ def count_headline():
     cur = int(re.match(r'^\S+ \S+\s+(\d+)', row).group(1))
     a = re.search(r'\bany=(\d+)', row)
     anyn = int(a.group(1)) if a else cur
-    d = re.search(r'\bdefer=(\S+)', row)
-    per = ', '.join(x.replace(':', ' ') for x in d.group(1).split(',')) if d else ''
-    return 'signed any plan %d | current plan %d | deferred re-sign %d%s' % (anyn, cur, anyn - cur, ' (%s)' % per if per else '')
+    def part(key):
+        d = re.search(r'\b%s=(\S+)' % key, row)
+        items = [x.split(':') for x in d.group(1).split(',')] if d else []
+        return sum(int(v) for _, v in items), (' (%s)' % ', '.join('%s %s' % (k, v) for k, v in items) if items else '')
+    kd, dt = part('defer')
+    nr, rt = part('retired')
+    return 'signed any plan %d | current plan %d | deferred re-sign %d%s | retired-plan %d%s' % (anyn, cur, kd, dt, nr, rt)
 
 
 def signed_type(item, stset):
