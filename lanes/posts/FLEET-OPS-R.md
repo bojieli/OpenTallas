@@ -659,3 +659,4 @@
 - 2026-11-19 09:06 PST HOST-REPORT 2026-11-19 09:05 | tolera L63.68/112 units0 free615G | key-ca L72.83/112 units189 free764G | dear-c L59.91/128 units426 free197G | loved- L1206.34/96 units63 free1633G | outgoi L74.97/96 units172 free950G | renewe L106.45/96 units90 free1527G | civil- L81.75/96 units60 free703G
 - 2026-11-19 09:13 PST STATE [FLEET-OPS-R -> COORD] epyc7 15 min after the duplicate-rsync cleanup. NOW: . At cleanup time: Connection to 93.115.25.103 port 22 timed out.
 - 2026-11-19 09:26 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kw43-wave-1109n on intel1 wrote 59 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
+- 2026-11-19 09:26 PST ALERT [FLEET-OPS-R -> COORD] lane quota: ot-jobs on intel1 wrote 42 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
