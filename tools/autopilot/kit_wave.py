@@ -13136,13 +13136,14 @@ def cancel_superseded(AP, cfg, st, notices, ap_dir=None):
     for key, r in (st.get("items") or {}).items():
         die = r.get("die")
         d = (cfg.get("dies") or {}).get(die)
+        so = isinstance(d, dict) and FG.stops_off_die(cfg, die)       # COORD 11-18 (D8e): under stops_off a die opt-out (cancel_superseded false) or a hold_items text does not keep a row on a dead plan block
         if die not in cur or ((r.get("arm") or {}).get("of") or key) in cur[die] or not isinstance(d, dict) \
-                or d.get("cancel_superseded") is False:
+                or (d.get("cancel_superseded") is False and not so):
             continue
         if r.get("status") in ("RUNNING", "LAUNCHING", "ENQUEUED"):
             item = r.get("item") or ""
-            held = next((str(w) for pat, w in (d.get("hold_items") or {}).items()
-                         if fnmatch.fnmatchcase(item, pat) and hold_protects_running(cfg, d, r, str(w))), None)
+            held = None if so else next((str(w) for pat, w in (d.get("hold_items") or {}).items()
+                                         if fnmatch.fnmatchcase(item, pat) and hold_protects_running(cfg, d, r, str(w))), None)
             same = row_inputs_unchanged(cfg, die, r, item, cur_blocks, cur_norm)
             if held is not None or same:
                 why = (f"hold_items: {held[:160]}" if held is not None else
@@ -13161,10 +13162,18 @@ def cancel_superseded(AP, cfg, st, notices, ap_dir=None):
             what = f"wave {r.get('stage') or r.get('status')}"
         elif r.get("status") == "ENQUEUED" and r.get("q_id"):
             j = jobs.get(r["q_id"]) or {}
-            if j.get("status") != "RUNNING" or not j.get("unit"):
+            if j.get("status") == "RUNNING" and j.get("unit"):
+                units.append(j["unit"])
+                what = f"queue job {r['q_id']}"
+            elif so:
+                # an ENQUEUED row whose queue job is not running (done, crashed, orphaned or not started) still blocks the item ("one live attempt per item"): retire it too
+                what = f"queue job {r['q_id']} ({j.get('status') or 'unknown'})"
+                if str(j.get("status") or "").upper() in ("QUEUED", "STARTING", "WAITING", "WAIT-GEOM") and r.get("kit") and not AP.DRY:
+                    what += " " + grt_arm_withdraw(AP, cfg, r, "superseded plan block")
+            else:
                 continue
-            units.append(j["unit"])
-            what = f"queue job {r['q_id']}"
+        elif r.get("status") == "ENQUEUED" and so:
+            what = "ENQUEUED row without a queue job"
         else:
             continue
         if n >= cap:
@@ -14971,6 +14980,14 @@ def main(argv=None):
             except (OSError, ValueError):
                 jobs = {}
             AP.DRY = bool(a.dry_run)
+            n_state = len(st.get("items") or {})
+            mine = [r for r in (st.get("items") or {}).values() if r.get("die") == a.die and fnmatch.fnmatchcase(str(r.get("item")), a.item)]
+            print(f"cancel-rows: state {ap_dir / STATE_FILE} ({n_state} rows); {len(mine)} row(s) of {a.die}/{a.item} in any status "
+                  f"({', '.join(f'{k} {v}' for k, v in sorted(__import__('collections').Counter(str(r.get('status')) for r in mine).items())) or 'none'}); "
+                  f"die plan sha {str(((cfg.get('dies') or {}).get(a.die) or {}).get('plan_sha256') or '')[:12] or '-'}; old-plans-only {bool(a.old_plans_only)}")
+            if not n_state:
+                print("cancel-rows: the state file is empty or missing here; run this on the hub (intel2) or pass --ap-dir")
+                return 2
             stops, done = cancel_rows_core(AP, cfg, st, a.die, a.item, a.why, a.owner, a.verdict, jobs, dry=a.dry_run, old_plans_only=a.old_plans_only)
             if not a.dry_run:
                 save_state(st, ap_dir)

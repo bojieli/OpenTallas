@@ -612,3 +612,34 @@ class ClassifierWritesStop(unittest.TestCase):
         st = {}
         KW.note_fail_key({"dies": {"s81": {}}}, st, {"die": "s81", "item": "x", "block_sha": "A" * 16, "attempt": 1, "stage": "gen", "dir": ""}, "FLOW", "ValueError @gen: x")
         self.assertFalse(st.get("struct_stops"))
+
+
+class SupersedeUnderStopsOff(unittest.TestCase):
+    """COORD 11-18 (D8e): ENQUEUED rows on a dead plan block are retired by the tick, opt-out or not, running queue job or not"""
+
+    def run_it(self, qstatus, opt_out=True, so=True):
+        cfg = {"stops_off": so, "supersede_max_per_tick": 1000,
+               "dies": {"s81": {"event": "E", "enabled": True, "cancel_superseded": False if opt_out else True, "plan": "p", "gen_host": "h"}}}
+        st = {"items": {"s81|E|t|bOLD": {"die": "s81", "item": "t", "event": "E", "block_sha": "OLD", "status": "ENQUEUED", "q_id": "j1", "attempt": 16, "dir": "/nonexistent"}},
+              "plans": {"h:p|E": {"blocks": {"t": "NEW"}}}}
+        jobs_dir = None
+        logs = []
+        ap = type("AP", (), {"DRY": False, "HUB_NAME": "hub", "log": staticmethod(logs.append), "sh": staticmethod(lambda *a, **k: (0, "", ""))})()
+        import tempfile, json as _j
+        with tempfile.TemporaryDirectory() as tmp:
+            Path(tmp, "state.json").write_text(_j.dumps({"jobs": {"j1": {"status": qstatus, "unit": "u1"}}}))
+            orig = KW.stop_on_fleet_bg
+            KW.stop_on_fleet_bg = lambda AP, roots: {}
+            try:
+                KW.cancel_superseded(ap, cfg, st, {}, tmp)
+            finally:
+                KW.stop_on_fleet_bg = orig
+        return st["items"]["s81|E|t|bOLD"]
+
+    def test_done_or_running_queue_job_row_on_a_dead_block_is_retired(self):
+        for q in ("RUNNING", "DONE-CRASH", "ORPHAN"):
+            r = self.run_it(q)
+            self.assertEqual((r["status"], r["class"]), ("CANCELLED", "SUPERSEDED"), q)
+
+    def test_opt_out_still_holds_without_stops_off(self):
+        self.assertEqual(self.run_it("RUNNING", opt_out=True, so=False)["status"], "ENQUEUED")
