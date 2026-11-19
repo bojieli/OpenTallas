@@ -40150,7 +40150,8 @@
      "OT_CONS_KIT": "1",
      "OT_KW41_CLAND": "0b305f2395",
      "OT_GEN_M8_GRANT": "1",
-     "OT_CLAND_STRIP_DENS": "1.0"
+     "OT_CLAND_STRIP_DENS": "1.0",
+     "OT_PAD_CHAIN_SITE": "auto"
     },
     "sle_st_a_v1__cl989804f6__cl18eece69": {
      "OT_GRT_ALLOW_CONGESTION": "1",
@@ -40176,7 +40177,8 @@
      "OT_POROUS_VIEWS": "all",
      "OT_GRT_TRANSITION_MODE": "edge_outline",
      "OT_GEN_M8_GRANT": "1",
-     "OT_CLAND_STRIP_DENS": "1.0"
+     "OT_CLAND_STRIP_DENS": "1.0",
+     "OT_PAD_CHAIN_SITE": "auto"
     },
     "cbf_q00__cl1b5a6458": {
      "OT_GRT_ALLOW_CONGESTION": "1",
@@ -40478,7 +40480,8 @@
      "OT_KW42_CSTART": "9db0ec8d71e",
      "OT_GRT_TRANSITION_MODE": "edge_outline",
      "OT_GEN_M8_GRANT": "1",
-     "OT_CLAND_STRIP_DENS": "1.0"
+     "OT_CLAND_STRIP_DENS": "1.0",
+     "OT_PAD_CHAIN_SITE": "auto"
     },
     "sle_sc_v1__cl115da35f": {
      "OT_KW42_CSTART": "9db0ec8d71e",
@@ -40490,13 +40493,15 @@
      "OT_KW43_FIX": "ccf792c10b63",
      "OT_GRT_TRANSITION_MODE": "edge_outline",
      "OT_GEN_M8_GRANT": "1",
-     "OT_CLAND_STRIP_DENS": "1.0"
+     "OT_CLAND_STRIP_DENS": "1.0",
+     "OT_PAD_CHAIN_SITE": "auto"
     },
     "sle_su_c": {
      "OT_KW43_FIX": "ccf792c10b63",
      "OT_GRT_TRANSITION_MODE": "edge_outline",
      "OT_GEN_M8_GRANT": "1",
-     "OT_CLAND_STRIP_DENS": "1.0"
+     "OT_CLAND_STRIP_DENS": "1.0",
+     "OT_PAD_CHAIN_SITE": "auto"
     },
     "slw_st_a_v1__clb036e152": {
      "OT_KW43_FIX": "pvschema-0409748de8de",
@@ -40589,7 +40594,8 @@
     "sle_ctl__cl503337ff": {
      "OT_GRT_TRANSITION_MODE": "edge_outline",
      "OT_GEN_M8_GRANT": "1",
-     "OT_CLAND_STRIP_DENS": "1.0"
+     "OT_CLAND_STRIP_DENS": "1.0",
+     "OT_PAD_CHAIN_SITE": "auto"
     },
     "sle_fe_v1__cl1cbb7497": {
      "OT_GRT_TRANSITION_MODE": "edge_outline",
@@ -40756,7 +40762,8 @@
     },
     "sle_ctl__cl372cea1c": {
      "OT_GEN_M8_GRANT": "1",
-     "OT_CLAND_STRIP_DENS": "1.0"
+     "OT_CLAND_STRIP_DENS": "1.0",
+     "OT_PAD_CHAIN_SITE": "auto"
     },
     "sle_fe_v1__cl8210183c": {
      "OT_GEN_M8_GRANT": "1",
@@ -40884,6 +40891,15 @@
     "tt_ctlm": {
      "OT_GEN_M8_GRANT": "1",
      "OT_CLAND_STRIP_DENS": "1.0"
+    },
+    "sle_ctl__cl503337ff__padE0": {
+     "OT_PAD_CHAIN_SITE": "auto"
+    },
+    "sle_ctl__cl503337ff__padE4": {
+     "OT_PAD_CHAIN_SITE": "auto"
+    },
+    "sle_ctl__cl67434795__padW5": {
+     "OT_PAD_CHAIN_SITE": "auto"
     }
    },
    "note_work_root_1105": "KW-FIX-9 01:0x COORD disk ruling: epyc4 scratch2 109 GB; new attempts go to scratch3 via symlink at this scratch2 path on epyc4, ordinary dir on other hosts. Back to scratch2 at >=250 GB; stop new epyc4 attempts at root 540.",
