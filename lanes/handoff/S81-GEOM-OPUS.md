@@ -169,3 +169,8 @@ Notes and scripts: epyc8 /srv/opentallas-scratch2/claude/s81-geom-opus-d8h-l4/FI
   col_h10_r1 frame_int_i0 equal-arc respace 422.6 -> 394.3 (12 types), col_h9_r0_p4..p6 frame_int_i0 406.1 -> 404.1 (30), 0 cycles; t51 natives dropped, taps back to pre-split sites.
 - G0 (g0main.sh, main 0c281312e1 tools in main_tools.tgz, D8g tree): geom 143952af592b 2 err = control plan_d8h_f 2 err (die cuts), 0 new.
 - Stopped my gate_rb (stale c4f base). Open: col_h10_r0_p4 proof kit on R3 D8h bound out; t51 bind result in R3 r1.
+
+## 11-19 ~15:10
+- Density rows: rows_d8h_geom_1119b.json (4f89db41a2f0) = respace 42 + t51 transform + ft_track_frac t2 .38 t22 .34 t57 .33 t66 .33 (cause: D8e TYPE-REDUCE-2 leaf core rows on die y 10500/10750). h + rows bf0a60fa290c G0 PASS (control h 2 cut errors). Posted.
+- C fix pushed main 9e13173c S81-SUPUP-1 (keep_own_up). B+C row: bc/bc_compose.py; private tree bc/tree build: bind only RESET_ANCHOR t47/t75 (shared with R3, fixed by R3 in h3), LATCHECK 873 PASS, PRE PASS, G0 = control. 21 layouts. Posted.
+- Proof kit col_h10_r0_p4 (pvcc166a6d + pv5b623e07): kit-rtl refused on failed global bind (snapshot pk/src of h). Waiting R3 h3 bind (intel2 ~/s81-die-r/build_d8h_h3.log), then re-snapshot to pk2 and kit/kits_d8h.sh, route via run_kit.sh.
