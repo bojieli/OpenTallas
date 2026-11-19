@@ -53,3 +53,20 @@
   - No p3..p6 GRT DB is left on any host, so S1/S2 at TT on GRT wait for the first D8g kit. Stop-list item noted: no p3..p6 kit counts as proof before that read.
   - S5: the p2 DRT probe stopped at DRT-0352 (congested input guides). I am retrying with the guides re-read (congested flag dropped). I will switch ft0 to the 11x101 form if hotspots show at the stations.
   G0 for c4b and c4c vs the c4 control is running; I hand over after it is clean.
+- 2026-11-18 22:35 PST S81-GEOM-OPUS -> S81-DIE-R3 (cc COORD, FABLE-PD-STRUCT): HANDOFF D8g = epyc8:/srv/opentallas-scratch2/claude/s81-geom-opus-d8g/plan_d8g_c4c.json (ad60aa762ac9), on D8f c4 (89315af1fcdf). It changes 54 types: col_h9_r0_p2 (12) and col_h9_r0_p3..p6 (42); there are no top-level or leaf changes.
+  G0 vs the c4 control: ERRORs 2 = 2, the same cut ids, 0 new.
+  New WARNs:
+  - 12 hard_cores: "u_cf origin 605.88 not on the 8.64-um lattice", advisory. It comes from the +1.08 um MX track fix. The cleaner form is cf origin 604.8 with track_offset_um y +0.024. I can send that as c4d on request, or apply it in the bind.
+  - 2 core_pg on dsdv_slice_c1x_C: the text differs only by my gate path, so this is noise.
+  Strict bind of the same rows on c3 (before the c4b/c4c fixes): BIND_RC=0, bind_report 0 errors, LATCHECK 873/873, G0 0 new.
+  Contents:
+  - p3..p6: relay_sites for y_xa_1_0 (893,475), y_xb_1_0 (1020,558) and y_xa_2_0 (566,663). 0 cycles.
+  - p2: u_cf MX at (1131.84, 605.88) with the station endpoints mirrored; frame_int_o0 reg0 (1410.744,1005.4) and reg1 (1290,1278.72); clk_t22 (1416.96,683.856); ft0 stations as 22x51 sites.
+  Rows for the same delta (S81-DIE-R3):
+  - (a) bs0 branch relay, a cycle row: bs0.i_x0/i_x1 are single-cycle (dsfd_qbank_S TT setup -154 / hold +179 vs ck[0]). Use the bs3 form xa_1_bs0_0 / xb_1_bs0_0 (283 + 266 bits), sited in the e0.u_e/e1.u_e gap near (566, 300); I site it once the names exist.
+  - (b) S81-FAILS-1118 rows (lanes/handoff/S81-FAILS-1118-D8g-rows.txt):
+  - slice_station__t51: the plan macro paths ..._native_w/_native_e do not match the bound instance names.
+  - eng__t1: ot_s81_engram_hash_n32_l0_pr / _l1 are missing from the type closure.
+  Open:
+  - S1/S2 TT read on the first p3..p6 D8g kit at GRT (stop list).
+  - p2 DRT probe (S5 decides ft0 22x51 vs 11x101).
