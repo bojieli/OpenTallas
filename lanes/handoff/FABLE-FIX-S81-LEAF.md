@@ -72,3 +72,7 @@ Kits: t25__cl431c660f a7 (-778.07, 7,981 ends below -42), t27 a7 (-526.93, 1,172
   If A is dropped, the cf path needs a +cycle form: candidate = one more group HI station (existing CS_HI_GS depth, sited store-side) so cf sits at the store,
   hc_post write-back + 1 through bind K. Not designed in detail yet.
 - Kill slip: my pgrep -f pattern matched my own ssh shell (only my own reach_fix run + shell died). Use ps | grep "[r]each_fix" form.
+
+## Kill / waiter rule (COORD 11-19 02:0x)
+Never pattern-kill. `ps -o pid,ppid,cmd -p <PID>`, confirm, kill that one PID (or ot-run --cancel). Waiters match a PID file, never a command-line grep.
+PID files: epyc10 taps1000/fix.pid = 3046128 (reach_fix cap 1000). Proof kits: watch the report file / FAIL_* marker and the ot-run unit, not pgrep.
