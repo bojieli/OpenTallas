@@ -520,6 +520,8 @@ SCHEMA = {
                     "landing_status_reg": {"type": "boolean"},
                     "landing_guard_reg": {"type": "boolean"},   # GUARD-REG-1 (implies landing_status_reg)
                     "landing_relay_start_copy": {"type": "boolean"},
+                    # RELAY-TX-STAGES (FABLE-FIX-QC 11-19): extra start-relay stages before the tx flop of an origin type
+                    "landing_relay_tx_stages": {"type": "integer", "minimum": 0, "maximum": 8},
                     "private_reset_start_exports": {"type": "boolean"},
                     # HEAD SOURCE7: actual existing registered raw reset Q exports.
                     # head_start_reset_aliases verifies each source instance/net in emitted RTL.

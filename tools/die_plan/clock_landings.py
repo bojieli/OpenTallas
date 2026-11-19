@@ -812,6 +812,15 @@ MON_RELAY_RTL = [
 RELAY_TX_PIN = "cland_rstart_out"
 
 
+def _relay_tx_extra_stages(t):
+    """RELAY-TX-STAGES (FABLE-FIX-QC 11-19): partition_types[t].landing_relay_tx_stages (count_align_bind.relay_tx_stages), 0 when absent"""
+    import count_align_bind as CAB
+    try:
+        return CAB.relay_tx_stages(t)
+    except CAB.BindError as ex:
+        raise LandingError(str(ex)) from ex
+
+
 def relay_tx_extra(t):
     """[(pin, suffix)] of the EXTRA start-relay tx pins of an origin type: landing-contract out pins cland_rstart_out_<n>
     (type_split: relay pieces on both sides of the keep piece, one pin per side).  Each gets its own tx flop
@@ -1322,9 +1331,11 @@ class Landings:
             for pn in ps:
                 if pn != org:
                     c = cparts[pn]
-                    if c["role"] != "relay" or c["src"] != org or int(c["stages"]) != RELAY_STAGES:
-                        raise LandingError(f"count-aligned landing: {pn} relay role {c} != relay({org}, {RELAY_STAGES})")
-                    role = ("relay", org, RELAY_STAGES)
+                    # RELAY-TX-STAGES: the origin TYPE's declared extra tx stages (count_align_bind.relay_tx_stages; absent = 0)
+                    rst_n = RELAY_STAGES + _relay_tx_extra_stages(getattr(self, "types", {}).get(self.parts[org]["type"]))
+                    if c["role"] != "relay" or c["src"] != org or int(c["stages"]) != rst_n:
+                        raise LandingError(f"count-aligned landing: {pn} relay role {c} != relay({org}, {rst_n})")
+                    role = ("relay", org, rst_n)
                 elif rg["parent"] is None:
                     role = ("root", int(ca.get("root_settle_cycles", 64)))
                 elif self.tstart and rg["tree_port"] in self.tstart["ports"]:
@@ -2328,14 +2339,21 @@ class Landings:
             extra.append("    output wire cland_rstart_out")
             raw0 = raw
             raw = self._tx_raw(tn, type_key or tn, raw, ca_raw, raw_logic)
-            logic.append(f"    ot_dp_landing_relay u_cland_rstart_tx (.clk(clk), .rst_raw_n({raw}), .d(cland_start), "
+            # RELAY-TX-STAGES: n same-clock relay stages between the origin start and the tx flop(s); same raw reset as the tx flop
+            tx_d = "cland_start"
+            for i in range(_relay_tx_extra_stages(getattr(self, "types", {}).get(type_key or tn))):
+                logic.append(f"    wire cland_rstart_p{i};")
+                logic.append(f"    ot_dp_landing_relay u_cland_rstart_tx_p{i} (.clk(clk), .rst_raw_n({raw}), .d({tx_d}), "
+                             f".q(cland_rstart_p{i}));")
+                tx_d = f"cland_rstart_p{i}"
+            logic.append(f"    ot_dp_landing_relay u_cland_rstart_tx (.clk(clk), .rst_raw_n({raw}), .d({tx_d}), "
                          f".q(cland_rstart_out));")
             for pin, sfx in relay_tx_extra(getattr(self, "types", {}).get(type_key or tn)):
                 # one tx flop per extra pin (a relay piece on the other side of the origin piece): same D, own nearest raw
                 extra.append(f"    output wire {pin}")
                 rawx = self._tx_raw(tn, type_key or tn, raw0, ca_raw, raw_logic, pin=pin, sfx=sfx)
                 logic.append(f"    ot_dp_landing_relay u_cland_rstart_tx{sfx} (.clk(clk), .rst_raw_n({rawx}), "
-                             f".d(cland_start), .q({pin}));")
+                             f".d({tx_d}), .q({pin}));")
         if self.tstart and self.tstart.get("reset_wave") and RAW_RESET_PIN_OUT in self.tstart["type_pins"].get(type_key or tn,{}):
             extra.append(f"    output wire {RAW_RESET_PIN_OUT}")
             # DIE-KV-32 10-29: the face flop is an ot_dp_rrelay instance driving the port alone (a kept reg aliased

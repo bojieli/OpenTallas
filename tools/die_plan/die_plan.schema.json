@@ -1460,6 +1460,11 @@
      "landing_relay_start_copy": {
       "type": "boolean"
      },
+     "landing_relay_tx_stages": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 8
+     },
      "private_reset_start_exports": {
       "type": "boolean"
      },

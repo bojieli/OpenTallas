@@ -797,12 +797,19 @@ class Verification:
                     node,relay=self._raw_node(pn,ins,info)
                     if not self._try(lambda:self.check_reset(tx,pn,node,relay,port='rst_raw_n')):
                         self._tx_raw_alt(tx,pn,ins,info,sfx)
-                self.equal_input(tx,'d',[self.output(path,'start')])
+                # RELAY-TX-STAGES: n declared stages u_cland_rstart_tx_p<i> between the origin start and the tx flop (same clock)
+                txd=self.output(path,'start')
+                for i in range(CL._relay_tx_extra_stages(self.raw['partition_types'].get(self.parts[pn]['type']))):
+                    st=self.instance(ident(pn)+f'.u_cland_rstart_tx_p{i}','ot_dp_landing_relay')
+                    if not st:break
+                    self.clock(st,pn);self.equal_input(st,'d',[txd]);txd=self.output(ident(pn)+f'.u_cland_rstart_tx_p{i}','q')
+                self.equal_input(tx,'d',[txd])
             txpin=CL.relay_tx_pins(self.raw)
             for q in sorted(rel):
                 v=cparts[q]
-                if v.get('src')!=pn or int(v.get('stages',-1))!=2:
-                    self.fail(f'count-aligned relay {q}: bind relay {v} != relay({pn}, 2 stages)');continue
+                rsn=2+CL._relay_tx_extra_stages(self.raw['partition_types'].get(self.parts[pn]['type']))
+                if v.get('src')!=pn or int(v.get('stages',-1))!=rsn:
+                    self.fail(f'count-aligned relay {q}: bind relay {v} != relay({pn}, {rsn} stages)');continue
                 rx=self.instance(ident(q)+'.u_cland_rstart_rx','ot_dp_landing_relay')
                 if rx:
                     qi=self.collector['types'][self.parts[q]['type']]

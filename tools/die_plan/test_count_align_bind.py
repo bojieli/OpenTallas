@@ -338,3 +338,30 @@ def test_freg_cycle_is_not_in_K():
     assert not v["identity_and_loop_errors"], v["identity_and_loop_errors"][:3]
     assert (v["sim_window_violations"], v["sim_min_margin_low_ps"], v["sim_min_margin_high_ps"]) == \
         (v0["sim_window_violations"], v0["sim_min_margin_low_ps"], v0["sim_min_margin_high_ps"])
+
+
+def test_relay_tx_stages_shift_only_that_regions_relays_and_keep_the_identity():
+    """RELAY-TX-STAGES (FABLE-FIX-QC 11-19, COORD form A): the origin type of region c declares 2 extra tx stages (QC st_b: origin ->
+    tx pin 1,048-1,087 um, two stages at thirds).  Region c's relays start origin N + 4, region a's stay at + 2, the K of every
+    crossing with a region-c relay end moves by the same 2, sched_lat is unchanged and the identity / loop / start-up sim hold."""
+    rows, parts = multi_rows()
+    b0 = CB.bind(plan(rows), parts=parts)
+    org_c = b0["regions"]["c"]["origin_part"]
+    b = CB.bind(plan(rows), parts=parts, relay_extra={org_c: 2})
+    v = CB.verify(b, 400)
+    assert not v["identity_and_loop_errors"] and v["sim_window_violations"] == 0, v
+    d = {q: b["parts"][q]["n_nominal"] - b0["parts"][q]["n_nominal"] for q in b["parts"]}
+    for q, p in b["parts"].items():
+        want = 2 if (p["region"] == "c" and p["role"] == "relay") else 0
+        assert p["stages"] == (0 if p["role"] != "relay" else 2 + want)
+    assert any(d.values())
+    for pid, c in b["ports"].items():
+        assert c["sched_lat"] == b0["ports"][pid]["sched_lat"]
+        if not c["tree"]:
+            assert c["K"] == b0["ports"][pid]["K"] - d[c["dst_part"]] + d[c["src_part"]]
+    assert CB.bind(plan(rows), parts=parts, relay_extra={}) == b0          # absent = unchanged
+    die = dict(partition_types=dict(t=dict(landing_relay_tx_stages=2), u={}), partitions=[dict(name="p", type="t"), dict(name="q", type="u")])
+    assert CB.relay_extra_from_plan(die) == {"p": 2}
+    for bad in (True, -1, 9, "2", 1.0):
+        with pytest.raises(CB.BindError):
+            CB.relay_tx_stages({"landing_relay_tx_stages": bad})

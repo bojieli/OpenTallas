@@ -47,6 +47,33 @@ LAUNCH = 1  # the forwarded start is the parent origin's REGISTER output: it ris
 # relay partition, both ot_dp_landing_relay on the region clock (rtl/common/ot_dp_clk_landing_ca.sv).  A relay
 # partition starts RELAY_STAGES counts after its region origin.
 RELAY_STAGES = 2
+# RELAY-TX-STAGES (FABLE-FIX-QC 11-19, COORD form A, r713): opt-in partition_types[<origin type>].landing_relay_tx_stages = n adds n
+# ot_dp_landing_relay stages u_cland_rstart_tx_p0..p<n-1> between the origin's start and its tx flop (QC st_b: origin -> tx pin
+# 1,048-1,087 um in one hop; 2 stages at thirds = 349-362 um hops).  Every relay partition of that region then starts
+# RELAY_STAGES + n counts after the origin and the K of its crossings shifts by the same n (the existing relay identity).
+RELAY_TX_KEY = "landing_relay_tx_stages"
+RELAY_TX_MAX = 8
+
+
+def relay_tx_stages(t):
+    """extra tx pipeline stages of a partition type (0 when the key is absent)"""
+    n = (t or {}).get(RELAY_TX_KEY, 0)
+    if isinstance(n, bool) or not isinstance(n, int) or not 0 <= n <= RELAY_TX_MAX:
+        raise BindError(f"{RELAY_TX_KEY} must be an integer 0..{RELAY_TX_MAX} (got {n!r})")
+    return n
+
+
+def relay_extra_from_plan(die_plan):
+    """{origin-candidate partition: extra tx stages} for every partition whose type declares the key (non-zero only)"""
+    types = die_plan.get("partition_types") or {}
+    parts = die_plan.get("partitions") or []
+    parts = parts.values() if isinstance(parts, dict) else parts
+    out = {}
+    for p in parts:
+        n = relay_tx_stages(types.get(p.get("type")))
+        if n:
+            out[p["name"]] = n
+    return out
 
 
 class BindError(ValueError):
@@ -87,7 +114,7 @@ def _fsh(b, s, d):
     return 0 if fr is None else fr.shift(s, d)
 
 
-def bind(plan, T=None, parts=None):
+def bind(plan, T=None, parts=None, relay_extra=None):
     """plan = count_align_plan.py --out document {summary, regions, crossings}.
     parts (opt-in, DIE-KV-3/CAORIGIN): {port: (src_partition, dst_partition)}; None = one origin per region (output
     unchanged).  With parts a region holding several landed partitions gets ONE origin partition and a timed start
@@ -185,10 +212,10 @@ def bind(plan, T=None, parts=None):
     if summ.get("start_skew_clean"):
         # MESO-START-2 (opt-in): the start-up sim samples each tree edge at d - skew (plan --start-skew-clean)
         b["start_skew_ps"] = [float(x) for x in summ["start_skew_ps"]]
-    return b if parts is None else bind_parts(b, parts)
+    return b if parts is None else bind_parts(b, parts, relay_extra)
 
 
-def bind_parts(b, parts):
+def bind_parts(b, parts, relay_extra=None):
     """Intra-region start relay (DIE-KV-3/CAORIGIN 69d1ba8933 on the plan-param bind v2; COORD 21:14 ASK 3).
 
     ORIGIN CHOICE (deterministic): a child region's origin is the partition that receives its start-tree port; the root
@@ -240,8 +267,9 @@ def bind_parts(b, parts):
 
     def relays(x):
         for q in sorted(reg_parts[x] - {origin[x]}):
-            N[q] = N[origin[x]] + RELAY_STAGES
-            pinfo[q] = dict(region=x, role="relay", src=origin[x], stages=RELAY_STAGES, n_nominal=N[q])
+            st = RELAY_STAGES + int((relay_extra or {}).get(origin[x], 0))   # RELAY-TX-STAGES: the origin type's extra tx stages
+            N[q] = N[origin[x]] + st
+            pinfo[q] = dict(region=x, role="relay", src=origin[x], stages=st, n_nominal=N[q])
         pinfo[origin[x]] = dict(region=x, role="origin", src=None, stages=0, n_nominal=N[origin[x]])
     relays(root)
     for x in sorted((x for x in reg if reg[x]["parent"] is not None), key=lambda x: reg[x]["depth"]):
@@ -888,7 +916,7 @@ def main(argv=None):
             CF.check_same(plan["summary"].get("frame"), CF.load_optional(a.plan_die), f"plan {a.plan_json}")
         except CF.FrameError as ex:
             raise SystemExit(f"count_align_bind: {ex}")
-    b = bind(plan, parts=parts)
+    b = bind(plan, parts=parts, relay_extra=relay_extra_from_plan(json.load(open(a.plan_die))) if a.plan_die else None)
     fall = write_fall_ports(b, json.load(open(a.plan_die))) if a.plan_die else set()
     v = verify(b, a.samples, fall_ports=fall)
     rep = report(b, v)

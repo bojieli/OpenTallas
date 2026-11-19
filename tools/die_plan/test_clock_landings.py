@@ -822,3 +822,20 @@ def test_one_tx_pin_form_is_unchanged_by_the_second_pin_support():
     top = RELAY2_TOP.replace("    c_mod d (\n        .clk(clk_core)\n    );\n", "")
     tt = c.top_rtl(top)
     assert "clock_landing_rstart_b_" not in tt and tt.count("wire clock_landing_rstart_b;") == 1
+
+
+def test_relay_tx_stages_emit_a_chain_and_need_the_matching_bind_role():
+    """RELAY-TX-STAGES (FABLE-FIX-QC 11-19): partition_types[origin type].landing_relay_tx_stages = 2 puts two relay stages between
+    the origin start and the tx flop; the bind role of the region's relays must then say stages 4 (2 + 2), else the compose stops."""
+    p, t = ca_relay_vehicle()
+    p["partition_types"]["B"]["landing_relay_tx_stages"] = 2
+    with pytest.raises(LandingError, match=r"relay\(b, 4\)"):
+        Landings(p, t)
+    t["count_aligned"]["parts"]["c"]["stages"] = 4
+    bb = Landings(p, t).type_rtl("B", B_BODY)
+    assert "ot_dp_landing_relay u_cland_rstart_tx_p0 (.clk(clk), .rst_raw_n(cland_reset_y), .d(cland_start), .q(cland_rstart_p0));" in bb
+    assert "ot_dp_landing_relay u_cland_rstart_tx_p1 (.clk(clk), .rst_raw_n(cland_reset_y), .d(cland_rstart_p0), .q(cland_rstart_p1));" in bb
+    assert "ot_dp_landing_relay u_cland_rstart_tx (.clk(clk), .rst_raw_n(cland_reset_y), .d(cland_rstart_p1), .q(cland_rstart_out));" in bb
+    p["partition_types"]["B"]["landing_relay_tx_stages"] = "2"
+    with pytest.raises(LandingError, match="landing_relay_tx_stages"):
+        Landings(p, t)
