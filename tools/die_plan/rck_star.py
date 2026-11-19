@@ -210,18 +210,21 @@ def _walk(a, d, nh, step, rows, res=0.5):
 
 def _legs(start, dest, hop, rows, bounds, nh=None, Rk=None):
     """one leg per key from start[k] to dest[k], ALL with the same stage count nh; length R = nh * hop for every leg (detours
-    make up a shorter distance), or Rk[k] per leg when given (stations then sit Rk[k] / nh apart) -> ({k: stations}, nh, R, nudged, short)"""
+    make up a shorter distance), or Rk[k] per leg when given (stations then sit Rk[k] / nh apart); nh may be a per-key dict
+    -> ({k: stations}, nh, R, nudged, short)"""
     if nh is None:
         dmax = max(_l1(start[k], dest[k]) for k in start)
         nh = max(1, math.ceil((dmax + 0.2 * hop) / hop))
-    R = nh * hop
+    nk = nh if isinstance(nh, dict) else {k: nh for k in start}
+    R = max(nk.values()) * hop
     out, moved, short = {}, 0, 0
     for k in start:
-        Rl = Rk[k] if Rk else R
-        step = Rl / nh
+        n = nk[k]
+        Rl = Rk[k] if Rk else n * hop
+        step = Rl / n
         best = None
         for P in leg_shapes(start[k], dest[k], Rl, bounds):
-            st = [_along(P, i * step) for i in range(nh)]
+            st = [_along(P, i * step) for i in range(n)]
             nb = sum(not rows.ok(*p) for p in st)
             # a hop that spans both corners of a narrow U is shorter as the router sees it (L1) than as planned: such a
             # shape is not an equal leg, so it only wins when nothing better exists
@@ -232,7 +235,7 @@ def _legs(start, dest, hop, rows, bounds, nh=None, Rk=None):
             if nb + ns == 0:
                 break
         if best is None or best[0] + best[1]:
-            st = _walk(start[k], dest[k], nh, step, rows)
+            st = _walk(start[k], dest[k], n, step, rows)
             pts = st + [dest[k]]
             nb = sum(not rows.ok(*p) for p in st)
             ns = sum(abs(_l1(a, b) - step) > 1.0 for a, b in zip(pts, pts[1:]))
@@ -348,21 +351,24 @@ def plan(g, max_sinks=200, max_extent=100.0, hop=92.0, cell='BUFx24_ASAP7_75t_R'
     R1 = 0.0
     R2k = None
     if G:
-        # equal hub -> entry path: each group's entry legs are only as long as its own spread needs (R2_j), and its sub-hub leg
-        # takes the rest (R1_j = path - R2_j).  The length surplus of a compact group is spent on ONE sub-hub leg, not on its
-        # ~14 entry legs; the stage counts n1 and n2 are common, so every entry sees the same stages and the same wire length.
+        # equal hub -> entry path: each group's entry legs are only as long and as deep as its own spread needs (R2_j, n2_j),
+        # and its sub-hub leg takes the rest (R1_j = path - R2_j, n1_j = N - n2_j).  The length and stage surplus of a compact
+        # group is spent on ONE sub-hub leg, not on its ~14 entry legs, so every entry sees the same N stages and the same
+        # wire length while no compact group bunches stations.
         gidx = list(range(len(groups)))
         s1start = _starts(hub, gidx, subs, rows, s0_pitch)
         start = {}
         for j, ks in enumerate(groups):
             start.update(_starts(subs[j], ks, drv, rows, s0_pitch))
         r2 = [max(_l1(start[k], drv[k]) for k in ks) for ks in groups]
-        n2 = max(1, math.ceil((max(r2) + 0.2 * hop) / hop))
-        R2 = [max(v + 0.2 * hop, 0.25 * n2 * hop) for v in r2]
+        n2 = [max(2, math.ceil((v + 0.2 * hop) / hop)) for v in r2]      # >= 2: one hop cannot take a detour
+        R2 = [max(v + 0.2 * hop, 0.25 * n2[j] * hop) for j, v in enumerate(r2)]
         path = max(_l1(s1start[j], subs[j]) + 0.2 * hop + R2[j] for j in gidx)
         R1k = {j: path - R2[j] for j in gidx}
-        n1 = max(1, math.ceil(max(R1k.values()) / hop - 1e-9))
-        s1, n1, _R, m, s = _legs(s1start, {j: subs[j] for j in gidx}, hop, rows, bounds, nh=n1, Rk=R1k)
+        N = max(max(2, math.ceil(R1k[j] / hop - 1e-9)) + n2[j] for j in gidx)
+        n1k = {j: N - n2[j] for j in gidx}
+        s1, _n, _R, m, s = _legs(s1start, {j: subs[j] for j in gidx}, hop, rows, bounds, nh=n1k, Rk=R1k)
+        n1 = max(n1k.values())
         R1 = max(R1k.values())
         moved += m
         short += s
@@ -371,8 +377,10 @@ def plan(g, max_sinks=200, max_extent=100.0, hop=92.0, cell='BUFx24_ASAP7_75t_R'
             for k in groups[j]:
                 parent[k] = j
         R2k = {k: R2[j] for j, ks in enumerate(groups) for k in ks}
-        s2, nh, R, m, s = _legs(start, {k: drv[k] for k in range(K)}, hop, rows, bounds, nh=n2, Rk=R2k)
+        s2, _n, R, m, s = _legs(start, {k: drv[k] for k in range(K)}, hop, rows, bounds,
+                                nh={k: n2[j] for j, ks in enumerate(groups) for k in ks}, Rk=R2k)
         R = max(R2)
+        nh = max(n2)
     else:
         start = _starts(hub, range(K), drv, rows, s0_pitch)
         s2, nh, R, m, s = _legs(start, {k: drv[k] for k in range(K)}, hop, rows, bounds)
@@ -397,12 +405,12 @@ def plan(g, max_sinks=200, max_extent=100.0, hop=92.0, cell='BUFx24_ASAP7_75t_R'
     dens, dens_at = leg_density(paths)
     fan = [sum(1 for e in entries if e['parent'] == j) for j in range(len(sub_rows))] if G else [K]
     ns = sorted(e['n'] for e in entries)
-    rep = dict(port=g['port'][0], hub=hub, pad=pad, feeder=len(feeder), entries=K, hops=nh, hop_um=hop, leg_um=R, stations=K * nh + len(sub_rows) * n1,
+    rep = dict(port=g['port'][0], hub=hub, pad=pad, feeder=len(feeder), entries=K, hops=nh, hop_um=hop, leg_um=R, stations=sum(len(e['stations']) for e in entries) + sum(len(h['stations']) for h in sub_rows),
                cell=cell, sinks=len(std), macro_pins=len(mac), sinks_min=ns[0], sinks_median=ns[K // 2], sinks_max=ns[-1],
                nudged_stations=moved, short_hops=short, max_sinks=max_sinks, max_extent_um=max_extent,
                sub_hubs=len(sub_rows), hops1=n1, leg1_um=R1, path_um=path if G else R, fanout_max=max([len(sub_rows)] + fan) if G else K,
                legs_per_100um_max=dens, legs_per_100um_at=dens_at,
-               stages_per_entry=len(feeder) + (n1 + 1 if G else 0) + nh + 1)
+               stages_per_entry=len(feeder) + (N + 2 if G else nh + 1))
     rep['feeder_um'] = feeder
     rep['subs'] = sub_rows
     rep['assign'] = assign

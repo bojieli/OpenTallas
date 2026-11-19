@@ -45,7 +45,9 @@ def test_every_leg_has_the_same_stages_and_length(pad):
     rows = RS.Rows(g['rows'])
     assert rep['entries'] == len(entries) > 20 and sum(e['n'] for e in entries) == 60 * 40 + 545
     assert max(e['n'] for e in entries) <= 200
-    assert {len(e['stations']) for e in entries} == {rep['hops']}
+    subs = rep['subs']
+    depth = lambda e: len(e['stations']) + 1 + (len(subs[e['parent']]['stations']) + 1 if e['parent'] >= 0 else 0)
+    assert len({depth(e) for e in entries}) == 1 and rep['stages_per_entry'] == rep['feeder'] + depth(entries[0])
     for e in entries:
         assert all(rows.ok(*p) for p in e['stations']) and rows.ok(*e['xy'])
         if rep['nudged_stations'] == 0:
@@ -239,11 +241,12 @@ def test_two_level_tree_has_equal_stages_short_hops_and_no_one_hub_funnel(tmp_pa
     assert K >= 100 and one['entries'] == K and one['sub_hubs'] == 0 and one['fanout_max'] == K
     assert rep['sub_hubs'] == 14
     subs = rep['subs']
-    # every sub-hub leg: same stage count, every hop <= hop_um (well under the 405-um placed limit)
-    assert {len(h['stations']) for h in subs} == {rep['hops1']}
-    # every entry leg: same stage count across ALL sub-hubs, so every sink sees the same number of stages
-    assert {len(e['stations']) for e in entries} == {rep['hops']}
-    assert rep['stages_per_entry'] == rep['feeder'] + rep['hops1'] + 1 + rep['hops'] + 1
+    # every entry sees the same stage count: its sub-hub leg + its own leg (a compact group puts its spare stages on its one
+    # sub-hub leg); all entry legs of one group have the same depth; every hop <= hop_um (well under the 405-um placed limit)
+    assert {len(subs[e['parent']]['stations']) + 1 + len(e['stations']) + 1 for e in entries} == {rep['stages_per_entry'] - rep['feeder']}
+    for j in range(len(subs)):
+        assert len({len(e['stations']) for e in entries if e['parent'] == j}) == 1
+    assert max(len(e['stations']) for e in entries) == rep['hops'] and max(len(h['stations']) for h in subs) == rep['hops1']
     pts_of = lambda P: [abs(a[0] - b[0]) + abs(a[1] - b[1]) for a, b in zip(P, P[1:])]
     for e in entries:
         P = [subs[e['parent']]['xy']] + e['stations'] + [e['xy']]
