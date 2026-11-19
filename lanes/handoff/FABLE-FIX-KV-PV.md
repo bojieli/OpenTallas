@@ -1,3 +1,39 @@
+# FABLE-FIX-KV-PV handoff (KV pv family owner; restarted 2026-11-19 01:0x PST; the 11-15 section below is history)
+
+## Status 2026-11-19 01:45 PST (read this first)
+Diagnosis of the D23H kv3_pv / kv3_pv_v8 TT setup (-2028 / -1703 ps) is DONE. It is NOT the clock: worst-path tap latencies are
+211-260 ps at both ends. It is unpipelined data crossing the 2160 x 1520 um outline in one cycle.
+Evidence (read-only STA on each kit's 4_cts_pre_tt.odb, same frame as tt_setup_repair.tcl): epyc7
+/srv/opentallas-scratch2/claude/fable-fix-kv-pv-1119/out_{v8,pv}/{paths.tsv,worst3.rpt,diag.log}; script diag/diag.tcl; launcher
+intel2 ~/tmp/ffkpv/diag.sh. NOTE paths.tsv columns "start"/"end" are swapped (start = endpoint pin, end = launch clock port) and
+wire_um/depth include the launch clock path.
+Classes (v8 endpoints below -42: 6012; pv: 1093):
+ A cland control: u_cland_rst_ft0_i/q (at 2082,1420) -> u_cland_origin (175,7), tstart_o, raw_reset_o, fstart_* : 17 endpoints,
+   -700..-2028, 2.2-3.3 mm of repeated wire, 50 buffers, fanout <= 12. Missing stations.
+ B soft ft0_i landing ring (w1057, E face, pins y 370-475): 4228 endpoints fclk_in_ft0_i half-cycle, -200..-481, pin->flop data
+   ~980 ps (v8). ft5_i already uses the hard child kv_cland_w1057_ns_94a44.
+ C core/child outputs to far flops: bout o_pvw__u_sN_j_y_valid/fault 2.1-2.8 mm (-340..-1129); astk owner_response cland child ->
+   u_bin 1.8 mm (129 endpoints, -531); pv u_pv_u_T?Q?_r.b[] 972 endpoints -278.
+ D core input buses u_pvgN_pN/s*__bc, bcx, pe: 396 endpoints to -891, 2.5 mm, fanout 36; tail copies u_pd1 ctl_cmd 45 at -381
+   (OT_TAIL_SITE over_380 1474, max hop 870 um).
+ E async rst_n recovery -150 (port ri_pv_u_gN_j_rst_n -> relay flop, 900 ps of buffers).
+Tap load from the kits' real counts (OT_CLOCK_TAPS per-tap sinks, cap 1200): kv3_pv 141,055 sinks, 17 taps over, +39 taps;
+kv3_pv_v8 132,571, 10 over, +28 (root tap clk holds 10,056, missed by the earlier row); kv3_pv_v1 146,805, 16 over, +23;
+kv3_pv_v2 165,403, 11 over, +30. v12 not at CTS; v3n, v1n, v2n, v3, kv3_io_cor: no route job on epyc7, unverified.
+Tap split fixes CTS run time (4 h) and hold classes only; it does not move the setup number.
+
+## Not done
+No fix composed, no private proof kit, no sign-off, no export. Rows posted to KV-D23-COMPOSE are requirements, not sited rows.
+
+## Next
+1. A: bind/compiler: relay stations on the cland rst -> origin/start/raw_reset fan (9 stages for 3.3 mm at 380 um) or re-site
+   u_cland_origin next to the ft0_i ring; extra cycles are pre-approved, check the START latency contract (LATCHECK).
+2. B: make ft0_i a hard ring child (cland_w1057_ew_94a44 is signed and archived) in all pv types.
+3. C/D: stations on the long core-out / core-in lanes (plan lanes, 380 um hop), fanout tree for bc/bcx/pe.
+4. Tap split rows from real counts; then one private kv3_pv_v8 kit to GRT TT (r712), then D25e rows.
+5. Rerun diag.sh on v1/v2/v12 4_cts_pre_tt.odb when they finish CTS to confirm the same classes.
+
+---
 # FABLE-FIX-KV-PV handoff (owner of the KV pv + hg/hgi families to sign-off; started 2026-11-15 22:20 PST)
 
 ## Decisions (measured basis: epyc10 /srv/opentallas-scratch2/claude/fable-fix-kv-pv/cnt_{base,after}/cnt2.tsv)
