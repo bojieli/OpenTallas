@@ -9471,3 +9471,8 @@ FAILED [AUTOPILOT 3e1ca8ba831e] 2026-11-19 13:49:35 PST AUTOPILOT -> KIT-WAVE-3:
   NO-PROGRESS epyc8 svc_hi_dsdv_svc_rs__t3 4_1_cts stage 54.5 h job 67.9 h: no new meaningful log line for 11.1 h; last: [WARNING STA-0450] virtual clock vclk can not be propagated.
   NO-PROGRESS epyc9 serdes__t13 signoff_meas_072023 stage 38.5 h job 39.7 h: no new meaningful log line for 38.1 h; last: - hold_ff: FAIL WNS -55.85 ps < 0
   NO-PROGRESS epyc9 ot_s81sl_leaf__t11 5_1_grt stage 13.7 h job 15.5 h: repair_Viol best 97 last 97 rows 302 window-gain 0.0%; stagnant 7.5 h; last event 0.0 h ago, log write 0.0 h ago (962 lines)
+- 2026-11-19 13:52 PST 14xx sweep: 478 unsigned rows (S81 349, QC 77, KV 51, HEAD 1), committed ef3281ea.
+  UNOWNED 0; FAILED-NO-RELAUNCH 0 (7 S81 FAILED bind-stale rows relaunched <1 h).
+  DEAD-OWNER 7 QC rows: FABLE-FIX-QC (4), SONNET-FIX-QC (3) last post 11:49, no successor named.
+  STALE >3 h: KV 33 (worst kv3_io_cor 37.2 h), S81 23, QC 1; KV WAIT-BIND 6.
+  FABLE-FIX-* renamed to OPUS-FIX-* (QC-COLLCORE, KV-HG, S81-LEAF, S81-LEPE, KV-PV) and counted live.

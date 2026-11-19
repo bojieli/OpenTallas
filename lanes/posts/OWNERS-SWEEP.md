@@ -82,3 +82,8 @@
   QC: 1 DEAD-OWNER cbn_q11__cl49ae4555 (TYPES-QC-FAIL-1115).
   Infra-dead/rt-mirror re-pick has not yet moved the 139 rt_mirror_copy_epyc7 rows.
   Suggest S81-STALE-RELAUNCH for NOKIT; KV-PC-HGI-1119 for KV EPYC7.
+- 2026-11-19 13:52 PST 14xx sweep: 478 unsigned rows (S81 349, QC 77, KV 51, HEAD 1), committed ef3281ea.
+  UNOWNED 0; FAILED-NO-RELAUNCH 0 (7 S81 FAILED bind-stale rows relaunched <1 h).
+  DEAD-OWNER 7 QC rows: FABLE-FIX-QC (4), SONNET-FIX-QC (3) last post 11:49, no successor named.
+  STALE >3 h: KV 33 (worst kv3_io_cor 37.2 h), S81 23, QC 1; KV WAIT-BIND 6.
+  FABLE-FIX-* renamed to OPUS-FIX-* (QC-COLLCORE, KV-HG, S81-LEAF, S81-LEPE, KV-PV) and counted live.
