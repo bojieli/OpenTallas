@@ -190,6 +190,29 @@ def load_launches(tail=48 << 20):
     return out
 
 
+BF = re.compile(r'^(\d{4}-\d\d-\d\d \d\d:\d\d):\d\d \w+ AUTOPILOT: KIT-WAVE BOUND-FALLBACK (\w+): \d+ BIND-STALE row\(s\) launch[^:]*: (.*)$')
+
+
+def load_bound_fallback(since, tail=48 << 20):
+    """(die, item) -> time of the newest BOUND-FALLBACK line naming it (S81 BIND-STALE rows launch on the D8f tree), only lines >= since"""
+    out = {}
+    try:
+        with open(os.path.join(COORD, 'autopilot/log.txt'), 'rb') as f:
+            f.seek(0, 2); f.seek(max(0, f.tell() - tail))
+            for l in f.read().decode('utf-8', 'replace').split('\n'):
+                m = BF.match(l)
+                if m and ts(m.group(1)) >= since:
+                    for tok in m.group(3).split():
+                        k = (m.group(2), tok.split('@')[0].split('#')[0]); out[k] = max(out.get(k, 0), ts(m.group(1)))
+    except OSError:
+        pass
+    return out
+
+
+def order_flags(owner, al):
+    return [] if al else ['DEAD-OWNER']
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--agent-ids'); ap.add_argument('--out', default=os.path.join(COORD, 'lanes/OWNERS-SWEEP.tsv'))
@@ -217,6 +240,8 @@ def main():
         last[(r['die'], r['item'])] = r
     fb.LAST.clear(); fb.LAST.update(last)
     holds = fb.die_holds(); reg = registry(); launches = load_launches()
+    s81_from = time.mktime(time.strptime(time.strftime('%Y-%m-%d') + ' 06:40', '%Y-%m-%d %H:%M'))
+    bfall = load_bound_fallback(s81_from)
     cbc = cbc_failed_rounds(rows, now - a.cbc_days * 86400 if a.cbc_days else 0.0); cbc_hit = collections.defaultdict(list)
     out = []; notes = []
     for die, tag in DIES:
@@ -277,12 +302,18 @@ def main():
             notinplan = lab == 'NOT-IN-PLAN'
             failed = lab not in NOT_FAILED and not notinplan
             lt = launches.get((die, item.split('#')[0]), 0)
+            lt = max(lt, bfall.get((die, item.split('#')[0]), 0)) if lt >= s81_from or (die, item.split('#')[0]) in bfall else lt
             if failed and lt > upd:
                 age = (now - lt) / 3600; failed = False; lab = 'relaunched (LAUNCH %s)' % fmt_t(lt)
             if failed and age is not None and age > 1: flags.append('FAILED-NO-RELAUNCH')
             if r and failed and (r.get('class') or '') == 'UNCLASSIFIED': flags.append('UNCLASSIFIED')      # WAVE-PILOT-FIX 11-18 (COORD FLOW-1950 N): no rule names this failure; COORD starts a lane the same hour
             if not running and age is not None and age > 3: flags.append('STALE')
             if notinplan: flags = []
+            # WAIT-BIND (OWNER-SWEEP 11-19): a KV row that is not running and would be UNOWNED / DEAD-OWNER / STALE waits for a bind of record
+            if tag.upper() == 'KV' and not running and not notinplan and set(flags) & {'UNOWNED', 'DEAD-OWNER', 'STALE'}:
+                flags = [x for x in flags if x not in ('UNOWNED', 'DEAD-OWNER', 'STALE')] + ['WAIT-BIND']
+                if not owner or 'DEAD-OWNER' in order_flags(owner, al): owner = owner or 'FABLE-FIX-KV-HG / KV-D23-COMPOSE'
+                if not lane: owner = 'FABLE-FIX-KV-HG / KV-D23-COMPOSE'; match = 'wait-bind'
             if (die, cbc_family(item)) in cbc:
                 flags.append('CBC-FALLBACK'); cbc_hit[(tag, die, cbc_family(item))].append(short)
             state = lab if not failed else 'FAILED ' + lab
