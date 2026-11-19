@@ -21,9 +21,9 @@ delivers even less early-ness than the plan declares.  This die-agnostic tool fi
         (constraint.sdc TT, core_taps_ff.sdc FF) must equal -new early, and a clock.tap_offset per-port row on a core
         tap port must be re-measured (its o_p carries the old early delivery).
 
-    core_tap_retarget.py delivery TARGETS.json NEWPROOF [--tol 25]   tap-delivery table: planned vs delivered per core
+    core_tap_retarget.py delivery TARGETS.json NEWPROOF [--tol 50]   tap-delivery table: planned vs delivered per core
         tap of a die proof built with the targets (die_trial --region-dme-sink-offsets = rows' sink_offsets.json);
-        a row is adoptable only when every port is within tol.
+        a row is adoptable only when every port is within tol (default 50).
     core_tap_retarget.py pairs ROWS.json STA.json [STA.json ...]   which worst die STA pairs (intra/seam hold, setup,
         skew per corner) have an endpoint on an UNSIGNED core tap (declared insertion), a SIGNED core tap, or a regular
         tap; plus per-module counts of unsigned early core taps.
@@ -340,9 +340,9 @@ def cmd_shift(a):
 _LAT = re.compile(r"set_clock_latency\s+-source\s+-clock\s+clk\s+(-?[0-9.]+)\s+\[get_ports\s+(\S+?)\]")
 
 
-def delivery_table(targets, proof, tol_ps=25.0):
+def delivery_table(targets, proof, tol_ps=50.0):
     """[(port, corner, planned, delivered, diff, ok)] of every target port in a NEW proof: delivered = the partition's
-    regular-tap mean - the core tap arrival.  Adoption gate (FABLE-CLOSURE-STRATEGY lever 2): every |diff| <= tol."""
+    regular-tap mean - the core tap arrival.  Adoption gate: every |diff| <= tol (50 ps: regular-tap port scatter alone is 20-31 ps, COORD 11-19 dropped the 25 ps per-port gate)."""
     out = []
     for c in ("TT", "FF"):
         f = Path(proof) / f"tap_arrivals_{c}.json"
@@ -516,7 +516,7 @@ def main(argv=None):
     dv = sp.add_parser("delivery")
     dv.add_argument("targets")
     dv.add_argument("proof")
-    dv.add_argument("--tol", type=float, default=25.0)
+    dv.add_argument("--tol", type=float, default=50.0)
     dv.add_argument("--offsets", help="the sink offsets file the tree was built with")
     dv.add_argument("--next-out", help="write next-pass corrected offsets here (closed loop)")
     q = sp.add_parser("pairs")

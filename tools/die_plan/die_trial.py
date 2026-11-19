@@ -2503,6 +2503,17 @@ def tap_wire_ps(d_um):
     return k1 * d_um + k2 * d_um * d_um
 
 
+def leaf_sink_ps(d_um, delay_rep_um, priced, early_merge):
+    """DME leaf sink delay of a tap leg d um long.  Delay mode (delay_rep_um) with snake / actual-max, or with merge-mode
+    early sinks (DIE-CORETAP-1119 / FABLE-PD-KV-0845): tap_wire_ps (model ps), so a ps sink offset adds to ps.  The
+    historical form (d um read as ps) is kept only for delay trees without early sinks, snake or actual-max (byte-
+    reproducible stock trees); with merge early it made KV in-core pc pins (136.6 / 47.4 um) look 137 / 47 ps slow and
+    the tree delivered 1.83 x planned + 85 ps."""
+    if delay_rep_um and (priced or early_merge):
+        return tap_wire_ps(d_um)
+    return d_um
+
+
 def chain_ps(pts):
     """delay (model ps) of a leg whose buffers sit at pts[1:] (pts[0] = driver): one STAGE_1X_TT stage per consecutive
     pair, stage length = Manhattan between the two buffers (what the router connects).  leg_ps is the even-split case."""
@@ -3070,7 +3081,7 @@ def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MOD
             if vgap:        # HBM-CLKLOC-6 --region-dme-vgap: driver on a PG-free gap column
                 q = _vgap_snap(site, q, vgap_avoid)
         d = _man(q, (t[2], t[3]))
-        sd = tap_wire_ps(d) if delay_rep_um and (snake or DME_ACTUAL_MAX_UM is not None) else d
+        sd = leaf_sink_ps(d, delay_rep_um, snake or DME_ACTUAL_MAX_UM is not None, bool(sink_early))
         if sink_early:      # DIE-S81-14 --region-dme-early-mode merge: declared early = DME sink delay (zero-skew merge)
             sd += float(sink_early.get((t[0], t[1]), 0.0))
         out.append(dict(x=q[0], y=q[1], kids=[], taps=[t], S=sd, Smin=sd, W=d,
