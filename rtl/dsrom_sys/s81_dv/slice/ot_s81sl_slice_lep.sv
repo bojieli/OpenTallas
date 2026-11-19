@@ -112,6 +112,15 @@
 // without more credits or a skid.  CRP 3 would give 0.727 < 0.764: NOT allowed (elaboration error below).  Data latency
 // (issue -> lo_v) is unchanged; only the credit return is later (bind K: data 0, credit return +CRP).  Default 0 = unchanged;
 // a kit sets +define+OT_S81SL_LEP_CRP=<n> (all lep variants share this core).  Bench: tb_s81sl_lep LEP_TXRATE.
+// FABLE-FIX-S81-LEPE 11-19 (r713 branch copy, 0 cycles): WREP > 1 (SAFE_FIFO + MU_EN) replicates the TX tag-window state {wn, w_ab}
+// WREP times; each replica is the same state machine on its own registered copies of the window command (mc_x) and the ring valid
+// (rvx), so every replica equals the master {wn, w_ab} in every cycle (bench assert OT_S81SL_TX_GROUP_ASSERT).  The push groups, the
+// lane pushes and the tag stamp slices read their region's replica instead of the one master (lepe_mu_LP__t2: 7 wn flops at one
+// site fed the write qualifiers of 5 bank columns over up to 787 um, 258 TT ends).  te / w_t stay on the master.  No latency
+// change anywhere: bind K 0.  Default 1 = unchanged; a kit sets +define+OT_S81SL_LEP_WREP=<n> (5 = one per TX bank column).
+`ifndef OT_S81SL_LEP_WREP
+`define OT_S81SL_LEP_WREP 1
+`endif
 `ifndef OT_S81SL_LEP_CRP
 `define OT_S81SL_LEP_CRP 0
 `endif
@@ -141,6 +150,7 @@ module ot_s81sl_lep_core #(
     parameter integer NATIVE32_STD = 0, // separate opt-in standard bounded SRAM/control path
     parameter integer NATIVE32 = 0,    // opt-in MU same-age bounded control replicas
     parameter integer IDX_EN = 0,      // 1 (S81/H4 10-24): index rank-tree frames tl -> link, link -> ca / cb (see g_itx)
+    parameter integer WREP = `OT_S81SL_LEP_WREP, // TX tag-window state replicas (1 = the one master), see the note above the module
     parameter integer CRP = `OT_S81SL_LEP_CRP, // credit-return relay stages (0..2), see the note above the module
     parameter integer IN_PIPE = 0      // 1 (LEPCAP 10-19): one registered face stage on ro / t_host / t_kd / mu_c (+1 edge on
                                        // each, same relative timing); ro[0] / t_kd[53] re-fanned by 6 KEPT copies <= 28 loads
@@ -430,6 +440,35 @@ module ot_s81sl_lep_core #(
     assign window_count=0;
     assign wopen = 1'b0; assign wab = 1'b0; assign wtag = 33'd0; assign terr = 1'b0;
     end endgenerate
+    // window state replicas (WREP): wrn_c / wrb_c[k] = replica k's count / pair-B bit; WREP 1 = the master
+    localparam integer WR_ON = (SAFE_FIFO && MU_EN != 0 && WREP > 1) ? 1 : 0;
+    localparam integer WRN = (WR_ON != 0) ? WREP : 1;
+    wire [WRN*32-1:0] wrn_c; wire [WRN-1:0] wro_c, wrb_c;
+    generate if (WR_ON != 0) begin : g_wrep
+      for (genvar wk = 0; wk < WRN; wk = wk + 1) begin : g_w
+        wire wr_rst = (RX_SRAM != 0) ? rr[CTRL_RSTBASE+NL+7] : rn;
+        (* keep = "true" *) reg [NBW-1:0] n_r; (* keep = "true" *) reg b_r, mv_r, mb_r, rv_r;
+        always @(posedge clk or negedge wr_rst)
+          if (!wr_rst) begin n_r <= '0; b_r <= 1'b0; mv_r <= 1'b0; mb_r <= 1'b0; rv_r <= 1'b0; end
+          else begin
+            mv_r <= mc_x[0]; mb_r <= mc_x[1] && (AB_EN != 0) && mc_x[12:3] != 10'd0; rv_r <= rvx[wk % NVC];
+            if (mv_r) begin n_r <= NBW'(NB); b_r <= mb_r; end
+            else if (rv_r && n_r != '0) n_r <= n_r - 1'b1;
+          end
+        assign wrn_c[wk*32 +: 32] = 32'(n_r); assign wro_c[wk] = n_r != '0;
+`ifdef OT_S81SL_LEP_MUT_WRONGCOPY
+        assign wrb_c[wk] = 1'b0;
+`else
+        assign wrb_c[wk] = b_r;
+`endif
+`ifdef OT_S81SL_TX_GROUP_ASSERT
+        always @(posedge clk) if (wr_rst && rn && {wrn_c[wk*32 +: 32], wro_c[wk], wrb_c[wk]} !== {window_count, wopen, wab})
+            $fatal(1, "TX window replica %0d differs from the master", wk);
+`endif
+      end
+    end else begin : g_nwrep
+      assign wrn_c = window_count; assign wro_c = wopen; assign wrb_c = wab;
+    end endgenerate
     wire stamp = rov && wopen;
     wire bsel = stamp && wab;                          // this frame goes to pair B
     reg [2*H-1:0] fr;
@@ -454,9 +493,9 @@ module ot_s81sl_lep_core #(
         wire stamp_local;
         if(8*fc<TG+33 && 8*(fc+1)>TG) begin:g_stamp_active
 `ifdef OT_S81SL_LEP_MUT_HSTAMP
-        (* keep=1 *) ot_s81sl_lep_stamp u_stamp(.count(window_count),.ring(1'b1),.stamp(stamp_local));
+        (* keep=1 *) ot_s81sl_lep_stamp u_stamp(.count(wrn_c[((fc*WRN)/FRAME_NS)*32 +: 32]),.ring(1'b1),.stamp(stamp_local));
 `else
-        (* keep=1 *) ot_s81sl_lep_stamp u_stamp(.count(window_count),.ring(rov_r),.stamp(stamp_local));
+        (* keep=1 *) ot_s81sl_lep_stamp u_stamp(.count(wrn_c[((fc*WRN)/FRAME_NS)*32 +: 32]),.ring(rov_r),.stamp(stamp_local));
 `endif
         end else begin:g_stamp_unused assign stamp_local=1'b0;end
         always @(posedge clk or negedge rr[FRAME_RSTBASE+fc])
@@ -524,7 +563,7 @@ module ot_s81sl_lep_core #(
             if(!rr[CTRL_RSTBASE+NL+8+pg]) begin iv_r<=0; ib_r<=0; end else begin iv_r<=ivx[pg/3]; ib_r<=ibx[pg/3]; end
           assign iv_g = iv_r; assign ib_g = ib_r;
         end else begin : g_ni assign iv_g = 1'b0; assign ib_g = 1'b0; end
-        (* keep=1 *) ot_s81sl_lep_tx_push u_push(.ring(ring_r),.host_go(!ring_r && !iv_g && frame_host_pending[pg]),.key_go(!ring_r && !iv_g && !frame_host_pending[pg] && frame_key_pending[pg]),.open(wopen),.pair_b(wab),.pp(pp_g));
+        (* keep=1 *) ot_s81sl_lep_tx_push u_push(.ring(ring_r),.host_go(!ring_r && !iv_g && frame_host_pending[pg]),.key_go(!ring_r && !iv_g && !frame_host_pending[pg] && frame_key_pending[pg]),.open(wro_c[(pg*WRN)/PUSH_GROUPS]),.pair_b(wrb_c[(pg*WRN)/PUSH_GROUPS]),.pp(pp_g));
         assign push_group[2*pg+:2] = pp_g | {!ring_r && iv_g && ib_g, !ring_r && iv_g && !ib_g};
       end
       for(genvar pl=0;pl<NL;pl=pl+1) begin:g_lane
@@ -538,7 +577,7 @@ module ot_s81sl_lep_core #(
             if(!rr[CTRL_RSTBASE+NL+8+PUSH_GROUPS+pl]) begin iv_r<=0; ib_r<=0; end else begin iv_r<=ivx[1+pl]; ib_r<=ibx[1+pl]; end
           assign iv_g = iv_r; assign ib_g = ib_r;
         end else begin : g_ni assign iv_g = 1'b0; assign ib_g = 1'b0; end
-        (* keep=1 *) ot_s81sl_lep_tx_push u_push(.ring(ring_r),.host_go(!ring_r && !iv_g && frame_host_pending[PUSH_GROUPS+pl]),.key_go(!ring_r && !iv_g && !frame_host_pending[PUSH_GROUPS+pl] && frame_key_pending[PUSH_GROUPS+pl]),.open(wopen),.pair_b(wab),.pp(pp_g));
+        (* keep=1 *) ot_s81sl_lep_tx_push u_push(.ring(ring_r),.host_go(!ring_r && !iv_g && frame_host_pending[PUSH_GROUPS+pl]),.key_go(!ring_r && !iv_g && !frame_host_pending[PUSH_GROUPS+pl] && frame_key_pending[PUSH_GROUPS+pl]),.open(wro_c[(pl*WRN)/NL]),.pair_b(wrb_c[(pl*WRN)/NL]),.pp(pp_g));
         assign push_lane[2*pl+:2] = pp_g | {!ring_r && iv_g && ib_g, !ring_r && iv_g && !ib_g};
       end
     end endgenerate
