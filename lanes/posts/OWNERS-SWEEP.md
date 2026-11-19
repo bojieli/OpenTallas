@@ -76,3 +76,4 @@
   STALE >3 h: S81 179 (was 38; the 07:39 relaunch wave has crossed 3 h, still RUNNING route), KV 43 (was 41), HEAD 0 (was 1, hd_mesh no longer listed). STALE-EPYC7: KV kv3_hub_Ei 1 (was 2). WAIT-BIND KV 7 unchanged; CBC-FALLBACK S81 serdes 11 unchanged.
   Suggested owners: leaf_t72 -> S81-OWN-1119; pvso_entry__t1 -> S81-CORES-2 relaunch; S81 stale col_h9/h10 -> S81-OWN-1119 + TYPE-S81-FLOWERR; KV stale kv3_hg*/pv*/pc* -> KV-SYSC-1119 / KV-PC-HGI-1119; serdes CBC -> CBC-RULES-1119.
   Table lanes/OWNERS-SWEEP.tsv committed.
+- 2026-11-19 11:52 PST 11-19 12:0x sweep 477 rows. STALE split (was KV 43, S81 179): KV NOLOG 35 + NOKIT 8; S81 NOLOG 28 + NOKIT(rt_mirror_copy_epyc7, no log) 139, ROUTE-LONG 2, LOGFRESH 1. STALE-EPYC7 KV 32 (was 1), S81 4. DEAD-OWNER S81 2 (t72, pvso_entry), QC 1 (cbn_q11 cl49ae4555), LIMIT-PAUSE S81 5 unchanged. CBC-FALLBACK 11, WAIT-BIND KV 7, UNCLASSIFIED 1 unchanged. NOLOG jobs possible ghosts: kv3_hg family since 11-18 17:00.
