@@ -98,3 +98,14 @@ def test_nothing_to_commit_but_origin_has_head_is_pushed_status():
     d, bare, work, other = setup()
     r = run(work, "noop", "lanes/Q.md")
     assert r.returncode == 0 and r.stdout.strip().splitlines()[-1].startswith("PUSHED ")
+
+
+def test_refuses_a_worktree_that_is_not_on_the_coord_branch():
+    """COORD-GUARD 11-19: no commit / push from a worktree that a mistaken checkout moved off coord/state"""
+    d, bare, work, other = setup()
+    git(work, "checkout", "-q", "-b", "claude/stray")
+    (work / "lanes/Q.md").write_text("- a\n- x\n")
+    r = run(work, "x", "lanes/Q.md")
+    assert r.returncode != 0 and r.stdout.strip().splitlines()[-1].startswith("FAILED") and "not coord/state" in r.stdout
+    assert "claude/stray" in r.stdout
+    assert git(bare, "rev-parse", "coord/state") == git(work, "rev-parse", "origin/coord/state")           # nothing was pushed

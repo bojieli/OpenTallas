@@ -21,6 +21,13 @@ set -eE
 trap 'rc=$?; echo "FAILED unexpected command failure (exit $rc) at line $LINENO: $BASH_COMMAND" | tee /dev/stderr; exit 1' ERR
 C=${COORD_DIR:-/home/ubuntu/coord}; B=${COORD_BRANCH:-coord/state}
 cd "$C"
+# COORD-GUARD 11-19 (incident: a `checkout -f -B` in this worktree replaced the coord files with main): never commit, merge or push from a worktree that
+# is not on $B, and say so.  tools/fleet/coord-branch-guard puts a mistaken checkout back; this stops anything that slipped through.
+cur=$(git symbolic-ref -q --short HEAD 2>/dev/null || true)
+if [ "$cur" != "$B" ]; then
+  echo "FAILED worktree $C is on '${cur:-detached HEAD}', not $B: nothing committed or pushed (run: git checkout $B here, after checking the files)" | tee /dev/stderr
+  exit 1
+fi
 msg="$1"; shift
 now() { date +%s.%N; }
 T0=$(now)
