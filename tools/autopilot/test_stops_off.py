@@ -580,3 +580,35 @@ class CancelRowsCore(unittest.TestCase):
         st = {"items": {"a": {"die": "s81", "item": "col_h9_r1__t1", "block_sha": "A" * 14, "status": "RUNNING", "attempt": 1}}}
         stops, done = KW.cancel_rows_core(object(), {}, st, "s81", "col_h9_r1__*", "x", "o", "GEOMETRY", {}, dry=True)
         self.assertEqual((stops, len(done), st.get("struct_stops")), (0, 1, None))
+
+
+class OldPlansOnly(unittest.TestCase):
+    """COORD 11-18 (D8e applied): rows launched on the applied plan are never cancelled or stopped by --old-plans-only"""
+
+    def test_cancel_rows_skips_rows_on_the_current_plan(self):
+        cfg = {"dies": {"s81": {"plan_sha256": "DF7446E48BA9" + "0" * 52}}}
+        st = {"items": {
+            "old": {"die": "s81", "item": "col_h9_r1__a", "block_sha": "A" * 14, "plan_sha": "e291d6a8e740" + "0" * 52, "status": "RUNNING", "attempt": 1},
+            "new": {"die": "s81", "item": "col_h9_r1__b", "block_sha": "B" * 14, "plan_sha": "df7446e48ba9" + "0" * 52, "status": "RUNNING", "attempt": 1}}}
+        stops, done = KW.cancel_rows_core(object(), cfg, st, "s81", "col_h9_r1__*", "x", "o", "GEOMETRY", {}, dry=True, old_plans_only=True)
+        self.assertEqual([d[1] for d in done], ["col_h9_r1__a"])
+        stops, done = KW.cancel_rows_core(object(), cfg, st, "s81", "col_h9_r1__*", "x", "o", "GEOMETRY", {}, dry=True)
+        self.assertEqual(len(done), 2)
+
+
+class ClassifierWritesStop(unittest.TestCase):
+    """COORD FLOW-1555: a STRUCTURAL verdict stores its own stop for the plan block; the next block is another key"""
+
+    def test_structural_fail_writes_a_stop_for_its_block_only(self):
+        cfg = {"dies": {"s81": {"event": "E"}}}
+        st = {}
+        rec = {"die": "s81", "item": "col_h9_r1__t1", "block_sha": "AAAAAAAAAAAAAAAA", "attempt": 3, "stage": "place", "dir": ""}
+        KW.note_fail_key(cfg, st, rec, "STRUCTURAL", "gpl noconverge @place: overflow")
+        self.assertIsNotNone(KW.struct_stop_for(st, "s81", "col_h9_r1__t1", "AAAAAAAAAAAAAAAA")[0])
+        self.assertEqual(KW.struct_stop_for(st, "s81", "col_h9_r1__t1", "BBBBBBBBBBBBBBBB"), (None, None))      # a new plan block releases it
+        self.assertTrue(next(iter(st["struct_stops"].values()))["auto"])
+
+    def test_other_classes_write_nothing(self):
+        st = {}
+        KW.note_fail_key({"dies": {"s81": {}}}, st, {"die": "s81", "item": "x", "block_sha": "A" * 16, "attempt": 1, "stage": "gen", "dir": ""}, "FLOW", "ValueError @gen: x")
+        self.assertFalse(st.get("struct_stops"))

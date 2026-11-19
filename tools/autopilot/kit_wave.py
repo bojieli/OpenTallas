@@ -9561,6 +9561,24 @@ def struct_stop_for(st, die, item, block_sha):
     return None, None
 
 
+def struct_stop_from_fail(cfg, st, rec, stage, why):
+    """a FAIL the classifier calls STRUCTURAL stores its own stop: key die|item|b<plan block[:12]>, owner = the die owner lane, verdict STRUCTURAL.  Idempotent per block (an existing stop, e.g.
+    a lane verdict or a spent force, is kept).  -> the key or None (no block on the row)"""
+    b12 = str(rec.get("block_sha") or "")[:12]
+    if not b12:
+        return None
+    key = f"{rec['die']}|{rec['item']}|b{b12}"
+    stops = st.setdefault("struct_stops", {})
+    if key not in stops:
+        try:
+            owner = die_owner(cfg, rec["die"], item=rec["item"])[0]
+        except Exception:
+            owner = rec["die"]
+        stops[key] = {"die": rec["die"], "item": rec["item"], "block": b12, "verdict": "STRUCTURAL", "owner": owner, "force_once": False, "ts": time.time(), "auto": True,
+                      "why": f"classifier STRUCTURAL @{stage or '?'} attempt {rec.get('attempt')}: {str(why or '')[:140]}"}
+    return key
+
+
 def struct_stop_gate(AP, cfg, st, die, item, block_sha, consume=False):
     """-> a refusal text when a structural stop holds this block (consume=True: a pending force is spent and the launch goes ahead), else ''"""
     k, e = struct_stop_for(st, die, item, block_sha)
@@ -9577,12 +9595,20 @@ def struct_stop_gate(AP, cfg, st, die, item, block_sha, consume=False):
             f"released by a changed block, or one launch by `kit_wave.py struct-force`)")
 
 
-def cancel_rows_core(AP, cfg, st, die, item_glob, why, owner, verdict, jobs, dry=False):
+def on_old_plan(cfg, die, r):
+    """the row was launched on a plan other than the die's current plan of record (D8e applied after it): rows on the NEW plan are never touched by --old-plans-only"""
+    cur = str(((cfg.get("dies") or {}).get(die) or {}).get("plan_sha256") or "").lower()[:12]
+    rp = str(r.get("plan_sha") or "").lower()[:12]
+    return bool(cur) and bool(rp) and rp != cur
+
+
+def cancel_rows_core(AP, cfg, st, die, item_glob, why, owner, verdict, jobs, dry=False, old_plans_only=False):
     """COORD 11-18 (cbx_q10 / col_h9_r1): place the structural stop for the plan block of every live row of die/item_glob FIRST (a CANCELLED row relaunches by itself under stops_off), then cancel
     each live row through the wave's own API (grt_arm_cancel: exact wave unit + PLACE client, the running route job's unit or the withdrawal of an unstarted queue row, exact container names
     under the attempt root; run data kept).  -> (stops placed, [(key, item, attempt, status)] cancelled)"""
     live = [(k, r) for k, r in sorted((st.get("items") or {}).items())
-            if r.get("die") == die and fnmatch.fnmatchcase(str(r.get("item")), item_glob) and r.get("status") in ("RUNNING", "LAUNCHING", "ENQUEUED")]
+            if r.get("die") == die and fnmatch.fnmatchcase(str(r.get("item")), item_glob) and r.get("status") in ("RUNNING", "LAUNCHING", "ENQUEUED")
+            and (not old_plans_only or on_old_plan(cfg, die, r))]
     stops, notices = 0, {}
     done = []
     for k, r in live:
@@ -9621,7 +9647,7 @@ def struct_cmd(a):
             blocks = {(a.item, a.block[:12]): a.item}
         else:
             for r in rows:
-                if cur is None or r.get("event") == cur:
+                if (cur is None or r.get("event") == cur) and (not getattr(a, "old_plans_only", False) or on_old_plan(cfg or {}, a.die, r)):
                     blocks[(r["item"], str(r["block_sha"])[:12])] = r["item"]
         n = 0
         for (item, b12) in sorted(blocks):
@@ -11620,6 +11646,8 @@ def note_fail_key(cfg, st, rec, cls, why):
     if is_host_fail(cls, why):
         return None
     stage = rec.get("stage") or FG.fail_stage(why)
+    if str(cls) == "STRUCTURAL":                       # COORD FLOW-1555: the classifier writes the structural stop itself (die, item, plan block); a new plan block is another key and releases it
+        struct_stop_from_fail(cfg, st, rec, stage, why)
     group, tfiles = tools_group(stage), failed_tool_files(why)
     parts = kit_digest_parts(cfg, rec["die"], rec, group=group, files=tfiles)
     key, dig = fail_key(parts, cls, why)
@@ -14856,6 +14884,7 @@ def main(argv=None):
     cr_.add_argument("--die", required=True); cr_.add_argument("--item", required=True); cr_.add_argument("--owner", required=True)
     cr_.add_argument("--verdict", default="STRUCTURAL", choices=STRUCT_VERDICTS); cr_.add_argument("--why", required=True)
     cr_.add_argument("--config"); cr_.add_argument("--ap-dir"); cr_.add_argument("--dry-run", action="store_true")
+    cr_.add_argument("--old-plans-only", action="store_true", help="skip rows launched on the die current plan of record (rows on the applied plan must run)")
     for _nm in ("struct-stop", "struct-force", "struct-release", "struct-list"):
         sp_ = sub.add_parser(_nm, help="COORD FLOW-1400 (3): structural verdict stops keyed by plan block (state struct_stops)")
         sp_.add_argument("--ap-dir"); sp_.add_argument("--config", help="kit_wave.json (needed to pick the current event for --block current)")
@@ -14864,6 +14893,7 @@ def main(argv=None):
             sp_.add_argument("--block", default="current", help="plan block sha (12+ chars) or current = the block of every current-event row of the item")
             sp_.add_argument("--owner", default="", help="the lane that owns the verdict"); sp_.add_argument("--verdict", default="STRUCTURAL", choices=STRUCT_VERDICTS)
             sp_.add_argument("--why", default="")
+            sp_.add_argument("--old-plans-only", action="store_true", help="--block current: only blocks of rows launched on a plan other than the die current plan of record")
     rd_ = sub.add_parser("reap-dead", help="KW-FIX-46: dry-run list of rows the REAP-DEAD sweep would reap (read-only)")
     rd_.add_argument("--config", help="kit_wave.json file instead of coord/state autopilot/kit_wave.json")
     rd_.add_argument("--minutes", type=float, default=REAP_DEAD_MIN)
@@ -14929,7 +14959,7 @@ def main(argv=None):
             except (OSError, ValueError):
                 jobs = {}
             AP.DRY = bool(a.dry_run)
-            stops, done = cancel_rows_core(AP, cfg, st, a.die, a.item, a.why, a.owner, a.verdict, jobs, dry=a.dry_run)
+            stops, done = cancel_rows_core(AP, cfg, st, a.die, a.item, a.why, a.owner, a.verdict, jobs, dry=a.dry_run, old_plans_only=a.old_plans_only)
             if not a.dry_run:
                 save_state(st, ap_dir)
             for x in done:
