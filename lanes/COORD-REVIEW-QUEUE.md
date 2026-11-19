@@ -8434,3 +8434,5 @@ FAILED [AUTOPILOT a35332dfe863] 2026-11-19 06:46:53 PST AUTOPILOT -> KIT-WAVE-12
   S81: 301 KIT-WAVE LAUNCH + 58 RELAUNCH-ON-FIX since 06:40 (BOUND-FALLBACK 06:40:52 on D8f tree); 349 rows running; 11 CBC-FALLBACK families flagged.
   40 S81 hold-after-CTS rows owned by S81-CLOCK-WINDOW-1119 (running, no flag). HEAD 2 running (hd_mesh CBC-FALLBACK); QC 101 running.
   Committed lanes/OWNERS-SWEEP.tsv + bin/owners_sweep.py
+- 2026-11-19 06:53 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-19 06:52 PST: 229 running jobs, PROGRESSING 221, SLOW 7, NO-PROGRESS 1 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc9 serdes__t13 signoff_meas_072023 stage 31.5 h job 32.7 h: no new meaningful log line for 31.1 h; last: - hold_ff: FAIL WNS -55.85 ps < 0
