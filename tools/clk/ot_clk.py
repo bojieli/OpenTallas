@@ -287,6 +287,23 @@ def fill_region_map(cfg, out, plan=None):
                           rules=rules, added=added)
 
 
+DEFAULT_REGION_EARLY = {"tt": 1.0, "mode": "merge"}
+
+
+def plan_has_early_core_taps(plan_path):
+    """True when a partition type of the plan declares clock.core_taps early with a kind core tap (raw JSON scan)."""
+    try:
+        raw = json.loads(Path(plan_path).read_text())
+    except (OSError, ValueError, TypeError):
+        return False
+    pt = raw.get("partition_types") or {}
+    for t in (pt.values() if isinstance(pt, dict) else pt):
+        ck = (t or {}).get("clock") or {}
+        if ck.get("core_taps") == "early" and any((x or {}).get("kind") == "core" for x in ck.get("taps") or []):
+            return True
+    return False
+
+
 def kit_argv(cfg, out, stage_cal_path=None, workers=None, plan=None, region_map=None):
     """die_trial.py kit argv for a config (flag order is irrelevant to die_trial; values are exact)"""
     if is_mesh(cfg):
@@ -374,7 +391,13 @@ def kit_argv(cfg, out, stage_cal_path=None, workers=None, plan=None, region_map=
         only = region_list(reg.get("only"), cfg)
         if only is not None:
             a += ["--region-dme-only", ",".join(only)]
-        e = reg.get("early") or {}
+        e = reg.get("early")
+        if e is None and mode == "delay" and plan_has_early_core_taps(plan or i["plan"]):
+            # DIE-CORETAP-1119 default: a delay-DME region form on a plan with early hard-core taps delivers the plan's
+            # declared core early (schema core_tap_early_ps) instead of feeding the cores on time (late by design;
+            # die proto intra hold -176 -> -115 TT).  region.early: false (or {}) opts out explicitly.
+            e = dict(DEFAULT_REGION_EARLY)
+        e = e or {}
         if e.get("tt") is not None:
             a += ["--region-dme-early", _fmt(e["tt"])]
         if e.get("ff") is not None:

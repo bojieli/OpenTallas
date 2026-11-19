@@ -642,3 +642,22 @@ def test_region_street_form_argv():
     c2["region"]["street_vlayer"] = "M9"
     f = flags(O.kit_argv(c2, "OUT"))
     assert f["--region-dme-street-column"] is True and f["--region-dme-street-vlayer"] == "M9"
+
+
+# ------------------------------------------------------------------- DIE-CORETAP-1119: region.early default
+def _plan(tmp_path, early=True):
+    ck = {"core_taps": "early", "taps": [{"name": "u_c.clk", "kind": "core", "xy": [1, 1], "insertion_ps": 400}]}
+    p = tmp_path / "plan.json"
+    p.write_text(json.dumps({"partition_types": {"t": {"clock": ck if early else {}}}}))
+    return str(p)
+
+
+def test_region_early_default_on_plans_with_early_core_taps(tmp_path):
+    c = cfg("qc")
+    c["region"].pop("early", None)
+    c["region"].pop("early_merge_only", None)
+    f = flags(O.kit_argv(c, "OUT", "CAL", None, plan=_plan(tmp_path)))
+    assert f["--region-dme-early"] == "1" and f["--region-dme-early-mode"] == "merge"
+    assert "--region-dme-early" not in flags(O.kit_argv(c, "OUT", "CAL", None, plan=_plan(tmp_path, early=False)))
+    c["region"]["early"] = False                 # explicit opt-out
+    assert "--region-dme-early" not in flags(O.kit_argv(c, "OUT", "CAL", None, plan=_plan(tmp_path)))
