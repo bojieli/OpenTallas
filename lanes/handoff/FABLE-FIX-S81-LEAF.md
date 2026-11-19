@@ -45,3 +45,21 @@ Kits: t25__cl431c660f a7 (-778.07, 7,981 ends below -42), t27 a7 (-526.93, 1,172
   vp src -> vp src 122 (-220), vp src -> cf 54, u_rr rst_n -> hog / hig stations 18 (-170, 824 um), leafdn pad -> u_rr 14, u_rrl q -> state 11.
   Next fix candidate: the vp glue has no region and dodd (one flop) writes the cf memory across the leaf.
 - Reach: fold is leaf + kv_leaf only (posts REACH, KVLEAF). Buckets of the 15 FAILED rows: 14 face bank (D8g stride 1), t56 = stale tool in the pinned D8e tree (main cf90bd19b2).
+
+## 11-19 01:2x PST state (three things in flight)
+1. Fold push: unchanged rule (t27keep GRT TT + D8g APPLIED). t27keep in GRT since 00:54.
+2. vp relay-stage form (class left after the fold fix):
+   - RTL: repo/ (epyc10 lane clone, UNCOMMITTED edit) rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv gets param CFP (define OT_S81SL_VP_CFPIPE):
+     cf is written CFP edges later from yrow_d[CFP-1] with the row select delayed CFP edges. 0 cycles at every output for legal streams
+     (no overlapping POSTs, the SR contract); CFP <= YA + 1. Bench test/run_vp_cfp_bench.sh -> epyc10 .../bench_cfp/summary.log
+     (ot-run log intel2 ~/.local/state/fable-fix-s81-leaf/cfp_bench.otrun.log). Expect cfp*_legal PASS, ctl_mut_sel FAIL, ctl_dense may differ.
+   - NORM / SU command path (cd_c -> n_pre / m_* / s_d, 122 + ends, 683 um): needs +1 cycle = the g_sre part of the existing SR form
+     (OT_S81SL_VP_SRAMREG, DIE-S81-85 11-09, benched, never switched on at the die). Latency through bind K: NORM n_go / m_v / n_pre + 1, SU s_v / s_d + 1.
+   - As-built: the S81 as-built base is older than main and bind names depend on source positions; apply like tools/die_plan/s81_vp_cfr_asbuilt_patch.py
+     (tokens keep line and column). NOT written yet.
+   - Proof 2: epyc10 proof/t27relay = t27keep + bin/relay_proxy.py on the bound module (physical proxy only: cf write from yrow_d[1] with select + 2,
+     one register on e_cd and its NORM select). Goal grt. Log intel2 .../t27relay.otrun.log.
+3. Tap re-derive (COORD 01:1x, PRECHECK TAP-CAP 11 types + t25cl431): plan tool exists, tools/die_plan/reach_fix.py fix --classes 1,2 --cap 1500 --assign kit.
+   Running on the whole family against the D8e plan (read-only) -> epyc10 taps/plan_leaf_taps.json, event_leaf_taps.json, fix_leaf.tsv, fix_leaf.log.
+   t28 / t29 are plain tap_mode grid with 16 taps (c2 12 taps over, max 7,156 sinks; t29 3 over, 3,156). t27 is not a tap-cap type, so a tap proof needs
+   a kit regenerated from the new plan (kit-rtl wrapper carries the tap ports): that is the die lane event_kits recipe, not a hand patch.
