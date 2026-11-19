@@ -45,3 +45,13 @@ Work dir: epyc2 /srv/opentallas-scratch3/claude/fable-fix-s81-colh9r1 (L). Tools
 - Kit continues: in 5_1_grt since about 02:15 (GRT hold repair includes port starts, OT_GRT_PORT_HOLD_INCLUDE=1). Waiter on 5_global_route.tt.rpt / FAIL_*.
 - This private kit wrote no 4_cts_post_hook.rpt (D8e tree tools); CTS numbers above are from run_grt.log and L/tools/runsta.sh (L/sta/p1.*).
 - lpl_6/8/9_r have no relay_mid station line (span under 200 um, left to GPL); lpl_7_r at (661,28), hop 117 um.
+
+## 2026-11-19 03:40 col_h9_r2 FAIL_route read (COORD ask; V on 3 kits: epyc8 pvfd79e8b6 a7, intel1 pvdc7d4221 a6, epyc10 pv6a2b031b a6)
+- Not DRT, not kit memory (peak 15.8-22.4 GB of 48). All three fail inside 5_1_grt, two steps:
+  (1) post-GRT max-wire repair_design goes flat for 1800 s at nets_done 10000-11000 of 86k (rate before: 1000 nets/min) -> grt183_make.sh OT_GRT_REPAIR_NO_PROGRESS
+      stops it and re-runs GRT once with the repair skipped.
+  (2) the re-run is SIGKILLed by the HOST guard (ot-oom-age PLAN_GUARD_PCT=5: MemAvailable < 5 % with a plan job running kills the largest young build):
+      /var/tmp/ot-oom-age/kills.log names dpkit-col_h9_r2...pvfd79e8b6 (09:10:17 UTC, RSS 15.4 GB) and ...pvdc7d4221 (02:43:20 PST, 21.5 GB). make Error 247 = -9.
+      intel1 kit was already in "Repair antennas" (GRT done) when killed.
+- Guard kills 11-18/19 of dpkit-col_h9_r2: intel1 16, epyc10 5, epyc8 1, epyc2 1; of dpkit-col_h9_r1: epyc2 15, epyc8 9, epyc10 6, intel1 1.
+- Not read: which net repair_design hangs on.
