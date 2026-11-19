@@ -947,6 +947,7 @@ def load_capped(r, mem, threads):
     return n > 0 and int(load1(r)) >= int(f * n)
 
 
+SMALL_JOB_GB = float(os.environ.get("OT_RUN_SMALL_JOB_GB", "30"))   # SMALLJOB-1119 (COORD): a job asking <= this many GB is not queued on a saturated host
 DIRECT_HEADROOM_GB = 32   # = ot-heavy DIRECT_1107: real MemAvailable must stay this far above the job's --mem
 
 
@@ -978,6 +979,25 @@ def plan_job():
 
 
 def choose(res, mem, threads=THREADS, die=False):
+    """SMALLJOB-1119 (COORD: a small read-only STA read sat queued on epyc7 at load 202/96 admitting 4 GB): the normal choice stands unless it would QUEUE the job or put it on a CPU-saturated host
+    (load ratio > 1) while a job of <= SMALL_JOB_GB could start now elsewhere: then the host admitting it now with the most admission memory wins; if none admits it, it queues where it admits soonest."""
+    host, queue = _choose(res, mem, threads, die)
+    if die or not (0 < mem <= SMALL_JOB_GB) or host is None or plan_job() or direct_job():
+        return host, queue
+    rs = {h: reserved(h, r) for h, r in res.items()}
+    ok = {h: r for h, r in rs.items() if r and not r.get("error") and r.get("ncpu") and physically_capable(r, mem) and HOST_ROLE.get(h) != "coord"}
+    if not ok:
+        return host, queue
+    room = lambda h: ok[h].get("admit_gb", ok[h]["free_gb"])
+    now = [h for h in ok if room(h) >= mem and not load_capped(ok[h], mem, threads)]
+    if not queue and host in ok and ratio(ok[host], threads) <= 1.0:
+        return host, queue
+    if now:
+        return max(now, key=lambda h: (room(h), ok[h].get("avail_gb", 0))), False
+    return max(ok, key=lambda h: (room(h), ok[h]["free_gb"])), True
+
+
+def _choose(res, mem, threads=THREADS, die=False):
     """res: host -> --free row (hosts that qualify by disk/dir only).  Returns (host, will_queue).
     die: prefer normal hosts among those admitting now, otherwise keep every admitting host eligible; any other job gets
     TPUT_BONUS on a throughput host that stays <= 1.0 x cores.  Among the hosts that admit it now: the best score()."""
