@@ -885,7 +885,7 @@ DEFAULTS = dict(GROWTH_FACTOR=0.5, NEED_FACTOR=0.7, MIN_AVAIL_FRAC=0.05,     # v
                 OLD_MIN_SPAN_S=200,                                          # v14 OLD SLOW (SCHED-TUNE2 10-22)
                 MEASURED_RESERVE=1.0, RESERVE_K=1.5, RESERVE_HORIZON_S=1800,  # v16 MEASURED RESERVE (coordinator 10-22)
                 GROWTH_CAP_AVAIL_FRAC=0.0, DIE_HEADROOM_GB=64.0,       # OWNER 10-22 20:10: growth reservation 0 %
-                HARD_INVARIANT=1.0, INV_HEADROOM_GB=64.0, INV_PAST_PEAK_FACTOR=1.0, PEAK_GAP_FACTOR=0.0, PLAN_GAP_FACTOR=1.0,
+                HARD_INVARIANT=1.0, INV_HEADROOM_GB=64.0, INV_PAST_PEAK_FACTOR=1.0, PEAK_GAP_FACTOR=0.0, PLAN_GAP_FACTOR=1.0, MEASURED_GAP_FACTOR=1.0,
                 PHASE_MARGIN=0.0, SEED_STEM_TOKENS=4.0, PHASE_CAP_AVAIL_FRAC=0.10,
                 SIMPLE_ADMIT=0.0, PLAN_BYPASS=0.0, PLAN_RESERVE=0.0, STAGE_PEAK=0.0, STAGE_LOOKAHEAD=0.0, STAGE_PEAK_FRAC=1.0, PLAN_PRIO=0.0, PLAN_MAX_RUNNING=1.0, PLAN_HOLD_MAX_S=7200.0, PLAN_DRAIN_S=0.0, PLAN_EARLY_S=0.0, SMALL_JOB_GB=0.0, SMALL_JOB_MAX=6.0, SMALL_FLOOR_GB=36.0, SIMPLE_PEAK=0.0, PEAK_FALLBACK_SHARE=1.0, PEAK_GROWTH_FRAC=0.05, PEAK_PCT=0.9, PEAK_MIN_N=3.0, SIMPLE_NEED_FACTOR=1.0, SIMPLE_FRESH_S=0.0, REAL_ADMIT=0.0, REQ_PEAK_MULT=1.1, REQ_PEAK_PAD_GB=2.0, CLASS_LOWER_MIN_N=3.0)   # REALMEM_1110 (KW-FIX-44, OWNER/COORD 11-10)  # OWNER 10-22 20:10: PHASE_MARGIN 0                      # v17.4 (coordinator 10-22)                    # v17 HARD INVARIANT (S81c/TOKc-ADM 10-22)
 
@@ -1942,6 +1942,21 @@ def peak_gap_gb(state_dir=None, scope_glob=None, min_gb=0.5):
     return gap
 
 
+def measured_gap_gb(units=None, hist=None, pct=0.9, min_n=3):
+    """GROWTH-AWARE ADMISSION (FABLE-FLOW-2355 A, COORD 11-19: 58 guard kills in 2 h): memory a running job is still expected to grow into = its class's MEASURED peak (pct-quantile of >= min_n
+    completed runs on this host, never above its request) minus its current use (scope + container).  Units of a class with no history add nothing (their charge would be a request guess, which zeroed
+    admission on 11-18).  Light path: cgroupfs + peaks.tsv only."""
+    units = running_units_light() if units is None else units
+    hist = peak_history() if hist is None else hist
+    gap = 0.0
+    for u, req, cls, now in units:
+        v = hist.get(cls) or []
+        if len(v) < min_n:
+            continue
+        gap += max(0.0, min(float(req), v[min(len(v) - 1, int(pct * len(v)))]) - now)
+    return gap
+
+
 def plan_gap_gb(state_dir=None, proc="/proc"):
     """PLAN JOBS CHARGE THEIR PEAK (FABLE-FLOW-1555 A, COORD 11-18): plan jobs (OT_HEAVY_PRIO=plan, marker plan.job.<launcher pid>) bypass the admission gate by owner decision, so the memory they
     still grow into was invisible to it and PLANGUARD killed 167 young jobs in a day to make room.  Each running plan job holds res.oth-<user>-<pid>-<epoch> (its charge); the gap = charge -
@@ -1994,6 +2009,8 @@ def free(path):
         gap = raw_gap * max(0.0, min(1.0, conf("PEAK_GAP_FACTOR")))
         plan_gap = min(plan_gap_gb(), 0.25 * avail) * max(0.0, min(1.0, conf("PLAN_GAP_FACTOR")))     # plan jobs charge their unreached peak (capped at 25 % of MemAvailable)
         gap += plan_gap
+        mgap = min(measured_gap_gb(), 0.5 * avail) * max(0.0, min(1.0, conf("MEASURED_GAP_FACTOR")))   # GROWTH-AWARE: charged by default, never more than half of MemAvailable (admission cannot fall to 0 from it)
+        gap += mgap
         can = max(0, math.floor(avail - conf("INV_HEADROOM_GB") - gap))
         try:
             v = os.statvfs(path)

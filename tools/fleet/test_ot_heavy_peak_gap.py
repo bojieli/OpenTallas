@@ -65,3 +65,18 @@ class PlanGap(unittest.TestCase):
         src = open(P).read()
         self.assertIn("min(plan_gap_gb(), 0.25 * avail)", src)
         self.assertIn('conf("PLAN_GAP_FACTOR")', src)
+
+
+class MeasuredGap(unittest.TestCase):
+    def test_only_classes_with_history_charge_their_unreached_peak(self):
+        hist = {"synth": [20.0, 22.0, 24.0, 26.0]}
+        units = [("u1", 48.0, "synth", 5.0),       # measured p90 ~26 GB, uses 5: 21 GB still to come
+                 ("u2", 48.0, "newcls", 1.0),      # no history: nothing charged
+                 ("u3", 16.0, "synth", 30.0)]      # already above its peak: nothing
+        g = R.measured_gap_gb(units, hist)
+        self.assertAlmostEqual(g, 26.0 - 5.0, places=3)
+
+    def test_the_charge_is_capped_at_half_of_available_and_switchable(self):
+        src = open(P).read()
+        self.assertIn("min(measured_gap_gb(), 0.5 * avail)", src)
+        self.assertIn('conf("MEASURED_GAP_FACTOR")', src)
