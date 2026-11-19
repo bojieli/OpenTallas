@@ -1,42 +1,35 @@
-# NOPROG-TABLE (NOPROG-WATCHDOG, generated 2026-11-18 21:30 PST)
+# NOPROG-TABLE (NOPROG-WATCHDOG, generated 2026-11-18 21:45 PST)
 
-Window 6 h, improvement >= 2 % from best. Verdict counts: {'YOUNG': 83, 'NO-DATA': 2, 'EXCLUDED': 167, 'KEEP': 4, 'PROGRESS': 4}. Hosts without report: none.
+Window 6 h, improvement >= 2 % from best. Verdict counts: {'YOUNG': 77, 'NO-DATA': 1, 'EXCLUDED': 167, 'KEEP': 4, 'PROGRESS': 4}. Hosts without report: none.
 
 | host | container | type | stage | age h | metric trend | verdict | action |
 |---|---|---|---|---|---|---|---|
-| epyc2 | ap-ageom-kw-col-h9-r0-p2--t1--cl0045af7b--pve183b536-grt-561504 | col-h9-r0-p2--t1--cl0045af7b--pve183b536-grt | stage_odb_cap | 0.0 | last meaningful line 0.0 h ago (60/60 lines) | YOUNG: evidence 0.0 h < 7.5 h |  |
-| epyc2 | ap-ageom-kw-sle-fw-v1--clf58b4dfb-grt-484642 | sle-fw-v1--clf58b4dfb-grt | stage_odb_cap | 0.1 | last meaningful line 0.1 h ago (123/123 lines) | YOUNG: evidence 0.1 h < 7.5 h |  |
-| epyc2 | ap-ageom-kw-slice-station--t49-grt-586401 | slice-station--t49-grt | stage_odb_cap | 0.0 | last meaningful line 0.0 h ago (73/73 lines) | YOUNG: evidence 0.0 h < 7.5 h |  |
-| epyc2 | dpkit-cbn_q01__cld9ff4c40-1428455 | cbn_q01 | 3_3_place_gp | 1.4 | last meaningful line 0.0 h ago (252/252 lines) | YOUNG: evidence 0.4 h < 7.5 h |  |
-| epyc2 | dpkit-cbx_q10__cl94a12200-2699479 | cbx_q10 | 3_4_place_resized | 1.0 |  | NO-DATA: empty log |  |
-| epyc2 | dpkit-col_h9_r0_p2__t1__cl9f71e63d__pv291547b4-2691953 | col_h9_r0_p2__t1 | 3_5_place_dp | 1.0 | last meaningful line 0.0 h ago (46/46 lines) | YOUNG: evidence 0.0 h < 7.5 h |  |
-| epyc2 | dpkit-col_h9_r0_p2__t1__cl9f71e63d__pvabc9823e-2731688 | col_h9_r0_p2__t1 | stage_odb_cap | 1.0 | last meaningful line 0.0 h ago (57/57 lines) | YOUNG: evidence 1.0 h < 7.5 h |  |
-| epyc2 | dpkit-col_h9_r0_p3__t1__cl8ce97bcb__pvd2159f4a-3528319 | col_h9_r0_p3__t1 | 3_3_place_gp | 0.6 | last meaningful line 0.0 h ago (36/36 lines) | YOUNG: evidence 0.0 h < 7.5 h |  |
-| epyc2 | dpkit-col_h9_r0_p4__t1__cl8ef405e8__pv89bf360c-3632525 | col_h9_r0_p4__t1 | 3_3_place_gp | 0.6 | overflow best 0.3502 last 0.3513 rows 22 | YOUNG: evidence 0.2 h < 7.5 h |  |
-| epyc2 | dpkit-col_h9_r0_p5__t1__pv8995e794-2807536 | col_h9_r0_p5__t1 | 3_3_place_gp | 0.9 | overflow best 0.3002 last 0.3002 rows 35 | YOUNG: evidence 0.4 h < 7.5 h |  |
-| epyc2 | dpkit-dsdv_slice_c1x_C__t9-2777637 | dsdv_slice_c1x_C__t9 | 3_2_place_iop | 2.8 | last meaningful line 0.0 h ago (21/21 lines) | YOUNG: evidence 0.0 h < 7.5 h |  |
-| epyc2 | dpkit-ot_s81sl_kv_leaf__t2-3545114 | ot_s81sl_kv_leaf__t2 | stage_odb_cap | 0.6 | last meaningful line 0.1 h ago (10/10 lines) | YOUNG: evidence 0.6 h < 7.5 h |  |
-| epyc2 | dpkit-ot_s81sl_leaf__t1-3638234 | ot_s81sl_leaf__t1 | 3_3_place_gp | 0.6 | last meaningful line 0.0 h ago (40/40 lines) | YOUNG: evidence 0.2 h < 7.5 h |  |
-| epyc2 | dpkit-ot_s81sl_leaf__t12-328166 | ot_s81sl_leaf__t12 | stage_odb_cap | 0.1 | last meaningful line 0.0 h ago (8/8 lines) | YOUNG: evidence 0.1 h < 7.5 h |  |
-| epyc2 | dpkit-ot_s81sl_leaf__t13-3628533 | ot_s81sl_leaf__t13 | stage_odb_cap | 0.6 | last meaningful line 0.0 h ago (34/34 lines) | YOUNG: evidence 0.6 h < 7.5 h |  |
-| epyc2 | dpkit-ot_s81sl_leaf__t15-3524859 | ot_s81sl_leaf__t15 | stage_odb_cap | 0.6 | last meaningful line 0.0 h ago (38/38 lines) | YOUNG: evidence 0.6 h < 7.5 h |  |
-| epyc2 | dpkit-ot_s81sl_leaf__t2-3597082 | ot_s81sl_leaf__t2 | 3_3_place_gp | 0.6 | last meaningful line 0.0 h ago (52/52 lines) | YOUNG: evidence 0.2 h < 7.5 h |  |
-| epyc2 | dpkit-ot_s81sl_leaf__t32-4122594 | ot_s81sl_leaf__t32 | stage_odb_cap | 0.3 | last meaningful line 0.0 h ago (21/21 lines) | YOUNG: evidence 0.3 h < 7.5 h |  |
-| epyc2 | dpkit-ot_s81sl_leaf__t37-3667683 | ot_s81sl_leaf__t37 | 3_3_place_gp | 0.6 | overflow best 0.298 last 0.298 rows 36 | YOUNG: evidence 0.5 h < 7.5 h |  |
-| epyc2 | dpkit-ot_s81sl_leaf__t43-3650717 | ot_s81sl_leaf__t43 | 3_3_place_gp | 0.6 | last meaningful line 0.0 h ago (107/107 lines) | YOUNG: evidence 0.2 h < 7.5 h |  |
-| epyc2 | dpkit-ot_s81sl_leaf__t60-3669573 | ot_s81sl_leaf__t60 | 3_3_place_gp | 0.6 | overflow best 0.5764 last 0.5805 rows 13 | YOUNG: evidence 0.3 h < 7.5 h |  |
-| epyc2 | dpkit-ot_s81sl_leaf__t73-2458574 | ot_s81sl_leaf__t73 | stage_odb_cap | 1.1 | last meaningful line 0.0 h ago (62/62 lines) | YOUNG: evidence 1.1 h < 7.5 h |  |
-| epyc2 | dpkit-serdes__t14-1476032 | serdes__t14 | 3_3_place_gp | 1.4 | last meaningful line 0.0 h ago (74/74 lines) | YOUNG: evidence 0.1 h < 7.5 h |  |
-| epyc2 | dpkit-serdes__t16-1495006 | serdes__t16 | stage_odb_cap | 1.4 | last meaningful line 0.0 h ago (83/83 lines) | YOUNG: evidence 1.4 h < 7.5 h |  |
-| epyc2 | dpkit-sle_ctl__cl503337ff-577332 | sle_ctl | stage_odb_cap | 1.7 | last meaningful line 0.0 h ago (103/103 lines) | YOUNG: evidence 1.7 h < 7.5 h |  |
-| epyc2 | dpkit-sle_su_c-2240028 | sle_su_c | stage_odb_cap | 1.1 | last meaningful line 0.0 h ago (67/67 lines) | YOUNG: evidence 1.1 h < 7.5 h |  |
-| epyc2 | dpkit-svc_hi_dsdv_svc_rs__t4-3639209 | svc_hi_dsdv_svc_rs__t4 | 1_2_yosys | 0.6 | last meaningful line 0.0 h ago (192/192 lines) | YOUNG: evidence 0.5 h < 7.5 h |  |
-| epyc2 | dpkit-svc_lo_dsdv_svc_rs__t3-3594659 | svc_lo_dsdv_svc_rs__t3 | 1_2_yosys | 0.6 | last meaningful line 0.0 h ago (129/129 lines) | YOUNG: evidence 0.6 h < 7.5 h |  |
-| epyc2 | dpkit-svc_lo_dsdv_svc_rs__t6-3697200 | svc_lo_dsdv_svc_rs__t6 | 1_2_yosys | 0.5 | last meaningful line 0.0 h ago (129/129 lines) | YOUNG: evidence 0.5 h < 7.5 h |  |
-| epyc2 | dpkit-tt_ctlm-2634858 | tt_ctlm | stage_odb_cap | 1.0 | last meaningful line 0.0 h ago (58/58 lines) | YOUNG: evidence 1.0 h < 7.5 h |  |
-| epyc2 | otc-4047804-8908 | 4047804 | drt | 0.4 | last meaningful line 0.1 h ago (120/120 lines) | YOUNG: evidence 0.4 h < 7.5 h |  |
-| epyc2 | so_3803974_ff_96676 | so_3803974_ff_96676 | stage_odb_cap | 0.5 | last meaningful line 0.2 h ago (683/683 lines) | YOUNG: evidence 0.5 h < 7.5 h |  |
-| epyc2 | so_3803974_tt_96676 | so_3803974_tt_96676 | stage_odb_cap | 0.5 | last meaningful line 0.2 h ago (683/683 lines) | YOUNG: evidence 0.5 h < 7.5 h |  |
+| epyc2 | ap-ageom-kw-col-h9-r0-p2--t1--cl9f71e63d--pv291547b4-grt-791268 | col-h9-r0-p2--t1--cl9f71e63d--pv291547b4-grt | stage_odb_cap | 0.2 | last meaningful line 0.2 h ago (63/63 lines) | YOUNG: evidence 0.2 h < 7.5 h |  |
+| epyc2 | ap-ageom-kw-col-h9-r0-p4--t1--cl8ef405e8--pv89bf360c-grt-1064577 | col-h9-r0-p4--t1--cl8ef405e8--pv89bf360c-grt | stage_odb_cap | 0.0 | last meaningful line 0.0 h ago (48/48 lines) | YOUNG: evidence 0.0 h < 7.5 h |  |
+| epyc2 | ap-ageom-kw-col-h9-r0-p5--t1--pv8995e794-grt-1030869 | col-h9-r0-p5--t1--pv8995e794-grt | stage_odb_cap | 0.0 | last meaningful line 0.0 h ago (69/69 lines) | YOUNG: evidence 0.0 h < 7.5 h |  |
+| epyc2 | ap-ageom-kw-ot-s81sl-leaf--t37-grt-925296 | ot-s81sl-leaf--t37-grt | stage_odb_cap | 0.1 | last meaningful line 0.1 h ago (43/43 lines) | YOUNG: evidence 0.1 h < 7.5 h |  |
+| epyc2 | ap-ageom-kw-ot-s81sl-leaf--t73-grt-1010854 | ot-s81sl-leaf--t73-grt | stage_odb_cap | 0.0 | last meaningful line 0.0 h ago (74/74 lines) | YOUNG: evidence 0.0 h < 7.5 h |  |
+| epyc2 | dpkit-cbn_q01__cld9ff4c40-1428455 | cbn_q01 | 3_3_place_gp | 1.7 | overflow best 0.5389 last 0.5389 rows 16 | YOUNG: evidence 0.6 h < 7.5 h |  |
+| epyc2 | dpkit-col_h9_r0_p3__t1__cl8ce97bcb__pvd2159f4a-3528319 | col_h9_r0_p3__t1 | 3_3_place_gp | 0.9 | overflow best 0.4353 last 0.4353 rows 2 | YOUNG: evidence 0.3 h < 7.5 h |  |
+| epyc2 | dpkit-dsdv_slice_c1x_C__t9-2777637 | dsdv_slice_c1x_C__t9 | stage_odb_cap | 3.0 | last meaningful line 0.0 h ago (147/147 lines) | YOUNG: evidence 3.0 h < 7.5 h |  |
+| epyc2 | dpkit-ot_s81sl_kv_leaf__t2-3545114 | ot_s81sl_kv_leaf__t2 | stage_odb_cap | 0.9 | last meaningful line 0.0 h ago (25/25 lines) | YOUNG: evidence 0.9 h < 7.5 h |  |
+| epyc2 | dpkit-ot_s81sl_leaf__t1-3638234 | ot_s81sl_leaf__t1 | stage_odb_cap | 0.8 | last meaningful line 0.0 h ago (49/49 lines) | YOUNG: evidence 0.8 h < 7.5 h |  |
+| epyc2 | dpkit-ot_s81sl_leaf__t12-328166 | ot_s81sl_leaf__t12 | stage_odb_cap | 0.4 | last meaningful line 0.0 h ago (23/23 lines) | YOUNG: evidence 0.4 h < 7.5 h |  |
+| epyc2 | dpkit-ot_s81sl_leaf__t13-3628533 | ot_s81sl_leaf__t13 | stage_odb_cap | 0.8 | last meaningful line 0.0 h ago (49/49 lines) | YOUNG: evidence 0.8 h < 7.5 h |  |
+| epyc2 | dpkit-ot_s81sl_leaf__t2-3597082 | ot_s81sl_leaf__t2 | 3_3_place_gp | 0.8 | overflow best 0.5544 last 0.5584 rows 7 | YOUNG: evidence 0.5 h < 7.5 h |  |
+| epyc2 | dpkit-ot_s81sl_leaf__t32-4122594 | ot_s81sl_leaf__t32 | 3_3_place_gp | 0.6 | overflow best 0.6065 last 0.6065 rows 1 | YOUNG: evidence 0.3 h < 7.5 h |  |
+| epyc2 | dpkit-ot_s81sl_leaf__t43-3650717 | ot_s81sl_leaf__t43 | stage_odb_cap | 0.8 | last meaningful line 0.0 h ago (49/49 lines) | YOUNG: evidence 0.8 h < 7.5 h |  |
+| epyc2 | dpkit-ot_s81sl_leaf__t60-3669573 | ot_s81sl_leaf__t60 | 3_5_place_dp | 0.8 | last meaningful line 0.0 h ago (26/26 lines) | YOUNG: evidence 0.0 h < 7.5 h |  |
+| epyc2 | dpkit-serdes__t14-1476032 | serdes__t14 | 3_3_place_gp | 1.7 | overflow best 0.8463 last 0.8463 rows 11 | YOUNG: evidence 0.3 h < 7.5 h |  |
+| epyc2 | dpkit-serdes__t16-1495006 | serdes__t16 | stage_odb_cap | 1.7 | last meaningful line 0.0 h ago (98/98 lines) | YOUNG: evidence 1.7 h < 7.5 h |  |
+| epyc2 | dpkit-sle_ctl__cl503337ff-577332 | sle_ctl | stage_odb_cap | 2.0 | last meaningful line 0.0 h ago (118/118 lines) | YOUNG: evidence 2.0 h < 7.5 h |  |
+| epyc2 | dpkit-sle_su_c-2240028 | sle_su_c | stage_odb_cap | 1.4 | last meaningful line 0.0 h ago (82/82 lines) | YOUNG: evidence 1.4 h < 7.5 h |  |
+| epyc2 | dpkit-svc_hi_dsdv_svc_rs__t4-3639209 | svc_hi_dsdv_svc_rs__t4 | 1_2_yosys | 0.8 | last meaningful line 0.0 h ago (266/266 lines) | YOUNG: evidence 0.8 h < 7.5 h |  |
+| epyc2 | dpkit-svc_lo_dsdv_svc_rs__t3-3594659 | svc_lo_dsdv_svc_rs__t3 | 1_2_yosys | 0.8 | last meaningful line 0.0 h ago (186/186 lines) | YOUNG: evidence 0.8 h < 7.5 h |  |
+| epyc2 | dpkit-svc_lo_dsdv_svc_rs__t6-3697200 | svc_lo_dsdv_svc_rs__t6 | 1_2_yosys | 0.8 | last meaningful line 0.0 h ago (193/193 lines) | YOUNG: evidence 0.8 h < 7.5 h |  |
+| epyc2 | otc-4047804-8908 | 4047804 | drt | 0.6 | last meaningful line 0.0 h ago (237/237 lines) | YOUNG: evidence 0.6 h < 7.5 h |  |
+| epyc2 | so_3803974_ff_96676 | so_3803974_ff_96676 | stage_odb_cap | 0.7 | last meaningful line 0.5 h ago (683/683 lines) | YOUNG: evidence 0.7 h < 7.5 h |  |
+| epyc2 | so_3803974_tt_96676 | so_3803974_tt_96676 | stage_odb_cap | 0.7 | last meaningful line 0.5 h ago (683/683 lines) | YOUNG: evidence 0.7 h < 7.5 h |  |
 | epyc7 | ap-ageom-kw-slw-su-l1--clcc9d0155-grt-3100916 | slw-su-l1--clcc9d0155-grt | - | 0.0 |  | NO-DATA: no log found |  |
 | epyc7 | dpkit-col_h10_r0_p1__t1__cl574cc59d__pvf60ac9dc-2733716 | col_h10_r0_p1__t1 | 3_1_place_gp_skip_io | 0.3 | overflow best 0.9507 last 0.9507 rows 7 | YOUNG: evidence 0.0 h < 7.5 h |  |
 | epyc7 | dpkit-col_h9_r0_p1__t1__pvb3e2a60a-2749808 | col_h9_r0_p1__t1 | 3_1_place_gp_skip_io | 0.3 | overflow best 0.9234 last 0.9234 rows 9 | YOUNG: evidence 0.1 h < 7.5 h |  |
@@ -89,71 +82,71 @@ Window 6 h, improvement >= 2 % from best. Verdict counts: {'YOUNG': 83, 'NO-DATA
 | intel1 | dpkit-slw_su_c__cl19bb38ef-3760964 | slw_su_c | stage_odb_cap | 1.3 | last meaningful line 0.0 h ago (79/79 lines) | YOUNG: evidence 1.3 h < 7.5 h |  |
 | intel1 | dpkit-svc_hi_dsdv_svc_rs__t1-2122549 | svc_hi_dsdv_svc_rs__t1 | stage_odb_cap | 2.0 | last meaningful line 0.0 h ago (118/118 lines) | YOUNG: evidence 2.0 h < 7.5 h |  |
 | intel1 | dpkit-svc_lo_dsdv_svc_rs__t4-2078865 | svc_lo_dsdv_svc_rs__t4 | stage_odb_cap | 2.0 | last meaningful line 0.0 h ago (119/119 lines) | YOUNG: evidence 2.0 h < 7.5 h |  |
-| epyc2 | dpkit-cbf_q00__cl1b5a6458-1196690 | cbf_q00 | stage_odb_cap | 9.9 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-cbf_q01-823221 | cbf_q01 | 5_1_grt | 12.4 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-cbf_q01_s2-370983 | cbf_q01_s2 | stage_odb_cap | 5.0 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-cbn_q00__cld7bf7197-420737 | cbn_q00 | stage_odb_cap | 10.3 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-col_h10_r1__t1__cl95b37463__pv69c7e9a6-3830528 | col_h10_r1__t1 | 3_3_place_gp | 0.5 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-col_h10_r1__t1__cl95b37463__pva3a8bfd1-248228 | col_h10_r1__t1 | stage_odb_cap | 0.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-col_h10_r2__t1__cl1f5d6c2a__pv0c1de895-248158 | col_h10_r2__t1 | 3_3_place_gp | 0.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-col_h10_r2__t1__cl1f5d6c2a__pvec003743-253567 | col_h10_r2__t1 | stage_odb_cap | 0.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-col_h10_r2__t1__cl8b686b3e-257830 | col_h10_r2__t1 | stage_odb_cap | 0.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-col_h10_r2__t1__cl99efd374__pv1619ecc6-3837303 | col_h10_r2__t1 | 4_1_cts | 0.5 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-col_h10_r2__t1__cl99efd374__pv9ae398c2-262666 | col_h10_r2__t1 | stage_odb_cap | 0.1 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-col_h9_r0_p6__t1__pv8241ebb8-279336 | col_h9_r0_p6__t1 | 3_3_place_gp | 0.1 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-col_h9_r1__t1__cl49d7a23e__pv1c15776f-2243403 | col_h9_r1__t1 | pregrt_ff_hold | 1.1 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-col_h9_r1__t1__cl49d7a23e__pv2cabd9a9-2845101 | col_h9_r1__t1 | tt_setup_repair | 0.9 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-col_h9_r1__t1__cl49d7a23e__pv2ec9c8a9-2840391 | col_h9_r1__t1 | tt_setup_repair | 0.9 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-col_h9_r1__t1__cl49d7a23e__pv2f96c04f-2811913 | col_h9_r1__t1 | stage_odb_cap | 0.9 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-col_h9_r1__t1__cl49d7a23e__pv36da905c-2255683 | col_h9_r1__t1 | stage_odb_cap | 1.1 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-col_h9_r1__t1__cl49d7a23e__pv4108910d-2853576 | col_h9_r1__t1 | 4_1_cts | 0.9 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-col_h9_r1__t1__cl49d7a23e__pv4593e8e5-2866937 | col_h9_r1__t1 | tt_setup_repair | 0.9 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-col_h9_r1__t1__cl49d7a23e__pv49636389-2797579 | col_h9_r1__t1 | stage_odb_cap | 0.9 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-col_h9_r1__t1__cl49d7a23e__pv4bd36c74-2806694 | col_h9_r1__t1 | tt_setup_repair | 0.9 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-col_h9_r1__t1__cl49d7a23e__pv534ef85e-2843160 | col_h9_r1__t1 | 4_1_cts | 0.9 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-col_h9_r1__t1__cl49d7a23e__pv87d52780-287277 | col_h9_r1__t1 | 2_4_floorplan_pdn | 0.1 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-col_h9_r1__t1__cl49d7a23e__pv88891f20-290337 | col_h9_r1__t1 | 2_4_floorplan_pdn | 0.1 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-col_h9_r1__t1__cl49d7a23e__pv8aaf8508-299887 | col_h9_r1__t1 | 2_4_floorplan_pdn | 0.1 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-col_h9_r1__t1__cl49d7a23e__pvbb600efe-307218 | col_h9_r1__t1 | 2_4_floorplan_pdn | 0.1 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-col_h9_r1__t1__cl49d7a23e__pvc22584f3-310260 | col_h9_r1__t1 | 2_4_floorplan_pdn | 0.1 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-col_h9_r1__t1__cl49d7a23e__pve273b259-313732 | col_h9_r1__t1 | 2_4_floorplan_pdn | 0.1 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-col_h9_r1__t1__cl49d7a23e__pve3f8a86c-316480 | col_h9_r1__t1 | stage_odb_cap | 0.1 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-col_h9_r1__t1__cl49d7a23e__pvfed9fee6-319388 | col_h9_r1__t1 | stage_odb_cap | 0.1 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-col_h9_r1__t1__clf32cde8d__pv48cfde67-332234 | col_h9_r1__t1 | 2_4_floorplan_pdn | 0.1 |  | KEEP: col_h9_r1__t1__clf32cde8d__pv48cfde67	S81-COL-INHERIT	representative (COORD 11-1 |  |
-| epyc2 | dpkit-col_h9_r2__t1__cl774acf45__pvf8d9f9e5-2832170 | col_h9_r2__t1 | stage_odb_cap | 0.9 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-col_h9_r2__t1__cl87f3ff59-343287 | col_h9_r2__t1 | 2_4_floorplan_pdn | 0.1 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-col_h9_r2__t1__clb8d86cd5__pvb2cd22a7-330345 | col_h9_r2__t1 | 2_4_floorplan_pdn | 0.1 |  | KEEP: col_h9_r2__t1__clb8d86cd5__pvb2cd22a7	S81-COL-INHERIT	representative (COORD 11-1 |  |
-| epyc2 | dpkit-col_h9_r2__t1__clc9ad8f7e__pv45d0c698-338076 | col_h9_r2__t1 | 3_3_place_gp | 0.1 |  | KEEP: col_h9_r2__t1__clc9ad8f7e__pv45d0c698	S81-COL-INHERIT	representative (COORD 11-1 |  |
-| epyc2 | dpkit-col_h9_r2__t1__clc9ad8f7e__pvf079625b-339966 | col_h9_r2__t1 | 3_3_place_gp | 0.1 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-col_h9_r2__t1__clce45cab5__pv1aac64f0-342841 | col_h9_r2__t1 | 3_3_place_gp | 0.1 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-col_h9_r2__t1__clce45cab5__pv37074264-349408 | col_h9_r2__t1 | 3_3_place_gp | 0.1 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-col_h9_r2__t1__clce45cab5__pvb11188eb-369881 | col_h9_r2__t1 | 3_3_place_gp | 0.1 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-col_h9_r2__t1__clce45cab5__pvb3f647ea-374642 | col_h9_r2__t1 | 3_3_place_gp | 0.1 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-col_h9_r2__t1__clce45cab5__pvc6132d1e-390378 | col_h9_r2__t1 | stage_odb_cap | 0.1 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-col_h9_r2__t1__clce45cab5__pvcd1d9f5f-384068 | col_h9_r2__t1 | 3_1_place_gp_skip_io | 0.1 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-coll_ft__cl78c7b300-746923 | coll_ft | stage_odb_cap | 1.7 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-coll_ft__cla4a25d77-754161 | coll_ft | stage_odb_cap | 1.7 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-iqf__t1-391915 | iqf__t1 | stage_odb_cap | 0.1 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-ot_s81sl_leaf__t25__cl55642d17-398711 | ot_s81sl_leaf__t25 | 3_1_place_gp_skip_io | 0.1 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-ot_s81sl_leaf__t30-400348 | ot_s81sl_leaf__t30 | stage_odb_cap | 0.1 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-ot_s81sl_leaf__t42-403231 | ot_s81sl_leaf__t42 | stage_odb_cap | 0.1 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-phy__t1-746475 | phy__t1 | 5_1_grt | 91.5 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-sle_ctl__cl503337ff__padE0-374648 | sle_ctl | stage_odb_cap | 4.9 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-sle_hc1__cl7d360508-3823681 | sle_hc1 | 3_1_place_gp_skip_io | 0.5 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-sle_sc_v2-3422384 | sle_sc_v2 | stage_odb_cap | 10.9 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-sle_st_b_v1__pvc5a85fd4__pv38472fb8-3439565 | sle_st_b_v1 | stage_odb_cap | 10.9 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-slice_station__t18-403791 | slice_station__t18 | 2_4_floorplan_pdn | 0.1 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-slw_fw_v1__cl51d45468-384158 | slw_fw_v1 | 5_1_grt | 4.9 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-slw_hc1__cl68f9248e__cle683a076-384938 | slw_hc1 | stage_odb_cap | 4.9 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-slw_hc2__cl6bcaba89-2768434 | slw_hc2 | 3_5_place_dp | 1.0 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-slw_hc2__cla3497502__cl16607c7a-2774982 | slw_hc2 | stage_odb_cap | 1.0 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-slw_sc_v2-431674 | slw_sc_v2 | stage_odb_cap | 10.3 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-slw_st_b_v1__cl6357f1cc__pvffd43fdc-425214 | slw_st_b_v1 | stage_odb_cap | 10.3 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-slw_stm_v1__cl05fc43f7__cl389df4e9-3834145 | slw_stm_v1 | 3_3_place_gp | 0.5 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-slw_stm_v2__cl1ca9c415-3836383 | slw_stm_v2 | stage_odb_cap | 0.5 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-slw_su_l0__cl1a1c1f8f-1556949 | slw_su_l0 | 5_1_grt | 1.4 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | prd-eco_20261118_181914_401583-i1t-2402380 | eco_20261118_181914_401583-i1t | 5_2_route | 3.1 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | prd-eco_20261118_191517_1773013-i1-3449288 | eco_20261118_191517_1773013-i1 | 5_2_route | 2.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-cbf_q00__cl1b5a6458-1196690 | cbf_q00 | 5_1_grt | 10.1 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-cbf_q01-823221 | cbf_q01 | 5_1_grt | 12.6 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-cbf_q01_s2-370983 | cbf_q01_s2 | stage_odb_cap | 5.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-cbn_q00__cld7bf7197-420737 | cbn_q00 | stage_odb_cap | 10.6 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-col_h10_r1__t1__cl95b37463__pv69c7e9a6-3830528 | col_h10_r1__t1 | 4_1_cts | 0.7 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-col_h10_r1__t1__cl95b37463__pva3a8bfd1-248228 | col_h10_r1__t1 | 3_3_place_gp | 0.4 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-col_h10_r2__t1__cl1f5d6c2a__pv0c1de895-248158 | col_h10_r2__t1 | 3_5_place_dp | 0.4 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-col_h10_r2__t1__cl1f5d6c2a__pvec003743-253567 | col_h10_r2__t1 | 3_5_place_dp | 0.4 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-col_h10_r2__t1__cl8b686b3e-257830 | col_h10_r2__t1 | 3_4_place_resized | 0.4 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-col_h10_r2__t1__cl99efd374__pv1619ecc6-3837303 | col_h10_r2__t1 | stage_odb_cap | 0.7 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-col_h10_r2__t1__cl99efd374__pv9ae398c2-262666 | col_h10_r2__t1 | 3_4_place_resized | 0.4 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-col_h9_r0_p6__t1__pv8241ebb8-279336 | col_h9_r0_p6__t1 | 3_4_place_resized | 0.4 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-col_h9_r1__t1__cl49d7a23e__pv1c15776f-2243403 | col_h9_r1__t1 | stage_odb_cap | 1.4 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-col_h9_r1__t1__cl49d7a23e__pv2cabd9a9-2845101 | col_h9_r1__t1 | stage_odb_cap | 1.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-col_h9_r1__t1__cl49d7a23e__pv2ec9c8a9-2840391 | col_h9_r1__t1 | stage_odb_cap | 1.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-col_h9_r1__t1__cl49d7a23e__pv2f96c04f-2811913 | col_h9_r1__t1 | stage_odb_cap | 1.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-col_h9_r1__t1__cl49d7a23e__pv36da905c-2255683 | col_h9_r1__t1 | stage_odb_cap | 1.4 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-col_h9_r1__t1__cl49d7a23e__pv4108910d-2853576 | col_h9_r1__t1 | stage_odb_cap | 1.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-col_h9_r1__t1__cl49d7a23e__pv4593e8e5-2866937 | col_h9_r1__t1 | stage_odb_cap | 1.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-col_h9_r1__t1__cl49d7a23e__pv49636389-2797579 | col_h9_r1__t1 | stage_odb_cap | 1.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-col_h9_r1__t1__cl49d7a23e__pv4bd36c74-2806694 | col_h9_r1__t1 | stage_odb_cap | 1.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-col_h9_r1__t1__cl49d7a23e__pv534ef85e-2843160 | col_h9_r1__t1 | pregrt_ff_hold | 1.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-col_h9_r1__t1__cl49d7a23e__pv87d52780-287277 | col_h9_r1__t1 | 3_3_place_gp | 0.4 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-col_h9_r1__t1__cl49d7a23e__pv88891f20-290337 | col_h9_r1__t1 | 3_3_place_gp | 0.4 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-col_h9_r1__t1__cl49d7a23e__pv8aaf8508-299887 | col_h9_r1__t1 | 3_3_place_gp | 0.4 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-col_h9_r1__t1__cl49d7a23e__pvbb600efe-307218 | col_h9_r1__t1 | 3_3_place_gp | 0.4 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-col_h9_r1__t1__cl49d7a23e__pvc22584f3-310260 | col_h9_r1__t1 | 3_3_place_gp | 0.4 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-col_h9_r1__t1__cl49d7a23e__pve273b259-313732 | col_h9_r1__t1 | 3_3_place_gp | 0.4 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-col_h9_r1__t1__cl49d7a23e__pve3f8a86c-316480 | col_h9_r1__t1 | stage_odb_cap | 0.4 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-col_h9_r1__t1__cl49d7a23e__pvfed9fee6-319388 | col_h9_r1__t1 | 3_3_place_gp | 0.4 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-col_h9_r1__t1__clf32cde8d__pv48cfde67-332234 | col_h9_r1__t1 | 3_3_place_gp | 0.4 |  | KEEP: col_h9_r1__t1__clf32cde8d__pv48cfde67	S81-COL-INHERIT	representative (COORD 11-1 |  |
+| epyc2 | dpkit-col_h9_r2__t1__cl774acf45__pvf8d9f9e5-2832170 | col_h9_r2__t1 | stage_odb_cap | 1.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-col_h9_r2__t1__cl87f3ff59-343287 | col_h9_r2__t1 | 3_4_place_resized | 0.4 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-col_h9_r2__t1__clb8d86cd5__pvb2cd22a7-330345 | col_h9_r2__t1 | 3_4_place_resized | 0.4 |  | KEEP: col_h9_r2__t1__clb8d86cd5__pvb2cd22a7	S81-COL-INHERIT	representative (COORD 11-1 |  |
+| epyc2 | dpkit-col_h9_r2__t1__clc9ad8f7e__pv45d0c698-338076 | col_h9_r2__t1 | 3_5_place_dp | 0.4 |  | KEEP: col_h9_r2__t1__clc9ad8f7e__pv45d0c698	S81-COL-INHERIT	representative (COORD 11-1 |  |
+| epyc2 | dpkit-col_h9_r2__t1__clc9ad8f7e__pvf079625b-339966 | col_h9_r2__t1 | 3_4_place_resized | 0.4 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-col_h9_r2__t1__clce45cab5__pv1aac64f0-342841 | col_h9_r2__t1 | 3_5_place_dp | 0.4 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-col_h9_r2__t1__clce45cab5__pv37074264-349408 | col_h9_r2__t1 | 3_5_place_dp | 0.4 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-col_h9_r2__t1__clce45cab5__pvb11188eb-369881 | col_h9_r2__t1 | 3_5_place_dp | 0.4 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-col_h9_r2__t1__clce45cab5__pvb3f647ea-374642 | col_h9_r2__t1 | 3_4_place_resized | 0.4 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-col_h9_r2__t1__clce45cab5__pvc6132d1e-390378 | col_h9_r2__t1 | 3_5_place_dp | 0.4 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-col_h9_r2__t1__clce45cab5__pvcd1d9f5f-384068 | col_h9_r2__t1 | 3_4_place_resized | 0.4 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-coll_ft__cl78c7b300-746923 | coll_ft | stage_odb_cap | 1.9 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-coll_ft__cla4a25d77-754161 | coll_ft | stage_odb_cap | 1.9 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-iqf__t1-391915 | iqf__t1 | 3_1_place_gp_skip_io | 0.4 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-ot_s81sl_leaf__t25__cl55642d17-398711 | ot_s81sl_leaf__t25 | 3_3_place_gp | 0.4 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-ot_s81sl_leaf__t30-400348 | ot_s81sl_leaf__t30 | 3_3_place_gp | 0.4 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-ot_s81sl_leaf__t42-403231 | ot_s81sl_leaf__t42 | 3_3_place_gp | 0.4 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-phy__t1-746475 | phy__t1 | 5_1_grt | 91.8 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-sle_ctl__cl503337ff__padE0-374648 | sle_ctl | stage_odb_cap | 5.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-sle_hc1__cl7d360508-3823681 | sle_hc1 | stage_odb_cap | 0.7 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-sle_sc_v2-3422384 | sle_sc_v2 | stage_odb_cap | 11.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-sle_st_b_v1__pvc5a85fd4__pv38472fb8-3439565 | sle_st_b_v1 | stage_odb_cap | 11.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-slice_station__t18-403791 | slice_station__t18 | stage_odb_cap | 0.4 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-slw_fw_v1__cl51d45468-384158 | slw_fw_v1 | stage_odb_cap | 5.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-slw_hc1__cl68f9248e__cle683a076-384938 | slw_hc1 | stage_odb_cap | 5.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-slw_hc2__cl6bcaba89-2768434 | slw_hc2 | 4_1_cts | 1.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-slw_hc2__cla3497502__cl16607c7a-2774982 | slw_hc2 | stage_odb_cap | 1.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-slw_sc_v2-431674 | slw_sc_v2 | 5_1_grt | 10.6 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-slw_st_b_v1__cl6357f1cc__pvffd43fdc-425214 | slw_st_b_v1 | stage_odb_cap | 10.6 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-slw_stm_v1__cl05fc43f7__cl389df4e9-3834145 | slw_stm_v1 | 3_3_place_gp | 0.7 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-slw_stm_v2__cl1ca9c415-3836383 | slw_stm_v2 | 3_3_place_gp | 0.7 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-slw_su_l0__cl1a1c1f8f-1556949 | slw_su_l0 | 5_1_grt | 1.6 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | prd-eco_20261118_181914_401583-i1t-2402380 | eco_20261118_181914_401583-i1t | 5_2_route | 3.4 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | prd-eco_20261118_191517_1773013-i1-3449288 | eco_20261118_191517_1773013-i1 | 5_2_route | 2.5 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | epyc7 | dpkit-col_h10_r0_p1__t1__cl574cc59d__pv67036687-2924667 | col_h10_r0_p1__t1 | 2_3_floorplan_tapcell | 0.1 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | epyc7 | dpkit-col_h10_r0_p4__t1__pvcc166a6d-1621894 | col_h10_r0_p4__t1 | stage_odb_cap | 4.6 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | epyc7 | dpkit-col_h9_r2__t1__clce45cab5__pve0486b40-2998491 | col_h9_r2__t1 | 3_3_place_gp | 0.1 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
@@ -256,11 +249,11 @@ Window 6 h, improvement >= 2 % from best. Verdict counts: {'YOUNG': 83, 'NO-DATA
 | intel1 | dpkit-slw_st_b_v2__pva66d0f22__pvb80e2003-460246 | slw_st_b_v2 | stage_odb_cap | 2.8 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | intel1 | dpkit-slw_stm_v2__cl9beb65e6-1732562 | slw_stm_v2 | 2_1_floorplan | 0.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | intel1 | otc-3710299-17277 | 3710299 | gen_lint_yosys | 1.4 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| intel2 | dpkit-col_h10_r0_p4__t1__pv07945c1e-1219449 | col_h10_r0_p4__t1 | stage_odb_cap | 5.5 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| intel2 | dpkit-col_h10_r0_p4__t1__pvd8c0565f-1312213 | col_h10_r0_p4__t1 | 5_1_grt | 5.4 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| intel2 | prd-eco_20261118_191315_3034440-i1-2101588 | eco_20261118_191315_3034440-i1 | 5_2_route | 0.8 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| intel2 | prd-eco_20261118_202613_1294196-i1-1955675 | eco_20261118_202613_1294196-i1 | 5_2_route | 1.0 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dhr1-drt7-cut_small-p16g | dhr1-drt7-cut_small-p16g | drt_TT | 37.7 | last meaningful line 0.6 h ago (1558/1558 lines) | PROGRESS: log still growing |  |
+| intel2 | dpkit-col_h10_r0_p4__t1__pv07945c1e-1219449 | col_h10_r0_p4__t1 | stage_odb_cap | 5.7 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| intel2 | dpkit-col_h10_r0_p4__t1__pvd8c0565f-1312213 | col_h10_r0_p4__t1 | 5_1_grt | 5.7 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| intel2 | prd-eco_20261118_191315_3034440-i1-2101588 | eco_20261118_191315_3034440-i1 | 5_2_route | 1.1 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| intel2 | prd-eco_20261118_202613_1294196-i1-1955675 | eco_20261118_202613_1294196-i1 | 5_2_route | 1.3 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dhr1-drt7-cut_small-p16g | dhr1-drt7-cut_small-p16g | drt_TT | 38.0 | last meaningful line 0.9 h ago (1558/1558 lines) | PROGRESS: log still growing |  |
 | epyc7 | dpkit-kv3_sys_c-1041596 | kv3_sys_c | stage_odb_cap | 11.6 | last meaningful line 0.0 h ago (693/693 lines) | PROGRESS: log still growing |  |
-| intel2 | dpkit-sle_st_a_v1__cl67389ecd-847193 | sle_st_a_v1 | stage_odb_cap | 7.6 | last meaningful line 0.0 h ago (455/455 lines) | PROGRESS: log still growing |  |
-| intel2 | dpkit-slw_st_a_v2__clf4365a62-810674 | slw_st_a_v2 | stage_odb_cap | 7.7 | last meaningful line 0.0 h ago (457/457 lines) | PROGRESS: log still growing |  |
+| intel2 | dpkit-sle_st_a_v1__cl67389ecd-847193 | sle_st_a_v1 | stage_odb_cap | 7.9 | last meaningful line 0.0 h ago (470/470 lines) | PROGRESS: log still growing |  |
+| intel2 | dpkit-slw_st_a_v2__clf4365a62-810674 | slw_st_a_v2 | stage_odb_cap | 7.9 | last meaningful line 0.0 h ago (472/472 lines) | PROGRESS: log still growing |  |
