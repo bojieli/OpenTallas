@@ -88,3 +88,12 @@ class HubFetch(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def test_job_root_sh_prefers_the_root_with_more_usable_space_and_counts_the_root_fs_floor():
+    import importlib.machinery, importlib.util, os
+    ld = importlib.machinery.SourceFileLoader("sl_jr", os.path.join(os.path.dirname(__file__), "ot-run-sealed"))
+    sp = importlib.util.spec_from_loader("sl_jr", ld); m = importlib.util.module_from_spec(sp); ld.exec_module(m)
+    assert "ROOT_FLOOR_GB" in dir(m) and m.ROOT_FLOOR_GB == 150
+    assert "-gt $((bf+20))" in m.JOB_ROOT_SH and "f-150" in m.JOB_ROOT_SH      # scratch3 only when 20 GB larger, root fs minus its floor
+    assert "&& continue; " not in m.JOB_ROOT_SH.replace("|| continue", "")      # the old 'skip a root-fs scratch3' rule is gone

@@ -233,12 +233,16 @@ FETCH_DISK_GB = 60      # ot-run refuses a scratch disk under its 50 GB floor (k
 # KW-FIX-44 COORD 14:3x (OWNER 11-05 every disk is scratch): the job dir (ot-job spec "root", ot-run --dir) is the first of
 # these roots with >= FETCH_DISK_GB free on that host; scratch2 first, scratch3 when scratch2 is under the floor
 JOB_ROOTS = ("/srv/opentallas-scratch2/claude/ot-jobs", "/srv/opentallas-scratch3/claude/ot-jobs")
-# KW-FIX-44 11-09 18:5x: a scratch3 that IS the root fs is skipped (ot-run refuses a root-fs --dir: "no host qualifies";
-# the sealed gen pilot on epyc2, scratch2 54 GB, fell to scratch3 = root and was NOT RUN)
-JOB_ROOT_SH = ("for r in " + " ".join(JOB_ROOTS) + "; do c=$(dirname $r); [ -d $c ] || continue; "
-               "[ \"$(stat -c %d $c)\" = \"$(stat -c %d /)\" ] && continue; "
-               "f=$(df --output=avail -BG $c | tail -1 | tr -dc 0-9); "
-               f"if [ \"${{f:-0}}\" -ge {FETCH_DISK_GB} ]; then mkdir -p $r && echo JOBROOT=$r; break; fi; done")
+# JOBROOT-S3 11-18 (COORD, epyc2 scratch2 at 54 GB while scratch3 had 1.4 TB): every sealed job went to scratch2 because a scratch3 that IS the root fs was skipped (KW-FIX-44 11-09, when ot-run
+# refused any root-fs --dir).  ot-run now authorizes scratch3 as a second root on every build host (ROOT_SCRATCH_ROOTS_HOSTS, usable = root free - 150 GB floor), so the job root is
+# the one with the most usable space: scratch2 stays unless scratch3's usable space (root fs: free - ROOT_FLOOR_GB) is 20 GB larger; both need >= FETCH_DISK_GB.  Existing job dirs are not moved.
+ROOT_FLOOR_GB = 150
+JOB_ROOT_SH = ("best=; bf=-1; for r in " + " ".join(JOB_ROOTS) + "; do c=$(dirname $r); [ -d $c ] || continue; "
+               "f=$(df --output=avail -BG $c | tail -1 | tr -dc 0-9); f=${f:-0}; "
+               f"[ \"$(stat -c %d $c)\" = \"$(stat -c %d /)\" ] && f=$((f-{ROOT_FLOOR_GB})); "
+               f"[ \"$f\" -ge {FETCH_DISK_GB} ] || continue; "
+               "if [ -z \"$best\" ] || [ \"$f\" -gt $((bf+20)) ]; then best=$r; bf=$f; fi; done; "
+               "[ -n \"$best\" ] && mkdir -p $best && echo JOBROOT=$best")
 
 
 def job_root(host):
