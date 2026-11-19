@@ -1,3 +1,20 @@
+# FABLE-FIX-KV-PV handoff, status 2026-11-19 13:40Z (newest first; SUPERSEDES the 12:55Z section below: tree/plan 85a1a20ea9b7 is dead)
+## Proof tree = compose/tree2 (reset.consumer_sites_um form). PRE + G0 PASS. Bind RUNNING. Kit NOT started. No TT number.
+- epyc7 /srv/opentallas-scratch2/claude/fable-fix-kv-pv-1119/compose/tree2: plan 3e5f74e1cf88, asbuilt 044908412a29, built from live D25c
+  by compose/compose_rows.py (B, T, C, D, E, A). Tools = D25c b3c4d97 + 5 files of main b7b2095a5066 + T/C/D patch.
+- G0 0 errors, 2447 warnings (control 0 / 2446): +1 cl_ft0_i lattice (B), +1 pvfin ck depth (E), -1 v8 R-CAP NEAR. R-REACH-5 7 = control 7.
+- Reset tree identical to D25c on kv3_pv, v1, v12, v2, v5n, v6n, v7; kv3_pv_v8 931 relays vs 928 (class B only).
+- Strict bind + LATCHECK: ot-run unit oth-ubuntu-423522-1795094078 on epyc7, started 13:14:40Z, 2.5-3 h. Gate file
+  compose/bindgate2/gate.out (ALL_DONE = finished), out compose/bind2.
+- Kit chain: intel2 ~/tmp/ffkpv/compose/chain_kit.sh v8b (log chain_kit_v8b.log): on RC_BIND 0 + BIND_ERRORS 0 + RC_LATCHECK 0 it runs
+  kit-rtl -> gen -> ot-run --priority proof kv3_pv_v8 to GRT. If LATCHECK is non-zero (possible C3 INTERNAL_PIPE_UNACKED warning) the
+  chain does NOT start the kit: read gate.out and decide.
+- First tree (compose/tree, hand re-indexed taps): bind cancelled 13:14Z, files kept, do not use.
+- Handover for KV-D23-COMPOSE: compose/HANDOVER.md + compose/pack (UNPROVED). --zero-cycle = B, T, C inject sites, D sites, E, A (0 lanes move).
+  Cycle rows PROVISIONAL (132 lanes +843; D pad lifts TRUNK_D 74->86, FLAG_D 78->86): compose/cycle_rows.tsv.
+- Open: V-pad table has an unexplained -5 residual on 488 members vs the table of record. Tool patch T/C/D not on main.
+- After the kit: read tt_setup_measure / 4_cts_post_hook.rpt / 5_global_route.tt.rpt and GRT markers near cl_ft0_i (1978-2160, 237-432).
+
 # FABLE-FIX-KV-PV handoff, status 2026-11-19 12:55Z (newest first; older sections below are history)
 ## Composed D25e pv rows: PRE + G0 PASS, bind running, kit NOT started
 - Tree epyc7 /srv/opentallas-scratch2/claude/fable-fix-kv-pv-1119/compose/tree, built from fresh live D25c (plan 4a40f1dbe86d) by
