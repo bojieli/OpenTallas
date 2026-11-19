@@ -880,3 +880,37 @@ class DieContextTypeScoped(unittest.TestCase):
             self.assertEqual(BI.die_ctx(base, n), BI.die_ctx(q, n))
         q = self.mod(lambda p: p["clock"]["seam_hold"].update(seam_ps=100))
         self.assertNotEqual(BI.die_ctx(base, "A"), BI.die_ctx(q, "A"))
+
+
+class CtxOnlySupersedeGuard(unittest.TestCase):
+    """COORD 11-18: a die_ctx-only change retires ENQUEUED-not-started and gen/place rows; rows past place finish"""
+
+    def run_it(self, status, qstatus, ctx_old="OLD", block_same=True):
+        cfg = {"stops_off": True, "supersede_max_per_tick": 1000,
+               "dies": {"qwen_compute": {"event": "E", "enabled": True, "plan": "p", "gen_host": "h"}}}
+        blk = "BLK"
+        st = {"items": {"qwen_compute|E|t|bBLK": {"die": "qwen_compute", "item": "t", "event": "E", "block_sha": blk if block_same else "OLDBLK", "status": status, "q_status": qstatus,
+                                                  "q_id": "j1", "attempt": 1, "dir": "/nonexistent", "die_ctx": ctx_old}},
+              "plans": {"h:p|E": {"blocks": {"t": blk}, "norm_blocks": {"t": "N"}, "die_ctx": {"t": "NEW"}}}}
+        import tempfile, json as _j
+        logs = []
+        ap = type("AP", (), {"DRY": False, "HUB_NAME": "hub", "log": staticmethod(logs.append), "sh": staticmethod(lambda *a, **k: (0, "", ""))})()
+        with tempfile.TemporaryDirectory() as tmp:
+            Path(tmp, "state.json").write_text(_j.dumps({"jobs": {"j1": {"status": qstatus, "unit": "u1"}}}))
+            orig = KW.stop_on_fleet_bg
+            KW.stop_on_fleet_bg = lambda AP, roots: {}
+            try:
+                KW.cancel_superseded(ap, cfg, st, {}, tmp)
+            finally:
+                KW.stop_on_fleet_bg = orig
+        return st["items"]["qwen_compute|E|t|bBLK"]["status"]
+
+    def test_row_past_place_finishes(self):
+        self.assertEqual(self.run_it("ENQUEUED", "RUNNING"), "ENQUEUED")
+
+    def test_unstarted_enqueued_and_wave_gen_place_rows_are_retired(self):
+        self.assertEqual(self.run_it("ENQUEUED", "QUEUED"), "CANCELLED")
+        self.assertEqual(self.run_it("RUNNING", None), "CANCELLED")
+
+    def test_same_die_ctx_is_untouched_and_block_change_still_retires(self):
+        self.assertEqual(self.run_it("ENQUEUED", "RUNNING", ctx_old="NEW"), "ENQUEUED")

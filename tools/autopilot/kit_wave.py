@@ -2399,6 +2399,21 @@ def ctx_changed(cur_ctx, die, r):
     return bool(cc) and bool(r.get("die_ctx")) and r["die_ctx"] != cc
 
 
+def past_place(r, jobs):
+    """the row is beyond gen / place: its queue job (route, CTS, sign-off) is running.  A RUNNING wave row is in gen / place by construction; an ENQUEUED row whose job has not started is still waiting"""
+    if r.get("status") != "ENQUEUED":
+        return False
+    j = (jobs or {}).get(r.get("q_id")) or {}
+    return str(j.get("status") or r.get("q_status") or "").upper() == "RUNNING"
+
+
+def ctx_only_keep(cfg, die, r, item, cur_blocks, cur_norm, cur_ctx, jobs):
+    """COORD 11-18 (QC N4.2 guard): a die_ctx-only change (the plan block itself unchanged) retires only rows that are ENQUEUED-not-started or in gen / place; a row past place keeps running and
+    relaunches on the new block only if it fails (stricter than needed is still valid for R-MINIMAL).  True = keep"""
+    return (ctx_changed(cur_ctx, die, r) and past_place(r, jobs)
+            and row_inputs_unchanged(cfg, die, r, item, cur_blocks, cur_norm, None))
+
+
 def row_inputs_unchanged(cfg, die, r, item, cur_blocks, cur_norm=None, cur_ctx=None):
     """OWNER 11-18: a live row keeps running when ITS inputs are unchanged on the new tree: the item's plan block equals the row's (raw sha, or the path-normalized sha with file contents hashed
     in place of tree paths: a tree rename moves the raw hash through clock.sink_bins_file-style absolute paths), and its staged views digest is what a launch would use now.  Tree path,
@@ -2457,8 +2472,11 @@ def supersede_on_switch(AP, cfg, st, notices, ap_dir=None, window_ticks=3):
             held = next((str(w) for pat, w in (d.get("hold_items") or {}).items()
                          if fnmatch.fnmatchcase(item, pat) and hold_protects_running(cfg, d, r, str(w))), None)
             same = row_inputs_unchanged(cfg, die, r, item, cur_blocks, cur_norm, cur_ctx)
-            if held is not None or same:
-                why = f"hold_items: {held[:120]}" if held is not None else f"own plan block {str(r.get('block_sha'))[:12]} is the item's block in the current plan"
+            ctxk = (not same) and ctx_only_keep(cfg, die, r, item, cur_blocks, cur_norm, cur_ctx, jobs)
+            if held is not None or same or ctxk:
+                why = (f"hold_items: {held[:120]}" if held is not None else
+                       f"die-level contract changed but the row is past place (queue job running): finishes, relaunches on the new block only if it fails" if ctxk else
+                       f"own plan block {str(r.get('block_sha'))[:12]} is the item's block in the current plan")
                 if r.get("switch_kept") != why:
                     r["switch_kept"] = why
                     AP.log(f"KIT-WAVE SWITCH-SUPERSEDE-KEEP {die}/{item}@{r.get('attempt')} (event {r.get('event')}): {why}")
@@ -13380,8 +13398,10 @@ def cancel_superseded(AP, cfg, st, notices, ap_dir=None):
             held = None if so else next((str(w) for pat, w in (d.get("hold_items") or {}).items()
                                          if fnmatch.fnmatchcase(item, pat) and hold_protects_running(cfg, d, r, str(w))), None)
             same = row_inputs_unchanged(cfg, die, r, item, cur_blocks, cur_norm, cur_ctx)
-            if held is not None or same:
+            ctxk = (not same) and ctx_only_keep(cfg, die, r, item, cur_blocks, cur_norm, cur_ctx, jobs)
+            if held is not None or same or ctxk:
                 why = (f"hold_items: {held[:160]}" if held is not None else
+                       f"die-level contract changed but the row is past place (queue job running): finishes, relaunches on the new block only if it fails" if ctxk else
                        f"own plan block {str(r.get('block_sha'))[:12]} unchanged in the current plan")
                 if r.get("supersede_kept") != why:
                     r["supersede_kept"] = why
