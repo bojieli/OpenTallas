@@ -23,3 +23,25 @@
   u_sys_face.u_ot_pr_core (648 ends).
 - NEXT: per-type relay_sites for the 7 sle_ctl types (type_relay_sites.py with macro PIN capture points), rows to QC-PLAN-R3 for N4.3/N4.4,
   private kit on one type to GRT TT.
+
+## 11-18 23:5x PST (fix written, proof kit running)
+- Lane clone: intel2 /srv/opentallas-scratch2/claude/fable-fix-qc-main (sparse tools + physical/common_flow), ONE local commit 74cf953c6ef
+  (not on main yet): tools/die_plan/pad_chain_site.tcl + gen_phys.pad_chain_site_place (opt-in gen env OT_PAD_CHAIN_SITE = unsited | auto |
+  all; unset = kit unchanged) + kit_istations rs_place_all separator-blind keys (su_c x3) + tests (test_pad_chain_site.py 6,
+  test_kit_istations.py +1; 78 pass). Push: cd clone && python3 -I /srv/opentallas-scratch2/claude/rt/current/tools/fleet/ot-push-main.
+  PUSH ONLY AFTER p1 prints "OT_PAD_CHAIN_SITE mode auto chains N of 2393 sited" in 3_3 without a Tcl error.
+- Dry read of the hook on the wave kit DB (W/pcs_dry.sh ctl372 3_3_place_gp.odb auto firm): 2,387 of 2,393 chains sited, 530 stale
+  plan-sited chains re-sited, worst hop 401 um (x_fw_i; was 651 um to the pin), x_fw_p1_i 114, b_tw_data_i 255, x_st_a_i 17.
+- Proof kit p1: W/kit/p1/gen/sle_ctl__cl372cea1c = copy of the wave N4 kit (epyc9 .../s29q103S4Q9N4/items/sle_ctl__cl372cea1c/gen) +
+  pad_chain_site.tcl + hook line at the end of face_flops.tcl + "export OT_PAD_CHAIN_SITE = auto" in config.mk (W/kit_p.sh).
+  Run: ot-run --hosts localhost --mem 96 --threads 16 --dir $W -- bash $W/run_p.sh p1 route 96 16; log W/logs/kit_p1.otrun.log,
+  kit log $K/run_route.log. Started 23:2x. Base to beat (same kit without the hook, live wave job): CTS TT -97.91 / tns -19,117
+  (tt_setup_measure.log), 757 negative ends.
+- Read after CTS: grep "measure TT" $K/tt_setup_measure.log; census: bash W/pull.sh is not needed (kit is local): copy
+  W/k/p1/work -> symlink is NOT allowed by census.sh (docker mount), use: mkdir -p W/k/p1 && ln -s $K W/k/p1/work, then census.sh p1 4_cts.odb placement.
+- After a pass at GRT TT (>= -42): (1) ot-push-main, (2) kit_wave_edit --set /dies/qwen_compute/item_env/<item>/OT_PAD_CHAIN_SITE="auto" for the 7
+  sle_ctl items (cl372cea1c, cl503337ff, cl67434795, cla4f6f12f, cl503337ff__padE0, cl503337ff__padE4, cl67434795__padW5; the three pad
+  items have no item_env entry yet: set the whole object), dry run first, (3) post, (4) follow the wave kits to sign-off and export.
+- Posted to QC-PLAN-R3 (23:4x): fw_v2 flt_wo hop 1,247 um (2 stations), st_b_v2 cland_origin -> cland_rstart_tx 1,075 um (2 stations).
+- Not owned, facts for the st_b owner: slw_st_b_v1__cle6023ec2 -210.4 = SRAM u_u_r4.u_scale_wait.u_m.g_bank[0].u_m rd_out (clk->q 255 ps)
+  + 276 ps wire + 22 logic levels into g_sc[1].u_mul...u_d.u_741 (122 ends); the other st_b types are +2..+44 at CTS.
