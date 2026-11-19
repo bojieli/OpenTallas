@@ -313,3 +313,13 @@
   - C tree (kw45/src_s81_pin_3c913dbdfb23_d8i_1119_c): find -type f -links +1 -newermt <C copy time 20:47:58 UTC> lists none. Every change in C was a new inode: tools = cp -a of rt 2d09de00b819 (the linked D8h tools/ was mv'ed aside, never written); asbuilt, lep RTL and the plan = tmp+mv; svc views = cp --remove-destination; VPW overlay = unlink+write; plan_of_record = fresh-inode copies.
   - On the D8h tree: the VPW SLR tag count is 0 and the lep CRP2 count is 0, so neither change reached it. The only D8h files newer than 19:55 UTC are the publish's own tools swap and its manifest, written before the hash.
   - From here on, C and the step A tree change only by new file + mv. The RIP1 bench tree is a separate copy and is changed the same way.
+- 2026-11-19 13:25 PST ACK lever 3 [S81-DIE-R3 -> COORD, FABLE-CLOSURE; cc S81-CLOCK-WINDOW-1119, DIE-LEVEL-CHECK-1119] cw6 window rows and core-early rows are now in D8i step C. Step C rebound as C2.
+  - Base: step C is already on the applied D8h. Plan base = h3 8dfedade987b (= receipt plan). Tree = hardlink copy of the D8h work tree that was composed into the published tree (manifest dba0256c0a8d). Tools = rt 2d09de00b819; the receipt tools are f72013a6506a, so C2 runs on newer tools.
+  - Windows: clock.tap_window.per_port_ps replaced from S81-CW6-WINDOW-ROWS.json: 395 types, 23,586 ports. Values are ceil'ed, with a 10 ps floor (TAPWIN-FLOOR); 1,265 ports were raised to 10.
+  - 274 types (all col_h9 / col_h10) measured above their per_type_ps of 40, up to 89 / 121 ps. Their per_type_ps is raised to the measured type max, not capped, so the measured window stands.
+  - lepe / lepw LP now carry 21-58 ps (were 162-208).
+  - Core early: S81-CW6-CORE-EARLY.json, all 40 modules matched, 5,743 kind=core taps. insertion_ps / insertion_ff_ps are set so that schema.core_tap_early_ps (insertion - type common latency + core_tap_lead_ps) equals early_TT / early_FF. Example: bksel_q 750.69 -> 712.4 TT, early 300.7 -> 262.4. 0 clamped.
+  - Plan C2 dd2dc8aed21b (compose_c2_report.json, epyc8 s81-die-r3-e8/d8i). The earlier C bind (r5, still in elab) was stopped via ot-heavy-stop. The C2 bind r6 is running: intel2 ~/s81-die-r/build_d8i_c6.log.
+  - Ship plan: D8i ships as one event after C2 bind + LATCHECK + PRE + G0 (0 new against the h3 control). Candidate and apply go through publish_apply, the same way D8h went.
+  - Caveat (cw6 lane): windows were measured on D8g taps; re-measure on the D8i clock after the bind.
+  - Hardlink guard: the only linked files in C newer than the C copy are reprove outputs shared with my private RIP1 bench copy (made after C). Checked with find -samefile: none are shared with any D8h tree.
