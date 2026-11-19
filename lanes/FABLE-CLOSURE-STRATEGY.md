@@ -1,4 +1,4 @@
-# FABLE-CLOSURE-STRATEGY 2026-11-19 13:45 PST (1345): the window moves die hold into the type; the type proof shows what it costs
+# FABLE-CLOSURE-STRATEGY 2026-11-19 13:15 PST (1315): the window moves die hold into the type; the type proof shows what it costs
 
 Reviewer: FABLE-CLOSURE-STRATEGY-13xx (Fable). Read-only: no job launched, killed or patched. Technical PD only; HBM parked.
 Gate (R-MINIMAL): DRC 0, routed TT >= -42 ps, internal FF hold >= 0, bind + lane latency.
