@@ -40,9 +40,10 @@ def centre(inst):
     return ((b.xMin() + b.xMax()) / 2.0 / dbu, (b.yMin() + b.yMax()) / 2.0 / dbu)
 
 
-kind = {}       # inst name -> 'reg' | 'macro' | 'comb'
+kind = {}       # inst name -> 'reg' | 'macro' | 'comb' | 'tie'
 loc = {}
 regs = []
+macros = []
 for inst in block.getInsts():
     m = inst.getMaster()
     n = inst.getName()
@@ -51,6 +52,10 @@ for inst in block.getInsts():
     loc[n] = centre(inst)
     if m.isBlock():
         kind[n] = "macro"
+        b = inst.getBBox()
+        macros.append([b.xMin() / dbu, b.yMin() / dbu, b.xMax() / dbu, b.yMax() / dbu])
+    elif m.getName().upper().startswith(("TIEHI", "TIELO")):
+        kind[n] = "tie"
     elif SEQ.match(m.getName()):
         kind[n] = "reg"
         regs.append(n)
@@ -77,6 +82,7 @@ log("clock/power nets", len(clock_nets))
 
 # per net: driver (inst name or port), sinks [(inst or port, pin)]
 drv_of = {}
+pinloc = {}         # (net, macro inst) -> pin centre (a macro end of a leg sits at its pin, not the macro centre)
 fanin = {}          # comb inst -> [nets]
 caps = []           # (net, capture inst/port, pin)
 nets = {}
@@ -90,6 +96,12 @@ for net in block.getNets():
         n = it.getInst().getName()
         if n not in kind:
             continue
+        if kind[n] == "macro":
+            try:
+                b = it.getBBox()
+                pinloc[(nn, n)] = ((b.xMin() + b.xMax()) / 2.0 / dbu, (b.yMin() + b.yMax()) / 2.0 / dbu)
+            except Exception:  # noqa: BLE001
+                pass
         if it.isOutputSignal():
             d = ("i", n)
         elif it.isInputSignal():
@@ -114,8 +126,10 @@ for net in block.getNets():
 log("nets", len(nets), "comb with fanin", len(fanin), "captures", len(caps))
 
 
-def dloc(d):
-    return d[2] if d[0] == "p" else loc[d[1]]
+def dloc(d, net=None):
+    if d[0] == "p":
+        return d[2]
+    return pinloc.get((net, d[1]), loc[d[1]])
 
 
 def dname(d):
@@ -136,10 +150,12 @@ for c, ins in fanin.items():
 A = {}
 
 
-def src_val(d):
+def src_val(d, net=None):
     if d[0] == "i" and kind[d[1]] == "comb":
         return A.get(d[1])
-    l = dloc(d)
+    if d[0] == "i" and kind[d[1]] == "tie":
+        return None                                   # constants are not launches
+    l = dloc(d, net)
     return (0.0, dname(d), l) if l else None
 
 
@@ -152,10 +168,10 @@ while ready:
     cl = loc[c]
     for nn in fanin[c]:
         d = nets[nn][0]
-        v = src_val(d)
+        v = src_val(d, nn)
         if v is None:
             continue
-        dl = dloc(d) if not (d[0] == "i" and kind[d[1]] == "comb") else loc[d[1]]
+        dl = dloc(d, nn) if not (d[0] == "i" and kind[d[1]] == "comb") else loc[d[1]]
         acc = v[0] + abs(dl[0] - cl[0]) + abs(dl[1] - cl[1])
         if best is None or acc > best[0]:
             best = (acc, v[1], v[2])
@@ -171,13 +187,13 @@ log("comb ordered", done, "of", len(fanin), "(rest in loops)")
 legs = []
 for nn, s, pin in caps:
     d = nets[nn][0]
-    v = src_val(d)
+    v = src_val(d, nn)
     if v is None:
         continue
-    cl = s[2] if isinstance(s, tuple) else loc[s]
+    cl = s[2] if isinstance(s, tuple) else pinloc.get((nn, s), loc[s])
     if cl is None:
         continue
-    dl = dloc(d) if not (d[0] == "i" and kind[d[1]] == "comb") else loc[d[1]]
+    dl = dloc(d, nn) if not (d[0] == "i" and kind[d[1]] == "comb") else loc[d[1]]
     acc = v[0] + abs(dl[0] - cl[0]) + abs(dl[1] - cl[1])
     straight = abs(v[2][0] - cl[0]) + abs(v[2][1] - cl[1])
     if straight > reach * 0.9:
@@ -187,6 +203,7 @@ legs.sort(key=lambda r: -r[0])
 die = block.getDieArea()
 json.dump(dict(odb=os.environ["OT_ODB"], design=block.getName(), die_um=[die.xMax() / dbu, die.yMax() / dbu], reach=reach,
                n_regs=len(regs), n_captures=len(caps), legs=legs[:200000],
-               regs=[[round(loc[r][0], 2), round(loc[r][1], 2)] for r in regs]),
+               regs=[[round(loc[r][0], 2), round(loc[r][1], 2)] for r in regs],
+               macros=[[round(v, 2) for v in r] for r in macros]),
           open(os.environ["OT_OUT"], "w"))
 log("legs >= 0.9 reach", len(legs), "written", os.environ["OT_OUT"])

@@ -30,3 +30,36 @@ TAP_SKEW_PS_PER_UM = 0.065      # fit 11-19 (14 S81 kits, 413 taps): skew ~ 0.06
 def rules():
     """the rule set as a dict (records, posts)"""
     return {k: v for k, v in globals().items() if k.isupper()}
+
+
+# ---------------------------------------------------------------- leg classification (shared with CBC-RULES-1119)
+import re as _re
+
+STRAP_TIE = _re.compile(r"(^|[._/:])(strap|tie|TIEHI|TIELO|count_strap)", _re.I)
+LEG_CLASSES = ("core", "channel", "logic", "strap")   # strap/tie legs are excluded from reach counts
+
+
+def _l_paths_blocked(a, b, rects):
+    """True when both L-shaped Manhattan routes a -> b cross a hard-core rect interior"""
+    def seg_hits(p, q, r):
+        x0, y0, x1, y1 = r
+        if p[0] == q[0]:                       # vertical
+            return x0 < p[0] < x1 and min(p[1], q[1]) < y1 and max(p[1], q[1]) > y0
+        return y0 < p[1] < y1 and min(p[0], q[0]) < x1 and max(p[0], q[0]) > x0
+
+    def path_hits(c):
+        return any(seg_hits(a, c, r) or seg_hits(c, b, r) for r in rects)
+    return path_hits((b[0], a[1])) and path_hits((a[0], b[1]))
+
+
+def classify_leg(launch, capture, la, lb, macro_rects):
+    """class of a placed register -> register leg: 'strap' (strap / tie source or sink: excluded), 'core' (every
+    Manhattan route crosses a hard core: the leg spans over a core), 'channel' (a block port end: boundary / ft
+    channel leg), 'logic' (core-free soft logic leg)"""
+    if STRAP_TIE.search(launch or "") or STRAP_TIE.search(capture or ""):
+        return "strap"
+    if macro_rects and _l_paths_blocked(tuple(la), tuple(lb), macro_rects):
+        return "core"
+    if (launch or "").startswith("port:") or (capture or "").startswith("port:"):
+        return "channel"
+    return "logic"

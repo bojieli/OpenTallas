@@ -102,6 +102,14 @@ def skew_estimate(dists, ps_per_um=CBC.TAP_SKEW_PS_PER_UM):
     return round(ps_per_um * (hi - lo), 1)
 
 
+MAX_ATTEMPTS = 3
+LAST_ERR = [""]
+
+
+def docker_ok():
+    return os.access("/var/run/docker.sock", os.W_OK)
+
+
 def run_placed(kit, odb, out_json, mem_gb=14):
     o = out_json.parent
     cmd = ["docker", "run", "--rm", "--name", f"phscan-{os.getpid()}", "--cpus=1", f"--memory={mem_gb}g", f"--memory-swap={mem_gb}g",
@@ -109,16 +117,29 @@ def run_placed(kit, odb, out_json, mem_gb=14):
            "-v", f"{odb.parent}:/k:ro", "-v", f"{o}:/o", "-v", f"{HERE}:/s:ro", IMAGE, "bash", "-lc",
            "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; openroad -python -exit /s/placed_hops_or.py > /o/%s.log 2>&1; "
            "rc=$?; chown %d:%d /o/%s /o/%s.log 2>/dev/null; exit $rc" % (out_json.stem, os.getuid(), os.getgid(), out_json.name, out_json.stem)]
+    if not docker_ok():                  # 11-19: the systemd --user manager predates the docker group: every timer scan
+        import shlex                     # failed with 'permission denied ... docker.sock' (rc 1); sg docker adds it
+        cmd = ["sg", "docker", "-c", shlex.join(cmd)]
     if os.path.exists(OT_HEAVY):         # host memory admission (owner r709 rails): queue like any heavy job
         cmd = [OT_HEAVY, "--mem", str(mem_gb), "--tag", f"phscan-{kit_type(kit)}", "--max-wait", "3600", "--"] + cmd
-    return subprocess.run(cmd, capture_output=True, text=True, timeout=10800).returncode
+    r = subprocess.run(cmd, capture_output=True, text=True, timeout=10800)
+    LAST_ERR[0] = "" if r.returncode == 0 else ((r.stderr or "") + (r.stdout or ""))[-400:]
+    return r.returncode
 
 
 def summarise_placed(kit, ph, reach=CBC.REACH_UM_PER_HOP):
-    legs = [r for r in ph.get("legs", []) if r[0] > reach]
+    """legs over reach by class (cbc_rules.classify_leg: core / channel / logic; strap/tie legs excluded)"""
+    legs, by_class = [], collections.Counter()
+    for r in ph.get("legs", []):
+        if r[0] <= reach:
+            continue
+        c = CBC.classify_leg(r[2], r[3], r[5], r[6], ph.get("macros") or [])
+        by_class[c] += 1
+        if c != "strap":
+            legs.append(r + [c])
     pairs = collections.defaultdict(lambda: [0, 0.0, None])
-    for st, acc, a, b, pin, la, lb in legs:
-        k = (reg_class(a), reg_class(b))
+    for st, acc, a, b, pin, la, lb, c in legs:
+        k = (c, reg_class(a), reg_class(b))
         p = pairs[k]
         p[0] += 1
         if st > p[1]:
@@ -130,7 +151,7 @@ def summarise_placed(kit, ph, reach=CBC.REACH_UM_PER_HOP):
         mem = assign_taps(taps, [tuple(r) for r in ph["regs"]], int(min(cap or CBC.TAP_MAX_SINKS, CBC.TAP_MAX_SINKS)), CBC.TAP_RADIUS_UM)
         skew = {n: (skew_estimate(d), len(d)) for n, d in mem.items() if len(d) >= MIN_TAP_SINKS}
     worst = max((v[0] for v in skew.values()), default=None)
-    return dict(legs_over=len(legs), pairs=[[a, b, n, round(w, 1), ex] for (a, b), (n, w, ex) in top[:40]],
+    return dict(legs_over=len(legs), by_class=dict(by_class), pairs=[[a, b, n, round(w, 1), ex, c] for (c, a, b), (n, w, ex) in top[:40]],
                 skew_worst_ps=worst, taps_over_pass=sorted([n for n, v in skew.items() if v[0] >= CBC.TAP_SKEW_PASS_PS]),
                 taps_over_fail=sorted([n for n, v in skew.items() if v[0] >= CBC.TAP_SKEW_FAIL_PS]),
                 skew=skew, n_regs=ph.get("n_regs"))
@@ -161,21 +182,31 @@ def scan_kit(kit, do_post=False, mem_gb=14):
             msgs.append(f"FOLD {r['lost']} register bits merged by synthesis: " + "; ".join(f"{c} {b} -> {n}" for c, b, n in r["folds"][:4]))
     sp = STATE / f"{kit.name}.placed.json"
     odb = stage_file(kit, "3_place.odb")
-    if not sp.exists() and odb:
+    prev = json.loads(sp.read_text()) if sp.exists() else None
+    retry = prev is not None and prev.get("status") != "OK" and int(prev.get("attempts", 1)) < MAX_ATTEMPTS
+    if odb and (prev is None or retry):
         raw = STATE / f"{kit.name}.placed_raw.json"
         rc = run_placed(kit, odb, raw, mem_gb)
+        attempts = int((prev or {}).get("attempts", 0)) + 1
         if rc == 0 and raw.exists():
             s = summarise_placed(kit, json.loads(raw.read_text()))
-            s["rc"] = 0
+            s.update(rc=0, status="OK", attempts=attempts)
             sp.write_text(json.dumps(s, indent=1))
             if s["legs_over"]:
-                msgs.append(f"PLACED {s['legs_over']} legs > {CBC.REACH_UM_PER_HOP:.0f} um: " + "; ".join(
-                    f"{a} -> {b} x{n} (max {w} um)" for a, b, n, w, _ex in s["pairs"][:4]))
+                bc = s["by_class"]
+                msgs.append(f"PLACED {s['legs_over']} legs > {CBC.REACH_UM_PER_HOP:.0f} um (core {bc.get('core', 0)}, "
+                            f"channel {bc.get('channel', 0)}, logic {bc.get('logic', 0)}; strap/tie {bc.get('strap', 0)} excluded): "
+                            + "; ".join(f"[{c}] {a} -> {b} x{n} (max {w} um)" for a, b, n, w, _ex, c in s["pairs"][:4]))
+        else:
+            err = ""
+            log = raw.parent / f"{raw.stem}.log"
+            if log.exists():
+                err = log.read_text(errors="replace")[-300:]
+            sp.write_text(json.dumps(dict(rc=rc, status="FAILED", attempts=attempts, err=(LAST_ERR[0] or err)[-400:]), indent=1))
+            msgs.append(f"PLACED scan FAILED (rc {rc}, attempt {attempts}/{MAX_ATTEMPTS}): {(LAST_ERR[0] or err)[-160:]}")
             # the placement-geometry skew estimate is NOT posted: fitted 11-19 on 14 kits / 413 taps against the measured
             # OT_TAP_INSERTION skew_ps, R2 <= 0.07 and 2-3 of 14 kits in the right 60 / 100 ps band (leaf median 121 ps vs
             # col 37-52 ps at the same distance spread).  The measured CTS number (scan "cts" below) is posted instead.
-        else:
-            sp.write_text(json.dumps(dict(rc=rc)))
     sc = STATE / f"{kit.name}.cts.json"
     cts = sorted(Path(kit, "work/run/logs").glob("*/*/base/4_1_cts.log"))
     if not sc.exists() and cts:
@@ -198,6 +229,8 @@ def scan_kit(kit, do_post=False, mem_gb=14):
         p = json.loads(sp.read_text()) if sp.exists() else {}
         c = json.loads(sc.read_text()) if sc.exists() else {}
         return [dict(die=kit_die(kit), type=tn, kit=kit.name, fold=f.get("lost", 0), legs=p.get("legs_over"),
+                     placed_status=p.get("status") or ("OK" if p.get("rc") == 0 else ("FAILED" if p else None)),
+                     by_class=p.get("by_class") or {},
                      worst_pair=(p.get("pairs") or [[None, None, 0, 0]])[0][:4], skew=c.get("worst_ps"),
                      skew60=len(c.get("over_pass") or []), skew100=len(c.get("over_fail") or []))] if msgs else []
     return []
@@ -215,11 +248,14 @@ def hourly_digest(rows, now=None):
     out = []
     for die, rs in sorted(by.items()):
         fold = [r for r in rs if r.get("fold")]
-        legs = [r for r in rs if r.get("legs")]
+        ok = [r for r in rs if r.get("placed_status") == "OK"]
+        failed = [r for r in rs if r.get("placed_status") == "FAILED"]
+        legs = [r for r in ok if r.get("legs")]
         sk = [r for r in rs if (r.get("skew100") or 0) > 0]
         w = max(legs, key=lambda r: r["legs"], default=None)
         out.append(f"{die}: {len(rs)} kits; FOLD {len(fold)}" + (f" ({', '.join(sorted({r['type'] for r in fold})[:3])})" if fold else "")
-                   + f"; legs>405 in {len(legs)}" + (f" (worst {w['type']} {w['legs']}: {w['worst_pair'][0]} -> {w['worst_pair'][1]} "
+                   + f"; placed scans OK {len(ok)}, FAILED {len(failed)}"
+                   + f"; legs>405 in {len(legs)} of {len(ok)}" + (f" (worst {w['type']} {w['legs']}: {w['worst_pair'][0]} -> {w['worst_pair'][1]} "
                                                      f"{w['worst_pair'][3]} um)" if w else "")
                    + f"; tap skew>=100 ps in {len(sk)}")
     return out

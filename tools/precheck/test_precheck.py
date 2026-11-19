@@ -215,10 +215,20 @@ def test_fold_scan_declared_vs_netlist():
 
 def test_kit_scan_hourly_digest_per_die():
     import kit_scan as KS
-    rows = [dict(die="s81", type="leaf__t27", fold=9670, legs=3729, worst_pair=["cst_hi", "lane", 1193, 829.8], skew100=0),
-            dict(die="s81", type="col__t1", fold=0, legs=0, worst_pair=[None, None, 0, 0], skew100=1)]
+    rows = [dict(die="s81", type="leaf__t27", fold=9670, legs=3729, placed_status="OK", worst_pair=["cst_hi", "lane", 1193, 829.8], skew100=0),
+            dict(die="s81", type="col__t1", fold=0, legs=0, placed_status="FAILED", worst_pair=[None, None, 0, 0], skew100=1)]
     out = KS.hourly_digest(rows)
-    assert len(out) == 1 and out[0].startswith("s81: 2 kits; FOLD 1 (leaf__t27); legs>405 in 1") and out[0].endswith("tap skew>=100 ps in 1")
+    assert len(out) == 1 and out[0].startswith("s81: 2 kits; FOLD 1 (leaf__t27); placed scans OK 1, FAILED 1; legs>405 in 1 of 1")
+    assert out[0].endswith("tap skew>=100 ps in 1")
+
+
+def test_classify_leg_core_channel_logic_strap():
+    import cbc_rules as CBC
+    core = [[100, -50, 200, 50]]
+    assert CBC.classify_leg("u_a.q", "u_b.d", [0, 0], [500, 0], core) == "core"          # a straight run through the core
+    assert CBC.classify_leg("u_a.q", "u_b.d", [0, 100], [500, 100], core) == "logic"     # passes above it
+    assert CBC.classify_leg("port:x_i", "u_b.d", [0, 100], [500, 100], core) == "channel"
+    assert CBC.classify_leg("u_strap_tie.q", "u_b.d", [0, 0], [500, 0], core) == "strap"
 
 
 def test_qc_skips_tap_cover_and_plan_reach():
