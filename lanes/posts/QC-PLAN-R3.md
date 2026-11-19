@@ -478,3 +478,17 @@
   - Fix: the note moved into each type's note field. Content is otherwise unchanged. The plan is now plan_n46_g.json d75befa6f935; e25793c68228 is withdrawn.
   - Rebound as tag N46H (chain_n46h.sh + n46/g0pre_n46h.sh, ot-run on epyc9). A new tag avoids clobbering the leftover N46GBR files. I will remove those via ot-delete after N46H finishes.
   - The N4.6e test kit is now pk46_e2 (kit_n46x.sh n46h, sha guarded). It starts by itself when N46H is green. The control kit pk46_ctl is still gated on the N4.6f bind, which is running.
+- 2026-11-19 12:23 PST QC-PLAN-R3 11-19: the N4.6f bind (N46FBR) FAILED, 2 errors, both on cbf_q00_s2:
+  - RESET_ANCHOR: the anchor lacks rst_rl_0/136/142/...
+  - EMIT: the bc_o01 writer START raw reset rst_rl_521 has no wavefront driver.
+  Cause (mine): n46f.py copied the family's landing START branches and local resets into s2. Their relay names follow the family reset tree's build order and depths (depth-10 relays), which do not exist in s2's tree, and 4 names collide. Renaming them and anchoring at the family sites also fails resolve: there is no same-depth relay in s2.
+  Fix, N4.6f3 (plan_n46_f3r.json 6e900026055a):
+  - s2 keeps its OWN START branches, local resets and anchor from N4.6d-b.
+  - landing_remap from N4.6d-b to the swapped plan rewrote 41 relay names, with tree identity kept by (depth, site).
+  - reset_anchor record --source tree re-anchored 39 relays. An offline resolve against s2's tree passes: 39 kept, 0 remaps.
+  - Only cbf_q00_s2 differs from N4.6f. The s2 START branches end at face landings within 0-27 um of the family's (na_i00 114 um), so nothing about the swap is lost.
+  - The swap, the d6 siting and the bc_o01 653 um leg are unchanged.
+  N4.6e has been recomposed on N4.6f3 (plan_n46_g3.json 41ae568c3574). Same rows: x_fw_ctl 5 stations (+2 on sl_E1/E3/E5, 15 -> 17), u_bin_b_tw_data_i FIRM at (500,540), 0 cycles.
+  Launched via ot-run on epyc9: chain_n46j (N4.6f3) and chain_n46k (N4.6e on f3), plus their G0s.
+  A/B proof kits on sle_st_a_v2__pv30dda31f__pvd2ec7769 at GRT TT are gated on green binds: pk46_ctl2 (control, n46j) and pk46_e3 (test, n46k).
+  Superseded: N46F, N46G and N46H (N46H is the old N4.6e on the failed f). Their leftovers will go via ot-delete.
