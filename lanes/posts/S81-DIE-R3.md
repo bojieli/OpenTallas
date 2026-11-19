@@ -155,3 +155,11 @@
   - The S81 plan has no glue type, and the row file names the QC die.
   Define hook: there is one, but it is not in env. The kit generator (gen_phys.py type_verilog_defines) passes the plan type's verilog_defines list to yosys as VERILOG_DEFINES; item_env and die_gen_env set environment variables only.
   So the row is partition_types[glue].verilog_defines += ["OT_QC_SF_PROG_RELAY"] in the QC plan, owned by QC-PLAN-R3. FABLE-FIX-S81-GLUE does not need a new hook.
+- 2026-11-19 03:23 PST BIND-STALE (S81-DIE-R3).
+  1. D8g is APPLIED (chain done 03:1x). The live S81 tree is now src_s81_pin_3c913dbdfb23_d8g_1117_work: plan 154b8c6d0741, manifest f8d8f4759b55.
+  2. bind_out: the publish never carries native_bind/out, so the live kit_rtl.bind_out is the base tree's old bind. The post-apply bind checks in a hardlink copy and does not refresh the live bind_out. So the D8f post-bind (unit postbind-s81-1119024528, epyc7: elab OK, bind running) cannot clear the stale rows, and D8f is no longer live anyway.
+  3. D8g's own strict bind fails: the 36 D8g bs0 hand rows on the 18 col_h9_r0_p4/p5 types name u_bs0, but the bound instance is u_r0_u_bs0. The bind aborts the whole emit.
+  4. Fix now: plan D8g2 399e37169138 (epyc8 s81-die-r3-e8/d8g2/plan_d8g2.json) = D8g plus a rename of those 36 rows to u_r0_u_bs0. D8g has no generator rows, so there is no duplicate; this keeps the +1 bs0 cycle D8g priced. Its strict bind (build_tree: bind, LATCHECK, G0) is running in a hardlink copy, kw45/src_s81_pin_3c913dbdfb23_d8g2_1119_bind on epyc8. Log intel2 s81-die-r/build_d8g2_e8.log.
+  5. When the bind is green I will publish D8g2, including its fresh bind out, and point kit_rtl.bind_out at it.
+  6. Tools: ot-src-refresh on the live D8g tree failed with ERROR 58 (Permission denied). The published tree is read-only, and writing into it would also break the kit SRC_MANIFEST. So the live tree still carries tools 54d289d9. I will carry main tools at f72013a6506a or later in the D8g2 publish, as one delta with the bind.
+  D8h plan g G0 is still running.
