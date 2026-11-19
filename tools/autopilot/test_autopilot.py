@@ -2223,13 +2223,57 @@ class HubProcsJanitor(Base):
         self.assertEqual([p for p, _ in self.ap.hub_procs(kit)], [102])
 
 
-class NoResumePin(Base):
-    """COORD 11-19: an infra-retry resubmit is NOT pinned to the host that killed it (that host is full: it would be killed again); ot-run places it"""
+class ResumeMove(Base):
+    """COORD 11-19: after an infra kill the checkpoint moves to a die host that admits; the same host only when it admits"""
+    STATUS = ("ot-run status: epyc2 admits 5 GB (avail 123, reserve 0, fresh 0, peak 418.3) load 354/128 run 121 threads 908/128 root 71% scratch 85 GB | "
+              "intel1 admits 60 GB (avail 67, reserve 0, fresh 0, peak 185.8) load 10/112 run 5 threads 10/112 root 10% scratch 500 GB | "
+              "epyc8 admits 300 GB (avail 320, reserve 0, fresh 0, peak 10) load 10/96 run 5 threads 10/96 root 10% scratch 900 GB | "
+              "localhost admits 500 GB (avail 520, reserve 0, fresh 0, peak 10) load 1/64 run 1 threads 1/64 root 10% scratch 900 GB")
 
-    def test_infra_retry_is_not_pinned(self):
+    def test_picks_the_host_with_the_most_admit_not_the_hub_not_the_full_killer(self):
+        h, why = self.ap.resume_target(self.STATUS, 48, "epyc2", self.ap.HUB_NAME)
+        self.assertEqual(h, "epyc8")
+
+    def test_the_killed_host_is_kept_when_it_admits(self):
+        h, why = self.ap.resume_target(self.STATUS, 4, "epyc2", self.ap.HUB_NAME)
+        self.assertEqual(h, "epyc2")
+
+    def test_nothing_admits(self):
+        h, why = self.ap.resume_target(self.STATUS, 900, "epyc2", self.ap.HUB_NAME)
+        self.assertEqual(h, "")
+
+    def test_checkpoint_is_the_last_stage_odb_only(self):
+        names = ["3_1_place_gp_skip_io.odb", "3_place.odb", "4_1_cts.odb", "4_cts.odb", "4_cts.sdc", "2_floorplan.odb", "1_synth.odb"]
+        self.assertEqual(self.ap.pick_checkpoint_odbs(names), ["4_cts.odb"])
+        self.assertEqual(self.ap.pick_checkpoint_odbs(["3_place.odb", "5_1_grt.odb", "4_cts.odb"]), ["5_1_grt.odb"])
+        self.assertEqual(self.ap.pick_checkpoint_odbs(["foo.log"]), [])
+
+    def test_copy_command_is_a_delta_rsync_from_the_source_host(self):
+        argv = self.ap.delta_copy_argv("/srv/x/kit", "epyc2", "epyc8", ["4_cts.odb"])
+        self.assertEqual(argv[:6], ["ssh", "-o", "BatchMode=yes", "-o", "ControlPath=none", "-o"])
+        cmd = argv[-1]
+        self.assertIn("epyc8:/srv/x/kit/", cmd)
+        self.assertIn("--inplace", cmd)
+        self.assertIn("run/results/asap7/*/base/4_cts.odb", cmd)
+        self.assertLess(cmd.index("--include"), cmd.index("--exclude='*.odb'"))
+
+    def test_submit_pins_after_a_successful_copy_and_not_after_a_failed_one(self):
         (j,) = self.ap.parse_queue("\t".join(ROW)).values()
-        j.update(infra_retry=True, ran_on="epyc10")
-        seen = []
-        self.ap.launch_unit = lambda unit, logfile, argv: seen.append(argv) or True
-        self.ap.submit({"jobs": {}}, j)
-        self.assertNotIn("--hosts", seen[0])
+        j.update(infra_retry=True, ran_on="epyc2", mem_gb=48)
+        calls = []
+        def fake_sh(argv, timeout=60, **k):
+            calls.append(argv)
+            if argv[1:2] == ["--status"]:
+                return 0, self.STATUS, ""
+            if argv[0] == "ssh" and "rsync" in argv[-1]:
+                return (0, "", "") if self.ok else (23, "", "boom")
+            return 0, "4_cts.odb\n3_place.odb\n", ""
+        self.ap.sh = fake_sh
+        for self.ok, want in ((True, True), (False, False)):
+            seen = []
+            self.ap.launch_unit = lambda unit, logfile, argv: seen.append(argv) or True
+            jj = dict(j)
+            self.ap.submit({"jobs": {}}, jj)
+            self.assertEqual("--hosts" in seen[0], want)
+            if want:
+                self.assertEqual(seen[0][seen[0].index("--hosts") + 1], "epyc8")

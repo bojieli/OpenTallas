@@ -1901,12 +1901,95 @@ def stage_disk_args():
         return []
 
 
+# COORD 11-19 (INFRA / OOM kill in GRT re-ran global placement): the kit lives on the host that was killed, which is full; the resubmit waited there or SPILLed a 40 GB lane root.  A resubmit after an
+# infra kill now moves the checkpoint instead: when the killed host does not admit the job, the kit (without run/objects and the intermediate stage odbs) plus the LAST stage odb and the run
+# dir's small files are rsynced (delta, hosts reach each other) to the die host with the most free admit memory, and the job is pinned there.  The same host when it still admits.
+CKPT_ODB = re.compile(r"^(\d)_([a-z]+)\.odb$")                  # a final stage odb: 3_place.odb, 4_cts.odb, 5_1_grt (5_1_grt.odb is matched below)
+CKPT_ODB_SUB = re.compile(r"^(\d)(?:_\d)?_([a-z_]+)\.odb$")
+
+
+def pick_checkpoint_odbs(names):
+    """from the file names of run/results/asap7/*/base: the odb of the LAST completed stage (highest stage number, final file of that stage, not a sub-step); [] when none"""
+    best = None
+    for n in names:
+        m = CKPT_ODB.match(n)
+        if not m:
+            m2 = re.match(r"^(\d)_(\d)_([a-z]+)\.odb$", n)         # 5_1_grt.odb
+            if m2 and m2.group(3) in ("grt", "route", "drt"):
+                m = m2
+            else:
+                continue
+        key = (int(m.group(1)), n)
+        if best is None or key > best:
+            best = key
+    return [best[1]] if best else []
+
+
+def resume_target(status_text, mem, ran_on, hub, die_hosts=None):
+    """-> (host, why): the die host to resume on.  ran_on itself when it admits `mem` GB, else the host with the most admit GB that does (never the hub); '' when none admits"""
+    adm = {}
+    for h, v in (KW.parse_otrun_status(status_text) or {}).items():
+        h = hub if h == "localhost" else h
+        if h == hub or (die_hosts and h not in die_hosts):
+            continue
+        adm[h] = int(v.get("admit", 0) or 0)
+    if ran_on in adm and adm[ran_on] >= mem:
+        return ran_on, "the killed host still admits"
+    ok = {h: a for h, a in adm.items() if a >= mem}
+    if not ok:
+        return "", "no die host admits %d GB now" % mem
+    h = max(ok, key=lambda x: (ok[x], x))
+    return h, "most free admit memory (%d GB)" % ok[h]
+
+
+def delta_copy_argv(kit, src, dst, odbs):
+    """the ssh+rsync command (run on the SOURCE host, hosts reach each other) that delta-copies the kit to the same path on dst: everything but run/objects and the odb files, then the last stage odb(s)"""
+    q = shlex.quote
+    e = "ssh -o BatchMode=yes -o ControlPath=none -o ConnectTimeout=15"
+    k = kit.rstrip("/")
+    keep = "".join(f" --include={q('run/results/asap7/*/base/' + o)}" for o in odbs)
+    cmd = (f"rsync -a --partial --inplace -e {q(e)} --exclude={q('run/objects')}{keep} --exclude={q('*.odb')} --exclude={q('*.odb.tmp')} {q(k + '/')} {dst}:{q(k + '/')}")
+    return ["ssh", "-o", "BatchMode=yes", "-o", "ControlPath=none", "-o", "ConnectTimeout=15", src, cmd]
+
+
+def resume_move(j, mem):
+    """COORD 11-19: -> host to pin the resubmit to ('' = leave placement to ot-run).  Copies the checkpoint when it moves; any failure -> '' (the old behaviour)"""
+    ro = str(j.get("ran_on") or "")
+    if not j.get("infra_retry") or not re.fullmatch(r"(?:epyc|intel)\d+", ro) or ro == HUB_NAME or j.get("resume_moves", 0) >= 2:
+        return ""
+    rc, out, _ = sh([OT_RUN, "--status"], timeout=120)
+    if rc:
+        return ""
+    host, why = resume_target(out, int(mem), ro, HUB_NAME)
+    if not host:
+        log(f"RESUME-MOVE {j['id']} {j.get('die')}/{j.get('type')}: {why}; ot-run places it")
+        return ""
+    if host == ro:
+        return host
+    kit = j["path"]
+    rc, ls, _ = sh(["ssh", "-o", "BatchMode=yes", "-o", "ControlPath=none", "-o", "ConnectTimeout=15", ro, f"ls {shlex.quote(kit)}/run/results/asap7/*/base/ 2>/dev/null"], timeout=60)
+    odbs = pick_checkpoint_odbs((ls or "").split())
+    if DRY:
+        log(f"would RESUME-MOVE {j['id']} {kit} {ro} -> {host} odb {odbs}")
+        return ""
+    rc, so, se = sh(delta_copy_argv(kit, ro, host, odbs), timeout=7200)
+    if rc:
+        log(f"RESUME-MOVE {j['id']} {j.get('die')}/{j.get('type')}: copy {ro} -> {host} failed rc {rc}: {(se or so)[-200:]}; ot-run places it")
+        return ""
+    j["resume_moves"] = int(j.get("resume_moves") or 0) + 1
+    log(f"RESUME-MOVE {j['id']} {j.get('die')}/{j.get('type')}: checkpoint {','.join(odbs) or 'kit only'} copied {ro} -> {host} ({why}); resubmit pinned there")
+    return host
+
+
 def submit(st, j, attempt_note=""):
     n = j.get("attempts", 0) + 1
     unit = f"ap-{j['id']}-a{n}"
     logf = AP_DIR / "jobs" / j["id"] / f"a{n}.log"
     kit, runner, mem, thr = j["path"], j["runner"], j["mem_gb"], j["threads"]
     argv = [OT_RUN, "--mem", str(mem), "--threads", str(thr), "--dir", kit, "--stage", kit] + stage_disk_args()
+    pin = resume_move(j, mem)
+    if pin:
+        argv += ["--hosts", pin]
     # NEAR-COUNT (COORD 11-01): a core/type listed in lanes/NEAR-COUNT.tsv is admitted as a die-priority crit job
     argv += near_count_args(parse_near_count(read_coord(NEAR_COUNT_FILE)), j.get("die"), j.get("type"),
                             j.get("module"), j.get("item"))
