@@ -136,11 +136,22 @@ class Router:
         return float("inf")
 
 
-def type_rows(plan, tn, text, repo=None, plan_dir=None, limit=LIMIT):
+def type_rows(plan, tn, text, repo=None, plan_dir=None, limit=LIMIT, netlist=None, macro_paths=None):
     """-> (relay_depth rows, report dict) for one type"""
     import core_conns_from_bind as CC
     t = plan["partition_types"][tn]
     res = CC.trace(plan, tn, text, repo)
+    n_netlist = 0
+    if netlist:
+        # FABLE-FIX-S81-LEAF 11-19: cores nested in a wrapper the bound module keeps whole (S81 bk_sel u_core, HEAD u_core) are
+        # not instances of the bound module, so the bound trace has no path for them.  The kit's synthesized netlist has every
+        # core as an instance: add its core-to-core paths (buffer / flop chains only) for sink ports the bound trace missed.
+        import core_conns_from_netlist as CN
+        have = {(p["core"], p["port"]) for p in res["paths"] if p.get("dir") == "in" and "partner" in p}
+        extra = [p for p in CN.trace(netlist, CN.plan_cores(plan, tn, macro_paths, repo))["paths"]
+                 if (p["core"], p["port"]) not in have]
+        res["paths"] = list(res["paths"]) + extra
+        n_netlist = len(extra)
     hcs = {h["inst"]: h for h in t.get("hard_cores", [])}
     pins = {}
     router = Router(t)
@@ -286,7 +297,7 @@ def type_rows(plan, tn, text, repo=None, plan_dir=None, limit=LIMIT):
         if r["D"] > 4:
             unfixed.append(dict(inst=r["inst"], reason=f"D={r['D']} > 4 (schema max)", path_um=r["path_um"]))
             r["D"] = 4
-    return out, dict(type=tn, paths_measured=seen, paths_traced=len(res["paths"]), skipped_no_pins=nopin, rows=len(out), extra_cycles=sum(r["D"] for r in out), unfixed=unfixed,
+    return out, dict(type=tn, paths_measured=seen, paths_traced=len(res["paths"]), paths_netlist=n_netlist, skipped_no_pins=nopin, rows=len(out), extra_cycles=sum(r["D"] for r in out), unfixed=unfixed,
                      read_loops=loops, flight_measured=flight, aligned_groups=aligned,
                      inf_routes=sum(1 for v in router.cache.values() if v == float("inf")))
 
@@ -373,6 +384,8 @@ def main(argv):
     ap.add_argument("--limit", type=float, default=LIMIT)
     ap.add_argument("--out-plan")
     ap.add_argument("--report")
+    ap.add_argument("--netlist-dir", help="DIR/<type>/1_2_yosys.v (+ bound_macro_paths.json) of each type's kit: adds the "
+                                          "core-to-core paths of cores nested in a kept wrapper (core_conns_from_netlist)")
     a = ap.parse_args(argv[1:])
     plan = json.loads(Path(a.plan).read_text())
     plan_dir = Path(a.plan_dir or Path(a.plan).resolve().parent)
@@ -393,7 +406,11 @@ def main(argv):
             rows, rep = cache[geo]
             rep = dict(rep, type=tn, reused=True)
         else:
-            rows, rep = type_rows(plan, tn, f.read_text(), a.repo, plan_dir, a.limit)
+            nl = Path(a.netlist_dir) / tn / "1_2_yosys.v" if a.netlist_dir else None
+            mp = nl.parent / "bound_macro_paths.json" if nl else None
+            rows, rep = type_rows(plan, tn, f.read_text(), a.repo, plan_dir, a.limit,
+                                  netlist=nl.read_text() if nl and nl.is_file() else None,
+                                  macro_paths=json.loads(mp.read_text()) if mp and mp.is_file() else None)
             cache[geo] = (rows, rep)
         if a.out_plan and rows:
             t["relay_depth"] = [dict(r) for r in rows]
