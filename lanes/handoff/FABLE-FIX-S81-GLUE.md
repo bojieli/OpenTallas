@@ -95,3 +95,13 @@ keep33.sh keeps each kit's 3_3_place_gp.odb there; balance.tcl = prototype that 
 ### Clones
 Lane clone epyc9 /srv/opentallas-scratch2/claude/fable-fix-s81-glue (HEAD = my last push 1fd3d8bd5139 line). Work dir
 epyc9 fable-fix-s81-glue-work (relayproof2/, kitrtl/). Local scratch files of this lane live under scratchpad/fxglue/ only.
+
+### tt_ctlm port-register clock latency kit (COORD 04:0x): NOT launched, blocked on the plan / gen chain
+- tap_resolve.py (main a3d70cd04da) refuses tt_ctlm: clock.tap_mode is 'density' (it appends only to explicit or
+  grid+explicit tables). Log epyc9 fable-fix-s81-glue-work/tap_resolve.log; register dump ttctlm_regs.json (41,260 regs).
+- Port-bank registers (u_bin / u_bout / u_lpad, 3,117): 1,602 on the right edge (x ~770), 827 on the bottom edge, 71 top,
+  617 inside. The kit has 62 tap ports clk_t1..62; taps are kit PORTS, so new taps change the bound RTL ports, SDC and pins:
+  a kit with new taps needs plan change -> bind kit-rtl -> gen.py phys (the wave chain), not a hand edit of a kit.
+  No gen command is recorded in the kit or the attempt dir (logs/ empty); kit_wave.py builds it.
+- Asked QC-PLAN-R3: either an explicit / grid+explicit tap table for tt_ctlm (then tap_resolve --span-um 300 runs), or the
+  gen chain command for a private kit. Resynth netlist to put on top: fable-fix-s81-glue-sta/ttctlm/regen/new.sv.
