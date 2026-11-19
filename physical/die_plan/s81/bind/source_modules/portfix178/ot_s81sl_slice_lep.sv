@@ -118,6 +118,24 @@
 // lane pushes and the tag stamp slices read their region's replica instead of the one master (lepe_mu_LP__t2: 7 wn flops at one
 // site fed the write qualifiers of 5 bank columns over up to 787 um, 258 TT ends).  te / w_t stay on the master.  No latency
 // change anywhere: bind K 0.  Default 1 = unchanged; a kit sets +define+OT_S81SL_LEP_WREP=<n> (5 = one per TX bank column).
+// S81-DIE-R3 11-19 (D8i LEPE row A): plan type verilog_defines are bare macro names only (gen_phys.type_verilog_defines),
+// so a type cannot carry +define+OT_S81SL_LEP_RIP=1.  Bare-name selectors for the per-type profile: a type that lists
+// OT_S81SL_LEP_RIP1 / OT_S81SL_LEP_CRP2 / OT_S81SL_LEP_WREP5 gets RIP 1 / CRP 2 / WREP 5; absent = the defaults below.
+`ifdef OT_S81SL_LEP_RIP1
+`ifndef OT_S81SL_LEP_RIP
+`define OT_S81SL_LEP_RIP 1
+`endif
+`endif
+`ifdef OT_S81SL_LEP_CRP2
+`ifndef OT_S81SL_LEP_CRP
+`define OT_S81SL_LEP_CRP 2
+`endif
+`endif
+`ifdef OT_S81SL_LEP_WREP5
+`ifndef OT_S81SL_LEP_WREP
+`define OT_S81SL_LEP_WREP 5
+`endif
+`endif
 `ifndef OT_S81SL_LEP_WREP
 `define OT_S81SL_LEP_WREP 1
 `endif
