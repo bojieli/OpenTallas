@@ -278,5 +278,70 @@ proc tcs_sinks_macro {f mac} {
   }
   return $out
 }
+# ORIGIN-SITE (FABLE-FIX-QC 11-19, same hook and env): the landing start origin `ot_dp_landing_origin(_s) u_cland_origin` of an origin
+# partition is a synchroniser (s0 s1 s2 [sf] + pd taps) whose `start` feeds every reader / writer / forwarded start flop of the
+# partition AND the region relay tx flop u_cland_rstart_tx at its pin.  Its flops are soft: GPL puts them with the majority of the
+# loads and the one far load pays the whole distance in one hop (QC sle_st_b_v2__cl14c98df5__pvcd986c42: origin at (99,470), 13 loads
+# within 300 um, u_cland_rstart_tx at (313,1331): 1,075 um, 1 end at -106.2 ps TT at GRT; st_b x5 kits -4..-106 on that end).
+# p_start into s0 is asynchronous, so the origin may sit anywhere: when the FIRM captures of `start` are spread over more than the
+# reach, all origin flops go to the point with the smallest largest routed distance to them (pcs_tail), FIRM through GPL.  0 cycles,
+# no netlist change.  An origin an earlier hook made FIRM is kept (mode all re-sites it).
+proc pcs_origin_of {nm} {
+  set nm [string map {\\ {}} $nm]
+  if {![regexp {^(.*(?:^|[./])u_cland_origin)[./](s0|s1|s2|sf|pd(?:\[[0-9]+\])?)(?:\$|$)} $nm -> o st]} { return "" }
+  return [list $o $st]
+}
+proc pcs_origin_run {} {
+  set mode [expr {[info exists ::env(OT_PAD_CHAIN_SITE)] ? $::env(OT_PAD_CHAIN_SITE) : "unsited"}]
+  if {$mode ni {unsited auto all}} { return }
+  set dry [expr {[info exists ::env(OT_PAD_CHAIN_SITE_DRY)] && $::env(OT_PAD_CHAIN_SITE_DRY) in {1 firm}}]
+  set blk [ord::get_db_block]
+  set dbu [$blk getDbUnitsPerMicron]
+  set hop_um [expr {[info exists ::env(OT_PAD_CHAIN_HOP_UM)] ? $::env(OT_PAD_CHAIN_HOP_UM) : 380.0}]
+  set halo [expr {round(9.0 * $dbu)}]
+  set row [lindex [$blk getRows] 0]; set sw [[$row getSite] getWidth]; set sh [[$row getSite] getHeight]
+  lassign [$row getOrigin] ox oy
+  set cb [$blk getCoreArea]; set core [list [$cb xMin] [$cb yMin] [$cb xMax] [$cb yMax]]
+  set boxes {}; set raw {}; set org [dict create]
+  foreach i [$blk getInsts] {
+    if {[[$i getMaster] isBlock]} { set b [$i getBBox]; lappend raw [list [$b xMin] [$b yMin] [$b xMax] [$b yMax]]; lappend boxes [list [expr {[$b xMin] - $halo}] [expr {[$b yMin] - $halo}] [expr {[$b xMax] + $halo}] [expr {[$b yMax] + $halo}]]; continue }
+    if {![pcs_isseq $i]} continue
+    set o [pcs_origin_of [$i getName]]
+    if {$o ne ""} { dict lappend org [lindex $o 0] [list $i [lindex $o 1]] }
+  }
+  set nsite 0; set nkeep 0; set nnear 0; set ncell 0; set rep {}
+  set out ""; if {!$dry && [dict size $org]} { set out [open $::env(RESULTS_DIR)/ot_face_flops.txt a] }
+  dict for {o recs} $org {
+    set firm 0; set pts {}; set own {}
+    foreach r $recs { lappend own [lindex $r 0]; if {!$dry && [[lindex $r 0] getPlacementStatus] in {FIRM LOCKED COVER}} { incr firm } }
+    if {$firm && $mode ne "all"} { incr nkeep; continue }
+    foreach r $recs {
+      lassign $r f st
+      if {$st ni {s0 s1 sf}} { foreach p [lindex [pcs_captures $f] 0] { lappend pts $p } }
+    }
+    # the origin's own stages are not captures (a dry read on a placed DB sees them placed)
+    set keep {}; foreach p $pts { set mine 0; foreach f $own { if {[pcs_ctr $f] eq $p} { set mine 1; break } }; if {!$mine} { lappend keep $p } }
+    set pts [lsort -unique $keep]
+    if {[llength $pts] < 2} { incr nnear; continue }
+    set ext [pcs_extremes $pts]
+    set spread 0; foreach p $ext { foreach q $ext { set dd [tcs_md $p $q]; if {$dd > $spread} { set spread $dd } } }
+    if {$spread <= $hop_um * $dbu} { incr nnear; continue }
+    lassign [pcs_tail $pts $boxes $raw $halo $sw] bx by
+    lassign [tcs_push_out $bx $by $boxes $sw] bx by _
+    set b [tcs_snap $bx $by $core $ox $oy $sw $sh]
+    set worst 0; foreach p $ext { set l [lindex [tcs_route $b $p $raw $halo] 0]; if {$l > $worst} { set worst $l } }
+    lappend rep [format "%s at (%.1f,%.1f) %d captures spread %.0f worst hop %.0f um" [string map {\\ {}} $o] [expr {[lindex $b 0] / double($dbu)}] [expr {[lindex $b 1] / double($dbu)}] [llength $pts] [expr {$spread / double($dbu)}] [expr {$worst / double($dbu)}]]
+    incr nsite
+    if {$dry} continue
+    foreach f $own {
+      if {[llength [info commands ff_put_near]]} {
+        if {[ff_put_near $f [lindex $b 0] [lindex $b 1]] eq ""} { tcs_unfix $f; $f setLocation {*}$b; $f setPlacementStatus FIRM }
+      } else { tcs_unfix $f; $f setLocation {*}$b; $f setPlacementStatus FIRM }
+      puts $out [$f getName]; incr ncell
+    }
+  }
+  if {$out ne ""} { close $out }
+  puts "OT_ORIGIN_SITE mode $mode[expr {$dry ? " DRY" : ""}] origins [dict size $org] sited $nsite ($ncell flops) kept_firm $nkeep captures_within_reach $nnear | [join $rep {; }]"
+}
 if {[llength [info commands tcs_route]] == 0} { uplevel #0 {source [file join [file dirname [info script]] tail_copy_anchor.tcl]} }
-if {![info exists ::pcs_no_run]} { pcs_run }
+if {![info exists ::pcs_no_run]} { pcs_run; pcs_origin_run }

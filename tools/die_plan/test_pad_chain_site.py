@@ -113,3 +113,24 @@ def test_hook_keeps_plan_sited_chains_unless_stale_and_never_touches_tail_copies
     assert "if {$firm == $k && $far <= $hop_um * $dbu} { incr kept; continue }" in SRC
     assert "[dict exists $copies $c] || [tcs_is_trunk $nm]" in SRC
     assert "pcs_pin_out" in SRC and "tcs_out_pos $it 1.5" in SRC     # captures at the pin face, not at the core rectangle
+
+
+@needs_tclsh
+def test_origin_flops_are_recognised_and_sited_only_when_the_start_loads_are_spread(tmp_path):
+    """ORIGIN-SITE (FABLE-FIX-QC 11-19): QC st_b, u_cland_origin at (99,470) with 13 loads near it and u_cland_rstart_tx at
+    (313,1331): 1,075 um in one hop, -106.2 ps TT at GRT.  The origin's synchroniser input is asynchronous, so its flops go to the
+    point with the smallest largest routed distance to the FIRM captures of start (622 um here); captures within the reach = left to GPL."""
+    out = tcl(tmp_path, ["pcs_origin_of", "pcs_extremes", "pcs_tail"], r"""
+foreach n {{u_bound.u_cland_origin/s2$_SDFF_PN0_} {u_bound.u_cland_origin/pd$_SDFF_PN0_} {u_bound.u_cland_origin.pd\[2\]$_SDFF_PN0_}
+           {u_bound.u_cland_origin/sf$_DFF_N_} {u_bound.u_cland_rstart_tx/q$_SDFF_PN0_} {u_bound.u_cland_origin_x/s2$_DFF_P_}} {
+  set o [pcs_origin_of $n]; puts [expr {$o eq "" ? "-" : [lindex $o 1]}]
+}
+set pts {{87000 535800} {77900 600900} {71500 330300} {82000 759900} {175500 316600} {118600 309300} {313100 1331500}
+         {146900 320600} {205000 319800} {6200 530700} {5100 397800} {5000 605200} {5000 726200}}
+lassign [pcs_tail $pts {} {} 9000 54] x y
+set w 0; foreach p $pts { set d [expr {abs($x - [lindex $p 0]) + abs($y - [lindex $p 1])}]; if {$d > $w} { set w $d } }
+puts $w
+""")
+    assert out[:6] == ["s2", "pd", "pd[2]", "sf", "-", "-"]
+    assert 600000 < int(out[6]) < 640000                      # 1,075 um today
+    assert "if {$spread <= $hop_um * $dbu} { incr nnear; continue }" in SRC and "pcs_run; pcs_origin_run" in SRC
