@@ -1,6 +1,6 @@
 {
- "schema": "FABLE-FIX-QC-rows.v3",
- "from": "FABLE-FIX-QC",
+ "schema": "FABLE-FIX-QC-rows.v4",
+ "from": "SONNET-FIX-QC (successor of FABLE-FIX-QC)",
  "for": "QC-PLAN-R3 (N4.5)",
  "date": "2026-11-19",
  "form": "A (COORD 04:0x): origin unchanged, 2 relay stages at thirds, +2 cycles declared, every hop under 405 um",
@@ -177,7 +177,12 @@
   "no QC bind / G0 / LATCHECK run with the key (unit tests only: bind identity + start-up sim on the multi-region vehicle, RTL chain, verifier suite, schema)",
   "whether every listed st_b type is the origin of its region in the live count table (measured kits all carry u_cland_origin + u_cland_rstart_tx)",
   "relay_sites are on the straight origin -> tx line; check they are clear of hard cores (kit ff_put_near moves to the nearest free site)",
-  "raw reset of the added stages = the tx flop's raw copy (nearest to the tx pin); the first stage is up to 720 um from it: reset is a level, but check the recovery end in the proof kit"
+  "recovery end of the reset in the proof kit (reset relay level may add 1 cycle of release skew; reset is a level, no lane effect)"
  ],
- "proof": "r712: after the N4.5 bind, one private kit of sle_st_b_v2__cl14c98df5__pvcd986c42 to GRT TT (base -106.24 on u_cland_rstart_tx/q). p3 (origin moved, no stages) stays as a data point only."
+ "proof": "r712: after the N4.5 bind, one private kit of sle_st_b_v2__cl14c98df5__pvcd986c42 to GRT TT (base -106.24 on u_cland_rstart_tx/q). p3 (origin moved, no stages) stays as a data point only.",
+ "reset_policy_r713": "each added stage u_cland_rstart_tx_p<i> takes its raw reset from the raw copy nearest ITS relay_sites entry (clock_landings _tx_raw at=site, limit 405 um = LOCAL_RESET_REACH_UM); a midpoint ot_dp_rrelay u_cland_rst_tx_p<i> is added when that copy is farther. Same rows, no row change needed: the relay_sites already carry the stage position. Stage without a site keeps the tx raw (old behaviour).",
+ "checked": [
+  "all 12 types: relay_sites (p0, p1) clear of every hard core incl. halo+2 um on plan_n45_b.json b27995d3 (0 hits)",
+  "unit tests test_clock_landings + test_count_align_bind pass (+1 new)"
+ ]
 }

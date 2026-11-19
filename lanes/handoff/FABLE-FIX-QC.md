@@ -102,3 +102,10 @@ bash tools/fleet/col_template_rows.sh TREE BASE_PLAN SIDECAR OUT [--all-members]
 - ON MAIN 45d943b418 RELAY-TX-STAGES: partition_types[origin type].landing_relay_tx_stages = n (count_align_bind relay_extra_from_plan via --plan-die, clock_landings u_cland_rstart_tx_p<i> chain, clock_landing_verify, schema + die_plan.schema.json). Tests: test_count_align_bind (+1), test_clock_landings (+1).
 - Form A rows v3 handed to QC-PLAN-R3: lanes/handoff/FABLE-FIX-QC-rows-stb-origin.json (12 st_b types, key = 2, relay_sites for p0/p1 at thirds, hops 349-362 um). NOT bound by me. After the N4.5 bind: private kit sle_st_b_v2__cl14c98df5__pvcd986c42 to GRT TT.
 - p3 = origin-only data point, still running; p1 sle_ctl waits for CTS TT.
+
+## 11-19 SONNET-FIX-QC (successor; Fable limit)
+- r713 FIX ON MAIN 5f65ed8017: clock_landings _tx_raw(at=, limit=): each RELAY-TX stage u_cland_rstart_tx_p<i> takes its raw reset from the raw copy nearest ITS relay_sites entry (reach 405 um; midpoint ot_dp_rrelay u_cland_rst_tx_p<i> beyond). No site = old tx raw. Test added; test_clock_landings + test_count_align_bind green.
+- rows-stb-origin.json v4: no row change (relay_sites already carry stage positions); policy + checks recorded. All 12 st_b types: p0/p1 sites clear of every hard core (halo+2 um) on plan_n45_b.json b27995d3. Told QC-PLAN-R3.
+- p1 sle_ctl (CTS, base -97.91) and p3 (origin-only, route) both still running on intel2 (run_p.sh p1/p3, autopost watchers 578596 / 519870 alive). NEXT: read p1 CTS TT, p3 CTS/GRT TT; after N4.5 bind, private kit sle_st_b_v2__cl14c98df5__pvcd986c42 (form A) to GRT TT.
+- Lane clone: intel2 /srv/opentallas-scratch2/claude/sonnet-fix-qc-repo
+- COORD 11-19: st_b form A rows go into N4.6 (not N4.5); the form A kit waits for the N4.6 bind. Keep p1/p3 watchers, post CTS TT when they land.
