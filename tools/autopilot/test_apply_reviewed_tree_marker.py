@@ -197,10 +197,24 @@ def test_ensure_tree_drops_a_host_that_cannot_take_the_tree():
 
     def run(cmd):
         cmds.append(cmd)
-        return (1, "intel1: refuse (free 0 GB)") if "replicate" in cmd and "--hosts intel1" in cmd else (0, "OK")
+        if "--hosts intel1" in cmd:
+            return (1, "intel1: refuse (free 0 GB)")            # no copy there: the verify-first check fails, then replicate is refused
+        return (0, "OK")
     hosts, notes = A.ensure_tree_on_hosts("/t", "h", ["epyc9", "intel1", "epyc8"], ["epyc9"], "/rt", run=run)
     assert hosts == ["epyc9", "epyc8"]
     assert any(n.startswith("DROPPED intel1") for n in notes) and notes[0].startswith("replicated from epyc9 and verified on epyc8")
+
+
+def test_ensure_tree_keeps_a_host_that_already_holds_a_verified_copy_without_replicating():
+    """QC N4.2 11-19: epyc10 was dropped 3 times with 'target exists' because replicate ran against a finished copy; verify first, keep, no replicate"""
+    cmds = []
+
+    def run(cmd):
+        cmds.append(cmd)
+        return (0, "OK")
+    hosts, notes = A.ensure_tree_on_hosts("/t", "h", ["epyc9", "epyc10"], ["epyc9"], "/rt", run=run)
+    assert hosts == ["epyc9", "epyc10"] and any("epyc10: already holds a verified copy" in n for n in notes)
+    assert not any("replicate" in c for c in cmds)
 
 
 def test_optimistic_apply_is_advisory_and_launches_every_type():

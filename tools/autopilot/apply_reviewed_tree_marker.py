@@ -60,6 +60,13 @@ def ensure_tree_on_hosts(tree, want, current_hosts, hosts, rt, run=None, link_fr
         return list(hosts), [f"DROPPED {h}: no candidate host holds a verified copy of {tree} to replicate from" for h in extra] + notes
     ssh = "ssh -n -o BatchMode=yes -o ControlPath=none -o ConnectTimeout=15 "
     for h in extra:
+        # 11-19 (QC N4.2, epyc10 dropped 3 times with 'target exists or not writable'): an earlier apply's copy had already finished there, so replicate refused the existing tree.
+        # A target that already holds the tree is VERIFIED first; a verified copy is kept without a new replicate (an unverified existing one still goes to replicate / the DROPPED note).
+        rc0, _out0 = sh(f"python3 -I {shlex.quote(sm)} hosts {shlex.quote(tree)} --hosts {shlex.quote(h)} --expect {shlex.quote(want)}")
+        if not rc0:
+            kept.append(h)
+            notes.append(f"{h}: already holds a verified copy")
+            continue
         rep = f"python3 -I {shlex.quote(sm)} replicate {shlex.quote(tree)} --hosts {shlex.quote(h)}" + (f" --link-from {shlex.quote(link_from)}" if link_from else " --tar")
         rc, out = sh(ssh + shlex.quote(src) + " " + shlex.quote(rep))
         if not rc:
