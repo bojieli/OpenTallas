@@ -149,7 +149,7 @@ sigtimedwait, so the message names the SENDER (pid + command line), and one line
                          exit 2) when the matches span more than one --dir, so a flag pattern such as '--mem 24' cannot
                          take other lanes' jobs; --all-dirs overrides after reading the list.  Never `pkill -f` ot-run.
 """
-import concurrent.futures as cf, json, os, re, shlex, signal, subprocess, sys, threading, time
+import concurrent.futures as cf, json, os, re, shlex, signal, socket, subprocess, sys, threading, time
 
 NOTRUN_EXIT = 78   # FLOW-1700: every refusal before the unit starts ends with "NOT-RUN <reason>" on stderr and this status
 
@@ -1242,25 +1242,23 @@ def clients():
     return out
 
 
-def stop_targets(hit, sub, hosts_all):
-    """CANCEL-STOP-1119 (COORD: lanes killed run_kit.sh and containers by hand): [(host, match)] of the STARTED jobs of the cancelled clients.  match = the client's own --dir (the job's mount /
-    kit path) unless that is the generic job root, else the user's substring; hosts = the client's --hosts (or every build host)."""
+def stop_targets(hit, sub, hosts_all, node=None):
+    """CANCEL-EXACT-1119 (QC-PLAN-R3 / S81-DIE-R3: a --cancel stopped every job under the lane dir, a 4 h proof kit included): the STARTED job of each cancelled client is identified by that
+    client's OWN tag, otrun-<this host>-<client pid>-, which ot-heavy puts in the command line of the job's scope (one client = one job).  [(host, tag, pid)] over the client's --hosts."""
+    node = node or socket.gethostname().split(".")[0]
     out = []
-    for rest, d in hit.values():
+    for pid, (rest, d) in sorted(hit.items()):
         opts = rest[:rest.index("--")] if "--" in rest else rest
         hs = opts[opts.index("--hosts") + 1].split(",") if "--hosts" in opts[:-1] else list(hosts_all)
-        m = d if d and os.path.normpath(d) not in (os.path.normpath(JOB_ROOT), "/") and len(d) > 12 else sub
-        if len(m) < 6:
-            continue                       # never stop on a short, unspecific match
         for h in hs:
-            if h not in ("localhost",) and (h, m) not in out:
-                out.append((h, m))
+            if h != "localhost" and (h, f"otrun-{node}-{pid}-", pid) not in out:
+                out.append((h, f"otrun-{node}-{pid}-", pid))
     return out
 
 
 def stop_started(targets, run=subprocess.run):
     """ot-heavy-stop --match M on each host (stops the scope AND its containers; matches processes by cmdline / cwd = the job's own dir)"""
-    for h, m in targets:
+    for h, m, *_ in targets:
         r = run(["ssh", "-n", "-o", "BatchMode=yes", "-o", "ConnectTimeout=10", h, "ot-heavy-stop --match " + shlex.quote(m)], capture_output=True, text=True, timeout=180)
         print(f"ot-run --cancel: {h}: ot-heavy-stop --match {m}: " + ((r.stdout or r.stderr).strip().splitlines() or ["no output"])[-1][:160])
 
@@ -1273,6 +1271,9 @@ def cancel(sub, all_dirs):
     if not hit:
         print(f"ot-run --cancel: no local ot-run client matches {sub!r}")
         return 1
+    if len(hit) > 1 and not all_dirs:
+        print(f"ot-run --cancel: REFUSED: {sub!r} matches {len(hit)} clients (listed above): a prefix is not one job.  Use a substring unique to ONE job, or pass --all-dirs (= all) to stop every one listed.  Nothing killed.")
+        return 2
     if len(dirs) > 1 and not all_dirs:
         print(f"ot-run --cancel: REFUSED: {sub!r} matches {len(hit)} clients in {len(dirs)} different --dir values "
               f"({', '.join(dirs)[:400]}); other lanes' jobs would die.  Use a substring unique to your job (its --dir or "
