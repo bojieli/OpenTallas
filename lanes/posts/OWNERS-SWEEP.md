@@ -37,3 +37,8 @@
   S81: UNOWNED gunit__t1 (place FLOW, 0.4h); UNCLASSIFIED s81sl_leaf__t56 (kit_rtl), svc_hi_dsdv_svc_pvso_entry__t1/t2 (place) - all owned by FAIL-ROUTE-1115, posted 20:38.
   KV: kv3_pv FAILED-NO-RELAUNCH+STALE 3.4h (route INFRA, owner KV-HUBPV-1118); kv3_pv_v8 now running/clean.
   HEAD, QC: no flags. Not verified whether kv3_pv has a live epyc7 job.
+- 2026-11-18 22:52 PST 2250 sweep: 508 rows, 6 flagged, all S81; HEAD/QC/KV none.
+  S81 UNOWNED 4: s81sl_leaf t40,t52,t53,t61 FAILED global_place 0.2-0.3 h; likely FABLE-FIX-S81-LEAF (name mismatch s81sl_leaf vs ot_s81sl_leaf, no agent_id) - confirm.
+  S81 UNCLASSIFIED 2: svc_hi_dsdv_svc_pvso_entry t1 (S81-TAIL-1118) and t2 (FAIL-ROUTE-1115), owners alive, class other.
+  No DEAD-OWNER, no STALE, no failed-no-relaunch flags.
+  Rows: lanes/OWNERS-SWEEP.tsv
