@@ -29,3 +29,11 @@ def test_small_job_that_fits_nowhere_queues_on_the_host_that_admits_most():
 def test_big_job_keeps_the_old_rule():
     host, queue = pick({"epyc7": row(4, 900, 202), "epyc10": row(20, 100, 150)}, 200)
     assert (host, queue) == ("epyc7", True)
+
+
+def test_loadfirst_prefers_the_host_with_the_lowest_load_ratio_among_those_that_admit():
+    """LOADFIRST-1119: epyc8 at 244/96 admits 100 GB (more free memory), the hub at 40/112 admits 60: a 48 GB / 8 thread job goes to the hub"""
+    host, queue = pick({"epyc8": row(100, 300, 244), "localhost": row(60, 200, 40, ncpu=112), "epyc9": row(90, 300, 194)}, 48)
+    assert (host, queue) == ("localhost", False)
+    host, queue = pick({"epyc8": row(100, 300, 90), "epyc9": row(40, 300, 20)}, 48)          # a host that does not admit 48 GB is never chosen for its low load
+    assert host == "epyc8"

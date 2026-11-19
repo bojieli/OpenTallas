@@ -963,6 +963,7 @@ def load_capped(r, mem, threads):
     return n > 0 and int(load1(r)) >= int(f * n)
 
 
+LOADFIRST_MAX_GB = float(os.environ.get("OT_RUN_LOADFIRST_MAX_GB", "96"))   # LOADFIRST-1119
 SMALL_JOB_GB = float(os.environ.get("OT_RUN_SMALL_JOB_GB", "30"))   # SMALLJOB-1119 (COORD): a job asking <= this many GB is not queued on a saturated host
 DIRECT_HEADROOM_GB = 32   # = ot-heavy DIRECT_1107: real MemAvailable must stay this far above the job's --mem
 
@@ -1048,6 +1049,13 @@ def _choose(res, mem, threads=THREADS, die=False):
         return max(ok, key=lambda h: ok[h]["free_gb"]), True
     if die and any(not nodie(h) for h in fits):
         fits = [h for h in fits if not nodie(h)]
+    # LOADFIRST-1119 (COORD, FABLE-FLOW-0555 B: epyc8 244/96 and epyc9 194/96 while the hub sat at 40/112): among the hosts that ADMIT the job on memory (this list), the ones within 0.15 of the lowest
+    # projected load/cores ratio keep the job; the rest of the choice (free threads, memory score) only orders those.  Ordering only: nothing is held that would not be held now.
+    if len(fits) > 1 and not die and mem <= LOADFIRST_MAX_GB:           # big-memory jobs keep the v10 complementary rule (idle RAM first, even on a busy CPU)
+        pool = [h for h in fits if ok[h]["ncpu"] >= SMALL_CORES]           # only the big hosts are compared (small hosts keep their existing role)
+        if len(pool) > 1:
+            lo = min(ratio(ok[h], threads) for h in pool)
+            fits = [h for h in fits if ok[h]["ncpu"] < SMALL_CORES or ratio(ok[h], threads) <= lo + 0.15]
     # THREADCAP_1116: a host whose committed threads + this job stay <= cores x THREAD_CAP takes it first; among those the most free threads
     # (ties: the old score).  When every host is over, the least over wins (the job queues there; ot-heavy holds it).  Hosts that do not
     # report committed_threads keep the old order.
