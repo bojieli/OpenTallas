@@ -1,3 +1,19 @@
+# FABLE-FIX-KV-PV handoff addendum 2026-11-19 (newest first; diagnosis section follows)
+## D25e CBC rows: where they stand (nothing composed, bound or proved yet)
+Worker outputs epyc7 /srv/opentallas-scratch2/claude/fable-fix-kv-pv-1119/rows/<CLASS>/{rows.py,NOTES.md[,tools.patch]}; brief CONTEXT.md.
+- A landing control: READY. clock.landing_raw_branches on kv3_pv + kv3_pv_v8 only (the other 14 pv types already have it), 10 branches
+  each, 48/46 flops, max hop 318/324 um, 0 cycles. Emitter validation passes on bound wrappers. APPLY LAST (names depend on final taps).
+- B ft0_i hard ring child: worker waiting on its G0 comparison. No result yet.
+- C core/child output stations: worker waiting on G0 runs + join RTL lookup. No result yet.
+- D core inputs: READY with caveat. tools.patch (9 files: tail split K from routed run, pad generators --min-pad, pad_reach_census.py),
+  rows site u_bin flops. Command +12 cycles on all 64 columns, pe2 up to +11. Pad tables NOT regenerated; hub re-kit + compiler
+  constants not done. Apply after C.
+- T tap split from placed flops (target 1000/tap): worker running. No result yet.
+- E pvfin views (fail class a11df238f3): cause = kv3_hub_C pvfin_lo/hi rows have no lef/lib, so kv_core_wave lists the SIGNED core
+  qkd_pv_fin_s8_pin (signed-export-1114, ARCHIVED-BOTH-NO-VIEWPACK) as a core to harden with no recipe. Fix = view pack from the signed
+  DB + lef/lib keys. Worker started; rows/E.
+Compose order: T, B, C, D, E, A. Then one bind, one private kv3_pv_v8 kit to GRT TT (r712), then hand to KV-D23-COMPOSE.
+
 # FABLE-FIX-KV-PV handoff (KV pv family owner; restarted 2026-11-19 01:0x PST; the 11-15 section below is history)
 
 ## Status 2026-11-19 01:45 PST (read this first)
