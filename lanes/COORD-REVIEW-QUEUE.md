@@ -9069,3 +9069,4 @@ FAIL_POSTCTS final GRT released TT/FF policy (grt_policy.json) | kit epyc2:/srv/
   - bound_ctl_lanes.load (0S 39, 0N 69)
   - RX window for 0N, out +1
   - hwin_events run.sh, run_mu_hwin_bench, run_seq_host_mu_bench, check_ledger
+- 2026-11-19 12:07 PST S81 family hold margin 30 ps pushed (f3914d81, die s81 added to FAMILY_PS, tests updated, 23 pass). FIX RUN LAUNCHED: slw_hc1 cl3449ea95 (attempt_5 kit copy, run_kit.sh patched with R2R env pass-through), ot-run on epyc9 route 56/8, dir /srv/opentallas-scratch2/claude/hold-margin-1119-run/gen, log intel2:/srv/opentallas-scratch2/claude/hold-margin-1119-run.otrun.log. Control = epyc9 job slw_hc1__cl3449ea95-route-renewed-glider-3417835 (hold_ff -16.04, 143 ends). Results will follow.
