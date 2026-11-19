@@ -75,3 +75,13 @@ Existing benches on the new source: run_mu_hwin_bench.sh, tools/s81_dv/hwin_even
   chain starts 933 um from the core, 0N 735 um. Other u_win classes: worst -389 (1 end t_wf), rest -89..-201, with launch CK 395 vs capture 187 (tap class).
 - Row for S81-DIE-R3: lanes/handoff/FABLE-FIX-S81-SEQHOST-reach-row.json (+2 stations 0S, +1 station 0N, output flops kept at the core). CANDIDATE, not kit-proven.
 - kit3 (pushed form) was still in CTS; kit2 in its TT repair. Read their GRT TT from the kit logs; expect mu_c / mu_rc to stay negative until the row is in.
+
+## State 11-19 05:3x PST: kit3 (pushed form, main 8e20268b5d83) post-CTS read; lane session ends here, kits keep running
+- kit3 post-CTS, before the kit TT repair, TT, placement RC (epyc7 sta_cts_kit3b/sta.log; count flop ends only, the */D glob also matches gate D pins in the kept module):
+  u_win flop ends below 0 = 778 (control 4,895). REACH: mu_c 134 (-997), mu_rc 43 (-966), 10 serial wire buffers (700 ps) to the dragged output flop.
+  Everything else: eat 525 (-122, config-word write decode, static after boot), age df 23 (-90), ng 8 (-92), t_wf 1 (-87), pe1h 37 (-20), pe 4 (-36), rp / rp1h 3 (-34);
+  measured with launch CK 349 vs capture CK 189 on the worst path (tap class). kit2 flat form in the same frame: non-reach worst -389, rp1h -201, vld -136.
+- NOT read: GRT TT of kit2 / kit3 (both were between CTS and GRT; no waiter after this session). Read: epyc7 kit{2,3}/seqhost__t1 logs (OT_TT_SETUP_REPAIR lines,
+  5_global_route.tt.rpt); ot-run logs intel2 ~/.local/state/fable-fix-s81-seqhost/kit{2,3}.otrun.log. Expect FAIL on mu_c / mu_rc until the reach row is in.
+- Gate status: seqhost TT >= -42 is NOT met yet. Depth class closed (RTL on main); reach row + LEPE tap rows are with S81-DIE-R3 (D8h).
+- If eat stays below -42 after the tap rows: the eat write decode (mw_q[SI-1:0] x esel x idle -> 752 enables) can take a registered write strobe, config-only path.
