@@ -1,0 +1,31 @@
+{
+ "schema": "FABLE-FIX-QC-rows.v1",
+ "from": "FABLE-FIX-QC", "for": "QC-PLAN-R3 (delta after N4.3)", "date": "2026-11-19",
+ "class": "slw_fw fault through bit: x_sc_i[0] (E face) -> flt_wo (W face) has no station on the W types; the E types carry 3",
+ "evidence": {
+  "kit": "slw_fw_v2__cl8537f156 N3 wave kit (intel1), 5_1_grt.odb, TT in the kit tt_setup_repair frame, GRT RC",
+  "grt_tt_wns_ps": -146.08, "negative_ends": 1,
+  "path": "u_bound.u_bin_x_sc_i/q[0] (617.1,1063.7) -> 20 buffers, 810 ps -> u_bound.u_bout_flt_wo/q (6.2,428.4); 1,247 um Manhattan in one hop",
+  "census": "intel2:/srv/opentallas-scratch2/claude/fable-fix-qc/k/fwv2/out/census_5_1_grt.odb.log",
+  "precedent": "sle_fw_v1 x2, sle_fw_v2 x2, sle_fw_v3: internal_stations bus:flt_wo with 3 regs_um + lanes[].fixed_cycles 3 on sl_E0..E5_fw__flte (plan a584b32f)"
+ },
+ "types": ["slw_fw_v1__cl51d45468", "slw_fw_v1__clf51c11d8__cl592e3d37", "slw_fw_v1__clf51c11d8__clc7ddab13", "slw_fw_v2__cl8537f156", "slw_fw_v2__cl8f84514c"],
+ "plan_rows": [
+  {"op": "append", "path": "partition_types.<each type above>.internal_stations",
+   "value": {"conn": "bus:flt_wo", "from_um": [622.08, 1068.168], "to_um": [0.0, 428.4],
+             "regs_um": [[466.56, 908.226], [311.04, 748.284], [155.52, 588.342]],
+             "bits": 1, "launch": "u_core", "capture": "face flt_wo", "bit_route": "per_bit", "leaf_um": [622.08, 1068.168],
+             "note": "FABLE-FIX-QC 11-19: W mirror of the sle_fw flt_wo station set; x_sc_i window centre 1068.168 -> flt_wo pin, 3 stations, hop 315.5 um (was 1,247 um in one hop, GRT TT -146.1)"}},
+  {"op": "set", "path": "lanes[id=sl_W0_fw__flte .. sl_W4_fw__flte].fixed_cycles", "value": 3},
+  {"op": "set", "path": "latency.lanes.sl_W0_fw__flte", "value": {"cycles": 7, "fixed": 3, "natural": 7}, "was": {"cycles": 4, "fixed": 0, "natural": 4}},
+  {"op": "set", "path": "latency.lanes.sl_W1_fw__flte", "value": {"cycles": 7, "fixed": 3, "natural": 7}, "was": {"cycles": 4, "fixed": 0, "natural": 4}},
+  {"op": "set", "path": "latency.lanes.sl_W2_fw__flte", "value": {"cycles": 8, "fixed": 3, "natural": 8}, "was": {"cycles": 5, "fixed": 0, "natural": 5}},
+  {"op": "set", "path": "latency.lanes.sl_W3_fw__flte", "value": {"cycles": 7, "fixed": 3, "natural": 7}, "was": {"cycles": 4, "fixed": 0, "natural": 4}},
+  {"op": "set", "path": "latency.lanes.sl_W4_fw__flte", "value": {"cycles": 7, "fixed": 3, "natural": 7}, "was": {"cycles": 4, "fixed": 0, "natural": 4}}
+ ],
+ "hops_um": {"face flop -> s0": 315.5, "s0 -> s1": 315.5, "s1 -> s2": 315.5, "s2 -> flt_wo pin flop": 315.5, "limit": 405},
+ "not_verified": ["bind / R8 / LATCHECK on these rows (fault lanes are 1-bit ctl; the E side took the same +3 with fixed_cycles 3)",
+                  "slw_fw_v1 x3 have no GRT TT read yet (CTS +10..+60); the row is by structure: same buses, same faces, same missing station entry",
+                  "slw_fw_v3 has no flt_wo bus and is not in this row"],
+ "proof": "r712: one private kit of slw_fw_v2__cl8537f156 on the event that carries the rows, read GRT TT (base -146.08)"
+}

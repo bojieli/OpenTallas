@@ -68,3 +68,24 @@
   rt/current); expect "OT_RELAY_SITES placed 1034 flops FIRM (plan keys unmatched: 0 of 1034)".
 - Checked, not a family: cbf_q00__cl870de686 CTS -300.7 = 13 ends, pipe u_d6_u_fab_u_x_1_0_a_d.r[2] -> r[3] on two BUFx8 with 289 + 534 ps
   of unbuffered wire at placement RC; the GRT max-wire pass (120 um) is the step that buffers it. Read its GRT TT before any row.
+
+## 11-19 00:5x PST (COORD 00:1x decisions applied)
+- WAVE: item_env OT_PAD_CHAIN_SITE=auto set (kit_wave_edit, coord 3da32f7a5fb) on sle_ctl x7 + su_c x3 (su_c kits carry 1,112..1,586 pad
+  chains with no plan row), and (82695beaf91) on sle_st_b_v1__pv0e7b1dcc + sle_st_b_v2__cl14c98df5__pvcd986c42. su_c x3 and the two st_b
+  were at N4.2 prelint 00:37; sle_ctl rows still say RUNNING on N4 (the cl372cea1c job dir on epyc9 is gone): watch for N4.2 sle_ctl rows.
+- ON MAIN 3b30e9c420 (rt/current 3b30e9c4208e): ORIGIN-SITE in pad_chain_site.tcl (pcs_origin_run): u_cland_origin flops FIRM at the
+  centre of the FIRM start loads when they are spread > 380 um. st_b class: origin (99,470) -> u_cland_rstart_tx (313,1331) 1,075 um.
+  0 cycles; replaces the "2 stations + K" row for st_b unless p2 reads GRT TT < -42 (then: per-region relay stage, count_align_bind
+  RELAY_STAGES is a global 2 today).
+- Proof kit p2: W/kit/p2/gen/sle_st_b_v2__cl14c98df5__pv41c959f3 (wave N4 attempt_8 kit from epyc9 + hook), started 00:37, watcher
+  autopost.sh p2. First p2 try died in kit_preflight (my rsync excluded signoff.py; the 00:35 AUTO line is that). Base: sibling
+  pvcd986c42 GRT TT -106.24; the wave kit of the same type is in GRT on epyc9 (CTS +18.26), read its tt_setup_measure_grt.log too.
+- ROWS handed over: lanes/handoff/FABLE-FIX-QC-rows-fw-flt_wo.json (5 slw_fw types: internal_stations bus:flt_wo 3 stations at 315.5 um
+  hops + fixed_cycles 3 on sl_W0..W4_fw__flte; exact mirror of the sle_fw rows). Not bound by me. Proof kit after QC-PLAN-R3 binds it.
+- slw_st_b_v1__cle6023ec2 (-210.4, 122 ends): NO row written. Facts: SRAM u_u_r4.u_scale_wait at (354,138) (same origin as the passing
+  sibling cl6357f1cc types), the u_r4 g_sc[*].u_mul logic sits at (170..200, 505..552), 530 um away, next to u_r5's (227,557). The
+  type has no param_set (siblings carry P_u_r*_HI_PAD 28/29, slw_st_b_v2 P_u_r*_RD_PAD 2/3). Open question for QC-PLAN-R3: is cle6023ec2
+  missing its pv split / RD_PAD; if not, the form is a read register at the multiplier (RTL, +1 cycle on that lane).
+- Pad chain census per family (live kits, W scratch padcensus): chains with a matching plan site row: sle_ctl 23 %, st_a 11-18 %, every
+  other family 0 % (slw_fw 20,316 chains / 56 k flops, sle_fw 11,480, stm 5,424, hc1 4,719, fe 5,054, sc 670, cb 1,542, native59 1,643).
+- Kit copy rule (kit_p.sh): source must be a gen dir without run/; N3 attempt dirs that ran in place are not usable.
