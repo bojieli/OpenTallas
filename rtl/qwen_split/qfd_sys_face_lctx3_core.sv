@@ -323,6 +323,26 @@ module qfd_sys_face_lctx3_core #(
     reg  [142:0] dh_prog;                      // {dw_v, dw_addr3, dw_data64, pw_v, pw_addr10, pw_data64}
     reg  [43:0]  dh_run;                       // {kv_write_drained, h_start, stage6, tp_token18, tp_pos18}
     always @* seq_dh = {dh_prog, dh_run};
+    // FABLE-FIX-S81-GLUE 11-19 RELAY FORM (r713; opt-in define OT_QC_SF_PROG_RELAY, undefined = the core is unchanged):
+    // +1 cycle on the program rows.  The row decode registers tt_pw_a / dh_prog_a stay at the ROM side and tt_pw / dh_prog
+    // are a plain relay toward the pin registers (QC glue: ROM at y 450, pins at y 1463, one 1.1 mm hop at TT -130 ps).
+    // Only the three valid bits are reset (rst_bpay keeps its 218-flop region).  seq_dh[43:0] (dh_run) is not relayed, so
+    // the die lanes glue__tt_pw_pw / glue__seq_dh_dh keep their cycles.  Proof for both settings:
+    // tools/qwen_split/sysface32/prove_relay.sh (off: equals the old core; on: the old core + a one-cycle relay on
+    // tt_pw and seq_dh[186:44] only).
+`ifdef OT_QC_SF_PROG_RELAY
+    reg  [74:0]  tt_pw_a;
+    reg  [142:0] dh_prog_a;
+    always @(posedge ck or negedge rst_bpay)
+        if (!rst_bpay) begin tt_pw[74] <= 1'b0; dh_prog[142] <= 1'b0; dh_prog[74] <= 1'b0; end
+        else begin tt_pw[74] <= tt_pw_a[74]; dh_prog[142] <= dh_prog_a[142]; dh_prog[74] <= dh_prog_a[74]; end
+    always @(posedge ck) begin tt_pw[73:0] <= tt_pw_a[73:0]; dh_prog[141:75] <= dh_prog_a[141:75]; dh_prog[73:0] <= dh_prog_a[73:0]; end
+`define QFD_SF_TTPW tt_pw_a
+`define QFD_SF_DHP dh_prog_a
+`else
+`define QFD_SF_TTPW tt_pw
+`define QFD_SF_DHP dh_prog
+`endif
     wire        any_running;
     wire        boot_row = dq_boot && st == S_BOOT;
     always @(posedge ck or negedge rst_boot) begin
@@ -393,19 +413,21 @@ module qfd_sys_face_lctx3_core #(
     // PW i -> TT pw + dh pw (both program copies), DW j -> dh dw
     always @(posedge ck or negedge rst_bpay) begin
         if (!rst_bpay) begin
-            tt_pw <= 75'd0; dh_prog <= 143'd0;
+            `QFD_SF_TTPW <= 75'd0; `QFD_SF_DHP <= 143'd0;
         end else begin
-            tt_pw[74] <= 1'b0; dh_prog[142] <= 1'b0; dh_prog[74] <= 1'b0;
+            `QFD_SF_TTPW[74] <= 1'b0; `QFD_SF_DHP[142] <= 1'b0; `QFD_SF_DHP[74] <= 1'b0;
             if (dq_prog) begin
                 if (dq_idx < PW_ROWS[10:0]) begin
-                    tt_pw <= {1'b1, dq_idx[9:0], rom_qr[63:0]};
-                    dh_prog[74] <= 1'b1; dh_prog[73:64] <= dq_idx[9:0]; dh_prog[63:0] <= rom_qr[63:0];
+                    `QFD_SF_TTPW <= {1'b1, dq_idx[9:0], rom_qr[63:0]};
+                    `QFD_SF_DHP[74] <= 1'b1; `QFD_SF_DHP[73:64] <= dq_idx[9:0]; `QFD_SF_DHP[63:0] <= rom_qr[63:0];
                 end else begin
-                    dh_prog[142] <= 1'b1; dh_prog[141:139] <= dq_idx[2:0]; dh_prog[138:75] <= rom_qr[63:0];
+                    `QFD_SF_DHP[142] <= 1'b1; `QFD_SF_DHP[141:139] <= dq_idx[2:0]; `QFD_SF_DHP[138:75] <= rom_qr[63:0];
                 end
             end
         end
     end
+`undef QFD_SF_TTPW
+`undef QFD_SF_DHP
     wire prog_busy = (st == S_PROG) || (st == S_ARM) || iss_prog || rd_prog || dq_prog;
 
     // ================================================================ MU head contexts (MU-DQ-SYSFACE 2026-10-19)
