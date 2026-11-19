@@ -134,3 +134,9 @@ If the guard kills one again: post the kills.log line to FLEET-OPS-R (bug).
   Contract: hc_post write-back + 1 clk, all other outputs same cycle, every stream. Bind K: vp hc_post write-back latency + 1 (define OT_S81SL_VP_CFX / param CFX).
   First bench run was killed by the memory guard (compile); relaunched -j 4 with output under proof/bench_cfx (proof-priority path),
   intel2 cfx_bench.otrun2.log. Commit + push only after summary.log shows cfx_* PASS and ctl_mut_hq FAIL. As-built patch tool NOT written.
+
+## 11-19 03:1x PST: why pushed flow fixes do not reach S81 kits yet
+gen.py phys runs from the DIE SOURCE TREE (wave spec src = kw45/src_s81_pin_3c913dbdfb23_d8e_1117_work), and the kit copies gp_noconverge.py, kit_ln_copies.py etc.
+from there, not from rt/<sha>. That tree has neither bfc57007db14 (HPWL gate) nor cf90bd19b2 (t56 relay no-op). So t13 / serdes t2 / t12 HPWL stops and the
+t56 kit_rtl error keep repeating until the S81 die source is refreshed from main (D8g compose or ot-src-refresh). Same will hold for the fold fix (gen_phys.py).
+serdes__t2 a13 real log through the fixed gate: 1.001, OK. t13 a18 / serdes t12 a10 logs not retrievable (ran on localhost, sealed job dir deleted).
