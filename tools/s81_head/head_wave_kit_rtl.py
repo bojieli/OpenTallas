@@ -87,6 +87,27 @@ def prepare(args):
           native_sink_censuses=asset_receipts, count_straps=straps, private_exports=private, added_cycles=0))
     print('HEAD_WAVE_PREPARED_DISABLED', out)
 
+def census_path(path, prepared):
+    """the receipt's census path, else the same tree-relative file under this prepared tree or this tool tree.
+    wave_prepare.json records absolute paths of the tree it was prepared in; a live-tree snapshot or a gen host
+    without that tree (KIT_NOT_SELF_CONTAINED, hd_host_n / hd_host_w 11-18) holds the identical file at the same
+    tree-relative path.  The sha256 check still decides."""
+    p = Path(path)
+    if p.is_file():
+        return p
+    parts = p.parts
+    if 'physical' in parts:
+        rel = Path(*parts[parts.index('physical'):])
+        roots = []
+        pp = prepared.parts
+        if 'physical' in pp:
+            roots.append(Path(*pp[:pp.index('physical')]))
+        roots.append(ROOT)
+        for r in roots:
+            if (r / rel).is_file():
+                return r / rel
+    raise ValueError('missing exact native sink census: ' + str(path))
+
 def export(args):
     plan_path, out = args.plan.resolve(), args.out.resolve()
     prepared = plan_path.parent
@@ -98,10 +119,22 @@ def export(args):
     sidecar = prepared / 'source_sidecar.json'
     if digest(sidecar) != receipt['sidecar_sha256']:
         raise ValueError('prepared sidecar changed')
-    for asset in receipt.get('native_sink_censuses', {}).values():
-        if digest(asset['path']) != asset['sha256']:
+    censuses = {}
+    for ref, asset in receipt.get('native_sink_censuses', {}).items():
+        src = census_path(asset['path'], prepared)
+        if digest(src) != asset['sha256']:
             raise ValueError('native sink census changed')
+        censuses[ref] = (src, asset['sha256'])
     out.mkdir(parents=True, exist_ok=False)
+    # KIT self-containment: the verified censuses travel inside the kit, so no later stage reads the
+    # prepare-time tree (which a cleanup or a new gen host may not have).
+    kit_assets = {}
+    for i, (ref, (src, sha)) in enumerate(sorted(censuses.items())):
+        dst = out / 'assets' / ('sink_bins_' + str(i) + '.json')
+        dst.parent.mkdir(exist_ok=True)
+        shutil.copy2(src, dst)
+        kit_assets[ref] = dict(path=str(dst), source=str(src), sha256=sha)
+    write(out / 'native_sink_censuses.json', kit_assets)
     plan = json.loads(plan_path.read_text()); t = plan['partition_types'][args.type]
     check_transport_strip(args.type, t)
     bootstrap = out / 'bootstrap'
