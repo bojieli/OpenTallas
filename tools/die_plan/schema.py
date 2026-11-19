@@ -3555,7 +3555,14 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["i
                        "stage0_um": {"type": "number"}, "stage_um": {"type": "number"}}}}
 
 
+# CBC-RULES-1119 (COORD r713, amended 11-19): die-level close-by-construction key read by tools/die_plan/cbc_pass.py.
+# Absent or true = ON with the default thresholds (cbc_pass HOP_UM / DEPTH_LEVELS / TAP_SINKS / RESET_LEAF); false = off;
+# an object = on (enabled false turns it off) with per-die threshold overrides.
+SCHEMA["properties"]["cbc"] = {"oneOf": [{"type": "boolean"}, {
+    "type": "object", "additionalProperties": False,
+    "properties": {"enabled": {"type": "boolean"}, "hop_um": {"type": "number", "exclusiveMinimum": 25, "maximum": 405},
+                   "depth_levels": {"type": "integer", "minimum": 4}, "tap_sinks": {"type": "integer", "minimum": 100},
+                   "reset_leaf": {"type": "integer", "minimum": 1, "maximum": 48}, "note": {"type": "string"}}}]}
+
 if __name__ == "__main__":
     sys.exit(main(sys.argv))
-
-

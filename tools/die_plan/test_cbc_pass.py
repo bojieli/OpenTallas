@@ -59,3 +59,17 @@ def test_token_cost_bounds():
     assert c["low"]["add_cycles"] == 108 and c["high"]["add_cycles"] == 216
     assert c["base_tok_s"] > c["low"]["tok_s"] > c["high"]["tok_s"]
     assert C.token_cost([], 1, 1, 1.0) is None
+
+
+def test_schema_accepts_the_cbc_key():
+    import jsonschema
+    import schema as S
+    sub = S.SCHEMA["properties"]["cbc"]
+    for ok in (True, False, {"enabled": True}, {"tap_sinks": 800, "hop_um": 300}):
+        jsonschema.validate(ok, sub)
+    for bad in ({"hop_um": 500}, {"x": 1}, "yes"):
+        try:
+            jsonschema.validate(bad, sub)
+        except jsonschema.ValidationError:
+            continue
+        raise AssertionError(bad)
