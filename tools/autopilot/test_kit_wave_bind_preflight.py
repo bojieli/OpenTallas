@@ -15,10 +15,13 @@ def cfg(**die):
 
 
 class Probe:
-    def __init__(self, stale=(), error=None):
-        self.calls, self.stale, self.error = [], set(stale), error
+    def __init__(self, stale=(), error=None, sig="s1"):
+        self.calls, self.stale, self.error, self.sig, self.sig_calls = [], set(stale), error, sig, 0
 
     def __call__(self, host, code, args, timeout=600):
+        if code is KW.PROBE_BIND_SIG:                    # WAVE-TICK-1119: the cheap input signature, counted apart from the full probes
+            self.sig_calls += 1
+            return {"sig": self.sig}
         self.calls.append(args)
         if self.error:
             return {"error": self.error}
@@ -80,3 +83,28 @@ def test_probe_code_runs_the_source_kit_topology(tmp_path):
     assert run(args) == {"stale": ["bad"]}
     assert run(dict(args, scope="selected")) == {"stale": []}
     assert "error" in run(dict(args, plan=str(tmp_path / "missing.json")))
+
+
+def test_verdict_stands_while_inputs_are_unchanged_and_is_reprobed_when_they_change():
+    # WAVE-TICK-1119 (COORD 2): no 30-min re-probe; a 5-min signature check; a changed signature runs the full probe again
+    p, st = Probe(stale={("/b/vD", "t_old")}), {}
+    KW.bind_preflight(None, cfg(), st, "kv", ROWS, now=100.0, rpy=p)
+    assert len(p.calls) == 2
+    t = 100.0 + KW.BIND_PREFLIGHT_TTL_S - 10
+    for i in range(1, 4):                                # 3 later ticks, hours later, same inputs
+        KW.bind_preflight(None, cfg(), st, "kv", ROWS, now=100.0 + i * 3600, rpy=p)
+    assert len(p.calls) == 2 and p.sig_calls >= 2 + 2 * 3     # 2 signatures at fill, one per group per later check
+    n = p.sig_calls
+    KW.bind_preflight(None, cfg(), st, "kv", ROWS, now=100.0 + 3600 + 10, rpy=p)           # inside the 5-min recheck window: not even a signature
+    assert p.sig_calls == n and len(p.calls) == 2
+    p.sig = "s2"                                                                          # the plan / bind / kit_topology.py changed
+    out = KW.bind_preflight(None, cfg(), st, "kv", ROWS, now=100.0 + 5 * 3600, rpy=p)
+    assert len(p.calls) == 4 and list(out) == ["t_old"]
+
+
+def test_unreadable_signature_probe_forces_the_full_probe():
+    p, st = Probe(), {}
+    KW.bind_preflight(None, cfg(), st, "kv", ROWS, now=100.0, rpy=p)
+    p2 = lambda host, code, args, timeout=600: {"error": "x"} if code is KW.PROBE_BIND_SIG else Probe()(host, code, args, timeout)
+    KW.bind_preflight(None, cfg(), st, "kv", ROWS, now=100.0 + 1000, rpy=p2)
+    assert len(p.calls) == 2                                                               # p itself not asked again; the fallback probe ran through p2

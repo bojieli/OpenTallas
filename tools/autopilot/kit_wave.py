@@ -8983,7 +8983,36 @@ except Exception as e:
     out = {"error": (type(e).__name__ + ": " + str(e))[:300]}
 print("AP_JSON " + json.dumps(out))
 """
-BIND_PREFLIGHT_TTL_S = 1800
+BIND_PREFLIGHT_TTL_S = 12 * 3600        # WAVE-TICK-1119 (COORD 2): a verdict now lives as long as its inputs do not change (was 30 min: 3 probes of 50 s each, 155 s of a tick)
+BIND_SIG_RECHECK_S = 300                # ... and the inputs are re-read (one cheap stat walk) at most every 5 min per group
+PROBE_BIND_SIG = r"""
+import hashlib, json, os, sys
+from pathlib import Path
+a = json.loads(sys.argv[1])
+h = hashlib.sha1()
+try:
+    paths = [a["plan"], str(Path(a["src"]) / "tools" / "die_plan" / "kit_topology.py"), a["bind_out"], a.get("asbuilt") or ""]
+    n = 0
+    for p in paths:
+        if not p:
+            continue
+        stack = [p]
+        while stack and n < 4000:
+            q = stack.pop()
+            try:
+                s = os.stat(q)
+            except OSError:
+                h.update(("missing " + q).encode())
+                continue
+            h.update(("%s %d %d" % (q, s.st_size, s.st_mtime_ns)).encode())
+            n += 1
+            if os.path.isdir(q):
+                stack.extend(sorted(os.path.join(q, x) for x in os.listdir(q)))
+    out = {"sig": h.hexdigest()}
+except Exception as e:
+    out = {"error": (type(e).__name__ + ": " + str(e))[:300]}
+print("AP_JSON " + json.dumps(out))
+"""
 
 
 def bind_preflight(AP, cfg, st, die, rows, now=None, rpy=None):
@@ -9021,6 +9050,15 @@ def bind_preflight(AP, cfg, st, die, rows, now=None, rpy=None):
     out = {}
     for key, (g, items) in groups.items():
         c = cache.get(key)
+        if c and c.get("sig") and now - float(c.get("sig_t") or 0) >= BIND_SIG_RECHECK_S:
+            # WAVE-TICK-1119 (COORD 2): the verdict stands while the plan, the bind and kit_topology.py are byte-for-byte what they were (size + mtime walk);
+            # a changed or unreadable signature drops the entry and the full probe below runs
+            sg = rpy(d.get("gen_host"), PROBE_BIND_SIG, g, timeout=120)
+            if isinstance(sg, dict) and sg.get("sig") == c["sig"]:
+                c["sig_t"] = now
+            else:
+                cache.pop(key, None)
+                c = None
         if not c or not set(items) <= set(c.get("checked") or ()):
             p = rpy(d.get("gen_host"), PROBE_BIND, dict(g, types=sorted(set(items))), timeout=600)
             if not isinstance(p, dict) or p.get("error") or not isinstance(p.get("stale"), list):
@@ -9030,7 +9068,9 @@ def bind_preflight(AP, cfg, st, die, rows, now=None, rpy=None):
                 for item in items:                       # FAILCLOSED-1116: an unreadable probe blocks the launch, never passes it (not cached: retried next tick)
                     out[item] = "BIND_PREFLIGHT_UNKNOWN: the bind probe could not run on the gen host; not launched until it can"
                 continue
-            c = cache[key] = {"t": now, "checked": sorted(set(items)), "stale": p["stale"]}
+            sg = rpy(d.get("gen_host"), PROBE_BIND_SIG, g, timeout=120)
+            c = cache[key] = {"t": now, "checked": sorted(set(items)), "stale": p["stale"],
+                              "sig": sg.get("sig") if isinstance(sg, dict) else None, "sig_t": now}
         for item in items:
             if item in c["stale"]:
                 out[item] = (f"KIT_TOPOLOGY_BIND_STALE preflight: bind {g['bind_out']} does not match plan {g['plan']} "
