@@ -250,3 +250,18 @@ QC / KV / HEAD CBC counts need a re-run by CBC-RULES-1119 with main >= 01360b438
   apply with relay_depth.py merge; the vs.sw_* rows of t21 / t60 are left to the station rows). Merged plan: epyc10 proof/g0/plandir/plan_d8i_rows2.json.
   G0 on it: running (intel2 g0_d8i2.otrun.log; epyc10 proof/g0/status_d8i2.txt, g0_d8i2/g0_report.json); control = g0_ctl (2 errors). g0_d8i (first, with the wrong 36) is void.
 - Trace-mapping task (COORD): the S81 leaf vsw case is not a mapping bug. Still to do: the QC flattened-tile case (48 blind types) and the 18 S81 blind types; then four-die re-runs.
+
+## 11-19 ~13:3x PST: mapping fix pushed, four-die recount, next = netlist-level trace
+- main dcd56363d450 (lane commit 05e32381863): core_conns_from_bind indexed-name tier (QC u_t02 = u_u_t_0_2, LEF pins must all be ports, unique pair) and
+  relay_depth.leaf_rel takes the bound leaf from trace core_insts (S81 leaf replica-index names u_u_lf4_u_vn_u_b). test_core_conns_indexed_tile.py.
+- Recount (lane dirs <host>:/srv/opentallas-scratch2/claude/fable-fix-s81-leaf/rc/<die>/{relay_depth.json,summary.json}; script rc_tools/recount.py TOOLS SRC PLAN RTLDIRS WORK):
+  S81 D8g (epyc10) 561 rows / 120 types / +643 stages, unfixed 173, 18 blind (was 360 / 74 / 375). QC N4.6c (epyc9) 13,393 traced, 202 measured, 0 rows, 49 blind
+  (tile links stop at qfd_c_xstn fabric leaves; 20 types had no bound file by my stager). KV D25c (epyc10 rc/kv, baseline rc/kv_base) 543 rows / 34 types / +762, same
+  with and without the fix, 10 blind. HEAD NF15f (epyc9 rc/head, recount_head.py) 0 traced, 7 blind (u_core wrappers).
+- D8i hand-off now: lanes/handoff/S81-D8I-RELAY-DEPTH-ROWS.json = 117 types, 551 rows, +631 stages; S81-LEAF-SWR-STATION-ROWS.json = 5 types, 6 stations.
+  G0 of the 354-row set was clean vs control (2 = 2 errors). G0 of the 551-row set: running (intel2 g0_d8i3.otrun.log; epyc10 proof/g0/status_d8i3.txt, plan plandir/plan_d8i_rows3.json).
+- Netlist-level trace (COORD task, scope: wrapper hierarchy + simple buffer/flop chains): the bind asbuilt.json does NOT help: it holds the nested wrappers as
+  blackboxes (dsdv_bk_sel_vmtx: 0 cells). Plan: read each type kit s own synthesized netlist (cores are instances there), walk core output pin -> BUF/INV/DFF -> core
+  input pin in OpenROAD tcl (bin/leaf_tcl.sh style), emit rows in the core_conns paths format so relay_depth measures them. Not started beyond this finding.
+- Proof kits: t27keep and t27stb still in GRT (relaunched after guard kills), t27relay stopped at FAIL_PLACE_HPWL.gate139 (not yet checked which gate version ran). No GRT TT read yet.
+- Open after that: one read of t31 worst CTS path (-1,116 unexplained).
