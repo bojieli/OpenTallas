@@ -517,3 +517,38 @@ def test_packed_sites_respread():
     assert max(gaps) - min(gaps) <= 1                                 # near-equal hop groups
     assert K.packed_sites(regs[:7], 9) == [(j, j) for j in range(7)]  # deeper: first sites in order (KW-FIX-27)
     assert K.packed_sites(regs[:8], 6) == [(0, 0), (1, 2), (2, 3), (3, 4), (4, 5), (5, 7)]
+
+
+RELAY_SEP_MOCK = r"""
+proc ff_put_near {i x y} { return [list $x $y] }
+set ::insts {}; set n 0
+foreach nm {{u_bound.u_twb.q\[3\]$_DFF_P_} {u_bound.u_a/q\[0\]$_DFF_P_} {u_bound.u_x.r\[1\]$_DFF_P_} {u_bound.u_amb.q$_DFF_P_}} {
+  set c ::ins[incr n]
+  proc $c {cmd} [format {if {$cmd eq "getName"} { return %s }; return ::mas} [list $nm]]
+  lappend ::insts $c
+}
+proc ::blk {cmd} { return $::insts }
+proc ::mas {cmd} { return DFFHQNx1 }
+set ff_blk ::blk; set ff_dbu 1000; set is_fh stdout; set is_miss {}
+"""
+
+
+def test_relay_sites_match_separator_blind_when_the_exact_name_is_absent(tmp_path):
+    """RELAY-SEP (FABLE-FIX-QC 11-18): QC su_c x3 plan keys u_u_suvm_u_vm8q_u_twb/q[N] against flops u_bound.u_u_suvm_u_vm8q_u_twb.q[N]:
+    1,034 of 1,034 keys matched nothing.  '/' and '.' are one separator when the exact name finds no key; exact names still win and an
+    ambiguous separator-blind name is not used."""
+    import shutil
+    import kit_istations as KI
+    if shutil.which("tclsh") is None:
+        pytest.skip("tclsh")
+    assert "string map {/ .} $k" in KI.RELAY_TCL and "RELAY-SEP" in KI.RELAY_TCL
+    f = tmp_path / "t.tcl"
+    f.write_text(RELAY_SEP_MOCK + KI.RELAY_TCL +
+                 "\nrs_place_all [dict create {u_twb/q[3]} {1 2} {u_a/q[0]} {3 4} {u_x/r[1]} {5 6} {u_amb/q} {7 8} {u_amb.q} {9 9} {u_gone/q} {0 0}]\n")
+    out = subprocess.run(["tclsh", str(f)], capture_output=True, text=True, check=True).stdout
+    got = {r[0]: (float(r[2]), float(r[3])) for r in (ln.split("\t") for ln in out.splitlines()) if len(r) > 3 and r[1] == "relay"}
+    assert got[r"u_bound.u_twb.q\[3\]$_DFF_P_"] == (1.0, 2.0)          # '/' key, '.' flop
+    assert got[r"u_bound.u_a/q\[0\]$_DFF_P_"] == (3.0, 4.0)            # exact, as before
+    assert got[r"u_bound.u_x.r\[1\]$_DFF_P_"] == (5.0, 6.0)
+    assert got[r"u_bound.u_amb.q$_DFF_P_"] == (9.0, 9.0)               # the exact key wins over the separator-blind one
+    assert "plan keys unmatched: 2 of 6" in out                            # u_gone/q and the unused u_amb/q

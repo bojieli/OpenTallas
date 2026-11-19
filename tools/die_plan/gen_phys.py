@@ -1004,6 +1004,35 @@ def tail_copy_place(kd):
     return len(rows)
 
 
+PAD_CHAIN_SITE_HOOK = ("\n# PAD-CHAIN-SITE (FABLE-FIX-QC 11-18): landing-pad chains u_pd<D>_<bus>_<bit> sited from the kit netlist (launch -> captures)\n"
+                       "uplevel #0 {source /work/pad_chain_site.tcl}\n")
+PAD_CHAIN_SITE_MODES = ("unsited", "auto", "all")
+
+
+def pad_chain_site_place(kd, env=None):
+    """PAD-CHAIN-SITE (FABLE-FIX-QC 11-18), opt-in by the gen env OT_PAD_CHAIN_SITE = unsited | auto | all (unset / off / 0 = nothing,
+    the kit is byte-identical).  Copies pad_chain_site.tcl (and tail_copy_anchor.tcl, whose route helpers it uses; without a
+    tail_copies.tsv that file does nothing by itself), sources it at the end of face_flops.tcl (PRE_GLOBAL_PLACE, after the plan
+    relay_sites / stations and the tail copies) and records the mode in config.mk.  The hook sites every landing-pad chain
+    u_pd<D>_<bus>_<bit> on a route from what drives it to what it feeds, read from the kit netlist: plan relay_sites rows keyed by
+    the pad depth go stale when the depth changes (QC sle_ctl x7: 10,100..13,316 of 21,808 keys matched nothing, and the matched
+    x_fw_i chain ended 651 um from its core pin, -97.9 ps at CTS).  Returns the mode or None."""
+    mode = str((os.environ if env is None else env).get("OT_PAD_CHAIN_SITE", "")).strip()
+    if mode in ("", "0", "off"):
+        return None
+    if mode not in PAD_CHAIN_SITE_MODES:
+        raise ValueError(f"OT_PAD_CHAIN_SITE={mode!r}: expected one of {', '.join(PAD_CHAIN_SITE_MODES)} (or off)")
+    kd = Path(kd)
+    shutil.copyfile(Path(__file__).with_name("pad_chain_site.tcl"), kd / "pad_chain_site.tcl")
+    if not (kd / "tail_copy_anchor.tcl").is_file():
+        shutil.copyfile(Path(__file__).with_name("tail_copy_anchor.tcl"), kd / "tail_copy_anchor.tcl")
+    with (kd / "face_flops.tcl").open("a") as f_:
+        f_.write(PAD_CHAIN_SITE_HOOK)
+    mk = (kd / "config.mk").read_text()
+    (kd / "config.mk").write_text(mk.rstrip("\n") + f"\nexport OT_PAD_CHAIN_SITE = {mode}\n")
+    return mode
+
+
 LP_EVEN_HOOK = "\n# KV-PVGEN: core_link_pipe stages (u_pc_lp_*) spread to equal hops between their driver and loads\nsource /work/lp_even.tcl\n"
 
 
@@ -7002,6 +7031,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         else:
             (kd / "config.mk").write_text(mk.rstrip("\n") + "\nexport PRE_RESIZE_TCL = /work/core_input_chain.tcl\n")
     tail_copy_place(kd)
+    pad_chain_site_place(kd)
     if core_link_pipe_place(P.raw, tn):
         shutil.copyfile(Path(__file__).with_name("lp_even.tcl"), kd / "lp_even.tcl")
         mk = (kd / "config.mk").read_text()

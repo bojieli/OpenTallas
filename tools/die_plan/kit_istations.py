@@ -271,12 +271,26 @@ RELAY_TCL = """# DIE-KV-59 10-31 plan relay_sites (opt-in partition_types[].rela
 proc rs_place_all {sites} {
   global ff_blk ff_dbu is_fh is_miss
   set n 0; set hit [dict create]
+  # RELAY-SEP (FABLE-FIX-QC 11-18): Yosys writes `inst.q[3]` for a register of a flattened instance and `inst/q[3]` where the
+  # hierarchy is kept, and which one a module gets changes with the flow.  A key that matches no flop as written is tried with
+  # '/' and '.' taken as the same separator (QC su_c x3: 1,034 of 1,034 keys u_u_suvm_u_vm8q_u_twb/q[N] matched nothing, the
+  # flops are u_u_suvm_u_vm8q_u_twb.q[N]).  Exact names win; a separator-blind name shared by two keys is not used.
+  set sep [dict create]
+  dict for {k v} $sites { set a [string map {/ .} $k]; if {[dict exists $sep $a]} { dict set sep $a "" } else { dict set sep $a $k } }
   foreach i [$ff_blk getInsts] {
     if {![string match "*DFF*" [[$i getMaster] getName]]} continue
     set nm [string map {\\\\ {}} [$i getName]]
-    regsub {\\$_[A-Za-z0-9_]*$} $nm {} k
+    regsub {\\$_[A-Za-z0-9_]*$} $nm {} k0
+    set k $k0
     if {![dict exists $sites $k]} { regsub {^[^./]*[./]} $k {} k }
-    if {![dict exists $sites $k]} continue
+    if {![dict exists $sites $k]} {
+      set k ""
+      foreach c [list $k0 [regsub {^[^./]*[./]} $k0 {}]] {
+        set a [string map {/ .} $c]
+        if {[dict exists $sep $a] && [dict get $sep $a] ne ""} { set k [dict get $sep $a]; break }
+      }
+      if {$k eq ""} continue
+    }
     lassign [dict get $sites $k] x y
     set got [ff_put_near $i [expr {round($x * $ff_dbu)}] [expr {round($y * $ff_dbu)}]]
     if {$got eq ""} { lappend is_miss $nm; continue }
