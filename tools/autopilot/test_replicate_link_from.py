@@ -81,3 +81,19 @@ def test_pick_link_base_takes_the_most_similar_sibling_and_never_itself_or_a_par
     assert SM.pick_link_base("src_s81_pin_3c913dbdfb23_d8f_1118_work", names) in ("src_s81_pin_3c913dbdfb23_d8e_1117_work", "src_s81_pin_3c913dbdfb23_d8dr2_1117_work")
     assert SM.pick_link_base("src_s81_pin_3c913dbdfb23_d8f_1118_work", ["other_tree", "x"]) == ""
     assert SM.pick_link_base("abc", ["abd"]) == ""
+
+
+def test_remote_free_gb_retries_a_slow_host_and_keeps_the_free_answer_when_du_fails():
+    """RETRY-1119: epyc7 under load timed out once; the host must not be dropped"""
+    import subprocess, types
+    calls = []
+    def run(cmd, **k):
+        calls.append(k.get("timeout"))
+        if len(calls) == 1:
+            raise subprocess.TimeoutExpired(cmd, k.get("timeout"))
+        if "du -sb" in cmd[-1]:
+            raise subprocess.TimeoutExpired(cmd, k.get("timeout"))
+        return types.SimpleNamespace(stdout="2048000\n")
+    free, have = SM.remote_free_gb("epyc7", "/x/y", "/x/y.part", run=run, sleep=lambda s: None)
+    assert free == 2048000 / 1024 and have == 0.0 and calls[:2] == [40, 80]
+    assert SM.remote_free_gb("h", "/x", "/x.part", run=lambda c, **k: (_ for _ in ()).throw(subprocess.TimeoutExpired(c, 1)), sleep=lambda s: None) == (None, 0.0)
