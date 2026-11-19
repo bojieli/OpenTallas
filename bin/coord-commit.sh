@@ -31,7 +31,13 @@ W9=0; W8=0; TP=0; i=0
 exec 9>"$C/.coord.lock"
 exec 8>"$C/.coord.push.lock"
 t=$(now); flock 9; W9=$(echo "$(now)-$t" | bc)
+ORIG=("$@")
 git add -- "$@"
+# NOTHING-COMMITTED (COORD 11-19, SONNET-FIX-QC): "no changes added to commit" followed by PUSHED hid a handoff that never committed.
+# After staging, the named paths must differ from HEAD; if not, say so, exit 1 (nothing is pushed on their behalf).
+if git diff --cached --quiet -- "$@"; then
+  echo "NOTHING-COMMITTED: $*" | tee /dev/stderr; flock -u 9; exit 1
+fi
 for a in "$@"; do case "$a" in lanes/posts/*.md)
   if [ -f "$C/tools/queue_view.py" ] && [ "$*" != "lanes/COORD-REVIEW-QUEUE.md" ]; then
     COORD_DIR="$C" timeout 120 python3 -I "$C/tools/queue_view.py" --coord "$C" --apply >/dev/null 2>&1 || true
