@@ -1,0 +1,412 @@
+{
+ "basis": "S81-CLOCK-WINDOW-1119 per COORD: core early offset = signed core clock latency (max_clock_tree_path of <module>_{tt,ff}.lib, DIE-LEVEL-CHECK coretap/s81.tsv) minus common latency (TT 250, FF 202.5)",
+ "modules": {
+  "dsdv_bk_g": {
+   "early_FF": 146.5,
+   "early_TT": 179.9,
+   "plan_early_TT_now": [
+    0.0
+   ],
+   "signed_FF": 349.0,
+   "signed_TT": 429.9,
+   "taps": 1
+  },
+  "dsdv_bksel_c": {
+   "early_FF": 175.5,
+   "early_TT": 216.7,
+   "plan_early_TT_now": [
+    0.0
+   ],
+   "signed_FF": 378.0,
+   "signed_TT": 466.7,
+   "taps": 1
+  },
+  "dsdv_bksel_q": {
+   "early_FF": 213.3,
+   "early_TT": 262.4,
+   "plan_early_TT_now": [
+    300.7
+   ],
+   "signed_FF": 415.8,
+   "signed_TT": 512.4,
+   "taps": 4
+  },
+  "dsdv_eng_rr_h0": {
+   "early_FF": 24.1,
+   "early_TT": 20.2,
+   "plan_early_TT_now": [
+    20.2
+   ],
+   "signed_FF": 226.6,
+   "signed_TT": 270.2,
+   "taps": 1
+  },
+  "dsdv_eng_rr_h1": {
+   "early_FF": 11.8,
+   "early_TT": 15.5,
+   "plan_early_TT_now": [
+    13.2
+   ],
+   "signed_FF": 214.3,
+   "signed_TT": 265.5,
+   "taps": 1
+  },
+  "dsdv_gunit_l0": {
+   "early_FF": 27.5,
+   "early_TT": 30.5,
+   "plan_early_TT_now": [
+    0.0
+   ],
+   "signed_FF": 230.0,
+   "signed_TT": 280.5,
+   "taps": 1
+  },
+  "dsdv_gunit_l1": {
+   "early_FF": 34.4,
+   "early_TT": 32.0,
+   "plan_early_TT_now": [
+    0.0
+   ],
+   "signed_FF": 236.9,
+   "signed_TT": 282.0,
+   "taps": 1
+  },
+  "dsdv_gunit_l1f_ba0": {
+   "early_FF": 130.5,
+   "early_TT": 154.1,
+   "plan_early_TT_now": [
+    0.0
+   ],
+   "signed_FF": 333.0,
+   "signed_TT": 404.1,
+   "taps": 4
+  },
+  "dsdv_gunit_l1f_ba1": {
+   "early_FF": 144.2,
+   "early_TT": 176.9,
+   "plan_early_TT_now": [
+    0.0
+   ],
+   "signed_FF": 346.7,
+   "signed_TT": 426.9,
+   "taps": 4
+  },
+  "dsdv_gunit_l1f_bf": {
+   "early_FF": 176.1,
+   "early_TT": 210.9,
+   "plan_early_TT_now": [
+    0.0
+   ],
+   "signed_FF": 378.6,
+   "signed_TT": 460.9,
+   "taps": 4
+  },
+  "dsdv_gunit_l2": {
+   "early_FF": 81.5,
+   "early_TT": 99.2,
+   "plan_early_TT_now": [
+    0.0
+   ],
+   "signed_FF": 284.0,
+   "signed_TT": 349.2,
+   "taps": 1
+  },
+  "dsdv_gunit_l3": {
+   "early_FF": 92.6,
+   "early_TT": 104.9,
+   "plan_early_TT_now": [
+    0.0
+   ],
+   "signed_FF": 295.1,
+   "signed_TT": 354.9,
+   "taps": 1
+  },
+  "dsdv_gunit_l4": {
+   "early_FF": 34.0,
+   "early_TT": 44.4,
+   "plan_early_TT_now": [
+    0.0
+   ],
+   "signed_FF": 236.5,
+   "signed_TT": 294.4,
+   "taps": 1
+  },
+  "dsdv_gunit_l5": {
+   "early_FF": 188.9,
+   "early_TT": 222.1,
+   "plan_early_TT_now": [
+    0.0
+   ],
+   "signed_FF": 391.4,
+   "signed_TT": 472.1,
+   "taps": 1
+  },
+  "dsdv_idx_tx_n32": {
+   "early_FF": 501.4,
+   "early_TT": 607.7,
+   "plan_early_TT_now": [
+    272.7
+   ],
+   "signed_FF": 703.9,
+   "signed_TT": 857.7,
+   "taps": 1
+  },
+  "dsfd_coll_lane_e_safe8_ntf": {
+   "early_FF": 160.7,
+   "early_TT": 211.4,
+   "plan_early_TT_now": [
+    155.0
+   ],
+   "signed_FF": 363.2,
+   "signed_TT": 461.4,
+   "taps": 6
+  },
+  "dsfd_coll_lane_w_safe8_ntf": {
+   "early_FF": 160.7,
+   "early_TT": 211.4,
+   "plan_early_TT_now": [
+    155.0
+   ],
+   "signed_FF": 363.2,
+   "signed_TT": 461.4,
+   "taps": 8
+  },
+  "dsfd_su_t_rxsf": {
+   "early_FF": 6.0,
+   "early_TT": 6.1,
+   "plan_early_TT_now": [
+    0.0
+   ],
+   "signed_FF": 208.5,
+   "signed_TT": 256.1,
+   "taps": 79
+  },
+  "ot_dsrom_su_hcpost_lane_pr": {
+   "early_FF": 2.4,
+   "early_TT": 9.6,
+   "plan_early_TT_now": [
+    0.0
+   ],
+   "signed_FF": 204.9,
+   "signed_TT": 259.6,
+   "taps": 1264
+  },
+  "ot_s81_mu72_lnland": {
+   "early_FF": 10.0,
+   "early_TT": 27.3,
+   "plan_early_TT_now": [
+    10.4
+   ],
+   "signed_FF": 212.5,
+   "signed_TT": 277.3,
+   "taps": 4
+  },
+  "ot_s81_mu72_lnland_nst": {
+   "early_FF": 8.4,
+   "early_TT": 25.1,
+   "plan_early_TT_now": [
+    10.5
+   ],
+   "signed_FF": 210.9,
+   "signed_TT": 275.1,
+   "taps": 24
+  },
+  "ot_s81c_attn_hcore": {
+   "early_FF": 100.2,
+   "early_TT": 126.3,
+   "plan_early_TT_now": [
+    0.0
+   ],
+   "signed_FF": 302.7,
+   "signed_TT": 376.3,
+   "taps": 1024
+  },
+  "ot_s81dv_eng_finish": {
+   "early_FF": 100.1,
+   "early_TT": 125.0,
+   "plan_early_TT_now": [
+    0.0,
+    106.9
+   ],
+   "signed_FF": 302.6,
+   "signed_TT": 375.0,
+   "taps": 64
+  },
+  "ot_s81dv_norm_finish": {
+   "early_FF": 100.1,
+   "early_TT": 125.0,
+   "plan_early_TT_now": [
+    0.0,
+    106.9
+   ],
+   "signed_FF": 302.6,
+   "signed_TT": 375.0,
+   "taps": 16
+  },
+  "ot_s81sl_capc5r": {
+   "early_FF": -129.8,
+   "early_TT": -164.7,
+   "plan_early_TT_now": [
+    0.0,
+    21.4,
+    192.0
+   ],
+   "signed_FF": 72.7,
+   "signed_TT": 85.3,
+   "taps": 34
+  },
+  "ot_s81sl_egg": {
+   "early_FF": 22.1,
+   "early_TT": 34.4,
+   "plan_early_TT_now": [
+    0.0,
+    25.0
+   ],
+   "signed_FF": 224.6,
+   "signed_TT": 284.4,
+   "taps": 16
+  },
+  "ot_s81sl_egn": {
+   "early_FF": 10.2,
+   "early_TT": 22.9,
+   "plan_early_TT_now": [
+    0.0,
+    14.7
+   ],
+   "signed_FF": 212.7,
+   "signed_TT": 272.9,
+   "taps": 32
+  },
+  "ot_s81sl_ve_m": {
+   "early_FF": 111.7,
+   "early_TT": 134.2,
+   "plan_early_TT_now": [
+    0.0
+   ],
+   "signed_FF": 314.2,
+   "signed_TT": 384.2,
+   "taps": 79
+  },
+  "ot_s81sl_ve_s": {
+   "early_FF": 25.0,
+   "early_TT": 23.9,
+   "plan_early_TT_now": [
+    0.0
+   ],
+   "signed_FF": 227.5,
+   "signed_TT": 273.9,
+   "taps": 79
+  },
+  "ot_s81sl_vn_a": {
+   "early_FF": 174.9,
+   "early_TT": 226.5,
+   "plan_early_TT_now": [
+    0.0
+   ],
+   "signed_FF": 377.4,
+   "signed_TT": 476.5,
+   "taps": 79
+  },
+  "ot_s81sl_vn_b": {
+   "early_FF": 179.9,
+   "early_TT": 208.9,
+   "plan_early_TT_now": [
+    0.0
+   ],
+   "signed_FF": 382.4,
+   "signed_TT": 458.9,
+   "taps": 75
+  },
+  "ot_s81sl_vq": {
+   "early_FF": 31.4,
+   "early_TT": 31.4,
+   "plan_early_TT_now": [
+    0.0
+   ],
+   "signed_FF": 233.9,
+   "signed_TT": 281.4,
+   "taps": 75
+  },
+  "ot_s81sl_vs": {
+   "early_FF": -50.9,
+   "early_TT": -52.8,
+   "plan_early_TT_now": [
+    0.0
+   ],
+   "signed_FF": 151.6,
+   "signed_TT": 197.2,
+   "taps": 79
+  },
+  "ot_s81sl_vsw": {
+   "early_FF": 90.8,
+   "early_TT": 116.3,
+   "plan_early_TT_now": [
+    0.0
+   ],
+   "signed_FF": 293.3,
+   "signed_TT": 366.3,
+   "taps": 79
+  },
+  "ot_s81sl_xrt1": {
+   "early_FF": 176.6,
+   "early_TT": 196.6,
+   "plan_early_TT_now": [
+    0.0,
+    79.8
+   ],
+   "signed_FF": 379.1,
+   "signed_TT": 446.6,
+   "taps": 14
+  },
+  "ot_s81sl_xrt3": {
+   "early_FF": 77.7,
+   "early_TT": 103.7,
+   "plan_early_TT_now": [
+    0.0
+   ],
+   "signed_FF": 280.2,
+   "signed_TT": 353.7,
+   "taps": 2
+  },
+  "ot_v41_bf16_half": {
+   "early_FF": 58.7,
+   "early_TT": 86.2,
+   "plan_early_TT_now": [
+    53.2
+   ],
+   "signed_FF": 261.2,
+   "signed_TT": 336.2,
+   "taps": 912
+  },
+  "ot_v41_bf_col3_c": {
+   "early_FF": 150.4,
+   "early_TT": 225.6,
+   "plan_early_TT_now": [
+    184.6
+   ],
+   "signed_FF": 352.9,
+   "signed_TT": 475.6,
+   "taps": 456
+  },
+  "ot_v41_rom_elem_q_qxpq_w10_gb_he": {
+   "early_FF": 247.7,
+   "early_TT": 303.2,
+   "plan_early_TT_now": [
+    215.4
+   ],
+   "signed_FF": 450.2,
+   "signed_TT": 553.2,
+   "taps": 864
+  },
+  "ot_v41_rom_elem_q_qxpq_w10_gb_hw": {
+   "early_FF": 228.8,
+   "early_TT": 283.0,
+   "plan_early_TT_now": [
+    215.4
+   ],
+   "signed_FF": 431.3,
+   "signed_TT": 533.0,
+   "taps": 864
+  }
+ }
+}
