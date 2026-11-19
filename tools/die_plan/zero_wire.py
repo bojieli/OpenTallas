@@ -94,6 +94,23 @@ def _cells(L):
     return out
 
 
+USE_TOK = re.compile(r"(?<![\w$\\.])(\\\S+|[A-Za-z_][\w$]*)(\s*\[[^\]]*\])?")
+
+
+def _use_key(x):
+    """a net expression as a use key: name plus its select, whitespace dropped"""
+    m = USE_TOK.fullmatch(x.strip())
+    return (m.group(1) + re.sub(r"\s+", "", m.group(2) or "")) if m else x.strip()
+
+
+def _use_counts(text):
+    """{use key: occurrences} of every net reference in text (pin names after '.' are not references)"""
+    c = defaultdict(int)
+    for m in USE_TOK.finditer(text):
+        c[m.group(1) + re.sub(r"\s+", "", m.group(2) or "")] += 1
+    return c
+
+
 def _strip_buffers(L, stats):
     """the flow removes the synthesis buffers before placement (ORFS remove_buffers) and re-buffers by load: drop every
     standard buffer whose output is no module port and is read only as a whole pin expression, its readers move to its
@@ -109,6 +126,7 @@ def _strip_buffers(L, stats):
         for _p, (_k, e) in pins.items():
             whole[e] += 1
     text = "\n".join(ln for ln in L if not re.match(r"^\s*(wire|reg|input|output|inout)\b", ln))   # uses, not declarations
+    uses = _use_counts(text)               # one pass (a per-buffer regex over the module was quadratic: hours on 50k buffers)
     alias, drop = {}, set()
     for c, _i, h, pins, e in cells:
         if not BUF_CELL.match(c) or "A" not in pins or "Y" not in pins:
@@ -116,7 +134,7 @@ def _strip_buffers(L, stats):
         a, y = pins["A"][1], pins["Y"][1]
         if not a or not y or re.match(r"^\d+'", a) or _base(y) in ports or y.startswith("{") or a.startswith("{"):
             continue
-        n_txt = text.count(y) if y.startswith("\\") else len(re.findall(r"(?<![\w$\\.])" + re.escape(y) + r"(?![\w$\[])", text))
+        n_txt = uses.get(_use_key(y), 0)
         if n_txt != whole[y]:
             continue                                          # read inside a concatenation / assign: keep the buffer
         alias[y] = a
