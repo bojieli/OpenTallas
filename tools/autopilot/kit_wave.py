@@ -11819,7 +11819,7 @@ def so_same_input(cfg, die, r, rec):
             # FABLE-FLOW-2355 C: the merged src OVERLAY moves with every signed child view of the die (it changed between ticks), so one whole-hash compare never matched and a deterministic place
             # failure reran in 71 min.  A flow-stage (place / route / cts ...) failure compares the components it consumes: block, src, snapshot, bind_context, views; the overlay alone is no release.
             a_, b_ = now.get("pc"), ip.get("pc")
-            if not (fam == "flow" and a_ and b_ and all(a_.get(k) == b_.get(k) for k in ("block", "src", "snapshot", "bind_context", "views"))):
+            if not ((fam == "flow" or stage == "kit_snap") and a_ and b_ and all(a_.get(k) == b_.get(k) for k in ("block", "src", "snapshot", "bind_context", "views"))):   # kit_snap (KIT_INPUT_MISSING) snapshots the original kit files: the merged overlay is not its input either
                 return False
         if (now.get("fam") or {}).get(fam) != (ip.get("fam") or {}).get(fam):
             return False                               # an executed file of this stage changed: relaunch

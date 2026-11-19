@@ -1009,6 +1009,8 @@ class FlowFixes2355(unittest.TestCase):
         rec = {"status": "FAIL", "stage": "place", "reason": "r", "block_sha": "blk", "input_parts": ip}
         cfg["dies"]["s81"]["_src_overlay"] = "OV2"
         self.assertTrue(KW.so_same_input(cfg, "s81", {"item": "x", "block_sha": "blk"}, rec))
+        rec["stage"] = "kit_snap"                                                        # KIT_INPUT_MISSING (kv3_hub_Wi): the overlay is not an input of the kit snapshot either
+        self.assertTrue(KW.so_same_input(cfg, "s81", {"item": "x", "block_sha": "blk"}, rec))
         rec["stage"] = "kit_rtl"                                                         # a bind-stage failure reads the overlay: still a release
         self.assertFalse(KW.so_same_input(cfg, "s81", {"item": "x", "block_sha": "blk"}, rec))
         rec["stage"] = "place"
