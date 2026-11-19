@@ -230,3 +230,13 @@ Cause: cbc_pass.relay_rows ran relay_depth on plan_branch.json in its WORK dir w
 Running: (a) full S81 D8g relay_depth recount, epyc10 rd/s81_d8g_all.json (+ .log, rd/all.pid); (b) private G0, epyc10 proof/g0 (plandir of symlinks + plan_swr.json):
 g0_swr (D8g + 36 station rows) and g0_ctl (D8g), status.txt, via ot-run (intel2 g0_swr.otrun.log). Compare ERROR sets; expect 0 new.
 QC / KV / HEAD CBC counts need a re-run by CBC-RULES-1119 with main >= 01360b438a05.
+
+## 11-19 10:1x PST: G0 on the SWR rows + full S81 recount
+- Private G0 (check.py --street-rule warn, D8g tree, plandir of symlinks): D8g + 36 SWR station rows = 2 errors, 11,287 warnings; D8g control = 2 errors, 11,289 warnings;
+  the 2 errors are identical (cuts at 10500 s_0S_L0 0.67, 10750 s_6S_L0 0.63). Rows are G0-clean. epyc10 proof/g0/{g0_swr,g0_ctl}/g0_report.json.
+- Full S81 D8g relay_depth recount with the tree + plan dir (epyc10 rd/s81_d8g_all.json): 395 types, 71,796 paths measured (was 0), 74 types with rows, 360 rows, +362 stages,
+  375 unfixed. By family: col_h9_r0_p2 72 rows, p5 72, p1 36, p4 36; col_h10_r0_p1 36, p4 30; col_h10_r1 24; leaf 32 rows on 12 types; gunit 19; eng 3.
+  Unfixed: leaf 88, col_h9_r1 60, col_h9_r2 60, dsdv_slice_c1x_C 54, col_h10_r1 36, col_h10_r2 12. 18 types still BLIND (bk_sel__t2, slice_station__t51, svc_hi_*pvso_entry, ...).
+- SECOND GAP, NOT FIXED: on the 36 leaf types of my SWR rows the tool lists the vsw -> vs link on only 5 (rows t21 / t60, unfixed t27 / t71 "neither end is a bound leaf
+  (sub-cores)", flight-only kv_leaf t1); 31 are not listed at all although pin to pin is 203..794 um (t31 591, t10 / t74 695, t4 794). Suspect: plan core inst u_lf.u_vsw vs
+  bound instance u_u_lf<N>_u_vsw name mapping in core_conns_from_bind.trace / relay_depth leaf_rel. Next step: compare trace paths of t60 (works) and t31 (missing).
