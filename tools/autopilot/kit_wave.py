@@ -2833,6 +2833,11 @@ def _live_private_job(item):
         return True
 
 
+def only_items_has(d, item):
+    oi = d.get("only_items")
+    return not isinstance(oi, (list, tuple, set)) or item in oi or any(item.startswith(x + "__") for x in oi)
+
+
 def select(rows, cfg, die, state, plan_types=None):
     """-> (picked rows in launch order, {reason: [items]})"""
     d = cfg["dies"][die]
@@ -2910,11 +2915,18 @@ def select(rows, cfg, die, state, plan_types=None):
             # KW-RELAUNCH-1 11-05: the parent row of a class-split item carries the state of the wave's OWN running class
             # (ROUTING / QUEUED ...).  That hid every released retry of its sibling classes (S81 slice_station t29 / t40 /
             # t6: retry @6 / @8 / @9 set, never launched).  Such a parent still expands, but only into released retries.
-            if not (str(r.get("owner", "")).startswith("KIT-WAVE") and _own_wave_unit(r)
-                    and plan_types is not None and r["item"] not in plan_types
-                    and any(x.split("@", 1)[0].startswith(r["item"] + "__") for x in retry)):
+            if r["state"] == "SIGNED-UNVERSIONED" and plan_types is not None and r["item"] not in plan_types \
+                    and any(t.startswith(r["item"] + "__") for t in plan_types):
+                pass         # FABLE-FLOW-1750: a SIGNED-UNVERSIONED parent still takes its unsigned class items (QC slw_stm_v1/v2, slw_hc2 never launched)
+            elif not (str(r.get("owner", "")).startswith("KIT-WAVE") and _own_wave_unit(r)
+                      and plan_types is not None and r["item"] not in plan_types
+                      and any(x.split("@", 1)[0].startswith(r["item"] + "__") for x in retry)):
+                # never silent: the SKIP line names the state
+                if only_items_has(d, r["item"]):
+                    skip.setdefault(f"SKIP state {r['state']} not in take_states", []).append(r["item"])
                 continue
-            only_retry = True
+            else:
+                only_retry = True
         if r["kind"] not in kinds:
             why = f"kind {r['kind']} not in wave"
         elif d.get("_cores_only") and r["kind"] != "core":
