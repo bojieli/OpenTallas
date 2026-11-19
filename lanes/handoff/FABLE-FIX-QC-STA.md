@@ -31,3 +31,16 @@
   read the GRT/route DB with W/census2.sh KIT OUT 5_1_grt.odb 5_1_grt.sdc grt. census2.sh STA_PATH needs unescaped pin names (bug, paths
   were read with W/dbg/*/dbg.tcl instead).
 - Status scripts: bash W/st.sh k3 k5 k6.
+
+## 11-18 18:4x PST (session parked; kits keep running)
+- k3 (old pin-sited copies) ENDED rc 6 at the post-GRT gate: TT setup_est -155.38 (SETUP_TRIAGE), FF hold +7.22. Form dead. Not routed.
+- k5 (sle_st_a_v1__cl67389ecd, lead form, main 4815c737): CTS TT +10.78 (post tap-balance, tt_setup_measure.log on 4_1_cts.odb); GRT max-wire done
+  (+26,294 cells), hold chunks 1-4: -23.0 -> -0.4 -> +6.6 -> +7.4 -> +7.8, 0 violators. It runs the 40 ps margin chase to the 3 h cap
+  (HOLD-STALL-30: stall stop only above 30 ps), about 19:15, then OT_POSTCTS_GATE TT (global_routing), DRT, sign-off.
+- k6 (slw_st_a_v2__clf4365a62): still in the first global_route (GRT183-RESUME, extra iteration 19/30 at 17:54). Measurement only.
+  Open on slw: u_u_r3/rs_s_c_p[0..1] -133.7 at CTS (668 um unbuffered copy -> pin). Do not rely on max-wire (COORD lever 8): if the GRT TT gate is
+  negative, shorten that hop (OT_TAIL_SRC_FRAC per type, or a nearer route candidate: the rs_s0 r3 copy was pushed to x 608, route 1,670 um
+  against 1,330 um through the x 404-440 channel).
+- W/autopost.sh k5 / k6 watchers post "AUTO kit ended" with RUN_KIT_RC and signoff.json fields.
+- TO DO when k5 ends: rc 0 + SIGNED -> export full DB to rtx-pro and metadata to AGIdock (tools/autopilot/auto_export.py), post; rc 6 -> read
+  OT_POSTCTS_GATE TT line and census the GRT DB (W/census2.sh K OUT 5_1_grt.odb 5_1_grt.sdc grt).
