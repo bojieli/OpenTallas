@@ -362,9 +362,73 @@
   "verdict": "W1 PROVEN: the landing strip y 1000-1200 falls from about 13,000-15,000 to 17. Not routable yet: the remaining 41,887 is the chain route, x 200-400 y 600-800 (W3 at x 340) and x 0-200 y 400-800 (tail t2 strip). D25e must carry the west-channel chain + t2 split (section H) and the raw-branch regen; then repeat this kit."
  },
  "J_kst_site_keys": {
-  "cause": "ot_qkh_head_kst.sv: generate if (D==0) begin:g_w ... else if (D==1) begin:g_r. The else-if is an unnamed nested generate, so Yosys names the flops <inst>.genblk1.g_r.r[b]; the plan relay_sites keys say <inst>.g_r.r[b] and rs_place_all matches exact names: 1,904 of 1,904 unmatched on kv3_hgi_v1 (k7 1_synth_odb.v: u_bound.u_head2_g_t_10_u_kst0.genblk1.g_r.r[0..33]).",
-  "row": "relay_sites keys of every hg / hgi type: u_head<h>_g_t_<t>_u_kst<j>.g_r.r[<b>] -> u_head<h>_g_t_<t>_u_kst<j>.genblk1.g_r.r[<b>] (same sites). Pure key rename in the kst rows writer; kit-only (gen_phys), no bind effect.",
-  "alternative_not_taken": "flatten the generate in the RTL (case form with named blocks) so the name is g_r.r: touches the e0 core RTL that is being re-hardened; do not do it now.",
-  "check": "OT_RELAY_SITES placed N flops FIRM (plan keys unmatched: 0 of 1904) in 3_3_place_gp.log of the next hgi_v1 kit"
+  "WITHDRAWN": "11-19: compose is right. k7 log: OT_RELAY_SITES placed 1936 flops FIRM (plan keys unmatched: 1904 of 3840) = 1,904 kst flops + 32 eN pad flops sited; each kst flop has two key forms and the genblk1 form matched. The 1,904 unmatched keys are unused aliases. No row. (Cosmetic: drop the alias form so the hook stops reporting missing.)"
+ },
+ "K_d25e2_rows_hgi_v1": {
+  "status": "UNPROVEN geometry (no kit yet); prove on the D25e2-bound k7 repeat",
+  "types": [
+   "kv3_hgi_v1__cl141fc26e",
+   "kv3_hgi_v1__cl42bc8b12"
+  ],
+  "geometry": "after W1 the landing core is at x 17-61, y 1097-1415, so the west channel x 0-78 below y 1097 is free. Front pins: e0 top face y 233, e2 broadcast bottom face y 337, e2 row_in top face y 553, e4 bottom face y 683, e6 bottom face y 1002. Channels: e0/e2 y 233-337, e2/e4 y 553-683 (holds cl_ft2_i x 95-260 y 587-644), e4/e6 y 898-1002.",
+  "t2_split_3_copies": {
+   "key": "partition_types[T].reg_leaf_split (tool option being written, see the DONE post of the reg-leaf-split helper for the final key form)",
+   "copies": [
+    {
+     "name": "a",
+     "pins": "u_head2_e0 all t2 ports + u_head2_e2 broadcast ports (c_in, e_in, lt_in, q_valid_in, q_beat_in, q_data_in)",
+     "bits": 807,
+     "site_um": [
+      40.0,
+      285.0
+     ]
+    },
+    {
+     "name": "b",
+     "pins": "u_head2_e2 row_in + u_head2_e4 all t2 ports",
+     "bits": 1063,
+     "site_um": [
+      40.0,
+      618.0
+     ]
+    },
+    {
+     "name": "c",
+     "pins": "u_head2_e6 all t2 ports",
+     "bits": 807,
+     "site_um": [
+      40.0,
+      950.0
+     ]
+    }
+   ],
+   "why_3": "one copy per channel: every pin wire then stays inside its own channel (<= 216 um along the face); the 2-copy k6 form left e2 row_in and e4 crossing channels"
+  },
+  "relay_polylines": [
+   {
+    "group_re": "u_hst2_g$",
+    "polyline_um": [
+     [
+      40.0,
+      1270.08
+     ],
+     [
+      40.0,
+      618.0
+     ]
+    ]
+   }
+  ],
+  "relay_polylines_note": "replaces W3 x 340. Chain = g -> t1 (t2 is split away, t1 is the tail). Source = lane pad station (133, 1270.08); path 93 + 652 = 745 um, 2 hops of 372: g lands at about (40, 991), t1 at (40, 618) = centroid of the 3 copies; hops t1 -> a 333, t1 -> c 332, b adjacent. Needs OT_RELAY_MID_TAIL (already keyed) and main >= ef4eb6eb679.",
+  "head3": "unchanged (chain g/ftg/t2 at x 450-790 is not in the west band); if its t2 shows the same strip problem after this kit, same 3-copy split with sites at x 1238 (east channel) or the middle channel",
+  "K6_choice": {
+   "choice": "+1 stage on the eN lane AND the tN lane (pre-approved cycles); the 0-cycle per-consumer split via land_pad_tail_split does NOT apply: the consumers of u_pd1_i_ectl_Q_N_eN_<b> are the soft leaves u_hst2_g / u_hst3_g, not plan hard cores, and the option only splits toward hard-core pins",
+   "why_not_0_cycle": "bin (0, 20) -> g2 (40, 991) is 1,011 um and -> g3 (451, 948) is 1,379 um: with one pad stage a hop is >= 505 / 690 um whatever the site (k7: 794 um hop = -27 ps, 580 um hop = 0); reach 405 needs 2 stages",
+   "rows": [
+    "lanes: i_ectl_Q_N_eN pad depth 1 -> 2 on the hgi types (fixed_cycles +1), relay_sites stage 0 at (40.0, 340.0), stage 1 at (140.0, 680.0) for all 32 bits (hops 360 / 440 / g2 410 / g3 579)",
+    "internal_stations bus:i_ectl_Q_N_tN regs_um [[133.0, 1270.08]] -> [[133.0, 1270.08], [60.0, 1080.0]] (+1, keeps eN and tN aligned at hst_g); with it the polyline source is (60, 1080): use polyline_um [[40.0, 1080.0], [40.0, 618.0]], g at about (40, 859)",
+    "R8 / latency: both lanes +1 on hgi types only -> r8_ev derive pass as for section B"
+   ]
+  }
  }
 }
