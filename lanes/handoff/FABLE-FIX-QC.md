@@ -112,3 +112,4 @@ bash tools/fleet/col_template_rows.sh TREE BASE_PLAN SIDECAR OUT [--all-members]
 - COORD N4.6a fix: rebuilt sidecar by patching N4.5d table with relay_extra(plan_n46_a): epyc9 qc-plan-r3-n41p/n46/sidecar_n46c.json (+sidecar_relay_extra_patch.py); 12 regions stages 4, 36 K re-referenced; not yet bound. fable-die-qc-r (scratch3) dir is gone; asked FLEET-OPS-R.
 - LEVER 6 11-19: sle_st_a_v2 loss = detour on 3 b_tw_data_i nets (+60 fF), cbf_q00_s2 = no station on x_0_1 b_d -> bc_o01 (28-buffer chain); posted. coll_ftc next.
 - LEVER 6 11-19: GR-RC 2nd repair pass does not close (-37.52 -> -37.52), no flow change pushed; bc_o01 station rows FABLE-FIX-QC-rows-stations-n46d.json for QC-PLAN-R3 N4.6d; coll_ftc DBs found on intel1 ot-jobs.
+- LEVER 6 11-19: bc_o01 row withdrawn (QC-PLAN-R3 plan sites); tap_d row FABLE-FIX-QC-rows-stations-tapd-n46d.json; b_tw_data_i detours = congestion (same-bus + ft ctl buses); coll_ftc = ring half-cycle ends, ~12 ps CTS->GRT.

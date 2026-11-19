@@ -1,0 +1,84 @@
+{
+ "schema": "SONNET-FIX-QC-rows-stations.v2",
+ "for": "QC-PLAN-R3 (N4.6d)",
+ "date": "2026-11-19",
+ "measured_on": "cbf_q00_s2 kit intel1 N4 attempt_2 4_cts.odb (TT -1093.18 tns -172711)",
+ "path": "u_d6_u_fab_u_x_0_0_a_d.q[0] at (77.4,1808.3) -> 8 repair buffers (519 ps and 399 ps stages = long wires) -> u_u_fab_u_x_0_1.u_st.tap_d[0] at (593.8,636.5); slack -777.4; 1688 um Manhattan",
+ "waypoints_um": [
+  [
+   77.4,
+   1808.3
+  ],
+  [
+   83.8,
+   1615.0
+  ],
+  [
+   265.5,
+   1302.3
+  ],
+  [
+   547.0,
+   963.8
+  ],
+  [
+   547.0,
+   801.0
+  ],
+  [
+   593.8,
+   636.5
+  ]
+ ],
+ "hops_now_um": [
+  200,
+  494,
+  620,
+  163,
+  211
+ ],
+ "plan_rows": [
+  {
+   "op": "append",
+   "path": "partition_types.cbf_q00_s2.internal_stations",
+   "value": {
+    "conn": "NEEDS-BUS: the a_d d6 chain end of x_0_0 to the x_0_1 tap_d register (QC-PLAN-R3 names the plan bus)",
+    "from_um": [
+     77.4,
+     1808.3
+    ],
+    "to_um": [
+     593.8,
+     636.5
+    ],
+    "regs_um": [
+     [
+      134.5,
+      1527.8
+     ],
+     [
+      258.6,
+      1314.2
+     ],
+     [
+      410.3,
+      1128.2
+     ],
+     [
+      547.0,
+      927.3
+     ]
+    ],
+    "bits": null,
+    "launch": "u_d6_u_fab_u_x_0_0_a_d.q",
+    "capture": "u_u_fab_u_x_0_1.u_st.tap_d",
+    "note": "4 FIRM stations, hops 338 um (<=405); +4 cycles on this path, counted in fixed_cycles; width and whether tap_d[0] is one bit or the bus not read"
+   }
+  }
+ ],
+ "not_verified": [
+  "conn / bus name and bit width (only q[0] -> tap_d[0] traced)",
+  "hard-core clearance of the sites",
+  "LATCHECK, and whether a station on the xstn tap row is already in QC-PLAN-R3 N4.4 XSTN_STRETCH rows (this is the OT_XSTN_KEEP class: tap_d fed from a d6 pipe 1.7 mm away)"
+ ]
+}
