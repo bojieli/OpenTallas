@@ -156,3 +156,14 @@ def test_boot_release_sites_are_not_type_constants():
     t = (HERE / "serdes_boot_release_local.tcl").read_text()
     assert "1656.72" not in t and "905.85" not in t and "proc ot_serdes_boot_sites" in t
     assert "OT_BOOT_RELEASE_SITES" in t
+
+
+def test_boot_stage_zero_of_the_die_bind_does_not_override_the_type_define(tmp_path):
+    line = "    ot_pdie_serdes_col #(.BOOT_RELEASE_STAGES(0), .HOLD_EDGES(64), .LOCKSAFE(1)) u_core (\n"
+    f = tmp_path / "s81p_x_bound.sv"
+    f.write_text(line)
+    assert G.serdes_boot_stage_param(tmp_path, ["OT_S81_RCK_RELAY4"]) == [] and f.read_text() == line
+    assert G.serdes_boot_stage_param(tmp_path, ["-DOT_S81_SERDES_BOOT_RELEASE3"]) == ["s81p_x_bound.sv"]
+    assert f.read_text() == "    ot_pdie_serdes_col #(.HOLD_EDGES(64), .LOCKSAFE(1)) u_core (\n"
+    f.write_text(line.replace("(0)", "(3)"))
+    assert G.serdes_boot_stage_param(tmp_path, ["OT_S81_SERDES_BOOT_RELEASE3"]) == [] and "(3)" in f.read_text()

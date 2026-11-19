@@ -5944,6 +5944,31 @@ def serdes_phy_region(kd):
         return False
 
 
+BOOT_STAGE_ZERO = re.compile(r"(\bot_pdie_serdes_col\s*#\(\s*)\.BOOT_RELEASE_STAGES\(0\)\s*,\s*")
+
+
+def serdes_boot_stage_param(rtl_dir, defines):
+    """FABLE-FIX-S81-SERDES 11-18 (D8e wave: every serdes kit died at global place, OT_BOOT_RELEASE expected3 kept stages, found 0).
+    The type define OT_S81_SERDES_BOOT_RELEASE3 selects the sized three-stage release (the module default under the define), but
+    the die bind elaborates WITHOUT the type defines and writes the elaborated value .BOOT_RELEASE_STAGES(0) on the bound
+    ot_pdie_serdes_col instance, which overrides the define: the netlist has no release stage while the kit runs the stage
+    placement hook.  In the kit copy of the bound RTL that explicit zero is dropped, so the define decides (the H17/H18 lineage
+    form); any other explicit value is left alone.  Returns the files changed.  The source fix is the bind (plan delta)."""
+    names = {(d[2:] if d.startswith("-D") else d).split("=", 1)[0] for d in defines}
+    if "OT_S81_SERDES_BOOT_RELEASE3" not in names:
+        return []
+    changed = []
+    for f in sorted(Path(rtl_dir).glob("*_bound.sv")):
+        text = f.read_text()
+        new, n = BOOT_STAGE_ZERO.subn(r"\1", text)
+        if n:
+            f.write_text(new)
+            changed.append(f.name)
+            print(f"OT_SERDES_BOOT_STAGES {f.name}: dropped {n} explicit .BOOT_RELEASE_STAGES(0) "
+                  "(type define OT_S81_SERDES_BOOT_RELEASE3 decides)")
+    return changed
+
+
 def serdes_h_post_gpl(kd, names, post_gpl):
     """S81-SERDES-GEN 11-17 (H17 lineage, FABLE-FIX-S81-SERDES2): BOOT_RELEASE3 types run the anchor-aware boot-release placement
     after the transport/RM hooks (the hand kit's post_global_boot3.tcl).  Returns the POST_GLOBAL_PLACE script name."""
@@ -6229,6 +6254,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
             shutil.copyfile(f, dst)
         srcs.append(f"/work/rtl/{Path(f).name}")
     stage_includes(rtl_files, kd / "rtl")
+    serdes_boot_stage_param(kd / "rtl", P.types[tn].get("verilog_defines") or [])
     # DIE-HEAD-53 11-01 (HEAD class LEP-BB): a hard macro instantiated with a parameter override (hd_lep0N
     # g_pp[k].u_pair = ot_s81hd_lep_pair #(.CHB(..))) has only a Liberty cell, which declares no parameters, so
     # yosys elaboration (GEN_LINT rtl_check, synth) stops with "does not have a parameter named ..".  Stage a
