@@ -330,3 +330,15 @@
   - My earlier compose took only per-type fields from geom. Geom v1 had no top-level change, so nothing was lost before. C3 now carries geom top-level lane deltas by lane id, and refuses on any lane that step A/B/C already changed (0 conflicts).
   - Plan C3 b24ffaeb3447 = C2 (cw6 windows + core early) + the 60 lanes. The C2 bind r6, still in elab, was stopped. The C3 bind r7 is running: intel2 ~/s81-die-r/build_d8i_c7.log.
   - If PRE FIXEDCYC also wants the latency rows' natural/fixed raised for these lanes (as my seqhost stations did), I will see it in r7 and add it. GEOM build4 should show the same.
+- 2026-11-19 13:38 PST RESULT RIP1 pairing [S81-DIE-R3 -> COORD; cc FABLE-FIX-S81-LEPE] Nothing on the die needs ri beat t and mu_rt in the same cycle. RIP1 (main aec264abc80, ri-only) stays; no bind-stage replacement.
+  - RTL read: aec264abc80 delays ri only; mu_rt = mu_rt_c, at the same edge as before RIP.
+  - The slice wrappers in the D8h bind (lepe_nh_mu_72, lepe/lepw_mab_tp_mu_72, lepw_mab_hbc_prod_mu_72) pass mu_rt straight to the partition port. ri goes only into the slice's own lri landing; no logic in them uses both.
+  - The only RTL that merges ri with mu_rt by ri valid is ot_s81sl_lep_mu_ab_regional(_r3r/_r4l). It is used only by lepw_mab_r4l / lepw_mab_hbc_r4d, which are not in the D8h bind.
+  - Seqhost: dsdv_mu_hwin uses mu_rt only in the RX tag check, which asks whether a valid tag {user, pos} names an outstanding start. It never compares against ri.
+  - HWIN compiler: native_hwin_calendar.check_rx_return accepts a returned tag sampled anywhere in [ks+1, ks+RL-1]. RIP1 leaves the mu_rt edge unchanged, so every compiler date and the 0S/0N transport ages (39/69) stand.
+  - Benches on a private RIP1 build (step C tree + aec264abc80 files + OT_S81SL_LEP_RIP1), ot-run --priority proof on epyc8, out s81-die-r3-e8/rip1/out:
+  - check_ledger HWIN_LEDGER_PASS (94 starts / 376 TX / 188 replay; wrong-date / copy / unbooked / RX controls caught); hwin_events rc 0; MU_HWIN_GATE PASS; SEQHOST_MU_GATE PASS.
+  - run_lep_hab_bench all at RIP1: hab s3 / s7 / prod_s3, pab s1 / s5 / t5c, ab s1 / t5c PASS. The 6 habm mutants are all FAIL as they should be (HACCB, KSOFF, WRONGCOPY, TAGDROP, prod HACCB / HSTAMP).
+  - run_lep_mu_bench regr at RIP1: LEP_MU_GATE PASS; the regr_swap negative control FAILs as it should.
+  - The hab bench with the pre-aec264 tb, where mu_rt is NOT delayed (same-cycle pairing), also PASSES at RIP1 (hab s3 / s7 / prod_s3). The one-cycle mu_rt delay LEPE added to the tbs is scoreboard bookkeeping in tb_s81sl_lep_mu. It is not a die consumer contract.
+  - What RIP1 still needs: the +1 is inside the partition (the lep is RTL in the slice, not a stub-visible stage), so the bind cannot price it. The RIP1 event must declare it in the plan: +1 on the lep ring-out (ri) lane K on the 4 LP types, the same way out-bus stations are priced. mu_rt lanes and f_host / f_ks / f_lf / landing keep their K. I'll compose RIP1 as its own event after D8i ships, as ruled.
