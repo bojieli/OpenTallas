@@ -93,3 +93,7 @@ bash tools/fleet/col_template_rows.sh TREE BASE_PLAN SIDECAR OUT [--all-members]
 - Real fix = plan row: lanes/handoff/FABLE-FIX-QC-rows-stb-origin.json (origin_rect_um -> [219.96,786.26,237.24,803.54] for sle_st_b).
 - p3 = same type as p2, landing_placement.tcl origin rect edited to that value (copy+mv before launch); started 03:25; watcher autopost.sh p3.
   Read: OT_CLAND / landing placement lines in 3_3, then CTS TT, then GRT TT end u_cland_rstart_tx/q (base -106.24 on the sibling).
+
+## 11-19 03:5x PST
+- st_b row file rewritten (v2, lanes/handoff/FABLE-FIX-QC-rows-stb-origin.json): 4 type groups measured. Origin move + 1 relay = 422-452 um hops (over 405); form A = origin unchanged + 2 relay stages at thirds (349-362 um, +2 cycles). No bind mechanism for extra relay stages yet (count_align_bind RELAY_STAGES const 2): NEXT = write it (per-region stage count + sites) if COORD picks form A.
+- p3 keeps running as origin-only data point (rect at 220,786).
