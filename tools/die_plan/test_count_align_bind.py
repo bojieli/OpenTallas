@@ -365,3 +365,18 @@ def test_relay_tx_stages_shift_only_that_regions_relays_and_keep_the_identity():
     for bad in (True, -1, 9, "2", 1.0):
         with pytest.raises(CB.BindError):
             CB.relay_tx_stages({"landing_relay_tx_stages": bad})
+
+
+def test_onemodel_rise_sample_keeps_ambiguous_tree_crossing_correlated():
+    # HEAD-CROSSING-1119 (HEAD NF15f chE0_t__1): FLOW-ONEMODEL-1 gives every tree edge a sample interval; on a RISE
+    # edge it is the tree port's own rise interval, so the start count and the ring lag see ONE phase.  An ambiguous
+    # rise tree crossing (interval across the rise boundary) must stay violation-free with the sample interval set;
+    # the former independent draw reported full-cycle window violations here.
+    p, b, v0 = run([row("ab", "a", "b", 0.0, 350, 350, unsh=4000.0)])
+    g = b["regions"]["b"]
+    assert g["sync_values"] == 2 and not g["edge_fall"]
+    assert v0["sim_window_violations"] == 0
+    c = b["ports"]["ab"]
+    g["sample_lo_ps"], g["sample_hi_ps"] = c["d_lo_ps"], c["d_hi_ps"]
+    v = CB.verify(b, 600)
+    assert v["sim_window_violations"] == 0

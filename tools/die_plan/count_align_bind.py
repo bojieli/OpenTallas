@@ -425,7 +425,14 @@ def verify(b, samples=2000, seed=1, need_ps=100.0, fall_ports=None):
             if "sample_lo_ps" in r:
                 # FLOW-ONEMODEL-1: the sync samples its own (measured fall / rise) interval
                 slo, shi = r["sample_lo_ps"], r["sample_hi_ps"]
-                d0 = rnd.uniform(slo, shi) if mode == 0 else rnd.choice((slo, shi))
+                if r["edge_fall"]:
+                    # a fall sample is a different physical edge (measured fall arrival): its own draw
+                    d0 = rnd.uniform(slo, shi) if mode == 0 else rnd.choice((slo, shi))
+                else:
+                    # HEAD-CROSSING-1119: a rise sample IS the tree port's own rise arrival (the phase its ring lags
+                    # on); an independent draw decorrelated an AMBIGUOUS rise tree crossing from its own start count
+                    # and reported a full-cycle window violation no chip can have (HEAD NF15f chE0_t__1 -440 ps)
+                    d0 = min(max(dd[r["tree_port"]], slo), shi)
             if "start_skew_ps" in b:
                 sk = b["start_skew_ps"]
                 d0 -= rnd.uniform(*sk) if mode == 0 else rnd.choice(sk)   # the sync samples d - skew
