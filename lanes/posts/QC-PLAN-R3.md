@@ -459,3 +459,12 @@
   - d6 u_d6_u_fab_u_x_0_0_a_d (x_0_0 -> x_0_1): 145.4 um pin-to-pin but 1687.7 um placed -> 1692.0 um routed on the swapped geometry. The 6 existing stages are sited along it, with legs <= 241.9 um (limit 405). Still 0 cycles. The swap does not shorten this path, so the existing stages are still needed.
   - Launched via ot-run on epyc9: chain_n46f.sh (tag N46F, SIDE + R8 seed N46CBQ) and g0pre_n46f.sh. Results go to ~/qc-plan-r3/chain_n46f.log and g0pre_n46f.log.
   - Next: if the bind is green and G0 matches control, re-derive the s2 bank_taps on the bound RTL and publish N4.6f as a delta on n46_s0. N4.6e is waiting for the core-clear x_fw_ctl sites and the b_tw_data_i station from SONNET-FIX-QC. Item 10 is still held.
+- 2026-11-19 11:53 PST QC-PLAN-R3 11-19: N4.6e is composed on top of N4.6f (bind tag N46G, plan_n46_g.json e25793c68228) and launched. It uses the SONNET-FIX-QC v2 core-clear sites (449aa90b8f). It runs in parallel with the N4.6f bind.
+  - Scope: all 3 sle_st_a_v2 types (pv88773f93, pvd2ec7769, pv4242de79). Their hard-core geometry is identical, which the compose script asserts.
+  - (c) x_fw_ctl feedthrough: stations go from 3 on the x=522 column to 5 at (522.1,1.0), (450,120), (300,257), (220,512), (420,640). Hops are 191/287/335/328/231 um. Gaps to the nearest core (halo + 2 um) are 10.0/13.8/10.9/15.6/75.4 um, about 16-82 um to the core edge.
+  - Cycles: sync_fixed_cycles prices +2 on sl_E1/E3/E5_fw__x_fw_ctl (15 -> 17). No bus deltas, nothing breaks the cycle rule.
+  - (d) b_tw_data_i: in these types the landing feeds u_bin_b_tw_data_i (ot_dp_st W=1080) directly. pd1 is a tail copy after the bin, and the binder adds IN-bus stations only before a core input. So the existing bin register is used as the mid-run station: it is FIRM-sited at (500,540) with 0 added cycles. That splits landing -> consumers into 2 hops.
+  - Layout: relay_sites u_bin_b_tw_data_i/q[0..1079], 40 x 27 grid, bounding box x 478.9-521.0, y 533.0-547.0. Gap is 25.6 um beyond halo + 2 to the nearest core.
+  - If a separate +1 register is wanted instead, it needs binder support for landing -> bin stations.
+  - Launched via ot-run on epyc9: chain_n46g.sh and n46/g0pre_n46g.sh. Logs are ~/qc-plan-r3/chain_n46g.log and g0pre_n46g.log.
+  - Effect on the 3 detoured nets is still unproven. Next is a GRT TT proof kit on sle_st_a_v2 pvd2ec7769 once it binds (r712).
