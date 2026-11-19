@@ -156,5 +156,40 @@ class LaunchTree(unittest.TestCase):
         self.assertFalse((Path(self.L) / "junk").exists())
 
 
+class DecoupleTwo(unittest.TestCase):
+    """TOOLS-DECOUPLE-2 (COORD 11-19)"""
+
+    def body(self):
+        return re.search(r"\ndef run_item\(spec_path\):\n(.*?)\n(?=def )", (HERE / "kit_wave.py").read_text(), re.S).group(1)
+
+    def test_flow_refresh_gets_the_die_tree_and_the_farm_starts_from_rt(self):
+        b = self.body()
+        self.assertIn("--die-src {q(src)}", b)                         # kit scripts that are die tree copies become rt's, tools_rev.json is written
+        self.assertIn("cp -a {q(tsrc)}/tools/die_plan {q(kt)}/tools/die_plan", b)   # the legacy kit_rtl farm no longer starts from the die tree's die_plan
+        self.assertNotIn("cp -a {q(src)}/tools", b)
+
+    def test_stage_tool_hashes_are_the_rt_tree_not_the_die_tree(self):
+        """SKIP-SAME-INPUT / fail keys: stage_tools_digest and exec_tools_digest read the scheduler's own (rt) tree; a die tree edit never moves them"""
+        with tempfile.TemporaryDirectory() as t:
+            rt, die = Path(t) / "rt", Path(t) / "die"
+            for r in (rt, die):
+                w(r / "tools/die_plan/hook.tcl", "puts same\n")
+                w(r / "tools/die_plan/gen.py", "x = 1\n")
+                w(r / "tools/die_plan/gen_phys.py", "y = 1\n")
+                w(r / "tools/die_plan/bind.py", "z = 1\n")
+            KW._EXEC_TOOLS.clear()
+            KW._STAGE_TOOLS.clear()
+            e0, s0 = KW.exec_tools_digest(rt), KW.stage_tools_digest(rt)
+            w(die / "tools/die_plan/hook.tcl", "puts die-edit\n")      # the die tree changes: no effect on the rt digest
+            KW._EXEC_TOOLS.clear()
+            KW._STAGE_TOOLS.clear()
+            self.assertEqual((KW.exec_tools_digest(rt), KW.stage_tools_digest(rt)), (e0, s0))
+            w(rt / "tools/die_plan/hook.tcl", "puts rt-fix\n")          # the rt copy changes: the exec digest moves
+            KW._EXEC_TOOLS.clear()
+            self.assertNotEqual(KW.exec_tools_digest(rt), e0)
+        default = re.search(r"def stage_tools_digest\(.*?\n(.*?)\n    k = ", (HERE / "kit_wave.py").read_text(), re.S).group(1)
+        self.assertIn("Path(__file__).resolve().parents[2]", default)  # default root = the tools tree the scheduler runs from (rt/<sha>)
+
+
 if __name__ == "__main__":
     unittest.main()

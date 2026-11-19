@@ -10,8 +10,15 @@ the last weeks.  A generated or edited kit file matches no blob and is never tou
 its inode).  Every call appends one record to K/flow_refresh.jsonl {stage, rt, sha, host, replaced, kept}.
 
   kit_flow_refresh.py --kit K --stage GOAL [--rt /srv/opentallas-scratch2/claude/rt/current] [--dry]
+  kit_flow_refresh.py --kit K --stage gen --die-src SRC     (TOOLS-DECOUPLE-2, see below)
   kit_flow_refresh.py --kit K --stage GOAL --index FILE --src tools/die_plan=DIR --src physical/common_flow=DIR --sha SHA
       (a staged copy instead of an rt tree: the autopilot admission bundle, visible inside the sealed stage job)
+TOOLS-DECOUPLE-2 (COORD 11-19): --die-src SRC (the die source tree; the wave passes it at the gen stage) closes what the blob index cannot:
+a top-level kit script whose bytes equal the die tree's copy of tools/** or physical/common_flow/** but differ from the rt copy of the
+same path is a copy that gen took from the die tree; it is replaced by the rt file whatever main history says.  Plan data and RTL
+are never touched (only .tcl/.py/.sh files that exist in BOTH trees).  The call also writes K/tools_rev.json, the tools rev of the kit:
+rt sha, host, the files taken from rt (sha1) and the files that exist only in the die tree (kept).  tools_rev.json carries no timestamp
+that changes between identical calls other than "t".
 A skipped refresh always prints one KIT_FLOW_REFRESH SKIPPED line (FABLE-FLOW-1000: it used to return silently).
 Opt-out: K/.no_flow_refresh or OT_FLOW_REFRESH=0.  Never fails the stage: any error is logged and exit 0.
 """
@@ -34,7 +41,69 @@ def blob_id(data):
     return hashlib.sha1(b"blob %d\0" % len(data) + data).hexdigest()
 
 
-def refresh(kit, stage, rt=RT, dry=False, index=None, src=None, sha=None):
+DIE_ROOTS = ("tools/die_plan", "tools/autopilot", "tools", "physical/common_flow")   # where a gen copy of a die-tree script can come from
+
+
+def die_tree_copies(kit, rt, die_src, dry=False):
+    """TOOLS-DECOUPLE-2: replace kit scripts that are byte copies of the die tree's tool file with the rt file of the same path.
+    -> (replaced [{file, src, old, new}], rt_files {name: rel}, die_only [name])"""
+    replaced, rt_files, die_only = [], {}, []
+    rtr = os.path.realpath(rt)
+    try:                                                 # a composed launch tree (rt_launch_tree.sh) lists the tool files only the die tree has
+        filled = {ln.strip() for ln in open(os.path.join(rtr, ".rt_launch_filled")) if ln.strip()}
+    except OSError:
+        filled = set()
+    for name in sorted(os.listdir(kit)):
+        p = os.path.join(kit, name)
+        if name in NEVER or not name.endswith(EXT) or os.path.islink(p) or not os.path.isfile(p):
+            continue
+        data = open(p, "rb").read()
+        hit = None
+        for d in DIE_ROOTS:
+            dp, rp = os.path.join(die_src, d, name), os.path.join(rtr, d, name)
+            if os.path.isfile(dp) and open(dp, "rb").read() == data:       # the kit file is the die tree's copy
+                hit = (f"{d}/{name}", os.path.isfile(rp) and f"{d}/{name}" not in filled, rp)
+                break
+        if hit is None:
+            for d in DIE_ROOTS:                                            # not a die tree copy: is it a verbatim rt file?
+                rp = os.path.join(rtr, d, name)
+                if os.path.isfile(rp) and f"{d}/{name}" not in filled and open(rp, "rb").read() == data:
+                    rt_files[name] = f"{d}/{name}"
+                    break
+            continue
+        rel, in_rt, rp = hit
+        if not in_rt:
+            die_only.append(name)
+            continue
+        new = open(rp, "rb").read()
+        if new == data:
+            rt_files[name] = rel
+            continue
+        replaced.append({"file": name, "src": rel, "old": blob_id(data)[:12], "new": blob_id(new)[:12], "from": "die_tree"})
+        rt_files[name] = rel
+        if dry:
+            continue
+        tmp = os.path.join(kit, f".{name}.kfr.{os.getpid()}")
+        with open(tmp, "wb") as f:
+            f.write(new)
+        os.chmod(tmp, os.stat(p).st_mode & 0o7777 | 0o200)
+        os.replace(tmp, p)
+    return replaced, rt_files, die_only
+
+
+def write_tools_rev(kit, rec, rt_files, die_only):
+    """K/tools_rev.json: the tools rev of this kit (the kit manifest line the wave and the post-mortems read)"""
+    doc = {"tools_sha": rec.get("sha", ""), "rt": rec.get("rt", ""), "host": rec.get("host", ""), "stage": rec.get("stage", ""), "t": rec.get("t", ""),
+           "rt_files": {n: rt_files[n] for n in sorted(rt_files)}, "die_tree_only": sorted(die_only),
+           "die_tree_copies_replaced": [r["file"] for r in rec.get("replaced", []) if r.get("from") == "die_tree"]}
+    tmp = os.path.join(kit, f".tools_rev.json.{os.getpid()}")
+    with open(tmp, "w") as f:
+        json.dump(doc, f, indent=1, sort_keys=True)
+        f.write("\n")
+    os.replace(tmp, os.path.join(kit, "tools_rev.json"))
+
+
+def refresh(kit, stage, rt=RT, dry=False, index=None, src=None, sha=None, die_src=None):
     rtr = os.path.realpath(rt)
     roots = dict(src or {})                              # rel dir -> directory holding its current files (default rt/<rel dir>)
     rec = {"t": time.strftime("%Y-%m-%d %H:%M:%S %Z"), "stage": stage, "rt": rtr, "host": socket.gethostname().split(".")[0],
@@ -51,6 +120,8 @@ def refresh(kit, stage, rt=RT, dry=False, index=None, src=None, sha=None):
         idx = json.load(open(ip))
     except (OSError, ValueError):
         rec["note"] = f"SKIPPED: no flow blob index {ip}: nothing replaced"
+        if die_src:
+            _die_pass(kit, rec, rtr, die_src, dry)
         return rec
     if idx.get("sha") and not sha:
         rec["sha"] = idx["sha"]
@@ -86,7 +157,18 @@ def refresh(kit, stage, rt=RT, dry=False, index=None, src=None, sha=None):
             f.write(new)
         os.chmod(tmp, os.stat(p).st_mode & 0o7777 | 0o200)
         os.replace(tmp, p)
+    if die_src:
+        _die_pass(kit, rec, rtr, die_src, dry)
     return rec
+
+
+def _die_pass(kit, rec, rtr, die_src, dry):
+    rep, rt_files, die_only = die_tree_copies(kit, rtr, os.path.realpath(die_src), dry)
+    rec["replaced"].extend(rep)
+    for r in rec["replaced"]:                            # index-pass replacements are rt files too
+        rt_files.setdefault(r["file"], r["src"])
+    if not dry:
+        write_tools_rev(kit, rec, rt_files, die_only)
 
 
 def main(argv=None):
@@ -98,13 +180,14 @@ def main(argv=None):
     ap.add_argument("--index", default="", help="flow blob index (default RT/tools/.flow_blobs.json)")
     ap.add_argument("--src", action="append", default=[], help="REL_DIR=DIR: current files of REL_DIR are in DIR (a staged copy)")
     ap.add_argument("--sha", default="")
+    ap.add_argument("--die-src", default="", help="the die source tree: kit scripts that are its copies are replaced by rt's; writes K/tools_rev.json")
     a = ap.parse_args(argv)
     kit = os.path.abspath(a.kit)
     if os.environ.get("OT_FLOW_REFRESH", "1") == "0" or os.path.exists(os.path.join(kit, ".no_flow_refresh")):
         print("KIT_FLOW_REFRESH SKIPPED: off (OT_FLOW_REFRESH=0 or KIT/.no_flow_refresh)", flush=True)
         return 0
     try:
-        rec = refresh(kit, a.stage, a.rt, a.dry, index=a.index or None, src=dict(x.split("=", 1) for x in a.src), sha=a.sha or None)
+        rec = refresh(kit, a.stage, a.rt, a.dry, index=a.index or None, src=dict(x.split("=", 1) for x in a.src), sha=a.sha or None, die_src=a.die_src or None)
     except Exception as e:                               # noqa: BLE001 - never fails the stage
         rec = {"t": time.strftime("%Y-%m-%d %H:%M:%S %Z"), "stage": a.stage, "error": f"{type(e).__name__}: {e}"}
     if not a.dry:

@@ -7497,7 +7497,7 @@ def run_item(spec_path):
         _kfr = f"{tsrc}/tools/autopilot/kit_flow_refresh.py"
         run("flow_refresh" if stage == "place" else f"flow_refresh_{stage}",
             remote(f"if [ -f {q(_kfr)} ]; then python3 -I {q(_kfr)} --kit {q(K)} --stage {q(stage)} --rt {q(tsrc)} "
-                   f"--sha {q(sp.get('tools_sha') or '')}; else echo 'KIT_FLOW_REFRESH SKIPPED: stage {stage}: '{q(_kfr)}' missing on this host'; fi"),
+                   f"--sha {q(sp.get('tools_sha') or '')} --die-src {q(src)}; else echo 'KIT_FLOW_REFRESH SKIPPED: stage {stage}: '{q(_kfr)}' missing on this host'; fi"),
             idempotent=True)
 
     def otrun(mem, thr, d, cmd, hosts, allow_hub=False, roam=True):  # ot-run names the hub itself 'localhost'
@@ -7903,7 +7903,7 @@ def run_item(spec_path):
                                              str(Path(__file__).resolve().parents[1] / "die_plan") + "/", dest], idempotent=True)
             if rc:
                 return fail("kit_rtl", txt)
-            farm = (f"rm -rf {q(kt)}/tools && mkdir -p {q(kt)}/tools && cp -a {q(src)}/tools/die_plan {q(kt)}/tools/die_plan && "
+            farm = (f"rm -rf {q(kt)}/tools && mkdir -p {q(kt)}/tools && cp -a {q(tsrc)}/tools/die_plan {q(kt)}/tools/die_plan && "
                     f"rsync -a --ignore-existing {q(kt)}/main_dp/ {q(kt)}/tools/die_plan/ && cp -f {q(kt)}/main_dp/bind.py {q(kt)}/main_dp/param_wrap.py {q(kt)}/tools/die_plan/ && "
                     f"cd {q(src)} && for e in * .[!.]*; do [ -e \"$e\" ] || continue; [ \"$e\" = tools ] && continue; "
                     f"ln -sfn {q(src)}/\"$e\" {q(kt)}/\"$e\"; done; "
