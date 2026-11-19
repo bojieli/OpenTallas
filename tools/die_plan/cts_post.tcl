@@ -8,6 +8,8 @@ uplevel #0 [list source [file join $cp_dir tap_balance.tcl]]
 if {![info exists ::env(OT_LEAF_AFFINITY)] || $::env(OT_LEAF_AFFINITY) ne "0"} { uplevel #0 [list source [file join $cp_dir leaf_affinity.tcl]] }
 # S81 AM half-cycle correction, opt-in and guarded by the baseline affinity checks.
 if {[info exists ::env(OT_S81_RCK_AM_COHORT)] && $::env(OT_S81_RCK_AM_COHORT) eq "1"} { uplevel #0 [list source [file join $cp_dir rck_am_cohort.tcl]] }
+# Kit-built pad-clock trunk (plan die_trunk host type, pad_clock_trunk.tcl at PRE_CTS): report the trunk-end arrival.
+if {[llength [info commands pct_report]]} { pct_report }
 # S81 rck depth balance (INV-pair pads, span acceptance), opt-in, after the leaf-repeat hook and the tap balance.
 if {[info exists ::env(OT_S81_RCK_BALANCE)] && $::env(OT_S81_RCK_BALANCE) eq "1"} { uplevel #0 [list source [file join $cp_dir rck_balance.tcl]] }
 # The GPL placement helper is loaded as a library in this fresh CTS process;

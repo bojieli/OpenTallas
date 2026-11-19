@@ -167,3 +167,22 @@ def test_die_trunk_hop_limit():
         pin['die_trunk']['from_xy_um'] = [far, y]
         with pytest.raises(ValueError):
             PC.die_trunks(p, 'mid')
+
+
+def test_host_type_trunk_moves_the_kit_port_and_emits_the_hook():
+    p, pin = tplan()
+    x, y = pin['xy_um']
+    assert PC.trunk_tcl(p, 'mid') == '' and PC.port_xy(pin) == [x, y]            # host die: nothing in the kit
+    w = p.types['mid']['outline_um'][0]
+    step = 200.0 if x + 400.0 <= w else -200.0
+    p, pin = tplan(host='type', from_xy_um=[x + 2 * step, y], stations_um=[[x + step, y]], cell='BUFx24_ASAP7_75t_R')
+    assert PC.port_xy(pin) == [x + 2 * step, y]
+    tcl = PC.trunk_tcl(p, 'mid')
+    assert tcl.count('set ::pct_trunks {') == 1 and 'source /work/pad_clock_trunk.tcl' in tcl
+    assert '{%s BUFx24_ASAP7_75t_R {{' % pin['name'] in tcl
+    hook = (HERE / PC.TRUNK_FILE).read_text()
+    assert 'pct_report' in hook and 'no placement row within' in hook and 'OT_PAD_CLOCK_TRUNK' in hook
+    assert 'pct_report' in (HERE / 'cts_post.tcl').read_text()
+    # a station-less host-type row moves the port but builds nothing
+    p, pin = tplan(host='type')
+    assert PC.trunk_tcl(p, 'mid') == '' and PC.port_xy(pin) == pin['die_trunk']['from_xy_um']
