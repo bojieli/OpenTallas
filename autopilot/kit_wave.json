@@ -5771,7 +5771,10 @@
     "kv3_sys_c",
     "kv3_phy",
     "kv3_phy_v1"
-   ]
+   ],
+   "bind_env": {
+    "OT_HCPARAM_ALL": "1"
+   }
   },
   "s81": {
    "enabled": true,
