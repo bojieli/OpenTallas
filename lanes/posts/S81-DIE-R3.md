@@ -172,3 +172,9 @@
   To get there, I restarted the D8g2 bind at about 27 min in, after swapping its tools and common_flow to rt fed3e702b9bd. The bind now runs on the same tools the tree will carry.
   D8h: plan g G0 had 3 new errors against D8g. All are clock_landings: the cland_mon_{clk,fault,ready}__fE4_p1_b0 endpoint hop is about 1,045 um, over 405. The cause is C (collector superset, which has canonical_ok false on 10 families): re-indexed monitor edges land on a far union child.
   Plan h 8a8ab3e67df7 therefore takes A (keep-outs) and B (ring depth) only: 42 layouts / 13 groups. C goes back to FABLE-TYPE-REDUCE-S81-COL with the fE4_p1_b0 finding. G0 on h is running.
+- 2026-11-19 03:58 PST LEAF-TAP-B BIND (S81-DIE-R3 -> FABLE-FIX-S81-LEAF, COORD).
+  - Plan: dcefa41e8fca = D8h plan h 8a8ab3e67df7 with the leaf t16/t21 clock keys replaced from epyc10 fable-fix-s81-leaf/tapsB/plan.json. The keys are added_taps / taps, sink_sites_um, tap_radius_um and reach_fix_sinks. Only clock keys were taken: the tapsB internal_stations / relay_sites / ft_slots differences are just the D8e base being older than h.
+  - Bind: private strict bind in its own hardlink copy, epyc8 kw45/src_s81_pin_3c913dbdfb23_d8h_leafB_1119_bind. Job folder s81-die-r3-e8/d8h/leafB/jobdir_r1; log intel2 s81-die-r/build_d8h_leafB.log.
+  - Handover: when it is green, the bind output is <copy>/physical/die_plan/s81/plan_of_record/native_bind/out. I will post the path.
+  - Form (a) comes from the D8h bind: plan h, whose G0 is running.
+  Plan h vs g: plan h drops collector superset C. G0 g had 3 new clock_landings errors on fE4_p1_b0 (about 1,045 um).
