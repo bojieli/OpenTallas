@@ -96,3 +96,10 @@ PID files: epyc10 taps1000/fix.pid = 3046128 (reach_fix cap 1000). Proof kits: w
   If timing is as good, propose: gate advisory on leaf (academic profile: only DRC / setup / hold / latency block) or growth measured from the first row at overflow <= 0.30.
 - Bench CFP: cfp1_legal and cfp2_legal PASS on 3 seeds each (59,959 checks, 0 errors); hqx2, cfp0_eq, dense control, mutant still running. Form A stays only if the dense control passes.
 - All three kits re-run global place on relaunch (run_kit does not skip to GRT).
+
+## 11-19 03:1x PST: PLACE-HPWL gate fix PUSHED (COORD ruling: measurement bug)
+main bfc57007db14 (from lane clone epyc10 .../fable-fix-s81-leaf/repo2, separate from repo/ so the fold commit stays unpushed).
+Growth counted from the first row at overflow <= 0.30 or the first non-virtual repair; ratio 1.3 unchanged. t27 kits read 1.165 (was 1.39 / 1.275);
+t47 still STOP at 2.22. Trailer Fixes-Items: s81/ot_s81sl_leaf__*, s81/ot_s81sl_kv_leaf__*.
+Note: that trailer relaunches the family before D8g: the 14 face-bank rows will fail again on stride 2 until D8g applies (told COORD).
+Fold commit (repo/, f25c... amended with trailers): still NOT pushed; rule unchanged (t27keep GRT TT + D8g APPLIED).
