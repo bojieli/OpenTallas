@@ -243,3 +243,13 @@ Files: epyc9 /srv/opentallas-scratch2/claude/fable-fix-s81-serdes3/{E (harness, 
 - D8e wave: fresh attempts are being generated now (serdes__t12 attempt_7 01:31 UTC has OT_SERDES_BOOT_PATH_LOCAL); older attempt dirs in
   3fa87b84b18 are pre-apply and say nothing. Items: <gen host>/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/serdes__t*.
 - Next delta rows (S81-DIE-R3): star row on the 11 io_pma_rck pins; die-level rck trunk field (asked 17:55, not designed).
+
+## State 2026-11-18 18:15 PST
+- D8e wave serdes FAIL class is NOT the 413 um hop. Every attempt I read (17 on epyc8/epyc10/intel1) stops at global place with
+  "OT_BOOT_RELEASE expected3 kept stages, found 0": the bound RTL has ot_pdie_serdes_col #(.BOOT_RELEASE_STAGES(0), ...) (die bind
+  elaborates without the type define), which overrides -DOT_S81_SERDES_BOOT_RELEASE3; netlist has only released_n, no g_stage.
+  Main 2551bd7f342: gen_phys.serdes_boot_stage_param drops that explicit zero in the kit copy of *_bound.sv. NOT yet seen in a
+  generated kit: check the next attempt for "OT_SERDES_BOOT_STAGES ... dropped" at gen and "OT_BOOT_RELEASE placed3" at place.
+- Still open on real D8e kits: the derived-site 413 um hop (seen only on H21), and OT_S81_LPL_CHUNK: the 6 kits generated
+  00:41-01:31 UTC (just before the 01:37 apply) have NO LPL_CHUNK define. Re-check on a post-apply kit; if absent, tell S81-DIE-R3.
+- Source fix for the next delta (S81-DIE-R3): the die bind must elaborate serdes with the type defines (or set the stage count).
