@@ -1916,13 +1916,38 @@ def waiters(table):
     return wait, req
 
 
+SCOPE_GLOB = "/sys/fs/cgroup/user.slice/user-*.slice/user@*.service/*/oth-*.scope"
+
+
+def peak_gap_gb(state_dir=None, scope_glob=None):
+    """MEASURED-PEAK ADMISSION in the light SIMPLE_ADMIT path (FABLE-FLOW-1555 A, COORD 11-18): ot-run saw 'peak 0' on every host because the light path dropped the per-unit books (one
+    `systemctl show` per unit saturated the user manager, FREE_LIGHT_1114).  This restores the term cheaply: every admitted unit holds res.<unit> (its charge = min(class peak, --mem), written
+    at admission); the gap = sum(max(0, reserved - memory.current of its scope)) is memory the running jobs are still expected to grow into.  Reads files only."""
+    d = state_dir or D
+    scopes = {os.path.basename(p)[:-6]: p for p in glob.glob(scope_glob or SCOPE_GLOB)}
+    gap = 0.0
+    for f in glob.glob(f"{d}/res.*"):
+        unit = os.path.basename(f)[4:]
+        sp = scopes.get(unit)
+        if not sp:
+            continue
+        try:
+            reserved = float(rd(f).split()[1])
+            cur = int(rd(sp + "/memory.current").strip()) / 2**30
+        except (ValueError, IndexError, OSError):
+            continue
+        gap += max(0.0, reserved - cur)
+    return gap
+
+
 def free(path):
     """the admission arithmetic of ot-heavy (the same books()), for ot-run"""
     total, avail = meminfo()
     table = sizes()
     if conf("SIMPLE_ADMIT"):   # FREE_LIGHT_1114 ADMIT-TUNE-1: SIMPLE_ADMIT needs no per-unit books; read_units() ran one `systemctl --user show` per unit and 326 piled-up probes saturated the user manager on a loaded host (epyc10 load 200: --free > 80 s, ot-run probe timeouts)
         wait, req = waiters(table)
-        can = max(0, math.floor(avail - conf("INV_HEADROOM_GB")))
+        gap = peak_gap_gb() * max(0.0, min(1.0, conf("INV_PAST_PEAK_FACTOR")))
+        can = max(0, math.floor(avail - conf("INV_HEADROOM_GB") - gap))
         try:
             v = os.statvfs(path)
             disk = v.f_bavail * v.f_frsize >> 30
@@ -1938,7 +1963,7 @@ def free(path):
                               ncpu=os.cpu_count(), running=running, fresh=0, committed_threads=committed_threads(), waiting=len(wait), waiting_gb=sum(wait),
                               waiting_req_gb=sum(req), disk_gb=disk, admit_gb=can, free_gb=can - sum(wait), die_admit_gb=can,
                               die_reserve=None, inv_free_gb=can, committed_gb=round(total - avail), inv_limit_gb=round(total - conf("INV_HEADROOM_GB")),
-                              other_gb=0, admit_gb_v16=can, inv_terms=dict(in_use=round(total - avail, 1), peak_gap=0, reserve=0, fresh=0, phase_extra=0, phase_raw=0),
+                              other_gb=0, admit_gb_v16=can, inv_terms=dict(in_use=round(total - avail, 1), peak_gap=round(gap, 1), reserve=0, fresh=0, phase_extra=0, phase_raw=0),
                               simple_admit=True)))
         return
     rows = read_units()
