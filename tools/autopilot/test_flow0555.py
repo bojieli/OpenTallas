@@ -241,3 +241,51 @@ def test_queued_wait_on_an_overloaded_or_unreadable_host_is_repicked_for_every_d
     assert st["items"]["c"]["status"] == "ENQUEUED" and st["items"]["d"]["status"] == "ENQUEUED"
     assert sum(1 for c in shs if "--cancel-dir" in c) == 2 and any("/k/1" in c for c in shs)
     assert KW.queued_host_bad({}, "epyc7") == ""            # no status at all: unknown, not bad
+
+
+def test_kit_topology_bind_stale_on_a_fallback_tree_is_wait_bind_not_a_fail(tmp_path):
+    cfg = cfg0()
+    cfg["dies"]["s81"]["src"] = "/new"
+    d = tmp_path / "a7"
+    d.mkdir()
+    (d / "spec.json").write_text(json.dumps({"src": "/old"}))
+    live = tmp_path / "a8"
+    live.mkdir()
+    (live / "spec.json").write_text(json.dumps({"src": "/new"}))
+    now = time.time()
+    mk = lambda it, dd: {"die": "s81", "item": it, "status": "FAIL", "stage": "kit_topology", "dir": str(dd), "updated": now, "attempt": "1",
+                         "reason": "ValueError: KIT_TOPOLOGY_BIND_STALE: regenerate the canonical native bind"}
+    st = {"items": {"a": mk("t1", d), "b": mk("t2", live)}}
+    a = FakeAP("/old")
+    assert KW.wait_bind_sweep(a, cfg, st, now=now) == 1
+    assert st["items"]["a"]["status"] == "CANCELLED" and st["items"]["a"]["class"] == "WAIT-BIND" and st["items"]["b"]["status"] == "FAIL"
+    assert "s81|t1|/old" in st["wait_bind"] and any("WAIT-BIND" in m for m in a.lines)
+    rows = [{"item": "t1", "kind": "type"}, {"item": "t3", "kind": "type"}]
+    stale = KW.bind_preflight(a, cfg, st, "s81", rows)
+    out = KW.bound_fallback(a, cfg, st, "s81", rows, stale)
+    assert "t1" not in out and out.get("t3") == "/old"                       # t1 never again on /old; t3 still does
+
+
+def test_running_row_on_an_unreadable_host_is_unknown_for_two_hours_then_infra_dead_once(tmp_path):
+    import unittest.mock as M
+    shs = []
+    ap = type("AP", (), {"DRY": False, "log": staticmethod(lambda m: None), "sh": staticmethod(lambda c, timeout=0, input=None: (shs.append(c) or (0, "", "")))})()
+    d = tmp_path / "a5"
+    d.mkdir()
+    (d / "spec.json").write_text(json.dumps({"gen_host": "epyc7"}))
+    now = 1e9
+    row = lambda age_h: {"die": "qwen_kvsys", "item": "kv3_sys_c", "status": "RUNNING", "unit": "kw-u", "dir": str(d), "updated": now - age_h * 3600, "started": now - age_h * 3600, "attempt": "5"}
+    cfg = {"dies": {"qwen_kvsys": {}}, "_hub": "intel2", "_otrun_status": {"epyc8": {"load": 1, "cores": 96}, "intel2": {"load": 1, "cores": 96}}}
+    with M.patch.object(KW, "pick_gen_host", return_value="epyc8"):
+        st = {"items": {"x": row(1.0)}}
+        assert KW.unreadable_host_rows(ap, cfg, st, {}, now=now) == 0 and st["items"]["x"]["status"] == "RUNNING"     # unknown for 2 h
+        st = {"items": {"x": row(8.5)}}
+        assert KW.unreadable_host_rows(ap, cfg, st, {}, now=now) == 1
+        r = st["items"]["x"]
+        assert r["status"] == "RETRY-INFRA" and r["class"] == "INFRA" and r["restage_host"] == "epyc8" and r["infra_dead_n"] == 1
+        assert ["systemctl", "--user", "stop", "kw-u"] in shs
+        r.update(status="RUNNING", updated=now - 9 * 3600)
+        assert KW.unreadable_host_rows(ap, cfg, st, {}, now=now) == 0                       # once only
+        cfg["_otrun_status"] = {}
+        st = {"items": {"x": row(9.0)}}
+        assert KW.unreadable_host_rows(ap, cfg, st, {}, now=now) == 0                       # no status at all: nothing known

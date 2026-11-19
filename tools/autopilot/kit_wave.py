@@ -9160,6 +9160,35 @@ print("AP_JSON " + json.dumps(out))
 BOUND_TREE_KEYS = ("src", "plan", "plan_sha256", "src_sha", "queue_src", "src_manifest_hash")
 
 
+def wait_bind_sweep(AP, cfg, st, now=None):
+    """COORD 11-19 (S81 col rows, 20 fails/h KIT_TOPOLOGY_BIND_STALE from 08:21): a row that LAUNCHED on a bound (fallback) tree and failed kit_topology with BIND_STALE found that
+    tree's own bind stale for it.  That is no design failure and no relaunch: the row ends CANCELLED class WAIT-BIND (not a FAIL, not counted) and the pair (item, tree) is
+    remembered in st.wait_bind, so bound_fallback never launches the item on that tree again; the item then waits as a BIND-STALE row until a tree with a green bind
+    exists (no hold: r703).  -> n rows"""
+    now = time.time() if now is None else now
+    seen = st.setdefault("wait_bind", {})
+    n = 0
+    for r in (st.get("items") or {}).values():
+        if r.get("status") != "FAIL" or r.get("stage") != "kit_topology" or "KIT_TOPOLOGY_BIND_STALE" not in str(r.get("reason") or ""):
+            continue
+        if now - float(r.get("updated") or 0) > 6 * 3600:
+            continue
+        d = (cfg.get("dies") or {}).get(r.get("die")) or {}
+        try:
+            src = json.loads((Path(r["dir"]) / "spec.json").read_text()).get("src") or ""
+        except (OSError, ValueError, KeyError, TypeError):
+            continue
+        if not src or not d.get("src") or src.rstrip("/") == str(d["src"]).rstrip("/"):
+            continue                                   # the live tree's own bind stale: the normal BIND-STALE path
+        seen[f"{r.get('die')}|{r.get('item')}|{src.rstrip('/')}"] = now
+        r.update(status="CANCELLED", **{"class": "WAIT-BIND"}, updated=now,
+                 reason=f"WAIT-BIND: the bind of tree {os.path.basename(src.rstrip('/'))} is stale for this row (kit_topology); no relaunch on that tree")
+        if AP:
+            AP.log(f"KIT-WAVE WAIT-BIND {r.get('die')}/{r.get('item')}@{r.get('attempt')}: kit_topology BIND_STALE on fallback tree {os.path.basename(src.rstrip('/'))}; row ends WAIT-BIND (not a FAIL), the tree is skipped for this item")
+        n += 1
+    return n
+
+
 def bound_fallback(AP, cfg, st, die, rows, stale, now=None, rpy=None):
     """FABLE-FLOW-0555 A (COORD 11-19): S81 289 rows BIND-STALE, 0 launches in 2 h while the newest tree's bind was red.  Launch a stale row on the
     newest EARLIER tree of the die (dies.<die>.bound_trees, newest first, written by every apply) whose bind preflight is green for that item;
@@ -9168,7 +9197,9 @@ def bound_fallback(AP, cfg, st, die, rows, stale, now=None, rpy=None):
     d = cfg["dies"][die]
     rescued = {}
     todo = [r for r in rows if r["item"] in stale]
+    wb = (st or {}).get("wait_bind") or {}
     for bi, bt in enumerate(list(d.get("bound_trees") or [])[:BOUND_TREE_TRIES]):
+        todo = [r for r in todo if f"{die}|{r['item']}|{str(bt.get('src') or '').rstrip('/')}" not in wb]
         if not todo or not bt.get("src") or not (bt.get("kit_rtl") or {}).get("bind_out"):
             continue
         holders = bound_holders(cfg, die, bi)
@@ -11737,6 +11768,49 @@ def reap_ghost_rows(AP, cfg, st, notices, now=None, minutes=GHOST_MIN, jobs=None
             AP.log(f"KIT-WAVE GHOST-ROW {r['die']}/{r['item']}@{r.get('attempt')}: queue client gone, nothing on the fleet for {age_m:.0f} min -> {'would reset' if AP.DRY else 'CANCELLED GHOST'}")
             out[r["die"]] += 1
     return dict(out)
+
+
+UNREADABLE_HOST_H = 2.0
+
+
+def unreadable_host_rows(AP, cfg, st, notices, now=None, hours=UNREADABLE_HOST_H):
+    """COORD 11-19 (ghost rows on epyc7: KV kv3_sys_c attempt_5 RUNNING 8.5 h, last log 10:13, no openroad; 7 more S81 ghosts): a RUNNING row whose gen host has no ot-run status
+    row (unreadable: ssh refused / timed out) is UNKNOWN for `hours` (2 h) since its last update and is left alone; after that it is declared INFRA-DEAD: its hub unit is stopped
+    (exact name), the row goes to RETRY-INFRA (free, uncharged) with restage_host = a load-aware gen host, once (infra_dead_n).  No ot-run status at all (hub probe failed) =
+    nothing is known, nothing is touched.  Not HBM.  -> n rows"""
+    stt, hub = cfg.get("_otrun_status") or {}, cfg.get("_hub") or ""
+    if not stt:
+        return 0
+    now = time.time() if now is None else now
+    n = 0
+    for r in (st.get("items") or {}).values():
+        if r.get("status") != "RUNNING" or not r.get("unit") or r.get("die") == "hbm" or int(r.get("infra_dead_n") or 0) >= 1:
+            continue
+        try:
+            host = json.loads((Path(r["dir"]) / "spec.json").read_text()).get("gen_host") or ""
+        except (OSError, ValueError, KeyError, TypeError):
+            continue
+        if not host or host in (hub, "localhost") or stt.get(host):
+            continue
+        age_h = (now - max(float(r.get("updated") or 0), float(r.get("started") or 0))) / 3600.0
+        if age_h < hours:
+            continue
+        if not AP.DRY:
+            AP.sh(["systemctl", "--user", "stop", r["unit"]], timeout=180)
+            try:
+                best = pick_gen_host(cfg, r["die"], item=r.get("item"))
+            except Exception:
+                best = ""
+            r["infra_dead_n"] = int(r.get("infra_dead_n") or 0) + 1
+            r["infra_base"] = int(r.get("infra_base") or 0) + max(1, infra_used(r) - infra_attempts(cfg, r["die"]) + 1)
+            r.update(status="RETRY-INFRA", **{"class": "INFRA"}, updated=now,
+                     reason=f"INFRA-DEAD: gen host {host} unreadable (no ot-run status) and the row silent for {age_h:.1f} h; unit stopped, relaunches once on a load-aware host")
+            if best and best != host:
+                r["restage_host"] = best
+            notices.setdefault(r["die"], []).append(f"{r['item']}@{r.get('attempt')} INFRA-DEAD (host {host} unreadable {age_h:.1f} h)")
+        AP.log(f"KIT-WAVE INFRA-DEAD {r['die']}/{r['item']}@{r.get('attempt')}: gen host {host} unreadable, row silent {age_h:.1f} h -> {'would relaunch' if AP.DRY else 'RETRY-INFRA once'}")
+        n += 1
+    return n
 
 
 def reap_dead(AP, cfg, st, notices, now=None):
@@ -15000,6 +15074,14 @@ def _step(AP, ap_dir):
         AP.log(f"KIT-WAVE src probe skipped: {e}")
     load_counter_signed(cfg)
     restage_waiters(AP, cfg, st, notices)
+    try:
+        unreadable_host_rows(AP, cfg, st, notices)
+    except Exception as e:                               # a sweep never stops the tick
+        AP.log(f"KIT-WAVE INFRA-DEAD skipped: {type(e).__name__}: {e}")
+    try:
+        wait_bind_sweep(AP, cfg, st)
+    except Exception as e:                               # a sweep never stops the tick
+        AP.log(f"KIT-WAVE WAIT-BIND skipped: {type(e).__name__}: {e}")
     try:
         repick_queued_waits(AP, cfg, st, notices)
     except Exception as e:                               # a re-pick sweep never stops the tick
