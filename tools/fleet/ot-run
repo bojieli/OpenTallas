@@ -1808,7 +1808,7 @@ def main():
     hosts = gate_hosts(cmd, hosts)
     _pool = drop_no_heavy(hosts)
     if not _pool and hosts:
-        sys.exit("ot-run: NOT RUN: localhost takes no heavy job (owner rule; NOLOCALHOST-1119); name a build host with --hosts")
+        not_run("localhost takes no heavy job (owner rule; NOLOCALHOST-1119); name a build host with --hosts")
     hosts = _pool
     held = held_hosts()
     if held and not os.environ.get("OT_RUN_INCLUDE_HELD"):
