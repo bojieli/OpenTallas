@@ -15,7 +15,8 @@ Gate of record: W8/d25cg0gate, G0 0 errors / 2446 warnings. Candidate W8/cand_d2
   G0 PASS, 0 errors / 2456 warnings. Bind on kw45/bindcopy_kv_d25d (gate W8/d25dbindgate).
   Next: private hgi_v1 kit to GRT TT via kit_wave item_inputs {kv3_hgi_v1__cl141fc26e: src, src_manifest_hash, plan,
   kit_rtl{bind_out = bindcopy bind_of_record, asbuilt}} + item_env OT_KV_HEAD_KST=2 (kit_wave_edit.py).
-- D25e inputs: sink_bins regenerated from the newest placed kits (helper writes W8/d25e_in/sink_bins/ + REPORT.json),
+- 10:15Z: fresh elab PASSED on both copies (RC_ELAB 0); strict binds running, ETA about 12:30Z.
+- D25e inputs: sink_bins DONE for 24 KV types (W8/d25e_in/sink_bins/ + REPORT.json; scripts epyc8 /srv/opentallas-scratch2/claude/kv-d23-compose8-bins/),
   FABLE-FIX-KV-PV tap split rows, K6 (hgi i_ectl +1 stage; pad names from the D25d bind).
 - Leftovers to delete once older than live (ot-delete): kw45/broken_* and kw45/bindcopy_kv_* after use.
 
