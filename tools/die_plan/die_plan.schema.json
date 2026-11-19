@@ -3142,6 +3142,11 @@
               "cell": {
                "type": "string",
                "minLength": 1
+              },
+              "sub_hubs": {
+               "type": "integer",
+               "minimum": 0,
+               "maximum": 64
               }
              }
             },

@@ -1612,7 +1612,8 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
     "type": "object", "required": ["evidence"], "additionalProperties": False,
     "properties": {"evidence": {"type": "string", "minLength": 1}, "max_sinks": {"type": "integer", "minimum": 16, "maximum": 4000},
                    "max_extent_um": {"type": "number", "minimum": 20, "maximum": 1000},
-                   "hop_um": {"type": "number", "minimum": 20, "maximum": 100}, "cell": {"type": "string", "minLength": 1}}}
+                   "hop_um": {"type": "number", "minimum": 20, "maximum": 100}, "cell": {"type": "string", "minLength": 1},
+                   "sub_hubs": {"type": "integer", "minimum": 0, "maximum": 64}}}
 # FABLE-FIX-S81-SERDES 11-18 (opt-in): die-level trunk of an input pad clock to a pin moved into the type (pad_clock.die_trunks:
 # type frame, hops <= 405 um; host die | type).  Validated only; no reader yet, kit unchanged.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["pad_clock"]["properties"]["pins"]["items"]["properties"]["die_trunk"] = {

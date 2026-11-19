@@ -280,8 +280,9 @@ def trunk_tcl(P, tn):
 
 
 STAR_KEYS = {'evidence'}
-STAR_OPT = {'max_sinks': (16, 4000), 'max_extent_um': (20.0, 1000.0), 'hop_um': (20.0, 100.0)}
-STAR_DEFAULT = {'max_sinks': 200, 'max_extent_um': 100.0, 'hop_um': 92.0, 'cell': 'BUFx24_ASAP7_75t_R'}
+STAR_OPT = {'max_sinks': (16, 4000), 'max_extent_um': (20.0, 1000.0), 'hop_um': (20.0, 100.0), 'sub_hubs': (0, 64)}
+# sub_hubs 14 = two-level matched tree (11-19: the one-hub star, sub_hubs 0, left ~200 legs at one hub and failed detail route)
+STAR_DEFAULT = {'max_sinks': 200, 'max_extent_um': 100.0, 'hop_um': 92.0, 'cell': 'BUFx24_ASAP7_75t_R', 'sub_hubs': 14}
 
 
 def star(P, tn):
@@ -307,8 +308,9 @@ def star(P, tn):
             if k in r and (isinstance(r[k], bool) or not isinstance(r[k], (int, float)) or not math.isfinite(r[k])
                            or not lo <= r[k] <= hi):
                 raise ValueError(f'{tn}.{n}: star {k} must be a number in {lo:g}..{hi:g}')
-        if 'max_sinks' in r and not isinstance(r['max_sinks'], int):
-            raise ValueError(f'{tn}.{n}: star max_sinks must be an integer')
+        for k in ('max_sinks', 'sub_hubs'):
+            if k in r and not isinstance(r[k], int):
+                raise ValueError(f'{tn}.{n}: star {k} must be an integer')
         if 'cell' in r and (not isinstance(r['cell'], str) or not re.fullmatch(r'[A-Za-z0-9_]+', r['cell'])):
             raise ValueError(f'{tn}.{n}: star cell must be one library cell name')
         out.append((n, {**STAR_DEFAULT, **r}))
@@ -326,7 +328,7 @@ def star_exports(P, tn):
     return ['# FABLE-FIX-S81-SERDES 11-18 (plan clock.pad_clock pins[].star): matched-leg star trunk on the placed sinks (rck_star.tcl)',
             f'export OT_RCK_STAR_PORT = {n}', f'export OT_RCK_STAR_MAX_SINKS = {int(r["max_sinks"])}',
             f'export OT_RCK_STAR_MAX_EXTENT_UM = {float(r["max_extent_um"]):g}', f'export OT_RCK_STAR_HOP_UM = {float(r["hop_um"]):g}',
-            f'export OT_RCK_STAR_CELL = {r["cell"]}']
+            f'export OT_RCK_STAR_CELL = {r["cell"]}', f'export OT_RCK_STAR_SUB_HUBS = {int(r["sub_hubs"])}']
 
 
 STAR_HOOK = 'uplevel #0 {source /work/rck_star.tcl}\n'

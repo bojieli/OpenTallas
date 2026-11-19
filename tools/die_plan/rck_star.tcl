@@ -5,7 +5,7 @@
 # entry.  A pad that is far from the sinks reaches the hub through one common feeder chain.  Same ports, flops, logic,
 # constraints and cycles; the cells are ordinary PLACED clock buffers (pce_<entry>_s<k> / pce_<entry>_drv, rks_feed_<k>).
 # Env: OT_RCK_STAR_PORT (io_pma_rck), OT_RCK_STAR_MAX_SINKS (200), OT_RCK_STAR_MAX_EXTENT_UM (100), OT_RCK_STAR_HOP_UM (92),
-#      OT_RCK_STAR_CELL (BUFx24_ASAP7_75t_R).
+#      OT_RCK_STAR_CELL (BUFx24_ASAP7_75t_R), OT_RCK_STAR_SUB_HUBS (14: two-level hub -> sub-hubs -> entries; 0 = one hub).
 proc rks_env {k d} { if {[info exists ::env($k)] && $::env($k) ne ""} { return $::env($k) }; return $d }
 set rks_dir [file dirname [file normalize [info script]]]
 set rks_blk [ord::get_db_block]
@@ -40,7 +40,7 @@ if {[$rks_blk findInst pce_rck_r0_drv] eq "NULL"} {
   file delete -force $rks_out
   puts [exec python3 -I [file join $rks_dir rck_star.py] $rks_geom $rks_out --max-sinks [rks_env OT_RCK_STAR_MAX_SINKS 200] \
           --max-extent [rks_env OT_RCK_STAR_MAX_EXTENT_UM 100] --hop [rks_env OT_RCK_STAR_HOP_UM 92] \
-          --cell [rks_env OT_RCK_STAR_CELL BUFx24_ASAP7_75t_R] --report [file join $rks_dir rck_star_report.json]]
+          --cell [rks_env OT_RCK_STAR_CELL BUFx24_ASAP7_75t_R] --sub-hubs [rks_env OT_RCK_STAR_SUB_HUBS 14] --report [file join $rks_dir rck_star_report.json]]
   uplevel #0 [list source $rks_out]
   if {[llength $::rks_assign] != [llength $rks_sinks]} { error "OT_RCK_STAR: plan covers [llength $::rks_assign] of [llength $rks_sinks] sinks" }
   set rks_m [[ord::get_db] findMaster $::rks_cell]
@@ -88,14 +88,24 @@ if {[$rks_blk findInst pce_rck_r0_drv] eq "NULL"} {
   # common feeder pad -> hub (empty when the hub is at the pad)
   set rks_hub $rks_net; set rks_k 0
   foreach rks_pt $::rks_feeder { set rks_hub [rks_stage rks_feed_$rks_k $rks_hub {*}$rks_pt]; incr rks_k }
-  # one leg per entry; the entry net carries the entry name
-  set rks_enets {}; set rks_nst 0
-  foreach rks_leg $::rks_legs {
-    lassign $rks_leg rks_name rks_st rks_xy
+  # two-level form (rck_star.py sub_hubs >= 2): one equal leg hub -> each sub-hub driver; empty list = one-level star
+  set rks_snets {}; set rks_nst 0
+  if {![info exists ::rks_subs]} { set ::rks_subs {} }
+  foreach rks_sub $::rks_subs {
+    lassign $rks_sub rks_name rks_st rks_xy
     set rks_src $rks_hub; set rks_j 0
+    foreach rks_pt $rks_st { set rks_src [rks_stage pce_${rks_name}_s$rks_j $rks_src {*}$rks_pt]; incr rks_j; incr rks_nst }
+    lappend rks_snets [rks_stage pce_${rks_name}_drv $rks_src {*}$rks_xy $rks_name]
+  }
+  # one leg per entry, from its sub-hub (parent >= 0) or the hub; the entry net carries the entry name
+  set rks_enets {}
+  foreach rks_leg $::rks_legs {
+    lassign $rks_leg rks_name rks_st rks_xy rks_par
+    if {$rks_par eq ""} { set rks_par -1 }
+    set rks_src [expr {$rks_par >= 0 ? [lindex $rks_snets $rks_par] : $rks_hub}]; set rks_j 0
     foreach rks_pt $rks_st { set rks_src [rks_stage pce_${rks_name}_s$rks_j $rks_src {*}$rks_pt]; incr rks_j; incr rks_nst }
     lappend rks_enets [rks_stage pce_${rks_name}_drv $rks_src {*}$rks_xy $rks_name]
   }
   foreach rks_it $rks_sinks rks_e $::rks_assign { $rks_it disconnect; $rks_it connect [lindex $rks_enets $rks_e] }
-  puts "OT_RCK_STAR $rks_port: [llength $rks_sinks] sinks behind [llength $rks_enets] matched entries ($rks_nst leg stations + $rks_k feeder stations of $::rks_cell), 0 left on the pad net"
+  puts "OT_RCK_STAR $rks_port: [llength $rks_sinks] sinks behind [llength $rks_enets] matched entries under [llength $rks_snets] sub-hubs ($rks_nst leg stations + $rks_k feeder stations of $::rks_cell), 0 left on the pad net"
 }

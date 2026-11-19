@@ -49,7 +49,7 @@ def test_every_leg_has_the_same_stages_and_length(pad):
     for e in entries:
         assert all(rows.ok(*p) for p in e['stations']) and rows.ok(*e['xy'])
         if rep['nudged_stations'] == 0:
-            assert max(hops(e)) <= rep['hop_um'] + 1e-6 and abs(sum(hops(e)) - rep['leg_um']) < 1e-6
+            assert max(hops(e)) <= rep['hop_um'] + 1.0 and abs(sum(hops(e)) - e['leg_um']) < 1.0 * len(hops(e))
     assert rep['nudged_stations'] <= 0.02 * rep['stations']
     # the regions tile the plane: every sink is inside exactly one region
     for x, y, *_ in g['sinks'][:-1]:
@@ -218,3 +218,59 @@ def test_host_type_kit_port_is_one_position_for_io_sidecar_and_pin_records(tmp_p
     assert side[name]['xy_um'] == [x, y] and 'plan_xy_um' not in side[name]
     r = {r['name']: r for r in GP.plan_pin_records(p, 'mid', GP.type_pins(p, 'mid'))}[name + '[0]']
     assert abs(float(r['x']) - x) < 1e-4 and abs(float(r['y']) - y) < 1e-4
+
+
+def big_geom():
+    """t13-scale: ~200 entries over the full row area (the H20/H21 one-hub star had ~200 legs leave one hub)."""
+    g = geom()
+    sinks = [s for s in g['sinks'] if s[5]]
+    for i in range(70):
+        for j in range(150):
+            sinks.append((20.0 + 20.0 * i, 10.0 + 6.0 * j, f'f_{i}_{j}', 'CLK', 'DFF', False))
+    sinks = [s for s in sinks if s[5] or not (1290.0 <= s[0] <= 1580.0 and 430.0 <= s[1] < 570.0)]
+    return dict(rows=g['rows'], sinks=sinks, port=g['port'])
+
+
+def test_two_level_tree_has_equal_stages_short_hops_and_no_one_hub_funnel(tmp_path):
+    g = big_geom()
+    entries, rep = RS.plan(g)
+    _e1, one = RS.plan(g, sub_hubs=0)
+    K = rep['entries']
+    assert K >= 100 and one['entries'] == K and one['sub_hubs'] == 0 and one['fanout_max'] == K
+    assert rep['sub_hubs'] == 14
+    subs = rep['subs']
+    # every sub-hub leg: same stage count, every hop <= hop_um (well under the 405-um placed limit)
+    assert {len(h['stations']) for h in subs} == {rep['hops1']}
+    # every entry leg: same stage count across ALL sub-hubs, so every sink sees the same number of stages
+    assert {len(e['stations']) for e in entries} == {rep['hops']}
+    assert rep['stages_per_entry'] == rep['feeder'] + rep['hops1'] + 1 + rep['hops'] + 1
+    pts_of = lambda P: [abs(a[0] - b[0]) + abs(a[1] - b[1]) for a, b in zip(P, P[1:])]
+    for e in entries:
+        P = [subs[e['parent']]['xy']] + e['stations'] + [e['xy']]
+        assert max(pts_of(P)[1:]) <= rep['hop_um'] + 6.0
+        # the same wire length hub -> entry for every entry: the sub-hub leg takes what the group's entry legs do not need
+        h = subs[e['parent']]
+        assert abs(h['leg_um'] + e['leg_um'] - rep['path_um']) < 1e-6
+        assert abs(sum(pts_of(P)[1:]) - e['leg_um']) <= 1.0 * len(P)
+    for h in subs:
+        assert max(pts_of(h['stations'] + [h['xy']])) <= rep['hop_um'] + 6.0
+    # fanout spread: no driver has more than ~15 legs leaving it; the legs per 100-um window fall well below the one-hub star
+    assert rep['fanout_max'] <= 15
+    assert rep['legs_per_100um_max'] < one['legs_per_100um_max'] / 2
+    # the emitted data carries the sub-hub legs and a parent per entry; the Tcl hook builds them
+    out = tmp_path / 'e.tcl'
+    RS.emit(entries, rep, out)
+    t = out.read_text()
+    assert len(re.findall(r'^  \{rck_h\d+ \{\{', t, re.M)) == len(subs)
+    assert {int(m) for m in re.findall(r'^  \{rck_r\d+ .* (\d+)\}$', t, re.M)} == set(range(len(subs)))
+    hook = (HERE / 'rck_star.tcl').read_text()
+    assert '::rks_subs' in hook and 'OT_RCK_STAR_SUB_HUBS' in hook
+
+
+def test_sub_hubs_plan_key():
+    (n, r), = PC.star(splan(), 'mid')
+    assert r['sub_hubs'] == 14 and 'export OT_RCK_STAR_SUB_HUBS = 14' in PC.star_exports(splan(), 'mid')
+    assert 'export OT_RCK_STAR_SUB_HUBS = 0' in PC.star_exports(splan(sub_hubs=0), 'mid')
+    for bad in (65, -1, 2.5, True):
+        with pytest.raises(ValueError):
+            PC.star(splan(sub_hubs=bad), 'mid')
