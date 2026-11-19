@@ -822,6 +822,55 @@ def sync_guarded(sha, hosts, tests):
     return rc
 
 
+def catchup(hosts=None, state=None, now_fn=time.time, host_cur=None, fn=None):
+    """CATCHUP-1119 (COORD, FABLE-FLOW-1150: epyc7 sat 11 promotions behind because a sync that failed was never retried until main moved again): every host whose rt/current differs from the hub's
+    is pushed again, all in parallel, one result line per host.  A host whose ssh fails is retried with a backoff (5, 10, 20, 30 min) kept in RT/.catchup.json, so a dead host is not hammered every
+    minute.  -> list of [host, ok, note]"""
+    cur = current()
+    if not cur:
+        return []
+    sf = state or (RT / ".catchup.json")
+    try:
+        st = json.loads(Path(sf).read_text())
+    except (OSError, ValueError):
+        st = {}
+    now = now_fn()
+    host_cur = host_cur or (lambda h: (run(SSH + [h, f"readlink {RT}/current"], input="", timeout=60).stdout or "").strip())
+    todo = []
+    for h in (HOSTS if hosts is None else hosts):
+        e = st.get(h) or {}
+        if now < e.get("next", 0):
+            continue
+        try:
+            there = host_cur(h)
+        except Exception:
+            there = ""
+        if there == cur:
+            st.pop(h, None)
+            continue
+        todo.append((h, there))
+    res = []
+    if todo:
+        fn = fn or (lambda h, name, prev: host_sync(h, name, prev))
+        prevs = dict(todo)
+        notes = sync_hosts(cur, "", hosts=[h for h, _ in todo], fn=lambda h, name, prev: fn(h, name, prevs.get(h) or ""))
+        for n in notes:
+            h, _, rest = n.partition(":")
+            ok = rest == "ok"
+            e = st.get(h) or {}
+            if ok or rest.startswith("SKIP"):
+                st.pop(h, None)
+            else:
+                f = int(e.get("fails", 0)) + 1
+                st[h] = {"fails": f, "next": now + 300 * min(f, 6)}
+            res.append([h, ok, rest])
+    try:
+        Path(sf).write_text(json.dumps(st))
+    except OSError:
+        pass
+    return res
+
+
 def follow(hosts=True):
     """rt/current follows origin/main, fast-forward only; one follower at a time, nothing to do when already there"""
     import fcntl
@@ -921,7 +970,7 @@ def auto_revert(cur_full, full, hosts=True):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("cmd", choices=["sync", "drift", "status", "prune", "follow"])
+    ap.add_argument("cmd", choices=["sync", "drift", "status", "prune", "follow", "catchup"])
     ap.add_argument("--sha", default="")
     ap.add_argument("--no-hosts", action="store_true")
     ap.add_argument("--no-tests", action="store_true", help="smoke without the wave test suite")
@@ -929,6 +978,10 @@ def main():
     a = ap.parse_args()
     if a.cmd == "sync":
         return sync_guarded(a.sha, not a.no_hosts, not a.no_tests)
+    if a.cmd == "catchup":
+        for h, ok, note in catchup():
+            print(f"{h}: {'ok' if ok else note[:160]}")
+        return 0
     if a.cmd == "follow":
         return follow(not a.no_hosts)
     if a.cmd == "prune":                       # run ON a build host: prune its rt/ (text naming pinned snapshots arrives on stdin from the hub)
