@@ -1604,7 +1604,7 @@ def gate_locked(mem, argv):
     inv = invariant(rows, total, avail, b, table)
     can = inv_cap(can, inv)                            # v17: committed + request <= physical - 64 GB, die jobs too
     can_die = inv_cap(die_admissible(avail, b, floor, need, can), inv)
-    me_die = os.environ.get("OT_HEAVY_PRIO") == "die" or die_like(argv, os.getcwd())
+    me_die = os.environ.get("OT_HEAVY_PRIO") in ("die", "proof") or die_like(argv, os.getcwd())      # PROOF-PRIO-1119: admitted on current memory like a die job; no protection (-999) is added
     if me_die and can < res <= can_die:
         note = (note + "; " if note else "") + f"DIE: admitted on current memory ({avail:.0f} GB available, {b.get('pending', 0.0):.0f} GB pending charged, settled growth not charged)"
     ok = (can_die if me_die else can) >= res
@@ -1708,7 +1708,7 @@ def prio_waiters(table, skip=()):
         except OSError:
             cwd = ""
         environment = rd(f"/proc/{p}/environ")
-        if not die_like(a[a.index("--") + 1:], cwd, environment.split("\0")):
+        if not (die_like(a[a.index("--") + 1:], cwd, environment.split("\0")) or "OT_HEAVY_PRIO=proof" in environment.split("\0")):   # PROOF-PRIO-1119: a proof kit waits like a die job, ahead of wave jobs
             continue
         # A CPU-blocked normal die cannot consume its reserved memory NOW.
         # Critical/unknown waiters retain their reservation; RAM guards are unchanged.

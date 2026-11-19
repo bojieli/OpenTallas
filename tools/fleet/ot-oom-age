@@ -119,7 +119,7 @@ PLAN_ADJ = -1000
 PLAN_EXTRA = {"python3", "python"}      # PLANBYPASS_1114: a plan job's helper processes are protected too
 
 
-def plan_pids(d=None):
+def plan_pids(d=None, prefix="plan.job."):
     """launcher pids of the running plan jobs (markers plan.job.<pid> written by ot-heavy for OT_HEAVY_PRIO=plan); a marker of a dead launcher is removed"""
     d = d or PLAN_DIR
     out = set()
@@ -128,9 +128,9 @@ def plan_pids(d=None):
     except OSError:
         return out
     for n in names:
-        if n.startswith("plan.job.") and n[9:].isdigit():
-            if os.path.isdir(f"/proc/{n[9:]}"):
-                out.add(n[9:])
+        if n.startswith(prefix) and n[len(prefix):].isdigit():
+            if os.path.isdir(f"/proc/{n[len(prefix):]}"):
+                out.add(n[len(prefix):])
             else:
                 try:
                     os.unlink(os.path.join(d, n))
@@ -219,7 +219,8 @@ def guard(seconds, pct, dry=False, kill=os.kill, log=None, sleep=time.sleep, mem
         if plans:
             mi = (meminfo or (lambda: {k: int(v.split()[0]) for k, v in (l.split(":", 1) for l in open("/proc/meminfo"))}))()
             if mi["MemAvailable"] * 100.0 / mi["MemTotal"] < pct:
-                procs, names = [], container_names()
+                procs, spared, names = [], [], container_names()
+                proofs = plan_pids(prefix="proof.job.")      # PROOF-PRIO-1119: r712 proof kits are victims only when no wave job is
                 for p in os.listdir("/proc"):
                     if not p.isdigit():
                         continue
@@ -228,10 +229,14 @@ def guard(seconds, pct, dry=False, kill=os.kill, log=None, sleep=time.sleep, mem
                         if comm not in COMMS or plan_key(p, names) in plans or plan_ancestor(p, plans):
                             continue
                         rss = int(re.search(r"VmRSS:\s+(\d+)", open(f"/proc/{p}/status").read()).group(1)) / 1048576
-                        procs.append((int(p), comm, int(open(f"/proc/{p}/oom_score_adj").read()), int(open(f"/proc/{p}/oom_score").read()), rss))
+                        row = (int(p), comm, int(open(f"/proc/{p}/oom_score_adj").read()), int(open(f"/proc/{p}/oom_score").read()), rss)
+                        (spared if proofs and (plan_key(p, names) in proofs or plan_ancestor(p, proofs)) else procs).append(row)
                     except (OSError, ValueError, AttributeError):
                         continue
                 v = guard_victim(procs)
+                if v is None:
+                    v = guard_victim(spared)
+                procs = procs + spared
                 if v is not None:
                     killed += 1
                     if not dry:

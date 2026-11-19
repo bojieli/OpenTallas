@@ -320,6 +320,7 @@ while :; do
     # OOMADJ_999_1022: a non-die job starts at oom_score_adj 0 (its launcher may sit in a protected die tree at -999,
     # or a legacy -1000 one, which would make the job un-killable by its own scope's memcg OOM: livelock at the cap).
     if [ "${OT_HEAVY_PRIO:-}" != die ]; then echo 0 > /proc/self/oom_score_adj 2>/dev/null || true; fi
+    if [ "${OT_HEAVY_PRIO:-}" = proof ]; then : > "$D/proof.job.$$"; fi   # PROOF-PRIO-1119: ot-oom-age guard spares this job while a wave job can be the victim
     if [ "${OT_HEAVY_PRIO:-}" = plan ]; then : > "$D/plan.job.$$"; fi   # PLANBYPASS_1114: ot-oom-age sets this job's openroad/yosys/python processes to -1000 (marker = launcher pid)
     if [ "$_short" = 1 ]; then
       # Keep the lease in this waiting parent: systemd may close inherited FDs.

@@ -1745,7 +1745,7 @@ def main():
         elif o == "--direct": os.environ["OT_RUN_CRIT"] = os.environ["OT_RUN_DIRECT"] = "1"
         elif o == "--priority":
             prio = a.pop(0)
-            if prio not in ("die", "plan"): sys.exit("ot-run: --priority takes only 'die' (owner 2026-10-15 23:50: die-level trials) or 'plan' (plan-event jobs: strict bind, G0, die-proto)")
+            if prio not in ("die", "plan", "proof"): sys.exit("ot-run: --priority takes only 'die' (owner 2026-10-15 23:50: die-level trials), 'plan' (plan-event jobs: strict bind, G0, die-proto) or 'proof' (r712 proof kits, PROOF-PRIO-1119)")
             os.environ["OT_RUN_PRIO_ENV"] = f"OT_HEAVY_PRIO={prio} "   # PLAN_PRIO_1114
         elif o == "--plan-job":      # WAVE-CONFIG 11-16: explicit plan marker: kind of the plan job (bind, latcheck or g0); implies --priority plan
             kind = a.pop(0) if a else ""
