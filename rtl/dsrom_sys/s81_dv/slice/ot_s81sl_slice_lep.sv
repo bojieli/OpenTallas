@@ -121,6 +121,14 @@
 `ifndef OT_S81SL_LEP_WREP
 `define OT_S81SL_LEP_WREP 1
 `endif
+// FABLE-FIX-S81-LEPE 11-19 (COORD ruling, r713 reach): RIP = relay stages on the ring output ri and its return tag mu_rt.
+// lepe_mu_LP__t2 full form: RX SRAM read word -> select -> rid sat 1,023 um from the bank (rid at the E face with its bus):
+// 1,278 ps of data, 4 logic cells + 13 buffers, TT -530.  With RIP 1 rid is an interior register (its only load is the relay),
+// so bank -> rid -> relay -> face are three placed legs.  ri and mu_rt move together by +RIP cycles; nothing else moves
+// (landing ml_wv / ml_wd, faults, credits unchanged).  Bind K: +RIP on the lep ring-out lane (ri, with mu_rt).  Default 0.
+`ifndef OT_S81SL_LEP_RIP
+`define OT_S81SL_LEP_RIP 0
+`endif
 `ifndef OT_S81SL_LEP_CRP
 `define OT_S81SL_LEP_CRP 0
 `endif
@@ -151,6 +159,7 @@ module ot_s81sl_lep_core #(
     parameter integer NATIVE32 = 0,    // opt-in MU same-age bounded control replicas
     parameter integer IDX_EN = 0,      // 1 (S81/H4 10-24): index rank-tree frames tl -> link, link -> ca / cb (see g_itx)
     parameter integer WREP = `OT_S81SL_LEP_WREP, // TX tag-window state replicas (1 = the one master), see the note above the module
+    parameter integer RIP = `OT_S81SL_LEP_RIP,   // relay stages on the ring output {ri, mu_rt} (0 = none), see the note above the module
     parameter integer CRP = `OT_S81SL_LEP_CRP, // credit-return relay stages (0..2), see the note above the module
     parameter integer IN_PIPE = 0      // 1 (LEPCAP 10-19): one registered face stage on ro / t_host / t_kd / mu_c (+1 edge on
                                        // each, same relative timing); ro[0] / t_kd[53] re-fanned by 6 KEPT copies <= 28 loads
@@ -906,7 +915,22 @@ module ot_s81sl_lep_core #(
     // S81/H4: a tree frame (type 5) is accepted on either pair at IDX_EN 1 and never reaches ri (not a ring beat)
     wire iacc = (IDX_EN != 0) && !h0[0] && h0[3:1] == 3'd5;
     reg [1103:1] rid; reg riv;
-    assign ri = {rid, riv};
+    // RIP: ri_c / mu_rt_c are the beat and its return tag as before; RIP kept relay stages follow (same edge for both)
+    wire [1103:0] ri_c = {rid, riv}; wire [31:0] mu_rt_c;
+    generate if (RIP == 0) begin : g_nrip
+        assign ri = ri_c; assign mu_rt = mu_rt_c;
+    end else begin : g_rip
+        (* keep = "true" *) reg [1103:1] rd_r [0:RIP-1]; (* keep = "true" *) reg [31:0] rt_r [0:RIP-1]; (* keep = "true" *) reg [RIP-1:0] rv_r;
+        integer ri_k;
+        always @(posedge clk) for (ri_k = 0; ri_k < RIP; ri_k = ri_k + 1) begin               // data: no reset (as rid)
+            rd_r[ri_k] <= (ri_k == 0) ? ri_c[1103:1] : rd_r[ri_k-1];
+            rt_r[ri_k] <= (ri_k == 0) ? mu_rt_c : rt_r[ri_k-1];
+        end
+        always @(posedge clk or negedge rn)
+            if (!rn) rv_r <= {RIP{1'b0}};
+            else for (ri_k = 0; ri_k < RIP; ri_k = ri_k + 1) rv_r[ri_k] <= (ri_k == 0) ? ri_c[0] : rv_r[ri_k-1];
+        assign ri = {rd_r[RIP-1], rv_r[RIP-1]}; assign mu_rt = rv_r[RIP-1] ? rt_r[RIP-1] : 32'd0;
+    end endgenerate
     wire mcol_w;                                       // MU: replay collided with a cut-through beat
     wire [1103:0] rb = {h1[H-1:0], h0[H-1:0]};          // the released frame (ring beat when bit 0)
     generate if (MU_EN == 0) begin : g_rxr
@@ -934,7 +958,7 @@ module ot_s81sl_lep_core #(
     always @(posedge clk or negedge rnx)
         if (!rnx) riv <= 1'b0;
         else riv <= rel && h0[0];
-    assign mu_rt = 32'd0; assign ml_wv = 1'b0; assign ml_wd = 1104'd0; assign mcol_w = 1'b0; if(!SAFE_STD) assign rhk = '0;
+    assign mu_rt_c = 32'd0; assign ml_wv = 1'b0; assign ml_wd = 1104'd0; assign mcol_w = 1'b0; if(!SAFE_STD) assign rhk = '0;
     end else begin : g_rxm
     // tagged = an XB / XQ ring beat with the tag bit; land = 1 -> landing leaf, else ri (tag stripped, tag on mu_rt)
     function automatic [1103:0] strip(input [1103:0] b);
@@ -1109,9 +1133,9 @@ module ot_s81sl_lep_core #(
             (* keep *) reg valid_r;
             always @(posedge clk or negedge rr[CTRL_RSTBASE+NL+3+rv])
                 if(!rr[CTRL_RSTBASE+NL+3+rv]) valid_r<=0; else valid_r<=rr_dlv || mrv;
-            assign mu_rt[8*rv+:8]=valid_r?rtq[8*rv+:8]:8'd0;
+            assign mu_rt_c[8*rv+:8]=valid_r?rtq[8*rv+:8]:8'd0;
         end
-    end else begin:g_return_legacy assign mu_rt=riv?rtq:32'd0;end
+    end else begin:g_return_legacy assign mu_rt_c=riv?rtq:32'd0;end
     assign ml_wv = mwv; assign ml_wd = mwd; assign mcol_w = mcol;
     end endgenerate
     always @(posedge clk or negedge rnx)
