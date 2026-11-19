@@ -97,3 +97,8 @@ bash tools/fleet/col_template_rows.sh TREE BASE_PLAN SIDECAR OUT [--all-members]
 ## 11-19 03:5x PST
 - st_b row file rewritten (v2, lanes/handoff/FABLE-FIX-QC-rows-stb-origin.json): 4 type groups measured. Origin move + 1 relay = 422-452 um hops (over 405); form A = origin unchanged + 2 relay stages at thirds (349-362 um, +2 cycles). No bind mechanism for extra relay stages yet (count_align_bind RELAY_STAGES const 2): NEXT = write it (per-region stage count + sites) if COORD picks form A.
 - p3 keeps running as origin-only data point (rect at 220,786).
+
+## 11-19 04:2x PST
+- ON MAIN 45d943b418 RELAY-TX-STAGES: partition_types[origin type].landing_relay_tx_stages = n (count_align_bind relay_extra_from_plan via --plan-die, clock_landings u_cland_rstart_tx_p<i> chain, clock_landing_verify, schema + die_plan.schema.json). Tests: test_count_align_bind (+1), test_clock_landings (+1).
+- Form A rows v3 handed to QC-PLAN-R3: lanes/handoff/FABLE-FIX-QC-rows-stb-origin.json (12 st_b types, key = 2, relay_sites for p0/p1 at thirds, hops 349-362 um). NOT bound by me. After the N4.5 bind: private kit sle_st_b_v2__cl14c98df5__pvcd986c42 to GRT TT.
+- p3 = origin-only data point, still running; p1 sle_ctl waits for CTS TT.
