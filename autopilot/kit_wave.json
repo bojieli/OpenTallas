@@ -39948,7 +39948,8 @@
     "coll_ftc@5": "FLOW-FIX: QC-FE-1118 (COORD 11-18): attempt died at GRT global_route.tcl OT_VCLK_MEASURED_HOLD pin-register mean unavailable (clocks 3, bind wanted 1); fixed on main e1ce3e0b234 (per-clock measured-hold bind); kits take tools from rt at launch; relaunch unchanged design",
     "slw_sc_v2@2": "FLOW-FIX: QC-FE-1118 (COORD 11-18): attempt died at GRT global_route.tcl OT_VCLK_MEASURED_HOLD pin-register mean unavailable (clocks 3, bind wanted 1); fixed on main e1ce3e0b234 (per-clock measured-hold bind); kits take tools from rt at launch; relaunch unchanged design",
     "slw_sc_v1__cl64543eaf__cl4590432d@2": "FLOW-FIX: QC-FE-1118 (COORD 11-18): attempt died at GRT global_route.tcl OT_VCLK_MEASURED_HOLD pin-register mean unavailable (clocks 3, bind wanted 1); fixed on main e1ce3e0b234 (per-clock measured-hold bind); kits take tools from rt at launch; relaunch unchanged design",
-    "sle_sc_v2@3": "FLOW-FIX: QC-FE-1118 (COORD 11-18): attempt died at GRT global_route.tcl OT_VCLK_MEASURED_HOLD pin-register mean unavailable (clocks 3, bind wanted 1); fixed on main e1ce3e0b234 (per-clock measured-hold bind); kits take tools from rt at launch; relaunch unchanged design"
+    "sle_sc_v2@3": "FLOW-FIX: QC-FE-1118 (COORD 11-18): attempt died at GRT global_route.tcl OT_VCLK_MEASURED_HOLD pin-register mean unavailable (clocks 3, bind wanted 1); fixed on main e1ce3e0b234 (per-clock measured-hold bind); kits take tools from rt at launch; relaunch unchanged design",
+    "slw_st_b_v1__cl6357f1cc__pv6ace3e48@3": "FLOW-FIX: QC-FE-1118 (COORD 11-18, FABLE-FIX-QC-STA): attempt 3 died only on the old vclk_measured_hold.tcl (OT_VCLK_MEASURED_HOLD pin-register mean unavailable); fixed on main e1ce3e0b234; the newer attempt is no real retry of it; relaunch unchanged design"
    },
    "gen_hosts": [
     "epyc9",
