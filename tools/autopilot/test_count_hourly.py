@@ -116,3 +116,11 @@ def test_any_plan_extra_counts_old_plan_names_not_variants():
     rows = [("qwen_compute", "coll_ucie__legalrows_1117", "t"), ("qwen_compute", "sta_old_a", "t"), ("qwen_compute", "sta_old_a__a2_1117", "t"),
             ("qwen_compute", "m1", "c"), ("s81", "ot_s81_svc_x", "c")]
     assert CH.any_plan_extra(c, rows) == 2
+
+
+def test_headline_and_per_die_deferred_backlog():
+    row = CH.rate_row(cache(0), "2026-11-04 05:36", {"s81": 3, "qc": 2})
+    assert row.endswith("any=95 defer=qc:2,s81:3 auto")
+    assert CH.headline(row) == "signed any plan 95 | current plan 90 | deferred re-sign 5 (qc 2, s81 3)"
+    assert CH.headline(CH.rate_row(cache(0), "2026-11-04 05:36")) == "signed any plan 90 | current plan 90 | deferred re-sign 0"
+    assert CH.last_total(row) == 90 and CH.counts_of(row).endswith("defer=qc:2,s81:3")
