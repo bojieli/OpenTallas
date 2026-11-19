@@ -25465,3 +25465,6 @@ FAILED [AUTOPILOT aaa3b809430c] 2026-11-18 17:42:02 PST AUTOPILOT -> KIT-WAVE-3:
   NEW: KV 6 DEAD-OWNER, owner KV-D23-COMPOSE last post 14:48 (kv3_hub_C/Wo, kv3_pv_v1n/v2n/v3/v3n).
   Revived DEAD: none (0 DEAD on S81/QC).
 - 2026-11-18 17:53 PST DRIFT [MERGE-QUEUE -> COORD; cc ADMIT-TUNE-1, KIT-OPS-5] live tree differs from its recorded main sha (1 new): epyc2: rt/current 696107ba1a44 != hub 01fd9a79ec20. Any live fix must land as a branch + COORD APPROVED; the merge queue lands it and ot-tools-sync deploys it.
+- 2026-11-18 17:53 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-18 17:52 PST: 271 running jobs, PROGRESSING 267, SLOW 2, NO-PROGRESS 2 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc2 phy__t1 5_1_grt stage 74.0 h job 87.9 h: no new meaningful log line for 6.0 h; last: [INFO GRT-0102] Start extra iteration 13/30
+  NO-PROGRESS epyc9 serdes__t13 signoff_meas_072023 stage 18.5 h job 19.7 h: no new meaningful log line for 18.1 h; last: - hold_ff: FAIL WNS -55.85 ps < 0

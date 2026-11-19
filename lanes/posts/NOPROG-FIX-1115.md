@@ -205,3 +205,6 @@
   NO-PROGRESS epyc9 serdes__t13 signoff_meas_072023 stage 16.5 h job 17.7 h: no new meaningful log line for 16.1 h; last: - hold_ff: FAIL WNS -55.85 ps < 0
 - 2026-11-18 16:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-18 16:52 PST: 388 running jobs, PROGRESSING 380, SLOW 7, NO-PROGRESS 1 (advisory, no cancel); table lanes/NOPROG.tsv
   NO-PROGRESS epyc9 serdes__t13 signoff_meas_072023 stage 17.5 h job 18.7 h: no new meaningful log line for 17.1 h; last: - hold_ff: FAIL WNS -55.85 ps < 0
+- 2026-11-18 17:53 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-18 17:52 PST: 271 running jobs, PROGRESSING 267, SLOW 2, NO-PROGRESS 2 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc2 phy__t1 5_1_grt stage 74.0 h job 87.9 h: no new meaningful log line for 6.0 h; last: [INFO GRT-0102] Start extra iteration 13/30
+  NO-PROGRESS epyc9 serdes__t13 signoff_meas_072023 stage 18.5 h job 19.7 h: no new meaningful log line for 18.1 h; last: - hold_ff: FAIL WNS -55.85 ps < 0
