@@ -47,7 +47,7 @@ HUB = os.environ.get("OT_HUB_NAME", "intel2")
 VIEWS_ROOT = "/srv/opentallas-scratch3/claude/kw32-views"   # non-hub disk on every host
 TOOL_DIR = VIEWS_ROOT + "/tool"                              # tools/autopilot (+ die_plan/die_sta_related.py) of main
 HUB_TOOL_DIR = str(HOME / "OpenTallas")                     # the hub's main checkout (read only), no copy on the hub
-HUB_RELAY_HOST = "epyc4"                                     # records on the hub: view copied here (no hub payload)
+HUB_RELAY_HOST = os.environ.get("OT_VIEWS_RELAY_HOST", "epyc9")        # records on the hub: view copied here (no hub payload); epyc4 terminated 11-13
 PROV_MAX = 3
 WAIT_FLAGS = ("planned", "noview")
 SSH = ["ssh", "-n", "-o", "ControlPath=none", "-o", "ConnectTimeout=10", "-o", "BatchMode=yes"]

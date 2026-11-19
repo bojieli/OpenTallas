@@ -1949,7 +1949,7 @@ def hold_main(a):
 
 
 # ------------------------------------------------------------------ localhost driver (lifesnap + collect + count guard), COORD 18:5x
-HOSTS = ["intel1", "intel2", "epyc2", "epyc4", "epyc5", "epyc6"]
+HOSTS = ["intel1", "intel2", "epyc2", "epyc7", "epyc8", "epyc9", "epyc10"]
 SSH = ["ssh", "-n", "-o", "ControlPath=none", "-o", "BatchMode=yes", "-o", "ConnectTimeout=10"]
 LOG_TXT = os.path.expanduser("~/coord/autopilot/log.txt")
 
@@ -1957,7 +1957,7 @@ LOG_TXT = os.path.expanduser("~/coord/autopilot/log.txt")
 def strict_protected():
     """full-row parse of both coord lists (COORD input 4).  Accepted rows: 'host|any<TAB or SPACE>/abs/path ...' or free text holding
     host:/abs/path tokens.  Every whole path token is kept; a row with no absolute path, or a file that shrank, aborts."""
-    hosts = {"intel1", "intel2", "epyc2", "epyc4", "epyc5", "epyc6", "localhost", "any"}
+    hosts = {"intel1", "intel2", "epyc2", "epyc7", "epyc8", "epyc9", "epyc10", "localhost", "any"}
     rows = []
     for f in (os.path.expanduser("~/coord/lanes/PROTECTED-DBS.txt"), os.path.expanduser("~/coord/PROTECTED-DBS.txt")):
         with open(f, errors="strict") as fh:

@@ -36,6 +36,6 @@ esac
 # scratch intel1/intel2/localhost 150, epyc 500).  It disagreed with that admission (100 vs 50 on epyc2/epyc4/intel1)
 # and held review renders for hours.  Revert: cp ot-run.bak-kw44-noloop-1110 ot-run
 # KW-FIX-42 11-09 08:4x COORD 08:3x(1): epyc4 scratch floor 50 for autopilot route/finish/sign-off units. Revert: cp ot-run.bak-kw42-e4floor-1109 ot-run
-: "${OT_RUN_SCRATCH_DISK_FLOOR_GB_HOSTS=epyc4=50,intel1=50,epyc2=50}"
+: "${OT_RUN_SCRATCH_DISK_FLOOR_GB_HOSTS=intel1=50,epyc2=50}"
 export OT_RUN_SCRATCH_DISK_FLOOR_GB_HOSTS
 exec /home/ubuntu/.local/lib/kw42/ot-run-base "$@"

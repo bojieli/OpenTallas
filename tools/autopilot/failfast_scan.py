@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """failfast_scan.py -- READ-ONLY dry run of the FAILFAST-1 stop rules over the live jobs of the fleet.
 
-    python3 -I tools/autopilot/failfast_scan.py [--hosts epyc2,epyc4,...] [--json OUT.json] [--timeout 120]
+    python3 -I tools/autopilot/failfast_scan.py [--hosts epyc2,epyc7,...] [--json OUT.json] [--timeout 120]
 
 For every OpenROAD global_route / detail_route / cts process on each host it reads the kit's logs and congestion reports and
 says which rule WOULD stop it (physical/common_flow/failfast_rules.py), with evidence: log path, GRT rounds / iteration,

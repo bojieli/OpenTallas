@@ -28,7 +28,7 @@ def test_no_second_disk_check():
 
 def test_admission_keeps_per_host_floors_and_execs_base():
     code = code_lines()
-    assert any("OT_RUN_SCRATCH_DISK_FLOOR_GB_HOSTS=epyc4=50,intel1=50,epyc2=50" in l for l in code)
+    assert any("OT_RUN_SCRATCH_DISK_FLOOR_GB_HOSTS=intel1=50,epyc2=50" in l for l in code)
     assert code[-1] == 'exec /home/ubuntu/.local/lib/kw42/ot-run-base "$@"'
 
 
@@ -45,6 +45,6 @@ def test_runs_through_to_base_without_waiting(tmp_path):
     r = subprocess.run([str(w), "--mem", "19", "--threads", "2", "--dir", "/srv/opentallas-scratch2/claude/autopilot/review/x",
                         "--no-spill", "--direct", "--", "true"], capture_output=True, text=True, env=env, timeout=30)
     assert r.returncode == 0, r.stderr
-    assert "FLOOR=unset" in r.stdout and "HOSTS=epyc4=50,intel1=50,epyc2=50" in r.stdout
+    assert "FLOOR=unset" in r.stdout and "HOSTS=intel1=50,epyc2=50" in r.stdout
     assert "ARGS=--mem 19 --threads 2 --dir /srv/opentallas-scratch2/claude/autopilot/review/x" in r.stdout
     assert "KW12_DISK_WAIT" not in r.stderr

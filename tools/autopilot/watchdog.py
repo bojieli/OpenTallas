@@ -39,7 +39,7 @@ Every --act action is appended to <coord>/autopilot/WATCHDOG.log; per-kit relaun
 sample, so a tick costs one sample however many jobs look hung.  SYNTH: a busy yosys has only its per-pass log: HUNG at 6 h
 silent, idle at 2 h.
 
-Usage: watchdog.py [--act] [--hosts intel2,epyc2,intel1,epyc4] [--idle-min 120] [--coord DIR] [--rows FILE.json]
+Usage: watchdog.py [--act] [--hosts intel2,epyc2,intel1,epyc7] [--idle-min 120] [--coord DIR] [--rows FILE.json]
 """
 import argparse, json, os, re, shlex, subprocess, sys, time
 from concurrent.futures import ThreadPoolExecutor

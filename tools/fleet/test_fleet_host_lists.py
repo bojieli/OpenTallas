@@ -5,8 +5,8 @@ import unittest
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-NEED = {"epyc2", "epyc4", "epyc7", "epyc8", "epyc9", "intel1"}
-RETIRED = {"epyc5", "epyc6"}
+NEED = {"epyc2", "epyc7", "epyc8", "epyc9", "intel1"}
+RETIRED = {"epyc3", "epyc4", "epyc5", "epyc6"}      # epyc4 terminated 11-13
 
 
 def hosts_of(fname, pat):
