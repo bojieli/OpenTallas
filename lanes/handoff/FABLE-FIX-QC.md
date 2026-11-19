@@ -1,91 +1,95 @@
-# FABLE-FIX-QC handoff (QC closure, hardest families; started 11-18 23:0x PST)
+# FABLE-TYPE-REDUCE-S81-REST handoff (started 11-19 01:16 PST)
 
-## 11-18 23:5x PST
-- Work dir: intel2 (hub) W=/srv/opentallas-scratch2/claude/fable-fix-qc. Scripts: pull.sh HOST TYPE TAG ODB [SDC] (copies a live kit work dir +
-  one stage DB to W/k/TAG), census.sh TAG ODB placement|grt (TT census in the kit's own tt_setup_repair.tcl frame, classes + worst paths ->
-  W/k/TAG/out/census_<ODB>.log), loc.sh TAG ODB NAME (placement query, patterns in W/k/TAG/loc_NAME.env). Run with
-  ot-run --hosts localhost --mem 80 --threads 8 --dir $W -- bash $W/census.sh ... (env does not cross ot-run: pass files).
-- Fleet census scripts (run on intel2: bash /tmp/ffq_all.sh /tmp/ffq_c3.sh): per live QC route job, CTS TT (tt_setup_measure.log, post
-  tap balance, placement RC) and GRT TT (tt_setup_measure_grt.log). 4_cts_post_hook.rpt / 5_global_route.tt.rpt exist only in kits
-  generated after 01c4b1e891d (su_l1, su_l0, coll_ft so far).
-- Family ranking (measured, TT): see lanes/posts/FABLE-FIX-QC.md first post.
-- TAKEN family 1 = sle_ctl x7. Cause (kit sle_ctl__cl372cea1c N4, 4_cts.odb, census W/k/ctl372/out):
-  (a) plan partition_types[sle_ctl*].relay_sites is ONE table shared by all 7 types, keyed by pad depth (u_pd11_x_fw_i, u_pd12_x_st_a_i,
-      u_pd4_b_tw_data_i, u_pd5_x_fw_p1_i). The bound types have other depths (cl372cea1c: 11 / 14 / 7 / 6; padE0: 10 / 25 / 8 / 5 +
-      u_pd2_x_su_l1_i): OT_RELAY_SITES "plan keys unmatched 10100 of 21808" (padE0 13316). Those chains are left to GPL.
-  (b) the matched chain is aimed wrong: u_pd11_x_fw_i_236.q sited (750,145); its consumer pin u_u_ctl/chd_q[236] is on the TOP edge of the
-      core at (550,596) = 651 um, 695 ps data against a core clock with 0 insertion (launch tap 238 ps): -97.9, 102 ends.
-      type_relay_sites.py point(): a macro consumer counts at its rectangle point nearest the chain, not at the pin.
-  (c) second class 652 ends to -66: same tail flops -> u_u_rp repair mux -> u_ist_x_su_c_p{1,2}_o_0 station (820.8,337), 520 ps of wire.
-- Same class elsewhere: slw_su_c x2 relay_sites 1034 of 1034 unmatched; cb* 276-294 of 11k; st_a 16 of 196.
-- Not taken (reported to owners): fw_v2 -146 = 1 end u_bin_x_sc_i/q[0] -> u_bout_flt_wo (800 ps wire); st_b_v2 pvcd986c42 -106 = 1 end
-  u_cland_origin/s2 -> u_cland_rstart_tx (QC-PLAN-R3 group B); slw_st_b_v1__cle6023ec2 -210 = 122 ends u_u_r#.g_sc.u_mul; glue -130 =
-  u_sys_face.u_ot_pr_core (648 ends).
-- NEXT: per-type relay_sites for the 7 sle_ctl types (type_relay_sites.py with macro PIN capture points), rows to QC-PLAN-R3 for N4.3/N4.4,
-  private kit on one type to GRT TT.
+Scope: S81 families leaf, slice_station, serdes, dsdv_slice_c1x_C, svc_lo/hi_dsdv_svc_rs, kv_leaf (col families: FABLE-TYPE-REDUCE-S81-COL).
+Lane dir: epyc9 /srv/opentallas-scratch2/claude/fable-type-reduce-s81-rest (a2..a12.py analysis scripts, census_*_v2.json, dedup_d8f.json, repo/ lane clone).
 
-## 11-18 23:5x PST (fix written, proof kit running)
-- Lane clone: intel2 /srv/opentallas-scratch2/claude/fable-fix-qc-main (sparse tools + physical/common_flow), ONE local commit 74cf953c6ef
-  (not on main yet): tools/die_plan/pad_chain_site.tcl + gen_phys.pad_chain_site_place (opt-in gen env OT_PAD_CHAIN_SITE = unsited | auto |
-  all; unset = kit unchanged) + kit_istations rs_place_all separator-blind keys (su_c x3) + tests (test_pad_chain_site.py 6,
-  test_kit_istations.py +1; 78 pass). Push: cd clone && python3 -I /srv/opentallas-scratch2/claude/rt/current/tools/fleet/ot-push-main.
-  PUSH ONLY AFTER p1 prints "OT_PAD_CHAIN_SITE mode auto chains N of 2393 sited" in 3_3 without a Tcl error.
-- Dry read of the hook on the wave kit DB (W/pcs_dry.sh ctl372 3_3_place_gp.odb auto firm): 2,387 of 2,393 chains sited, 530 stale
-  plan-sited chains re-sited, worst hop 401 um (x_fw_i; was 651 um to the pin), x_fw_p1_i 114, b_tw_data_i 255, x_st_a_i 17.
-- Proof kit p1: W/kit/p1/gen/sle_ctl__cl372cea1c = copy of the wave N4 kit (epyc9 .../s29q103S4Q9N4/items/sle_ctl__cl372cea1c/gen) +
-  pad_chain_site.tcl + hook line at the end of face_flops.tcl + "export OT_PAD_CHAIN_SITE = auto" in config.mk (W/kit_p.sh).
-  Run: ot-run --hosts localhost --mem 96 --threads 16 --dir $W -- bash $W/run_p.sh p1 route 96 16; log W/logs/kit_p1.otrun.log,
-  kit log $K/run_route.log. Started 23:2x. Base to beat (same kit without the hook, live wave job): CTS TT -97.91 / tns -19,117
-  (tt_setup_measure.log), 757 negative ends.
-- Read after CTS: grep "measure TT" $K/tt_setup_measure.log; census: bash W/pull.sh is not needed (kit is local): copy
-  W/k/p1/work -> symlink is NOT allowed by census.sh (docker mount), use: mkdir -p W/k/p1 && ln -s $K W/k/p1/work, then census.sh p1 4_cts.odb placement.
-- After a pass at GRT TT (>= -42): (1) ot-push-main, (2) kit_wave_edit --set /dies/qwen_compute/item_env/<item>/OT_PAD_CHAIN_SITE="auto" for the 7
-  sle_ctl items (cl372cea1c, cl503337ff, cl67434795, cla4f6f12f, cl503337ff__padE0, cl503337ff__padE4, cl67434795__padW5; the three pad
-  items have no item_env entry yet: set the whole object), dry run first, (3) post, (4) follow the wave kits to sign-off and export.
-- Posted to QC-PLAN-R3 (23:4x): fw_v2 flt_wo hop 1,247 um (2 stations), st_b_v2 cland_origin -> cland_rstart_tx 1,075 um (2 stations).
-- Not owned, facts for the st_b owner: slw_st_b_v1__cle6023ec2 -210.4 = SRAM u_u_r4.u_scale_wait.u_m.g_bank[0].u_m rd_out (clk->q 255 ps)
-  + 276 ps wire + 22 logic levels into g_sc[1].u_mul...u_d.u_741 (122 ends); the other st_b types are +2..+44 at CTS.
+## State 11-19 01:5x PST: Step 0 done, no family passes, nothing running
+- Posts: STEP0 01:2x (serdes PASS and leaf "faster" lines are WITHDRAWN) and RESULT 01:5x (final).
+- Pushed: main f5f0d744f8, tools/precheck/type_census.py + 4 tests (bound RTL by plan module name; traffic_classes, landing_classes,
+  estimate_no_reroute). No plan flag `type_template`, no generator change, no kit, no waiter.
 
-## 11-19 00:3x PST (fix on main, proof kit in GPL, watcher armed)
-- ON MAIN f6b105fc5d (ot-push-main, touched tests pass): pad_chain_site.tcl + gen_phys.pad_chain_site_place + rs_place_all separator-blind
-  keys. rt/current on the hub = rt/f6b105fc5def (carries it). Lane clone needs cone tools + physical/common_flow + rtl for the gen_phys tests.
-- p1 passed the hook in 3_3 at 00:09: "OT_PAD_CHAIN_SITE mode auto chains 2387 of 2393 sited (39775 cells, 530 stale plan-sited re-sited)
-  kept_plan_sited 6 ... max_hop 401.5 um | x_fw_i 401, x_st_a_i 17, flt_hc1_i 182, flt_hc2_i 268, x_fw_p1_i 114, b_tw_data_i 255".
-  Expected stages (wave kit timing of the same type): 3_5 about 01:45, CTS + TT repair about 04:20, GRT TT hours later (the wave kit was
-  still in GRT 7 h after launch).
-- Detached watcher W/autopost.sh p1 (pid via pgrep -af "autopost.sh p1"): posts "AUTO p-kit CTS TT", "AUTO p-kit GRT TT" and
-  "AUTO p-kit ended" lines to lanes/posts/FABLE-FIX-QC.md by itself. Log W/logs/autopost_p1.log.
-- The wave job of sle_ctl__cl372cea1c on epyc9 (the base kit) ended before 00:15 (job dir gone; stages table still says RUNNING). Base
-  numbers stay: CTS TT -97.91 / tns -19,117 / 757 negative ends (W/k/ctl372/out/census_4_cts.odb.log).
-- WAVE STEP (NOT DONE; waits for the p1 read per r712): dry run passed for
-  python3 -I /srv/opentallas-scratch2/claude/rt/current/tools/autopilot/kit_wave_edit.py -m "FABLE-FIX-QC: sle_ctl x7 OT_PAD_CHAIN_SITE=auto (PAD-CHAIN-SITE f6b105fc5d)" \
-    --set /dies/qwen_compute/item_env/sle_ctl__cl372cea1c/OT_PAD_CHAIN_SITE=\"auto\"   (run in ~/coord; one --set per item)
-  Items with an item_env object: cl372cea1c, cl503337ff, cl67434795, cla4f6f12f. Without one (set the object:
-  --set /dies/qwen_compute/item_env/<item>={"OT_PAD_CHAIN_SITE":"auto"}): cl503337ff__padE0, cl503337ff__padE4, cl67434795__padW5.
-  Decision rule: p1 CTS TT >= -42 -> apply to all 7 at once; between -42 and -98 -> apply (still better than base) and census p1 for the
-  next class; worse than base -> do not apply, census p1 (ln -s the kit dir to W/k/p1/work, census.sh p1 4_cts.odb placement).
-- su_c x3 (sle_su_c, slw_su_c__cl19bb38ef, slw_su_c__cl92142dac): the separator fix reaches them on their next kit generation (tools from
-  rt/current); expect "OT_RELAY_SITES placed 1034 flops FIRM (plan keys unmatched: 0 of 1034)".
-- Checked, not a family: cbf_q00__cl870de686 CTS -300.7 = 13 ends, pipe u_d6_u_fab_u_x_1_0_a_d.r[2] -> r[3] on two BUFx8 with 289 + 534 ps
-  of unbuffered wire at placement RC; the GRT max-wire pass (120 um) is the step that buffers it. Read its GRT TT before any row.
+## Why (measured on D8f plan_h2_2249.json, D8e bind RTL, registry 01:17)
+- S81 types split on three position axes: (a) die traffic through the type as ft_slots (no streets; 73 of 75 leaves carry foreign lanes),
+  (b) clock landing cohort (landing_contract + count-aligned strap set), (c) wrapper extras (rst_o export, sid parameter default, tap names).
+- A pin template removes only window positions. Classes with windows re-slotted, no lane moved: leaf 65, slice_station 39, serdes 4,
+  c1x_C 9, svc 13, kv_leaf 5. With the landing cohort: leaf 74, serdes 11, slice_station 46. S81 395 -> 274 (lower bound 51).
+- schema.py ("bus is unbound ... tie-offs are not allowed") blocks a superset FT template until bind / landing / K-strap code supports it.
+- Signed now: slice_station 35 of 46 (7 route, 4 pre-route); every other family here 0.
+- serdes chain facts (for a later event): 4 shore chains; E-form types t2 t14 (0 FT), t1 x2 t16 (2 FT), t3 t15 x2 (4 FT), own bus on slot
+  0 / 1 / 2 of the inner face, FT straight with 8 stations; S-form ends t4 t12 t13. A shift form (own bus on slot 1, W slot 1 -> E slot 0,
+  W slot 0 -> E slot 2) keeps t12 / t13 and the slice_station pins, permutes the W slots of t4, and needs 9 stations on the 450 um jog.
+- leaf floorplan check (a10.py): cores are 34 % of the leaf area; t69's core placement clears the FT station sites of 11 of 75 types, t27's 7.
 
-## 11-19 00:5x PST (COORD 00:1x decisions applied)
-- WAVE: item_env OT_PAD_CHAIN_SITE=auto set (kit_wave_edit, coord 3da32f7a5fb) on sle_ctl x7 + su_c x3 (su_c kits carry 1,112..1,586 pad
-  chains with no plan row), and (82695beaf91) on sle_st_b_v1__pv0e7b1dcc + sle_st_b_v2__cl14c98df5__pvcd986c42. su_c x3 and the two st_b
-  were at N4.2 prelint 00:37; sle_ctl rows still say RUNNING on N4 (the cl372cea1c job dir on epyc9 is gone): watch for N4.2 sle_ctl rows.
-- ON MAIN 3b30e9c420 (rt/current 3b30e9c4208e): ORIGIN-SITE in pad_chain_site.tcl (pcs_origin_run): u_cland_origin flops FIRM at the
-  centre of the FIRM start loads when they are spread > 380 um. st_b class: origin (99,470) -> u_cland_rstart_tx (313,1331) 1,075 um.
-  0 cycles; replaces the "2 stations + K" row for st_b unless p2 reads GRT TT < -42 (then: per-region relay stage, count_align_bind
-  RELAY_STAGES is a global 2 today).
-- Proof kit p2: W/kit/p2/gen/sle_st_b_v2__cl14c98df5__pv41c959f3 (wave N4 attempt_8 kit from epyc9 + hook), started 00:37, watcher
-  autopost.sh p2. First p2 try died in kit_preflight (my rsync excluded signoff.py; the 00:35 AUTO line is that). Base: sibling
-  pvcd986c42 GRT TT -106.24; the wave kit of the same type is in GRT on epyc9 (CTS +18.26), read its tt_setup_measure_grt.log too.
-- ROWS handed over: lanes/handoff/FABLE-FIX-QC-rows-fw-flt_wo.json (5 slw_fw types: internal_stations bus:flt_wo 3 stations at 315.5 um
-  hops + fixed_cycles 3 on sl_W0..W4_fw__flte; exact mirror of the sle_fw rows). Not bound by me. Proof kit after QC-PLAN-R3 binds it.
-- slw_st_b_v1__cle6023ec2 (-210.4, 122 ends): NO row written. Facts: SRAM u_u_r4.u_scale_wait at (354,138) (same origin as the passing
-  sibling cl6357f1cc types), the u_r4 g_sc[*].u_mul logic sits at (170..200, 505..552), 530 um away, next to u_r5's (227,557). The
-  type has no param_set (siblings carry P_u_r*_HI_PAD 28/29, slw_st_b_v2 P_u_r*_RD_PAD 2/3). Open question for QC-PLAN-R3: is cle6023ec2
-  missing its pv split / RD_PAD; if not, the form is a read register at the multiplier (RTL, +1 cycle on that lane).
-- Pad chain census per family (live kits, W scratch padcensus): chains with a matching plan site row: sle_ctl 23 %, st_a 11-18 %, every
-  other family 0 % (slw_fw 20,316 chains / 56 k flops, sle_fw 11,480, stm 5,424, hc1 4,719, fe 5,054, sc 670, cb 1,542, native59 1,643).
-- Kit copy rule (kit_p.sh): source must be a gen dir without run/; N3 attempt dirs that ran in place are not usable.
+## Open decision (COORD / owner), not started
+S81 slice re-floor with street columns: leaf 75 + c1x_C 9 + kv_leaf 5 -> about 8 types + about 16 FT-only street types; street about 240 um
+(0.6 track use), die x about +6 %, 35 signed slice_station types get new pins, one landing contract per template; 3 to 5 days before the
+first template kit. Recommendation: decide at the first D8g leaf GRT TT read; start only if the FT-heavy leaves (t8 t72 t3 t75 t67) fail on
+congestion classes after the common-logic fixes.
+
+## Next for a successor
+- Nothing is pending. If the re-floor is approved: rows = street column per slice half in gen_plan_v2.py, ft_channel_route with "no foreign
+  FT in leaf", uniform landing contract for the leaf template, then one template kit to GRT TT (r712) before the bind.
+
+## Re-verify after the census s81p_ fix (COORD 11-19, posted)
+- col is bound as rtl/<type>.sv (0 s81p_col* files, 216 present); not affected.
+- Per family: FT slots, buses, internal stations, taps = 1 variant each. Landing contracts differ per position in 10 of 12 families
+  (h9_r2 7, h9_r1 4, p2 4, h10_r1 3, h10_r2 3, p3 3, others 2; p5 and p6 1); count_straps in 5 families; reset tree by position.
+- 0 of 51 template groups mix landing contracts or FT slots. Speed verdict: 51 kits per event vs 216 (4.2x), every family faster.
+
+## Code state (all on main 994caa6f8c05; off unless a plan sets type_template)
+- tools/fleet/type_template.py: groups / check / flag / credit / records / rommap / view (+ tests). kit_wave: plan probe (PROBE_V 11),
+  select() member skip, template_credit_step (every tick). col_inherit group=. Schema key type_template. tools/fleet/col_template_rows.sh.
+- Push 083b4e3849 ran the whole touched test set green (the 2 enqueue_skip tests pass on current main).
+- Automatic credit: a representative SIGNED on the current block -> records built on the die gen host -> hub
+  ~/coord/autopilot/inherit_records/<die>/<member>__<block>/inherited.json + autopilot/inherit_members.tsv (the counter's file).
+  With no image dir (die option type_template_rom_dir) the via map check is recorded as not done; it does not refuse the credit.
+- rommap on D8e: 216 positions, 51 layouts, 9372 ROM images (35 ROM macros + 8 element cores per col_h9_r1 type), 0 errors
+  (W/rommap_d8e.json). It is a map + check; the via-map-to-GDS writer itself still does not exist (rom_gen emits no GDS).
+
+## Merge rows below 51 (plan level, measured on D8e df7446e48ba9; W/rows/d8e_tt = plan_tt.json 944ba058bbe2, sidecar_tt.json 60a304c234a7)
+bash tools/fleet/col_template_rows.sh TREE BASE_PLAN SIDECAR OUT [--all-members]
+- A reset keep-outs union (col_typemerge keepouts): 128 types get 326 more reset outs (max 4 per type), left open and declared. 51 -> 42.
+- C collector superset, collector-form members only, --keep-taps (cland_col_superset): one landing contract per family, unused children tied.
+  -> 25 plan layouts. Without --keep-taps the tap union gives 10 schema errors (added tap spacing, col_h9_r2 / p2), so taps stay per type.
+- B one ring depth per sibling group and bus: 63 ports raised (depth 4 -> 8) on 29 r0 types; count_straps width follows at CA compose. -> 20.
+- --all-members (plain tiles take the family contract too, R3b): 20 plan layouts, 15 after B. Costs landing pins/cells on 150+ plain tiles: not for D8h.
+- Left after A+B+C: h9_r2 4, h9_r1 2, h10_r1 2, h10_r2 2, h10_r0_p1 2, p2 2 (two core placements), others 1.
+- Schema validate of the result: 0 errors. NOT run: CA compose, bind, G0, LATCHECK, any kit. The bound-RTL key can only be counted after the
+  bind; 20 is the plan-layout count and assumes the keep-outs union makes the reset trees equal (the only RTL difference found inside a layout
+  today, plus one cland monitor in col_h10_r2 that the superset covers).
+- Cost of the rows for closure: 0 cycles; more reset out pads and tied monitor pins on 128 / 78 types; deeper CA rings on 29 types (more slot flops).
+
+## For S81-DIE-R3 (D8h)
+1. Tree tools at main 994caa6f8c05 or later.
+2. Rows: col_template_rows.sh TREE <D8g plan + trunk rows> <its landed sidecar> OUT  -> plan_tt.json + sidecar_tt.json; then the normal
+   CA compose, strict bind, LATCHECK, G0 vs control. (Flag only, no merge: type_template.py flag BASE OUT "col_h*".)
+3. After the bind: type_template.py check plan --bind-rtl <bind>/rtl --repo TREE  (expect 216 positions, 0 FAILED; groups = kits to build)
+   and type_template.py rommap ... --out rommap.json (0 errors).
+4. r712 proof kit: one representative of the largest group (col_h9_r1) to GRT TT.
+5. Wave: 216 col rows become one per group; members show as skip "TYPE-TEMPLATE member"; credit is automatic.
+
+## ROM via map to GDS at die assembly (main e1f0efbdd62d) - lane closed here
+- The writer already existed (tools/mem_compiler/rom_viamap_gds.py, 8dfe82f36f: VIA1 21/0 overlay per unique image, merge by DEF);
+  my earlier "no tool" line was wrong. Added: merge-map / verify-map (driven by type_template rommap, for one representative layout
+  per group), rom_gen.py gds (one image, read back), all-zero image verify fix.
+- Die assembly: type_template.py rommap ... --out R.json ; rom_viamap_gds.py merge-map --rommap R.json --macro <ROM datasheet json>
+  --viamap-dir D --top TOP [--die-gds in.gds] --out out.gds ; verify-map the same with --die-gds out.gds (exit 1 on any difference).
+- Check (no col layout is signed, so not against a signed layout): D8e map, frame u_f_0L01 at fW0_p1_b0/b1/b2 (col_h10_r0_p1, r1, r2
+  templates, MX), 112 ROM macros, images = results/arch/s81_rate3_admission_1020/aproj_slice_frames/u_f_0L01/gold: merged 112,
+  18 unique overlays, readback PASS 112/112. epyc9 W/gds/s81_0L01_via1.gds.
+- Where images are: rom_gen personalise / rom_content.write_viamap write <INSTANCE>.viamap.hex. In the S81 tree only that 10-20
+  slice-frame run has them (7 frames of 72, about 295 files each, named u_f_0L01_c1_5 for die instance u_f_0L01.u_r0.u_c1_5; the tool
+  accepts both names). They are sparse test content (frame 0L01: 82 of 112 all zero, 120 vias). The release weight images for the 72
+  frames are not in the tree: someone must export them before a real die merge.
+- Open: (1) array origin inside the ROM macro is assumed (decoder width, 0) and the via sits at the cell centre: no base ROM layout
+  exists to check it against; (2) the 8 element cores per type hold their ROMs inside the core layout: counted, not stamped;
+  (3) no real die GDS was merged (overlay-only stream).
+
+## 11-19 03:3x PST
+- p1 (sle_ctl) in 4_1_cts at 03:19, no TT number yet; watcher alive. Wave: all 7 sle_ctl relaunched 01:19-01:56 on N4.3 / N4.3G (place).
+- p2 was NOT a proof: st_b u_cland_origin is plan-sited (landing_placement.tcl rect from clock...origin_rect_um, landing_place.py 572-597);
+  the hook kept it ("origins 1 sited 0 kept_firm 1"). p2 stopped 03:24 (run_p.sh pid 1032744, container d8e1a5d32291, watcher 1093956).
+  The item_env on the two st_b wave items is a no-op for this class (harmless).
+- Real fix = plan row: lanes/handoff/FABLE-FIX-QC-rows-stb-origin.json (origin_rect_um -> [219.96,786.26,237.24,803.54] for sle_st_b).
+- p3 = same type as p2, landing_placement.tcl origin rect edited to that value (copy+mv before launch); started 03:25; watcher autopost.sh p3.
+  Read: OT_CLAND / landing placement lines in 3_3, then CTS TT, then GRT TT end u_cland_rstart_tx/q (base -106.24 on the sibling).

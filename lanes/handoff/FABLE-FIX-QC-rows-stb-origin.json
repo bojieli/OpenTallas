@@ -1,0 +1,16 @@
+{
+ "schema": "FABLE-FIX-QC-rows.v1", "from": "FABLE-FIX-QC", "for": "QC-PLAN-R3 (N4.5)", "date": "2026-11-19",
+ "class": "st_b landing start origin sits in a PLAN rectangle next to 13 start loads; the region relay tx flop at the cland_rstart_out pin is 1,075 um away (one hop)",
+ "evidence": {"kit": "sle_st_b_v2__cl14c98df5__pvcd986c42 N3, 5_1_grt.odb TT, GRT RC: wns -106.24, 1 end u_cland_origin/s2 -> u_cland_rstart_tx/q; sle_st_b_v1__pv0e7b1dcc -63.66 (tns = wns)",
+              "plan_site": "landing_placement.tcl {u_cland_origin {95.48 469.70 112.76 486.98} reader-start-origin}; tx flop FIRM at (313.2,1331.4)",
+              "why_not_the_hook": "ORIGIN-SITE (main 3b30e9c420) keeps an origin an earlier hook made FIRM; p2 printed 'origins 1 sited 0 kept_firm 1'. The plan rectangle is the cause, so the fix is this row."},
+ "plan_rows": [
+  {"op": "set", "path": "partition_types.<sle_st_b_*>.clock.<landing_reader_start | landing_writer_start, the key that carries origin_rect_um today>.origin_rect_um",
+   "value": [219.96, 786.26, 237.24, 803.54], "was": [95.48, 469.70, 112.76, 486.98],
+   "note": "L1 centre of the 13 FIRM start captures incl. u_cland_rstart_tx; worst hop 622 um -> every capture within 2 hops is not needed: origin -> tx 622 um is still over 405, see open"}
+ ],
+ "open": ["622 um > 405 um: this row halves the hop, it does not meet the CBC 405 rule. Estimate from the measured path (810 ps of buffers over 1,075 um): about 470 ps over 622 um, slack about +230 vs -106. p3 measures it.",
+          "slw_st_b types: recompute the rectangle per type from their own start captures (not measured by me)",
+          "full CBC form = one more relay stage in the region (count_align_bind RELAY_STAGES is a global 2): only if p3 reads < -42"],
+ "proof": "p3: intel2 /srv/opentallas-scratch2/claude/fable-fix-qc/kit/p3 (sle_st_b_v2__cl14c98df5__pv41c959f3, origin rect moved in landing_placement.tcl), started 03:25, watcher posts CTS / GRT TT"
+}
