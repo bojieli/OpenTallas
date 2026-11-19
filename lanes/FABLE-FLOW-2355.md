@@ -17,7 +17,7 @@ Fleet: about 690 running jobs on 624 threads, UNDER-USE idle 0. Waste shares are
 - Build hosts admit 0-15 GB each (available memory 5-9% of 1007 GB). ot-run shows `reserve 0, fresh 0`, so a job is
   admitted on current free memory while already-admitted young jobs are still growing. The host then crosses 5%
   and the guard kills the youngest process.
-- The wave saw 9 of these as INFRA fails. The costly ones are long single-thread synth runs of svc types:
+- The wave saw 8 of these as INFRA fails. The costly ones are long single-thread synth runs of svc types:
   svc_lo_dsdv_svc_rs__t5 yosys was killed on epyc7 at 23:24 after about 6 h (22.7 GB RSS). A relaunched long job
   is always the youngest on its host, so it is the first victim again: ot_s81sl_kv_leaf__t2 is at attempt 23
   and svc_hi_dsdv_svc_rs__t1 at attempt 10. KILL-PIN "resumes its checkpoint", but yosys has none.
