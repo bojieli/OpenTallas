@@ -471,6 +471,13 @@ wait)
     touch "$K/lec_async.abort"
     exit 0
   fi
+  # COORD 11-19 (S81 leaf__t12 idle 2.6 h at 0.1 s CPU after FAIL_POSTCTS, lepe_nh_mus_LP__t1 earlier): a flow that ended in a terminal FAIL (rc != 0 and a FAIL_* marker in the kit) has no
+  # reader for the proof: the LEC is aborted and the container exits, releasing its admitted slot (a resume runs a fresh LEC).
+  if [ "$RC" != 0 ] && [ -f "$K/lec_async.ready" ] && [ ! -f "$K/lec_async.rc" ] && compgen -G "$K/FAIL_*" > /dev/null; then
+    echo "LEC_ASYNC flow ended rc $RC with $(basename "$(compgen -G "$K/FAIL_*" | head -1)"): LEC aborted, wrapper exits and releases its slot"
+    touch "$K/lec_async.abort"
+    exit 0
+  fi
   # Unit form: the LEC has its own admitted unit, so this container need not stay alive for it.
   [ "$(cat "$K/lec_async.mode" 2>/dev/null)" != unit ] || exit 0
   # FABLE-FLOW-2355 B: the wait ended only on lec_async.rc, so a watcher that died (or aborted, or finished with no rc) left this container holding its slot for 2.5-13 h.  It ends on ANY

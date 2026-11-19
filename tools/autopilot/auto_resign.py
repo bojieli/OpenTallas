@@ -44,6 +44,7 @@ resign.py --auto runs sign-off + routed LEC again at the tag.
 
     auto_resign.py status                 state table (hub)
 """
+import collections
 import copy
 import fnmatch
 import hashlib
@@ -1121,12 +1122,31 @@ def candidates(AP, ap_dir):
     return wave_candidates(AP.load_state().get("jobs") or {}, kits, cm) + parse_registry(AP.read_coord(REGISTRY))
 
 
+def eco_summary(AP, items, cands):
+    """COORD 11-19 (FABLE-FLOW-1150 H: wave-eco 0 launches and no reason): ONE line per pass with the wave-eco candidate count and, per row status / why, how many are waiting"""
+    ce = [c for c in cands if c.get("source") == "wave-eco"]
+    if not ce:
+        AP.log("AUTO-ECO wave-eco: 0 DONE-NEAR-MISS candidates this pass (none with a signoff record on a plan_current kit)")
+        return
+    reasons = collections.Counter()
+    for c in ce:
+        it = items.get(cand_id(c)) or {}
+        why = str(it.get("why") or it.get("status") or "NEW")
+        reasons["%s %s" % (it.get("status", "NEW"), re.sub(r"[0-9a-f]{8,}|\d+(?:\.\d+)?", "N", why)[:70])] += 1
+    AP.log("AUTO-ECO wave-eco: %d candidate(s); %s" % (len(ce), "; ".join("%dx %s" % (n, k) for k, n in reasons.most_common(6))))
+
+
 def advance(AP, st, ctx, ap_dir, notices):
     items = st["items"]
     handled = set()
     room = dict(running=sum(1 for it in items.values() if it.get("status") == "RUNNING"),
                 eco=sum(1 for it in items.values() if it.get("status") == "ECO"), launched=0)
-    for c in candidates(AP, ap_dir):
+    cands = candidates(AP, ap_dir)
+    try:
+        eco_summary(AP, items, cands)
+    except Exception as e:                           # a summary line never stops the pass
+        AP.log("AUTO-ECO summary skipped: %s: %s" % (type(e).__name__, e))
+    for c in cands:
         handled.add((c["die"], c["name"]))
         cid = cand_id(c)
         it = items.setdefault(cid, dict(die=c["die"], name=c["name"], host=c["host"], path=c["path"], source=c["source"], status="NEW"))

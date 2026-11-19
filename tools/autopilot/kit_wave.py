@@ -3597,6 +3597,8 @@ RULES = [
     ("PLAN", None, r"FAIL_POSTCTS SETUP_TRIAGE", "PLAN-TRIAGE: post-CTS TT setup estimate below -150 ps, routing cannot close it (plan item for the die owner, not relaunched)"),
     ("PLAN", None, r"FACE_GUARD FAIL|face_guard[^\n]*FAIL|FAIL_PREFLOOR face_guard", "face guard (plan pins / landing)"),
     ("PLAN", None, r"PORT_BIND FAIL|port_bind[^\n]*FAIL|FAIL_PREFLOOR port_bind", "port bind (plan pins)"),
+    # COORD 11-19 (UNCLASSIFIED kit_preflight rows): the plan places a macro instance the bound RTL does not contain (KIT_PREFLIGHT macro_instances, PLAN-SRC-MACRO)
+    ("PLAN", None, r"PLAN-SRC-MACRO|macro_instances[^\n]*(?:FAIL|not an instance|no bound instance)", "PLAN-SRC-MACRO: plan macro with no bound instance (plan item for the die owner)"),
     ("PLAN", None, r"LEF master \S+ not found|ORD-2013", "macro not declared in the plan type"),
     ("PLAN", None, r"is blocked|fails? closed|no legal site|DPL-0033|DPL-0036|not in plan|unknown (?:partition )?type|"
                    r"(?:ERROR|Error|error|FAIL)[^\n]*\boutline\b|utili[sz]ation .* exceeds|\[ERROR PDN-0\d+|Error:[^\n]*PDN-0\d+", "plan geometry / site"),   # FABLE-FLOW-2355: bare "outline" matched the info line "GRTM mode edge_outline image"

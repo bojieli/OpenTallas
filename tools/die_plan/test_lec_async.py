@@ -326,3 +326,19 @@ def test_kit_wave_does_not_read_aborted_lec_as_neq_or_infra():
            "the kit needs a fresh LEC\n[ERROR PDN-0006] bad grid\n")
     cls, why = kit_wave.classify("route", log)
     assert "PDN-0006" in why and "LEC" not in why, (cls, why)
+
+
+def test_terminal_fail_marker_ends_the_wait_and_aborts_the_lec(tmp_path):
+    k, env = _kit(tmp_path, 0)
+    (k / "lec_async.ready").write_text("1\nsleep 30\n")
+    (k / "FAIL_POSTCTS").write_text("FAIL_POSTCTS timing\n")
+    (k / "run/results/asap7/x/base").mkdir(parents=True)
+    (k / "run/results/asap7/x/base/3_place.odb").write_text("odb")          # past the place checkpoint: the old rule kept waiting here
+    p = subprocess.run(["bash", str(TOOL), "wait", str(k), "flowc", "route", "1"], env=env, timeout=20, capture_output=True, text=True)
+    assert p.returncode == 0 and (k / "lec_async.abort").exists() and "wrapper exits and releases its slot" in p.stdout
+    k2, env2 = _kit(tmp_path / "b", 0) if (tmp_path / "b").mkdir() is None else (None, None)
+    (k2 / "lec_async.ready").write_text("1\nsleep 0.5; echo ok > /work/p.done\n")
+    (k2 / "run/results/asap7/x/base").mkdir(parents=True)
+    (k2 / "run/results/asap7/x/base/3_place.odb").write_text("odb")
+    p2 = subprocess.run(["bash", str(TOOL), "wait", str(k2), "flowc", "route", "1"], env=env2, timeout=30)   # rc 1 but no FAIL_* marker: waits as before
+    assert p2.returncode == 0 and not (k2 / "lec_async.abort").exists()

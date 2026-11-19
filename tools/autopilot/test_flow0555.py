@@ -318,3 +318,19 @@ def test_row_stuck_in_the_rt_mirror_of_a_bad_host_moves_after_30_minutes(tmp_pat
         assert KW.unreadable_host_rows(ap, cfg, st, {}, now=now) == 1 and st["items"]["x"]["status"] == "RETRY-INFRA"
         st = {"items": {"x": dict(row, stage="rt_mirror_copy_epyc9")}}
         assert KW.unreadable_host_rows(ap, cfg, st, {}, now=now) == 0           # a healthy host's mirror is left alone
+
+
+def test_plan_src_macro_is_a_classified_plan_failure():
+    cls, why = KW.classify("preflight", "KIT_PREFLIGHT FAIL 21 issues\n  macro_instances PLAN-SRC-MACRO: u_bound.u_host.host__qkd_hr_core_order is not an instance of the bound host\n")[:2]
+    assert cls == "PLAN" and "PLAN-SRC-MACRO" in why
+
+
+def test_wave_eco_prints_one_summary_line_per_pass():
+    import auto_resign as AR
+    lines = []
+    ap = type("AP", (), {"log": staticmethod(lines.append)})()
+    c = {"die": "hd", "name": "hd_mesh", "host": "h", "path": "/k", "source": "wave-eco"}
+    AR.eco_summary(ap, {AR.cand_id(c): {"status": "WAIT", "why": "no tag tools for hd"}}, [c, {"die": "x", "name": "y", "source": "wave"}])
+    assert len(lines) == 1 and "1 candidate(s)" in lines[0] and "no tag tools" in lines[0]
+    AR.eco_summary(ap, {}, [])
+    assert "0 DONE-NEAR-MISS candidates" in lines[1]
