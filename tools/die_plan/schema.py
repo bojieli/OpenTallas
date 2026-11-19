@@ -1874,7 +1874,14 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]['r
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]['reset']["properties"]['port_relays'] = {
     'type': 'array', 'items': {'type': 'object', 'additionalProperties': False, 'required': ['name', 'depth', 'sinks'],
                                'properties': {'name': {'type': 'string', 'pattern': '^[A-Za-z_][A-Za-z_0-9]*$'},
-                                              'depth': {'type': 'integer', 'minimum': 1, 'maximum': 8},
+                                              'depth': {'type': 'integer', 'minimum': 1, 'maximum': 16},
+                                              'sinks': {'type': 'array', 'minItems': 1, 'uniqueItems': True,
+                                                        'items': {'type': 'string', 'pattern': '^[A-Za-z_][A-Za-z_0-9]*$'}}}}}
+# CBC-RULES-1119 (r713 rule 4): bank rst_n pins re-pointed to the nearest equal-depth generated-tree tap (bank_reset_delta.py,
+# realised by reset_port_relays.apply_bank_taps at the bind): 0 cycles, 0 flops
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]['reset']["properties"]['bank_taps'] = {
+    'type': 'array', 'items': {'type': 'object', 'additionalProperties': False, 'required': ['tap', 'sinks'],
+                               'properties': {'tap': {'type': 'integer', 'minimum': 0},
                                               'sinks': {'type': 'array', 'minItems': 1, 'uniqueItems': True,
                                                         'items': {'type': 'string', 'pattern': '^[A-Za-z_][A-Za-z_0-9]*$'}}}}}
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["hard_cores"]["items"]["properties"]["bound_group"] = {'additionalProperties': False,

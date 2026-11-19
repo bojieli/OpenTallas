@@ -3558,6 +3558,16 @@ class Binder:
                     raise BindError(f"reset port relays {tn}: {exc}") from exc
                 f.write_text(txt2)
                 self.__dict__.setdefault("_reset_port_relays", {})[tn] = receipt
+            bank_taps = t.get("reset", {}).get("bank_taps")
+            if bank_taps:
+                # CBC-RULES-1119 (r713 rule 4): banks to the nearest equal-depth reset-tree tap (reset_port_relays.apply_bank_taps)
+                import reset_port_relays
+                try:
+                    txt2, receipt = reset_port_relays.apply_bank_taps(f.read_text(), bank_taps)
+                except reset_port_relays.PortRelayError as exc:
+                    raise BindError(f"reset bank taps {tn}: {exc}") from exc
+                f.write_text(txt2)
+                self.__dict__.setdefault("_reset_bank_taps", {})[tn] = receipt
             import bound_groups
             try:
                 files.extend(bound_groups.materialize(self, tn, f))
