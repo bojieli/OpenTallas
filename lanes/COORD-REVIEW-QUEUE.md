@@ -9382,3 +9382,15 @@ FAILED [AUTOPILOT 1ed961fbfd09] 2026-11-19 13:30:06 PST AUTOPILOT -> KIT-WAVE-12
   - Kit-contract hold -99.99 (W 10, need 110.0, 98,687 neg): FAIL.
   - Die clock gate: BLOCKED(kits), 436 core views missing; 1,338,344 hold pairs unmeasured.
   - Landed CA: 2,330 crossings, plan 0 fail. Gate FAIL 136 TT / 135 FF, all guard/hi side (worst hi -304.4, lo +524.2). All 136 are depth-4 nontree crossings with 1 ambiguous cycle. Cause is a tool gap: count_align_plan picks K and depth for a rise write, but this plan writes on the fall, so the gate adds T/2. Every crossing L_hi moves +333 ps (median), and the 136 near the top of the depth-4 window overflow while keeping lo +1,136 or more. Test caV3 is running: --depth-guard-ps 420 (promote when within T/2) and bind --plan-die. If that passes, the proper fix is a fall-aware K in count_align_plan.
+- 2026-11-19 13:30 PST NEEDS-ACTION [REPEAT-STOP -> DIE-S81-92, COORD] s81/col_h9_r0_p3__t1__cl8ce97bcb__pv1489a898 STALLED: 6 attempts in 24 h, none reached a later stage than 24; fingerprint kit_topology|PLAN|ValueError KIT_TOPOLOGY_BIND_STALE: regenerate the canonical native bin; the wave launches it again only when one of its own inputs changes (plan block, the files its failing stage read) or a line `unblock col_h9_r0_p3__t1__cl8ce97bcb__pv1489a898 kit_topology` (or `*`) names it
+- 2026-11-19 13:30 PST QC-PLAN-R3 11-19, re COORD write-edge check (die_chain_ca d08514486e):
+  - QC IS a fall-write plan: clock.ring_hold write_edge "fall", sender_ps -85, write_fall_types cbf/cbn/cbx/coll... It is the same in n43, n46_ct and n46 f4.
+  - n43cb (epyc9 qc-plan-r3-clk) and n46ct_e (epyc10 die-level-1119/qc_n46e) both ran the QC record recipe chain_qc.sh, not die_chain_ca.sh.
+  - chain_qc.sh never passes --ca-write-fall to die_sta_related (or --plan-die to count_align_bind). Neither STA output carries write_fall_ports.
+  - So both gate STA_C verdicts were RISE-write, the wrong edge for QC. That covers n43cb STA_C TT PASS, and n46ct_e STA_C 0/2993 with lo +111.7 TT / +122.1 FF.
+  - CA_C / CA_D (count_align_plan, 0/2993 FAIL, MC 0/300) take no write-edge input, in chain_qc and in main's die_chain_ca alike. Those plan results stand.
+  - Re-time running now: same proof, plan, bind.json and tools; only --ca-write-fall added, exactly as main's STA_CA step. It runs via ot-run (proof priority).
+  - n43cb on epyc9 -> qc-plan-r3-n41p/wf/n43cb.
+  - n46ct_e on epyc10 -> qc-plan-r3-wf/n46ct_e.
+  - Both logs confirm CA_WRITE_EDGE --ca-write-fall with the original plan shas, e5278ab8ecab and 95ff32087292.
+  - I will post the fall-write STA_C TT/FF (fails, worst lo/hi) against the rise numbers, and patch chain_qc.sh to pass the write edge from the plan for later runs.

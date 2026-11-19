@@ -538,3 +538,14 @@
   - Checked offline with the current tools (rt 55cdd618512a): before, LT ERR "no SIGNED mean clock contract"; after, mean_contract with require_signed False, u_lane0..3 rows 397.07/397.09/397.47/393.41 parent_budget, and all 4 tap-vs-mean checks OK.
   - Folded into N4.6e5 (n46o) and every later form.
   - If the m44s1 views are meant to become the selected views, the taps need 383.87 etc. That is a view-selection decision for the QC view owner, not this fix.
+- 2026-11-19 13:30 PST QC-PLAN-R3 11-19, re COORD write-edge check (die_chain_ca d08514486e):
+  - QC IS a fall-write plan: clock.ring_hold write_edge "fall", sender_ps -85, write_fall_types cbf/cbn/cbx/coll... It is the same in n43, n46_ct and n46 f4.
+  - n43cb (epyc9 qc-plan-r3-clk) and n46ct_e (epyc10 die-level-1119/qc_n46e) both ran the QC record recipe chain_qc.sh, not die_chain_ca.sh.
+  - chain_qc.sh never passes --ca-write-fall to die_sta_related (or --plan-die to count_align_bind). Neither STA output carries write_fall_ports.
+  - So both gate STA_C verdicts were RISE-write, the wrong edge for QC. That covers n43cb STA_C TT PASS, and n46ct_e STA_C 0/2993 with lo +111.7 TT / +122.1 FF.
+  - CA_C / CA_D (count_align_plan, 0/2993 FAIL, MC 0/300) take no write-edge input, in chain_qc and in main's die_chain_ca alike. Those plan results stand.
+  - Re-time running now: same proof, plan, bind.json and tools; only --ca-write-fall added, exactly as main's STA_CA step. It runs via ot-run (proof priority).
+  - n43cb on epyc9 -> qc-plan-r3-n41p/wf/n43cb.
+  - n46ct_e on epyc10 -> qc-plan-r3-wf/n46ct_e.
+  - Both logs confirm CA_WRITE_EDGE --ca-write-fall with the original plan shas, e5278ab8ecab and 95ff32087292.
+  - I will post the fall-write STA_C TT/FF (fails, worst lo/hi) against the rise numbers, and patch chain_qc.sh to pass the write edge from the plan for later runs.
