@@ -197,3 +197,22 @@ def test_wave_near_miss_job_is_an_eco_candidate_with_the_routed_kit_memory():
     out = {c["name"]: c for c in AR.wave_candidates(jobs, kits)}
     assert set(out) == {"hd_mesh", "y"} and out["hd_mesh"]["source"] == "wave-eco" and out["y"]["source"] == "wave"
     assert AR.WAVE_ECO_MEM_GB == 24
+
+
+def test_wave_eco_orders_smallest_miss_first_has_no_inflight_cap_and_unpins_an_overloaded_host():
+    import auto_resign as AR
+    mk = lambda i, so: {"id": i, "status": "DONE-NEAR-MISS", "die": "hd", "type": i, "host": "h", "path": f"h:/k/{i}", "signoff": dict(so, path=f"/k/{i}/s/signoff.json")}
+    jobs = {"big": mk("big", {"tt_wns": -120.0, "drc": 0}), "small": mk("small", {"tt_wns": -44.0, "drc": 0}), "drc": mk("drc", {"ff_wns": -5.0, "drc": 3})}
+    kits = {f"/k/{i}": "yes" for i in jobs}
+    assert [c["name"] for c in AR.wave_candidates(jobs, kits)] == ["small", "big", "drc"]
+    assert AR.host_overloaded({"epyc7": {"load": 600, "cores": 96}}, "epyc7") and not AR.host_overloaded({"epyc7": {"load": 150, "cores": 96}}, "epyc7")
+    assert not AR.host_overloaded({}, "x")
+
+    class A:
+        OT_RUN = "ot-run"
+        ssh_host = staticmethod(lambda h: h)
+    c, e = {"host": "epyc7"}, {"kit": "/k/small", "record": "/k/small/s.json"}
+    pinned = AR.eco_argv(A, c, e, "/d", "/out", 24)
+    free = AR.eco_argv(A, c, e, "/d", "/out", 24, anyhost=True)
+    assert "--hosts" in pinned and "--hosts" not in free and "--stage" in free and "24" in free
+    assert AR.MAX_ECO_INFLIGHT == 4                          # the cap still binds the registry rows

@@ -229,6 +229,26 @@ def wave_kits(tsv_text):
     return out
 
 
+def miss_size(so):
+    """smallest miss first (COORD 11-19): (routed DRC > 0, worst setup / hold WNS magnitude in ps, DRC count) from the job's sign-off summary; unreadable = last"""
+    so = so or {}
+    w = [abs(float(so[k])) for k in ("tt_wns", "setup_wns", "ff_wns", "hold_wns") if isinstance(so.get(k), (int, float)) and so[k] < 0]
+    try:
+        drc = int(so.get("drc") or 0)
+    except (TypeError, ValueError):
+        drc = 0
+    return (drc > 0, max(w) if w else (1e9 if not so else 0.0), drc)
+
+
+HOST_OVERLOAD_X = 2.0
+
+
+def host_overloaded(status, host):
+    """the host runs over 2x its cores (load / cores from ot-run --status); unknown = not overloaded"""
+    v = (status or {}).get("localhost" if host in ("localhost", "") else host) or {}
+    return bool(v.get("cores")) and float(v.get("load") or 0) > HOST_OVERLOAD_X * float(v["cores"])
+
+
 def wave_candidates(jobs, kits, core_module=lambda x: x):
     out = []
     for j in jobs.values():
@@ -242,7 +262,8 @@ def wave_candidates(jobs, kits, core_module=lambda x: x):
         out.append(dict(die=j.get("die"), name=j.get("type"), module=core_module(j.get("type")),
                         host=j.get("probe") or j.get("host"), path=os.path.dirname(os.path.dirname(so["path"])),
                         record=so["path"], src=j.get("src"), lane=j.get("lane") or "", note="wave job %s" % j.get("id"),
-                        source="wave-eco" if eco else "wave", build_commit=""))
+                        source="wave-eco" if eco else "wave", build_commit="", miss=miss_size(so) if eco else None))
+    out.sort(key=lambda c: ((1, c["miss"]) if c.get("miss") else (0, ())))      # re-sign rows first, then the ECO candidates smallest miss first
     return out
 
 
@@ -341,9 +362,11 @@ def judge_eco(c, e, it, holds, near_wns, near_drc):
     return "LAUNCH", nums
 
 
-def eco_argv(AP, c, e, d, out, mem):
+def eco_argv(AP, c, e, d, out, mem, anyhost=False):
     host = "localhost" if AP.ssh_host(c["host"]) == "localhost" else c["host"]
-    return [AP.OT_RUN, "--mem", str(mem), "--threads", str(THREADS), "--hosts", host, "--no-spill", "--disk", str(ECO_DISK_GB),
+    # COORD 11-19: a DB host over 2x its cores does not get the job pinned: ot-run places it on a host that admits it (inputs staged, outputs back), as the re-sign anyhost form
+    place = ["--stage", ",".join([d, e["kit"], out])] if anyhost else ["--hosts", host, "--no-spill"]
+    return [AP.OT_RUN, "--mem", str(mem), "--threads", str(THREADS)] + place + ["--disk", str(ECO_DISK_GB),
             "--dir", d, "--priority", "die", "--crit", "--", "python3", "-I", d + "/tools/die_plan/eco_loop.py", "run",
             "--kit", e["kit"], "--signoff", e["record"], "--out", out, "--mem", str(mem), "--cpus", str(THREADS)]
 
@@ -953,6 +976,21 @@ def eco_stop(AP, ap_dir):
     return cfg.get("auto_eco", True) is False or cfg.get("late_eco", True) is False
 
 
+def otrun_status(AP):
+    """ot-run --status -> {host: {load, cores, ...}} once per process"""
+    try:
+        import kit_wave as _KW
+        rc, out, _ = AP.sh([AP.OT_RUN, "--status"], timeout=120)
+        st = _KW.parse_otrun_status(out) if rc == 0 else {}
+    except Exception:
+        st = {}
+    try:
+        AP._otrun_status_cache = st
+    except Exception:
+        pass
+    return st
+
+
 def try_eco(AP, c, ctx, it, cid, ap_dir, eco_running, notices):
     """-> True when a late-ECO loop was launched"""
     e = AP.rpy(c["host"], PROBE_ECO, dict(path=c["path"], record=it.get("eco_next"), roots=ROOTS, free_gb=ECO_DISK_GB), timeout=300)
@@ -967,7 +1005,8 @@ def try_eco(AP, c, ctx, it, cid, ap_dir, eco_running, notices):
                 notices.append("%s/%s needs a lane: %s" % (c["die"], c["name"], why[:300]))
         it["status"] = action
         return False
-    if eco_running >= MAX_ECO_INFLIGHT or AP.DRY or eco_stop(AP, ap_dir):
+    wave_eco = c.get("source") == "wave-eco"            # OWNER 11-13/11-14 + COORD 11-19: no launch cap for the wave near-miss ECOs, ot-run admits on memory
+    if (eco_running >= MAX_ECO_INFLIGHT and not wave_eco) or AP.DRY or eco_stop(AP, ap_dir):
         it.update(status="WAIT", why="near miss, ECO not launched this tick (%s)" % why)
         return False
     if not e.get("root"):
@@ -988,7 +1027,8 @@ def try_eco(AP, c, ctx, it, cid, ap_dir, eco_running, notices):
     mem = it.get("eco_mem", WAVE_ECO_MEM_GB if c.get("source") == "wave-eco" else ECO_MEM_GB)
     unit = "ae-%s-a%d" % (cid, n)
     logf = Path(ap_dir) / "auto_resign_jobs" / (unit + ".log")
-    if not AP.launch_unit(unit, logf, eco_argv(AP, c, e, d, out, mem)):
+    anyhost = wave_eco and host_overloaded(getattr(AP, "_otrun_status_cache", None) or otrun_status(AP), c["host"])
+    if not AP.launch_unit(unit, logf, eco_argv(AP, c, e, d, out, mem, anyhost)):
         it.update(status="WAIT", why="systemd-run failed")
         return False
     it.update(status="ECO", why=why, eco_unit=unit, eco_log=str(logf), eco_out=out, eco_key=e["odb_sha"], eco_attempt=n, eco_mem=mem, eco_tag=tag)
