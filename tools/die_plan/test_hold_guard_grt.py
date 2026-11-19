@@ -176,5 +176,6 @@ def test_input_ports_are_excluded_from_the_hold_repair_and_the_sdc_is_restored()
 
 def test_setup_only_and_opt_outs_leave_the_sdc_alone():
     assert "false_path" not in sdclog(run("20.0", env={"OT_HOLD_SKIP_PORTS": "0"}))
-    assert "false_path" not in sdclog(run("20.0", env={"OT_GRT_PORT_HOLD_INCLUDE": "1"}))
+    assert "false_path" not in sdclog(run("20.0", env={"OT_GRT_PORT_HOLD_INCLUDE": "1", "OT_GRT_PORT_HOLD_PORTS": "1"}))       # the explicit port opt-in
+    assert "false_path" in sdclog(run("20.0", env={"OT_GRT_PORT_HOLD_INCLUDE": "1"}))                                          # a stale INCLUDE alone (kit made before 11-18 lever 3) is ignored
     assert "false_path" not in sdclog(run("20.0", preamble="set ::ot_grt_nonport_installed native\n"))      # the nonport adapter already scopes it

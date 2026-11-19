@@ -130,7 +130,7 @@ if {[llength [info procs ::repair_timing_helper]] && ![llength [info procs ::ot_
   proc ::ot_hg_skip_ports_on {} {
     if {[info exists ::ot_grt_nonport_installed] || [info exists ::ot_hg_skip_active]} { return 0 }
     if {[info exists ::env(OT_HOLD_SKIP_PORTS)] && $::env(OT_HOLD_SKIP_PORTS) eq "0"} { return 0 }
-    if {[info exists ::env(OT_GRT_PORT_HOLD_INCLUDE)] && $::env(OT_GRT_PORT_HOLD_INCLUDE) eq "1"} { return 0 }
+    if {[info exists ::env(OT_GRT_PORT_HOLD_INCLUDE)] && $::env(OT_GRT_PORT_HOLD_INCLUDE) eq "1" && [info exists ::env(OT_GRT_PORT_HOLD_PORTS)] && $::env(OT_GRT_PORT_HOLD_PORTS) eq "1"} { return 0 }
     return 1
   }
   proc ::repair_timing_helper {args} {

@@ -6650,7 +6650,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            *(["export SKIP_CTS_REPAIR_TIMING = 1", f"export OT_HOLD_FF_MARGIN = {hold_ff_margin:g}"]
              if hold_ff_margin is not None else []),
            *(["export OT_S81_SSTN_M5_BLOCK = 1"] if os.environ.get("OT_S81_SSTN_M5_BLOCK") == "1" else []),
-           *(["export OT_GRT_PORT_HOLD_INCLUDE = 1"] if os.environ.get("OT_GRT_PORT_HOLD_PORTS") == "1" and os.environ.get("OT_GRT_PORT_HOLD_MARGIN_PS", "").strip() else []),
+           *(["export OT_GRT_PORT_HOLD_INCLUDE = 1", "export OT_GRT_PORT_HOLD_PORTS = 1"] if os.environ.get("OT_GRT_PORT_HOLD_PORTS") == "1" and os.environ.get("OT_GRT_PORT_HOLD_MARGIN_PS", "").strip() else []),
            # pin registers FIRM at their faces through GPL, released for DPL (CP1 10-23: GPL left them ~1 mm inside)
            "export PRE_GLOBAL_PLACE_TCL = /work/face_flops.tcl",
            "export PRE_DETAIL_PLACE_TCL = /work/face_flops_release.tcl",

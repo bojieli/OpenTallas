@@ -459,7 +459,8 @@ proc ot_prd_hold_scope {body} {
   if {![info exists ::env(OT_HOLD_REPAIR_SCOPE)]} {
     # FLOW-LATEECO 11-15: no explicit scope -> port hold is the parent's; default reg2reg unless OT_HOLD_PORT_SCOPE_OFF=1.
     # Only where it can be applied exactly (single-mode, or a synced FF 4_cts.sdc session); otherwise the old body.
-    set _dflt [expr {[info exists ::env(OT_HOLD_PORT_SCOPE_OFF)] && $::env(OT_HOLD_PORT_SCOPE_OFF) eq "1" ? "" : "reg2reg"}]
+    # WAVE-PILOT-FIX 11-19: OT_HOLD_SKIP_PORTS=0 (the flow-wide opt-out, hold_guard_grt.tcl) turns the default input-port exclusion off here too
+    set _dflt [expr {([info exists ::env(OT_HOLD_PORT_SCOPE_OFF)] && $::env(OT_HOLD_PORT_SCOPE_OFF) eq "1") || ([info exists ::env(OT_HOLD_SKIP_PORTS)] && $::env(OT_HOLD_SKIP_PORTS) eq "0") ? "" : "reg2reg"}]
     set _mma [expr {[info exists ::ot_mm_active] && $::ot_mm_active}]
     set _mms [expr {[info exists ::ot_mm_synced] && $::ot_mm_synced && [info exists ::ot_mm_stage] && $::ot_mm_stage eq "4_cts.sdc"}]
     if {$_dflt eq "" || ($_mma && (!$_mms || ![llength [info commands ot_hold_repair_scope]]))} { return [uplevel 1 $body] }

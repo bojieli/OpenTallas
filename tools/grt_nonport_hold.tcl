@@ -8,7 +8,9 @@ if {[info exists ::ot_grt_nonport_installed]} { return }
 # input-port DATA starts: the GRT hold repair then sees them (at the kit's OT_HOLD_FF_MARGIN, which gen_phys floors at
 # OT_GRT_PORT_HOLD_MARGIN_PS), so a family stops relying on the pre-GRT port margin alone (port hold lost 18.6 ps placement RC -> route).
 # Native session: no set_false_path -hold -from inputs.  Two-mode session: OT_HOLD_REPAIR_SCOPE is the explicit empty value (all paths).
-set ::ot_grt_port_include [expr {[info exists ::env(OT_GRT_PORT_HOLD_INCLUDE)] && $::env(OT_GRT_PORT_HOLD_INCLUDE) eq "1"}]
+# WAVE-PILOT-FIX 11-19 (col_h9_r1 pv36da905c a2, generated 11-18 11:40 BEFORE the 11-18 lever 3): such kits carry OT_GRT_PORT_HOLD_INCLUDE = 1 in config.mk (item_env margin alone used to set it) and the
+# adapter then repaired every input-port end (1,491, hours).  Port inclusion now needs the explicit marker OT_GRT_PORT_HOLD_PORTS = 1 too, which gen writes only for the explicit opt-in.
+set ::ot_grt_port_include [expr {[info exists ::env(OT_GRT_PORT_HOLD_INCLUDE)] && $::env(OT_GRT_PORT_HOLD_INCLUDE) eq "1" && [info exists ::env(OT_GRT_PORT_HOLD_PORTS)] && $::env(OT_GRT_PORT_HOLD_PORTS) eq "1"}]
 
 # Native FF scope follows ot_prd_hold_scope's full-precision SDC restoration.
 # Only input DATA starts are excluded; no output/internal/macro exception.

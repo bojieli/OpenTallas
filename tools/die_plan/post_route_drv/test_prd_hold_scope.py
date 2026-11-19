@@ -66,8 +66,12 @@ class Scope(unittest.TestCase):
             if scope:
                 env["OT_HOLD_REPAIR_SCOPE"] = scope
             env.pop("OT_HOLD_PORT_SCOPE_OFF", None)
+            env.pop("OT_HOLD_SKIP_PORTS", None)
             if off:
                 env["OT_HOLD_PORT_SCOPE_OFF"] = "1"
+            if off == "skip0":
+                env.pop("OT_HOLD_PORT_SCOPE_OFF")
+                env["OT_HOLD_SKIP_PORTS"] = "0"
             r = subprocess.run(["tclsh", str(s)], capture_output=True, text=True, timeout=60, env=env)
             self.assertEqual(r.returncode, 0, r.stderr)
             lines = r.stdout.splitlines()
@@ -77,6 +81,12 @@ class Scope(unittest.TestCase):
         out = self.run_tcl(off=True)
         self.assertEqual([x for x in out if not x.startswith("FILES")],
                          ["repair_timing -hold -hold_margin 0 -max_buffer_percent 40 -allow_setup_violations exc=0"])
+
+    def test_flow_wide_skip_ports_opt_out_is_the_same_opt_out(self):
+        # WAVE-PILOT-FIX 11-19: OT_HOLD_SKIP_PORTS=0 behaves like OT_HOLD_PORT_SCOPE_OFF=1; without it the input ports are excluded by default
+        self.assertEqual(self.run_tcl(off="skip0"), self.run_tcl(off=True))
+        self.assertIn("set_false_path -hold -from a b", self.run_tcl())
+        self.assertNotIn("set_false_path -hold -from a b", self.run_tcl(off="skip0"))
 
     def test_opt_out_two_mode_unchanged(self):
         out = self.run_tcl(two_mode=True, off=True)

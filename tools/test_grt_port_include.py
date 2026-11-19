@@ -32,8 +32,10 @@ def test_default_still_excludes_input_starts():
 
 
 def test_include_opt_in_runs_the_repair_over_all_paths():
-    out = _run("set ::env(OT_GRT_PORT_HOLD_INCLUDE) 1\n")
+    out = _run("set ::env(OT_GRT_PORT_HOLD_INCLUDE) 1\nset ::env(OT_GRT_PORT_HOLD_PORTS) 1\n")        # WAVE-PILOT-FIX 11-19: INCLUDE needs the explicit PORTS marker
     assert "SCOPE=<>" in out and "AFTER 0" in out and "input-port starts INCLUDED" in out, out
+    stale = _run("set ::env(OT_GRT_PORT_HOLD_INCLUDE) 1\n")                                              # a kit made before 11-18 lever 3: INCLUDE alone is stale
+    assert "SCOPE=<nonport>" in stale and "INCLUDED" not in stale, stale
 
 
 def test_native_scope_skips_the_false_path_only_when_included():
