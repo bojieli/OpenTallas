@@ -1370,7 +1370,7 @@ PLAN_BYPASS_RE = re.compile(r'''(?i)(?:^|[/\s_.=-])(?:bind[A-Za-z0-9_]*|run_gate
 
 def bypass_like(argv, environ=()):
     """a plan connectivity job: OT_HEAVY_PRIO=plan (ot-run validated its command) or a bind*/run_gate*/chain*/latcheck*/g0 script on the command line"""
-    return "OT_HEAVY_PRIO=plan" in environ or bool(PLAN_BYPASS_RE.search(" ".join(argv)))
+    return "OT_HEAVY_PRIO=plan" in environ      # BYPASS-ENV-1119 (COORD, FABLE-FLOW-0200: 61 percent of admissions bypassed because `bind.py kit-rtl` of wave kits matched the argv pattern): only the explicit env, set by ot-run --priority plan / --plan-job
 
 
 

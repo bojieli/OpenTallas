@@ -25,7 +25,8 @@ class Bypass(unittest.TestCase):
 
     def test_plan_job_is_admitted_with_no_memory_left_and_past_the_plan_cap(self):
         conf = dict(PLAN_BYPASS=1, SIMPLE_ADMIT=1, PLAN_PRIO=1, PLAN_MAX_RUNNING=1, INV_HEADROOM_GB=64, SMALL_FLOOR_GB=36, SIMPLE_PEAK=1, PEAK_PCT=0.9, PEAK_MIN_N=3, SIMPLE_FRESH_S=0)
-        txt = self.gate(3.0, ["bash", "chainR92.sh"], conf)          # 3 GB free, 5 plan jobs already running, cap 1
+        with patch.dict(os.environ, {"OT_HEAVY_PRIO": "plan"}):
+            txt = self.gate(3.0, ["bash", "chainR92.sh"], conf)          # 3 GB free, 5 plan jobs already running, cap 1
         self.assertTrue(txt.startswith("OK 48"), txt)
         self.assertIn("PLAN_BYPASS", txt)
 
@@ -35,7 +36,18 @@ class Bypass(unittest.TestCase):
 
     def test_bypass_off_keeps_the_old_gate(self):
         conf = dict(PLAN_BYPASS=0, SIMPLE_ADMIT=1, PLAN_PRIO=1, PLAN_MAX_RUNNING=1, INV_HEADROOM_GB=64, SMALL_FLOOR_GB=36, SIMPLE_PEAK=1, PEAK_PCT=0.9, PEAK_MIN_N=3, SIMPLE_FRESH_S=0)
-        self.assertNotIn("PLAN_BYPASS", self.gate(3.0, ["bash", "chainR92.sh"], conf))
+        with patch.dict(os.environ, {"OT_HEAVY_PRIO": "plan"}):
+            self.assertNotIn("PLAN_BYPASS", self.gate(3.0, ["bash", "chainR92.sh"], conf))
+
+    def test_an_argv_pattern_alone_never_bypasses(self):
+        """BYPASS-ENV-1119: wave kit launches (bind.py kit-rtl, chain*.sh, run_gate*) without the explicit env wait like any job"""
+        conf = dict(PLAN_BYPASS=1, SIMPLE_ADMIT=1, PLAN_PRIO=1, PLAN_MAX_RUNNING=1, INV_HEADROOM_GB=64, SMALL_FLOOR_GB=36, SIMPLE_PEAK=1, PEAK_PCT=0.9, PEAK_MIN_N=3, SIMPLE_FRESH_S=0)
+        with patch.dict(os.environ, {}, clear=False):
+            os.environ.pop("OT_HEAVY_PRIO", None)
+            for argv in (["python3", "bind.py", "kit-rtl", "--x"], ["bash", "chainR92.sh"], ["bash", "run_gate_x.sh"]):
+                self.assertTrue(self.gate(3.0, argv, conf).startswith("NO"), argv)
+        self.assertFalse(R.bypass_like(["python3", "bind.py", "kit-rtl"]))
+        self.assertTrue(R.bypass_like(["x"], ["OT_HEAVY_PRIO=plan"]))
 
     def test_type_builds_do_not_bypass(self):
         conf = dict(PLAN_BYPASS=1, SIMPLE_ADMIT=1, PLAN_PRIO=1, PLAN_MAX_RUNNING=1, INV_HEADROOM_GB=64, SMALL_FLOOR_GB=36, SIMPLE_PEAK=1, PEAK_PCT=0.9, PEAK_MIN_N=3, SIMPLE_FRESH_S=0)
