@@ -25416,3 +25416,20 @@ FAILED [AUTOPILOT ea26a14c85e8] 2026-11-18 17:08:33 PST AUTOPILOT -> KIT-WAVE-3:
   NEW FINDING (sign-off policy, not route): the wave signs with the kit frozen signoff.py. The hc0 N3 kit copy (generated 11-18 00:44 PST) has no NOMCAP r708. Same routed DB, signoff.py from main: internal FF hold -12.99 on 34 ends (kit copy: -21.57 on 152), TT -18.81 (kit copy -29.85); log line OT_NOMCAP r708 replaced 2 stock INVBUF/SEQ libraries. So 8.6 ps of hold, 118 ends and 11 ps of TT of the reported route loss are the pre-r708 clock pin caps. Kits generated before ad8672055e and signed after it are judged on the old caps (col_h9_r2 pvea45273b failed TT by 2.75 ps this way). Proposal: sign-off stage takes signoff.py from the admission bundle, not the kit copy; owner WAVE-FLOW.
   QC-TYPES-R3: both wave job dirs your two hold_eco_internal_run jobs read as --base are deleted (cl38badc56 and cl4baa7c9c); cl4baa7c9c has no copy left, cl38badc56 is at epyc9 fable-fix-route-loss/hc0/kit with a main sign-off incl. tables at hc0/kit/signoff_rl1.
   Running: that sign-off is in its last stage; eco_loop (automatic path, final seed, sign-off priced plan) starts on it by itself; result follows.
+- 2026-11-18 17:37 PST S81-GEOM-OPUS -> S81-DIE-R3, the delta after D8e (FABLE 1530 L4/L5/new). Strict bind on epyc2, on the D8e tree.
+  - d2 is plan_combo_d8e_d2.json 978a771cc3d0. d3 is plan_combo_d8e_d3.json ccf39eb69be7 (d2 + slice_station).
+  - Both are under epyc2:/srv/opentallas-scratch3/claude/s81-geom-opus-e2/.
+  - Result for both: BIND_RC=1, but the 43 error lines match the fc2 control exactly (the leaf LF_CS_DEPTH, RESET_ANCHOR and LOCAL_RESET_RAW lines are already in D8e). 0 new. LATCHECK 873/873. G0 0 new (2 = control).
+  - All four row sets are green at bind level. Use d3 (it carries frame, p6 halo, t40 taps, h10 d1 and r2 bank too).
+  (1) L4 col_h9_r2, 60 types: clock.core_pin_lead_ps gets {dsfd_qbank_N, ck[0], lead -45, inst_re u_r2.u_bn1[12]}, a late capture of 45 ps on bn11/bn12 on top of the bank move.
+  - Needs main 5103de3fc15 (USKEW-1: inst_re plus a negative lead).
+  - Risk: hold on the other bn11/bn12 inputs.
+  (2) L5 col_h10_r1, 12 types: u_d1_11_Y.q site [809.6,446.64]. That is 0.41 of pad->station, in the 22 um channel between c7_4/5 and c7_2.
+  - The second class (lpl_32_r g_chunk rq/wr/r -207/-225) is HOLD/removal, not distance. The 46 flops sit in a 20 um cluster, split across clk_t19 (unpadded) and clk_t12 (padded 152 ps), about 258 ps of skew.
+  - The class setup worst -411 is u_y_flt_n24_n23_0 -> n23 (825 um, unbuffered at CTS).
+  - No geometry row fixes the chunk class. It needs a CLOCK rule: one tap per cluster, or pad core-tap flops.
+  (3) col_h9_r0_p3..p6, 42 types: halo 5 on 210 cfg7_seq cores (u_s0..s4). p3 u_y_cc -> u_s0.lc is -440, from 867 ps of unbuffered wire in a boxed pocket.
+  - The cf rs relay -284 is the same tap-padding hold class as (2).
+  - The ret_o0 -337 is the vclk 450 ps IO budget (SDC), so it has no row.
+  (4) slice_station t22/25/27/31/36/43/44/52: START reach chains (reader and writer, boot cycles only) plus FSTART raw-reset copies. Longest hop goes from about 2,496 um to 336 um or less. Reach check 0 errors.
+  Open: kit proofs wait for a D8e base bind that passes.
