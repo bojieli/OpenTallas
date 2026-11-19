@@ -450,3 +450,13 @@ def test_a_host_with_stuck_mirrors_is_dropped_from_gen_hosts_for_three_hours():
     cfg["_otrun_status"] = {"epyc7": {"load": 10, "cores": 96}, "epyc8": {"load": 10, "cores": 96}}            # next tick: re-applied from the state, rows already moved
     KW.unreadable_host_rows(ap, cfg, {"items": {}, "mirror_bad": st["mirror_bad"]}, {}, now=now + 3600)
     assert KW.gen_hosts(cfg, "s81", "t1") == ["epyc8"]
+
+
+def test_tick_start_marks_unreadable_and_overloaded_hosts_for_the_stop_helpers():
+    import autopilot as A
+    import wave_jobs as WJ
+    txt = ("intel2 admits 100 GB load 10/96 run 1 | epyc8 admits 50 GB load 80/96 run 3 | epyc9 admits 50 GB load 400/96 run 9")
+    bad = A.bad_hosts_from_status(txt, "intel2")
+    assert "epyc9" in bad and "epyc8" not in bad and "epyc7" in bad            # epyc7: a fleet host with no status row
+    assert A.bad_hosts_from_status("", "intel2") == set()                       # nothing readable: nothing marked
+    assert WJ.STOP_SSH_S <= 30

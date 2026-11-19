@@ -171,6 +171,7 @@ print(json.dumps({'containers': names, 'scopes': sorted(scopes)}))
 
 
 BAD_HOSTS = set()      # COORD 11-19 (FLOW-1150 B): hosts the wave found unreadable / over 2x cores this tick (kit_wave sets it); the stop / scan paths do not wait on them
+STOP_SSH_S = 30        # a remote stop that has not answered in 30 s is 'not checked' (12:00-13:05 ticks: 11 cancel-stops cost 455 s, the tick passed its 50 min TimeoutStartSec before the launch pass)
 SSH_CONNECT_S = 10     # ssh ConnectTimeout of every fleet-wide stop / scan call (was 15)
 
 
@@ -190,7 +191,7 @@ def stop_on_fleet(sh, hub, roots, hosts=None, dry=False):
             ['ssh', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=%d' % SSH_CONNECT_S, '-o', 'ControlPath=none', h,
              'python3', '-I', '-', shlex.quote(args)]
         try:
-            rc, out, err = sh(cmd, timeout=90, input=STOP_KIT)
+            rc, out, err = sh(cmd, timeout=(240 if len(cmd) < 4 or cmd[0] != 'ssh' else STOP_SSH_S), input=STOP_KIT)
             if rc != 0 or not (out or '').strip():
                 return h, {'error': 'rc %s %s' % (rc, (err or '')[-160:])}
             return h, json.loads(out.strip().splitlines()[-1])

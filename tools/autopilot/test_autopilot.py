@@ -90,6 +90,7 @@ class TestQueue(Base):
         logs = []
         olog, self.ap.log = self.ap.log, logs.append
         self.ap.AP_DIR = d
+        _seen, self.ap.CELL_BIG_SEEN = self.ap.CELL_BIG_SEEN, str(d / "cell-big-seen.json")     # once-per-day dedupe state: a fresh file per test, never the host's
         try:
             r = list(self.ap.parse_queue(row).values())[0]
             die = r["die"]

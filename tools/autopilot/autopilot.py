@@ -3566,6 +3566,25 @@ def retry_pending(st):
 
 
 # ------------------------------------------------------------------------------------------------ commands
+def bad_hosts_from_status(text, hub=None):
+    """hosts that are unreadable (no ot-run status row of a known fleet host) or over 2x their cores"""
+    stt = KW.parse_otrun_status(text)
+    if not stt:
+        return set()
+    hub = hub or HUB_NAME
+    names = set(WJ.FLEET) | set(stt)
+    return {h for h in names if h not in (hub, "localhost") and KW.queued_host_bad(stt, h, hub)}
+
+
+def mark_bad_hosts():
+    """COORD 11-19: at tick start, before any cancel-stop / survivor-stop / poll ssh, the fleet-wide stop helpers learn which hosts to skip (wave_jobs.BAD_HOSTS)"""
+    rc, out, _ = sh([OT_RUN, "--status"], timeout=60)
+    if rc == 0:
+        WJ.BAD_HOSTS = bad_hosts_from_status(out)
+        if WJ.BAD_HOSTS:
+            log("BAD-HOSTS this tick (stop / reap ssh skipped): " + " ".join(sorted(WJ.BAD_HOSTS)))
+
+
 def tick(args):
     global DRY
     DRY = args.dry_run
@@ -3584,6 +3603,10 @@ def tick(args):
         _ph[name] = round(n - _last[0], 1)
         _last[0] = n
     st = load_state()
+    try:
+        mark_bad_hosts()
+    except Exception as _e:                            # a host-status read never stops the tick
+        log(f"BAD-HOSTS skipped: {type(_e).__name__}: {_e}")
     rows = parse_queue(read_queue_text())
     geom_text = read_coord("lanes/GEOM-REVIEW.md")
     _mark("load")
