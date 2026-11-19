@@ -435,3 +435,18 @@ def test_rt_mirror_stage_older_than_an_hour_moves_even_when_the_host_status_is_f
         assert KW.unreadable_host_rows(ap, cfg, st, {}, now=now) == 1 and st["items"]["x"]["status"] == "RETRY-INFRA"
         st = {"items": {"x": dict(row, updated=now - 1200, started=now - 1200)}}
         assert KW.unreadable_host_rows(ap, cfg, st, {}, now=now) == 0
+
+
+def test_a_host_with_stuck_mirrors_is_dropped_from_gen_hosts_for_three_hours():
+    import unittest.mock as M
+    ap = type("AP", (), {"DRY": False, "log": staticmethod(lambda m: None), "sh": staticmethod(lambda c, timeout=0, input=None: (0, "", ""))})()
+    now = 1e9
+    mk = lambda i: {"die": "s81", "item": f"t{i}", "status": "RUNNING", "unit": "u", "dir": "/nonexistent", "stage": "rt_mirror_copy_epyc7", "updated": now - 2 * 3600, "started": now - 2 * 3600, "attempt": "1"}
+    cfg = {"dies": {"s81": {"gen_host": "epyc7", "gen_hosts": ["epyc7", "epyc8"], "work_root": "/srv/x/claude/l"}}, "_hub": "intel2",
+           "_otrun_status": {"epyc7": {"load": 10, "cores": 96}, "epyc8": {"load": 10, "cores": 96}}}
+    st = {"items": {str(i): mk(i) for i in range(3)}}
+    KW.unreadable_host_rows(ap, cfg, st, {}, now=now)
+    assert st["mirror_bad"]["epyc7"]["n"] == 3 and KW.gen_hosts(cfg, "s81", "t1") == ["epyc8"]
+    cfg["_otrun_status"] = {"epyc7": {"load": 10, "cores": 96}, "epyc8": {"load": 10, "cores": 96}}            # next tick: re-applied from the state, rows already moved
+    KW.unreadable_host_rows(ap, cfg, {"items": {}, "mirror_bad": st["mirror_bad"]}, {}, now=now + 3600)
+    assert KW.gen_hosts(cfg, "s81", "t1") == ["epyc8"]

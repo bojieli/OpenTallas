@@ -7026,6 +7026,8 @@ def queued_host_bad(stt, host, hub=""):
     v = stt.get("localhost" if host == hub else host)
     if not v:
         return f"{host} unreadable (no ot-run status row)"
+    if v.get("mirror_stuck"):
+        return f"{host} rt-tools mirror stuck for {v['mirror_stuck']} rows"
     n = float(v.get("cores") or 0)
     if n and float(v.get("load") or 0) > QUEUE_REPICK_LOAD_X * n:
         return f"{host} load {v.get('load'):g}/{int(n)} is over {QUEUE_REPICK_LOAD_X:g}x its cores"
@@ -11832,6 +11834,21 @@ def unreadable_host_rows(AP, cfg, st, notices, now=None, hours=UNREADABLE_HOST_H
     except Exception:
         pass
     now = time.time() if now is None else now
+    # a host whose rt-tools mirror holds 3+ rows for over an hour is marked mirror_stuck for 3 h (st.mirror_bad), so the re-picked rows do not roam straight back to it
+    mb = st.setdefault("mirror_bad", {})
+    cnt = collections.Counter()
+    for r in (st.get("items") or {}).values():
+        m_ = re.match(r"rt_mirror(?:_copy|_fin)?_(.+)$", str(r.get("stage") or ""))
+        if m_ and r.get("status") == "RUNNING" and (now - max(float(r.get("updated") or 0), float(r.get("started") or 0))) / 3600.0 >= UNREADABLE_MIRROR_H:
+            cnt[m_.group(1)] += 1
+    for h_, c_ in cnt.items():
+        if c_ >= 3:
+            mb[h_] = {"t": now, "n": c_}
+    for h_ in [h_ for h_, v_ in mb.items() if now - float(v_.get("t") or 0) > 3 * 3600]:
+        mb.pop(h_, None)
+    for h_, v_ in mb.items():
+        if stt.get(h_) is not None:
+            stt[h_]["mirror_stuck"] = int(v_.get("n") or 0)
     n = 0
     for r in (st.get("items") or {}).values():
         if r.get("status") != "RUNNING" or not r.get("unit") or r.get("die") == "hbm" or int(r.get("infra_dead_n") or 0) >= 1:
