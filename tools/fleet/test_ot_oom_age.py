@@ -185,6 +185,11 @@ class Guard(unittest.TestCase):
         procs = [(1, "openroad", 564, 568, 4.4), (2, "openroad", 700, 728, 18.0), (3, "openroad", 0, 30, 45.0), (4, "yosys", 599, 608, 7.9),
                  (5, "openroad", -1000, 0, 90.0), (6, "python3", 800, 820, 20.0)]
         self.assertEqual(M.guard_victim(procs), 2)              # not the 4 GB one, not adj 0 / -1000 (late stage, plan), not a non-build comm
+        # FABLE-FLOW-1555 A: the biggest frees the most; equal sizes -> the youngest (highest adj)
+        big_old = [(1, "openroad", 120, 130, 40.0), (2, "openroad", 790, 800, 2.0), (3, "openroad", 700, 710, 21.0)]
+        self.assertEqual(M.guard_victim(big_old), 1)
+        tie = [(1, "openroad", 300, 310, 8.0), (2, "openroad", 790, 800, 8.1), (3, "openroad", 100, 110, 8.0)]
+        self.assertEqual(M.guard_victim(tie), 2)
         self.assertIsNone(M.guard_victim([(3, "openroad", 0, 30, 45.0)]))
 
     def test_ancestor_fallback_finds_a_marked_launcher(self):
