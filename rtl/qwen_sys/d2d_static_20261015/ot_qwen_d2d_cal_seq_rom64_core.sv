@@ -66,7 +66,44 @@ module ot_qwen_d2d_cal_seq_rom64_core #(
     localparam integer NI = 2 * NE + 2;
     localparam integer IW = $clog2(NI + 1);
     localparam integer GW = (GO_OFS > 0) ? GO_OFS : 1;
-    wire [31:0] E_ADM = EP_SKEW + rom_adm_ofs, E_SW = E_ADM + rom_adm_len, E_TOK = EP_SKEW + rom_first_ofs;
+    // KV-SYSC-1119 (zero-wire STA: u_dcal.u_seq 195 endpoints over 600 ps, worst 874 ps; the 32-bit E_* adders and the
+    // e + 1 ripple sat in the unrolled e / pcnt compare cone): the epoch anchors depend only on the profile scalars (static
+    // after the 66-edge init stream; the profile reads finish in the first 8 of those edges), so they are registered from
+    // two-stage 16 + 16 split adders instead of summed in the compare cone.  They settle 4 edges after the last profile load,
+    // long before the first epoch use: 0 production cycles, 0 boot cycles.
+    wire [31:0] EP_SKEW_W = EP_SKEW;
+    wire [31:0] E_K = EP_SKEW - GO_OFS - 2;
+    reg [31:0] E_ADM, E_SW, E_SW1, E_TOK, E_TOK2;
+    reg [16:0] E_ADM_lo; reg [15:0] E_ADM_hi;
+    always @(posedge ck) begin
+        E_ADM_lo <= {1'b0, EP_SKEW_W[15:0]} + {1'b0, rom_adm_ofs[15:0]} + 17'd0;
+        E_ADM_hi <= EP_SKEW_W[31:16] + rom_adm_ofs[31:16];
+        E_ADM    <= {E_ADM_hi + {15'd0, E_ADM_lo[16]}, E_ADM_lo[15:0]};
+    end
+    reg [16:0] E_SW_lo; reg [15:0] E_SW_hi;
+    always @(posedge ck) begin
+        E_SW_lo <= {1'b0, E_ADM[15:0]} + {1'b0, rom_adm_len[15:0]} + 17'd0;
+        E_SW_hi <= E_ADM[31:16] + rom_adm_len[31:16];
+        E_SW    <= {E_SW_hi + {15'd0, E_SW_lo[16]}, E_SW_lo[15:0]};
+    end
+    reg [16:0] E_SW1_lo; reg [15:0] E_SW1_hi;
+    always @(posedge ck) begin
+        E_SW1_lo <= {1'b0, E_ADM[15:0]} + {1'b0, rom_adm_len[15:0]} + 17'd1;
+        E_SW1_hi <= E_ADM[31:16] + rom_adm_len[31:16];
+        E_SW1    <= {E_SW1_hi + {15'd0, E_SW1_lo[16]}, E_SW1_lo[15:0]};
+    end
+    reg [16:0] E_TOK_lo; reg [15:0] E_TOK_hi;
+    always @(posedge ck) begin
+        E_TOK_lo <= {1'b0, EP_SKEW_W[15:0]} + {1'b0, rom_first_ofs[15:0]} + 17'd0;
+        E_TOK_hi <= EP_SKEW_W[31:16] + rom_first_ofs[31:16];
+        E_TOK    <= {E_TOK_hi + {15'd0, E_TOK_lo[16]}, E_TOK_lo[15:0]};
+    end
+    reg [16:0] E_TOK2_lo; reg [15:0] E_TOK2_hi;
+    always @(posedge ck) begin
+        E_TOK2_lo <= {1'b0, E_K[15:0]} + {1'b0, rom_first_ofs[15:0]} + 17'd0;
+        E_TOK2_hi <= E_K[31:16] + rom_first_ofs[31:16];
+        E_TOK2    <= {E_TOK2_hi + {15'd0, E_TOK2_lo[16]}, E_TOK2_lo[15:0]};
+    end
     wire [31:0] TXB0 = ADM ? rom_tx_seg2 : rom_tx_seg1, RXB0 = ADM ? rom_rx_seg2 : rom_rx_seg1;
     reg          init;
     reg [IW-1:0] ip;
@@ -75,6 +112,7 @@ module ot_qwen_d2d_cal_seq_rom64_core #(
     reg [GW:0]   go_d;
     reg          ep_q, eact, tokbase, adm_pend, adm_run;
     reg [31:0]   e, pcnt;
+    wire [31:0] e_inc = {e[31:16] + {15'd0, &e[15:0]}, e[15:0] + 16'd1};
     reg          prun;
     wire         go_in = AUTO ? tok_start : tok_go;
     reg [GW:0]   gd;
@@ -187,7 +225,7 @@ module ot_qwen_d2d_cal_seq_rom64_core #(
             if (halt) begin ; ; ; end
             // ---- AUTO token anchor: first token at E_TOK, then every rom_period
             if (AUTO && eact && !halt) begin
-                if (e == E_TOK - GO_OFS - 2) begin ; ; ; ; end
+                if (e == E_TOK2) begin ; ; ; ; end
                 else if (prun) begin
                     if (pcnt == rom_period) begin ; ; ; end
                     else ;
@@ -222,11 +260,11 @@ module ot_qwen_d2d_cal_seq_rom64_core #(
             end else if (ADM && eact && e == E_ADM && adm_pend) begin
                 if (!cal_ready || tokbase || running_copy0) ;
                 ; ; ; ;
-            end else if (ADM && eact && (e == E_SW || e == E_SW + 1) && adm_run) begin
+            end else if (ADM && eact && (e == E_SW || e == E_SW1) && adm_run) begin
                 // admission over: segment-1 bases to the token run
                 ; ;
                 ; ;
-                if (e == E_SW + 1) begin ; ; ; ; end
+                if (e == E_SW1) begin ; ; ; ; end
             end else if (running_copy0) begin
                 if (go_now) ;                  // a second token start inside a running_copy0 program
                 ;
@@ -257,7 +295,7 @@ module ot_qwen_d2d_cal_seq_rom64_core #(
             if (halt) begin ; ; ; end
             // ---- AUTO token anchor: first token at E_TOK, then every rom_period
             if (AUTO && eact && !halt) begin
-                if (e == E_TOK - GO_OFS - 2) begin ; ; ; ; end
+                if (e == E_TOK2) begin ; ; ; ; end
                 else if (prun) begin
                     if (pcnt == rom_period) begin ; ; ; end
                     else ;
@@ -292,11 +330,11 @@ module ot_qwen_d2d_cal_seq_rom64_core #(
             end else if (ADM && eact && e == E_ADM && adm_pend) begin
                 if (!cal_ready || tokbase || running_copy1) ;
                 ; ; ; ;
-            end else if (ADM && eact && (e == E_SW || e == E_SW + 1) && adm_run) begin
+            end else if (ADM && eact && (e == E_SW || e == E_SW1) && adm_run) begin
                 // admission over: segment-1 bases to the token run
                 ; ;
                 ; ;
-                if (e == E_SW + 1) begin ; ; ; ; end
+                if (e == E_SW1) begin ; ; ; ; end
             end else if (running_copy1) begin
                 if (go_now) ;                  // a second token start inside a running_copy1 program
                 ;
@@ -327,7 +365,7 @@ module ot_qwen_d2d_cal_seq_rom64_core #(
             if (halt) begin ; ; ; end
             // ---- AUTO token anchor: first token at E_TOK, then every rom_period
             if (AUTO && eact && !halt) begin
-                if (e == E_TOK - GO_OFS - 2) begin ; ; ; ; end
+                if (e == E_TOK2) begin ; ; ; ; end
                 else if (prun) begin
                     if (pcnt == rom_period) begin ; ; ; end
                     else ;
@@ -362,11 +400,11 @@ module ot_qwen_d2d_cal_seq_rom64_core #(
             end else if (ADM && eact && e == E_ADM && adm_pend) begin
                 if (!cal_ready || tokbase || running_copy2) ;
                 ; ; ; ;
-            end else if (ADM && eact && (e == E_SW || e == E_SW + 1) && adm_run) begin
+            end else if (ADM && eact && (e == E_SW || e == E_SW1) && adm_run) begin
                 // admission over: segment-1 bases to the token run
                 ; ;
                 ; ;
-                if (e == E_SW + 1) begin ; ; ; ; end
+                if (e == E_SW1) begin ; ; ; ; end
             end else if (running_copy2) begin
                 if (go_now) ;                  // a second token start inside a running_copy2 program
                 ;
@@ -397,7 +435,7 @@ module ot_qwen_d2d_cal_seq_rom64_core #(
             if (halt) begin ; ; ; end
             // ---- AUTO token anchor: first token at E_TOK, then every rom_period
             if (AUTO && eact && !halt) begin
-                if (e == E_TOK - GO_OFS - 2) begin ; ; ; ; end
+                if (e == E_TOK2) begin ; ; ; ; end
                 else if (prun) begin
                     if (pcnt == rom_period) begin ; ; ; end
                     else ;
@@ -432,11 +470,11 @@ module ot_qwen_d2d_cal_seq_rom64_core #(
             end else if (ADM && eact && e == E_ADM && adm_pend) begin
                 if (!cal_ready || tokbase || running_copy0) ;
                 ; ; ; ;
-            end else if (ADM && eact && (e == E_SW || e == E_SW + 1) && adm_run) begin
+            end else if (ADM && eact && (e == E_SW || e == E_SW1) && adm_run) begin
                 // admission over: segment-1 bases to the token run
                 ; ;
                 ; ;
-                if (e == E_SW + 1) begin ; ; ; ; end
+                if (e == E_SW1) begin ; ; ; ; end
             end else if (running_copy0) begin
                 if (go_now) ;                  // a second token start inside a running_copy0 program
                 ;
@@ -467,7 +505,7 @@ module ot_qwen_d2d_cal_seq_rom64_core #(
             if (halt) begin ; ; ; end
             // ---- AUTO token anchor: first token at E_TOK, then every rom_period
             if (AUTO && eact && !halt) begin
-                if (e == E_TOK - GO_OFS - 2) begin ; ; ; ; end
+                if (e == E_TOK2) begin ; ; ; ; end
                 else if (prun) begin
                     if (pcnt == rom_period) begin ; ; ; end
                     else ;
@@ -502,11 +540,11 @@ module ot_qwen_d2d_cal_seq_rom64_core #(
             end else if (ADM && eact && e == E_ADM && adm_pend) begin
                 if (!cal_ready || tokbase || running_copy1) fault_part0 = 1'b1;
                 ; ; ; ;
-            end else if (ADM && eact && (e == E_SW || e == E_SW + 1) && adm_run) begin
+            end else if (ADM && eact && (e == E_SW || e == E_SW1) && adm_run) begin
                 // admission over: segment-1 bases to the token run
                 ; ;
                 ; ;
-                if (e == E_SW + 1) begin ; ; ; ; end
+                if (e == E_SW1) begin ; ; ; ; end
             end else if (running_copy1) begin
                 if (go_now) fault_part0 = 1'b1;                  // a second token start inside a running_copy1 program
                 ;
@@ -537,7 +575,7 @@ module ot_qwen_d2d_cal_seq_rom64_core #(
             if (halt) begin ; ; ; end
             // ---- AUTO token anchor: first token at E_TOK, then every rom_period
             if (AUTO && eact && !halt) begin
-                if (e == E_TOK - GO_OFS - 2) begin ; ; ; ; end
+                if (e == E_TOK2) begin ; ; ; ; end
                 else if (prun) begin
                     if (pcnt == rom_period) begin ; ; ; end
                     else ;
@@ -572,11 +610,11 @@ module ot_qwen_d2d_cal_seq_rom64_core #(
             end else if (ADM && eact && e == E_ADM && adm_pend) begin
                 if (!cal_ready || tokbase || running_copy2) ;
                 ; ; ; ;
-            end else if (ADM && eact && (e == E_SW || e == E_SW + 1) && adm_run) begin
+            end else if (ADM && eact && (e == E_SW || e == E_SW1) && adm_run) begin
                 // admission over: segment-1 bases to the token run
                 ; ;
                 cfg_tx_we_part0 = (e == E_SW); ;
-                if (e == E_SW + 1) begin ; ; ; ; end
+                if (e == E_SW1) begin ; ; ; ; end
             end else if (running_copy2) begin
                 if (go_now) ;                  // a second token start inside a running_copy2 program
                 ;
@@ -607,7 +645,7 @@ module ot_qwen_d2d_cal_seq_rom64_core #(
             if (halt) begin ; ; ; end
             // ---- AUTO token anchor: first token at E_TOK, then every rom_period
             if (AUTO && eact && !halt) begin
-                if (e == E_TOK - GO_OFS - 2) begin ; ; ; ; end
+                if (e == E_TOK2) begin ; ; ; ; end
                 else if (prun) begin
                     if (pcnt == rom_period) begin ; ; ; end
                     else ;
@@ -642,11 +680,11 @@ module ot_qwen_d2d_cal_seq_rom64_core #(
             end else if (ADM && eact && e == E_ADM && adm_pend) begin
                 if (!cal_ready || tokbase || running_copy0) ;
                 ; ; ; ;
-            end else if (ADM && eact && (e == E_SW || e == E_SW + 1) && adm_run) begin
+            end else if (ADM && eact && (e == E_SW || e == E_SW1) && adm_run) begin
                 // admission over: segment-1 bases to the token run
                 ; ;
-                ; cfg_rx_we_part0 = (e == E_SW + 1);
-                if (e == E_SW + 1) begin ; ; ; ; end
+                ; cfg_rx_we_part0 = (e == E_SW1);
+                if (e == E_SW1) begin ; ; ; ; end
             end else if (running_copy0) begin
                 if (go_now) ;                  // a second token start inside a running_copy0 program
                 ;
@@ -677,7 +715,7 @@ module ot_qwen_d2d_cal_seq_rom64_core #(
             if (halt) begin ; ; ; end
             // ---- AUTO token anchor: first token at E_TOK, then every rom_period
             if (AUTO && eact && !halt) begin
-                if (e == E_TOK - GO_OFS - 2) begin ; ; ; ; end
+                if (e == E_TOK2) begin ; ; ; ; end
                 else if (prun) begin
                     if (pcnt == rom_period) begin ; ; ; end
                     else ;
@@ -712,11 +750,11 @@ module ot_qwen_d2d_cal_seq_rom64_core #(
             end else if (ADM && eact && e == E_ADM && adm_pend) begin
                 if (!cal_ready || tokbase || running_copy1) ;
                 ; ; ; ;
-            end else if (ADM && eact && (e == E_SW || e == E_SW + 1) && adm_run) begin
+            end else if (ADM && eact && (e == E_SW || e == E_SW1) && adm_run) begin
                 // admission over: segment-1 bases to the token run
                 cfg_addr_part0 = 6'b100000; ;
                 ; ;
-                if (e == E_SW + 1) begin ; ; ; ; end
+                if (e == E_SW1) begin ; ; ; ; end
             end else if (running_copy1) begin
                 if (go_now) ;                  // a second token start inside a running_copy1 program
                 ;
@@ -747,7 +785,7 @@ module ot_qwen_d2d_cal_seq_rom64_core #(
             if (halt) begin ; ; ; end
             // ---- AUTO token anchor: first token at E_TOK, then every rom_period
             if (AUTO && eact && !halt) begin
-                if (e == E_TOK - GO_OFS - 2) begin ; ; ; ; end
+                if (e == E_TOK2) begin ; ; ; ; end
                 else if (prun) begin
                     if (pcnt == rom_period) begin ; ; ; end
                     else ;
@@ -782,11 +820,11 @@ cfg_data_part0[24 +: 8] = 8'b0;
             end else if (ADM && eact && e == E_ADM && adm_pend) begin
                 if (!cal_ready || tokbase || running_copy2) ;
                 ; ; ; ;
-            end else if (ADM && eact && (e == E_SW || e == E_SW + 1) && adm_run) begin
+            end else if (ADM && eact && (e == E_SW || e == E_SW1) && adm_run) begin
                 // admission over: segment-1 bases to the token run
                 ; cfg_data_part0 = (e == E_SW) ? rom_tx_seg1 : rom_rx_seg1;
                 ; ;
-                if (e == E_SW + 1) begin ; ; ; ; end
+                if (e == E_SW1) begin ; ; ; ; end
             end else if (running_copy2) begin
                 if (go_now) ;                  // a second token start inside a running_copy2 program
                 ;
@@ -817,7 +855,7 @@ cfg_data_part0[24 +: 8] = 8'b0;
             if (halt) begin ; ; ; end
             // ---- AUTO token anchor: first token at E_TOK, then every rom_period
             if (AUTO && eact && !halt) begin
-                if (e == E_TOK - GO_OFS - 2) begin ; ; ; ; end
+                if (e == E_TOK2) begin ; ; ; ; end
                 else if (prun) begin
                     if (pcnt == rom_period) begin ; ; ; end
                     else ;
@@ -852,11 +890,11 @@ cfg_data_part1[24 +: 8] = 8'b0;
             end else if (ADM && eact && e == E_ADM && adm_pend) begin
                 if (!cal_ready || tokbase || running_copy0) ;
                 ; ; ; ;
-            end else if (ADM && eact && (e == E_SW || e == E_SW + 1) && adm_run) begin
+            end else if (ADM && eact && (e == E_SW || e == E_SW1) && adm_run) begin
                 // admission over: segment-1 bases to the token run
                 ; cfg_data_part1 = (e == E_SW) ? rom_tx_seg1 : rom_rx_seg1;
                 ; ;
-                if (e == E_SW + 1) begin ; ; ; ; end
+                if (e == E_SW1) begin ; ; ; ; end
             end else if (running_copy0) begin
                 if (go_now) ;                  // a second token start inside a running_copy0 program
                 ;
@@ -887,7 +925,7 @@ cfg_data_part1[24 +: 8] = 8'b0;
             if (halt) begin ; ; ; end
             // ---- AUTO token anchor: first token at E_TOK, then every rom_period
             if (AUTO && eact && !halt) begin
-                if (e == E_TOK - GO_OFS - 2) begin ; ; ; ; end
+                if (e == E_TOK2) begin ; ; ; ; end
                 else if (prun) begin
                     if (pcnt == rom_period) begin ; ; ; end
                     else ;
@@ -922,11 +960,11 @@ cfg_data_part1[24 +: 8] = 8'b0;
             end else if (ADM && eact && e == E_ADM && adm_pend) begin
                 if (!cal_ready || tokbase || running_copy0) ;
                 cal_start_part0 = 1'b1; ; ; ;
-            end else if (ADM && eact && (e == E_SW || e == E_SW + 1) && adm_run) begin
+            end else if (ADM && eact && (e == E_SW || e == E_SW1) && adm_run) begin
                 // admission over: segment-1 bases to the token run
                 ; ;
                 ; ;
-                if (e == E_SW + 1) begin ; ; ; ; end
+                if (e == E_SW1) begin ; ; ; ; end
             end else if (running_copy0) begin
                 if (go_now) ;                  // a second token start inside a running_copy0 program
                 ;
@@ -957,7 +995,7 @@ cfg_data_part1[24 +: 8] = 8'b0;
             if (halt) begin ; ; ; end
             // ---- AUTO token anchor: first token at E_TOK, then every rom_period
             if (AUTO && eact && !halt) begin
-                if (e == E_TOK - GO_OFS - 2) begin ; ; ; ; end
+                if (e == E_TOK2) begin ; ; ; ; end
                 else if (prun) begin
                     if (pcnt == rom_period) begin ; ; ; end
                     else ;
@@ -992,11 +1030,11 @@ cfg_data_part1[24 +: 8] = 8'b0;
             end else if (ADM && eact && e == E_ADM && adm_pend) begin
                 if (!cal_ready || tokbase || running_copy1) ;
                 ; cal_seg_part0 = 1'b1; ; ;
-            end else if (ADM && eact && (e == E_SW || e == E_SW + 1) && adm_run) begin
+            end else if (ADM && eact && (e == E_SW || e == E_SW1) && adm_run) begin
                 // admission over: segment-1 bases to the token run
                 ; ;
                 ; ;
-                if (e == E_SW + 1) begin ; ; ; ; end
+                if (e == E_SW1) begin ; ; ; ; end
             end else if (running_copy1) begin
                 if (go_now) ;                  // a second token start inside a running_copy1 program
                 ;
@@ -1027,7 +1065,7 @@ cfg_data_part1[24 +: 8] = 8'b0;
             if (halt) begin ; ; ; end
             // ---- AUTO token anchor: first token at E_TOK, then every rom_period
             if (AUTO && eact && !halt) begin
-                if (e == E_TOK - GO_OFS - 2) begin ; ; ; ; end
+                if (e == E_TOK2) begin ; ; ; ; end
                 else if (prun) begin
                     if (pcnt == rom_period) begin ; ; ; end
                     else ;
@@ -1062,11 +1100,11 @@ cfg_data_part1[24 +: 8] = 8'b0;
             end else if (ADM && eact && e == E_ADM && adm_pend) begin
                 if (!cal_ready || tokbase || running_copy2) ;
                 ; ; ; ;
-            end else if (ADM && eact && (e == E_SW || e == E_SW + 1) && adm_run) begin
+            end else if (ADM && eact && (e == E_SW || e == E_SW1) && adm_run) begin
                 // admission over: segment-1 bases to the token run
                 ; ;
                 ; ;
-                if (e == E_SW + 1) begin ; ; ; ; end
+                if (e == E_SW1) begin ; ; ; ; end
             end else if (running_copy2) begin
                 if (go_now) ;                  // a second token start inside a running_copy2 program
                 t_part0 = t + 1'b1;
@@ -1097,7 +1135,7 @@ cfg_data_part1[24 +: 8] = 8'b0;
             if (halt) begin ; ; ; end
             // ---- AUTO token anchor: first token at E_TOK, then every rom_period
             if (AUTO && eact && !halt) begin
-                if (e == E_TOK - GO_OFS - 2) begin ; ; ; ; end
+                if (e == E_TOK2) begin ; ; ; ; end
                 else if (prun) begin
                     if (pcnt == rom_period) begin ; ; ; end
                     else ;
@@ -1132,11 +1170,11 @@ cfg_data_part1[24 +: 8] = 8'b0;
             end else if (ADM && eact && e == E_ADM && adm_pend) begin
                 if (!cal_ready || tokbase || running_copy0) ;
                 ; ; ; ;
-            end else if (ADM && eact && (e == E_SW || e == E_SW + 1) && adm_run) begin
+            end else if (ADM && eact && (e == E_SW || e == E_SW1) && adm_run) begin
                 // admission over: segment-1 bases to the token run
                 ; ;
                 ; ;
-                if (e == E_SW + 1) begin ; ; ; ; end
+                if (e == E_SW1) begin ; ; ; ; end
             end else if (running_copy0) begin
                 if (go_now) ;                  // a second token start inside a running_copy0 program
                 t_part1 = t + 1'b1;
@@ -1167,7 +1205,7 @@ cfg_data_part1[24 +: 8] = 8'b0;
             if (halt) begin ; ; ; end
             // ---- AUTO token anchor: first token at E_TOK, then every rom_period
             if (AUTO && eact && !halt) begin
-                if (e == E_TOK - GO_OFS - 2) begin ; ; ; ; end
+                if (e == E_TOK2) begin ; ; ; ; end
                 else if (prun) begin
                     if (pcnt == rom_period) begin ; ; ; end
                     else ;
@@ -1202,11 +1240,11 @@ cfg_data_part1[24 +: 8] = 8'b0;
             end else if (ADM && eact && e == E_ADM && adm_pend) begin
                 if (!cal_ready || tokbase || running_copy0) ;
                 ; ; ; ;
-            end else if (ADM && eact && (e == E_SW || e == E_SW + 1) && adm_run) begin
+            end else if (ADM && eact && (e == E_SW || e == E_SW1) && adm_run) begin
                 // admission over: segment-1 bases to the token run
                 ; ;
                 ; ;
-                if (e == E_SW + 1) begin ; ; ; ; end
+                if (e == E_SW1) begin ; ; ; ; end
             end else if (running_copy0) begin
                 if (go_now) ;                  // a second token start inside a running_copy0 program
                 ;
@@ -1237,7 +1275,7 @@ cfg_data_part1[24 +: 8] = 8'b0;
             if (halt) begin ; ; ; end
             // ---- AUTO token anchor: first token at E_TOK, then every rom_period
             if (AUTO && eact && !halt) begin
-                if (e == E_TOK - GO_OFS - 2) begin ; ; ; ; end
+                if (e == E_TOK2) begin ; ; ; ; end
                 else if (prun) begin
                     if (pcnt == rom_period) begin ; ; ; end
                     else ;
@@ -1272,11 +1310,11 @@ cfg_data_part1[24 +: 8] = 8'b0;
             end else if (ADM && eact && e == E_ADM && adm_pend) begin
                 if (!cal_ready || tokbase || running_copy1) ;
                 ; ; layer_part0 = 6'h3f; ;
-            end else if (ADM && eact && (e == E_SW || e == E_SW + 1) && adm_run) begin
+            end else if (ADM && eact && (e == E_SW || e == E_SW1) && adm_run) begin
                 // admission over: segment-1 bases to the token run
                 ; ;
                 ; ;
-                if (e == E_SW + 1) begin ; ; ; ; end
+                if (e == E_SW1) begin ; ; ; ; end
             end else if (running_copy1) begin
                 if (go_now) ;                  // a second token start inside a running_copy1 program
                 ;
@@ -1307,7 +1345,7 @@ cfg_data_part1[24 +: 8] = 8'b0;
             if (halt) begin ; ; ; end
             // ---- AUTO token anchor: first token at E_TOK, then every rom_period
             if (AUTO && eact && !halt) begin
-                if (e == E_TOK - GO_OFS - 2) begin ; ; ; ; end
+                if (e == E_TOK2) begin ; ; ; ; end
                 else if (prun) begin
                     if (pcnt == rom_period) begin ; ; ; end
                     else ;
@@ -1342,11 +1380,11 @@ cfg_data_part1[24 +: 8] = 8'b0;
             end else if (ADM && eact && e == E_ADM && adm_pend) begin
                 if (!cal_ready || tokbase || running_copy2) ;
                 ; ; ; ;
-            end else if (ADM && eact && (e == E_SW || e == E_SW + 1) && adm_run) begin
+            end else if (ADM && eact && (e == E_SW || e == E_SW1) && adm_run) begin
                 // admission over: segment-1 bases to the token run
                 ; ;
                 ; ;
-                if (e == E_SW + 1) begin ; ; ; ; end
+                if (e == E_SW1) begin ; ; ; ; end
             end else if (running_copy2) begin
                 if (go_now) ;                  // a second token start inside a running_copy2 program
                 ;
@@ -1377,7 +1415,7 @@ cfg_data_part1[24 +: 8] = 8'b0;
             if (halt) begin ; ; ; end
             // ---- AUTO token anchor: first token at E_TOK, then every rom_period
             if (AUTO && eact && !halt) begin
-                if (e == E_TOK - GO_OFS - 2) begin ; ; ; ; end
+                if (e == E_TOK2) begin ; ; ; ; end
                 else if (prun) begin
                     if (pcnt == rom_period) begin ; ; ; end
                     else ;
@@ -1412,11 +1450,11 @@ cfg_data_part1[24 +: 8] = 8'b0;
             end else if (ADM && eact && e == E_ADM && adm_pend) begin
                 if (!cal_ready || tokbase || running_copy0) ;
                 ; ; ; ;
-            end else if (ADM && eact && (e == E_SW || e == E_SW + 1) && adm_run) begin
+            end else if (ADM && eact && (e == E_SW || e == E_SW1) && adm_run) begin
                 // admission over: segment-1 bases to the token run
                 ; ;
                 ; ;
-                if (e == E_SW + 1) begin ; ; ; ; end
+                if (e == E_SW1) begin ; ; ; ; end
             end else if (running_copy0) begin
                 if (go_now) ;                  // a second token start inside a running_copy0 program
                 ;
@@ -1447,7 +1485,7 @@ cfg_data_part1[24 +: 8] = 8'b0;
             if (halt) begin eact_part0 = 1'b0; ; ; end
             // ---- AUTO token anchor: first token at E_TOK, then every rom_period
             if (AUTO && eact && !halt) begin
-                if (e == E_TOK - GO_OFS - 2) begin ; ; ; ; end
+                if (e == E_TOK2) begin ; ; ; ; end
                 else if (prun) begin
                     if (pcnt == rom_period) begin ; ; ; end
                     else ;
@@ -1482,11 +1520,11 @@ cfg_data_part1[24 +: 8] = 8'b0;
             end else if (ADM && eact && e == E_ADM && adm_pend) begin
                 if (!cal_ready || tokbase || running_copy1) ;
                 ; ; ; ;
-            end else if (ADM && eact && (e == E_SW || e == E_SW + 1) && adm_run) begin
+            end else if (ADM && eact && (e == E_SW || e == E_SW1) && adm_run) begin
                 // admission over: segment-1 bases to the token run
                 ; ;
                 ; ;
-                if (e == E_SW + 1) begin ; ; ; ; end
+                if (e == E_SW1) begin ; ; ; ; end
             end else if (running_copy1) begin
                 if (go_now) ;                  // a second token start inside a running_copy1 program
                 ;
@@ -1513,11 +1551,11 @@ cfg_data_part1[24 +: 8] = 8'b0;
             // ---- epoch anchor
             if ((epoch_go && !ep_q_copy0) && ADM) begin
                 ; e_part0 = 32'd1; ; ; ;
-            end else if (eact) e_part0 = e + 32'd1;
+            end else if (eact) e_part0 = e_inc;
             if (halt) begin ; ; ; end
             // ---- AUTO token anchor: first token at E_TOK, then every rom_period
             if (AUTO && eact && !halt) begin
-                if (e == E_TOK - GO_OFS - 2) begin ; ; ; ; end
+                if (e == E_TOK2) begin ; ; ; ; end
                 else if (prun) begin
                     if (pcnt == rom_period) begin ; ; ; end
                     else ;
@@ -1552,11 +1590,11 @@ cfg_data_part1[24 +: 8] = 8'b0;
             end else if (ADM && eact && e == E_ADM && adm_pend) begin
                 if (!cal_ready || tokbase || running_copy2) ;
                 ; ; ; ;
-            end else if (ADM && eact && (e == E_SW || e == E_SW + 1) && adm_run) begin
+            end else if (ADM && eact && (e == E_SW || e == E_SW1) && adm_run) begin
                 // admission over: segment-1 bases to the token run
                 ; ;
                 ; ;
-                if (e == E_SW + 1) begin ; ; ; ; end
+                if (e == E_SW1) begin ; ; ; ; end
             end else if (running_copy2) begin
                 if (go_now) ;                  // a second token start inside a running_copy2 program
                 ;
@@ -1583,11 +1621,11 @@ cfg_data_part1[24 +: 8] = 8'b0;
             // ---- epoch anchor
             if ((epoch_go && !ep_q_copy1) && ADM) begin
                 ; e_part1 = 32'd1; ; ; ;
-            end else if (eact) e_part1 = e + 32'd1;
+            end else if (eact) e_part1 = e_inc;
             if (halt) begin ; ; ; end
             // ---- AUTO token anchor: first token at E_TOK, then every rom_period
             if (AUTO && eact && !halt) begin
-                if (e == E_TOK - GO_OFS - 2) begin ; ; ; ; end
+                if (e == E_TOK2) begin ; ; ; ; end
                 else if (prun) begin
                     if (pcnt == rom_period) begin ; ; ; end
                     else ;
@@ -1622,11 +1660,11 @@ cfg_data_part1[24 +: 8] = 8'b0;
             end else if (ADM && eact && e == E_ADM && adm_pend) begin
                 if (!cal_ready || tokbase || running_copy0) ;
                 ; ; ; ;
-            end else if (ADM && eact && (e == E_SW || e == E_SW + 1) && adm_run) begin
+            end else if (ADM && eact && (e == E_SW || e == E_SW1) && adm_run) begin
                 // admission over: segment-1 bases to the token run
                 ; ;
                 ; ;
-                if (e == E_SW + 1) begin ; ; ; ; end
+                if (e == E_SW1) begin ; ; ; ; end
             end else if (running_copy0) begin
                 if (go_now) ;                  // a second token start inside a running_copy0 program
                 ;
@@ -1657,7 +1695,7 @@ cfg_data_part1[24 +: 8] = 8'b0;
             if (halt) begin ; ; ; end
             // ---- AUTO token anchor: first token at E_TOK, then every rom_period
             if (AUTO && eact && !halt) begin
-                if (e == E_TOK - GO_OFS - 2) begin ; ; ; ; end
+                if (e == E_TOK2) begin ; ; ; ; end
                 else if (prun) begin
                     if (pcnt == rom_period) begin ; ; ; end
                     else ;
@@ -1692,11 +1730,11 @@ cfg_data_part1[24 +: 8] = 8'b0;
             end else if (ADM && eact && e == E_ADM && adm_pend) begin
                 if (!cal_ready || tokbase || running_copy0) ;
                 ; ; ; ;
-            end else if (ADM && eact && (e == E_SW || e == E_SW + 1) && adm_run) begin
+            end else if (ADM && eact && (e == E_SW || e == E_SW1) && adm_run) begin
                 // admission over: segment-1 bases to the token run
                 ; ;
                 ; ;
-                if (e == E_SW + 1) begin tokbase_part0 = 1'b1; ; ; ; end
+                if (e == E_SW1) begin tokbase_part0 = 1'b1; ; ; ; end
             end else if (running_copy0) begin
                 if (go_now) ;                  // a second token start inside a running_copy0 program
                 ;
@@ -1727,7 +1765,7 @@ cfg_data_part1[24 +: 8] = 8'b0;
             if (halt) begin ; ; ; end
             // ---- AUTO token anchor: first token at E_TOK, then every rom_period
             if (AUTO && eact && !halt) begin
-                if (e == E_TOK - GO_OFS - 2) begin ; ; ; ; end
+                if (e == E_TOK2) begin ; ; ; ; end
                 else if (prun) begin
                     if (pcnt == rom_period) begin ; ; ; end
                     else ;
@@ -1762,11 +1800,11 @@ cfg_data_part1[24 +: 8] = 8'b0;
             end else if (ADM && eact && e == E_ADM && adm_pend) begin
                 if (!cal_ready || tokbase || running_copy1) ;
                 ; ; ; ;
-            end else if (ADM && eact && (e == E_SW || e == E_SW + 1) && adm_run) begin
+            end else if (ADM && eact && (e == E_SW || e == E_SW1) && adm_run) begin
                 // admission over: segment-1 bases to the token run
                 ; ;
                 ; ;
-                if (e == E_SW + 1) begin ; ; adm_pend_part0 = 1'b0; ; end
+                if (e == E_SW1) begin ; ; adm_pend_part0 = 1'b0; ; end
             end else if (running_copy1) begin
                 if (go_now) ;                  // a second token start inside a running_copy1 program
                 ;
@@ -1797,7 +1835,7 @@ cfg_data_part1[24 +: 8] = 8'b0;
             if (halt) begin ; ; adm_run_part0 = 1'b0; end
             // ---- AUTO token anchor: first token at E_TOK, then every rom_period
             if (AUTO && eact && !halt) begin
-                if (e == E_TOK - GO_OFS - 2) begin ; ; ; ; end
+                if (e == E_TOK2) begin ; ; ; ; end
                 else if (prun) begin
                     if (pcnt == rom_period) begin ; ; ; end
                     else ;
@@ -1832,11 +1870,11 @@ cfg_data_part1[24 +: 8] = 8'b0;
             end else if (ADM && eact && e == E_ADM && adm_pend) begin
                 if (!cal_ready || tokbase || running_copy2) ;
                 ; ; ; adm_run_part0 = 1'b1;
-            end else if (ADM && eact && (e == E_SW || e == E_SW + 1) && adm_run) begin
+            end else if (ADM && eact && (e == E_SW || e == E_SW1) && adm_run) begin
                 // admission over: segment-1 bases to the token run
                 ; ;
                 ; ;
-                if (e == E_SW + 1) begin ; adm_run_part0 = 1'b0; ; ; end
+                if (e == E_SW1) begin ; adm_run_part0 = 1'b0; ; ; end
             end else if (running_copy2) begin
                 if (go_now) ;                  // a second token start inside a running_copy2 program
                 ;
@@ -1867,7 +1905,7 @@ cfg_data_part1[24 +: 8] = 8'b0;
             if (halt) begin ; ; ; end
             // ---- AUTO token anchor: first token at E_TOK, then every rom_period
             if (AUTO && eact && !halt) begin
-                if (e == E_TOK - GO_OFS - 2) begin ; ; ; ; end
+                if (e == E_TOK2) begin ; ; ; ; end
                 else if (prun) begin
                     if (pcnt == rom_period) begin ; ; ; end
                     else ;
@@ -1902,11 +1940,11 @@ cfg_data_part1[24 +: 8] = 8'b0;
             end else if (ADM && eact && e == E_ADM && adm_pend) begin
                 if (!cal_ready || tokbase || running_copy0) ;
                 ; ; ; ;
-            end else if (ADM && eact && (e == E_SW || e == E_SW + 1) && adm_run) begin
+            end else if (ADM && eact && (e == E_SW || e == E_SW1) && adm_run) begin
                 // admission over: segment-1 bases to the token run
                 ; ;
                 ; ;
-                if (e == E_SW + 1) begin ; ; ; adm_done_part0 = 1'b1; end
+                if (e == E_SW1) begin ; ; ; adm_done_part0 = 1'b1; end
             end else if (running_copy0) begin
                 if (go_now) ;                  // a second token start inside a running_copy0 program
                 ;
@@ -1937,7 +1975,7 @@ cfg_data_part1[24 +: 8] = 8'b0;
             if (halt) begin ; ; ; end
             // ---- AUTO token anchor: first token at E_TOK, then every rom_period
             if (AUTO && eact && !halt) begin
-                if (e == E_TOK - GO_OFS - 2) begin ; ; pcnt_part0 = 32'd1; ; end
+                if (e == E_TOK2) begin ; ; pcnt_part0 = 32'd1; ; end
                 else if (prun) begin
                     if (pcnt == rom_period) begin ; pcnt_part0 = 32'd1; ; end
                     else pcnt_part0 = pcnt + 32'd1;
@@ -1972,11 +2010,11 @@ cfg_data_part1[24 +: 8] = 8'b0;
             end else if (ADM && eact && e == E_ADM && adm_pend) begin
                 if (!cal_ready || tokbase || running_copy2) ;
                 ; ; ; ;
-            end else if (ADM && eact && (e == E_SW || e == E_SW + 1) && adm_run) begin
+            end else if (ADM && eact && (e == E_SW || e == E_SW1) && adm_run) begin
                 // admission over: segment-1 bases to the token run
                 ; ;
                 ; ;
-                if (e == E_SW + 1) begin ; ; ; ; end
+                if (e == E_SW1) begin ; ; ; ; end
             end else if (running_copy2) begin
                 if (go_now) ;                  // a second token start inside a running_copy2 program
                 ;
@@ -2007,7 +2045,7 @@ cfg_data_part1[24 +: 8] = 8'b0;
             if (halt) begin ; ; ; end
             // ---- AUTO token anchor: first token at E_TOK, then every rom_period
             if (AUTO && eact && !halt) begin
-                if (e == E_TOK - GO_OFS - 2) begin ; ; pcnt_part1 = 32'd1; ; end
+                if (e == E_TOK2) begin ; ; pcnt_part1 = 32'd1; ; end
                 else if (prun) begin
                     if (pcnt == rom_period) begin ; pcnt_part1 = 32'd1; ; end
                     else pcnt_part1 = pcnt + 32'd1;
@@ -2042,11 +2080,11 @@ cfg_data_part1[24 +: 8] = 8'b0;
             end else if (ADM && eact && e == E_ADM && adm_pend) begin
                 if (!cal_ready || tokbase || running_copy0) ;
                 ; ; ; ;
-            end else if (ADM && eact && (e == E_SW || e == E_SW + 1) && adm_run) begin
+            end else if (ADM && eact && (e == E_SW || e == E_SW1) && adm_run) begin
                 // admission over: segment-1 bases to the token run
                 ; ;
                 ; ;
-                if (e == E_SW + 1) begin ; ; ; ; end
+                if (e == E_SW1) begin ; ; ; ; end
             end else if (running_copy0) begin
                 if (go_now) ;                  // a second token start inside a running_copy0 program
                 ;
@@ -2077,7 +2115,7 @@ cfg_data_part1[24 +: 8] = 8'b0;
             if (halt) begin ; prun_part0 = 1'b0; ; end
             // ---- AUTO token anchor: first token at E_TOK, then every rom_period
             if (AUTO && eact && !halt) begin
-                if (e == E_TOK - GO_OFS - 2) begin ; prun_part0 = 1'b1; ; ; end
+                if (e == E_TOK2) begin ; prun_part0 = 1'b1; ; ; end
                 else if (prun) begin
                     if (pcnt == rom_period) begin ; ; ; end
                     else ;
@@ -2112,11 +2150,11 @@ cfg_data_part1[24 +: 8] = 8'b0;
             end else if (ADM && eact && e == E_ADM && adm_pend) begin
                 if (!cal_ready || tokbase || running_copy0) ;
                 ; ; ; ;
-            end else if (ADM && eact && (e == E_SW || e == E_SW + 1) && adm_run) begin
+            end else if (ADM && eact && (e == E_SW || e == E_SW1) && adm_run) begin
                 // admission over: segment-1 bases to the token run
                 ; ;
                 ; ;
-                if (e == E_SW + 1) begin ; ; ; ; end
+                if (e == E_SW1) begin ; ; ; ; end
             end else if (running_copy0) begin
                 if (go_now) ;                  // a second token start inside a running_copy0 program
                 ;
@@ -2147,7 +2185,7 @@ cfg_data_part1[24 +: 8] = 8'b0;
             if (halt) begin ; ; ; end
             // ---- AUTO token anchor: first token at E_TOK, then every rom_period
             if (AUTO && eact && !halt) begin
-                if (e == E_TOK - GO_OFS - 2) begin ; ; ; tok_start_part0 = 1'b1; end
+                if (e == E_TOK2) begin ; ; ; tok_start_part0 = 1'b1; end
                 else if (prun) begin
                     if (pcnt == rom_period) begin ; ; tok_start_part0 = 1'b1; end
                     else ;
@@ -2182,11 +2220,11 @@ cfg_data_part1[24 +: 8] = 8'b0;
             end else if (ADM && eact && e == E_ADM && adm_pend) begin
                 if (!cal_ready || tokbase || running_copy1) ;
                 ; ; ; ;
-            end else if (ADM && eact && (e == E_SW || e == E_SW + 1) && adm_run) begin
+            end else if (ADM && eact && (e == E_SW || e == E_SW1) && adm_run) begin
                 // admission over: segment-1 bases to the token run
                 ; ;
                 ; ;
-                if (e == E_SW + 1) begin ; ; ; ; end
+                if (e == E_SW1) begin ; ; ; ; end
             end else if (running_copy1) begin
                 if (go_now) ;                  // a second token start inside a running_copy1 program
                 ;
