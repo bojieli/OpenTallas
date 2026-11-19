@@ -59,6 +59,7 @@ def _align_group(src_mod, src_port):
 def _is_read_loop(src_mod, src_port, sink_mod, sink_port):
     return any(a.search(src_mod) and b.search(src_port) and c.search(sink_mod) and d.search(sink_port) for a, b, c, d in READ_LOOP)
 RELAY_MOD = re.compile(r"^(ot_s81_rly|dsfd_rly_\d+_[A-Z]+)$")
+TRANSPORT_MOD = re.compile(r"^(ot_dp_dly|ot_dp_dly_keep)$")
 
 
 def _pin_table(hc, plan_dir):
@@ -286,7 +287,9 @@ def type_rows(plan, tn, text, repo=None, plan_dir=None, limit=LIMIT):
 
 def _is_relay_inst(text, inst):
     m = re.search(r"\n\s*(\w+)\s*(?:#\([^;]*?\))?\s*" + re.escape(inst) + r"\s*\(", text)
-    return bool(m and RELAY_MOD.match(m.group(1)))
+    # CBC-RULES-1119 (COORD 11-19): the generic transport stages (ot_dp_dly / ot_dp_dly_keep, QC / KV / HEAD) are relay cells
+    # too: a path through one is a relay chain, measured round the core halos like an S81 relay
+    return bool(m and (RELAY_MOD.match(m.group(1)) or TRANSPORT_MOD.match(m.group(1))))
 
 
 def apply_reports(plan, reports, equalise=False):

@@ -245,3 +245,49 @@ def test_branch_rows_routed_length_makes_a_branch_far():
     t["hard_cores"].append({"inst": "u_wall", "module": "w", "origin_um": [400.0, 0.0], "outline_um": [20.0, 1300.0]})
     rows, _d, _r = RB.branch_rows(p, "t", TEXT)
     assert rows and rows[0]["copies"][0]["sinks"] == ["u_r0_u_bs3"] and rows[0]["copies"][0]["D"] >= 1
+
+
+# CBC-RULES-1119: generic transport relays (QC / KV / HEAD bind-emitted ot_dp_dly one-liners)
+DLY = """module q (
+    input wire clk
+);
+    wire [3:0] w_a_x;
+    wire [3:0] s0_q;
+    wire [3:0] s1_q;
+    core_a u_a (
+        .ck(clk),
+        .x(w_a_x)
+    );
+    ot_dp_dly #(.W(4), .D(1)) u_tp_x_0 (.clk(clk), .d(w_a_x), .q(s0_q));
+    ot_dp_dly #(.W(4), .D(2)) u_tp_x_1 (.clk(clk), .d(s0_q), .q(s1_q));
+    core_b u_b (
+        .ck(clk),
+        .xi(s1_q[3:0])
+    );
+    core_c u_c (
+        .ck(clk),
+        .xi(s1_q[3:0])
+    );
+endmodule
+"""
+
+
+def test_transport_relay_copy_is_kept_dly_and_never_merge_flagged():
+    out, rep = RB.apply(DLY, [{"inst": "tp_x_1", "copies": [{"name": "tp_x_c_1", "sinks": ["c"]}]}])
+    assert "ot_dp_dly_keep #(.W(4), .D(2)) u_tp_x_c_1 (.clk(clk), .d(s0_q), .q(w_tp_x_c_1_q));" in out
+    assert "wire [3:0] w_tp_x_c_1_q;" in out
+    assert re.search(r"u_c \(\n\s+\.ck\(clk\),\n\s+\.xi\(w_tp_x_c_1_q\[3:0\]\)", out)
+    assert re.search(r"u_b \(\n\s+\.ck\(clk\),\n\s+\.xi\(s1_q\[3:0\]\)", out)
+    assert rep[0]["kept"] is True and RB.copies_distinct(out, rep) == []
+
+
+def test_transport_chain_only_last_stage_is_a_candidate():
+    N = RB.Netlist(DLY)
+    assert RB.relay_ports(N.st[N.by_inst["u_tp_x_0"]]) == ("d", "q")
+    plan = {"partition_types": {"q": {"outline_um": [2000, 200], "hard_cores": [
+        dict(inst="a", module="core_a", origin_um=[0, 0], outline_um=[10, 10]),
+        dict(inst="b", module="core_b", origin_um=[100, 0], outline_um=[10, 10]),
+        dict(inst="c", module="core_c", origin_um=[1900, 0], outline_um=[10, 10])]}}}
+    rows, drows, rep = RB.branch_rows(plan, "q", DLY, None, 405.0)
+    assert [r["inst"] for r in rows] == ["tp_x_1"]          # stage 0 feeds stage 1, so only stage 1 splits
+    assert rows[0]["copies"][0]["sinks"] == ["c"]

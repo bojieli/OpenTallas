@@ -73,3 +73,17 @@ def test_schema_accepts_the_cbc_key():
         except jsonschema.ValidationError:
             continue
         raise AssertionError(bad)
+
+
+def test_stage_rtl_several_binders_and_name_forms(tmp_path):
+    a, b = tmp_path / 'a', tmp_path / 'b'
+    a.mkdir(); b.mkdir()
+    (a / 'hub_part.sv').write_text('module hub_part; endmodule\n')
+    (b / 'hub.sv').write_text('// later binder\n')
+    (b / 's81p_tile.sv').write_text('module tile; endmodule\n')
+    (b / 'pv_bound.sv').write_text('module pv; endmodule\n')
+    d, n = C.stage_rtl(f'{a},{b}', ['hub', 'tile', 'pv', 'none'], tmp_path / 'out')
+    assert n == 3
+    assert (d / 'hub.sv').resolve() == (b / 'hub.sv').resolve()      # exact stem beats a _part form
+    assert (d / 'tile.sv').read_text().startswith('module tile')
+    assert (d / 'pv.sv').exists() and not (d / 'none.sv').exists()

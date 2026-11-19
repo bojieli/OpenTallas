@@ -144,14 +144,19 @@ def k_deltas(P, ft_rows):
 
 # ------------------------------------------------------------------------------------------------ rule 2/5 relays
 def stage_rtl(rtl_dir, types, work):
-    """relay_branch / relay_depth read BOUND_DIR/<type>.sv; binds name files <prefix>_<type>.sv: link them by type"""
+    """relay_branch / relay_depth / reset read BOUND_DIR/<type>.sv; binds name files <prefix>_<type>.sv, <type>_part.sv or
+    <type>_bound.sv, and a die may bind in several binders (KV: bound_binder2, bound_pv, ...): rtl_dir is one directory or a
+    comma list, the first directory holding a type wins.  Links them by type."""
     d = Path(work) / "bound"
     d.mkdir(parents=True, exist_ok=True)
-    src = Path(rtl_dir)
-    names = {p.stem: p for p in src.glob("*.sv")}
+    names = {}
+    for src in [Path(x) for x in str(rtl_dir).split(",") if x]:
+        for p in sorted(src.glob("*.sv")):
+            names.setdefault(p.stem, p)
     n = 0
     for tn in types:
-        p = names.get(tn) or next((names[s] for s in names if re.fullmatch(r"[A-Za-z0-9]+_" + re.escape(tn), s)), None)
+        p = names.get(tn) or names.get(tn + "_part") or names.get(tn + "_bound") or \
+            next((names[s] for s in names if re.fullmatch(r"[A-Za-z0-9]+_" + re.escape(tn), s)), None)
         if p is None:
             continue
         q = d / f"{tn}.sv"
@@ -342,22 +347,22 @@ def main(argv=None):
         P = S.Plan(raw, a.plan)
     skip = {s.strip() for s in a.skip.split(",") if s.strip()}
     types = sorted(t for t in P.types if re.search(a.types, t) and t in {p["type"] for p in P.parts.values()})
-    rows = dict(boundary=boundary_rows(P, a.rtl, types))
+    bound, n_bound = stage_rtl(a.rtl, types, out) if a.rtl else (None, 0)
+    rows = dict(boundary=boundary_rows(P, bound, types))
     ftr = ft_station_rows(P, th["hop_um"])
     rows["ft_stations"] = sorted(ftr.values(), key=lambda r: (r["type"], r["slot"]))
     kd = k_deltas(P, ftr)
     rel = None
     if a.rtl and "relay" not in skip:
-        bound, n = stage_rtl(a.rtl, types, out)
         rel = relay_rows(a.plan, a.types, bound, out, th["hop_um"])
         rows["relays"] = summarise_relays(rel)
-        rows["relays"]["bound_types"] = n
+        rows["relays"]["bound_types"] = n_bound
     if "taps" not in skip:
         rows["taps"], tap_err = tap_rows(P, th["tap_sinks"], a.plan)
     else:
         tap_err = []
     if a.rtl and "reset" not in skip:
-        rows["reset"], rs_err = reset_rows(raw, a.rtl, types, th["hop_um"], th["reset_leaf"])
+        rows["reset"], rs_err = reset_rows(raw, bound, types, th["hop_um"], th["reset_leaf"])
     else:
         rs_err = []
     rows["depth"] = depth_rows(a.depth, th["depth_levels"])

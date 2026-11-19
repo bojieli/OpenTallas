@@ -45,6 +45,22 @@ sys.path.insert(0, str(HERE))
 LIMIT = 405.0
 TAG = "S81-RLYBR-1"
 RELAY_MOD = re.compile(r"^(ot_s81_rly|ot_s81_rly_k|dsfd_rly_\d+_[A-Z]+)$")
+# CBC-RULES-1119 (COORD 11-19, die-agnostic): the generic transport stages of every die (QC / KV / HEAD core-to-core
+# relays are bind-emitted ot_dp_dly / ot_dp_dly_keep one-liners, .d -> .q) are relay leaves too.  A copy of one keeps the
+# stage count D and is emitted as ot_dp_dly_keep ((* keep *) registers: Yosys opt_merge does not fold kept cells), so it
+# needs no per-instance reset region.
+TRANSPORT_MOD = re.compile(r"^(ot_dp_dly|ot_dp_dly_keep)$")
+KEEP_COPY = {"ot_dp_dly": "ot_dp_dly_keep", "ot_dp_dly_keep": "ot_dp_dly_keep"}
+
+
+def relay_ports(S):
+    """(in port, out port) of a relay-leaf statement, else None: S81 relay leaves (multi-line .i -> .o) and the generic
+    transport stages (one-line or block .d -> .q)"""
+    if S.get("kind") == "inst" and RELAY_MOD.match(S["mod"]):
+        return "i", "o"
+    if S.get("kind") in ("inst", "one") and TRANSPORT_MOD.match(S["mod"]):
+        return "d", "q"
+    return None
 _PAR = r"#\((?:[^()]|\((?:[^()]|\([^()]*\))*\))*\)"
 HDR = re.compile(r"^(?P<ind>\s*)(?P<mod>[A-Za-z_]\w*)\s*(?P<par>" + _PAR + r")?\s+(?P<inst>[A-Za-z_][\w$]*)\s*\(\s*$")
 ONE = re.compile(r"^(?P<ind>\s*)(?P<mod>[A-Za-z_]\w*)\s*(?P<par>" + _PAR + r")?\s+(?P<inst>[A-Za-z_][\w$]*)\s*"
@@ -205,9 +221,11 @@ def apply(text, rows):
                 continue
             raise BranchError(f"relay {row['inst']} not in the bound module")
         S = N.st[k]
-        if not RELAY_MOD.match(S["mod"]) or S["kind"] != "inst":
+        rp = relay_ports(S)
+        if rp is None:
             raise BranchError(f"{inst} is {S['mod']}, not a relay leaf")
-        W = S["ports"].get("o", "")
+        OUT = rp[1]
+        W = S["ports"].get(OUT, "")
         if not IDENT.fullmatch(W) or W not in N.decl:
             raise BranchError(f"{inst}: output {W!r} is not a declared wire")
         readers = {c: N.owners(c, W) for c in N.consumers(W) if c != k}
@@ -228,21 +246,26 @@ def apply(text, rows):
             if seen & set(hit):
                 raise BranchError(f"{inst}: a reader is claimed by two copies")
             seen |= set(hit)
-            WC = f"w_{cname[2:]}_o"
+            WC = f"w_{cname[2:]}_{OUT}"
             for r in hit:
                 for j in N.st[r]["lines"]:
                     edits[j] = re.sub(rf"\b{re.escape(W)}\b", WC, edits.get(j, N.lines[j]))
             par = _bump_id(S["par"], used_ids) if S["mod"] == "ot_s81_rly_k" else S["par"]
             ind = S["ind"]
-            ps = ",\n".join(f"{ind}    .{p}({WC if p == 'o' else e})" for p, e in S["ports"].items())
-            block = [f"{ind}// {TAG}: relay branch copy of {inst} for {', '.join(sorted(sinks))} "
-                     f"(1 stage like the original, {int(c.get('D', 0))} declared stage(s) in front of its sinks)",
-                     f"{ind}{S['mod']}{(' ' + par) if par else ''} {cname} (", ps, f"{ind});"]
+            note = (f"{ind}// {TAG}: relay branch copy of {inst} for {', '.join(sorted(sinks))} "
+                    f"(same stages as the original, {int(c.get('D', 0))} declared stage(s) in front of its sinks)")
+            if S["mod"] in KEEP_COPY:
+                ps = ", ".join(f".{p}({WC if p == OUT else e})" for p, e in S["ports"].items())
+                block = [note, f"{ind}{KEEP_COPY[S['mod']]}{(' ' + par) if par else ''} {cname} ({ps});"]
+            else:
+                ps = ",\n".join(f"{ind}    .{p}({WC if p == OUT else e})" for p, e in S["ports"].items())
+                block = [note, f"{ind}{S['mod']}{(' ' + par) if par else ''} {cname} (", ps, f"{ind});"]
             inserts.append((S["lines"][-1] + 1, block))
             dl, wd = N.decl[W]
             rng = f"[{wd[0]}:{wd[1]}] " if wd else ""
             inserts.append((dl + 1, [f"    wire {rng}{WC};  // {TAG}"]))
-            rep.append(dict(relay=inst, copy=cname, sinks=sorted(sinks), readers=len(hit), D=int(c.get("D", 0))))
+            rep.append(dict(relay=inst, copy=cname, sinks=sorted(sinks), readers=len(hit), D=int(c.get("D", 0)),
+                            **({"kept": True} if S["mod"] in KEEP_COPY else {})))
     lines = [edits.get(j, ln) for j, ln in enumerate(N.lines)]
     for pos, block in sorted(inserts, key=lambda x: -x[0]):
         lines[pos:pos] = block
@@ -255,6 +278,8 @@ def copies_distinct(text, rep):
     N = Netlist(text)
     bad = []
     for r in rep:
+        if r.get("kept"):
+            continue                    # an ot_dp_dly_keep copy: kept registers are never merged
         a, b = N.st[N.by_inst[r["relay"]]]["ports"], N.st[N.by_inst[r["copy"]]]["ports"]
         if all(a.get(p) == e for p, e in b.items() if p != "o"):
             bad.append((r["relay"], r["copy"]))
@@ -371,11 +396,15 @@ def branch_rows(plan, tn, text, plan_dir=None, limit=LIMIT):
     router = None
     have_rd = {(sid(r["inst"]), r.get("port", "o")): int(r["D"]) for r in G.t.get("relay_depth") or [] if r.get("side") != "sink"}
     for k, S in enumerate(N.st):
-        if S["kind"] != "inst" or not RELAY_MOD.match(S["mod"]):
+        rp = relay_ports(S)
+        if rp is None:
             continue
-        W = S["ports"].get("o", "")
+        IN, OUT = rp
+        W = S["ports"].get(OUT, "")
         if not IDENT.fullmatch(W):
             continue
+        if OUT == "q" and any(c != k and relay_ports(N.st[c]) for c in N.consumers(W)):
+            continue                    # not the last stage of a transport chain: the stage that fans out is split
         sinks, ports, soft = {}, defaultdict(set), set()
         for c in N.consumers(W):
             if c == k:
@@ -390,7 +419,7 @@ def branch_rows(plan, tn, text, plan_dir=None, limit=LIMIT):
         pts = {i: (sum(x for x, _ in v) / len(v), sum(y for _, y in v) / len(v)) for i, v in sinks.items()}
         if len(pts) < 2:
             continue
-        src = G.source(S["ports"].get("i", ""))
+        src = G.source(S["ports"].get(IN, ""))
         sp = src[1] if src else None
         allp = list(pts.values()) + ([sp] if sp else [])
         # the relay legs run round the hard macros (relay_mid polyline): a sink whose routed length from the source is over
@@ -421,11 +450,11 @@ def branch_rows(plan, tn, text, plan_dir=None, limit=LIMIT):
             L = max(max(_flight(sp, pts[n]), rlen.get(n, 0.0)) for n in c) if sp else 0.0
             near = sp is not None and not (far & set(c)) and _box_ok([sp] + [pts[n] for n in c], limit)
             # a relay_depth row on the relay (its stages follow the copy's readers) already pays part of the way
-            D = 0 if near or sp is None else max(0, max(1, math.ceil(L / limit) - 2) - have_rd.get((sid(rel), "o"), 0))
+            D = 0 if near or sp is None else max(0, max(1, math.ceil(L / limit) - 2) - have_rd.get((sid(rel), OUT), 0))
             span = max(_flight(pts[a], pts[b]) for a in c for b in c)
             copies.append(dict(name=name, sinks=sorted(n[2:] for n in c), D=D, span_um=round(span, 1), path_um=round(L, 1)))
             if D:
-                if (sid(rel), "o") in have_rd:     # relay and sink depth rows exclude each other in bind
+                if (sid(rel), OUT) in have_rd:     # relay and sink depth rows exclude each other in bind
                     rep.append(dict(relay=S["inst"], copy=name, unfixed=f"D={D} needed but the relay has a relay_depth row"))
                     continue
                 for n in c:
