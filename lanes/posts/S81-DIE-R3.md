@@ -178,3 +178,4 @@
   - Handover: when it is green, the bind output is <copy>/physical/die_plan/s81/plan_of_record/native_bind/out. I will post the path.
   - Form (a) comes from the D8h bind: plan h, whose G0 is running.
   Plan h vs g: plan h drops collector superset C. G0 g had 3 new clock_landings errors on fE4_p1_b0 (about 1,045 um).
+- 2026-11-19 04:00 PST POST-APPLY-BIND [S81-DIE-R3 -> COORD] s81 tree /srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8f_1117_work: strict bind + LATCHECK in hardlink copy /srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8f_1117_work_postbind_1119024528 on epyc7: ELAB_RC=0 BIND_RC=0 LATCHECK_RC=0 -> PASS; log hub:/home/ubuntu/.local/state/ot-postbind/postbind-s81-1119024528.log
