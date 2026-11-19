@@ -148,3 +148,17 @@ def test_untracked_base_inputs_copied_without_overwriting(tmp_path):
     assert (new / "kv37" / "pads.json").read_text() == "{}"
     assert (new / "keep.txt").read_text() == "tracked-new"
     assert "x.pyc" not in got and "kv37/pads.json" in got
+
+
+def test_a_worker_that_ended_without_a_result_is_not_rerun_for_the_same_src_and_tip(tmp_path):
+    ap = AP(tmp_path); cfg = config(); state = {}
+    S.step(ap, cfg, state)                                   # launches once
+    assert len(ap.launches) == 1
+    jd = tmp_path / 'source_follow' / 's81' / 'old' / ('a' * 12)
+    (jd / 'unit.log').write_text('bind.py bind --strict rc=1\nFileNotFoundError: src/kv3/pv_col_pads_Nb.json\n')
+    ap.active.clear()                                        # the worker is gone, no result.json
+    cfg = config(); S.step(ap, cfg, state)
+    assert len(ap.launches) == 1 and 'FileNotFoundError' in ap.messages[-1] and 'not rerun' in ap.messages[-1]
+    assert json.loads((jd / 'result.json').read_text())['verdict'] == 'FAIL'
+    cfg = config(); S.step(ap, cfg, state); S.step(ap, cfg, state)
+    assert len(ap.launches) == 1                             # still not rerun

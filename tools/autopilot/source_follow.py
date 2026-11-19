@@ -339,6 +339,19 @@ def step(AP, cfg, state):
         if AP.DRY:
             AP.log(f"SOURCE-FOLLOW would prepare {die} {tip[:12]}")
             continue
+        if (jd / "spec.json").is_file():
+            # COORD 11-19 (FABLE-FLOW-0755 E: the KV bind re-ran every tick on the same (src, tip) and the same FileNotFoundError): this (base, tip) was already prepared and its worker
+            # ended without a result.  Retries are keyed on (src tree sha, tip): the failure is recorded as the result, once, and the pair is not rerun until the tip changes.
+            err = ""
+            try:
+                err = next((l.strip() for l in reversed((jd / "unit.log").read_text(errors="replace").splitlines()) if l.strip()), "")
+            except OSError:
+                pass
+            reason = "worker ended without a result: " + (err[:300] or "no output")
+            result.write_text(json.dumps({"verdict": "FAIL", "reason": reason}))
+            rec["reported"] = tip
+            AP.log(f"SOURCE-FOLLOW {die} held: {reason} (same src {str(base.get('src_sha', ''))[:12]} and tip {tip[:12]} are not rerun; a new tip or src retries)")
+            continue
         jd.mkdir(parents=True, exist_ok=True)
         spec = {"die": die, "tip": tip, "die_config": d, "result": str(result),
                 "keep_refs": referenced_snapshots(live_snapshot_refs(AP.AP_DIR, [original, cfg], state),
