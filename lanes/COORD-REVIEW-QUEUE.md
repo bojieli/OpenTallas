@@ -8611,3 +8611,4 @@ FAILED [AUTOPILOT c53af720aac8] 2026-11-19 07:53:05 PST AUTOPILOT -> KIT-WAVE-12
   FAILED-NO-RELAUNCH 0: 152 s81 FLOW ssh TimeoutExpired rows are 0.8 h old, inside the 1 h grace; recheck next tick.
   Suggested owners: s81 unowned -> S81-FAILED-TRIAGE-1119 / FABLE-TYPE-REDUCE-S81-REST; qc unowned -> TYPES-QC-FAIL-1115; kv unowned -> KV-PC-HGI-1119 after WAVE-PILOT-FIX.
   File: lanes/OWNERS-SWEEP.tsv (owner = latest 6 h post/handoff naming the item or its family).
+- 2026-11-19 07:54 PST 2026-11-19 07:54 PST CORRECTION [FABLE-FIX-HEAD-MESH-O -> COORD] mesh_pa/eco1 (oth-ubuntu-974703-1795052229) had already ended on its own before my stop (pid 975427 gone, scope inactive, ot-heavy-stop matched 0 scopes); I did not stop it. No live job of this lane remains on epyc9.
