@@ -1,0 +1,138 @@
+{
+ "schema": "fable-fix-s81-lepe.d8i_rows.v1",
+ "lane": "FABLE-FIX-S81-LEPE",
+ "for": "S81-DIE-R3 (D8i)",
+ "types": [
+  "dsdv_slice_lepe_mu_LP__t2",
+  "dsdv_slice_lepe_nh_mus_LP__t1",
+  "dsdv_slice_lepw_mu_LP__t2",
+  "dsdv_slice_lepw_mus_LP__t2"
+ ],
+ "status": "TWO ROWS for D8i, candidates: RTL of row A benched and on main; neither row has a kit; die G0 vs control NOT run by this lane (apply-first step on the die side).",
+ "row_A_ring_out_relay": {
+  "what": "+1 registered stage on the lep ring output (ri with mu_rt)",
+  "switch": "+define+OT_S81SL_LEP_RIP=1 on the lep core of all four types (main >= 3367432685d, both lep copies); default 0",
+  "bind_K": "+1 on the lep ring-out lane (the ri bus of the lep instance, with mu_rt) of each of the four types; no other lane",
+  "why": "mu full form post-CTS: RX SRAM read word -> select -> rid 1,023 um, 1,278 ps data (4 logic cells + 13 buffers), TT -530; 342 of the 400 worst clk ends are reach, 0 logic depth",
+  "proof": "run_lep_hab_bench ab/pab/hab (CRP 2, WREP 5, group assert) + run_lep_mu_bench regr: every gate PASS at RIP 0 and RIP 1, 12 PASS runs each, 4 mutants still FAIL; latency-user identity holds because the reference top shares the core",
+  "limit": "rid then sits between its sources: pair-A and pair-B rx memories are ~430-700 um apart for the low half of the word, so about 215-350 um per leg expected; not measured. Apply together with OT_S81SL_LEP_CRP=2 and OT_S81SL_LEP_WREP=5."
+ },
+ "row_B_land_reset": {
+  "what": "land reset: synchroniser at the land centroid + relay flops on its source",
+  "cycles": "reset release of the land block +N (N = relay count per type below); reset-only, no data lane K",
+  "wiring": "bound RTL: u_u_land.rst_n is lepk_i0_q[0] (bit 0 of the registered E-face lepk_i0 bus); insert N relay flops between lepk_i0_q[0] and u_u_land.rst_n at relay_sites, and site u_u_land.u_rstr (ot_rst_relay, 3 flops) at land_centroid. Mechanism: an internal_stations entry on that 1-bit conn if the bind accepts a 1-bit reset conn, else a kit_rtl_post relay.",
+  "basis": "sites = equal Manhattan steps from the lepk_i0 E-face window start to the centroid of the 5 land SRAMs in the plan (COORD: plan geometry); mu kit measured the same thing: synchroniser at (1433,11), 2,270 land registers centred (429,345), 62 ends to -520 ps",
+  "per_type": {
+   "dsdv_slice_lepe_mu_LP__t2": {
+    "src": [
+     1442.9,
+     6.1
+    ],
+    "land_centroid": [
+     349.8,
+     355.8
+    ],
+    "manhattan": 1443,
+    "legs": 4,
+    "leg_um": 361,
+    "relay_sites": [
+     [
+      1169.6,
+      93.6
+     ],
+     [
+      896.3,
+      181.0
+     ],
+     [
+      623.1,
+      268.4
+     ]
+    ]
+   },
+   "dsdv_slice_lepe_nh_mus_LP__t1": {
+    "src": [
+     1442.9,
+     6.1
+    ],
+    "land_centroid": [
+     318.7,
+     818.9
+    ],
+    "manhattan": 1937,
+    "legs": 5,
+    "leg_um": 387,
+    "relay_sites": [
+     [
+      1218.0,
+      168.7
+     ],
+     [
+      993.2,
+      331.2
+     ],
+     [
+      768.4,
+      493.8
+     ],
+     [
+      543.5,
+      656.3
+     ]
+    ]
+   },
+   "dsdv_slice_lepw_mu_LP__t2": {
+    "src": [
+     1442.9,
+     6.1
+    ],
+    "land_centroid": [
+     349.8,
+     355.8
+    ],
+    "manhattan": 1443,
+    "legs": 4,
+    "leg_um": 361,
+    "relay_sites": [
+     [
+      1169.6,
+      93.6
+     ],
+     [
+      896.3,
+      181.0
+     ],
+     [
+      623.1,
+      268.4
+     ]
+    ]
+   },
+   "dsdv_slice_lepw_mus_LP__t2": {
+    "src": [
+     1442.9,
+     596.2
+    ],
+    "land_centroid": [
+     937.3,
+     884.5
+    ],
+    "manhattan": 794,
+    "legs": 3,
+    "leg_um": 361,
+    "relay_sites": [
+     [
+      1210.2,
+      724.0
+     ],
+     [
+      1075.0,
+      771.0
+     ]
+    ],
+    "note": "straight-line site fell inside tx bank g_tx[0] bank[4]; two sites in the free channels x 1202-1218 and y 764-778 instead: legs 361 / 182 / 251 um"
+   }
+  },
+  "limit": "sites checked against plan macro boxes only, not rows / PG / ft channels; whether lepk_i0[0] may be relayed as a reset (it is a bus bit in the bind) is a bind question I have not checked; not built in any kit."
+ }
+}
