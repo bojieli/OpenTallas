@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; coordinator update 2026-11-01 18:00 PST)
 
-2026-11-19 01:2x PST: signed any plan 450 | current 401 (flat since 17:3x). QC N4.3 APPLIED 01:03. S81 D8f still replicating, D8g next. Proof builds: S81 leaf fold fix CTS -527 -> -230 (GRT pending); col_h9_r1 stations placed (CTS ~02:15); glue record port 25 -> 13 levels on main + 6 private kits (GRT ~07:00); QC sle_ctl/st_b p1/p2. Fable limit reset ~01:00; 7 Fable lanes incl new KV-PV (pv -2024/-1703 TT post-CTS). PRECHECK-1119 + type-reduction census started (owner yes).
+2026-11-19 02:1x PST: signed any plan 456 | current 401 | backlog (deferred re-sign) s81 0, head 3, qc 2, kv 0 (hbm 1; retired-plan 49). S81: D8f replicated, verifying before apply; D8g and D8h (lepe/seqhost/lepw interior taps, r713 caps) queued behind it. Proofs: leaf HPWL gate fix on main; tt_ctlm resynth 24->16 levels proven equivalent, plus fence kits; glue u_record -73 pre-CTS. QC: N4.3 and N43G applied; st_a and coll_core proofs. KV: D25c applied, bind about 04:50. Fleet: PLAN_BYPASS leak closed (f219fca23ec); proof priority live.
 Plans 11:36: count 152 flat (S81 50/58 + 4/205 types, HEAD 4/4 + 12/25, QC 16/19, KV 26/32, HBM 40/103). Merged I118-I126 since 10:40: QC coll_core fold + ring ff class (tag e-qc), KV PV taps (tag b-kv), HEAD l48ue (tag a-head), wave prune + resume fixes. 9 core gaps from CORE-FORMS-2 all owned. intel2 scratch2 142 after 49 GB move.
 
 <!-- BREAKDOWN BEGIN -->
