@@ -27,3 +27,4 @@
   QC FAILED: sle_su_l1 x2, slw_su_l1; STALE slw_stm/sle_hc1; UNOWNED sle_fe_v1, slw_fe_v2.
   NEW: KV 6 DEAD-OWNER, owner KV-D23-COMPOSE last post 14:48 (kv3_hub_C/Wo, kv3_pv_v1n/v2n/v3/v3n).
   Revived DEAD: none (0 DEAD on S81/QC).
+- 2026-11-18 18:50 PST 18:50 vs 17:50 (U/F/S/D): S81 0/0/0/0 (was 6/11/11/0), QC 0/6/9/0 (was 2/5/9/0), KV 1/6+1/0/0 (was 1/2/0/6), HEAD 0. S81 leaf rows mapped to owners. QC STALE 9 are owned rows (FE/HC2/STM). QC su_l1 x4 FAILED-NO-RELAUNCH under PLAN-R3/FAIL-ROUTE-1115. KV hub/pv 7 FAILED-NO-RELAUNCH, kv3_hub_Wi has no owner row.
