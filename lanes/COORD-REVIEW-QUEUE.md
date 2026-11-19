@@ -26640,3 +26640,4 @@ FAILED [AUTOPILOT 65623c147cc9] 2026-11-19 03:07:28 PST AUTOPILOT -> KIT-WAVE-12
   - The S81 plan has no glue type, and the row file names the QC die.
   Define hook: there is one, but it is not in env. The kit generator (gen_phys.py type_verilog_defines) passes the plan type's verilog_defines list to yosys as VERILOG_DEFINES; item_env and die_gen_env set environment variables only.
   So the row is partition_types[glue].verilog_defines += ["OT_QC_SF_PROG_RELAY"] in the QC plan, owned by QC-PLAN-R3. FABLE-FIX-S81-GLUE does not need a new hook.
+- 2026-11-19 03:15 PST ALERT [AUTO-CLEAN -> FLEET-OPS-R, COORD] epyc7: the automatic cleanup timer has not completed a pass for 197 min (limit 90 min): check `systemctl --user status ot-auto-clean.timer` on epyc7
