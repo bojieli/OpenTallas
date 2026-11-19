@@ -12324,6 +12324,8 @@ def stale_cancel(rec, d):
 def so_same_input(cfg, die, r, rec):
     """under stops_off a failed row relaunches on its own (no retry key, no NEEDS-LANE) unless the full input hash equals the hash its failed attempt launched on.  An attempt with no
     stored hash (launched before the hash existed) relaunches once; its new attempt then records the hash"""
+    if is_infra_fail(rec):                             # COORD 11-19: a host kill (make Error 241/247, rc 137/143) is no design result, whatever class was stored: retries free
+        return False
     ip = rec.get("input_parts") or {}
     if ip.get("noenv"):                                # COORD class C / FLOW-1000 (2): the failing stage's executed files and env are compared, never the die-wide env or the whole tree
         if ip.get("v") != 2:
@@ -15536,6 +15538,17 @@ def same_input_records(a, b):
     return stage_env(ia.get("env"), stage, why) == stage_env(ib.get("env"), stage, why)
 
 
+INFRA_FAIL_RE = re.compile(r"\] Error 24[17]\b|\bearlyoom\b|\brc[ =]+1(?:37|43)\b|\bexit -(?:9|15)\b|\bexit 14[3]\b|\bterminated by signal (?:9|15)\b|INFRA_KILLED|\bOOM\b.*host")
+
+
+def is_infra_fail(r):
+    """COORD 11-19 (S81: 20 retry rows of make Error 247/241 host kills, stored class FLOW from before the classifier fix): a failure is INFRA when its stored class says so
+    OR its recorded reason / evidence matches the CURRENT infra signatures (host kill: make Error 241/247, rc 137/143, earlyoom), whatever class was stored then"""
+    if str(r.get("class") or "") == "INFRA" or str(r.get("stage_class") or "") == "infra":
+        return True
+    return bool(INFRA_FAIL_RE.search(str(r.get("reason") or "") + " " + str(r.get("evidence_tail") or "")))
+
+
 def retry_key_decision(st, die, item, n):
     """WF-1 11-14 (COORD: KW-FIX-23's first-seen epoch silently dropped item@N when attempt N launched after the key was first seen,
     and 'first seen' lingers for days: lepe@2, bk_sel@4 after 36 h).  Rule: item@N releases exactly once, when attempt N is the
@@ -15567,8 +15580,8 @@ def retry_key_decision(st, die, item, n):
     # FABLE-FLOW-0555 C: an attempt that ended CANCELLED (or INFRA) is no new input: it is compared against the last FAILED attempt (cbn_q00 reached attempt 18
     # on one gen error because attempt 17 ended CANCELLED and "released once" let 18 launch)
     cancelled = last.get("status") == "CANCELLED" or (last.get("status") == "ENQUEUED" and last.get("q_status") == "CANCELLED")
-    if ended and ((last.get("status") == "FAIL" and str(last.get("class") or "") != "INFRA") or cancelled):
-        prev = [r for r in recs if r is not last and r.get("status") == "FAIL" and str(r.get("class") or "") != "INFRA" and started(r) < started(last) and r.get("input_parts")]
+    if ended and ((last.get("status") == "FAIL" and not is_infra_fail(last)) or cancelled):
+        prev = [r for r in recs if r is not last and r.get("status") == "FAIL" and not is_infra_fail(r) and started(r) < started(last) and r.get("input_parts")]
         if prev and last.get("input_parts") and same_input_records(max(prev, key=started), last):
             return False, (f"FABLE-FLOW-0358 C: attempt {nn} {'was cancelled on' if cancelled else 'failed on'} the SAME inputs as the last failed attempt {max(prev, key=started).get('attempt')} "
                            f"({last.get('stage')}); {item}@{nn} stays blocked until the stage's input hash changes")

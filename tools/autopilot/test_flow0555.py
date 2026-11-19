@@ -78,3 +78,22 @@ def test_cell_big_logged_once_per_item_per_day(tmp_path, monkeypatch):
     assert AP.cell_big_first_today("d", "t", today="2026-11-19") is False
     assert AP.cell_big_first_today("d", "u", today="2026-11-19") is True
     assert AP.cell_big_first_today("d", "t", today="2026-11-20") is True
+
+
+def test_host_kill_fail_with_stored_flow_class_is_infra_for_rule_c():
+    P = {"v": 2, "noenv": "N1", "env": {}, "fam": {"gen": "F"}, "stg": {"gen": "G"}}
+    a = _rec(5, "FAIL", 1, P, "FLOW")
+    b = _rec(6, "FAIL", 2, P, "FLOW")
+    st = {"items": {"a": a, "b": b}}
+    assert KW.retry_key_decision(st, "d", "i", "6")[0] is False             # same inputs, real flow fail: blocked
+    b["reason"] = "FAIL_route make[1]: *** [Makefile:499: do-3_5_route] Error 247"
+    assert KW.is_infra_fail(b) and KW.retry_key_decision(st, "d", "i", "6")[0] is True
+    b["reason"] = "x rc 137 killed"
+    assert KW.retry_key_decision(st, "d", "i", "6")[0] is True
+    b["reason"] = "TIMING setup -300"
+    assert KW.retry_key_decision(st, "d", "i", "6")[0] is False
+
+
+def test_so_same_input_never_blocks_a_host_kill_fail():
+    rec = {"status": "FAIL", "class": "FLOW", "reason": "make Error 247", "input_parts": {"v": 2, "noenv": "N", "env": {}, "fam": {}, "stg": {}}}
+    assert KW.so_same_input({"dies": {"d": {}}}, "d", {"item": "i"}, rec) is False
