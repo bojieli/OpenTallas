@@ -2790,18 +2790,19 @@ SEAM_HOLD_MIN_PS = 25.0
 
 
 def seam_ps_for(sh, tn):
-    """clock.seam_hold.by_type {fnmatch pattern: seam_ps} (first matching pattern in plan order) for type tn, else the die seam_ps"""
-    import fnmatch
+    """clock.seam_hold.per_type_ps {type: seam_ps}: exact type name, else the VARIANT-stripped name (AUTO-EXPORT / re-sign suffixes), else the die seam_ps"""
+    import re
+    pt = sh.get("per_type_ps") or {}
     if tn is not None:
-        for pat, v in (sh.get("by_type") or {}).items():
-            if fnmatch.fnmatchcase(str(tn), pat):
-                return float(v)
+        for k in (str(tn), re.sub(r"__(a\d+_\d{4}|legalrows_\d+)$", "", str(tn))):
+            if k in pt:
+                return float(pt[k])
     return float(sh["seam_ps"])
 
 
 def seam_hold(P, tn=None):
     """{in_min_ps, out_min_ps, seam_ps, basis}: the kit min input / output delays vs vclk (ps) of the seam hold contract.  tn: the RECEIVING type; its
-    seam_ps may be overridden by clock.seam_hold.by_type (FABLE-PD-STRUCT-1840: QC hc1 160 ps while the die seam is 110)."""
+    seam_ps may be overridden by clock.seam_hold.per_type_ps (FABLE-PD-STRUCT-1840: QC hc1 160 ps while the die seam is 110)."""
     sh = P.clock.get("seam_hold")
     if not sh:
         tol = float(P.clock["insertion_tol_ps"])
