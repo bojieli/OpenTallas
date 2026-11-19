@@ -70,3 +70,4 @@
   FAILED-NO-RELAUNCH 0: 152 s81 FLOW ssh TimeoutExpired rows are 0.8 h old, inside the 1 h grace; recheck next tick.
   Suggested owners: s81 unowned -> S81-FAILED-TRIAGE-1119 / FABLE-TYPE-REDUCE-S81-REST; qc unowned -> TYPES-QC-FAIL-1115; kv unowned -> KV-PC-HGI-1119 after WAVE-PILOT-FIX.
   File: lanes/OWNERS-SWEEP.tsv (owner = latest 6 h post/handoff naming the item or its family).
+- 2026-11-19 07:54 PST OWNERS-SWEEP-09xx CORRECTION: exact counts UNOWNED 95 (s81 71, qc 14, kv 10), DEAD-OWNER 65 (s81 37, qc 23, kv 5), STALE s81 49, head 1; supersedes the totals in the previous post.
