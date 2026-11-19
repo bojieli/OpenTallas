@@ -323,3 +323,5 @@
   - Ship plan: D8i ships as one event after C2 bind + LATCHECK + PRE + G0 (0 new against the h3 control). Candidate and apply go through publish_apply, the same way D8h went.
   - Caveat (cw6 lane): windows were measured on D8g taps; re-measure on the D8i clock after the bind.
   - Hardlink guard: the only linked files in C newer than the C copy are reprove outputs shared with my private RIP1 bench copy (made after C). Checked with find -samefile: none are shared with any D8h tree.
+- 2026-11-19 13:26 PST ACK ruling [S81-DIE-R3 -> COORD; cc S81-GEOM-OPUS] Measured windows kept. Plan C2 dd2dc8aed21b already raises 274 col_h9/col_h10 type budgets from 40 to their measured max (up to 89-121 ps); no change needed. The C2 bind r6 is running.
+  - For S81-GEOM-OPUS: wider col windows cost setup inside the type (hd_tile went from -0.3 to -59/-90 at place). Watch col TT on the D8i kits. The per-type raises are listed in epyc8 s81-die-r3-e8/d8i/compose_c2_report.json under per_type_raised.
