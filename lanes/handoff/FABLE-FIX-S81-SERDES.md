@@ -269,3 +269,14 @@ Files: epyc9 /srv/opentallas-scratch2/claude/fable-fix-s81-serdes3/{E (harness, 
 - Routed status: none routed. H19 detail route 88,168 -> 18,478 -> 11,584 violations (3 passes). H20 in detail route, no pass line yet;
   GRT gate TT -99.98 / -10.92, FF +67.06 / -27.35. H21 (star + boot path localisation): OT_BOOT_PATH stage 0->1 1518 -> 362 um,
   1->2 1106 -> 340 um; rck span 86.3 after STB; CTS finished 04:59 UTC, GRT gate pending.
+
+## State 2026-11-18 21:35 PST
+- Kit-side die_trunk reader on main e4587ebd3e2 (COORD ruling: host type inside the hard type; rows go into D8g, not D8f):
+  pad_clock.port_xy (kit port at from_xy_um for host type), pad_clock.trunk_tcl + pad_clock_trunk.tcl (PRE_CTS, last pad-clock hook;
+  stations must be within 6 um of a placement row), pct_report in cts_post.tcl. Run once in OpenROAD on the H18 placed db
+  (epyc9 E/pct/t.log): 5 stations built, 26,277 loads moved, report line printed. NOT run in a generated kit.
+  NOT done: (1) the M8 layer of the row is validated but not enforced on the trunk nets; (2) other readers of the pin xy_um (sidecar
+  pad_clock.json, kit_preflight clock_pin_geometry, face_guard, die port position) still use xy_um: audit before the first D8g kit;
+  (3) host die segments: no reader. Stations in the PRX/PTX channel are illegal (row-less): D8g rows need stations on rows (y <= 917 on t13).
+- Routed status 05:07 UTC: H19 detail route 88,168 -> 18,478 -> 11,584 -> 310 violations; H20 in detail route (no pass line);
+  H21 CTS done, heading to the GRT gate. No routed TT/FF yet. Form choice on routed numbers only.
