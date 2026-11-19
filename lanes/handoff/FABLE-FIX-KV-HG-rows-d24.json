@@ -360,5 +360,11 @@
    }
   },
   "verdict": "W1 PROVEN: the landing strip y 1000-1200 falls from about 13,000-15,000 to 17. Not routable yet: the remaining 41,887 is the chain route, x 200-400 y 600-800 (W3 at x 340) and x 0-200 y 400-800 (tail t2 strip). D25e must carry the west-channel chain + t2 split (section H) and the raw-branch regen; then repeat this kit."
+ },
+ "J_kst_site_keys": {
+  "cause": "ot_qkh_head_kst.sv: generate if (D==0) begin:g_w ... else if (D==1) begin:g_r. The else-if is an unnamed nested generate, so Yosys names the flops <inst>.genblk1.g_r.r[b]; the plan relay_sites keys say <inst>.g_r.r[b] and rs_place_all matches exact names: 1,904 of 1,904 unmatched on kv3_hgi_v1 (k7 1_synth_odb.v: u_bound.u_head2_g_t_10_u_kst0.genblk1.g_r.r[0..33]).",
+  "row": "relay_sites keys of every hg / hgi type: u_head<h>_g_t_<t>_u_kst<j>.g_r.r[<b>] -> u_head<h>_g_t_<t>_u_kst<j>.genblk1.g_r.r[<b>] (same sites). Pure key rename in the kst rows writer; kit-only (gen_phys), no bind effect.",
+  "alternative_not_taken": "flatten the generate in the RTL (case form with named blocks) so the name is g_r.r: touches the e0 core RTL that is being re-hardened; do not do it now.",
+  "check": "OT_RELAY_SITES placed N flops FIRM (plan keys unmatched: 0 of 1904) in 3_3_place_gp.log of the next hgi_v1 kit"
  }
 }
