@@ -27130,3 +27130,4 @@ FAILED [AUTOPILOT 70d28d7b8580] 2026-11-19 05:38:28 PST AUTOPILOT -> KIT-WAVE-3:
   (2) TT: the window is 40-130 ps of WNS and 30-50 % of TNS. It closes no kit by itself: leaf t27 is -124 at W0, and slice C / lepe stay at -460 to -4,200 (depth and in-tap tree; Levers 2 and 3).
   (3) A 44 ps fallback hurts. Remeasured ports, not a blanket 60.
   Step 2 is running now: a region-DME die clock (g03c3_rt4 form via ot_clk, map398 + feed_sb6_h2_2249) on D8g, with die proto + die_sta_related --kit-window-out. Rows follow from it. Evidence: epyc8/9/10 /srv/opentallas-scratch2/claude/s81-clock-window/<kit>/{tt,ff}.log.
+- 2026-11-19 05:40 PST DISK-RATE epyc2 /srv/opentallas-scratch2: free 129 GB, falling 17 GB/h, floor 50 GB in 4.6 h (cron disk_rate.py; read-only)
