@@ -2,6 +2,23 @@
 
 Work dir epyc7 /srv/opentallas-scratch2/claude/kv-d23-compose (lane clone wt/ = sparse main worktree). Hub logs intel2 ~/tmp/kvd23c.
 
+## Status 2026-11-19 09:55Z (read this first; supersedes 07:30Z)
+LIVE = KV-D25c, applied on G0 per r712 at 09:50Z. Tree kw45/src_kv_pin_eb1e73448bd0_hg10_4a40f1db_tb3c4d97_d25c, manifest a42f7c77f43b,
+plan 4a40f1dbe86d, tools b3c4d97 (rt/current). Receipt lanes/handoff/qwen_kvsys_atomic_apply_1795081781159010419.json.
+Gate of record: W8/d25cg0gate, G0 0 errors / 2446 warnings. Candidate W8/cand_d25c.json (mk_candidate_g0.py), driver intel2 ~/tmp/kvd23c/apply_d25.sh TAG EVENT.
+- Live bind_of_record is EMPTY. Post-apply bind runs on the linked copy kw45/bindcopy_kv_d25c (.link-base = live tree; mk_bindcopy.sh).
+  Gate W8/d25cbindgate (gate_bind_d25.sh): fresh bind.py elab, because the kst2 netlist makes the cached bind9 elab wrong (first try:
+  CompositionError missing exact member). Started 09:53Z, about 3 h.
+  When green: make a linked child tree (cp -al live + bind files in bind_of_record, .link-base = live), seal, replicate, apply as the
+  bind-carrying event, then relaunch the KV kits.
+- D25d: sealed, not applied. kw45/src_kv_pin_eb1e73448bd0_hg10_2030743e_tb3c4d97_d25d, manifest f348a8425747, plan 2030743e51da.
+  G0 PASS, 0 errors / 2456 warnings. Bind on kw45/bindcopy_kv_d25d (gate W8/d25dbindgate).
+  Next: private hgi_v1 kit to GRT TT via kit_wave item_inputs {kv3_hgi_v1__cl141fc26e: src, src_manifest_hash, plan,
+  kit_rtl{bind_out = bindcopy bind_of_record, asbuilt}} + item_env OT_KV_HEAD_KST=2 (kit_wave_edit.py).
+- D25e inputs: sink_bins regenerated from the newest placed kits (helper writes W8/d25e_in/sink_bins/ + REPORT.json),
+  FABLE-FIX-KV-PV tap split rows, K6 (hgi i_ectl +1 stage; pad names from the D25d bind).
+- Leftovers to delete once older than live (ot-delete): kw45/broken_* and kw45/bindcopy_kv_* after use.
+
 ## Status 2026-11-19 07:30Z (read this first; supersedes 05:05Z)
 LIVE = KV-D24 (d24c, manifest b951ed387f8c, plan 2862ed5a71bc). W8 = epyc8 /srv/opentallas-scratch2/claude/kv-d23-compose8.
 - D25b red at PRE: SCHEMA-UNKNOWN-KEY. I had added note keys to relay_polylines and relay_sites_note. Not a design finding.
