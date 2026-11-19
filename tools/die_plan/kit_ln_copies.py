@@ -324,6 +324,10 @@ def copy_relay(btxt, cfg):
                 else:
                     cur += ch
             parts.append(cur)
+            if m.group(2) is not None and m.group(2) != "0" or (m.group(2) == "0" and len(parts) > 1):
+                # S81-TAIL-1118: bus[i] of a concatenation is its i-th part from the right (all single-bit parts)
+                i = int(m.group(2))
+                return resolve(parts[-1 - i], depth + 1) if i < len(parts) else None
             ks = {resolve(q, depth + 1) for q in parts}
             return ks.pop() if len(ks) == 1 else None
         if m.group(2) not in (None, "0") and not re.fullmatch(r"\w+\[\d+\]", rhs):
@@ -334,7 +338,7 @@ def copy_relay(btxt, cfg):
     lanes = sorted(((int(m.group(4)), m.group(3)) for m in lane_rx.finditer(btxt)))
     if not lanes:
         raise LnCopyError(f"no lane instance matches {cfg['lane_re']}")
-    bits, edits = set(), []
+    bits, edits, lane_x = set(), [], []
     for idx, (l, name) in enumerate(lanes):
         ls, le, lmod, lpar, lc = _instance(btxt, name)
         x = lc.get("rst_n")
@@ -342,7 +346,14 @@ def copy_relay(btxt, cfg):
         if k is None:
             raise LnCopyError(f"{name}.rst_n = {x!r} is not a bit of {rw}")
         bits.add(k)
+        lane_x.append(x)
         edits.append((ls, le, name, x, R + idx, l))
+    if len(bits) == len(lanes) and len(lanes) > 1 and R > len(lanes):
+        # S81-TAIL-1118 (t56, XR leaf: ot_s81sl_vp RREG=20, rs_ln = rsv[19:4]): the RTL already gives every lane its own
+        # relay bit, so there is nothing to copy; the kit keeps the bound as is (0 cycles changed)
+        return btxt, dict(relay=inst, regions_original=R, regions=R, already_per_lane=True,
+                          lanes=[dict(lane=l, instance=name, rst_n=f"{rw}[{resolve(x)}]")
+                                 for (l, name), x in zip(lanes, lane_x)])
     if len(bits) != 1:
         raise LnCopyError(f"lanes use relay bits {sorted(bits)}; want one shared bit")
     n = len(lanes)

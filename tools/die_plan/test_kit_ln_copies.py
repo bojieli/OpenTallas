@@ -217,3 +217,13 @@ def test_relay_lane_reset_through_replicated_bus(tmp_path):
     bad = b.replace("{w_u_vp_2_Y[0], w_u_vp_2_Y[0]}", "{w_u_vp_2_Y[0], rst_in}")
     with pytest.raises(K.LnCopyError):
         K.apply(bad, True, _dir(tmp_path))
+
+
+def test_relay_lanes_already_per_lane_is_noop(tmp_path):
+    """S81-TAIL-1118: XR leaves (t56) already drive each lane from its own relay bit: no copy, bound unchanged"""
+    b = BOUND.replace("wire [1:0] w_u_vp_u_rr_rst_n;", "wire [3:0] w_u_vp_u_rr_rst_n;").replace(".REGIONS(2)", ".REGIONS(4)")
+    b = b.replace("    wire [0:0] w_u_vp_2_Y;", "    wire [0:0] w_u_vp_2_Y;\n    wire [1:0] w_u_vp_4_Y;\n    assign w_u_vp_4_Y = {w_u_vp_u_rr_rst_n[3], w_u_vp_u_rr_rst_n[2]};")
+    b = b.replace(".rst_n(w_u_vp_2_Y[0])", ".rst_n(w_u_vp_4_Y[1])", 1).replace(".rst_n(w_u_vp_2_Y[0])", ".rst_n(w_u_vp_4_Y[0])", 1)
+    t, m, r = K.apply(b, True, _dir(tmp_path))
+    assert r["relay"]["already_per_lane"] and r["relay"]["regions"] == 4
+    assert ".rst_n(w_u_vp_4_Y[1])" in t
