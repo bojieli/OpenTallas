@@ -42,3 +42,4 @@
   S81 UNCLASSIFIED 2: svc_hi_dsdv_svc_pvso_entry t1 (S81-TAIL-1118) and t2 (FAIL-ROUTE-1115), owners alive, class other.
   No DEAD-OWNER, no STALE, no failed-no-relaunch flags.
   Rows: lanes/OWNERS-SWEEP.tsv
+- 2026-11-18 23:51 PST 23:50 sweep: 508 unsigned rows S81/HEAD/QC/KV, 487 unflagged. HEAD, QC, KV: 0 flags. S81: 13 UNOWNED all s81sl_leaf__t* global_place FAILED (family covered by FABLE-FIX-S81-LEAF, so no new lane unless it lacks them). S81 FAILED-NO-RELAUNCH 11 (eng__t1, gunit__t1, leaf t40/t52/t53/t54/t61/t75...). S81 UNCLASSIFIED 2: dsdv_slice_c1x_C__t9, s81sl_leaf__t56. No DEAD-OWNER, no STALE.
