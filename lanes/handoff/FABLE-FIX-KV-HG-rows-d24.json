@@ -278,5 +278,41 @@
    "fix_now": "W3b: polyline x 340 -> 310 (west side of the middle channel, 38-45 um off the ft2 column): relay_polylines [{group_re: u_hst2_g$, polyline_um: [[310.0, 950.4], [310.0, 664.0]]}]",
    "fix_next": "tail site off the cl_ft2_i strip: a tail_um override (west channel (40, 618), below the landing core after W1) needs a relay_polylines key that does not exist yet, or better the 0-cycle split of hst<h>_t2 into one copy per front pair (channels y 233-337 and 898-1002) so that no 1,575-bit trunk enters the e2/e4 channel. Not proven: needs one kit. D25a can carry W2 + W3b + W5; the tail fix follows as D25b after a private kit."
   }
+ },
+ "H_k6_t2_split": {
+  "kit": "epyc8:/srv/opentallas-scratch2/claude/fable-fix-kv-hg3/k6/gen/kv3_hgi_v1__cl141fc26e (stopped after GRT iteration 5)",
+  "form": "k5 + polyline x 310 + u_hst2_t2 as two kept 1,063-bit copies: x2a (e0+e2) FIRM (310, 320), x2b (e4+e6) FIRM (310, 845); t1 = chain tail at (309.4, 582.4)",
+  "post_cts_tt": {
+   "before_repair": [
+    -10.29,
+    -20.74
+   ],
+   "after": [
+    -0.45,
+    -0.45
+   ],
+   "k5": [
+    -16.95,
+    0.46
+   ]
+  },
+  "grt_iter5": {
+   "overflow": 43904,
+   "west_x0_200_y400_1200": 15196,
+   "x0_400_y400_700": 4560,
+   "bins": {
+    "x0 y1000": 13054,
+    "x200 y600": 10851,
+    "x200 y800": 10175,
+    "x600 y600": 3231
+   },
+   "k5": {
+    "overflow": 45119,
+    "west": 28820
+   },
+   "k4_x0_400_y400_700": "about 12,000"
+  },
+  "verdict": "HALF: timing holds (inside -42) and the e2/e4 strip is relieved (12,000 -> 4,560; west band 28,820 -> 15,196, the rest of it is the W1 strip at y 1000-1200). But the total did not fall: 21,000 moved into the middle channel x 200-400, y 600-1000 (nets u_hst<h>_g ti_b, u_hst2_x2b, t1): a 94-um channel cannot carry the 1,575-bit g -> t1 trunk, the x2b cluster and the ft2 station column together.",
+  "row_for_D25d": "take the t2 split (0 cycles; generator form = asbuilt pad-tail-split style kept copies per front pair with relay_sites) but NOT the x 310 polyline for the whole chain. Chain route for the next proof: g and t1 back in the WEST channel (free below y 1097 once W1 has moved the landing core), x2a / x2b at the west ends of the e0/e2 and e4/e6 channels (about (40, 285) and (40, 950)). Unproven: needs the D25d-bound kit, where W1 exists."
  }
 }
