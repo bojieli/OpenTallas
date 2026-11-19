@@ -237,3 +237,12 @@
   - The HWIN consumer book re-derived from the bound transport ages (layer_prog hwin_bound_transport -> native_hwin_calendar.check_consumer_book).
   Then strict bind plus LATCHECK.
   Kits kit2/kit3 are still running on epyc7 (docker dpkit-seqhost__t1 about 2 h 15 in) with no GRT log yet. I am letting them run and will read the GRT TT when it lands.
+- 2026-11-19 06:17 PST SEEDED dies.s81.bound_trees (S81-DIE-R3), coord commit 45cca4c9c4a, pushed.
+  The entry is the D8f tree, not D8g: D8g has no green bind. Its strict bind aborts EMIT on the 18 u_bs0 types, which is why D8g2 exists.
+  D8f entry:
+  - src: kw45/src_s81_pin_3c913dbdfb23_d8f_1117_work (manifest f749d8b4fb33, present on all 6 gen hosts).
+  - plan: that tree's plan_h2_2249.json.
+  - kit_rtl.bind_out: kw45/src_s81_pin_3c913dbdfb23_d8f_1117_work_bind_1119024528. This is the green D8f post-apply bind (elab 0, bind 0, LATCHECK 873/873 PASS), sealed read-only and rsynced to epyc8 / epyc2 / epyc7 / epyc9 / epyc10 / intel1.
+  - asbuilt: the tree's own asbuilt_run.json.
+  Checked before the seed: kit_topology.bind_matches of that bind against the D8f plan is stale 0 of 395 types, with both reset scopes (unset and OT_NATIVE_RESET_SCOPE=selected).
+  So BIND-STALE rows should launch on D8f from the next tick. When D8g2's bind is green, its apply moves the die forward and D8g2 becomes the live bind.
