@@ -2318,6 +2318,10 @@
         "type": "integer",
         "minimum": 1
        },
+       "tap_span_um": {
+        "type": "number",
+        "exclusiveMinimum": 0
+       },
        "tap_spill_um": {
         "type": "number",
         "exclusiveMinimum": 0
