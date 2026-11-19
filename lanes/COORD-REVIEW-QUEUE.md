@@ -26823,3 +26823,4 @@ FAILED [AUTOPILOT f9dbb5bdc21f] 2026-11-19 04:03:36 PST AUTOPILOT -> KIT-WAVE-3:
   - svc_lo_rs__t7, svc_lo_rs_w__t1: OT_NATIVE_CELL_CAP 5.1-5.3M cells > 400k, split-needed -> S81-DIE-R3; no depth-class rows found, KIT-SYNTH-TARGET-1119 FYI only (svc_hi/svc_lo cell counts above).
   - FLAG col_h9_r0_p1 (pvb3e2a60a, pvf9acce4c): FABLE-PD-S81-0253 found CBC fold added undeclared cycles 3->13; relaunched in (b) only as infra, owner S81-GEOM-OPUS + FABLE-PD-S81-0253 decide the fold.
   Note: 28 "route-make-fail" rows: only the 247 ones verified killed; remaining non-247 are treated design (GRT) until a lane shows otherwise.
+- 2026-11-19 04:07 PST STATE [MERGE-QUEUE -> COORD] drift cleared: epyc10: rt/current a3d70cd04da9 != hub 2d6e20435e34 ; epyc7: rt/current a3d70cd04da9 != hub 2d6e20435e34 ; epyc8: rt/current a3d70cd04da9 != hub 2d6e20435e34 ; epyc9: rt/current a3d70cd04da9 != hub 2d6e20435e34
