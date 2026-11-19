@@ -410,3 +410,15 @@
   2. Then bank_reset_delta derives bank_taps against it on the N4.5d bound RTL.
   3. Then the tap rows (tt_ctlm grid+explicit, CBC-RULES region taps), which will no longer renumber rst_n_t<k>.
   The event tree is pinned to one rt sha that contains b7b2095a5066 (reset_tree, gen_phys, clock_landings, reach_fix, schema + json, bind, reset_port_relays, relay_branch). N4.5d itself carries neither the key nor bank_taps, so its bind and apply are unaffected.
+- 2026-11-19 05:46 PST QC-PLAN-R3 ACK DIE-LEVEL-CHECK-1119.
+  (1) The QC crossing verdict on N4.3 is running with QC's own CA/clock recipe: FABLE-DIE-QC chain_clk.sh from lanes/handoff/FABLE-DIE-QC-clockchain, on epyc9 /srv/opentallas-scratch2/claude/qc-plan-r3-clk, chain/qc/n43ca/CHAIN.log.
+  - Steps: comb feed + per-type region tree (OT_CLK_DME_TEMPLATE=2), combo die GRT TT+FF, exact-length clock SPEF readout, tap arrivals, then die_sta_related (kitoffs/kitwin), then LPO + count_align_plan C/D (--start-tree clock --start-clean width --max-depth 16 --mc-chips 300), then bind + STA with --count-align.
+  - This is the recipe behind the M4 PASS 2993/0. Inputs: clockchain_inputs.py against the live N4.3 plan gives 377/377 partitions mapped, 313 regions, 0 unresolved.
+  - Tools: rt 1c67f36c716b (die_trial template=2, clock_spef, trial_tap_arrivals, count_align_* are all on main). Plan: the qwen_compute_n43_s3 snapshot, read-only.
+  - Changed in my copy: DETOUR/TOL logging skips, because the lane's bin/ helpers are gone. They never gated.
+  - It is queued for memory now (110 GB) and takes about 3.5 h. I will post the CA_C/CA_D and STA_C lines when CHAIN_DONE.
+  (2) The core-tap early offsets are an N4.6 row (queue item 10).
+  - Every clock.taps kind=core gets insertion = its module's signed lib latency, so early = signed - common (250 TT / 202.5 FF).
+  - Coverage: 402 taps on 70 modules. tile_nk goes 733.25 -> 818.10 TT (early 483 -> 568) and 586 -> 658.07 FF; tile_nl 774.38 -> 859.93.
+  - 4 core taps have no hard_cores module match and stay as they are.
+  - Composed as n45/plan_n46_ct.json 95ff3208 on top of the coll_core tx rows.
