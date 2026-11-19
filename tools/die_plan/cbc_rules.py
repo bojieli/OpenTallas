@@ -17,7 +17,8 @@ AIM_MIN_BITS = 64               # ... checked on buses of at least this width
 SINK_BINS_STALE_FRAC = 0.10     # plan sink bins vs the newest kit sink count
 TAP_SKEW_PASS_PS = 60.0         # in-tap skew (sink latency spread within one tap): < 60 ps 58 of 111 kits closed
 TAP_SKEW_FAIL_PS = 100.0        # >= 100 ps: 0 of 23 closed (FABLE-CLOSURE-STRATEGY 11-19)
-TAP_SKEW_PS_PER_UM = 0.25       # estimate: skew ~ this x the spread (p98 - p2) of sink distance to the tap; UNCALIBRATED
+TAP_SKEW_PS_PER_UM = 0.065      # fit 11-19 (14 S81 kits, 413 taps): skew ~ 0.065 x (p98 - p2) + 44, R2 0.013 -- NOT predictive;
+                                # kit_scan posts the measured CTS skew (OT_TAP_INSERTION) instead
 
 
 def rules():

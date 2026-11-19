@@ -8,9 +8,10 @@ each scan once per kit, as soon as the stage it reads exists.  An estimator: it 
 FOLD    after synthesis (1_2_yosys.v): declared register bits vs netlist flops per class (fold_scan.py).
 PLACED  after placement (3_place.odb, in the ORFS container, placed_hops_or.py): every register -> register leg
         whose launch -> capture Manhattan distance exceeds CBC reach (405 um), grouped by register class pair; and the
-        in-tap skew estimate: registers assigned to the kit's taps (budget.json clock.taps_snapped, nearest tap, then
-        the 200-um cap rebalance of clock_taps.tcl), per tap skew ~ TAP_SKEW_PS_PER_UM x (p98 - p2 of the sink
-        distance to the tap).  CBC: < 60 ps 58 of 111 kits closed, >= 100 ps 0 of 23.
+        in-tap skew from placement geometry is computed but NOT posted (it does not predict the CTS number:
+        R2 <= 0.07 on 413 taps, skew_calib.py 11-19).
+CTS     after CTS (4_1_cts.log OT_TAP_INSERTION skew_ps, taps >= 100 sinks): the measured in-tap skew, worst tap and the
+        taps >= 100 ps.  CBC bands: < 60 ps 58 of 111 kits closed, >= 100 ps 0 of 23.
 State: ~/.local/state/precheck-kit-scan/<kit>.<scan>.json (a scan that wrote its state is not repeated).
 """
 import argparse
@@ -36,6 +37,7 @@ OT_HEAVY = "/srv/opentallas-scratch2/claude/rt/current/tools/fleet/ot-heavy"
 STATE = Path(os.path.expanduser("~/.local/state/precheck-kit-scan"))
 IMAGE = os.environ.get("OT_ORFS_IMAGE", "openroad/orfs:asap7lock")
 CLS = re.compile(r"\[\d+\]")
+TAPLINE = re.compile(r"OT_TAP_INSERTION tap=(\S+) sinks=(\d+) ins_ps=([-\d.]+) skew_ps=([-\d.]+)")
 
 
 def reg_class(name):
@@ -169,19 +171,35 @@ def scan_kit(kit, do_post=False, mem_gb=14):
             if s["legs_over"]:
                 msgs.append(f"PLACED {s['legs_over']} legs > {CBC.REACH_UM_PER_HOP:.0f} um: " + "; ".join(
                     f"{a} -> {b} x{n} (max {w} um)" for a, b, n, w, _ex in s["pairs"][:4]))
-            if s["skew_worst_ps"] is not None and s["skew_worst_ps"] >= CBC.TAP_SKEW_PASS_PS:
-                msgs.append(f"IN-TAP SKEW est. worst {s['skew_worst_ps']} ps; {len(s['taps_over_pass'])} taps >= 60 ps, "
-                            f"{len(s['taps_over_fail'])} >= 100 ps ({', '.join(s['taps_over_fail'][:6])}) [model uncalibrated]")
+            # the placement-geometry skew estimate is NOT posted: fitted 11-19 on 14 kits / 413 taps against the measured
+            # OT_TAP_INSERTION skew_ps, R2 <= 0.07 and 2-3 of 14 kits in the right 60 / 100 ps band (leaf median 121 ps vs
+            # col 37-52 ps at the same distance spread).  The measured CTS number (scan "cts" below) is posted instead.
         else:
             sp.write_text(json.dumps(dict(rc=rc)))
+    sc = STATE / f"{kit.name}.cts.json"
+    cts = sorted(Path(kit, "work/run/logs").glob("*/*/base/4_1_cts.log"))
+    if not sc.exists() and cts:
+        taps = {}
+        for m in TAPLINE.finditer(cts[0].read_text(errors="replace")):
+            taps[m.group(1)] = (int(m.group(2)), float(m.group(4)))
+        big = {t: v for t, v in taps.items() if v[0] >= 100}
+        if big:
+            worst = max(big.items(), key=lambda kv: kv[1][1])
+            over = sorted(t for t, v in big.items() if v[1] >= CBC.TAP_SKEW_FAIL_PS)
+            sc.write_text(json.dumps(dict(worst_tap=worst[0], worst_ps=worst[1][1], taps=len(big), over_fail=over,
+                                          over_pass=sorted(t for t, v in big.items() if v[1] >= CBC.TAP_SKEW_PASS_PS)), indent=1))
+            if worst[1][1] >= CBC.TAP_SKEW_PASS_PS:
+                msgs.append(f"CTS IN-TAP SKEW worst {worst[0]} {worst[1][1]:.0f} ps; {len(over)} of {len(big)} taps >= "
+                            f"{CBC.TAP_SKEW_FAIL_PS:.0f} ps (< 60 ps: 58 of 111 kits closed; >= 100 ps: 0 of 23)")
     if msgs:
         print(f"KIT-SCAN {tn} ({kit.name}): " + " | ".join(msgs))
-    if sf.exists() or sp.exists():
+    if sf.exists() or sp.exists() or sc.exists():
         f = json.loads(sf.read_text()) if sf.exists() else {}
         p = json.loads(sp.read_text()) if sp.exists() else {}
+        c = json.loads(sc.read_text()) if sc.exists() else {}
         return [dict(die=kit_die(kit), type=tn, kit=kit.name, fold=f.get("lost", 0), legs=p.get("legs_over"),
-                     worst_pair=(p.get("pairs") or [[None, None, 0, 0]])[0][:4], skew=p.get("skew_worst_ps"),
-                     skew60=len(p.get("taps_over_pass") or []), skew100=len(p.get("taps_over_fail") or []))] if msgs else []
+                     worst_pair=(p.get("pairs") or [[None, None, 0, 0]])[0][:4], skew=c.get("worst_ps"),
+                     skew60=len(c.get("over_pass") or []), skew100=len(c.get("over_fail") or []))] if msgs else []
     return []
 
 

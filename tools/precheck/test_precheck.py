@@ -200,7 +200,7 @@ def test_kit_scan_tap_assign_skew_and_class():
     regs = [(1.0, 0.0)] * 5 + [(90.0, 0.0)] * 3
     m = KS.assign_taps(taps, regs, 4, 200.0)
     assert len(m["clk"]) == 4 and len(m["clk_t1"]) == 4
-    assert KS.skew_estimate([0.0] * 10 + [400.0] * 10) == 100.0
+    assert KS.skew_estimate([0.0] * 10 + [400.0] * 10, 0.25) == 100.0
     assert KS.reg_class("g_u_lf0_u_vp_g_ln_3_u_cst_hi_gd_s_0_u_src_bdbec6ef94848d02f109_q\\[65\\]$_DFF_P_") == "g_u_lf0_u_vp_g_ln_N_u_cst_hi_gd_s_N_u_src_H_q"
     assert KS.kit_type("/x/ot_s81sl_leaf__t27-route-civil-redfish-2152390-1795068054") == "ot_s81sl_leaf__t27"
 
