@@ -34,6 +34,9 @@ import re
 import sys
 from pathlib import Path
 
+if str(Path(__file__).resolve().parent) not in sys.path:      # `python3 -I schema.py validate ...`: isolated mode drops the script
+    sys.path.append(str(Path(__file__).resolve().parent))      # directory, and the sibling imports (parent_id_straps) then fail
+
 SCHEMA_ID = "opentallas.die_plan.v1"
 DIE_PART = "@die"
 FACES = ("N", "S", "E", "W")

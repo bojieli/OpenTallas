@@ -146,6 +146,7 @@ def type_rows(plan, tn, text, repo=None, plan_dir=None, limit=LIMIT):
     router = Router(t)
     # one candidate per (partner pair, via): the longest bit
     rows, unfixed, seen, direct, srcdirect = {}, [], 0, {}, {}
+    nopin = 0
     leaf_cache, loops, flight, agroup, aligned = {}, [], [], defaultdict(list), []
 
     def leaf_rel(core):
@@ -179,6 +180,7 @@ def type_rows(plan, tn, text, repo=None, plan_dir=None, limit=LIMIT):
         if sk is None:
             sk = pins.setdefault(("tab", p["core"]), _pin_table(hcs[p["core"]], plan_dir))
         if not sp or not sk or src_port not in sp or p["port"] not in sk:
+            nopin += 1
             continue
         spts = list(sp[src_port].values())
         kpts = [sk[p["port"]][str(bit)] for lo, hi in p["bit_ranges"] for bit in range(lo, hi + 1) if str(bit) in sk[p["port"]]]
@@ -280,9 +282,25 @@ def type_rows(plan, tn, text, repo=None, plan_dir=None, limit=LIMIT):
         if r["D"] > 4:
             unfixed.append(dict(inst=r["inst"], reason=f"D={r['D']} > 4 (schema max)", path_um=r["path_um"]))
             r["D"] = 4
-    return out, dict(type=tn, paths_measured=seen, rows=len(out), extra_cycles=sum(r["D"] for r in out), unfixed=unfixed,
+    return out, dict(type=tn, paths_measured=seen, paths_traced=len(res["paths"]), skipped_no_pins=nopin, rows=len(out), extra_cycles=sum(r["D"] for r in out), unfixed=unfixed,
                      read_loops=loops, flight_measured=flight, aligned_groups=aligned,
                      inf_routes=sum(1 for v in router.cache.values() if v == float("inf")))
+
+
+def blind_types(plan, reports):
+    """RELAY-DEPTH-BLIND 11-19: types this run could not see.  A type with two or more hard cores that carry pin tables whose
+    report measured 0 paths although the trace returned none either (no --repo: child sources not found) or every traced
+    core-to-core path was dropped for a missing pin table (no --plan-dir).  A type whose paths were traced and measured, or
+    that has fewer than two such cores, is not blind."""
+    out = []
+    for r in reports:
+        t = plan["partition_types"].get(r.get("type"), {})
+        cores = [h for h in t.get("hard_cores", []) if h.get("pins") or h.get("pins_file")]
+        if r.get("error") or len(cores) < 2 or r.get("paths_measured"):
+            continue
+        if not r.get("paths_traced") or r.get("skipped_no_pins"):
+            out.append(r["type"])
+    return out
 
 
 def _is_relay_inst(text, inst):
@@ -378,6 +396,10 @@ def main(argv):
         reports.append(dict(rep, rows_data=rows))
     if a.out_plan:
         Path(a.out_plan).write_text(json.dumps(plan, indent=1))
+    blind = blind_types(plan, reports)
+    if blind:
+        print(f"RELAY-DEPTH-BLIND: {len(blind)} type(s) with hard cores measured 0 core-to-core paths (child sources or pin "
+              f"files not found: pass --repo and --plan-dir): {' '.join(blind[:6])}{' ...' if len(blind) > 6 else ''}", file=sys.stderr)
     if a.report:
         Path(a.report).write_text(json.dumps(reports, indent=1))
     for r in reports:
@@ -386,7 +408,7 @@ def main(argv):
         else:
             print(f"{r['type']}: {r['rows']} relay rows, +{r['extra_cycles']} stages, {r['paths_measured']} paths measured, "
                   f"unfixed {len(r['unfixed'])}{' (reused)' if r.get('reused') else ''}")
-    return 0
+    return 3 if blind and not any(r.get("paths_measured") for r in reports) else 0      # a run that saw nothing is not a clean run
 
 
 if __name__ == "__main__":

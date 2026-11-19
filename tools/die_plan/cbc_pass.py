@@ -239,7 +239,12 @@ def relay_rows(plan_path, type_re, bound, work, hop, fix=(), legs=()):
                     "--limit", hop, "--out-plan", br_plan, "--report", br_rep] + extra, Path(work) / "relay_branch.log")
     base = br_plan if rc1 == 0 and br_plan.is_file() else plan_path
     dp_rep = Path(work) / "relay_depth.json"
-    rc2 = run_tool([HERE / "relay_depth.py", base, type_re, bound, "--limit", hop, "--report", dp_rep],
+    # RELAY-DEPTH-BLIND 11-19 (FABLE-FIX-S81-LEAF): relay_depth read the branch-applied plan from the WORK dir with no --repo and
+    # no --plan-dir, so the trace found no child sources and no pin files and measured 0 paths on every type of every die
+    # (S81 D8g: 395 types, "0 relay rows"; 36 leaf types had a 203..980 um vsw -> vs core-to-core link with no station).
+    rc2 = run_tool([HERE / "relay_depth.py", base, type_re, bound, "--limit", hop, "--report", dp_rep,
+                    "--plan-dir", Path(plan_path).resolve().parent]
+                   + (["--repo", tree_root(plan_path)] if tree_root(plan_path) else []),
                    Path(work) / "relay_depth.log")
     br = json.loads(br_rep.read_text()) if br_rep.is_file() else []
     dp = json.loads(dp_rep.read_text()) if dp_rep.is_file() else []
