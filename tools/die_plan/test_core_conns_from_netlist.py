@@ -41,11 +41,15 @@ module top(clk, pi);
   wire b0;
   wire f0;
   wire g0;
+  wire t1;
+  TIEHIx1_ASAP7_75t_R _9_ (
+    .H(t1)
+  );
   wire [3:0] \u_bound.u_core.x ;
   core_a \u_bound.u_core.g_q[0].u_a  (
     .ck(clk),
     .o({ \u_bound.u_core.a_o[1] , \u_bound.u_core.a_o[0]  }),
-    .i({ g0, pi, 2'h0 })
+    .i({ g0, pi, t1, 1'h0 })
   );
   ot_dp_rrelay \u_bound.u_r  (
     .clk(clk),

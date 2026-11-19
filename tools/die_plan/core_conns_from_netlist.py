@@ -32,6 +32,7 @@ _BUF = re.compile(r"^(BUF|HB\d|CKBUF)")
 _INV = re.compile(r"^(INV|CKINV)")
 _DFF = re.compile(r"^(DFF|SDF|ASYNC_DFF)")
 _LAT = re.compile(r"^(DLL|DHL)")
+_TIE = re.compile(r"^TIE(HI|LO)")
 STD_OUT = {"Y", "Q", "QN", "CON", "SN", "CO", "GCLK"}
 DEPTH = 256
 
@@ -158,7 +159,7 @@ class Netlist:
                                 d[b] = ("sub", k, pin, i)
             else:
                 for pin, bb in pins.items():
-                    if pin in STD_OUT and bb and bb[0] is not None:
+                    if (pin in STD_OUT or (pin in ("H", "L") and _TIE.match(mod))) and bb and bb[0] is not None:
                         d[bb[0]] = ("cell", k, pin, 0)
         m.driver = d
         return d
@@ -201,6 +202,8 @@ class Netlist:
                 bit = bb[pb.index(ii)]
                 st += r[2]; lat += r[3]
                 continue
+            if _TIE.match(mod):
+                return ("stop", "constant", st, lat)
             if _BUF.match(mod) or _INV.match(mod):
                 bit = (pins.get("A") or [None])[0]
             elif _DFF.match(mod):
