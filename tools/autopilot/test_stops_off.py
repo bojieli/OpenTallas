@@ -914,3 +914,66 @@ class CtxOnlySupersedeGuard(unittest.TestCase):
 
     def test_same_die_ctx_is_untouched_and_block_change_still_retires(self):
         self.assertEqual(self.run_it("ENQUEUED", "RUNNING", ctx_old="NEW"), "ENQUEUED")
+
+
+class FixesItems(unittest.TestCase):
+    """COORD 11-18: a commit trailer  Fixes-Items: die/item  relaunches the FAILED rows of those items on the first tick whose rt tree carries the commit"""
+    LOG = ("aaaaaaaaaaaa1111\x1fSubject\n\nbody\nFixes-Items: s81/ot_s81sl_leaf__t56, eng__t1\nFixes-Items: qwen_*/gunit__t1\n\x1e"
+           "bbbbbbbbbbbb2222\x1fother commit, no trailer\x1e")
+
+    def ap(self, log=None, rc=0):
+        logs, calls = [], []
+        def sh(cmd, timeout=0, **k):
+            calls.append(cmd)
+            return rc, (log if log is not None else self.LOG), ""
+        return type("AP", (), {"REPO": "/repo", "log": staticmethod(logs.append), "sh": staticmethod(sh)})(), logs, calls
+
+    def state(self):
+        return {"items": {
+            "a": {"die": "s81", "item": "ot_s81sl_leaf__t56", "event": "E", "attempt": 3, "status": "FAIL", "class": "UNCLASSIFIED", "started": 5},
+            "b": {"die": "s81", "item": "eng__t1", "event": "E", "attempt": 1, "status": "FAIL", "class": "FLOW", "started": 5},
+            "c": {"die": "qwen_compute", "item": "gunit__t1", "event": "E", "attempt": 2, "status": "FAIL", "class": "PLAN", "started": 5},
+            "d": {"die": "s81", "item": "other", "event": "E", "attempt": 1, "status": "FAIL", "started": 5},
+            "e": {"die": "s81", "item": "eng__t1", "event": "OLD", "attempt": 9, "status": "FAIL", "started": 9}}}
+
+    def cfg(self):
+        return {"dies": {"s81": {"event": "E"}, "qwen_compute": {"event": "E"}, "hbm": {"event": "E"}}}
+
+    def test_trailer_parsing(self):
+        got = KW.parse_fixes_log(self.LOG)
+        self.assertEqual(got, [("aaaaaaaaaaaa", "s81", "ot_s81sl_leaf__t56"), ("aaaaaaaaaaaa", "*", "eng__t1"), ("aaaaaaaaaaaa", "qwen_*", "gunit__t1")])
+
+    def test_first_tick_after_rt_carries_the_commit_forces_the_failed_rows(self):
+        ap, logs, calls = self.ap()
+        st, cfg, notices = self.state(), self.cfg(), {}
+        self.assertEqual(KW.fixes_release(ap, cfg, st, notices, rt_sha="0" * 12), 0)           # first sight: history is not replayed
+        self.assertEqual(st["fixes_seen"], "0" * 12)
+        n = KW.fixes_release(ap, cfg, st, notices, rt_sha="1" * 12)
+        self.assertEqual(n, 3)
+        self.assertIn("0" * 12 + ".." + "1" * 12, calls[0])
+        self.assertEqual(sorted(cfg["dies"]["s81"]["retry"]), ["eng__t1@1", "ot_s81sl_leaf__t56@3"])      # current event only: the OLD-event eng__t1@9 is not touched
+        self.assertEqual(cfg["dies"]["qwen_compute"]["retry"], ["gunit__t1@2"])
+        self.assertNotIn("retry", cfg["dies"]["hbm"])
+        self.assertTrue(any("FIX-RELAUNCH s81/eng__t1@1" in m for m in logs))
+
+    def test_stays_forced_until_the_row_relaunches_then_clears(self):
+        ap, logs, calls = self.ap()
+        st, cfg = self.state(), self.cfg()
+        KW.fixes_release(ap, cfg, st, {}, rt_sha="0" * 12)
+        KW.fixes_release(ap, cfg, st, {}, rt_sha="1" * 12)
+        cfg2 = self.cfg()
+        KW.fixes_release(ap, cfg2, st, {}, rt_sha="1" * 12)                                      # next tick, still FAIL: forced again (in memory only)
+        self.assertIn("eng__t1@1", cfg2["dies"]["s81"]["retry"])
+        st["items"]["b"]["status"] = "RUNNING"
+        cfg3 = self.cfg()
+        KW.fixes_release(ap, cfg3, st, {}, rt_sha="1" * 12)
+        self.assertNotIn("eng__t1@1", cfg3["dies"]["s81"].get("retry", []))
+        self.assertNotIn("s81|eng__t1@1", st["fixes_pending"])
+        self.assertEqual(sum("FIX-RELAUNCH s81/eng__t1@1" in m for m in logs), 1)               # logged once
+
+    def test_unreadable_commit_range_waits_and_does_not_mark_seen(self):
+        ap, logs, calls = self.ap(rc=128)
+        st, cfg = self.state(), self.cfg()
+        KW.fixes_release(ap, cfg, st, {}, rt_sha="0" * 12)
+        self.assertEqual(KW.fixes_release(ap, cfg, st, {}, rt_sha="1" * 12), 0)
+        self.assertEqual(st["fixes_seen"], "0" * 12)

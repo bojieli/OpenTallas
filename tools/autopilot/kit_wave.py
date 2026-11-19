@@ -13987,6 +13987,10 @@ def _step(AP, ap_dir):
         release_pending(cfg, st, parse_pending(AP.read_coord(PENDING_FILE)), _merged(AP, cfg), notices)
     except Exception as e:                               # a missing/unreadable pending file never blocks the wave
         AP.log(f"KIT-WAVE pending retries skipped: {type(e).__name__}: {e}")
+    try:
+        fixes_release(AP, cfg, st, notices)
+    except Exception as e:
+        AP.log(f"KIT-WAVE FIXES-ITEMS skipped: {type(e).__name__}: {e}")
     try:                                                 # KW-FIX-17: LEAFSLEW signature -> auto class retry
         leafslew_step(AP, cfg, st, notices, AP.HUB_NAME)
     except Exception as e:                               # a sign-off log read never blocks the wave
@@ -14938,6 +14942,85 @@ def parse_pending(text):
         out.append(dict(sha=f[0].strip(), scope=f[1].strip(), die=f[2].strip(), retry=f[3].strip(),
                         lane=(f[4].strip() if len(f) > 4 else ""), note=(f[5].strip() if len(f) > 5 else "")))
     return out
+
+
+# COORD 11-18: a fix reaches main but the failed types waited for a retry key.  A commit names what it fixes in a trailer line  "Fixes-Items: <die>/<item>[, <die>/<item> ...]"  (die or item may be
+# a glob; a bare <item> means every non-HBM die).  On the first tick whose rt tree (rt/<sha12>, the tree this code runs from) contains that commit, every FAILED row (any class, UNCLASSIFIED / NEEDS-LANE
+# included) of a matching item on the die's current event is forced to relaunch once: its item@attempt joins the die's in-memory retry set (a retry key forces past SKIP-SAME-INPUT and the
+# UNCLASSIFIED hold) until the row is no longer that FAIL.  kit_wave.json is never written.
+FIXES_TRAILER = re.compile(r"^[ \t]*Fixes-Items:[ \t]*(.+)$", re.M | re.I)
+
+
+def parse_fixes_log(text):
+    """git log --format=%H%x1f%B%x1e text -> [(sha, die_glob, item_glob)]"""
+    out = []
+    for ent in (text or "").split("\x1e"):
+        sha, _, body = ent.strip().partition("\x1f")
+        if not sha or not body:
+            continue
+        for m in FIXES_TRAILER.finditer(body):
+            for tok in re.split(r"[,\s]+", m.group(1).strip()):
+                if not tok:
+                    continue
+                die, _, item = tok.rpartition("/")
+                out.append((sha[:12], die or "*", item))
+    return out
+
+
+def fixes_release(AP, cfg, st, notices, rt_sha=None, now=None):
+    """see FIXES_TRAILER.  -> number of rows newly queued for relaunch"""
+    now = time.time() if now is None else now
+    rt_sha = rt_sha or Path(__file__).resolve().parents[2].name
+    if not re.fullmatch(r"[0-9a-f]{12}", str(rt_sha)):
+        return 0
+    n = 0
+    seen = st.get("fixes_seen")
+    if seen is None:                                   # first sight of this state: history is not replayed
+        st["fixes_seen"] = rt_sha
+    elif seen != rt_sha:
+        rng = f"{seen}..{rt_sha}"
+        rc, out, err = AP.sh(["git", "-C", str(AP.REPO), "log", "--format=%H%x1f%B%x1e", rng], timeout=60)
+        if rc != 0:
+            rc, out, err = AP.sh(["git", "-C", str(AP.REPO), "log", "-n", "40", "--format=%H%x1f%B%x1e", rt_sha], timeout=60)
+        if rc != 0:
+            if st.get("fixes_unreadable") != rt_sha:
+                st["fixes_unreadable"] = rt_sha
+                AP.log(f"KIT-WAVE FIXES-ITEMS: cannot read the commits of rt {rt_sha} in {AP.REPO} ({(err or out)[-120:]}); tries again next tick")
+            return 0
+        pend = st.setdefault("fixes_pending", {})
+        for sha, dglob, iglob in parse_fixes_log(out):
+            for die, d in (cfg.get("dies") or {}).items():
+                if not isinstance(d, dict) or die == "hbm" or not fnmatch.fnmatchcase(die, dglob) or not d.get("event"):
+                    continue
+                latest = {}
+                for r in (st.get("items") or {}).values():
+                    if r.get("die") == die and r.get("event") == d["event"] and fnmatch.fnmatchcase(str(r.get("item")), iglob):
+                        if r.get("item") not in latest or float(r.get("started") or 0) > float(latest[r["item"]].get("started") or 0):
+                            latest[r["item"]] = r
+                for item, r in latest.items():
+                    if r.get("status") == "FAIL":
+                        k = f"{die}|{item}@{r.get('attempt')}"
+                        if k not in pend:
+                            pend[k] = {"sha": sha, "ts": now, "rt": rt_sha}
+                            n += 1
+        st["fixes_seen"] = rt_sha
+        st.pop("fixes_unreadable", None)
+    pend = st.get("fixes_pending") or {}
+    for k in list(pend):
+        die, _, ia = k.partition("|")
+        item, _, att = ia.rpartition("@")
+        row = next((r for r in (st.get("items") or {}).values() if r.get("die") == die and r.get("item") == item and str(r.get("attempt")) == att), None)
+        if not row or row.get("status") != "FAIL" or now - float(pend[k].get("ts") or now) > 86400:
+            del pend[k]
+            continue
+        d = (cfg.get("dies") or {}).get(die)
+        if d is not None and ia not in d.setdefault("retry", []):
+            d["retry"].append(ia)
+            if not pend[k].get("logged"):
+                pend[k]["logged"] = now
+                AP.log(f"KIT-WAVE FIX-RELAUNCH {die}/{ia}: fix {pend[k].get('sha')} (Fixes-Items) is in rt {pend[k].get('rt')}; the FAILED row relaunches")
+                notices.setdefault(die, []).append(f"{ia} relaunched: fix {pend[k].get('sha')} in rt")
+    return n
 
 
 def release_pending(cfg, st, rows, merged, notices):
