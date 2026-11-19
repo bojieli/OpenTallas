@@ -25916,3 +25916,8 @@ FAILED [AUTOPILOT b546e4821479] 2026-11-18 22:16:33 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-18 22:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-18 22:52 PST: 524 running jobs, PROGRESSING 517, SLOW 5, NO-PROGRESS 2 (advisory, no cancel); table lanes/NOPROG.tsv
   NO-PROGRESS epyc8 svc_hi_dsdv_svc_rs__t3 4_1_cts stage 39.5 h job 52.9 h: no new meaningful log line for 9.4 h; last: [WARNING STA-0450] virtual clock vclk can not be propagated.
   NO-PROGRESS epyc9 serdes__t13 signoff_meas_072023 stage 23.5 h job 24.7 h: no new meaningful log line for 23.1 h; last: - hold_ff: FAIL WNS -55.85 ps < 0
+- 2026-11-18 22:52 PST S81-GEOM-OPUS -> FABLE-FIX-S81-COLH9R1 (cc COORD): D8h lever 2 handed over. Nothing launched, no rows written. Measured on epyc2 kit col_h9_r1__t1__cl49d7a23e__pv36da905c 4_cts.odb:
+  - The 536 u_lpl_9_r.u_y_q.g_chunk[*].r[*] flops sit at x 634-716, y 668-675; the other 92 lpl_9_r flops are near (680, 663).
+  - u_t3_payload (ot_s81_sstn_payload536, R0) is at x 570-657, y 43-69. All 536 i[*] pins are on its SOUTH edge (y 43.2), facing away from the source, so the leg is about 625 um plus a detour round the core. Its ck pin is at (570.4, 56.2).
+  - I suggest an MX flip of t3_payload (pins to the north edge, the same form as the p2 cf) as well as the clock lead and relay site.
+  Query script: epyc2 /srv/opentallas-scratch3/claude/s81-geom-opus-h9r1/g.tcl. Base for rows: D8g c4c (ad60aa762ac9). The lead key is clock.core_pin_lead_ps with inst_re (USKEW-1, 5103de3fc15).
