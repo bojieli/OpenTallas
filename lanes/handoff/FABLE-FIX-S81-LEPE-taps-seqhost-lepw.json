@@ -1,0 +1,726 @@
+{
+ "schema": "fable-fix-s81-lepe.tap_rows.v2",
+ "lane": "FABLE-FIX-S81-LEPE",
+ "for": "S81-DIE-R3 (D8h)",
+ "status": "ROWS requested by COORD/FABLE-CLOSURE-STRATEGY 02:00. Class proof (r712) = private kit dsdv_slice_lepe_mu_LP__t2 on epyc10, in flight (watcher posts PROOF lines); these two tables come from the same tool on measured kit data and have no kit of their own yet.",
+ "tool": "main@1605efbe81a tools/die_plan/tap_resolve.py (tests test_tap_resolve.py). Criterion: spread of per-tap MEAN insertion over taps with >= 1 % of the registers > clock.neighbour_skew_ps (80); not sink count (one dominant tap = one tree = OK, the QC sle_hc0 case).",
+ "apply": "per type: APPEND added_taps to partition_types[T].clock.taps (explicit table; existing taps keep name+xy), feed the new M9 drops from the die spine, re-measure clock.tap_window.per_port_ps for the new ports, then bind + LATCHECK alongside.",
+ "regen": "openroad -python tools/die_plan/tap_resolve.py --dump (env ODB=3_place.odb OUT=regs.json); python3 tools/die_plan/tap_resolve.py PLAN TYPE --regs regs.json --cts-log 4_1_cts.log -o taps.json",
+ "types": {
+  "seqhost__t1": {
+   "measured": "att21 3_place.odb + 4_1_cts.log: tap means 205..507 ps, spread 302 over 20 material taps, 3 taps over cap",
+   "registers": 51257,
+   "criterion": {
+    "verdict": "SPLIT",
+    "spread_ps": 302.0,
+    "material_taps": 20,
+    "slowest": "clk_t10",
+    "fastest": "clk_t21",
+    "tol_ps": 80.0,
+    "basis": "MEASURED"
+   },
+   "target_sinks": 1400,
+   "added": 40,
+   "max_load_after": 1396,
+   "predicted_spread_after_ps": 52.7,
+   "added_taps": [
+    {
+     "name": "clk_t29",
+     "xy": [
+      781.92,
+      529.2
+     ]
+    },
+    {
+     "name": "clk_t30",
+     "xy": [
+      784.08,
+      660.96
+     ]
+    },
+    {
+     "name": "clk_t31",
+     "xy": [
+      930.96,
+      810.0
+     ]
+    },
+    {
+     "name": "clk_t32",
+     "xy": [
+      583.2,
+      680.4
+     ]
+    },
+    {
+     "name": "clk_t33",
+     "xy": [
+      779.76,
+      479.52
+     ]
+    },
+    {
+     "name": "clk_t34",
+     "xy": [
+      168.48,
+      702.0
+     ]
+    },
+    {
+     "name": "clk_t35",
+     "xy": [
+      762.48,
+      412.56
+     ]
+    },
+    {
+     "name": "clk_t36",
+     "xy": [
+      708.48,
+      820.8
+     ]
+    },
+    {
+     "name": "clk_t37",
+     "xy": [
+      706.32,
+      490.32
+     ]
+    },
+    {
+     "name": "clk_t38",
+     "xy": [
+      676.08,
+      678.24
+     ]
+    },
+    {
+     "name": "clk_t39",
+     "xy": [
+      239.76,
+      965.52
+     ]
+    },
+    {
+     "name": "clk_t40",
+     "xy": [
+      788.4,
+      354.24
+     ]
+    },
+    {
+     "name": "clk_t41",
+     "xy": [
+      827.28,
+      468.72
+     ]
+    },
+    {
+     "name": "clk_t42",
+     "xy": [
+      702.0,
+      628.56
+     ]
+    },
+    {
+     "name": "clk_t43",
+     "xy": [
+      600.48,
+      492.48
+     ]
+    },
+    {
+     "name": "clk_t44",
+     "xy": [
+      561.6,
+      589.68
+     ]
+    },
+    {
+     "name": "clk_t45",
+     "xy": [
+      25.92,
+      555.12
+     ]
+    },
+    {
+     "name": "clk_t46",
+     "xy": [
+      760.32,
+      710.64
+     ]
+    },
+    {
+     "name": "clk_t47",
+     "xy": [
+      25.92,
+      218.16
+     ]
+    },
+    {
+     "name": "clk_t48",
+     "xy": [
+      799.2,
+      440.64
+     ]
+    },
+    {
+     "name": "clk_t49",
+     "xy": [
+      710.64,
+      414.72
+     ]
+    },
+    {
+     "name": "clk_t50",
+     "xy": [
+      872.64,
+      656.64
+     ]
+    },
+    {
+     "name": "clk_t51",
+     "xy": [
+      585.36,
+      637.2
+     ]
+    },
+    {
+     "name": "clk_t52",
+     "xy": [
+      876.96,
+      457.92
+     ]
+    },
+    {
+     "name": "clk_t53",
+     "xy": [
+      721.44,
+      529.2
+     ]
+    },
+    {
+     "name": "clk_t54",
+     "xy": [
+      25.92,
+      455.76
+     ]
+    },
+    {
+     "name": "clk_t55",
+     "xy": [
+      637.2,
+      660.96
+     ]
+    },
+    {
+     "name": "clk_t56",
+     "xy": [
+      25.92,
+      140.4
+     ]
+    },
+    {
+     "name": "clk_t57",
+     "xy": [
+      762.48,
+      609.12
+     ]
+    },
+    {
+     "name": "clk_t58",
+     "xy": [
+      745.2,
+      453.6
+     ]
+    },
+    {
+     "name": "clk_t59",
+     "xy": [
+      587.52,
+      548.64
+     ]
+    },
+    {
+     "name": "clk_t60",
+     "xy": [
+      749.52,
+      505.44
+     ]
+    },
+    {
+     "name": "clk_t61",
+     "xy": [
+      848.88,
+      436.32
+     ]
+    },
+    {
+     "name": "clk_t62",
+     "xy": [
+      600.48,
+      596.16
+     ]
+    },
+    {
+     "name": "clk_t63",
+     "xy": [
+      518.4,
+      470.88
+     ]
+    },
+    {
+     "name": "clk_t64",
+     "xy": [
+      732.24,
+      352.08
+     ]
+    },
+    {
+     "name": "clk_t65",
+     "xy": [
+      816.48,
+      656.64
+     ]
+    },
+    {
+     "name": "clk_t66",
+     "xy": [
+      565.92,
+      509.76
+     ]
+    },
+    {
+     "name": "clk_t67",
+     "xy": [
+      28.08,
+      529.2
+     ]
+    },
+    {
+     "name": "clk_t68",
+     "xy": [
+      28.08,
+      481.68
+     ]
+    }
+   ]
+  },
+  "dsdv_slice_lepw_mu_LP__t2": {
+   "measured": "att24 3_place.odb + 4_1_cts.log: tap means 238..553 ps, spread 315 over 19 material taps, 6 taps over cap",
+   "registers": 54645,
+   "criterion": {
+    "verdict": "SPLIT",
+    "spread_ps": 315.0,
+    "material_taps": 19,
+    "slowest": "clk_t15",
+    "fastest": "clk_t17",
+    "tol_ps": 80.0,
+    "basis": "MEASURED"
+   },
+   "target_sinks": 1200,
+   "added": 56,
+   "max_load_after": 1450,
+   "predicted_spread_after_ps": 56.6,
+   "added_taps": [
+    {
+     "name": "clk_t21",
+     "xy": [
+      604.8,
+      427.68
+     ]
+    },
+    {
+     "name": "clk_t22",
+     "xy": [
+      535.68,
+      425.52
+     ]
+    },
+    {
+     "name": "clk_t23",
+     "xy": [
+      1049.76,
+      496.8
+     ]
+    },
+    {
+     "name": "clk_t24",
+     "xy": [
+      267.84,
+      298.08
+     ]
+    },
+    {
+     "name": "clk_t25",
+     "xy": [
+      829.44,
+      360.72
+     ]
+    },
+    {
+     "name": "clk_t26",
+     "xy": [
+      43.2,
+      390.96
+     ]
+    },
+    {
+     "name": "clk_t27",
+     "xy": [
+      1036.8,
+      319.68
+     ]
+    },
+    {
+     "name": "clk_t28",
+     "xy": [
+      1175.04,
+      319.68
+     ]
+    },
+    {
+     "name": "clk_t29",
+     "xy": [
+      425.52,
+      432.0
+     ]
+    },
+    {
+     "name": "clk_t30",
+     "xy": [
+      898.56,
+      591.84
+     ]
+    },
+    {
+     "name": "clk_t31",
+     "xy": [
+      533.52,
+      617.76
+     ]
+    },
+    {
+     "name": "clk_t32",
+     "xy": [
+      86.4,
+      546.48
+     ]
+    },
+    {
+     "name": "clk_t33",
+     "xy": [
+      531.36,
+      311.04
+     ]
+    },
+    {
+     "name": "clk_t34",
+     "xy": [
+      1028.16,
+      103.68
+     ]
+    },
+    {
+     "name": "clk_t35",
+     "xy": [
+      604.8,
+      319.68
+     ]
+    },
+    {
+     "name": "clk_t36",
+     "xy": [
+      397.44,
+      572.4
+     ]
+    },
+    {
+     "name": "clk_t37",
+     "xy": [
+      1211.76,
+      496.8
+     ]
+    },
+    {
+     "name": "clk_t38",
+     "xy": [
+      423.36,
+      319.68
+     ]
+    },
+    {
+     "name": "clk_t39",
+     "xy": [
+      235.44,
+      496.8
+     ]
+    },
+    {
+     "name": "clk_t40",
+     "xy": [
+      840.24,
+      194.4
+     ]
+    },
+    {
+     "name": "clk_t41",
+     "xy": [
+      492.48,
+      371.52
+     ]
+    },
+    {
+     "name": "clk_t42",
+     "xy": [
+      336.96,
+      289.44
+     ]
+    },
+    {
+     "name": "clk_t43",
+     "xy": [
+      1032.48,
+      619.92
+     ]
+    },
+    {
+     "name": "clk_t44",
+     "xy": [
+      632.88,
+      382.32
+     ]
+    },
+    {
+     "name": "clk_t45",
+     "xy": [
+      822.96,
+      462.24
+     ]
+    },
+    {
+     "name": "clk_t46",
+     "xy": [
+      155.52,
+      289.44
+     ]
+    },
+    {
+     "name": "clk_t47",
+     "xy": [
+      425.52,
+      371.52
+     ]
+    },
+    {
+     "name": "clk_t48",
+     "xy": [
+      535.68,
+      462.24
+     ]
+    },
+    {
+     "name": "clk_t49",
+     "xy": [
+      628.56,
+      41.04
+     ]
+    },
+    {
+     "name": "clk_t50",
+     "xy": [
+      1034.64,
+      216.0
+     ]
+    },
+    {
+     "name": "clk_t51",
+     "xy": [
+      477.36,
+      311.04
+     ]
+    },
+    {
+     "name": "clk_t52",
+     "xy": [
+      699.84,
+      388.8
+     ]
+    },
+    {
+     "name": "clk_t53",
+     "xy": [
+      1244.16,
+      319.68
+     ]
+    },
+    {
+     "name": "clk_t54",
+     "xy": [
+      648.0,
+      315.36
+     ]
+    },
+    {
+     "name": "clk_t55",
+     "xy": [
+      198.72,
+      319.68
+     ]
+    },
+    {
+     "name": "clk_t56",
+     "xy": [
+      43.2,
+      291.6
+     ]
+    },
+    {
+     "name": "clk_t57",
+     "xy": [
+      1036.8,
+      306.72
+     ]
+    },
+    {
+     "name": "clk_t58",
+     "xy": [
+      967.68,
+      319.68
+     ]
+    },
+    {
+     "name": "clk_t59",
+     "xy": [
+      535.68,
+      390.96
+     ]
+    },
+    {
+     "name": "clk_t60",
+     "xy": [
+      829.44,
+      410.4
+     ]
+    },
+    {
+     "name": "clk_t61",
+     "xy": [
+      406.08,
+      287.28
+     ]
+    },
+    {
+     "name": "clk_t62",
+     "xy": [
+      237.6,
+      319.68
+     ]
+    },
+    {
+     "name": "clk_t63",
+     "xy": [
+      38.88,
+      45.36
+     ]
+    },
+    {
+     "name": "clk_t64",
+     "xy": [
+      1021.68,
+      496.8
+     ]
+    },
+    {
+     "name": "clk_t65",
+     "xy": [
+      492.48,
+      291.6
+     ]
+    },
+    {
+     "name": "clk_t66",
+     "xy": [
+      663.12,
+      382.32
+     ]
+    },
+    {
+     "name": "clk_t67",
+     "xy": [
+      535.68,
+      356.4
+     ]
+    },
+    {
+     "name": "clk_t68",
+     "xy": [
+      589.68,
+      41.04
+     ]
+    },
+    {
+     "name": "clk_t69",
+     "xy": [
+      604.8,
+      356.4
+     ]
+    },
+    {
+     "name": "clk_t70",
+     "xy": [
+      155.52,
+      496.8
+     ]
+    },
+    {
+     "name": "clk_t71",
+     "xy": [
+      470.88,
+      432.0
+     ]
+    },
+    {
+     "name": "clk_t72",
+     "xy": [
+      228.96,
+      319.68
+     ]
+    },
+    {
+     "name": "clk_t73",
+     "xy": [
+      922.32,
+      496.8
+     ]
+    },
+    {
+     "name": "clk_t74",
+     "xy": [
+      43.2,
+      453.6
+     ]
+    },
+    {
+     "name": "clk_t75",
+     "xy": [
+      1008.72,
+      496.8
+     ]
+    },
+    {
+     "name": "clk_t76",
+     "xy": [
+      455.76,
+      371.52
+     ]
+    }
+   ]
+  }
+ },
+ "not_done": {
+  "dsdv_slice_lepw_mus_LP__t2": "same recipe; placed DB epyc8 att27 3_place.odb, no table yet",
+  "bk_sel, kv_leaf": "named by FABLE-CLOSURE-STRATEGY; not measured by this lane",
+  "lepe C x2": "perimeter-heavy explicit tables (40/43 taps); no CTS log yet"
+ }
+}
