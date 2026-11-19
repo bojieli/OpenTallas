@@ -177,7 +177,7 @@ def hc_port_bit_indices(hc, repo=None):
     return {p:sorted(bits,reverse=True) for p,bits in pins.items()}
 
 
-def match_hard_cores(hcs, insts):
+def match_hard_cores(hcs, insts, repo=None):
     """Match only unique scoped identities; never overwrite a shared suffix."""
     def flat(s): return re.sub(r'_+', '_', re.sub(r'\[(\d+)\]', r'_\1', s.replace('.', '_')).lstrip('\\'))
     result, unknown = {}, []
@@ -193,6 +193,30 @@ def match_hard_cores(hcs, insts):
         choices = full or short
         if len(choices) == 1: result[inst] = choices[0]
         elif choices: unknown.append(dict(inst=inst, module=mod, candidates=choices))
+    # FABLE-FIX-S81-LEAF 11-19 (QC-PLAN-R3 blind recount, 48 QC types): a plan core whose module is the hard-macro
+    # master while the bound module keeps the logical tile under another module and an indexed name (plan u_t02 /
+    # qfd_tile_nk_a0c, bound `qfd_tile_nk_rp2_romleaf_rr u_u_t_0_2`).  Second tier, only for cores the exact tier left
+    # unmatched: same name once the `_` beside digits is dropped, AND every signal pin of the core LEF is a port of the
+    # instance, AND the pairing is unique in both directions.  Anything else stays unresolved.
+    def digits(s): return re.sub(r'_(?=\d)', '', flat(s))
+    taken = set(result.values())
+    cand = defaultdict(list)
+    for hc in hcs:
+        if hc['inst'] in taken or not hc.get('lef'): continue
+        pins = {p for p, d_ in hc_port_directions(hc, repo).items() if d_ in ('INPUT', 'OUTPUT')}
+        if not pins: continue
+        names = {digits(hc['inst']), digits(hc['inst'].split('.', 1)[-1])}
+        for mod, inst, ports, *_ in insts:
+            if inst in result or mod.lstrip('\\') == hc.get('module'): continue
+            ci = digits(inst)
+            if any(ci == n or ci.endswith('_' + n) for n in names) and pins <= set(ports):
+                cand[hc['inst']].append(inst)
+    by_inst = defaultdict(list)
+    for core, found in cand.items():
+        for inst in found: by_inst[inst].append(core)
+    for core, found in cand.items():
+        if len(found) == 1 and len(by_inst[found[0]]) == 1: result[found[0]] = core
+        else: unknown.append(dict(inst=found[0], module=None, candidates=sorted(by_inst[found[0]]), tier='indexed-name'))
     return result, unknown
 
 
@@ -262,7 +286,7 @@ def trace(plan, tn, text, repo=None):
     params={m[3]:m[2] for m in re.finditer(r'\n\s*('+ID+r')\s*#\s*\(((?:[^()]|\([^()]*\))*)\)\s*('+ID+r')\s*\(',body,re.S)}
     hcs = t.get('hard_cores', [])
     hc_by_name = {h['inst']: h for h in hcs}
-    core_of, ambiguous = match_hard_cores(hcs, insts)
+    core_of, ambiguous = match_hard_cores(hcs, insts, repo)
     directions = {i: hc_port_directions(hc_by_name[c], repo) for i,c in core_of.items()}
     pin_indices = {i: hc_port_bit_indices(hc_by_name[c], repo) for i,c in core_of.items()}
     warnings = []
@@ -406,7 +430,8 @@ def trace(plan, tn, text, repo=None):
     return dict(core_conns={tn:{c:{p:sorted(v) for p,v in sorted(ps.items())} for c,ps in sorted(conns.items())}},
                 paths=rows,n_insts=len(insts),n_assigns=len(assigns),cores=sorted(hc_by_name),buses=len(t.get('buses',[])),
                 unresolved=unknown,ambiguous_cores=ambiguous,wiring_warnings=warnings,
-                matched_cores=sorted(set(core_of.values())), unresolved_cores=missing_cores)
+                matched_cores=sorted(set(core_of.values())), unresolved_cores=missing_cores,
+                core_insts={c: sorted(i for i, c2 in core_of.items() if c2 == c) for c in set(core_of.values())})
 
 
 def main(argv):

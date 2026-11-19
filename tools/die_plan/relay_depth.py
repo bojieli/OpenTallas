@@ -163,6 +163,10 @@ def type_rows(plan, tn, text, repo=None, plan_dir=None, limit=LIMIT):
                 if re.search(r"\n\s*\w+\s*(?:#\([^;]*?\))?\s*u_" + re.escape(n_) + r"\s*\(", text):
                     hit = n_
                     break
+            if hit is None:     # indexed-name tier of core_conns_from_bind.match_hard_cores (QC tile u_t02 = bound u_u_t_0_2)
+                bi = res.get("core_insts", {}).get(core, [])
+                if len(bi) == 1 and bi[0].startswith("u_"):
+                    hit = bi[0][2:]
             leaf_cache[core] = hit
         return leaf_cache[core]
     for p in res["paths"]:
