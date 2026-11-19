@@ -222,3 +222,11 @@ OWNER: FABLE-FIX-S81-LEAF owns s81sl_leaf__t* and s81sl_kv_leaf__t* (all).
   Lock-step on the live D8g source: PASS 59,991 checks 0 errors; XR 0 control FAIL 53,438 errors. No physical result; no Fixes-Items trailer on purpose.
 - Correction: the "180 ps late launch clock" on the -840 path was my misreading (I compared the launch Q arrival with the capture clock). Launch CLK 550, capture CLK 541,
   same tap clk_t2, CRPR 79. Nothing for S81-CLOCK-WINDOW-1119 from this path.
+
+## 11-19 09:2x PST: CBC checker was blind for core-to-core legs (all dies)
+Cause: cbc_pass.relay_rows ran relay_depth on plan_branch.json in its WORK dir without --repo / --plan-dir -> trace finds no child sources, no pin files ->
+0 paths measured on every type, "0 relay rows", rc 0 (epyc8 cbc-rules-1119/runs/s81_d8g4/relay_depth.json: 395 types, 0 paths). With the tree + plan dir leaf t60 alone:
+37 paths, 5 rows, +7 stages. Fix main 01360b438a05 (cbc_pass args; relay_depth RELAY-DEPTH-BLIND warning / exit 3; schema.py -I import). --no-test push (known tools-only reason).
+Running: (a) full S81 D8g relay_depth recount, epyc10 rd/s81_d8g_all.json (+ .log, rd/all.pid); (b) private G0, epyc10 proof/g0 (plandir of symlinks + plan_swr.json):
+g0_swr (D8g + 36 station rows) and g0_ctl (D8g), status.txt, via ot-run (intel2 g0_swr.otrun.log). Compare ERROR sets; expect 0 new.
+QC / KV / HEAD CBC counts need a re-run by CBC-RULES-1119 with main >= 01360b438a05.
