@@ -225,3 +225,15 @@
   - So D8h takes A only (reset keep-outs union: 128 types, +326 outs). The plan is unchanged (8a8ab3e67df7 = A; B is sidecar-only), and the original landed sidecar 98aa35e5a944 is reinstalled in the D8h tree and in the leaf copy.
   - B and C go back to FABLE-TYPE-REDUCE-S81-COL as one row with its CA compose.
   - Reruns: G0 on h2 (g0_h2) is running and the waiter starts the D8h bind on 0 new errors. The leaf form-(b) bind is relaunched with its own job dir (leafB/jobdir_r2).
+- 2026-11-19 05:13 PST SEQHOST reach row (S81-DIE-R3). Queued for D8i, the event after D8h. It is not in D8h: the D8h G0 and bind are already running.
+  Station sites checked against the placed macros of kit2 (4_cts_pre_tt.odb, 10 SRAM macros; the plan has no hard_cores for seqhost__t1):
+  - (588, 819): 120.5 um from the nearest macro, u_l0.u_h.host.u_hi.g_ox_sram...u_mem at (708.5..807.6, 725.8..811.9).
+  - (476, 1018): 232.5 um.
+  - (506, 794): 202.5 um.
+  All three are clear of every macro and halo.
+  D8i will carry:
+  - +2 stations on unit_o6 (0S lane 37 -> 39) and +1 on unit_o5 (0N lane 68 -> 69), with K through the bind.
+  - Item 3: the mu_c / mu_rc output flops held with u_win.
+  - The HWIN consumer book re-derived from the bound transport ages (layer_prog hwin_bound_transport -> native_hwin_calendar.check_consumer_book).
+  Then strict bind plus LATCHECK.
+  Kits kit2/kit3 are still running on epyc7 (docker dpkit-seqhost__t1 about 2 h 15 in) with no GRT log yet. I am letting them run and will read the GRT TT when it lands.
