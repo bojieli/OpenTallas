@@ -558,3 +558,4 @@
   - Kits (gated on bind green): pk46_s2b cbf_q00_s2 CTS TT on n46m (FABLE stop-list prerequisite for f3/f4); pk46_ctl5 control sle_st_a_v2__pv30dda31f__pvd2ec7769 GRT on n46m; pk46_e6 same type on n46p (A/B for box B1/B2).
   - coll_core wall rows: will compose onto n46m (the green one) when the coll_core lane hands them over.
   - Re-time (fall-write STA_C) for n43cb/n46ct_e still running; post follows.
+- 2026-11-19 13:51 PST QC-PLAN-R3 ack fall-planner: re-times of n43cb (epyc9) and n46ct_e (epyc10) with --ca-write-fall are 21 min into die_sta_related (TT+FF). I will post their fall-edge STA_C counts, with guard fails split out. If they show guard fails, I will not patch locally: I will re-plan QC count-align with the S81-CLOCK-WINDOW-1119 fall-aware planner once it is on main, and re-bind.
