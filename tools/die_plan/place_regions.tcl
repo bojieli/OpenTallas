@@ -22,6 +22,7 @@ set pr_dbu [expr {double([[ord::get_db_tech] getDbUnitsPerMicron])}]
 set pr_core [$pr_blk getCoreArea]
 set pr_cx0 [expr {[$pr_core xMin]/$pr_dbu}]; set pr_cy0 [expr {[$pr_core yMin]/$pr_dbu}]
 set pr_cx1 [expr {[$pr_core xMax]/$pr_dbu}]; set pr_cy1 [expr {[$pr_core yMax]/$pr_dbu}]
+set pr_site [[lindex [$pr_blk getRows] 0] getSite]; set pr_sw [$pr_site getWidth]; set pr_rh [$pr_site getHeight]
 set pr_insts {}
 foreach i [$pr_blk getInsts] { lappend pr_insts [list [string map {\\ {}} [$i getName]] $i] }
 set pr_macros {}
@@ -70,11 +71,19 @@ foreach pr_row $::ot_place_regions {
   }
   if {$pr_free < $pr_need} { error "OT_PLACE_REGION $pr_name: the core has $pr_free um2 free of macros, the region needs $pr_need" }
   set pr_r [odb::dbRegion_create $pr_blk ot_region_$pr_name]
-  odb::dbBox_create $pr_r [expr {int($pr_x0*$pr_dbu)}] [expr {int($pr_y0*$pr_dbu)}] [expr {int(($pr_x0+$pr_w)*$pr_dbu)}] [expr {int(($pr_y0+$pr_h)*$pr_dbu)}]
+  # SNAP (11-19, DPL-0033 on QC glue kit H and S81 leaf t27fence): the box goes OUTWARD onto the placement grid (site
+  # width in x, row height in y, from the core origin).  An off-grid edge lets the legaliser put a member in the last
+  # site column / row with its edge a fraction of a site outside the box, and check_placement fails the region check
+  # (kit H: 41 straddling members = "Region placement check failed (41)", none outside, utilisation unchanged).
+  set pr_bx0 [expr {[$pr_core xMin] + ((int($pr_x0*$pr_dbu) - [$pr_core xMin]) / $pr_sw) * $pr_sw}]
+  set pr_by0 [expr {[$pr_core yMin] + ((int($pr_y0*$pr_dbu) - [$pr_core yMin]) / $pr_rh) * $pr_rh}]
+  set pr_bx1 [expr {min([$pr_core xMax], [$pr_core xMin] + ((int(($pr_x0+$pr_w)*$pr_dbu) - [$pr_core xMin] + $pr_sw - 1) / $pr_sw) * $pr_sw)}]
+  set pr_by1 [expr {min([$pr_core yMax], [$pr_core yMin] + ((int(($pr_y0+$pr_h)*$pr_dbu) - [$pr_core yMin] + $pr_rh - 1) / $pr_rh) * $pr_rh)}]
+  odb::dbBox_create $pr_r $pr_bx0 $pr_by0 $pr_bx1 $pr_by1
   set pr_g [odb::dbGroup_create $pr_r ot_region_${pr_name}_grp]
   $pr_g setType PHYSICAL_CLUSTER
   foreach pr_i $pr_grp { $pr_g addInst $pr_i }
-  puts [format "OT_PLACE_REGION %s: %d cells %.0f um2 util %.2f of the macro-free area, box (%.1f %.1f)-(%.1f %.1f) um centre %s" $pr_name [llength $pr_grp] $pr_a [expr {$pr_a/$pr_free}] $pr_x0 $pr_y0 [expr {$pr_x0+$pr_w}] [expr {$pr_y0+$pr_h}] $pr_how]
+  puts [format "OT_PLACE_REGION %s: %d cells %.0f um2 util %.2f of the macro-free area, box (%.3f %.3f)-(%.3f %.3f) um on the site / row grid, centre %s" $pr_name [llength $pr_grp] $pr_a [expr {$pr_a/$pr_free}] [expr {$pr_bx0/$pr_dbu}] [expr {$pr_by0/$pr_dbu}] [expr {$pr_bx1/$pr_dbu}] [expr {$pr_by1/$pr_dbu}] $pr_how]
 }
 }
 }

@@ -52,3 +52,11 @@ def test_schema_has_the_key():
     p = schema.SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["place_regions"]
     assert p["items"]["required"] == ["name", "inst_re"] and p["items"]["additionalProperties"] is False
     assert set(p["items"]["properties"]) == {"name", "inst_re", "util", "centre_um", "near_re", "note"}
+
+
+def test_region_box_is_snapped_to_the_placement_grid():
+    """DPL-0033 (glue kit H, leaf t27fence): an off-grid box edge fails the region check; the hook snaps outward to site / row"""
+    hook = (Path(gen_phys.__file__).resolve().parent / "place_regions.tcl").read_text()
+    assert "getSite" in hook and "$pr_sw) * $pr_sw" in hook and "$pr_rh) * $pr_rh" in hook
+    assert "odb::dbBox_create $pr_r $pr_bx0 $pr_by0 $pr_bx1 $pr_by1" in hook
+    assert "int($pr_x0*$pr_dbu)}] [expr {int($pr_y0*$pr_dbu)}]" not in hook      # the unsnapped box is gone
