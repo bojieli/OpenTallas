@@ -127,6 +127,28 @@ def unit(so, hint=None):
         p = os.path.join(sod, f)
         if f.endswith(".json") and os.path.isfile(p) and os.path.getsize(p) < 20 << 20 and f not in [x[1] for x in files]:
             files.append((sod, f))
+    # EVIDENCE-EXPORT-1119 (QC-RING-REBUILD: exports held only 6_final.* + signoff.json, so a signed child's views could not be regenerated once its kit was cleaned): the landing evidence
+    # (land_slots.json, face_guard.json, 1_synth.v) and the view pack (export_view output: a view/ or views/ dir next to the record, the DB or the kit) travel with the record, 2 GB cap.
+    have_f = set(x[1] for x in files)
+    for r in [x for x in (inp.get("kit"), inp.get("base"), dbd) if x and os.path.isdir(x)]:
+        for f in ("land_slots.json", "face_guard.json", "1_synth.v"):
+            if f not in have_f and os.path.isfile(os.path.join(r, f)):
+                files.append((r, f)); have_f.add(f)
+        if "1_synth.v" not in have_f:
+            for dp, dn, fn in os.walk(r):
+                dn[:] = [d for d in dn if d not in ("objects", ".git", "__pycache__")] if dp.count("/") - r.count("/") < 4 else []
+                if "1_synth.v" in fn:
+                    files.append((dp, "1_synth.v")); have_f.add("1_synth.v"); break
+    vt = 0
+    for vr in [x for x in (os.path.join(sod, "view"), os.path.join(sod, "views"), os.path.join(os.path.dirname(sod), "view"), os.path.join(os.path.dirname(sod), "views"),
+                           os.path.join(dbd, "view"), os.path.join(dbd, "views"), os.path.join(inp.get("kit") or "/nonexistent", "views")) if os.path.isdir(x)]:
+        for dp, dn, fn in os.walk(vr):
+            for f in fn:
+                q = os.path.join(dp, f)
+                if os.path.isfile(q) and vt + os.path.getsize(q) < 2 << 30:
+                    rel = os.path.basename(vr) + "/" + os.path.relpath(q, vr)
+                    if rel not in have_f:
+                        files.append((os.path.dirname(vr), rel)); have_f.add(rel); vt += os.path.getsize(q)
     disp, taken, tot = [], set(), 0
     DISP = re.compile(r"\.(png|svg|webp|jpe?g|lef|lib|lib\.gz)$|(^|_)(pins|abstract|layout_dump|bb)\.(json|v)$|_bb\.v$")
     roots = [sod, os.path.dirname(sod), dbd, inp.get("kit"), os.path.join(os.path.dirname(sod), "view"), os.path.join(os.path.dirname(sod), "views"),
@@ -187,6 +209,9 @@ elif mode == "hash":
     os.makedirs(os.path.dirname(CACHE), exist_ok=True)
     tmp = CACHE + ".tmp"; json.dump(cache, open(tmp, "w")); os.replace(tmp, CACHE)
     print(json.dumps(out))
+elif mode == "evidence":
+    u = unit(arg["signoff"])
+    print(json.dumps(dict(files=[x for x in u.get("files", []) if x[1] in ("land_slots.json", "face_guard.json", "1_synth.v") or "/" in x[1]], err=u.get("err"))))
 elif mode == "rmspool":
     for f in arg["files"]:
         if re.fullmatch(r"[0-9a-f]{16}\.json", f) and os.path.isfile(os.path.join(SPOOL, f)):
@@ -311,7 +336,7 @@ def index_row(u):
 
 def meta_files(u):
     """the AGIdock share of a unit: the sign-off json (not the 6_final.* DB files)."""
-    return [(d, f) for d, f in u['files'] if not f.startswith('6_final.')]
+    return [(d, f) for d, f in u['files'] if not f.startswith('6_final.') and f != '1_synth.v' and '/' not in f]   # the big evidence (1_synth.v, view packs) stays rtx-pro only
 
 
 def export_agi_meta(u):
@@ -431,6 +456,48 @@ def finish(L, have):
     save_ledger(L)
 
 
+def evidence_backfill(L, budget_s=1500):
+    """EVIDENCE-EXPORT-1119: for every exported ('done') unit whose kit still exists on its host, list its landing evidence + view pack, hash it and queue it for rtx-pro (evidence_rtx.json).
+    Units whose kit is gone stay without (nothing to copy).  A unit is tried once per drain; evidence_done.jsonl from rtx-pro marks it ev_done."""
+    t0, queue = time.time(), []
+    dp = os.path.join(STATE, 'evidence_done.jsonl')
+    if os.path.isfile(dp):
+        for line in open(dp):
+            try:
+                d = json.loads(line)
+            except ValueError:
+                continue
+            u = L['units'].get(d.get('key'))
+            if u and d.get('ok'):
+                u['ev_done'] = time.strftime('%Y-%m-%dT%H:%M:%S%z')
+        os.replace(dp, dp + '.%d' % int(t0))
+    for k, u in L['units'].items():
+        if u.get('state') != 'done' or u.get('ev_done') or u.get('ev_none') or not u.get('host') or not u.get('signoff'):
+            continue
+        if time.time() - t0 > budget_s:
+            break
+        try:
+            ev = probe(u['host'], 'evidence', dict(signoff=u['signoff']), timeout=600)[0]
+        except Exception as e:
+            say('evidence %s: %s' % (k, e))
+            continue
+        fl = [tuple(x) for x in ev.get('files') or ()]
+        if not fl:
+            u['ev_none'] = ev.get('err') or 'no kit evidence on host'
+            continue
+        hs = probe(u['host'], 'hash', dict(paths=[os.path.join(d, f) for d, f in fl]), timeout=3600)[0]
+        u['ev_files'] = [[d, f] for d, f in fl if hs[os.path.join(d, f)][0]]
+        u['ev_shas'] = {f: hs[os.path.join(d, f)][0] for d, f in fl if hs[os.path.join(d, f)][0]}
+    queue = [dict(key=k, die=u['die'], unit=u['unit'], host=u['host'], files=u['ev_files'], shas=u['ev_shas'])
+             for k, u in L['units'].items() if u.get('ev_files') and not u.get('ev_done')]
+    tmp = os.path.join(STATE, 'evidence_rtx.json.tmp')
+    with open(tmp, 'w') as f:
+        json.dump(queue, f, indent=1)
+    os.replace(tmp, os.path.join(STATE, 'evidence_rtx.json'))
+    save_ledger(L)
+    say('evidence backfill: %d unit(s) queued for rtx-pro' % len(queue))
+
+
 def drain(a):
     os.makedirs(STATE, exist_ok=True)
     lk = open(os.path.join(STATE, 'drain.lock'), 'w')
@@ -445,6 +512,9 @@ def drain(a):
     have = {r[7] for r in rows}
     hosts = a.hosts.split(',') if a.hosts else HOSTS
     finish(L, have)
+    if a.evidence:
+        evidence_backfill(L, a.budget_s)
+        return 0
     # 2. collect new candidates
     scan = a.scan or (time.time() - L.get('last_scan', 0) > SCAN_H * 3600)
     cands = collect(hosts, scan)
@@ -525,6 +595,42 @@ def rtx_pull(a):
         say('hub unreadable', r.stderr[-200:])
         return 1
     reports = []
+    er = subprocess.run(SSH + [a.hub, 'cat .local/state/ot-auto-export/evidence_rtx.json'], capture_output=True, text=True, timeout=120)
+    ev_reports = []
+    for u in (json.loads(er.stdout or '[]') if er.returncode == 0 else []):
+        dest = os.path.join(RTX_ROOT, u['die'], u['unit'])
+        if not os.path.isdir(dest):
+            continue
+        err = None
+        groups = collections.OrderedDict()
+        for d, f in u['files']:
+            groups.setdefault(d, []).append(f)
+        for d, fs in groups.items():
+            src = subprocess.Popen(SSH + [u['host'], 'nice -n 10 tar cf - -C %s %s' % (shlex.quote(d), ' '.join(map(shlex.quote, fs)))], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            dst = subprocess.run(['tar', 'xf', '-', '--skip-old-files', '-C', dest], stdin=src.stdout, capture_output=True, timeout=6 * 3600)
+            src.stdout.close()
+            src.wait()
+            if src.returncode or dst.returncode:
+                err = 'evidence stream rc %s/%s' % (src.returncode, dst.returncode)
+                break
+        if not err:
+            bad = []
+            for f, sh_ in u['shas'].items():
+                h = hashlib.sha256()
+                try:
+                    with open(os.path.join(dest, f), 'rb') as fh:
+                        for b in iter(lambda: fh.read(1 << 22), b''):
+                            h.update(b)
+                except OSError:
+                    bad.append(f)
+                    continue
+                if h.hexdigest() != sh_:
+                    bad.append(f)
+            err = 'evidence sha mismatch %s' % bad[:5] if bad else None
+        ev_reports.append(dict(key=u['key'], ok=not err, err=err))
+        say('evidence', u['die'], u['unit'], err or 'ok')
+    if ev_reports:
+        subprocess.run(SSH + [a.hub, 'cat >> .local/state/ot-auto-export/evidence_done.jsonl'], input=''.join(json.dumps(x) + '\n' for x in ev_reports), text=True, timeout=120, check=True)
     for u in json.loads(r.stdout or '[]'):
         k = '%s/%s' % (u['die'], u['unit'])
         dest, part = os.path.join(RTX_ROOT, k), os.path.join(RTX_ROOT, k + '.partial')
@@ -599,6 +705,7 @@ def main(argv=None):
     d.add_argument('--scan', action='store_true')
     d.add_argument('--list-only', action='store_true')
     d.add_argument('--hosts')
+    d.add_argument('--evidence', action='store_true', help='backfill landing evidence + view packs of already exported units whose kit still exists')
     d.add_argument('--budget-s', type=float, default=2400)
     r = sub.add_parser('rtx-pull')
     r.add_argument('--hub', default='intel2')

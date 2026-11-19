@@ -91,3 +91,26 @@ def test_infer_order_and_row():
     c = AE.index_row(dict(u, state='meta', display=[('d', 'm.lef')])).rstrip('\n').split('\t')
     assert c[4] == '' and c[5].startswith('/home/ubuntu/signed-export-1114/s81/') and c[8] == 's81/m__ax_0123456789/display'
     assert c[10] == 'RTX-FULL-AGI-META'
+
+
+def test_unit_carries_landing_evidence_and_view_pack(tmp_path):
+    base = tmp_path / 'claude' / 'k' / 'work' / 'base'
+    base.mkdir(parents=True)
+    (base / '6_final.odb').write_bytes(b'\0' * (2 << 20))
+    kit = tmp_path / 'claude' / 'k' / 'work'
+    (kit / 'config.mk').write_text('export DESIGN_NAME = ot_top_m\n')
+    (kit / 'land_slots.json').write_text('{}')
+    (kit / 'face_guard.json').write_text('{}')
+    (kit / 'results').mkdir()
+    (kit / 'results' / '1_synth.v').write_text('module m; endmodule\n')
+    sod = tmp_path / 'claude' / 'k' / 'signoff'
+    (sod / 'views' / 'm').mkdir(parents=True)
+    (sod / 'views' / 'm' / 'gates.json').write_text('{}')
+    (sod / 'signoff.json').write_text(json.dumps(rec(odb=str(base / '6_final.odb'), kit=str(kit))))
+    env = dict(os.environ, HOME=str(tmp_path / 'home'))
+    r = subprocess.run([sys.executable, '-I', '-', 'scan', json.dumps(dict(hours=1, roots=[str(tmp_path / 'claude')]))], input=AE.PROBE, text=True, capture_output=True, env=env, check=True)
+    u = [json.loads(l) for l in r.stdout.splitlines() if l.startswith('{')][0]
+    names = {f for _, f in u['files']}
+    assert {'land_slots.json', 'face_guard.json', '1_synth.v', 'views/m/gates.json'} <= names
+    got = {f for _, f in AE.meta_files(dict(files=[tuple(x) for x in u['files']]))}
+    assert '1_synth.v' not in got and 'views/m/gates.json' not in got and 'land_slots.json' in got   # big evidence stays rtx-pro only
