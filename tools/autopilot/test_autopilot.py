@@ -2277,3 +2277,17 @@ class ResumeMove(Base):
             self.assertEqual("--hosts" in seen[0], want)
             if want:
                 self.assertEqual(seen[0][seen[0].index("--hosts") + 1], "epyc8")
+
+
+class RouteKillIsInfra(Base):
+    """COORD 11-19: a host-guard kill in the GRT stage (make Error 247) is infra-oom, never FAIL_route"""
+
+    def test_guard_kill_in_grt_is_infra(self):
+        c = {"FAIL_route": "make exit 2 (see run_route.log)", "runlog_tail": "make[1]: *** [Makefile:585: do-5_1_grt] Error 247"}
+        self.assertEqual(self.ap.classify(c, {})[:2], ("CRASH", "infra-oom"))
+        self.assertEqual(self.ap.classify(dict(c, runlog_tail="", oom="] Error 241"), {})[:2], ("CRASH", "infra-oom"))
+
+    def test_a_real_route_failure_stays_route_make_fail(self):
+        c = {"FAIL_route": "make exit 2 (see run_route.log)", "runlog_tail": "[ERROR DRT-0305] something"}
+        self.assertEqual(self.ap.classify(c, {})[:2], ("CRASH", "route-make-fail"))
+        self.assertEqual(self.ap.classify({"FAIL_route": "DRT-0255 path of net x"}, {})[:2], ("STRUCTURAL", "drt-nopath"))

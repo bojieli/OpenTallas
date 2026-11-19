@@ -1167,6 +1167,13 @@ def classify(c, client):
         if re.search(r"DRT-0255", fr):
             net = re.search(r"path of net (\S+)", fr)
             return "STRUCTURAL", "drt-nopath", f"DRT-NOPATH net {net.group(1) if net else '?'}: {fr[:260]}"
+        # COORD 11-19 (col_h9 r1/r2: host-guard SIGKILL in the GRT stage filed FAIL_route): a make Error 241/247 / rc 137 / 143 is the host killing the job (ot-oom-age guard, earlyoom), not a route
+        # failure: infra-oom, free resubmit.  The run-log probe (c["oom"]) or the failure text itself names it.
+        if c.get("oom"):
+            return "CRASH", "infra-oom", c["oom"]
+        km = re.search(r"\] Error 24[17]\b[^\n]*|\brc[ =]+(?:137|143)\b[^\n]*", " ".join(str(x) for x in (fr, c.get("runlog_tail"), c.get("orfs_error"), client.get("msg")) if x))
+        if km:
+            return "CRASH", "infra-oom", km.group(0)[:300]
         return "CRASH", "route-make-fail", fr[:300]
     # DIE-HBM-97 11-10 (COORD): a global placement that stopped at the per-pass Nesterov cap above overflow 0.1 is the
     # cause of what follows it (kv_line vC: 459k resizer buffers, DPL-0038 at 153%), not a crash or a congestion row

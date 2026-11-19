@@ -1,4 +1,5 @@
 """LATENCY-R 11-18 (COORD 11-18 optimistic launch): publish_apply apply / bind-fail."""
+import argparse
 import json
 import pytest
 import sys
@@ -257,3 +258,86 @@ def test_postbind_unit_prep_line_really_makes_the_copy(tmp_path):
         assert SM.verify(str(t), ro=True, full=True)[0] == []
     finally:
         _chmod_back(tmp_path)
+
+
+# ---- adopt-bind (COORD 11-19): a green post-bind switches kit_rtl.bind_out ---------------------------------------------------
+class _R:
+    def __init__(self, rc=0, out="", err=""):
+        self.returncode, self.stdout, self.stderr = rc, out, err
+
+
+def _adopt_cfg(tmp_path, old="/t/tree_bind_old"):
+    C = tmp_path / "coord"
+    (C / "autopilot").mkdir(parents=True)
+    (C / "bin").mkdir()
+    (C / "bin/post.sh").write_text("#!/bin/bash\n")
+    cfg = {"dies": {"s81": {"src": "/t/tree", "plan": "/t/tree/plan.json", "gen_hosts": ["epyc8", "epyc10", "intel1"], "gen_host": "epyc8",
+                            "kit_rtl": {"mode": "bind", "bind_out": old, "asbuilt": "/t/tree/asbuilt.json"},
+                            "item_inputs": {"a": {"kit_rtl": {"bind_out": old}}, "b": {"kit_rtl": {"bind_out": "/other"}}, "c/d": {"kit_rtl": {"bind_out": old}}}}}}
+    (C / "autopilot/kit_wave.json").write_text(json.dumps(cfg))
+    return C, cfg
+
+
+def test_adopt_bind_plan_repoints_the_die_and_the_items_that_named_the_old_bind(tmp_path):
+    C, cfg = _adopt_cfg(tmp_path)
+    p = PA.adopt_bind_plan(cfg, "s81", "/t/tree", "/t/tree_postbind_0101", "0101", "epyc8")
+    assert p["dest"] == "/t/tree_bind_0101" and p["out"] == "/t/tree_postbind_0101/_postbind/out" and p["hosts"] == ["epyc10", "intel1"]
+    paths = [o["path"] for o in p["patch"]]
+    assert paths == ["/dies/s81/kit_rtl/bind_out", "/dies/s81/item_inputs/a/kit_rtl/bind_out", "/dies/s81/item_inputs/c~1d/kit_rtl/bind_out"]
+    assert all(o["value"] == "/t/tree_bind_0101" for o in p["patch"])
+    assert PA.adopt_bind_plan({"dies": {"s81": {"kit_rtl": {"mode": "native"}}}}, "s81", "/t", "/c", "1", "h") is None
+
+
+def test_adopt_bind_green_seals_replicates_checks_and_switches_once(tmp_path):
+    C, cfg = _adopt_cfg(tmp_path)
+    calls = []
+    def run(argv, **k):
+        calls.append(argv)
+        if argv[0] == "ssh" and "bash -s" in argv[-1]:
+            return _R(0, "ADOPT_SEAL /t/tree_bind_0101\n")
+        return _R(0)
+    a = argparse.Namespace(die="s81", lane="S81-DIE-R3", tree="/t/tree", copy="/t/tree_postbind_0101", host="epyc8", id="u1", stamp="0101", coord=str(C))
+    rc = PA.cmd_adopt_bind(a, run=run, check_fn=lambda obj, run=None: (True, "bind matches the candidate on 40/40 types (epyc8)"))
+    assert rc == 0
+    rsyncs = [c for c in calls if c[0] == "ssh" and "rsync" in c[-1]]
+    assert [c[-1].split()[-1].split(":")[0] for c in rsyncs] == ["epyc10", "intel1"]
+    edits = [c for c in calls if any("kit_wave_edit.py" in str(x) for x in c)]
+    assert len(edits) == 1 and "--patch-file" in edits[0]
+
+
+def test_adopt_bind_mismatch_switches_nothing_and_bind_fails_only_the_named_types(tmp_path):
+    C, cfg = _adopt_cfg(tmp_path)
+    calls = []
+    def run(argv, **k):
+        calls.append(argv)
+        return _R(0, "ADOPT_SEAL x\n") if (argv[0] == "ssh" and "bash -s" in argv[-1]) else _R(0)
+    a = argparse.Namespace(die="s81", lane="S81-DIE-R3", tree="/t/tree", copy="/t/c", host="epyc8", id="u1", stamp="0101", coord=str(C))
+    txt = "bind /t/x does not match the candidate on 2/40 types (epyc8): differs {}; e.g. svc_a, ot_leaf__t3.  A clock_table_sha256-only difference = ..."
+    rc = PA.cmd_adopt_bind(a, run=run, check_fn=lambda obj, run=None: (False, txt))
+    assert rc == 1
+    assert not any(any("kit_wave_edit.py" in str(x) for x in c) for c in calls)
+    bf = [c for c in calls if "bind-fail" in c]
+    assert len(bf) == 1 and bf[0][bf[0].index("--types") + 1] == "svc_a,ot_leaf__t3"
+
+
+def test_adopt_bind_stops_when_the_seal_or_a_replica_fails(tmp_path):
+    C, cfg = _adopt_cfg(tmp_path)
+    a = argparse.Namespace(die="s81", lane="L", tree="/t/tree", copy="/t/c", host="epyc8", id="u", stamp="1", coord=str(C))
+    assert PA.cmd_adopt_bind(a, run=lambda argv, **k: _R(1, "", "no such dir"), check_fn=lambda *x, **y: (True, "")) == 2
+    def run2(argv, **k):
+        if argv[0] == "ssh" and "bash -s" in argv[-1]:
+            return _R(0, "ADOPT_SEAL x\n")
+        return _R(23, "", "rsync boom") if "rsync" in argv[-1] else _R(0)
+    calls = []
+    assert PA.cmd_adopt_bind(a, run=run2, check_fn=lambda *x, **y: calls.append(1) or (True, "")) == 2 and not calls
+
+
+def test_post_bind_unit_runs_adopt_only_after_a_pass():
+    obj = {"marker": {"tree": "/t/tree", "plan": "/t/tree/plan.json", "config": {"kit_rtl": {"mode": "bind", "bind_out": "/b", "asbuilt": "a.json"}, "gen_hosts": ["epyc8"]}}}
+    seen = []
+    PA.start_postbind("/c", obj, "L", "s81", run=lambda argv, **k: seen.append(argv) or _R(0), stamp="0101", log_dir="/tmp/pb_t")
+    body = seen[0][-1]
+    assert "[ $rc = 0 ] && python3 -I" in body and "adopt-bind --die s81" in body
+    seen.clear()
+    PA.start_postbind("/c", obj, "L", "s81", run=lambda argv, **k: seen.append(argv) or _R(0), stamp="0102", log_dir="/tmp/pb_t", auto_adopt=False)
+    assert "adopt-bind" not in seen[0][-1]

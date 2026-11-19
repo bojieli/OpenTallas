@@ -236,7 +236,7 @@ def postbind_prep_sh(s):
             f"mv {Cp}.part {Cp}\necho POSTBIND_COPY {Cp}\n")
 
 
-def start_postbind(C, obj, lane, die, run=subprocess.run, host="", stamp=None, log_dir=None):
+def start_postbind(C, obj, lane, die, run=subprocess.run, host="", stamp=None, log_dir=None, auto_adopt=True):
     """start the post-apply strict bind + LATCHECK as a hub user unit: ssh-prep the copy, ot-run the job there (plan/bind admission), post the result.
     -> (unit or None, text)"""
     stamp = stamp or time.strftime("%m%d%H%M%S")
@@ -262,11 +262,102 @@ def start_postbind(C, obj, lane, die, run=subprocess.run, host="", stamp=None, l
             f"r=$(grep -E '^(ELAB|BIND|LATCHECK)_RC=' {q(str(log))} | tr '\\n' ' ')\n"
             f"if [ $rc = 0 ]; then v=PASS; else v=\"FAIL (rc $rc): run {fail}\"; fi\n"
             f"bash {q(str(Path(C) / 'bin/post.sh'))} {q(lane)} \"POST-APPLY-BIND [{lane} -> COORD] {die} tree {s['tree']}: strict bind + LATCHECK in hardlink copy "
-            f"{s['copy']} on {s['host']}: $r-> $v; log hub:{log}\"\n")
+            f"{s['copy']} on {s['host']}: $r-> $v; log hub:{log}\"\n"
+            + (f"[ $rc = 0 ] && python3 -I {q(str(HERE / 'publish_apply.py'))} adopt-bind --die {die} --lane {q(lane)} --tree {q(s['tree'])} --copy {q(s['copy'])} --host {q(s['host'])} "
+               f"--id {unit} --coord {q(str(C))} >> {q(str(log))} 2>&1\n" if auto_adopt else ""))
     r = run(["systemd-run", "--user", "--unit", unit, "--collect", "--quiet", "--nice=5", "bash", "-c", body], capture_output=True, text=True, timeout=120)
     if r.returncode != 0:
         return None, "post-apply bind not started (rc %d: %s)" % (r.returncode, (r.stderr or r.stdout)[-160:])
     return unit, f"post-apply strict bind + LATCHECK unit {unit} in hardlink copy {s['copy']} on {s['host']} (log {log})"
+
+
+# COORD 11-19 (structural; S81-DIE-R3 owns the post-bind): publish / apply never carried the bind output, so after every plan event kit_rtl.bind_out kept pointing at the OLD bind and the kits
+# failed KIT_TOPOLOGY_BIND_STALE until someone hand-published.  adopt-bind closes the loop when the post-apply bind is GREEN: its output (<copy>/_postbind/out, fresh files, the only part of the copy
+# the bind wrote) is sealed (read-only) as <tree>_bind_<stamp> on the bind host, replicated to every other gen host of the die, checked with kit_topology.bind_matches against the die's live plan, and
+# only then dies.<die>.kit_rtl.bind_out (and every item_inputs bind_out that still named the old bind) is switched to it in ONE CAS commit (kit_wave_edit).  This does not compose a new tree: the
+# tree is unchanged, so no manifest hash, event or tools change; a child tree is only needed when the bind must travel INSIDE the tree.  A bind that does not match the plan on every type switches
+# nothing and bind-fails ONLY the types that differ.
+BIND_DEST_SUFFIX = "_bind_"
+
+
+def adopt_bind_plan(cfg, die, tree, copy, stamp, host):
+    """-> dict(out, dest, hosts, old_bind, patch) for dies.<die>: out = the bind the post-bind wrote, dest = its sealed name beside the tree, patch = the kit_wave_edit ops that repoint the die
+    and every item_inputs bind_out that named the same old bind; None when the die has no bind-mode kit_rtl"""
+    d = (cfg.get("dies") or {}).get(die) or {}
+    kr = d.get("kit_rtl") or {}
+    if kr.get("mode") != "bind" or not kr.get("bind_out"):
+        return None
+    dest = f"{tree.rstrip('/')}{BIND_DEST_SUFFIX}{stamp}"
+    old = kr["bind_out"]
+    ops = [{"op": "replace", "path": f"/dies/{die}/kit_rtl/bind_out", "value": dest}]
+    for item, ii in sorted((d.get("item_inputs") or {}).items()):
+        if isinstance(ii, dict) and isinstance((ii.get("kit_rtl") or {}).get("bind_out"), str) and ii["kit_rtl"]["bind_out"] == old:
+            ops.append({"op": "replace", "path": f"/dies/{die}/item_inputs/{item.replace('~', '~0').replace('/', '~1')}/kit_rtl/bind_out", "value": dest})
+    hosts = [h for h in (d.get("gen_hosts") or []) if h != host]
+    return dict(out=f"{copy.rstrip('/')}/{POSTBIND_DIR}/out", dest=dest, hosts=hosts, old_bind=old, patch=ops)
+
+
+def adopt_bind_seal_sh(plan_):
+    """host side (the bind host): the bind output must be there and complete, then it is copied (fresh files) to <dest>.part, made read-only and renamed; an existing dest is left alone"""
+    q = shlex.quote
+    o, d = q(plan_["out"]), q(plan_["dest"])
+    return (f"set -euo pipefail\ntest -f {o}/native_topology.json\nif [ -e {d} ]; then echo ADOPT_SEAL exists {d}; exit 0; fi\ntest ! -e {d}.part\n"
+            f"cp -a {o} {d}.part\nchmod -R a-w {d}.part\nmv {d}.part {d}\necho ADOPT_SEAL {d}\n")
+
+
+def adopt_bind_candidate(cfg, die, dest):
+    """the candidate shape bind_check reads: the die's live tree and plan with the NEW bind_out"""
+    d = cfg["dies"][die]
+    kr = dict(d.get("kit_rtl") or {})
+    kr["bind_out"] = dest
+    return {"marker": {"tree": d["src"], "plan": d["plan"], "die_gen_env": d.get("die_gen_env") or {}, "hosts": d.get("gen_hosts") or [],
+                       "config": {"kit_rtl": kr, "gen_hosts": d.get("gen_hosts") or []}}}
+
+
+def cmd_adopt_bind(a, run=subprocess.run, check_fn=None):
+    """publish_apply.py adopt-bind --die D --lane L --tree TREE --copy COPY --host H --id ID: see the block comment above.  rc 0 switched (or already current), 1 bind did not match (those types
+    are bind-failed), 2 nothing to do / a step failed (nothing switched)"""
+    C = Path(a.coord)
+    cfg = json.loads((C / "autopilot/kit_wave.json").read_text())
+    plan_ = adopt_bind_plan(cfg, a.die, a.tree, a.copy, a.stamp or time.strftime("%m%d%H%M%S"), a.host)
+    if not plan_:
+        print(f"ADOPT-BIND {a.die}: no bind-mode kit_rtl; nothing to adopt")
+        return 2
+    sh = lambda host, script: run(["ssh", "-o", "BatchMode=yes", "-o", "ControlPath=none", host, "bash -s"], input=script, capture_output=True, text=True, timeout=1800)
+    r = sh(a.host, adopt_bind_seal_sh(plan_))
+    if r.returncode or "ADOPT_SEAL" not in (r.stdout or ""):
+        print(f"ADOPT-BIND {a.die}: sealing the bind output on {a.host} failed rc {r.returncode}: {(r.stderr or r.stdout)[-200:]}; nothing switched")
+        return 2
+    e = "ssh -o BatchMode=yes -o ControlPath=none -o ConnectTimeout=15"
+    for h in plan_["hosts"]:
+        r = run(["ssh", "-o", "BatchMode=yes", "-o", "ControlPath=none", a.host,
+                 f"rsync -a -e {shlex.quote(e)} {shlex.quote(plan_['dest'] + '/')} {h}:{shlex.quote(plan_['dest'] + '/')}"], capture_output=True, text=True, timeout=1800)
+        if r.returncode:
+            print(f"ADOPT-BIND {a.die}: replicating the bind to {h} failed rc {r.returncode}: {(r.stderr or r.stdout)[-200:]}; nothing switched")
+            return 2
+    ok, txt = (check_fn or bind_check)(adopt_bind_candidate(cfg, a.die, plan_["dest"]), run=run)
+    print(f"ADOPT-BIND {a.die}: {txt}")
+    if ok is not True:
+        types = re.findall(r"e\.g\. ([^;]+?)\.", txt)
+        names = [t.strip() for t in (types[0].split(",") if types else []) if t.strip()]
+        post(C, a.lane, f"ADOPT-BIND-FAIL [{a.lane} -> {a.lane}] {a.die}: the post-bind output {plan_['dest']} does not match the live plan ({txt[:300]}); kit_rtl.bind_out NOT switched; "
+                        f"bind-failing {len(names)} named type(s)", run=run)
+        if names:
+            run([sys.executable, "-I", str(HERE / "publish_apply.py"), "bind-fail", "--die", a.die, "--lane", a.lane, "--id", a.id or "adopt-bind", "--types", ",".join(names),
+                 "--coord", str(C)], capture_output=True, text=True, timeout=600)
+        return 1
+    with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False) as f:
+        json.dump(plan_["patch"], f)
+    r = run([sys.executable, "-I", str(HERE / "kit_wave_edit.py"), "--coord", str(C), "--message",
+             f"{a.lane}: adopt post-bind output as kit_rtl.bind_out of {a.die} ({Path(plan_['dest']).name}; was {Path(plan_['old_bind']).name})", "--patch-file", f.name],
+            capture_output=True, text=True, timeout=600)
+    os.unlink(f.name)
+    if r.returncode:
+        print(f"ADOPT-BIND {a.die}: the kit_wave.json edit failed: {(r.stdout + r.stderr)[-300:]}")
+        return 2
+    post(C, a.lane, f"ADOPT-BIND [{a.lane} -> COORD] {a.die}: post-bind GREEN and matching on every type; kit_rtl.bind_out {plan_['old_bind']} -> {plan_['dest']} "
+                    f"({len(plan_['patch']) - 1} item_inputs repointed, hosts {a.host},{','.join(plan_['hosts'])}); the BIND-STALE rows relaunch on the next wave pass", run=run)
+    return 0
 
 
 def cmd_post_bind(a, run=subprocess.run):
@@ -483,6 +574,15 @@ def main(argv=None):
     pb.add_argument("--die", default="")
     pb.add_argument("--host", default="", help="build host holding the tree (default: the candidate's first gen host)")
     pb.add_argument("--coord", default=os.path.expanduser("~/coord"))
+    ad = sp.add_parser("adopt-bind", help="after a GREEN post-bind: seal its output, replicate it to the die gen hosts, verify it matches the live plan, switch kit_rtl.bind_out (one CAS commit)")
+    ad.add_argument("--die", required=True)
+    ad.add_argument("--lane", required=True)
+    ad.add_argument("--tree", required=True)
+    ad.add_argument("--copy", required=True)
+    ad.add_argument("--host", required=True)
+    ad.add_argument("--id", default="")
+    ad.add_argument("--stamp", default="")
+    ad.add_argument("--coord", default=os.path.expanduser("~/coord"))
     dv = sp.add_parser("derive-asbuilt", help="write the kit asbuilt the bind was made with (tables from bind/INPUTS_ISOLATED.json)")
     dv.add_argument("--bind", required=True)
     dv.add_argument("--asbuilt", required=True)
@@ -500,6 +600,8 @@ def main(argv=None):
     a = P.parse_args(argv)
     if a.cmd == "post-bind":
         return cmd_post_bind(a)
+    if a.cmd == "adopt-bind":
+        return cmd_adopt_bind(a)
     return cmd_apply(a) if a.cmd == "apply" else cmd_derive(a) if a.cmd == "derive-asbuilt" else cmd_bind_fail(a)
 
 

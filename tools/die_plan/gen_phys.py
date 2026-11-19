@@ -6783,6 +6783,10 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         # -max_wire_length UM (grt_maxwire.tcl overrides ORFS repair_design_helper; same SLEW/CAP margins): routed
         # station kits kept 2-27 max-slew pins on ~150 um single-driver M2/M3 segments the GRT estimate passed.
         cfg += [f"export OT_MAXWIRE_UM = {max_wire_um:g}"]
+        if os.environ.get("OT_MAXWIRE_POST_SKIP", "").strip() == "1":
+            # WAVE-PILOT-FIX 11-19 (COORD, FABLE-FIX-S81-COLH9R1): the post-GRT max-wire repair stalls 1800 s on every col_h9 kit and GRT then re-runs; item_env / die_gen_env OT_MAXWIRE_POST_SKIP=1
+            # skips it from the first run (grt_maxwire.tcl)
+            cfg += ["export OT_MAXWIRE_POST_SKIP = 1"]
         shutil.copyfile(Path(__file__).with_name("grt_maxwire.tcl"), kd / "grt_maxwire.tcl")
     # FT-HOP-M2-WIRE (GEN-CLASS-1 11-12, COORD plan (1)): every kit with ft slots gets a post-GRT repeater pitch on its
     # ft-station hop nets only (ft_hop_maxwire.tcl; HEAD hd_spn_wshim_tx 120 sign-off slew pins = 200-um M2 hops).
