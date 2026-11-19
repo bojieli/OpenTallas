@@ -157,3 +157,41 @@ def test_replicated_constant_is_a_constant_not_a_data_term():
         bad = HDC.replace("else r <= d;", "else r <= d ^ r;")
         got = set(RK.derive(_rtl(d, bad)))
     assert "w11_cut:r" not in got                     # r now depends on itself through logic
+
+
+BOUND = """
+module leaf_bound (input wire clk, input wire [7:0] a, output wire [15:0] o);
+    reg [7:0] g_u_lf0_u_vp_g_ln_0_u_cst_hi_gd_s_0_u_src_bdbec6ef94848d02f109_q;
+    always @(posedge clk) g_u_lf0_u_vp_g_ln_0_u_cst_hi_gd_s_0_u_src_bdbec6ef94848d02f109_q <= a;
+    reg [7:0] g_u_lf0_u_vp_g_ln_1_u_cst_hi_gd_s_0_u_src_bdbec6ef94848d02f109_q;
+    always @(posedge clk) g_u_lf0_u_vp_g_ln_1_u_cst_hi_gd_s_0_u_src_bdbec6ef94848d02f109_q <= a;
+    reg [7:0] g_u_lf0_u_vp_driver_x_q;
+    always @(posedge clk) g_u_lf0_u_vp_driver_x_q <= a;
+    assign o = {g_u_lf0_u_vp_g_ln_0_u_cst_hi_gd_s_0_u_src_bdbec6ef94848d02f109_q,
+                g_u_lf0_u_vp_g_ln_1_u_cst_hi_gd_s_0_u_src_bdbec6ef94848d02f109_q} ^ {2{g_u_lf0_u_vp_driver_x_q}};
+endmodule
+"""
+IST = """proc is_place {pat x y tag} {}
+is_place {*u_vp_g_ln_0_u_cst_hi_gd_s_0_u_*} 168.48 533.817 cst:hi
+is_place {*u_vp_g_ln_1_u_cst_hi_gd_s_0_u_*} 289.44 145.017 cst:hi
+is_place {*u_ist_leafup_o0_0[./]q\\[4[0-9]\\]*} 1.0 2.0 ist:leafup_o0:bit
+"""
+
+
+def test_bound_plan_stations_are_kept(monkeypatch):
+    """FABLE-FIX-S81-LEAF: per-lane stations of ONE bound module (plain regs, equal D) get a module-scoped keep."""
+    monkeypatch.delenv("OT_REPLICA_KEEP", raising=False)
+    with tempfile.TemporaryDirectory() as d:
+        (Path(d) / "leaf_bound.sv").write_text(BOUND)
+        ist = Path(d) / "istations.tcl"
+        ist.write_text(IST)
+        assert RK.derive(d) == []                                   # one module instance: the module rule sees nothing
+        got = RK.station_regs(d, [Path(d) / "missing.tcl", ist])
+        assert got == ["leaf_bound:g_u_lf0_u_vp_g_ln_0_u_cst_hi_gd_s_0_u_src_bdbec6ef94848d02f109_q",
+                       "leaf_bound:g_u_lf0_u_vp_g_ln_1_u_cst_hi_gd_s_0_u_src_bdbec6ef94848d02f109_q"]
+        assert RK.station_regs(d, []) == [] and RK.station_regs(d, None) == []
+        w = gen_phys.replica_keep_wires(d, "extra_x", stations=[ist])
+        assert got[0] in w and got[1] in w and "extra_x" in w and not any("driver_x" in x for x in w)
+        assert gen_phys.replica_keep_wires(d, "extra_x") == ["extra_x"]          # no sidecar: unchanged
+        monkeypatch.setenv("OT_REPLICA_KEEP", "0")
+        assert gen_phys.replica_keep_wires(d, None, stations=[ist]) == []

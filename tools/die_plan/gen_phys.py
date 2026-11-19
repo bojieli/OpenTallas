@@ -5297,7 +5297,7 @@ _FSM_NONE_BY_MODULE = ((re.compile(r"^\s*module\s+ot_s81ph_link_gbx\w*\b", re.M)
                        (re.compile(r"^\s*module\s+(?:ot_qwen_d2d_recovery|qfd_sys_face_lctx3_core)\b", re.M), ("st",)),)
 
 
-def replica_keep_wires(rtl_dir, extra=None):
+def replica_keep_wires(rtl_dir, extra=None, stations=None):
     """MERGE-CENSUS 11-15 (FABLE-GENBUG G5): OT_KEEP_WIRES entries for the port-staging registers of every module the kit
     instantiates more than once (replica_keep.derive: `Module:reg`), then the per-item env names (commas or spaces),
     de-duplicated in order.  OT_REPLICA_KEEP=0 omits the derived part (the env names stay)."""
@@ -5305,6 +5305,8 @@ def replica_keep_wires(rtl_dir, extra=None):
     if os.environ.get("OT_REPLICA_KEEP", "1").strip() != "0":
         import replica_keep as _RK
         names.extend(_RK.derive(rtl_dir))
+        # FABLE-FIX-S81-LEAF 11-18: the bound module's plan stations (istations.tcl is_place) fold the same way
+        names.extend(_RK.station_regs(rtl_dir, stations))
     names.extend((extra or "").replace(",", " ").split())
     return list(dict.fromkeys(names))
 
@@ -6306,7 +6308,9 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     rom_bits = max(declared_rom_bits(kd / "rtl"), declared_flop_mem_bits(kd / "rtl"))   # + DIE-KV-60/hubeo flop FIFOs
     landing_ff = defines_landing_ring(kd / "rtl")
     fsm_wires = fsm_none_wires(kd / "rtl", os.environ.get("OT_FSM_NONE_WIRES"))
-    keep_wires = replica_keep_wires(kd / "rtl", os.environ.get("OT_KEEP_WIRES"))
+    keep_wires = replica_keep_wires(kd / "rtl", os.environ.get("OT_KEEP_WIRES"),
+                                    stations=[Path(f).parent / n for f in rtl_files[:1]
+                                              for n in (str(t.get("module", "")) + ".istations.tcl", "istations.tcl")])
     pins = type_pins(P, tn)
     bump_sites = bump_pin_sites(P, tn, bump_ports, macros, Path(root) if root else Path(__file__).resolve().parent.parent.parent) \
         if bump_ports else []

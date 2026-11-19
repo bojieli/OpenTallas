@@ -8,7 +8,7 @@ as qkh_head_tstage ti_b <= ti_a, qkd_seq_fan_s qd <= q / qd2 <= qd, ot_sram_oldr
 Two copies fed by the same signals are then identical flops and opt_merge folds them into one that drives loads far
 apart.  The keep is declared per MODULE ('Mod:reg' entries of OT_KEEP_WIRES, ot_keep_regs.tcl), so a register named `q`
 elsewhere is untouched.  Function is unchanged: keep only stops the folding.
-usage: replica_keep.py RTL_DIR [--json]    prints one 'Mod:reg' per line.
+usage: replica_keep.py RTL_DIR [--stations ISTATIONS.tcl] [--json]    prints one 'Mod:reg' per line.
 """
 import re, sys, json
 from pathlib import Path
@@ -193,11 +193,41 @@ def derive(rtl_dir):
     return res
 
 
+_IS_PLACE = re.compile(r"^\s*is_place(?:_alt)?\s+\{\*([A-Za-z_]\w*)\*\}", re.M)
+_REG_DECL = re.compile(r"^\s*reg\s*(?:\[[^\]]*\]\s*)?([A-Za-z_]\w*)\s*;", re.M)
+
+
+def station_regs(rtl_dir, ist_files):
+    """FABLE-FIX-S81-LEAF 11-18 (S81 leaf family, TT -220..-778 on D8e): the registers of a BOUND module that the kit's
+    istations.tcl places FIRM at a plan site (`is_place {*<name fragment>*} x y tag`) are declared stations, one per lane
+    / group, each wired to its own consumer.  The bind writes them as plain registers of the one bound module
+    (g_<path>_cst_hi_gd_s_<k>_u_src_<hash>_q), so derive() (replicated MODULES) never sees them, and stations with equal
+    data fold: leaf t25 / t27 keep 2,048 of 8,200 hig bits and 1,040 of 4,112 lane cst_hi bits; the surviving lane-9 flop
+    then drives the lane 1 / 5 / 13 macro pins on one net (t27 TT: 693 ps of wire at 2.2 ns slew, slack -271).
+    Returns `Module:reg` for every register declaration whose name contains an is_place fragment.  Function unchanged
+    (keep only stops the folding); no cycle changes; a kit without istations.tcl or without such registers gets []."""
+    frags = set()
+    for f in ist_files or []:
+        f = Path(f)
+        if f.is_file():
+            frags |= set(_IS_PLACE.findall(f.read_text(errors="replace")))
+    if not frags:
+        return []
+    res = []
+    for m, body in sorted(parse(rtl_dir).items()):
+        for r in sorted(set(_REG_DECL.findall(body))):
+            if any(fr in r for fr in frags):
+                res.append(f"{m}:{r}")
+    return res
+
+
 def main(argv):
     if not argv:
         print(__doc__)
         return 2
     res = derive(argv[0])
+    if "--stations" in argv:
+        res += station_regs(argv[0], [argv[argv.index("--stations") + 1]])
     if "--json" in argv:
         print(json.dumps(res))
     else:
