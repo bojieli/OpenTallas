@@ -40,7 +40,7 @@ def ensure_tree_on_hosts(tree, want, current_hosts, hosts, rt, run=None, link_fr
     def sh(cmd):
         if run:
             return run(cmd)
-        r = subprocess.run(["bash", "-c", cmd], capture_output=True, text=True, timeout=3600)
+        r = subprocess.run(["bash", "-c", cmd], capture_output=True, text=True, timeout=14400)   # 11-18: a 58 GB tree copy + verify ran past the old 3600 s and was killed (epyc7, epyc10 DROPPED at QC N4.1q)
         return r.returncode, (r.stdout + r.stderr).strip()
     # LATENCY-R 11-18 (QC N3 sat ready ~1 h+ because intel1 scratch2 was full): one extra host that cannot take the tree (disk floor, down) no longer refuses the
     # whole apply.  Each extra host is replicated + verified on its own; a host that fails is DROPPED from the die's gen_hosts for this tree (named in the detail
@@ -60,7 +60,7 @@ def ensure_tree_on_hosts(tree, want, current_hosts, hosts, rt, run=None, link_fr
         return list(hosts), [f"DROPPED {h}: no candidate host holds a verified copy of {tree} to replicate from" for h in extra] + notes
     ssh = "ssh -n -o BatchMode=yes -o ControlPath=none -o ConnectTimeout=15 "
     for h in extra:
-        rep = f"python3 -I {shlex.quote(sm)} replicate {shlex.quote(tree)} --hosts {shlex.quote(h)}" + (f" --link-from {shlex.quote(link_from)}" if link_from else "")
+        rep = f"python3 -I {shlex.quote(sm)} replicate {shlex.quote(tree)} --hosts {shlex.quote(h)}" + (f" --link-from {shlex.quote(link_from)}" if link_from else " --tar")
         rc, out = sh(ssh + shlex.quote(src) + " " + shlex.quote(rep))
         if not rc:
             rc, out = sh(f"python3 -I {shlex.quote(sm)} hosts {shlex.quote(tree)} --hosts {shlex.quote(h)} --expect {shlex.quote(want)}")
