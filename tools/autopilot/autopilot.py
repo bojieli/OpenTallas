@@ -352,6 +352,31 @@ def parse_queue(text):
     return rows
 
 
+CELL_BIG_SEEN = os.environ.get("OT_CELL_BIG_SEEN") or os.path.expanduser("~/.local/state/ap-cell-big-seen.json")
+
+
+def cell_big_first_today(die, typ, today=None):
+    """True the first time (die, type) is noted today; the day's set lives in a small state file (enqueue runs in a fresh process every call)"""
+    today = today or time.strftime("%Y-%m-%d")
+    key = f"{die}/{typ}"
+    try:
+        d = json.loads(Path(CELL_BIG_SEEN).read_text())
+        if d.get("day") != today:
+            d = {}
+    except (OSError, ValueError):
+        d = {}
+    if key in (d.get("seen") or []):
+        return False
+    try:
+        Path(CELL_BIG_SEEN).parent.mkdir(parents=True, exist_ok=True)
+        tmp = f"{CELL_BIG_SEEN}.{os.getpid()}"
+        Path(tmp).write_text(json.dumps({"day": today, "seen": sorted(set(d.get("seen") or []) | {key})}))
+        os.replace(tmp, CELL_BIG_SEEN)
+    except OSError:
+        pass
+    return True
+
+
 def validate_row(r):
     if not r["die"] or not r["type"]:
         return "die/type missing"
@@ -372,7 +397,8 @@ def validate_row(r):
     # WAVE-FLOW-R2 11-17 (COORD FABLE-FLOW-1500 D): the one cell limit (die_plan/cell_cap.py) is enforced at enqueue, whatever launched the kit; waiver = a
     # ruling id in lanes/CELL-WAIVER.tsv (die<TAB>type<TAB>rNNN)
     if c > SPLIT_CELLS and stops_off_for(r.get("die")):
-        log(f"KIT-WAVE CELL-BIG {r.get('die')}/{r.get('type')}: {int(c)} cells > {SPLIT_CELLS} (the one cell limit): enqueued anyway (stops_off); the owner may split the type")
+        if cell_big_first_today(r.get("die"), r.get("type")):      # FABLE-FLOW-0555 I: one line per item per day (it was 77% of the log)
+          log(f"KIT-WAVE CELL-BIG {r.get('die')}/{r.get('type')}: {int(c)} cells > {SPLIT_CELLS} (the one cell limit): enqueued anyway (stops_off); the owner may split the type")
     elif c > SPLIT_CELLS and not cell_waiver_for(r.get("die"), r.get("type")):
         return f"SPLIT-NEEDED: cells {int(c)} > {SPLIT_CELLS} (the one cell limit); split the type or waive with a ruling id in lanes/CELL-WAIVER.tsv"
     if r["goal"] not in ("", "auto", "route", "finish", "cts", "grt"):

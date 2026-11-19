@@ -9038,6 +9038,44 @@ print("AP_JSON " + json.dumps(out))
 """
 
 
+BOUND_TREE_KEYS = ("src", "plan", "plan_sha256", "src_sha", "queue_src", "src_manifest_hash")
+
+
+def bound_fallback(AP, cfg, st, die, rows, stale, now=None, rpy=None):
+    """FABLE-FLOW-0555 A (COORD 11-19): S81 289 rows BIND-STALE, 0 launches in 2 h while the newest tree's bind was red.  Launch a stale row on the
+    newest EARLIER tree of the die (dies.<die>.bound_trees, newest first, written by every apply) whose bind preflight is green for that item;
+    any-plan sign-off counts (OWNER 11-19).  The row's item_inputs {src, plan, src_manifest_hash, kit_rtl{bind_out, asbuilt}} are set in memory for
+    this tick (spec_for reads them); the row identity stays on the die plan.  -> {item: tree src} of the rescued items, removed from `stale`."""
+    d = cfg["dies"][die]
+    rescued = {}
+    todo = [r for r in rows if r["item"] in stale]
+    for bt in list(d.get("bound_trees") or [])[:BOUND_TREE_TRIES]:
+        if not todo or not bt.get("src") or not (bt.get("kit_rtl") or {}).get("bind_out"):
+            continue
+        ent = {k: bt[k] for k in BOUND_TREE_KEYS if bt.get(k)}
+        ent["kit_rtl"] = dict(bt["kit_rtl"])
+        cfg2 = json.loads(json.dumps(cfg))
+        ii2 = cfg2["dies"][die].setdefault("item_inputs", {})
+        for r in todo:
+            ii2[r["item"]] = dict(ii2.get(r["item"]) or {}, **json.loads(json.dumps(ent)))
+        try:
+            bad = bind_preflight(AP, cfg2, st, die, todo, now=now, rpy=rpy)
+        except Exception as e:                           # a diagnostic probe never stops the plan
+            AP.log(f"KIT-WAVE BOUND-FALLBACK {die} {bt.get('src')} skipped: {e}")
+            continue
+        ok = [r for r in todo if r["item"] not in bad]
+        for r in ok:
+            ii = d.setdefault("item_inputs", {}).setdefault(r["item"], {})
+            ii.update(json.loads(json.dumps(ent)))
+            rescued[r["item"]] = bt["src"]
+            stale.pop(r["item"], None)
+        todo = [r for r in todo if r["item"] in bad]
+    return rescued
+
+
+BOUND_TREE_TRIES = 3
+
+
 def bind_preflight(AP, cfg, st, die, rows, now=None, rpy=None):
     """{item: why} for type rows whose kit_topology prepare-stations would raise KIT_TOPOLOGY_BIND_STALE (kit_rtl mode
     bind, canonical topology preparation on).  One probe per (src, plan, bind_out, asbuilt, reset scope) on the die's
@@ -9083,7 +9121,10 @@ def bind_preflight(AP, cfg, st, die, rows, now=None, rpy=None):
                 cache.pop(key, None)
                 c = None
         if not c or not set(items) <= set(c.get("checked") or ()):
-            p = rpy(d.get("gen_host"), PROBE_BIND, dict(g, types=sorted(set(items))), timeout=600)
+            # FABLE-FLOW-0555 E: probe only the items this entry has not judged and merge (a verdict, stale or green, is kept for the entry's life)
+            old_c = c if (c and c.get("sig")) else None
+            todo_i = sorted(set(items) - set(old_c.get("checked") or ())) if old_c else sorted(set(items))
+            p = rpy(d.get("gen_host"), PROBE_BIND, dict(g, types=todo_i), timeout=600)
             if not isinstance(p, dict) or p.get("error") or not isinstance(p.get("stale"), list):
                 if AP:
                     AP.log(f"KIT-WAVE bind preflight {die} UNKNOWN (fail closed, rows not launched): "
@@ -9092,7 +9133,8 @@ def bind_preflight(AP, cfg, st, die, rows, now=None, rpy=None):
                     out[item] = "BIND_PREFLIGHT_UNKNOWN: the bind probe could not run on the gen host; not launched until it can"
                 continue
             sg = rpy(d.get("gen_host"), PROBE_BIND_SIG, g, timeout=120)
-            c = cache[key] = {"t": now, "checked": sorted(set(items)), "stale": p["stale"],
+            c = cache[key] = {"t": now, "checked": sorted(set(items) | set((old_c or {}).get("checked") or ())),
+                              "stale": sorted(set(p["stale"]) | (set((old_c or {}).get("stale") or ()) if old_c and isinstance(sg, dict) and sg.get("sig") == old_c.get("sig") else set())),
                               "sig": sg.get("sig") if isinstance(sg, dict) else None, "sig_t": now}
         for item in items:
             if item in c["stale"]:
@@ -9446,6 +9488,16 @@ def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
                         stale = {}
                         AP.log(f"KIT-WAVE bind preflight {die} skipped: {e}")
                     st.setdefault("bind_stale_items", {})[die] = sorted(stale or {})          # FABLE-FLOW-0358 A: the supersede steps read it (a row is cancelled only when its replacement can launch)
+                    if stale:
+                        try:
+                            resc = bound_fallback(AP, cfg, st, die, go, stale) if FG.stops_off_die(cfg, die) else {}
+                        except Exception as e:             # a diagnostic probe never stops the plan
+                            resc = {}
+                            AP.log(f"KIT-WAVE BOUND-FALLBACK {die} skipped: {e}")
+                        if resc:
+                            st["bind_stale_items"][die] = sorted(stale or {})
+                            AP.log(f"KIT-WAVE BOUND-FALLBACK {die}: {len(resc)} BIND-STALE row(s) launch on the newest earlier tree with a green bind (any-plan sign-off counts): "
+                                   + " ".join(f"{i}@{os.path.basename(t.rstrip('/'))[-24:]}" for i, t in sorted(resc.items())[:12]))
                     if stale:
                         for r in go:
                             if r["item"] in stale:
@@ -15512,10 +15564,13 @@ def retry_key_decision(st, die, item, n):
     if nn < ln:
         return False, f"attempt {ln} is the latest of {item}; {item}@{nn} was consumed by its relaunch (or names an older attempt)"
     ended = last.get("status") in ("FAIL", "CANCELLED") or (last.get("status") == "ENQUEUED" and last.get("q_status") in ("FAIL", "CANCELLED"))
-    if ended and last.get("status") == "FAIL" and str(last.get("class") or "") != "INFRA":
-        prev = [r for r in recs if r is not last and r.get("status") == "FAIL" and started(r) < started(last) and r.get("input_parts")]
+    # FABLE-FLOW-0555 C: an attempt that ended CANCELLED (or INFRA) is no new input: it is compared against the last FAILED attempt (cbn_q00 reached attempt 18
+    # on one gen error because attempt 17 ended CANCELLED and "released once" let 18 launch)
+    cancelled = last.get("status") == "CANCELLED" or (last.get("status") == "ENQUEUED" and last.get("q_status") == "CANCELLED")
+    if ended and ((last.get("status") == "FAIL" and str(last.get("class") or "") != "INFRA") or cancelled):
+        prev = [r for r in recs if r is not last and r.get("status") == "FAIL" and str(r.get("class") or "") != "INFRA" and started(r) < started(last) and r.get("input_parts")]
         if prev and last.get("input_parts") and same_input_records(max(prev, key=started), last):
-            return False, (f"FABLE-FLOW-0358 C: attempt {nn} failed on the SAME inputs as the previous failed attempt {max(prev, key=started).get('attempt')} "
+            return False, (f"FABLE-FLOW-0358 C: attempt {nn} {'was cancelled on' if cancelled else 'failed on'} the SAME inputs as the last failed attempt {max(prev, key=started).get('attempt')} "
                            f"({last.get('stage')}); {item}@{nn} stays blocked until the stage's input hash changes")
     if ended:
         return True, f"attempt {nn} is {item}'s latest and ended ({last.get('status')}/{last.get('q_status') or '-'}): released once"

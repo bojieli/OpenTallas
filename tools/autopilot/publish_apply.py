@@ -429,6 +429,10 @@ def bind_first(C, obj, lane, die, run=subprocess.run, host="", stamp=None, log_d
         rr = run(["ssh", "-o", "BatchMode=yes", "-o", "ControlPath=none", s["host"], f"rsync -a -e {q(e)} {q(plan_['dest'] + '/')} {h}:{q(plan_['dest'] + '/')}"], capture_output=True, text=True, timeout=1800)
         if rr.returncode:
             return "", f"bind-first: replicating the bind to {h} failed rc {rr.returncode}", fails
+    for h in [s["host"]] + plan_["hosts"]:                # FABLE-FLOW-0555 A: a tree never becomes the die's tree without a bind report on every gen host
+        rr = run(["ssh", "-o", "BatchMode=yes", "-o", "ControlPath=none", h, f"test -f {q(plan_['dest'] + '/bind_report.json')}"], capture_output=True, text=True, timeout=300)
+        if rr.returncode:
+            return "", f"bind-first: no bind_report.json in {plan_['dest']} on {h}; the die keeps its tree", fails
     return plan_["dest"], f"bind-first: strict bind + LATCHECK rc {r.returncode}; output sealed as {plan_['dest']} on {s['host']},{','.join(plan_['hosts'])}", fails
 
 

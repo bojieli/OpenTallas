@@ -175,6 +175,9 @@ def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=
         if keep:
             assert sorted(d.get("gen_hosts") or []) == sorted(hosts), "keep_gen_hosts: gen_hosts changed since the guard read; nothing applied"
         old = dict(src=d["src"], event=d["event"], plan=d.get("plan"), plan_sha256=d.get("plan_sha256"), kit_rtl=d.get("kit_rtl"))
+        old_bt = {k: d.get(k) for k in ("src", "plan", "plan_sha256", "src_sha", "queue_src", "src_manifest_hash") if d.get(k)}
+        old_bt["kit_rtl"] = {k: v for k, v in (d.get("kit_rtl") or {}).items() if k in ("mode", "bind_out", "asbuilt")}
+        old_bt["event"] = d.get("event")
         # decide the pilot BEFORE any write: a refusal leaves everything untouched
         pilot = ""
         if not no_pilot:
@@ -196,6 +199,9 @@ def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=
             if old["event"] not in lin:
                 lin.append(old["event"])
             d["event_lineage"] = lin
+        # FABLE-FLOW-0555 A: the replaced tree with its bind joins dies.<die>.bound_trees (newest first, 4 kept): the wave launches a BIND-STALE row on it
+        if old_bt.get("src") and old_bt["src"] != tree and old_bt["kit_rtl"].get("bind_out"):
+            d["bound_trees"] = ([old_bt] + [b for b in (d.get("bound_trees") or []) if b.get("src") != old_bt["src"] and b.get("src") != tree])[:4]
         d.update(src=tree, src_manifest=True, src_manifest_hash=want, plan=marker["plan"], plan_sha256=marker["plan_sha256"], gen_hosts=hosts,
                  gen_host=mc.get("gen_host") or (d.get("gen_host") if keep and d.get("gen_host") in hosts else hosts[0]),
                  cancel_superseded=False)
