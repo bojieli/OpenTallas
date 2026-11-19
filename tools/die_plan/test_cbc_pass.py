@@ -1,0 +1,61 @@
+"""CBC-RULES-1119 cbc_pass: plan key, shared thresholds, ft stations + K deltas, boundary banks, depth rows, token cost."""
+import cbc_pass as C
+
+
+def test_plan_key_default_on_off_and_overrides():
+    assert C.cbc_settings({}) == (True, C.DEFAULTS)
+    assert C.cbc_settings({"cbc": True})[0] is True
+    assert C.cbc_settings({"cbc": False})[0] is False
+    on, th = C.cbc_settings({"cbc": {"tap_sinks": 800}})
+    assert on and th["tap_sinks"] == 800 and th["hop_um"] == 405.0
+    assert C.cbc_settings({"cbc": {"enabled": False}})[0] is False
+
+
+def test_thresholds_are_the_r713_amended_set():
+    # amendment 11-19: keep 405 um per placed leg; r713: 13 levels, 1,000 sinks per tap, 32 per reset leaf
+    assert (C.HOP_UM, C.DEPTH_LEVELS, C.TAP_SINKS, C.RESET_LEAF) == (405.0, 13, 1000, 32)
+
+
+class FakeP:
+    def __init__(self):
+        self.types = {"t": dict(outline_um=[1000.0, 300.0], ft_slots=[
+            dict(name="f", stations=1, in_face="W", out_face="E", width=64),      # 1000 um on 1 station -> 3
+            dict(name="g", stations=1, in_face="N", out_face="S", width=8)])}     # 300 um: fine
+        self.parts = {"p0": dict(type="t"), "p1": dict(type="t")}
+        self.lanes = {"L0": {}, "L1": {}}
+
+    def lane_crossings(self, lid):
+        return [("p0", "f", 0, 1), ("p1", "f", 1, 2)] if lid == "L0" else [("p0", "g", 0, 1)]
+
+    def lane_natural(self, lid):
+        return dict(cycles=10)
+
+
+def test_ft_stations_and_k_deltas():
+    P = FakeP()
+    rows = C.ft_station_rows(P, 405.0)
+    assert list(rows) == [("t", "f")] and rows[("t", "f")]["set_stations"] == 3 and rows[("t", "f")]["delta"] == 2
+    kd = C.k_deltas(P, rows)
+    assert kd == [dict(lane="L0", before=10, after=14, delta=4, cause="p0.f+2,p1.f+2")]
+
+
+def test_boundary_rows_from_bound_rtl(tmp_path):
+    P = FakeP()
+    P.types["t"]["buses"] = [dict(name="a", dir="in"), dict(name="b", dir="out")]
+    (tmp_path / "x_t.sv").write_text("module t;\n ot_dp_st #(.W(1)) u_bin_a (.clk(clk));\nendmodule\n")
+    rows = C.boundary_rows(P, str(tmp_path), ["t"])
+    assert rows == [dict(type="t", bus="b", dir="out", width=None, rule="bus without its boundary bank")]
+
+
+def test_depth_rows(tmp_path):
+    p = tmp_path / "d.tsv"
+    p.write_text("type\tendpoint\tlevels\nt\tu_a/D\t12\nt\tu_b/D\t30\n")
+    assert C.depth_rows(str(p), 13) == [dict(type="t", endpoint="u_b/D", levels=30, add_stages=2)]
+
+
+def test_token_cost_bounds():
+    kd = [dict(delta=3), dict(delta=3)]
+    c = C.token_cost(kd, 272641, 36, 1.2e9)
+    assert c["low"]["add_cycles"] == 108 and c["high"]["add_cycles"] == 216
+    assert c["base_tok_s"] > c["low"]["tok_s"] > c["high"]["tok_s"]
+    assert C.token_cost([], 1, 1, 1.0) is None

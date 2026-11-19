@@ -164,3 +164,10 @@ def test_cli_byte_preserving(tmp_path):
     o = json.loads(out.read_text())
     assert o["other"] == plan["other"] and o["partition_types"]["h"]["reset"]["depth"] == 6
     assert json.loads(rep.read_text())["s"]["form"] == "bank_taps"
+
+
+def test_ft_slot_without_windows_is_unplaced():
+    t = soft_t()
+    del t["ft_slots"][0]["in_window_um"]
+    r = B.type_delta("s", t, SOFT)
+    assert r["unplaced"] == ["u_ft_f_o_0"] and all("u_ft_f_o_0" not in x["sinks"] for x in r["rows"])

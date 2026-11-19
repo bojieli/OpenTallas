@@ -85,6 +85,8 @@ def bank_xy(t, inst):
             regs = s.get("regs_um") or []
             if len(regs) == n:
                 return tuple(regs[k])
+            if not (s.get("in_window_um") and s.get("out_window_um")):
+                return None
             a = face_point(s["in_face"], s["in_window_um"], w, h)
             b = face_point(s["out_face"], s["out_window_um"], w, h)
             return lerp_l(a, b, (k + 1) / (n + 1))
