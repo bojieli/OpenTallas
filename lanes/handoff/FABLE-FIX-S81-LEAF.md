@@ -34,3 +34,14 @@ Kits: t25__cl431c660f a7 (-778.07, 7,981 ends below -42), t27 a7 (-526.93, 1,172
 - Proof passes (cst_hi class gone at GRT TT): `python3 -I /srv/opentallas-scratch2/claude/rt/current/tools/fleet/ot-push-main` in repo/.
 - Post the t25cl431 tap row to S81-DIE-R3. Read t24__cl81374cd8 HPWL divergence (not read yet).
 - Then the classes of item 3 (RTL / plan), sign-off and export.
+
+## 11-19 00:5x PST state
+- Fold commit is f25c6f0633+trailers (amended; Fixes-Items leaf + kv_leaf) in epyc10 .../fable-fix-s81-leaf/repo. PUSH RULE (COORD): only when
+  BOTH t27keep GRT TT reads fine AND S81-DIE-R3 has posted D8g APPLIED. Push = cd repo && python3 -I /srv/opentallas-scratch2/claude/rt/current/tools/fleet/ot-push-main
+- Proof t27keep at CTS, TT, placement RC, after the kit TT repair (my STA on a side copy t27keep_cts): wns -230.33 (control -526.93),
+  ends below -42: 648 (control 1,172). cst_hi -> lane macro class: 0 ends (control about 553). x_wa_q -> wdo_q: 0 (control 252).
+  OT_ISTATIONS placed 15,228 flops (control 6,036). GRT was running at 00:56 PST.
+- What is left on t27keep is one class, the vp controller glue with 600-800 um legs: driver_dodd_q -> cf / yrow native_memory 336 ends (-227),
+  vp src -> vp src 122 (-220), vp src -> cf 54, u_rr rst_n -> hog / hig stations 18 (-170, 824 um), leafdn pad -> u_rr 14, u_rrl q -> state 11.
+  Next fix candidate: the vp glue has no region and dodd (one flop) writes the cf memory across the leaf.
+- Reach: fold is leaf + kv_leaf only (posts REACH, KVLEAF). Buckets of the 15 FAILED rows: 14 face bank (D8g stride 1), t56 = stale tool in the pinned D8e tree (main cf90bd19b2).
