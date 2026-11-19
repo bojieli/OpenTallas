@@ -49908,7 +49908,10 @@
     "s29q103S4Q9N43"
    ],
    "breaker_fix": "QC-TYPES-R3 11-18: OWNER r703 removed all class breakers (stops_off not in code yet): probe window reopened for every open class of this die, COORD 11-18; rt_tools: TOOLS-DECOUPLE aed901b rt mirror",
-   "note_only_items_qcplanr3_1118": "11-18 07:1x QC-PLAN-R3: + sle_st_a_v2__pv30dda31f__pv88773f93,sle_st_a_v2__pv30dda31f__pvd2ec7769,slw_st_b_v2__pva66d0f22__pv3d7bec84,slw_st_b_v2__pva66d0f22__pvb80e2003,sle_ctl__cl503337ff__padE0,sle_ctl__cl503337ff__padE4,sle_ctl__cl67434795__padW5 (N3 plan split children; parents in only_items are pre-split names, never selected)"
+   "note_only_items_qcplanr3_1118": "11-18 07:1x QC-PLAN-R3: + sle_st_a_v2__pv30dda31f__pv88773f93,sle_st_a_v2__pv30dda31f__pvd2ec7769,slw_st_b_v2__pva66d0f22__pv3d7bec84,slw_st_b_v2__pva66d0f22__pvb80e2003,sle_ctl__cl503337ff__padE0,sle_ctl__cl503337ff__padE4,sle_ctl__cl67434795__padW5 (N3 plan split children; parents in only_items are pre-split names, never selected)",
+   "retry": [
+    "glue@6"
+   ]
   },
   "hbm": {
    "enabled": true,
