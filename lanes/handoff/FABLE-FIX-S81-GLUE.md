@@ -105,3 +105,18 @@ epyc9 fable-fix-s81-glue-work (relayproof2/, kitrtl/). Local scratch files of th
   No gen command is recorded in the kit or the attempt dir (logs/ empty); kit_wave.py builds it.
 - Asked QC-PLAN-R3: either an explicit / grid+explicit tap table for tt_ctlm (then tap_resolve --span-um 300 runs), or the
   gen chain command for a private kit. Resynth netlist to put on top: fable-fix-s81-glue-sta/ttctlm/regen/new.sv.
+
+### 04:50 update
+- Glue post-CTS TT measure: F (relay form) +30.85 / tns 0; A -24.02 / -72; D -48.92 (cancelled); E -176.22 (cancelled).
+  Running on the hub: A, F (to GRT). The hub refuses NEW heavy jobs (NOLOCALHOST-1119): new kits go to epyc9 via
+  ot-run --hosts epyc9 after rsync of the kit dir.
+- DPL-0033 on kit H: 41 group members straddle the off-grid region box edges (none outside, util unchanged) = the 41 of
+  the failed region check (fable-fix-s81-glue-sta/dpl/chk.log). In the flow it appears after improve_placement.
+  Fix pushed: main @133514c255cf place_regions.tcl snaps the box outward to the site / row grid (+ test). NOT yet proven
+  on a kit: my stand-alone harness (epyc9 fable-fix-s81-glue-work/snap) does not reproduce the flow failure; COORD said
+  stop the harness. Proof kit: glue H2 on epyc9 /srv/opentallas-scratch2/claude/fable-fix-s81-glue-kith2 (pushed hook +
+  place_regions_data.tcl, from scratch, --priority proof, log run_grt_epyc9.log on intel2 in the same path). Read its
+  3_5_place_dp log: pass = post it and re-enable the key for LEAF / COLL-CORE; fail = read the check name and count.
+- tt_ctlm kit c (resynth netlist only) running on epyc9 fable-fix-s81-ttctlm-kitc. Kits a / b (hand fence, unsnapped) on
+  the hub are DPL data points only; expect the same region check failure.
+- Leaf t27fence: no path in the posts; asked FABLE-FIX-S81-LEAF for the "Region placement check failed (N)" line.
