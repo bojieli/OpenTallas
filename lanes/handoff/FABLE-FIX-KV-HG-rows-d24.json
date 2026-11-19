@@ -247,5 +247,36 @@
    }
   ],
   "pc": "all pc kits in GRT are HG6-era (launched 11-17 / 11-18 before D23): none carries the D23 pc taps, efault EQ pipe or pipes:true split, so -468..-1,486 are stale. Named causes from the HG6 pc_v1 dump stand (section B: hsl boot region 1,991 ends, phy pi d1/d2 570 ends, idpc 35 ends, kvpc1->kvpc2); pc_v3 worst = u_bin_i_host_host_rst_n -> u_u_efault.fault and pc cl254 = u_bin_i_ectl_Q_N_kf -> u_u_efault.fault, both the efault class D23 already pipes. Relaunch ONE pc kit on the live tree and re-dump before writing more pc rows."
+ },
+ "G_struct_2053": {
+  "K1": {
+   "main": "aae3f7b5ec6",
+   "tool": "python3 -I tools/die_plan/start_stage_raw_resite.py PLAN.json <bind>/rtl --out PLAN2.json --report R.json ; after the event bind: ... --check (exit 1 if any START stage is still > 405 um from its raw relay)",
+   "census_live_D23H": "342 START stages (writer + reader) on kv3_hgi_v3 116, v4 59, v5 51, v6 33, v7 83 sit > 405 um from the reset relay they name (median 764 um, 114 over 900 um, worst 2,611 um); all 342 re-sited to a same-depth tap output within reach, 0 unresolved; every other KV type 0. Cause: the plan stage raw_reset names do not match the emitted reset tree numbering on those five types (pad taps sit at the pad origin). Report epyc9 fable-fix-kv-hg3/k1_report.json, rewritten plan k1_plan.json.",
+   "note": "depth is kept (all depth 9), so the release edge does not move; clock_landing_verify reads the rewritten plan, so emitter and verify stay consistent. Tree numbering must be re-read after W1 (cores are walls): run the tool on the D25 pre-bind tree or re-run + --check after the bind."
+  },
+  "K8": {
+   "rows": [
+    {
+     "type": "kv3_hgi_v8",
+     "row": "hard_cores cl_i_ectl_Q_N_tN origin_um [25.92, 924.48] -> [25.92, 1097.28] (+172.8 = 20 x 8.64), same class as W1"
+    },
+    {
+     "type": "kv3_hgi_v1__cl141fc26e, kv3_hgi_v1__cl42bc8b12",
+     "row": "W1 as given: [17.28, 760.32] -> [17.28, 1097.28] (+336.96)"
+    }
+   ],
+   "census": "landing core centre vs W-face bus centre y 1260.19: hgi_v1 x2 -341 um, hgi_v8 -177 um, all others within 22-65 um (no row). kv3_hgi (base) has the core at x 172.8, i.e. 173 um in from the W face: 1,560 pin wires of 173 um; move to x 17.28 / 25.92 like its siblings when it is touched.",
+   "W2_scope": "lane-pad station regs_um (133.0, 1164.095) lies on head2_e6 in 10 of 11 hgi types (all but kv3_hgi, whose e6 ends at y 1157.76): W2 applies to all 10."
+  },
+  "K6": {
+   "verdict": "reach rule not met: W5 hops are 580 + 670 um (rule 405); +0.46 at CTS is placement RC after the TT repair step (-16.95 before) and has no routed margin.",
+   "row": "add one stage on BOTH i_ectl lanes of the hgi types (they meet in hst<h>_g, so they move together): i_ectl_Q_N_eN pad depth 1 -> 2, sites at thirds of bin (0, 20) -> g; i_ectl_Q_N_tN lane pad depth 1 -> 2 (second station between the landing q pins and g). +1 cycle on the two lanes, 3 hops of about 420 um on eN with g in the middle channel, about 350 um with g in the west channel. Cycles are pre-approved."
+  },
+  "K5": {
+   "cause": "the tail station t2 sits at the sink centroid (168.5, 579-581), which is the 34-um strip between head2_e2 (top y 553) and hard core cl_ft2_i (95-260 x 587-644) inside the e2/e4 channel; the t1 -> t2 trunk (1,575 bits) and the t2 fan-out share that channel with the ft2 ring outputs and the first ft2 station (348, 602); g and t1 at x 340 sit 8-15 um from the ft2 station column x 348-355.",
+   "fix_now": "W3b: polyline x 340 -> 310 (west side of the middle channel, 38-45 um off the ft2 column): relay_polylines [{group_re: u_hst2_g$, polyline_um: [[310.0, 950.4], [310.0, 664.0]]}]",
+   "fix_next": "tail site off the cl_ft2_i strip: a tail_um override (west channel (40, 618), below the landing core after W1) needs a relay_polylines key that does not exist yet, or better the 0-cycle split of hst<h>_t2 into one copy per front pair (channels y 233-337 and 898-1002) so that no 1,575-bit trunk enters the e2/e4 channel. Not proven: needs one kit. D25a can carry W2 + W3b + W5; the tail fix follows as D25b after a private kit."
+  }
  }
 }
