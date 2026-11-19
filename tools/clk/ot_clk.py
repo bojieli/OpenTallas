@@ -287,50 +287,6 @@ def fill_region_map(cfg, out, plan=None):
                           rules=rules, added=added)
 
 
-DEFAULT_REGION_EARLY = {"tt": 1.0, "mode": "merge"}
-
-
-def plan_has_early_core_taps(plan_path):
-    """True when a partition type of the plan declares clock.core_taps early with a kind core tap (raw JSON scan)."""
-    try:
-        raw = json.loads(Path(plan_path).read_text())
-    except (OSError, ValueError, TypeError):
-        return False
-    pt = raw.get("partition_types") or {}
-    for t in (pt.values() if isinstance(pt, dict) else pt):
-        ck = (t or {}).get("clock") or {}
-        if ck.get("core_taps") == "early" and any((x or {}).get("kind") == "core" for x in ck.get("taps") or []):
-            return True
-    return False
-
-
-def early_core_regions(plan_path, region_map_path):
-    """sorted regions (inputs.region_map part_region) of the plan parts whose type has an early core tap that the spine
-    must deliver early: kind core tap insertion_ps (+ clock.core_tap_lead_ps) above the type's common latency
-    (type clock.insertion_target_override -> its clock.insertion_ps, else die clock.common_latency_ps / insertion_ps)."""
-    try:
-        raw = json.loads(Path(plan_path).read_text())
-        m = json.loads(Path(region_map_path).read_text())["part_region"]
-    except (OSError, ValueError, TypeError, KeyError):
-        return []
-    ck0 = raw.get("clock") or {}
-    common = float(ck0.get("common_latency_ps", ck0.get("insertion_ps", 250.0)))
-    pt = raw.get("partition_types") or {}
-    pt = pt if isinstance(pt, dict) else {t["name"]: t for t in pt}
-    early = set()
-    for tn, t in pt.items():
-        ck = (t or {}).get("clock") or {}
-        if ck.get("core_taps") != "early":
-            continue
-        ov = ck.get("insertion_target_override")
-        c = float(ck["insertion_ps"]) if isinstance(ov, dict) and ov.get("reason") and ck.get("insertion_ps") is not None else common
-        lead = float(ck.get("core_tap_lead_ps", 0.0) or 0.0)
-        if any((x or {}).get("kind") == "core" and float(x.get("insertion_ps", 0.0)) + lead > c + 0.5
-               for x in ck.get("taps") or []):
-            early.add(tn)
-    return sorted({m[p["name"]] for p in raw.get("partitions", []) if p.get("type") in early and p["name"] in m})
-
-
 def kit_argv(cfg, out, stage_cal_path=None, workers=None, plan=None, region_map=None):
     """die_trial.py kit argv for a config (flag order is irrelevant to die_trial; values are exact)"""
     if is_mesh(cfg):
@@ -416,21 +372,9 @@ def kit_argv(cfg, out, stage_cal_path=None, workers=None, plan=None, region_map=
         mode = reg.get("dme_mode", True)
         a += ["--region-dme"] + ([] if mode is True else [str(mode)])
         only = region_list(reg.get("only"), cfg)
-        e = reg.get("early")
-        if e is None and mode == "delay" and plan_has_early_core_taps(plan or i["plan"]):
-            # DIE-CORETAP-1119 default: a delay-DME region form on a plan with early hard-core taps delivers the plan's
-            # declared core early (schema core_tap_early_ps) instead of feeding the cores on time (late by design;
-            # die proto intra hold -176 -> -115 TT).  region.early: false (or {}) opts out explicitly.
-            e = dict(DEFAULT_REGION_EARLY)
-        e = e or {}
-        if (e.get("tt") is not None and isinstance(only, list) and reg.get("early_regions", "cores") == "cores"
-                and (region_map or i.get("region_map"))):
-            # DIE-CORETAP-1119: early taps are delivered only inside DME regions, so every region holding a part with an
-            # early (insertion > common) hard-core tap joins region.only; region.early_regions: config keeps the list.
-            extra = early_core_regions(plan or i["plan"], region_map or i["region_map"])
-            only = only + [r for r in extra if r not in only]
         if only is not None:
             a += ["--region-dme-only", ",".join(only)]
+        e = reg.get("early") or {}
         if e.get("tt") is not None:
             a += ["--region-dme-early", _fmt(e["tt"])]
         if e.get("ff") is not None:

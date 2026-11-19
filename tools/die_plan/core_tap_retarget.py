@@ -21,7 +21,15 @@ delivers even less early-ness than the plan declares.  This die-agnostic tool fi
         (constraint.sdc TT, core_taps_ff.sdc FF) must equal -new early, and a clock.tap_offset per-port row on a core
         tap port must be re-measured (its o_p carries the old early delivery).
 
-A tap without a signed contract keeps its declared insertion (status KEEP_NO_SIGNED) unless --basis etm_max.
+    core_tap_retarget.py pairs ROWS.json STA.json [STA.json ...]   which worst die STA pairs (intra/seam hold, setup,
+        skew per corner) have an endpoint on an UNSIGNED core tap (declared insertion), a SIGNED core tap, or a regular
+        tap; plus per-module counts of unsigned early core taps.
+
+SIGNED-ONLY rule (COORD 11-19): a core tap's early target is set only from a SIGNED core (clock contract / signoff.json
+verdict SIGNED); --basis etm_max only changes WHICH signed number (ETM max_clock_tree_path of the signed view instead of
+the pin-register mean).  A core without a signed record keeps its declared insertion and is flagged UNSIGNED.  Evidence:
+offset rows and region.early helped HEAD (signed cores) but made KV intra hold worse (-222 -> -253 / -260 TT): its
+worst pairs sit on unsigned cores with declared insertion.
 """
 import argparse
 import csv
@@ -39,7 +47,8 @@ HERE = Path(__file__).resolve().parent
 TOL_PS = 0.5
 FIELDS = ["type", "tap", "port", "inst", "module", "pins", "status", "basis", "common_TT", "common_FF",
           "old_ins_TT", "old_ins_FF", "signed_mean_TT", "signed_mean_FF", "etm_max_TT", "etm_max_FF",
-          "new_ins_TT", "new_ins_FF", "old_early_TT", "old_early_FF", "new_early_TT", "new_early_FF", "source"]
+          "new_ins_TT", "new_ins_FF", "old_early_TT", "old_early_FF", "new_early_TT", "new_early_FF",
+          "signed_target_TT", "signed_target_FF", "source"]
 
 
 def _tools(d):
@@ -66,6 +75,13 @@ def _early(S, P, tp, c, t):
         return S.core_tap_early_ps(P, tp, c, t)
     except TypeError:            # trees before the type-override basis (schema.core_tap_early_ps(P, tp, corner))
         return S.core_tap_early_ps(P, tp, c)
+
+
+def _lead(S, t, c):
+    try:
+        return S.core_tap_lead_ps(t, c)
+    except AttributeError:
+        return 0.0
 
 
 def _common(S, P, c, t):
@@ -131,7 +147,9 @@ def _signed_read(CC, C, core, pins, root):
     return mean, etm, src
 
 
-def build_rows(plan_path, root, basis="mean", tools=None):
+def build_rows(plan_path, root, basis="mean", tools=None, signed_ins=None):
+    """signed_ins {module: {TT, FF, source}}: signed insertions measured in a record outside the view directory (e.g. a
+    view pack not yet applied to the plan); used as the signed number of that module, labelled with its source."""
     S, C, CC = _tools(tools)
     raw = json.loads(Path(plan_path).read_text())
     P = S.Plan(raw, path=plan_path) if "path" in S.Plan.__init__.__code__.co_varnames else S.Plan(raw)
@@ -156,18 +174,26 @@ def build_rows(plan_path, root, basis="mean", tools=None):
                 rows.append(_fill(r))
                 continue
             mean, etm, src = _signed(CC, C, core, pins, root, t)
+            if (signed_ins or {}).get(core.get("module")):
+                o = signed_ins[core["module"]]
+                mean = etm = {"TT": float(o["TT"]), "FF": float(o["FF"])}
+                src = f"SIGNED (record): {o.get('source', '')}"
             r.update({f"signed_mean_{c}": round(mean[c], 3) if mean else None for c in ("TT", "FF")})
             r.update({f"etm_max_{c}": round(etm[c], 3) if etm else None for c in ("TT", "FF")})
-            new = mean if basis == "mean" else etm
-            r["source"] = src if basis == "mean" else f"ETM max_clock_tree_path {core.get('lib')}"
+            # SIGNED-ONLY rule (COORD 11-19, DIE-CORETAP-1119): the target comes from a SIGNED core only; an unsigned
+            # core keeps its declared insertion and is flagged UNSIGNED (its declared number is not moved by this tool)
+            new = (mean if basis == "mean" else etm) if mean else None
+            r["source"] = src if (basis == "mean" or not mean) else f"SIGNED view, ETM max_clock_tree_path {core.get('lib')}"
             if not new:
-                r.update(status="KEEP_NO_SIGNED", **{f"new_ins_{c}": r[f"old_ins_{c}"] for c in ("TT", "FF")},
+                r.update(status="UNSIGNED", **{f"new_ins_{c}": r[f"old_ins_{c}"] for c in ("TT", "FF")},
                          **{f"new_early_{c}": r[f"old_early_{c}"] for c in ("TT", "FF")})
                 rows.append(_fill(r))
                 continue
             ntp = dict(tp, insertion_ps=new["TT"], insertion_ff_ps=new["FF"])
             r.update({f"new_ins_{c}": round(new[c], 3) for c in ("TT", "FF")})
             r.update({f"new_early_{c}": round(_early(S, P, ntp, c, t), 3) for c in ("TT", "FF")})
+            # signed target incl. LATE (negative): signed insertion - common (+ lead), not clipped at 0
+            r.update({f"signed_target_{c}": round(new[c] - _common(S, P, c, t) + _lead(S, t, c), 3) for c in ("TT", "FF")})
             ch = any(abs(r[f"new_ins_{c}"] - r[f"old_ins_{c}"]) >= TOL_PS for c in ("TT", "FF"))
             r["status"] = "CHANGE" if ch else "KEEP"
             rows.append(_fill(r))
@@ -185,8 +211,10 @@ def _part_types(P):
     return {n: p["type"] for n, p in P.parts.items()}
 
 
-def tap_targets(rows, P, proof):
-    """{die port: {part, type, tap, TT/FF: {target_early, die_early, retarget_ps}}}: die port t_<part>__<kit port>."""
+def tap_targets(rows, P, proof, late=False, modules=None):
+    """{die port: {part, type, tap, TT/FF: {target_early, die_early, retarget_ps}}}: die port t_<part>__<kit port>.
+    late: target = signed_target (a core faster than the common latency is delivered LATE); modules: only taps of
+    these core modules get a target (region-local retarget), every other tap keeps its delivered arrival."""
     by = {(r["type"], r["port"]): r for r in rows}
     ptype = _part_types(P)
     out = {}
@@ -199,11 +227,12 @@ def tap_targets(rows, P, proof):
         for t in taps:
             part, kp = t.get("part"), t["port"].rsplit("__", 1)[-1]
             r = by.get((ptype.get(part), kp))
-            if r is None or not reg.get(part):
+            if r is None or not reg.get(part) or (modules and r["module"] not in modules):
                 continue
             m = st.mean(reg[part])
             de = m - t["late_ps"]
-            tgt = float(r[f"new_early_{c}"])
+            tgt = float(r[f"signed_target_{c}"] if late and r.get(f"signed_target_{c}") is not None
+                        else r[f"new_early_{c}"])
             e = out.setdefault(t["port"], dict(part=part, type=r["type"], tap=r["tap"], module=r["module"],
                                                status=r["status"]))
             e[c] = dict(target_early=round(tgt, 3), plan_early_old=r[f"old_early_{c}"], die_early=round(de, 3),
@@ -212,7 +241,8 @@ def tap_targets(rows, P, proof):
 
 
 def cmd_rows(a):
-    meta, rows, P, S = build_rows(a.plan, a.root, a.basis, a.tools)
+    sig = json.loads(Path(a.signed_ins).read_text()) if a.signed_ins else None
+    meta, rows, P, S = build_rows(a.plan, a.root, a.basis, a.tools, sig)
     od = Path(a.out_dir)
     od.mkdir(parents=True, exist_ok=True)
     with open(od / "rows.tsv", "w") as f:
@@ -233,7 +263,7 @@ def cmd_rows(a):
         print(f"  {m} n{len(rs)} ins TT {r['old_ins_TT']}->{r['new_ins_TT']} FF {r['old_ins_FF']}->{r['new_ins_FF']} "
               f"early TT {r['old_early_TT']}->{r['new_early_TT']} FF {r['old_early_FF']}->{r['new_early_FF']}")
     if a.proof:
-        tg = tap_targets(rows, P, a.proof)
+        tg = tap_targets(rows, P, a.proof, a.late, set(a.modules.split(",")) if a.modules else None)
         (od / "tap_targets.json").write_text(json.dumps(dict(meta, proof=str(a.proof), targets=tg), indent=1))
         for c in ("TT", "FF"):
             v = [x[c]["retarget_ps"] for x in tg.values() if c in x]
@@ -337,6 +367,55 @@ def cmd_kitcheck(a):
     return 1 if bad else 0
 
 
+def _port_map(rows):
+    """{kit core port name per type: row}; die ports are t_<part>__<kit port>."""
+    return {(r["type"], r["port"]): r for r in rows}
+
+
+def pair_report(rows, sta, plan_parts):
+    """[(corner, class, kind, launch, capture, slack/skew, launch_tag, capture_tag)]: tag = UNSIGNED:<module> |
+    SIGNED:<module> | regular."""
+    pm = _port_map(rows)
+
+    def tag(port):
+        part, _, kp = port[2:].rpartition("__") if port.startswith("t_") else ("", "", port)
+        r = pm.get((plan_parts.get(part), kp))
+        if r is None:
+            return "regular"
+        return ("UNSIGNED:" if r["status"] == "UNSIGNED" or r["signed_mean_TT"] is None else "SIGNED:") + str(r["module"])
+    out = []
+    for c, cd in (sta.get("corners") or {}).items():
+        for cl, v in (cd.get("classes") or {}).items():
+            if not isinstance(v, dict):
+                continue
+            for kind in ("worst_hold", "worst_setup"):
+                w = v.get(kind)
+                if isinstance(w, dict) and w.get("launch"):
+                    out.append((c, cl, kind, w["launch"], w["capture"], v.get(kind + "_slack_ps"), tag(w["launch"]),
+                                tag(w["capture"])))
+            for sk, a, b in (v.get("worst_skew") or [])[:3]:
+                out.append((c, cl, "worst_skew", a, b, sk, tag(a), tag(b)))
+    return out
+
+
+def cmd_pairs(a):
+    d = json.loads(Path(a.rows).read_text())
+    rows = d["rows"]
+    raw = json.loads(Path(d["plan"]).read_text())
+    parts = {p["name"]: p["type"] for p in raw["partitions"]}
+    un = defaultdict(int)
+    for r in rows:
+        if r["status"] == "UNSIGNED" or (r["status"] != "SKIP_CORE_GROUP" and r["signed_mean_TT"] is None):
+            un[(r["module"], r["old_early_TT"] > 0)] += 1
+    print("UNSIGNED early core taps (module, declared early>0): n")
+    for (m, e), n in sorted(un.items(), key=lambda x: -x[1]):
+        print(f"  {m}\tearly>0={e}\t{n}")
+    for f in a.sta:
+        for row in pair_report(rows, json.loads(Path(f).read_text()), parts):
+            print("PAIR", Path(f).parent.name, *row, sep="\t")
+    return 0
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sp = ap.add_subparsers(dest="cmd", required=True)
@@ -347,6 +426,9 @@ def main(argv=None):
     r.add_argument("--proof")
     r.add_argument("--basis", choices=["mean", "etm_max"], default="mean")
     r.add_argument("--tools", help="die_plan tools of the plan's own tree (default: this tree)")
+    r.add_argument("--signed-ins", help="JSON {module: {TT, FF, source}} of signed insertions from records")
+    r.add_argument("--late", action="store_true", help="tree targets allow LATE delivery (signed - common < 0)")
+    r.add_argument("--modules", help="comma list: tree targets only for these core modules (region-local)")
     p = sp.add_parser("apply")
     p.add_argument("plan")
     p.add_argument("rows")
@@ -361,8 +443,11 @@ def main(argv=None):
     k.add_argument("--type", required=True)
     k.add_argument("--plan")
     k.add_argument("--unit-ps", type=float, default=1.0, help="ps per SDC time unit (ASAP7 kits: 1)")
+    q = sp.add_parser("pairs")
+    q.add_argument("rows")
+    q.add_argument("sta", nargs="+")
     a = ap.parse_args(argv)
-    return dict(rows=cmd_rows, apply=cmd_apply, shift=cmd_shift, kitcheck=cmd_kitcheck)[a.cmd](a)
+    return dict(rows=cmd_rows, apply=cmd_apply, shift=cmd_shift, kitcheck=cmd_kitcheck, pairs=cmd_pairs)[a.cmd](a)
 
 
 if __name__ == "__main__":

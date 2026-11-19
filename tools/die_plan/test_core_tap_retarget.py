@@ -60,7 +60,10 @@ def test_rows_use_signed_mean_not_etm_max(tmp_path):
 def test_unsigned_core_keeps_declared(tmp_path):
     p = fixture(tmp_path, sign=False)
     _, rows, _, _ = RT.build_rows(p, tmp_path)
-    assert rows[0]["status"] == "KEEP_NO_SIGNED" and rows[0]["new_early_TT"] == 50.0
+    assert rows[0]["status"] == "UNSIGNED" and rows[0]["new_early_TT"] == 50.0
+    # signed-only rule: the ETM basis never moves an unsigned core either
+    _, rows, _, _ = RT.build_rows(p, tmp_path, basis="etm_max")
+    assert rows[0]["status"] == "UNSIGNED" and rows[0]["new_ins_TT"] == 300.0
 
 
 def test_apply_feeds_schema_early_and_kit_sdc(tmp_path):
@@ -109,3 +112,31 @@ def test_targets_and_shift_model(tmp_path):
     t = {x["port"]: x for x in json.loads((out / "tap_arrivals_TT.json").read_text())["taps"]}
     assert t["t_pfa__clk_c0"]["late_ps"] == pytest.approx(1000.0 - 70.5)
     assert t["t_pfa__clk_t0"]["late_ps"] == 1000.0
+
+
+def test_pairs_tag_unsigned_endpoints(tmp_path):
+    p = fixture(tmp_path, sign=False)
+    _, rows, P, _ = RT.build_rows(p, tmp_path)
+    sta = {"corners": {"TT": {"classes": {"intra": {
+        "worst_hold": {"launch": "t_pfa__clk_t0", "capture": "t_pfa__clk_c0"}, "worst_hold_slack_ps": -50.0,
+        "worst_skew": [[60.0, "t_pfa__clk_c0", "t_pfa__clk_t1"]]}}}}}
+    out = RT.pair_report(rows, sta, {"pfa": "fa", "pfb": "fb"})
+    assert out[0][2] == "worst_hold" and out[0][6:] == ("regular", "UNSIGNED:node")
+    assert out[1][6] == "UNSIGNED:node"
+
+
+def test_late_target_region_local_and_record_signed(tmp_path):
+    p = fixture(tmp_path, sign=False)
+    sig = {"node": {"TT": 193.0, "FF": 160.0, "source": "view pack E2"}}
+    _, rows, P, _ = RT.build_rows(p, tmp_path, signed_ins=sig)
+    r = rows[0]
+    assert r["status"] == "CHANGE" and r["signed_target_TT"] == -57.0 and r["new_early_TT"] == 0.0
+    assert "view pack E2" in r["source"]
+    proof = tmp_path / "proof"
+    proof.mkdir()
+    for c in ("TT", "FF"):
+        taps = [dict(port="t_pfa__clk_t0", part="pfa", late_ps=1000.0), dict(port="t_pfa__clk_c0", part="pfa", late_ps=990.0)]
+        (proof / f"tap_arrivals_{c}.json").write_text(json.dumps(dict(taps=taps)))
+    tg = RT.tap_targets(rows, P, proof, late=True)
+    assert tg["t_pfa__clk_c0"]["TT"]["retarget_ps"] == -67.0          # deliver 57 ps late from 10 ps early
+    assert RT.tap_targets(rows, P, proof, late=True, modules={"other"}) == {}
