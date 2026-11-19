@@ -23,21 +23,17 @@ def run_cap(tmp_path, std, macros, limit=None, waiver=None):
     return subprocess.run(['tclsh', str(p)], capture_output=True, text=True), (json.loads(out.read_text()) if out.exists() else {})
 
 
-# WAVE-FLOW-R2 11-17 (COORD FABLE-FLOW-1500 D): over the one limit (400000) the run stops unless a ruling id waives it
-@pytest.mark.parametrize('std,macros,fail', [(0, 1, False), (400000, 3, False), (400001, 0, True)])
-def test_actual_top_cell_cap_excludes_blocks(tmp_path, std, macros, fail):
+# KV-HUBPV-1118 (OWNER 11-14 remove cell caps): the in-kit stop is deleted; over the one limit (400000) the count is only REPORTED, with or without a ruling id
+@pytest.mark.parametrize('std,macros,over', [(0, 1, False), (400000, 3, False), (400001, 0, True)])
+def test_actual_top_cell_cap_excludes_blocks(tmp_path, std, macros, over):
     result, count = run_cap(tmp_path, std, macros)
-    assert bool(result.returncode) == fail, result.stderr
-    if fail:
-        assert 'SPLIT-NEEDED' in result.stderr and 'run cap' in result.stderr
-    else:
-        assert count['stdcells'] == std and count['macros'] == macros and count['limit'] == 400000
+    assert result.returncode == 0, result.stderr
+    assert count['stdcells'] == std and count['macros'] == macros and count['limit'] == 400000
+    assert ('cell cap removed' in result.stdout) == over
 
 
-@pytest.mark.parametrize('std,limit,waiver,fail', [(473289, 517000, None, True), (517001, 900000, None, True), (420000, 450000, None, True),
-                                                   (420000, 450000, 'r590', False), (517001, 900000, 'r590', False), (473289, 517000, 'nope', True)])
-def test_a_declared_native_limit_needs_a_ruling_waiver(tmp_path, std, limit, waiver, fail):
+@pytest.mark.parametrize('std,limit,waiver', [(473289, 517000, None), (517001, 900000, None), (420000, 450000, 'r590'), (473289, 517000, 'nope')])
+def test_a_declared_native_limit_never_stops_the_run(tmp_path, std, limit, waiver):
     result, count = run_cap(tmp_path, std, 0, limit, waiver)
-    assert bool(result.returncode) == fail, result.stderr
-    if not fail:
-        assert 'WAIVED by r590' in result.stdout
+    assert result.returncode == 0, result.stderr
+    assert count['stdcells'] == std
