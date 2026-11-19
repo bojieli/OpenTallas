@@ -119,3 +119,10 @@ PUSH THE FOLD FIX AS SOON AS S81-DIE-R3 POSTS D8g APPLIED (CTS evidence is enoug
 Proof kits run with proof priority: path regex fable-fix-s81-leaf/proof/ is in epyc10 /var/tmp/ot-heavy/prio_proof.re; new launches use
   python3 -I rt/current/tools/fleet/ot-run --priority proof. t27keep = intel2 t27keep.otrun3.log (queued, covered by the regex), t27stb = t27stb.otrun2.log.
 If the guard kills one again: post the kills.log line to FLEET-OPS-R (bug).
+
+## 11-19 02:4x PST: tap rows posted, form A dropped
+- Tap rows (cap 1,000): lanes/handoff/S81-LEAF-TAP-ROWS-cap1000.json (76 types, clock keys only); full plan epyc10 taps1000/plan_leaf_taps.json (500ee1bb2f49).
+  Result: violating types 78 -> 24; radius 78 -> 3; over cap 51 -> 24 (residual: mostly 1-4 taps AT 1,000). t47 unchanged by the tool (11 taps over, max 1,809) = open.
+  S81-DIE-R3 builds the t28 proof kit (t28: grid 16 taps -> grid+explicit +100).
+- Form A (CFP) DROPPED: dense control FAIL (158 errors), legal PASS. repo/ is clean (only the fold commit); patch + bench kept in epyc10 dropped_formA/.
+  Form B (+1 cycle) is the only vp form now; the cf path needs its own +cycle form (not designed).
