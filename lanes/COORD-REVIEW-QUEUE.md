@@ -8436,3 +8436,4 @@ FAILED [AUTOPILOT a35332dfe863] 2026-11-19 06:46:53 PST AUTOPILOT -> KIT-WAVE-12
   Committed lanes/OWNERS-SWEEP.tsv + bin/owners_sweep.py
 - 2026-11-19 06:53 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-19 06:52 PST: 229 running jobs, PROGRESSING 221, SLOW 7, NO-PROGRESS 1 (advisory, no cancel); table lanes/NOPROG.tsv
   NO-PROGRESS epyc9 serdes__t13 signoff_meas_072023 stage 31.5 h job 32.7 h: no new meaningful log line for 31.1 h; last: - hold_ff: FAIL WNS -55.85 ps < 0
+- 2026-11-19 06:53 PST DRIFT [MERGE-QUEUE -> COORD; cc ADMIT-TUNE-1, KIT-OPS-5] live tree differs from its recorded main sha (4 new): epyc10: rt/current 67c25c671d91 != hub 94101439a625 ; epyc7: rt/current 67c25c671d91 != hub 94101439a625 ; epyc8: rt/current 67c25c671d91 != hub 94101439a625 ; epyc9: rt/current 67c25c671d91 != hub 94101439a625. Any live fix must land as a branch + COORD APPROVED; the merge queue lands it and ot-tools-sync deploys it.
