@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; coordinator update 2026-11-01 18:00 PST)
 
-2026-11-19 05:10 PST: signed any plan 458 | current 403 | backlog (deferred re-sign) s81 0, head 3, qc 2, kv 0 (hbm 1; retired-plan 49). Per die signed types+cores: s81 64+44, head 5+24, qc 70+28, kv 68+6, hbm 90+4 (qc +1 core vs 04:10). S81: D8h tap rows in proof (lepe full-form kit t2 running), seqhost__t1 post-CTS 810 u_win ends below 0; svc 5M-cell types moved to H8 SVC-REPLAN; 85 failed-no-relaunch rows in triage. HEAD: NF15f landed PASS TT+FF (468 crossings). QC: N4.5d bind GREEN, N4.6 next. KV: D25c die proto clock of record posted. Fleet: epyc2 scratch2 135 GB below floor; wave tick 332 s.
+2026-11-19 06:10 PST: signed any plan 459 | current 404 | backlog (deferred re-sign) s81 0, head 3, qc 2, kv 0 (hbm 1; retired-plan 49). Per die signed types+cores: s81 64+44, head 5+24, qc 70+29, kv 68+6, hbm 90+4 (qc +1 core vs 05:10). Kit-wave last hour: 12 LAUNCH, 1 FAIL (qc cbn_q11 place OT_XSTN_STRETCH), no class >=10. Fleet: epyc2 scratch2 126 GB (below floor), epyc10 scratch2 90% (745 GB), epyc8 87%. 06:00 hub worktree wipe restored (INCIDENT b91bf9d9).
 Plans 11:36: count 152 flat (S81 50/58 + 4/205 types, HEAD 4/4 + 12/25, QC 16/19, KV 26/32, HBM 40/103). Merged I118-I126 since 10:40: QC coll_core fold + ring ff class (tag e-qc), KV PV taps (tag b-kv), HEAD l48ue (tag a-head), wave prune + resume fixes. 9 core gaps from CORE-FORMS-2 all owned. intel2 scratch2 142 after 49 GB move.
 
 <!-- BREAKDOWN BEGIN -->
