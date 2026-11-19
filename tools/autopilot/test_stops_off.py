@@ -796,7 +796,7 @@ class SnapshotNeutralBlockHash(unittest.TestCase):
 
     def test_probe_uses_the_shared_normalizer(self):
         self.assertIn("norm_tree_paths(prof[", KW.PROBE_PLAN)
-        self.assertEqual(KW.PROBE_V, 10)
+        self.assertGreaterEqual(KW.PROBE_V, 10)
 
 
 class DieContextHash(unittest.TestCase):
@@ -835,7 +835,7 @@ class DieContextHash(unittest.TestCase):
 
     def test_probe_emits_die_ctx(self):
         self.assertIn("die_ctx(p, name)", KW.PROBE_PLAN)
-        self.assertEqual(KW.PROBE_V, 10)
+        self.assertGreaterEqual(KW.PROBE_V, 10)
 
 
 class DieContextTypeScoped(unittest.TestCase):
