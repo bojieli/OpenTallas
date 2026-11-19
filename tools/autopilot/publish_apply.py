@@ -8,11 +8,16 @@ the moment its tree is PUBLISHED:
   apply     optimistic atomic apply (apply_reviewed_tree_marker optimistic=True: publish gate, source guard and smoke are ADVISORY, no pilot hold, the
             event joins gate_events_extra in the same write), commit through coord-commit.sh, then the publish gate is started in the background as a
             REPORT (its record lists advisory findings; it never blocks), and one post names the warnings.  The next wave pass launches every type.
+            apply then starts the post-apply strict bind + LATCHECK itself (post-bind below) unless --no-post-bind.
+  post-bind strict bind + LATCHECK of the candidate's PUBLISHED tree in a hardlink copy <tree>_postbind_<stamp> (sibling, .link-base = tree) on
+            a gen host, via ot-run --plan-job bind; outputs only under <copy>/_postbind/; one POST-APPLY-BIND post with the result.  Never bind in
+            the tree a lane is composing: the publish renames it (D8f 11-18).
   bind-fail strict bind / LATCHECK (still running in parallel, the only blocking plan checks) failed: hold ONLY the types it names (explicit --types,
             or the plan item names found in --log), released by result:<owner>:<id>.  Running rows of held types are cancelled by the wave (kit_wave
             hold_records with cancel_running, WAVE-FLOW-R2).
 
     publish_apply.py apply --candidate JSON --expect-source OLD_TREE --expect-event OLD_EVENT --lane LANE [--coord ~/coord] [--no-gate]
+    publish_apply.py post-bind --candidate JSON --lane LANE [--die D] [--host H] [--coord ~/coord]
     publish_apply.py bind-fail --die DIE --lane LANE --id ID (--types t1,t2 | --log FILE) [--reason TEXT] [--coord ~/coord] [--dry]
     publish_apply.py derive-asbuilt --bind BIND_DIR --asbuilt KIT_ASBUILT --tree TREE --out NEW_ASBUILT
   apply first runs kit_topology.bind_matches on the candidate on a candidate host (FABLE-FLOW-1400): a bind that does not match refuses (rc 4).
@@ -175,6 +180,100 @@ def cmd_derive(a):
     return 0
 
 
+# S81-DIE-R3 11-18 (COORD): the post-apply strict bind + LATCHECK run in a hardlink copy this tool makes, never in the tree a lane composed.
+# D8f: bind r4 ran in <tree>_work while the publish renamed it to _work_live; the bind's absolute paths re-created _work (delta-apply refused the
+# publish) and the bind died (ModuleNotFoundError, its tools path was gone).  The copy is a SIBLING of the published tree whose .link-base names it
+# (src_manifest.linked_children: the shared inodes are accounted, the published tree still verifies --ro).  Every shared file stays read-only, so an
+# in-place write fails instead of reaching the tree; the bind and LATCHECK write only under <copy>/_postbind/ (fresh files).
+POSTBIND_MEM = int(os.environ.get("OT_POSTBIND_MEM", "96"))
+POSTBIND_DIR = "_postbind"
+
+
+def _rel(p, tree):
+    return p if not os.path.isabs(p) else tree_rel(p, [tree])
+
+
+def postbind_spec(obj, stamp, host=""):
+    """-> {host, tree, copy, plan, asbuilt, env, run_dir} for a bind-mode candidate (paths in the copy tree-relative), None when it builds no bind"""
+    args, hosts = candidate_bind_args(obj)
+    if not args or not (host or hosts):
+        return None
+    tree = args["src"].rstrip("/")
+    return {"host": host or hosts[0], "tree": tree, "copy": f"{tree}_postbind_{stamp}", "plan": _rel(args["plan"], tree),
+            "asbuilt": _rel(args["asbuilt"], tree) if args["asbuilt"] else "", "env": {"OT_NATIVE_RESET_SCOPE": args["scope"]} if args["scope"] else {},
+            "bind_out": args["bind_out"]}
+
+
+def postbind_run_sh(s):
+    """the job ot-run starts in the copy: strict elab + bind into _postbind/out, then LATCHECK on that bind (outputs under _postbind only)"""
+    q = shlex.quote
+    L = f"{s['copy']}/{POSTBIND_DIR}"
+    ab = f" --asbuilt {q(s['asbuilt'])}" if s["asbuilt"] else ""
+    env = "".join(f"export {k}={q(v)}\n" for k, v in sorted(s["env"].items()))
+    return (f"#!/bin/bash\n# publish_apply.py post-bind: strict bind + LATCHECK of {s['tree']} in its hardlink copy\nset -uo pipefail\n"
+            f"export PYTHONDONTWRITEBYTECODE=1\n{env}cd {q(s['copy'])} || exit 6\nmkdir -p {q(L)}/out\n"
+            f"python3 -I -B tools/die_plan/bind.py elab {q(s['plan'])}{ab} --out {q(L)}/out --strict --mem {POSTBIND_MEM} > {q(L)}/elab.log 2>&1\n"
+            f"e=$?; echo ELAB_RC=$e; tail -n 1 {q(L)}/elab.log | cut -c1-300\n"
+            f"python3 -I -B tools/die_plan/bind.py bind {q(s['plan'])}{ab} --out {q(L)}/out --strict > {q(L)}/bind.log 2>&1\n"
+            f"b=$?; echo BIND_RC=$b; tail -n 2 {q(L)}/bind.log | cut -c1-600\n"
+            f"[ $b = 0 ] || grep -E '^ +[A-Z_]+ ' {q(L)}/bind.log | head -20 | cut -c1-600\n"
+            f"python3 -I -B tools/die_plan/lane_asbuilt_latency.py {q(L)}/out {q(s['plan'])}{ab} --pricing as-bound --tsv {q(L)}/latcheck.tsv "
+            f"--json {q(L)}/latcheck.json > {q(L)}/latcheck.log 2>&1\n"
+            f"l=$?; echo LATCHECK_RC=$l; tail -n 2 {q(L)}/latcheck.log | cut -c1-300\n"
+            f"echo POSTBIND_DONE elab $e bind $b latcheck $l\nexit $(( e || b || l ))\n")
+
+
+def postbind_prep_sh(s):
+    """host side, ONE ssh: cp -al the published tree to <copy>.part, make the copy's own dirs writable, declare .link-base (rename, never a write
+    through a shared inode), write _postbind/run.sh, rename to <copy>.  Refuses when the tree is not a manifest tree or the copy exists."""
+    q = shlex.quote
+    T, Cp = q(s["tree"]), q(s["copy"])
+    return (f"set -euo pipefail\ncd /\ntest -f {T}/.src-manifest.json\ntest ! -e {Cp}\ntest ! -e {Cp}.part\n"
+            f"cp -al {T} {Cp}.part\nfind {Cp}.part -type d -exec chmod u+w {{}} +\n"
+            f"realpath {T} > {Cp}.part/.link-base.tmp\nchmod 444 {Cp}.part/.link-base.tmp\nmv -f {Cp}.part/.link-base.tmp {Cp}.part/.link-base\n"
+            f"mkdir {Cp}.part/{POSTBIND_DIR}\n"
+            f"cat > {Cp}.part/{POSTBIND_DIR}/run.sh <<'OT_POSTBIND_EOF'\n{postbind_run_sh(s)}OT_POSTBIND_EOF\n"
+            f"mv {Cp}.part {Cp}\necho POSTBIND_COPY {Cp}\n")
+
+
+def start_postbind(C, obj, lane, die, run=subprocess.run, host="", stamp=None, log_dir=None):
+    """start the post-apply strict bind + LATCHECK as a hub user unit: ssh-prep the copy, ot-run the job there (plan/bind admission), post the result.
+    -> (unit or None, text)"""
+    stamp = stamp or time.strftime("%m%d%H%M%S")
+    s = postbind_spec(obj, stamp, host)
+    if not s:
+        return None, "no bind (candidate is not kit_rtl mode bind)"
+    ld = Path(log_dir or os.path.expanduser("~/.local/state/ot-postbind"))
+    ld.mkdir(parents=True, exist_ok=True)
+    unit = f"postbind-{die}-{stamp}"
+    prep, log = ld / f"{unit}.prep.sh", ld / f"{unit}.log"
+    prep.write_text(postbind_prep_sh(s))
+    q = shlex.quote
+    otrun = HERE.parent / "fleet" / "ot-run"
+    fail = (f"publish_apply.py bind-fail --die {die} --lane {lane} --id {unit} --log {log}")
+    body = (f"cd /; ssh -n -o BatchMode=yes -o ControlPath=none {q(s['host'])} 'bash -s' < {q(str(prep))} > {q(str(log))} 2>&1 || "
+            f"{{ bash {q(str(Path(C) / 'bin/post.sh'))} {q(lane)} \"POST-APPLY-BIND [{lane} -> COORD] {die}: the bind copy could not be made on {s['host']} "
+            f"(log {log}); run publish_apply.py post-bind again\"; exit 3; }}\n"
+            f"{q(str(otrun))} --mem {POSTBIND_MEM} --hosts {q(s['host'])} --priority plan --plan-job bind --dir {q(s['copy'])} --stage {q(s['copy'])} "
+            f"--stage {q(s['tree'])} -- bash {q(s['copy'] + '/' + POSTBIND_DIR + '/run.sh')} >> {q(str(log))} 2>&1; rc=$?\n"
+            f"r=$(grep -E '^(ELAB|BIND|LATCHECK)_RC=' {q(str(log))} | tr '\\n' ' ')\n"
+            f"if [ $rc = 0 ]; then v=PASS; else v=\"FAIL (rc $rc): run {fail}\"; fi\n"
+            f"bash {q(str(Path(C) / 'bin/post.sh'))} {q(lane)} \"POST-APPLY-BIND [{lane} -> COORD] {die} tree {s['tree']}: strict bind + LATCHECK in hardlink copy "
+            f"{s['copy']} on {s['host']}: $r-> $v; log hub:{log}\"\n")
+    r = run(["systemd-run", "--user", "--unit", unit, "--collect", "--quiet", "--nice=5", "bash", "-c", body], capture_output=True, text=True, timeout=120)
+    if r.returncode != 0:
+        return None, "post-apply bind not started (rc %d: %s)" % (r.returncode, (r.stderr or r.stdout)[-160:])
+    return unit, f"post-apply strict bind + LATCHECK unit {unit} in hardlink copy {s['copy']} on {s['host']} (log {log})"
+
+
+def cmd_post_bind(a, run=subprocess.run):
+    obj = json.loads(Path(a.candidate).read_text())
+    m = obj.get("marker", obj)
+    unit, txt = start_postbind(a.coord, obj, a.lane, a.die or obj.get("die") or m.get("die") or "die", run=run, host=a.host or "")
+    print(f"POST-BIND {txt}")
+    return 0 if unit else 2
+
+
 def cmd_apply(a, run=subprocess.run, apply_fn=None, commit_fn=None):
     C = Path(a.coord)
     obj = json.loads(Path(a.candidate).read_text())
@@ -210,10 +309,14 @@ def cmd_apply(a, run=subprocess.run, apply_fn=None, commit_fn=None):
             except Exception as e:  # noqa: BLE001 -- an estimator launch never fails the apply
                 pc = "not started (%s)" % type(e).__name__
     res["precheck"] = pc
+    pb = "off (--no-post-bind)"
+    if not getattr(a, "no_post_bind", False):
+        unit, pb = (getattr(a, "postbind_fn", None) or start_postbind)(C, obj, a.lane, res["applied"], run=run)
+        res["post_bind"] = unit
     w = res.get("warnings") or []
     post(C, a.lane, f"APPLIED-OPTIMISTIC [{a.lane} -> COORD; cc WAVE-FLOW-R2] {res['applied']} event {res.get('event')} tree {res.get('source')}: every type launches on the "
                     f"next wave pass (no pilot); apply {res['apply_s']} s; advisory gate {gate}; precheck {pc}; gen_hosts {','.join(res.get('gen_hosts') or [])}; "
-                    f"{len(w)} advisory warning(s){': ' + ' | '.join(w)[:900] if w else ''}. Strict bind + LATCHECK stay blocking: on a failure run "
+                    f"{len(w)} advisory warning(s){': ' + ' | '.join(w)[:900] if w else ''}. Strict bind + LATCHECK stay blocking: {pb}; on a failure run "
                     f"publish_apply.py bind-fail (holds only the named types).", run=run)
     print(json.dumps(res))
     return 0
@@ -369,6 +472,13 @@ def main(argv=None):
     p.add_argument("--no-gate", action="store_true", help="do not start the advisory publish gate")
     p.add_argument("--no-precheck", action="store_true", help="do not start the background PRECHECK-1119 estimator")
     p.add_argument("--skip-bind-check", action="store_true", help="apply although kit_topology.bind_matches says the bind does not match the candidate")
+    p.add_argument("--no-post-bind", action="store_true", help="do not start the post-apply strict bind + LATCHECK (hardlink copy of the published tree)")
+    pb = sp.add_parser("post-bind", help="post-apply strict bind + LATCHECK in a hardlink copy of the candidate's published tree (apply starts it itself)")
+    pb.add_argument("--candidate", required=True)
+    pb.add_argument("--lane", required=True)
+    pb.add_argument("--die", default="")
+    pb.add_argument("--host", default="", help="build host holding the tree (default: the candidate's first gen host)")
+    pb.add_argument("--coord", default=os.path.expanduser("~/coord"))
     dv = sp.add_parser("derive-asbuilt", help="write the kit asbuilt the bind was made with (tables from bind/INPUTS_ISOLATED.json)")
     dv.add_argument("--bind", required=True)
     dv.add_argument("--asbuilt", required=True)
@@ -384,6 +494,8 @@ def main(argv=None):
     b.add_argument("--coord", default=os.path.expanduser("~/coord"))
     b.add_argument("--dry", action="store_true")
     a = P.parse_args(argv)
+    if a.cmd == "post-bind":
+        return cmd_post_bind(a)
     return cmd_apply(a) if a.cmd == "apply" else cmd_derive(a) if a.cmd == "derive-asbuilt" else cmd_bind_fail(a)
 
 
