@@ -274,3 +274,6 @@
   NO-PROGRESS epyc9 serdes__t13 signoff_meas_072023 stage 39.5 h job 40.7 h: no new meaningful log line for 39.1 h; last: - hold_ff: FAIL WNS -55.85 ps < 0
   NO-PROGRESS epyc9 ot_s81sl_leaf__t11 5_1_grt stage 14.7 h job 16.5 h: repair_Viol best 97 last 97 rows 336 window-gain 0.0%; stagnant 8.5 h; last event 0.0 h ago, log write 0.0 h ago (996 lines)
   NO-PROGRESS epyc10 proof 4_2_tapbal_grt stage 10.7 h job 11.1 h: no new meaningful log line for 6.0 h; last: delta HPWL                    0 %
+- 2026-11-19 15:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-19 15:52 PST: 272 running jobs, PROGRESSING 266, SLOW 4, NO-PROGRESS 2 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc9 serdes__t13 signoff_meas_072023 stage 40.5 h job 41.7 h: no new meaningful log line for 40.1 h; last: - hold_ff: FAIL WNS -55.85 ps < 0
+  NO-PROGRESS epyc10 proof 4_2_tapbal_grt stage 11.7 h job 12.1 h: no new meaningful log line for 7.0 h; last: delta HPWL                    0 %
