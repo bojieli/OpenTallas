@@ -90,7 +90,8 @@ def precheck_argv(obj, res, lane, now=None):
     unit = "precheck-%s-%d" % (die, int(now or time.time()))
     return ["timeout", "60", "ssh", "-n", "-o", "ControlPath=none", hosts[0], "systemd-run", "--user", "--unit", unit, "--collect", "--quiet",
             "--nice=15", "python3", "-I", PRECHECK_RT + "/tools/precheck/precheck_hook.py", "--die", str(die), "--plan", plan,
-            "--tools", str(Path(tree) / "tools/die_plan"), "--event", str(res.get("event")), "--owner", lane]
+            "--tools", str(Path(tree) / "tools/die_plan"), "--event", str(res.get("event")), "--owner", lane,
+            "--kit-hosts", ",".join(hosts)]
 
 
 def candidate_bind_args(obj):

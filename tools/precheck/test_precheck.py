@@ -8,6 +8,7 @@ sys.path.insert(0, str(HERE))
 import precheck as PC  # noqa: E402
 import precheck_hook as PH  # noqa: E402
 import type_census as TC  # noqa: E402
+sys.path.insert(0, str(HERE.parent / "die_plan"))
 
 
 def test_family_strips_type_and_variant_suffixes():
@@ -23,9 +24,10 @@ def test_reach_flags_long_station_hop_only():
         {"conn": "bus:b", "bits": 8, "from_um": [0, 0], "regs_um": [[100, 0]], "to_um": [100, 500]}]}   # hop 500
     f = PC.reach_findings(t, 405, margin=1.0)
     assert len(f) == 1 and f[0][0] == 500 and "bus:b" in f[0][1]
-    assert PC.reach_findings(t, 405) == []                  # calibrated: an 8-bit chain may hop up to 506 um
-    t["internal_stations"][1]["bits"] = 512
-    assert len(PC.reach_findings(t, 405)) == 1              # a 512-bit chain only up to 439 um
+    f = PC.reach_findings(t)                                # CBC r713: 300 um per hop, any width
+    assert len(f) == 1 and f[0][0] == 500
+    t["internal_stations"][0]["regs_um"] = [[310, 0]]
+    assert len(PC.reach_findings(t)) == 2
 
 
 def test_reach_ft_slot_uses_window_centres_and_regs():
@@ -143,3 +145,41 @@ def test_synth_blackbox_stubs_only_for_undefined_modules():
     st = PS.blackbox_stubs([top, cells])
     assert "module ot_rom #(parameter INSTANCE = 0, parameter VIAMAP = 0) (addr_in, clk, rd_out);" in st and "ot_dp_st" not in st
     assert PS.reg_class("\\g_u_lf4_u_vp_g_ln_10_u_cst_hi_gd_s_0_u_src_bdbec6ef94848d02f109_q [3:0]") == "g_u_lf4_u_vp_g_ln_N_u_cst_hi_gd_s_N_u_src_H_q"
+
+
+def test_kit_sinks_parse_line_and_type():
+    import kit_sinks as KS
+    ln = "OT_CLOCK_TAPS 3 taps, 120 sinks moved off clk: clk 100 clk_t1 15 clk_t2 5"
+    assert KS.parse_line("noise " + ln) == (3, 120)
+    assert KS.type_of("kv3_pv_v8-route-loved-redfish-2395315-1795051866") == "kv3_pv_v8"
+    assert KS.type_of("tmp") is None
+
+
+def test_stale_bins_flags_kit_count_far_from_plan_bins(tmp_path):
+    d = tmp_path / "por"
+    (d / "sink_bins").mkdir(parents=True)
+    (d / "sink_bins/t.json").write_text(json.dumps({"n": 99260, "bins": []}))
+    (d / "plan.json").write_text("{}")
+    ctx = PC.Ctx(None, {}, d / "plan.json", None)
+    n = PC.bins_count(ctx, {"sink_bins_file": "physical/x/sink_bins/t.json"})
+    assert n == 99260
+    r = PC.stale_bins(n, {"sinks": 120625, "taps": 248, "log": "h:/p"})
+    assert r and r[0] == 1.215 and "99260" in r[1]
+    assert PC.stale_bins(n, {"sinks": 101000}) is None
+
+
+def test_cbc_rules_shared_constants():
+    import cbc_rules as CBC
+    assert (CBC.REACH_UM_PER_HOP, CBC.TAP_MAX_SINKS, CBC.RESET_LEAF_MAX_FANOUT, CBC.BOUNDARY_REG_UM, CBC.DEPTH_LEVELS_MAX) == (300.0, 1000, 32, 50.0, 13)
+    assert PC.REACH_UM == 300.0 and PC.TAP_CAP == 1000 and PC.RESET_LEAF == 32
+
+
+def test_boundary_unregistered_ports():
+    pins = [("a_i", 0, 0, 0.0, 0.0, "S"), ("a_i", 1, 0, 10.0, 0.0, "S"), ("b_o", 0, 0, 500.0, 0.0, "S")]
+    miss = PC.boundary_unregistered(pins, [(5.0, 20.0), (500.0, 80.0)], 50.0)
+    assert set(miss) == {"b_o"} and miss["b_o"][0] == 1
+
+
+def test_reset_leaf_fanout_over_cbc():
+    assert PC.reset_findings({"reset": {"max_fanout": 64, "relay_um": 100}})[0][0] == 64
+    assert PC.reset_findings({"reset": {"max_fanout": 32, "relay_um": 100}}) == []

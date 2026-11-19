@@ -14,6 +14,7 @@ Heavy: run it through ot-run (one type per job).  Writes <work>/<type>.synth.jso
 """
 import argparse
 import collections
+import os
 import json
 import re
 import subprocess
@@ -21,6 +22,9 @@ import sys
 from pathlib import Path
 
 YOSYS = "/home/ubuntu/.local/opentallas-tools/bin/yosys"
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "die_plan"))
+sys.path.insert(1, os.path.dirname(os.path.abspath(__file__)))
+import cbc_rules as CBC  # noqa: E402  (owner r713: depth <= 13 levels, shared with the CBC generator)
 _INST = re.compile(r"^\s*(?:\(\*[^)]*\*\)\s*)?([A-Za-z_]\w*)\s*(#\s*\((?:[^;]*?)\))?\s+\\?([A-Za-z_][\w.\[\]$]*)\s*\((.*?)\);", re.S | re.M)
 _KW = {"module", "endmodule", "input", "output", "inout", "wire", "reg", "assign", "always", "if", "else", "begin", "end", "case",
        "endcase", "parameter", "localparam", "genvar", "generate", "endgenerate", "for", "function", "endfunction", "initial", "logic"}
@@ -39,6 +43,39 @@ def driven_names(text):
     return d
 
 
+_DECL = re.compile(r"\b(?:wire|reg|logic|input|output|inout)\s+(?:wire\s+|reg\s+|logic\s+)?(?:signed\s+)?(?:\[\s*(\d+)\s*:\s*(\d+)\s*\]\s*)?\\?([A-Za-z_][\w$]*)")
+
+
+def decl_widths(texts):
+    w = {}
+    for t in texts:
+        for m in _DECL.finditer(t):
+            w[m.group(3)] = abs(int(m.group(1)) - int(m.group(2))) + 1 if m.group(1) else 1
+    return w
+
+
+def expr_width(expr, widths):
+    """bit width of a port connection: a name (its declared width), a bit/part select, a sized literal, a {concat}"""
+    e = expr.strip()
+    if not e:
+        return 1
+    if e.startswith("{") and e.endswith("}"):
+        return max(1, sum(expr_width(x, widths) for x in re.split(r",(?![^{]*})", e[1:-1])))
+    m = re.fullmatch(r"(\d+)'[sS]?[bBhHdDoO][0-9a-fA-FxXzZ_]+", e)
+    if m:
+        return int(m.group(1))
+    m = re.fullmatch(r"\\?([A-Za-z_][\w$]*)\s*\[\s*(\d+)\s*:\s*(\d+)\s*\]", e)
+    if m:
+        return abs(int(m.group(2)) - int(m.group(3))) + 1
+    m = re.fullmatch(r"\\?([A-Za-z_][\w$]*)\s*\[[^\]:]+\]", e)
+    if m:
+        return 1
+    m = re.fullmatch(r"\\?([A-Za-z_][\w$]*)", e)
+    if m:
+        return widths.get(m.group(1), 1)
+    return 64
+
+
 def blackbox_stubs(texts):
     """(* blackbox *) stubs for every instantiated module that no text defines: ports = the named connections (input when
     the connected signal is driven in the parent, else output; an inout stub makes yosys resolve driver conflicts to x and
@@ -49,6 +86,8 @@ def blackbox_stubs(texts):
         defined |= defined_modules(t)
         driven |= driven_names(t)
     ports, params = collections.defaultdict(dict), collections.defaultdict(set)
+    pw = collections.defaultdict(lambda: collections.defaultdict(int))
+    widths = decl_widths(texts)
     for t in texts:
         for m in _INST.finditer(t):
             mod = m.group(1)
@@ -59,6 +98,7 @@ def blackbox_stubs(texts):
                 dirn = "input" if (not ids or any(i in driven for i in ids) or "'" in expr) else "output"
                 if ports[mod].get(p) != "input":
                     ports[mod][p] = dirn
+                pw[mod][p] = max(pw[mod][p], expr_width(expr, widths))
             if m.group(2):
                 for p in re.findall(r"\.\s*([A-Za-z_]\w*)\s*\(", m.group(2)):
                     params[mod].add(p)
@@ -68,7 +108,7 @@ def blackbox_stubs(texts):
         pr = sorted(params[mod])
         hdr = ("#(" + ", ".join(f"parameter {p} = 0" for p in pr) + ") ") if pr else ""
         out.append(f"(* blackbox *) module {mod} {hdr}(" + ", ".join(ps) + ");\n"
-                   + "".join(f"  {ports[mod][p]} [4095:0] {p};\n" for p in ps) + "endmodule\n")
+                   + "".join(f"  {ports[mod][p]} [{max(1, pw[mod][p]) - 1}:0] {p};\n" for p in ps) + "endmodule\n")
     return "".join(out)
 
 
@@ -146,6 +186,7 @@ def run(a):
         if ltp.is_file():
             ls = [int(x) for x in re.findall(r"Longest topological path in \S+ \(length=(\d+)\)", ltp.read_text())]
             rec["depth_generic"] = max(ls) if ls else None
+            rec["depth_limit"] = a.depth_limit
     (work / f"{a.type}.synth.json").write_text(json.dumps(rec, indent=1))
     print(json.dumps({k: rec.get(k) for k in ("type", "rc", "dff_bits_pre", "dff_bits_post", "depth_generic")}))
     return 0 if r.returncode == 0 else 1
@@ -159,6 +200,7 @@ def main(argv=None):
     ap.add_argument("--yosys", default=YOSYS)
     ap.add_argument("--no-depth", action="store_true")
     ap.add_argument("--timeout", type=int, default=3000)
+    ap.add_argument("--depth-limit", type=int, default=CBC.DEPTH_LEVELS_MAX)
     return run(ap.parse_args(argv))
 
 

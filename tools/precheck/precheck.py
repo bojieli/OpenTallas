@@ -21,6 +21,13 @@ seen on 11-18:
               stations inside the 27 um retention of face_flops.tcl ff_put_near ("NS face bank cannot fit").
   RESET-FANOUT a type whose boundary registers (bus + ft + station bits) exceed 2,000 with no reset relay structure
               in the plan (S81 phy__t1: ~11k RESETN pins on one raw net).
+  STALE-BINS  (with --kit-sinks) the clock sinks the newest kit saw (clock_taps.tcl OT_CLOCK_TAPS line, kit_sinks.py)
+              differ from the plan's clock.sink_bins_file count by more than 10 %: density taps follow the stale bins and
+              the new flops land on the root tap (KV kv3_pv_v8: bins 99,260, kit 120,625 -> clk 10,056, clk_t34 10,234).
+  BOUNDARY-REG (CBC r713) a port bit with no planned register (taps.planned_sinks) within 50 um of its pin.
+  Thresholds come from tools/die_plan/cbc_rules.py (owner r713 close-by-construction), shared with the CBC generator:
+  reach 300 um per hop, tap <= 1,000 sinks, reset leaf <= 32, boundary register <= 50 um, aim >= 10 % of the bus bits,
+  depth <= 13 levels (precheck_synth).
   FOLD / DEPTH (precheck_synth.py, optional): station registers merged by synthesis; logic depth per D cone.
 
 Outputs in --out: findings.tsv (type, check, value, threshold, family, detail), family_summary.md, suggested_rows.json
@@ -40,16 +47,57 @@ import traceback
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-REACH_UM = 405.0
-TAP_CAP = 1200
-TAP_RADIUS_UM = 200.0
+sys.path.insert(0, str(HERE.parent / "die_plan"))
+import cbc_rules as CBC  # noqa: E402  owner r713 close-by-construction: ONE rule module shared with the CBC generator
+sys.path.pop(0)
+REACH_UM = CBC.REACH_UM_PER_HOP
+TAP_CAP = CBC.TAP_MAX_SINKS
+TAP_RADIUS_UM = CBC.TAP_RADIUS_UM
 RESET_FLOPS = 2000
+RESET_LEAF = CBC.RESET_LEAF_MAX_FANOUT
+BOUNDARY_UM = CBC.BOUNDARY_REG_UM
 FF_CPITCH_UM = 2.16      # face_flops.tcl ff_cpitch = 40 sites x 0.054 um
 FF_ROW_UM = 0.27
 FF_RETENTION_UM = 27.0   # ff_put_near: |dx| + |dy| <= 27 um around the request
 FF_NEAR_FACE_UM = 10.0   # a request within 10 um of the N/S face takes the face-bank search
 FF_DEPTH_ROWS = 120
-CHECKS = ("REACH", "MISAIM", "TAP-CAP", "TAP-COVER", "TAP-EDGE", "FACE-BANK", "RESET-FANOUT")
+CHECKS = ("REACH", "MISAIM", "TAP-CAP", "TAP-COVER", "TAP-EDGE", "STALE-BINS", "BOUNDARY-REG", "FACE-BANK", "RESET-FANOUT")
+STALE_FRAC = CBC.SINK_BINS_STALE_FRAC
+
+
+def bins_count(ctx, ck):
+    """sink count recorded in the plan's clock.sink_bins_file (its n, else the sum of the bin weights), or None"""
+    f = ck.get("sink_bins_file")
+    if not f:
+        return None
+    pd = Path(ctx.plan_path).resolve().parent
+    cands = [pd / f, pd / Path(f).name, pd / "sink_bins" / Path(f).name]
+    for anc in pd.parents:                      # repo-relative paths (physical/die_plan/<die>/...)
+        cands.append(anc / f)
+    for c in cands:
+        if c.is_file():
+            try:
+                d = json.loads(c.read_text())
+            except ValueError:
+                return None
+            if isinstance(d, dict):
+                if d.get("n"):
+                    return int(d["n"])
+                b = d.get("bins") or []
+                return int(sum((x[2] if isinstance(x, (list, tuple)) and len(x) > 2 else 1) for x in b)) or None
+            return None
+    return None
+
+
+def stale_bins(plan_n, kit, frac=STALE_FRAC):
+    """(ratio, detail) when the kit's sink count differs from the plan bins by more than frac"""
+    if not plan_n or not kit or not kit.get("sinks"):
+        return None
+    r = kit["sinks"] / plan_n
+    if abs(r - 1) <= frac:
+        return None
+    return round(r, 3), (f"kit saw {kit['sinks']} clock sinks over {kit.get('taps')} taps, plan sink_bins hold {plan_n} "
+                         f"({r:.2f}x); density taps follow stale bins (refresh sink_bins from the newest placed kit: {kit.get('log', '?')})")
 
 
 def family(t):
@@ -76,8 +124,10 @@ def chain_hops(points):
 
 
 WIDE_BITS = 256
-WIDE_MARGIN = 1.085     # CALIBRATED 11-19 on 43 signed S81 types: widest signed hop on a >= 256-bit chain 436.8 um (slice_station t27/t37)
-NARROW_MARGIN = 1.25    # signed narrow chain up to 501.9 um (slice_station t37 ft7, 32 b)
+# CBC r713: one flat limit per hop (CBC.REACH_UM_PER_HOP = 300).  The 11-19 calibration on the pre-CBC 405-um plans
+# (>= 256-bit chains 405 x 1.085, narrower x 1.25) is kept for --legacy-reach only.
+WIDE_MARGIN = 1.0
+NARROW_MARGIN = 1.0
 
 
 def reach_findings(t, reach=REACH_UM, margin=None):
@@ -280,7 +330,7 @@ def pin_width(pins_doc, pin):
     return n or None
 
 
-def misaim_findings(ctx, t, frac=0.10, min_bits=64):
+def misaim_findings(ctx, t, frac=CBC.AIM_MIN_BIT_FRAC, min_bits=CBC.AIM_MIN_BITS):
     out = []
     widths = {b.get("name"): int(b.get("width") or 0) for b in t.get("buses") or []}
     cores = {c.get("inst"): c for c in t.get("hard_cores") or []}
@@ -306,18 +356,60 @@ def misaim_findings(ctx, t, frac=0.10, min_bits=64):
     return out
 
 
-def reset_findings(t, limit=RESET_FLOPS):
+def boundary_unregistered(pins, regs, radius=BOUNDARY_UM):
+    """{port base: (bits with no register within radius (Manhattan), worst distance)} -- CBC both-side boundary rule.
+    pins [(name, bit, layer, x, y, face)], regs [(x, y)] planned register sites"""
+    cell = max(radius, 1.0)
+    grid = collections.defaultdict(list)
+    for x, y in regs:
+        grid[(int(x // cell), int(y // cell))].append((x, y))
+    out = {}
+    for name, _bit, _ln, x, y, _f in pins:
+        gx, gy = int(x // cell), int(y // cell)
+        best = None
+        for i in (-1, 0, 1):
+            for j in (-1, 0, 1):
+                for rx, ry in grid.get((gx + i, gy + j), ()):
+                    d = abs(rx - x) + abs(ry - y)
+                    best = d if best is None or d < best else best
+        if best is None or best > radius:
+            n, w = out.get(name, (0, 0.0))
+            out[name] = (n + 1, max(w, best if best is not None else 2 * cell))
+    return out
+
+
+def boundary_findings(ctx, tn, radius=BOUNDARY_UM):
+    import gen_phys as G
+    import taps as T
+    pins = G.type_pins(ctx.P, tn)
+    regs = [(float(x), float(y)) for x, y, _ in T.planned_sinks(ctx.P, tn)]
+    miss = boundary_unregistered(pins, regs, radius)
+    if not miss:
+        return []
+    bits = sum(n for n, _ in miss.values())
+    worst = sorted(miss.items(), key=lambda kv: -kv[1][0])
+    return [(bits, f"{bits} of {len(pins)} port bits on {len(miss)} ports have no planned register within {radius:.0f} um "
+             f"({', '.join(f'{k} {n}b' + (f' >{d:.0f}um' if d < 2 * radius else ' none near') for k, (n, d) in worst[:5])})")]
+
+
+def reset_findings(t, limit=RESET_FLOPS, leaf=RESET_LEAF):
+    """raw reset nets (no relay structure over `limit` register bits) and planned reset leaves above the CBC fanout"""
+    out = []
+    rs = t.get("reset") or {}
+    for k in ("max_fanout", "leaf_fanout", "relay_fanout"):
+        v = rs.get(k)
+        if isinstance(v, (int, float)) and v > leaf:
+            out.append((int(v), f"reset.{k} {v} > CBC leaf fanout {leaf}"))
     bits = sum(int(b.get("width") or 0) for b in t.get("buses") or [])
     bits += sum(int(s.get("width") or 0) * max(1, int(s.get("stations", 1) or 1)) for s in t.get("ft_slots") or [])
     bits += sum(int(e.get("bits") or 1) * len(e.get("regs_um") or []) for e in t.get("internal_stations") or [])
-    rs = t.get("reset") or {}
     lc = (t.get("clock") or {}).get("landing_contract") or {}
     relay = any(rs.get(k) for k in ("relay_um", "local_relay_tree", "relay_tree")) or any(
         t.get(k) for k in ("reset_relay_full", "reset_replicate", "reset_spine_pins")) or bool(lc.get("collector_tree"))
     if bits > limit and not relay:
-        return [(bits, f"~{bits} boundary/station register bits on the raw reset (reset {json.dumps(rs)[:120]}); no relay_um, "
-                 f"reset_relay_full/replicate or collector_tree")]
-    return []
+        out.append((bits, f"~{bits} boundary/station register bits on the raw reset (reset {json.dumps(rs)[:120]}); no relay_um, "
+                    f"reset_relay_full/replicate or collector_tree; CBC needs leaves of <= {leaf}"))
+    return out
 
 
 def taps_and_sinks(ctx, tn):
@@ -343,7 +435,7 @@ def type_findings(ctx, tn, checks, opts):
             add("REACH", v, opts.reach, d)
     if "MISAIM" in checks:
         for v, d in misaim_findings(ctx, t):
-            add("MISAIM", v, 0.10, d)
+            add("MISAIM", v, CBC.AIM_MIN_BIT_FRAC, d)
     if "RESET-FANOUT" in checks:
         for v, d in reset_findings(t, opts.reset_flops):
             add("RESET-FANOUT", v, opts.reset_flops, d)
@@ -354,7 +446,7 @@ def type_findings(ctx, tn, checks, opts):
         except Exception as e:  # noqa: BLE001 -- an estimator reports, never stops
             add("TAP-ERROR", 0, 0, f"{type(e).__name__}: {str(e)[:200]}")
             grid, sinks = [], []
-        cap = int(ck.get("tap_max_sinks") or opts.tap_cap)
+        cap = min(int(ck.get("tap_max_sinks") or opts.tap_cap), opts.tap_cap)     # CBC r713: <= 1,000 per tap
         if "TAP-CAP" in checks and grid and sinks:
             cnt = tap_assign(grid, sinks)
             over = tap_rebalance(grid, cnt, cap, opts.tap_radius)
@@ -383,6 +475,13 @@ def type_findings(ctx, tn, checks, opts):
                     add("TAP-EDGE", round(min(fx, fy), 3), opts.tap_span,
                         f"{len(grid)} taps span {fx:.0%} of the width and {fy:.0%} of the height (edges {''.join(sorted(edges))}, "
                         f"{interior} interior; tap_mode {ck.get('tap_mode')}); outline {w}x{h}")
+    if "STALE-BINS" in checks and getattr(opts, "kit_sinks_map", None) and tn in opts.kit_sinks_map:
+        r = stale_bins(bins_count(ctx, ck), opts.kit_sinks_map[tn], opts.stale_frac)
+        if r:
+            add("STALE-BINS", r[0], opts.stale_frac, r[1])
+    if "BOUNDARY-REG" in checks and not t.get("hard"):
+        for v, d in boundary_findings(ctx, tn, opts.boundary_um):
+            add("BOUNDARY-REG", v, opts.boundary_um, d)
     if "FACE-BANK" in checks:
         r = face_bank_check(ctx, tn, opts.bank_density, opts.bank_gap_um)
         if r:
@@ -473,6 +572,15 @@ def suggested_rows(findings, raw):
                 rows.append(dict(check=check, family=fam, types=[f["type"]], path=f"partition_types.{f['type']}.clock",
                                  action="add taps over the uncovered free area or refresh clock.sink_bins_file from the current netlist",
                                  detail=f["detail"]))
+        elif check == "BOUNDARY-REG":
+            for f in fs:
+                rows.append(dict(check=check, family=fam, types=[f["type"]], path=f"partition_types.{f['type']}.buses",
+                                 action=f"register every port within {BOUNDARY_UM:.0f} um of its pin (CBC both-side boundary)",
+                                 detail=f["detail"]))
+        elif check == "STALE-BINS":
+            rows.append(dict(check=check, family=fam, types=types, path="partition_types.<type>.clock.sink_bins_file",
+                             action="regenerate the sink bins from the newest placed kit (all_registers -clock clk), then re-run taps",
+                             detail=fs[0]["detail"]))
         elif check == "TAP-EDGE":
             rows.append(dict(check=check, family=fam, types=types, path="partition_types.<type>.clock.tap_mode", set="grid+explicit",
                              why="taps on one or two edges only; use the family's grid+explicit form"))
@@ -535,7 +643,18 @@ def main(argv=None):
     ap.add_argument("--bank-density", type=int, default=64, help="face registers + face-near stations per 3 station columns")
     ap.add_argument("--bank-gap-um", type=float, default=45.0, help="face-to-hard-core gap under the dense columns")
     ap.add_argument("--reset-flops", type=int, default=RESET_FLOPS)
+    ap.add_argument("--boundary-um", type=float, default=BOUNDARY_UM)
+    ap.add_argument("--kit-sinks", default="", help="kit_sinks.py JSON file(s), comma-separated (STALE-BINS)")
+    ap.add_argument("--stale-frac", type=float, default=STALE_FRAC)
     a = ap.parse_args(argv)
+    a.kit_sinks_map = {}
+    for f in [x for x in a.kit_sinks.split(",") if x]:
+        try:
+            for k, v in json.loads(Path(f).read_text()).items():
+                if k not in a.kit_sinks_map or v.get("mtime", 0) > a.kit_sinks_map[k].get("mtime", 0):
+                    a.kit_sinks_map[k] = v
+        except (OSError, ValueError) as e:
+            print(f"PRECHECK kit-sinks {f}: {e}")
     sys.path.insert(0, a.tools)
     import schema as S
     t0 = time.time()

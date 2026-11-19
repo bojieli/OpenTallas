@@ -83,6 +83,7 @@ def test_apply_starts_background_precheck_on_first_gen_host(tmp_path):
     assert pa[:7] == ["timeout", "60", "ssh", "-n", "-o", "ControlPath=none", "epyc8"] and "systemd-run" in pa
     assert pa[pa.index("--plan") + 1] == "/x/new/physical/p.json" and pa[pa.index("--tools") + 1] == "/x/new/tools/die_plan"
     assert pa[pa.index("--owner") + 1] == "QC-PLAN-R3" and pa[pa.index("--unit") + 1] == "precheck-qc-5"
+    assert pa[pa.index("--kit-hosts") + 1] == ",".join(res.get("gen_hosts") or obj.get("config", {}).get("gen_hosts") or pa[6:7])
     assert PA.precheck_argv({"die": "qc"}, {}, "L") is None
     c = coord(tmp_path)
     cand = tmp_path / "cand.json"

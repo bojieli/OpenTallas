@@ -42,6 +42,22 @@ def summary_text(die, event, owner, out, findings_tsv):
     return head + ("\n" + "\n".join(parts) if parts else " No findings.")
 
 
+def gather_kit_sinks(hosts, out):
+    """run kit_sinks.py on each gen host (read-only grep of its kit run logs); returns the JSON files written"""
+    files = []
+    for h in hosts:
+        f = out / f"kit_sinks_{h}.json"
+        cmd = ["timeout", "300", "ssh", "-n", "-o", "ControlPath=none", h, f"cd / && python3 -I {HERE / 'kit_sinks.py'}"]
+        try:
+            r = subprocess.run(cmd, capture_output=True, text=True, timeout=330)
+        except subprocess.TimeoutExpired:
+            continue
+        if r.returncode == 0 and r.stdout.strip().startswith("{"):
+            f.write_text(r.stdout)
+            files.append(str(f))
+    return files
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--die", required=True)
@@ -52,9 +68,12 @@ def main(argv=None):
     ap.add_argument("--out-root", default=OUT_ROOT)
     ap.add_argument("--post-host", default="intel2")
     ap.add_argument("--no-post", action="store_true")
+    ap.add_argument("--kit-hosts", default="", help="gen hosts whose kit runs feed STALE-BINS (kit_sinks.py over ssh)")
     a = ap.parse_args(argv)
     out = Path(a.out_root) / f"{a.die}_{a.event}_{time.strftime('%m%d%H%M')}"
-    rc = PC.main(["--die", a.die, "--plan", a.plan, "--tools", a.tools, "--out", str(out)])
+    out.mkdir(parents=True, exist_ok=True)
+    ks = gather_kit_sinks([h for h in a.kit_hosts.split(",") if h], out)
+    rc = PC.main(["--die", a.die, "--plan", a.plan, "--tools", a.tools, "--out", str(out)] + (["--kit-sinks", ",".join(ks)] if ks else []))
     text = summary_text(a.die, a.event, a.owner, out, out / "findings.tsv")
     print(text)
     if not a.no_post:
