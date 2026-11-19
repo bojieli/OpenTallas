@@ -170,6 +170,10 @@ print(json.dumps({'containers': names, 'scopes': sorted(scopes)}))
 '''
 
 
+BAD_HOSTS = set()      # COORD 11-19 (FLOW-1150 B): hosts the wave found unreadable / over 2x cores this tick (kit_wave sets it); the stop / scan paths do not wait on them
+SSH_CONNECT_S = 10     # ssh ConnectTimeout of every fleet-wide stop / scan call (was 15)
+
+
 def stop_on_fleet(sh, hub, roots, hosts=None, dry=False):
     """stop every container (and its ot-heavy scope) with an RW mount on these kit/attempt roots, on all hosts: ot-run may
     have spilled the job anywhere and a hub client's stop leaves a started command running.  Exact names, never pkill.
@@ -180,11 +184,13 @@ def stop_on_fleet(sh, hub, roots, hosts=None, dry=False):
     args = json.dumps({'roots': roots, 'dry': bool(dry)})
 
     def one(h):
+        if h in BAD_HOSTS:
+            return h, {'error': 'skipped: host unreadable or over 2x its cores this tick'}
         cmd = ['python3', '-I', '-', args] if h in ('localhost', hub, os.uname().nodename) else \
-            ['ssh', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=15', '-o', 'ControlPath=none', h,
+            ['ssh', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=%d' % SSH_CONNECT_S, '-o', 'ControlPath=none', h,
              'python3', '-I', '-', shlex.quote(args)]
         try:
-            rc, out, err = sh(cmd, timeout=240, input=STOP_KIT)
+            rc, out, err = sh(cmd, timeout=90, input=STOP_KIT)
             if rc != 0 or not (out or '').strip():
                 return h, {'error': 'rc %s %s' % (rc, (err or '')[-160:])}
             return h, json.loads(out.strip().splitlines()[-1])
@@ -277,11 +283,13 @@ def orphan_scopes(sh, hub, rows, hosts=None, dry=False, min_age=1800, cap=40):
 
     def one(h):
         # the args (every recent row) are sent on stdin with the script: they no longer fit argv (E2BIG once single-attempt rows were included)
+        if h in BAD_HOSTS:
+            return h, {'error': 'skipped: host unreadable or over 2x its cores this tick'}
         cmd = ['python3', '-I', '-'] if h in ('localhost', hub, os.uname().nodename) else \
-            ['ssh', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=15', '-o', 'ControlPath=none', h,
+            ['ssh', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=%d' % SSH_CONNECT_S, '-o', 'ControlPath=none', h,
              'python3', '-I', '-']
         try:
-            rc, out, err = sh(cmd, timeout=600, input='import sys\nsys.argv[1:2] = [%r]\n' % args + ORPHAN_SCAN)
+            rc, out, err = sh(cmd, timeout=300, input='import sys\nsys.argv[1:2] = [%r]\n' % args + ORPHAN_SCAN)
             if rc != 0 or not (out or '').strip():
                 return h, {'error': 'rc %s %s' % (rc, (err or '')[-160:])}
             return h, json.loads(out.strip().splitlines()[-1])

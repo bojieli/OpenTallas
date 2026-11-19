@@ -5529,6 +5529,9 @@ def sync_die_inputs(AP, cfg, run=None):
         return []
     inc = cfg.get("_src_incomplete") or {}
     done = []
+    # COORD 11-19 (FLOW-1150 B: a tick took 2,581 s inside a self-heal copy): live (run is None) the copies are DETACHED hub units (ss-<hash>); the tick never waits for them, the next
+    # probe sees the files (or the unit log says why not).  An injected run (tests) stays synchronous.
+    detached = run is None and hasattr(AP, "launch_unit") and not getattr(AP, "DRY", False) and cfg.get("src_sync_detached") is not False
     if run is None:
         def run(argv, inp=None):
             return AP.sh(argv, timeout=1800)[0]
@@ -5562,6 +5565,13 @@ def sync_die_inputs(AP, cfg, run=None):
                 names = " ".join(shlex.quote(p.lstrip("/")) for p in part)
                 pipe = (f"{' '.join(ssh)} {src} 'cd / && for f in {names}; do test -e \"$f\" || exit 3; done; tar -C / --hard-dereference -cf - {names}' | "
                         f"{' '.join(ssh).replace('-n ', '')} {h} {shlex.quote(tar_extract_cmd(part))}")
+                if detached:
+                    unit = "ss-%s" % hashlib.sha1((h + "|" + names).encode()).hexdigest()[:12]
+                    if not AP.unit_active(unit):
+                        AP.launch_unit(unit, Path(os.path.expanduser("~/.local/state/ap-src-sync")) / (unit + ".log"), ["bash", "-c", "set -o pipefail; " + pipe])
+                        AP.log(f"KIT-WAVE SRC-SYNC {src}->{h} {die}: {len(part)} file(s) copying in detached unit {unit} (next probe verifies)")
+                    ok += len(part)
+                    continue
                 errf = os.path.join(tempfile.gettempdir(), "srcsync-err-%d-%s.txt" % (os.getpid(), h))
                 try:
                     rc = run(["bash", "-c", "set -o pipefail; { " + pipe + "; } 2>" + shlex.quote(errf)])
@@ -8419,9 +8429,21 @@ def run_item(spec_path):
 KS_PATH = Path(__file__).resolve().parent / "kit_store.py"
 
 
+def ks_source():
+    """COORD 11-19 (FABLE-FLOW-1150 A: 246 of 468 live units run old tools): the kit_store.py that the snapshot push / fetch / verify runs is the one in rt/current NOW, not the copy beside this
+    (possibly frozen, days old) unit module.  Falls back to the module's own copy when rt/current is not visible (sealed job, tests)."""
+    rt = Path(os.environ.get("OT_RT_CURRENT") or "/srv/opentallas-scratch2/claude/rt/current") / "tools/autopilot/kit_store.py"
+    try:
+        if rt.is_file():
+            return rt
+    except OSError:
+        pass
+    return KS_PATH
+
+
 def ks_cmd(args):
     """shell command running kit_store.py <args> on a gen host (source on stdin, like kr_cmd)"""
-    return f"python3 - {args} <<'KWKS_EOF'\n{KS_PATH.read_text()}\nKWKS_EOF"
+    return f"python3 - {args} <<'KWKS_EOF'\n{ks_source().read_text()}\nKWKS_EOF"
 
 
 def kit_store_on(cfg, die, item):
@@ -11803,6 +11825,11 @@ def unreadable_host_rows(AP, cfg, st, notices, now=None, hours=UNREADABLE_HOST_H
     stt, hub = cfg.get("_otrun_status") or {}, cfg.get("_hub") or ""
     if not stt:
         return 0
+    try:                                                  # the stop / reap / orphan-scan paths of this tick skip these hosts (wave_jobs.BAD_HOSTS)
+        WJ.BAD_HOSTS = {h for h in set(WJ.FLEET) | {h for d_ in (cfg.get("dies") or {}).values() if isinstance(d_, dict) for h in (d_.get("gen_hosts") or [])}
+                        if h not in (hub, "localhost") and queued_host_bad(stt, h, hub)}
+    except Exception:
+        pass
     now = time.time() if now is None else now
     n = 0
     for r in (st.get("items") or {}).values():

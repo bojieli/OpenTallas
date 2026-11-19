@@ -10,6 +10,16 @@ import kit_wave as KW  # noqa: E402
 import autopilot as AP  # noqa: E402
 
 
+import pytest  # noqa: E402
+
+
+@pytest.fixture(autouse=True)
+def _reset_bad_hosts():
+    import wave_jobs as _WJ
+    yield
+    _WJ.BAD_HOSTS = set()                                   # unreadable_host_rows sets the module-global per tick
+
+
 class FakeAP:
     def __init__(self, green_src):
         self.lines, self.green = [], green_src
@@ -368,3 +378,41 @@ def test_self_heal_source_sync_skips_bad_hosts_both_ways():
     KW.sync_die_inputs(ap, cfg, run=lambda argv, inp=None: (runs.append(argv) or 0))
     joined = " ".join(" ".join(map(str, c)) for c in runs)
     assert "epyc7" not in joined                              # neither a destination nor a donor
+
+
+def test_snapshot_commands_run_kit_store_from_rt_current(tmp_path, monkeypatch):
+    rt = tmp_path / "rt_current" / "tools" / "autopilot"
+    rt.mkdir(parents=True)
+    (rt / "kit_store.py").write_text("# RT-CURRENT-COPY\n")
+    monkeypatch.setenv("OT_RT_CURRENT", str(tmp_path / "rt_current"))
+    assert KW.ks_source() == rt / "kit_store.py" and "RT-CURRENT-COPY" in KW.ks_cmd("snap --x")
+    monkeypatch.setenv("OT_RT_CURRENT", str(tmp_path / "none"))
+    assert KW.ks_source() == KW.KS_PATH                      # not visible: the module's own copy
+
+
+def test_fleet_stop_and_scan_skip_bad_hosts_with_a_short_ssh_timeout(monkeypatch):
+    import wave_jobs as WJ
+    seen = []
+    sh = lambda cmd, timeout=0, input=None: (seen.append((cmd, timeout)) or (0, "{}", ""))
+    monkeypatch.setattr(WJ, "BAD_HOSTS", {"epyc7"})
+    res = WJ.stop_on_fleet(sh, "intel2", ["/r"], hosts=["epyc7", "epyc8"])
+    assert "skipped" in res["epyc7"]["error"] and not any("epyc7" in c for c, _ in seen)
+    cmd, to = [x for x in seen if "epyc8" in x[0]][0]
+    assert "ConnectTimeout=10" in cmd and to <= 90
+    seen.clear()
+    res = WJ.orphan_scopes(sh, "intel2", [], hosts=["epyc7", "epyc9"])
+    assert "skipped" in res["epyc7"]["error"] and any("epyc9" in c for c, _ in seen)
+
+
+def test_live_source_sync_copies_run_in_detached_units_and_never_wait():
+    launched, shs = [], []
+    ap = type("AP", (), {"DRY": False, "log": staticmethod(lambda m: None), "sh": staticmethod(lambda c, timeout=0, input=None: (shs.append(c) or (0, "", ""))),
+                         "launch_unit": staticmethod(lambda unit, logf, argv: launched.append((unit, argv)) or True), "unit_active": staticmethod(lambda u: False)})()
+    cfg = {"dies": {"s81": {"gen_hosts": ["epyc8", "epyc9"], "gen_host": "epyc8"}}, "_hub": "intel2",
+           "_otrun_status": {"epyc8": {"load": 10, "cores": 96}, "epyc9": {"load": 10, "cores": 96}},
+           "_src_incomplete": {"epyc9": {"s81": "/srv/opentallas-scratch2/claude/x/a.sv missing"}}}
+    import tempfile
+    os.environ["OT_SELF_HEAL_STATE"] = os.path.join(tempfile.mkdtemp(), "t.json")
+    KW.sync_die_inputs(ap, cfg)
+    assert len(launched) == 1 and launched[0][0].startswith("ss-") and "tar -C / --hard-dereference -cf -" in launched[0][1][-1]
+    assert not any(c and c[0] == "bash" for c in shs)          # nothing ran inline
