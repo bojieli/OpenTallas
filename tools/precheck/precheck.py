@@ -75,17 +75,30 @@ def chain_hops(points):
     return [man(a, b) for a, b in zip(points, points[1:])]
 
 
-def reach_findings(t, reach=REACH_UM, margin=1.0):
-    """[(value, detail)] hops above reach*margin in internal_stations, ft_slots and relay_polylines"""
+WIDE_BITS = 256
+WIDE_MARGIN = 1.085     # CALIBRATED 11-19 on 43 signed S81 types: widest signed hop on a >= 256-bit chain 436.8 um (slice_station t27/t37)
+NARROW_MARGIN = 1.25    # signed narrow chain up to 501.9 um (slice_station t37 ft7, 32 b)
+
+
+def reach_findings(t, reach=REACH_UM, margin=None):
+    """[(value, detail)] station hops above the calibrated limit: reach x 1.085 on >= 256-bit chains, reach x 1.25 on
+    narrower ones (margin overrides both).  internal_stations from -> regs -> to, ft_slots in pin -> regs -> out pin."""
     w, h = t.get("outline_um") or (0, 0)
     out = []
-    lim = reach * margin
+    widths = {b.get("name"): int(b.get("width") or 0) for b in t.get("buses") or []}
+
+    def limit(bits):
+        if margin is not None:
+            return reach * margin
+        return reach * (WIDE_MARGIN if (bits or 0) >= WIDE_BITS else NARROW_MARGIN)
     for i, e in enumerate(t.get("internal_stations") or []):
         if not e.get("from_um") or not e.get("to_um"):
             continue
         pts = [tuple(e["from_um"])] + [tuple(r) for r in (e.get("regs_um") or [])] + [tuple(e["to_um"])]
         hops = chain_hops(pts)
-        if hops and max(hops) > lim:
+        conn = e.get("conn", "")
+        bits = int(e.get("bits") or 0) or widths.get(conn[4:] if conn.startswith("bus:") else "", 0)
+        if hops and max(hops) > limit(bits):
             j = max(range(len(hops)), key=hops.__getitem__)
             out.append((round(max(hops), 1), f"internal_stations[{i}] {e.get('conn', '')} bits {e.get('bits', '?')} hop {j} "
                         f"{pts[j]} -> {pts[j + 1]} ({len(hops)} hops)"))
@@ -101,7 +114,7 @@ def reach_findings(t, reach=REACH_UM, margin=1.0):
         b = face_point(s["out_face"], s["out_window_um"], w, h, mid[-1] if mid else None)
         pts = [a] + mid + [b]
         hops = chain_hops(pts)
-        if hops and max(hops) > lim:
+        if hops and max(hops) > limit(int(s.get("width") or 0)):
             j = max(range(len(hops)), key=hops.__getitem__)
             out.append((round(max(hops), 1), f"ft_slot {s.get('name')} width {s.get('width')} hop {j} {pts[j]} -> {pts[j + 1]}"))
     # relay_polylines are not checked: the kit places relay_depth relays along each polyline at <= max_hop_um
@@ -351,14 +364,17 @@ def type_findings(ctx, tn, checks, opts):
                 add("TAP-CAP", round(top[0][1] + cap), cap, f"{len(top)} taps over cap {cap} after the {opts.tap_radius:.0f}-um rebalance ("
                     f"{', '.join(f'{n} {round(v + cap)}' for n, v in top[:6])}); ~{need} added taps; {len(grid)} taps, "
                     f"{round(sum(cnt.values()))} planned sinks")
-        if "TAP-COVER" in checks and grid:
+        # TAP-COVER only where the taps follow a sink inventory (tap_mode density): an explicit/grid type's taps are placed by
+        # hand and 28 of 43 signed S81 types would flag (CALIBRATED 11-19); the KV pv root-tap class is density + stale bins
+        if "TAP-COVER" in checks and grid and ck.get("tap_mode") == "density":
             rad = opts.tap_radius        # the kit's clock_taps.tcl reach (no tap with room within 200 um -> root tap)
             unc, free, cen = tap_cover(t, grid, rad)
             if free and unc / free > opts.cover_frac and unc > opts.cover_um2:
                 add("TAP-COVER", round(unc / free, 3), opts.cover_frac,
                     f"{unc / 1e6:.3f} mm2 of {free / 1e6:.3f} mm2 free area > {rad:.0f} um from every tap "
                     f"(centroid {tuple(round(c) for c in cen)}); flops placed there stay on the root tap")
-        if "TAP-EDGE" in checks and len(grid) >= 3:
+        # TAP-EDGE only on explicit taps (density taps follow the sinks: kv3_sys_SD signed with an edge-only density set)
+        if "TAP-EDGE" in checks and len(grid) >= 3 and ck.get("tap_mode") == "explicit":
             w, h = t.get("outline_um") or (0, 0)
             if min(w, h) > 2 * float(ck.get("tap_radius_um") or opts.tap_radius):
                 fx, fy = tap_span(t, grid)
@@ -389,9 +405,9 @@ def ns_stride(raw, tn):
 
 
 def face_bank_features(pins, slots, lanes_in, cores, h):
-    """(max face registers + face-near stations in any 3 adjacent 2.16-um station columns, face-to-core gap under
-    the densest column, face, x) over the N and S faces"""
-    best = (0, None, None, None)
+    """(max face registers + face-near stations in any 3 adjacent 2.16-um station columns over the N and S faces,
+    the smallest face-to-core gap under any N/S pin column, face and x of the densest columns)"""
+    n3, where, gap = 0, (None, None), None
     for face in "NS":
         col = collections.Counter()
         for name, _bit, _ln, x, _y, f in pins:
@@ -404,14 +420,17 @@ def face_bank_features(pins, slots, lanes_in, cores, h):
                 col[k] += 1
         for k in list(col):
             s3 = col[k - 1] + col[k] + col[k + 1]
+            if s3 > n3:
+                n3, where = s3, (face, round(k * FF_CPITCH_UM, 1))
             x = k * FF_CPITCH_UM
-            gap = min([(b if face == "S" else h - d) for a, b, c, d in cores if a - FF_CPITCH_UM <= x <= c + FF_CPITCH_UM] or [h])
-            if (s3, -gap) > (best[0], -(best[1] if best[1] is not None else h)):
-                best = (s3, gap, face, round(x, 1))
-    return best
+            for a, b, c, d in cores:
+                if a <= x <= c:
+                    g = b if face == "S" else h - d
+                    gap = g if gap is None or g < gap else gap
+    return n3, gap, where[0], where[1]
 
 
-def face_bank_check(ctx, tn, density=60, gap_um=45.0):
+def face_bank_check(ctx, tn, density=64, gap_um=45.0):
     """CALIBRATED RISK (D8e, 75 leaf types, 19 known 'NS face bank cannot fit'): a type whose budgets.face_flop_ns_types
     stride > 1 (the NS bank search is off at stride 1), with a dense N/S face (>= density face registers + face-near
     stations in 3 station columns) over a hard core within gap_um of that face.  The full face_flops.tcl occupancy
@@ -429,7 +448,7 @@ def face_bank_check(ctx, tn, density=60, gap_um=45.0):
     n3, gap, face, x = face_bank_features(pins, slots, lanes_in, core_rects(t), h)
     if n3 >= density and gap is not None and gap <= gap_um:
         return (round(gap, 1), gap_um, f"stride {stride} inset {inset}: {n3} face registers + face-near stations in 3 station columns "
-                f"at {face} x={x}, hard core {gap:.1f} um from the face (27 um retention); risk of 'NS face bank cannot fit'")
+                f"(densest at {face} x={x}), a hard core {gap:.1f} um from an N/S face over pin columns (27 um retention); risk of 'NS face bank cannot fit'")
     return None
 
 
@@ -513,7 +532,7 @@ def main(argv=None):
     ap.add_argument("--cover-frac", type=float, default=0.10)
     ap.add_argument("--cover-um2", type=float, default=40000.0)
     ap.add_argument("--tap-span", type=float, default=0.35)
-    ap.add_argument("--bank-density", type=int, default=60, help="face registers + face-near stations per 3 station columns")
+    ap.add_argument("--bank-density", type=int, default=64, help="face registers + face-near stations per 3 station columns")
     ap.add_argument("--bank-gap-um", type=float, default=45.0, help="face-to-hard-core gap under the dense columns")
     ap.add_argument("--reset-flops", type=int, default=RESET_FLOPS)
     a = ap.parse_args(argv)

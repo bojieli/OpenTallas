@@ -21,17 +21,20 @@ def test_reach_flags_long_station_hop_only():
     t = {"outline_um": [1000, 1000], "internal_stations": [
         {"conn": "bus:a", "bits": 8, "from_um": [0, 0], "regs_um": [[300, 0]], "to_um": [600, 0]},      # hops 300, 300
         {"conn": "bus:b", "bits": 8, "from_um": [0, 0], "regs_um": [[100, 0]], "to_um": [100, 500]}]}   # hop 500
-    f = PC.reach_findings(t, 405)
+    f = PC.reach_findings(t, 405, margin=1.0)
     assert len(f) == 1 and f[0][0] == 500 and "bus:b" in f[0][1]
+    assert PC.reach_findings(t, 405) == []                  # calibrated: an 8-bit chain may hop up to 506 um
+    t["internal_stations"][1]["bits"] = 512
+    assert len(PC.reach_findings(t, 405)) == 1              # a 512-bit chain only up to 439 um
 
 
 def test_reach_ft_slot_uses_window_centres_and_regs():
     t = {"outline_um": [1000, 800], "ft_slots": [
         {"name": "ft0", "width": 4, "stations": 2, "in_face": "S", "in_window_um": [100, 200], "out_face": "N", "out_window_um": [100, 200],
          "regs_um": [[150, 400]]}]}
-    assert PC.reach_findings(t, 405) == []
+    assert PC.reach_findings(t, 405, margin=1.0) == []
     t["ft_slots"][0]["regs_um"] = [[150, 100]]
-    assert PC.reach_findings(t, 405)[0][0] == 700
+    assert PC.reach_findings(t, 405, margin=1.0)[0][0] == 700
 
 
 def test_tap_assign_nearest_and_cap():
