@@ -55,6 +55,7 @@ Per tick (autopilot.py tick calls step() after admit_new; off unless the config 
     kit_wave.py run-item SPEC.json                          one item pipeline (run by the tick inside a unit)
 """
 import argparse
+import collections
 import hashlib
 import fnmatch
 import math
@@ -11115,6 +11116,71 @@ def reap_dead_scan(AP, cfg, st, now=None, minutes=None, watch_out=None):
     return out
 
 
+GHOST_MIN = 30      # COORD 11-18: a row that claims RUNNING while its unit / client and its job dir are gone for this many minutes is a ghost
+
+
+def reap_ghost_rows(AP, cfg, st, notices, now=None, minutes=GHOST_MIN, jobs=None):
+    """COORD 11-18 (QC sle_ctl rows that read RUNNING with nothing behind them never took the new env): a ghost row is reset by itself.
+    (A) a wave row RUNNING / LAUNCHING whose unit is not active AND whose job dir is gone -> FAIL class INFRA (the INFRA relaunch path takes it);
+    (B) a queue row (ENQUEUED, queue status RUNNING) whose autopilot client unit is not active, silent for `minutes`, and that no process / container of the fleet names (the cached
+        fleet probe: unknown = left alone) -> CANCELLED class GHOST (a cancelled row relaunches by itself) and its queue job closed.  Not HBM.  -> {die: n}"""
+    now = time.time() if now is None else now
+    out = collections.Counter()
+    items = st.get("items") or {}
+    cand = [(k, r) for k, r in items.items() if r.get("die") != "hbm" and ((r.get("status") in ("RUNNING", "LAUNCHING") and r.get("unit"))
+                                                                              or (r.get("status") == "ENQUEUED" and r.get("q_status") == "RUNNING"))]
+    if not cand:
+        return {}
+    if jobs is None:
+        try:
+            jobs = AP.load_state().get("jobs") or {}
+        except Exception:
+            jobs = {}
+    units = [r.get("unit") for _, r in cand if r.get("status") != "ENQUEUED"] + [(jobs.get(r.get("q_id")) or {}).get("unit") for _, r in cand if r.get("status") == "ENQUEUED"]
+    active = unit_active_many(AP, units)
+    queue_rows = []
+    for k, r in cand:
+        age_m = (now - max(float(r.get("updated") or 0), float(r.get("started") or 0))) / 60.0
+        if age_m <= minutes:
+            continue
+        if r.get("status") != "ENQUEUED":
+            if active.get(r.get("unit"), False) or Path(r.get("dir") or "/nonexistent").exists():
+                continue
+            if not AP.DRY:
+                r.update(status="FAIL", **{"class": "INFRA"}, updated=now, reason=f"GHOST: unit {r.get('unit')} is not active and the job dir is gone ({age_m:.0f} min); reset, relaunches on the INFRA path")
+                notices.setdefault(r["die"], []).append(f"{r['item']}@{r.get('attempt')} GHOST (unit and job dir gone): reset")
+            AP.log(f"KIT-WAVE GHOST-ROW {r['die']}/{r['item']}@{r.get('attempt')}: wave unit and job dir gone for {age_m:.0f} min -> {'would reset' if AP.DRY else 'FAIL INFRA'}")
+            out[r["die"]] += 1
+        else:
+            j = jobs.get(r.get("q_id")) or {}
+            if j.get("unit") and active.get(j["unit"], False):
+                continue
+            queue_rows.append((k, r, age_m, j))
+    if queue_rows:
+        roots = {k: attempt_root(r) for k, r, _, _ in queue_rows}
+        hosts = list(WJ.FLEET)
+        for d_ in (cfg.get("dies") or {}).values():
+            for h in ((d_.get("hosts") or cfg.get("hosts") or DEFAULTS["hosts"]) if isinstance(d_, dict) else []):
+                h = AP.HUB_NAME if h == "localhost" else h
+                if h not in hosts:
+                    hosts.append(h)
+        live, _ts = fleet_probe(AP, "live", [x for x in roots.values() if x], hosts, now)
+        for k, r, age_m, j in queue_rows:
+            root = roots[k]
+            if live is None or not root or live.get(root) or getattr(live, "unreadable", None) or (hasattr(live, "get") and root not in live and getattr(live, "unreadable", ())):
+                continue
+            if not AP.DRY:
+                r.update(status="CANCELLED", **{"class": "GHOST"}, updated=now, reason=f"GHOST: queue job {r.get('q_id')} reads RUNNING, its client unit is gone and nothing on the fleet names {root} ({age_m:.0f} min); reset")
+                notices.setdefault(r["die"], []).append(f"{r['item']}@{r.get('attempt')} GHOST (queue client gone, nothing running): reset")
+                try:
+                    close_queue_job(AP, r, "GHOST row reset")
+                except Exception:
+                    pass
+            AP.log(f"KIT-WAVE GHOST-ROW {r['die']}/{r['item']}@{r.get('attempt')}: queue client gone, nothing on the fleet for {age_m:.0f} min -> {'would reset' if AP.DRY else 'CANCELLED GHOST'}")
+            out[r["die"]] += 1
+    return dict(out)
+
+
 def reap_dead(AP, cfg, st, notices, now=None):
     """apply reap_dead_scan under the wave lock (called from _step); die/global option reap_dead_min 0 = off"""
     minutes = float(cfg.get("reap_dead_min", REAP_DEAD_MIN))
@@ -13656,7 +13722,7 @@ def reap_stale_attempts(AP, cfg, st, notices, ap_dir=None):
 # WF-1 11-14 (#4): per-call wall timers of the functions _step calls, one KW-STEP-TIMES line per pass (top consumers), so the slow part
 # of the wave step is measured, not guessed.  Wrapping is idempotent and adds one time.time() pair per call.
 STEP_TIMED = ("load_config", "merge_auto_views", "merge_src_overlay", "load_state", "prune_stale_retries", "collect", "reap_dead",
-              "retry_enqueue", "follow_queue", "visual_reject_discard", "stop_cancelled_rows", "auto_rejudge", "release_pending",
+              "reap_ghost_rows", "retry_enqueue", "follow_queue", "visual_reject_discard", "stop_cancelled_rows", "auto_rejudge", "release_pending",
               "leafslew_step", "cancel_class_volume", "cancel_superseded", "reap_stale_attempts", "grt_arm_step", "parse_otrun_status",
               "gen_disk_low", "workroot_low", "spill_marked", "src_incomplete", "load_counter_signed", "restage_waiters",
               "reap_orphan_waiters", "save_state", "write_stages", "infra_relaunch_due", "launch_safe", "ensure_plan_view", "plan_dies",
@@ -14022,6 +14088,7 @@ def _step(AP, ap_dir):
     collect(AP, cfg, st, notices)
     try:                                                 # KW-FIX-46 REAP-DEAD: under the wave lock, right after collect
         reap_dead(AP, cfg, st, notices)                  # WAVE-PILOT-FIX 11-18: the fleet probes run detached (fleet_probe), so this is cheap: every tick
+        reap_ghost_rows(AP, cfg, st, notices)
     except Exception as e:                              # a sweep never stops the tick
         AP.log(f"KIT-WAVE REAP-DEAD skipped: {type(e).__name__}: {e}")
     retry_enqueue(AP, cfg, st, notices)

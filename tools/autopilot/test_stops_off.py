@@ -1054,3 +1054,48 @@ class RetryHost(unittest.TestCase):
     def test_without_status_or_alternatives_the_default_stays(self):
         cfg = self.cfg(); cfg["_otrun_status"] = {}
         self.assertEqual(KW.retry_gen_host(cfg, "s81", "t", ["epyc7"], "epyc7"), "epyc7")
+
+
+class GhostRows(unittest.TestCase):
+    """COORD 11-18: RUNNING rows with nothing behind them are reset by themselves"""
+
+    def ap(self, active=(), jobs=None, live=None):
+        logs = []
+        ap = type("AP", (), {"DRY": False, "HUB_NAME": "hub", "log": staticmethod(logs.append), "unit_active": staticmethod(lambda u: u in active),
+                             "load_state": staticmethod(lambda: {"jobs": jobs or {}})})()
+        return ap, logs
+
+    def test_wave_row_with_unit_and_dir_gone_resets_but_a_live_unit_or_present_dir_does_not(self):
+        import tempfile
+        now = 1_000_000.0
+        with tempfile.TemporaryDirectory() as tmp:
+            st = {"items": {
+                "g": {"die": "s81", "item": "ghost", "attempt": 1, "status": "RUNNING", "unit": "u1", "dir": "/nonexistent/x", "started": now - 3600},
+                "u": {"die": "s81", "item": "unit-up", "attempt": 1, "status": "RUNNING", "unit": "u2", "dir": "/nonexistent/y", "started": now - 3600},
+                "d": {"die": "s81", "item": "dir-there", "attempt": 1, "status": "RUNNING", "unit": "u3", "dir": tmp, "started": now - 3600},
+                "y": {"die": "s81", "item": "young", "attempt": 1, "status": "RUNNING", "unit": "u4", "dir": "/nonexistent/z", "started": now - 600},
+                "h": {"die": "hbm", "item": "hbm", "attempt": 1, "status": "RUNNING", "unit": "u5", "dir": "/nonexistent/h", "started": now - 3600}}}
+            ap, logs = self.ap(active=("u2",))
+            self.assertEqual(KW.reap_ghost_rows(ap, {"dies": {}}, st, {}, now=now), {"s81": 1})
+            self.assertEqual((st["items"]["g"]["status"], st["items"]["g"]["class"]), ("FAIL", "INFRA"))
+            self.assertEqual([st["items"][k]["status"] for k in "udyh"], ["RUNNING"] * 4)
+
+    def test_queue_row_resets_only_when_the_client_is_gone_and_the_fleet_names_nothing(self):
+        now = 1_000_000.0
+        row = lambda: {"die": "qwen_compute", "item": "sle_ctl", "attempt": 2, "status": "ENQUEUED", "q_status": "RUNNING", "q_id": "j1", "kit": "h:/w/kit", "started": now - 7200, "updated": now - 7200}
+        jobs = {"j1": {"status": "RUNNING", "unit": "ap-j1"}}
+        orig_fp, orig_cq, orig_ar = KW.fleet_probe, KW.close_queue_job, KW.attempt_root
+        closed = []
+        KW.close_queue_job = lambda AP, rec, why: closed.append(rec["q_id"]) or "closed"
+        KW.attempt_root = lambda r: "/w/kit"
+        try:
+            for live, active, want in ((KW.FleetMap(), (), "CANCELLED"), (KW.FleetMap({"/w/kit": ["h:1"]}), (), "ENQUEUED"), (None, (), "ENQUEUED"), (KW.FleetMap(), ("ap-j1",), "ENQUEUED")):
+                KW.fleet_probe = lambda AP, kind, roots, hosts, now=None, _l=live: (_l, 0)
+                st = {"items": {"q": row()}}
+                ap, logs = self.ap(active=active, jobs=jobs)
+                KW.reap_ghost_rows(ap, {"dies": {}}, st, {}, now=now, jobs=jobs)
+                self.assertEqual(st["items"]["q"]["status"], want, (live, active))
+            self.assertEqual(closed, ["j1"])
+            self.assertEqual(st["items"]["q"]["status"], "ENQUEUED")
+        finally:
+            KW.fleet_probe, KW.close_queue_job, KW.attempt_root = orig_fp, orig_cq, orig_ar
