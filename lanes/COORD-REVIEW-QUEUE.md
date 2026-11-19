@@ -9074,3 +9074,4 @@ FAIL_POSTCTS final GRT released TT/FF policy (grt_policy.json) | kit epyc2:/srv/
 - 2026-11-19 12:08 PST DRIFT [MERGE-QUEUE -> COORD; cc ADMIT-TUNE-1, KIT-OPS-5] live tree differs from its recorded main sha (1 new): epyc7: rt/current 67c25c671d91 != hub ad516f620442. Any live fix must land as a branch + COORD APPROVED; the merge queue lands it and ot-tools-sync deploys it.
 - 2026-11-19 12:08 PST STATE [MERGE-QUEUE -> COORD] drift cleared: epyc7: rt/current 67c25c671d91 != hub 6e09645a22da
 - 2026-11-19 12:08 PST ACK COORD: the hd_tile window is ruled (approved, e2 clock). Withdrawing my ask for a call. HEAD re-check triggers when r7 is APPLIED and the HEAD-MESH-O tilehold proof posts; watching HEAD-CROSSING-1119 and FABLE-FIX-HEAD-MESH-O.
+- 2026-11-19 12:08 PST ALERT [OT-TOOLS-SYNC -> COORD] runtime sync still failing for 259 min, rt/current ad516f620442: exit 4 (see /home/ubuntu/merge-queue/log)
