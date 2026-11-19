@@ -98,12 +98,12 @@ def test_branch_rows_fit_one_box_no_row_and_far_branch_cycles():
     near["partition_types"]["t"]["hard_cores"][1]["origin_um"] = [440.0, 500.0]
     assert RB.branch_rows(near, "t", TEXT)[0] == []
     far = plan_geo((1100.0, 1100.0))
-    rows, drows, _ = RB.branch_rows(far, "t", TEXT)
+    rows, drows, _ = RB.branch_rows(far, "t", TEXT, add_cycles=True)
     c = rows[0]["copies"][0]
     assert c["sinks"] == ["u_r0_u_t3"] and c["D"] == 1                  # 1200 um flight: one declared stage
     assert drows == []                                                  # t3 reads through an assign: reported, no row
     text2 = TEXT.replace(".xai(w_9_Y[7:0])", ".xai(w_u_r0_u_y_xa_3_0_o[7:0])")
-    rows, drows, _ = RB.branch_rows(far, "t", text2)
+    rows, drows, _ = RB.branch_rows(far, "t", text2, add_cycles=True)
     assert drows == [dict(inst="u_r0_u_t3", port="xai", side="sink", D=1, path_um=1200.0,
                           note="S81-RLYBR-1: far branch of u_r0_u_y_xa_3_0 via copy u_r0_u_y_xa_3_t3_0")]
 
@@ -243,8 +243,10 @@ def test_branch_rows_routed_length_makes_a_branch_far():
     t["hard_cores"][0]["pins"] = [{"name": "xa", "layer": "M4", "xy": [10.0, 0.0]}]
     t["hard_cores"][2]["pins"] = [{"name": p_, "layer": "M4", "xy": [10.0, 0.0]} for p_ in ("xai", "cc")]
     t["hard_cores"].append({"inst": "u_wall", "module": "w", "origin_um": [400.0, 0.0], "outline_um": [20.0, 1300.0]})
-    rows, _d, _r = RB.branch_rows(p, "t", TEXT)
+    rows, _d, _r = RB.branch_rows(p, "t", TEXT, add_cycles=True)
     assert rows and rows[0]["copies"][0]["sinks"] == ["u_r0_u_bs3"] and rows[0]["copies"][0]["D"] >= 1
+    rows, _d, rep = RB.branch_rows(p, "t", TEXT)                         # default: copy kept at D 0, need reported
+    assert rows[0]["copies"][0]["D"] == 0 and any(r.get("need_D", 0) >= 1 for r in rep)
 
 
 # CBC-RULES-1119: generic transport relays (QC / KV / HEAD bind-emitted ot_dp_dly one-liners)
@@ -291,3 +293,12 @@ def test_transport_chain_only_last_stage_is_a_candidate():
     rows, drows, rep = RB.branch_rows(plan, "q", DLY, None, 405.0)
     assert [r["inst"] for r in rows] == ["tp_x_1"]          # stage 0 feeds stage 1, so only stage 1 splits
     assert rows[0]["copies"][0]["sinks"] == ["c"]
+
+
+def test_branch_rows_default_keeps_stage_count():
+    # FABLE-PD-S81-0253 11-19: the far-branch sink stages raised col_h10_r0_p1 internal depth 3 -> 13 with no K delta
+    far = plan_geo((1100.0, 1100.0))
+    text2 = TEXT.replace(".xai(w_9_Y[7:0])", ".xai(w_u_r0_u_y_xa_3_0_o[7:0])")
+    rows, drows, rep = RB.branch_rows(far, "t", text2)
+    assert drows == [] and all(c["D"] == 0 for r in rows for c in r["copies"])
+    assert [r["need_D"] for r in rep if "need_D" in r] == [1]

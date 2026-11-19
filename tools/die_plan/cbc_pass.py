@@ -45,11 +45,13 @@ sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(HERE.parent / "precheck"))
 
 # ONE threshold set, shared with tools/precheck (PRECHECK-1119): import these, do not copy the numbers
-HOP_UM = 405.0          # amendment 11-19: per placed leg, every leg
-DEPTH_LEVELS = 13       # logic levels per cycle (r713: ~12-13)
-TAP_SINKS = 1000        # clock tap cap (r713)
-RESET_LEAF = 32         # reset relay tree leaf fan-out (r713)
-TAP_RADIUS_UM = 200.0   # clock_taps.tcl rebalance reach (kit)
+import cbc_rules as RULES   # COORD 11-19: every threshold from the shared rule module (PRECHECK-1119 imports it too)
+HOP_UM = RULES.REACH_UM_PER_HOP
+DEPTH_LEVELS = RULES.DEPTH_LEVELS_MAX      # pre-screen only; rule 3 is RULES.LOGIC_PS_MAX (zero_wire.py)
+TAP_SINKS = RULES.TAP_MAX_SINKS
+RESET_LEAF = RULES.RESET_LEAF_MAX_FANOUT
+TAP_RADIUS_UM = RULES.TAP_RADIUS_UM
+LOGIC_PS = RULES.LOGIC_PS_MAX
 DEFAULTS = dict(hop_um=HOP_UM, depth_levels=DEPTH_LEVELS, tap_sinks=TAP_SINKS, reset_leaf=RESET_LEAF)
 
 
@@ -187,13 +189,21 @@ def relay_rows(plan_path, type_re, bound, work, hop):
 
 
 def summarise_relays(rel):
-    out = dict(copies=0, far_copies=0, joins=0, trunks=0, depth_rows=0, depth_cycles=0, unfixed=[], read_loops=[], per_type={})
+    out = dict(copies=0, far_copies=0, joins=0, trunks=0, depth_rows=0, depth_cycles=0, unfixed=[], read_loops=[], per_type={},
+               branch_stages_added=0, far_need_stages=0)
     for r in rel["branch"]:
         if r.get("error"):
             continue
         cp = [c for x in r.get("relay_branch") or [] for c in x["copies"]]
         out["copies"] += len(cp)
         out["far_copies"] += sum(1 for c in cp if c.get("D"))
+        # internal stages the branch rows add (0 unless relay_branch.py --add-cycles): never reported as 0-cycle
+        out["branch_stages_added"] += sum(int(d.get("D", 0)) for d in r.get("relay_depth_sink") or [])
+        far_need = [u for u in r.get("detail") or [] if u.get("need_D")]
+        out["far_need_stages"] += len(far_need)
+        for u in far_need:
+            out["unfixed"].append(dict(type=r["type"], relay=u["relay"], copy=u["copy"], need_D=u["need_D"], path_um=u["path_um"],
+                                       reason="far branch over the reach: needs stages (cycles) or a re-site, not emitted"))
         out["joins"] += sum(len(v) for v in (r.get("joins") or {}).values())
         out["trunks"] += len(r.get("trunks") or {})
         if cp or r.get("joins") or r.get("trunks"):
@@ -386,9 +396,10 @@ def main(argv=None):
          f"ft slots re-stationed: {len(rows['ft_stations'])} (families {sorted({family(r['type']) for r in rows['ft_stations']})[:12]})",
          f"- core-to-core relay_depth rows after 0-cycle fixes: {rl.get('depth_rows', 0)} (max D {rl.get('depth_cycles', 0)}; "
          "internal pipe cycles, bind_core_input_pipe / compiler, not plan lanes)" if rel else "- relays: not run (no --rtl)",
-         f"- 0-cycle relay fixes: {rl.get('copies', 0)} branch copies ({rl.get('far_copies', 0)} far), {rl.get('joins', 0)} station joins, "
-         f"{rl.get('trunks', 0)} trunk re-aims (relay_branch / relay_depth match the S81 relay leaves ot_s81_rly*/dsfd_rly_*: "
-         "0 on a die without them means not applicable, not clean)" if rel else "",
+         f"- relay fixes in plan_branch.json: {rl.get('copies', 0)} branch copies, {rl.get('joins', 0)} station joins, "
+         f"{rl.get('trunks', 0)} trunk re-aims; internal stages these rows ADD: {rl.get('branch_stages_added', 0)} "
+         f"(0 = stage count kept, the 0-cycle form); far branches left over the reach (need stages, not emitted): "
+         f"{rl.get('far_need_stages', 0)}; leaves matched: S81 ot_s81_rly*/dsfd_rly_* and ot_dp_dly/ot_dp_dly_keep" if rel else "",
          f"- reset: {len(rows.get('reset') or {})} types get bank relay rows, "
          f"+{max([v['added_reset_cycles'] for v in (rows.get('reset') or {}).values()], default=0)} reset-release cycles max (boot-only)",
          "", "## Added flops",

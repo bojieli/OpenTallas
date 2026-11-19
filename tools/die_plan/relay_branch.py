@@ -387,8 +387,12 @@ def _copy_name(rel, tag, taken):
     return name
 
 
-def branch_rows(plan, tn, text, plan_dir=None, limit=LIMIT):
-    """-> (relay_branch rows, relay_depth sink rows for far copies, report) of one type"""
+def branch_rows(plan, tn, text, plan_dir=None, limit=LIMIT, add_cycles=False):
+    """-> (relay_branch rows, relay_depth sink rows for far copies, report) of one type.
+    add_cycles False (default, CBC-RULES-1119 11-19 after FABLE-PD-S81-0253: the far-branch sink stages raised the internal
+    link depth of 8 S81 col families, col_h10_r0_p1 3 -> 13, with no K delta): every copy keeps the relay's stage count
+    (D = 0, no relay_depth rows); a far copy that would need stages is reported unfixed with need_D.  True = the old form:
+    emit the sink stages (internal cycles, the caller must account them)."""
     N = Netlist(text)
     G = Geometry(plan, tn, N, plan_dir)
     rows, drows, rep = [], [], []
@@ -452,6 +456,10 @@ def branch_rows(plan, tn, text, plan_dir=None, limit=LIMIT):
             # a relay_depth row on the relay (its stages follow the copy's readers) already pays part of the way
             D = 0 if near or sp is None else max(0, max(1, math.ceil(L / limit) - 2) - have_rd.get((sid(rel), OUT), 0))
             span = max(_flight(pts[a], pts[b]) for a in c for b in c)
+            if D and not add_cycles:
+                rep.append(dict(relay=S["inst"], copy=name, need_D=D, path_um=round(L, 1),
+                                unfixed=f"far branch needs {D} stage(s): not emitted (0-cycle mode, stage count kept)"))
+                D = 0
             copies.append(dict(name=name, sinks=sorted(n[2:] for n in c), D=D, span_um=round(span, 1), path_um=round(L, 1)))
             if D:
                 if (sid(rel), OUT) in have_rd:     # relay and sink depth rows exclude each other in bind
@@ -709,6 +717,8 @@ def main(argv):
     ap.add_argument("--limit", type=float, default=LIMIT)
     ap.add_argument("--out-plan")
     ap.add_argument("--report")
+    ap.add_argument("--add-cycles", action="store_true",
+                    help="emit relay_depth sink stages for far copies (adds internal cycles; default keeps the stage count)")
     a = ap.parse_args(argv[1:])
     plan = json.loads(Path(a.plan).read_text())
     plan_dir = Path(a.plan_dir or Path(a.plan).resolve().parent)
@@ -722,7 +732,7 @@ def main(argv):
             continue
         text = f.read_text()
         t = plan["partition_types"][tn]
-        rows, drows, rep = branch_rows(plan, tn, text, plan_dir, a.limit)
+        rows, drows, rep = branch_rows(plan, tn, text, plan_dir, a.limit, add_cycles=a.add_cycles)
         joins, jrep = join_rows(plan, tn, text, plan_dir, a.limit)
         trunks, trep = trunk_rows(plan, tn, text, plan_dir, a.limit)
         if a.out_plan:

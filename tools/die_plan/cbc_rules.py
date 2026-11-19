@@ -7,7 +7,13 @@ REACH_UM_PER_HOP = 405.0        # FABLE-CLOSURE-STRATEGY 11-19 02:00 (amends r71
                                 # launch and capture register of any leg, measured on PLACED hops (placed_hops.py on
                                 # 3_place.odb, every leg incl. undeclared ones); plan coordinates are an estimate of it
 DEPTH_LEVELS_TARGET = 12        # logic levels per register D cone the generator aims for
-DEPTH_LEVELS_MAX = 13           # above this a cone is flagged
+DEPTH_LEVELS_MAX = 13           # COORD 11-19 (amends r713 rule 3): a cheap PRE-SCREEN only -- level count does not predict
+                                # closure (hd_ctl signed at 23 levels, tt_ctlm at 24 used 820 of 833 ps at zero wire)
+PERIOD_PS = 833.0               # die clock
+LOGIC_PS_MAX = 600.0            # rule 3 (COORD 11-19): zero-wire logic delay per endpoint (clk->Q + cells + setup, ASAP7 RVT
+                                # TT NLDM, pin loads only, fanout bounded) above this is flagged: leaves ~230 ps for wire + clock
+FANOUT_BOUND = 8                # zero-wire STA: every net over this many cell sinks gets a buffer tree first (the
+                                # FABLE-FIX-S81-GLUE method: driver copies at 8), as placement repair would
 TAP_MAX_SINKS = 1000            # clock sinks per tap (a plan's lower clock.tap_max_sinks wins)
 TAP_RADIUS_UM = 200.0           # kit clock_taps.tcl rebalance reach
 RESET_LEAF_MAX_FANOUT = 32      # flops per reset relay leaf
