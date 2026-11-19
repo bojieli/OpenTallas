@@ -4092,6 +4092,1514 @@
   ]
  },
  {
+  "type": "dsdv_slice_c1x_C__t1",
+  "rows": 6,
+  "extra_cycles": 13,
+  "rows_data": [
+   {
+    "inst": "u_s_1S_u_lp_u_eg_u_gg",
+    "port": "scale",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 3,
+    "path_um": 1251.5,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_1S_u_lp_u_eg_u_nh",
+    "port": "eps",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 2,
+    "path_um": 1061.8,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_1S_u_lp_u_eg_u_nk",
+    "port": "eps",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 2,
+    "path_um": 1200.1,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_1S_u_lp_u_xr",
+    "port": "eg_c",
+    "side": "sink",
+    "bits": [
+     0,
+     1
+    ],
+    "D": 2,
+    "path_um": 1129.2,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_1S_u_lp_u_xr",
+    "port": "eg_d",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 2,
+    "path_um": 1152.5,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_1S_u_lp_u_xr",
+    "port": "eg_v",
+    "side": "sink",
+    "bits": [
+     0,
+     0
+    ],
+    "D": 2,
+    "path_um": 1127.1,
+    "stages_existing": 0
+   }
+  ]
+ },
+ {
+  "type": "dsdv_slice_c1x_C__t10",
+  "rows": 6,
+  "extra_cycles": 9,
+  "rows_data": [
+   {
+    "inst": "u_s_1N_u_lp_u_eg_u_gg",
+    "port": "scale",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 2,
+    "path_um": 932.0,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_1N_u_lp_u_eg_u_nh",
+    "port": "eps",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 1,
+    "path_um": 742.3,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_1N_u_lp_u_eg_u_nk",
+    "port": "eps",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 2,
+    "path_um": 880.6,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_1N_u_lp_u_xr",
+    "port": "eg_c",
+    "side": "sink",
+    "bits": [
+     0,
+     1
+    ],
+    "D": 1,
+    "path_um": 809.7,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_1N_u_lp_u_xr",
+    "port": "eg_d",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 2,
+    "path_um": 832.9,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_1N_u_lp_u_xr",
+    "port": "eg_v",
+    "side": "sink",
+    "bits": [
+     0,
+     0
+    ],
+    "D": 1,
+    "path_um": 807.6,
+    "stages_existing": 0
+   }
+  ]
+ },
+ {
+  "type": "dsdv_slice_c1x_C__t3",
+  "rows": 6,
+  "extra_cycles": 13,
+  "rows_data": [
+   {
+    "inst": "u_s_2S_u_lp_u_eg_u_gg",
+    "port": "scale",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 3,
+    "path_um": 1217.0,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_2S_u_lp_u_eg_u_nh",
+    "port": "eps",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 2,
+    "path_um": 1027.3,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_2S_u_lp_u_eg_u_nk",
+    "port": "eps",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 2,
+    "path_um": 1165.5,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_2S_u_lp_u_xr",
+    "port": "eg_c",
+    "side": "sink",
+    "bits": [
+     0,
+     1
+    ],
+    "D": 2,
+    "path_um": 1094.7,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_2S_u_lp_u_xr",
+    "port": "eg_d",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 2,
+    "path_um": 1117.9,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_2S_u_lp_u_xr",
+    "port": "eg_v",
+    "side": "sink",
+    "bits": [
+     0,
+     0
+    ],
+    "D": 2,
+    "path_um": 1092.6,
+    "stages_existing": 0
+   }
+  ]
+ },
+ {
+  "type": "dsdv_slice_c1x_C__t4",
+  "rows": 6,
+  "extra_cycles": 8,
+  "rows_data": [
+   {
+    "inst": "u_s_2N_u_lp_u_eg_u_gg",
+    "port": "scale",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 2,
+    "path_um": 888.8,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_2N_u_lp_u_eg_u_nh",
+    "port": "eps",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 1,
+    "path_um": 716.4,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_2N_u_lp_u_eg_u_nk",
+    "port": "eps",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 2,
+    "path_um": 854.6,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_2N_u_lp_u_xr",
+    "port": "eg_c",
+    "side": "sink",
+    "bits": [
+     0,
+     1
+    ],
+    "D": 1,
+    "path_um": 766.5,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_2N_u_lp_u_xr",
+    "port": "eg_d",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 1,
+    "path_um": 789.7,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_2N_u_lp_u_xr",
+    "port": "eg_v",
+    "side": "sink",
+    "bits": [
+     0,
+     0
+    ],
+    "D": 1,
+    "path_um": 764.4,
+    "stages_existing": 0
+   }
+  ]
+ },
+ {
+  "type": "dsdv_slice_c1x_C__t5",
+  "rows": 6,
+  "extra_cycles": 11,
+  "rows_data": [
+   {
+    "inst": "u_s_4N_u_lp_u_eg_u_gg",
+    "port": "scale",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 2,
+    "path_um": 949.1,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_4N_u_lp_u_eg_u_nh",
+    "port": "eps",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 1,
+    "path_um": 759.4,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_4N_u_lp_u_eg_u_nk",
+    "port": "eps",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 2,
+    "path_um": 897.7,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_4N_u_lp_u_xr",
+    "port": "eg_c",
+    "side": "sink",
+    "bits": [
+     0,
+     1
+    ],
+    "D": 2,
+    "path_um": 826.8,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_4N_u_lp_u_xr",
+    "port": "eg_d",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 2,
+    "path_um": 850.1,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_4N_u_lp_u_xr",
+    "port": "eg_v",
+    "side": "sink",
+    "bits": [
+     0,
+     0
+    ],
+    "D": 2,
+    "path_um": 824.7,
+    "stages_existing": 0
+   }
+  ]
+ },
+ {
+  "type": "dsdv_slice_c1x_C__t6",
+  "rows": 6,
+  "extra_cycles": 11,
+  "rows_data": [
+   {
+    "inst": "u_s_5S_u_lp_u_eg_u_gg",
+    "port": "scale",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 2,
+    "path_um": 966.6,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_5S_u_lp_u_eg_u_nh",
+    "port": "eps",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 1,
+    "path_um": 776.9,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_5S_u_lp_u_eg_u_nk",
+    "port": "eps",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 2,
+    "path_um": 915.1,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_5S_u_lp_u_xr",
+    "port": "eg_c",
+    "side": "sink",
+    "bits": [
+     0,
+     1
+    ],
+    "D": 2,
+    "path_um": 844.3,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_5S_u_lp_u_xr",
+    "port": "eg_d",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 2,
+    "path_um": 867.5,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_5S_u_lp_u_xr",
+    "port": "eg_v",
+    "side": "sink",
+    "bits": [
+     0,
+     0
+    ],
+    "D": 2,
+    "path_um": 842.2,
+    "stages_existing": 0
+   }
+  ]
+ },
+ {
+  "type": "dsdv_slice_c1x_C__t7",
+  "rows": 6,
+  "extra_cycles": 11,
+  "rows_data": [
+   {
+    "inst": "u_s_5N_u_lp_u_eg_u_gg",
+    "port": "scale",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 2,
+    "path_um": 949.1,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_5N_u_lp_u_eg_u_nh",
+    "port": "eps",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 1,
+    "path_um": 759.4,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_5N_u_lp_u_eg_u_nk",
+    "port": "eps",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 2,
+    "path_um": 897.7,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_5N_u_lp_u_xr",
+    "port": "eg_c",
+    "side": "sink",
+    "bits": [
+     0,
+     1
+    ],
+    "D": 2,
+    "path_um": 826.8,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_5N_u_lp_u_xr",
+    "port": "eg_d",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 2,
+    "path_um": 850.1,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_5N_u_lp_u_xr",
+    "port": "eg_v",
+    "side": "sink",
+    "bits": [
+     0,
+     0
+    ],
+    "D": 2,
+    "path_um": 824.7,
+    "stages_existing": 0
+   }
+  ]
+ },
+ {
+  "type": "dsdv_slice_c1x_C__t8",
+  "rows": 6,
+  "extra_cycles": 19,
+  "rows_data": [
+   {
+    "inst": "u_s_6S_u_lp_u_eg_u_gg",
+    "port": "scale",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 4,
+    "path_um": 1657.6,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_6S_u_lp_u_eg_u_nh",
+    "port": "eps",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 3,
+    "path_um": 1467.9,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_6S_u_lp_u_eg_u_nk",
+    "port": "eps",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 3,
+    "path_um": 1614.8,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_6S_u_lp_u_xr",
+    "port": "eg_c",
+    "side": "sink",
+    "bits": [
+     0,
+     1
+    ],
+    "D": 3,
+    "path_um": 1535.3,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_6S_u_lp_u_xr",
+    "port": "eg_d",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 3,
+    "path_um": 1558.5,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_6S_u_lp_u_xr",
+    "port": "eg_v",
+    "side": "sink",
+    "bits": [
+     0,
+     0
+    ],
+    "D": 3,
+    "path_um": 1533.2,
+    "stages_existing": 0
+   }
+  ]
+ },
+ {
+  "type": "dsdv_slice_c1x_C__t9",
+  "rows": 6,
+  "extra_cycles": 9,
+  "rows_data": [
+   {
+    "inst": "u_s_6N_u_lp_u_eg_u_gg",
+    "port": "scale",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 2,
+    "path_um": 923.2,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_6N_u_lp_u_eg_u_nh",
+    "port": "eps",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 1,
+    "path_um": 724.9,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_6N_u_lp_u_eg_u_nk",
+    "port": "eps",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 2,
+    "path_um": 880.4,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_6N_u_lp_u_xr",
+    "port": "eg_c",
+    "side": "sink",
+    "bits": [
+     0,
+     1
+    ],
+    "D": 1,
+    "path_um": 800.9,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_6N_u_lp_u_xr",
+    "port": "eg_d",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 2,
+    "path_um": 824.1,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_6N_u_lp_u_xr",
+    "port": "eg_v",
+    "side": "sink",
+    "bits": [
+     0,
+     0
+    ],
+    "D": 1,
+    "path_um": 798.8,
+    "stages_existing": 0
+   }
+  ]
+ },
+ {
+  "type": "dsdv_slice_c3x_C__t1",
+  "rows": 6,
+  "extra_cycles": 11,
+  "rows_data": [
+   {
+    "inst": "u_s_4S_u_lp_u_eg_u_gg",
+    "port": "scale",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 2,
+    "path_um": 966.6,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_4S_u_lp_u_eg_u_nh",
+    "port": "eps",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 1,
+    "path_um": 785.5,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_4S_u_lp_u_eg_u_nk",
+    "port": "eps",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 2,
+    "path_um": 932.4,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_4S_u_lp_u_xr",
+    "port": "eg_c",
+    "side": "sink",
+    "bits": [
+     0,
+     1
+    ],
+    "D": 2,
+    "path_um": 844.3,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_4S_u_lp_u_xr",
+    "port": "eg_d",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 2,
+    "path_um": 867.5,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_4S_u_lp_u_xr",
+    "port": "eg_v",
+    "side": "sink",
+    "bits": [
+     0,
+     0
+    ],
+    "D": 2,
+    "path_um": 842.2,
+    "stages_existing": 0
+   }
+  ]
+ },
+ {
+  "type": "dsdv_slice_iq_C__t1",
+  "rows": 8,
+  "extra_cycles": 10,
+  "rows_data": [
+   {
+    "inst": "u_s_3S_u_sl_g_c3_u_xr",
+    "port": "eg_c",
+    "side": "sink",
+    "bits": [
+     0,
+     1
+    ],
+    "D": 1,
+    "path_um": 706.0,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_3S_u_sl_g_c3_u_xr",
+    "port": "eg_d",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 1,
+    "path_um": 729.2,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_3S_u_sl_g_c3_u_xr",
+    "port": "eg_v",
+    "side": "sink",
+    "bits": [
+     0,
+     0
+    ],
+    "D": 1,
+    "path_um": 703.9,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_3S_u_sl_u_cap",
+    "port": "cfg_d",
+    "side": "sink",
+    "bits": [
+     0,
+     159
+    ],
+    "D": 1,
+    "path_um": 782.4,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_3S_u_sl_u_cap",
+    "port": "cfg_v",
+    "side": "sink",
+    "bits": [
+     0,
+     0
+    ],
+    "D": 2,
+    "path_um": 851.9,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_3S_u_sl_u_eg_u_gg",
+    "port": "scale",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 2,
+    "path_um": 828.3,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_3S_u_sl_u_eg_u_nh",
+    "port": "eps",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 1,
+    "path_um": 647.3,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_3S_u_sl_u_eg_u_nk",
+    "port": "eps",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 1,
+    "path_um": 794.2,
+    "stages_existing": 0
+   }
+  ]
+ },
+ {
+  "type": "dsdv_slice_kv512_C__t1",
+  "rows": 8,
+  "extra_cycles": 13,
+  "rows_data": [
+   {
+    "inst": "u_s_3N_u_slice_g_c1_u_xr",
+    "port": "eg_c",
+    "side": "sink",
+    "bits": [
+     0,
+     1
+    ],
+    "D": 2,
+    "path_um": 827.0,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_3N_u_slice_g_c1_u_xr",
+    "port": "eg_d",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 2,
+    "path_um": 850.2,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_3N_u_slice_g_c1_u_xr",
+    "port": "eg_v",
+    "side": "sink",
+    "bits": [
+     0,
+     0
+    ],
+    "D": 2,
+    "path_um": 824.9,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_3N_u_slice_u_cap",
+    "port": "cfg_d",
+    "side": "sink",
+    "bits": [
+     0,
+     159
+    ],
+    "D": 1,
+    "path_um": 713.3,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_3N_u_slice_u_cap",
+    "port": "cfg_v",
+    "side": "sink",
+    "bits": [
+     0,
+     0
+    ],
+    "D": 1,
+    "path_um": 782.8,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_3N_u_slice_u_eg_u_gg",
+    "port": "scale",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 2,
+    "path_um": 949.3,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_3N_u_slice_u_eg_u_nh",
+    "port": "eps",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 1,
+    "path_um": 759.6,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_3N_u_slice_u_eg_u_nk",
+    "port": "eps",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 2,
+    "path_um": 897.8,
+    "stages_existing": 0
+   }
+  ]
+ },
+ {
+  "type": "dsdv_slice_lepe_mu_C__t1",
+  "rows": 6,
+  "extra_cycles": 6,
+  "rows_data": [
+   {
+    "inst": "u_s_7N_u_sl_u_eg_u_gg",
+    "port": "scale",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 1,
+    "path_um": 793.8,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_7N_u_sl_u_eg_u_nh",
+    "port": "eps",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 1,
+    "path_um": 621.4,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_7N_u_sl_u_eg_u_nk",
+    "port": "eps",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 1,
+    "path_um": 759.6,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_7N_u_sl_u_xr",
+    "port": "eg_c",
+    "side": "sink",
+    "bits": [
+     0,
+     1
+    ],
+    "D": 1,
+    "path_um": 671.5,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_7N_u_sl_u_xr",
+    "port": "eg_d",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 1,
+    "path_um": 694.7,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_7N_u_sl_u_xr",
+    "port": "eg_v",
+    "side": "sink",
+    "bits": [
+     0,
+     0
+    ],
+    "D": 1,
+    "path_um": 669.4,
+    "stages_existing": 0
+   }
+  ]
+ },
+ {
+  "type": "dsdv_slice_lepe_mu_LP__t2",
+  "rows": 4,
+  "extra_cycles": 4,
+  "rows_data": [
+   {
+    "inst": "u_lnl0",
+    "port": "n_flt",
+    "side": "sink",
+    "bits": [
+     0,
+     2
+    ],
+    "D": 1,
+    "path_um": 438.9,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lnl1",
+    "port": "n_flt",
+    "side": "sink",
+    "bits": [
+     0,
+     2
+    ],
+    "D": 1,
+    "path_um": 438.9,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lnl2",
+    "port": "n_flt",
+    "side": "sink",
+    "bits": [
+     0,
+     2
+    ],
+    "D": 1,
+    "path_um": 438.9,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lnl3",
+    "port": "n_flt",
+    "side": "sink",
+    "bits": [
+     0,
+     2
+    ],
+    "D": 1,
+    "path_um": 438.9,
+    "stages_existing": 0
+   }
+  ]
+ },
+ {
+  "type": "dsdv_slice_lepe_nh_mus_C__t1",
+  "rows": 6,
+  "extra_cycles": 11,
+  "rows_data": [
+   {
+    "inst": "u_s_7S_u_sl_u_eg_u_gg",
+    "port": "scale",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 2,
+    "path_um": 949.1,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_7S_u_sl_u_eg_u_nh",
+    "port": "eps",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 1,
+    "path_um": 759.4,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_7S_u_sl_u_eg_u_nk",
+    "port": "eps",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 2,
+    "path_um": 897.7,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_7S_u_sl_u_xr",
+    "port": "eg_c",
+    "side": "sink",
+    "bits": [
+     0,
+     1
+    ],
+    "D": 2,
+    "path_um": 826.8,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_7S_u_sl_u_xr",
+    "port": "eg_d",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 2,
+    "path_um": 850.1,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_7S_u_sl_u_xr",
+    "port": "eg_v",
+    "side": "sink",
+    "bits": [
+     0,
+     0
+    ],
+    "D": 2,
+    "path_um": 824.7,
+    "stages_existing": 0
+   }
+  ]
+ },
+ {
+  "type": "dsdv_slice_lepe_nh_mus_LP__t1",
+  "rows": 2,
+  "extra_cycles": 2,
+  "rows_data": [
+   {
+    "inst": "u_lnl0",
+    "port": "n_flt",
+    "side": "sink",
+    "bits": [
+     0,
+     2
+    ],
+    "D": 1,
+    "path_um": 434.6,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lnl1",
+    "port": "n_flt",
+    "side": "sink",
+    "bits": [
+     0,
+     2
+    ],
+    "D": 1,
+    "path_um": 434.6,
+    "stages_existing": 0
+   }
+  ]
+ },
+ {
+  "type": "dsdv_slice_lepw_mu_C__t1",
+  "rows": 6,
+  "extra_cycles": 11,
+  "rows_data": [
+   {
+    "inst": "u_s_0N_u_sl_u_eg_u_gg",
+    "port": "scale",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 2,
+    "path_um": 949.1,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_0N_u_sl_u_eg_u_nh",
+    "port": "eps",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 1,
+    "path_um": 759.4,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_0N_u_sl_u_eg_u_nk",
+    "port": "eps",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 2,
+    "path_um": 897.7,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_0N_u_sl_u_xr",
+    "port": "eg_c",
+    "side": "sink",
+    "bits": [
+     0,
+     1
+    ],
+    "D": 2,
+    "path_um": 826.8,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_0N_u_sl_u_xr",
+    "port": "eg_d",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 2,
+    "path_um": 850.1,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_0N_u_sl_u_xr",
+    "port": "eg_v",
+    "side": "sink",
+    "bits": [
+     0,
+     0
+    ],
+    "D": 2,
+    "path_um": 824.7,
+    "stages_existing": 0
+   }
+  ]
+ },
+ {
+  "type": "dsdv_slice_lepw_mu_LP__t2",
+  "rows": 4,
+  "extra_cycles": 4,
+  "rows_data": [
+   {
+    "inst": "u_lnl0",
+    "port": "n_flt",
+    "side": "sink",
+    "bits": [
+     0,
+     2
+    ],
+    "D": 1,
+    "path_um": 438.9,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lnl1",
+    "port": "n_flt",
+    "side": "sink",
+    "bits": [
+     0,
+     2
+    ],
+    "D": 1,
+    "path_um": 438.9,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lnl2",
+    "port": "n_flt",
+    "side": "sink",
+    "bits": [
+     0,
+     2
+    ],
+    "D": 1,
+    "path_um": 438.9,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lnl3",
+    "port": "n_flt",
+    "side": "sink",
+    "bits": [
+     0,
+     2
+    ],
+    "D": 1,
+    "path_um": 438.9,
+    "stages_existing": 0
+   }
+  ]
+ },
+ {
+  "type": "dsdv_slice_lepw_mus_C__t1",
+  "rows": 6,
+  "extra_cycles": 11,
+  "rows_data": [
+   {
+    "inst": "u_s_0S_u_sl_u_eg_u_gg",
+    "port": "scale",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 2,
+    "path_um": 949.1,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_0S_u_sl_u_eg_u_nh",
+    "port": "eps",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 1,
+    "path_um": 759.4,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_0S_u_sl_u_eg_u_nk",
+    "port": "eps",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 2,
+    "path_um": 897.7,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_0S_u_sl_u_xr",
+    "port": "eg_c",
+    "side": "sink",
+    "bits": [
+     0,
+     1
+    ],
+    "D": 2,
+    "path_um": 826.8,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_0S_u_sl_u_xr",
+    "port": "eg_d",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 2,
+    "path_um": 850.1,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_s_0S_u_sl_u_xr",
+    "port": "eg_v",
+    "side": "sink",
+    "bits": [
+     0,
+     0
+    ],
+    "D": 2,
+    "path_um": 824.7,
+    "stages_existing": 0
+   }
+  ]
+ },
+ {
+  "type": "dsdv_slice_lepw_mus_LP__t2",
+  "rows": 4,
+  "extra_cycles": 4,
+  "rows_data": [
+   {
+    "inst": "u_lnl0",
+    "port": "n_flt",
+    "side": "sink",
+    "bits": [
+     0,
+     2
+    ],
+    "D": 1,
+    "path_um": 434.6,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lnl1",
+    "port": "n_flt",
+    "side": "sink",
+    "bits": [
+     0,
+     2
+    ],
+    "D": 1,
+    "path_um": 434.6,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lnl2",
+    "port": "n_flt",
+    "side": "sink",
+    "bits": [
+     0,
+     2
+    ],
+    "D": 1,
+    "path_um": 434.6,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lnl3",
+    "port": "n_flt",
+    "side": "sink",
+    "bits": [
+     0,
+     2
+    ],
+    "D": 1,
+    "path_um": 434.6,
+    "stages_existing": 0
+   }
+  ]
+ },
+ {
   "type": "eng__t1",
   "rows": 3,
   "extra_cycles": 3,
@@ -4370,6 +5878,37 @@
   ]
  },
  {
+  "type": "ot_s81sl_leaf__t11",
+  "rows": 2,
+  "extra_cycles": 2,
+  "rows_data": [
+   {
+    "inst": "u_lf4_u_vq",
+    "port": "u_i",
+    "side": "sink",
+    "bits": [
+     0,
+     2
+    ],
+    "D": 1,
+    "path_um": 411.2,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf4_u_vq",
+    "port": "u_v",
+    "side": "sink",
+    "bits": [
+     0,
+     0
+    ],
+    "D": 1,
+    "path_um": 411.8,
+    "stages_existing": 0
+   }
+  ]
+ },
+ {
   "type": "ot_s81sl_leaf__t12",
   "rows": 3,
   "extra_cycles": 3,
@@ -4413,6 +5952,135 @@
   ]
  },
  {
+  "type": "ot_s81sl_leaf__t15",
+  "rows": 2,
+  "extra_cycles": 2,
+  "rows_data": [
+   {
+    "inst": "u_lf3_u_vn_u_b",
+    "port": "c_s",
+    "side": "sink",
+    "bits": [
+     0,
+     30
+    ],
+    "D": 1,
+    "path_um": 435.0,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf3_u_vn_u_b",
+    "port": "c_v",
+    "side": "sink",
+    "bits": [
+     0,
+     0
+    ],
+    "D": 1,
+    "path_um": 435.0,
+    "stages_existing": 0
+   }
+  ]
+ },
+ {
+  "type": "ot_s81sl_leaf__t23",
+  "rows": 5,
+  "extra_cycles": 5,
+  "rows_data": [
+   {
+    "inst": "u_lf1_u_vq",
+    "port": "u",
+    "side": "sink",
+    "bits": [
+     0,
+     255
+    ],
+    "D": 1,
+    "path_um": 432.6,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf1_u_vq",
+    "port": "um_b",
+    "side": "sink",
+    "bits": [
+     0,
+     0
+    ],
+    "D": 1,
+    "path_um": 464.5,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf1_u_vq",
+    "port": "um_i",
+    "side": "sink",
+    "bits": [
+     0,
+     7
+    ],
+    "D": 1,
+    "path_um": 465.7,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf1_u_vq",
+    "port": "um_q",
+    "side": "sink",
+    "bits": [
+     0,
+     0
+    ],
+    "D": 1,
+    "path_um": 464.3,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf1_u_vq",
+    "port": "um_v",
+    "side": "sink",
+    "bits": [
+     0,
+     0
+    ],
+    "D": 1,
+    "path_um": 464.1,
+    "stages_existing": 0
+   }
+  ]
+ },
+ {
+  "type": "ot_s81sl_leaf__t24__cl2456157b",
+  "rows": 2,
+  "extra_cycles": 2,
+  "rows_data": [
+   {
+    "inst": "u_lf3_u_rxsf",
+    "port": "i_v",
+    "side": "sink",
+    "bits": [
+     0,
+     0
+    ],
+    "D": 1,
+    "path_um": 493.3,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf3_u_rxsf",
+    "port": "i_x",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 1,
+    "path_um": 451.6,
+    "stages_existing": 0
+   }
+  ]
+ },
+ {
   "type": "ot_s81sl_leaf__t26",
   "rows": 2,
   "extra_cycles": 2,
@@ -4431,6 +6099,332 @@
    },
    {
     "inst": "u_vn_u_b",
+    "port": "c_v",
+    "side": "sink",
+    "bits": [
+     0,
+     0
+    ],
+    "D": 1,
+    "path_um": 414.8,
+    "stages_existing": 0
+   }
+  ]
+ },
+ {
+  "type": "ot_s81sl_leaf__t3",
+  "rows": 24,
+  "extra_cycles": 27,
+  "rows_data": [
+   {
+    "inst": "u_lf1_u_rxsf",
+    "port": "i_v",
+    "side": "sink",
+    "bits": [
+     0,
+     0
+    ],
+    "D": 1,
+    "path_um": 670.6,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf1_u_rxsf",
+    "port": "i_x",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 1,
+    "path_um": 708.6,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf1_u_ve_u_m",
+    "port": "a_c",
+    "side": "sink",
+    "bits": [
+     0,
+     1
+    ],
+    "D": 1,
+    "path_um": 611.5,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf1_u_ve_u_m",
+    "port": "a_g",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 1,
+    "path_um": 587.5,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf1_u_ve_u_m",
+    "port": "a_h",
+    "side": "sink",
+    "bits": [
+     0,
+     127
+    ],
+    "D": 1,
+    "path_um": 607.3,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf1_u_ve_u_m",
+    "port": "a_v",
+    "side": "sink",
+    "bits": [
+     0,
+     0
+    ],
+    "D": 1,
+    "path_um": 611.7,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf1_u_ve_u_m",
+    "port": "a_val",
+    "side": "sink",
+    "bits": [
+     0,
+     255
+    ],
+    "D": 1,
+    "path_um": 595.9,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf1_u_ve_u_m",
+    "port": "r_c",
+    "side": "sink",
+    "bits": [
+     0,
+     1
+    ],
+    "D": 1,
+    "path_um": 612.8,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf1_u_ve_u_m",
+    "port": "r_h",
+    "side": "sink",
+    "bits": [
+     0,
+     63
+    ],
+    "D": 1,
+    "path_um": 610.9,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf1_u_ve_u_m",
+    "port": "r_k",
+    "side": "sink",
+    "bits": [
+     0,
+     127
+    ],
+    "D": 1,
+    "path_um": 605.3,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf1_u_ve_u_m",
+    "port": "r_v",
+    "side": "sink",
+    "bits": [
+     0,
+     0
+    ],
+    "D": 1,
+    "path_um": 612.9,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf1_u_ve_u_m",
+    "port": "r_w",
+    "side": "sink",
+    "bits": [
+     0,
+     127
+    ],
+    "D": 1,
+    "path_um": 597.9,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf1_u_vq",
+    "port": "y",
+    "side": "sink",
+    "bits": [
+     0,
+     63
+    ],
+    "D": 1,
+    "path_um": 760.8,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf1_u_vq",
+    "port": "y",
+    "side": "sink",
+    "bits": [
+     64,
+     127
+    ],
+    "D": 2,
+    "path_um": 909.9,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf1_u_vq",
+    "port": "y_i",
+    "side": "sink",
+    "bits": [
+     0,
+     2
+    ],
+    "D": 2,
+    "path_um": 919.6,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf1_u_vq",
+    "port": "y_v",
+    "side": "sink",
+    "bits": [
+     0,
+     0
+    ],
+    "D": 2,
+    "path_um": 916.6,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf1_u_vs",
+    "port": "ve_oc",
+    "side": "sink",
+    "bits": [
+     0,
+     1
+    ],
+    "D": 1,
+    "path_um": 625.1,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf1_u_vs",
+    "port": "ve_ov",
+    "side": "sink",
+    "bits": [
+     0,
+     0
+    ],
+    "D": 1,
+    "path_um": 625.0,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf1_u_vs",
+    "port": "ve_oy",
+    "side": "sink",
+    "bits": [
+     0,
+     127
+    ],
+    "D": 1,
+    "path_um": 629.2,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf1_u_vs",
+    "port": "ve_pc",
+    "side": "sink",
+    "bits": [
+     0,
+     1
+    ],
+    "D": 1,
+    "path_um": 731.7,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf1_u_vs",
+    "port": "ve_pdd",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 1,
+    "path_um": 616.4,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf1_u_vs",
+    "port": "ve_phh",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 1,
+    "path_um": 707.5,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf1_u_vs",
+    "port": "ve_pkk",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 1,
+    "path_um": 662.0,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf1_u_vs",
+    "port": "ve_pv",
+    "side": "sink",
+    "bits": [
+     0,
+     0
+    ],
+    "D": 1,
+    "path_um": 733.8,
+    "stages_existing": 0
+   }
+  ]
+ },
+ {
+  "type": "ot_s81sl_leaf__t30",
+  "rows": 2,
+  "extra_cycles": 2,
+  "rows_data": [
+   {
+    "inst": "u_lf4_u_vn_u_b",
+    "port": "c_s",
+    "side": "sink",
+    "bits": [
+     0,
+     30
+    ],
+    "D": 1,
+    "path_um": 414.8,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf4_u_vn_u_b",
     "port": "c_v",
     "side": "sink",
     "bits": [
@@ -4537,6 +6531,61 @@
   ]
  },
  {
+  "type": "ot_s81sl_leaf__t36",
+  "rows": 4,
+  "extra_cycles": 4,
+  "rows_data": [
+   {
+    "inst": "u_lf4_u_vn_u_b",
+    "port": "c_s",
+    "side": "sink",
+    "bits": [
+     0,
+     30
+    ],
+    "D": 1,
+    "path_um": 414.8,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf4_u_vn_u_b",
+    "port": "c_v",
+    "side": "sink",
+    "bits": [
+     0,
+     0
+    ],
+    "D": 1,
+    "path_um": 414.8,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf4_u_vq",
+    "port": "u_i",
+    "side": "sink",
+    "bits": [
+     0,
+     2
+    ],
+    "D": 1,
+    "path_um": 428.5,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf4_u_vq",
+    "port": "u_v",
+    "side": "sink",
+    "bits": [
+     0,
+     0
+    ],
+    "D": 1,
+    "path_um": 429.0,
+    "stages_existing": 0
+   }
+  ]
+ },
+ {
   "type": "ot_s81sl_leaf__t37",
   "rows": 4,
   "extra_cycles": 4,
@@ -4592,6 +6641,314 @@
   ]
  },
  {
+  "type": "ot_s81sl_leaf__t4",
+  "rows": 2,
+  "extra_cycles": 2,
+  "rows_data": [
+   {
+    "inst": "u_lf3_u_vsw",
+    "port": "i_lim",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 1,
+    "path_um": 526.4,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf3_u_vsw",
+    "port": "i_w",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 1,
+    "path_um": 490.4,
+    "stages_existing": 0
+   }
+  ]
+ },
+ {
+  "type": "ot_s81sl_leaf__t40__cl86ea32b3",
+  "rows": 2,
+  "extra_cycles": 2,
+  "rows_data": [
+   {
+    "inst": "u_lf4_u_vn_u_b",
+    "port": "c_s",
+    "side": "sink",
+    "bits": [
+     0,
+     30
+    ],
+    "D": 1,
+    "path_um": 414.8,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf4_u_vn_u_b",
+    "port": "c_v",
+    "side": "sink",
+    "bits": [
+     0,
+     0
+    ],
+    "D": 1,
+    "path_um": 414.8,
+    "stages_existing": 0
+   }
+  ]
+ },
+ {
+  "type": "ot_s81sl_leaf__t40__cl86ea32b3__sid5S",
+  "rows": 2,
+  "extra_cycles": 2,
+  "rows_data": [
+   {
+    "inst": "u_lf4_u_vn_u_b",
+    "port": "c_s",
+    "side": "sink",
+    "bits": [
+     0,
+     30
+    ],
+    "D": 1,
+    "path_um": 414.8,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf4_u_vn_u_b",
+    "port": "c_v",
+    "side": "sink",
+    "bits": [
+     0,
+     0
+    ],
+    "D": 1,
+    "path_um": 414.8,
+    "stages_existing": 0
+   }
+  ]
+ },
+ {
+  "type": "ot_s81sl_leaf__t43",
+  "rows": 3,
+  "extra_cycles": 3,
+  "rows_data": [
+   {
+    "inst": "u_lf1_u_vq",
+    "port": "y",
+    "side": "sink",
+    "bits": [
+     0,
+     127
+    ],
+    "D": 1,
+    "path_um": 719.9,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf1_u_vq",
+    "port": "y_i",
+    "side": "sink",
+    "bits": [
+     0,
+     2
+    ],
+    "D": 1,
+    "path_um": 729.5,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf1_u_vq",
+    "port": "y_v",
+    "side": "sink",
+    "bits": [
+     0,
+     0
+    ],
+    "D": 1,
+    "path_um": 726.5,
+    "stages_existing": 0
+   }
+  ]
+ },
+ {
+  "type": "ot_s81sl_leaf__t44__clf4ea6d4b",
+  "rows": 4,
+  "extra_cycles": 4,
+  "rows_data": [
+   {
+    "inst": "u_lf3_u_vq",
+    "port": "u_i",
+    "side": "sink",
+    "bits": [
+     0,
+     2
+    ],
+    "D": 1,
+    "path_um": 411.4,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf3_u_vq",
+    "port": "u_v",
+    "side": "sink",
+    "bits": [
+     0,
+     0
+    ],
+    "D": 1,
+    "path_um": 411.9,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf3_u_vsw",
+    "port": "i_lim",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 1,
+    "path_um": 436.0,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf3_u_vsw",
+    "port": "i_w",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 1,
+    "path_um": 427.2,
+    "stages_existing": 0
+   }
+  ]
+ },
+ {
+  "type": "ot_s81sl_leaf__t44__clf6cf8492",
+  "rows": 4,
+  "extra_cycles": 4,
+  "rows_data": [
+   {
+    "inst": "u_lf3_u_vq",
+    "port": "u_i",
+    "side": "sink",
+    "bits": [
+     0,
+     2
+    ],
+    "D": 1,
+    "path_um": 411.4,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf3_u_vq",
+    "port": "u_v",
+    "side": "sink",
+    "bits": [
+     0,
+     0
+    ],
+    "D": 1,
+    "path_um": 411.9,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf3_u_vsw",
+    "port": "i_lim",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 1,
+    "path_um": 436.0,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf3_u_vsw",
+    "port": "i_w",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 1,
+    "path_um": 427.2,
+    "stages_existing": 0
+   }
+  ]
+ },
+ {
+  "type": "ot_s81sl_leaf__t46",
+  "rows": 2,
+  "extra_cycles": 2,
+  "rows_data": [
+   {
+    "inst": "u_lf0_u_rxsf",
+    "port": "i_v",
+    "side": "sink",
+    "bits": [
+     0,
+     0
+    ],
+    "D": 1,
+    "path_um": 545.4,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf0_u_rxsf",
+    "port": "i_x",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 1,
+    "path_um": 583.4,
+    "stages_existing": 0
+   }
+  ]
+ },
+ {
+  "type": "ot_s81sl_leaf__t5",
+  "rows": 2,
+  "extra_cycles": 2,
+  "rows_data": [
+   {
+    "inst": "u_lf4_u_vn_u_b",
+    "port": "c_s",
+    "side": "sink",
+    "bits": [
+     0,
+     30
+    ],
+    "D": 1,
+    "path_um": 414.8,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf4_u_vn_u_b",
+    "port": "c_v",
+    "side": "sink",
+    "bits": [
+     0,
+     0
+    ],
+    "D": 1,
+    "path_um": 414.8,
+    "stages_existing": 0
+   }
+  ]
+ },
+ {
   "type": "ot_s81sl_leaf__t50",
   "rows": 3,
   "extra_cycles": 3,
@@ -4630,6 +6987,161 @@
     ],
     "D": 1,
     "path_um": 414.8,
+    "stages_existing": 0
+   }
+  ]
+ },
+ {
+  "type": "ot_s81sl_leaf__t51",
+  "rows": 2,
+  "extra_cycles": 2,
+  "rows_data": [
+   {
+    "inst": "u_lf0_u_vq",
+    "port": "u_i",
+    "side": "sink",
+    "bits": [
+     0,
+     2
+    ],
+    "D": 1,
+    "path_um": 411.4,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf0_u_vq",
+    "port": "u_v",
+    "side": "sink",
+    "bits": [
+     0,
+     0
+    ],
+    "D": 1,
+    "path_um": 411.9,
+    "stages_existing": 0
+   }
+  ]
+ },
+ {
+  "type": "ot_s81sl_leaf__t54__cl501e5681",
+  "rows": 1,
+  "extra_cycles": 1,
+  "rows_data": [
+   {
+    "inst": "u_lf4_u_rxsf",
+    "port": "i_x",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 1,
+    "path_um": 408.6,
+    "stages_existing": 0
+   }
+  ]
+ },
+ {
+  "type": "ot_s81sl_leaf__t54__cl706d9749",
+  "rows": 3,
+  "extra_cycles": 3,
+  "rows_data": [
+   {
+    "inst": "u_lf4_u_rxsf",
+    "port": "i_x",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 1,
+    "path_um": 417.2,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf4_u_vn_u_b",
+    "port": "c_s",
+    "side": "sink",
+    "bits": [
+     0,
+     30
+    ],
+    "D": 1,
+    "path_um": 414.8,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf4_u_vn_u_b",
+    "port": "c_v",
+    "side": "sink",
+    "bits": [
+     0,
+     0
+    ],
+    "D": 1,
+    "path_um": 414.8,
+    "stages_existing": 0
+   }
+  ]
+ },
+ {
+  "type": "ot_s81sl_leaf__t57",
+  "rows": 2,
+  "extra_cycles": 2,
+  "rows_data": [
+   {
+    "inst": "u_lf0_u_rxsf",
+    "port": "i_v",
+    "side": "sink",
+    "bits": [
+     0,
+     0
+    ],
+    "D": 1,
+    "path_um": 528.2,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf0_u_rxsf",
+    "port": "i_x",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 1,
+    "path_um": 566.2,
+    "stages_existing": 0
+   }
+  ]
+ },
+ {
+  "type": "ot_s81sl_leaf__t59",
+  "rows": 2,
+  "extra_cycles": 2,
+  "rows_data": [
+   {
+    "inst": "u_lf3_u_vn_u_b",
+    "port": "c_s",
+    "side": "sink",
+    "bits": [
+     0,
+     30
+    ],
+    "D": 1,
+    "path_um": 429.2,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf3_u_vn_u_b",
+    "port": "c_v",
+    "side": "sink",
+    "bits": [
+     0,
+     0
+    ],
+    "D": 1,
+    "path_um": 429.2,
     "stages_existing": 0
    }
   ]
@@ -4697,6 +7209,37 @@
   ]
  },
  {
+  "type": "ot_s81sl_leaf__t61",
+  "rows": 2,
+  "extra_cycles": 2,
+  "rows_data": [
+   {
+    "inst": "u_lf0_u_rxsf",
+    "port": "i_v",
+    "side": "sink",
+    "bits": [
+     0,
+     0
+    ],
+    "D": 1,
+    "path_um": 439.3,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf0_u_vq",
+    "port": "y",
+    "side": "sink",
+    "bits": [
+     0,
+     63
+    ],
+    "D": 1,
+    "path_um": 656.4,
+    "stages_existing": 0
+   }
+  ]
+ },
+ {
   "type": "ot_s81sl_leaf__t65",
   "rows": 2,
   "extra_cycles": 2,
@@ -4728,6 +7271,104 @@
   ]
  },
  {
+  "type": "ot_s81sl_leaf__t67",
+  "rows": 5,
+  "extra_cycles": 5,
+  "rows_data": [
+   {
+    "inst": "u_lf1_u_vq",
+    "port": "u",
+    "side": "sink",
+    "bits": [
+     0,
+     255
+    ],
+    "D": 1,
+    "path_um": 432.6,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf1_u_vq",
+    "port": "um_b",
+    "side": "sink",
+    "bits": [
+     0,
+     0
+    ],
+    "D": 1,
+    "path_um": 464.5,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf1_u_vq",
+    "port": "um_i",
+    "side": "sink",
+    "bits": [
+     0,
+     7
+    ],
+    "D": 1,
+    "path_um": 465.7,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf1_u_vq",
+    "port": "um_q",
+    "side": "sink",
+    "bits": [
+     0,
+     0
+    ],
+    "D": 1,
+    "path_um": 464.3,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf1_u_vq",
+    "port": "um_v",
+    "side": "sink",
+    "bits": [
+     0,
+     0
+    ],
+    "D": 1,
+    "path_um": 464.1,
+    "stages_existing": 0
+   }
+  ]
+ },
+ {
+  "type": "ot_s81sl_leaf__t69",
+  "rows": 2,
+  "extra_cycles": 2,
+  "rows_data": [
+   {
+    "inst": "u_lf4_u_vn_u_b",
+    "port": "c_s",
+    "side": "sink",
+    "bits": [
+     0,
+     30
+    ],
+    "D": 1,
+    "path_um": 414.8,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf4_u_vn_u_b",
+    "port": "c_v",
+    "side": "sink",
+    "bits": [
+     0,
+     0
+    ],
+    "D": 1,
+    "path_um": 414.8,
+    "stages_existing": 0
+   }
+  ]
+ },
+ {
   "type": "ot_s81sl_leaf__t70",
   "rows": 2,
   "extra_cycles": 2,
@@ -4754,6 +7395,37 @@
     ],
     "D": 1,
     "path_um": 406.2,
+    "stages_existing": 0
+   }
+  ]
+ },
+ {
+  "type": "ot_s81sl_leaf__t72",
+  "rows": 2,
+  "extra_cycles": 2,
+  "rows_data": [
+   {
+    "inst": "u_lf1_u_rxsf",
+    "port": "i_v",
+    "side": "sink",
+    "bits": [
+     0,
+     0
+    ],
+    "D": 1,
+    "path_um": 418.0,
+    "stages_existing": 0
+   },
+   {
+    "inst": "u_lf1_u_rxsf",
+    "port": "i_x",
+    "side": "sink",
+    "bits": [
+     0,
+     31
+    ],
+    "D": 1,
+    "path_um": 456.0,
     "stages_existing": 0
    }
   ]
