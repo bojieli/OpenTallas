@@ -224,6 +224,42 @@ def keep_kit_hit(path, depth=3, rx=None):
     return ""
 
 
+_RECREF_RX = re.compile(r'"(/srv/opentallas-scratch[23]?/claude/[^"\\]+)"')
+
+
+def record_refs(claude, days=14, depth=5, deadline_s=120, now=None, walk=os.walk):
+    """KEEP-BY-REF-1119 (COORD, FABLE-FLOW-0555 H): every absolute /srv/opentallas-scratch*/claude path named in a record JSON (signoff.json, *_record.json, bind/plan receipts) younger than `days`
+    d.  A lane tree that such a record names (kit, base, ODB, plan, bind input) is in use by reference, whatever its name.  -> set of paths, bounded by a time budget."""
+    now = now or time.time()
+    t_end = time.time() + deadline_s
+    out = set()
+    n0 = claude.rstrip("/").count("/")
+    for dp, dn, fn in walk(claude):
+        if time.time() > t_end:
+            break
+        if dp.count("/") - n0 >= depth:
+            dn[:] = []
+        dn[:] = [d for d in dn if d not in (".git", "objects", "__pycache__", "node_modules", "results", "logs", "tmp")]
+        for f in fn:
+            if not f.endswith(".json") or not (f.startswith("signoff") or f.endswith("_record.json") or "receipt" in f or f.startswith(("bind_of_record", "plan_of_record"))):
+                continue
+            q = os.path.join(dp, f)
+            try:
+                if now - os.path.getmtime(q) > days * 86400 or os.path.getsize(q) > 4 << 20:
+                    continue
+                txt = open(q, errors="replace").read()
+            except OSError:
+                continue
+            out.update(m.rstrip("/") for m in _RECREF_RX.findall(txt))
+    return out
+
+
+def record_ref_hit(path, refs):
+    """a record names this tree or something inside it"""
+    p = path.rstrip("/")
+    return next((r for r in refs if r == p or r.startswith(p + "/")), "")
+
+
 def post_text_hit(path, posts):
     """a lane tree named in a hub post of the last 24 h (the posts file is built by the hub driver) is in use by somebody"""
     return bool(posts) and re.search(re.escape(path.rstrip("/")) + r"(?![A-Za-z0-9_.-])", posts) is not None
@@ -408,11 +444,12 @@ def lane_candidates(claude, now=None, idle_h=24.0, skip=LANE_SKIP, mtime=newest_
     return res
 
 
-def run_lanes(claude, ids, refuse, log, target_gb, apply=False, delete=None, free=None, now=None, idle_h=24.0, mtime=newest_mtime, posts="", git_check=git_unsafe, links=None, deadline=None, scan_state=""):
+def run_lanes(claude, ids, refuse, log, target_gb, apply=False, delete=None, free=None, now=None, idle_h=24.0, mtime=newest_mtime, posts="", git_check=git_unsafe, links=None, deadline=None, scan_state="", recrefs=None):
     """retire idle lane dirs (and claude/wt children) through the guard, ingest-first, oldest first, stop at target_gb free.  A parent already removed or
     refused as a whole is retried through its children (level 2 is in the candidate list)."""
     free = free or (lambda: free_gb(claude)); res = []; gone = []
     links = home_link_targets() if links is None else links
+    recrefs = record_refs(claude) if recrefs is None else recrefs
     for p, idle in lane_candidates(claude, now, idle_h, mtime=mtime, deadline=deadline, scan_state=scan_state):
         if deadline and time.time() > deadline:            # 11-18: a pass must END (epyc2 sat 15+ min in git status of 50 GB trees, no host.log line for 100 min): the rest is next pass
             res.append(dict(stop="deadline")); log(dict(stop="deadline", t=time.strftime("%F %T"))); break
@@ -426,6 +463,8 @@ def run_lanes(claude, ids, refuse, log, target_gb, apply=False, delete=None, fre
             why = "a symlink under ~ points into it (%s)" % link_hit(p, links)
         if not why and post_text_hit(p, posts):
             why = "named in a hub post of the last 24 h"
+        if not why and record_ref_hit(p, recrefs):
+            why = "named by a record JSON (%s)" % record_ref_hit(p, recrefs)[-80:]
         if not why and keep_kit_hit(p):
             why = "die clock-of-record / die-proto kit kept (%s)" % keep_kit_hit(p)
         if not why:

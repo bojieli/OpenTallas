@@ -296,3 +296,18 @@ def test_die_clock_of_record_and_proto_kits_are_never_retired(tmp_path):
     c = tmp_path / "plain" / "k"; c.mkdir(parents=True)
     assert AR.keep_kit_hit(str(tmp_path / "plain")) == ""
     assert AR.refuse_attempt(types.SimpleNamespace(refuse=lambda p, prot=None: None), str(a), set()).startswith("die clock-of-record")
+
+
+def test_a_tree_named_by_a_record_json_is_kept_by_reference(tmp_path):
+    """KEEP-BY-REF-1119: a lane dir named inside a young signoff.json (kit / base / odb) is not retired, whatever its name"""
+    claude = tmp_path / "claude"
+    kit = claude / "somelane" / "kit_plain"; kit.mkdir(parents=True); (kit / "f").write_text("x")
+    so = claude / "otherlane" / "signoff"; so.mkdir(parents=True)
+    (so / "signoff.json").write_text(json.dumps({"inputs": {"kit": "/srv/opentallas-scratch2/claude/somelane/kit_plain", "odb": "/srv/opentallas-scratch2/claude/somelane/kit_plain/6_final.odb"}}))
+    refs = AR.record_refs(str(claude))
+    assert "/srv/opentallas-scratch2/claude/somelane/kit_plain" in refs
+    assert AR.record_ref_hit("/srv/opentallas-scratch2/claude/somelane/kit_plain", refs)
+    assert AR.record_ref_hit("/srv/opentallas-scratch2/claude/somelane", refs)                     # the parent holds a referenced tree
+    assert not AR.record_ref_hit("/srv/opentallas-scratch2/claude/unreferenced", refs)
+    old = so / "signoff.json"; os.utime(old, (time.time() - 30 * 86400,) * 2)
+    assert AR.record_refs(str(claude)) == set()                                                    # an old record no longer keeps
