@@ -571,3 +571,4 @@
 - 2026-11-18 22:29 PST ALERT [FLEET-OPS-R -> COORD] lane quota: ot-jobs on intel1 wrote 174 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
 - 2026-11-18 22:30 PST DISK-RATE epyc10 /srv/opentallas-scratch2: free 712 GB, falling 151 GB/h, floor 50 GB in 4.4 h (cron disk_rate.py; read-only)
 - 2026-11-18 23:05 PST HOST-REPORT 2026-11-18 23:05 | tolera L10.80/112 units0 free969G | key-ca L211.93/112 units227 free683G | dear-c L137.98/128 units452 free104G | loved- L219.22/96 units116 free2382G | outgoi L265.92/96 units285 free1415G | renewe L330.61/96 units184 free1775G | civil- L330.34/96 units128 free630G
+- 2026-11-18 23:10 PST DISK-RATE epyc8 /srv/opentallas-scratch2: free 1476 GB, falling 249 GB/h, floor 50 GB in 5.7 h (cron disk_rate.py; read-only)
