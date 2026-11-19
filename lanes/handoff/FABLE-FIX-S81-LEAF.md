@@ -126,3 +126,11 @@ If the guard kills one again: post the kills.log line to FLEET-OPS-R (bug).
   S81-DIE-R3 builds the t28 proof kit (t28: grid 16 taps -> grid+explicit +100).
 - Form A (CFP) DROPPED: dense control FAIL (158 errors), legal PASS. repo/ is clean (only the fold commit); patch + bench kept in epyc10 dropped_formA/.
   Form B (+1 cycle) is the only vp form now; the cf path needs its own +cycle form (not designed).
+
+## 11-19 03:1x PST: t47 tool fix pushed; CFX form written, bench pending
+- reach_fix reset retry: main f72013a6506a. t47 / t75 rows added to lanes/handoff/S81-LEAF-TAP-ROWS-cap1000.json (78 types now; those two carry
+  whole_keys = the full clock block incl. landing reset re-selection). Evidence epyc10 taps47b/.
+- CFX (+1 cycle coefficient form): UNCOMMITTED in epyc10 repo2/ (vp.sv + test/tb_vp_cfx.sv + test/run_vp_cfx_bench.sh); patch copy epyc10 cfx_vp.patch.
+  Contract: hc_post write-back + 1 clk, all other outputs same cycle, every stream. Bind K: vp hc_post write-back latency + 1 (define OT_S81SL_VP_CFX / param CFX).
+  First bench run was killed by the memory guard (compile); relaunched -j 4 with output under proof/bench_cfx (proof-priority path),
+  intel2 cfx_bench.otrun2.log. Commit + push only after summary.log shows cfx_* PASS and ctl_mut_hq FAIL. As-built patch tool NOT written.
