@@ -172,3 +172,16 @@ def test_a_live_tree_gap_on_every_host_does_not_disable_a_die_with_a_usable_fall
 def test_source_sync_tar_dereferences_hard_links():
     src = open(KW.__file__).read()
     assert "tar -C / --hard-dereference -cf - " in src and "tar -C / -cf - " not in src
+
+
+def test_a_host_failing_ssh_twice_is_skipped_for_the_rest_of_the_tick(monkeypatch):
+    monkeypatch.setattr(AP, "SSH_FAILS", {})
+    calls = []
+    monkeypatch.setattr(AP, "sh", lambda cmd, timeout=0, input=None: (calls.append(cmd) or (255, "", "Connection timed out")))
+    for _ in range(4):
+        AP.rpy("epyc7", "x", {})
+    assert len(calls) == 2 and "error" in AP.rpy("epyc7", "x", {}) and AP.ssh_skipped("epyc7")
+    assert AP.rbash("epyc7", "true")[0] == 255 and len(calls) == 2
+    AP.rpy("epyc8", "x", {})
+    assert len(calls) == 3                                   # another host is unaffected
+    assert "ConnectTimeout=10" in " ".join(calls[0])

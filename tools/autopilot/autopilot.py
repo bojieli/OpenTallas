@@ -200,11 +200,31 @@ def ssh_host(host):
     return "localhost" if host == "localhost" or host in HUB_ALIASES.get(HUB_NAME, (HUB_NAME,)) else host
 
 
+SSH_FAILS = {}          # host -> failed ssh calls in this tick process (a tick is one process)
+SSH_SKIP_AFTER = 2
+
+
+def ssh_skipped(host):
+    """FABLE-FLOW-0755 H (tick 556-796 s, poll_running 262 s waiting on epyc7): a host whose ssh failed (255 / timeout) twice in this tick is skipped for the rest of the tick"""
+    return SSH_FAILS.get(ssh_host(host), 0) >= SSH_SKIP_AFTER
+
+
+def ssh_note(host, rc, out=""):
+    h = ssh_host(host)
+    if rc in (255, 124) and not (out or "").strip():
+        SSH_FAILS[h] = SSH_FAILS.get(h, 0) + 1
+    elif rc == 0:
+        SSH_FAILS.pop(h, None)
+
+
 def rpy(host, code, args, timeout=600):
     """run python code on host (read-mostly probes) with JSON args on argv; returns parsed JSON or {'error': ...}"""
-    cmd = ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=20", "-o", "ControlPath=none", ssh_host(host),
+    if ssh_skipped(host):
+        return {"error": f"probe skipped: ssh to {host} failed {SSH_SKIP_AFTER}x this tick (not checked)"}
+    cmd = ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=10", "-o", "ControlPath=none", ssh_host(host),
            "python3", "-I", "-", shlex.quote(json.dumps(args))]
     rc, out, err = sh(cmd, timeout=timeout, input=code)
+    ssh_note(host, rc, out)
     for line in reversed(out.splitlines()):
         if line.startswith("AP_JSON "):
             return json.loads(line[8:])
@@ -212,9 +232,13 @@ def rpy(host, code, args, timeout=600):
 
 
 def rbash(host, script, timeout=1800):
-    cmd = ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=20", "-o", "ControlPath=none", ssh_host(host),
+    if ssh_skipped(host):
+        return 255, "", f"skipped: ssh to {host} failed {SSH_SKIP_AFTER}x this tick (not checked)"
+    cmd = ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=10", "-o", "ControlPath=none", ssh_host(host),
            "bash", "-s"]
-    return sh(cmd, timeout=timeout, input=script)
+    r = sh(cmd, timeout=timeout, input=script)
+    ssh_note(host, r[0], r[1])
+    return r
 
 
 def job_id(kit, src, goal):
