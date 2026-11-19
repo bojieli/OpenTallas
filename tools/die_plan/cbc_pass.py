@@ -349,11 +349,11 @@ def solve_taps(P, tn, t, grid, sinks, cap, span=None, radius=None):
     return added, s0, TR.tap_stats(exist + added, pts, radius) if added else s0, f
 
 
-def tap_rows(P, cap, plan_path=None):
+def tap_rows(P, cap, plan_path=None, tree=None):
     import precheck as PC
     import schema as S
     import taps as T
-    root = tree_root(plan_path) if plan_path else None
+    root = Path(tree) if tree else (tree_root(plan_path) if plan_path else None)
     if root is not None:
         T._root = lambda: root                     # plan inputs from the plan's own tree, not this tool checkout
         T.PLAN_DIR = str(Path(plan_path).resolve().parent)
@@ -465,6 +465,8 @@ def main(argv=None):
     ap.add_argument("--types", default=".*", help="regex over type names")
     ap.add_argument("--depth", help="precheck_synth DEPTH tsv: type, endpoint, levels")
     ap.add_argument("--skip", default="", help="comma list of relay,reset,taps")
+    ap.add_argument("--tree", help="source tree the plan's repo-relative inputs (sink bins) resolve in, for a plan outside "
+                    "<tree>/physical/ (default: the tree the plan lives in, else this checkout)")
     ap.add_argument("--fix", action="append", default=[], help="TYPE:NAME bus / relay to fix (relay_branch --fix)")
     ap.add_argument("--legs", action="append", default=[], help="TYPE=placed_hops.json measured legs (relay_branch --legs)")
     ap.add_argument("--cycles-per-token", type=float)
@@ -497,7 +499,7 @@ def main(argv=None):
         rows["relays"] = summarise_relays(rel)
         rows["relays"]["bound_types"] = n_bound
     if "taps" not in skip:
-        rows["taps"], tap_err = tap_rows(P, th["tap_sinks"], a.plan)
+        rows["taps"], tap_err = tap_rows(P, th["tap_sinks"], a.plan, a.tree)
     else:
         tap_err = []
     if a.rtl and "reset" not in skip:
