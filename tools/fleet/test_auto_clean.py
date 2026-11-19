@@ -311,3 +311,9 @@ def test_a_tree_named_by_a_record_json_is_kept_by_reference(tmp_path):
     assert not AR.record_ref_hit("/srv/opentallas-scratch2/claude/unreferenced", refs)
     old = so / "signoff.json"; os.utime(old, (time.time() - 30 * 86400,) * 2)
     assert AR.record_refs(str(claude)) == set()                                                    # an old record no longer keeps
+
+
+def test_cleanup_unit_is_not_idle_io_class():
+    """a saturated disk starves an idle-class cleanup for hours (epyc7 11-19: pass held the lock 43 min, no pass for 90 min)"""
+    u = (H / "systemd" / "ot-auto-clean.service").read_text()
+    assert "IOSchedulingClass=idle" not in u.replace("# ", "#").split("\n", 0)[0] and "\nIOSchedulingClass=best-effort" in u and "IOSchedulingPriority=6" in u

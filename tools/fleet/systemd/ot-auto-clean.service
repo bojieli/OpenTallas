@@ -7,6 +7,8 @@ Environment=AC_FULL=1 TARGET_GB=100000
 # rt/current tools only; every delete goes through ot_delete_guard (no rm fallback); the inputs come from the hub or, when it is unreachable, from the cache of the last pass (<= 6 h)
 ExecStart=/bin/bash /srv/opentallas-scratch2/claude/rt/current/tools/fleet/ot-auto-retire-run.sh apply
 Nice=10
-IOSchedulingClass=idle
+# 11-19: idle class starved the pass on epyc7 (IO PSI 60 percent, w_await 595 ms): the lock stayed held 43 min, no pass for 90 min
+IOSchedulingClass=best-effort
+IOSchedulingPriority=6
 TimeoutStartSec=1700
 KillMode=process
