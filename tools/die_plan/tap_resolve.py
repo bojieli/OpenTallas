@@ -153,39 +153,66 @@ def solve(exist, pts, legal, target, radius, core=(), max_add=80, min_new=40, sp
             return sum(max(0, q[0] - target) for q in s_) + sum(max(0.0, q[4] - span) for q in s_)
         return sum(max(0, q[0] - target) for q in s_) + sum(q[1] for q in s_ if q[1] >= FAR_MIN)
 
-    fails = 0
-    while len(added) < max_add and fails < 6:
+    # Split loop (fixed 11-19 after S81-SLICE-C-TAPS: the first form gave up after 6 failed splits in a row and tried one split
+    # per tap, so it stalled on iq_C t1 / c1x_C t6 with taps still over the load and the region limit).  Now: the worst tap that is
+    # not blocked is split; every candidate cut is tried (region middle and count median, both axes, either half), each first with
+    # a relax of all added taps and then without; a tap is blocked only when no candidate lowers the total excess, and every
+    # accepted split unblocks all taps (the geometry changed).  Ends when no violating tap is left unblocked, or at max_add.
+    def halves(s, x, y, by_mid):
+        out = []
+        xs = [pts[i][0] for i in s]; ys = [pts[i][1] for i in s]
+        first = 0 if (max(xs) - min(xs)) >= (max(ys) - min(ys)) else 1
+        for ax in (first, 1 - first):
+            v = xs if ax == 0 else ys
+            cut = (max(v) + min(v)) / 2.0 if by_mid else st.median(v)
+            lo = [i for i in s if pts[i][ax] <= cut]; hi = [i for i in s if pts[i][ax] > cut]
+            if not lo or not hi:
+                continue
+            far_hi = abs((x, y)[ax] - max(v)) >= abs((x, y)[ax] - min(v))
+            out += [hi, lo] if far_hi else [lo, hi]
+        return out
+
+    blocked = set()
+    while len(added) < max_add:
         T = exist + added; g = assign(T, pts); s_ = tap_stats(T, pts, radius)
         sc = [max(q[0] / target, (q[4] / span) if span else (1.0 + q[1] / FAR_MIN if q[1] >= FAR_MIN else 0.0)) for q in s_]
-        order = sorted(range(len(T)), key=lambda i: -sc[i])
-        k = order[min(fails, len(order) - 1)]
-        if sc[k] <= 1.0:
+        order = [i for i in sorted(range(len(T)), key=lambda i: -sc[i]) if sc[i] > 1.0 and T[i] not in blocked]
+        if not order:
             break
-        s = g[k]; x, y = T[k]; n, f = s_[k][0], s_[k][1]
-        if span and s_[k][4] / span >= n / target:
-            xs = [pts[i][0] for i in s]; ys = [pts[i][1] for i in s]
-            ax = 0 if (max(xs) - min(xs)) >= (max(ys) - min(ys)) else 1
-            v = xs if ax == 0 else ys; mid = (max(v) + min(v)) / 2.0
-            lo = [i for i in s if pts[i][ax] <= mid]; hi = [i for i in s if pts[i][ax] > mid]
-            far = hi if abs(((x, y)[ax]) - max(v)) >= abs(((x, y)[ax]) - min(v)) else lo
-            if not far: far = hi or lo
-        elif (not span) and f >= FAR_MIN and 1.0 + f / FAR_MIN >= n / target:
-            far = [i for i in s if abs(pts[i][0] - x) + abs(pts[i][1] - y) > radius]
+        k = order[0]; s = g[k]; x, y = T[k]; n, f = s_[k][0], s_[k][1]
+        cands = []
+        if span and s_[k][4] > span:
+            cands += halves(s, x, y, True)
+        if (not span) and f >= FAR_MIN:
+            cands.append([i for i in s if abs(pts[i][0] - x) + abs(pts[i][1] - y) > radius])
+        cands += halves(s, x, y, False)
+        if span and s_[k][4] <= span:
+            cands += halves(s, x, y, True)
+        before = excess(s_); keep = list(added); ok = False
+        for far in cands:
+            if not far or len(far) == len(s):
+                continue
+            try:
+                site = legalize(med(far, 0), med(far, 1), exist + core + keep, legal)
+            except ValueError:
+                continue
+            for do_relax in (True, False):
+                added = keep + [site]
+                if do_relax:
+                    relax(2)
+                s2 = tap_stats(exist + added, pts, radius)
+                if excess(s2) < before and min(q[0] for q in s2[len(exist):]) >= min_new:
+                    ok = True; break
+            if ok:
+                break
+        if ok:
+            blocked.clear()
         else:
-            ax = 0 if (max(pts[i][0] for i in s) - min(pts[i][0] for i in s)) >= (max(pts[i][1] for i in s) - min(pts[i][1] for i in s)) else 1
-            m = med(s, ax)
-            lo = [i for i in s if pts[i][ax] <= m]; hi = [i for i in s if pts[i][ax] > m]
-            cen = lambda q: abs(med(q, 0) - x) + abs(med(q, 1) - y) if q else -1.0
-            far = hi if cen(hi) >= cen(lo) else lo
-        keep = list(added); before = excess(s_)
-        added.append(legalize(med(far, 0), med(far, 1), exist + core + added, legal))
-        relax(2)
-        s2 = tap_stats(exist + added, pts, radius)
-        if excess(s2) >= before or min(q[0] for q in s2[len(exist):]) < min_new:
-            added = keep; fails += 1
-        else:
-            fails = 0
+            added = keep; blocked.add(T[k])
+    keep = list(added); before = excess(tap_stats(exist + added, pts, radius)) if added else 0
     relax(3)
+    if added and excess(tap_stats(exist + added, pts, radius)) > before:
+        added = keep                                   # the final relax may not undo what the splits reached
     return added
 
 

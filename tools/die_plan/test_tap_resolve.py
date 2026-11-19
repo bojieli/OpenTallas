@@ -50,3 +50,21 @@ def test_span_rule_splits_wide_regions_and_keeps_stragglers_local():
     s = TR.tap_stats(exist + added, pts, 160.0)
     assert added and max(q[4] for q in s) <= 300.0          # every sink region inside W + H 300, the 12 stragglers on their own tap
     assert TR.solve(exist, [(400.0 + i % 20, 120.0 + i // 20) for i in range(200)], legal, 1400, 160.0, min_new=8, span=300.0) == []
+
+
+def test_split_loop_does_not_stall_on_many_dense_and_wide_taps():
+    """S81-SLICE-C-TAPS 11-19 (iq_C t1: +3 taps, 21 still over, one tap 20,427 sinks): a field of dense blobs joined by thin
+    wide rows, hard boxes over the blob centres (the median site of a first cut is illegal), one perimeter tap."""
+    rnd = random.Random(11)
+    pts = []; boxes = []
+    for bx in range(6):
+        for by in range(3):
+            cx, cy = 120 + 220 * bx, 100 + 160 * by
+            pts += [(cx + rnd.uniform(-45, 45), cy + rnd.uniform(-45, 45)) for _ in range(1500)]
+            boxes.append((cx - 12, cy - 12, cx + 12, cy + 12))
+    pts += [(rnd.uniform(20, 1380), rnd.choice((20.0, 180.0, 340.0, 500.0))) for _ in range(2500)]
+    legal = TR.make_legal((1400.0, 520.0), 8.64, boxes)
+    added = TR.solve([(17.28, 17.28)], pts, legal, target=1000, radius=160.0, max_add=400, min_new=1, span=300.0)
+    s = TR.tap_stats([(17.28, 17.28)] + added, pts, 160.0)
+    assert max(q[0] for q in s) <= 1000 and max(q[4] for q in s) <= 300.0, (len(added), max(q[0] for q in s), max(q[4] for q in s))
+    assert len(added) < 120 and all(legal(x, y, []) for x, y in added)
