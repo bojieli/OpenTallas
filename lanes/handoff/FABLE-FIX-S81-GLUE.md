@@ -1,59 +1,51 @@
-# FABLE-TYPE-REDUCE-QC handoff (owner order 11-19: cut QC types only where closure gets faster)
+# FABLE-TYPE-REDUCE-S81-REST handoff (started 11-19 01:16 PST)
 
-## 11-19 01:5x PST  Step 0 speed test: NO QC family passes as a template build now. One free merge found.
+Scope: S81 families leaf, slice_station, serdes, dsdv_slice_c1x_C, svc_lo/hi_dsdv_svc_rs, kv_leaf (col families: FABLE-TYPE-REDUCE-S81-COL).
+Lane dir: epyc9 /srv/opentallas-scratch2/claude/fable-type-reduce-s81-rest (a2..a12.py analysis scripts, census_*_v2.json, dedup_d8f.json, repo/ lane clone).
 
-Inputs: live plan N4.3 (epyc9 kw45/snap_qwen_compute/qwen_compute_n43_s1, zz_s29_qc103_s4q9n43.json), bind
-kw45/qcbind_pin_eb1e73448bd0_s4q9n4/bind_s29q103S4Q9N43BQ, census_qc.json, kit_wave status 01:2x, fleet TT scan 01:2x
-(/tmp/ffq_all.sh /tmp/ffq_c3.sh on intel2, 89 live route jobs), AGIdock index. My scripts were short read-only plan/bind diffs
-(rtx-pro session scratchpad); rewrite from this note if needed.
+## State 11-19 01:5x PST: Step 0 done, no family passes, nothing running
+- Posts: STEP0 01:2x (serdes PASS and leaf "faster" lines are WITHDRAWN) and RESULT 01:5x (final).
+- Pushed: main f5f0d744f8, tools/precheck/type_census.py + 4 tests (bound RTL by plan module name; traffic_classes, landing_classes,
+  estimate_no_reroute). No plan flag `type_template`, no generator change, no kit, no waiter.
 
-### What the 133 -> 73 census number is made of (measured on N4.3)
-39 families hold 104 types = 44 (logic, outline). Three split mechanisms, none is pins / faces / orientation:
-- __cl (clock_landing_plan.py:1051 and 1222; cohort signature = landed in/out sets, monitor children xy, up seam, ca_relay, CA mask):
-  about 85 types. Plan pins and outline are identical in a family, but the bound wrappers are NOT near-identical: sle_ctl cohorts
-  differ in 1,900-6,600 of 6,300-9,000 wrapper statements (reset collector tree relays, cland monitor bands 2 vs 3 vs 0, rst_o
-  exports, strap ports, and the landing pad chains u_pd<D>_<bus>_<bit> whose depth D is baked per position: cl372cea1c 11/14/7/6 vs
-  padE0 10/25/8/5). n_pad differs per cohort (sle_fe_v1 207 vs 188, slw_hc1 217 vs 233). cbn_q00 cohorts also differ in cland
-  hard-core modules and tap mode.
-- __pv (param_class_split.py; logic parameter values per instance, HI_PAD / RD_PAD pad depths): 15 types in 6 st_a/st_b families.
-- __pad (r8_strap_pad_max, sle_ctl x3): same plan, pad depths differ in the bound RTL.
-So the position-specific part is pad depth (lane latency) + reset/monitor tree, inside the type. QC is abutted: there is no street to
-move the pad flops into (slw_fw 56 k) without a re-floor.
+## Why (measured on D8f plan_h2_2249.json, D8e bind RTL, registry 01:17)
+- S81 types split on three position axes: (a) die traffic through the type as ft_slots (no streets; 73 of 75 leaves carry foreign lanes),
+  (b) clock landing cohort (landing_contract + count-aligned strap set), (c) wrapper extras (rst_o export, sid parameter default, tap names).
+- A pin template removes only window positions. Classes with windows re-slotted, no lane moved: leaf 65, slice_station 39, serdes 4,
+  c1x_C 9, svc 13, kv_leaf 5. With the landing cohort: leaf 74, serdes 11, slice_station 46. S81 395 -> 274 (lower bound 51).
+- schema.py ("bus is unbound ... tie-offs are not allowed") blocks a superset FT template until bind / landing / K-strap code supports it.
+- Signed now: slice_station 35 of 46 (7 route, 4 pre-route); every other family here 0.
+- serdes chain facts (for a later event): 4 shore chains; E-form types t2 t14 (0 FT), t1 x2 t16 (2 FT), t3 t15 x2 (4 FT), own bus on slot
+  0 / 1 / 2 of the inner face, FT straight with 8 stations; S-form ends t4 t12 t13. A shift form (own bus on slot 1, W slot 1 -> E slot 0,
+  W slot 0 -> E slot 2) keeps t12 / t13 and the slice_station pins, permutes the W slots of t4, and needs 9 stations on the 450 um jog.
+- leaf floorplan check (a10.py): cores are 34 % of the leaf area; t69's core placement clears the FT station sites of 11 of 75 types, t27's 7.
 
-### State now
-- Signed, any plan: about 30 QC types (103 unsigned at 23:18). They keep counting.
-- All 133 types have a live N4.x wave row (ENQUEUED/RUNNING). About 27 are in detail route or abstract with TT >= -42
-  (hc0 x3, sc x8, hc1 x2, st_b x6, su_l1 x4, su_l0, fw x2, coll_s, glue); about 16 more are in GRT with clean CTS TT.
-- Siblings pass or fail together (TT ps): sc +2..+62; hc0 +17..+25; hc1 -3..+6; slw_st_b +10..+38 (one outlier cle6023ec2 -210, a
-  type with no param_set, owner FABLE-FIX-QC); st_a x11 -167..-273 (N4.3 rows just applied); sle_ctl x7 -86..-109 (pad-chain hook
-  just relaunched); cbx +11..+25 (one -15). No family has one clean variant the others could reuse.
+## Open decision (COORD / owner), not started
+S81 slice re-floor with street columns: leaf 75 + c1x_C 9 + kv_leaf 5 -> about 8 types + about 16 FT-only street types; street about 240 um
+(0.6 track use), die x about +6 %, 35 signed slice_station types get new pins, one landing contract per template; 3 to 5 days before the
+first template kit. Recommendation: decide at the first D8g leaf GRT TT read; start only if the FT-heavy leaves (t8 t72 t3 t75 t67) fail on
+congestion classes after the common-logic fixes.
 
-### Speed verdict per family group
-| group | types -> est | verdict | reason |
-|---|---|---|---|
-| sc, hc0-3, su_l0/l1, fe, stm, st_b (22 families, about 52 types) | -> about 24 | SKIP | setup-clean, in route / near gate or signed; a template renames the types, changes the die transport fingerprint (BIND-CHECK 133/133, as on N4.3) and restarts every kit (8-20 h each) for no fix |
-| cbf/cbn/cbx (5 families, 14 types, 143 inst) | -> 6 | SKIP | CTS +17..+30, in GRT; cohorts differ in cland cores, taps (density vs explicit), monitor bands; a superset is a new clock design on the largest kits |
-| sle_ctl (7) | -> 1..4 | SKIP now | all 7 share one failure class and one fix (OT_PAD_CHAIN_SITE, relaunched 00:5x); cohort wrappers differ 25-75 %; a merge needs strap-selected pad depth on every pad bus (RTL + bind) |
-| st_a (4 families, 11 types) | -> 7 | SKIP template, 1 FREE MERGE | N4.3 st_a rows applied 01:03, kits relaunching, proof kit pk_sta running; a second event now restarts them again |
-| fw (sle/slw fw_v1/v2, 9 types) | -> 4 | SKIP | flt_wo rows are already one row set per family, next delta; cohorts differ in 20 k pad chains |
-| su_c, coll_ft | | SKIP | 2 types each; coll_ft has two outlines; su_c in flight with a fix |
+## Next for a successor
+- Nothing is pending. If the re-floor is approved: rows = street column per slice half in gen_plan_v2.py, ft_channel_route with "no foreign
+  FT in leaf", uniform landing contract for the leaf template, then one template kit to GRT TT (r712) before the bind.
 
-Cost, template path: generator (cohort superset + role-named taps + strap pad depth) + bind + G0/LATCHECK + die clock rows, about
-1-2 days, then a die-wide strict bind (two-pass, hours) and a restart of every merged family, plus new risk in the superset (max pad
-chains and all monitor bands in every instance). Per-type path: kits already in flight, fixes already applied per family by regex /
-item_env; the QC kit count is not what limits the fleet. A template saves compute per round (about 60 kits), not closure time.
-Not faster -> not built.
+## Re-verify after the census s81p_ fix (COORD 11-19, posted)
+- col is bound as rtl/<type>.sv (0 s81p_col* files, 216 present); not affected.
+- Per family: FT slots, buses, internal stations, taps = 1 variant each. Landing contracts differ per position in 10 of 12 families
+  (h9_r2 7, h9_r1 4, p2 4, h10_r1 3, h10_r2 3, p3 3, others 2; p5 and p6 1); count_straps in 5 families; reset tree by position.
+- 0 of 51 template groups mix landing contracts or FT slots. Speed verdict: 51 kits per event vs 216 (4.2x), every family faster.
 
-### Free merge (no build, no template)
-sle_st_a_v2__pv4242de79 (sl_E3_st_a) == sle_st_a_v2__pv30dda31f__pvd2ec7769 (sl_E1_st_a): bound RTL identical after the type name
-(sha 9ef6a8b653, 284 k chars); plan record identical in 7,247 of 7,255 leaves, the 8 others are names and notes. The pv split is
-stale. Rows: lanes/handoff/FABLE-TYPE-REDUCE-QC-rows.json. For QC-PLAN-R3 with the next st_a event (it changes the type list, so it
-rides on the bind of that event; no event for this alone). Until then a sign-off of either one is the same layout; pk_sta
-(pvd2ec7769) proves both.
+## Code state
+- Lane clone commits: type_template.py + tests, kit_wave probe/select + test, col_inherit group=, schema key + json + test.
+  Push: W/push3.log (ot-push-main; PUSH_RC=0 = on main). An earlier push stopped on sparse-cone-only failures (physical/ not checked out);
+  cone now has physical/die_plan/s81/kit_wave and physical/common_flow. test_kit_wave_item_sync fails on pristine rt/current too (flaky).
 
-### When a template does pay (for QC-PLAN-R3 / COORD; not started)
-At the next event that restarts all QC kits anyway (re-floor or freeze event): (1) pad depth by parent-tied strap on every landing pad
-bus (removes __pad and most __pv: about 18 types); (2) cohort superset where cohorts differ only in monitor-band count and rst_o
-exports (hc*, sc, su_l*, fe, fw: about 25 types). Flag name reserved: partition_types.<family>.type_template: true. Nothing on main.
-
-NEXT: nothing running, no waiter, no kit or wave row touched. Reopen only if COORD orders a die-wide QC restart event.
+## For S81-DIE-R3 (next S81 event)
+1. Tree tools must hold the type_template commits (schema key), else PRE refuses the key.
+2. python3 -I tools/fleet/type_template.py flag BASE.json OUT.json "col_h*"   (metadata only: no geometry, pin, RTL or cycle change;
+   the 216 col block shas change, which the event does anyway).
+3. After the bind: type_template.py check OUT.json --bind-rtl <bind out>/rtl --repo <tree> ; expect 216 positions, 0 FAILED.
+4. The wave then launches 51 col rows; skip reason "TYPE-TEMPLATE member" lists the other 165.
+5. When a representative signs: type_template.py credit ... --rep R --signoff <kit signoff.json> --out <records> --members-tsv
+   ~/coord/autopilot/inherit_members.tsv (records must be readable by the counter on the hub).
