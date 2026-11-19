@@ -36,18 +36,34 @@ congestion classes after the common-logic fixes.
   (h9_r2 7, h9_r1 4, p2 4, h10_r1 3, h10_r2 3, p3 3, others 2; p5 and p6 1); count_straps in 5 families; reset tree by position.
 - 0 of 51 template groups mix landing contracts or FT slots. Speed verdict: 51 kits per event vs 216 (4.2x), every family faster.
 
-## Code state
-- ON MAIN 31bc0da44cf8 (3 commits): tools/fleet/type_template.py + test, kit_wave probe (PROBE_V 11) / select + test, col_inherit group=,
-  schema key type_template + die_plan.schema.json + test. Off unless a plan sets type_template.
-- Tests: 100 percent of tools/autopilot/test_kit_wave*.py, fleet col tests and die_plan schema tests pass on my tree except
-  test_kit_wave_enqueue_skip (2 tests), which fail the same way on pristine main (since WAVE-PILOT-FIX 1539ebdea8). Pushed with --no-test for that reason.
-- Not done: no template kit built or signed; no plan flagged; no automatic credit step; ROM via map to GDS.
+## Code state (all on main 994caa6f8c05; off unless a plan sets type_template)
+- tools/fleet/type_template.py: groups / check / flag / credit / records / rommap / view (+ tests). kit_wave: plan probe (PROBE_V 11),
+  select() member skip, template_credit_step (every tick). col_inherit group=. Schema key type_template. tools/fleet/col_template_rows.sh.
+- Push 083b4e3849 ran the whole touched test set green (the 2 enqueue_skip tests pass on current main).
+- Automatic credit: a representative SIGNED on the current block -> records built on the die gen host -> hub
+  ~/coord/autopilot/inherit_records/<die>/<member>__<block>/inherited.json + autopilot/inherit_members.tsv (the counter's file).
+  With no image dir (die option type_template_rom_dir) the via map check is recorded as not done; it does not refuse the credit.
+- rommap on D8e: 216 positions, 51 layouts, 9372 ROM images (35 ROM macros + 8 element cores per col_h9_r1 type), 0 errors
+  (W/rommap_d8e.json). It is a map + check; the via-map-to-GDS writer itself still does not exist (rom_gen emits no GDS).
 
-## For S81-DIE-R3 (next S81 event)
-1. Tree tools must hold the type_template commits (schema key), else PRE refuses the key.
-2. python3 -I tools/fleet/type_template.py flag BASE.json OUT.json "col_h*"   (metadata only: no geometry, pin, RTL or cycle change;
-   the 216 col block shas change, which the event does anyway).
-3. After the bind: type_template.py check OUT.json --bind-rtl <bind out>/rtl --repo <tree> ; expect 216 positions, 0 FAILED.
-4. The wave then launches 51 col rows; skip reason "TYPE-TEMPLATE member" lists the other 165.
-5. When a representative signs: type_template.py credit ... --rep R --signoff <kit signoff.json> --out <records> --members-tsv
-   ~/coord/autopilot/inherit_members.tsv (records must be readable by the counter on the hub).
+## Merge rows below 51 (plan level, measured on D8e df7446e48ba9; W/rows/d8e_tt = plan_tt.json 944ba058bbe2, sidecar_tt.json 60a304c234a7)
+bash tools/fleet/col_template_rows.sh TREE BASE_PLAN SIDECAR OUT [--all-members]
+- A reset keep-outs union (col_typemerge keepouts): 128 types get 326 more reset outs (max 4 per type), left open and declared. 51 -> 42.
+- C collector superset, collector-form members only, --keep-taps (cland_col_superset): one landing contract per family, unused children tied.
+  -> 25 plan layouts. Without --keep-taps the tap union gives 10 schema errors (added tap spacing, col_h9_r2 / p2), so taps stay per type.
+- B one ring depth per sibling group and bus: 63 ports raised (depth 4 -> 8) on 29 r0 types; count_straps width follows at CA compose. -> 20.
+- --all-members (plain tiles take the family contract too, R3b): 20 plan layouts, 15 after B. Costs landing pins/cells on 150+ plain tiles: not for D8h.
+- Left after A+B+C: h9_r2 4, h9_r1 2, h10_r1 2, h10_r2 2, h10_r0_p1 2, p2 2 (two core placements), others 1.
+- Schema validate of the result: 0 errors. NOT run: CA compose, bind, G0, LATCHECK, any kit. The bound-RTL key can only be counted after the
+  bind; 20 is the plan-layout count and assumes the keep-outs union makes the reset trees equal (the only RTL difference found inside a layout
+  today, plus one cland monitor in col_h10_r2 that the superset covers).
+- Cost of the rows for closure: 0 cycles; more reset out pads and tied monitor pins on 128 / 78 types; deeper CA rings on 29 types (more slot flops).
+
+## For S81-DIE-R3 (D8h)
+1. Tree tools at main 994caa6f8c05 or later.
+2. Rows: col_template_rows.sh TREE <D8g plan + trunk rows> <its landed sidecar> OUT  -> plan_tt.json + sidecar_tt.json; then the normal
+   CA compose, strict bind, LATCHECK, G0 vs control. (Flag only, no merge: type_template.py flag BASE OUT "col_h*".)
+3. After the bind: type_template.py check plan --bind-rtl <bind>/rtl --repo TREE  (expect 216 positions, 0 FAILED; groups = kits to build)
+   and type_template.py rommap ... --out rommap.json (0 errors).
+4. r712 proof kit: one representative of the largest group (col_h9_r1) to GRT TT.
+5. Wave: 216 col rows become one per group; members show as skip "TYPE-TEMPLATE member"; credit is automatic.
