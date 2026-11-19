@@ -1,0 +1,28 @@
+{
+ "schema": "fable-fix-s81-seqhost.reach_row.v1",
+ "lane": "FABLE-FIX-S81-SEQHOST",
+ "for": "S81-DIE-R3 (D8h)",
+ "type": "seqhost__t1",
+ "rule": "r713: both-side registers, every PLACED leg <= 405 um, +cycles through bind K",
+ "status": "CANDIDATE, measured, not proven on a kit. No RTL change needed: dsdv_mu_hwin mu_c / mu_rc already leave output flops (c_q / rc_q).",
+ "basis": "private kit2 (D8e kit of wave attempt_22 + depth-fixed dsdv_mu_hwin, flat form) post-CTS, before the kit TT repair, TT, placement RC: epyc7 /srv/opentallas-scratch2/claude/fable-fix-s81-seqhost/sta_cts_kit2b/sta.log and geo2/g.log",
+ "measured": {
+  "u_win_core_um": "pointer / entry / age flops in (631..780, 549..697), centroid about (700, 620)",
+  "classes_after_depth_fix": "u_win ends below 0: mu_c 136 (worst -1265), mu_rc 44 (-996); all other u_win classes together 630 ends, worst -389 (t_wf 1 end), eat config -89, rp1h -201, vld -136, df -135, ng -162",
+  "worst_path": "u_win.pe1h[6][34] -> 13 gates -> 12 serial wire buffers (about 700 ps) -> u_win.mu_c[89]/D; launch CK 395, capture CK 187 (tap class, LEPE rows)",
+  "why": "the mu_c / mu_rc output flops are placed along the route to their boundary station (mu_rc flops spread over x 150..711, y 545..1222), so the last logic leg carries the whole distance",
+  "lanes": [
+   {"lane": "unit__seqhost__s_0S_LP", "port": "unit_o6", "pin_um": [104, 1227], "bout_chain_bbox_um": [99, 1217, 364, 1222], "core_to_nearest_station_um": 933, "cycles_now": 37},
+   {"lane": "unit__seqhost__s_0N_LP", "port": "unit_o5", "pin_um": [86, 1227], "bout_chain_bbox_um": [66, 968, 313, 1222], "core_to_nearest_station_um": 735, "cycles_now": 68},
+   {"lane": "unit__seqhost__s_7N_LP", "port": "unit_o2", "pin_um": [1443, 495], "bout_chain_bbox_um": [547, 492, 1438, 588], "core_to_nearest_station_um": "under 405 (chain passes the core)", "cycles_now": 81},
+   {"lane": "unit__seqhost__s_7S_LP", "port": "unit_o3", "pin_um": [1443, 536], "bout_chain_bbox_um": [702, 532, 1438, 588], "core_to_nearest_station_um": "under 405", "cycles_now": 50}
+  ]
+ },
+ "items": [
+  {"id": 1, "cycles": "+2 on unit__seqhost__s_0S_LP (37 -> 39)", "row": "two source-side stations on unit_o6 (45 bits) between the core and the first existing station: about (588, 819) and (476, 1018); legs 311 / 311 / 311 um"},
+  {"id": 2, "cycles": "+1 on unit__seqhost__s_0N_LP (68 -> 69)", "row": "one source-side station on unit_o5 (45 bits) at about (506, 794); legs 368 / 367 um"},
+  {"id": 3, "cycles": 0, "row": "keep the mu_c / mu_rc output flops of u_win with the core: region or FIRM site for u_win/mu_c* and u_win/mu_rc* at the core (700, 620), so the first leg is flop -> station and not logic -> flop. With main 8e20268b5d83 the block is a kept module (instances u_win/...), so one instance-prefix region covers it."},
+  {"id": 4, "cycles": 0, "row": "7N / 7S: re-measure after items 1-3 and the LEPE tap rows; their station chains already pass the core"}
+ ],
+ "notes": "HWIN event dates: the boot compiler takes the transport ages from the bind (tools/s81_dv/layer_prog bound_ctl_lanes.hwin_bound_transport -> native_hwin_calendar.check_consumer_book), so +K on these lanes needs the consumer book re-derived, not an RTL change. Station positions are straight-line thirds / halves, not checked against macros or channels."
+}

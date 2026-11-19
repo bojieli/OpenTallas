@@ -68,3 +68,10 @@ Existing benches on the new source: run_mu_hwin_bench.sh, tools/s81_dv/hwin_even
 - Adoption for S81-DIE-R3: rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv from main 8e20268b5d83 (+ tools/s81_dv/layer_prog/native_hwin_calendar.py for the sha).
   Instance names inside u_win now carry "/" (u_win/..., u_win/g_en[i].u_a/...); no kit tcl / sdc names u_win.
 - Next: kit3 CTS / GRT TT read (waiter in the Fable session; else read epyc7 kit3/seqhost__t1/run/logs and the *.tt.rpt), then post the TT line.
+
+## State 11-19 05:1x PST: depth fixed, REACH class found behind it (row posted)
+- kit2 (flat form) post-CTS, before the kit TT repair, own TT STA (epyc7 sta_cts_kit2b, snap2/4_cts_pre_tt.odb): u_win ends below 0 = 810 (control 4,895).
+  mu_c 136 worst -1265, mu_rc 44 worst -996 = REACH: output flops dragged toward the face stations, worst path ends in 12 wire buffers (700 ps); 0S lane station
+  chain starts 933 um from the core, 0N 735 um. Other u_win classes: worst -389 (1 end t_wf), rest -89..-201, with launch CK 395 vs capture 187 (tap class).
+- Row for S81-DIE-R3: lanes/handoff/FABLE-FIX-S81-SEQHOST-reach-row.json (+2 stations 0S, +1 station 0N, output flops kept at the core). CANDIDATE, not kit-proven.
+- kit3 (pushed form) was still in CTS; kit2 in its TT repair. Read their GRT TT from the kit logs; expect mu_c / mu_rc to stay negative until the row is in.
