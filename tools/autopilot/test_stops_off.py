@@ -692,3 +692,51 @@ class DeferResign(unittest.TestCase):
         cfg["dies"]["s81"]["plan_frozen"] = True
         st["items"]["s81|E|t1|bNEW"].update(status="ENQUEUED")
         self.assertEqual(KW.retire_resign_unstarted(ap, cfg, st), 0)
+
+
+class UnclassifiedFail(unittest.TestCase):
+    """COORD FLOW-1950 N: an unmatched failure is UNCLASSIFIED (not FLOW) and waits for a lane; a check can name its own class"""
+
+    def test_unmatched_failure_is_unclassified(self):
+        cls, why = KW.classify("place", "Warning: nothing the rules know about\nKW_PLACE_RC=1\n")
+        self.assertEqual(cls, "UNCLASSIFIED")
+        self.assertIn("unclassified failure @place", why)
+
+    def test_check_names_its_own_class(self):
+        self.assertEqual(KW.classify("gen", "x\nOT_CLASS: design face-bank fit error: 3 faces do not fit\n")[0], "PLAN")
+        self.assertEqual(KW.classify("gen", "OT_CLASS: flow staged script missing\n")[0], "FLOW")
+        cls, why = KW.classify("gen", "OT_CLASS: design face-bank fit error\n")
+        self.assertIn("face-bank fit error", why)
+
+    def test_one_relaunch_only_when_inputs_changed(self):
+        cfg = {"dies": {"s81": {"event": "E", "src_manifest_hash": "snap2", "gen_env": {}, "_plan_sha": "p1"}}}
+        r = {"item": "x", "block_sha": "blk"}
+        old_parts = KW.input_parts({"dies": {"s81": {"event": "E", "src_manifest_hash": "snap1", "gen_env": {}, "_plan_sha": "p1"}}}, "s81", "x", "blk")
+        rec = {"class": "UNCLASSIFIED", "status": "FAIL", "attempt": 4, "stage": "place", "reason": "r", "block_sha": "blk", "input_parts": old_parts}
+        self.assertFalse(KW.unclassified_hold(cfg, "s81", r, rec, set()))                     # snapshot changed: one relaunch
+        rec2 = dict(rec, input_parts=KW.input_parts(cfg, "s81", "x", "blk"))
+        self.assertTrue(KW.unclassified_hold(cfg, "s81", r, rec2, set()))                      # nothing changed: stays FAIL
+        self.assertTrue(KW.unclassified_hold(cfg, "s81", r, dict(rec, unclass_n=1), set()))     # already relaunched once
+        self.assertFalse(KW.unclassified_hold(cfg, "s81", r, rec2, {"x@4"}))                    # a retry key forces
+        self.assertFalse(KW.unclassified_hold(cfg, "s81", r, dict(rec2, class_="x", **{"class": "FLOW"}), set()))
+
+    def test_needs_lane_row_posted_once(self):
+        cfg = {"dies": {"s81": {"event": "E", "src_manifest_hash": "snap", "gen_env": {}, "_plan_sha": "p1"}}}
+        ip = KW.input_parts(cfg, "s81", "x", "blk")
+        st = {"items": {"k": {"die": "s81", "item": "x", "event": "E", "status": "FAIL", "class": "UNCLASSIFIED", "attempt": 2, "stage": "place", "reason": "odd", "block_sha": "blk", "input_parts": ip}}}
+        posts, logs = [], []
+        ap = type("AP", (), {"DRY": False, "coord_append": staticmethod(lambda f, t: posts.append(t)), "log": staticmethod(logs.append)})()
+        self.assertEqual(KW.unclassified_needs_lane(ap, cfg, st), 1)
+        self.assertEqual(KW.unclassified_needs_lane(ap, cfg, st), 0)
+        self.assertIn("NEEDS-LANE [UNCLASSIFIED", posts[0])
+
+    def test_classify_fail_cmd_releases_rows(self):
+        import tempfile, json as _j, argparse
+        with tempfile.TemporaryDirectory() as tmp:
+            Path(tmp, KW.STATE_FILE).write_text(_j.dumps({"items": {
+                "a": {"die": "s81", "item": "t1", "status": "FAIL", "class": "UNCLASSIFIED", "attempt": 3},
+                "b": {"die": "s81", "item": "t2", "status": "FAIL", "class": "UNCLASSIFIED", "attempt": 1}}}))
+            ns = argparse.Namespace(ap_dir=tmp, die="s81", item="t1", attempt=None, cls="PLAN", owner="S81-X")
+            self.assertEqual(KW.classify_fail_cmd(ns), 0)
+            st = _j.loads(Path(tmp, KW.STATE_FILE).read_text())
+            self.assertEqual((st["items"]["a"]["class"], st["items"]["b"]["class"]), ("PLAN", "UNCLASSIFIED"))

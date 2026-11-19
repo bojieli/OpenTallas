@@ -118,7 +118,7 @@ AP_DIR = Path(os.environ.get("AP_DIR", str(HOME / "coord" / "autopilot")))
 OT_RUN = os.environ.get("AP_OT_RUN", str(HOME / ".local/bin/ot-run"))
 LANE = "KIT-WAVE-1"
 # STRUCTURAL (DIE-HBM-97 11-10, COORD): a design verdict the flow reached early (gpl-noconverge); held like FLOW/PLAN
-CLASSES = ("PLAN", "FLOW", "RTL", "INFRA", "STRUCTURAL")
+CLASSES = ("PLAN", "FLOW", "RTL", "INFRA", "STRUCTURAL", "UNCLASSIFIED")   # COORD FLOW-1950 N: an unmatched failure is UNCLASSIFIED (not FLOW), not auto-relaunched until a lane classifies it
 import importlib.util as _ilu
 _cc_spec = _ilu.spec_from_file_location("cell_cap", str(Path(__file__).resolve().parents[1] / "die_plan" / "cell_cap.py"))
 _cc = _ilu.module_from_spec(_cc_spec)
@@ -3014,6 +3014,9 @@ def select(rows, cfg, die, state, plan_types=None):
         elif rec and rec.get("q_status") in ("SIGNED", "SIGNED-LINKED"):
             # SIGNED-TERMINAL-1115: a signed R-MINIMAL record on this plan block is terminal, flow tag or not, retry key or not
             why = "signed off on this plan block (terminal; a missing flow tag is bookkeeping, never a build)"
+        elif rec and unclassified_hold(cfg, die, r, rec, retry):
+            why = (f"UNCLASSIFIED: attempt {rec.get('attempt')} failed with an error no rule or OT_CLASS marker names ({str(rec.get('reason'))[:120]}); it gets ONE automatic relaunch once rt or the die tree "
+                   f"changed, then stays FAIL as a NEEDS-LANE row (owners_sweep flag UNCLASSIFIED); a lane may classify it: kit_wave.py classify-fail --die {die} --item {r['item']} --class PLAN|FLOW|RTL|INFRA|STRUCTURAL")
         elif struct_stop_gate(None, cfg, state, die, r["item"], blk(r["item"])):
             why = struct_stop_gate(None, cfg, state, die, r["item"], blk(r["item"]))
         elif rec and FG.stops_off_die(cfg, die) and so_failed(rec) and f"{r['item']}@{rec.get('attempt')}" not in retry and so_same_input(cfg, die, r, rec):
@@ -3723,6 +3726,10 @@ def _matched_line(s, m):
     return line
 
 
+OT_CLASS_MARK = re.compile(r"^\s*OT_CLASS:\s*(design|flow|rtl|structural)\b[:\s]*(.*)$", re.M | re.I)
+OT_CLASS_MAP = {"design": "PLAN", "flow": "FLOW", "rtl": "RTL", "structural": "STRUCTURAL"}
+
+
 def classify(stage, text):
     """-> (class, reason); never guesses INFRA for a design failure.  The rules read the error lines of the log first,
     then the whole log, both without ot-run admission chatter; the reason quotes the decisive error line (the matched
@@ -3731,6 +3738,9 @@ def classify(stage, text):
     ran = re.search(r"ot-run: RAN on \S+", raw)
     clean = drop_superseded_tries(strip_admission(raw))
     views = (error_lines(clean), clean)
+    mk = OT_CLASS_MARK.search(clean)                           # COORD FLOW-1950 N: a gen / place check names its own class with its error: "OT_CLASS: design|flow|rtl|structural <error>"
+    if mk:
+        return OT_CLASS_MAP[mk.group(1).lower()], f"{mk.group(1).lower()} check @{stage}: {mk.group(2).strip()[:300]}"
     for cls, st_re, tx_re, why in RULES:
         if st_re and not re.search(st_re, stage or ""):
             continue
@@ -3751,7 +3761,7 @@ def classify(stage, text):
                     line = decisive_line(clean) or line
                 return cls, f"{why} @{stage}: {line[:300]}"
     dl = decisive_line(clean)
-    return "FLOW", f"unclassified failure @{stage} (see log)" + (f": {dl[:300]}" if dl else "")
+    return "UNCLASSIFIED", f"unclassified failure @{stage} (see log)" + (f": {dl[:300]}" if dl else "")
 
 
 # ------------------------------------------------------------------------------------------------ AUTO-GEOM verdict
@@ -9799,6 +9809,62 @@ def cancel_rows_phased(AP, cfg, ap_dir, die, item_glob, why, owner, verdict, dry
     return stops, done, skipped
 
 
+def unclassified_hold(cfg, die, r, rec, retry):
+    """COORD FLOW-1950 N (+ no new waits, r703): a FAIL row classed UNCLASSIFIED relaunches ONCE, and only when its inputs changed since the failed attempt (rt executed files, the design snapshot,
+    the plan block: something could have fixed it); a second UNCLASSIFIED fail of the item, or an unchanged input, keeps it FAIL (NEEDS-LANE).  A retry key still forces.  -> True = do not relaunch"""
+    if str(rec.get("class") or "") != "UNCLASSIFIED" or rec.get("status") != "FAIL" or f"{r['item']}@{rec.get('attempt')}" in retry:
+        return False
+    if int(rec.get("unclass_n") or 0) >= 1:
+        return True
+    ip = rec.get("input_parts") or {}
+    if not ip.get("noenv"):
+        return False                                   # launched before the hash existed: it may have been fixed since, one relaunch
+    return so_same_input(cfg, die, r, rec)
+
+
+def unclassified_needs_lane(AP, cfg, st):
+    """one NEEDS-LANE line (COORD-REVIEW-QUEUE, flagged UNCLASSIFIED by owners_sweep) per UNCLASSIFIED FAIL row that is not relaunching; once per row.  -> number posted"""
+    n = 0
+    for key, r in (st.get("items") or {}).items():
+        d = (cfg.get("dies") or {}).get(r.get("die")) or {}
+        if r.get("status") != "FAIL" or r.get("class") != "UNCLASSIFIED" or r.get("unclass_posted") or not d.get("event") or r.get("event") != d["event"]:
+            continue
+        if not unclassified_hold(cfg, r["die"], r, r, set()):
+            continue
+        r["unclass_posted"] = time.time()
+        if not AP.DRY:
+            AP.coord_append("lanes/COORD-REVIEW-QUEUE.md", f"- {now_s()} NEEDS-LANE [UNCLASSIFIED -> {die_owner(cfg, r['die'], item=r['item'])[0]}] {r['die']}/{r['item']}@{r.get('attempt')}: "
+                            f"{str(r.get('reason'))[:200]} | no rule names this error; classify it (kit_wave.py classify-fail --die {r['die']} --item {r['item']} --class ...) or fix the check to print OT_CLASS:")
+        AP.log(f"KIT-WAVE UNCLASSIFIED {r['die']}/{r['item']}@{r.get('attempt')}: NEEDS-LANE posted")
+        n += 1
+    return n
+
+
+def classify_fail_cmd(a):
+    """kit_wave.py classify-fail --die D --item I [--attempt N] --class C: a lane names the class of an UNCLASSIFIED FAIL row (under kit_wave.lock); FLOW / INFRA relaunch on the next tick, PLAN / RTL / STRUCTURAL
+    are design verdicts (the next input change relaunches them)"""
+    ap_dir = Path(a.ap_dir or AP_DIR)
+    lk = lock_take(ap_dir / "kit_wave.lock", wait_s=900)
+    if lk is None:
+        print("classify-fail: kit_wave.lock busy for 15 min; nothing written")
+        return 1
+    try:
+        st = load_state(ap_dir)
+        n = 0
+        for r in (st.get("items") or {}).values():
+            if r.get("die") == a.die and fnmatch.fnmatchcase(str(r.get("item")), a.item) and r.get("status") == "FAIL" and r.get("class") == "UNCLASSIFIED" \
+                    and (a.attempt is None or int(r.get("attempt") or 0) == a.attempt):
+                r["class"] = a.cls
+                r["reclass"] = {"by": a.owner or "lane", "ts": time.time(), "was": "UNCLASSIFIED"}
+                n += 1
+        if n:
+            save_state(st, ap_dir)
+        print(f"classify-fail: {n} UNCLASSIFIED row(s) of {a.die}/{a.item} set to {a.cls}")
+        return 0
+    finally:
+        lk.close()
+
+
 def struct_cmd(a):
     """kit_wave.py struct-stop / struct-force / struct-release / struct-list: edit state struct_stops under kit_wave.lock (blocking wait)"""
     ap_dir = Path(a.ap_dir or AP_DIR)
@@ -10069,6 +10135,7 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
            "status": "RUNNING" if ok else "FAIL", "class": "" if ok else "INFRA", "replicas": r.get("replicas"),
            "full_hash": full_input_hash(cfg, die, r["item"], r.get("block_sha")),
            "input_parts": input_parts(cfg, die, r["item"], r.get("block_sha")),
+           "unclass_n": (int(prev.get("unclass_n") or 0) + 1) if prev.get("class") == "UNCLASSIFIED" else int(prev.get("unclass_n") or 0),
            "reason": "" if ok else "systemd-run failed", "started": time.time(), "updated": time.time(),
            # INFRA budget counts INFRA attempts since the last design verdict (KIT-TRIAGE-1 11-01): an item that had
            # design FAILs before must still get its infra_attempts after a class fix relaunch
@@ -13920,6 +13987,10 @@ def _step(AP, ap_dir):
     cancel_class_volume(AP, cfg, st, notices)
     cancel_superseded(AP, cfg, st, notices, ap_dir)
     try:
+        unclassified_needs_lane(AP, cfg, st)
+    except Exception as _e:
+        AP.log(f"KIT-WAVE UNCLASSIFIED skipped: {type(_e).__name__}: {_e}")
+    try:
         retire_resign_unstarted(AP, cfg, st)
     except Exception as _e:
         AP.log(f"KIT-WAVE RETIRE-RESIGN skipped: {type(_e).__name__}: {_e}")
@@ -15067,6 +15138,9 @@ def main(argv=None):
     rc_.add_argument("--write", action="store_true", help="update the state + kit_wave_stages.tsv (under kit_wave.lock)")
     rc_.add_argument("--ap-dir", help="state dir (default AP_DIR)")
     rc_.add_argument("--quiet", action="store_true", help="histogram only")
+    cf_ = sub.add_parser("classify-fail", help="COORD FLOW-1950 N: name the class of an UNCLASSIFIED FAIL row (releases it)")
+    cf_.add_argument("--die", required=True); cf_.add_argument("--item", required=True); cf_.add_argument("--attempt", type=int)
+    cf_.add_argument("--class", dest="cls", required=True, choices=("PLAN", "FLOW", "RTL", "INFRA", "STRUCTURAL")); cf_.add_argument("--owner", default=""); cf_.add_argument("--ap-dir")
     cr_ = sub.add_parser("cancel-rows", help="COORD: place structural stops for the plan blocks of the live rows of die/item-glob, then cancel those rows by exact unit (grt_arm_cancel)")
     cr_.add_argument("--die", required=True); cr_.add_argument("--item", required=True); cr_.add_argument("--owner", required=True)
     cr_.add_argument("--verdict", default="STRUCTURAL", choices=STRUCT_VERDICTS); cr_.add_argument("--why", required=True)
@@ -15130,6 +15204,8 @@ def main(argv=None):
         return 0
     if a.cmd.startswith("struct-"):
         return struct_cmd(a)
+    if a.cmd == "classify-fail":
+        return classify_fail_cmd(a)
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     import autopilot as AP
     if a.cmd == "cancel-rows":
