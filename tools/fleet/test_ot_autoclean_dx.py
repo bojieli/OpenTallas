@@ -11,6 +11,9 @@ import test_ot_autoclean_auto as T   # noqa: E402
 
 ac = T.ac
 ROUTED = ("6_final", "5_3_fillcell", "5_2_route", "5_1_grt", "5_route", "6_1_fill", "4_1_cts", "4_cts")
+# FABLE-FLOW-1555 (3bb606ac2f, 11-18): ot_delete_guard refuses an unsigned attempt that holds 5_2_route.odb / 6_final.odb unless a NEWER attempt of the
+# same item also holds one.  So the newest unsigned attempt of those two stages is kept; every older one, and every other routed stage, is deleted.
+GUARDED = ("6_final", "5_2_route")
 
 
 class Gate(T.Base):
@@ -35,16 +38,18 @@ class Gate(T.Base):
         return [ln.split("\t") for ln in self.out.splitlines() if ln.startswith("DXREQ\t")]
 
     def test_unsigned_routed_db_is_deleted_without_export(self):
-        """OWNER 11-12: only SIGNED routed DBs are exported; an unsigned / failed / superseded attempt is deleted, no cut asked"""
+        """OWNER 11-12: only SIGNED routed DBs are exported; an unsigned / failed / superseded attempt is deleted, no cut asked.
+        11-18 guard: the NEWEST unsigned 6_final / 5_2_route attempt is kept (not superseded by a newer routed one); never a cut request"""
         for stage in ROUTED:
             with self.subTest(stage=stage):
-                fin, odb = self.attempt("kv3_hgi", 1, stage)
-                sup, odb2 = self.attempt("kv3_hgi", 2, stage)
+                item = "kv3_hgi_" + stage     # one item per stage: a kept 6_final in a shared dir would make the next stage guarded too
+                fin, odb = self.attempt(item, 1, stage)
+                sup, odb2 = self.attempt(item, 2, stage)
                 self.kw_for(fin, sup)
                 self.dx["ledger"] = []
                 self.run_job("--classes", "a")
                 self.assertFalse(os.path.exists(fin))
-                self.assertFalse(os.path.exists(sup))
+                self.assertEqual(os.path.exists(sup), stage in GUARDED)
                 self.assertEqual(self.dxreq(), [])
 
     def sign(self, k):
@@ -74,7 +79,7 @@ class Gate(T.Base):
         self.run_job("--classes", "b")
         self.assertFalse(os.path.exists(os.path.join(b2, "5_route.odb")))
         fin, odb = self.attempt("not_a_current_design", 1, "6_final")
-        sup, _ = self.attempt("not_a_current_design", 2, "3_place")
+        sup, _ = self.attempt("not_a_current_design", 2, "6_final")   # a newer ROUTED attempt: the guard lets the older one go
         self.kw_for(fin, sup)
         self.dx = {"all": True, "ledger": []}   # the drive's HOLD ALL file (snapshot failed)
         self.run_job("--classes", "a")
@@ -87,8 +92,8 @@ class Gate(T.Base):
         self.run_job("--classes", "a")                  # gate names only current designs: old_design is not one
         self.assertFalse(os.path.exists(fin))
         self.dx = None
-        self.run_job("--classes", "a", "--design-export", "off")   # explicit off opens the gate
-        self.assertFalse(os.path.exists(sup))
+        self.run_job("--classes", "a", "--design-export", "off")   # explicit off opens the export gate ...
+        self.assertTrue(os.path.exists(sup))                       # ... but the newest unsigned routed attempt stays (delete guard, 11-18)
 
     def test_drive_writes_hold_all_when_hook_fails(self):
         import types
