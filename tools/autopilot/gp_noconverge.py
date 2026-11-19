@@ -52,6 +52,13 @@ ROW_OLD = re.compile(r"Iter:\s*(\d+)\s+overflow:\s*([0-9.]+)", re.I)
 ROW_HPWL = re.compile(r"^\s*\d+ \|\s+[0-9.]+ \|\s+([0-9.]+(?:e[+-]?\d+)?) \|", re.I)
 HPWL_CLASS = "PLACE-HPWL"
 HPWL_RATIO = 1.3
+# FABLE-FIX-S81-LEAF 11-19 (COORD ruling, measurement bug): growth is counted only once the placement has converged, i.e. from the first table
+# row at overflow <= HPWL_CONV_OVERFLOW or from the first non-virtual timing repair (it only fires below keep_resize_below_overflow), whichever is
+# first.  Before that the table shows the compressed start (S81 leaf t27: HPWL flat at 4.33e6 um from iteration 0 to overflow 0.41, then 6.0e6 um
+# at 0.19), and exit / that minimum is the normal spread of a sparse macro-heavy block, not a divergence: two t27 kits 300 flops apart read
+# 1.275 (pass) and 1.39 (stop), t24 1.36 / 1.47, t37 1.38-1.40, kv_leaf t3 1.32, all of it before the repair.
+HPWL_CONV_OVERFLOW = 0.30
+ROW_OVF_HPWL = re.compile(r"^\s*\d+ \|\s+([0-9.]+) \|\s+([0-9.]+(?:e[+-]?\d+)?) \|", re.I)
 
 
 def overflows(lines):
@@ -107,28 +114,33 @@ def hpwl_min(text):
     return min(vals) if vals else None
 
 
-def hpwl_segments(text):
+def hpwl_segments(text, conv=HPWL_CONV_OVERFLOW):
     """[[HPWL rows], ...] of one global-place log, one list per netlist: a non-virtual timing-driven repair (GPL-0100
-    virtual: false) inserts buffers, so the rows after it measure another netlist than the rows before it."""
-    segs = [[]]
+    virtual: false) inserts buffers, so the rows after it measure another netlist than the rows before it.
+    Only CONVERGED rows are kept (see HPWL_CONV_OVERFLOW): the rows from the first one at overflow <= conv on, and every
+    row after the first non-virtual repair.  conv=None keeps every row (the reading before 11-19)."""
+    segs, ok = [[]], conv is None
     for line in (text or "").splitlines():
         if REPAIR.search(line):
             segs.append([])
+            ok = True
             continue
-        m = ROW_HPWL.match(line)
+        m = ROW_OVF_HPWL.match(line)
         if m:
-            segs[-1].append(float(m.group(1)))
+            ok = ok or float(m.group(1)) <= conv
+            if ok:
+                segs[-1].append(float(m.group(2)))
     return [s for s in segs if s]
 
 
 def hpwl_growth(text, exit_hpwl):
-    """(ratio, parts): growth of HPWL after its minimum, with the netlist change of each repair taken out.  Per netlist
-    segment the growth is (last row, or the measured exit HPWL for the last segment) / (lowest row of that segment);
-    the ratio is the product.  The step from the last row before a repair to the first row after it (the buffer nets)
-    is not counted.  One segment = exit / run minimum, the old reading."""
+    """(ratio, parts): growth of HPWL after the placement converged, with the netlist change of each repair taken out.
+    Per netlist segment the growth is (last row, or the measured exit HPWL for the last segment) / (lowest CONVERGED row
+    of that segment); the ratio is the product.  The step from the last row before a repair to the first row after it
+    (the buffer nets) is not counted.  A log with HPWL rows but no converged row has nothing to judge: (1.0, [])."""
     segs = hpwl_segments(text)
     if not segs:
-        return None, []
+        return (1.0, []) if hpwl_min(text) else (None, [])
     parts = [(exit_hpwl if k == len(segs) - 1 else s[-1]) / min(s) for k, s in enumerate(segs)]
     r = 1.0
     for q in parts:
@@ -144,11 +156,12 @@ def hpwl_gate(text, exit_hpwl, ratio=HPWL_RATIO):
     r, parts = hpwl_growth(text, exit_hpwl)
     seg = " x ".join(f"{q:.3f}" for q in parts)
     if r > ratio:
-        return "STOP", (f"{HPWL_CLASS}: global placement left at HPWL {exit_hpwl:.4e} um = {r:.2f} x the run minimum "
-                        f"{lo:.4e} um (limit {ratio:g}; per netlist segment {seg}, repair steps not counted); "
-                        f"the placement diverged after it had converged")
-    return "OK", (f"exit HPWL {exit_hpwl:.4e} um = {r:.3f} x run minimum {lo:.4e} um (limit {ratio:g}; per netlist "
-                  f"segment {seg}, repair steps not counted)")
+        return "STOP", (f"{HPWL_CLASS}: global placement left at HPWL {exit_hpwl:.4e} um = {r:.2f} x its converged minimum "
+                        f"(limit {ratio:g}; per netlist segment {seg}, rows from overflow <= {HPWL_CONV_OVERFLOW:g} or the first "
+                        f"repair on, repair steps not counted; run minimum {lo:.4e} um); the placement diverged after it had converged")
+    return "OK", (f"exit HPWL {exit_hpwl:.4e} um = {r:.3f} x its converged minimum (limit {ratio:g}; per netlist segment "
+                  f"{seg or 'none converged'}, rows from overflow <= {HPWL_CONV_OVERFLOW:g} or the first repair on, repair steps "
+                  f"not counted; run minimum {lo:.4e} um)")
 
 
 def hpwl_gate_main(log, exit_hpwl, ratio, marker=None):

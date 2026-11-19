@@ -1,6 +1,7 @@
 """PLACE-HPWL gate (FABLE-PD-S81-STRIP fix 1): gp_noconverge.py --hpwl-gate, its PRE_RESIZE hook and the gen_phys switch.
 Numbers are the S81 strip leaves of 11-16: t47 table minimum 1.100241e7 um, GPL exit measured 2.578385e7 (2.34 x);
-t28 1.944146e7 / 1.958761e7 (1.008 x)."""
+t28 1.944146e7 / 1.958761e7 (1.008 x).
+11-19: growth is counted from the first row at overflow <= 0.30 (t47: the 0.2222 row, 1.159559e7 -> 2.22 x)."""
 import sys
 from pathlib import Path
 
@@ -30,11 +31,11 @@ def test_table_minimum_ignores_resizer_rows():
 
 def test_t47_divergence_stops_t28_passes():
     v, why = G.hpwl_gate(LOG, 2.578385e7)
-    assert v == "STOP" and "PLACE-HPWL" in why and "2.34 x" in why
+    assert v == "STOP" and "PLACE-HPWL" in why and "2.22 x" in why and "run minimum 1.1002e+07" in why
     v, why = G.hpwl_gate(LOG, 1.02 * 1.100241e7)
     assert v == "OK"
-    assert G.hpwl_gate(LOG, 1.4e7, ratio=1.3)[0] == "OK"          # 1.27 x
-    assert G.hpwl_gate(LOG, 1.5e7, ratio=1.3)[0] == "STOP"        # 1.36 x
+    assert G.hpwl_gate(LOG, 1.5e7, ratio=1.3)[0] == "OK"          # 1.29 x the converged row (was 1.36 x the run minimum)
+    assert G.hpwl_gate(LOG, 1.55e7, ratio=1.3)[0] == "STOP"       # 1.34 x
     assert G.hpwl_gate("", 2.6e7)[0] == "OK"                     # nothing to judge: unchanged flow
 
 

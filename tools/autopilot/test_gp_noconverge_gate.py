@@ -124,8 +124,9 @@ def test_gen_installs_the_gate_once(tmp_path):
 
 
 def test_hpwl_growth_takes_the_repair_step_out():
-    """S81 leaf t37 attempt 8: buffers of the non-virtual repair add 3 % (6.671e6 -> 6.914e6); growth on each netlist
-    is 1.196 and 1.133.  The repair step is not growth; spreading before the repair still is."""
+    """S81 leaf t37 attempt 8: buffers of the non-virtual repair add 3 % (6.671e6 -> 6.914e6).  The repair step is not
+    growth, and (11-19) neither is the spread before the placement converged: the pre-repair rows are all above overflow
+    0.30, so only the 1.133 after the repair counts."""
     import gp_noconverge as G
     row = lambda i, o, h: "%9d |   %.4f |  %.6e |   +0.00%% |  1.0e-08 |      " % (i, o, h)
     pre = [row(0, 0.7515, 5.578922e6), row(310, 0.5144, 5.660772e6), row(360, 0.3358, 6.671055e6)]
@@ -134,10 +135,36 @@ def test_hpwl_growth_takes_the_repair_step_out():
     post = [row(370, 0.3872, 6.913760e6), row(385, 0.2393, 7.834546e6)]
     log = "\n".join(pre[:2] + [virt] + pre[2:] + [rep] + post) + "\n"
     r, parts = G.hpwl_growth(log, 7.8347e6)
-    assert len(parts) == 2 and abs(parts[0] - 1.1958) < 1e-3 and abs(parts[1] - 1.1332) < 1e-3 and abs(r - 1.355) < 2e-3
-    assert G.hpwl_gate(log, 7.8347e6)[0] == "STOP"                       # 1.36 x: over on spreading alone
-    assert G.hpwl_gate(log, 7.2e6)[0] == "OK"                            # 1.196 x 1.041 = 1.245
-    one = "\n".join(pre + post) + "\n"                                  # no repair: exit / run minimum as before
-    assert abs(G.hpwl_growth(one, 7.8347e6)[0] - 7.8347e6 / 5.578922e6) < 1e-9
+    assert len(parts) == 1 and abs(parts[0] - 1.1332) < 1e-3 and abs(r - 1.1332) < 1e-3
+    assert G.hpwl_gate(log, 7.8347e6)[0] == "OK"                         # was STOP at 1.36 x on pre-convergence spreading
+    assert G.hpwl_gate(log, 9.2e6)[0] == "STOP"                          # 9.2 / 6.914 = 1.33 after the repair: still caught
+    old = G.hpwl_segments(log, conv=None)                                # the reading before 11-19, kept for reference
+    assert len(old) == 2 and abs(old[0][-1] / min(old[0]) - 1.1958) < 1e-3
+    one = "\n".join(pre + post) + "\n"                                  # no repair: converged at the 0.2393 row only
+    assert abs(G.hpwl_growth(one, 7.8347e6)[0] - 7.8347e6 / 7.834546e6) < 1e-9
+    assert G.hpwl_growth("\n".join(pre) + "\n", 7.8347e6) == (1.0, []) and G.hpwl_gate("\n".join(pre) + "\n", 9e9)[0] == "OK"
     drift = "\n".join(pre[:2] + [rep, row(370, 0.39, 5.8e6), row(400, 0.25, 9.0e6)]) + "\n"
     assert G.hpwl_gate(drift, 9.0e6)[0] == "STOP"                        # drift after the last repair is still caught
+
+
+def test_hpwl_growth_counts_only_converged_rows_t27():
+    """FABLE-FIX-S81-LEAF 11-19, S81 leaf t27 proof kits (D8e): HPWL is flat at 4.33e6 um from iteration 0 to overflow 0.41 and
+    reaches 6.0e6 at 0.19; the old reading (exit / run minimum) gave 1.39 (STOP) on one kit and 1.275 (OK) on its twin 300
+    flops smaller, all of it before the repair.  From the first row at overflow <= 0.30 the growth is 1.18 and 1.10."""
+    import gp_noconverge as G
+    row = lambda i, o, h: "%9d |   %.4f |  %.6e |   +0.00%% |  1.0e-08 |      " % (i, o, h)
+    virt = "[INFO GPL-0100] Timing-driven iteration 1/2, virtual: true."
+    rep = "[INFO GPL-0100] Timing-driven iteration 2/2, virtual: false."
+    relay = [row(0, 0.8036, 4.331097e6), row(80, 0.7728, 4.317853e6), row(300, 0.6580, 4.341851e6), virt, row(340, 0.4149, 4.385265e6),
+             row(350, 0.3573, 4.761265e6), row(360, 0.2494, 5.154157e6), row(370, 0.2707, 5.414911e6), row(380, 0.2594, 5.684366e6),
+             row(390, 0.1861, 6.002058e6), rep, row(390, 0.1861, 6.064049e6)]
+    log = "\n".join(relay) + "\n"
+    assert abs(6.0639e6 / G.hpwl_min(log) - 1.404) < 2e-3                 # the old reading: over 1.3 on spreading alone
+    r, parts = G.hpwl_growth(log, 6.0639e6)
+    assert len(parts) == 2 and abs(parts[0] - 6.002058e6 / 5.154157e6) < 1e-9 and parts[1] <= 1.0 and abs(r - 1.1645) < 1e-3
+    v, why = G.hpwl_gate(log, 6.0639e6)
+    assert v == "OK" and "converged minimum" in why and "run minimum 4.3179e+06" in why
+    assert G.hpwl_gate(log, 8.2e6)[0] == "STOP"                           # 1.1645 x (8.2 / 6.064) = 1.57 after the repair
+    # a row that bounces back over 0.30 after convergence still counts (370: 0.2707 here; t37 0.3872 after its repair)
+    bounce = "\n".join([row(0, 0.80, 4.0e6), row(100, 0.29, 5.0e6), row(110, 0.45, 5.2e6), row(120, 0.20, 7.0e6)]) + "\n"
+    assert abs(G.hpwl_growth(bounce, 7.0e6)[0] - 1.4) < 1e-9 and G.hpwl_gate(bounce, 7.0e6)[0] == "STOP"
