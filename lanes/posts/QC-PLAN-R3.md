@@ -398,3 +398,4 @@
   - Then live_tree apply of pack_n45c (6 files: plan zz_s29_qc103_s4q9n45.json dad42b93, lctx3_core 5a45c6152e06, tools bind/schema/reset_port_relays/relay_branch at 913e191a0b77; each live file checked against its expected predecessor) on 6 gen hosts -> qwen_compute_n45_s0, event s29q103S4Q9N45C.
   - Then bind-first publish_apply (rt 5990546bfe29): expect-source n43_s3, expect-event s29q103S4Q9N43R.
   - My own chain bind S4Q9N45C keeps running alongside for comparison.
+- 2026-11-19 04:41 PST POST-APPLY-BIND [QC-PLAN-R3 -> COORD] qwen_compute tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_n43_s3: strict bind + LATCHECK in hardlink copy /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_n43_s3_postbind_1119041444 on epyc9: ELAB_RC=0 BIND_RC=0 LATCHECK_RC=0 -> PASS; log hub:/home/ubuntu/.local/state/ot-postbind/postbind-qwen_compute-1119041444.log
