@@ -3,7 +3,7 @@
  "lane": "FABLE-FIX-S81-LEPE",
  "for": "S81-DIE-R3 (D8h)",
  "type": "dsdv_slice_lepe_mu_LP__t2",
- "status": "CANDIDATE, ONE ROW, REPLACES the 71-tap row and v1 of this file: (a) 4 rx bank moves, (b) clock.taps += added_taps (existing 23 keep name + xy), (c) clock.tap_span_um = 300 (kit pair planner + cap pass keep the regions; needs main >= 57b6f1261de in the die tools), (d) lep switches OT_S81SL_LEP_CRP=2 + OT_S81SL_LEP_WREP=5 (main >= 31fcf236383). Apply together.",
+ "status": "CANDIDATE, ONE ROW, REPLACES the 71-tap row and v1 of this file: (a) 4 rx bank moves, (b) clock.taps += added_taps (existing 23 keep name + xy), (c) clock.tap_span_um = 300 (kit pair planner + cap pass keep the regions; needs main >= 57b6f1261de in the die tools), (d) lep switches OT_S81SL_LEP_CRP=2 + OT_S81SL_LEP_WREP=5 (main >= 31fcf236383). Apply together. (e) clock.insertion_ps 306 (core-tap effective insertion), (f) reset.consumer_sites_um = the 23 pre-row taps (no renumbering, no new bind).",
  "proof": "tap class proven at CTS on the 71-tap private kit (tap mean spread 311 -> 93 ps, TT -797.6 -> -506.75). THIS 122-tap table has no kit yet; the full-form kit (proof4) carries the older 71-tap banks table, not this one.",
  "limits": "solved from the 23 original taps on the 71-tap kit placement with only the 4 macro boxes moved; nearest-tap split, not as-built; one tap stays over the 1000 target (see taps_over_1000) and over the 1500 cap if listed there.",
  "tool": "main tools/die_plan/tap_resolve.py --span-um 300 --target 1000 --min-new 1 --max-add 400",
@@ -749,5 +749,127 @@
     54.0
    ]
   }
- ]
+ ],
+ "clock_insertion_ps": 306,
+ "reset_consumer_sites_um": [
+  [
+   "clk",
+   651.808,
+   613.408
+  ],
+  [
+   "clk_t1",
+   17.76,
+   17.312
+  ],
+  [
+   "clk_t2",
+   96.8,
+   17.312
+  ],
+  [
+   "clk_t3",
+   1426.08,
+   64.48
+  ],
+  [
+   "clk_t4",
+   1426.08,
+   178.784
+  ],
+  [
+   "clk_t5",
+   1426.08,
+   285.344
+  ],
+  [
+   "clk_t6",
+   651.808,
+   306.72
+  ],
+  [
+   "clk_t7",
+   1426.08,
+   375.968
+  ],
+  [
+   "clk_t8",
+   1426.08,
+   453.152
+  ],
+  [
+   "clk_t9",
+   651.808,
+   920.16
+  ],
+  [
+   "clk_t10",
+   45.92,
+   1209.632
+  ],
+  [
+   "clk_t11",
+   107.488,
+   1209.632
+  ],
+  [
+   "clk_t12",
+   238.112,
+   1209.632
+  ],
+  [
+   "clk_t13",
+   361.504,
+   1209.632
+  ],
+  [
+   "clk_t14",
+   428.32,
+   1209.632
+  ],
+  [
+   "clk_t15",
+   561.12,
+   1209.632
+  ],
+  [
+   "clk_t16",
+   709.856,
+   1209.632
+  ],
+  [
+   "clk_t17",
+   888.992,
+   1209.632
+  ],
+  [
+   "clk_t18",
+   1018.464,
+   1209.632
+  ],
+  [
+   "clk_t19",
+   1080.8,
+   1209.632
+  ],
+  [
+   "clk_t20",
+   1200.48,
+   1209.632
+  ],
+  [
+   "clk_t21",
+   1330.08,
+   1209.632
+  ],
+  [
+   "clk_t22",
+   1391.584,
+   1209.632
+  ]
+ ],
+ "kit_results_1119": {
+  "taps_only_71": "tap mean 214..306 (spread 93), TT -506.75 / tns -192.8k, FF hold -200.94 on 14.6k ends (cross_tap 7,907 ws -200.9, port_in 3,725 ws -127.6, port_out 2,593 ws -147.8, same_tap 392 ws -38.6); control att22 311 / -797.6 / -441.9 on 19.0k",
+  "full_form_71_banks_CRP2_WREP5": "tap mean 191..306 (spread 116), TT -530.49 / tns -221.9k, FF hold -199.07 on 14.8k ends: NO TT gain over taps-only at post-CTS placement RC; the bank moves + RTL switches did not show up in the worst path here"
+ }
 }
