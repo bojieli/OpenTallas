@@ -680,3 +680,4 @@
 - 2026-11-19 12:17 PST STATE tools sync recovered after 268 min (rt/current 6dd135d75515)
 - 2026-11-19 12:29 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kw43-wave-1109n on intel1 wrote 241 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
 - 2026-11-19 12:29 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kw45 on intel1 wrote 183 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
+- 2026-11-19 12:30 PST DISK-RATE epyc2 /srv/opentallas-scratch: free 582 GB, falling 153 GB/h, floor 50 GB in 3.5 h (cron disk_rate.py; read-only)
