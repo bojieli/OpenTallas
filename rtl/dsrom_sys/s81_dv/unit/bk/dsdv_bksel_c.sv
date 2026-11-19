@@ -6,6 +6,25 @@
 // (XDX + ceil((RC + RS) / 2)), the landing FIFO / initial credits grow by OT_BKSEL_DMX (control AND quarter), and
 // OT_BKSEL_SLX adds status latency.  All 0 = as built.  The stations are reset-less: they flush to the quarters'
 // reset zeros while rst is held (S81 boot holds rst_n >= 64 clk, more than any station depth).
+// S81-GEOM-OPUS 11-19 (bank-leaf; FABLE-FIX-S81-LEAF netlist trace, main 35d4334b5b42: bk_sel__t2 had 22 core-to-core links,
+// 0 stages, 16 over 405 um): OT_BKSEL_A2P = the S81-A2 station profile as ONE bare macro name, because plan verilog_defines take
+// bare names only (gen_phys.type_verilog_defines): RC 3, RS 3, RO 4, RLN 3, for the re-placed bk_sel__t2 core layout where every
+// control <-> quarter / glue -> quarter link is <= (D + 1) x 405 um.  The control core dsdv_bksel_c MUST be hardened with the same
+// macro (XDX = 1 + ceil((RC + RS + QRX) / 2) = 5 with the eco3 QRX 1); quarters unchanged (DMX 0).  Explicit OT_BKSEL_* defines win.
+`ifdef OT_BKSEL_A2P
+`ifndef OT_BKSEL_RC
+`define OT_BKSEL_RC 3
+`endif
+`ifndef OT_BKSEL_RS
+`define OT_BKSEL_RS 3
+`endif
+`ifndef OT_BKSEL_RO
+`define OT_BKSEL_RO 4
+`endif
+`ifndef OT_BKSEL_RLN
+`define OT_BKSEL_RLN 3
+`endif
+`endif
 `ifndef OT_BKSEL_RC
 `define OT_BKSEL_RC 0
 `endif
