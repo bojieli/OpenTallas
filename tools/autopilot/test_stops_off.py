@@ -1025,3 +1025,30 @@ class FlowFixes2355(unittest.TestCase):
         self.assertTrue(hung)                     # CPU dipped by 20 s (an exited child): the 120-min clock was not reset
         hung, w, _ = KW.hung_judge({"cpu": 5000.0, "t": t0}, {"cpu": 100.0, "log": t0 - 9999}, t0 - 9999, t0 + 130 * 60, 120)
         self.assertFalse(hung)                    # a real restart (CPU fell by thousands of seconds) restarts the clock
+
+
+class RetryHost(unittest.TestCase):
+    """COORD / FLEET-OPS-R 11-18: an INFRA / OOM retry goes to the gen host with the most free memory, not the host that killed it"""
+
+    def cfg(self):
+        return {"_hub": "hub", "_otrun_status": {"epyc7": {"admit": 5, "wait_gb": 0}, "epyc8": {"admit": 200, "wait_gb": 50}, "epyc9": {"admit": 120, "wait_gb": 0}, "localhost": {"admit": 300, "wait_gb": 0}},
+                "dies": {"s81": {"event": "E", "gen_host": "epyc7", "gen_hosts": ["epyc7", "epyc8", "epyc9"]}}}
+
+    def test_killed_hosts_reads_the_latest_infra_attempt(self):
+        st = {"items": {"a": {"die": "s81", "item": "t", "attempt": 22, "status": "FAIL", "class": "FLOW", "started": 1},
+                        "b": {"die": "s81", "item": "t", "attempt": 23, "status": "RETRY-INFRA", "class": "INFRA", "started": 2, "gen_host": "epyc7", "ran_on": "epyc7"}}}
+        self.assertEqual(KW.killed_hosts(st, "s81", "t"), ["epyc7"])
+        st["items"]["b"]["class"] = "FLOW"
+        st["items"]["b"]["status"] = "FAIL"
+        st["items"]["b"]["reason"] = "design error"
+        self.assertEqual(KW.killed_hosts(st, "s81", "t"), [])
+
+    def test_most_free_memory_wins_the_hub_is_a_candidate_the_killer_is_avoided(self):
+        cfg = self.cfg()
+        self.assertEqual(KW.retry_gen_host(cfg, "s81", "t", ["epyc7"], "epyc7"), "hub")             # 300 free on the hub
+        cfg["_otrun_status"]["localhost"]["admit"] = 10
+        self.assertEqual(KW.retry_gen_host(cfg, "s81", "t", ["epyc7"], "epyc7"), "epyc8")           # epyc8 has 200-50 = 150 free, epyc9 120
+
+    def test_without_status_or_alternatives_the_default_stays(self):
+        cfg = self.cfg(); cfg["_otrun_status"] = {}
+        self.assertEqual(KW.retry_gen_host(cfg, "s81", "t", ["epyc7"], "epyc7"), "epyc7")

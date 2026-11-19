@@ -5738,6 +5738,35 @@ def pick_gen_host(cfg, die, take=0, threads=0, item=None):
     return best
 
 
+def killed_hosts(st, die, item):
+    """FABLE-FLOW-2355: the host(s) that just killed the latest attempt of (die, item) (INFRA / OOM / guard kill: INFRA_KILLED, killed_attempt), '' otherwise -> [host, ...]"""
+    rows = [r for r in (st.get("items") or {}).values() if r.get("die") == die and r.get("item") == item]
+    if not rows:
+        return []
+    last = max(rows, key=lambda r: float(r.get("started") or 0))
+    if not (last.get("status") in ("RETRY-INFRA", "FAIL", "CANCELLED") and (last.get("class") == "INFRA" or killed_attempt(last))):
+        return []
+    out = [last.get("ran_on"), last.get("gen_host"), str(last.get("kit") or "").partition(":")[0], (last.get("q_hosts") or [None])[-1] if isinstance(last.get("q_hosts"), list) else None]
+    return [h for h in dict.fromkeys(out) if h]
+
+
+def retry_gen_host(cfg, die, item, avoid, default):
+    """COORD / FLEET-OPS-R 11-18 (kv_leaf__t2 died 23 times on the host that killed it): an attempt after an INFRA / OOM kill goes to the gen host with the most FREE memory (the ot-run status row's
+    admit GB), never back to the host that killed it while another is usable.  The hub counts as a candidate when it has a status row.  The caller still checks that the host holds the source tree
+    (tree_host_for).  -> host"""
+    stt, hub = cfg.get("_otrun_status") or {}, cfg.get("_hub") or ""
+    hs = list(gen_hosts(cfg, die, item))
+    if hub and stt.get("localhost") is not None and hub not in hs:
+        hs.append(hub)
+    cand = [h for h in hs if h not in set(avoid or ())] or hs
+    if not cand or not stt:
+        return default
+    key = lambda h: stt.get("localhost" if h == hub else h) or {}
+    free = lambda h: int(key(h).get("admit", 0) or 0) - int(key(h).get("wait_gb", 0) or 0)
+    best = max(cand, key=lambda h: (free(h), -hs.index(h)))
+    return best if key(best) else default
+
+
 def alt_charge(cfg, h):
     """KW-FIX-38 11-08: one new attempt booked on host h's scratch2 alternative (gen_need_gb); below room it is off for
     the rest of the tick, so one tick cannot send more kits to the alternative disk than it holds"""
@@ -10076,6 +10105,15 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
                                                   and v.get("item") == r["item"]]) + 1
     jd = Path(AP.AP_DIR) / "kit_wave" / re.sub(r"[^A-Za-z0-9_.-]", "_", key) / f"a{attempt}"
     sp = spec_for(cfg, die, r["item"], hub, r.get("parent_item") or prev.get("parent_item"), kind=r.get("kind") or "type")
+    if not arm:
+        _kh = killed_hosts(st, die, r["item"])
+        if _kh:
+            _nh = retry_gen_host(cfg, die, r["item"], _kh, sp["gen_host"])
+            if _nh != sp["gen_host"] or sp["gen_host"] in _kh:
+                AP.log(f"KIT-WAVE RETRY-HOST {die}/{r['item']}: the last attempt was killed on {','.join(_kh)}; gen host {sp['gen_host']} -> {_nh} (most free memory)")
+            sp["gen_host"] = _nh
+            sp["place_prefer"] = [_nh] + [h for h in sp.get("place_prefer") or [] if h != _nh]
+            sp["hosts"] = [_nh] + [h for h in sp.get("hosts") or [] if h != _nh]
     sp.update(rt_tools_fields(cfg, die))                   # TOOLS-DECOUPLE-1118: tools = this scheduler's rt/<sha>, fixed for the attempt
     sp["item_disk_gb"] = item_disk_gb(cfg, die, r["item"], r.get("replicas"))
     sp["host_fall_gb_h"] = dict(cfg.get("_disk_fall") or {})
