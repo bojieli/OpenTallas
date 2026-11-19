@@ -1,3 +1,210 @@
+# FABLE-CLOSURE-STRATEGY 2026-11-19 05:55 PST (0555): the tap rows fix the tree, not the contract; which 03:30 levers held
+
+Reviewer: FABLE-CLOSURE-STRATEGY-05xx (Fable). Read-only: no job launched, killed or patched. Technical PD only; HBM parked.
+Gate (R-MINIMAL): DRC 0, routed TT >= -42 ps, internal FF hold >= 0, bind + lane latency.
+Marking: **V** = I opened the log or file this round. **R** = reported by the named lane. **I** = inferred. **P** = proposal.
+State (V, failure_breakdown 05:10): signed any plan 458, current plan 403. Types signed: S81 44 / 394, QC 28 / 130, KV 6 / 56, HEAD 24 / 26.
+Nothing below is a hold (r703).
+
+## 0. Headline
+
+1. **The S81 families that fail are the ones whose kit SDC carries a 100 to 208 ps tap window; the col families carry 40 ps (V).** The window is
+   `clock.tap_window.per_port_ps` in the plan, measured 11-05 on a die clock tree that no longer exists. It is written as an early source latency
+   on each tap port, so a cross-tap path loses up to that much setup and needs that much hold padding. Leaf: 2,883 of 5,557 ports at 100 ps or more.
+   The new tap rows do not touch it, and every added tap gets a 44 ps fallback that nobody measured. Lever 1.
+2. **The tap region rule works on the tree and does not move TT by itself (V).** Two lepe proof kits: 0 of 52 and 0 of 70 taps at 100 ps or more
+   in-tap skew (control family 15 of 39). TT on nh_mus_LP t1 went -926 to -786 only; the full-form mu_LP kit (-530) is no better than taps-only (-507). Lever 2.
+3. **Slice C types cannot close on depth plus window alone (V + R).** Zero-wire depth 668 to 724 ps (R) plus a 134 to 208 ps window (V) is 833 ps
+   or more before any wire. Levers 1 and 3 are both needed there.
+4. **Whole-type automatic siting made three kits worse (R); single-bus topology fixes worked (R).** Lever 4.
+5. **No die has a landed verdict on its clock of record (R).** HEAD's 6 fails and its 0-fail fix are both on the wrong start form; KV has 9 real
+   fails; S81 and QC have no tree. The intra-hold numbers on HEAD and KV both start at a hard-core clock tap. Lever 5.
+
+## 1. Levers ranked by closure impact
+
+| # | die | lever | types | owner |
+|---|---|---|---|---|
+| 1 | S81 (HEAD, KV in reverse) | regenerate the die clock of record on the region taps, re-measure `per_port_ps`, target 60 ps per type; no blanket window raise on HEAD / KV | leaf 75, kv_leaf 5, slice C 12, lepe / lepw 8, bk_sel, gunit, part of serdes 8 and slice_station 43; HEAD 22, KV pc | S81-DIE-R3 (tree + table), FABLE-FIX-S81-LEPE (STA-only read), DIE-LEVEL-CHECK-1119 (measure), HEAD-CROSSING-1119 |
+| 2 | S81, QC, KV | roll the region tap rows out through the reset key, without a bind; balance to the core-tap insertion, not to 250 | leaf 78 rows, slice C 11, lepe / lepw 4, QC 6 short types + coll_core, KV pv 16 | S81-DIE-R3, FABLE-FIX-S81-LEAF, S81-SLICE-C-TAPS, FABLE-FIX-S81-LEPE, QC-PLAN-R3, FABLE-FIX-KV-PV |
+| 3 | all | depth: confirm the ABC recipe on the 17 types that really exceed 600 ps; keep_hierarchy where it is not enough; kv3_pc needs RTL | 17 measured (kv3_pc 4, slice C 7, lepe / lepw 4, glue, native59) + hd_ctl | KIT-SYNTH-TARGET-1119, CBC-RULES-1119 (zero-wire tool), KV-PC-HGI-1119, FABLE-FIX-HEAD-MESH-O |
+| 4 | S81, QC, KV | reach by named bus only: relay stage or re-aim at a hand site; regions only after the snap proof; recount every distance-only cycle row pin to pin | seqhost, col_h9_r1 60, col_h10 / h9_r0 families, glue, coll_core, sle / slw st_b 12, KV pv 16, QC 52 slots | CBC-RULES-1119, FABLE-FIX-S81-SEQHOST, S81-GEOM-OPUS, FABLE-FIX-S81-GLUE, QC-COLL-CORE-1118, SONNET-FIX-QC, FABLE-FIX-KV-PV |
+| 5 | KV, HEAD, S81, QC | landed verdict on the form of record; core-tap early offsets from the signed core latency | 4 dies | DIE-LEVEL-CHECK-1119, KV-D23-COMPOSE, HEAD-CROSSING-1119, S81-DIE-R3, QC-PLAN-R3 |
+| 6 | S81 | col GRT: start col_h9_r1 / r2 kits with the post-GRT max-wire repair skipped | 120 | FABLE-FIX-S81-COLH9R1 |
+| 7 | S81 | svc: H8 provider form, with the three open items below | 16 | S81-SVC-SPLIT-1119, S81-DIE-R3 |
+
+### Lever 1. The tap window in the kit SDC
+**Evidence (V).** Kit `constraint.sdc` and `config.mk` of 246 kit job folders under `ot-jobs` on epyc7, epyc8, epyc10, intel1, epyc2, joined with
+`tt_setup_measure.log` and the `OT_PREGRT_FF_HOLD class before` line of the same kit. Per family: ports with a window of 100 ps or more, the
+post-CTS TT (median), and the cross-tap hold class before repair (FF, median worst slack / endpoints).
+
+| family (kits) | ports >= 100 ps | type max window | CTS TT | cross-tap hold |
+|---|---|---|---|---|
+| ot_s81sl_leaf (30) | 642 / 1,358 | 140 median, 208 max | -475 | -209 / 5,476 |
+| dsdv_slice_iq_C (1) | 51 / 51 | 208 | -1,308 | -542 / 33,470 |
+| dsdv_slice_c1x_C (7) | 261 / 293 | 156 | -4,306 | -316 / 29,475 |
+| dsdv_slice_kv512_C (1) | 41 / 41 | 171 | -1,556 | -390 / 18,562 |
+| lepe_nh_mus_C, lepw_mus_C | 91 / 91 | 170, 136 | -1,533, -1,529 | -230 / 16,618, -301 / 22,843 |
+| lepe_mu_LP, lepe_nh_mus_LP | 37 / 44 | 208 | -798, -926 | -442 / 13,429, -462 / 9,719 |
+| kv_leaf (3) | 9 / 125 | 122 | -874 | -405 / 7,111 |
+| slice_station (15) | 112 / 734 | 130 median, 175 max | +97 | -85 / 432 |
+| col_h9_r0 / r1 / r2, col_h10 (51) | 2 / 1,801 | 40 | -9 to -423 by family | -50 to -123 / 115 to 633 |
+
+- The SDC (lepe_mu_LP proof4, V): `set_clock_latency -source -early -clock clk -208` on `clk clk_t2 clk_t3 clk_t6 clk_t7 clk_t14 clk_t15`, -139 to
+  -204 on the other original taps, -44 on every added tap, `-late 0` on all. Comment: "MEASURED per port ... 44..208 ps; IO shift input -208 /
+  output +44 ... FALLBACK". Hold gate line: `structural limit -308.0 (contract in_min -40, tap window 208)`.
+- The plan (V, D8g tree `plan_h2_2249.json` `clock.tap_window`): leaf 75 types, 2,883 of 5,557 ports at 100 or more, median 100, max 208. bk_sel
+  51 of 51 (median 185). gunit 50 of 74. c1x_C 268 of 312. lepe / lepw LP medians 163 to 208. serdes 85 of 402. slice_station 233 of 1,854.
+  Every col family 40. Note in the plan: per-port values from TAPWIN-PORT-1105, proof `s81/r98`, on the ckclk3 tree.
+- The lepe proof kits (V): after the region taps, tap means 233 to 306 and in-tap skew at most 67 ps, yet cross-tap hold is still -220 on 12,297
+  ends (nh_mus_LP) and -199 on 7,886 (mu_LP). That is the window, not the tree.
+- R (FABLE-FIX-S81-SEQHOST 05:10): all u_win ends outside the reach class sit at -20 to -122 "under a 160 ps adverse launch / capture tap skew".
+- The clock-of-record kit for S81 (ECOv3, 43 levels) is on no host and has no `ot_clk` config (R, DIE-LEVEL-CHECK 04:57).
+
+**Root cause.** The kit closes against a tap-to-tap arrival contract. On S81 that contract is two weeks old, from another tree and another tap
+table, and on half the leaf ports it takes 100 to 208 ps of an 833 ps cycle from every cross-tap path (I for the per-path amount; V for the SDC
+form and the hold class). The same contract forces 5,000 to 33,000 hold insertions per kit before GRT. The col families have 40 ps and are the
+families that close.
+
+**Fix (P).**
+1. FABLE-FIX-S81-LEPE and FABLE-FIX-S81-LEAF, today, no place or route: STA only on the existing `4_cts.odb` of the nh_mus_LP t1 proof and of
+   t27keep, same SDC with every early latency set to -60. The difference in TT and in cross-tap hold ends is the share the contract owns.
+2. S81-DIE-R3: write the S81 tree as an `ot_clk` config (the kv_7yhr route), build it on D8h with the region tap tables, and run
+   `die_sta_related` for `per_port_ps`. Design target: taps of one partition hang from one balanced leaf branch, window 60 ps or less per type.
+   S81-DIE-R3 already names the limit: 50 taps per 600-um leaf driver (04:52). Protect the kit from cleanup.
+3. Until the measurement exists, a tap table is not frozen against the 11-05 values or the 44 ps fallback: a kit that closes on 44 and meets
+   150 at die level has to be rebuilt.
+4. HEAD and KV, the reverse case. HEAD-CROSSING 05:10 proposes TAPWIN-FLOOR: 535 port rows, 23 per-type raises (hd_mesh 83 -> 100, hd_ctl 44 -> 90,
+   hd_spn 70 -> 100, hd_serdes 50 -> 100). hd_mesh is at TT -32.9 and hd_ctl at -45 in their ECO passes; 17 and 46 ps more window puts both under
+   the gate (I). Take the structural row instead (rebalance the lep0N leaf branch to the core-tap target, 186 ps) and raise only the lep0N ports.
+   KV the same: need 178 against W 36 comes from pc_ES_2 `clk_c3 <-> clk_c4`, two core taps (Lever 5), not from the type.
+
+### Lever 2. Region tap rows: what the proofs show, and how they reach kits
+**Evidence (V, `4_1_cts.log` of the three lepe proof kits on epyc9).**
+
+| kit | taps (>= 100 sinks) | skew >= 100 / >= 60 | tap insertion | TT after repair | control TT |
+|---|---|---|---|---|---|
+| lepe_mu_LP t2 taps-only (proof) | 83 (70) | 0 / 4 | 251 to 359 | -507 (R) | -798 |
+| lepe_nh_mus_LP t1 taps-only | 61 (52) | 0 / 3 | 250 to 311 | -786 | -926 |
+| lepe_mu_LP t2 full form (banks + taps + CRP2 + WREP5) | 83 (70) | 2 / 9 | 246 to 386 | -530 | -798 |
+
+- The region rule is confirmed as the in-tap skew fix. It is not a closing row: nh_mus_LP still has 1,871 ends below 0 and the TT repair moved
+  nothing (wns -785.86 before and after, 22 cells).
+- The full form is not better than taps-only on the same type, and its taps are worse (2 over 100 ps, clk_t8 at 386 ps insertion). It carries the
+  older banks table (R). Its endpoint classes have not been read.
+- `OT_TAP_BALANCE` (V): the register taps are padded to a 250 ps target while the hard-core taps `clk_c0 / c3 / c6 / c9` sit at 306 and cannot
+  move. The reported spread (73, 116) is mostly that gap.
+- None of the W+H 300 tables (leaf 78 types, iq_C, kv512_C, c1x_C x9, lepe / lepw x3) has a kit. The leaf A/B has no CTS result (R).
+- R: `reset.consumer_sites_um` (main b7b2095a5066) passed gen phys on leaf t16 with 239 added taps; no complete kit. Without the key, QC N4.5c
+  failed its bind on `rst_n_t383` and KV pv class T shifted every reset reference (22 to 38 hops per type, up to 2,158 um).
+- R: die M9 / M8 drop capacity 2.9 % worst; about 7 % with the leaf tables.
+
+**Fix (P).**
+1. FABLE-FIX-S81-LEPE (`tap_balance.tcl`): target = the largest core-tap insertion of the type when the type has core taps. No plan change.
+2. S81-DIE-R3: one generation of leaf t16 with the key decides whether the 78 + 15 tap rows apply without a bind. If it generates, apply them on
+   D8h with `clock.tap_span_um 300`; first CTS read on iq_C t1 (worst control: 20 of 45 taps over 100 ps, 378 ps).
+3. FABLE-FIX-S81-LEPE: read the endpoint classes of proof4 before D8h takes the banks + CRP + WREP row; taps-only is the better kit today.
+4. QC-PLAN-R3 (N4.6): key first, then taps for the 6 short types and coll_core (43 taps for 65,949 sinks). FABLE-FIX-KV-PV: class T on the key.
+
+### Lever 3. Depth
+**Evidence (R).** KIT-SYNTH-TARGET 04:55: recipe on main d460443cd51, default for all kits. Max levels hd_ctl 23 -> 14, kv3_pc 29 -> 24, kv_leaf t5
+21 -> 17, leaf t57 15 -> 12; kv3_pc zero-wire TNS -22.9 ns -> -1.1 ns (150 -> 11 ends). LEC closed on 1 of 4. CBC-RULES 04:56 (old recipe): 17 of
+53 measured types exceed 600 ps zero-wire: kv3_pc x4 907 to 979, glue 738, lepw_mus_C 724, lepe_nh_mus_C 710, c1x_C t8 705, iq_C 701, c3x_C 682,
+kv512_C 670, c1x_C t6 668, lepe_mu_LP 651, native59 645, sle_stm_v1 629, lepw_mu_LP 612. All leaf types are under (463 to 502).
+FABLE-FIX-S81-SEQHOST 05:10: keep_hierarchy is worth about 250 ps on u_win (-389 -> -122).
+**Reading.** Leaf is not a depth family; its problem is Levers 1, 2 and 4. Slice C and lepe / lepw are depth plus window. kv3_pc is still 24 levels
+after the recipe: it needs a pipeline stage in RTL.
+**Fix (P).** KIT-SYNTH-TARGET-1119 re-runs the one-pass zero-wire tool with the new recipe on the 17 types and posts what is still over 600.
+For those, `keep_hierarchy` on the bound sub-module with the state loop, then RTL. KV-PC-HGI-1119 owns the kv3_pc stage (4 types).
+FABLE-FIX-HEAD-MESH-O: one hd_ctl kit on the new recipe beside the ECO; 23 -> 14 levels is more margin than the ECO can find at -45.
+
+### Lever 4. Reach: what worked and what did not
+**Worked (R).** col_h9_r1 trunk re-aim, CTS -278 -> -13.6, 623 ends -> 0 (GRT not read). Glue relay core, kit F +30.85 at CTS (control -24).
+KV t2 split, 0 cycles, strip overflow 12,000 -> 4,560. coll_core tx stations on the direct path over M6 / M7, 3 lane-cycles saved.
+**Did not (R).**
+- PAD-CHAIN-SITE auto on sle_ctl: -97.9 -> -182.9, tns x 7.7, with 39,775 cells sited.
+- Leaf t27relay (forms A + B proxy): -407 against t27keep -230.
+- Glue timing-driven keys: kit E -176, kit D -49 against control -24.
+- Regions: DPL-0033 on glue H and leaf t27fence. Cause found (box off the site grid); snap on main 133514c255cf; in-flow proof H2 not back.
+  The leaf region also took the wrong flops (output registers whose loads are far cores).
+- CBC ft span: (w+h)/2 on corner slots priced 98 um at 1,884; all 52 QC rows withdrawn (FABLE-PD-QC-0407).
+**Root cause (I).** A fix that adds a stage or a copy on one named bus at a hand-checked site changes the topology and holds. A mode that
+re-sites thousands of cells toward computed centroids fights the placer and the other sinks of the same registers.
+**Fix (P).**
+1. CBC-RULES-1119: pin-to-pin span; then recount the three distance-only sets before any is bound: KV pv class C (+843 cycles on 132 lanes,
+   "all pure distance with no logic", R), S81 162 far branches, QC st_b form A (+2). Core-free buffered legs close to about 550 um (03:30).
+2. FABLE-FIX-S81-SEQHOST row (+2 stations 0S, +1 0N, mu_c / mu_rc kept at the core): take it in D8h; the residue (-122) is Lever 1.
+3. FABLE-FIX-S81-GLUE: H2 result first. Then regions in this order: coll_core `srr` (QC-COLL-CORE-1118), seqhost `mu_c* / mu_rc*`, leaf vp
+   with the fan-in walk and without pin-register flops.
+4. SONNET-FIX-QC: PAD-CHAIN-SITE auto off; site only the chains of the failing bus (st_a_st_b_o, 428 bits without a register within 50 um, R).
+5. S81-GEOM-OPUS: the col_h9_r1 pattern (trunk aimed at a 1-bit reset capture) on col_h10_r1, col_h10_r2, col_h9_r2 is generated (R); the
+   col_h10_r0_p4 proof kit to GRT TT is still the missing read. V: 14 of 17 col_h9_r1 wave kits print the same CTS line (-290.47, 633 ends),
+   so one proof covers them.
+
+### Lever 5. Die level
+**Evidence (R, DIE-LEVEL-CHECK and HEAD-CROSSING).**
+- KV D25c on kv_7yhr: GRT overflow 0; landed 9 fails of 3,915 (4 on hg_ES_7 -> pc_ES_7, +73.8 TT / +1.0 FF against a need of 100); start skew
+  15 of 159; setup +490. Intra hold -222 (pc_ES_2 `clk_c3 <-> clk_c4`); kit-contract hold -142.
+- HEAD NF15f: the 6 landed fails and the 0-fail fix were both computed on the generic data-start-tree form; the plan of record is START-TREE-1
+  (427 ports, 1,846 regions). Neither number is a verdict. Intra hold -176: lep0N leaves arrive 186 ps after the early core tap `clk_c1`.
+- S81: generic tree only; default CA left 66 crossings without K / DEPTH. QC: M4 kit found on epyc2, abstracts are s4q9m4, not N4.3.
+- R (FABLE-FIX-KV-PV): pc core clock insertion about 318 ps against the plan's 250.
+**Root cause (I).** Both intra-hold numbers start at a hard-core clock tap whose real insertion differs from the early offset the die tree was
+balanced to. V on S81: lepe core taps at 306 against a 250 target.
+**Fix (P).**
+1. DIE-LEVEL-CHECK-1119: per die, list every core tap with plan `early_ps`, signed `core_latency`, and the die-tree arrival; rows where they
+   differ by more than 30 ps go to the die owner as core-tap offset rows. This is a table from existing files, not a run.
+2. KV-D23-COMPOSE: the hg_ES_7 -> pc_ES_7 window (+26 TT / +99 FF) and the 5 single crossings, in D25e.
+3. HEAD-CROSSING-1119: `head_current_ca.py` on the l1119c_t2p proof once the NF15f regions map and ring spec are named.
+4. S81-DIE-R3 / QC-PLAN-R3: tree of record as in Lever 1; QC re-cuts the M4 tree for partitions N4.x moved.
+
+### Lever 6. col GRT
+R (FABLE-FIX-S81-COLH9R1 03:29, V by that lane on 3 kits): the post-GRT max-wire `repair_design` goes flat for 1,800 s at 10 to 11 thousand of 86
+thousand nets, the script re-runs GRT once, and the second pass adds 1 to 2 h. 23 col_h9_r2 and 31 col_h9_r1 kits ended there.
+**Fix (P).** Gen env for col_h9_r1 / r2 starts with that repair skipped (the form the script already has). The net it hangs on is not found;
+one read of the repair log on a stalled kit would name it.
+
+### Lever 7. svc
+R (S81-SVC-SPLIT 04:37): flat H16 is 5.1 to 5.3 M cells; with the 62 cores black-boxed 597 k; the cores need 1.196 M um2 against 1.138 M free;
+die spare 103.7 um. H8 provider form: parent soft 382 k (lo) / 229 k (hi).
+**Open technical items (P).** (a) 382 k is close to the 400 k practical limit: count svc_lo after the new ABC recipe before the rebind.
+(b) `idx_hslice_fp` changed after its signed DB (pin registers): re-sign running. (c) pvso_entry t1 / t2 keep 64 H16 heads: census first.
+(d) The kits instantiate `ot_s81_svc_idx_hslice_fp` while the signed H16 core is `ot_hdc_v41x_idx_hslice`: resolve the name in the H8 bind.
+
+## 2. The 03:30 levers: outcome
+
+| 03:30 lever | outcome |
+|---|---|
+| 1 tap by compact region, no spill | **Held for the tree** (0 taps over 100 ps on 2 proofs, V). **Did not close TT**; the leaf A/B never reached CTS. The window (Lever 1 here) was missed. |
+| 2 ABC delay target | **Held** on 4 types synth-only; kv3_pc still 24 levels; LEC 1 of 4; svc never measured. |
+| 3 reach estimator | Scans now return on all hosts (R). **Not useful yet**: "legs > 405" in 26 of 26 QC and 59 of 61 S81 kits; no core-span or logic column in the digest. The CBC span it fed was wrong. |
+| 4 die proof on the composed plan | **Half**: KV done, HEAD on the wrong form, S81 / QC without a tree. Token cost read on KV / HEAD only. |
+| 5 region for scattered soft logic | **Did not pan out yet**: DPL-0033 twice, wrong flop set on leaf, anonymous cells; snap unproven in flow. |
+| 6 col_h9_r2 FAIL_route | Cause found (Lever 6 here); fix not applied. |
+| r713 centroid aim as a whole-type mode | **Worse** on sle_ctl and on leaf t27relay. |
+
+## 3. Stop list (the 03:30 list stands, plus these)
+- Do not expect a tap row to close an S81 type while its SDC carries 100 to 208 ps windows.
+- Do not freeze a region tap table against the 11-05 `per_port_ps` or the 44 ps fallback.
+- Do not raise windows by a floor rule on HEAD (TAPWIN-FLOOR, 23 per-type raises) or on KV for types within 50 ps of the setup gate.
+- Do not quote HEAD landed 6 or landed 0; both are on the generic start form.
+- Do not take the lepe banks + CRP2 + WREP5 row into D8h on the proof4 number; it is not better than taps-only.
+- Do not run PAD-CHAIN-SITE auto or the timing-driven placement keys on a whole type.
+- Do not use place_regions before glue H2 passes; do not fence output registers whose loads are far cores.
+- Do not bind KV pv class C (+843) or any other distance-only cycle set before the pin-to-pin recount.
+- Do not spend more kits on flat H16 svc, and do not open a svc depth lane before the H8 count.
+- Do not launch col_h9_r1 / r2 kits with the post-GRT max-wire repair on.
+- Do not treat leaf as a depth family (463 to 502 ps zero-wire).
+- Do not pad register taps to 250 ps where the type's core taps sit at 306.
+
+## 4. Not checked
+- The setup share of the window per path: no STA run by me; Lever 1 step 1 measures it. Whether same-tap pairs get full credit is read from the
+  hold class only (same_tap -22 to -25).
+- epyc9 wave kits (my scan failed there), HEAD and most KV windows beyond the family table; QC cb* kits show 4 to 12 ports each with an early
+  latency of 447 to 538 ps, which I did not trace.
+- Endpoint classes of any lepe or leaf proof kit; GRT TT of col_h9_r1, seqhost kit2 / kit3, glue F, t27keep (none had printed).
+- The ABC recipe under place and route; LEC on hd_ctl, kv3_pc, kv_leaf.
+- The H8 svc numbers, the reset key in a complete kit, the snap in flow: all lane-reported.
+
 # FABLE-CLOSURE-STRATEGY 2026-11-19 03:30 PST (0330): what the tap rows and the +cycle rows will not fix
 
 Reviewer: FABLE-CLOSURE-STRATEGY-04xx (Fable). Read-only: no job launched, killed or patched. Technical PD only; HBM parked.
