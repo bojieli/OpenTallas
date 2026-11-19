@@ -58,7 +58,7 @@ def pins(P, tn):
     periods.update({n: float(P.die['period_ps']) for n, *_ in gen_phys.clock_pins(P, tn) + gen_phys.core_tap_pins(P, tn)})
     periods.update({n: float(P.die['period_ps']) * m for n, _x, _y, m in gen_phys.edge_clock_pins(P, tn)})
     for p in c['pins']:
-        if not isinstance(p, dict) or required - set(p) or set(p) - required - {'source_clock_port', 'sink_pins', 'cdc', 'cdc_evidence', 'data_inputs', 'data_outputs', 'entries', 'star'}:
+        if not isinstance(p, dict) or required - set(p) or set(p) - required - {'source_clock_port', 'sink_pins', 'cdc', 'cdc_evidence', 'data_inputs', 'data_outputs', 'entries', 'star', 'die_trunk'}:
             raise ValueError(f'{tn}: pad_clock pin requires name/dir/period_ps/source/layer/xy_um')
         n = p['name']; pad = pads.get(n)
         if not isinstance(n, str) or not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', n) or n in seen:
@@ -202,6 +202,59 @@ def check_entries(tn, t, p, port_names):
                 raise ValueError(f'{tn}.{n}.{en}: entry sink pin {key} is not a declared pad sink or is claimed twice')
             taken.add(key)
     return rows
+
+
+DIE_TRUNK_KEYS = {'from_xy_um', 'stations_um', 'layer', 'host', 'evidence'}
+DIE_TRUNK_OPT = {'cell'}
+DIE_TRUNK_HOSTS = ('die', 'type')
+
+
+def die_trunks(P, tn):
+    """[(pad clock name, row)] of the declared die-level trunks of the type's input pad clocks (FABLE-FIX-S81-SERDES 11-18,
+    opt-in pad_clock pins[].die_trunk).  The row states how the die net of that pad clock reaches a pin that was moved into
+    the type: {"from_xy_um": [x, y], "stations_um": [[x, y], ...], "layer": "M8", "host": "die" | "type", "evidence": ...,
+    optional "cell"}, all in the TYPE frame (one row serves every instance; the die tool maps it by the instance transform).
+    from_xy_um = where the die net arrives (the old pin / the type edge); the chain from_xy_um -> stations -> pin xy_um is the
+    trunk, every hop <= ENTRY_HOP_UM.  stations_um may be empty: then the trunk is one unrepeated route on `layer` and its
+    whole length must be <= ENTRY_HOP_UM.  With stations, `cell` (one repeater per station) is required.  host says who builds
+    the repeaters: "die" = the die clock tool places them (the sites must be die-owned area), "type" = the kit builds them as
+    its own cells.  Independent of the in-type clock form (single tree, regional roots, star).  This module only validates the
+    row and hands it out; no kit file changes (absent or present = kit byte-identical) until a reader uses it."""
+    out = []
+    t = P.types[tn]
+    w, h = t['outline_um']
+    for p in pins(P, tn):
+        if 'die_trunk' not in p:
+            continue
+        r = p['die_trunk']
+        n = p['name']
+        if p['dir'] != 'in':
+            raise ValueError(f'{tn}.{n}: die_trunk needs an input pad clock')
+        if not isinstance(r, dict) or not (DIE_TRUNK_KEYS <= set(r) <= DIE_TRUNK_KEYS | DIE_TRUNK_OPT):
+            raise ValueError(f'{tn}.{n}: die_trunk requires {sorted(DIE_TRUNK_KEYS)} and only the optional {sorted(DIE_TRUNK_OPT)}')
+        if not isinstance(r['evidence'], str) or not r['evidence'].strip():
+            raise ValueError(f'{tn}.{n}: die_trunk evidence required')
+        if r['host'] not in DIE_TRUNK_HOSTS:
+            raise ValueError(f'{tn}.{n}: die_trunk host must be one of {DIE_TRUNK_HOSTS}')
+        if r['layer'] not in P.layers:
+            raise ValueError(f'{tn}.{n}: die_trunk layer {r["layer"]!r} is not a plan layer')
+        st = r['stations_um']
+        if not _finite_xy(r['from_xy_um']) or not isinstance(st, list) or not all(_finite_xy(x) for x in st):
+            raise ValueError(f'{tn}.{n}: die_trunk from_xy_um / stations_um must be finite [x, y] points')
+        if st and (not isinstance(r.get('cell'), str) or not re.fullmatch(r'[A-Za-z0-9_]+', r['cell'])):
+            raise ValueError(f'{tn}.{n}: die_trunk with stations needs one repeater cell name')
+        if not st and 'cell' in r:
+            raise ValueError(f'{tn}.{n}: die_trunk without stations takes no cell')
+        chain = [r['from_xy_um']] + st + [p['xy_um']]
+        for x, y in chain[:-1]:
+            if not (0.0 <= x <= w and 0.0 <= y <= h):
+                raise ValueError(f'{tn}.{n}: die_trunk point ({x}, {y}) outside the outline')
+        for a, b in zip(chain, chain[1:]):
+            hop = abs(a[0] - b[0]) + abs(a[1] - b[1])
+            if hop > ENTRY_HOP_UM + 1e-6:
+                raise ValueError(f'{tn}.{n}: die_trunk hop {hop:.1f} um > {ENTRY_HOP_UM:g} um (12.1e)')
+        out.append((n, r))
+    return out
 
 
 STAR_KEYS = {'evidence'}

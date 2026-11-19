@@ -127,3 +127,43 @@ def test_hooks():
     assert 'string match pce_* [[$it getInst] getName]' in body
     hook = (HERE / 'rck_star.tcl').read_text()
     assert 'rck_star.py' in hook and 'rks_feed_' in hook and '0 left on the pad net' in hook and 'pad_clock_entry' not in hook
+
+
+def tplan(**over):
+    p = plan()
+    pin = p.types['mid']['clock']['pad_clock']['pins'][0]
+    x, y = pin['xy_um']
+    row = {'from_xy_um': [x + 300.0, y], 'stations_um': [], 'layer': pin['layer'], 'host': 'die', 'evidence': 'test'}
+    row.update(over)
+    pin['die_trunk'] = row
+    return p, pin
+
+
+def test_die_trunk_row_validates_and_changes_no_kit_data():
+    p = plan()
+    assert PC.die_trunks(p, 'mid') == []
+    p, pin = tplan()
+    (n, r), = PC.die_trunks(p, 'mid')
+    assert n == pin['name'] and r['host'] == 'die' and PC.star(p, 'mid') == [] and PC.entries_tcl(p, 'mid') == ''
+    x, y = pin['xy_um']
+    p, pin = tplan(from_xy_um=[x + 390.0, y], host='type')
+    assert PC.die_trunks(p, 'mid')[0][1]['host'] == 'type'
+
+
+@pytest.mark.parametrize('over', [dict(host='pad'), dict(layer='M99'), dict(evidence=''), dict(cell='BUFx24_ASAP7_75t_R'),
+                                  dict(stations_um=[[1.0, 1.0]]), dict(extra=1), dict(from_xy_um=[1e9, 0.0])])
+def test_bad_die_trunk_fails_closed(over):
+    p, pin = tplan(**over)
+    with pytest.raises(ValueError):
+        PC.die_trunks(p, 'mid')
+
+
+def test_die_trunk_hop_limit():
+    p, pin = tplan()
+    x, y = pin['xy_um']
+    w = p.types['mid']['outline_um'][0]
+    far = x + 410.0 if x + 410.0 <= w else x - 410.0
+    if 0.0 <= far <= w:
+        pin['die_trunk']['from_xy_um'] = [far, y]
+        with pytest.raises(ValueError):
+            PC.die_trunks(p, 'mid')

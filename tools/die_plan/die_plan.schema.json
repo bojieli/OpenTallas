@@ -3136,6 +3136,56 @@
               }
              }
             },
+            "die_trunk": {
+             "type": "object",
+             "required": [
+              "from_xy_um",
+              "stations_um",
+              "layer",
+              "host",
+              "evidence"
+             ],
+             "additionalProperties": false,
+             "properties": {
+              "from_xy_um": {
+               "type": "array",
+               "items": {
+                "type": "number"
+               },
+               "minItems": 2,
+               "maxItems": 2
+              },
+              "stations_um": {
+               "type": "array",
+               "items": {
+                "type": "array",
+                "items": {
+                 "type": "number"
+                },
+                "minItems": 2,
+                "maxItems": 2
+               }
+              },
+              "layer": {
+               "type": "string",
+               "minLength": 1
+              },
+              "host": {
+               "enum": [
+                "die",
+                "type"
+               ]
+              },
+              "cell": {
+               "type": "string",
+               "minLength": 1
+              },
+              "evidence": {
+               "type": "string",
+               "minLength": 1
+              }
+             }
+            },
             "data_outputs": {
              "type": "array",
              "minItems": 1,
@@ -7239,6 +7289,13 @@
       },
       "note": {
        "type": "string"
+      },
+      "per_type_ps": {
+       "type": "object",
+       "additionalProperties": {
+        "type": "number",
+        "minimum": 0
+       }
       }
      }
     },

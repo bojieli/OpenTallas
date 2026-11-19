@@ -1575,6 +1575,14 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
     "properties": {"evidence": {"type": "string", "minLength": 1}, "max_sinks": {"type": "integer", "minimum": 16, "maximum": 4000},
                    "max_extent_um": {"type": "number", "minimum": 20, "maximum": 1000},
                    "hop_um": {"type": "number", "minimum": 20, "maximum": 100}, "cell": {"type": "string", "minLength": 1}}}
+# FABLE-FIX-S81-SERDES 11-18 (opt-in): die-level trunk of an input pad clock to a pin moved into the type (pad_clock.die_trunks:
+# type frame, hops <= 405 um; host die | type).  Validated only; no reader yet, kit unchanged.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["pad_clock"]["properties"]["pins"]["items"]["properties"]["die_trunk"] = {
+    "type": "object", "required": ["from_xy_um", "stations_um", "layer", "host", "evidence"], "additionalProperties": False,
+    "properties": {"from_xy_um": {"type": "array", "items": {"type": "number"}, "minItems": 2, "maxItems": 2},
+                   "stations_um": {"type": "array", "items": {"type": "array", "items": {"type": "number"}, "minItems": 2, "maxItems": 2}},
+                   "layer": {"type": "string", "minLength": 1}, "host": {"enum": ["die", "type"]},
+                   "cell": {"type": "string", "minLength": 1}, "evidence": {"type": "string", "minLength": 1}}}
 # S81 LEAF-CLKENTRY-1109 (opt-in): core-clock REGIONAL entries of a tapped type.  Each is the RCK2 trunk form sourced at
 # an existing die-spine tap port (tap: clk / clk_t<k>): stations_um (one cell per station, hops <= 405 um) to an entry
 # driver at xy_um whose net takes the std-cell sinks inside region_um that the nearest-tap split left on any tap port of
