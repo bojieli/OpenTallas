@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; coordinator update 2026-11-01 18:00 PST)
 
-2026-11-18 22:3x PST: signed any plan 450 | current plan 401 | deferred re-sign S81 9, HEAD 2, KV 3. 5-h limit ~22:00-22:30 stopped all lanes (no Codex cover); Fable weekly limit to 11-22 22:00 (FIX lanes on Opus/Sonnet successors). S81 D8f r4 still in strict bind (since 20:59), auto chain armed; D8g c4c G0. Block-hash snapshot-path fix on main 78f0714a41 (stops plan events relaunching every type). QC N4.2 applied; KV D25b gate; HEAD r5 apply.
+2026-11-18 23:1x PST: signed any plan 450 | current plan 401 | deferred re-sign S81 9, HEAD 2, KV 3. Wave 65 launches/h; 23 S81 FLOW[design] fails/h (leaf global_place divergence class -> FABLE-FIX-S81-LEAF; no hold per r703). HEAD r5 applied (bind/LATCHECK/G0 pass), hd_mesh + hd_ctl route-keeping ECOs in pass 1. S81 D8f apply ~00:45, D8g ~01:15 (r712 apply-first). QC N4.3 in G0. KV D25c/D25d + hgi_v1 k6 proof kit. Fable back on new account: owns S81 leaf, col_h9_r1, QC families, KV hg. Block-hash fixes: snapshot paths 78f0714a41 live; die-level keys (seam_hold) bug sent to WAVE-PILOT-FIX.
 Plans 11:36: count 152 flat (S81 50/58 + 4/205 types, HEAD 4/4 + 12/25, QC 16/19, KV 26/32, HBM 40/103). Merged I118-I126 since 10:40: QC coll_core fold + ring ff class (tag e-qc), KV PV taps (tag b-kv), HEAD l48ue (tag a-head), wave prune + resume fixes. 9 core gaps from CORE-FORMS-2 all owned. intel2 scratch2 142 after 49 GB move.
 
 <!-- BREAKDOWN BEGIN -->
