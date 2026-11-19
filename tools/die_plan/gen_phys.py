@@ -8155,12 +8155,12 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
       OT_VCLK_TT=\$(sed -n 's/^export OT_VCLK_TT = //p' /work/config.mk) OT_VCLK_FF=\$(sed -n 's/^export OT_VCLK_FF = //p' /work/config.mk) \
       OT_HOLD_IN_MIN=\$(sed -n 's/^export OT_HOLD_IN_MIN = //p' /work/config.mk) OT_HOLD_OUT_MIN=\$(sed -n 's/^export OT_HOLD_OUT_MIN = //p' /work/config.mk) \
       OT_TAP_WINDOW=\$(sed -n 's/^export OT_TAP_WINDOW = //p' /work/config.mk) \
-      OT_PREGRT_HOLD_GUARD=\$(sed -n 's/^export OT_PREGRT_HOLD_GUARD = //p' /work/config.mk) OT_PREGRT_HOLD_PORT_MARGIN=\$(sed -n 's/^export OT_PREGRT_HOLD_PORT_MARGIN = //p' /work/config.mk) \
+      OT_PREGRT_HOLD_GUARD=\$(sed -n 's/^export OT_PREGRT_HOLD_GUARD = //p' /work/config.mk) OT_PREGRT_HOLD_PORT_MARGIN=\$(sed -n 's/^export OT_PREGRT_HOLD_PORT_MARGIN = //p' /work/config.mk) OT_PREGRT_HOLD_R2R_MARGIN=\$(sed -n 's/^export OT_PREGRT_HOLD_R2R_MARGIN = //p' /work/config.mk) OT_PREGRT_SKIP_SETUP_PS=\$(sed -n 's/^export OT_PREGRT_SKIP_SETUP_PS = //p' /work/config.mk) \
       LAYER_PARASITICS_FILE=\$(sed -n 's/^export LAYER_PARASITICS_FILE = //p' /work/config.mk) \
       openroad -exit /work/pregrt_ff_hold.tcl > /work/pregrt_ff_hold.log 2>&1; pgrc=\$?; grep -h OT_PREGRT_FF_HOLD /work/pregrt_ff_hold.log | tail -4; \
     rm -f \"\$C.pg_tmp\"; if [ \$pgrc != 0 ]; then echo \"OT_PREGRT_FF_HOLD FALLBACK step rc \$pgrc (pregrt_ff_hold.log): 4_cts.odb unchanged, the in-flow GRT hold repair takes the whole debt\" | tee -a /work/pregrt_ff_hold_fallback.log; echo \"PREGRT_HOLD_FALLBACK tool rc \$pgrc: 4_cts.odb unchanged (pregrt_ff_hold.log)\" | tee -a /work/pregrt_ff_hold_fallback.log; \
     elif grep -q 'OT_PREGRT_FF_HOLD FALLBACK' /work/pregrt_ff_hold.log; then grep -h 'OT_PREGRT_FF_HOLD FALLBACK' /work/pregrt_ff_hold.log | tail -1 | sed 's/^.*OT_PREGRT_FF_HOLD FALLBACK */PREGRT_HOLD_FALLBACK guard /' | tee -a /work/pregrt_ff_hold_fallback.log; fi; fi; \
-  HM=; if [ \$rc = 0 ]; then HMR=\$(\$M print-OT_HOLD_FF_MARGIN 2> /work/hold_margin_read.log); hmr=\$?; \
+  HM=; if [ \$rc = 0 ] && [ ! -f /work/HOLD_SKIPPED_SETUP ]; then HMR=\$(\$M print-OT_HOLD_FF_MARGIN 2> /work/hold_margin_read.log); hmr=\$?; \
     if [ \$hmr != 0 ]; then cat /work/hold_margin_read.log; echo 'FAIL_POSTCTS hold margin Make read' | tee -a /work/FAIL_POSTCTS; rc=9; \
     else HM=\$(printf '%s\\n' \"\$HMR\" | sed -nE 's/^OT_HOLD_FF_MARGIN[[:space:]]*[:=][[:space:]]*//p'); \
       if [ -n \"\$HM\" ] && ! python3 -c 'import math,re,sys; s=sys.argv[1].strip(); valid=re.fullmatch(r\"[+-]?(?:[0-9]+(?:[.][0-9]*)?|[.][0-9]+)(?:[eE][+-]?[0-9]+)?\",s); x=float(s) if valid else float(\"nan\"); sys.exit(not math.isfinite(x))' \"\$HM\" > /work/hold_margin_value.log 2>&1; then \

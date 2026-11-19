@@ -173,6 +173,15 @@ set pg_w0 [pg_hold]; set pg_n0 [sta::endpoint_violation_count min]; set pg_s0 [p
 set pg_i0 [llength [$pg_blk getInsts]]; set pg_t0 [clock seconds]
 puts "OT_PREGRT_FF_HOLD before wns $pg_w0 endpoints $pg_n0 insts $pg_i0 setup_wns $pg_s0 scenes [expr {$pg_two ? {TC+BC} : {BC only (no TLIBS: setup guard at FF)}}] guard $pg_guard"
 pg_classes before
+# HOLD-MARGIN-1119 (FABLE-CLOSURE-STRATEGY lever 5): a kit whose CTS TT setup estimate is below OT_PREGRT_SKIP_SETUP_PS (default -1000; "off" disables)
+# is a setup failure, 1,500 to 4,300 ps from closure (S81 slice C: 8-9 h and 65-75k hold cells for nothing).  Skip the hold build, leave 4_cts.odb
+# untouched, write /work/HOLD_SKIPPED_SETUP (the GRT hold repair step in run_kit honours it) and rc 0: the existing triage owns the setup failure.
+set pg_skip [expr {[info exists ::env(OT_PREGRT_SKIP_SETUP_PS)] && $::env(OT_PREGRT_SKIP_SETUP_PS) ne "" ? $::env(OT_PREGRT_SKIP_SETUP_PS) : -1000.0}]
+if {[string is double -strict $pg_skip] && $pg_s0 < $pg_skip} {
+  puts "OT_PREGRT_FF_HOLD SKIP setup $pg_s0 < $pg_skip: setup failure, hold repair not run"
+  catch {set pg_f [open /work/HOLD_SKIPPED_SETUP w]; puts $pg_f "setup_wns $pg_s0 skip_below $pg_skip"; close $pg_f}
+  exit 0
+}
 # the clock network and its sinks keep their sites: FIRM while hold cells are seated and legalized
 set pg_lock {}
 foreach pg_net [$pg_blk getNets] {

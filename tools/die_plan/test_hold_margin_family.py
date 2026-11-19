@@ -177,3 +177,23 @@ def test_hold_retry_runs_at_the_asked_margin_with_the_guard_off_and_is_bounded()
               "\not_hold_final_retry {-hold_margin 19 -max_buffer_percent 20} 30 19\n")
     out = " ".join(_tclsh(script))
     assert "CMD repair_timing -hold_margin 30 -max_buffer_percent 20 -hold" in out and "applied 19,30" in out and "met" in out
+
+
+def test_run_kit_passes_r2r_margin_and_skip_to_the_pregrt_tcl():
+    """HOLD-MARGIN-1119: config.mk carried OT_PREGRT_HOLD_R2R_MARGIN = 40 but run_kit passed only GUARD and PORT_MARGIN to openroad,
+    so the rr pass was skipped (pg_rm 0) and every kit left the pre-route build at margin 5."""
+    src = (HERE / "gen_phys.py").read_text()
+    i = src.index("openroad -exit /work/pregrt_ff_hold.tcl")
+    env = src[src.rindex("OT_PREGRT_HOLD_GUARD=", 0, i):i]
+    for k in ("OT_PREGRT_HOLD_GUARD", "OT_PREGRT_HOLD_PORT_MARGIN", "OT_PREGRT_HOLD_R2R_MARGIN", "OT_PREGRT_SKIP_SETUP_PS"):
+        assert f"{k}=\\$(sed -n 's/^export {k} = //p' /work/config.mk)" in env, k
+
+
+def test_hold_skipped_on_setup_failure_marker():
+    import pregrt_ff_hold as P
+    t = P.TAIL
+    assert t.index("OT_PREGRT_SKIP_SETUP_PS") < t.index("repair_timing -hold")
+    assert "-1000.0" in t and "$pg_s0 < $pg_skip" in t and "/work/HOLD_SKIPPED_SETUP" in t
+    assert t.index("exit 0", t.index("SKIP setup")) < t.index("repair_timing -hold")
+    src = (HERE / "gen_phys.py").read_text()
+    assert "[ ! -f /work/HOLD_SKIPPED_SETUP ]; then HMR=" in src
