@@ -314,5 +314,51 @@
   },
   "verdict": "HALF: timing holds (inside -42) and the e2/e4 strip is relieved (12,000 -> 4,560; west band 28,820 -> 15,196, the rest of it is the W1 strip at y 1000-1200). But the total did not fall: 21,000 moved into the middle channel x 200-400, y 600-1000 (nets u_hst<h>_g ti_b, u_hst2_x2b, t1): a 94-um channel cannot carry the 1,575-bit g -> t1 trunk, the x2b cluster and the ft2 station column together.",
   "row_for_D25d": "take the t2 split (0 cycles; generator form = asbuilt pad-tail-split style kept copies per front pair with relay_sites) but NOT the x 310 polyline for the whole chain. Chain route for the next proof: g and t1 back in the WEST channel (free below y 1097 once W1 has moved the landing core), x2a / x2b at the west ends of the e0/e2 and e4/e6 channels (about (40, 285) and (40, 950)). Unproven: needs the D25d-bound kit, where W1 exists."
+ },
+ "I_k7_d25d4_proof": {
+  "kit": "epyc9:/srv/opentallas-scratch2/claude/fable-fix-kv-hg3/k7/gen/kv3_hgi_v1__cl141fc26e (from bindcopy_kv_d25d4, plan a1e1d4d07494, tree tools, no kit-local edits; stopped after GRT iteration 5)",
+  "post_cts_tt": {
+   "before_repair": [
+    -174.77,
+    -539.94
+   ],
+   "after": [
+    -172.51,
+    -528.22
+   ],
+   "failing_ends": 12
+  },
+  "classes": [
+   {
+    "ends": 4,
+    "wns": -172.5,
+    "path": "u_cland_rst_ft0_i/q -> u_cland_fstart_{ft0_o,ft2_o,o_hst..,o_head..}/q",
+    "cause": "NORAWB: with the raw branches dropped the four FSTART face flops take their reset from one landing reset relay instead of their own local raw-branch copy",
+    "row": "D25e raw-branch regen with the fixed tools (main 041f1eefb09); nothing else"
+   },
+   {
+    "ends": 8,
+    "wns": -27.4,
+    "path": "u_pd1_i_ectl_Q_N_eN_<b>.q -> u_hst3_g ti_b",
+    "cause": "W5 site (45, 560) suits the head-2 chain only; head 3 g is at x 450",
+    "row": "K6 (second stage on the eN lane) covers it; or site per consumer"
+   }
+  ],
+  "gone": "kt class (192+ ends at -251 on k1) = 0 ends with the bound kst stations; hst / lpad / reset->core classes 0",
+  "hooks": "OT_ISTATIONS 1559 FIRM, missing relay_sites:1904 = the 28 x 2 x 34 parent kst flops are NOT sited (relay_sites keys u_head<h>_g_t_<t>_u_kst<j>.g_r.r[b] match no placed flop name); timing holds anyway at CTS, but they are GPL-placed. OT_RELAY_MID 9450 / 6 stations; OT_TAIL_SITE 16 of 18.",
+  "grt_iter5": {
+   "overflow": 41887,
+   "report_capped_20000_gcells": true,
+   "west_band": 13329,
+   "west_y1000_1200": 17,
+   "bins": {
+    "x200 y600": 15490,
+    "x0 y600": 8971,
+    "x0 y400": 4309,
+    "x600 y600": 3411,
+    "x800 y600": 3283
+   }
+  },
+  "verdict": "W1 PROVEN: the landing strip y 1000-1200 falls from about 13,000-15,000 to 17. Not routable yet: the remaining 41,887 is the chain route, x 200-400 y 600-800 (W3 at x 340) and x 0-200 y 400-800 (tail t2 strip). D25e must carry the west-channel chain + t2 split (section H) and the raw-branch regen; then repeat this kit."
  }
 }
