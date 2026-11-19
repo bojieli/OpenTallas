@@ -6889,8 +6889,10 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         if f == "reset_taps.tcl" and (RT.pipelined(P) or RT.wavefront(P)):
             hook = kd / f
             reset_prefix = f"set rt_leaf_tap {RT.leaf_tap(P, tn)}\n"
-            if t.get("reset", {}).get("local_taps_um"):
-                # These are terminal relay sites, not additional clock BTerms.
+            if t.get("reset", {}).get("local_taps_um") or t.get("reset", {}).get("consumer_sites_um"):
+                # These are terminal relay sites, not additional clock BTerms.  RESET-KEY 11-19: with frozen reset consumers the
+                # clock ports no longer map one to one onto rst_n_t<i>, so every FIRM flop takes the NEAREST reset leaf
+                # (flops on a clock tap added after the bind included).
                 reset_prefix += "set rt_consumer_taps_um {" + " ".join(
                     f"{{{i} {x:.5f} {y:.5f}}}" for i, (_, x, y) in enumerate(RT.consumer_taps(P, tn))) + "}\n"
             hook.write_text(reset_prefix + hook.read_text())

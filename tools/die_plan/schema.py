@@ -935,6 +935,10 @@ SCHEMA = {
                                            for k in ("instance", "pin", "old_reset", "new_reset", "clock_net")}}},
                         # Local synchronous reset/START consumers; clock entry pins are unchanged.
                         "local_taps_um": {"type": "array", "items": _xy},
+                        # RESET-KEY 11-19: frozen reset consumer sites [[name, x, y], ...]; when present the reset tree is solved from
+                        # these, not from the clock tap table, so a clock tap added later needs no new bind (reset_tree._taps).
+                        "consumer_sites_um": {"type": "array", "minItems": 1, "items": {"type": "array", "minItems": 3, "maxItems": 3,
+                            "prefixItems": [{"type": "string"}, {"type": "number"}, {"type": "number"}]}},
                         # Measured J=1 synchronous entry window only: one falling pre-capture per input.
                         "pin_entry_fall": {"type": "boolean"},
                         # FABLE-FIX-HEAD-RESET 11-17: strap-selected rising/falling capture + local handoff

@@ -725,6 +725,7 @@ def fix_taps(P, Q, tn, cap=CAP_SINKS, radius=RADIUS_UM, max_rounds=10, log=print
             ck.setdefault("sink_sites_um", []).extend(add)
             ck.setdefault("reach_fix_sinks", []).extend(add)
             rec["changes"].append(["sink_sites_um+", rnd, len(add)])
+        _freeze_reset_consumers(P, tn, t, rec, rnd)
         if mode == "explicit":
             tbl = ck.setdefault("taps", [])
             nloc = sum(1 for p in tbl if p.get("kind") != "core")
@@ -1660,6 +1661,23 @@ def cmd_check(a):
         Path(a.tsv).write_text("\n".join(lines) + "\n")
     print(json.dumps(dict(die=P.name, plan_sha256=sha[:12], **rec["summary"])))
     return fail_loud("check", {r["type"]: r["error"] for r in rows if r.get("error")})
+
+
+def _freeze_reset_consumers(P, tn, t, rec, rnd=0):
+    """RESET-KEY 11-19: before the first tap is appended to a type with a synchronous reset tree, record the BASE plan's tap
+    sites as type.reset.consumer_sites_um (reset_tree._taps reads it), so the appended clock taps change no reset relay, index
+    or site and the bound reset RTL stays valid.  A type that already carries the key, or has no such tree, is untouched."""
+    import reset_tree as RT
+    if t.get("reset", {}).get("consumer_sites_um") or not (RT.pipelined(P) or RT.wavefront(P)):
+        return
+    try:
+        sites = [[n, float(x), float(y)] for n, x, y in RT._taps(P, tn)]     # exact: gen phys compares the solved tree coordinate for coordinate
+    except Exception as e:  # noqa: BLE001  (a base plan whose taps do not export: nothing to freeze, the fix reports its own error)
+        rec.setdefault("notes", []).append("reset consumers not frozen: %s" % str(e)[:120])
+        return
+    if sites:
+        t.setdefault("reset", {})["consumer_sites_um"] = sites
+        rec["changes"].append(["reset.consumer_sites_um", rnd, len(sites)])
 
 
 def _reset_only_worse(tn, rec, after, base):

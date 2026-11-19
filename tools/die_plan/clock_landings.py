@@ -512,7 +512,7 @@ def ring_taps(plan, tn):
     e = _RING_PLAN.get(id(plan))
     if e is None or e[0] is not plan:
         e = _RING_PLAN[id(plan)] = (plan, schema.Plan(plan))
-    return [(x, y) for _, x, y in RT._taps(e[1], tn)]
+    return [(x, y) for _, x, y in RT._clock_taps(e[1], tn)]      # the real clock taps (RESET-KEY: never the frozen reset view)
 
 
 def network_lane_cycles(plan):

@@ -1013,6 +1013,21 @@ _TAPS = {}
 
 
 def _taps(P, tn):
+    """The tap sites the RESET solve reads: type.reset.consumer_sites_um when the plan carries it, else the clock taps.
+
+    RESET-KEY 11-19 (FABLE-FIX-S81-LEAF): the reset tree hangs one terminal relay rst_n_t<k> on every clock tap, numbers the
+    collector outs after them and sites its face / corner / START relays around them, and gen phys refuses a kit whose solve
+    differs from the tree captured at bind.  So every added clock tap (tap cap / sink-region rows) was a reset change that
+    needed a new bind.  consumer_sites_um = [[name, x, y], ...] is the clock-tap view of the plan the type was BOUND on
+    (reach_fix writes it when it appends taps): the reset solve, its indices and its sites then stay as bound while the
+    clock tap table grows.  The clock side (ports, landings, tap split) reads _clock_taps.  No key: _taps is _clock_taps."""
+    frozen = P.types[tn].get("reset", {}).get("consumer_sites_um")
+    if frozen:
+        return [(str(n), float(x), float(y)) for n, x, y in frozen]
+    return _clock_taps(P, tn)
+
+
+def _clock_taps(P, tn):
     """Geometry-only explicit endpoints, otherwise schema.tap_grid, memoised per Plan.
     The entry retains P, preventing identity reuse; full explicit sink budgets stay
     in schema.tap_grid/taps.explicit_taps after reset/START positions are solved.
