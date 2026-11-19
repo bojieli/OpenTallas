@@ -140,3 +140,11 @@ gen.py phys runs from the DIE SOURCE TREE (wave spec src = kw45/src_s81_pin_3c91
 from there, not from rt/<sha>. That tree has neither bfc57007db14 (HPWL gate) nor cf90bd19b2 (t56 relay no-op). So t13 / serdes t2 / t12 HPWL stops and the
 t56 kit_rtl error keep repeating until the S81 die source is refreshed from main (D8g compose or ot-src-refresh). Same will hold for the fold fix (gen_phys.py).
 serdes__t2 a13 real log through the fixed gate: 1.001, OK. t13 a18 / serdes t12 a10 logs not retrievable (ran on localhost, sealed job dir deleted).
+
+## 11-19 03:5x PST: FOLD FIX PUSHED (D8g APPLIED seen 03:1x)
+Pushed with --no-test: the touched-file set has 7 failures that are identical on plain main in the same sparse checkout
+(6 = rtl/common missing from the cone, 1 = test_gen_phys_cap_budget broken on main by a2e83fc189). test_replica_keep passes.
+Reaches kits only when the S81 live tree carries main tools (S81-DIE-R3: D8g2 publish).
+CFX bench: legal x3, dense x3, hqx2 x2 PASS so far (proof/bench_cfx/summary.log); commit + push when the mutant control line is in.
+A/B taps (COORD 03:3x): form (b) solve running epyc10 tapsB/ (radius 75, assign nearest, t21 + t16; fix.pid); private kit chain script bin/gen_private.sh
+(kit-rtl -> prepare-stations -> gen phys from a plandir of symlinks + private plan), NOT run yet. Glue fence recipe for t69: waiting for FABLE-FIX-S81-GLUE.
