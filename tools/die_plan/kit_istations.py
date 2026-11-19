@@ -1493,6 +1493,53 @@ def chain_floats(t, conn):
     return bool(es) and all(e.get("sites") == "float" for e in es)
 
 
+def _splice(base, W, repl):
+    """{base[W-1:..], repl expr, ..., base[..:0]} with repl = [(lo, hi, expr)] (non-overlapping)"""
+    parts, top = [], W - 1
+    for lo, hi, ex in sorted(repl, key=lambda r: -r[0]):
+        if hi < top:
+            parts.append(f"{base}[{top}:{hi + 1}]")
+        parts.append(ex)
+        top = lo - 1
+    if top >= 0:
+        parts.append(f"{base}[{top}:0]")
+    return "{" + ", ".join(parts) + "}"
+
+
+def join_stations(n, W, d0, ea0, need, joins):
+    """S81-RLYBR-1 11-19 (relay_branch.join_rows): out chain u_ist_<n>_0..need-1 where slice bits [lo, hi] of the face input
+    d0 join at station k through k local flops u_isj_<n>_<g>_<s> (ot_dp_st, q <= d every clock like the stations): every bit
+    still crosses `need` registers (0 added cycles) and the far source no longer wires to station 0; stations 0..k-1 carry
+    zeros in those bits.  -> (decl, body, last q, last eq, station names)"""
+    js = sorted((int(j["bits"][0]), int(j["bits"][1]), int(j["stage"])) for j in joins)
+    for (lo, hi, k), nxt in zip(js, js[1:] + [None]):
+        if not (0 <= lo <= hi < W) or not (0 < k < need) or (nxt and nxt[0] <= hi):
+            raise SystemExit(f"kit_istations: {n}: bad join bits [{lo}, {hi}] stage {k} (width {W}, {need} stations, no overlap)")
+    jd = f"{n}_jd"
+    decl = [f"    wire [{W - 1}:0] {jd};  // kit_istations: S81-RLYBR-1 face input of the joined chain"]
+    body = [f"    assign {jd} = {d0};"]
+    tail = {}
+    for g, (lo, hi, k) in enumerate(js):
+        w, prevq = hi - lo + 1, f"{jd}[{hi}:{lo}]"
+        for s_ in range(k):
+            qn = f"{n}_j{g}_s{s_}_q"
+            decl.append(f"    wire [{w - 1}:0] {qn};  // kit_istations: S81-RLYBR-1 join")
+            body.append(f"    ot_dp_st #(.W({w})) u_isj_{n}_{g}_{s_} (.clk(clk), .rst_n(rst_n), .d({prevq}), .ea(rst_n), "
+                        f".q({qn}), .eq());  // kit_istations: S81-RLYBR-1 bits {lo}..{hi} join station {k} ({s_ + 1}/{k})")
+            prevq = qn
+        tail.setdefault(k, []).append((lo, hi, prevq))
+    names, cq, ceq = [], jd, ea0
+    zero = [(lo, hi, f"{hi - lo + 1}'b0") for lo, hi, _k in js]
+    for j in range(need):
+        d = _splice(jd, W, zero) if j == 0 else (_splice(cq, W, tail[j]) if j in tail else cq)
+        decl.append(f"    wire [{W - 1}:0] {n}_is{j}_q;\n    wire {n}_is{j}_eq;  // kit_istations")
+        body.append(f"    ot_dp_st #(.W({W})) u_ist_{n}_{j} (.clk(clk), .rst_n(rst_n), .d({d}), .ea({ceq}), "
+                    f".q({n}_is{j}_q), .eq({n}_is{j}_eq));  // kit_istations: FIRM plan station")
+        cq, ceq = f"{n}_is{j}_q", f"{n}_is{j}_eq"
+        names.append(f"u_ist_{n}_{j}")
+    return decl, body, cq, ceq, names
+
+
 def bus_entries(t):
     """Station entries of a type's buses, one per bus.  The planner lists one entry per capture group, but a bus has one
     chain (bind face register -> leaf): its depth is the deepest entry, stage j at the bits-weighted centroid of the
@@ -1705,7 +1752,14 @@ def main(argv):
                           txt, re.M)
             if need and not m:
                 raise SystemExit(f"kit_istations: {tn}: no u_bout_{n} face register line to feed")
-            if need:
+            if e.get("join") and (pads or (prev and not re.search(rf"\bu_isj_{re.escape(n)}_\d", txt))):
+                raise SystemExit(f"kit_istations: {tn} {bus}: join rows need a fresh out chain (no pads, no chain inserted "
+                                 "without its joins)")
+            if need and e.get("join"):
+                # S81-RLYBR-1 11-19: far slices join the chain at their nearest station (0 added cycles)
+                decl, body, cq, ceq, jn = join_stations(n, W, m.group(2), m.group(4), need, e["join"])
+                names += jn
+            elif need:
                 d0, ea0 = m.group(2), m.group(4)
                 decl, body = [], []
                 cq, ceq = d0, ea0
@@ -1715,6 +1769,7 @@ def main(argv):
                                 f".q({n}_is{j}_q), .eq({n}_is{j}_eq));  // kit_istations: FIRM plan station")
                     cq, ceq = f"{n}_is{j}_q", f"{n}_is{j}_eq"
                     names.append(f"u_ist_{n}_{j}")
+            if need:
                 line = m.group(1) + cq + m.group(3) + ceq + m.group(5)
                 line = re.sub(r"^(\s*)ot_dp_ste\b", r"\1ot_dp_st", line)   # ea is now a station epoch, not a reset net
                 txt = txt[:m.start()] + line + txt[m.end():]

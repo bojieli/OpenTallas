@@ -1540,6 +1540,17 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["r
                        "bits": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "integer", "minimum": 0}},
                        "D": {"type": "integer", "minimum": 1, "maximum": 4}, "path_um": {"type": "number"},
                        "stages_existing": {"type": "integer", "minimum": 0}, "note": {"type": "string"}}}}
+# S81-RLYBR-1 11-19 (COORD family class, relay_branch.py): per-branch copies of a relay whose sinks fit no common reach box
+# (bind.py, 0 added stages per copy; far branches also carry relay_depth sink rows)
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["relay_branch"] = {
+    "type": "array", "items": {"type": "object", "additionalProperties": False, "required": ["inst", "copies"],
+        "properties": {"inst": {"type": "string", "minLength": 1}, "optional": {"type": "boolean"}, "note": {"type": "string"},
+                       "copies": {"type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": False,
+                           "required": ["name", "sinks"], "properties": {
+                               "name": {"type": "string", "minLength": 1},
+                               "sinks": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+                               "D": {"type": "integer", "minimum": 0, "maximum": 4},
+                               "span_um": {"type": "number"}, "path_um": {"type": "number"}}}}}}}
 # Opt-in: realize the already priced internal stations in logical and physical source alike.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["realize_internal_stations"] = {"type": "boolean"}
 # TYPE-SAFE-2 11-06: gen-time ft station spread opt-out (ft_spread.py; absent = on)
@@ -3527,6 +3538,17 @@ def main(argv):
     return 2
 
 
+# S81-RLYBR-1 11-19 (relay_branch.join_rows, kit_istations.join_stations): an out-bus slice joins its station chain at stage k
+# through k local flops (0 added cycles); stations 0..k-1 carry zeros in those bits
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["join"] = {
+    "type": "array", "items": {"type": "object", "additionalProperties": False, "required": ["bits", "stage"],
+        "properties": {"bits": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "integer", "minimum": 0}},
+                       "stage": {"type": "integer", "minimum": 1}, "src": {"type": "string"},
+                       "src_um": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "number"}},
+                       "stage0_um": {"type": "number"}, "stage_um": {"type": "number"}}}}
+
+
 if __name__ == "__main__":
     sys.exit(main(sys.argv))
+
 

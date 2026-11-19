@@ -4965,6 +4965,16 @@ class Binder:
                 raise BindError(f"relay_depth {tn}: {len(miss)} row(s) matched no internal sink: {miss[:6]}")
         text = head + f"module {mod}{pblock} (\n" + "\n".join(_strip_comment_comma(ports)) + "\n);\n" + "\n".join(decl) + \
             "\n" + "\n".join(body) + "\n" + "\n".join(insts) + f"\nendmodule\n`default_nettype wire\n"
+        rb_rep = []
+        if t.get("relay_branch"):
+            # S81-RLYBR-1 11-19 (COORD family class): one copy of a relay per far sink branch, same stage count (relay_branch.py);
+            # before reset_replicate, so every copy gets its own per-instance reset region
+            import relay_branch
+            try:
+                text, rb_rep = relay_branch.apply(text, t["relay_branch"])
+            except relay_branch.BranchError as exc:
+                raise BindError(f"relay_branch {tn}: {exc}") from exc
+            self.__dict__.setdefault("_relay_branch_rows", {})[tn] = rb_rep
         if t.get("reset_replicate"):
             # S81-COLGEN-1 11-14 (FABLE-TYPES-S81-COL C2): per-region copies of a named reset / flush driver, equal latency
             import reset_replicate
@@ -4973,6 +4983,11 @@ class Binder:
             except reset_replicate.ReplicateError as exc:
                 raise BindError(f"reset_replicate {tn}: {exc}") from exc
             self.__dict__.setdefault("_reset_replicate_rows", {})[tn] = rows
+        if rb_rep:
+            import relay_branch
+            same = relay_branch.copies_distinct(text, rb_rep)
+            if same:      # flattened synthesis (opt_merge) would fold the copy back into the relay
+                raise BindError(f"relay_branch {tn}: copy inputs identical to the relay (no per-instance reset region): {same[:4]}")
         return text, pnames
 
     def default_domain(self, p):
