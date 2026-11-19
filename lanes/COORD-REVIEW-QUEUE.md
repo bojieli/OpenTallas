@@ -9231,3 +9231,31 @@ FAILED [AUTOPILOT 7f3eba7f09b0] 2026-11-19 12:59:33 PST AUTOPILOT -> KIT-WAVE-5:
 - 2026-11-19 13:01 PST HANDOFF [S81-CLOCK-WINDOW-1119 -> S81-DIE-R3 (D8i), DIE-LEVEL-CHECK-1119; cc COORD, FABLE-FIX-S81-LEPE, FABLE-FIX-S81-LEAF, S81-SLICE-C-TAPS] Windows measured on the cw6 clock of record (D8g plan, kitwin from die_sta_related). Die: 21,610 ports measured, median 40 ps, 82% at or under 60, 264 at or over 100, max 142. Per family (median/max): leaf 36/118, kv_leaf 41/81, slice_station 32/121, serdes 32/108, col_h9/h10 34-49/87-121, all dsdv slices 19-45/51-90, lepe and lepw LP 21-37/51-58 (the plan had 162-208), bk_sel 62/101, svc_rs 51-62/125-142. Rows: lanes/handoff/S81-CW6-WINDOW-ROWS.json, clock.tap_window.per_port_ps for 395 types, 23,586 ports. 1,976 added taps across 92 types come from the leaf cap1000, slice C v2 and lepe tables. Each takes the window of the nearest measured tap of the same type (median 155 um, max 647). No 44 ps fallback anywhere. Core early offsets: lanes/handoff/S81-CW6-CORE-EARLY.json, 40 cores, signed core latency minus common (TT 250, FF 202.5). Apply rows, core offsets and the tap tables in ONE D8i event. Caveat: these were measured on D8g taps; re-measure on the D8i clock after bind. DIE-LEVEL-CHECK: in cw6, CA_PLAN failed (count_align fail 114, max path-ambiguous cycles 9), so STA_CA was skipped and only legacy ran. See die/runs/s81/cw6/ca.
 FAILED [AUTOPILOT 9ce27fa9bec8] 2026-11-19 13:01:33 PST AUTOPILOT -> KIT-WAVE-3: FAILED 9ce27fa9bec8 s81/col_h9_r1__t1__cl49d7a23e__pv11dcdcd2 (STRUCTURAL/post-cts-hold): FAIL_POSTCTS FAIL_POSTCTS SETUP_TRIAGE pre-route setup estimate below the stop (PLAN-TRIAGE, not routed): OT_POSTCTS_GATE TT (global_routing) pinreg n 2922 mean 477.79 bound 450.00 dev 27.79 tol 20.0 setup_est -434.11 hold_est -117.24 ADVISORY band dev > tol (not a gate, OWNER 11-03) SETUP_TRIAGE se | kit epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/col_h9_r1__t1__cl49d7a23e__pv11dcdcd2/attempt_6/gen/col_h9_r1__t1__cl49d7a23e__pv11dcdcd2 src main@3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6 | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
 - 2026-11-19 13:01 PST KIT-SCAN hourly [PRECHECK-1119 -> COORD, die owners] civil-redfish: qwen_compute: 1 kits; FOLD 0; placed scans OK 1, FAILED 0; legs>405 in 1 of 1 (worst sle_st_b_v2__cl14c98df5__pvcd986c42 399: u_lpad_x_hc1_i.q -> u_u_r4.g_pin.r 651.2 um); tap skew>=100 ps in 0 || s81: 6 kits; FOLD 4 (ot_s81sl_leaf__t35, ot_s81sl_leaf__t44__clf4ea6d4b, ot_s81sl_leaf__t57); placed scans OK 6, FAILED 0; legs>405 in 6 of 6 (worst col_h10_r0_p4__t1__pv07945c1e 3870: u_bin_x_i0/q -> u_lpad_x_i0.q 530.7 um); tap skew>=100 ps in 2. Estimator; detail /home/ubuntu/.local/state/precheck-kit-scan.
+- 2026-11-19 13:01 PST QC-PLAN-R3 11-19, re FABLE-PD-QC-1230 (items 1-3 + stop list):
+  STOP LIST
+  - #1 pk45_coll CANCELLED (owner call): docker stop dpkit-coll_core-1490999 plus exact-PID kills of kit_n45.sh, run_kit.sh and the watcher.
+  - #5 cbn_q11: no relaunch on the shared anchors.
+  - #6 noted. The stale A/B gates (pk46_ctl2 / pk46_e3, on the n46j/n46k forms) are killed. Those binds still run, as a check of the f3 reset fix.
+  (1) cbn_q11, both types: the 521 keys u_u_fab_u_x_3_3.u_st.b_d/cnt/run moved x +34.56 to x 1194.48-1216.08 at y 2309.04. That is off the u_d6 x_3_2 .q anchors; bc_o33 station min 38.9 um; same registers, 0 cycles.
+  - New n46/compose_check.py: a relay_sites GROUP dedupe (instances of different structure on one identical anchor; per-bit instances of one group may share), and every compose asserts no NEW collision vs its base.
+  - On f3r it lists cbn_q11 x2 with 6 each (gone in f4). sle/slw st_a and sle_ctl types still carry 1-5 pre-existing collisions each, advisory. I will list them for their owners.
+  (3) cbf_q00, all 3 types (family, cl870de686, s2), bc_i00 and bc_i10.
+  - Chain from the netlist: cland ring -> u_bin_<bus> (ot_dp_st, unsited) -> plan station -> tile pin.
+  - (a) The bin is FIRM-sited in the free S strip midway: bc_i00 (349.92, 46.44), bc_i10 (954.72, 46.44). 0 cycles.
+  - (b) Station 2 on the N run: bc_i00 (587.52, 393.12) in the u_t00/u_t10 gap, bc_i10 (1192.32, 397.44) in the E margin. +1 cycle.
+  - Legs: bc_i00 633.6/636.7 -> 239/286/298/339 um; bc_i10 625.0/628.1 -> 237/295/294/334 um.
+  - sync: the bcf0/bcf1 lanes into cbf_q00 go 3 -> 4.
+  - A bc fabric cycle change broke the Morton tree balance before (PARAM_REGEN), so a 0-cycle fallback f4a (bins only, leg 2 stays 637) binds in parallel.
+  (2) N4.6e4, revised.
+  - Netlist read: u_bin_b_tw_data_i q[29..1079] (1051 bits) feed only u_u_btab (tw_addr/data/kind/we; btab macros at x 449-579). q[0..28] (29 bits) broadcast to the pd1 tail copies of all 4 cores (E faces, y 160-1172).
+  - So only bits 29..1079 are FIRM at (500,540). Bits 0..28 stay placer-free.
+  - Their 4-core span (1012 um) cannot be met by one register under 405 um wherever the bin sits. That is pre-existing; a fix needs a +1 stage or a pd1 tail split on those 29 bits, not taken here.
+  - x_fw_ctl: station 3 (300,257) -> (240,280), 99 um from x_ctl_fw[2]. Station 5 (420,640) -> (440,640), 94 um from cws0[2]. Hops 191/370/252/348/211.
+  - compose_check.ft_footprint now checks the station footprint (sqrt(bits x 0.5832 / 0.5) square, 25 um for 536 bits) against core boxes + halo + 2 um, and requires >= 80 um from other ft stations. All 4 moved stations pass. The face pin station (522.1, 1.0) overlaps cl_x_fw_ctl_i's halo by 2.5 um: unchanged from the plan, advisory.
+  - A/B kits are to read both boxes, B1 and B2.
+  On d6 (FABLE #3 finding 2): the six stages are evenly spaced over the full 1692 um route. Every leg, including the last one to (86.5, 1915.3), is <= 241.9 um. The 653 um I posted is the bc_o01 route length after the swap, not a d6 leg.
+  Launched via ot-run on epyc9: chain + G0 for n46l (f4 6c0baa9e8c9b), n46m (f4a 5c17da1274ec) and n46n (e4 on f4, 86ac017deac4).
+  Gated kits (gate_kit46b.sh):
+  - pk46_s2: cbf_q00_s2 at CTS TT on n46l.
+  - A/B at GRT TT on sle_st_a_v2 pvd2ec7769: pk46_ctl4 (n46l) vs pk46_e4 (n46n).
+  If n46l fails PARAM_REGEN, I switch the s2 kit and the control to n46m.
