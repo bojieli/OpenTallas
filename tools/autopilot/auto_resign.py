@@ -75,6 +75,8 @@ CLOCK_FAMILY_RELS = ("tools/die_plan/clock_family.tcl", "physical/common_flow/cl
 HERE = Path(__file__).resolve().parent
 DRIVER = HERE / "die_plan" / "resign.py" if (HERE / "die_plan" / "resign.py").is_file() else HERE.parent / "die_plan" / "resign.py"
 WAVE_STATUS = ("WAIT-PARENT", "SIGNED-UNVERSIONED")
+WAVE_ECO_STATUS = "DONE-NEAR-MISS"        # COORD 11-19 (lever 5, FABLE-CLOSURE-STRATEGY 07:50): a routed wave kit that missed sign-off enters the late-ECO loop on its routed DB, not a full relaunch
+WAVE_ECO_MEM_GB = 24                      # eco_loop on a routed kit: about 22-24 GB, 8-11 h (HEAD-MESH-O)
 ECO_FAILS = {"setup_tt", "hold_ff", "drv", "drc", "fanout"}   # = eco_loop.ECO_FAILS
 NEAR_ENDPOINTS = 100                                  # COORD 11-07 05:37, = eco_loop.NEAR_ENDPOINTS
 ECO_MEM_GB = 64
@@ -230,7 +232,8 @@ def wave_kits(tsv_text):
 def wave_candidates(jobs, kits, core_module=lambda x: x):
     out = []
     for j in jobs.values():
-        if j.get("status") not in WAVE_STATUS:
+        eco = j.get("status") == WAVE_ECO_STATUS
+        if j.get("status") not in WAVE_STATUS and not eco:
             continue
         so = j.get("signoff") or {}
         kit = str(j.get("path") or j.get("kit") or "").split(":", 1)[-1]
@@ -239,7 +242,7 @@ def wave_candidates(jobs, kits, core_module=lambda x: x):
         out.append(dict(die=j.get("die"), name=j.get("type"), module=core_module(j.get("type")),
                         host=j.get("probe") or j.get("host"), path=os.path.dirname(os.path.dirname(so["path"])),
                         record=so["path"], src=j.get("src"), lane=j.get("lane") or "", note="wave job %s" % j.get("id"),
-                        source="wave", build_commit=""))
+                        source="wave-eco" if eco else "wave", build_commit=""))
     return out
 
 
@@ -982,7 +985,7 @@ def try_eco(AP, c, ctx, it, cid, ap_dir, eco_running, notices):
         return False
     n = it.get("eco_attempt", 0) + 1
     out = "%s/claude/auto-resign/eco/%s/%s__%s%s" % (e["root"], c["die"], c["name"], e["odb_sha"][:8], "" if n == 1 else "_a%d" % n)
-    mem = it.get("eco_mem", ECO_MEM_GB)
+    mem = it.get("eco_mem", WAVE_ECO_MEM_GB if c.get("source") == "wave-eco" else ECO_MEM_GB)
     unit = "ae-%s-a%d" % (cid, n)
     logf = Path(ap_dir) / "auto_resign_jobs" / (unit + ".log")
     if not AP.launch_unit(unit, logf, eco_argv(AP, c, e, d, out, mem)):
@@ -1109,7 +1112,7 @@ def advance_row(AP, c, cid, it, ctx, ap_dir, notices, room):
     p = AP.rpy(c["host"], PROBE_RECORD, dict(path=c["path"], record=c.get("record"), roots=ROOTS,
                                              known=dict(stamp=it.get("stamp"), odb_sha=it.get("odb_sha"), netlist_sha=it.get("netlist_sha"))), timeout=300)
     action, why = judge(c, p, ctx, it)
-    if action == "WAIT" and why == "no record that counts yet" and c["source"] == "registry" and not p.get("error"):
+    if action == "WAIT" and why == "no record that counts yet" and c["source"] in ("registry", "wave-eco") and not p.get("error"):
         try_eco(AP, c, ctx, it, cid, ap_dir, room["eco"], notices)
         return
     it.update({k: p[k] for k in ("stamp", "odb_sha", "netlist_sha") if p.get(k)})

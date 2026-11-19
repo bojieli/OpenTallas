@@ -185,3 +185,15 @@ def test_a_host_failing_ssh_twice_is_skipped_for_the_rest_of_the_tick(monkeypatc
     AP.rpy("epyc8", "x", {})
     assert len(calls) == 3                                   # another host is unaffected
     assert "ConnectTimeout=10" in " ".join(calls[0])
+
+
+def test_wave_near_miss_job_is_an_eco_candidate_with_the_routed_kit_memory():
+    import auto_resign as AR
+    jobs = {"j1": {"id": "j1", "status": "DONE-NEAR-MISS", "die": "hd", "type": "hd_mesh", "host": "h", "path": "h:/k/a1/gen/hd_mesh",
+                   "signoff": {"path": "/k/a1/gen/hd_mesh/signoff/signoff.json"}},
+            "j2": {"id": "j2", "status": "DONE-STRUCTURAL", "die": "hd", "type": "x", "host": "h", "path": "h:/k/a2", "signoff": {"path": "/k/a2/signoff.json"}},
+            "j3": {"id": "j3", "status": "WAIT-PARENT", "die": "hd", "type": "y", "host": "h", "path": "h:/k/a3", "signoff": {"path": "/k/a3/s/signoff.json"}}}
+    kits = {"/k/a1/gen/hd_mesh": "yes", "/k/a2": "yes", "/k/a3": "yes"}
+    out = {c["name"]: c for c in AR.wave_candidates(jobs, kits)}
+    assert set(out) == {"hd_mesh", "y"} and out["hd_mesh"]["source"] == "wave-eco" and out["y"]["source"] == "wave"
+    assert AR.WAVE_ECO_MEM_GB == 24
