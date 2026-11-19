@@ -1919,7 +1919,7 @@ def waiters(table):
 SCOPE_GLOB = "/sys/fs/cgroup/user.slice/user-*.slice/user@*.service/*/oth-*.scope"
 
 
-def peak_gap_gb(state_dir=None, scope_glob=None):
+def peak_gap_gb(state_dir=None, scope_glob=None, min_gb=0.5):
     """MEASURED-PEAK ADMISSION in the light SIMPLE_ADMIT path (FABLE-FLOW-1555 A, COORD 11-18): ot-run saw 'peak 0' on every host because the light path dropped the per-unit books (one
     `systemctl show` per unit saturated the user manager, FREE_LIGHT_1114).  This restores the term cheaply: every admitted unit holds res.<unit> (its charge = min(class peak, --mem), written
     at admission); the gap = sum(max(0, reserved - memory.current of its scope)) is memory the running jobs are still expected to grow into.  Reads files only."""
@@ -1936,6 +1936,8 @@ def peak_gap_gb(state_dir=None, scope_glob=None):
             cur = int(rd(sp + "/memory.current").strip()) / 2**30
         except (ValueError, IndexError, OSError):
             continue
+        if cur < min_gb:
+            continue          # a docker job: its processes run in the container's own cgroup, so the scope reads ~0 and the whole reservation would look unused (11-18: admit 0 fleet-wide)
         gap += max(0.0, reserved - cur)
     return gap
 

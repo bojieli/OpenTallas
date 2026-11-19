@@ -26,6 +26,10 @@ class PeakGap(unittest.TestCase):
         open(f"{d}/res.oth-z-9", "w").write("garbage")
         self.assertAlmostEqual(R.peak_gap_gb(d, g), 12.0, places=3)
 
+    def test_a_container_job_whose_scope_reads_zero_adds_no_gap(self):
+        d, g = self.mk([("oth-a-1", 48, 0.0), ("oth-b-2", 48, 0.01), ("oth-c-3", 40, 10.0)])
+        self.assertAlmostEqual(R.peak_gap_gb(d, g), 30.0, places=3)          # only the unit that really runs in its scope counts
+
     def test_empty_host_has_no_gap(self):
         d, g = self.mk([])
         self.assertEqual(R.peak_gap_gb(d, g), 0.0)
