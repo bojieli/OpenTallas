@@ -1152,3 +1152,11 @@ class OldPlanUnknownProbe(unittest.TestCase):
         self.assertEqual(run(None), "ROUTE-HELD")                  # unknown: left alone
         self.assertEqual(run({"t": "BLK1"}), "ROUTE-HELD")         # current block: the hold is stale but nothing is cancelled
         self.assertEqual(run({"t": "BLK2"}), "CANCELLED")
+
+
+class ItemEnvGlob(unittest.TestCase):
+    def test_glob_key_applies_to_the_family_exact_key_wins(self):
+        d = {"item_env": {"col_h9_r2__*": {"OT_MAXWIRE_POST_SKIP": "1", "OT_A": "g"}, "col_h9_r2__t1__x": {"OT_A": "exact"}}, "die_gen_env": {"OT_D": "d"}}
+        self.assertEqual(KW.item_env(d, "col_h9_r2__t1__y"), {"OT_D": "d", "OT_MAXWIRE_POST_SKIP": "1", "OT_A": "g"})
+        self.assertEqual(KW.item_env(d, "col_h9_r2__t1__x")["OT_A"], "exact")
+        self.assertEqual(KW.item_env(d, "col_h9_r1__t1"), {"OT_D": "d"})

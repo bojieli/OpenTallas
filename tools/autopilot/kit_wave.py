@@ -1337,7 +1337,7 @@ def die_env_stale(d, item, sp):
     (keys the item's own item_env sets are the item's, never stale) -> sorted list, [] = current"""
     if not isinstance(sp, dict) or not isinstance(sp.get("gen_env"), dict):
         return []
-    own = ((d.get("item_env") or {}).get(item) or {}) if isinstance(d, dict) else {}
+    own = (item_env_entry(d, item)) if isinstance(d, dict) else {}
     ge = sp["gen_env"]
     return sorted(k for k, v in ((d.get("die_gen_env") or {}) if isinstance(d, dict) else {}).items()
                   if k not in own and str(ge.get(k)) != str(v))
@@ -4054,7 +4054,7 @@ def gen_env_outside_tree(d, item):
     src = str(d["src"]).rstrip("/") + "/"
     allow = set(d.get("gen_env_outside_allow") or [])
     env = dict(d.get("die_gen_env") or {})
-    env.update((d.get("item_env") or {}).get(item) or {})
+    env.update(item_env_entry(d, item))
     out = []
     for key, v in env.items():
         for p in re.findall(r"(?<![\w.-])(/[A-Za-z0-9_.][A-Za-z0-9_./+-]*)", v if isinstance(v, str) else ""):
@@ -4064,12 +4064,22 @@ def gen_env_outside_tree(d, item):
     return sorted(set(out))
 
 
+def item_env_entry(d, item):
+    """die item_env[item] merged with the glob keys that match it (COORD 11-19: one entry for a whole family, e.g. "col_h9_r2__*"): an exact key wins over a glob, a longer glob over a shorter one"""
+    tab = (d.get("item_env") or {}) if isinstance(d, dict) else {}
+    out = {}
+    for k in sorted((k for k in tab if re.search(r"[*?\[]", str(k)) and fnmatch.fnmatchcase(str(item), str(k))), key=lambda k: (len(str(k)), str(k))):
+        out.update(tab[k] or {})
+    out.update(tab.get(item) or {})
+    return out
+
+
 def item_env(d, item):
     """die item_env[item] -> {OT_*: value} (validated: OT_ names, shell-safe values; anything else raises)"""
     # KW-FIX-45 11-12 (COORD class fix: drive failures from fanout over 64): die option die_gen_env {OT_*: value} is the default
     # env of EVERY item of the die (no per-type opt-in); the item's own item_env wins
     env = dict(d.get("die_gen_env") or {})
-    env.update((d.get("item_env") or {}).get(item) or {})
+    env.update(item_env_entry(d, item))
     for k, v in env.items():
         capture_path = (k == "OT_NATIVE_PRODUCER_CONTEXT" and isinstance(v, str)
                         and re.fullmatch(r"/[A-Za-z0-9_./-]+", v))
