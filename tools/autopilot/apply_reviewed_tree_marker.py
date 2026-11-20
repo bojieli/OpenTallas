@@ -49,20 +49,30 @@ def ensure_tree_on_hosts(tree, want, current_hosts, hosts, rt, run=None, link_fr
     # FABLE-FLOW-1400 (2): the apply runs on the hub, which holds no tree ("not a manifest tree" dropped epyc10 at QC N4 s1).  The copy is made FROM
     # the first candidate host that holds the tree and verifies it against the manifest hash, over ssh on that host; no verified source = every
     # extra host is DROPPED (named), never a copy of an unverified tree.
+    def verify(host, cached=False):
+        cmd = f"python3 -I {shlex.quote(sm)} hosts {shlex.quote(tree)} --hosts {shlex.quote(host)} --expect {shlex.quote(want)}"
+        return sh(cmd + (" --cached-receipts" if cached else ""))
+
     src = ""
-    for s in hosts:
-        rc, out = sh(f"python3 -I {shlex.quote(sm)} hosts {shlex.quote(tree)} --hosts {shlex.quote(s)} --expect {shlex.quote(want)}")
-        if not rc:
-            src = s
+    # A receipt proves the exact manifest and current read-only inventory.
+    # Try every candidate receipt before a large full payload rehash.
+    for cached in (True, False):
+        for host in hosts:
+            rc, out = verify(host, cached)
+            if not rc:
+                src = host
+                break
+            if not cached:
+                notes.append(f"source {host} not verified: {out[-160:]}")
+        if src:
             break
-        notes.append(f"source {s} not verified: {out[-160:]}")
     if not src:
         return list(hosts), [f"DROPPED {h}: no candidate host holds a verified copy of {tree} to replicate from" for h in extra] + notes
     ssh = "ssh -n -o BatchMode=yes -o ControlPath=none -o ConnectTimeout=15 "
     for h in extra:
         # 11-19 (QC N4.2, epyc10 dropped 3 times with 'target exists or not writable'): an earlier apply's copy had already finished there, so replicate refused the existing tree.
         # A target that already holds the tree is VERIFIED first; a verified copy is kept without a new replicate (an unverified existing one still goes to replicate / the DROPPED note).
-        rc0, _out0 = sh(f"python3 -I {shlex.quote(sm)} hosts {shlex.quote(tree)} --hosts {shlex.quote(h)} --expect {shlex.quote(want)}")
+        rc0, _ = verify(h)
         if not rc0:
             kept.append(h)
             notes.append(f"{h}: already holds a verified copy")
@@ -70,7 +80,7 @@ def ensure_tree_on_hosts(tree, want, current_hosts, hosts, rt, run=None, link_fr
         rep = f"python3 -I {shlex.quote(sm)} replicate {shlex.quote(tree)} --hosts {shlex.quote(h)}" + (f" --link-from {shlex.quote(link_from)}" if link_from else "")
         rc, out = sh(ssh + shlex.quote(src) + " " + shlex.quote(rep))
         if not rc:
-            rc, out = sh(f"python3 -I {shlex.quote(sm)} hosts {shlex.quote(tree)} --hosts {shlex.quote(h)} --expect {shlex.quote(want)}")
+            rc, out = verify(h)
         if rc:
             notes.append(f"DROPPED {h}: replicate/verify rc {rc}: {out[-200:]}")
         else:
