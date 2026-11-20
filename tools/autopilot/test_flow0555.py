@@ -713,3 +713,7 @@ def test_tool_digests_of_an_immutable_rt_tree_are_computed_once_and_persisted(tm
     other = tmp_path / "not-a-sha-dir"
     other.mkdir()
     assert KW._digest_persist(other, "stage", "gen", lambda: "X") == "X" and KW._digest_persist(other, "stage", "gen", lambda: "Y") == "Y"   # mutable trees are never cached
+
+
+def test_bind_signature_recheck_interval_is_half_an_hour():
+    assert KW.BIND_SIG_RECHECK_S == 1800

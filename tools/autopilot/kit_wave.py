@@ -9508,7 +9508,8 @@ except Exception as e:
 print("AP_JSON " + json.dumps(out))
 """
 BIND_PREFLIGHT_TTL_S = 12 * 3600        # WAVE-TICK-1119 (COORD 2): a verdict now lives as long as its inputs do not change (was 30 min: 3 probes of 50 s each, 155 s of a tick)
-BIND_SIG_RECHECK_S = 300                # ... and the inputs are re-read (one cheap stat walk) at most every 5 min per group
+BIND_SIG_RECHECK_S = 1800               # 11-20 (tick 1,241 s; cProfile of `plan --probe`: 4 bind probes = 57 s of ssh on saturated gen hosts, 131 s of probing in all): was 300 s; the kit_topology STAGE verdict wins over this check since 11-19 (WAIT-BIND), so a stale-for-30-min signature costs one failed row, not a loop
+BIND_SIG_RECHECK_OLD_S = 300                # ... and the inputs are re-read (one cheap stat walk) at most every 5 min per group
 PROBE_BIND_SIG = r"""
 import hashlib, json, os, sys
 from pathlib import Path
