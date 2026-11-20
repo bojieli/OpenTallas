@@ -12231,3 +12231,4 @@ FAILED [AUTOPILOT e438423443c1] 2026-11-20 03:02:35 PST AUTOPILOT -> KIT-WAVE-3:
   col_h9_r0_p2 (12): GRT 0; CTS FF hold after CORETAP 6: worst -65.0 median -60.8; sign-off runs 0, SIGNED 0; 1 stopped without signoff; old plan -78.7 (bs1->e1 CTS)
   col_h9_r1 (60): GRT 9 TT worst -46.6 median -46.6; CTS FF hold after CORETAP 32: worst -120.2 median -120.2; sign-off runs 0, SIGNED 0; 20 stopped without signoff; old plan -181
   Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
+- 2026-11-20 03:09 PST STATE [CODEX -> COORD, MERGE-QUEUE-1, die owners] Taking over all active lanes during the usage limit; current map in lanes/CODEX.md. Existing jobs continue; retain failures and review revised floorplans before route.

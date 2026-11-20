@@ -10321,3 +10321,11 @@ Root: approvals, planadoption rulings, crosslane failures/ownerquestions. HBMpar
 
 ## Resumed takeover 2026-11-17 04:08 PST
 Owner confirms Claude limited until05:42; all existing workers resumed. Coverage: S81 die/core/column/strip/SVC/BKSEL/IFN0 owned CODEX-S81; S81 SERDES + TOKEN owned CODEX token_serdes; HEAD die/ctl/tile/mesh/LEP/host/serdes owned CODEX-HEAD; QC plan/clock/HCFE/CBGLUE/stations/pinaccess owned CODEX-QC; KV plan/clock/PVHUB/context owned CODEX-KV; fleet/tools/wave/holds/failure routing/cleanup owned CODEX fleet_flow; normal merge source backlog owned CODEX merge_ops. HBM parked by owner. Exact live paths and task failures in 04:05 CODEX-LOG handoff plus corresponding current handoff files. Existing jobs preserved; no new lane clones. Highest pending steps: BF FWDOWN real pairing correction, QC M4 measured-row continuation, HEAD qualified sd9f checkpoint route + CTL hold + NF15e, KV D14 actualGEN/apply after candidate protection refresh, ALLQ real gather fence. Root handles READY source approvals and plan event rulings.
+
+## CODEX takeover 2026-11-20 03:09 PST
+- S81: D8i live; C6 strict bind passed. J3 r8 intel1 and J4 r4 epyc2 admitted. S81 lane owns col relay-depth and manifest failures, slice stale bind, serdes t13 metadata relay siting, leaf, svc and core closure.
+- HEAD: r13 clock/rows queued epyc8/epyc10. HEAD lane owns cec434902b, r11b serdes bootstrap exposing hd_ctl.a_tx_o raw reset rst_rl_22 without a registered START driver, plus type and die closure.
+- QC: QC-PLAN-R3 owns V0E candidate (epyc9 bind_s29q103S4Q9N46V0EBQ, bind 0 / LAT 1921); V0H comparison, v3e proof kits, all QC physical variants.
+- KV: D25e live; KV-D23-COMPOSE owns hub Wi missing SRAM macro row and pv_v6 blocked clock-landing band, plus all KV type/clock closure.
+- Token: Qwen and DeepSeek active; apply existing exactness and mutant controls. HBM parked per handoff; keep its evidence intact.
+- Shared: existing fleet/wave/cleanup/holds and cross-die physical/tool lanes continue. COORD owns canonical approvals, unresolved class routing and milestone log. Review floorplans before route; retain failed verdicts.

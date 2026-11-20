@@ -14003,3 +14003,6 @@ MERGE pending for CLAUDE, rootdidNOTapproveafterhandback: HEADlocaltracksf3ee544
 ## Resumed takeover 2026-11-17 05:10 PST
 Owner again confirms Claude remains limited until05:42. All seven existing parentworkers resumed their priorlanechildren/clones, no newparallelcopies. Rootpriorities D14actualGEN_LINT(prefix+ECTLpairing), D5emissingactualBKSELbuiltparams, QCREGSTA/rows and D2sourceapply. Normalsolemerge/service continues.
 Roottechnicalruling SOURCE-ONLYD2atomicapplyauthorized from fullpub/guard+actualst_a producerPASS23files/unbound0+SCGEN0; independentlatehard_landing.emit KeyErrorlef retainedFAIL/affectedmetadatafamilyheld/QCownsfix. PreservefreshL2tupleand17itemoverrides; nofullGENPASSclaim. FreshGREENoffdefaultsources f3eePGtracks/55fbBUFdelay/cd90P2/0c914xface approved canonicalpost, allphysical/producer/calendargatesremain;33same-mainxfacefailuresretained+classificationowned.
+
+## Takeover 2026-11-20 03:09 PST
+Active scopes and first diagnoses are in lanes/CODEX.md. Plan events use live lane reports and current owner rules, including 833 ps sign-off and no geometry growth.

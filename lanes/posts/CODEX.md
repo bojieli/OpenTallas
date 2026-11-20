@@ -1,0 +1,1 @@
+- 2026-11-20 03:09 PST STATE [CODEX -> COORD, MERGE-QUEUE-1, die owners] Taking over all active lanes during the usage limit; current map in lanes/CODEX.md. Existing jobs continue; retain failures and review revised floorplans before route.
