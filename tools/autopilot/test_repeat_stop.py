@@ -53,8 +53,8 @@ def test_oom_resubmits_with_more_memory_once_then_blocks():
     cfg = {"dies": {"qwen_kvsys": {"place_mem_gb": 48}}, "_mem_x": {"qwen_kvsys|kv3_pc_v1": 1.5}}
     assert KW.place_mem_gb(cfg, "qwen_kvsys", "kv3_pc_v1") == 72 and KW.place_mem_gb(cfg, "qwen_kvsys", "other") == 48
     e2 = RS.record(st, "qwen_kvsys", "kv3_pc_v1", 2, "place", "INFRA", OOM, t=2)
-    assert e2["event"] == "BLOCKED-REPEAT" and "second OOM" in e2["why"]
-    assert RS.gate(st, "qwen_kvsys", "kv3_pc_v1", {})[0] is True
+    assert e2["event"] == "OOM-RESUBMIT" and e2["mem_x"] == 2.25                      # FLOW-1803 (4): a second OOM raises the memory again, never blocks the row
+    assert RS.gate(st, "qwen_kvsys", "kv3_pc_v1", {})[0] is False
 
 
 def test_stalled_after_six_attempts_in_24h_with_no_later_stage_whatever_the_cause():

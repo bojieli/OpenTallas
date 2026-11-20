@@ -9811,6 +9811,19 @@ def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
         while len(launch) < room and any(i < len(q) for q in part):
             launch += [q[i] for q in part if i < len(q)][:room - len(launch)]
             i += 1
+    try:                                              # COORD 11-19 (FLOW-1803 1: KV D25d 4.7 h, 28 eligible rows, no line saying why): a die that is off, or has picks and launches none, says why
+        _lp = collections.Counter(x[0] for x in launch)
+        for _die, _ok, _why, _picks, _skip in out:
+            _dd = (cfg.get("dies") or {}).get(_die) or {}
+            if not _dd.get("enabled"):
+                continue
+            if not _ok:
+                (AP.log if AP else log)(f"KIT-WAVE DIE-OFF {_die}: no launches this tick, the die gate says: {str(_why)[:300]}")
+            elif _picks and not _lp.get(_die):
+                (AP.log if AP else log)(f"KIT-WAVE NO-LAUNCH {_die}: {len(_picks)} eligible row(s), 0 launched this tick; skipped: "
+                                        + "; ".join(f"{len(v)}x {str(k)[:80]}" for k, v in sorted((_skip or {}).items(), key=lambda kv: -len(kv[1]))[:5]) + f"; launch room {room}")
+    except Exception as _e:                           # a summary line never stops the plan
+        log(f"KIT-WAVE NO-LAUNCH summary skipped: {_e}")
     return out, launch
 
 

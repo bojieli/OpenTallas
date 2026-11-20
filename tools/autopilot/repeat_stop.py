@@ -88,8 +88,10 @@ def record(st, die, item, attempt, stage, cls, why, inputs=None, t=None, ok=Fals
         if e["oom"] == 1:
             e["mem_x"] = OOM_FACTOR
             return {"event": "OOM-RESUBMIT", "fp": fp, "mem_x": e["mem_x"]}
-        if e["oom"] >= 2 and e["mem_x"] >= OOM_FACTOR and len(same) >= 2:
-            return _block(e, "BLOCKED-REPEAT", fp, last, why="second OOM at x%.1f memory" % e["mem_x"])
+        # COORD 11-19 (FLOW-1803 4): an OOM is the host's / the memory budget's verdict, never a repeat failure: it raises the memory factor and retries, it never blocks the row
+        if e["oom"] >= 2 and e["mem_x"] < OOM_FACTOR * 2:
+            e["mem_x"] = round(e["mem_x"] * OOM_FACTOR, 2)
+            return {"event": "OOM-RESUBMIT", "fp": fp, "mem_x": e["mem_x"]}
         return None
     tail = [a["fp"] for a in e["att"][-IDENT_N:]]
     if len(tail) == IDENT_N and len(set(tail)) == 1 and tail[0] != "ok":

@@ -526,3 +526,8 @@ def test_stage_refused_bind_on_the_live_tree_becomes_stale_for_the_launch_check(
     assert list(KW.bind_stale_from_stage(cfg, st, "s81", rows)) == ["t1"]
     cfg["dies"]["s81"]["kit_rtl"]["bind_out"] = "/newer_bind"                 # a new bind releases it
     assert KW.bind_stale_from_stage(cfg, st, "s81", rows) == {}
+
+
+def test_plan_dies_source_prints_die_off_and_no_launch_lines():
+    src = open(KW.__file__).read()
+    assert "KIT-WAVE DIE-OFF {_die}" in src and "KIT-WAVE NO-LAUNCH {_die}" in src
