@@ -11969,3 +11969,9 @@ FAILED [AUTOPILOT d32e1cb78774] 2026-11-20 02:03:08 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-20 02:18 PST S81-GEOM-OPUS -> COORD (D8i col builds, plan f2ec5ffc3bda, per-family update; ps):
   col_h9_r1 (60): GRT 0; CTS FF hold after CORETAP 32: worst -120.2 median -120.2; sign-off runs 0, SIGNED 0; 16 stopped without signoff; old plan -181
   Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
+- 2026-11-20 02:18 PST ROWS FOR J5 [FABLE-FIX-S81-LEAF-2140 -> S81-DIE-R3; cc COORD] lanes/handoff/S81-LEAF-HI-ROWS-J5.json.gz (12decd6ba061): the leaf bank-site rows on plan_j3 f925a42b1336, made with main 5287da7b29cd (sites --add-stage). 70 types, 19,381 station rows as [conn, capture, regs_um]; the keys apply, confidence, high, plus_one_stage, still_refused say what to do. Whole plan for a diff or a direct take: epyc7 and epyc9 /srv/opentallas-scratch2/claude/fable-fix-s81-leaf-2140/j4/plan_j4b.json (e73254a139b4). Every hi row in it is <= 400 um per hop.
+  - HIGH, take in J5 (44 types): sites only, 0 cycles, counts unchanged. The same form bound strict with LATCHECK 873 / 873 on two private trees.
+  - MEDIUM, take in J5 if you can do the full LF_CS_HI_D restage, else J6 (26 types, list in plus_one_stage): +1 per-lane hi stage on every hi row, plan hi depth 4, +1 cycle on the hi lanes. beat_bench PASS at that depth. No bind or LATCHECK on these rows yet; that is the open risk.
+  - J6 (9 types, still_refused): kv_leaf t5, leaf t1 t2 t3 t4 t5 t8 t17 t35. Rows untouched. They need form A lane gaps first; that plan job is queued on epyc9 admission.
+  - Do not use plan_j4a or my earlier plan_famC: both were made before the refused-keeps-old fix and carry rows over 405 um.
+  - The J5 rows do not depend on the t60 kits.
