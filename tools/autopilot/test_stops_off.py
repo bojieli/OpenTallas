@@ -911,8 +911,8 @@ class CtxOnlySupersedeGuard(unittest.TestCase):
         self.assertEqual(self.run_it("ENQUEUED", "RUNNING"), "ENQUEUED")
 
     def test_unstarted_enqueued_and_wave_gen_place_rows_are_retired(self):
-        self.assertEqual(self.run_it("ENQUEUED", "QUEUED"), "CANCELLED")
-        self.assertEqual(self.run_it("RUNNING", None), "CANCELLED")
+        self.assertEqual(self.run_it("ENQUEUED", "QUEUED"), "ENQUEUED")                # FLOW 11-19: nothing live is retired for a newer plan
+        self.assertEqual(self.run_it("RUNNING", None), "RUNNING")
 
     def test_same_die_ctx_is_untouched_and_block_change_still_retires(self):
         self.assertEqual(self.run_it("ENQUEUED", "RUNNING", ctx_old="NEW"), "ENQUEUED")
@@ -1278,7 +1278,7 @@ class FlowFixes0358(unittest.TestCase):
                     KW.stop_on_fleet_bg = orig
             return st["items"]["s81|E|t|bOLD"]["status"]
         self.assertEqual(run(["t"]), "ENQUEUED")          # replacement is BIND-STALE: the old row stays
-        self.assertEqual(run([]), "CANCELLED")            # replacement can launch: cancelled as before
+        self.assertEqual(run([]), "ENQUEUED")             # replacement can launch: the old row still runs in parallel (OWNER 11-19)
         self.assertTrue(KW.replacement_blocked({"bind_stale_items": {"s81": ["t"]}}, "s81", "t"))
 
     def parts(self, **over):
@@ -1347,7 +1347,8 @@ class OldPlanFinishes(unittest.TestCase):
             self.assertIn(self.run_it(row, switch=True), ("RUNNING", "ENQUEUED"), row)
 
     def test_not_started_rows_are_still_superseded_and_hbm_is_unchanged(self):
-        self.assertEqual(self.run_it({"status": "ENQUEUED", "q_status": "QUEUED"}), "CANCELLED")
-        self.assertEqual(self.run_it({"status": "RUNNING", "stage": "kit_rtl"}), "CANCELLED")          # before synthesis: not started
-        self.assertEqual(self.run_it({"status": "RUNNING", "stage": "gen"}), "CANCELLED")
+        # COORD 11-19 (S81-OWN): plan_current=no never cancels a queued or running job: queued and early-stage rows are kept too (priority only)
+        self.assertEqual(self.run_it({"status": "ENQUEUED", "q_status": "QUEUED"}), "ENQUEUED")
+        self.assertEqual(self.run_it({"status": "RUNNING", "stage": "kit_rtl"}), "RUNNING")
+        self.assertEqual(self.run_it({"status": "RUNNING", "stage": "gen"}), "RUNNING")
         self.assertFalse(KW.finishes_on_old_plan({"stops_off": True, "dies": {"hbm": {}}}, "hbm", {"status": "RUNNING", "stage": "place"}, {}))

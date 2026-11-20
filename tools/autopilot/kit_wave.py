@@ -2436,9 +2436,13 @@ def finishes_on_old_plan(cfg, die, r, jobs):
     superseded.  Not HBM (parked; keeps its holds).  Memory admission stays the only limit."""
     if not FG.stops_off_die(cfg, die):
         return False
+    # COORD 11-19 (S81-OWN: 266+83 queued col geom jobs cancelled when D8 landed): plan_current=no never cancels or stops a queued or running job (any-plan sign-off counts); it only orders
+    # priority (superseded last: DEFER-RESIGN, r711).  Explicit lane STRUCT-STOPs / cancel-rows are other paths and still work.
     if r.get("status") in ("RUNNING", "LAUNCHING"):
-        return str(r.get("stage") or "") in POST_SYNTH_STAGES
-    return past_place(r, jobs)
+        return True
+    if r.get("status") == "ENQUEUED" and r.get("q_id"):               # a queue job that is gone (done, crashed, orphan) or never existed blocks nothing and is still retired
+        return str((jobs.get(r["q_id"]) or {}).get("status") or r.get("q_status") or "").upper() in REAP_LIVE_Q
+    return False
 
 
 def past_place(r, jobs):
@@ -14000,7 +14004,7 @@ def _retry_enqueue_body(AP, cfg, st, notices):
             continue
         if any(fnmatch.fnmatchcase(rec["item"], pat) for pat in (d.get("hold_items") or {})):
             continue
-        if _plan_current(cfg, st, rec) is False:
+        if _plan_current(cfg, st, rec) is False and not FG.stops_off_die(cfg, rec.get("die")):
             rec.pop("enqueue_pending", None)
             rec.update(status="CANCELLED", **{"class": "SUPERSEDED"}, updated=time.time(),
                        reason="enqueue pending on a superseded plan block (plan_current=no); not sent")

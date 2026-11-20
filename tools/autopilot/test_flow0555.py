@@ -559,3 +559,14 @@ def test_queued_wait_on_a_host_at_its_cores_moves_when_another_host_has_room(tmp
     with M.patch.object(KW, "pick_gen_host", return_value="epyc2"):
         assert KW.repick_queued_waits(ap, cfg, st, {}, jobs=jobs, now=1e9) == 1
     assert st["items"]["a"]["restage_host"] == "epyc2"
+
+
+def test_plan_current_no_never_cancels_a_queued_or_running_job_under_stops_off():
+    cfg = {"dies": {"s81": {}, "hbm": {}}, "stops_off": True}
+    for status in ("RUNNING", "LAUNCHING"):
+        assert KW.finishes_on_old_plan(cfg, "s81", {"status": status, "stage": "gen"}, {}) is True
+    for q in ("QUEUED", "WAIT-GEOM", "RUNNING"):
+        assert KW.finishes_on_old_plan(cfg, "s81", {"status": "ENQUEUED", "q_id": "j"}, {"j": {"status": q}}) is True
+    assert KW.finishes_on_old_plan(cfg, "s81", {"status": "ENQUEUED", "q_id": "j"}, {"j": {"status": "DONE-CRASH"}}) is False
+    assert KW.finishes_on_old_plan(cfg, "s81", {"status": "FAIL"}, {}) is False
+    assert KW.finishes_on_old_plan(cfg, "hbm", {"status": "ENQUEUED"}, {}) is False        # hbm keeps its holds
