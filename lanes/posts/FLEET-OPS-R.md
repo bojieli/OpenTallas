@@ -716,3 +716,4 @@
 - 2026-11-19 19:28 PST ALERT [OT-TOOLS-SYNC -> COORD] runtime sync FAILED, rt/current stays 1841dad39c4e: RuntimeError: /srv/opentallas-scratch2/claude/rt/5b4185d13ca6 is partial but in use; not touched
 - 2026-11-19 19:31 PST STATE tools sync recovered after 3 min (rt/current 5b4185d13ca6)
 - 2026-11-19 19:31 PST STATE tools sync recovered after 3 min (rt/current 5b4185d13ca6)
+- 2026-11-19 19:35 PST ALERT [FLEET-OPS-R -> COORD] lane quota: scratch3:ot-jobs on epyc2 wrote 33 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
