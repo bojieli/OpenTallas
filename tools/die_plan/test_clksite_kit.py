@@ -49,6 +49,28 @@ class T(unittest.TestCase):
         self.assertGreater(st["obs_rects_out"], 2)
         self.assertIn("RECT 0.0000 0.0000 1.0000 100.0000", txt)
 
+    # CLKSITE-PGCUT-1119
+    def test_pg_cut_windows_strap_layers_only(self):
+        P = FakeP([{"rect_um": [1, 1, 2, 2], "kind": "die_clock_tree", "route_layers": "M1-M4"},
+                   {"rect_um": [3, 3, 4, 4], "kind": "die_clock_tree", "route_layers": "M5-M7", "edge_pad_sites": 0},
+                   {"rect_um": [5, 5, 6, 6], "kind": "die_clock_tree", "route_layers": "M1-M7"},
+                   {"rect_um": [7, 7, 8, 8], "kind": "die_clock_tree", "route_layers": "M1-M2"},
+                   {"rect_um": [9, 9, 10, 10], "kind": "die_clock_tree", "route_layers": "M1-M7", "pg_cut": False},
+                   {"rect_um": [11, 11, 12, 12], "kind": "die_clock_tree"},
+                   {"rect_um": [13, 13, 14, 14], "kind": "landing_ring_bank", "route_layers": "M1-M7"}])
+        self.assertEqual(gen_phys.reserved_pg_cut_windows(P, "t"),
+                         [((1.0, 1.0, 2.0, 2.0), [3, 4]), ((3.0, 3.0, 4.0, 4.0), [5, 6, 7]),
+                          ((5.0, 5.0, 6.0, 6.0), [3, 4, 5, 6, 7])])
+        self.assertEqual(gen_phys.reserved_pg_cut_windows(FakeP([{"rect_um": [1, 1, 2, 2], "kind": "die_clock_tree"}]), "t"), [])
+
+    def test_pg_cut_tcl_rows_and_rails_kept(self):
+        tcl = gen_phys.reserved_pg_cut_tcl([((3.752, 648.54, 5.428, 648.81), [5, 6, 7])])
+        self.assertIn("{3.752 648.54 5.428 648.81 {5 6 7}}", tcl)
+        self.assertIn("if {$L < 3} continue", tcl)          # M1/M2 followpin rails never cut
+        self.assertIn("if {$bot < 2} continue", tcl)        # M1-M2 rail vias kept
+        self.assertTrue(tcl.startswith("# GENERATED") and "uplevel #0 {" in tcl)
+        self.assertEqual(tcl.count("{"), tcl.count("}"))
+
     # CLKSITE-TAP-ESCAPE-1117
     def test_tap_escape_pieces(self):
         site = (1361.56, 117.72, 1365.34, 119.34)                       # sd9f clk_t8 site + pin

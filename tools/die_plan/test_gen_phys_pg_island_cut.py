@@ -137,3 +137,28 @@ def test_kit_byte_identical_without_cut(monkeypatch):
         assert "export POST_PDN_TCL = /work/pg_island_cut.tcl" in cfg
         assert cfg.index("export PDN_TCL") < cfg.index("POST_PDN_TCL")
         assert "pgc_window 1.0000 1.0000 2.0000 2.0000" in (Path(d) / "fa" / "pg_island_cut.tcl").read_text()
+
+
+def test_reserved_site_pg_cut_in_kit(monkeypatch):
+    """CLKSITE-PGCUT-1119: a route-obstructed die clock-tree site on M5-M7 gets the POST_PDN strap cut after the island cut;
+    an M1-M4-only site or pg_cut false adds nothing."""
+    monkeypatch.setenv("OT_PG_RAIL_CHECK", "0")
+    monkeypatch.setattr(gen_phys, "pg_island_cuts", lambda P, tn, root=None: [("u", "rst_n", (1.0, 1.0, 2.0, 2.0))])
+
+    def kit(rows):
+        raw = copy.deepcopy(PAIR)
+        raw["partition_types"]["fa"].setdefault("clock", {})["reserved_sites_um"] = rows
+        d = tempfile.mkdtemp()
+        gen_phys.write_type_kit(schema.Plan(raw), "fa", d, [])
+        return Path(d) / "fa"
+    site = {"rect_um": [3.0, 3.0, 4.0, 4.0], "kind": "die_clock_tree"}
+    k = kit([dict(site, route_layers="M5-M7", edge_pad_sites=0)])
+    cfg = (k / "config.mk").read_text()
+    assert "export POST_PDN_TCL = /work/post_pdn.tcl" in cfg
+    assert (k / "post_pdn.tcl").read_text().splitlines()[1:] == ["source /work/pg_island_cut.tcl",
+                                                                 "source /work/reserved_pg_cut.tcl"]
+    assert "{3 3 4 4 {5 6 7}}" in (k / "reserved_pg_cut.tcl").read_text()
+    for rows in ([dict(site, route_layers="M1-M2")], [dict(site, route_layers="M1-M7", pg_cut=False)]):
+        k = kit(rows)
+        assert not (k / "reserved_pg_cut.tcl").exists()
+        assert "POST_PDN_TCL = /work/pg_island_cut.tcl" in (k / "config.mk").read_text()
