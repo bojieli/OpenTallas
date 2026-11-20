@@ -115,13 +115,13 @@ class Liveness(unittest.TestCase):
 
     def test_cpu_liveness_reaps_flat_cpu_and_spares_a_busy_unit(self):
         with tempfile.TemporaryDirectory() as d:
-            cfg = {"dies": {"s81": {"event": "e"}}}
+            cfg = {"dies": {"s81": {"event": "e"}}, "hung_dead_cpu_min": 30}      # FLEET-WATCH-1400: the 30-min window is now opt-in; the default follows hung_watch_min
             roots = {"a": "/srv/kw/a", "b": "/srv/kw/b"}
             st = {"items": {k: silent_row(d, k, 300, 100) for k in roots}}
             now = time.time()
             ap = AP(active={"u-a", "u-b"}, live={r: [7] for r in roots.values()},
-                    prog={"/srv/kw/a": {"log": 0, "cpu": 40.0, "pids": 3, "containers": []},
-                          "/srv/kw/b": {"log": 0, "cpu": 40.0, "pids": 3, "containers": []}})
+                    prog={"/srv/kw/a": {"log": 0, "cpu": 40.0, "pids": 3, "containers": ["epyc9:dpkit-x"]},
+                          "/srv/kw/b": {"log": 0, "cpu": 40.0, "pids": 3, "containers": ["epyc9:dpkit-x"]}})
             self.assertEqual(KW.reap_dead(ap, cfg, st, {}, now=now), 0)          # first sight: marks only
             ap.prog["/srv/kw/b"]["cpu"] = 400.0                                  # b keeps burning CPU
             ap.prog["/srv/kw/a"]["cpu"] = 41.0                                   # a: ~0 growth

@@ -142,6 +142,45 @@ class Reap(unittest.TestCase):
             self.assertEqual((st["items"]["a"]["status"], st["items"]["a"]["class"]), ("FAIL", "INFRA"))
 
 
+class AdmissionWait(unittest.TestCase):
+    """FLEET-WATCH-1400: a row with no container on any host is an ot-run waiter; its wait is never counted, and the CPU-liveness window follows hung_watch_min"""
+
+    def test_waiter_is_never_judged_however_long_it_is_silent(self):
+        prog = {"cpu": 150.0, "log": 0, "containers": [], "pids": 4}
+        hung, w, why = KW.hung_judge({"cpu": 150.0, "t": 0.0, "dcpu": 150.0, "dt": 0.0}, prog, 0, 50_000.0, 120, dead_min=30)
+        self.assertFalse(hung)
+        self.assertEqual((w["t"], w["dt"]), (50_000.0, 50_000.0))       # both clocks restart: the waiting time is not counted
+        self.assertIn("waiting for admission", why)
+
+    def test_clock_starts_when_the_container_appears(self):
+        t0 = 100_000.0
+        _, w, _ = KW.hung_judge({}, {"cpu": 150.0, "log": 0, "containers": [], "pids": 4}, 0, t0, 120, dead_min=30)
+        run = {"cpu": 150.0, "log": 0, "containers": ["epyc9:dpkit-a-1"], "pids": 9}
+        h1, w, _ = KW.hung_judge(w, run, 0, t0 + 60, 120, dead_min=30)
+        self.assertFalse(h1)
+        h2, _, _ = KW.hung_judge(w, run, 0, t0 + 60 + 121 * 60, 120, dead_min=30)
+        self.assertTrue(h2)                                              # judged from the start of the container, 120 min
+
+    def test_waiting_row_survives_reap_dead(self):
+        with tempfile.TemporaryDirectory() as d:
+            st = {"items": {"a": silent_rec(d, 400)}}
+            now = time.time()
+            for i in range(3):
+                ap = AP(cpu=150.0, containers=())
+                self.assertEqual(KW.reap_dead(ap, CFG, st, {}, now=now + i * 200 * 60), 0)
+                self.assertEqual(st["items"]["a"]["status"], "RUNNING")
+                self.assertFalse(any(c[:3] == ["systemctl", "--user", "stop"] for c in ap.cmds))
+
+    def test_dead_window_follows_hung_watch_min_unless_configured(self):
+        with tempfile.TemporaryDirectory() as d:
+            st = {"items": {"a": silent_rec(d, 400)}}
+            now = time.time()
+            KW.reap_dead(AP(cpu=500.0), CFG, st, {}, now=now)
+            ap = AP(cpu=501.0)
+            self.assertEqual(KW.reap_dead(ap, CFG, st, {}, now=now + 40 * 60), 0)        # 40 min flat with a container: not cancelled at 30
+            self.assertEqual(st["items"]["a"]["status"], "RUNNING")
+
+
 class Probe(unittest.TestCase):
     def test_probe_counts_processes_and_stage_log(self):
         with tempfile.TemporaryDirectory() as d:

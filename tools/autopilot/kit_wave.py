@@ -12329,6 +12329,14 @@ def hung_judge(prev, prog, hub_newest, now, minutes, cpu_s=None, dead_min=None):
     WAVE-LONGRUN-1 11-15 liveness: with dead_min (default HUNG_DEAD_CPU_MIN 30) a second, short mark ('dcpu'/'dt') also
     declares the row DEAD when its processes grew less than max(HUNG_CPU_S, 5 % of one core) CPU-s in dead_min minutes AND the
     newest stage log is dead_min old: a unit that burns no CPU for 30 min is reaped; a busy unit is never touched."""
+    if "containers" in prog and not prog.get("containers"):
+        # ADMISSION-WAIT-1400 (FLEET-WATCH-1400, FABLE-FLOW-1400 class 4): a row with no container anywhere is an ot-run waiter (or a client between steps): only its
+        # client and ssh are alive (100-200 CPU-s, no stage log), so the CPU / log clocks read it as dead after 31-48 min and 16 queued rows were cancelled and
+        # lost their queue place.  Admission-wait time is never counted: both marks restart now and stay restarted until a container exists.
+        cpu = float(prog.get("cpu") or 0)
+        logt = max(float(prog.get("log") or 0), float(hub_newest or 0))
+        return False, {"cpu": cpu, "t": now, "dcpu": cpu, "dt": now, "log": logt, "waiting": True}, \
+            f"waiting for admission (no container on any host, {prog.get('pids', 0)} processes): not judged"
     pw = dict(prev or {})
     hung, w, why = _hung_judge(prev, prog, hub_newest, now, minutes, cpu_s)
     dm = float(dead_min or 0)
@@ -12463,7 +12471,8 @@ def reap_dead_scan(AP, cfg, st, now=None, minutes=None, watch_out=None):
     now = now or time.time()
     minutes = REAP_DEAD_MIN if minutes is None else minutes
     hm = float(cfg.get("hung_watch_min", HUNG_WATCH_MIN) or 0)
-    dm = float(cfg.get("hung_dead_cpu_min", HUNG_DEAD_CPU_MIN) or 0)
+    # FLEET-WATCH-1400: the 30-min CPU-liveness window cancelled rows at 31-48 min although hung_watch_min is 120; unless a config sets hung_dead_cpu_min itself, it follows hung_watch_min
+    dm = float(cfg.get("hung_dead_cpu_min", hm if "hung_dead_cpu_min" not in cfg else HUNG_DEAD_CPU_MIN) or 0)
     s_min = min(minutes, hm) if hm > 0 else minutes          # HUNG-WATCH looks at rows silent for hung_watch_min already
     if hm > 0 and dm > 0:
         s_min = min(s_min, dm)                               # the CPU-liveness mark needs rows silent for dead_min only
