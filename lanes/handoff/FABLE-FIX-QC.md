@@ -127,3 +127,4 @@ bash tools/fleet/col_template_rows.sh TREE BASE_PLAN SIDECAR OUT [--all-members]
 - 21:15 su-lane family rows + contracts + enable script in lanes/handoff/FABLE-FIX-QC-su-family/ for N46T; 7 types check pass.
 - 21:40 slw_su_l1 legacy = 6 cland taps owner Measured..., cland signoff lacks fclk per-pin mean; proposal: extract fclk from signed exports, contracts+rows next event.
 - 21:55 cland per-pin means extracted on rtx-pro (validated vs signoff clk <0.06 ps), contracts in lanes/handoff/FABLE-FIX-QC-cland-means/ not installed; ship with su_l1 rows next event.
+- 22:10 contract files moved out of pinned n46_s0 (all hosts), manifest verified OK; enable_contracts.sh takes N46T tree arg and refuses n46_s0.
