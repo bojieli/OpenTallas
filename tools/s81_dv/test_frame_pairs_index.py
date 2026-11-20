@@ -76,13 +76,17 @@ class FramePairsIndex(unittest.TestCase):
 
     @unittest.skipUnless((ROOT / 'physical/die_plan/s81/bind/asbuilt_b178_coll.json').is_file(), 'repo manifest')
     def test_repo_asb_frames_equal_flat_frames(self):
+        wrappers = (
+            ROOT / 'rtl/dsrom_sys/s81_dv/frame/col_h9.sv',
+            ROOT / 'rtl/dsrom_sys/s81_dv/frame/col_h10.sv',
+        )
         with patch.dict(os.environ, CLEAN, clear=True):
-            flat = {m: B.frame_pairs(m) for m in ('col_h9', 'col_h10')}
+            flat = {wrapper.stem: B.frame_pairs(wrapper.stem) for wrapper in wrappers}
         man = json.loads((ROOT / 'physical/die_plan/s81/bind/asbuilt_b178_coll.json').read_text())
         env = dict(CLEAN, OT_S81_SELECTED_SOURCE_ROOT=str(ROOT), OT_S81_SELECTED_DEFINES=','.join(man['defines']),
                    OT_S81_SELECTED_ASBUILT_MANIFEST='physical/die_plan/s81/bind/asbuilt_b178_coll.json')
         with patch.dict(os.environ, env, clear=True):
-            for m in ('col_h9', 'col_h10'):
+            for m in flat:
                 for v in ('x', 'nx'):
                     self.assertEqual(B.frame_pairs(f'{m}_l4_lp_asb_{v}'), flat[m], (m, v))
 
