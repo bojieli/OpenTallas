@@ -115,3 +115,21 @@ def test_prove_blocks_on_pins(tmp_path):
 def test_prove_blocks_on_netlist(tmp_path):
     rc, r = run_prove(tmp_path, rename(A).replace("INVx1_ASAP7_75t_R", "BUFx4_ASAP7_75t_R"))
     assert rc == 1 and not r["credit"] and not r["proof"]["isomorphic"]
+
+
+def test_explain_names_the_difference():
+    e = N.explain(g(A), g(A.replace("INVx1_ASAP7_75t_R", "BUFx4_ASAP7_75t_R")))
+    assert e["master_delta_b_minus_a"] == {"INVx1_ASAP7_75t_R": -1, "BUFx4_ASAP7_75t_R": 1}
+    e = N.explain(g(A), g(A.replace(".A(n1), .Y(q)", ".A(_0_), .Y(q)")))
+    assert e["separated_at_round"] >= 1 and e["cells_a"]
+    e = N.explain(g(A), g(A.replace("assign r[3] = 1'b1;", "assign r[3] = 1'b0;")))
+    assert "constants" in e
+    assert N.explain(g(A), g(rename(A))) == {}
+
+
+def test_summary_cli(tmp_path, capsys):
+    f = tmp_path / "a.v"
+    f.write_text(A)
+    assert N.main(["summary", str(f)]) == 0
+    o = json.loads(capsys.readouterr().out.strip().splitlines()[-1])
+    assert o["cells"] == 6 and o["rom"] == 1 and o["structural_hash"]

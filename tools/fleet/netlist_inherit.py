@@ -372,6 +372,7 @@ class Graph:
         self.cell_name, self.cell_label, self.cell_master, self.cell_adj = [], [], [], []
         self.net_label, self.net_adj, self.net_name = [], [], []
         self.rom = []                                   # (cell id, class)
+        self.net_label_text = []
 
 
 def build(mods, top=None, lef_sigs=None, rom_re=ROM_RE_DEFAULT):
@@ -463,6 +464,7 @@ def build(mods, top=None, lef_sigs=None, rom_re=ROM_RE_DEFAULT):
         if r[0] == "const":
             labs.append("const:" + r[1])
         g.net_label[n] = stable_int("net|" + "|".join(labs))
+        g.net_label_text.append("|".join(labs))
     return g
 
 
@@ -702,6 +704,48 @@ def physical_match(km, kr, member, rep, cmap=None, gm=None, gr=None):
     return dict(ok=ok, checks=chk, advisory=adv, shas=shas)
 
 
+def summary(g):
+    """per-netlist facts for class reports (FABLE-SUPERSET classes): what a plan lane needs to see why two members differ"""
+    ports = sorted(g.net_label_text[n] for n in range(len(g.net_label)) if g.net_label_text[n].startswith("port:"))
+    masters = Counter(g.cell_master)
+    consts = Counter(t for t in g.net_label_text if t.startswith("const:"))
+    tie = Counter(m for m in g.cell_master if re.match(r"(?i)TIE(HI|LO)", m))
+    return dict(cells=len(g.cell_label), nets=len(g.net_label), ports=len(ports),
+                ports_sha=hashlib.sha256("\n".join(ports).encode()).hexdigest()[:16],
+                masters_sha=hashlib.sha256(json.dumps(sorted(masters.items())).encode()).hexdigest()[:16],
+                masters=dict(masters), port_names=ports, rom=len(g.rom), const_nets=dict(consts), tie_cells=dict(tie))
+
+
+def explain(ga, gb, max_items=20):
+    """what differs between two netlists: ports, master counts, constants, else the first cells colour refinement separates"""
+    sa, sb = summary(ga), summary(gb)
+    out = {}
+    pa, pb = set(sa["port_names"]), set(sb["port_names"])
+    if pa != pb:
+        out["ports_only_a"], out["ports_only_b"] = sorted(pa - pb)[:max_items], sorted(pb - pa)[:max_items]
+        out["ports_only_counts"] = [len(pa - pb), len(pb - pa)]
+    md = {m: sb["masters"].get(m, 0) - sa["masters"].get(m, 0) for m in set(sa["masters"]) | set(sb["masters"])}
+    md = {m: d for m, d in md.items() if d}
+    if md:
+        out["master_delta_b_minus_a"] = dict(sorted(md.items(), key=lambda kv: -abs(kv[1]))[:max_items])
+    if sa["const_nets"] != sb["const_nets"] or sa["tie_cells"] != sb["tie_cells"]:
+        out["constants"] = dict(a=[sa["const_nets"], sa["tie_cells"]], b=[sb["const_nets"], sb["tie_cells"]])
+    if not out:
+        ca, na, cb, nb = list(ga.cell_label), list(ga.net_label), list(gb.cell_label), list(gb.net_label)
+        for r in range(MAX_ROUNDS):
+            ca2, na2 = refine_round(ga, ca, na)
+            cb2, nb2 = refine_round(gb, cb, nb)
+            ha, hb = Counter(ca2), Counter(cb2)
+            if ha != hb:
+                bad = {c for c in set(ha) | set(hb) if ha.get(c, 0) != hb.get(c, 0)}
+                out["separated_at_round"] = r + 1
+                out["cells_a"] = [(ga.cell_name[i], ga.cell_master[i]) for i, c in enumerate(ca2) if c in bad][:max_items]
+                out["cells_b"] = [(gb.cell_name[i], gb.cell_master[i]) for i, c in enumerate(cb2) if c in bad][:max_items]
+                break
+            ca, na, cb, nb = ca2, na2, cb2, nb2
+    return out
+
+
 def load_graph(netlist, lef_sigs, rom_re=ROM_RE_DEFAULT):
     return build(parse(Path(netlist).read_text(errors="replace")), lef_sigs=lef_sigs, rom_re=rom_re)
 
@@ -740,6 +784,7 @@ def prove(a):
                 rom.append([gm.cell_name[ci], gr.cell_name[iso["cmap"][ci]], cls, gm.cell_master[ci], gr.cell_master[iso["cmap"][ci]]])
         else:
             blockers.append("netlists not proven isomorphic: %s" % iso["why"])
+            rec["differs"] = explain(gm, gr)
         rec["proof"] = dict(isomorphic=iso["isomorphic"], why=iso["why"], structural_hash=iso["structural_hash"],
                             method="1-WL colour refinement in lock step + individualisation + exact bijection check (names not labels; "
                                    "top port names, masters, parameters, pins are labels; ROM macros by LEF size + pins)",
@@ -775,7 +820,30 @@ def main(argv=None):
     p.add_argument("--rep-netlist")
     p.add_argument("--lef-dir", action="append")
     p.add_argument("--rom-re", default=ROM_RE_DEFAULT)
+    s_ = sub.add_parser("summary", help="structural hash + ports / masters / constants of netlists (JSON lines)")
+    s_.add_argument("netlists", nargs="+")
+    s_.add_argument("--lef-dir", action="append")
+    s_.add_argument("--rom-re", default=ROM_RE_DEFAULT)
+    d_ = sub.add_parser("diff", help="what differs between two netlists")
+    d_.add_argument("a")
+    d_.add_argument("b")
+    d_.add_argument("--rom-re", default=ROM_RE_DEFAULT)
     a = ap.parse_args(argv)
+    if a.cmd == "summary":
+        sigs = lef_signatures(a.lef_dir)
+        for n in a.netlists:
+            try:
+                g = load_graph(n, sigs, a.rom_re)
+                hh, r = structural_hash(g)
+                sm = summary(g)
+                sm.pop("port_names")
+                print(json.dumps(dict(netlist=n, structural_hash=hh, rounds=r, **sm)), flush=True)
+            except Exception as e:
+                print(json.dumps(dict(netlist=n, error=str(e)[:300])), flush=True)
+        return 0
+    if a.cmd == "diff":
+        print(json.dumps(explain(load_graph(a.a, {}, a.rom_re), load_graph(a.b, {}, a.rom_re)), indent=1))
+        return 0
     if a.cmd == "hash":
         g = load_graph(a.netlist, lef_signatures(a.lef_dir), a.rom_re)
         hh, r = structural_hash(g)
