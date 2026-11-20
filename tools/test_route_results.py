@@ -1,11 +1,11 @@
-"""tests for tools/route_results.py: builds a fake kit tree and checks stage counts, gate pass/fail and failure classes."""
+"""tests for tools/route_results.py (kept next to the source so ot-push-main selects it): builds a fake kit tree and checks stage counts, gate pass/fail and failure classes."""
 import importlib.util
 import json
 import os
 import time
 from pathlib import Path
 
-_SPEC = importlib.util.spec_from_file_location("route_results", Path(__file__).resolve().parents[1] / "tools" / "route_results.py")
+_SPEC = importlib.util.spec_from_file_location("route_results", Path(__file__).resolve().parent / "route_results.py")
 rr = importlib.util.module_from_spec(_SPEC)
 _SPEC.loader.exec_module(rr)
 
@@ -45,9 +45,11 @@ def so(drc=0, setup=-10.0, hold=5.0, gates=None):
     return d
 
 
-def table(root, live=""):
+def table(root, live="", wave=frozenset(), cancel=()):
     recs = rr.collect([str(root)], live=live)
-    return rr.aggregate(recs, SINCE, UNTIL, NOW, rr.STALE_MIN * 60)
+    for r in recs:
+        r["cancel_sig"] = r["cancel_sig"] or r["kit"] in cancel
+    return rr.aggregate(recs, SINCE, UNTIL, NOW, rr.STALE_MIN * 60, wave)
 
 
 def test_pass_and_failure_classes(tmp_path):
@@ -82,8 +84,7 @@ def test_crash_congestion_and_running(tmp_path):
     kit(tmp_path, "qwen_compute", "slw_live", ("cts",), None, log_only="grt", log_text="progress\n", log_t=NOW - 60)
     t = table(tmp_path)["qc"]
     assert t["congestion"] == 1
-    assert t["crash"] == 2          # explicit signature + idle log; the live one is not counted
-    assert t["crash_idle"] == 1
+    assert t["crash"] == 1 and t["dead"] == 1     # signature = real crash; idle log with no record = dead; the live one is not counted
     assert t["cts"] == 4 and t["grt"] == 1 and t["ended"] == 3
 
 
@@ -106,7 +107,7 @@ def test_render_has_table_and_rate(tmp_path):
     kit(tmp_path, "s81", "col_p", ("cts", "grt", "route"), so())
     kit(tmp_path, "s81", "col_f", ("cts", "grt", "route"), so(hold=-1.0))
     out = rr.render(table(tmp_path), SINCE, UNTIL)
-    assert "ROUTE-RESULTS" in out and "| s81 | 2 | 2 | 2 | 2 | 1 | 0 | 1 | 0 | 0 | 0 | 0 |" in out
+    assert "ROUTE-RESULTS" in out and "| s81 | 2 | 2 | 2 | 2 | 1 | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 |" in out
     assert "failed 1" in out and "50%" in out
 
 
@@ -121,3 +122,41 @@ def test_walk_skips_kit_internals_but_finds_all_builds(tmp_path):
     (k / "rtl" / "deep").mkdir(parents=True)
     (k / "macros" / "logs" / "asap7" / "dp_x" / "base").mkdir(parents=True)   # inside a kit but not under run/: ignored
     assert len(rr.find_bases(str(tmp_path))) == 1
+
+
+def test_cancelled_by_signal_or_wave_is_not_a_crash(tmp_path):
+    k1 = kit(tmp_path, "s81", "col_sig", ("cts",), None, log_only="grt", log_text="Segmentation fault\n")
+    kit(tmp_path, "s81", "col_wave", ("cts",), None, log_only="grt", log_text="progress\n", log_t=IN)
+    kit(tmp_path, "s81", "col_dead", ("cts",), None, log_only="grt", log_text="progress\n", log_t=NOW - 2.5 * 3600)
+    wave = {("s81", "ev", "col_wave", None)}
+    t = table(tmp_path, wave=wave, cancel={str(k1)})["s81"]
+    assert t["cancelled"] == 2 and t["crash"] == 0 and t["dead"] == 1
+
+
+def test_wave_attempt_must_match(tmp_path):
+    k = tmp_path / "runs" / "s81" / "kit-wave" / "s81" / "ev" / "items" / "col_x" / "attempt_3" / "gen" / "col_x"
+    rec = {"kit": str(k), "cancel_sig": False}
+    assert rr.is_cancelled(rec, {("s81", "ev", "col_x", 3)})
+    assert not rr.is_cancelled(rec, {("s81", "ev", "col_x", 2)})
+
+
+def test_cancel_dirs_and_wave_state_parse(tmp_path):
+    log = tmp_path / "signals.log"
+    log.write_text("2026-11-19T23:56:21-0800 signal 15 from pid 1 (python3 x) -> ot-run pid 5 host h1 tag t WAITING dir /srv/a/gen/k1: \n"
+                   "2026-11-19T23:56:22-0800 SPILL-DROP /srv/b on h1\n")
+    assert rr.cancel_dirs(str(log)) == {"/srv/a/gen/k1"}
+    st = tmp_path / "state.json"
+    st.write_text(json.dumps({"items": {"hbm|NE_io|bab": {"status": "CANCELLED", "event": "d44v", "attempt": 16},
+                                        "hbm|NW_io|bcd": {"status": "RUNNING", "event": "d44v", "attempt": 1}}}))
+    assert rr.wave_cancelled(str(st)) == {("hbm", "d44v", "NE_io", 16)}
+
+
+def test_fast_roots_only_wave_runs_and_active_dirs(tmp_path):
+    c = tmp_path / "opentallas-scratch2" / "claude"
+    for d in ("kw43/runs", "kw45", "old-private", "live-private", "new-private"):
+        (c / d).mkdir(parents=True)
+    os.utime(c / "old-private", (OLD - 5 * 86400, OLD - 5 * 86400))
+    roots = rr.fast_roots(SINCE, live="cwd " + str(c / "live-private") + "/run", srv=str(tmp_path))
+    names = {os.path.relpath(r, c) for r in roots}
+    assert "kw43/runs" in names and "live-private" in names and "new-private" in names
+    assert "old-private" not in names
