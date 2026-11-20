@@ -64,3 +64,21 @@ def test_cli_check(tmp_path):
     out = subprocess.run([sys.executable, "-I", str(HERE / "s81_hi_corridor.py"), "check", str(p), "--types", "t99"],
                          capture_output=True, text=True, check=True).stdout
     assert "HI_CORRIDOR_CHECK" in out and "OVER" in out
+
+
+def test_apply_moves_lane_with_riding_coordinates_only():
+    P = plan()
+    t = P["partition_types"]["ot_s81sl_leaf__t99"]
+    t["clock"] = {"landing_contract": [{"inst": "u_lf.u_vp.g_ln[3].u_l", "pin_um": [1.0, 2.0], "xy": [1.0, 6.0]}],
+                  "taps": [{"name": "u_lf.u_vp.g_ln[3].u_l.clk", "kind": "core", "xy": [5.0, 5.0, 1]}]}
+    e3 = [e for e in t["internal_stations"] if e["capture"] == "u_lf.u_vp.g_ln[3].u_l"][0]
+    e4 = copy.deepcopy([e for e in t["internal_stations"] if e["capture"] == "u_lf.u_vp.g_ln[4].u_l"][0])
+    shared, last, to = copy.deepcopy(e3["regs_um"][:2]), list(e3["regs_um"][2]), list(e3["to_um"])
+    o = t["hard_cores"][4]["origin_um"]
+    n = H.move_lanes(t, {"u_lf.u_vp.g_ln[3].u_l": {"origin_um": [o[0] + 4.32, o[1] + 8.64], "orient": "MX"}}, 2)
+    assert n["lanes"] == 1 and n["clock"] == 3
+    r4 = lambda v: [round(x, 4) for x in v]  # noqa: E731
+    assert e3["to_um"] == r4([to[0] + 4.32, to[1] + 8.64]) and e3["regs_um"][2] == r4([last[0] + 4.32, last[1] + 8.64])
+    assert e3["regs_um"][:2] == shared
+    assert [e for e in t["internal_stations"] if e["capture"] == "u_lf.u_vp.g_ln[4].u_l"][0]["regs_um"] == e4["regs_um"]
+    assert t["clock"]["taps"][0]["xy"] == [9.32, 13.64, 1]

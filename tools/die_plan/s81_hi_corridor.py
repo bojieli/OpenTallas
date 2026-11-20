@@ -12,6 +12,9 @@ both sides and the bus crosses the core twice (measured t28/t27 GRT hot gcells: 
         A = corridor: keep the lane -> quad map, widen every lane column / row gap below --corridor to --corridor
         B = remap: keep the 16 lane sites, give each quad 4 sites in one lane column (nearest the vn face first)
         (SEED = core_place.py --seed input {type: {inst: {origin_um, orient}}})
+  apply PLAN --seed SEED.json --out PLAN_OUT  rigid lane moves with their riding coordinates (clock / landing records,
+                                            station end points, per-lane registers near the lane); then
+                                            istation_clear.py / leaf_slot_clear.py, then `sites`
   sites PLAN --types RE --out PLAN_OUT      every shared bank gets ONE explicit site in a free channel (all member
                                             lanes' regs_um[j] = that point): s0 nearest free point to the old centroid,
                                             s1 the free point with the least max hop to the members' next points.
@@ -313,7 +316,7 @@ def seed(P, rex, form, cor):
                 perm = min(itertools.permutations(range(4)), key=lambda p: sum(md(lp[l], ch[p[i]][1]["origin_um"]) for i, l in enumerate(lanes)))
                 for i, l in enumerate(lanes):
                     site = ch[perm[i]][1]
-                    sd[L[l]["inst"]] = dict(origin_um=list(site["origin_um"]), orient=site.get("orient", "R0"))
+                    sd[L[l]["inst"]] = dict(origin_um=list(site["origin_um"]), orient=L[l].get("orient", "R0"))
             pure = sum(1 for ch in chunks if max(h["origin_um"][0] for _, h in ch) - min(h["origin_um"][0] for _, h in ch) <= 30)
             moved = sum(1 for k, h in L.items() if sd[h["inst"]]["origin_um"] != list(h["origin_um"]))
             rep[tn] = dict(form="B", quads_in_one_column=pure, lanes_moved=moved)
@@ -321,9 +324,67 @@ def seed(P, rex, form, cor):
     return out, rep
 
 
+def _shift(v, d):
+    return [round(v[0] + d[0], 4), round(v[1] + d[1], 4)] + list(v[2:])
+
+
+def move_lanes(t, sd, gs, near=30.0):
+    """rigid lane moves (same orient): the lane, every clock / landing record of that lane (inst / name prefix),
+    the end points of station rows on it, and the registers of those rows near the old lane box (hi rows: the
+    per-lane stages >= gs only; the shared banks are re-sited by `sites`) move by the lane's delta."""
+    L = {h["inst"]: h for h in t["hard_cores"] if LN.search(h["inst"])}
+    D, old = {}, {}
+    for inst, v in sd.items():
+        h = L[inst]
+        if v.get("orient", h.get("orient", "R0")) != h.get("orient", "R0"):
+            raise SystemExit(f"HI_CORRIDOR_APPLY refuses an orient change on {inst}")
+        d = (v["origin_um"][0] - h["origin_um"][0], v["origin_um"][1] - h["origin_um"][1])
+        if abs(d[0]) + abs(d[1]) > 1e-6:
+            w, hh = h["outline_um"]
+            old[inst] = (h["origin_um"][0], h["origin_um"][1], h["origin_um"][0] + w, h["origin_um"][1] + hh)
+            D[inst] = d
+            h["origin_um"] = [round(v["origin_um"][0], 4), round(v["origin_um"][1], 4)]
+    n = dict(lanes=len(D), clock=0, ends=0, regs=0)
+
+    def walk(o):
+        if isinstance(o, dict):
+            inst = o.get("inst") if o.get("inst") in D else next((k for k in D if str(o.get("name", "")).startswith(k + ".")), None)
+            if inst:
+                for k in ("xy", "pin_um", "tap_um"):
+                    if isinstance(o.get(k), list) and len(o[k]) >= 2 and all(isinstance(x, (int, float)) for x in o[k][:2]):
+                        o[k] = _shift(o[k], D[inst]); n["clock"] += 1
+            for v in o.values():
+                walk(v)
+        elif isinstance(o, list):
+            for v in o:
+                walk(v)
+    walk(t.get("clock") or {})
+    for e in t.get("internal_stations") or []:
+        for inst, d in D.items():
+            cap = e.get("capture") == inst
+            lau = e.get("launch", "").startswith("core:" + inst + ".")
+            if not (cap or lau):
+                continue
+            if cap:
+                e["to_um"] = _shift(e["to_um"], d); n["ends"] += 1
+            if lau:
+                e["from_um"] = _shift(e["from_um"], d); n["ends"] += 1
+            hi = cap and "u_vn" in e.get("launch", "")
+            b = old[inst]
+            for j, r in enumerate(e.get("regs_um") or []):
+                if hi and j < gs:
+                    continue
+                dx = max(b[0] - r[0], 0, r[0] - b[2]); dy = max(b[1] - r[1], 0, r[1] - b[3])
+                if max(dx, dy) <= near:
+                    e["regs_um"][j] = _shift(r, d); n["regs"] += 1
+            e["note"] = e.get("note", "") + f" | S81-HI-CORRIDOR lane move {inst} by {d[0]:.2f},{d[1]:.2f}"
+    return n
+
+
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("cmd", choices=("check", "seed", "sites"))
+    ap.add_argument("cmd", choices=("check", "seed", "sites", "apply"))
+    ap.add_argument("--seed")
     ap.add_argument("plan")
     ap.add_argument("--types", default=r"ot_s81sl_leaf__t\d+")
     ap.add_argument("--gs", type=int, default=2)
@@ -345,6 +406,12 @@ def main():
         json.dump(sd, open(a.out, "w"), indent=1)
         for tn, r in rep.items():
             print(tn, r)
+    elif a.cmd == "apply":
+        S = json.load(open(a.seed))
+        for tn, sd in S.items():
+            if re.search(a.types, tn):
+                print(tn, "HI_CORRIDOR_APPLY", move_lanes(P["partition_types"][tn], sd, a.gs))
+        json.dump(P, open(a.out, "w"), indent=1)
     else:
         rows = sites(P, a.types, a.gs, a.min_clear)
         json.dump(P, open(a.out, "w"), indent=1)
