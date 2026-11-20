@@ -45,6 +45,7 @@ ODB_STAGES = ["3_place.odb", "3_5_place_dp.odb", "4_1_cts.odb", "5_1_grt.odb", "
 KIT_RE = re.compile(r"^(?P<type>.+?)-(route|place|cts|grt|kit|sign|signoff|flow|full)-(?P<host>[^-]+)-(?P<pid>\d+)-(?P<epoch>\d+)$")
 STATION_RE = re.compile(r"(^|[./\\])u_(bin|bout|lpad|cland)_|(^|[._])(pinreg|ftst|ft_st)")
 STRAP_RE = re.compile(r"(^|[._/:])(strap|tie|TIEHI|TIELO|count_strap)", re.I)      # as cbc_rules.STRAP_TIE
+RESET_RE = re.compile(r"(^|[._/:\\])(rst|reset|raw_reset|arst|rstn|rst_n)(?![a-z])|u_cland_rst|u_rstr|rst_ft|reset_ring|rstring", re.I)     # reset-ring / reset-tree legs: their own class r
 VARIANT_RE = re.compile(r"__(cl|pv)[0-9a-f]{8}")
 GEN_HOSTS = ["epyc2", "intel1", "epyc7", "epyc8", "epyc9", "epyc10"]
 CLEAN_IDX = re.compile(r"\\?\[\d+\\?\]|(?<=[a-zA-Z_])\d+$|_\d+(?=[./]|$)")
@@ -96,7 +97,7 @@ def kit_budget(kit):
         return {}
 
 
-def select_kits(roots, max_age_h=72.0, now=None):
+def select_kits(roots, max_age_h=72.0, now=None, dies=()):
     """{(die, type): kit} newest placed attempt per type"""
     now = now or time.time()
     best = {}
@@ -108,6 +109,8 @@ def select_kits(roots, max_age_h=72.0, now=None):
             if not odb or now - odb.stat().st_mtime < 60 or (max_age_h and now - odb.stat().st_mtime > max_age_h * 3600):
                 continue
             b = kit_budget(kit)
+            if dies and (b.get("die") or "?") not in dies:
+                continue
             key = (b.get("die") or "?", base_type(b.get("type") or tn))
             rank = (epoch, odb.stat().st_mtime)
             if key not in best or rank > best[key][0]:
@@ -320,7 +323,7 @@ def cmd_scan(a):
     import socket
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
-    kits = select_kits([r for r in a.roots.split(",") if r], a.max_age_h)
+    kits = select_kits([r for r in a.roots.split(",") if r], a.max_age_h, dies=tuple(x for x in a.dies.split(",") if x))
     rows = []
     with cf.ThreadPoolExecutor(a.jobs) as ex:
         futs = [ex.submit(scan_one, k, v[0], v[1], out, a.mem_gb) for k, v in sorted(kits.items())]
@@ -371,7 +374,14 @@ def bus_of(launch, capture):
     return ".".join(parts[-2:])[-60:]
 
 
-def kind_of(name, master, macros_hit, slots, pats):
+def compile_rows(slots, pats):
+    """one regex for the glob patterns and one for the slot names of a kit (a kit has thousands: per-name loops were too slow)"""
+    pr = re.compile("|".join("(?:%s)" % fnmatch.translate(p) for p in pats)) if pats else None
+    sr = re.compile(r"(^|[._/])(?:" + "|".join(re.escape(x) for x in slots if x) + r")(?=[._/\d]|$)") if any(slots) else None
+    return pr, sr
+
+
+def kind_of(name, master, macros_hit, slots, pats, compiled=None):
     """-> (kind label, FIXED?, station-row?)"""
     clean = name.replace("\\", "")
     if name.startswith("port:"):
@@ -379,7 +389,8 @@ def kind_of(name, master, macros_hit, slots, pats):
     if master.startswith("macro:") or macros_hit:
         return "macro", True, False
     in_row = bool(STATION_RE.search(clean))
-    row = any(fnmatch.fnmatch(clean, p) for p in pats) or (bool(slots) and any(s and re.search(r"(^|[._/])" + re.escape(s) + r"(?=[._/\d]|$)", clean) for s in slots))
+    pr, sr = compiled if compiled else compile_rows(slots, pats)
+    row = bool((pr and pr.match(clean)) or (sr and sr.search(clean)))
     return ("station" if (in_row or row) else "logic"), (in_row or row), row or in_row
 
 
@@ -394,6 +405,14 @@ def classify_rows(scan_rows):
     for r in scan_rows:
         if r.get("status") != "OK":
             continue
+        memo = {}
+        comp = compile_rows(r["slots"], r["patterns"])
+
+        def kof(n, m, r=r, memo=memo, comp=comp):
+            k = (n, m)
+            if k not in memo:
+                memo[k] = kind_of(n, m, False, r["slots"], r["patterns"], comp)
+            return memo[k]
         for leg in r["legs"]:
             straight, acc, la, lb, pin, pa, pb, net = leg[:8]
             ma, mb = (leg[8], leg[9]) if len(leg) > 9 else ("?", "?")
@@ -401,9 +420,10 @@ def classify_rows(scan_rows):
             ea, eb = (leg[11], leg[12]) if len(leg) > 12 else ("p", "p")
             half = ea != eb
             lim = HALF_UM if half else REACH_UM
-            ka, fa, ra = kind_of(la, ma, False, r["slots"], r["patterns"])
-            kb, fb, rb = kind_of(lb, mb, False, r["slots"], r["patterns"])
-            cls = "h" if half else ("a" if (fa and fb) else ("b" if (fa or fb) else "c"))
+            ka, fa, ra = kof(la, ma)
+            kb, fb, rb = kof(lb, mb)
+            isrst = bool(RESET_RE.search(la) or RESET_RE.search(lb) or RESET_RE.search(net))
+            cls = "h" if half else ("r" if isrst else ("a" if (fa and fb) else ("b" if (fa or fb) else "c")))
             out.append(dict(limit=lim, launch_edge=ea, capture_edge=eb, fcls=("a" if (fa and fb) else ("b" if (fa or fb) else "c")), legacy_um=legacy, die=r["die"], type=r["type"], family=family_of(r["type"]), kit=r["kit"], um=straight, bus=bus_of(la, lb), net=net,
                             launch=la, launch_kind=ka, launch_fixed="FIXED" if fa else "MOVABLE", capture=lb, capture_kind=kb,
                             capture_fixed="FIXED" if fb else "MOVABLE", station_row="yes" if (ra or rb) else "no", cls=cls,
@@ -413,7 +433,8 @@ def classify_rows(scan_rows):
     return out
 
 
-FIX = {"h": "half-cycle face (negedge end, limit 200 um): retime to a posedge / full-cycle phase, or station row so each half-cycle hop is <= 200 um; fixed/movable ends in the leg rows",
+FIX = {"r": "reset-ring / reset-tree leg (own class): relay rank per <= 300 um hop in the reset tree (plan reset row), not a data station; fixed/movable split in fcls",
+       "h": "half-cycle face (negedge end, limit 200 um): retime to a posedge / full-cycle phase, or station row so each half-cycle hop is <= 200 um; fixed/movable ends in the leg rows",
        "a": "plan station / relay row (+1 cycle, pre-approved) on the leg",
        "b": "pin or macro-site move toward the fixed end, else a station row (+1 cycle)",
        "c": "placement / region fix: pull both registers into one region (or add a plan station row)"}
@@ -498,12 +519,12 @@ def summary_md(legs, agg, kits_ok, kits_failed, stamp):
          f"Every single-cycle placed leg longer than {REACH_UM:.0f} um (launch -> capture straight Manhattan; register / port / macro ends), "
          f"newest placed kit per (die, type). Kits scanned OK {kits_ok}, failed {kits_failed}. Tool: tools/die_plan/long_leg_census.py. "
          "Class a = both ends FIXED (station / relay row, +1 cycle); b = one end fixed (pin or macro-site move, or station); c = both movable (placement / region).", "",
-         "Class h = half-cycle leg (launch or capture on a negedge face, limit 200 um instead of 405); its fixed / movable split is in the leg rows (fcls).", "",
-         "| die | legs (excl. strap/tie) | a | b | c | h (half-cycle) | types hit | worst um | bus classes |", "|---|---|---|---|---|---|---|---|---|"]
+         "Class r = reset-ring / reset-tree leg (kept, own class, COORD 11-20). Class h = half-cycle leg (launch or capture on a negedge face, limit 200 um instead of 405); its fixed / movable split is in the leg rows (fcls).", "",
+         "| die | legs (excl. strap/tie) | a | b | c | h (half-cycle) | r (reset ring) | types hit | worst um | bus classes |", "|---|---|---|---|---|---|---|---|---|---|"]
     for die in sorted(by):
         c = by[die]
-        n = c["a"] + c["b"] + c["c"] + c["h"]
-        o.append(f"| {die} | {n} | {c['a']} | {c['b']} | {c['c']} | {c['h']} | {len(types[die])} | {worst[die]:.0f} | {sum(1 for r in agg if r['die'] == die)} |")
+        n = c["a"] + c["b"] + c["c"] + c["h"] + c["r"]
+        o.append(f"| {die} | {n} | {c['a']} | {c['b']} | {c['c']} | {c['h']} | {c['r']} | {len(types[die])} | {worst[die]:.0f} | {sum(1 for r in agg if r['die'] == die)} |")
     o += ["", "## Legs that changed because macro / hard-core ends now sit at the pin shape (COORD 11-19)", "",
           "Old measure = macro / core centre. `new` = over 405 um only with the pin location (by class a / b / c); `dropped` = over 405 um at the core centre, not at the pin. "
           "Class a / b / c does not depend on length: a leg keeps its class, it enters or leaves the census.", ""]
@@ -535,7 +556,7 @@ def cmd_census(a):
         for f in sorted(Path(d).glob("*.scan.jsonl")):
             rows += [json.loads(x) for x in f.read_text().splitlines() if x.strip()]
     rows = dedupe(rows)
-    legs = classify_rows(rows)
+    legs = classify_rows([r for r in rows if not getattr(a, "die", "") or r.get("die") == a.die])
     agg = aggregate(legs)
     ok = sum(1 for r in rows if r.get("status") == "OK")
     write_tsv(a.tsv, agg, TSV_COLS)
@@ -560,7 +581,7 @@ def cmd_fleet(a):
             subprocess.run(["timeout", "300", "scp", "-o", "ControlPath=none", str(f), f"{h}:{stage}/{f.name}"], capture_output=True)
         r = subprocess.run([OT_RUN, "--mem", "2", "--hosts", h, "--dir", stage, "--stage", stage, "--", "python3", "-I", f"{stage}/long_leg_census.py"]
                            + (["slack-scan", "--roots", roots, "--out", f"{stage}/out", "--max-kits", str(a.max_kits), "--mem-gb", "24"] if a.mode == "slack" else
-                              ["scan", "--roots", roots, "--out", f"{stage}/out", "--jobs", str(a.jobs), "--mem-gb", str(a.mem_gb)]), capture_output=True, text=True, timeout=14400)
+                              ["scan", "--roots", roots, "--out", f"{stage}/out", "--jobs", str(a.jobs), "--mem-gb", str(a.mem_gb), "--dies", a.dies]), capture_output=True, text=True, timeout=14400)
         subprocess.run(["timeout", "600", "scp", "-o", "ControlPath=none", f"{h}:{stage}/out/*.{a.mode if a.mode == 'slack' else 'scan'}.jsonl", str(out)], capture_output=True)
         return h, r.returncode, (r.stdout + r.stderr)[-200:]
 
@@ -570,7 +591,7 @@ def cmd_fleet(a):
     if a.mode == "slack":
         return cmd_slack_report(argparse.Namespace(inp=[str(out)], md=a.md))
     if a.tsv and a.md:
-        return cmd_census(argparse.Namespace(inp=[str(out)], tsv=a.tsv, md=a.md, legs_tsv=a.legs_tsv))
+        return cmd_census(argparse.Namespace(inp=[str(out)], tsv=a.tsv, md=a.md, legs_tsv=a.legs_tsv, die=""))
     return 0
 
 
@@ -583,6 +604,7 @@ def main(argv=None):
     s.add_argument("--jobs", type=int, default=4)
     s.add_argument("--mem-gb", type=int, default=8)
     s.add_argument("--max-age-h", type=float, default=72.0)
+    s.add_argument("--dies", default="")
     ss = sp.add_parser("slack-scan")
     ss.add_argument("--roots", required=True)
     ss.add_argument("--out", required=True)
@@ -597,11 +619,13 @@ def main(argv=None):
     c.add_argument("--tsv", required=True)
     c.add_argument("--md", required=True)
     c.add_argument("--legs-tsv", default="")
+    c.add_argument("--die", default="")
     f = sp.add_parser("fleet")
     f.add_argument("--out", required=True)
     f.add_argument("--hosts", default=",".join(GEN_HOSTS))
     f.add_argument("--jobs", type=int, default=4)
     f.add_argument("--mem-gb", type=int, default=8)
+    f.add_argument("--dies", default="")
     f.add_argument("--mode", choices=["scan", "slack"], default="scan")
     f.add_argument("--max-kits", type=int, default=6)
     f.add_argument("--tsv", default="")

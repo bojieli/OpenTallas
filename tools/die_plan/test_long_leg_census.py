@@ -99,6 +99,12 @@ class T(unittest.TestCase):
         r = row("s81", "t", [leg(500, "u_bound.u_bin_x_i0/q", "u_core.u_a.r"), leg(500, "u_core.u_a.r", "u_core.u_b.r")])
         self.assertEqual([x["rank1"] for x in L.classify_rows([r])], ["firm-site", ""])
 
+    def test_reset_class(self):
+        r = row("s81", "t", [leg(900, "u_bound.u_cland_rst_ft0_i/q", "u_bound.u_cland_origin/s1"), leg(900, "u_core.u_a.r", "u_core.u_b.r")])
+        self.assertEqual([x["cls"] for x in L.classify_rows([r])], ["r", "c"])
+        agg = L.aggregate(L.classify_rows([r]))
+        self.assertEqual(sorted(x["cls"] for x in agg), ["c", "r"])
+
     def test_slot_row(self):
         r = row("kv", "hg_x", [leg(450, "u_core.u_ft3_i.a", "u_core.b")], slots=["ft3_i"])
         self.assertEqual(L.classify_rows([r])[0]["station_row"], "yes")
