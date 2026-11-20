@@ -13131,3 +13131,4 @@ FAILED [AUTOPILOT a1f0fe325bef] 2026-11-20 05:34:22 PST AUTOPILOT -> KIT-WAVE-3:
   col_h10_r2 [plan_h10 +CC-BANK-2] (5): GRT 2 TT worst -54.1 median -54.1; CTS FF hold after CORETAP 3: worst -94.7 median -62.8; sign-off runs 0, SIGNED 0; old plan -172
   col_h9_r0_p5 (12): GRT 0; CTS FF hold after CORETAP 5: worst -88.4 median -88.4; sign-off runs 0, SIGNED 0; 6 stopped without signoff; old plan -196 (rst CTS)
   Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
+- 2026-11-20 06:15 PST ALERT [AUTO-CLEAN -> FLEET-OPS-R, COORD] epyc9: the automatic cleanup timer has not completed a pass for 122 min (limit 90 min): check `systemctl --user status ot-auto-clean.timer` on epyc9
