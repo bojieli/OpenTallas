@@ -24,6 +24,11 @@ or the ``VIAMAP`` parameter), ``<name>_bb.v`` and ``<name>.json``.
         --out physical/asap7_memory_macros
     python3 tools/mem_compiler/rom_gen.py personalise --macro physical/asap7_memory_macros/X/X.json \\
         --image data.hex --data-bits 256 --ecc secded --instance-prefix wrom --out <dir>
+    python3 tools/mem_compiler/rom_gen.py weights --spec spec.json --snapshot <safetensors dir> --out <dir>
+    python3 tools/mem_compiler/rom_gen.py verify-weights --manifest <dir>/weights.manifest.json --snapshot <dir>
+
+``weights`` / ``verify-weights`` (ROM-WEIGHTS-1119) carry released checkpoint bytes into the ROMs and read them back
+from the physical via maps against the checkpoint (see the section "real checkpoint weights").
 """
 from __future__ import annotations
 
@@ -429,6 +434,278 @@ def spec_from_sheet(path: Path) -> RomSpec:
     return RomSpec(**json.loads(path.read_text())["spec"])
 
 
+# ---------------------------------------------------------------------------
+# real checkpoint weights (OWNER 11-19, ROM-WEIGHTS-1119: "ROMs must carry real qwen and deepseek weights")
+# ---------------------------------------------------------------------------
+#
+# ``weights`` turns a weight spec (which released tensor slices go into which ROM instance, in which word order) into
+# per-instance via maps, a logical image and a sha256 manifest.  Payload bytes are copied from the safetensors file
+# unchanged (no arithmetic, no requantisation); a family whose contract quantises (Qwen W8) emits its own codes and
+# hands them in as a ``codes`` tensor file of the same safetensors layout.  ``verify-weights`` is the independent
+# read-back bench: for a deterministic sample of (instance, address, lane) it decodes the PHYSICAL via map the way the
+# macro model reads it and compares the lane bytes with bytes read again from the checkpoint at the element's own file
+# offset (it never uses the packer's stream).  Tails beyond the payload must read zero.
+#
+# Spec (JSON, schema opentallas.rom-weights-spec.v1):
+#   {"macro": "<datasheet name or path>", "lane_bits": 16,
+#    "checkpoint": {"repo": "...", "revision": "...", "index_sha256": "..."},     (optional pins, checked when given)
+#    "roms": [{"instances": ["u_x_0", "u_x_1"],          ping-pong: physical word p lives in instance p % len, addr p // len
+#              "skew": 0, "skew_mod": 8,                  physical word p, lane j = logical word (p - skew*(j % skew_mod)) mod N
+#              "segments": [{"tensor": "head.weight", "row0": 0, "rows": 32, "col0": 0, "cols": 4096,
+#                            "row_order": [optional list of row offsets, default 0..rows-1]}]}]}
+# The logical stream is the segments' elements in row-major order, packed lane_bits per lane, lanes = data bits /
+# lane_bits per word, padded with zero words to N = len(instances) * macro words.
+
+SAFETENSORS_ITEM_BYTES = {"BF16": 2, "F16": 2, "F32": 4, "F64": 8, "I8": 1, "U8": 1, "I16": 2, "U16": 2, "I32": 4,
+                          "U32": 4, "I64": 8, "F8_E4M3": 1, "F8_E5M2": 1, "F8_E8M0": 1}
+WEIGHTS_SPEC_SCHEMA = "opentallas.rom-weights-spec.v1"
+WEIGHTS_MANIFEST_SCHEMA = "opentallas.rom-weights.v1"
+
+
+class Checkpoint:
+    """A safetensors snapshot read without torch: index -> shard -> header -> raw element bytes at their file offset."""
+
+    def __init__(self, snapshot: Path):
+        self.dir = Path(snapshot)
+        idx = self.dir / "model.safetensors.index.json"
+        if idx.is_file():
+            self.index_sha256 = asap7.sha256_file(idx)
+            self.weight_map = json.loads(idx.read_text())["weight_map"]
+        else:                                     # single-file checkpoint
+            self.index_sha256 = None
+            self.weight_map = None
+        self._headers: dict[str, tuple[dict[str, Any], int, str]] = {}
+
+    def _header(self, shard: str) -> tuple[dict[str, Any], int, str]:
+        if shard not in self._headers:
+            with (self.dir / shard).open("rb") as f:
+                n = int.from_bytes(f.read(8), "little")
+                raw = f.read(n)
+            self._headers[shard] = (json.loads(raw), 8 + n, hashlib.sha256(raw).hexdigest())
+        return self._headers[shard]
+
+    def tensor(self, key: str) -> dict[str, Any]:
+        shard = self.weight_map[key] if self.weight_map is not None else "model.safetensors"
+        hdr, start, hsha = self._header(shard)
+        rec = hdr[key]
+        item = SAFETENSORS_ITEM_BYTES[rec["dtype"]]
+        shape = list(rec["shape"])
+        cols = shape[-1] if shape else 1
+        rows = (math.prod(shape[:-1]) if len(shape) > 1 else 1)
+        lo, hi = rec["data_offsets"]
+        if (hi - lo) != rows * cols * item:
+            raise ValueError(f"{key}: data_offsets disagree with shape {shape} x {item} B")
+        return {"key": key, "shard": shard, "header_sha256": hsha, "dtype": rec["dtype"], "shape": shape,
+                "rows": rows, "cols": cols, "item": item, "offset": start + lo}
+
+    def read(self, t: dict[str, Any], row: int, col0: int, ncols: int) -> bytes:
+        if not (0 <= row < t["rows"] and 0 <= col0 and col0 + ncols <= t["cols"]):
+            raise ValueError(f"{t['key']}: slice row {row} cols {col0}+{ncols} outside {t['shape']}")
+        with (self.dir / t["shard"]).open("rb") as f:
+            f.seek(t["offset"] + (row * t["cols"] + col0) * t["item"])
+            data = f.read(ncols * t["item"])
+        if len(data) != ncols * t["item"]:
+            raise ValueError(f"{t['key']}: truncated shard {t['shard']}")
+        return data
+
+
+def _weights_macro(spec_json: dict[str, Any], spec_path: Path) -> tuple[RomSpec, Path]:
+    m = Path(spec_json["macro"])
+    for cand in (m, spec_path.parent / m, ROOT / "physical/asap7_memory_macros_v2" / m.name / f"{m.name}.json"):
+        if cand.suffix == ".json" and cand.is_file():
+            return spec_from_sheet(cand), cand
+    raise ValueError(f"no ROM datasheet for {spec_json['macro']}")
+
+
+def _segment_rows(seg: dict[str, Any]) -> list[int | None]:
+    """Row offsets in stream order; ``None`` is a zero (padding) row, e.g. an invalid row inside a permuted block."""
+    order = seg.get("row_order")
+    rows = list(range(seg["rows"])) if order is None else [None if r is None else int(r) for r in order]
+    real = [r for r in rows if r is not None]
+    if sorted(real) != list(range(seg["rows"])):
+        raise ValueError("row_order must hold each of 0..rows-1 exactly once (None = zero row)")
+    return rows
+
+
+def weights_streams(ck: Checkpoint, rom: dict[str, Any], spec: RomSpec, lane_bits: int,
+                    payload_bits: int) -> tuple[list[int], list[dict[str, Any]]]:
+    """The logical word stream of one ROM entry (all its ping-pong instances), packed from raw checkpoint bytes."""
+    usable = payload_bits // 8                              # data bytes a word carries (bits above stay 0)
+    buf = bytearray()
+    segs = []
+    for seg in rom["segments"]:
+        t = ck.tensor(seg["tensor"])
+        if (t["item"] * 8) > lane_bits or lane_bits % (t["item"] * 8):
+            raise ValueError(f"{t['key']}: {t['dtype']} elements do not tile {lane_bits}-bit lanes")
+        h = hashlib.sha256()
+        for r in _segment_rows(seg):
+            if r is None:
+                buf += bytes(seg["cols"] * t["item"])
+                continue
+            data = ck.read(t, seg["row0"] + r, seg.get("col0", 0), seg["cols"])
+            h.update(data)
+            buf += data
+        segs.append({"tensor": t["key"], "shard": t["shard"], "shard_header_sha256": t["header_sha256"],
+                     "dtype": t["dtype"], "shape": t["shape"], "row0": seg["row0"], "rows": seg["rows"],
+                     "col0": seg.get("col0", 0), "cols": seg["cols"], "row_order": seg.get("row_order"),
+                     "source_bytes_sha256": h.hexdigest()})
+    n_words = len(rom["instances"]) * spec.words
+    if len(buf) > n_words * usable:
+        raise ValueError(f"{rom['instances']}: {len(buf)} payload bytes exceed {n_words} words x {usable} B")
+    buf += bytes(n_words * usable - len(buf))
+    return [int.from_bytes(buf[w * usable:(w + 1) * usable], "little") for w in range(n_words)], segs
+
+
+def physical_words(logical: list[int], lanes: int, lane_bits: int, skew: int, skew_mod: int) -> list[int]:
+    """Physical word p, lane j = lane j of logical word (p - skew * (j mod skew_mod)) mod N."""
+    if not skew:
+        return list(logical)
+    n, mask = len(logical), (1 << lane_bits) - 1
+    out = []
+    for p in range(n):
+        w = 0
+        for j in range(lanes):
+            w |= ((logical[(p - skew * (j % skew_mod)) % n] >> (j * lane_bits)) & mask) << (j * lane_bits)
+        out.append(w)
+    return out
+
+
+def weights_build(spec_path: Path, snapshot: Path, out: Path) -> dict[str, Any]:
+    spec_path = Path(spec_path)
+    sj = json.loads(spec_path.read_text())
+    if sj.get("schema", WEIGHTS_SPEC_SCHEMA) != WEIGHTS_SPEC_SCHEMA:
+        raise ValueError(f"unknown spec schema {sj.get('schema')}")
+    spec, sheet = _weights_macro(sj, spec_path)
+    lane_bits = int(sj.get("lane_bits", 16))
+    payload_bits = int(sj.get("payload_bits", (spec.bits // lane_bits) * lane_bits))
+    if payload_bits % lane_bits or payload_bits > spec.bits or payload_bits % 8:
+        raise ValueError(f"payload_bits {payload_bits} must be a multiple of the lane within {spec.bits}")
+    lanes = payload_bits // lane_bits
+    ck = Checkpoint(snapshot)
+    pin = sj.get("checkpoint", {})
+    if pin.get("index_sha256") and pin["index_sha256"] != ck.index_sha256:
+        raise ValueError("checkpoint index sha256 differs from the spec pin")
+    out = Path(out)
+    (out / "images").mkdir(parents=True, exist_ok=True)
+    recs = []
+    names = [i for rom in sj["roms"] for i in rom["instances"]]
+    if len(names) != len(set(names)):
+        raise ValueError("instance names repeat")
+    for rom in sj["roms"]:
+        logical, segs = weights_streams(ck, rom, spec, lane_bits, payload_bits)
+        phys = physical_words(logical, lanes, lane_bits, int(rom.get("skew", 0)), int(rom.get("skew_mod", 8)))
+        k = len(rom["instances"])
+        for i, inst in enumerate(rom["instances"]):
+            words = phys[i::k]
+            digits = (spec.bits + 3) // 4
+            img = out / "images" / f"{inst}.hex"
+            img.write_text("".join(f"{w:0{digits}x}\n" for w in words))
+            rec = personalise_instance(spec, words, inst, out)
+            rec.update({"image": f"images/{inst}.hex", "image_sha256": asap7.sha256_file(img),
+                        "pingpong": {"index": i, "of": k}, "skew": int(rom.get("skew", 0)),
+                        "skew_mod": int(rom.get("skew_mod", 8)), "segments": segs})
+            recs.append(rec)
+    man = {"schema": WEIGHTS_MANIFEST_SCHEMA, "generator": f"tools/mem_compiler/rom_gen.py v{GENERATOR_VERSION} weights",
+           "macro": spec.name, "macro_sheet_sha256": asap7.sha256_file(sheet), "data_bits": spec.bits,
+           "lane_bits": lane_bits, "payload_bits": payload_bits, "ecc": "none", "spec_sha256": asap7.sha256_file(spec_path),
+           "checkpoint": {**pin, "index_sha256_seen": ck.index_sha256},
+           "payload_policy": "released checkpoint bytes copied unchanged (no arithmetic, no requantisation)",
+           "instances": recs, "content_signature": die_signature(recs),
+           "viamap_set_sha256": hashlib.sha256("".join(r["viamap_sha256"] for r in
+                                                        sorted(recs, key=lambda r: r["instance"])).encode()).hexdigest()}
+    (out / "weights.manifest.json").write_text(json.dumps(man, indent=1, sort_keys=True) + "\n")
+    return man
+
+
+def read_word(spec: RomSpec, rows: list[int], a: int) -> int:
+    """One word as the behavioural model reads it: physical row a // mux, column b * mux + a % mux."""
+    r, s = divmod(a, spec.mux)
+    row = rows[r] >> s
+    return sum(((row >> (b * spec.mux)) & 1) << b for b in range(spec.bits))
+
+
+def weights_expected_lane(ck: Checkpoint, rec: dict[str, Any], spec: RomSpec, lane_bits: int, lanes: int,
+                          a: int, j: int) -> int:
+    """Expected lane j of macro address a, straight from the checkpoint file offset (independent of the packer)."""
+    k, i = rec["pingpong"]["of"], rec["pingpong"]["index"]
+    n = k * spec.words
+    p = a * k + i
+    g = (p - rec["skew"] * (j % rec["skew_mod"])) % n if rec["skew"] else p
+    lane_bytes = lane_bits // 8
+    byte0 = (g * lanes + j) * lane_bytes                     # byte offset of this lane in the logical stream
+    out = b""
+    pos = 0
+    for seg in rec["segments"]:
+        t = ck.tensor(seg["tensor"])
+        row_bytes = seg["cols"] * t["item"]
+        order = _segment_rows(seg)
+        size = len(order) * row_bytes
+        if byte0 < pos + size:
+            want = lane_bytes
+            while want and byte0 < pos + size:
+                off = byte0 - pos
+                r, cb = divmod(off, row_bytes)
+                take = min(want, row_bytes - cb)
+                el0, eb = divmod(cb, t["item"])
+                if order[r] is None:
+                    out += bytes(take)
+                else:
+                    data = ck.read(t, seg["row0"] + order[r], seg["col0"] + el0, math.ceil((eb + take) / t["item"]))
+                    out += data[eb:eb + take]
+                want -= take
+                byte0 += take
+            if not want:
+                break
+        pos += size
+    out += bytes(lane_bytes - len(out))                       # payload tail and padding words read zero
+    return int.from_bytes(out, "little")
+
+
+def weights_verify(manifest_path: Path, snapshot: Path, samples: int = 64, macro_sheet: Path | None = None,
+                   full: bool = False) -> dict[str, Any]:
+    """Read-back bench: sampled (or every) word of every instance, physical via map against the checkpoint bytes."""
+    import random
+    manifest_path = Path(manifest_path)
+    man = json.loads(manifest_path.read_text())
+    sheet = Path(macro_sheet) if macro_sheet else ROOT / "physical/asap7_memory_macros_v2" / man["macro"] / f"{man['macro']}.json"
+    spec = spec_from_sheet(sheet)
+    lane_bits = man["lane_bits"]
+    lanes = man["payload_bits"] // lane_bits
+    ck = Checkpoint(snapshot)
+    seen = man["checkpoint"].get("index_sha256_seen")
+    if seen and seen != ck.index_sha256:
+        return {"verdict": "FAIL", "errors": ["checkpoint index differs from the one the images were built from"]}
+    bad, checked = [], 0
+    for rec in man["instances"]:
+        vm = manifest_path.parent / rec["viamap"]
+        text = vm.read_text()
+        if hashlib.sha256(text.encode()).hexdigest() != rec["viamap_sha256"]:
+            bad.append(f"{rec['instance']}: via map hash differs")
+            continue
+        for seg in rec["segments"]:
+            if ck.tensor(seg["tensor"])["header_sha256"] != seg["shard_header_sha256"]:
+                bad.append(f"{rec['instance']}: {seg['tensor']} shard header differs from the build")
+        rows = [int(x, 16) for x in text.split()]
+        rnd = random.Random(int(rec["viamap_sha256"][:16], 16))
+        addrs = range(spec.words) if full else sorted({0, spec.words - 1, *(rnd.randrange(spec.words) for _ in range(samples))})
+        for a in addrs:
+            w = read_word(spec, rows, a)
+            for j in range(lanes):
+                got = (w >> (j * lane_bits)) & ((1 << lane_bits) - 1)
+                want = weights_expected_lane(ck, rec, spec, lane_bits, lanes, a, j)
+                if got != want:
+                    bad.append(f"{rec['instance']}: addr {a} lane {j} reads {got:x}, checkpoint {want:x}")
+                    break
+            if w >> (lanes * lane_bits):
+                bad.append(f"{rec['instance']}: addr {a} dead bits above the lanes are programmed")
+            checked += 1
+        if f"{ecc.signature_fast(read_back(spec, rows), spec.bits):08x}" != rec["signature_crc32"]:
+            bad.append(f"{rec['instance']}: BIST signature differs")
+    return {"verdict": "FAIL" if bad else "PASS", "macro": man["macro"], "instances": len(man["instances"]),
+            "words_checked": checked, "lanes_per_word": lanes, "content_signature": die_signature(man["instances"]),
+            "errors": bad[:20]}
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -456,7 +733,26 @@ def main() -> int:
     v.add_argument("--manifest", type=Path, required=True, help="<prefix>.personalisation.json")
     v.add_argument("--image", type=Path, default=None, help="the content file (default: the manifest's)")
     v.add_argument("--macro", type=Path, default=None, help="datasheet JSON of a shape not in physical/ (fresh compile)")
+    w = sub.add_parser("weights", help="real checkpoint tensors -> per-instance via maps + sha256 manifest (no requantisation)")
+    w.add_argument("--spec", type=Path, required=True, help="opentallas.rom-weights-spec.v1 JSON")
+    w.add_argument("--snapshot", type=Path, required=True, help="safetensors snapshot directory")
+    w.add_argument("--out", type=Path, required=True)
+    vw = sub.add_parser("verify-weights", help="read-back bench: physical via maps against the checkpoint bytes")
+    vw.add_argument("--manifest", type=Path, required=True, help="weights.manifest.json")
+    vw.add_argument("--snapshot", type=Path, required=True)
+    vw.add_argument("--samples", type=int, default=64, help="random addresses per instance (plus first and last)")
+    vw.add_argument("--full", action="store_true", help="every address of every instance")
+    vw.add_argument("--macro", type=Path, default=None, help="datasheet JSON of a shape not in physical/")
     args = ap.parse_args()
+    if args.cmd == "weights":
+        man = weights_build(args.spec, args.snapshot, args.out)
+        print(json.dumps({"instances": len(man["instances"]), "macro": man["macro"],
+                          "content_signature": man["content_signature"], "viamap_set_sha256": man["viamap_set_sha256"]}))
+        return 0
+    if args.cmd == "verify-weights":
+        res = weights_verify(args.manifest, args.snapshot, args.samples, args.macro, args.full)
+        print(json.dumps(res, indent=1, sort_keys=True))
+        return 0 if res["verdict"] == "PASS" else 1
     if args.cmd == "gds":
         import rom_viamap_gds as VG
         m = VG.Macro(args.macro)
