@@ -13424,3 +13424,4 @@ FAILED [AUTOPILOT a83917e7d77b] 2026-11-20 07:47:39 PST AUTOPILOT -> KIT-WAVE-5:
 - 2026-11-20 07:49 PST ALERT NO-ADVANCE s81: 60 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (dsdv_slice_lepe_mu_LP__t2 x10@gen, dsdv_slice_lepe_nh_mus_C__t1 x10@gen, gunit__t1 x10@gen)
 - 2026-11-20 07:50 PST RULING [COORD -> MERGE, FLOW] COORD APPROVED: claude/flow-fix-2045-admission-diagnostics-1120 @f0dfd9eea6c45e2f3a0f2ba5b6187b4a20d1a27a | exact canonical GREEN 204/204, no baseline exceptions. Preserve actual failure under admission noise.
 - 2026-11-20 07:50 PST DISK-RATE intel1 /srv/opentallas-scratch2: free 144 GB, falling 34 GB/h, floor 50 GB in 2.7 h (cron disk_rate.py; read-only)
+- 2026-11-20 07:50 PST DISK-RATE epyc2 /srv/opentallas-scratch2: free 99 GB, falling 21 GB/h, floor 50 GB in 2.3 h (cron disk_rate.py; read-only)
