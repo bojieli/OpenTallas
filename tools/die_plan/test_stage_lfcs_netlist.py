@@ -92,3 +92,25 @@ def test_explicit_shared_stage_override_keeps_latency(tmp_path):
 ])
 def test_bad_tree_override_fails(overrides):
     with pytest.raises(SystemExit):SN.leaf_depths(PLAN,overrides)
+
+
+def test_update_reprices_only_the_named_class():
+    staged = ("module dv_die (input wire clk);\n"
+              "    ot_s81sl_slice_x #(.LF_VP_XR(5'b11111), .LF_CS_SW_D(20'h11111), .LF_CS_SWR_D(20'h11011), "
+              ".LF_CS_HI_D(20'h22222)) u_s_0N (.clk(clk));\n"
+              "    ot_s81sl_slice_y #(.LF_CS_SWR_D(20'h00000)) u_s_1N (.clk(clk));\nendmodule\n")
+    plan = dict(partition_types={
+        "ot_s81sl_leaf__t9": dict(hard_cores=[1], internal_stations=[
+            _st("core:u_lf.u_vsw.o_ri", "u_lf.u_vs.sw_ri", 2), _st("core:u_lf.u_vs.sw_d", "u_lf.u_vsw.i_d", 1)])},
+        partitions=[dict(name="s_0N_L2", type="ot_s81sl_leaf__t9")])
+    out, rep = SN.update(plan, staged, ["SWR_D"])
+    assert ".LF_CS_SWR_D(20'h11211)" in out and ".LF_CS_SW_D(20'h11111)" in out and ".LF_CS_HI_D(20'h22222)" in out
+    assert "LF_VP_XR(5'b11111)" in out and ".LF_CS_SWR_D(20'h00000)) u_s_1N" in out
+    assert rep == [dict(slice="u_s_0N", cls="SWR_D", old="20'h11011", new="20'h11211")]
+
+
+def test_update_refuses_xr_dependent_class_and_unstaged_slice():
+    with pytest.raises(SystemExit):
+        SN.update(PLAN, NET, ["HI_D"])
+    with pytest.raises(SystemExit, match="stage the slice first"):
+        SN.update(PLAN, NET, ["SWR_D"])

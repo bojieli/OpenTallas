@@ -13,7 +13,10 @@ cs rows have no RTL realisation (re-planned in the floorplan stage) and are repo
 S81-STRIP form B (11-17): with --vp-xr TYPE:1 the plan's HI depth of that leaf is its EFFECTIVE depth and includes the one
 per-lane HI stage XR adds in ot_s81sl_vp (CS_HI_E = CS_HI_D + XR); the source gets HI_D = plan HI - 1 (GS follows), so a
 plan HI 3 stages source 2 / GS 2 and elaborates to 3, not 4.  The die instance's LF_VP_XR mask must agree with the
-contracts bit by bit (a mask bit with no contract refuses)."""
+contracts bit by bit (a mask bit with no contract refuses).
+
+S81-LEAF-SWR (11-20): --update CLASS (repeatable, e.g. SWR_D) re-prices only those classes on an already staged netlist
+(the D8i bind dropped 5 SWR rows: plan 1-2 stages, staged LF_CS_SWR_D nibble 0); XR / group classes need a full stage."""
 import argparse
 import json
 import re
@@ -168,6 +171,55 @@ def stage(plan, net_text, rtl_root, tree_overrides=None, vp_xr=None):
     return out, rep
 
 
+def update(plan, staged_text, classes):
+    """S81-LEAF-SWR 11-20: re-price only `classes` (e.g. SWR_D) on an ALREADY staged netlist.  Every slice instance that
+    holds a plan leaf gets the nibbles of those classes recomputed from the plan (leaf_cs_depth.plan_depths, the strict
+    gate's own definition); every other class, nibble, parameter (LF_VP_XR) and instance stays byte-identical.  Fails
+    closed on a class not in CL, an XR / group dependent class, an instance without a literal LF_CS_<C>, a depth > 15."""
+    bad = [c for c in classes if c not in CL or c in ("HI_D", "HI_GS", "HO_GS", "H_G")]
+    if bad:
+        raise SystemExit(f"--update: {bad} not updatable (HI_D/HI_GS/HO_GS/H_G depend on XR / group contracts: full stage)")
+    PT = plan["partition_types"]
+    want = {}
+    for p in plan["partitions"]:
+        m = PART.match(p["name"])
+        if not (LCD.LEAF_TYPE.match(p["type"]) and m) or not PT[p["type"]].get("hard_cores"):
+            continue
+        d, _ = LCD.plan_depths(PT[p["type"]])
+        for c in classes:
+            v = d.get(CLS[c], 0)
+            if v > 15:
+                raise SystemExit(f"{p['name']}: {c} depth {v} > 15")
+            want.setdefault(m.group(1), {})[(c, int(m.group(2)))] = v
+    rep, done = [], set()
+
+    def sub(m):
+        s = m.group("inst")[4:]
+        if s not in want:
+            return m.group(0)
+        p = m.group("p") or ""
+        for c in classes:
+            r = re.search(rf"\.LF_CS_{c}\(\s*20'h([0-9a-fA-F]{{5}})\s*\)", p)
+            if not r:
+                raise SystemExit(f"u_s_{s}: no literal .LF_CS_{c}(20'h.....) to update (stage the slice first)")
+            v0 = int(r.group(1), 16)
+            v = v0
+            for k in range(5):
+                if (c, k) in want[s]:
+                    v = (v & ~(0xF << (4 * k))) | (want[s][(c, k)] << (4 * k))
+            if v != v0:
+                rep.append(dict(slice="u_s_" + s, cls=c, old=f"20'h{v0:05x}", new=f"20'h{v:05x}"))
+            p = p[:r.start(1)] + f"{v:05x}" + p[r.end(1):]
+        done.add(s)
+        return f"{m.group('lead')}#({p}) {m.group('inst')} ("
+
+    out = INST.sub(sub, staged_text)
+    miss = sorted(set(want) - done)
+    if miss:
+        raise SystemExit(f"plan leaf slices not instantiated in the netlist: {miss}")
+    return out, rep
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("plan")
@@ -179,8 +231,18 @@ def main(argv=None):
     ap.add_argument("--ho-gs", action="append", default=[], metavar="TYPE:N")
     ap.add_argument("--vp-xr", action="append", default=[], metavar="TYPE:0|1",
                     help="explicit selective XR contract: plan effective HI depth includes XR; source depth excludes it")
+    ap.add_argument("--update", action="append", default=[], metavar="CLASS",
+                    help="re-price only these classes (e.g. SWR_D) on an already staged netlist; all else unchanged")
     a = ap.parse_args(argv)
     plan = json.loads(Path(a.plan).read_text())
+    if a.update:
+        out, rep = update(plan, Path(a.netlist).read_text(), a.update)
+        Path(a.out).write_text(out)
+        if a.report:
+            Path(a.report).write_text(json.dumps(rep, indent=1) + "\n")
+        print(f"LF_CS update {a.update}: {len(rep)} slice nibble words changed: "
+              + "; ".join(f"{r['slice']} {r['cls']} {r['old']}->{r['new']}" for r in rep))
+        return 0
     overrides = {}
     for param, values in (("HI_GS", a.hi_gs), ("HO_GS", a.ho_gs)):
         for item in values:
