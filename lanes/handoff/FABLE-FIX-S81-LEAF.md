@@ -307,3 +307,10 @@ QC / KV / HEAD CBC counts need a re-run by CBC-RULES-1119 with main >= 01360b438
 - t31wreg CTS TT: WNS -1,044.6 (was -1,263), setup_est -912.7 unchanged (TT FAIL). New worst path: g_ln_8 cst_hi -> lane g_ln_12, 1,906 ps (HI fabric).
 - No GRT launched after lever 5. t28/t27keep GRT left to finish. Stop list: no leaf tap pre-pass.
 - Tools on epyc10 lane dir bin/: hotpts.py, hotmap.tcl, hotrun.sh, hotsum.py, hig.tcl, higrun.sh, lanegeo.py, vnface.py.
+
+## 11-20 ~04:4x UTC: HI corridor forms (COORD: build A + B, also PRECHECK check)
+- Cause: kit_istations sites each shared hi-quad bank at the bit-weighted centroid of member lane sites; on f2ec5ffc3bda it lands inside a lane/vn core (t28 5/8, t31 5/8, all 75 types 1-8/8).
+- Tool main adc8824d+: tools/die_plan/s81_hi_corridor.py check|seed|apply|sites (6 tests).
+- Work: epyc8 + epyc9 /srv/opentallas-scratch2/claude/fable-fix-s81-leaf/hic. Plans: C (sites only) baad7711137e; A2 (lane gaps >= 30.24 + rigid apply + istation_clear + leaf_slot_clear + sites) 3e9118c2db3d (first A had a 2.16-um lane overlap -> KITFIT-OVERLAP, fixed); B via private core_place copy hic/cpx/core_place_hic.py (gate: link timing not worse than base), then sites.
+- Builds on epyc9 (form_build9.sh X: hardlinked tree6base = GEOM-OPUS tree6 copy, build_tree_own.sh, kit_one_d8i.sh t28/t31): logs intel2 ~/lanes-opus-s81leaf/hic_build_{C,A2}.log. Next: run_kit.sh grt on each kit, compare GRT overflow/iterations + TT vs base t28 (congested) / t31 attempt 12.
+- tree_A/build_A on epyc9 are dead (overlap); ot-delete refused (protected dir marker).
