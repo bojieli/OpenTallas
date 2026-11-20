@@ -204,3 +204,82 @@ def test_dly_spread_station_key():
     assert m({"r_dly_spread_station_um": {"kv3_pv": 405, "kv3_pv_v8": 300}}, "kv3_pv_v8__x") == 300.0
     assert "OT_DLY_SPREAD_STATION_UM" in (HERE / "gen_phys.py").read_text()
     assert schema.SCHEMA["properties"]["budgets"]["properties"]["r_dly_spread_station_um"]["type"] == "object"
+
+
+def _netlist_seg():
+    """XTAP-C: one bit of a split pad trunk: 3 segments of 3 stages (r[0], r[1], q) with a hop lockup latch between segments"""
+    w, body = ["a"], [f"  {FF} src (.CLK(clk), .D(1'b0), .QN(a));"]
+    d = "a"
+    for j in range(3):
+        for k, nm in enumerate(("r[0]", "r[1]", "q")):
+            o = f"E_{j}_{k}"
+            w.append(o)
+            body.append(f"  {FF} \\u_bound.u_pd9_x_t_5_sg{j}.{nm}$_DFF_P_  (.CLK(clk), .D({d}), .QN({o}));")
+            d = o
+        if j < 2:
+            o = f"E_l{j}"
+            w.append(o)
+            body.append(f"  DLLx1_ASAP7_75t_R \\u_bound.u_fl_pd9_x_t_5_sg{j + 1}.q$_DLATCH_N_  (.CLK(clk), .D({d}), .Q({o}));")
+            d = o
+    body.append(f"  {FF} ldE (.CLK(clk), .D({d}), .QN());")
+    return "\n".join(["module t(input wire clk, output wire y);"] + [f"  wire {x};" for x in w] + body + ["  assign y = 1'b0;\nendmodule\n"])
+
+
+TCL_SEG = r"""
+set P /OpenROAD-flow-scripts/flow/platforms/asap7/lef
+read_lef $P/asap7_tech_1x_201209.lef
+read_lef $P/asap7sc7p5t_28_R_1x_220121a.lef
+read_verilog /w/t.v
+link_design t
+initialize_floorplan -die_area "0 0 3000 600" -core_area "5 5 2995 595" -site asap7sc7p5t
+set blk [ord::get_db_block]
+set u [[ord::get_db_tech] getDbUnitsPerMicron]
+foreach i [$blk getInsts] {
+  set n [string map {\\ {}} [$i getName]]
+  set st PLACED; set x 2450
+  if {$n eq "src"} { set x 100; set st FIRM } elseif {$n eq "ldE"} { set x 2500; set st FIRM } elseif {$n eq "@ANCHOR@"} { set x 2400; set st FIRM }
+  $i setLocation [expr {int($x * $u)}] [expr {int(300 * $u)}]; $i setPlacementStatus $st
+}
+set ::env(OT_DLY_SPREAD) warn
+set ::env(OT_DLY_SPREAD_SEG) 1
+set ::env(OT_DLY_SPREAD_STATION_UM) 405
+source /w/dly_spread.tcl
+foreach i [$blk getInsts] { set n [string map {\\ {}} [$i getName]]; set b [$i getBBox]; puts "POS $n [expr {[$b xMin]/double($u)}] [expr {[$b yMin]/double($u)}]" }
+"""
+
+
+def _run_seg(tcl, d):
+    (Path(d) / "t.v").write_text(_netlist_seg())
+    (Path(d) / "t.tcl").write_text(tcl)
+    shutil.copy(HERE / "dly_spread.tcl", d)
+    cmd = "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; openroad -exit /w/t.tcl; chmod -R a+rwX /w"
+    r = subprocess.run(["docker", "run", "--rm", "--memory=4g", "--memory-swap=4g", "-v", f"{d}:/w",
+                        "openroad/orfs:asap7lock", "bash", "-lc", cmd], capture_output=True, text=True, timeout=600)
+    if r.returncode and "Unable to find image" in r.stderr:
+        pytest.skip("image missing")
+    return r.stdout
+
+
+def test_dly_spread_segment_form_latch_groups():
+    """XTAP-C (FABLE-FIX-KV-PV 11-20): OT_DLY_SPREAD_SEG=1: the stages between two hop lockup latches are one station, the
+    latch sits with its launch station; a group that reaches a FIRM stage with no latch between sits at that stage."""
+    if not shutil.which("docker"):
+        pytest.skip("no docker")
+    with tempfile.TemporaryDirectory() as d:
+        out = _run_seg(TCL_SEG, d)
+        pos = {m.group(1): float(m.group(2)) for m in re.finditer(r"POS (\S+) ([0-9.]+) ([0-9.]+)", out)}
+        assert pos, out[-3000:]
+        seg = lambda j: [pos[f"u_bound.u_pd9_x_t_5_sg{j}.{nm}$_DFF_P_"] for nm in ("r[0]", "r[1]", "q")]  # noqa: E731
+        # no anchor stage: 3 groups at 1/4, 2/4, 3/4 of 100 -> 2500
+        for j, x in enumerate((700, 1300, 1900)):
+            assert all(abs(v - x) <= 30 for v in seg(j)), (j, seg(j), out[-1500:])
+            if j:
+                assert abs(pos[f"u_bound.u_fl_pd9_x_t_5_sg{j}.q$_DLATCH_N_"] - (x - 600)) <= 30
+        assert "fail 0" in out, out[-2000:]
+    with tempfile.TemporaryDirectory() as d:
+        out = _run_seg(TCL_SEG.replace("@ANCHOR@", "u_bound.u_pd9_x_t_5_sg2.q\\$_DFF_P_"), d)
+        pos = {m.group(1): float(m.group(2)) for m in re.finditer(r"POS (\S+) ([0-9.]+) ([0-9.]+)", out)}
+        seg = lambda j: [pos[f"u_bound.u_pd9_x_t_5_sg{j}.{nm}$_DFF_P_"] for nm in ("r[0]", "r[1]", "q")]  # noqa: E731
+        # the last stage is FIRM at 2400: its group sits there, the two free groups at 1/3 and 2/3 of 100 -> 2400
+        assert all(abs(v - 2400) <= 30 for v in seg(2)), (seg(2), out[-1500:])
+        assert all(abs(v - 867) <= 30 for v in seg(0)) and all(abs(v - 1633) <= 30 for v in seg(1)), (seg(0), seg(1))
