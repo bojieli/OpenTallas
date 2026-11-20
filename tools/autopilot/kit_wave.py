@@ -5517,11 +5517,18 @@ def sync_item_inputs(AP, cfg, run=None):
                                 and p not in str((inc[g].get(die) or {}).get(item) or "")), None)
                     if not src:
                         continue
-                    q = shlex.quote(p)
+                    # FLOW-HEALTH-2 11-19 (FABLE-FLOW-1949 class 6, phy_serdes_b rc=2 every tick since 13:55): "<plan>.json: <pins file> missing" means the plan EXISTS on
+                    # the host and the file it names (pins_file) is absent; copying the plan always fails (tar --keep-old-files on an existing file = rc 2).  Copy the named file.
+                    sp = p
+                    if ": " in part:
+                        _t = part.split(": ", 1)[1].replace(" missing", "").strip()
+                        if _ITEM_SYNC_OK.match(_t) and ".." not in _t:
+                            sp = _t
+                    q = shlex.quote(sp)
                     pipe = (f"{' '.join(ssh)} {src} 'test -e {q} && [ $(du -sm {q} | cut -f1) -le {ITEM_SYNC_MAX_MB} ] && "
-                            f"tar -C / --hard-dereference -cf - {shlex.quote(p.lstrip('/'))}' | "
-                            f"{' '.join(ssh).replace('-n ', '')} {h} 'mkdir -p {shlex.quote(os.path.dirname(p))} && "
-                            f"{tar_extract_cmd([p])}'")
+                            f"tar -C / --hard-dereference -cf - {shlex.quote(sp.lstrip('/'))}' | "
+                            f"{' '.join(ssh).replace('-n ', '')} {h} 'mkdir -p {shlex.quote(os.path.dirname(sp))} && "
+                            f"{tar_extract_cmd([sp])}'")
                     try:
                         for _try in range(5):                   # sshd MaxStartups / banner timeouts are transient
                             rc = run(["bash", "-c", "set -o pipefail; " + pipe])
@@ -9882,7 +9889,13 @@ def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
             if not _dd.get("enabled"):
                 continue
             if not _ok:
-                (AP.log if AP else log)(f"KIT-WAVE DIE-OFF {_die}: no launches this tick, the die gate says: {str(_why)[:300]}")
+                # FLOW-HEALTH-2 11-19 (FABLE-FLOW-1949 class 6): a parked die (HBM) printed DIE-OFF every tick; same die + same reason = one line per hour
+                _k = f"{_die}|{str(_why)[:120]}"; _seen = st.setdefault("die_off_logged", {})
+                if time.time() - float(_seen.get(_k, 0) or 0) >= 3600:
+                    _seen[_k] = time.time()
+                    for _o in [o for o in _seen if o.split("|", 1)[0] == _die and o != _k]:
+                        _seen.pop(_o, None)           # a changed reason replaces the old key, the map stays one entry per die
+                    (AP.log if AP else log)(f"KIT-WAVE DIE-OFF {_die}: no launches this tick, the die gate says: {str(_why)[:300]}")
             elif _picks and not _lp.get(_die):
                 (AP.log if AP else log)(f"KIT-WAVE NO-LAUNCH {_die}: {len(_picks)} eligible row(s), 0 launched this tick; skipped: "
                                         + "; ".join(f"{len(v)}x {str(k)[:80]}" for k, v in sorted((_skip or {}).items(), key=lambda kv: -len(kv[1]))[:5]) + f"; launch room {room}")

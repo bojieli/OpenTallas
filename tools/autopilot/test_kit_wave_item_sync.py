@@ -75,3 +75,22 @@ def test_src_sync_logs_the_first_stderr_line_of_a_failed_copy(tmp_path, monkeypa
     KW.sync_die_inputs(a2, cfg, run=run)
     KW.sync_die_inputs(a2, cfg, run=run)                                              # third call: blocked after 2 tries
     assert any("STOPPED after 2" in l for l in a2.logs)
+
+
+def test_plan_present_pins_file_missing_copies_the_pins_file(tmp_path, monkeypatch):
+    """FLOW-HEALTH-2 11-19: 'plan.json: <pins> missing' (plan exists on the host) copied the PLAN every tick: tar --keep-old-files rc 2, ITEM-SYNC loop 37x"""
+    monkeypatch.setattr(KW, "_heal_path", lambda: str(tmp_path / "heal.json"))
+    plan = "/srv/opentallas-scratch2/claude/tl-q/por/plan_x.json"
+    pins = "/srv/opentallas-scratch2/claude/tl-q/por/cores/pins.json"
+    c = {"dies": {"qwen_compute": {"gen_hosts": ["intel1", "epyc2"]}},
+         "_item_incomplete": {"epyc2": {"qwen_compute": {"phy": f"{plan}: {pins} missing"}}, "intel1": {}}}
+    ap = AP()
+    KW.sync_item_inputs(ap, c)
+    cmd = ap.cmds[0][-1]
+    assert "cores/pins.json" in cmd and "plan_x.json" not in cmd
+
+
+def test_die_off_line_is_hourly_per_die_and_reason():
+    import inspect
+    src = inspect.getsource(KW)
+    assert 'st.setdefault("die_off_logged"' in src and ">= 3600" in src
