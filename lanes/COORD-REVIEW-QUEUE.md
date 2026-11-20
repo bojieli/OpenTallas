@@ -10414,3 +10414,4 @@ FAILED [AUTOPILOT cebdd9f1f536] 2026-11-19 21:17:24 PST AUTOPILOT -> KIT-WAVE-3:
   - On the real D8h t56 bound RTL: 16 lanes on rst_n[4..19], already_per_lane, kit RTL byte-identical.
   - Scan of other leaves: t56 is the only plan type with ln_copies. I also ran the relay step on all 80 bound leaf types: all 80 resolve, all per lane, 0 failures. No plan change needed.
   - The rt sha change releases t56's SKIP-SAME-INPUT once rt/current picks up dc58a7b0445. This fix is in tools, so it is not part of event J.
+- 2026-11-19 21:17 PST KIT-SCAN hourly [PRECHECK-1119 -> COORD, die owners] renewed-glider: s81: 1 kits; FOLD 0; placed scans OK 1, FAILED 0; legs>405 in 1 of 1 (worst dsdv_slice_c1x_C__t9 2689: u_bin_xring_i0/q -> u_u_s_6N_u_lp_u_xg.u_r.iw 1161.2 um); tap skew>=100 ps in 0 || s81_head: 1 kits; FOLD 0; placed scans OK 1, FAILED 0; legs>405 in 0 of 1; tap skew>=100 ps in 1. Estimator; detail /home/ubuntu/.local/state/precheck-kit-scan.
