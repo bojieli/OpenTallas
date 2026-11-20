@@ -268,3 +268,29 @@ def test_grt_stage_ignores_the_legalizer_violations_table():
 def test_grt_incremental_activity_counts_as_growth():
     t = LEGALIZER + "[INFO GRT-0128] incremental global routing: 12 nets\n"
     assert nw.extract("grt", t)["growth_idx"] == len(t.splitlines()) - 1
+
+
+# ---------------------------------------------------------------- DOCKERGRP-1400
+def test_sh_retries_refused_docker_through_sg(monkeypatch):
+    """a user manager started before ubuntu joined group docker gets 'permission denied': the call is retried through sg docker -c"""
+    import subprocess as sp
+    calls = []
+
+    def fake(cmd, **kw):
+        calls.append(cmd)
+        if cmd[0] == "docker":
+            return sp.CompletedProcess(cmd, 1, "", "permission denied while trying to connect to the docker API")
+        return sp.CompletedProcess(cmd, 0, "abc123\n", "")
+    monkeypatch.setattr(nw.subprocess, "run", fake)
+    del nw.DOCKER_ERR[:]
+    assert nw.sh("docker", "ps", "-q") == "abc123\n"
+    assert calls[1] == ["sg", "docker", "-c", "docker ps -q"] and not nw.DOCKER_ERR
+
+
+def test_sh_keeps_a_docker_failure_for_the_loud_line(monkeypatch):
+    import subprocess as sp
+    monkeypatch.setattr(nw.subprocess, "run", lambda cmd, **kw: sp.CompletedProcess(cmd, 1, "", "Cannot connect to the Docker daemon"))
+    del nw.DOCKER_ERR[:]
+    assert nw.sh("docker", "ps", "-q") == "" and "Cannot connect" in nw.DOCKER_ERR[0]
+    del nw.DOCKER_ERR[:]
+    assert nw.sh("echo", "x") == "" and not nw.DOCKER_ERR       # a non-docker failure is not a docker error

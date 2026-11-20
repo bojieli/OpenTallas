@@ -30,7 +30,7 @@ jobs (bind / LATCHECK / G0 / die-proto / chain), and anything matched by a NOPRO
 
 Cancel = `ot-heavy-stop --match <kit dir>` (exact `--unit` when the match would hit another scope), nothing else is killed.
 """
-import argparse, glob, json, os, re, socket, subprocess, sys, time
+import argparse, glob, json, os, re, shlex, socket, subprocess, sys, time
 
 WINDOW_S = 6 * 3600
 MIN_IMPROVE = 0.02
@@ -475,10 +475,23 @@ def keep_match(keep_lines, text):
 
 
 # ---------------------------------------------------------------- host scan
+DOCKER_ERR = []     # DOCKERGRP-1400: why a docker call returned nothing (filled by sh, read by scan, which says so loudly)
+
+
 def sh(*a, timeout=60):
+    """run a command, return stdout.  DOCKERGRP-1400: a systemd USER manager keeps the groups it started with; epyc8/9/10 started theirs before ubuntu joined group docker,
+    so every unit it runs gets 'permission denied' on the socket and `docker ps -q` was empty on every pass (167 of 369 jobs unwatched, 30 h).  A docker call that is
+    refused is retried once through `sg docker -c` (setuid newgrp; the user is in /etc/group docker); a failure that remains is kept in DOCKER_ERR."""
     try:
-        return subprocess.run(list(a), capture_output=True, text=True, timeout=timeout).stdout
-    except (subprocess.SubprocessError, OSError):
+        r = subprocess.run(list(a), capture_output=True, text=True, timeout=timeout)
+        if a and a[0] == "docker" and r.returncode != 0 and "permission denied" in (r.stderr or "").lower():
+            r = subprocess.run(["sg", "docker", "-c", " ".join(shlex.quote(x) for x in a)], capture_output=True, text=True, timeout=timeout)
+        if a and a[0] == "docker" and r.returncode != 0:
+            DOCKER_ERR.append((r.stderr or "").strip()[:200] or f"rc {r.returncode}")
+        return r.stdout
+    except (subprocess.SubprocessError, OSError) as e:
+        if a and a[0] == "docker":
+            DOCKER_ERR.append(f"{type(e).__name__}: {e}"[:200])
         return ""
 
 
@@ -656,8 +669,11 @@ def scan(now=None, act=False, probe_s=4):
     pol = os.path.join(STATE_DIR, "policy")
     keep = read_lines(os.path.join(pol, "keep.tsv"))
     state = load_state()
+    del DOCKER_ERR[:]
     ids = sh("docker", "ps", "-q").split()
     insp = json.loads(sh("docker", "inspect", *ids) or "[]") if ids else []
+    if DOCKER_ERR:
+        print(f"noprog scan: DOCKER FAILED on {hostname}: {DOCKER_ERR[0]} -- this host is NOT watched this pass", file=sys.stderr)
     sc = scopes()
     pid2unit = {p: u for u, ps in sc.items() for p in ps}
     cg0 = {}
