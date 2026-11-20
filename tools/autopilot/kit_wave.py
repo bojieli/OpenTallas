@@ -13728,7 +13728,7 @@ def full_input_hash(cfg, die, item, block_sha=None):
 def fail_key(parts, cls, why):
     """FABLE-FLOWCLASS-RETRY-2030 P2: one key = kit input digest + masked first error (item / type names stripped)"""
     dig = hashlib.sha1(json.dumps(parts, sort_keys=True).encode()).hexdigest()[:16]
-    return hashlib.sha1((dig + "|" + FG.norm_class(cls, why)).encode()).hexdigest()[:16], dig
+    return hashlib.sha1((dig + "|" + FG.norm_text(why)).encode()).hexdigest()[:16], dig
 
 
 def is_host_fail(cls, why):
@@ -13751,7 +13751,7 @@ def note_fail_key(cfg, st, rec, cls, why):
     k = f"{rec['die']}|{rec['item']}"
     prev = store.get(k) or {}
     n = int(prev.get("n") or 0) + 1 if prev.get("key") == key else 1
-    sig = hashlib.sha1(f"{stage}|{FG.norm_class(cls, why)}".encode()).hexdigest()[:12]
+    sig = hashlib.sha1(f"{stage}|{FG.norm_text(why)}".encode()).hexdigest()[:12]
     sig_n = int(prev.get("sig_n") or 1) + 1 if prev.get("sig") == sig else 1
     store[k] = {"event": rec.get("event"), "key": key, "dig": dig, "parts": parts, "cls": cls, "stage": rec.get("stage") or FG.fail_stage(why), "n": n, "ts": time.time(), "why": (why or "")[:160],
                 "tools_group": group, "tool_files": tfiles, "sig": sig, "sig_n": sig_n,
@@ -14135,7 +14135,7 @@ def infra_key(cfg, rec, cls, why):
     except (OSError, ValueError, KeyError, TypeError):
         pass
     body = [sp.get("src_sha") or d.get("src_sha"), sp.get("src_overlay") or d.get("_src_overlay"), sp.get("plan") if False else None,
-            rec.get("block_sha") or rec.get("plan_sha") or d.get("_plan_sha") or d.get("plan_sha"), FG.norm_class(cls, why)]
+            rec.get("block_sha") or rec.get("plan_sha") or d.get("_plan_sha") or d.get("plan_sha"), FG.norm_text(why)]
     if HOST_ENV_RE.search(why or ""):
         body.append(rec.get("gen_host") or sp.get("gen_host"))      # a host-environment fail is per host: the same fail on another host is a new key
     return hashlib.sha1(json.dumps(body, default=str).encode()).hexdigest()[:16]

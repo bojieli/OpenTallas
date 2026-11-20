@@ -80,6 +80,12 @@ def norm_class(cls, why):
     return re.sub(r"\s+", " ", s).strip()[:150]
 
 
+def norm_text(why):
+    """norm_class without the class label (FLOW-NOADV-R2 11-20, FABLE-FLOW-1200 class 7): the retry keys name the CAUSE, so a
+    classifier relabel (UNCLASSIFIED -> PLAN, CRASH -> INFRA) of the same text is the same key and does not reset the repeat count"""
+    return norm_class("", why).lstrip(": ").strip()
+
+
 _FAM_SUFFIX = re.compile(r"(?:__(?:cl|pv|t)[0-9a-z]*)+$")
 STAGE_ORDER = ("mkdir", "src_manifest", "kit_snap", "kit_store", "bind", "bind_fetch", "kit_rtl", "gen", "gen_lint", "kit_topology", "preflight", "prov_views", "lec_tools", "views", "cells",
                "relay_bay", "sync_hub", "pipeline", "selfcontained", "type_overlay", "unit", "place", "cts", "grt", "route", "sta", "signoff")

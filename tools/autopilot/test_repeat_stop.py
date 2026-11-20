@@ -124,3 +124,15 @@ def test_queue_route_outcomes_reach_the_ledger(monkeypatch):
         KW.QUEUE_OUTCOMES.append(({"die": D, "item": I, "attempt": n, "block_sha": "b", "dir": "/x"}, "FAIL", "route", "CRASH", DRT % ("net25397", 1, 2, 3, 4)))
     KW.repeat_queue_outcomes(AP, cfg, st)
     assert RS.state_of(st, D, I)[0] == "BLOCKED-REPEAT" and len(AP.q) == 1 and KW.QUEUE_OUTCOMES == []
+
+
+def test_class_relabel_keeps_the_streak_and_the_fail_key():
+    # FLOW-NOADV-R2 11-20 (FABLE-FLOW-1200 class 7): UNCLASSIFIED -> PLAN -> INFRA on the same text is ONE cause: same retry key, same streak
+    why = "AttributeError: module gen_phys has no attribute tap_3 (gen_phys.py)"
+    assert KW.fail_key({"a": 1}, "UNCLASSIFIED", why) == KW.fail_key({"a": 1}, "PLAN", why)
+    assert KW.fail_key({"a": 1}, "PLAN", why) != KW.fail_key({"a": 2}, "PLAN", why)                  # other inputs: another key
+    assert KW.fail_key({"a": 1}, "PLAN", why) != KW.fail_key({"a": 1}, "PLAN", "KeyError: 'x' (gen_phys.py)")
+    st = {}
+    ev = [RS.record(st, D, "t1", n, "gen", cls, why) for n, cls in enumerate(["UNCLASSIFIED", "PLAN", "CRASH"], 1)]
+    assert ev[-1] and ev[-1]["event"] == "BLOCKED-REPEAT"
+    assert RS.ident("gen|PLAN|ValueError x") == RS.ident("gen|CRASH|ValueError x") != RS.ident("gen|PLAN|ValueError y")

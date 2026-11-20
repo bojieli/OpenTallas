@@ -66,6 +66,14 @@ def fingerprint(stage, cls, why):
     return f"{stage}|{cls}|{obj}"[:200]
 
 
+def ident(fp):
+    """the fingerprint without its class label: stage|obj (FLOW-NOADV-R2 11-20: a relabel of the same cause keeps the streak)"""
+    parts = str(fp).split("|", 2)
+    if len(parts) < 3:
+        return str(fp)
+    return parts[0] + "|" + re.sub(r"^[A-Z][A-Z0-9_-]*: ", "", parts[2])
+
+
 def _best_rank(attempts, before=None):
     ranks = [a["rank"] for a in attempts if before is None or a["t"] < before]
     return max(ranks) if ranks else -1
@@ -97,7 +105,7 @@ def record(st, die, item, attempt, stage, cls, why, inputs=None, t=None, ok=Fals
             e["mem_x"] = round(e["mem_x"] * OOM_FACTOR, 2)
             return {"event": "OOM-RESUBMIT", "fp": fp, "mem_x": e["mem_x"]}
         return None
-    tail = [a["fp"] for a in e["att"][-IDENT_N:]]
+    tail = [ident(a["fp"]) if a["fp"] != "ok" else "ok" for a in e["att"][-IDENT_N:]]
     if len(tail) == IDENT_N and len(set(tail)) == 1 and tail[0] != "ok":
         return _block(e, "BLOCKED-REPEAT", fp, last, why=f"{IDENT_N} identical fingerprints in a row")
     win = [a for a in e["att"] if t - a["t"] <= STALL_WINDOW_S and not a["oom"]]
