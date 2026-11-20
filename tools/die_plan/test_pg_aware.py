@@ -81,7 +81,9 @@ def kit(d, monkeypatch, env=()):
 
 def test_kit_default_off_and_gen_env_switch(tmp_path, monkeypatch):
     kd, c = kit(tmp_path / "a", monkeypatch)
-    assert c["OT_PG_CELL_KEEPOUT"] == "0" and (kd / "pg_cell_keepout.tcl").is_file()
+    # HEAD is outside R-FLOW. The staged GRT hook stays off with the setting absent.
+    assert "OT_PG_CELL_KEEPOUT" not in c
+    assert (kd / "pg_cell_keepout.tcl").is_file()
     assert stripes((kd / "pdn.tcl").read_text())["M7"][3] == 4.128
     kd, c = kit(tmp_path / "b", monkeypatch, [("OT_PG_CELL_KEEPOUT", "1"), ("OT_PG_DIE_PHASE", "1")])
     assert c["OT_PG_CELL_KEEPOUT"] == "1"
