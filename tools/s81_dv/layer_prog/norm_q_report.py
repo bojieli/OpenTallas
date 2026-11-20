@@ -53,11 +53,12 @@ def main(prog, tree, out=None):
         lk, dst, inport, age = N._lane0(die, e['inst'], e['port'])
         words.append(dict(inst=e['inst'], port=e['port'], edge=e['cycle'], hops=h, origin=o, dst=dst, land=e['cycle'] + age,
                           own=(e['inst'] == by_sid[o] and h in (N.HE, N.HW))))
+    delivery = S.get('timing_contract', {}).get('xfin', {}).get('delivery_cycles', 0)
     arr = Q.arrivals(words)
     root = {}
     for inst, dl in sorted(arr.items()):
         assert len(dl) == Q.NS, (inst, len(dl))
-        root[inst] = Q.finish_root(dl)
+        root[inst] = Q.finish_root(dl, delivery)
     last = {inst: max(dl.values()) for inst, dl in arr.items()}
     r0 = min(root.values())
     doc = dict(n_words=len(words), c_in=Q.C_IN,

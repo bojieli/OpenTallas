@@ -106,6 +106,45 @@ def manifest_selection(source_root, name):
     return path, ab, idx, prefer
 
 
+def xfin_delivery_contract(source_root, manifest, bound_rtl=None):
+    """Resolve added NORM and ENG finish delivery cycles from selected source."""
+    import bind_elab
+
+    source_root = Path(source_root).resolve()
+    _path, asbuilt, index, prefer = manifest_selection(source_root, manifest)
+    module = 'ot_s81dv_xfin'
+    picked, ambiguous = bind_elab.pick(index, module, prefer)
+    if not picked or ambiguous:
+        raise ValueError('selected xfin source is missing or ambiguous')
+    path = Path(picked)
+    raw = path.read_text()
+    clean = preprocess(re.sub(r'/\*.*?\*/|//[^\n]*', '', raw, flags=re.S),
+                       set(asbuilt.get('defines', [])))
+    match = re.search(r'\bmodule\s+' + module + r'\b(.*?)(?=\bendmodule\b)', clean, re.S)
+    if not match:
+        raise ValueError('selected xfin source does not contain its module')
+    defaults = re.findall(r'\bparameter\s+(?:integer\s+)?DLV\s*=\s*(\d+)\b', match[1])
+    if len(defaults) > 1 or (not defaults and re.search(r'\bDLV\b', match[1])):
+        raise ValueError('selected xfin DLV is not a single literal parameter')
+    default = int(defaults[0]) if defaults else 0
+    cycles = set()
+    if bound_rtl is not None:
+        instances = re.compile(r'\b' + module + r'\s*(?:#\s*\(([^;]*?)\)\s*)?(\w+)\s*\(')
+        for file in sorted(Path(bound_rtl).glob('*_C*.sv')):
+            text = re.sub(r'/\*.*?\*/|//[^\n]*', '', file.read_text(), flags=re.S)
+            for override, _instance in instances.findall(text):
+                explicit = re.search(r'\.DLV\s*\(\s*([^()]*)\s*\)', override)
+                value = explicit[1].strip() if explicit else str(default)
+                if not value.isdigit():
+                    raise ValueError('xfin DLV override is not an integer literal in '+str(file))
+                cycles.add(int(value))
+    if len(cycles) > 1 or not (cycles or {default}) <= {0, 1}:
+        raise ValueError('unsupported mixed or nonbinary xfin DLV values')
+    return dict(delivery_cycles=next(iter(cycles or {default})),
+                source=str(path.relative_to(source_root)),
+                source_sha256=hashlib.sha256(path.read_bytes()).hexdigest())
+
+
 def resolve(die, slice_inst, source_root=None):
     explicit = source_root is not None or bool(os.environ.get('OT_S81_SELECTED_SOURCE_ROOT'))
     source_root = Path(source_root or os.environ.get('OT_S81_SELECTED_SOURCE_ROOT') or ROOT)

@@ -80,8 +80,10 @@ def _clog2(x):
     return (x - 1).bit_length()
 
 
-def finish_root(dl):
+def finish_root(dl, delivery_cycles=0):
     """dl = {flit base (5 sid): the edge its dl_v is high} -> the edge the root (node 1) is written back (wr_v)"""
+    if delivery_cycles not in (0, 1):
+        raise ValueError('xfin delivery depth must be 0 or 1')
     vd = {}                                   # node -> first cycle VD is 1
     for b, a in dl.items():
         for k in range(NVL):
@@ -114,7 +116,7 @@ def finish_root(dl):
             wb = c + 1 + LAV                  # f_q (c + 1) -> av[LAV]
             vd[win] = wb + 1
             if win == 1:
-                return wb
+                return wb + delivery_cycles
         nxt = {}
         for n in rdy:
             g = n // 8
