@@ -44,3 +44,19 @@ hold ends before/after); hand rows to S81-DIE-R4 (J6), QC-PLAN-R5 (V1), KV-PLAN-
 - Rows: needs_route flag for slots whose line crosses a core (main 814120525d).
 - Open: t39 proof result (waiters bfwogbx13/be3vjvn5i die with this session; re-check proof_t39/gen/ot_s81sl_leaf__t39/pregrt_ff_hold.log);
   stop the unit (ot-run --cancel lockup-station-1130-meas/proof_t39) after the pregrt read unless GRT is wanted.
+
+## Update ~14:10 PST (FABLE-CLOSURE-1315 items 1-5)
+- (1) proof_t39 is NOT to be cancelled after pre-GRT: let GOAL=grt run through GRT it10 for congestion A/B
+  (baseline hit the 20k marker cap at GRT it 5/10/15). Read gen/ot_s81sl_leaf__t39 pregrt_ff_hold.log, hold_gate.log, GRT log
+  overflow/markers at it5/it10. It was in CTS at 13:30.
+- (2) main 887cb2d06a: zl_netlist_lockup.tcl = post-synth DLL lockup (POST_SYNTH_TCL face_keep_release.tcl hook, plan
+  clock.zl_lockup.<T>.netlist regexes, DFFH launch->capture through BUF/INV/HB only); kits with the list run LEC on 1_synth_odb.v.
+  lec.py bb_free_out (latch fed by black-box output stub = wire) + test_lec_bbo_lockup.py; push in flight / landed after 887cb2d06a.
+  Measured on proof t39 synth DB (epyc7 meas/nlt): 1,583 latches in ~51 s; LEC EQUIVALENT 81,040 points (gold 131 RTL latches + gate 1,583 netlist).
+  The RTL-only proof kit would have been UNPROVEN without the lec fix (gold latch after u_l.lec_bbo_o).
+- (3) SRAM-wrapper captures -> tap_group row (census.tap_group.re, one tap per wrapper), never latched.
+- (4) Coverage on capture ends: t39 22,958/23,153; lepe 7,462/10,237 (+1,602 tap_group); hd_lep 40,335/44,659 (+3,854 tap_group);
+  slw_fe_v2 40,936/41,091 but 0 cross-tap hold ends pre-repair -> no QC latch rows. Exact violating-end coverage:
+  OT_PREGRT_OPEN_BEFORE=1 writes pregrt_ff_hold_open_before.tsv; station_rule derive --hold-ends.
+- (5) lepe roq/rop excluded (--exclude). New-form specs: intel2 /srv/opentallas-scratch2/claude/lockup-station-1130-rows/*_spec_nl.json
+  (spec = hops + netlist; plan key clock.zl_lockup.<T>).
