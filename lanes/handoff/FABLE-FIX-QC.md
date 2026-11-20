@@ -122,3 +122,4 @@ bash tools/fleet/col_template_rows.sh TREE BASE_PLAN SIDECAR OUT [--all-members]
 - 18:50 vmr proof kit running epyc10 sonnet-fix-qc-vmrproof (pid file ~/sfq-l6/vmrproof.pid); retry rows pending QC-PLAN-R3 N46P confirm.
 - 19:15 6 failed rows: cbn_q11 x2 private in place epyc7 (STRETCH_STOP=0), slw_su_c cl19bb38ef private vmrproof2 epyc10, st_a_v2 + tt_ctlm re-enqueued (orphans), st_a_v2 rebind needs N46Q.
 - 20:05 tt_ctlm: no relaunch (Fable stop list); ad4d52b9ea00 already ORPHAN, nothing to cancel.
+- 19:55 vmr proofs: cl92142dac in CTS, cl19bb38ef in 3_4; retry rows wait for N46Q live tree path.
