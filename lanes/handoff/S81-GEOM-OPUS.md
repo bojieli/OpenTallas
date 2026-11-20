@@ -187,3 +187,10 @@ Notes and scripts: epyc8 /srv/opentallas-scratch2/claude/s81-geom-opus-d8h-l4/FI
 - BK-PLACE rows: bksel/bk_rows.py -> plan_h3_bk.json 22d55e96e075, rows_bk.json 3c632455897c (street-aware layout r2). G0 bk (r1 layout) = control 2 errors; street findings -> r2 layout, G0 bk2 log intel2 ~/s81-geom-opus-g0-bk2.log.
 - u_c re-harden: kit epyc8 s81-geom-opus-d8g/ucore/dsdv_bksel_c_rfda2p (recipe bksel/recipes_a2p.json), running on intel1 (spill), log intel2 ~/s81-geom-opus-ucore-a2p.log.
 - Next: on SIGNED export view cores/views/bksel_c_a2p_1119, plan hard_core u_c lef/lib -> new view, private strict bind of BK plan (build_tree_own.sh), kit from it (pk3 kit gen needs fresh bind: KIT_TOPOLOGY_BIND_STALE), route to GRT TT.
+
+## 11-19 22:5x D8i BUILDS + BK HANDOFF
+- D8i plan f2ec5ffc3bda (rows 150e5d5abfd2): strict bind on epyc8 d8i/tree6 is green (BIND/LATCHECK/PRE pass, G0 = control 2 cut errors). All 114 col kits are under tree6/kb_d8i/kits.
+- Builds: 59 relaunched (epyc7 27, epyc9 17, epyc2 12, epyc10 3), units in intel2 ~/s81-geom-opus-d8i-relaunch-units.txt, logs ~/s81-geom-opus-d8ik2-<type>.log. 55 still on epyc8 (d8j/runall.txt minus the 10 stopped; d8j/stop_rest.log). These have NO client: read results in the kit dirs on epyc8.
+- TODO: per-family GRT TT / sign-off vs old plan (h9_r1 -181, h10_r1 -208/-411, h10_r2 -172 [COL-H10-1119], h10_r0_p1 -481); confirm auto-export picks up the signed ones.
+- bk_sel: G0 bk3 is clean on street (2->0, errors = control). u_c re-harden dsdv_bksel_c_rfda2p is running on intel1 (oth-ubuntu-590313-1795139614, log ~/s81-geom-opus-ucore-a2p.log). Next: export the view -> point the plan u_c at it -> private bind of plan_h3_bk -> bk_sel__t2 kit -> GRT TT.
+- col_h10_r1/r2 rows went to COL-H10-1119.
