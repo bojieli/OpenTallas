@@ -125,3 +125,4 @@ bash tools/fleet/col_template_rows.sh TREE BASE_PLAN SIDECAR OUT [--all-members]
 - 19:55 vmr proofs: cl92142dac in CTS, cl19bb38ef in 3_4; retry rows wait for N46Q live tree path.
 - 20:50 su_l0: route B (contract files) works for l0 only and breaks 6 siblings (tap 392.5 vs signed means); reverted (.SONNET-DISABLED-1120); plan rows for N46T.
 - 21:15 su-lane family rows + contracts + enable script in lanes/handoff/FABLE-FIX-QC-su-family/ for N46T; 7 types check pass.
+- 21:40 slw_su_l1 legacy = 6 cland taps owner Measured..., cland signoff lacks fclk per-pin mean; proposal: extract fclk from signed exports, contracts+rows next event.
