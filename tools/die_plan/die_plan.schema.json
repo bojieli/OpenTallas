@@ -6454,6 +6454,31 @@
        }
       }
      },
+     "soft_latency": {
+      "type": "object",
+      "required": [
+       "out",
+       "inst"
+      ],
+      "additionalProperties": false,
+      "properties": {
+       "out": {
+        "type": "object",
+        "minProperties": 1,
+        "additionalProperties": {
+         "type": "integer",
+         "minimum": 1
+        }
+       },
+       "inst": {
+        "type": "string",
+        "minLength": 1
+       },
+       "note": {
+        "type": "string"
+       }
+      }
+     },
      "param_base_type": {
       "type": "string",
       "minLength": 1

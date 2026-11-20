@@ -11,13 +11,27 @@ Declaration (plan hard_cores[] row):   "core_latency": {"out": {"<type out bus>"
 Effect: the bus's source-station depth is (kit stations in internal_stations regs_um) + the declared core cycles, in BOTH the
 bind pricing (annotate_kit) and LATCHECK (side_stages / kit_source_pricing).  A type that declares +1 but keeps its old station
 count, or drops the station without declaring the core cycle, delivers != table and fails LANE_ASBUILT (class
-UNPRICED_KIT_STATIONS / OTHER), instead of hiding.  No declaration = 0, byte-identical to before."""
+UNPRICED_KIT_STATIONS / OTHER), instead of hiding.  No declaration = 0, byte-identical to before.
+
+CORE-LAT-2 (11-19): the same count for cycles in the type's own soft logic, declared at type level ("soft_latency", see
+soft_out_cycles), so a soft register is never hung on an unrelated hard-core row."""
+
+
+def soft_out_cycles(typ, bus):
+    """declared SOFT-logic cycles on OUT bus <bus> of plan type <typ>: the type-level row "soft_latency" (0 = none).
+    CORE-LAT-2 (COORD ruling 11-19, S81 lep RIP1): a register inside the type's own synthesised RTL (not a hard core, e.g. the
+    lep ring-output relay in u_bound.u_u_lep) that every path to that OUT bus crosses.  Declaration (plan type row):
+        "soft_latency": {"out": {"<type out bus>": <cycles>, ...}, "inst": "<soft instance holding the cycles>", "note": "..."}
+    It is counted exactly like a hard-core declaration, but names the soft block instead of borrowing a hard_cores row."""
+    sl = (typ or {}).get("soft_latency") or {}
+    return int((sl.get("out") or {}).get(bus, 0) or 0)
 
 
 def out_cycles(typ, bus):
-    """declared hard-core cycles on OUT bus <bus> of plan type <typ> (0 = none)"""
+    """declared cycles on OUT bus <bus> of plan type <typ> (0 = none): hard-core rows (CORE-LAT-1) + the type's soft-logic
+    row (CORE-LAT-2, soft_out_cycles)"""
     n = 0
     for h in (typ or {}).get("hard_cores", []) or []:
         cl = h.get("core_latency") or {}
         n += int((cl.get("out") or {}).get(bus, 0) or 0)
-    return n
+    return n + soft_out_cycles(typ, bus)
