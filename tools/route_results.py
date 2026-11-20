@@ -25,6 +25,7 @@ usage: route_results.py [--since 'YYYY-MM-DD HH:MM'] [--until 'YYYY-MM-DD HH:MM'
 Times are local time (hosts run PST).  Default window: 00:00 today to now.
 """
 import argparse
+import glob
 import json
 import os
 import re
@@ -191,12 +192,16 @@ def record(base, live="", cancel=()):
     rec = {"kit": kit, "design": design, "die": die_of(kit), "item": design[3:] if design.startswith("dp_") else design,
            "t": {}, "log_t": {}, "res": {}, "live": bool(live) and kit in live,
            "cancel_sig": kit in cancel or (kit + "/run") in cancel}
+    # FLOW-FIX-2045: a stage result older than this kit's own synthesis start is a copy from another kit (cp -a keeps mtimes), not this kit's result
+    s0 = [x for x in (mtime(p) for p in glob.glob(os.path.join(base, "1_*.log"))) if x is not None]
+    s0 = min(s0) - 2.0 if s0 else None
+    own = lambda m: m is not None and (s0 is None or m >= s0)
     for st, f in STAGE_FILE.items():
         j = mtime(os.path.join(base, f + ".json"))
         l = mtime(os.path.join(base, f + ".log"))
-        if j is not None:
+        if j is not None and own(j):
             rec["t"][st] = j
-        if l is not None:
+        if l is not None and own(l):
             rec["log_t"][st] = l
     # newest sign of life: stage logs, other logs in the stage dir, and the kit root's own logs (run_route.log, tt_setup_repair.log, ...);
     # a sealed ot-job (bwrap) keeps these in <ot-jobs>/<job>/work, where the host process-path check cannot see the run
@@ -211,6 +216,8 @@ def record(base, live="", cancel=()):
     rec["act"] = max(act) if act else None
     sj = os.path.join(kit, "signoff", "signoff.json")
     t = mtime(sj)
+    if t is not None and not own(t):
+        t = None
     if t is not None:
         rec["t"]["signoff"] = t
         d = load_json(sj) or {}
