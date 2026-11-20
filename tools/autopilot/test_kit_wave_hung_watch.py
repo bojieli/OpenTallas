@@ -149,12 +149,19 @@ class Probe(unittest.TestCase):
             (root / "gen" / "a" / "run" / "logs").mkdir(parents=True)
             lg = root / "gen" / "a" / "run" / "logs" / "3_3_place_gp.tmp.log"
             lg.write_text("x")
-            p = subprocess.Popen(["sleep", "30"], cwd=str(root))
+            # This fixture probes a host process and its stage log. Keep the
+            # container census independent of concurrent Docker activity.
+            docker = Path(d) / "docker"
+            docker.write_text("#!/bin/sh\nexit 0\n")
+            docker.chmod(0o700)
+            p = subprocess.Popen(["sleep", "300"], cwd=str(root))
             try:
                 o = subprocess.run([sys.executable, "-I", "-", json.dumps([str(root)])], input=KW.HUNG_PROBE,
-                                   capture_output=True, text=True, timeout=120).stdout
+                                   capture_output=True, text=True, timeout=120, check=True,
+                                   env=dict(os.environ, PATH=d)).stdout
             finally:
                 p.kill()
+                p.wait()
             got = json.loads(o.strip().splitlines()[-1])["HUNG_PROBE"][str(root)]
             self.assertGreaterEqual(got["pids"], 1)
             self.assertAlmostEqual(got["log"], lg.stat().st_mtime, places=3)
