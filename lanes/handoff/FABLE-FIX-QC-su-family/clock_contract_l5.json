@@ -1,0 +1,23 @@
+{
+ "schema": "opentallas.core_clock_contract.v1",
+ "view_lib_sha256": "0362bb61d13f29297d10754e00ac5219258bd3cce31b499cabe161858feb1ca0",
+ "signed": true,
+ "signoff_source": "/archive/opentallas-signed-1114/Qwen_ROM/qfd_qc_su_lane_w_l5/signoff.json",
+ "signoff_verdict": "SIGNED",
+ "pins": {
+  "clk": {
+   "tt": {
+    "mean_ps": 426.38,
+    "n": 1012,
+    "basis": "pin_register_mean",
+    "source": "/archive/opentallas-signed-1114/Qwen_ROM/qfd_qc_su_lane_w_l5/signoff.json:clk:tt:insertion_pinflops"
+   },
+   "ff": {
+    "mean_ps": 342.51,
+    "n": 1012,
+    "basis": "pin_register_mean",
+    "source": "/archive/opentallas-signed-1114/Qwen_ROM/qfd_qc_su_lane_w_l5/signoff.json:clk:ff:insertion_pinflops"
+   }
+  }
+ }
+}

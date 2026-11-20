@@ -124,3 +124,4 @@ bash tools/fleet/col_template_rows.sh TREE BASE_PLAN SIDECAR OUT [--all-members]
 - 20:05 tt_ctlm: no relaunch (Fable stop list); ad4d52b9ea00 already ORPHAN, nothing to cancel.
 - 19:55 vmr proofs: cl92142dac in CTS, cl19bb38ef in 3_4; retry rows wait for N46Q live tree path.
 - 20:50 su_l0: route B (contract files) works for l0 only and breaks 6 siblings (tap 392.5 vs signed means); reverted (.SONNET-DISABLED-1120); plan rows for N46T.
+- 21:15 su-lane family rows + contracts + enable script in lanes/handoff/FABLE-FIX-QC-su-family/ for N46T; 7 types check pass.

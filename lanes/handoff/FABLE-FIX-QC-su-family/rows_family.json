@@ -1,0 +1,293 @@
+{
+ "rows": [
+  {
+   "op": "merge",
+   "path": "partition_types.slw_su_l0__cl76fb247e.clock.taps[name=u_lane0.clk]",
+   "value": {
+    "insertion_ps": 397.07,
+    "insertion_ff_ps": 327.17,
+    "budget_owner": "SIGNED pin-register mean (signoff.json corners.tt/ff.insertion_pinflops.mean) of qfd_qc_su_lane_w_l0: AGIdock /archive/opentallas-signed-1114/Qwen_ROM/qfd_qc_su_lane_w_l0/signoff.json",
+    "note": "SONNET-FIX-QC 11-19 su-lane family: SIGNED TT/FF pin-register mean of the lane core (was parent_budget estimate 392.5/321.0)"
+   }
+  },
+  {
+   "op": "merge",
+   "path": "partition_types.slw_su_l0__cl76fb247e.clock.taps[name=u_lane1.clk]",
+   "value": {
+    "insertion_ps": 397.09,
+    "insertion_ff_ps": 326.44,
+    "budget_owner": "SIGNED pin-register mean (signoff.json corners.tt/ff.insertion_pinflops.mean) of qfd_qc_su_lane_w_l1: AGIdock /archive/opentallas-signed-1114/Qwen_ROM/qfd_qc_su_lane_w_l1/signoff.json",
+    "note": "SONNET-FIX-QC 11-19 su-lane family: SIGNED TT/FF pin-register mean of the lane core (was parent_budget estimate 392.5/321.0)"
+   }
+  },
+  {
+   "op": "merge",
+   "path": "partition_types.slw_su_l0__cl76fb247e.clock.taps[name=u_lane2.clk]",
+   "value": {
+    "insertion_ps": 397.47,
+    "insertion_ff_ps": 322.45,
+    "budget_owner": "SIGNED pin-register mean (signoff.json corners.tt/ff.insertion_pinflops.mean) of qfd_qc_su_lane_w_l2: AGIdock /archive/opentallas-signed-1114/Qwen_ROM/qfd_qc_su_lane_w_l2/signoff.json",
+    "note": "SONNET-FIX-QC 11-19 su-lane family: SIGNED TT/FF pin-register mean of the lane core (was parent_budget estimate 392.5/321.0)"
+   }
+  },
+  {
+   "op": "merge",
+   "path": "partition_types.slw_su_l0__cl76fb247e.clock.taps[name=u_lane3.clk]",
+   "value": {
+    "insertion_ps": 393.41,
+    "insertion_ff_ps": 319.31,
+    "budget_owner": "SIGNED pin-register mean (signoff.json corners.tt/ff.insertion_pinflops.mean) of qfd_qc_su_lane_w_l3: AGIdock /archive/opentallas-signed-1114/Qwen_ROM/qfd_qc_su_lane_w_l3/signoff.json",
+    "note": "SONNET-FIX-QC 11-19 su-lane family: SIGNED TT/FF pin-register mean of the lane core (was parent_budget estimate 392.5/321.0)"
+   }
+  },
+  {
+   "op": "merge",
+   "path": "partition_types.slw_su_l0__cl1e5219ea.clock.taps[name=u_lane0.clk]",
+   "value": {
+    "insertion_ps": 397.07,
+    "insertion_ff_ps": 327.17,
+    "budget_owner": "SIGNED pin-register mean (signoff.json corners.tt/ff.insertion_pinflops.mean) of qfd_qc_su_lane_w_l0: AGIdock /archive/opentallas-signed-1114/Qwen_ROM/qfd_qc_su_lane_w_l0/signoff.json",
+    "note": "SONNET-FIX-QC 11-19 su-lane family: SIGNED TT/FF pin-register mean of the lane core (was parent_budget estimate 392.5/321.0)"
+   }
+  },
+  {
+   "op": "merge",
+   "path": "partition_types.slw_su_l0__cl1e5219ea.clock.taps[name=u_lane1.clk]",
+   "value": {
+    "insertion_ps": 397.09,
+    "insertion_ff_ps": 326.44,
+    "budget_owner": "SIGNED pin-register mean (signoff.json corners.tt/ff.insertion_pinflops.mean) of qfd_qc_su_lane_w_l1: AGIdock /archive/opentallas-signed-1114/Qwen_ROM/qfd_qc_su_lane_w_l1/signoff.json",
+    "note": "SONNET-FIX-QC 11-19 su-lane family: SIGNED TT/FF pin-register mean of the lane core (was parent_budget estimate 392.5/321.0)"
+   }
+  },
+  {
+   "op": "merge",
+   "path": "partition_types.slw_su_l0__cl1e5219ea.clock.taps[name=u_lane2.clk]",
+   "value": {
+    "insertion_ps": 397.47,
+    "insertion_ff_ps": 322.45,
+    "budget_owner": "SIGNED pin-register mean (signoff.json corners.tt/ff.insertion_pinflops.mean) of qfd_qc_su_lane_w_l2: AGIdock /archive/opentallas-signed-1114/Qwen_ROM/qfd_qc_su_lane_w_l2/signoff.json",
+    "note": "SONNET-FIX-QC 11-19 su-lane family: SIGNED TT/FF pin-register mean of the lane core (was parent_budget estimate 392.5/321.0)"
+   }
+  },
+  {
+   "op": "merge",
+   "path": "partition_types.slw_su_l0__cl1e5219ea.clock.taps[name=u_lane3.clk]",
+   "value": {
+    "insertion_ps": 393.41,
+    "insertion_ff_ps": 319.31,
+    "budget_owner": "SIGNED pin-register mean (signoff.json corners.tt/ff.insertion_pinflops.mean) of qfd_qc_su_lane_w_l3: AGIdock /archive/opentallas-signed-1114/Qwen_ROM/qfd_qc_su_lane_w_l3/signoff.json",
+    "note": "SONNET-FIX-QC 11-19 su-lane family: SIGNED TT/FF pin-register mean of the lane core (was parent_budget estimate 392.5/321.0)"
+   }
+  },
+  {
+   "op": "merge",
+   "path": "partition_types.slw_su_l0__cl1a1c1f8f.clock.taps[name=u_lane0.clk]",
+   "value": {
+    "insertion_ps": 397.07,
+    "insertion_ff_ps": 327.17,
+    "budget_owner": "SIGNED pin-register mean (signoff.json corners.tt/ff.insertion_pinflops.mean) of qfd_qc_su_lane_w_l0: AGIdock /archive/opentallas-signed-1114/Qwen_ROM/qfd_qc_su_lane_w_l0/signoff.json",
+    "note": "SONNET-FIX-QC 11-19 su-lane family: SIGNED TT/FF pin-register mean of the lane core (was parent_budget estimate 392.5/321.0)"
+   }
+  },
+  {
+   "op": "merge",
+   "path": "partition_types.slw_su_l0__cl1a1c1f8f.clock.taps[name=u_lane1.clk]",
+   "value": {
+    "insertion_ps": 397.09,
+    "insertion_ff_ps": 326.44,
+    "budget_owner": "SIGNED pin-register mean (signoff.json corners.tt/ff.insertion_pinflops.mean) of qfd_qc_su_lane_w_l1: AGIdock /archive/opentallas-signed-1114/Qwen_ROM/qfd_qc_su_lane_w_l1/signoff.json",
+    "note": "SONNET-FIX-QC 11-19 su-lane family: SIGNED TT/FF pin-register mean of the lane core (was parent_budget estimate 392.5/321.0)"
+   }
+  },
+  {
+   "op": "merge",
+   "path": "partition_types.slw_su_l0__cl1a1c1f8f.clock.taps[name=u_lane2.clk]",
+   "value": {
+    "insertion_ps": 397.47,
+    "insertion_ff_ps": 322.45,
+    "budget_owner": "SIGNED pin-register mean (signoff.json corners.tt/ff.insertion_pinflops.mean) of qfd_qc_su_lane_w_l2: AGIdock /archive/opentallas-signed-1114/Qwen_ROM/qfd_qc_su_lane_w_l2/signoff.json",
+    "note": "SONNET-FIX-QC 11-19 su-lane family: SIGNED TT/FF pin-register mean of the lane core (was parent_budget estimate 392.5/321.0)"
+   }
+  },
+  {
+   "op": "merge",
+   "path": "partition_types.slw_su_l0__cl1a1c1f8f.clock.taps[name=u_lane3.clk]",
+   "value": {
+    "insertion_ps": 393.41,
+    "insertion_ff_ps": 319.31,
+    "budget_owner": "SIGNED pin-register mean (signoff.json corners.tt/ff.insertion_pinflops.mean) of qfd_qc_su_lane_w_l3: AGIdock /archive/opentallas-signed-1114/Qwen_ROM/qfd_qc_su_lane_w_l3/signoff.json",
+    "note": "SONNET-FIX-QC 11-19 su-lane family: SIGNED TT/FF pin-register mean of the lane core (was parent_budget estimate 392.5/321.0)"
+   }
+  },
+  {
+   "op": "merge",
+   "path": "partition_types.sle_su_l1__cl5ea486db.clock.taps[name=u_lane4.clk]",
+   "value": {
+    "insertion_ps": 426.38,
+    "insertion_ff_ps": 342.51,
+    "budget_owner": "SIGNED pin-register mean (signoff.json corners.tt/ff.insertion_pinflops.mean) of qfd_qc_su_lane_w_l4: AGIdock /archive/opentallas-signed-1114/Qwen_ROM/qfd_qc_su_lane_w_l4/signoff.json",
+    "note": "SONNET-FIX-QC 11-19 su-lane family: SIGNED TT/FF pin-register mean of the lane core (was parent_budget estimate 392.5/321.0)"
+   }
+  },
+  {
+   "op": "merge",
+   "path": "partition_types.sle_su_l1__cl5ea486db.clock.taps[name=u_lane5.clk]",
+   "value": {
+    "insertion_ps": 426.38,
+    "insertion_ff_ps": 342.51,
+    "budget_owner": "SIGNED pin-register mean (signoff.json corners.tt/ff.insertion_pinflops.mean) of qfd_qc_su_lane_w_l5: AGIdock /archive/opentallas-signed-1114/Qwen_ROM/qfd_qc_su_lane_w_l5/signoff.json",
+    "note": "SONNET-FIX-QC 11-19 su-lane family: SIGNED TT/FF pin-register mean of the lane core (was parent_budget estimate 392.5/321.0)"
+   }
+  },
+  {
+   "op": "merge",
+   "path": "partition_types.sle_su_l1__cl5ea486db.clock.taps[name=u_lane6.clk]",
+   "value": {
+    "insertion_ps": 401.18,
+    "insertion_ff_ps": 322.99,
+    "budget_owner": "SIGNED pin-register mean (signoff.json corners.tt/ff.insertion_pinflops.mean) of qfd_qc_su_lane_w_l6: AGIdock /archive/opentallas-signed-1114/Qwen_ROM/qfd_qc_su_lane_w_l6/signoff.json",
+    "note": "SONNET-FIX-QC 11-19 su-lane family: SIGNED TT/FF pin-register mean of the lane core (was parent_budget estimate 392.5/321.0)"
+   }
+  },
+  {
+   "op": "merge",
+   "path": "partition_types.sle_su_l1__cl5ea486db.clock.taps[name=u_lane7.clk]",
+   "value": {
+    "insertion_ps": 414.04,
+    "insertion_ff_ps": 333.91,
+    "budget_owner": "SIGNED pin-register mean (signoff.json corners.tt/ff.insertion_pinflops.mean) of qfd_qc_su_lane_w_l7: AGIdock /archive/opentallas-signed-1114/Qwen_ROM/qfd_qc_su_lane_w_l7/signoff.json",
+    "note": "SONNET-FIX-QC 11-19 su-lane family: SIGNED TT/FF pin-register mean of the lane core (was parent_budget estimate 392.5/321.0)"
+   }
+  },
+  {
+   "op": "merge",
+   "path": "partition_types.sle_su_l1__clc6d66f5b.clock.taps[name=u_lane4.clk]",
+   "value": {
+    "insertion_ps": 426.38,
+    "insertion_ff_ps": 342.51,
+    "budget_owner": "SIGNED pin-register mean (signoff.json corners.tt/ff.insertion_pinflops.mean) of qfd_qc_su_lane_w_l4: AGIdock /archive/opentallas-signed-1114/Qwen_ROM/qfd_qc_su_lane_w_l4/signoff.json",
+    "note": "SONNET-FIX-QC 11-19 su-lane family: SIGNED TT/FF pin-register mean of the lane core (was parent_budget estimate 392.5/321.0)"
+   }
+  },
+  {
+   "op": "merge",
+   "path": "partition_types.sle_su_l1__clc6d66f5b.clock.taps[name=u_lane5.clk]",
+   "value": {
+    "insertion_ps": 426.38,
+    "insertion_ff_ps": 342.51,
+    "budget_owner": "SIGNED pin-register mean (signoff.json corners.tt/ff.insertion_pinflops.mean) of qfd_qc_su_lane_w_l5: AGIdock /archive/opentallas-signed-1114/Qwen_ROM/qfd_qc_su_lane_w_l5/signoff.json",
+    "note": "SONNET-FIX-QC 11-19 su-lane family: SIGNED TT/FF pin-register mean of the lane core (was parent_budget estimate 392.5/321.0)"
+   }
+  },
+  {
+   "op": "merge",
+   "path": "partition_types.sle_su_l1__clc6d66f5b.clock.taps[name=u_lane6.clk]",
+   "value": {
+    "insertion_ps": 401.18,
+    "insertion_ff_ps": 322.99,
+    "budget_owner": "SIGNED pin-register mean (signoff.json corners.tt/ff.insertion_pinflops.mean) of qfd_qc_su_lane_w_l6: AGIdock /archive/opentallas-signed-1114/Qwen_ROM/qfd_qc_su_lane_w_l6/signoff.json",
+    "note": "SONNET-FIX-QC 11-19 su-lane family: SIGNED TT/FF pin-register mean of the lane core (was parent_budget estimate 392.5/321.0)"
+   }
+  },
+  {
+   "op": "merge",
+   "path": "partition_types.sle_su_l1__clc6d66f5b.clock.taps[name=u_lane7.clk]",
+   "value": {
+    "insertion_ps": 414.04,
+    "insertion_ff_ps": 333.91,
+    "budget_owner": "SIGNED pin-register mean (signoff.json corners.tt/ff.insertion_pinflops.mean) of qfd_qc_su_lane_w_l7: AGIdock /archive/opentallas-signed-1114/Qwen_ROM/qfd_qc_su_lane_w_l7/signoff.json",
+    "note": "SONNET-FIX-QC 11-19 su-lane family: SIGNED TT/FF pin-register mean of the lane core (was parent_budget estimate 392.5/321.0)"
+   }
+  },
+  {
+   "op": "merge",
+   "path": "partition_types.sle_su_l0__cl7a55c676.clock.taps[name=u_lane0.clk]",
+   "value": {
+    "insertion_ps": 397.07,
+    "insertion_ff_ps": 327.17,
+    "budget_owner": "SIGNED pin-register mean (signoff.json corners.tt/ff.insertion_pinflops.mean) of qfd_qc_su_lane_w_l0: AGIdock /archive/opentallas-signed-1114/Qwen_ROM/qfd_qc_su_lane_w_l0/signoff.json",
+    "note": "SONNET-FIX-QC 11-19 su-lane family: SIGNED TT/FF pin-register mean of the lane core (was parent_budget estimate 397.07/327.17)"
+   }
+  },
+  {
+   "op": "merge",
+   "path": "partition_types.sle_su_l0__cl7a55c676.clock.taps[name=u_lane1.clk]",
+   "value": {
+    "insertion_ps": 397.09,
+    "insertion_ff_ps": 326.44,
+    "budget_owner": "SIGNED pin-register mean (signoff.json corners.tt/ff.insertion_pinflops.mean) of qfd_qc_su_lane_w_l1: AGIdock /archive/opentallas-signed-1114/Qwen_ROM/qfd_qc_su_lane_w_l1/signoff.json",
+    "note": "SONNET-FIX-QC 11-19 su-lane family: SIGNED TT/FF pin-register mean of the lane core (was parent_budget estimate 397.09/326.44)"
+   }
+  },
+  {
+   "op": "merge",
+   "path": "partition_types.sle_su_l0__cl7a55c676.clock.taps[name=u_lane2.clk]",
+   "value": {
+    "insertion_ps": 397.47,
+    "insertion_ff_ps": 322.45,
+    "budget_owner": "SIGNED pin-register mean (signoff.json corners.tt/ff.insertion_pinflops.mean) of qfd_qc_su_lane_w_l2: AGIdock /archive/opentallas-signed-1114/Qwen_ROM/qfd_qc_su_lane_w_l2/signoff.json",
+    "note": "SONNET-FIX-QC 11-19 su-lane family: SIGNED TT/FF pin-register mean of the lane core (was parent_budget estimate 397.47/322.45)"
+   }
+  },
+  {
+   "op": "merge",
+   "path": "partition_types.sle_su_l0__cl7a55c676.clock.taps[name=u_lane3.clk]",
+   "value": {
+    "insertion_ps": 393.41,
+    "insertion_ff_ps": 319.31,
+    "budget_owner": "SIGNED pin-register mean (signoff.json corners.tt/ff.insertion_pinflops.mean) of qfd_qc_su_lane_w_l3: AGIdock /archive/opentallas-signed-1114/Qwen_ROM/qfd_qc_su_lane_w_l3/signoff.json",
+    "note": "SONNET-FIX-QC 11-19 su-lane family: SIGNED TT/FF pin-register mean of the lane core (was parent_budget estimate 393.41/319.31)"
+   }
+  },
+  {
+   "op": "merge",
+   "path": "partition_types.sle_su_l0__cl086d85ba.clock.taps[name=u_lane0.clk]",
+   "value": {
+    "insertion_ps": 397.07,
+    "insertion_ff_ps": 327.17,
+    "budget_owner": "SIGNED pin-register mean (signoff.json corners.tt/ff.insertion_pinflops.mean) of qfd_qc_su_lane_w_l0: AGIdock /archive/opentallas-signed-1114/Qwen_ROM/qfd_qc_su_lane_w_l0/signoff.json",
+    "note": "SONNET-FIX-QC 11-19 su-lane family: SIGNED TT/FF pin-register mean of the lane core (was parent_budget estimate 392.5/321.0)"
+   }
+  },
+  {
+   "op": "merge",
+   "path": "partition_types.sle_su_l0__cl086d85ba.clock.taps[name=u_lane1.clk]",
+   "value": {
+    "insertion_ps": 397.09,
+    "insertion_ff_ps": 326.44,
+    "budget_owner": "SIGNED pin-register mean (signoff.json corners.tt/ff.insertion_pinflops.mean) of qfd_qc_su_lane_w_l1: AGIdock /archive/opentallas-signed-1114/Qwen_ROM/qfd_qc_su_lane_w_l1/signoff.json",
+    "note": "SONNET-FIX-QC 11-19 su-lane family: SIGNED TT/FF pin-register mean of the lane core (was parent_budget estimate 392.5/321.0)"
+   }
+  },
+  {
+   "op": "merge",
+   "path": "partition_types.sle_su_l0__cl086d85ba.clock.taps[name=u_lane2.clk]",
+   "value": {
+    "insertion_ps": 397.47,
+    "insertion_ff_ps": 322.45,
+    "budget_owner": "SIGNED pin-register mean (signoff.json corners.tt/ff.insertion_pinflops.mean) of qfd_qc_su_lane_w_l2: AGIdock /archive/opentallas-signed-1114/Qwen_ROM/qfd_qc_su_lane_w_l2/signoff.json",
+    "note": "SONNET-FIX-QC 11-19 su-lane family: SIGNED TT/FF pin-register mean of the lane core (was parent_budget estimate 392.5/321.0)"
+   }
+  },
+  {
+   "op": "merge",
+   "path": "partition_types.sle_su_l0__cl086d85ba.clock.taps[name=u_lane3.clk]",
+   "value": {
+    "insertion_ps": 393.41,
+    "insertion_ff_ps": 319.31,
+    "budget_owner": "SIGNED pin-register mean (signoff.json corners.tt/ff.insertion_pinflops.mean) of qfd_qc_su_lane_w_l3: AGIdock /archive/opentallas-signed-1114/Qwen_ROM/qfd_qc_su_lane_w_l3/signoff.json",
+    "note": "SONNET-FIX-QC 11-19 su-lane family: SIGNED TT/FF pin-register mean of the lane core (was parent_budget estimate 392.5/321.0)"
+   }
+  }
+ ],
+ "types": [
+  "slw_su_l0__cl76fb247e",
+  "slw_su_l0__cl1e5219ea",
+  "slw_su_l0__cl1a1c1f8f",
+  "sle_su_l1__cl5ea486db",
+  "sle_su_l1__clc6d66f5b",
+  "sle_su_l0__cl7a55c676",
+  "sle_su_l0__cl086d85ba"
+ ]
+}
