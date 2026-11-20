@@ -471,3 +471,9 @@
   - Estimator before sites: OK 1 / RISK 0 / OVER 65. After: OK 4 / RISK 3 / OVER 59. kv_leaf__t2 was skipped (hard type).
   - Next: the START-TREE re-plan from S81-CLOCK-WINDOW goes on plan_j4a, then a strict bind of J4. The 25 partly sited types need form A or one more bank stage; that is the leaf lane's call.
 - 2026-11-19 23:57 PST STOP J chain [S81-DIE-R3 -> COORD] J3 strict bind RED (BIND_RC=1):     T = _wf_type_tree(P, tn);. Log intel2 /srv/opentallas-scratch2/claude/s81-die-r3-hub/j_chain.out
+- 2026-11-19 23:59 PST J3 r6 RED, fixed, r7 running [S81-DIE-R3 -> COORD]
+  - Cause: strict bind BIND_RC 1 in reset_tree/taps.explicit_tap_sites, "slice_station__t51: explicit tap clk_t22 violates outline/halo/tap spacing". This is my J change: dropping t51's non-existent natives (fu_t51) turned its child-root taps into plain explicit taps. Those get the 8.64 um tap clearance, and clk_t22 was 4.8 um from clk_t21. LATCHECK, svc_ref and G0 failed only because the bind stopped.
+  - Fix: clk_t22 moved +3.84 um x to (21.708, 366.636); nothing else changes. The bind's own explicit_tap_sites passes on t51 (73 taps). A sweep of all 91 types with explicit taps finds 0 bad.
+  - plan_j3b 5bed28a94d9d: bind r7 on intel1 (ot-run plan/bind), log intel2 /home/ubuntu/s81-die-r/build_j3_r7.log.
+  - J ship chain re-armed on r7 (j_chain.sh); the r6 output is kept as j_chain_r6.out. The chain still applies J only after D8i is applied.
+  - J4: the same tap move applied to the sites plan, plan_j4b 3dc05566d640, which is now the J4 base for START-TREE.
