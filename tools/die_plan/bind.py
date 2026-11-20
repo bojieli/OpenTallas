@@ -3652,18 +3652,30 @@ class Binder:
             for q, ports in r8v.items():
                 man["instances"].setdefault(q, {}).update({sp: dict(width=w, value=v, kind="r8pad_strap")
                                                            for sp, (w, v) in ports.items()})
+        import landing_tie_children as LTC
+        try:
+            monitor_use = LTC.instance_use(self.plan)
+        except ValueError as exc:
+            raise BindError(str(exc)) from exc
+        if monitor_use:
+            man = LTC.with_use_manifest(man, self.types, monitor_use)
         if any(man["types"].values()):
             (out.parent / "bind_parent_id_straps.json").write_text(json.dumps(man, indent=1) + "\n")
         # tie-off audit (OWNER 10-25 option B): a literal on a partition pin is legal ONLY on a declared ID strap;
         # each strap bit then gets its own TIEHI/TIELO next to the pin (die_constant_cells.tcl; strap_ties_check.tcl)
         import straps as STR
-        import landing_tie_children as LTC
         aud = STR.audit_top_ties(f.read_text(), man, {self.types[tn]["module"]: tn for tn in self.types},
                                  landing_ties=LTC.landing_ties(self.types), spare_ft_ties=self.spare_ft_ties)
         (out.parent / "bind_tie_audit.json").write_text(json.dumps(aud, indent=1) + "\n")
         if aud["verdict"] != "PASS":
             raise BindError(f"tie-off audit: {aud['reason']}")
         rows = aud["rows"]
+        if monitor_use:
+            expected = {re.sub(r"[^A-Za-z0-9_]", "_", q): v for q, v in monitor_use.items()}
+            monitor_aud = STR.audit_count_strap_values(f.read_text(), expected, prefix=LTC.MONITOR_USE_PREFIX)
+            (out.parent / "bind_monitor_use_audit.json").write_text(json.dumps(monitor_aud, indent=1) + "\n")
+            if monitor_aud["verdict"] != "PASS":
+                raise BindError(f"monitor use strap audit: {monitor_aud['reason']}")
         if cexp:
             # count-strap VALUE audit (COORD addition, 12.14a: extends this audit): literal == bind value, every pin
             cva = STR.audit_count_strap_values(f.read_text(), {re.sub(r"[^A-Za-z0-9_]", "_", q): v for q, v in cexp.items()})

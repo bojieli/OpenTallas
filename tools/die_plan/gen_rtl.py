@@ -872,6 +872,11 @@ def check_kit_rtl_ports(P, tn, ep, filelist):
         gw = int(m.group(1)) + 1 if m else (1 if not w else None)
         if d != ("input" if b["dir"] == "in" else "output") or gw != want:
             bad.append(f"{b['name']}: kit {d} {w or '[0:0]'} vs plan {b['dir']} width {want}")
+    import landing_tie_children as LTC
+    for name in LTC.physical_use_pins(t):
+        got = ports.get(name)
+        if got is None or got[0] != "input" or got[1]:
+            bad.append(f"{name}: expected a one-bit monitor use input, got {got}")
     if bad:
         raise GenError(f"type {tn}: plan buses disagree with kit RTL module {t['module']}: " + "; ".join(bad[:6]))
 
@@ -990,6 +995,22 @@ def write_rtl(raw, out, rtl_root=None, types=None, plan_path=None, landing=None,
         files.append(out / "gen_count_strap_audit.json")
         if cva["verdict"] != "PASS":
             raise GenError(f"count-strap tie-value audit (G0 ERROR): {cva['reason']}")
+    import landing_tie_children as LTC
+    try:
+        monitor_use = LTC.instance_use(P.raw)
+    except ValueError as e:
+        raise GenError(str(e)) from e
+    if monitor_use:
+        import json
+        import straps as STR
+        man = LTC.with_use_manifest(man, P.types, monitor_use)
+        expected = {sv_id(part): v for part, v in monitor_use.items()}
+        audit = STR.audit_count_strap_values(text, expected, prefix=LTC.MONITOR_USE_PREFIX)
+        receipt = out / "gen_monitor_use_audit.json"
+        receipt.write_text(json.dumps(audit, indent=1) + "\n")
+        files.append(receipt)
+        if audit["verdict"] != "PASS":
+            raise GenError(f"monitor use strap audit: {audit['reason']}")
     if man["types"]:
         import json
         f = out / "parent_id_straps.json"

@@ -23,7 +23,8 @@ DN = re.compile(r"(?:cland_dn_(?:ready|fault)|fclk_in_cland_dn)_(\d+)$")
 
 
 def is_mon(n):
-    return n in UP or bool(DN.match(n))
+    import landing_tie_children as LTC
+    return n in UP or bool(DN.match(n)) or n.startswith(LTC.MONITOR_USE_PREFIX)
 
 
 def key_list(c):
@@ -92,6 +93,8 @@ def build(plan, side, fam_re=None, collector_only=False, keep_tree=False, keep_t
                 b = copy.deepcopy(bandsrc[key]); b["instance"] = f"u_cland_monitor_{i}"; bands[f"monitor_{i}"] = b
             if key[1] and key in clksrc:
                 e = copy.deepcopy(clksrc[key]); e["port"] = f"fclk_in_cland_dn_{i}"; ecl.append(e)
+        import landing_tie_children as LTC
+        newpins = LTC.with_use_pins(newpins, tie, P[tmpl_k]["outline_um"])
         members = [k for k in (L if collector_only else ks) if k not in outliers]   # collector_only: plain tiles keep their form (no R3b)
         base = P[members[0]]["clock"].get("added_taps", []); first = int(re.sub(r"\D", "", base[0]["name"])) if base else 16
         seen = []

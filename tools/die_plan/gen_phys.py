@@ -934,8 +934,9 @@ def rck_early_exports(P, tn):
 def logical_strap_names(t):
     """Declared logical strap buses exist independently of optional physical pin sites."""
     from straps import checked
-    return sorted(checked([sp["name"] for sp in (t.get("id_straps", []) or []) +
-                           (t.get("count_straps", []) or [])]))
+    import landing_tie_children as LTC
+    ports = [sp["name"] for sp in (t.get("id_straps", []) or []) + (t.get("count_straps", []) or [])]
+    return sorted(checked(ports + list(LTC.physical_use_pins(t))))
 
 
 def logical_strap_pin_records(t):
@@ -9238,6 +9239,8 @@ def bound_parent_id_plan(raw, kit_rtl):
         actual = {r["port"]: (r["dir"], r["width"]) for r in kr.get("bound_only_pins", [])}
         additions = []
         declared_top = {r["name"]: r["width"] for r in t.get("id_straps", []) + t.get("count_straps", [])}
+        import landing_tie_children as LTC
+        declared_top.update(LTC.physical_use_pins(t))
         for name, row in rows.items():
             if "leaf" not in row:
                 if declared_top.get(name) != row.get("width"):
