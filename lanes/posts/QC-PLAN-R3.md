@@ -599,3 +599,17 @@
   - Fix pushed to main: 8b1909473d6 (check guarded by not rca; a CA row's added_cycles must equal sidecar sched_lat). a2fb7e625dd restores two f-string quotes lost in 8b19094 (only the new error message, no behaviour) and adds a regression test (CA + strap, sched_lat 2/3/5). 98 tests in test_landing_output_qreg/clock_landings/ca_mixed/count_straps/legacy_input_freg pass.
   - event_tree_t2 carries clock_landings.py from a2fb7e625dd (N46Q unaffected: all its QREG ports are at 4). Re-binds N46R2 / N46S2 running on epyc9. N46Q bind is still in progress.
 - 2026-11-19 19:49 PST QC-PLAN-R3: N46Q GREEN (strict bind s29q103S4Q9N46QBQ on main tools: BIND_ERRORS 0, LANE_ASBUILT 1921/1921; G0 = control, 4 kit_fit; PRE rc 0). Applying now as the QC event: pack_n46q (277 files: plan + bind side files + 266 tools/common_flow files at main d2c3111be068 with clock_landings.py from a2fb7e625dd; 2 off-main overlays dropped) on live qwen_compute_n46_s0 -> qwen_compute_n46_s1, candidate tools_sha d2c3111be068d5. Bind-first publish_apply running on intel2. rt/6118d8a879fe refs (OPUS-FIX-QC-COLLCORE): my live G0/precheck scripts n46q/r/s/r2/s2 use rt/d2c3111be068 (present on epyc9); 14 old g0pre_n46a..p scripts repointed to rt/current. G0 for N46R2/N46S2 re-running on the same plans.
+- 2026-11-19 20:04 PST QC-PLAN-R3 on FABLE-PD-QC-1955 + N46R2/S2 results:
+  - N46R2 / N46S2 (fold + 498-strap form, with the CA QREG fix) still fail strict bind, same two root classes on both:
+  (a) PARAM_REGEN coll_regen "CS_RXV: seam members shift by [3, 4]". The fold drops sched_lat by different amounts inside one coll seam bundle. Members must shift equally (regen_constants QC_SEAM_BUNDLES).
+  (b) R8_STRAP_PAD slw_su_c__cl92142dac: pad 31 / 35 / 18 > strap capacity 15. The fold's -1..-3 cycle lanes push R8 group pads past the 4-bit strap.
+  The rest is cascade (HARD_CORE_PARAM_WRAP x st_a, HARD_CORE_PARAM_ALL sc, R8_STALE before BQ). So the fall fold cannot bind as a pure K/DEPTH swap. It needs per-bundle equal shift and an R8 pad budget, i.e. a planner option to hold a latency floor (keep sched_lat >= old within seam bundles / R8 groups; depth 8 where needed). Not composed yet; it will be its own event. FABLE stop 4 holds anyway: it is not proven until re-timed on a new built clock.
+  - Next form N46R3 on N46Q, composing now (no fold):
+  (1) strap halo rule fixed on main 1a6837b0817 (a contents[] copy of a hard_cores[] instance no longer blocks; test added). Only the real halo pins move, nearest free site. The 408 contents-only pins stay at the tile edge.
+  (2) the 59 QC-PADLEG rows.
+  (3) x_ctl_i head re-space to equal thirds on every type with the 378 um head (0 regs, 0 cycles).
+  (4) cbf_q00_s2 collector sources + children re-picked by position on its own tree (collector_reattach, BASE = sibling tree), plan + sidecar.
+  The generator now checks collector source/child -> node <= 405 um on every type (compose_check.collector_over, 4 tests), asserted before write.
+  Then bind + G0 + LATCHECK.
+  - N46Q apply: live tree qwen_compute_n46_s1 built on 6 hosts (56bcb338). publish_apply bind-first strict bind in progress.
+  - N46T: QC-PADLEG section2 / section3_cland are now in the rows file. Composed after N46R3 binds, with a footprint check on section 3 first (FABLE stop 9). The stm guides use main tools (event_tree_t2 is main d2c3111be068 + fixes, newer than 1841dad39c4).
