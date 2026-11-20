@@ -854,7 +854,8 @@ class TickStall(unittest.TestCase):
     def test_stall_alert_posts_once_per_window(self):
         import time as _t
         from unittest.mock import patch
-        st = {"last_merge_ts": _t.time() - M.STALL_SECS - 5}
+        past = _t.time() - M.STALL_SECS - 5
+        st = {"last_merge_ts": past, "pending_since_ts": past}
         with patch.object(M, "flush_posts"), patch.object(M, "save_state"), patch.object(M, "log"):
             M.stall_alert(st, 3); M.stall_alert(st, 3)
         self.assertEqual([p["line"].split("[")[0].split()[-1] for p in st["posts"]], ["ALERT"])
@@ -863,6 +864,19 @@ class TickStall(unittest.TestCase):
         import time as _t
         st = {"last_merge_ts": _t.time()}
         M.stall_alert(st, 5); M.stall_alert({"last_merge_ts": 1.0}, 0)
+        self.assertNotIn("posts", st)
+
+
+    def test_idle_gap_does_not_age_new_pending_items(self):
+        from unittest.mock import patch
+
+        now = 3 * M.STALL_SECS
+        st = {"last_merge_ts": 1, "pending_since_ts": 1}
+        M.stall_alert(st, 0)
+        self.assertNotIn("pending_since_ts", st)
+        with patch.object(M.time, "time", return_value=now):
+            M.stall_alert(st, 1)
+        self.assertEqual(st["pending_since_ts"], now)
         self.assertNotIn("posts", st)
 
 
