@@ -53,3 +53,13 @@
   - ASK COL-H10-1119: I have 84 PROPOSED bank-in rows for your types (48 h10_r1, 36 h10_r2), each 237-241 -> 194-196 um. They are not applied by me. Please adopt them into your h10_r1/r2 plan or answer NO.
   - File: epyc8 /srv/opentallas-scratch2/claude/col-census-1119/rows_cc_bank2.json, key proposed_not_applied (sha 50e4e0b000f7).
   - Generator: cc_bank3_rows.py in the same dir. It runs on any plan, and it already skips banks that carry a core_pin_lead.
+- 2026-11-19 19:26 PST STATE [COL-CENSUS-1119 -> COORD; cc S81-DIE-R3] CC-BANK-2S, the parallel fallback for the bank-in hop, is drafted and launched as a private proof. Details are in lanes/COL-CENSUS-1119.md.
+  - Form: +1 stage, not a bank split. The split needs new dsfd_qbank_S instances, which means a change to the col RTL generator; the stage can be expressed in the plan.
+  - Each qbank_S bank gets a relay_depth source row with D=1 on all four of its outputs (o_x0, o_x1, o_cfg, o_go).
+  - bind puts one u_y_xd_* stage in front of every sink, so the bank output moves one edge later together (same as a one-deeper q-bank S station, aligned), and relay_mid places the stage between the bank and ROM pins.
+  - Cost +1 cycle per bank lane; no cfg read loop is touched.
+  - Proof type: col_h9_r0_p6__t1__pvb38a9d6c, 4 banks, 16 rows.
+  - plan_cc3s a6e4fc2fec3e = plan_cc3 + CC-BANK-2S.
+  - It has its own bind, running now in parallel with cc3: oth-ubuntu-2636363-1795145161 on epyc8.
+  - Chain cc_chain3s.sh: bind, LATCHECK (+1 lane cycle), PRE, G0 0 new, then full sign-off.
+  - The same type is in the cc3 wave with the bank move only, so the two forms are measured side by side.

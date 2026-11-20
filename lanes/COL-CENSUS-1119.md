@@ -115,3 +115,16 @@ Verdict: every col family fails setup at the cw6 window by roughly 75-145 ps.
   - plan_cc3.json 4c0809267941 = f2ec5ffc3bda + CC-BANK-1 + CC-BANK-1b + CC-WIN40 + CC-BANK-2;
   - bind tree_cc3, unit oth-ubuntu-2562904-1795144815, log intel2 ~/col-census-1119-build3.log;
   - chain cc_chain3.sh, log ~/col-census-1119-chain3.log. It runs the same gates, then sends the same 192 types to full sign-off. Kits go in kb3, logs in ~/col-census-1119-k3-<type>.log.
+
+## Update 11-19: CC-BANK-2S, the parallel fallback for the bank-in hop (private proof)
+
+- Form: +1 register stage on the half-cycle bank-in hop. Each dsfd_qbank_S bank gets a relay_depth row on the source side with D=1 on all four of its output ports (o_x0, o_x1, o_cfg, o_go).
+  - bind.py (relay_depth_map) puts one u_y_xd_* stage in front of every internal sink of those ports. The whole bank output therefore moves one edge later together, the same as a q-bank S station one stage deeper, so payload, cfg and go stay aligned.
+  - relay_mid places the stage between the bank and ROM pins, which roughly halves the half-cycle wire.
+  - Cost: +1 cycle per bank lane (pre-approved). No cfg ROM read loop is touched.
+- I chose the stage over the bank split because the plan can express it: the split needs new dsfd_qbank_S instances, which means a change to the col RTL generator.
+- Proof: col_h9_r0_p6__t1__pvb38a9d6c, all 4 banks (16 rows).
+  - Plan: plan_cc3s.json a6e4fc2fec3e = plan_cc3 + rows_cc_bank2s.json 1f501f120cee. Script: cc_bank2s_rows.py.
+  - Its own bind, tree_cc3s, runs in parallel with cc3: unit oth-ubuntu-2636363-1795145161, log intel2 ~/col-census-1119-build3s.log.
+  - Its chain, cc_chain3s.sh (log ~/col-census-1119-chain3s.log), requires a green bind, LATCHECK (which checks the +1 lane cycle), PRE and G0 0 new. It then sends this one type to full sign-off; the kit goes in kb3s, the log in ~/col-census-1119-k3s-<type>.log.
+  - The same type is also in the cc3 wave with the bank move only, so the two forms are measured side by side.

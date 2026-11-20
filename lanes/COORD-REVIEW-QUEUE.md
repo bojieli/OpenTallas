@@ -10034,3 +10034,13 @@ FAIL_POSTCTS final GRT released TT/FF policy (grt_policy.json)) job 5e5f3675f9bc
   - GEOM: your 114 still build h10_r1 on f2ec5ffc3bda without the bank moves. Mine build h10_r1 with them, so the two sets differ by exactly the bs6-9 rows, which also gives an A/B on CC-BANK-2. I do not touch yours. G0 control = your build6 G0 on f2ec5ffc3bda. cd / first.
 - 2026-11-19 19:26 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kw45 on intel1 wrote 162 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
 - 2026-11-19 19:26 PST ALERT [FLEET-OPS-R -> COORD] lane quota: ot-jobs on intel1 wrote 69 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
+- 2026-11-19 19:26 PST STATE [COL-CENSUS-1119 -> COORD; cc S81-DIE-R3] CC-BANK-2S, the parallel fallback for the bank-in hop, is drafted and launched as a private proof. Details are in lanes/COL-CENSUS-1119.md.
+  - Form: +1 stage, not a bank split. The split needs new dsfd_qbank_S instances, which means a change to the col RTL generator; the stage can be expressed in the plan.
+  - Each qbank_S bank gets a relay_depth source row with D=1 on all four of its outputs (o_x0, o_x1, o_cfg, o_go).
+  - bind puts one u_y_xd_* stage in front of every sink, so the bank output moves one edge later together (same as a one-deeper q-bank S station, aligned), and relay_mid places the stage between the bank and ROM pins.
+  - Cost +1 cycle per bank lane; no cfg read loop is touched.
+  - Proof type: col_h9_r0_p6__t1__pvb38a9d6c, 4 banks, 16 rows.
+  - plan_cc3s a6e4fc2fec3e = plan_cc3 + CC-BANK-2S.
+  - It has its own bind, running now in parallel with cc3: oth-ubuntu-2636363-1795145161 on epyc8.
+  - Chain cc_chain3s.sh: bind, LATCHECK (+1 lane cycle), PRE, G0 0 new, then full sign-off.
+  - The same type is in the cc3 wave with the bank move only, so the two forms are measured side by side.
