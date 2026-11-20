@@ -12824,6 +12824,14 @@ def hung_cancel(AP, rec, why, notices, containers=(), st=None):
         rc, _, _ = AP.sh(cmd, timeout=120)
         stopped.append(f"{h}:{name}" + ("" if rc == 0 else f"(rc {rc})"))
     rec["stopped_containers"] = {"at": time.time(), "names": " ".join(stopped)[:300], "why": "HUNG-WATCH", "root": r or ""}
+    try:                    # CANCELMARK-1400: the stopped job exits 143 / Error 241; autopilot.marked_cancel reads this line and classes it CANCELLED, not infra-oom
+        _mk = Path(getattr(AP, "AP_DIR", "") or "") / "cancel_marks.tsv"
+        if getattr(AP, "AP_DIR", None) and not getattr(AP, "DRY", False):
+            with _mk.open("a") as _f:
+                for _d in {x for x in (rec.get("dir"), r) if x}:
+                    _f.write(f"{time.time():.0f}\t{_d}\tHUNG-WATCH\t{str(why)[:160].replace(chr(9), ' ').replace(chr(10), ' ')}\n")
+    except OSError:
+        pass
     rec.update(status="CANCELLED", **{"class": "HUNG"}, updated=time.time(), reason=f"CANCELLED-HUNG: {why}"[:300])
     rec.pop("hung_watch", None)
     free = False

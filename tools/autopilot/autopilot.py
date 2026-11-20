@@ -1397,6 +1397,42 @@ def watchdog_stop(unit, since=0.0):
     return None
 
 
+CANCEL_MARKS = AP_DIR / "cancel_marks.tsv"                                  # t \t dir \t who \t why: appended by kit_wave HUNG-WATCH
+NOPROG_ACTIONS = COORD / "lanes" / "NOPROG-ACTIONS.tsv"                      # time(local) \t host \t type \t stage \t metric \t kit dir ...: one line per no-progress / unsignable cancel
+
+
+def marked_cancel(j, now=None, marks=None, actions=None):
+    """CANCELMARK-1400 (FLEET-WATCH-1400, FABLE-FLOW-1400 class 2): a job the watchdogs stopped (no-progress / unsignable cancel by ot-heavy-stop, HUNG-WATCH by docker stop) exits 143 with make
+    'Error 241', and was classed infra-oom and resubmitted with more memory.  Both leave a hub-side record naming the job's dir; a record at or after this attempt started, whose dir is the
+    job's path (or contains it / is inside it), makes the row CANCELLED, like an explicit ot-run --cancel.  -> the reason text or None"""
+    path = str(j.get("path") or "").rstrip("/")
+    if not path:
+        return None
+    since = float(j.get("started", 0)) - 60
+    now = now or time.time()
+    def hit(kit):
+        kit = (kit or "").rstrip("/")
+        return bool(kit) and (kit == path or kit.startswith(path + "/") or path.startswith(kit + "/"))
+    for src, kind in ((marks or CANCEL_MARKS, "marks"), (actions or NOPROG_ACTIONS, "actions")):
+        try:
+            lines = Path(src).read_text(errors="replace").splitlines()
+        except OSError:
+            continue
+        for line in reversed(lines[-4000:]):
+            f = line.split("\t")
+            try:
+                if kind == "marks":
+                    t, kit, who, why = float(f[0]), f[1], f[2], f[3] if len(f) > 3 else ""
+                else:
+                    t, kit, who, why = time.mktime(time.strptime(f[0], "%Y-%m-%d %H:%M:%S")), f[5], "no-progress watchdog", f[7] if len(f) > 7 else ""
+            except (ValueError, IndexError):
+                continue
+            if t < since or t > now + 60 or not hit(kit):
+                continue
+            return f"cancelled by {who} at {time.strftime('%F %T', time.localtime(t))} (not an OOM kill): {why}"[:300]
+    return None
+
+
 def signals_cancel(j):
     """the ot-run signals.log line recording an explicit `ot-run --cancel` of this job's client (signal from an
     `ot-run --cancel` sender to the ot-run whose --dir is the job's kit, at or after this attempt started), or None"""
@@ -3050,7 +3086,7 @@ def poll_running(st):
         if client.get("ran_on"):
             j["ran_on"] = client["ran_on"]
         if not client.get("cancelled"):
-            sig = signals_cancel(j)
+            sig = signals_cancel(j) or marked_cancel(j)
             if sig:
                 client["cancelled"] = sig
         if client.get("cancelled"):
