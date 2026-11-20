@@ -748,3 +748,5 @@
 - 2026-11-19 23:49 PST ALERT [OT-TOOLS-SYNC -> COORD] runtime sync FAILED, rt/current stays 7e9768a93884: RuntimeError: /srv/opentallas-scratch2/claude/rt/68ee718a2a14 is partial but in use; not touched
 - 2026-11-19 23:50 PST DISK-RATE intel2 /srv/opentallas-scratch2: free 165 GB, falling 91 GB/h, floor 50 GB in 1.3 h AUTO-RETIRE rc 0: df before: 154G / df after: 154G; deleted 0,  (cron disk_rate.py; read-only)
 - 2026-11-19 23:52 PST STATE tools sync recovered after 12 min (rt/current 68ee718a2a14)
+- 2026-11-19 23:55 PST ALERT [OT-TOOLS-SYNC -> COORD] runtime sync FAILED, rt/current stays 315cc722d686: FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch2/claude/rt/f18f3c9e8fa5/tools/.flow_blobs.json'
+- 2026-11-19 23:55 PST STATE [FLEET-OPS-R -> COORD] stage-peak admission trial, one hour after: 'guard kills, admitted jobs' per hour. epyc2 before 0 88 -> after 0 13; epyc8 before 20 57 -> after 5 85 (before = the hour ending when the trial started).
