@@ -8,13 +8,13 @@ Sources are the ORFS run of each build, never the wave log:
   <kit>/signoff/signoff.json                                                   sign-off verdict (route.drc, checks, profile_gates)
 A build counts in a stage row when that stage's file was written inside the window.  A build ENDS in the window when its last
 event is inside it:  sign-off.json written (pass / fail class),  route finished with DRC > 0 (DRC),  a stage log with a crash or
-overflow signature and no result (tool crash / congestion),  a stage log with no result idle for --stale-min (tool crash: the
-run died; dated when the idle time ran out),  or route finished with no sign-off yet (pending, not a failure).  A build still writing its log is running and is
+overflow signature and no result (tool crash / congestion),  a stage log with no result idle for --stale-min (tool crash, shown apart as "no signature": the
+run died or was cancelled; dated when the idle time ran out),  or route finished with no sign-off yet (pending, not a failure).  A build still writing its log is running and is
 not counted.  A build that fails more than one gate is counted once, by its first failing gate in the order DRC, setup, hold.
 
 usage: route_results.py [--since 'YYYY-MM-DD HH:MM'] [--until 'YYYY-MM-DD HH:MM'] [--hours N] [--hosts h1,h2,...] [--roots d1,d2] [--extra f1.json,...]
                         [--stale-min N] [--json] [--collect]
-  --hosts   fan out over ssh (this script is piped to `python3 -I -` on each host, --collect), then merge
+  --hosts   fan out over ssh ('local' = this host, no ssh) (this script is piped to `python3 -I -` on each host, --collect), then merge
   --collect internal: print the raw per-build records of this host as JSON
 Times are local time (hosts run PST).  Default window: 00:00 today to now.
 """
@@ -100,15 +100,37 @@ def find_bases(root):
             dns[:] = []
             continue
         dns[:] = [d for d in dns if d not in SKIP_DIRS]
+        # inside a kit only run/logs/asap7 matters (signoff.json is read by path): skip the other thousands of kit files
+        if os.path.basename(os.path.dirname(dp)) == "gen":
+            dns[:] = [d for d in dns if d == "run"]
+        elif os.path.basename(dp) == "run":
+            dns[:] = [d for d in dns if d == "logs"]
+        elif os.path.basename(dp) == "logs":
+            dns[:] = [d for d in dns if d == "asap7"]
     return out
 
 
-def record(base):
+def live_snapshot():
+    """one string of every process cwd + command line on this host: a build whose kit path appears in it is still running."""
+    parts = []
+    for pid in os.listdir("/proc") if os.path.isdir("/proc") else []:
+        if not pid.isdigit():
+            continue
+        try:
+            parts.append(os.readlink("/proc/%s/cwd" % pid))
+            with open("/proc/%s/cmdline" % pid, "rb") as f:
+                parts.append(f.read().replace(b"\0", b" ").decode("utf-8", "replace"))
+        except OSError:
+            continue
+    return "\n".join(parts)
+
+
+def record(base, live=""):
     """one build: stage times + the facts the classifier needs.  base = <kit>/run/logs/asap7/<design>/base"""
     design = os.path.basename(os.path.dirname(base))
     kit = base.split("/run/logs/asap7/")[0]
-    rec = {"kit": kit, "design": design, "die": die_of(kit), "item": os.path.basename(kit),
-           "t": {}, "log_t": {}, "res": {}}
+    rec = {"kit": kit, "design": design, "die": die_of(kit), "item": design[3:] if design.startswith("dp_") else design,
+           "t": {}, "log_t": {}, "res": {}, "live": bool(live) and kit in live}
     for st, f in STAGE_FILE.items():
         j = mtime(os.path.join(base, f + ".json"))
         l = mtime(os.path.join(base, f + ".log"))
@@ -172,6 +194,8 @@ def outcome(rec, now, stale_s):
         if drc:
             return t["route"], "drc"
         return t["route"], "pending"
+    if rec.get("live"):
+        return None      # a process still works in this kit: running, not failed
     # no route result: look at the newest stage without a result
     for st in ("route", "grt", "cts"):
         lt = rec["log_t"].get(st)
@@ -181,22 +205,24 @@ def outcome(rec, now, stale_s):
         if kind:
             return lt, kind
         if now - lt > stale_s:
-            return lt + stale_s, "crash"      # declared dead when the idle time ran out, so it lands in that hour once
+            return lt + stale_s, "crash_idle"      # declared dead when the idle time ran out, so it lands in that hour once
         return None
     return None
 
 
-def collect(roots):
+def collect(roots, live=None):
+    """records of every build under roots; roots are walked in parallel (the trees are large, the walk is I/O bound)."""
+    live = live_snapshot() if live is None else live
+    roots = [r for r in roots if os.path.isdir(r)]
+    with ThreadPoolExecutor(max_workers=8) as ex:
+        found = list(ex.map(find_bases, roots))
     seen, recs = set(), []
-    for r in roots:
-        if not os.path.isdir(r):
-            continue
-        for b in find_bases(r):
+    for bases in found:
+        for b in bases:
             real = os.path.realpath(b)
-            if real in seen:
-                continue
-            seen.add(real)
-            recs.append(record(b))
+            if real not in seen:
+                seen.add(real)
+                recs.append(record(b, live))
     return recs
 
 
@@ -213,7 +239,7 @@ def default_roots():
 
 def aggregate(recs, since, until, now, stale_s):
     tab = {d: {"cts": 0, "grt": 0, "route": 0, "signoff": 0, "pass": 0, "pending": 0,
-               **{c: 0 for c in CLASSES}, "ended": 0, "names": {}} for d in DIES}
+               **{c: 0 for c in CLASSES}, "crash_idle": 0, "ended": 0, "names": {}} for d in DIES}
     seen = set()
     for r in recs:
         key = (r["die"], r["design"], tuple(sorted(r["t"].items())))
@@ -234,6 +260,9 @@ def aggregate(recs, since, until, now, stale_s):
         elif kind == "pending":
             row["pending"] += 1
         else:
+            if kind == "crash_idle":      # no signature, no process, log idle: crashed OR cancelled by the wave; counted as crash, shown apart
+                row["crash_idle"] += 1
+                kind = "crash"
             row[kind] += 1
             row["names"].setdefault(kind, []).append(r["item"])
     return tab
@@ -260,6 +289,10 @@ def render(tab, since, until, hosts_note=""):
     done = tot["pass"] + fails
     lines.append("ended past CTS: %d  passed %d  failed %d%s" % (done + tot["pending"], tot["pass"], fails,
                  "  (fail rate %.0f%% of %d decided)" % (100.0 * fails / done, done) if done else ""))
+    idle = sum(tab[d]["crash_idle"] for d in DIES)
+    if tot["crash"]:
+        lines.append("  of the %d tool crashes, %d have no crash signature: no process, log idle >= %d min (crashed or cancelled by the wave)"
+                     % (tot["crash"], idle, STALE_MIN))
     for d in DIES:
         for c, names in sorted(tab[d]["names"].items()):
             lines.append("  %s %s: %d (%s%s)" % (d, CLASS_LABEL[c], len(names), ", ".join(sorted(names)[:4]), ", ..." if len(names) > 4 else ""))
@@ -274,6 +307,11 @@ def fan_out(hosts, since, roots, timeout):
     src = open(os.path.abspath(__file__)).read()
 
     def one(h):
+        if h == "local":      # the hub itself: no ssh to self
+            try:
+                return h, [r for r in collect(roots or default_roots()) if any(v >= since for v in list(r["t"].values()) + list(r["log_t"].values()))], None
+            except Exception as e:
+                return h, [], "local: %s" % str(e)[:80]
         cmd = ["ssh", "-o", "ControlPath=none", "-o", "BatchMode=yes", h, "python3", "-I", "-", "--collect", "--since-epoch", str(since)]
         if roots:
             cmd += ["--roots", ",".join(roots)]

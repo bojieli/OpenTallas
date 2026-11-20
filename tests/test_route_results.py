@@ -45,8 +45,8 @@ def so(drc=0, setup=-10.0, hold=5.0, gates=None):
     return d
 
 
-def table(root):
-    recs = rr.collect([str(root)])
+def table(root, live=""):
+    recs = rr.collect([str(root)], live=live)
     return rr.aggregate(recs, SINCE, UNTIL, NOW, rr.STALE_MIN * 60)
 
 
@@ -83,6 +83,7 @@ def test_crash_congestion_and_running(tmp_path):
     t = table(tmp_path)["qc"]
     assert t["congestion"] == 1
     assert t["crash"] == 2          # explicit signature + idle log; the live one is not counted
+    assert t["crash_idle"] == 1
     assert t["cts"] == 4 and t["grt"] == 1 and t["ended"] == 3
 
 
@@ -107,3 +108,16 @@ def test_render_has_table_and_rate(tmp_path):
     out = rr.render(table(tmp_path), SINCE, UNTIL)
     assert "ROUTE-RESULTS" in out and "| s81 | 2 | 2 | 2 | 2 | 1 | 0 | 1 | 0 | 0 | 0 | 0 |" in out
     assert "failed 1" in out and "50%" in out
+
+
+def test_live_build_is_running_not_crashed(tmp_path):
+    k = kit(tmp_path, "s81", "col_live", ("cts",), None, log_only="grt", log_text="Segmentation fault\n")
+    assert table(tmp_path, live=str(k) + "/run")["s81"]["crash"] == 0
+    assert table(tmp_path)["s81"]["crash"] == 1
+
+
+def test_walk_skips_kit_internals_but_finds_all_builds(tmp_path):
+    k = kit(tmp_path, "s81", "col_a", ("cts",))
+    (k / "rtl" / "deep").mkdir(parents=True)
+    (k / "macros" / "logs" / "asap7" / "dp_x" / "base").mkdir(parents=True)   # inside a kit but not under run/: ignored
+    assert len(rr.find_bases(str(tmp_path))) == 1
