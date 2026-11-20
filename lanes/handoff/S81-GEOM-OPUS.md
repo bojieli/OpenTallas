@@ -194,3 +194,34 @@ Notes and scripts: epyc8 /srv/opentallas-scratch2/claude/s81-geom-opus-d8h-l4/FI
 - TODO: per-family GRT TT / sign-off vs old plan (h9_r1 -181, h10_r1 -208/-411, h10_r2 -172 [COL-H10-1119], h10_r0_p1 -481); confirm auto-export picks up the signed ones.
 - bk_sel: G0 bk3 is clean on street (2->0, errors = control). u_c re-harden dsdv_bksel_c_rfda2p is running on intel1 (oth-ubuntu-590313-1795139614, log ~/s81-geom-opus-ucore-a2p.log). Next: export the view -> point the plan u_c at it -> private bind of plan_h3_bk -> bk_sel__t2 kit -> GRT TT.
 - col_h10_r1/r2 rows went to COL-H10-1119.
+
+## 11-20 01:xx FULL STATE (successor: start here)
+Goal: every D8i col type (114) + col_h10 (24) to sign-off; bk_sel__t2 BK-PLACE + A2P proof.
+
+### Builds
+- D8i 114 kits: plan_h3_d8i f2ec5ffc3bda, strict-bound tree epyc8 /srv/opentallas-scratch2/claude/s81-geom-opus-d8g/d8i/tree6. Kits: tree6/kb_d8i/kits/<T>/gen/<T> (same path on every host; 59 relaunched on epyc7/9/2/10, 55 on epyc8). Host per type: intel2 ~/s81-geom-opus-hostmap.txt (also in watcher cur.sorted, col 1).
+- col_h10 24 kits (took over from dead COL-H10-1119): plan_h10 dc08d8b68653 = f2ec5ffc3bda + CC-BANK-2 bank moves, tree epyc8 /srv/opentallas-scratch2/claude/col-h10-1119/tree, kits col-h10-1119/kb/kits/<T>. Launcher intel2 ~/s81-geom-opus-h10-launch.sh (log ~/s81-geom-opus-h10-launch.log): stages tree refs + pristine kits to epyc9/intel1/epyc10/epyc2/epyc7, launches GOAL=route, staggered 45 s. Logs ~/s81-geom-opus-h10k-<T>.log.
+- MISTAKE to know: all 114 D8i first runs used GOAL=finish -> they die at GRT ("OT_GRT_NONPORT ... must explicitly select FF"). Die kits must use GOAL=route.
+
+### Watcher (the one thing to keep alive)
+- intel2 ~/s81-geom-opus-d8i-watch.sh (top process state Ss; log ~/s81-geom-opus-d8i-watch.log), every 15 min. Helpers: ~/s81-geom-opus-d8i-probe.sh (per-kit probe on host, KR=kit root), ~/s81-geom-opus-d8i-fam.py (per-family post), ~/s81-geom-opus-mkresume.sh, ~/s81-geom-opus-coretap.sh.
+- State: ~/s81-geom-opus-d8i-watch/ (cur.sorted per-type table, posted.json, resume.log, coretap_h10.log, status_* snapshots).
+- Per pass: probe stage / GRT TT / signoff (verdict DRC TT FF) / post-CTS FF gate; spool auto_export enqueue for R-MINIMAL SIGNED; post per-family changes vs old plan (h9_r1 -181, h10_r1 -208/-411, h10_r2 -172, h10_r0_p1 -481).
+- RESTART RULE: a kit with no process and no signoff gets ONE resume: mkresume writes K/resume.json, then ot-run --hosts <same host> ... run_kit.sh K route. Marker = ~/s81-geom-opus-d8ik3-<T>.log (h10: ~/s81-geom-opus-h10k3-<T>.log). A second failure is NOT retried automatically; look at it by hand.
+- RESUME-FILE RULE (mkresume): only for a kit with no live "bash K/run_kit.sh" process, no resume.json and no signoff. start=cts if 3_place.odb exists AND the kit cts_post.tcl has DIE-CORETAP-1119; else grt if 4_cts.odb; else cts/place by the newest stage ODB. reused_steps listed; source = same kit (in place). Without resume.json an in-place route rerun redoes floorplan (11 epyc8 kits did; reported to FLOW-FIX-2045).
+- Edit the watcher only by stop + restart: bash reads the script while it runs. Kill only the Ss top pid, after a cmdline check.
+
+### CORETAP (main 7109ee911ef)
+- rt cts_post.tcl + subtree_balance.tcl swapped into all 114 D8i kits (atomic). Staged copies: /tmp/s81go_coretap on each host. The h10 kits are refreshed by the watcher after launch.
+- 35 queued resumes were moved to start=cts. FF hold gate BEFORE: ~/s81-geom-opus-coretap-1.txt (col_h9_r1 -120.8/-120.2 ... col_h10_r1 -56.8/-42.1). AFTER: the watcher posts "CTS FF hold after CORETAP" per family.
+
+### Rows handed over
+- J4 (S81-DIE-R3): col_h10_r1 u_n24.fi[0] D1 relay_depth, epyc8 /srv/opentallas-scratch2/claude/s81-geom-opus-d8g/j4/rows_j4_h10r1_n24fi.json f3851eb37f87. WATCH: u_d1_11_Y.q -> ist_frame_int_o0_0, 822 um, row only if h10 GRT fails on it.
+
+### bk_sel__t2
+- RTL e21f466924 on main (OT_BKSEL_A2P: RC3 RS3 RO4 RLN3, u_c XDX 5); bench PASS. BK plan epyc8 s81-geom-opus-d8g/bksel -> plan_h3_bk 5d456e18a580 (bk_rows.py), G0 bk3 street 2->0, errors = control.
+- BLOCKER: the u_c A2P re-harden (ucore/dsdv_bksel_c_rfda2p) FAILED LEC: 5/58401 differ in u_c.g_pipe.u_ctl (rep_req; c_rep and st[2:0] removed by synth). Control = same recipe without A2P: ucore_ctl/dsdv_bksel_c_rfdqctl (recipes bksel/recipes_ctl.json), log intel2 ~/s81-geom-opus-ucore-ctl.log, queued on epyc8. If the control passes LEC -> fix the A2P / u_ctl interaction (ot_s81ph_sel_ctl_pp.sv FSM). If it fails -> an LEC flow class: post it to the flow owner and keep A2P.
+- After a signed u_c: export view -> plan u_c lef/lib -> private bind of plan_h3_bk (build_tree_own.sh on a tree4 copy) -> bk_sel__t2 kit GOAL=route -> GRT TT.
+
+### Rules
+- Kill exact PIDs/units only (recorded at launch), with a cmdline check first; never pgrep patterns. No foreground sleep. Post via bash ~/coord/bin/post.sh S81-GEOM-OPUS.
