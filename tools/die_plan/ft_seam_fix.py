@@ -26,7 +26,10 @@ sys.path.insert(0, str(HERE)); sys.path.insert(0, str(HERE.parents[1]))
 import schema as S  # noqa: E402
 import check as C  # noqa: E402
 
-LIMIT = 400.0                       # 5 um under the 405 rule (cell centre vs pin model), as ft_reach_fix
+import os as _os_cbc, sys as _sys_cbc
+_sys_cbc.path.insert(0, _os_cbc.path.dirname(_os_cbc.path.abspath(__file__)))
+import cbc_rules as _CBC  # noqa: E402  OWNER 11-20 #6: generator hop default (300 um), one knob for every die
+LIMIT = _CBC.REACH_UM_PER_HOP - _CBC.SITE_MARGIN_UM                       # 5 um under the 405 rule (cell centre vs pin model), as ft_reach_fix
 MAX_ADD = 3
 STEPS = tuple(round(0.05 * i, 2) for i in range(1, 20))     # fraction of the way to the out window point
 

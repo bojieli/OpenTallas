@@ -49,7 +49,10 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 
-LIMIT = 405.0
+import os as _os_cbc, sys as _sys_cbc
+_sys_cbc.path.insert(0, _os_cbc.path.dirname(_os_cbc.path.abspath(__file__)))
+import cbc_rules as _CBC  # noqa: E402  OWNER 11-20 #6: generator hop default (300 um), one knob for every die
+LIMIT = _CBC.REACH_UM_PER_HOP
 TAG = "S81-RLYBR-1"
 RELAY_MOD = re.compile(r"^(ot_s81_rly|ot_s81_rly_k|dsfd_rly_\d+_[A-Z]+)$")
 # CBC-RULES-1119 (COORD 11-19, die-agnostic): the generic transport stages of every die (QC / KV / HEAD core-to-core

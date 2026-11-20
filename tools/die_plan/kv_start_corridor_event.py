@@ -51,7 +51,10 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 
 STEP_UM = 340.0          # target hop of a START stage (r2r gate 405; margin for GPL of face flops / ring cells)
-MAX_HOP_UM = 405.0
+import os as _os_cbc, sys as _sys_cbc
+_sys_cbc.path.insert(0, _os_cbc.path.dirname(_os_cbc.path.abspath(__file__)))
+import cbc_rules as _CBC  # noqa: E402  OWNER 11-20 #6: generator hop default (300 um), one knob for every die
+MAX_HOP_UM = _CBC.REACH_UM_PER_HOP
 NEED_UM = 380.0          # writer branches only for output rings whose START corridor is longer than this
 EDGE_Y = 12.0            # origin row (inside core rows, clear of the M7 strap/pin sites)
 CLEAR_UM = 4.32          # corridor clearance around macros (= reset_tree.CLEAR_UM)

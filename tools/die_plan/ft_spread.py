@@ -39,7 +39,10 @@ CORE_MARGIN = 4.32             # gen_phys.CORE_MARGIN_UM
 PROJ_STEPS = (1, 3, 6)          # retry radii (x MAX_PROJ_UM), as ft_corridor.place_slot
 MAX_PROJ_UM = 40.0             # a bit may move at most this far to reach free space / a free site
 HOP_TOL_UM = 5.0               # a spread hop may exceed the budget only if it is within this of the clump's same hop
-REACH_UM = 405.0               # repeated reach (COORD GEOM-21 10-27); budget = REACH x 0.98 - 2 (ft_corridor default)
+import os as _os_cbc, sys as _sys_cbc
+_sys_cbc.path.insert(0, _os_cbc.path.dirname(_os_cbc.path.abspath(__file__)))
+import cbc_rules as _CBC  # noqa: E402  OWNER 11-20 #6: generator hop default (300 um), one knob for every die
+REACH_UM = _CBC.REACH_UM_PER_HOP               # repeated reach (COORD GEOM-21 10-27); budget = REACH x 0.98 - 2 (ft_corridor default)
 PITCH = dict(M2=.036, M3=.036, M4=.048, M5=.048, M6=.064, M7=.064)
 H_LAYERS = ('M2', 'M4', 'M6')
 V_LAYERS = ('M3', 'M5', 'M7')

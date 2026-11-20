@@ -19,7 +19,10 @@ from placement_obstacles import placement_boxes  # noqa: E402
 from tools.die_trial.legal_sites import RowAllocator  # noqa: E402
 from ft_nudge import KEEPOFF, CELL_DEFAULT, clock_points  # noqa: E402
 
-LIMIT = 400.0
+import os as _os_cbc, sys as _sys_cbc
+_sys_cbc.path.insert(0, _os_cbc.path.dirname(_os_cbc.path.abspath(__file__)))
+import cbc_rules as _CBC  # noqa: E402  OWNER 11-20 #6: generator hop default (300 um), one knob for every die
+LIMIT = _CBC.REACH_UM_PER_HOP - _CBC.SITE_MARGIN_UM
 
 
 def main():

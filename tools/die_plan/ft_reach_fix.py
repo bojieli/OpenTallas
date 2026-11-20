@@ -22,7 +22,10 @@ from placement_obstacles import placement_boxes  # noqa: E402
 from tools.die_trial.legal_sites import RowAllocator  # noqa: E402
 from ft_nudge import KEEPOFF, CELL_DEFAULT, clock_points  # noqa: E402
 
-LIMIT = 400.0          # S0->S1 accepted (5 um under the 405 rule for the cell-centre vs pin model)
+import os as _os_cbc, sys as _sys_cbc
+_sys_cbc.path.insert(0, _os_cbc.path.dirname(_os_cbc.path.abspath(__file__)))
+import cbc_rules as _CBC  # noqa: E402  OWNER 11-20 #6: generator hop default (300 um), one knob for every die
+LIMIT = _CBC.REACH_UM_PER_HOP - _CBC.SITE_MARGIN_UM          # S0->S1 accepted (5 um under the 405 rule for the cell-centre vs pin model)
 STATION_MAX = 405.0
 TARGETS = (390.0, 370.0, 350.0, 320.0, 290.0, 250.0)
 

@@ -34,7 +34,10 @@ import schema as S  # noqa: E402
 import gen_phys  # noqa: E402
 import ft_reach  # noqa: E402
 
-REACH = 405.0
+import os as _os_cbc, sys as _sys_cbc
+_sys_cbc.path.insert(0, _os_cbc.path.dirname(_os_cbc.path.abspath(__file__)))
+import cbc_rules as _CBC  # noqa: E402  OWNER 11-20 #6: generator hop default (300 um), one knob for every die
+REACH = _CBC.REACH_UM_PER_HOP
 
 
 def _style(raw_bytes, P):

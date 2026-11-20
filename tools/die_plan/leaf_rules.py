@@ -37,7 +37,10 @@ WIDE_BITS = 512          # R-LEAF-2b: a window this wide keeps 2 x STREET clear 
 def face_need(landed, bits):
     """R-LEAF-2 / 2b clearance of a >= 16-pin window."""
     return 2 * STREET if (landed or bits >= WIDE_BITS) else STREET
-REACH = 405 - 2.16
+import os as _os_cbc, sys as _sys_cbc
+_sys_cbc.path.insert(0, _os_cbc.path.dirname(_os_cbc.path.abspath(__file__)))
+import cbc_rules as _CBC  # noqa: E402  OWNER 11-20 #6: generator hop default (300 um), one knob for every die
+REACH = _CBC.REACH_UM_PER_HOP - 2.16
 
 
 def windows(t):

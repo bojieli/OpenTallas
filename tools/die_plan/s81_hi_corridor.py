@@ -27,7 +27,10 @@ from collections import defaultdict
 
 LN = re.compile(r"g_ln\[(\d+)\]\.u_l$")
 TRK = 10.0          # measured over-core tracks/um per direction (t28 GRT gcell 0.57 um: H cap 5-8, V cap 6)
-LIMIT = 400.0
+import os as _os_cbc, sys as _sys_cbc
+_sys_cbc.path.insert(0, _os_cbc.path.dirname(_os_cbc.path.abspath(__file__)))
+import cbc_rules as _CBC  # noqa: E402  OWNER 11-20 #6: generator hop default (300 um), one knob for every die
+LIMIT = _CBC.REACH_UM_PER_HOP - _CBC.SITE_MARGIN_UM
 G = 4.32
 SEP = 21.6         # um between two shared banks
 md = lambda a, b: abs(a[0] - b[0]) + abs(a[1] - b[1])          # noqa: E731

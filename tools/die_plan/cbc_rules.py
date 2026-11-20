@@ -3,9 +3,14 @@
 
 Units: um, clock sinks, flops, logic levels.  ASAP7, 833 ps clock.
 """
-REACH_UM_PER_HOP = 405.0        # FABLE-CLOSURE-STRATEGY 11-19 02:00 (amends r713's 300): longest Manhattan distance between
-                                # launch and capture register of any leg, measured on PLACED hops (placed_hops.py on
-                                # 3_place.odb, every leg incl. undeclared ones); plan coordinates are an estimate of it
+import os as _os
+REACH_UM_PER_HOP = float(_os.environ.get("OT_CBC_REACH_UM", "300"))   # OWNER 11-20 #6 (COORD): generator default on EVERY die -- the longest placed hop (launch ->
+                                # capture register, Manhattan, placed_hops.py on 3_place.odb) a plan generator / station tool
+                                # builds for; PRECHECK REACH estimates against it.  Was 405 (FABLE-CLOSURE-STRATEGY 11-19).
+                                # OT_CBC_REACH_UM overrides it (tools/conftest.py: 405 for the suites drawn at the old rule).
+REACH_GATE_UM = 405.0           # the CHECK rule is unchanged (METHODOLOGY 12.1e registered hop): G0 ft_station_max_um, bind
+                                # reach, routed reach.  Generators aim at REACH_UM_PER_HOP; nothing that passes 405 fails here.
+SITE_MARGIN_UM = 5.0            # generators that site cell centres keep 5 um under the cap for the cell-centre vs pin model
 DEPTH_LEVELS_TARGET = 12        # logic levels per register D cone the generator aims for
 DEPTH_LEVELS_MAX = 13           # COORD 11-19 (amends r713 rule 3): a cheap PRE-SCREEN only -- level count does not predict
                                 # closure (hd_ctl signed at 23 levels, tt_ctlm at 24 used 820 of 833 ps at zero wire)

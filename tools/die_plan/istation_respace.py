@@ -14,6 +14,7 @@ import numpy as np
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE)); sys.path.insert(0, str(HERE.parents[1]))
 import ft_seam_fix as SF  # noqa: E402
+import cbc_rules as _CBC  # noqa: E402  OWNER 11-20 #6
 
 
 def md(a, b):
@@ -86,7 +87,8 @@ def reprice(old, raw):
 def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("plan"); ap.add_argument("out"); ap.add_argument("ledger")
-    ap.add_argument("--limit", type=float, default=400.0); ap.add_argument("--report", type=float, default=405.0)
+    ap.add_argument("--limit", type=float, default=_CBC.REACH_UM_PER_HOP - _CBC.SITE_MARGIN_UM)
+    ap.add_argument("--report", type=float, default=_CBC.REACH_UM_PER_HOP)
     ap.add_argument("--types")
     a = ap.parse_args(argv)
     raw = json.loads(Path(a.plan).read_text())

@@ -29,7 +29,10 @@ from collections import defaultdict
 from pathlib import Path
 
 GATE = 405.0      # die.reach_um (R3)
-LIMIT = 400.0     # accepted (5 um under the gate for the cell-centre vs pin model, as ft_reach_fix.py)
+import os as _os_cbc, sys as _sys_cbc
+_sys_cbc.path.insert(0, _os_cbc.path.dirname(_os_cbc.path.abspath(__file__)))
+import cbc_rules as _CBC  # noqa: E402  OWNER 11-20 #6: generator hop default (300 um), one knob for every die
+LIMIT = _CBC.REACH_UM_PER_HOP - _CBC.SITE_MARGIN_UM     # accepted (5 um under the gate for the cell-centre vs pin model, as ft_reach_fix.py)
 FRACS = (0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.5, 0.6)
 
 

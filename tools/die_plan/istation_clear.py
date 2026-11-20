@@ -15,7 +15,10 @@ sys.path[:0] = [str(HERE), str(HERE.parents[1])]
 import ft_seam_fix as SF  # noqa: E402
 import numpy as np  # noqa: E402
 
-LIMIT = 400.0
+import os as _os_cbc, sys as _sys_cbc
+_sys_cbc.path.insert(0, _os_cbc.path.dirname(_os_cbc.path.abspath(__file__)))
+import cbc_rules as _CBC  # noqa: E402  OWNER 11-20 #6: generator hop default (300 um), one knob for every die
+LIMIT = _CBC.REACH_UM_PER_HOP - _CBC.SITE_MARGIN_UM
 md = lambda a, b: abs(a[0] - b[0]) + abs(a[1] - b[1])
 def hops(e, regs=None):
     pts = [e["from_um"]] + list(regs if regs is not None else e["regs_um"]) + [e["to_um"]]

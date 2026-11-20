@@ -36,7 +36,10 @@ INSET_Y = 8.64
 PITCH_X = 25.92
 PITCH_Y = 8.64
 MAX_MOVE_UM = 120.0
-HOP_LIMIT_UM = 400.0
+import os as _os_cbc, sys as _sys_cbc
+_sys_cbc.path.insert(0, _os_cbc.path.dirname(_os_cbc.path.abspath(__file__)))
+import cbc_rules as _CBC  # noqa: E402  OWNER 11-20 #6: generator hop default (300 um), one knob for every die
+HOP_LIMIT_UM = _CBC.REACH_UM_PER_HOP - _CBC.SITE_MARGIN_UM
 KEYS = ("landing_writer_start", "landing_reader_start")
 
 

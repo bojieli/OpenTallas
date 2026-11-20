@@ -14,7 +14,10 @@ sidecar collector.edges dst_index) are re-indexed to the union index.
     cland_col_superset.py PLAN SIDECAR OUT_PLAN OUT_SIDECAR [--fam REGEX] [--report R.json]
 """
 import argparse, collections, copy, json, re, sys
-REACH_UM = 405.0
+import os as _os_cbc, sys as _sys_cbc
+_sys_cbc.path.insert(0, _os_cbc.path.dirname(_os_cbc.path.abspath(__file__)))
+import cbc_rules as _CBC  # noqa: E402  OWNER 11-20 #6: generator hop default (300 um), one knob for every die
+REACH_UM = _CBC.REACH_UM_PER_HOP
 UP = ("cland_up_ready", "cland_up_fault", "fclk_out_cland_up")
 DN = re.compile(r"(?:cland_dn_(?:ready|fault)|fclk_in_cland_dn)_(\d+)$")
 

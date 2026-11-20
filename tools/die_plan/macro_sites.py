@@ -14,7 +14,10 @@ Partners (plan coordinates, all boxes [x0, y0, x1, y1]):
 A macro with no partner in the plan raises (a silent grid fallback is what this replaced)."""
 import re
 
-REACH_UM = 405.0
+import os as _os_cbc, sys as _sys_cbc
+_sys_cbc.path.insert(0, _os_cbc.path.dirname(_os_cbc.path.abspath(__file__)))
+import cbc_rules as _CBC  # noqa: E402  OWNER 11-20 #6: generator hop default (300 um), one knob for every die
+REACH_UM = _CBC.REACH_UM_PER_HOP
 GRID_UM = 8.64
 
 

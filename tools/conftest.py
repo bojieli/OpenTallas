@@ -10,6 +10,10 @@ import pytest
 # TOOLS-CONVERGE-1115: the kit_wave launch gate (autopilot/tool_skew.py) never ssh-es to a die tree host under test
 os.environ.setdefault("OT_TOOL_SKEW_REMOTE", "0")
 
+# OWNER 11-20 #6: generators default to a 300-um placed-hop cap (cbc_rules.REACH_UM_PER_HOP).  The geometry fixtures of the
+# suites before it are drawn at the 405 rule; they keep running there.  test_cbc_rules_default.py checks the 300 default.
+os.environ.setdefault("OT_CBC_REACH_UM", "405")
+
 
 @pytest.fixture(autouse=True)
 def _legacy_signoff_profile_default(monkeypatch):
