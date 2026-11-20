@@ -40,9 +40,14 @@ def test_nested_fails_on_old_unbound_serdes_form():
 @pytest.fixture(scope="module")
 def gen_new(tmp_path_factory):
     raw = S.load(str(PLAN))
+    types = ("hd_serdes", "hd_tile")
     assert "rtl/dsrom_sys/s81_head/ot_s81hd_serdes_link.sv" in raw["partition_types"]["hd_serdes"]["sources"]
+    sources = {source for name in types for source in raw["partition_types"][name]["sources"]}
+    missing = sorted(source for source in sources if not (ROOT / source).is_file())
+    if missing:
+        raise FileNotFoundError("missing source fixture inputs: " + " ".join(missing))
     out = tmp_path_factory.mktemp("gen")
-    files = gen_rtl.write_rtl(raw, out, str(ROOT), ["hd_serdes", "hd_tile"], plan_path=PLAN)
+    files = gen_rtl.write_rtl(raw, out, str(ROOT), list(types), plan_path=PLAN)
     return raw, out, files
 
 

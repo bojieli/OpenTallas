@@ -83,6 +83,10 @@ class FramePairsIndex(unittest.TestCase):
         with patch.dict(os.environ, CLEAN, clear=True):
             flat = {wrapper.stem: B.frame_pairs(wrapper.stem) for wrapper in wrappers}
         man = json.loads((ROOT / 'physical/die_plan/s81/bind/asbuilt_b178_coll.json').read_text())
+        inputs = set(man['files']) | set(man.get('prefer', []))
+        missing = sorted(path for path in inputs if not (ROOT / path).is_file())
+        if missing:
+            raise FileNotFoundError('missing source fixture inputs: ' + ' '.join(missing))
         env = dict(CLEAN, OT_S81_SELECTED_SOURCE_ROOT=str(ROOT), OT_S81_SELECTED_DEFINES=','.join(man['defines']),
                    OT_S81_SELECTED_ASBUILT_MANIFEST='physical/die_plan/s81/bind/asbuilt_b178_coll.json')
         with patch.dict(os.environ, env, clear=True):
