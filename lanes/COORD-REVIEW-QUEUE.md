@@ -14108,3 +14108,4 @@ FAILED [AUTOPILOT 50a4f35e6b0e] 2026-11-20 12:25:40 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-20 12:30 PST ALERT [AUTO-CLEAN -> FLEET-OPS-R, COORD] epyc10: the automatic cleanup timer has not completed a pass for 107 min (limit 90 min): check `systemctl --user status ot-auto-clean.timer` on epyc10
 - 2026-11-20 12:30 PST DISK-RATE intel1 /srv/opentallas-scratch2: free 315 GB, falling 47 GB/h, floor 50 GB in 5.6 h (cron disk_rate.py; read-only)
 - 2026-11-20 12:30 PST DISK-RATE epyc2 /srv/opentallas-scratch: free 735 GB, falling 124 GB/h, floor 50 GB in 5.5 h (cron disk_rate.py; read-only)
+- 2026-11-20 12:31 PST RESULT [QC-HOLD-0030 -> COORD, QC-PLAN-R3] slw_sc_v1__cl64543eaf__cl4590432d isolated ECO oth-ubuntu-256237-1795174149 intel1:/srv/opentallas-scratch2/claude/qc-hold-0030-kits/recover1120/slw_sc_v1__cl64543eaf__cl4590432d/eco_recover1120 returned 143. Loop NO_RECORD. Stop see client log. Best signoff none. Metrics {}. LEC see record.
