@@ -7498,6 +7498,23 @@ def tree_tool_smoke_cmd(src):
 SRC_MANIFEST_PY = Path(__file__).with_name("src_manifest.py")
 
 
+def verifier_path(own=None):
+    """SNAP-RO-1119: the src_manifest verifier a kit ships to its gen host.  A kit worker runs from the rt tree its spec pinned when the row was queued (QC n46_s2: 43 rows queued at 22:45 pinned
+    rt/77973bd52d22, 14 min before the .orig fix, and all failed 'missing' on it).  The verifier judges the SNAPSHOT, not the die's pinned tools, so it is always the newest published one:
+    <rt root>/current/tools/autopilot/src_manifest.py when this file sits in an rt/<sha> tree and current has one, else this tree's own."""
+    own = Path(own or SRC_MANIFEST_PY)
+    try:
+        for p in own.resolve().parents:
+            if p.parent.name == "rt":
+                cur = p.parent / "current" / "tools" / "autopilot" / "src_manifest.py"
+                if cur.is_file():
+                    return cur
+                break
+    except OSError:
+        pass
+    return own
+
+
 def src_manifest_cmd(sp):
     """SRC-TREE-1115: shell command (on the gen host) verifying the die src tree against its manifest; None = off.
     The verifier is shipped inline (python3 -I -c), so the gen host needs no copy of it."""
@@ -7507,7 +7524,7 @@ def src_manifest_cmd(sp):
     if mode == "off" or not str(sp.get("src") or "").startswith("/"):
         return None
     try:
-        script = SRC_MANIFEST_PY.read_text()
+        script = verifier_path().read_text()
     except OSError:
         return None
     cmd = f"python3 -I -c {shlex.quote(script)} verify {shlex.quote(sp['src'])}"
@@ -7545,6 +7562,7 @@ def src_manifest_verdict(sp, rc, txt):
 SRC_BREAKER_N = 3
 SRC_BREAKER_WINDOW_S = 900
 SRC_BREAKER_RECHECK_S = 120
+SRC_BREAKER_PROBE_S = 600
 _SRC_FAIL_PATH_RE = re.compile(r"SRC_MANIFEST FAIL (/\S+?):")
 
 
@@ -7586,6 +7604,8 @@ def src_breaker_gate(AP, cfg, st, die, go, skip, verify_fn=None, now=None):
         return go
     if now - float(br.get("last_check") or 0) >= SRC_BREAKER_RECHECK_S:
         br["last_check"] = now
+        if verify_fn is None:
+            verify_fn = src_breaker_verify
         sp = {"src": cur, "src_manifest": d.get("src_manifest") if isinstance(d.get("src_manifest"), str) else "require", "src_manifest_hash": d.get("src_manifest_hash") or ""}
         rc, txt, host = (verify_fn or src_breaker_verify)(d, sp)
         why, _note = src_manifest_verdict(sp, rc, txt)
@@ -7594,24 +7614,46 @@ def src_breaker_gate(AP, cfg, st, die, go, skip, verify_fn=None, now=None):
             (AP.log if AP else log)(f"KIT-WAVE SRC-BREAKER CLOSED {die}: {cur} verifies on {host}; the die's rows launch again")
             return go
         br["last_why"] = str(why or txt or "no answer")[:240]
+        if go and now - float(br.get("probe") or 0) >= SRC_BREAKER_PROBE_S:      # half-open: ONE row goes through; its own kit verifies the snapshot, and a pass leaves the receipt the next check reads
+            br["probe"] = now
+            (AP.log if AP else log)(f"KIT-WAVE SRC-BREAKER PROBE {die}: {go[0]['item']} launches alone to re-verify {os.path.basename(cur.rstrip('/'))} ({br['last_why'][:120]})")
+            rest = go[1:]
+            if rest:
+                skip.setdefault(f"src_manifest breaker open on {os.path.basename(cur.rstrip('/'))}", []).extend(r["item"] for r in rest)
+            return go[:1]
     if go:
         skip.setdefault(f"src_manifest breaker open on {os.path.basename(cur.rstrip('/'))}", []).extend(r["item"] for r in go)
     return []
 
 
 def src_breaker_verify(d, sp):
-    """verify the die snapshot on its gen host, over ssh -> (rc | None when no answer, text, host)"""
-    cmd = src_manifest_cmd(sp)
-    host = str(d.get("gen_host") or ((d.get("gen_hosts") or [""])[0]))
-    if not cmd or not host:
-        return None, "", host
+    """is the die snapshot verified?  Reads the completed-verification receipt (stat only, no rehash of a 58 GB tree: the planner never waits on it) on every gen host in parallel; any PASS closes.
+    -> (rc | None when no host answered, text, host)"""
+    import concurrent.futures as CF
+    hosts = [h for h in dict.fromkeys(([d.get("gen_host")] if d.get("gen_host") else []) + list(d.get("gen_hosts") or [])) if h]
     try:
-        p = subprocess.run(["timeout", "240", "ssh", "-n", "-o", "BatchMode=yes", "-o", "ControlPath=none", "-o", "ConnectTimeout=15", host, cmd], capture_output=True, text=True, timeout=260)
-    except (OSError, subprocess.TimeoutExpired):
-        return None, "", host
-    if p.returncode and "SRC_MANIFEST" not in (p.stdout + p.stderr):
-        return None, p.stderr[-200:], host              # ssh / host trouble: the breaker stays as it is
-    return p.returncode, (p.stdout or "") + (p.stderr or ""), host
+        script = verifier_path().read_text()
+    except OSError:
+        return None, "", ""
+    cmd = f"python3 -I -c {shlex.quote(script)} cached-receipt {shlex.quote(sp['src'])}" + (f" --expect {shlex.quote(sp['src_manifest_hash'])}" if sp.get("src_manifest_hash") else "")
+
+    def one(h):
+        try:
+            p = subprocess.run(["timeout", "60", "ssh", "-n", "-o", "BatchMode=yes", "-o", "ControlPath=none", "-o", "ConnectTimeout=15", h, cmd], capture_output=True, text=True, timeout=70)
+        except (OSError, subprocess.TimeoutExpired):
+            return h, None, ""
+        return h, p.returncode, (p.stdout or "") + (p.stderr or "")
+    if not hosts:
+        return None, "", ""
+    with CF.ThreadPoolExecutor(max_workers=len(hosts)) as ex:
+        res = list(ex.map(one, hosts))
+    for h, rc, txt in res:
+        if rc == 0:
+            return 0, txt, h
+    answered = [(h, rc, txt) for h, rc, txt in res if rc is not None]
+    if not answered:
+        return None, "no host answered", hosts[0]
+    return 1, "SRC_MANIFEST no completed verification receipt on any gen host: " + "; ".join(f"{h}: {t.strip().splitlines()[-1][:80] if t.strip() else rc}" for h, rc, t in answered[:3]), answered[0][0]
 
 
 def placed_scan_line(txt):

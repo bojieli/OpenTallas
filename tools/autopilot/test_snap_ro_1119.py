@@ -177,15 +177,20 @@ class Breaker(unittest.TestCase):
             KW.src_breaker_note(st, "qc", self.WHY, now=t)
         go = [{"item": f"r{i}"} for i in range(17)]
         bad = lambda d, sp: (1, "SRC_MANIFEST DRIFT x (missing)", "epyc9")
+        st["src_breaker"]["qc|/k/snap/n46_s1"]["probe"] = 5                                  # a probe just went: nothing launches
         self.assertEqual(KW.src_breaker_gate(ap, self.CFG, st, "qc", go, skip, verify_fn=bad, now=10), [])
         self.assertEqual(sum(len(v) for v in skip.values()), 17)
+        skip2 = {}                                                                           # half-open: ONE row goes after the probe interval, 16 wait
+        self.assertEqual(KW.src_breaker_gate(ap, self.CFG, st, "qc", go, skip2, verify_fn=bad, now=700), go[:1])
+        self.assertEqual(sum(len(v) for v in skip2.values()), 16)
+        self.assertEqual(KW.src_breaker_gate(ap, self.CFG, st, "qc", go, {}, verify_fn=bad, now=850), [])   # next probe only after SRC_BREAKER_PROBE_S
         none = lambda d, sp: (None, "", "epyc9")                                             # no answer: stays open
-        self.assertEqual(KW.src_breaker_gate(ap, self.CFG, st, "qc", go, {}, verify_fn=none, now=500), [])
+        self.assertEqual(KW.src_breaker_gate(ap, self.CFG, st, "qc", go, {}, verify_fn=none, now=1000), [])
         ok = lambda d, sp: (0, "SRC_MANIFEST OK", "epyc9")
-        self.assertEqual(KW.src_breaker_gate(ap, self.CFG, st, "qc", go, {}, verify_fn=ok, now=700), go)
+        self.assertEqual(KW.src_breaker_gate(ap, self.CFG, st, "qc", go, {}, verify_fn=ok, now=1200), go)
         self.assertEqual([l for l in ap.lines if "CLOSED" in l].__len__(), 1)
         self.assertNotIn("qc|/k/snap/n46_s1", st["src_breaker"])
-        self.assertEqual(KW.src_breaker_gate(ap, self.CFG, st, "qc", go, {}, verify_fn=bad, now=900), go)   # closed: a healthy path is never gated
+        self.assertEqual(KW.src_breaker_gate(ap, self.CFG, st, "qc", go, {}, verify_fn=bad, now=1500), go)   # closed: a healthy path is never gated
 
     def test_a_new_snapshot_ends_the_old_breaker(self):
         st = {}
@@ -195,6 +200,18 @@ class Breaker(unittest.TestCase):
         go = [{"item": "a"}]
         self.assertEqual(KW.src_breaker_gate(self.AP(), cfg, st, "qc", go, {}, verify_fn=lambda d, sp: (1, "x", "h"), now=10), go)
         self.assertEqual(st["src_breaker"], {})
+
+    def test_verifier_is_the_newest_published_one_not_the_pinned_tree(self):
+        """n46_s2: rows queued under rt/77973bd52d22 ran its old verifier; the shipped verifier is rt/current's"""
+        t = tempfile.mkdtemp()
+        self.addCleanup(shutil.rmtree, t, True)
+        for tree in ("old/tools/autopilot", "newer/tools/autopilot"):
+            os.makedirs(f"{t}/rt/{tree}")
+            open(f"{t}/rt/{tree}/src_manifest.py", "w").write(tree)
+        os.symlink(f"{t}/rt/newer", f"{t}/rt/current")
+        self.assertEqual(KW.verifier_path(f"{t}/rt/old/tools/autopilot/kit_wave.py"), Path(f"{t}/rt/current/tools/autopilot/src_manifest.py"))
+        own = Path(t) / "other/tools/autopilot/kit_wave.py"                                 # not under rt/: its own copy
+        self.assertEqual(KW.verifier_path(own), own)
 
     def test_failure_classifier(self):
         self.assertTrue(KW.is_src_manifest_fail("src_manifest", ""))
