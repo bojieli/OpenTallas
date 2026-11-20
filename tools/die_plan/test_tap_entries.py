@@ -86,7 +86,7 @@ def test_hook_takes_tap_ports_and_roots_the_trunk():
 
 
 def _delta():
-    path = HERE.parents[1] / 'physical' / 'die_plan' / 's81' / 'delta_leaf_clkentry_1109.py'
+    path = HERE.parents[1] / 'physical/die_plan/s81/delta_leaf_clkentry_1109.py'
     spec = importlib.util.spec_from_file_location('delta_leaf_clkentry_1109', path)
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
@@ -117,8 +117,8 @@ def test_delta_trunk_points_within_reach():
 def test_delta_report_channel_default_and_probe():
     """the committed event report: CHANNEL on the four t21-geometry types, FIELD not applied (opt-in --field), and the
     t21 probe that decided it (GRT overflow 8039 -> 0)"""
-    rep = json.loads((HERE.parents[1] / 'physical' / 'die_plan' / 's81' /
-                      'delta_leaf_clkentry_1109_report.json').read_text())
+    report = HERE.parents[1] / 'physical/die_plan/s81/delta_leaf_clkentry_1109_report.json'
+    rep = json.loads(report.read_text())
     assert rep['mode'] == 'channel' and rep['field_entries'] == []
     assert rep['matched'] == ['ot_s81sl_leaf__t10', 'ot_s81sl_leaf__t21', 'ot_s81sl_leaf__t27', 'ot_s81sl_leaf__t74']
     assert all(r['move']['vs_vq_gap_um'] == [8.64, 25.92] for r in rep['types'])
