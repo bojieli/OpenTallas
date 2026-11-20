@@ -438,7 +438,7 @@ KIT_TOOL_DEPENDENCIES = {
     "postcts_gate.tcl": ("pinreg_measure.tcl", "clock_family.tcl"),
     "pinreg_pad.tcl": ("pinreg_measure.tcl", "clock_family.tcl"),
     "tap_balance.tcl": ("clock_family.tcl", "clk_obs_halo.tcl"),
-    "cts_post.tcl": ("tap_balance.tcl", "leaf_affinity.tcl", "pg_connect.tcl"),
+    "cts_post.tcl": ("subtree_balance.tcl", "tap_balance.tcl", "leaf_affinity.tcl", "pg_connect.tcl"),
     "grt_post.tcl": ("pg_connect.tcl",),
     "tapbal_grt.tcl": ("tap_balance.tcl", "pinreg_pad.tcl"),
     "hold_gate.tcl": ("vclk_corner.tcl",),

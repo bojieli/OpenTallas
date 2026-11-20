@@ -33,6 +33,9 @@ set ::stb::pair [expr {[info exists ::env(OT_STB_PAIR)] ? $::env(OT_STB_PAIR) : 
 set ::stb::span_max [expr {[info exists ::env(OT_STB_SPAN_MAX)] && $::env(OT_STB_SPAN_MAX) ne "" ? $::env(OT_STB_SPAN_MAX) : ""}]
 set ::stb::span_fail [expr {[info exists ::env(OT_STB_SPAN_FAIL)] ? $::env(OT_STB_SPAN_FAIL) : 0}]
 set ::stb::blk_sinks [expr {[info exists ::env(OT_STB_BLOCK_SINKS)] ? $::env(OT_STB_BLOCK_SINKS) : "sink"}]
+# DIE-CORETAP-1119: OT_STB_TAG names the cells of one pass (delaybuf_otstb_<tag><k>, nets otstb_<tag>net_<k>), so a pass in a
+# later process (tapbal_grt.tcl after the POST_CTS pass of cts_post.tcl) never re-creates an existing name.  Unset: unchanged.
+set ::stb::tag [expr {[info exists ::env(OT_STB_TAG)] ? $::env(OT_STB_TAG) : ""}]
 if {![info exists ::stb::n]} { set ::stb::n 0 }
 
 proc stb::arr {pinname} {
@@ -131,15 +134,15 @@ proc stb::insert {sink x y} {
   $n0 setDoNotTouch 0
   set k [incr ::stb::n]
   set master [[ord::get_db] findMaster $::stb::cell]
-  set b [odb::dbInst_create $blk $master delaybuf_otstb_$k]
+  set b [odb::dbInst_create $blk $master delaybuf_otstb_${::stb::tag}$k]
   $b setLocation $x $y; $b setPlacementStatus PLACED
-  set n1 [odb::dbNet_create $blk otstb_net_$k]; $n1 setSigType CLOCK
+  set n1 [odb::dbNet_create $blk otstb_${::stb::tag}net_$k]; $n1 setSigType CLOCK
   $sink disconnect
   if {$::stb::pair} {
     # inverter pair: n0 -> INV a -> mid -> INV b -> n1 -> sink (two cells, same polarity, symmetric rise/fall)
-    set b2 [odb::dbInst_create $blk $master delaybuf_otstb_${k}_b]
+    set b2 [odb::dbInst_create $blk $master delaybuf_otstb_${::stb::tag}${k}_b]
     $b2 setLocation $x $y; $b2 setPlacementStatus PLACED
-    set nm [odb::dbNet_create $blk otstb_mid_$k]; $nm setSigType CLOCK
+    set nm [odb::dbNet_create $blk otstb_${::stb::tag}mid_$k]; $nm setSigType CLOCK
     [$b findITerm A] connect $n0
     [$b findITerm Y] connect $nm
     [$b2 findITerm A] connect $nm

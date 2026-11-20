@@ -189,7 +189,8 @@ def test_postcts_helpers_have_global_scope_inside_orfs_proc(tmp_path):
     # Reproduce ORFS sourcing its POST_CTS hook from cts.tcl's procedure.
     # Real helpers expose state through global procedures (la_succ in F4).
     (tmp_path / "cts_post.tcl").write_text((HERE / "cts_post.tcl").read_text())
-    for filename, var, value in (("tap_balance.tcl", "tb_state", "balanced"),
+    for filename, var, value in (("subtree_balance.tcl", "stb_d", "padded"),   # DIE-CORETAP-1119 in-tap pass
+                                 ("tap_balance.tcl", "tb_state", "balanced"),
                                  ("leaf_affinity.tcl", "la_d", "data")):
         (tmp_path / filename).write_text(
             f"set {var} {value}\nproc read_{var} {{}} {{ global {var}; return ${{{var}}} }}\n")

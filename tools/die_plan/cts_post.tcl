@@ -1,9 +1,29 @@
-# GENERATED-COPY of tools/die_plan/cts_post.tcl (POST_CTS hook, FLOW 2026-10-25): tap trees balanced to the bound
-# insertion (tap_balance.tcl), then register pairs with no logic between them moved onto one clock leaf
+# GENERATED-COPY of tools/die_plan/cts_post.tcl (POST_CTS hook, FLOW 2026-10-25): in-tap subtrees balanced (subtree_balance.tcl,
+# DIE-CORETAP-1119), tap trees balanced to the bound insertion (tap_balance.tcl), then register pairs with no logic between them moved onto one clock leaf
 # (leaf_affinity.tcl, F4; OT_LEAF_AFFINITY=0 turns it off).
 # ORFS sources POST_CTS inside a procedure. Both helpers define global procs
 # whose state must live at global scope too.
 set cp_dir [file dirname [file normalize [info script]]]
+# DIE-CORETAP-1119 (FABLE-CLOSURE lever 1, kit side): in-tap range.  TritonCTS balances each tap tree, then the post-CTS
+# clock edits (clk_leaf_repeat.tcl repeaters, repair_clock_nets long-wire buffers) add 1-3 stages on SOME branches only; the
+# tap balance pads the whole tap at its root and caps the pad at the LATEST sink (target + window), so the unedited majority
+# stays early.  S81 D8i col_h9_r1 pve3f8a86c (4_1_cts, placement RC): 11 of 31 taps over 60 ps in-tap range (clk_t9 165,
+# clk_t27 107, clk_t14 100); in 10 of the 11 the sinks behind no post-CTS edit span <= 58 ps (clk_t14: 1,000 sinks in 13 ps,
+# 15 repeated sinks 100 ps later), FF hold -120.21 on 3,603 ends.  Fix: the subtree latency balance (subtree_balance.tcl,
+# default on in core kits and in the GRT-RC pre-pass) runs here first, on placement RC, per tap port: every subtree early by
+# a stage or more is padded at its highest editable node up to that tap's latest register (hard-core subtrees fixed: their
+# internal latency is the tap pass's job).  Then the tap balance below moves the now-narrow tap as a whole.
+# OT_CTS_STB=0 (config.mk) = off (old behaviour).
+if {(![info exists ::env(OT_CTS_STB)] || $::env(OT_CTS_STB) ne "0") && [file exists [file join $cp_dir subtree_balance.tcl]]} {
+  set cp_stb_env {}
+  foreach {k v} {OT_STB_EST placement OT_STB_BLOCK_SINKS fixed OT_STB_TAG c} {
+    dict set cp_stb_env $k [expr {[info exists ::env($k)] ? $::env($k) : "OT_UNSET"}]
+    set ::env($k) $v
+  }
+  uplevel #0 [list source [file join $cp_dir subtree_balance.tcl]]
+  # restore, so a later in-process pass (rck_balance.tcl) reads its own settings
+  dict for {k v} $cp_stb_env { if {$v eq "OT_UNSET"} { unset ::env($k) } else { set ::env($k) $v } }
+}
 uplevel #0 [list source [file join $cp_dir tap_balance.tcl]]
 if {![info exists ::env(OT_LEAF_AFFINITY)] || $::env(OT_LEAF_AFFINITY) ne "0"} { uplevel #0 [list source [file join $cp_dir leaf_affinity.tcl]] }
 # S81 AM half-cycle correction, opt-in and guarded by the baseline affinity checks.

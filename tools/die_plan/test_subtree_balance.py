@@ -219,3 +219,31 @@ def test_rck_balance_hook_is_opt_in_after_leaf_repeat_and_staged():
         assert need in rb, need
     gp = (HERE / "gen_phys.py").read_text()
     assert '"rck_balance.tcl"' in gp and "OT_S81_RCK_BALANCE" in gp
+
+
+def test_cts_post_balances_in_tap_subtrees_before_the_tap_pad():
+    """DIE-CORETAP-1119 (FABLE-CLOSURE lever 1): the post-CTS edits (leaf repeat, long-wire buffers) make a few branches of a
+    tap late and the tap pad is capped at that latest sink, so the subtree balance runs first on placement RC, per tap port,
+    hard-core subtrees fixed, under its own cell tag; OT_CTS_STB=0 restores the old order."""
+    post = (HERE / "cts_post.tcl").read_text()
+    text = "\n".join(ln for ln in post.splitlines() if not ln.lstrip().startswith("#"))
+    assert text.index("subtree_balance.tcl") < text.index("tap_balance.tcl") < text.index("leaf_affinity.tcl")
+    assert '$::env(OT_CTS_STB) ne "0")' in text
+    assert "OT_STB_EST placement OT_STB_BLOCK_SINKS fixed OT_STB_TAG c" in text
+    assert "unset ::env($k)" in text                       # caller settings restored for a later rck_balance pass
+    deps = (HERE / "signoff.py").read_text().split('"cts_post.tcl": (')[1].split(")")[0]
+    assert '"subtree_balance.tcl"' in deps
+
+
+def test_tag_keeps_cell_names_of_two_passes_apart():
+    env = "set ::env(OT_STB_EST) placement\nset ::env(OT_STB_TAG) c\n"
+    after = 'puts "TAGGED [llength [info commands delaybuf_otstb_c*]] PLAIN [llength [info commands {delaybuf_otstb_[0-9]*}]]"\n'
+    out, arr = _run(env, after=after)
+    assert "OT_STB ERROR" not in out, out
+    assert 80 - 8 - 20 < arr["f1"] <= 80, (arr, out)
+    tagged = int(out.split("TAGGED ")[1].split()[0])
+    plain = int(out.split("PLAIN ")[1].split()[0])
+    assert tagged > 0 and plain == 0, out
+    # untagged pass (tapbal_grt.tcl, a later process) keeps the old names
+    out2, _ = _run("set ::env(OT_STB_EST) placement\n", after=after)
+    assert int(out2.split("TAGGED ")[1].split()[0]) == 0 and int(out2.split("PLAIN ")[1].split()[0]) > 0, out2
