@@ -149,3 +149,8 @@
   QC: 8 new FAILED global_place no relaunch (FAIL-ROUTE-1115) + 2 old stale/place; 5 UNOWNED (sle_fw_v2, sle_sc_v2, sle_st_a_v1__cled3c1d7b, slw_hc2__cl6bcaba89, slw_st_b_v2__pv3d7bec84); 4 DEAD-OWNER (QC-PLAN-R4, UNIFY-TOOLS-R2 x2, CODEX-CROSS-HANDBACK-1120).
   KV: 22 WAIT-BIND, 6 FAILED-NO-RELAUNCH (new: CLAND ring band; kv3_pv_v8 7.xh, 7.4h hub stale); 10 new held/placed rows.
   HEAD: none flagged.
+- 2026-11-20 14:50 PST 14:50 sweep: 495 rows, 35 flagged (was 94), 0 UNOWNED, 0 DEAD-OWNER after COORD owner mapping (S81-DIE-R4 leaf/kv_leaf, QC-PLAN-R5 QC, KV-PLAN-R1 hgi/hub/sys, AUTO-REVIEW-HELD listed owners).
+  S81: none flagged. HEAD: none.
+  QC: 15 FAILED-NO-RELAUNCH global_place (5 new, 10 old; 3 STALE) + 1 place error UNCLASSIFIED STALE; owner QC-PLAN-R5 (FAIL-ROUTE-1115).
+  KV: 4 FAILED-NO-RELAUNCH (PDN-0006 x2, bind stale, flow errors; CLAND ring band), 19 WAIT-BIND held/placed; all old, owner KV-PLAN-R1.
+  New since 13:50: only 5 QC global_place failures.

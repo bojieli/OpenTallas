@@ -14381,3 +14381,8 @@ FAILED [AUTOPILOT e05b5d00ca50] 2026-11-20 14:46:33 PST AUTOPILOT -> KIT-WAVE-3:
   col_h10_r2 [plan_h10 +CC-BANK-2] (12): GRT 11 TT worst -95.8 median -95.8; CTS FF hold after CORETAP 12: worst -100.9 median -100.9; sign-off runs 3, SIGNED 0, routed TT worst -261.1, FF worst -118.4, DRC max 0; old plan -172
   col_h9_r1 (60): GRT 30 TT worst -61.6 median -46.7; CTS FF hold after CORETAP 49: worst -120.2 median -58.2; sign-off runs 8, SIGNED 0, routed TT worst -114.4, FF worst -164.1, DRC max 0; 29 stopped without signoff; old plan -181
   Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
+- 2026-11-20 14:50 PST 14:50 sweep: 495 rows, 35 flagged (was 94), 0 UNOWNED, 0 DEAD-OWNER after COORD owner mapping (S81-DIE-R4 leaf/kv_leaf, QC-PLAN-R5 QC, KV-PLAN-R1 hgi/hub/sys, AUTO-REVIEW-HELD listed owners).
+  S81: none flagged. HEAD: none.
+  QC: 15 FAILED-NO-RELAUNCH global_place (5 new, 10 old; 3 STALE) + 1 place error UNCLASSIFIED STALE; owner QC-PLAN-R5 (FAIL-ROUTE-1115).
+  KV: 4 FAILED-NO-RELAUNCH (PDN-0006 x2, bind stale, flow errors; CLAND ring band), 19 WAIT-BIND held/placed; all old, owner KV-PLAN-R1.
+  New since 13:50: only 5 QC global_place failures.
