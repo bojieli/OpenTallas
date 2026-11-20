@@ -276,6 +276,26 @@ class EndToEnd(unittest.TestCase):
         self.assertEqual(q.read_text().count("\n"), n)                                      # idempotent
         self.assertIn("Merge claude/good", sh("git", "log", "-3", "--format=%B", "main", cwd=o)); self.assertIn("auto-merge", sh("git", "log", "-3", "--format=%B", "main", cwd=o))
 
+    def test_auto_tick_respects_standalone_coord_revocation(self):
+        q = self._auto_setup()
+        for branch in ("good", "clash"):
+            gate = self._omq("gate", f"claude/{branch}")
+            self.assertEqual(gate.returncode, 0, gate.stdout + gate.stderr)
+        q.write_text(
+            f"- 2026-11-20 05:16 PST RULING [COORD -> MERGE] "
+            f"COORD REVOKED: claude/good @{self.shas['good'][:12]}\n"
+            f"- 2026-11-20 05:17 PST STATE [OTHER-LANE -> MERGE] "
+            f"COORD REVOKED: claude/clash @{self.shas['clash']}\n"
+        )
+        (self.d / "mq/auto.on").write_text("")
+        listing = self._omq("auto-list")
+        self.assertNotIn("claude/good", listing.stdout)
+        self.assertIn("claude/clash", listing.stdout)
+        result = self.tick()
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertNotIn("MERGED-AUTO [claude/good]", result.stdout)
+        self.assertIn("MERGED-AUTO [claude/clash]", result.stdout)
+
     def test_auto_tick_skips_a_tip_that_moved_past_its_gate_and_an_old_record(self):
         self._auto_setup()
         self.assertEqual(self._omq("gate", "claude/good").returncode, 0)

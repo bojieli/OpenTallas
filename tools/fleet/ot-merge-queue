@@ -254,9 +254,8 @@ def is_ancestor(a, b, cwd=REPO):
 
 # ---------------------------------------------------------------- parsing
 
-def parse_approvals(text):
-    """-> ordered list of {'key','branch','sha','line','revoked'} (first approval of a key wins; REVOKED after it marks it)"""
-    out, seen = [], {}
+def coord_rulings(text):
+    """Yield authorized approval and revocation rulings in queue order."""
     entry_au = None                                   # author of the "- <ts> KIND [AUTHOR -> ...]" entry a line belongs to
     for n, line in enumerate(text.splitlines(), 1):
         if line.startswith("- "):
@@ -292,15 +291,27 @@ def parse_approvals(text):
                     if t not in found:
                         found.append(t)
         for kind, branch, sha in found:
-            key = f"{branch or '-'}@{sha}"
-            if kind == "APPROVED" and key not in seen:
-                seen[key] = {"key": key, "branch": branch, "sha": sha, "line": n, "revoked": False,
-                             "high": bool(PRIORITY_RE.search(line))}
-                out.append(seen[key])
-            elif kind == "REVOKED":
-                for a in out:                         # a revoke names the sha (prefix either way), branch optional
-                    if (a["sha"].startswith(sha) or sha.startswith(a["sha"])) and (not branch or branch == a["branch"]):
-                        a["revoked"] = True
+            yield kind, branch, sha, n, bool(PRIORITY_RE.search(line))
+
+
+def matches_revocation(branch, sha, revoked_branch, revoked_sha):
+    return (not revoked_branch or branch == revoked_branch) and (
+        sha.startswith(revoked_sha) or revoked_sha.startswith(sha)
+    )
+
+
+def parse_approvals(text):
+    """-> ordered list of {'key','branch','sha','line','revoked'} (first approval of a key wins; REVOKED after it marks it)"""
+    out, seen = [], {}
+    for kind, branch, sha, n, high in coord_rulings(text):
+        key = f"{branch or '-'}@{sha}"
+        if kind == "APPROVED" and key not in seen:
+            seen[key] = {"key": key, "branch": branch, "sha": sha, "line": n, "revoked": False, "high": high}
+            out.append(seen[key])
+        elif kind == "REVOKED":
+            for approval in out:
+                if matches_revocation(approval["branch"], approval["sha"], branch, sha):
+                    approval["revoked"] = True
     return out
 
 
@@ -1198,7 +1209,7 @@ def auto_candidates(text, items, base, hours=None):
     """-> [(age_h, branch, fullsha)] claude/* branches with a gate record < hours old, whose remote tip IS the gated sha, not in main,
     not settled in the state file, not REVOKED by COORD"""
     hours = AUTO_HOURS if hours is None else hours
-    revoked = [a["sha"] for a in parse_approvals(text) if a["revoked"]]
+    revoked = [(branch, sha) for kind, branch, sha, _, _ in coord_rulings(text) if kind == "REVOKED"]
     settled = {(v.get("sha_full") or v.get("sha", "")) for v in items.values() if v.get("status") in TERMINAL}
     out = []
     for f in sorted((MQ / "gates").glob("*.json")):
@@ -1211,7 +1222,7 @@ def auto_candidates(text, items, base, hours=None):
         br = r.get("branch", "")
         if age > hours or not br.startswith("claude/") or not re.fullmatch(r"[0-9a-f]{40}", full) or full in settled:
             continue
-        if any(full.startswith(x) or x.startswith(full) for x in revoked):
+        if any(matches_revocation(br, full, branch, sha) for branch, sha in revoked):
             continue
         if f"{br}@{full}" in items and items[f"{br}@{full}"].get("status") in TERMINAL:
             continue
