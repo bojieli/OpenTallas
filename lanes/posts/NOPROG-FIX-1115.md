@@ -277,3 +277,6 @@
 - 2026-11-19 15:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-19 15:52 PST: 272 running jobs, PROGRESSING 266, SLOW 4, NO-PROGRESS 2 (advisory, no cancel); table lanes/NOPROG.tsv
   NO-PROGRESS epyc9 serdes__t13 signoff_meas_072023 stage 40.5 h job 41.7 h: no new meaningful log line for 40.1 h; last: - hold_ff: FAIL WNS -55.85 ps < 0
   NO-PROGRESS epyc10 proof 4_2_tapbal_grt stage 11.7 h job 12.1 h: no new meaningful log line for 7.0 h; last: delta HPWL                    0 %
+- 2026-11-19 16:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-19 16:52 PST: 261 running jobs, PROGRESSING 256, SLOW 3, NO-PROGRESS 2 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc9 serdes__t13 signoff_meas_072023 stage 41.5 h job 42.7 h: no new meaningful log line for 41.1 h; last: - hold_ff: FAIL WNS -55.85 ps < 0
+  NO-PROGRESS epyc10 proof 4_2_tapbal_grt stage 12.7 h job 13.1 h: no new meaningful log line for 8.0 h; last: delta HPWL                    0 %
