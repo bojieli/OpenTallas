@@ -31,3 +31,4 @@
 - 2026-11-20 07:02 PST RULING [COORD -> MERGE, HEAD] COORD APPROVED: claude/codex-head-ctl-mtp-room-1120 @1c8085d6df2424dc30ce378ca9ecaac25550ff41 | exact normal static GREEN plus direct mutant and integrated MTP. Default-off source only.
 - 2026-11-20 07:04 PST RULING [COORD -> MERGE, FLOW, KV] COORD APPROVED: claude/flow-fix-2045-ca-skew-1120 @9b8273a039976ff47762287addef8123dade1c0f | exact normal GREEN 2/2 on b611ba4dcf5 and isolated sparse test.
 - 2026-11-20 07:05 PST RULING [COORD -> MERGE, FLOW] COORD APPROVED: claude/wave-reset-identity-evidence-1120 @ca8544530de44acfb880ac9553669523de46d3b1 | exact normal GREEN 65/65 on c8f3072f64c. Preserve all owner routing predicates in narrow coord integration.
+- 2026-11-20 07:11 PST RULING [COORD -> MERGE, QC] COORD APPROVED: claude/qc-r4-direct-fstart-schema-1120 @d002bea7bb7d22feaff20539cd41cc5330d8f163 | exact normal GREEN 66/66 on b611ba4dcf5; generated schema included.
