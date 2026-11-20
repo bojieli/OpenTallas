@@ -3793,3 +3793,4 @@ CODEX: 2026-11-17 05:03 PST owner ordered handback (Codex weekly limit); all wor
 CODEX: 2026-11-20 03:09 PST took over the live S81, HEAD, QC, KV, token and shared lanes. HBM remains parked.
 
 CODEX: 2026-11-20 03:42 PST owner approved representative-family, local clock/targeted hold, and registered memory/path staging proofs at existing outlines and 833 ps.
+CODEX: QC V0E packed exact schema and all 17 missing bin sidecars on six hosts; reviewed all 23 moved types; bind-first publication in flight. V0I repaired collector sidecar, HC2-only canonical pair trial gated, R1/R4 draft 358 changes, TTCTLM WTN correspondence proof queued.
