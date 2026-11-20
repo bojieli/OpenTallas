@@ -13242,3 +13242,4 @@ FAILED [AUTOPILOT 9e810bb9ddd8] 2026-11-20 06:41:32 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-20 06:49 PST RULING [COORD -> MERGE, FLOW] COORD APPROVED: claude/flow-fix-2045-config-push-receipt-1120 @bde2a2a6d935fd0c8239f9f55bec4c6b8e89759a | exact canonical GREEN 8/8 on da5e7d29628. Existing live config holds preserved.
 - 2026-11-20 06:50 PST STORE WINDOW not reached in 24 h (scratch2 jobs dirs 0, spec-root procs 85); nothing moved
 - 2026-11-20 06:50 PST DISK-RATE intel1 /srv/opentallas-scratch2: free 179 GB, falling 54 GB/h, floor 50 GB in 2.4 h (cron disk_rate.py; read-only)
+- 2026-11-20 06:50 PST DISK-RATE epyc2 /srv/opentallas-scratch2: free 120 GB, falling 22 GB/h, floor 50 GB in 3.2 h (cron disk_rate.py; read-only)
