@@ -205,14 +205,19 @@ def test_source_sync_tar_dereferences_hard_links():
 
 
 def test_a_host_failing_ssh_twice_is_skipped_for_the_rest_of_the_tick(monkeypatch):
-    monkeypatch.setattr(AP, "SSH_FAILS", {})
+    from importlib.util import module_from_spec, spec_from_file_location
+
+    # Other tick fixtures replace the shared module's probes. Exercise the real SSH accounting here.
+    spec = spec_from_file_location("ssh_accounting_fixture", AP.__file__)
+    isolated = module_from_spec(spec)
+    spec.loader.exec_module(isolated)
     calls = []
-    monkeypatch.setattr(AP, "sh", lambda cmd, timeout=0, input=None: (calls.append(cmd) or (255, "", "Connection timed out")))
+    monkeypatch.setattr(isolated, "sh", lambda cmd, timeout=0, input=None: (calls.append(cmd) or (255, "", "Connection timed out")))
     for _ in range(4):
-        AP.rpy("epyc7", "x", {})
-    assert len(calls) == 2 and "error" in AP.rpy("epyc7", "x", {}) and AP.ssh_skipped("epyc7")
-    assert AP.rbash("epyc7", "true")[0] == 255 and len(calls) == 2
-    AP.rpy("epyc8", "x", {})
+        isolated.rpy("epyc7", "x", {})
+    assert len(calls) == 2 and "error" in isolated.rpy("epyc7", "x", {}) and isolated.ssh_skipped("epyc7")
+    assert isolated.rbash("epyc7", "true")[0] == 255 and len(calls) == 2
+    isolated.rpy("epyc8", "x", {})
     assert len(calls) == 3                                   # another host is unaffected
     assert "ConnectTimeout=10" in " ".join(calls[0])
 

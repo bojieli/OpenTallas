@@ -111,7 +111,8 @@ class TestGates(TickBase):
         self.assertIn("trial", j["history"][-1][2])
         self.assertEqual(self.f.launched, [])
         self.tick()                                          # logged once, still held
-        self.assertEqual(sum("HOLD" in l for l in (Path(self.tmp.name) / "log.txt").read_text().splitlines()), 1)
+        marker = f"HOLD {j['id']} qwen_compute/{QC[1]}:"
+        self.assertEqual(sum(marker in line for line in (Path(self.tmp.name) / "log.txt").read_text().splitlines()), 1)
         self.freeze(FREEZE_HEAD + "FROZEN QC plan@0123456789ab\n")
         (j,) = self.tick().values()
         self.assertEqual(j["status"], "RUNNING")
