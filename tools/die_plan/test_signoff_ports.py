@@ -74,3 +74,17 @@ def test_kit_model_uses_the_tap_port_range():
     assert (m["lat_early"], m["lat_late"], m["name"]) == (300.0, 310.0, "kit:fa:clk_t12")
     m = R.kit_model(kit, "FF", "fa", REG, "clk_t99")                          # port not measured: type-wide bound
     assert (m["lat_early"], m["lat_late"]) == (40.0, 260.0)
+
+
+def test_resolver_prefers_a_record_with_ports(tmp_path, monkeypatch):
+    import gen_phys as G
+    from test_die_sta_core_insertion import _plan
+    monkeypatch.setattr(G, "type_pins", lambda P, t: [("d", 0, "M5", 10.0, 0.0, "S")])
+    k = lambda ports=None: dict({"corners": {"TT": dict(lat_min_ps=1.0, lat_max_ps=9.0),
+                                             "FF": dict(lat_min_ps=1.0, lat_max_ps=9.0)}}, **({"ports": ports} if ports else {}))
+    el = lambda kit: dict(verdict="SIGNED", kit=kit, pins={"d[0]": ["M5", 10.0, 0.3]}, record="h:/r/signoff.json")
+    dg = {"elements": {"fa": el(k()), "fa__a1_1109": el(k({"clk": {"TT": dict(lat_min_ps=2, lat_max_ps=3),
+                                                                    "FF": dict(lat_min_ps=2, lat_max_ps=3)}}))}}
+    args, st = V.resolve_types(_plan(early=False), None, tmp_path, False, [dg])
+    assert st["fa"]["per_port"] == 1 and st["fa"]["candidates"] == 2
+    assert "ports" in json.loads((tmp_path / "kits" / "fa.json").read_text())
