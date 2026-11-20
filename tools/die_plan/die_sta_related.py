@@ -1492,7 +1492,8 @@ def build_pairs(plan, taps, ca_pairs=None, related=None):
         v.sort()
     intra, seam, landed, straddle = [], [], [], []
     ptype = {x["name"]: x["type"] for x in plan.get("partitions", [])} if related is not None else {}
-    rel = dict(kept=0, dropped=0, unlisted=0, listed_types=set(), unlisted_types=defaultdict(int)) if related is not None else None
+    rel = dict(kept=0, dropped=0, unlisted=0, unknown_port_pairs=0, listed_types=set(), unlisted_types=defaultdict(int)) \
+        if related is not None else None
     for part, tl in by_part.items():
         lst = related.get(ptype.get(part)) if related is not None else None
         for a, b in itertools.permutations(tl, 2):
@@ -1500,7 +1501,11 @@ def build_pairs(plan, taps, ca_pairs=None, related=None):
                 if lst is None:
                     rel["unlisted"] += 1
                     rel["unlisted_types"][ptype.get(part)] += 1
-                elif frozenset((kit_port(a, taps[a]), kit_port(b, taps[b]))) in lst:
+                elif lst["ports"] is not None and not {kit_port(a, taps[a]), kit_port(b, taps[b])} <= lst["ports"]:
+                    rel["unlisted"] += 1
+                    rel["unknown_port_pairs"] += 1
+                    rel["unlisted_types"][ptype.get(part)] += 1
+                elif frozenset((kit_port(a, taps[a]), kit_port(b, taps[b]))) in lst["pairs"]:
                     rel["kept"] += 1
                     rel["listed_types"].add(ptype.get(part))
                 else:
@@ -1527,6 +1532,7 @@ def build_pairs(plan, taps, ca_pairs=None, related=None):
         **({"start_stage_taps_no_pairs": unpart} if unpart else {}),
         **({"related_pairs": dict(mode="kit-exported related tap pairs (unlisted types: all pairs)", kept=rel["kept"],
                                   dropped=rel["dropped"], unlisted=rel["unlisted"], listed_types=len(rel["listed_types"]),
+                                  unknown_port_pairs=rel["unknown_port_pairs"],
                                   unlisted_types=dict(sorted(rel["unlisted_types"].items(), key=lambda x: -x[1])))}
            if rel is not None else {}))
 
@@ -1595,15 +1601,24 @@ def endpoint_slacks(A, B, la, ea, lc, ec, cr, period, unc_s, unc_h, models_a, mo
 
 
 def load_related_pairs(paths):
-    """{type: {frozenset(pair)}} merged over kit_tap_related_pairs.tcl JSON files (a directory = every *.json in it).  A type
-    present in any file is LISTED (an empty list = no data-carrying tap pair: every intra pair of it drops)."""
-    out = defaultdict(set)
+    """{type: {"pairs": {frozenset(pair)}, "ports": {kit port} | None}} merged over kit_tap_related_pairs.tcl JSON files (a
+    directory = every *.json in it).  A type present in any file is LISTED.  "ports" = every clock tap port that clocks a
+    register in the kit (written by the tcl since DIE-LEVEL-CHECK-1119); a die tap whose kit port is not among them is not
+    known to the kit (renamed / added since) and its pairs stay all-pair (unlisted).  None (older exports) = every port known."""
+    out = {}
     for p in paths:
         p = Path(p)
         for f in (sorted(p.glob("*.json")) if p.is_dir() else [p]):
+            raw = json.loads(f.read_text())
             for t, prs in kit_related_pairs(f).items():
-                out[t] |= prs
-    return dict(out)
+                e = out.setdefault(t, {"pairs": set(), "ports": set()})
+                e["pairs"] |= prs
+                kp = (raw.get("ports") or {}).get(t)
+                if kp is None or e["ports"] is None:
+                    e["ports"] = None
+                else:
+                    e["ports"] |= set(kp)
+    return out
 
 
 def kit_port(port, row):

@@ -32,6 +32,17 @@ def test_listed_type_keeps_related_pairs_only(tmp_path):
     assert rp["unlisted_types"] == {"B": 6}
 
 
+def test_tap_unknown_to_kit_stays_all_pair(tmp_path):
+    f = tmp_path / "A.json"
+    f.write_text(json.dumps({"related_pairs": {"A": [["clk", "clk_t1"]]}, "ports": {"A": ["clk", "clk_t1"]}}))
+    pairs, cov = R.build_pairs(PLAN, _taps(), related=R.load_related_pairs([str(f)]))
+    a = sorted((x, y) for x, y, p in pairs["intra"] if p == "a0")
+    # clk<->clk_t1 related (2 directed); clk_t2 is not a kit port -> its 4 directed pairs stay (unlisted)
+    assert len(a) == 6
+    rp = cov["related_pairs"]
+    assert (rp["kept"], rp["dropped"], rp["unknown_port_pairs"]) == (2, 0, 4)
+
+
 def test_empty_list_drops_every_pair_and_none_is_unchanged(tmp_path):
     f = tmp_path / "x.json"
     f.write_text(json.dumps({"related_pairs": {"A": [], "B": [["clk_t1", "clk_t2"]]}}))

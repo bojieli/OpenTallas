@@ -87,6 +87,8 @@ dict for {iname p} $port {
 set rows {}
 dict for {k v} $pairs { lappend rows "\[\"[lindex $k 0]\", \"[lindex $k 1]\"\]" }
 set fh [open $::env(OT_KTP_OUT) w]
-puts $fh "{\"related_pairs\": {\"$tp\": \[[join [lsort $rows] {, }]\]}}"
+set prow {}
+foreach q [lsort -unique [dict values $port]] { lappend prow "\"$q\"" }
+puts $fh "{\"related_pairs\": {\"$tp\": \[[join [lsort $rows] {, }]\]}, \"ports\": {\"$tp\": \[[join $prow {, }]\]}}"
 close $fh
 puts "OT_KTP $tp: [dict size $pairs] data-related tap port pairs of [dict size $port] clocked instances (depth $depth) -> $::env(OT_KTP_OUT)"
