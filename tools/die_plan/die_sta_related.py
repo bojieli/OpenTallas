@@ -3026,16 +3026,28 @@ def kit_windows(pc, intra_override=None, plan=None):
 
 
 
-def period_policy(period):
-    """Keep noncanonical what-if timing available without qualifying it as policy timing."""
-    ok = math.isfinite(period) and period == PERIOD_PS
-    return dict(period_ps=period, required_period_ps=PERIOD_PS,
+def die_policy_period_ps(die=None):
+    """OWNER 11-20 (#1): the die runs at the slowest signed type's period, up to 1000 ps; the policy period of a die is the
+    sign-off profile's die_period_ps (signoff_profile.die_period_ps: SIGN-PROFILE record / env, default 833)."""
+    try:
+        import signoff_profile as SP
+        return float(SP.die_period_ps(die))
+    except Exception:       # noqa: BLE001  a tools tree without signoff_profile keeps the canonical 833
+        return PERIOD_PS
+
+
+def period_policy(period, die=None):
+    """Keep noncanonical what-if timing available without qualifying it as policy timing.  Canonical = the die's policy
+    period (die_policy_period_ps; 833 unless the sign-off profile records a die period)."""
+    req = die_policy_period_ps(die) if die is not None else PERIOD_PS
+    ok = math.isfinite(period) and period == req
+    return dict(period_ps=period, required_period_ps=req,
                 verdict="PASS" if ok else "FAIL",
                 role="canonical timing" if ok else "DIAGNOSTIC: noncanonical period cannot qualify")
 
 
-def apply_period_policy(gate, period):
-    policy = period_policy(period)
+def apply_period_policy(gate, period, die=None):
+    policy = period_policy(period, die)
     if policy["verdict"] != "PASS":
         for record in gate.values():
             if isinstance(record, dict) and record.get("verdict") == "PASS":
@@ -3052,7 +3064,18 @@ def main(argv=None):
     ap.add_argument("--out", required=True)
     ap.add_argument("--corner", action="append")
     ap.add_argument("--clock-tool", help="tools/die_plan dir holding die_clock_mesh.py (fold report on a copy)")
-    ap.add_argument("--period-ps", type=float, default=PERIOD_PS)
+    ap.add_argument("--period-ps", type=float, default=None,
+                    help="die clock period; default = the die's policy period (signoff_profile.die_period_ps, OWNER 11-20 #1)")
+    ap.add_argument("--lockup-crossings", action="store_true",
+                    help="OWNER 11-20 #5 MODEL (type root + lockup): every single-cycle crossing between partitions (class "
+                         "seam) carries a lockup latch on the launch type's clock (transparent low): new data reaches the "
+                         "capture register no earlier than the launch falling edge -> hold + T/2, and the post-latch hop "
+                         "has T/2 -> setup - T/2 (latch G->Q taken equal to the register clk->Q).  Landed / count-aligned "
+                         "classes unchanged.  Default off")
+    ap.add_argument("--type-root", action="store_true",
+                    help="OWNER 11-20 #5 MODEL: one clock root per type instance; the root -> tap sub-tree is inside the "
+                         "kit (kit STA), so intra / intra_cross_region tap pairs leave die timing (counted in "
+                         "coverage.type_root).  Default off")
     ap.add_argument("--core-latency-ff", type=float, help="declared FF core latency (default = TT value, cancels)")
     ap.add_argument("--core-tol-ps", type=float, default=20.0)
     ap.add_argument("--seam-wire-um", type=float, default=40.0)
@@ -3214,7 +3237,8 @@ def main(argv=None):
         kits[n] = json.loads(Path(f).read_text())
     core_views = dict(k.split("=", 1) for k in a.core_view)
     real = bool(kits or core_views)
-    period = a.period_ps
+    die_name = (plan.get("die") or {}).get("name")
+    period = a.period_ps if a.period_ps is not None else die_policy_period_ps(die_name)
     window = a.landing_window_ps if a.landing_window_ps else period / 2
     lat_tt = float(plan.get("clock", {}).get("common_latency_ps", 250.0))
     pc = plan.get("clock", {})
@@ -3404,6 +3428,25 @@ def main(argv=None):
                       f"{rr['worst_hi_built']}) declared {rr['declared_ports']} (worst lo {rr['worst_lo_declared']} hi "
                       f"{rr['worst_hi_declared']})")
         vmiss = missing_views(views, taps, plan, ecm)
+        if a.type_root:
+            tr = {k: len(pairs.get(k) or []) for k in ("intra", "intra_cross_region")}
+            for k in tr:
+                pairs[k] = []
+            cov["type_root"] = dict(model="one clock root per type instance; root->tap sub-tree timed in the kit",
+                                    kit_owned_pairs=tr)
+        if a.lockup_crossings:
+            lk_ps = period / 2.0
+            seam_keys = {(x, y) for x, y, _ in (pairs.get("seam") or [])}
+            base_ocv = ocv
+
+            def ocv(x, y, check, _b=base_ocv, _s=seam_keys, _l=lk_ps):
+                v = _b(x, y, check) if _b is not None else 0.0
+                if (x, y) in _s:
+                    v += _l if check == "setup" else -_l
+                return v
+            cr["lockup"] = dict(model="launch-clock lockup latch on every single-cycle partition crossing (seam): hold + T/2, "
+                                      "setup - T/2; latch G->Q = register clk->Q", shift_ps=lk_ps, pairs=len(seam_keys),
+                                note="the shift rides the clock-variation callable: clock_ocv max values include it")
         if a.kit_window_out:
             kw_needs.append(kit_port_needs([pairs["intra"], pairs["intra_cross_region"]], kc_basis[0], kc_basis[1], kit_off,
                                            related=kw_related, ptype={q["name"]: q["type"] for q in plan.get("partitions", [])}))
@@ -3496,7 +3539,7 @@ def main(argv=None):
                                       pairs_needing_hb=hb[k]["pairs_needing_hb"])
         res["hb4"] = hb
     gate["die_clock_gate"] = PSG.from_related(res)   # OWNER 12.25: THE die clock verdict (skew > 150 = WARN only)
-    apply_period_policy(gate, period)
+    apply_period_policy(gate, period, die_name)
     res["summary"] = dict(gate, status="UNCHECKED (NUMBER-CHECK pending)",
                           label=res["block_model"]["label"] if real else "declared-budget (no QC kit)",
                           margin_policy=mpol, nominal_arrival=a.nominal_arrival)
