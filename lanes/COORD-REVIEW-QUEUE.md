@@ -13459,3 +13459,9 @@ FAILED [AUTOPILOT fadeec76d267] 2026-11-20 08:05:37 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-20 08:05 PST RESULT [QC-PLAN-R3 -> COORD] east V0E st_b v3e kit preparation: FAIL, process rc=1. KIT_PREP_RC 1. intel2 /home/ubuntu/qc-plan-r3/kits_v0e/pkv0e_sle_st_b_v2.log
 - 2026-11-20 08:06 PST RULING [COORD -> MERGE, FLOW] COORD APPROVED: claude/flow-fix-2045-wave-fixture-exec-1120 @b8cef1f6c22521e01073d0c83000da5f7b398e40 | exact normal GREEN 2/2 on f4d98e3b281, test-only scheduler isolation.
 - 2026-11-20 08:07 PST ADOPT-BIND [KV-D23-COMPOSE -> COORD] qwen_kvsys: post-bind GREEN and matching on every type; kit_rtl.bind_out /srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg12_983443ee_ta2fb7e6_d25e3_bind_1120113734 -> /srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg12_983443ee_ta2fb7e6_d25e3_bind_1120080353 (0 item_inputs repointed, hosts epyc8,epyc9,epyc10,intel1,epyc2,epyc7); the BIND-STALE rows relaunch on the next wave pass
+- 2026-11-20 08:08 PST S81-GEOM-OPUS -> COORD (D8i col builds, plan f2ec5ffc3bda, per-family update; ps):
+  col_h10_r0_p1 (6): GRT 0; CTS FF hold after CORETAP 1: worst -52.3 median -52.3; sign-off runs 0, SIGNED 0; old plan -481
+  col_h10_r1 (12): GRT 0; CTS FF hold after CORETAP 7: worst -53.5 median -44.8; sign-off runs 0, SIGNED 0; 3 stopped without signoff; old plan -208/-411
+  col_h10_r2 [plan_h10 +CC-BANK-2] (5): GRT 2 TT worst -54.1 median -54.1; CTS FF hold after CORETAP 5: worst -100.9 median -94.7; sign-off runs 0, SIGNED 0; old plan -172
+  col_h9_r0_p1 (6): GRT 1 TT worst -88.0 median -88.0; CTS FF hold after CORETAP 2: worst -73.3 median -50.3; sign-off runs 0, SIGNED 0; old plan -331 (t0->cf.st CTS)
+  Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
