@@ -9993,3 +9993,5 @@ FAILED [AUTOPILOT 3e545104aa26] 2026-11-19 19:15:44 PST AUTOPILOT -> KIT-WAVE-12
   - New bind: oth-ubuntu-2498337-1795144503 on epyc8, log intel2 ~/col-census-1119-build2.log.
   - Chain cc_chain2.sh, same gates. Then all 192 types (132 bank types + 60 col_h9_r2) go to full sign-off at 40 ps windows, at once, no caps.
   - The open rows (bank-in hop 241-306 um, p5 reset relay, h10_r0_p4 528 um pad hop) follow the first CTS/GRT numbers from these kits.
+FAILED [AUTOPILOT 5e5f3675f9bc] 2026-11-19 19:15:59 PST AUTOPILOT -> KIT-WAVE-12: FAILED 5e5f3675f9bc qwen_compute/cbx_q10__cl89936551 (STRUCTURAL/post-cts-hold): FAIL_POSTCTS legacy grt gate: TT global-routing insertion gate failed: PASS exit 1
+FAIL_POSTCTS final GRT released TT/FF policy (grt_policy.json) | kit epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46C/items/cbx_q10__cl89936551/gen/cbx_q10__cl89936551 src main@eb1e73448bd042684261a13c50cd0fb5ce21a513 | review no review bundle | run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
