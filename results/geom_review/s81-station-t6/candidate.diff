@@ -1,0 +1,28 @@
+--- slice_station__t6__cl0755c26e_bound.sv	2026-11-19 20:13:52.797355660 -0800
++++ candidate_bound.sv	2026-11-20 07:02:49.523372153 -0800
+@@ -86,13 +86,21 @@
+     wire cland_start;  // count origin of this region (count-aligned landings)
+     wire cland_start_d, cland_start_raw;  // D-side + raw reset of cland_start (FSTART face flops)
+     assign fclk_out_ft0_o = clk_t5;
+-    ot_dp_landing_relay u_cland_fstart_ft0_o (.clk(clk), .rst_raw_n(cland_start_raw), .d(cland_start_d), .q(cland_fstart_out_ft0_o));
++    wire cland_lrst_fstart_ft0;
++    (* keep = "true" *) ot_dp_rrelay u_cland_lrst_fstart_ft0 (.clk(clk), .d(rst_rl_120), .q(cland_lrst_fstart_ft0));  // local same-cycle reset copy (depth 6)
++    wire cland_lrst_fstart_ft1;
++    (* keep = "true" *) ot_dp_rrelay u_cland_lrst_fstart_ft1 (.clk(clk), .d(rst_rl_120), .q(cland_lrst_fstart_ft1));  // local same-cycle reset copy (depth 6)
++    wire cland_lrst_fstart_ft2;
++    (* keep = "true" *) ot_dp_rrelay u_cland_lrst_fstart_ft2 (.clk(clk), .d(rst_rl_15), .q(cland_lrst_fstart_ft2));  // local same-cycle reset copy (depth 6)
++    wire cland_lrst_fstart_ft3;
++    (* keep = "true" *) ot_dp_rrelay u_cland_lrst_fstart_ft3 (.clk(clk), .d(rst_rl_15), .q(cland_lrst_fstart_ft3));  // local same-cycle reset copy (depth 6)
++    ot_dp_landing_relay u_cland_fstart_ft0_o (.clk(clk), .rst_raw_n(cland_lrst_fstart_ft0), .d(cland_start_d), .q(cland_fstart_out_ft0_o));
+     assign fclk_out_ft1_o = clk_t15;
+-    ot_dp_landing_relay u_cland_fstart_ft1_o (.clk(clk), .rst_raw_n(cland_start_raw), .d(cland_start_d), .q(cland_fstart_out_ft1_o));
++    ot_dp_landing_relay u_cland_fstart_ft1_o (.clk(clk), .rst_raw_n(cland_lrst_fstart_ft1), .d(cland_start_d), .q(cland_fstart_out_ft1_o));
+     assign fclk_out_ft2_o = clk_t2;
+-    ot_dp_landing_relay u_cland_fstart_ft2_o (.clk(clk), .rst_raw_n(cland_start_raw), .d(cland_start_d), .q(cland_fstart_out_ft2_o));
++    ot_dp_landing_relay u_cland_fstart_ft2_o (.clk(clk), .rst_raw_n(cland_lrst_fstart_ft2), .d(cland_start_d), .q(cland_fstart_out_ft2_o));
+     assign fclk_out_ft3_o = clk_t3;
+-    ot_dp_landing_relay u_cland_fstart_ft3_o (.clk(clk), .rst_raw_n(cland_start_raw), .d(cland_start_d), .q(cland_fstart_out_ft3_o));
++    ot_dp_landing_relay u_cland_fstart_ft3_o (.clk(clk), .rst_raw_n(cland_lrst_fstart_ft3), .d(cland_start_d), .q(cland_fstart_out_ft3_o));
+     wire cland_reader_start_ft10_i_0;
+     wire [4:0] cland_reader_start_ft10_i_0_x;
+     (* keep = "true" *) ot_dp_landing_relay_rep #(.N(5)) u_cland_reader_start_ft10_i_0 (.clk(clk), .rst_raw_n(rst_n_t29), .d(cland_start), .q(cland_reader_start_ft10_i_0), .qx(cland_reader_start_ft10_i_0_x));

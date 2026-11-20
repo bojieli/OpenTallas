@@ -1,0 +1,11 @@
+{
+  "scope": "exact extracted four FSTART writer cones and all reset-flop ancestors to the common rst_root_n",
+  "timing": "arbitrary synchronous reset and START data at each edge, independent unconstrained power-on flop states, seven edges to flush",
+  "yosys_preprocess": "read_verilog -sv; hierarchy -top miter; proc; flatten; opt_clean (no opt_merge)",
+  "equivalence": "sat -seq 16 -prove-skip 7 -prove mismatch 0: SUCCESS; sat -seq 8 -tempinduct -prove mismatch 0 -maxsteps 16 -verify: Induction step proven: SUCCESS",
+  "negative_control": "depth-five direct ft3 raw, same other three: SAT counterexample found",
+  "baseline_sha": "8bfa18034de90ca658566236c20973af4e3c90ff8fc95089688171278e451452",
+  "candidate_sha": "89200344b413bc47076d57f37c925e2343b2fe0359f47537dcfde9a8423fa40d",
+  "miter_sha": "eca1e391c4d85eea9a3c2bf60bf7fb5a027ae2410d7475797dd24c9a5d97bb72",
+  "mutant_sha": "5b98a3940735f3c759693f451c57c06a61ac341c6b5088014bb369666171c5e6"
+}
