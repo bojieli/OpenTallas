@@ -84,8 +84,8 @@ def test_rule1_writer_branch_respects_requested_reach():
     t = p["partition_types"]["mid"]
     pins = t["clock"]["landing_contract"]["pins"]
     fstart = next(pin for pin in pins if pin["name"] == "cland_fstart_out_q")
-    # Within the legacy writer threshold, beyond the caller's tighter cap.
-    fstart["xy_um"] = [450.0, 2.0]
+    # The physical pin exceeds the cap, while its inset siting target fits.
+    fstart["xy_um"] = [391.0, 2.0]
     before, findings = RR.start_findings(t, "mid", reach=300.0)
     assert before["writer_over"] == 1
     assert any(f["kind"] == "start_writer_reach" for f in findings)
