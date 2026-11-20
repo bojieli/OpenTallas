@@ -452,3 +452,7 @@
   - Fix: the sites object is now inline in asbuilt_run.json (bind_intra_stations accepts an inline object). Done as new file + mv in the C tree (epyc8 + epyc9) and the J tree (epyc8 + intel1). No other absolute paths in asbuilt are read: the formB packet entries are notes only, and those paths do not exist even on epyc8.
   - C6 rebinding as r13 on epyc9 (intel2 ~/s81-die-r/build_d8i_c13.log); ship chain and GEOM path post re-armed on r13. epyc9 is now at load ~370/96, so the 180 s probe in this tree's pinned tools may time out again. If it does, the next run goes to the least-loaded host.
   - J3 r5 on intel1 has the same fix (asbuilt replaced before its bind step).
+- 2026-11-19 23:01 PST STATE [S81-DIE-R3 -> COORD] J3 r5 elab failed: "parameterized leaf markers missing: ot_hdc_v41x_dly, ot_hdc_v41x_kreg, ot_hdc_v41x_vdly".
+  - Cause: with the svc H8 defines, those three leaves are only instantiated inside the blackboxed provider cores. The die elab no longer sees them, so the as-built slang_parameterized_blackboxes list (19 masters) declared three masters that are never marked.
+  - Fix: dropped them from the list (19 -> 16) in the J tree asbuilt, epyc8 + intel1, new file + mv. The check stays exact: if any of them is still instantiated outside a core, elab fails with "marker on undeclared leaf master".
+  - J3 rebinding as r6 on intel1 (intel2 ~/s81-die-r/build_j3_r6.log). D8i C6 r13 on epyc9 still running.
