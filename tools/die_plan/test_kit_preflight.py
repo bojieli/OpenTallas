@@ -23,7 +23,7 @@ def test_port_bits_missing_extra_and_scalar():
                                       ('port_bind_gate',1),('face_guard',1),('hold_gate',1)])
 def test_runner_stops_before_costly_stage(tmp_path,gate,code):
     kit=tmp_path/'kit'; kit.mkdir(); fake=tmp_path/'bin'; fake.mkdir()
-    (kit/'config.mk').write_text('')
+    (kit/'config.mk').write_text('export OT_FACE_GUARD_GATE = 1\n' if gate=='face_guard' else '')
     out=kit/'run/results/asap7/top/base';out.mkdir(parents=True)
     for f in ['1_2_yosys.v','1_synth.odb','4_cts.odb','4_cts.sdc']:(out/f).write_text('')
     for name in ['kit_preflight','native_bb','rtl_lint','reg_fanout_gate','sdc_lint','selrange_gate','port_bind_gate','face_guard','signoff','pin_audit']:
