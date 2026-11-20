@@ -570,7 +570,7 @@ def frame_programme(master, lk, mats, x, seed=SEED, iters=ITERS, pairs=None, ran
     best = None
     for cand in ([pairs] if pairs else [q[:NPAIRS], q[len(q) - NPAIRS:], q[1:1 + NPAIRS]]):
         plan = P.plan_phase(base_master(master), cand, mats[0], x, NSEG, seed=seed, iters=iters,
-                            land_e=land_e(lk), frame_schedule=frame_schedule, ret_score=ret_score, frame_cohort=frame_cohort(frame))
+                            land_e=land_e(lk), frame_schedule=frame_schedule, ret_score=ret_score, frame_cohort=frame_cohort(frame_instance))
         finish_faults = ret_score(plan['ret']) if ret_score is not None else 0
         key = (plan['faults'] + finish_faults, plan['ret_words'])
         if best is None or key < best[0]:

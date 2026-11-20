@@ -106,10 +106,14 @@ def test_selected_frame_placement_only_prices_its_landing(monkeypatch):
     die = FakeDie(TOPOS[84])
     sl = 's00'
     frame = die.frames_of(sl)[1]
-    for topo, split in (('1', 'B'), ('1', 'X'), ('0', 'B')):
+    for topo, split in (('1', 'B'), ('1', 'X'), ('0', None)):
         monkeypatch.setenv('OT_XS_APROJ_TOPO', topo)
-        monkeypatch.setenv('OT_XS_DENSE_SPLIT2', split)
-        monkeypatch.setenv('OT_XS_DENSE_SPLIT2_ROWS', '224')
+        if split is None:
+            monkeypatch.delenv('OT_XS_DENSE_SPLIT2', raising=False)
+            monkeypatch.delenv('OT_XS_DENSE_SPLIT2_ROWS', raising=False)
+        else:
+            monkeypatch.setenv('OT_XS_DENSE_SPLIT2', split)
+            monkeypatch.setenv('OT_XS_DENSE_SPLIT2_ROWS', '224')
         with monkeypatch.context() as m:
             expected = LX.placement(die, sl, FX)
             calls = []
@@ -124,6 +128,27 @@ def test_selected_frame_placement_only_prices_its_landing(monkeypatch):
             assert actual == (expected[0], [expected[1][1]])
             assert calls == [frame]
 
+
+
+def test_frame_programme_forwards_selected_cohort(monkeypatch):
+    import frame_return_plan as P
+
+    class ReachedPhasePlanner(Exception):
+        pass
+
+    def plan_phase(*args, **kwargs):
+        assert kwargs['frame_cohort'] == 'cohort:u_f_3L01'
+        raise ReachedPhasePlanner
+
+    monkeypatch.delenv('OT_XS_APROJ_CAP_PLAN', raising=False)
+    monkeypatch.setattr(P, 'plan_phase', plan_phase)
+    monkeypatch.setattr(LX, 'frame_cohort', lambda frame: 'cohort:' + frame)
+    try:
+        LX.frame_programme('col_h10_l4', 0x249, [object()], None, pairs=[0], frame_instance='u_f_3L01')
+    except ReachedPhasePlanner:
+        pass
+    else:
+        raise AssertionError('frame programme did not price the selected frame')
 
 def test_default_identical():
     set_split(None)
