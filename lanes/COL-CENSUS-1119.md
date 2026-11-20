@@ -1,0 +1,67 @@
+# COL-CENSUS-1119: S81 col structural census (11-19, Opus)
+
+OWNER directive 11-19: fix the structural layout problems in the S81 col types now; no col structural class without a fix.
+Base plan for every row: S81-GEOM-OPUS `plan_h3_d8i.json` f2ec5ffc3bda (D8h h3 + D8i 114 rows). 216 col types, 12 families.
+
+## Evidence used
+
+- 5,800 col attempt dirs on intel1/epyc2/epyc7/epyc8/epyc9/epyc10/intel2. Most old run dirs are cleaned, so the per-path reads come from the 70 kits with a report left: the 3fa87b84b18 (D8g plan_h2_2249) wave CTS/GRT reports (`4_cts_post_hook.rpt`, `5_global_route.rpt`) and the routed `6_finish.rpt` + `signoff.json`.
+- Lane posts 11-15..11-19: S81-GEOM-OPUS, FABLE-FIX-S81-COL(H9R1), S81-TYPES-R2/R3, S81-COL-FLOW-1118, FABLE-CLOSURE-STRATEGY, COL-H10-1119, S81-CLOCK-WINDOW-1119.
+- Reference (works): col_h9_r2 signed x2 (rtx-pro ~/signed-export-1114/s81): `cl774acf45__pv11b6518d__ax` and `clce45cab5__pv7a260fc0__pg3hei_1117` (DRC 0, TT -39.22, internal FF 0). Best wave kit pvea45273b: routed TT -44.75 (1 path, c12_6 -> s12), FF -0.54 (1 end), DRC 0.
+- D8h (h3) is applied as event b4bb6a8b1e9, but every col wave row on it is `WAIT-BIND: kit_topology refused this bind` (18:16). Today only private builds run col types on h3/D8i.
+
+## Classes
+
+| Class | What it is (worst ends seen) |
+|---|---|
+| HOP | One long last hop, relay or stage -> hard-core input pin, over 405 um placed (700-960 ps wire, slew 2-3 ns). h10_r0_p1 xb_3/xa_3 -> t3 -481/-469 CTS; h10_r0_p4 cc_1 -> s0 -537 CTS; h9_r0 p1/p3/p5 xd s0_lc -> s0 -347..-351, t0 -> cf -331..-335 CTS, p1 cf -> t0 -227 GRT; p6 xa_1 -> t1 -133 GRT; h10_r1 flt_n24_n23 -> n23 -406..-442, lpl_8_r -> n24 -355..-390; h9_r1 lpl_9_r -> t3_payload -310..-352 GRT |
+| BANK-OUT | hw ROM `pval` (falling edge, 620 ps clk->q, half cycle) -> `dsfd_qbank_N.e_r0`. p6 e0_u_w -> bn0 -30..-45 GRT; h10_r2 e13_u_w -> bn13 -96 GRT; h9_r2 e11_u_w -> bn11 -46.9 routed before the D8f move + lead. Plan distance (LEF pins): r0 bn0 222 um, h10_r0_p1 bn0 248, h10_r0_p4 bn2 283 / bn4 214, h9_r1 bn6 266 / bn7 227, h10_r1 bn8 348, h10_r2 bn12 266 / bn13 227 |
+| BANK-IN | `dsfd_qbank_S.o_x` -> hw ROM `xs_q` / `cfg_d` (half cycle). h9_r2 bs12 -> e12_u_w -18 CTS; h9_r0_p2 bs1 -> e1_u_w -78.7 CTS (557 ends, S81-TYPES-R2 11-16). Plan distance 241-306 um in every family |
+| RDLOOP | cfg ROM fixed-latency read loop c*_k -> s*.q (no stage allowed). h9_r2 c12_6 -> s12 -44.75 routed (the only end); h9_r1 proof worst u_s5/q6 at -41.49 |
+| PIN | Station / pad siting: h9_r2 lpad frame_int_i0 r -> r -83 GRT; h10_r0_p4 bin_x_i0 -> lpad_x_i0.q 528-531 um placed; h10_r2 t7.so -> ist_o0 rank 0; h9_r1 frame stations on the N edge |
+| CONG | GRT overflow: h9_r1 N strip x701-758; h9_r0_p2 two capacity-0 gcells at lpad_xo_i0.q (77,186 M8/M6 layer-assignment overflow, D8e proof); h9_r0_p3 ft0_i landing band (157k on the B-era plan, no current GRT); h10_r1 lpad_frame_int_i1 strip. h9_r2 and p6: overflow 0 |
+| RST | Reset recovery across relays: h9_r0_p5 xo0_0 g_rsreg.rq -> xo2_1 / xo3_1 o[*] -196 CTS |
+| CLKWIN | cw6 per-port windows up to 121 ps inside the type, the 39 S81 TT start-skew crossings, core-tap early insertion |
+| PORT-HOLD | Input-port-start FF hold (frame_int_i0 / x_i0 / xo_i0 / ft*_i -> u_bin): -55..-110 at GRT, h10_r2 -297. Parent-owned (R-MINIMAL advisory, NEEDS_PARENT); GRT repair excludes ports since 1fd8080739 |
+| INT-HOLD | Pre-repair CTS hold mins (cf_rs reset chain -> rr/nf/lpl, lpl_*_r wr -> rc, cland ring) -20..-178; GRT hold repair closes them (routed h9_r2 FF -0.54, 1 end) |
+| FLOW | GRT post max-wire repair goes flat 1,800 s (h9_r2 FAIL_route, h9_r1); kit_topology WAIT-BIND on every D8h col wave row |
+
+## Family x class x owner x status
+
+Status: FIXED-PLAN = the row is in plan_h3_d8i (D8h/D8i), proof build running; CC1 = my CC-BANK-1 row, private build queued; OPEN-ROW = uncovered, my row follows the first CC1 CTS read; ADVISORY = not a type gate; FLOW = not structural.
+
+| Family (types) | HOP | BANK-OUT | BANK-IN | RDLOOP | PIN | CONG | RST | CLKWIN | PORT-HOLD / INT-HOLD / FLOW |
+|---|---|---|---|---|---|---|---|---|---|
+| col_h9_r2 (60, 2 signed) | FIXED-PLAN D8h RLYBR copies (S81-DIE-R3) | bn11/bn12 FIXED-PLAN D8f move + lead -45; bn10/bn14 hw 84-88 um, none needed | OPEN-ROW CC-BANK-2 (COL-CENSUS) | OPEN near miss -2.75 ps, 1 end: ECO allowed, or c12_6 move CC-RDLOOP-1 (COL-CENSUS) | lpad i0: FIXED-PLAN D8h RLYBR-1 trunk aim | none (overflow 0) | - | S81-CLOCK-WINDOW-1119 | ADVISORY / FLOW (OT_MAXWIRE_POST_SKIP ask, S81-COL-FLOW-1118 + WAVE-FLOW-R2) |
+| col_h9_r1 (60) | FIXED-PLAN D8h H9R1-I1-TRUNK-1 (FABLE-FIX-S81-COLH9R1, proof TT -41.49) | CC1: bn6 266->123, bn7 227->136 um | OPEN-ROW CC-BANK-2 | u_s5 q6 near miss (proof -41.49): read on D8i build | FIXED-PLAN D8i I0 +1 / H9R1-FRAME-1 | FIXED-PLAN D8i STRIP (S81-GEOM-OPUS) | - | S81-CLOCK-WINDOW-1119 | ADVISORY / FLOW |
+| col_h10_r1 (12) | FIXED-PLAN D8i rows; lpad i0 west-bit WATCH (COL-H10-1119) | HANDED to COL-H10-1119: bn8 348 um, bn6 227 | HANDED to COL-H10-1119 | - | COL-H10-1119 | COL-H10-1119 | - | S81-CLOCK-WINDOW-1119 | ADVISORY |
+| col_h10_r2 (12) | t7 join FIXED-PLAN D8h (COL-H10-1119) | HANDED to COL-H10-1119: e13_u_w -> bn13 -96 GRT, bn12 266 / bn13 227 um | HANDED to COL-H10-1119 | - | COL-H10-1119 | - | - | S81-CLOCK-WINDOW-1119 | PORT-HOLD -297 GRT: parent (S81-DIE-R3) |
+| col_h9_r0_p1 (6) | FIXED-PLAN D8h copy + D8i cf.st / t0 rows | CC1: bn0 222->184 um | OPEN-ROW CC-BANK-2 (bs1 276) | - | - | - | - | S81-CLOCK-WINDOW-1119 | ADVISORY / FLOW |
+| col_h9_r0_p2 (12) | FIXED-PLAN D8i relay_depth | CC1: bn0 222->184 um; cl0045af7b bn3 201 um has no legal site (5 types, residual) | OPEN-ROW CC-BANK-2 | - | - | lpad_xo_i0.q cap-0 gcells: read on the D8i p2 builds (S81-GEOM-OPUS) | - | S81-CLOCK-WINDOW-1119 | ADVISORY / FLOW |
+| col_h9_r0_p3 (12) | FIXED-PLAN D8h cc_1_s0 copy + cc_1 D1 (no build until CC1) | CC1: bn0 222->184 um | OPEN-ROW CC-BANK-2 | - | - | ft0_i band: first current GRT read = CC1 build | - | S81-CLOCK-WINDOW-1119 | INT-HOLD -155..-178 CTS: FLOW |
+| col_h9_r0_p4 (6) | FIXED-PLAN D8i relay_depth | CC1: bn0 222->184 um | OPEN-ROW CC-BANK-2 | - | - | - | - | S81-CLOCK-WINDOW-1119 | ADVISORY / FLOW |
+| col_h9_r0_p5 (12) | FIXED-PLAN D8i relay_depth | CC1: bn0 222->184 um | OPEN-ROW CC-BANK-2 | - | - | - | OPEN: xo0 rsreg -> xo2/xo3 -196 CTS; read on the D8i/CC1 p5 CTS, reset relay row (COL-CENSUS) if it stays | S81-CLOCK-WINDOW-1119 | ADVISORY / FLOW |
+| col_h9_r0_p6 (12) | FIXED-PLAN D8h xa_1_bs0 copy D1 + t1 sinks (no build until CC1) | CC1: bn0 222->184 um (the GRT -30..-45 end) | OPEN-ROW CC-BANK-2 | - | - | none (overflow 0) | - | S81-CLOCK-WINDOW-1119 | PORT-HOLD -103: ADVISORY |
+| col_h10_r0_p1 (6) | FIXED-PLAN D8h copies + D8i relay_depth (t3 xai/xbi/cci) | CC1: bn0 248->136, bn3 197->123 um | OPEN-ROW CC-BANK-2 | - | - | - | INT-HOLD cf_rs_r78 -> nf -167 CTS: FLOW | S81-CLOCK-WINDOW-1119 | ADVISORY / FLOW |
+| col_h10_r0_p4 (6) | FIXED-PLAN D8h cc_1_s0 copy D1 + s0.lc D1 (no build until CC1) | CC1: bn2 283->123, bn3 197->123, bn4 214->123 um | OPEN-ROW CC-BANK-2 | - | OPEN: bin_x_i0 -> lpad_x_i0.q 528-531 um placed; read on CC1 CTS, then a relay_sites row (COL-CENSUS) | - | - | S81-CLOCK-WINDOW-1119 | ADVISORY / FLOW |
+
+## CC-BANK-1 (my row set, 0 cycles)
+
+- What it does: moves every `dsfd_qbank_N` u_bnK whose hw pval -> e_r0 hop is over 180 um along its own row (x only, 4.32 grid) to the legal site that minimises that hop. The he pval -> e_r1 hop stays at or under 230 um. Checks: 8.64 um keepout to every hard core, and no station reg, relay site, tap or sink site inside the bank box. Plain core move: no reshape, no cycle, no clock row. h10_r1/h10_r2 are left to COL-H10-1119. Banks with a core_pin_lead row (h9_r2 bn11/bn12) are not touched.
+- Scope: 210 moves in 132 types (r0 p1-p6 bn0, h10_r0_p1 bn0/bn3, h10_r0_p4 bn2/bn3/bn4, h9_r1 bn6/bn7). 5 unfixed: col_h9_r0_p2 cl0045af7b bn3 (201 um, no legal site).
+- Limit: r0 bn0 can only move 38.9 um (250.56 -> 211.68), because it sits between cfg ROMs c2_2 and c2_3. If the p6 kits still show e0_u_w -> bn0 below -42 at GRT, the next step is a c2_2 shift (read-loop check first).
+- Files: epyc8 /srv/opentallas-scratch2/claude/col-census-1119/
+  - cc_bank_rows.py BASE OUT_PLAN OUT_ROWS
+  - rows_cc_bank.json a164cf40a01a
+  - plan_cc1.json 8865a8a00190 (= f2ec5ffc3bda + CC-BANK-1)
+- Proof: private cp -al of the S81-GEOM-OPUS D8h tree4 -> tree_cc1, run through build_tree_own.sh. That covers elab, strict bind (bind_rowcheck FIXEDCYC/ROWSINK/MODULES/TOOLSTALE run inside bind), local-reset writeback, G0, LATCHECK and plan_gate_pre. ot-run unit oth-ubuntu-2304581-1795143705, log intel2 ~/col-census-1119-build1.log.
+- Launch chain: intel2 ~/col-census-1119/cc_chain.sh, log ~/col-census-1119-chain.log. It waits for BIND_RC=0, LATCHECK_RC=0 and PRE_PASS, then for G0 with 0 NEW errors against the control (S81-GEOM-OPUS build6 on f2ec5ffc3bda, g0diff.py). Then it generates kits for 192 types: the 132 CC-BANK-1 types plus the 60 col_h9_r2 types, which have no build on h3 anywhere. Every type with GEN_LINT_RC=0 then goes to full sign-off through ot-run at once (--mem 96, --stage kit dir, no caps). Per-type logs: intel2 ~/col-census-1119-k-<type>.log.
+
+## Coverage after this census
+
+- Every col type has a current-plan build queued or running:
+  - S81-GEOM-OPUS: D8i, 114 types
+  - COL-H10-1119: col_h10_r2, 12 types
+  - COL-CENSUS: CC1, 192 types (overlap with D8i = A/B for CC-BANK-1)
+- Classes still open after CC1: BANK-IN (CC-BANK-2), h9_r2 RDLOOP near miss, p5 RST, h10_r0_p4 lpad_x_i0 hop. My rows for each follow the first CC1 CTS/GRT read.
+- Not type-structural: PORT-HOLD belongs to the parent (S81-DIE-R3). INT-HOLD and FLOW belong to the flow lanes: GRT max-wire skip, and kit_topology WAIT-BIND on the D8h wave rows (S81-DIE-R3 / WAVE-FLOW-R2). That WAIT-BIND blocks every col wave build on h3.
