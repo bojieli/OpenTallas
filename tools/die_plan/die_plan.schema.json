@@ -6855,6 +6855,40 @@
        }
       }
      },
+     "placement_guides": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "required": [
+        "inst",
+        "bbox_um",
+        "kind"
+       ],
+       "additionalProperties": false,
+       "properties": {
+        "inst": {
+         "type": "string",
+         "minLength": 1
+        },
+        "bbox_um": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         },
+         "minItems": 4,
+         "maxItems": 4
+        },
+        "kind": {
+         "enum": [
+          "soft_region"
+         ]
+        },
+        "note": {
+         "type": "string"
+        }
+       }
+      }
+     },
      "reset_relay_names": {
       "enum": [
        "site"
