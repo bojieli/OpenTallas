@@ -1,0 +1,246 @@
+{
+  "type": "slice_station__t6__cl0755c26e",
+  "scoped_reference": true,
+  "baseline_plan": "49b46aeb90083cb4c8e2521206cee682a013a49b5621a49918869d694f144ba9",
+  "baseline_sidecar": "0aab3486f37f0942a9f5b59a6ca2288d49414e008d29e6885e7be541439d5a5b",
+  "donor_plan": "679d950fb6bc473642f65e98432316401ee38f871ed4aa1cd83ea4248af80f15",
+  "baseline_rtl": "/srv/opentallas-scratch2/claude/s81-die-r3-e8/d8j/j5_intake/station_t6_start/r4/r4_scoped_reference.sv",
+  "baseline_rtl_sha": "10ebb81a97a7569dbd40af4c6a932898160d4907c456b3d49cd9328c9d749078",
+  "candidate_rtl_sha": "e4357a3ac385428028b2e46baddc1924dd1cd85f781badf5617265c9334dbc74",
+  "outline": [
+    1442.88,
+    1278.72
+  ],
+  "native_depth": 8,
+  "old_raw": "rst_n_t29",
+  "old_xy": [
+    17.28,
+    1165.792
+  ],
+  "added_ff": 4,
+  "added_cycles": 0,
+  "raw_to_copy": [
+    {
+      "writer": 0,
+      "raw": "rst_rl_81",
+      "raw_xy": [
+        60.953333333333376,
+        265.32
+      ],
+      "raw_to_copy": 166.163,
+      "copy_to_pin": 22.958,
+      "copy_xy": [
+        19.98,
+        140.13
+      ],
+      "copy_box": [
+        17.82,
+        137.97,
+        22.14,
+        142.29
+      ],
+      "pin_xy": [
+        2.144,
+        135.008
+      ],
+      "ft_box_clearance_um": 9.936
+    },
+    {
+      "writer": 1,
+      "raw": "rst_rl_148",
+      "raw_xy": [
+        8.64,
+        366.643
+      ],
+      "raw_to_copy": 26.909,
+      "copy_to_pin": 24.016,
+      "copy_xy": [
+        22.032,
+        380.16
+      ],
+      "copy_box": [
+        19.872,
+        378.0,
+        24.192,
+        382.32
+      ],
+      "pin_xy": [
+        2.144,
+        376.032
+      ],
+      "ft_box_clearance_um": 11.988
+    },
+    {
+      "writer": 2,
+      "raw": "rst_rl_185",
+      "raw_xy": [
+        605.536,
+        17.28
+      ],
+      "raw_to_copy": 106.306,
+      "copy_to_pin": 34.85,
+      "copy_xy": [
+        511.92,
+        29.97
+      ],
+      "copy_box": [
+        509.76,
+        27.81,
+        514.08,
+        32.13
+      ],
+      "pin_xy": [
+        519.456,
+        2.656
+      ],
+      "ft_box_clearance_um": 20.25
+    },
+    {
+      "writer": 3,
+      "raw": "rst_rl_185",
+      "raw_xy": [
+        605.536,
+        17.28
+      ],
+      "raw_to_copy": 55.208,
+      "copy_to_pin": 34.904,
+      "copy_xy": [
+        649.944,
+        28.08
+      ],
+      "copy_box": [
+        647.784,
+        25.92,
+        652.104,
+        30.24
+      ],
+      "pin_xy": [
+        659.424,
+        2.656
+      ],
+      "ft_box_clearance_um": 19.116
+    }
+  ],
+  "bind": [
+    {
+      "name": "fstart_ft0",
+      "instance": "u_cland_lrst_fstart_ft0",
+      "net": "cland_lrst_fstart_ft0",
+      "raw": "rst_rl_81",
+      "depth": 8,
+      "xy_um": [
+        19.98,
+        140.13
+      ],
+      "replaced": {
+        "u_cland_fstart_ft0_o": "cland_start_raw"
+      },
+      "added_flops": 1,
+      "added_cycles": 0
+    },
+    {
+      "name": "fstart_ft1",
+      "instance": "u_cland_lrst_fstart_ft1",
+      "net": "cland_lrst_fstart_ft1",
+      "raw": "rst_rl_148",
+      "depth": 8,
+      "xy_um": [
+        22.032,
+        380.16
+      ],
+      "replaced": {
+        "u_cland_fstart_ft1_o": "cland_start_raw"
+      },
+      "added_flops": 1,
+      "added_cycles": 0
+    },
+    {
+      "name": "fstart_ft2",
+      "instance": "u_cland_lrst_fstart_ft2",
+      "net": "cland_lrst_fstart_ft2",
+      "raw": "rst_rl_185",
+      "depth": 8,
+      "xy_um": [
+        511.92,
+        29.97
+      ],
+      "replaced": {
+        "u_cland_fstart_ft2_o": "cland_start_raw"
+      },
+      "added_flops": 1,
+      "added_cycles": 0
+    },
+    {
+      "name": "fstart_ft3",
+      "instance": "u_cland_lrst_fstart_ft3",
+      "net": "cland_lrst_fstart_ft3",
+      "raw": "rst_rl_185",
+      "depth": 8,
+      "xy_um": [
+        649.944,
+        28.08
+      ],
+      "replaced": {
+        "u_cland_fstart_ft3_o": "cland_start_raw"
+      },
+      "added_flops": 1,
+      "added_cycles": 0
+    }
+  ],
+  "landing_bands": [
+    [
+      17.28,
+      1167.196,
+      62.64,
+      1184.256
+    ],
+    [
+      17.28,
+      1185.436,
+      62.64,
+      1202.496
+    ],
+    [
+      17.28,
+      1203.676,
+      62.64,
+      1220.736
+    ],
+    [
+      17.28,
+      17.28,
+      58.32,
+      77.148
+    ],
+    [
+      569.856,
+      17.28,
+      624.732,
+      58.32
+    ],
+    [
+      627.072,
+      17.28,
+      636.836,
+      69.12
+    ],
+    [
+      17.28,
+      1112.284,
+      62.64,
+      1129.344
+    ],
+    [
+      17.28,
+      1130.524,
+      62.64,
+      1147.584
+    ],
+    [
+      17.28,
+      1148.956,
+      62.64,
+      1166.016
+    ]
+  ]
+}
