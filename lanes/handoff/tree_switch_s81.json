@@ -7,7 +7,7 @@
  "bind_types": 395,
  "config": {
   "cancel_superseded": false,
-  "event": "b4bb6a8b1e9",
+  "event": "b05c98f7919",
   "gen_args": [
    "--hold-ff-margin",
    "0",
@@ -54,7 +54,8 @@
   "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8h_1117_work/physical/die_plan/s81/plan_inputs/signed_view_sha_s81.json",
   "OT_TT_SETUP_REPAIR": "both"
  },
- "event": "b4bb6a8b1e9",
+ "event": "b05c98f7919",
+ "event_note": "S81-DIE-R3 11-19 19:3x: D8h event key b4bb6a8b1e9 was synthetic (not a commit) -> wave gate DIE-OFF since 14:52; replaced by main b05c98f7919 (physical/die_plan/s81/events/d8h_1119/EVENT.json, same D8h tree/manifest dba0256c0a8d)",
  "g0_baseline": {
   "path": "/home/ubuntu/coord/lanes/handoff/S81-D8H-G0-BASELINE-1119.json",
   "sha256": "bafae09223d0d39e48ec6a4cb6f8b51a5245b38f27b84039699cf7a068e8848c"
