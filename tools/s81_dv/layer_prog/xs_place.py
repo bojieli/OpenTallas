@@ -824,8 +824,9 @@ def load_die(a):
         return C.Die(tree)
     from layer_prog import bound_data as BD
 
-    bind = BD.load_bind(a.bound_data, a.bound_data_manifest, C.ROOT)
-    manifest = C.ROOT / a.bound_data_manifest
+    root = getattr(a, 'bound_data_source_root', None) or C.ROOT
+    bind = BD.load_bind(a.bound_data, a.bound_data_manifest, root)
+    manifest = root / a.bound_data_manifest
     frame_root, selected = LX.frame_manifest()
     explicit = os.environ.get('OT_S81_FRAME_ASBUILT_MANIFEST')
     if explicit and C.manifest_content(frame_root / selected) != C.manifest_content(manifest):
@@ -1286,9 +1287,13 @@ def main(argv=None):
     for command in (f, g):
         command.add_argument('--bound-data', type=Path, help='clean strict bind output with its emitted RTL')
         command.add_argument('--bound-data-manifest', help='the matching as-built manifest of that bind')
+        command.add_argument('--bound-data-source-root', type=Path, help='source root corresponding to the bound manifest')
     a = ap.parse_args(argv)
-    if a.cmd in ('frame', 'gen') and (a.bound_data is None) != (a.bound_data_manifest is None):
-        ap.error('--bound-data needs --bound-data-manifest')
+    if a.cmd in ('frame', 'gen'):
+        if (a.bound_data is None) != (a.bound_data_manifest is None):
+            ap.error('--bound-data needs --bound-data-manifest')
+        if a.bound_data_source_root is not None and a.bound_data is None:
+            ap.error('--bound-data-source-root needs --bound-data')
     return {'tie': cmd_tie, 'frame': cmd_frame, 'gen': cmd_gen, 'check': cmd_check, 'collect': cmd_collect}[a.cmd](a)
 
 

@@ -35,6 +35,7 @@ import json
 import math
 import os
 import re
+import shlex
 from collections import defaultdict
 from pathlib import Path
 
@@ -78,6 +79,29 @@ def _top(path):
     return path.split('.')[0]
 
 
+def selected_die_top(bound, raw_top):
+    """Resolve the emitted structural top used by read_slang from a relocated strict bind."""
+    structural = bound / 'structural_tops'
+    script = bound / 'asbuilt.ys'
+    if not structural.exists() and not script.is_file():
+        return raw_top
+    commands = script.read_text().splitlines()
+    sources = [Path(arg) for line in commands if line.startswith('read_slang ')
+               for arg in shlex.split(line)[1:] if Path(arg).parent.name == 'structural_tops']
+    if not structural.exists() and not sources:
+        return raw_top
+    candidates = {p.name for p in sources if p.name != 'interfaces.sv'}
+    if len(candidates) != 1:
+        raise ValueError(f'{script}: expected one prepared die top, got {sorted(candidates)}')
+    name = candidates.pop()
+    selected = (structural / name).resolve()
+    if not re.fullmatch(r'[0-9a-f]{12}_' + re.escape(raw_top.name), name) and selected != raw_top:
+        raise ValueError(f'{script}: prepared top {name} does not select {raw_top.name}')
+    if selected.parent != structural.resolve() or not selected.is_file():
+        raise ValueError(f'{script}: selected structural top missing from sealed bind: {name}')
+    return selected
+
+
 def load_bind(bound, manifest=None, root=None, *, diagnostic=False):
     """read + pin the bind records; strict unless diagnostic (then the bind's errors are carried, never cleared)"""
     bound = Path(bound)
@@ -103,7 +127,7 @@ def load_bind(bound, manifest=None, root=None, *, diagnostic=False):
         netlist_path = Path(nl[0])
         if not netlist_path.is_absolute():
             netlist_path = base / netlist_path
-        netlist_path = netlist_path.resolve()
+        netlist_path = selected_die_top(bound, netlist_path.resolve())
         netlist_sha = file_sha(netlist_path)
     groups = json.loads((bound / 'bus_groups.json').read_text())
     lat = json.loads((bound / 'bind_latency.json').read_text())

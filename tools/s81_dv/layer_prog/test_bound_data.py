@@ -66,6 +66,43 @@ def bind_dir(tmp, errors=0, landing=None, internal=None):
     return d
 
 
+def test_manifest_resolves_relocated_structural_die_top(tmp_path):
+    root = tmp_path / 'src'
+    root.mkdir()
+    raw = root / 'die.v'
+    raw.write_text('module raw_die; endmodule')
+    (root / 'm.json').write_text(json.dumps({'netlist': ['die.v']}))
+    bind = bind_dir(tmp_path / 'sealed')
+    assert BD.load_bind(bind, 'm.json', root)['netlist_path'] == raw
+
+    name = '0123456789ab_die.v'
+    structural = bind / 'structural_tops'
+    structural.mkdir()
+    top = structural / name
+    top.write_text('module normalized_die; endmodule')
+    script = bind / 'asbuilt.ys'
+    script.write_text(f'read_slang /old/structural_tops/interfaces.sv /old/structural_tops/{name}\n')
+    record = BD.load_bind(bind, 'm.json', root)
+    assert (record['netlist_path'], record['netlist_sha256']) == (top, BD.file_sha(top))
+
+    script.write_text('read_slang /old/structural_tops/0123456789ab_other.v\n')
+    try:
+        BD.load_bind(bind, 'm.json', root)
+    except ValueError as error:
+        assert 'does not select die.v' in str(error)
+    else:
+        raise AssertionError('unrelated structural top was accepted')
+
+    script.write_text(f'read_slang /old/structural_tops/{name}\n')
+    top.unlink()
+    try:
+        BD.load_bind(bind, 'm.json', root)
+    except ValueError as error:
+        assert 'missing from sealed bind' in str(error)
+    else:
+        raise AssertionError('missing emitted top fell back to raw source')
+
+
 def run(tmp, **kw):
     die = FakeDie()
     B = BD.load_bind(bind_dir(Path(tmp) / 'b', **kw), diagnostic=kw.get('errors', 0) > 0)
