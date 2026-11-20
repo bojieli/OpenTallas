@@ -183,6 +183,11 @@ def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=
     tree = marker["tree"]
     want = marker.get("manifest_hash") or marker["src_manifest_sha"]
     mc = dict(marker.get("config") or {})
+    review = mc.get("review_before_route")
+    if review is not None:
+        assert isinstance(review, dict) and review.get("event") and review["event"] == mc.get("event"), "review_before_route must name the candidate event"
+        items = review.get("items")
+        assert isinstance(items, list) and items and all(isinstance(it, str) and it and not any(c in it for c in "*?[") for it in items), "review_before_route requires exact item names"
     kr = marker_kit_rtl(marker)
     if kr:
         mc["kit_rtl"] = kr

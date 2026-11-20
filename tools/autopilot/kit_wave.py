@@ -10402,10 +10402,10 @@ def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
             if _ok and _dd.get("_family_meta"):                           # OWNER 11-20 (#8): representative count per die per tick
                 _fm = _dd["_family_meta"]
                 (AP.log if AP else log)(f"KIT-WAVE FAMILIES {_die}: {_fm['families']} famil(ies), {len(_fm['reps'])} representative(s) (high priority), "
-                                        f"{_fm['siblings']} sibling(s) (spare capacity), {_fm['held']} held by a failed representative; picks this tick {len(_picks)}, launched {_lp.get(_die, 0)}")
+                                        f"{_fm['siblings']} sibling(s) (spare capacity), {_fm['held']} held by a failed representative; picks this tick {len(_picks)}, scheduled {_lp.get(_die, 0)}")
             if _ok and (_dd.get("_plan_rows_n") is not None):          # COORD 11-19: the synthesized-rows counter, one line per die per tick
                 (AP.log if AP else log)(f"KIT-WAVE PLAN-ROWS {_die}: {_dd.get('_plan_rows_n')} plan type(s) with no OWNERS row synthesized, "
-                                        f"{sum(1 for r in _picks if r.get('_plan_row'))} picked, {sum(1 for x in launch if x[0] == _die and x[1].get('_plan_row'))} launched this tick")
+                                        f"{sum(1 for r in _picks if r.get('_plan_row'))} picked, {sum(1 for x in launch if x[0] == _die and x[1].get('_plan_row'))} scheduled this tick")
             if not _ok:
                 # FLOW-HEALTH-2 11-19 (FABLE-FLOW-1949 class 6): a parked die (HBM) printed DIE-OFF every tick; same die + same reason = one line per hour
                 _k = f"{_die}|{str(_why)[:120]}"; _seen = st.setdefault("die_off_logged", {})
@@ -10415,7 +10415,7 @@ def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
                         _seen.pop(_o, None)           # a changed reason replaces the old key, the map stays one entry per die
                     (AP.log if AP else log)(f"KIT-WAVE DIE-OFF {_die}: no launches this tick, the die gate says: {str(_why)[:300]}")
             elif _picks and not _lp.get(_die):
-                (AP.log if AP else log)(f"KIT-WAVE NO-LAUNCH {_die}: {len(_picks)} eligible row(s), 0 launched this tick; skipped: "
+                (AP.log if AP else log)(f"KIT-WAVE NO-LAUNCH {_die}: {len(_picks)} eligible row(s), 0 scheduled this tick; skipped: "
                                         + "; ".join(f"{len(v)}x {str(k)[:80]}" for k, v in sorted((_skip or {}).items(), key=lambda kv: -len(kv[1]))[:5]) + f"; launch room {room}")
     except Exception as _e:                           # a summary line never stops the plan
         log(f"KIT-WAVE NO-LAUNCH summary skipped: {_e}")
@@ -14223,11 +14223,12 @@ def visual_verdicts():
         if p.exists():
             break
     else:
+        _VISUAL_CACHE.update(mtime=None, v={}, ts={}, exact={}, unparsed=[])
         return {}
     try:
         mt = (str(p), p.stat().st_mtime)
         if _VISUAL_CACHE["mtime"] != mt:
-            v, ts, bad = {}, {}, []
+            v, ts, exact, bad = {}, {}, {}, []
             for ln in p.read_text(errors="replace").splitlines():
                 r = parse_visual_line(ln)
                 if r == "UNPARSED":
@@ -14235,7 +14236,9 @@ def visual_verdicts():
                 elif r:
                     v[r[:3]] = r[3]
                     ts[r[:3]] = verdict_line_ts(ln)
-            _VISUAL_CACHE.update(mtime=mt, v=v, ts=ts, unparsed=bad)
+                    if kit := re.search(r"(?:^|\s)kit=([^\s`]+)", ln):
+                        exact[(*r[:3], kit[1])] = r[3]
+            _VISUAL_CACHE.update(mtime=mt, v=v, ts=ts, exact=exact, unparsed=bad)
     except OSError:
         pass
     return _VISUAL_CACHE["v"]
@@ -14451,8 +14454,26 @@ def launch_held(cfg, rec):
     return any(fnmatch.fnmatchcase(str(rec.get("item") or ""), pat) for pat in (d.get("hold_items") or {}))
 
 
+def review_before_route(cfg, rec):
+    """Require the declared candidate-event items to be reviewed before submission."""
+    d = (cfg.get("dies") or {}).get(rec.get("die")) or {}
+    policy = d.get("review_before_route") or {}
+    event = policy.get("event")
+    return bool(event and d.get("event") == rec.get("event") == event and rec.get("item") in (policy.get("items") or ()))
+
+
 def route_hold_reason(cfg, rec):
     """An optional die-owned hold on new ROUTE submissions, never on an admitted unit."""
+    if review_before_route(cfg, rec):
+        host, path = rec.get("kit_host") or rec.get("gen_host"), rec.get("kit")
+        kit = f"{host}:{path}" if host and path else ""
+        visual_verdicts()
+        key = (rec["die"], rec["item"], int(rec.get("attempt") or 0), kit)
+        verdict = (_VISUAL_CACHE.get("exact") or {}).get(key)
+        if verdict in VISUAL_REJECT:
+            return f"WAIT-FORM: exact kit {kit} visual verdict {verdict}; rebuild on a changed form"
+        if verdict not in VISUAL_ACCEPT:
+            return f"WAIT-VISUAL: record a GEOM VERDICT for this attempt with kit={kit or '<host:/kit/path>'}"
     if FG.stops_off_die(cfg, rec.get("die")):      # OWNER 11-18 (hbm excluded): owner-review route holds (route_hold_items, WAIT-VISUAL / WAIT-FORM) hold nothing; visual review is advisory
         return None
     d = (cfg.get("dies") or {}).get(rec["die"]) or {}
