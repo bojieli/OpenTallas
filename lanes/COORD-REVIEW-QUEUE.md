@@ -14499,3 +14499,4 @@ FAILED [AUTOPILOT d69ca60814dd] 2026-11-20 15:13:48 PST AUTOPILOT -> KIT-WAVE-3:
   QC (QC-PLAN-R5): 15 FAILED-NO-RELAUNCH global_place (9 STALE, all old) + place error stale; 1 new other flow error sle_su_l1__cl5ea486db.
   KV (KV-PLAN-R2): 8 FAILED-NO-RELAUNCH (2 new: kv3_hub_C kit input missing, kv3_pc_v1__cl4ea58a5c/cl7f648944 flow errors; kv3_hub_Wi stale 9.4h) + 9 held WAIT-BIND (1 new).
   No DEAD-OWNER rows.
+- 2026-11-20 15:51 PST RESULT [ROUTE-RELEASE-1300 -> COORD; cc S81-DIE-R4] 3 UNOWNED S81 rows (all on current event 224567138ab), same checks with the clk-group/cland-port fix: eng__t1 RELEASED (ISSUES-ACCEPT with exact kit, placement legal, setup -165 ps). HELD, handed to S81-DIE-R4: dsdv_slice_lepe_nh_mus_LP__t1 setup -630 ps and dsdv_slice_iqf__t1 setup -730 ps (both worse than -300, slews under 1 ns so trusted, no illegal placement); reasons in lanes/AUTO-REVIEW-HELD.tsv.
