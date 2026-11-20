@@ -71,6 +71,18 @@ class T(unittest.TestCase):
         self.assertTrue(tcl.startswith("# GENERATED") and "uplevel #0 {" in tcl)
         self.assertEqual(tcl.count("{"), tcl.count("}"))
 
+    def test_pg_cut_rail_keeper(self):
+        """COORD 11-19: hd_mesh lost the last stack via of 14 rail segments (28 rows) to an M1-M7 site; the cut records what
+        it removes and rebuilds the stack on a same-net bypass beside the site, reporting what it cannot place."""
+        tcl = gen_phys.reserved_pg_cut_tcl([((228.744, 501.66, 230.904, 502.74), [3, 4, 5, 6, 7])])
+        self.assertIn("lappend kc_rm [list $net $sw [$s isVia]", tcl)        # removed vias/fill recorded before destroy
+        self.assertIn("proc kc_orphans", tcl)
+        self.assertIn("foreach l $kc_strap_lv { if {$l >= 3} { lappend kc_slv $l } }", tcl)   # bypass on the lowest strap layer
+        self.assertIn("odb::dbSBox_create $sw0 $kc_l5 $a $b $c $d STRIPE", tcl)
+        self.assertIn("orphan_rails_left=$kc_orph_left", tcl)
+        self.assertEqual(tcl.count("{"), tcl.count("}"))
+        self.assertNotIn("%", tcl.replace("%d", ""))                           # every format slot filled
+
     # CLKSITE-TAP-ESCAPE-1117
     def test_tap_escape_pieces(self):
         site = (1361.56, 117.72, 1365.34, 119.34)                       # sd9f clk_t8 site + pin

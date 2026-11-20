@@ -4691,7 +4691,11 @@ proc kc_vlev {s} {
   }
   return {}
 }
-set kc_cut 0; set kc_piece 0; set kc_via 0; set kc_left 0
+proc kc_vdef {s} {
+  foreach v [list [$s getBlockVia] [$s getTechVia]] { if {$v ne "NULL" && $v ne ""} { return $v } }
+  return ""
+}
+set kc_cut 0; set kc_piece 0; set kc_via 0; set kc_left 0; set kc_rm {}
 foreach net {VDD VSS} {
   set n [$kc_b findNet $net]
   if {$n eq "NULL" || $n eq ""} continue
@@ -4739,9 +4743,158 @@ foreach net {VDD VSS} {
           if {$clear} { set hit 1; break }
         }
       }
-      if {$hit} { odb::dbSBox_destroy $s; incr kc_via }
+      if {$hit} {
+        lappend kc_rm [list $net $sw [$s isVia] [expr {[$s isVia] ? [kc_vdef $s] : [$s getTechLayer]}] $bot $top \
+                           [$s xMin] [$s yMin] [$s xMax] [$s yMax] [$s getWireShapeType]]
+        odb::dbSBox_destroy $s; incr kc_via
+      }
     }
   }
+}
+# RAIL KEEPER (COORD 11-19, hd_mesh 28 orphaned rail segments): a followpin rail segment whose only stack vias to the
+# lowest strap layer sat under a site gets a bypass on that layer just outside the site (a strap piece beside the site
+# jogged to the cut strap's pieces above and below it) and a copy of its removed via stack on the bypass.
+proc kc_rail_index {} {
+  global kc_b kc_rail kc_rv
+  array unset kc_rail; array unset kc_rv
+  foreach net {VDD VSS} {
+    set n [$kc_b findNet $net]
+    if {$n eq "NULL" || $n eq ""} continue
+    foreach sw [$n getSWires] { foreach s [$sw getWires] {
+      if {[$s isVia]} {
+        set vl [kc_vlev $s]
+        if {[llength $vl] && [lindex $vl 0] == 2} { lappend kc_rv($net,[expr {([$s yMin]+[$s yMax])/2}]) [expr {([$s xMin]+[$s xMax])/2}] }
+      } elseif {[$s getWireShapeType] eq "FOLLOWPIN" && [kc_lev [$s getTechLayer]] == 2} {
+        lappend kc_rail($net,[expr {([$s yMin]+[$s yMax])/2}]) [list [$s xMin] [$s xMax]]
+      }
+    } }
+  }
+}
+proc kc_orphans {} {
+  global kc_rm kc_rail kc_rv
+  kc_rail_index
+  set out {}; set seen {}
+  foreach r $kc_rm {
+    lassign $r net sw isv obj bot top x0 y0 x1 y1 st
+    if {!$isv || $bot != 2} continue
+    set cx [expr {($x0+$x1)/2}]; set cy [expr {($y0+$y1)/2}]
+    if {![info exists kc_rail($net,$cy)]} continue
+    foreach iv $kc_rail($net,$cy) {
+      lassign $iv rx0 rx1
+      if {$cx < $rx0 || $cx > $rx1} continue
+      set k "$net,$cy,$rx0,$rx1"
+      if {$k in $seen} break
+      lappend seen $k
+      set ok 0
+      if {[info exists kc_rv($net,$cy)]} { foreach vx $kc_rv($net,$cy) { if {$vx >= $rx0 && $vx <= $rx1} { set ok 1; break } } }
+      if {!$ok} { lappend out [list $net $cy $rx0 $rx1 $cx] }
+      break
+    }
+  }
+  return $out
+}
+set kc_bypass 0; set kc_fixed 0; set kc_orph_n 0; set kc_orph_left 0
+set kc_slv {}
+foreach l $kc_strap_lv { if {$l >= %d} { lappend kc_slv $l } }
+if {[llength $kc_slv] && [llength $kc_rm]} {
+  set kc_lo [lindex [lsort -integer $kc_slv] 0]
+  set kc_l5 [[ord::get_db_tech] findLayer M$kc_lo]
+  set kc_c [expr {round(0.1*$kc_u)}]
+  set kc_orph [kc_orphans]
+  set kc_orph_n [llength $kc_orph]
+  set kc_m5 {}
+  foreach net {VDD VSS} {
+    set n [$kc_b findNet $net]
+    if {$n eq "NULL" || $n eq ""} continue
+    foreach sw [$n getSWires] { foreach s [$sw getWires] {
+      if {![$s isVia] && [kc_lev [$s getTechLayer]] == $kc_lo} { lappend kc_m5 [list $net $sw [$s xMin] [$s yMin] [$s xMax] [$s yMax]] }
+    } }
+  }
+  proc kc_free {net rect} {
+    global kc_m5 kc_c kc_lo
+    lassign $rect a b c d
+    foreach m $kc_m5 {
+      lassign $m n sw x0 y0 x1 y1
+      if {$n eq $net} continue
+      if {$c + $kc_c <= $x0 || $a - $kc_c >= $x1 || $d + $kc_c <= $y0 || $b - $kc_c >= $y1} continue
+      return 0
+    }
+    foreach w [kc_find $a $b $c $d] { if {$kc_lo in [lindex $w 4]} { return 0 } }
+    return 1
+  }
+  array unset kc_g
+  foreach o $kc_orph { lassign $o net cy rx0 rx1 sx; lappend kc_g($net,$sx) $o }
+  foreach key [array names kc_g] {
+    lassign [split $key ,] net sx
+    set pcs {}; set sw0 ""; set ws 0
+    foreach m $kc_m5 {
+      lassign $m n sw x0 y0 x1 y1
+      if {$n eq $net && ($x0+$x1)/2 == $sx && ($y1-$y0) > ($x1-$x0)} { lappend pcs [list $y0 $y1]; set sw0 $sw; set ws [expr {$x1-$x0}] }
+    }
+    if {$sw0 eq ""} continue
+    set half [expr {$ws/2}]
+    array unset kc_gap
+    foreach o $kc_g($key) {
+      set cy [lindex $o 1]; set yb ""; set yt ""
+      foreach pc $pcs {
+        lassign $pc p0 p1
+        if {$p1 <= $cy && ($yb eq "" || $p1 > $yb)} { set yb $p1 }
+        if {$p0 >= $cy && ($yt eq "" || $p0 < $yt)} { set yt $p0 }
+      }
+      if {$yb ne "" && $yt ne ""} { lappend kc_gap($yb,$yt) $o }
+    }
+    foreach gk [array names kc_gap] {
+      lassign [split $gk ,] yb yt
+      set rs $kc_gap($gk)
+      set wx0 ""; set wx1 ""
+      foreach w [kc_find [expr {$sx-$half}] $yb [expr {$sx+$half}] $yt] {
+        if {$kc_lo ni [lindex $w 4]} continue
+        lassign $w a _ c
+        if {$wx0 eq "" || $a < $wx0} { set wx0 $a }
+        if {$wx1 eq "" || $c > $wx1} { set wx1 $c }
+      }
+      if {$wx0 eq ""} continue
+      set lo ""; set hi ""
+      foreach o $rs {
+        lassign $o _ _ rx0 rx1
+        if {$lo eq "" || $rx0 > $lo} { set lo $rx0 }
+        if {$hi eq "" || $rx1 < $hi} { set hi $rx1 }
+      }
+      foreach xc [list [expr {$wx0 - $kc_c - $half}] [expr {$wx1 + $kc_c + $half}]] {
+        if {$xc - $half < $lo || $xc + $half > $hi} continue
+        set V  [list [expr {$xc-$half}] [expr {$yb-$ws}] [expr {$xc+$half}] [expr {$yt+$ws}]]
+        set Jb [list [expr {min($xc,$sx)-$half}] [expr {$yb-$ws}] [expr {max($xc,$sx)+$half}] $yb]
+        set Jt [list [expr {min($xc,$sx)-$half}] $yt [expr {max($xc,$sx)+$half}] [expr {$yt+$ws}]]
+        if {![kc_free $net $V] || ![kc_free $net $Jb] || ![kc_free $net $Jt]} continue
+        foreach r [list $V $Jb $Jt] {
+          lassign $r a b c d
+          odb::dbSBox_create $sw0 $kc_l5 $a $b $c $d STRIPE
+          lappend kc_m5 [list $net $sw0 $a $b $c $d]
+        }
+        incr kc_bypass
+        set dx [expr {$xc - $sx}]
+        foreach o $rs {
+          set cy [lindex $o 1]
+          foreach r $kc_rm {
+            lassign $r n sw isv obj bot top x0 y0 x1 y1 st
+            if {$n ne $net || $bot < 2 || $top > $kc_lo || $obj eq ""} continue
+            set cx [expr {($x0+$x1)/2}]; set ry [expr {($y0+$y1)/2}]
+            if {abs($cx-$sx) > 2*$ws || abs($ry-$cy) > 2*$ws} continue
+            if {$isv} {
+              set nb [odb::dbSBox_create $sw $obj [expr {$cx+$dx}] $ry $st]
+              set ex [expr {$cx+$dx - ([$nb xMin]+[$nb xMax])/2}]; set ey [expr {$ry - ([$nb yMin]+[$nb yMax])/2}]
+              if {$ex != 0 || $ey != 0} { odb::dbSBox_destroy $nb; odb::dbSBox_create $sw $obj [expr {$cx+$dx+$ex}] [expr {$ry+$ey}] $st }
+            } else {
+              odb::dbSBox_create $sw $obj [expr {$x0+$dx}] $y0 [expr {$x1+$dx}] $y1 $st
+            }
+          }
+          incr kc_fixed
+        }
+        break
+      }
+    }
+  }
+  set kc_orph_left [llength [kc_orphans]]
 }
 foreach net {VDD VSS} {
   set n [$kc_b findNet $net]
@@ -4754,10 +4907,11 @@ foreach net {VDD VSS} {
     }
   }
 }
-puts "OT_RESERVED_PG_CUT sites=$kc_n no_strap_layer=$kc_skip straps_cut=$kc_cut pieces=$kc_piece vias_removed=$kc_via residual_overlaps=$kc_left"
+puts "OT_RESERVED_PG_CUT sites=$kc_n no_strap_layer=$kc_skip straps_cut=$kc_cut pieces=$kc_piece vias_removed=$kc_via residual_overlaps=$kc_left orphan_rails=$kc_orph_n bypasses=$kc_bypass rails_restored=$kc_fixed orphan_rails_left=$kc_orph_left"
+if {$kc_orph_left} { puts "OT_RESERVED_PG_CUT ADVISORY $kc_orph_left rail segments keep no stack via (no legal bypass beside the site)" }
 if {$kc_left} { puts "OT_RESERVED_PG_CUT ADVISORY $kc_left PG strap boxes still overlap a reserved site" }
 }
-""" % (rows, PG_CUT_MIN_LEVEL, PG_CUT_MIN_LEVEL)
+""" % (rows, PG_CUT_MIN_LEVEL, PG_CUT_MIN_LEVEL, PG_CUT_MIN_LEVEL)
 
 
 def _pdn_inst_patterns(instances):
