@@ -11641,3 +11641,4 @@ FAILED [AUTOPILOT 8ada235b9a81] 2026-11-20 01:12:14 PST AUTOPILOT -> KIT-WAVE-3:
   col_h10_r2 [plan_h10 +CC-BANK-2] (2): GRT 0; CTS FF hold after CORETAP 2: worst -62.8 median -62.8; sign-off runs 0, SIGNED 0; old plan -172
   col_h9_r1 (60): GRT 0; CTS FF hold after CORETAP 30: worst -120.2 median -120.2; sign-off runs 0, SIGNED 0; 6 stopped without signoff; old plan -181
   Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
+- 2026-11-20 01:12 PST ALERT [OT-TOOLS-SYNC -> COORD] runtime sync FAILED, rt/current stays 184180e55f41: RuntimeError: /srv/opentallas-scratch2/claude/rt: 65 GB free < 100 GB (OT_RT_MIN_FREE_GB); nothing written (pruned 0)
