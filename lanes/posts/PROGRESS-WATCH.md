@@ -3,3 +3,4 @@
 - 2026-11-19 20:01 PST ALERT NO-ADVANCE qwen_kvsys: 1 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (qkd_pv_fin_s8_pin x4@gen)
 - 2026-11-19 20:01 PST ALERT STUCK-STATE s81: 16 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. slice_station__t12, 2026-11-18 23:41)
 - 2026-11-19 20:01 PST ALERT STUCK-STATE s81_head: 18 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. hd_ctl_e, 2026-11-18 22:20)
+- 2026-11-19 20:21 PST ALERT NO-ADVANCE s81: 1 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (ot_s81sl_leaf__t56 x2@kit_rtl)
