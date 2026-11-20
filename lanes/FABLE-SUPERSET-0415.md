@@ -296,3 +296,29 @@ The cheap path is 10.3 S81 row 1 and QC row 1: no floorplan or tap work, plan ro
 - Whether `strap_cland_use` exists in `ot_dp_clk_landing` or needs RTL.
 - QC and KV numbers are on N46R3 and D25f2, not on today's V0 / D25e3.
 - The die clock can deliver one tap table to every instance of a class (U2) without the type root.
+
+### 10.6 Landing-role check before J6 (COORD 11-20 02:4x, after the QC slw_fe pilot failed) -- corrects 10.2 to 10.4
+
+Checked per member (V): landing pin set, die landing-network edges, start-tree role, reset shape, reader / writer start, tap table, whole plan row with names and ROM selectors removed (`roles.py`, plans S81 j4e and QC N46R3); count-aligned role, edge and pad from the sidecars (`count_aligned.parts`, S81 D8i `sidecar_new.json`, QC N46R3BQ); bound wrappers and reset trees of the strict-bound D8i tree.
+
+| Class | Origin / relay role | Landing variants | Whole-row variants (members) | Bound wrapper variants | Merges on today's tools | Needs UNIFY-TOOLS for |
+|---|---|---|---|---|---|---|
+| S81 col_h9_r1 (60) | none: col parts are not count-aligned parts; S81 has 379 origins and 0 relays | 3: plain 51, collector 2 outs 8, collector 1 out 1 | 4 (51, 7, 1, 1) | 4 (51, 7, 1, 1), reset trees equal inside each | 60 -> 4 builds (ROM-only inheritance inside each variant) | 4 -> 1: spare monitor link (6 pins), reset outs at maximum |
+| S81 col_h9_r2 (60) | none | 3: plain 44, 1 child 14, 2 children 2 | 8 (42, 6, 4, 3, 2, 1, 1, 1) on j4e | 7 (44, 6, 4, 3, 1, 1, 1) on D8i | 60 -> 7 or 8 builds | -> 1: spare monitor links (9 pins), reset outs, one relay / tap row |
+| QC sle_ctl (7) | none: all 7 are origin, falling edge, pad 0, start role equal | 4 (3, 2, 1, 1): they differ only in `cland_dn_*_k` / `fclk_in_cland_dn_k` for k = 0..4, and in the reset relays that reader / writer start hang on | 6 (2 + five singles); pad maximum unset / 16 / 25 / 26 | not checked | 7 -> 6 now; 7 -> 4 after the V1 strap / pad union | 4 -> 1: spare cland dn links (15 pins), reset outs 0 / 2 / 4 |
+| QC slw_stm (6) | DIFFERS: 4 origin, 2 relay (2 stages) | - | - | - | none across roles | origin / relay as a strap |
+| QC slw_fw (6) | DIFFERS: 2 origin, 4 relay | - | - | - | none across roles | origin / relay as a strap, bus union |
+| S81 leaf (75) | no relay; write edge differs (33 falling, 37 rising, 5 not count-aligned), already a strap (`strap_ca_efall`) | - | - | - | none (floorplans differ) | everything in 10.1 |
+
+What this changes:
+- **No origin / relay difference in col_h9_r1, col_h9_r2 or sle_ctl.** The QC failure mode (relay rx / tx pins) does not apply to them. It does apply to slw_stm and slw_fw.
+- **Their one-class merge still needs UNIFY-TOOLS**, because the members differ in the number of monitor links and reset outs, and G0 / clock_landings refuse undeclared spare ends today (QC pilot).
+- **On today's tools, col inheritance is already available inside each variant**: the bound wrappers of 51 col_h9_r1 types are text-equal once names and ROM instance strings are removed, and 44 of col_h9_r2 likewise. That is 120 types -> 11 or 12 builds with no plan change. SIGN-PROFILE read 0 because the existing kits come from different plans and synthesis runs; the test needs member kits generated from ONE tree with one recipe (gen + synth only), then `summary` / `prove`.
+- Estimates: S81 col r1 + r2 **120 -> 11 or 12 today, -> 2 with UNIFY-TOOLS**. QC sle_ctl **7 -> 4 after V1 straps, -> 1 with UNIFY-TOOLS**. The "127 types in 3 hash groups" of 10.4 is the UNIFY-TOOLS figure, not a J6 / V2 figure on today's tools; today's figure is 127 -> 15 or 16.
+
+Rows, corrected:
+- **S81 J6, today's tools:** no plan row. Action: gen + synth every col_h9_r1 / r2 member from the J6 tree with one flow tag; sign one representative per variant (4 + 7 or 8); `prove` the rest. The first measured inherit count comes from this.
+- **S81 J6 or J7, with UNIFY-TOOLS (schema spare ends + spare-lane bind check):** collector form with union monitor links on all (10.3 row 1).
+- **QC V1:** strap / pad union on sle_ctl (already planned). **V2 with UNIFY-TOOLS:** spare dn links + reset outs. slw_stm / slw_fw wait for the origin / relay strap.
+
+Not checked: sle_ctl bound wrappers (QC bind out not read); that synthesis of text-equal bound wrappers is bit-stable across member kits; col members on the J5 / J6 plan (rows read on j4e, wrappers on D8i).
