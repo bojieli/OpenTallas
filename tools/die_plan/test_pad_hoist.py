@@ -100,7 +100,7 @@ def test_apply_keeps_latency_table_in_step():
     # 2 more than the table pad: the member's fixed cycles the merged type lacks are cut, cycles stay
     assert PH.apply(plan, {("fb", "d_ctl"): 2}) == [dict(lane="L2", table_pad=1, hoisted=2, fixed_cut=1)]
     assert plan["latency"]["lanes"]["L2"] == dict(row(), stations=9, fixed=1, natural=12, pad=0)
-    assert plan["lanes"][2]["fixed_cycles"] == 2      # raw lane fixed_cycles stay: they price kit stations
+    assert plan["lanes"][2]["fixed_cycles"] == 1      # raw lane fixed_cycles follow the row (plan_gate FIXEDCYC)
 
 
 def test_raise_cycles_levels_up_the_lower_instances(tmp_path):

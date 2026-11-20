@@ -155,6 +155,23 @@ def _solve(plan, pads, lower):
     return dict(hoists), info, unplaced
 
 
+class CutError(ValueError):
+    """a hoist would cut a lane's fixed cycles below the kit stations they price"""
+
+
+def kit_floor(plan, lid):
+    """registers of the source type's OUT-bus and the destination type's IN-bus internal_stations on this lane"""
+    ports = {x["id"]: x for x in plan.get("ports", [])}
+    ln = next(x for x in plan["lanes"] if x["id"] == lid)
+    a, b = ports[ln["ports"][0]]["src"], ports[ln["ports"][-1]]["dst"]
+    ptype = {x["name"]: x["type"] for x in plan["partitions"]}
+
+    def regs(part, bus):
+        rows = plan["partition_types"][ptype[part]].get("internal_stations", [])
+        return max((len(e.get("regs_um", [])) for e in rows if e.get("conn") == "bus:" + bus), default=0)
+    return regs(a["part"], a["bus"]) + regs(b["part"], b["bus"])
+
+
 def apply(plan, hoists, tag="UNIFY-TOOLS pad_hoist"):
     """raise the slot stations and keep the latency table in step (bind LANE_LATENCY): every lane through a raised
     (type, slot) hop gets stations/natural + k and pad - k; its cycles are unchanged"""
@@ -176,9 +193,13 @@ def apply(plan, hoists, tag="UNIFY-TOOLS pad_hoist"):
         nat = int(row.get("boundary", 2)) + row["stations"] + int(row.get("fixed", 0)) + int(row.get("clock_landing", 0))
         cut = max(0, nat - cyc)
         if cut:
-            if int(row.get("fixed", 0)) < cut:
-                raise ValueError(f"pad_hoist: lane {lid}: {add} hoisted stations exceed its cycles {cyc}")
+            # the cut may not go below the kit stations the fixed cycles still price (native_istations: raw lane
+            # fixed_cycles >= kit depth); raw fixed_cycles and the row move together (plan_gate FIXEDCYC)
+            if int(row.get("fixed", 0)) - cut < kit_floor(plan, lid):
+                raise CutError(lid)
             row["fixed"] = int(row["fixed"]) - cut
+            if lid in lanes_raw and "fixed_cycles" in lanes_raw[lid]:
+                lanes_raw[lid]["fixed_cycles"] = row["fixed"]
             stale.append(dict(lane=lid, table_pad=int(row.get("pad", 0)), hoisted=add, fixed_cut=cut))
             nat = cyc
         row["natural"] = nat
@@ -201,9 +222,7 @@ def raise_cycles(plan, pads, unplaced):
     out = []
     for tn, b in sorted({(u["type"], u["bus"]) for u in unplaced}):
         vals = {q: v.get(b, 0) for q, v in pads[tn].items()}
-        M = max(vals.values())
-        if any(u.get("below") for u in unplaced if (u["type"], u["bus"]) == (tn, b)):
-            M = max(u["target"] for u in unplaced if (u["type"], u["bus"]) == (tn, b))
+        M = max(max(vals.values()), in_station_floor(plan, tn, b))
         for q, v in sorted(vals.items()):
             lid = paths[(q, b)][0]
             if v < M and lid in lat:
@@ -236,20 +255,42 @@ def main(argv=None):
           f"(+{sum(hoists.values())} stations), {len(unplaced)} unplaced")
     for u in unplaced:
         print("  UNPLACED", u)
-    if unplaced and a.raise_cycles:
-        # the unplaced buses are not hoisted at all (their slots stay); the lower instances rise to the maximum
-        keep = {(u["type"], u["bus"]) for u in unplaced}
-        pads2 = {tn: {q: {b: v for b, v in bs.items() if (tn, b) not in keep} for q, bs in d.items()}
-                 for tn, d in pads.items()}
-        hoists, lanes, rest = solve(plan, pads2)
-        assert not rest, rest
-        rep.update(hoists=[dict(type=t, slot=s, add=k) for (t, s), k in sorted(hoists.items())], lanes=lanes)
-        rep["raised_cycles"] = raise_cycles(plan, pads, unplaced)
-        print(f"  raise-cycles: {len(rep['raised_cycles'])} lanes +{sum(r['add'] for r in rep['raised_cycles'])} cycles")
-        unplaced = []
-    if unplaced and not a.partial:
-        return 3
-    rep["stale_table_rows"] = apply(plan, hoists)
+    import copy
+    keep = set()
+    base = plan
+    while True:
+        plan = copy.deepcopy(base)
+        if unplaced and a.raise_cycles:
+            # the unplaced buses are not hoisted at all (their slots stay); the lower instances rise to the maximum
+            keep |= {(u["type"], u["bus"]) for u in unplaced}
+        if keep:
+            pads2 = {tn: {q: {b: v for b, v in bs.items() if (tn, b) not in keep} for q, bs in d.items()}
+                     for tn, d in pads.items()}
+            hoists, lanes, rest = solve(plan, pads2)
+            assert not rest, rest
+            rep.update(hoists=[dict(type=t, slot=s, add=k) for (t, s), k in sorted(hoists.items())], lanes=lanes)
+            gone = [dict(type=t, bus=b, lane=None, left=1, below=False, target=0, part=None, pad=None) for t, b in keep]
+            rep["raised_cycles"] = raise_cycles(plan, pads, gone)
+            print(f"  raise-cycles: {len(rep['raised_cycles'])} lanes +{sum(r['add'] for r in rep['raised_cycles'])}"
+                  f" cycles on {len(keep)} buses")
+            unplaced = []
+        if unplaced and not a.partial:
+            return 3
+        try:
+            rep["stale_table_rows"] = apply(plan, hoists)
+            break
+        except CutError as e:
+            lid = e.args[0]
+            if not a.raise_cycles or lid not in lanes:
+                print(f"pad_hoist: lane {lid}: the hoist would cut fixed cycles below its kit stations")
+                return 3
+            k = (lanes[lid]["type"], lanes[lid]["bus"])
+            if k in keep:
+                print(f"pad_hoist: lane {lid} ({k}) still cut after leveling its bus up: refusing")
+                return 3
+            print(f"  cut below kit stations on {lid}: level {k} up instead")
+            keep.add(k)
+            unplaced = []
     if a.report:
         Path(a.report).write_text(json.dumps(rep, indent=1) + "\n")
     Path(a.out_plan).write_text(json.dumps(plan, indent=1) + "\n")
