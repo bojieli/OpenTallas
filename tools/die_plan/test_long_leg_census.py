@@ -46,6 +46,19 @@ class T(unittest.TestCase):
         self.assertEqual(L.base_type("col_h9_r0_p3__t1__cl0cd90c0e__pv110cabb8"), "col_h9_r0_p3__t1")
         self.assertEqual(L.base_type("serdes__t3"), "serdes__t3")
 
+    def test_shorter_half_edge_predecessor_is_retained(self):
+        rising = (250.0, "rising", (170, 0), False)
+        falling = (150.0, "falling", (200, 0), True)
+        later_falling = (160.0, "later_falling", (210, 0), True)
+        paths = L.longest_launches_by_edge([((350, 0), (rising, falling, later_falling))], (400, 0))
+        self.assertEqual(paths, ((300.0, "rising", (170, 0), False),
+                                 (210.0, "later_falling", (210, 0), True)))
+        self.assertEqual(L.longest_launches_by_edge([((400, 0), paths)], (450, 0)),
+                         ((350.0, "rising", (170, 0), False), (260.0, "later_falling", (210, 0), True)))
+        # At x=450 the winning rising path fits 300 um and the shorter falling path exceeds 200 um.
+        self.assertLess(450 - paths[0][2][0], L.REACH_UM)
+        self.assertGreater(450 - paths[1][2][0], L.HALF_UM)
+
     def test_off_centre_pin(self):
         # 100 x 40 macro, pin 4 x 4 near the left end: R0 pin at x=6, centre would be x=50
         r = [(4, 18, 8, 22)]
