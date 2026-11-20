@@ -2793,6 +2793,10 @@ SLEW_MARGIN_PCT, CAP_MARGIN_PCT = 50, 20   # repair_design margins, % of the lim
 #   gpl_keep_overflow          timing-driven GPL keeps repair buffers only below this overflow: the first pass (overflow
 #                              0.41-0.63) added +18..+51 % area on an unsettled placement and was re-done at 0.19
 #   place_max_fanout           place repair_design fanout limit (ASAP7 liberty has none)
+#   place_max_transition       CORE-LIB-LIMITS-1330 (FABLE-CLOSURE-1315 lever 1): design max_transition (ps) for the place
+#                              repair_design; the hard-core view libs (write_timing_model ETMs) carry no max_transition, so a
+#                              net whose loads are core pins had no limit (t60 core->core 66 bits, 5.0 ns slew, 0 buffers).
+#                              320 = the ASAP7 stdcell default_max_transition, so stdcell pins see no change.
 #   max_wire_um                post-GRT repair_design -max_wire_length (grt_maxwire.tcl); a smaller explicit value wins
 #   hold_budget_pct            OT_HOLD_BUDGET report line: repair_timing cells / placed logic cells (OVER = R-CLOCK).
 #                              Hold repair itself is unchanged: once, at the FF GRT step, target slack 0, HB4 pads.
@@ -2807,6 +2811,7 @@ SLEW_MARGIN_PCT, CAP_MARGIN_PCT = 50, 20   # repair_design margins, % of the lim
 #                              5_1_grt.odb; opt-in (gen env OT_PG_CELL_KEEPOUT=1) until the rollout proof.
 # CTS is unchanged (BUFx24 root and sink buffers, clusters of <= ~42 sinks; 0 clock pins among the violators).
 RFLOW = {"slew_margin": float(SLEW_MARGIN_PCT), "cap_margin": float(CAP_MARGIN_PCT), "gpl_keep_overflow": 0.25, "place_max_fanout": 32,
+         "place_max_transition": 320.0,
          "max_wire_um": 120.0, "hold_budget_pct": 10.0, "pg_track_truth": 1,
          "pg_cell_keepout": 0}
 # Kit classes (die plans) that take the defaults, each with its proof kit (old vs new settings on one synthesized
@@ -8198,7 +8203,9 @@ def install_gp_noconverge_gate(kd, cfg, die=None):
         [f"# GPL-OVERFLOW (FABLE-PD-S81-STRIP pilot): global placement stops at overflow {ov:g}, not 0.1",
          f"export GLOBAL_PLACEMENT_ARGS = -overflow {ov:g}"] if (ov := gpl_overflow(die)) else []) + (
         [f"# KW-FIX-45 PLACE-FANOUT: place-stage repair_design limit (gp_noconverge_gate.tcl set_max_fanout)",
-         f"export OT_PLACE_MAX_FANOUT = {fo}"] if fo else [])
+         f"export OT_PLACE_MAX_FANOUT = {fo}"] if fo else []) + (
+        [f"# PLACE-SLEW (CORE-LIB-LIMITS-1330): design max_transition for place repair; hard-core pins have no liberty limit",
+         f"export OT_PLACE_MAX_TRANSITION = {mt:g}"] if (mt := place_max_transition(die)) else [])
 
 
 def gpl_sparse_overflow(die=None):
@@ -8279,6 +8286,28 @@ def place_max_fanout(die=None):
     if not v.isdigit() or not 2 <= int(v) <= 1000:
         raise ValueError(f"OT_PLACE_MAX_FANOUT must be an integer 2..1000, got {v!r}")
     return int(v)
+
+
+def place_max_transition(die=None):
+    """PLACE-SLEW (CORE-LIB-LIMITS-1330, FABLE-CLOSURE-1315 lever 1): the gen environment's OT_PLACE_MAX_TRANSITION (ps;
+    0 = off, else 20..2000) -> set_max_transition on the design before the place repair_design (PRE_RESIZE hook), else
+    the R-FLOW default 320 for a die plan in RFLOW_DIES (off elsewhere).
+    The hard-core view libs are write_timing_model ETMs with no max_transition / max_capacitance, and OpenSTA checks a
+    slew limit at the load pin from that pin's own library: a net whose loads are core input pins had no limit to
+    violate, so repair_design left it as one wire (S81 leaf t60 u_vsw/o_f -> u_vs/sw_fi, 66 bits, 423 um: 5.0 ns slew,
+    1,576 ps wire; kv_leaf t1/t4, leaf t57/t43, slice C t9 the same class).  320 equals the ASAP7 stdcell
+    default_max_transition, and OpenSTA takes the tighter of the design and liberty limits, so stdcell pins are unchanged.
+    write_sdc carries the limit to the later repair passes; sign-off reads the kit's own constraint.sdc (no gate change)."""
+    v = os.environ.get("OT_PLACE_MAX_TRANSITION", "").strip()
+    if not v:
+        return RFLOW["place_max_transition"] if rflow_on(die) else 0
+    try:
+        r = float(v)
+    except ValueError:
+        raise ValueError(f"OT_PLACE_MAX_TRANSITION must be a number of ps (0 = off, else 20..2000), got {v!r}") from None
+    if r != 0 and not 20 <= r <= 2000:
+        raise ValueError(f"OT_PLACE_MAX_TRANSITION must be 0 (off) or 20..2000 ps, got {v!r}")
+    return r or 0
 
 
 RUN_KIT = r"""#!/bin/bash

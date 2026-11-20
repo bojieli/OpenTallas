@@ -12,6 +12,13 @@ if {[info exists ::env(OT_PLACE_MAX_FANOUT)] && [string is integer -strict $::en
   set_max_fanout $::env(OT_PLACE_MAX_FANOUT) [current_design]
   puts "PLACE-FANOUT set_max_fanout $::env(OT_PLACE_MAX_FANOUT) on design [current_design] (place repair_design)"
 }
+# PLACE-SLEW (CORE-LIB-LIMITS-1330): OT_PLACE_MAX_TRANSITION (ps, kit config.mk, gen_phys.place_max_transition) = design
+# max_transition for the same repair_design.  The hard-core view libs carry no max_transition, so nets into core pins
+# had no slew limit; the stdcell libs' own 320 ps limit is the tighter one elsewhere.  Unset / empty / 0 = unchanged.
+if {[info exists ::env(OT_PLACE_MAX_TRANSITION)] && [string is double -strict $::env(OT_PLACE_MAX_TRANSITION)] && $::env(OT_PLACE_MAX_TRANSITION) > 0} {
+  set_max_transition $::env(OT_PLACE_MAX_TRANSITION) [current_design]
+  puts "PLACE-SLEW set_max_transition $::env(OT_PLACE_MAX_TRANSITION) on design [current_design] (place repair_design; core pins have no liberty limit)"
+}
 set gpnc_dir [file dirname [file normalize [info script]]]
 set gpnc_log [file join $::env(LOG_DIR) 3_3_place_gp.log]
 set gpnc_ovf 0.1
