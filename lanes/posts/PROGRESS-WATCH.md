@@ -53,3 +53,4 @@
 - 2026-11-20 05:36 PST ALERT STUCK-STATE s81_head: 8 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. ot_sram_1r1w2c_256x64_m1, 2026-11-19 21:05)
 - 2026-11-20 05:46 PST ALERT NO-ADVANCE qwen_compute: 14 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (sle_su_l0__cl7a55c676 x4@gen, slw_su_c__cl92142dac x3@gen, slw_st_a_v2__clf4365a62 x3@gen)
 - 2026-11-20 05:46 PST ALERT NO-ADVANCE s81: 49 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (ot_s81sl_leaf__t23 x6@gen, ot_s81sl_leaf__t57 x5@gen, ot_s81sl_leaf__t70 x5@gen)
+- 2026-11-20 05:56 PST ALERT NO-ADVANCE qwen_kvsys: 2 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (kv3_pv_v8 x3@gen, kv3_pv_v5 x2@gen)
