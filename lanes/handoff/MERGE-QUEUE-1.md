@@ -207,3 +207,13 @@ kit-ops-5-curplan-1114 @4c696027e0ef RED (branch alone fails test_kit_wave_compo
 - Qwen TT15 tested stage37 C1 patch from epyc7 recovery has SHA256 b3009e46985c0c82f45f7db5ff10e5b895ab58146ae7e2b4050c262bb6dfd705. Applied exact in inherited source staging clone after including the single RTL file in sparse checkout. Commit 779d2c32d9a608a10b5d5a32a5ef79ec8783c7bc on claude/tok-tt15-stage37-c1-1120 pushed mirror and GitHub. QC reported no source overlap. Gate client 4113455, log intel2 /srv/opentallas-scratch2/claude/mq1/tmp/rg/tok-tt15-stage37-c1-779d2c32d9-1120.out. Component evidence is TOKEN-TT15 03:38. This commit adds source compatibility only.
 - Exact S81-H8W source gate claude/s81-svc-h8w-1120 @7c0fe7461f2868010612c2291bc6bd529d09dec4 client 4062663, log in that same directory svc-h8w-7c0fe7461f-1120.out. H8W lane collected 6 focused PASS.
 - Watcher PID 4127076 at mq1/tmp/rg/watch-source-gates-1120-current.py now tracks redwatch, SVC combined, S81-H8W and TT15. Earlier watcher retired by exact PID. All gate jobs left to the normal admission guard.
+
+## CODEX continuation 2026-11-20 03:55 PST
+- Canonical runtime 4f48b4149678 synchronized all six build hosts. Normal queue merged recent UNIFY and QC route-stop source fixes. Flow synchronized stable gate launcher paths to each host current runtime.
+- Normal source clients, pinned to exact candidates, all in fleet admission waits:
+  - redwatch 28b0056744f2031a7d8ca8e1545aaacf76a5bff9, PID 3992722, redwatch-28b0056744-1120.out.
+  - S81 SVC combined successor c5b855c83153c541f3c54383f8ad608d4bd063bc, PID 228668, svc-combined-c5b855c831-1120.out. Carries prior PBUF/QMEM/WQ proof and locates the helper in the common memory source once.
+  - S81 H8W successor d21cf7be964596ab9148fccbf0ddf6103537b1be, PID 154989, svc-h8w-d21cf7be96-1120.out. Retains width-gate parser repair and scopes PVSO TF=0 to the existing 513-bit H8 ABI.
+  - Qwen TT15 C1 source 779d2c32d9a608a10b5d5a32a5ef79ec8783c7bc, PID 4113455, tok-tt15-stage37-c1-779d2c32d9-1120.out.
+  - UNIFY whole-FT exact-width successor 209b10ba0c1806e080de53a32a77636989d45f55, PID 288956, unify-whole-ft-209b10ba0c-1120.out. Lane reports four positive/negative tests and 64/64 strict native FT6/7 records, with 315-cycle 833 ps match and epoch mutant divergence at cycle 5.
+- All logs are under intel2 /srv/opentallas-scratch2/claude/mq1/tmp/rg. Current watcher PID 289122 at watch-source-gates-1120-unify.py posts exact READY or terminal status. SVC and H8W predecessors were unstarted and superseded by exact own PID. Any source approval follows the exact GREEN receipt.
