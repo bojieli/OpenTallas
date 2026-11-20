@@ -726,3 +726,4 @@
 - 2026-11-19 20:30 PST DISK-RATE intel2 /srv/opentallas-scratch2: free 438 GB, falling 66 GB/h, floor 50 GB in 5.8 h (cron disk_rate.py; read-only)
 - 2026-11-19 20:40 PST DISK-RATE intel1 /srv/opentallas-scratch2: free 707 GB, falling 136 GB/h, floor 50 GB in 4.8 h (cron disk_rate.py; read-only)
 - 2026-11-19 20:55 PST ALERT [OT-TOOLS-SYNC -> COORD] runtime sync FAILED, rt/current stays 9dbd155d25de: RuntimeError: git fetch -q origin +refs/heads/main:refs/remotes/origin/main: error: fetching ref refs/remotes/origin/main failed: incorrect old value provided
+- 2026-11-19 20:59 PST STATE tools sync recovered after 4 min (rt/current ff87d7bf9afd)
