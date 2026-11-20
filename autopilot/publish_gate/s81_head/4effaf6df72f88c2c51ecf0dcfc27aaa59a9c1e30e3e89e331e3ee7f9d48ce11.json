@@ -1,0 +1,114 @@
+{
+ "advisory": [
+  "contained",
+  "foreign_tree"
+ ],
+ "checks": {
+  "bound_params": {
+   "advisory": true,
+   "findings": [],
+   "n": 0,
+   "verdict": "PASS"
+  },
+  "contained": {
+   "findings": [
+    "CONTAINED plan names /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0/physical/die_plan/s81_head/prep/NF6/assets/sink_bins_ev_hd_tile.json, a file outside the tree",
+    "CONTAINED plan names /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0/physical/die_plan/s81_head/prep/NF6/assets/sink_bins_1.json, a file outside the tree",
+    "CONTAINED plan names /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0/physical/die_plan/s81_head/prep/NF6/assets/sink_bins_2.json, a file outside the tree",
+    "CONTAINED plan names /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0/physical/die_plan/s81_head/prep/native_domains/head_serdes_primary_3place_1113.json, a file outside the tree",
+    "CONTAINED plan names /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0/physical/die_plan/s81_head/prep/NF6/assets/sink_bins_3.json, a file outside the tree",
+    "CONTAINED plan names /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0/physical/die_plan/s81_head/prep/NF6/assets/sink_bins_ev_hd_mesh.json, a file outside the tree",
+    "CONTAINED plan names /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0/physical/die_plan/s81_head/prep/NF6/assets/sink_bins_4.json, a file outside the tree",
+    "CONTAINED plan names /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0/physical/die_plan/s81_head/prep/NF6/assets/sink_bins_5.json, a file outside the tree",
+    "CONTAINED plan names /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0/physical/die_plan/s81_head/prep/NF6/assets/sink_bins_6.json, a file outside the tree",
+    "CONTAINED plan names /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0/physical/die_plan/s81_head/prep/NF6/assets/sink_bins_7.json, a file outside the tree",
+    "CONTAINED plan names /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0/physical/die_plan/s81_head/prep/NF6/assets/sink_bins_8.json, a file outside the tree",
+    "CONTAINED plan names /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0/physical/die_plan/s81_head/prep/NF6/assets/sink_bins_9.json, a file outside the tree",
+    "CONTAINED plan names /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0/physical/die_plan/s81_head/prep/eco99_south_g2/i1/views/ot_s81hd_he_epc_tt.lib, a file outside the tree"
+   ],
+   "verdict": "FAIL"
+  },
+  "dry_gen": {
+   "dir": "/home/ubuntu/.local/state/publish-gate/s81_head/4effaf6df72f/hd_lep0N",
+   "gen_host": "epyc9",
+   "item": "hd_lep0N",
+   "kind": "type",
+   "origin": "/home/ubuntu/.local/state/publish-gate/s81_head/4effaf6df72f/hd_lep0N/published_gen_origin.json",
+   "origin_sha256": "09ea867326ad1886a9237b37b3b06e99882b62ed6aefa08ebb5c31eeb000dbbb",
+   "preflight_fail_advisory": null,
+   "proof_kind": "published-gen",
+   "rc": 0,
+   "result": "DRY-PASS",
+   "result_sha256": "322f5a252a2bee4cd6e7dee4ef39271bf33e653ff770c102160967cb4c2271eb",
+   "spec_sha256": "649637296513e81a19e3c45e4bbcf1199835a623bfe8df283c11d671a95a2060",
+   "spec_src": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r10_s0",
+   "stage": "preflight",
+   "unit_log_sha256": "ff3a42a75bc07b973d718a1db7dddd8a3939d8449ad4be6e98870d3ebbca7f8a",
+   "verdict": "PASS"
+  },
+  "foreign_tree": {
+   "advisory": true,
+   "findings": [
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r10_s0/physical/die_plan/s81_head/prep/NF15f/prep/source_plan.json names /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0/physical/die_plan/s81_head/prep/NF6/assets/sink_bins_1.json (published tree /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0, not the candidate tree /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r10_s0)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r10_s0/physical/die_plan/s81_head/prep/NF15f/prep/source_plan.json names /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0/physical/die_plan/s81_head/prep/NF6/assets/sink_bins_2.json (published tree /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0, not the candidate tree /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r10_s0)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r10_s0/physical/die_plan/s81_head/prep/NF15f/prep/source_plan.json names /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0/physical/die_plan/s81_head/prep/NF6/assets/sink_bins_3.json (published tree /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0, not the candidate tree /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r10_s0)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r10_s0/physical/die_plan/s81_head/prep/NF15f/prep/source_plan.json names /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0/physical/die_plan/s81_head/prep/NF6/assets/sink_bins_4.json (published tree /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0, not the candidate tree /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r10_s0)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r10_s0/physical/die_plan/s81_head/prep/NF15f/prep/source_plan.json names /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0/physical/die_plan/s81_head/prep/NF6/assets/sink_bins_5.json (published tree /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0, not the candidate tree /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r10_s0)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r10_s0/physical/die_plan/s81_head/prep/NF15f/prep/source_plan.json names /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0/physical/die_plan/s81_head/prep/NF6/assets/sink_bins_6.json (published tree /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0, not the candidate tree /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r10_s0)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r10_s0/physical/die_plan/s81_head/prep/NF15f/prep/source_plan.json names /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0/physical/die_plan/s81_head/prep/NF6/assets/sink_bins_7.json (published tree /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0, not the candidate tree /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r10_s0)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r10_s0/physical/die_plan/s81_head/prep/NF15f/prep/source_plan.json names /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0/physical/die_plan/s81_head/prep/NF6/assets/sink_bins_8.json (published tree /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0, not the candidate tree /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r10_s0)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r10_s0/physical/die_plan/s81_head/prep/NF15f/prep/source_plan.json names /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0/physical/die_plan/s81_head/prep/NF6/assets/sink_bins_9.json (published tree /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0, not the candidate tree /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r10_s0)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r10_s0/physical/die_plan/s81_head/prep/NF15f/prep/source_plan.json names /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0/physical/die_plan/s81_head/prep/NF6/assets/sink_bins_ev_hd_mesh.json (published tree /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0, not the candidate tree /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r10_s0)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r10_s0/physical/die_plan/s81_head/prep/NF15f/prep/source_plan.json names /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0/physical/die_plan/s81_head/prep/NF6/assets/sink_bins_ev_hd_tile.json (published tree /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0, not the candidate tree /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r10_s0)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r10_s0/physical/die_plan/s81_head/prep/NF15f/prep/source_plan.json names /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0/physical/die_plan/s81_head/prep/eco99_south_g2/i1/views/ot_s81hd_he_epc_tt.lib (published tree /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0, not the candidate tree /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r10_s0)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r10_s0/physical/die_plan/s81_head/prep/NF15f/prep/source_plan.json names /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0/physical/die_plan/s81_head/prep/native_domains/head_serdes_primary_3place_1113.json (published tree /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0, not the candidate tree /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r10_s0)"
+   ],
+   "n": 13,
+   "verdict": "ADVISORY"
+  },
+  "hashes": {
+   "findings": [],
+   "verdict": "PASS",
+   "views": 31
+  },
+  "pre_g0": {
+   "baseline": {
+    "inherited": false,
+    "verdict": "PASS"
+   },
+   "g0_rc": 0,
+   "g0_report": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave/pubgate/g0-4u8686hy/g0_report.json",
+   "pre_rc": 0,
+   "tail": "PRE: PLAN-GATE-PRE PASS tree=/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r10_s0 plan=/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r10_s0/physical/die_plan/s81_head/prep/NF15f/prep/source_plan.json findings=0\n\nG0: IMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t8 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t10 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t12 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t13 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t14 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t20 load=5940/1000, radius=329.356/200.0, empty=False (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t21 load=1817/1000, radius=487.614/200.0, empty=False (info, LIMIT-BIND-1: not blocking)\n",
+   "verdict": "PASS"
+  },
+  "schema": {
+   "rc": 0,
+   "tail": "BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t3 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t4 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t5 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t6 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t7 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t8 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t10 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t12 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t13 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t14 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t20 load=5940/1000, radius=329.356/200.0, empty=False (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t21 load=1817/1000, radius=487.614/200.0, empty=False (info, LIMIT-BIND-1: not blocking)\n",
+   "verdict": "PASS"
+  }
+ },
+ "die": "s81_head",
+ "foreign_tree_scan": {
+  "asbuilts": [],
+  "bind_out": null,
+  "files": [
+   "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r10_s0/physical/die_plan/s81_head/prep/NF15f/prep/source_sidecar.json"
+  ]
+ },
+ "gate_s": 786.1,
+ "hosts": [
+  "epyc9",
+  "epyc10"
+ ],
+ "item": "hd_lep0N",
+ "manifest_hash": "4effaf6df72f88c2c51ecf0dcfc27aaa59a9c1e30e3e89e331e3ee7f9d48ce11",
+ "plan": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r10_s0/physical/die_plan/s81_head/prep/NF15f/prep/source_plan.json",
+ "plan_sha256": "4d0bff88f4c6f84802926e2fc17779c5731f1b3cea12e1a7c7c2076f9c6ce74f",
+ "rows_proofs": [],
+ "schema": "opentallas.publish_gate.v1",
+ "static_s": 84.7,
+ "t": 1795150489.2339885,
+ "tree": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r10_s0",
+ "verdict": "FAIL"
+}
