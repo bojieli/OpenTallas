@@ -3658,14 +3658,7 @@ class Binder:
         except ValueError as exc:
             raise BindError(str(exc)) from exc
         if monitor_use:
-            man = json.loads(json.dumps(man))
-            for tn, ty in self.types.items():
-                lc = ty.get("clock", {}).get("landing_contract", {})
-                for pin in LTC.seam_use_ports(lc.get("tieable_children")).values():
-                    man["types"].setdefault(tn, {})[pin] = dict(width=1, kind="landing_monitor_use")
-            for part, pins in monitor_use.items():
-                for pin, (width, value) in pins.items():
-                    man["instances"].setdefault(part, {})[pin] = dict(width=width, value=value, kind="landing_monitor_use")
+            man = LTC.with_use_manifest(man, self.types, monitor_use)
         if any(man["types"].values()):
             (out.parent / "bind_parent_id_straps.json").write_text(json.dumps(man, indent=1) + "\n")
         # tie-off audit (OWNER 10-25 option B): a literal on a partition pin is legal ONLY on a declared ID strap;
