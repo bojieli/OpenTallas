@@ -1,0 +1,82 @@
+{
+ "tool": "setup_to_stage",
+ "rule": "R11",
+ "die": "kv",
+ "type": "kv3_io_ft_v1",
+ "kit": "/srv/opentallas-scratch/claude/genbug-impl/qktt/kvsys_kv3_io_ft_v1/kit",
+ "plan": "",
+ "paths_file": "/srv/opentallas-scratch2/claude/cbc-all-0200/sts/kv/kv3_io_ft_v1/sts_paths.json",
+ "failing_paths": 222,
+ "rows": [
+  {
+   "rule": "R11",
+   "type": "kv3_io_ft_v1",
+   "paths": 137,
+   "worst_slack_ps": -62.7,
+   "worst_start": "ft2_i[90]",
+   "worst_end": "u_bound.u_cland_ft2_i/u_ring.dch[1].sd_c[154]$_DFFE_NP_/D",
+   "max_straight_um": 202.7,
+   "hop_cap_um": 200.0,
+   "half_cycle": true,
+   "kind": "internal_stations_add",
+   "conn": "bus:ft2_i",
+   "add_regs": 1,
+   "cycles": 1,
+   "sites_um": [
+    [
+     26.363,
+     563.698
+    ]
+   ],
+   "existing_entries": 0,
+   "note": "+1 station register(s) on bus:ft2_i (+1 cycle on its lanes, LATCHECK reprices)"
+  },
+  {
+   "rule": "R11",
+   "type": "kv3_io_ft_v1",
+   "paths": 83,
+   "worst_slack_ps": -40.1,
+   "worst_start": "ft0_i[30]",
+   "worst_end": "u_bound.u_cland_ft0_i/u_ring.dch[0].sd_c[222]$_DFFE_NP_/D",
+   "max_straight_um": 222.5,
+   "hop_cap_um": 200.0,
+   "half_cycle": true,
+   "kind": "internal_stations_add",
+   "conn": "bus:ft0_i",
+   "add_regs": 1,
+   "cycles": 1,
+   "sites_um": [
+    [
+     1244.128,
+     116.639
+    ]
+   ],
+   "existing_entries": 0,
+   "note": "+1 station register(s) on bus:ft0_i (+1 cycle on its lanes, LATCHECK reprices)"
+  },
+  {
+   "rule": "R11",
+   "type": "kv3_io_ft_v1",
+   "paths": 2,
+   "worst_slack_ps": -21.1,
+   "worst_start": "u_bound.u_cland_reader_start_ft3_i_3/q$_SDFF_PN0_/QN",
+   "worst_end": "u_bound.u_cland_ft3_i/u_ring.dch[0].u_dsel/di[3]$_DFFE_PP_/D",
+   "max_straight_um": 286.1,
+   "hop_cap_um": 300.0,
+   "half_cycle": false,
+   "kind": "internal_stations_add",
+   "conn": "bus:reader_start_ft3_i",
+   "add_regs": 1,
+   "cycles": 1,
+   "sites_um": [
+    [
+     22.976,
+     729.675
+    ]
+   ],
+   "existing_entries": 0,
+   "note": "+1 station register(s) on bus:reader_start_ft3_i (+1 cycle on its lanes, LATCHECK reprices)"
+  }
+ ],
+ "rtl_requests": []
+}
