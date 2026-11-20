@@ -278,3 +278,14 @@ class ResumeInputsStayWhole(unittest.TestCase):
     def test_prd_mk_treats_an_empty_4_1_cts_as_absent(self):
         t = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "post_route_drv", "prd_mk.sh")).read()
         self.assertIn('if [ ! -s "$RS/4_1_cts.odb" ]; then', t)
+
+
+def test_floorplan_repair_is_skipped_on_a_huge_netlist_by_remove_abc_buffers():
+    """FLOW-FIX-2045 (LONG-RUN-0315: S81 svc_lo_dsdv_svc_rs__t7, 4,992,695 instances, floorplan-stage repair_timing ran 21,913 s at wire-load estimate): above OT_FLOORPLAN_REPAIR_MAX_INST (1.5 M) run_kit makes the floorplan
+    step use the ORFS REMOVE_ABC_BUFFERS branch (remove_buffers only), logs a classified line; OT_FLOORPLAN_REPAIR=on keeps the repair"""
+    import gen_phys
+    t = gen_phys.RUN_KIT
+    i = t.index("OT_FLOORPLAN_REPAIR SKIPPED class=SIZE")
+    blk = t[i - 900:i + 200]
+    assert "OT_FLOORPLAN_REPAIR_MAX_INST:-1500000" in blk and 'REMOVE_ABC_BUFFERS=1' in blk and "grep -cE" in blk
+    assert t.index("OT_FLOORPLAN_REPAIR SKIPPED") < t.index("check-synth") and t.index("OT_FLOORPLAN_REPAIR SKIPPED") < t.index("SKIP_CTS_REPAIR_TIMING=1")
