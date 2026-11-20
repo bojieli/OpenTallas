@@ -175,3 +175,32 @@ def test_dly_spread_budget_key_installs_the_hook():
     assert m({"r_dly_spread": ["dsdv_slice_c1x_C"]}, "cbf_q01") is None
     assert m({"r_dly_spread": []}, "cbf_q01") is None and m({}, "cbf_q01") is None and m({"r_dly_spread": False}, "x") is None
     assert "export OT_DLY_SPREAD = warn" in (HERE / "gen_phys.py").read_text()
+
+
+def test_dly_spread_station_form_groups_stages():
+    """XTAP-A (FABLE-FIX-KV-PV 11-20): OT_DLY_SPREAD_STATION_UM groups the stages of a run on ceil(L/S)-1 stations, so
+    back-to-back stages sit together (one clock tap) and only the station hops (<= S of route) carry wire."""
+    if not shutil.which("docker"):
+        pytest.skip("no docker")
+    with tempfile.TemporaryDirectory() as d:
+        out = _run(TCL.replace("set ::env(OT_DLY_SPREAD) warn", "set ::env(OT_DLY_SPREAD) warn\nset ::env(OT_DLY_SPREAD_STATION_UM) 800"), d)
+        pos = {m.group(1): (float(m.group(2)), float(m.group(3))) for m in re.finditer(r"POS (\S+) ([0-9.]+) ([0-9.]+)", out)}
+        # A: route 2400 um, S 800 -> 2 stations at 900 and 1700; 9 stages -> r[0..4] on the first, r[5..7] + q on the second
+        xs = [pos[f"u_bound.u_d10_6_Y.g_reg.r[{k}]$_DFF_P_"][0] for k in range(8)] + [pos["u_bound.u_d10_6_Y.q$_DFF_P_"][0]]
+        assert all(abs(x - 900) <= 30 for x in xs[:5]) and all(abs(x - 1700) <= 30 for x in xs[5:]), xs
+        a = re.search(r"AFTER_A (\S+)", out)
+        assert a and float(a.group(1)) <= 830, out[-2000:]
+        # B: FIRM r[2] stays an anchor; C untouched; no ratio failure (the ideal hop is the station hop)
+        assert pos["u_bound.u_d3_x.g_reg.r[2]$_DFF_P_"] == (1000.0, 100.0)
+        assert {pos[k][0] for k in pos if k.startswith("u_bound.u_d4_short")} == {250.0}
+        assert "fail 0" in out, out[-2000:]
+
+
+def test_dly_spread_station_key():
+    import gen_phys
+    import schema
+    m = gen_phys.dly_spread_station_um
+    assert m({}, "kv3_pv_v8") is None and m({"r_dly_spread_station_um": {"kv3_pv": 405}}, "kv3_hub_C") is None
+    assert m({"r_dly_spread_station_um": {"kv3_pv": 405, "kv3_pv_v8": 300}}, "kv3_pv_v8__x") == 300.0
+    assert "OT_DLY_SPREAD_STATION_UM" in (HERE / "gen_phys.py").read_text()
+    assert schema.SCHEMA["properties"]["budgets"]["properties"]["r_dly_spread_station_um"]["type"] == "object"

@@ -6,6 +6,12 @@
 # Runs after GPL, before DPL (face_flops_release.tcl, after chain_even.tcl).  No netlist change.
 #   ::ot_dly_min_hop_um  (405)  a chain whose hops are all within this is left alone
 #   ::ot_dly_fail_ratio  (1.5)  after the move, worst hop > ratio * ideal hop (span / (n+1)) -> OT_DLY_SPREAD FAIL
+#   OT_DLY_SPREAD_STATION_UM  (unset = off, byte-identical)  STATION form (FABLE-FIX-KV-PV XTAP-A 11-20): the stages of a run go
+#                        to ceil(L / S) - 1 stations (at least 1) at equal route fractions instead of one site per stage; stages
+#                        of one station sit together, so back-to-back stages share a clock tap and only the station-to-station hops
+#                        (each <= S um of route, carrying real wire) can cross a tap.  kv3_pv_v8 v8b: 42,662 of 47,549 FF hold
+#                        cross-tap ends were stage k -> k+1 of 100+ stage pad trunks spread at span/(n+1) ~ 10 um per hop.
+#                        A run with no more stages than stations keeps the equal spread.
 #   OT_DLY_SPREAD_RE     discovery regexp (default: any <inst>.g_reg.r[k][b] / <inst>.r[k][b] / <inst>.q[b])
 # Flops that are FIRM/LOCKED or sited by the plan (ot_face_flops.txt) are anchors, never moved; a run of movable stages between
 # two anchors is spread between them.
@@ -18,6 +24,7 @@ set ds_core [$ds_blk getCoreArea]
 set ds_halo [expr {round(9.0 * $ds_dbu)}]
 set ds_minum [expr {[info exists ::ot_dly_min_hop_um] ? $::ot_dly_min_hop_um : 405.0}]
 set ds_min [expr {round($ds_minum * $ds_dbu)}]
+set ds_st [expr {[info exists ::env(OT_DLY_SPREAD_STATION_UM)] && [string is double -strict $::env(OT_DLY_SPREAD_STATION_UM)] && $::env(OT_DLY_SPREAD_STATION_UM) > 0 ? round($::env(OT_DLY_SPREAD_STATION_UM) * $ds_dbu) : 0}]
 set ds_ratio [expr {[info exists ::ot_dly_fail_ratio] ? $::ot_dly_fail_ratio : 1.5}]
 set ds_re [expr {[info exists ::env(OT_DLY_SPREAD_RE)] ? $::env(OT_DLY_SPREAD_RE) : {^(.*?)[./](?:g_reg[./])?(?:r\[[0-9]+\](?:\[[0-9]+\])?|q(?:\[[0-9]+\])?)(?:\$.*|_reg)?$}}]
 set ds_mac {}
@@ -181,7 +188,7 @@ proc ds_atpl {pts f} {
 }
 # the whole pass is one proc: a kit hook shares the global namespace of face_flops_release.tcl, so its loop variables stay local
 proc ds_main {} {
-global ds_blk ds_dbu ds_core ds_min ds_ratio ds_re ds_mac ds_sited
+global ds_blk ds_dbu ds_core ds_min ds_ratio ds_re ds_mac ds_sited ds_st
 # candidates by name (discovery only)
 set ds_cand {}
 foreach i [$ds_blk getInsts] {
@@ -242,14 +249,21 @@ dict for {nm head} $ds_cand {
     for {set k 1} {$k <= $n} {incr k} { if {![ds_movable [lindex $seq [expr {$k-1}]]]} { lappend anch $k } }
     lappend anch [expr {$n+1}]
     # one route per run (anchor -> anchor), around the hard cores; stage k of a run at (k-k0)/(k1-k0) of its length
-    set runs {}; set hoprun {}; set rlen 0
+    set runs {}; set hoprun {}; set rlen 0; set fr [dict create]; set nhop 0
     for {set a 0} {$a < [llength $anch]-1} {incr a} {
       set k0 [lindex $anch $a]; set k1 [lindex $anch [expr {$a+1}]]
       set rt [ds_route [lindex $P $k0] [lindex $P $k1]]
       lappend runs [list $k0 $k1 $rt]; set rlen [expr {$rlen + [ds_plen $rt]}]
       for {set j $k0} {$j < $k1} {incr j} { dict set hoprun $j $a }
+      # route fraction of every point of the run: equal hops, or (STATION form) ns stations with the stages grouped on them
+      set nr [expr {$k1 - $k0 - 1}]; set ns $nr
+      if {$ds_st > 0} { set ns [expr {max(1, int(ceil([ds_plen $rt] / double($ds_st))) - 1)}]; if {$ns >= $nr} { set ns $nr } }
+      dict set fr $k0 0.0; dict set fr $k1 1.0; incr nhop [expr {$ns + 1}]
       for {set k [expr {$k0+1}]} {$k < $k1} {incr k} {
-        lassign [ds_atpl $rt [expr {double($k-$k0)/($k1-$k0)}]] x y
+        if {$ns == $nr} { dict set fr $k [expr {double($k-$k0)/($k1-$k0)}] } else { dict set fr $k [expr {double(int(($k-$k0-1) * $ns / $nr) + 1) / ($ns + 1)}] }
+      }
+      for {set k [expr {$k0+1}]} {$k < $k1} {incr k} {
+        lassign [ds_atpl $rt [dict get $fr $k]] x y
         ds_put [lindex $seq [expr {$k-1}]] $x $y; incr ds_nmv
         lset P $k [ds_ctr [[lindex $seq [expr {$k-1}]] getBBox]]
       }
@@ -264,7 +278,8 @@ dict for {nm head} $ds_cand {
         lassign $b d bi
         if {![ds_movable $bi]} continue
         if {$j == 0} { set f [expr {1.0 - double($d+1)/($md+2)}] } else { set f [expr {double($d+1)/($md+2)}] }
-        lassign [ds_atpl $rt [expr {($j - $k0 + $f) / ($k1 - $k0)}]] x y
+        set f0 [dict get $fr $j]; set f1 [dict get $fr [expr {$j+1}]]
+        lassign [ds_atpl $rt [expr {$f0 + $f * ($f1 - $f0)}]] x y
         ds_put $bi $x $y
       }
     }
@@ -272,7 +287,7 @@ dict for {nm head} $ds_cand {
   }
   set ds_ha [expr {max($ds_ha, $wa)}]; if {$wa > $ds_min} { incr ds_oa }
   if {[info exists ::env(OT_DLY_SPREAD_DEBUG)] && [string match $::env(OT_DLY_SPREAD_DEBUG) $nm]} { puts "OT_DLY_SPREAD DEBUG [ds_clean $nm] stages $n loads [llength $tl] hops [format %.0f [expr {$wb/double($ds_dbu)}]] -> [format %.0f [expr {$wa/double($ds_dbu)}]] um" }
-  set ideal [expr {(($wb <= $ds_min) ? [ds_md $src $T] : $rlen) / double($n + 1)}]   ;# route length: a detour around a core is not a defect
+  set ideal [expr {(($wb <= $ds_min) ? [ds_md $src $T] : $rlen) / double(($wb > $ds_min && $ds_st > 0) ? $nhop : $n + 1)}]   ;# route length: a detour around a core is not a defect
   if {$ideal > 0} {
     set r [expr {$wa / $ideal}]
     if {$r > $ds_wr} { set ds_wr $r }

@@ -1742,6 +1742,7 @@ SCHEMA["properties"]["budgets"]["properties"]["r_dly_spread"] = {"anyOf": [{"typ
 # form of the KV hst g/t1/t2 pipeline siting keys (0 cycles, kit-side).  Absent = byte-identical kits.
 _B = SCHEMA["properties"]["budgets"]["properties"]
 _B["relay_mid_re"] = {"type": "string", "minLength": 1}
+_B["r_dly_spread_station_um"] = {"type": "object", "additionalProperties": {"type": "number", "exclusiveMinimum": 0}}   # XTAP-A 11-20 (gen_phys dly_spread_station_um)
 _B["relay_mid_re_types"] = {"type": "object", "additionalProperties": {"type": "string", "minLength": 1}}
 _B["relay_mid_tail"] = {"type": "boolean"}
 _B["relay_mid_tail_types"] = {"type": "array", "uniqueItems": True, "items": {"type": "string", "minLength": 1}}

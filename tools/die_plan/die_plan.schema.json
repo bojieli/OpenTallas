@@ -8846,6 +8846,13 @@
      "type": "string",
      "minLength": 1
     },
+    "r_dly_spread_station_um": {
+     "type": "object",
+     "additionalProperties": {
+      "type": "number",
+      "exclusiveMinimum": 0
+     }
+    },
     "relay_mid_re_types": {
      "type": "object",
      "additionalProperties": {

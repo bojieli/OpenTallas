@@ -751,6 +751,15 @@ def dly_spread_mode(budgets, tn):
     if isinstance(v, list) and tn and any(b and str(tn).startswith(b) for b in v):
         return "warn"
     return None
+
+
+def dly_spread_station_um(budgets, tn):
+    """budgets.r_dly_spread_station_um {type base: um} (XTAP-A, FABLE-FIX-KV-PV 11-20): dly_spread STATION form for the types whose
+    name starts with a listed base (longest base wins): stages grouped on ceil(L/S)-1 stations so back-to-back stages share a clock
+    tap (kv3_pv_v8 v8b: 42,662 of 47,549 FF hold cross-tap ends were stage k -> k+1 of spread pad trunks).  Absent = off."""
+    v = budgets.get("r_dly_spread_station_um") or {}
+    hit = [b for b in v if b and tn and str(tn).startswith(b)]
+    return float(v[max(hit, key=len)]) if hit else None
 # R-REACH-5 (RULEBOOK 11-13, RULES-REACH-1): the generated zero-logic register chains every kit has -- landing bin ->
 # lane pad stages (u_lpad_<bus> r[k] / q, u_pd<n>_<bus>) -> their consumer -- get equal hops after GPL when a hop is over
 # the reach.  Evidence: S81 leaf t21 u_bin_leafdn_i0 -> u_lpad q 587 um (104 captures), KV hub_Eo u_lpad r -> q 824 um,
@@ -7391,6 +7400,10 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
             # list form: the listed types keep the stage-shortfall chains they have (plan item) as a log line, not a stop
             mk = (kd / "config.mk").read_text()
             (kd / "config.mk").write_text(mk.rstrip("\n") + "\nexport OT_DLY_SPREAD = warn\n")
+        st_um = dly_spread_station_um(P.budgets, tn)
+        if st_um:
+            mk = (kd / "config.mk").read_text()
+            (kd / "config.mk").write_text(mk.rstrip("\n") + f"\nexport OT_DLY_SPREAD_STATION_UM = {st_um:g}\n")
     if core_input_place(P.raw, tn):
         for f_ in ("core_input_anchor.tcl", "core_input_chain.tcl", "place_wire_ratio.tcl"):
             shutil.copyfile(Path(__file__).with_name(f_), kd / f_)
