@@ -36,7 +36,9 @@ def _frame():
     ff = lambda d, q: dict(type='$dff', port_directions=dict(D='input', Q='output', CLK='input'), connections=dict(D=[d], Q=[q], CLK=[9]))
     bb = lambda typ, ins, outs: dict(type=typ, port_directions={**{k: 'input' for k in ins}, **{k: 'output' for k in outs}},
                                      connections={**ins, **outs})
-    cells = {'u_r0.u_cf': bb('dsfd_cfifo_crs4', dict(ri=[8]), dict(xa=[2, 3])),
+    scope = dict(type='$scopeinfo', port_directions={}, connections={})
+    cells = {'u_r0.u_y_a': scope, 'u_r0.u_t0__payload': scope,
+             'u_r0.u_cf': bb('dsfd_cfifo_crs4', dict(ri=[8]), dict(xa=[2, 3])),
              'u_r0.u_y_a.r': ff(2, 4), 'u_r0.u_t0__payload.r': ff(3, 5), 'u_r0.u_o.r': ff(3, 6),
              'u_r0.u_n3': bb('dsfd_node_NNfu', dict(a=[4], b=[5]), dict(o=[10])),
              'u_r0.u_n4': bb('dsfd_node_NNfu', dict(a=[6]), dict(o=[11]))}
@@ -63,5 +65,7 @@ def test_schedule_relay_depth_rows_as_stages():
     import pytest
     with pytest.raises(ValueError, match='differ between its types'):
         F.relay_depth_extra(rows[:2] + [('col_h9_r0__tb', dict(inst='u_y_a', port='o', D=1))], 'col_h9')
+    with pytest.raises(ValueError, match='relay row on the end point'):
+        F.measure(_frame(), 'top', None, F.relay_depth_extra([('col_h9_r0__ta', dict(inst='u_n3', port='o', D=1))], 'col_h9'))
     with pytest.raises(ValueError, match='no such instance'):
         F.measure(_frame(), 'top', None, F.relay_depth_extra([('col_h9_r0__ta', dict(inst='u_nope', port='o', D=1))], 'col_h9'))
