@@ -17,7 +17,7 @@ def test_order_and_flags():
 
 
 def test_runs_all_steps_with_stub_tools(tmp_path):
-    t = tmp_path / "die_plan"; (tmp_path / "s81_head").mkdir(); t.mkdir()
+    tmp_path.mkdir(parents=True, exist_ok=True); t = tmp_path / "die_plan"; (tmp_path / "s81_head").mkdir(); t.mkdir()
     calls = tmp_path / "calls.txt"
     for n, d in (("landed_phase_ocv.py", tmp_path / "s81_head"), ("count_align_plan.py", t), ("count_align_bind.py", t), ("die_sta_related.py", t)):
         (d / n).write_text(f"import sys\nopen({str(calls)!r},'a').write('{n} '+' '.join(sys.argv[1:])+'\\n')\n")
@@ -68,3 +68,28 @@ def test_write_edge_snippet_reads_fall_plan(tmp_path):
 
 def test_write_edge_snippet_rise_plan(tmp_path):
     assert _wf(tmp_path, '{"clock": {}}') == "[]"
+
+
+def _fall_plan_args(tmp_path, plan_args, fall=True):
+    tmp_path.mkdir(parents=True, exist_ok=True); t = tmp_path / "die_plan"; (tmp_path / "s81_head").mkdir(); t.mkdir()
+    calls = tmp_path / "calls.txt"
+    for n, d in (("landed_phase_ocv.py", tmp_path / "s81_head"), ("count_align_plan.py", t), ("count_align_bind.py", t), ("die_sta_related.py", t)):
+        (d / n).write_text(f"import sys\nopen({str(calls)!r},'a').write('{n} '+' '.join(sys.argv[1:])+'\\n')\n")
+    (t / "clock_landings.py").write_text("def ring_write_fall(plan, tn=None):\n    return %r\n" % fall)
+    plan = tmp_path / "plan.json"; plan.write_text("{}")
+    env = dict(os.environ, CA_TOOLS=str(t))
+    if plan_args is not None:
+        env["CA_PLAN_ARGS"] = plan_args
+    r = subprocess.run(["bash", str(SH), str(tmp_path / "proof"), str(plan), str(tmp_path / "out")], capture_output=True, text=True, env=env)
+    assert r.returncode == 0, r.stderr
+    return next(g for g in calls.read_text().splitlines() if g.startswith("count_align_plan.py"))
+
+
+def test_fall_chain_plans_at_depth_16_by_default(tmp_path):
+    g = _fall_plan_args(tmp_path, None)
+    assert "--write-fall-plan" in g and "--max-depth 16" in g
+
+
+def test_fall_chain_keeps_an_explicit_depth_and_rise_chain_is_unchanged(tmp_path):
+    assert "--max-depth 8" in _fall_plan_args(tmp_path / "a", "--max-depth 8") and "--max-depth 16" not in _fall_plan_args(tmp_path / "b", "--max-depth 8")
+    assert "--max-depth" not in _fall_plan_args(tmp_path / "c", None, fall=False)

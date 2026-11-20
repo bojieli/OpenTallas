@@ -19,7 +19,10 @@ WF=$(cd "$T" && python3 -I -c "import json,sys; sys.path.insert(0,'.'); import c
 # S81-CLOCK-WINDOW-1119: a fall-write plan is also PLANNED (K/DEPTH for lag L + T/2) and BOUND (verify window +T/2)
 # in that form; without it the plan picks rise-write K and the gate fails the guard (S81 cw6: 136 hi -304 ps).
 WFP=; WFB=; [ -n "$WF" ] && { WFP="--write-fall-plan $PLAN"; WFB="--plan-die $PLAN"; }
-python3 -s "$T/count_align_plan.py" "$OUT/landed_phase_ocv.json" ${CA_PLAN_ARGS:-} $WFP --out "$OUT/count_align_plan.json" > "$OUT/ca_plan.log" 2>&1; r=$?; log "CA_PLAN $r"; [ $r -ne 0 ] && rc=1
+# KV-CROSSING-1119 11-20 (COORD): the fall chain plans at --max-depth 16 unless CA_PLAN_ARGS names a depth: a fall write
+# needs a window the depth-8 ring does not hold on long start-tree paths (KV pcsink: 26 crossings with no K/DEPTH at 8).
+MD=; [ -n "$WF" ] && case " ${CA_PLAN_ARGS:-} " in *" --max-depth "*) ;; *) MD="--max-depth 16";; esac
+python3 -s "$T/count_align_plan.py" "$OUT/landed_phase_ocv.json" ${CA_PLAN_ARGS:-} $WFP $MD --out "$OUT/count_align_plan.json" > "$OUT/ca_plan.log" 2>&1; r=$?; log "CA_PLAN $r"; [ $r -ne 0 ] && rc=1
 python3 -s "$T/count_align_bind.py" "$OUT/count_align_plan.json" ${CA_BIND_ARGS:-} $WFB --out "$OUT/count_align_bind.json" > "$OUT/ca_bind.log" 2>&1; r=$?; log "CA_BIND $r"; [ $r -ne 0 ] && rc=1
 log "CA_WRITE_EDGE ${WF:-rise}"
 # REAL-VIEWS-1119 (COORD 11-19): every signed core view (--core-view) and signed type view (--kit) whose pins match this
