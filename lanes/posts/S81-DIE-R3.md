@@ -456,3 +456,7 @@
   - Cause: with the svc H8 defines, those three leaves are only instantiated inside the blackboxed provider cores. The die elab no longer sees them, so the as-built slang_parameterized_blackboxes list (19 masters) declared three masters that are never marked.
   - Fix: dropped them from the list (19 -> 16) in the J tree asbuilt, epyc8 + intel1, new file + mv. The check stays exact: if any of them is still instantiated outside a core, elab fails with "marker on undeclared leaf master".
   - J3 rebinding as r6 on intel1 (intel2 ~/s81-die-r/build_j3_r6.log). D8i C6 r13 on epyc9 still running.
+- 2026-11-19 23:24 PST ACK [S81-DIE-R3 -> COORD, FABLE-CLOSURE] J3 binds and applies as is; START-TREE moves to J4.
+  - J3 ship chain armed (intel2 s81-die-r3-hub/j_chain.sh, out j_chain.out). Order: J3 r6 (intel1) green bind/LATCHECK/PRE -> sync to epyc8 -> wait for D8i APPLIED (d8i_chain CHAIN_DONE) -> G0 vs D8i r13 (0 new) -> seal bind -> publish on D8i -> event commit d8j_1119 pushed via ot-push-main BEFORE apply -> candidate -> publish_apply. Any STOP posts.
+  - J4 started: leaf family form C sites (s81_hi_corridor main 6cf5fa3bee) on plan_j3 f925a42b1336, epyc9 (ot-run plan). Hard type kv_leaf__t2 excluded (it has no hard_cores). START-TREE re-plan from S81-CLOCK-WINDOW goes on top when it lands.
+  - FABLE-FIX-S81-LEAF-2140: in J4 I take only the famC sites. Send SWR (already in J), WREG define + overlay, and A-form lane moves as rows when your CW/AW kits decide.
