@@ -2764,7 +2764,7 @@ def dedup_enqueued(AP, cfg, st, notices, jobs, hash_fn, max_probes=16):
             rs.sort(key=lambda r: (r.get("item") != own, r.get("q_status") != "RUNNING", float(r.get("started") or 0)))
             keeper = rs[0]
             for r in rs[1:]:
-                j = jobs.get(r.get("q_id")) or {}
+                j = own_job(r, jobs)
                 units = [j.get("unit") or (f"ap-{r['q_id']}-a1" if r.get("q_id") else None)]
                 if not AP.DRY:
                     for u in units:
@@ -11875,7 +11875,7 @@ def reap_ghost_rows(AP, cfg, st, notices, now=None, minutes=GHOST_MIN, jobs=None
             jobs = AP.load_state().get("jobs") or {}
         except Exception:
             jobs = {}
-    units = [r.get("unit") for _, r in cand if r.get("status") != "ENQUEUED"] + [(jobs.get(r.get("q_id")) or {}).get("unit") for _, r in cand if r.get("status") == "ENQUEUED"]
+    units = [r.get("unit") for _, r in cand if r.get("status") != "ENQUEUED"] + [own_job(r, jobs).get("unit") for _, r in cand if r.get("status") == "ENQUEUED"]
     active = unit_active_many(AP, units)
     queue_rows = []
     for k, r in cand:
@@ -11891,7 +11891,7 @@ def reap_ghost_rows(AP, cfg, st, notices, now=None, minutes=GHOST_MIN, jobs=None
             AP.log(f"KIT-WAVE GHOST-ROW {r['die']}/{r['item']}@{r.get('attempt')}: wave unit and job dir gone for {age_m:.0f} min -> {'would reset' if AP.DRY else 'FAIL INFRA'}")
             out[r["die"]] += 1
         else:
-            j = jobs.get(r.get("q_id")) or {}
+            j = own_job(r, jobs)
             if j.get("unit") and active.get(j["unit"], False):
                 continue
             queue_rows.append((k, r, age_m, j))
@@ -14608,6 +14608,19 @@ def _row_live(r, jobs):
     return r.get("status") == "ENQUEUED" and bool(r.get("q_id")) and (jobs.get(r["q_id"]) or {}).get("status") in REAP_LIVE_Q
 
 
+def own_job(r, jobs):
+    """FLEET-OPS-R 18df9b0d8973 (tt_ctlm@2 of an old event and of N46C shared a queue job: stopping the old row killed 4 live jobs): the queue job of THIS row, or {} -- the job's kit path must lie
+    under the row's own attempt dir (the event is in that path), whatever q_id the row carries.  Every stop / reap / ghost path reads its job through here."""
+    j = (jobs or {}).get(r.get("q_id")) or {}
+    if not j:
+        return {}
+    root = attempt_root(r)
+    kit = str(j.get("kit") or j.get("path") or "").partition(":")[2] or str(j.get("kit") or "")
+    if root and kit and not (kit.rstrip("/") == root.rstrip("/") or kit.startswith(root.rstrip("/") + "/")):
+        return {}
+    return j
+
+
 def superseded_live_job(cfg, r, jobs):
     """COORD 11-19 (REAP stopped epyc2/epyc10 dpkit units of s81 col_h9_r1 rows cancelled SUPERSEDED at 02:46, before OLD-PLAN-FINISHES): the queue job of a row that
     was cancelled only for supersede while it was already past synthesis (stops_off, not HBM).  -> the job id or ''"""
@@ -14615,9 +14628,12 @@ def superseded_live_job(cfg, r, jobs):
         return ""
     if not FG.stops_off_die(cfg, r.get("die")) or str(r.get("stage") or "") not in POST_SYNTH_STAGES:
         return ""
-    tag = f"/items/{r.get('item')}/attempt_{r.get('attempt')}/"
-    for jid, j in (jobs or {}).items():
-        if j.get("status") in REAP_LIVE_Q and tag in str(j.get("kit") or "") + "/":
+    root = attempt_root(r).rstrip("/")
+    if not root:
+        return ""
+    for jid, j in (jobs or {}).items():                  # the row's OWN attempt dir (it contains the event): never a job of another event's same item@attempt
+        kit = (str(j.get("kit") or "").partition(":")[2] or str(j.get("kit") or "")).rstrip("/")
+        if j.get("status") in REAP_LIVE_Q and (kit == root or kit.startswith(root + "/")):
             return jid
     return ""
 
@@ -14690,7 +14706,7 @@ def reap_stale_attempts(AP, cfg, st, notices, ap_dir=None):
                 units.append(json.loads((Path(r["dir"]) / "place_service.json").read_text())["unit"])
             except (OSError, ValueError, KeyError, TypeError):
                 pass
-        j = jobs.get(r.get("q_id")) or {}
+        j = own_job(r, jobs)
         if j.get("unit") and j.get("status") in REAP_LIVE_Q:
             units.append(j["unit"])
         kit = (r.get("kit") or "").partition(":")[2]

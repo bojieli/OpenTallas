@@ -111,9 +111,9 @@ def test_so_same_input_never_blocks_a_host_kill_fail():
 
 
 def test_reap_revives_a_supersede_cancelled_row_whose_job_is_live_past_synthesis():
-    kit = "epyc7:/r/items/it/attempt_4/gen/it"
+    kit = "epyc7:/r/E/items/it/attempt_4/gen/it"
     cfg = {"dies": {"s81": {"_stops_off": True}}}
-    row = {"die": "s81", "item": "it", "attempt": "4", "status": "CANCELLED", "class": "SUPERSEDED", "stage": "geom", "reaped": 1, "reason": "x"}
+    row = {"die": "s81", "item": "it", "attempt": "4", "status": "CANCELLED", "class": "SUPERSEDED", "stage": "geom", "reaped": 1, "reason": "x", "kit": kit}
     jobs = {"j1": {"status": "RUNNING", "kit": kit}, "j2": {"status": "DONE-CRASH", "kit": kit}}
     st = {"items": {"k": row, "s": dict(row, item="it", attempt="2", class_="x", **{"class": "STRUCT-STOP"})}}
     import unittest.mock as M
@@ -582,3 +582,19 @@ def test_explicit_retry_key_overrides_skip_same_input():
     cfg = {"dies": {"d": {"retry": ["i@15"]}}}
     assert KW.explicit_retry_pending(cfg, st, "d", "i") is True                 # pre-release of the next attempt
     assert KW.explicit_retry_pending({"dies": {"d": {}}}, st, "d", "i") is False
+
+
+def test_two_events_same_item_and_attempt_never_share_a_queue_job(tmp_path):
+    root_old = "/runs/qwen_compute/kit-wave/qwen_compute/hcut1111/items/tt_ctlm/attempt_2"
+    root_new = "/runs/qwen_compute/kit-wave/qwen_compute/N46C/items/tt_ctlm/attempt_2"
+    live = {"status": "RUNNING", "unit": "ap-live-a1", "kit": "epyc7:" + root_new + "/gen/tt_ctlm"}
+    jobs = {"ad4d52b9ea00": live}
+    mk = lambda root, st_="ENQUEUED": {"die": "qwen_compute", "item": "tt_ctlm", "attempt": "2", "status": st_, "q_id": "ad4d52b9ea00", "kit": "epyc7:" + root + "/gen/tt_ctlm"}
+    old_row, new_row = mk(root_old), mk(root_new)
+    assert KW.own_job(old_row, jobs) == {}                               # the old event's row never sees the live job: no unit to stop
+    assert KW.own_job(new_row, jobs) == live
+    cfg = {"dies": {"qwen_compute": {"_stops_off": True}}, "stops_off": True}
+    old_row.update(status="CANCELLED", **{"class": "SUPERSEDED"}, stage="geom")
+    assert KW.superseded_live_job(cfg, old_row, jobs) == ""              # REAP-REVIVE does not adopt the other event's job
+    new_row.update(status="CANCELLED", **{"class": "SUPERSEDED"}, stage="geom")
+    assert KW.superseded_live_job(cfg, new_row, jobs) == "ad4d52b9ea00"
