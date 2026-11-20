@@ -3004,6 +3004,27 @@ def retire_resign_unstarted(AP, cfg, st):
     return n
 
 
+def plan_type_rows(cfg, die, d, rows, plan_types):
+    """COORD 11-19 (HEAD-CROSSING: variant types hd_ctl_e, hd_spn_eshim_rx, hd_st_n3_turn ... 18 rows never relaunched on a new event, the HEAD builder took types only from the ownership table
+    that lists base names): under stops_off (not hbm) EVERY type of the current plan (partition_types) is a wave row, whether or not OWNERS names it.  Not rows already known (an OWNERS row, or a
+    parent that expands into <parent>__<class> variants), not plan cores, not template members (they share a representative's kit).  The synthesized rows are exempt from the owner's only_items
+    list (_plan_row).  Die option rows_from_plan false opts out.  -> [row]"""
+    if not isinstance(plan_types, dict) or d.get("rows_from_plan") is False or not FG.stops_off_die(cfg, die):
+        return []
+    known = {r["item"] for r in rows if r["die"] == die}
+    cores = set(d.get("plan_core_items") or [])
+    out = []
+    for item in sorted(plan_types):
+        if item in known or item in cores or any(item.startswith(k + "__") for k in known):
+            continue
+        if template_member(d, item):
+            continue
+        out.append(dict(die=die, item=item, kind="type", state="NEEDS-KIT", owner="KIT-WAVE", live_job="none", last_activity="",
+                        next_step="plan type with no OWNERS row (rows_from_plan)", evidence=d.get("plan", ""),
+                        default_owner=d.get("owner_lane", ""), replicas="1", members="", _plan_row=True))
+    return out
+
+
 def select(rows, cfg, die, state, plan_types=None):
     """-> (picked rows in launch order, {reason: [items]})"""
     d = cfg["dies"][die]
@@ -3054,6 +3075,7 @@ def select(rows, cfg, die, state, plan_types=None):
                              owner="KIT-WAVE", live_job="none", last_activity="",
                              next_step="adopted plan core allowlist", evidence=d.get("plan", ""),
                              default_owner=d.get("owner_lane", ""), replicas="1", members=item))
+    rows = list(rows) + plan_type_rows(cfg, die, d, rows, plan_types)                # COORD 11-19 (HEAD-CROSSING): every plan type gets a row
     rows = list(rows) + auto_core_rows(cfg, state, die, d, rows, plan_types)       # WF-1 11-14: WAIT-CHILD cores with no builder
     for r in rows:
         if r["die"] != die:
@@ -3236,9 +3258,9 @@ def select(rows, cfg, die, state, plan_types=None):
     if d.get("only_items") is not None:
         allowed = set(d["only_items"])
         for r in picked:
-            if r["item"] not in allowed and not r.get("_auto_core"):
+            if r["item"] not in allowed and not r.get("_auto_core") and not r.get("_plan_row"):
                 skip.setdefault("outside configured only_items", []).append(r["item"])
-        picked = [r for r in picked if r["item"] in allowed or r.get("_auto_core")]
+        picked = [r for r in picked if r["item"] in allowed or r.get("_auto_core") or r.get("_plan_row")]
 
     def rep(r):
         try:
