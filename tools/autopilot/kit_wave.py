@@ -7450,6 +7450,15 @@ def region_guide_cmd(sp, core):
     without region_guide.py, a missing geom.tsv or a planner error leaves RG empty (kit unchanged, KW_NOTE)."""
     q = shlex.quote
     gd = sp.get("region_guide_geom")
+    if not gd and isinstance(sp.get("plan"), str) and sp["plan"].startswith("/") and sp.get("item"):
+        # QC-PADLEG-1119: plan field partition_types.<item>.placement_guides -> soft GPL guides (spec only when the type has any)
+        out = f"{sp['work']}/region_guide.json"
+        flag = f"--region-guide {out}" if core else f"--region-guide {sp['item']}={out}"
+        return (f"RG=; rm -f {q(out)}; if [ -f tools/die_plan/region_guide.py ] && grep -q placement_guides {q(sp['plan'])} 2>/dev/null; then "
+                f"python3 tools/die_plan/region_guide.py from-plan --plan {q(sp['plan'])} --type {q(sp['item'])} --out {q(out)} "
+                f"|| echo 'KW_NOTE region_guide from-plan failed: kit without plan guides'; "
+                f"if [ -s {q(out)} ]; then RG={q(flag)}; fi; fi; "
+                f"echo \"KW_REGION_GUIDE ${{RG:-none}}\"; "), " $RG"
     if not gd:
         return "RG=; ", ""
     out = f"{sp['work']}/region_guide.json"

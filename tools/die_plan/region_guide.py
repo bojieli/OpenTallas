@@ -327,6 +327,33 @@ def _tsv_quote(s):
     return s
 
 
+def from_plan(plan, type_name, prefix="u_bound."):
+    """QC-PADLEG-1119: SOFT placement guides keyed by the plan field partition_types.<TYPE>.placement_guides
+    ([{inst, bbox_um [x0,y0,x1,y1], kind soft_region}]) -> region_guide spec (None when the type has none).  Each guide
+    becomes one INCLUSIVE dbRegion + dbGroup in the kit's PRE_GLOBAL_PLACE hook holding every core instance whose ODB name
+    matches PREFIX + inst + '.*' (the flattened bound design names cells u_bound.<hier>.<reg>).  Released before DPL.
+    Why: QC stm u_stream (259x380 reuse core) was placed over ~500x680 um (4-5x its outline) and its flops ran 405-598 um."""
+    t = plan["partition_types"][type_name]
+    guides = t.get("placement_guides") or []
+    if not guides:
+        return None
+    w, h = (float(v) for v in t["outline_um"])
+    regions, boxes = [], []
+    for i, g in enumerate(guides):
+        if g.get("kind", "soft_region") != "soft_region":
+            raise SystemExit(f"placement guide {g.get('inst')}: kind {g.get('kind')} unsupported (soft_region only)")
+        b = [float(v) for v in g["bbox_um"]]
+        if not (0 <= b[0] < b[2] <= w and 0 <= b[1] < b[3] <= h):
+            raise SystemExit(f"placement guide {g['inst']}: box {b} outside the {w:g}x{h:g} outline")
+        for o in boxes:
+            if b[0] < o[2] and o[0] < b[2] and b[1] < o[3] and o[1] < b[3]:
+                raise SystemExit(f"placement guide {g['inst']}: overlaps another guide")
+        boxes.append(b)
+        regions.append(dict(name=f"ot_rg_pg_{i}", box_um=[round(v, 4) for v in b], insts=[], inst_glob=[prefix + g["inst"] + ".*"]))
+    return dict(schema=SCHEMA, source=dict(kind="plan_placement_guides", type=type_name), die_um=[0.0, 0.0, w, h],
+                core_um=[0.0, 0.0, w, h], regions=regions, class_d=False)
+
+
 def install(kd, spec, outline=None, src=None):
     """write the kit hook files (region_guide.tcl/.tsv/_release.tcl/.json) and source them at the end of the kit's
     face_flops.tcl (PRE_GLOBAL_PLACE) / face_flops_release.tcl (PRE_DETAIL_PLACE).  -> record dict for freeze/rec.
@@ -358,6 +385,7 @@ def install(kd, spec, outline=None, src=None):
         boxes.append(b)
         lines.append("\t".join(["R", r["name"]] + [f"{v:.4f}" for v in b]))
         lines += ["\t".join(["I", r["name"], _tsv_quote(i)]) for i in r["insts"]]
+        lines += ["\t".join(["G", r["name"], _tsv_quote(g)]) for g in r.get("inst_glob") or []]       # QC-PADLEG-1119 plan guide
     (kd / "region_guide.tsv").write_text("\n".join(lines) + "\n")
     (kd / "region_guide.tcl").write_text(TCL_HOOK.read_text())
     (kd / "region_guide_release.tcl").write_text(TCL_RELEASE.read_text())
@@ -366,7 +394,7 @@ def install(kd, spec, outline=None, src=None):
         with open(kd / f, "a") as fh:
             fh.write(f"# FLOW-23 class D --region-guide (soft GPL guide, released before DPL)\n"
                      f"source [file join [file dirname [info script]] {s}]\n")
-    return dict(regions=len(regs), insts=sum(len(r["insts"]) for r in regs), tile_um=spec.get("tile_um"),
+    return dict(regions=len(regs), insts=sum(len(r["insts"]) for r in regs), globs=sum(len(r.get("inst_glob") or []) for r in regs), tile_um=spec.get("tile_um"),
                 predicted=spec.get("predicted"), src=src)
 
 
@@ -391,7 +419,20 @@ def main(argv=None):
     b = sub.add_parser("measure")
     b.add_argument("--geom-dir", required=True)
     b.add_argument("--spec", required=True)
+    c = sub.add_parser("from-plan")
+    c.add_argument("--plan", required=True)
+    c.add_argument("--type", required=True)
+    c.add_argument("--out", required=True)
+    c.add_argument("--prefix", default="u_bound.")
     a_ = ap.parse_args(argv)
+    if a_.cmd == "from-plan":
+        spec = from_plan(json.loads(Path(a_.plan).read_text()), a_.type, a_.prefix)
+        if spec is None:
+            print(f"REGION_GUIDE none: type {a_.type} has no placement_guides; no spec written")
+            return 0
+        Path(a_.out).write_text(json.dumps(spec, indent=1) + "\n")
+        print(f"REGION_GUIDE {len(spec['regions'])} plan placement guides ({a_.type}) -> {a_.out}")
+        return 0
     gd = Path(a_.geom_dir)
     if a_.cmd == "measure":
         print("REGION_GUIDE_MEASURE " + json.dumps(measure(load_design(gd), json.loads(Path(a_.spec).read_text()))))

@@ -13,7 +13,7 @@ uplevel #0 {
 set rg_blk [ord::get_db_block]
 set rg_u [[ord::get_db_tech] getDbUnitsPerMicron]
 set rg_fh [open [file join $::rg_dir region_guide.tsv] r]
-set rg_boxes [dict create]; set rg_members [dict create]; set rg_order {}
+set rg_boxes [dict create]; set rg_members [dict create]; set rg_order {}; set rg_globs [dict create]
 foreach rg_ln [split [read $rg_fh] "\n"] {
   if {$rg_ln eq ""} continue
   set rg_f [split $rg_ln "\t"]
@@ -21,9 +21,21 @@ foreach rg_ln [split [read $rg_fh] "\n"] {
     dict set rg_boxes [lindex $rg_f 1] [lrange $rg_f 2 5]; lappend rg_order [lindex $rg_f 1]
   } elseif {[lindex $rg_f 0] eq "I"} {
     dict lappend rg_members [lindex $rg_f 1] [lindex $rg_f 2]
+  } elseif {[lindex $rg_f 0] eq "G"} {
+    dict lappend rg_globs [lindex $rg_f 1] [lindex $rg_f 2]
   }
 }
 close $rg_fh
+# QC-PADLEG-1119 plan placement guides: "G name glob" rows = every instance whose ODB name matches the glob joins the region
+# (names are matched as written, backslash escapes included; the glob is a plain prefix + *).
+if {[dict size $rg_globs] > 0} {
+  foreach rg_gi [$rg_blk getInsts] {
+    set rg_gn [$rg_gi getName]
+    dict for {rg_gk rg_gl} $rg_globs {
+      foreach rg_gp $rg_gl { if {[string match $rg_gp $rg_gn]} { dict lappend rg_members $rg_gk $rg_gn; break } }
+    }
+  }
+}
 set rg_n 0; set rg_cells 0; set rg_miss 0; set rg_skip 0
 foreach rg_nm $rg_order {
   lassign [dict get $rg_boxes $rg_nm] zx0 zy0 zx1 zy1
