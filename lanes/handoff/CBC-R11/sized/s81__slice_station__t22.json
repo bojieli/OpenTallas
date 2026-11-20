@@ -1,0 +1,77 @@
+{
+ "tool": "setup_to_stage",
+ "rule": "R11",
+ "die": "s81",
+ "type": "slice_station__t22",
+ "kit": "/srv/opentallas-scratch/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/7073a6b4a59/items/slice_station__t22/attempt_17/gen/slice_station__t22",
+ "plan": "",
+ "paths_file": "/srv/opentallas-scratch2/claude/cbc-all-0200/sts/s81/slice_station__t22/sts_paths.json",
+ "failing_paths": 109,
+ "rows": [
+  {
+   "rule": "R11",
+   "type": "slice_station__t22",
+   "paths": 56,
+   "worst_slack_ps": -49.9,
+   "worst_start": "u_bound.u_cland_ft5_i/u_ring.n3[2]$_DFF_P_/QN",
+   "worst_end": "u_bound.u_cland_ft5_i/u_ring.dch[16].u_dsel/g_srep.sr[1].u_sel/di[0]$_DFFE_PP_/D",
+   "max_straight_um": 247.3,
+   "hop_cap_um": 300.0,
+   "half_cycle": false,
+   "kind": "internal_stations_add",
+   "conn": "bus:ft5_i",
+   "add_regs": 1,
+   "cycles": 1,
+   "sites_um": [
+    [
+     428.597,
+     1192.86
+    ]
+   ],
+   "existing_entries": 0,
+   "note": "+1 station register(s) on bus:ft5_i (+1 cycle on its lanes, LATCHECK reprices)"
+  },
+  {
+   "rule": "R11",
+   "type": "slice_station__t22",
+   "paths": 52,
+   "worst_slack_ps": -46.6,
+   "worst_start": "u_bound.u_cland_ft4_i/on_c[0]$_DFF_P_/QN",
+   "worst_end": "u_bound.u_cland_ft4_i/u_ring.dch[10].u_dsel/g_srep.sr[5].u_sel/di[0]$_DFFE_PP_/D",
+   "max_straight_um": 234.1,
+   "hop_cap_um": 300.0,
+   "half_cycle": false,
+   "kind": "internal_stations_add",
+   "conn": "bus:ft4_i",
+   "add_regs": 1,
+   "cycles": 1,
+   "sites_um": [
+    [
+     146.447,
+     1196.235
+    ]
+   ],
+   "existing_entries": 0,
+   "note": "+1 station register(s) on bus:ft4_i (+1 cycle on its lanes, LATCHECK reprices)"
+  }
+ ],
+ "rtl_requests": [
+  {
+   "rule": "R11",
+   "type": "slice_station__t22",
+   "paths": 1,
+   "worst_slack_ps": -27.5,
+   "worst_start": "u_bound.u_rrl_14/q$_DFF_P_/QN",
+   "worst_end": "u_bound.u_rrl_25/q$_DFF_P_/D",
+   "max_straight_um": 343.6,
+   "hop_cap_um": 300.0,
+   "half_cycle": false,
+   "kind": "rtl_pipeline",
+   "module": "<type top>",
+   "levels": 0,
+   "cell_ps": 575.1,
+   "wire_ps": 75.3,
+   "ask": "split the cone: +1 pipeline register (levels 0, cells 575 ps)"
+  }
+ ]
+}
