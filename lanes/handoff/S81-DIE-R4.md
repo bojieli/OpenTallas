@@ -1,0 +1,45 @@
+# S81-DIE-R4 handoff (2026-11-20 ~10:50 PST)
+
+Successor of S81-DIE-R3 + Codex. Rules: scratchpad rules.txt (hub intel2, ot-run only, no new holds except COORD stop list, 300 um, 833 ps).
+My hub dir: intel2 /srv/opentallas-scratch2/claude/s81-die-r4-hub ; lane clone epyc2 /srv/opentallas-scratch2/claude/s81-die-r4-clone (events cone).
+
+## J5 (14:00 cut) - armed, unattended
+- All-gaps strict (epyc10, plan 8cf9560f) exit 11, exactly 11 EMIT: 8 col_h9_r2 R11 rows in bound-name form (u_u_bs10 -> u_bs10, u_t8, u_t6__payload),
+  iq_C t1 xr c3 rb_v/rb_d source rows on an unconsumed port, serdes t1/t15 local FSTART copy depth 7/9 vs 13/12.
+- Repair strict (Codex-prepared plan 913a7026, script epyc10 .../s81_j5_existing_clock_r4_1120/strict_r4_repair.sh, gate dir rehome_input/gate_r5_repair)
+  running; log intel2 s81-die-r3-hub/j5_r4_repaired_strict.log. Donor watchers (vp_sr, rom, r1_frame, f0_q, svcref, t31) start at bound_ready; they
+  are separate trial trees (go to J6 unless green in time), except svcref which writes into the bound out.
+- j5_chain.sh (PID on hub, log s81-die-r4-hub/j5_chain.out): waits repair green -> waits svcref green -> reach check (every rtl/*.reset_tree.json
+  tree.reach_um <= 300, j5_reach_check.py) -> seal bind _d8j5_..._bind_<stamp> on epyc10 -> compose src_s81_pin_3c913dbdfb23_d8j5_1117_work on epyc8
+  (rsync link-dest D8i) -> replicate bind to 4 hosts -> publish_onbase d8j5 on D8i -> out_install verify 5 hosts -> event commit via
+  mk_event_commit_r4.sh (R4 clone; R3 hwin clone has foreign tracked edits, that broke J3's push) -> mk_cand_d8j5.py writes
+  lanes/handoff/S81_D8J5_source_candidate_1120.json + S81-D8J5-G0-BASELINE-1120.json, coord-commit -> CHAIN_PACKED + post.
+- j5_apply.sh (log j5_apply.out): after CHAIN_PACKED: kit_wave_edit sets /dies/s81/hold_items {col_h9_r1__*, col_h9_r2__*} (COORD stop list: no
+  120-kit col wave before J6 masters route), then publish_apply apply --pilot-item slice_station__t27, posts APPLIED. On any failure both post STOP.
+- Known model-only risk: leaf HI bank rows in J5 raise leaf hot-tile demand 2-4x (spread model); J5 keeps them, GRT proof decides J6.
+
+## J3
+Not applied, superseded by J5 as the plan to apply; kits not cancelled; sealed bind _11200611 + review fence kept; bk_sel/t41 BAD/HOLD -> fixes in J5/J6.
+Original optimistic publisher left parked. cw9b unit oth-ubuntu-3303151-1795193789 stopped per COORD (no cw9a/cw9b forms).
+
+## J6 (11-21 14:00 cut)
+- SDC envelope (per-port worst case over all 60 members per band; r1 W110/min67 45 ports, r2 W116/min68 40 ports; one item_env per band):
+  epyc8 /srv/opentallas-scratch2/claude/s81-die-r4-e8/j6_sdc_env (src/, gen_out/, kit_wave_1120_reuse_env.json, envelope_report.json).
+  Both pairs: pins/outline/sdc PASS, constraint/core_taps_ff/config identical, synth isomorphic, macro_place PASS; only pdn.tcl M8-grant comment hash differs.
+- bin->lpad lockup (subagent): masters r1 col_h9_r1__t1__cl49d7a23e__pv1c15776f, r2 col_h9_r2__t1__cl774acf45__pv11b6518d at epyc8
+  .../s81-die-r4-e8/j6_lockup/env_kits/<T>/gen/<T> (kit_zl_lockup: r1 2 latches 1490 b, r2 1 latch 1168 b, -DOT_ZL_LOCKUP, midpoint FIRM in istations.tcl).
+  Synth queued on epyc8 (admits 0 GB). Open: synth + LEC latch_to_wire, latch->capture leg <=200 um check, then route both masters, then plan rows for J6.
+- svc H8: goes to J6 if its R4 strict (S81-SVC-SPLIT client 2173093, width gate) passes; note t7 R9 max die hop 378 um > 300 to fix first.
+- Slice C bundle-bug types (c1x_C t9/t10, iq_C t1) + svc mem_ar types on D8i: do-not-count rows verified present (7 hosts each), none in credit lists.
+
+## Leaf GRT-TRIAGE lever (for J6)
+- Cause both bands: shared 4-lane station stages placed at one centroid over the 16-lane array; 1,025-bit group buses fan out there (demand, not blockage;
+  place_regions cannot help, flops FIRM). Rows: intel2 s81-die-r4-hub/S81-LEAF-SPREAD-J6.json (GS 0 restage + per-lane station sites, 288 rows/type,
+  modelled peak -25..-68%). Open: t54/t35/t5 320 um first hop (needs vn_b next to vn_a, J7), t33/t46/t66 300.2, t44__clf4 small gain.
+- Proof running (subagent) on epyc9 /srv/opentallas-scratch2/claude/s81-die-r4-leafspread/: tree_SP (spread, whole-die bind then t39 GRT) and tree_Cc
+  (form-C control). Baseline D8i t39 overflow 80,858/58,705/54,150 (it5/10/20), top (1000,400) 29,297.
+
+## col_h9_r0 sweep rows (owned, posted)
+p1 pva2e3974f: src_manifest = D8i drift window (fixed 03:24, not flow); latest failure FLOW @place resize.tcl empty explicit buffer set -> FLOW-NOADV-0915.
+p3 cl31d0dc4b / p6 pv0012ba28: CANCELLED geom SUPERSEDED, last guard ssh TimeoutExpired (infra). Not superseded by J6 (J6 = r1/r2 only).
+All relaunch after the 405 reach override (lever 1) lands for D8i.
