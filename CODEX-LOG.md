@@ -14031,3 +14031,6 @@ Owner approved proceeding with physical representatives and exact instance perso
 
 OWNER?
 Which authenticated ASAP7 base-ROM GDS and array-origin contract should be authoritative for final HEAD and QC VIA1 personalization? Recommend using the base master corresponding to the signed macro LEF and its documented array origin. Exact mask data and pilot overlays are available. ROM work continues on current binds and content in parallel.
+
+OWNER?
+Which executable native CALR37 schedule and authenticated TT f16 return contract should define the Qwen production receiver witness? The exact passive path observes 48 events, and eight cycles contain two simultaneous receivers. Recommend preserving both events with epoch/address identity unless the chosen production calendar proves those collisions unreachable. Existing component, mask, and physical closure work continues.
