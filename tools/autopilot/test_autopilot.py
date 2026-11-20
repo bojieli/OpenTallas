@@ -21,6 +21,72 @@ def _legacy_signoff_profile(monkeypatch):
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 
+def test_publish_copy_failure_requires_sealed_admitted_receipt():
+    import autopilot as ap
+
+    root = "/srv/opentallas-scratch3/claude/ot-jobs/collector-route-done"
+    log = (f"ot-job: SEALED {root}: 3 inputs\n"
+           f"ot-job: PUBLISH FAILED, job dir KEPT {root}: ['return copy: Permission denied']\n"
+           "ot-run: RAN on epyc2 (unit oth-1): exit 98\nAP_RC=98\n")
+    client = ap.parse_client_log(log)
+    assert client["publish_return"]["root"] == root
+    cls, kind, reason = ap.classify({}, client)
+    assert (cls, kind) == ("CRASH", "infra-publish-return")
+    assert "Permission denied" in reason
+    assert kind not in ap.INFRA_KINDS
+    assert "publish_return" not in ap.parse_client_log(log.replace("AP_RC=98", "AP_RC=1"))
+    assert "publish_return" not in ap.parse_client_log(log.replace("SEALED " + root, "SEALED " + root + "-other"))
+
+
+def test_retained_return_accepts_only_matching_completed_negative_evidence(tmp_path):
+    import subprocess
+    from unittest import mock
+    import autopilot as ap
+
+    job_dir = tmp_path / "collector-route"
+    meta = job_dir / ".ot-job"
+    signoff = job_dir / "work" / "signoff"
+    meta.mkdir(parents=True)
+    signoff.mkdir(parents=True)
+    target = "/srv/original/kit"
+    (meta / "job.json").write_text(json.dumps(dict(schema="opentallas.ot_job.v1", J=str(job_dir), host="host", started=101,
+                                                  spec={"return": {"to": target}})))
+    (meta / "result.json").write_text(json.dumps(dict(J=str(job_dir), host="host", ended=201, errors=["return copy: denied"])))
+    proof = signoff / "signoff.json"
+
+    def write_proof(verdict, setup, hold, mtime=150):
+        proof.write_text(json.dumps(dict(verdict=verdict, reasons=["setup_tt: FAIL"], checks={
+            "setup_tt": {"wns_ps": setup, "verdict": "FAIL"}, "hold_ff": {"wns_ps": hold, "verdict": "FAIL"},
+            "drc": {"count": 0, "verdict": "PASS"},
+        })))
+        os.utime(proof, (mtime, mtime))
+
+    def probe(host, script, data):
+        assert host == "epyc2"
+        result = subprocess.run([sys.executable, "-I", "-c", script, json.dumps(data)], capture_output=True, text=True, check=True)
+        return json.loads(result.stdout.split("AP_JSON ", 1)[1])
+
+    client = {"ran_on": "epyc2", "exit": 98, "publish_return": {"root": str(job_dir), "reason": "return copy failed"}}
+    j = {"goal": "route", "die": "s81", "type": "collector", "id": "job", "host": "epyc10", "path": target, "started": 100}
+    write_proof("NOT SIGNED", -468.49, -97.06)
+    retained = ap.retained_publish_negative(j, client, probe=probe)
+    assert retained["signoff"]["tt_wns"] == -468.49
+    with mock.patch.object(ap, "rpy", side_effect=probe), mock.patch.object(ap, "log"), \
+         mock.patch.object(ap, "set_status") as status, mock.patch.object(ap, "after_class"), mock.patch.object(ap, "released_cleanup"):
+        ap.finish({}, j, {}, client)
+    assert j["retained_signoff"] == retained and j["signoff"] is None
+    assert status.call_args.args[2] == "STRUCTURAL"
+    assert ap.retained_publish_negative(dict(j, path="/other/kit"), client, probe=probe) is None
+    write_proof("NOT SIGNED", -468.49, -97.06, mtime=202)
+    assert ap.retained_publish_negative(j, client, probe=probe) is None
+    write_proof("NOT SIGNED", -468.49, None)
+    assert ap.retained_publish_negative(j, client, probe=probe)["failed_gates"] == ["setup_tt"]
+    write_proof("NOT SIGNED", 9.0, -97.06)  # Boundary WNS without a measured internal census supplies no physical failure.
+    assert ap.retained_publish_negative(j, client, probe=probe) is None
+    write_proof("SIGNED", 9.0, 1.0)
+    assert ap.retained_publish_negative(j, client, probe=probe) is None
+
+
 KIT = "epyc2:/srv/opentallas-scratch2/claude/s81/kits/slice_station__t5"
 ROW = ["s81", "slice_station__t5", KIT, "claude/s81-kits@0123456789ab", "PASS", "GEOM-REVIEW 03:33", "24", "120000",
        "S81"]
