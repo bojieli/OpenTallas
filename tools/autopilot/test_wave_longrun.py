@@ -252,6 +252,53 @@ class Orphans(unittest.TestCase):
     def test_scan_script_compiles(self):
         compile(WJ.ORPHAN_SCAN, "ORPHAN_SCAN", "exec")
 
+    def test_remote_scan_preserves_tracked_place_but_stops_unowned_scope(self):
+        epoch = int(time.time()) - 9000
+        unit = f"oth-ubuntu-1234-{epoch}"
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            cgroup = root / "cgroup" / (unit + ".scope")
+            cgroup.mkdir(parents=True)
+            (cgroup / "cgroup.procs").write_text("1234\n")
+            proc = root / "proc" / "1234"
+            proc.mkdir(parents=True)
+            scope_kit = "/srv/kw/kit-wave/s81/D8i/items/dsdv/attempt_2/gen/dsdv"
+            (proc / "cmdline").write_bytes(b"dpkit-place\0" + scope_kit.encode())
+            (proc / "cwd").symlink_to(scope_kit)
+            script = WJ.ORPHAN_SCAN.replace("/sys/fs/cgroup/user.slice", str(cgroup.parent))
+            script = script.replace("/proc/%d/", str(proc.parent) + "/%d/")
+            stop = ["ot-heavy-stop", "--unit", unit]
+            newer = [22, epoch + 3000, "RUNNING", epoch + 3010]
+            st = {"items": {
+                "s81|dsdv|b-old": dict(die="s81", event="D8i", item="dsdv", stage="place",
+                                        attempt=2, started=epoch - 120, status="RUNNING"),
+                "s81|dsdv|b-new": dict(die="s81", event="D8i", item="dsdv", stage="kit_rtl",
+                                        attempt=22, started=newer[1], status="RUNNING"),
+            }}
+
+            def remote_run(rows):
+                import contextlib
+                import io
+                import subprocess
+                import sys
+                from unittest import mock
+
+                listing = subprocess.CompletedProcess([], 0, stdout=unit + ".scope loaded active running\n")
+                successful_stop = subprocess.CompletedProcess(stop, 0, stdout="")
+                with mock.patch.object(sys, "argv", ["scan", json.dumps(dict(rows=rows, dry=False))]), \
+                     mock.patch.object(subprocess, "run", side_effect=[listing, successful_stop]) as run, \
+                     contextlib.redirect_stdout(io.StringIO()) as stdout:
+                    exec(script, {})
+                return json.loads(stdout.getvalue())["orphans"], [x.args[0] for x in run.call_args_list]
+
+            live_rows = KW.orphan_rows(st)
+            orphans, calls = remote_run(live_rows)
+            self.assertEqual(orphans, [])
+            self.assertNotIn(stop, calls)
+            orphans, calls = remote_run({"s81|D8i|dsdv": [newer]})
+            self.assertEqual([orphan["unit"] for orphan in orphans], [unit])
+            self.assertIn(stop, calls)
+
     def test_recent_rows_include_single_attempt_rows(self):
         now = time.time()
         st = {"items": {"x": dict(die="d", event="e", item="t", attempt=1, started=now - 100, status="FAIL"),

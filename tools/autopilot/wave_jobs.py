@@ -280,6 +280,10 @@ for u in units:
     rows = a['rows'].get('%s|%s|%s' % (die, ev, item))
     if not rows:
         continue
+    # Parallel block identities can have different attempt numbers within the same event and item.
+    # A live owner of this scope takes precedence over any newer sibling row.
+    if any(r[0] == n and r[2] in ('LAUNCHING', 'RUNNING', 'ENQUEUED') and r[1] <= t0 + 60 for r in rows):
+        continue
     newer = [r for r in rows if r[0] > n and r[1] > t0]
     own = [r for r in rows if r[0] == n and r[2] in ('FAIL', 'CANCELLED', 'DEDUP') and len(r) > 3 and r[3] > t0 + 60]
     if own and not newer:
