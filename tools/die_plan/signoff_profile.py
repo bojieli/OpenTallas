@@ -49,6 +49,13 @@ def setup_tolerance_ps(die=None):
     """|min TT WNS at 833 ps| that still signs off: (P_die - 833) + 42"""
     return max(0.0, die_period_ps(die) - PERIOD_PS) + SETUP_TOL_PS
 HOLD_MIN_PS = 0.0            # internal FF hold, no tolerance
+# SIGN-PERIOD (OWNER 2026-11-20 decision (1), SIGN-PROFILE-0400): a type signs at 833 ps where its build passes; otherwise the SAME routed
+# DB is re-timed (no re-route) at a relaxed period up to SIGN_PERIOD_MAX_PS and signs there.  Such a record carries signed_period_ps and
+# its checks (setup_tt, hold_ff) are measured AT that period (tools/die_plan/period_resign.py: the golden SDC with every create_clock
+# period scaled, IO budgets unchanged); the 833 ps result is kept in at_833.  The gates are unchanged: DRC 0, setup >= -42 ps at the
+# signed period, internal hold >= 0.  A die runs at the slowest signed type's period (die_period_ps, count_hourly / DIE-PERIOD.tsv).
+SIGN_PERIOD_MAX_PS = 1000.0
+PERIOD_MATCH_PS = 0.5
 MINIMAL_GATES = ("drc", "setup_tt", "hold_ff")
 PROFILES = ("minimal", "legacy")
 ENV = "OT_SIGNOFF_PROFILE"
@@ -162,6 +169,42 @@ def internal_hold_port_only(rec):
             and not any(str(r).startswith("hold_ff") for r in rec.get("reasons") or []))
 
 
+def record_clock_period_ps(rec):
+    """largest create_clock period the record's STA ran at (corners.<c>.periods; generated clocks print 0), None when not recorded"""
+    best = None
+    for c in (rec.get("corners") or {}).values():
+        if not isinstance(c, dict) or not isinstance(c.get("periods"), dict):
+            continue
+        for v in c["periods"].values():
+            v = _num(v)
+            if v is not None and v > 0 and (best is None or v > best):
+                best = v
+    return best
+
+
+def signed_period_ps(rec):
+    """the declared sign-off period of a period re-sign record (SIGN-PERIOD), else None"""
+    return _num(rec.get("signed_period_ps"))
+
+
+def period_problem(rec):
+    """None when the record's timing period is admissible: no signed_period_ps and no clock above 833 ps, or a signed_period_ps in
+    [833, 1000] that equals the period the STA really ran at.  Else the reason (blocks the setup gate: the setup number is not a
+    measurement at an admissible period)."""
+    sp, cp = signed_period_ps(rec), record_clock_period_ps(rec)
+    if sp is None:
+        if cp is not None and cp > PERIOD_PS + PERIOD_MATCH_PS:
+            return f"clock period {cp:g} ps above {PERIOD_PS:g} without signed_period_ps"
+        return None
+    if sp < PERIOD_PS - PERIOD_MATCH_PS or sp > SIGN_PERIOD_MAX_PS + 1e-6:
+        return f"signed_period_ps {sp:g} outside [{PERIOD_PS:g}, {SIGN_PERIOD_MAX_PS:g}]"
+    if cp is None:
+        return f"signed_period_ps {sp:g} without a recorded STA clock period"
+    if abs(cp - sp) > PERIOD_MATCH_PS:
+        return f"signed_period_ps {sp:g} but the STA clock period is {cp:g}"
+    return None
+
+
 def achieved_period_ps(tt_wns):
     """the routed period this type closes at: 833 - min(0, WNS) (a positive slack keeps the plan period)"""
     return None if tt_wns is None else round(PERIOD_PS - min(0.0, tt_wns), 2)
@@ -190,16 +233,21 @@ def judge(rec, die=None):
             achieved_period_ps, setup_within_tolerance, legacy_verdict)"""
     drc, tt, ff, src = metrics(rec)
     die = die or record_die(rec)
-    tol = setup_tolerance_ps(die)
+    sp, pprob = signed_period_ps(rec), period_problem(rec)
+    tol = SETUP_TOL_PS if sp is not None else setup_tolerance_ps(die)   # a period record is timed AT its period: plain -42 ps
     gates = gate_verdicts(drc, tt, ff, tol)
+    if pprob and gates["setup_tt"] == "PASS":
+        gates["setup_tt"] = "FAIL"
     boundary_ff, boundary_source = boundary_hold_metric(rec)
     port_only = ff is not None and ff >= HOLD_MIN_PS and boundary_ff is not None and boundary_ff < HOLD_MIN_PS
     reasons = []
     if gates["drc"] != "PASS":
         reasons.append(f"drc: {gates['drc']}" + ("" if drc is None else f" {drc}"))
-    if gates["setup_tt"] != "PASS":
+    if pprob:
+        reasons.append(f"setup_tt: FAIL period: {pprob}")
+    elif gates["setup_tt"] != "PASS":
         reasons.append(f"setup_tt: {gates['setup_tt']}" + ("" if tt is None else f" WNS {tt:+.2f} ps < -{tol:g} "
-                                                            f"(P_die {die_period_ps(die):g} ps)"))
+                                                            + (f"at signed period {sp:g} ps" if sp is not None else f"(P_die {die_period_ps(die):g} ps)")))
     if gates["hold_ff"] != "PASS":
         reasons.append(f"hold_ff: {gates['hold_ff']}" + ("" if ff is None else f" WNS {ff:+.2f} ps < {HOLD_MIN_PS:g}"))
     # HEAD-DIE-R 11-17 (COORD): balance pads on a forwarded-clock output (fwd_pad_check.py) shift the receiver's
@@ -228,7 +276,9 @@ def judge(rec, die=None):
                 internal_hold=internal_hold_measurement(rec),
                 setup_within_tolerance=tt is not None and -tol <= tt < 0, die=die, die_period_ps=die_period_ps(die),
                 setup_tolerance_ps=tol,
-                achieved_period_ps=achieved_period_ps(tt), legacy_verdict=rec.get("verdict"))
+                achieved_period_ps=achieved_period_ps(tt) if sp is None else sp,
+                signed_period_ps=(sp if sp is not None else PERIOD_PS) if not reasons else None,
+                period_problem=pprob, legacy_verdict=rec.get("verdict"))
 
 
 def apply(rec, value=None):
@@ -242,8 +292,31 @@ def apply(rec, value=None):
     rec.update(verdict=j["verdict"], reasons=j["reasons"], advisories=j["advisories"], profile="minimal",
                profile_gates=j["gates"], internal_hold=j["internal_hold"], achieved_period_ps=j["achieved_period_ps"],
                setup_within_tolerance=j["setup_within_tolerance"], die_period_ps=j["die_period_ps"],
+               **({"signed_period_ps": signed_period_ps(rec)} if signed_period_ps(rec) is not None else {}),
                profile_rule="R-MINIMAL + R-PERIOD (OWNER 2026-11-13)")
     return rec
+
+
+def die_period_from_types(periods):
+    """SIGN-PERIOD: a die runs at the slowest signed type's period.  periods = iterable of signed type periods (None = 833) -> ps"""
+    vals = [PERIOD_PS if p is None else float(p) for p in periods]
+    return max(vals) if vals else PERIOD_PS
+
+
+def signed_die_period_ps(die, path=None):
+    """die_period_ps of a die from the count's lanes/DIE-PERIOD.tsv (count_hourly writes it: die, die_period_ps, slowest type, ...);
+    833 when the file or row is missing.  For the die STA (run the die at this period)."""
+    import pathlib
+    d = DIE_ALIAS.get(str(die or "").lower(), str(die or "").lower())
+    p = pathlib.Path(path or os.environ.get("OT_DIE_PERIOD_TSV") or pathlib.Path.home() / "coord/lanes/DIE-PERIOD.tsv")
+    try:
+        for ln in p.read_text().splitlines():
+            f = ln.split("\t")
+            if len(f) >= 2 and not ln.startswith("#") and DIE_ALIAS.get(f[0], f[0]) == d and _num(f[1]) is not None:
+                return _num(f[1])
+    except OSError:
+        pass
+    return PERIOD_PS
 
 
 def die_gate_thresholds(value=None):

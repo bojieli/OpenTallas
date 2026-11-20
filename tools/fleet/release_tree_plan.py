@@ -665,6 +665,21 @@ def _fin(x):
     try: x = float(x)
     except (TypeError, ValueError): return None
     return x if abs(x) < 1e6 else None
+def record_clock_period(d):
+    # largest create_clock period the record's STA ran at (corners.<c>.periods; generated clocks print 0); None when not recorded
+    best = None
+    for c in (d.get('corners') or {}).values():
+        if not isinstance(c, dict) or not isinstance(c.get('periods'), dict): continue
+        for v in c['periods'].values():
+            v = _fin(v)
+            if v is not None and v > 0 and (best is None or v > best): best = v
+    return best
+def period_problem(d):
+    # SIGN-PERIOD (OWNER 11-20 (1), tools/die_plan/signoff_profile.period_problem): a record timed above 833 ps counts only as a period
+    # re-sign record: signed_period_ps in [833, 1000] equal to the STA clock period (its checks are measured at that period)
+    sp, cp = _fin(d.get('signed_period_ps')), record_clock_period(d)
+    if sp is None: return cp is not None and cp > 833.5
+    return sp < 832.5 or sp > 1000.0 or cp is None or abs(cp - sp) > 0.5
 def rminimal(d):
     # COUNT-FRICTION-1 11-14 (R-MINIMAL, OWNER 11-13 17:5x; same metrics as tools/die_plan/signoff_profile.py): a record counts when detailed-route
     # DRC is 0, TT setup WNS >= -42 ps (833 ps) and the INTERNAL FF hold >= 0 (a hold miss only at input ports is allowed); every other
@@ -680,6 +695,7 @@ def rminimal(d):
         ff = _fin(hf.get('wns_ps'))
         if ff is None: ff = _fin(hf.get('sdc_wns_ps'))
         if drc is None or int(drc) != 0 or tt is None or tt < -42.0 or ff is None: return False
+        if period_problem(d): return False
         return ff >= 0.0 or (bool(hf.get('port_only_needs_parent')) and hf.get('verdict') == 'PASS')
     except Exception:
         return False
@@ -757,6 +773,7 @@ for p in sys.stdin.read().split():
     fg = d.get('face_guard') or {}
     r = dict(path=p, name=d.get('name'), top=fg.get('top') if isinstance(fg, dict) else None,
              generated=d.get('generated'), host=d.get('host'), pins_path=fg.get('pins') if isinstance(fg, dict) else None)
+    if d.get('signed_period_ps') is not None: r['signed_period_ps'] = d.get('signed_period_ps')
     r.update(prov(p, d, lambda f: json.load(open(f))))
     # SIGNOFF-SPRINT-19 11-01: an INTERNAL_CORE face_guard (endpoint census, signoff 9242a82) names no pins file, so the
     # record was never pin-fetched ('pins not readable', HEAD kp4_dchn e13a).  Key it on <record>/../pins.json: the
@@ -964,6 +981,7 @@ def read_archive_local(paths):
         fg = d.get('face_guard') if isinstance(d.get('face_guard'), dict) else {}
         out.append(dict(path=p, name=d.get('name'), top=fg.get('top'), generated=d.get('generated'), host='AGIdock', pins_path=None,
                         versioned=False, scan_host='AGIdock', direct=True, hard_ip=d.get('verdict') == 'HARD-IP'))
+        if d.get('signed_period_ps') is not None: out[-1]['signed_period_ps'] = d.get('signed_period_ps')
     return out
 
 
@@ -1093,6 +1111,7 @@ def main_records(tree):
             if r.get('prov_file', '').startswith(str(tree)):
                 r['prov_file'] = 'origin/main:' + str(pathlib.Path(r['prov_file']).relative_to(tree))
             r['versioned'] = bool(r.get('src_commit') and r.get('flow_tag'))
+            if d.get('signed_period_ps') is not None: r['signed_period_ps'] = d.get('signed_period_ps')
             # FLOW-12 10-30: the view's own pins.json + config.mk beside its signoff.json (S81 cores/views/<m>/) on main
             mp = main_view_pins(p.parent)
             if mp: MAIN_PINS[r['path']] = mp
@@ -1819,6 +1838,11 @@ def keep_g0c_report(label, rep):
 
 INHERIT_FILE = pathlib.Path(os.environ.get('OT_COUNT_INHERIT') or COORD_DIR / 'autopilot' / 'inherit_members.tsv')
 INHERIT_SCHEMA = 'opentallas.col_inherit.v1'
+# SIGN-INHERIT (OWNER 11-20 decision (3), tools/fleet/netlist_inherit.py): a type whose synthesized netlist equals a signed sibling's after
+# ROM contents are masked and instance / net names canonicalised (proved by graph isomorphism), with the same outline / pins / plan rows,
+# inherits the sibling's sign-off; its ROM views are still generated (real weights), no P&R.  Counted with the reason 'INHERIT <sibling>'.
+NETLIST_INHERIT_SCHEMA = 'opentallas.netlist_inherit.v1'
+INHERIT_SCHEMAS = (INHERIT_SCHEMA, NETLIST_INHERIT_SCHEMA)
 
 
 def inherit_rows(path=None):
@@ -1844,10 +1868,34 @@ def inherit_record_ok(row):
         return False, 'record unreadable: %s' % e
     if row.get('sha') and hashlib.sha256(raw).hexdigest() != row['sha']:
         return False, 'record sha256 differs from the row'
-    if rec.get('schema') != INHERIT_SCHEMA: return False, 'wrong schema'
+    if rec.get('schema') not in INHERIT_SCHEMAS: return False, 'wrong schema'
+    if rec.get('schema') == NETLIST_INHERIT_SCHEMA and not (rec.get('proof') or {}).get('isomorphic'):
+        return False, 'netlist record has no isomorphism proof'
     if rec.get('sibling') != row['member'] or rec.get('representative') != row['rep']: return False, 'record names another identity'
     if rec.get('credit') is not True: return False, 'record credit is not true: %s' % (rec.get('credit_blockers') or 'unspecified')
     return True, ''
+
+
+def _inherit_schema(row):
+    try: return json.loads(pathlib.Path(row['record']).read_text()).get('schema')
+    except (OSError, ValueError, KeyError): return None
+
+
+PERIOD_RE = re.compile(r' PERIOD (\d+(?:\.\d+)?)')
+
+
+def type_periods(st):
+    """SIGN-PERIOD: {type: period ps it signs at} = the smallest period over its counting refs (a ref without ' PERIOD n' = 833)"""
+    out = {}
+    for t, refs in (st or {}).items():
+        ps = [float(m.group(1)) if m else 833.0 for m in (PERIOD_RE.search(x) for x in refs or [])]
+        out[t] = min(ps) if ps else 833.0
+    return out
+
+
+def die_period(tp):
+    """the die runs at the slowest signed type's period (OWNER 11-20 (1)) -> ps"""
+    return max(tp.values()) if tp else 833.0
 
 
 def inherit_credit(die, st, tm, rows, ok=inherit_record_ok):
@@ -1861,7 +1909,8 @@ def inherit_credit(die, st, tm, rows, ok=inherit_record_ok):
         if r['die'] != die or m in st or m not in tm or not st.get(o): continue
         good, _why = ok(r)
         if not good: continue
-        st[m] = [x + ' via inherit %s (record %s)' % (o, (r.get('sha') or '')[:12] or r['record']) for x in st[o]]
+        tag = 'INHERIT' if _inherit_schema(r) == NETLIST_INHERIT_SCHEMA else 'via inherit'
+        st[m] = [x + ' %s %s (record %s)' % (tag, o, (r.get('sha') or '')[:12] or r['record']) for x in st[o]]
         done.append(m)
     return done
 
@@ -2019,6 +2068,7 @@ def refresh(log=lambda *a: None, old=None):
                 else:
                     ref += ' SIGNED-NO-TAG'   # COUNT-FRICTION-1 11-14 (OWNER): no src commit / flow tag needed to count
                 if r_.get('direct'): ref += ' DIRECT-READ (not yet in signed-store)'
+                if r_.get('signed_period_ps') is not None: ref += ' PERIOD %g' % float(r_['signed_period_ps'])
                 T, C = st, sc
                 for k, m in tm.items():
                     if k in ks or m in ks:
@@ -2041,6 +2091,8 @@ def refresh(log=lambda *a: None, old=None):
             except Exception as e:
                 errs.append('INHERIT credit %s: %s' % (d, e))
             ent['signed_types'] = st; ent['signed_cores'] = sc
+            ent['type_period_ps'] = {k: v for k, v in type_periods(st).items() if v > 833.0}
+            ent['die_period_ps'] = die_period(type_periods(st))
             if ent.get('type_blocks'):
                 try:
                     ent['digest_kept'] = digest_keep(ent['die'], ent.pop('type_blocks'), st, ledger, live, ent.get('plan_sha'))

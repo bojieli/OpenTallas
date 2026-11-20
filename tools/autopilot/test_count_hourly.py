@@ -141,3 +141,19 @@ def test_repeat_run_in_the_hour_still_prints_the_summary(env, capsys):
     assert CH.run(NOW, None, lambda: pytest.fail("committed")) == 0
     out = capsys.readouterr().out
     assert "already holds these counts" in out and "count_hourly: signed any plan" in out
+
+
+def test_die_period_token_and_tsv(env, capsys):
+    """SIGN-PERIOD (OWNER 11-20 (1)): the die runs at its slowest signed type's period; the row and lanes/DIE-PERIOD.tsv carry it"""
+    c = cache(NOW - 60)
+    c["plans"]["a"]["signed_types"] = {"col_a": ["h:/a PERIOD 915", "h:/a2 PERIOD 940"], "col_b": ["h:/b PERIOD 960"], "st": ["h:/s"]}
+    per = CH.die_periods(c)
+    assert per["s81"][0] == 960.0 and per["s81"][1] == "col_b" and per["s81"][2] == {"col_a": 915.0, "col_b": 960.0}
+    assert per["qc"][0] == 833.0
+    assert CH.period_token(per) == "period=s81:960,head:833,qc:833,kv:833,hbm:833"
+    (env / "cache.json").write_text(json.dumps(c))
+    assert CH.run(now=NOW, scan=lambda: 0, commit=lambda: 0, force=False) == 0
+    assert rows(env)[-1].endswith(" auto") and "period=" not in rows(env)[-1]
+    t = (env / CH.PERIOD_TSV).read_text().splitlines()
+    assert "s81\t960\tcol_b\tcol_a:915,col_b:960" in t and "qwen_compute\t833\t\t" in t
+    assert "die_period_ps s81 960 (slowest col_b)" in capsys.readouterr().out
