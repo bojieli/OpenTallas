@@ -1,5 +1,25 @@
 # FABLE-FIX-KV-PV-2140 handoff (KV pv family owner; newest first)
 
+## Update 2026-11-20 09:15Z (read first; supersedes the kit list and tool sha below)
+- COORD 01:0x PST: the owner approved the type-root clock with a lockup latch at every type boundary, die-wide, once v8j routes.
+  v8j is the critical path for all 4 dies: post its routed TT / FF the moment it lands.
+- v8j (epyc10, unit oth-ubuntu-2992067-1795157314, container dpkit-kv3_pv_v8-2992479): REAL FLOW 3_3 pre-place hooks done 09:06Z:
+  OT_RESET_TREE PASS, OT_TAIL_SITE copies 9112 of 9112 sited, merged 0, max_hop 412.4, routed_hop 404.7, over_380 172, core_crossing 0.
+  Now in 3_3 global place.  Its reg-to-reg hold repair target is 25 ps since 09:03Z (config.mk, tools/r2r_patch.sh); v8h carries the 40 ps arm.
+  v8j still has the 32 chained ctl_cmd trunk pieces (not the lockup form): if routed TT misses -42 only on u_pd*_ctl_cmd_*_t_* ends, say so
+  with the count; do not call it a pass.
+- v8j priority: ot-run --crit exists only at launch; there is no tool for a running unit and a relaunch on epyc10 would queue on memory
+  (admissible 0 GB).  Asked COORD 09:1x whether to apply the same effect by hand (docker update --cpu-shares on the one container).
+  NOT done without that answer.
+- v8k (v8j + unchain + r2r 25 through rows_C v2) MOVED to epyc7 per COORD: tree4c is being copied epyc10 -> epyc7 (same path; rsync
+  --copy-dest tree4, log epyc7 fable-fix-kv-pv-2140/copy_tree4c.log), lane clone epyc7 fable-fix-kv-pv-2140/repo, then hub chain
+  intel2 ~/tmp/ffkpv2140/chain_v8k7.sh (log chain_v8k7.log) runs GEN and the kit with ot-run --crit --hosts epyc7, goal route, 40 GB / 16 thr.
+  The epyc10 v8k chain and its queued gen were cancelled.  The watcher covers kit/v8k only on epyc10 paths: for epyc7 read
+  ~/tmp/ffkpv2140/kit_v8k.log and run tools/kstat.sh on epyc7.
+- Main is at 4ed355582d4f for this lane: 1aaea37124e0 (r_dly_lockup.r2r_margin_ps) + RTR-SCAN (reset_tree rtr_place lists the flops once;
+  the reset-tree hook took 32 min on v8j; cause inferred from the code, not profiled).
+- Rows for D25f: rows_C v2, sha d8c56e74e599 ({seg 8, tail_groups 0, r2r_margin_ps 25} + station 405), posted 00:1x PST.
+
 ## Update 2026-11-20 08:10Z (read first; supersedes the kit list below)
 - Tools on main f9a626fef84d = form C + mid-hop latches (ebe5d224187) + UNCHAIN.  UNCHAIN: the bind TRUNK-CHAIN form (1b95661b75) chains the
   trunks of one bit, so the deeper pad's piece is only the pad difference: kv3_pv_v8 D25e form has 32 such pieces (ctl_cmd, 1-2 stages)
