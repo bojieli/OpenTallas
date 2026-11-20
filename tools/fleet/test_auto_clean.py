@@ -321,7 +321,7 @@ def test_cleanup_unit_is_not_idle_io_class():
 
 def test_failed_units_are_listed_per_host_and_reach_the_report():
     """FAILED-UNITS-1119: a failed ot-disk-autoprune.service must be named in the report"""
-    out = "ot-disk-autoprune.service loaded failed failed Auto-prune\\nwt-reaper.service loaded failed failed Reaper\\noth-ubuntu-1.scope loaded failed failed x\\n"
+    out = "ot-disk-autoprune.service loaded failed failed Auto-prune\nwt-reaper.service loaded failed failed Reaper\noth-ubuntu-1.scope loaded failed failed x\n"
     run = lambda *a, **k: types.SimpleNamespace(returncode=0, stdout=out, stderr="")
     assert HUB.failed_units("h", run) == ["ot-disk-autoprune.service", "wt-reaper.service"]
     assert HUB.failed_units("h", lambda *a, **k: types.SimpleNamespace(returncode=0, stdout="", stderr="")) == []
