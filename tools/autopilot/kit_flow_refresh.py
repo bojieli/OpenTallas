@@ -103,6 +103,65 @@ def write_tools_rev(kit, rec, rt_files, die_only):
     os.replace(tmp, os.path.join(kit, "tools_rev.json"))
 
 
+# FLOW-FIX-2045 (COORD, FABLE-FLOW-0035): flow files a kit takes from rt/current at EVERY stage start, whatever blob index / die tree says: a kit copies them at gen or launch (from the die's pinned snapshot, or
+# from the rt of that moment) and 41 watchers started after the fix still ran the old script.  (where, name, rt path); where "kit" = <kit>/<name>, "runner" = <kit>/../<name> (the generated run_kit.sh of
+# the work dir); the runner's source is gen_phys.RUN_KIT of the rt tree.  Present files only, copy to a tmp name then rename (a new inode: a running shell / watcher keeps the old one), mode kept.
+ALWAYS = (("kit", "stage_odb_cap.py", "tools/die_plan/stage_odb_cap.py"),
+          ("kit", "tt_setup_repair.tcl", "tools/die_plan/tt_setup_repair.tcl"),
+          ("kit", "hold_cap.tcl", "physical/die_plan/hbm_arch_cores/hold_cap.tcl"),
+          ("runner", "run_kit.sh", "gen_phys.RUN_KIT"))
+
+
+def _rt_run_kit_text(rtr):
+    import importlib.util
+    dd = os.path.join(rtr, "tools", "die_plan")
+    gp = os.path.join(dd, "gen_phys.py")
+    if not os.path.isfile(gp):
+        return None
+    if dd not in sys.path:
+        sys.path.insert(0, dd)
+    mod = sys.modules.get("gen_phys")
+    if mod is None or os.path.dirname(os.path.abspath(getattr(mod, "__file__", "") or "")) != os.path.abspath(dd):
+        spec = importlib.util.spec_from_file_location("gen_phys_rt", gp)
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+    return getattr(mod, "RUN_KIT", None)
+
+
+def always_pass(kit, rtr, rec, dry=False):
+    """replace the ALWAYS files present in the kit by rt's copy when they differ.  -> list of replaced names (also appended to rec['replaced'] with from='always')"""
+    out = []
+    for where, name, srcrel in ALWAYS:
+        p = os.path.join(kit, name) if where == "kit" else os.path.join(os.path.dirname(kit.rstrip("/")), name)
+        if not os.path.isfile(p) or os.path.islink(p):
+            continue
+        try:
+            if srcrel == "gen_phys.RUN_KIT":
+                txt = _rt_run_kit_text(rtr)
+                new = txt.encode() if txt else None
+            else:
+                sp = os.path.join(rtr, srcrel)
+                new = open(sp, "rb").read() if os.path.isfile(sp) else None
+        except Exception as e:                       # noqa: BLE001 - a missing / broken rt file never stops a stage
+            rec.setdefault("kept_old", []).append(f"{name}: {type(e).__name__}: {e}")
+            continue
+        if not new:
+            continue
+        data = open(p, "rb").read()
+        if new == data:
+            continue
+        rec["replaced"].append({"file": name, "src": srcrel, "old": blob_id(data)[:12], "new": blob_id(new)[:12], "from": "always"})
+        out.append(name)
+        if dry:
+            continue
+        tmp = os.path.join(os.path.dirname(p), f".{name}.kfr.{os.getpid()}")
+        with open(tmp, "wb") as f:
+            f.write(new)
+        os.chmod(tmp, os.stat(p).st_mode & 0o7777 | 0o200)
+        os.replace(tmp, p)
+    return out
+
+
 def refresh(kit, stage, rt=RT, dry=False, index=None, src=None, sha=None, die_src=None):
     rtr = os.path.realpath(rt)
     roots = dict(src or {})                              # rel dir -> directory holding its current files (default rt/<rel dir>)
@@ -119,7 +178,8 @@ def refresh(kit, stage, rt=RT, dry=False, index=None, src=None, sha=None, die_sr
     try:
         idx = json.load(open(ip))
     except (OSError, ValueError):
-        rec["note"] = f"SKIPPED: no flow blob index {ip}: nothing replaced"
+        rec["note"] = f"SKIPPED: no flow blob index {ip}: nothing replaced by the index pass"
+        always_pass(kit, rtr, rec, dry)
         if die_src:
             _die_pass(kit, rec, rtr, die_src, dry)
         return rec
@@ -157,6 +217,7 @@ def refresh(kit, stage, rt=RT, dry=False, index=None, src=None, sha=None, die_sr
             f.write(new)
         os.chmod(tmp, os.stat(p).st_mode & 0o7777 | 0o200)
         os.replace(tmp, p)
+    always_pass(kit, rtr, rec, dry)
     if die_src:
         _die_pass(kit, rec, rtr, die_src, dry)
     return rec

@@ -210,3 +210,30 @@ def test_flow_files_refresh_covers_the_runner_and_the_watcher_with_a_new_inode(t
     assert subprocess.run(["bash", "-c", KW.flow_files_refresh_cmd(bare / "gen" / "t", bare)]).returncode == 0
     assert not (bare / "gen" / "run_kit.sh").exists() and not (bare / "gen" / "t" / "stage_odb_cap.py").exists()
     assert [x[1] for x in KW.FLOW_REFRESH_FILES] == ["stage_odb_cap.py", "tt_setup_repair.tcl", "hold_cap.tcl", "run_kit.sh"]
+
+
+def test_kit_flow_refresh_always_replaces_the_listed_flow_files_at_every_stage(tmp_path):
+    """FLOW-FIX-2045: stage_odb_cap.py, tt_setup_repair.tcl, hold_cap.tcl and the runner come from rt at each stage start (not once at gen), with a new inode"""
+    import stat
+    import kit_flow_refresh as KFR
+    from pathlib import Path
+    rt = Path(__file__).resolve().parents[2]
+    work0 = None
+    work = tmp_path / "w"; kit = work / "t"; kit.mkdir(parents=True)
+    runner = work / "run_kit.sh"; runner.write_text("#!/bin/bash\n# old\n"); runner.chmod(0o755)
+    for n in ("stage_odb_cap.py", "tt_setup_repair.tcl", "hold_cap.tcl"):
+        (kit / n).write_text("# old copy of " + n + "\n")
+    held = open(kit / "stage_odb_cap.py"); ino = (kit / "stage_odb_cap.py").stat().st_ino
+    rec = KFR.refresh(str(kit), "route", rt=str(rt), index=str(tmp_path / "no_index.json"))
+    assert sorted(r["file"] for r in rec["replaced"] if r["from"] == "always") == ["hold_cap.tcl", "run_kit.sh", "stage_odb_cap.py", "tt_setup_repair.tcl"]
+    assert "EARLY_RULES" in (kit / "stage_odb_cap.py").read_text() and "ot_bounded_repair" in (kit / "hold_cap.tcl").read_text()
+    assert "[ $GOAL = finish ]; }; then" in runner.read_text() and stat.S_IMODE(runner.stat().st_mode) == 0o755
+    assert (kit / "stage_odb_cap.py").stat().st_ino != ino and held.read().startswith("# old copy")
+    rec2 = KFR.refresh(str(kit), "route2", rt=str(rt), index=str(tmp_path / "no_index.json"))              # a later stage: nothing left to replace
+    assert not [r for r in rec2["replaced"] if r["from"] == "always"]
+    (kit / "stage_odb_cap.py").write_text("# a fix landed on main after the first stage\n")               # simulate the kit going stale again: the next stage start repairs it
+    rec3 = KFR.refresh(str(kit), "route3", rt=str(rt), index=str(tmp_path / "no_index.json"))
+    assert [r["file"] for r in rec3["replaced"] if r["from"] == "always"] == ["stage_odb_cap.py"]
+    (kit / "stage_odb_cap.py").write_text("# a fix landed on main after the first stage\n")
+    (kit / ".no_flow_refresh").write_text("")
+    assert KFR.main(["--kit", str(kit), "--stage", "x", "--rt", str(rt)]) == 0 and "fix landed" in (kit / "stage_odb_cap.py").read_text()      # opt-out file keeps the kit as it is
