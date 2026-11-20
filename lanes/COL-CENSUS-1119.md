@@ -65,3 +65,27 @@ Status: FIXED-PLAN = the row is in plan_h3_d8i (D8h/D8i), proof build running; C
   - COL-CENSUS: CC1, 192 types (overlap with D8i = A/B for CC-BANK-1)
 - Classes still open after CC1: BANK-IN (CC-BANK-2), h9_r2 RDLOOP near miss, p5 RST, h10_r0_p4 lpad_x_i0 hop. My rows for each follow the first CC1 CTS/GRT read.
 - Not type-structural: PORT-HOLD belongs to the parent (S81-DIE-R3). INT-HOLD and FLOW belong to the flow lanes: GRT max-wire skip, and kit_topology WAIT-BIND on the D8h wave rows (S81-DIE-R3 / WAVE-FLOW-R2). That WAIT-BIND blocks every col wave build on h3.
+
+## Class WINDOW: the cw6 window eats setup inside the type (COORD 11-19, added after the first post)
+
+The plan gives col_h9/h10 ports a flat 40 ps window. cw6 delivers 87-121 ps, and about 140 ps with the handed-off rows. The per-family port gap below is from S81-CLOCK-WINDOW 18:28. The estimate is the worst known internal reg2reg setup minus that gap. The HOP ends are left out, because D8h/D8i fix them. The estimate is worst-case: it assumes the worst path has launch and capture on different clock ports. That holds for c12_6 -> s12 and for every ROM <-> bank path (core taps).
+
+| Family | Port gap max (ps) | Worst internal setup now (non-HOP) | Estimate at the cw6 window | In-type fix? |
+|---|---|---|---|---|
+| col_h9_r2 | 98 | -44.75 routed (c12_6 -> s12, read loop); signed -39.22 | about -137..-143 | No. The read loop has a fixed latency (no stage allowed). |
+| col_h9_r1 | 100 | -41.49 GRT proof (u_s5 q6, read loop) | about -141 | No (same reason) |
+| col_h9_r0_p6 | 88 | -30..-45 GRT (e0_u_w -> bn0, half cycle) | about -118..-133 | CC-BANK-1 gives about +10 ps, far short |
+| col_h9_r0_p1/p2/p3/p4/p5 | 76-97 | not measured clean (HOP masks); the same bank and read-loop tiers | about -95..-140 | No |
+| col_h10_r0_p1 / p4 | 79 / 70 | HOP masks; bank hop 248 / 283 um before CC1 | about -100..-130 | Partly (CC1) |
+| col_h10_r1 / r2 | 90 / 74 | h10_r2 -96 GRT (e13_u_w -> bn13) | about -170 (r2) | COL-H10-1119 |
+
+Verdict: every col family fails setup at the cw6 window by roughly 75-145 ps.
+- The binding paths are the fixed-latency cfg read loops and the half-cycle hw ROM ports.
+- No cycle can be added to either, and each sits within a few ps of zero today.
+- In-type pipelining therefore cannot recover 100 ps.
+- The fix is die-side: a tap-balance request to S81-CLOCK-WINDOW-1119.
+  - Balance the col core taps in the cw6 region DME so that col_h9/h10 port windows stay at 40 ps or less, 50 ps at most.
+  - This is the same core-tap sink-balance lever as the attn_hcore class A.
+  - Do NOT widen the col per_port windows to the cw6 need: that turns a die-clock error into roughly 100 ps of type-internal setup loss on all 216 types.
+- In-type, CC-BANK-1 still helps the half-cycle class. CC-BANK-2 (bank-in) follows the CC1 read.
+- The CC1 kits keep the 40 ps plan window, so they measure the type itself.

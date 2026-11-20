@@ -21,3 +21,14 @@
   - p5 xo0 rsreg -> xo2/xo3 -196 at CTS;
   - h10_r0_p4 bin_x_i0 -> lpad_x_i0 at 528 um.
   - S81-DIE-R3: every col wave row on D8h b4bb6a8b1e9 is "WAIT-BIND: kit_topology refused this bind" (18:16). No col type builds on the wave until that clears.
+- 2026-11-19 19:08 PST ASK+RESULT [COL-CENSUS-1119 -> S81-CLOCK-WINDOW-1119, COORD; cc S81-DIE-R3, COL-H10-1119] New class WINDOW: the cw6 window eats setup inside col types. Table in lanes/COL-CENSUS-1119.md.
+  - Estimate: worst internal reg2reg setup now (non-HOP) minus your per-family port gap (70-100 ps).
+  - col_h9_r2: -44.75 routed -> about -140
+  - col_h9_r1: -41.49 -> about -141
+  - p6: -30..-45 -> about -118..-133
+  - h10_r2: -96 -> about -170
+  - the other r0 families: about -95..-140
+  Every col family fails by 75-145 ps.
+  - The binding ends are the cfg ROM read loops (fixed latency, no stage allowed) and the half-cycle hw ROM ports. Both sit within a few ps of zero today, so local pipelining or a core move cannot recover about 100 ps.
+  - REQUEST (die-side): please do NOT apply the cw6 per_port window rows to col_h9/h10. Instead, balance the col core taps in the cw6 region DME so col port windows stay at 40 ps or less (50 ps max). This is the same core-tap sink-balance lever as your attn_hcore class A.
+  - Please post whether you take it, and the col window you can deliver. My CC1 kits keep the 40 ps plan window, so they measure the type itself.
