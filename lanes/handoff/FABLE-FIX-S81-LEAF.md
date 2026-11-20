@@ -301,3 +301,9 @@ QC / KV / HEAD CBC counts need a re-run by CBC-RULES-1119 with main >= 01360b438
 - GRT watch 02:20 UTC: t28 extra iteration 7/30, t27keep 18/30, t27relay clock-leaf repeat; t27stb FAIL_POSTCTS GRT-0232 (congestion too high) in the tapbal GRT, 13h47.
   t27 hotspot is local: 138..568 GRT cells at x 846-948, y 677-945, the channels between lane cores g_ln[7]/[8]/[9] and [6]/[11]; nets = vp g_hig HI group stations + vni stations.
   t28 iteration-5 overflow sits over its lane-core columns (x 184-526) with the same HI families plus ft stations. Same class on both; read t28 again at 15.
+
+## 11-19 19:4x PST lever 5 (hot gcells) + t31 WREG CTS
+- Hot gcells are not capacity-0: t27 1/668, t28 41/700 sampled. The rest are capacity 5-8 per 0.57-um gcell over lane/vn_a boxes, where only M6/M8 H and M7 V remain. Cause is demand: g_hig 1,025-bit HI station buses cross lane columns (t28 g_hig_2/3 s0 844/942 bits cross a lane; t27 g_hig_0/1 583/437). Post 1d2caa11 has the numbers and the proposed corridor fix for S81-DIE-R3.
+- t31wreg CTS TT: WNS -1,044.6 (was -1,263), setup_est -912.7 unchanged (TT FAIL). New worst path: g_ln_8 cst_hi -> lane g_ln_12, 1,906 ps (HI fabric).
+- No GRT launched after lever 5. t28/t27keep GRT left to finish. Stop list: no leaf tap pre-pass.
+- Tools on epyc10 lane dir bin/: hotpts.py, hotmap.tcl, hotrun.sh, hotsum.py, hig.tcl, higrun.sh, lanegeo.py, vnface.py.
