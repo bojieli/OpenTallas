@@ -4403,12 +4403,13 @@ GEN_ENV_SYSTEM_PREFIXES = ("/work/", "/OpenROAD-flow-scripts/", "/usr/", "/opt/"
 
 
 def gen_env_outside_tree(d, item):
-    """FABLE-FLOW-2200 C (COORD): a gen env value is a path outside the die's own src tree (KV: OT_SIGNED_VIEW_SHA -> /srv/.../kit-ops-6/signed_view_sha_kv.json, a file that
-    changes under a published tree; HEAD fixed it in-tree 21:25).  -> sorted [(KEY, path)] for die_gen_env + item_env[item] values that are absolute paths under neither the die src
-    tree nor a container/system prefix.  Die option gen_env_outside_ok: true = off; gen_env_outside_allow: [keys] = those keys pass."""
-    if d.get("gen_env_outside_ok") is True or not d.get("src"):
+    """List gen env paths outside the source selected by spec_for for this item.
+    System prefixes and the configured per-key exceptions are permitted."""
+    item_inputs = (d.get("item_inputs") or {}).get(item) or {}
+    source = item_inputs.get("src") or d.get("src")
+    if d.get("gen_env_outside_ok") is True or not source:
         return []
-    src = str(d["src"]).rstrip("/") + "/"
+    src = str(source).rstrip("/") + "/"
     allow = set(d.get("gen_env_outside_allow") or [])
     env = dict(d.get("die_gen_env") or {})
     env.update(item_env_entry(d, item))

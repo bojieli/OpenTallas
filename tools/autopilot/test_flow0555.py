@@ -123,6 +123,26 @@ def test_reap_revives_a_supersede_cancelled_row_whose_job_is_live_past_synthesis
     assert st["items"]["s"]["status"] == "CANCELLED"
 
 
+def test_fallback_signed_view_path_is_checked_against_the_selected_tree():
+    cfg, st = cfg0(), {}
+    die = cfg["dies"]["s81"]
+    current, fallback = die["src"], die["bound_trees"][1]["src"]
+    rel = "/physical/die_plan/s81/plan_inputs/signed_view_sha_s81.json"
+    key = "OT_SIGNED_VIEW_SHA"
+    die["die_gen_env"] = {key: current + rel}
+    die["bound_trees"][1]["gen_env"] = {key: fallback + rel}
+    ap = FakeAP(fallback)
+    rows = [{"item": "t1", "kind": "type"}]
+    stale = KW.bind_preflight(ap, cfg, st, "s81", rows)
+
+    assert KW.bound_fallback(ap, cfg, st, "s81", rows, stale) == {"t1": fallback}
+    assert KW.gen_env_outside_tree(die, "t1") == []
+    assert KW.gen_env_outside_tree(die, "t2") == []
+    for other in (current, "/third"):
+        die["item_env"]["t1"][key] = other + rel
+        assert KW.gen_env_outside_tree(die, "t1") == [(key, other + rel)]
+
+
 def test_fallback_launch_uses_the_bound_trees_own_gen_env_and_skips_unknown_env():
     a, st, cfg = FakeAP("/old"), {}, cfg0()
     d = cfg["dies"]["s81"]
