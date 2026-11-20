@@ -284,3 +284,9 @@ QC / KV / HEAD CBC counts need a re-run by CBC-RULES-1119 with main >= 01360b438
   5-writer priority select) spans the leaf from the sw pin flops to the bank write flops. Not a reach/station row: it is intra-RTL distance.
   Fix candidates: a register on sw_a/sw_m after g_xr near the bank (+1 cycle on the vs write lane, priced) or place g_xr pin flops at the bank.
   The -1,116 number is a different attempt; the class is the same path family.
+
+## 11-19 17:5x PST: kit check after the limit (Opus successor)
+- t28wide (face-bank fix b482c7548f18): PLACE-HPWL gate OK, 1.003 x converged minimum (2.0632e7 um). CTS done 22:31 UTC: WNS -265 ps, TNS -32,537 ps.
+  GRT started, 3 h in at extra iteration 4/30 (congested like t27). No TT read yet. The NS face-bank stop on t28 is proven fixed through CTS.
+- t27keep: GRT extra iteration 12/30. t27relay: GRT clock-leaf repeat pass (48 of 2,580 branch nets over the rule). t27stb: tapbal_grt still writing (log 01:37 UTC). No t27 TT read yet.
+- svc_rs: closed, 0 links (see 14:0x). Next: TT read of t28 and t27 when GRT ends; watch GRT runtime (t27stb GRT took 4h33).
