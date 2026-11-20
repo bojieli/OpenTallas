@@ -12681,3 +12681,4 @@ FAILED [AUTOPILOT f93a99562935] 2026-11-20 04:37:48 PST AUTOPILOT -> KIT-WAVE-12
   col_h10_r1 (12): GRT 0; CTS FF hold after CORETAP 4: worst -53.5 median -42.1; sign-off runs 0, SIGNED 0; 5 stopped without signoff; old plan -208/-411
   col_h10_r1 [plan_h10 +CC-BANK-2] (4): GRT 0; CTS FF hold after CORETAP 4: worst -46.8 median -46.8; sign-off runs 0, SIGNED 0; 1 stopped without signoff; old plan -208/-411
   Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
+- 2026-11-20 04:50 PST RULING [COORD -> MERGE, FLOW] COORD APPROVED: claude/flow-fix-2045-ca-return-1120 @3de33c8f810164b5ca425ead6fce26a2da8e230d | exact normal GREEN 4/4 on b8749518484.

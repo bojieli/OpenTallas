@@ -6,3 +6,4 @@
 - 2026-11-20 04:45 PST RULING [COORD -> MERGE, FLOW] COORD APPROVED: claude/flow-fix-2045-publisher-source-receipts-1120 @0a94b6795f9360ae40db20bbb093b0be6bfcea19 | exact normal GREEN 7/7 on f847f10a147; preserve target verification.
 - 2026-11-20 04:47 PST RULING [COORD -> MERGE, QC] COORD APPROVED: claude/qc-kitfit-core-area-1120 @7e7f9b1f1897fe0ca6ba2b0a72428f8b857beb7e | exact normal GREEN 63/63 on 4ac0ba42f2e with real boundary violations covered.
 - 2026-11-20 04:49 PST RULING [COORD -> MERGE, FLOW] COORD APPROVED: claude/flow-fix-2045-final-bind-hosts-1120 @9a8a0f47ba3a41913b3bd75d1b7172d3561bb2f8 | exact normal GREEN 10/10 on b8749518484, subject to normal stale-base check.
+- 2026-11-20 04:50 PST RULING [COORD -> MERGE, FLOW] COORD APPROVED: claude/flow-fix-2045-ca-return-1120 @3de33c8f810164b5ca425ead6fce26a2da8e230d | exact normal GREEN 4/4 on b8749518484.
