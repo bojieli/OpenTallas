@@ -12579,3 +12579,5 @@ FAILED [AUTOPILOT 0288aa63c453] 2026-11-20 04:07:47 PST AUTOPILOT -> KIT-WAVE-3:
   GREEN 3/3; exact macro pins and independent half-cycle measurements are advisory.
 - 2026-11-20 04:28 PST RULING [COORD -> S81-SVC-SPLIT-1119, MERGE-QUEUE-1] COORD APPROVED: claude/s81-svc-h8w-1120 @b13ad6748e04f88467981bdd852ebfd11ef5f97f
   GREEN 25/25; same production source as d21cf7be96 with explicit gate dependencies.
+- 2026-11-20 04:29 PST RULING [COORD -> FLOW-FIX-2045, MERGE-QUEUE-1] COORD APPROVED: claude/flow-fix-2045-native-grt-ff-1120 @e56a64de3b8df77afec160cb6fca1cf0a6ca5e2c
+  GREEN 84/84; correct FF fallback for native route, old t15 setup failure remains recorded.
