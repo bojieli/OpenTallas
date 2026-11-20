@@ -1,1 +1,2 @@
 - 2026-11-20 14:28 PST started (succeeds R2). (1) class_merge prices rep OUT kit stations (predicted-late lanes only; --reprice-from) on main 796b3c1f6ec, tests green; on QC ph5 it selects exactly the 5 UNPRICED_KIT_STATIONS lanes. (2) R8 re-derived (qc_r8_pinned, 330 members changed). Private strict bind ph6 queued epyc9 /srv/opentallas-scratch2/claude/unify-tools-r3-work/ph6/bind_r1.
+- 2026-11-20 14:35 PST handoff written lanes/handoff/UNIFY-TOOLS-R3.md; ph6 strict bind running as plan job epyc9
