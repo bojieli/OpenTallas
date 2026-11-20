@@ -103,6 +103,22 @@ def count_headline():
     return 'signed any plan %d | current plan %d | deferred re-sign %d%s | retired-plan %d%s' % (anyn, cur, kd, dt, nr, rt)
 
 
+def die_period_line():
+    """SIGN-PERIOD (OWNER 11-20 (1)): 'die_period_ps: s81 960 (slowest col_b, 3 types above 833) | head 833 | ...' from lanes/DIE-PERIOD.tsv
+    (count_hourly writes it: a die runs at the slowest signed type's period; the die STA uses it)"""
+    try:
+        rows = [l.split('\t') for l in open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'lanes', 'DIE-PERIOD.tsv'))
+                .read().splitlines() if l and not l.startswith('#')]
+    except OSError:
+        return ''
+    parts = []
+    for f in rows:
+        if len(f) < 2: continue
+        above = [x for x in (f[3].split(',') if len(f) > 3 and f[3] else []) if x]
+        parts.append('%s %s%s' % (f[0], f[1], ' (slowest %s, %d types above 833)' % (f[2], len(above)) if above else ''))
+    return ('die_period_ps (signed period, OWNER 11-20): ' + ' | '.join(parts)) if parts else ''
+
+
 def signed_type(item, stset):
     """a type already in the plan's signed_types: never a failure row (kv3_phy / kv3_phy_v1 showed failed while signed)"""
     return item.split('#')[0] in stset or short(item) in stset
@@ -223,6 +239,9 @@ def main():
     hl = count_headline()
     if hl:
         out.append('count_hourly: ' + hl)
+    dp = die_period_line()
+    if dp:
+        out.append(dp)
     for die, tag in DIES:
         plan = next(p for k, p in cache['plans'].items() if PLAN_DIE.get(k.split('/')[0]) == die)
         designs = plan['designs']

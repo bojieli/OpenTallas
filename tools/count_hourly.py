@@ -26,6 +26,7 @@ COUNTER = os.environ.get("COUNT_TOOL", str(COORD / "tools" / "release_tree_plan.
 COMMIT = os.environ.get("COUNT_COMMIT", str(COORD / "bin" / "coord-commit.sh"))
 STATE = Path(os.environ.get("COUNT_STATE", str(HOME / ".local/state/fleet-viz")))
 RATE = "lanes/SIGN-RATE.tsv"
+PERIOD_TSV = "lanes/DIE-PERIOD.tsv"     # SIGN-PERIOD (OWNER 11-20 (1)): die, die_period_ps, slowest type, types above 833; the die STA reads it
 FRESH_S = 30 * 60
 SCAN_TIMEOUT_S = 25 * 60
 DIES = (("s81", "s81"), ("s81_head", "head"), ("qwen_compute", "qc"), ("qwen_kvsys", "kv"), ("hbm", "hbm"))
@@ -101,6 +102,43 @@ def rate_row(cache, stamp, extra=0):
     dfr = "".join(" %s=%s" % (key, ",".join("%s:%d" % (k, v) for k, v in sorted((by.get(src) or {}).items()) if v))
                   for key, src in (("defer", "defer"), ("retired", "retired")) if any((by.get(src) or {}).values()))
     return "%s %d %s any=%d%s auto" % (stamp, total, " ".join(parts), total + any_extra, dfr)
+
+
+PERIOD_RE = re.compile(r" PERIOD (\d+(?:\.\d+)?)")
+
+
+def die_periods(cache):
+    """SIGN-PERIOD (OWNER 11-20 (1)): {short die: (die_period_ps, slowest type, {type: period > 833})}.  A type signs at the smallest
+    period over its counting records (no ' PERIOD n' in a ref = 833); the die runs at the slowest signed type's period."""
+    short = dict(DIES)
+    out = {}
+    for e in (cache.get("plans") or {}).values():
+        n = short.get(e.get("die"))
+        if not n:
+            continue
+        tp = {}
+        for t, refs in (e.get("signed_types") or {}).items():
+            ps = [float(m.group(1)) if m else 833.0 for m in (PERIOD_RE.search(x) for x in refs or [])]
+            tp[t] = min(ps) if ps else 833.0
+        cur = out.get(n, (833.0, "", {}))
+        slow = max(tp.items(), key=lambda kv: kv[1]) if tp else ("", 833.0)
+        above = dict(cur[2], **{k: v for k, v in tp.items() if v > 833.0})
+        out[n] = (max(cur[0], slow[1]), slow[0] if slow[1] > cur[0] else cur[1], above)
+    for _, n in DIES:
+        out.setdefault(n, (833.0, "", {}))
+    return out
+
+
+def period_token(per):
+    return "period=" + ",".join("%s:%g" % (n, per[n][0]) for _, n in DIES if n in per)
+
+
+def period_tsv(per, stamp):
+    rows = ["# SIGN-PERIOD (OWNER 11-20 (1)), written by count_hourly %s: die\tdie_period_ps\tslowest type\ttypes above 833 ps (type:ps)" % stamp]
+    for die, n in DIES:
+        p, slow, above = per.get(n, (833.0, "", {}))
+        rows.append("%s\t%g\t%s\t%s" % (die, p, slow if p > 833.0 else "", ",".join("%s:%g" % kv for kv in sorted(above.items()))))
+    return "\n".join(rows) + "\n"
 
 
 def headline(row):
@@ -181,6 +219,13 @@ def run(now=None, scan=None, commit=None, force=None):
         print("count_hourly: cache still %d min old after the scan, no row" % ((now - float(cache.get("generated") or 0)) / 60), file=sys.stderr)
         return 1
     row = rate_row(cache, time.strftime("%Y-%m-%d %H:%M", time.localtime(now)), any_plan_extra(cache, index_rows(CACHE.with_name("agidock_archive_index.json")), by_die=True))
+    per = die_periods(cache)       # SIGN-PERIOD: printed + lanes/DIE-PERIOD.tsv (the SIGN-RATE row keeps its shape)
+    try:
+        (COORD / PERIOD_TSV).write_text(period_tsv(per, time.strftime("%Y-%m-%d %H:%M", time.localtime(now))))
+    except OSError as e:
+        print("count_hourly: %s not written: %s" % (PERIOD_TSV, e), file=sys.stderr)
+    print("count_hourly: die_period_ps " + " | ".join("%s %g%s" % (n, per[n][0], " (slowest %s)" % per[n][1] if per[n][0] > 833.0 else "")
+                                                    for _, n in DIES if n in per))
     p = COORD / RATE
     last = last_total(p.read_text() if p.exists() else "")
     total = int(row.split(" ")[2])
@@ -210,7 +255,8 @@ def _scan():
 def _commit():
     """a lost race on coord/state leaves the row in the tree; the next hour's commit carries it"""
     try:
-        r = subprocess.run([COMMIT, "count hourly (auto)", RATE], timeout=280, capture_output=True, text=True)
+        r = subprocess.run([COMMIT, "count hourly (auto)", RATE] + ([PERIOD_TSV] if (COORD / PERIOD_TSV).exists() else []),
+                           timeout=280, capture_output=True, text=True)
     except subprocess.TimeoutExpired:
         print("count_hourly: coord-commit timed out; the row is in the tree for the next commit", file=sys.stderr)
         return 1

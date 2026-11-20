@@ -37,7 +37,8 @@ ARCHIVE_ROOT = "/archive/opentallas-signed-1106"
 AGIDOCK = ["ssh", "-o", "ControlPath=none", "-o", "BatchMode=yes", "-o", "ConnectTimeout=20",
            "-i", os.path.join(HOME, ".ssh/agidock_ot"), "ubuntu@155.103.253.53"]
 SCAN_FIELDS = ("name", "top", "generated", "host", "pins_path", "src_commit", "flow_tag", "prov_file", "resign", "routed_db",
-               "build_commit", "lec", "versioned", "resign_error", "legacy", "source_commit")
+               "build_commit", "lec", "versioned", "resign_error", "legacy", "source_commit",
+               "signed_period_ps")
 CLASS_SUFFIX = {"v": (".v", ".v.gz"), "spef": (".spef", ".spef.gz"), "sdc": (".sdc",), "lef": (".lef",), "lib": (".lib", ".lib.gz"),
                 "odb": (".odb",), "def": (".def", ".def.gz"), "gds": (".gds", ".gds.gz")}
 DIE_CI_NAMES = ("6_final.v", "6_final.spef", "6_final.sdc")
