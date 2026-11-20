@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; coordinator update 2026-11-01 18:00 PST)
 
-2026-11-19 13:1x PST: signed any plan 471 | current 406 | backlog (deferred re-sign) s81 0, head 3, qc 2, kv 0 (hbm 1; retired-plan 59). Per die signed types+cores: s81 64+44, head 5+25, qc 70+30, kv 68+6, hbm 90+4 (any flat vs 12:05 row 471, current +1 vs 405: qc core; SIGN-RATE row 13:05). Fleet 13:07 ot-run: epyc2 load 213/128 run 83 root 85% scratch 407 GB, intel1 run 34, localhost run 48, epyc7 admits 98 GB (load 36/96), epyc8 run 80, epyc9 run 100 waiters 1, epyc10 run 67; next 16-thread job -> epyc7.
+2026-11-19 18:1x PST: signed any plan 473 | current 408 | backlog (deferred re-sign) s81 0, head 3, qc 2, kv 0 (hbm 1; retired-plan 59). Per die signed types+cores: s81 64+44, head 5+25, qc 70+32, kv 68+6, hbm 90+4 (any +2 vs 13:05 row 471, current +2 vs 406: qc cores; SIGN-RATE row 18:05). Live plan events: S81 D8h live, D8i C4 binding; HEAD r8b live; QC N46C live, N46P binding; KV D25d live, D25e strict bind. Fleet 18:05 ot-run: epyc2 load 102/128 run 45 root 72%, intel1 run 27, localhost run 20, epyc7 run 50, epyc8 run 49 (load 163/96), epyc9 run 70 waiters 1, epyc10 run 45; next 16-thread job -> intel1.
 Plans 11:36: count 152 flat (S81 50/58 + 4/205 types, HEAD 4/4 + 12/25, QC 16/19, KV 26/32, HBM 40/103). Merged I118-I126 since 10:40: QC coll_core fold + ring ff class (tag e-qc), KV PV taps (tag b-kv), HEAD l48ue (tag a-head), wave prune + resume fixes. 9 core gaps from CORE-FORMS-2 all owned. intel2 scratch2 142 after 49 GB move.
 
 <!-- BREAKDOWN BEGIN -->
