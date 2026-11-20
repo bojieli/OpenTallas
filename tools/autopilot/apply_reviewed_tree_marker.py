@@ -72,9 +72,7 @@ def ensure_tree_on_hosts(tree, want, current_hosts, hosts, rt, run=None, link_fr
     for h in extra:
         # 11-19 (QC N4.2, epyc10 dropped 3 times with 'target exists or not writable'): an earlier apply's copy had already finished there, so replicate refused the existing tree.
         # A target that already holds the tree is VERIFIED first; a verified copy is kept without a new replicate (an unverified existing one still goes to replicate / the DROPPED note).
-        rc0, _ = verify(h, cached=True)
-        if rc0:
-            rc0, _ = verify(h)
+        rc0, _ = verify(h)
         if not rc0:
             kept.append(h)
             notes.append(f"{h}: already holds a verified copy")
