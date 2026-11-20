@@ -234,3 +234,47 @@ class BusyPattern(unittest.TestCase):
         self.assertIsNone(C.BUSY_CMD.search(cmd))
         for real in ("python3 eco_loop.py --kit K", "bash run_eco.sh", "python3 kit_resume.py K", "ot-run ... --eco x", "OT_ECO_MODE=1 openroad"):
             self.assertIsNotNone(C.BUSY_CMD.search(real), real)
+
+
+class ResumeInputsStayWhole(unittest.TestCase):
+    """FLOW-FIX-2045 (COORD: S81-GEOM-OPUS restarts failed builds with goal route): what the next stage to run reads is never emptied, failed run or not"""
+
+    def build(self, have):
+        d = tempfile.mkdtemp()
+        for i, n in enumerate(have):
+            p = os.path.join(d, n); open(p, "wb").write(b"x" * 100); os.utime(p, (NOW - 10000 + i * 10, NOW - 10000 + i * 10))
+        return d
+
+    def emptied(self, d):
+        C.once(d, d, log=lambda m: None, scan=lambda p: (set(), []), now=NOW)
+        return sorted(n for n in os.listdir(d) if os.path.getsize(os.path.join(d, n)) == 0)
+
+    def test_failed_grt_leaves_cts_boundary_and_grt_inputs_whole(self):
+        d = self.build(["1_synth.odb", "2_floorplan.odb", "3_place.odb", "4_1_cts.odb", "4_cts.odb", "4_cts.sdc", "5_1_grt-failed.odb"])     # GRT failed: no 5_1_grt.odb
+        self.assertEqual(self.emptied(d), ["4_1_cts.odb"])                          # ORFS global_route.tcl loads 4_cts.odb + 4_cts.sdc, never 4_1_cts.odb
+        for n in ("4_cts.odb", "4_cts.sdc", "3_place.odb", "5_1_grt-failed.odb"):
+            self.assertEqual(os.path.getsize(os.path.join(d, n)), 100)
+
+    def test_failed_cts_or_place_empties_nothing_the_stage_needs(self):
+        d = self.build(["1_synth.odb", "2_floorplan.odb", "3_1_place_gp_skip_io.odb", "3_5_place_dp.odb", "3_place.odb", "4_1_cts-failed.odb"])
+        self.assertEqual(self.emptied(d), ["3_1_place_gp_skip_io.odb", "3_5_place_dp.odb"])    # CTS reads 3_place.odb, kept
+        d = self.build(["1_synth.odb", "2_floorplan.odb", "3_1_place_gp_skip_io.odb", "3_3_place_gp-failed.odb"])     # place failed: 3_place.odb absent
+        self.assertEqual(self.emptied(d), [])
+
+    def test_route_inputs_5_1_grt_and_5_2_route_are_never_victims(self):
+        d = self.build(["3_place.odb", "4_cts.odb", "5_1_grt.odb", "5_2_route.odb", "5_3_fillcell.odb", "5_route.odb", "6_1_fill.odb", "6_final.odb", "6_final.v"])
+        C.once(d, d, log=lambda m: None, scan=lambda p: (set(), []), now=NOW)
+        for n in ("5_1_grt.odb", "5_2_route.odb", "4_cts.odb"):
+            self.assertEqual(os.path.getsize(os.path.join(d, n)), 100)
+
+    def test_resume_step_outputs_are_boundaries_only(self):
+        import re as _re
+        src = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "autopilot", "kit_resume.py")).read()
+        names = set(_re.findall(r'"([2-5]_[a-z_0-9]*\.odb)"', src.split("STEP_OUT = ")[1].split("}")[0]))
+        self.assertTrue(names)
+        for n in names:
+            self.assertFalse(any(rx.match(n) for rx, _ in C.EARLY_RULES) or any(rx.match(n) for rx, _ in C.RULES if n != "5_route.odb"), n)
+
+    def test_prd_mk_treats_an_empty_4_1_cts_as_absent(self):
+        t = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "post_route_drv", "prd_mk.sh")).read()
+        self.assertIn('if [ ! -s "$RS/4_1_cts.odb" ]; then', t)

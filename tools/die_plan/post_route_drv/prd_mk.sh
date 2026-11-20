@@ -80,7 +80,8 @@ esac
 # exists (that DB carries the post-CTS clock tree), so the stage identity is taken from 5_1_grt.odb and recorded in
 # PRD.json ("cts_identity").  No 4_1_cts.odb and no 5_1_grt.odb -> refused (never an invalid vehicle).
 CTS_ID=4_1_cts.odb
-if [ ! -f "$RS/4_1_cts.odb" ]; then
+# FLOW-FIX-2045: a live run's STAGE-CAP leaves a zero-byte 4_1_cts.odb placeholder (mtime kept for make); an empty file is no CTS DB: -s, not -f
+if [ ! -s "$RS/4_1_cts.odb" ]; then
   test -f "$RS/5_1_grt.odb" || { echo "prd_mk: $RS lacks original 4_1_cts.odb and 5_1_grt.odb (GRT stage identity)"; exit 2; }
   CTS_ID=5_1_grt.odb
   echo "prd_mk: $RS lacks original 4_1_cts.odb: GRT stage identity from 5_1_grt.odb (recorded in PRD.json)"
