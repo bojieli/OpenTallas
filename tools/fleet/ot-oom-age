@@ -10,6 +10,18 @@ import argparse, json, os, re, signal, subprocess, sys, time
 
 COMMS = {"openroad", "yosys", "yosys-abc", "verilator_bin", "verilator_bin_dbg", "cc1plus", "cc1", "klayout", "vvp"}
 STARTADJ, STEP, FLOOR, MAXMANAGED = 800, 100, 0, 800
+# WAITERADJ_1400 (FLEET-WATCH-1400, FABLE-FLOW-1400 class 3): the ot-run / ot-heavy waiters and their helpers (ssh to post.sh, sleep, tee, timeout, git fetch, flock) run at the user session's
+# oom_score_adj 200 (epyc8 earlyoom log: 'oom_score 800, oom_score_adj 200, VmRSS 3 MiB').  earlyoom ranks by score, so 3 to 8 of them died BEFORE every build: nothing was freed and the queue clients
+# and posts were lost.  They hold a few MB, so they are set to WAITER_ADJ (never raised: a plan job's -1000 or a die's -999 stays; a process above WAITER_RSS_MB is left alone).
+WAITER_COMMS = {"ot-heavy", "ot-heavy-exit", "ot-heavy-reconcile", "ot-run", "ot-job", "ssh", "sleep", "tee", "flock", "timeout", "git", "git-remote-http", "git-upload-pack", "sg"}
+WAITER_ADJ, WAITER_RSS_MB = -100, 256
+
+
+def waiter_adj(comm, cur, rss_mb):
+    """the adj a tiny waiter wrapper / helper gets, or None when it is not one or already at or below it"""
+    if comm in WAITER_COMMS and WAITER_ADJ < cur <= MAXMANAGED and rss_mb < WAITER_RSS_MB:
+        return WAITER_ADJ
+    return None
 
 
 def target_adj(age_s, start=STARTADJ, step=STEP, floor=FLOOR):
@@ -389,6 +401,18 @@ def main(argv=None):
                         open(f"/proc/{p}/oom_score_adj", "w").write(str(PLAN_ADJ))
                     changed += 1
                 seen += 1
+                continue
+            if comm in WAITER_COMMS and comm not in comms:
+                cur = int(open(f"/proc/{p}/oom_score_adj").read())
+                _m = re.search(r"VmRSS:\s+(\d+)", open(f"/proc/{p}/status").read())
+                if not _m:              # a zombie has no VmRSS line
+                    continue
+                rss_mb = int(_m.group(1)) / 1024
+                w = waiter_adj(comm, cur, rss_mb)
+                if w is not None:
+                    if not a.dry_run:
+                        open(f"/proc/{p}/oom_score_adj", "w").write(str(w))
+                    changed += 1
                 continue
             if comm not in comms:
                 continue

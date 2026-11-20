@@ -207,6 +207,18 @@ class Guard(unittest.TestCase):
             self.assertEqual(M.guard(0.2, 5.0, kill=lambda *a: self.fail("killed"), sleep=lambda s: time.sleep(0.01), meminfo=hi), 0)
 
 
+
+class WaiterAdj(unittest.TestCase):
+    """WAITERADJ_1400: earlyoom killed 3-8 tiny ot-heavy / ssh / sleep wrappers (adj 200 = score 800) before any build"""
+
+    def test_waiter_wrappers_get_a_low_adj_and_are_never_raised(self):
+        self.assertEqual([M.waiter_adj(c, 200, 3) for c in ("ot-heavy", "ssh", "sleep", "timeout")], [-100] * 4)
+        self.assertIsNone(M.waiter_adj("ot-heavy", -1000, 3))          # a plan job stays at -1000
+        self.assertIsNone(M.waiter_adj("ot-heavy", -100, 3))
+        self.assertIsNone(M.waiter_adj("ot-heavy", 200, 900))          # a big process is judged like any other
+        self.assertIsNone(M.waiter_adj("openroad", 200, 3))
+        self.assertIsNone(M.waiter_adj("python3", 200, 3))
+
 if __name__ == "__main__":
     unittest.main()
 
