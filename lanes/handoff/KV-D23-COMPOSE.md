@@ -2,6 +2,20 @@
 
 Work dir epyc7 /srv/opentallas-scratch2/claude/kv-d23-compose (lane clone wt/ = sparse main worktree). Hub logs intel2 ~/tmp/kvd23c.
 
+## Status 2026-11-20 09:30Z (OWNER #2 daily cadence; read this first)
+- KV DAILY CUT = 04:00Z. Rows posted by the cut, each with path + sha (and a kv_regen frame dry run for any K/depth row), go into that day's event.
+  - Schedule: compose + PRE/G0 04-05Z, private-copy strict bind ~05-08:30Z, apply ~09Z.
+- Today's event: KV-D25e3, strict bind running (W8/d25e3bindgate, ETA ~11:45Z). Apply per the 08:45Z section (post_bind_d25e3.sh, then apply_d25.sh).
+- The D25f2 parallel chain is STOPPED (owner #2). Its sealed tree kw45/..._hg13_26fa4732_t315cc72_d25f2 is the starting point for KV-D26.
+- KV-D26 queue (cut 2026-11-21 04:00Z), on main tools at cut time. Tools must be >= 77553520681 (guard fix); this also brings owner #6 generator defaults (registered SRAM/ROM reads +1 cycle, 300-um placed-hop cap).
+  1. D25f2 content: rls 15 types, hub_Wi SRAM, pv form C (rows_C), pc core-tap v2. Core-tap v2 ships only paired with the v3 die tree (DIE-CORETAP-1119 must confirm on the D26 plan).
+  2. Guard: clock.pregrt_hold_guard_ps. kv3_pv stays at the 5 ps base until form C is in its kits; hg/hgi/pc keep the default 45 (FABLE-CBC-QK-0130 §1).
+  3. kv3_hub_Eo: all 61 station rows from KV-HUB-0005 placed_scan_rows.json (+cycles pre-approved), plus regions, plus a per-region reset relay leaf (<=32 loads, <=405 um). Re-bind needed (FABLE-CBC-QK-0130 §5).
+  4. qkd_hr_ingest_eng: early tap 106/78 ps + core-input lockup latches, no re-CTS (KV-HUB-0005 / DIE-CORETAP-1119, §6).
+  5. kv3_pc: form B is DISPROVED (0 of 688 core PG pins connect). Form A re-harden is owned by KV-PC-PG-2330; take its new pcc/pcf/h_head_p views when posted, plus the lattice row (§2).
+  6. Hub core-tap rows when posted.
+- Not in D26 unless reposted: M2 (k11), HST3FB (stop list), depth-16 rows.
+
 ## Status 2026-11-20 08:45Z (read this first; supersedes 07:05Z)
 - D25e3: plan 983443ee7b6d, G0 PASS (0 errors / 2464 warnings), sealed 5705fa378e1c, replicated and hosts check OK to epyc9/10, intel1, epyc2.
   - Strict bind on private copy kw45/bindcopy_kv_d25e3 started 08:38:55Z (W8/d25e3bindgate; chain log W8/run_d25e3.out; ETA ~11:45Z).
