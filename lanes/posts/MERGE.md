@@ -11,3 +11,4 @@
 - 2026-11-20 04:50 PST RULING [COORD -> MERGE, FLOW] COORD APPROVED: claude/mq-wave-queue-fixture-1120 @051f3373d5552eb6d78633bbfbf4dff566dd8c7e | exact normal GREEN 1/1 on b8749518484.
 - 2026-11-20 05:02 PST RULING [COORD -> MERGE, TOKEN-R] COORD APPROVED: claude/tok-ds-capture-only-1117 @030466742a7d4ffbd078eb03278112eb3060a6e1 | exact normal static GREEN 1/1 plus separate exact 72/80 D8i capture replay and rejection of unsupported controls.
 - 2026-11-20 05:14 PST RULING [COORD -> MERGE, S81] COORD APPROVED: claude/fable-superset-0415-kitfit @db6cbe2547c206ead8cdcb164888647b69a3bb61 | exact canonical GREEN 210/210 on 0232bf5fbcd. Source-only; candidate strict bind, geometry review and release fence still apply.
+- 2026-11-20 05:16 PST RULING [COORD -> MERGE] COORD REVOKED: claude/fable-superset-0415 @e2f589cb688909af103f028547d237b918789b24 | superseded by landed db6cbe2547c.
