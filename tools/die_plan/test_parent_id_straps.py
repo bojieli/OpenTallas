@@ -69,3 +69,31 @@ def test_exact_keybuf_lane_identity(base,lane):
     with pytest.raises(ValueError): validate_parent_id_straps(d, {'strap_lane_id':3}, actual_module='ot_other')
     with pytest.raises(ValueError): validate_parent_id_straps(d, {})
     with pytest.raises(ValueError): validate_parent_id_straps(d, {'strap_lane_id':3}, ['strap_lane_id[0]'])
+
+
+def test_s81_vq_sid_requires_exact_native_role():
+    d = {"module": "ot_s81sl_vq", "inst": "u_lf.u_vq", "parent_id_leaf": "u_lf4.u_vq",
+         "parent_id_straps": {"sid": {"width": 4, "value": 9}}}
+    assert validate_parent_id_straps(d, {"sid": 4}, actual_module="ot_s81sl_vq") == d["parent_id_straps"]
+    for bad in (dict(d, parent_id_leaf="u_lf0.u_vq"), dict(d, module="other"),
+                dict(d, parent_id_straps={"sid": {"width": 3, "value": 1}})):
+        with pytest.raises(ValueError):
+            validate_parent_id_straps(bad, {"sid": 4}, actual_module="ot_s81sl_vq")
+    with pytest.raises(ValueError):
+        validate_parent_id_straps(d, {"sid": 4}, actual_module="other")
+
+
+def test_vq_sid_partition_pin_requires_validated_child():
+    from tools.die_plan.schema import _id_strap_errors
+
+    name = "strap_u_lf4_u_vq_sid"
+    d = {"module": "ot_s81sl_vq", "inst": "u_lf.u_vq", "parent_id_leaf": "u_lf4.u_vq",
+         "parent_id_straps": {"sid": {"width": 4, "value": 9}}}
+    t = {"hard_cores": [d], "id_straps": [{"name": name, "width": 4}]}
+    plan = {"partition_types": {"test": t}, "partitions": [
+        {"name": "north", "type": "test", "id_straps": {name: 9}},
+        {"name": "south", "type": "test", "id_straps": {name: 10}},
+    ]}
+    assert _id_strap_errors(plan) == []
+    t["hard_cores"] = []
+    assert any("not an approved ID" in e for e in _id_strap_errors(plan))

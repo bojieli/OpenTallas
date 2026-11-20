@@ -26,7 +26,11 @@ PHYSICAL_ID_ALIASES = {
 RESET_PHASE_WIDTHS = {'strap_rst_ph': 1}
 PHYSICAL_ID_WIDTHS = {**KV_ID_WIDTHS, 'strap_tile_tid': 6, **S81HD_ID_WIDTHS, 'strap_qid': 2, **RESET_PHASE_WIDTHS,
                       **{a: r['width'] for a, r in PHYSICAL_ID_ALIASES.items()}}
-ID_PORTS = frozenset({'tile_id', 'tile_tid', 'map_lane_j', 'lane_lane_id', 'sidx', 'strap_lane_id', *PHYSICAL_ID_WIDTHS})
+VQ_SID_MASTER = 'ot_s81sl_vq'
+VQ_SID_BOUND_LEAF = 'u_lf4.u_vq'
+VQ_SID_PARENT_STRAP = 'strap_u_lf4_u_vq_sid'
+VQ_SID_WIDTH = 4
+ID_PORTS = frozenset({'tile_id', 'tile_tid', 'map_lane_j', 'lane_lane_id', 'sidx', 'sid', 'strap_lane_id', *PHYSICAL_ID_WIDTHS})
 
 
 def validate_parent_id_straps(descriptor, inputs=None, pins=None, actual_module=None):
@@ -93,6 +97,13 @@ def validate_parent_id_straps(descriptor, inputs=None, pins=None, actual_module=
         width, value = contract['width'], contract['value']
         if type(width) is not int or width < 1:
             raise ValueError(f'parent_id_straps {port}: width must be a positive integer')
+        if port == 'sid':
+            if (descriptor.get('module') != VQ_SID_MASTER or
+                    descriptor.get('parent_id_leaf') != VQ_SID_BOUND_LEAF or
+                    actual_module not in (None, VQ_SID_MASTER)):
+                raise ValueError('parent_id_straps sid requires the exact S81 VQ master and bound leaf')
+            if width != VQ_SID_WIDTH:
+                raise ValueError(f'parent_id_straps sid: identity width must be exactly {VQ_SID_WIDTH} bits')
         if port == 'sidx' and width != 3:
             raise ValueError('parent_id_straps sidx: identity width must be exactly 3 bits')
         if port in PHYSICAL_ID_WIDTHS and width != PHYSICAL_ID_WIDTHS[port]:
