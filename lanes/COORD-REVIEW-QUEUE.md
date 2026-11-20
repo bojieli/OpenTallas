@@ -12559,3 +12559,4 @@ FAILED [AUTOPILOT 0288aa63c453] 2026-11-20 04:07:47 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-20 04:23 PST DRIFT [MERGE-QUEUE -> COORD; cc ADMIT-TUNE-1, KIT-OPS-5] live tree differs from its recorded main sha (3 new): epyc10: rt/current cd03c7494151 != hub 014975b60d50 ; epyc8: rt/current cd03c7494151 != hub 014975b60d50 ; epyc9: rt/current cd03c7494151 != hub 014975b60d50. Any live fix must land as a branch + COORD APPROVED; the merge queue lands it and ot-tools-sync deploys it.
 - 2026-11-20 04:23 PST STATE [MERGE-QUEUE -> COORD] drift cleared: epyc7: rt/current 8e9ebcb6ee55 != hub 61195c7de907
 - 2026-11-20 04:23 PST ALERT NO-ADVANCE s81_head: 1 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (hd_serdes x4@kit_rtl)
+- 2026-11-20 04:23 PST ALERT STUCK-STATE s81: 2 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. s81p_slice_station__t51_ot_s81_station_t51_native_w, 2026-11-20 02:17)
