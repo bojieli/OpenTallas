@@ -387,7 +387,9 @@ def scratch_disk(row, d, out, host=None):
     # v13 SCRATCH-DISK: a root on a separate disk exists -> only those roots count (never the root fs, even if emptier)
     disk_roots = {r: v for r, v in roots.items() if r not in onroot}
     if disk_roots and (onroot or "rootfs_pct" in extra):     # v13 probe: every root off the root fs = scratch disk
-        extra.update(scratch_disk=max(disk_roots, key=disk_roots.get), scratch_disk_gb=max(disk_roots.values()))
+        dedicated = max(disk_roots, key=disk_roots.get)
+        extra.update(scratch_disk=dedicated, scratch_disk_gb=disk_roots[dedicated],
+                     dedicated_scratch=dedicated, dedicated_scratch_gb=disk_roots[dedicated])
         roots = disk_roots
         sr = SCRATCH_PIN if SCRATCH_PIN in second else (max(second, key=second.get) if second else None)
         extra["scratch_floor_gb"] = sfloor(host)
@@ -480,8 +482,25 @@ def dir_disk_full(row):
     own = row.get("disk_own_gb") if isinstance(row, dict) else None
     if not (row.get("scratch_second") and own is not None and own < row.get("scratch_floor_gb", SCRATCH_DISK_FLOOR_GB)):
         return ""
-    return (f"{DIR_FULL_NOTE} ({own} GB free < floor {SCRATCH_DISK_FLOOR_GB} GB); new work here goes to "
-            f"{row.get('scratch_disk')} only")
+    floor = row.get("scratch_floor_gb", SCRATCH_DISK_FLOOR_GB)
+    return (f"{DIR_FULL_NOTE} ({own} GB free < floor {floor} GB); eligible new job dirs here use "
+            f"authorized root-backed scratch {row.get('scratch_disk')}, keeping {row.get('root_floor_gb', ROOT_SCRATCH_FLOOR_GB)} GB free on the root filesystem")
+
+
+def root_dir_guidance(row):
+    """Describe the actual device kind without presenting an authorized spill as dedicated scratch."""
+    if row.get("scratch_second") and not row.get("disk_refusal"):
+        return (f"{row['scratch_disk']} is an authorized root-backed scratch path; "
+                f"{row['scratch_disk_gb']} GB usable after keeping "
+                f"{row.get('root_floor_gb', ROOT_SCRATCH_FLOOR_GB)} GB free on the root filesystem")
+    dedicated = row.get("dedicated_scratch")
+    floor = row.get("scratch_floor_gb", SCRATCH_DISK_FLOOR_GB)
+    if dedicated:
+        free = row["dedicated_scratch_gb"]
+        if free >= floor:
+            return f"use the dedicated scratch filesystem {dedicated}/claude/<lane> ({free} GB free)"
+        return f"dedicated scratch {dedicated} has {free} GB free below its {floor} GB floor; choose an eligible host or volume"
+    return "the probe found no dedicated scratch filesystem; choose an eligible host or volume"
 
 
 THREADS, SMALL_CORES, SMALL_THREADS = 16, 48, 8
@@ -3367,9 +3386,8 @@ def place(hosts, d, disk, mem, quiet=False):
             note = dir_disk_full(r)                     # QUEUE-BAL-2: the host takes new work on scratch3, not this --dir
         if r and not r.get("error") and r["disk_gb"] < disk and trigger_reaper(h, note):
             note += " (ot-reaper started for this host)"
-        if r and not r.get("error") and r.get("dir_onroot") and r.get("scratch_disk") and d and not quiet:
-            print(f"ot-run: WARNING: {h}: --dir {d} is on the ROOT filesystem; move it to {r['scratch_disk']}/claude/<lane> "
-                  f"(owner 2026-10-24: never use root disks for work)", file=sys.stderr)
+        if r and not r.get("error") and r.get("dir_onroot") and d and not quiet:
+            print(f"ot-run: WARNING: {h}: --dir {d} is on the ROOT filesystem; {root_dir_guidance(r)}", file=sys.stderr)
         PLACE_NOTES[h] = note
         if r and not r.get("error"):
             if not quiet:

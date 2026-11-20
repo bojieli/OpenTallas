@@ -44,6 +44,25 @@ class Epyc2S3(unittest.TestCase):
         row = m.scratch_disk({'disk_gb': 400}, self.D, probe(400, 2000), host='epyc2')
         self.assertEqual(row['scratch_disk'], '/srv/opentallas-scratch2')
 
+    def test_root_backed_exception_is_not_recommended_as_a_dedicated_disk(self):
+        root_probe = probe(89, 743).replace("OT_DIR_ONROOT 0", "OT_DIR_ONROOT 1")
+        permitted = m.scratch_disk({"disk_gb": 743}, S3 + "/claude/lane", root_probe, host="epyc2")
+        self.assertTrue(permitted["scratch_second"])
+        self.assertEqual(permitted["disk_gb"], 743 - m.root_floor("epyc2"))
+        self.assertEqual(m.host_refusal(permitted), "")
+        note = m.root_dir_guidance(permitted)
+        self.assertIn(f"{S3} is an authorized root-backed scratch path", note)
+        self.assertIn(f"keeping {m.root_floor('epyc2')} GB free", note)
+        self.assertNotIn(f"filesystem {S3}/claude", note)
+
+        unauthorized = m.scratch_disk({"disk_gb": 743}, "/home/ubuntu/lane", root_probe, host="epyc2")
+        self.assertIn("without an explicit root scratch exception", m.host_refusal(unauthorized))
+        note = m.root_dir_guidance(unauthorized)
+        self.assertNotIn(S3, note)
+        self.assertIn("/srv/opentallas-scratch2", note)
+        low = dict(unauthorized, dedicated_scratch_gb=1)
+        self.assertIn("below its", m.root_dir_guidance(low))
+
     def test_env_script_lists_scratch3_for_epyc2_only(self):
         self.assertIn(' ' + S3 + ' ', m.scratch_env('epyc2').split('case')[1].split('esac')[0])
         self.assertNotIn(' ' + S3 + ' ', m.scratch_env('nohost').split('case')[1].split('esac')[0])
