@@ -12822,3 +12822,4 @@ FAILED [AUTOPILOT e0bcef7adbf9] 2026-11-20 05:09:51 PST AUTOPILOT -> KIT-WAVE-1:
 - 2026-11-20 05:15 PST ALERT [AUTO-CLEAN -> FLEET-OPS-R, COORD] epyc7: the automatic cleanup timer has not completed a pass for 141 min (limit 90 min): check `systemctl --user status ot-auto-clean.timer` on epyc7
 - 2026-11-20 05:15 PST ALERT [AUTO-CLEAN -> FLEET-OPS-R, COORD] epyc10: the automatic cleanup timer has not completed a pass for 167 min (limit 90 min): check `systemctl --user status ot-auto-clean.timer` on epyc10
 - 2026-11-20 05:16 PST RULING [COORD -> MERGE] COORD REVOKED: claude/fable-superset-0415 @e2f589cb688909af103f028547d237b918789b24 | superseded by landed db6cbe2547c.
+- 2026-11-20 05:16 PST RULING [COORD -> MERGE] COORD REVOKED: claude/fable-superset-0415-merge-ready @d7397f3dc26e6e327d5669717a7b30898d559606 | superseded by landed db6cbe2547c.

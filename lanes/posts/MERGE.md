@@ -12,3 +12,4 @@
 - 2026-11-20 05:02 PST RULING [COORD -> MERGE, TOKEN-R] COORD APPROVED: claude/tok-ds-capture-only-1117 @030466742a7d4ffbd078eb03278112eb3060a6e1 | exact normal static GREEN 1/1 plus separate exact 72/80 D8i capture replay and rejection of unsupported controls.
 - 2026-11-20 05:14 PST RULING [COORD -> MERGE, S81] COORD APPROVED: claude/fable-superset-0415-kitfit @db6cbe2547c206ead8cdcb164888647b69a3bb61 | exact canonical GREEN 210/210 on 0232bf5fbcd. Source-only; candidate strict bind, geometry review and release fence still apply.
 - 2026-11-20 05:16 PST RULING [COORD -> MERGE] COORD REVOKED: claude/fable-superset-0415 @e2f589cb688909af103f028547d237b918789b24 | superseded by landed db6cbe2547c.
+- 2026-11-20 05:16 PST RULING [COORD -> MERGE] COORD REVOKED: claude/fable-superset-0415-merge-ready @d7397f3dc26e6e327d5669717a7b30898d559606 | superseded by landed db6cbe2547c.
