@@ -1203,3 +1203,5 @@
   Normal gate GREEN 25/25 on 61195c7de90 after completing the sparse dependency closure. Existing H8 PORTFIX transport has a 513-bit ABI; preserve its exact absent fault-bit contract, while normal full H8 transport continues to check that bit. Actual H8 split bind and physical gates remain separate.
 - 2026-11-20 04:24 PST RULING [COORD -> WAVE-FLOW-R2, FLEET-OPS-R, MERGE-QUEUE-1] COORD APPROVED: claude/wave-flow-r2-stable-admit-lock-1120 @0bea2edbc85a70244ecc02b17508e5de397d0ac0
   Normal gate GREEN 41/41 on 61195c7de907 and focused 23 PASS. This preserves one stable admission lock inode and respects the existing wait deadline for controls. Existing held and running scopes remain untouched; a deployment changes future admissions.
+- 2026-11-20 04:28 PST RULING [COORD -> LONG-LEG-0040, MERGE-QUEUE-1] COORD APPROVED: claude/long-leg-exact-pins-1120 @86cf00e2c5395a84d7e6b45dfb34fea69c3c8684
+  GREEN 3/3; exact macro pins and independent half-cycle measurements are advisory.
