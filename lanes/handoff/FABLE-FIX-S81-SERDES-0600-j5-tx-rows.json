@@ -1,0 +1,678 @@
+{
+ "schema": "opentallas.plan_rows.v1",
+ "owner": "FABLE-FIX-S81-SERDES-0600",
+ "event": "J5",
+ "rows": [
+  {
+   "type": "serdes__t12",
+   "path": "internal_stations[conn=bus:coll_i0]",
+   "set": {
+    "conn": "bus:coll_i0",
+    "from_um": [
+     1074.4,
+     0.0
+    ],
+    "regs_um": [
+     [
+      1159.5,
+      172.0
+     ],
+     [
+      1244.6,
+      344.0
+     ],
+     [
+      1329.8,
+      516.0
+     ],
+     [
+      1414.9,
+      688.0
+     ]
+    ],
+    "to_um": [
+     1500.0,
+     860.0
+    ],
+    "stations": 4
+   },
+   "cycles": {
+    "lane": "coll_i0",
+    "clk": 4
+   },
+   "class": "serdes-tx-in-stations",
+   "status": "CBC-SIZED for J5 (COORD 11-20: do not wait for the t13 / t15 scans); geometry from the plan face window, hop measured on t1 / t14; refine in J6 from the placed DBs",
+   "evidence": "The plan has no internal_stations on bus:coll_i0 on any serdes type. Measured (placed_hops_or.py at 300 um, wave b05c98f7919 3_place): serdes__t1__clb45db5be u_bin_coll_i0.q -> u_enc.d0 median 745 / max 817 um in one cycle (512 bits); serdes__t14 ring dch -> u_bin_coll_i0.q median 594 / max 749 um (GPL dragged the face flops inward); u_enc.d0 -> u_enc.p_d up to 984 / 914 um (encoder stretched between the face and the PMA); u_enc.p_d -> u_txl r0 median 496..559 max 755, r0 -> r1 max 760, last row -> q max 909 um: about 2300 um on the worst bit in 4 hops with 3 rows. Form: the encoder gets ONE anchor at (1500,860), under the middle of the PMA TX pin face, and the input bus walks there in registered hops: face S window centre (1074.4,0.0) -> anchor L1 1286 um = 5 hops of 257 um (cap 300) -> 4 stations, lane coll_i0 +4 clk. regs_um are straight-line aims: bit_sites_um by the station tool, clear of u_chn / u_dmem / u_cmem and the rate matcher (on the S-face types the line crosses the decoder macros, so the tool will dog-leg; if a dog-leg pushes a hop over 300 take one more station). With the encoder at the face centre the fan-out to the 2273 um pin face is 1268 um each way instead of 2018 one way."
+  },
+  {
+   "type": "serdes__t13",
+   "path": "internal_stations[conn=bus:coll_i0]",
+   "set": {
+    "conn": "bus:coll_i0",
+    "from_um": [
+     922.3,
+     0.0
+    ],
+    "regs_um": [
+     [
+      1037.8,
+      172.0
+     ],
+     [
+      1153.4,
+      344.0
+     ],
+     [
+      1268.9,
+      516.0
+     ],
+     [
+      1384.5,
+      688.0
+     ]
+    ],
+    "to_um": [
+     1500.0,
+     860.0
+    ],
+    "stations": 4
+   },
+   "cycles": {
+    "lane": "coll_i0",
+    "clk": 4
+   },
+   "class": "serdes-tx-in-stations",
+   "status": "CBC-SIZED for J5 (COORD 11-20: do not wait for the t13 / t15 scans); geometry from the plan face window, hop measured on t1 / t14; refine in J6 from the placed DBs",
+   "evidence": "The plan has no internal_stations on bus:coll_i0 on any serdes type. Measured (placed_hops_or.py at 300 um, wave b05c98f7919 3_place): serdes__t1__clb45db5be u_bin_coll_i0.q -> u_enc.d0 median 745 / max 817 um in one cycle (512 bits); serdes__t14 ring dch -> u_bin_coll_i0.q median 594 / max 749 um (GPL dragged the face flops inward); u_enc.d0 -> u_enc.p_d up to 984 / 914 um (encoder stretched between the face and the PMA); u_enc.p_d -> u_txl r0 median 496..559 max 755, r0 -> r1 max 760, last row -> q max 909 um: about 2300 um on the worst bit in 4 hops with 3 rows. Form: the encoder gets ONE anchor at (1500,860), under the middle of the PMA TX pin face, and the input bus walks there in registered hops: face S window centre (922.3,0.0) -> anchor L1 1438 um = 5 hops of 288 um (cap 300) -> 4 stations, lane coll_i0 +4 clk. regs_um are straight-line aims: bit_sites_um by the station tool, clear of u_chn / u_dmem / u_cmem and the rate matcher (on the S-face types the line crosses the decoder macros, so the tool will dog-leg; if a dog-leg pushes a hop over 300 take one more station). With the encoder at the face centre the fan-out to the 2273 um pin face is 1268 um each way instead of 2018 one way."
+  },
+  {
+   "type": "serdes__t14",
+   "path": "internal_stations[conn=bus:coll_i0]",
+   "set": {
+    "conn": "bus:coll_i0",
+    "from_um": [
+     2885.76,
+     625.7
+    ],
+    "regs_um": [
+     [
+      2654.8,
+      664.8
+     ],
+     [
+      2423.8,
+      703.8
+     ],
+     [
+      2192.9,
+      742.9
+     ],
+     [
+      1961.9,
+      781.9
+     ],
+     [
+      1731.0,
+      821.0
+     ]
+    ],
+    "to_um": [
+     1500.0,
+     860.0
+    ],
+    "stations": 5
+   },
+   "cycles": {
+    "lane": "coll_i0",
+    "clk": 5
+   },
+   "class": "serdes-tx-in-stations",
+   "status": "CBC-SIZED for J5 (COORD 11-20: do not wait for the t13 / t15 scans); this type measured; refine in J6 from the placed DBs",
+   "evidence": "The plan has no internal_stations on bus:coll_i0 on any serdes type. Measured (placed_hops_or.py at 300 um, wave b05c98f7919 3_place): serdes__t1__clb45db5be u_bin_coll_i0.q -> u_enc.d0 median 745 / max 817 um in one cycle (512 bits); serdes__t14 ring dch -> u_bin_coll_i0.q median 594 / max 749 um (GPL dragged the face flops inward); u_enc.d0 -> u_enc.p_d up to 984 / 914 um (encoder stretched between the face and the PMA); u_enc.p_d -> u_txl r0 median 496..559 max 755, r0 -> r1 max 760, last row -> q max 909 um: about 2300 um on the worst bit in 4 hops with 3 rows. Form: the encoder gets ONE anchor at (1500,860), under the middle of the PMA TX pin face, and the input bus walks there in registered hops: face E window centre (2885.8,625.7) -> anchor L1 1620 um = 6 hops of 270 um (cap 300) -> 5 stations, lane coll_i0 +5 clk. regs_um are straight-line aims: bit_sites_um by the station tool, clear of u_chn / u_dmem / u_cmem and the rate matcher (on the S-face types the line crosses the decoder macros, so the tool will dog-leg; if a dog-leg pushes a hop over 300 take one more station). With the encoder at the face centre the fan-out to the 2273 um pin face is 1268 um each way instead of 2018 one way."
+  },
+  {
+   "type": "serdes__t15__cla2127225",
+   "path": "internal_stations[conn=bus:coll_i0]",
+   "set": {
+    "conn": "bus:coll_i0",
+    "from_um": [
+     2885.76,
+     398.4
+    ],
+    "regs_um": [
+     [
+      2687.8,
+      464.3
+     ],
+     [
+      2489.8,
+      530.3
+     ],
+     [
+      2291.9,
+      596.2
+     ],
+     [
+      2093.9,
+      662.2
+     ],
+     [
+      1895.9,
+      728.1
+     ],
+     [
+      1698.0,
+      794.1
+     ]
+    ],
+    "to_um": [
+     1500.0,
+     860.0
+    ],
+    "stations": 6
+   },
+   "cycles": {
+    "lane": "coll_i0",
+    "clk": 6
+   },
+   "class": "serdes-tx-in-stations",
+   "status": "CBC-SIZED for J5 (COORD 11-20: do not wait for the t13 / t15 scans); geometry from the plan face window, hop measured on t1 / t14; refine in J6 from the placed DBs",
+   "evidence": "The plan has no internal_stations on bus:coll_i0 on any serdes type. Measured (placed_hops_or.py at 300 um, wave b05c98f7919 3_place): serdes__t1__clb45db5be u_bin_coll_i0.q -> u_enc.d0 median 745 / max 817 um in one cycle (512 bits); serdes__t14 ring dch -> u_bin_coll_i0.q median 594 / max 749 um (GPL dragged the face flops inward); u_enc.d0 -> u_enc.p_d up to 984 / 914 um (encoder stretched between the face and the PMA); u_enc.p_d -> u_txl r0 median 496..559 max 755, r0 -> r1 max 760, last row -> q max 909 um: about 2300 um on the worst bit in 4 hops with 3 rows. Form: the encoder gets ONE anchor at (1500,860), under the middle of the PMA TX pin face, and the input bus walks there in registered hops: face E window centre (2885.8,398.4) -> anchor L1 1847 um = 7 hops of 264 um (cap 300) -> 6 stations, lane coll_i0 +6 clk. regs_um are straight-line aims: bit_sites_um by the station tool, clear of u_chn / u_dmem / u_cmem and the rate matcher (on the S-face types the line crosses the decoder macros, so the tool will dog-leg; if a dog-leg pushes a hop over 300 take one more station). With the encoder at the face centre the fan-out to the 2273 um pin face is 1268 um each way instead of 2018 one way."
+  },
+  {
+   "type": "serdes__t15__cla3d02796",
+   "path": "internal_stations[conn=bus:coll_i0]",
+   "set": {
+    "conn": "bus:coll_i0",
+    "from_um": [
+     2885.76,
+     398.4
+    ],
+    "regs_um": [
+     [
+      2687.8,
+      464.3
+     ],
+     [
+      2489.8,
+      530.3
+     ],
+     [
+      2291.9,
+      596.2
+     ],
+     [
+      2093.9,
+      662.2
+     ],
+     [
+      1895.9,
+      728.1
+     ],
+     [
+      1698.0,
+      794.1
+     ]
+    ],
+    "to_um": [
+     1500.0,
+     860.0
+    ],
+    "stations": 6
+   },
+   "cycles": {
+    "lane": "coll_i0",
+    "clk": 6
+   },
+   "class": "serdes-tx-in-stations",
+   "status": "CBC-SIZED for J5 (COORD 11-20: do not wait for the t13 / t15 scans); geometry from the plan face window, hop measured on t1 / t14; refine in J6 from the placed DBs",
+   "evidence": "The plan has no internal_stations on bus:coll_i0 on any serdes type. Measured (placed_hops_or.py at 300 um, wave b05c98f7919 3_place): serdes__t1__clb45db5be u_bin_coll_i0.q -> u_enc.d0 median 745 / max 817 um in one cycle (512 bits); serdes__t14 ring dch -> u_bin_coll_i0.q median 594 / max 749 um (GPL dragged the face flops inward); u_enc.d0 -> u_enc.p_d up to 984 / 914 um (encoder stretched between the face and the PMA); u_enc.p_d -> u_txl r0 median 496..559 max 755, r0 -> r1 max 760, last row -> q max 909 um: about 2300 um on the worst bit in 4 hops with 3 rows. Form: the encoder gets ONE anchor at (1500,860), under the middle of the PMA TX pin face, and the input bus walks there in registered hops: face E window centre (2885.8,398.4) -> anchor L1 1847 um = 7 hops of 264 um (cap 300) -> 6 stations, lane coll_i0 +6 clk. regs_um are straight-line aims: bit_sites_um by the station tool, clear of u_chn / u_dmem / u_cmem and the rate matcher (on the S-face types the line crosses the decoder macros, so the tool will dog-leg; if a dog-leg pushes a hop over 300 take one more station). With the encoder at the face centre the fan-out to the 2273 um pin face is 1268 um each way instead of 2018 one way."
+  },
+  {
+   "type": "serdes__t16",
+   "path": "internal_stations[conn=bus:coll_i0]",
+   "set": {
+    "conn": "bus:coll_i0",
+    "from_um": [
+     2885.76,
+     173.7
+    ],
+    "regs_um": [
+     [
+      2687.8,
+      271.7
+     ],
+     [
+      2489.8,
+      369.8
+     ],
+     [
+      2291.9,
+      467.8
+     ],
+     [
+      2093.9,
+      565.9
+     ],
+     [
+      1895.9,
+      663.9
+     ],
+     [
+      1698.0,
+      762.0
+     ]
+    ],
+    "to_um": [
+     1500.0,
+     860.0
+    ],
+    "stations": 6
+   },
+   "cycles": {
+    "lane": "coll_i0",
+    "clk": 6
+   },
+   "class": "serdes-tx-in-stations",
+   "status": "CBC-SIZED for J5 (COORD 11-20: do not wait for the t13 / t15 scans); geometry from the plan face window, hop measured on t1 / t14; refine in J6 from the placed DBs",
+   "evidence": "The plan has no internal_stations on bus:coll_i0 on any serdes type. Measured (placed_hops_or.py at 300 um, wave b05c98f7919 3_place): serdes__t1__clb45db5be u_bin_coll_i0.q -> u_enc.d0 median 745 / max 817 um in one cycle (512 bits); serdes__t14 ring dch -> u_bin_coll_i0.q median 594 / max 749 um (GPL dragged the face flops inward); u_enc.d0 -> u_enc.p_d up to 984 / 914 um (encoder stretched between the face and the PMA); u_enc.p_d -> u_txl r0 median 496..559 max 755, r0 -> r1 max 760, last row -> q max 909 um: about 2300 um on the worst bit in 4 hops with 3 rows. Form: the encoder gets ONE anchor at (1500,860), under the middle of the PMA TX pin face, and the input bus walks there in registered hops: face E window centre (2885.8,173.7) -> anchor L1 2072 um = 7 hops of 296 um (cap 300) -> 6 stations, lane coll_i0 +6 clk. regs_um are straight-line aims: bit_sites_um by the station tool, clear of u_chn / u_dmem / u_cmem and the rate matcher (on the S-face types the line crosses the decoder macros, so the tool will dog-leg; if a dog-leg pushes a hop over 300 take one more station). With the encoder at the face centre the fan-out to the 2273 um pin face is 1268 um each way instead of 2018 one way."
+  },
+  {
+   "type": "serdes__t1__clb45db5be",
+   "path": "internal_stations[conn=bus:coll_i0]",
+   "set": {
+    "conn": "bus:coll_i0",
+    "from_um": [
+     2885.76,
+     398.4
+    ],
+    "regs_um": [
+     [
+      2687.8,
+      464.3
+     ],
+     [
+      2489.8,
+      530.3
+     ],
+     [
+      2291.9,
+      596.2
+     ],
+     [
+      2093.9,
+      662.2
+     ],
+     [
+      1895.9,
+      728.1
+     ],
+     [
+      1698.0,
+      794.1
+     ]
+    ],
+    "to_um": [
+     1500.0,
+     860.0
+    ],
+    "stations": 6
+   },
+   "cycles": {
+    "lane": "coll_i0",
+    "clk": 6
+   },
+   "class": "serdes-tx-in-stations",
+   "status": "CBC-SIZED for J5 (COORD 11-20: do not wait for the t13 / t15 scans); this type measured; refine in J6 from the placed DBs",
+   "evidence": "The plan has no internal_stations on bus:coll_i0 on any serdes type. Measured (placed_hops_or.py at 300 um, wave b05c98f7919 3_place): serdes__t1__clb45db5be u_bin_coll_i0.q -> u_enc.d0 median 745 / max 817 um in one cycle (512 bits); serdes__t14 ring dch -> u_bin_coll_i0.q median 594 / max 749 um (GPL dragged the face flops inward); u_enc.d0 -> u_enc.p_d up to 984 / 914 um (encoder stretched between the face and the PMA); u_enc.p_d -> u_txl r0 median 496..559 max 755, r0 -> r1 max 760, last row -> q max 909 um: about 2300 um on the worst bit in 4 hops with 3 rows. Form: the encoder gets ONE anchor at (1500,860), under the middle of the PMA TX pin face, and the input bus walks there in registered hops: face E window centre (2885.8,398.4) -> anchor L1 1847 um = 7 hops of 264 um (cap 300) -> 6 stations, lane coll_i0 +6 clk. regs_um are straight-line aims: bit_sites_um by the station tool, clear of u_chn / u_dmem / u_cmem and the rate matcher (on the S-face types the line crosses the decoder macros, so the tool will dog-leg; if a dog-leg pushes a hop over 300 take one more station). With the encoder at the face centre the fan-out to the 2273 um pin face is 1268 um each way instead of 2018 one way."
+  },
+  {
+   "type": "serdes__t1__clfe1f0815",
+   "path": "internal_stations[conn=bus:coll_i0]",
+   "set": {
+    "conn": "bus:coll_i0",
+    "from_um": [
+     2885.76,
+     398.4
+    ],
+    "regs_um": [
+     [
+      2687.8,
+      464.3
+     ],
+     [
+      2489.8,
+      530.3
+     ],
+     [
+      2291.9,
+      596.2
+     ],
+     [
+      2093.9,
+      662.2
+     ],
+     [
+      1895.9,
+      728.1
+     ],
+     [
+      1698.0,
+      794.1
+     ]
+    ],
+    "to_um": [
+     1500.0,
+     860.0
+    ],
+    "stations": 6
+   },
+   "cycles": {
+    "lane": "coll_i0",
+    "clk": 6
+   },
+   "class": "serdes-tx-in-stations",
+   "status": "CBC-SIZED for J5 (COORD 11-20: do not wait for the t13 / t15 scans); geometry from the plan face window, hop measured on t1 / t14; refine in J6 from the placed DBs",
+   "evidence": "The plan has no internal_stations on bus:coll_i0 on any serdes type. Measured (placed_hops_or.py at 300 um, wave b05c98f7919 3_place): serdes__t1__clb45db5be u_bin_coll_i0.q -> u_enc.d0 median 745 / max 817 um in one cycle (512 bits); serdes__t14 ring dch -> u_bin_coll_i0.q median 594 / max 749 um (GPL dragged the face flops inward); u_enc.d0 -> u_enc.p_d up to 984 / 914 um (encoder stretched between the face and the PMA); u_enc.p_d -> u_txl r0 median 496..559 max 755, r0 -> r1 max 760, last row -> q max 909 um: about 2300 um on the worst bit in 4 hops with 3 rows. Form: the encoder gets ONE anchor at (1500,860), under the middle of the PMA TX pin face, and the input bus walks there in registered hops: face E window centre (2885.8,398.4) -> anchor L1 1847 um = 7 hops of 264 um (cap 300) -> 6 stations, lane coll_i0 +6 clk. regs_um are straight-line aims: bit_sites_um by the station tool, clear of u_chn / u_dmem / u_cmem and the rate matcher (on the S-face types the line crosses the decoder macros, so the tool will dog-leg; if a dog-leg pushes a hop over 300 take one more station). With the encoder at the face centre the fan-out to the 2273 um pin face is 1268 um each way instead of 2018 one way."
+  },
+  {
+   "type": "serdes__t2",
+   "path": "internal_stations[conn=bus:coll_i0]",
+   "set": {
+    "conn": "bus:coll_i0",
+    "from_um": [
+     2885.76,
+     173.7
+    ],
+    "regs_um": [
+     [
+      2687.8,
+      271.7
+     ],
+     [
+      2489.8,
+      369.8
+     ],
+     [
+      2291.9,
+      467.8
+     ],
+     [
+      2093.9,
+      565.9
+     ],
+     [
+      1895.9,
+      663.9
+     ],
+     [
+      1698.0,
+      762.0
+     ]
+    ],
+    "to_um": [
+     1500.0,
+     860.0
+    ],
+    "stations": 6
+   },
+   "cycles": {
+    "lane": "coll_i0",
+    "clk": 6
+   },
+   "class": "serdes-tx-in-stations",
+   "status": "CBC-SIZED for J5 (COORD 11-20: do not wait for the t13 / t15 scans); geometry from the plan face window, hop measured on t1 / t14; refine in J6 from the placed DBs",
+   "evidence": "The plan has no internal_stations on bus:coll_i0 on any serdes type. Measured (placed_hops_or.py at 300 um, wave b05c98f7919 3_place): serdes__t1__clb45db5be u_bin_coll_i0.q -> u_enc.d0 median 745 / max 817 um in one cycle (512 bits); serdes__t14 ring dch -> u_bin_coll_i0.q median 594 / max 749 um (GPL dragged the face flops inward); u_enc.d0 -> u_enc.p_d up to 984 / 914 um (encoder stretched between the face and the PMA); u_enc.p_d -> u_txl r0 median 496..559 max 755, r0 -> r1 max 760, last row -> q max 909 um: about 2300 um on the worst bit in 4 hops with 3 rows. Form: the encoder gets ONE anchor at (1500,860), under the middle of the PMA TX pin face, and the input bus walks there in registered hops: face E window centre (2885.8,173.7) -> anchor L1 2072 um = 7 hops of 296 um (cap 300) -> 6 stations, lane coll_i0 +6 clk. regs_um are straight-line aims: bit_sites_um by the station tool, clear of u_chn / u_dmem / u_cmem and the rate matcher (on the S-face types the line crosses the decoder macros, so the tool will dog-leg; if a dog-leg pushes a hop over 300 take one more station). With the encoder at the face centre the fan-out to the 2273 um pin face is 1268 um each way instead of 2018 one way."
+  },
+  {
+   "type": "serdes__t3",
+   "path": "internal_stations[conn=bus:coll_i0]",
+   "set": {
+    "conn": "bus:coll_i0",
+    "from_um": [
+     2885.76,
+     625.7
+    ],
+    "regs_um": [
+     [
+      2654.8,
+      664.8
+     ],
+     [
+      2423.8,
+      703.8
+     ],
+     [
+      2192.9,
+      742.9
+     ],
+     [
+      1961.9,
+      781.9
+     ],
+     [
+      1731.0,
+      821.0
+     ]
+    ],
+    "to_um": [
+     1500.0,
+     860.0
+    ],
+    "stations": 5
+   },
+   "cycles": {
+    "lane": "coll_i0",
+    "clk": 5
+   },
+   "class": "serdes-tx-in-stations",
+   "status": "CBC-SIZED for J5 (COORD 11-20: do not wait for the t13 / t15 scans); geometry from the plan face window, hop measured on t1 / t14; refine in J6 from the placed DBs",
+   "evidence": "The plan has no internal_stations on bus:coll_i0 on any serdes type. Measured (placed_hops_or.py at 300 um, wave b05c98f7919 3_place): serdes__t1__clb45db5be u_bin_coll_i0.q -> u_enc.d0 median 745 / max 817 um in one cycle (512 bits); serdes__t14 ring dch -> u_bin_coll_i0.q median 594 / max 749 um (GPL dragged the face flops inward); u_enc.d0 -> u_enc.p_d up to 984 / 914 um (encoder stretched between the face and the PMA); u_enc.p_d -> u_txl r0 median 496..559 max 755, r0 -> r1 max 760, last row -> q max 909 um: about 2300 um on the worst bit in 4 hops with 3 rows. Form: the encoder gets ONE anchor at (1500,860), under the middle of the PMA TX pin face, and the input bus walks there in registered hops: face E window centre (2885.8,625.7) -> anchor L1 1620 um = 6 hops of 270 um (cap 300) -> 5 stations, lane coll_i0 +5 clk. regs_um are straight-line aims: bit_sites_um by the station tool, clear of u_chn / u_dmem / u_cmem and the rate matcher (on the S-face types the line crosses the decoder macros, so the tool will dog-leg; if a dog-leg pushes a hop over 300 take one more station). With the encoder at the face centre the fan-out to the 2273 um pin face is 1268 um each way instead of 2018 one way."
+  },
+  {
+   "type": "serdes__t4",
+   "path": "internal_stations[conn=bus:coll_i0]",
+   "set": {
+    "conn": "bus:coll_i0",
+    "from_um": [
+     849.8,
+     0.0
+    ],
+    "regs_um": [
+     [
+      958.2,
+      143.3
+     ],
+     [
+      1066.5,
+      286.7
+     ],
+     [
+      1174.9,
+      430.0
+     ],
+     [
+      1283.3,
+      573.3
+     ],
+     [
+      1391.6,
+      716.7
+     ]
+    ],
+    "to_um": [
+     1500.0,
+     860.0
+    ],
+    "stations": 5
+   },
+   "cycles": {
+    "lane": "coll_i0",
+    "clk": 5
+   },
+   "class": "serdes-tx-in-stations",
+   "status": "CBC-SIZED for J5 (COORD 11-20: do not wait for the t13 / t15 scans); geometry from the plan face window, hop measured on t1 / t14; refine in J6 from the placed DBs",
+   "evidence": "The plan has no internal_stations on bus:coll_i0 on any serdes type. Measured (placed_hops_or.py at 300 um, wave b05c98f7919 3_place): serdes__t1__clb45db5be u_bin_coll_i0.q -> u_enc.d0 median 745 / max 817 um in one cycle (512 bits); serdes__t14 ring dch -> u_bin_coll_i0.q median 594 / max 749 um (GPL dragged the face flops inward); u_enc.d0 -> u_enc.p_d up to 984 / 914 um (encoder stretched between the face and the PMA); u_enc.p_d -> u_txl r0 median 496..559 max 755, r0 -> r1 max 760, last row -> q max 909 um: about 2300 um on the worst bit in 4 hops with 3 rows. Form: the encoder gets ONE anchor at (1500,860), under the middle of the PMA TX pin face, and the input bus walks there in registered hops: face S window centre (849.8,0.0) -> anchor L1 1510 um = 6 hops of 252 um (cap 300) -> 5 stations, lane coll_i0 +5 clk. regs_um are straight-line aims: bit_sites_um by the station tool, clear of u_chn / u_dmem / u_cmem and the rate matcher (on the S-face types the line crosses the decoder macros, so the tool will dog-leg; if a dog-leg pushes a hop over 300 take one more station). With the encoder at the face centre the fan-out to the 2273 um pin face is 1268 um each way instead of 2018 one way."
+  },
+  {
+   "type": "serdes__t12",
+   "path": "verilog_defines",
+   "append": [
+    "OT_S81_SERDES_TXL4"
+   ],
+   "cycles": {
+    "lane": "tx (u_enc -> u_txl -> u_ptx)",
+    "clk": 2
+   },
+   "class": "serdes-txl4",
+   "status": "CBC-SIZED for J5; take together with class serdes-tx-in-stations (the 300 um figure assumes the encoder anchor)",
+   "evidence": "OT_S81_SERDES_TXL4 (DIE-S81-85 11-09, in main; TXL_N = TXL 2 + TXL4 2 + TXPIPE 1 = 5 relay rows of 545 bits, rows spaced by tools/die_plan/txl_mid.tcl, which the TXPIPE define already turns on at kit generation, face mode: last row at its PMA pin). Measured (placed_hops_or.py at 300 um, wave b05c98f7919 3_place): serdes__t1__clb45db5be u_bin_coll_i0.q -> u_enc.d0 median 745 / max 817 um in one cycle (512 bits); serdes__t14 ring dch -> u_bin_coll_i0.q median 594 / max 749 um (GPL dragged the face flops inward); u_enc.d0 -> u_enc.p_d up to 984 / 914 um (encoder stretched between the face and the PMA); u_enc.p_d -> u_txl r0 median 496..559 max 755, r0 -> r1 max 760, last row -> q max 909 um: about 2300 um on the worst bit in 4 hops with 3 rows. With the encoder anchored at (1500,860): worst bit 1268 + 233 = 1501 um in 6 hops = 250 um (cap 300). Without the anchor (encoder where GPL leaves it, x about 2250) 5 rows give 2300 / 6 = 383 um: under 405, over 300; 7 rows would need a new define. TX +2 clk on every beat; reset: none on the rows (LOCKSAFE holds >= 64 edges, as for the other rows). LATCHECK: +2 clk on the serdes TX lane."
+  },
+  {
+   "type": "serdes__t13",
+   "path": "verilog_defines",
+   "append": [
+    "OT_S81_SERDES_TXL4"
+   ],
+   "cycles": {
+    "lane": "tx (u_enc -> u_txl -> u_ptx)",
+    "clk": 2
+   },
+   "class": "serdes-txl4",
+   "status": "CBC-SIZED for J5; take together with class serdes-tx-in-stations (the 300 um figure assumes the encoder anchor)",
+   "evidence": "OT_S81_SERDES_TXL4 (DIE-S81-85 11-09, in main; TXL_N = TXL 2 + TXL4 2 + TXPIPE 1 = 5 relay rows of 545 bits, rows spaced by tools/die_plan/txl_mid.tcl, which the TXPIPE define already turns on at kit generation, face mode: last row at its PMA pin). Measured (placed_hops_or.py at 300 um, wave b05c98f7919 3_place): serdes__t1__clb45db5be u_bin_coll_i0.q -> u_enc.d0 median 745 / max 817 um in one cycle (512 bits); serdes__t14 ring dch -> u_bin_coll_i0.q median 594 / max 749 um (GPL dragged the face flops inward); u_enc.d0 -> u_enc.p_d up to 984 / 914 um (encoder stretched between the face and the PMA); u_enc.p_d -> u_txl r0 median 496..559 max 755, r0 -> r1 max 760, last row -> q max 909 um: about 2300 um on the worst bit in 4 hops with 3 rows. With the encoder anchored at (1500,860): worst bit 1268 + 233 = 1501 um in 6 hops = 250 um (cap 300). Without the anchor (encoder where GPL leaves it, x about 2250) 5 rows give 2300 / 6 = 383 um: under 405, over 300; 7 rows would need a new define. TX +2 clk on every beat; reset: none on the rows (LOCKSAFE holds >= 64 edges, as for the other rows). LATCHECK: +2 clk on the serdes TX lane."
+  },
+  {
+   "type": "serdes__t14",
+   "path": "verilog_defines",
+   "append": [
+    "OT_S81_SERDES_TXL4"
+   ],
+   "cycles": {
+    "lane": "tx (u_enc -> u_txl -> u_ptx)",
+    "clk": 2
+   },
+   "class": "serdes-txl4",
+   "status": "CBC-SIZED for J5; take together with class serdes-tx-in-stations (the 300 um figure assumes the encoder anchor)",
+   "evidence": "OT_S81_SERDES_TXL4 (DIE-S81-85 11-09, in main; TXL_N = TXL 2 + TXL4 2 + TXPIPE 1 = 5 relay rows of 545 bits, rows spaced by tools/die_plan/txl_mid.tcl, which the TXPIPE define already turns on at kit generation, face mode: last row at its PMA pin). Measured (placed_hops_or.py at 300 um, wave b05c98f7919 3_place): serdes__t1__clb45db5be u_bin_coll_i0.q -> u_enc.d0 median 745 / max 817 um in one cycle (512 bits); serdes__t14 ring dch -> u_bin_coll_i0.q median 594 / max 749 um (GPL dragged the face flops inward); u_enc.d0 -> u_enc.p_d up to 984 / 914 um (encoder stretched between the face and the PMA); u_enc.p_d -> u_txl r0 median 496..559 max 755, r0 -> r1 max 760, last row -> q max 909 um: about 2300 um on the worst bit in 4 hops with 3 rows. With the encoder anchored at (1500,860): worst bit 1268 + 233 = 1501 um in 6 hops = 250 um (cap 300). Without the anchor (encoder where GPL leaves it, x about 2250) 5 rows give 2300 / 6 = 383 um: under 405, over 300; 7 rows would need a new define. TX +2 clk on every beat; reset: none on the rows (LOCKSAFE holds >= 64 edges, as for the other rows). LATCHECK: +2 clk on the serdes TX lane."
+  },
+  {
+   "type": "serdes__t15__cla2127225",
+   "path": "verilog_defines",
+   "append": [
+    "OT_S81_SERDES_TXL4"
+   ],
+   "cycles": {
+    "lane": "tx (u_enc -> u_txl -> u_ptx)",
+    "clk": 2
+   },
+   "class": "serdes-txl4",
+   "status": "CBC-SIZED for J5; take together with class serdes-tx-in-stations (the 300 um figure assumes the encoder anchor)",
+   "evidence": "OT_S81_SERDES_TXL4 (DIE-S81-85 11-09, in main; TXL_N = TXL 2 + TXL4 2 + TXPIPE 1 = 5 relay rows of 545 bits, rows spaced by tools/die_plan/txl_mid.tcl, which the TXPIPE define already turns on at kit generation, face mode: last row at its PMA pin). Measured (placed_hops_or.py at 300 um, wave b05c98f7919 3_place): serdes__t1__clb45db5be u_bin_coll_i0.q -> u_enc.d0 median 745 / max 817 um in one cycle (512 bits); serdes__t14 ring dch -> u_bin_coll_i0.q median 594 / max 749 um (GPL dragged the face flops inward); u_enc.d0 -> u_enc.p_d up to 984 / 914 um (encoder stretched between the face and the PMA); u_enc.p_d -> u_txl r0 median 496..559 max 755, r0 -> r1 max 760, last row -> q max 909 um: about 2300 um on the worst bit in 4 hops with 3 rows. With the encoder anchored at (1500,860): worst bit 1268 + 233 = 1501 um in 6 hops = 250 um (cap 300). Without the anchor (encoder where GPL leaves it, x about 2250) 5 rows give 2300 / 6 = 383 um: under 405, over 300; 7 rows would need a new define. TX +2 clk on every beat; reset: none on the rows (LOCKSAFE holds >= 64 edges, as for the other rows). LATCHECK: +2 clk on the serdes TX lane."
+  },
+  {
+   "type": "serdes__t15__cla3d02796",
+   "path": "verilog_defines",
+   "append": [
+    "OT_S81_SERDES_TXL4"
+   ],
+   "cycles": {
+    "lane": "tx (u_enc -> u_txl -> u_ptx)",
+    "clk": 2
+   },
+   "class": "serdes-txl4",
+   "status": "CBC-SIZED for J5; take together with class serdes-tx-in-stations (the 300 um figure assumes the encoder anchor)",
+   "evidence": "OT_S81_SERDES_TXL4 (DIE-S81-85 11-09, in main; TXL_N = TXL 2 + TXL4 2 + TXPIPE 1 = 5 relay rows of 545 bits, rows spaced by tools/die_plan/txl_mid.tcl, which the TXPIPE define already turns on at kit generation, face mode: last row at its PMA pin). Measured (placed_hops_or.py at 300 um, wave b05c98f7919 3_place): serdes__t1__clb45db5be u_bin_coll_i0.q -> u_enc.d0 median 745 / max 817 um in one cycle (512 bits); serdes__t14 ring dch -> u_bin_coll_i0.q median 594 / max 749 um (GPL dragged the face flops inward); u_enc.d0 -> u_enc.p_d up to 984 / 914 um (encoder stretched between the face and the PMA); u_enc.p_d -> u_txl r0 median 496..559 max 755, r0 -> r1 max 760, last row -> q max 909 um: about 2300 um on the worst bit in 4 hops with 3 rows. With the encoder anchored at (1500,860): worst bit 1268 + 233 = 1501 um in 6 hops = 250 um (cap 300). Without the anchor (encoder where GPL leaves it, x about 2250) 5 rows give 2300 / 6 = 383 um: under 405, over 300; 7 rows would need a new define. TX +2 clk on every beat; reset: none on the rows (LOCKSAFE holds >= 64 edges, as for the other rows). LATCHECK: +2 clk on the serdes TX lane."
+  },
+  {
+   "type": "serdes__t16",
+   "path": "verilog_defines",
+   "append": [
+    "OT_S81_SERDES_TXL4"
+   ],
+   "cycles": {
+    "lane": "tx (u_enc -> u_txl -> u_ptx)",
+    "clk": 2
+   },
+   "class": "serdes-txl4",
+   "status": "CBC-SIZED for J5; take together with class serdes-tx-in-stations (the 300 um figure assumes the encoder anchor)",
+   "evidence": "OT_S81_SERDES_TXL4 (DIE-S81-85 11-09, in main; TXL_N = TXL 2 + TXL4 2 + TXPIPE 1 = 5 relay rows of 545 bits, rows spaced by tools/die_plan/txl_mid.tcl, which the TXPIPE define already turns on at kit generation, face mode: last row at its PMA pin). Measured (placed_hops_or.py at 300 um, wave b05c98f7919 3_place): serdes__t1__clb45db5be u_bin_coll_i0.q -> u_enc.d0 median 745 / max 817 um in one cycle (512 bits); serdes__t14 ring dch -> u_bin_coll_i0.q median 594 / max 749 um (GPL dragged the face flops inward); u_enc.d0 -> u_enc.p_d up to 984 / 914 um (encoder stretched between the face and the PMA); u_enc.p_d -> u_txl r0 median 496..559 max 755, r0 -> r1 max 760, last row -> q max 909 um: about 2300 um on the worst bit in 4 hops with 3 rows. With the encoder anchored at (1500,860): worst bit 1268 + 233 = 1501 um in 6 hops = 250 um (cap 300). Without the anchor (encoder where GPL leaves it, x about 2250) 5 rows give 2300 / 6 = 383 um: under 405, over 300; 7 rows would need a new define. TX +2 clk on every beat; reset: none on the rows (LOCKSAFE holds >= 64 edges, as for the other rows). LATCHECK: +2 clk on the serdes TX lane."
+  },
+  {
+   "type": "serdes__t1__clb45db5be",
+   "path": "verilog_defines",
+   "append": [
+    "OT_S81_SERDES_TXL4"
+   ],
+   "cycles": {
+    "lane": "tx (u_enc -> u_txl -> u_ptx)",
+    "clk": 2
+   },
+   "class": "serdes-txl4",
+   "status": "CBC-SIZED for J5; take together with class serdes-tx-in-stations (the 300 um figure assumes the encoder anchor)",
+   "evidence": "OT_S81_SERDES_TXL4 (DIE-S81-85 11-09, in main; TXL_N = TXL 2 + TXL4 2 + TXPIPE 1 = 5 relay rows of 545 bits, rows spaced by tools/die_plan/txl_mid.tcl, which the TXPIPE define already turns on at kit generation, face mode: last row at its PMA pin). Measured (placed_hops_or.py at 300 um, wave b05c98f7919 3_place): serdes__t1__clb45db5be u_bin_coll_i0.q -> u_enc.d0 median 745 / max 817 um in one cycle (512 bits); serdes__t14 ring dch -> u_bin_coll_i0.q median 594 / max 749 um (GPL dragged the face flops inward); u_enc.d0 -> u_enc.p_d up to 984 / 914 um (encoder stretched between the face and the PMA); u_enc.p_d -> u_txl r0 median 496..559 max 755, r0 -> r1 max 760, last row -> q max 909 um: about 2300 um on the worst bit in 4 hops with 3 rows. With the encoder anchored at (1500,860): worst bit 1268 + 233 = 1501 um in 6 hops = 250 um (cap 300). Without the anchor (encoder where GPL leaves it, x about 2250) 5 rows give 2300 / 6 = 383 um: under 405, over 300; 7 rows would need a new define. TX +2 clk on every beat; reset: none on the rows (LOCKSAFE holds >= 64 edges, as for the other rows). LATCHECK: +2 clk on the serdes TX lane."
+  },
+  {
+   "type": "serdes__t1__clfe1f0815",
+   "path": "verilog_defines",
+   "append": [
+    "OT_S81_SERDES_TXL4"
+   ],
+   "cycles": {
+    "lane": "tx (u_enc -> u_txl -> u_ptx)",
+    "clk": 2
+   },
+   "class": "serdes-txl4",
+   "status": "CBC-SIZED for J5; take together with class serdes-tx-in-stations (the 300 um figure assumes the encoder anchor)",
+   "evidence": "OT_S81_SERDES_TXL4 (DIE-S81-85 11-09, in main; TXL_N = TXL 2 + TXL4 2 + TXPIPE 1 = 5 relay rows of 545 bits, rows spaced by tools/die_plan/txl_mid.tcl, which the TXPIPE define already turns on at kit generation, face mode: last row at its PMA pin). Measured (placed_hops_or.py at 300 um, wave b05c98f7919 3_place): serdes__t1__clb45db5be u_bin_coll_i0.q -> u_enc.d0 median 745 / max 817 um in one cycle (512 bits); serdes__t14 ring dch -> u_bin_coll_i0.q median 594 / max 749 um (GPL dragged the face flops inward); u_enc.d0 -> u_enc.p_d up to 984 / 914 um (encoder stretched between the face and the PMA); u_enc.p_d -> u_txl r0 median 496..559 max 755, r0 -> r1 max 760, last row -> q max 909 um: about 2300 um on the worst bit in 4 hops with 3 rows. With the encoder anchored at (1500,860): worst bit 1268 + 233 = 1501 um in 6 hops = 250 um (cap 300). Without the anchor (encoder where GPL leaves it, x about 2250) 5 rows give 2300 / 6 = 383 um: under 405, over 300; 7 rows would need a new define. TX +2 clk on every beat; reset: none on the rows (LOCKSAFE holds >= 64 edges, as for the other rows). LATCHECK: +2 clk on the serdes TX lane."
+  },
+  {
+   "type": "serdes__t2",
+   "path": "verilog_defines",
+   "append": [
+    "OT_S81_SERDES_TXL4"
+   ],
+   "cycles": {
+    "lane": "tx (u_enc -> u_txl -> u_ptx)",
+    "clk": 2
+   },
+   "class": "serdes-txl4",
+   "status": "CBC-SIZED for J5; take together with class serdes-tx-in-stations (the 300 um figure assumes the encoder anchor)",
+   "evidence": "OT_S81_SERDES_TXL4 (DIE-S81-85 11-09, in main; TXL_N = TXL 2 + TXL4 2 + TXPIPE 1 = 5 relay rows of 545 bits, rows spaced by tools/die_plan/txl_mid.tcl, which the TXPIPE define already turns on at kit generation, face mode: last row at its PMA pin). Measured (placed_hops_or.py at 300 um, wave b05c98f7919 3_place): serdes__t1__clb45db5be u_bin_coll_i0.q -> u_enc.d0 median 745 / max 817 um in one cycle (512 bits); serdes__t14 ring dch -> u_bin_coll_i0.q median 594 / max 749 um (GPL dragged the face flops inward); u_enc.d0 -> u_enc.p_d up to 984 / 914 um (encoder stretched between the face and the PMA); u_enc.p_d -> u_txl r0 median 496..559 max 755, r0 -> r1 max 760, last row -> q max 909 um: about 2300 um on the worst bit in 4 hops with 3 rows. With the encoder anchored at (1500,860): worst bit 1268 + 233 = 1501 um in 6 hops = 250 um (cap 300). Without the anchor (encoder where GPL leaves it, x about 2250) 5 rows give 2300 / 6 = 383 um: under 405, over 300; 7 rows would need a new define. TX +2 clk on every beat; reset: none on the rows (LOCKSAFE holds >= 64 edges, as for the other rows). LATCHECK: +2 clk on the serdes TX lane."
+  },
+  {
+   "type": "serdes__t3",
+   "path": "verilog_defines",
+   "append": [
+    "OT_S81_SERDES_TXL4"
+   ],
+   "cycles": {
+    "lane": "tx (u_enc -> u_txl -> u_ptx)",
+    "clk": 2
+   },
+   "class": "serdes-txl4",
+   "status": "CBC-SIZED for J5; take together with class serdes-tx-in-stations (the 300 um figure assumes the encoder anchor)",
+   "evidence": "OT_S81_SERDES_TXL4 (DIE-S81-85 11-09, in main; TXL_N = TXL 2 + TXL4 2 + TXPIPE 1 = 5 relay rows of 545 bits, rows spaced by tools/die_plan/txl_mid.tcl, which the TXPIPE define already turns on at kit generation, face mode: last row at its PMA pin). Measured (placed_hops_or.py at 300 um, wave b05c98f7919 3_place): serdes__t1__clb45db5be u_bin_coll_i0.q -> u_enc.d0 median 745 / max 817 um in one cycle (512 bits); serdes__t14 ring dch -> u_bin_coll_i0.q median 594 / max 749 um (GPL dragged the face flops inward); u_enc.d0 -> u_enc.p_d up to 984 / 914 um (encoder stretched between the face and the PMA); u_enc.p_d -> u_txl r0 median 496..559 max 755, r0 -> r1 max 760, last row -> q max 909 um: about 2300 um on the worst bit in 4 hops with 3 rows. With the encoder anchored at (1500,860): worst bit 1268 + 233 = 1501 um in 6 hops = 250 um (cap 300). Without the anchor (encoder where GPL leaves it, x about 2250) 5 rows give 2300 / 6 = 383 um: under 405, over 300; 7 rows would need a new define. TX +2 clk on every beat; reset: none on the rows (LOCKSAFE holds >= 64 edges, as for the other rows). LATCHECK: +2 clk on the serdes TX lane."
+  },
+  {
+   "type": "serdes__t4",
+   "path": "verilog_defines",
+   "append": [
+    "OT_S81_SERDES_TXL4"
+   ],
+   "cycles": {
+    "lane": "tx (u_enc -> u_txl -> u_ptx)",
+    "clk": 2
+   },
+   "class": "serdes-txl4",
+   "status": "CBC-SIZED for J5; take together with class serdes-tx-in-stations (the 300 um figure assumes the encoder anchor)",
+   "evidence": "OT_S81_SERDES_TXL4 (DIE-S81-85 11-09, in main; TXL_N = TXL 2 + TXL4 2 + TXPIPE 1 = 5 relay rows of 545 bits, rows spaced by tools/die_plan/txl_mid.tcl, which the TXPIPE define already turns on at kit generation, face mode: last row at its PMA pin). Measured (placed_hops_or.py at 300 um, wave b05c98f7919 3_place): serdes__t1__clb45db5be u_bin_coll_i0.q -> u_enc.d0 median 745 / max 817 um in one cycle (512 bits); serdes__t14 ring dch -> u_bin_coll_i0.q median 594 / max 749 um (GPL dragged the face flops inward); u_enc.d0 -> u_enc.p_d up to 984 / 914 um (encoder stretched between the face and the PMA); u_enc.p_d -> u_txl r0 median 496..559 max 755, r0 -> r1 max 760, last row -> q max 909 um: about 2300 um on the worst bit in 4 hops with 3 rows. With the encoder anchored at (1500,860): worst bit 1268 + 233 = 1501 um in 6 hops = 250 um (cap 300). Without the anchor (encoder where GPL leaves it, x about 2250) 5 rows give 2300 / 6 = 383 um: under 405, over 300; 7 rows would need a new define. TX +2 clk on every beat; reset: none on the rows (LOCKSAFE holds >= 64 edges, as for the other rows). LATCHECK: +2 clk on the serdes TX lane."
+  }
+ ],
+ "notes": [
+  "22 rows, 2 classes, all 11 serdes types. Not yet proven on a kit: the t15 proof kit from the first bind that carries them measures both classes (r712).",
+  "Cycles: lane coll_i0 +4 (t12, t13), +5 (t14, t3, t4), +6 (t15 x2, t1 x2, t16, t2); TX +2 on all.",
+  "Encoder internal stretch (d0 -> p_d up to 984 um) has no row: with both ends anchored (last coll_i0 station and u_txl row 0 one hop from the anchor) GPL has no pull apart; the proof kit shows whether a u_enc placement group is still needed.",
+  "RX / decoder legs over 300 um seen on the same wave DBs (u_syn x -> x_q 1018..1163, u_chn -> u_lpl w 563..619 median, u_lpr_syn.q -> u_lpl g_ck 544 median) are not in these rows: the wave kits lack AMPIPE / RM / coll_o0 stations; re-measure on R1 and the J4 kits first (J6)."
+ ]
+}
