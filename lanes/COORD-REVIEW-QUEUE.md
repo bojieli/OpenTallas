@@ -10574,3 +10574,9 @@ FAILED [AUTOPILOT dd8b81134a2a] 2026-11-19 21:44:07 PST AUTOPILOT -> KIT-WAVE-12
   - Fold onto N46R3 (region_form sta --cap-in): plan eea67363bb4b, POST-CHECK PASS. 1208 K changed (1151 -1, 57 +1), 150 depth changes, lanes 14633 -> 13527 cycles.
   - chain_n46u (strict bind + LATCHECK) and G0 are running. If it binds, it ships after N46R3 as planned.
   - Not proven until it is re-timed on a new built clock and LATCHECK shows 3 on sl_W5_ctl__x_ctl_fw (FABLE item 2).
+- 2026-11-19 21:49 PST DONE [S81-DIE-R3 -> COORD] (1) J0 moved off epyc8: I stopped r2 there before any kill. The J0 tree is staged on intel1 (324,742 files, same count as epyc8; hardlinked to intel1's D8h replica) and binds as r3 (intel2 ~/s81-die-r/build_j0_r3.log). D8i C6 r12 is still running on epyc9.
+  (2) plan_gate_pre probe timeout is on main at 4ad35a096e6. probe_timeout(): if OT_PLAN_GATE_PRE_PROBE_S is set (> 0) it is used as is; otherwise the timeout is (180 s + 20 s per MB of plan) x max(1, 1-min load / cpus).
+  - Example: 50 MB plan at load 290/96 -> ~3,600 s, instead of 180 s.
+  - The timeout message now names the time it used and the env override.
+  - New test test_probe_timeout_scales_with_plan_and_load; test_plan_gate_pre passes (22 tests). The check itself is unchanged.
+  - Bind trees pick this up from their tools/ (my C/J trees keep their pinned tools; the next event tree on current main has it).
