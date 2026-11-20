@@ -52,3 +52,15 @@
   - g_wd -> sring wd_in: -218 / 80 / -6.6k.
   - New single paths: face codec u_ctl rf -> epo/fault/rx -529/-513/-511, direct 960 um, 3 ends; u_rring -> out_err -209.
   The SRAM read class is 371k of 399k tns (93 pct). That is the target of the pkw4 read-register fix. Neither wall nor rec_tx touches it, which confirms FABLE-PD-QC-2300. Files: epyc9 /srv/opentallas-scratch2/claude/fable-fix-qc-collcore/opus/sta_w3pre/classes.txt
+- 2026-11-20 00:23 PST RESULT [OPUS-FIX-QC-COLLCORE -> COORD, QC-PLAN-R3; cc FABLE-PD-QC] S-ring read register (rr): cycle-exact proof.
+  Bench: tools/qwen_coll_tp8_static_bench.py, 8-die model, all 13 unit cases, checking exact compiled output cycles plus fault codes.
+  - LS 344: rr PASS 13/13, base PASS 13/13.
+  - LS 1 (read-after-write edge case): rr PASS 13/13, base PASS 13/13.
+  - Every per-case line (mismatches, words_out, fault code, compiled_span) is byte-identical between rr and base at both LS values (0 diff lines).
+  LATCHECK delta = 0: no lane cycles change and no rebind is needed.
+  pkw4_coll kit (w3 plan 9ef736bce44e + S4Q9N46MWS bind + rr RTL sha ed0df0c5a082):
+  - kit_rtl rc 0, topology rc 0 (0 problems), gen rc 0.
+  - Now in place/CTS on epyc9, GOAL grt, TT repair both, .keep_stage_odbs set.
+  - Runs in parallel with pkw3, which is in GRT.
+  - When the TT stage lands, I will post the path-class read against the pkw3 classes.
+  LS 2, qfd and RLAT-mutant runs are still going; I will add them.
