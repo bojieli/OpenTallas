@@ -131,6 +131,7 @@ def test_selected_frame_placement_only_prices_its_landing(monkeypatch):
 
 
 def test_frame_programme_forwards_selected_cohort(monkeypatch):
+    import frame_bench as B
     import frame_return_plan as P
 
     class ReachedPhasePlanner(Exception):
@@ -141,6 +142,7 @@ def test_frame_programme_forwards_selected_cohort(monkeypatch):
         raise ReachedPhasePlanner
 
     monkeypatch.delenv('OT_XS_APROJ_CAP_PLAN', raising=False)
+    monkeypatch.setattr(B, 'frame_pairs', lambda master: ([0], []))
     monkeypatch.setattr(P, 'plan_phase', plan_phase)
     monkeypatch.setattr(LX, 'frame_cohort', lambda frame: 'cohort:' + frame)
     try:
