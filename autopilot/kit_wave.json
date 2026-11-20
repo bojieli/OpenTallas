@@ -5868,7 +5868,7 @@
    "src_sha": "3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6",
    "kit_rtl": {
     "mode": "bind",
-    "bind_out": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8i_1117_work_bind_11200120",
+    "bind_out": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8i_1117_work_bind_1120040121",
     "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8i_1117_work/physical/die_plan/s81/plan_of_record/native_bind/asbuilt_run.json",
     "note": "S81-DIE-R3 2026-11-19 D8i on d7462b520b09, bind src_s81_pin_3c913dbdfb23_d8i_1117_work_bind_11200120. Revert: rollback_tree D8h"
    },
@@ -37090,13 +37090,18 @@
       "note": "S81-DIE-R3 11-19: D8f post-apply strict bind (green: elab 0 bind 0 LATCHECK 873/873; bind_matches 395/395 both reset scopes), sealed + replicated to the 6 gen hosts"
      }
     }
+   ],
+   "bind_copy_of_record": [
+    "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8i_1117_work_postbind_1120021437"
    ]
   },
   "s81_head": {
    "enabled": true,
    "event": "head_rp21z20NF15f_r11b",
    "tools_from_rt": false,
-   "unblock": ["hd_serdes#r11b-pinned-cohort-20261120"],
+   "unblock": [
+    "hd_serdes#r11b-pinned-cohort-20261120"
+   ],
    "gate": {
     "g0c": "PASS",
     "bind": "PASS",
