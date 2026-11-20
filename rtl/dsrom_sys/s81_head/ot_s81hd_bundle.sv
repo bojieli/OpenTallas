@@ -47,6 +47,14 @@ module ot_s81hd_bundle #(
     // DIE-HEAD-70 11-05 (hd_tile flt_q[0] -> flt_h[0] -74 ps, eA0 fault pin ~1 mm from the OR): 1 = a third fault hop
     // (MERGE_HOP only).  The fault is sticky until the next go, so +1 is free like the first two.
     parameter integer FLT_XHOP = 0,
+    // PICK_SPLIT (FABLE-FIX-HEAD-MESH 11-20, hd_tile tilecomb2 4_cts TT: c1_h[1][54] -> res_bits -387 ps, the level-2 pick is
+    // a 32-b key > / == plus 17-b row < compare (~700 ps) and an 81-b select on two fanout-32 trees (~380 ps) in one
+    // 833-ps cycle): bit 0 = the level-2 (res) pick, bit 1 = the level-1 (c1) picks register the compare result
+    // (PICK_NSL kept select copies, one per 14-b slice of the 81-b mux) and both operands, then select one edge later.
+    // The compare tree has no enables, so each split level is a pure +1 on the data; the valid logic and the go block
+    // window are unchanged and res_v is the unsplit res_v delayed by the same count (res_v / data: +popcount cycles).
+    // 0 = unchanged.
+    parameter [1:0] PICK_SPLIT = 2'b00,
     // CV (S81-HEAD 10-24): 1 = the elements are the CLOSED views (physical/dsrom_fh_safe/closed/elem{A,B}) as the hard
     // macros ot_s81hd_elemA_cv (u_eA0..3) / ot_s81hd_elemB_cv (u_eB) in the labelled block g_cv (no generate index in
     // their paths); they are the closed parameter point (CUT 0x1ff, SPLIT9 1, IOREG 1, SAFE 1), checked below.
@@ -193,6 +201,11 @@ module ot_s81hd_bundle #(
     function automatic [80:0] pick(input [80:0] u, input [80:0] v);   // {key, row, bits}
         pick = (v[80:49] > u[80:49] || (v[80:49] == u[80:49] && v[48:32] < u[48:32])) ? v : u;
     endfunction
+    function automatic better(input [80:0] u, input [80:0] v);         // pick(u, v) == v
+        better = v[80:49] > u[80:49] || (v[80:49] == u[80:49] && v[48:32] < u[48:32]);
+    endfunction
+    localparam integer PICK_S = PICK_SPLIT[0] + PICK_SPLIT[1];
+    localparam integer PICK_NSL = 6;                                   // select copies: 81 b / 14 b slices
     reg [80:0] c1 [0:1];
     reg        c1_v;
     // S81-HEAD 10-24 (GEOM-REVIEW tile batch 2: u_eA0/best_key -> c1 was a 14-level path across the tile, TT -627 ps):
@@ -211,16 +224,22 @@ module ot_s81hd_bundle #(
     reg        c1_vh;
     wire [3:0] pk_done_m = MERGE_HOP ? pk_done_h : pk_done;
     wire       c1_v_m = MERGE_HOP ? c1_vh : c1_v;
+    reg  [1:0] res_vs;                                   // PICK_SPLIT: res_v follows the split data (+PICK_S)
+    wire       res_v_n = c1_v_m && !gblk;
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin c1_v <= 1'b0; res_v <= 1'b0; gsh <= {GW{1'b0}}; pk_done <= 4'd0; pk_done_h <= 4'd0; c1_vh <= 1'b0; end
+        if (!rst_n) begin c1_v <= 1'b0; res_v <= 1'b0; gsh <= {GW{1'b0}}; pk_done <= 4'd0; pk_done_h <= 4'd0; c1_vh <= 1'b0; res_vs <= 2'd0; end
         else begin
             gsh <= {gsh[GW-2:0], a_go[0]};
             pk_done <= a_done;
             pk_done_h <= pk_done;
             c1_v <= &pk_done_m && !gblk;
             c1_vh <= c1_v;
-            res_v <= c1_v_m && !gblk;
+            res_vs <= {res_vs[0], res_v_n};
+            res_v <= PICK_S == 0 ? res_v_n : res_vs[PICK_S == 0 ? 0 : PICK_S - 1];
         end
+    wire [80:0] ps_u [0:2];
+    wire [80:0] ps_v [0:2];
+    wire [80:0] ps_o [0:2];
     reg [80:0] pk_h [0:3];
     reg [80:0] c1_h [0:1];
     always @(posedge clk) begin
@@ -231,15 +250,36 @@ module ot_s81hd_bundle #(
         c1_h[0] <= c1[0];
         c1_h[1] <= c1[1];
         if (MERGE_HOP) begin
-            c1[0] <= pick(pk_h[0], pk_h[1]);
-            c1[1] <= pick(pk_h[2], pk_h[3]);
-            {res_row, res_bits} <= pick(c1_h[0], c1_h[1]);
+            c1[0] <= PICK_SPLIT[1] ? ps_o[0] : pick(pk_h[0], pk_h[1]);
+            c1[1] <= PICK_SPLIT[1] ? ps_o[1] : pick(pk_h[2], pk_h[3]);
+            {res_row, res_bits} <= PICK_SPLIT[0] ? ps_o[2] : pick(c1_h[0], c1_h[1]);
         end else begin
-            c1[0] <= pick(pk_q[0], pk_q[1]);
-            c1[1] <= pick(pk_q[2], pk_q[3]);
-            {res_row, res_bits} <= pick(c1[0], c1[1]);
+            c1[0] <= PICK_SPLIT[1] ? ps_o[0] : pick(pk_q[0], pk_q[1]);
+            c1[1] <= PICK_SPLIT[1] ? ps_o[1] : pick(pk_q[2], pk_q[3]);
+            {res_row, res_bits} <= PICK_SPLIT[0] ? ps_o[2] : pick(c1[0], c1[1]);
         end
     end
+    // PICK_SPLIT first stage: picks 0, 1 = level 1, pick 2 = level 2; ps_o is the select of the registered operands
+    assign ps_u[0] = MERGE_HOP ? pk_h[0] : pk_q[0];
+    assign ps_v[0] = MERGE_HOP ? pk_h[1] : pk_q[1];
+    assign ps_u[1] = MERGE_HOP ? pk_h[2] : pk_q[2];
+    assign ps_v[1] = MERGE_HOP ? pk_h[3] : pk_q[3];
+    assign ps_u[2] = MERGE_HOP ? c1_h[0] : c1[0];
+    assign ps_v[2] = MERGE_HOP ? c1_h[1] : c1[1];
+    genvar pp, pb;
+    generate for (pp = 0; pp < 3; pp = pp + 1) begin : g_ps
+        if (PICK_SPLIT[pp == 2 ? 0 : 1]) begin : g_on
+            reg  [80:0] u_q, v_q;
+            wire [PICK_NSL-1:0] s_q;
+            always @(posedge clk) begin u_q <= ps_u[pp]; v_q <= ps_v[pp]; end
+            ot_s81hd_kreg #(.W(PICK_NSL)) u_sel (.clk(clk), .d({PICK_NSL{better(ps_u[pp], ps_v[pp])}}), .q(s_q));
+            for (pb = 0; pb < 81; pb = pb + 1) begin : g_b
+                assign ps_o[pp][pb] = s_q[pb / 14] ? v_q[pb] : u_q[pb];
+            end
+        end else begin : g_off
+            assign ps_o[pp] = 81'd0;
+        end
+    end endgenerate
     // MERGE_HOP: the five element fault pins are landed next to their element and hopped (2 stages each) before the OR
     // (tile_prev2: eA1 fault -> tile bflt_q crossed the tile in one cycle, -224 ps).  The fault is sticky, +2 is free.
     reg [4:0] flt_q, flt_h, flt_x;
