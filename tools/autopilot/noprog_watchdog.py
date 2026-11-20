@@ -313,6 +313,46 @@ HBM_RE = re.compile(r"(?i)(^|[/_-])(hbm|trialhbm|hbmcore)")
 B64 = re.compile(r"[A-Za-z0-9+/=]{60,}")
 
 
+# ---------------------------------------------------------------- UNSIGNABLE (FLEET-WATCH-1015, owner rule 11-20, FABLE-FLOW-1000 class 5)
+# A job running > 3 h whose MEASURED post-CTS/repair setup (4_1_cts.json cts__timing__setup__ws) is worse than -300 ps cannot sign off (gate TT >= -42 ps).  The hub cancels it by
+# `ot-run --cancel <exact unit>` after it was listed in a posted table, and writes the evidence row to lanes/CANCEL-UNSIGNABLE-1120.tsv.  Never touched: hold-only failures (setup is the only
+# number read), unmeasured jobs (no 4_1_cts.json written by THIS job), --priority plan / proof jobs and proofs by name, ECOs, HBM (parked: its own verdict), KEEP lines, setup between -42 and -300.
+UNSIGNABLE = "UNSIGNABLE"
+UNSIGNABLE_SETUP_PS = -300.0
+UNSIGNABLE_MIN_AGE_H = 3.0
+UNSIGNABLE_REPORT_ONLY_S = 3600       # the hub lists (and posts) for one hour before it cancels anything
+ECO_RE = re.compile(r"(?i)(?:^|[/_\-.])eco(?:$|[/_\-.0-9])")
+PROOF_RE = re.compile(r"(?i)(?:^|[/_\-.])proofs?(?:$|[/_\-.0-9])")
+UNSIG_GLOBS = ("run/logs/*/*/*/4_1_cts.json", "gen/*/run/logs/*/*/*/4_1_cts.json", "logs/*/*/*/4_1_cts.json", "*/4_1_cts.json", "4_1_cts.json")
+
+
+def measured_setup(dirs, started):
+    """-> (setup_ws_ps, path) from the newest 4_1_cts.json under any of dirs that THIS job wrote (mtime >= its container start - 60 s), else None.  Missing key / unparsable = None (unmeasured)."""
+    best = None
+    for d in dict.fromkeys(x for x in dirs if x):
+        for g in UNSIG_GLOBS:
+            for p in glob.glob(os.path.join(d, g)):
+                try:
+                    mt = os.path.getmtime(p)
+                    if mt < started - 60 or (best and mt <= best[0]):
+                        continue
+                    v = json.load(open(p)).get("cts__timing__setup__ws")
+                except (OSError, ValueError, AttributeError):
+                    continue
+                if isinstance(v, (int, float)) and not isinstance(v, bool):
+                    best = (mt, float(v), p)
+    return (best[1], best[2]) if best else None
+
+
+def unsignable_evidence(ident, prio, kind, age_h, setup):
+    """-> evidence text when the rule applies, else None.  Pure."""
+    if setup is None or age_h <= UNSIGNABLE_MIN_AGE_H or setup[0] >= UNSIGNABLE_SETUP_PS:
+        return None
+    if prio in ("plan", "proof") or kind == "lec" or ECO_RE.search(ident) or PROOF_RE.search(ident) or is_hbm(ident):
+        return None
+    return f"{os.path.basename(setup[1])} cts__timing__setup__ws {setup[0]:.2f} ps (< {UNSIGNABLE_SETUP_PS:.0f}, gate TT >= -42); job age {age_h} h > {UNSIGNABLE_MIN_AGE_H:g} h"
+
+
 def is_plan(env_prio, text):
     """--priority plan (OT_HEAVY_PRIO=plan) or a bind / LATCHECK / G0 / die-proto / chain command.  --priority die (die-level
     trials) is NOT excluded: those are exactly the long builds this watchdog is for.  base64 spec blobs are stripped first."""
@@ -620,6 +660,15 @@ def scan(now=None, act=False, probe_s=4):
             st["samples"] = st["samples"][-MAX_SAMPLES:]
             st["seen"] = now
         row["key"] = f"{name}|{kit}"
+        row["ident"] = ident[:400]
+        if row["verdict"] not in ("KEEP", "EXCLUDED") and row["age_h"] > UNSIGNABLE_MIN_AGE_H:
+            # a 4_1_cts.json under the kit / work dir written by THIS container; the verdict is only a label here (the HUB cancels, host scans never do)
+            ms = measured_setup([kit, work], started)
+            ev = unsignable_evidence(ident, prio, kind, row["age_h"], ms)
+            if ms:
+                row["setup_ps"] = ms[0]
+            if ev and row["verdict"] not in BAD_VERDICTS:
+                row.update(verdict=UNSIGNABLE, why=ev, action="UNSIGNABLE (hub cancels after the report hour)")
         rows.append(row)
     time.sleep(max(0.0, probe_s - (time.time() - t_probe)))
     t1 = time.time()
@@ -677,7 +726,7 @@ def do_cancel(unit, rs, now):
 
 
 # ---------------------------------------------------------------- hub
-ORDER = {"GRT-LABEL": 1, "DESIGN-FAIL": 0, "NO-PROGRESS": 0, "CANCEL-NOW": 0, "NO-DATA": 2, "YOUNG": 2, "EXCLUDED": 3, "KEEP": 3, "PROGRESS": 4}
+ORDER = {UNSIGNABLE: 0, "GRT-LABEL": 1, "DESIGN-FAIL": 0, "NO-PROGRESS": 0, "CANCEL-NOW": 0, "NO-DATA": 2, "YOUNG": 2, "EXCLUDED": 3, "KEEP": 3, "PROGRESS": 4}
 
 
 def md_table(reports):
@@ -719,7 +768,7 @@ def hub(now=None, post=True):
             missing.append(h)
     table, rows = md_table(reports)
     stamp = time.strftime("%Y-%m-%d %H:%M PST", time.localtime(now))
-    flagged = [r for r in rows if r["verdict"] in ("NO-PROGRESS", "CANCEL-NOW", "DESIGN-FAIL", GRT_LABEL)]
+    flagged = [r for r in rows if r["verdict"] in ("NO-PROGRESS", "CANCEL-NOW", "DESIGN-FAIL", GRT_LABEL, UNSIGNABLE)]
     counts = {}
     for r in rows:
         counts[r["verdict"]] = counts.get(r["verdict"], 0) + 1
@@ -776,6 +825,9 @@ def hub(now=None, post=True):
                       f"kit kept at {a['kit']}; freed {a['gb']} GB / {a['cores']} cores. "
                       + ("DESIGN failure (congestion/synthesis): do not retry unchanged." if a.get("class") else "Needs a structural fix, not a retry."))
     seen["posted"] = sorted(done)
+    umode, ucand, udone = unsignable_pass(rows, seen, now, post=post)
+    if udone:
+        files.append("lanes/CANCEL-UNSIGNABLE-1120.tsv")
     if qlines:
         with open(os.path.join(COORD, "lanes/COORD-REVIEW-QUEUE.md"), "a") as f:
             f.write("\n".join(qlines) + "\n")
@@ -785,6 +837,73 @@ def hub(now=None, post=True):
         subprocess.run(["bash", os.path.join(COORD, "bin/coord-commit.sh"), f"NOPROG-WATCHDOG {stamp}: {len(flagged)} flagged, {len(new_actions)} cancelled"] + files,
                        capture_output=True, text=True, timeout=600)
     return reports, new_actions
+
+
+def plan_of(kit):
+    m = re.search(r"/kit-wave/([^/]+)/([^/]+)/", kit or "")
+    return f"{m.group(1)} {m.group(2)}" if m else "-"
+
+
+def unsignable_mode(seen, now):
+    """report | act.  NOPROG_UNSIGNABLE_MODE=report|act forces it; auto (default): report for UNSIGNABLE_REPORT_ONLY_S after the first pass AND only once the list was posted."""
+    forced = os.environ.get("NOPROG_UNSIGNABLE_MODE", "auto")
+    if forced in ("report", "act"):
+        return forced
+    first = seen.setdefault("unsig_first", now)
+    return "act" if seen.get("unsig_posted") and now - first >= UNSIGNABLE_REPORT_ONLY_S else "report"
+
+
+def ot_run_cancel(unit, run=subprocess.run):
+    """the only cancel path: ot-run --cancel <exact unit>.  -> (rc, last output line)"""
+    exe = os.environ.get("OT_RUN_BIN") or os.path.expanduser("~/.local/bin/ot-run")
+    r = run([exe, "--cancel", unit], capture_output=True, text=True, timeout=900)
+    lines = ((r.stdout or "") + (r.stderr or "")).strip().splitlines()
+    return r.returncode, (lines[-1][:200] if lines else "no output")
+
+
+def unsignable_pass(rows, seen, now, post=True, cancel=ot_run_cancel):
+    """HUB half of the rule.  rows = every host's rows.  Lists UNSIGNABLE jobs (first time: posts the list, starts the report hour), and in act mode cancels every unit whose containers are ALL
+    UNSIGNABLE and that has been listed >= MIN_REPORT_AGE_S.  Appends the evidence rows to lanes/CANCEL-UNSIGNABLE-1120.tsv.  -> (mode, listed rows, cancelled [dict])"""
+    cand = [r for r in rows if r["verdict"] == UNSIGNABLE]
+    listed = seen.setdefault("unsig_listed", {})
+    keys = {f"{r['host']}|{r['key']}" for r in cand}
+    for k in keys:
+        listed.setdefault(k, now)
+    for k in list(listed):
+        if k not in keys:
+            del listed[k]
+    mode = unsignable_mode(seen, now)
+    stamp = time.strftime("%Y-%m-%d %H:%M PST", time.localtime(now))
+    if cand and post and (not seen.get("unsig_posted") or set(keys) - set(seen.get("unsig_posted_keys", []))):
+        txt = (f"UNSIGNABLE watchdog ({mode} mode; cancels only after the report hour {UNSIGNABLE_REPORT_ONLY_S // 60} min from the first list): {len(cand)} job(s) over {UNSIGNABLE_MIN_AGE_H:g} h with post-CTS setup < "
+               f"{UNSIGNABLE_SETUP_PS:.0f} ps: " + "; ".join(f"{r['host']} {r['type']} {r['setup_ps']:.0f} ps {r['age_h']} h {r['gb']} GB" for r in cand[:60]))
+        try:
+            subprocess.run(["bash", os.path.join(COORD, "bin/post.sh"), os.environ.get("NOPROG_POST_LANE", "FLEET-WATCH-1015"), txt], capture_output=True, text=True, timeout=300)
+            seen["unsig_posted"] = seen.get("unsig_posted") or now
+            seen["unsig_posted_keys"] = sorted(set(seen.get("unsig_posted_keys", [])) | keys)
+        except (subprocess.SubprocessError, OSError):
+            pass
+    done = []
+    if mode == "act":
+        units = {}
+        for r in rows:
+            if r.get("unit"):
+                units.setdefault((r["host"], r["unit"]), []).append(r)
+        for (h, u), rs in sorted(units.items()):
+            if not all(r["verdict"] == UNSIGNABLE and now - listed.get(f"{r['host']}|{r['key']}", now) >= MIN_REPORT_AGE_S for r in rs):
+                continue
+            rc, line = cancel(u)
+            first = rs[0]
+            rec = {"t": now, "unit": u, "host": h, "type": first["type"], "plan": plan_of(first["kit"]), "evidence": first["why"], "freed_gb": round(sum(r["gb"] for r in rs), 1),
+                   "class": "UNSIGNABLE-SETUP", "cancel_method": f"ot-run --cancel {u} rc={rc}: {line}"}
+            done.append(rec)
+            seen.setdefault("unsig_cancelled", []).append(f"{h}|{u}")
+        if done:
+            path = os.path.join(COORD, "lanes/CANCEL-UNSIGNABLE-1120.tsv")
+            with open(path, "a") as f:
+                for d in done:
+                    f.write("\t".join(str(d[k]).replace("\t", " ").replace("\n", " ") for k in ("unit", "host", "type", "plan", "evidence", "freed_gb", "class", "cancel_method")) + "\n")
+    return mode, cand, done
 
 
 def main(argv=None):
