@@ -758,6 +758,22 @@ class FakeAP:
 
 
 class Step(unittest.TestCase):
+    def setUp(self):
+        # Reloading would discard the injected scheduler dependencies and start a real CLI pass.
+        self.enterContext(mock.patch.object(KW, "scheduler_code_id", lambda: KW.IMPORTED_SCHEDULER_CODE))
+        self.enterContext(mock.patch.object(KW, "reload_step", side_effect=AssertionError("fixture launched the scheduler CLI")))
+        home = Path(self.enterContext(tempfile.TemporaryDirectory()))
+        self.enterContext(mock.patch.object(Path, "home", return_value=home))
+
+    def test_injected_step_uses_its_loaded_revision(self):
+        with tempfile.TemporaryDirectory() as d, mock.patch.object(KW, "IMPORTED_SCHEDULER_CODE", "fixture-import-id"):
+            (Path(d) / "OWNERS.tsv").write_text(OWN)
+            ap = FakeAP(d, json.dumps(cfg(die_max_inflight=1)))
+            st = KW.step(ap)
+            self.assertEqual(len(ap.units), 1)
+            self.assertEqual(len(st["items"]), 1)
+            KW.reload_step.assert_not_called()
+
     def test_launch_collect_enqueue_and_classify(self):
         with tempfile.TemporaryDirectory() as d:
             (Path(d) / "OWNERS.tsv").write_text(OWN)
