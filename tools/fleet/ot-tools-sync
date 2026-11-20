@@ -130,8 +130,22 @@ def prune_snapshots(root=RT, keep=None, protect=(), text=None, rm=None):
     keep = KEEP if keep is None else keep
     if keep <= 0:
         return []
-    keep = max(keep, MIN_KEEP)
-    snaps = sorted((d for d in Path(root).iterdir() if re.fullmatch(r"[0-9a-f]{12}", d.name) and d.is_dir() and not d.is_symlink()),
+    root = Path(root)
+    if not any(re.fullmatch(r"[0-9a-f]{12}", d.name) and d.is_dir() and not d.is_symlink() for d in root.iterdir()):
+        return []
+    import fcntl
+
+    with (root / ".prune.lock").open("a") as lock:
+        try:
+            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            log(f"{root} prune skipped: a prune is already active")
+            return []
+        return _prune_snapshots_locked(root, max(keep, MIN_KEEP), protect, text, rm)
+
+
+def _prune_snapshots_locked(root, keep, protect, text, rm):
+    snaps = sorted((d for d in root.iterdir() if re.fullmatch(r"[0-9a-f]{12}", d.name) and d.is_dir() and not d.is_symlink()),
                    key=lambda d: d.stat().st_mtime, reverse=True)
     cur = current(root)
     stay = {d.name for d in snaps[:keep]} | {cur, *protect}
@@ -140,7 +154,7 @@ def prune_snapshots(root=RT, keep=None, protect=(), text=None, rm=None):
     except Exception: pass
     gone = []
     for d in snaps:
-        if d.name in stay or d.name in text or in_use(d):
+        if d.name in stay or d.name == current(root) or d.name in text or in_use(d):
             continue
         try:
             if rm: rm(d)
@@ -573,6 +587,30 @@ def sync_hosts(name, prev, hosts=None, fn=None, record=None):
     return notes
 
 
+def prune_build_hosts(pins, hosts=None):
+    """Prune independent host volumes concurrently, with at most three host scans at once."""
+    from concurrent.futures import ThreadPoolExecutor
+
+    hs = list(dict.fromkeys(HOSTS if hosts is None else hosts))
+    if not hs:
+        return
+
+    def one(host):
+        start = time.monotonic()
+        try:
+            result = run(SSH + [host, f"OT_RT_KEEP={KEEP} python3 -I {RT}/current/tools/fleet/ot-tools-sync prune"],
+                         input=pins, timeout=900)
+            note = (result.stdout or result.stderr).strip()[-120:]
+            if result.returncode:
+                note = f"rc={result.returncode} {note}"
+        except Exception as exc:
+            note = f"skipped: {type(exc).__name__}: {exc}"
+        log(f"{host} prune ({time.monotonic() - start:.0f}s): {note}")
+
+    with ThreadPoolExecutor(max_workers=min(3, len(hs))) as pool:
+        list(pool.map(one, hs))
+
+
 def sync(sha, hosts=True, tests=True):
     if not sha:
         git("fetch", "-q", REMOTE, "+refs/heads/main:refs/remotes/origin/main", timeout=300)
@@ -624,13 +662,7 @@ def sync(sha, hosts=True, tests=True):
         log(msg); print(msg)
         notes.append("ALERT installed != rt")
     if all(":ok" in n for n in notes) and KEEP > 0:
-        pins = names_in_use_text()
-        for h in HOSTS:                                        # r536 only pruned the hub (build hosts held 203 snapshots each)
-            try:
-                rr = run(SSH + [h, f"OT_RT_KEEP={KEEP} python3 -I {RT}/current/tools/fleet/ot-tools-sync prune"], input=pins, timeout=900)
-                log(f"{h} prune: {(rr.stdout or rr.stderr).strip()[-120:]}")
-            except Exception as e:
-                log(f"{h} prune skipped: {type(e).__name__}: {e}")
+        prune_build_hosts(names_in_use_text())
     if all(":ok" in n for n in notes):
         try:
             prune_snapshots(RT, protect=(prev or "", name))

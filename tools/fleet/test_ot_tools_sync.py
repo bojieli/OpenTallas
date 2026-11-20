@@ -28,6 +28,7 @@ class Sync(unittest.TestCase):
         sh("git", "config", "extensions.worktreeConfig", "true", cwd=d / "repo")
         self.env = dict(os.environ, OT_RT_ROOT=str(d / "rt"), MQ_REPO=str(d / "repo"), MQ_HOME=str(d / "mq"), OT_RT_HOSTS="",
                         OT_RT_SMOKE_TESTS="", OT_RT_MIN_FREE_GB="0", OT_RT_LEGACY="", OT_RT_BACKEND_ROOTS="", MQ_COORD=str(d / "coord"), MQ_PYTHON=sys.executable)
+        self.env.pop("MQ_SPARSE", None)  # Exercise the runtime default, independent of the gate checkout's sparse scope.
 
     def run_(self, *a):
         return subprocess.run([sys.executable, "-I", P, *a], env=self.env, capture_output=True, text=True, timeout=300)
@@ -141,6 +142,49 @@ class Guard(unittest.TestCase):
         m.in_use = lambda p: [1] if pathlib.Path(p).name == names[0] else []
         gone = m.prune_snapshots(d, keep=1, text="")
         self.assertNotIn(names[0], gone); self.assertEqual(len(gone), 1)          # keep=1 is raised to the minimum 3: only names[1] goes (names[0] is in use)
+
+    def test_prune_skips_while_the_same_root_is_locked(self):
+        import fcntl
+        m = self.load()
+        names = ["%012x" % i for i in range(1, 6)]
+        d = self.mk(names)
+        with (d / ".prune.lock").open("a") as held:
+            fcntl.flock(held, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            self.assertEqual(m.prune_snapshots(d, keep=3, text=""), [])
+            self.assertTrue(all((d / name).is_dir() for name in names))
+        self.assertEqual(set(m.prune_snapshots(d, keep=3, text="")), set(names[:2]))
+
+    def test_remote_prune_is_parallel_bounded_and_reports_all_hosts(self):
+        import threading
+        from types import SimpleNamespace
+
+        m = self.load()
+        barrier = threading.Barrier(3, timeout=5)
+        lock = threading.Lock()
+        active = set()
+        peaks = []
+        calls = []
+        logs = []
+        m.log = logs.append
+
+        def remote(argv, **kw):
+            host = argv[-2]
+            with lock:
+                calls.append((host, kw["input"], kw["timeout"]))
+                active.add(host)
+                peaks.append(len(active))
+            if host in {"H1", "H2", "H3"}:
+                barrier.wait()
+            with lock:
+                active.remove(host)
+            return SimpleNamespace(returncode=1 if host == "H2" else 0, stdout="", stderr="receipt")
+
+        m.run = remote
+        m.prune_build_hosts("pinned-snapshot", hosts=["H1", "H2", "H3", "H3", "H4"])
+        self.assertEqual(max(peaks), 3)
+        self.assertEqual(sorted(calls), [(host, "pinned-snapshot", 900) for host in ("H1", "H2", "H3", "H4")])
+        self.assertEqual({line.split()[0] for line in logs}, {"H1", "H2", "H3", "H4"})
+        self.assertTrue(any(line.startswith("H2 prune") and "rc=1 receipt" in line for line in logs))
 
     def test_low_disk_refuses_to_write(self):
         m = self.load(); d = pathlib.Path(tempfile.mkdtemp())
