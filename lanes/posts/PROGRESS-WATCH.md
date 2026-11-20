@@ -58,3 +58,4 @@
 - 2026-11-20 06:07 PST ALERT STUCK-STATE qwen_kvsys: 6 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. kv_cland_w288_ns_ad575, 2026-11-20 05:01)
 - 2026-11-20 06:27 PST ALERT STUCK-STATE s81: 3 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. col_h9_r0_p3__t1__cl31d0dc4b, 2026-11-20 03:51)
 - 2026-11-20 06:37 PST ALERT NO-PROGRESS s81_head: 24 eligible rows, 0 KIT-WAVE LAUNCH for 183 min (last 03:33); NO-LAUNCH x20
+- 2026-11-20 06:37 PST ALERT STUCK-STATE s81_head: 8 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. ot_sram_1r1w2c_256x64_m1, 2026-11-19 21:05)
