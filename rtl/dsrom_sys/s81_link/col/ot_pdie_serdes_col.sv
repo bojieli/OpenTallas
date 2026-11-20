@@ -343,9 +343,14 @@ module ot_s81_rate_match_rt #(parameter integer NRD = 8,
                             parameter integer RPC = 1,
 `endif
 `ifdef OT_S81_SERDES_RM_LOCAL_EMPTY8
-                            parameter integer LOCAL_EMPTY = 1
+                            parameter integer LOCAL_EMPTY = 1,
 `else
-                            parameter integer LOCAL_EMPTY = 0
+                            parameter integer LOCAL_EMPTY = 0,
+`endif
+`ifdef OT_S81_SERDES_RM_WPL8
+                            parameter integer LOCAL_WP = 1
+`else
+                            parameter integer LOCAL_WP = 0
 `endif
 ) (
     input  wire            wclk, wrst_n,
@@ -361,6 +366,15 @@ module ot_s81_rate_match_rt #(parameter integer NRD = 8,
     initial if (RPC != 1 && RPC != NRD) $error("ot_s81_rate_match_rt: RPC must be 1 or NRD");
     initial if (LOCAL_EMPTY != 0 && (LOCAL_EMPTY != 1 || RPC != NRD))
         $error("ot_s81_rate_match_rt: LOCAL_EMPTY requires RPC=NRD");
+    initial if (LOCAL_WP != 0 && LOCAL_WP != 1) $error("ot_s81_rate_match_rt: LOCAL_WP must be 0 or 1");
+    // LOCAL_WP=1 (OT_S81_SERDES_RM_WPL8, FABLE-FIX-S81-SERDES-0000 11-20; default 0 = unchanged): the read side uses a THIRD
+    // rclk stage of the synchronised write pointer.  wp_g1 -> wp_g2 stays the one two-flop synchroniser (one decision);
+    // wp_g3 (read control: empty / rp / rp_g) and, with LOCAL_EMPTY, one kept copy per output bank (g_rd[k]...wpl) each
+    // register wp_g2, so all copies are equal in every cycle and every transfer that leaves the control tap is a
+    // zero-logic flop-to-flop hop.  Measured cause (serdes__t13 H22/H23): wp_g2 on clk_t43 -> g2b -> compare -> 64-load
+    // enable -> 8:1 mux -> q on clk_t41 carried the tap window on setup AND 297 ps of hold cells on the shared start.
+    // PIN CYCLE: +1 rclk from a write to its read (RX latency +1 clk).  Occupancy seen by the writer is one beat higher
+    // in steady state; full / fault / IDLE-shed rules and the credit loop logic are unchanged.
     // RPC=NRD: private read-select counters, one beside each output slice.
     // Every copy follows the ORIGINAL rrst_nc/empty/increment contract, hence
     // equals rp[2:0] even when rrst_nd independently resets an output bank.
@@ -383,7 +397,15 @@ module ot_s81_rate_match_rt #(parameter integer NRD = 8,
             if (push) begin mem[wp[2:0]] <= w_d; wp <= wp + 1'b1; wp_g <= (wp + 1'b1) ^ ((wp + 1'b1) >> 1); end
             if (w_v && full && !idle) flt <= 1'b1;
         end
-    wire empty = g2b(wp_g2) == rp;
+    wire [3:0] wp_rd;
+    generate if (LOCAL_WP != 0) begin : g_wp3
+        (* keep *) reg [3:0] wp_g3;
+        always @(posedge rclk or negedge rrst_nc) if (!rrst_nc) wp_g3 <= 4'd0; else wp_g3 <= wp_g2;
+        assign wp_rd = wp_g3;
+    end else begin : g_wp2
+        assign wp_rd = wp_g2;
+    end endgenerate
+    wire empty = g2b(wp_rd) == rp;
     always @(posedge rclk or negedge rrst_nc)
         if (!rrst_nc) begin rp <= 0; rp_g <= 0; end
         else if (!empty) begin rp <= rp + 1'b1; rp_g <= (rp + 1'b1) ^ ((rp + 1'b1) >> 1); end
@@ -408,7 +430,21 @@ module ot_s81_rate_match_rt #(parameter integer NRD = 8,
 `else
                 wire [3:0] bank_rp = {rpw, rpq};
 `endif
-                assign bank_empty = g2b(wp_g2) == bank_rp;
+                wire [3:0] bank_wp;
+                if (LOCAL_WP != 0) begin : g_wp_local
+                    (* keep *) reg [3:0] wpl;      // == wp_g3 every cycle; lives in this bank's tap group
+                    always @(posedge rclk or negedge rrst_nc)
+                        if (!rrst_nc) wpl <= 4'd0;
+`ifdef RMWPL_RT_MUT_EARLY
+                        else wpl <= (gs == 5) ? wp_g1 : wp_g2;   // bench mutant only: bank 5 one stage early
+`else
+                        else wpl <= wp_g2;
+`endif
+                    assign bank_wp = wpl;
+                end else begin : g_wp_shared
+                    assign bank_wp = wp_g2;
+                end
+                assign bank_empty = g2b(bank_wp) == bank_rp;
                 always @(posedge rclk or negedge rrst_nc)
                     if (!rrst_nc) {rpw, rpq} <= 4'd0;
                     else if (!bank_empty) {rpw, rpq} <= {rpw, rpq} + 4'd1;

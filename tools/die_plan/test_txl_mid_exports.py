@@ -184,3 +184,25 @@ def test_rck4_lpl_actual_source_and_frozen_reader_refusal():
             assert "actual local writer/reader modules absent" in str(error)
         else:
             raise AssertionError("frozen landing source silently accepted")
+
+
+def test_rck4_rm_wpl8_requires_local_empty_and_actual_source():
+    import json
+    with tempfile.TemporaryDirectory() as d:
+        cfg, defines = _rck4_capsule(d)
+        try:
+            G.txl_mid_exports(cfg, d, env={}, defines=defines + ["-DOT_S81_SERDES_RM_WPL8"])
+        except AssertionError as error:
+            assert "RM_WPL8 requires LOCAL_EMPTY8" in str(error)
+        else:
+            raise AssertionError("RM_WPL8 without LOCAL_EMPTY8 accepted")
+        both = defines + ["-DOT_S81_SERDES_RM_LOCAL_EMPTY8", "-DOT_S81_SERDES_RM_WPL8"]
+        G.txl_mid_exports(cfg, d, env={}, defines=both)
+        record = json.loads((Path(d) / "rck4_source_contract.json").read_text())
+        assert record["expected_actual_synth_ff"]["LOCAL_WP"] == 36 and record["RM_read_added_edges"] == 1
+        try:
+            G.txl_mid_exports(cfg, d, env={"OT_SERDES_RM_LOCAL": "1"}, defines=both)
+        except AssertionError as error:
+            assert "no RM_WPL8 scope" in str(error)
+        else:
+            raise AssertionError("RM locality helper accepted the RM_WPL8 profile")

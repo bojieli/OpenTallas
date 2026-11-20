@@ -6331,6 +6331,13 @@ def s81_rck4_source_contract(cfg, kd, names):
     if empty:
         assert re.search(r"\bg_empty_local\b", body) and re.search(r"\breg\s+rpw\b", body), (
             "S81 LOCAL_EMPTY8: actual kept local wrap/empty mechanism absent")
+    # FABLE-FIX-S81-SERDES-0000 11-20: OT_S81_SERDES_RM_WPL8 = third rclk stage of the synchronised write pointer, one kept
+    # copy per read bank (zero-logic cross-tap hop; RX +1 clk).  Lives in the LOCAL_EMPTY8 bank block.
+    wpl = "OT_S81_SERDES_RM_WPL8" in names
+    assert not wpl or empty, "S81 RM_WPL8 requires LOCAL_EMPTY8"
+    if wpl:
+        assert re.search(r"\bg_wp_local\b", body) and re.search(r"\breg\s*\[\s*3\s*:\s*0\s*\]\s*wp_g3\b", body), (
+            "S81 RM_WPL8: actual kept local write-pointer stage absent")
     if rpc:
         assert "OT_S81_SERDES_RST_TREE" in names and "OT_S81_RM_STAGED" not in names, (
             "S81 RCK4 RPC8: requires RST_TREE native _rt caller and no RM_STAGED")
@@ -6349,6 +6356,9 @@ def s81_rck4_source_contract(cfg, kd, names):
         "expected_actual_synth_ff": {"transport": 2216, "reset": 4, "AM": 9, "RPC": 24 if rpc else 0, "LOCAL_EMPTY": 8 if empty else 0},
         "scope": "Actual emitted source guard; synthesized inventory remains required before P&R",
         "RX_added_edges": 4, "TX_added_edges": 0, "RPC_added_edges": 0}
+    if wpl:
+        record["expected_actual_synth_ff"].update(LOCAL_WP=36)
+        record["RM_read_added_edges"] = 1
     if chunk:
         record["expected_actual_synth_ff"].update(LPL_read_onehot=356, LPL_write_onehot=356)
         record["expected_local_ring_instances"] = {"read": 89, "write": 89}
@@ -6520,6 +6530,7 @@ def txl_mid_exports(cfg, kd, env=None, defines=()):
     am_clock = env.get("OT_S81_RCK_AM_COHORT") == "1"
     rm_local = env.get("OT_SERDES_RM_LOCAL") == "1"
     assert not rm_local or rck4, "S81 RM locality requires the actual RCK4 native source profile"
+    assert not (rm_local and "OT_S81_SERDES_RM_WPL8" in names), "S81 RM locality helper has no RM_WPL8 scope (58-FF selector)"
     assert not am_clock or rck4, "S81 AM cohort requires the actual RCK4 source profile"
     if rck4:
         s81_rck4_source_contract(cfg, kd, names)
