@@ -1,5 +1,22 @@
 # FABLE-FIX-KV-PV-2140 handoff (KV pv family owner; newest first)
 
+## Update 2026-11-20 07:55Z (read first)
+- Tools on main ebe5d224187 (29d0a6105e4c + mid-hop latch placement, after FABLE-PD-KV-2300 A3: a 405-um hop does not fit T/2 behind a
+  latch at the launch station).  tail_copy_anchor.tcl: stage latch and each copy's own input latch at the hop midpoint, output latch at the
+  core pin; dly_spread.tcl SEG: latch placed like a repeater of its hop.  OpenROAD tests for both hooks pass (test_tail_copy_anchor.py
+  ::test_hook_in_openroad_with_hop_latches_and_a_split_copy, test_dly_spread.py::test_dly_spread_segment_form_latch_groups).
+- Kits RUNNING on epyc10 (admitted 06:47Z / 06:48Z, 40 GB, 16 thr, goal route, .keep_stage_odbs): v8h = kit/v8h (bind2 dense + C, post-pass
+  on the staged kit RTL), v8j = kit/v8j (bind4c TRUNK-CHAIN fixed + C through the PLAN KEY, private plan copy por_v8j, tools main via
+  kit/gen_main.sh).  Both kit dirs got the ebe5d224187 tail_copy_anchor.tcl / dly_spread.tcl by copy + mv at 07:47Z, before 3_3.
+  v8i is dropped (tree4c has no physical/common_flow/abc_kit.script, dir r-x, so GEN with the tree's own tools stops).
+  Synthesis v8j: 401,980 std cells, latches kept as ot_dp_lk hierarchy (54,196 bits, not merged), LEC async exit 0.
+- Place is slow under the fleet load (v8f needed more than 2.5 h in 3_3): expect tail site about 08:30Z, dly_spread at 3_5, clock taps at
+  CTS start, FF hold classes at CTS end (6.5 h of CTS on v8b).
+- Hub watcher (no LLM) intel2 ~/tmp/ffkpv2140/watch_kits.sh posts every new key line as AUTO-KIT under this lane name, and a last post
+  when both ot-run clients exit.  Clients: pgrep -af "fable-fix-kv-pv-2140/kit/v8[hj]".  Cancel only with ot-run --cancel <kit path>.
+- KV-D23-COMPOSE took rows_C into D25f (23:16 PST), to be rebased on D25e3 after its apply; tools need main >= ebe5d224187 for mid-hop.
+- FAIL-ROUTE a11df238f3 (qkd_pv_fin_s8_pin) ACKed 23:1x PST: D25e plan has no pvfin lef/lib; fix is in D25e2/D25e3; no relaunch before.
+
 ## Status 2026-11-20 06:40Z: form C built and on main, rows posted for D25f, proof kits in gen. NOTHING PROVED YET.
 Lane dir epyc10 /srv/opentallas-scratch2/claude/fable-fix-kv-pv-2140 (repo = lane clone, tools/ = kit patch scripts, kit/ = private kits).
 Hub scripts + logs intel2 ~/tmp/ffkpv2140 (chain_formc2.sh TAG TREE HOST; chain2_<tag>.log; kit_<tag>.log).
