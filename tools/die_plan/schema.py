@@ -1512,7 +1512,7 @@ _ZL_HOP = {"type": "object", "additionalProperties": False, "required": ["inst"]
     "groups": {"type": "array", "items": {"type": "array", "items": _name}},
     "types": {"type": "array", "items": _name}, "allow_missing": {"type": "boolean"}}}
 _ZL_REG = {"type": "object", "additionalProperties": False, "required": ["reg"], "properties": {
-    "reg": {"type": "string"}, "allow_missing": {"type": "boolean"}}}
+    "reg": {"type": "string"}, "module": _name, "allow_missing": {"type": "boolean"}}}
 SCHEMA["properties"]["clock"]["properties"]["zl_lockup"] = {"type": "object", "additionalProperties": {
     "type": "object", "additionalProperties": False, "properties": {
         "guard": {"type": ["string", "null"]}, "note": {"type": "string"},

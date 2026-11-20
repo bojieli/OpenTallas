@@ -208,3 +208,48 @@ def test_lockstep_bench(tmp_path, mutant):
     assert r.returncode == 0, r.stderr
     o = subprocess.run(["vvp", str(tmp_path / "a.out")], capture_output=True, text=True).stdout
     assert ("LOCKSTEP_FAIL" in o) if mutant else ("LOCKSTEP_PASS" in o), o
+
+
+SUB = """module ot_ctl (input wire clk, input wire [3:0] d_i, output reg [3:0] d_o);
+    always @(posedge clk) d_o <= d_i;
+endmodule
+module ot_other (input wire clk, input wire [3:0] d_i, output reg [3:0] d_o);
+    always @(posedge clk) d_o <= d_i;
+endmodule
+module top2 (input wire clk, input wire [3:0] x_i, output wire [3:0] y_o);
+    wire [3:0] a;
+    reg [3:0] r0;
+    always @(posedge clk) r0 <= x_i;
+    ot_ctl u_ctl (.clk(clk), .d_i(r0), .d_o(a));
+`ifdef SLOW
+    ot_other u_m(.clk(clk),
+`else
+    ot_other u_m(.clk(clk),
+`endif
+        .d_i(a), .d_o(y_o));
+endmodule
+"""
+
+
+def test_module_scoped_register_and_ifdef_headers(tmp_path):
+    (tmp_path / "lep.sv").write_text(SUB)
+    pairs = [("u_core.r0[0]$_DFF_P_", "u_core.u_ctl/d_o[1]$_DFF_P_", "clk", "clk_t1", 90.0, "DFF", "DFF")]
+    tsv = tmp_path / "p.tsv"
+    tsv.write_text("".join("\t".join(map(str, r)) + "\n" for r in pairs))
+    spec, rec = SR.derive_spec(SR.read_pairs(tsv), tmp_path, "top2")
+    assert spec["regs"] == [{"reg": "d_o", "module": "ot_ctl", "allow_missing": True}] and rec["cross_tap_covered"] == 1
+    out = zl.apply_kit(tmp_path, spec)
+    txt = (tmp_path / "lep.sv").read_text()
+    ctl, other = txt.split("module ot_other")
+    assert "u_fl_d_o" in ctl and "u_fl_d_o" not in other and out["lep.sv"]["latches"] == 1
+    assert txt.count("module ot_dp_lk") == 1
+
+
+def test_parameter_width_register():
+    src = """module ot_st #(parameter integer W = 552) (input wire clk, input wire [W-1:0] d_i, output reg [W-1:0] d_o);
+    always @(posedge clk) d_o <= d_i;
+endmodule
+"""
+    txt, lat, sk = zl.apply(src, {"guard": None, "regs": [{"reg": "d_o", "module": "ot_st"}]})
+    assert len(lat) == 1 and lat[0]["width"] == "((W-1)-(0)+1)"
+    assert "wire [((W-1)-(0)+1)-1:0] fl_d_o;" in txt and "ot_dp_lk #(.W(((W-1)-(0)+1))) u_fl_d_o (.clk(clk), .d(d_i), .q(fl_d_o));" in txt

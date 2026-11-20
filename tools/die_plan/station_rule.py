@@ -292,7 +292,7 @@ def generalize(name):
 def _rtl_objects(rtl_dir):
     """{instance name: module type} and {register name} over the kit RTL (instances via kit_zl_lockup.instances)."""
     import kit_zl_lockup as ZL
-    insts, regs = {}, set()
+    insts, regs, modregs = {}, set(), collections.defaultdict(set)
     for f in sorted(Path(rtl_dir).glob("*.sv")) + sorted(Path(rtl_dir).glob("*.v")):
         txt = f.read_text(errors="replace")
         try:
@@ -301,12 +301,14 @@ def _rtl_objects(rtl_dir):
         except ZL.LkError:
             pass                                  # a file the instance parser cannot read: its registers still count
         regs.update(re.findall(r"\breg\b\s*(?:\[[^\]]*\])?\s*([A-Za-z_]\w*)\s*;", txt))
-    return insts, regs
+        for m in re.finditer(r"(?s)\bmodule\s+([A-Za-z_]\w*).*?\bendmodule\b", txt):
+            modregs[m.group(1)].update(re.findall(r"\breg\b\s*(?:\[[^\]]*\])?\s*([A-Za-z_]\w*)\s*[,;)]", m.group(0)))
+    return insts, regs, modregs
 
 
 def derive_spec(pairs, rtl_dir, type_name, min_pairs=1, guard=None):
     """kit_zl_lockup spec for every capture class with >= min_pairs cross-tap zero-logic pairs, + the census."""
-    insts, regs = _rtl_objects(rtl_dir)
+    insts, regs, modregs = _rtl_objects(rtl_dir)
     cls = collections.Counter()
     same = collections.Counter()
     unmapped = collections.Counter()
@@ -315,8 +317,10 @@ def derive_spec(pairs, rtl_dir, type_name, min_pairs=1, guard=None):
         inst, reg = _cell_obj(cap)
         if inst in insts and insts[inst] in DATA_PORTS:
             key = ("inst", generalize(inst), insts[inst])
-        elif reg in regs:
+        elif reg in regs and not (inst in insts and reg in modregs.get(insts[inst], ())):
             key = ("reg", generalize(reg), None)
+        elif inst in insts and reg in modregs.get(insts[inst], ()):
+            key = ("modreg", generalize(reg), insts[inst])         # the register inside the capture's own module
         elif inst in insts:
             unmapped[f"{insts[inst]} (no data-port map)"] += 1
             continue
@@ -334,6 +338,8 @@ def derive_spec(pairs, rtl_dir, type_name, min_pairs=1, guard=None):
             continue
         if kind == "inst":
             hops.append({"inst": rx, "types": [mt], "ports": DATA_PORTS[mt], "allow_missing": True})
+        elif kind == "modreg":
+            regs_out.append({"reg": rx, "module": mt, "allow_missing": True})
         else:
             regs_out.append({"reg": rx, "allow_missing": True})   # netlist -> RTL register names are a heuristic map
     spec = {"guard": guard, "note": f"LOCKUP-STATION-1130 station_rule.derive {type_name}: launch-side lockup on every "

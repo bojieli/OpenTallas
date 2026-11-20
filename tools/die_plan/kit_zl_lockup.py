@@ -69,7 +69,10 @@ def instances(txt):
         if mt in KEYWORDS or name in KEYWORDS:
             continue
         lp = m.end() - 1
-        e = _close(txt, lp)
+        try:
+            e = _close(txt, lp)
+        except LkError:
+            continue                                  # e.g. an `ifdef inside the header: not an editable instance
         out.append((mt, params, name, m.start(), e, lp))
     return out
 
@@ -88,14 +91,32 @@ def conns(txt, lp, e):
     return res
 
 
+def _rw(hi, lo):
+    """width of [hi:lo]: an int, or a parameter expression string such as '((W-1)-(0)+1)' (LOCKUP-STATION-1130)"""
+    try:
+        return abs(int(hi) - int(lo)) + 1
+    except ValueError:
+        return f"(({hi.strip()})-({lo.strip()})+1)"
+
+
+def _wsum(ws):
+    if all(isinstance(w, int) for w in ws):
+        return sum(ws)
+    return "(" + "+".join(str(w) for w in ws) + ")"
+
+
+def _bits(ws):
+    return sum(w for w in ws if isinstance(w, int))
+
+
 def decl_widths(txt):
     w = {}
     txt = re.sub(r"/\*.*?\*/", "", re.sub(r"//[^\n]*", "", txt), flags=re.S)
-    for m in re.finditer(r"^\s*(?:input|output|inout)\s+(?:wire|reg|logic)?\s*(\[\s*(\d+)\s*:\s*(\d+)\s*\])?\s*([A-Za-z_]\w*)",
+    for m in re.finditer(r"(?:^|[(,])\s*(?:input|output|inout)\s+(?:wire|reg|logic)?\s*(\[\s*([^\]:]+?)\s*:\s*([^\]:]+?)\s*\])?\s*([A-Za-z_]\w*)",
                          txt, re.M):
-        w.setdefault(m.group(4), abs(int(m.group(2)) - int(m.group(3))) + 1 if m.group(1) else 1)
-    for m in re.finditer(r"\b(?:wire|reg|logic)\b\s*(\[\s*(\d+)\s*:\s*(\d+)\s*\])?([^;]*);", txt):
-        n = abs(int(m.group(2)) - int(m.group(3))) + 1 if m.group(1) else 1
+        w.setdefault(m.group(4), _rw(m.group(2), m.group(3)) if m.group(1) else 1)
+    for m in re.finditer(r"\b(?:wire|reg|logic)\b\s*(\[\s*([^\]:]+?)\s*:\s*([^\]:]+?)\s*\])?([^;]*);", txt):
+        n = _rw(m.group(2), m.group(3)) if m.group(1) else 1
         for part in m.group(4).split(","):
             nm = re.match(r"\s*([A-Za-z_]\w*)", part.split("=")[0])
             if nm and nm.group(1) not in KEYWORDS:
@@ -121,7 +142,7 @@ def expr_width(expr, widths):
             else:
                 cur += c
         parts.append(cur)
-        return sum(expr_width(p, widths) for p in parts)
+        return _wsum([expr_width(p, widths) for p in parts])
     m = re.fullmatch(r"([A-Za-z_]\w*)\s*\[\s*(\d+)\s*:\s*(\d+)\s*\]", expr)
     if m:
         return abs(int(m.group(2)) - int(m.group(3))) + 1
@@ -169,15 +190,16 @@ def _reg_edits(txt, hdr_end, regs, ins, widths, used, latches, edits, skipped):
     """flattened register captures (spec "regs"): edits + latches; returns the per-entry hit counts."""
     hit = [0] * len(regs)
     body = txt[hdr_end:]
-    names = sorted(set(re.findall(r"\breg\b\s*(?:\[[^\]]*\])?\s*([A-Za-z_]\w*)\s*;", body)))
+    names = sorted(set(re.findall(r"\breg\b\s*(?:\[[^\]]*\])?\s*([A-Za-z_]\w*)\s*;", body)) |
+                   set(re.findall(r"\boutput\s+reg\b\s*(?:\[[^\]]*\])?\s*([A-Za-z_]\w*)\s*[,;)]", txt[:hdr_end])))
     alw = [(m.start(), m.group(1), m.group(2)) for m in
            re.finditer(r"\balways\s*@\s*\(\s*(posedge|negedge)\s+([A-Za-z_]\w*)", body)]
     for nm in names:
-        sel = next((i for i, (rx, _am) in enumerate(regs) if rx.fullmatch(nm)), None)
+        sel = next((i for i, (rx, *_r) in enumerate(regs) if rx.fullmatch(nm)), None)
         if sel is None:
             continue
         dm = re.search(r"\breg\b\s*(?:\[[^\]]*\])?\s*" + re.escape(nm) + r"\s*;", body)
-        pre_txt = body[:dm.start()]
+        pre_txt = body[:dm.start()] if dm else ""            # an output reg is declared in the header: top level
         depth = (len(re.findall(r"\bbegin\b", pre_txt)) - len(re.findall(r"\bend\b", pre_txt))
                  + len(re.findall(r"\bgenerate\b", pre_txt)) - len(re.findall(r"\bendgenerate\b", pre_txt)))
         if depth:
@@ -202,8 +224,8 @@ def _reg_edits(txt, hdr_end, regs, ins, widths, used, latches, edits, skipped):
         if w != widths.get(nm, w):
             skipped["logic"] += 1
             continue
-        if (re.match(r"[A-Za-z_]\w*", x.lstrip("{ ")) or [None])[0] in ins:
-            skipped["port"] += 1
+        if (re.match(r"[A-Za-z_]\w*", x.lstrip("{ ")) or [None])[0] in ins and not regs[sel][2]:
+            skipped["port"] += 1                      # the kit top: a pin loads its face flop directly
             continue
         pre = [a for a in alw if a[0] < data[0].start()]
         if not pre or pre[-1][1] != "posedge":
@@ -271,7 +293,10 @@ def apply(txt, spec):
                 continue
             ws = [port_width(mt, params, p, cs[p][0], widths) for p in ports]
             exprs = [cs[p][0] for p in ports]
-            tot = sum(ws)
+            tot = _wsum(ws)
+            if not isinstance(tot, int) and len(ports) > 1:
+                skipped["logic"] += 1                 # a parameter-width group of several ports: not split here
+                continue
             base = name[2:] if name.startswith("u_") else name
             base = re.sub(r"\W", "_", base) + ("" if len(sel[1]) == 1 else "_" + "_".join(group))
             ln = f"fl_{base}"
@@ -283,7 +308,7 @@ def apply(txt, spec):
             latches.append(dict(inst=f"u_{ln}", net=ln, width=tot, src=src, capture=name, ports=ports, clk=ck))
             lo = 0
             for p, w in zip(ports, ws):
-                if tot == 1:
+                if tot == 1 or not isinstance(tot, int):
                     sl = ln
                 elif w == 1:
                     sl = f"{ln}[{lo}]"
@@ -294,7 +319,10 @@ def apply(txt, spec):
     for i, n in hit.items():
         if n == 0 and not hops[i][3]:
             raise LkError(f"spec hop {spec['hops'][i]['inst']!r} matched no instance")
-    regs = [(re.compile(r["reg"]), bool(r.get("allow_missing"))) for r in spec.get("regs") or []]
+    mname = re.search(r"\bmodule\s+(\w+)", txt).group(1)
+    # a module-scoped entry applies in its module only, and there a port-fed register is an internal hop (latched)
+    regs = [(re.compile(r["reg"]), bool(r.get("allow_missing")), bool(r.get("module")))
+            if r.get("module") in (None, mname) else (re.compile(r"(?!x)x"), True, True) for r in spec.get("regs") or []]
     if regs:
         rh = _reg_edits(txt, hdr_end, regs, ins, widths, used, latches, edits, skipped)
         for i, n in enumerate(rh):
@@ -305,9 +333,9 @@ def apply(txt, spec):
     for a, b, sl in sorted(edits, reverse=True):
         txt = txt[:a] + sl + txt[b:]
     decl = [f"    // kit_zl_lockup (DIE-HEAD-86/SPN 11-08): {len(latches)} zero-logic hop lockup latches, "
-            f"{sum(l['width'] for l in latches)} bits; " + (f"on with -D{guard}" if guard else "unguarded")]
+            f"{_bits([l['width'] for l in latches])} bits; " + (f"on with -D{guard}" if guard else "unguarded")]
     for l in latches:
-        decl.append(f"    wire [{l['width'] - 1}:0] {l['net']};  // kit_zl_lockup: {l['capture']}.{'+'.join(l['ports'])}")
+        decl.append(f"    wire [{l['width'] - 1 if isinstance(l['width'], int) else str(l['width']) + '-1'}:0] {l['net']};  // kit_zl_lockup: {l['capture']}.{'+'.join(l['ports'])}")
     lk = ["    // negative-level lockup latches (ot_dp_lk: transparent while clk is LOW), 0 cycles; clock_taps.tcl hangs",
           "    // each u_fl_* latch on its LAUNCH flop's tap, face_flops.tcl places it at the hop midpoint"]
     lk += [f"    ot_dp_lk #(.W({l['width']})) {l['inst']} (.clk({l.get('clk', 'clk')}), .d({l['src']}), .q({l['net']}));"
@@ -326,7 +354,7 @@ def apply_kit(rtl_dir, spec):
     has a match (an entry may match in one file only; an entry that matches in NO file fails closed unless
     allow_missing).  Adds ot_dp_lk to the first patched file when no staged file defines it.  -> {file: stats}"""
     files = sorted(Path(rtl_dir).glob("*.sv")) + sorted(Path(rtl_dir).glob("*.v"))
-    out, any_hit, patched = {}, set(), []
+    out, any_hit, patched, errors = {}, set(), [], []
     hop_rx = [re.compile(h["inst"]) for h in spec.get("hops") or []]
     reg_rx = [re.compile(r["reg"]) for r in spec.get("regs") or []]
     for f in files:
@@ -345,10 +373,9 @@ def apply_kit(rtl_dir, spec):
             chunk = m.group(0)
             try:
                 ctxt, clat, csk = apply(chunk + "\n", sub)
-            except LkError:
-                if any(rx.search(chunk) for rx in hop_rx + reg_rx):
-                    raise
-                ctxt, clat, csk = chunk + "\n", [], {}
+            except LkError as ex:                      # a module the pass cannot read stays as it is, recorded;
+                errors.append(f"{f.name}:{m.group(0)[:60].split('(')[0].strip()}: {ex}")   # a strict entry that
+                ctxt, clat, csk = chunk + "\n", [], {}                                     # then matches nothing fails below
             pieces.append(ctxt[:-1] if ctxt.endswith("\n") and not chunk.endswith("\n") else ctxt)
             lat += clat
             sk.update(csk)
@@ -368,7 +395,9 @@ def apply_kit(rtl_dir, spec):
         tmp.write_text(txt)
         tmp.replace(f)
         patched.append(f)
-        out[f.name] = dict(latches=len(lat), bits=sum(l["width"] for l in lat), skipped=sk)
+        out[f.name] = dict(latches=len(lat), bits=_bits([l["width"] for l in lat]), skipped=sk)
+    if errors:
+        out["_unparsed_modules"] = errors[:50]
     for i, h in enumerate(spec.get("hops") or []):
         if ("h", i) not in any_hit and not h.get("allow_missing"):
             raise LkError(f"spec hop {h['inst']!r} matched no instance in {rtl_dir}")
@@ -390,7 +419,7 @@ def main(argv):
     txt, latches, skipped = apply(rtl.read_text(), spec)
     out.write_text(txt)
     rep = dict(rtl=str(out), guard=spec.get("guard", "OT_ZL_LOCKUP"), latches=len(latches),
-               bits=sum(l["width"] for l in latches), skipped=skipped, entries=latches)
+               bits=_bits([l["width"] for l in latches]), skipped=skipped, entries=latches)
     if "--report" in argv:
         Path(argv[argv.index("--report") + 1]).write_text(json.dumps(rep, indent=1))
     print(json.dumps(dict(latches=rep["latches"], bits=rep["bits"], skipped=skipped)))

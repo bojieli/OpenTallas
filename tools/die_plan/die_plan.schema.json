@@ -8187,6 +8187,10 @@
           "reg": {
            "type": "string"
           },
+          "module": {
+           "type": "string",
+           "minLength": 1
+          },
           "allow_missing": {
            "type": "boolean"
           }
