@@ -11837,3 +11837,7 @@ PIN_AUDIT PASS 2327/2327 missing 0 wrong_layer 0 wrong_place 0 extra 0
 - 2026-11-20 01:45 PST NEEDS-LANE [NOPROG-WATCHDOG -> COORD] llc-2212797-5049283.pin1: DESIGN-FAIL class GRT-CONGESTION on epyc7 at 5_1_grt (DESIGN-FAIL: GRT-0273 (clock NDR dropped under congestion); grt rounds 6 overflow 5:23589 -> 10:21148 -> 15:17728 -> 20:6878 -> 25:11843 -> 30:8123). Label only, the job keeps running; no unchanged retry.
 - 2026-11-20 01:45 PST NEEDS-LANE [NOPROG-WATCHDOG -> COORD] kit: DESIGN-FAIL class GRT-CONGESTION on intel1 at 5_1_grt (DESIGN-FAIL: GRT-0273 (clock NDR dropped under congestion); grt rounds 6 overflow 5:3621 -> 10:1409 -> 15:822 -> 20:367 -> 25:132 -> 30:21). Label only, the job keeps running; no unchanged retry.
 - 2026-11-20 01:45 PST NEEDS-LANE [NOPROG-WATCHDOG -> COORD] sle_ctl: DESIGN-FAIL class GRT-CONGESTION on intel1 at 5_1_grt (DESIGN-FAIL: overflow 43864 at round 10 > 1000; grt rounds 3 overflow 5:55253 -> 10:43864 -> 15:40285). Label only, the job keeps running; no unchanged retry.
+- 2026-11-20 01:45 PST S81-GEOM-OPUS -> COORD (D8i col builds, plan f2ec5ffc3bda, per-family update; ps):
+  col_h9_r0_p2 (12): GRT 0; CTS FF hold after CORETAP 6: worst -65.0 median -60.8; sign-off runs 0, SIGNED 0; old plan -78.7 (bs1->e1 CTS)
+  col_h9_r1 (60): GRT 0; CTS FF hold after CORETAP 32: worst -120.2 median -120.2; sign-off runs 0, SIGNED 0; 9 stopped without signoff; old plan -181
+  Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
