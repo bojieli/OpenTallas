@@ -108,6 +108,14 @@ def test_portfix_overlays_are_fresh():
     """FRESH: the bind178 PORTFIX svc overlays are exactly what svc_rs_faces.py --portfix writes (no hand copy)."""
     import subprocess
     root = Path(__file__).resolve().parents[2]
+    # Keep literal repository paths so the sparse source gate stages the
+    # role ROMs read by the generator subprocess.
+    role_inputs = (
+        "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs_roles.svh",
+        "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx_roles.svh",
+    )
+    for role_input in role_inputs:
+        assert (root / role_input).is_file(), f"missing face generator input: {role_input}"
     gen = root / "tools" / "s81_dv" / "svc_rs" / "svc_rs_faces.py"
     r = subprocess.run([sys.executable, "-I", str(gen), "--root", str(root), "--check", "--only-portfix"],
                        capture_output=True, text=True)
