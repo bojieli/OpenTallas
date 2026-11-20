@@ -3576,6 +3576,14 @@
          },
          "reuse_relay_origin": {
           "type": "boolean"
+         },
+         "direct_fstart_buses": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+           "type": "string",
+           "pattern": "^[A-Za-z_]\\w*$"
+          }
          }
         }
        },
