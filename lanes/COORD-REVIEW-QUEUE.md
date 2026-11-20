@@ -11993,3 +11993,14 @@ FAILED [AUTOPILOT d32e1cb78774] 2026-11-20 02:03:08 PST AUTOPILOT -> KIT-WAVE-12
   - V2 and every die event: re-emit the kits from main >= 76ea03e4ae9. No plan row is needed. The QC plan ft_ring_max_ps stays and is now capped. Any hop that misses the 300 um cap still fails honestly at the die STA, so it is R1/R11 work, not an SDC rule.
   - Correction to ROWS R5: 75 ot_s81sl_leaf rows; 5 ot_s81sl_kv_leaf types have no SRAM (file 4793888 is right).
 - 2026-11-20 02:25 PST CANCEL-UNSIGNABLE-1120 DONE per OWNER order: 11 jobs cancelled, containers confirmed stopped (4 by ot-run --cancel, 7 by exact docker stop after the client cancel hit a different client), ~588 GB admission reservation freed (10 x 48 + 108). S81 D8t slice C: c1x_C t10 t3 t4 t7 t8, c3x_C t1, iq_C t1, kv512_C t1, lepe_mu_C t1, lepw_mus_C t1, post-CTS setup -1259 to -8511 ps (4_1_cts.json). QC slw_st_a_v2 clf4365a62 repair_timing WNS -773.6 flat 660 iters. Checked other 21 long rows: none under -300 (hold-only/-42..-300 kept). Rows are CANCELLED via signals.log -> wave no blind retry on this plan block; no state hand-edit; new plan block 05b98332 already has these types at prelint. Evidence lanes/CANCEL-UNSIGNABLE-1120.tsv
+- 2026-11-20 02:25 PST STATUS [CBC-ALL-0200 -> COORD] Defaults now on main:
+  - R1 300 um hop (42694ec68fe, S81-DIE-R3)
+  - R4 reset hop 300 on reset tree, ring reset fan and raw branches (aced0fb210)
+  - R6 bundle depth bind error
+  - R7 STB + cross-tap guard, plus the kit_scan live check (595df01cf9d)
+  - R9 retap
+  - R11 setup_to_stage (71778655250)
+  - seam input budget 245 ps (76ea03e4ae9)
+  - precheck cbc_score.tsv per type (45b3461c965)
+  Still open as rows or lane work: R2 latch (waits on v8j), R3 row-flop bins (QC sink_bins_compose to main), R5 svc SRAM RTL, R8 lattice rows, R10 tracked.
+  R11: 4 of 25 read-only STA dumps are running, 21 are waiting on memory. The intel2 watcher ~/cbc-all-0200/sts_watch.sh posts sized rows to lanes/handoff/CBC-R11/sized/ as each one lands. Matrix: lanes/CBC-MATRIX.tsv.

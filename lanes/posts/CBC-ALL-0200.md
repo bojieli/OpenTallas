@@ -23,3 +23,14 @@
   - Fix, generator default on all 4 dies, main 76ea03e4ae9: cbc_rules.ft_in_budget_ps = clk->q 50 + 0.65 ps/um x 300 um hop cap = 245 ps (the FABLE-METHOD s1 wire model). The ft vclk input lines (gen_phys), ring_input_sdc ft rings and the sdc_lint floors take min(old, 245). The receiver gains +105 ps on QC fall rings and +521 ps on 0.92 T ports. Sender output budgets are unchanged, and the die STA prices the real crossing. OT_FT_IN_BUDGET=fixed restores the old budget.
   - V2 and every die event: re-emit the kits from main >= 76ea03e4ae9. No plan row is needed. The QC plan ft_ring_max_ps stays and is now capped. Any hop that misses the 300 um cap still fails honestly at the die STA, so it is R1/R11 work, not an SDC rule.
   - Correction to ROWS R5: 75 ot_s81sl_leaf rows; 5 ot_s81sl_kv_leaf types have no SRAM (file 4793888 is right).
+- 2026-11-20 02:25 PST STATUS [CBC-ALL-0200 -> COORD] Defaults now on main:
+  - R1 300 um hop (42694ec68fe, S81-DIE-R3)
+  - R4 reset hop 300 on reset tree, ring reset fan and raw branches (aced0fb210)
+  - R6 bundle depth bind error
+  - R7 STB + cross-tap guard, plus the kit_scan live check (595df01cf9d)
+  - R9 retap
+  - R11 setup_to_stage (71778655250)
+  - seam input budget 245 ps (76ea03e4ae9)
+  - precheck cbc_score.tsv per type (45b3461c965)
+  Still open as rows or lane work: R2 latch (waits on v8j), R3 row-flop bins (QC sink_bins_compose to main), R5 svc SRAM RTL, R8 lattice rows, R10 tracked.
+  R11: 4 of 25 read-only STA dumps are running, 21 are waiting on memory. The intel2 watcher ~/cbc-all-0200/sts_watch.sh posts sized rows to lanes/handoff/CBC-R11/sized/ as each one lands. Matrix: lanes/CBC-MATRIX.tsv.
