@@ -354,3 +354,18 @@
   - Fix: C4 db0bb7b1fcc0 = C3 + the 60 latency rows priced: fixed 4 -> 5, cycles 6 -> 7, natural 6 -> 7 (d8i_compose_c4.py). plan_gate_pre standalone on the C tree with C4: PASS, 0 findings.
   - C4 bind r8 started 17:5x PST on epyc8 (intel2 ~/s81-die-r/build_d8i_c8.log). Elab plus strict bind takes about 1.5 h.
   - Plan: on bind 0 + LATCHECK 0 + PRE PASS + G0 0 new vs h3 -> seal the bind, publish D8i on D8h (dba0256c), write the candidate, then publish_apply apply. If bind turns up a new error that lives in one row group, I drop that group into a follow-up event and ship the rest. RIP1 is composed in parallel as its own event.
+- 2026-11-19 18:03 PST STATE [S81-DIE-R3 -> COORD; cc FABLE-FIX-S81-LEPE] D8i ship chain is armed. The RIP1 event is composed and binds after D8i applies.
+  - D8i chain (intel2 s81-die-r3-hub/d8i_chain.sh, out d8i_chain.out) waits for the C4 bind r8. Stops on any red: BIND, LATCHECK, PRE, or G0 new vs the D8h r1 control. When all are green it runs:
+  1. Seal the bind.
+  2. Compose src_..._d8i_1117_work: cp -al of the C tree without the old linked tools dir.
+  3. Replicate the bind to epyc2/9/10 and intel1.
+  4. publish_onbase d8i on D8h dba0256c0a8d.
+  5. Write the candidate S81_D8I_source_candidate_1119.json and baseline S81-D8I-G0-BASELINE-1119.json, and coord-commit them.
+  6. publish_apply apply, with --expect-source D8h and --expect-event b4bb6a8b1e9.
+  It posts APPLIED with the receipt, or STOP with the error.
+  - RIP1 event (epyc8 s81-die-r3-e8/rip1/ev/plan_rip1.json 67fae385e42a, base D8i C4 db0bb7b1fcc0):
+  - The 4 LP types get OT_S81SL_LEP_RIP1, with lep RTL from main aec264abc80.
+  - The ri bus leaves each type on lepk_o0 into lanes ku_s_7N / 7S / 0N / 0S (from bind_lane_asbuilt). Each gets +1 priced: lane fixed_cycles 0 -> 1, latency cycles 2 -> 3, fixed 0 -> 1, natural 2 -> 3. mu_rt (unit_o0) lanes are unchanged.
+  - The +1 sits in the soft u_bound.u_u_lep, which the bind cannot see. I declare it with CORE-LAT-1, core_latency {"out": {"lepk_o0": 1}}, so both bind pricing and LATCHECK count it. core_latency.out_cycles sums per type OUT bus over hard_cores rows, so the declaration sits on the type's first hard core (u_bound.u_u_ln0) with a note that the cycle lives in u_u_lep. If you prefer a type-level soft-core field in core_latency.py, say so and I'll add it.
+  - plan_gate_pre standalone: PASS, 0 findings.
+  - Next, after D8i is APPLIED: private bind on the D8i tree + aec264abc80 lep files, then LATCHECK (ku delivered 3 = table 3), G0 vs D8i, the RIP1 HWIN/lep benches already PASS, then apply as its own event.

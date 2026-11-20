@@ -9723,3 +9723,18 @@ FAILED [AUTOPILOT 77e4ad21b49b] 2026-11-19 18:01:24 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-19 18:01 PST NEEDS-LANE [KIT-WAVE -> COORD; owner HBM die owner (DIE-HBM-101)] TOOL-SKEW refused launches on hbm: tree /srv/opentallas-scratch2/claude/kw45/src_hbm_main_d6b0b70323 has 263 gen/bind module(s) that differ from main (0 differ, 0 private, 263 missing; 0 allowlist entries expired). First: tools/die_plan/abstract_cutout.py, tools/die_plan/abstract_detail.py, tools/die_plan/added_tap_recentre.py, tools/die_plan/band_capacity.py, tools/die_plan/bind.py, tools/die_plan/bind_component.py, tools/die_plan/bind_compose.py, tools/die_plan/bind_compose_split.py. Fix: land the die feature on main (TOOLS-CONVERGE-1115 branch), rebuild the tree as main tools + plan at the next plan event, or declare the module in tools/autopilot/tool_skew_allow.json with an expiry. signature cc8e1ccf9a6c
 - 2026-11-19 18:02 PST PROOF [FABLE-FIX-S81-LEPE watcher -> S81-DIE-R3; cc COORD] private FULL-FORM + corrected ln core LEF proof kit dsdv_slice_lepe_mu_LP__t2 (epyc9 /srv/opentallas-scratch2/claude/fable-lepe/proof5/dsdv_slice_lepe_mu_LP__t2/gen/dsdv_slice_lepe_mu_LP__t2): OT_PREGRT_FF_HOLD pass xt 1 margin 5.0 + cross-tap 40.0 wns -70.71444846852106 endpoints 33 insts 367532
 - 2026-11-19 18:03 PST PROOF [FABLE-FIX-S81-LEPE watcher -> S81-DIE-R3; cc COORD] private FULL-FORM + corrected ln core LEF proof kit dsdv_slice_lepe_mu_LP__t2 (epyc9 /srv/opentallas-scratch2/claude/fable-lepe/proof5/dsdv_slice_lepe_mu_LP__t2/gen/dsdv_slice_lepe_mu_LP__t2): OT_PREGRT_FF_HOLD pass xt 2 margin 5.0 + cross-tap 40.0 wns -70.71444846852106 endpoints 20 insts 367572
+- 2026-11-19 18:03 PST STATE [S81-DIE-R3 -> COORD; cc FABLE-FIX-S81-LEPE] D8i ship chain is armed. The RIP1 event is composed and binds after D8i applies.
+  - D8i chain (intel2 s81-die-r3-hub/d8i_chain.sh, out d8i_chain.out) waits for the C4 bind r8. Stops on any red: BIND, LATCHECK, PRE, or G0 new vs the D8h r1 control. When all are green it runs:
+  1. Seal the bind.
+  2. Compose src_..._d8i_1117_work: cp -al of the C tree without the old linked tools dir.
+  3. Replicate the bind to epyc2/9/10 and intel1.
+  4. publish_onbase d8i on D8h dba0256c0a8d.
+  5. Write the candidate S81_D8I_source_candidate_1119.json and baseline S81-D8I-G0-BASELINE-1119.json, and coord-commit them.
+  6. publish_apply apply, with --expect-source D8h and --expect-event b4bb6a8b1e9.
+  It posts APPLIED with the receipt, or STOP with the error.
+  - RIP1 event (epyc8 s81-die-r3-e8/rip1/ev/plan_rip1.json 67fae385e42a, base D8i C4 db0bb7b1fcc0):
+  - The 4 LP types get OT_S81SL_LEP_RIP1, with lep RTL from main aec264abc80.
+  - The ri bus leaves each type on lepk_o0 into lanes ku_s_7N / 7S / 0N / 0S (from bind_lane_asbuilt). Each gets +1 priced: lane fixed_cycles 0 -> 1, latency cycles 2 -> 3, fixed 0 -> 1, natural 2 -> 3. mu_rt (unit_o0) lanes are unchanged.
+  - The +1 sits in the soft u_bound.u_u_lep, which the bind cannot see. I declare it with CORE-LAT-1, core_latency {"out": {"lepk_o0": 1}}, so both bind pricing and LATCHECK count it. core_latency.out_cycles sums per type OUT bus over hard_cores rows, so the declaration sits on the type's first hard core (u_bound.u_u_ln0) with a note that the cycle lives in u_u_lep. If you prefer a type-level soft-core field in core_latency.py, say so and I'll add it.
+  - plan_gate_pre standalone: PASS, 0 findings.
+  - Next, after D8i is APPLIED: private bind on the D8i tree + aec264abc80 lep files, then LATCHECK (ku delivered 3 = table 3), G0 vs D8i, the RIP1 HWIN/lep benches already PASS, then apply as its own event.
