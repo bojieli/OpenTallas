@@ -165,6 +165,30 @@ def edit(coord, ops, message, dry=False, commit_cmd=None):
         lock.close()
 
 
+def event_problems(old_doc, new_doc):
+    """FLOW-1949 (1): a die whose event CHANGED must carry an event the wave's die gate can resolve: a label of the die's accepted list (GATE_EVENTS exact + gate_events_extra) or, for a commit-typed
+    die, a hex commit id.  A synthetic key (spaces, empty, an unlisted label) would turn the die off at the next tick.  -> [problem text].  Needs kit_wave (same dir); absent -> no check"""
+    try:
+        import re
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        import kit_wave as _KW
+    except Exception:
+        return []
+    out = []
+    od, nd = (old_doc or {}).get("dies") or {}, (new_doc or {}).get("dies") or {}
+    for die, d in nd.items():
+        if not isinstance(d, dict) or not d.get("enabled") or str(d.get("event") or "") == str((od.get(die) or {}).get("event") or ""):
+            continue
+        ev, rule = str(d.get("event") or ""), _KW.GATE_EVENTS.get(die)
+        if not ev.strip() or re.search(r"\s", ev):
+            out.append(f"{die}: event {ev!r} is empty or has whitespace (not a resolvable event)")
+        elif rule and "exact" in rule and ev not in rule["exact"] and ev not in (d.get("gate_events_extra") or ()):
+            out.append(f"{die}: event {ev!r} is not in the die's accepted events (GATE_EVENTS exact / gate_events_extra); add it to gate_events_extra in the same edit")
+        elif rule and "descends" in rule and not re.fullmatch(r"[0-9a-f]{7,40}", ev):
+            out.append(f"{die}: event {ev!r} is not a commit id (the die gate needs one descending from {rule['descends']})")
+    return out
+
+
 def cas_write(coord, new_obj, base_text, wait_s=120):
     """COORD 11-18 (a writer holding a stale snapshot overwrote kit_wave.json 70 s after a commit and blocked every kit_wave_edit): the whole-file writers
     (apply_reviewed_tree_marker) write through this: take kit_wave_edit.lock (blocking up to wait_s, so no edit is in flight), compare the file with the text this writer READ at its start
@@ -188,6 +212,9 @@ def cas_write(coord, new_obj, base_text, wait_s=120):
         p = coord / REL
         if p.read_text() != base_text:
             raise SystemExit(f"kit_wave_edit: {REL} changed while this writer worked (compare-and-swap failed); nothing written, rerun on the new content")
+        _ep = event_problems(json.loads(base_text), new_obj)
+        if _ep:
+            raise SystemExit("kit_wave_edit: die event refused at write time, nothing written: " + "; ".join(_ep[:4]))
         tmp = p.with_name(p.name + f".tmp.cas.{os.getpid()}")
         tmp.write_text(dump(new_obj))
         os.replace(tmp, p)
@@ -214,7 +241,7 @@ def _edit_once(coord, ops, message, dry, commit_cmd):
     try:
         _old = json.loads(head)
         _newdoc = apply_patch(_old, ops)
-        _errs = release_repoint_errors(_old, _newdoc, ops)
+        _errs = release_repoint_errors(_old, _newdoc, ops) + event_problems(_old, _newdoc)
         if _errs:
             raise PatchError("; ".join(_errs[:6]))
         new = dump(_newdoc)

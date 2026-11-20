@@ -633,3 +633,16 @@ def test_reap_never_supersedes_by_an_equal_attempt_or_another_events_row(tmp_pat
     st = {"items": {"a": mk("NEW", 2, 1.0), "b": mk("NEW", 3, 2.0)}}
     KW.reap_stale_attempts(ap, cfg, st, {}, ap_dir=str(tmp_path))
     assert st["items"]["a"]["status"] == "CANCELLED" and st["items"]["b"]["status"] == "RUNNING"
+
+
+def test_kit_wave_edit_refuses_a_die_event_the_gate_cannot_resolve():
+    import kit_wave_edit as E
+    old = {"dies": {"s81": {"enabled": True, "event": "1dfae74037a"}, "qwen_kvsys": {"enabled": True, "event": "event28w_c"}}}
+    ok_new = {"dies": {"s81": {"enabled": True, "event": "b05c98f7919"}, "qwen_kvsys": {"enabled": True, "event": "event28w_c"}}}
+    assert E.event_problems(old, ok_new) == []
+    bad = {"dies": {"s81": {"enabled": True, "event": "D8h synthetic key"}, "qwen_kvsys": {"enabled": True, "event": "nolisted"}}}
+    probs = E.event_problems(old, bad)
+    assert len(probs) == 2 and "whitespace" in probs[0] and "accepted events" in probs[1]
+    ok_listed = {"dies": {"qwen_kvsys": {"enabled": True, "event": "KV-D26", "gate_events_extra": ["KV-D26"]}}}
+    assert E.event_problems(old, ok_listed) == []
+    assert E.event_problems(old, {"dies": {"s81": {"enabled": True, "event": "xyz"}}}) != []              # not hex
