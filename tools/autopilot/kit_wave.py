@@ -10614,13 +10614,91 @@ def tree_on_host(AP, cfg, host, tree):
     return cache[key]
 
 
+HOST_RECEIPT_TTL_S = 900          # a PASS receipt is trusted this long between probes (the probe walks the whole tree); a MISS is re-probed on every pass
+
+
+def _receipt_cache_path(AP):
+    return Path(getattr(AP, "AP_DIR", None) or Path.home() / ".local/state/opentallas") / "host_tree_receipts.json"
+
+
+def _receipt_start_verify(AP, host, tree, expect, script, hub):
+    """start (detached, one per tree per host: flock) the host's OWN full file-hash verification of the tree; it writes the cache cached-receipt reads.  Best effort, never raises."""
+    tag = hashlib.md5(f"{tree}|{expect}".encode()).hexdigest()[:12]
+    q = shlex.quote
+    remote = ("mkdir -p ~/.cache/src-manifest && cat > ~/.cache/src-manifest/sm_receipt.py && "
+              f"(flock -n ~/.cache/src-manifest/rcpt.{tag}.lock nohup python3 -I ~/.cache/src-manifest/sm_receipt.py verify {q(tree)} --expect {expect} --ro "
+              f">~/.cache/src-manifest/rcpt.{tag}.log 2>&1 </dev/null &) ; true")
+    argv = ["bash", "-c", remote] if hub else ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=15", "-o", "ControlPath=none", host, remote]
+    try:
+        subprocess.run(argv, input=script, text=True, capture_output=True, timeout=90)
+    except (OSError, subprocess.SubprocessError):
+        pass
+
+
+def host_tree_receipt(AP, cfg, host, tree, expect):
+    """HOST-RECEIPT-1120 (FLEET-WATCH-1015, FABLE-FLOW-1000 class 7: QC A4 09:38 SRC-INCOMPLETE on epyc9 / intel1, 100 launches at 09:43): a host runs gen on a source tree only while ITS OWN
+    file-hash receipt matches the die's adopted manifest hash.  `src_manifest cached-receipt TREE --expect HASH` runs ON the host: the hash file, the manifest, every listed file present and
+    read-only / unshared, and a completed full verification on that host.  True = receipt PASS (cached HOST_RECEIPT_TTL_S) or unknown (no hash pinned, probe error: never refuse blind);
+    False = the host has no matching receipt: it is skipped for this tree, and its own full verification is started in the background (the receipt appears when it completes).
+    Off per die with option host_receipt false, or OT_KW_HOST_RECEIPT=0."""
+    if not tree or not re.fullmatch(r"[0-9a-f]{64}", expect or "") or os.environ.get("OT_KW_HOST_RECEIPT") == "0":
+        return True
+    cache = cfg.setdefault("_tree_receipt_ok", {})
+    key = (host, tree, expect)
+    if key in cache:
+        return cache[key]
+    now, ck, disk = time.time(), f"{host}|{tree}|{expect}", {}
+    try:
+        disk = json.loads(_receipt_cache_path(AP).read_text())
+    except (OSError, ValueError):
+        pass
+    if now - float(disk.get(ck) or 0) < HOST_RECEIPT_TTL_S:
+        cache[key] = True
+        return True
+    try:
+        script = Path(verifier_path()).read_text()
+    except OSError:
+        cache[key] = True                           # unknown
+        return True
+    hub = host in ((cfg.get("_hub") or getattr(AP, "HUB_NAME", "") or ""), "localhost")
+    cmd = f"python3 -I -c {shlex.quote(script)} cached-receipt {shlex.quote(tree)} --expect {expect}"
+    argv = ["bash", "-c", cmd] if hub else ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=15", "-o", "ControlPath=none", host, cmd]
+    try:
+        rc, out, err = AP.sh(argv, timeout=180)
+    except Exception:
+        rc, out, err = 255, "", ""
+    txt = (out or "") + (err or "")
+    if rc == 0:
+        cache[key] = True
+        disk = {k: v for k, v in disk.items() if now - float(v or 0) < 86400}
+        disk[ck] = now
+        try:
+            p = _receipt_cache_path(AP)
+            p.parent.mkdir(parents=True, exist_ok=True)
+            tmp = p.with_suffix(f".tmp{os.getpid()}")
+            tmp.write_text(json.dumps(disk))
+            os.replace(tmp, p)
+        except OSError:
+            pass
+        return True
+    if rc == 1 and "SRC_MANIFEST" in txt:
+        cache[key] = False
+        AP.log(f"KIT-WAVE HOST-RECEIPT-MISS {host}: no matching file-hash receipt for {tree} ({expect[:12]}): {txt.strip().splitlines()[0][:160] if txt.strip() else '?'}; host skipped for this tree, its own verification started")
+        _receipt_start_verify(AP, host, tree, expect, script, hub)
+        return False
+    cache[key] = True                               # ssh / python failure: unknown, never refuse blind
+    return True
+
+
 def tree_host_for(AP, cfg, die, sp, item):
-    """the host a launch may use: sp's gen_host when it holds the item's tree, else the first other gen host of the die that does, else ''"""
+    """the host a launch may use: sp's gen_host when it holds the item's tree (and its own receipt matches the pinned manifest hash), else the first other gen host of the die that does, else ''"""
     tree = sp.get("src")
-    if tree_on_host(AP, cfg, sp["gen_host"], tree):
+    expect = str(sp.get("src_manifest_hash") or "").lower() if opt_get(cfg, die, "host_receipt") is not False else ""
+    ok = lambda h: tree_on_host(AP, cfg, h, tree) and host_tree_receipt(AP, cfg, h, tree, expect)
+    if ok(sp["gen_host"]):
         return sp["gen_host"]
     for h in gen_hosts(cfg, die, item):
-        if h != sp["gen_host"] and tree_on_host(AP, cfg, h, tree):
+        if h != sp["gen_host"] and ok(h):
             return h
     return ""
 
