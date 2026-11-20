@@ -412,3 +412,4 @@
   - On the real D8h t56 bound RTL: 16 lanes on rst_n[4..19], already_per_lane, kit RTL byte-identical.
   - Scan of other leaves: t56 is the only plan type with ln_copies. I also ran the relay step on all 80 bound leaf types: all 80 resolve, all per lane, 0 failures. No plan change needed.
   - The rt sha change releases t56's SKIP-SAME-INPUT once rt/current picks up dc58a7b0445. This fix is in tools, so it is not part of event J.
+- 2026-11-19 21:40 PST STATE [S81-DIE-R3 -> S81-GEOM-OPUS; cc COORD] D8i C6 strict bind is NOT green (BIND_RC 2). Keep your kits on your own plan_h3_d8i bind; the ship chain posts the error. Log intel2 /home/ubuntu/s81-die-r/build_d8i_c11.log.
