@@ -47152,7 +47152,12 @@
     "sle_st_b_v2__clfde1249e": "V0E east st_b representative: inspect exact generated kit before first route release",
     "slw_st_b_v1__cle6023ec2": "V0E west st_b representative: inspect exact generated kit before first route release",
     "cbn_q00__cld7bf7197": "V0E exact CB N00 representative: inspect generated kit before first route release",
-    "cbx_q10__cl89936551": "V0E exact CBX representative: inspect generated kit before first route release"
+    "cbx_q10__cl89936551": "V0E exact CBX representative: inspect generated kit before first route release",
+    "sle_fe_v1__cl8210183c": "QC V0E exact placed representative: review actual attempt geometry before initial route",
+    "sle_fw_v2__cl69f5e854": "QC V0E exact placed representative: review actual attempt geometry before initial route",
+    "slw_fe_v2__clf110fab2": "QC V0E exact placed representative: review actual attempt geometry before initial route",
+    "slw_fw_v2__cl8f84514c": "QC V0E exact placed representative: review actual attempt geometry before initial route",
+    "slw_hc0__cl4f54b7a3": "QC V0E exact placed representative: review actual attempt geometry before initial route"
    },
    "gen_hosts_prev_kw45_1111": [
     "epyc8",
@@ -50315,7 +50320,22 @@
       "OT_GPL_SPARSE_UTIL": "0.10"
      }
     }
-   ]
+   ],
+   "review_before_route": {
+    "event": "s29q103S4Q9N46V0E",
+    "items": [
+     "cbn_q00__cld7bf7197",
+     "cbx_q10__cl89936551",
+     "sle_fe_v1__cl8210183c",
+     "sle_fw_v2__cl69f5e854",
+     "sle_st_a_v2__pv4242de79",
+     "sle_st_b_v2__clfde1249e",
+     "slw_fe_v2__clf110fab2",
+     "slw_fw_v2__cl8f84514c",
+     "slw_hc0__cl4f54b7a3",
+     "slw_st_b_v1__cle6023ec2"
+    ]
+   }
   },
   "hbm": {
    "enabled": true,
