@@ -180,6 +180,54 @@ def build_classes(coord, state, posts, now, window_h, live_h):
     return classes
 
 
+def reset_evidence(state, die, item):
+    """Locate the exact failed attempt recorded by fail_sigs; a later attempt can use another bind."""
+    sig = (state.get("fail_sigs") or {}).get(f"{die}|{item}") or {}
+    if sig.get("stage") != "gen" or "physical collector_tree differs from captured bound reset identity" not in sig.get("reason", ""):
+        return ""
+    attempts = sig.get("attempts") or []
+    if not attempts or not sig.get("block"):
+        return ""
+    event, _, number = str(attempts[-1]).rpartition("@")
+    if not event or not number.isdigit():
+        return ""
+    for row in (state.get("items") or {}).values():
+        if (row.get("die"), row.get("item"), row.get("block_sha")) != (die, item, sig["block"]) or not row.get("dir"):
+            continue
+        attempt = Path(row["dir"]).parent / ("a" + number)
+        try:
+            spec = json.loads((attempt / "spec.json").read_text())
+            if not isinstance(spec, dict) or (spec.get("die"), spec.get("item"), spec.get("event")) != (die, item, event):
+                continue
+            log = attempt / "gen.log"
+            with log.open(errors="replace") as f:
+                line = next((s for s in f if s.startswith("gen phys: RESET_IDENTITY ")), "")
+        except (OSError, ValueError):
+            continue
+        # Historical workers report the original refusal only; leave their graph quantities unknown.
+        tag = spec.get("gen_tools_manifest_sha") or spec.get("tools_sha") or ""
+        basis = "source manifest" if spec.get("gen_tools_manifest_sha") else "runtime"
+        pin = f", GEN {basis} {tag[:12]}" if tag else ""
+        context = f". Representative {item} {event}@{number}{pin}, {log}"
+        if line:
+            try:
+                d = json.loads(line.removeprefix("gen phys: RESET_IDENTITY "))
+                if d["type"] == item and "solved" in d:
+                    a, b = d["captured"], d["solved"]
+                    context += (f" (captured/solved reach {a['reach_um']}/{b['reach_um']} um, "
+                                f"max hop {a['max_hop_um']}/{b['max_hop_um']} um, "
+                                f"depth {a['depth']}/{b['depth']}, relays {a['relays']}/{b['relays']})")
+                    relay = d.get("first_changed_relay")
+                    if isinstance(relay, dict) and isinstance(relay.get("name"), str):
+                        context += f", first changed relay {relay['name']}"
+                elif d["type"] == item and d.get("solve_error"):
+                    context += " (solver error: " + str(d["solve_error"]).replace("\n", " ")[:180] + ")"
+            except (TypeError, ValueError, KeyError):
+                pass
+        return context
+    return ""
+
+
 def names_line(c):
     ns = sorted(c["items"], key=lambda n: -c["items"][n])
     s = ", ".join(ns[:MAX_NAMES])
@@ -269,7 +317,12 @@ def run(coord, state_f, post_sh, window_h=3.0, live_h=3.0, ack_min=30, dry=False
             lane_digest.append((rec, c))
     for owner, lst in sorted(digest.items()):
         to = f"{owner}, COORD" if owner != "COORD" else "COORD"
-        segs = " | ".join(f"FAIL-CLASS {c['cid']} owner {owner} {c['label']}: {len(c['items'])} item(s): {names_line(c)}" for _, c in lst)
+        segments = []
+        for _, c in lst:
+            rep = max(c["items"], key=c["items"].get)
+            evidence = reset_evidence(kw, c["die"], rep) if c["kind"] == "kit" else ""
+            segments.append(f"FAIL-CLASS {c['cid']} owner {owner} {c['label']}: {len(c['items'])} item(s): {names_line(c)}{evidence}")
+        segs = " | ".join(segments)
         text = (f"NEEDS-ACTION [{LANE} -> {to}] {len(lst)} failed class(es), {sum(len(c['items']) for _, c in lst)} item(s) not answered: {segs}. "
                 f"Owner: post RESULT or ACK naming a class id (or an item) with the cause and the next step within {ack_min} min, else NEEDS-LANE goes to "
                 f"COORD. One digest per owner per run; a class closes by itself when its items have a later attempt, or when COORD names its id.")

@@ -117,3 +117,33 @@ def test_coord_ruling_naming_the_class_closes_it(tmp_path):
     q.write_text(q.read_text() + f"- {stamp(-5)} RULING [COORD -> DIE-S81-92] class {cid} is closed by r301\n")
     s2, _, _ = fr.run(tmp_path, st, "post.sh", now=NOW + 40 * 60, poster=lambda p, t: sent.append(t) or True)
     assert s2 == [] and len(sent) == 1
+
+def test_reset_identity_alert_links_only_the_exact_representative_attempt(tmp_path):
+    key, item = "qwen_kvsys|kv3_hg_v3", "kv3_hg_v3"
+    mk(tmp_path, [], [key])
+    state_path = tmp_path / "autopilot/kit_wave_state.json"
+    state = json.loads(state_path.read_text())
+    failed = tmp_path / "kit/a4"
+    failed.mkdir(parents=True)
+    row = state["items"][key + "|b1"]
+    row.update(die="qwen_kvsys", item=item, block_sha="1", dir=str(failed))
+    state["fail_sigs"][key].update(cls="PLAN", block="1", attempts=["D25@4"],
+                                   reason="physical collector_tree differs from captured bound reset identity")
+    state_path.write_text(json.dumps(state))
+    spec = dict(die="qwen_kvsys", item=item, event="D25", tools_sha="IGNORED", gen_tools_manifest_sha="ACTUAL")
+    (failed / "spec.json").write_text(json.dumps(spec))
+    cap = dict(reach_um=405, max_hop_um=275, depth=5, relays=41)
+    detail = dict(type=item, captured=cap, solved=dict(cap, reach_um=300, depth=7, relays=55))
+    (failed / "gen.log").write_text("gen phys: RESET_IDENTITY " + json.dumps(detail) + "\n")
+    sent = []
+    args = (tmp_path, tmp_path / "st.json", "post.sh")
+    fr.run(*args, now=NOW, poster=lambda p, text: sent.append(text) or True)
+    assert len(sent) == 1 and "GEN source manifest ACTUAL" in sent[0]
+    assert "reach 405/300 um, max hop 275/275 um, depth 5/7, relays 41/55" in sent[0]
+    assert str(failed / "gen.log") in sent[0]
+    assert fr.run(*args, now=NOW + 60, poster=lambda *a: True)[0] == []
+    (failed / "gen.log").write_text("historical refusal only")
+    old = fr.reset_evidence(state, "qwen_kvsys", item)
+    assert str(failed / "gen.log") in old and "max hop" not in old
+    (failed / "spec.json").write_text(json.dumps(dict(spec, event="other")))
+    assert fr.reset_evidence(state, "qwen_kvsys", item) == ""
