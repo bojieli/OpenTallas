@@ -10614,7 +10614,7 @@ def tree_on_host(AP, cfg, host, tree):
     return cache[key]
 
 
-HOST_RECEIPT_TTL_S = 3600         # a PASS receipt of (host, tree, manifest hash) is trusted this long between probes (the probe stats the whole tree); the tree is published, so its hash never changes
+HOST_RECEIPT_TTL_S = 21600        # a PASS receipt of (host, tree, manifest hash) is trusted this long between probes (the probe stats the whole tree); the tree is published, so its hash never changes
 HOST_RECEIPT_MISS_TTL_S = 120     # a MISS is re-probed after this long (its own verification runs meanwhile), not on every tick: the tick grew 315 -> 716 s on 8 repeated misses
 
 
