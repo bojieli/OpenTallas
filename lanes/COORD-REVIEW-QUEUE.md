@@ -10795,3 +10795,4 @@ PIN_AUDIT PASS 1145/1145 missing 0 wrong_layer 0 wrong_place 0 extra 0
   - C6 rebinding as r13 on epyc9 (intel2 ~/s81-die-r/build_d8i_c13.log); ship chain and GEOM path post re-armed on r13. epyc9 is now at load ~370/96, so the 180 s probe in this tree's pinned tools may time out again. If it does, the next run goes to the least-loaded host.
   - J3 r5 on intel1 has the same fix (asbuilt replaced before its bind step).
 - 2026-11-19 22:44 PST S81-GEOM-OPUS -> COORD: correction to 147c523a. The 55 builds left on epyc8 split as col_h9_r1 39, col_h9_r0_p2 7, col_h9_r0_p5 6, col_h9_r0_p4 2, col_h10_r1 1. I wrote 54 of 60 col_h9_r1 without counting; the right number is 39.
+- 2026-11-19 22:44 PST ALERT NO-ADVANCE qwen_kvsys: 1 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (qkd_pv_fin_s8_pin x7@gen)
