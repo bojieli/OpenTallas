@@ -11,10 +11,13 @@ Row: flip the upper near pair about its x axis (R0 -> MX, MY -> R180; same origi
 Its pin edge then faces the 103.68-um channel it shares with the far pair; the ts bus reaches the join N face over the
 pair's own porous M5/M7.  0 cycles, 0 lanes, no RTL, no core re-shape, no core move, die clock taps unchanged.
 
-usage: rows_R2.py PLAN_C.json [--check] [--types kv3_pv_v8,...] [--station-um 300] [--reserved-rows P3_SEL.json]
+usage: rows_R2.py PLAN_C.json [--check] [--no-flip] [--types kv3_pv_v8,...] [--station-um 300] [--pad-min-stations 16]
+                  [--reserved-rows P3_SEL.json]
   --check          report only
   --no-flip        skip the flip (control arm of a private A/B)
   --station-um N   also set budgets.r_dly_spread_station_um[kv3_pv] = N   (D26 R3 row; private kits on older plans)
+  --pad-min-stations N  set budgets.r_dly_lockup.kv3_pv.pad_min_stations (sparse pad lines: a station per transport hop;
+                   needs tools with kit_dly_lockup pad_min_stations)
   --reserved-rows  also replace clock.reserved_sites_um of the types present in that file (private kits only)
 """
 import json, sys, os, tempfile
@@ -73,6 +76,12 @@ def main(argv):
         print(f"R2-STATION budgets.r_dly_spread_station_um kv3_pv {b.get('kv3_pv')} -> {st}")
         if not check:
             b["kv3_pv"] = int(st)
+    pms = opt("--pad-min-stations")
+    if pms:
+        b = plan.setdefault("budgets", {}).setdefault("r_dly_lockup", {}).setdefault("kv3_pv", {})
+        print(f"R2-PADSTN budgets.r_dly_lockup.kv3_pv.pad_min_stations {b.get('pad_min_stations')} -> {pms}")
+        if not check:
+            b["pad_min_stations"] = int(pms)
     rr = opt("--reserved-rows")
     if rr:
         sel = json.load(open(rr))

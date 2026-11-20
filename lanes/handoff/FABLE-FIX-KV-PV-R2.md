@@ -4,6 +4,34 @@ Written 2026-11-20 12:3x PST. Posts lanes/posts/FABLE-FIX-KV-PV-R2.md. Lane dir 
 (repo = lane clone of main, tools/ = scripts, out/ = dumps, por_<tag>/ = private plan dirs, kit/<tag>/ = private kits).
 Hub logs and chains: intel2 ~/tmp/ffkpvr2 (chain_r2.sh TAG LABEL, chain_<tag>.log, kit_<tag>.log, watch_r2.sh posts AUTO-KIT lines).
 
+## Update 2026-11-20 14:3x PST (read first)
+- THREE private kits on epyc7 (crit, goal route, 64 GB / 16 thr, DO_NOT_COUNT, .keep_stage_odbs; tree4c data + bind4c RTL):
+    v8m = flip + station 300 + R3 split rows + form C, tools main 38cdd37cec9.  Launched 12:08 PST; 13:11 PST place hooks:
+          OT_TAIL_SITE 9,112 of 9,112, merged 0, core_crossing 0, max_hop 412.3, over_380 119; now in 3_4 / 3_5.
+    v8c = control, no flip (over_380 172).  Same stage.
+    v8p = v8m + budgets.r_dly_lockup.kv3_pv.pad_min_stations 16, tools = lane branch (below).  Chain started 14:2x PST
+          (intel2 ~/tmp/ffkpvr2/chain_v8p.log, kit_v8p.log); GEN not yet confirmed when this was written: check
+          epyc7 fable-fix-kv-pv-r2/kit/v8p/gen.out = RC_GEN 0 and gen.log OT_DLY_LOCKUP (more segments than v8m).
+- TRUNK SETUP ROOT CAUSE (measured: v8j CTS placement, one astk bit traced; v8m / v8c 3_4 dly_spread max_hop 1,404 um, fail 70 / 66):
+  form C makes a SEGMENT one placement station.  seg 8 cuts the sparse astk owner-response pad lines (D 7..11 over 3.1-3.6 mm)
+  into 2 segments, so sg0.q -> latch -> sg1.r[0] is one 1,404-um hop while r[0..2] and q sit on one spot.  The anchor
+  c6ab8bd7be (REPFIX, 119 repeaters) only removes the wrong-side inverter (685 um out and back).  v8m and v8c therefore still
+  carry this class at CTS: do not read their TT as the trunk proof; they are the GRT A/B for the flip.
+- FIX, in the lane clone, NOT pushed: branch claude/fable-fix-kv-pv-r2-padstations in epyc7 fable-fix-kv-pv-r2/repo
+  (uncommitted edits: tools/die_plan/kit_dly_lockup.py, gen_phys.py dly_lockup_cfg, schema.py, test_kit_dly_lockup.py + 3 tests;
+  15 tests pass).  Option pad_min_stations N: a non-tail u_pd<N>_* line gets segment size min(seg, max(1, D // N)); absent / 0 =
+  unchanged kit.  To do: commit (trailer Claude Fable 5.2), push with ot-push-main, then post the plan row
+  (rows script --pad-min-stations 16).  Cost: about +5k latch bits on kv3_pv_v8 (astk 512 bits, ctl_cmd, vport D 36-44).
+- Watcher intel2 ~/tmp/ffkpvr2/watch_r2.sh (PID 3075362 at start) covers v8m / v8c / v8k, NOT v8p: after a cmdline check kill that
+  exact PID and restart it with v8p in the kit list and in the pgrep pattern.
+- Next reads: (1) v8p GEN + 3_4 OT_DLY_SPREAD max_hop (must fall from 1,404 to about the 405-um class); (2) CTS of v8m / v8c / v8p:
+  tools/run_sta.sh + an4.py on a copy of 4_cts.odb / .sdc in db/ (trunk q class gone only in v8p); (3) GRT iteration 5 of v8m
+  against v8c: upper strip, pin edge, centre street (tools/grt_cap.tcl + an5.py give tracks per region; scratchpad cls.py splits
+  reserved rows / core boxes); (4) if v8m is cleaner: READY-ROWS to KV-PLAN-R1 for D27 (cut 11-21 20:00); if the centre street
+  still overflows, row 2 (ft0 leg) goes to KV-PLAN-R1 as a bind-side row.
+- Tools in epyc7 fable-fix-kv-pv-r2/tools: dump_nets.py / run_dump.sh (net terminals), hops.py / run_hops2.sh + an7.py (long
+  zero-logic hops), sta_ends.tcl / run_sta.sh + an4.py (setup end classes), grt_cap.tcl / run_grt.sh + an5.py, an1-an3, an6.
+
 ## Live
 - v8m (epyc7, crit, goal route, 64 GB / 16 thr, launched 12:08 PST): D27 candidate = flip of the 4 upper near pairs + station 300
   + R3 split reserved rows of kv3_pv_v8 + form C, tools main 38cdd37cec9 (has c6ab8bd7be, b699b5b678).
