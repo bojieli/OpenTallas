@@ -1,5 +1,5 @@
 """Small calendar mechanism check; no arithmetic or whole-HEAD claim."""
-from lep_calendar import VF, STRESS, NF15F, Stages, require_matching_receipt
+from lep_calendar import VF, STRESS, NF15F, NF15F_R13, Stages, require_matching_receipt
 
 rows = [dict(id=n, leg=leg, cycle=100+n) for n, leg in enumerate(VF.legs())]
 a = VF.shift_events(rows)
@@ -51,3 +51,23 @@ assert NF15F.params()['KCRED'] == 28 and NF15F.credit_ok()
 assert [max(NF15F.credit_rtt(i).values()) for i in range(4)] == [17, 24, 24, 21]   # measured LEPK_RTT
 assert not Stages(ktx=0x1111, krx=0x2660, txi=0x2442, pin=6, pout=8, plw=3, col0=2, rxh=1, kcred=16).credit_ok()
 print(f'PASS NF15f tuple + RXH 1: {NF15F.state_bits()} logical stage bits, rx_head leg +1')
+
+# The legacy provider and its receipt remain usable without an explicit KTR.
+assert 'KTR' not in NF15F.params()
+assert [NF15F.lane('ktr', i) for i in range(4)] == [1, 1, 1, 1]
+assert [NF15F_R13.lane('ktr', i) for i in range(4)] == [2, 1, 1, 3]
+assert [NF15F_R13.legs()[f'lane{i}.tx_k.forward.valid+data'] for i in range(4)] == [1]*4
+assert [NF15F_R13.credit_rtt(i)['tx'] for i in range(4)] == [18, 17, 17, 19]
+assert [NF15F_R13.credit_rtt(i)['rx'] for i in range(4)] == [14, 24, 24, 21]
+assert NF15F_R13.credit_ok() and NF15F_R13.state_bits() == NF15F.state_bits() + 3
+assert NF15F_R13.params()['KTR'] == "16'h3112"
+split_receipt = dict(receipt, params=NF15F_R13.params())
+assert require_matching_receipt(NF15F_R13, split_receipt, programme) == (106, 118, 217)
+for stages, other in ((NF15F, NF15F_R13), (NF15F_R13, NF15F)):
+    try:
+        require_matching_receipt(stages, dict(receipt, params=other.params()), programme)
+    except ValueError:
+        pass
+    else:
+        raise AssertionError('incorrect KTR accepted in reservation receipt')
+print('PASS r13 split TX return pricing; both wrong-KTR receipt directions CAUGHT')
