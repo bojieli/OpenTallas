@@ -7,6 +7,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import kit_wave as KW  # noqa: E402
@@ -118,7 +119,8 @@ class PastGeom(unittest.TestCase):
         self.assertEqual(Q(job("REJECTED", error="bad row"))[2], "FLOW")
 
     def test_follow_queue_rows_and_one_notice(self):
-        with tempfile.TemporaryDirectory() as d:
+        # follow_queue leaves outcomes for a later wave step to consume.
+        with mock.patch.object(KW, "QUEUE_OUTCOMES", []), tempfile.TemporaryDirectory() as d:
             st = {"items": {"k": {"die": "s81", "item": "t", "status": "ENQUEUED", "kit": "intel1:/k/t", "updated": 1,
                                   "evidence": "intel1:/g/auto_geom.json"},
                             "k2": {"die": "s81", "item": "u", "status": "ENQUEUED", "kit": "intel1:/k/u", "updated": 1}}}
