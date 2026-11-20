@@ -32,6 +32,8 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 TAPQ = re.compile(r"^rst_n_t(\d+)$")
+RAWQ = re.compile(r"^rr_t(\d+)$")
+START_KEYS = ("landing_writer_start", "landing_reader_start", "landing_local_resets")
 FWD_KEYS = ("source_clock_port", "source_clock_tap")
 
 
@@ -89,6 +91,26 @@ def repoint_type(t, old, new):
         if now != r["new_reset"]:
             out.append([f"consumer_localization.{r.get('instance')}.{r.get('pin')}", "new_reset", r["new_reset"], now, um(o, m[o])])
             r["new_reset"] = now
+    # START transport / local resets name the raw reset of tap i (rr_t<i>, reset_tree START plan): same tap map
+    # (N46V0F bind EMIT 'x_ctl_o: writer START raw reset rr_t99 has no registered wavefront driver').
+    # rst_rl_<k> relay names stay with reset_anchor.py at bind.
+    def walk(o, where):
+        items = o.items() if isinstance(o, dict) else enumerate(o) if isinstance(o, list) else ()
+        for k, v in items:
+            if isinstance(v, str) and k in ("raw_reset", "raw") and RAWQ.match(v):
+                oi = by_idx.get(int(RAWQ.match(v).group(1)))
+                if oi is None:
+                    raise RetapError(f"{where}: {v}: no tap {RAWQ.match(v).group(1)} in the old tap set")
+                now = f"rr_t{nidx[m[oi]]}"
+                if now != v:
+                    out.append([where, k, v, now, um(oi, m[oi])])
+                    o[k] = now
+            elif isinstance(v, (dict, list)):
+                walk(v, where)
+    ck = t.get("clock", {})
+    for sk in START_KEYS:
+        if sk in ck:
+            walk(ck[sk], sk)
     return out
 
 
@@ -150,7 +172,9 @@ def repoint(old_raw, new_raw, old_path=None, new_path=None, types=None, taps_fn=
                       for q in t.get("clock", {}).get("landing_contract", {}).get("pins", []) or [])
         has_rst = any(TAPQ.match(str(r.get("new_reset", ""))) for r in t.get("reset", {}).get("consumer_localization", []) or [])
         has_tree = _published(t) is not None
-        if not (has_fwd or has_rst or has_tree):
+        has_start = any(RAWQ.search(json.dumps(t.get("clock", {}).get(k))) or "rr_t" in json.dumps(t.get("clock", {}).get(k))
+                        for k in START_KEYS if k in t.get("clock", {}))
+        if not (has_fwd or has_rst or has_tree or has_start):
             continue
         a, b = to(tn), tn_(tn)
         if key(a) == key(b):

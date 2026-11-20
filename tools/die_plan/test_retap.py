@@ -162,3 +162,19 @@ def test_foreign_or_stale_published_tree_is_reported_not_overwritten():
     rep = SB.apply_bins(raw, {"T": "placed.json"}, None, taps_fn=taps, tree_fn=tree)
     assert raw["partition_types"]["T"]["clock"]["landing_contract"]["collector_tree"] == foreign
     assert ["landing_contract.collector_tree", "tree_not_own", 0, 0, 0] in rep["T"]
+
+
+def test_start_transport_raw_resets_follow_the_tap_map():
+    """N46V0F bind: 'writer START raw reset rr_t99 has no registered wavefront driver' (slw_sc_v1): the START stages
+    name the raw reset of tap i, which moves with the taps."""
+    t = typ()
+    t["clock"]["landing_writer_start"] = {"depth": 2, "branches": {"x_ctl_o": {"stages": [
+        {"xy_um": [900, 900], "raw_reset": "rr_t3"}, {"xy_um": [900, 100], "raw_reset": "rr_t2"}]}}}
+    t["clock"]["landing_reader_start"] = {"branches": {"x_i": {"stages": [{"xy_um": [100, 100], "raw_reset": "rr_t0"}]}}}
+    t["clock"]["landing_local_resets"] = [{"name": "start_0", "raw": "rst_rl_7", "consumers": ["u_a"]}]
+    ch = retap.repoint_type(t, OLD, NEW)
+    st = t["clock"]["landing_writer_start"]["branches"]["x_ctl_o"]["stages"]
+    assert [s["raw_reset"] for s in st] == ["rr_t2", "rr_t1"]          # old t3 -> new t2, old t2 -> new t1
+    assert t["clock"]["landing_reader_start"]["branches"]["x_i"]["stages"][0]["raw_reset"] == "rr_t0"
+    assert t["clock"]["landing_local_resets"][0]["raw"] == "rst_rl_7"   # relay names: reset_anchor at bind
+    assert ["landing_writer_start", "raw_reset", "rr_t3", "rr_t2", 5.0] in ch
