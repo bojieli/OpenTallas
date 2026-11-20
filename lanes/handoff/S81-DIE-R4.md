@@ -121,3 +121,8 @@ All relaunch after the 405 reach override (lever 1) lands for D8i.
 2. reset/monitor relays: tool owned by RESET-RELAY-GEN-1530; my handoff is epyc10 s81-die-r4-relay/HANDOFF-RESET-RELAY-GEN.md (patch unpushed).
 3. Leaf spread rows + core-pin stages.
 - Lockup rows go in only after LOCKUP-STATION re-solves the taps.
+
+## 11-20 16:0x MPL-0020 (FABLE-PD-QC-1600)
+- The svc_rs MPL-0020 failures are all on D8i blocks (do-not-count, mostly SUPERSEDED). Cause: macro_place names macros in bound form (u_u_) and the netlist does not match.
+- A watcher reads the 12 J5 svc_rs rows at floorplan_macro.
+- If a J5 row hits MPL-0020: hand it to the FABLE-FIX-S81-SVC-R2 successor for J6. If clean: closed, fixed by J5.
