@@ -33,7 +33,8 @@ C=${HUB_SYNC_COORD:-$HOME/coord}; R=${HUB_SYNC_REPO:-$HOME/OpenTallas}; B=${HUB_
 URL=git@github.com:bojieli/OpenTallas.git
 # COORD-COMMIT-SPEED-1 11-13: lanes/handoff/<LANE>.md is lane-appended text like lanes/*.md; three dirty handoffs made the sync
 # FAIL 07:05-08:22 ("non-log local edits") while the autopilot read a stale checkout.
-APPEND_RE='^(HANDOFF\.md|CODEX-LOG\.md|CODEX-HANDOFF\.md|lanes/[^/]+\.md|lanes/handoff/[^/]+\.md|lanes/SIGN-RATE\.tsv|autopilot/(queue|resolved|auto_resign)\.tsv)$'
+# FLOW-HEALTH-2 11-19: a lane that appends to a root <LANE>-FIX-*.md in the hub tree (FABLE-FIX-QC.md, HUB-SYNC-FAILED 11:48-18:xx) is an append log too
+APPEND_RE='^(HANDOFF\.md|CODEX-LOG\.md|CODEX-HANDOFF\.md|lanes/[^/]+\.md|lanes/handoff/[^/]+\.md|lanes/SIGN-RATE\.tsv|[A-Za-z0-9._]+-FIX-[A-Za-z0-9._-]+\.md|autopilot/(queue|resolved|auto_resign)\.tsv)$'
 # FLOW-HEALTH-1 11-15 (FABLE-FLOW-2000 d): lanes/NOPROG*.tsv, FLOW-HEALTH.tsv, STALE.tsv, VISUAL-QUEUE.tsv are rewritten on the hub by timers that commit them
 # themselves; a dirty copy between the write and the commit raised HUB-SYNC-FAILED 494 times (19:02-20:22), so they are generated files too
 GENERATED_RE='^(RELEASE_TREE\.md|lanes/(NOPROG|NOPROG-ACTIONS|FLOW-HEALTH|STALE|VISUAL-QUEUE)\.tsv|lanes/NOPROG-TABLE\.md)$'

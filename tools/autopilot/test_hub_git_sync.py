@@ -126,6 +126,23 @@ class HubSync(unittest.TestCase):
             self.assertEqual(got.count(line), 1, got)
         self.assertFalse((self.hub / "autopilot/HUB-SYNC-FAILED").exists())
 
+    def test_root_lane_fix_file_is_an_append_log(self):
+        # FLOW-HEALTH-2 11-19: a lane appended to root FABLE-FIX-QC.md in the hub tree; sync failed 7 h
+        self.git(self.other, "pull", "-q", "--no-rebase", "origin", B)
+        (self.other / "FABLE-FIX-QC.md").write_text("q1\n")
+        self.git(self.other, "add", "FABLE-FIX-QC.md")
+        self.git(self.other, "commit", "-qm", "root fix file")
+        self.git(self.other, "push", "-q", "origin", B)
+        self.assertEqual(self.sync().returncode, 0)
+        self.append(self.hub, "FABLE-FIX-QC.md", "hub q2")
+        self.remote_commit("FABLE-FIX-QC.md", "remote q3")
+        r = self.sync()
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        self.assertFalse((self.hub / "autopilot/HUB-SYNC-FAILED").exists())
+        got = self.remote_file("FABLE-FIX-QC.md").splitlines()
+        for line in ("q1", "hub q2", "remote q3"):
+            self.assertEqual(got.count(line), 1, got)
+
     def test_deeper_handoff_path_is_not_an_append_log(self):
         self.git(self.other, "pull", "-q", "--no-rebase", "origin", B)
         (self.other / "lanes/handoff/sub").mkdir(parents=True, exist_ok=True)
