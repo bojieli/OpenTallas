@@ -195,7 +195,7 @@ class SameInputSkip(unittest.TestCase):
         old = KW._EXEC_TOOLS.copy()
         try:
             KW._EXEC_TOOLS[str(Path(KW.__file__).resolve().parents[2])] = "another-exec-digest"
-            self.assertNotEqual(base, KW.full_input_hash(self.cfg(), "s81", "x", "blk"))
+            self.assertEqual(base, KW.full_input_hash(self.cfg(), "s81", "x", "blk"))          # FLOW-0245: another rt tree does not move the key (stage-input digest)
         finally:
             KW._EXEC_TOOLS.clear()
             KW._EXEC_TOOLS.update(old)

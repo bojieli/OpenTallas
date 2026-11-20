@@ -834,5 +834,24 @@ def test_real_family_table_is_used_then_the_name_key(tmp_path):
     assert KW.family_of("qwen_compute", "sle_ctl__cl372cea1c", t) == "qc:sle_ctl" and KW.family_of("qwen_compute", "cbf_q01_s2", t) == "qc:cbf_q01_s2"
     assert KW.family_of("qwen_compute", "cbf_q01", t) == "qc:cbf_q01"
     assert KW.family_of("qwen_kvsys", "kv3_pv_v3n", t) == "kv:kv3_pv"
+    f2 = tmp_path / "classes2.json"
+    f2.write_text(_j.dumps({"s81": {"leaf": {"classes": [{"id": "old", "members": [["ot_s81sl_leaf__t13", "R0"]]}]},
+                                     "leaf_nogrowth_j4e": {"note": "x", "by_cap_bits": {"3000": [{"id": "wrong", "members": [["ot_s81sl_leaf__t13", "R0"]]}],
+                                                                                         "4500": [{"id": "leaf_N01", "members": [["ot_s81sl_leaf__t13", "R0"], ["ot_s81sl_leaf__t4", "R0"]]}]}},
+                                     "leaf_site_slack_j4e": [{"id": "x"}]}, "qc": [], "kv": []}))
+    t2 = KW.family_table(str(f2))
+    assert KW.family_of("s81", "ot_s81sl_leaf__t13", t2) == "s81:leaf_N01" == KW.family_of("s81", "ot_s81sl_leaf__t4", t2)      # nogrowth cut wins over the growth cut
     assert KW.family_table(str(tmp_path / "none.json")) == {}
     assert KW.family_of("hbm", "x_t1", t) == "x"
+
+
+def test_full_input_hash_does_not_move_with_the_rt_tools_digest(monkeypatch):
+    cfg = {"dies": {"d": {"src_manifest_hash": "S", "gen_env": {}, "die_gen_env": {}}}}
+    monkeypatch.setattr(KW, "kit_digest_parts", lambda cfg, die, rec=None, **k: {"plan": "P", "tools": "T"})
+    monkeypatch.setattr(KW, "item_env", lambda d, item: {})
+    monkeypatch.setattr(KW, "exec_tools_digest", lambda root=None: "RT1")
+    h1 = KW.full_input_hash(cfg, "d", "i", "B")
+    monkeypatch.setattr(KW, "exec_tools_digest", lambda root=None: "RT2")            # another rt tree: the hash is unchanged
+    assert h1 and KW.full_input_hash(cfg, "d", "i", "B") == h1
+    monkeypatch.setattr(KW, "kit_digest_parts", lambda cfg, die, rec=None, **k: {"plan": "P2", "tools": "T"})
+    assert KW.full_input_hash(cfg, "d", "i", "B") != h1                                # a plan row change moves it

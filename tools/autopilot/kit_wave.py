@@ -3112,10 +3112,15 @@ def family_table(path=None):
     try:
         d = json.load(open(path))
         types = {}
-        for sec, v in (d.get("s81") or {}).items():
-            if sec == "leaf_cap7786" or not isinstance(v, dict):
+        s81 = d.get("s81") or {}
+        ng = any(str(k).endswith("_nogrowth_j4e") for k in s81)            # COORD 11-20: the no-growth cut (33 leaf classes at the 4,500-bit cap) replaces the growth cut
+        for sec, v in s81.items():
+            if not isinstance(v, dict) or sec in ("leaf_cap7786", "leaf_site_slack_j4e") or (ng and not str(sec).endswith("_nogrowth_j4e")):
                 continue
-            for cl in v.get("classes") or []:
+            cls_ = v.get("classes")
+            if cls_ is None and isinstance(v.get("by_cap_bits"), dict):          # leaf_nogrowth_j4e: {cap_bits: [classes]}: the 4,500-bit cap (33 classes), COORD 11-20
+                cls_ = v["by_cap_bits"].get("4500") or []
+            for cl in cls_ or []:
                 for m in cl.get("members") or []:
                     types.setdefault(str(m[0]), f"s81:{cl.get('id')}")
         out["s81"] = {"types": types, "stems": []}
@@ -13456,7 +13461,9 @@ def full_input_hash(cfg, die, item, block_sha=None):
         d = (cfg.get("dies") or {}).get(die) or {}
         spec = kit_digest_parts(cfg, die, dict(item=item, **({"block_sha": block_sha} if block_sha else {})))
         env = {"gen_env": d.get("gen_env") or {}, "die_gen_env": d.get("die_gen_env") or {}, "item_env": item_env(d, item) or {}}
-        body = {"rt": exec_tools_digest(), "snapshot": str(d.get("src_manifest_hash") or ""), "spec": spec, "env": env}
+        # FLOW-0245: the rt sha / exec-tools digest is NOT in the key (30 rt trees in one night: the skip never matched); the key is the stage-input digest: snapshot, spec (plan rows, kit config,
+        # stage tool closure, bind context, views) and env
+        body = {"snapshot": str(d.get("src_manifest_hash") or ""), "spec": spec, "env": env}
         return hashlib.sha1(json.dumps(body, sort_keys=True, default=str).encode()).hexdigest()[:20]
     except Exception:
         return ""
