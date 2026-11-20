@@ -76,6 +76,17 @@ def longest_launches_by_edge(sources, sink_xy):
     return tuple(best.values())
 
 
+def clock_inverter_drivers(net, cache):
+    """Count inverter output drivers once per shared clock net."""
+    name = net.getName()
+    if name not in cache:
+        cache[name] = sum(
+            term.isOutputSignal() and "INV" in term.getInst().getMaster().getName().upper()
+            for term in net.getITerms()
+        )
+    return cache[name]
+
+
 def pin_centroid(rects, orient, ll, size):
     """area-weighted centroid (um) of master-frame pin rects (x0, y0, x1, y1) of a macro placed with `orient` whose placed bbox lower-left
     is `ll`; `size` = (master width, height).  The leg end of a macro / hard-core pin sits HERE, not at the macro centre."""

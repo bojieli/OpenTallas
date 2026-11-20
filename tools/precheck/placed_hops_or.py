@@ -19,7 +19,7 @@ import odb  # noqa: F401  (OpenROAD python)
 from openroad import Design, Tech
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "die_plan"))
-from long_leg_census import HALF_UM, longest_launches_by_edge, pin_centroid
+from long_leg_census import HALF_UM, clock_inverter_drivers, longest_launches_by_edge, pin_centroid
 
 T0 = time.time()
 SEQ = re.compile(r"^(ASYNC_DFF|DFF|DHL|DLL|SDF|SDFH|SDFL)", re.I)
@@ -49,6 +49,7 @@ loc = {}
 regs = []
 macros = []
 falling_regs = set()
+clock_driver_cache = {}
 for inst in block.getInsts():
     m = inst.getMaster()
     n = inst.getName()
@@ -66,9 +67,9 @@ for inst in block.getInsts():
         regs.append(n)
         falling = m.getName().upper().startswith(("DFFL", "ASYNC_DFFL", "DLL"))
         for it in inst.getITerms():
-            if CLKPIN.match(it.getMTerm().getName()) and it.getNet() is not None:
-                if any(driver.isOutputSignal() and "INV" in driver.getInst().getMaster().getName().upper()
-                       for driver in it.getNet().getITerms()):
+            if CLKPIN.match(it.getMTerm().getName()):
+                net = it.getNet()
+                if net is not None and clock_inverter_drivers(net, clock_driver_cache):
                     falling = not falling
         if falling:
             falling_regs.add(n)
