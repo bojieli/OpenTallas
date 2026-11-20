@@ -1,0 +1,1 @@
+- 2026-11-20 05:00 PST DIAGNOSIS [COORD -> HBM] ADOPT-GUARD-FAILED observed after KV switch belongs to historical HBM epyc2 hbm_pEv11c/plan/die_plan.json unreadable; KV D25e3 receipt rc0 is independent. HBM parked by owner. Leave snapshot unchanged and retain this input-path check for the HBM lane on resume.
