@@ -362,3 +362,15 @@ def test_tools_sys_path_insert_resolves_imports_in_that_dir(tmp_path):
     assert G.check_tools(str(tmp_path)) == []
     (sh / "fallback_land.py").write_text("CYC = 3\n")          # a real miss in the dir it imports from is still found
     assert any("part_boxes" in x for x in G.check_tools(str(tmp_path)))
+
+
+def test_probe_timeout_scales_with_plan_and_load(tmp_path):
+    """S81-DIE-R3 11-19: no fixed 180 s: plan size and host load scale it; the env setting wins"""
+    small = tmp_path / "p.json"; small.write_text("{}")
+    big = tmp_path / "big.json"; big.write_bytes(b" " * 50_000_000)
+    assert G.probe_timeout(str(small), env={}, load=0, ncpu=96) == pytest.approx(180, abs=1)
+    assert G.probe_timeout(str(big), env={}, load=0, ncpu=96) == pytest.approx(180 + 20 * 50, abs=1)
+    assert G.probe_timeout(str(small), env={}, load=290, ncpu=96) == pytest.approx(180 * 290 / 96, abs=1)
+    assert G.probe_timeout(None, env={}, load=10, ncpu=96) == pytest.approx(180, abs=1)
+    assert G.probe_timeout(str(big), env={"OT_PLAN_GATE_PRE_PROBE_S": "900"}, load=290, ncpu=96) == 900
+    assert G.probe_timeout(str(small), env={"OT_PLAN_GATE_PRE_PROBE_S": "junk"}, load=0, ncpu=96) == pytest.approx(180, abs=1)

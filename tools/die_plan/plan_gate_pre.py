@@ -100,7 +100,40 @@ elif mode == "keys":
 """
 
 
-def _probe(tree, *args, timeout=180):
+PROBE_BASE_S = 180          # one schema import + validate of a small plan on an idle host
+PROBE_S_PER_MB = 20         # validate time grows with the plan file (S81 plan ~100+ MB)
+
+
+def probe_timeout(plan=None, env=None, load=None, ncpu=None):
+    """S81-DIE-R3 11-19 (COORD): the schema probe timeout, never a fixed 180 s.  OT_PLAN_GATE_PRE_PROBE_S (> 0) wins;
+    otherwise (180 s + 20 s per MB of the plan) x max(1, 1-min load / cpus), so a big plan on a host at load 290/96
+    (epyc8, D8i C6 r10 'schema probe timed out') gets the time the work needs instead of a false SCHEMA-LOAD FAIL."""
+    env = os.environ if env is None else env
+    try:
+        v = float(env.get("OT_PLAN_GATE_PRE_PROBE_S") or 0)
+    except ValueError:
+        v = 0
+    if v > 0:
+        return v
+    mb = 0.0
+    if plan:
+        try:
+            mb = os.path.getsize(plan) / 1e6
+        except OSError:
+            mb = 0.0
+    if load is None:
+        try:
+            load = os.getloadavg()[0]
+        except OSError:
+            load = 0.0
+    ncpu = ncpu or os.cpu_count() or 1
+    return (PROBE_BASE_S + PROBE_S_PER_MB * mb) * max(1.0, load / ncpu)
+
+
+def _probe(tree, *args, timeout=None):
+    if timeout is None:
+        plan = next((a for a in args if isinstance(a, (str, Path)) and str(a).endswith(".json") and os.path.isfile(a)), None)
+        timeout = probe_timeout(plan)
     sd = Path(tree) / "tools" / "die_plan"
     if not (sd / "schema.py").is_file():
         return None, f"{sd}/schema.py does not exist"
@@ -108,7 +141,7 @@ def _probe(tree, *args, timeout=180):
         r = subprocess.run([sys.executable, "-I", "-B", "-c", _SCHEMA_PROBE, str(sd), *map(str, args)],
                            capture_output=True, text=True, timeout=timeout, cwd=str(tree))
     except subprocess.TimeoutExpired:
-        return None, "schema probe timed out"
+        return None, f"schema probe timed out ({timeout:.0f} s; OT_PLAN_GATE_PRE_PROBE_S overrides)"
     if r.returncode != 0:
         tail = (r.stderr.strip().splitlines() or ["?"])[-1]
         return None, f"schema.py of the bind tree does not import: {tail}"
