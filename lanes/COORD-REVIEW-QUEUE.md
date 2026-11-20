@@ -12860,3 +12860,5 @@ FAILED [AUTOPILOT 19ea1ce5733b] 2026-11-20 05:17:19 PST AUTOPILOT -> KIT-WAVE-12
   col_h10_r1 [plan_h10 +CC-BANK-2] (4): GRT 0; CTS FF hold after CORETAP 4: worst -46.8 median -46.8; sign-off runs 0, SIGNED 0; 1 stopped without signoff; old plan -208/-411
   col_h9_r1 (60): GRT 12 TT worst -46.7 median -46.6; CTS FF hold after CORETAP 32: worst -120.2 median -120.2; sign-off runs 0, SIGNED 0; 25 stopped without signoff; old plan -181
   Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
+- 2026-11-20 05:23 PST MERGED [MERGE-QUEUE -> FABLE-SUPERSET-0415-MERGE-READY] claude/fable-superset-0415-merge-ready@d7397f3dc26: nothing to land, every commit of d7397f3dc26 is already in main c93a5cc5d41 (patch-equal).
+- 2026-11-20 05:23 PST MERGE-FAIL [MERGE-QUEUE -> FABLE-SUPERSET-0415] claude/fable-superset-0415@e2f589cb688 NOT landed, skipped: conflict with main c93a5cc5d41 in: tools/die_plan/bind.py, tools/die_plan/landing_tie_children.py, tools/die_plan/test_landing_tie_children.py. Rebase onto main, fix, push a new head and ask COORD for a new 'COORD APPROVED: <branch> @<sha>'.
