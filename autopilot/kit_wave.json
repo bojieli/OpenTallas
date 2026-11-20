@@ -273,7 +273,16 @@
    "die_max_inflight": 100000,
    "live_claim_h": 0.25,
    "pilot_mode": "queue",
-   "hold_items": {},
+   "hold_items": {
+    "kv3_hg": "KV-PLAN-R1 11-20 11:2x (COORD hourly): GEN_LINT g_param_mismatch. D25e2/e3 took the ECTL rq lanes -1 cycle, so bind sets RESPONSE_LAT 25 / QK_ISSUE_AGE 36 vs the hardened ectlk q0..q3 views 26 / 37 on every hg frame; an unchanged relaunch fails the same way. Fix = D26 R3b krsp lanes 5 -> 6 (RT 26). Lift = delete this key when D26 is applied.",
+    "kv3_hg_v1": "KV-PLAN-R1 11-20 11:2x (COORD hourly): GEN_LINT g_param_mismatch. D25e2/e3 took the ECTL rq lanes -1 cycle, so bind sets RESPONSE_LAT 25 / QK_ISSUE_AGE 36 vs the hardened ectlk q0..q3 views 26 / 37 on every hg frame; an unchanged relaunch fails the same way. Fix = D26 R3b krsp lanes 5 -> 6 (RT 26). Lift = delete this key when D26 is applied.",
+    "kv3_hg_v1p2": "KV-PLAN-R1 11-20 11:2x (COORD hourly): GEN_LINT g_param_mismatch. D25e2/e3 took the ECTL rq lanes -1 cycle, so bind sets RESPONSE_LAT 25 / QK_ISSUE_AGE 36 vs the hardened ectlk q0..q3 views 26 / 37 on every hg frame; an unchanged relaunch fails the same way. Fix = D26 R3b krsp lanes 5 -> 6 (RT 26). Lift = delete this key when D26 is applied.",
+    "kv3_hg_v1p3": "KV-PLAN-R1 11-20 11:2x (COORD hourly): GEN_LINT g_param_mismatch. D25e2/e3 took the ECTL rq lanes -1 cycle, so bind sets RESPONSE_LAT 25 / QK_ISSUE_AGE 36 vs the hardened ectlk q0..q3 views 26 / 37 on every hg frame; an unchanged relaunch fails the same way. Fix = D26 R3b krsp lanes 5 -> 6 (RT 26). Lift = delete this key when D26 is applied.",
+    "kv3_hg_v1p4": "KV-PLAN-R1 11-20 11:2x (COORD hourly): GEN_LINT g_param_mismatch. D25e2/e3 took the ECTL rq lanes -1 cycle, so bind sets RESPONSE_LAT 25 / QK_ISSUE_AGE 36 vs the hardened ectlk q0..q3 views 26 / 37 on every hg frame; an unchanged relaunch fails the same way. Fix = D26 R3b krsp lanes 5 -> 6 (RT 26). Lift = delete this key when D26 is applied.",
+    "kv3_hg_v1p5": "KV-PLAN-R1 11-20 11:2x (COORD hourly): GEN_LINT g_param_mismatch. D25e2/e3 took the ECTL rq lanes -1 cycle, so bind sets RESPONSE_LAT 25 / QK_ISSUE_AGE 36 vs the hardened ectlk q0..q3 views 26 / 37 on every hg frame; an unchanged relaunch fails the same way. Fix = D26 R3b krsp lanes 5 -> 6 (RT 26). Lift = delete this key when D26 is applied.",
+    "kv3_hg_v1p6": "KV-PLAN-R1 11-20 11:2x (COORD hourly): GEN_LINT g_param_mismatch. D25e2/e3 took the ECTL rq lanes -1 cycle, so bind sets RESPONSE_LAT 25 / QK_ISSUE_AGE 36 vs the hardened ectlk q0..q3 views 26 / 37 on every hg frame; an unchanged relaunch fails the same way. Fix = D26 R3b krsp lanes 5 -> 6 (RT 26). Lift = delete this key when D26 is applied.",
+    "kv3_hg_v3": "KV-PLAN-R1 11-20 11:2x (COORD hourly): GEN_LINT g_param_mismatch. D25e2/e3 took the ECTL rq lanes -1 cycle, so bind sets RESPONSE_LAT 25 / QK_ISSUE_AGE 36 vs the hardened ectlk q0..q3 views 26 / 37 on every hg frame; an unchanged relaunch fails the same way. Fix = D26 R3b krsp lanes 5 -> 6 (RT 26). Lift = delete this key when D26 is applied."
+   },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave",
    "retry_fix": {
     "kv3_io_cor@2": "604304bb7f2 (KV-032 DPL-0033 / cland status-window class: CLAND_RELEASE_GROWN_TCL + per-type diamond DPL + cland_fit_resize_off_types; proof V3 0 viol on the wave kit 3_4 DB) in source-follow src 08542fa9d7d; relaunched 07:03 as a3 (resume from a2)",
