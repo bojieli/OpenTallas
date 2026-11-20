@@ -1,17 +1,82 @@
 {
  "schema": "fable-fix-s81-lepe.rip1_rows.v1",
  "lane": "FABLE-FIX-S81-LEPE (Opus successor)",
- "for": "S81-DIE-R3: the RIP1 follow-up event after D8i",
- "types": ["dsdv_slice_lepe_mu_LP__t2", "dsdv_slice_lepe_nh_mus_LP__t1", "dsdv_slice_lepw_mu_LP__t2", "dsdv_slice_lepw_mus_LP__t2"],
+ "for": "S81-DIE-R4: J6 (cut 11-21 14:00); was S81-DIE-R3 RIP1 follow-up after D8i",
+ "types": [
+  "dsdv_slice_lepe_mu_LP__t2",
+  "dsdv_slice_lepe_nh_mus_LP__t1",
+  "dsdv_slice_lepw_mu_LP__t2",
+  "dsdv_slice_lepw_mus_LP__t2"
+ ],
  "basis": "mu_LP full form post-CTS TT, placement RC (epyc9 fable-lepe/out4/setup400.json = proof4 4_cts, -530.49). Pin xy are from plan_d8i_c3 (epyc8 s81-die-r3-e8/d8i) hard_cores + pins_file. proof5 has NOT reached GRT yet (pre-GRT FF hold repair still running at 17:48 PST), so nothing here is confirmed at GRT.",
  "item1_li_credit_station": {
   "what": "lep RX credit return li<N>_r (lep lir[N] = registered credit pulse per pop) -> u_lnl<N>.k_li_r. Measured li3_r (612,360) -> lnl3 k_li_r (1218.3,516.2): -496 ps, 762 um, 0 logic + 1 buffer",
   "row": "partition_types[T].relay_depth += {inst u_lnl<N>, port k_li_r, side sink, D 1} for every lnl core of the type (same mechanism as the existing n_flt D1 rows; relay_mid places the stage on the source-to-sink line)",
   "per_type_k_li_r_pins_um": {
-   "dsdv_slice_lepe_mu_LP__t2": {"u_lnl0": [95.1, 516.2], "u_lnl1": [406.1, 516.2], "u_lnl2": [907.2, 516.2], "u_lnl3": [1218.3, 516.2]},
-   "dsdv_slice_lepw_mu_LP__t2": {"u_lnl0": [95.1, 516.2], "u_lnl1": [406.1, 516.2], "u_lnl2": [907.2, 516.2], "u_lnl3": [1218.3, 516.2]},
-   "dsdv_slice_lepw_mus_LP__t2": {"u_lnl0": [95.1, 702.1], "u_lnl1": [406.1, 702.1], "u_lnl2": [907.2, 702.1], "u_lnl3": [1218.3, 702.1]},
-   "dsdv_slice_lepe_nh_mus_LP__t1": {"u_lnl0": [95.1, 702.1], "u_lnl1": [406.1, 702.1]}
+   "dsdv_slice_lepe_mu_LP__t2": {
+    "u_lnl0": [
+     95.1,
+     516.2
+    ],
+    "u_lnl1": [
+     406.1,
+     516.2
+    ],
+    "u_lnl2": [
+     907.2,
+     516.2
+    ],
+    "u_lnl3": [
+     1218.3,
+     516.2
+    ]
+   },
+   "dsdv_slice_lepw_mu_LP__t2": {
+    "u_lnl0": [
+     95.1,
+     516.2
+    ],
+    "u_lnl1": [
+     406.1,
+     516.2
+    ],
+    "u_lnl2": [
+     907.2,
+     516.2
+    ],
+    "u_lnl3": [
+     1218.3,
+     516.2
+    ]
+   },
+   "dsdv_slice_lepw_mus_LP__t2": {
+    "u_lnl0": [
+     95.1,
+     702.1
+    ],
+    "u_lnl1": [
+     406.1,
+     702.1
+    ],
+    "u_lnl2": [
+     907.2,
+     702.1
+    ],
+    "u_lnl3": [
+     1218.3,
+     702.1
+    ]
+   },
+   "dsdv_slice_lepe_nh_mus_LP__t1": {
+    "u_lnl0": [
+     95.1,
+     702.1
+    ],
+    "u_lnl1": [
+     406.1,
+     702.1
+    ]
+   }
   },
   "legs_from_measured_li3_r_site": "lnl0 673, lnl1 362, lnl2 451, lnl3 762 um. All four get D1 so the four RX lanes stay symmetric",
   "cycles": "credit return +1 only. Data K 0, no die lane: k_li_r is core-internal (lep RTL -> lnl hard core). The RX credit round trip goes ~6 -> ~7 cycles, which stays within DR 8 credits (ot_s81sl_slice_lep header): full beat rate",
@@ -35,11 +100,20 @@
  "item4_ring_in_rop_roq": {
   "what": "lep g_inpipe rop (E face, 1436,9) -> roq (104,258): 30 ends, -166 ps, 1581 um; and roq -> g_tx wdata -237 ps, 1595 um. roq (1104 b) feeds the TX write data of all 5 bank columns, so GPL puts it west",
   "row_provisional": "(a) 0 cycles: WREP-style kept copies of roq per bank column (5), each sited at its column, plus rop sited at the face. Near columns close; columns x 52/242 stay at ~700 um per leg. (b) For the west columns: IN_PIPE 2 (asbuilt param on the 4 LP lep instances, data K +1 on the lepk_i0 ring-in lane) with the second stage at ~(740,200). Choose (a) alone if GRT shows the west legs inside -42; otherwise (a)+(b)",
-  "confirm": "on proof5 GRT TT (pending)"
+  "confirm": "proof6 post-CTS + post-GRT repair trace (roq 27 worst rows, min -375.18)",
+  "row_final": "(a)+(b): roq kept copies per bank column (5, sited at each column, rop sited at E face) AND IN_PIPE 2 on the 4 LP lep instances (data K +1 on lepk_i0 ring-in lane, second stage ~(740,200)). Reason: proof6 (no row 4) roq was the worst post-CTS class (1462 ends, -403.58) and still swings to -375 inside post-GRT repair; west legs ~700 um cannot meet -42 with 0 cycles. Cycles are pre-approved (setup by pipeline)."
  },
  "item5_htx_status_ph_r": {
   "what": "p.u.g_htx.g_native_status.g_region[*].u_status/now_status (104,222) -> lep g_frame_local.g_slice[*].ph_r (1105,405): 6 ends, -218 ps, 1184 um",
   "row_provisional": "0 cycles: the status register is already per region (g_region[*]). Site the region copies that feed the frame_local slices at x >= 900 next to those slices, with relay_sites from the placed slice centroid. If a region copy also feeds west logic over 405 um, split it (one more kept copy per side). Not +1",
-  "confirm": "on proof5 GRT TT (pending)"
- }
+  "confirm": "proof6 post-CTS + post-GRT: no htx end in worst classes",
+  "row_final": "keep 0-cycle siting only (region copies of u_status next to the frame_local slices); no +1. proof6: htx/ph_r ends absent from the worst classes post-CTS and post-GRT. Optional for J6; never limiting."
+ },
+ "basis_final": "proof6/r2 (epyc9 fable-lepe/proof6/r2, RIP1 + rows 1-3, d8e base, corrected lane LEF): GRT overflow 0 (usage 9.55%); post-CTS TT -403.58 (proof5 -530.49, rid class gone); post-GRT TT (GRT RC) start -167.83 / 385 ends, after repair_timing -149.06 / EnTNS -10364 / 208 ends; worst class at GRT = u_u_land.tag[0][*] (not roq). Hold: pre-GRT FF -205.98 (cross_tap 7622 ends -205.98, port_out 2832 -148.36, port_in 3726 -116.07, same_tap 280 -40.67) -> after pre-GRT repair cross_tap/port_out/same_tap 0, port_in 3726 -116.07 (32,839 hold cells); post-GRT hold before repair -24.07 / 144 viol, GRT hold repair reaching TNS 0 (iter 170).",
+ "item6_land_tag_new": {
+  "what": "u_u_land (dsdv_mu_land NB80 W1104 SRAM) tag[0][*] D (31-bit {user,pos}, DFFE): worst at GRT, start -167.83, final -149.06, 208 ends. Logic is flop-to-flop (wdq -> tag, enable wvq && wc==0), so the cost is intra-land distance or clock skew, not a plan hop.",
+  "row_provisional": "none yet: path read (STA on proof6 5_1_grt/repair DB) pending; if wdq tag bits sit at the SRAM write port far from tag, site tag next to wdq[TG..] (31 b) or add a local copy; if skew, it is a clock row.",
+  "confirm": "proof6 post-GRT STA path report (owner of this file / successor)"
+ },
+ "hold_structural": "cross_tap (7622 ends, the -205.98 worst) = the LOCKUP-STATION-1130 class (launch-side lockup latch on cross-tap zero-logic hops, main 123dc80f79/cce380131d, kit_zl_lockup). Its die rows for s81 (epyc7 meas/plans rows_s81) are not published yet (dir absent 11-20 15:2x PST), so lepe is NOT covered by a posted row today; apply station_rule derive on a lepe CTS kit for J6. port_in 3726 (-116) is NOT a lockup class (ring inputs, contract in_min -40); it is closed post-GRT by nonport input hold (-24.07 before GRT hold repair, TNS 0 reached). Sign-off hold >= 0 after route: on track in proof6, final number at its 5_1_grt end."
 }
