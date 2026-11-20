@@ -760,6 +760,12 @@ def die_top(P, epochs, dropped=None, rtl_root=None):
         for side in ("src", "dst"):
             if pr[side]["part"] != S.DIE_PART:
                 conn.setdefault(pr[side]["part"], []).append((pr[side]["bus"], net))
+    import spare_ft
+    try:
+        for name, slots in spare_ft.declared(P.raw).items():
+            conn.setdefault(name, []).extend(spare_ft.connections(slots))
+    except ValueError as exc:
+        raise GenError(str(exc)) from exc
     import infra_rtl as IR
     provider_ports = None
     if any(t.get("infra_ports") for t in P.types.values()):
@@ -956,6 +962,9 @@ def write_rtl(raw, out, rtl_root=None, types=None, plan_path=None, landing=None,
     import reset_tree as RT
     try:
         RT.write_wf_open_pads(P, f, text, sv_id, fresh=True)   # not returned: callers compile the returned files
+        import spare_ft
+        slots = spare_ft.declared(raw)
+        spare_ft.write_pads(slots, f, text, sv_id, {pn: P.ptype(pn)["module"] for pn in slots}, port_id=sv_id)
     except ValueError as e:
         raise GenError(str(e)) from e
     man = parent_id_manifest(P)
