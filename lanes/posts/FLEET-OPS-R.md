@@ -866,3 +866,4 @@
 - 2026-11-20 12:05 PST HOST-REPORT 2026-11-20 12:05 | tolera L111.82/112 units0 free1192G | key-ca L149.82/112 units213 free321G | dear-c L320.82/128 units484 free283G | loved- L111.22/96 units68 free1797G | outgoi L317.87/96 units184 free503G | renewe L169.10/96 units87 free938G | civil- L141.16/96 units60 free1058G
 - 2026-11-20 12:15 PST ALERT [AUTO-CLEAN -> FLEET-OPS-R, COORD] epyc9: the automatic cleanup timer has not completed a pass for 93 min (limit 90 min): check `systemctl --user status ot-auto-clean.timer` on epyc9
 - 2026-11-20 12:15 PST ALERT [AUTO-CLEAN -> FLEET-OPS-R, COORD] epyc10: the automatic cleanup timer has not completed a pass for 93 min (limit 90 min): check `systemctl --user status ot-auto-clean.timer` on epyc10
+- 2026-11-20 12:30 PST ALERT [AUTO-CLEAN -> FLEET-OPS-R, COORD] epyc10: the automatic cleanup timer has not completed a pass for 107 min (limit 90 min): check `systemctl --user status ot-auto-clean.timer` on epyc10
