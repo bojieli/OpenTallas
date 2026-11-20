@@ -172,3 +172,56 @@ Cost (E): cell area under 1 % of the tile (S00: 28,400 station flops and up to 8
 
 - intel2 `/srv/opentallas-scratch2/claude/fable-superset-0415-wt`: a partial clone of mine (5.6 GB) that I stopped. `ot-delete` skips it as protected (`.git/shallow.lock` marker). I did not delete it another way.
 - intel2 `/srv/opentallas-scratch2/claude/fable-superset-0415-lane` (lane clone, 1.4 GB), epyc7 and epyc9 `/srv/opentallas-scratch2/claude/fable-superset-0415` (plans copy 295 MB; two hardlinked trees).
+
+## 9. Die-fit check (COORD 11-20 01:5x: the S81 die cannot grow) -- supersedes the +16 % form of sections 2.1, 3 and 4
+
+Plan read: plan_j4e `9780ae146139`, die 32,693.76 x 25,980.48 um, 398 partitions covering 94.0 % of the die (V, `sitefit.py`, `out/s81_j4e_leaf_sitefit.txt`).
+
+### 9.1 Does +16 % fit? No.
+
+Free distance from each of the 75 leaf sites to the next partition or die edge, type frame:
+
+| Slack | Sites |
+|---|---|
+| 0 um on E and on W | 48 of 75 (all of columns 3 to 7, and every L1 row of columns 0 to 2) |
+| 146.9 or 155.5 um on one side only | 17 |
+| 146.9 + 155.5 um (both sides) | 10 (column 1) |
+| any slack in y | 4 (s_1S_L4 129.6, s_4S_L4 129.6, s_2N_L0 103.7, s_4N_L0 51.8); 71 have 0 |
+
+- +230.4 um (+16 %) on one side fits at 0 of 75 sites. Split over both sides it fits at 10.
+- Even +43.2 um fits at only 27 of 75 sites. The slack is the two channels beside columns 0, 1 and 2; columns 3 to 7 abut on all four sides.
+- So no outline growth fits everywhere. Growing only where there is slack would split each class in two (grown and not grown) and gain nothing.
+
+### 9.2 Smallest form that fits: no growth, classes inside one outline
+
+Each class holds members of one existing outline only and keeps that outline. The superset has to fit the face pins and the channels the tile already has. Area cost is 0; the price is more classes.
+
+| Cap on ft bits per tile | Builds, face cap 3.6 pins/um | Builds, face cap 4.6 pins/um (today's measured pitch) | ft bits carried | Largest class |
+|---|---|---|---|---|
+| 3,000 | 46 | 46 | x1.17 | 25 types at 2,666 bits |
+| 4,000 | 34 | 34 | x1.30 | 25 |
+| 4,500 | 33 | 28 | x1.32 to x1.45 | 28 types at 3,370 bits |
+| 5,000 | 29 | 25 | x1.42 to x1.47 | 25 |
+| 6,000 | 25 | 18 | x1.46 to x1.62 | 25 |
+| 7,786 | 23 | 13 | x1.49 to x1.80 | 31 at 4.6 pins/um |
+
+For scale, tiles of the 1442.88 x 1226.88 outline carry up to 5,755 ft bits today (median 2,094); the 1278.72 outline up to 7,786; the 1356.48 outline up to 5,949.
+
+Trade-off against the earlier table (which mixed outlines and allowed growth): 17 builds with up to +16 % area becomes **25 builds at 0 area** (6,000-bit cap, 3.6 pins/um), or 33 builds if no class may exceed 4,500 bits. The 13-build table is reachable without growth only at 4.6 pins/um and tiles up to 7,786 bits, which no 1227-outline tile carries today: not recommended before a class is routed.
+
+Recommended (P): 4,500-bit cap, 33 builds, first class F00 = 28 types of the 1442.88 x 1226.88 outline, superset N>S 597, 597, 276, 1 and S>N 668, 668, 562, 1 = 3,370 ft bits. One member (t38) already carries 3,093 of them in this outline. Then widen the cap class by class as each routes.
+
+S81 total with this form: 395 -> about 105 (leaf 33 instead of 17); about 98 at the 6,000-bit cap.
+
+### 9.3 Pilot changed to the fitting form
+
+- The +16 % kits (t13) were cancelled before they started (my two ot-run clients, by exact job string). `tree_sup` is kept but is not the pilot.
+- New pilot: `ot_s81sl_leaf__t38` in `tree_fit` (plan 8047689296ac, `patch_fit.py`), **outline unchanged**, class F00 superset: two spare lanes added (N>S 276 and N>S 1, +277 bits, 3,093 -> 3,370), windows in the free face span 980 to 1,045 um, 6 stations through the free channel at x 1,091 to 1,123 um, hops at most 285 um. `superset` key set; pins checked (ft6 277 pins, ft7 2 pins on N and S). Control: the unchanged t38 in `tree_base`.
+- Both kit generations are queued on epyc9 (admits 0 GB); the hub chain routes each when its gen lint is clean. No measured number yet.
+- The control and the pilot differ by 9 % in ft bits, so the pilot answers "does the F00 superset close in the existing outline", not "what does a large superset cost".
+
+### 9.4 Not checked
+
+- The four y-slack sites and the column 0 to 2 channels were not checked for what the die uses them for (clock, PG, routes); I counted them as free only for the fit test, and the recommended form does not use them.
+- A smaller tile placed in a larger site (a 1227 tile in a 1279 or 1356 site) would merge classes across outlines at 0 area, but leaves a 52 to 130 um gap with unregistered wire at the face. Not priced.
+- Stations and serdes classes of section 2.2 already keep their outlines; they were not re-run on plan_j4e.
