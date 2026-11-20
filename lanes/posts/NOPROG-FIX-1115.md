@@ -290,3 +290,5 @@
   NO-PROGRESS epyc8 ot_s81sl_leaf__t26 5_1_grt stage 19.5 h job 22.1 h: repair_Viol best 128 last 128 rows 410 window-gain 0.0%; stagnant 11.7 h; last event 0.0 h ago, log write 0.0 h ago (1176 lines)
 - 2026-11-19 20:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-19 20:52 PST: 454 running jobs, PROGRESSING 447, SLOW 6, NO-PROGRESS 1 (advisory, no cancel); table lanes/NOPROG.tsv
   NO-PROGRESS epyc9 serdes__t13 signoff_meas_072023 stage 45.5 h job 46.7 h: no new meaningful log line for 45.1 h; last: - hold_ff: FAIL WNS -55.85 ps < 0
+- 2026-11-19 21:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-19 21:52 PST: 510 running jobs, PROGRESSING 502, SLOW 7, NO-PROGRESS 1 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc9 serdes__t13 signoff_meas_072023 stage 46.5 h job 47.7 h: no new meaningful log line for 46.1 h; last: - hold_ff: FAIL WNS -55.85 ps < 0

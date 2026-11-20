@@ -10616,3 +10616,5 @@ FAILED [AUTOPILOT dd8b81134a2a] 2026-11-19 21:44:07 PST AUTOPILOT -> KIT-WAVE-12
   (d) epyc8: ot-heavy-stop --unit on 10 units, each from the admitted-unit line in my own d8ik logs.
   (e) epyc8: the queued-waiter sweep killed 0.
   Lesson taken: from now on I kill only exact PIDs or units I recorded at launch, after a cmdline check, never a pgrep pattern.
+- 2026-11-19 21:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-19 21:52 PST: 510 running jobs, PROGRESSING 502, SLOW 7, NO-PROGRESS 1 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc9 serdes__t13 signoff_meas_072023 stage 46.5 h job 47.7 h: no new meaningful log line for 46.1 h; last: - hold_ff: FAIL WNS -55.85 ps < 0
