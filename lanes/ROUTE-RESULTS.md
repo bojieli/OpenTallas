@@ -116,3 +116,20 @@ decided past CTS: 77  passed 12  failed 65  (fail rate 84%);  not failures: 6 ca
   other hold: 1 (sle_hc0__cl929603c0__cl38badc56)
 
 Fix: a build with any log written in the last 30 min is alive (sealed ot-job/bwrap runs live in claude/ot-jobs/<job>/work and hide their processes); a crash signature counts only after the log has been quiet 5 min; an old kit dir is not dead while the same design runs elsewhere; epyc4 is dropped from --hosts. The 62 'dead' fall to 13.
+
+## 2026-11-20 01:1x PST ROUTE-RESULTS (HOURLY-WRITEUP-01xx, fast mode, window 00:05-01:05)
+
+ROUTE-RESULTS 11-20 00:05 to 11-20 01:05 (from kit run logs + signoff.json; gate = DRC 0, TT setup >= -42 ps, FF hold >= 0)  hosts local,epyc2,epyc7,epyc8,epyc9,epyc10,intel1
+| die | CTS | GRT | route | sign-off | pass | fail setup | fail hold | fail congestion | fail DRC | fail real crash | cancelled/superseded | dead, unexplained | routed, no sign-off |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| s81 | 48 | 20 | 3 | 1 | 0 | 1 | 0 | 0 | 1 | 0 | 0 | 0 | 0 |
+| head | 1 | 4 | 1 | 0 | 0 | 0 | 0 | 0 | 1 | 0 | 0 | 0 | 0 |
+| qc | 11 | 4 | 3 | 1 | 0 | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 3 |
+| kv | 4 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| other | 2 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| all | 66 | 29 | 7 | 2 | 0 | 1 | 1 | 0 | 2 | 0 | 0 | 0 | 3 |
+decided past CTS: 4  passed 0  failed 4  (fail rate 100%);  not failures: 0 cancelled/superseded, 0 dead unexplained, 3 routed awaiting sign-off
+  s81 DRC: 1 (col_h9_r2__t1__clce45cab5__pv467913cc)
+  s81 setup timing: 1 (col_h9_r2__t1__clce45cab5__pv40e9fb5a)
+  head DRC: 1 (hd_host_n)
+  qc hold: 1 (slw_sc_v1__cl63e5a7a2)
