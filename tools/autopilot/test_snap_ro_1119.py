@@ -115,6 +115,64 @@ class Snapshot(Tmp):
         self.assertEqual(sorted(LT.writable_names(d)), sorted([d, d + "/sub", d + "/sub/f"]))
 
 
+class IncrementalVerify(Tmp):
+    """COORD 11-20: a new snapshot version derived from a verified parent hashes only its changed files"""
+
+    def _chain(self):
+        pub = self.t + "/src_x_r1"
+        h0 = make_published(pub, {"tools/a.py": b"A1", "tools/b.py": b"B1", "physical/plan.json": b"P1"})
+        live, snaps = LT.live_path("d", self.t), LT.snap_root("d", self.t)
+        LT.host_seed(pub, live)
+        LT.host_apply(live, "", snaps, "s2")
+        self.assertEqual(SM.verify(snaps + "/s2", expect=h0, ro=True, full=True)[0], [])     # the parent's completed verification (writes its receipt)
+        pk = self.t + "/pk"
+        make_pack(pk, h0, {"tools/b.py": b"B2"})
+        LT.host_apply(live, pk, snaps, "s2_p1")
+        return snaps, live
+
+    def test_only_changed_files_are_hashed_and_the_rest_is_inherited(self):
+        snaps, live = self._chain()
+        s3 = snaps + "/s2_p1"
+        dl = json.load(open(s3 + "/.snap-delta"))
+        self.assertEqual(dl["changed"], ["tools/b.py"])
+        hashed = []
+        orig = SM.tree_hash
+        SM.tree_hash = lambda p: (hashed.append(os.path.basename(p)), orig(p))[1]
+        self.addCleanup(setattr, SM, "tree_hash", orig)
+        m3 = json.load(open(s3 + "/" + SM.MANIFEST))
+        errs, info = SM.verify(s3, expect=m3["manifest_hash"], ro=True, full=True)
+        self.assertEqual(errs, [])
+        self.assertEqual(hashed, ["b.py"])
+        self.assertEqual(info.get("inherited_from"), snaps + "/s2")
+
+    def test_a_replaced_unchanged_file_is_not_inherited(self):
+        snaps, live = self._chain()
+        s3 = snaps + "/s2_p1"
+        for dp, dn, fn in os.walk(s3):
+            os.chmod(dp, 0o755)
+        os.unlink(s3 + "/tools/a.py")                                            # same bytes would pass, different bytes must not
+        open(s3 + "/tools/a.py", "wb").write(b"EVIL")
+        os.chmod(s3 + "/tools/a.py", 0o444)
+        m3 = json.load(open(s3 + "/" + SM.MANIFEST))
+        errs, _ = SM.verify(s3, expect=m3["manifest_hash"], full=True)
+        self.assertTrue(any("tools/a.py (modified" in e for e in errs), errs)
+
+    def test_no_verified_parent_means_a_full_verify(self):
+        snaps, live = self._chain()
+        s3 = snaps + "/s2_p1"
+        for f in os.listdir(SM.CACHE_DIR):
+            os.unlink(os.path.join(SM.CACHE_DIR, f))                              # the parent has no receipt
+        hashed = []
+        orig = SM.tree_hash
+        SM.tree_hash = lambda p: (hashed.append(os.path.basename(p)), orig(p))[1]
+        self.addCleanup(setattr, SM, "tree_hash", orig)
+        m3 = json.load(open(s3 + "/" + SM.MANIFEST))
+        errs, info = SM.verify(s3, expect=m3["manifest_hash"], ro=True, full=True)
+        self.assertEqual(errs, [])
+        self.assertEqual(sorted(hashed), ["a.py", "b.py", "plan.json"])
+        self.assertNotIn("inherited_from", info)
+
+
 class ApplyHosts(Tmp):
     def test_findings_refuse_unreachable_only_warns_ok_passes(self):
         def run(cmd):

@@ -44,6 +44,7 @@ import time
 
 KW45 = "/srv/opentallas-scratch2/claude/kw45"
 MANIFEST, HASHFILE, LINKBASE, SNAPGROUP = ".src-manifest.json", ".src-manifest.sha256", ".link-base", ".snap-group"
+SNAPDELTA = ".snap-delta"
 SSH = ["ssh", "-o", "BatchMode=yes", "-o", "ControlPath=none"]
 FLEET = os.environ.get("OT_LIVE_HOSTS", "intel1 epyc2 epyc7 epyc8 epyc9 epyc10").split()   # --hosts fleet
 FLOOR_GB = float(os.environ.get("OT_LIVE_FLOOR_GB", "100"))     # r709 disk floor: a host keeps this much free after the copy
@@ -195,6 +196,7 @@ def redigest_wave_prepare(live, touched, files, ov):
 def host_apply(live, pack, snaps, name):
     """pack (may be '') -> live, then snapshot live -> snaps/name.  Prints LIVE_TREE SNAP <path> <hash>."""
     m = json.load(open(os.path.join(live, MANIFEST)))
+    parent_hash, changed = m["manifest_hash"], []
     final = os.path.join(snaps, name)
     if os.path.exists(final):                                    # idempotent rerun: the snapshot of this change exists
         sm = json.load(open(os.path.join(final, MANIFEST)))
@@ -205,6 +207,7 @@ def host_apply(live, pack, snaps, name):
         if d.get("old_manifest_hash") != m["manifest_hash"]:
             raise SystemExit(f"LIVE_TREE refuse: pack is for tree {str(d.get('old_manifest_hash'))[:12]}, live is {m['manifest_hash'][:12]}")
         files = dict(m["files"])
+        changed = sorted(set([p for p in (d.get("delete") or [])] + [p for p in (d.get("add") or {})]))
         for path in d.get("delete") or []:
             if skipped(path):
                 files.pop(path, None)                      # SNAP-RO-1119: a skipped name is never a manifest entry (an old pack may carry one)
@@ -245,6 +248,9 @@ def host_apply(live, pack, snaps, name):
     with open(os.path.join(part, SNAPGROUP), "w") as f:         # a new file of the snapshot only
         f.write(os.path.realpath(live) + "\n")
     os.chmod(os.path.join(part, SNAPGROUP), 0o444)
+    with open(os.path.join(part, SNAPDELTA), "w") as f:         # SNAP-RO-1119: what this snapshot changed against the live tree it was cut from (the verifier inherits the rest from the verified parent)
+        json.dump({"parent_manifest_hash": parent_hash, "changed": changed}, f, sort_keys=True)
+    os.chmod(os.path.join(part, SNAPDELTA), 0o444)
     dirs_writable(part, on=False)
     wr = writable_names(part)                                    # SNAP-RO-1119 (b): refuse a snapshot that is not read-only; never chmod a file (its inode is the live tree's)
     if wr:

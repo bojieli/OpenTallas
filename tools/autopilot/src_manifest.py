@@ -37,6 +37,7 @@ MANIFEST = ".src-manifest.json"
 HASHFILE = ".src-manifest.sha256"
 SNAPGROUP = ".snap-group"        # TOOLS-DECOUPLE phase 2 (live_tree.py): a snapshot of the die's live tree; its files share inodes with the live tree and the
                                  # die's other snapshots by design (read-only files, rename-only writes), so the shared-inode check does not apply
+SNAPDELTA = ".snap-delta"        # SNAP-RO-1119: {"parent_manifest_hash", "changed": [paths]} written by live_tree.py when a snapshot is derived from a live tree that a pack just changed
 LINKBASE = ".link-base"          # STAGE A (COORD 11-17, QC D-steps wrote 57 GB each): text file naming the published base tree whose inodes this tree shares
 DEFAULT_SCOPE = ["tools", "rtl", "physical", "plans"]
 SKIP_DIRS = ("__pycache__", ".git", ".pytest_cache")
@@ -71,7 +72,7 @@ def walk_tree(root):
         for f in sorted(fn):
             p = os.path.join(dp, f)
             rel = os.path.relpath(p, root)
-            if rel in (MANIFEST, HASHFILE, LINKBASE, SNAPGROUP) or skipped(rel):
+            if rel in (MANIFEST, HASHFILE, LINKBASE, SNAPGROUP, SNAPDELTA) or skipped(rel):
                 continue
             out[rel] = p
     return out
@@ -163,6 +164,35 @@ def snap_group(root):
         return ""
 
 
+def verified_parent(root):
+    """SNAP-RO-1119 (COORD: re-hashing 58 GB on every loaded host for a one-file change): a snapshot derived from a verified parent.  -> (parent tree, set of changed paths) when ROOT has a .snap-delta,
+    a sibling snapshot carries the manifest hash it names, and that sibling has a COMPLETED verification receipt that still matches (cached_receipt: stat-only, read-only and unshared checked now);
+    else ('', set()).  The caller hashes only the changed files and accepts every other file that is the SAME INODE as the parent's file (same inode = same verified bytes)."""
+    try:
+        with open(os.path.join(root, SNAPDELTA)) as f:
+            dl = json.load(f)
+        want = dl["parent_manifest_hash"]
+        changed = set(dl.get("changed") or [])
+    except (OSError, ValueError, KeyError, TypeError):
+        return "", set()
+    parent_dir = os.path.dirname(root.rstrip("/"))
+    try:
+        sibs = sorted(os.listdir(parent_dir))
+    except OSError:
+        return "", set()
+    for n in sibs:
+        sib = os.path.join(parent_dir, n)
+        if sib == root or not os.path.isdir(sib):
+            continue
+        pm = load_manifest(sib)
+        if not pm or pm.get("manifest_hash") != want:
+            continue
+        errs, _info = cached_receipt(sib, want)
+        if not errs:
+            return sib, changed
+    return "", set()
+
+
 def load_manifest(root):
     try:
         with open(os.path.join(root, MANIFEST)) as f:
@@ -173,6 +203,17 @@ def load_manifest(root):
 
 def writable(p):
     return bool(os.lstat(p).st_mode & (stat.S_IWUSR | stat.S_IWGRP | stat.S_IWOTH)) and not os.path.islink(p)
+
+
+def _same_as_parent(parent, changed, p, rel):
+    """an unchanged file that is the very inode of the verified parent's file (stat only)"""
+    if not parent or rel in changed or os.path.islink(p):
+        return False
+    try:
+        a, b = os.lstat(p), os.lstat(os.path.join(parent, rel))
+    except OSError:
+        return False
+    return a.st_ino == b.st_ino and a.st_dev == b.st_dev
 
 
 def verify(root, expect="", ro=False, full=False):
@@ -204,13 +245,16 @@ def verify(root, expect="", ro=False, full=False):
     lbase = link_base(root)
     kids = linked_children(root)
     snap = bool(snap_group(root))
+    parent, changed = verified_parent(root)
+    if parent:
+        info["inherited_from"] = parent
     for rel in sorted(want):
         p = have.get(rel)
         if p is None and skipped(rel) and os.path.lexists(os.path.join(root, rel)):
             p = os.path.join(root, rel)          # SNAP-RO-1119: listed by a delta pack although walk_tree skips its name (tools/_s81ph_gen.py.orig): check it where it is
         if p is None:
             errs.append(f"SRC_MANIFEST DRIFT {rel} (missing)")
-        elif tree_hash(p) != want[rel]:
+        elif not _same_as_parent(parent, changed, p, rel) and tree_hash(p) != want[rel]:
             errs.append(f"SRC_MANIFEST DRIFT {rel} (modified: not the manifest content)")
         elif ro and writable(p):
             errs.append(f"SRC_MANIFEST DRIFT {rel} (writable: published trees are read-only)")
