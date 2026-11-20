@@ -36,6 +36,11 @@ def vehicle(mutant=None,reset_tree=None):
         tx=cell('b.u_cland_rstart_tx','ot_dp_landing_relay',{'clk':[bclk],'rst_raw_n':[txr],'d':[bo]},{'q':1}).ports['q'][0]
         rx=cell('b2.u_cland_rstart_rx','ot_dp_landing_relay',{'clk':[bclk],'rst_raw_n':[b2t],'d':[tx if mutant!='car_skip_tx' else bo]},{'q':1}).ports['q'][0]
         cell('b2.u_cland_y2','ot_dp_clk_landing_ca',{'clk':[bclk],'fclk':[aclk],'t_rst_n':[ao],'rst_n':[rx if mutant!='car_ring_origin' else bo],'d':[10,11]},{'q':2,'ready':1,'fault':1})
+    if mutant and mutant.startswith('ca_rfan'):
+        # RING-RSTFAN-1: the origin's raw reset is a kept same-D copy u_cland_rfan_<bus>_<k> of the ring reset relay
+        name='b.u_cland_rfan_z_1' if mutant=='ca_rfan_other_bus' else 'b.u_cland_rfan_y_1'
+        cp=cell(name,'ot_dp_rrelay',{'clk':[bclk],'d':[rst if mutant=='ca_rfan_wrong_d' else br]},{'q':1}).ports['q'][0]
+        next(c for c in cells if c.path=='b.u_cland_origin').ports['rst_raw_n']=[cp]
     if mutant=='fclk':ring.ports['fclk']=[bclk]
     if mutant=='reset_depth':ring.ports['rst_n']=[br]
     bc=cell('b.u_cland_collect_rst_n_t0','ot_dp_landing_collect',{'clk':[bclk],'rst_n':[bt],'ready_i':ring.ports['ready'],'fault_i':ring.ports['fault']},{'ready_o':1,'fault_o':1})
@@ -423,3 +428,11 @@ def test_tx_flop_raw_through_midpoint_relay_is_verified():assert vehicle('car_tx
 
 
 def test_tx_flop_relay_on_a_wrong_node_still_fails():assert any('nearest-copy tx form' in x for x in vehicle('car_tx_relay_bad')['errors'])
+
+
+def test_ring_reset_fan_copy_verified():
+    """RING-RSTFAN-1: the origin on a same-D copy of the ring reset relay walks the same planned parent/depth"""
+    assert vehicle('ca_rfan')['errors']==[]
+    for m in ('ca_rfan_wrong_d','ca_rfan_other_bus'):
+        errs=vehicle(m)['errors']
+        assert any('b.u_cland_origin' in e and 'reset-parent/depth' in e for e in errs),(m,errs)

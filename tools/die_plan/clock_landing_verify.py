@@ -295,6 +295,10 @@ class Verification:
             if not row:return False
             allowed={prefix+row['name'],prefix+row['name']+'_r',prefix+'u_cland_reset_'+ident(n)}
             if extra:allowed.add(prefix+extra)
+            # RING-RSTFAN-1 (clock_landings._ring_reset_fan): a kept same-D copy u_cland_rfan_<bus>_<k> of the ring reset
+            # relay u_cland_rst_<bus> stands where that relay stands (same parent node walked below, same depth)
+            if extra and extra.startswith('u_cland_rst_') and re.fullmatch(re.escape(prefix+'u_cland_rfan_'+ident(extra[12:]))+r'_\d+',up.path):
+                allowed.add(up.path)
             if n in outq:allowed.add(prefix+row['name']+'_t')
             if up.path not in allowed or up.module not in('ot_dp_rrelay','ot_dp_rrelay_nl') or port!='q':return False
             ib=up.ports.get('d',[])

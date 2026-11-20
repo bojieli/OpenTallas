@@ -739,6 +739,98 @@ def pick_local_reset_raw(raw, xy, need_depth, relays, ported, reach_um):
     return raw, None
 
 
+# RING-RSTFAN-1 (HEAD-CROSSING-1119, FABLE-PD-HEAD-2040 D3): the ring reset relay u_cland_rst_<bus> (cland_reset_<bus>) is
+# also the raw reset of the count origin (and, through cland_start_raw, of the FSTART / START face flops) and of the
+# dataflow monitor collects.  On HEAD hd_serdes (r8b a2 place) its Q drove 28 loads over 554.6 um (x 1470.7..1977.8): the
+# ring band (x 1824.9..2030.1) and the origin at the cland_tstart_in pin / start_capture_um (1452, 77.7) with the FSTART
+# face flop at its pin (1714, 2.7).  Rule: when the plan sites of those loads span more than RING_RESET_FAN_UM (bbox
+# width + height, the REACH_UM of reach_rules / METHODOLOGY 12.1e), the far load groups take a kept same-D copy
+# u_cland_rfan_<bus>_<k> (same D as u_cland_rst_<bus>: same parent, same depth, the SAME release edge; 0 cycles, +1 flop
+# per far group).  Loads within reach: no copy, byte-identical RTL.
+RING_RESET_FAN_UM = LOCAL_RESET_REACH_UM
+
+
+def _bbox_spread(pts):
+    xs, ys = [p[0] for p in pts], [p[1] for p in pts]
+    return (max(xs) - min(xs)) + (max(ys) - min(ys)) if pts else 0.0
+
+
+def reset_fan_clusters(home, groups, reach=RING_RESET_FAN_UM):
+    """RING-RSTFAN-1 grouping.  home = [(x, y)] sites that stay on the original reset (ring band corners + the relay
+    site), groups = [(name, [(x, y)])] movable load groups.  -> (spread of everything, [home group names],
+    [(names, pts)] far clusters, each spread <= reach unless a single group alone is wider).  Deterministic: groups join
+    home, else the first far cluster that stays within reach, else open a new one, nearest-to-home first."""
+    every = list(home) + [p for _n, ps in groups for p in ps]
+    before = _bbox_spread(every)
+    if before <= reach + 1e-6:
+        return before, [n for n, _ps in groups], []
+    hx = (min(p[0] for p in home) + max(p[0] for p in home)) / 2
+    hy = (min(p[1] for p in home) + max(p[1] for p in home)) / 2
+    order = sorted(groups, key=lambda g: (min(abs(p[0] - hx) + abs(p[1] - hy) for p in g[1]), g[0]))
+    hpts, hnames, far = list(home), [], []
+    for n, ps in order:
+        if _bbox_spread(hpts + list(ps)) <= reach + 1e-6:
+            hpts += list(ps)
+            hnames.append(n)
+            continue
+        for c in far:
+            if _bbox_spread(c[1] + list(ps)) <= reach + 1e-6:
+                c[0].append(n)
+                c[1].extend(ps)
+                break
+        else:
+            far.append(([n], list(ps)))
+    return before, hnames, far
+
+
+def plan_pin_xy(t, name):
+    """plan site of a pin of type dict t: landing_contract / type pins xy_um, else the centre of a face bus window"""
+    pins = list(((t.get("clock") or {}).get("landing_contract") or {}).get("pins", []) or []) + list(t.get("pins", []) or [])
+    for p in pins:
+        xy = p.get("xy_um")
+        if p.get("name") == name and isinstance(xy, (list, tuple)) and len(xy) == 2:
+            return (float(xy[0]), float(xy[1]))
+    bus = next((b for b in t.get("buses", []) or [] if b.get("name") == name), None)
+    if bus and bus.get("face") in ("E", "W", "N", "S") and bus.get("window_um") and t.get("outline_um"):
+        tw, th = t["outline_um"]
+        at, f = sum(bus["window_um"]) / 2, bus["face"]
+        return (0.0 if f == "W" else float(tw), at) if f in "EW" else (at, 0.0 if f == "S" else float(th))
+    return None
+
+
+def plan_origin_xy(t, p_start=None):
+    """where the count origin sits: its pinned home rect (landing_writer_start / landing_reader_start origin_rect_um,
+    landing_origin_rect_um), else its p_start pin, else clock.start_capture_um (the cland_tstart_in pin site)"""
+    ck = t.get("clock") or {}
+    for rect in [(ck.get(k) or {}).get("origin_rect_um") for k in ("landing_writer_start", "landing_reader_start")] + [
+            ck.get("landing_origin_rect_um")]:
+        if isinstance(rect, (list, tuple)) and len(rect) == 4:
+            return ((rect[0] + rect[2]) / 2, (rect[1] + rect[3]) / 2)
+    xy = plan_pin_xy(t, p_start) if p_start else None
+    if xy is not None:
+        return xy
+    sc = ck.get("start_capture_um")
+    if p_start in (None, START_PIN_IN) and isinstance(sc, (list, tuple)) and len(sc) == 2:
+        return (float(sc[0]), float(sc[1]))
+    return None
+
+
+def ring_reset_load_xy(t, inst, stmt=""):
+    """plan site of a ring-reset load instance (RING-RSTFAN-1), None = unknown (stays on the original reset)"""
+    if re.fullmatch(r"u_cland_(?:origin(?:_t\d+)?|root)", inst):
+        m = re.search(r"\.p_start\(\s*(\w+)\s*\)", stmt)
+        return plan_origin_xy(t, m.group(1) if m else None)
+    m = re.fullmatch(r"u_cland_fstart_(\w+)", inst)
+    if m:
+        return plan_pin_xy(t, "cland_fstart_out_" + m.group(1))
+    if inst == "u_cland_tstart_o":
+        return plan_pin_xy(t, START_PIN_OUT)
+    m = re.fullmatch(r"u_cland_up_(\w+)", inst)
+    if m and m.group(1) != "observer":
+        return plan_pin_xy(t, "cland_up_ready_" + m.group(1))
+    return None
+
+
 RING_LITE_KEYS = {"max_width", "monitors"}
 
 
@@ -2124,6 +2216,8 @@ class Landings:
             if collector_info["mask"].get("observer"):
                 body=gate_observer(body,self.collector["observer"])
         logic[:] = self._local_resets(tn, key, body, logic)
+        if raw_graph is None:
+            self._ring_reset_fan(tn, key, logic, body)
         if raw_graph is not None:
             self.reset_placements[tn]["literal_raw_branches"] = raw_graph.validate(body + "\n" + "\n".join(logic))
         # The former last port can carry an end-of-line comment.
@@ -2607,6 +2701,118 @@ class Landings:
                             replaced=olds, added_flops=1, added_cycles=0, **({"raw_rederived_from": was} if was else {})))
         self.reset_placements.setdefault(tn, {}).setdefault("local_resets", []).extend(rec)
         return decl + [text]
+
+    def _ring_reset_fan(self, tn, key, logic, body=""):
+        """RING-RSTFAN-1 (see RING_RESET_FAN_UM): split the loads of each generated ring reset relay u_cland_rst_<bus>
+        whose plan sites span more than the reach.  Load sites: the ring band rect + the relay site (home, never moved),
+        the count origin (+ the FSTART / START face flops on its raw alias cland_start_raw: one group, they must share
+        the origin's raw net), each monitor output collect u_cland_up_<bus> at its pin.  Each far cluster takes a kept
+        ot_dp_rrelay u_cland_rfan_<bus>_<k> with the SAME D as u_cland_rst_<bus>: same depth, same release edge, 0 data
+        and 0 control cycles.  The receipt site of a copy is its far cluster's centre, or the midpoint between the D relay
+        site (reset_tree 'depth D @ (x, y)' comment, else the ring relay site) and that centre when the centre is over the
+        reach from it.  Any load form this pass does not recognise leaves the bus unchanged (fail safe)."""
+        t = self.types[key]
+        sites = bound_relay_sites(body)
+        bands = ((t.get("clock") or {}).get("landing_contract") or {}).get("bands") or {}
+        rp = self.reset_placements.get(tn, {})
+        text = "\n".join(logic)
+        changed = False
+        for b in sorted(k for k, v in rp.items() if isinstance(v, dict) and v.get("net") == f"cland_reset_{k}"
+                        and not v.get("hard_wrapper")):
+            rect, xy = (bands.get(b) or {}).get("rect_um"), rp[b].get("xy_um")
+            if not (isinstance(rect, (list, tuple)) and len(rect) == 4 and isinstance(xy, (list, tuple)) and len(xy) == 2):
+                continue
+            net, drv_inst = f"cland_reset_{b}", f"u_cland_rst_{b}"
+            drv = re.search(r"^    ot_dp_rrelay " + re.escape(drv_inst) + r" \(\.clk\(clk\), \.d\((\w+)\), \.q\(" +
+                            re.escape(net) + r"\)\);[^\n]*$", text, re.M)
+            if drv is None:
+                continue
+            ref = re.compile(r"\b" + re.escape(net) + r"\b")
+            loads, aliases, ok = [], [], True
+            for st in re.finditer(r"[^;]*;", text):
+                s = st.group(0)
+                if not ref.search(s) or st.start() <= drv.start() < st.end():
+                    continue
+                code = re.sub(r"^(?:\s*//[^\n]*\n)*", "", s)
+                if re.fullmatch(r"\s*wire\s+" + re.escape(net) + r"\s*;", code):
+                    continue
+                a = re.fullmatch(r"\s*assign\s+(\w+)\s*=\s*" + re.escape(net) + r"\s*;", code)
+                if a:
+                    aliases.append((a.group(1), st.start(), st.end()))
+                    continue
+                h = re.match(r"\s*(?:\(\*[^*]*\*\)\s*)?\w+\s*(?:#\s*\((?:[^()]|\([^()]*\))*\))?\s+(\w+)\s*\(", code)
+                pins = re.findall(r"\.(\w+)\(\s*" + re.escape(net) + r"\s*\)", code)
+                if h is None or len(pins) != len(ref.findall(code)):
+                    ok = False
+                    break
+                loads.append((h.group(1), pins, st.start(), st.end(), code))
+            if not ok:
+                continue
+            groups, members = {}, {}
+            for inst, pins, s0, s1, code in loads:
+                site = ring_reset_load_xy(t, inst, code)
+                if site is None or set(pins) - {"rst_n", "rst_raw_n"}:
+                    continue
+                g = "origin" if re.fullmatch(r"u_cland_(?:origin(?:_t\d+)?|root)", inst) else inst
+                groups.setdefault(g, []).append(site)
+                members.setdefault(g, []).append(("inst", inst, s0, s1))
+            for al, s0, s1 in aliases:
+                # an alias (cland_start_raw) travels with the origin: the FSTART / START face flops must share its net
+                g = "origin" if "origin" in groups else f"assign:{al}"
+                for m in re.finditer(r"[^;]*;", text):
+                    c = re.sub(r"^(?:\s*//[^\n]*\n)*", "", m.group(0))
+                    if re.search(r"\.(?:rst_n|rst_raw_n)\(\s*" + re.escape(al) + r"\s*\)", c):
+                        h = re.match(r"\s*(?:\(\*[^*]*\*\)\s*)?\w+\s*(?:#\s*\((?:[^()]|\([^()]*\))*\))?\s+(\w+)\s*\(", c)
+                        site = ring_reset_load_xy(t, h.group(1), c) if h else None
+                        if site is not None:
+                            groups.setdefault(g, []).append(site)
+                members.setdefault(g, []).append(("assign", al, s0, s1))
+            movable = [(g, groups.get(g, [])) for g in sorted(members) if groups.get(g)]
+            home = [(rect[0], rect[1]), (rect[2], rect[3]), (float(xy[0]), float(xy[1]))]
+            before, kept, far = reset_fan_clusters(home, movable)
+            if not far:
+                continue
+            d = drv.group(1)
+            subs, decl, copies = [], [], []
+            for k, (names, pts) in enumerate(far, 1):
+                cnet, cinst = f"cland_rfan_{ident(b)}_{k}", f"u_cland_rfan_{ident(b)}_{k}"
+                cx = (min(p[0] for p in pts) + max(p[0] for p in pts)) / 2
+                cy = (min(p[1] for p in pts) + max(p[1] for p in pts)) / 2
+                dx, dy = sites[d][1] if d in sites else (float(xy[0]), float(xy[1]))
+                if abs(cx - dx) + abs(cy - dy) > RING_RESET_FAN_UM:
+                    cx, cy = (cx + dx) / 2, (cy + dy) / 2
+                cx, cy = round(cx, 3), round(cy, 3)
+                decl += [f"    wire {cnet};",
+                         f'    (* keep = "true" *) ot_dp_rrelay {cinst} (.clk(clk), .d({d}), .q({cnet}));  '
+                         f"// RING-RSTFAN-1 same-cycle copy of {drv_inst} for its far loads"]
+                moved = []
+                for g in names:
+                    for kind, name, s0, s1 in members[g]:
+                        moved.append(name)
+                        seg = text[s0:s1]
+                        if kind == "assign":
+                            new = re.sub(r"(=\s*)" + re.escape(net) + r"(\s*;)", r"\g<1>" + cnet + r"\g<2>", seg)
+                        else:
+                            new = re.sub(r"(\.(?:rst_n|rst_raw_n)\(\s*)" + re.escape(net) + r"(\s*\))",
+                                         r"\g<1>" + cnet + r"\g<2>", seg)
+                        subs.append((s0, s1, new))
+                copies.append(dict(instance=cinst, net=cnet, d=d, xy_um=[cx, cy], loads=sorted(moved),
+                                   spread_um=round(_bbox_spread(pts), 1),
+                                   d_hop_um=round(abs(cx - dx) + abs(cy - dy), 1),
+                                   load_reach_um=round(max(abs(cx - p[0]) + abs(cy - p[1]) for p in pts), 1)))
+                if "origin" in names and isinstance(rp.get("count_origin"), dict) and rp["count_origin"].get("raw_reset") == net:
+                    rp["count_origin"]["raw_reset"] = cnet
+            for s0, s1, new in sorted(subs, reverse=True):
+                text = text[:s0] + new + text[s1:]
+            at = text.index("\n", drv.start()) if "\n" in text[drv.start():] else len(text)
+            text = text[:at] + "\n" + "\n".join(decl) + text[at:]
+            home_pts = home + [p for g, ps in movable if g in kept for p in ps]
+            rp[b]["ring_reset_fan"] = dict(rule="RING-RSTFAN-1", reach_um=RING_RESET_FAN_UM, spread_before_um=round(before, 1),
+                                           spread_home_um=round(_bbox_spread(home_pts), 1), copies=copies,
+                                           added_flops=len(copies), added_cycles=0)
+            changed = True
+        if changed:
+            logic[:] = [text]
 
     def _dataflow_monitor(self, tn, key, mask, info, extra, logic, body):
         """Registered dataflow monitor: local = AND(landing_ready) / OR(landing_fault), aggregate = AND(in_ok) /

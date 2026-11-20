@@ -62,6 +62,16 @@ THE RULES (numbers; the why and the evidence are in ~/coord/lanes/RULEBOOK-1113.
                         FIX (rule 1 fix): raw resets are re-pointed to the nearest SAME-EDGE leaf tap rst_n_t<i> when the
                         plan has no START broadcast (rr_t<i> only with it); a half-cycle hop the nearest tap cannot
                         close is NOT FIXED (needs reset.local_taps_um or the latch lockup form).
+  R-REACH-6 ring_reset_fan  The ring reset relay u_cland_rst_<bus> of a type's FIRST landed input ring (the count origin's
+                        raw reset, hence also the FSTART / START face flops' cland_start_raw, and the monitor collects)
+                        has its loads within REACH_UM (bbox width + height of their plan sites: ring band rect, origin
+                        home / START pin, FSTART out pins not on a writer START chain or local reset, cland_up pins).
+                        HEAD hd_serdes coll_i0 (FABLE-PD-HEAD-2040 D3): 28 loads over 554.6 um, origin at the
+                        cland_tstart_in pin 470 um from the ring band.  Warning only: the generator splits the fan by
+                        itself (clock_landings RING-RSTFAN-1: kept same-D copy u_cland_rfan_<bus>_<k> per far cluster,
+                        0 cycles); the finding names the copies it will emit and any cluster still over the reach.
+                        FIX: none needed in the plan (generator default); a residual cluster (one load group alone
+                        wider than the reach) needs an origin home (landing_origin_rect_um) or landing_local_resets.
 
 G0: check.py calls check_plan(); a finding is a WARNING (check "r_reach") by default; budgets.r_reach "error" makes it
 an ERROR (opt-in, REACH-FIN-2 11-13: defaults of existing plans preserved), "off" skips; rule 3 is always a warning.  The fix is idempotent: a fixed plan run again changes nothing.
@@ -94,8 +104,9 @@ DETOUR_UM = 1.0         # a route longer than the Manhattan distance by more tha
 EDGE_IN_UM = 12.0       # origin home: this far inside the face of the START pin (KV corridor form EDGE_Y)
 PAD_PITCH_UM = 5.4      # dwell stages of a short trunk sit side by side at the origin home
 PAD_SPAN_UM = 30.0      # ... never farther than this from the home (the trunk's first hop is planned this much shorter)
-RULES = ("1", "2", "3", "4", "5")
-RULE_NAME = {"1": "start_fan", "2": "macro_barrier", "3": "bus_window", "4": "fwd_source", "5": "edge_reach"}
+RULES = ("1", "2", "3", "4", "5", "6")
+RULE_NAME = {"1": "start_fan", "2": "macro_barrier", "3": "bus_window", "4": "fwd_source", "5": "edge_reach",
+             "6": "ring_reset_fan"}
 EPS = 1e-6
 HALF_REACH_UM = 180.0   # R-REACH-5: a HALF-CYCLE hop (launch and capture on opposite clock edges) reaches this far
 HALF_CYCLE_CELLS = ("ot_dp_rrelay_nl",)   # reset relays that launch on the FALLING edge (CLK form #7 negedge lockup)
@@ -718,6 +729,58 @@ def _fix_raw_edges(P, t, tn, rep):
     return rep
 
 
+# ------------------------------------------------------------------------------------ rule 6: ring reset fan
+def ring_reset_fan_findings(t, tn, reach=REACH_UM):
+    """-> (row, [finding]) of R-REACH-6 for one type (plan only; the generator's RING-RSTFAN-1 grouping on the same
+    sites).  The ring whose relay carries the origin raw is the first landed input in sorted order (as
+    clock_landing_verify._raw_node); its home is its band rect."""
+    import clock_landings as CL
+    ck = t.get("clock") or {}
+    lc = ck.get("landing_contract") or {}
+    pins = {p.get("name"): p for p in lc.get("pins", []) or []}
+    bands = lc.get("bands") or {}
+    ins = sorted(b for b in bands if "cland_fstart_in_" + b in pins and len(bands[b].get("rect_um") or []) == 4
+                 and not bands[b].get("hard_core"))
+    if not ins:
+        return None, []
+    b = ins[0]
+    rect = bands[b]["rect_um"]
+    home = [(rect[0], rect[1]), (rect[2], rect[3])]
+    covered = {c for r in ck.get("landing_local_resets") or [] if isinstance(r, dict) for c in r.get("consumers") or []}
+    wbr = set(((ck.get("landing_writer_start") or {}).get("branches") or {}))
+    groups = []
+    origin = []
+    if CL.START_PIN_IN in pins or ck.get("landing_origin_rect_um") or any(
+            (ck.get(k) or {}).get("origin_rect_um") for k in ("landing_reader_start", "landing_writer_start")):
+        o = CL.plan_origin_xy(t, CL.START_PIN_IN if CL.START_PIN_IN in pins else None)
+        if o is not None and "u_cland_origin" not in covered:
+            origin.append(o)
+    if origin:
+        for n in sorted(pins):
+            if n.startswith("cland_fstart_out_") and n[len("cland_fstart_out_"):] not in wbr and \
+                    "u_cland_fstart_" + n[len("cland_fstart_out_"):] not in covered:
+                xy = CL.plan_pin_xy(t, n)
+                if xy is not None:
+                    origin.append(xy)
+        groups.append(("origin", origin))
+    for n in sorted(pins):
+        if n.startswith("cland_up_ready_") and "u_cland_up_" + n[len("cland_up_ready_"):] not in covered:
+            xy = CL.plan_pin_xy(t, n)
+            if xy is not None:
+                groups.append(("u_cland_up_" + n[len("cland_up_ready_"):], [xy]))
+    before, kept, far = CL.reset_fan_clusters(home, groups, reach)
+    resid = max((CL._bbox_spread(pts) for _n, pts in far), default=0.0)
+    row = dict(type=tn, ring=b, spread_um=round(before, 1), copies=len(far), residual_um=round(resid, 1))
+    if before <= reach + EPS:
+        return row, []
+    names = "; ".join(f"u_cland_rfan_{b}_{k} <- {', '.join(ns)}" for k, (ns, _p) in enumerate(far, 1))
+    return row, [dict(rule="6", kind="ring_reset_fan", type=tn, value=round(before, 1), limit=reach, n=len(far), warn=True,
+                      msg=f"ring reset u_cland_rst_{b} (origin raw) loads span {before:.0f} um > {reach:g} um (ring band + "
+                          f"{', '.join(n for n, _p in groups)}); generator RING-RSTFAN-1 emits {len(far)} same-cycle "
+                          f"copies ({names})" + (f"; RESIDUAL cluster {resid:.0f} um > {reach:g} um (needs an origin "
+                          f"home or landing_local_resets)" if resid > reach + EPS else ""))]
+
+
 # ------------------------------------------------------------------------------ rules 2 + 3: barriers and windows
 def _bus_points(P, tn):
     import check as CK
@@ -1113,7 +1176,7 @@ def type_findings(P, tn, rules=RULES, tree_hops=False):
     rows, out = {}, []
     for r, fn in (("1", lambda: start_findings(t, tn)), ("2", lambda: barrier_findings(P, t, tn)),
                   ("3", lambda: window_rows(P, t, tn)), ("4", lambda: fwd_findings(P, t, tn)),
-                  ("5", lambda: edge_findings(P, t, tn, tree_hops))):
+                  ("5", lambda: edge_findings(P, t, tn, tree_hops)), ("6", lambda: ring_reset_fan_findings(t, tn))):
         if r not in rules:
             continue
         try:
@@ -1262,7 +1325,7 @@ def main(argv=None):
     for s in (c, f):
         s.add_argument("--repo")
         s.add_argument("--types")
-    c.add_argument("--rules", default="1,2,3,4,5")
+    c.add_argument("--rules", default="1,2,3,4,5,6")
     c.add_argument("--reset-tree", action="store_true",
                    help="R-REACH-5 (b): also check every falling-edge reset tree hop (~10 s per negedge type)")
     f.add_argument("--rules", default="1,4")
