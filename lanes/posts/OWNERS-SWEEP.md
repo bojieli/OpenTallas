@@ -123,3 +123,4 @@
   DEAD-OWNER 0. STALE: slice_station__t51 (4.3 h, owner CBC-RULES-1119 posted 00:17).
   FAILED-NO-RELAUNCH >1h: S81 leaf t42, t52 (FABLE-FIX-S81-LEAF-2140), serdes__t16, slice_station__t51, t37, t51; KV kv3_hub_Wi (KV-D23-COMPOSE).
   CBC-FALLBACK 79 S81 rows; file lanes/OWNERS-SWEEP.tsv
+- 2026-11-20 01:50 PST 01:50 sweep: 519 rows (S81 351, QC 108, KV ~51, HEAD 9). UNOWNED 0, DEAD-OWNER 0. FAILED-NO-RELAUNCH 8 (S81 7: leaf t37/t42/t47/t51/t52, serdes t16, slice_station t51; KV kv3_hub_Wi). STALE failed/signed 5 (S81 t42,t52,serdes t16,slice_station t51; QC sle_su_l1 clc6d66f5b signed-pending 9.4h). RUNNING >3h: ~190 rows, oldest KV kv3_io_cor 49h, S81 dsdv_slice_iq/kv512/c1x_C 19-40h, QC sle_* 10-16h; see lanes/OWNERS-SWEEP.tsv
