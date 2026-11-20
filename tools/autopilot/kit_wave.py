@@ -11829,6 +11829,30 @@ UNREADABLE_HOST_H = 2.0
 UNREADABLE_MIRROR_H = 1.0      # one rt-tools mirror stage that long is stuck on any host
 
 
+def release_infra_stops(AP, cfg, st):
+    """COORD 11-19 (FABLE-FLOW-1355 1): class breakers keyed on an INFRA class and repeat-stop ledger entries whose last failure was INFRA were opened by host trouble (the epyc7 copy tail:
+    6 rows stopped); they are closed / released now, whatever their age.  -> (breakers closed, rows released)"""
+    g = (st.get("flow_guard") or st.get("fg") or {})
+    n1 = n2 = 0
+    try:
+        opn = FG.fg_state(st).get("open") or {}
+        for k in [k for k in list(opn) if "|INFRA:" in k or k.startswith("INFRA:")]:
+            opn.pop(k, None)
+            n1 += 1
+    except Exception:
+        pass
+    for key, e in ((st.get("repeat_ledger") or {}).items()):
+        if not e.get("state") or str(key).split("|", 1)[0] == "hbm":
+            continue
+        last = (e.get("att") or [{}])[-1]
+        if str(last.get("cls")) == "INFRA" or str(e.get("fp", "")).startswith(("pipeline|INFRA", "rt_tools|INFRA")) or "INFRA" in str(e.get("fp", ""))[:40]:
+            RS.release(e, "INFRA fails never stop a row (FABLE-FLOW-1355)")
+            n2 += 1
+    if (n1 or n2) and AP:
+        AP.log(f"KIT-WAVE INFRA-RELEASE: {n1} INFRA class breaker(s) closed, {n2} repeat-stopped row(s) released")
+    return n1, n2
+
+
 def unreadable_host_rows(AP, cfg, st, notices, now=None, hours=UNREADABLE_HOST_H):
     """COORD 11-19 (ghost rows on epyc7: KV kv3_sys_c attempt_5 RUNNING 8.5 h, last log 10:13, no openroad; 7 more S81 ghosts): a RUNNING row whose gen host has no ot-run status
     row (unreadable: ssh refused / timed out) is UNKNOWN for `hours` (2 h) since its last update and is left alone; after that it is declared INFRA-DEAD: its hub unit is stopped
@@ -12185,7 +12209,8 @@ def _collect_body(AP, cfg, st, notices):
         try:                                             # FLOW-HEALTH-1: class circuit-breaker input (pre-P&R and import / missing-file classes)
             _stg = FG.fail_stage(why) or str(res.get("stage") or "")
             _key = FG.norm_class(cls, why)
-            if rec.get("stage_class") != "stopped" and rec.get("kill_kind") != "guard" and not (cls == "INFRA" and (NO_HOST.search(why or "") or _TRANSIENT_INFRA.search(why or "") or HOST_ENV_RE.search(why or ""))):     # INFRA counts: 56 S81 + 24 KV same-class fails never opened the breaker
+            # COORD 11-19 (FABLE-FLOW-1355 1): INFRA fails (host / transport / copy timeouts / kills) never count toward the class breaker or the per-row repeat stop
+            if cls != "INFRA" and not is_infra_fail(rec) and rec.get("stage_class") != "stopped" and rec.get("kill_kind") != "guard" and not (cls == "INFRA" and (NO_HOST.search(why or "") or _TRANSIENT_INFRA.search(why or "") or HOST_ENV_RE.search(why or ""))):     # INFRA counts: 56 S81 + 24 KV same-class fails never opened the breaker
                 FG.record_fail(st, rec["die"], rec["item"], cls, why, evidence=str(Path(rec.get("dir") or ".") / f"{_stg or 'result'}.log"),
                                legacy=bool(_stg in PRE_PR_STAGES or FG.pf_kind(_key)), stage=_stg,
                                inp=breaker_inputs(cfg, rec["die"]))
@@ -15160,6 +15185,10 @@ def _step(AP, ap_dir):
         AP.log(f"KIT-WAVE src probe skipped: {e}")
     load_counter_signed(cfg)
     restage_waiters(AP, cfg, st, notices)
+    try:
+        release_infra_stops(AP, cfg, st)
+    except Exception as e:                               # a sweep never stops the tick
+        AP.log(f"KIT-WAVE INFRA-RELEASE skipped: {type(e).__name__}: {e}")
     try:
         unreadable_host_rows(AP, cfg, st, notices)
     except Exception as e:                               # a sweep never stops the tick

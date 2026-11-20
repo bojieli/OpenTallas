@@ -472,3 +472,16 @@ def test_stops_off_die_is_not_gated_by_a_post_apply_bind_value():
     assert ok, why
     cfg2 = {"dies": {"qwen_kvsys": dict(d)}}                  # not stops_off: the old rule
     assert KW.gate(cfg2, "qwen_kvsys")[0] is False
+
+
+def test_infra_class_breakers_and_repeat_stops_are_released():
+    import flow_guard as FG
+    st = {}
+    FG.fg_state(st)["open"]["CLASS s81|pipeline|INFRA: infra (kit snapshot copy timed out) @pipeline"] = {"n": 9}
+    FG.fg_state(st)["open"]["CLASS s81|gen|FLOW: real error"] = {"n": 9}
+    st["repeat_ledger"] = {"s81|a": {"state": "BLOCKED-REPEAT", "fp": "pipeline|INFRA|x", "att": [{"cls": "INFRA", "fp": "x", "n": 1}]},
+                           "s81|b": {"state": "BLOCKED-REPEAT", "fp": "gen|FLOW|y", "att": [{"cls": "FLOW", "fp": "y", "n": 1}]}}
+    ap = type("AP", (), {"log": staticmethod(lambda m: None)})()
+    assert KW.release_infra_stops(ap, {}, st) == (1, 1)
+    assert "CLASS s81|gen|FLOW: real error" in FG.fg_state(st)["open"]
+    assert st["repeat_ledger"]["s81|a"]["state"] == "" and st["repeat_ledger"]["s81|b"]["state"] == "BLOCKED-REPEAT"
