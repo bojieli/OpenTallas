@@ -33,7 +33,9 @@ EXTRA_SUCCESSOR = {"5_route.odb": "6_final.v", "6_1_fill.odb": "6_final.v"}
 FINISH = ("5_3_fillcell.odb", "5_route.odb", "6_1_fill.odb", "6_final.odb")      # the finish stages write byte-identical ODBs (KIT-SLIM-1118)
 LOG_GZ_BYTES = 100 << 20
 LOG_TAIL_BYTES = 20 << 20
-BUSY_CMD = re.compile(r"eco|kit_resume|resume\.json", re.I)
+# FLOW-FIX-2045: the pattern was `eco|...` as a SUBSTRING: the docker command line of every live kit carries run_kit.sh text ("... recorded in lec/lec.json ...", "r-ECO-rded"), so every live kit
+# counted as an ECO / resume process and its watcher skipped every pass (STAGE-CAP skip ... eco/resume process active) for the whole run.  ECO as a word only (eco, eco_loop, ECO_x).
+BUSY_CMD = re.compile(r"(?<![A-Za-z])eco(?![A-Za-z])|kit_resume|resume\.json", re.I)
 
 
 def open_procs(prefix):

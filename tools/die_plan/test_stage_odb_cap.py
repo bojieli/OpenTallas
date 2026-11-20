@@ -226,3 +226,11 @@ class ReplaceWatchers(unittest.TestCase):
                 old.wait(timeout=5)
             except Exception:
                 pass
+
+
+class BusyPattern(unittest.TestCase):
+    def test_recorded_in_a_kit_command_line_is_not_an_eco_process(self):
+        cmd = "docker run --rm --name dpkit-x bash -lc echo 'LEC WARNING (exit 1): not proved, recorded in lec/lec.json; the flow continues' second decorated"
+        self.assertIsNone(C.BUSY_CMD.search(cmd))
+        for real in ("python3 eco_loop.py --kit K", "bash run_eco.sh", "python3 kit_resume.py K", "ot-run ... --eco x", "OT_ECO_MODE=1 openroad"):
+            self.assertIsNotNone(C.BUSY_CMD.search(real), real)
