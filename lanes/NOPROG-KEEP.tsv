@@ -10,3 +10,7 @@ col_h9_r2__t1__clc9ad8f7e__pv45d0c698	S81-COL-INHERIT	representative (COORD 11-1
 col_h9_r2__t1__clce45cab5__pv2f87774f	S81-COL-INHERIT	representative (COORD 11-14)
 /claude/s81-col-inherit/	S81-COL-INHERIT	private forms (COORD 11-14)
 /claude/type-hdcore-elemab/	TYPE-HDCORE-ELEMAB	HEAD cores built with the HBM kit generator (hbmcore-/run_kit_hbm.sh names); not HBM (COORD 11-14 QC-W515)
+fable-fix-qc-collcore/opus/pkits/pkw4_coll	QC-PLAN-R5	coll_core read-register class proof (dpkit-coll_core-987854, epyc9); Fable PD-QC-0945 fix 8 waits on its GRT TT class read (COORD 11-20)
+dpkit-coll_core-987854	QC-PLAN-R5	pkw4 container name (same proof)
+fable-fix-qc-collcore/opus/pkits/pkw2b_coll	QC-PLAN-R5	coll_core proof, GRT repair WNS -240 (> -300); keep while above -300 (COORD 11-20)
+dpkit-coll_core-1096606	QC-PLAN-R5	pkw2b container name (same proof)
