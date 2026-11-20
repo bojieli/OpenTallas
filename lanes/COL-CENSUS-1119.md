@@ -142,3 +142,22 @@ Verdict: every col family fails setup at the cw6 window by roughly 75-145 ps.
   - Once every type has timed, each type whose bank-in hop is still below -42 ps gets the CC-BANK-2S rows: relay_depth source D=1 on o_x0/o_x1/o_cfg/o_go of every bank.
   - It writes them to rows_cc_bank2s_die.json and plan_cc3b_2s.json, checks the plan with tapcheck, and posts them to S81-DIE-R3 for the follow-up event.
   - cc_bank2s_rows.py now uses the bound leaf name: u_r0_u_bsN for h9_r0_p1/p2/p4/p5 and h10_r0_p1/p4, u_bsN for the others.
+
+## Update 11-19 ~22:xx: binds moved off epyc8; event J rows (WINDOW-HOP, read loop, p5 reset); precheck fix on main
+
+- **Binds moved off epyc8 (COORD).** I cancelled my two queued binds (exact ot-run client PIDs; they never started; nothing remained on epyc8).
+  - The trees were pre-made on epyc8 as hard-link copies (tree_cc3b, tree_cc3sb). ot-run --replicate (its own tar copy, --keep-old-files, no rsync --delete) copies them to epyc9 (cc3b) and intel1 (cc3sb).
+  - Each bind then runs pinned there with --stage inputs (cc_bind_staged.sh, --mem 32; the measured cc3 bind peak was 24.7 GB).
+  - Chain cc_chainx.sh, started by cc_after_repl.sh: bind/LATCHECK/PRE, then G0 against the GEOM build6 control (copied over when it exists; build6's G0 is still running on epyc8), then kit gen on the bind host, then every kit through ot-run --stage, unpinned.
+  - The watcher cc_watch3b.sh now scans epyc9.
+- **WINDOW-HOP (CC-WHOP-1, cc_whop_rows.py).** The face-bus chain is measured from the far end of the pin window (the worst bit).
+  - The 36 types: h10_r0_p4 x_i0 goes 512 -> 358 um with one station re-sited (0 cycles, 6 types). h9_r0_p4 x_i0 and h9_r0_p5/p6 xo_i0 (30 types): the far bit to the u_cf sink is about 892 um, so one station can reach at best 446 um. Form A uses 2 stations, +1 cycle on that bus, 297 um.
+  - Form Z (0 cycles, one station re-sited, 446 um) is attached as the alternative. LATCHECK of event J must accept the +1 bus cycle; otherwise use Z.
+  - The same measure finds 216 more over-405 chains on other col face buses (frame_int_i0/o0 in most families; x/xo in h10_r0_p1 and h9_r0_p1/p2/p3 at 408–435 um). Those are PROPOSED only (rows_cc_whop_ext.json); 12 h10_r1 frame_int_i0 have no free site.
+- **Read loop (CC-RDLOOP-1, cc_rdloop_rows.py).** All 60 col_h9_r2 types: cfg ROM c12_6 moves next to u_s12 (e.g. (639.36, 673.92) -> (466.56, 501.12)). Loop centre distance goes 405 -> 59 um; 0 cycles, keepout and tap checks clean.
+- **p5 reset (-196).** In the D8i bound RTL (tree6, col_h9_r0_p5) each xo lane already has its own ot_reset_sync (u_xrl0..3), and every ot_s81_rly carries RSREG=1 with sliced, kept rq copies.
+  - The old path (xo0 rq -> xo2_1/xo3_1, a cross-lane reset register) cannot form in this RTL.
+  - reset_replicate only rewrites ot_dp_dly / ot_dp_rsync drivers, so widening its driver_re to the relay rq would be a no-op.
+  - No row is needed now. I recheck the reset ends on the cc3b CTS; the CC-WHOP-1 re-site of xo_i0 also takes away the shared geometry.
+- **Combined.** plan_cc4.json ece0c09ed67d = plan_cc3b + WHOP-A + RDLOOP-1 (tapcheck PASS). All rows: rows_event_j_col_census.json c3224558d4ec (epyc8 lane dir).
+- **Precheck fix on main 4d7c18e50d9.** tools/precheck/precheck.py reach_findings measures a face-bus chain from the worst bit of the window (the end on the bus face). Test added (h10_r0_p4 x_i0 geometry, its re-sited form, an out bus, an inner launch); 32/32 pass.

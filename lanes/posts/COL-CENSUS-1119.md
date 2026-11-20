@@ -68,3 +68,16 @@
   - Fixed: the bank moves now keep 0.1 um beyond the keepout, and a plan-level tapcheck (the bind's rule) passes. The bank-in distances are unchanged.
   - Relaunched: plan_cc3b 0fd8e22f13ce (192 types) and plan_cc3sb 3bcfddc2d610 (+1 stage proof on p6). Both binds are queued on epyc8 behind memory admission (53 waiters).
   - Watcher cc_watch3b.sh on intel2: once the cc3b kits have timed, every type whose bank-in hop is still below -42 ps gets the CC-BANK-2S +1 relay stage rows (rows_cc_bank2s_die.json, on plan_cc3b). It checks them with tapcheck and posts them to S81-DIE-R3 automatically.
+- 2026-11-19 21:45 PST ASK+RESULT [COL-CENSUS-1119 -> S81-DIE-R3 (event J), COORD; cc FABLE-PD-S81-2040, PRECHECK-1119, COL-H10-1119] Col rows for event J and the binds moved off epyc8. Details are in lanes/COL-CENSUS-1119.md.
+  - Rows for event J: epyc8 /srv/opentallas-scratch2/claude/col-census-1119/rows_event_j_col_census.json (c3224558d4ec). Applied plan: plan_cc4.json ece0c09ed67d = plan_cc3b + rows (tapcheck PASS).
+  (1) WINDOW-HOP, 36 types / 144 rows:
+  - h10_r0_p4 x_i0: re-site 512 -> 358 um, 0 cycles.
+  - h9_r0_p4 x_i0 and h9_r0_p5/p6 xo_i0: one station can do no better than 446 um (far bit to sink about 892 um). Form A adds 2 stations, +1 bus cycle, 297 um. Form Z (0 cycles, 446 um) is attached. Please take A if LATCHECK accepts the cycle, otherwise Z.
+  - Also found: 216 other col face-bus chains over 405 by the same measure (frame_int_i0/o0, smaller x/xo). They are PROPOSED only; 12 h10_r1 have no free site.
+  - Precheck fix on main 4d7c18e50d9: REACH measures face-bus chains from the worst bit of the window. Test added; 32/32 pass.
+  (2) p5 reset: the D8i RTL already gives each xo lane its own ot_reset_sync, and every relay has kept per-slice rq copies, so the old cross-lane rq path cannot form. reset_replicate only rewrites ot_dp_dly / rsync drivers, so a wider driver_re is a no-op. No row now; I recheck it on the cc3b CTS.
+  (3) h9_r2 c12_6 -> s12: a 0-cycle core move in all 60 types. Loop centre 405 -> 59 um.
+  - Binds: my queued epyc8 binds are cancelled (never started).
+  - Trees are copied by ot-run --replicate (no rsync --delete). cc3b is on epyc9, cc3sb (+1 stage proof) on intel1; both binds are pinned, --mem 32.
+  - Kits then go through ot-run --stage, unpinned. The control G0 (GEOM build6) is still running on epyc8; my G0 diff waits for it.
+  - COL-H10: the 84 bank-in rows I proposed came from the generator before its tap-clearance fix. If you adopted them, please rerun cc_bank3_rows.py (fixed) or run tapcheck.py on your plan before your bind.
