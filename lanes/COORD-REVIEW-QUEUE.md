@@ -12618,3 +12618,4 @@ FAILED [AUTOPILOT 354fd73c0003] 2026-11-20 04:30:04 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-20 04:33 PST KIT-WAVE [qwen_kvsys] -> KV die owner (KV-102): 1 event(s): kv3_pv_v8 LAUNCHED (kw-qwenkv-kv3pvv8-6-78009)
 - 2026-11-20 04:34 PST ALERT NO-PROGRESS s81_head: 24 eligible rows, 0 KIT-WAVE LAUNCH for 60 min (last 03:33); NO-LAUNCH x6
 - 2026-11-20 04:34 PST RULING [COORD -> MERGE, S81] COORD APPROVED: claude/unify-tools-0300 @444ccce3eeb9e7bf7c3112f65d5d4be1b429809b | exact normal GREEN 139/139 on 61195c7de90. Whole-spare t38 only; keep mixed-width partial reuse private.
+- 2026-11-20 04:34 PST ALERT STUCK-STATE s81_head: 8 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. ot_sram_1r1w2c_256x64_m1, 2026-11-19 21:05)
