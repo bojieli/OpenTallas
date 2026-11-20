@@ -330,3 +330,24 @@ def test_failed_units_are_listed_per_host_and_reach_the_report():
 
 def test_explorer_service_lane_folders_are_never_idle_lane_candidates():
     assert {"explorer-fable-1", "explorer-2-work"} <= set(AR.LANE_SKIP)
+
+
+def test_protected_dbs_registry_blocks_the_path_its_parents_and_children(tmp_path):
+    """PROTECTED-DBS-1120: HARVEST-0330 registered kit dirs are never retired by the aggressive cleanup"""
+    f = tmp_path / "PROTECTED-DBS.txt"
+    f.write_text("# header\\nepyc8\\t/srv/opentallas-scratch3/claude/lane/kitA/base\\ts81 routed\\nepyc2\\t/srv/opentallas-scratch2/claude/lane2/kitB\\tqc routed\\n")
+    dbs = AR.load_protected_dbs(str(f))
+    assert "/srv/opentallas-scratch2/claude/lane/kitA/base" in dbs                    # scratch3 canonicalised
+    assert AR.protected_db_hit("/srv/opentallas-scratch2/claude/lane/kitA/base/results", dbs)     # a child
+    assert AR.protected_db_hit("/srv/opentallas-scratch2/claude/lane/kitA", dbs)                  # a parent
+    assert AR.protected_db_hit("/srv/opentallas-scratch3/claude/lane2/kitB", dbs)                 # scratch3 alias of a registered path
+    assert not AR.protected_db_hit("/srv/opentallas-scratch2/claude/lane3/other", dbs)
+    g = types.SimpleNamespace(refuse=lambda p, prot=None: None)
+    AR.guard_with_protected_dbs(g, dbs)
+    assert g.refuse("/srv/opentallas-scratch2/claude/lane2/kitB/x").startswith("protected DB registry")
+    assert g.refuse("/srv/opentallas-scratch2/claude/lane3/other") is None
+
+
+def test_runner_fetches_and_passes_the_registry():
+    r = (H / "ot-auto-retire-run.sh").read_text()
+    assert "PROTECTED-DBS.txt" in r and "--protected-dbs" in r and "pdbs.txt" in r

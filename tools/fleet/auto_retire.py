@@ -270,6 +270,36 @@ def post_text_hit(path, posts):
     return any(re.search(re.escape(c) + r"(?![A-Za-z0-9_.-])", posts) for c in cands)
 
 
+def load_protected_dbs(path):
+    """PROTECTED-DBS-1120 (COORD, HARVEST-0330: 127 routed-but-failed kit dirs registered in lanes/PROTECTED-DBS.txt, read by prune/spill/reaper but not by the aggressive cleanup): the paths of the
+    registry (column 2 of 'host<TAB>path<TAB>kind', scratch3 canonicalised to scratch2).  A missing file when one is demanded is the caller's refusal (fail closed)."""
+    out = set()
+    for ln in open(path, errors="replace"):
+        if ln.startswith("#") or "\t" not in ln:
+            continue
+        p = ln.split("\t")[1].strip()
+        if p.startswith("/"):
+            out.add(re.sub(r"opentallas-scratch3", "opentallas-scratch2", p).rstrip("/"))
+    return out
+
+
+def protected_db_hit(path, dbs):
+    """the path is a registered DB, lies under one, or contains one (never delete these paths or any parent/child of them)"""
+    q = re.sub(r"opentallas-scratch3", "opentallas-scratch2", path).rstrip("/")
+    return next((d for d in dbs if q == d or q.startswith(d + "/") or d.startswith(q + "/")), "")
+
+
+def guard_with_protected_dbs(g, dbs):
+    """wrap the delete guard's refuse(): a registered routed DB (HARVEST-0330 / SIGNOFF-SPRINT-19 registry) is refused first, for every caller (source trees, attempts, lanes)"""
+    orig = g.refuse
+
+    def refuse(t, *a, **k):
+        h = protected_db_hit(t, dbs)
+        return ("protected DB registry (PROTECTED-DBS.txt): " + h) if h else orig(t, *a, **k)
+    g.refuse = refuse
+    return g
+
+
 class LiveRefs:
     """LIVE-INPUT GUARD (COORD 11-18: 03:11 UTC epyc8, s81-die-r3-e8/gitshim and /d8t went on age alone, gitshim was a live input of S81 D8f bind r3): every absolute path a running
     process names - cmdline args, environment values (PATH / colon lists split), cwd, exe, root, open fd and map targets, mount sources - and so every queued ot-run job's argv and env (a waiter is a
@@ -711,12 +741,15 @@ def main(argv=None):
     ap.add_argument("--max-s", type=float, default=float(os.environ.get("AC_MAX_S", "600")), help="wall seconds per claude root; the pass stops starting new candidates after this and finishes (0 = no limit)")
     ap.add_argument("--attempts", action="store_true", help="retire finished kit-wave attempt dirs (failed/cancelled/superseded at once, old-event attempts after --idle-h)")
     ap.add_argument("--refs", default="", help="file: AUTO-RESIGN state + COUNT-DIRECT + ... text; an attempt named there is kept")
+    ap.add_argument("--protected-dbs", default="", help="file: lanes/PROTECTED-DBS.txt of the hub; every path in it, its parents and children are never deleted")
     ap.add_argument("--posts", default="", help="file: hub post text of the last 24 h; a lane tree named there is kept")
     a = ap.parse_args(argv)
     sp = importlib.util.spec_from_file_location("g", a.guard_module); g = importlib.util.module_from_spec(sp); sp.loader.exec_module(g)
     prot, err = g.load_list(a.list)
     if prot is None:
         print("protected list unusable (fail closed): %s" % err); return 3
+    if a.protected_dbs:
+        guard_with_protected_dbs(g, load_protected_dbs(a.protected_dbs))
     cfgt = open(a.kit_wave).read()
     texts = [cfgt, open(a.state).read(), open(a.markers).read()]
     ids = {l.strip() for l in open(a.store_ids) if l.strip()}

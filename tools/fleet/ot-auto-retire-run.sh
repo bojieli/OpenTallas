@@ -15,11 +15,12 @@ CACHE=$D/inputs; mkdir -p "$CACHE"; CACHE_MAX_S=${AC_CACHE_MAX_S:-21600}
 SSH="ssh -o BatchMode=yes -o ConnectTimeout=15 -o ControlPath=none"
 fetch_inputs() {
 if [ "$(hostname -s)" = tolerant-swine ]; then
-  cp $HC/autopilot/kit_wave.json $HC/autopilot/kit_wave_state.json "$W/" && cat $HC/lanes/handoff/tree_switch_*.json > "$W/markers.json" && cp $C/fleet-ops-r/protected_struct.txt "$L" && (cd $HC/signed-store/records && ls */ | grep json.gz | sed 's/.json.gz//' | sort -u) > "$W/ids.txt"
+  cp $HC/autopilot/kit_wave.json $HC/autopilot/kit_wave_state.json "$W/" && cat $HC/lanes/handoff/tree_switch_*.json > "$W/markers.json" && cp $C/fleet-ops-r/protected_struct.txt "$L" && cp $HC/lanes/PROTECTED-DBS.txt "$W/pdbs.txt" && (cd $HC/signed-store/records && ls */ | grep json.gz | sed 's/.json.gz//' | sort -u) > "$W/ids.txt"
 else
   scp -q -o BatchMode=yes -o ControlPath=none $HUB:$HC/autopilot/kit_wave.json $HUB:$HC/autopilot/kit_wave_state.json "$W/" || exit 3
   $SSH $HUB "cat $HC/lanes/handoff/tree_switch_*.json" > "$W/markers.json" || exit 3
   scp -q -o BatchMode=yes -o ControlPath=none $HUB:$C/fleet-ops-r/protected_struct.txt "$L" || exit 3
+  scp -q -o BatchMode=yes -o ControlPath=none $HUB:$HC/lanes/PROTECTED-DBS.txt "$W/pdbs.txt" || exit 3
   $SSH $HUB "cd $HC/signed-store/records && ls */ | grep json.gz | sed 's/.json.gz//' | sort -u" > "$W/ids.txt" || exit 3
 fi
 if [ "${AC_FULL:-0}" = 1 ]; then
@@ -34,12 +35,12 @@ if [ "${AC_FULL:-0}" = 1 ]; then
 fi
 }
 if [ "${AC_NO_FETCH:-0}" != 1 ] && (set +e; fetch_inputs) ; then
-  for f in kit_wave.json kit_wave_state.json markers.json ids.txt refs.txt posts.txt; do [ -f "$W/$f" ] && cp "$W/$f" "$CACHE/$f"; done; cp "$L" "$CACHE/protected_struct.txt" 2>/dev/null; date +%s > "$CACHE/t"
+  for f in kit_wave.json kit_wave_state.json markers.json ids.txt refs.txt posts.txt; do [ -f "$W/$f" ] && cp "$W/$f" "$CACHE/$f"; done; cp "$L" "$CACHE/protected_struct.txt" 2>/dev/null; [ -f "$W/pdbs.txt" ] && cp "$W/pdbs.txt" "$CACHE/pdbs.txt"; date +%s > "$CACHE/t"
 else
   age=$(( $(date +%s) - $(cat "$CACHE/t" 2>/dev/null || echo 0) ))
   [ "$age" -le "$CACHE_MAX_S" ] || { echo "hub inputs unreachable and cache is ${age}s old (> ${CACHE_MAX_S}s): nothing done" >&2; exit 3; }
   cp "$CACHE"/kit_wave.json "$CACHE"/kit_wave_state.json "$CACHE"/markers.json "$CACHE"/ids.txt "$W/" && cp "$CACHE/protected_struct.txt" "$L" && echo "hub unreachable: using the ${age}s old input cache"
-  [ -f "$CACHE/refs.txt" ] && cp "$CACHE/refs.txt" "$W/refs.txt"; [ -f "$CACHE/posts.txt" ] && cp "$CACHE/posts.txt" "$W/posts.txt"
+  [ -f "$CACHE/pdbs.txt" ] && cp "$CACHE/pdbs.txt" "$W/pdbs.txt"; [ -f "$CACHE/refs.txt" ] && cp "$CACHE/refs.txt" "$W/refs.txt"; [ -f "$CACHE/posts.txt" ] && cp "$CACHE/posts.txt" "$W/posts.txt"
 fi
 if [ "${AC_FULL:-0}" = 1 ]; then      # FLEET-OPS-R 11-18 automatic cleanup: attempts + idle lanes (12 h); refs + 24 h posts come with the inputs (or the cache)
   [ -f "$W/refs.txt" ] && [ -f "$W/posts.txt" ] || { echo "refs/posts inputs missing: nothing done" >&2; exit 3; }
@@ -60,7 +61,7 @@ rc=0
 for R in $ROOTS; do
   echo "== root $R"
   python3 -I "$AR" --kit-wave "$W/kit_wave.json" --state "$W/kit_wave_state.json" --markers "$W/markers.json" --store-ids "$W/ids.txt" \
-    --guard-module "$G" --list "$L" --log "$D/log.jsonl" --target "${TARGET_GB:-350}" --root "$R/kw45" $EXTRA $MODE | tee -a "$OUT"
+    --guard-module "$G" --list "$L" --log "$D/log.jsonl" --target "${TARGET_GB:-350}" --root "$R/kw45" $EXTRA $([ -f "$W/pdbs.txt" ] && echo "--protected-dbs $W/pdbs.txt") $MODE | tee -a "$OUT"
   r1=${PIPESTATUS[0]}; [ "$r1" = 0 ] || rc=$r1
 done
 FA=$(df -BG --output=avail $C | tail -n 1 | tr -dc 0-9)
