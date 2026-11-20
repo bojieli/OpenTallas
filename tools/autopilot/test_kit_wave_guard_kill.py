@@ -70,8 +70,10 @@ class Step(unittest.TestCase):
 
     def test_without_a_kills_log_match_the_old_rule_stays(self):
         (a, b), st = self.kill_twice(None)
-        self.assertEqual((b["status"], b.get("blocked")), ("FAIL", "BLOCKED-INFRA-REPEAT"))
-        self.assertTrue(st.get("repeat_ledger"), "control: an unmatched kill IS recorded for repeat-stop, so the empty ledger above means something")
+        # Error 247 is an OOM kill: a second one on the same inputs is a free retry (OOM_KILL_FREE), not BLOCKED-INFRA-REPEAT
+        self.assertEqual((b["status"], b.get("blocked"), b.get("kill_n")), ("RUNNING", None, 2))
+        # control: an unmatched kill IS counted by the INFRA-REPEAT bookkeeping (kill_n), so the falsy kill_n of the guard test means something
+        # (INFRA fails no longer feed the repeat-stop ledger at all since FABLE-FLOW-1355, so the old ledger control was stale)
 
 
 class QueueRoute(unittest.TestCase):

@@ -82,6 +82,7 @@ import wave_jobs as WJ
 import kit_wave_roam as ROAM
 import flow_guard as FG
 import repeat_stop as RS
+OOM_KILL_FREE = 3                                # FABLE-FIX-S81-LEPE 11-19: free retries of an OOM kill on the same inputs before INFRA-REPEAT
 
 # A main merge can happen during a long tick. Never release a merged fix with
 # older in-memory launch logic; the next ordinary tick imports the new package.
@@ -12265,13 +12266,18 @@ def _collect_body(AP, cfg, st, notices):
             except (OSError, ValueError, KeyError, TypeError):
                 _kh = None
             _dg = input_digest(cfg, rec["die"])
-            if rec.get("kill_digest") == _dg and int(rec.get("kill_n") or 0) >= 1:
+            # FABLE-FIX-S81-LEPE 11-19 (with WAVE-PILOT-FIX cdba42d317 "an OOM never blocks a row"): s81 dsdv_slice_lepw_mu_C__t1 a20, a host
+            # earlyoom victim at gen_lint (the same lint re-run stays under 0.5 GB), sat BLOCKED-INFRA-REPEAT 2.5 h with no owner.  An OOM kill
+            # on the same inputs gets OOM_KILL_FREE free retries (repeat_stop raises its memory factor); only other outside kills stop at the second
+            _kmax = OOM_KILL_FREE if RS.is_oom(cls, why) else 1
+            if rec.get("kill_digest") == _dg and int(rec.get("kill_n") or 0) >= _kmax:
                 rec["blocked"] = "BLOCKED-INFRA-REPEAT"
                 AP.log(f"KIT-WAVE INFRA-REPEAT {rec['die']}/{rec['item']}@{rec.get('attempt')}: killed again on the same inputs "
                        f"({why[:120]}); no auto retry, posted (retry key or inputs change releases it)")
                 notices.setdefault(rec["die"], []).append(f"{rec['item']} INFRA-REPEAT killed twice on the same inputs ({why[:120]}); retry key needed")
             else:
-                rec["kill_digest"], rec["kill_n"], rec["kill_host"] = _dg, 1, _kh
+                rec["kill_n"] = (int(rec.get("kill_n") or 0) + 1) if rec.get("kill_digest") == _dg else 1
+                rec["kill_digest"], rec["kill_host"] = _dg, _kh
                 rec["infra_base"] = int(rec.get("infra_base") or 0) + 1
                 rec["no_host_at"] = 0
                 rec["status"] = "RETRY-INFRA"

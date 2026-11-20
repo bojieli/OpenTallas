@@ -7,6 +7,7 @@ import tempfile
 import time
 import os
 import unittest
+from unittest import mock
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -760,10 +761,34 @@ class Step(unittest.TestCase):
             self.assertEqual(ap.units, [])                                     # 2 used of 2
             self.assertEqual(len(st["items"]), 2)
 
+    def kill_until_stop(self, tail, n):
+        """kill the item's attempt n times on the same inputs -> the record after each tick"""
+        with tempfile.TemporaryDirectory() as d:
+            (Path(d) / "OWNERS.tsv").write_text(OWN)
+            c = json.dumps(cfg(die_max_inflight=1))
+            st = KW.step(FakeAP(d, c))
+            (r,) = st["items"].values()
+            item, out = r["item"], []
+            for _ in range(n):
+                (r,) = [x for x in st["items"].values() if x["item"] == item]
+                (Path(r["dir"]) / "result.json").write_text(json.dumps({"verdict": "FAIL", "stage": "place", "tail": tail}))
+                st = KW.step(FakeAP(d, c))
+                out.append(dict([x for x in st["items"].values() if x["item"] == item][0]))
+            return out
+
+    def test_oom_kill_retries_up_to_the_free_count(self):
+        # FABLE-FIX-S81-LEPE 11-19 (WAVE-PILOT-FIX "an OOM never blocks a row"): exit 137 on the same inputs retries OOM_KILL_FREE times,
+        # then BLOCKED-INFRA-REPEAT (a kit over its own memory cap stops instead of relaunching every tick)
+        out = self.kill_until_stop("place: exit 137", KW.OOM_KILL_FREE + 1)
+        for k, r in enumerate(out[:-1]):
+            self.assertEqual((r["attempt"], r["status"], r.get("kill_n")), (k + 2, "RUNNING", k + 1))
+        self.assertEqual((out[-1]["status"], out[-1].get("blocked")), ("FAIL", "BLOCKED-INFRA-REPEAT"))
+
     def test_infra_relaunched_once(self):
         # KIT-OPS-4 11-14: an externally killed attempt (exit 137 / 143, earlyoom, signal) gets ONE free INFRA retry at the next tick,
         # without a retry key and without spending the infra budget; a second kill on the same inputs stops it as BLOCKED-INFRA-REPEAT
-        with tempfile.TemporaryDirectory() as d:
+        # (an OOM kill gets OOM_KILL_FREE retries: test_oom_kill_retries_up_to_the_free_count)
+        with mock.patch.object(KW, "OOM_KILL_FREE", 1), tempfile.TemporaryDirectory() as d:   # the one-free-retry form (OOM_KILL_FREE 1)
             (Path(d) / "OWNERS.tsv").write_text(OWN)
             c = json.dumps(cfg(die_max_inflight=1))
             st = KW.step(FakeAP(d, c))
@@ -788,7 +813,7 @@ class Step(unittest.TestCase):
         self.assertEqual(KW.infra_attempts(cfg(), "qwen_kvsys"), 3)
 
     def test_infra_attempts_config_two_is_once(self):
-        with tempfile.TemporaryDirectory() as d:
+        with mock.patch.object(KW, "OOM_KILL_FREE", 1), tempfile.TemporaryDirectory() as d:   # the one-free-retry form (OOM_KILL_FREE 1)
             (Path(d) / "OWNERS.tsv").write_text(OWN)
             c = json.dumps(dict(cfg(die_max_inflight=1), infra_attempts=2))
             st = KW.step(FakeAP(d, c))
