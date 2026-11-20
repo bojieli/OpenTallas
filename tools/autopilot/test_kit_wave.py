@@ -20,6 +20,40 @@ def _legacy_signoff_profile(monkeypatch):
     tools/die_plan/test_signoff_profile.py"""
     monkeypatch.setenv("OT_SIGNOFF_PROFILE", "legacy")
 
+def _tree_is_git_checkout():
+    import subprocess
+    try:
+        return subprocess.run(["git", "-C", str(Path(KW.__file__).resolve().parents[1] / "die_plan"), "rev-parse", "--verify", "-q", "HEAD"],
+                              capture_output=True, timeout=30).returncode == 0
+    except Exception:
+        return False
+
+
+def _worktree_lec_snapshot(snapshot, commit=None):
+    """FLOW-HEALTH-2 11-19 (COORD): future_lec_snapshot reads `git show HEAD:...` of tools/die_plan, so the Step tests failed in any tree that is not a git
+    checkout (rt/current: 'Could not access HEAD', 7 failures).  The same snapshot from the working-tree files: the test tree is the commit."""
+    import ast, hashlib
+    snapshot = Path(snapshot); snapshot.mkdir(parents=True, exist_ok=True)
+    dp = Path(KW.__file__).resolve().parents[1] / "die_plan"
+    payload = (dp / "lec.py").read_bytes(); helper = Path(KW.KR.__file__).read_bytes()
+    tree = ast.parse((dp / "gen_phys.py").read_text())
+    template = next(ast.literal_eval(n.value) for n in tree.body if isinstance(n, ast.Assign)
+                    and any(isinstance(x, ast.Name) and x.id == "RUN_KIT" for x in n.targets))
+    (snapshot / "kit_resume.py").write_bytes(helper); (snapshot / "run_kit_template.sh").write_text(template)
+    meta = dict(commit=commit or "worktree", sha256=hashlib.sha256(payload).hexdigest(),
+                runner_template_sha256=hashlib.sha256(template.encode()).hexdigest(), resume_helper_sha256=hashlib.sha256(helper).hexdigest())
+    (snapshot / "lec.py").write_bytes(payload); (snapshot / "TOOL.json").write_text(json.dumps(meta) + "\n")
+    (snapshot / "future_kit_lec.py").write_bytes(Path(KW.__file__).with_name("future_kit_lec.py").read_bytes())
+    return meta
+
+
+@pytest.fixture(autouse=True)
+def _snapshot_without_git(monkeypatch):
+    if not _tree_is_git_checkout():
+        monkeypatch.setattr(KW, "future_lec_snapshot", _worktree_lec_snapshot)
+        monkeypatch.setattr(KW, "tool_skew_refuse", lambda *a, **k: False)      # the skew check compares the tree with git main; no git = nothing to compare
+
+
 GATE = {"g0c": "PASS", "bind": "PASS", "clock": "PASS", "evidence": "DIE-KV-40 21:07"}
 
 
