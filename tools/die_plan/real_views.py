@@ -401,7 +401,9 @@ def resolve_types(plan, records, out, fetch, digests=()):
             byname.setdefault(VARIANT.sub("", el), []).append((el, v))
     for t in used:
         recs = signed.get(t) or []
-        why, done = [], False
+        # every pin-matched signed record is a candidate; the first one carrying per-port arrivals wins (else the
+        # first one: a type-wide insertion range, i.e. a hold BOUND)
+        why, cands = [], []
         for el, v in byname.get(t, []):
             if signed_verdict_str(v.get("verdict")) not in SIGNED_OK:
                 why.append(f"export {el}: verdict {v.get('verdict')}")
@@ -417,16 +419,11 @@ def resolve_types(plan, records, out, fetch, digests=()):
                 why.append(f"export {el}: {r}")
                 continue
             kit = dict(v["kit"], source=v.get("record"), signoff_sha256=v.get("signoff_sha256"))
-            kf = Path(out) / "kits" / f"{t}.json"
-            kf.write_text(json.dumps(kit, indent=1) + "\n")
-            args.append(f"--kit={t}={kf}")
-            status[t] = dict(status="REAL", record=v.get("record"), verdict=signed_verdict_str(v.get("verdict")),
-                             via="export DEF pins", lat=kit["corners"], per_port=len(kit.get("ports") or {}))
-            done = True
-            break
-        if done:
-            continue
-        for line in recs:
+            cands.append((kit, dict(record=v.get("record"), verdict=signed_verdict_str(v.get("verdict")),
+                                    via="export DEF pins")))
+            if kit.get("ports"):
+                break
+        for line in ([] if any(k.get("ports") for k, _ in cands) else recs):
             spec = line.split()[0]
             f = _fetch(spec, out, fetch)
             if f is None:
@@ -462,14 +459,18 @@ def resolve_types(plan, records, out, fetch, digests=()):
                 why.append(f"{spec}: {r}")
                 continue
             kit["source"] = spec
-            kf = Path(out) / "kits" / f"{t}.json"
-            kf.write_text(json.dumps(kit, indent=1) + "\n")
-            args.append(f"--kit={t}={kf}")
-            status[t] = dict(status="REAL", record=spec, lat=kit["corners"], per_port=len(kit.get("ports") or {}))
-            done = True
-            break
-        if not done:
+            cands.append((kit, dict(record=spec, verdict=signed_verdict_str(rec.get("verdict")), via="record pins")))
+            if kit.get("ports"):
+                break
+        if not cands:
             status[t] = dict(status="CONTRACT", reasons=why or ["no signed record for this type"])
+            continue
+        kit, st = next((c for c in cands if c[0].get("ports")), cands[0])
+        kf = Path(out) / "kits" / f"{t}.json"
+        kf.write_text(json.dumps(kit, indent=1) + "\n")
+        args.append(f"--kit={t}={kf}")
+        status[t] = dict(st, status="REAL", lat=kit["corners"], per_port=len(kit.get("ports") or {}),
+                         candidates=len(cands))
     return args, status
 
 
