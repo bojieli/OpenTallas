@@ -3677,7 +3677,7 @@
      "kind": "soft_region",
      "note": "reuse outline 259x380; placed cells span x 136-368 y 1091-1636 (p10-p90 of long-leg endpoints), ~1.3x the outline area"
     },
-    "status": "PROPOSED, needs compiler support (no placement_guides key in plan schema today); alternative: hard region via core floorplan"
+    "status": "READY on main 1841dad+: plan field placement_guides -> region_guide.py from-plan -> kit PRE_GLOBAL_PLACE INCLUSIVE dbRegion/dbGroup, released before DPL (kit_wave passes it automatically)"
    },
    {
     "op": "append",
@@ -3693,7 +3693,7 @@
      "kind": "soft_region",
      "note": "reuse outline 259x380; placed cells span x 155-325 y 1128-1606 (p10-p90 of long-leg endpoints), ~0.8x the outline area"
     },
-    "status": "PROPOSED, needs compiler support (no placement_guides key in plan schema today); alternative: hard region via core floorplan"
+    "status": "READY on main 1841dad+: plan field placement_guides -> region_guide.py from-plan -> kit PRE_GLOBAL_PLACE INCLUSIVE dbRegion/dbGroup, released before DPL (kit_wave passes it automatically)"
    },
    {
     "op": "append",
@@ -3709,7 +3709,7 @@
      "kind": "soft_region",
      "note": "reuse outline 259x380; placed cells span x 130-333 y 1096-1641 (p10-p90 of long-leg endpoints), ~1.1x the outline area"
     },
-    "status": "PROPOSED, needs compiler support (no placement_guides key in plan schema today); alternative: hard region via core floorplan"
+    "status": "READY on main 1841dad+: plan field placement_guides -> region_guide.py from-plan -> kit PRE_GLOBAL_PLACE INCLUSIVE dbRegion/dbGroup, released before DPL (kit_wave passes it automatically)"
    },
    {
     "op": "append",
@@ -3725,7 +3725,7 @@
      "kind": "soft_region",
      "note": "reuse outline 259x380; placed cells span x 137-515 y 1124-1680 (p10-p90 of long-leg endpoints), ~2.1x the outline area"
     },
-    "status": "PROPOSED, needs compiler support (no placement_guides key in plan schema today); alternative: hard region via core floorplan"
+    "status": "READY on main 1841dad+: plan field placement_guides -> region_guide.py from-plan -> kit PRE_GLOBAL_PLACE INCLUSIVE dbRegion/dbGroup, released before DPL (kit_wave passes it automatically)"
    }
   ],
   "findings": {
@@ -3742,5 +3742,6063 @@
     "macro-dst": 16
    }
   }
+ },
+ "section3_cland": {
+  "status": "PROPOSED",
+  "finding": "cland hard rings sit at the face; bins were placed at the core centre (ring->bin 410-840 um). Rows: relay_sites merge (FIRM bin site at the L1 midpoint of ring bit and consumer, 0 cycles) and, where ring->consumer > 740 um, bin at 1/3 + 1 station at 2/3 (+1 cycle). 1393 bins, 16 types. Not checked against hard-core footprints.",
+  "rows": [
+   {
+    "op": "append",
+    "path": "partition_types.slw_fe_v2__cle312294d.internal_stations",
+    "value": {
+     "conn": "bus:arv_ei",
+     "from_um": [
+      593.1,
+      150.0
+     ],
+     "to_um": [
+      328.1,
+      709.2
+     ],
+     "regs_um": [
+      [
+       416.433,
+       522.8
+      ]
+     ],
+     "bits": 1,
+     "launch": "face arv_ei",
+     "capture": "u_core",
+     "bit_route": "per_bit",
+     "note": "QC-PADLEG-1119 cland ring -> consumers 824 um: bin at 1/3 (relay_sites row) + 1 station at 2/3"
+    },
+    "added_regs": 1,
+    "cycles": "+1 on lane bus:arv_ei (pre-approved)",
+    "fixes": {
+     "bits": 1,
+     "worst_um": 824.1
+    }
+   },
+   {
+    "op": "append",
+    "path": "partition_types.slw_fe_v2__cle312294d.internal_stations",
+    "value": {
+     "conn": "bus:arm_ei",
+     "from_um": [
+      550.8,
+      135.1
+     ],
+     "to_um": [
+      312.4,
+      663.5
+     ],
+     "regs_um": [
+      [
+       391.867,
+       487.367
+      ]
+     ],
+     "bits": 1,
+     "launch": "face arm_ei",
+     "capture": "u_core",
+     "bit_route": "per_bit",
+     "note": "QC-PADLEG-1119 cland ring -> consumers 767 um: bin at 1/3 (relay_sites row) + 1 station at 2/3"
+    },
+    "added_regs": 1,
+    "cycles": "+1 on lane bus:arm_ei (pre-approved)",
+    "fixes": {
+     "bits": 1,
+     "worst_um": 766.8
+    }
+   },
+   {
+    "op": "merge",
+    "path": "partition_types.slw_fe_v2__cle312294d.relay_sites",
+    "value": {
+     "u_bin_arv_ei/q": [
+      504.767,
+      336.4
+     ],
+     "u_bin_arm_ei/q": [
+      471.333,
+      311.233
+     ],
+     "u_bin_arl_ei/q": [
+      347.8,
+      398.4
+     ],
+     "u_bin_st_ei/q[1074]": [
+      458.4,
+      1108.05
+     ],
+     "u_bin_st_ei/q[1077]": [
+      457.35,
+      1104.05
+     ],
+     "u_bin_st_ei/q[1071]": [
+      456.5,
+      1107.15
+     ],
+     "u_bin_st_ei/q[1084]": [
+      453.75,
+      1110.95
+     ],
+     "u_bin_st_ei/q[1085]": [
+      460.75,
+      1106.85
+     ]
+    },
+    "added_regs": 0,
+    "cycles": "0 (re-site of existing bin flops)",
+    "fixes": {
+     "bins": 8,
+     "worst_um": 824.1,
+     "predicted_worst_um": 293.0
+    },
+    "note": "QC-PADLEG-1119 cland->bin: bins sit at the core centre, hard cland ring at the face; FIRM bin site = L1 midpoint of the cland ring bit and the bin's placed consumer point (qc_struct_core minimax rule). ring->bin and bin->consumer each <= predicted_worst_um (+~35 um spread). Site not checked against hard-core footprints (region_form does); type has no relay_sites."
+   },
+   {
+    "op": "merge",
+    "path": "partition_types.slw_fe_v1__clfe325744__cldb4efe33.relay_sites",
+    "value": {
+     "u_bin_arl_ei/q": [
+      348.4,
+      405.95
+     ]
+    },
+    "added_regs": 0,
+    "cycles": "0 (re-site of existing bin flops)",
+    "fixes": {
+     "bins": 1,
+     "worst_um": 600.0,
+     "predicted_worst_um": 299.9
+    },
+    "note": "QC-PADLEG-1119 cland->bin: bins sit at the core centre, hard cland ring at the face; FIRM bin site = L1 midpoint of the cland ring bit and the bin's placed consumer point (qc_struct_core minimax rule). ring->bin and bin->consumer each <= predicted_worst_um (+~35 um spread). Site not checked against hard-core footprints (region_form does); type has no relay_sites."
+   },
+   {
+    "op": "merge",
+    "path": "partition_types.sle_fw_v1__clf58b4dfb.relay_sites",
+    "value": {
+     "u_bin_sc_ei/q[47]": [
+      163.15,
+      812.3
+     ],
+     "u_bin_sc_ei/q[14]": [
+      165.75,
+      817.4
+     ],
+     "u_bin_sc_ei/q[4]": [
+      162.35,
+      813.75
+     ],
+     "u_bin_sc_ei/q[25]": [
+      162.7,
+      815.8
+     ],
+     "u_bin_sc_ei/q[18]": [
+      164.8,
+      815.0
+     ],
+     "u_bin_sc_ei/q[30]": [
+      165.3,
+      814.6
+     ],
+     "u_bin_sc_ei/q[28]": [
+      168.0,
+      817.0
+     ],
+     "u_bin_sc_ei/q[2]": [
+      165.7,
+      812.15
+     ],
+     "u_bin_sc_ei/q[5]": [
+      169.8,
+      816.2
+     ],
+     "u_bin_sc_ei/q[45]": [
+      166.8,
+      818.2
+     ],
+     "u_bin_sc_ei/q[42]": [
+      162.4,
+      814.05
+     ],
+     "u_bin_sc_ei/q[37]": [
+      163.15,
+      812.4
+     ],
+     "u_bin_sc_ei/q[38]": [
+      169.0,
+      819.85
+     ],
+     "u_bin_sc_ei/q[33]": [
+      168.7,
+      816.75
+     ],
+     "u_bin_sc_ei/q[31]": [
+      170.05,
+      820.1
+     ],
+     "u_bin_sc_ei/q[12]": [
+      167.2,
+      815.3
+     ],
+     "u_bin_sc_ei/q[0]": [
+      169.4,
+      811.6
+     ],
+     "u_bin_sc_ei/q[35]": [
+      165.15,
+      814.05
+     ],
+     "u_bin_sc_ei/q[9]": [
+      165.4,
+      808.1
+     ],
+     "u_bin_sc_ei/q[23]": [
+      165.3,
+      811.75
+     ],
+     "u_bin_sc_ei/q[29]": [
+      174.05,
+      819.55
+     ],
+     "u_bin_sc_ei/q[7]": [
+      166.7,
+      810.95
+     ],
+     "u_bin_sc_ei/q[3]": [
+      173.1,
+      814.75
+     ],
+     "u_bin_sc_ei/q[46]": [
+      173.55,
+      821.2
+     ],
+     "u_bin_sc_ei/q[16]": [
+      168.45,
+      812.15
+     ],
+     "u_bin_sc_ei/q[13]": [
+      175.6,
+      817.05
+     ],
+     "u_bin_sc_ei/q[36]": [
+      172.1,
+      817.3
+     ],
+     "u_bin_sc_ei/q[17]": [
+      174.3,
+      817.85
+     ],
+     "u_bin_sc_ei/q[34]": [
+      174.7,
+      819.3
+     ],
+     "u_bin_sc_ei/q[24]": [
+      173.5,
+      813.65
+     ],
+     "u_bin_sc_ei/q[40]": [
+      167.65,
+      810.4
+     ],
+     "u_bin_sc_ei/q[44]": [
+      176.5,
+      820.7
+     ],
+     "u_bin_sc_ei/q[21]": [
+      167.85,
+      810.25
+     ],
+     "u_bin_sc_ei/q[43]": [
+      169.15,
+      813.8
+     ],
+     "u_bin_sc_ei/q[8]": [
+      173.6,
+      812.95
+     ],
+     "u_bin_sc_ei/q[15]": [
+      172.4,
+      812.15
+     ],
+     "u_bin_sc_ei/q[19]": [
+      171.6,
+      810.7
+     ],
+     "u_bin_sc_ei/q[22]": [
+      175.75,
+      814.85
+     ],
+     "u_bin_sc_ei/q[20]": [
+      177.7,
+      817.45
+     ],
+     "u_bin_sc_ei/q[10]": [
+      170.6,
+      808.4
+     ],
+     "u_bin_sc_ei/q[26]": [
+      169.15,
+      808.65
+     ],
+     "u_bin_sc_ei/q[1]": [
+      175.5,
+      809.85
+     ],
+     "u_bin_sc_ei/q[32]": [
+      178.05,
+      815.1
+     ],
+     "u_bin_sc_ei/q[41]": [
+      173.8,
+      810.8
+     ],
+     "u_bin_sc_ei/q[27]": [
+      177.2,
+      810.3
+     ],
+     "u_bin_sc_ei/q[39]": [
+      176.7,
+      812.15
+     ],
+     "u_bin_sc_ei/q[6]": [
+      177.25,
+      807.3
+     ],
+     "u_bin_sc_ei/q[11]": [
+      178.55,
+      808.25
+     ]
+    },
+    "added_regs": 0,
+    "cycles": "0 (re-site of existing bin flops)",
+    "fixes": {
+     "bins": 48,
+     "worst_um": 539.0,
+     "predicted_worst_um": 269.5
+    },
+    "note": "QC-PADLEG-1119 cland->bin: bins sit at the core centre, hard cland ring at the face; FIRM bin site = L1 midpoint of the cland ring bit and the bin's placed consumer point (qc_struct_core minimax rule). ring->bin and bin->consumer each <= predicted_worst_um (+~35 um spread). Site not checked against hard-core footprints (region_form does); type has no relay_sites."
+   },
+   {
+    "op": "merge",
+    "path": "partition_types.slw_fw_v2__cl8537f156.relay_sites",
+    "value": {
+     "u_bin_sc_wi/q[42]": [
+      162.15,
+      814.9
+     ],
+     "u_bin_sc_wi/q[37]": [
+      161.35,
+      813.65
+     ],
+     "u_bin_sc_wi/q[35]": [
+      165.1,
+      813.55
+     ],
+     "u_bin_sc_wi/q[33]": [
+      167.95,
+      815.0
+     ],
+     "u_bin_sc_wi/q[30]": [
+      162.55,
+      811.2
+     ],
+     "u_bin_sc_wi/q[45]": [
+      165.65,
+      815.0
+     ],
+     "u_bin_sc_wi/q[9]": [
+      163.35,
+      807.85
+     ],
+     "u_bin_sc_wi/q[43]": [
+      169.05,
+      816.35
+     ],
+     "u_bin_sc_wi/q[25]": [
+      161.95,
+      807.3
+     ],
+     "u_bin_sc_wi/q[7]": [
+      166.65,
+      808.1
+     ],
+     "u_bin_sc_wi/q[38]": [
+      169.75,
+      813.25
+     ],
+     "u_bin_sc_wi/q[40]": [
+      165.9,
+      811.1
+     ],
+     "u_bin_sc_wi/q[5]": [
+      169.7,
+      808.35
+     ],
+     "u_bin_sc_wi/q[14]": [
+      165.5,
+      805.4
+     ],
+     "u_bin_sc_wi/q[31]": [
+      170.75,
+      812.4
+     ],
+     "u_bin_sc_wi/q[19]": [
+      170.45,
+      810.85
+     ],
+     "u_bin_sc_wi/q[23]": [
+      164.1,
+      806.1
+     ],
+     "u_bin_sc_wi/q[28]": [
+      166.8,
+      806.6
+     ],
+     "u_bin_sc_wi/q[18]": [
+      162.2,
+      803.8
+     ],
+     "u_bin_sc_wi/q[41]": [
+      172.8,
+      813.9
+     ],
+     "u_bin_sc_wi/q[4]": [
+      160.95,
+      799.45
+     ],
+     "u_bin_sc_wi/q[39]": [
+      175.4,
+      815.65
+     ],
+     "u_bin_sc_wi/q[15]": [
+      170.95,
+      809.05
+     ],
+     "u_bin_sc_wi/q[46]": [
+      172.7,
+      813.2
+     ],
+     "u_bin_sc_wi/q[26]": [
+      169.25,
+      806.25
+     ],
+     "u_bin_sc_wi/q[29]": [
+      172.9,
+      809.7
+     ],
+     "u_bin_sc_wi/q[21]": [
+      166.95,
+      804.05
+     ],
+     "u_bin_sc_wi/q[36]": [
+      170.6,
+      810.15
+     ],
+     "u_bin_sc_wi/q[17]": [
+      173.75,
+      810.15
+     ],
+     "u_bin_sc_wi/q[24]": [
+      171.2,
+      807.95
+     ],
+     "u_bin_sc_wi/q[22]": [
+      173.6,
+      810.5
+     ],
+     "u_bin_sc_wi/q[34]": [
+      174.45,
+      810.15
+     ],
+     "u_bin_sc_wi/q[16]": [
+      165.9,
+      803.25
+     ],
+     "u_bin_sc_wi/q[13]": [
+      174.7,
+      807.2
+     ],
+     "u_bin_sc_wi/q[44]": [
+      176.9,
+      810.85
+     ],
+     "u_bin_sc_wi/q[10]": [
+      168.6,
+      804.2
+     ],
+     "u_bin_sc_wi/q[2]": [
+      162.8,
+      797.45
+     ],
+     "u_bin_sc_wi/q[12]": [
+      165.1,
+      801.5
+     ],
+     "u_bin_sc_wi/q[8]": [
+      171.15,
+      805.4
+     ],
+     "u_bin_sc_wi/q[27]": [
+      175.95,
+      807.3
+     ],
+     "u_bin_sc_wi/q[0]": [
+      165.55,
+      797.6
+     ],
+     "u_bin_sc_wi/q[32]": [
+      176.2,
+      808.5
+     ],
+     "u_bin_sc_wi/q[3]": [
+      169.95,
+      800.0
+     ],
+     "u_bin_sc_wi/q[20]": [
+      175.35,
+      805.3
+     ],
+     "u_bin_sc_wi/q[1]": [
+      172.7,
+      799.45
+     ],
+     "u_bin_sc_wi/q[6]": [
+      173.3,
+      795.15
+     ],
+     "u_bin_sc_wi/q[11]": [
+      174.8,
+      795.15
+     ]
+    },
+    "added_regs": 0,
+    "cycles": "0 (re-site of existing bin flops)",
+    "fixes": {
+     "bins": 47,
+     "worst_um": 525.3,
+     "predicted_worst_um": 262.6
+    },
+    "note": "QC-PADLEG-1119 cland->bin: bins sit at the core centre, hard cland ring at the face; FIRM bin site = L1 midpoint of the cland ring bit and the bin's placed consumer point (qc_struct_core minimax rule). ring->bin and bin->consumer each <= predicted_worst_um (+~35 um spread). Site not checked against hard-core footprints (region_form does); type has no relay_sites."
+   },
+   {
+    "op": "append",
+    "path": "partition_types.sle_fe_v1__cl1cbb7497.internal_stations",
+    "value": {
+     "conn": "bus:arv_wi",
+     "from_um": [
+      593.1,
+      150.0
+     ],
+     "to_um": [
+      354.4,
+      734.8
+     ],
+     "regs_um": [
+      [
+       433.967,
+       539.867
+      ]
+     ],
+     "bits": 1,
+     "launch": "face arv_wi",
+     "capture": "u_core",
+     "bit_route": "per_bit",
+     "note": "QC-PADLEG-1119 cland ring -> consumers 824 um: bin at 1/3 (relay_sites row) + 1 station at 2/3"
+    },
+    "added_regs": 1,
+    "cycles": "+1 on lane bus:arv_wi (pre-approved)",
+    "fixes": {
+     "bits": 1,
+     "worst_um": 823.5
+    }
+   },
+   {
+    "op": "append",
+    "path": "partition_types.sle_fe_v1__cl1cbb7497.internal_stations",
+    "value": {
+     "conn": "bus:arm_wi",
+     "from_um": [
+      550.8,
+      135.1
+     ],
+     "to_um": [
+      314.8,
+      640.0
+     ],
+     "regs_um": [
+      [
+       393.467,
+       471.7
+      ]
+     ],
+     "bits": 1,
+     "launch": "face arm_wi",
+     "capture": "u_core",
+     "bit_route": "per_bit",
+     "note": "QC-PADLEG-1119 cland ring -> consumers 741 um: bin at 1/3 (relay_sites row) + 1 station at 2/3"
+    },
+    "added_regs": 1,
+    "cycles": "+1 on lane bus:arm_wi (pre-approved)",
+    "fixes": {
+     "bits": 1,
+     "worst_um": 740.9
+    }
+   },
+   {
+    "op": "merge",
+    "path": "partition_types.sle_fe_v1__cl1cbb7497.relay_sites",
+    "value": {
+     "u_bin_arv_wi/q": [
+      513.533,
+      344.933
+     ],
+     "u_bin_arm_wi/q": [
+      472.133,
+      303.4
+     ],
+     "u_bin_arl_wi/q": [
+      348.5,
+      388.0
+     ],
+     "u_bin_st_wi/q[1085]": [
+      459.9,
+      1111.7
+     ],
+     "u_bin_st_wi/q[1077]": [
+      460.4,
+      1110.4
+     ],
+     "u_bin_st_wi/q[1079]": [
+      458.05,
+      1108.65
+     ],
+     "u_bin_st_wi/q[1081]": [
+      458.5,
+      1111.7
+     ],
+     "u_bin_st_wi/q[1074]": [
+      457.95,
+      1106.85
+     ],
+     "u_bin_st_wi/q[1069]": [
+      458.6,
+      1106.2
+     ],
+     "u_bin_st_wi/q[1071]": [
+      457.05,
+      1107.7
+     ]
+    },
+    "added_regs": 0,
+    "cycles": "0 (re-site of existing bin flops)",
+    "fixes": {
+     "bins": 10,
+     "worst_um": 823.5,
+     "predicted_worst_um": 281.9
+    },
+    "note": "QC-PADLEG-1119 cland->bin: bins sit at the core centre, hard cland ring at the face; FIRM bin site = L1 midpoint of the cland ring bit and the bin's placed consumer point (qc_struct_core minimax rule). ring->bin and bin->consumer each <= predicted_worst_um (+~35 um spread). Site not checked against hard-core footprints (region_form does); type has no relay_sites."
+   },
+   {
+    "op": "merge",
+    "path": "partition_types.sle_fw_v2__cl6740750e.relay_sites",
+    "value": {
+     "u_bin_sc_ei/q[44]": [
+      161.8,
+      879.5
+     ],
+     "u_bin_sc_ei/q[39]": [
+      162.35,
+      875.35
+     ],
+     "u_bin_sc_ei/q[17]": [
+      161.8,
+      872.2
+     ],
+     "u_bin_sc_ei/q[27]": [
+      162.6,
+      872.1
+     ],
+     "u_bin_sc_ei/q[25]": [
+      164.45,
+      875.05
+     ],
+     "u_bin_sc_ei/q[20]": [
+      163.05,
+      873.2
+     ],
+     "u_bin_sc_ei/q[42]": [
+      165.05,
+      877.9
+     ],
+     "u_bin_sc_ei/q[23]": [
+      166.5,
+      876.05
+     ],
+     "u_bin_sc_ei/q[32]": [
+      163.95,
+      871.05
+     ]
+    },
+    "added_regs": 0,
+    "cycles": "0 (re-site of existing bin flops)",
+    "fixes": {
+     "bins": 9,
+     "worst_um": 420.7,
+     "predicted_worst_um": 210.3
+    },
+    "note": "QC-PADLEG-1119 cland->bin: bins sit at the core centre, hard cland ring at the face; FIRM bin site = L1 midpoint of the cland ring bit and the bin's placed consumer point (qc_struct_core minimax rule). ring->bin and bin->consumer each <= predicted_worst_um (+~35 um spread). Site not checked against hard-core footprints (region_form does); type has no relay_sites."
+   },
+   {
+    "op": "merge",
+    "path": "partition_types.sle_fw_v2__cl69f5e854.relay_sites",
+    "value": {
+     "u_bin_sc_ei/q[44]": [
+      161.65,
+      878.45
+     ],
+     "u_bin_sc_ei/q[39]": [
+      162.05,
+      875.65
+     ],
+     "u_bin_sc_ei/q[17]": [
+      161.8,
+      871.95
+     ],
+     "u_bin_sc_ei/q[25]": [
+      164.65,
+      874.5
+     ],
+     "u_bin_sc_ei/q[20]": [
+      163.1,
+      872.75
+     ],
+     "u_bin_sc_ei/q[27]": [
+      162.5,
+      870.75
+     ],
+     "u_bin_sc_ei/q[42]": [
+      165.7,
+      876.95
+     ],
+     "u_bin_sc_ei/q[23]": [
+      167.25,
+      875.5
+     ]
+    },
+    "added_regs": 0,
+    "cycles": "0 (re-site of existing bin flops)",
+    "fixes": {
+     "bins": 8,
+     "worst_um": 418.2,
+     "predicted_worst_um": 209.1
+    },
+    "note": "QC-PADLEG-1119 cland->bin: bins sit at the core centre, hard cland ring at the face; FIRM bin site = L1 midpoint of the cland ring bit and the bin's placed consumer point (qc_struct_core minimax rule). ring->bin and bin->consumer each <= predicted_worst_um (+~35 um spread). Site not checked against hard-core footprints (region_form does); type has no relay_sites."
+   },
+   {
+    "op": "merge",
+    "path": "partition_types.slw_fe_v1__cl95cd1d0c.relay_sites",
+    "value": {
+     "u_bin_arl_ei/q": [
+      349.6,
+      402.75
+     ]
+    },
+    "added_regs": 0,
+    "cycles": "0 (re-site of existing bin flops)",
+    "fixes": {
+     "bins": 1,
+     "worst_um": 591.1,
+     "predicted_worst_um": 295.6
+    },
+    "note": "QC-PADLEG-1119 cland->bin: bins sit at the core centre, hard cland ring at the face; FIRM bin site = L1 midpoint of the cland ring bit and the bin's placed consumer point (qc_struct_core minimax rule). ring->bin and bin->consumer each <= predicted_worst_um (+~35 um spread). Site not checked against hard-core footprints (region_form does); type has no relay_sites."
+   },
+   {
+    "op": "merge",
+    "path": "partition_types.slw_fe_v1__clfe325744__cl08d14f0d.relay_sites",
+    "value": {
+     "u_bin_arl_ei/q": [
+      348.1,
+      388.8
+     ]
+    },
+    "added_regs": 0,
+    "cycles": "0 (re-site of existing bin flops)",
+    "fixes": {
+     "bins": 1,
+     "worst_um": 566.3,
+     "predicted_worst_um": 283.1
+    },
+    "note": "QC-PADLEG-1119 cland->bin: bins sit at the core centre, hard cland ring at the face; FIRM bin site = L1 midpoint of the cland ring bit and the bin's placed consumer point (qc_struct_core minimax rule). ring->bin and bin->consumer each <= predicted_worst_um (+~35 um spread). Site not checked against hard-core footprints (region_form does); type has no relay_sites."
+   },
+   {
+    "op": "merge",
+    "path": "partition_types.slw_fe_v2__clf110fab2.relay_sites",
+    "value": {
+     "u_bin_arl_ei/q": [
+      349.6,
+      399.2
+     ],
+     "u_bin_st_ei/q[1077]": [
+      459.5,
+      1114.3
+     ],
+     "u_bin_st_ei/q[1069]": [
+      457.9,
+      1111.3
+     ],
+     "u_bin_st_ei/q[1085]": [
+      460.85,
+      1112.0
+     ],
+     "u_bin_st_ei/q[1058]": [
+      461.6,
+      1105.9
+     ],
+     "u_bin_st_ei/q[1078]": [
+      453.05,
+      1117.4
+     ],
+     "u_bin_st_ei/q[1065]": [
+      454.65,
+      1109.4
+     ],
+     "u_bin_st_ei/q[1054]": [
+      458.15,
+      1103.35
+     ],
+     "u_bin_st_ei/q[1067]": [
+      452.7,
+      1109.7
+     ],
+     "u_bin_st_ei/q[1050]": [
+      462.55,
+      1102.85
+     ]
+    },
+    "added_regs": 0,
+    "cycles": "0 (re-site of existing bin flops)",
+    "fixes": {
+     "bins": 10,
+     "worst_um": 584.1,
+     "predicted_worst_um": 292.0
+    },
+    "note": "QC-PADLEG-1119 cland->bin: bins sit at the core centre, hard cland ring at the face; FIRM bin site = L1 midpoint of the cland ring bit and the bin's placed consumer point (qc_struct_core minimax rule). ring->bin and bin->consumer each <= predicted_worst_um (+~35 um spread). Site not checked against hard-core footprints (region_form does); type has no relay_sites."
+   },
+   {
+    "op": "merge",
+    "path": "partition_types.slw_fw_v1__clf51c11d8__cl592e3d37.relay_sites",
+    "value": {
+     "u_bin_rr_wi/q[1]": [
+      177.2,
+      783.8
+     ],
+     "u_bin_rr_wi/q[0]": [
+      177.5,
+      785.25
+     ],
+     "u_bin_rr_wi/q[2]": [
+      145.9,
+      797.15
+     ],
+     "u_bin_re_wi/q": [
+      171.6,
+      814.45
+     ],
+     "u_bin_sc_wi/q[44]": [
+      162.45,
+      896.25
+     ],
+     "u_bin_sc_wi/q[39]": [
+      161.55,
+      892.5
+     ],
+     "u_bin_sc_wi/q[42]": [
+      166.7,
+      895.55
+     ],
+     "u_bin_sc_wi/q[32]": [
+      163.95,
+      889.95
+     ],
+     "u_bin_sc_wi/q[30]": [
+      166.35,
+      892.5
+     ],
+     "u_bin_sc_wi/q[27]": [
+      162.5,
+      885.45
+     ],
+     "u_bin_sc_wi/q[37]": [
+      164.1,
+      889.5
+     ],
+     "u_bin_sc_wi/q[35]": [
+      166.85,
+      891.65
+     ],
+     "u_bin_sc_wi/q[40]": [
+      169.2,
+      892.5
+     ],
+     "u_bin_sc_wi/q[38]": [
+      171.85,
+      894.9
+     ],
+     "u_bin_sc_wi/q[17]": [
+      163.5,
+      884.25
+     ],
+     "u_bin_sc_wi/q[25]": [
+      165.05,
+      886.0
+     ],
+     "u_bin_sc_wi/q[45]": [
+      167.3,
+      893.3
+     ],
+     "u_bin_sc_wi/q[28]": [
+      169.35,
+      888.0
+     ],
+     "u_bin_sc_wi/q[20]": [
+      164.2,
+      881.15
+     ],
+     "u_bin_sc_wi/q[33]": [
+      169.75,
+      890.5
+     ],
+     "u_bin_sc_wi/q[43]": [
+      172.05,
+      893.95
+     ],
+     "u_bin_sc_wi/q[26]": [
+      170.95,
+      889.9
+     ],
+     "u_bin_sc_wi/q[21]": [
+      170.7,
+      886.7
+     ],
+     "u_bin_sc_wi/q[23]": [
+      168.05,
+      884.25
+     ],
+     "u_bin_sc_wi/q[46]": [
+      176.1,
+      894.35
+     ],
+     "u_bin_sc_wi/q[36]": [
+      174.55,
+      891.8
+     ],
+     "u_bin_sc_wi/q[6]": [
+      166.5,
+      880.35
+     ],
+     "u_bin_sc_wi/q[41]": [
+      175.1,
+      893.3
+     ],
+     "u_bin_sc_wi/q[12]": [
+      166.8,
+      879.7
+     ],
+     "u_bin_sc_wi/q[31]": [
+      172.6,
+      888.6
+     ],
+     "u_bin_sc_wi/q[0]": [
+      168.45,
+      878.45
+     ],
+     "u_bin_sc_wi/q[34]": [
+      177.65,
+      890.5
+     ],
+     "u_bin_sc_wi/q[24]": [
+      173.8,
+      886.85
+     ],
+     "u_bin_sc_wi/q[13]": [
+      172.5,
+      883.6
+     ],
+     "u_bin_sc_wi/q[19]": [
+      176.15,
+      887.9
+     ],
+     "u_bin_sc_wi/q[29]": [
+      175.5,
+      886.8
+     ],
+     "u_bin_sc_wi/q[22]": [
+      176.6,
+      887.1
+     ],
+     "u_bin_sc_wi/q[18]": [
+      170.7,
+      879.1
+     ],
+     "u_bin_rl_wi/q": [
+      172.95,
+      873.75
+     ],
+     "u_bin_rd_wi/q[63]": [
+      224.55,
+      827.0
+     ],
+     "u_bin_rd_wi/q[65]": [
+      226.1,
+      823.0
+     ]
+    },
+    "added_regs": 0,
+    "cycles": "0 (re-site of existing bin flops)",
+    "fixes": {
+     "bins": 41,
+     "worst_um": 527.9,
+     "predicted_worst_um": 263.9
+    },
+    "note": "QC-PADLEG-1119 cland->bin: bins sit at the core centre, hard cland ring at the face; FIRM bin site = L1 midpoint of the cland ring bit and the bin's placed consumer point (qc_struct_core minimax rule). ring->bin and bin->consumer each <= predicted_worst_um (+~35 um spread). Site not checked against hard-core footprints (region_form does); type has no relay_sites."
+   },
+   {
+    "op": "merge",
+    "path": "partition_types.slw_fw_v1__clf51c11d8__clc7ddab13.relay_sites",
+    "value": {
+     "u_bin_rr_wi/q[1]": [
+      177.95,
+      781.95
+     ],
+     "u_bin_rr_wi/q[0]": [
+      177.85,
+      783.5
+     ],
+     "u_bin_rr_wi/q[2]": [
+      145.45,
+      797.3
+     ],
+     "u_bin_re_wi/q": [
+      166.35,
+      830.65
+     ],
+     "u_bin_sc_wi/q[44]": [
+      160.6,
+      898.3
+     ],
+     "u_bin_sc_wi/q[42]": [
+      166.05,
+      896.25
+     ],
+     "u_bin_sc_wi/q[32]": [
+      161.25,
+      893.45
+     ],
+     "u_bin_sc_wi/q[30]": [
+      166.15,
+      891.3
+     ],
+     "u_bin_sc_wi/q[38]": [
+      171.8,
+      896.95
+     ],
+     "u_bin_sc_wi/q[25]": [
+      165.2,
+      887.75
+     ],
+     "u_bin_sc_wi/q[39]": [
+      160.25,
+      888.6
+     ],
+     "u_bin_sc_wi/q[20]": [
+      163.85,
+      884.25
+     ],
+     "u_bin_sc_wi/q[28]": [
+      170.2,
+      888.45
+     ],
+     "u_bin_sc_wi/q[27]": [
+      160.9,
+      883.85
+     ],
+     "u_bin_sc_wi/q[45]": [
+      166.7,
+      893.45
+     ],
+     "u_bin_sc_wi/q[37]": [
+      162.55,
+      888.05
+     ],
+     "u_bin_sc_wi/q[23]": [
+      167.9,
+      886.15
+     ],
+     "u_bin_sc_wi/q[40]": [
+      168.1,
+      890.35
+     ],
+     "u_bin_sc_wi/q[17]": [
+      161.6,
+      885.7
+     ],
+     "u_bin_sc_wi/q[33]": [
+      168.05,
+      891.45
+     ],
+     "u_bin_sc_wi/q[46]": [
+      174.0,
+      897.6
+     ],
+     "u_bin_sc_wi/q[35]": [
+      166.1,
+      886.4
+     ],
+     "u_bin_sc_wi/q[21]": [
+      170.8,
+      885.05
+     ],
+     "u_bin_sc_wi/q[26]": [
+      171.25,
+      887.75
+     ],
+     "u_bin_sc_wi/q[6]": [
+      166.65,
+      880.2
+     ],
+     "u_bin_sc_wi/q[12]": [
+      168.15,
+      881.3
+     ],
+     "u_bin_sc_wi/q[41]": [
+      175.1,
+      893.2
+     ],
+     "u_bin_sc_wi/q[0]": [
+      167.6,
+      879.4
+     ],
+     "u_bin_sc_wi/q[18]": [
+      171.6,
+      883.15
+     ],
+     "u_bin_sc_wi/q[43]": [
+      169.7,
+      890.3
+     ],
+     "u_bin_sc_wi/q[31]": [
+      170.45,
+      887.5
+     ],
+     "u_bin_sc_wi/q[34]": [
+      175.6,
+      890.1
+     ],
+     "u_bin_sc_wi/q[36]": [
+      171.95,
+      888.55
+     ],
+     "u_bin_sc_wi/q[24]": [
+      172.05,
+      885.75
+     ],
+     "u_bin_sc_wi/q[7]": [
+      170.7,
+      882.1
+     ],
+     "u_bin_sc_wi/q[29]": [
+      173.05,
+      886.4
+     ],
+     "u_bin_sc_wi/q[1]": [
+      175.4,
+      878.7
+     ],
+     "u_bin_rl_wi/q": [
+      173.95,
+      878.6
+     ],
+     "u_bin_rd_wi/q[65]": [
+      224.7,
+      827.7
+     ],
+     "u_bin_rd_wi/q[63]": [
+      224.3,
+      825.1
+     ],
+     "u_bin_rd_wi/q[71]": [
+      223.7,
+      819.85
+     ]
+    },
+    "added_regs": 0,
+    "cycles": "0 (re-site of existing bin flops)",
+    "fixes": {
+     "bins": 41,
+     "worst_um": 525.6,
+     "predicted_worst_um": 262.8
+    },
+    "note": "QC-PADLEG-1119 cland->bin: bins sit at the core centre, hard cland ring at the face; FIRM bin site = L1 midpoint of the cland ring bit and the bin's placed consumer point (qc_struct_core minimax rule). ring->bin and bin->consumer each <= predicted_worst_um (+~35 um spread). Site not checked against hard-core footprints (region_form does); type has no relay_sites."
+   },
+   {
+    "op": "append",
+    "path": "partition_types.sle_fe_v1__cl8210183c.internal_stations",
+    "value": {
+     "conn": "bus:arv_wi",
+     "from_um": [
+      593.1,
+      150.0
+     ],
+     "to_um": [
+      354.3,
+      728.6
+     ],
+     "regs_um": [
+      [
+       433.9,
+       535.733
+      ]
+     ],
+     "bits": 1,
+     "launch": "face arv_wi",
+     "capture": "u_core",
+     "bit_route": "per_bit",
+     "note": "QC-PADLEG-1119 cland ring -> consumers 817 um: bin at 1/3 (relay_sites row) + 1 station at 2/3"
+    },
+    "added_regs": 1,
+    "cycles": "+1 on lane bus:arv_wi (pre-approved)",
+    "fixes": {
+     "bits": 1,
+     "worst_um": 817.4
+    }
+   },
+   {
+    "op": "append",
+    "path": "partition_types.sle_fe_v1__cl8210183c.internal_stations",
+    "value": {
+     "conn": "bus:arm_wi",
+     "from_um": [
+      550.8,
+      135.1
+     ],
+     "to_um": [
+      311.0,
+      635.4
+     ],
+     "regs_um": [
+      [
+       390.933,
+       468.633
+      ]
+     ],
+     "bits": 1,
+     "launch": "face arm_wi",
+     "capture": "u_core",
+     "bit_route": "per_bit",
+     "note": "QC-PADLEG-1119 cland ring -> consumers 740 um: bin at 1/3 (relay_sites row) + 1 station at 2/3"
+    },
+    "added_regs": 1,
+    "cycles": "+1 on lane bus:arm_wi (pre-approved)",
+    "fixes": {
+     "bits": 1,
+     "worst_um": 740.1
+    }
+   },
+   {
+    "op": "merge",
+    "path": "partition_types.sle_fe_v1__cl8210183c.relay_sites",
+    "value": {
+     "u_bin_arv_wi/q": [
+      513.5,
+      342.867
+     ],
+     "u_bin_arm_wi/q": [
+      470.867,
+      301.867
+     ],
+     "u_bin_arl_wi/q": [
+      350.4,
+      386.95
+     ],
+     "u_bin_st_wi/q[1077]": [
+      459.3,
+      1107.95
+     ],
+     "u_bin_st_wi/q[1085]": [
+      459.65,
+      1108.75
+     ],
+     "u_bin_st_wi/q[1081]": [
+      457.1,
+      1110.25
+     ]
+    },
+    "added_regs": 0,
+    "cycles": "0 (re-site of existing bin flops)",
+    "fixes": {
+     "bins": 6,
+     "worst_um": 817.4,
+     "predicted_worst_um": 278.9
+    },
+    "note": "QC-PADLEG-1119 cland->bin: bins sit at the core centre, hard cland ring at the face; FIRM bin site = L1 midpoint of the cland ring bit and the bin's placed consumer point (qc_struct_core minimax rule). ring->bin and bin->consumer each <= predicted_worst_um (+~35 um spread). Site not checked against hard-core footprints (region_form does); type has no relay_sites."
+   },
+   {
+    "op": "merge",
+    "path": "partition_types.sle_fw_v1__cl9d029624.relay_sites",
+    "value": {
+     "u_bin_sc_ei/q[42]": [
+      162.25,
+      817.85
+     ],
+     "u_bin_sc_ei/q[25]": [
+      162.3,
+      815.0
+     ],
+     "u_bin_sc_ei/q[37]": [
+      162.4,
+      814.05
+     ],
+     "u_bin_sc_ei/q[23]": [
+      165.35,
+      813.5
+     ],
+     "u_bin_sc_ei/q[4]": [
+      162.15,
+      808.65
+     ],
+     "u_bin_sc_ei/q[35]": [
+      166.0,
+      813.4
+     ],
+     "u_bin_sc_ei/q[45]": [
+      166.8,
+      815.65
+     ],
+     "u_bin_sc_ei/q[18]": [
+      164.15,
+      809.9
+     ],
+     "u_bin_sc_ei/q[14]": [
+      166.15,
+      810.0
+     ],
+     "u_bin_sc_ei/q[40]": [
+      168.05,
+      813.25
+     ],
+     "u_bin_sc_ei/q[12]": [
+      167.4,
+      813.25
+     ],
+     "u_bin_sc_ei/q[30]": [
+      165.0,
+      808.9
+     ],
+     "u_bin_sc_ei/q[28]": [
+      167.15,
+      811.75
+     ],
+     "u_bin_sc_ei/q[36]": [
+      171.95,
+      818.1
+     ],
+     "u_bin_sc_ei/q[43]": [
+      169.0,
+      816.35
+     ],
+     "u_bin_sc_ei/q[31]": [
+      170.35,
+      815.95
+     ],
+     "u_bin_sc_ei/q[33]": [
+      168.15,
+      812.85
+     ],
+     "u_bin_sc_ei/q[38]": [
+      168.75,
+      815.25
+     ],
+     "u_bin_sc_ei/q[41]": [
+      174.65,
+      817.7
+     ],
+     "u_bin_sc_ei/q[29]": [
+      174.05,
+      816.45
+     ],
+     "u_bin_sc_ei/q[9]": [
+      159.1,
+      810.4
+     ],
+     "u_bin_sc_ei/q[5]": [
+      169.25,
+      809.55
+     ],
+     "u_bin_sc_ei/q[21]": [
+      168.35,
+      809.3
+     ],
+     "u_bin_sc_ei/q[10]": [
+      171.95,
+      809.05
+     ],
+     "u_bin_sc_ei/q[16]": [
+      167.8,
+      807.55
+     ],
+     "u_bin_sc_ei/q[24]": [
+      173.0,
+      811.2
+     ],
+     "u_bin_sc_ei/q[34]": [
+      174.25,
+      816.2
+     ],
+     "u_bin_sc_ei/q[19]": [
+      171.55,
+      808.8
+     ],
+     "u_bin_sc_ei/q[8]": [
+      173.4,
+      810.95
+     ],
+     "u_bin_sc_ei/q[7]": [
+      166.1,
+      804.3
+     ],
+     "u_bin_sc_ei/q[2]": [
+      165.05,
+      802.05
+     ],
+     "u_bin_sc_ei/q[46]": [
+      173.1,
+      815.0
+     ],
+     "u_bin_sc_ei/q[44]": [
+      175.5,
+      817.15
+     ],
+     "u_bin_sc_ei/q[26]": [
+      164.05,
+      812.85
+     ],
+     "u_bin_sc_ei/q[39]": [
+      176.45,
+      814.45
+     ],
+     "u_bin_sc_ei/q[15]": [
+      171.85,
+      807.95
+     ],
+     "u_bin_sc_ei/q[17]": [
+      174.45,
+      811.1
+     ],
+     "u_bin_sc_ei/q[20]": [
+      177.2,
+      812.6
+     ],
+     "u_bin_sc_ei/q[27]": [
+      175.95,
+      811.5
+     ],
+     "u_bin_sc_ei/q[32]": [
+      177.55,
+      812.95
+     ],
+     "u_bin_sc_ei/q[1]": [
+      174.0,
+      807.05
+     ],
+     "u_bin_sc_ei/q[22]": [
+      174.4,
+      808.9
+     ],
+     "u_bin_sc_ei/q[0]": [
+      167.65,
+      799.45
+     ],
+     "u_bin_sc_ei/q[6]": [
+      171.4,
+      811.05
+     ],
+     "u_bin_sc_ei/q[13]": [
+      173.5,
+      805.45
+     ],
+     "u_bin_sc_ei/q[3]": [
+      171.6,
+      798.95
+     ],
+     "u_bin_sc_ei/q[11]": [
+      176.5,
+      802.7
+     ],
+     "u_bin_sc_ei/q[47]": [
+      160.15,
+      758.7
+     ]
+    },
+    "added_regs": 0,
+    "cycles": "0 (re-site of existing bin flops)",
+    "fixes": {
+     "bins": 48,
+     "worst_um": 531.4,
+     "predicted_worst_um": 265.7
+    },
+    "note": "QC-PADLEG-1119 cland->bin: bins sit at the core centre, hard cland ring at the face; FIRM bin site = L1 midpoint of the cland ring bit and the bin's placed consumer point (qc_struct_core minimax rule). ring->bin and bin->consumer each <= predicted_worst_um (+~35 um spread). Site not checked against hard-core footprints (region_form does); type has no relay_sites."
+   },
+   {
+    "op": "merge",
+    "path": "partition_types.slw_su_c__cl19bb38ef.relay_sites",
+    "value": {
+     "u_bin_x_ctl_p2_i/q[389]": [
+      790.45,
+      1196.65
+     ],
+     "u_bin_x_ctl_p2_i/q[350]": [
+      802.45,
+      1203.3
+     ],
+     "u_bin_x_ctl_p2_i/q[473]": [
+      823.7,
+      1206.9
+     ],
+     "u_bin_x_ctl_p2_i/q[354]": [
+      807.85,
+      1211.25
+     ],
+     "u_bin_x_ctl_p2_i/q[367]": [
+      808.0,
+      1212.15
+     ],
+     "u_bin_x_ctl_p2_i/q[465]": [
+      814.45,
+      1227.7
+     ],
+     "u_bin_x_ctl_p2_i/q[301]": [
+      805.95,
+      1203.4
+     ],
+     "u_bin_x_ctl_p2_i/q[335]": [
+      792.45,
+      1229.35
+     ],
+     "u_bin_x_ctl_p2_i/q[259]": [
+      801.1,
+      1200.7
+     ],
+     "u_bin_x_ctl_p2_i/q[428]": [
+      815.45,
+      1226.75
+     ],
+     "u_bin_x_ctl_p2_i/q[379]": [
+      825.05,
+      1206.45
+     ],
+     "u_bin_x_ctl_p2_i/q[457]": [
+      848.25,
+      1204.35
+     ],
+     "u_bin_x_ctl_p2_i/q[482]": [
+      847.75,
+      1205.25
+     ],
+     "u_bin_x_ctl_p2_i/q[518]": [
+      850.0,
+      1196.1
+     ],
+     "u_bin_x_ctl_p2_i/q[228]": [
+      787.3,
+      1221.35
+     ],
+     "u_bin_x_ctl_p2_i/q[515]": [
+      852.1,
+      1194.75
+     ],
+     "u_bin_x_ctl_p2_i/q[489]": [
+      816.3,
+      1229.2
+     ],
+     "u_bin_x_ctl_p2_i/q[234]": [
+      801.0,
+      1213.5
+     ],
+     "u_bin_x_ctl_p2_i/q[492]": [
+      822.0,
+      1228.25
+     ],
+     "u_bin_x_ctl_p2_i/q[257]": [
+      799.3,
+      1218.95
+     ],
+     "u_bin_x_ctl_p2_i/q[348]": [
+      826.2,
+      1216.25
+     ],
+     "u_bin_x_ctl_p2_i/q[282]": [
+      812.9,
+      1208.1
+     ],
+     "u_bin_x_ctl_p2_i/q[478]": [
+      813.95,
+      1233.9
+     ],
+     "u_bin_x_ctl_p2_i/q[516]": [
+      842.25,
+      1213.4
+     ],
+     "u_bin_x_ctl_p2_i/q[243]": [
+      802.9,
+      1218.0
+     ],
+     "u_bin_x_ctl_p2_i/q[509]": [
+      796.85,
+      1258.5
+     ],
+     "u_bin_x_ctl_p2_i/q[125]": [
+      791.9,
+      1210.7
+     ],
+     "u_bin_x_ctl_p2_i/q[89]": [
+      789.6,
+      1206.65
+     ],
+     "u_bin_x_ctl_p2_i/q[225]": [
+      818.75,
+      1198.4
+     ],
+     "u_bin_x_ctl_p2_i/q[398]": [
+      862.25,
+      1199.2
+     ],
+     "u_bin_x_ctl_p2_i/q[462]": [
+      822.45,
+      1246.3
+     ],
+     "u_bin_x_ctl_p2_i/q[106]": [
+      800.75,
+      1200.55
+     ],
+     "u_bin_x_ctl_p2_i/q[77]": [
+      785.0,
+      1212.4
+     ],
+     "u_bin_x_ctl_p2_i/q[295]": [
+      813.55,
+      1222.45
+     ],
+     "u_bin_x_ctl_p2_i/q[232]": [
+      822.1,
+      1200.95
+     ],
+     "u_bin_x_ctl_p2_i/q[545]": [
+      810.8,
+      1240.4
+     ],
+     "u_bin_x_ctl_p2_i/q[355]": [
+      859.7,
+      1198.4
+     ],
+     "u_bin_x_ctl_p2_i/q[305]": [
+      800.25,
+      1238.6
+     ],
+     "u_bin_x_ctl_p2_i/q[339]": [
+      852.75,
+      1198.0
+     ],
+     "u_bin_x_ctl_p2_i/q[130]": [
+      810.8,
+      1197.7
+     ],
+     "u_bin_x_ctl_p2_i/q[329]": [
+      800.15,
+      1252.65
+     ],
+     "u_bin_x_ctl_p2_i/q[72]": [
+      759.5,
+      1237.95
+     ],
+     "u_bin_x_ctl_p2_i/q[446]": [
+      820.75,
+      1254.0
+     ],
+     "u_bin_x_ctl_p2_i/q[513]": [
+      877.0,
+      1196.65
+     ],
+     "u_bin_x_ctl_p2_i/q[412]": [
+      838.55,
+      1215.8
+     ],
+     "u_bin_x_ctl_p2_i/q[470]": [
+      862.35,
+      1216.75
+     ],
+     "u_bin_x_ctl_p2_i/q[423]": [
+      851.45,
+      1223.0
+     ],
+     "u_bin_x_ctl_p2_i/q[419]": [
+      834.6,
+      1236.85
+     ],
+     "u_bin_x_ctl_p2_i/q[216]": [
+      784.5,
+      1246.05
+     ],
+     "u_bin_x_ctl_p2_i/q[267]": [
+      823.0,
+      1215.9
+     ],
+     "u_bin_x_ctl_p2_i/q[222]": [
+      820.4,
+      1214.5
+     ],
+     "u_bin_x_ctl_p2_i/q[199]": [
+      820.85,
+      1212.05
+     ],
+     "u_bin_x_ctl_p2_i/q[438]": [
+      807.7,
+      1272.4
+     ],
+     "u_bin_x_ctl_p2_i/q[315]": [
+      803.65,
+      1251.75
+     ],
+     "u_bin_x_ctl_p2_i/q[437]": [
+      855.1,
+      1227.7
+     ],
+     "u_bin_x_ctl_p2_i/q[158]": [
+      816.9,
+      1208.1
+     ],
+     "u_bin_x_ctl_p2_i/q[405]": [
+      852.9,
+      1228.25
+     ],
+     "u_bin_x_ctl_p2_i/q[204]": [
+      837.0,
+      1196.2
+     ],
+     "u_bin_x_ctl_p2_i/q[469]": [
+      853.2,
+      1234.95
+     ],
+     "u_bin_x_ctl_p2_i/q[40]": [
+      789.15,
+      1220.0
+     ],
+     "u_bin_x_ctl_p2_i/q[384]": [
+      835.1,
+      1243.5
+     ],
+     "u_bin_x_ctl_p2_i/q[311]": [
+      855.45,
+      1200.55
+     ],
+     "u_bin_x_ctl_p2_i/q[107]": [
+      765.6,
+      1254.95
+     ],
+     "u_bin_x_ctl_p2_i/q[83]": [
+      764.75,
+      1257.55
+     ],
+     "u_bin_x_ctl_p2_i/q[393]": [
+      882.35,
+      1200.55
+     ],
+     "u_bin_x_ctl_p2_i/q[471]": [
+      843.4,
+      1256.6
+     ],
+     "u_bin_x_ctl_p2_i/q[227]": [
+      824.6,
+      1225.15
+     ],
+     "u_bin_x_ctl_p2_i/q[233]": [
+      791.0,
+      1254.25
+     ],
+     "u_bin_x_ctl_p2_i/q[126]": [
+      810.95,
+      1221.65
+     ],
+     "u_bin_x_ctl_p2_i/q[418]": [
+      887.9,
+      1199.85
+     ],
+     "u_bin_x_ctl_p2_i/q[93]": [
+      823.35,
+      1202.55
+     ],
+     "u_bin_x_ctl_p2_i/q[537]": [
+      900.9,
+      1196.1
+     ],
+     "u_bin_x_ctl_p2_i/q[349]": [
+      845.8,
+      1235.95
+     ],
+     "u_bin_x_ctl_p2_i/q[16]": [
+      788.3,
+      1229.35
+     ],
+     "u_bin_x_ctl_p2_i/q[39]": [
+      813.15,
+      1208.95
+     ],
+     "u_bin_x_ctl_p2_i/q[538]": [
+      860.15,
+      1235.25
+     ],
+     "u_bin_x_ctl_p2_i/q[455]": [
+      883.7,
+      1215.25
+     ],
+     "u_bin_x_ctl_p2_i/q[251]": [
+      780.6,
+      1279.3
+     ],
+     "u_bin_x_ctl_p2_i/q[481]": [
+      872.15,
+      1235.15
+     ],
+     "u_bin_x_ctl_p2_i/q[524]": [
+      862.55,
+      1234.45
+     ],
+     "u_bin_x_ctl_p2_i/q[395]": [
+      865.0,
+      1227.15
+     ],
+     "u_bin_x_ctl_p2_i/q[53]": [
+      758.95,
+      1270.5
+     ],
+     "u_bin_x_ctl_p2_i/q[247]": [
+      799.1,
+      1259.25
+     ],
+     "u_bin_x_ctl_p2_i/q[549]": [
+      853.6,
+      1233.75
+     ],
+     "u_bin_x_ctl_p2_i/q[330]": [
+      823.75,
+      1258.6
+     ],
+     "u_bin_x_ctl_p2_i/q[316]": [
+      780.35,
+      1296.0
+     ],
+     "u_bin_x_ctl_p2_i/q[156]": [
+      835.85,
+      1211.5
+     ],
+     "u_bin_x_ctl_p2_i/q[179]": [
+      816.45,
+      1236.1
+     ],
+     "u_bin_x_ctl_p2_i/q[245]": [
+      786.4,
+      1279.15
+     ],
+     "u_bin_x_ctl_p2_i/q[319]": [
+      856.0,
+      1221.75
+     ],
+     "u_bin_x_ctl_p2_i/q[252]": [
+      815.8,
+      1251.05
+     ],
+     "u_bin_x_ctl_p2_i/q[404]": [
+      843.65,
+      1254.15
+     ],
+     "u_bin_x_ctl_p2_i/q[368]": [
+      838.8,
+      1254.95
+     ],
+     "u_bin_x_ctl_p2_i/q[351]": [
+      801.65,
+      1291.5
+     ],
+     "u_bin_x_ctl_p2_i/q[49]": [
+      814.05,
+      1218.5
+     ],
+     "u_bin_x_ctl_p2_i/q[95]": [
+      820.4,
+      1225.15
+     ],
+     "u_bin_x_ctl_p2_i/q[230]": [
+      811.25,
+      1255.5
+     ],
+     "u_bin_x_ctl_p2_i/q[314]": [
+      832.55,
+      1242.0
+     ],
+     "u_bin_x_ctl_p2_i/q[385]": [
+      871.6,
+      1230.95
+     ],
+     "u_bin_x_ctl_p2_i/q[494]": [
+      889.45,
+      1213.8
+     ],
+     "u_bin_x_ctl_p2_i/q[442]": [
+      840.8,
+      1274.8
+     ],
+     "u_bin_x_ctl_p2_i/q[190]": [
+      769.1,
+      1294.95
+     ],
+     "u_bin_x_ctl_p2_i/q[113]": [
+      776.05,
+      1273.6
+     ],
+     "u_bin_x_ctl_p2_i/q[213]": [
+      863.8,
+      1205.45
+     ],
+     "u_bin_x_ctl_p2_i/q[436]": [
+      860.6,
+      1255.65
+     ],
+     "u_bin_x_ctl_p2_i/q[327]": [
+      842.55,
+      1244.0
+     ],
+     "u_bin_x_ctl_p2_i/q[302]": [
+      865.0,
+      1219.6
+     ],
+     "u_bin_x_ctl_p2_i/q[219]": [
+      817.55,
+      1245.75
+     ],
+     "u_bin_x_ctl_p2_i/q[461]": [
+      915.25,
+      1203.1
+     ],
+     "u_bin_x_ctl_p2_i/q[361]": [
+      792.45,
+      1296.5
+     ],
+     "u_bin_x_ctl_p2_i/q[45]": [
+      814.25,
+      1227.85
+     ],
+     "u_bin_x_ctl_p2_i/q[298]": [
+      849.7,
+      1231.6
+     ],
+     "u_bin_x_ctl_p2_i/q[208]": [
+      846.1,
+      1222.6
+     ],
+     "u_bin_x_ctl_p2_i/q[407]": [
+      898.3,
+      1216.65
+     ],
+     "u_bin_x_ctl_p2_i/q[48]": [
+      816.85,
+      1224.15
+     ],
+     "u_bin_x_ctl_p2_i/q[547]": [
+      823.4,
+      1278.45
+     ],
+     "u_bin_x_ctl_p2_i/q[128]": [
+      783.35,
+      1272.8
+     ],
+     "u_bin_x_ctl_p2_i/q[363]": [
+      803.95,
+      1303.05
+     ],
+     "u_bin_x_ctl_p2_i/q[421]": [
+      888.1,
+      1229.75
+     ],
+     "u_bin_x_ctl_p2_i/q[239]": [
+      865.9,
+      1208.35
+     ],
+     "u_bin_x_ctl_p2_i/q[527]": [
+      907.3,
+      1210.95
+     ],
+     "u_bin_x_ctl_p2_i/q[432]": [
+      875.15,
+      1242.1
+     ],
+     "u_bin_x_ctl_p2_i/q[427]": [
+      869.8,
+      1251.75
+     ],
+     "u_bin_x_ctl_p2_i/q[192]": [
+      791.6,
+      1278.9
+     ],
+     "u_bin_x_ctl_p2_i/q[215]": [
+      858.15,
+      1216.9
+     ],
+     "u_bin_x_ctl_p2_i/q[411]": [
+      830.35,
+      1275.05
+     ],
+     "u_bin_x_ctl_p2_i/q[434]": [
+      887.75,
+      1221.45
+     ],
+     "u_bin_x_ctl_p2_i/q[253]": [
+      833.9,
+      1247.1
+     ],
+     "u_bin_x_ctl_p2_i/q[277]": [
+      788.55,
+      1294.65
+     ],
+     "u_bin_x_ctl_p2_i/q[137]": [
+      830.55,
+      1229.7
+     ],
+     "u_bin_x_ctl_p2_i/q[185]": [
+      807.7,
+      1264.95
+     ],
+     "u_bin_x_ctl_p2_i/q[441]": [
+      872.9,
+      1247.8
+     ],
+     "u_bin_x_ctl_p2_i/q[56]": [
+      791.7,
+      1257.1
+     ],
+     "u_bin_x_ctl_p2_i/q[71]": [
+      813.9,
+      1236.6
+     ],
+     "u_bin_x_ctl_p2_i/q[78]": [
+      785.65,
+      1268.3
+     ],
+     "u_bin_x_ctl_p2_i/q[506]": [
+      870.2,
+      1252.95
+     ],
+     "u_bin_x_ctl_p2_i/q[21]": [
+      833.85,
+      1216.75
+     ],
+     "u_bin_x_ctl_p2_i/q[375]": [
+      838.6,
+      1273.85
+     ],
+     "u_bin_x_ctl_p2_i/q[30]": [
+      800.3,
+      1252.0
+     ],
+     "u_bin_x_ctl_p2_i/q[439]": [
+      836.95,
+      1290.15
+     ],
+     "u_bin_x_ctl_p2_i/q[144]": [
+      864.05,
+      1202.95
+     ],
+     "u_bin_x_ctl_p2_i/q[352]": [
+      886.4,
+      1224.55
+     ],
+     "u_bin_x_ctl_p2_i/q[235]": [
+      856.55,
+      1230.8
+     ],
+     "u_bin_x_ctl_p2_i/q[409]": [
+      866.4,
+      1255.9
+     ],
+     "u_bin_x_ctl_p2_i/q[166]": [
+      832.75,
+      1240.1
+     ],
+     "u_bin_x_ctl_p2_i/q[32]": [
+      797.05,
+      1255.1
+     ],
+     "u_bin_x_ctl_p2_i/q[420]": [
+      887.3,
+      1242.55
+     ],
+     "u_bin_x_ctl_p2_i/q[159]": [
+      821.5,
+      1250.5
+     ],
+     "u_bin_x_ctl_p2_i/q[266]": [
+      885.15,
+      1207.75
+     ],
+     "u_bin_x_ctl_p2_i/q[180]": [
+      839.95,
+      1238.2
+     ],
+     "u_bin_x_ctl_p2_i/q[344]": [
+      841.9,
+      1272.1
+     ],
+     "u_bin_x_ctl_p2_i/q[42]": [
+      815.75,
+      1238.05
+     ],
+     "u_bin_x_ctl_p2_i/q[290]": [
+      840.85,
+      1254.65
+     ],
+     "u_bin_x_ctl_p2_i/q[459]": [
+      908.1,
+      1228.0
+     ],
+     "u_bin_x_ctl_p2_i/q[493]": [
+      877.95,
+      1245.2
+     ],
+     "u_bin_x_ctl_p2_i/q[359]": [
+      837.5,
+      1277.9
+     ],
+     "u_bin_x_ctl_i/q[4]": [
+      589.65,
+      1100.65
+     ],
+     "u_bin_x_ctl_i/q[6]": [
+      701.0,
+      998.35
+     ],
+     "u_bin_x_ctl_i/q[0]": [
+      589.0,
+      1129.65
+     ],
+     "u_bin_x_ctl_i/q[5]": [
+      534.65,
+      1224.05
+     ],
+     "u_bin_x_ctl_p1_i/q[431]": [
+      750.7,
+      1204.05
+     ],
+     "u_bin_x_ctl_p1_i/q[444]": [
+      772.15,
+      1196.65
+     ],
+     "u_bin_x_ctl_p1_i/q[276]": [
+      744.25,
+      1183.25
+     ],
+     "u_bin_x_ctl_p1_i/q[380]": [
+      778.2,
+      1183.95
+     ],
+     "u_bin_x_ctl_p1_i/q[448]": [
+      745.3,
+      1212.7
+     ],
+     "u_bin_x_ctl_p1_i/q[388]": [
+      787.4,
+      1181.35
+     ],
+     "u_bin_x_ctl_p1_i/q[385]": [
+      765.05,
+      1212.85
+     ],
+     "u_bin_x_ctl_p1_i/q[361]": [
+      735.2,
+      1229.3
+     ],
+     "u_bin_x_ctl_p1_i/q[333]": [
+      771.75,
+      1200.3
+     ],
+     "u_bin_x_ctl_p1_i/q[362]": [
+      774.5,
+      1203.25
+     ],
+     "u_bin_x_ctl_p1_i/q[289]": [
+      741.7,
+      1216.65
+     ],
+     "u_bin_x_ctl_p1_i/q[424]": [
+      767.25,
+      1227.3
+     ],
+     "u_bin_x_ctl_p1_i/q[293]": [
+      768.55,
+      1197.75
+     ],
+     "u_bin_x_ctl_p1_i/q[433]": [
+      787.75,
+      1205.95
+     ],
+     "u_bin_x_ctl_p1_i/q[311]": [
+      745.35,
+      1222.6
+     ],
+     "u_bin_x_ctl_p1_i/q[236]": [
+      750.3,
+      1203.25
+     ],
+     "u_bin_x_ctl_p1_i/q[509]": [
+      739.4,
+      1249.95
+     ],
+     "u_bin_x_ctl_p1_i/q[500]": [
+      800.75,
+      1192.45
+     ],
+     "u_bin_x_ctl_p1_i/q[415]": [
+      754.95,
+      1241.35
+     ],
+     "u_bin_x_ctl_p1_i/q[313]": [
+      765.15,
+      1202.4
+     ],
+     "u_bin_x_ctl_p1_i/q[395]": [
+      803.8,
+      1187.85
+     ],
+     "u_bin_x_ctl_p1_i/q[29]": [
+      731.75,
+      1191.5
+     ],
+     "u_bin_x_ctl_p1_i/q[546]": [
+      783.55,
+      1193.0
+     ],
+     "u_bin_x_ctl_p1_i/q[363]": [
+      779.85,
+      1210.55
+     ],
+     "u_bin_x_ctl_p1_i/q[103]": [
+      749.25,
+      1187.9
+     ],
+     "u_bin_x_ctl_p1_i/q[442]": [
+      811.0,
+      1192.85
+     ],
+     "u_bin_x_ctl_p1_i/q[171]": [
+      761.35,
+      1189.5
+     ],
+     "u_bin_x_ctl_p1_i/q[409]": [
+      798.2,
+      1201.75
+     ],
+     "u_bin_x_ctl_p1_i/q[459]": [
+      772.3,
+      1218.4
+     ],
+     "u_bin_x_ctl_p1_i/q[302]": [
+      778.75,
+      1197.2
+     ],
+     "u_bin_x_ctl_p1_i/q[183]": [
+      768.8,
+      1199.2
+     ],
+     "u_bin_x_ctl_p1_i/q[194]": [
+      723.75,
+      1230.75
+     ],
+     "u_bin_x_ctl_p1_i/q[320]": [
+      766.95,
+      1209.6
+     ],
+     "u_bin_x_ctl_p1_i/q[167]": [
+      757.5,
+      1192.05
+     ],
+     "u_bin_x_ctl_p1_i/q[111]": [
+      753.3,
+      1189.1
+     ],
+     "u_bin_x_ctl_p1_i/q[100]": [
+      717.5,
+      1219.7
+     ],
+     "u_bin_x_ctl_p1_i/q[365]": [
+      748.05,
+      1248.1
+     ],
+     "u_bin_x_ctl_p1_i/q[207]": [
+      761.8,
+      1200.85
+     ],
+     "u_bin_x_ctl_p1_i/q[191]": [
+      747.0,
+      1213.55
+     ],
+     "u_bin_x_ctl_p1_i/q[351]": [
+      812.25,
+      1181.65
+     ],
+     "u_bin_x_ctl_p1_i/q[213]": [
+      758.3,
+      1208.1
+     ],
+     "u_bin_x_ctl_p1_i/q[76]": [
+      754.9,
+      1183.85
+     ],
+     "u_bin_x_ctl_p1_i/q[538]": [
+      794.1,
+      1203.4
+     ],
+     "u_bin_x_ctl_p1_i/q[437]": [
+      764.95,
+      1250.1
+     ],
+     "u_bin_x_ctl_p1_i/q[161]": [
+      742.05,
+      1209.45
+     ],
+     "u_bin_x_ctl_p1_i/q[303]": [
+      760.45,
+      1224.35
+     ],
+     "u_bin_x_ctl_p1_i/q[390]": [
+      790.75,
+      1213.9
+     ],
+     "u_bin_x_ctl_p1_i/q[144]": [
+      754.35,
+      1199.45
+     ],
+     "u_bin_x_ctl_p1_i/q[304]": [
+      804.95,
+      1181.55
+     ],
+     "u_bin_x_ctl_p1_i/q[315]": [
+      796.8,
+      1189.35
+     ],
+     "u_bin_x_ctl_p1_i/q[12]": [
+      743.75,
+      1189.75
+     ],
+     "u_bin_x_ctl_p1_i/q[465]": [
+      793.35,
+      1212.6
+     ],
+     "u_bin_x_ctl_p1_i/q[307]": [
+      753.1,
+      1234.3
+     ],
+     "u_bin_x_ctl_p1_i/q[25]": [
+      753.4,
+      1186.65
+     ],
+     "u_bin_x_ctl_p1_i/q[462]": [
+      767.9,
+      1241.2
+     ],
+     "u_bin_x_ctl_p1_i/q[463]": [
+      809.15,
+      1201.5
+     ],
+     "u_bin_x_ctl_p1_i/q[490]": [
+      820.95,
+      1193.4
+     ],
+     "u_bin_x_ctl_p1_i/q[233]": [
+      746.9,
+      1228.5
+     ],
+     "u_bin_x_ctl_p1_i/q[537]": [
+      779.65,
+      1227.4
+     ],
+     "u_bin_x_ctl_p1_i/q[57]": [
+      733.9,
+      1211.75
+     ],
+     "u_bin_x_ctl_p1_i/q[10]": [
+      759.1,
+      1184.25
+     ],
+     "u_bin_x_ctl_p1_i/q[396]": [
+      766.1,
+      1252.4
+     ],
+     "u_bin_x_ctl_p1_i/q[370]": [
+      806.3,
+      1213.0
+     ],
+     "u_bin_x_ctl_p1_i/q[527]": [
+      775.95,
+      1231.35
+     ],
+     "u_bin_x_ctl_p1_i/q[37]": [
+      713.7,
+      1238.75
+     ],
+     "u_bin_x_ctl_p1_i/q[247]": [
+      746.4,
+      1238.45
+     ],
+     "u_bin_x_ctl_p1_i/q[488]": [
+      778.05,
+      1241.6
+     ],
+     "u_bin_x_ctl_p1_i/q[542]": [
+      767.75,
+      1237.95
+     ],
+     "u_bin_x_ctl_p1_i/q[228]": [
+      790.4,
+      1196.5
+     ],
+     "u_bin_x_ctl_p1_i/q[139]": [
+      776.55,
+      1188.55
+     ],
+     "u_bin_x_ctl_p1_i/q[383]": [
+      817.55,
+      1193.65
+     ],
+     "u_bin_x_ctl_p1_i/q[402]": [
+      821.0,
+      1204.85
+     ],
+     "u_bin_x_ctl_p1_i/q[508]": [
+      769.3,
+      1260.1
+     ],
+     "u_bin_x_ctl_p1_i/q[389]": [
+      764.4,
+      1260.9
+     ],
+     "u_bin_x_ctl_p1_i/q[208]": [
+      751.5,
+      1235.4
+     ],
+     "u_bin_x_ctl_p1_i/q[256]": [
+      743.9,
+      1246.85
+     ],
+     "u_bin_x_ctl_p1_i/q[332]": [
+      742.5,
+      1266.45
+     ],
+     "u_bin_x_ctl_p1_i/q[203]": [
+      789.1,
+      1194.85
+     ],
+     "u_bin_x_ctl_p1_i/q[306]": [
+      760.35,
+      1242.65
+     ],
+     "u_bin_x_ctl_p1_i/q[169]": [
+      733.4,
+      1249.3
+     ],
+     "u_bin_x_ctl_p1_i/q[519]": [
+      837.35,
+      1191.75
+     ],
+     "u_bin_x_ctl_p1_i/q[297]": [
+      803.5,
+      1199.7
+     ],
+     "u_bin_x_ctl_p1_i/q[497]": [
+      815.0,
+      1216.1
+     ],
+     "u_bin_x_ctl_p1_i/q[229]": [
+      774.1,
+      1219.6
+     ],
+     "u_bin_x_ctl_p1_i/q[154]": [
+      756.05,
+      1227.45
+     ],
+     "u_bin_x_ctl_p1_i/q[513]": [
+      773.95,
+      1259.85
+     ],
+     "u_bin_x_ctl_p1_i/q[366]": [
+      832.5,
+      1191.2
+     ],
+     "u_bin_x_ctl_p1_i/q[310]": [
+      786.95,
+      1222.85
+     ],
+     "u_bin_x_ctl_p1_i/q[138]": [
+      781.4,
+      1191.9
+     ],
+     "u_bin_x_su_l0_i/q[165]": [
+      1060.55,
+      115.7
+     ],
+     "u_bin_x_su_l0_i/q[169]": [
+      1064.0,
+      111.4
+     ]
+    },
+    "added_regs": 0,
+    "cycles": "0 (re-site of existing bin flops)",
+    "fixes": {
+     "bins": 251,
+     "worst_um": 671.2,
+     "predicted_worst_um": 335.6
+    },
+    "note": "QC-PADLEG-1119 cland->bin: bins sit at the core centre, hard cland ring at the face; FIRM bin site = L1 midpoint of the cland ring bit and the bin's placed consumer point (qc_struct_core minimax rule). ring->bin and bin->consumer each <= predicted_worst_um (+~35 um spread). Site not checked against hard-core footprints (region_form does); type already carries relay_sites."
+   },
+   {
+    "op": "append",
+    "path": "partition_types.slw_st_a_v2__cl9f076a5c.internal_stations",
+    "value": {
+     "conn": "bus:rs_s0",
+     "from_um": [
+      243.674,
+      69.1
+     ],
+     "to_um": [
+      261.992,
+      662.781
+     ],
+     "regs_um": [
+      [
+       255.886,
+       464.887
+      ]
+     ],
+     "bits": 390,
+     "launch": "face rs_s0",
+     "capture": "u_core",
+     "bit_route": "per_bit",
+     "note": "QC-PADLEG-1119 cland ring -> consumers 612 um: bin at 1/3 (relay_sites row) + 1 station at 2/3"
+    },
+    "added_regs": 1,
+    "cycles": "+1 on lane bus:rs_s0 (pre-approved)",
+    "fixes": {
+     "bits": 390,
+     "worst_um": 840.3
+    }
+   },
+   {
+    "op": "append",
+    "path": "partition_types.slw_st_a_v2__cl9f076a5c.internal_stations",
+    "value": {
+     "conn": "bus:rs_s1",
+     "from_um": [
+      144.061,
+      69.1
+     ],
+     "to_um": [
+      272.722,
+      627.755
+     ],
+     "regs_um": [
+      [
+       229.835,
+       441.537
+      ]
+     ],
+     "bits": 450,
+     "launch": "face rs_s1",
+     "capture": "u_core",
+     "bit_route": "per_bit",
+     "note": "QC-PADLEG-1119 cland ring -> consumers 687 um: bin at 1/3 (relay_sites row) + 1 station at 2/3"
+    },
+    "added_regs": 1,
+    "cycles": "+1 on lane bus:rs_s1 (pre-approved)",
+    "fixes": {
+     "bits": 450,
+     "worst_um": 821.2
+    }
+   },
+   {
+    "op": "merge",
+    "path": "partition_types.slw_st_a_v2__cl9f076a5c.relay_sites",
+    "value": {
+     "u_bin_rs_s0/q[512]": [
+      328.8,
+      292.9
+     ],
+     "u_bin_rs_s0/q[513]": [
+      328.8,
+      292.8
+     ],
+     "u_bin_rs_s0/q[263]": [
+      270.633,
+      266.967
+     ],
+     "u_bin_rs_s0/q[270]": [
+      263.967,
+      274.267
+     ],
+     "u_bin_rs_s0/q[258]": [
+      264.6,
+      271.467
+     ],
+     "u_bin_rs_s0/q[256]": [
+      262.567,
+      270.2
+     ],
+     "u_bin_rs_s0/q[265]": [
+      270.633,
+      266.267
+     ],
+     "u_bin_rs_s0/q[259]": [
+      270.167,
+      265.8
+     ],
+     "u_bin_rs_s0/q[261]": [
+      264.867,
+      270.767
+     ],
+     "u_bin_rs_s0/q[264]": [
+      261.333,
+      274.433
+     ],
+     "u_bin_rs_s0/q[260]": [
+      264.733,
+      270.4
+     ],
+     "u_bin_rs_s0/q[290]": [
+      262.933,
+      276.067
+     ],
+     "u_bin_rs_s0/q[286]": [
+      266.333,
+      271.933
+     ],
+     "u_bin_rs_s0/q[272]": [
+      259.2,
+      276.967
+     ],
+     "u_bin_rs_s0/q[257]": [
+      261.067,
+      272.9
+     ],
+     "u_bin_rs_s0/q[271]": [
+      263.0,
+      272.733
+     ],
+     "u_bin_rs_s0/q[266]": [
+      260.6,
+      274.067
+     ],
+     "u_bin_rs_s0/q[273]": [
+      271.167,
+      263.567
+     ],
+     "u_bin_rs_s0/q[277]": [
+      268.367,
+      266.867
+     ],
+     "u_bin_rs_s0/q[269]": [
+      270.9,
+      263.1
+     ],
+     "u_bin_rs_s0/q[275]": [
+      267.233,
+      267.167
+     ],
+     "u_bin_rs_s0/q[280]": [
+      271.8,
+      263.267
+     ],
+     "u_bin_rs_s0/q[267]": [
+      269.633,
+      263.2
+     ],
+     "u_bin_rs_s0/q[268]": [
+      263.667,
+      269.033
+     ],
+     "u_bin_rs_s0/q[262]": [
+      265.3,
+      266.433
+     ],
+     "u_bin_rs_s0/q[276]": [
+      270.067,
+      262.833
+     ],
+     "u_bin_rs_s0/q[283]": [
+      266.833,
+      266.7
+     ],
+     "u_bin_rs_s0/q[281]": [
+      268.233,
+      264.633
+     ],
+     "u_bin_rs_s0/q[282]": [
+      267.633,
+      264.467
+     ],
+     "u_bin_rs_s0/q[279]": [
+      270.4,
+      261.133
+     ],
+     "u_bin_rs_s0/q[288]": [
+      259.933,
+      272.833
+     ],
+     "u_bin_rs_s0/q[294]": [
+      257.867,
+      275.533
+     ],
+     "u_bin_rs_s0/q[291]": [
+      265.7,
+      267.233
+     ],
+     "u_bin_rs_s0/q[289]": [
+      266.0,
+      266.533
+     ],
+     "u_bin_rs_s0/q[274]": [
+      272.833,
+      257.333
+     ],
+     "u_bin_rs_s0/q[278]": [
+      259.033,
+      271.467
+     ],
+     "u_bin_rs_s0/q[296]": [
+      270.6,
+      262.367
+     ],
+     "u_bin_rs_s0/q[284]": [
+      270.067,
+      260.3
+     ],
+     "u_bin_rs_s0/q[287]": [
+      273.6,
+      256.633
+     ],
+     "u_bin_rs_s0/q[297]": [
+      264.767,
+      266.333
+     ],
+     "u_bin_rs_s0/q[301]": [
+      265.667,
+      265.433
+     ],
+     "u_bin_rs_s0/q[298]": [
+      257.933,
+      271.733
+     ],
+     "u_bin_rs_s0/q[293]": [
+      260.467,
+      268.133
+     ],
+     "u_bin_rs_s0/q[285]": [
+      262.767,
+      264.633
+     ],
+     "u_bin_rs_s0/q[299]": [
+      271.7,
+      257.7
+     ],
+     "u_bin_rs_s0/q[304]": [
+      268.6,
+      259.967
+     ],
+     "u_bin_rs_s0/q[295]": [
+      268.167,
+      259.067
+     ],
+     "u_bin_rs_s0/q[311]": [
+      258.833,
+      270.467
+     ],
+     "u_bin_rs_s0/q[312]": [
+      256.7,
+      271.3
+     ],
+     "u_bin_rs_s0/q[306]": [
+      261.967,
+      264.8
+     ],
+     "u_bin_rs_s0/q[330]": [
+      254.4,
+      275.533
+     ],
+     "u_bin_rs_s0/q[340]": [
+      256.633,
+      274.067
+     ],
+     "u_bin_rs_s0/q[308]": [
+      257.433,
+      268.5
+     ],
+     "u_bin_rs_s0/q[334]": [
+      256.533,
+      273.1
+     ],
+     "u_bin_rs_s0/q[160]": [
+      223.267,
+      277.967
+     ],
+     "u_bin_rs_s0/q[317]": [
+      262.333,
+      263.567
+     ],
+     "u_bin_rs_s0/q[305]": [
+      266.167,
+      257.867
+     ],
+     "u_bin_rs_s0/q[315]": [
+      260.2,
+      264.9
+     ],
+     "u_bin_rs_s0/q[307]": [
+      260.0,
+      263.9
+     ],
+     "u_bin_rs_s0/q[303]": [
+      257.6,
+      265.533
+     ],
+     "u_bin_rs_s0/q[292]": [
+      252.6,
+      269.033
+     ],
+     "u_bin_rs_s0/q[323]": [
+      254.8,
+      271.1
+     ],
+     "u_bin_rs_s0/q[357]": [
+      255.333,
+      275.267
+     ],
+     "u_bin_rs_s0/q[300]": [
+      263.733,
+      258.333
+     ],
+     "u_bin_rs_s0/q[348]": [
+      254.8,
+      274.167
+     ],
+     "u_bin_rs_s0/q[355]": [
+      257.867,
+      272.2
+     ],
+     "u_bin_rs_s0/q[344]": [
+      255.6,
+      272.733
+     ],
+     "u_bin_rs_s0/q[314]": [
+      262.3,
+      261.567
+     ],
+     "u_bin_rs_s0/q[331]": [
+      257.767,
+      268.233
+     ],
+     "u_bin_rs_s0/q[356]": [
+      256.433,
+      272.733
+     ],
+     "u_bin_rs_s0/q[338]": [
+      256.167,
+      270.2
+     ],
+     "u_bin_rs_s0/q[192]": [
+      226.367,
+      275.8
+     ],
+     "u_bin_rs_s0/q[350]": [
+      256.767,
+      270.667
+     ],
+     "u_bin_rs_s0/q[349]": [
+      257.6,
+      270.033
+     ],
+     "u_bin_rs_s0/q[146]": [
+      217.833,
+      277.5
+     ],
+     "u_bin_rs_s0/q[310]": [
+      260.633,
+      261.133
+     ],
+     "u_bin_rs_s0/q[371]": [
+      256.4,
+      274.067
+     ],
+     "u_bin_rs_s0/q[343]": [
+      256.267,
+      270.2
+     ],
+     "u_bin_rs_s0/q[313]": [
+      254.9,
+      267.333
+     ],
+     "u_bin_rs_s0/q[321]": [
+      259.3,
+      263.733
+     ],
+     "u_bin_rs_s0/q[399]": [
+      256.933,
+      277.4
+     ],
+     "u_bin_rs_s0/q[197]": [
+      226.6,
+      275.433
+     ],
+     "u_bin_rs_s0/q[403]": [
+      257.367,
+      276.967
+     ],
+     "u_bin_rs_s0/q[360]": [
+      258.467,
+      269.767
+     ],
+     "u_bin_rs_s0/q[322]": [
+      255.767,
+      267.067
+     ],
+     "u_bin_rs_s0/q[316]": [
+      257.067,
+      264.8
+     ],
+     "u_bin_rs_s0/q[352]": [
+      258.5,
+      268.667
+     ],
+     "u_bin_rs_s0/q[457]": [
+      265.433,
+      276.7
+     ],
+     "u_bin_rs_s0/q[369]": [
+      258.267,
+      271.1
+     ],
+     "u_bin_rs_s0/q[362]": [
+      256.8,
+      271.567
+     ],
+     "u_bin_rs_s0/q[326]": [
+      257.2,
+      265.967
+     ],
+     "u_bin_rs_s0/q[397]": [
+      256.9,
+      276.7
+     ],
+     "u_bin_rs_s0/q[151]": [
+      222.333,
+      272.567
+     ],
+     "u_bin_rs_s0/q[200]": [
+      227.2,
+      275.067
+     ],
+     "u_bin_rs_s0/q[363]": [
+      257.4,
+      271.033
+     ],
+     "u_bin_rs_s0/q[319]": [
+      263.067,
+      258.767
+     ],
+     "u_bin_rs_s0/q[366]": [
+      256.233,
+      272.267
+     ],
+     "u_bin_rs_s0/q[309]": [
+      255.633,
+      264.733
+     ],
+     "u_bin_rs_s0/q[202]": [
+      227.1,
+      274.9
+     ],
+     "u_bin_rs_s0/q[163]": [
+      223.6,
+      272.633
+     ],
+     "u_bin_rs_s0/q[193]": [
+      226.4,
+      274.0
+     ],
+     "u_bin_rs_s0/q[387]": [
+      255.033,
+      276.067
+     ],
+     "u_bin_rs_s0/q[171]": [
+      224.2,
+      272.9
+     ],
+     "u_bin_rs_s0/q[389]": [
+      255.667,
+      275.7
+     ],
+     "u_bin_rs_s0/q[302]": [
+      256.3,
+      262.467
+     ],
+     "u_bin_rs_s0/q[410]": [
+      258.467,
+      275.6
+     ],
+     "u_bin_rs_s0/q[324]": [
+      256.1,
+      265.633
+     ],
+     "u_bin_rs_s0/q[345]": [
+      256.9,
+      267.767
+     ],
+     "u_bin_rs_s0/q[156]": [
+      222.4,
+      272.2
+     ],
+     "u_bin_rs_s0/q[475]": [
+      267.633,
+      275.533
+     ],
+     "u_bin_rs_s0/q[135]": [
+      216.167,
+      275.067
+     ],
+     "u_bin_rs_s0/q[412]": [
+      259.033,
+      274.9
+     ],
+     "u_bin_rs_s0/q[372]": [
+      256.067,
+      272.0
+     ],
+     "u_bin_rs_s0/q[392]": [
+      255.867,
+      274.967
+     ],
+     "u_bin_rs_s0/q[374]": [
+      255.867,
+      272.367
+     ],
+     "u_bin_rs_s0/q[385]": [
+      254.833,
+      274.967
+     ],
+     "u_bin_rs_s0/q[351]": [
+      256.367,
+      268.5
+     ],
+     "u_bin_rs_s0/q[218]": [
+      228.2,
+      274.533
+     ],
+     "u_bin_rs_s0/q[318]": [
+      258.067,
+      261.767
+     ],
+     "u_bin_rs_s0/q[201]": [
+      227.1,
+      272.833
+     ],
+     "u_bin_rs_s0/q[195]": [
+      225.967,
+      273.267
+     ],
+     "u_bin_rs_s0/q[339]": [
+      257.033,
+      265.7
+     ],
+     "u_bin_rs_s0/q[365]": [
+      257.433,
+      269.033
+     ],
+     "u_bin_rs_s0/q[210]": [
+      226.9,
+      274.367
+     ],
+     "u_bin_rs_s0/q[341]": [
+      256.933,
+      265.9
+     ],
+     "u_bin_rs_s0/q[130]": [
+      215.633,
+      273.9
+     ],
+     "u_bin_rs_s0/q[388]": [
+      255.433,
+      274.067
+     ],
+     "u_bin_rs_s0/q[378]": [
+      253.933,
+      274.067
+     ],
+     "u_bin_rs_s0/q[169]": [
+      224.1,
+      270.933
+     ],
+     "u_bin_rs_s0/q[361]": [
+      258.767,
+      266.8
+     ],
+     "u_bin_rs_s0/q[406]": [
+      258.1,
+      273.9
+     ],
+     "u_bin_rs_s0/q[401]": [
+      257.2,
+      274.0
+     ],
+     "u_bin_rs_s0/q[481]": [
+      268.9,
+      273.8
+     ],
+     "u_bin_rs_s0/q[148]": [
+      218.0,
+      273.8
+     ],
+     "u_bin_rs_s0/q[223]": [
+      228.667,
+      273.9
+     ],
+     "u_bin_rs_s0/q[320]": [
+      262.533,
+      256.633
+     ],
+     "u_bin_rs_s0/q[367]": [
+      257.467,
+      268.333
+     ],
+     "u_bin_rs_s0/q[332]": [
+      256.5,
+      264.167
+     ],
+     "u_bin_rs_s0/q[142]": [
+      217.2,
+      273.267
+     ],
+     "u_bin_rs_s0/q[398]": [
+      256.4,
+      273.633
+     ],
+     "u_bin_rs_s0/q[384]": [
+      254.233,
+      273.9
+     ],
+     "u_bin_rs_s0/q[354]": [
+      257.267,
+      266.533
+     ],
+     "u_bin_rs_s0/q[176]": [
+      222.033,
+      273.267
+     ],
+     "u_bin_rs_s0/q[141]": [
+      217.133,
+      273.0
+     ],
+     "u_bin_rs_s0/q[162]": [
+      223.133,
+      269.933
+     ],
+     "u_bin_rs_s0/q[154]": [
+      222.333,
+      269.567
+     ],
+     "u_bin_rs_s0/q[194]": [
+      224.7,
+      272.9
+     ],
+     "u_bin_rs_s0/q[462]": [
+      266.067,
+      273.0
+     ],
+     "u_bin_rs_s0/q[375]": [
+      258.733,
+      267.767
+     ],
+     "u_bin_rs_s0/q[335]": [
+      258.433,
+      262.3
+     ],
+     "u_bin_rs_s0/q[213]": [
+      227.167,
+      273.1
+     ],
+     "u_bin_rs_s0/q[177]": [
+      224.5,
+      270.567
+     ],
+     "u_bin_rs_s0/q[347]": [
+      256.367,
+      266.267
+     ],
+     "u_bin_rs_s0/q[400]": [
+      256.933,
+      272.733
+     ],
+     "u_bin_rs_s0/q[149]": [
+      218.233,
+      272.633
+     ],
+     "u_bin_rs_s0/q[479]": [
+      268.367,
+      272.9
+     ],
+     "u_bin_rs_s0/q[325]": [
+      256.633,
+      262.367
+     ],
+     "u_bin_rs_s0/q[145]": [
+      217.5,
+      272.633
+     ],
+     "u_bin_rs_s0/q[226]": [
+      229.367,
+      272.367
+     ],
+     "u_bin_rs_s0/q[441]": [
+      262.7,
+      272.833
+     ],
+     "u_bin_rs_s0/q[152]": [
+      222.5,
+      268.6
+     ],
+     "u_bin_rs_s0/q[342]": [
+      255.833,
+      265.367
+     ],
+     "u_bin_rs_s0/q[219]": [
+      228.167,
+      272.367
+     ],
+     "u_bin_rs_s0/q[376]": [
+      253.933,
+      272.0
+     ],
+     "u_bin_rs_s0/q[346]": [
+      256.467,
+      265.167
+     ],
+     "u_bin_rs_s0/q[231]": [
+      230.1,
+      272.0
+     ],
+     "u_bin_rs_s0/q[452]": [
+      264.433,
+      272.367
+     ],
+     "u_bin_rs_s0/q[157]": [
+      223.033,
+      268.333
+     ],
+     "u_bin_rs_s0/q[359]": [
+      255.8,
+      267.5
+     ],
+     "u_bin_rs_s0/q[128]": [
+      215.133,
+      272.0
+     ],
+     "u_bin_rs_s0/q[459]": [
+      265.5,
+      272.2
+     ],
+     "u_bin_rs_s0/q[492]": [
+      270.433,
+      271.933
+     ],
+     "u_bin_rs_s0/q[446]": [
+      263.533,
+      272.2
+     ],
+     "u_bin_rs_s0/q[329]": [
+      255.9,
+      263.0
+     ],
+     "u_bin_rs_s0/q[207]": [
+      227.567,
+      270.833
+     ],
+     "u_bin_rs_s0/q[333]": [
+      255.5,
+      263.9
+     ],
+     "u_bin_rs_s0/q[327]": [
+      259.9,
+      258.7
+     ],
+     "u_bin_rs_s0/q[175]": [
+      221.967,
+      271.833
+     ],
+     "u_bin_rs_s0/q[353]": [
+      256.533,
+      265.533
+     ],
+     "u_bin_rs_s0/q[336]": [
+      255.4,
+      264.367
+     ],
+     "u_bin_rs_s0/q[129]": [
+      215.367,
+      271.667
+     ],
+     "u_bin_rs_s0/q[233]": [
+      230.4,
+      271.567
+     ],
+     "u_bin_rs_s0/q[485]": [
+      268.933,
+      272.1
+     ],
+     "u_bin_rs_s0/q[490]": [
+      270.167,
+      271.567
+     ],
+     "u_bin_rs_s0/q[205]": [
+      227.3,
+      270.467
+     ],
+     "u_bin_rs_s0/q[136]": [
+      216.433,
+      271.467
+     ],
+     "u_bin_rs_s0/q[493]": [
+      270.4,
+      271.667
+     ],
+     "u_bin_rs_s0/q[499]": [
+      271.267,
+      271.733
+     ],
+     "u_bin_rs_s0/q[328]": [
+      254.333,
+      263.9
+     ],
+     "u_bin_rs_s0/q[230]": [
+      229.967,
+      271.3
+     ],
+     "u_bin_rs_s0/q[395]": [
+      256.367,
+      271.467
+     ],
+     "u_bin_rs_s0/q[181]": [
+      225.333,
+      268.667
+     ],
+     "u_bin_rs_s0/q[168]": [
+      221.067,
+      270.933
+     ],
+     "u_bin_rs_s0/q[178]": [
+      222.333,
+      271.033
+     ],
+     "u_bin_rs_s0/q[408]": [
+      258.467,
+      270.833
+     ],
+     "u_bin_rs_s0/q[405]": [
+      257.733,
+      271.033
+     ],
+     "u_bin_rs_s0/q[419]": [
+      259.9,
+      270.833
+     ],
+     "u_bin_rs_s0/q[134]": [
+      216.033,
+      270.767
+     ],
+     "u_bin_rs_s0/q[470]": [
+      266.767,
+      271.3
+     ],
+     "u_bin_rs_s0/q[488]": [
+      269.733,
+      270.833
+     ],
+     "u_bin_rs_s0/q[380]": [
+      254.1,
+      270.833
+     ],
+     "u_bin_rs_s0/q[377]": [
+      253.833,
+      270.667
+     ],
+     "u_bin_rs_s0/q[214]": [
+      227.967,
+      270.033
+     ],
+     "u_bin_rs_s0/q[150]": [
+      218.533,
+      270.467
+     ],
+     "u_bin_rs_s0/q[133]": [
+      215.8,
+      270.4
+     ],
+     "u_bin_rs_s0/q[393]": [
+      255.9,
+      270.567
+     ],
+     "u_bin_rs_s0/q[497]": [
+      271.5,
+      270.033
+     ],
+     "u_bin_rs_s0/q[434]": [
+      262.133,
+      269.933
+     ],
+     "u_bin_rs_s0/q[391]": [
+      255.933,
+      269.933
+     ],
+     "u_bin_rs_s0/q[358]": [
+      256.867,
+      264.167
+     ],
+     "u_bin_rs_s0/q[165]": [
+      220.667,
+      269.767
+     ],
+     "u_bin_rs_s0/q[472]": [
+      267.5,
+      269.867
+     ],
+     "u_bin_rs_s0/q[337]": [
+      254.367,
+      263.467
+     ],
+     "u_bin_rs_s0/q[209]": [
+      226.767,
+      269.667
+     ],
+     "u_bin_rs_s0/q[494]": [
+      270.633,
+      269.5
+     ],
+     "u_bin_rs_s0/q[407]": [
+      258.167,
+      269.3
+     ],
+     "u_bin_rs_s0/q[428]": [
+      261.0,
+      269.4
+     ],
+     "u_bin_rs_s0/q[509]": [
+      272.567,
+      269.5
+     ],
+     "u_bin_rs_s0/q[465]": [
+      266.267,
+      269.5
+     ],
+     "u_bin_rs_s0/q[170]": [
+      224.067,
+      266.267
+     ],
+     "u_bin_rs_s0/q[390]": [
+      255.467,
+      269.4
+     ],
+     "u_bin_rs_s0/q[247]": [
+      231.9,
+      269.5
+     ],
+     "u_bin_rs_s0/q[414]": [
+      259.0,
+      269.133
+     ],
+     "u_bin_rs_s0/q[179]": [
+      224.567,
+      266.967
+     ],
+     "u_bin_rs_s0/q[477]": [
+      267.9,
+      269.4
+     ],
+     "u_bin_rs_s0/q[243]": [
+      231.4,
+      269.3
+     ],
+     "u_bin_rs_s0/q[196]": [
+      224.833,
+      269.033
+     ],
+     "u_bin_rs_s0/q[445]": [
+      263.567,
+      269.033
+     ],
+     "u_bin_rs_s0/q[442]": [
+      263.2,
+      268.867
+     ],
+     "u_bin_rs_s0/q[422]": [
+      260.267,
+      268.967
+     ],
+     "u_bin_rs_s0/q[235]": [
+      230.5,
+      268.867
+     ],
+     "u_bin_rs_s0/q[155]": [
+      222.933,
+      264.9
+     ],
+     "u_bin_rs_s0/q[458]": [
+      265.5,
+      268.767
+     ],
+     "u_bin_rs_s0/q[253]": [
+      232.433,
+      269.233
+     ],
+     "u_bin_rs_s0/q[382]": [
+      254.633,
+      268.667
+     ],
+     "u_bin_rs_s0/q[396]": [
+      256.167,
+      269.133
+     ],
+     "u_bin_rs_s0/q[138]": [
+      216.333,
+      268.867
+     ],
+     "u_bin_rs_s0/q[402]": [
+      257.5,
+      268.667
+     ],
+     "u_bin_rs_s0/q[368]": [
+      255.433,
+      265.7
+     ],
+     "u_bin_rs_s0/q[153]": [
+      218.333,
+      268.667
+     ],
+     "u_bin_rs_s0/q[131]": [
+      215.533,
+      268.5
+     ],
+     "u_bin_rs_s0/q[180]": [
+      222.733,
+      268.333
+     ],
+     "u_bin_rs_s0/q[411]": [
+      258.2,
+      268.967
+     ],
+     "u_bin_rs_s0/q[199]": [
+      225.367,
+      268.4
+     ],
+     "u_bin_rs_s0/q[506]": [
+      272.233,
+      268.5
+     ],
+     "u_bin_rs_s0/q[206]": [
+      226.333,
+      268.333
+     ],
+     "u_bin_rs_s0/q[159]": [
+      223.333,
+      264.533
+     ],
+     "u_bin_rs_s0/q[448]": [
+      263.933,
+      268.233
+     ],
+     "u_bin_rs_s0/q[381]": [
+      254.467,
+      268.233
+     ],
+     "u_bin_rs_s0/q[429]": [
+      261.2,
+      268.333
+     ],
+     "u_bin_rs_s0/q[198]": [
+      226.8,
+      266.533
+     ],
+     "u_bin_rs_s0/q[413]": [
+      258.967,
+      268.333
+     ],
+     "u_bin_rs_s0/q[364]": [
+      257.033,
+      262.933
+     ],
+     "u_bin_rs_s0/q[394]": [
+      256.0,
+      268.233
+     ],
+     "u_bin_rs_s0/q[252]": [
+      232.733,
+      268.333
+     ],
+     "u_bin_rs_s0/q[466]": [
+      266.2,
+      268.4
+     ],
+     "u_bin_rs_s0/q[451]": [
+      264.133,
+      268.133
+     ],
+     "u_bin_rs_s0/q[139]": [
+      216.767,
+      267.7
+     ],
+     "u_bin_rs_s0/q[420]": [
+      260.2,
+      267.6
+     ],
+     "u_bin_rs_s0/q[211]": [
+      227.467,
+      267.333
+     ],
+     "u_bin_rs_s0/q[484]": [
+      269.267,
+      267.7
+     ],
+     "u_bin_rs_s0/q[229]": [
+      229.533,
+      267.767
+     ],
+     "u_bin_rs_s0/q[432]": [
+      261.4,
+      267.967
+     ],
+     "u_bin_rs_s0/q[496]": [
+      270.233,
+      268.333
+     ],
+     "u_bin_rs_s0/q[463]": [
+      266.167,
+      267.767
+     ],
+     "u_bin_rs_s0/q[370]": [
+      256.767,
+      263.633
+     ],
+     "u_bin_rs_s0/q[166]": [
+      220.567,
+      267.5
+     ],
+     "u_bin_rs_s0/q[449]": [
+      264.467,
+      267.333
+     ],
+     "u_bin_rs_s0/q[147]": [
+      217.833,
+      267.433
+     ],
+     "u_bin_rs_s0/q[182]": [
+      225.167,
+      265.0
+     ],
+     "u_bin_rs_s0/q[415]": [
+      259.2,
+      267.333
+     ],
+     "u_bin_rs_s0/q[486]": [
+      269.667,
+      267.067
+     ],
+     "u_bin_rs_s0/q[460]": [
+      265.167,
+      267.767
+     ],
+     "u_bin_rs_s0/q[251]": [
+      232.3,
+      267.5
+     ],
+     "u_bin_rs_s0/q[469]": [
+      266.8,
+      267.433
+     ],
+     "u_bin_rs_s0/q[220]": [
+      228.367,
+      267.067
+     ],
+     "u_bin_rs_s0/q[416]": [
+      258.767,
+      267.7
+     ],
+     "u_bin_rs_s0/q[241]": [
+      231.167,
+      267.167
+     ],
+     "u_bin_rs_s0/q[386]": [
+      254.567,
+      267.5
+     ],
+     "u_bin_rs_s0/q[234]": [
+      230.367,
+      266.867
+     ],
+     "u_bin_rs_s0/q[132]": [
+      215.6,
+      266.967
+     ],
+     "u_bin_rs_s0/q[433]": [
+      261.867,
+      266.867
+     ],
+     "u_bin_rs_s0/q[185]": [
+      223.2,
+      266.967
+     ],
+     "u_bin_rs_s0/q[480]": [
+      268.5,
+      266.967
+     ],
+     "u_bin_rs_s0/q[504]": [
+      272.133,
+      266.8
+     ],
+     "u_bin_rs_s0/q[140]": [
+      216.833,
+      266.7
+     ],
+     "u_bin_rs_s0/q[500]": [
+      271.2,
+      266.7
+     ],
+     "u_bin_rs_s0/q[216]": [
+      228.433,
+      265.967
+     ],
+     "u_bin_rs_s0/q[404]": [
+      257.0,
+      267.233
+     ],
+     "u_bin_rs_s0/q[174]": [
+      221.833,
+      266.433
+     ],
+     "u_bin_rs_s0/q[423]": [
+      259.9,
+      266.867
+     ],
+     "u_bin_rs_s0/q[409]": [
+      258.167,
+      266.6
+     ],
+     "u_bin_rs_s0/q[507]": [
+      272.567,
+      266.333
+     ],
+     "u_bin_rs_s0/q[426]": [
+      261.0,
+      266.067
+     ],
+     "u_bin_rs_s0/q[137]": [
+      216.233,
+      266.167
+     ],
+     "u_bin_rs_s0/q[454]": [
+      264.733,
+      266.267
+     ],
+     "u_bin_rs_s0/q[204]": [
+      226.133,
+      265.967
+     ],
+     "u_bin_rs_s0/q[215]": [
+      227.667,
+      265.967
+     ],
+     "u_bin_rs_s0/q[144]": [
+      217.567,
+      265.8
+     ],
+     "u_bin_rs_s0/q[167]": [
+      220.733,
+      265.7
+     ],
+     "u_bin_rs_s0/q[447]": [
+      264.333,
+      265.433
+     ],
+     "u_bin_rs_s0/q[383]": [
+      254.3,
+      265.967
+     ],
+     "u_bin_rs_s0/q[248]": [
+      231.933,
+      265.967
+     ],
+     "u_bin_rs_s0/q[421]": [
+      259.667,
+      265.967
+     ],
+     "u_bin_rs_s0/q[242]": [
+      231.4,
+      265.633
+     ],
+     "u_bin_rs_s0/q[435]": [
+      261.4,
+      266.167
+     ],
+     "u_bin_rs_s0/q[227]": [
+      229.6,
+      265.167
+     ],
+     "u_bin_rs_s0/q[498]": [
+      271.033,
+      265.433
+     ],
+     "u_bin_rs_s0/q[474]": [
+      267.667,
+      265.367
+     ],
+     "u_bin_rs_s0/q[510]": [
+      273.033,
+      265.067
+     ],
+     "u_bin_rs_s0/q[467]": [
+      266.767,
+      265.067
+     ],
+     "u_bin_rs_s0/q[418]": [
+      259.567,
+      265.267
+     ],
+     "u_bin_rs_s0/q[511]": [
+      273.3,
+      264.8
+     ],
+     "u_bin_rs_s0/q[489]": [
+      270.033,
+      264.9
+     ],
+     "u_bin_rs_s0/q[190]": [
+      224.3,
+      264.733
+     ],
+     "u_bin_rs_s0/q[453]": [
+      264.4,
+      265.267
+     ],
+     "u_bin_rs_s0/q[158]": [
+      219.6,
+      264.733
+     ],
+     "u_bin_rs_s0/q[143]": [
+      217.533,
+      264.533
+     ],
+     "u_bin_rs_s0/q[437]": [
+      261.767,
+      265.433
+     ],
+     "u_bin_rs_s0/q[417]": [
+      259.267,
+      265.0
+     ],
+     "u_bin_rs_s0/q[438]": [
+      262.7,
+      264.633
+     ],
+     "u_bin_rs_s0/q[425]": [
+      260.533,
+      264.9
+     ],
+     "u_bin_rs_s0/q[172]": [
+      221.667,
+      264.467
+     ],
+     "u_bin_rs_s0/q[508]": [
+      272.267,
+      264.9
+     ],
+     "u_bin_rs_s0/q[224]": [
+      229.033,
+      264.533
+     ],
+     "u_bin_rs_s0/q[161]": [
+      223.367,
+      260.933
+     ],
+     "u_bin_rs_s0/q[430]": [
+      261.533,
+      264.367
+     ],
+     "u_bin_rs_s0/q[471]": [
+      267.3,
+      264.467
+     ],
+     "u_bin_rs_s0/q[440]": [
+      262.167,
+      265.067
+     ],
+     "u_bin_rs_s0/q[221]": [
+      228.567,
+      264.267
+     ],
+     "u_bin_rs_s0/q[431]": [
+      261.3,
+      264.633
+     ],
+     "u_bin_rs_s0/q[373]": [
+      253.467,
+      264.0
+     ],
+     "u_bin_rs_s0/q[502]": [
+      271.2,
+      264.467
+     ],
+     "u_bin_rs_s0/q[436]": [
+      262.333,
+      263.833
+     ],
+     "u_bin_rs_s0/q[427]": [
+      261.033,
+      263.833
+     ],
+     "u_bin_rs_s0/q[443]": [
+      262.9,
+      264.167
+     ],
+     "u_bin_rs_s0/q[238]": [
+      230.967,
+      263.733
+     ],
+     "u_bin_rs_s0/q[208]": [
+      226.667,
+      263.733
+     ],
+     "u_bin_rs_s0/q[379]": [
+      254.033,
+      263.733
+     ],
+     "u_bin_rs_s0/q[424]": [
+      260.333,
+      263.833
+     ],
+     "u_bin_rs_s0/q[246]": [
+      231.633,
+      264.0
+     ],
+     "u_bin_rs_s0/q[456]": [
+      264.767,
+      263.9
+     ],
+     "u_bin_rs_s0/q[222]": [
+      228.9,
+      263.1
+     ],
+     "u_bin_rs_s0/q[483]": [
+      269.2,
+      263.1
+     ],
+     "u_bin_rs_s0/q[245]": [
+      231.667,
+      263.367
+     ],
+     "u_bin_rs_s0/q[184]": [
+      225.2,
+      260.933
+     ],
+     "u_bin_rs_s0/q[240]": [
+      231.1,
+      263.1
+     ],
+     "u_bin_rs_s0/q[468]": [
+      266.5,
+      263.267
+     ],
+     "u_bin_rs_s0/q[503]": [
+      271.5,
+      263.0
+     ],
+     "u_bin_rs_s0/q[505]": [
+      272.033,
+      262.667
+     ],
+     "u_bin_rs_s0/q[478]": [
+      268.0,
+      262.667
+     ],
+     "u_bin_rs_s0/q[255]": [
+      232.933,
+      262.733
+     ],
+     "u_bin_rs_s0/q[455]": [
+      264.533,
+      262.733
+     ],
+     "u_bin_rs_s0/q[244]": [
+      231.5,
+      262.467
+     ],
+     "u_bin_rs_s0/q[187]": [
+      225.8,
+      259.867
+     ],
+     "u_bin_rs_s0/q[203]": [
+      227.233,
+      260.567
+     ],
+     "u_bin_rs_s0/q[450]": [
+      263.933,
+      262.2
+     ],
+     "u_bin_rs_s0/q[164]": [
+      220.3,
+      262.033
+     ],
+     "u_bin_rs_s0/q[212]": [
+      227.033,
+      262.1
+     ],
+     "u_bin_rs_s0/q[228]": [
+      229.567,
+      261.833
+     ],
+     "u_bin_rs_s0/q[501]": [
+      271.467,
+      262.033
+     ],
+     "u_bin_rs_s0/q[464]": [
+      266.067,
+      262.033
+     ],
+     "u_bin_rs_s0/q[495]": [
+      270.467,
+      262.1
+     ],
+     "u_bin_rs_s0/q[444]": [
+      262.833,
+      262.2
+     ],
+     "u_bin_rs_s0/q[183]": [
+      225.3,
+      259.133
+     ],
+     "u_bin_rs_s0/q[249]": [
+      232.233,
+      261.667
+     ],
+     "u_bin_rs_s0/q[439]": [
+      262.6,
+      261.4
+     ],
+     "u_bin_rs_s0/q[491]": [
+      270.0,
+      261.2
+     ],
+     "u_bin_rs_s0/q[482]": [
+      268.933,
+      260.867
+     ],
+     "u_bin_rs_s0/q[476]": [
+      267.633,
+      261.2
+     ],
+     "u_bin_rs_s0/q[254]": [
+      232.767,
+      261.033
+     ],
+     "u_bin_rs_s0/q[236]": [
+      230.7,
+      260.4
+     ],
+     "u_bin_rs_s0/q[217]": [
+      228.167,
+      260.133
+     ],
+     "u_bin_rs_s0/q[232]": [
+      230.1,
+      260.233
+     ],
+     "u_bin_rs_s0/q[487]": [
+      269.067,
+      260.867
+     ],
+     "u_bin_rs_s0/q[461]": [
+      265.567,
+      260.567
+     ],
+     "u_bin_rs_s0/q[250]": [
+      232.533,
+      260.5
+     ],
+     "u_bin_rs_s0/q[188]": [
+      225.767,
+      257.6
+     ],
+     "u_bin_rs_s0/q[473]": [
+      267.133,
+      260.033
+     ],
+     "u_bin_rs_s0/q[189]": [
+      225.967,
+      256.8
+     ],
+     "u_bin_rs_s0/q[173]": [
+      224.633,
+      255.733
+     ],
+     "u_bin_rs_s0/q[237]": [
+      230.8,
+      258.5
+     ],
+     "u_bin_rs_s0/q[191]": [
+      226.067,
+      256.067
+     ],
+     "u_bin_rs_s0/q[225]": [
+      229.5,
+      257.533
+     ],
+     "u_bin_rs_s0/q[239]": [
+      231.0,
+      257.6
+     ],
+     "u_bin_rs_s0/q[186]": [
+      225.833,
+      253.933
+     ],
+     "u_bin_rs_s0/q[126]": [
+      221.6,
+      197.867
+     ],
+     "u_bin_rs_s0/q[127]": [
+      221.433,
+      197.767
+     ],
+     "u_bin_rs_s0/q[125]": [
+      221.533,
+      197.033
+     ],
+     "u_bin_rs_s0/q[124]": [
+      221.633,
+      196.667
+     ],
+     "u_bin_rs_s1/q[513]": [
+      256.533,
+      264.1
+     ],
+     "u_bin_rs_s1/q[512]": [
+      254.8,
+      264.0
+     ],
+     "u_bin_rs_s1/q[390]": [
+      204.767,
+      280.2
+     ],
+     "u_bin_rs_s1/q[366]": [
+      207.933,
+      273.467
+     ],
+     "u_bin_rs_s1/q[319]": [
+      201.4,
+      272.833
+     ],
+     "u_bin_rs_s1/q[339]": [
+      199.9,
+      276.233
+     ],
+     "u_bin_rs_s1/q[256]": [
+      184.467,
+      276.433
+     ],
+     "u_bin_rs_s1/q[360]": [
+      205.733,
+      272.9
+     ],
+     "u_bin_rs_s1/q[387]": [
+      204.767,
+      277.4
+     ],
+     "u_bin_rs_s1/q[469]": [
+      215.567,
+      278.5
+     ],
+     "u_bin_rs_s1/q[321]": [
+      210.0,
+      262.367
+     ],
+     "u_bin_rs_s1/q[286]": [
+      193.4,
+      273.9
+     ],
+     "u_bin_rs_s1/q[264]": [
+      192.133,
+      272.0
+     ],
+     "u_bin_rs_s1/q[378]": [
+      205.667,
+      274.8
+     ],
+     "u_bin_rs_s1/q[401]": [
+      212.833,
+      270.833
+     ],
+     "u_bin_rs_s1/q[494]": [
+      220.467,
+      276.233
+     ],
+     "u_bin_rs_s1/q[284]": [
+      204.267,
+      262.033
+     ],
+     "u_bin_rs_s1/q[492]": [
+      222.667,
+      273.733
+     ],
+     "u_bin_rs_s1/q[272]": [
+      207.267,
+      257.6
+     ],
+     "u_bin_rs_s1/q[452]": [
+      217.767,
+      272.733
+     ],
+     "u_bin_rs_s1/q[396]": [
+      211.9,
+      270.567
+     ],
+     "u_bin_rs_s1/q[338]": [
+      211.267,
+      262.733
+     ],
+     "u_bin_rs_s1/q[223]": [
+      165.533,
+      288.667
+     ],
+     "u_bin_rs_s1/q[471]": [
+      213.567,
+      279.4
+     ],
+     "u_bin_rs_s1/q[213]": [
+      165.133,
+      287.667
+     ],
+     "u_bin_rs_s1/q[444]": [
+      219.633,
+      269.3
+     ],
+     "u_bin_rs_s1/q[496]": [
+      223.2,
+      273.167
+     ],
+     "u_bin_rs_s1/q[341]": [
+      201.0,
+      273.1
+     ],
+     "u_bin_rs_s1/q[435]": [
+      215.1,
+      272.367
+     ],
+     "u_bin_rs_s1/q[443]": [
+      216.833,
+      271.667
+     ],
+     "u_bin_rs_s1/q[199]": [
+      163.233,
+      287.233
+     ],
+     "u_bin_rs_s1/q[218]": [
+      165.433,
+      287.767
+     ],
+     "u_bin_rs_s1/q[509]": [
+      220.167,
+      277.667
+     ],
+     "u_bin_rs_s1/q[466]": [
+      216.2,
+      275.433
+     ],
+     "u_bin_rs_s1/q[294]": [
+      204.667,
+      262.2
+     ],
+     "u_bin_rs_s1/q[491]": [
+      215.633,
+      279.567
+     ],
+     "u_bin_rs_s1/q[475]": [
+      221.6,
+      271.3
+     ],
+     "u_bin_rs_s1/q[486]": [
+      220.033,
+      274.167
+     ],
+     "u_bin_rs_s1/q[332]": [
+      209.333,
+      262.733
+     ],
+     "u_bin_rs_s1/q[382]": [
+      206.5,
+      272.733
+     ],
+     "u_bin_rs_s1/q[447]": [
+      209.533,
+      278.933
+     ],
+     "u_bin_rs_s1/q[246]": [
+      168.2,
+      288.3
+     ],
+     "u_bin_rs_s1/q[398]": [
+      201.867,
+      279.3
+     ],
+     "u_bin_rs_s1/q[364]": [
+      202.267,
+      274.0
+     ],
+     "u_bin_rs_s1/q[324]": [
+      205.967,
+      264.467
+     ],
+     "u_bin_rs_s1/q[462]": [
+      214.667,
+      275.6
+     ],
+     "u_bin_rs_s1/q[302]": [
+      190.2,
+      276.867
+     ],
+     "u_bin_rs_s1/q[248]": [
+      167.4,
+      289.033
+     ],
+     "u_bin_rs_s1/q[247]": [
+      167.767,
+      288.4
+     ],
+     "u_bin_rs_s1/q[463]": [
+      216.5,
+      273.533
+     ],
+     "u_bin_rs_s1/q[318]": [
+      200.8,
+      268.233
+     ],
+     "u_bin_rs_s1/q[309]": [
+      194.233,
+      273.633
+     ],
+     "u_bin_rs_s1/q[300]": [
+      196.233,
+      270.4
+     ],
+     "u_bin_rs_s1/q[428]": [
+      212.9,
+      272.0
+     ],
+     "u_bin_rs_s1/q[383]": [
+      202.633,
+      275.867
+     ],
+     "u_bin_rs_s1/q[503]": [
+      223.667,
+      272.1
+     ],
+     "u_bin_rs_s1/q[254]": [
+      168.867,
+      287.933
+     ],
+     "u_bin_rs_s1/q[474]": [
+      218.7,
+      272.633
+     ],
+     "u_bin_rs_s1/q[464]": [
+      215.167,
+      274.7
+     ],
+     "u_bin_rs_s1/q[303]": [
+      206.733,
+      259.967
+     ],
+     "u_bin_rs_s1/q[421]": [
+      216.533,
+      267.167
+     ],
+     "u_bin_rs_s1/q[340]": [
+      207.967,
+      264.0
+     ],
+     "u_bin_rs_s1/q[431]": [
+      210.167,
+      274.8
+     ],
+     "u_bin_rs_s1/q[395]": [
+      207.2,
+      272.567
+     ],
+     "u_bin_rs_s1/q[314]": [
+      191.167,
+      276.967
+     ],
+     "u_bin_rs_s1/q[232]": [
+      166.867,
+      286.5
+     ],
+     "u_bin_rs_s1/q[326]": [
+      204.667,
+      265.067
+     ],
+     "u_bin_rs_s1/q[244]": [
+      167.433,
+      287.567
+     ],
+     "u_bin_rs_s1/q[349]": [
+      210.133,
+      262.833
+     ],
+     "u_bin_rs_s1/q[236]": [
+      167.0,
+      286.867
+     ],
+     "u_bin_rs_s1/q[433]": [
+      214.1,
+      271.033
+     ],
+     "u_bin_rs_s1/q[372]": [
+      202.633,
+      273.733
+     ],
+     "u_bin_rs_s1/q[262]": [
+      194.3,
+      266.067
+     ],
+     "u_bin_rs_s1/q[193]": [
+      163.067,
+      284.433
+     ],
+     "u_bin_rs_s1/q[306]": [
+      194.1,
+      272.467
+     ],
+     "u_bin_rs_s1/q[219]": [
+      165.233,
+      285.867
+     ],
+     "u_bin_rs_s1/q[352]": [
+      201.967,
+      271.1
+     ],
+     "u_bin_rs_s1/q[363]": [
+      202.533,
+      272.1
+     ],
+     "u_bin_rs_s1/q[194]": [
+      163.267,
+      284.067
+     ],
+     "u_bin_rs_s1/q[458]": [
+      214.467,
+      273.633
+     ],
+     "u_bin_rs_s1/q[225]": [
+      166.133,
+      285.5
+     ],
+     "u_bin_rs_s1/q[404]": [
+      203.833,
+      276.433
+     ],
+     "u_bin_rs_s1/q[271]": [
+      189.0,
+      272.1
+     ],
+     "u_bin_rs_s1/q[441]": [
+      221.9,
+      263.633
+     ],
+     "u_bin_rs_s1/q[260]": [
+      195.6,
+      263.833
+     ],
+     "u_bin_rs_s1/q[414]": [
+      212.067,
+      269.5
+     ],
+     "u_bin_rs_s1/q[373]": [
+      204.4,
+      271.033
+     ],
+     "u_bin_rs_s1/q[371]": [
+      199.067,
+      276.167
+     ],
+     "u_bin_rs_s1/q[305]": [
+      192.9,
+      272.833
+     ],
+     "u_bin_rs_s1/q[211]": [
+      164.533,
+      284.8
+     ],
+     "u_bin_rs_s1/q[327]": [
+      199.033,
+      269.767
+     ],
+     "u_bin_rs_s1/q[202]": [
+      163.433,
+      284.533
+     ],
+     "u_bin_rs_s1/q[399]": [
+      204.267,
+      274.8
+     ],
+     "u_bin_rs_s1/q[268]": [
+      199.3,
+      260.767
+     ],
+     "u_bin_rs_s1/q[472]": [
+      222.0,
+      267.6
+     ],
+     "u_bin_rs_s1/q[328]": [
+      198.567,
+      270.133
+     ],
+     "u_bin_rs_s1/q[290]": [
+      189.633,
+      273.533
+     ],
+     "u_bin_rs_s1/q[257]": [
+      199.867,
+      258.6
+     ],
+     "u_bin_rs_s1/q[454]": [
+      209.933,
+      276.767
+     ],
+     "u_bin_rs_s1/q[502]": [
+      226.033,
+      267.5
+     ],
+     "u_bin_rs_s1/q[429]": [
+      220.933,
+      262.1
+     ],
+     "u_bin_rs_s1/q[468]": [
+      210.567,
+      277.867
+     ],
+     "u_bin_rs_s1/q[405]": [
+      207.7,
+      271.733
+     ],
+     "u_bin_rs_s1/q[282]": [
+      198.367,
+      263.367
+     ],
+     "u_bin_rs_s1/q[233]": [
+      166.767,
+      285.167
+     ],
+     "u_bin_rs_s1/q[465]": [
+      212.467,
+      275.533
+     ],
+     "u_bin_rs_s1/q[440]": [
+      220.5,
+      263.833
+     ],
+     "u_bin_rs_s1/q[506]": [
+      219.267,
+      274.533
+     ],
+     "u_bin_rs_s1/q[208]": [
+      163.933,
+      283.967
+     ],
+     "u_bin_rs_s1/q[258]": [
+      188.333,
+      269.567
+     ],
+     "u_bin_rs_s1/q[377]": [
+      205.833,
+      269.133
+     ],
+     "u_bin_rs_s1/q[206]": [
+      163.9,
+      283.533
+     ],
+     "u_bin_rs_s1/q[322]": [
+      200.767,
+      266.433
+     ],
+     "u_bin_rs_s1/q[478]": [
+      225.667,
+      263.633
+     ],
+     "u_bin_rs_s1/q[406]": [
+      200.967,
+      278.033
+     ],
+     "u_bin_rs_s1/q[420]": [
+      208.3,
+      272.567
+     ],
+     "u_bin_rs_s1/q[331]": [
+      205.433,
+      262.733
+     ],
+     "u_bin_rs_s1/q[483]": [
+      223.0,
+      267.167
+     ],
+     "u_bin_rs_s1/q[500]": [
+      220.2,
+      272.267
+     ],
+     "u_bin_rs_s1/q[380]": [
+      207.533,
+      267.6
+     ],
+     "u_bin_rs_s1/q[470]": [
+      214.5,
+      273.267
+     ],
+     "u_bin_rs_s1/q[296]": [
+      189.033,
+      273.9
+     ],
+     "u_bin_rs_s1/q[460]": [
+      212.467,
+      274.0
+     ],
+     "u_bin_rs_s1/q[412]": [
+      215.1,
+      264.467
+     ],
+     "u_bin_rs_s1/q[400]": [
+      199.533,
+      278.3
+     ],
+     "u_bin_rs_s1/q[343]": [
+      210.9,
+      258.7
+     ],
+     "u_bin_rs_s1/q[490]": [
+      218.3,
+      272.367
+     ],
+     "u_bin_rs_s1/q[362]": [
+      209.7,
+      262.567
+     ],
+     "u_bin_rs_s1/q[489]": [
+      211.2,
+      279.3
+     ],
+     "u_bin_rs_s1/q[354]": [
+      205.833,
+      265.167
+     ],
+     "u_bin_rs_s1/q[477]": [
+      221.867,
+      266.967
+     ],
+     "u_bin_rs_s1/q[270]": [
+      201.133,
+      257.6
+     ],
+     "u_bin_rs_s1/q[346]": [
+      195.633,
+      274.167
+     ],
+     "u_bin_rs_s1/q[348]": [
+      209.167,
+      260.867
+     ],
+     "u_bin_rs_s1/q[203]": [
+      163.6,
+      282.533
+     ],
+     "u_bin_rs_s1/q[345]": [
+      198.467,
+      270.833
+     ],
+     "u_bin_rs_s1/q[445]": [
+      211.867,
+      271.733
+     ],
+     "u_bin_rs_s1/q[437]": [
+      223.267,
+      259.233
+     ],
+     "u_bin_rs_s1/q[455]": [
+      213.4,
+      271.667
+     ],
+     "u_bin_rs_s1/q[297]": [
+      196.767,
+      265.433
+     ],
+     "u_bin_rs_s1/q[222]": [
+      165.067,
+      283.633
+     ],
+     "u_bin_rs_s1/q[430]": [
+      213.2,
+      268.133
+     ],
+     "u_bin_rs_s1/q[368]": [
+      200.533,
+      271.733
+     ],
+     "u_bin_rs_s1/q[436]": [
+      216.5,
+      265.633
+     ],
+     "u_bin_rs_s1/q[227]": [
+      166.0,
+      283.167
+     ],
+     "u_bin_rs_s1/q[265]": [
+      195.433,
+      262.033
+     ],
+     "u_bin_rs_s1/q[449]": [
+      211.367,
+      272.367
+     ],
+     "u_bin_rs_s1/q[250]": [
+      167.9,
+      284.333
+     ],
+     "u_bin_rs_s1/q[439]": [
+      210.8,
+      271.467
+     ],
+     "u_bin_rs_s1/q[461]": [
+      206.9,
+      278.5
+     ],
+     "u_bin_rs_s1/q[201]": [
+      163.467,
+      281.567
+     ],
+     "u_bin_rs_s1/q[511]": [
+      228.6,
+      264.0
+     ],
+     "u_bin_rs_s1/q[394]": [
+      203.5,
+      272.1
+     ],
+     "u_bin_rs_s1/q[392]": [
+      211.2,
+      264.1
+     ],
+     "u_bin_rs_s1/q[320]": [
+      201.667,
+      263.1
+     ],
+     "u_bin_rs_s1/q[450]": [
+      211.0,
+      272.633
+     ],
+     "u_bin_rs_s1/q[369]": [
+      206.633,
+      265.433
+     ],
+     "u_bin_rs_s1/q[446]": [
+      207.0,
+      275.967
+     ],
+     "u_bin_rs_s1/q[376]": [
+      200.067,
+      272.833
+     ],
+     "u_bin_rs_s1/q[453]": [
+      207.3,
+      276.6
+     ],
+     "u_bin_rs_s1/q[288]": [
+      202.1,
+      257.967
+     ],
+     "u_bin_rs_s1/q[411]": [
+      206.9,
+      270.833
+     ],
+     "u_bin_rs_s1/q[409]": [
+      211.833,
+      265.633
+     ],
+     "u_bin_rs_s1/q[403]": [
+      213.533,
+      262.933
+     ],
+     "u_bin_rs_s1/q[499]": [
+      218.133,
+      272.1
+     ],
+     "u_bin_rs_s1/q[427]": [
+      209.1,
+      270.767
+     ],
+     "u_bin_rs_s1/q[253]": [
+      168.933,
+      282.9
+     ],
+     "u_bin_rs_s1/q[384]": [
+      195.367,
+      278.033
+     ],
+     "u_bin_rs_s1/q[482]": [
+      224.2,
+      263.467
+     ],
+     "u_bin_rs_s1/q[413]": [
+      215.4,
+      262.2
+     ],
+     "u_bin_rs_s1/q[370]": [
+      205.233,
+      266.067
+     ],
+     "u_bin_rs_s1/q[221]": [
+      165.533,
+      281.367
+     ],
+     "u_bin_rs_s1/q[220]": [
+      165.133,
+      281.9
+     ],
+     "u_bin_rs_s1/q[407]": [
+      205.667,
+      270.933
+     ],
+     "u_bin_rs_s1/q[241]": [
+      167.733,
+      282.0
+     ],
+     "u_bin_rs_s1/q[497]": [
+      217.733,
+      271.833
+     ],
+     "u_bin_rs_s1/q[448]": [
+      216.233,
+      266.067
+     ],
+     "u_bin_rs_s1/q[289]": [
+      192.067,
+      267.333
+     ],
+     "u_bin_rs_s1/q[212]": [
+      164.767,
+      280.567
+     ],
+     "u_bin_rs_s1/q[479]": [
+      213.433,
+      273.167
+     ],
+     "u_bin_rs_s1/q[388]": [
+      208.6,
+      264.9
+     ],
+     "u_bin_rs_s1/q[418]": [
+      207.7,
+      269.933
+     ],
+     "u_bin_rs_s1/q[197]": [
+      162.933,
+      280.033
+     ],
+     "u_bin_rs_s1/q[337]": [
+      204.933,
+      261.033
+     ],
+     "u_bin_rs_s1/q[510]": [
+      216.5,
+      274.367
+     ],
+     "u_bin_rs_s1/q[355]": [
+      197.4,
+      271.1
+     ],
+     "u_bin_rs_s1/q[249]": [
+      168.5,
+      281.833
+     ],
+     "u_bin_rs_s1/q[438]": [
+      210.6,
+      269.767
+     ],
+     "u_bin_rs_s1/q[215]": [
+      165.067,
+      280.3
+     ],
+     "u_bin_rs_s1/q[473]": [
+      224.533,
+      260.567
+     ],
+     "u_bin_rs_s1/q[480]": [
+      225.4,
+      260.867
+     ],
+     "u_bin_rs_s1/q[393]": [
+      208.367,
+      265.267
+     ],
+     "u_bin_rs_s1/q[451]": [
+      214.633,
+      267.167
+     ],
+     "u_bin_rs_s1/q[292]": [
+      195.233,
+      263.633
+     ],
+     "u_bin_rs_s1/q[228]": [
+      166.467,
+      280.2
+     ],
+     "u_bin_rs_s1/q[192]": [
+      162.633,
+      278.867
+     ],
+     "u_bin_rs_s1/q[424]": [
+      212.667,
+      264.9
+     ],
+     "u_bin_rs_s1/q[207]": [
+      164.167,
+      279.3
+     ],
+     "u_bin_rs_s1/q[334]": [
+      195.133,
+      269.233
+     ],
+     "u_bin_rs_s1/q[295]": [
+      191.533,
+      267.333
+     ],
+     "u_bin_rs_s1/q[217]": [
+      165.5,
+      279.3
+     ],
+     "u_bin_rs_s1/q[316]": [
+      199.8,
+      262.1
+     ],
+     "u_bin_rs_s1/q[287]": [
+      198.333,
+      259.333
+     ],
+     "u_bin_rs_s1/q[335]": [
+      201.433,
+      263.1
+     ],
+     "u_bin_rs_s1/q[402]": [
+      200.133,
+      274.0
+     ],
+     "u_bin_rs_s1/q[457]": [
+      217.7,
+      264.367
+     ],
+     "u_bin_rs_s1/q[467]": [
+      212.8,
+      270.933
+     ],
+     "u_bin_rs_s1/q[263]": [
+      195.4,
+      258.6
+     ],
+     "u_bin_rs_s1/q[293]": [
+      192.333,
+      265.9
+     ],
+     "u_bin_rs_s1/q[204]": [
+      163.767,
+      278.767
+     ],
+     "u_bin_rs_s1/q[379]": [
+      213.533,
+      257.067
+     ],
+     "u_bin_rs_s1/q[504]": [
+      221.0,
+      267.433
+     ],
+     "u_bin_rs_s1/q[351]": [
+      199.9,
+      266.6
+     ],
+     "u_bin_rs_s1/q[205]": [
+      164.2,
+      278.4
+     ],
+     "u_bin_rs_s1/q[374]": [
+      203.5,
+      266.267
+     ],
+     "u_bin_rs_s1/q[330]": [
+      198.0,
+      265.433
+     ],
+     "u_bin_rs_s1/q[329]": [
+      201.867,
+      261.4
+     ],
+     "u_bin_rs_s1/q[259]": [
+      193.233,
+      259.967
+     ],
+     "u_bin_rs_s1/q[304]": [
+      203.367,
+      256.267
+     ],
+     "u_bin_rs_s1/q[195]": [
+      162.933,
+      278.133
+     ],
+     "u_bin_rs_s1/q[481]": [
+      228.0,
+      256.967
+     ],
+     "u_bin_rs_s1/q[285]": [
+      192.933,
+      263.833
+     ],
+     "u_bin_rs_s1/q[410]": [
+      210.467,
+      264.267
+     ],
+     "u_bin_rs_s1/q[276]": [
+      188.967,
+      266.333
+     ],
+     "u_bin_rs_s1/q[425]": [
+      210.7,
+      265.967
+     ],
+     "u_bin_rs_s1/q[237]": [
+      166.967,
+      279.667
+     ],
+     "u_bin_rs_s1/q[419]": [
+      210.833,
+      265.0
+     ],
+     "u_bin_rs_s1/q[278]": [
+      194.433,
+      260.933
+     ],
+     "u_bin_rs_s1/q[255]": [
+      168.2,
+      280.933
+     ],
+     "u_bin_rs_s1/q[508]": [
+      221.667,
+      266.7
+     ],
+     "u_bin_rs_s1/q[243]": [
+      167.6,
+      279.767
+     ],
+     "u_bin_rs_s1/q[325]": [
+      201.067,
+      260.933
+     ],
+     "u_bin_rs_s1/q[200]": [
+      163.867,
+      277.233
+     ],
+     "u_bin_rs_s1/q[476]": [
+      215.667,
+      267.967
+     ],
+     "u_bin_rs_s1/q[426]": [
+      204.233,
+      272.2
+     ],
+     "u_bin_rs_s1/q[381]": [
+      201.8,
+      267.967
+     ],
+     "u_bin_rs_s1/q[495]": [
+      211.9,
+      274.167
+     ],
+     "u_bin_rs_s1/q[385]": [
+      198.033,
+      272.2
+     ],
+     "u_bin_rs_s1/q[301]": [
+      200.667,
+      257.433
+     ],
+     "u_bin_rs_s1/q[501]": [
+      212.367,
+      274.433
+     ],
+     "u_bin_rs_s1/q[422]": [
+      205.533,
+      270.033
+     ],
+     "u_bin_rs_s1/q[493]": [
+      220.867,
+      264.633
+     ],
+     "u_bin_rs_s1/q[498]": [
+      220.867,
+      265.167
+     ],
+     "u_bin_rs_s1/q[361]": [
+      205.633,
+      260.767
+     ],
+     "u_bin_rs_s1/q[216]": [
+      164.967,
+      277.667
+     ],
+     "u_bin_rs_s1/q[277]": [
+      191.1,
+      263.0
+     ],
+     "u_bin_rs_s1/q[273]": [
+      196.667,
+      256.7
+     ],
+     "u_bin_rs_s1/q[391]": [
+      205.467,
+      265.0
+     ],
+     "u_bin_rs_s1/q[224]": [
+      166.0,
+      277.5
+     ],
+     "u_bin_rs_s1/q[505]": [
+      211.667,
+      275.167
+     ],
+     "u_bin_rs_s1/q[344]": [
+      198.267,
+      265.367
+     ],
+     "u_bin_rs_s1/q[416]": [
+      208.9,
+      265.067
+     ],
+     "u_bin_rs_s1/q[308]": [
+      194.467,
+      263.9
+     ],
+     "u_bin_rs_s1/q[507]": [
+      228.567,
+      258.433
+     ],
+     "u_bin_rs_s1/q[347]": [
+      202.233,
+      261.667
+     ],
+     "u_bin_rs_s1/q[209]": [
+      164.467,
+      276.7
+     ],
+     "u_bin_rs_s1/q[389]": [
+      208.967,
+      260.933
+     ],
+     "u_bin_rs_s1/q[210]": [
+      164.633,
+      276.6
+     ],
+     "u_bin_rs_s1/q[291]": [
+      192.667,
+      263.1
+     ],
+     "u_bin_rs_s1/q[274]": [
+      189.833,
+      263.467
+     ],
+     "u_bin_rs_s1/q[261]": [
+      191.933,
+      259.5
+     ],
+     "u_bin_rs_s1/q[456]": [
+      208.8,
+      270.667
+     ],
+     "u_bin_rs_s1/q[386]": [
+      201.0,
+      268.133
+     ],
+     "u_bin_rs_s1/q[267]": [
+      187.8,
+      264.167
+     ],
+     "u_bin_rs_s1/q[281]": [
+      195.2,
+      258.7
+     ],
+     "u_bin_rs_s1/q[229]": [
+      166.567,
+      276.867
+     ],
+     "u_bin_rs_s1/q[283]": [
+      195.6,
+      258.6
+     ],
+     "u_bin_rs_s1/q[350]": [
+      200.1,
+      263.633
+     ],
+     "u_bin_rs_s1/q[358]": [
+      203.833,
+      260.933
+     ],
+     "u_bin_rs_s1/q[356]": [
+      207.067,
+      257.433
+     ],
+     "u_bin_rs_s1/q[417]": [
+      202.0,
+      271.3
+     ],
+     "u_bin_rs_s1/q[397]": [
+      203.267,
+      266.967
+     ],
+     "u_bin_rs_s1/q[275]": [
+      193.3,
+      259.4
+     ],
+     "u_bin_rs_s1/q[242]": [
+      167.367,
+      277.5
+     ],
+     "u_bin_rs_s1/q[279]": [
+      196.133,
+      256.9
+     ],
+     "u_bin_rs_s1/q[307]": [
+      200.733,
+      256.367
+     ],
+     "u_bin_rs_s1/q[269]": [
+      188.867,
+      262.833
+     ],
+     "u_bin_rs_s1/q[299]": [
+      197.5,
+      258.333
+     ],
+     "u_bin_rs_s1/q[336]": [
+      198.9,
+      261.767
+     ],
+     "u_bin_rs_s1/q[317]": [
+      200.067,
+      257.967
+     ],
+     "u_bin_rs_s1/q[231]": [
+      166.367,
+      276.233
+     ],
+     "u_bin_rs_s1/q[423]": [
+      206.0,
+      266.867
+     ],
+     "u_bin_rs_s1/q[333]": [
+      198.333,
+      261.833
+     ],
+     "u_bin_rs_s1/q[198]": [
+      163.567,
+      274.167
+     ],
+     "u_bin_rs_s1/q[311]": [
+      197.4,
+      259.4
+     ],
+     "u_bin_rs_s1/q[442]": [
+      212.0,
+      263.467
+     ],
+     "u_bin_rs_s1/q[234]": [
+      167.033,
+      275.433
+     ],
+     "u_bin_rs_s1/q[365]": [
+      199.267,
+      265.067
+     ],
+     "u_bin_rs_s1/q[323]": [
+      197.9,
+      260.033
+     ],
+     "u_bin_rs_s1/q[252]": [
+      168.4,
+      276.5
+     ],
+     "u_bin_rs_s1/q[315]": [
+      200.0,
+      256.633
+     ],
+     "u_bin_rs_s1/q[484]": [
+      213.933,
+      266.8
+     ],
+     "u_bin_rs_s1/q[280]": [
+      189.933,
+      261.567
+     ],
+     "u_bin_rs_s1/q[226]": [
+      166.133,
+      274.633
+     ],
+     "u_bin_rs_s1/q[310]": [
+      198.133,
+      257.533
+     ],
+     "u_bin_rs_s1/q[230]": [
+      166.6,
+      274.533
+     ],
+     "u_bin_rs_s1/q[485]": [
+      208.833,
+      271.733
+     ],
+     "u_bin_rs_s1/q[240]": [
+      167.267,
+      275.167
+     ],
+     "u_bin_rs_s1/q[367]": [
+      197.733,
+      265.9
+     ],
+     "u_bin_rs_s1/q[487]": [
+      214.267,
+      266.6
+     ],
+     "u_bin_rs_s1/q[432]": [
+      206.7,
+      266.067
+     ],
+     "u_bin_rs_s1/q[353]": [
+      198.133,
+      263.2
+     ],
+     "u_bin_rs_s1/q[408]": [
+      207.933,
+      261.2
+     ],
+     "u_bin_rs_s1/q[359]": [
+      197.633,
+      264.467
+     ],
+     "u_bin_rs_s1/q[245]": [
+      167.967,
+      274.8
+     ],
+     "u_bin_rs_s1/q[488]": [
+      209.9,
+      270.567
+     ],
+     "u_bin_rs_s1/q[313]": [
+      197.467,
+      257.6
+     ],
+     "u_bin_rs_s1/q[238]": [
+      167.5,
+      273.9
+     ],
+     "u_bin_rs_s1/q[266]": [
+      193.233,
+      255.1
+     ],
+     "u_bin_rs_s1/q[235]": [
+      167.133,
+      273.733
+     ],
+     "u_bin_rs_s1/q[158]": [
+      159.733,
+      269.767
+     ],
+     "u_bin_rs_s1/q[357]": [
+      199.3,
+      261.3
+     ],
+     "u_bin_rs_s1/q[251]": [
+      167.967,
+      274.267
+     ],
+     "u_bin_rs_s1/q[239]": [
+      167.2,
+      273.267
+     ],
+     "u_bin_rs_s1/q[196]": [
+      162.833,
+      271.367
+     ],
+     "u_bin_rs_s1/q[415]": [
+      203.9,
+      264.533
+     ],
+     "u_bin_rs_s1/q[184]": [
+      162.267,
+      269.933
+     ],
+     "u_bin_rs_s1/q[298]": [
+      197.933,
+      253.567
+     ],
+     "u_bin_rs_s1/q[191]": [
+      162.667,
+      270.3
+     ],
+     "u_bin_rs_s1/q[150]": [
+      158.967,
+      267.867
+     ],
+     "u_bin_rs_s1/q[176]": [
+      161.333,
+      269.033
+     ],
+     "u_bin_rs_s1/q[141]": [
+      157.9,
+      267.333
+     ],
+     "u_bin_rs_s1/q[135]": [
+      157.667,
+      266.6
+     ],
+     "u_bin_rs_s1/q[375]": [
+      207.667,
+      253.933
+     ],
+     "u_bin_rs_s1/q[342]": [
+      196.733,
+      259.867
+     ],
+     "u_bin_rs_s1/q[214]": [
+      164.933,
+      270.2
+     ],
+     "u_bin_rs_s1/q[173]": [
+      160.967,
+      267.767
+     ],
+     "u_bin_rs_s1/q[188]": [
+      162.2,
+      268.867
+     ],
+     "u_bin_rs_s1/q[312]": [
+      196.533,
+      254.833
+     ],
+     "u_bin_rs_s1/q[178]": [
+      161.667,
+      266.8
+     ],
+     "u_bin_rs_s1/q[129]": [
+      156.967,
+      264.1
+     ],
+     "u_bin_rs_s1/q[175]": [
+      161.0,
+      265.7
+     ],
+     "u_bin_rs_s1/q[140]": [
+      157.233,
+      264.367
+     ],
+     "u_bin_rs_s1/q[185]": [
+      161.767,
+      265.967
+     ],
+     "u_bin_rs_s1/q[133]": [
+      157.4,
+      262.2
+     ],
+     "u_bin_rs_s1/q[459]": [
+      214.733,
+      254.267
+     ],
+     "u_bin_rs_s1/q[174]": [
+      161.167,
+      263.567
+     ],
+     "u_bin_rs_s1/q[154]": [
+      159.467,
+      261.767
+     ],
+     "u_bin_rs_s1/q[148]": [
+      158.9,
+      261.4
+     ],
+     "u_bin_rs_s1/q[165]": [
+      159.7,
+      262.933
+     ],
+     "u_bin_rs_s1/q[187]": [
+      162.533,
+      263.2
+     ],
+     "u_bin_rs_s1/q[434]": [
+      210.2,
+      253.733
+     ],
+     "u_bin_rs_s1/q[179]": [
+      161.3,
+      262.367
+     ],
+     "u_bin_rs_s1/q[147]": [
+      158.4,
+      260.133
+     ],
+     "u_bin_rs_s1/q[144]": [
+      158.3,
+      258.767
+     ],
+     "u_bin_rs_s1/q[128]": [
+      156.1,
+      258.333
+     ],
+     "u_bin_rs_s1/q[146]": [
+      158.1,
+      258.867
+     ],
+     "u_bin_rs_s1/q[139]": [
+      157.333,
+      258.433
+     ],
+     "u_bin_rs_s1/q[177]": [
+      161.533,
+      259.667
+     ],
+     "u_bin_rs_s1/q[181]": [
+      161.733,
+      259.967
+     ],
+     "u_bin_rs_s1/q[182]": [
+      161.9,
+      259.4
+     ],
+     "u_bin_rs_s1/q[138]": [
+      157.333,
+      256.967
+     ],
+     "u_bin_rs_s1/q[183]": [
+      162.233,
+      258.333
+     ],
+     "u_bin_rs_s1/q[172]": [
+      161.2,
+      257.167
+     ],
+     "u_bin_rs_s1/q[136]": [
+      157.833,
+      255.1
+     ],
+     "u_bin_rs_s1/q[186]": [
+      161.967,
+      257.867
+     ],
+     "u_bin_rs_s1/q[157]": [
+      159.333,
+      256.367
+     ],
+     "u_bin_rs_s1/q[149]": [
+      158.667,
+      255.533
+     ],
+     "u_bin_rs_s1/q[151]": [
+      158.667,
+      255.8
+     ],
+     "u_bin_rs_s1/q[145]": [
+      158.167,
+      254.833
+     ],
+     "u_bin_rs_s1/q[155]": [
+      159.2,
+      254.367
+     ],
+     "u_bin_rs_s1/q[168]": [
+      160.4,
+      254.567
+     ],
+     "u_bin_rs_s1/q[143]": [
+      158.033,
+      253.1
+     ],
+     "u_bin_rs_s1/q[142]": [
+      157.9,
+      252.933
+     ],
+     "u_bin_rs_s1/q[166]": [
+      160.533,
+      253.733
+     ],
+     "u_bin_rs_s1/q[164]": [
+      160.467,
+      253.467
+     ],
+     "u_bin_rs_s1/q[130]": [
+      156.6,
+      251.4
+     ],
+     "u_bin_rs_s1/q[180]": [
+      161.467,
+      253.567
+     ],
+     "u_bin_rs_s1/q[167]": [
+      160.6,
+      252.467
+     ],
+     "u_bin_rs_s1/q[134]": [
+      157.0,
+      251.133
+     ],
+     "u_bin_rs_s1/q[170]": [
+      160.8,
+      251.867
+     ],
+     "u_bin_rs_s1/q[171]": [
+      160.333,
+      251.933
+     ],
+     "u_bin_rs_s1/q[161]": [
+      159.933,
+      250.767
+     ],
+     "u_bin_rs_s1/q[137]": [
+      157.9,
+      248.867
+     ],
+     "u_bin_rs_s1/q[132]": [
+      157.233,
+      248.267
+     ],
+     "u_bin_rs_s1/q[156]": [
+      158.9,
+      249.6
+     ],
+     "u_bin_rs_s1/q[163]": [
+      159.833,
+      249.167
+     ],
+     "u_bin_rs_s1/q[162]": [
+      160.233,
+      248.533
+     ],
+     "u_bin_rs_s1/q[131]": [
+      157.267,
+      247.0
+     ],
+     "u_bin_rs_s1/q[152]": [
+      159.367,
+      247.9
+     ],
+     "u_bin_rs_s1/q[189]": [
+      162.2,
+      249.967
+     ],
+     "u_bin_rs_s1/q[190]": [
+      162.533,
+      249.6
+     ],
+     "u_bin_rs_s1/q[153]": [
+      158.867,
+      247.7
+     ],
+     "u_bin_rs_s1/q[159]": [
+      159.233,
+      247.8
+     ],
+     "u_bin_rs_s1/q[160]": [
+      159.867,
+      246.533
+     ],
+     "u_bin_rs_s1/q[169]": [
+      160.267,
+      247.167
+     ],
+     "u_bin_rs_s1/q[127]": [
+      158.767,
+      191.367
+     ],
+     "u_bin_rs_s1/q[126]": [
+      158.2,
+      190.467
+     ],
+     "u_bin_rs_s1/q[125]": [
+      158.433,
+      189.767
+     ],
+     "u_bin_rs_s1/q[124]": [
+      158.4,
+      189.3
+     ],
+     "u_bin_rs_s1/q[123]": [
+      158.333,
+      188.567
+     ],
+     "u_bin_rs_s1/q[121]": [
+      157.733,
+      188.867
+     ],
+     "u_bin_rs_s1/q[122]": [
+      158.433,
+      187.867
+     ],
+     "u_bin_rs_s1/q[120]": [
+      158.333,
+      187.5
+     ],
+     "u_bin_rs_s1/q[119]": [
+      157.833,
+      187.133
+     ],
+     "u_bin_rs_s1/q[118]": [
+      158.0,
+      186.867
+     ],
+     "u_bin_rs_s1/q[114]": [
+      157.567,
+      186.7
+     ],
+     "u_bin_rs_s1/q[115]": [
+      157.667,
+      186.5
+     ],
+     "u_bin_rs_s1/q[116]": [
+      157.467,
+      186.233
+     ],
+     "u_bin_rs_s1/q[113]": [
+      157.233,
+      185.8
+     ],
+     "u_bin_rs_s1/q[117]": [
+      157.1,
+      186.333
+     ],
+     "u_bin_rs_s1/q[112]": [
+      157.067,
+      185.6
+     ],
+     "u_bin_rs_s1/q[110]": [
+      157.233,
+      184.633
+     ],
+     "u_bin_rs_s1/q[111]": [
+      157.0,
+      184.633
+     ],
+     "u_bin_rs_s1/q[107]": [
+      156.767,
+      183.367
+     ],
+     "u_bin_rs_s1/q[108]": [
+      156.533,
+      183.633
+     ],
+     "u_bin_rs_s1/q[106]": [
+      156.767,
+      183.0
+     ],
+     "u_bin_rs_s1/q[109]": [
+      156.867,
+      183.267
+     ],
+     "u_bin_rs_s1/q[105]": [
+      156.667,
+      181.567
+     ],
+     "u_bin_rs_s1/q[103]": [
+      156.767,
+      181.033
+     ],
+     "u_bin_rs_s1/q[104]": [
+      156.567,
+      181.3
+     ],
+     "u_bin_rs_s1/q[101]": [
+      156.9,
+      180.4
+     ],
+     "u_bin_rs_s1/q[102]": [
+      157.2,
+      180.2
+     ],
+     "u_bin_rs_s1/q[99]": [
+      156.667,
+      179.867
+     ],
+     "u_bin_rs_s1/q[98]": [
+      156.567,
+      179.4
+     ],
+     "u_bin_rs_s1/q[95]": [
+      156.567,
+      178.767
+     ],
+     "u_bin_rs_s1/q[97]": [
+      156.467,
+      179.033
+     ],
+     "u_bin_rs_s1/q[100]": [
+      156.4,
+      179.4
+     ],
+     "u_bin_rs_s1/q[96]": [
+      156.3,
+      178.667
+     ],
+     "u_bin_rs_s1/q[93]": [
+      156.333,
+      178.233
+     ],
+     "u_bin_rs_s1/q[94]": [
+      156.2,
+      178.4
+     ],
+     "u_bin_rs_s1/q[91]": [
+      156.233,
+      177.6
+     ],
+     "u_bin_rs_s1/q[92]": [
+      155.867,
+      177.967
+     ],
+     "u_bin_rs_s1/q[90]": [
+      155.867,
+      177.333
+     ],
+     "u_bin_rs_s1/q[89]": [
+      155.733,
+      176.967
+     ],
+     "u_bin_rs_s1/q[86]": [
+      155.633,
+      176.267
+     ],
+     "u_bin_rs_s1/q[88]": [
+      155.5,
+      176.533
+     ],
+     "u_bin_rs_s1/q[85]": [
+      155.767,
+      175.8
+     ],
+     "u_bin_rs_s1/q[87]": [
+      155.867,
+      175.533
+     ],
+     "u_bin_rs_s1/q[84]": [
+      155.533,
+      175.067
+     ],
+     "u_bin_rs_s1/q[83]": [
+      155.433,
+      174.533
+     ],
+     "u_bin_rs_s1/q[82]": [
+      154.833,
+      175.0
+     ],
+     "u_bin_rs_s1/q[81]": [
+      155.167,
+      174.167
+     ],
+     "u_bin_rs_s1/q[80]": [
+      155.133,
+      173.833
+     ],
+     "u_bin_rs_s1/q[79]": [
+      155.067,
+      173.567
+     ],
+     "u_bin_rs_s1/q[75]": [
+      154.833,
+      173.2
+     ],
+     "u_bin_rs_s1/q[77]": [
+      154.5,
+      173.467
+     ],
+     "u_bin_rs_s1/q[76]": [
+      154.933,
+      172.733
+     ],
+     "u_bin_rs_s1/q[78]": [
+      154.333,
+      173.367
+     ],
+     "u_bin_rs_s1/q[73]": [
+      154.267,
+      171.833
+     ],
+     "u_bin_rs_s1/q[74]": [
+      154.167,
+      172.3
+     ],
+     "u_bin_rs_s1/q[71]": [
+      153.7,
+      172.1
+     ],
+     "u_bin_rs_s1/q[72]": [
+      154.4,
+      170.867
+     ],
+     "u_bin_rs_s1/q[70]": [
+      154.033,
+      170.567
+     ],
+     "u_bin_rs_s1/q[69]": [
+      154.033,
+      170.133
+     ],
+     "u_bin_rs_s1/q[68]": [
+      153.8,
+      169.233
+     ],
+     "u_bin_rs_s1/q[67]": [
+      153.467,
+      168.867
+     ],
+     "u_bin_rs_s1/q[65]": [
+      153.833,
+      167.8
+     ],
+     "u_bin_rs_s1/q[66]": [
+      153.267,
+      168.333
+     ],
+     "u_bin_rs_s1/q[64]": [
+      152.833,
+      166.8
+     ],
+     "u_bin_b_tw_data_i/q[617]": [
+      523.15,
+      554.45
+     ],
+     "u_bin_b_tw_data_i/q[579]": [
+      523.7,
+      549.8
+     ],
+     "u_bin_b_tw_data_i/q[581]": [
+      523.9,
+      548.9
+     ],
+     "u_bin_b_tw_data_i/q[629]": [
+      523.25,
+      555.05
+     ],
+     "u_bin_b_tw_data_i/q[640]": [
+      524.15,
+      557.05
+     ],
+     "u_bin_b_tw_data_i/q[578]": [
+      524.1,
+      548.0
+     ],
+     "u_bin_b_tw_data_i/q[573]": [
+      523.65,
+      546.8
+     ],
+     "u_bin_b_tw_data_i/q[602]": [
+      524.0,
+      550.9
+     ],
+     "u_bin_b_tw_data_i/q[843]": [
+      505.75,
+      567.05
+     ],
+     "u_bin_b_tw_data_i/q[842]": [
+      506.25,
+      567.0
+     ],
+     "u_bin_b_tw_data_i/q[604]": [
+      523.7,
+      549.25
+     ],
+     "u_bin_b_tw_data_i/q[582]": [
+      523.75,
+      545.45
+     ],
+     "u_bin_b_tw_data_i/q[694]": [
+      523.2,
+      560.4
+     ],
+     "u_bin_b_tw_data_i/q[669]": [
+      523.75,
+      557.1
+     ],
+     "u_bin_b_tw_data_i/q[608]": [
+      524.1,
+      548.5
+     ],
+     "u_bin_b_tw_data_i/q[693]": [
+      523.9,
+      560.4
+     ],
+     "u_bin_b_tw_data_i/q[666]": [
+      523.55,
+      556.2
+     ],
+     "u_bin_b_tw_data_i/q[613]": [
+      523.25,
+      546.85
+     ],
+     "u_bin_b_tw_data_i/q[883]": [
+      506.25,
+      568.7
+     ],
+     "u_bin_b_tw_data_i/q[592]": [
+      523.25,
+      543.7
+     ],
+     "u_bin_b_tw_data_i/q[611]": [
+      523.4,
+      546.4
+     ],
+     "u_bin_b_tw_data_i/q[830]": [
+      506.65,
+      560.9
+     ],
+     "u_bin_b_tw_data_i/q[853]": [
+      506.35,
+      564.15
+     ]
+    },
+    "added_regs": 0,
+    "cycles": "0 (re-site of existing bin flops)",
+    "fixes": {
+     "bins": 863,
+     "worst_um": 840.3,
+     "predicted_worst_um": 280.1
+    },
+    "note": "QC-PADLEG-1119 cland->bin: bins sit at the core centre, hard cland ring at the face; FIRM bin site = L1 midpoint of the cland ring bit and the bin's placed consumer point (qc_struct_core minimax rule). ring->bin and bin->consumer each <= predicted_worst_um (+~35 um spread). Site not checked against hard-core footprints (region_form does); type already carries relay_sites."
+   }
+  ]
  }
 }
