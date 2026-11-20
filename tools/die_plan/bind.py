@@ -1198,6 +1198,8 @@ class Binder:
             f = self.ab["plan_cells"]
             f = f if Path(f).is_absolute() else str(Path(base or str(E.REPO)) / f)
             self.pc = bind_plancells.PlanCells(self, f, base or str(E.REPO))
+        if self.ab.get("efault_stage") is not None and self.pc is None:
+            raise BindError("efault_stage: needs asbuilt.plan_cells (it stages the eq inputs of ot_dp_efault plan cells)")
 
     def apply_rewires(self, base):
         """asbuilt.rewires {"file": plan rewires (schema *.plan_rewires.v1), "classes": [names]}: connectivity the plan
@@ -3487,6 +3489,8 @@ class Binder:
                 raise BindError(f"{IS.KEY}: types {[x.pattern for x in lis_cfg['types']]} match no bound type")
             if f"module {TS.KEEP_MODULE} " not in cells:
                 cells += "\n" + TS.KEEP_CELL              # intra stations: keep stage regs (same cell as the tail split)
+        if getattr(self, "pc", None) is not None and self.pc.efs_cfg is not None and f"module {TS.KEEP_MODULE} " not in cells:
+            cells += "\n" + TS.KEEP_CELL                  # EFAULT-STAGE: eq station regs (bind_efault_stage.py)
         import gen_rtl
         if any(t.get("reset_replicate") for t in (self.plan.get("partition_types") or {}).values()) \
                 and "module ot_dp_rrelay " not in cells:      # S81-COLGEN-1: the kept 1-bit copy cell
@@ -3702,6 +3706,11 @@ class Binder:
             (out.parent / "bind_intra_stations.json").write_text(json.dumps(dict(
                 schema="opentallas.die_plan.bind_intra_stations.v1", option=self.ab[IS.KEY],
                 types=dict(sorted(getattr(self, "_intra_stations", {}).items()))), indent=1) + "\n")
+        if getattr(self, "pc", None) is not None and self.pc.efs_cfg is not None:
+            # EFAULT-STAGE receipt: per bound type and staged ot_dp_efault cell the depth, AGE, chains and pre-GPL site rows
+            (out.parent / "bind_efault_stage.json").write_text(json.dumps(dict(
+                schema="opentallas.die_plan.bind_efault_stage.v1", option=self.ab["efault_stage"],
+                types=dict(sorted(self.pc.efs_rec.items()))), indent=1) + "\n")
         if rows:
             (out.parent / "strap_ties_check.tcl").write_text(STR.tie_check_tcl(rows))
         return files

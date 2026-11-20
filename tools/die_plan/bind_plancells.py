@@ -24,6 +24,7 @@ import sys
 from collections import defaultdict
 from pathlib import Path
 
+import bind_efault_stage as ES
 import bind_elab as E
 
 
@@ -68,6 +69,18 @@ class PlanCells:
         self.leafdrv, self.busdrv, self.celldrv, self.explicit = {}, {}, {}, {}
         for tn, t in self.T.items():
             self.leafdrv[tn], self.busdrv[tn] = self._resolve(tn, t)
+        # EFAULT-STAGE (opt-in asbuilt.efault_stage, bind_efault_stage.py; absent = nothing below runs)
+        self.efs_cfg, self.efs_rec = None, {}
+        if ab.get(ES.KEY) is not None:
+            err = sys.modules[type(B).__module__].BindError
+            try:
+                self.efs_cfg = ES.config(ab, base)
+                hit = [tn for tn, t in self.T.items() if ES.selected(self.efs_cfg, tn) and ES.staged_cells(self.efs_cfg, t["cells"])]
+            except ValueError as exc:
+                raise err(str(exc)) from exc
+            if not hit:
+                raise err(f"{ES.KEY}: types {[x.pattern for x in self.efs_cfg['types']]} match no plan-cell type with "
+                          f"an {ES.MODULE} cell")
 
     # ---------------------------------------------------------------- conns -> per-bit atoms
     def _atoms(self, tn, e):
@@ -285,10 +298,13 @@ class PlanCells:
             decl.append(f"    wire [{W - 1}:0] pb_{b};")
             e = [render(bits[j]) if j in bits else undriven(f"out bus {b}[{j}] has no plan driver") for j in range(W)]
             body.append(f"    assign pb_{b} = {_concat(e)};  // plan-driven out bus")
+        efs = self._efs_emit(p, pt, tn, t, render, decl, body) if self.efs_cfg is not None else {}
         for inst, c in sorted(t["cells"].items()):
             mod = self.iface.get(c["module"])
             if mod is None:
                 continue
+            if inst in efs:
+                c = dict(c, params=dict(c.get("params", {}), AGE=efs[inst]["age_new"]))
             cs = []
             for port, (d, _r) in mod.ports.items():
                 if d == "output":
@@ -306,9 +322,57 @@ class PlanCells:
                     atoms = [a for e in ents for a in self._atoms(pt, e)]
                 if w is not None and len(atoms) != w:
                     B.errors.append(f"PLAN_CELL_WIDTH {pt}.{inst}.{port}: {len(atoms)} driver bits != port width {w}")
+                if inst in efs and port == "eq":
+                    cs.append(f"        .{port}({_concat([efs[inst]['q'][j] for j in range(len(atoms))])})")
+                    continue
                 cs.append(f"        .{port}({_concat([render(a) for a in atoms])})")
             ps = ", ".join(f".{k}({v})" for k, v in sorted(c.get("params", {}).items()))
             body.append(f"    // plan cell ({pt})\n    {c['module']}" + (f" #({ps})" if ps else "") +
                         f" u_{inst} (\n" + ",\n".join(cs) + "\n    );")
             self.stats["cells_emitted"] += 1
         return render
+
+    def _efs_emit(self, p, pt, tn, t, render, decl, body):
+        """EFAULT-STAGE: the eq station chains of the staged ot_dp_efault cells of partition p (plan-cell type pt, bound
+        type tn); returns {inst: dict(age_new, q=[per eq bit expression])}, records the receipt row per bound type"""
+        B, cfg = self.B, self.efs_cfg
+        if not ES.selected(cfg, pt, tn):
+            return {}
+        import bind_pad_tail_split as TS
+        bm = sys.modules[type(B).__module__]
+        err, short_id = bm.BindError, bm.short_id
+        typ = (getattr(B, "types", {}) or {}).get(tn) or B.plan["partition_types"].get(tn) or \
+            B.plan["partition_types"].get(pt) or {}
+        sites = cfg["sites"].get(tn, cfg["sites"].get(pt)) or {}
+        if not isinstance(sites, dict):
+            raise err(f"{ES.KEY} {tn}: sites entry must be {{cell: {{at_um, src_um}}}}")
+        out, rec = {}, {}
+        try:
+            for inst in ES.staged_cells(cfg, t["cells"]):
+                plan = ES.plan_cell(cfg, pt, inst, t["cells"][inst], lambda b: TS.src_xy(typ, b), sites)
+                row = dict({k: v for k, v in plan.items() if k != "chains"}, cells=0, flops=0, chains=[], sites={})
+                rec[inst] = row
+                D = plan["depth"]
+                if D == 0:
+                    continue
+                q = {}
+                eq = t["cells"][inst]["conns"]["eq"]
+                for ch in plan["chains"]:
+                    i0 = ch["bits"][0]
+                    nm = short_id(f"u_efs{D}_{inst[2:] if inst.startswith('u_') else inst}_{i0}", 90)
+                    decl.append(f"    wire {nm}_q;")
+                    body.append(f"    ot_dp_dly_keep #(.W(1), .D({D})) {nm} (.clk(clk), .d({render(('eq', eq[i0]['epoch']))}), "
+                                f".q({nm}_q));  // efault eq station: {ch['dist_um']:.0f} um in {D + 1} hops")
+                    for j in ch["bits"]:
+                        q[j] = f"{nm}_q"
+                    row["chains"].append(dict(inst=nm, bus=ch["bus"], bits=ch["bits"], src_um=ch["src_um"],
+                                              dist_um=ch["dist_um"]))
+                    row["sites"].update(ES.site_rows(nm, ch["regs_um"]))
+                    row["cells"] += 1
+                    row["flops"] += D
+                out[inst] = dict(age_new=plan["age_new"], q=[q[j] for j in range(len(eq))])
+                self.stats["efault_stage_cells"] += row["cells"]
+        except ValueError as exc:
+            raise err(str(exc)) from exc
+        self.efs_rec[tn] = rec
+        return out
