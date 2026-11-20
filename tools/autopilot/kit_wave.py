@@ -12836,6 +12836,36 @@ def failed_tool_files(why, root=None):
     return sorted(out)[:12]
 
 
+DIGEST_CACHE = os.environ.get("OT_KW_DIGEST_CACHE") or os.path.expanduser("~/.local/state/kw-tools-digests.json")
+
+
+def _digest_persist(root, name, key, compute):
+    """COORD 11-19 (tick 1,241 s; cProfile of `kit_wave.py plan`: select -> minimal_auto_retry -> rearm_changes -> stage_tools_digest -> flow_guard.closure_files = 16 s of AST walking per process, again
+    for every group, in every tick): an rt/<sha12> tree never changes after it is made, so the digest of its tool closure is computed ONCE per (tree, name) and kept in a small state file.  Only
+    for a root whose directory name is a 12-hex rt sha; any other root computes as before.  -> digest"""
+    root = Path(root)
+    if not re.fullmatch(r"[0-9a-f]{12}", root.name):
+        return compute()
+    k = f"{root.name}|{name}|{key}"
+    try:
+        d = json.loads(Path(DIGEST_CACHE).read_text())
+    except (OSError, ValueError):
+        d = {}
+    if k in d:
+        return d[k]
+    v = compute()
+    try:
+        d = {kk: vv for kk, vv in d.items() if kk.split("|", 1)[0] == root.name or len(d) < 400}          # keep the file small: other trees only while < 400 entries
+        d[k] = v
+        tmp = f"{DIGEST_CACHE}.{os.getpid()}"
+        Path(DIGEST_CACHE).parent.mkdir(parents=True, exist_ok=True)
+        Path(tmp).write_text(json.dumps(d))
+        os.replace(tmp, DIGEST_CACHE)
+    except OSError:
+        pass
+    return v
+
+
 def stage_tools_digest(root=None, group="", files=None):
     """FABLE-FLOWCLASS-RETRY-2030 P2: the digest of the tool files the generation / bind stages import (flow_guard.closure_files of gen.py, gen_phys.py,
     bind.py), not the whole tools tree: rt/current changed 22 times in 4 h and re-armed every failed row each time.
@@ -12860,16 +12890,19 @@ def stage_tools_digest(root=None, group="", files=None):
             return (root / rel).read_text()
         except (OSError, UnicodeDecodeError):
             return None
-    h = hashlib.sha1()
-    try:
-        for rel in FG.closure_files(read, entry=entry):
-            try:
-                h.update(rel.encode()); h.update((root / rel).read_bytes())
-            except OSError:
-                pass
-    except Exception:
-        h.update(b"no-closure")
-    _STAGE_TOOLS[k] = h.hexdigest()[:16]
+
+    def compute():
+        h = hashlib.sha1()
+        try:
+            for rel in FG.closure_files(read, entry=entry):
+                try:
+                    h.update(rel.encode()); h.update((root / rel).read_bytes())
+                except OSError:
+                    pass
+        except Exception:
+            h.update(b"no-closure")
+        return h.hexdigest()[:16]
+    _STAGE_TOOLS[k] = _digest_persist(root, "stage", group or "-", compute)
     return _STAGE_TOOLS[k]
 
 
@@ -13047,14 +13080,16 @@ def exec_tools_digest(root=None):
     key = str(root)
     if key in _EXEC_TOOLS:
         return _EXEC_TOOLS[key]
-    h = hashlib.sha1()
-    for p in exec_tools_files(root):
-        try:
-            h.update(str(p.relative_to(root)).encode())
-            h.update(p.read_bytes())
-        except OSError:
-            h.update(b"unreadable")
-    _EXEC_TOOLS[key] = h.hexdigest()[:20]
+    def compute():
+        h = hashlib.sha1()
+        for p in exec_tools_files(root):
+            try:
+                h.update(str(p.relative_to(root)).encode())
+                h.update(p.read_bytes())
+            except OSError:
+                h.update(b"unreadable")
+        return h.hexdigest()[:20]
+    _EXEC_TOOLS[key] = _digest_persist(root, "exec", "-", compute)
     return _EXEC_TOOLS[key]
 
 

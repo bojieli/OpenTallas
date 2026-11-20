@@ -700,3 +700,16 @@ def test_plan_failure_with_alternating_evidence_texts_stops_after_three():
     assert ev and ev["event"] == "BLOCKED-REPEAT"                                         # 3rd failure of the same plan cause on the same block
     assert RS.gate(st, "qwen_kvsys", "qkd_pv_fin_s8_pin", {"block": "B"})[0] is True      # held while block / plan file are unchanged
     assert RS.gate(st, "qwen_kvsys", "qkd_pv_fin_s8_pin", {"block": "B2"})[0] is False   # a new plan block (D25e3) releases it
+
+
+def test_tool_digests_of_an_immutable_rt_tree_are_computed_once_and_persisted(tmp_path, monkeypatch):
+    monkeypatch.setattr(KW, "DIGEST_CACHE", str(tmp_path / "dg.json"))
+    root = tmp_path / "abcdef012345"                                  # an rt/<sha12> tree
+    root.mkdir()
+    calls = []
+    assert KW._digest_persist(root, "stage", "gen", lambda: calls.append(1) or "D1") == "D1"
+    assert KW._digest_persist(root, "stage", "gen", lambda: calls.append(1) or "D2") == "D1" and len(calls) == 1      # second call (a new process) reads the file
+    assert KW._digest_persist(root, "stage", "bind", lambda: "D3") == "D3"
+    other = tmp_path / "not-a-sha-dir"
+    other.mkdir()
+    assert KW._digest_persist(other, "stage", "gen", lambda: "X") == "X" and KW._digest_persist(other, "stage", "gen", lambda: "Y") == "Y"   # mutable trees are never cached
