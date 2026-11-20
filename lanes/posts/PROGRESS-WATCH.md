@@ -74,3 +74,4 @@
 - 2026-11-20 08:51 PST ALERT NO-ADVANCE s81: 67 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (seqhost__t1 x12@gen, slice_station__t6__cl0755c26e x12@gen, dsdv_slice_lepe_mu_LP__t2 x11@gen)
 - 2026-11-20 09:01 PST ALERT NO-ADVANCE qwen_kvsys: 12 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (kv3_hg_v3 x6@gen, kv3_pv_v6n x5@gen, kv3_pv_v8 x4@gen)
 - 2026-11-20 09:31 PST ALERT STUCK-STATE s81: 3 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. col_h9_r0_p3__t1__cl31d0dc4b, 2026-11-20 03:51)
+- 2026-11-20 09:51 PST ALERT NO-PROGRESS s81_head: 16 eligible rows, 0 KIT-WAVE LAUNCH for 128 min (last 07:43); NO-LAUNCH x15
