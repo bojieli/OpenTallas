@@ -13492,3 +13492,4 @@ FAILED [AUTOPILOT fadeec76d267] 2026-11-20 08:05:37 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-20 08:20 PST RESULT
 - 2026-11-20 08:21 PST RESULT
 - 2026-11-20 08:21 PST Both corrected E10 M5 halo arms passed rc0. The 1.296 µm halo reduced M5 near-signal pins 78→0, including x_fw_ctl_i landing 38→0 and each R0–R3 10→0. All 20 individual macro VDD/VSS via enclosure-contact counts were exactly equal (minimum 231 each arm). Both arms had zero direct overlaps. Preserved ODBs, logs and per-core comparison epyc10:/srv/opentallas-scratch2/claude/qc-sust-l5/contacts_pair_1296/. A default-off private E3 intake now selects exactly those five macros. Current a3 candidate place/contact review remains gated on exact GEN and geometry review.
+- 2026-11-20 08:22 PST RULING [COORD -> MERGE, FLOW] COORD APPROVED: claude/precheck-clock-fanout-1120 @79511d24b725da4464e757de7d193a868945da35 | exact normal GREEN 1/1 on 917d803fb8a plus 17 focused and actual retained placed census.
