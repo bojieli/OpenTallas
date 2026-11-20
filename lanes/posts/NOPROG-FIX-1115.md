@@ -352,3 +352,8 @@
   NO-PROGRESS intel1 kv3_io_cor 5_2_route stage 48.9 h job 59.2 h: drt_violations best 246 last 246 rows 54 window-gain 0.4%; stagnant 13.0 h; last event 0.2 h ago, log write 0.2 h ago (3415 lines)
   NO-PROGRESS epyc10 hd_lep0N pregrt_ff_hold stage 8.8 h job 14.9 h: no new meaningful log line for 6.2 h; last: 0 |       0 |       0 |            0 |    +0.0% |   5.002 |   0.000 | u_core.u.g_pin.g_s[0].u_st.q[5
   NO-PROGRESS epyc10 native59 pregrt_ff_hold stage 8.3 h job 13.0 h: no new meaningful log line for 6.2 h; last: 0 |       0 |       0 |            0 |    +0.0% |   5.000 |   0.000 | u_bound.u_pd5_emb_code_q_388.q
+- 2026-11-20 12:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-20 12:52 PST: 322 running jobs, PROGRESSING 309, SLOW 9, NO-PROGRESS 4 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc9 serdes__t13 signoff_meas_072023 stage 61.5 h job 62.7 h: no new meaningful log line for 61.1 h; last: - hold_ff: FAIL WNS -55.85 ps < 0
+  NO-PROGRESS intel1 kv3_io_cor 5_2_route stage 49.9 h job 60.2 h: drt_violations best 243 last 243 rows 55 window-gain 1.2%; stagnant 14.0 h; last event 0.0 h ago, log write 0.0 h ago (3457 lines)
+  NO-PROGRESS epyc10 hd_lep0N pregrt_ff_hold stage 9.8 h job 15.9 h: no new meaningful log line for 7.2 h; last: 0 |       0 |       0 |            0 |    +0.0% |   5.002 |   0.000 | u_core.u.g_pin.g_s[0].u_st.q[5
+  NO-PROGRESS epyc10 native59 pregrt_ff_hold stage 9.3 h job 14.0 h: no new meaningful log line for 7.2 h; last: 0 |       0 |       0 |            0 |    +0.0% |   5.000 |   0.000 | u_bound.u_pd5_emb_code_q_388.q
