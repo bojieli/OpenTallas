@@ -3,7 +3,17 @@
 Written 2026-11-20 09:5x PST. Posts: lanes/posts/KV-PLAN-R1.md. Lane dirs: epyc8 /srv/opentallas-scratch2/claude/kv-plan-r1
 (wt = proposal-3 clone, wt_rls, wt_pv = lane clones), intel2 same path (kR_copy, kR_rb, wait_r3.sh), hub logs intel2 ~/tmp/kvplanr1.
 
-## Live
+## Live (update 11:3x)
+- R3 first launch ran 10:4x and exited 3 before compose: the runtime check could not see the new rt sha in the unfetched warm repo.
+  Relaunched as run_gate_r3b.sh (fetches first; candidate source_gate_r3b, outputs normal_g0_r3b / normal_gates_r3b), intel2 launcher
+  PID 1927491, log ~/tmp/kvplanr1/d26_r3b_gate.log, proof priority epyc8. source_gate_r3 (copy only, never gated) is FREE FOR CLEANUP.
+- compose_r3.sh now also: 5. d26r3_cil/krsp_rt26.py (32 p2p slg_*.krsp lanes 5 -> 6 fixed cycles) and 6. gen.py latency --inplace.
+  Cause (COORD hourly GEN_LINT on 8 hg types): D25e2 fall rows + D25e3 ROWS-KV-ECTL-RT-FIX took every ECTL rq lane -1, bind
+  kv_regen RESPONSE_LAT 25 / QK 36 (krq [6,7] krs [10,11]); hardened ectlk q0..q3 views are 26 / 37, so qkd_ectl3_kiss_st_cols
+  elaborates g_param_mismatch. krs +1 restores RT 26 (D25e value). Verify after R3b bind: param_regen.json ectl RESPONSE_LAT 26.
+  Alternative if a cycle matters: re-harden ectlk q0..q3 at -GQK_ISSUE_AGE=36 -GRESPONSE_LAT=25 and set CORE_QK/CORE_RL.
+- kit_wave hold (kit_wave_edit 35d9003a96b): dies.qwen_kvsys.hold_items kv3_hg, hg_v1, hg_v1p2..v1p6, hg_v3. Lift (delete keys) when D26 applies.
+- R3 lockup list also has the 16 head-core rst_n pins (40 ports).
 - D26 R2 dc02d274deb3 (reset-only baseline): queued epyc8, intel2 client 2895973, log ~/tmp/kvd23c/d26_typed_r2_gate.log.
 - D26 R3 = R2 + rows: epyc8 kv-d23-compose8/d26_raw/d26_contracts/run_gate_r3.sh (R2 script + compose_r3.sh + runtime check
   b699b5b678 / 8899ba10e9 / c6ab8bd7be). Launched by intel2 waiter wait_r3.sh (proof priority, epyc8), log ~/tmp/kvplanr1/d26_r3_gate.log.
