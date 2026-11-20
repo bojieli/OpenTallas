@@ -49,6 +49,22 @@ class Apply(unittest.TestCase):
         self.assertEqual(r["pilot"]["item"], "t1"); self.assertTrue(r["pilot"]["hold_added"])
         self.assertTrue((c / "lanes/handoff/tree_switch_kv.json").exists())
 
+    def test_apply_keeps_the_same_bind_the_host_verifier_checked(self):
+        c = mk()
+        selected = {"mode": "bind", "asbuilt": "/x/selected_asbuilt.json", "bind_out": "/x/sealed_bind"}
+        candidate = dict(cand(), asbuilt="/x/legacy_asbuilt.json", bind_out="/x/new/native_bind/out",
+                         config={"kit_rtl": selected})
+        seen = []
+
+        def verify(*args, bind_out):
+            seen.append(bind_out)
+            return {}, {}
+
+        apply(c, candidate, "/x/old", "E0", no_pilot=True, TC=TC, host_verify=verify)
+        d = json.loads((c / "autopilot/kit_wave.json").read_text())["dies"]["kv"]
+        self.assertEqual(seen, [selected["bind_out"]])
+        self.assertEqual(d["kit_rtl"], selected)
+
     def test_superseded_auto_pilot_is_preserved_in_apply_receipt(self):
         old = {"id": "pilot-kv-deadbeefdead", "plan_sha": "s0", "items": ["*"],
                "pilot_items": ["t3"], "release": ["gen_pilot:kv:deadbeefdead"],

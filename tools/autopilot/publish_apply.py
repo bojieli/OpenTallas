@@ -103,7 +103,7 @@ def candidate_bind_args(obj):
     """-> (probe args, hosts) of a bind-mode candidate, (None, []) when the candidate builds no bind"""
     m = obj.get("marker", obj)
     mc = m.get("config") or {}
-    kr = mc.get("kit_rtl") or {}
+    kr = A.marker_kit_rtl(m)
     if kr.get("mode") != "bind" or not kr.get("bind_out"):
         return None, []
     env = dict(m.get("die_gen_env") or {})
@@ -140,99 +140,66 @@ def bind_check_full(obj, run=subprocess.run):
     return False, "bind check: no candidate host answered: " + "; ".join(err)[:400], []
 
 
-# FLOW-FIX-2045 (COORD, S81-DIE-R3: publish_onbase.sh keeps the BASE copy of <tree>/physical/die_plan/<die>/plan_of_record/native_bind/out and expects a post-apply bind that the D8i chain never ran: the applied tree served
-# 343 of 397 stale bound modules for about 1.5 h).  Every die's apply now installs the event's SEALED bind (kit_rtl.bind_out) into that out directory on every publish host, verifies the module hashes, and
-# refuses the event commit when a host still differs.
-OUT_REL = "physical/die_plan/{die}/plan_of_record/native_bind/out"
+# The candidate source has already been sealed against its manifest. Read the
+# same explicit bind that apply_marker will put in the wave configuration.
 OUT_PROBE = r"""
-import hashlib, json, os, subprocess, sys
+import hashlib, json, os, sys
 a = json.loads(sys.argv[1])
-def tree_hash(d):
-    if not os.path.isdir(d):
-        return None
-    out = {}
-    for root, dirs, files in os.walk(os.path.join(d, "rtl")):
-        for f in files:
-            if f.endswith((".sv", ".v")):
-                p = os.path.join(root, f)
-                out[os.path.relpath(p, d)] = hashlib.sha256(open(p, "rb").read()).hexdigest()
-    for f in ("bind_report.json", "native_topology.json"):
-        p = os.path.join(d, f)
-        if os.path.isfile(p):
-            out[f] = hashlib.sha256(open(p, "rb").read()).hexdigest()
-    return out
-res = {"host": os.uname().nodename}
+res = {}
 try:
     if not os.path.isdir(a["tree"]):
         res["state"] = "no-tree"
     else:
-        sealed, out = a["sealed"], a["out"]
-        s = tree_hash(sealed)
-        if s is None:
-            res["state"] = "no-sealed"
-        else:
-            o = tree_hash(out)
-            res.update(sealed_n=len(s), out_n=None if o is None else len(o))
-            if o != s and a.get("install"):
-                if os.path.isdir(out):
-                    subprocess.run(["chmod", "-R", "u+w", out], check=False)
-                os.makedirs(out, exist_ok=True)
-                r = subprocess.run(["rsync", "-a", "--delete", "--chmod=u+w", sealed.rstrip("/") + "/", out.rstrip("/") + "/"], capture_output=True, text=True)
-                subprocess.run(["chmod", "-R", "a-w", out], check=False)
-                res["installed"] = r.returncode == 0
-                o = tree_hash(out)
-            if o == s:
-                res["state"] = "equal"
-            else:
-                res["state"] = "differs"
-                res["diff"] = len({k for k in set(s) | set(o or {}) if (o or {}).get(k) != s.get(k)})
-except Exception as e:
-    res["state"] = "error"
-    res["error"] = (type(e).__name__ + ": " + str(e))[:200]
+        bind = a["bind"]
+        hashes = {}
+        for root, _, names in os.walk(os.path.join(bind, "rtl")):
+            for name in names:
+                if name.endswith((".sv", ".v")):
+                    path = os.path.join(root, name)
+                    with open(path, "rb") as stream:
+                        hashes[os.path.relpath(path, bind)] = hashlib.sha256(stream.read()).hexdigest()
+        if not hashes:
+            raise ValueError("bind has no RTL modules")
+        for name in ("bind_report.json", "native_topology.json"):
+            path = os.path.join(bind, name)
+            if name == "bind_report.json" or os.path.isfile(path):
+                with open(path, "rb") as stream:
+                    hashes[name] = hashlib.sha256(stream.read()).hexdigest()
+        res.update(state="ok", count=len(hashes), digest=hashlib.sha256(
+            json.dumps(hashes, sort_keys=True).encode()).hexdigest())
+except (OSError, ValueError) as e:
+    res.update(state="error", error=str(e)[:200])
 print("AP_JSON " + json.dumps(res))
 """
 
 
-def out_sync_args(obj):
-    """-> (args dict, hosts) of a bind-mode candidate whose sealed bind is not already the tree's out dir, else (None, [])"""
+def out_sync(obj, run=subprocess.run):
+    """Verify identical selected bind output on hosts that hold the tree."""
     args, hosts = candidate_bind_args(obj)
     if not args:
-        return None, []
-    m = obj.get("marker", obj)
-    die = m.get("die") or obj.get("die") or ""
-    if not die or not args.get("src"):
-        return None, []
-    out = str(Path(args["src"]) / OUT_REL.format(die=die))
-    if os.path.realpath(out) == os.path.realpath(args["bind_out"]):
-        return None, []                                   # the kit reads the tree's own out: nothing to install
-    return dict(tree=args["src"], sealed=args["bind_out"], out=out, install=True), hosts
-
-
-def out_sync(obj, run=subprocess.run):
-    """-> (ok, [one line per host]).  ok None = nothing to do.  Every host that holds the tree gets the sealed bind installed into the tree's native_bind/out (rsync, new inodes, dirs re-sealed a-w) and the
-    module hashes verified; a host whose out still differs, or that lacks the sealed bind, makes ok False"""
-    args, hosts = out_sync_args(obj)
-    if not args:
-        return None, ["no out install needed"]
-    lines, bad = [], False
+        return None, ["no bind output to verify"]
+    probe = dict(tree=args["src"], bind=args["bind_out"])
+    lines, bad, digest = [], False, None
     for h in hosts:
         p = run(["ssh", "-n", "-o", "BatchMode=yes", "-o", "ControlPath=none", "-o", "ConnectTimeout=15", h,
-                 "python3 -I -c " + shlex.quote(OUT_PROBE) + " " + shlex.quote(json.dumps(args))], capture_output=True, text=True, timeout=900)
+                 "python3 -I -c " + shlex.quote(OUT_PROBE) + " " + shlex.quote(json.dumps(probe))], capture_output=True, text=True, timeout=900)
         row = [x for x in (p.stdout or "").splitlines() if x.startswith("AP_JSON ")]
-        if not row:
+        if p.returncode or not row:
             lines.append(f"{h}: no answer (rc {p.returncode}) {(p.stderr or '')[-120:]}")
             bad = True
             continue
-        r = json.loads(row[-1][8:])
-        st = r.get("state")
-        if st == "equal":
-            lines.append(f"{h}: out == sealed bind ({r.get('sealed_n')} files)" + (" (installed)" if r.get("installed") else ""))
-        elif st == "no-tree":
-            lines.append(f"{h}: no tree here (skipped)")
+        result = json.loads(row[-1][8:])
+        if result["state"] == "no-tree":
+            lines.append(f"{h}: no tree here (checked during replication)")
+        elif result["state"] == "ok" and digest in (None, result["digest"]):
+            digest = result["digest"]
+            lines.append(f"{h}: selected bind verified ({result['count']} files, {digest[:12]})")
         else:
             bad = True
-            lines.append(f"{h}: {st} {r.get('error') or ''} sealed={r.get('sealed_n')} out={r.get('out_n')} differing files={r.get('diff')}".strip())
+            why = result.get("error") or f"selected bind digest {result['digest']} != {digest}"
+            lines.append(f"{h}: {why}")
     return (not bad), lines
+
 
 
 def tree_rel(path, tree_roots):
@@ -604,8 +571,7 @@ def cmd_apply(a, run=subprocess.run, apply_fn=None, commit_fn=None):
         for ln in lines_o:
             print(f"OUT-SYNC {ln}", flush=True)
         if ok_o is False:
-            print("APPLY REFUSED: the event's sealed bind could not be installed into <tree>/.../native_bind/out on every publish host and verified (the applied tree would serve stale bound modules); "
-                  "fix the host named above or pass --skip-out-check")
+            print("APPLY REFUSED: the candidate's selected bind output could not be verified across publish hosts; fix the host named above or pass --skip-out-check")
             return 5
     t0 = time.time()
     res = (apply_fn or A.apply_marker)(C, obj, a.expect_source, a.expect_event, pilot_item=a.pilot_item, optimistic=True)
@@ -802,7 +768,7 @@ def main(argv=None):
     p.add_argument("--no-gate", action="store_true", help="do not start the advisory publish gate")
     p.add_argument("--no-precheck", action="store_true", help="do not start the background PRECHECK-1119 estimator")
     p.add_argument("--skip-bind-check", action="store_true", help="apply although kit_topology.bind_matches says the bind does not match the candidate")
-    p.add_argument("--skip-out-check", action="store_true", help="apply without installing / verifying the sealed bind in <tree>/.../native_bind/out on the publish hosts")
+    p.add_argument("--skip-out-check", action="store_true", help="apply without comparing the selected bind output on the publish hosts")
     p.add_argument("--no-bind-first", action="store_true", help="do not run the strict bind before the apply when the candidate bind does not match (refuse instead, as before)")
     p.add_argument("--die", default="", help="die name (default: from the candidate)")
     p.add_argument("--no-post-bind", action="store_true", help="do not start the post-apply strict bind + LATCHECK (hardlink copy of the published tree)")
