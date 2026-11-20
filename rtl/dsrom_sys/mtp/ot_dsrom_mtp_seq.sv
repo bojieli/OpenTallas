@@ -614,7 +614,12 @@ module ot_dsrom_mtp_seq_fan #(
     end
     wire [USER_W-1:0] r_user = USER_W'(r_data[HDR_USER +: 8]) | (USER_W'(r_data[HDR_USER_HI +: UHIW]) << 8);
     wire [USER_W-1:0] q_user = q_data[DW-1 -: USER_W];
+`ifdef OT_S81HD_CTL_MTP_ROOM_PRE
+    reg room_q;
+    wire room = room_q;
+`else
     wire room = tq_n <= 3'd1 && !sq_v && !hq_v;       // an event may push <= 2 flits + a seed or a dh step
+`endif
     wire sel_q = st == S_SEL && rst_c && room && q_valid;
     wire sel_w = st == S_SEL && rst_c && room && !q_valid && w_valid;
     wire sel_r = st == S_SEL && rst_c && room && !q_valid && !w_valid && r_valid;
@@ -756,6 +761,18 @@ module ot_dsrom_mtp_seq_fan #(
     wire [FLIT-1:0] e_flit = a_reld ? e_dflit : a_relh ? (rflit(eu, r_hh) | {{(FLIT-16){1'b0}}, hdr_ds}) : ef;
     wire e_pop = t_valid && t_ready;
 
+`ifdef OT_S81HD_CTL_MTP_ROOM_PRE
+    // Evaluate the same queue reserve test at the preceding edge. Same-edge
+    // launches take precedence over acknowledgements, as in S_WB below.
+    wire [2:0] tq_n_next = tq_n + {2'b00, e_push} - {2'b00, e_pop};
+    wire seed_pending_next = (sq_v && !s_ready) || (w_any && a_close && a_gn != 0);
+    wire draft_pending_next = (hq_v && !h_ready) ||
+        (w_any && ((a_isrow && !a_rowb) || (a_isdh && !a_dhb && a_dhm)));
+    always @(posedge clk)
+        if (!rst_c) room_q <= 1'b1;
+        else room_q <= tq_n_next <= 3'd1 && !seed_pending_next && !draft_pending_next;
+`endif
+
     integer i;
     always @(posedge clk) begin
         acc_v <= 1'b0;
@@ -766,7 +783,11 @@ module ot_dsrom_mtp_seq_fan #(
         end else begin
             if (e_pop) tq_r <= tq_r + 1'b1;
             if (e_push) tq_w <= tq_w + 1'b1;
+`ifdef OT_S81HD_CTL_MTP_ROOM_PRE
+            tq_n <= tq_n_next;
+`else
             tq_n <= tq_n + (e_push ? 3'd1 : 3'd0) - (e_pop ? 3'd1 : 3'd0);
+`endif
             if (s_valid && s_ready) sq_v <= 1'b0;
             if (h_valid && h_ready) hq_v <= 1'b0;
             case (st)
