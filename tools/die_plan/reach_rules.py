@@ -52,7 +52,8 @@ THE RULES (numbers; the why and the evidence are in ~/coord/lanes/RULEBOOK-1113.
                         it reaches HALF_REACH_UM (180 um), not REACH_UM (S81-STRIP 11-17, COORD 01:55: t47's reset class
                         is falling-edge relay -> relay hops of 363-387 um against a ~416 ps budget, worst -232 ps).  Under
                         reset.relay_lockup "negedge" every internal reset relay (rst_rl_<k>, raw copies rr_t<i>) is an
-                        ot_dp_rrelay_nl (posedge state, NEGEDGE q); leaf taps rst_n_t<i> stay plain posedge.  Checked:
+                        ot_dp_rrelay_nl (posedge state, NEGEDGE q). A type with reset_relay_full emits a posedge-only
+                        version of this cell in its physical kit. Leaf taps rst_n_t<i> stay plain posedge. Checked:
                         (a) every START relay stage's raw reset (landing_reader_start / landing_writer_start raw_reset;
                         the stages are posedge ot_dp_landing_relay) and every clock.landing_local_resets raw: rst_n_t<i>
                         = same edge (REACH_UM from the tap), rr_t<i> / rst_rl_<k> on a negedge type = half cycle
@@ -598,11 +599,17 @@ def _raw_prefix(P, t):
         return "rr_t"
 
 
+def _kit_reset_relay_full(P, tn):
+    """gen_phys.reset_relay_full changes the kit-local _nl definition while keeping its cell name."""
+    return P is not None and bool(P.types[tn].get("reset_relay_full"))
+
+
 def negedge_type(P, tn):
-    """True when type tn's internal reset relays are falling-edge ot_dp_rrelay_nl (reset.relay_lockup negedge)."""
+    """True when the type's physical kit launches internal reset relays on the falling edge."""
     import reset_tree as RT
     try:
-        return bool(RT.relay_lockup(P, tn)) and RT.relay_lockup_form(P) == "negedge"
+        return (bool(RT.relay_lockup(P, tn)) and RT.relay_lockup_form(P) == "negedge"
+                and not _kit_reset_relay_full(P, tn))
     except Exception:
         return False
 
@@ -660,6 +667,8 @@ def raw_hops(P, t, tn, tree=None):
 def tree_half_hops(P, tn, T=None):
     """[(hop um, launch relay, capture relay)] of the type reset tree hops launched by a falling-edge relay."""
     import reset_tree as RT
+    if _kit_reset_relay_full(P, tn):
+        return []
     T = T or RT.for_type(P, tn)
     q = {r["q"]: r for r in T["relays"]}
     out = []
