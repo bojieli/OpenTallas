@@ -125,3 +125,7 @@
   CBC-FALLBACK 79 S81 rows; file lanes/OWNERS-SWEEP.tsv
 - 2026-11-20 01:50 PST 01:50 sweep: 519 rows (S81 351, QC 108, KV ~51, HEAD 9). UNOWNED 0, DEAD-OWNER 0. FAILED-NO-RELAUNCH 8 (S81 7: leaf t37/t42/t47/t51/t52, serdes t16, slice_station t51; KV kv3_hub_Wi). STALE failed/signed 5 (S81 t42,t52,serdes t16,slice_station t51; QC sle_su_l1 clc6d66f5b signed-pending 9.4h). RUNNING >3h: ~190 rows, oldest KV kv3_io_cor 49h, S81 dsdv_slice_iq/kv512/c1x_C 19-40h, QC sle_* 10-16h; see lanes/OWNERS-SWEEP.tsv
 - 2026-11-20 02:50 PST hourly sweep: 518 rows (S81 351 QC 107 KV/HEAD rest). UNOWNED 0, DEAD-OWNER 0, STALE 0. FAILED-NO-RELAUNCH 1 (KV kv3_hub_Wi, WAIT-BIND). UNCLASSIFIED 2 (S81 col_h10_r1__t1__cld01bb4ae, col_h10_r2__t1__clac068e56). 11 CANCEL-UNSIGNABLE jobs treated as cancelled. RUNNING >12h listed in lanes/OWNERS-SWEEP.tsv
+- 2026-11-20 09:50 PST 09:50 sweep lanes/OWNERS-SWEEP.tsv: 498 rows (S81 351, QC 95, KV 51, HEAD 1); 493 unflagged, 5 flagged.
+  KV: kv3_hub_Wi FAILED other flow error 3.4h and kv3_pv_v8 bind stale vs plan 3.7h, both FAILED-NO-RELAUNCH, owner KV-PLAN-R1 alive (posted 09:35).
+  S81: col_h9_r0_p1__t1__pva2e3974f FAILED src_manifest UNCLASSIFIED 6.5h (owner FAIL-ROUTE-1115, posted 09:28, no relaunch); col_h9_r0_p3__t1__cl31d0dc4b cancelled-superseded STALE 6.0h (PROGRESS-WATCH alert only).
+  S81 col_h9_r0_p6__t1__pv0012ba28 cancelled-superseded 2h UNOWNED. HEAD hd_lep0N running 13h, owned (GRT-TRIAGE/HEAD-R14). QC: none flagged; no reset-identity rows flagged.
