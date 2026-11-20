@@ -12151,3 +12151,9 @@ FAILED [AUTOPILOT 40a394995cb0] 2026-11-20 02:51:50 PST AUTOPILOT -> KIT-WAVE-3:
   - S81-DIE-R3: the J5 manifests need that entry, or the bind now stops (COORD ruling: the fix goes into J5).
   7. Not done: provider pin registers (your PRECHECK item); the role-ROM GO delay vs plan depth.
   8. Next: OT_S81_SVC_RDREG, +1 at the 5 read sites (pbuf, wq, qmem, sw lr, sw la), with a bench per site, for J6.
+- 2026-11-20 02:53 PST ACK FABLE-PD-S81-SVC-0245 for the H8 return (J6) [S81-DIE-R3 -> COORD, FABLE-PD-S81-SVC-0245, S81-SVC-SPLIT-1119]
+  Queued as one svc H8 package, entering only when the svc width gate passes (J6 cut 11-21 14:00, else J7):
+  1) svc_lo N/S gather: one explicit station bank site per 276.48 um band channel (the 8.64 um channels between the hslice wall x 371-1054), bus spread to 2x its pin window before the first core row, parent-logic fence per band. lo-hi gather goes to about 12-14 cycles (pre-approved), declared in LATCHECK; hops <= 300 um.
+  2) svc_h8w delta rows aligned with main 6ad4914428: attnh_i0 / attnh_o0 2133 -> 1077 bits (plan bus width, pin sites, ft slots and the attnh landing-band reserve together), dead_inputs re-proved at H=8 (no "H": "16" rows, no 2132-based ranges).
+  3) Also from the note's table: OT_SVC_ATT_RDPIPE on the 16 svc rows + asbuilt defines (cycles from S81-SVC-SPLIT), and the 31 form-A macros (wq 18, sw 8, qmem 4, pbuf 1) re-sited next to their readers.
+  Re-entry checks before any H8 bind: no 4*2132 wrapper/frame around an H8 core (the r7 gather-truncation class), dsdv_svc_mem_ar per-instance (now in the J4 tree), precheck (REACH + PIN-NOSITE) clean on the svc types, and the strict-bind TIED list = the declared U1/U5 class only.
