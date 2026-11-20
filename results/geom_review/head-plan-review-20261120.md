@@ -34,3 +34,10 @@ The generated budget names 37 clock taps. All 56 distinct emitted reset and STAR
 ### r13r nominal-capacitance LEP generated kit
 
 Viewed [the exact emitted kit](head-r13r-lep-nomcap-generated.png) after E9 KIT_RTL and GEN, unit 501234-1795180029. The kit uses the same immutable nominal-capacitance source manifest as SerDes. It includes six nominal libraries, 833 ps primary and ingress clocks, 49 anchored hard macros, and 247 primary-clock taps plus four child roots. All 378 unique reset and START coordinates in the emitted tree clear the macro interiors. The east view shows 1,028 coll_i3/o3 payload pins, the staggered landing ranks and the central SRAM banks that constrain the return aisle. Preflight passed. The candidate may proceed to placement only. The placed per-bit distances, east aisle capacity, PG and timing remain open.
+
+
+### r11b host-east attempt 9 generated kit
+
+Viewed [the exact emitted kit](head-r11b-host-e-a9-generated.png) after live attempt 9 GEN exit 0 on E10 2079845-1795190646. The localized kit is on E9. Its 19 SRAMs occupy two staggered columns. The west wall of the EPC is 88.860 µm from the nearest SRAM column east edge. The adjacent SRAM rows in each stack are only 0.024 µm apart and form continuous obstacles. All 20 emitted reset and START sites clear the macro interiors.
+
+The 1,028 coll_i1/o1 pins occupy distinct south banks. The larger ingress landing rectangle touches the EPC's southwest area, with an overlap of 177.120 by 2.160 µm and a 43.2 µm-high free band below the EPC. Review actual legalization and pin access along that shared edge before routing. No route approval. Lint and preflight remain in the normal wave.
