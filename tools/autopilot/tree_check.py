@@ -5,6 +5,7 @@ Workers run in independent user units; no verification lifetime depends on a dae
 thread in the calling tick. Each attempt keeps its own spec and log.
 """
 import argparse
+from concurrent.futures import ThreadPoolExecutor
 import fcntl
 import hashlib
 import json
@@ -103,6 +104,27 @@ def launch(root, ident, checker, main_sha, links_only=False, launcher=None):
         return pending
 
 
+def verify_host(spec, host):
+    ident = spec["identity"]
+    base = [sys.executable, "-I", spec["checker"], "hosts", ident["tree"], "--hosts", host]
+
+    def probe(basis, args):
+        try:
+            p = subprocess.run(base + args, capture_output=True, text=True)
+            return dict(host=host, basis=basis, rc=p.returncode, output=(p.stdout + p.stderr)[-3000:])
+        except (OSError, subprocess.SubprocessError) as exc:
+            return dict(host=host, basis=basis, rc=1, output=str(exc)[-3000:])
+
+    if spec["links_only"]:
+        return [probe("links", ["--links-only"])]
+    expect = ["--expect", ident["manifest_hash"]]
+    receipt = probe("published-verification-receipt", expect + ["--cached-receipts"])
+    if receipt["rc"] == 0:
+        return [receipt]
+    receipt.update(basis="cache-miss", output=receipt["output"][-1000:])
+    return [receipt, probe("full-verification", expect)]
+
+
 def worker(specfile):
     spec = json.loads(Path(specfile).read_text())
     ident = spec["identity"]
@@ -112,26 +134,14 @@ def worker(specfile):
     except (OSError, ValueError):
         prior = {}
     details, rc = [], 0
-    for host in ident["hosts"]:
-        base = [sys.executable, "-I", spec["checker"], "hosts", ident["tree"], "--hosts", host]
-        if spec["links_only"]:
-            p = subprocess.run(base + ["--links-only"], capture_output=True, text=True)
-            details.append(dict(host=host, basis="links", rc=p.returncode, output=(p.stdout + p.stderr)[-3000:]))
-        else:
-            # Publication already completed a content hash on many hosts. Reuse
-            # that exact successful receipt only while its inventory/signature,
-            # immutable modes and unshared inodes still match.
-            p = subprocess.run(base + ["--expect", ident["manifest_hash"], "--cached-receipts"],
-                               capture_output=True, text=True)
-            basis = "published-verification-receipt"
-            if p.returncode:
-                details.append(dict(host=host, basis="cache-miss", rc=p.returncode,
-                                    output=(p.stdout + p.stderr)[-1000:]))
-                p = subprocess.run(base + ["--expect", ident["manifest_hash"]],
-                                   capture_output=True, text=True)
-                basis = "full-verification"
-            details.append(dict(host=host, basis=basis, rc=p.returncode, output=(p.stdout + p.stderr)[-3000:]))
-        rc |= bool(p.returncode)
+    hosts = ident["hosts"]
+    if hosts:
+        with ThreadPoolExecutor(max_workers=len(hosts)) as pool:
+            checks = [pool.submit(verify_host, spec, host) for host in hosts]
+            for check in checks:
+                host_details = check.result()
+                details.extend(host_details)
+                rc |= bool(host_details[-1]["rc"])
     now = time.time()
     result = dict(prior, identity=ident, running=False, unit=spec["unit"], attempt=spec["attempt"],
                   t=now, state="bad" if rc else "ok", details=details)
