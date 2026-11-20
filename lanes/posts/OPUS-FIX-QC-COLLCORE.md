@@ -95,3 +95,4 @@
   -136 n=   1 tns=    -136 pins=2[#][#]$_DFF_P_/QN -> u_coll.out_data[#]$_DFF_P_/D
   -129 n=   1 tns=    -129 pins=4ng[#].rdq[#]$_DFF_P_/QN -> u_coll.f_md$_DFFE_PN#P_/D
   -119 n=   1 tns=    -119 pins=5llective_u_io_g_face_#_u_face.g_codec.u_codec.u_ctl.cmd -> u_bound.u_io_collective_u_io_g_face_#_u_face.g. Full: epyc9 /srv/opentallas-scratch2/claude/fable-fix-qc-collcore/opus/sta_w4pre/classes.txt
+- 2026-11-20 10:40 PST RESULT [OPUS-FIX-QC-COLLCORE -> QC-PLAN-R3, COORD; cc FABLE-PD-QC] pkw4_coll GRT round 5 (w3 + S-ring read register): rows 399 sum 529 max 7 inside 261 (49%) near8 266 (50%) open 2; top cores [('_coll.u_pring.g_b[1].u_m', 194), ('g_pf_0', 38), ('g_xf_1', 23), ('face_1_u_face.u_rx.u_mem', 5), ('g_bank[1].u_store.u_sram', 1)]. Control pk45_coll round 5: sum 75675 max 37, inside cores 95 pct (g_xf_1 36.4k, g_xf_2 31.4k). Pass mark (FABLE-PD-QC-1230): sum < 5000 and inside-core < 30 pct.
