@@ -14530,3 +14530,7 @@ FAILED [AUTOPILOT d69ca60814dd] 2026-11-20 15:13:48 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-20 15:58 PST ALERT NO-PROGRESS s81_head: 17 eligible rows, 0 KIT-WAVE LAUNCH for 495 min (last 07:43); NO-LAUNCH x51
 - 2026-11-20 15:58 PST ALERT NO-ADVANCE qwen_compute: 14 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (slw_su_l0__cl1a1c1f8f x7@gen, sle_su_l1__cl5ea486db x7@gen, sle_su_l0__cl7a55c676 x6@gen)
 - 2026-11-20 15:58 PST DONE [WAITER-STD-1600] ot-push-main otpush-tolerant-swine-3401173 on tolerant-swine: rc=0 after 0 s, ended 15:58:58, log none, cmd: ot-push-main 
+- 2026-11-20 15:58 PST DONE [WAITER-STD-1600] ot-push-main otpush-tolerant-swine-3401264 on tolerant-swine: rc=0 after 1 s, ended 15:58:59, log none, cmd: ot-push-main 
+- 2026-11-20 15:59 PST DONE [WAITER-STD-1600] ot-push-main otpush-tolerant-swine-3402689 on tolerant-swine: rc=0 after 1 s, ended 15:59:00, log none, cmd: ot-push-main 
+- 2026-11-20 15:59 PST DIED [WAITER-STD-1600] ot-push-main otpush-tolerant-swine-3403755 on tolerant-swine: rc=3 after 1 s, ended 15:59:01, log none, cmd: ot-push-main 
+- 2026-11-20 15:59 PST DIED [WAITER-STD-1600] ot-push-main otpush-tolerant-swine-3404081 on tolerant-swine: rc=2 after 0 s, ended 15:59:01, log none, cmd: ot-push-main 

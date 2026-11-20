@@ -1,2 +1,5 @@
 - 2026-11-20 15:58 PST DONE [WAITER-STD-1600] ot-push-main otpush-tolerant-swine-3401173 on tolerant-swine: rc=0 after 0 s, ended 15:58:58, log none, cmd: ot-push-main 
 - 2026-11-20 15:58 PST DONE [WAITER-STD-1600] ot-push-main otpush-tolerant-swine-3401264 on tolerant-swine: rc=0 after 1 s, ended 15:58:59, log none, cmd: ot-push-main 
+- 2026-11-20 15:59 PST DONE [WAITER-STD-1600] ot-push-main otpush-tolerant-swine-3402689 on tolerant-swine: rc=0 after 1 s, ended 15:59:00, log none, cmd: ot-push-main 
+- 2026-11-20 15:59 PST DIED [WAITER-STD-1600] ot-push-main otpush-tolerant-swine-3403755 on tolerant-swine: rc=3 after 1 s, ended 15:59:01, log none, cmd: ot-push-main 
+- 2026-11-20 15:59 PST DIED [WAITER-STD-1600] ot-push-main otpush-tolerant-swine-3404081 on tolerant-swine: rc=2 after 0 s, ended 15:59:01, log none, cmd: ot-push-main 
