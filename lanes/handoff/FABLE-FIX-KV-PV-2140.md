@@ -1,5 +1,25 @@
 # FABLE-FIX-KV-PV-2140 handoff (KV pv family owner; newest first)
 
+## Update 2026-11-20 08:10Z (read first; supersedes the kit list below)
+- Tools on main f9a626fef84d = form C + mid-hop latches (ebe5d224187) + UNCHAIN.  UNCHAIN: the bind TRUNK-CHAIN form (1b95661b75) chains the
+  trunks of one bit, so the deeper pad's piece is only the pad difference: kv3_pv_v8 D25e form has 32 such pieces (ctl_cmd, 1-2 stages)
+  between trunk ends about 1 mm apart (over the 405 um rule; would be the next worst TT class).  kit_dly_lockup rewrites each as an
+  independent kept trunk of the full depth from the chain source (0 cycles, +229 flops).  Comes with budgets.r_dly_lockup, no new row.
+- Evidence so far (the only real-DB evidence): tail-site + dly_spread SEG dry run on the v8j floorplan DB (tools/dryhooks.sh, out
+  dryhooks_v8j/dry.log): OT_TAIL_SITE copies 9112 of 9112 sited, merged 0 (old tools 9080 / merged 32), max_hop 412.4, routed 404.7 um;
+  54,196 latches in the DB, 43,784 sited with the copies; dly_spread walked 16,713 chains without error.  No timing number exists yet.
+- Kits on epyc10 (all private, DO_NOT_COUNT, goal route, 40 GB / 16 thr, .keep_stage_odbs):
+    v8k = bind4c + C + unchain via the plan key: THE proof kit.  gen started 08:03Z, hub chain ~/tmp/ffkpv2140/chain_key.sh, chain_v8k.log.
+    v8j = same without unchain (admitted 06:48Z): hold-form read on the D25e form; its TT will carry the 32-piece class.
+    v8h = bind2 dense, old tools + C (admitted 06:47Z): hold-form read; TT carries the old -675 merged-copy class.
+  Watcher intel2 watch_kits2.sh posts new key lines of the three kits as AUTO-KIT.  Place is slow under load (3_1 about 90 min).
+- tools/trunk_reach.py + tools/dryhooks2.sh: per-piece T-to-T reach of chained trunk pieces from a tail-site dry run (job waits for memory).
+- Read order when a kit reaches CTS: OT_TAP_CHAIN groups/segments/joined (join rate), "hop latches: N on their launch station's tap",
+  cap recheck WARN (report only), then pregrt_ff_hold.log "class before" (expect cross_tap near the core-launched count, about 2k),
+  tt_setup_repair worst endpoint (should no longer be u_pd*_ctl_cmd tail copies on v8k), then GRT / route TT.
+- If the pre-GRT hold repair stalls again (v8b: no iteration in hours with 54,601 ends): read the class split first; do not add buffers by
+  hand; the remaining classes are core-launched (phase 2: transparent-high latch on the capture tap at the core output) and port_in.
+
 ## Update 2026-11-20 07:55Z (read first)
 - Tools on main ebe5d224187 (29d0a6105e4c + mid-hop latch placement, after FABLE-PD-KV-2300 A3: a 405-um hop does not fit T/2 behind a
   latch at the launch station).  tail_copy_anchor.tcl: stage latch and each copy's own input latch at the hop midpoint, output latch at the
