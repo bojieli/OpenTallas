@@ -314,3 +314,12 @@ QC / KV / HEAD CBC counts need a re-run by CBC-RULES-1119 with main >= 01360b438
 - Work: epyc8 + epyc9 /srv/opentallas-scratch2/claude/fable-fix-s81-leaf/hic. Plans: C (sites only) baad7711137e; A2 (lane gaps >= 30.24 + rigid apply + istation_clear + leaf_slot_clear + sites) 3e9118c2db3d (first A had a 2.16-um lane overlap -> KITFIT-OVERLAP, fixed); B via private core_place copy hic/cpx/core_place_hic.py (gate: link timing not worse than base), then sites.
 - Builds on epyc9 (form_build9.sh X: hardlinked tree6base = GEOM-OPUS tree6 copy, build_tree_own.sh, kit_one_d8i.sh t28/t31): logs intel2 ~/lanes-opus-s81leaf/hic_build_{C,A2}.log. Next: run_kit.sh grt on each kit, compare GRT overflow/iterations + TT vs base t28 (congested) / t31 attempt 12.
 - tree_A/build_A on epyc9 are dead (overlap); ot-delete refused (protected dir marker).
+
+## 11-20 05:5x Opus successor -> FABLE-FIX-S81-LEAF-2140 (leaf family + SWR owner)
+- SWR: main @2427590ce023 stage_lfcs_netlist --update SWR_D; netlist epyc10 /srv/opentallas-scratch2/claude/fable-fix-s81-leaf/swr/die_b178_lfcs_swr.v (3340107e82f0); bench epyc10 .../swr/bench4 (3 PASS + negative control fails as expected); post 5383bea5 to S81-DIE-R3.
+- Form C family: epyc8 /srv/opentallas-scratch2/claude/fable-fix-s81-leaf/hic/plan_famC.json (750f33553a0e), types with a bank inside a core 78 -> 4 (clb66fa5cb, t35, t43, t45), 35 types have hop-refused rows, 72 still OVER on bits/track -> corridors (form A) needed.
+- Form C t28/t31 build epyc9 hic/build_C: BIND_RC=0, rest in flight; intel2 ~/lanes-opus-s81leaf/grt_launch.sh C waits on its kits, then GRT.
+- Form A3: bind fails on added tap clk_t38 (t28). Fix s81_hi_corridor.clear_added_taps to honour grid taps + all core halos.
+- Form B: not buildable via core_place (t28 not applied).
+- Stopped my centroid-site GRTs (t28wide/t27keep/t27relay).
+- Repo clone epyc10 .../fable-fix-s81-leaf/repo3 (branch opus-swr = pushed).
