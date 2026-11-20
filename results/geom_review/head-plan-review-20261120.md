@@ -29,3 +29,8 @@ Six classes of checks gave one flag, fanout spread. Native PHY reset `u_phy.u_li
 Viewed [the exact emitted kit](head-r13r-serdes-nomcap-generated.png) after successful E10 KIT_RTL and GEN, unit 2075244-1795190643. The source is the immutable r13r nominal-capacitance snapshot, manifest 6d3c0e3e43d9. The kit emitted six approved libraries and declares 833 ps recovered-clock period. All 1,054 exact emitted io.tcl port records match r11b a8 names, layers and coordinates. The separate south banks, 16.632 µm SRAM-to-SRAM gap and 24.444 µm SRAM-to-channel clearance are visible. The ingress landing rectangle ends 44.688 µm below the channel.
 
 The generated budget names 37 clock taps. All 56 distinct emitted reset and START sites clear the three macro interiors. The view supports moving the exact nominal candidate into placement. Placed reach, fanout and timing are open. The prior a8 stock-form ISSUES hold remains in force. No route is authorized by this generated geometry review.
+
+
+### r13r nominal-capacitance LEP generated kit
+
+Viewed [the exact emitted kit](head-r13r-lep-nomcap-generated.png) after E9 KIT_RTL and GEN, unit 501234-1795180029. The kit uses the same immutable nominal-capacitance source manifest as SerDes. It includes six nominal libraries, 833 ps primary and ingress clocks, 49 anchored hard macros, and 247 primary-clock taps plus four child roots. All 378 unique reset and START coordinates in the emitted tree clear the macro interiors. The east view shows 1,028 coll_i3/o3 payload pins, the staggered landing ranks and the central SRAM banks that constrain the return aisle. Preflight passed. The candidate may proceed to placement only. The placed per-bit distances, east aisle capacity, PG and timing remain open.

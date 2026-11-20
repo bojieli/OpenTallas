@@ -10,3 +10,19 @@ Viewed the exact original E10 r9 attempt's placement and GRT maps for hd_ctl_n, 
 Geometry reviewed for STA-only recovery of retained final routes. Original routed ODB/SPEF, successful route and LEC artifacts and failed signoff traces remain intact. No layout edits or reroute proposed.
 
 The archived PG-aware north turn `6eca20321243` has canonical pins `bf449d377dbc`, distinct from the retained r9 north turn `40ce5a00339`. Both signed predecessor forms stay in the counted archive.
+
+
+## Nominal-capacitance re-sign results
+
+All six read-only re-signs finished R-MINIMAL using their original routed databases and LEC. Every run reported zero antenna nets and DRC, and its complete internal FF hold census has zero violations. These local results leave parent qualification open.
+
+| Type | TT setup (ps) | Achieved period (ps) | Export identity |
+| --- | ---: | ---: | --- |
+| hd_ctl_n | -13.70 | 846.7 | s81_head/ot_s81hd_ctl_nstrip__ax_bc823b4a57 |
+| hd_spn_eshim_rx | +12.12 | 833.0 | s81_head/ot_s81hd_spn_eshim_rx__ax_4c8aa73bc7 |
+| hd_spn_eshim_tx | +104.53 | 833.0 | s81_head/hd_spn_eshim_tx__ax_cc35cdbc27 |
+| hd_spn_wshim_tx | +166.43 | 833.0 | s81_head/ot_s81hd_spn_wshim_tx__ax_a607e4ae46 |
+| hd_st_n3_transit | +113.82 | 833.0 | s81_head/ot_s81hd_st_n3_transit__ax_d9a572df28 |
+| hd_st_n3_turn | +89.56 | 833.0 | s81_head/ot_s81hd_st_n3_turn__ax_aec95f8839 |
+
+The archive ledger recorded metadata for five variants under their inferred RTL top names. The east TX shim's exact ODB SHA cc35cdbc276d was already indexed under its plan type. Re-sign receipts are on E10 in `/srv/opentallas-scratch2/claude/head-crossing-1119/r9_nomcap_recover_codex/<type>/signoff/signoff.json`.
