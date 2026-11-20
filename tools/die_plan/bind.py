@@ -6788,6 +6788,12 @@ def cmd_kit_rtl(a):
         import kit_ln_copies
         btxt, kit_ln_mods, kit_ln_rep = kit_ln_copies.apply(btxt, t.get("ln_copies"),
                                                              [out / "rtl" / "native_glue", out / "native_glue"])
+        # KIT-RD-1 11-20 (COORD): the plan's relay_depth rows against the bound text: rows the bind already emitted are kept,
+        # sink-side rows the bound module lacks are staged here (D DECLARED cycles, receipt kit_relay_depth.json), anything
+        # else stops the kit naming the row (S81 proof6: 4 k_li_r sink rows were dropped without a word)
+        import kit_relay_depth
+        btxt, kit_rd_rep = kit_relay_depth.apply(btxt, tn, t.get("relay_depth"), lambda inst: short_id("u_" + sv_id(inst), 90),
+                                                 sv_id)
     except ValueError as exc:
         raise BindError(f"kit-rtl {tn}: {exc}") from exc
     bports = [(m.group(1), int(m.group(2)) + 1 if m.group(2) else 1, m.group(3)) for m in
@@ -6959,7 +6965,7 @@ def cmd_kit_rtl(a):
     except (ValueError, KeyError, OSError) as exc:
         raise BindError(f"kit-rtl HBM SPB {tn}: {exc}") from exc
     native_bound_source, native_bound_module = bfile, bmod
-    if bmod == mod or kit_core_swaps or kit_core_adapters or kit_param_wraps or kit_ln_rep or kit_soft_clones or kit_core_clocks.rtl_wired(kit_core_clock_rows):  # private kit-only source; source bind is immutable
+    if bmod == mod or kit_core_swaps or kit_core_adapters or kit_param_wraps or kit_ln_rep or (kit_rd_rep or {}).get("applied") or kit_soft_clones or kit_core_clocks.rtl_wired(kit_core_clock_rows):  # private kit-only source; source bind is immutable
         nb = bmod + "_bound" if bmod == mod else bmod + "_coreclk"
         (kd / f"{nb}.sv").write_text(re.sub(rf"\b(module|endmodule\s*:)\s+{bmod}\b", rf"\1 {nb}", btxt))
         bfile, bmod = kd / f"{nb}.sv", nb
@@ -7075,6 +7081,8 @@ def cmd_kit_rtl(a):
     rs = Path(__file__).resolve().parent.parent.parent / "rtl" / "lib" / "ot_reset_sync.sv"
     kit_srcs = [kd / f"{mod}.sv"] + pkgs + [bfile, (out / "rtl" / "bind_cells.sv").resolve()] + \
         [f for f in files if f.name != "bind_cells.sv"]
+    if kit_rd_rep:      # KIT-RD-1: which relay_depth rows the bind carried and which kit-rtl staged (cycles DECLARED)
+        (kd / "kit_relay_depth.json").write_text(json.dumps(kit_rd_rep, indent=1) + "\n")
     if kit_ln_rep:      # S81-LNB-1: the generated copy modules + the receipt (cycles_changed 0)
         (kd / "kit_ln_copies.sv").write_text(kit_ln_mods)
         (kd / "kit_ln_copies.json").write_text(json.dumps(kit_ln_rep, indent=1) + "\n")
