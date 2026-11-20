@@ -2,6 +2,7 @@
 kits on epyc2 / intel1, 2026-11-15), the PROGRESSING / SLOW / NO-PROGRESS classes, the exclusion-free host scan helpers.
 The tests start no process: docker / ssh / coord are never called."""
 import os, sys, tempfile, json
+from types import SimpleNamespace
 sys.path.insert(0, os.path.dirname(__file__))
 import noprog_stage as ns
 
@@ -252,19 +253,24 @@ def test_tsv_sorts_no_progress_first_and_summary_lists_evidence():
     assert "repair_TNS best 534718" in s and "epyc9" in s and "no cancel" in s
 
 
-def test_hub_writes_tsv_and_posts_through_post_sh_only(monkeypatch=None):
+def test_hub_writes_tsv_and_posts_through_post_sh_only(monkeypatch):
     """hub() with the host scan, coord-commit and post.sh replaced: file refreshed, one post per hour, no other process"""
     calls = []
     d = tempfile.mkdtemp()
     os.makedirs(os.path.join(d, "lanes"))
     os.makedirs(os.path.join(d, "state"))
-    ns.COORD, ns.STATE_DIR = d, os.path.join(d, "state")
-    ns.push_and_scan = lambda h: (h, [dict(row("NO-PROGRESS"), host=h)] if h == "epyc2" else [dict(row("PROGRESSING"), host=h)])
-    ns.coord_commit = lambda msg, files: calls.append(("commit", files))
+    monkeypatch.setattr(ns, "COORD", d)
+    monkeypatch.setattr(ns, "STATE_DIR", os.path.join(d, "state"))
+    monkeypatch.setattr(ns, "push_and_scan", lambda host: (
+        host, [row("NO-PROGRESS" if host == "epyc2" else "PROGRESSING", host=host)],
+    ))
+    monkeypatch.setattr(ns, "coord_commit", lambda msg, files: calls.append(("commit", files)))
 
-    class R:
-        stdout = stderr = ""
-    ns.subprocess.run = lambda cmd, **kw: (calls.append(("run", cmd[1].split("/")[-1], cmd[2], cmd[3])), R())[1]
+    def post(cmd, **kwargs):
+        calls.append(("run", os.path.basename(cmd[1]), cmd[2], cmd[3]))
+        return SimpleNamespace(returncode=0, stdout="", stderr="")
+
+    monkeypatch.setattr(ns, "subprocess", SimpleNamespace(run=post))
     rows = ns.hub(now=NOW)
     assert len(rows) == len(ns.HOSTS)
     t = open(os.path.join(d, "lanes/NOPROG.tsv")).read()

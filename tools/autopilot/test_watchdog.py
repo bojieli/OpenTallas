@@ -224,17 +224,24 @@ class VerifyFakeDirTest(unittest.TestCase):
             self.assertLess(time.time() - t, 20)
 
     def test_verify_cpu_sample_counts_busy_process(self):
-        import subprocess
-        busy = subprocess.Popen([sys.executable, '-c', 'import time\nt=time.time()\nwhile time.time()-t<20: pass'])
-        try:
-            ns = {}
-            src = wd.VERIFY.split('def cpu_s(pids):')[1].split('PROGRESS =')[0]
-            exec('import os\ndef cpu_s(pids):' + src, ns)
-            c0 = ns['cpu_s']([busy.pid]); time.sleep(2); c1 = ns['cpu_s']([busy.pid])
-            self.assertGreater(c1 - c0, 1.0)
-            self.assertIsNone(ns['cpu_s']([999999999]))
-        finally:
-            busy.kill()
+        from io import StringIO
+
+        ticks = {42: (37, 13)}
+
+        def open_stat(path):
+            pid = int(path.split('/')[2])
+            if pid not in ticks:
+                raise FileNotFoundError(path)
+            user, system = ticks[pid]
+            return StringIO(f'{pid} (openroad) S' + ' 0' * 10 + f' {user} {system}')
+
+        ns = {'open': open_stat}
+        src = wd.VERIFY.split('def cpu_s(pids):')[1].split('PROGRESS =')[0]
+        exec('import os\ndef cpu_s(pids):' + src, ns)
+        first = ns['cpu_s']([42])
+        ticks[42] = (132, 18)
+        self.assertAlmostEqual(ns['cpu_s']([42]) - first, 100 / os.sysconf('SC_CLK_TCK'))
+        self.assertIsNone(ns['cpu_s']([999999999]))
 
 
 class MainTest(unittest.TestCase):
