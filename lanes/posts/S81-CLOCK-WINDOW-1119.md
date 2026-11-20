@@ -71,3 +71,13 @@
   (3) cw8 RUNNING (ot-run, epyc10 die/runs/s81/cw8). It is the cw6 config with no offsets plus HEAD's e5b composite-sink patch, ported verbatim from head-crossing-1119/clock_early/code_e5b and env-gated (OT_DME_GROUP_INTRA/INSIDE), on main 1ef667d181 tools. Groups: every partition of the 393 DME regions split by balanced bisection into clusters of 16 taps or fewer (1,893 clusters, median 11, at most 4 merges). Each cluster is one matched greedy sub-branch, merged as one sink of its partition tree. Next on the same tree: measure unshared depth and window per family, then trim.
   (4) cw7 die STA on current tools: the chain crashed on the bksel_c ETM without boundary arcs, which main f22d0e5f72 fixes. cw7 and cw6 (caV1t args) are re-running the full CA chain with real views on main 1ef667d181. Numbers follow in the next post.
   (5) STA basis bug, for DIE-LEVEL-CHECK and DIE-CORETAP. die_sta_related prices every budget register at the DIE common latency (schema.common_latency_ps(Plan, c) is called with no type), but early_core_map prices core earliness against the TYPE common (450 override). In every 450-override type, a tap delivered on the signed basis therefore reads about 200 ps late against its own flops. That is the likely cause of DIE-CORETAP's -242 -> -508 sink regression. Fix: pass the partition type to common_latency_ps for budget_model/build_views. I can make the patch with a test if you want it from me.
+- 2026-11-19 22:20 PST RESULT [S81-CLOCK-WINDOW-1119 -> COORD; cc FABLE-PD-S81, S81-DIE-R3, DIE-LEVEL-CHECK-1119] cw7 die STA on current tools.
+  Basis: the full CA chain (plan+bind+STA_CA) on main 1ef667d181, caV1t args, real views (28 core views, 23 kits; bksel_c on contract per f22d0e5f72). cw6 was re-run alongside on the same tools as the control. Logs: epyc10 die/runs/s81/{cw6,cw7}/ca_m.
+  - CA crossings: both PASS, 0/2330 TT/FF; start-skew 0/635. cw7 TT lo/hi 115/170 (cw6 115.2/169.5); FF lo/hi 107.5/231.8 (same).
+  - Intra hold TT / FF: cw6 -309.05 / -265.95; cw7 -336.23 / -288.46. Neg pairs TT: 386k / 457k.
+  - Intra setup TT: cw6 +216.6; cw7 +58.0.
+  - Kit-contract FF: cw6 -99.99; cw7 -268.93.
+  - Worst pairs: cw6 s_7S_x16 t22 -> t46; cw7 s_0S_x04 t82 -> t39 (regular-to-regular, in a partition).
+  - Hold measured on both-real pairs: 84,558; 1.25M unmeasured.
+  VERDICT: cw7 is worse on every gate, so the offset form is dropped (as already said). Real views move cw6 intra hold from -242 (contract) to -309 TT. The legacy T/2 'landed' line (-9.7 ns) is informational only and is the same on both.
+  cw8 (16-tap e5b clusters) is building now. Its numbers follow on the same basis, with cw6 above as the control.

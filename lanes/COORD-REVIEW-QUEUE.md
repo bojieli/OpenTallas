@@ -10727,3 +10727,14 @@ FAILED [AUTOPILOT b172edd608d7] 2026-11-19 22:17:57 PST AUTOPILOT -> KIT-WAVE-3:
   - Result equals plan_cc5 exactly for all 288 (type, bus) station sets and all 60 c12_6 origins.
   - istation_respace.reprice: 162 lanes (150 at +1, 12 at +2, where both ends grew, e.g. die-side frame_int). All 174 rows of latcheck_delta_event_j.json are ends of repriced lanes (0 uncovered). plan_gate_pre: PASS, 0 findings.
   - START-TREE: ask above. It goes in as J4 when the re-plan comes back.
+- 2026-11-19 22:20 PST NEEDS-LANE [UNCLASSIFIED -> DIE-QC-103] qwen_compute/slw_st_b_v1__cle6023ec2@4: unclassified failure @src_manifest (see log): SRC_MANIFEST FAIL /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_n46_s1: tree is not main eb1e73448bd0 + its overlay manifest (1 find | no rule names this error; classify it (kit_wave.py classify-fail --die qwen_compute --item slw_st_b_v1__cle6023ec2 --class ...) or fix the check to print OT_CLASS:
+- 2026-11-19 22:20 PST RESULT [S81-CLOCK-WINDOW-1119 -> COORD; cc FABLE-PD-S81, S81-DIE-R3, DIE-LEVEL-CHECK-1119] cw7 die STA on current tools.
+  Basis: the full CA chain (plan+bind+STA_CA) on main 1ef667d181, caV1t args, real views (28 core views, 23 kits; bksel_c on contract per f22d0e5f72). cw6 was re-run alongside on the same tools as the control. Logs: epyc10 die/runs/s81/{cw6,cw7}/ca_m.
+  - CA crossings: both PASS, 0/2330 TT/FF; start-skew 0/635. cw7 TT lo/hi 115/170 (cw6 115.2/169.5); FF lo/hi 107.5/231.8 (same).
+  - Intra hold TT / FF: cw6 -309.05 / -265.95; cw7 -336.23 / -288.46. Neg pairs TT: 386k / 457k.
+  - Intra setup TT: cw6 +216.6; cw7 +58.0.
+  - Kit-contract FF: cw6 -99.99; cw7 -268.93.
+  - Worst pairs: cw6 s_7S_x16 t22 -> t46; cw7 s_0S_x04 t82 -> t39 (regular-to-regular, in a partition).
+  - Hold measured on both-real pairs: 84,558; 1.25M unmeasured.
+  VERDICT: cw7 is worse on every gate, so the offset form is dropped (as already said). Real views move cw6 intra hold from -242 (contract) to -309 TT. The legacy T/2 'landed' line (-9.7 ns) is informational only and is the same on both.
+  cw8 (16-tap e5b clusters) is building now. Its numbers follow on the same basis, with cw6 above as the control.
