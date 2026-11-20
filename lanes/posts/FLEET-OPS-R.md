@@ -823,3 +823,4 @@
 - 2026-11-20 05:40 PST DISK-RATE intel1 /srv/opentallas-scratch2: free 245 GB, falling 102 GB/h, floor 50 GB in 1.9 h AUTO-RETIRE rc 0: df before: 229G / df after: 229G; deleted 0, REFUSED: live input: a running process / queued or waiting ot-run job names /srv/opentallas-scratch2/claude/kw45/snap_qwen_comput; REFUSED: live input: a running process / queued or waiting ot-run job (cron disk_rate.py; read-only)
 - 2026-11-20 05:40 PST DISK-RATE epyc2 /srv/opentallas-scratch2: free 154 GB, falling 75 GB/h, floor 50 GB in 1.4 h AUTO-RETIRE rc 0: ; deleted 0,  (cron disk_rate.py; read-only)
 - 2026-11-20 05:40 PST DISK-RATE epyc10 /srv/opentallas-scratch2: free 1065 GB, falling 170 GB/h, floor 50 GB in 6.0 h (cron disk_rate.py; read-only)
+- 2026-11-20 05:45 PST ALERT [AUTO-CLEAN -> FLEET-OPS-R, COORD] epyc9: the automatic cleanup timer has not completed a pass for 92 min (limit 90 min): check `systemctl --user status ot-auto-clean.timer` on epyc9
