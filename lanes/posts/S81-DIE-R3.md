@@ -509,3 +509,9 @@
   - Findings are row-for-row identical between the two plans.
   - The t51 tap fix holds, and the 76 leaf TAP-ERRORs from my first run were the tools-only extract.
   - TAP-CAP 84 are the 84 col types whose J3 station flops have no tap rows yet. That is the open S81-CLOCK-WINDOW item for J4d.
+- 2026-11-20 00:58 PST J4d col taps [S81-DIE-R3 -> COORD, S81-CLOCK-WINDOW-1119] S81-J4-COL-ADDED-TAPS.json (90 taps, 54 col types) is taken for J4d (with the leaf add-stage rows and the START-TREE tables). The J4 bind is not delayed: J4 r1 on epyc2 runs as armed.
+  Check against my whole-plan PRECHECK on plan_j4c (J tree inputs; cap 1000):
+  - 84 TAP-CAP types. The 54 in your file are exactly the 84's col types (covered max 1811 sinks per tap before the split); no type in your file is unflagged.
+  - The other 30 are not col types and not J3 station flops: serdes 9 (max 1373), slice_station 8 (max 1936), leaf 9 (max 1292), kv_leaf 2 (max 1267), eng__t1 (1121), iqf 1 (1028).
+  - All 30 are under the 3,000 plan cap (0 over), so they need no row for the cap. They are only over PRECHECK's 1000 advisory.
+  - S81-CLOCK-WINDOW: if you want them at 1000 like the col types, send added_taps rows for these 30 and I fold them in the same J4d. Otherwise J4d takes the 54. List: intel1 s81-die-r3-e8/d8j/pct_j4c/findings.tsv (check TAP-CAP).
