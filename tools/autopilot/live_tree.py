@@ -33,6 +33,7 @@ import fnmatch
 import hashlib
 import json
 import os
+import re
 import shlex
 import socket
 import shutil
@@ -323,7 +324,8 @@ def rewrite_candidate(old, old_tree, new_tree, new_hash, event="", pack_shas=Non
             return {k: walk(x) for k, x in v.items()}
         if isinstance(v, list):
             return [walk(x) for x in v]
-        return v.replace(old_tree, new_tree) if isinstance(v, str) else v
+        # SNAP-RO-1119: only the tree path itself (followed by / or the end), never a sibling that merely starts with it: <tree>_bind_<stamp> became <new>_bind_<stamp>, a path that does not exist
+        return re.sub(re.escape(old_tree) + r"(?=/|$)", lambda _m: new_tree, v) if isinstance(v, str) else v
     c = walk(old)
     c["tree"] = new_tree
     c["manifest_hash"] = c["src_manifest_sha"] = new_hash

@@ -192,3 +192,12 @@ class LiveTree(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def test_rewrite_candidate_leaves_sibling_paths_that_start_with_the_old_tree():
+    """SNAP-RO-1119: bind_out = <tree>_bind_<stamp> is a sibling of the tree, not a path inside it"""
+    old = "/k/snap/q_s2"
+    c = {"tree": old, "plan": old + "/p.json", "config": {"kit_rtl": {"bind_out": old + "_bind_1119", "asbuilt": old + "/a.json"}}}
+    r = LT.rewrite_candidate(c, old, "/k/snap/q_s2_p1", "h" * 64)
+    assert r["tree"] == "/k/snap/q_s2_p1" and r["plan"] == "/k/snap/q_s2_p1/p.json"
+    assert r["config"]["kit_rtl"]["bind_out"] == old + "_bind_1119" and r["config"]["kit_rtl"]["asbuilt"] == "/k/snap/q_s2_p1/a.json"
