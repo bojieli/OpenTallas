@@ -5,7 +5,8 @@
 // Static SO order0,8,1,9,..., 40-edge CS lead, operand row cadence2; no readiness-driven issue.
 // ENABLE=0 removes the candidate. ENABLE=1 requires source-stamped PV_IDENTITY
 // headers from actual dsdv_svc_att producers and a statically reserved q window.
-module dsdv_pv_so_ingress_h8 #(parameter integer ENABLE=0,HEADER_DEN=0)(
+// Physical header-only entries have no external denominator event source.
+module dsdv_pv_so_ingress_h8 #(parameter integer ENABLE=0,HEADER_DEN=0, EXTERNAL_DEN_EVENT=1)(
  input wire clk,rst_n,
  input wire cfg_v,input wire[19:0]cfg_owner,input wire[20:0]cfg_position,input wire[7:0]cfg_se_jid,cfg_so_jid,
  input wire pv_v,input wire[1:0]pv_quarter,input wire[512:0]pv_d,
@@ -23,7 +24,7 @@ module dsdv_pv_so_ingress_h8 #(parameter integer ENABLE=0,HEADER_DEN=0)(
   reg cv,pv,pp,dv,lv;reg[19:0]co,po,do_;reg[20:0]cp,ppos;reg[7:0]cj,sj,dj;reg[1:0]pq;
   reg[512:0]pd;reg[511:0]par;reg[2:0]pr;reg[15:0]dm;
   always @(posedge clk)begin co<=cfg_owner;cp<=cfg_position;ppos<=param_position;cj<=cfg_se_jid;sj<=cfg_so_jid;pq<=pv_quarter;pd<=pv_d;par<=param_d;pr<=param_row;po<=param_owner;do_<=den_owner;dj<=den_jid;dm<=den_mask;end
-  always @(posedge clk or negedge rn)if(!rn)begin cv<=0;pv<=0;pp<=0;dv<=0;lv<=0;end else begin cv<=cfg_v;pv<=pv_v;pp<=param_v;dv<=den_v;lv<=launch;end
+  always @(posedge clk or negedge rn)if(!rn)begin cv<=0;pv<=0;pp<=0;dv<=0;lv<=0;end else begin cv<=cfg_v;pv<=pv_v;pp<=param_v;dv<=(EXTERNAL_DEN_EVENT!=0) && den_v;lv<=launch;end
   reg active,emitting;reg[19:0]owner;reg[20:0]position;reg[7:0]se_jid,so_jid;
   reg[255:0]headers;reg[10:0]ndata;reg[4:0]params;reg[15:0]den;
   reg[2:0]wi[0:3];reg[3:0]tile[0:3];reg[2:0]col[0:3];reg pass_[0:3];

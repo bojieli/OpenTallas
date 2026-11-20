@@ -65,3 +65,53 @@ module tb;
   end
 endmodule
 """, [MEMORY, MEMORY_MODEL])
+
+
+def test_h8_header_only_ingress_retains_tied_behavior_and_default_fault(tmp_path):
+    ingress = "rtl/dsrom_sys/s81_dv/pv_so/dsdv_pv_so_ingress_h8.sv"
+    model = "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.v"
+    _run(tmp_path, """
+module tb;
+  reg clk=0;
+  always #5 clk=~clk;
+  reg rst_n=1, cfg=0, den=0, param_valid=0, launch=0;
+  wire [2:0] qv, ready, done, fault;
+  wire [511:0] data[3];
+  wire [11:0] code[3];
+  for (genvar m=0; m<3; m=m+1) begin : cases
+    wire den_input = m==0 ? 1'b0 : den;
+    dsdv_pv_so_ingress_h8 #(.ENABLE(1),.HEADER_DEN(1),.EXTERNAL_DEN_EVENT(m!=1)) ingress
+      (.clk(clk),.rst_n(rst_n),.cfg_v(cfg),.cfg_owner(20'd3),.cfg_position(21'd5),
+       .cfg_se_jid(8'd7),.cfg_so_jid(8'd9),.pv_v(1'b0),.pv_quarter(2'd0),.pv_d(513'd0),
+       .param_v(param_valid),.param_row(3'd0),.param_owner(20'd3),.param_position(21'd5),.param_d(512'd0),
+       .den_v(den_input),.den_mask(16'hffff),.den_owner(20'd3),.den_jid(8'd7),.launch(launch),
+       .q_v(qv[m]),.q_d(data[m]),.ready(ready[m]),.done(done[m]),.fault(fault[m]),.fault_code(code[m]));
+  end
+  always @(posedge clk) if (rst_n) begin
+    #1;
+    if ({qv[0],ready[0],done[0],fault[0],code[0]} !== {qv[1],ready[1],done[1],fault[1],code[1]})
+      $fatal(1,"Physical ingress changed the original tied behavior");
+    if (qv[0] && data[0] !== data[1]) $fatal(1,"Physical ingress data divergence");
+  end
+  initial begin
+    #1 rst_n=0;
+    repeat (3) @(negedge clk);
+    rst_n=1;
+    repeat (4) @(negedge clk);
+    cfg=1; den=1;
+    @(negedge clk); cfg=0; den=0;
+    repeat (3) @(negedge clk);
+    if (fault !== 3'b100 || code[2] !== 12'h001)
+      $fatal(1,"Full ingress lost external-den collision detection");
+    param_valid=1; den=1;
+    @(negedge clk); param_valid=0; den=0;
+    repeat (3) @(negedge clk);
+    if (fault[1:0] !== 2'b00) $fatal(1,"Physical ingress unexpectedly faulted");
+    launch=1; den=1;
+    @(negedge clk); launch=0; den=0;
+    repeat (3) @(negedge clk);
+    if (code[0] !== 12'h080 || code[1] !== 12'h080) $fatal(1,"Launch guard was removed");
+    $finish;
+  end
+endmodule
+""", [ingress, model])
