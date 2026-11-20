@@ -51,3 +51,4 @@ time	die	class	state	posted	text
 2026-11-20 04:54:56	qwen_kvsys	NO-ADVANCE	alert	yes	NO-ADVANCE qwen_kvsys: 2 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (qkd_pv_fin_s8_pin x2@gen, kv3_pv_v8 x2@gen)
 2026-11-20 05:05:12	qwen_compute	STUCK-STATE	alert	yes	STUCK-STATE qwen_compute: 11 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. d2d_sram_1r1w_64x137_m1_r2c2_p192, 2026-11-19 21:19)
 2026-11-20 05:25:32	s81	STUCK-STATE	alert	yes	STUCK-STATE s81: 3 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. col_h9_r0_p3__t1__cl31d0dc4b, 2026-11-20 03:51)
+2026-11-20 05:35:52	s81_head	NO-PROGRESS	alert	yes	NO-PROGRESS s81_head: 24 eligible rows, 0 KIT-WAVE LAUNCH for 121 min (last 03:33); NO-LAUNCH x12
