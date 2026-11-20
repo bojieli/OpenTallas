@@ -7,6 +7,8 @@ Marking: **V** = measured or opened this round. **E** = my estimate. **P** = pro
 Inputs (V): S81 D8i `05b98332d100`, QC N46R3 `ce3a7b3c4671`, KV D25f2 `26fa4732ff8e`, HEAD r11b `0eb418a2a6da`.
 Scripts and tables: epyc7 `/srv/opentallas-scratch2/claude/fable-superset-0415/{scripts,out}`. Class tables for the plan lanes: `lanes/handoff/FABLE-SUPERSET-0415-classes.json` (sha c6b142d032c7).
 
+> **OWNER 11-20: "do not use the +16% growth."** Superset uses only no-growth classes on every die. Section 9 is the valid S81 form. Every growth figure below (the +16 % area, the 13 / 17-build leaf tables of section 2.1, station 46 -> 12, kv_leaf 5 -> 2, the t13 pilot of section 4) is OBSOLETE and kept only as history. Valid counts: S81 leaf 75 -> 33 (4,500-bit cap) or 25 (6,000), station 46 -> 16, serdes 11 -> 2, kv_leaf 5 -> 3; S81 395 -> about 110; area 0 on all dies. The handoff file (sha 728d928f6546) now holds only `*_nogrowth_j4e` tables; the growth tables were removed.
+
 ## 0. Answer
 
 | Die | Types now | Builds after | What collapses them | Area | Cycles |
@@ -66,7 +68,7 @@ How the leaf variants differ (V, `out/s81_leaf_detail.txt`):
 
 ## 2. Superset forms
 
-### 2.1 S81 leaf (P; class table V from `cluster.py`)
+### 2.1 S81 leaf (P; class table V from `cluster.py`) -- OBSOLETE where it assumes growth (OWNER 11-20); see section 9
 
 Slot model: a tile = own buses (exact) + ft slots keyed by directed face pair. A narrower lane may ride a wider slot. The class superset per face pair is the element-wise maximum of the width lists. Each member may be mirrored (R0 / MX / MY / R180). Greedy merge by least added bits, with a cap on tile ft bits and a face pin cap of 3.6 pins per um.
 
@@ -100,7 +102,7 @@ Form:
 
 Cost (E): cell area under 1 % of the tile (S00: 28,400 station flops and up to 8 landing bands on 1.77 mm2). Wiring: static channel check `ft_channel_route.py` at 0.70 reports 0 channels over on the pilot type with the four added lanes, with and without the street (V, but the no-street variant has station points on cores, so that reading is not a proof). Cycles: +0 to +2 per tile crossing; a leaf-to-C lane crosses at most 2 tiles.
 
-### 2.2 S81 station, serdes, kv_leaf (P)
+### 2.2 S81 station, serdes, kv_leaf (P) -- OBSOLETE where it assumes growth (OWNER 11-20); see section 9
 
 - slice_station: pure feedthrough tiles. 46 -> 12 at 6,000 bits (largest class 21 types), 6 at 8,000. 25 of the 35 station items are signed: keep them, apply the class form to the unsigned ones and to stations whose pins a leaf class moves anyway. Outline: unchanged (the largest class superset is below today's largest station, 7,625 bits).
 - serdes: 11 -> 2 (8 + 3), superset 3,078 bits = today's largest. No growth.
@@ -118,7 +120,7 @@ Cost (E): cell area under 1 % of the tile (S00: 28,400 station flops and up to 8
 2. **hgi 11 -> 1 to 3**: buses already equal; the union ft set is 5,315 bits against the largest variant's 5,311. The hard-core sets (18 to 25) must be compared first: if the extra cores are slot-driven the union is one build, otherwise split by core set.
 3. **pv and pc pairs** (v1/v1n and so on): clock and one-core differences; they go with the type-root event.
 
-## 3. Cost summary (E unless marked)
+## 3. Cost summary (E unless marked) -- OBSOLETE where it assumes growth (OWNER 11-20); see section 9
 
 | Family | Builds before -> after | Area | Cycles | Die effect |
 |---|---|---|---|---|
@@ -131,7 +133,7 @@ Cost (E): cell area under 1 % of the tile (S00: 28,400 station flops and up to 8
 | KV hg | 6 -> 1 | 0 | 0 | 25 spare bits per instance at most |
 | KV hgi, pv, pc | 50 -> 23 to 29 | 0 | 0 | to be confirmed |
 
-## 4. Pilot: S81 leaf, class S00 (private, epyc9 `/srv/opentallas-scratch2/claude/fable-superset-0415/pilot`)
+## 4. Pilot: S81 leaf, class S00 (private, epyc9 `/srv/opentallas-scratch2/claude/fable-superset-0415/pilot`) -- OBSOLETE where it assumes growth (OWNER 11-20); see section 9
 
 - Two hardlinked copies of the strict-bound D8i tree `tree6base` (plan f2ec5ffc3bda): `tree_base` (per-type control) and `tree_sup`.
 - Type: `ot_s81sl_leaf__t13` (R0, own bus N, 5 ft slots, 2,662 bits, the largest R0 member of S00).
@@ -225,3 +227,9 @@ S81 total with this form: 395 -> about 105 (leaf 33 instead of 17); about 98 at 
 - The four y-slack sites and the column 0 to 2 channels were not checked for what the die uses them for (clock, PG, routes); I counted them as free only for the fit test, and the recommended form does not use them.
 - A smaller tile placed in a larger site (a 1227 tile in a 1279 or 1356 site) would merge classes across outlines at 0 area, but leaves a 52 to 130 um gap with unregistered wire at the face. Not priced.
 - Stations and serdes classes of section 2.2 already keep their outlines; they were not re-run on plan_j4e.
+
+### 9.5 OWNER 11-20: no growth on every die
+
+- Handoff file rewritten (sha 728d928f6546): `s81.leaf`, `s81.leaf_cap7786`, and the mixed-outline `s81.station`, `s81.serdes`, `s81.kvleaf` are removed. Valid keys: `s81.leaf_nogrowth_j4e`, `s81.station_nogrowth_j4e` (46 -> 16 at 6,000 bits), `s81.serdes_nogrowth_j4e` (11 -> 2, one outline already), `s81.kvleaf_nogrowth_j4e` (5 -> 3), all on plan_j4e with one outline per class.
+- QC and KV rows never changed an outline (tap / strap union, v1 / v2 ports, hg bus width); they stand.
+- The t38 pilot is unchanged.
