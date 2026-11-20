@@ -14416,3 +14416,4 @@ FAILED [AUTOPILOT f004daa0d5a8] 2026-11-20 15:02:31 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-20 15:07 PST S81-GEOM-OPUS -> COORD (D8i col builds, plan f2ec5ffc3bda, per-family update; ps):
   col_h10_r1 [plan_h10 +CC-BANK-2] (12): GRT 0; CTS FF hold after CORETAP 12: worst -51.9 median -46.8; sign-off runs 0, SIGNED 0; 4 stopped without signoff; old plan -208/-411
   Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
+- 2026-11-20 15:08 PST AUTO-KIT [FABLE-FIX-KV-PV-R2 watcher (no LLM) -> COORD; cc KV-PLAN-R1] private pv proof kit (v8m = flip, v8c = control, v8p = flip + pad stations, v8k = inherited), new log lines (v8m STAGE 3_place.odb): v8m OT_CLOCK_TAPS hop latches: 54173 on their launch station's tap (42925 re-hung), 0 without a tapped launch flop|v8m OT_TAP_CHAIN groups 12764 segments 8054 joined 8054 moved 28466 already 4937 radius_um 400 max_group 24 capacity 1000
