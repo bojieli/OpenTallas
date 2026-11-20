@@ -1,3 +1,4 @@
 - LEVER 6 11-19: ft congestion row analysis (FABLE-FIX-QC-rows-ftcongestion-n46d.json, sites not final); coll_ftc ring ends = mux 270 um from both flops (placement), no RTL change.
 - 11-19 ring-group proof: spans 38->19 split groups, GRT unrepaired -158->-111 but repair failed RSZ-0074; fix incomplete (free-run aware fit next); ft sites v2 core-clear for QC-PLAN-R3.
 - 19:50 tt_ctlm worst-50 = logic depth (one flop u_75259, 24 levels), rows FABLE-FIX-QC-rows-ttctlm.json (RTL retime +1 cycle needs core owner).
+- 20:30 sle_su_l0 cl7a55c676 gen fail = SIGNED core-tap owner strings without signoff.json in views; rows FABLE-FIX-QC-rows-sulane-l0.json for QC-PLAN-R3.
