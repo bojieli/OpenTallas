@@ -19,13 +19,12 @@ Only setup, hold, congestion, DRC and real crash count as failures in the fail r
 
 usage: route_results.py [--since 'YYYY-MM-DD HH:MM'] [--until 'YYYY-MM-DD HH:MM'] [--hours N] [--hosts h1,h2,...] [--roots d1,d2] [--extra f1.json,...]
                         [--stale-min N] [--wave-state F] [--fast] [--json] [--collect]
-  --hosts   fan out over ssh ('local' = this host, no ssh) (this script is piped to `python3 -I -` on each host, --collect), then merge
+  --hosts   'all' = the live fleet; epyc4 (terminated) is always dropped; fan out over ssh ('local' = this host, no ssh) (this script is piped to `python3 -I -` on each host, --collect), then merge
   --fast    hourly mode: only the wave run trees (claude/kw*/runs) and private build dirs in use now or touched in the last 24 h
   --collect internal: print the raw per-build records of this host as JSON
 Times are local time (hosts run PST).  Default window: 00:00 today to now.
 """
 import argparse
-import glob
 import json
 import os
 import re
@@ -47,7 +46,11 @@ CLASS_LABEL = {"setup": "setup timing", "hold": "hold", "congestion": "congestio
 DIES = ("s81", "head", "qc", "kv", "hbm", "other")
 SETUP_MIN_PS = -42.0     # academic profile: TT setup >= -42 ps
 HOLD_MIN_PS = 0.0        # FF hold >= 0
-STALE_MIN = 120          # a stage log with no result and no write for this long: the run died
+STALE_MIN = 120
+SETTLE_S = 300           # a crash/congestion signature counts once the log has been quiet this long
+ACTIVE_S = 1800          # any log of the build written in the last 30 min: alive (sealed ot-job / bwrap / docker runs hide their processes)
+DEFAULT_HOSTS = "local,epyc2,epyc7,epyc8,epyc9,epyc10,intel1"
+RETIRED_HOSTS = {"epyc4"}   # terminated (COORD 11-20)          # a stage log with no result and no write for this long: the run died
 SKIP_DIRS = {"results", "objects", "rtl", "reports", ".git", "__pycache__", "node_modules", "plandir", "future_lec", "geom"}
 MAX_DEPTH = 14
 CRASH_RE = re.compile(r"Segmentation fault|terminate called|std::bad_alloc|\bKilled\b|Traceback \(most recent|core dumped|"
@@ -188,21 +191,26 @@ def record(base, live="", cancel=()):
     rec = {"kit": kit, "design": design, "die": die_of(kit), "item": design[3:] if design.startswith("dp_") else design,
            "t": {}, "log_t": {}, "res": {}, "live": bool(live) and kit in live,
            "cancel_sig": kit in cancel or (kit + "/run") in cancel}
-    # FLOW-FIX-2045: a stage result older than this kit own synthesis start is a copy from another kit (cp -a keeps mtimes), not this kit result
-    s0 = [x for x in (mtime(p) for p in glob.glob(os.path.join(base, "1_*.log"))) if x is not None]
-    s0 = min(s0) - 2.0 if s0 else None
-    own = lambda m: m is not None and (s0 is None or m >= s0)
     for st, f in STAGE_FILE.items():
         j = mtime(os.path.join(base, f + ".json"))
         l = mtime(os.path.join(base, f + ".log"))
-        if j is not None and own(j):
+        if j is not None:
             rec["t"][st] = j
-        if l is not None and own(l):
+        if l is not None:
             rec["log_t"][st] = l
+    # newest sign of life: stage logs, other logs in the stage dir, and the kit root's own logs (run_route.log, tt_setup_repair.log, ...);
+    # a sealed ot-job (bwrap) keeps these in <ot-jobs>/<job>/work, where the host process-path check cannot see the run
+    act = [v for v in rec["log_t"].values()]
+    for d in (base, kit):
+        try:
+            for e in os.scandir(d):
+                if e.name.endswith(".log"):
+                    act.append(e.stat().st_mtime)
+        except OSError:
+            pass
+    rec["act"] = max(act) if act else None
     sj = os.path.join(kit, "signoff", "signoff.json")
     t = mtime(sj)
-    if t is not None and not own(t):
-        t = None
     if t is not None:
         rec["t"]["signoff"] = t
         d = load_json(sj) or {}
@@ -260,7 +268,8 @@ def outcome(rec, now, stale_s, cancelled=False):
         return t["route"], "pending"
     if rec.get("live"):
         return None      # a process still works in this kit: running, not failed
-    # no route result: look at the newest stage without a result
+    act = rec.get("act")
+    recent = act is not None and now - act < ACTIVE_S      # sealed ot-job / bwrap / docker runs hide their processes: a fresh log means alive
     for st in ("route", "grt", "cts"):
         lt = rec["log_t"].get(st)
         if lt is None or st in t:
@@ -268,10 +277,13 @@ def outcome(rec, now, stale_s, cancelled=False):
         if cancelled:
             return lt, "cancelled"
         kind = rec["res"].get("fail_" + st, "")
-        if kind:
+        if kind and (act is None or now - act >= SETTLE_S):      # a signature in a log that is still being written is not final
             return lt, kind
-        if now - lt > stale_s:
-            return lt + stale_s, "dead"      # declared dead when the idle time ran out, so it lands in that hour once
+        if recent:
+            return None
+        la = max(lt, act or 0)
+        if now - la > stale_s:
+            return la + stale_s, "dead"      # declared dead when the idle time ran out, so it lands in that hour once
         return None
     return None
 
@@ -328,6 +340,8 @@ def aggregate(recs, since, until, now, stale_s, wave=frozenset()):
     tab = {d: {"cts": 0, "grt": 0, "route": 0, "signoff": 0, "pass": 0, "pending": 0,
                **{c: 0 for c in CLASSES + APART}, "ended": 0, "names": {}} for d in DIES}
     seen = set()
+    # a design that runs somewhere right now (sealed ot-job copy, another host) is not dead in its other, older kit dirs
+    running = {r["design"] for r in recs if r.get("live") or (r.get("act") is not None and now - r["act"] < ACTIVE_S)}
     for r in recs:
         key = (r["die"], r["design"], tuple(sorted(r["t"].items())))
         if key in seen:
@@ -338,6 +352,8 @@ def aggregate(recs, since, until, now, stale_s, wave=frozenset()):
             if st in r["t"] and since <= r["t"][st] < until:
                 row[st] += 1
         oc = outcome(r, now, stale_s, is_cancelled(r, wave))
+        if oc is not None and oc[1] in ("dead", "crash", "cancelled") and r["design"] in running and not (r.get("live") or (r.get("act") is not None and now - r["act"] < ACTIVE_S)):
+            continue
         if oc is None or not (since <= oc[0] < until):
             continue
         kind = oc[1]
@@ -424,6 +440,8 @@ def main(argv=None):
     ap.add_argument("--json", action="store_true")
     ap.add_argument("--collect", action="store_true")
     a = ap.parse_args(argv)
+    if a.hosts:
+        a.hosts = ",".join(h for h in (DEFAULT_HOSTS if a.hosts == "all" else a.hosts).split(",") if h and h not in RETIRED_HOSTS)
     now = time.time()
     lt = time.localtime(now)
     midnight = time.mktime((lt.tm_year, lt.tm_mon, lt.tm_mday, 0, 0, 0, 0, 0, -1))

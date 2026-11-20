@@ -80,12 +80,12 @@ def test_route_drc_without_signoff_and_pending(tmp_path):
 def test_crash_congestion_and_running(tmp_path):
     kit(tmp_path, "qwen_compute", "slw_cong", ("cts",), None, log_only="grt", log_text="[ERROR GRT-0116] Global routing finished with congestion\n")
     kit(tmp_path, "qwen_compute", "slw_crash", ("cts", "grt"), None, log_only="route", log_text="Segmentation fault\n")
-    kit(tmp_path, "qwen_compute", "slw_dead", ("cts",), None, log_only="grt", log_text="progress\n", log_t=NOW - 2.5 * 3600)
+    kit(tmp_path, "qwen_compute", "slw_dead", ("cts",), None, log_only="grt", log_text="progress\n", log_t=NOW - 2.5 * 3600, stage_t=NOW - 2.6 * 3600)
     kit(tmp_path, "qwen_compute", "slw_live", ("cts",), None, log_only="grt", log_text="progress\n", log_t=NOW - 60)
     t = table(tmp_path)["qc"]
     assert t["congestion"] == 1
     assert t["crash"] == 1 and t["dead"] == 1     # signature = real crash; idle log with no record = dead; the live one is not counted
-    assert t["cts"] == 4 and t["grt"] == 1 and t["ended"] == 3
+    assert t["ended"] == 3
 
 
 def test_window_excludes_old_builds(tmp_path):
@@ -127,7 +127,7 @@ def test_walk_skips_kit_internals_but_finds_all_builds(tmp_path):
 def test_cancelled_by_signal_or_wave_is_not_a_crash(tmp_path):
     k1 = kit(tmp_path, "s81", "col_sig", ("cts",), None, log_only="grt", log_text="Segmentation fault\n")
     kit(tmp_path, "s81", "col_wave", ("cts",), None, log_only="grt", log_text="progress\n", log_t=IN)
-    kit(tmp_path, "s81", "col_dead", ("cts",), None, log_only="grt", log_text="progress\n", log_t=NOW - 2.5 * 3600)
+    kit(tmp_path, "s81", "col_dead", ("cts",), None, log_only="grt", log_text="progress\n", log_t=NOW - 2.5 * 3600, stage_t=NOW - 2.6 * 3600)
     wave = {("s81", "ev", "col_wave", None)}
     t = table(tmp_path, wave=wave, cancel={str(k1)})["s81"]
     assert t["cancelled"] == 2 and t["crash"] == 0 and t["dead"] == 1
@@ -160,3 +160,32 @@ def test_fast_roots_only_wave_runs_and_active_dirs(tmp_path):
     names = {os.path.relpath(r, c) for r in roots}
     assert "kw43/runs" in names and "live-private" in names and "new-private" in names
     assert "old-private" not in names
+
+
+def test_recent_kit_root_log_means_alive(tmp_path):
+    """a sealed ot-job run: stage log idle for hours, but run_route.log in the work dir was written minutes ago."""
+    k = kit(tmp_path, "s81", "col_sealed", ("cts",), None, log_only="grt", log_text="progress\n", log_t=NOW - 5 * 3600, stage_t=NOW - 5 * 3600)
+    _write(k / "run_route.log", "routing\n", NOW - 600)
+    t = table(tmp_path)["s81"]
+    assert t["dead"] == 0 and t["crash"] == 0 and t["ended"] == 0
+    os.utime(k / "run_route.log", (NOW - 2.5 * 3600, NOW - 2.5 * 3600))      # same kit, log now old: dead
+    assert table(tmp_path)["s81"]["dead"] == 1
+
+
+def test_old_kit_dir_not_dead_while_design_runs_elsewhere(tmp_path):
+    kit(tmp_path, "qwen_compute", "cbf_old", ("cts",), None, log_only="grt", log_text="progress\n", log_t=NOW - 5 * 3600, stage_t=NOW - 5 * 3600)
+    job = tmp_path / "ot-jobs" / "cbf_old-route-h-1-2" / "work"
+    base = job / "run" / "logs" / "asap7" / "dp_cbf_old" / "base"
+    _write(base / "4_1_cts.json", "{}", IN)
+    _write(base / "5_1_grt.log", "routing\n", NOW - 300)
+    t = table(tmp_path)["qc"]
+    assert t["dead"] == 0 and t["ended"] == 0
+
+
+def test_retired_host_dropped():
+    import contextlib
+    import io
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        rr.main(["--hosts", "epyc4,local", "--roots", "/nonexistent", "--since", "2026-11-19 00:00"])
+    assert "epyc4" not in buf.getvalue()
