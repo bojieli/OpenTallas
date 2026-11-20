@@ -1,0 +1,35 @@
+{
+ "schema": "SONNET-FIX-QC-rows-sulane.v1",
+ "for": "QC-PLAN-R3 (N4.6q or the next event)",
+ "date": "2026-11-19",
+ "type": "sle_su_l0__cl7a55c676",
+ "failure": "6+ gen attempts at the same error: core_clock_contract.ContractError .../qcviews_1111/views/qfd_qc_su_lane_w_l0/qfd_qc_su_lane_w_l0_tt.lib: no SIGNED mean clock contract; ETM max_clock_tree_path is not a mean (gen_phys write_type_kit -> core_mean_contract_options -> load(require_signed=True))",
+ "cause": "ONLY this type carries core taps with budget_owner starting SIGNED (DIE-QC-103 r251, insertion_ps 397.07/397.09/397.47/393.41, ff 327.17/326.44/322.45/319.31). signed_mean_core_taps() then forces require_signed=True, which needs clock_contract.json or signoff.json in the view dir; qcviews_1111/views/qfd_qc_su_lane_w_l0..l7 hold only RECORD/SHA256SUMS/gates/pins/provenance/core.json/lef/lib (no signoff.json: the signed records live on AGIdock). Every other su_l0/l1 type uses parent_budget taps and gens fine.",
+ "fix_options": [
+  "A (plan, this file): change the 4 core-tap budget_owner strings of the type from SIGNED... to parent_budget... keeping the numbers: core_mean_contract_options then takes the estimate form (require_signed False), as the sibling types do",
+  "B (view input): add the signed pin-register means as clock_contract.json next to each lane lib (needs the AGIdock signoff.json; the views are in the hashed snapshot / live tree)"
+ ],
+ "plan_rows": [
+  {
+   "op": "set",
+   "path": "partition_types.sle_su_l0__cl7a55c676.clock.taps[name=u_lane0.clk].budget_owner",
+   "value": "parent_budget early tap: SIGNED pin-register mean (signoff.json corners.tt/ff.insertion_pinflops.mean) of qfd_qc_su_lane_w_l0, AGIdock /archive/opentallas-signed-1114/Qwen_ROM/qfd_qc_su_lane_w_l0/signoff.json; the view dir has no signoff.json / clock_contract.json so the gen takes the plan means as the labelled estimate (DIE-QC-103 r251 values kept: insertion_ps / insertion_ff_ps unchanged)"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.sle_su_l0__cl7a55c676.clock.taps[name=u_lane1.clk].budget_owner",
+   "value": "parent_budget early tap: SIGNED pin-register mean (signoff.json corners.tt/ff.insertion_pinflops.mean) of qfd_qc_su_lane_w_l1, AGIdock /archive/opentallas-signed-1114/Qwen_ROM/qfd_qc_su_lane_w_l1/signoff.json; the view dir has no signoff.json / clock_contract.json so the gen takes the plan means as the labelled estimate (DIE-QC-103 r251 values kept: insertion_ps / insertion_ff_ps unchanged)"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.sle_su_l0__cl7a55c676.clock.taps[name=u_lane2.clk].budget_owner",
+   "value": "parent_budget early tap: SIGNED pin-register mean (signoff.json corners.tt/ff.insertion_pinflops.mean) of qfd_qc_su_lane_w_l2, AGIdock /archive/opentallas-signed-1114/Qwen_ROM/qfd_qc_su_lane_w_l2/signoff.json; the view dir has no signoff.json / clock_contract.json so the gen takes the plan means as the labelled estimate (DIE-QC-103 r251 values kept: insertion_ps / insertion_ff_ps unchanged)"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.sle_su_l0__cl7a55c676.clock.taps[name=u_lane3.clk].budget_owner",
+   "value": "parent_budget early tap: SIGNED pin-register mean (signoff.json corners.tt/ff.insertion_pinflops.mean) of qfd_qc_su_lane_w_l3, AGIdock /archive/opentallas-signed-1114/Qwen_ROM/qfd_qc_su_lane_w_l3/signoff.json; the view dir has no signoff.json / clock_contract.json so the gen takes the plan means as the labelled estimate (DIE-QC-103 r251 values kept: insertion_ps / insertion_ff_ps unchanged)"
+  }
+ ],
+ "not_verified": "no gen run with the rows (needs the plan event); the plan_budget() check set(budget)==set(pins) needs the lane view to have exactly one clock pin per tap (same as siblings)"
+}
