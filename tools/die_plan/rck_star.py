@@ -282,7 +282,7 @@ def _ksplit(pts, parts):
     return _ksplit(s[:i], p1) + _ksplit(s[i:], parts - p1)
 
 
-def plan(g, max_sinks=200, max_extent=100.0, hop=92.0, cell='BUFx24_ASAP7_75t_R', s0_pitch=2.4, sub_hubs=14):
+def plan(g, max_sinks=200, max_extent=100.0, hop=92.0, cell='BUFx24_ASAP7_75t_R', s0_pitch=2.4, sub_hubs=14, hub_at_pad=False):
     """sub_hubs 0 / 1: one-level star (every entry leg leaves the hub).  sub_hubs >= 2 (two-level matched tree, FABLE-FIX-S81-SERDES
     11-19, after the one-hub star failed detail route on serdes__t13 H20/H21 with ~200 legs leaving one hub): the entry drivers are
     cut into sub_hubs compact groups of near-equal count; each group gets a sub-hub driver at its L1 centre, fed from the hub by
@@ -334,7 +334,9 @@ def plan(g, max_sinks=200, max_extent=100.0, hop=92.0, cell='BUFx24_ASAP7_75t_R'
     if best is None:
         best = ((0.0, 0.0), rows.nearest(*_centre(roots, rows)))
     far_pad = max(_l1(pad, d) for d in roots)
-    hub = pad if far_pad - best[0][0] < hop else best[1]
+    # hub_at_pad (11-19, H23): no common feeder; the tree starts at the pad, so the deepest entry is only as deep as its own
+    # pad distance needs (a central hub adds the feeder on top of the hub's longest leg)
+    hub = pad if hub_at_pad or far_pad - best[0][0] < hop else best[1]
     feeder = []
     fd = _l1(hub, pad)
     if fd > 1e-6:
@@ -452,10 +454,11 @@ def main(argv=None):
     ap.add_argument('--hop', type=float, default=92.0)
     ap.add_argument('--cell', default='BUFx24_ASAP7_75t_R')
     ap.add_argument('--sub-hubs', type=int, default=14)
+    ap.add_argument('--hub-at-pad', type=int, default=0)
     ap.add_argument('--report')
     a = ap.parse_args(argv)
     g = load(a.geom)
-    entries, rep = plan(g, a.max_sinks, a.max_extent, a.hop, a.cell, sub_hubs=a.sub_hubs)
+    entries, rep = plan(g, a.max_sinks, a.max_extent, a.hop, a.cell, sub_hubs=a.sub_hubs, hub_at_pad=bool(a.hub_at_pad))
     emit(entries, rep, a.out)
     if a.report:
         json.dump({k: v for k, v in rep.items() if k not in ('assign',)}, open(a.report, 'w'), indent=1, sort_keys=True)

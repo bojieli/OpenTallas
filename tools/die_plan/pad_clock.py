@@ -280,9 +280,10 @@ def trunk_tcl(P, tn):
 
 
 STAR_KEYS = {'evidence'}
-STAR_OPT = {'max_sinks': (16, 4000), 'max_extent_um': (20.0, 1000.0), 'hop_um': (20.0, 100.0), 'sub_hubs': (0, 64)}
+STAR_OPT = {'max_sinks': (16, 4000), 'max_extent_um': (20.0, 1000.0), 'hop_um': (20.0, 405.0), 'sub_hubs': (0, 64)}
 # sub_hubs 14 = two-level matched tree (11-19: the one-hub star, sub_hubs 0, left ~200 legs at one hub and failed detail route)
-STAR_DEFAULT = {'max_sinks': 200, 'max_extent_um': 100.0, 'hop_um': 92.0, 'cell': 'BUFx24_ASAP7_75t_R', 'sub_hubs': 14}
+STAR_DEFAULT = {'max_sinks': 200, 'max_extent_um': 100.0, 'hop_um': 92.0, 'cell': 'BUFx24_ASAP7_75t_R', 'sub_hubs': 14,
+                'hub_at_pad': False}
 
 
 def star(P, tn):
@@ -290,8 +291,9 @@ def star(P, tn):
     pad_clock pins[].star = {"evidence": ..., optional max_sinks / max_extent_um / hop_um / cell}): the PRE_CTS hook rck_star.tcl
     cuts the PLACED sinks of that pad clock into compact regions and feeds one entry driver per region through its own leg of
     equal stage count and equal length (rck_star.py).  Nothing is plan-placed, so the same row
-    serves every type of a family.  Fail closed: input pad clock only, not together with plan-placed entries, hop <= 100 um
-    (the kit max-wire length: a longer hop would get an unplanned repeater), at most one star per type."""
+    serves every type of a family.  Fail closed: input pad clock only, not together with plan-placed entries, hop <= 405 um
+    (12.1e placed hop; clock nets are outside the signal max-wire repair; 11-19 H23 deeper-than-18-stage fix), at most one star
+    per type; hub_at_pad (bool) starts the tree at the pad (no common feeder)."""
     out = []
     for p in pins(P, tn):
         if 'star' not in p:
@@ -300,7 +302,7 @@ def star(P, tn):
         n = p['name']
         if p['dir'] != 'in' or 'entries' in p:
             raise ValueError(f'{tn}.{n}: star needs an input pad clock without plan-placed entries')
-        if not isinstance(r, dict) or not (STAR_KEYS <= set(r) <= STAR_KEYS | set(STAR_OPT) | {'cell'}):
+        if not isinstance(r, dict) or not (STAR_KEYS <= set(r) <= STAR_KEYS | set(STAR_OPT) | {'cell', 'hub_at_pad'}):
             raise ValueError(f'{tn}.{n}: star requires evidence and only the optional {sorted(set(STAR_OPT) | {"cell"})}')
         if not isinstance(r['evidence'], str) or not r['evidence'].strip():
             raise ValueError(f'{tn}.{n}: star evidence required')
@@ -311,6 +313,8 @@ def star(P, tn):
         for k in ('max_sinks', 'sub_hubs'):
             if k in r and not isinstance(r[k], int):
                 raise ValueError(f'{tn}.{n}: star {k} must be an integer')
+        if 'hub_at_pad' in r and not isinstance(r['hub_at_pad'], bool):
+            raise ValueError(f'{tn}.{n}: star hub_at_pad must be true or false')
         if 'cell' in r and (not isinstance(r['cell'], str) or not re.fullmatch(r'[A-Za-z0-9_]+', r['cell'])):
             raise ValueError(f'{tn}.{n}: star cell must be one library cell name')
         out.append((n, {**STAR_DEFAULT, **r}))
@@ -328,7 +332,8 @@ def star_exports(P, tn):
     return ['# FABLE-FIX-S81-SERDES 11-18 (plan clock.pad_clock pins[].star): matched-leg star trunk on the placed sinks (rck_star.tcl)',
             f'export OT_RCK_STAR_PORT = {n}', f'export OT_RCK_STAR_MAX_SINKS = {int(r["max_sinks"])}',
             f'export OT_RCK_STAR_MAX_EXTENT_UM = {float(r["max_extent_um"]):g}', f'export OT_RCK_STAR_HOP_UM = {float(r["hop_um"]):g}',
-            f'export OT_RCK_STAR_CELL = {r["cell"]}', f'export OT_RCK_STAR_SUB_HUBS = {int(r["sub_hubs"])}']
+            f'export OT_RCK_STAR_CELL = {r["cell"]}', f'export OT_RCK_STAR_SUB_HUBS = {int(r["sub_hubs"])}',
+            f'export OT_RCK_STAR_HUB_AT_PAD = {int(bool(r["hub_at_pad"]))}']
 
 
 STAR_HOOK = 'uplevel #0 {source /work/rck_star.tcl}\n'

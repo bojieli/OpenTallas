@@ -5,7 +5,8 @@
 # entry.  A pad that is far from the sinks reaches the hub through one common feeder chain.  Same ports, flops, logic,
 # constraints and cycles; the cells are ordinary PLACED clock buffers (pce_<entry>_s<k> / pce_<entry>_drv, rks_feed_<k>).
 # Env: OT_RCK_STAR_PORT (io_pma_rck), OT_RCK_STAR_MAX_SINKS (200), OT_RCK_STAR_MAX_EXTENT_UM (100), OT_RCK_STAR_HOP_UM (92),
-#      OT_RCK_STAR_CELL (BUFx24_ASAP7_75t_R), OT_RCK_STAR_SUB_HUBS (14: two-level hub -> sub-hubs -> entries; 0 = one hub).
+#      OT_RCK_STAR_CELL (BUFx24_ASAP7_75t_R), OT_RCK_STAR_SUB_HUBS (14: two-level hub -> sub-hubs -> entries; 0 = one hub),
+#      OT_RCK_STAR_HUB_AT_PAD (0; 1 = the tree starts at the pad, no common feeder).
 proc rks_env {k d} { if {[info exists ::env($k)] && $::env($k) ne ""} { return $::env($k) }; return $d }
 set rks_dir [file dirname [file normalize [info script]]]
 set rks_blk [ord::get_db_block]
@@ -40,7 +41,7 @@ if {[$rks_blk findInst pce_rck_r0_drv] eq "NULL"} {
   file delete -force $rks_out
   puts [exec python3 -I [file join $rks_dir rck_star.py] $rks_geom $rks_out --max-sinks [rks_env OT_RCK_STAR_MAX_SINKS 200] \
           --max-extent [rks_env OT_RCK_STAR_MAX_EXTENT_UM 100] --hop [rks_env OT_RCK_STAR_HOP_UM 92] \
-          --cell [rks_env OT_RCK_STAR_CELL BUFx24_ASAP7_75t_R] --sub-hubs [rks_env OT_RCK_STAR_SUB_HUBS 14] --report [file join $rks_dir rck_star_report.json]]
+          --cell [rks_env OT_RCK_STAR_CELL BUFx24_ASAP7_75t_R] --sub-hubs [rks_env OT_RCK_STAR_SUB_HUBS 14] --hub-at-pad [rks_env OT_RCK_STAR_HUB_AT_PAD 0] --report [file join $rks_dir rck_star_report.json]]
   uplevel #0 [list source $rks_out]
   if {[llength $::rks_assign] != [llength $rks_sinks]} { error "OT_RCK_STAR: plan covers [llength $::rks_assign] of [llength $rks_sinks] sinks" }
   set rks_m [[ord::get_db] findMaster $::rks_cell]

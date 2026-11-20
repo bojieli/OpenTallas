@@ -109,7 +109,7 @@ def test_plan_key_exports_and_hook():
     assert all((HERE / f).is_file() for f in PC.STAR_FILES) and 'rck_star.tcl' in PC.STAR_HOOK and len(PC.STAR_FILES) == 2
 
 
-@pytest.mark.parametrize('row', [dict(hop_um=140.0), dict(max_sinks=4), dict(max_sinks=1.5), dict(cell='a b'), dict(extra=1),
+@pytest.mark.parametrize('row', [dict(hop_um=500.0), dict(hub_at_pad=1), dict(max_sinks=4), dict(max_sinks=1.5), dict(cell='a b'), dict(extra=1),
                                  dict(evidence=' ')])
 def test_bad_star_row_fails_closed(row):
     with pytest.raises(ValueError):
@@ -277,3 +277,18 @@ def test_sub_hubs_plan_key():
     for bad in (65, -1, 2.5, True):
         with pytest.raises(ValueError):
             PC.star(splan(sub_hubs=bad), 'mid')
+
+
+def test_hub_at_pad_with_long_hops_is_shallow_and_still_equal():
+    g = big_geom()
+    _e, c = RS.plan(g)
+    entries, rep = RS.plan(g, hop=200.0, hub_at_pad=True)
+    assert rep['feeder'] == 0 and tuple(rep['hub']) == tuple(rep['pad'])
+    subs = rep['subs']
+    depth = lambda e: len(e['stations']) + 1 + len(subs[e['parent']]['stations']) + 1
+    assert len({depth(e) for e in entries}) == 1 and rep['stages_per_entry'] == depth(entries[0]) < c['stages_per_entry'] - 8
+    for e in entries:
+        P = [subs[e['parent']]['xy']] + e['stations'] + [e['xy']]
+        assert max(abs(a[0] - b[0]) + abs(a[1] - b[1]) for a, b in zip(P[1:], P[2:])) <= 201.0
+    ex = PC.star_exports(splan(hop_um=200.0, hub_at_pad=True), 'mid')
+    assert 'export OT_RCK_STAR_HUB_AT_PAD = 1' in ex and 'export OT_RCK_STAR_HOP_UM = 200' in ex

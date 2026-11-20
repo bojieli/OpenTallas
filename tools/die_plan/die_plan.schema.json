@@ -3137,7 +3137,7 @@
               "hop_um": {
                "type": "number",
                "minimum": 20,
-               "maximum": 100
+               "maximum": 405
               },
               "cell": {
                "type": "string",
@@ -3147,6 +3147,9 @@
                "type": "integer",
                "minimum": 0,
                "maximum": 64
+              },
+              "hub_at_pad": {
+               "type": "boolean"
               }
              }
             },
