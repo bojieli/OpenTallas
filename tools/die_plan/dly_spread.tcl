@@ -32,6 +32,14 @@
 # two anchors is spread between them.
 # A chain whose stages are all plan-sited has nothing to spread and never fails the gate.
 # Log: OT_DLY_SPREAD chains C stages S moved M max_hop A -> B um (over reach X -> Y), worst/ideal R, fail F
+# DLY-REPAIR-1 (CORE-LIB-LIMITS-1330 11-20, QC cbf_q01_s2): (1) a hop that ends on an anchor which also starts the next run
+#   took f1 = 0.0 (the next run's start overwrote fr[anchor]), so its repeaters went BACKWARDS along the route, away from the
+#   anchor (cbf: wire bufs 100-760 um onto the u_t12 halo, last hop 902 um, 4.0 ns slew).  Each hop now uses its own run's
+#   0.0 / 1.0 at the run ends.  (2) No clear route around the cores -> the chain / repeater keeps its GPL site (counted
+#   noroute); the old straight-line fallback put cells inside a core and ds_put snapped them onto its edge.
+#   (3) This pass moves cells AFTER the place repair_design, so it repairs the signal nets of the cells it moved
+#   (repair_design with every other net dont_touch; CAP_MARGIN / SLEW_MARGIN / OT_PLACE_MAX_TRANSITION as in place).
+#   OT_DLY_SPREAD_REPAIR=0 turns (3) off; a session without liberty skips it.
 uplevel #0 {
 set ds_blk [ord::get_db_block]
 set ds_dbu [[ord::get_db_tech] getDbUnitsPerMicron]
@@ -122,6 +130,7 @@ proc ds_put {inst x y} {
   set x [expr {max([$ds_core xMin], min([$ds_core xMax]-$w, $x))}]
   set y [expr {max([$ds_core yMin], min([$ds_core yMax]-$h, $y))}]
   $inst setLocation [expr {int($x)}] [expr {int($y)}]
+  dict set ::ds_moved [$inst getName] $inst
   if {[$inst getPlacementStatus] eq "UNPLACED"} { $inst setPlacementStatus PLACED }
 }
 proc ds_at {a b f} { return [list [expr {[lindex $a 0]+([lindex $b 0]-[lindex $a 0])*$f}] [expr {[lindex $a 1]+([lindex $b 1]-[lindex $a 1])*$f}]] }
@@ -165,6 +174,7 @@ proc ds_route {A B} {
   if {[dict exists $ds_rcache $key]} {
     # the cached route was found for the quantised pair of its first query: reuse its street lines, keep this pair's end points
     set r [dict get $ds_rcache $key]
+    if {$r eq {}} { return {} }
     if {[llength $r] == 2} { return [list $A $B] }
     lset r 0 $A; lset r end $B
     return $r
@@ -192,7 +202,7 @@ proc ds_route {A B} {
     foreach x1 $ds_xs { foreach y $ds_ys { foreach x2 $ds_xs { set p [list $A [list $x1 $hy] [list $x1 $y] [list $x2 $y] [list $x2 $ty] $B]; if {![ds_pok $p]} continue; set l [ds_plen $p]; if {$best eq {} || $l < $bl} { set best $p; set bl $l } } } }
     foreach y1 $ds_ys { foreach x $ds_xs { foreach y2 $ds_ys { set p [list $A [list $hx $y1] [list $x $y1] [list $x $y2] [list $tx $y2] $B]; if {![ds_pok $p]} continue; set l [ds_plen $p]; if {$best eq {} || $l < $bl} { set best $p; set bl $l } } } }
   }
-  if {$best eq {}} { set best [list $A $B] }
+  # DLY-REPAIR-1 (2): no clear route -> {} (the caller keeps the GPL sites); never a straight line through a core
   dict set ds_rcache $key $best
   return $best
 }
@@ -222,7 +232,7 @@ proc ds_repfix {P hb segb n} {
       if {![ds_movable $bi]} continue
       set c [ds_ctr [$bi getBBox]]
       if {[ds_md $a $c] + [ds_md $c $b] - [ds_md $a $b] <= $ds_rdet} continue
-      if {$rt eq {}} { set rt [ds_route $a $b] }
+      if {$rt eq {}} { set rt [ds_route $a $b]; if {$rt eq {}} { incr ::ds_noroute; break } }
       if {$j == 0} { set f [expr {1.0 - double($d+1)/($md+2)}] } else { set f [expr {double($d+1)/($md+2)}] }
       lassign [ds_atpl $rt $f] x y
       ds_put $bi $x $y; incr ds_nrep
@@ -292,17 +302,28 @@ dict for {nm head} $ds_cand {
       lappend lkh $h; if {$h} { set haslk 1 }
     }
   }
-  if {$wb <= $ds_min && !$haslk} { set wa $wb; ds_repfix $P $hb $segb $n } else {
-    # anchors: indexes (0 = src, n+1 = T) plus every stage that is not movable; run of movable stages between anchors -> equal hops
-    set nmovable 0; foreach s_ $seq { if {[ds_movable $s_]} { incr nmovable } }
+  set rts {}
+  if {!($wb <= $ds_min && !$haslk)} {
     set anch [list 0]
     for {set k 1} {$k <= $n} {incr k} { if {![ds_movable [lindex $seq [expr {$k-1}]]]} { lappend anch $k } }
     lappend anch [expr {$n+1}]
+    for {set a 0} {$a < [llength $anch]-1} {incr a} {
+      set rt_ [ds_route [lindex $P [lindex $anch $a]] [lindex $P [lindex $anch [expr {$a+1}]]]]
+      if {$rt_ eq {}} { set rts {}; break }
+      lappend rts $rt_
+    }
+  }
+  if {$wb <= $ds_min && !$haslk} { set wa $wb; ds_repfix $P $hb $segb $n } elseif {![llength $rts]} {
+    # DLY-REPAIR-1 (2): no clear route for a run: the chain keeps its GPL sites
+    set wa $wb; incr ::ds_noroute; set nmovable 0
+  } else {
+    # anchors: indexes (0 = src, n+1 = T) plus every stage that is not movable; run of movable stages between anchors -> equal hops
+    set nmovable 0; foreach s_ $seq { if {[ds_movable $s_]} { incr nmovable } }
     # one route per run (anchor -> anchor), around the hard cores; stage k of a run at (k-k0)/(k1-k0) of its length
     set runs {}; set hoprun {}; set rlen 0; set fr [dict create]; set nhop 0
     for {set a 0} {$a < [llength $anch]-1} {incr a} {
       set k0 [lindex $anch $a]; set k1 [lindex $anch [expr {$a+1}]]
-      set rt [ds_route [lindex $P $k0] [lindex $P $k1]]
+      set rt [lindex $rts $a]
       lappend runs [list $k0 $k1 $rt]; set rlen [expr {$rlen + [ds_plen $rt]}]
       for {set j $k0} {$j < $k1} {incr j} { dict set hoprun $j $a }
       # route fraction of every point of the run: equal hops, or (STATION form) ns stations with the stages grouped on them
@@ -347,7 +368,8 @@ dict for {nm head} $ds_cand {
         lassign $b d bi
         if {![ds_movable $bi]} continue
         if {$j == 0} { set f [expr {1.0 - double($d+1)/($md+2)}] } else { set f [expr {double($d+1)/($md+2)}] }
-        set f0 [dict get $fr $j]; set f1 [dict get $fr [expr {$j+1}]]
+        # DLY-REPAIR-1 (1): the run's own ends (an anchor shared with the next run holds that run's 0.0 in fr)
+        set f0 [expr {$j == $k0 ? 0.0 : [dict get $fr $j]}]; set f1 [expr {$j + 1 == $k1 ? 1.0 : [dict get $fr [expr {$j+1}]]}]
         lassign [ds_atpl $rt [expr {$f0 + $f * ($f1 - $f0)}]] x y
         ds_put $bi $x $y
       }
@@ -363,6 +385,7 @@ dict for {nm head} $ds_cand {
     if {$wa > $ds_min && $r > $ds_ratio && $nmovable > 0} { incr ds_nfail; if {$ds_nfail <= 5} { puts "OT_DLY_SPREAD WORST [ds_clean [$head getName]] stages $n hop [format %.0f [expr {$wa/double($ds_dbu)}]] um ideal [format %.0f [expr {$ideal/double($ds_dbu)}]] um" } }
   }
 }
+puts "OT_DLY_SPREAD NOROUTE $::ds_noroute chains / repeaters kept at their GPL sites (no clear route around the cores)"
 puts "OT_DLY_SPREAD REPFIX repeaters $ds_nrep moved onto their hop (detour > [format %.0f [expr {$ds_rdet/double($ds_dbu)}]] um)"
 puts "OT_DLY_SPREAD chains $ds_nch stages $ds_nst moved $ds_nmv skipped $ds_nskip max_hop [format %.0f [expr {$ds_hb/double($ds_dbu)}]] -> [format %.0f [expr {$ds_ha/double($ds_dbu)}]] um (chains over [format %.0f [expr {$ds_min/double($ds_dbu)}]] um: $ds_ob -> $ds_oa) worst/ideal [format %.2f $ds_wr] fail $ds_nfail"
 if {$ds_nfail > 0 && (![info exists ::env(OT_DLY_SPREAD)] || $::env(OT_DLY_SPREAD) ne "warn")} {
@@ -370,5 +393,36 @@ if {$ds_nfail > 0 && (![info exists ::env(OT_DLY_SPREAD)] || $::env(OT_DLY_SPREA
   error "OT_DLY_SPREAD: $ds_nfail chains over ratio"
 }
 }
+set ::ds_moved [dict create]; set ::ds_noroute 0
 ds_main
+# DLY-REPAIR-1 (3): repair the signal nets of the moved cells (the place repair_design ran before this pass)
+proc ds_repair {} {
+  if {[info exists ::env(OT_DLY_SPREAD_REPAIR)] && $::env(OT_DLY_SPREAD_REPAIR) eq "0"} { puts "OT_DLY_SPREAD_REPAIR off"; return }
+  if {![dict size $::ds_moved]} { puts "OT_DLY_SPREAD_REPAIR nets 0 (nothing moved)"; return }
+  if {![llength [info commands repair_design]] || [catch {llength [get_libs -quiet *]} nl] || $nl == 0} { puts "OT_DLY_SPREAD_REPAIR skipped: no liberty in this session"; return }
+  set blk [ord::get_db_block]
+  set keep [dict create]
+  dict for {nm i} $::ds_moved {
+    foreach it [$i getITerms] {
+      set n [$it getNet]
+      if {$n eq "NULL" || [$n getSigType] ne "SIGNAL" || [$n isSpecial] || [$n isDoNotTouch]} continue
+      dict set keep [$n getId] 1
+    }
+  }
+  set masked {}
+  foreach n [$blk getNets] { if {[dict exists $keep [$n getId]] || [$n isDoNotTouch]} continue; $n setDoNotTouch 1; lappend masked $n }
+  if {[info exists ::env(OT_PLACE_MAX_TRANSITION)] && [string is double -strict $::env(OT_PLACE_MAX_TRANSITION)] && $::env(OT_PLACE_MAX_TRANSITION) > 0} {
+    set_max_transition $::env(OT_PLACE_MAX_TRANSITION) [current_design]
+  }
+  set args {}
+  if {[info exists ::env(CAP_MARGIN)] && $::env(CAP_MARGIN) ne ""} { lappend args -cap_margin $::env(CAP_MARGIN) }
+  if {[info exists ::env(SLEW_MARGIN)] && $::env(SLEW_MARGIN) ne ""} { lappend args -slew_margin $::env(SLEW_MARGIN) }
+  set n0 [sta::network_leaf_instance_count]
+  puts "OT_DLY_SPREAD_REPAIR repair_design $args on [dict size $keep] nets of [dict size $::ds_moved] moved cells ([llength $masked] other nets dont_touch)"
+  set rc [catch {estimate_parasitics -placement; repair_design {*}$args} err opts]
+  foreach n $masked { $n setDoNotTouch 0 }
+  puts "OT_DLY_SPREAD_REPAIR leaf instances $n0 -> [sta::network_leaf_instance_count]"
+  if {$rc} { return -options $opts $err }
+}
+ds_repair
 }

@@ -41,6 +41,15 @@ def _netlist():
     o = pipe("u_bound.u_d5_fan", 2, "a", "D")
     body.append(f"  {FF} ldD0 (.CLK(clk), .D(D_o0), .QN());")
     body.append(f"  {FF} ldD1 (.CLK(clk), .D({o}), .QN());")
+    # E (DLY-REPAIR-1): src -> r[0] -> bufE -> r[1] (FIRM anchor) -> r[2] -> q -> ldE: the repeater of the hop that ENDS on the
+    # anchor must sit between r[0] and r[1] (the next run's start once overwrote fr[anchor] = 0.0 and sent it backwards)
+    w.extend(["E_o0", "E_b", "E_o1", "E_o2", "E_o3"])
+    body.append(f"  {FF} \\u_bound.u_d6_anc.g_reg.r[0]$_DFF_P_  (.CLK(clk), .D(a), .QN(E_o0));")
+    body.append(f"  {BUF} bufE (.A(E_o0), .Y(E_b));")
+    body.append(f"  {FF} \\u_bound.u_d6_anc.g_reg.r[1]$_DFF_P_  (.CLK(clk), .D(E_b), .QN(E_o1));")
+    body.append(f"  {FF} \\u_bound.u_d6_anc.g_reg.r[2]$_DFF_P_  (.CLK(clk), .D(E_o1), .QN(E_o2));")
+    body.append(f"  {FF} \\u_bound.u_d6_anc.q$_DFF_P_  (.CLK(clk), .D(E_o2), .QN(E_o3));")
+    body.append(f"  {FF} ldE (.CLK(clk), .D(E_o3), .QN());")
     v = ["module t(input wire clk, output wire y);"] + [f"  wire {x};" for x in w] + body + ["  assign y = 1'b0;\nendmodule\n"]
     return "\n".join(v)
 
@@ -63,6 +72,8 @@ foreach i [$blk getInsts] {
   } elseif {$n eq "ldC"} { put $i 400 300 FIRM
   } elseif {[string match ldD* $n]} { put $i 2000 500 FIRM
   } elseif {$n eq "u_bound.u_d3_x.g_reg.r\[2\]\$_DFF_P_"} { put $i 1000 100 FIRM
+  } elseif {$n eq "u_bound.u_d6_anc.g_reg.r\[1\]\$_DFF_P_"} { put $i 1200 500 FIRM
+  } elseif {$n eq "ldE"} { put $i 2500 500 FIRM
   } elseif {[string match u_bound.u_d4_short* $n]} { put $i 250 300 PLACED
   } else { put $i 2450 300 PLACED }
 }
@@ -80,7 +91,7 @@ set ::env(OT_DLY_SPREAD) warn
 source /w/dly_spread.tcl
 puts "AFTER_A [worst $A {100 300}]"
 foreach i [$blk getInsts] { set n [string map {\\ {}} [$i getName]]; set b [$i getBBox]
-  if {[string match "u_bound.u_d*" $n] || $n eq "bufB"} { puts "POS $n [expr {[$b xMin]/double($u)}] [expr {[$b yMin]/double($u)}]" } }
+  if {[string match "u_bound.u_d*" $n] || $n eq "bufB" || $n eq "bufE"} { puts "POS $n [expr {[$b xMin]/double($u)}] [expr {[$b yMin]/double($u)}]" } }
 # fail closed: a 3-stage chain whose load is out of any ideal
 """
 
@@ -368,3 +379,43 @@ def test_dly_spread_repeater_anchor_and_station_reach():
         xs = [pos[f"u_bound.u_pd3_mid.{n}$_DFF_P_"][0] for n in ("r[0]", "r[1]", "q")]
         assert all(abs(x - e) <= 30 for x, e in zip(xs, (400, 700, 1000))), xs   # re-spread to 300 um hops under the station reach
         assert "chains over 300 um" in out and "fail 0" in out, out[-2000:]
+
+
+def test_dly_repair_hop_into_anchor_keeps_its_repeater_between_stages():
+    """DLY-REPAIR-1 (1), QC cbf_q01_s2: a repeater of the hop that ends on an anchor stage goes between that hop's stages."""
+    if not shutil.which("docker"):
+        pytest.skip("no docker")
+    with tempfile.TemporaryDirectory() as d:
+        out = _run(TCL, d)
+        pos = {m.group(1): (float(m.group(2)), float(m.group(3))) for m in re.finditer(r"POS (\S+) ([0-9.]+) ([0-9.]+)", out)}
+        r0 = pos["u_bound.u_d6_anc.g_reg.r[0]$_DFF_P_"]
+        r1 = pos["u_bound.u_d6_anc.g_reg.r[1]$_DFF_P_"]
+        b = pos["bufE"]
+        assert r1 == (1200.0, 500.0), r1
+        lo, hi = min(r0[0], r1[0]), max(r0[0], r1[0])
+        assert lo - 30 <= b[0] <= hi + 30 and 100 < r0[0] < 1200, (r0, b, r1)
+        # no liberty in this session: the repair step says so and the pass still finishes
+        assert "OT_DLY_SPREAD_REPAIR skipped: no liberty" in out, out[-2000:]
+        assert "OT_DLY_SPREAD NOROUTE 0" in out, out[-2000:]
+
+
+def test_dly_repair_repairs_moved_nets_with_liberty():
+    """DLY-REPAIR-1 (3): with liberty loaded, the nets of the moved cells get a repair_design (others dont_touch)."""
+    if not shutil.which("docker"):
+        pytest.skip("no docker")
+    libs = "".join(f"read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_{g}_RVT_TT_nldm_{v}.lib{"" if g == "SEQ" else ".gz"}\n"
+                   for g, v in (("AO", "211120"), ("INVBUF", "220122"), ("OA", "211120"), ("SIMPLE", "211120"), ("SEQ", "220123")))
+    tcl = TCL.replace("read_verilog /w/t.v", libs + "read_verilog /w/t.v").replace(
+        "set ::env(OT_DLY_SPREAD) warn", "set ::env(OT_DLY_SPREAD) warn\nsource /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl")
+    with tempfile.TemporaryDirectory() as d:
+        out = _run(tcl, d)
+        m = re.search(r"OT_DLY_SPREAD_REPAIR repair_design .*on (\d+) nets of (\d+) moved cells", out)
+        assert m and int(m.group(1)) > 0 and int(m.group(2)) > 0, out[-3000:]
+        assert re.search(r"OT_DLY_SPREAD_REPAIR leaf instances \d+ -> \d+", out), out[-3000:]
+
+
+def test_dly_repair_no_straight_fallback_and_switch():
+    tcl = (HERE / "dly_spread.tcl").read_text()
+    assert "set best [list $A $B]" not in tcl                       # DLY-REPAIR-1 (2): never a straight route through a core
+    assert "if {$r eq {}} { return {} }" in tcl                      # a cached 'no route' stays 'no route'
+    assert "OT_DLY_SPREAD_REPAIR" in tcl and "setDoNotTouch 0" in tcl
