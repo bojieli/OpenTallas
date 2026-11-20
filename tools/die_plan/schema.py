@@ -1350,6 +1350,13 @@ SCHEMA = {
             "in_sites": {"type": "object", "additionalProperties": _xy}, "root_part": _name,
             "parent_pins": {"type": "object", "additionalProperties": {"oneOf": [_name, {"type": "array", "minItems": 2, "maxItems": 2}]}},
             "keep_outs": {"type": "object", "additionalProperties": {"type": "array", "items": {"type": "integer"}}},
+            # R-REACH-1 die reset relays (S81-DIE-R4 11-20; reset_tree.plan_die_relays / reach_relay_plan.py): per child
+            # partition, registered die-top relay flops on its wavefront hop (solved parent + rst_o site, die-frame sites,
+            # every segment <= hop_um); each relay = +1 release cycle of the child's subtree (reset_tree.wf_plan)
+            "die_relays": {"type": "object", "additionalProperties": {
+                "type": "object", "additionalProperties": False, "required": ["parent", "site", "sites_um"],
+                "properties": {"parent": _name, "site": {"type": "integer", "minimum": 0},
+                               "sites_um": {"type": "array", "minItems": 1, "items": _xy}}}},
             # OWNER DECISION 13c: "broadcast" = explicit START broadcast riding the wavefront (start_i / start_o_<k>
             # beside arst_n / rst_o_<k>; control state released by reset AND run; reset_tree.start_broadcast)
             "start": {"enum": ["none", "broadcast"]},

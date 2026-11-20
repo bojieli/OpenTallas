@@ -20,6 +20,19 @@ Plan step (opt-in, guarded): nothing else in the plan changes.
   relay also either L of its own parent -> child leg) -- the same die-level site model as the existing provider stages
   (physical_qualified stays False; QC types declare no die_islands_um).
 
+  Existing-clock forms (S81 J5 'die_start_stages', no landing_network.start_tree.provider): the START relay step is
+  skipped (nothing to relay: the die start stages are the clock_landings top RTL's), and monitor relays are sited at
+  their Manhattan targets off hard partitions / hard cores; a die_clock_relay site takes the die H-tree leaf node over
+  it (clock.spine, spine.py model) as its clock node.
+
+  Die reset relays (reset.release wavefront; S81-DIE-R4 11-20, CBC rule 4): every wavefront hop over reset.hop_um
+  (300 um) gets registered die-top relays (reset_tree.plan_die_relays -> plan reset.die_relays), each segment
+  <= hop_um - 25; reset_tree.wf_plan prices +1 release cycle per relay for the child's whole subtree.  --no-reset-relays
+  skips it.
+
+  Reach: relay segments are planned at min(395, cbc_rules.REACH_UM_PER_HOP - SITE_MARGIN_UM) (300-um generator rule:
+  295); START edges over min(405, REACH_UM_PER_HOP) are relayed; monitor bundles over the 405-um gate.
+
   plan PLAN SIDECAR --out-plan OUT --out-sidecar OUT_SIDE --report REPORT.json [--skip-unplaced-monitor]
   exit 2 if any relay could not be placed within SITE_MAX of both neighbours (nothing written).
 """
@@ -31,12 +44,14 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import cbc_rules as CBC  # noqa: E402
 import schema as S  # noqa: E402
 import start_provider_plan as SP  # noqa: E402
 
-SITE_MAX = 395.0     # planned relay site reach (each segment)
-TRIGGER = 405.0      # an edge is relayed only when it fails the 405-um reach gate
-TRUNK = 340.0
+SITE_MAX = min(395.0, CBC.REACH_UM_PER_HOP - CBC.SITE_MARGIN_UM)   # planned relay site reach (each segment)
+TRIGGER = 405.0      # a monitor edge is relayed only when it fails the 405-um reach gate
+START_TRIGGER = min(TRIGGER, CBC.REACH_UM_PER_HOP)   # START stage edges: relayed over the generator reach (300 um)
+TRUNK = SITE_MAX * 340.0 / 395.0
 FLOP_W = 1.08
 ROW = 0.27
 CLK_HALF = 0.81
@@ -213,7 +228,7 @@ def start_relays(P, pv, side_regions, built=None, rejected=None):
             new_edges.append(e)
             continue
         h = SP.hop(e["src_rect_um"], e["dst_rect_um"])
-        if h <= TRIGGER + 1e-6:
+        if h <= START_TRIGGER + 1e-6:
             new_edges.append(e)
             continue
         src, dst = by[e["src_stage"]], by[e["dst_stage"]]
@@ -293,6 +308,42 @@ def pin_die(P, part, bus):
     return tuple(P.to_die(part, q[0]["xy_um"]))
 
 
+def htree_leaf(P, pt):
+    """(node name, (x, y)) of the die H-tree leaf node over pt (clock.spine; the spine.htree_path model)"""
+    import spine
+    root, (W, H), _o, _ps, leaf = spine.spine_geom(P)
+    lo, hi, node = [0.0, 0.0], [float(W), float(H)], [float(root[0]), float(root[1])]
+    level = small = 0
+    path = []
+    while small < 2 and level < 64:
+        ax = level % 2
+        if hi[ax] - lo[ax] <= leaf + 1e-9:
+            small += 1
+            level += 1
+            continue
+        small = 0
+        s_ = root[ax] if level < 2 else (lo[ax] + hi[ax]) / 2
+        if not lo[ax] < s_ < hi[ax]:
+            s_ = (lo[ax] + hi[ax]) / 2
+        if pt[ax] < s_:
+            hi[ax] = s_
+            path.append("L")
+        else:
+            lo[ax] = s_
+            path.append("H")
+        node[ax] = (lo[ax] + hi[ax]) / 2
+        level += 1
+    return "htree_" + "".join(path), (round(node[0], 4), round(node[1], 4))
+
+
+def free_sites(tg, reach=100.0, step=4.32):
+    """candidate relay points around tg (nearest first; no clock leg: existing-clock form)"""
+    n = int(reach // step)
+    offs = sorted(((abs(i) + abs(j), i, j) for i in range(-n, n + 1) for j in range(-n, n + 1)))
+    for _d, i, j in offs:
+        yield (tg[0] + i * step, tg[1] + j * step), None
+
+
 def mon_relays(P, ln, segs, taken, unplaced=None):
     groups = {}
     for e in ln["edges"]:
@@ -315,39 +366,49 @@ def mon_relays(P, ln, segs, taken, unplaced=None):
         lead = (clk or es)[0]                                     # same region: status on the die clock
         if any("relays" in e for e in es):
             raise RelayError(f"monitor bundle {g}: already relayed")
-        k = max(1, math.ceil(h / TRUNK) - 1)
+        k0 = max(1, math.ceil(h / TRUNK) - 1)
         a, b = pts[lead["id"]]
-        sites, nodes = [], []
-        for i, tg in enumerate(targets(a, b, k)):
-            last = i == k - 1
+        bits = len([e for e in es if e["kind"] == "ctl"])
+        for k in range(k0, k0 + (4 if segs is None else 1)):    # existing-clock form: one more relay when sites are blocked
+            sites, nodes, rects = [], [], []
+            for i, tg in enumerate(targets(a, b, k)):
+                last = i == k - 1
 
-            def ok(r, last=last):
-                for s_, d_ in pts.values():
-                    p0 = sites[-1] if sites else s_
-                    if SP.hop(list(p0) * 2, r) > SITE_MAX or (last and SP.hop(r, list(d_) * 2) > SITE_MAX):
-                        return False
-                    if not last and SP.hop(r, list(d_) * 2) > SITE_MAX * (k - i):
-                        return False
-                return True
-            best = None
-            for cxy, sg in trunk_sites(tg, segs):
-                bits = len([e for e in es if e["kind"] == "ctl"])
-                r = free_rect(cxy, taken, ok, n=bits * (2 if clk else 1))
-                if r:
-                    best = (r, cxy, sg)
+                def ok(r, last=last, i=i, k=k):
+                    for s_, d_ in pts.values():
+                        p0 = sites[-1] if sites else s_
+                        if SP.hop(list(p0) * 2, r) > SITE_MAX or (last and SP.hop(r, list(d_) * 2) > SITE_MAX):
+                            return False
+                        if not last and SP.hop(r, list(d_) * 2) > SITE_MAX * (k - i):
+                            return False
+                    return True
+                best = None
+                for cxy, sg in (trunk_sites(tg, segs) if segs is not None else free_sites(tg)):
+                    r = free_rect(cxy, taken, ok, n=bits * (2 if clk else 1))
+                    if r:
+                        if sg is None:
+                            sg = (None, None, None) + (htree_leaf(P, centre(r)),)
+                        best = (r, cxy, sg)
+                        break
+                if best is None:
                     break
-            if best is None:
-                msg = f"monitor bundle {g}: no die-level relay site within {SITE_MAX} um (hop {h:.1f})"
-                if unplaced is None:
-                    raise RelayError(msg)
-                unplaced.append(dict(bundle=g, src=lead["src"]["part"], dst=lead["dst"]["part"], hop_um=round(h, 1),
-                                     edges=[e["id"] for e in es], why=msg))
-                sites = None
+                taken.add(tuple(best[0]))
+                rects.append(tuple(best[0]))
+                sites.append(tuple(round(v, 4) for v in centre(best[0])))
+                nd = best[2][3]
+                nodes.append((round(best[1][0], 4), round(best[1][1], 4), nd) if not isinstance(nd, tuple) else
+                             (nd[1][0], nd[1][1], nd[0]))
+            if best is not None:
                 break
-            taken.add(tuple(best[0]))
-            sites.append(tuple(round(v, 4) for v in centre(best[0])))
-            nodes.append((round(best[1][0], 4), round(best[1][1], 4), best[2][3]))
-        if sites is None:
+            for r in rects:                       # retry with one more relay: release this attempt's sites
+                for kk in taken.keys(r):
+                    taken.b[kk].remove(r)
+        if best is None:
+            msg = f"monitor bundle {g}: no die-level relay site within {SITE_MAX} um (hop {h:.1f})"
+            if unplaced is None:
+                raise RelayError(msg)
+            unplaced.append(dict(bundle=g, src=lead["src"]["part"], dst=lead["dst"]["part"], hop_um=round(h, 1),
+                                 edges=[e["id"] for e in es], why=msg))
             continue
         for e in es:
             e["relays"] = [dict(id=f"rl_{g}_{i + 1}", kind=form, xy_um=list(s),
@@ -386,47 +447,100 @@ def depth_stats(pv):
                 max_loads=max(kids.values()) if kids else 0)
 
 
-def plan(raw, side, skip_unplaced=False, trunks_doc=None):
+class Blocked(Grid):
+    """relay rects taken so far + fixed die boxes (hard partitions, hard cores) no relay flop may overlap"""
+
+    def __init__(self, boxes):
+        super().__init__()
+        self.fixed = Grid()
+        self.fixed.B = 200.0
+        for r in boxes:
+            self.fixed.add(r)
+
+    def hit(self, r):
+        return super().hit(r) or self.fixed.hit(r)
+
+
+def reset_relays(P, raw):
+    """reset.die_relays for the wavefront hops over reset.hop_um (reset_tree.plan_die_relays); returns the report."""
+    import reset_tree as RT
+    W0 = RT.wf_plan(P)
+    before = dict(max_release=W0["max_release"], long_hops=len(W0["long_hops"]), unreachable=len(W0["unreachable"]),
+                  max_die_hop_um=W0["max_die_hop_um"])
+    decl, rows = RT.plan_die_relays(P)
+    if decl:
+        raw.setdefault("reset", {})["die_relays"] = decl
+    else:
+        raw.get("reset", {}).pop("die_relays", None)
+    P.reset["die_relays"] = decl
+    P.__dict__.get("_reset_tree_cache", {}).pop("wf_plan", None)   # the solve is unchanged (it never reads die_relays)
+    W1 = RT.wf_plan(P)
+    after = dict(max_release=W1["max_release"], long_hops=len(W1["long_hops"]), unreachable=len(W1["unreachable"]),
+                 max_die_hop_um=W1["max_die_hop_um"])
+    added = {p: W1["parts"][p]["release"] - W0["parts"][p]["release"] for p in W1["parts"]}
+    return dict(hop_um=RT.hop_um(P), step_um=RT.hop_um(P) - RT.MARGIN_UM, hops=len(rows),
+                relays=sum(r["relays"] for r in rows), over_hard=[r["part"] for r in rows if r["over_hard"]],
+                before=before, after=after, release_cycles_added_max_part=max(added.values() or [0]),
+                max_release_added=after["max_release"] - before["max_release"],
+                long_hops_after=W1["long_hops"][:20], rows=rows)
+
+
+def plan(raw, side, skip_unplaced=False, trunks_doc=None, reset=True):
     raw, side = copy.deepcopy(raw), copy.deepcopy(side)
     P = S.Plan(raw)
     ln = raw["clock"]["landing_network"]
-    pv = ln["start_tree"]["provider"]
-    before = depth_stats(pv)
+    pv = (ln.get("start_tree") or {}).get("provider")
+    srows, before, after, chk, rewrite, rejected = [], None, None, None, None, set()
     regions = side["count_aligned"]["regions"]
-    built, rewrite, rejected = None, None, set()
-    if trunks_doc is not None and not any(n.get("kind") == "relay" for n in pv["nodes"]):
-        stages, bsegs, meta = load_trunks(trunks_doc)
-        rewrite = rewrite_provider(pv, stages)
-        rewrite.update(clock_build=trunks_doc.get("clock_build"), plan_sha256=trunks_doc.get("plan_sha256"),
-                       legs=len(bsegs), legs_detoured=sum(1 for lg in trunks_doc["legs"] if lg.get("detour_um")))
-        built = (bsegs, meta, by_region(bsegs, meta))
-        # the build identity goes to the report (start_tree keys are a closed declaration)
-    elif trunks_doc is not None:
-        _s, bsegs, meta = load_trunks(trunks_doc)
-        built = (bsegs, meta, by_region(bsegs, meta))
-    segs = trunks(pv) if built is None else built[0]
-    srows = start_relays(P, pv, regions, built, rejected)
-    taken = Grid([tuple(n["rect_um"]) for n in pv["nodes"]])
+    if pv is not None:
+        before = depth_stats(pv)
+        built = None
+        if trunks_doc is not None and not any(n.get("kind") == "relay" for n in pv["nodes"]):
+            stages, bsegs, meta = load_trunks(trunks_doc)
+            rewrite = rewrite_provider(pv, stages)
+            rewrite.update(clock_build=trunks_doc.get("clock_build"), plan_sha256=trunks_doc.get("plan_sha256"),
+                           legs=len(bsegs), legs_detoured=sum(1 for lg in trunks_doc["legs"] if lg.get("detour_um")))
+            built = (bsegs, meta, by_region(bsegs, meta))
+            # the build identity goes to the report (start_tree keys are a closed declaration)
+        elif trunks_doc is not None:
+            _s, bsegs, meta = load_trunks(trunks_doc)
+            built = (bsegs, meta, by_region(bsegs, meta))
+        segs = trunks(pv) if built is None else built[0]
+        srows = start_relays(P, pv, regions, built, rejected)
+        taken = Grid([tuple(n["rect_um"]) for n in pv["nodes"]])
+    else:
+        # existing-clock form (die_start_stages, no provider): no START relay step; monitor relays off hard boxes
+        import reset_tree as RT
+        segs, taken = None, Blocked(RT._die_hard_boxes(P))
     unplaced = [] if skip_unplaced else None
     mrows = mon_relays(P, ln, segs, taken, unplaced)
-    after = depth_stats(pv)
-    if after["max_loads"] > MAX_LOADS:
-        raise RelayError(f"provider stage drives {after['max_loads']} loads > {MAX_LOADS}")
-    chk = SP.check(S.Plan(raw), pv)
-    rep = dict(schema="opentallas.reach_relay_plan.v1", site_max_um=SITE_MAX, trigger_um=TRIGGER, trunk_um=TRUNK,
-               start=dict(edges=len(srows), relays=sum(r["relays"] for r in srows), before=before, after=after,
-                          boot_cycles_added_max_path=after["max_relays_on_path"],
-                          # count_align_plan --edge-pad input (MESO-RECONCILE-1: per start-tree edge PAD, keyed by child
-                          # region): the bind re-derives n_nominal and K from it (K mod ring count width: data latency kept)
-                          count_align_edge_pad={r["region"]: int(regions[r["region"]]["pad"]) for r in srows},
-                          provider_check=dict(errors=chk["errors"][:20], n_errors=len(chk["errors"]),
-                                              max_hop_um=chk["max_hop_um"], max_clock_access_um=chk["max_clock_access_um"]),
-                          rows=srows),
+    if pv is not None:
+        after = depth_stats(pv)
+        if after["max_loads"] > MAX_LOADS:
+            raise RelayError(f"provider stage drives {after['max_loads']} loads > {MAX_LOADS}")
+        chk = SP.check(S.Plan(raw), pv)
+        start = dict(edges=len(srows), relays=sum(r["relays"] for r in srows), before=before, after=after,
+                     boot_cycles_added_max_path=after["max_relays_on_path"],
+                     # count_align_plan --edge-pad input (MESO-RECONCILE-1: per start-tree edge PAD, keyed by child
+                     # region): the bind re-derives n_nominal and K from it (K mod ring count width: data latency kept)
+                     count_align_edge_pad={r["region"]: int(regions[r["region"]]["pad"]) for r in srows},
+                     provider_check=dict(errors=chk["errors"][:20], n_errors=len(chk["errors"]),
+                                         max_hop_um=chk["max_hop_um"], max_clock_access_um=chk["max_clock_access_um"]),
+                     rows=srows)
+    else:
+        start = dict(edges=0, relays=0, boot_cycles_added_max_path=0, count_align_edge_pad={}, rows=[],
+                     provider_check=dict(errors=[], n_errors=0),
+                     skipped=f"no landing_network.start_tree.provider (form {(ln.get('start_tree') or {}).get('form')!r})")
+    rep = dict(schema="opentallas.reach_relay_plan.v1", site_max_um=SITE_MAX, trigger_um=TRIGGER,
+               start_trigger_um=START_TRIGGER, trunk_um=TRUNK, start=start,
                monitor=dict(bundles=len(mrows), relays=sum(r["relays"] for r in mrows),
                             edges=sum(r["edges"] for r in mrows), status_cycles_added_max=max([r["relays"] for r in mrows] or [0]),
                             unplaced=unplaced or [], rows=mrows),
                data_cycles_added=0)
-    if trunks_doc is not None:
+    import reset_tree as RT
+    if reset and RT.wavefront(P):
+        rep["reset"] = reset_relays(P, raw)
+    if trunks_doc is not None and pv is not None:
         rep["built_clock"] = dict(rewrite=rewrite, rejected_region_sites=len(rejected),
                                   relays_src_side=sum(1 for n in pv["nodes"] if n.get("kind") == "relay" and n.get("clock_side") != "dst"),
                                   relays_dst_side=sum(1 for n in pv["nodes"] if n.get("kind") == "relay" and n.get("clock_side") == "dst"),
@@ -448,13 +562,15 @@ def main(argv=None):
     p.add_argument("--skip-unplaced-monitor", action="store_true",
                    help="leave a monitor bundle with no relay site unchanged (listed in report.monitor.unplaced; its "
                         "reach rows stay in the gates) instead of failing the step")
+    p.add_argument("--no-reset-relays", action="store_true",
+                   help="leave reset.die_relays alone (no die reset relays on wavefront hops over reset.hop_um)")
     p.add_argument("--trunks", help="built clock trunk_nodes.json (opentallas.qc_trunk_nodes.v1): rewrite the provider "
                    "clock nodes from it and seat relays on its legs (same clock region as the source stage)")
     a = ap.parse_args(argv)
     try:
         raw, side, rep = plan(json.loads(Path(a.plan).read_text()), json.loads(Path(a.sidecar).read_text()),
                               a.skip_unplaced_monitor,
-                              json.loads(Path(a.trunks).read_text()) if a.trunks else None)
+                              json.loads(Path(a.trunks).read_text()) if a.trunks else None, not a.no_reset_relays)
     except RelayError as ex:
         print(f"reach_relay_plan: NOT PLACED: {ex}", file=sys.stderr)
         return 2
@@ -462,11 +578,16 @@ def main(argv=None):
     Path(a.out_plan).write_text(json.dumps(raw, indent=1))
     Path(a.out_sidecar).write_text(json.dumps(side, indent=1))
     s = rep["start"]
-    print(f"reach_relay_plan: START {s['edges']} edges +{s['relays']} relays (depth {s['before']['max_depth']} -> "
-          f"{s['after']['max_depth']}, max +{s['boot_cycles_added_max_path']} boot cycles on a path, provider errors "
-          f"{s['provider_check']['n_errors']}); monitor {rep['monitor']['bundles']} bundles +{rep['monitor']['relays']} relays, "
-          f"{len(rep['monitor']['unplaced'])} unplaced {[u['bundle'] for u in rep['monitor']['unplaced']]}")
-    return 1 if s["provider_check"]["n_errors"] else 0
+    st = s.get("skipped") or (f"{s['edges']} edges +{s['relays']} relays (depth {s['before']['max_depth']} -> "
+                              f"{s['after']['max_depth']}, max +{s['boot_cycles_added_max_path']} boot cycles on a path, "
+                              f"provider errors {s['provider_check']['n_errors']})")
+    r = rep.get("reset")
+    rs = "" if r is None else (f"; reset {r['hops']} hops +{r['relays']} die relays (long hops {r['before']['long_hops']} -> "
+                               f"{r['after']['long_hops']}, max release {r['before']['max_release']} -> "
+                               f"{r['after']['max_release']}, over_hard {len(r['over_hard'])})")
+    print(f"reach_relay_plan: START {st}; monitor {rep['monitor']['bundles']} bundles +{rep['monitor']['relays']} relays, "
+          f"{len(rep['monitor']['unplaced'])} unplaced {[u['bundle'] for u in rep['monitor']['unplaced']]}{rs}")
+    return 1 if s["provider_check"]["n_errors"] or (r and (r["after"]["long_hops"] or r["after"]["unreachable"])) else 0
 
 
 if __name__ == "__main__":

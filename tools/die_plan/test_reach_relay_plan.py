@@ -158,3 +158,184 @@ def test_built_trunk_guards():
     with pytest.raises(RP.RelayError):
         RP.start_relays(_P(), pv, {"st:b0": dict(pad=0), "st:b1": dict(pad=0)}, (segs, meta, RP.by_region(segs, meta)), rej)
     assert rej and all(r[2] == "R0" for r in rej)
+
+
+# ---- existing-clock form (S81 J5 die_start_stages: no START provider) + die reset relays (S81-DIE-R4 11-20) ----------
+def _mon_plan(dy=900.0, clock=True):
+    """a status bundle s -> d dy um apart (straight up x = 0); with clock: a seam bundle (fwd_clock_relay)"""
+    P = _lc_plan()
+    for t in P.types.values():
+        t["outline_um"] = [10.0, 2000.0]
+    for tn, y in (("d", dy),):
+        for p in P.types[tn]["clock"]["landing_contract"]["pins"]:
+            p["xy_um"] = [0.0, y + (2.0 if p["kind"] == "clock" else 0.0)]
+    if not clock:
+        P.clock["landing_network"]["edges"] = [e for e in P.clock["landing_network"]["edges"] if e["kind"] != "clock"]
+        for t in P.types.values():
+            lc = t["clock"]["landing_contract"]
+            lc["pins"] = [p for p in lc["pins"] if p["kind"] != "clock"]
+            t["clock"]["edge_clocks"] = []
+    P.ptype = lambda pn: P.types[P.parts[pn]["type"]]
+    P.W, P.H, P.budgets = 2000.0, 2000.0, dict(tap_pitch_um=200.0)
+    P.clock["spine"] = dict(root_um=[1000.0, 1000.0])
+    return P
+
+
+@pytest.mark.parametrize("clock", [True, False])
+def test_monitor_relays_without_provider_keep_segments_and_avoid_hard_boxes(clock):
+    P = _mon_plan(clock=clock)
+    box = (-50.0, 280.0, 50.0, 340.0)            # a hard core right on the straight path
+    taken = RP.Blocked([box])
+    rows = RP.mon_relays(P, P.clock["landing_network"], None, taken)
+    assert len(rows) == 1 and rows[0]["max_segment_um"] <= RP.SITE_MAX
+    assert rows[0]["form"] == ("fwd_clock_relay" if clock else "die_clock_relay")
+    for e in P.clock["landing_network"]["edges"]:
+        for r in e["relays"]:
+            x, y = r["xy_um"]
+            assert not (box[0] < x < box[2] and box[1] < y < box[3])
+            if not clock:                        # die clock-tree node: the H-tree leaf over the site
+                assert r["clock_node"].startswith("htree_") and len(r["clock_node_xy_um"]) == 2
+                assert RP.htree_leaf(P, (x, y))[0] == r["clock_node"]
+    r = LC.check(P)
+    assert not r["errors"] and r["max_hop_um"] <= RP.SITE_MAX + 2.0
+    before = copy.deepcopy(P.clock)              # second pass: no-op
+    assert RP.mon_relays(P, P.clock["landing_network"], None, RP.Blocked([])) == [] and P.clock == before
+
+
+def test_monitor_relays_without_provider_add_a_relay_when_targets_are_blocked():
+    P = _mon_plan(dy=780.0)
+    k0 = max(1, math.ceil(780.0 / RP.TRUNK) - 1)
+    walls = [(-200.0, 780.0 * i / (k0 + 1) - 60.0, 200.0, 780.0 * i / (k0 + 1) + 60.0) for i in range(1, k0 + 1)]
+    rows = RP.mon_relays(P, P.clock["landing_network"], None, RP.Blocked(walls))
+    assert rows and rows[0]["max_segment_um"] <= RP.SITE_MAX
+
+
+def test_htree_leaf_matches_spine_model():
+    import spine
+    P = _mon_plan()
+    for pt in [(10.0, 20.0), (1500.0, 300.0), (999.0, 1999.0)]:
+        name, xy = RP.htree_leaf(P, pt)
+        L, legs = spine.htree_path([1000.0, 1000.0], [2000.0, 2000.0], pt, 200.0)
+        assert abs(legs[-1] - (abs(pt[0] - xy[0]) + abs(pt[1] - xy[1]))) < 1e-6 and name.startswith("htree_")
+
+
+import json  # noqa: E402
+import math  # noqa: E402
+from pathlib import Path  # noqa: E402
+
+import reset_tree as RT  # noqa: E402
+import schema  # noqa: E402
+
+TINY = json.loads((Path(__file__).resolve().parent / "examples" / "tiny_plan.json").read_text())
+
+
+def _tiny(gap=500.0):
+    """the tiny die with a gap before its last partition pb: pm2 -> pb is a wavefront hop over the 300-um reset cap"""
+    raw = copy.deepcopy(TINY)
+    raw.setdefault("reset", {}).update(release="wavefront")
+    raw["die"]["outline_um"][0] += gap
+    for p in raw["partitions"]:
+        if p["name"] == "pb":
+            p["origin_um"][0] += gap
+    assert schema.validate(raw) == []
+    return raw
+
+
+def test_die_reset_relays_close_long_wavefront_hops_and_price_release():
+    raw = _tiny()
+    P = schema.Plan(raw)
+    W0 = RT.wf_plan(P)
+    assert W0["long_hops"] and any("reset wavefront" in e for e in RT.check(P)[0])
+    decl, rows = RT.plan_die_relays(P)
+    assert decl and all(r["max_segment_um"] <= RT.hop_um(P) - RT.MARGIN_UM + 1e-6 for r in rows)
+    raw["reset"]["die_relays"] = decl
+    assert schema.validate(raw) == []
+    P1 = schema.Plan(raw)
+    W1 = RT.wf_plan(P1)
+    assert W1["long_hops"] == [] and W1["unreachable"] == [] and W1["max_die_hop_um"] <= RT.hop_um(P1)
+    assert not [e for e in RT.check(P1)[0] if "reset wavefront" in e]
+    for p, r in W1["parts"].items():           # every relay is one more release cycle for the child and its subtree
+        if r["parent"] is None:
+            continue
+        n = len(decl.get(p, {}).get("sites_um", []))
+        assert r.get("die_relays", 0) == n
+        assert r["release"] == W1["parts"][r["parent"]]["release"] + n + (W0["parts"][p]["release"] -
+                                                                          W0["parts"][r["parent"]]["release"])
+    assert all(W1["parts"][p]["release"] == W0["parts"][p]["release"] + len(decl[p]["sites_um"]) for p in decl)
+    assert W1["max_release"] >= W0["max_release"] and W1["die_relays"]["relays"] == sum(r["relays"] for r in rows)
+    # the die top carries the relays (clocked by the die clock), START rides the same relays
+    lines, arst, _outs = RT.wf_die_rtl(P1, clk=lambda p: "clk_core")
+    for p in decl:
+        n = len(decl[p]["sites_um"])
+        assert arst[p] == f"rstw_rl_{p}_{n}" and sum(f"u_rstw_rl_{p}_" in ln for ln in lines) == n
+    assert all("(.clk(clk_core)" in ln for ln in lines if "ot_dp_rrelay" in ln)
+
+
+def test_die_reset_relays_stale_declaration_and_schema():
+    raw = _tiny()
+    decl, _rows = RT.plan_die_relays(schema.Plan(raw))
+    p = sorted(decl)[0]
+    raw["reset"]["die_relays"] = {p: dict(decl[p], site=decl[p]["site"] + 7)}
+    errs = RT.check(schema.Plan(raw))[0]
+    assert any("reset.die_relays" in e and "not the solved" in e for e in errs)
+    raw["reset"]["die_relays"] = {p: dict(decl[p], sites_um=[])}
+    assert schema.validate(raw)                  # at least one site
+    assert len(decl[p]["sites_um"]) > 1
+    raw["reset"]["die_relays"] = {p: dict(decl[p], sites_um=[decl[p]["sites_um"][0]])}   # one relay too few: still long
+    assert RT.wf_plan(schema.Plan(raw))["long_hops"]
+
+
+def test_die_reset_relays_simulated_release_matches_offsets():
+    """the generated tiny die with die reset relays: every tap releases exactly at W.parts[p].release"""
+    import shutil
+    import subprocess
+    import tempfile
+    import gen_rtl
+    if not shutil.which("iverilog"):
+        pytest.skip("iverilog")
+    HERE = Path(__file__).resolve().parent
+    raw = _tiny()
+    decl, _rows = RT.plan_die_relays(schema.Plan(raw))
+    raw["reset"]["die_relays"] = decl
+    P = schema.Plan(raw)
+    W = RT.wf_plan(P)
+    nets, want = [], []
+    for part, p in P.parts.items():
+        for i in range(len(RT.for_type(P, p["type"])["taps"])):
+            nets.append(f"u_top.{gen_rtl.sv_id(part)}.rst_n_t{i}")
+            want.append(W["parts"][part]["release"])
+    mx = W["max_release"]
+    with tempfile.TemporaryDirectory() as d:
+        files = [str(f) for f in gen_rtl.write_rtl(copy.deepcopy(raw), d, rtl_root=str(HERE.parent.parent))]
+        assert "u_rstw_rl_" in (Path(d) / "tiny_top.sv").read_text()
+        chk = "\n".join(f"        if ({n} === 1'b1 && rel[{k}] < 0) rel[{k}] = cyc + 1;" for k, n in enumerate(nets))
+        tb = Path(d) / "tb.sv"
+        tb.write_text(f"""`timescale 1ns/1ps
+module tb;
+    reg clk = 0, rst_n = 0;
+    always #0.5 clk = ~clk;
+    reg [31:0] din = 0;
+    wire [31:0] dout;
+    tiny_top u_top (.clk(clk), .rst_n(rst_n), .din(din), .dout(dout));
+    integer cyc = -{mx + 20}, k;
+    integer rel [0:{len(nets) - 1}];
+    initial for (k = 0; k < {len(nets)}; k = k + 1) rel[k] = -1;
+    always @(posedge clk) begin
+        #0.1;
+{chk}
+        if (cyc == -1) rst_n = 1;
+        cyc = cyc + 1;
+    end
+    initial begin
+        repeat ({2 * mx + 40}) @(posedge clk);
+        for (k = 0; k < {len(nets)}; k = k + 1) $display("REL %0d %0d", k, rel[k]);
+        $finish;
+    end
+endmodule
+""")
+        exe = str(Path(d) / "a.out")
+        subprocess.run(["iverilog", "-g2012", "-o", exe, str(tb)] + files + [str(HERE / "examples" / "tiny_leaves.sv")],
+                       check=True)
+        out = subprocess.run(["vvp", "-n", exe], capture_output=True, text=True).stdout
+        import re
+        assert [int(x) for x in re.findall(r"REL \d+ (-?\d+)", out)] == want, out[-1500:]

@@ -2053,6 +2053,147 @@ def _wf_type_tree(P, tn):
     return copy.deepcopy(cache[key])
 
 
+# ---------------------------------------------------------------- R-REACH-1 die reset relays (S81-DIE-R4 11-20)
+# A wavefront hop longer than hop_um (CBC rule 4: 300 um) -- a partition with no neighbour rst_o in reach, attached to the
+# nearest (wf_solve) -- takes registered die-level relay flops (ot_dp_rrelay at die top, clocked by the child's die clock)
+# on the L path parent rst_o -> child arst_n, every segment <= hop_um.  Each relay is one more reset (and START) release
+# cycle for the child and its whole subtree: wf_plan prices it (release += relays).  Declared in the plan as
+#   reset.die_relays {child part: {parent, site, sites_um: [[x, y], ...]}}   (die frame; parent / site = the solved
+# wavefront parent and its rst_o face site; a declaration that no longer matches the solve is an error, never re-used).
+# The solve itself never reads the declaration, so adding relays cannot move any parent.  Planned by
+# plan_die_relays (tools/die_plan/reach_relay_plan.py writes it).  Hosting is OPEN like every die-level relay (the die has
+# no rows of its own): sites keep off hard cores / hard partitions where the reach allows (report over_hard otherwise).
+
+def wf_hop_ends(P, p, sol=None):
+    """(parent rst_o site, child arst_n pin) of p's wavefront hop, die frame (the points wf_solve measured)."""
+    sol = sol or wf_solve(P)
+    q, j, _d = sol["parent"][p]
+    a = P.to_die(q, face_sites(P, P.parts[q]["type"])[j]["xy"])
+    b = part_reset_pin(P, p) if p in sol["hard"] else P.to_die(p, sol["choice"][P.parts[p]["type"]])
+    return tuple(a), tuple(b)
+
+
+def _die_relay_rows(P, sol):
+    """{child: (sites [(x, y)], max segment um)} for the declared die relays; ResetError on a stale declaration."""
+    out = {}
+    for p, d in sorted((P.reset.get("die_relays") or {}).items()):
+        pr = sol["parent"].get(p)
+        if pr is None or [pr[0], pr[1]] != [d.get("parent"), d.get("site")]:
+            raise ResetError(f"reset.die_relays {p}: declared parent {d.get('parent')}/{d.get('site')} is not the solved "
+                             f"wavefront parent {None if pr is None else pr[:2]} (re-plan: reach_relay_plan.py)")
+        sites = [tuple(float(v) for v in s) for s in d.get("sites_um") or []]
+        if not sites:
+            raise ResetError(f"reset.die_relays {p}: no sites")
+        a, b = wf_hop_ends(P, p, sol)
+        ch = [a] + sites + [b]
+        out[p] = (sites, max(_man(u, v) for u, v in zip(ch, ch[1:])))
+    return out
+
+
+def _die_hard_boxes(P):
+    """die-frame boxes no die relay flop may sit in: hard partitions whole, soft partitions' hard cores / macro leaves."""
+    cache = P.__dict__.setdefault("_reset_tree_cache", {})
+    if "die_hard_boxes" in cache:
+        return cache["die_hard_boxes"]
+    out, tb = [], {}
+    for n, p in P.parts.items():
+        t = P.types[p["type"]]
+        if t.get("hard"):
+            out.append(tuple(P.rect(n)))
+            continue
+        if p["type"] not in tb:
+            tb[p["type"]] = blockages(t, 0.0)
+        for x0, y0, x1, y1 in tb[p["type"]]:
+            (a, b), (c, d) = P.to_die(n, (x0, y0)), P.to_die(n, (x1, y1))
+            out.append((min(a, c), min(b, d), max(a, c), max(b, d)))
+    cache["die_hard_boxes"] = out
+    return out
+
+
+class _BoxGrid:
+    B = 100.0
+
+    def __init__(self, boxes):
+        self.b = {}
+        for r in boxes:
+            for i in range(int(r[0] // self.B), int(r[2] // self.B) + 1):
+                for j in range(int(r[1] // self.B), int(r[3] // self.B) + 1):
+                    self.b.setdefault((i, j), []).append(r)
+
+    def inside(self, xy):
+        x, y = xy
+        return any(r[0] < x < r[2] and r[1] < y < r[3] for r in self.b.get((int(x // self.B), int(y // self.B)), ()))
+
+
+def _along_l(a, b, t):
+    """point at Manhattan distance t from a on the L path a -> b (x leg first)"""
+    dx = abs(b[0] - a[0])
+    if t <= dx:
+        return (a[0] + math.copysign(t, b[0] - a[0]), a[1])
+    return (b[0], a[1] + math.copysign(min(t - dx, abs(b[1] - a[1])), b[1] - a[1]))
+
+
+def _site_chain(a, b, n, step, free, used):
+    """n relay sites a -> b, every segment <= step, each site free(); None when no such chain"""
+    L = _man(a, b)
+    out, prev = [], a
+    offs = [0.0] + [s * k * 4.32 for k in range(1, 24) for s in (1, -1)]
+    for i in range(1, n + 1):
+        t0 = L * i / (n + 1)
+        left = n + 1 - i                                   # segments after this site
+        best = None
+        for dt in offs:
+            for perp in offs[:9]:
+                t = max(0.0, min(L, t0 + dt))
+                c = _along_l(a, b, t)
+                horiz = t < abs(b[0] - a[0])                # on the x leg: offsets go across it (y), else across x
+                c = (round(c[0], 4), round(c[1] + perp, 4)) if horiz else (round(c[0] + perp, 4), round(c[1], 4))
+                if _man(prev, c) <= step + 1e-6 and _man(c, b) <= left * step + 1e-6 and free(c) and c not in used:
+                    best = c
+                    break
+            if best:
+                break
+        if best is None:
+            return None
+        out.append(best)
+        prev = best
+    return out
+
+
+def plan_die_relays(P, free=None):
+    """reset.die_relays for every wavefront hop longer than hop_um: relays on the L path parent rst_o -> child arst_n,
+    each segment <= hop_um - MARGIN_UM, off hard boxes when the reach allows (up to 3 extra relays), else evenly
+    spaced on the path (listed in over_hard).  Returns (decl, report rows)."""
+    sol = wf_solve(P)
+    hp = hop_um(P)
+    step = hp - MARGIN_UM
+    if free is None:
+        g = _BoxGrid(_die_hard_boxes(P))
+        free = lambda c: not g.inside(c)  # noqa: E731
+    decl, rows, used = {}, [], set()
+    for p, pr in sorted(sol["parent"].items(), key=lambda kv: kv[0]):
+        if pr is None:
+            continue
+        a, b = wf_hop_ends(P, p, sol)
+        d = _man(a, b)
+        if d <= hp + 1e-6:
+            continue
+        n0 = max(1, math.ceil(d / step - 1e-9) - 1)
+        sites, over = None, False
+        for n in range(n0, n0 + 4):
+            sites = _site_chain(a, b, n, step, free, used)
+            if sites:
+                break
+        if not sites:
+            sites, over = [tuple(round(v, 4) for v in _along_l(a, b, d * i / (n0 + 1))) for i in range(1, n0 + 1)], True
+        used.update(sites)
+        ch = [a] + sites + [b]
+        decl[p] = dict(parent=pr[0], site=pr[1], sites_um=[list(s) for s in sites])
+        rows.append(dict(part=p, parent=pr[0], direct_hop_um=round(d, 1), relays=len(sites), over_hard=over,
+                         max_segment_um=round(max(_man(u, v) for u, v in zip(ch, ch[1:])), 1)))
+    return decl, rows
+
+
 def wf_plan(P):
     """the published wavefront: per type (IN pin, outs, depth K, entry), per partition (parent, parent rst_o port,
     die hop, entry stages, release cycle = clocks after die rst_n deasserts at which its taps and rst_o release)."""
@@ -2083,12 +2224,13 @@ def wf_plan(P):
     for p, pr in sol["parent"].items():
         if pr is not None:
             kids.setdefault(pr[0], []).append(p)
+    drl = _die_relay_rows(P, sol)                # R-REACH-1 die reset relays: +1 release cycle each, hop = longest segment
     parts, st = {}, [sol["root"]]
     while st:
         p = st.pop()
         pr = sol["parent"][p]
         tn = P.parts[p]["type"]
-        base = 0 if pr is None else parts[pr[0]]["release"]
+        base = 0 if pr is None else parts[pr[0]]["release"] + len(drl.get(p, ((),))[0])
         if p in sol["hard"]:
             rel = base + sol["hard_depth"][p]
             ent, K = 1, sol["hard_depth"][p] - 1
@@ -2123,10 +2265,15 @@ def wf_plan(P):
             q = pr[0]
             k = sol["outs"][P.parts[q]["type"]].index(pr[1])
             row.update(source=f"{q}.rst_o_{k}", hop_um=pr[2])
+            if p in drl:
+                row.update(hop_um=round(drl[p][1], 1), direct_hop_um=pr[2], die_relays=len(drl[p][0]))
         parts[p] = row
         st += sorted(kids.get(p, []))
+    fixed = {p for p in drl if p in parts and parts[p]["hop_um"] <= hop_um(P) + 1e-6}
     out = dict(release="wavefront", sync_stages=N, root=sol["root"], root_type=sol["root_type"],
-               hop_um=hop_um(P), relay_um=relay_um(P), unreachable=sol["unreachable"],
+               hop_um=hop_um(P), relay_um=relay_um(P), unreachable=[p for p in sol["unreachable"] if p not in fixed],
+               **({"die_relays": dict(parts=len(drl), relays=sum(len(v[0]) for v in drl.values()),
+                                      max_segment_um=round(max(v[1] for v in drl.values()), 1))} if drl else {}),
                max_release=max([r["release"] for r in parts.values()] or [0]),
                max_die_hop_um=max([r.get("hop_um", 0.0) for r in parts.values()] or [0.0]),
                long_hops=sorted([[p, r["source"], r["hop_um"]] for p, r in parts.items()
@@ -2175,8 +2322,23 @@ def wf_plan(P):
     return out
 
 
-def wf_die_rtl(P, ind="    "):
-    """die top: the root partition's arst_n = rst_n (die pin); every other arst_n = its parent's rst_o_<k>.
+def _die_relay_chain(lines, net, p, n, clk, ind, kind):
+    """R-REACH-1 die reset relays: n registered ot_dp_rrelay stages net -> ... at die top (clocked by the child's die
+    clock); returns the last stage's net (the child's arst_n / start_i)."""
+    c = clk(p) if callable(clk) else clk
+    tag = re.sub(r"\W", "_", p)
+    for i in range(1, n + 1):
+        q = f"{kind}_rl_{tag}_{i}"
+        lines.append(f"{ind}wire {q};")
+        lines.append(f"{ind}ot_dp_rrelay u_{q} (.clk({c}), .d({net}), .q({q}));  // die reset relay {i}/{n} "
+                     f"(reset.die_relays, +1 release cycle)")
+        net = q
+    return net
+
+
+def wf_die_rtl(P, ind="    ", clk="clk"):
+    """die top: the root partition's arst_n = rst_n (die pin); every other arst_n = its parent's rst_o_<k> (through
+    its declared die reset relays, reset.die_relays; clk = the die clock net, or part -> net).
     Returns (wire lines, {part: arst_n net}, {part: {port: net}})."""
     W = wf_plan(P)
     lines = [f"{ind}// OWNER DECISION 13 reset wavefront: root {W['root']} (ONE root synchroniser on rst_n); every "
@@ -2190,11 +2352,11 @@ def wf_die_rtl(P, ind="    "):
             if net not in {n for d in outs.values() for n in d.values()}:
                 lines.append(f"{ind}wire {net};")
             outs.setdefault(r["parent"], {})[r["source"].split(".")[-1]] = net
-            arst[p] = net
+            arst[p] = _die_relay_chain(lines, net, p, r.get("die_relays", 0), clk, ind, "rstw")
     return lines, arst, outs
 
 
-def wf_die_start(P, ind="    "):
+def wf_die_start(P, ind="    ", clk="clk"):
     """die top START wiring (decision 13c; start_broadcast plans): the root partition's start_i = the die `start` pin,
     every other soft partition's start_i = its parent's start_o_<k> (the k of its rst_o parent).  Returns (wire lines,
     {part: start_i net}, {part: {start_o port: net}}).  Hard partitions have no start pin."""
@@ -2212,7 +2374,7 @@ def wf_die_start(P, ind="    "):
             if net not in {n for d in souts.values() for n in d.values()}:
                 lines.append(f"{ind}wire {net};")
             souts.setdefault(r["parent"], {})[src.split(".")[-1]] = net
-            sin[p] = net
+            sin[p] = _die_relay_chain(lines, net, p, r.get("die_relays", 0), clk, ind, "stw")   # START rides the relays
     return lines, sin, souts
 
 

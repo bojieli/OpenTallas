@@ -5127,9 +5127,10 @@ class Binder:
         start_in = {}
         if P is not None:
             import reset_tree as RT
-            wires, reset_in, reset_out = RT.wf_die_rtl(P)
+            dclk = lambda p: f"clk_{sv_id(self.default_domain(p))}"   # noqa: E731  die reset relays (reset.die_relays)
+            wires, reset_in, reset_out = RT.wf_die_rtl(P, clk=dclk)
             if RT.start_broadcast(P):
-                sl, start_in, sout = RT.wf_die_start(P)
+                sl, start_in, sout = RT.wf_die_start(P, clk=dclk)
                 wires += sl
                 for q, d in sout.items():
                     reset_out.setdefault(q, {}).update(d)
