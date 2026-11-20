@@ -22,12 +22,18 @@ class GrtGoalTests(unittest.TestCase):
         cls.old = runner(subprocess.check_output(['git', '-C', str(ROOT), 'show',
                                                   '66d55c026ad:tools/die_plan/gen_phys.py'], text=True))
 
-    def execute(self, source, goal, margin='', fail_hold=False, fail_policy=False, fail_pg=False):
+    def execute(self, source, goal, margin='', fail_hold=False, fail_policy=False, fail_pg=False, native=False, skip_setup=False):
         with tempfile.TemporaryDirectory() as td:
             d = Path(td);k = d / 'kit';b = d / 'bin';b.mkdir();k.mkdir()
             result = k / 'run/results/asap7/test/base';result.mkdir(parents=True)
             for n in ['4_cts.odb', '4_cts.sdc']:(result / n).write_text('checkpoint')
             (k / 'config.mk').write_text('export OT_PREGRT_FF_HOLD = 1\nexport OT_POSTCTS_BAND_GATE = 1\n')
+            if native:
+                with (k / 'config.mk').open('a') as config:
+                    config.write('export OT_GRT_NONPORT_HOLD = 1\n')
+                (k / 'macro_ff_repair.mk').touch()
+            if skip_setup:
+                (k / 'HOLD_SKIPPED_SETUP').write_text('setup_wns -2176.15 skip_below -1000')
             (b / 'make').write_text('''#!/bin/bash
 for a in "$@"; do
  case "$a" in
@@ -37,6 +43,7 @@ for a in "$@"; do
  esac
 done
 printf 'make %s\\n' "$*" >> "$TRACE"
+if [ "$NATIVE_GRT" = 1 ] && [[ " $* " = *" grt "* ]]; then printf 'native corner %s\\n' "${OT_VCLK_CORNER:-unset}" >> "$TRACE"; fi
 for a in "$@"; do case "$a" in grt) touch "$RESULTS/5_1_grt.odb";; route) touch "$RESULTS/5_route.odb";; do-finish) touch "$RESULTS/6_final.odb";; esac; done
 ''')
             (b / 'openroad').write_text('''#!/bin/bash
@@ -63,7 +70,7 @@ exit 0
             trace = d / 'trace'
             env = dict(os.environ, PATH=str(b) + ':' + os.environ['PATH'], TRACE=str(trace),
                        RESULTS=str(result), GOAL=goal, MARGIN=margin, FAIL_HOLD=str(int(fail_hold)),
-                       FAIL_POLICY=str(int(fail_policy)), FAIL_PG=str(int(fail_pg)), NAME='fixture', HUID=str(os.getuid()), HGID=str(os.getgid()))
+                       FAIL_POLICY=str(int(fail_policy)), FAIL_PG=str(int(fail_pg)), NATIVE_GRT=str(int(native)), NAME='fixture', HUID=str(os.getuid()), HGID=str(os.getgid()))
             p = subprocess.run(['bash', '-c', 'set -uo pipefail; rc=0; M=make; ' + body], env=env,
                                text=True, capture_output=True)
             lines = trace.read_text().replace(str(k), 'KIT').splitlines() if trace.exists() else []
@@ -89,6 +96,19 @@ exit 0
                 mk = lambda r: [x for x in r[1] if x.startswith('make ') and 'grt' in x.split()]
                 self.assertEqual(mk(fin), mk(route))
                 self.assertEqual([x for x in fin[1] if 'hold_gate.tcl' in x], [x for x in route[1] if 'hold_gate.tcl' in x])
+
+    def test_route_native_grt_uses_ff_even_without_hold_margin(self):
+        for skip_setup in (False, True):
+            with self.subTest(skip_setup=skip_setup):
+                rc, lines, err = self.execute(self.new, 'route', native=True, margin='0' if skip_setup else '',
+                                              skip_setup=skip_setup)
+                self.assertEqual(rc, 0, (lines, err))
+                expected = 'make DESIGN_CONFIG=KIT/macro_ff_repair.mk grt CORNER=BC CORNERS=bc'
+                if skip_setup:
+                    expected += ' SKIP_INCREMENTAL_REPAIR=1'
+                self.assertIn(expected, lines)
+                self.assertIn('native corner ff', lines)
+                self.assertNotIn('make grt', lines)
 
     def test_grt_runs_standard_gates_without_detail_route(self):
         for margin in ['', '0']:

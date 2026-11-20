@@ -8756,7 +8756,13 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
       if [ \$BG != 0 ]; then grep -h OT_POSTCTS_GATE /work/postcts_gate_*.log | sed 's/^/FAIL_POSTCTS pre-route insertion gate: /' >> /work/FAIL_POSTCTS; rc=6; \
       else grep -h OT_POSTCTS_GATE /work/postcts_gate_*.log | sed 's/^/OT_POSTCTS_ADVISORY pre-route insertion gate (not a stop, OWNER 11-03 19:12; signoff.json insertion_band): /' | tee -a /work/postcts_advisory.log; fi; fi; fi; \
   if [ \$rc = 0 ] && { [ $GOAL = grt ] || [ $GOAL = route ] || [ $GOAL = finish ]; }; then \
-    if [ -z \"\$HM\" ]; then \$M grt; rc=\$?; fi; \
+    if [ -z \"\$HM\" ]; then \
+      if grep -q '^export OT_GRT_NONPORT_HOLD = 1' /work/config.mk; then \
+        MF=\$M; if [ -f /work/macro_ff_repair.mk ]; then MF=\"\$M DESIGN_CONFIG=/work/macro_ff_repair.mk\"; fi; \
+        GRT_SKIP=; if [ -f /work/HOLD_SKIPPED_SETUP ]; then GRT_SKIP=SKIP_INCREMENTAL_REPAIR=1; fi; \
+        OT_VCLK_CORNER=ff \$MF grt CORNER=BC CORNERS=bc \$GRT_SKIP; rc=\$?; \
+      else \$M grt; rc=\$?; fi; \
+    fi; \
     if [ \$rc = 0 ]; then python3 -I /work/legacy_gate.py /work grt; rc=\$?; \
       if [ \$rc != 0 ]; then echo 'FAIL_POSTCTS final GRT released TT/FF policy (grt_policy.json)' | tee -a /work/FAIL_POSTCTS; rc=6; fi; fi; fi; \
   if [ \$rc = 0 ] && [ $GOAL != grt ]; then \$M $GOAL; rc=\$?; fi; \
