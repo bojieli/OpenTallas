@@ -91,3 +91,17 @@ def test_plan_only_site_rule_avoids_macros_reserved_sites_and_placed_straps():
     assert got[0] in ([56.16, 51.84], [51.84, 47.52], [51.84, 56.16])      # nearest the tap anchor first
     with pytest.raises(RF.Conflict, match="sit on a macro"):
         RF._strap_lattice_free(raw, None, "T", 1, [(8.64, 8.64)])
+
+
+def test_contents_copy_of_a_hard_core_does_not_block_strap_sites():
+    # FABLE-PD-QC-1955 1.3: cbn_q11 tile ID pins 1.1 um outside the hard_cores u_t23 halo, inside its stale contents[] copy
+    hc = dict(inst="u_t", origin_um=[20.0, 0.0], outline_um=[60.0, 100.0], orient="R0")
+    stale = dict(inst="u_t", module="old", origin_um=[11.36, 0.0], outline_um=[60.0, 100.0])
+    soft = dict(inst="u_s", module="soft", origin_um=[90.0, 0.0], outline_um=[5.0, 5.0])
+    raw = dict(partition_types=dict(T=dict(outline_um=[120.0, 100.0], hard_cores=[hc], contents=[stale, soft],
+                                         clock=dict(tap_um=[110.0, 50.0]))))
+    RF._strap_lattice_free(raw, None, "T", 1, [(12.96, 50.0)])         # 1.64 um outside 20 - 5.4: legal, stale copy ignored
+    with pytest.raises(RF.Conflict, match="sit on a macro"):
+        RF._strap_lattice_free(raw, None, "T", 1, [(17.28, 50.0)])     # inside the real halo
+    with pytest.raises(RF.Conflict, match="sit on a macro"):
+        RF._strap_lattice_free(raw, None, "T", 1, [(90.72, 2.16)])     # a contents-only instance still blocks

@@ -91,7 +91,11 @@ def _strap_lattice_free(raw, plan_path, tn, need, taken, cache=None):
     t = raw["partition_types"][tn]
     w, h = t["outline_um"]
     blocked = []
-    for c in (t.get("hard_cores") or []) + (t.get("contents") or []):
+    # QC-PLAN-R3 11-19 (FABLE-PD-QC-1955 1.3): an instance placed in hard_cores[] is blocked by THAT box only; its
+    # contents[] copy (reference box of the soft view, here 8.64 um off and an older module) is not a footprint.  The
+    # contents[] boxes blocked 408 of 498 QC strap pins that sat legally 1.1 um outside the real tile halo.
+    hard = {c.get("inst") for c in t.get("hard_cores") or [] if c.get("inst")}
+    for c in (t.get("hard_cores") or []) + [c for c in t.get("contents") or [] if c.get("inst") not in hard]:
         if not (c.get("origin_um") and c.get("outline_um")):
             continue
         (x, y), (mw, mh) = c["origin_um"], c["outline_um"]
