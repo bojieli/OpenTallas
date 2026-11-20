@@ -462,3 +462,13 @@ def test_tick_start_marks_unreadable_and_overloaded_hosts_for_the_stop_helpers()
     assert "epyc9" in bad and "epyc8" not in bad and "epyc7" in bad            # epyc7: a fleet host with no status row
     assert A.bad_hosts_from_status("", "intel2") == set()                       # nothing readable: nothing marked
     assert WJ.STOP_SSH_S <= 30
+
+
+def test_stops_off_die_is_not_gated_by_a_post_apply_bind_value():
+    d = {"enabled": True, "event": "KV-D25d", "plan": "/p", "gen_host": "h", "src": "/s", "gate_events_extra": ["KV-D25d"],
+         "gate": {"g0c": "PASS", "clock": "PASS", "bind": "POST-APPLY r712 (linked copy)"}}
+    cfg = {"dies": {"qwen_kvsys": d}, "stops_off": True}
+    ok, why = KW.gate(cfg, "qwen_kvsys")
+    assert ok, why
+    cfg2 = {"dies": {"qwen_kvsys": dict(d)}}                  # not stops_off: the old rule
+    assert KW.gate(cfg2, "qwen_kvsys")[0] is False

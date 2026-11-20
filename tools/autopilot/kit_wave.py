@@ -1158,6 +1158,10 @@ def gate(cfg, die, descends=None):
                     return False, f"event {ev} does not descend from {base}"
     g = d.get("gate") or {}
     bad = [k for k in GATE_KEYS if str(g.get(k, "")).upper() != "PASS"]
+    # COORD 11-19 (KV D25d applied 12:40, no D25d row for 5 h: "bind not PASS in the config", the apply wrote bind = 'POST-APPLY r712 ...'): under stops_off (r703, not hbm) the bind
+    # gate key never blocks a die; the per-item bind preflight / BIND-STALE / bound-tree fallback decide per row
+    if bad and "bind" in bad and FG.stops_off_die(cfg, die):
+        bad = [k for k in bad if k != "bind"]
     d.pop("_cores_only", None)
     if bad == ["clock"] and d.get("types_before_die_clock"):
         # KW-FIX-32 11-07 (OWNER 17:4x "allow type builds for all dies, including HBM"): die option
