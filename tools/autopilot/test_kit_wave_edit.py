@@ -187,3 +187,17 @@ class Lock(unittest.TestCase):
 if __name__ == "__main__":
     import unittest.mock
     unittest.main()
+
+
+def test_push_receipt_preserves_failure_diagnostics(monkeypatch, capsys):
+    def refused(argv, **kwargs):
+        return subprocess.CompletedProcess(argv, 1, "precise rejection\n")
+
+    monkeypatch.setattr(KE.subprocess, "run", refused)
+    try:
+        KE.commit_config(None, "test", None)
+    except subprocess.CalledProcessError as exc:
+        assert exc.returncode == 1
+    else:
+        raise AssertionError("a failed push returned success")
+    assert capsys.readouterr().out == "precise rejection\n"

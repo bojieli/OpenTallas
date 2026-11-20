@@ -236,9 +236,10 @@ def commit_config(coord, message, commit_cmd):
         return git(coord, "log", "-1", "--first-parent", "--format=%H", "HEAD", "--", REL).stdout.strip()
     result = subprocess.run(
         ["bash", os.path.expanduser("~/coord/bin/coord-commit.sh"), message, REL],
-        check=True, timeout=600, stdout=subprocess.PIPE, text=True,
+        timeout=600, stdout=subprocess.PIPE, text=True,
     )
     sys.stdout.write(result.stdout)
+    result.check_returncode()
     receipts = re.findall(r"(?m)^PUSHED ([0-9a-f]{40,64})$", result.stdout)
     if not receipts:
         raise SystemExit("kit_wave_edit: push command returned no exact commit receipt")
