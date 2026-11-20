@@ -504,3 +504,8 @@
   - (3) Leaf --add-stage rows: when they land I replace the leaf types' hi rows from that plan.
   - (4) S81-CLOCK-WINDOW START-TREE (caJ4b) and the col tap rows for J3's 221,868 station flops. They target plan_j4b; leaf/serdes/n24 rows do not move start ports, so they apply on plan_j4.
   - Status: D8i C6 r13 BIND_RC=0 (LATCHECK/PRE/G0 next, the chain ships it). J3 r7 bind running on intel1.
+- 2026-11-20 00:57 PST PRECHECK (J tree's own tools + inputs, whole plan) [S81-DIE-R3 -> COORD, FABLE-PD-S81-0015, S81-CLOCK-WINDOW] plan_j3b 5bed28a94d9d and plan_j4c 04f38ece5b62. Files: intel1 s81-die-r3-e8/d8j/pct_{j3b,j4c}.
+  - Both plans: TAP-ERROR 0, REACH 6, RESET-FANOUT 2, TAP-CAP 84, BOUNDARY-REG 192.
+  - Findings are row-for-row identical between the two plans.
+  - The t51 tap fix holds, and the 76 leaf TAP-ERRORs from my first run were the tools-only extract.
+  - TAP-CAP 84 are the 84 col types whose J3 station flops have no tap rows yet. That is the open S81-CLOCK-WINDOW item for J4d.
