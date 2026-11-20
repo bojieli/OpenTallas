@@ -24,9 +24,11 @@ class SoftPin(unittest.TestCase):
     def test_all_inputs_with_a_fetch_host_may_move(self):
         self.assertTrue(M.soft_pin_ok(spec([{"path": "/a/run_kit.sh", "host": "epyc9"}]), JOBS))
 
-    def test_a_path_only_input_stays_hard_pinned(self):
-        self.assertFalse(M.soft_pin_ok(spec([{"path": "/a/run_kit.sh"}]), JOBS))
-        self.assertFalse(M.soft_pin_ok(spec([{"path": "/a", "host": "hub"}, {"path": "/b"}]), JOBS))
+    def test_a_path_only_input_is_soft_pinned_and_input_hold_keeps_it_on_holders(self):
+        # SOFTPIN-PATHONLY-1119: the INPUT HOLD step narrows the alternatives to hosts that hold every path-only input
+        self.assertTrue(M.soft_pin_ok(spec([{"path": "/a/run_kit.sh"}]), JOBS))
+        self.assertTrue(M.soft_pin_ok(spec([{"path": "/a", "host": "hub"}, {"path": "/b"}]), JOBS))
+        self.assertFalse(M.soft_pin_ok(spec([{"at": "/x"}]), JOBS))
 
     def test_kit_local_dir_or_unreadable_spec_stays_hard_pinned(self):
         self.assertFalse(M.soft_pin_ok(spec([{"path": "/a", "host": "hub"}]), "/srv/opentallas-scratch2/claude/lane/kit"))

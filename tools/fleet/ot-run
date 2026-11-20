@@ -1745,7 +1745,10 @@ def soft_pin_ok(spec_path, d=None):
     try:
         ins = json.load(open(spec_path)).get("inputs") or []
         local_dir = bool(d) and not str(d).startswith("/srv/opentallas-scratch2/claude/ot-jobs")
-        return bool(ins) and all(isinstance(i, dict) and i.get("host") for i in ins) and not local_dir
+        # SOFTPIN-PATHONLY-1119 (COORD, FLOW-FIX-2045: 37 waiters pinned to epyc8 at load 290-348 while five hosts had room; 27 of them path-only job-root specs): a path-only input is not a
+        # reason to hard-pin by itself: the INPUT HOLD step that follows narrows the candidates to the hosts that really HOLD every path-only input, so the job only moves where its inputs are.
+        # Kit-local --dir jobs stay hard-pinned (their kit lives on one host).
+        return bool(ins) and all(isinstance(i, dict) and (i.get("host") or i.get("path")) for i in ins) and not local_dir
     except Exception:
         return False
 
