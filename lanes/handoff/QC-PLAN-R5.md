@@ -32,3 +32,9 @@
 - Fix in r5_apply_option_a.py: for those lanes the source type internal_stations row bus:cw_n0/cw_n2 gets +2 stations, chain re-spaced evenly from launch to face (11 sle/slw hc0/hc2 types; cw_s* have no native row). Plan regenerated (216 lanes, 48 INNER, 11 chains).
 - Round 2 chain running on intel2: ~/qc-plan-r5/chain_r2.sh (cbf relay, then strict q1 with R8 from A4, then strict q2 with R8 from q1). Results: chain_r2.out, strict_q1/q2.log/.rc, epyc9 v1_cbc/r5/strict_q{1,2}. Old p1 dir and chain_p2.sh are dead ends.
 - If q2 is clean: run G0 on r5/strict_q2 tree, read LATCHECK token impact, post. If another class appears, classify and fix the plan the same way (no unchanged retries).
+
+## UPDATE ~11:15 PST
+- COORD accepted the fabric price (395k flops, +15 fabric cycles within owner pre-approval). Record the LATCHECK token impact in the post once q2 binds clean.
+- Waiter: QC-PLAN-R5 armed a background until-loop on intel2 ~/qc-plan-r5/chain_r2.out. A successor re-arms it if this lane is gone: `until test -s ~/qc-plan-r5/chain_r2.out; do sleep 60; done` (on intel2), then read strict_q1/q2.log and epyc9 v1_cbc/r5/strict_q2/bind/bind_report.json + latcheck.json.
+- Next V1 rows to BUILD on top of r5/v1a_r5_fabric_a_raw_plan.json, in order (COORD 11:1x): (1) st_a rs_s0/rs_s1 two stages on all 11 st_a types (+1 cycle, legs <=300, disjoint exact banks; input epyc7 .../r4_direct/gen_representative_a3_retry/sust_e3_s1_reseat_evidence + Fable 0945 sec 6); (2) sle_ctl u_tap channel >=60 um (move u_ctl east, move only) + hc*_o bank sides + b_tw_data_st_a_o south + cws1 window; (3) re-bin from newest placed kits for the 25 STALE-BINS types and retap (V1A retap draft); (4) first-rank seating FIRM at port windows (slw_fe_v1 attempt_5 form). Each as a separate script in v1_cbc/r5 producing a new plan file, then one combined strict (strict_r5_launch.sh tag pred plan).
+- Not started by R5: items (1)-(4). Context ran out at the fabric step.
