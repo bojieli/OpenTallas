@@ -12,3 +12,8 @@ OPEN 1: S81 ot_s81sl_leaf__t2 / __t10 collector_tree refusal (only 2 types since
  If only the later rt differs: find the commit by bisecting rt dirs between them (list on epyc9 /srv/opentallas-scratch2/claude/rt), then gate the new behaviour to new binds via a receipt marker.
 OPEN 2: drop s81/kvsys OT_CBC_REACH_UM=405 only after confirming no consumer outside reset needs it.
 Notes: test_flow2045 failures were sparse-checkout artefacts. Clone: /srv/opentallas-scratch2/claude/flow-noadv-r2 (intel2, cone tools rtl physical/common_flow physical/die_plan). Push gate takes ~35 min (run ot-push-main with nohup).
+
+## Update 14:xx
+- REPEAT-STOP now holds an unchanged relaunch after 3 identical fails also under stops_off (main 6ea719be97): LAUNCH-HELD, explicit retry key overrides, auto-release on changed plan block / src sha / failing-stage files / runtime tools_sha, or an unblock line. Same-fail-key refusal stays log-only. Gap: a fix that only adds a file the failing stage never named (e.g. signoff.json in the QC lane views) does not release by itself; new tree/plan or unblock does.
+- CLASS plan contract metadata missing (qwen_compute su_l0/su_l1, 22 fails): plan taps say SIGNED but views qcviews_1111/views/qfd_qc_su_lane_w_l0..l7 have no signoff.json; source records gone. Handed to DIE-QC-103 (export signoff.json or move taps to parent_budget).
+- t10 rerun (OPEN 1): STILL QUEUED on epyc9 (ot-run waits, fleet admits 0 GB); no result yet. Output file scratchpad rep.out (/tmp/claude-1000/-home-ubuntu-OpenTallas/c228d9e1-f423-4eaf-829b-3bad2a9c2331/scratchpad/rep.out). If the process is gone, rerun with the command above on epyc2/intel1/epyc8/epyc10 (bind dir exists there too).
