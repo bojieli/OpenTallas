@@ -882,3 +882,25 @@ def test_col_h9_landing_variants_are_the_families(tmp_path):
     assert f("col_h9_r1__a") == f("col_h9_r1__b") == f("col_h9_r1__c") == "s81:col_h9_r1:v1"
     assert len({f("col_h9_r1__d"), f("col_h9_r1__e"), f("col_h9_r1__a")}) == 3 and f("col_h9_r2__a") == "s81:col_h9_r2:v1"
     assert f("col_h9_r1__unknown") == "col_h9_r1"                                                      # not listed: the name key
+
+
+def test_bind_probe_marks_a_type_stale_when_the_bound_module_predates_the_plan_relay_rows(tmp_path, monkeypatch):
+    import json as _j, subprocess as _sp, sys as _sys
+    root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    bo = tmp_path / "bind"
+    (bo / "rtl").mkdir(parents=True)
+    (bo / "bind_report.json").write_text(_j.dumps({"types": {"ta": {"module": "ma"}, "tb": {"module": "mb"}, "tc": {"module": "mc"}}}))
+    plain = "module %s(\n  input wire clk\n);\n  leaf_x u_x (.clk(clk), .i(w_a));\nendmodule\n"
+    for m in ("ma", "mb", "mc"):
+        (bo / "rtl" / f"{m}.sv").write_text(plain % m)
+    (bo / "rtl" / "mb.sv").write_text("module mb(\n  input wire clk\n);\n  wire [3:0] w_a;\n  leaf_x u_x (.clk(clk), .i(w_a));\nendmodule\n")
+    row = lambda inst: {"inst": inst, "side": "sink", "port": "i", "D": 1}
+    plan = {"partition_types": {"ta": {"relay_depth": [row("nope")]},            # sink instance absent from the bound module: kit_rtl would fail
+                                "tb": {"relay_depth": [row("x")]},               # applies (sink instance + plain 4-bit wire): not stale
+                                "tc": {}}}                                       # no relay rows
+    (tmp_path / "plan.json").write_text(_j.dumps(plan))
+    monkeypatch.setenv("OT_BIND_PROBE_RT", str(tmp_path / "no_rt"))               # fall back to the src tree's tools/die_plan
+    a = {"src": root, "plan": str(tmp_path / "plan.json"), "bind_out": str(bo), "types": ["ta", "tb", "tc"]}
+    r = _sp.run([_sys.executable, "-I", "-", _j.dumps(a)], input=KW.PROBE_BIND, capture_output=True, text=True, env=dict(os.environ))
+    out = _j.loads([l for l in r.stdout.splitlines() if l.startswith("AP_JSON ")][-1][8:])
+    assert out["stale"] == ["ta"] and "ta" in out["relay"] and "tb" not in out["relay"], out

@@ -9633,6 +9633,42 @@ try:
     ab = a.get("asbuilt") or None
     out = {"stale": [t for t in a["types"] if t in (raw.get("partition_types") or {}) and kt.has_topology(raw, t, ab)
                      and not kt.bind_matches(raw, t, a["bind_out"], ab, a["plan"])]}
+    # COORD 11-20 (S81 col_h10 r1/r2 t1 on D8i failed kit_rtl: the bound module predates the plan's relay rows): the plan's relay_depth / relay_branch rows against the bound module,
+    # the exact calls kit-rtl makes (kit_relay_depth.apply / check_branch on the bound text); a ValueError there is a kit_rtl failure, so the row is BIND-STALE before launch
+    import hashlib, re as _re
+    sys.path.insert(0, os.path.dirname(os.path.abspath(kt.__file__)))
+    try:
+        import kit_relay_depth as krd
+    except ImportError:                                                  # a tree without the relay checker: the kit_topology verdict stands alone
+        krd = None
+    _sv = lambda s_: (lambda t_: t_ if t_ and not t_[0].isdigit() else "n" + t_)(_re.sub(r"_+", "_", _re.sub(r"[^A-Za-z0-9_]", "_", s_)).strip("_"))
+    def _short(s_, n=60):
+        s_ = _sv(s_)
+        return s_ if len(s_) <= n else s_[: n - 9] + "_" + hashlib.sha1(s_.encode()).hexdigest()[:8]
+    relay = {}
+    rep = None
+    for t in a["types"]:
+        pt = (raw.get("partition_types") or {}).get(t) or {}
+        if krd is None or t in out["stale"] or not (pt.get("relay_depth") or pt.get("relay_branch")):
+            continue
+        try:
+            if rep is None:
+                rep = json.loads((Path(a["bind_out"]) / "bind_report.json").read_text())
+            ty = rep.get("types") or {}
+            key = t if t in ty else next((k for k in sorted(ty) if k.startswith(t + "__")), None)
+            if key is None:
+                relay[t] = "bound type not in bind_report"
+            else:
+                btxt = (Path(a["bind_out"]) / "rtl" / (ty[key]["module"] + ".sv")).read_text()
+                btxt, _r = krd.apply(btxt, t, pt.get("relay_depth"), lambda i: _short("u_" + _sv(i), 90), _sv)
+                krd.check_branch(btxt, t, pt.get("relay_branch"), lambda i: _short("u_" + _sv(i), 90))
+        except ValueError as ex:
+            relay[t] = str(ex)[:220]
+        except (OSError, KeyError, TypeError) as ex:
+            relay[t] = "unreadable: " + type(ex).__name__
+    if relay:
+        out["relay"] = relay
+        out["stale"] = sorted(set(out["stale"]) | set(relay))
 except Exception as e:
     out = {"error": (type(e).__name__ + ": " + str(e))[:300]}
 print("AP_JSON " + json.dumps(out))
@@ -9850,12 +9886,14 @@ def _bind_preflight_groups(AP, d, st, die, group_items, cache, now, rpy, out):
                     out[item] = "BIND_PREFLIGHT_UNKNOWN: the bind probe could not run on the gen host; not launched until it can"
                 continue
             sg = rpy(d.get("gen_host"), PROBE_BIND_SIG, g, timeout=120)
-            c = cache[key] = {"t": now, "checked": sorted(set(items) | set((old_c or {}).get("checked") or ())),
+            c = cache[key] = {"t": now, "relay": dict((old_c or {}).get("relay") or {}, **(p.get("relay") or {})), "checked": sorted(set(items) | set((old_c or {}).get("checked") or ())),
                               "stale": sorted(set(p["stale"]) | (set((old_c or {}).get("stale") or ()) if old_c and isinstance(sg, dict) and sg.get("sig") == old_c.get("sig") else set())),
                               "sig": sg.get("sig") if isinstance(sg, dict) else None, "sig_t": now}
         for item in items:
             if item in c["stale"]:
-                out[item] = (f"KIT_TOPOLOGY_BIND_STALE preflight: bind {g['bind_out']} does not match plan {g['plan']} "
+                rw = (c.get("relay") or {}).get(item)
+                out[item] = (f"KIT_TOPOLOGY_BIND_STALE preflight: bind {g['bind_out']} predates the plan {g['plan']} relay rows ({rw}); regenerate the bind or repoint kit_rtl.bind_out" if rw else
+                             f"KIT_TOPOLOGY_BIND_STALE preflight: bind {g['bind_out']} does not match plan {g['plan']} "
                              f"(kit_topology.bind_matches); regenerate the canonical bind or repoint kit_rtl.bind_out")
 
 
