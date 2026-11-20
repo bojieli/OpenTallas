@@ -176,11 +176,14 @@ class KeepGenHosts(unittest.TestCase):
     def test_default_never_narrows_the_die_it_replicates_or_refuses(self):
         """FABLE-FLOW-1700 item 3: the candidate lists only epyc10 but the die serves epyc10 and epyc8: the tree is replicated to epyc8 (and verified) before the switch, else nothing is applied"""
         seen = []
+        verified_bind_hosts = []
         orig = A.ensure_tree_on_hosts
         A.ensure_tree_on_hosts = lambda tree, want, cur, hosts, rt, run=None, link_from="": (seen.append((cur, hosts)) or (list(hosts) + [h for h in cur if h not in hosts], ["replicated"]))
         try:
             c = mk({"gen_hosts": ["epyc10", "epyc8"]})
-            apply(c, cand(), "/x/old", "E0", pilot_item="t1", TC=self._tc([]))
+            apply(c, cand(), "/x/old", "E0", pilot_item="t1", TC=self._tc([]),
+                  verify_retained_bind=verified_bind_hosts.append)
+            self.assertEqual(verified_bind_hosts, [["epyc10", "epyc8"]])
         finally:
             A.ensure_tree_on_hosts = orig
         d = json.loads((c / "autopilot/kit_wave.json").read_text())["dies"]["kv"]

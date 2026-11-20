@@ -160,7 +160,7 @@ def marker_kit_rtl(marker):
     return dict(legacy, **(marker.get("kit_rtl") or {})) | ((marker.get("config") or {}).get("kit_rtl") or {})
 
 
-def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=False, TC=None, rt=None, keep_gen_hosts=False, PG=None, optimistic=None, host_verify=None):
+def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=False, TC=None, rt=None, keep_gen_hosts=False, PG=None, optimistic=None, host_verify=None, verify_retained_bind=None):
     """optimistic (COORD 11-18, OWNER "build all types directly from the latest plan"; candidate key optimistic: true or --optimistic): the publish gate record,
     the normal source guard and the smoke flag are ADVISORY (logged in the receipt as warnings, never a refusal) and no pilot hold is added (every type of the
     plan launches at once) unless --pilot-item names one.  Strict bind + LATCHECK, run in parallel by the lane, are the only blocking plan checks: a failure
@@ -177,6 +177,7 @@ def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=
     if kr:
         mc["kit_rtl"] = kr
     hosts = list(mc.get("gen_hosts") or marker.get("hosts") or [])
+    candidate_hosts = set(hosts)
     keep = bool(keep_gen_hosts or obj.get("keep_gen_hosts"))
     if keep:
         cur = json.loads((C / "autopilot/kit_wave.json").read_text())["dies"][die]
@@ -205,6 +206,8 @@ def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=
         if _bad:
             raise SystemExit("APPLY REFUSED: the tree does not verify on every gen host, the die keeps its tree (nothing switched): "
                              + " | ".join(f"{h}: {t.strip().splitlines()[-1][:200] if t.strip() else '?'}" for h, t in sorted(_bad.items())))
+    if verify_retained_bind and set(hosts) - candidate_hosts:
+        verify_retained_bind(hosts)
     # PUBLISH-GATE-1116: no switch without a PASS record of the pre-apply gate (schema, PRE/G0, provenance hashes, dry gen) keyed to
     # this tree manifest sha.  PG=False is only publish_gate.project_cfg() projecting the apply on a scratch copy.
     if PG is not False:

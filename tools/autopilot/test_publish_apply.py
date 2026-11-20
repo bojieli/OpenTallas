@@ -521,3 +521,27 @@ def test_apply_refuses_the_event_commit_when_the_out_cannot_be_synced(tmp_path, 
     rc = PA.cmd_apply(a, run=_local_ssh(), apply_fn=lambda *x, **k: committed.append("apply") or {}, commit_fn=lambda *x: committed.append("commit"))
     out = capsys.readouterr().out
     assert rc == 5 and committed == [] and "OUT-SYNC epyc8: differs" in out and "APPLY REFUSED" in out
+
+
+def test_apply_checks_bind_digests_on_the_final_retained_hosts(tmp_path, monkeypatch):
+    c = coord(tmp_path)
+    candidate = tmp_path / "candidate.json"
+    candidate.write_text(json.dumps(bind_candidate(tmp_path / "tree")))
+    calls = []
+
+    def out_sync(obj, run=None, hosts=None):
+        calls.append(hosts)
+        if hosts:
+            return False, ["epyc7: selected bind digest differs"]
+        return True, ["epyc9: selected bind verified"]
+
+    def apply_marker(*args, verify_retained_bind, **kwargs):
+        verify_retained_bind(["epyc9", "epyc7"])
+        raise AssertionError("bind divergence allowed the apply to proceed")
+
+    monkeypatch.setattr(PA, "out_sync", out_sync)
+    monkeypatch.setattr(PA.A, "apply_marker", apply_marker)
+    args = types.SimpleNamespace(coord=str(c), candidate=str(candidate), expect_source="/x/old", expect_event="E0",
+                                 pilot_item=None, skip_bind_check=True)
+    assert PA.cmd_apply(args, commit_fn=lambda *x: pytest.fail("event committed with divergent bind")) == 5
+    assert calls == [None, ["epyc9", "epyc7"]]
