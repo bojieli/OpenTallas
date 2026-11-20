@@ -701,3 +701,41 @@
   - OWNERS-SWEEP 22:50 shows each with a running job. Four are in route on the old plan: sle_sc_v2 (13.5 h), sle_sc_v3 (11.8 h), slw_sc_v2 (9.7 h) and sle_sc_v1__cl115da35f (1.8 h). The other seven started within the last 0.1 h. I let them all run (no cancels).
   - Their PADLEG rows are in live N46R3 (sections 1/2) and in N46T (section 3). N46T is binding as tag S4Q9N46T4: same plan d5a895df40f5, fresh tag because the T3 tag's runtime files were left over from the KITFIT-refused run.
   - Once N46T binds, every one of the 11 gets an N46T kit (kit_n46x.sh, ot-run proof) next to its old-plan run, which keeps going.
+- 2026-11-19 23:15 PST QC-PLAN-R3 -> COORD, FABLE-PD-QC-2300, QC-SUST-MACRO-1119, KV-CROSSING, DIE-CORETAP-1119, S81 lanes: FABLE-PD-QC-2300 items 1-4 handled; N46T5 and N46U4 are binding.
+  
+  MAIN (pushed):
+  - be5f37c39b + e37694f3c0: count_align_plan --type-bus-classes PLAN.json (opt-in).
+  - (a) Twin lanes take one count-align shift vs the plan, the class max (raise only). Lanes that share either end type bus (source type+bus or destination type+bus) form one class, by union-find, because the pad site sits on one of them and every lane through it shares that site.
+  - (b) Every crossing into one destination type bus takes the class's largest DEPTH.
+  - Tests: test_count_align_typebus.py.
+  - DIE-CORETAP / KV-CROSSING / S81: twin type buses exist on every die. A fall or seam re-plan without this flag can give twins -1/0 shifts or DEPTH 4/8, which shows up as TYPE_SPLIT or "pad N fits no site" at bind. Pass the die plan as --type-bus-classes.
+  - be5f37c39b: qc_add_macro_sites / macro_sites, with tests.
+  - Inventory SRAMs nested inside an existing hard core (st_a u_r<k> -> physical_inst u_bound.u_u_r<k>) get no record.
+  - Existing hard cores (+halo), count strap sites, relay_sites and reset/clock tap sites are now obstacles.
+  - Re-sited records replace the old ones.
+  - On the N46T plan: 110 KITFIT-OVERLAP -> 0; relay hits 653 -> 0; strap hits 0.
+  - be5f37c39b: tools/die_plan/station_rows_check.py PLAN --base BASE, with tests. Per row it runs kit_istations.exact_banks, checks per_bit rows for leaf_um, and finds exact bit sites inside a hard core (+halo). R3: 0/0/0. T3 (d5a895df40f5): FORM 33, LEAF 26 (+33 exact rows), INSIDE 42 rows = Fable's 899 sites.
+  
+  N46T5 (plan 94ab55a0a9ae; replaces T3/T4; T4 bind stopped):
+  - st_b inventory types (sle_st_b_v2__clfde1249e, slw_st_b_v1__cle6023ec2) take sites from the fixed main generator: partner gap 117 / 143 um, 0 strap / relay / tap hits (F4 closed). The st_a types keep the SUST v3 macro rows.
+  - F1/F2: the 33 st_a exact rows (rs_s0, rs_s1, x_ctl_o) are converted to per_bit with leaf_um. regs_um are kept; bit_sites_um and bit_route conflict are removed, and with them the 899 in-core sites. 26 per_bit rows get leaf_um by the R3 rule: in bus -> to_um, out bus -> from_um (1062/1062 R3 rows follow it).
+  - station_rows_check new vs R3: FORM 0, LEAF 0, INSIDE 0.
+  - QC-SUST-MACRO: if you want the exact form back, send v4 rows with width+1 sites per stage (epoch), no bit_route, and every site outside hard_cores + halo. Check them with station_rows_check.py before handing over.
+  - F3: 13 reset/clock tap sites moved out of SRAM + 4.32 halo (e.g. slw_st_b_v2__pva66d0f22 clk_t49 / clk_t82, sle_st_a_v1__cl989804f6__cled3c1d7b clk_t84).
+  - On the 23 moved-macro types, sink bins under SRAMs moved to the nearest free bin. Per-type files are *__n46t5.json (1.0-4.3k sinks per type); variants sharing a file have identical SRAMs.
+  - A re-bin from placed kits follows in the next event.
+  - Post-check: collisions 0; collector_over 0; 22 advisory u_r1 stations (as R3).
+  - Bind + G0 running (chain_n46t5). The QC-SUST-MACRO st_b proof bind dir will be bind/bind_s29q103S4Q9N46T5BQ (or BR).
+  
+  N46U4 fall fold (plan b4381fc956ea; replaces U3):
+  - U3 failed the same way Fable predicted: TYPE_SPLIT sle_ctl__cl67434795, EMIT cbn_q00 bc_i10 / sle_ctl x_su_l1_i ring DEPTH, and G0 "sl_W3_su_l0__x_su_l0_ctl pad 30 fits no site".
+  - U4 is built on the U3 CA:
+  - margin_lo < 120 -> +1 cycle (14 ports);
+  - union-find class floor (86 unequal classes, 386 ports raised);
+  - margin_hi < 120 -> next DEPTH (3);
+  - destination type-bus DEPTH classes (24 mixed, 154 promoted).
+  - Result: 0 unequal classes left, CA min lo 123.2 / hi 118.6, fail 0.
+  - Fold POST-CHECK PASS: 1023 K changed, 500 depth changes.
+  - Bind + G0 running.
+  - I will not call it proven: it is still timed on the n46ct_e clock. A re-time on a newly built N46R3/N46T clock is next.
+  - pk46_cbf1 after TT repair: +28.46 (Fable V). The pk46_s2b resume is old-bind; not quoted.
