@@ -1,0 +1,77 @@
+{
+  "f0_A": {
+    "startpoint": "u_bound.u_cland_origin/s1$_SDFF_PN0_/QN",
+    "endpoint": "u_bound.u_cland_fstart_ft0_o/q$_SDFF_PN0_/D",
+    "slack_ps": 298.8,
+    "qn_to_gate_ps": 393.5,
+    "qn_to_d_ps": 415.6,
+    "buffer_count": 8
+  },
+  "f0_B": {
+    "startpoint": "u_bound.u_rrl_56/q$_DFF_P_/QN",
+    "endpoint": "u_bound.u_cland_fstart_ft0_o/q$_SDFF_PN0_/D",
+    "slack_ps": -163.4,
+    "qn_to_gate_ps": 873.9,
+    "qn_to_d_ps": 901.9,
+    "buffer_count": 18
+  },
+  "f1_A": {
+    "startpoint": "u_bound.u_cland_origin/s1$_SDFF_PN0_/QN",
+    "endpoint": "u_bound.u_cland_fstart_ft1_o/q$_SDFF_PN0_/D",
+    "slack_ps": 420.4,
+    "qn_to_gate_ps": 254.7,
+    "qn_to_d_ps": 279.0,
+    "buffer_count": 4
+  },
+  "f1_B": {
+    "startpoint": "u_bound.u_rrl_56/q$_DFF_P_/QN",
+    "endpoint": "u_bound.u_cland_fstart_ft1_o/q$_SDFF_PN0_/D",
+    "slack_ps": -62.41,
+    "qn_to_gate_ps": 762.9,
+    "qn_to_d_ps": 786.9,
+    "buffer_count": 16
+  },
+  "f2_A": {
+    "startpoint": "u_bound.u_cland_origin/s1$_SDFF_PN0_/QN",
+    "endpoint": "u_bound.u_cland_fstart_ft2_o/q$_SDFF_PN0_/D",
+    "slack_ps": 74.57,
+    "qn_to_gate_ps": 591.1,
+    "qn_to_d_ps": 623.3,
+    "buffer_count": 12
+  },
+  "f2_B": {
+    "startpoint": "u_bound.u_rrl_56/q$_DFF_P_/QN",
+    "endpoint": "u_bound.u_cland_fstart_ft2_o/q$_SDFF_PN0_/D",
+    "slack_ps": -281.6,
+    "qn_to_gate_ps": 977.9,
+    "qn_to_d_ps": 995.9,
+    "buffer_count": 24
+  },
+  "f3_A": {
+    "startpoint": "u_bound.u_cland_origin/s1$_SDFF_PN0_/QN",
+    "endpoint": "u_bound.u_cland_fstart_ft3_o/q$_SDFF_PN0_/D",
+    "slack_ps": 33.3,
+    "qn_to_gate_ps": 591.2,
+    "qn_to_d_ps": 677.4,
+    "buffer_count": 12
+  },
+  "f3_B": {
+    "startpoint": "u_bound.u_rrl_56/q$_DFF_P_/QN",
+    "endpoint": "u_bound.u_cland_fstart_ft3_o/q$_SDFF_PN0_/D",
+    "slack_ps": -305.0,
+    "qn_to_gate_ps": 949.9,
+    "qn_to_d_ps": 1031.9,
+    "buffer_count": 23
+  },
+  "worst_other": {
+    "startpoint": "u_bound.u_cland_origin/s2$_SDFF_PN0_/QN",
+    "endpoint": "u_bound.u_cland_reader_start_ft5_i_0/g_x[8].u_r/q$_SDFF_PN0_/D",
+    "slack_ps": -104.4
+  },
+  "odb_sha256": "fa5752e6df4e3cde9e88c1eb42a8a7fec2b5b26374d66539be8034fc348663e4",
+  "stage": "original pre-TT-repair global route",
+  "wns_ps": -305.04,
+  "tns_ps": -3986.26,
+  "setup_uncertainty_ps": 0,
+  "hold_uncertainty_ps": 25
+}
