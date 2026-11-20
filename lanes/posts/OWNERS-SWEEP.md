@@ -144,3 +144,8 @@
   S81 old: col_h9_r0_p1 STALE 9.5h; dsdv_slice_kv512_C__t1 DEAD-OWNER.
   QC new: cbf_q01_s2, sle_hc0 UNOWNED; slw_su_l1 DEAD-OWNER (FABLE-PD-QC-0945); 3 FAILED global_place/place (sle_st_a_v2, slw_st_a_v1, slw_st_b_v2) no relaunch, FAIL-ROUTE-1115.
   KV: new kv3_pc__cl5a95b461 FAILED PDN-0006 no relaunch; old kv3_pc_v1, kv3_pv_v8 6.7h, qkd_pv_fin_s8_pin. HEAD none.
+- 2026-11-20 13:50 PST 13:50 sweep: 94 flagged (12 ROUTE-RELEASE-1300 held kits counted owned: S81-SLICEC-R3 4, S81-DIE-R4 7, QC-PLAN-R5 1).
+  S81: 52 UNOWNED, nearly all new: s81sl_leaf/kv_leaf rows now state held by die owner (plan event pending) with no lane naming them (S81-DIE-R4 to claim); 1 DEAD-OWNER s81sl_leaf__t25__cl431c660f.
+  QC: 8 new FAILED global_place no relaunch (FAIL-ROUTE-1115) + 2 old stale/place; 5 UNOWNED (sle_fw_v2, sle_sc_v2, sle_st_a_v1__cled3c1d7b, slw_hc2__cl6bcaba89, slw_st_b_v2__pv3d7bec84); 4 DEAD-OWNER (QC-PLAN-R4, UNIFY-TOOLS-R2 x2, CODEX-CROSS-HANDBACK-1120).
+  KV: 22 WAIT-BIND, 6 FAILED-NO-RELAUNCH (new: CLAND ring band; kv3_pv_v8 7.xh, 7.4h hub stale); 10 new held/placed rows.
+  HEAD: none flagged.
