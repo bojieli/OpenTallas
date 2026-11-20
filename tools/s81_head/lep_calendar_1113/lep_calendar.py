@@ -3,7 +3,7 @@
 This prices explicit register legs, never FIFO residence or a token period.
 The vF physical candidate preserves the current N-face collective-0 pins.
 """
-from dataclasses import dataclass, replace as replace_stages
+from dataclasses import dataclass, replace
 
 @dataclass(frozen=True)
 class Stages:
@@ -121,7 +121,7 @@ class Stages:
 
 VF = Stages(ktx=0x0000, krx=0x1220, txi=0x1221, pin=2, pout=3, plw=3, col0=2)
 NF15F = Stages(ktx=0x1111, krx=0x2660, txi=0x2442, pin=6, pout=8, plw=3, col0=2, rxh=1, kcred=28)   # HEAD-PLAN-R4 11-17
-NF15F_R13 = replace_stages(NF15F, ktr=0x3112)
+NF15F_R13 = replace(NF15F, ktr=0x3112)
 STRESS = Stages(ktx=0x3333, krx=0x4444, txi=0x4444, pin=4, pout=4, plw=4, col0=2, pair=0)
 
 
@@ -131,11 +131,10 @@ def require_matching_receipt(stages, receipt, programme_sha256):
             or receipt.get('programme_sha256') != programme_sha256):
         raise ValueError('handoff receipt programme differs from selected static programme')
     expected = stages.params()
-    source_params = receipt['params']
-    actual = {key: source_params[key] for key in expected if key != 'KTR'}
-    if 'KTR' in expected:
-        actual['KTR'] = source_params.get('KTR', actual['KTX'])
-    if actual != expected or source_params.get('KTR', actual['KTX']) != expected.get('KTR', expected['KTX']):
+    actual = dict(receipt['params'])
+    expected.setdefault('KTR', expected['KTX'])
+    actual.setdefault('KTR', actual['KTX'])
+    if any(actual[key] != value for key, value in expected.items()):
         raise ValueError('handoff receipt stage tuple differs from selected provider')
     if receipt.get('static_replay') != 'PASS' or receipt.get('removed_reservation_mutant') != 'CAUGHT':
         raise ValueError('fixed static replay and removed-reservation control required')
