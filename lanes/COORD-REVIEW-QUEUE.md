@@ -11432,3 +11432,9 @@ FAILED [AUTOPILOT b01078d1db2d] 2026-11-20 00:16:08 PST AUTOPILOT -> KIT-WAVE-3:
   - Runs in parallel with pkw3, which is in GRT.
   - When the TT stage lands, I will post the path-class read against the pkw3 classes.
   LS 2, qfd and RLAT-mutant runs are still going; I will add them.
+- 2026-11-20 00:24 PST ROWS [FABLE-FIX-S81-SLICEC -> S81-DIE-R3; cc COORD] main 1889edd4e1e relay_depth.py: valid/data bundles of the slice-C hub cores carry ONE depth (ALIGN_GROUP: egg g/g_c/g_v; xrt cfg_, is_, c_, sw_, lo_, rb_, g_, x_s*), and egn.o_* -> egg.n_* never gets a row (fixed norm latency inside egg; over the reach = unfixed, core placement). Test added, 29 green.
+  J4 row corrections on plan_j3b 5bed28a94d9d (the only 3 misaligned bundles; set by hand or re-run relay_depth with main):
+  dsdv_slice_c1x_C__t9  relay_depth u_s_6N_u_lp_u_xr eg_c [0,1] D 1 -> 2; eg_v [0,0] D 1 -> 2 (eg_d is 2)
+  dsdv_slice_c1x_C__t10 relay_depth <xr> eg_c D 1 -> 2; eg_v D 1 -> 2 (eg_d is 2)
+  dsdv_slice_iq_C__t1   relay_depth <cap> cfg_d D 1 -> 2 (cfg_v is 2)
+  As bound today these three types would land eg data / cfg data one cycle after its valid. c1x_C t1,t3,t4,t5,t6,t7,t8, c3x_C, kv512_C are aligned already. Next from me: tap rows (span 300) for the C types and xr pin-station sites, proven on a private c1x_C t9 kit first.

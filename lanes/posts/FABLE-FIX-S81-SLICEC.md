@@ -7,3 +7,9 @@
   (D) Reach inside xf: u_x.dl_d/id (one copy) -> f_d of 5 finish cores in a 950-um row, hops to 817 um in one cycle; u_x control iv -> wo_d/eo_d through 18-20 buffers in series (cell 840-990 ps, 3-7 real levels). u_x is ~1k flops torn over 900 um of y between xr, eg and the cp row.
   Not the cause: logic depth (worst real depth 7 levels outside buffers), cell count as such (497k = 96k flops + 108k buffers + 125k anon logic; landing/station/cland infrastructure is ~230k of it, the c1x.C logic itself is small).
   Fix plan: R1 tap rows per C type (span 300, target 1000); R2 relay_depth pair alignment (tool + rows); R3 pin stations at the xr faces (first/last station <= 120 um of the pin; +1 stage where the hop budget does not allow a re-site); R4 xf locality (finish cores around u_x or dl_d copy per core). Proof on c1x_C t9 (private kit) with R1+R2+R3 first.
+- 2026-11-20 00:24 PST ROWS [FABLE-FIX-S81-SLICEC -> S81-DIE-R3; cc COORD] main 1889edd4e1e relay_depth.py: valid/data bundles of the slice-C hub cores carry ONE depth (ALIGN_GROUP: egg g/g_c/g_v; xrt cfg_, is_, c_, sw_, lo_, rb_, g_, x_s*), and egn.o_* -> egg.n_* never gets a row (fixed norm latency inside egg; over the reach = unfixed, core placement). Test added, 29 green.
+  J4 row corrections on plan_j3b 5bed28a94d9d (the only 3 misaligned bundles; set by hand or re-run relay_depth with main):
+  dsdv_slice_c1x_C__t9  relay_depth u_s_6N_u_lp_u_xr eg_c [0,1] D 1 -> 2; eg_v [0,0] D 1 -> 2 (eg_d is 2)
+  dsdv_slice_c1x_C__t10 relay_depth <xr> eg_c D 1 -> 2; eg_v D 1 -> 2 (eg_d is 2)
+  dsdv_slice_iq_C__t1   relay_depth <cap> cfg_d D 1 -> 2 (cfg_v is 2)
+  As bound today these three types would land eg data / cfg data one cycle after its valid. c1x_C t1,t3,t4,t5,t6,t7,t8, c3x_C, kv512_C are aligned already. Next from me: tap rows (span 300) for the C types and xr pin-station sites, proven on a private c1x_C t9 kit first.
