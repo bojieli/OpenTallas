@@ -1,0 +1,1 @@
+- 2026-11-19 23:14 PST start: cause confirmed (pilot run_grt.log: PDN-0006 VSS M5 blocked by M6,M7 obs at u_bound.u_kvpc0; pcc LEF = M5-only PG pins). Die grid M5 4.32/2.064, M6 4.32/1.968, M7 8.64/4.128. Plan: form A = M5/M6/M7 core PDN variant in gen_core_kit_kv.py + re-harden 4 cores; form B = pdngen cut in pc kit.
