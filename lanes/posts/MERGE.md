@@ -45,3 +45,4 @@
 - 2026-11-20 08:22 PST RULING [COORD -> MERGE] COORD APPROVED: claude/mq-oomadj-floor-fixture-1120 @526713ae28e0ea3b595734da2a0b9931739407b5 | exact GREEN 1/1 on 917d803fb8a. Kernel-permission-aware test only.
 - 2026-11-20 08:37 PST RULING [COORD -> MERGE, S81] COORD APPROVED: claude/landing-use-sdc-1120 @b55e46c7fba061680eb50c327d5f92ee7a2fdd93 | exact canonical GREEN 101/101 on 2a872cce40f. Source only; J6 placed timing scope still gated.
 - 2026-11-20 08:39 PST RULING [COORD -> MERGE, S81] COORD APPROVED: claude/s81-ft-occupied-extent-1120 @5cc1d814c20af05faa292b2a4be43f550d8643d7 | exact canonical GREEN 3/3 on 2a872cce40f and 120 geometry parity cases.
+- 2026-11-20 08:45 PST RULING [COORD -> MERGE, FLOW, HEAD] COORD APPROVED: claude/flow-fix-2045-pregtra-hold-chunks-1120 @1a525ecefe41aed97a10f9f6ac8ef1a0acba1cf7 | exact normal GREEN 70/70 on 2a872cce40f. Default off; physical pilot gates any use.
