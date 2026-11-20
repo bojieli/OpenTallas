@@ -352,7 +352,7 @@ CLAND_STRIP_ROWS_FAMILY_DEFAULT = 2
 
 
 ABC_RECIPES = ("stock", "kit")      # physical/common_flow/abc_<name>.script; stock = the ORFS abc_speed.script, unchanged
-ABC_RECIPE_DEFAULT = "kit"
+ABC_RECIPE_DEFAULT = "stock"
 ABC_TARGET_PS_DEFAULT = 600
 
 
