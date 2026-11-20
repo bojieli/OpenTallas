@@ -35,6 +35,50 @@ class SchedulerRt(unittest.TestCase):
             self.assertEqual(KW.rt_tools_fields(cfg, "qc"), {})
             self.assertFalse(KW.tool_skew_refuse(None, cfg, {}, "s81"))
 
+    def test_item_pin_matches_only_its_event_and_effective_source(self):
+        source = "c" * 64
+        d = {"event": "E1", "src_manifest_hash": "d" * 64,
+             "item_inputs": {"t": {"src_manifest_hash": source,
+                                   "gen_tools_pin": {"event": "E1", "src_manifest_hash": source}}}}
+        self.assertEqual(KW.item_gen_tools_manifest(d, "t"), source)
+        self.assertEqual(KW.item_gen_tools_manifest(d, "other"), "")
+        self.assertEqual(KW.item_gen_tools_manifest(dict(d, event="E2"), "t"), "")
+        d["item_inputs"]["t"]["src_manifest_hash"] = "e" * 64
+        self.assertEqual(KW.item_gen_tools_manifest(d, "t"), "")
+
+    def test_item_pin_rekeys_gen_and_keeps_late_flow_on_runtime(self):
+        source = "a" * 64
+        d = {"event": "E1", "src_manifest_hash": source,
+             "item_inputs": {"t": {"gen_tools_pin": {"event": "E1", "src_manifest_hash": source}}}}
+        cfg = {"dies": {"s81": d}}
+        for rt in ("runtime-before", "runtime-after"):
+            with mock.patch.object(KW, "exec_family_digests", return_value={"gen": rt, "kit": rt, "flow": rt}), \
+                 mock.patch.object(KW, "stage_tools_digests", return_value={"gen": rt, "kit_rtl": rt, "route": rt}):
+                pin = KW.input_parts(cfg, "s81", "t")
+                sibling = KW.input_parts(cfg, "s81", "other")
+                self.assertEqual(pin["stg"]["gen"], source)
+                self.assertEqual(pin["stg"]["kit_rtl"], source)
+                self.assertEqual(pin["stg"]["route"], rt)
+                self.assertEqual(sibling["stg"]["gen"], rt)
+                self.assertNotEqual(pin["noenv"], sibling["noenv"])
+
+    def test_bind_preflight_uses_the_selected_tool_cohort(self):
+        source = "c" * 64
+        d = {"event": "E1", "src_manifest_hash": source, "src": "/x/src", "plan": "/x/plan",
+             "kit_rtl": {"mode": "bind", "bind_out": "/x/bind"},
+             "item_inputs": {"t": {"gen_tools_pin": {"event": "E1", "src_manifest_hash": source}}}}
+        calls = {}
+
+        def probe(host, code, args, timeout):
+            if code == KW.PROBE_BIND:
+                calls[args["types"][0]] = args.get("gen_tools_manifest_sha")
+                return {"stale": []}
+            return {"sig": "stable"}
+
+        self.assertEqual(KW.bind_preflight(None, {"dies": {"s81": d}}, {}, "s81",
+                                          [{"item": "t"}, {"item": "other"}], rpy=probe), {})
+        self.assertEqual(calls, {"t": source, "other": None})
+
     def test_tools_fields_are_not_kit_inputs(self):
         """a new main sha alone never releases a design-fail hold (the stage tools digest of fail keys covers real tool changes)"""
         a = {"die": "s81", "item": "t", "plan": "/p", "gen_args": ["x"]}
