@@ -114,6 +114,7 @@ ALWAYS = (("kit", "stage_odb_cap.py", "tools/die_plan/stage_odb_cap.py"),
           ("kit", "subtree_balance.tcl", "tools/die_plan/subtree_balance.tcl"),        # DIE-CORETAP-1119 (7109ee911ef): sourced by cts_post.tcl, standalone (sources nothing)
           ("kit", "failfast_rules.py", "physical/common_flow/failfast_rules.py"),      # DRT_STALL rule (the judge is run from the kit copy at each poll of the NEXT route stage)
           ("kit+", "repair_bound.tcl", "physical/common_flow/repair_bound.tcl"),      # post-GRT repair_timing_helper chunk + stall + wall-time bound, hooked below
+          ("kit+", "kit_resume.py", "tools/autopilot/kit_resume.py"),                 # in-place restart: run_kit.sh calls it (auto resume)
           ("kit+", "kit_reports.py", "tools/die_plan/kit_reports.py"))      # "kit+" = created when missing, so legacy kits get the helper the refreshed run_kit.sh calls
 
 

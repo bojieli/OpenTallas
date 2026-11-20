@@ -7764,7 +7764,8 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     # FLOW-21 / COORD 11-01: the pre-route LEC runs beside place/CTS/route (lec_async.sh, OT_LEC_ASYNC=0 = inline)
     shutil.copyfile(Path(__file__).with_name("lec_async.sh"), kd / "lec_async.sh")
     shutil.copyfile(Path(__file__).with_name("stage_odb_cap.py"), kd / "stage_odb_cap.py")   # STAGE-CAP 11-17
-    shutil.copyfile(Path(__file__).with_name("kit_reports.py"), kd / "kit_reports.py")       # FLOW-FIX-2045: run_kit.sh quarantines reports that are not this kit's own
+    shutil.copyfile(Path(__file__).with_name("kit_reports.py"), kd / "kit_reports.py")
+    shutil.copyfile(Path(__file__).resolve().parents[1] / "autopilot" / "kit_resume.py", kd / "kit_resume.py")           # FLOW-FIX-2045: run_kit.sh writes its own resume file for an in-place restart       # FLOW-FIX-2045: run_kit.sh quarantines reports that are not this kit's own
     import core_flow; core_flow.stage_grt183(kd)   # FLOW-28 11-04: GRT-0183 fresh-process re-run (run_kit.sh)
     shutil.copyfile(Path(__file__).with_name("adder_map_dontuse.py"), kd / "adder_map_dontuse.py")   # ruling 4 (10-25)
     for f in ("face_keep.tcl", "face_keep_release.tcl"):   # CP1-R10 (restored: lost in main merge 0ce45ab03c)
@@ -8100,6 +8101,12 @@ RUN_KIT = r"""#!/bin/bash
 # The FF structural hold gate (OT_HOLD_GATE, rc 4) is unchanged.
 set -uo pipefail
 K=$(cd "$1" && pwd); GOAL=${2:-route}; MEM=${3:-16}; CPUS=${4:-8}
+# AUTO-RESUME block (FLOW-FIX-2045; S81-GEOM-OPUS 39ed0e56: an in-place restart with no resume.json redid floorplan onward): a kit that already has stage results and no wave resume plan gets K/resume.json for
+# the newest valid step (complete, passed, inputs not newer); OT_RESUME=0 opts out; any doubt = the full flow as before.  Refusal-free; no physical step  # KWRS-BEGIN
+if [ "${OT_RESUME:-1}" != 0 ] && [ ! -f "$K/.no_auto_resume" ] && [ -f "$K/kit_resume.py" ] && [ "$GOAL" != synth ] && ls "$K"/run/results/asap7/*/base/1_synth.odb >/dev/null 2>&1; then
+  python3 -I "$K/kit_resume.py" auto "$K" "$GOAL" >&2 || true
+fi
+# KWRS-END
 # RESYNTH-GUARD block: a refusal check only, no physical step, so it stays outside the resume runner fingerprint  # KWRS-BEGIN
 # KW-FIX-32 RESYNTH-GUARD (COORD 20:2x, DIE-QC-91 20:15): a kit assembled by copying stage checkpoints (cp -p keeps the
 # old mtimes) re-synthesises under a make-chain goal when config.mk / sdc / rtl are newer than the restored results, so

@@ -82,6 +82,7 @@ RUNNER_ROOTS["clk_leaf_repeat_default.tcl"] = "cts"
 # KW-FIX-25/AUTORENDER 11-06: advisory renders, read stage ODBs only and write run/layout_review; no stage output depends on them
 GATE_ROOTS |= {"layout_render_hook.sh", "layout_render.tcl", "layout_smells.py"}
 GATE_ROOTS |= {"failfast_rules.py"}   # FAILFAST-1 11-11: stops a run on progress; inert unless a rule fires
+GATE_ROOTS |= {"kit_reports.py", "stage_odb_cap.py", "kit_resume.py"}   # FLOW-FIX-2045: helpers the wave ships into every kit (report quarantine, ODB cap, this file): no stage output depends on them
 GATE_ROOTS |= {"grt_stall_resume.tcl"}   # KW-FIX-17 11-05 GRT-STALL: inert unless a 5_1_grt stage stalls in -end_incremental
 # run_kit.sh reads these config variables itself (outside the ORFS make steps)
 RUNNER_VARS = {"OT_HOLD_FF_MARGIN": "grt", "OT_TAP_GRT_PRE": "cts", "OT_PINREG_PAD": "cts"}
@@ -530,6 +531,82 @@ def decide(new, old, allow_nochange=False):
 KWRS_MARKER = ".kwrs_done."           # run_kit.sh stage-resume step markers (/work/.kwrs_done.$PPID)
 
 
+AUTO_SKIP_RE = re.compile(r"(\.log|\.jsonl|\.tmp|\.new)$|^(FAIL_|DONE|PASS_|GATE_|\.kwrs|kwrs_|stale_reports/|stage_odb_|tools_rev|flow_refresh|KIT_FORK)")
+
+
+def auto_plan(K, goal="route", now=None):
+    """FLOW-FIX-2045 (S81-GEOM-OPUS 39ed0e56: run_kit.sh restarted in place with no resume file redid floorplan onward, keeping only synth): the plan of an IN-PLACE restart.  The newest step of
+    K/run that is complete, passed, and whose inputs are not newer than its outputs is reused; the run starts at the step after it.  Input = a kit file classify() says is read at that step or
+    earlier (gates and files nobody reads do not count; logs, markers and the helpers the wave ships are never inputs).  -> resume record (not yet written) or None when nothing past synth can be reused"""
+    ck = checkpoint(K)
+    if not ck.get("upto") or IDX[ck["upto"]] < IDX["floorplan"]:
+        return None
+    files, how = input_files(K)
+    files = [f for f in files if not AUTO_SKIP_RE.search(f)]
+    texts = {}
+    for rel in files:
+        p = os.path.join(K, rel)
+        try:
+            if os.path.getsize(p) <= TEXT_MAX and not rel.endswith((".odb", ".lef", ".lib", ".gz")):
+                texts[rel] = open(p, errors="replace").read()
+        except OSError:
+            pass
+    try:
+        config = parse_config(open(os.path.join(K, "config.mk")).read())
+    except OSError:
+        return None
+    stage = classify(texts, files, config)
+    mt = {}
+    for rel in files:
+        try:
+            mt[rel] = os.path.getmtime(os.path.join(K, rel))
+        except OSError:
+            pass
+    valid = "synth"
+    for s in STEPS[:-1]:
+        st = ck["steps"].get(s) or {}
+        if not (st.get("complete") and st.get("passed")):
+            break
+        newer = [rel for rel, t in mt.items() if stage.get(rel) not in (None, GATE) and IDX[stage[rel]] <= IDX[s] and t > st["end"] + 2]
+        if newer:
+            valid_why = f"inputs newer than {s}: " + ",".join(sorted(newer)[:4])
+            break
+        valid = s
+    else:
+        valid_why = ""
+    if IDX[valid] < IDX["floorplan"]:
+        return None
+    start = STEPS[IDX[valid] + 1]
+    if goal in IDX and IDX[goal] < IDX[start]:
+        start = goal if goal != "synth" else None
+        if start is None:
+            return None
+    return {"schema": SCHEMA, "auto": True, "start": start, "reused_steps": list(STEPS[:IDX[valid] + 1]), "why": f"in-place restart: newest valid step {valid}" + (f" ({valid_why})" if locals().get("valid_why") else ""),
+            "source": {"host": os.uname().nodename, "kit": K, "attempt": None, "attempt_dir": K, "relay": False}, "links": [], "changed": [], "applied": time.time(), "applied_on": os.uname().nodename,
+            "n_link": 0, "n_copy": 0, "bytes_link": 0, "bytes_copy": 0, "markers_dropped": [], "keep_created": False, "keep_path": None, "source_checkpoint": {}, "fingerprints": None}
+
+
+def auto_write(K, goal="route"):
+    """write K/resume.json for an in-place restart.  A resume.json that is not auto (the wave's own stage-resume plan) is never touched; an auto one is recomputed.  -> the record or None"""
+    p = os.path.join(K, RESUME_FILE)
+    if os.path.exists(p):
+        try:
+            if not _load(p).get("auto"):
+                return None
+        except (OSError, ValueError):
+            return None
+    rec = auto_plan(K, goal)
+    if rec is None:
+        if os.path.exists(p):
+            os.unlink(p)
+        return None
+    tmp = p + ".tmp"
+    with open(tmp, "w") as f:
+        json.dump(rec, f, indent=1)
+    os.replace(tmp, p)
+    return rec
+
+
 def drop_markers(K):
     """COORD 11-05 11:1x class fix (DIE-HEAD-68 ctln2 skipped GRT; DIE-QC-75 sle_fe_v3 skipped place): a kit copied
     with cp -al carries the old run's .kwrs_done.<ppid> markers, and the container's PPID repeats, so kwrs_make.sh
@@ -708,6 +785,9 @@ def main(argv):
     a.add_argument("kit")
     a = sub.add_parser("release")
     a.add_argument("kit")
+    a = sub.add_parser("auto", help="in-place restart: write K/resume.json from the newest valid stage result (run_kit.sh does this unless OT_RESUME=0)")
+    a.add_argument("kit")
+    a.add_argument("goal", nargs="?", default="route")
     a = sub.add_parser("clean", help="drop stale .kwrs_done.* step markers (run after cp -al of a kit, before launch)")
     a.add_argument("kit")
     a = ap.parse_args(argv)
@@ -725,6 +805,9 @@ def main(argv):
         except Exception as e:                  # noqa: BLE001 -- any doubt: the caller rebuilds in full
             print("KW_RESUME_APPLY_FAIL " + json.dumps({"error": f"{type(e).__name__}: {e}"}))
             return 3
+    elif a.cmd == "auto":
+        r = auto_write(os.path.abspath(a.kit), a.goal)
+        print("KW_RESUME_AUTO " + (json.dumps({"start": r["start"], "reused": r["reused_steps"], "why": r["why"]}) if r else "none (full flow: nothing past synth is reusable, or the kit has a wave resume plan)"), file=sys.stderr)
     elif a.cmd == "verify":
         bad = verify(a.kit)
         print("KW_RESUME_VERIFY " + json.dumps({"ok": not bad, "bad": bad[:20]}))
