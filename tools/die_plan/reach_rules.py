@@ -345,8 +345,11 @@ def _trunk(o, h, obs, bands, W, H, reach=REACH_UM):
             bx = [list(x) for x in bands if not any(x[0] - c < q[0] < x[2] + c and x[1] - c < q[1] < x[3] + c
                                                     for q in (o, h))] if extra else []
             r = KS._route(tuple(o), tuple(h), obs + bx, W, H)
-            n = max(0, math.ceil(length(r) / STEP_UM) - 1)
-            way = relay_sites(r, n, max_hop_um=min(reach, SITE_HOP_UM) - PAD_SPAN_UM, site_boxes=bands,
+            hop = min(reach, SITE_HOP_UM) - PAD_SPAN_UM
+            if hop <= 0:
+                raise ValueError("START reach leaves no room for the trunk placement span")
+            n = max(0, math.ceil(length(r) / min(STEP_UM, hop)) - 1)
+            way = relay_sites(r, n, max_hop_um=hop, site_boxes=bands,
                               clearance_um=KS.CLEAR_UM) if n else []
             return r, [list(q) for q in way]
         except ValueError as ex:
