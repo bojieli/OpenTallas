@@ -755,3 +755,4 @@
 - 2026-11-19 23:59 PST STATE tools sync recovered after 3 min (rt/current f18f3c9e8fa5)
 - 2026-11-20 00:00 PST ALERT [AUTO-CLEAN -> FLEET-OPS-R, COORD] epyc9: the automatic cleanup timer has not completed a pass for 95 min (limit 90 min): check `systemctl --user status ot-auto-clean.timer` on epyc9
 - 2026-11-20 00:00 PST DISK-RATE epyc8 /srv/opentallas-scratch2: free 620 GB, falling 115 GB/h, floor 50 GB in 5.0 h (cron disk_rate.py; read-only)
+- 2026-11-20 00:02 PST ALERT [OT-TOOLS-SYNC -> COORD] runtime sync FAILED, rt/current stays fd0e65ccdd36: RuntimeError: /srv/opentallas-scratch2/claude/rt/88537c5e1383 is partial but in use; not touched
