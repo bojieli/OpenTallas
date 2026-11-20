@@ -1440,3 +1440,9 @@ def test_residual_cli_on_a_finished_loop(tmp_path, monkeypatch):
     assert res["iterations"][-1]["dir"].startswith(str(Path(r1["root"]) / "residual"))
     again = E.run_residual(k, r1["root"], mem=8, cpus=2, run=f)
     assert "residual_refused" in again                                         # PASS / already ran: nothing to do
+
+
+def test_residual_case_ignores_advisory_drv():
+    m = dict(signed=False, min_hold_only=True, drc=0, drv=1913, ff_core_n=1, ff_core=-0.07, hold_score_exact=True)
+    assert E.residual_case(m)
+    assert not E.residual_case(dict(m, drc=1)) and not E.residual_case(dict(m, ff_core_n=6)) and not E.residual_case(dict(m, ff_core=-5.01))

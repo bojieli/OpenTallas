@@ -375,7 +375,7 @@ def residual_enabled(env=None):
 
 def residual_case(m):
     """metrics of the best pass -> True when the residual-only pad pass applies (see RESIDUAL_MAX_ENDS)"""
-    if not m or m.get("signed") or not m.get("min_hold_only") or m.get("drc") or m.get("drv"):
+    if not m or m.get("signed") or not m.get("min_hold_only") or m.get("drc"):   # DRV counts are advisory under R-MINIMAL (sle_su_l1 had 1913)
         return False
     n, w = m.get("ff_core_n"), m.get("ff_core")
     if not m.get("hold_score_exact") or n is None or w is None:
