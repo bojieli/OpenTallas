@@ -4706,6 +4706,34 @@ def tap_escape_pieces(rect, pins):
     return pieces, len(merged)
 
 
+# CLKSITE-SPLIT-1120 (FABLE-PD-KV-2300 B3, k12 proof): a merged die_clock_tree row obstructed M1-M7 over its WHOLE rect, so
+# a long merged row (KV hgi_v1: 27 rects > 10 um, up to 268 x 1.3 um) was a full-stack wall across the type's channels
+# (k12: 3,869 GRT overflow under one 33 x 5 um rect in the middle gap).  A split row keeps the whole rect as the placement
+# blockage and its route_layers (M1-M2: the die cell's pin access) obstruction, and adds "stack_layers" (M3-M7) obstructions
+# only over "stack_um": one window per die clock cell (cell body + margin, from the tree), where the cell's via stack to M8
+# rises.  die_trial cuts the die abstract the same way (M1-M2 holes = rect, M3-M7 holes = stack windows).
+def stack_rects(tn, r):
+    """validated [(x0, y0, x1, y1)] stack windows of a die_clock_tree row ([] for a classic row)"""
+    st = r.get("stack_um") or []
+    if not st:
+        if r.get("stack_layers"):
+            raise ValueError(f"{tn}: reserved site stack_layers without stack_um: {r['rect_um']}")
+        return []
+    if not r.get("stack_layers") or not r.get("route_layers"):
+        raise ValueError(f"{tn}: reserved site stack_um needs route_layers and stack_layers: {r['rect_um']}")
+    lo, hi = set(route_layer_names(r["route_layers"])), set(route_layer_names(r["stack_layers"]))
+    if lo & hi:
+        raise ValueError(f"{tn}: reserved site route_layers and stack_layers overlap: {sorted(lo & hi)}")
+    x0, y0, x1, y1 = r["rect_um"]
+    out = []
+    for s in st:
+        a, b, c, d = (float(v) for v in s)
+        if not (x0 - 1e-6 <= a < c <= x1 + 1e-6 and y0 - 1e-6 <= b < d <= y1 + 1e-6):
+            raise ValueError(f"{tn}: reserved site stack window {list(s)} outside its rect {r['rect_um']}")
+        out.append((a, b, c, d))
+    return out
+
+
 def route_obstruction_lines(items, pins_by_layer=None):
     """CLKSITE-RESERVE-1115: M1-M7 routing obstructions over the reserved die clock-tree cell sites, so the type's own
     routing keeps the site metal-free (the die cell's M1 pins and via stack to M8 need it).  items [(rect, [layers])] or
@@ -4771,6 +4799,8 @@ def reserved_sites_tcl(P, tn):
         px0, px1 = x0, x1
         if r["kind"] == "die_clock_tree" and r.get("route_layers"):   # CLKSITE-RESERVE-1115 opt-in
             hard_route.append(((x0, y0, x1, y1), route_layer_names(r["route_layers"]), r.get("tap_escape", True)))
+            for s in stack_rects(tn, r):                               # CLKSITE-SPLIT-1120: per-cell via-stack columns
+                hard_route.append((s, route_layer_names(r["stack_layers"]), r.get("tap_escape", True)))
             pad = r.get("edge_pad_sites", SITE_EDGE_PAD_SITES)         # CLKSITE-TAP-ESCAPE-1117 (2)
             if not isinstance(pad, int) or isinstance(pad, bool) or pad < 0:
                 raise ValueError(f"{tn}: reserved site edge_pad_sites must be an integer >= 0: {pad!r}")
@@ -4847,6 +4877,10 @@ def reserved_pg_cut_windows(P, tn):
         lv = sorted({int(n[1:]) for n in route_layer_names(r["route_layers"]) if int(n[1:]) >= PG_CUT_MIN_LEVEL})
         if lv:
             out.append((tuple(float(v) for v in r["rect_um"]), lv))
+        sl = r.get("stack_layers")      # CLKSITE-SPLIT-1120: straps are cut only where a cell's via stack rises
+        lvs = sorted({int(n[1:]) for n in route_layer_names(sl) if int(n[1:]) >= PG_CUT_MIN_LEVEL}) if sl else []
+        if lvs:
+            out += [(tuple(float(v) for v in s), lvs) for s in r.get("stack_um") or []]
     return out
 
 

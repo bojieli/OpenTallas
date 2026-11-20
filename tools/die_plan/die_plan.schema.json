@@ -2018,6 +2018,20 @@
           "route_layers": {
            "type": "string"
           },
+          "stack_layers": {
+           "type": "string"
+          },
+          "stack_um": {
+           "type": "array",
+           "items": {
+            "type": "array",
+            "items": {
+             "type": "number"
+            },
+            "minItems": 4,
+            "maxItems": 4
+           }
+          },
           "tap_escape": {
            "type": "boolean"
           },

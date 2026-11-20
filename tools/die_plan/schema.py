@@ -648,6 +648,9 @@ SCHEMA = {
                             "properties": {"rect_um": _rect, "kind": {"enum": ["die_clock_tree", "landing_ring_bank", "channel_keepout"]},
                                            "ref": {"type": "string"},
                                            "route_layers": {"type": "string"},
+                                           # CLKSITE-SPLIT-1120: route_layers over the whole rect, stack_layers only over stack_um
+                                           "stack_layers": {"type": "string"},
+                                           "stack_um": {"type": "array", "items": _rect},
                                            # CLKSITE-TAP-ESCAPE-1117: per-site opt-outs of the tap escape column / E-W placement pad
                                            "tap_escape": {"type": "boolean"},
                                            "edge_pad_sites": {"type": "integer", "minimum": 0}}}},

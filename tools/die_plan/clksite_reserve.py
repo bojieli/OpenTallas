@@ -13,7 +13,10 @@ usage:
   clksite_reserve.py PLAN.json OUT_ROWS.json --tree TREE.json [TREE.json..]   (die_trial kit clock/tree.json, die frame)
   clksite_reserve.py PLAN.json OUT_ROWS.json --from-islands                    (plan clock.die_islands_um template;
                                                                                die_islands_um is deleted by the row)
-options: --max-rects 100  --margin-um 0.25  --layers M1-M7  --lane NAME  --types T,T  --types-uncovered
+options: --max-rects 100  --margin-um 0.25  --layers M1-M7  --lane NAME  --types T,T  [--stack-layers M3-M7]
+CLKSITE-SPLIT-1120 (split form, FABLE-PD-KV-2300 B3): --layers M1-M2 --stack-layers M3-M7 keeps each merged rect as the
+placement blockage + M1-M2 obstruction (die cell pin access) and obstructs M3-M7 only over "stack_um", the cell windows
+inside the rect (one via-stack column per die clock cell), so a long merged row is no longer a full-stack wall.  --types-uncovered
 Existing reserved_sites_um rows of another kind (landing_ring_bank) are kept.  A merged rect that would touch a planned
 hard core is not formed (the members stay separate).  Neither is one that would run more than 10 um along a hard core
 within --edge-gap-um (5) of it: a reserved rect is an M1-M7 obstruction, so that would wall in the core's edge pins.
@@ -179,8 +182,24 @@ def merge_rects(rects, max_rects=100, blockers=(), pre_n=1500, max_waste_um2=Non
     return out, st
 
 
+def stack_windows(merged, cells, eps=1e-6):
+    """CLKSITE-SPLIT-1120: {merged rect: [cell windows inside it]}, overlapping cells united (lossless bbox of an overlap
+    cluster that stays inside the rect); every cell lands in exactly one merged rect (the first that contains it)."""
+    out = {m: [] for m in merged}
+    for c in cells:
+        for m in merged:
+            if m[0] - eps <= c[0] and m[1] - eps <= c[1] and c[2] <= m[2] + eps and c[3] <= m[3] + eps:
+                out[m].append(tuple(c))
+                break
+        else:
+            raise ValueError(f"cell window {c} inside no merged rect")
+    for m, cs in out.items():
+        out[m] = sorted(_bbox(g) for g in _cluster(sorted(set(cs))))
+    return out
+
+
 def plan_rows(plan, windows, max_rects=100, layers=LAYERS, lane="CLKSITE-RESERVE-1115", delete_islands=False,
-              max_waste_frac=0.002, edge_gap_um=EDGE_GAP_UM, protect_points=False):
+              max_waste_frac=0.002, edge_gap_um=EDGE_GAP_UM, protect_points=False, stack_layers=None):
     """plan: schema.Plan (needs .types, core_obs via die_trial); windows {type: [rect]} -> (row file dict, report)"""
     import die_trial as D
     rows, rep = {}, {}
@@ -202,7 +221,13 @@ def plan_rows(plan, windows, max_rects=100, layers=LAYERS, lane="CLKSITE-RESERVE
         merged, st = merge_rects(rs, max_rects, blockers, max_waste_um2=max_waste_frac * w * h,
                                 edge_gap_um=edge_gap_um, point_blockers=point_blockers)
         keep = [r for r in (t.get("clock") or {}).get("reserved_sites_um", []) if r.get("kind") != "die_clock_tree"]
-        new = keep + [dict(rect_um=list(m), kind="die_clock_tree", route_layers=layers) for m in merged]
+        if stack_layers:            # CLKSITE-SPLIT-1120
+            sw = stack_windows(merged, rs)
+            new = keep + [dict(rect_um=list(m), kind="die_clock_tree", route_layers=layers, stack_layers=stack_layers,
+                               stack_um=[list(s) for s in sw[m]]) for m in merged]
+            st["stack_windows"] = sum(len(v) for v in sw.values())
+        else:
+            new = keep + [dict(rect_um=list(m), kind="die_clock_tree", route_layers=layers) for m in merged]
         rows[tn] = {"clock.reserved_sites_um": new}
         if delete_islands and (t.get("clock") or {}).get("die_islands_um"):
             rows[tn]["clock.die_islands_um"] = {"$delete": True}
@@ -256,6 +281,8 @@ def main(argv=None):
     ap.add_argument("--edge-gap-um", type=float, default=EDGE_GAP_UM,
                     help="no merged rect longer than %g um within this distance of a hard core (0 = old merge)" % EDGE_MAX_LEN_UM)
     ap.add_argument("--layers", default=LAYERS)
+    ap.add_argument("--stack-layers", default=None,
+                    help="CLKSITE-SPLIT-1120: obstruct these layers only over per-cell stack windows (use with --layers M1-M2)")
     ap.add_argument("--lane", default="CLKSITE-RESERVE-1115")
     ap.add_argument("--types")
     ap.add_argument("--types-uncovered", action="store_true",
@@ -285,7 +312,7 @@ def main(argv=None):
         print("UNCOVERED " + json.dumps(moved, sort_keys=True))
         win = {k: v for k, v in win.items() if k in moved}
     rows, rep = plan_rows(P, win, a.max_rects, a.layers, a.lane, delete_islands=a.from_islands, max_waste_frac=a.max_waste_frac,
-                          edge_gap_um=a.edge_gap_um, protect_points=a.protect_points)
+                          edge_gap_um=a.edge_gap_um, protect_points=a.protect_points, stack_layers=a.stack_layers)
     Path(a.out).write_text(json.dumps(rows, indent=1) + "\n")
     tot = dict(types=len(rep), rects_in=sum(r["rects_in"] for r in rep.values()),
                rects_out=sum(r["rects_out"] for r in rep.values()),

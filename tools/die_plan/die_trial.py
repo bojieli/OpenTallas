@@ -274,11 +274,41 @@ ISLAND_GRID_UM = (0.054, 0.27)    # site width / row height (ASAP7 7.5T)
 ISLAND_PG_CUT = ("M7",)           # abstract PG pin layers cut at a window (the pin stack's M7 riser runs there)
 
 
+def _rsv_rows(P, tn):
+    return [r for r in (P.types[tn].get("clock") or {}).get("reserved_sites_um", [])
+            if r.get("kind") == "die_clock_tree" and r.get("route_layers")]
+
+
 def reserved_windows(P, tn):
     """CLKSITE-RESERVE-1115: type-frame die_clock_tree rects of clock.reserved_sites_um that carry route_layers (opt-in).
-    These are the windows cut out of the abstract (plan abstract M1-M3 + M7 PG, closed view M1-M7 + implants + M7 PG)."""
-    return [tuple(r["rect_um"]) for r in (P.types[tn].get("clock") or {}).get("reserved_sites_um", [])
-            if r.get("kind") == "die_clock_tree" and r.get("route_layers")]
+    These are the windows cut out of the abstract on EVERY layer (plan abstract M1-M3 + M7 PG, closed view M1-M7 +
+    implants + M7 PG).  CLKSITE-SPLIT-1120: a split row (stack_um) contributes its stack windows here and its whole rect
+    to reserved_low_windows only."""
+    out = []
+    for r in _rsv_rows(P, tn):
+        out += [tuple(s) for s in r["stack_um"]] if r.get("stack_um") else [tuple(r["rect_um"])]
+    return out
+
+
+def reserved_low_windows(P, tn):
+    """CLKSITE-SPLIT-1120: {layer: [rect]} -- the whole rect of every split row, cut out of the abstract only on that row's
+    route_layers (M1-M2: the die cell's pin access); above them only the stack windows (reserved_windows) are open."""
+    out = defaultdict(list)
+    for r in _rsv_rows(P, tn):
+        if r.get("stack_um"):
+            for ln in gen_phys.route_layer_names(r["route_layers"]):
+                out[ln].append(tuple(r["rect_um"]))
+    return dict(out)
+
+
+def cut_reserved_lef(txt, windows, low):
+    """closed view cut: windows on M1-M7 + M7 PG (abstract_cutout defaults), low {layer: rects} on that layer only"""
+    import abstract_cutout
+    txt, cst = abstract_cutout.cut_lef_text(txt, windows)
+    for ln, rs in sorted((low or {}).items()):
+        txt, c2 = abstract_cutout.cut_lef_text(txt, rs, layers=(ln,), pg_layer=None)
+        cst = {k: cst.get(k, 0) + c2.get(k, 0) for k in set(cst) | set(c2)}
+    return txt, cst
 
 
 def load_island_sites(paths):
@@ -394,9 +424,11 @@ def _cut_vertical(rect, holes):
     return out
 
 
-def abstract_lef(P, tn, slots_only_pins=False, islands=None, module_name=None, landing_infra=False, reset_infra=False):
+def abstract_lef(P, tn, slots_only_pins=False, islands=None, module_name=None, landing_infra=False, reset_infra=False,
+                 low_islands=None):
     """partition abstract (see module doc).  Returns (lef text, stats).  islands (CLOCK-128-R7, opt-in): type-frame
-    island windows: no M1-M3 OBS and no ISLAND_PG_CUT PG stripe inside them."""
+    island windows: no M1-M3 OBS and no ISLAND_PG_CUT PG stripe inside them.  low_islands {layer: rects}
+    (CLKSITE-SPLIT-1120): further holes on that layer only (split reserved rows: whole rect on M1-M2)."""
     t = P.types[tn]
     w, h = t["outline_um"]
     module_name = module_name or t["module"]
@@ -452,12 +484,15 @@ def abstract_lef(P, tn, slots_only_pins=False, islands=None, module_name=None, l
             rects = [("M7", *r) for _, *q in rects for r in _cut_vertical(tuple(q), islands)]
         L += pin(net, "INOUT", "POWER" if net == "VDD" else "GROUND", rects)
     cores = core_obs(t)
-    if islands:
-        free = rect_minus(w, h, islands)
+    if islands or low_islands:
         L += ["  OBS"]
+        free_by = {}
         for i in (1, 2, 3):
+            holes = tuple(sorted(set(list(islands or []) + list((low_islands or {}).get(f"M{i}", [])))))
+            if holes not in free_by:
+                free_by[holes] = rect_minus(w, h, list(holes)) if holes else [(0.0, 0.0, w, h)]
             L.append(f"    LAYER M{i} ;")
-            L += [f"      RECT {a:.4f} {b:.4f} {c:.4f} {d:.4f} ;" for a, b, c, d in free]
+            L += [f"      RECT {a:.4f} {b:.4f} {c:.4f} {d:.4f} ;" for a, b, c, d in free_by[holes]]
     else:
         L += ["  OBS"] + [f"    LAYER M{i} ;\n      RECT 0 0 {w:.4f} {h:.4f} ;" for i in (1, 2, 3)]
     by_layer = defaultdict(list)
@@ -473,6 +508,8 @@ def abstract_lef(P, tn, slots_only_pins=False, islands=None, module_name=None, l
               core_top_layers=sorted({c[4] for c in cores}))
     if islands:
         st["island_windows"] = len(islands)
+    if low_islands:
+        st["low_windows"] = {k: len(v) for k, v in sorted(low_islands.items())}
     return "\n".join(L), st
 
 
@@ -5839,12 +5876,14 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
     rsv = {tn: reserved_windows(P, tn) for tn in P.types}
     rsv = {k: v for k, v in rsv.items() if v}
     iw = {tn: sorted(set(list(iw.get(tn, [])) + rsv.get(tn, []))) for tn in set(iw) | set(rsv)}
+    low = {tn: reserved_low_windows(P, tn) for tn in P.types}          # CLKSITE-SPLIT-1120
+    low = {k: v for k, v in low.items() if v}
     view_ok, view_refused = closed_view_candidates(P, views)
     for tn_, r_ in sorted(view_refused.items()):
         print(f"CLOSED_VIEW_REFUSED {tn_}: view SIZE {r_['view_size_um']} != outline {r_['outline_um']}: plan abstract used", flush=True)
     meta["closed_views_refused"] = view_refused
     _abs_calls = [(tn, (abstract_lef, (P, tn), dict(islands=iw.get(tn), module_name=smod[tn], landing_infra=landing_infra,
-                                                   reset_infra=reset_infra)))
+                                                   reset_infra=reset_infra, low_islands=low.get(tn))))
                   for tn, t in sorted(P.types.items())
                   if tn not in view_ok]
     _abs = dict(zip([tn for tn, _ in _abs_calls], kit_map([c for _, c in _abs_calls])))
@@ -5852,9 +5891,8 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
         v = view_ok.get(tn)
         if v:
             txt = retarget_lef_macro(v.read_text(), t["module"], smod[tn])
-            if iw.get(tn):      # CLKSITE-RESERVE-1115: closed view gets the same windows (M1-M7 OBS, implants, M7 PG)
-                import abstract_cutout
-                txt, cst = abstract_cutout.cut_lef_text(txt, iw[tn])
+            if iw.get(tn) or low.get(tn):      # CLKSITE-RESERVE-1115: closed view gets the same windows (M1-M7 OBS, implants, M7 PG)
+                txt, cst = cut_reserved_lef(txt, iw.get(tn) or [], low.get(tn))
                 ab[tn] = dict(closed_view_cut=cst)
             if landing_infra:
                 expected = {p['name'] for p in t.get('clock',{}).get('landing_contract',{}).get('pins',[])}
