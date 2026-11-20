@@ -5,6 +5,7 @@ Cores: unsigned designs from the release-tree plan cache, classed by
 lanes/CORE-CLASS.tsv (COORD override, prefix match) or else by the latest
 kit-wave row. Types: latest current-plan kit-wave row per type item.
 The block sits between the BREAKDOWN markers; run after release_tree_plan.py.
+Default: print the block, write nothing.  --write-release-tree splices it into RELEASE_TREE.md and commits it with bin/coord-commit.sh.
 STALE section (WAVE-OPS-1 11-10): stale_list.py, full list in lanes/STALE.tsv; OT_FB_NO_STALE=1 skips it.
 """
 import csv, json, collections, os, re, time
@@ -199,7 +200,7 @@ def design_row(last, die, did, design):
     return last.get((die, did.split('#')[0]))
 
 
-def main():
+def main(write=False):
     cache = json.load(open(CACHE))
     rows = list(csv.DictReader(open(STAGES), delimiter='\t'))
     last = {}
@@ -299,17 +300,42 @@ def main():
     out.append(END)
     block = '\n'.join(out)
 
-    text = open(TREE).read()
-    if BEGIN in text:
-        text = re.sub(re.escape(BEGIN) + '.*?' + re.escape(END), block, text, flags=re.S)
-    else:
-        lines = text.split('\n')
-        i = next(n for n, l in enumerate(lines) if l.startswith('## EDIT'))
-        lines[i:i] = [block, '']
-        text = '\n'.join(lines)
-    open(TREE, 'w').write(text)
+    if write:                                         # FLOW-NOADV-R2 11-20 (COORD): writing is explicit and goes through coord-commit.sh
+        write_release_tree(block)
     print(block)
 
 
+def splice(text, block):
+    """RELEASE_TREE.md text with the BREAKDOWN block replaced (or inserted before the first '## EDIT' heading)"""
+    if BEGIN in text:
+        return re.sub(re.escape(BEGIN) + '.*?' + re.escape(END), lambda m: block, text, flags=re.S)
+    lines = text.split('\n')
+    i = next(n for n, l in enumerate(lines) if l.startswith('## EDIT'))
+    lines[i:i] = [block, '']
+    return '\n'.join(lines)
+
+
+def write_release_tree(block, tree=None, commit=True):
+    """splice the block into RELEASE_TREE.md and commit it with bin/coord-commit.sh (the only way ~/coord changes); -> commit status line"""
+    import subprocess
+    tree = tree or TREE
+    with open(tree) as f:
+        text = f.read()
+    new = splice(text, block)
+    if new == text:
+        return 'unchanged'
+    with open(tree, 'w') as f:
+        f.write(new)
+    if not commit:
+        return 'written'
+    root = os.path.dirname(os.path.abspath(tree))
+    r = subprocess.run(['bash', os.path.join(root, 'bin', 'coord-commit.sh'), 'FAILURE-BREAKDOWN: refresh the BREAKDOWN block',
+                        os.path.relpath(tree, root)], capture_output=True, text=True, timeout=600)
+    return (r.stdout.strip().splitlines() or [r.stderr.strip()[-200:]])[-1]
+
+
 if __name__ == '__main__':
-    main()
+    import sys
+    if sys.argv[1:] not in ([], ['--write-release-tree']):
+        sys.exit('usage: failure_breakdown.py [--write-release-tree]   (default: print the block, write nothing)')
+    main(write=sys.argv[1:] == ['--write-release-tree'])
