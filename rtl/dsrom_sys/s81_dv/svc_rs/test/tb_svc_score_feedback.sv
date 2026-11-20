@@ -33,7 +33,7 @@ module tb_svc_score_feedback;
    else begin assign gi_v[s][f]=0;assign gi_d[s][W*f+:W]=0;assign si_v[s][f]=0;assign si_d[s][W*f+:W]=0;end
   end
   dsdv_svc_sx_pl u(.ck(ck),.rst(rn),.sid(4'(s)),.l_v(lv[s]),.l_d(ld[s]),.gi_v(gi_v[s]),.gi_d(gi_d[s]),.go_v(go_v[s]),.go_d(go_d[s]),.si_v(si_v[s]),.si_d(si_d[s]),.so_v(so_v[s]),.so_d(so_d[s]),.rt_v(rt_v[s]),.rt_d(rt_d[s]),.t_v(t_v[s]),.t_tag(t_tag[s]),.t_y(t_y[s]),.t_f(t_f[s]),.fault(xf[s]));
-  dsdv_svc_p_source #(.H(8))u_p(.pon(rn&&pwin),.hsel(tile_of(s)<8),.pk(pk[s]),.tile(4'(tile_of(s))),.tjob(10'd32),.jcs(16'(cyc)),.pio(16'(pio_base+sx_role_off(s))),.prw(s==SEL?prw:256'd0),.rows_ready(s==SEL?pb_n:6'd2),.fire(pfire[s]),.missing(pmissing[s]),.beat(pbeat[s]));
+  dsdv_svc_p_source #(.H(8))u_p(.ck(ck),.pon(rn&&pwin),.hsel(tile_of(s)<8),.pk(pk[s]),.tile(4'(tile_of(s))),.tjob(10'd32),.jcs(16'(cyc)),.pio(16'(pio_base+sx_role_off(s))),.prw(s==SEL?prw:256'd0),.rows_ready(s==SEL?pb_n:6'd2),.fire(pfire[s]),.missing(pmissing[s]),.beat(pbeat[s]));
  end endgenerate
  always@(posedge ck)begin
   cyc<=cyc+1;

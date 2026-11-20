@@ -162,7 +162,11 @@ module dsdv_svc_att #(
     input  wire                 hw_v,
     input  wire [290:0]         hw_d,
     // the slice's two PC faces (dsfd_svc_pc N faces)
+`ifdef OT_S81_SVC_WQ_RDREG
+    output wire [2*341-1:0]     qrq,
+`else
     output reg  [2*341-1:0]     qrq,
+`endif
     input  wire [1:0]           qrk,
     input  wire [1:0]           qwd,
     input  wire [1:0]           qrv,
@@ -314,9 +318,22 @@ module dsdv_svc_att #(
     wire [29:0] ring = wb + 30'(wuser) * 30'd68;
 `endif
 
+`ifndef OT_SVC_ATT_MEM_MACRO
+`ifdef OT_S81_SVC_WQ_RDREG
+    initial $fatal(1, "OT_S81_SVC_WQ_RDREG requires OT_SVC_ATT_MEM_MACRO");
+`endif
+`ifdef OT_S81_SVC_QMEM_RDREG
+    initial $fatal(1, "OT_S81_SVC_QMEM_RDREG requires OT_SVC_ATT_MEM_MACRO");
+`endif
+`endif
     // ------------------------------------------------------------------ write FIFOs per PC: OWN_ROW codes / scales, host
     // depth 8 each (OWN_ROW: 1 code + 1 scale write per 17-word frame; host: <= 8 words in flight on the 8 host credits)
 `ifdef OT_SVC_ATT_MEM_MACRO
+`ifdef OT_S81_SVC_WQ_RDREG
+    localparam integer WQ_RDREG = 1;
+`else
+    localparam integer WQ_RDREG = 0;
+`endif
     wire [340:0] wq_hd [0:2][0:1];                   // FIFO heads: g_wqm[c].g_pc[p].u_wq_mem
 `else
     reg [340:0] wq [0:2][0:1][0:7];
@@ -442,9 +459,9 @@ module dsdv_svc_att #(
             nreq[p] = '0; nv[p] = 1'b0; npop[p] = 3'd7; nwin[p] = 1'b0; nsc[p] = 1'b0; nf[p] = 1'b0;
             if (cr[p] != 0) begin
 `ifdef OT_SVC_ATT_MEM_MACRO
-                if (wq_w[2][p] != wq_r[2][p]) begin nv[p] = 1; nreq[p] = wq_hd[2][p]; npop[p] = 3'd2; end
-                else if (wq_w[0][p] != wq_r[0][p]) begin nv[p] = 1; nreq[p] = wq_hd[0][p]; npop[p] = 3'd0; end
-                else if (wq_w[1][p] != wq_r[1][p]) begin nv[p] = 1; nreq[p] = wq_hd[1][p]; npop[p] = 3'd1; end
+                if (wq_w[2][p] != wq_r[2][p]) begin nv[p] = 1; nreq[p] = WQ_RDREG ? '0 : wq_hd[2][p]; npop[p] = 3'd2; end
+                else if (wq_w[0][p] != wq_r[0][p]) begin nv[p] = 1; nreq[p] = WQ_RDREG ? '0 : wq_hd[0][p]; npop[p] = 3'd0; end
+                else if (wq_w[1][p] != wq_r[1][p]) begin nv[p] = 1; nreq[p] = WQ_RDREG ? '0 : wq_hd[1][p]; npop[p] = 3'd1; end
 `else
                 if (wq_w[2][p] != wq_r[2][p]) begin nv[p] = 1; nreq[p] = wq[2][p][wq_r[2][p][2:0]]; npop[p] = 3'd2; end
                 else if (wq_w[0][p] != wq_r[0][p]) begin nv[p] = 1; nreq[p] = wq[0][p][wq_r[0][p][2:0]]; npop[p] = 3'd0; end
@@ -761,12 +778,46 @@ module dsdv_svc_att #(
                 .wd(wpush_d[gwc]), .rd(wq_hd[gwc][gwp]));
         end
     end
+    if (WQ_RDREG) begin : g_wq_capture
+        // Capture the heads locally, before request selection. The issue
+        // decision and non-write request are registered at the same edge.
+        for (genvar port = 0; port < 2; port++) begin : g_port
+            dsdv_svc_wq_capture u_capture (
+                .clk(clk), .head_0(wq_hd[0][port]), .head_1(wq_hd[1][port]),
+                .head_2(wq_hd[2][port]), .valid(nv[port]), .source(npop[port]),
+                .read_req(nreq[port]), .request(qrq[341*port +: 341]));
+        end
+    end
     // pvq is NOT converted here: the as-built bound flow already maps it to 32x128 macros (ot_t7_pvq_capture_v2).
-    dsdv_svc_mem_ar #(.W(D*16), .DEPTH(H), .AW(4), .SYNC(1)) u_qmem_mem (
+`ifdef OT_S81_SVC_QMEM_RDREG
+    // Read one edge before eq_v is launched. The prior-edge write bypass
+    // makes the prefetched value read-first at the original launch edge.
+    // Native RT2 launches only on phase 1; its index is stable in phase 0.
 `ifdef OT_SVC_NATIVE_RT2_CALENDAR
-        .clk(clk), .ra_n(qmem_read_index), .we(q_word), .wa(P2 ? 4'(f_idx[6:4]) : {f_hdr[448], f_idx[6:4]}), .wd(q_d), .rd(eq_w));
+    wire [3:0] qmem_addr = go ? 4'd0 : NATIVE_RT2_LOAD_CAL ? 4'(q_launch_count) : 4'(rc);
 `else
-        .clk(clk), .ra_n(4'(rc - 10'd1)), .we(q_word), .wa(P2 ? 4'(f_idx[6:4]) : {f_hdr[448], f_idx[6:4]}), .wd(q_d), .rd(eq_w));
+    wire [3:0] qmem_addr = go ? 4'd0 : 4'(rc);
+`endif
+    localparam integer QMEM_SYNC = 0;
+    wire [D*16-1:0] qmem_prefetch;
+    reg [D*16-1:0] qmem_capture;
+    always @(posedge clk) qmem_capture <= qmem_prefetch;
+    assign eq_w = qmem_capture;
+`else
+`ifdef OT_SVC_NATIVE_RT2_CALENDAR
+    wire [3:0] qmem_addr = qmem_read_index;
+`else
+    wire [3:0] qmem_addr = 4'(rc - 10'd1);
+`endif
+    localparam integer QMEM_SYNC = 1;
+`endif
+    dsdv_svc_mem_ar #(.W(D*16), .DEPTH(H), .AW(4), .SYNC(QMEM_SYNC)) u_qmem_mem (
+        .clk(clk), .ra_n(qmem_addr), .we(q_word),
+        .wa(P2 ? 4'(f_idx[6:4]) : {f_hdr[448], f_idx[6:4]}), .wd(q_d),
+`ifdef OT_S81_SVC_QMEM_RDREG
+        .rd(qmem_prefetch));
+`else
+        .rd(eq_w));
 `endif
 `ifndef SYNTHESIS
     // bench visibility (warm-reset lock-step): the read pointers of the last edge before reset assertion
@@ -844,7 +895,9 @@ module dsdv_svc_att #(
 `endif
         ekv_w <= kc_w; ekv_m <= kc_m;
         // PC request flops
+`ifndef OT_S81_SVC_WQ_RDREG
         for (k = 0; k < 2; k = k + 1) qrq[341*k +: 341] <= nv[k] ? nreq[k] : '0;
+`endif
     end
 
     always @(posedge clk or negedge rst_n) begin
