@@ -10,14 +10,17 @@ HERE=$(cd "$(dirname "$0")" && pwd); T=${CA_TOOLS:-$HERE}; H=$T/../s81_head
 mkdir -p "$OUT"; log(){ echo "$1 $(date '+%F %T')" >> "$OUT/CHAIN.log"; }
 rc=0
 python3 -s "$H/landed_phase_ocv.py" "$PLAN" "$PROOF" --tools "$T" --clock-cell "$CC" --out "$OUT/landed_phase_ocv.json" > "$OUT/ca_ocv.log" 2>&1; r=$?; log "CA_OCV $r"; [ $r -ne 0 ] && rc=1
-python3 -s "$T/count_align_plan.py" "$OUT/landed_phase_ocv.json" ${CA_PLAN_ARGS:-} --out "$OUT/count_align_plan.json" > "$OUT/ca_plan.log" 2>&1; r=$?; log "CA_PLAN $r"; [ $r -ne 0 ] && rc=1
-python3 -s "$T/count_align_bind.py" "$OUT/count_align_plan.json" ${CA_BIND_ARGS:-} --out "$OUT/count_align_bind.json" > "$OUT/ca_bind.log" 2>&1; r=$?; log "CA_BIND $r"; [ $r -ne 0 ] && rc=1
 # S81-DIE-R3 11-17: a plan that declares the falling-edge ring write (clock.ring_hold.write_edge fall) is timed in that
 # form (--ca-write-fall); without it the CA check times the rise-write form the die does not build (S81 D7w: -198.9 / 247
 # fail rise-write vs +217.6 / 0 fail fall-write on the same bind)
 # S81-CLOCK-WINDOW-1119: the snippet had lost its quotes (a Python SyntaxError hidden by 2>/dev/null), so every chain
 # timed the rise-write form; single quotes keep it valid inside the bash double quotes.
 WF=$(cd "$T" && python3 -I -c "import json,sys; sys.path.insert(0,'.'); import clock_landings as C; print('--ca-write-fall' if C.ring_write_fall(json.load(open(sys.argv[1]))) else '')" "$PLAN" 2>/dev/null)
+# S81-CLOCK-WINDOW-1119: a fall-write plan is also PLANNED (K/DEPTH for lag L + T/2) and BOUND (verify window +T/2)
+# in that form; without it the plan picks rise-write K and the gate fails the guard (S81 cw6: 136 hi -304 ps).
+WFP=; WFB=; [ -n "$WF" ] && { WFP="--write-fall-plan $PLAN"; WFB="--plan-die $PLAN"; }
+python3 -s "$T/count_align_plan.py" "$OUT/landed_phase_ocv.json" ${CA_PLAN_ARGS:-} $WFP --out "$OUT/count_align_plan.json" > "$OUT/ca_plan.log" 2>&1; r=$?; log "CA_PLAN $r"; [ $r -ne 0 ] && rc=1
+python3 -s "$T/count_align_bind.py" "$OUT/count_align_plan.json" ${CA_BIND_ARGS:-} $WFB --out "$OUT/count_align_bind.json" > "$OUT/ca_bind.log" 2>&1; r=$?; log "CA_BIND $r"; [ $r -ne 0 ] && rc=1
 log "CA_WRITE_EDGE ${WF:-rise}"
 if [ $rc -eq 0 ]; then
   ( cd "$T" && python3 -s die_sta_related.py "$PROOF" --plan "$PLAN" --out "$OUT/sta_ca" --corner TT --corner FF --core-insertion declared --cppr-lca --clock-cell "$CC" \

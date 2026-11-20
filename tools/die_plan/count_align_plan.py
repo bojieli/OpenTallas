@@ -213,6 +213,11 @@ DEPTH16_ALLOW = frozenset()
 # FABLE-PD-S81-0335 B(c) opt-in guarded depth: a crossing takes the next depth when L_hi is within DEPTH_GUARD_PS of
 # its depth limit (default 0 = unchanged).  Set by main() for one run.
 DEPTH_GUARD_PS = 0.0
+# S81-CLOCK-WINDOW-1119 opt-in (--write-fall-plan): crossing ids whose receiving ring writes on the falling fclk edge
+# (die plan clock.ring_hold.write_edge "fall" + write_fall_types, the SAME set count_align_bind.write_fall_ports and
+# die_sta_related --ca-write-fall use).  Their write->read lag is L + T/2, so K and DEPTH are chosen for L + T/2;
+# L_lo_ps / L_hi_ps stay rise-referenced (the gate adds the T/2), margins are the fall-write margins.
+WRITE_FALL = frozenset()
 
 
 def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edge_pad=None, start_skew=(0.0, 0.0),
@@ -428,11 +433,12 @@ def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edg
             amb = path_amb(u, v) if (u != v and child is None) else (0, 0)
             rel_lo, rel_hi = r["lo"] + amb[0] * T, r["hi"] + amb[1] * T
         rel_lo, rel_hi = rel_lo - w, rel_hi + w
-        k_eff = math.ceil((lo_win - rel_lo) / T - 1e-12) + (pe(child) - pad if child is not None else 0)
+        wf = 0.5 * T if r["port"] in WRITE_FALL else 0.0
+        k_eff = math.ceil((lo_win - wf - rel_lo) / T - 1e-12) + (pe(child) - pad if child is not None else 0)
         L_lo, L_hi = k_eff * T + rel_lo, k_eff * T + rel_hi
         nh = max(ap, 100.0 + smax) if (skew_clean and kind == "tree_ambiguous") else ap
         dep = next((dd for dd in (4, 8, 16) if (dd <= max_depth or (dd == 16 and r["port"] in DEPTH16_ALLOW))
-                    and L_hi <= (dd - 0.5) * T - nh - DEPTH_GUARD_PS + 1e-9), None)
+                    and L_hi + wf <= (dd - 0.5) * T - nh - DEPTH_GUARD_PS + 1e-9), None)
         old_vals = interval_boundaries(r["lo"], r["hi"], T, T / 2) + 1
         if r.get("src_part") is not None and r.get("dst_part") is not None and r.get("_named"):
             out_parts = dict(src_part=r["src_part"], dst_part=r["dst_part"])
@@ -442,13 +448,14 @@ def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edg
                         p_dn_ps=r["p_dn_ps"], wander_ps=round(w, 1), path_ambiguous_cycles=amb[1] - amb[0],
                         n0=n0, K_eff=k_eff, K=k_eff - n0, L_lo_ps=round(L_lo, 1), L_hi_ps=round(L_hi, 1),
                         L_width_ps=round(L_hi - L_lo, 1), depth=dep,
-                        margin_lo_ps=round(L_lo - 0.5 * T, 1) if dep else None,
-                        margin_hi_ps=round((dep - 0.5) * T - L_hi, 1) if dep else None,
+                        margin_lo_ps=round(L_lo + wf - 0.5 * T, 1) if dep else None,
+                        margin_hi_ps=round((dep - 0.5) * T - L_hi - wf, 1) if dep else None,
                         lat_cycles=k_eff + 1 if dep else None, rx_lat_counts=k_eff - n0 + 1 if dep else None,
                         rtl=dict(module="ot_dp_clk_landing_ca", DEPTH=dep, K=k_eff - n0, GUARD_LO=0, GUARD_HI=dep)
                         if dep else None,
                         old_ring_lat_values=old_vals, old_ring_margin_ps=r.get("margin_ps"),
-                        old_ring_ok=(r.get("margin_ps", 0) >= 0), **out_parts))
+                        old_ring_ok=(r.get("margin_ps", 0) >= 0), **out_parts,
+                        **({"write_edge": "fall"} if wf else {})))
         if start_edges is not None:
             out[-1]["start_hops"] = hops(u, v)
     regs = []
@@ -1555,6 +1562,10 @@ def main(argv=None):
                     help="COORD 11-13 11:54 opt-in: JSON list of crossing ids that may take DEPTH 16 (RTL proof "
                          "results/die_s81_11_1028/D16.md); every other crossing keeps --max-depth")
     ap.add_argument("--depth-guard-ps", type=float, default=0.0, help="FABLE-PD-S81-0335 B(c) opt-in: promote to the next depth when L_hi is within this many ps of the depth limit (0 = unchanged)")
+    ap.add_argument("--write-fall-plan", metavar="PLAN.json",
+                    help="S81-CLOCK-WINDOW-1119 opt-in: die plan whose clock.ring_hold.write_edge fall (+ write_fall_types) "
+                         "makes those crossings write on the fclk fall; K / DEPTH are chosen for lag L + T/2, the form "
+                         "die_sta_related --ca-write-fall times (die_chain_ca passes it when the plan declares fall)")
     ap.add_argument("--max-depth", type=int, choices=(8, 16), default=8,
                     help="DIE-S81-11 / 12.16 b(iii) opt-in: largest standard ring DEPTH (16 needs its RTL proof; default 8)")
     add_start_tree_args(ap)
@@ -1562,7 +1573,7 @@ def main(argv=None):
     ap.add_argument("--out")
     ap.add_argument("--cases", help="TSV for the Verilator bench: port DEPTH L_ps (lo / mid / hi per crossing)")
     a = ap.parse_args(argv)
-    global DEPTH16_ALLOW, DEPTH_GUARD_PS
+    global DEPTH16_ALLOW, DEPTH_GUARD_PS, WRITE_FALL
     DEPTH_GUARD_PS = float(a.depth_guard_ps or 0.0)
     allow = frozenset(json.load(open(a.depth16_allow))) if a.depth16_allow else frozenset()
     DEPTH16_ALLOW = allow
@@ -1570,6 +1581,17 @@ def main(argv=None):
         return _main(a, ap, allow)
     finally:
         DEPTH16_ALLOW = frozenset()
+        WRITE_FALL = frozenset()
+
+
+def write_fall_of(die_plan, ports):
+    """Crossing ids (of ports) whose receiving ring writes on the fclk fall: count_align_bind.write_fall_ports' rule."""
+    import clock_landings as CL
+    if not CL.ring_write_fall(die_plan):
+        return frozenset()
+    ptype = {p["name"]: p["type"] for p in die_plan.get("partitions", [])}
+    dst = {p["id"]: p["dst"]["part"] for p in die_plan.get("ports", [])}
+    return frozenset(pid for pid in ports if pid in dst and CL.ring_write_fall(die_plan, ptype.get(dst[pid], "")))
 
 
 def _main(a, ap, allow):
@@ -1602,6 +1624,9 @@ def _main(a, ap, allow):
                   "(die_sta_related fails them closed: no taps)", file=sys.stderr)
     if a.start_skew_clean and not any(a.start_skew):
         ap.error("--start-skew-clean needs --start-skew LO,HI")
+    global WRITE_FALL
+    if getattr(a, "write_fall_plan", None):
+        WRITE_FALL = write_fall_of(json.load(open(a.write_fall_plan)), {r["port"] for r in rows})
     sedges, sroot, sinfo = start_tree_from_args(a, rows, ap.error)
     skw = dict(start_edges=sedges, start_root=sroot) if sedges is not None else {}
     if sedges is not None and getattr(a, "start_prev", None):
@@ -1620,6 +1645,9 @@ def _main(a, ap, allow):
         summ["tree_parent"] = parse_edge_pad(a.tree_parent, str)
     if any(a.start_skew):
         summ["start_skew_ps"] = list(a.start_skew)
+    if getattr(a, "write_fall_plan", None):
+        summ["write_fall"] = dict(plan=a.write_fall_plan, ports=len(WRITE_FALL),
+                                  note="K/DEPTH chosen for lag L + T/2; L_lo/L_hi rise-referenced")
     if sta_info:
         summ["sta_interval"] = sta_info
     if allow:
