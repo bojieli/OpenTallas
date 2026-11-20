@@ -580,3 +580,11 @@
   - n46ct_e: plan C, 2993 crossings, plan FAIL 0, depth 4 on 2862 and 8 on 131. STA TT 0/2993 fail (start-skew 0/715), lo 108.1 hi 130.0. FF 0/2993, lo 112.7 hi 204.0. PASS. Was TT 395 / FF 256 fail.
   - No crossing under 100 ps on either. Files: epyc9 qc-plan-r3-n41p/caf/n43cb, epyc10 qc-plan-r3-wf/caf/n46ct_e (ca_C.json, bind.json, sta/).
   - Next: N46Q (N46P plan on tools main d2c3111be068) applies as the QC event as soon as its bind + G0 pass, per COORD. N46R = fold of the n46ct_e fall plan (K/DEPTH/sched_lat via region_form sta --cap-in) on N46Q, as its own event after.
+- 2026-11-19 18:58 PST QC-PLAN-R3 strap pins in hard-core halos, whole family in N46R (COORD 11-19). The scan of the N46Q plan (region_form plan-only rule: off every hard_cores/contents footprint + 5.4 um, off clock reserved sites + 1.08 um) finds 17 types, 538 strap pin sites:
+  - cbn_q11__cl5cc92dfe 48, cbn_q11__cl49ae4555 48
+  - cbx_q10__cl94a12200 70, cbx_q10__cl89936551 70, cbx_q10__cl94a12200_h 70, cbx_q10__cl89936551_h 70
+  - slw_su_l1__clcc9d0155 35, slw_su_l1__cla2a78701 35
+  - sle_su_c 12, slw_su_c__cl92142dac 10, slw_su_c__cl19bb38ef 10
+  - sle_stm_v1__cl27746664 5, sle_stm_v1__clbe630b9c 4, sle_stm_v2__cl7b3062fa 5, sle_stm_v2__cl55be2264 4
+  - slw_stm_v1__cl05fc43f7__cl2086fa2c 1, slw_stm_v1__cl05fc43f7__cl389df4e9 1
+  n46r_all.py (N46R_ALL=1) re-sites the blocked pins of all 17 to free strap-lattice sites (4.32 um M5, nearest to the type anchor, same rule region_form uses for new bits). Unblocked pins stay put. It then folds the n46ct_e fall-aware K/DEPTH/sched_lat (region_form sta --cap-in). Moves are logged in n46r/out_all/strap_resite.json. N46R = this plan + bind + G0, as its own event after N46Q. Running on epyc9.
