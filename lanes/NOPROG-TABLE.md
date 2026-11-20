@@ -1,6 +1,6 @@
-# NOPROG-TABLE (NOPROG-WATCHDOG, generated 2026-11-20 12:15 PST)
+# NOPROG-TABLE (NOPROG-WATCHDOG, generated 2026-11-20 12:30 PST)
 
-Window 6 h, improvement >= 2 % from best. Verdict counts: {'NO-PROGRESS': 3, 'UNSIGNABLE': 2, 'GRT-LABEL': 11, 'YOUNG': 137, 'NO-DATA': 3, 'KEEP': 1, 'EXCLUDED': 3, 'PROGRESS': 32}. Hosts without report: none.
+Window 6 h, improvement >= 2 % from best. Verdict counts: {'NO-PROGRESS': 3, 'UNSIGNABLE': 2, 'GRT-LABEL': 11, 'YOUNG': 128, 'NO-DATA': 4, 'KEEP': 1, 'EXCLUDED': 3, 'PROGRESS': 34}. Hosts without report: none.
 
 | host | container | type | stage | age h | metric trend | verdict | action |
 |---|---|---|---|---|---|---|---|
@@ -19,7 +19,7 @@ Window 6 h, improvement >= 2 % from best. Verdict counts: {'NO-PROGRESS': 3, 'UN
 | intel1 | dpkit-sle_ctl__cl372cea1c-784571 | sle_ctl | 5_1_grt | 23.1 | grt rounds 3 overflow 5:49160 -> 10:43104 -> 15:40069 | GRT-LABEL: DESIGN-FAIL: GRT-0273 (clock NDR dropped under congestion) |  |
 | intel1 | dpkit-sle_ctl__cl503337ff__padE0-2899102 | sle_ctl | 5_1_grt | 15.0 | grt rounds 3 overflow 5:46995 -> 10:41355 -> 15:38838 | GRT-LABEL: DESIGN-FAIL: GRT-0273 (clock NDR dropped under congestion) |  |
 | intel1 | dpkit-sle_ctl__cl503337ff__padE4-2900534 | sle_ctl | 5_1_grt | 15.0 | grt rounds 2 overflow 5:58470 -> 10:41949 | GRT-LABEL: DESIGN-FAIL: overflow 41949 at round 10 > 1000 |  |
-| intel2 | dpkit-kv3_hgi_v1__cl141fc26e-2426424 | kv3_hgi_v1 | 5_1_grt | 9.6 | grt rounds 4 overflow 5:13197 -> 10:11192 -> 15:10179 -> 20:10000 | GRT-LABEL: DESIGN-FAIL: GRT-0273 (clock NDR dropped under congestion) |  |
+| intel2 | dpkit-kv3_hgi_v1__cl141fc26e-2426424 | kv3_hgi_v1 | 5_1_grt | 9.8 | grt rounds 4 overflow 5:13197 -> 10:11019 -> 15:10179 -> 20:10000 | GRT-LABEL: DESIGN-FAIL: GRT-0273 (clock NDR dropped under congestion) |  |
 | epyc2 | dpkit-cbf_q11-330676 | cbf_q11 | 2_4_floorplan_pdn | 0.4 | last meaningful line 0.0 h ago (57/57 lines) | YOUNG: evidence 0.1 h < 7.5 h |  |
 | epyc2 | dpkit-cbx_q10__cl89936551_h-1485860 | cbx_q10 | 2_1_floorplan | 0.1 | repair_Viol best 847 last 847 rows 304 | YOUNG: stage 0.1 h < 1 h |  |
 | epyc2 | dpkit-col_h10_r0_p4__t1__pvcc166a6d-2409529 | col_h10_r0_p4__t1 | stage_odb_cap | 2.7 | last meaningful line 0.0 h ago (281/281 lines) | YOUNG: evidence 2.7 h < 7.5 h |  |
@@ -83,46 +83,37 @@ Window 6 h, improvement >= 2 % from best. Verdict counts: {'NO-PROGRESS': 3, 'UN
 | epyc2 | prd-eco_20261120_003409_3748476-i2r-2879183 | eco_20261120_003409_3748476-i2r | 5_2_route | 1.7 | last meaningful line 0.1 h ago (132/132 lines) | YOUNG: evidence 0.4 h < 7.5 h |  |
 | epyc2 | prd-eco_20261120_003409_3748726-i1-3133296 | eco_20261120_003409_3748726-i1 | 5_1_grt | 0.7 | last meaningful line 0.1 h ago (143/143 lines) | YOUNG: evidence 0.7 h < 7.5 h |  |
 | epyc2 | prd-eco_recover1120-i1t-2162531 | eco_recover1120-i1t | 5_2_route | 8.8 | drt_violations best 26911 last 26911 rows 1 | YOUNG: evidence 4.4 h < 7.5 h |  |
-| epyc7 | dpkit-cbn_q00__cldbcda913-1076792 | cbn_q00 | 3_3_place_gp | 0.5 | overflow best 0.7006 last 0.7006 rows 1 | YOUNG: stage 0.2 h < 1 h |  |
-| epyc7 | dpkit-cbn_q01__cld9ff4c40-1136289 | cbn_q01 | stage_odb_cap | 0.5 | last meaningful line 0.0 h ago (773/773 lines) | YOUNG: evidence 0.5 h < 7.5 h |  |
-| epyc7 | dpkit-col_h9_r0_p1__t1__pvb3e2a60a-642785 | col_h9_r0_p1__t1 | 5_2_route | 12.3 | drt_violations best 150968 last 150968 rows 1 | YOUNG: evidence 5.1 h < 7.5 h |  |
-| epyc7 | dpkit-hd_lep0N-3749933 | hd_lep0N | 3_3_place_gp | 1.4 | overflow best 0.5927 last 0.5943 rows 8 | YOUNG: evidence 1.4 h < 7.5 h |  |
-| epyc7 | dpkit-hd_serdes-379194 | hd_serdes | 3_3_place_gp | 0.9 | overflow best 0.9364 last 0.9367 rows 15 | YOUNG: stage 0.1 h < 1 h |  |
-| epyc7 | dpkit-kv3_hgi_v2__cle0015330-1708790 | kv3_hgi_v2 | 2_4_floorplan_pdn | 0.1 | last meaningful line 0.1 h ago (478/478 lines) | YOUNG: evidence 0.1 h < 7.5 h |  |
-| epyc7 | dpkit-kv3_pc__cl254f2e73-1975559 | kv3_pc | 1_2_yosys | 0.0 | last meaningful line -0.0 h ago (104/104 lines) | YOUNG: evidence 0.0 h < 7.5 h |  |
-| epyc7 | dpkit-kv3_pc_v3-1060726 | kv3_pc_v3 | 3_1_place_gp_skip_io | 0.5 | overflow best 0.8742 last 0.916 rows 10 | YOUNG: stage 0.1 h < 1 h |  |
-| epyc7 | dpkit-kv3_pv_v1-3573937 | kv3_pv_v1 | stage_odb_cap | 1.5 | last meaningful line 0.0 h ago (76/76 lines) | YOUNG: evidence 1.5 h < 7.5 h |  |
-| epyc7 | dpkit-kv3_pv_v12-3098388 | kv3_pv_v12 | 2_4_floorplan_pdn | 1.7 | last meaningful line 0.0 h ago (105/105 lines) | YOUNG: evidence 0.2 h < 7.5 h |  |
-| epyc7 | dpkit-kv3_pv_v12-3603774 | kv3_pv_v12 | 2_4_floorplan_pdn | 1.5 | last meaningful line 0.1 h ago (104/104 lines) | YOUNG: evidence 0.1 h < 7.5 h |  |
-| epyc7 | dpkit-kv3_pv_v2-3267427 | kv3_pv_v2 | stage_odb_cap | 1.7 | last meaningful line 0.0 h ago (104/104 lines) | YOUNG: evidence 1.7 h < 7.5 h |  |
-| epyc7 | dpkit-kv3_pv_v2n-3268154 | kv3_pv_v2n | 3_3_place_gp | 1.7 | last meaningful line 0.0 h ago (60/60 lines) | YOUNG: evidence 0.1 h < 7.5 h |  |
-| epyc7 | dpkit-kv3_pv_v3-3038377 | kv3_pv_v3 | 3_3_place_gp | 1.7 | last meaningful line 0.0 h ago (29/29 lines) | YOUNG: evidence 0.0 h < 7.5 h |  |
-| epyc7 | dpkit-kv3_pv_v3n-3830624 | kv3_pv_v3n | 2_4_floorplan_pdn | 1.4 | last meaningful line 0.1 h ago (92/92 lines) | YOUNG: evidence 0.3 h < 7.5 h |  |
-| epyc7 | dpkit-kv3_pv_v4n-3427796 | kv3_pv_v4n | stage_odb_cap | 1.6 | last meaningful line 0.1 h ago (16/16 lines) | YOUNG: evidence 1.6 h < 7.5 h |  |
-| epyc7 | dpkit-kv3_pv_v5-3465794 | kv3_pv_v5 | 2_4_floorplan_pdn | 1.6 | last meaningful line 0.1 h ago (92/92 lines) | YOUNG: evidence 0.2 h < 7.5 h |  |
-| epyc7 | dpkit-kv3_pv_v5n-3392006 | kv3_pv_v5n | 2_4_floorplan_pdn | 1.6 | last meaningful line 0.1 h ago (91/91 lines) | YOUNG: evidence 0.1 h < 7.5 h |  |
-| epyc7 | dpkit-kv3_pv_v6n-2561884 | kv3_pv_v6n | 3_1_place_gp_skip_io | 1.9 | overflow best 0.809 last 0.809 rows 18 | YOUNG: stage 0.2 h < 1 h |  |
-| epyc7 | dpkit-kv3_pv_v7-3012201 | kv3_pv_v7 | 2_4_floorplan_pdn | 1.8 | last meaningful line 0.1 h ago (104/104 lines) | YOUNG: evidence 0.1 h < 7.5 h |  |
-| epyc7 | dpkit-kv3_pv_v8-1802160 | kv3_pv_v8 | 2_1_floorplan | 0.1 | last meaningful line 0.0 h ago (16/16 lines) | YOUNG: evidence 0.0 h < 7.5 h |  |
-| epyc7 | dpkit-kv3_pv_v8-1803775 | kv3_pv_v8 | synth_odb_v | 0.1 | last meaningful line 0.0 h ago (4/4 lines) | YOUNG: evidence 0.0 h < 7.5 h |  |
-| epyc7 | dpkit-kv3_pv_v8-725922 | kv3_pv_v8 | 3_5_place_dp | 2.8 | last meaningful line 0.5 h ago (44/44 lines) | YOUNG: evidence 0.6 h < 7.5 h |  |
-| epyc7 | dpkit-ot_s81sl_leaf__t39-1017632 | ot_s81sl_leaf__t39 | stage_odb_cap | 0.6 | last meaningful line 0.0 h ago (361/361 lines) | YOUNG: evidence 0.6 h < 7.5 h |  |
-| epyc7 | dpkit-serdes__t13-734348 | serdes__t13 | 5_1_grt | 2.8 | repair_TNS best 223737 last 223737 rows 14 | YOUNG: evidence 1.4 h < 7.5 h |  |
-| epyc7 | dpkit-serdes__t16-3746725 | serdes__t16 | stage_odb_cap | 3.5 | last meaningful line 0.0 h ago (867/867 lines) | YOUNG: evidence 3.5 h < 7.5 h |  |
-| epyc7 | dpkit-sle_hc0__cl929603c0__cl38badc56-3750132 | sle_hc0 | 5_1_grt | 3.5 | last meaningful line 2.0 h ago (215/912 lines) | YOUNG: evidence 2.9 h < 7.5 h |  |
-| epyc7 | dpkit-sle_hc1__cl7d360508-3739575 | sle_hc1 | postcts_gate_TT | 3.5 | last meaningful line 0.2 h ago (383/383 lines) | YOUNG: evidence 0.3 h < 7.5 h |  |
-| epyc7 | dpkit-sle_sc_v1__cl115da35f-944972 | sle_sc_v1 | stage_odb_cap | 2.7 | last meaningful line 0.0 h ago (795/795 lines) | YOUNG: evidence 2.7 h < 7.5 h |  |
-| epyc7 | dpkit-sle_st_b_v2__pv41c959f3-3745640 | sle_st_b_v2 | 5_1_grt | 3.5 | last meaningful line 1.9 h ago (213/919 lines) | YOUNG: evidence 3.2 h < 7.5 h |  |
-| epyc7 | ffkpvr2-grt-v8j_it0b-1427409 | ffkpvr2-grt-v8j_it0b | v8j_it0b.grt | 0.3 | last meaningful line 0.0 h ago (978/978 lines) | YOUNG: evidence 0.3 h < 7.5 h |  |
-| epyc7 | ffss0600-lec-R1 | ffss0600-lec-R1 | - | 2.8 |  | NO-DATA: no log found |  |
-| epyc7 | phscan-1854121 | phscan | kv3_pc_v3-route-loved-redfish-1034456-1795203695.placed_raw | 4.0 | last meaningful line 0.3 h ago (11/11 lines) | YOUNG: evidence 0.3 h < 7.5 h |  |
-| epyc7 | prd-eco_20261120_124815_3297714-i1t-3989767 | eco_20261120_124815_3297714-i1t | 5_2_route | 7.4 | drt_violations best 28098 last 28098 rows 1 | YOUNG: evidence 5.9 h < 7.5 h |  |
-| epyc7 | so_1437304_ff_48902 | so_1437304_ff_48902 | signoff | 0.3 |  | NO-DATA: empty log |  |
-| epyc7 | so_1437304_tt_48902 | so_1437304_tt_48902 | signoff | 0.3 |  | NO-DATA: empty log |  |
-| epyc7 | so_1684594_ff_93836 | so_1684594_ff_93836 | stage_odb_cap | 0.2 | last meaningful line 0.2 h ago (7338/7338 lines) | YOUNG: evidence 0.2 h < 7.5 h |  |
-| epyc7 | so_1684594_tt_93836 | so_1684594_tt_93836 | stage_odb_cap | 0.2 | last meaningful line 0.2 h ago (7338/7338 lines) | YOUNG: evidence 0.2 h < 7.5 h |  |
-| epyc7 | so_1737751_ff_72795 | so_1737751_ff_72795 | stage_odb_cap | 0.1 | last meaningful line 0.1 h ago (7331/7331 lines) | YOUNG: evidence 0.1 h < 7.5 h |  |
-| epyc7 | so_1737751_tt_72795 | so_1737751_tt_72795 | stage_odb_cap | 0.1 | last meaningful line 0.1 h ago (7331/7331 lines) | YOUNG: evidence 0.1 h < 7.5 h |  |
+| epyc7 | dpkit-cbn_q00__cldbcda913-1076792 | cbn_q00 | 3_4_place_resized | 0.8 | last meaningful line 0.0 h ago (24/24 lines) | YOUNG: evidence 0.0 h < 7.5 h |  |
+| epyc7 | dpkit-cbn_q01__cld9ff4c40-1136289 | cbn_q01 | stage_odb_cap | 0.7 | last meaningful line 0.0 h ago (833/833 lines) | YOUNG: evidence 0.7 h < 7.5 h |  |
+| epyc7 | dpkit-col_h9_r0_p1__t1__pvb3e2a60a-642785 | col_h9_r0_p1__t1 | 5_2_route | 12.6 | drt_violations best 150968 last 150968 rows 1 | YOUNG: evidence 5.3 h < 7.5 h |  |
+| epyc7 | dpkit-hd_lep0N-3749933 | hd_lep0N | 3_4_place_resized | 1.7 | repair_Remaining best 261343 last 261343 rows 84 | YOUNG: stage 0.0 h < 1 h |  |
+| epyc7 | dpkit-hd_serdes-379194 | hd_serdes | 3_3_place_gp | 1.2 | overflow best 0.2491 last 0.2491 rows 45 | YOUNG: stage 0.4 h < 1 h |  |
+| epyc7 | dpkit-kv3_hgi_v2__cl2862d491-1983684 | kv3_hgi_v2 | 3_1_place_gp_skip_io | 0.2 | overflow best 0.6904 last 0.7282 rows 19 | YOUNG: stage 0.0 h < 1 h |  |
+| epyc7 | dpkit-kv3_hgi_v2__cle0015330-1708790 | kv3_hgi_v2 | 3_3_place_gp | 0.4 | overflow best 0.3586 last 0.3768 rows 19 | YOUNG: stage 0.1 h < 1 h |  |
+| epyc7 | dpkit-kv3_pc_v3-1060726 | kv3_pc_v3 | 3_3_place_gp | 0.8 | last meaningful line 0.0 h ago (23/23 lines) | YOUNG: evidence 0.0 h < 7.5 h |  |
+| epyc7 | dpkit-kv3_pv_v1-3573937 | kv3_pv_v1 | stage_odb_cap | 1.8 | last meaningful line 0.0 h ago (136/136 lines) | YOUNG: evidence 1.8 h < 7.5 h |  |
+| epyc7 | dpkit-kv3_pv_v2-3267427 | kv3_pv_v2 | 3_3_place_gp | 1.9 | overflow best 0.6973 last 0.6973 rows 14 | YOUNG: stage 0.2 h < 1 h |  |
+| epyc7 | dpkit-kv3_pv_v2n-3268154 | kv3_pv_v2n | 3_3_place_gp | 1.9 | overflow best 0.6451 last 0.6451 rows 17 | YOUNG: stage 0.3 h < 1 h |  |
+| epyc7 | dpkit-kv3_pv_v3-3038377 | kv3_pv_v3 | 3_3_place_gp | 2.0 | overflow best 0.6324 last 0.6324 rows 1 | YOUNG: stage 0.3 h < 1 h |  |
+| epyc7 | dpkit-kv3_pv_v3n-3830624 | kv3_pv_v3n | stage_odb_cap | 1.6 | last meaningful line 0.0 h ago (40/40 lines) | YOUNG: evidence 1.6 h < 7.5 h |  |
+| epyc7 | dpkit-kv3_pv_v4n-3427796 | kv3_pv_v4n | stage_odb_cap | 1.8 | last meaningful line 0.0 h ago (76/76 lines) | YOUNG: evidence 1.8 h < 7.5 h |  |
+| epyc7 | dpkit-kv3_pv_v5-3465794 | kv3_pv_v5 | 3_1_place_gp_skip_io | 1.8 | overflow best 0.7735 last 0.7735 rows 11 | YOUNG: stage 0.1 h < 1 h |  |
+| epyc7 | dpkit-kv3_pv_v5n-3392006 | kv3_pv_v5n | 3_1_place_gp_skip_io | 1.9 | overflow best 0.8609 last 0.8609 rows 6 | YOUNG: stage 0.1 h < 1 h |  |
+| epyc7 | dpkit-kv3_pv_v6n-2561884 | kv3_pv_v6n | 3_3_place_gp | 2.2 | last meaningful line 0.0 h ago (28/28 lines) | YOUNG: evidence 0.0 h < 7.5 h |  |
+| epyc7 | dpkit-kv3_pv_v7-3012201 | kv3_pv_v7 | 3_1_place_gp_skip_io | 2.0 | overflow best 0.8695 last 0.8695 rows 6 | YOUNG: stage 0.1 h < 1 h |  |
+| epyc7 | dpkit-kv3_pv_v8-1802160 | kv3_pv_v8 | 2_2_floorplan_macro | 0.4 | last meaningful line 0.0 h ago (17/17 lines) | YOUNG: evidence 0.0 h < 7.5 h |  |
+| epyc7 | dpkit-kv3_pv_v8-1803775 | kv3_pv_v8 | 2_1_floorplan | 0.4 | last meaningful line 0.1 h ago (384/384 lines) | YOUNG: evidence 0.2 h < 7.5 h |  |
+| epyc7 | dpkit-kv3_pv_v8-725922 | kv3_pv_v8 | 3_5_place_dp | 3.1 | last meaningful line 0.1 h ago (127/127 lines) | YOUNG: evidence 0.9 h < 7.5 h |  |
+| epyc7 | dpkit-ot_s81sl_leaf__t39-1017632 | ot_s81sl_leaf__t39 | 3_5_place_dp | 0.8 | last meaningful line 0.0 h ago (89/89 lines) | YOUNG: evidence 0.2 h < 7.5 h |  |
+| epyc7 | dpkit-serdes__t13-734348 | serdes__t13 | 5_1_grt | 3.1 | repair_TNS best 220427 last 220427 rows 19 | YOUNG: evidence 1.6 h < 7.5 h |  |
+| epyc7 | dpkit-serdes__t16-3746725 | serdes__t16 | 4_1_cts | 3.7 | repair_Violations best 13 last 16 rows 14 | YOUNG: stage 0.6 h < 1 h |  |
+| epyc7 | dpkit-sle_hc1__cl7d360508-3739575 | sle_hc1 | 5_2_route | 3.7 | last meaningful line 0.1 h ago (134/134 lines) | YOUNG: evidence 0.2 h < 7.5 h |  |
+| epyc7 | dpkit-sle_sc_v1__cl115da35f-944972 | sle_sc_v1 | 4_1_cts | 3.0 | last meaningful line 0.0 h ago (5537/5537 lines) | YOUNG: evidence 0.9 h < 7.5 h |  |
+| epyc7 | ffss0600-lec-R1 | ffss0600-lec-R1 | - | 3.1 |  | NO-DATA: no log found |  |
+| epyc7 | otc-2036208-3288 | 2036208 | - | 0.2 |  | NO-DATA: no log found |  |
+| epyc7 | phscan-1854121 | phscan | kv3_pc_v3-route-loved-redfish-1034456-1795203695.placed_raw | 4.2 | last meaningful line 0.5 h ago (11/11 lines) | YOUNG: evidence 0.6 h < 7.5 h |  |
+| epyc7 | so_1437304_ff_48902 | so_1437304_ff_48902 | signoff | 0.5 |  | NO-DATA: empty log |  |
+| epyc7 | so_1437304_tt_48902 | so_1437304_tt_48902 | signoff | 0.5 |  | NO-DATA: empty log |  |
 | intel1 | dpkit-cbf_q00__cl870de686-1852213 | cbf_q00 | 2_1_floorplan | 0.5 | last meaningful line 0.0 h ago (1431/1431 lines) | YOUNG: evidence 0.4 h < 7.5 h |  |
 | intel1 | dpkit-cbx_q10__cl94a12200_h-1912437 | cbx_q10 | stage_odb_cap | 3.7 | last meaningful line 0.0 h ago (1491/1491 lines) | YOUNG: evidence 3.7 h < 7.5 h |  |
 | intel1 | dpkit-col_h10_r0_p4__t1__pv07945c1e-2023527 | col_h10_r0_p4__t1 | stage_odb_cap | 3.7 | last meaningful line 0.0 h ago (364/364 lines) | YOUNG: evidence 3.7 h < 7.5 h |  |
@@ -159,11 +150,12 @@ Window 6 h, improvement >= 2 % from best. Verdict counts: {'NO-PROGRESS': 3, 'UN
 | intel1 | prd-eco_20261120_091653_2376724-i1-614277 | eco_20261120_091653_2376724-i1 | 5_2_route | 2.9 | drt_violations best 4 last 4 rows 1 | YOUNG: evidence 1.9 h < 7.5 h |  |
 | intel1 | so_915205_ff_21124 | so_915205_ff_21124 | generate_abstract | 0.9 | last meaningful line 0.7 h ago (204/204 lines) | YOUNG: evidence 0.9 h < 7.5 h |  |
 | intel1 | so_915205_tt_21124 | so_915205_tt_21124 | generate_abstract | 0.9 | last meaningful line 0.7 h ago (204/204 lines) | YOUNG: evidence 0.9 h < 7.5 h |  |
-| intel2 | prd-eco_20261120_103658_2442812-i1-1367643 | eco_20261120_103658_2442812-i1 | 5_2_route | 1.6 | last meaningful line 0.0 h ago (128/128 lines) | YOUNG: evidence 0.2 h < 7.5 h |  |
+| intel2 | dpkit-hd_mesh-4092448 | hd_mesh | 5_1_grt | 16.0 | last meaningful line 0.0 h ago (126/126 lines) | YOUNG: evidence 0.1 h < 7.5 h |  |
+| intel2 | prd-eco_20261120_103658_2442812-i1-1367643 | eco_20261120_103658_2442812-i1 | 5_2_route | 1.8 | last meaningful line 0.2 h ago (132/132 lines) | YOUNG: evidence 0.4 h < 7.5 h |  |
 | epyc2 | dpkit-col_h10_r2__t1__cl1f5d6c2a__pvf1512c16-387127 | col_h10_r2__t1 | 5_2_route | 25.1 |  | KEEP: col_h10_r2__t1__cl1f5d6c2a__pvf1512c16	S81-COL-INHERIT	representative (COORD 11- |  |
 | intel1 | dpkit-kv3_io_cor-767906 | kv3_io_cor | 5_2_route | 59.6 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| intel2 | dpkit-col_h10_r2__t1__cl1f5d6c2a__pv0c1de895-1681005 | col_h10_r2__t1 | stage_odb_cap | 35.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| intel2 | dpkit-kv3_pv_v8-376552 | kv3_pv_v8 | stage_odb_cap | 36.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| intel2 | dpkit-col_h10_r2__t1__cl1f5d6c2a__pv0c1de895-1681005 | col_h10_r2__t1 | stage_odb_cap | 35.5 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| intel2 | dpkit-kv3_pv_v8-376552 | kv3_pv_v8 | 5_1_grt | 36.4 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | epyc2 | dhr1-drt7-cut_small-p16g | dhr1-drt7-cut_small-p16g | drt_TT | 9.5 | last meaningful line 1.6 h ago (1373/1373 lines) | PROGRESS: log still growing |  |
 | epyc2 | dpkit-col_h10_r0_p1__t1__cl911743eb-4083127 | col_h10_r0_p1__t1 | stage_odb_cap | 6.6 | last meaningful line 0.0 h ago (3532/3532 lines) | PROGRESS: log still growing |  |
 | epyc2 | dpkit-col_h10_r1__t1__cl95b37463__pvf724da2a-320050 | col_h10_r1__t1 | 4_1_cts | 0.4 | repair_Violations best 0 last 0 rows 3 | PROGRESS: repair_Violations reached 0 |  |
@@ -177,22 +169,24 @@ Window 6 h, improvement >= 2 % from best. Verdict counts: {'NO-PROGRESS': 3, 'UN
 | epyc2 | dpkit-col_h9_r1__t1__cl49d7a23e__pv047ea3b3-4028288 | col_h9_r1__t1 | stage_odb_cap | 6.6 | last meaningful line 0.0 h ago (3589/3589 lines) | PROGRESS: log still growing |  |
 | epyc2 | dpkit-serdes__t1__clb45db5be-2837229 | serdes__t1 | 3_5_place_dp | 1.7 | repair_Violations best 0 last 0 rows 12 | PROGRESS: repair_Violations reached 0 |  |
 | epyc2 | dpkit-sle_su_l1__cl5ea486db-3281164 | sle_su_l1 | stage_odb_cap | 6.7 | last meaningful line 0.0 h ago (476/476 lines) | PROGRESS: log still growing |  |
-| epyc7 | dpkit-slw_su_l1__cla2a78701-531187 | slw_su_l1 | 5_2_route | 21.3 | drt_violations best 10389 last 10389 rows 16 | before-window best 11596, window best 10389 | PROGRESS: drt_violations improved 10.4 % in window |  |
-| epyc7 | dpkit-slw_su_l1__clcc9d0155-768070 | slw_su_l1 | 5_2_route | 21.0 | drt_violations best 7619 last 38244 rows 18 | before-window best 8100, window best 7619 | PROGRESS: drt_violations improved 5.9 % in window |  |
-| epyc7 | klegacy-dsdv_bksel_c_rfda3p-2239264 | dsdv_bksel_c_rfda3p | 5_1_grt | 2.1 | repair_TNS best 0 last 0 rows 67 | PROGRESS: repair_TNS reached 0 |  |
-| intel2 | dpkit-col_h10_r2__t1__cl1f5d6c2a__pv418d3dc0-2688718 | col_h10_r2__t1 | stage_odb_cap | 22.4 | last meaningful line 0.0 h ago (1337/1337 lines) | PROGRESS: log still growing |  |
-| intel2 | dpkit-hd_host_e-775407 | hd_host_e | stage_odb_cap | 17.5 | last meaningful line 0.0 h ago (1059/1059 lines) | PROGRESS: log still growing |  |
-| intel2 | dpkit-hd_mesh-4092448 | hd_mesh | stage_odb_cap | 15.8 | last meaningful line 0.0 h ago (981/981 lines) | PROGRESS: log still growing |  |
-| intel2 | dpkit-kv3_hg_v1p6-2680076 | kv3_hg_v1p6 | pregrt_ff_hold | 9.4 | repair_TNS best 0 last 0 rows 1 | PROGRESS: repair_TNS reached 0 |  |
-| intel2 | dpkit-kv3_hg_v1p6-2680438 | kv3_hg_v1p6 | pregrt_ff_hold | 9.4 | repair_TNS best 0 last 0 rows 1 | PROGRESS: repair_TNS reached 0 |  |
-| intel2 | dpkit-ot_s81sl_leaf__t28-1126913 | ot_s81sl_leaf__t28 | stage_odb_cap | 13.0 | last meaningful line 0.0 h ago (1110/1110 lines) | PROGRESS: log still growing |  |
-| intel2 | dpkit-sle_fw_v2__cl6740750e-482449 | sle_fw_v2 | stage_odb_cap | 15.6 | last meaningful line 0.0 h ago (927/927 lines) | PROGRESS: log still growing |  |
-| intel2 | dpkit-sle_fw_v2__cl69f5e854-3239385 | sle_fw_v2 | stage_odb_cap | 16.2 | last meaningful line 0.0 h ago (1038/1038 lines) | PROGRESS: log still growing |  |
-| intel2 | dpkit-sle_st_b_v1__pvc5a85fd4__pv38472fb8-486644 | sle_st_b_v1 | stage_odb_cap | 15.6 | last meaningful line 0.0 h ago (926/926 lines) | PROGRESS: log still growing |  |
-| intel2 | dpkit-slw_fw_v1__clf51c11d8__cl592e3d37-488539 | slw_fw_v1 | stage_odb_cap | 15.6 | last meaningful line 0.0 h ago (926/926 lines) | PROGRESS: log still growing |  |
-| intel2 | dpkit-slw_fw_v3-489810 | slw_fw_v3 | stage_odb_cap | 15.6 | last meaningful line 0.0 h ago (926/926 lines) | PROGRESS: log still growing |  |
-| intel2 | dpkit-slw_hc1__cl68f9248e__cl144ee7b3-2435819 | slw_hc1 | stage_odb_cap | 16.6 | last meaningful line 0.0 h ago (1051/1051 lines) | PROGRESS: log still growing |  |
-| intel2 | dpkit-slw_sc_v1__cl64543eaf__cl5e017c6f-4065313 | slw_sc_v1 | stage_odb_cap | 15.8 | last meaningful line 0.0 h ago (941/941 lines) | PROGRESS: log still growing |  |
-| intel2 | dpkit-slw_st_b_v1__cl6357f1cc__pv6ace3e48-492590 | slw_st_b_v1 | stage_odb_cap | 15.6 | last meaningful line 0.0 h ago (926/926 lines) | PROGRESS: log still growing |  |
-| intel2 | dpkit-slw_st_b_v2__pva66d0f22__pv3d7bec84-495397 | slw_st_b_v2 | stage_odb_cap | 15.6 | last meaningful line 0.0 h ago (926/926 lines) | PROGRESS: log still growing |  |
-| intel2 | dpkit-slw_st_b_v2__pva66d0f22__pvb80e2003-498208 | slw_st_b_v2 | stage_odb_cap | 15.5 | last meaningful line 0.0 h ago (926/926 lines) | PROGRESS: log still growing |  |
+| epyc7 | dpkit-sle_hc0__cl929603c0__cl38badc56-3750132 | sle_hc0 | 5_1_grt | 3.7 | repair_TNS best 0 last 0 rows 15 | PROGRESS: repair_TNS reached 0 |  |
+| epyc7 | dpkit-sle_st_b_v2__pv41c959f3-3745640 | sle_st_b_v2 | 5_1_grt | 3.7 | repair_TNS best 0 last 0 rows 3 | PROGRESS: repair_TNS reached 0 |  |
+| epyc7 | dpkit-slw_su_l1__cla2a78701-531187 | slw_su_l1 | 5_2_route | 21.6 | drt_violations best 10389 last 10389 rows 16 | before-window best 11596, window best 10389 | PROGRESS: drt_violations improved 10.4 % in window |  |
+| epyc7 | dpkit-slw_su_l1__clcc9d0155-768070 | slw_su_l1 | 5_2_route | 21.3 | drt_violations best 7619 last 38244 rows 18 | before-window best 8100, window best 7619 | PROGRESS: drt_violations improved 5.9 % in window |  |
+| epyc7 | klegacy-dsdv_bksel_c_rfda3p-2239264 | dsdv_bksel_c_rfda3p | 5_1_grt | 2.3 | repair_TNS best 0 last 0 rows 160 | PROGRESS: repair_TNS reached 0 |  |
+| epyc7 | prd-eco_20261120_124815_3297714-i1t-3989767 | eco_20261120_124815_3297714-i1t | 5_2_route | 7.6 | drt_violations best 413 last 413 rows 4 | before-window best 28098, window best 413 | PROGRESS: drt_violations improved 98.5 % in window |  |
+| intel2 | dpkit-col_h10_r2__t1__cl1f5d6c2a__pv418d3dc0-2688718 | col_h10_r2__t1 | stage_odb_cap | 22.7 | last meaningful line 0.0 h ago (1352/1352 lines) | PROGRESS: log still growing |  |
+| intel2 | dpkit-hd_host_e-775407 | hd_host_e | stage_odb_cap | 17.7 | last meaningful line 0.0 h ago (1073/1073 lines) | PROGRESS: log still growing |  |
+| intel2 | dpkit-kv3_hg_v1p6-2680076 | kv3_hg_v1p6 | pregrt_ff_hold | 9.6 | repair_TNS best 0 last 0 rows 1 | PROGRESS: repair_TNS reached 0 |  |
+| intel2 | dpkit-kv3_hg_v1p6-2680438 | kv3_hg_v1p6 | pregrt_ff_hold | 9.6 | repair_TNS best 0 last 0 rows 1 | PROGRESS: repair_TNS reached 0 |  |
+| intel2 | dpkit-ot_s81sl_leaf__t28-1126913 | ot_s81sl_leaf__t28 | stage_odb_cap | 13.3 | last meaningful line 0.0 h ago (1125/1125 lines) | PROGRESS: log still growing |  |
+| intel2 | dpkit-sle_fw_v2__cl6740750e-482449 | sle_fw_v2 | stage_odb_cap | 15.8 | last meaningful line 0.0 h ago (941/941 lines) | PROGRESS: log still growing |  |
+| intel2 | dpkit-sle_fw_v2__cl69f5e854-3239385 | sle_fw_v2 | stage_odb_cap | 16.4 | last meaningful line 0.0 h ago (1053/1053 lines) | PROGRESS: log still growing |  |
+| intel2 | dpkit-sle_st_b_v1__pvc5a85fd4__pv38472fb8-486644 | sle_st_b_v1 | stage_odb_cap | 15.8 | last meaningful line 0.0 h ago (941/941 lines) | PROGRESS: log still growing |  |
+| intel2 | dpkit-slw_fw_v1__clf51c11d8__cl592e3d37-488539 | slw_fw_v1 | stage_odb_cap | 15.8 | last meaningful line 0.0 h ago (941/941 lines) | PROGRESS: log still growing |  |
+| intel2 | dpkit-slw_fw_v3-489810 | slw_fw_v3 | stage_odb_cap | 15.8 | last meaningful line 0.0 h ago (941/941 lines) | PROGRESS: log still growing |  |
+| intel2 | dpkit-slw_hc1__cl68f9248e__cl144ee7b3-2435819 | slw_hc1 | stage_odb_cap | 16.9 | last meaningful line 0.0 h ago (1066/1066 lines) | PROGRESS: log still growing |  |
+| intel2 | dpkit-slw_sc_v1__cl64543eaf__cl5e017c6f-4065313 | slw_sc_v1 | stage_odb_cap | 16.0 | last meaningful line 0.0 h ago (956/956 lines) | PROGRESS: log still growing |  |
+| intel2 | dpkit-slw_st_b_v1__cl6357f1cc__pv6ace3e48-492590 | slw_st_b_v1 | stage_odb_cap | 15.8 | last meaningful line 0.0 h ago (941/941 lines) | PROGRESS: log still growing |  |
+| intel2 | dpkit-slw_st_b_v2__pva66d0f22__pv3d7bec84-495397 | slw_st_b_v2 | stage_odb_cap | 15.8 | last meaningful line 0.0 h ago (941/941 lines) | PROGRESS: log still growing |  |
+| intel2 | dpkit-slw_st_b_v2__pva66d0f22__pvb80e2003-498208 | slw_st_b_v2 | stage_odb_cap | 15.8 | last meaningful line 0.0 h ago (941/941 lines) | PROGRESS: log still growing |  |
