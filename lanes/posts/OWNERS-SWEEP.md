@@ -87,3 +87,8 @@
   DEAD-OWNER 7 QC rows: FABLE-FIX-QC (4), SONNET-FIX-QC (3) last post 11:49, no successor named.
   STALE >3 h: KV 33 (worst kv3_io_cor 37.2 h), S81 23, QC 1; KV WAIT-BIND 6.
   FABLE-FIX-* renamed to OPUS-FIX-* (QC-COLLCORE, KV-HG, S81-LEAF, S81-LEPE, KV-PV) and counted live.
+- 2026-11-19 17:50 PST 18xx sweep 17:49: 481 rows (S81/HEAD/QC/KV), 441 unflagged, 24 KV WAIT-BIND.
+  UNOWNED 3 (QC slw_sc_v1 cl4590432d + cl5e017c6f; S81 dsdv_slice_lepw_mu_C__t1 lint fail at gen).
+  DEAD-OWNER 0 (S81-OWN-1119 in agent_ids, resumed 17:50).
+  FAILED-NO-RELAUNCH 15 (S81 10 mostly bind stale re-bind, QC 5); STALE 16, worst 4.7 h (S81 slice_station t36, svc_hi_pvso_entry t1).
+  Detail lanes/OWNERS-SWEEP.tsv
