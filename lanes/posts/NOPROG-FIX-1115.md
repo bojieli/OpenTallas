@@ -339,3 +339,7 @@
   NO-PROGRESS epyc9 serdes__t13 signoff_meas_072023 stage 57.5 h job 58.7 h: no new meaningful log line for 57.1 h; last: - hold_ff: FAIL WNS -55.85 ps < 0
   NO-PROGRESS intel1 kv3_io_cor 5_2_route stage 45.9 h job 56.2 h: drt_violations best 246 last 246 rows 54 window-gain 0.4%; stagnant 10.0 h; last event 0.5 h ago, log write 0.5 h ago (3401 lines)
   NO-PROGRESS epyc9 ot_s81sl_leaf__t27 stage_odb_cap stage 17.9 h job 17.9 h: no new meaningful log line for 9.6 h; last: 2026-11-20 07:17:00 STAGE-CAP skip /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave
+- 2026-11-20 09:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-20 09:52 PST: 390 running jobs, PROGRESSING 374, SLOW 13, NO-PROGRESS 3 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc9 serdes__t13 signoff_meas_072023 stage 58.5 h job 59.7 h: no new meaningful log line for 58.1 h; last: - hold_ff: FAIL WNS -55.85 ps < 0
+  NO-PROGRESS intel1 kv3_io_cor 5_2_route stage 46.9 h job 57.2 h: drt_violations best 246 last 246 rows 54 window-gain 0.4%; stagnant 11.0 h; last event 0.4 h ago, log write 0.4 h ago (3405 lines)
+  NO-PROGRESS epyc9 ot_s81sl_leaf__t27 stage_odb_cap stage 18.9 h job 18.9 h: no new meaningful log line for 10.6 h; last: 2026-11-20 07:17:00 STAGE-CAP skip /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave
