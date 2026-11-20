@@ -195,18 +195,30 @@ set pg_fail ""; set pg_xt "nan"
 # tap window ports of the kit SDC (gen_phys.tap_window_tcl: set_clock_latency -source -early -clock <ck> <-W_p>
 # [get_ports {...}]): port -> {clock early}.  Early core-tap ports with an FF overlay (core_taps_ff.sdc) keep their
 # FF value untouched (no cross-tap guard on them).
+# FABLE-CBC-QK-0130 11-20: since R-CLOCK-7 (11-14) the overlay also carries the FF -early / -late arrival offsets of
+# EVERY grid tap, and the old rule (any port named in the overlay is skipped) left no tap port: "cross-tap guard not
+# applied", tap_ports 0, on every type with a plan clock.tap_offset row (sle_hc0 11-19: the routed internal hold misses
+# read, to -21.9 ps, are pairs on two tap ports).  A core tap is the port with a plain `-source -clock` line in the
+# overlay; only those are skipped.  A grid tap takes its FF -early value from the overlay (the value live in mode ff),
+# so the widening starts from it and the restore puts it back.
 set pg_taps [dict create]
 if {[info exists hg_txt]} {
-  set pg_skip {}
+  set pg_skip {}; set pg_ffe [dict create]
   set pg_cf [file join [file dirname $hg_gold] core_taps_ff.sdc]
   if {[file exists $pg_cf]} {
     set pg_f [open $pg_cf]
-    foreach pg_l [split [read $pg_f] "\n"] { if {[regexp {\[get_ports \{?([^\}\]]+)\}?\]} $pg_l -> pg_pl]} { foreach pg_p $pg_pl { lappend pg_skip $pg_p } } }
+    foreach pg_l [split [read $pg_f] "\n"] {
+      if {![regexp {^set_clock_latency -source (-early |-late )?-clock \S+ (-?[0-9.]+) \[get_ports \{?([^\}\]]+)\}?\]\s*$} $pg_l -> pg_k pg_e pg_pl]} continue
+      foreach pg_p $pg_pl { if {$pg_k eq ""} { lappend pg_skip $pg_p } elseif {$pg_k eq "-early "} { dict set pg_ffe $pg_p $pg_e } }
+    }
     close $pg_f
   }
   foreach pg_l [split $hg_txt "\n"] {
     if {![regexp {^set_clock_latency -source -early -clock (\S+) (-?[0-9.]+) \[get_ports \{?([^\}\]]+)\}?\]\s*$} $pg_l -> pg_ck pg_e pg_pl]} continue
-    foreach pg_p $pg_pl { if {$pg_p ni $pg_skip && [llength [get_ports -quiet $pg_p]]} { dict set pg_taps $pg_p [list $pg_ck $pg_e] } }
+    foreach pg_p $pg_pl {
+      if {$pg_p in $pg_skip || ![llength [get_ports -quiet $pg_p]]} continue
+      if {[dict exists $pg_ffe $pg_p]} { dict set pg_taps $pg_p [list $pg_ck [dict get $pg_ffe $pg_p]] } else { dict set pg_taps $pg_p [list $pg_ck $pg_e] }
+    }
   }
 }
 set pg_pm [expr {[info exists ::env(OT_PREGRT_HOLD_PORT_MARGIN)] && [string is double -strict $::env(OT_PREGRT_HOLD_PORT_MARGIN)] ? $::env(OT_PREGRT_HOLD_PORT_MARGIN) : 5.0}]

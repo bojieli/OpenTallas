@@ -263,3 +263,41 @@ def test_pregrt_nonport_scope_default():
     t = (Path(__file__).with_name("pregrt_ff_hold.py")).read_text()
     assert "OT_PREGRT_HOLD_PORTS" in t and "pg_np_apply" in t and "pg_np_end" in t
     assert t.index("pg_np_apply\n") < t.index("foreach pg_tag {all rr xt}")
+
+
+def test_cross_tap_guard_keeps_grid_taps_named_in_the_ff_overlay(tmp_path):
+    """FABLE-CBC-QK-0130 11-20: R-CLOCK-7 writes every grid tap into core_taps_ff.sdc; only a core tap (plain -source -clock
+    line) is skipped, and a grid tap takes its FF early value from the overlay."""
+    tclsh = shutil.which("tclsh")
+    if not tclsh:
+        pytest.skip("no tclsh")
+    _kit(tmp_path, {"pregrt_ff_hold": True})
+    t = (tmp_path / "pregrt_ff_hold.tcl").read_text()
+    blk = t[t.index("set pg_taps [dict create]"):t.index("set pg_pm [expr")]
+    (tmp_path / "constraint.sdc").write_text(
+        "set_clock_latency -source -early -clock clk -9.2000 [get_ports {clk_t6 clk_t90}]\n"
+        "set_clock_latency -source -late -clock clk 11.0000 [get_ports {clk_t6 clk_t90}]\n"
+        "set_clock_latency -source -early -clock clk 13.7000 [get_ports {clk_t47}]\n"
+        "set_clock_latency -source -clock clk -120.0000 [get_ports clk_c0]\n"
+        "set_clock_latency -source -early -clock clk -160.0000 [get_ports {clk_c0}]\n"
+        "set_clock_latency -source -early -clock clk -40.0000 [get_ports {clk_t7}]\n"
+        "set_clock_latency -source -early -clock clk -40.0000 [get_ports {clk_gone}]\n")
+    (tmp_path / "core_taps_ff.sdc").write_text(
+        "# CP2 FF core tap clk_c0 (u/ck: internal 300 ps)\n"
+        "set_clock_latency -source -clock clk -97.5000 [get_ports clk_c0]\n"
+        "set_clock_latency -source -early -clock clk -130.0000 [get_ports {clk_c0}]\n"
+        "# R-CLOCK-7 plan clock.tap_offset FF arrival offsets on the grid / edge taps\n"
+        "set_clock_latency -source -early -clock clk -9.6000 [get_ports {clk_t90}]\n"
+        "set_clock_latency -source -late -clock clk 10.6000 [get_ports {clk_t90}]\n"
+        "set_clock_latency -source -early -clock clk 9.9000 [get_ports {clk_t47}]\n"
+        "set_clock_latency -source -late -clock clk 30.1000 [get_ports {clk_t47}]\n"
+        "set_clock_latency -source -early 12.0000 [get_clocks fclk_edge]\n")
+    drv = tmp_path / "drv.tcl"
+    drv.write_text('proc get_ports {args} { set p [lindex $args end]; return [expr {$p eq "clk_gone" ? {} : [list $p]}] }\n'
+                   'set hg_gold [file join [file dirname [info script]] constraint.sdc]\n'
+                   'set f [open $hg_gold]; set hg_txt [read $f]; close $f\n' + blk +
+                   'foreach k [lsort [dict keys $pg_taps]] { puts "$k [dict get $pg_taps $k]" }\n')
+    r = subprocess.run([tclsh, str(drv)], capture_output=True, text=True)
+    assert r.returncode == 0, r.stderr
+    # grid taps kept (overlay FF early where it has one, the SDC value otherwise); core tap and absent port dropped
+    assert r.stdout.split("\n")[:-1] == ["clk_t47 clk 9.9000", "clk_t6 clk -9.2000", "clk_t7 clk -40.0000", "clk_t90 clk -9.6000"]
