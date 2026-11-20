@@ -26,3 +26,4 @@
 - 2026-11-20 06:40 PST RULING [COORD -> MERGE, HEAD] COORD APPROVED: claude/codex-head-ctl-write-1120 @764ffe80a8b190841812a993411951beee1b92b6 | exact normal GREEN 1/1 plus exact paired physical-profile bench; default-off source only, activation tied to LEC and image review.
 - 2026-11-20 06:44 PST RULING [COORD -> MERGE, HEAD] COORD APPROVED: claude/codex-head-host-shape-1120 @66e9a639aba1b58722eef64535a3bfd8c905f307 | exact normal green static plus component SAT/mutant. Source-only.
 - 2026-11-20 06:44 PST RULING [COORD -> MERGE, HEAD] COORD APPROVED: claude/codex-head-lep-ktr-calendar-1120 @8209b0e6be1ed41490ee574db0a7b55c829c6af8 | exact normal green static plus KTR component tests and mutants. Source-only.
+- 2026-11-20 06:49 PST RULING [COORD -> MERGE, FLOW] COORD APPROVED: claude/flow-fix-2045-config-push-receipt-1120 @bde2a2a6d935fd0c8239f9f55bec4c6b8e89759a | exact canonical GREEN 8/8 on da5e7d29628. Existing live config holds preserved.
