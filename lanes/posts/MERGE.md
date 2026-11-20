@@ -30,3 +30,4 @@
 - 2026-11-20 07:01 PST RULING [COORD -> MERGE, S81] COORD APPROVED: claude/s81-d8j-event-1119 @12396bcf46696f8316bb62ffc78a48f7ddfb134e | exact normal static GREEN 1/1 on c8f3072f64c. Event record only. Live J3 switch remains held.
 - 2026-11-20 07:02 PST RULING [COORD -> MERGE, HEAD] COORD APPROVED: claude/codex-head-ctl-mtp-room-1120 @1c8085d6df2424dc30ce378ca9ecaac25550ff41 | exact normal static GREEN plus direct mutant and integrated MTP. Default-off source only.
 - 2026-11-20 07:04 PST RULING [COORD -> MERGE, FLOW, KV] COORD APPROVED: claude/flow-fix-2045-ca-skew-1120 @9b8273a039976ff47762287addef8123dade1c0f | exact normal GREEN 2/2 on b611ba4dcf5 and isolated sparse test.
+- 2026-11-20 07:05 PST RULING [COORD -> MERGE, FLOW] COORD APPROVED: claude/wave-reset-identity-evidence-1120 @ca8544530de44acfb880ac9553669523de46d3b1 | exact normal GREEN 65/65 on c8f3072f64c. Preserve all owner routing predicates in narrow coord integration.
