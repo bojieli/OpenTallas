@@ -159,6 +159,31 @@ class CoreKit(unittest.TestCase):
             self.assertIn("CORE_VIEW FAIL m@*: 2 views", r.stderr)
             self.assertEqual(KW.classify("gen", r.stderr)[0], "PLAN")
 
+    def test_generated_views_and_core_gen_share_admitted_host(self):
+        with tempfile.TemporaryDirectory() as t:
+            local = Path(t)
+            plan = local / "fixture.json"
+            plan.write_text(json.dumps({"view_list": [{"view": "m@0123456789ab", "module": "m"}]}))
+            views, _, gen, _, _ = KW.core_kit_cmds(
+                {"views_cmd": "cp {plan} {views}", "gen_cmd": "echo GEN {view}"},
+                t, str(plan), t, t, "m")
+            self.assertFalse(Path(views).exists())
+            first = subprocess.run(["bash", "-c", gen], capture_output=True, text=True, check=True)
+            self.assertIn("GEN m@0123456789ab", first.stdout)
+            self.assertEqual(Path(views).read_text(), plan.read_text())
+            plan.unlink()
+            cached = subprocess.run(["bash", "-c", gen], capture_output=True, text=True, check=True)
+            self.assertIn("GEN m@0123456789ab", cached.stdout)
+
+    def test_missing_views_traceback_is_not_a_plan_view_mismatch(self):
+        log = ("Traceback (most recent call last):\n"
+               "    sys.exit('CORE_VIEW FAIL '+m)\n"
+               "FileNotFoundError: [Errno 2] No such file or directory: '/r/core_views.2608c03546.json'\n"
+               "ot-run: RAN on epyc10 (unit x): exit 1")
+        outcome, reason = KW.classify("gen", log)
+        self.assertEqual(outcome, "FLOW")
+        self.assertIn("FileNotFoundError", reason)
+
     def test_no_recipe_is_plan(self):
         self.assertEqual(KW.classify("gen", "NO_RECIPE ot_hfd_coll_q3_body_core@e9fac1f891ac\not-run: RAN on intel1 (unit x): exit 1")[0], "PLAN")
 

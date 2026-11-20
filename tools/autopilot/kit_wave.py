@@ -3818,7 +3818,7 @@ RULES = [
     # fail-closed kit-RTL contracts whose own message names a plan fix (S81 kit_rtl.sh / image_params.py)
     # AUTOBUILD-PIPE-2: core-kit mode (HBM gen_core_kit_hbm): a view the plan names with no harden recipe / an
     # ambiguous pin->port map / several pin tables under one wave item is the plan / core-recipe owner's
-    ("PLAN", None, r"NO_RECIPE |MAP_AMBIGUOUS|CORE_VIEW FAIL", "core view has no recipe / unambiguous port map in the plan"),
+    ("PLAN", None, r"(?m)NO_RECIPE |MAP_AMBIGUOUS|^[ \t]*CORE_VIEW FAIL\b", "core view has no recipe / unambiguous port map in the plan"),
     # SIDECAR-COVERAGE (GEN-CLASS-1 11-12): gen's clock-landing sidecar was composed for another plan
     ("PLAN", None, r"SIDECAR_STALE", "clock-landing sidecar does not cover the plan types (point --clock-landing at the "
      "sidecar composed with this plan)"),
@@ -4392,6 +4392,13 @@ def core_kit_cmds(ck, src, plan, root, work, item):
     gen = (f"VIEW=$({pick}) && echo \"KW_CORE_VIEW $VIEW\" && "
            + c["gen_cmd"].format(views=q(views), view='"$VIEW"', out=q(f"{work}/gen"), plan=q(plan), src=q(src),
                                  args=" ".join(q(x) for x in c.get("args") or [])))
+    if vcmd:
+        # Prepare views on the host that runs GEN, which may differ from the
+        # preferred host. Release the per-event lock before generating the kit.
+        prep = (f"(exec 9>{q(root + '/.views.lock')} && flock 9 && "
+                f"if [ ! -s {q(views)} ]; then {vcmd} > {q(root + '/views.log')} 2>&1 || "
+                f"{{ rm -f {q(views)}; tail -40 {q(root + '/views.log')}; exit 3; }}; fi)")
+        gen = f"{prep} && {gen}"
     find = f"ls -d {q(work)}/gen/*/freeze.json 2>/dev/null | head -1 | xargs -r dirname"
     return views, vcmd, gen, find, c["runner"]
 
@@ -8507,16 +8514,7 @@ def run_item(spec_path):
         if plan is None:
             return prc
     if core:
-        # AUTOBUILD-PIPE-2: hard core = the die's own core generator (HBM gen_core_kit_hbm.py) on the plan's views
-        # inventory (built once per event under flock, like the die bind); kit = W/gen/<module>_<sha12>
-        views, vcmd, gcmd, kfind, runner = core_kit_cmds(sp["core_kit"], tsrc, plan, sp["root"], W, T)
-        if vcmd:
-            prep = (f"cd {q(tsrc)} && exec 9>{q(sp['root'])}/.views.lock && flock 9 && "
-                    f"if [ ! -s {q(views)} ]; then {vcmd} > {q(sp['root'])}/views.log 2>&1 || "
-                    f"{{ rm -f {q(views)}; tail -40 {q(sp['root'])}/views.log; exit 3; }}; fi")
-            rc, txt = run("views", otrun(8, 2, sp["root"], prep, gh))
-            if rc:
-                return fail("views", txt, f"{G}:{sp['root']}/views.log")
+        _, _, gcmd, kfind, runner = core_kit_cmds(sp["core_kit"], tsrc, plan, sp["root"], W, T)
         rgp, rga = region_guide_cmd(sp, True)
         rc, txt = run("gen", otrun(sp["gen_mem_gb"], 2, W, f"cd {q(tsrc)} && {rgp}{gcmd}{rga}", gh))
         if rc:
