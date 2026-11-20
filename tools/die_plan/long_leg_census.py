@@ -59,6 +59,23 @@ def orient_point(x, y, orient, w, h):
             "R90": (h - y, x), "R270": (y, w - x), "MXR90": (y, x), "MYR90": (h - y, w - x)}[o]
 
 
+def longest_launches_by_edge(sources, sink_xy):
+    """Retain the longest-wire launch independently on each clock edge.
+
+    Each source supplies its pin location and paths of the form
+    (wire length, launch name, launch location, launched on falling edge).
+    """
+    best = {}
+    for (x, y), paths in sources:
+        distance = abs(x - sink_xy[0]) + abs(y - sink_xy[1])
+        for length, launch, launch_xy, falling in paths:
+            accumulated = length + distance
+            previous = best.get(falling)
+            if previous is None or accumulated > previous[0]:
+                best[falling] = (accumulated, launch, launch_xy, falling)
+    return tuple(best.values())
+
+
 def pin_centroid(rects, orient, ll, size):
     """area-weighted centroid (um) of master-frame pin rects (x0, y0, x1, y1) of a macro placed with `orient` whose placed bbox lower-left
     is `ll`; `size` = (master width, height).  The leg end of a macro / hard-core pin sits HERE, not at the macro centre."""
@@ -226,7 +243,7 @@ def cmd_slack_scan(a):
     out.mkdir(parents=True, exist_ok=True)
     res = []
     for kit, odb, ep in routed_kits([r for r in a.roots.split(",") if r], a.per_type)[: a.max_kits]:
-        raw = out / "raw" / f"{kit.name}.slack.json"
+        raw = out / "raw" / f"{kit.name}.slack_pin3.json"
         raw.parent.mkdir(parents=True, exist_ok=True)
         if not raw.exists():
             rc = run_or(kit, odb, raw, a.mem_gb, reach=100.0, netlen=True)
@@ -307,7 +324,7 @@ def cmd_slack_report(a):
 
 def scan_one(key, kit, odb, out, mem_gb):
     die, tn = key
-    raw = out / "raw" / f"{kit.name}.pin2.json"      # pin2 (+edges): macro / core ends at the pin shape (COORD 11-19), not the core centre
+    raw = out / "raw" / f"{kit.name}.pin3.json"      # precise macro terminals plus independent launch edges
     raw.parent.mkdir(parents=True, exist_ok=True)
     if not raw.exists() or raw.stat().st_mtime < odb.stat().st_mtime:
         rc = run_or(kit, odb, raw, mem_gb)

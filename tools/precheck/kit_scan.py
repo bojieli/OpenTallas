@@ -128,7 +128,7 @@ def run_placed(kit, odb, out_json, mem_gb=14):
     return r.returncode
 
 
-SCAN_VERSION = 2
+SCAN_VERSION = 3
 LEG_RULE = "pin-centroid-half-cycle-1120"   # summaries of another rule are re-summarised from the stored raw scan
 
 

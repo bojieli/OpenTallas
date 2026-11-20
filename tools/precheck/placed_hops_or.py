@@ -2,10 +2,9 @@
 
     openroad -python -exit placed_hops_or.py        (env OT_ODB=<3_place.odb>, OT_OUT=<result.json>)
 
-Every register-to-register leg of a placed netlist, declared or not: a longest-wire dynamic programme over the
-combinational DAG (A(cell) = max over its input nets of A(driver) + |driver - cell|, registers / macros / ports start at
-0 and carry their location).  At each capture pin (register data / reset inputs, macro inputs, output ports) the leg is
-the launch -> capture pair of the longest-wire path; its straight Manhattan distance is what CBC reach (405 um) bounds.
+At each capture endpoint the combinational DAG yields the longest accumulated wire path for each
+launch clock edge. The straight Manhattan distance between the launch and capture endpoints is
+compared with the full-cycle limit or the half-cycle limit for opposite edges.
 Clock nets (nets reaching a register clock pin) are skipped.  Also dumps every register's location (in-tap skew).
 Registers are recognised by master name (ASAP7 DFF* / ASYNC_DFF* / DHL* / DLL* / SDF*); ICG* is clock logic.
 """
@@ -20,7 +19,7 @@ import odb  # noqa: F401  (OpenROAD python)
 from openroad import Design, Tech
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "die_plan"))
-from long_leg_census import HALF_UM, pin_centroid
+from long_leg_census import HALF_UM, longest_launches_by_edge, pin_centroid
 
 T0 = time.time()
 SEQ = re.compile(r"^(ASYNC_DFF|DFF|DHL|DLL|SDF|SDFH|SDFL)", re.I)
@@ -162,7 +161,7 @@ def dname(d):
     return ("port:" + d[1]) if d[0] == "p" else d[1]
 
 
-# A[inst] = (acc wire um, launch name, launch loc); Kahn order over comb insts
+# Longest inferred data path per launch edge in Kahn order over combinational instances.
 out_nets = {}
 for nn, (d, sinks) in nets.items():
     if d[0] == "i" and kind[d[1]] == "comb":
@@ -176,13 +175,24 @@ for c, ins in fanin.items():
 A = {}
 
 
-def src_val(d, net=None):
-    if d[0] == "i" and kind[d[1]] == "comb":
-        return A.get(d[1])
-    if d[0] == "i" and kind[d[1]] == "tie":
-        return None                                   # constants are not launches
-    l = dloc(d, net)
-    return (0.0, dname(d), l) if l else None
+def source_paths(driver, net):
+    instance = driver[1]
+    if driver[0] == "i":
+        if kind[instance] == "comb":
+            return A.get(instance, ())
+        if kind[instance] == "tie":
+            return ()
+    xy = dloc(driver, net)
+    falling = driver[0] == "i" and instance in falling_regs
+    return ((0.0, dname(driver), xy, falling),) if xy else ()
+
+
+def fanin_paths(instance):
+    for net in fanin[instance]:
+        driver = nets[net][0]
+        paths = source_paths(driver, net)
+        if paths:
+            yield dloc(driver, net), paths
 
 
 ready = [c for c, k in indeg.items() if k == 0]
@@ -190,18 +200,8 @@ done = 0
 while ready:
     c = ready.pop()
     done += 1
-    best = None
     cl = loc[c]
-    for nn in fanin[c]:
-        d = nets[nn][0]
-        v = src_val(d, nn)
-        if v is None:
-            continue
-        dl = dloc(d, nn) if not (d[0] == "i" and kind[d[1]] == "comb") else loc[d[1]]
-        acc = v[0] + abs(dl[0] - cl[0]) + abs(dl[1] - cl[1])
-        if best is None or acc > best[0]:
-            best = (acc, v[1], v[2])
-    A[c] = best or (0.0, c, cl)
+    A[c] = longest_launches_by_edge(fanin_paths(c), cl) or ((0.0, c, cl, False),)
     for nn in out_nets.get(c, ()):
         for s, _pin in nets[nn][1]:
             if not isinstance(s, tuple) and s in indeg:
@@ -213,24 +213,27 @@ log("comb ordered", done, "of", len(fanin), "(rest in loops)")
 legs = []
 for nn, s, pin in caps:
     d = nets[nn][0]
-    v = src_val(d, nn)
-    if v is None:
+    paths = source_paths(d, nn)
+    if not paths:
         continue
     cl = s[2] if isinstance(s, tuple) else pinloc.get((nn, s, pin), loc[s])
     if cl is None:
         continue
-    dl = dloc(d, nn) if not (d[0] == "i" and kind[d[1]] == "comb") else loc[d[1]]
-    acc = v[0] + abs(dl[0] - cl[0]) + abs(dl[1] - cl[1])
-    straight = abs(v[2][0] - cl[0]) + abs(v[2][1] - cl[1])
+    dl = dloc(d, nn)
+    distance = abs(dl[0] - cl[0]) + abs(dl[1] - cl[1])
     capture = ("port:" + s[1]) if isinstance(s, tuple) else s
-    opposite_edges = (v[1] in falling_regs) != (capture in falling_regs)
-    limit = min(reach, HALF_UM) if opposite_edges else reach
-    if straight > limit * 0.9:
-        legs.append([round(straight, 1), round(acc, 1), v[1], capture, pin,
-                     [round(v[2][0], 1), round(v[2][1], 1)], [round(cl[0], 1), round(cl[1], 1)], opposite_edges])
+    capture_falling = capture in falling_regs
+    for path_length, launch, launch_xy, falling in paths:
+        accumulated = path_length + distance
+        straight = abs(launch_xy[0] - cl[0]) + abs(launch_xy[1] - cl[1])
+        opposite_edges = falling != capture_falling
+        limit = min(reach, HALF_UM) if opposite_edges else reach
+        if straight > limit * 0.9:
+            legs.append([round(straight, 1), round(accumulated, 1), launch, capture, pin,
+                         [round(launch_xy[0], 1), round(launch_xy[1], 1)], [round(cl[0], 1), round(cl[1], 1)], opposite_edges])
 legs.sort(key=lambda r: -r[0])
 die = block.getDieArea()
-json.dump(dict(scan_version=2, odb=os.environ["OT_ODB"], design=block.getName(), die_um=[die.xMax() / dbu, die.yMax() / dbu], reach=reach,
+json.dump(dict(scan_version=3, odb=os.environ["OT_ODB"], design=block.getName(), die_um=[die.xMax() / dbu, die.yMax() / dbu], reach=reach,
                n_regs=len(regs), n_captures=len(caps), legs=legs[:200000],
                regs=[[round(loc[r][0], 2), round(loc[r][1], 2)] for r in regs],
                macros=[[round(v, 2) for v in r] for r in macros]),
