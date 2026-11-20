@@ -53,16 +53,26 @@ class InUse(unittest.TestCase):
         self.assertFalse(ar.name_hit("/srv/s/claude/kw45/src_s81_other", p))
 
     def test_run_refuses_a_src_tree_a_live_job_or_post_names(self):
-        import tempfile, os
-        with tempfile.TemporaryDirectory() as d:
-            root = os.path.join(d, "kw45"); os.makedirs(root + "/src_s81_x_work")
-            log = []
-            class L:
-                def hit(self, p): return p + "/f"
-            ar.run(root, {}, [""], set(), lambda t: "", log.append, 0, apply=True, posts="", live=L())
-            self.assertTrue(os.path.isdir(root + "/src_s81_x_work"))
-            for r in log:
-                self.assertTrue(r.get("stop") or r["result"].startswith("REFUSED"))
+        import tempfile, os, time, json, shutil
+        d = tempfile.mkdtemp(); self.addCleanup(shutil.rmtree, d)
+        root = os.path.join(d, "kw45"); now = time.time()
+        for n, age in (("src_kv_a", 500), ("src_kv_b", 400), ("src_kv_c", 100)):
+            os.makedirs(os.path.join(root, n)); os.utime(os.path.join(root, n), (now - age, now - age))
+        old = os.path.join(root, "src_kv_a")
+        cfg = {"dies": {"qwen_kvsys": {"src": os.path.join(root, "src_kv_c"), "superseded_trees": [old]}}}
+        texts = [json.dumps(cfg), "", ""]
+        class L:
+            def __init__(self, h): self.h = h
+            def hit(self, p): return self.h
+        def run(posts="", live=None):
+            return ar.run(root, cfg, texts, set(), lambda t: "", lambda _: None, 999, free=lambda: 1.0, posts=posts, live=live)
+        self.assertEqual(run()[0]["result"], "WOULD-DELETE")                      # the tree IS a candidate
+        r = run(live=L(old + "/f"))[0]["result"]
+        self.assertTrue(r.startswith("REFUSED: live input") and "queued" in r)
+        self.assertIn("hub post", run(posts="- build5 needs kw45/src_kv_a\n")[0]["result"])
+        self.assertIn("hub post", run(posts="- x " + old + " y\n")[0]["result"])
+        self.assertEqual(run(posts="- other src_kv_aX\n", live=L(""))[0]["result"], "WOULD-DELETE")
+        self.assertTrue(os.path.isdir(old))
 
     def test_runner_adds_handoffs_to_the_posts_input(self):
         sh = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "ot-auto-retire-run.sh")).read()
