@@ -6149,6 +6149,12 @@
          "enum": [
           "rsync"
          ]
+        },
+        "tail_clear": {
+         "enum": [
+          "async",
+          "sync"
+         ]
         }
        }
       }

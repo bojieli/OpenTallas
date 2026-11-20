@@ -383,6 +383,61 @@ def test_rsync_copies_same_function_async_assert_iverilog(tmp_path):
     assert m and m.group(1) == "0" and int(m.group(2)) > 50 and int(m.group(3)) > 50, out
 
 
+
+RS_SYNC_SPEC = [dict(RS_SPEC[0], tail_clear="sync")]
+
+
+def test_rsync_sync_tail_text_and_errors():
+    new, rep = RR.apply(rs_mod(6), RS_SYNC_SPEC)
+    tails = re.findall(r"ot_dp_rtail #\(\.D\((\d+)\)\) \w+ \(\.clk\(clk\), \.a\(([^()]*)\), ", new)
+    assert tails and {a for _d, a in tails} == {"1'b1"} and {d for d, _a in tails} == {"4"}
+    assert "synchronous copy: assert +4 clk, release unchanged" in new
+    assert rep[0]["tail_clear"] == "sync" and rep[0]["assert_delay_clk"] == 4
+    old, _ = RR.apply(rs_mod(6), RS_SPEC)
+    assert old == RR.apply(rs_mod(6), [dict(RS_SPEC[0], tail_clear="async")])[0]        # async = the form before the key
+    with pytest.raises(RR.ReplicateError):
+        RR.apply(rs_mod(6), [dict(RS_SPEC[0], tail_clear="maybe")])
+    with pytest.raises(RR.ReplicateError):
+        RR.apply(mod(7), [dict(SPEC[0], tail_clear="sync")])
+
+
+@pytest.mark.skipif(not shutil.which("iverilog"), reason="iverilog")
+def test_rsync_sync_tail_bench_iverilog(tmp_path):
+    """BENCH (COORD approval of the sync-tail form): one 6-stage synchroniser (all stages spine-cleared) vs synchroniser + per-core
+    SYNCHRONOUS 4-stage copies.  Spine asserted between edges and released at random, with long and short pulses.
+    Checked at every half step: (1) every core's copy carries the same level (all cores assert and release on the same edge);
+    (2) every release (0->1) of a copy happens on the SAME clock edge as the old load; (3) every assert (1->0) of the copies
+    comes exactly 4 clocks after the old (asynchronous) assert, and the copies never stay high while the old load is low for
+    more than 4 edges.  Stimulus: each spine level held >= 8 clocks.  Outside that contract the forms differ: a re-assert
+    within the n-clock release sequence clears the old load at once but lets the synchronous copies emit the part of the
+    release already shifted in (a short high pulse) before they assert; the reset spine is a held level (boot >= 64 clk)."""
+    new, _ = RR.apply(rs_mod(6), RS_SYNC_SPEC)
+    (tmp_path / "old.v").write_text(RS_CELLS + rs_mod(6).replace("module top", "module top_old"))
+    (tmp_path / "new.v").write_text(RR.TAIL_CELL + new.replace("module top", "module top_new"))
+    tb = """module tb; reg clk=0; reg a=0; wire [6:0] x, y; integer i, e=0, ec=0, bad_eq=0, bad_rel=0, bad_as=0, rel=0, as_n=0, la=-1, ly=1, lx=0;
+      integer sx[0:9999]; reg [31:0] r = 32'h13579bd;
+      top_old o(.clk(clk), .ri_pv_rst_n(a), .o(x)); top_new n(.clk(clk), .ri_pv_rst_n(a), .o(y));
+      always @(posedge clk) begin e = e + 1; end
+      initial begin for (i = 0; i < 8000; i = i + 1) begin r = r * 1103515245 + 12345;
+          // the spine moves between clock edges and holds each level >= 8 clocks (reset contract: rst_n is a level held for
+          // many clocks, boot >= 64; a re-assert inside the n-clock release sequence is outside the contract, see the docstring)
+          #1 if (e - ec >= 8 && r[20:16] == 0) begin a = ~a; ec = e; end
+          #1 if (y !== {7{y[0]}}) bad_eq = bad_eq + 1;
+          if (x[0] === 1'b0 && lx === 1) la = e;               // old load asserted (async) during edge count e
+          if (y[0] === 1'b1 && ly === 0) begin rel = rel + 1; if (x[0] !== 1'b1) bad_rel = bad_rel + 1; end
+          if (x[0] === 1'b1 && lx === 0 && y[0] !== 1'b1) bad_rel = bad_rel + 1;
+          if (y[0] === 1'b0 && ly === 1) begin as_n = as_n + 1; if (e - la != 4 && la >= 0) bad_as = bad_as + 1; end
+          if (x[0] === 1'b0 && y[0] === 1'b1 && la >= 0 && e - la > 4) bad_as = bad_as + 1;
+          lx = x[0]; ly = y[0];
+          #1 if (i % 2) clk = ~clk; end
+        $display("EQ=%0d REL=%0d/%0d AS=%0d/%0d", bad_eq, bad_rel, rel, bad_as, as_n); $finish; end endmodule"""
+    (tmp_path / "tb.v").write_text(tb)
+    subprocess.run(["iverilog", "-o", str(tmp_path / "s"), str(tmp_path / "old.v"), str(tmp_path / "new.v"), str(tmp_path / "tb.v")], check=True)
+    out = subprocess.run(["vvp", str(tmp_path / "s")], capture_output=True, text=True, check=True).stdout
+    m = re.search(r"EQ=(\d+) REL=(\d+)/(\d+) AS=(\d+)/(\d+)", out)
+    assert m and m.group(1) == "0" and m.group(2) == "0" and int(m.group(3)) > 10 and m.group(4) == "0" and int(m.group(5)) > 10, out
+
+
 def _spine_plan(tmp_path, tag, sink_stages=None, row=None):
     """bind_tiny with a sink partition of two leaves (u_s0 / u_s1) whose flt pins hang directly on the reset spine p1.u_b.flt"""
     import json

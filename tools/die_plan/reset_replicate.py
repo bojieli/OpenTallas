@@ -11,7 +11,8 @@ What: plan `partition_types[T].reset_replicate` = [{"driver": "u_d7_6_Y"        
                                                     "optional": true,                a type without the driver is a no-op
                                                     "min_loads": 20,                 drivers with fewer loads are left alone
                                                     "copy_depth": 3,                 optional, FABLE-DIE-S81 11-16, see below
-                                                    "form": "rsync"}]                optional, KV-D23-REACH 11-18, see below
+                                                    "form": "rsync",                 optional, KV-D23-REACH 11-18, see below
+                                                    "tail_clear": "sync"}]           optional, rsync form only, see below
 The driver `ot_dp_dly #(.W(1), .D(n)) u_x (.clk, .d(S), .q(x))` becomes
 
     ot_dp_dly #(.W(1), .D(n-1)) u_x (.clk, .d(S), .q(x))          common part (absent when n == 1: S feeds the copies)
@@ -39,6 +40,15 @@ k = copy_depth capped at n - 2: only the stages AFTER the two synchroniser flops
 landing) the driver is left unchanged and the row says so; the stages come from asbuilt.reset_spines[].sink_stages
 (bind.py, per sink type), which is the only latency change (reset release + k clocks; assert stays asynchronous).  The
 n-stage chain A -> load is the same function as the single ot_dp_rsync #(.S(n)) (every stage cleared by A, shifted on clk).
+"tail_clear": "sync" (FABLE-FIX-KV-PV 11-20, COORD-approved; absent = "async", byte-identical): the copies are NOT cleared by
+the spine: `.a(1'b1)`, so each copy is a plain kept k-stage shift register of the synchroniser output x.  Why: with .a(A) the
+spine net runs from the type's reset port to the async clear pins of every copy across the type, a timed recovery path in
+ONE cycle (owner reset rule: only the die root synchroniser is exempt); kv3_pv_v8 D25e kits: port ri_pv_u_g0_j_rst_n
+(vclk input 341 ps) -> 20 copies over ~1 ns of buffers, recovery TT -255 ps.  Effect: RELEASE is on the same clock edge as
+before at every load (x releases after n - k edges, then k shifts: the copies had D = x = 0 at every edge before that);
+ASSERT reaches the loads k clocks after the spine (x clears asynchronously, then k shifts), the same k at every region, so
+all copies assert on the same edge.  Needs the clock running for >= k cycles while the spine is held (boot holds rst_n
+>= 64 clk).  Only the near-port synchroniser keeps the spine on its clear pins.
 Each copy line carries the tail-copy marker `// landing pad tail copy for core <region>:` so the siting hook
 (gen_phys.tail_copy_place / tail_copy_anchor.tcl) lists it; use region_re "^(.*)$" for one copy per consumer instance.
 W must be 1 (a reset / flush level).  Pure text transform of the module `emit_type` returns; nothing happens unless the plan
@@ -109,6 +119,10 @@ def apply(text, specs, positions=None):
         drv, drv_re = spec.get("driver"), spec.get("driver_re")
         if spec.get("form") not in (None, "rsync"):
             raise ReplicateError(f"reset_replicate form {spec.get('form')!r}: expected \"rsync\" or no form")
+        if spec.get("tail_clear") not in (None, "async", "sync"):
+            raise ReplicateError(f"reset_replicate tail_clear {spec.get('tail_clear')!r}: expected \"async\" or \"sync\"")
+        if spec.get("tail_clear") == "sync" and spec.get("form") != "rsync":
+            raise ReplicateError("reset_replicate tail_clear sync needs form rsync")
         if not drv and not drv_re:
             raise ReplicateError("reset_replicate entry needs driver or driver_re")
         hits = []
@@ -258,8 +272,12 @@ def _one(lines, di, m, spec, positions):
         cells.append(f"    wire [0:0] {wire[r]};")
         prev = src
         if rsync:
-            cells.append(f"    {TAIL} #(.D({kk})) {names[r]} (.clk({clk}), .a({dexpr}), .d({prev}), .q({wire[r]}[0]));  "
-                         f"// landing pad tail copy for core {r}: reset spine relay ({leaf[r]} load(s)); {D} stage(s) total")
+            sync_tail = spec.get("tail_clear") == "sync"
+            aexpr = "1'b1" if sync_tail else dexpr
+            cells.append(f"    {TAIL} #(.D({kk})) {names[r]} (.clk({clk}), .a({aexpr}), .d({prev}), "
+                         f".q({wire[r]}[0]));  "
+                         f"// landing pad tail copy for core {r}: reset spine relay ({leaf[r]} load(s)); {D} stage(s) total"
+                         + (f"; synchronous copy: assert +{kk} clk, release unchanged" if sync_tail else ""))
             continue
         for j in range(kk - 1):
             cells.append(f"    wire {wire[r]}_s{j};")
@@ -282,6 +300,7 @@ def _one(lines, di, m, spec, positions):
     lines[di + 1:di + 1] = new
     row = dict(driver=inst, depth=D, common_depth=D - kk if D > 1 else 0, copy_depth=kk, regions=len(allr), copies=len(allr),
                **(dict(form="rsync") if rsync else {}),
+               **(dict(tail_clear="sync", assert_delay_clk=kk) if spec.get("tail_clear") == "sync" else {}),
                chain_flops=len(allr) * kk,
                loads=len(uses), assign_splits=len(top) - len(dead), dead_assigns=len(dead), region_names=sorted(allr),
                loads_per_region=dict(sorted(leaf.items())), shared_rest=("rest" in allr))
