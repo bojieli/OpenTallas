@@ -14066,3 +14066,7 @@ Which authoritative full-size ASAP7 ROM GDS/OAS and actual array origin should f
 
 OWNER?
 Which executable native CALR37 schedule and authenticated TT f16 return contract define the production Qwen receiver witness? The component observes 48 identities and eight simultaneous-return cycles; exact production integration still needs the selected schedule/transport.
+
+### KV gate handoff correction
+
+The single active D26 R2 gate for plan dc02d274deb3 is Intel2 client 78011, log ~/tmp/kvd23c/d26_typed_r2_fleet.log. It can admit on E8, E9 or E10 from /srv/opentallas-scratch2/claude/kv-d26-r2-admitted/d26_raw/d26_contracts. Its original E8-only client 2895973 was canceled while waiting, with no payload or candidate tree present. The active job keeps the original 56 GB cap and exact inputs. No D26 apply or route is pending from this lane.
