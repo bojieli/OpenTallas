@@ -1,220 +1,244 @@
-# FABLE-PD-S81-SVC-0245: structural fix for the S81 svc family (target J6, cut 11-21 14:00 PST)
+# FABLE-PD-S81-SVC-0245: S81 svc family, what is still open for the J6 cut (11-21 14:00 PST)
 
-Written 2026-11-20 03:1x PST. Read-only review. Sources: lanes/posts of S81-DIE-R3, S81-SVC-SPLIT-1119, FLOW-FIX-2045,
-FABLE-FIX-S81-SVC2, S81-TYPES-R3; origin/main 150d614de88 (svc RTL and generators); plan_j3b / plan_j3c / plan_j4f and
-asbuilt_run.svc_h8.json in intel1+epyc2 `/srv/opentallas-scratch2/claude/s81-die-r3-e8/d8j`; the live wave kits on epyc2
-(`kw43-wave-1109n/runs/s81/kit-wave/s81/b05c98f7919/items/svc_*`).
+Revision 2, 2026-11-20 03:5x PST. Read-only review. Revision 1 (commit before this one) covered the width class and the
+split; COORD's 02:5x update says both are settled by S81-SVC-SPLIT-1119 on main 6ad4914428, so this revision keeps only
+a short confirmation of those and spends the rest on the four open items: lo t7 margin, H8 placement and outline fit,
+registered-read timing, and seams.
+
+Sources: lanes/posts of S81-DIE-R3, S81-SVC-SPLIT-1119, FLOW-FIX-2045, FABLE-FIX-S81-SVC2, S81-TYPES-R3,
+FABLE-FIX-S81-LEAF; origin/main 150d614de88 (my local ref; I did not read 6ad4914428); plan_j3b (the H8 rows) and
+asbuilt_run.svc_h8.json in intel1 `/srv/opentallas-scratch2/claude/s81-die-r3-e8/d8j`; shell synth stats in intel1
+`/srv/opentallas-scratch2/claude/s81-svc-split-1119`; provider kits in epyc8 `.../s81-svc-split-1119/s81svc_*`; live
+flat kits on epyc2; SRAM views `physical/asap7_memory_macros_v2`.
 
 ## Verdict
 
-The split into tiles of at most 500k already exists: it is the H8 provider form A (10 provider cores signed 11-19, rows
-composed with no growth). What stopped it in J3 r7 is one class of error: the H value lives in five places that do not
-follow each other. Fix that class first (lever 1); the rest is a rebind plus a cell census. The flat C6 form that J3c /
-J4f went back to cannot close (3.4M to 5.0M instances a type), so the revert only keeps the die bind green.
+1. **lo t7 is over the limit in practice, not at it.** 495k is a synth-only cell count before the 300-um stations,
+   tie cells and timing repair. Decide the extra cut now; do not wait for the bind census.
+2. **The H8 rows fit** (0 overlaps, 0 out of bounds on the three types I checked, parent cells use about 8 % of the
+   free area). The risk is not area. It is where the N / S bus stations go: on svc_lo the cores form a wall with only
+   8.64-um channels, and the gather bus arrives at 8.5 bits per um.
+3. **Registered reads are a siting problem first.** All svc memories sit in one band at the top of the type, 1.2 to
+   2.6 mm from their readers, with a 270 to 401 ps clk-to-q. A +1 flop does not close that unless the flop is at the
+   macro and the macro is near its reader. One of the five sites (sw) already has a registered form on main that the
+   H8 plan does not switch on.
+4. **Seams:** five of the seven provider masters have pin registers, hslice is source-registered, and the TRX box is
+   not registered on either side. That is the one open provider seam.
 
-Ranked levers:
+Ranked actions for J6:
 
-| # | Lever | Owner | Needed for J6 |
+| # | Action | Owner | Cost |
 |---|---|---|---|
-| 1 | One H per plan, generated widths, three checks | S81-SVC-SPLIT-1119 (RTL, generators), S81-DIE-R3 (rows, bind) | yes, blocks all |
-| 2 | H8 provider form A re-enters as the split; parent census at most 500k; ring cut for the two largest | S81-SVC-SPLIT-1119 rows, S81-DIE-R3 event | yes |
-| 3 | Placement: provider bands as composed, parent logic fenced per band, SRAM-side registers | S81-DIE-R3 | yes (rows exist) |
-| 4 | Registered reads in the three svc memory wrappers, +1 | S81-SVC-SPLIT-1119 | if the bench is green by the cut, else J7 |
-| 5 | Reach: 300-um stations on the gather / scatter / stream buses from the plan knob, not by hand | S81-DIE-R3 | rides on J5's R1 knob |
+| 1 | Add `OT_SVC_ATT_RDPIPE` to the 16 svc rows and the as-built defines | S81-DIE-R3 (rows), S81-SVC-SPLIT-1119 (confirm cycles) | define only |
+| 2 | Re-site the 31 form-A macros (wq 18, sw 8, qmem 4, pbuf 1) next to their readers | S81-DIE-R3 (`svc_formA_sites.py`) | plan rows |
+| 3 | Explicit station bank sites for the N / S buses, one bank per band channel, spread wider than the pin window | S81-DIE-R3 | plan rows |
+| 4 | t7 cut prepared now: `dsdv_idx_rg3` child; check whether `dsfd_ctrl_rg3_native32` has a usable view | S81-SVC-SPLIT-1119 | 1 core kit |
+| 5 | TRX seam: trace `col` and the control pins on the first H8 bound; parent-side register beside the box if a leg is over 300 um | S81-SVC-SPLIT-1119 | +1 on the q.k / p.v calendar |
+| 6 | RDREG on pbuf, wq, qmem with per-site bench | S81-SVC-SPLIT-1119 | J7 unless green by 11-21 08:00 |
 
-## 1. Width parameterisation (b): the bug is wider than the three files named
+## 0. Width class and split: confirmed, three leftovers
 
-Measured on origin/main and on the H8 as-built manifest:
+I found the same root cause independently before the lane's post: the as-built lists only
+`portfix178/dsdv_svc_rs_fv.sv` and `portfix178/dsdv_svc_rs_pvso_entry.sv` for the port variants, both were 10-25 H16
+copies (`wire [8527:0] c_gi_d`), and the column-frame `2132` hits are net names and reset-leaf indices. Leftovers:
 
-1. **The bound does not use the wrappers named in the J3 r7 post.** `asbuilt_run.svc_h8.json` lists, for svc_rs, only
-   `rtl/.../svc_rs/dsdv_svc_rs.sv` (parameterised, `H = OT_SVC_HV`, ports `4*(H*132+20)`) plus the two overlay copies
-   `physical/die_plan/s81/bind/source_modules/portfix178/dsdv_svc_rs_fv.sv` and `.../portfix178/dsdv_svc_rs_pvso_entry.sv`.
-   Both overlay copies are from 10-25 and are H16 literal: `wire [8527:0] c_gi_d`, per-face slices at 2132 offsets (105
-   literal hits in the fv copy; the entry copy has `[4*2132-1:0]`). The rtl copies of the same two files were made
-   H-aware on 11-08 (`localparam GW = H*132+20`, `c_gi_d[GW*f +: GW]`), and the generator `tools/s81_dv/svc_rs/svc_rs_faces.py`
-   already emits GW. So the overlay is a stale generated file that shadows a correct one. This reproduces the J3 r7
-   example exactly: with FM_GI 1100 the stale wrapper drives face 1 (`c_gi_d[4263:2132]`) to zero and face 2 at
-   `[6395:4264]`; the H8 core reads `[4303:0]`, so its live faces 2 and 3 (`[2152:4303]`) see zeros in `[2152:4263]`
-   (2,112 bits) and the low 40 bits of the wrong face above that.
-2. `dsdv_svc_rs_f.sv`, `dsdv_svc_rs_entry_f.sv`, `lp/dsdv_svc_rs_lp.sv`, `lp/dsdv_svc_rs_entry_lp.sv` and the four
-   `group72/` files are also H16 literal (`[4*2132-1:0]`; the lp file passes the bus straight into `dsdv_svc_sx`). They
-   are not in the H8 as-built file list, so they are the same class but not the cause of the 26,540 bits.
-3. **The plan rows are H16 too.** In plan_j3b (the H8 plan) every svc type still has gather buses `attnh_i0 / attnh_o0`
-   2133 wide, and its `dead_inputs` rows still carry `"H": "16"` with ranges such as `gi_d [[2132, 8527]]`. The die
-   netlist `bind/inputs/die_b178.v` / `die_b178_lfcs.v` instantiates `dsdv_svc_busland_2133` (4-slot ring, W 2133).
-4. The only lint, `tools/s81_dv/svc_rs/rs_fv_lint.sh`, runs Verilator with `-Wno-WIDTH -Wno-fatal` and `|| true`, so a
-   truncation can never fail it.
-5. Column frames: I found no gather width there. The `2132` hits in `frame/col_h9.sv`, `col_h10.sv`, `frame_l4/*` are
-   net names (`n2132`), and in `frame_lp/*` and `frame_lp/kit/*` they are reset-leaf indices (`lpr_r1_leaves[(2132) +: 1]`).
-   S81-DIE-R3: name the frame line you saw, or drop the frames from the fix list.
+- `tools/s81_dv/svc_rs/rs_fv_lint.sh` runs Verilator with `-Wno-WIDTH -Wno-fatal` and `|| true`. `svc_width_gate` now
+  covers the bind; the lint should still fail on WIDTH, or be deleted.
+- The H8 plan rows in plan_j3b still have the gather buses `attnh_i0 / attnh_o0` at 2133 bits and `dead_inputs` rows
+  with `"H": "16"` (ranges such as `gi_d [[2132, 8527]]`). `svc_h_netlist.py --h 8` now narrows the die netlist to
+  1,077. The plan bus width, pin sites, ft slots and the `attnh` landing-band reserve (9,634 um2 on t7) must follow in
+  the same event, or the gate will stop on the type port. I did not check the post-fix rows.
+- Nothing checks that a file under `bind/source_modules` is the current output of its generator. That check would have
+  caught this bug at the source; the width gate catches it one step later.
 
-Fix (all generated, no hand edits):
+## 1. lo t7 margin
 
-- **One source of H.** A plan field per svc type (for example `svc_form: {"H": 8}`) is the only place H is written. The
-  event script derives from it: the `OT_SVC_H8*` defines, the regenerated `portfix178` overlays (run `svc_rs_faces.py`
-  with the PORTFIX-DEAD option and write both files; never keep a copy the generator did not just write), the
-  `dead_inputs` parameters, and the bus `used_width`.
-- **Superset pinout at the partition boundary (owner 11-20, superset pinouts yes).** Keep the 2133-bit `attnh` buses, the
-  ft slots, the landing bands and `dsdv_svc_busland_2133` exactly as they are in plan_j4f. A bus row gets
-  `used_width = H*132+21`: valid stays bit 0, the lane is low-aligned in `[H*132+20:1]`, the bits above are a declared
-  pad (driver 0, receiver unconnected, tie listed in `declared_ties`). This means no pin, ft, clock-band or die-netlist
-  change in J6. Narrowing the die buses to `busland_1077` (the module exists) is a later clean-up, not J6.
-- **Make the remaining literals follow H.** `dsdv_svc_rs_f.sv`, `dsdv_svc_rs_entry_f.sv`: `parameter integer H = OT_SVC_HV`
-  and `4*(H*132+20)`. `lp.py` and `gen_service72.py`: take the width from the port declaration of the module they wrap
-  (they copy the text today). `svc_rs_faces.py` line 228 keeps a 2132 record for the table; leave it, but label it H16.
-- **Three checks, all must be 0 before svc H8 rows enter an event:**
-  1. WIDTH: Verilator lint of every bound svc type top at the plan defines with WIDTH warnings as errors
-     (`rs_fv_lint.sh` without `-Wno-WIDTH`, without `|| true`), plus a bind check that compares each elaborated port
-     width of the type against the plan bus `used_width` and stops on any difference (class `WIDTH-FORM`).
-  2. FRESH: for every file under `bind/source_modules` that has a generator, regenerate and compare the sha; a mismatch
-     stops the bind. This is the check that would have caught the stale overlay.
-  3. LIVE-TIE: the bind's tied-input census must equal the dead-input proof run at the same H as the bound
-     (`parameters.H` in the row must equal the elaborated H, else error). S81-DIE-R3 did this by hand for r7
-     (83,926 dead, 26,540 live); make it the gate. Neighbouring svc types with different H are an error.
-- Also from r7, same event: `declared_ties` for the `ot_s81_svc_attn_s` literals (`job_t {6'd0,..}`, `sc_cr`, `pv_cr`,
-  `q_w[511:256]`), `dsdv_svc_mem_ar wa[3]`, and the pvso_entry__t1 hcore `rst_n` path (0 bound leaves: the entry wrapper
-  has one more `u_` level, the same naming class as the 31 macro paths reported 11-18 21:00).
+Measured (split lane synth, plain yosys + abc, cores black-boxed):
 
-## 2. The split (a): H8 provider form A, with a census gate and one more cut
+| Shell | Cells | Area um2 |
+|---|---|---|
+| lo t7 H16, hcores + hrows + providers boxed (A) | 698,776 | 95,133 |
+| lo t7 H16, landing rings also boxed (AF) | about 495k | 71,403 |
+| lo rs_w t1 H16 (A) / rings boxed (AF) | 597,137 / 476,923 | 81,967 / 67,974 |
+| hi rs t2 H16 (A), H8 measured 11-09 | 432,791, 228,760 | 60,092 |
 
-Partition boundary: module boundaries inside the svc type, as composed in `rows_h8_svc16_1119.json` (epyc8
-`/srv/opentallas-scratch2/claude/s81-svc-split-1119/`). Per type in plan_j3b:
+In the t7 shell 217,580 cells are flops or latches and 172,440 are buffers or inverters.
 
-| Tile | svc_lo count | svc_hi count | Cells each | Outline um | Signed 11-19 (TT setup / FF hold ps) |
+The H8 estimate of 495k is 698,776 minus the 204k H16-to-H8 delta measured on hi rs. Three things are not in it:
+
+- **300-um stations (R1, default on S81 from J5).** svc_lo carries about 8,400 bus bits on its N face and they travel
+  about 1,700 um to the hrow band. At one station per 276.48-um band (section 2) that is about 5 more stations than
+  today on each bus: roughly 40k to 60k more flops. Estimate, not measured.
+- **Kit additions.** On the flat lo7 run of 11-17 the kit added 121,915 tie cells to 5.69M and the timing-driven
+  repair added 13.9 % instances by global place.
+- **Count basis.** The 517k "largest closed" is a kit instance count; 495k is a generic abc count. On hi t4 today the
+  same kit reports 4.37M yosys cells and 3.39M instances at floorplan, so the two bases differ by about 20 %, and I
+  cannot say in which direction the split lane's number is off.
+
+So plan for t7 at 500k to 600k placed instances and make the cut now. Options, by saving:
+
+| Cut | Saving | Cost | Comment |
+|---|---|---|---|
+| Landing rings as boxes | about 204k (measured, A vs AF) | up to 10 distinct ring masters, forwarded-clock cores, 17 ring bands on t7 | largest lever, too many new masters for J6; J7 |
+| `dsfd_ctrl_rg3_native32` x 2 | 164k (split lane measure of bind_native) | none if the "reuse" status in the plan contents means a signed view exists | **check first**: I did not verify the view |
+| `dsdv_idx_rg3` child (the lane's plan) | 57.5k to 79.9k (plan note) + 13 SRAM | 1 master a lo type; seam is to the 32 hslices, which are source-registered | good seam, small saving: t7 lands near 420k to 435k before stations |
+
+Recommendation: build the `dsdv_idx_rg3` child now, in parallel with the bind (it is useful either way), and check the
+ctrl view today. With both, t7 is about 260k to 280k before stations. With only the idx child t7 stays above 450k once
+stations are in, so it would be the first svc type I expect to fail. pvso_entry t1 (about 420k, no idx) has the same
+problem with less margin to cut: it needs the ctrl view or the rings.
+
+## 2. H8 placement and outline fit
+
+Measured on plan_j3b:
+
+| Type | Outline um | Hard cores | Core area um2 | SRAM (count, area) | Overlaps | Out of bounds |
+|---|---|---|---|---|---|---|
+| svc_lo rs t7 | 1442.88 x 2980.8 | 98 | 2,779,802 | 97, 305,079 | 0 | 0 |
+| svc_hi rs t4 | 1442.88 x 2747.52 | 66 | 2,091,831 | 76, 145,950 | 0 | 0 |
+| svc_hi pvso_entry t1 | 1442.88 x 2877.12 | 66 | 2,091,831 | 212, 221,077 | 0 | 0 |
+
+- Area: t7 has 1.216M um2 free and the parent is about 95k um2 at most. Area is not a constraint on any type.
+- Band structure: rows at a 276.48-um pitch. hcore rows (8 x 157.68 x 259.2) alternate with provider rows; the hrow
+  row (8 x 138.24 x 164.16) is at y 1140; all memories are in one band above y 2420.
+- svc_hi: a provider row uses 544 um (691 on the smc / smr row) of 1,443 um, so each provider band has about 750 to
+  900 um of free width. Channels are 10.8 um or more.
+- svc_lo: the 32 hslices (77.76 x 276.48, taller than the band) stand at x 371 to 1054 in each provider band with
+  8.64-um gaps in x (54 gaps) and 8.64 um to the hcore rows above and below (56 gaps). From y 35 to y 2420 the
+  x range 371 to 1054 is hard core except for 8.64-um channels.
+
+Consequences:
+
+1. **N / S buses on svc_lo cross that wall.** `attnh_i0` (2,133 b) enters in the N window x 879 to 1130: 8.5 bits
+   per um, straight above the hslice wall, and has to reach the hrow band about 1,700 um below. Every core is
+   `obs_max M5`, so only M7 carries it vertically over the cores. The leaf lane measured about 10 usable tracks per um
+   over hard cores on 11-19. A bus that stays in its pin window would use about 85 % of that; with `attn_o0` and
+   `attnh_o0` beside it the column is over. Estimate from the leaf number, not an svc measurement.
+2. **Stations need explicit sites.** The band pitch (276.48 um) is just under the 300-um hop, so the natural form is
+   one station bank per band channel. A 2,133-bit bank is about 620 um2: in an 8.64-um channel that is about 72 um of
+   channel length at full use, so give each bank at least 150 um of channel and spread the bus to about twice its pin
+   window before the first core row. Without sites the tool places a bank at the centroid of its ends, which on the
+   leaf types landed inside a core for 5 of 8 banks (FABLE-FIX-S81-LEAF 11-19 20:27). Use the same site form as
+   `s81_hi_corridor.py sites`.
+3. **Cycles.** With a bank per band the gather path inside svc_lo is about 7 to 8 legs from the N pin to the sx
+   centre and about 4 to 5 on svc_hi from its S pin, against 2 to 3 today (`NR = 1`: 5 cycles a hop in total). The
+   lo-to-hi score hop goes from 5 to about 12 to 14 cycles plus the landing ring. E / W hops on svc_hi (1,443 um
+   pitch) go from 5 to about 7. The role-ROM GO delay (`svc_rs_tree.py`) has to be regenerated from the plan depth in
+   the same event. Cycles are pre-approved; the numbers are geometry estimates.
+4. Fence the parent logic by instance prefix to its band (`u_att.u_eng.g_t[i]` to band i, `u_sx` to the hrow band,
+   `u_cland_*` to their `band_fixed_um` rectangles). At 2 % density over 3 mm the placer has no other reason to keep a
+   500k-cell parent local.
+
+## 3. Registered reads
+
+Measured:
+
+- SRAM views (TT): clk to `rd_out` 270 to 290 ps for `32x128`, 380 to 401 ps for `160x256`; address setup 28 to 32 ps.
+  At 833 ps that leaves about 430 to 530 ps for the bypass mux, the wire and the reader's logic.
+- Sites and macro positions in plan_j3b (svc_hi rs t4; svc_lo is the same band, 190 um higher):
+
+| Site | Wrapper | Macros | Where | Reader | Distance |
 |---|---|---|---|---|---|
-| ot_s81c_attn_hcore | 32 | 32 | hard | 157.68 x 259.2 | earlier view |
-| dsdv_svc_sx_hrow | 8 | 8 | hard | 138.24 x 164.16 | earlier view |
-| ot_s81_svc_idx_hslice_fp | 32 | 0 | 59,836 | 77.76 x 276.48 | +104.4 / +7.8 |
-| ot_s81_su_sml_fold2 | 8 | 8 | 87,328 | 103.68 x 259.2 | +84.6 / +20.9 |
-| ot_s81_svc_merge_h4 | 8 | 8 | 82,680 | 103.68 x 259.2 | +103.8 / +14.3 |
-| ot_s81_su_smd_fold2 | 4 | 4 | 52,966 | 69.12 x 259.2 | +97.9 / +22.5 |
-| ot_hdc_v41x_attn_tr_x (4 XOFF masters) | 4 | 4 | 27,880 | 60.48 x 259.2 | +129..+151 / +25..+28 |
-| ot_s81_su_smc | 1 | 1 | 65,901 | 77.76 x 259.2 | +89.2 / +17.3 |
-| ot_s81_su_smr | 1 | 1 | 40,242 | 69.12 x 259.2 | +80.6 / +18.0 |
-| parent soft | 1 | 1 | see below | type outline | not built |
+| sw | `mem_la`, or `mem_lr` under `OT_SVC_ATT_RDPIPE` | 8 x 32x128 | x 168 to 655, y 2610 to 2630 | scanner (`g_own / f_full -> sw_step`) | not traced |
+| wq | `mem_ar` x 6 (3 queues x 2 PC, 341 b) | 18 x 32x128 | x 146 to 1255, y 2559 to 2580 | HBM request `rq`, out on `hbm_o0` | svc_hi: S face, about 2,560 um |
+| qmem | `mem_ar` SYNC 1 (512 b) | 4 x 32x128 | x 43 to 1380: one word spread over 1,340 um | engine q operand `eq_w` | fans to all hcore rows |
+| pbuf | `mem_ar` MACRO 1 (256 b) | 1 x 160x256 | x 43 to 135, top-left corner | P-beat inject into the sx leaf | hrow band, about 1,250 um or more |
 
-Provider cells leave the parent: 3.70M a svc_lo type, 1.79M a svc_hi type (sum of the plan `cells` fields). Every
-provider is at most 87k cells.
+- In `mem_ar` and `mem_la` the macro output goes through the write-bypass mux to the reader with no flop, and the read
+  address is the D-input cone of the pointer. `mem_lr` holds the word in a flop; the RTL comment records why: the `ar`
+  form of sw was -107 ps TT pre-route and the 32:1 count mux was -173 ps.
+- **`OT_SVC_ATT_RDPIPE` is not in the H8 as-built defines** (`OT_SVC_ALLQ, OT_SVC_ATT_MEM_MACRO, OT_SVC_H8,
+  OT_SVC_H8_REUSE_RT2, OT_SVC_MERGE_H4, OT_IDX_*`), and not in the plan rows. The five provider kits signed on 11-19
+  (sml, smd, merge_h4, smc, smr) do list it in their spec defines. The define is only read in `dsdv_svc_att.sv`, so the
+  provider netlists should not depend on it, but the parent and its providers are then built under different define
+  sets, and the parent uses the slower sw form.
 
-Parent soft size, which is the real risk:
+What follows:
 
-- Measured 11-09 on the H8 bound: 381,961 (lo) and 228,760 (hi rs t2).
-- Estimated for today's RTL (not measured: needs the H8 rebind): H16 shell measured 11-19 with cores black-boxed minus
-  the measured H16-to-H8 delta of 204k (hi t2: 432,791 to 228,760): lo rs_w t1 about 393k, **lo t7 about 495k**,
-  pvso_entry t1 about 420k, pvso_entry t2 about 302k.
-- Gate: after the rebind, read the parent count of all 16 types from the bind census before any kit launches. Limit 450k
-  (the largest type ever closed is about 517k, so 500k has no margin).
-- Second cut for a type over 450k (expected: lo t7, maybe pvso t1): the clock-landing rings `ot_dp_clk_landing_cas`
-  become hard boxes in their own `band_fixed_um` rectangles, which the plan already reserves. Measured 11-19: 8 rings on
-  rs_w t1 take the shell from 597,137 to 476,923, about 15k cells a ring; t7 has 14 rings, so about 210k less, giving
-  about 285k. The ring is already a module with a fixed band, a forwarded clock and a strap; it is the cheapest box.
-  Third cut if still needed: `dsfd_ctrl_rg3_native32` x 2 (status "reuse" in the plan contents; the split lane measured
-  bind_native at 164k).
+1. **sw: switch on the existing form.** Add `OT_SVC_ATT_RDPIPE` to the 16 rows. It has a bench (`tb_svc_mem_ar` LR,
+   two negative controls). S81-SVC-SPLIT-1119 should confirm it is cycle-exact against the `la` form before the rows
+   go in; I read the comment, not the bench result.
+2. **Siting before retiming.** A capture flop only helps if it sits at the macro, and then the word still has 1.2 to
+   2.6 mm to travel: 4 to 9 stations at 300 um, each of which the static calendar has to absorb. Moving the macro is
+   cheaper. The provider bands of svc_hi have 750 to 900 um of free width and a `32x128` macro is about 52 x 21 um.
+   Proposed sites (S81-DIE-R3, `svc_formA_sites.py`):
+   - qmem: the 4 macros of the one word adjacent, in the provider band nearest the engine's q distribution.
+   - wq: each queue's 3 macros adjacent, in the band next to the HBM face (svc_hi: the lowest provider band, y 311 to
+     570, under the `hbm_o0` window x 401 to 569; svc_lo: stay in the top band, its HBM face is N).
+   - pbuf: in the free 300 um of the hrow row (y 1140 to 1305), next to `u_sx`.
+   - sw: next to the scanner; with RDPIPE the word flop goes beside the macros.
+   On svc_lo the provider bands are full of hslices; the free width there is about 200 to 280 um a band, enough for
+   these macros but check the channel to the hslice row.
+3. **RDREG as the lane scoped it** (reader re-timed by +1, or a two-ahead address, bench per site) is then a +1 with
+   the capture flop and the address flop both at the macro. Order by need: pbuf (401 ps, worst), wq, qmem.
+   `mem_ar` already carries a registered address for qmem (`SYNC 1`). Do not add the define without the bench: the
+   lane is right that it would break the slice.
+4. The `mem_ar` 256-bit blackbox bug the lane found sits on the same three sites (wq 341 to 256, qmem 512 to 256). Any
+   timing or cell count taken from a bound before that fix under-counts these read paths.
 
-Seams and cycles:
+There is no placed or CTS timing report of any svc type left on epyc8 or epyc9 to confirm this with a path; the
+argument is view timing plus plan geometry.
 
-- Provider seams. Each provider box sits in the band of the hcores it serves (four freed `g_h[8..15]` bands, 259.2 um
-  tall), so the provider-to-hcore distance is inside one band. Required before kits: both-side registers on every
-  provider pin (close-by-construction). Only `idx_hslice_fp` is known to have pin registers on (2d2291f3f7). For
-  sml / smd / merge_h4 / smc / smr / tr_x this is **not checked**: run PRECHECK reach on the H8 bound (core pin to first
-  flop, 300 um) and add a pin register where a pin has none; +1 cycle on that seam is pre-approved and is internal to
-  the type (the 11-19 re-baseline found 0 die-lane cycles for the form: AR 838.8 / MTP 2701.3 unchanged).
-- Gather (score) bus. Inside the slice it is `dsdv_svc_sx`: 4 rows x 4 faces, each face lane split in two halves of
-  269 bits on 276-bit relay stations; a hop is centre register, A, B, then C, leaf pin flop: 5 cycles at `NR = 1`,
-  `2*NR + 3` in general. Between two svc partitions it is the `attnh` bus: out pin flop, plan stations (`ot_dp_st`
-  W 2133 are already in the bound), then the receiver's 4-slot landing ring on the forwarded clock. With the superset
-  pinout this path is bit-for-bit the J4f path; at H8 only bits `[1076:0]` of each lane are live and the pad flops drop
-  out as declared ties.
-- Broadcast (dn 805 b), up (16 b), P.V return (514 b) and scatter (1,076 b + v) do not depend on H; they cross exactly
-  as in J4f. No width work there.
-- Reach. The type is 1442.88 x 2980.8 (lo) and 1442.88 x 2747.52 (hi). With `NR = 1` a slice-internal leg is about a
-  quarter of the centre-to-centre hop: about 360 um east-west and about 700 um north-south (lo N face to hi S face).
-  The 300-um rule (R1, default on S81 from J5) therefore needs more stations on the N / S legs. Take them from the plan
-  station rows (`relay_depth` / `istation_respace` under `REACH_UM_PER_HOP 300`), which price the latency in LATCHECK,
-  not from a hand-set `NR`. Estimate: N / S hop 5 cycles to about 11, E / W 5 to 7; the role ROM GO delay
-  (`svc_rs_tree.py`, "5 cycles a hop") must be regenerated from the plan depth in the same event. Not measured.
-- H8 itself is the two-pass (reuse) engine: svc attention throughput cost was accepted with option A on 11-19.
+## 4. Seams
 
-## 3. Placement and outline (d): fits, no growth
+| Master | Count lo / hi | Pin registers | Source |
+|---|---|---|---|
+| ot_s81_su_sml_fold2 | 8 / 8 | recipe stage on, 1 in + 1 out | kit `pin_regs.json` |
+| ot_s81_svc_merge_h4 | 8 / 8 | on, 1 + 1 | same |
+| ot_s81_su_smd_fold2 | 4 / 4 | on, 1 + 1 | same |
+| ot_s81_su_smc, ot_s81_su_smr | 1 / 1 each | on, 1 + 1 | same |
+| ot_s81_svc_idx_hslice_fp | 32 / 0 | source-registered: every input a pin flop, every output from a flop | same |
+| ot_hdc_v41x_attn_tr_x (4 XOFF masters) | 4 / 4 | **off**: inputs land on storage flops, controls pass one decode level before a flop, `col` is a one-hot read mux of stored flops | same |
+| ot_s81c_attn_hcore, dsdv_svc_sx_hrow | 32 + 8 | on the flat hi t2 netlist every core input ends at logic, a constant, a port or a landing ring; 0 core-to-core links | FABLE-FIX-S81-LEAF 11-19 13:59 |
 
-- Outlines stay: svc_lo 1442.88 x 2980.8, svc_hi rs 1442.88 x 2747.52, pvso_entry 1442.88 x 2877.12. The die has
-  103.7 um spare in X and Y and 8 svc columns abut, so nothing may grow.
-- The H8 rows drop 32 hcores a type: 32 x 157.68 x 259.2 = 1.31M um2 freed, and put 58 (lo) / 26 (hi) provider boxes at
-  signed sizes into those four bands; the svc_lo macro row at y >= 2415 lifts 8.64 um. Private G0 on D8h: only the two
-  cut errors that D8h already had; reach_fix 0 errors.
-- For comparison the H16 provider split does not fit: 62 core outlines need 1.196M um2 against 1.138M um2 free.
-- Add to the rows (S81-DIE-R3): (1) fence the parent logic by instance prefix to the band it serves (`u_att.u_eng.g_t[i]`
-  to band i, `u_sx` to the hrow band, `u_cland_*` to their `band_fixed_um`), so the 300k to 450k parent cells are
-  seeded and not spread over 3 mm; (2) the SOFT0.. regions stay for SE / SM glue; (3) bank sites for shared stations in
-  free channels, as the leaf hi-corridor tool does (`s81_hi_corridor.py sites`), so a station bank does not land inside
-  a provider box.
+- The TRX box is the open seam. `col` leaves a mux inside the box and its controls enter a decode. In svc_lo the box
+  is at x 1253 to 1313 at the east end of each provider band, up to about 1,220 um from the far end of the hcore row;
+  in svc_hi it is at x 553. I did not trace which cells read `col`. On the first fixed H8 bound: trace the TRX pins to
+  their first flop; if any leg is over 300 um, put a parent-side register bank beside the box (the row is free east
+  of x 1313 on svc_lo) and move the q.k / p.v calendar by one, or move the box to mid-row.
+- Parent-side partner of the registered providers: the provider side is registered, the parent side is whatever the
+  placer does with the driving flop. The band fences of section 2 are what keeps that under 300 um.
+- Between partitions the seam is unchanged from J4f: out pin flop, plan stations, 4-slot landing ring on the
+  forwarded clock. The dn (805 b), up (16 b), P.V return (514 b) and scatter (1,076 b) lanes do not depend on H.
+- The hcore / hrow trace above was "blind" on hi t4 / t5 / t6 (cores looked up by plan name, no receipt), so it stands
+  for t2 only.
 
-## 4. Registered reads (c)
-
-Measured in the RTL: all svc SRAMs sit behind three wrappers, `dsdv_svc_mem_ar`, `dsdv_svc_mem_la`, `dsdv_svc_mem_lr`
-(68 macros on a hi type, 97 on lo t7). In all three the macro `rd_out` goes through the write-bypass mux straight to the
-consumer (up to 512 bits), and in `mem_la` / `mem_lr` the read address is combinational from the pointer (`rp + 1`,
-bank select) into the macro pin. Neither side is registered, and the macros sit in the macro row at the top of the type.
-
-Fix: one parameter `RREG` (define `OT_SVC_MEM_RREG`) in the three wrappers: a capture register on `rd` after the bypass
-mux and a register on the address / write pins, both placed at the macro (macro-side group in the plan). Read latency
-+1 (pre-approved). Because `mem_la` / `mem_lr` are look-ahead stores, the cheapest correct form is to advance the
-pointer one cycle earlier inside the wrapper so the consumers do not change; `mem_ar` already has a `SYNC` option for
-its address. Proof: the lock-step bench with shift 1 (pattern of `tb_vp_cfr` for `OT_S81SL_VP_SRAMREG`) and LATCHECK +1
-on the 16 rows. This does not depend on levers 1 to 3, but it needs the same rebind, so put the define in the J6 rows
-only if the bench is green by 11-21 08:00 PST; otherwise J7. Not blocking.
-
-## 5. Evidence per lever (e)
+## 5. Evidence by lever
 
 | Lever | Evidence | Where |
 |---|---|---|
-| Flat form cannot close | 4,992,695 instances (lo t7), 3,394,731 (hi t4), 3,531,946 (hi t6); yosys 3.5 h; floorplan repair 50,584 / 55,780 endpoints, all violating, 0 % gain; t7 repair 6 h 05 | FLOW-FIX-2045 02:0x; epyc2 kits t4 a14, t6 a14 `2_1_floorplan.tmp.log` |
-| Flat form cannot close | lo7 11-17: 5.69M instances, core use 0.899, movable 61.4 % of free area, after timing repair target density 1.0636, GPL slack -2,572 ps; no placed DB written | S81-TYPES-R3 11-17 13:15 |
-| Where the area is | hi t4 synth: 2.109M um2 = hcores 1.41M + SRAM 0.137M + hrow 0.062M + cells about 0.50M (4.17M flat cells) | epyc2 t4 a14 `synth_stat.txt` |
-| Providers close | 10 cores signed 11-19, DRC 0, TT +80.6..+151, FF hold +7.8..+28 | S81-SVC-SPLIT-1119 08:28 |
-| Parent size | 381,961 / 228,760 measured 11-09; H16 shell 597,137 and 699k, 476,923 with 8 rings boxed | split lane 04:37, 05:44, 09:03 |
-| H16 split does not fit | 1.196M um2 needed, 1.138M um2 free, die spare 103.7 um | split lane 04:25 |
-| Width class | stale overlay `wire [8527:0]`; plan_j3b buses 2133 and `"H": "16"`; lint `-Wno-WIDTH` | origin/main 150d614de88; plan_j3b |
-| Live ties | 83,926 dead, 26,540 live at H8; 202 bind errors | S81-DIE-R3 02:11 |
-| Registered reads | unregistered bypass-mux read in mem_ar / la / lr | origin/main rtl `svc_rs/dsdv_svc_mem_*.sv` |
-| Core-to-core links | hi t2 flat: 72 cores, 0 core-to-core links, every core input ends at logic | FABLE-FIX-S81-LEAF 11-19 13:59 (blind on t4/t5/t6) |
+| t7 cut | shell 698,776 / 495k with rings boxed; 204k H8 delta from hi rs; kit adds ties and +13.9 % repair | split lane stats (intel1); S81-TYPES-R3 11-17 13:15 |
+| Station sites | 8.64-um channels x 110 on lo; attnh 2,133 b in a 251-um window; leaf banks inside cores 5 of 8; about 10 tracks per um over cores | plan_j3b; FABLE-FIX-S81-LEAF 11-19 19:30, 20:27 |
+| Macro re-site | clk to q 270 to 401 ps; macros 1.2 to 2.6 mm from readers; qmem word over 1,340 um | SRAM `_tt.lib`; plan_j3b contents |
+| RDPIPE | define missing in as-built and rows; -107 / -173 ps recorded for the unregistered forms | asbuilt_run.svc_h8.json; `dsdv_svc_att.sv` 726 to 746 |
+| TRX seam | `pin_regs.enable false` with the stated reason | epyc8 `s81svc_h8_trx_xoff0/pin_regs.json` |
+| Fit | 0 overlaps, 0 out of bounds, free 1.216M um2 on t7 | plan_j3b |
+| Flat form | 3.39M to 4.99M instances; floorplan repair 50,584 / 55,780 endpoints all violating; t7 repair 6 h 05 | epyc2 kits t4 / t6 a14; FLOW-FIX-2045 |
 
-No svc type kit has been placed or routed in the H8 form on the current RTL. Levers 2 and 3 rest on core sign-offs, the
-11-09 census and the G0 of the rows, not on a type kit.
+No svc type kit has been placed in the H8 form on the current RTL. Everything above about the type level is plan
+geometry, view timing and synth counts.
 
-## 6. Order of work to the J6 cut
+## 6. Stop list
 
-1. S81-SVC-SPLIT-1119, now: regenerate the two portfix178 overlays with H from the defines; parameterise `_f`,
-   `_entry_f`, lp and group72 emitters; lint with WIDTH as error at H8 and H16 on all fv variants; add the FRESH check.
-2. S81-DIE-R3: `svc_form.H`, `used_width`, dead-input rows at H 8, the declared ties, the pvso hcore path; WIDTH-FORM
-   and LIVE-TIE in the bind. Private bind of the 16 svc types on plan_j4f + `rows_h8_svc16_1119.json`. Pass = 0 errors,
-   0 live ties.
-3. Same bind: parent census of 16 types. Any type over 450k gets the landing-ring boxes in the same event.
-4. Two proof kits to GRT TT, in parallel with the event (r712): svc_hi rs t4 and svc_lo rs t7, private, H8 rows.
-5. J6 carries the svc H8 rows if steps 1 to 3 are green by 11-21 10:00 PST. The proof kits will most likely not have a
-   routed TT number by the cut; say so in the event note. If step 2 is not green, J6 keeps the C6 form and svc goes
-   to J7; do not put svc H8 rows into J6 unproven a second time.
-
-## 7. Stop list
-
-- Do not put svc H8 rows into any event until WIDTH, FRESH and LIVE-TIE are all 0.
-- Do not hand-edit the `portfix178` copies, and do not "fix" the truncation by widening the H8 core ports to 8528 with
-  ties.
-- Do not narrow the die-level `attnh` buses, ft slots or `busland_2133` in J6.
-- Do not pursue the H16 provider split, rows v2 (+155.52 um X a type) or any die or outline growth.
-- Do not spend lane time on the flat C6 / H16 svc kits (floorplan skip, longer runs, more retries): they are count
-  sources at best. Whether the live rows are stopped is COORD's call under the unsignable rule; I stopped nothing.
-- Do not launch H8 type kits before the parent census; do not launch a parent over 450k.
-- Do not set `NR` or the role-ROM hop delay by hand; do not accept a lint that runs with `-Wno-WIDTH`.
-- Do not count the column frames as part of this bug until a real gather-width line is shown.
+- Do not launch the lo t7 or pvso_entry t1 H8 kit as a single 495k / 420k parent and wait for the result; make the cut
+  first.
+- Do not add an RDREG define without the per-site bench, and do not add read flops while the macros stay in the top
+  band: it buys one cycle of a path that needs four to nine.
+- Do not leave the N / S station banks to centroid placement on svc_lo, and do not set `NR` or the role-ROM hop delay
+  by hand.
+- Do not box the landing rings for J6 (too many masters); do not pursue the H16 provider split or any growth (die
+  spare is 103.7 um; H16 needs 1.196M um2 against 1.138M um2 free).
+- Do not take cell counts or timing from a bound made before the `mem_ar` blackbox fix as final.
+- Do not spend lane time on the flat C6 / H16 svc kits. Whether the live rows are stopped is COORD's call; I stopped
+  nothing.
 
 ## Not checked
 
-- Pin registers on the providers other than idx_hslice_fp; any reach number on an H8 bound.
-- The H8 parent count on today's RTL (estimates only), and the ring-box saving on t7 (scaled from rs_w t1).
-- Whether the plan `dead_inputs` rows with H 16 were what the r7 bind read, or only S81-DIE-R3's separate re-proof.
-- The consumers of the three memory wrappers (which ones tolerate the look-ahead form of the +1), and the read timing of
-  the SRAM views.
-- The N / S and E / W cycle estimates in section 2 (geometry arithmetic, no PRECHECK run).
-- GRT or CTS results of hi3 flat (11-17); I found no post with its numbers.
-- `tools/landed_parent/lp.py` itself (no 2132 literal in it; the literal is in its generated outputs).
+- main 6ad4914428 itself (the fix, `svc_width_gate`, the bench) and the post-fix plan rows.
+- Whether `dsfd_ctrl_rg3_native32` has a signed view; the per-type variation of `dsdv_idx_rg3`.
+- Which cells read TRX `col`, the sw scanner distance, and the qmem distribution path (`ot_hdc_v41x_kreg` may already
+  pipeline it).
+- Over-core routing capacity on svc (taken from the leaf measurement) and every cycle estimate in section 2.
+- Whether `OT_SVC_ATT_RDPIPE` is cycle-exact against the `la` form, and whether the 11-09 parent counts were taken
+  with it.
+- The other 13 svc types' rows for overlaps (three checked), and svc_lo macro sites after an H8 re-site.
