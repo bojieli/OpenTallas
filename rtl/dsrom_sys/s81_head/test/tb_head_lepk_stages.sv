@@ -62,6 +62,10 @@ module tb_head_lepk_stages;
 `ifndef KCRED_DUT
 `define KCRED_DUT 12
 `endif
+// FABLE-CBC-HEAD-0130 row 5: K-link credit-return stage counts (default = KTX_DUT)
+`ifndef KTR_DUT
+`define KTR_DUT `KTX_DUT
+`endif
 // RST-FAN-1 11-20: the core reset fan (RFAN levels + maps) and u_lep's mapped reset tree (RTG ...); 0 = off.
 `ifndef RFAN_DUT
 `define RFAN_DUT 0
@@ -102,7 +106,7 @@ module tb_head_lepk_stages;
     .coll_i0(ci_r[0]), .coll_i1(ci_r[1]), .coll_i2(ci_r[2]), .coll_i3(ci_r[3]),
     .coll_o0(co_r[0]), .coll_o1(co_r[1]), .coll_o2(co_r[2]), .coll_o3(co_r[3]),
     .lepk_i0(ro), .lepk_o0(ri_r), .lepf_i0(lepf), .unit_i0(unit), .ctrl_o0(rt_r), .fault_o0(f_r), .lw_o(lw_r));
-  ot_s81hd_lep0N_noidx_core #(.CH_B(4'b1111), .PAIR(0), .KTX(`KTX_DUT), .KRX(`KRX_DUT), .TXI(`TXI_DUT), .PIN(`PIN_DUT), .POUT(`POUT_DUT), .PLW(`PLW_DUT), .COL0(`COL0_DUT), .RXH(`RXH_DUT), .KCRED(`KCRED_DUT),
+  ot_s81hd_lep0N_noidx_core #(.CH_B(4'b1111), .PAIR(0), .KTX(`KTX_DUT), .KRX(`KRX_DUT), .TXI(`TXI_DUT), .KTR(`KTR_DUT), .PIN(`PIN_DUT), .POUT(`POUT_DUT), .PLW(`PLW_DUT), .COL0(`COL0_DUT), .RXH(`RXH_DUT), .KCRED(`KCRED_DUT),
     .RFAN(`RFAN_DUT), .RFN1(`RFN1_DUT), .RFN2(`RFN2_DUT), .RFMX(`RFMX_DUT), .RFPL(`RFPL_DUT), .RFPM(`RFPM_DUT),
     .RTG(`RTG_DUT), .RTR(`RTR_DUT), .RTGS(`RTGS_DUT), .RTRM(`RTRM_DUT)) u_dut(
     .ck(ck), .rst_n(rs),
@@ -281,7 +285,7 @@ module tb_head_lepk_stages;
     idle(1);
     repeat (6000) @(negedge ck);
     ri_exp = sent - landed;
-    $display("LEPK_STAGES COL0=%0d RXH=%0d KCRED=%0d", `COL0_DUT, `RXH_DUT, `KCRED_DUT);
+    $display("LEPK_STAGES COL0=%0d RXH=%0d KCRED=%0d KTR=%h", `COL0_DUT, `RXH_DUT, `KCRED_DUT, 16'(`KTR_DUT));
     rtt_report;
     $display("LEPK_STAGES release gap A<->B min ref=%0d dut=%0d (collisions dut %0d)", gmin_r, gmin_d, gcol_d);
     $display("LEPK_STAGES RFAN=%0d RTG=%0d release (edges after rs): core ref %0d dut %0d, u_lep rr ref %0d dut %0d",

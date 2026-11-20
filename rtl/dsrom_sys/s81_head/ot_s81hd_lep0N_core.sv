@@ -43,6 +43,10 @@
 //         to their own depth-7 die taps (core_resets), so their release does not move.
 //  RTG / RTR / RTGS / RTRM = u_lep's internal SAFE_FIFO reset tree (generated ot_s81hd_lep_nr.sv, RST-FAN-1): RTG > 0 =
 //         ot_rst_relay_tree3m, RTR root copies + RTG groups with explicit boundaries, same 3 edges (0 cycles).
+//  KTR  = FABLE-CBC-HEAD-0130 row 5 (default KTX = unchanged): stages on lane i's K-link CREDIT RETURN lo_r (g_txr)
+//         counted apart from the forward lo_v / lo_d (g_txf, KTX), so the credit leg can carry more stages than the data
+//         leg (hd_lep0N: kr fanned to 18 credit_pin_r copies, lane 3 735 um).  Credit based: each stage adds one edge to
+//         that lane's TX credit round trip only (no beat lost or duplicated); KCRED must cover the longer loop.
 // WHY THE +RFAN RELEASE IS SAFE (and the condition it rests on): the core reset is the wrapper's gated tap (ot_dp_rgate:
 // reset AND START run), so nothing in the core leaves reset before START.  The wrapper's face stations (u_bin_* / u_bout_*)
 // release on their own depth-7 taps, RFAN edges before the core.  In those RFAN cycles the core's input stages are still
@@ -97,6 +101,7 @@ endmodule
 module ot_s81hd_lep0N_core #(
  parameter [3:0] CH_B=4'b1111, parameter integer IDX_EN=1, parameter integer PAIR=0,
  parameter [15:0] KTX=16'h0000, parameter [15:0] KRX=16'h0000, parameter [15:0] TXI=16'h0000,
+ parameter [15:0] KTR=KTX,
  parameter integer PIN=0, parameter integer POUT=0, parameter integer PLW=0, parameter integer COL0=0,
  parameter integer RXH=0, parameter integer KCRED=12,
  parameter integer RFAN=0, parameter integer RFN1=1, parameter integer RFN2=1, parameter integer RFMX=0,
@@ -118,10 +123,10 @@ module ot_s81hd_lep0N_core #(
  wire[1103:0]lepk_ix,lepk_ox;wire lepf_ix,fault_ox;wire[44:0]unit_ix;wire[31:0]ctrl_ox;
  reg[10:0]lw_r;
  // RST-FAN-1 reset leaves (see the header).  Leaf order: u_lep, u_land, lw_r, PIN, POUT, PLW, COL0 stages, then per lane
- // i the K stages txf[KTX_i] txr[KTX_i] rxf[KRX_i] rxr[KRX_i], then (PAIR 0) one leaf per g_lane.  rl[NRL] = rst_n spare
+ // i the K stages txf[KTX_i] txr[KTR_i] rxf[KRX_i] rxr[KRX_i], then (PAIR 0) one leaf per g_lane.  rl[NRL] = rst_n spare
  // (keeps every zero-width slice in range); RFAN 0: rl = rst_n on every bit (no flop, the nets above unchanged).
  function integer rl_k(input integer n);
-  integer j; begin rl_k=0; for(j=0;j<n;j=j+1)rl_k=rl_k+2*KTX[4*j+:4]+2*KRX[4*j+:4]; end
+  integer j; begin rl_k=0; for(j=0;j<n;j=j+1)rl_k=rl_k+KTX[4*j+:4]+KTR[4*j+:4]+2*KRX[4*j+:4]; end
  endfunction
  localparam integer RL_LEP=0, RL_LAND=1, RL_LW=2, RL_PIN=3, RL_POUT=RL_PIN+PIN, RL_PLW=RL_POUT+POUT, RL_C0=RL_PLW+PLW,
   RL_K=RL_C0+COL0, RL_LN=RL_K+rl_k(4), NRL=RL_LN+(PAIR?0:4), RV=(RFAN>0)?1:0;
@@ -202,14 +207,14 @@ module ot_s81hd_lep0N_core #(
 `else
   localparam integer MV=0;
 `endif
-  localparam integer KT=KTX[4*i+:4], KR=KRX[4*i+:4], RB=RL_K+rl_k(i);   // RST-FAN-1: this lane's first leaf
+  localparam integer KT=KTX[4*i+:4], KQ=KTR[4*i+:4], KR=KRX[4*i+:4], RB=RL_K+rl_k(i);   // RST-FAN-1: this lane's first leaf
   ot_s81hd_lep_pipe #(.W(1+553),.WC(1),.N(KTX[4*i+:4]),.MUTBIT(MB),.MUTV(MV),.RV(RV))g_txf(.ck(ck),.rst_n(rst_n),
    .rst_nv(rl[RB+:(KT>0?KT:1)]),.d({kd[i],kv[i]}),.q({pkd[i],pkv[i]}));
-  ot_s81hd_lep_pipe #(.W(1),.WC(1),.N(KTX[4*i+:4]),.RV(RV))g_txr(.ck(ck),.rst_n(rst_n),.rst_nv(rl[RB+KT+:(KT>0?KT:1)]),
+  ot_s81hd_lep_pipe #(.W(1),.WC(1),.N(KTR[4*i+:4]),.RV(RV))g_txr(.ck(ck),.rst_n(rst_n),.rst_nv(rl[RB+KT+:(KQ>0?KQ:1)]),
    .d(pkr[i]),.q(kr[i]));
-  ot_s81hd_lep_pipe #(.W(3+1+553),.WC(4),.N(KRX[4*i+:4]),.RV(RV))g_rxf(.ck(ck),.rst_n(rst_n),.rst_nv(rl[RB+2*KT+:(KR>0?KR:1)]),
+  ot_s81hd_lep_pipe #(.W(3+1+553),.WC(4),.N(KRX[4*i+:4]),.RV(RV))g_rxf(.ck(ck),.rst_n(rst_n),.rst_nv(rl[RB+KT+KQ+:(KR>0?KR:1)]),
    .d({pkid[i],pkf[i],pkiv[i]}),.q({kid[i],kf[i],kiv[i]}));
-  ot_s81hd_lep_pipe #(.W(2),.WC(2),.N(KRX[4*i+:4]),.RV(RV))g_rxr(.ck(ck),.rst_n(rst_n),.rst_nv(rl[RB+2*KT+KR+:(KR>0?KR:1)]),
+  ot_s81hd_lep_pipe #(.W(2),.WC(2),.N(KRX[4*i+:4]),.RV(RV))g_rxr(.ck(ck),.rst_n(rst_n),.rst_nv(rl[RB+KT+KQ+KR+:(KR>0?KR:1)]),
    .d({kir[i],krx[i]}),.q({pkir[i],pkrx[i]}));
  end endgenerate
  // PAIR=1 (DIE-HEAD-9, opt-in): each g_lane body sits in one ot_s81hd_lep_pair
@@ -241,7 +246,7 @@ endmodule
 // generated/ot_s81hd_lep_nr.sv, so tl is parameter-proven unread and ca/cb are
 // parameter-proven constant dead outputs. The generic provider default stays1.
 module ot_s81hd_lep0N_noidx_core #(parameter[3:0]CH_B=4'b1111,parameter integer PAIR=0,
- parameter[15:0]KTX=16'h0000,parameter[15:0]KRX=16'h0000,parameter[15:0]TXI=16'h0000,
+ parameter[15:0]KTX=16'h0000,parameter[15:0]KRX=16'h0000,parameter[15:0]TXI=16'h0000,parameter[15:0]KTR=KTX,
  parameter integer PIN=0,parameter integer POUT=0,parameter integer PLW=0,parameter integer COL0=0,parameter integer RXH=0,parameter integer KCRED=12,
  parameter integer RFAN=0,parameter integer RFN1=1,parameter integer RFN2=1,parameter integer RFMX=0,
  parameter[1023:0]RFPL=1024'd0,parameter[511:0]RFPM=512'd0,
@@ -253,7 +258,7 @@ module ot_s81hd_lep0N_noidx_core #(parameter[3:0]CH_B=4'b1111,parameter integer 
  input wire lepf_i0,input wire[44:0]unit_i0,
  output wire[31:0]ctrl_o0,output wire fault_o0,output wire[10:0]lw_o
 );
- ot_s81hd_lep0N_core #(.CH_B(CH_B),.IDX_EN(0),.PAIR(PAIR),.KTX(KTX),.KRX(KRX),.TXI(TXI),.PIN(PIN),.POUT(POUT),.PLW(PLW),.COL0(COL0),.RXH(RXH),.KCRED(KCRED),
+ ot_s81hd_lep0N_core #(.CH_B(CH_B),.IDX_EN(0),.PAIR(PAIR),.KTX(KTX),.KRX(KRX),.TXI(TXI),.KTR(KTR),.PIN(PIN),.POUT(POUT),.PLW(PLW),.COL0(COL0),.RXH(RXH),.KCRED(KCRED),
  .RFAN(RFAN),.RFN1(RFN1),.RFN2(RFN2),.RFMX(RFMX),.RFPL(RFPL),.RFPM(RFPM),.RTG(RTG),.RTR(RTR),.RTGS(RTGS),.RTRM(RTRM))u(
  .ck(ck),.rst_n(rst_n),.coll_i0(coll_i0),.coll_i1(coll_i1),.coll_i2(coll_i2),.coll_i3(coll_i3),
  .coll_o0(coll_o0),.coll_o1(coll_o1),.coll_o2(coll_o2),.coll_o3(coll_o3),

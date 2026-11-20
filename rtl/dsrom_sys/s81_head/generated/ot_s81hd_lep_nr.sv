@@ -116,11 +116,12 @@ module ot_s81hd_lep_core_nr #(
     // L5B-LEPMU 10-21: AB_EN 1 + SAFE_FIFO adds two leaves (lanes 2 / 3 TX state) so rr[0] / rr[1] stop driving 40 / 38
     // reset pins (native census); same release edge as every leaf.
     localparam integer NXR=(SAFE_FIFO && NL==4)?2:0;
-    wire [3+NRX_RST+NXR:0] rr;
+    localparam integer NRV=(SAFE_FIFO && NL==4 && RTG>0)?2:0;   // RST-FAN-1: rxvb_q[0] / [1] own locals (mapped tree only)
+    wire [3+NRX_RST+NXR+NRV:0] rr;
     generate if(SAFE_FIFO && RTG==0) begin:g_reset_balanced
       ot_rst_relay_tree3 #(.REGIONS(4+NRX_RST+NXR)) u_rstr(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
     end else if(SAFE_FIFO) begin:g_reset_mapped   // RST-FAN-1: root copies + free group boundaries, same 3 edges
-      ot_rst_relay_tree3m #(.REGIONS(4+NRX_RST+NXR),.GROUPS(RTG),.ROOTS(RTR),.GS(RTGS[16*RTG-1:0]),.RM(RTRM[4*RTG-1:0]))
+      ot_rst_relay_tree3m #(.REGIONS(4+NRX_RST+NXR+NRV),.GROUPS(RTG),.ROOTS(RTR),.GS(RTGS[16*RTG-1:0]),.RM(RTRM[4*RTG-1:0]))
         u_rstr(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
     end else begin:g_reset_legacy
       ot_rst_relay #(.REGIONS(4+NRX_RST), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rstr (.clk(clk), .rst_n_in(rst_n), .rst_n(rr));
@@ -795,7 +796,13 @@ module ot_s81hd_lep_core_nr #(
         // reg does not stop that) and one flop drove rxv[1] and rxvb[*] ~580 um apart (gate textbook.wire_reach 10-19)
         wire rnb = rr[1];
         (* keep = "true" *) reg [1:0] rxvb_q;
-        always @(posedge clk or negedge rnb) if (!rnb) rxvb_q <= 2'b00; else rxvb_q <= 2'b11;
+        if (NRV == 0) begin : g_rxvb_r1
+            always @(posedge clk or negedge rnb) if (!rnb) rxvb_q <= 2'b00; else rxvb_q <= 2'b11;
+        end else begin : g_rxvb_own   // RST-FAN-1: one local per lane (rr[4+NRX_RST+NXR+b]), same release edge
+            wire rnb0 = rr[4+NRX_RST+NXR], rnb1 = rr[5+NRX_RST+NXR];
+            always @(posedge clk or negedge rnb0) if (!rnb0) rxvb_q[0] <= 1'b0; else rxvb_q[0] <= 1'b1;
+            always @(posedge clk or negedge rnb1) if (!rnb1) rxvb_q[1] <= 1'b0; else rxvb_q[1] <= 1'b1;
+        end
         assign rxvb = rxvb_q;
     end else begin : g_nrxb
         assign li2_r = 1'b0; assign li3_r = 1'b0; assign rxvb = 2'b00;
