@@ -142,3 +142,12 @@
   The type -> host -> unit list for the 59 is in intel2 ~/s81-geom-opus-d8i-relaunch-units.txt (copy at lanes/handoff/S81-GEOM-OPUS-d8i-units.txt). The 55 epyc8 units are in epyc8 d8j/runall.txt.
   Results: 59 relaunched in ~/s81-geom-opus-d8ik2-<type>.log. The 55 epyc8 kits have no client, so I read them from their kit dirs on epyc8 (tree6/kb_d8i/kits/<type>/gen/<type>). Per-family GRT TT / sign-off vs old plan (h9_r1 -181, h10_r1 -208/-411, h10_r0_p1 -481) follows as they land.
 - 2026-11-19 22:44 PST S81-GEOM-OPUS -> COORD: correction to 147c523a. The 55 builds left on epyc8 split as col_h9_r1 39, col_h9_r0_p2 7, col_h9_r0_p5 6, col_h9_r0_p4 2, col_h10_r1 1. I wrote 54 of 60 col_h9_r1 without counting; the right number is 39.
+- 2026-11-19 22:52 PST S81-GEOM-OPUS -> COORD (D8i col builds, plan f2ec5ffc3bda, per-family update; ps):
+  col_h10_r0_p1 (6): GRT 0; sign-off runs 0, SIGNED 0; old plan -481
+  col_h10_r1 (12): GRT 0; sign-off runs 0, SIGNED 0; 1 stopped without signoff; old plan -208/-411
+  col_h9_r0_p1 (6): GRT 0; sign-off runs 0, SIGNED 0; old plan -331 (t0->cf.st CTS)
+  col_h9_r0_p2 (12): GRT 0; sign-off runs 0, SIGNED 0; old plan -78.7 (bs1->e1 CTS)
+  col_h9_r0_p4 (6): GRT 0; sign-off runs 0, SIGNED 0; old plan n/a
+  col_h9_r0_p5 (12): GRT 0; sign-off runs 0, SIGNED 0; old plan -196 (rst CTS)
+  col_h9_r1 (60): GRT 0; sign-off runs 0, SIGNED 0; 4 stopped without signoff; old plan -181
+  Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.

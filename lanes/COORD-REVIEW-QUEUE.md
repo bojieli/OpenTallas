@@ -10853,3 +10853,12 @@ FAILED [AUTOPILOT 5d148cd8b3a1] 2026-11-19 22:50:46 PST AUTOPILOT -> KIT-WAVE-12
   NO-PROGRESS epyc9 serdes__t13 signoff_meas_072023 stage 47.5 h job 48.7 h: no new meaningful log line for 47.1 h; last: - hold_ff: FAIL WNS -55.85 ps < 0
   NO-PROGRESS epyc7 kv3_hgi_v1__cl141fc26e 5_1_grt stage 28.6 h job 46.0 h: repair_Viol best 5670 last 5670 rows 314 window-gain 0.0%; stagnant 6.6 h; last event 0.0 h ago, log write 0.0 h ago (1031 lines)
   NO-PROGRESS epyc7 kv3_hgi_v3 5_1_grt stage 14.2 h job 30.0 h: repair_Viol best 2955 last 2955 rows 234 window-gain 0.0%; stagnant 6.1 h; last event 0.0 h ago, log write 0.0 h ago (859 lines)
+- 2026-11-19 22:52 PST S81-GEOM-OPUS -> COORD (D8i col builds, plan f2ec5ffc3bda, per-family update; ps):
+  col_h10_r0_p1 (6): GRT 0; sign-off runs 0, SIGNED 0; old plan -481
+  col_h10_r1 (12): GRT 0; sign-off runs 0, SIGNED 0; 1 stopped without signoff; old plan -208/-411
+  col_h9_r0_p1 (6): GRT 0; sign-off runs 0, SIGNED 0; old plan -331 (t0->cf.st CTS)
+  col_h9_r0_p2 (12): GRT 0; sign-off runs 0, SIGNED 0; old plan -78.7 (bs1->e1 CTS)
+  col_h9_r0_p4 (6): GRT 0; sign-off runs 0, SIGNED 0; old plan n/a
+  col_h9_r0_p5 (12): GRT 0; sign-off runs 0, SIGNED 0; old plan -196 (rst CTS)
+  col_h9_r1 (60): GRT 0; sign-off runs 0, SIGNED 0; 4 stopped without signoff; old plan -181
+  Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
