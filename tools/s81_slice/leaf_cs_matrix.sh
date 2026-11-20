@@ -21,6 +21,8 @@ for c in VNI VNO Y U SW SWR RA RAR PVS VSP; do
     run leaf_$c PASS env S81SL_CST="-GCS_${c}_D=1" bash tools/s81_slice/leaf_bench.sh $O/leaf_$c 0 L0
 done
 run leaf_Y2 PASS env S81SL_CST="-GCS_Y_D=2" bash tools/s81_slice/leaf_bench.sh $O/leaf_Y2 0 L0
+# S81-LEAF-SWR 11-19: leaf__t60 has 2 stations on the vsw -> vs return (980 um pin to pin); with SW 1 as on that leaf, layer 2
+run leaf_SWR2 PASS env S81SL_CST="-GCS_SW_D=1 -GCS_SWR_D=2" bash tools/s81_slice/leaf_bench.sh $O/leaf_SWR2 0 L2
 run leaf_all PASS env S81SL_CST="$ALL" bash tools/s81_slice/leaf_bench.sh $O/leaf_all 0 L0
 run leaf_mutuv FAIL env S81SL_CST="-GCS_U_D=1 +define+OT_S81SL_CST_MUT_UV" bash tools/s81_slice/leaf_bench.sh $O/leaf_mutuv 0 L0
 for c in VE VER; do
