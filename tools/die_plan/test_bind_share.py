@@ -1,4 +1,5 @@
 import os, tempfile, unittest
+from unittest.mock import patch
 import bind_share as B
 
 
@@ -18,7 +19,10 @@ class T(unittest.TestCase):
     def test_small_or_unstorable_kept(self):
         d = tempfile.mkdtemp(); p = d + "/a.json"; open(p, "wb").write(b"x")
         self.assertEqual(B.share_identical(p, d + "/s"), "kept")
-        self.assertEqual(B.share_identical(p, None, 0), "kept")      # not under a scratch root, no OT_BIND_SHARE
+        # The remote gate's TMPDIR can sit under a real scratch root.
+        # Exercise the unavailable-store case without writing its shared store.
+        with patch.object(B, "store_dir", return_value=None):
+            self.assertEqual(B.share_identical(p, None, 0), "kept")
 
     def test_orphan_store_entry_pruned(self):
         d = tempfile.mkdtemp(); store = d + "/s"; os.makedirs(store)
