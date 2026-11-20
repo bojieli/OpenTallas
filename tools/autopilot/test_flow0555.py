@@ -792,3 +792,29 @@ def test_loop_gaps_run_in_the_aux_timer_when_the_marker_exists(tmp_path, monkeyp
     assert len(calls) == 1 and calls[0][0] == {"jobs": {}}
     src = open(A.__file__).read()
     assert "if not loop_gaps_off_tick():" in src                  # the tick skips it
+
+
+def test_family_key_groups_generator_families_and_variants():
+    assert KW.family_key("col_h9_r1__t1__cl49d7a23e__pv047ea3b3") == "col_h9_r1" == KW.family_key("col_h9_r1__t1__clf32cde8d")
+    assert KW.family_key("ot_s81sl_leaf__t56") == KW.family_key("ot_s81sl_leaf__t21") == "ot_s81sl_leaf"
+    assert KW.family_key("kv3_pv_v3") == KW.family_key("kv3_pv_v3n") == "kv3_pv" and KW.family_key("hd_ctl_e") == "hd_ctl_e"
+
+
+def test_representatives_first_hold_siblings_while_the_representative_fails_and_release_on_a_new_attempt():
+    cfg = {"dies": {"s81": {"event": "E"}}, "stops_off": True}
+    mk = lambda i: {"die": "s81", "item": i, "kind": "type"}
+    picks = [mk("ot_s81sl_leaf__t1"), mk("ot_s81sl_leaf__t2"), mk("ot_s81sl_leaf__t3"), mk("slice_station__t1")]
+    st = {"items": {"a": {"die": "s81", "item": "ot_s81sl_leaf__t3", "status": "FAIL", "event": "OLD", "started": 1, "attempt": "1"}}}      # t3 failed most (on an old event)
+    ordered, held, meta = KW.family_plan(cfg, st, "s81", picks)
+    assert meta["families"] == 2 and "ot_s81sl_leaf__t3" in meta["reps"] and "slice_station__t1" in meta["reps"] and meta["siblings"] == 2 and not held
+    assert [r["item"] for r in ordered][:2] == sorted(["ot_s81sl_leaf__t3", "slice_station__t1"], key=lambda x: [r["item"] for r in picks].index(x))      # representatives first
+    st["items"]["b"] = {"die": "s81", "item": "ot_s81sl_leaf__t3", "status": "FAIL", "class": "PLAN", "stage": "place", "event": "E", "started": 5, "attempt": "2"}
+    ordered, held, meta = KW.family_plan(cfg, st, "s81", picks)
+    assert set(held) == {"ot_s81sl_leaf__t1", "ot_s81sl_leaf__t2"} and "FAMILY-HOLD" in held["ot_s81sl_leaf__t1"]
+    assert {r["item"] for r in ordered} == {"ot_s81sl_leaf__t3", "slice_station__t1"}                          # siblings stay queued, not launched
+    st["items"]["c"] = {"die": "s81", "item": "ot_s81sl_leaf__t3", "status": "RUNNING", "event": "E", "started": 9, "attempt": "3"}       # the fix landed: a newer attempt
+    ordered, held, meta = KW.family_plan(cfg, st, "s81", picks)
+    assert not held and len(ordered) == 4
+    st["items"]["c"]["status"] = "FAIL"
+    st["items"]["c"].update(**{"class": "INFRA"}, reason="make Error 247")
+    assert not KW.family_plan(cfg, st, "s81", picks)[1]                                                       # an INFRA failure of the representative holds nothing

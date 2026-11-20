@@ -3080,6 +3080,49 @@ def retire_resign_unstarted(AP, cfg, st):
 PLAN_ROW_EXCLUDE = ("ot_sram_*", "ot_rom_*", "ot_regfile_*")      # generated memory / ROM macro masters: no kit of their own (die option plan_row_exclude replaces the list)
 
 
+_FAM_TAIL = re.compile(r"(_t\d+|_v\d+[a-z]*|_p\d+|_n\d+|_[we]\d+)$")
+
+
+def family_key(item):
+    """OWNER 11-20 (#8, FABLE-CONVERGE-0215 move 3): the family of a wave type = its generator family / template: the name before the first '__' (class / param-variant suffixes
+    __cl<hash>, __pv<hash>, __t<n>), minus one trailing instance token (_t12, _v3n, _p4, _n9, _e2).  col_h9_r1__t1__cl..__pv.. -> col_h9_r1; ot_s81sl_leaf__t56 -> ot_s81sl_leaf"""
+    head = str(item).split("__")[0]
+    return _FAM_TAIL.sub("", head) or head
+
+
+def family_plan(cfg, st, die, picks):
+    """OWNER 11-20 (#8): representatives first.  Per die, the picked type rows are grouped by family_key; ONE representative per family (the most-failed type, then the name) launches at
+    high priority (ot-run --crit via spec crit); siblings launch after every representative (spare capacity, default priority).  When the representative of a family FAILED on the current
+    event with a design / flow class (not INFRA) its siblings are HELD (they stay in the queue) until the representative has a newer attempt (the family's fix landed) or signs.
+    Old-plan kits already running are never touched.  -> (ordered picks, {item: hold reason}, {"families": n, "reps": [..], "siblings": n})"""
+    d = cfg["dies"][die]
+    fails = collections.Counter(r.get("item") for r in (st.get("items") or {}).values() if r.get("die") == die and r.get("status") == "FAIL")
+    fam = collections.defaultdict(list)
+    for r in picks:
+        if (r.get("kind") or "type") == "type":
+            fam[family_key(r["item"])].append(r)
+    reps, held, sibs = {}, {}, set()
+    ev = d.get("event")
+    for k, members in fam.items():
+        rep_row = max(members, key=lambda r: (fails.get(r["item"], 0), r["item"]))
+        reps[k] = rep_row["item"]
+        for r in members:
+            if r is rep_row:
+                continue
+            sibs.add(r["item"])
+        # the representative's latest record on the current event
+        recs = [x for x in (st.get("items") or {}).values() if x.get("die") == die and x.get("item") == rep_row["item"] and str(x.get("event") or "") == str(ev or "")]
+        last = max(recs, key=lambda x: (float(x.get("started") or 0), int(x.get("attempt") or 0)), default=None)
+        if last and last.get("status") == "FAIL" and not is_infra_fail(last):
+            for r in members:
+                if r is not rep_row:
+                    held[r["item"]] = f"FAMILY-HOLD {k}: representative {rep_row['item']} failed ({last.get('class') or '?'} @{last.get('stage') or '?'}) on this plan; its siblings wait for the family fix"
+    rep_set = set(reps.values())
+    ordered = [r for r in picks if r["item"] in rep_set] + [r for r in picks if r["item"] not in rep_set and r["item"] not in held]
+    meta = {"families": len(fam), "reps": sorted(rep_set), "siblings": len(sibs), "held": len(held)}
+    return ordered, held, meta
+
+
 def plan_type_rows(cfg, die, d, rows, plan_types):
     """COORD 11-19 (HEAD-CROSSING: variant types hd_ctl_e, hd_spn_eshim_rx, hd_st_n3_turn ... 18 rows never relaunched on a new event, the HEAD builder took types only from the ownership table
     that lists base names): under stops_off (not hbm) EVERY type of the current plan (partition_types) is a wave row, whether or not OWNERS names it.  Not rows already known (an OWNERS row, or a
@@ -4464,7 +4507,7 @@ def spec_for(cfg, die, item, hub, parent=None, kind="type"):
             "relay_bay_re": (d["relay_bay_re"] if "relay_bay_re" in d else RELAY_BAY_RE.get(die, "")) if kind == "type" else "",
             "prov_first_re": (d.get("prov_first_re") or "") if kind == "type" else "",
             "bind_mem_gb": int(opt(cfg, die, "bind_mem_gb")), "ot_run": capture_ot_run(cfg),
-            "crit": near_count_hit(cfg.get("_near_count") or set(), die, item, parent, core_module(item))} \
+            "crit": near_count_hit(cfg.get("_near_count") or set(), die, item, parent, core_module(item)) or item in ((cfg.get("_family_reps") or {}).get(die) or ())} \
         | ({"kit_store": True} if kit_store_on(cfg, die, item) else {}) \
         | ({"kit_snap": True} if kit_snap_on(cfg, die, item) else {}) \
         | ({"kit_snap_view_refs": "strict"} if opt_get(cfg, die, "kit_snap_view_refs") == "strict" else {}) \
@@ -10080,6 +10123,17 @@ def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
                     record_lint(st, cfg, die, d["_lint"])
             if ok:
                 picks, skip = select(owners, cfg, die, st, names)
+                if picks and FG.stops_off_die(cfg, die) and d.get("families_first") is not False:
+                    try:                                         # OWNER 11-20 (#8): representatives first, siblings on spare capacity, held while the family's representative fails
+                        _all = list(picks)
+                        picks, _held, _fm = family_plan(cfg, st, die, picks)
+                        for _it, _why in _held.items():
+                            skip.setdefault(_why[:100], []).append(_it)
+                        cfg.setdefault("_family_reps", {})[die] = set(_fm["reps"])
+                        d["_family_meta"] = _fm
+                    except Exception as _e:                      # a grouping never stops the plan
+                        picks = _all
+                        AP.log(f"KIT-WAVE FAMILIES {die} skipped: {type(_e).__name__}: {_e}")
                 if skip.get(NO_ROW_SOURCE):                  # WAVE-OPS-1 11-10: never silent (18 HBM cores had no row)
                     its = skip[NO_ROW_SOURCE]
                     (AP.log if AP else log)(f"KIT-WAVE NO-ROW-SOURCE {die}: {len(its)} only_items item(s) have no row "
@@ -10186,6 +10240,10 @@ def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
             _dd = (cfg.get("dies") or {}).get(_die) or {}
             if not _dd.get("enabled"):
                 continue
+            if _ok and _dd.get("_family_meta"):                           # OWNER 11-20 (#8): representative count per die per tick
+                _fm = _dd["_family_meta"]
+                (AP.log if AP else log)(f"KIT-WAVE FAMILIES {_die}: {_fm['families']} famil(ies), {len(_fm['reps'])} representative(s) (high priority), "
+                                        f"{_fm['siblings']} sibling(s) (spare capacity), {_fm['held']} held by a failed representative; picks this tick {len(_picks)}, launched {_lp.get(_die, 0)}")
             if _ok and (_dd.get("_plan_rows_n") is not None):          # COORD 11-19: the synthesized-rows counter, one line per die per tick
                 (AP.log if AP else log)(f"KIT-WAVE PLAN-ROWS {_die}: {_dd.get('_plan_rows_n')} plan type(s) with no OWNERS row synthesized, "
                                         f"{sum(1 for r in _picks if r.get('_plan_row'))} picked, {sum(1 for x in launch if x[0] == _die and x[1].get('_plan_row'))} launched this tick")
