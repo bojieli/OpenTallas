@@ -1204,5 +1204,208 @@
    "cycles": "none beyond L/K6 (+1 eN, +1 tN on these 2 types)"
   },
   "risk": "the hst3 trunk now uses the middle channel x 293.76-388.8 from y 950 to 640 (one 1575-bit trunk; k7 15,490 there came from the hst2 chain + t2 + ft2 column). Unproven: needs k9"
+ },
+ "N_k12_rows_hgi_v1": {
+  "by": "FABLE-FIX-KV-HG (Opus successor) 11-20 10:xx PST, for FABLE-PD-KV-2300 B / FABLE-CLOSURE 23:15",
+  "k12": "epyc9 /srv/opentallas-scratch2/claude/opus-kv-hg/k12 = k7 GEN output (d25d4 bind) + k12_edit.py + k12_rst.py + tN bin eq site; stopped after GRT iter 5",
+  "result": {
+   "post_cts_tt": {
+    "wns_ps": 14.23,
+    "tns": 0.0,
+    "failing_ends": 0
+   },
+   "grt_iter5_total": {
+    "k7": 41887,
+    "k10": 21073,
+    "k11": 19249,
+    "k12": 17404
+   },
+   "zones_k10_k11_k12": {
+    "landing gap x0-78 y1000-1420": [
+     1417,
+     1,
+     2
+    ],
+    "x340 gap row4 y898-1300": [
+     774,
+     7825,
+     4562
+    ],
+    "mid gap row3 x604-700 y683-898": [
+     3453,
+     3851,
+     3879
+    ],
+    "x340 gap row3": [
+     302,
+     310,
+     341
+    ],
+    "channel y898-1002 x0-389": [
+     453,
+     280,
+     136
+    ],
+    "channel y898-1002 x389-700": [
+     118,
+     136,
+     248
+    ],
+    "west gap x0-78 y233-898": [
+     738,
+     706,
+     59
+    ],
+    "rest of die": [
+     13818,
+     6140,
+     8177
+    ]
+   },
+   "residual_cause": "mid gap: 3,869 of 3,879 lie in y 750-775, at x 610 and 640-670, directly under the M1-M7 reserved clock rects (607-610 / 613-616 / 639-672 x 760-765); the x 617-639 lane the hst3 leg now uses holds 43. The overflow is insensitive to the hst3 leg (k10/k11/k12: 3,453/3,851/3,879). x340 row4: 950+859+228 at y 1150-1200 under the strip (302-346, 1187.5) and 878+549+178 at y 900-950 under the rect (339-354, 909) + ft2 station. Fix = proposal 3 (reserved rects block clock layers only), not another route."
+  },
+  "rows": {
+   "reg_leaf_split": [
+    {
+     "leaf": "u_hst2_t2",
+     "copies": [
+      {
+       "name": "a",
+       "pins": [
+        "u_head2_e0.*",
+        "u_head2_e2.g_front_1_u_front__c_in",
+        "u_head2_e2.g_front_1_u_front__e_in",
+        "u_head2_e2.g_front_1_u_front__lt_in",
+        "u_head2_e2.g_front_1_u_front__q_valid_in",
+        "u_head2_e2.g_front_1_u_front__q_beat_in",
+        "u_head2_e2.g_front_1_u_front__q_data_in"
+       ],
+       "site_um": [
+        40.0,
+        285.0
+       ]
+      },
+      {
+       "name": "b",
+       "pins": [
+        "u_head2_e2.g_front_1_u_front__row_in",
+        "u_head2_e4.*"
+       ],
+       "site_um": [
+        40.0,
+        600.0
+       ]
+      },
+      {
+       "name": "c",
+       "pins": [
+        "u_head2_e6.*"
+       ],
+       "site_um": [
+        40.0,
+        980.0
+       ]
+      }
+     ]
+    },
+    {
+     "leaf": "u_hst3_t2",
+     "copies": [
+      {
+       "name": "a",
+       "pins": [
+        "u_head3_e0.*",
+        "u_head3_e2.g_front_1_u_front__c_in",
+        "u_head3_e2.g_front_1_u_front__e_in",
+        "u_head3_e2.g_front_1_u_front__lt_in",
+        "u_head3_e2.g_front_1_u_front__q_valid_in",
+        "u_head3_e2.g_front_1_u_front__q_beat_in",
+        "u_head3_e2.g_front_1_u_front__q_data_in"
+       ],
+       "site_um": [
+        650.0,
+        285.0
+       ]
+      },
+      {
+       "name": "b",
+       "pins": [
+        "u_head3_e2.g_front_1_u_front__row_in",
+        "u_head3_e4.*"
+       ],
+       "site_um": [
+        660.0,
+        600.0
+       ]
+      },
+      {
+       "name": "c",
+       "pins": [
+        "u_head3_e6.*"
+       ],
+       "site_um": [
+        655.0,
+        925.0
+       ]
+      }
+     ]
+    }
+   ],
+   "internal_stations": [
+    "bus:i_ectl_Q_N_tN regs_um [[133.0,1270.08],[366.0,1140.0],[385.0,935.0]]  (D=3)",
+    "bus:i_ectl_Q_N_eN regs_um [[40.0,383.0],[40.0,775.0],[250.0,935.0]]  (D=3)"
+   ],
+   "relay_polylines": [
+    {
+     "group_re": "u_hst2_g$",
+     "polyline_um": [
+      [
+       385.0,
+       935.0
+      ],
+      [
+       40.0,
+       935.0
+      ],
+      [
+       40.0,
+       660.0
+      ]
+     ]
+    },
+    {
+     "group_re": "u_hst3_g$",
+     "polyline_um": [
+      [
+       385.0,
+       935.0
+      ],
+      [
+       627.0,
+       935.0
+      ],
+      [
+       627.0,
+       640.0
+      ]
+     ]
+    }
+   ],
+   "relay_sites": {
+    "u_bin_i_ectl_Q_N_eN.eq": [
+     44.0,
+     40.0
+    ],
+    "u_bin_i_ectl_Q_N_tN.eq": [
+     95.0,
+     1290.0
+    ]
+   },
+   "cycles": "eN +2, tN +2 vs bind (pre-approved; aligned at hst_g)",
+   "hops_um": "eN 403/392/370 then 225 (g2) / 403 (g3); tN 363/224 then 310 (g2) / 269 (g3); hst2 path 663 hop 331; hst3 path 602 hop 301; t1->copies 375/60/320; ftg->copies 378/72/313",
+   "clearance": "every station >= 20 um from clock/reset taps, >= 15 um from reserved rects, >= 25 um from ft stations, >= 20 um from each other (sc/siteclear.py, 0 close)",
+   "reset": "k12 adds 2 kept ot_dp_rrelay copies of u_cland_rst_ft0_i (d from depth-8 raw nodes rst_rl_177 / rst_rl_238, sited (1240,1410) / (30,135)), 0 cycles: this stands in for the D25e raw-branch regen, which D25e already binds for hgi_v1 (u_cland_raw_fs_ft0_o_* chains in rtl/kv3_hgi_v1__cl141fc26e.sv). No plan row needed on D25e/D25e3."
+  },
+  "status": "MEASURED; candidate for the event after D25e3 (hgi_v1 x2). Replaces M where named."
  }
 }
