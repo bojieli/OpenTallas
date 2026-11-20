@@ -1426,6 +1426,21 @@ def rearm_candidates(state, cfg, die, d, log=None):
     return out
 
 
+def stage_cap_refresh_cmd(kit):
+    """FLOW-FIX-2045: shell command that replaces <kit>/stage_odb_cap.py by the runtime tools' copy (content sent in the command, so the host needs no matching rt path); only when the kit
+    already has the file (a kit without it never ran a watcher) and the copy differs"""
+    import base64
+    src = Path(__file__).resolve().with_name("stage_odb_cap.py")
+    if not src.exists():
+        src = Path(__file__).resolve().parents[1] / "die_plan" / "stage_odb_cap.py"
+    try:
+        b64 = base64.b64encode(src.read_bytes()).decode()
+    except OSError:
+        return "true"
+    k = shlex.quote(str(kit) + "/stage_odb_cap.py")
+    return f"[ ! -f {k} ] || {{ echo {b64} | base64 -d > {k}.new && ! cmp -s {k}.new {k} && mv -f {k}.new {k} || rm -f {k}.new; }}"
+
+
 LOG_HOURLY_S = 3600
 
 
@@ -8386,6 +8401,9 @@ def run_item(spec_path):
         if rc:
             return fail("lec_tools", txt)
         res["future_lec"] = lt
+    # FLOW-FIX-2045: the STAGE-CAP watcher a kit runs is the stage_odb_cap.py gen copied from the die's PINNED snapshot (HEAD r11b: older than the fix), so every wave kit still deleted the early
+    # stage ODBs and its route job re-ran floorplan + place.  The wave puts rt/current's copy into the kit (before the inputs are fingerprinted); a kit without the file is left alone.
+    run("stage_cap_refresh", remote(stage_cap_refresh_cmd(K)), idempotent=True)
     # KW-RESUME-1: record the kit's gen-time inputs (K/.kw_inputs.json) before any gate writes into K; a later
     # relaunch fingerprints against this record.  Advisory: a failure only means the next relaunch uses the mtime rule.
     run("resume_inputs", remote(kr_cmd(f"inputs {q(K)}")), idempotent=True)

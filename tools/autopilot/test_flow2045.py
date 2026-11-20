@@ -138,3 +138,19 @@ def test_repeat_inputs_do_not_hold_the_plan_path_only_block_and_src(tmp_path):
     cfg["dies"]["s81_head"]["src_sha"] = "S2"
     assert KW.repeat_inputs_now(cfg, st, "s81_head", "hd_host_e", "B1")["src"] == "S2"           # a changed src sha releases
     assert KW.repeat_inputs_now(cfg, st, "s81_head", "hd_host_e", "B2")["block"] == "B2"         # a changed block releases
+
+
+def test_stage_cap_refresh_replaces_an_old_watcher_copy_in_the_kit(tmp_path):
+    """FLOW-FIX-2045: kits from a pinned snapshot older than the fix get rt's stage_odb_cap.py; a kit without the file gets none"""
+    import subprocess
+    kit = tmp_path / "kit"; kit.mkdir()
+    (kit / "stage_odb_cap.py").write_text("# old snapshot copy: deletes 2_x / 3_x with the live watcher\n")
+    cmd = KW.stage_cap_refresh_cmd(kit)
+    assert subprocess.run(["bash", "-c", cmd]).returncode == 0
+    new = (kit / "stage_odb_cap.py").read_text()
+    assert "EARLY_RULES" in new and "def guard" in new and not (kit / "stage_odb_cap.py.new").exists()
+    assert subprocess.run(["bash", "-c", cmd]).returncode == 0                       # idempotent
+    assert (kit / "stage_odb_cap.py").read_text() == new
+    bare = tmp_path / "bare"; bare.mkdir()
+    assert subprocess.run(["bash", "-c", KW.stage_cap_refresh_cmd(bare)]).returncode == 0
+    assert not (bare / "stage_odb_cap.py").exists()
