@@ -50,8 +50,26 @@ for C in TT FF; do python3 -s $S/trial_tap_arrivals.py $K/clock/tree.json $D/grt
 CAT=${CA_TOOLS:-}; if [ -z "$CAT" ]; then pd=$(cd "$(dirname "$P")" && pwd)
   while [ "$pd" != / ]; do [ -f "$pd/.src-manifest.json" ] && { CAT=$pd/tools/die_plan; break; }; pd=$(dirname "$pd"); done; fi
 [ -f "${CAT:-/nonexistent}/die_chain_ca.sh" ] || CAT=$S; log "CA_TOOLS $CAT"
-CA_TOOLS=$CAT bash $CAT/die_chain_ca.sh $D/proof $P $D/ca ${CC:-inv2} --kit-window-out $D/kitwin.json; rc=$?; [ $rc = 0 ] || echo CA_CHAIN >> $D/FAILS; log "CA_CHAIN $rc (STA_CA in $D/ca/CHAIN.log; legacy T/2 = LEGACY)"
-( cd $S && nice python3 -s die_sta_related.py $D/proof --plan $P --out $D/sta_droop --corner TT --corner FF --core-insertion declared --cppr-lca --clock-cell ${CC:-inv2} --margin-policy legacy --data-droop class ) > $D/sta_droop.log 2>&1; rc=$?; [ $rc = 0 ] || echo STA_DROOP >> $D/FAILS; log "STA_DROOP $rc"
+# REAL-VIEWS-1119 (COORD 11-19): every signed core view (--core-view) and signed type view (--kit) whose pins match this
+# plan goes to die_sta_related, so hold is MEASURED on those pairs; unsigned / pin-mismatched blocks stay on the contract
+# (reasons in real_views/real_views.json).  Store: REAL_VIEWS_STORE (rec_<die>.json = counter signed records,
+# digest_<die>.json = signed-export digest, default ~/.local/state/real-views); REAL_VIEWS=0 turns it off.
+rv_resolve(){ # RVTOOLS PLAN OUTDIR -> RVA (args) + RVMSG; never fails the chain (no view = contract)
+  RVA=(); RVMSG="REAL_VIEWS off"; [ "${REAL_VIEWS:-1}" = 0 ] && return 0
+  if python3 -I "$1/real_views.py" "$2" --out "$3" --store "${REAL_VIEWS_STORE:-$HOME/.local/state/real-views}" \
+      ${REAL_VIEWS_FETCH:+--fetch} > "$3.log" 2>&1; then mapfile -t RVA < "$3/args.txt"; RVMSG="REAL_VIEWS $(tail -n 1 "$3.log")"
+  else RVMSG="REAL_VIEWS FAILED (see $3.log): contract only"; fi
+}
+# --kit needs a die_sta_related with the kit register fallback (kit_model reg=); older tool copies get the core views only
+rv_for(){ # STA_TOOLS -> RVF (RVA filtered for that die_sta_related)
+  RVF=("${RVA[@]}"); grep -q "def kit_model(spec, corner, name, reg" "$1/die_sta_related.py" 2>/dev/null && return 0
+  RVF=(); local x; for x in "${RVA[@]}"; do case $x in --kit=*) ;; *) RVF+=("$x");; esac; done
+  RVMSG="$RVMSG | kits SKIPPED for $1 (no kit register fallback)"
+}
+# resolved once with the worktree tools; the CA chain may run the plan's own (older) tools, so filter for those
+rv_resolve "$S" "$P" "$D/real_views"; rv_for "$CAT"; RVCA=("${RVF[@]}"); log "$RVMSG"; rv_for "$S"; RVSD=("${RVF[@]}")
+CA_TOOLS=$CAT REAL_VIEWS_GIVEN=1 bash $CAT/die_chain_ca.sh $D/proof $P $D/ca ${CC:-inv2} --kit-window-out $D/kitwin.json "${RVCA[@]}"; rc=$?; [ $rc = 0 ] || echo CA_CHAIN >> $D/FAILS; log "CA_CHAIN $rc (STA_CA in $D/ca/CHAIN.log; legacy T/2 = LEGACY)"
+( cd $S && nice python3 -s die_sta_related.py $D/proof --plan $P --out $D/sta_droop --corner TT --corner FF --core-insertion declared --cppr-lca --clock-cell ${CC:-inv2} --margin-policy legacy --data-droop class "${RVSD[@]}" ) > $D/sta_droop.log 2>&1; rc=$?; [ $rc = 0 ] || echo STA_DROOP >> $D/FAILS; log "STA_DROOP $rc"
 # any failed step -> CHAIN_FAIL + exit 1 (an all-crashed route used to end CHAIN_DONE with exit 0)
 if [ -s $D/FAILS ]; then log "CHAIN_FAIL $(tr '\n' ' ' < $D/FAILS)"; exit 1; fi
 log CHAIN_DONE

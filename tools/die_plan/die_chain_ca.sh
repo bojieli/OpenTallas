@@ -22,10 +22,32 @@ WFP=; WFB=; [ -n "$WF" ] && { WFP="--write-fall-plan $PLAN"; WFB="--plan-die $PL
 python3 -s "$T/count_align_plan.py" "$OUT/landed_phase_ocv.json" ${CA_PLAN_ARGS:-} $WFP --out "$OUT/count_align_plan.json" > "$OUT/ca_plan.log" 2>&1; r=$?; log "CA_PLAN $r"; [ $r -ne 0 ] && rc=1
 python3 -s "$T/count_align_bind.py" "$OUT/count_align_plan.json" ${CA_BIND_ARGS:-} $WFB --out "$OUT/count_align_bind.json" > "$OUT/ca_bind.log" 2>&1; r=$?; log "CA_BIND $r"; [ $r -ne 0 ] && rc=1
 log "CA_WRITE_EDGE ${WF:-rise}"
+# REAL-VIEWS-1119 (COORD 11-19): every signed core view (--core-view) and signed type view (--kit) whose pins match this
+# plan goes to die_sta_related, so hold is MEASURED on those pairs; unsigned / pin-mismatched blocks stay on the contract
+# (reasons in real_views/real_views.json).  Store: REAL_VIEWS_STORE (rec_<die>.json = counter signed records,
+# digest_<die>.json = signed-export digest, default ~/.local/state/real-views); REAL_VIEWS=0 turns it off.
+rv_resolve(){ # RVTOOLS PLAN OUTDIR -> RVA (args) + RVMSG; never fails the chain (no view = contract)
+  RVA=(); RVMSG="REAL_VIEWS off"; [ "${REAL_VIEWS:-1}" = 0 ] && return 0
+  if python3 -I "$1/real_views.py" "$2" --out "$3" --store "${REAL_VIEWS_STORE:-$HOME/.local/state/real-views}" \
+      ${REAL_VIEWS_FETCH:+--fetch} > "$3.log" 2>&1; then mapfile -t RVA < "$3/args.txt"; RVMSG="REAL_VIEWS $(tail -n 1 "$3.log")"
+  else RVMSG="REAL_VIEWS FAILED (see $3.log): contract only"; fi
+}
+# --kit needs a die_sta_related with the kit register fallback (kit_model reg=); older tool copies get the core views only
+rv_for(){ # STA_TOOLS -> RVF (RVA filtered for that die_sta_related)
+  RVF=("${RVA[@]}"); grep -q "def kit_model(spec, corner, name, reg" "$1/die_sta_related.py" 2>/dev/null && return 0
+  RVF=(); local x; for x in "${RVA[@]}"; do case $x in --kit=*) ;; *) RVF+=("$x");; esac; done
+  RVMSG="$RVMSG | kits SKIPPED for $1 (no kit register fallback)"
+}
+RVF=()
+if [ "${REAL_VIEWS_GIVEN:-0}" = 1 ]; then log "REAL_VIEWS passed by caller"
+else rt=$T; [ -f "$rt/real_views.py" ] || rt=$HERE; rv_resolve "$rt" "$PLAN" "$OUT/real_views"; rv_for "$T"; log "$RVMSG"; fi
 if [ $rc -eq 0 ]; then
   ( cd "$T" && python3 -s die_sta_related.py "$PROOF" --plan "$PLAN" --out "$OUT/sta_ca" --corner TT --corner FF --core-insertion declared --cppr-lca --clock-cell "$CC" \
-      --count-align "$OUT/count_align_bind.json" --count-align-key part $WF "$@" ) > "$OUT/sta_ca.log" 2>&1; log "STA_CA $?"
+      --count-align "$OUT/count_align_bind.json" --count-align-key part $WF "${RVF[@]}" "$@" ) > "$OUT/sta_ca.log" 2>&1; log "STA_CA $?"
+  # measured vs contract hold per pair class (CONTRACT = declared/kit-contract window; MEASURED = both endpoints real views)
+  python3 -I "$HERE/real_views.py" report "$OUT/sta_ca" > "$OUT/hold_report.log" 2>&1
+  while read -r l; do log "$l"; done < "$OUT/hold_report.log"
 else log "STA_CA SKIPPED (a CA step failed: the legacy result below is NOT a landed verdict)"; fi
-( cd "$T" && python3 -s die_sta_related.py "$PROOF" --plan "$PLAN" --out "$OUT/sta_legacy" --corner TT --corner FF --core-insertion declared --cppr-lca --clock-cell "$CC" "$@" ) > "$OUT/sta_legacy.log" 2>&1
+( cd "$T" && python3 -s die_sta_related.py "$PROOF" --plan "$PLAN" --out "$OUT/sta_legacy" --corner TT --corner FF --core-insertion declared --cppr-lca --clock-cell "$CC" "${RVF[@]}" "$@" ) > "$OUT/sta_legacy.log" 2>&1
 log "STA_LEGACY $? (LEGACY T/2 landed result: informational only, not the landed gate)"
 exit $rc
