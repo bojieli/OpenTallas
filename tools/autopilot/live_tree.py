@@ -29,6 +29,7 @@ Host side (shipped over ssh stdin, stdlib only): host-seed, host-apply.
 """
 import argparse
 import concurrent.futures as CF
+import fnmatch
 import hashlib
 import json
 import os
@@ -45,6 +46,29 @@ MANIFEST, HASHFILE, LINKBASE, SNAPGROUP = ".src-manifest.json", ".src-manifest.s
 SSH = ["ssh", "-o", "BatchMode=yes", "-o", "ControlPath=none"]
 FLEET = os.environ.get("OT_LIVE_HOSTS", "intel1 epyc2 epyc7 epyc8 epyc9 epyc10").split()   # --hosts fleet
 FLOOR_GB = float(os.environ.get("OT_LIVE_FLOOR_GB", "100"))     # r709 disk floor: a host keeps this much free after the copy
+
+
+SKIP_FILES = ("*.pyc", "*.bak*", "*.orig", "*.rej")      # the names src_manifest.walk_tree skips: a manifest never lists them (SNAP-RO-1119; stdlib copy of src_manifest.skipped)
+SKIP_DIRS = ("__pycache__", ".git", ".pytest_cache")
+
+
+def skipped(rel):
+    parts = rel.split("/")
+    return any(d in SKIP_DIRS for d in parts[:-1]) or any(fnmatch.fnmatch(parts[-1], g) for g in SKIP_FILES)
+
+
+def writable_names(root):
+    """SNAP-RO-1119 (b): every directory and every regular file under root (and root itself) that still has a write bit.  A snapshot is read-only from the moment it exists."""
+    bad = []
+    for dp, dn, fn in os.walk(root):
+        if os.lstat(dp).st_mode & 0o222:
+            bad.append(dp)
+        for f in fn:
+            p = os.path.join(dp, f)
+            st = os.lstat(p)
+            if not stat.S_ISLNK(st.st_mode) and st.st_mode & 0o222:
+                bad.append(p)
+    return bad
 
 
 def live_path(die, root=KW45):
@@ -181,11 +205,17 @@ def host_apply(live, pack, snaps, name):
             raise SystemExit(f"LIVE_TREE refuse: pack is for tree {str(d.get('old_manifest_hash'))[:12]}, live is {m['manifest_hash'][:12]}")
         files = dict(m["files"])
         for path in d.get("delete") or []:
+            if skipped(path):
+                files.pop(path, None)                      # SNAP-RO-1119: a skipped name is never a manifest entry (an old pack may carry one)
+                continue
             p = os.path.join(live, path)
             if os.path.lexists(p):
                 os.unlink(p)
             files.pop(path, None)
         for path, e in (d.get("add") or {}).items():
+            if skipped(path):
+                print(f"LIVE_TREE NOTE pack path {path} is not tracked content (a *.orig / *.bak* / *.rej / cache name): not added, not listed")
+                continue
             srcf = os.path.join(pack, "files", path)
             got = sha256_file(srcf)
             if got != e["sha256"]:
@@ -206,6 +236,7 @@ def host_apply(live, pack, snaps, name):
     if os.path.exists(part):
         dirs_writable(part)
         shutil.rmtree(part)
+    files_readonly(live)                                         # SNAP-RO-1119 (b): the live tree's files are a-w before they are shared (a writable one would reach every snapshot)
     subprocess.run(["cp", "-al", live, part], check=True)       # a snapshot of the unpublished live tree (directories are new, files shared)
     for n in (LINKBASE,):
         if os.path.lexists(os.path.join(part, n)):
@@ -214,6 +245,9 @@ def host_apply(live, pack, snaps, name):
         f.write(os.path.realpath(live) + "\n")
     os.chmod(os.path.join(part, SNAPGROUP), 0o444)
     dirs_writable(part, on=False)
+    wr = writable_names(part)                                    # SNAP-RO-1119 (b): refuse a snapshot that is not read-only; never chmod a file (its inode is the live tree's)
+    if wr:
+        raise SystemExit(f"LIVE_TREE refuse: snapshot {final} would not be read-only ({len(wr)} writable, first {wr[0]}); {part} left for inspection")
     os.chmod(snaps, os.lstat(snaps).st_mode | stat.S_IWUSR)
     os.rename(part, final)
     print(f"LIVE_TREE SNAP {final} {m['manifest_hash']}")

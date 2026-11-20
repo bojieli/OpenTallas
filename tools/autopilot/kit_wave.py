@@ -7487,6 +7487,81 @@ def src_manifest_verdict(sp, rc, txt):
                if "SRC_MANIFEST NOT-READY" in txt else "")), ""
 
 
+# SNAP-RO-1119 (d) (FABLE-FLOW-2155 class 1): a src_manifest failure is a fact about the die's snapshot, not about a row.  17 QC rows each failed it, each was blocked on its own, and none relaunched when the
+# tree was fixed.  3 or more src_manifest failures on the same snapshot within one tick open ONE die-level breaker (one log line): the die's rows on that snapshot stop launching and the wave re-verifies the
+# snapshot every tick; the first clean verify closes it and the rows go on.  A self-stop on a snapshot that is failing, never a gate on a healthy one.  These failures do not enter the repeat ledger or the class breaker.
+SRC_BREAKER_N = 3
+SRC_BREAKER_WINDOW_S = 900
+SRC_BREAKER_RECHECK_S = 120
+_SRC_FAIL_PATH_RE = re.compile(r"SRC_MANIFEST FAIL (/\S+?):")
+
+
+def is_src_manifest_fail(stage, why):
+    return str(stage or "") == "src_manifest" or "SRC_MANIFEST FAIL " in str(why or "")
+
+
+def src_breaker_note(st, die, why, cur_src="", now=None):
+    """one src_manifest failure of DIE on the snapshot its text names (else the die's current src).  -> the breaker key when this failure opened it, else ''"""
+    now = time.time() if now is None else now
+    m = _SRC_FAIL_PATH_RE.search(str(why or ""))
+    src = m.group(1) if m else str(cur_src or "")
+    if not src:
+        return ""
+    key = f"{die}|{src}"
+    br = st.setdefault("src_breaker", {}).setdefault(key, {"fails": []})
+    if br.get("open"):
+        return ""
+    br["fails"] = [t for t in br.get("fails", []) if now - t <= SRC_BREAKER_WINDOW_S] + [now]
+    if len(br["fails"]) >= SRC_BREAKER_N:
+        br.update(open=now, last_check=0, first=str(why or "")[:240], n=len(br["fails"]))
+        return key
+    return ""
+
+
+def src_breaker_gate(AP, cfg, st, die, go, skip, verify_fn=None, now=None):
+    """-> the rows of GO that may launch this tick.  Open breaker on the die's current snapshot: re-verify it (at most every SRC_BREAKER_RECHECK_S); clean = close + one line; else the die's rows wait.
+    Entries of snapshots the die no longer uses, and stale failure counts, are dropped."""
+    now = time.time() if now is None else now
+    br_all = st.get("src_breaker") or {}
+    d = (cfg.get("dies") or {}).get(die) or {}
+    cur = str(d.get("src") or "")
+    for k in [k for k in br_all if k.split("|", 1)[0] == die and k != f"{die}|{cur}"]:
+        br_all.pop(k, None)                              # the die moved to another snapshot: its breaker is over
+    br = br_all.get(f"{die}|{cur}")
+    if not br or not br.get("open"):
+        if br:
+            br["fails"] = [t for t in br.get("fails", []) if now - t <= SRC_BREAKER_WINDOW_S]
+        return go
+    if now - float(br.get("last_check") or 0) >= SRC_BREAKER_RECHECK_S:
+        br["last_check"] = now
+        sp = {"src": cur, "src_manifest": d.get("src_manifest") if isinstance(d.get("src_manifest"), str) else "require", "src_manifest_hash": d.get("src_manifest_hash") or ""}
+        rc, txt, host = (verify_fn or src_breaker_verify)(d, sp)
+        why, _note = src_manifest_verdict(sp, rc, txt)
+        if rc is not None and not why:
+            br_all.pop(f"{die}|{cur}", None)
+            (AP.log if AP else log)(f"KIT-WAVE SRC-BREAKER CLOSED {die}: {cur} verifies on {host}; the die's rows launch again")
+            return go
+        br["last_why"] = str(why or txt or "no answer")[:240]
+    if go:
+        skip.setdefault(f"src_manifest breaker open on {os.path.basename(cur.rstrip('/'))}", []).extend(r["item"] for r in go)
+    return []
+
+
+def src_breaker_verify(d, sp):
+    """verify the die snapshot on its gen host, over ssh -> (rc | None when no answer, text, host)"""
+    cmd = src_manifest_cmd(sp)
+    host = str(d.get("gen_host") or ((d.get("gen_hosts") or [""])[0]))
+    if not cmd or not host:
+        return None, "", host
+    try:
+        p = subprocess.run(["timeout", "240", "ssh", "-n", "-o", "BatchMode=yes", "-o", "ControlPath=none", "-o", "ConnectTimeout=15", host, cmd], capture_output=True, text=True, timeout=260)
+    except (OSError, subprocess.TimeoutExpired):
+        return None, "", host
+    if p.returncode and "SRC_MANIFEST" not in (p.stdout + p.stderr):
+        return None, p.stderr[-200:], host              # ssh / host trouble: the breaker stays as it is
+    return p.returncode, (p.stdout or "") + (p.stderr or ""), host
+
+
 def placed_scan_line(txt):
     """PLACED-SCAN-1115: the AP_PLACED_SCAN line of geom_check.sh (zero-logic bus hops over reach with no station on the
     matched group), "" when the scan did not run.  Advisory: it never changes the geom verdict."""
@@ -9923,6 +9998,11 @@ def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
                                 skip.setdefault(scst[r["item"]], []).append(r["item"])
                         go = [r for r in go if r["item"] not in scst]
                         AP.log(f"KIT-WAVE SIDECAR-STALE {die}: {len(scst)} row(s) not launched: " + " ".join(sorted(scst)[:40]))
+                if AP and probe:                                   # SNAP-RO-1119 (d): one die-level self-stop on a snapshot that fails src_manifest
+                    try:
+                        go = src_breaker_gate(AP, cfg, st, die, go, skip)
+                    except Exception as e:                         # a breaker never stops the plan
+                        AP.log(f"KIT-WAVE src breaker {die} skipped: {type(e).__name__}: {e}")
                 if AP and probe and d.get("flow_guard") is not False and not FG.stops_off_die(cfg, die) and (go or any(FG.held_key(st, die, r["item"]) for r in picks)):
                     try:
                         go = flow_guard_gate(AP, cfg, st, die, go, picks, skip)
@@ -12450,7 +12530,13 @@ def _collect_body(AP, cfg, st, notices):
             _stg = FG.fail_stage(why) or str(res.get("stage") or "")
             _key = FG.norm_class(cls, why)
             # COORD 11-19 (FABLE-FLOW-1355 1): INFRA fails (host / transport / copy timeouts / kills) never count toward the class breaker or the per-row repeat stop
-            if cls != "INFRA" and not is_infra_fail(rec) and rec.get("stage_class") != "stopped" and rec.get("kill_kind") != "guard" and not (cls == "INFRA" and (NO_HOST.search(why or "") or _TRANSIENT_INFRA.search(why or "") or HOST_ENV_RE.search(why or ""))):     # INFRA counts: 56 S81 + 24 KV same-class fails never opened the breaker
+            if is_src_manifest_fail(_stg, why) and rec.get("stage_class") != "stopped":
+                _bk = src_breaker_note(st, rec["die"], why, (cfg.get("dies", {}).get(rec["die"]) or {}).get("src", ""))          # SNAP-RO-1119 (d): a tree fact, not a row fact
+                if _bk:
+                    _b = st["src_breaker"][_bk]
+                    AP.log(f"KIT-WAVE SRC-BREAKER OPEN {rec['die']}: {_b['n']} src_manifest failures on one snapshot within {SRC_BREAKER_WINDOW_S // 60} min ({_b['first'][:200]}); the die's rows on it stop "
+                           f"launching until it verifies (re-checked every tick); rows are not blocked one by one")
+            elif cls != "INFRA" and not is_infra_fail(rec) and rec.get("stage_class") != "stopped" and rec.get("kill_kind") != "guard" and not (cls == "INFRA" and (NO_HOST.search(why or "") or _TRANSIENT_INFRA.search(why or "") or HOST_ENV_RE.search(why or ""))):     # INFRA counts: 56 S81 + 24 KV same-class fails never opened the breaker
                 FG.record_fail(st, rec["die"], rec["item"], cls, why, evidence=str(Path(rec.get("dir") or ".") / f"{_stg or 'result'}.log"),
                                legacy=bool(_stg in PRE_PR_STAGES or FG.pf_kind(_key)), stage=_stg,
                                inp=breaker_inputs(cfg, rec["die"]))

@@ -11,6 +11,7 @@ class PGOK:                                   # PUBLISH-GATE-1116: these tests a
 
 def apply(*a, **k):
     k.setdefault("PG", PGOK)
+    k.setdefault("host_verify", lambda *a, **kw: ({}, {}))          # SNAP-RO-1119: the real per-host verify has its own tests (test_snap_ro_1119.py)
     return A.apply_marker(*a, **k)
 
 SHA = "13f758a4fe342e4838cebd2401f11f37570e92e46e226642e518ad78245f776d"

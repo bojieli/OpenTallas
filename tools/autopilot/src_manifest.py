@@ -206,6 +206,8 @@ def verify(root, expect="", ro=False, full=False):
     snap = bool(snap_group(root))
     for rel in sorted(want):
         p = have.get(rel)
+        if p is None and skipped(rel) and os.path.lexists(os.path.join(root, rel)):
+            p = os.path.join(root, rel)          # SNAP-RO-1119: listed by a delta pack although walk_tree skips its name (tools/_s81ph_gen.py.orig): check it where it is
         if p is None:
             errs.append(f"SRC_MANIFEST DRIFT {rel} (missing)")
         elif tree_hash(p) != want[rel]:
@@ -274,7 +276,7 @@ def cached_receipt(root, expect=""):
         errs.append("SRC_MANIFEST CACHE MISS completed verification hash/signature is stale")
     have = walk_tree(root)
     want = m.get("files") or {}
-    if set(have) != set(want):
+    if set(have) != {r for r in want if not skipped(r)}:        # SNAP-RO-1119: an entry whose name the walk skips is not an inventory difference
         errs.append("SRC_MANIFEST CACHE MISS current inventory differs from verified manifest")
     paths = [root, os.path.join(root, MANIFEST), os.path.join(root, HASHFILE)] + list(have.values())
     snap = bool(snap_group(root))
@@ -366,7 +368,9 @@ def report(errs):
 
 def git_archive(repo, sha, scope, out, lazy=False):
     """write the scope of commit `sha` into out: ls-tree + cat-file (no .gitattributes / export filters, exact blobs).
-    A missing blob (partial clone without it) is an error naming the path, never a silent skip."""
+    A missing blob (partial clone without it) is an error naming the path, never a silent skip.
+    SNAP-RO-1119: the tracked list is the ONE list of the tree: a path the manifest walk skips (*.orig, *.bak*, *.rej, *.pyc, caches) is neither written nor listed.
+    -> the relpaths written (build records exactly these, plus its overlay)."""
     lt = subprocess.run(["git", "-C", repo, "ls-tree", "-r", "-z", sha, "--"] + list(scope), capture_output=True)
     if lt.returncode:
         raise SystemExit(f"git ls-tree {sha} failed: {lt.stderr.decode()[-300:]}")
@@ -376,7 +380,7 @@ def git_archive(repo, sha, scope, out, lazy=False):
             continue
         meta, path = rec.split(b"\t", 1)
         mode, typ, oid = meta.decode().split()
-        if typ == "blob":
+        if typ == "blob" and not skipped(path.decode()):
             ents.append((mode, oid, path.decode()))
     if not ents:
         raise SystemExit(f"scope {scope} is empty at {sha}")
@@ -402,6 +406,7 @@ def git_archive(repo, sha, scope, out, lazy=False):
     finally:
         cf.stdin.close()
         cf.wait()
+    return [p for _m, _o, p in ents]
 
 
 TOOLS_SCOPE = ("tools/", "physical/common_flow/", "rtl/lib/", "rtl/common/")
@@ -504,7 +509,7 @@ def build(repo, sha, overlay_json, scope, out, die="", allow_file="", main_ref="
     tmp = out + ".building"
     shutil.rmtree(tmp, ignore_errors=True)
     os.makedirs(tmp)
-    git_archive(repo, sha, scope, tmp)
+    tracked = git_archive(repo, sha, scope, tmp)
     for rel, e in sorted(ov.items()):
         src = e["from"] if os.path.isabs(e["from"]) else os.path.join(os.path.dirname(os.path.abspath(overlay_json)), e["from"])
         dest = os.path.join(tmp, rel)
@@ -517,7 +522,13 @@ def build(repo, sha, overlay_json, scope, out, die="", allow_file="", main_ref="
     if vh:                                              # fail closed: a view whose bytes differ from its provenance never ships
         shutil.rmtree(tmp, ignore_errors=True)
         raise SystemExit("refuse: frozen view hash mismatch:\n  " + "\n  ".join(vh[:20]))
-    files = {rel: tree_hash(p) for rel, p in walk_tree(tmp).items()}
+    # SNAP-RO-1119: manifest = the tracked list + the overlay, nothing else; a file the tree holds beyond that list is a build error, never an entry
+    listed = sorted(set(tracked) | {r for r in ov if not skipped(r)})
+    walked = walk_tree(tmp)
+    if set(walked) != set(listed):
+        shutil.rmtree(tmp, ignore_errors=True)
+        raise SystemExit("refuse: tree and tracked list differ: " + ", ".join(sorted(set(walked) ^ set(listed))[:10]))
+    files = {rel: tree_hash(os.path.join(tmp, rel)) for rel in listed}
     m = {"version": 1, "main_sha": sha, "scope": list(scope), "overlay": {r: e["sha256"] for r, e in sorted(ov.items())},
          "files": files}
     m["manifest_hash"] = manifest_hash(m)
@@ -605,7 +616,7 @@ def delta_make(repo, old_tree, new_sha, out, drop_overlay=(), paths=None):
         raise SystemExit("refuse: --paths outside the tree scope " + ",".join(m["scope"]))
     nm = subprocess.run(["git", "-C", repo, "diff", "--name-status", "-z", "--no-renames", m["main_sha"], new_sha, "--"] + spec,
                         capture_output=True, text=True, check=True).stdout.split("\0")
-    recs = [(nm[i], nm[i + 1]) for i in range(0, len(nm) - 1, 2)]
+    recs = [(nm[i], nm[i + 1]) for i in range(0, len(nm) - 1, 2) if not skipped(nm[i + 1])]    # SNAP-RO-1119: a path the walk skips is never listed (n46_s1: tools/_s81ph_gen.py.orig)
     drop = set(drop_overlay)
     clash = [p for _st, p in recs if p in m["overlay"] and p not in drop]
     if clash:

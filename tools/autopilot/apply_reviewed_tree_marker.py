@@ -81,6 +81,51 @@ def ensure_tree_on_hosts(tree, want, current_hosts, hosts, rt, run=None, link_fr
     return list(hosts) + kept, notes
 
 
+def verify_tree_on_all_hosts(tree, want, hosts, rt, run=None, bind_out=""):
+    """SNAP-RO-1119 (c) (FABLE-FLOW-2155 classes 1 and 3): the event is not applied until the tree verifies (hash, every file, read-only, unshared) on EVERY gen host it will serve, and the bind output the
+    candidate names is present there.  QC n46_s1 was adopted with one manifest entry no host could verify (17 rows failed one by one); KV D25e before its bind inputs were on every host.
+    A host that answers with a finding is a refusal; a host that does not answer (ssh timeout, no SRC_MANIFEST line) is only named, because an unreachable host is not a bad tree.
+    -> (findings {host: text}, unreachable {host: text})"""
+    import concurrent.futures as CF
+    import shlex
+    import subprocess
+    sm = str(Path(rt) / "src_manifest.py")
+
+    def sh(cmd):
+        if run:
+            return run(cmd)
+        r = subprocess.run(["bash", "-c", cmd], capture_output=True, text=True, timeout=3600)
+        return r.returncode, (r.stdout + r.stderr).strip()
+
+    def one(h):
+        rc, out = sh(f"python3 -I {shlex.quote(sm)} hosts {shlex.quote(tree)} --hosts {shlex.quote(h)} --expect {shlex.quote(want)} --cached-receipts")     # a completed full verify that still matches (stat only)
+        if rc:
+            rc, out = sh(f"python3 -I {shlex.quote(sm)} hosts {shlex.quote(tree)} --hosts {shlex.quote(h)} --expect {shlex.quote(want)}")                   # no receipt: the full verify
+        if rc and "SRC_MANIFEST" not in (out or ""):
+            return "unreachable", f"rc {rc}: {(out or '')[-160:]}"
+        if rc:
+            return "finding", (out or "")[-400:]
+        if bind_out:
+            rc, out = sh("ssh -n -o BatchMode=yes -o ControlPath=none -o ConnectTimeout=15 " + shlex.quote(h) + " " + shlex.quote(f"test -f {shlex.quote(bind_out.rstrip('/') + '/bind_report.json')}"))
+            if rc == 1:
+                return "finding", f"bind output {bind_out} has no bind_report.json on {h}"
+            rc2, _o2 = sh("ssh -n -o BatchMode=yes -o ControlPath=none -o ConnectTimeout=15 " + shlex.quote(h) + " " + shlex.quote(
+                f"d={shlex.quote(bind_out.rstrip('/'))}; test -d \"$d\" && (test ! -d \"$d/composed_rtl\" || test -n \"$(ls -A \"$d/composed_rtl\" | head -1)\")"))   # KV D25e: the composed RTL the bind names is there too
+            if rc2 == 1:
+                return "finding", f"bind output {bind_out} on {h}: composed_rtl is empty or the directory is missing"
+            if rc:
+                return "unreachable", f"bind check rc {rc}"
+        return "ok", ""
+    findings, unreachable = {}, {}
+    with CF.ThreadPoolExecutor(max_workers=max(1, len(hosts))) as ex:
+        for h, (kind, txt) in zip(hosts, ex.map(one, hosts)):
+            if kind == "finding":
+                findings[h] = txt
+            elif kind == "unreachable":
+                unreachable[h] = txt
+    return findings, unreachable
+
+
 def repoint_gen_env(d, old_tree, new_tree, exists=os.path.exists):
     """11-18 (third time tonight: OT_SIGNED_VIEW_SHA left outside the new tree, every launch refused): every die_gen_env / item_env string naming a path inside the OLD tree is rewritten to the
     same relative path in the NEW tree; a repointed file missing there fails the apply (SystemExit, nothing written)."""
@@ -108,7 +153,7 @@ def marker_event_of(mc, d):
     return mc.get("event") or d.get("event")
 
 
-def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=False, TC=None, rt=None, keep_gen_hosts=False, PG=None, optimistic=None):
+def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=False, TC=None, rt=None, keep_gen_hosts=False, PG=None, optimistic=None, host_verify=None):
     """optimistic (COORD 11-18, OWNER "build all types directly from the latest plan"; candidate key optimistic: true or --optimistic): the publish gate record,
     the normal source guard and the smoke flag are ADVISORY (logged in the receipt as warnings, never a refusal) and no pilot hold is added (every type of the
     plan launches at once) unless --pilot-item names one.  Strict bind + LATCHECK, run in parallel by the lane, are the only blocking plan checks: a failure
@@ -142,6 +187,14 @@ def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=
         hosts, replicated = ensure_tree_on_hosts(tree, want, _cur, hosts, rt or HERE, link_from=os.path.basename(str(_cfg0["dies"][die].get("src") or "")))
         mc.pop("gen_hosts", None) if replicated else None
         warnings += [x for x in replicated if x.startswith("DROPPED")]
+    if PG is not False:      # SNAP-RO-1119 (c): PG False is only publish_gate projecting the apply on a scratch copy; a real apply proves the tree whole on every host first
+        _fn = host_verify or verify_tree_on_all_hosts
+        _bad, _unreach = _fn(tree, want, list(hosts), rt or HERE, bind_out=str(((mc.get("kit_rtl") or marker.get("kit_rtl") or {}).get("bind_out")) or ""))
+        if _unreach:
+            warnings.append("ADVISORY src_manifest not answered on " + ", ".join(f"{h} ({t[:60]})" for h, t in sorted(_unreach.items())))
+        if _bad:
+            raise SystemExit("APPLY REFUSED: the tree does not verify on every gen host, the die keeps its tree (nothing switched): "
+                             + " | ".join(f"{h}: {t.strip().splitlines()[-1][:200] if t.strip() else '?'}" for h, t in sorted(_bad.items())))
     # PUBLISH-GATE-1116: no switch without a PASS record of the pre-apply gate (schema, PRE/G0, provenance hashes, dry gen) keyed to
     # this tree manifest sha.  PG=False is only publish_gate.project_cfg() projecting the apply on a scratch copy.
     if PG is not False:
