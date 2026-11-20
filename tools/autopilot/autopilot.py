@@ -676,8 +676,25 @@ def jl(p):
     except Exception:
         return None
 if not out["exists"]: done()
+until = float("inf")
+if a.get("retained_return_to"):
+    root = os.path.dirname(K)
+    job = jl(os.path.join(root, ".ot-job", "job.json")) or {}
+    result = jl(os.path.join(root, ".ot-job", "result.json")) or {}
+    expected = ((job.get("spec") or {}).get("return") or {}).get("to")
+    started = job.get("started")
+    ended = result.get("ended")
+    if (job.get("schema") != "opentallas.ot_job.v1" or job.get("J") != root or result.get("J") != root
+            or job.get("host") != result.get("host") or expected != a["retained_return_to"]
+            or not isinstance(started, (int, float)) or not isinstance(ended, (int, float))
+            or started < since or ended < started
+            or not any(str(err).startswith("return copy:") for err in result.get("errors") or [])):
+        out["error"] = "retained return receipt does not match this job"
+        done()
+    # The work tree can contain a returned input snapshot. Require timing evidence newer than execution start.
+    since, until = started, ended
 # newest signoff record written by this run
-so = [p for p in glob.glob(os.path.join(K, "signoff*", "signoff.json")) if os.path.getmtime(p) >= since]
+so = [p for p in glob.glob(os.path.join(K, "signoff*", "signoff.json")) if since <= os.path.getmtime(p) <= until]
 so.sort(key=os.path.getmtime)
 if so:
     d = jl(so[-1]) or {}
@@ -689,6 +706,10 @@ if so:
         "drc": (c.get("drc") or {}).get("count"), "antenna": (c.get("antenna") or {}).get("count"),
         "pg": (c.get("pg") or {}).get("verdict"),
         "base": (d.get("inputs") or {}).get("base"), "odb": (d.get("inputs") or {}).get("odb")}
+    ff = (d.get("corners") or {}).get("ff")
+    if a.get("retained_return_to") and isinstance(ff, dict):
+        out["signoff"]["corners"] = {"ff": {k: ff[k] for k in ("done", "rc", "errors", "std_min_start",
+                                                             "std_wns_min", "std_nviol_min") if k in ff}}
     try:
         out["signoff"]["odb_bytes"] = os.path.getsize(out["signoff"]["odb"])
     except Exception:
@@ -1210,6 +1231,8 @@ def classify(c, client):
                 and (timing_neg or drc > 0 or "drv" in fails)):
             return "NEAR-MISS", "routed", reasons
         return "STRUCTURAL", "routed-not-signed", reasons
+    if client.get("publish_return"):
+        return "CRASH", "infra-publish-return", client["publish_return"]["reason"]
     if c.get("FAIL_PREFLOOR"):
         return "STRUCTURAL", "preflight", "FAIL_PREFLOOR " + c["FAIL_PREFLOOR"]
     if c.get("FAIL_route"):
@@ -1333,6 +1356,13 @@ def parse_client_log(text):
     if m:
         o["ap_rc"] = int(m[-1])
         o.setdefault("exit", o["ap_rc"])
+    if o.get("ap_rc") == o.get("exit") == 98 and o.get("ran_on"):
+        root_pattern = r"(/srv/opentallas-scratch[^/\s:]*/claude/ot-jobs/[A-Za-z0-9_.-]+)"
+        sealed = re.findall(r"^ot-job: SEALED " + root_pattern + r":", text, re.M)
+        failed = re.findall(r"^ot-job: PUBLISH FAILED, job dir KEPT " + root_pattern + r": ([^\n]*return copy:[^\n]*)", text, re.M)
+        if sealed and failed and sealed[-1] == failed[-1][0]:
+            root, detail = failed[-1]
+            o["publish_return"] = {"root": root, "reason": f"retained on {o['ran_on']}: {detail[:300]}"}
     m = [l for l in text.splitlines() if l.startswith("ot-run: interrupted (signal ") and "ot-run --cancel" in l]
     if m:
         o["cancelled"] = m[-1][:300]
@@ -3059,10 +3089,10 @@ def poll_running(st):
                 continue
         else:
             c = probe_job(j)
-        if c is None:
+        if c is None and not client.get("publish_return"):
             log(f"HOLD {j['id']}: classify probe failed on every host; retry next tick")
             continue
-        finish(st, j, c, client)
+        finish(st, j, c or {}, client)
 
 
 def sealed_job_dir(j):
@@ -3096,6 +3126,23 @@ def earlyoom_kill_near(host, t, probe=None):
     return bool(nums and nums[-1] > 0)
 
 
+def retained_publish_negative(j, client, probe=None):
+    """Accept only a fresh measured failure from the exact retained job."""
+    entry = client["publish_return"]
+    host = client["ran_on"]
+    probe = probe or rpy
+    c = probe(host, PROBE_CLASSIFY, {"kit": entry["root"] + "/work", "since": j.get("started", 0),
+                                   "goal": j["goal"], "retained_return_to": j["path"]})
+    so = (c or {}).get("signoff")
+    if not so or c.get("error") or so.get("verdict") != "NOT SIGNED":
+        return None
+    gates = SP.judge(so, j.get("die"))["gates"]
+    failed = [k for k in so.get("fails", ()) if gates.get(k) == "FAIL"]
+    if not failed:
+        return None
+    return {"host": host, "signoff": so, "failed_gates": failed}
+
+
 def finish(st, j, c, client):
     if client.get("exit") == 143 and not c.get("oom") and not client.get("watchdog") and not client.get("cancelled"):
         try:                                             # WF-1 11-14: SIGTERM 143 with an earlyoom kill on the host within +-60 s is an OOM kill
@@ -3114,6 +3161,14 @@ def finish(st, j, c, client):
         if w:
             client = dict(client, watchdog=w)
     cls, kind, reasons = classify(c, client)
+    if client.get("publish_return"):
+        j["publish_return"] = client["publish_return"]
+        if not c.get("signoff") and j["goal"] == "route":
+            retained = retained_publish_negative(j, client)
+            if retained:
+                j["retained_signoff"] = retained
+                cls, kind, reasons = classify({"signoff": retained["signoff"]}, {})
+                reasons = f"{reasons} | return copy failed; retained {retained['host']}:{j['publish_return']['root']}"
     if j.get("chain_required") and cls in ("SIGNED", "WAIT-PARENT"):
         chain = c.get("chain") or {}
         if chain.get("verdict") == "LEC_OOM":
@@ -3428,8 +3483,8 @@ def record_failure(st, j):
         # AUTOPILOT-SIGNOFF-2 (owner speed-up 10-27): stop the kit, tell the owning lane + COORD, delete the failed
         # run data at once (logs, reports, review bundle and receipts kept), never retry it blindly
         kind = j.get("kind", "")
-        nonphysical = (kind in ("preflight", "admission-tools", "proof-oom") or kind.startswith("infra-") or
-                       j.get("goal") in ("synth", "lec", "post", "proof"))
+        nonphysical = (j.get("publish_return") or kind in ("preflight", "admission-tools", "proof-oom") or
+                       kind.startswith("infra-") or j.get("goal") in ("synth", "lec", "post", "proof"))
         if nonphysical:
             j.update(delete_pending=False, data_deleted=False,
                      checkpoint_preserved="preflight/infra/proof attempt does not own prior physical checkpoints")
