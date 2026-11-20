@@ -527,6 +527,8 @@ SCHEMA = {
                     "landing_status_reg": {"type": "boolean"},
                     "landing_guard_reg": {"type": "boolean"},   # GUARD-REG-1 (implies landing_status_reg)
                     "landing_relay_start_copy": {"type": "boolean"},
+                    # UNIFY-TOOLS ROLE-STRAP: origin and relay copies of one type, strap_ca_relay (count_align_bind)
+                    "landing_role_strap": {"type": "boolean"},
                     # RELAY-TX-STAGES (FABLE-FIX-QC 11-19): extra start-relay stages before the tx flop of an origin type
                     "landing_relay_tx_stages": {"type": "integer", "minimum": 0, "maximum": 8},
                     "private_reset_start_exports": {"type": "boolean"},

@@ -879,7 +879,7 @@ class LandingError(ValueError):
 RELAY_STAGES = 2
 # Strap inputs the strap-form origin declares SCALAR (`input wire strap_ca_efall`, no [0:0]); every other strap is a
 # vector.  gen_phys.strap_pin_sites names these pins without a bit index (FLOW-GEN-1 10-28, DIE-HEAD-9 bug 1).
-SCALAR_STRAPS = frozenset({"strap_ca_efall", "strap_ca_root"})
+SCALAR_STRAPS = frozenset({"strap_ca_efall", "strap_ca_root", "strap_ca_relay"})
 
 
 def ca_cycles(ca, pid):
@@ -1285,7 +1285,7 @@ class Landings:
                     required.update({pin: d for pin, d in self.tstart["type_pins"].get(tn, {}).items()})
                 if cat and cat["relay_tx"]:
                     required["cland_rstart_out"] = "out"
-                if cat and cat["role"][0] == "relay":
+                if cat and cat["role"][0] in ("relay", "rolestrap"):
                     required["cland_rstart_in"] = "in"
                 if cat and cat.get("straps"):
                     # strap pins: types[].count_straps of the declared width (like id_straps: no plan bus; the parent
@@ -1412,6 +1412,15 @@ class Landings:
             logic += [f"    wire {reset};", f"    ot_dp_rrelay u_cland_rst_monitor (.clk(clk), .d({relay.group(2)}), .q({reset}));"]
         return reset, dict(net=reset, xy_um=list(taps[tap]) if taps else xy, copied_raw_parent=relay.group(2),
                            extra_control_flops=int(relay.group(1) == "gate"), must_be_ready_before_start=True)
+    def _role_strap(self, tn):
+        """UNIFY-TOOLS ROLE-STRAP (strap form only): partition_types[tn].landing_role_strap"""
+        v = (getattr(self, "types", {}).get(tn) or {}).get("landing_role_strap", False)
+        if not isinstance(v, bool):
+            raise LandingError(f"{tn}: landing_role_strap must be a boolean")
+        if v and not self.strap:
+            raise LandingError(f"{tn}: landing_role_strap needs the count-strap form")
+        return v
+
     def _count_aligned_types(self, raise_split=True):
         """Count-aligned form (opt-in): one count origin per region; every copy of a type gets identical ring parameters
         and origin role, else TYPE_SPLIT.  Without a bind "parts" block (MESO-INTEG-1) a region must hold one landed
@@ -1489,6 +1498,9 @@ class Landings:
                     # strap form: K, PAD, EDGE_FALL, tree select and root/child are strap values, not type identity;
                     # only the relay pin list (rx in / tx out) still separates copies (residual TYPE_SPLIT)
                     sig = (tuple(sorted(_ca_in(self, pn))), role[0] == "relay", tx)
+                    if self._role_strap(self.parts[pn]["type"]):
+                        # UNIFY-TOOLS ROLE-STRAP: relay rx vs origin (and tx out present vs absent) is strap_ca_relay
+                        sig = (sig[0],)
                 per_type[self.parts[pn]["type"]].setdefault(sig, []).append(pn)
         bad = {tn: [ps for ps in sigs.values()] for tn, sigs in per_type.items() if len(sigs) > 1}
         self.ca_type_split = dict(types_needing_split=len(bad), type_count_before=len(per_type),
@@ -1504,7 +1516,24 @@ class Landings:
                 st = self.strap["types"][tn]
                 o = st["origin"]
                 role = out[tn]["role"]
-                if role[0] != "relay" and o["form"] == "strap":
+                if o.get("role_strap"):
+                    # UNIFY-TOOLS ROLE-STRAP: the origin form of the origin copies + the relay rx of the relay copies
+                    pns = [q for ps in sigs.values() for q in ps]
+                    org_roles = [self.ca_part_cat[q]["role"] for q in pns if self.ca_part_cat[q]["role"][0] != "relay"]
+                    rel_roles = {self.ca_part_cat[q]["role"] for q in pns if self.ca_part_cat[q]["role"][0] == "relay"}
+                    if len(rel_roles) != 1 or not org_roles:
+                        raise LandingError(f"clock landing {tn}: role strap needs relay copies with one stage count and "
+                                           f"origin copies (relay {sorted(rel_roles)}, origins {len(org_roles)})")
+                    if o["form"] == "strap":
+                        org_role = ("strap", tuple(o["tree_buses"]), o["padw"], int(self.ca.get("root_settle_cycles", 64)),
+                                    bool(o["root"]))
+                    elif len({r for r in org_roles}) == 1:
+                        org_role = org_roles[0]
+                    else:
+                        raise LandingError(f"clock landing {tn}: role strap origin copies differ: {sorted(set(org_roles))}")
+                    role = ("rolestrap", org_role, next(iter(rel_roles))[-1])
+                    out[tn]["relay_tx"] = any(self.ca_part_cat[q]["relay_tx"] for q in pns)
+                elif role[0] != "relay" and o["form"] == "strap":
                     role = ("strap", tuple(o["tree_buses"]), o["padw"], int(self.ca.get("root_settle_cycles", 64)),
                             bool(o["root"]))
                 out[tn] = dict(rings={b: dict(K=None, depth=v["depth"], kw=v["kw"]) for b, v in st["buses"].items()},
@@ -2446,7 +2475,9 @@ class Landings:
                               f"    assign cland_start_raw = {raw};"]
             return raw_logic + [f"    ot_dp_landing_relay u_cland_rstart_rx (.clk(clk), .rst_raw_n({raw}), .d(cland_rstart_in), "
                     f".q(cland_start));"]
-        if role[0] == "strap":
+        if role[0] == "rolestrap":
+            logic, raw = self._origin_rolestrap_rtl(tn, role, ca_raw, extra, local_raw, raw_logic)
+        elif role[0] == "strap":
             logic, raw = self._origin_strap_rtl(tn, role, ca_raw, extra, local_raw)
         elif role[0] == "child":
             b = role[1]
@@ -2508,7 +2539,33 @@ class Landings:
             logic.append(f"    ot_dp_rrelay u_cland_raw_reset_o (.clk(clk), .d({raw}), .q({RAW_RESET_PIN_OUT}));")
         return raw_logic + logic
 
-    def _origin_strap_rtl(self, tn, role, ca_raw, extra, local_raw):
+    def _origin_rolestrap_rtl(self, tn, role, ca_raw, extra, local_raw, raw_logic):
+        """UNIFY-TOOLS ROLE-STRAP: one type for the origin and the relay copies of a region.  The origin hardware is the
+        strap origin (ot_dp_landing_origin_s, as _origin_strap_rtl) on cland_start_org; the relay rx flop
+        u_cland_rstart_rx (as the relay role) on cland_start_rly; the static strap_ca_relay picks the copy's start, its
+        D-side (relay: cland_rstart_in, as landing_relay_start_copy) and its raw reset BEFORE every flop that uses them
+        (same pattern as strap_ca_root).  The unused start pin of a copy is tied 0 at the parent.  0 data cycles: the
+        relay copy's start is the rx flop Q (RELAY_STAGES after its origin) exactly as in the relay type."""
+        _, org_role, stages = role
+        if org_role[0] != "strap":
+            raise LandingError(f"{tn}: role strap needs a strap-form origin (child origin copies), got {org_role[0]}")
+        rraw = self._branch_raw(tn, "origin", local_raw("start relay rx"))
+        extra.append("    input wire cland_rstart_in")
+        extra.append("    input wire strap_ca_relay")   # SCALAR_STRAPS
+        logic, oraw = self._origin_strap_rtl(tn, org_role, ca_raw, extra, local_raw,
+                                             names=("cland_start_org", "cland_start_org_d", "cland_start_org_raw"))
+        rec = self.reset_placements[tn]["count_origin"]
+        self.reset_placements[tn]["count_origin"] = dict(rec, kind="rolestrap", origin_kind=rec["kind"],
+                                                       relay=dict(raw_reset=rraw, stages=stages, rx="u_cland_rstart_rx"))
+        raw_logic.append("    wire cland_start_org, cland_start_org_d, cland_start_org_raw, cland_start_rly;")
+        logic += [f"    ot_dp_landing_relay u_cland_rstart_rx (.clk(clk), .rst_raw_n({rraw}), .d(cland_rstart_in), "
+                  ".q(cland_start_rly));",
+                  "    assign cland_start = strap_ca_relay ? cland_start_rly : cland_start_org;",
+                  "    assign cland_start_d = strap_ca_relay ? cland_rstart_in : cland_start_org_d;",
+                  f"    assign cland_start_raw = strap_ca_relay ? {rraw} : cland_start_org_raw;"]
+        return logic, oraw
+
+    def _origin_strap_rtl(self, tn, role, ca_raw, extra, local_raw, names=("cland_start", "cland_start_d", "cland_start_raw")):
         """MESO-STRAP-1 strap origin: ot_dp_landing_origin_s (strap_ca_pad / strap_ca_efall), the parent's forwarded
         start and the child raw reset chosen by strap_ca_tsel among the copies' tree buses. Each tree bus has its own
         origin sampler; static selection follows those samplers (out-of-range values take the last bus). An optional
@@ -2547,7 +2604,8 @@ class Landings:
             logic += [f"    wire cland_oraw = {sel([ca_raw[b] for b in tbs])};"]
         else:
             p_start, raw = pin(tbs[0]), ca_raw[tbs[0]]
-        start = "cland_start"
+        n_start, n_start_d, n_raw = names
+        start = n_start
         if root:
             extra.append("    input wire strap_ca_root")   # SCALAR_STRAPS
             rraw = local_raw("root count origin")
@@ -2557,13 +2615,13 @@ class Landings:
                       f"    wire cland_raw_sel = strap_ca_root ? {rraw} : {raw};",
                       f"    ot_dp_landing_root #(.SETTLE({settle})) u_cland_root (.clk(clk), .rst_raw_n({rraw}), "
                       ".start(cland_start_root), .start_d(cland_start_root_d));",
-                      "    assign cland_start = strap_ca_root ? cland_start_root : cland_start_child;",
-                      "    assign cland_start_d = strap_ca_root ? cland_start_root_d : cland_start_child_d;",
-                      "    assign cland_start_raw = cland_raw_sel;"]
+                      f"    assign {n_start} = strap_ca_root ? cland_start_root : cland_start_child;",
+                      f"    assign {n_start_d} = strap_ca_root ? cland_start_root_d : cland_start_child_d;",
+                      f"    assign {n_raw} = cland_raw_sel;"]
             start, start_d, raw_used = "cland_start_child", "cland_start_child_d", "cland_raw_sel"
         else:
-            raw_used, start_d = raw, "cland_start_d"
-            logic.append(f"    assign cland_start_raw = {raw};")
+            raw_used, start_d = raw, n_start_d
+            logic.append(f"    assign {n_raw} = {raw};")
         if multi:
             # Each START owns its sampler. Static selection follows both registered and D-side taps,
             # preserving the dedicated forwarded START face flop's existing zero-cycle contract.
@@ -2671,9 +2729,19 @@ class Landings:
                 d = depth(pm.group(1), seen + (net,)) + 1
             else:
                 a = re.search(r"\bassign\s+" + re.escape(net) + r"\s*=\s*(\w+)\s*;", allrtl)
-                if not a:
+                # ROLE-STRAP: a static strap select of two raw resets is one depth only when both arms agree
+                mx = None if a else re.search(r"\bassign\s+" + re.escape(net) +
+                                              r"\s*=\s*\w+\s*\?\s*(\w+)\s*:\s*(\w+)\s*;", allrtl)
+                if a:
+                    d = depth(a.group(1), seen + (net,))
+                elif mx:
+                    d0, d1 = (depth(x, seen + (net,)) for x in mx.groups())
+                    if d0 != d1:
+                        raise LandingError(f"{tn}: landing_local_resets: strap-selected reset {net} arms differ in "
+                                           f"depth ({d0} vs {d1})")
+                    d = d0
+                else:
                     raise LandingError(f"{tn}: landing_local_resets: reset {net} has no registered wavefront depth")
-                d = depth(a.group(1), seen + (net,))
             memo[net] = d
             return d
         relays = bound_relay_sites(allrtl)
@@ -3133,6 +3201,9 @@ class Landings:
                         conn.append(f"        .{START_PIN_IN}({tsw[pn]})")
                     elif rpr.get(pn, {}).get("role") == "root" and self.strap:
                         conn.append(f"        .{START_PIN_IN}(1'b0)")
+                    elif rpr.get(pn, {}).get("role") == "relay" and self._role_strap(p["type"]):
+                        # ROLE-STRAP relay copy: strap_ca_relay selects the rx flop, the origin's start pin is unread
+                        conn.append(f"        .{START_PIN_IN}(1'b0)")
                     else:
                         raise LandingError(f"clock landing {pn}: type {p['type']} has {START_PIN_IN} but no start "
                                            "port lands on this copy")
@@ -3146,6 +3217,10 @@ class Landings:
                     raise LandingError(f"clock landing {pn}: relay edge names tx pin {org}.{txp}, not a declared "
                                        "start-relay tx pin of the origin type")
                 conn.append(f"        .cland_rstart_in({rst[org]}{txp[len(RELAY_TX_PIN):]})")
+            elif self.ca and self._role_strap(p["type"]) and \
+                    (self.ca_type.get(p["type"]) or {}).get("role", ("",))[0] == "rolestrap":
+                # ROLE-STRAP origin copy: strap_ca_relay = 0 selects the origin, the rx pin is unread
+                conn.append("        .cland_rstart_in(1'b0)")
             if self.strap and pn in self.strap["instances"]:
                 # OWNER 12.15a / 1.8 rule 3: each strap bit a literal here; die_constant_cells.tcl maps every bit to its
                 # own TIEHI/TIELO next to the pin; straps.audit_count_strap_values checks the pattern against the bind

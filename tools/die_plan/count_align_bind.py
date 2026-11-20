@@ -541,7 +541,10 @@ def annotate_table(table, b, root_settle_cycles=64, strap_form=False, mixed=None
 #   strap_ca_tsel[TSW-1:0]  which landed input carries the parent's forwarded start (only if it differs between copies)
 #   strap_ca_root           root origin (ot_dp_landing_root) instead of a child origin (only if both occur in the type)
 # Copies that differ in the intra-region RELAY role (rx relay vs origin, or tx relay out present vs absent) change the
-# type's pin list (cland_rstart_in / cland_rstart_out) and stay a TYPE_SPLIT (residual_split; never an open/tied input).
+# type's pin list (cland_rstart_in / cland_rstart_out) and stay a TYPE_SPLIT (residual_split; never an open/tied input),
+# unless the type opts in to the ROLE STRAP (partition_types[T].landing_role_strap, UNIFY-TOOLS):
+#   strap_ca_relay          1 = relay rx copy (start = rx flop on cland_rstart_in), 0 = origin copy; the unused start pin
+#                           of each copy (cland_rstart_in on an origin, cland_tstart_in on a relay) is tied 0 at the parent
 STRAP_PREFIX = "strap_ca_"
 
 
@@ -601,6 +604,14 @@ def start_port_end(ca, tree_port):
     if sp is None:
         return None
     return sp.get("dst_part") or sp.get("capture_part"), START_PIN_IN
+
+
+def role_strap(plan, tn):
+    """UNIFY-TOOLS ROLE-STRAP: partition_types[tn].landing_role_strap (opt-in; absent / false = today's residual split)"""
+    v = (plan.get("partition_types", {}).get(tn) or {}).get("landing_role_strap", False)
+    if not isinstance(v, bool):
+        raise BindError(f"{tn}: landing_role_strap must be a boolean")
+    return v
 
 
 def strap_ties(ca, plan):
@@ -685,6 +696,12 @@ def strap_ties(ca, plan):
         # origin class: relay rx / origin with or without tx relay -> a pin-list difference -> residual split
         cls = {q: (role[q]["kind"] == "relay", role[q]["tx"]) for q in qs}
         kinds = {role[q]["kind"] for q in qs}
+        # UNIFY-TOOLS ROLE-STRAP (FABLE-SUPERSET-0415 10.6): a type that opts in (partition_types[T].landing_role_strap)
+        # carries BOTH the relay rx pin and the origin hardware; strap_ca_relay picks the copy's role, the tx pin is
+        # there when any copy drives one (left open on the others).  No residual split for the relay role any more.
+        rstrap = role_strap(plan, tn) and "relay" in kinds and len(kinds) > 1
+        if rstrap:
+            cls = {q: (False, False) for q in qs}
         org = sorted(q for q in qs if role[q]["kind"] in ("root", "child"))
         tsel = sorted({role[q]["tree_bus"] for q in org if role[q]["kind"] == "child"})
         has_child = any(role[q]["kind"] == "child" for q in org)
@@ -701,6 +718,9 @@ def strap_ties(ca, plan):
                 straps[f"{STRAP_PREFIX}tsel"] = origin["tsw"]
             if origin["root"]:
                 straps[f"{STRAP_PREFIX}root"] = 1
+        if rstrap:
+            origin["role_strap"] = True
+            straps[f"{STRAP_PREFIX}relay"] = 1
         variants = {}
         for q in qs:
             v = {f"{STRAP_PREFIX}k_{b}": strap_bits(inst_bus[q][b]["K"], straps[f"{STRAP_PREFIX}k_{b}"]) for b in buses}
@@ -715,6 +735,8 @@ def strap_ties(ca, plan):
                     v[f"{STRAP_PREFIX}root"] = int(not ch)
             elif has_child:     # relay copy of a child-capable type (residual split): origin straps unused -> 0
                 v.update({k: 0 for k in straps if not k.startswith(f"{STRAP_PREFIX}k_")})
+            if rstrap:
+                v[f"{STRAP_PREFIX}relay"] = int(rq["kind"] == "relay")
             key = json.dumps([cls[q], sorted(v.items())])
             vi = variants.setdefault(key, len(variants))
             insts[q] = dict(type=tn, values=v, role=dict(rq), variant=vi,

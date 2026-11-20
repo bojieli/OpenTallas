@@ -39,12 +39,19 @@ def tie_connections(tieable, connected):
     return conn
 
 
+# UNIFY-TOOLS ROLE-STRAP (count_align_bind.role_strap): the start pin a copy does not use -- cland_rstart_in on an
+# origin copy, cland_tstart_in on a relay copy -- is tied 0 at the parent (strap_ca_relay selects the other one).
+ROLE_STRAP_TIES = {"cland_rstart_in": "1'b0", "cland_tstart_in": "1'b0"}
+
+
 def landing_ties(types):
     """{type name: {port: literal}} from plan partition types (bind tie-off audit input)."""
     out = {}
     for tn, t in types.items():
         lc = ((t.get("clock") or {}).get("landing_contract") or {})
         ports = tie_ports(lc.get("tieable_children"))
+        if t.get("landing_role_strap") is True:
+            ports = dict(ports, **ROLE_STRAP_TIES)
         if ports:
             out[tn] = ports
     return out

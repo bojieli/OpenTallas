@@ -652,7 +652,8 @@ class Verification:
         # landing_relay_start_copy (clock_landings._origin_rtl): a strap-form relay partition keeps its own FSTART face
         # flops: d-side = the rx flop's D (cland_rstart_in), raw reset = the rx flop's raw reset
         relay_copy=relay and bool(ca.get('strap_form')) and \
-            (self.raw['partition_types'].get(self.parts[pn]['type']) or {}).get('landing_relay_start_copy') is True
+            any((self.raw['partition_types'].get(self.parts[pn]['type']) or {}).get(k) is True
+                for k in ('landing_relay_start_copy','landing_role_strap'))   # UNIFY-TOOLS ROLE-STRAP: same face flops
         if not ca.get('strap_form') or (relay and not relay_copy):return self.start_net(pn)
         path=ident(pn)+'.u_cland_fstart_'+bus
         if path not in self._fstart_checked:
