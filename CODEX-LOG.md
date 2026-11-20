@@ -14006,3 +14006,14 @@ Roottechnicalruling SOURCE-ONLYD2atomicapplyauthorized from fullpub/guard+actual
 
 ## Takeover 2026-11-20 03:09 PST
 Active scopes and first diagnoses are in lanes/CODEX.md. Plan events use live lane reports and current owner rules, including 833 ps sign-off and no geometry growth.
+
+## Transcript reconciliation 2026-11-20 03:23 PST
+Read latest Claude coordinator transcript c228d9e1-f423-4eaf-829b-3bad2a9c2331 and lane tails through the post-login rate-limit notices. Latest explicit owner priorities: merge S81 types immediately, no outline growth, 833 ps fixed, one daily event per active die. Claude did not write a fresh handoff after its last messages.
+- S81 J6 col tieable-child merge promoted (D8i observed 60 to 1 and 60 to 2 plan identities; physical and binding gates open). No-growth leaf column repinning and inheritance pilot assigned in parallel. S81 Slice C p1/p2 and clock-window/cw9a exact jobs recovered.
+- HEAD tilecomb3l exact probes recovered and waiting; preserved unpushed hc-lep-rfan source at e8747069ad. Active r11b tool pin d6ad3a86682; exact pinned hd_serdes producer replay PASS 21 sources. r13 bind chain admission pending.
+- QC V0E bind 0 / LATCHECK 1921; publishing against exact tools, with old event live. Exact TTCTLM r1be/rae pre-GRT alive; rae LEC UNPROVEN with 145 X-dependent points, r1b LEC active. Coll_core/SUST/st_A/SINK offsets carryovers assigned.
+- KV D25e3 gate active; D26 raw-reset and hub_Wi fixes staged; hg/hgi paired pilots and v8j CPU restoration covered.
+- Token D8i CAP recovery running; QC native stage-37 exact production dates remain open. ROM HEAD four ranks sample-readback pass; QC rank builds and S81 L0 advancing. HBM parked.
+- Approved UNIFY step 1b 30852a695c8 (82/82). D8i manifest bytes restored on all five gen hosts, kit_rtl now uses separate sealed bind (d8810348da8); class fix in source gate. S81 H8 P-buffer capture ad478df98e, 1,024/1,024 before and after, both mutants caught, 0 external cycles, remote gate queued.
+FOR-CLAUDE
+Fable closure/physical strategy review following the rate-limited 03:15 trigger. Existing authored CBC, no-growth and superset findings remain in use. Implement and gate concrete rows in active lanes meanwhile.
