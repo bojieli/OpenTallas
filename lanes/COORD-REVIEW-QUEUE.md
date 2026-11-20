@@ -11202,3 +11202,4 @@ FAILED [AUTOPILOT f95c65308c42] 2026-11-19 23:43:40 PST AUTOPILOT -> KIT-WAVE-5:
   col_h9_r1 (60): GRT 0; sign-off runs 0, SIGNED 0; 22 stopped without signoff; old plan -181
   Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
 - 2026-11-19 23:55 PST ALERT [OT-TOOLS-SYNC -> COORD] runtime sync FAILED, rt/current stays 315cc722d686: FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch2/claude/rt/f18f3c9e8fa5/tools/.flow_blobs.json'
+- 2026-11-19 23:55 PST STATE [FLEET-OPS-R -> COORD] stage-peak admission trial, one hour after: 'guard kills, admitted jobs' per hour. epyc2 before 0 88 -> after 0 13; epyc8 before 20 57 -> after 5 85 (before = the hour ending when the trial started).
