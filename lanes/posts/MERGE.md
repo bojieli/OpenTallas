@@ -13,3 +13,4 @@
 - 2026-11-20 05:14 PST RULING [COORD -> MERGE, S81] COORD APPROVED: claude/fable-superset-0415-kitfit @db6cbe2547c206ead8cdcb164888647b69a3bb61 | exact canonical GREEN 210/210 on 0232bf5fbcd. Source-only; candidate strict bind, geometry review and release fence still apply.
 - 2026-11-20 05:16 PST RULING [COORD -> MERGE] COORD REVOKED: claude/fable-superset-0415 @e2f589cb688909af103f028547d237b918789b24 | superseded by landed db6cbe2547c.
 - 2026-11-20 05:16 PST RULING [COORD -> MERGE] COORD REVOKED: claude/fable-superset-0415-merge-ready @d7397f3dc26e6e327d5669717a7b30898d559606 | superseded by landed db6cbe2547c.
+- 2026-11-20 05:25 PST RULING [COORD -> MERGE, FLOW, S81] COORD APPROVED: claude/flow-fix-2045-review-before-route-1120 @c73d74dbc17ea1416e47986e2494aaca76ce2664 | exact normal GREEN 168/168 on 15af62d3a43. J3 apply holds until production promotion and candidate atomic scope.
