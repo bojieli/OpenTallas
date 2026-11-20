@@ -9249,11 +9249,23 @@ def wait_bind_sweep(AP, cfg, st, now=None):
             continue
         d = (cfg.get("dies") or {}).get(r.get("die")) or {}
         try:
-            src = json.loads((Path(r["dir"]) / "spec.json").read_text()).get("src") or ""
+            sp_ = json.loads((Path(r["dir"]) / "spec.json").read_text())
         except (OSError, ValueError, KeyError, TypeError):
             continue
-        if not src or not d.get("src") or src.rstrip("/") == str(d["src"]).rstrip("/"):
-            continue                                   # the live tree's own bind stale: the normal BIND-STALE path
+        src = sp_.get("src") or ""
+        if not src:
+            continue
+        # FLOW-1355 (3): the live tree's rows too: the kit stage refused what the launch check passed, so the (item, tree, bind) is remembered and the launch check treats it as stale
+        # (bind_stale_from_stage) until the tree or its bind changes; no FAIL, no relaunch loop
+        bo_ = str(((sp_.get("kit_rtl") or {}).get("bind_out")) or "")
+        seen[f"{r.get('die')}|{r.get('item')}|{src.rstrip('/')}|{bo_}"] = now
+        if src.rstrip("/") == str(d.get("src") or "").rstrip("/"):
+            r.update(status="CANCELLED", **{"class": "WAIT-BIND"}, updated=now,
+                     reason="WAIT-BIND: kit_topology refused this bind for the row although the launch check passed; the row waits for a new tree or bind")
+            if AP:
+                AP.log(f"KIT-WAVE WAIT-BIND {r.get('die')}/{r.get('item')}@{r.get('attempt')}: kit_topology BIND_STALE on the live tree; row ends WAIT-BIND, launch check now treats it as stale")
+            n += 1
+            continue
         seen[f"{r.get('die')}|{r.get('item')}|{src.rstrip('/')}"] = now
         r.update(status="CANCELLED", **{"class": "WAIT-BIND"}, updated=now,
                  reason=f"WAIT-BIND: the bind of tree {os.path.basename(src.rstrip('/'))} is stale for this row (kit_topology); no relaunch on that tree")
@@ -9261,6 +9273,16 @@ def wait_bind_sweep(AP, cfg, st, now=None):
             AP.log(f"KIT-WAVE WAIT-BIND {r.get('die')}/{r.get('item')}@{r.get('attempt')}: kit_topology BIND_STALE on fallback tree {os.path.basename(src.rstrip('/'))}; row ends WAIT-BIND (not a FAIL), the tree is skipped for this item")
         n += 1
     return n
+
+
+def bind_stale_from_stage(cfg, st, die, rows):
+    """{item: why} for rows the kit_topology STAGE refused on the die's CURRENT tree + bind (wait_bind_sweep), until the tree or the bind changes"""
+    d = cfg["dies"][die]
+    src = str(d.get("src") or "").rstrip("/")
+    bo = str((d.get("kit_rtl") or {}).get("bind_out") or "")
+    wb = st.get("wait_bind") or {}
+    return {r["item"]: "KIT_TOPOLOGY_BIND_STALE: the kit_topology stage refused this item on the current tree and bind (WAIT-BIND)" for r in rows
+            if f"{die}|{r['item']}|{src}|{bo}" in wb}
 
 
 def bound_fallback(AP, cfg, st, die, rows, stale, now=None, rpy=None):
@@ -9723,6 +9745,11 @@ def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
                     except Exception as e:                 # a diagnostic probe never stops the plan
                         stale = {}
                         AP.log(f"KIT-WAVE bind preflight {die} skipped: {e}")
+                    try:
+                        for _i, _w in bind_stale_from_stage(cfg, st, die, go).items():
+                            (stale if isinstance(stale, dict) else {}).setdefault(_i, _w)
+                    except Exception:
+                        pass
                     st.setdefault("bind_stale_items", {})[die] = sorted(stale or {})          # FABLE-FLOW-0358 A: the supersede steps read it (a row is cancelled only when its replacement can launch)
                     if stale:
                         try:

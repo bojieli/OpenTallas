@@ -270,8 +270,8 @@ def test_kit_topology_bind_stale_on_a_fallback_tree_is_wait_bind_not_a_fail(tmp_
                          "reason": "ValueError: KIT_TOPOLOGY_BIND_STALE: regenerate the canonical native bind"}
     st = {"items": {"a": mk("t1", d), "b": mk("t2", live)}}
     a = FakeAP("/old")
-    assert KW.wait_bind_sweep(a, cfg, st, now=now) == 1
-    assert st["items"]["a"]["status"] == "CANCELLED" and st["items"]["a"]["class"] == "WAIT-BIND" and st["items"]["b"]["status"] == "FAIL"
+    assert KW.wait_bind_sweep(a, cfg, st, now=now) == 2                      # the live-tree row too (FLOW-1355 3: the stage verdict wins)
+    assert st["items"]["a"]["status"] == "CANCELLED" and st["items"]["a"]["class"] == "WAIT-BIND" and st["items"]["b"]["status"] == "CANCELLED"
     assert "s81|t1|/old" in st["wait_bind"] and any("WAIT-BIND" in m for m in a.lines)
     rows = [{"item": "t1", "kind": "type"}, {"item": "t3", "kind": "type"}]
     stale = KW.bind_preflight(a, cfg, st, "s81", rows)
@@ -510,3 +510,19 @@ def test_retry_host_prefers_room_under_cores_over_free_memory():
     assert KW.retry_gen_host(cfg, "s81", "t1", [], "epyc2") == "epyc7"          # epyc2 has more memory but is over its cores
     cfg["_otrun_status"]["epyc7"]["load"] = 200
     assert KW.retry_gen_host(cfg, "s81", "t1", [], "epyc2") == "epyc2"          # both over: memory decides, nothing is capped
+
+
+def test_stage_refused_bind_on_the_live_tree_becomes_stale_for_the_launch_check(tmp_path):
+    cfg = cfg0()
+    cfg["dies"]["s81"].update(src="/new", kit_rtl={"mode": "bind", "bind_out": "/new_bind"})
+    d = tmp_path / "a1"
+    d.mkdir()
+    (d / "spec.json").write_text(json.dumps({"src": "/new", "kit_rtl": {"bind_out": "/new_bind"}}))
+    now = time.time()
+    st = {"items": {"a": {"die": "s81", "item": "t1", "status": "FAIL", "stage": "kit_topology", "dir": str(d), "updated": now, "attempt": "1",
+                          "reason": "ValueError: KIT_TOPOLOGY_BIND_STALE: regenerate"}}}
+    assert KW.wait_bind_sweep(FakeAP("/x"), cfg, st, now=now) == 1 and st["items"]["a"]["class"] == "WAIT-BIND"
+    rows = [{"item": "t1"}, {"item": "t2"}]
+    assert list(KW.bind_stale_from_stage(cfg, st, "s81", rows)) == ["t1"]
+    cfg["dies"]["s81"]["kit_rtl"]["bind_out"] = "/newer_bind"                 # a new bind releases it
+    assert KW.bind_stale_from_stage(cfg, st, "s81", rows) == {}
