@@ -567,6 +567,9 @@ def check_abutment(P, R):
     """returns {(part, die_face): [(coord, layer, port)]} for the face-density check."""
     face_pins = defaultdict(list)
     type_tables = defaultdict(dict)    # type -> {inst: {(bus, bit): (layer, tface, coord)}}
+    for part, inst in P.parts.items():
+        if P.types[inst["type"]].get("superset"):
+            type_tables[inst["type"]][part] = {}
     smax = lnum(P.layer_budget["partition_signal_max"])
     for pid, pr in P.ports.items():
         f = pr["face"]
@@ -713,9 +716,25 @@ def superset_pin_tables(P, R, tn, insts):
     """UNIFY-TOOLS-0300 (FABLE-SUPERSET-0415 5: compare the full type table, not the bound subset): every instance of a
     superset type carries the class pin table.  A pin two instances both bind must sit at the same type-frame place; a
     bus an instance does not bind must be one of its declared spare_ends (gen_phys pins it from the type window)."""
+    import gen_phys
+
+    spare_buses = set().union(*(P.spare_ends(inst) for inst in insts))
+    # A type with no bound port on one instance still gets every spare pin from
+    # its declared window. Match the generator's pin coordinates bit for bit.
+    try:
+        declared = gen_phys.superset_spare_pins(P, tn, set(P._type_buses(tn)) - spare_buses)
+    except (KeyError, ValueError) as e:
+        R.err("abutment", str(e), type=tn)
+        return
+    window_pins = {(bus, bit): (layer, face, y if face in "EW" else x)
+                   for bus, bit, layer, x, y, face in declared}
     union, owner = {}, {}
     for inst, tab in sorted(insts.items()):
         for k, v in tab.items():
+            if k[0] in spare_buses and window_pins.get(k) != v:
+                R.err("abutment", f"type {tn}: superset pin {k[0]}[{k[1]}] {v} on {inst} differs from "
+                      f"its declared window pin {window_pins.get(k)}", type=tn)
+                return
             if k in union and union[k] != v:
                 R.err("abutment", f"type {tn}: superset pin {k[0]}[{k[1]}] {v} on {inst} != {union[k]} on {owner[k]} "
                       "-- a superset type must have one pin table", type=tn)

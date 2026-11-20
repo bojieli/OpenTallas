@@ -3363,6 +3363,8 @@ def spare_end_errors(P, use):
         for bn in sorted(spare):
             if use.get((part, bn)):
                 errs.append(f"partition {part}: spare end '{bn}' is bound by port(s) {use[(part, bn)]}")
+            if bn in buses and P._type_geom(part, bn) is None:
+                errs.append(f"partition {part}: spare end '{bn}' declares no type face/window/layers")
         for sl in t.get("ft_slots", []):
             ends = {sl["name"] + "_i", sl["name"] + "_o"}
             if len(ends & spare) == 1:
