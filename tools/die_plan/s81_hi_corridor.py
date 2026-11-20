@@ -19,6 +19,8 @@ both sides and the bus crosses the core twice (measured t28/t27 GRT hot gcells: 
                                             lanes' regs_um[j] = that point): s0 nearest free point to the old centroid,
                                             s1 the free point with the least max hop to the members' next points.
                                             Station counts, cycles, bits, pins unchanged; hops <= max(400, before).
+        --add-stage (S81-HI-STAGE)          a type with refused rows: +1 per-lane hi stage on every hi row of that type
+                                            (plan hi depth +1, +1 cycle, restage LF_CS_HI_D), then all hops <= 400.
 """
 import argparse, itertools, json, re, sys
 from collections import defaultdict
@@ -167,60 +169,131 @@ def free_points(t, B, mincl, step=4.32):
     return pts
 
 
-def sites(P, rex, gs, mincl):
+def _hops(e):
+    return [md(x, y) for x, y in zip([e["from_um"]] + e["regs_um"], e["regs_um"] + [e["to_um"]])]
+
+
+def _site_type(tn, t, gs, mincl, extra=False):
+    """one type.  extra=True (S81-HI-STAGE, +1 cycle on the hi lanes of this leaf): every hi row has ONE more per-lane
+    stage at index gs (after the shared banks); the last shared bank may then sit up to two hops from the lane's next
+    point, and the new stage is placed on a free point between them (both sub-hops <= LIMIT)."""
+    rows = []
+    Q = hi_rows(t)
+    if not Q:
+        return rows
+    B = boxes(t)
+    FP = free_points(t, B, mincl)
+    if not FP:
+        return [dict(type=tn, result="no free point")]
+    used = []          # banks already sited in this type: keep >= SEP um apart (one bank per channel spot)
+    hop0 = {id(e): max(_hops(e)) for es in Q.values() for e in es}
+    if extra:
+        for es in Q.values():
+            for e in es:
+                if len(e["regs_um"]) < gs:
+                    return [dict(type=tn, capture=e["capture"], result="REFUSED add-stage: row has fewer than gs stages")]
+                a, c = e["regs_um"][gs - 1], nxt(e, gs - 1)
+                e["regs_um"].insert(gs, [round((a[0] + c[0]) / 2, 3), round((a[1] + c[1]) / 2, 3)])     # placeholder
+    snap = {g: [(e, [list(r) for r in e["regs_um"]], e.get("note")) for e in es] for g, es in Q.items()}
+    picks = defaultdict(list)
+    for g, es in sorted(Q.items()):
+        prev = None
+        for j in range(gs):
+            mem = [e for e in es if len(e["regs_um"]) > j]
+            if not mem:
+                continue
+            c = centroid(mem, j)
+            before = max(max(_hops(e)) for e in mem)
+            lim = LIMIT if extra else max(LIMIT, before)
+
+            def worst(p):
+                w = 0
+                for e in mem:
+                    a = prev if prev is not None else (e["regs_um"][j - 1] if j else e["from_um"])
+                    w = max(w, md(a, p))
+                    if j == gs - 1:                  # extra: two hops to the point after the new stage, 10 um for the detour
+                        w = max(w, (md(p, nxt(e, j + 1)) + 10.0) / 2 if extra else md(p, nxt(e, j)))
+                return w
+            FPu = [q for q in FP if md(q[0], c) <= 2 * LIMIT and all(md(q[0], u) >= SEP for u in used)]
+            if j == 0:
+                cand = sorted(FPu, key=lambda q: md(q[0], c))[:400]
+                cand = [q for q in cand if worst(q[0]) <= lim]
+                pick = cand[0][0] if cand else None
+            else:
+                cand = [(worst(q[0]), -q[1], q[0]) for q in FPu]
+                cand = [q for q in cand if q[0] <= lim]
+                pick = min(cand)[2] if cand else None
+            if pick is None:
+                rows.append(dict(type=tn, quad=g, stage=j, result="REFUSED no site within hop limit", lim=lim)); prev = None; continue
+            for e in mem:
+                e["regs_um"][j] = [pick[0], pick[1]]
+                e["note"] = e.get("note", "") + f" | S81-HI-CORRIDOR shared quad{g} stage {j} site {pick[0]},{pick[1]} (was centroid {c[0]:.1f},{c[1]:.1f})"
+            after = max(max(_hops(e)) for e in mem)
+            rows.append(dict(type=tn, quad=g, stage=j, result="sited", old=[round(c[0], 2), round(c[1], 2)], new=pick,
+                             clear_um=round(clear(pick, B), 1), max_hop_before=round(before, 1), max_hop_after=round(after, 1)))
+            prev = pick
+            used.append(pick); picks[g].append(pick)
+    if extra:              # the new per-lane stage: free point with the least longer sub-hop, >= SEP / 2 from banks and each other
+        for g, es in sorted(Q.items()):
+            for e in es:
+                a, c = e["regs_um"][gs - 1], nxt(e, gs)
+                cand = [(max(md(a, q[0]), md(q[0], c)), md(a, q[0]) + md(q[0], c), q[0]) for q in FP
+                        if md(q[0], a) <= LIMIT and md(q[0], c) <= LIMIT and all(md(q[0], u) >= SEP / 2 for u in used)]
+                if not cand:
+                    rows.append(dict(type=tn, capture=e["capture"], result="REFUSED add-stage: no free point within one hop of both ends"))
+                    continue
+                q = min(cand)[2]
+                e["regs_um"][gs] = [q[0], q[1]]; used.append(q)
+                e["note"] = e.get("note", "") + f" | S81-HI-STAGE +1 per-lane hi stage at {q[0]},{q[1]} (index {gs}, +1 cycle; shared bank to lane was over {LIMIT:g} um)"
+    for g, es in sorted(Q.items()):          # final hop check over the whole rows (both stages moved)
+        bad = []
+        for e in es:
+            h = max(_hops(e))
+            if h > (LIMIT if extra else max(LIMIT, hop0[id(e)])) + 1e-6:
+                bad.append(dict(type=tn, quad=g, capture=e["capture"], result="REFUSED final hop", hop=round(h, 1),
+                                before=round(hop0[id(e)], 1)))
+        if (bad or any(r.get("quad") == g and r["result"] != "sited" for r in rows)) and not extra:
+            # REFUSED-KEEPS-OLD (FABLE-PD-S81-0015 11-20: plan_j4a carried 491 rows over 405 um, max 626.4): a refused row
+            # used to keep the moved site.  The quad is one bank per stage, so the WHOLE quad goes back to its old rows.
+            for e, regs, note in snap[g]:
+                e["regs_um"] = [list(r) for r in regs]
+                if note is None:
+                    e.pop("note", None)
+                else:
+                    e["note"] = note
+            for r in rows:
+                if r.get("quad") == g and r["result"] == "sited":
+                    r["result"] = "REFUSED quad kept its old sites (a member row would exceed the hop limit)"
+            for q in picks[g]:
+                used.remove(q)
+            for b in bad:
+                b["kept_old"] = True
+        rows += bad
+    return rows
+
+
+def sites(P, rex, gs, mincl, add_stage=False):
+    """add_stage (S81-HI-STAGE, COORD 11-19, cycles pre-approved): a type whose plain siting refuses any row is done again
+    from its untouched rows with one more per-lane hi stage on EVERY hi row of the type (one CS_HI_D per leaf, so the
+    depth stays uniform: plan hi depth +1, +1 cycle on the hi lanes, restage LF_CS_HI_D).  A type that still refuses
+    keeps its untouched rows and its refusals are reported."""
+    import copy
     rows = []
     for tn, t in matching(P, rex):
-        Q = hi_rows(t)
-        if not Q:
-            continue
-        B = boxes(t)
-        FP = free_points(t, B, mincl)
-        if not FP:
-            rows.append(dict(type=tn, result="no free point")); continue
-        used = []          # banks already sited in this type: keep >= SEP um apart (one bank per channel spot)
-        hop0 = {id(e): max(md(a, b) for a, b in zip([e["from_um"]] + e["regs_um"], e["regs_um"] + [e["to_um"]]))
-                for es in Q.values() for e in es}
-        for g, es in sorted(Q.items()):
-            prev = None
-            for j in range(gs):
-                mem = [e for e in es if len(e["regs_um"]) > j]
-                if not mem:
-                    continue
-                c = centroid(mem, j)
-                before = max(max(md(a, b) for a, b in zip([e["from_um"]] + e["regs_um"], e["regs_um"] + [e["to_um"]])) for e in mem)
-                lim = max(LIMIT, before)
-
-                def worst(p):
-                    w = 0
-                    for e in mem:
-                        a = prev if prev is not None else (e["regs_um"][j - 1] if j else e["from_um"])
-                        w = max(w, md(a, p), md(p, nxt(e, j)) if j == gs - 1 else 0)
-                    return w
-                FPu = [q for q in FP if md(q[0], c) <= 2 * LIMIT and all(md(q[0], u) >= SEP for u in used)]
-                if j == 0:
-                    cand = sorted(FPu, key=lambda q: md(q[0], c))[:400]
-                    cand = [q for q in cand if worst(q[0]) <= lim]
-                    pick = cand[0][0] if cand else None
-                else:
-                    cand = [(worst(q[0]), -q[1], q[0]) for q in FPu]
-                    cand = [q for q in cand if q[0] <= lim]
-                    pick = min(cand)[2] if cand else None
-                if pick is None:
-                    rows.append(dict(type=tn, quad=g, stage=j, result="REFUSED no site within hop limit", lim=lim)); prev = None; continue
-                for e in mem:
-                    e["regs_um"][j] = [pick[0], pick[1]]
-                    e["note"] = e.get("note", "") + f" | S81-HI-CORRIDOR shared quad{g} stage {j} site {pick[0]},{pick[1]} (was centroid {c[0]:.1f},{c[1]:.1f})"
-                after = max(max(md(a, b) for a, b in zip([e["from_um"]] + e["regs_um"], e["regs_um"] + [e["to_um"]])) for e in mem)
-                rows.append(dict(type=tn, quad=g, stage=j, result="sited", old=[round(c[0], 2), round(c[1], 2)], new=pick,
-                                 clear_um=round(clear(pick, B), 1), max_hop_before=round(before, 1), max_hop_after=round(after, 1)))
-                prev = pick
-                used.append(pick)
-        for es in Q.values():          # final hop check over the whole rows (both stages moved)
-            for e in es:
-                h = max(md(a, b) for a, b in zip([e["from_um"]] + e["regs_um"], e["regs_um"] + [e["to_um"]]))
-                if h > max(LIMIT, hop0[id(e)]) + 1e-6:
-                    rows.append(dict(type=tn, capture=e["capture"], result="REFUSED final hop", hop=round(h, 1),
-                                     before=round(hop0[id(e)], 1)))
+        keep = copy.deepcopy(t.get("internal_stations"))
+        r = _site_type(tn, t, gs, mincl)
+        if add_stage and any(x["result"] != "sited" for x in r):
+            t["internal_stations"] = copy.deepcopy(keep)
+            r2 = _site_type(tn, t, gs, mincl, extra=True)
+            if any(x["result"] != "sited" for x in r2):
+                t["internal_stations"] = keep
+                r = [dict(x, add_stage="tried") for x in r2 if x["result"] != "sited"]
+            else:
+                n = sum(len(es) for es in hi_rows(t).values())
+                r = r2 + [dict(type=tn, result="sited", add_stage=1, hi_rows=n,
+                               hi_depth=max(len(e["regs_um"]) for es in hi_rows(t).values() for e in es),
+                               max_hop_after=round(max(max(_hops(e)) for es in hi_rows(t).values() for e in es), 1))]
+        rows += r
     return rows
 
 
@@ -482,6 +555,8 @@ def main():
     ap.add_argument("--corridor", type=float, default=30.24)
     ap.add_argument("--min-clear", type=float, default=8.64)
     ap.add_argument("--out"); ap.add_argument("--json")
+    ap.add_argument("--add-stage", action="store_true",
+                    help="sites: a type with refused rows gets one more per-lane hi stage on every hi row (+1 cycle) and is sited again")
     a = ap.parse_args()
     P = json.load(open(a.plan))
     if a.cmd == "check":
@@ -504,7 +579,7 @@ def main():
                 print(tn, "HI_CORRIDOR_APPLY", move_lanes(ok[tn], sd, a.gs, budgets=P.get("budgets")))
         json.dump(P, open(a.out, "w"), indent=1)
     else:
-        rows = sites(P, a.types, a.gs, a.min_clear)
+        rows = sites(P, a.types, a.gs, a.min_clear, a.add_stage)
         json.dump(P, open(a.out, "w"), indent=1)
         json.dump(rows, open(a.out + ".sites.json", "w"), indent=1)
         bad = [r for r in rows if r["result"] != "sited"]

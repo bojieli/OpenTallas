@@ -159,3 +159,61 @@ def test_types_without_hard_cores_are_skipped_with_warning(capsys):
     assert rows and all(r["type"] == "ot_s81sl_leaf__t99" for r in rows)
     assert Q["partition_types"]["ot_s81sl_kv_leaf__t2"] == P["partition_types"]["ot_s81sl_kv_leaf__t2"]
     assert "HI_CORRIDOR_WARN ot_s81sl_kv_leaf__t2" in capsys.readouterr().err
+
+
+def _far_plan():
+    """vn face 300 um further east: the far quads are more than two hops from the first bank"""
+    P = plan()
+    t = P["partition_types"]["ot_s81sl_leaf__t99"]
+    t["outline_um"] = [1400.0, 1200.0]
+    for h in t["hard_cores"]:
+        if h["inst"] == "u_lf.u_vn.u_a":
+            h["origin_um"] = [800.0, 300.0]
+    for e in t["internal_stations"]:
+        e["from_um"] = [800.0, 380.0]; e["regs_um"][0] = [790.0, 380.0]
+        x, y = e["to_um"]
+        e["regs_um"][1] = [(790.0 + x) / 2, (380.0 + y) / 2]
+    return P
+
+
+def test_add_stage_gives_every_hi_row_one_more_stage_and_closes_the_hops():
+    P = _far_plan()
+    t = P["partition_types"]["ot_s81sl_leaf__t99"]
+    base = copy.deepcopy(P)
+    r0 = H.sites(copy.deepcopy(base), "t99", 2, 8.64)
+    assert any(x["result"] != "sited" for x in r0)                     # plain form C refuses rows here
+    r = H.sites(P, "t99", 2, 8.64, add_stage=True)
+    assert all(x["result"] == "sited" for x in r), [x for x in r if x["result"] != "sited"][:3]
+    assert r[-1]["add_stage"] == 1 and r[-1]["hi_depth"] == 4 and r[-1]["hi_rows"] == 16
+    B = H.boxes(t)
+    for e in t["internal_stations"]:
+        assert len(e["regs_um"]) == 4                                   # uniform depth: one CS_HI_D per leaf
+        assert max(H._hops(e)) <= 400.0 + 1e-6
+        assert all(H.clear(p, B) >= 8.64 for p in e["regs_um"][:3])     # shared banks and the new stage in free channels
+        assert "S81-HI-STAGE +1" in e["note"]
+    for g in range(4):                                                  # the two shared stages stay shared per quad
+        es = [e for e in t["internal_stations"] if int(H.LN.search(e["capture"])[1]) // 4 == g]
+        assert len({tuple(e["regs_um"][0]) for e in es}) == 1 and len({tuple(e["regs_um"][1]) for e in es}) == 1
+
+
+def test_add_stage_leaves_a_type_alone_when_plain_siting_works():
+    P = plan(); Q = plan()
+    assert H.sites(P, "t99", 2, 8.64, add_stage=True) == H.sites(Q, "t99", 2, 8.64)
+    assert P == Q
+
+
+def test_refused_quad_keeps_its_old_rows_and_no_row_gets_longer():
+    """FABLE-PD-S81-0015 11-20: 'REFUSED final hop' still wrote the moved site (plan_j4a: 491 rows over 405 um)"""
+    P = _far_plan()
+    base = copy.deepcopy(P)
+    r = H.sites(P, "t99", 2, 8.64)
+    t, t0 = P["partition_types"]["ot_s81sl_leaf__t99"], base["partition_types"]["ot_s81sl_leaf__t99"]
+    refused = {x["quad"] for x in r if x["result"] != "sited"}
+    assert refused and all("quad" in x for x in r)
+    for e, e0 in zip(t["internal_stations"], t0["internal_stations"]):
+        g = int(H.LN.search(e["capture"])[1]) // 4
+        if g in refused:
+            assert e == e0                                               # regs and note untouched
+        assert max(H._hops(e)) <= max(400.0, max(H._hops(e0))) + 1e-6    # no row of the type is longer than before
+    sited = {x["quad"] for x in r if x["result"] == "sited"}
+    assert not (sited & refused)                                         # a quad is sited whole or not at all
