@@ -1,0 +1,339 @@
+{
+ "tool": "setup_to_stage",
+ "rule": "R11",
+ "die": "qc",
+ "type": "coll_ftc",
+ "kit": "/srv/opentallas-scratch/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N3/items/coll_ftc/attempt_5/gen/coll_ftc",
+ "plan": "",
+ "paths_file": "/srv/opentallas-scratch2/claude/cbc-all-0200/sts/qc/coll_ftc/sts_paths.json",
+ "failing_paths": 1260,
+ "rows": [
+  {
+   "rule": "R11",
+   "type": "coll_ftc",
+   "paths": 57,
+   "worst_slack_ps": -180.6,
+   "worst_start": "u_bound.u_cland_tl_st_wi_i/u_ring.dch[16].sd_c[235]$_DFFE_NP_/QN",
+   "worst_end": "u_bound.u_cland_tl_st_wi_i/u_ring.dch[16].u_dsel/y[43]$_DFF_P_/D",
+   "max_straight_um": 496.8,
+   "hop_cap_um": 200.0,
+   "half_cycle": true,
+   "kind": "internal_stations_add",
+   "conn": "bus:tl_st_wi_i",
+   "add_regs": 2,
+   "cycles": 2,
+   "sites_um": [
+    [
+     40.582,
+     918.405
+    ],
+    [
+     41.207,
+     918.405
+    ]
+   ],
+   "existing_entries": 0,
+   "note": "+2 station register(s) on bus:tl_st_wi_i (+2 cycle on its lanes, LATCHECK reprices)"
+  },
+  {
+   "rule": "R11",
+   "type": "coll_ftc",
+   "paths": 8,
+   "worst_slack_ps": -87.1,
+   "worst_start": "arv_wo_in_valid_i[1]",
+   "worst_end": "u_bound.u_cland_arv_wo_in_valid_i/u_ring.s_d[3][1]$_DFFE_NP_/D",
+   "max_straight_um": 333.2,
+   "hop_cap_um": 200.0,
+   "half_cycle": true,
+   "kind": "internal_stations_add",
+   "conn": "bus:arv_wo_in_valid_i",
+   "add_regs": 1,
+   "cycles": 1,
+   "sites_um": [
+    [
+     664.303,
+     542.491
+    ]
+   ],
+   "existing_entries": 0,
+   "note": "+1 station register(s) on bus:arv_wo_in_valid_i (+1 cycle on its lanes, LATCHECK reprices)"
+  },
+  {
+   "rule": "R11",
+   "type": "coll_ftc",
+   "paths": 1083,
+   "worst_slack_ps": -45.5,
+   "worst_start": "ard_wo_in_data_i[227]",
+   "worst_end": "u_bound.u_cland_ard_wo_in_data_i/u_ring.dch[3].sd_c[163]$_DFFE_NP_/D",
+   "max_straight_um": 327.0,
+   "hop_cap_um": 200.0,
+   "half_cycle": true,
+   "kind": "internal_stations_add",
+   "conn": "bus:ard_wo_in_data_i",
+   "add_regs": 1,
+   "cycles": 1,
+   "sites_um": [
+    [
+     694.868,
+     476.602
+    ]
+   ],
+   "existing_entries": 0,
+   "note": "+1 station register(s) on bus:ard_wo_in_data_i (+1 cycle on its lanes, LATCHECK reprices)"
+  },
+  {
+   "rule": "R11",
+   "type": "coll_ftc",
+   "paths": 31,
+   "worst_slack_ps": -32.9,
+   "worst_start": "art_wo_in_tag_i[32]",
+   "worst_end": "u_bound.u_cland_art_wo_in_tag_i/u_ring.s_d[3][32]$_DFFE_NP_/D",
+   "max_straight_um": 205.9,
+   "hop_cap_um": 200.0,
+   "half_cycle": true,
+   "kind": "internal_stations_add",
+   "conn": "bus:art_wo_in_tag_i",
+   "add_regs": 1,
+   "cycles": 1,
+   "sites_um": [
+    [
+     736.447,
+     532.899
+    ]
+   ],
+   "existing_entries": 0,
+   "note": "+1 station register(s) on bus:art_wo_in_tag_i (+1 cycle on its lanes, LATCHECK reprices)"
+  },
+  {
+   "rule": "R11",
+   "type": "coll_ftc",
+   "paths": 8,
+   "worst_slack_ps": -27.4,
+   "worst_start": "arl_wo_in_last_i[1]",
+   "worst_end": "u_bound.u_cland_arl_wo_in_last_i/u_ring.s_d[3][1]$_DFFE_NP_/D",
+   "max_straight_um": 341.0,
+   "hop_cap_um": 200.0,
+   "half_cycle": true,
+   "kind": "internal_stations_add",
+   "conn": "bus:arl_wo_in_last_i",
+   "add_regs": 1,
+   "cycles": 1,
+   "sites_um": [
+    [
+     660.524,
+     533.981
+    ]
+   ],
+   "existing_entries": 0,
+   "note": "+1 station register(s) on bus:arl_wo_in_last_i (+1 cycle on its lanes, LATCHECK reprices)"
+  },
+  {
+   "rule": "R11",
+   "type": "coll_ftc",
+   "paths": 35,
+   "worst_slack_ps": -26.4,
+   "worst_start": "cct_wo_cmd_tag_i[15]",
+   "worst_end": "u_bound.u_cland_cct_wo_cmd_tag_i/u_ring.s_d[2][15]$_DFFE_NP_/D",
+   "max_straight_um": 224.0,
+   "hop_cap_um": 200.0,
+   "half_cycle": true,
+   "kind": "internal_stations_add",
+   "conn": "bus:cct_wo_cmd_tag_i",
+   "add_regs": 1,
+   "cycles": 1,
+   "sites_um": [
+    [
+     736.447,
+     529.763
+    ]
+   ],
+   "existing_entries": 0,
+   "note": "+1 station register(s) on bus:cct_wo_cmd_tag_i (+1 cycle on its lanes, LATCHECK reprices)"
+  },
+  {
+   "rule": "R11",
+   "type": "coll_ftc",
+   "paths": 5,
+   "worst_slack_ps": -26.0,
+   "worst_start": "ccv_wo_cmd_v_i[0]",
+   "worst_end": "u_bound.u_cland_ccv_wo_cmd_v_i/u_ring.s_d[0][0]$_DFFE_NP_/D",
+   "max_straight_um": 284.5,
+   "hop_cap_um": 200.0,
+   "half_cycle": true,
+   "kind": "internal_stations_add",
+   "conn": "bus:ccv_wo_cmd_v_i",
+   "add_regs": 1,
+   "cycles": 1,
+   "sites_um": [
+    [
+     688.063,
+     550.848
+    ]
+   ],
+   "existing_entries": 0,
+   "note": "+1 station register(s) on bus:ccv_wo_cmd_v_i (+1 cycle on its lanes, LATCHECK reprices)"
+  },
+  {
+   "rule": "R11",
+   "type": "coll_ftc",
+   "paths": 4,
+   "worst_slack_ps": -21.7,
+   "worst_start": "table_req_treq_wi_i[5]",
+   "worst_end": "u_bound.u_cland_table_req_treq_wi_i/u_ring.s_d[0][5]$_DFFE_NP_/D",
+   "max_straight_um": 196.8,
+   "hop_cap_um": 200.0,
+   "half_cycle": true,
+   "kind": "internal_stations_add",
+   "conn": "bus:table_req_treq_wi_i",
+   "add_regs": 1,
+   "cycles": 1,
+   "sites_um": [
+    [
+     94.16,
+     789.349
+    ]
+   ],
+   "existing_entries": 0,
+   "note": "+1 station register(s) on bus:table_req_treq_wi_i (+1 cycle on its lanes, LATCHECK reprices)"
+  },
+  {
+   "rule": "R11",
+   "type": "coll_ftc",
+   "paths": 8,
+   "worst_slack_ps": -21.6,
+   "worst_start": "fltk_i[1]",
+   "worst_end": "u_bound.u_cland_fltk_i/u_ring.s_d[0][1]$_DFFE_NP_/D",
+   "max_straight_um": 269.4,
+   "hop_cap_um": 200.0,
+   "half_cycle": true,
+   "kind": "internal_stations_add",
+   "conn": "bus:fltk_i",
+   "add_regs": 1,
+   "cycles": 1,
+   "sites_um": [
+    [
+     232.709,
+     961.625
+    ]
+   ],
+   "existing_entries": 0,
+   "note": "+1 station register(s) on bus:fltk_i (+1 cycle on its lanes, LATCHECK reprices)"
+  },
+  {
+   "rule": "R11",
+   "type": "coll_ftc",
+   "paths": 4,
+   "worst_slack_ps": -21.6,
+   "worst_start": "arm_wo_in_mode_i[1]",
+   "worst_end": "u_bound.u_cland_arm_wo_in_mode_i/u_ring.s_d[0][1]$_DFFE_NP_/D",
+   "max_straight_um": 165.4,
+   "hop_cap_um": 200.0,
+   "half_cycle": true,
+   "kind": "internal_stations_add",
+   "conn": "bus:arm_wo_in_mode_i",
+   "add_regs": 1,
+   "cycles": 1,
+   "sites_um": [
+    [
+     753.295,
+     534.494
+    ]
+   ],
+   "existing_entries": 0,
+   "note": "+1 station register(s) on bus:arm_wo_in_mode_i (+1 cycle on its lanes, LATCHECK reprices)"
+  },
+  {
+   "rule": "R11",
+   "type": "coll_ftc",
+   "paths": 1,
+   "worst_slack_ps": -7.4,
+   "worst_start": "ccw_wo_cmd_words_i[16]",
+   "worst_end": "u_bound.u_cland_ccw_wo_cmd_words_i/u_ring.s_d[0][16]$_DFFE_NP_/D",
+   "max_straight_um": 183.9,
+   "hop_cap_um": 200.0,
+   "half_cycle": true,
+   "kind": "internal_stations_add",
+   "conn": "bus:ccw_wo_cmd_words_i",
+   "add_regs": 1,
+   "cycles": 1,
+   "sites_um": [
+    [
+     737.851,
+     554.113
+    ]
+   ],
+   "existing_entries": 0,
+   "note": "+1 station register(s) on bus:ccw_wo_cmd_words_i (+1 cycle on its lanes, LATCHECK reprices)"
+  },
+  {
+   "rule": "R11",
+   "type": "coll_ftc",
+   "paths": 6,
+   "worst_slack_ps": -5.4,
+   "worst_start": "ag_wo_ag5_i[3]",
+   "worst_end": "u_bound.u_cland_ag_wo_ag5_i/u_ring.s_d[2][3]$_DFFE_NP_/D",
+   "max_straight_um": 263.1,
+   "hop_cap_um": 200.0,
+   "half_cycle": true,
+   "kind": "internal_stations_add",
+   "conn": "bus:ag_wo_ag5_i",
+   "add_regs": 1,
+   "cycles": 1,
+   "sites_um": [
+    [
+     694.004,
+     738.823
+    ]
+   ],
+   "existing_entries": 0,
+   "note": "+1 station register(s) on bus:ag_wo_ag5_i (+1 cycle on its lanes, LATCHECK reprices)"
+  },
+  {
+   "rule": "R11",
+   "type": "coll_ftc",
+   "paths": 9,
+   "worst_slack_ps": -4.1,
+   "worst_start": "dd_wo_dd_i_i[508]",
+   "worst_end": "u_bound.u_cland_dd_wo_dd_i_i/u_ring.dch[7].sd_c[124]$_DFFE_NP_/D",
+   "max_straight_um": 175.9,
+   "hop_cap_um": 200.0,
+   "half_cycle": true,
+   "kind": "internal_stations_add",
+   "conn": "bus:dd_wo_dd_i_i",
+   "add_regs": 1,
+   "cycles": 1,
+   "sites_um": [
+    [
+     765.932,
+     706.639
+    ]
+   ],
+   "existing_entries": 0,
+   "note": "+1 station register(s) on bus:dd_wo_dd_i_i (+1 cycle on its lanes, LATCHECK reprices)"
+  },
+  {
+   "rule": "R11",
+   "type": "coll_ftc",
+   "paths": 1,
+   "worst_slack_ps": -1.0,
+   "worst_start": "ss_wo_ss5_i[13]",
+   "worst_end": "u_bound.u_cland_ss_wo_ss5_i/u_ring.dch[0].sd_c[13]$_DFFE_NP_/D",
+   "max_straight_um": 153.6,
+   "hop_cap_um": 200.0,
+   "half_cycle": true,
+   "kind": "internal_stations_add",
+   "conn": "bus:ss_wo_ss5_i",
+   "add_regs": 1,
+   "cycles": 1,
+   "sites_um": [
+    [
+     746.275,
+     744.197
+    ]
+   ],
+   "existing_entries": 0,
+   "note": "+1 station register(s) on bus:ss_wo_ss5_i (+1 cycle on its lanes, LATCHECK reprices)"
+  }
+ ],
+ "rtl_requests": []
+}

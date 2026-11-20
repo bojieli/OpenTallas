@@ -1,0 +1,79 @@
+{
+ "tool": "setup_to_stage",
+ "rule": "R11",
+ "die": "s81",
+ "type": "slice_station__t48",
+ "kit": "/srv/opentallas-scratch/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/slice_station__t48/attempt_7/gen/slice_station__t48",
+ "plan": "",
+ "paths_file": "/srv/opentallas-scratch2/claude/cbc-all-0200/sts/s81/slice_station__t48/sts_paths.json",
+ "failing_paths": 12,
+ "rows": [
+  {
+   "rule": "R11",
+   "type": "slice_station__t48",
+   "paths": 11,
+   "worst_slack_ps": -182.8,
+   "worst_start": "u_bound.u_cland_origin/s2$_SDFF_PN0_/QN",
+   "worst_end": "u_bound.u_cland_reader_start_ft4_i_0/g_x[7].u_r/q$_SDFF_PN0_/D",
+   "max_straight_um": 1225.7,
+   "hop_cap_um": 300.0,
+   "half_cycle": false,
+   "kind": "internal_stations_add",
+   "conn": "bus:reader_start_ft4_i",
+   "add_regs": 4,
+   "cycles": 4,
+   "sites_um": [
+    [
+     58.826,
+     957.825
+    ],
+    [
+     71.79,
+     728.055
+    ],
+    [
+     84.754,
+     498.285
+    ],
+    [
+     97.718,
+     268.515
+    ]
+   ],
+   "existing_entries": 0,
+   "note": "+4 station register(s) on bus:reader_start_ft4_i (+4 cycle on its lanes, LATCHECK reprices)"
+  },
+  {
+   "rule": "R11",
+   "type": "slice_station__t48",
+   "paths": 1,
+   "worst_slack_ps": -145.7,
+   "worst_start": "u_bound.u_cland_origin/s2$_SDFF_PN0_/QN",
+   "worst_end": "u_bound.u_cland_fstart_ft2_o/q$_SDFF_PN0_/D",
+   "max_straight_um": 1185.3,
+   "hop_cap_um": 300.0,
+   "half_cycle": false,
+   "kind": "internal_stations_add",
+   "conn": "bus:fstart_ft2_o",
+   "add_regs": 3,
+   "cycles": 3,
+   "sites_um": [
+    [
+     45.327,
+     891.81
+    ],
+    [
+     44.792,
+     596.025
+    ],
+    [
+     44.257,
+     300.24
+    ]
+   ],
+   "existing_entries": 0,
+   "note": "+3 station register(s) on bus:fstart_ft2_o (+3 cycle on its lanes, LATCHECK reprices)"
+  }
+ ],
+ "rtl_requests": []
+}

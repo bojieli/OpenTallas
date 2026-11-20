@@ -1,0 +1,48 @@
+{
+ "tool": "setup_to_stage",
+ "rule": "R11",
+ "die": "qc",
+ "type": "slw_fw_v2__cl8537f156",
+ "kit": "/srv/opentallas-scratch/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N3/items/slw_fw_v2__cl8537f156/attempt_3/gen/slw_fw_v2__cl8537f156",
+ "plan": "",
+ "paths_file": "/srv/opentallas-scratch2/claude/cbc-all-0200/sts/qc/slw_fw_v2__cl8537f156/sts_paths.json",
+ "failing_paths": 1,
+ "rows": [
+  {
+   "rule": "R11",
+   "type": "slw_fw_v2__cl8537f156",
+   "paths": 1,
+   "worst_slack_ps": -75.9,
+   "worst_start": "u_bound.u_bin_x_sc_i/q[0]$_DFF_P_/QN",
+   "worst_end": "u_bound.u_bout_flt_wo/q$_DFF_P_/D",
+   "max_straight_um": 1247.0,
+   "hop_cap_um": 300.0,
+   "half_cycle": false,
+   "kind": "internal_stations_add",
+   "conn": "bus:x_sc_i",
+   "add_regs": 4,
+   "cycles": 4,
+   "sites_um": [
+    [
+     495.262,
+     936.603
+    ],
+    [
+     372.927,
+     809.541
+    ],
+    [
+     250.592,
+     682.479
+    ],
+    [
+     128.257,
+     555.417
+    ]
+   ],
+   "existing_entries": 0,
+   "note": "+4 station register(s) on bus:x_sc_i (+4 cycle on its lanes, LATCHECK reprices)"
+  }
+ ],
+ "rtl_requests": []
+}

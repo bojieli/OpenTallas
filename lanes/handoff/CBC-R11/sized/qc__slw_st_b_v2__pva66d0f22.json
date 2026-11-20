@@ -1,0 +1,30 @@
+{
+ "tool": "setup_to_stage",
+ "rule": "R11",
+ "die": "qc",
+ "type": "slw_st_b_v2__pva66d0f22",
+ "kit": "/srv/opentallas-scratch/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q6D/items/slw_st_b_v2__pva66d0f22/attempt_6/gen/slw_st_b_v2__pva66d0f22",
+ "plan": "",
+ "paths_file": "/srv/opentallas-scratch2/claude/cbc-all-0200/sts/qc/slw_st_b_v2__pva66d0f22/sts_paths.json",
+ "failing_paths": 1,
+ "rows": [],
+ "rtl_requests": [
+  {
+   "rule": "R11",
+   "type": "slw_st_b_v2__pva66d0f22",
+   "paths": 1,
+   "worst_slack_ps": -118.1,
+   "worst_start": "u_bound.u_cland_origin/s2$_SDFF_PN0_/QN",
+   "worst_end": "u_bound.u_cland_rstart_tx/q$_SDFF_PN0_/D",
+   "max_straight_um": 1047.5,
+   "hop_cap_um": 300.0,
+   "half_cycle": false,
+   "kind": "rtl_pipeline",
+   "module": "<type top>",
+   "levels": 2,
+   "cell_ps": 503.8,
+   "wire_ps": 280.4,
+   "ask": "split the cone: +1 pipeline register (levels 2, cells 504 ps)"
+  }
+ ]
+}
