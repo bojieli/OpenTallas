@@ -12,10 +12,15 @@ Registers are recognised by master name (ASAP7 DFF* / ASYNC_DFF* / DHL* / DLL* /
 import json
 import os
 import re
+import sys
 import time
+from pathlib import Path
 
 import odb  # noqa: F401  (OpenROAD python)
 from openroad import Design, Tech
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "die_plan"))
+from long_leg_census import HALF_UM, pin_centroid
 
 T0 = time.time()
 SEQ = re.compile(r"^(ASYNC_DFF|DFF|DHL|DLL|SDF|SDFH|SDFL)", re.I)
@@ -44,6 +49,7 @@ kind = {}       # inst name -> 'reg' | 'macro' | 'comb' | 'tie'
 loc = {}
 regs = []
 macros = []
+falling_regs = set()
 for inst in block.getInsts():
     m = inst.getMaster()
     n = inst.getName()
@@ -59,6 +65,14 @@ for inst in block.getInsts():
     elif SEQ.match(m.getName()):
         kind[n] = "reg"
         regs.append(n)
+        falling = m.getName().upper().startswith(("DFFL", "ASYNC_DFFL", "DLL"))
+        for it in inst.getITerms():
+            if CLKPIN.match(it.getMTerm().getName()) and it.getNet() is not None:
+                if any(driver.isOutputSignal() and "INV" in driver.getInst().getMaster().getName().upper()
+                       for driver in it.getNet().getITerms()):
+                    falling = not falling
+        if falling:
+            falling_regs.add(n)
     else:
         kind[n] = "comb"
 
@@ -80,9 +94,24 @@ for net in block.getNets():
             break
 log("clock/power nets", len(clock_nets))
 
+def macro_pin_loc(it):
+    inst = it.getInst()
+    m = inst.getMaster()
+    try:
+        rects = [(r.xMin() / dbu, r.yMin() / dbu, r.xMax() / dbu, r.yMax() / dbu)
+                 for pin in it.getMTerm().getMPins() for r in pin.getGeometry()]
+        if rects:
+            bb = inst.getBBox()
+            return pin_centroid(rects, str(inst.getOrient()), (bb.xMin() / dbu, bb.yMin() / dbu),
+                                (m.getWidth() / dbu, m.getHeight() / dbu))
+    except (AttributeError, KeyError, RuntimeError) as e:
+        log("macro pin geometry unavailable", inst.getName(), it.getMTerm().getName(), str(e)[:80])
+    ok, x, y = it.getAvgXY()
+    return (x / dbu, y / dbu) if ok else loc[inst.getName()]
+
+
 # per net: driver (inst name or port), sinks [(inst or port, pin)]
-drv_of = {}
-pinloc = {}         # (net, macro inst) -> pin centre (a macro end of a leg sits at its pin, not the macro centre)
+pinloc = {}         # (net, macro inst, pin) -> pin centre
 fanin = {}          # comb inst -> [nets]
 caps = []           # (net, capture inst/port, pin)
 nets = {}
@@ -96,16 +125,13 @@ for net in block.getNets():
         n = it.getInst().getName()
         if n not in kind:
             continue
+        pin = it.getMTerm().getName()
         if kind[n] == "macro":
-            try:
-                b = it.getBBox()
-                pinloc[(nn, n)] = ((b.xMin() + b.xMax()) / 2.0 / dbu, (b.yMin() + b.yMax()) / 2.0 / dbu)
-            except Exception:  # noqa: BLE001
-                pass
+            pinloc[(nn, n, pin)] = macro_pin_loc(it)
         if it.isOutputSignal():
-            d = ("i", n)
+            d = ("i", n, pin)
         elif it.isInputSignal():
-            sinks.append((n, it.getMTerm().getName()))
+            sinks.append((n, pin))
     for bt in net.getBTerms():
         ok, x, y = bt.getFirstPinLocation()
         p = ("p", bt.getName(), (x / dbu, y / dbu) if ok else None)
@@ -129,7 +155,7 @@ log("nets", len(nets), "comb with fanin", len(fanin), "captures", len(caps))
 def dloc(d, net=None):
     if d[0] == "p":
         return d[2]
-    return pinloc.get((net, d[1]), loc[d[1]])
+    return pinloc.get((net, d[1], d[2]), loc[d[1]])
 
 
 def dname(d):
@@ -190,18 +216,21 @@ for nn, s, pin in caps:
     v = src_val(d, nn)
     if v is None:
         continue
-    cl = s[2] if isinstance(s, tuple) else pinloc.get((nn, s), loc[s])
+    cl = s[2] if isinstance(s, tuple) else pinloc.get((nn, s, pin), loc[s])
     if cl is None:
         continue
     dl = dloc(d, nn) if not (d[0] == "i" and kind[d[1]] == "comb") else loc[d[1]]
     acc = v[0] + abs(dl[0] - cl[0]) + abs(dl[1] - cl[1])
     straight = abs(v[2][0] - cl[0]) + abs(v[2][1] - cl[1])
-    if straight > reach * 0.9:
-        legs.append([round(straight, 1), round(acc, 1), v[1], ("port:" + s[1]) if isinstance(s, tuple) else s, pin,
-                     [round(v[2][0], 1), round(v[2][1], 1)], [round(cl[0], 1), round(cl[1], 1)]])
+    capture = ("port:" + s[1]) if isinstance(s, tuple) else s
+    opposite_edges = (v[1] in falling_regs) != (capture in falling_regs)
+    limit = min(reach, HALF_UM) if opposite_edges else reach
+    if straight > limit * 0.9:
+        legs.append([round(straight, 1), round(acc, 1), v[1], capture, pin,
+                     [round(v[2][0], 1), round(v[2][1], 1)], [round(cl[0], 1), round(cl[1], 1)], opposite_edges])
 legs.sort(key=lambda r: -r[0])
 die = block.getDieArea()
-json.dump(dict(odb=os.environ["OT_ODB"], design=block.getName(), die_um=[die.xMax() / dbu, die.yMax() / dbu], reach=reach,
+json.dump(dict(scan_version=2, odb=os.environ["OT_ODB"], design=block.getName(), die_um=[die.xMax() / dbu, die.yMax() / dbu], reach=reach,
                n_regs=len(regs), n_captures=len(caps), legs=legs[:200000],
                regs=[[round(loc[r][0], 2), round(loc[r][1], 2)] for r in regs],
                macros=[[round(v, 2) for v in r] for r in macros]),

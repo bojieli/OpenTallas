@@ -7,7 +7,7 @@ each scan once per kit, as soon as the stage it reads exists.  An estimator: it 
 
 FOLD    after synthesis (1_2_yosys.v): declared register bits vs netlist flops per class (fold_scan.py).
 PLACED  after placement (3_place.odb, in the ORFS container, placed_hops_or.py): every register -> register leg
-        whose launch -> capture Manhattan distance exceeds CBC reach (405 um), grouped by register class pair; and the
+        whose pin-to-pin Manhattan distance exceeds reach (405 um full-cycle, 200 um half-cycle), grouped by register class pair; the
         in-tap skew from placement geometry is computed but NOT posted (it does not predict the CTS number:
         R2 <= 0.07 on 413 taps, skew_calib.py 11-19).
 CTS     after CTS (4_1_cts.log OT_TAP_INSERTION skew_ps, taps >= 100 sinks): the measured in-tap skew, worst tap and the
@@ -28,6 +28,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent / "die_plan"))
 import cbc_rules as CBC  # noqa: E402
+from long_leg_census import HALF_UM  # noqa: E402
 sys.path.pop(0)
 sys.path.insert(0, str(HERE))
 import fold_scan as FS  # noqa: E402
@@ -114,8 +115,8 @@ def run_placed(kit, odb, out_json, mem_gb=14):
     o = out_json.parent
     cmd = ["docker", "run", "--rm", "--name", f"phscan-{os.getpid()}", "--cpus=1", f"--memory={mem_gb}g", f"--memory-swap={mem_gb}g",
            "-e", "OT_ODB=/k/" + odb.name, "-e", "OT_OUT=/o/" + out_json.name, "-e", f"OT_REACH_UM={CBC.REACH_UM_PER_HOP}",
-           "-v", f"{odb.parent}:/k:ro", "-v", f"{o}:/o", "-v", f"{HERE}:/s:ro", IMAGE, "bash", "-lc",
-           "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; openroad -python -exit /s/placed_hops_or.py > /o/%s.log 2>&1; "
+           "-v", f"{odb.parent}:/k:ro", "-v", f"{o}:/o", "-v", f"{HERE.parent}:/s:ro", IMAGE, "bash", "-lc",
+           "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; openroad -python -exit /s/precheck/placed_hops_or.py > /o/%s.log 2>&1; "
            "rc=$?; chown %d:%d /o/%s /o/%s.log 2>/dev/null; exit $rc" % (out_json.stem, os.getuid(), os.getgid(), out_json.name, out_json.stem)]
     if not docker_ok():                  # 11-19: the systemd --user manager predates the docker group: every timer scan
         import shlex                     # failed with 'permission denied ... docker.sock' (rc 1); sg docker adds it
@@ -127,19 +128,28 @@ def run_placed(kit, odb, out_json, mem_gb=14):
     return r.returncode
 
 
-LEG_RULE = "pin2pin-nocore-nostrap-1119"   # summaries of another rule are re-summarised from the stored raw scan
+SCAN_VERSION = 2
+LEG_RULE = "pin-centroid-half-cycle-1120"   # summaries of another rule are re-summarised from the stored raw scan
 
 
 def summarise_placed(kit, ph, reach=CBC.REACH_UM_PER_HOP):
     """legs over reach by class (cbc_rules.classify_leg: core / channel / logic; strap/tie legs excluded)"""
     legs, by_class = [], collections.Counter()
+    half_cycle_count = 0
     for r in ph.get("legs", []):
-        if r[0] <= reach:
+        half_cycle = len(r) > 7 and r[7]
+        limit = min(reach, HALF_UM) if half_cycle else reach
+        if r[0] <= limit:
             continue
-        by_class[CBC.classify_leg(r[2], r[3], r[5], r[6], ph.get("macros") or [])] += 1     # every class, for the record
-        c = CBC.reach_leg(r, ph.get("macros") or [], reach)    # COORD 11-19 05:55: pin-to-pin, not over a core, not strap/tie
-        if c:
-            legs.append(r + [c])
+        c = CBC.classify_leg(r[2], r[3], r[5], r[6], ph.get("macros") or [])
+        by_class[c] += 1
+        if c in ("strap", "core"):
+            continue
+        if half_cycle:
+            half_cycle_count += 1
+            legs.append(r[:7] + ["half_cycle"])
+        elif c != "channel" or r[0] > CBC.REACH_BUFFERED_UM:
+            legs.append(r[:7] + [c])
     pairs = collections.defaultdict(lambda: [0, 0.0, None])
     for st, acc, a, b, pin, la, lb, c in legs:
         k = (c, reg_class(a), reg_class(b))
@@ -154,7 +164,7 @@ def summarise_placed(kit, ph, reach=CBC.REACH_UM_PER_HOP):
         mem = assign_taps(taps, [tuple(r) for r in ph["regs"]], int(min(cap or CBC.TAP_MAX_SINKS, CBC.TAP_MAX_SINKS)), CBC.TAP_RADIUS_UM)
         skew = {n: (skew_estimate(d), len(d)) for n, d in mem.items() if len(d) >= MIN_TAP_SINKS}
     worst = max((v[0] for v in skew.values()), default=None)
-    return dict(leg_rule=LEG_RULE, legs_over=len(legs), by_class=dict(by_class), pairs=[[a, b, n, round(w, 1), ex, c] for (c, a, b), (n, w, ex) in top[:40]],
+    return dict(scan_version=ph.get("scan_version"), leg_rule=LEG_RULE, legs_over=len(legs), half_cycle_legs=half_cycle_count, by_class=dict(by_class), pairs=[[a, b, n, round(w, 1), ex, c] for (c, a, b), (n, w, ex) in top[:40]],
                 skew_worst_ps=worst, taps_over_pass=sorted([n for n, v in skew.items() if v[0] >= CBC.TAP_SKEW_PASS_PS]),
                 taps_over_fail=sorted([n for n, v in skew.items() if v[0] >= CBC.TAP_SKEW_FAIL_PS]),
                 skew=skew, n_regs=ph.get("n_regs"))
@@ -186,35 +196,40 @@ def scan_kit(kit, do_post=False, mem_gb=14):
     sp = STATE / f"{kit.name}.placed.json"
     odb = stage_file(kit, "3_place.odb")
     prev = json.loads(sp.read_text()) if sp.exists() else None
+    stale = prev is not None and prev.get("scan_version") != SCAN_VERSION
     retry = prev is not None and prev.get("status") != "OK" and int(prev.get("attempts", 1)) < MAX_ATTEMPTS
     raw0 = STATE / f"{kit.name}.placed_raw.json"
-    if prev and prev.get("status") == "OK" and prev.get("leg_rule") != LEG_RULE and raw0.exists():
+    if prev and not stale and prev.get("status") == "OK" and prev.get("leg_rule") != LEG_RULE and raw0.exists():
         try:                             # same scan, the counted-leg rule changed: no new docker run
-            s = summarise_placed(kit, json.loads(raw0.read_text()))
+            ph = json.loads(raw0.read_text())
+            if ph.get("scan_version") != SCAN_VERSION:
+                raise ValueError("cached scan has an older geometry method")
+            s = summarise_placed(kit, ph)
             s.update(rc=0, status="OK", attempts=prev.get("attempts", 1))
             sp.write_text(json.dumps(s, indent=1))
             prev = s
         except (OSError, ValueError):
             pass
-    if odb and (prev is None or retry):
+    if odb and (prev is None or stale or retry):
         raw = STATE / f"{kit.name}.placed_raw.json"
         rc = run_placed(kit, odb, raw, mem_gb)
-        attempts = int((prev or {}).get("attempts", 0)) + 1
-        if rc == 0 and raw.exists():
-            s = summarise_placed(kit, json.loads(raw.read_text()))
+        attempts = 1 if stale else int((prev or {}).get("attempts", 0)) + 1
+        ph = json.loads(raw.read_text()) if rc == 0 and raw.exists() else {}
+        if ph.get("scan_version") == SCAN_VERSION:
+            s = summarise_placed(kit, ph)
             s.update(rc=0, status="OK", attempts=attempts)
             sp.write_text(json.dumps(s, indent=1))
             if s["legs_over"]:
                 bc = s["by_class"]
-                msgs.append(f"PLACED {s['legs_over']} legs pin-to-pin > {CBC.REACH_UM_PER_HOP:.0f} um (channel > {CBC.REACH_BUFFERED_UM:.0f}) counted; over the reach by class: core {bc.get('core', 0)} (not counted), "
+                msgs.append(f"PLACED {s['legs_over']} legs over reach (full cycle {CBC.REACH_UM_PER_HOP:.0f} um, channel {CBC.REACH_BUFFERED_UM:.0f} um, half cycle {HALF_UM:.0f} um); over the reach by class: core {bc.get('core', 0)} (not counted), "
                             f"channel {bc.get('channel', 0)}, logic {bc.get('logic', 0)}, strap/tie {bc.get('strap', 0)} (not counted): "
                             + "; ".join(f"[{c}] {a} -> {b} x{n} (max {w} um)" for a, b, n, w, _ex, c in s["pairs"][:4]))
         else:
-            err = ""
+            err = "no current-version placed scan output" if rc == 0 else ""
             log = raw.parent / f"{raw.stem}.log"
             if log.exists():
                 err = log.read_text(errors="replace")[-300:]
-            sp.write_text(json.dumps(dict(rc=rc, status="FAILED", attempts=attempts, err=(LAST_ERR[0] or err)[-400:]), indent=1))
+            sp.write_text(json.dumps(dict(scan_version=SCAN_VERSION, rc=rc, status="FAILED", attempts=attempts, err=(LAST_ERR[0] or err)[-400:]), indent=1))
             msgs.append(f"PLACED scan FAILED (rc {rc}, attempt {attempts}/{MAX_ATTEMPTS}): {(LAST_ERR[0] or err)[-160:]}")
             # the placement-geometry skew estimate is NOT posted: fitted 11-19 on 14 kits / 413 taps against the measured
             # OT_TAP_INSERTION skew_ps, R2 <= 0.07 and 2-3 of 14 kits in the right 60 / 100 ps band (leaf median 121 ps vs
