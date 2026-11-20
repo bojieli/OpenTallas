@@ -2,6 +2,21 @@
 
 Work dir epyc7 /srv/opentallas-scratch2/claude/kv-d23-compose (lane clone wt/ = sparse main worktree). Hub logs intel2 ~/tmp/kvd23c.
 
+## Status 2026-11-20 08:45Z (read this first; supersedes 07:05Z)
+- D25e3: plan 983443ee7b6d, G0 PASS (0 errors / 2464 warnings), sealed 5705fa378e1c, replicated and hosts check OK to epyc9/10, intel1, epyc2.
+  - Strict bind on private copy kw45/bindcopy_kv_d25e3 started 08:38:55Z (W8/d25e3bindgate; chain log W8/run_d25e3.out; ETA ~11:45Z).
+- When green:
+  1. On epyc8: `bash W8/post_bind_d25e3.sh`. It seals and replicates the bind dest, rsyncs every referenced bindcopy path to epyc7/9/10, intel1 and epyc2, and checks 0 missing per host. Wait for READY_TO_APPLY in W8/post_bind_d25e3.out.
+  2. On intel2: `RT=$(readlink -f rt/current) TOOLS=a2fb7e625dd89d4961fa633e35977e1e4a3577f5 HOSTS=epyc8,epyc9,epyc10,intel1,epyc2 BGH=epyc8 BIND_DEST=<dest> LIVE=<d25e tree> LIVE_EV=KV-D25e BC=d25e3 SKIP_SEAL=1 NOTE_TXT=... bash ~/tmp/kvd23c/apply_d25.sh d25e3 KV-D25e3`.
+  3. NEVER delete bindcopy_kv_d25e3.
+- D25f2 (lever 5 + FABLE-PD-KV-2300 §A) staged on D25e3: tree kw45/src_kv_pin_eb1e73448bd0_hg13_26fa4732_t315cc72_d25f2, plan 26fa4732ff8e, tools main 315cc72.
+  - Steps: RLS 15 types, HUBWI SRAM at (1058.4,1566.0), ROWSC (rows_C 2c57439f7acf: lockup seg 8, station 405), COREEARLY (die-coretap kv_d25e_mean rows 112360ab8ca5: 48 pc core taps). HST3FB dropped (FABLE stop list).
+  - G0 PASS. Chain W8/run_d25f2.sh (seal, private bindcopy, strict bind) is running.
+  - PAIRING: COREEARLY ships only if DIE-CORETAP-1119 confirms the v3 tree is built on plan 26fa4732ff8e (asked 08:0xZ). Otherwise rebuild without it: SKIP_COREEARLY=1 W8/build_d25f.py.
+- Out of D25f2: M2 (k11 not ready), depth-16 rows (other form), kv3_pc PG views (KV-PC-PG).
+- Scrap: old D25f tree kw45/src_kv_pin_eb1e73448bd0_hg13_ba572267_t99007dc_d25f plus its replicas on epyc9/10, intel1, epyc2; ot-delete when idle.
+  - Deleted: kw45/bindcopy_kv_d25e2, kw45/bindsrc_kv_d25e2, kw45/bindcopy_kv_d25f (guard).
+
 ## Status 2026-11-20 07:05Z (read this first; supersedes 05:30Z for D25e2)
 - D25e2 strict bind FAILED with exactly one error: PARAM_REGEN kv_regen 'ECTL: K round trips differ per frame [25, 26]'.
   - Cause: the 28 fall rows moved 28 ECTL rq lanes down one cycle; the 4 hg->pc pairs without a fall row (WN_1/WN_3/WS_3/WS_6) stayed at RT 26.
