@@ -322,7 +322,7 @@ def main(argv=None):
     defines, srcs = list(a.define), list(a.src)
     if a.asbuilt:
         ab = json.loads(Path(a.asbuilt).read_text())
-        defines += [d.lstrip("-D") for d in ab.get("defines", [])]
+        defines += [d.removeprefix("-D") for d in ab.get("defines", [])]
         srcs += [f for f in ab.get("files", []) if SVC_FILE.search(f) and f.endswith((".sv", ".v"))]
         bb_par = ab.get("slang_parameterized_blackboxes", [])
         diss = set(ab.get("dissolve", [])) | {ab.get("top")}
