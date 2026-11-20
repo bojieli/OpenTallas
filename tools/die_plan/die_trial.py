@@ -5791,6 +5791,8 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
     _kit_stage("plan load")
     raw = S.load(plan_path)
     P = S.Plan(raw, Path(plan_path))   # plan-relative sidecars (core pins_file of the reset wavefront; as claude/die-proto-1025@bd51e6310)
+    import plan_inputs
+    plan_inputs.check(P)   # HEAD-CROSSING-1119: every relative plan input (core pins_file, native census) named up front
     landing = None
     if landing_infra:
         import landing_route
@@ -6510,6 +6512,9 @@ def main(argv=None):
     k.add_argument("plan")
     k.add_argument("--out", required=True)
     k.add_argument("--views")
+    k.add_argument("--plan-root", action="append", default=[],
+                   help="extra folder (repeatable) for plan-relative inputs (core pins_file, native_domains census files): "
+                        "looked up after the plan's own folder, before the tree root (plan_inputs.py; HEAD-CROSSING-1119)")
     k.add_argument("--leaf-um", type=float, default=600.0)
     k.add_argument("--rep-um", type=float, default=450.0)
     k.add_argument("--band-share-form", choices=BAND_SHARE_FORMS, default=BAND_SHARE_FORM,
@@ -6926,6 +6931,8 @@ def main(argv=None):
         globals()["BAND_SHARE_FORM"] = a.band_share_form
         globals()["TAP_PIN_SNAP"] = a.snap_tap_pins
         globals()["STAMPED_TREE_JSON"] = a.tree_json
+        import plan_inputs
+        plan_inputs.set_roots(a.plan_root)
         m = write_kit(a.plan, a.out, a.views, a.leaf_um, a.rep_um, a.coarse_um, a.density, a.island_sites,
                       a.island_margin_um, full_depth=a.htree_full_depth, site_legal=a.tree_site_legal,
                       site_slide=a.tree_site_slide, regions=a.region_trees, landing_infra=a.landing_infra,

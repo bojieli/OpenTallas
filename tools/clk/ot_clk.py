@@ -295,6 +295,14 @@ def kit_argv(cfg, out, stage_cal_path=None, workers=None, plan=None, region_map=
     a = ["kit", plan or i["plan"], "--out", str(out)]
     if i.get("views"):
         a += ["--views", i["views"]]
+    # inputs.plan_root (11-19): folder(s) for plan-relative inputs of a plan composed outside its prep folder
+    pr = i.get("plan_root")
+    if pr is not None:
+        pr = [pr] if isinstance(pr, str) else pr
+        if not isinstance(pr, list) or not pr or not all(isinstance(x, str) and x for x in pr):
+            raise ConfigError("inputs.plan_root must be a path or a non-empty list of paths")
+        for x in pr:
+            a += ["--plan-root", x]
     # Native START/reset contracts are present only when the same plan's
     # abstracts and signal netlist emit their infrastructure terminals.
     # Omission keeps historical clock-only kit bytes unchanged.

@@ -12,8 +12,11 @@ from pathlib import Path
 
 
 def _load(P,name):
+    # HEAD-CROSSING-1119: plan folder, explicit plan roots, tree root (plan_inputs); a miss names the file and the folders tried.
+    import plan_inputs
     p=Path(name)
-    if not p.is_absolute():p=(Path(P.path).parent if P.path else Path.cwd())/p
+    if not p.is_absolute() and P.path is None and (Path.cwd()/p).is_file():p=Path.cwd()/p
+    else:p=plan_inputs.require(P,name,'native clock census')
     return json.loads(p.read_text())
 
 

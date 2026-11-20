@@ -1900,6 +1900,44 @@ def start_out_pins(P, tn):
     return list(_start_sites(P, tn)[1])
 
 
+def pin_table_dir(P, tn, c):
+    """The folder a hard core's relative pins_file resolves against (None = inline pins / absolute path).  Raises
+    ResetError when the table cannot be resolved uniquely (plan_inputs.check lists every such miss before a die run)."""
+    import cores
+    pd = None
+    if c.get("pins_file") and not Path(c["pins_file"]).is_absolute():
+        # The declaration's plan directory is authoritative. Pin tables may
+        # use "core" rather than "module" metadata, and the LEF may be absent
+        # during a logical bind, so do not infer context from either one.
+        # HEAD-CROSSING-1119: the plan folder, then every explicit plan root (die_trial --plan-root / OT_PLAN_ROOT /
+        # plan "plan_root") and the tree root -- plan_inputs.dirs, the same order check() reports up front.
+        import plan_inputs
+        pd = plan_inputs.base_dir(P, c["pins_file"])
+        lef = cores.resolve(c.get("lef", "."))
+        if pd is None:
+            pd = next((a for a in lef.parents if (a / c["pins_file"]).is_file()), None)
+        if pd is None:
+            # Views may live outside their plan (physical/ref_tile); resolve the plan-relative pin table by
+            # its declared module, and refuse differing candidates instead of silently choosing another die.
+            base = HERE.parents[1] / "physical" / "die_plan"
+            paths = list(base.glob("*/" + c["pins_file"])) + list(base.glob("*/*/" + c["pins_file"]))
+            tabs = [(p, json.loads(p.read_text())) for p in paths]
+            keyed = [p for p, j in tabs if isinstance(j, dict) and (j.get("module") or j.get("core")) == c.get("module")]
+            # QC-CLK-R2 11-17: a bare pin list (no module / core key, e.g. qwen_compute cores/su/signed/*_pins.json)
+            # cannot name its module; it is a candidate only when no table at that path names another module, and
+            # the byte-equality rule below still refuses differing copies.
+            other = [p for p, j in tabs if isinstance(j, dict) and (j.get("module") or j.get("core")) not in (None, c.get("module"))]
+            paths = keyed or ([p for p, j in tabs if isinstance(j, list)] if not other else [])
+            if paths and len({p.read_bytes() for p in paths}) == 1:
+                pd = paths[0]
+                for _ in Path(c["pins_file"]).parts:
+                    pd = pd.parent
+            else:
+                raise ResetError(f"type {tn}: cannot uniquely resolve hard-core pin table {c['pins_file']} from {lef} "
+                                 f"(tried {', '.join(str(d) for d in plan_inputs.dirs(P))}; pass die_trial --plan-root)")
+    return pd
+
+
 def core_reset_targets(P, tn):
     """Active-low hard-core reset pins, transformed into the type frame, with legal local relay sites.
 
@@ -1932,36 +1970,7 @@ def core_reset_targets(P, tn):
                 raise ResetError(f"type {tn}: {c['inst']}: reset_from_master content {rfm['content']} not in contents")
             if rfm["kind"] == "internal":
                 continue
-        pd = None
-        if c.get("pins_file") and not Path(c["pins_file"]).is_absolute():
-            # The declaration's plan directory is authoritative. Pin tables may
-            # use "core" rather than "module" metadata, and the LEF may be absent
-            # during a logical bind, so do not infer context from either one.
-            if P.path is not None:
-                plan_dir = Path(P.path).resolve().parent
-                if (plan_dir / c["pins_file"]).is_file():
-                    pd = plan_dir
-            lef = cores.resolve(c.get("lef", "."))
-            if pd is None:
-                pd = next((a for a in lef.parents if (a / c["pins_file"]).is_file()), None)
-            if pd is None:
-                # Views may live outside their plan (physical/ref_tile); resolve the plan-relative pin table by
-                # its declared module, and refuse differing candidates instead of silently choosing another die.
-                base = HERE.parents[1] / "physical" / "die_plan"
-                paths = list(base.glob("*/" + c["pins_file"])) + list(base.glob("*/*/" + c["pins_file"]))
-                tabs = [(p, json.loads(p.read_text())) for p in paths]
-                keyed = [p for p, j in tabs if isinstance(j, dict) and (j.get("module") or j.get("core")) == c.get("module")]
-                # QC-CLK-R2 11-17: a bare pin list (no module / core key, e.g. qwen_compute cores/su/signed/*_pins.json)
-                # cannot name its module; it is a candidate only when no table at that path names another module, and
-                # the byte-equality rule below still refuses differing copies.
-                other = [p for p, j in tabs if isinstance(j, dict) and (j.get("module") or j.get("core")) not in (None, c.get("module"))]
-                paths = keyed or ([p for p, j in tabs if isinstance(j, list)] if not other else [])
-                if paths and len({p.read_bytes() for p in paths}) == 1:
-                    pd = paths[0]
-                    for _ in Path(c["pins_file"]).parts:
-                        pd = pd.parent
-                else:
-                    raise ResetError(f"type {tn}: cannot uniquely resolve hard-core pin table {c['pins_file']} from {lef}")
+        pd = pin_table_dir(P, tn, c)
         for name, _layer, x, y in check.core_pins(c, pd):
             if name not in ("rst_n", "arst_n", "reset_n"):
                 continue
