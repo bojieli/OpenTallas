@@ -125,8 +125,10 @@ def test_key_absent_identical_and_key_on_splits(tmp_path, monkeypatch):
     tails = [x for x in pad_s if "_t_" not in x[1]]
     assert len(trunk) == 5 and {d for d, *_ in trunk} == {"1"} and all(src.endswith("]") and "_q[" in src for _d, _n, src, _q in trunk)
     assert len(tails) == 10 and {d for d, *_ in tails} == {"2"}
-    # the copies are (* keep *) modules (opt_merge would fold them back into one flop); trunk and base pads are plain
-    assert rtl_s.count("ot_dp_dly_keep #(") == 10 and "ot_dp_dly_keep" not in rtl_b
+    # the copies AND the trunks are (* keep *) modules: opt_merge would fold copies back into one flop, and a deeper trunk of
+    # the same bit into the copy of a shallower pad (TRUNK-CHAIN 11-20); base pads are plain
+    assert rtl_s.count("ot_dp_dly_keep #(") == 15 and "ot_dp_dly_keep" not in rtl_b
+    assert all(f"ot_dp_dly_keep #(.W(1), .D(1)) u_{n} " in rtl_s for _d, n, _s, _q in trunk)
     cells_s = (split / "rtl" / "bind_cells.sv").read_text()
     assert "module ot_dp_dly_keep" in cells_s and "(* keep *) reg [W-1:0] r [0:D-1];" in cells_s
     assert "ot_dp_dly_keep" not in (base / "rtl" / "bind_cells.sv").read_text()

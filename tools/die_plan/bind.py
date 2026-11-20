@@ -4422,14 +4422,7 @@ class Binder:
                         if bkey not in pads:
                             src = f"{L['iname']}_q[{j}]"
                             if d[7] > kd:
-                                tkey = key + (None,)
-                                if tkey not in pads:
-                                    nm = short_id(f"pd{d[7] - kd}_{L['iname']}_{j}_t_{d[7]}", 100)
-                                    pads[tkey] = nm
-                                    decl.append(f"    wire [0:0] {nm};")
-                                    body.append(f"    ot_dp_dly #(.W(1), .D({d[7] - kd})) u_{nm} (.clk(clk), .d({src}), "
-                                                f".q({nm}));  // landing pad trunk: shared stages of pad {d[7]} (tail split)")
-                                src = f"{pads[tkey]}[0]"
+                                src = f"{ts_trunk(L['iname'], j, d[7] - kd)}[0]"
                             nm = short_id(f"pd{kd}_{L['iname']}_{j}_{sv_id(tag)}_{d[7]}", 100)
                             pads[bkey] = nm
                             decl.append(f"    wire [0:0] {nm};")
@@ -4628,6 +4621,36 @@ class Binder:
                 ts_row["max_spread_um"] = max(ts_row["max_spread_um"], round(ks[1], 3))
                 ts_row["tail_depths"][str(ks[0])] = ts_row["tail_depths"].get(str(ks[0]), 0) + 1
                 ts_row["shared_readers"] += sum(1 for ci, _pn, _i in ts_cons[key] if ci not in per)
+            # TRUNK-CHAIN (FABLE-FIX-KV-PV 11-20): the trunks of one in-bus bit are ONE chain of kept stages.  Before, each split
+            # pad had its own plain ot_dp_dly trunk from <bus>_q[j]; Yosys opt_merge then folded the stages of a deeper trunk into
+            # the (* keep *) tail-copy flops of a shallower pad (same function: reg^n of the same bit), so the deeper pad's copies
+            # read a flop sited at ANOTHER core's pins (kv3_pv_v8 D25e kits: 194 copy flops on 32 command buses, OT_TAIL_SITE
+            # merged 32, TT setup -1223 ps on u_pd3_..pvg1_p2_12 -> ..pvg0_p2_13, 43 um apart).  Now trunk depth T of a bit starts
+            # at the end of the next shallower trunk of that bit (kept stages, D = T - T_prev), equal depths share one trunk, and
+            # no stage can merge into a copy.  Same depths, same flop count or fewer, same names (u_pd<T>_<bus>_<j>_t_<pad>).
+            ts_depths, ts_trunks = defaultdict(set), {}
+            for (tb, tj, tpad), (tk, _per) in tsplit.items():
+                if tpad > tk:
+                    ts_depths[(tb, tj)].add((tpad - tk, tpad))
+
+            def ts_trunk(bus, j, T):
+                k = (bus, j, T)
+                if k in ts_trunks:
+                    return ts_trunks[k]
+                rows = sorted(ts_depths[(bus, j)])
+                prev = [x for x, _ in rows if x < T]
+                pad_n = min(pd for x, pd in rows if x == T)
+                if prev:
+                    src, D = f"{ts_trunk(bus, j, prev[-1])}[0]", T - prev[-1]
+                else:
+                    src, D = f"{bus}_q[{j}]", T
+                nm = short_id(f"pd{T}_{bus}_{j}_t_{pad_n}", 100)
+                pads[(bus, j, pad_n, None)] = nm
+                ts_trunks[k] = nm
+                decl.append(f"    wire [0:0] {nm};")
+                body.append(f"    {TS.KEEP_MODULE} #(.W(1), .D({D})) u_{nm} (.clk(clk), .d({src}), "
+                            f".q({nm}));  // landing pad trunk: shared stages of pad {pad_n} (tail split)")
+                return nm
             for key in sorted(ts_other):
                 by, _per = ts_cores(ts_other[key])
                 if TS.tail_depth(1, by, ts_cfg) is not None:

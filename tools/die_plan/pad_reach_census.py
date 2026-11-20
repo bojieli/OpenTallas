@@ -86,7 +86,7 @@ def parse(sv, cores):
 def resolve(name, bit, dly, buses):
     """(bus, bit, landing pad) of a pin net fed by an in bus through landing pads only, else None"""
     pad = 0
-    for _ in range(8):
+    for _ in range(64):         # TRUNK-CHAIN: trunk -> trunk -> copy chains
         if name.endswith("_q") and name[:-2] in buses and bit is not None:
             return name[:-2], bit, pad
         if name not in dly:
