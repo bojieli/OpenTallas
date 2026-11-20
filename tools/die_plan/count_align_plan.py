@@ -1590,8 +1590,8 @@ def seam_pad_rules(out, groups, floor, T, ap, max_depth, write_fall=frozenset(),
 
 def type_bus_class_floor(die_plan, out):
     """QC-PLAN-R3 (COORD 11-20) opt-in --type-bus-classes: twin instances of one type bus must take ONE count-align shift.
-    The lanes of one class share (source partition type, source bus, destination partition type, destination bus) of
-    their first / last hop; a re-plan that gives twin instances different shifts vs the plan's count_aligned_cycles
+    The lanes of one class are linked by a shared (source partition type, source bus) of their first hop or a shared
+    (destination partition type, destination bus) of their last hop; a re-plan that gives twin instances different shifts vs the plan's count_aligned_cycles
     (per-instance clock skew: -1 on one, 0 on its twin) makes them bind as different variants of one type (TYPE_SPLIT,
     R8 pad that fits no site).  Every member's lane total takes the class's largest (least negative) shift; the difference
     goes on the lane's last hop.  -> ({port: lat floor}, summary) for seam_pad_rules (raise only, never lower).
@@ -1614,7 +1614,11 @@ def type_bus_class_floor(die_plan, out):
         part = e.get("part")
         return (ptype.get(part, part), e.get("bus")) if part is not None else None
 
-    cls = defaultdict(list)
+    # a lane's pad sits on its source or its destination type bus, and every lane through that type bus shares the site:
+    # lanes that share EITHER end type bus are one class (union-find), not only lanes that share both (QC N46U3 G0: lane
+    # sl_W3_su_l0__x_su_l0_ctl "pad 30 fits no site": its sle_ctl destination bus is shared with sl_W2 / sl_W4 lanes
+    # from another su_l0 type)
+    kept, keys = [], []
     for ln in lanes:
         ps = [p for p in ln if p in byp and p in base]
         if not ps:
@@ -1622,7 +1626,23 @@ def type_bus_class_floor(die_plan, out):
         a, b = end(ln[0], "src"), end(ln[-1], "dst")
         if a is None or b is None:
             continue
-        cls[a + b].append(ps)
+        kept.append(ps); keys.append((("s",) + a, ("d",) + b))
+    par = list(range(len(kept)))
+
+    def root(i):
+        while par[i] != i:
+            par[i] = par[par[i]]; i = par[i]
+        return i
+    first = {}
+    for i, ks in enumerate(keys):
+        for k in ks:
+            if k in first:
+                par[root(i)] = root(first[k])
+            else:
+                first[k] = i
+    cls = defaultdict(list)
+    for i, ps in enumerate(kept):
+        cls[root(i)].append(ps)
     floor, n = {}, 0
     for lns in cls.values():
         if len(lns) < 2:

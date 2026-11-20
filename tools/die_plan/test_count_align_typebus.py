@@ -29,12 +29,21 @@ def test_twin_instances_of_one_type_bus_get_the_same_shift():
     out = [xing("sl_W1_su__ctl__0", 2), xing("sl_W1_su__ctl__1", 3), xing("sl_W3_su__ctl__0", 3), xing("sl_W3_su__ctl__1", 3),
            xing("sl_W2_su__ctl__0", 1), xing("sl_W2_su__ctl__1", 3)]
     f, s = CAP.type_bus_class_floor(d, out)
-    assert f == {"sl_W1_su__ctl__1": 4} and s["classes"] == 1 and s["classes_unequal"] == 1
+    # W2 lands on another fe type but leaves the same su_t source bus: its pad site may be that shared bus, so it joins
+    assert f == {"sl_W1_su__ctl__1": 4, "sl_W2_su__ctl__1": 5} and s["classes"] == 1 and s["classes_unequal"] == 1
     CAP.seam_pad_rules(out, [], f, T, AP, 8)
     lat = {o["port"]: o["lat_cycles"] for o in out}
     shift = {i: lat[f"sl_{i}_su__ctl__0"] + lat[f"sl_{i}_su__ctl__1"] - 6 for i in ("W1", "W3", "W2")}
-    assert shift["W1"] == shift["W3"] == 0
-    assert shift["W2"] == -2                      # a different destination type is its own class: untouched
+    assert shift["W1"] == shift["W3"] == shift["W2"] == 0
+
+
+def test_lanes_sharing_no_type_bus_stay_apart():
+    d = twin_plan()
+    d["partitions"][2]["type"] = "su_v"           # W2: own source type and own destination type -> own class
+    out = [xing("sl_W1_su__ctl__0", 2), xing("sl_W1_su__ctl__1", 3), xing("sl_W3_su__ctl__0", 3), xing("sl_W3_su__ctl__1", 3),
+           xing("sl_W2_su__ctl__0", 1), xing("sl_W2_su__ctl__1", 3)]
+    f, s = CAP.type_bus_class_floor(d, out)
+    assert f == {"sl_W1_su__ctl__1": 4} and s["classes"] == 1
 
 
 def test_equal_class_and_singletons_unchanged():
