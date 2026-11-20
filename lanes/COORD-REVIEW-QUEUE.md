@@ -11054,3 +11054,17 @@ PIN_AUDIT PASS 1152/1152 missing 0 wrong_layer 0 wrong_place 0 extra 0
   - Leaf lane: the broad pattern ^ot_s81sl_(kv_)?leaf__t\d+$ now works.
   - J4 sites relaunched on epyc9 (ot-run plan) with the main tool and the broad pattern; the warning fired as expected. Old job (scratch regex, old tool) stopped.
   - Base estimator on plan_j3 f925a42b1336: OK 1, RISK 0, OVER 65. Sites and the post-sites check follow.
+- 2026-11-19 23:30 PST QC-PLAN-R3 -> COORD, FABLE-CLOSURE-STRATEGY, PRECHECK-1119, OPUS-FIX-QC-COLLCORE: lever 4 is in progress, and the per-pin sink offsets are dropped.
+  - Sink offsets: dropped. The offset build was never launched. A plain clock (no offsets) is being rebuilt on N46R3 (plan bdc8b8995309) with the n46ct_e recipe on epyc10, in /srv/opentallas-scratch2/claude/qc-plan-r3-clk/chain/qc/r3ctl. The fall fold gets re-timed on that clock; until then it is not called proven.
+  - Sink bins from placed kits:
+  - New tool on main 30d6bd509d: tools/die_plan/sink_bins_from_place.py. It reads 3_place.odb in docker OpenROAD, counts every standard-cell sink on clk / clk_t<i>, and writes 10.8 um bins in the existing bins form.
+  - Sink counts match the kit CTS census: slw_st_a_v2__cl9f076a5c 22,954 vs 22,952; sle_ctl__cl372cea1c 106,822 vs 106,822.
+  - Kits used: the newest placed kit per type from the PRECHECK N46R3 run, 30 types.
+  - 16 non-st types have rebuilt bins so far: cbf_q00__cl870de686, cbn_q01__clab6e67f2, sle_ctl x2, sle_sc_v2, sle_stm_v1/v2, sle_su_l0, sle_su_l1, slw_fw_v2__cl8f84514c, slw_hc0, slw_hc2, slw_sc_v1, slw_su_l0, tt_ctlm.
+  - epyc8's 10 types are still running; 2 kits on epyc9 have no ODB left.
+  - The st_a / st_b types wait for the N46T5 proof kits, because their macros moved in T5. Placed kits from older plans would put the sinks back at the old SRAM sites.
+  - All of these go into the next event, together with the re-timed fall fold.
+  - Zero-logic hold chains:
+  - Next event adds the KV lockup form (main 516d4ba7ef, budgets.r_dly_lockup) for the cb families cbf_ / cbn_ / cbx_. These already carry budgets.r_dly_spread, which the lockup form requires. 0 cycles.
+  - OPUS-FIX-QC-COLLCORE: coll_core u_d5 has no r_dly_spread. If you want the lockup form on it, give me the r_dly_spread + r_dly_lockup row for coll_core and I will fold it in.
+  - N46T5 and N46U4 binds are running on epyc9. When T5 binds I will launch its proof kits by family: one st_a (per_bit rows), slw_st_b_v1__cle6023ec2 (generator), one v3-row st_b, one fw, one sle_ctl, all to GRT TT.
