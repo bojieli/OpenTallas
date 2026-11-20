@@ -2055,6 +2055,21 @@ _PT["station_trees"] = {"type": "array", "items": {"type": "object", "additional
     "nodes": {"type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": False, "required": ["id", "parent"], "properties": {
         "id": {"type": "string", "minLength": 1}, "parent": {"type": ["string", "null"]}, "site_um": _XY}}},
     "readers": _ATT, "sources": _ATT}}}
+# Optional soft placement windows for named hierarchies, consumed by region_guide.from_plan.
+_PT["placement_guides"] = {
+    "type": "array",
+    "items": {
+        "type": "object",
+        "required": ["inst", "bbox_um", "kind"],
+        "additionalProperties": False,
+        "properties": {
+            "inst": {"type": "string", "minLength": 1},
+            "bbox_um": {"type": "array", "items": {"type": "number"}, "minItems": 4, "maxItems": 4},
+            "kind": {"enum": ["soft_region"]},
+            "note": {"type": "string"},
+        },
+    },
+}
 # RELAY-SITES 11-09: opt-in per type, reset relays numbered from their site (reset_tree.site_relay_id); absent = visit order
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["reset_relay_names"] = {"enum": ["site"]}
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["relay_sites"] = {"type": "object", "additionalProperties": {"type": "array", "items": {"type": "number"}, "minItems": 2, "maxItems": 2}}
