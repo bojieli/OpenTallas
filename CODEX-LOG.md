@@ -14017,3 +14017,6 @@ Read latest Claude coordinator transcript c228d9e1-f423-4eaf-829b-3bad2a9c2331 a
 - Approved UNIFY step 1b 30852a695c8 (82/82). D8i manifest bytes restored on all five gen hosts, kit_rtl now uses separate sealed bind (d8810348da8); class fix in source gate. S81 H8 P-buffer capture ad478df98e, 1,024/1,024 before and after, both mutants caught, 0 external cycles, remote gate queued.
 FOR-CLAUDE
 Fable closure/physical strategy review following the rate-limited 03:15 trigger. Existing authored CBC, no-growth and superset findings remain in use. Implement and gate concrete rows in active lanes meanwhile.
+
+## Owner-directed structural closure 2026-11-20 03:42 PST
+Owner approved proceeding with physical representatives and exact instance personalization, local type clock rooting and targeted zero-logic hold fixes, and memory capture plus priced path-specific setup staging. Existing 833 ps, no-growth, visual-review and daily-event rules apply. Immediate proofs: S81 J6 col r1/r2 same-master plus explicit spare-child cold/warm boot; QC E0/E4 exact delay selectors and independent sink-date ledger plus HC2/CBX monitor candidates; type-root measured control/target clocks; svc P/Q/WQ capture; LEPE p8 compact unchanged CRP2; D26 PV role replay and reset release pricing.
