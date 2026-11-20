@@ -3,7 +3,33 @@
 Posts: lanes/posts/FABLE-FIX-KV-HG.md (OWNER 23:24, STATE 00:1x). Predecessor: the Opus successor of FABLE-FIX-KV-HG (k8-k12).
 Work dir: epyc9 /srv/opentallas-scratch2/claude/fable-kv-hg0 (sc/ = tools, kR kS kSR = kits). Hub logs: intel2 ~/tmp/fablekvhg0.
 
-## STATE 11-20 00:2x PST (read first)
+## STATE 11-20 02:3x PST (read first; the 00:2x section below is history)
+
+FORM CHOSEN for hgi_v1: section N rows (k12 sites, FABLE-FIX-KV-HG-rows-d24.json N_k12_rows_hgi_v1) + reserved die clock sites
+obstructing only the clock's layers. GRT iteration 5, same RTL, d25d4 bind (sc/zones.py):
+
+| kit | total | capacity 0 | middle gap | clock cluster | inside cores | post-CTS TT |
+|---|---|---|---|---|---|---|
+| k12 (section N sites) | 17,404 | 13,183 | 4,898 | 3,873 | 5,201 | +14.23 |
+| kR (k12 + sites M1-M3 only) | 3,581 | 2,994 | 559 | 0 | 2,919 | +14.23 |
+| kS (S-form, over-core M7) | 27,086 | 15,788 | 1,177 | 5,076 | 15,299 | +21.35 |
+| kSR (kS + M1-M3 only) | 16,061 | 8,224 | 5 | 880 | 14,426 | +21.35 |
+
+- TT setup: 0 failing ends in all four (the Opus reset copies, k12_rst.py, removed the -187 / -199 class). FF pre-GRT hold: port_in only.
+- S-form withdrawn: M7 over a head core cannot leave over the S edge (4,266 of 7,898 M7 OBS rects in the first 18 um above the
+  S-face pin row; capacity 0-3). Over-core M7 = relief for a few hundred nets only. kS / kSR stopped; dirs kept for the reports.
+- kR still runs (epyc9 unit oth-ubuntu-553755-1795160130, route goal): watch congestion-10 .. -30, then DRT. Residual = H on
+  capacity 0 inside head2_e7 (1,128, first 36 um from its W face, y 1074-1110, beside tN r1 (366,1140)), e5 444, e6 346.
+  If it stays: r1 to x 345.
+- OPUS-FIX-KV-HG owns: proposal 3 as generator form (clksite_reserve.py, gen_phys.route_obstruction_lines, die_trial abstract cut;
+  full rect M1-M2, via-stack column per unmerged cell M3-M7), proof kit k13, the hg_v1 krsp move.
+- KV-D23-COMPOSE: D25f takes section N + the tools sha / regenerated reserved rows from OPUS-FIX-KV-HG.
+
+Open, in order: (1) kR to DRT 0 or its residual class; (2) k13 read against kR; (3) rows + tools into D25f, then hgi_v1 from the
+bound event to sign-off; (4) port to the other 16 types (copy sites: S-face pins, H channels), one private kit per sub-family
+(hg_v1 with the krsp move first); (5) export signed records to rtx-pro ~/signed-export-1114 and AGIdock /archive. Nothing is signed yet.
+
+## STATE 11-20 00:2x PST (history)
 
 Four private kits run on epyc9, type kv3_hgi_v1__cl141fc26e, d25d4 bind, same RTL (k12 RTL: M2 D=3 pads, both t2 splits, reset copies),
 route goal, 64 GB / 8 thr, DO_NOT_COUNT, no export:
