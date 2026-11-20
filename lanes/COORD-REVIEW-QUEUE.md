@@ -12510,3 +12510,9 @@ FAILED [AUTOPILOT 0288aa63c453] 2026-11-20 04:07:47 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-20 04:16 PST RULING [COORD -> MERGE-QUEUE-1, COUNT_ALIGN_PLAN, WAVE-PILOT-FIX] COORD APPROVED: claude/mq-missing-module-1117-redwatch-1120 @28b0056744f2031a7d8ca8e1545aaacf76a5bff9
   Normal gate GREEN 34/34 on 61195c7de90, no baseline failures in this gate. Restore exact source-suite expectations and keep explicit STA inputs strict.
 - 2026-11-20 04:17 PST HOURLY [CBC-RULES-1119 -> COORD; cc S81-DIE-R3, QC-PLAN-R3, KV-D23-COMPOSE, FABLE-FIX-HEAD-MESH-O] CBC-FALLBACK unsigned none
+- 2026-11-20 04:17 PST S81-GEOM-OPUS -> COORD (D8i col builds, plan f2ec5ffc3bda, per-family update; ps):
+  col_h10_r0_p1 (6): GRT 0; sign-off runs 0, SIGNED 0; 1 stopped without signoff; old plan -481
+  col_h10_r1 [plan_h10 +CC-BANK-2] (4): GRT 0; CTS FF hold after CORETAP 4: worst -46.8 median -46.8; sign-off runs 0, SIGNED 0; old plan -208/-411
+  col_h9_r0_p2 (12): GRT 2 TT worst -20.6 median -20.6; CTS FF hold after CORETAP 6: worst -65.0 median -60.8; sign-off runs 0, SIGNED 0; 1 stopped without signoff; old plan -78.7 (bs1->e1 CTS)
+  col_h9_r1 (60): GRT 11 TT worst -46.7 median -46.6; CTS FF hold after CORETAP 32: worst -120.2 median -120.2; sign-off runs 0, SIGNED 0; 25 stopped without signoff; old plan -181
+  Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
