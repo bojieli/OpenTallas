@@ -2394,11 +2394,16 @@ def core_view_model(module, view_dir, corner, load_ff, part_delay_ps):
     return result
 
 
-def kit_model(spec, corner, name):
+def kit_model(spec, corner, name, reg=None):
+    """signed type view.  lat_min/lat_max = measured clock arrival at the type's pin registers (required); clkq/setup/
+    hold default to the characterised pin register reg when the kit spec does not carry them (REAL-VIEWS-1119: the
+    signed record measures insertion_pinflops; the pin register is the same library cell the budget model uses)."""
     c = spec["corners"][corner]
+    dflt = dict(clkq_max_ps=reg["clkq_max_wire_ps"], clkq_min_ps=reg["clkq_min_nowire_ps"], setup_ps=reg["setup_ps"],
+                hold_ps=reg["hold_ps"]) if reg else {}
+    g = lambda k: float(c[k] if k in c else dflt[k])
     return dict(name=f"kit:{name}", real=True, lat_late=float(c["lat_max_ps"]), lat_early=float(c["lat_min_ps"]),
-                clkq_max=float(c["clkq_max_ps"]), clkq_min=float(c["clkq_min_ps"]), setup=float(c["setup_ps"]),
-                hold=float(c["hold_ps"]))
+                clkq_max=g("clkq_max_ps"), clkq_min=g("clkq_min_ps"), setup=g("setup_ps"), hold=g("hold_ps"))
 
 
 def budget_model(reg, lat):
@@ -2616,7 +2621,7 @@ def build_views(plan, taps, corner, reg, lat, core_views, kits, load_ff, part_de
     for p, r in taps.items():
         key = r["part"] if r["part"] in kits else ptype.get(r["part"]) if ptype.get(r["part"]) in kits else None
         if key:
-            views[p] = [kit_model(kits[key], corner, key)]
+            views[p] = [kit_model(kits[key], corner, key, reg)]
             real_taps.add(p)
             kit_parts.add(r["part"])
     tot = defaultdict(int)
