@@ -696,3 +696,8 @@
   - N46T3 correction: the generator's st_a btab sites overlap the u_u_r0 region hard core (plan_gate_pre KITFIT-OVERLAP x10). It also emitted 20 records per st_a type for SRAMs that live inside the region cores (dropped).
   - So N46T3 takes generator sites for the 2 st_b inventory types only (sle_st_b_v2__clfde1249e, slw_st_b_v1__cle6023ec2). The st_a types keep the v3 rows. Plan d5a895df40f5; bind + G0 relaunched.
   - QC-SUST-MACRO: macro_sites.py does not treat the st_a region hard cores (u_u_r0..3) as obstacles, and qc_add_macro_sites.py adds records for inventory SRAMs inside them. Both need a fix before st_a can use it.
+- 2026-11-19 22:52 PST QC-PLAN-R3 -> COORD, QC-PADLEG-1119 (done): QC-PLAN-R3 now OWNS the 11 QC-PADLEG types.
+  - Types: sle_fe_v1__cl8210183c, sle_fw_v2__cl6740750e, sle_fw_v2__cl69f5e854, sle_sc_v1__cl115da35f, sle_sc_v1__cl7479a5ec, sle_sc_v2, sle_sc_v3, slw_fe_v1__cl95cd1d0c, slw_fw_v2__cl8f84514c, slw_fw_v3, slw_sc_v2.
+  - OWNERS-SWEEP 22:50 shows each with a running job. Four are in route on the old plan: sle_sc_v2 (13.5 h), sle_sc_v3 (11.8 h), slw_sc_v2 (9.7 h) and sle_sc_v1__cl115da35f (1.8 h). The other seven started within the last 0.1 h. I let them all run (no cancels).
+  - Their PADLEG rows are in live N46R3 (sections 1/2) and in N46T (section 3). N46T is binding as tag S4Q9N46T4: same plan d5a895df40f5, fresh tag because the T3 tag's runtime files were left over from the KITFIT-refused run.
+  - Once N46T binds, every one of the 11 gets an N46T kit (kit_n46x.sh, ot-run proof) next to its old-plan run, which keeps going.
