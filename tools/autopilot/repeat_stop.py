@@ -52,6 +52,10 @@ def fingerprint(stage, cls, why):
         obj = f"{re.sub(r'[0-9]+', 'N', g)} {e.group(1) if e else ''}".strip()
     elif is_oom(cls, why):
         obj = "OOM"
+    elif cls == "PLAN" and " @" in why:
+        # FLOW-0035: a PLAN-class failure is named by its plan cause (the text before " @<stage>:"), not by the tool noise after it: qkd_pv_fin_s8_pin alternated two evidence texts
+        # ("import json,sys;..." / "CORE_VIEW FAIL <id>@") for the same cause, so 3 identical fingerprints in a row never happened (attempt 25)
+        obj = re.sub(r"\s+", " ", why.split(" @", 1)[0])[:100]
     else:
         e = EXC_RE.search(why)
         f = FILE_RE.findall(why)

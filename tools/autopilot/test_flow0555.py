@@ -687,3 +687,16 @@ def test_src_manifest_extra_files_alone_never_refuse_a_kit():
 
 def test_tick_source_logs_the_plan_rows_counter():
     assert "KIT-WAVE PLAN-ROWS {_die}" in open(KW.__file__).read()
+
+
+def test_plan_failure_with_alternating_evidence_texts_stops_after_three():
+    import repeat_stop as RS
+    a = "core view has no recipe / unambiguous port map in the plan @gen: import json,sys;v=json.load(open(sys.argv[1]))"
+    b = "core view has no recipe / unambiguous port map in the plan @gen: CORE_VIEW FAIL <id>@ x"
+    assert RS.fingerprint("gen", "PLAN", a) == RS.fingerprint("gen", "PLAN", b)
+    st, ev = {}, None
+    for n, w in enumerate([a, b, a], 1):
+        ev = RS.record(st, "qwen_kvsys", "qkd_pv_fin_s8_pin", n, "gen", "PLAN", w, inputs={"block": "B"}, t=n)
+    assert ev and ev["event"] == "BLOCKED-REPEAT"                                         # 3rd failure of the same plan cause on the same block
+    assert RS.gate(st, "qwen_kvsys", "qkd_pv_fin_s8_pin", {"block": "B"})[0] is True      # held while block / plan file are unchanged
+    assert RS.gate(st, "qwen_kvsys", "qkd_pv_fin_s8_pin", {"block": "B2"})[0] is False   # a new plan block (D25e3) releases it
