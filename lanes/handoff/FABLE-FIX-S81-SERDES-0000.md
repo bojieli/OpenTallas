@@ -3,7 +3,7 @@ Gate R-MINIMAL: route DRC 0, TT >= -42, hold >= 0, bind + LATCHECK, hops <= 405 
 Dirs: intel2 ~/fable-fix-s81-serdes-0000 (client logs, scripts), intel2 /srv/opentallas-scratch2/claude/fable-fix-s81-serdes-0000/{wt,rows,sim},
 epyc7 .../fable-fix-s81-serdes-0000/R1, epyc9 + epyc10 + intel1 .../fable-fix-s81-serdes-0000/{sta,geo}. Lane clone wt = main + cone tools rtl physical/common_flow.
 
-## State 2026-11-20 01:10 PST
+## State 2026-11-19 23:55 PST
 NO serdes type is signed off. Nothing was exported to rtx-pro ~/signed-export-1114 or AGIdock /archive. No plan row is applied yet.
 
 ### Live units (mine: one)
