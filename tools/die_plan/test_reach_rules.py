@@ -79,6 +79,24 @@ def test_rule1_start_far_rings_error_and_fix():
     assert RR.fix_start(_P(p), t, "mid")["changed"] == [] and json.dumps(t, sort_keys=True) == before
 
 
+def test_rule1_writer_branch_respects_requested_reach():
+    p = _start_plan(n_far=0)
+    t = p["partition_types"]["mid"]
+    pins = t["clock"]["landing_contract"]["pins"]
+    fstart = next(pin for pin in pins if pin["name"] == "cland_fstart_out_q")
+    # Within the legacy writer threshold, beyond the caller's tighter cap.
+    fstart["xy_um"] = [450.0, 2.0]
+    before, findings = RR.start_findings(t, "mid", reach=300.0)
+    assert before["writer_over"] == 1
+    assert any(f["kind"] == "start_writer_reach" for f in findings)
+
+    report = RR.fix_start(_P(p), t, "mid", reach=300.0)
+
+    assert "q" in t["clock"]["landing_writer_start"]["branches"]
+    assert report["after"]["writer_worst_hop_um"] <= 300.0
+    assert RR.start_findings(t, "mid", reach=300.0)[1] == []
+
+
 def test_rule1_fanout_over_48():
     p = _start_plan(n_far=0)
     t = p["partition_types"]["mid"]
