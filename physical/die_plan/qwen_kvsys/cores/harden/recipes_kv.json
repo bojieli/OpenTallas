@@ -26,7 +26,8 @@
  },
  "qkd_kvs_pc*": {
   "sigmax": "M7",
-  "source": "KV-CORES/PV-PC 10-25: 10-24 kvs_pc / pc_h_head_p M5 runs GRT overflow 10284 / 4324 (4396 / 3278 pins, N/S M5 + W M4 faces); M7 inside the core as kv3_pv_pair (M7 GRT 0) and head_eighth"
+  "pg_top": "M7",
+  "source": "KV-PC-PG-2330 11-19: pg_top M7 = own M6/M7 PG stripes on the die grid, PG pins on M7 (E2 views had M5-only PG under 17 % M6 / 30 % M7 routing: die PDN-0006). KV-CORES/PV-PC 10-25: 10-24 kvs_pc / pc_h_head_p M5 runs GRT overflow 10284 / 4324 (4396 / 3278 pins, N/S M5 + W M4 faces); M7 inside the core as kv3_pv_pair (M7 GRT 0) and head_eighth"
  },
  "qkd_hr_cdc_*": {
   "synth_memory_max_bits": 8192,
