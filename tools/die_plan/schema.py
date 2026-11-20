@@ -1984,6 +1984,14 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]['r
                                'properties': {'tap': {'type': 'integer', 'minimum': 0},
                                               'sinks': {'type': 'array', 'minItems': 1, 'uniqueItems': True,
                                                         'items': {'type': 'string', 'pattern': '^[A-Za-z_][A-Za-z_0-9]*$'}}}}}
+# RESET-RELAY-GEN-1530 (FABLE-CLOSURE-1515 lever 1): any emitted instance reset port moved from its generated-tree net to the
+# equal-depth tap nearest its PLACED reset sinks (reset_leg_plan.py; reset_port_relays.apply_inst_taps at bind and kit-rtl): 0 cycles
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]['reset']["properties"]['inst_taps'] = {
+    'type': 'array', 'items': {'type': 'object', 'additionalProperties': False, 'required': ['tap', 'sinks'],
+                               'properties': {'tap': {'type': 'integer', 'minimum': 0},
+                                              'port': {'type': 'string', 'pattern': '^[A-Za-z_][A-Za-z_0-9]*$'},
+                                              'sinks': {'type': 'array', 'minItems': 1, 'uniqueItems': True,
+                                                        'items': {'type': 'string', 'pattern': '^[A-Za-z_][A-Za-z_0-9]*$'}}}}}
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["hard_cores"]["items"]["properties"]["bound_group"] = {'additionalProperties': False,
  'properties': {'kind': {'const': 'exact_post_bind_group'},
                 'members': {'items': {'additionalProperties': False,

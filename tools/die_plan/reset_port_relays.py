@@ -138,3 +138,64 @@ def apply_bank_taps(text, rows):
     for lo, hi, net in sorted(patches, reverse=True):
         text = text[:lo] + text[lo:hi].replace("rst_n", net) + text[hi:]
     return text, receipts
+
+
+# RESET-RELAY-GEN-1530 (FABLE-CLOSURE-1515 lever 1, form R): a soft sub-instance's reset pin on a far tree tap.
+TREE_NET = re.compile(r"^(?:rst_n|rst_n_t(\d+))$")
+TREE_CELLS = ("ot_dp_rrelay", "ot_dp_rgate", "ot_dp_rsync")
+
+
+def apply_inst_taps(text, rows):
+    """reset.inst_taps -> (RTL, receipts): any emitted instance's reset port moved from the generated tree net it is on
+    (the leaf alias rst_n or a tap rst_n_t<j>) to the equal-depth tap rst_n_t<i> nearest its PLACED reset sinks
+    (reset_leg_plan.py).  Every tap of the tree has the same depth K, so release is unchanged: 0 cycles, 0 flops.
+    Row {"tap": i, "sinks": [inst, ...], "port": "rst_n" (default)}.  Fail closed: one generated-tree leaf alias, tap net
+    declared, sink an emitted instance (not a tree relay) whose port is exactly a tree net, no (sink, port) twice.
+    A sink already on rst_n_t<i> is left alone and counted "bound" (kit-rtl re-applies the rows idempotently)."""
+    if not rows:
+        return text, []
+    if not isinstance(rows, list):
+        raise PortRelayError("inst_taps must be a list")
+    leaf = LEAF.findall(text)
+    if len(leaf) != 1:
+        raise PortRelayError("inst_taps needs exactly one generated reset-tree leaf alias `wire rst_n = rst_n_t<k>;`")
+    calls = RC._calls(text)
+    seen, patches, receipts = set(), [], []
+    for row in rows:
+        if not isinstance(row, dict) or not {"tap", "sinks"} <= set(row) or set(row) - {"tap", "sinks", "port"}:
+            raise PortRelayError(f"inst_taps row needs tap, sinks (port optional): {row}")
+        tap, sinks, port = row["tap"], row["sinks"], row.get("port", "rst_n")
+        if isinstance(tap, bool) or not isinstance(tap, int) or tap < 0:
+            raise PortRelayError(f"inst_taps: bad tap {tap!r}")
+        if not isinstance(port, str) or not _ID.match(port):
+            raise PortRelayError(f"inst_taps tap {tap}: bad port {port!r}")
+        net = f"rst_n_t{tap}"
+        if not re.search(rf"\bwire\s+{net}\s*;", text):
+            raise PortRelayError(f"inst_taps: reset tap net {net} is not declared in the emitted RTL")
+        if not isinstance(sinks, list) or not sinks:
+            raise PortRelayError(f"inst_taps tap {tap}: sinks must be a non-empty list")
+        moved, bound = [], []
+        for s in sinks:
+            if not isinstance(s, str) or (s, port) in seen:
+                raise PortRelayError(f"inst_taps: bad or duplicate sink {s!r}.{port}")
+            seen.add((s, port))
+            c = calls.get(s)
+            if c is None:
+                raise PortRelayError(f"inst_taps: sink {s} is not an emitted instance")
+            if c["module"].startswith(TREE_CELLS):
+                raise PortRelayError(f"inst_taps: sink {s} is a reset-tree relay ({c['module']})")
+            pn, lo, hi = c["ports"].get(port, (None, 0, 0))
+            m = TREE_NET.match(pn or "")
+            if not m:
+                raise PortRelayError(f"inst_taps: sink {s}.{port} is {pn!r}, not a generated reset-tree net")
+            cur = int(m.group(1)) if m.group(1) is not None else int(leaf[0])
+            if cur == tap:
+                bound.append(s)
+                continue
+            patches.append((lo, hi, net))
+            moved.append(s)
+        receipts.append(dict(tap=tap, reset=net, port=port, sinks=list(sinks), moved=moved, bound=bound,
+                             leaf=f"rst_n_t{leaf[0]}", cycles_added=0))
+    for lo, hi, net in sorted(patches, reverse=True):
+        text = text[:lo] + net + text[hi:]
+    return text, receipts

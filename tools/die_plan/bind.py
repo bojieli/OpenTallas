@@ -3578,6 +3578,16 @@ class Binder:
                     raise BindError(f"reset bank taps {tn}: {exc}") from exc
                 f.write_text(txt2)
                 self.__dict__.setdefault("_reset_bank_taps", {})[tn] = receipt
+            inst_taps = t.get("reset", {}).get("inst_taps")
+            if inst_taps:
+                # RESET-RELAY-GEN-1530: any instance reset port to the equal-depth tap nearest its placed sinks (reset_leg_plan.py)
+                import reset_port_relays
+                try:
+                    txt2, receipt = reset_port_relays.apply_inst_taps(f.read_text(), inst_taps)
+                except reset_port_relays.PortRelayError as exc:
+                    raise BindError(f"reset inst taps {tn}: {exc}") from exc
+                f.write_text(txt2)
+                self.__dict__.setdefault("_reset_inst_taps", {})[tn] = receipt
             import bound_groups
             try:
                 files.extend(bound_groups.materialize(self, tn, f))
@@ -6844,6 +6854,12 @@ def cmd_kit_rtl(a):
         btxt, kit_rd_rep = kit_relay_depth.apply(btxt, tn, t.get("relay_depth"), lambda inst: short_id("u_" + sv_id(inst), 90),
                                                  sv_id)
         kit_relay_depth.check_branch(btxt, tn, t.get("relay_branch"), lambda inst: short_id("u_" + sv_id(inst), 90))
+        # RESET-RELAY-GEN-1530: reset.inst_taps rows the earlier bind never saw are applied here (idempotent: a sink already
+        # on its tap counts as bound); a row that cannot apply stops the kit naming it
+        if (t.get("reset") or {}).get("inst_taps"):
+            import reset_port_relays          # PortRelayError is a ValueError: the kit-rtl handler below names the kit
+            btxt, kit_it_rep = reset_port_relays.apply_inst_taps(btxt, t["reset"]["inst_taps"])
+            kit_rd_rep = dict(kit_rd_rep or dict(schema="opentallas.kit_relay_depth.v1", type=tn, rows=[]), inst_taps=kit_it_rep)
     except ValueError as exc:
         raise BindError(f"kit-rtl {tn}: {exc}") from exc
     bports = [(m.group(1), int(m.group(2)) + 1 if m.group(2) else 1, m.group(3)) for m in
