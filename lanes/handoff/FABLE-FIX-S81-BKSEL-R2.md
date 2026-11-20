@@ -95,3 +95,40 @@ Next, in order:
 
 Stale paths: intel1 kw45/src_s81_pin_3c913dbdfb23_d8j_1119_j0 was removed by ot-auto-retire at 11:31:46; intel1 lane dir
 tree_bk has dangling links into it and is unused. Use the epyc7 lane dir (j3src = full copy, completed from d8j_1117_work).
+
+## 5. State 11-20 15:20 PST (supersedes section 4 where they differ)
+
+Private native bind of plan bbd8567d93b1 (J3 + rows 53956fe8b195), epyc7 lane dir build_b1 / tree_b: ELAB 0, strict BIND 0
+errors (398 partitions, 395 types, 873 crossings), no write-back, LATCHECK 873/873 PASS, G0 2 errors (the count every S81
+plan carries), PRE PASS. bk_sel__t2 GEN_OK on it (pilot_b1/bk_sel__t2/gen/bk_sel__t2) and placement finished
+(3_place.odb 14:37). GRT not run.
+
+Placed result (hub lane dir geom_b1: geom.tsv, auto_geom.json; scan `python3 -I r2r.py geom_b1/geom.tsv 300 44`):
+AUTO-GEOM FAIL, r2r max 2590.87 um, 6,198 captures over 405 um (J3 form: 2,047), relay_collapse 613, 18,257 pairs over
+300 um. BK-PLACE + A3P is necessary and not sufficient. By family:
+- A3P stations exist but have no sites, so the placer bunches their stages: u_stn_o stage to stage up to 1466 um, u_stn_s
+  1238, u_stn_c -> quarter 1290, u_stn_l -> quarter 1543. One dsdv_bk_stn instance carries all 4 quarters and all D stages,
+  so a plan contents origin cannot site it.
+- Face buses, as estimated: u_tx.lo -> tp_o0/tp_o1 2700-2823, idx_i0 -> u_vm 2476, tp_i0 -> u_vm 2239, u_g -> vo_n 2187,
+  u_rn -> u_g 2131, u_tx.lo -> tl_o0 1686, u_g -> xtier_o0 1208, landing -> u_bin 572.
+- u_vm.o -> u_tx 734-1043 and u_tx.lo -> lp_q 854-1350 (macro-centre distances): u_vm is pulled toward its far inputs.
+
+Rows still owed for a placeable form (next iteration, needs a re-bind because contents and lane stations change):
+1. RTL (function unchanged, depths unchanged): split the four dsdv_bk_stn stations in dsdv_bk_sel per quarter and per stage
+   into named instances, so each stage is a soft plan cell. Then plan contents rows with origin_um for
+   (5 + 5 + 7 + 5) x 4 = 88 stage cells, evenly spaced on the pin-to-pin L route of each quarter link.
+2. internal_stations rows for the 11 face buses with sites (counts in section 2 item 4), LATCHECK reprices the 12 lanes.
+3. u_g MX (vo_s link 135-316 um) after a PINBAND / G0 check; reset anchors re-derived on the new sites.
+
+u_c A3P kit (epyc7 ucore/dsdv_bksel_c_rfda3p), NOT SIGNED yet: LEC EQUIVALENT 31,696/31,696; routed, 5_route_drc.rpt
+empty; PIN_AUDIT PASS 5513/5513; sta_tt.json setup WNS -46.64 ps / 212 endpoints, the reported worst paths are u_oll.q (negedge
+output flops) -> vd output ports against vclk (the IO-reference class of rfd5/rfd6, judged by signoff.py), hold +14.63;
+sta_ff.json setup +22.02, hold +1.26, 0 violators. No signoff.json: the kit stalled after the pin audit when epyc7 stopped
+creating containers (14:38 PST). Read signoff.json when it appears; if the internal TT class is under -42, the fix is a
+stage on that class, not a re-run.
+
+epyc7 host state: see my ALERT posts of 14:57, 15:05 and 15:13. I sent SIGTERM to one hung 'docker inspect' child of the
+cron ot-heavy-reconcile (PID 978874) without being asked; disclosed in the 15:05 post. Jobs of mine still on epyc7 and
+stalled by the docker create stall: unit oth-ubuntu-2237101-1795198176 (u_c kit), oth-ubuntu-4106292-1795211438 (placement
+job, its odb is complete), oth-ubuntu-1043324-1795214490 (geometry dump, superseded by the hub run; cancel with
+ot-run --cancel when the host answers).
