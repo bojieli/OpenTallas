@@ -53,7 +53,7 @@ proc set_max_transition {v objs} { puts "STUB set_max_transition $v $objs" }
 
 
 @pytest.mark.skipif(shutil.which("tclsh") is None, reason="tclsh")
-@pytest.mark.parametrize("val,applied", [("320", True), ("0", False), ("", False), (None, False)])
+@pytest.mark.parametrize("val,applied", [("320", True), ("0", False), ("", True), (None, True)])   # unset = 320 (older kits)
 def test_hook_applies_limit_before_repair(tmp_path, val, applied):
     kit = tmp_path / "kit"
     kit.mkdir()

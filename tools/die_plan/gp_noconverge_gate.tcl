@@ -14,10 +14,13 @@ if {[info exists ::env(OT_PLACE_MAX_FANOUT)] && [string is integer -strict $::en
 }
 # PLACE-SLEW (CORE-LIB-LIMITS-1330): OT_PLACE_MAX_TRANSITION (ps, kit config.mk, gen_phys.place_max_transition) = design
 # max_transition for the same repair_design.  The hard-core view libs carry no max_transition, so nets into core pins
-# had no slew limit; the stdcell libs' own 320 ps limit is the tighter one elsewhere.  Unset / empty / 0 = unchanged.
-if {[info exists ::env(OT_PLACE_MAX_TRANSITION)] && [string is double -strict $::env(OT_PLACE_MAX_TRANSITION)] && $::env(OT_PLACE_MAX_TRANSITION) > 0} {
-  set_max_transition $::env(OT_PLACE_MAX_TRANSITION) [current_design]
-  puts "PLACE-SLEW set_max_transition $::env(OT_PLACE_MAX_TRANSITION) on design [current_design] (place repair_design; core pins have no liberty limit)"
+# had no slew limit; the stdcell libs' own 320 ps limit is the tighter one elsewhere.  0 = off.  Unset / empty = 320 (COORD 11-20:
+# kits generated before PLACE-SLEW get the hook through kit_flow_refresh but not the config line; relaunched held kits need it).
+set ot_pmt 320
+if {[info exists ::env(OT_PLACE_MAX_TRANSITION)] && $::env(OT_PLACE_MAX_TRANSITION) ne ""} { set ot_pmt $::env(OT_PLACE_MAX_TRANSITION) }
+if {[string is double -strict $ot_pmt] && $ot_pmt > 0 && [llength [info commands set_max_transition]]} {
+  set_max_transition $ot_pmt [current_design]
+  puts "PLACE-SLEW set_max_transition $ot_pmt on design [current_design] (place repair_design; core pins have no liberty limit)"
 }
 set gpnc_dir [file dirname [file normalize [info script]]]
 set gpnc_log [file join $::env(LOG_DIR) 3_3_place_gp.log]

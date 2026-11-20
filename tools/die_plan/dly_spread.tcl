@@ -411,9 +411,9 @@ proc ds_repair {} {
   }
   set masked {}
   foreach n [$blk getNets] { if {[dict exists $keep [$n getId]] || [$n isDoNotTouch]} continue; $n setDoNotTouch 1; lappend masked $n }
-  if {[info exists ::env(OT_PLACE_MAX_TRANSITION)] && [string is double -strict $::env(OT_PLACE_MAX_TRANSITION)] && $::env(OT_PLACE_MAX_TRANSITION) > 0} {
-    set_max_transition $::env(OT_PLACE_MAX_TRANSITION) [current_design]
-  }
+  set pmt 320
+  if {[info exists ::env(OT_PLACE_MAX_TRANSITION)] && $::env(OT_PLACE_MAX_TRANSITION) ne ""} { set pmt $::env(OT_PLACE_MAX_TRANSITION) }
+  if {[string is double -strict $pmt] && $pmt > 0} { set_max_transition $pmt [current_design] }
   set args {}
   if {[info exists ::env(CAP_MARGIN)] && $::env(CAP_MARGIN) ne ""} { lappend args -cap_margin $::env(CAP_MARGIN) }
   if {[info exists ::env(SLEW_MARGIN)] && $::env(SLEW_MARGIN) ne ""} { lappend args -slew_margin $::env(SLEW_MARGIN) }
