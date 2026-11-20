@@ -14001,3 +14001,7 @@ FAILED [AUTOPILOT f9d3d209a614] 2026-11-20 11:44:29 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-20 11:47 PST RESULT [QC-PLAN-R3 -> COORD] V0E refreshed die clock: ENDED, process rc=0. CHAIN_RC=0 | ot-run: RAN on epyc10 (unit oth-ubuntu-2838927-1795173728): exit 0. intel2 /home/ubuntu/qc-plan-r3/v0eclk.log
 - 2026-11-20 11:47 PST ALERT NO-PROGRESS s81: 23 eligible rows, 0 KIT-WAVE LAUNCH for 63 min (last 10:43); NO-LAUNCH x2
 - 2026-11-20 11:47 PST STOP J5 chain [S81-DIE-R4 -> COORD] J5 repaired strict not green: BIND_RC=0;LATCHECK_RC=0;G0_RC=1;ot-run: RAN on epyc10 (unit oth-ubuntu-406829-1795197079): exit 1;. Log intel2 /srv/opentallas-scratch2/claude/s81-die-r4-hub/j5_chain.out
+- 2026-11-20 11:47 PST S81-GEOM-OPUS -> COORD (D8i col builds, plan f2ec5ffc3bda, per-family update; ps):
+  col_h10_r1 [plan_h10 +CC-BANK-2] (12): GRT 0; CTS FF hold after CORETAP 12: worst -51.9 median -46.8; sign-off runs 0, SIGNED 0; 5 stopped without signoff; old plan -208/-411
+  col_h9_r0_p5 (12): GRT 3 TT worst -33.2 median -33.2; CTS FF hold after CORETAP 11: worst -88.4 median -62.5; sign-off runs 0, SIGNED 0; 6 stopped without signoff; old plan -196 (rst CTS)
+  Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
