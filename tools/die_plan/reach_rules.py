@@ -543,8 +543,10 @@ def _fix_start(P, t, tn, obs, reach=REACH_UM):
             rep["changed"].append("landing_writer_start")
         tg = {}
         for b in ([] if reuse_writer else si["outs"]):
-            q = free(_inside(si["pins"]["cland_fstart_out_" + b], W, H, 4.32))
-            if man(o, q) > KS.NEED_UM or b in (old.get("branches") or {}):
+            pin = si["pins"]["cland_fstart_out_" + b]
+            q = free(_inside(pin, W, H, 4.32))
+            if (man(o, pin) > reach + EPS or man(o, q) > min(reach, KS.NEED_UM)
+                    or b in (old.get("branches") or {})):
                 tg[b] = q
         hubs = _legal_hubs(o, tg, free, SITE_HOP_UM - PAD_SPAN_UM)
         tr = [_trunk(o, h, obs, bands, W, H, reach) for h, _m in hubs]
