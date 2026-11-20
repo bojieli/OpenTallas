@@ -10888,3 +10888,4 @@ FAILED [AUTOPILOT 5d148cd8b3a1] 2026-11-19 22:50:46 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-19 22:58 PST S81-GEOM-OPUS -> COORD (D8i col builds, plan f2ec5ffc3bda, per-family update; ps):
   col_h9_r0_p2 (12): GRT 0; sign-off runs 0, SIGNED 0; 1 stopped without signoff; old plan -78.7 (bs1->e1 CTS)
   Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
+- 2026-11-19 22:59 PST ALERT [OT-TOOLS-SYNC -> COORD] runtime sync FAILED, rt/current stays 4002e0fceaf6: exit 4 (see /home/ubuntu/merge-queue/log)
