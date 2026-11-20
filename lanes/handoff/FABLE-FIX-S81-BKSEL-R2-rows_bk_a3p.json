@@ -1,0 +1,415 @@
+{
+ "note": "FABLE-FIX-S81-BKSEL-R2 11-20: S81-GEOM-OPUS bk_rows.py (rows_bk.json 3c632455897c) with the station profile OT_BKSEL_A3P\n(RC 5 RS 5 RO 7 RLN 5, 300-um hop cap, control XDX 7) in place of OT_BKSEL_A2P; core sites, core taps and tap moves unchanged.\nS81-GEOM-OPUS 11-19 bank-leaf rows for bk_sel__t2 (one type = the whole bk_sel family on S81).\nusage: bk_rows.py PLAN_IN PLAN_OUT ROWS_OUT\nBK-PLACE (0 cycles): re-place the 7 hard cores in the type (orientations kept), so dsdv_idx_tx_n32.vo <- u_g.vo_s is 399 um (was\n  1,735; street-aware layout 11-19 r2: 86.4 um where pins face, 47.52 otherwise; no station form: u_tx taps vo_s AND vi_m, a vo-only station would skew them) and every type-port link gets shorter.\n  Core taps move with their clock pins; regular taps that land on a moved core move to the nearest free 4.32-um site.\nBK-A2P (cycles): verilog_defines += OT_BKSEL_A2P (RC 3 RS 3 RO 4 RLN 3 reset-less stations inside dsdv_bk_sel; main RTL);\n  the u_c control core must be hardened with OT_BKSEL_A2P (XDX 5).  With BK-PLACE every c<->q / g->q link is <= (D+1) x 405 um.",
+ "type": "bk_sel__t2",
+ "rows": {
+  "hard_cores": [
+   {
+    "inst": "u_bk_sel.u_sel.g_q[0].u_q",
+    "origin_um": [
+     [
+      794.88,
+      328.32
+     ],
+     [
+      259.2,
+      146.88
+     ]
+    ],
+    "orient": "MX"
+   },
+   {
+    "inst": "u_bk_sel.u_sel.g_q[1].u_q",
+    "origin_um": [
+     [
+      2859.84,
+      216.0
+     ],
+     [
+      2505.6,
+      509.76
+     ]
+    ],
+    "orient": "MX"
+   },
+   {
+    "inst": "u_bk_sel.u_sel.g_q[2].u_q",
+    "origin_um": [
+     [
+      1486.08,
+      552.96
+     ],
+     [
+      993.6,
+      388.8
+     ]
+    ],
+    "orient": "MX"
+   },
+   {
+    "inst": "u_bk_sel.u_sel.g_q[3].u_q",
+    "origin_um": [
+     [
+      2177.28,
+      440.64
+     ],
+     [
+      3240.0,
+      388.8
+     ]
+    ],
+    "orient": "MX"
+   },
+   {
+    "inst": "u_bk_sel.u_tx",
+    "origin_um": [
+     [
+      3594.24,
+      190.08
+     ],
+     [
+      1753.92,
+      475.2
+     ]
+    ],
+    "orient": "MX"
+   },
+   {
+    "inst": "u_bk_sel.u_sel.u_c",
+    "origin_um": [
+     [
+      1693.44,
+      319.68
+     ],
+     [
+      1710.72,
+      250.56
+     ]
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_bk_sel.u_sel.u_g",
+    "origin_um": [
+     [
+      2185.92,
+      216.0
+     ],
+     [
+      2185.92,
+      207.36
+     ]
+    ],
+    "orient": "R0"
+   }
+  ],
+  "core_taps": [
+   {
+    "name": "u_bk_sel.u_sel.g_q[0].u_q.ck",
+    "xy": [
+     [
+      1099.56,
+      328.435
+     ],
+     [
+      563.88,
+      146.995
+     ]
+    ]
+   },
+   {
+    "name": "u_bk_sel.u_sel.g_q[1].u_q.ck",
+    "xy": [
+     [
+      3164.52,
+      216.115
+     ],
+     [
+      2810.28,
+      509.875
+     ]
+    ]
+   },
+   {
+    "name": "u_bk_sel.u_sel.g_q[2].u_q.ck",
+    "xy": [
+     [
+      1790.76,
+      553.075
+     ],
+     [
+      1298.28,
+      388.915
+     ]
+    ]
+   },
+   {
+    "name": "u_bk_sel.u_sel.g_q[3].u_q.ck",
+    "xy": [
+     [
+      2481.96,
+      440.755
+     ],
+     [
+      3544.68,
+      388.915
+     ]
+    ]
+   },
+   {
+    "name": "u_bk_sel.u_tx.ck",
+    "xy": [
+     [
+      3594.39,
+      610.776
+     ],
+     [
+      1754.07,
+      895.896
+     ]
+    ]
+   },
+   {
+    "name": "u_bk_sel.u_sel.u_c.ck[0]",
+    "xy": [
+     [
+      2079.96,
+      449.052
+     ],
+     [
+      2097.24,
+      379.932
+     ]
+    ]
+   },
+   {
+    "name": "u_bk_sel.u_sel.u_g.clk[0]",
+    "xy": [
+     [
+      2291.013,
+      216.031
+     ],
+     [
+      2291.013,
+      207.391
+     ]
+    ]
+   }
+  ],
+  "taps_moved": [
+   {
+    "name": "clk_t9",
+    "xy": [
+     [
+      590.269,
+      153.36
+     ],
+     [
+      590.269,
+      136.08
+     ]
+    ]
+   },
+   {
+    "name": "clk_t18",
+    "xy": [
+     [
+      590.269,
+      460.08
+     ],
+     [
+      581.629,
+      136.08
+     ]
+    ]
+   },
+   {
+    "name": "clk_t20",
+    "xy": [
+     [
+      1452.895,
+      460.08
+     ],
+     [
+      1452.895,
+      378.0
+     ]
+    ]
+   },
+   {
+    "name": "clk_t25",
+    "xy": [
+     [
+      3517.658,
+      460.08
+     ],
+     [
+      3517.658,
+      378.0
+     ]
+    ]
+   },
+   {
+    "name": "clk_t26",
+    "xy": [
+     [
+      3585.011,
+      460.08
+     ],
+     [
+      3585.011,
+      378.0
+     ]
+    ]
+   },
+   {
+    "name": "clk_t29",
+    "xy": [
+     [
+      590.269,
+      766.8
+     ],
+     [
+      590.269,
+      805.68
+     ]
+    ]
+   },
+   {
+    "name": "clk_t30",
+    "xy": [
+     [
+      785.062,
+      766.8
+     ],
+     [
+      785.062,
+      805.68
+     ]
+    ]
+   },
+   {
+    "name": "clk_t31",
+    "xy": [
+     [
+      1452.895,
+      766.8
+     ],
+     [
+      1651.615,
+      766.8
+     ]
+    ]
+   },
+   {
+    "name": "clk_t32",
+    "xy": [
+     [
+      1770.807,
+      542.16
+     ],
+     [
+      1744.887,
+      542.16
+     ]
+    ]
+   },
+   {
+    "name": "clk_t33",
+    "xy": [
+     [
+      2164.32,
+      766.8
+     ],
+     [
+      2393.28,
+      766.8
+     ]
+    ]
+   },
+   {
+    "name": "clk_t34",
+    "xy": [
+     [
+      2834.313,
+      766.8
+     ],
+     [
+      2834.313,
+      498.96
+     ]
+    ]
+   },
+   {
+    "name": "clk_t35",
+    "xy": [
+     [
+      3344.858,
+      872.64
+     ],
+     [
+      3228.218,
+      872.64
+     ]
+    ]
+   },
+   {
+    "name": "clk_t36",
+    "xy": [
+     [
+      3738.371,
+      766.8
+     ],
+     [
+      3898.211,
+      766.8
+     ]
+    ]
+   },
+   {
+    "name": "clk_t44",
+    "xy": [
+     [
+      2557.833,
+      1097.28
+     ],
+     [
+      2493.033,
+      1097.28
+     ]
+    ]
+   },
+   {
+    "name": "clk_t45",
+    "xy": [
+     [
+      2951.345,
+      1073.52
+     ],
+     [
+      2951.345,
+      1168.56
+     ]
+    ]
+   }
+  ],
+  "tap_um": [
+   [
+    2160.0,
+    613.44
+   ],
+   [
+    2155.68,
+    462.24
+   ]
+  ],
+  "verilog_defines": [
+   [
+    "OT_BKQ_ECO3"
+   ],
+   [
+    "OT_BKQ_ECO3",
+    "OT_BKSEL_A3P"
+   ]
+  ]
+ }
+}
