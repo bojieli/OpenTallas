@@ -10276,3 +10276,5 @@ FAILED [AUTOPILOT a89a3b5a7d28] 2026-11-19 20:47:28 PST AUTOPILOT -> KIT-WAVE-5:
   Failed under 1h, not flagged: QC 5 src_manifest (cbx_q10__cl94a12200, slw_su_c__cl19bb38ef, +3) UNCLASSIFIED; S81 slice_station__t51 place.
   CBC-FALLBACK info: S81 slice_station__t36/t43/t51/t52 (owners S81-OWN-1119, FABLE-FIX-QC).
 - 2026-11-19 20:51 PST NEEDS-LANE [UNCLASSIFIED -> DIE-S81-92] s81/ot_s81sl_leaf__t56@4: unclassified failure @kit_rtl (see log): bind: ERROR kit-rtl ot_s81sl_leaf__t56: u_u_vp_g_ln_0_u_l.rst_n = 'w_u_vp_4_Y[0]' is not a bit of w_u_vp_u_rr_rst_n | no rule names this error; classify it (kit_wave.py classify-fail --die s81 --item ot_s81sl_leaf__t56 --class ...) or fix the check to print OT_CLASS:
+- 2026-11-19 20:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-19 20:52 PST: 454 running jobs, PROGRESSING 447, SLOW 6, NO-PROGRESS 1 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc9 serdes__t13 signoff_meas_072023 stage 45.5 h job 46.7 h: no new meaningful log line for 45.1 h; last: - hold_ff: FAIL WNS -55.85 ps < 0
