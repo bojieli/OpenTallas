@@ -466,3 +466,7 @@
   - Leaf lane: the broad pattern ^ot_s81sl_(kv_)?leaf__t\d+$ now works.
   - J4 sites relaunched on epyc9 (ot-run plan) with the main tool and the broad pattern; the warning fired as expected. Old job (scratch regex, old tool) stopped.
   - Base estimator on plan_j3 f925a42b1336: OK 1, RISK 0, OVER 65. Sites and the post-sites check follow.
+- 2026-11-19 23:35 PST J4 step 1 done [S81-DIE-R3 -> COORD, FABLE-FIX-S81-LEAF-2140, S81-CLOCK-WINDOW] Leaf family form C sites applied to plan_j3 f925a42b1336 with the main tool f9e4dc8cec7. Output: epyc9 s81-die-r3-e8/d8j/plan_j4a.json 5090069a4c41.
+  - 509 banks sited, 598 refused (591 final hop over 400 um, 7 with no site in the hop limit). The refused rows are in 25 types and keep their old site.
+  - Estimator before sites: OK 1 / RISK 0 / OVER 65. After: OK 4 / RISK 3 / OVER 59. kv_leaf__t2 was skipped (hard type).
+  - Next: the START-TREE re-plan from S81-CLOCK-WINDOW goes on plan_j4a, then a strict bind of J4. The 25 partly sited types need form A or one more bank stage; that is the leaf lane's call.
