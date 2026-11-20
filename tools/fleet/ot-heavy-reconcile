@@ -2028,6 +2028,9 @@ def free(path):
         gap += plan_gap
         mgap = min(measured_gap_gb(), max(0.0, min(1.0, conf("MEASURED_GAP_CAP"))) * avail) * max(0.0, min(1.0, conf("MEASURED_GAP_FACTOR")))   # GROWTH-AWARE: charged by default, never more than half of MemAvailable (admission cannot fall to 0 from it)
         gap += mgap
+        if conf("STAGE_PEAK"):    # STAGE-ADMIT-1119 (COORD: 25 OOM kills on epyc2 at 22:xx): the status/placement view charges the SAME stage-peak growth the gate charges (stage_growth: table peak of each running build's
+            _sg, _sn = stage_growth(load_stage_table(), conf("STAGE_LOOKAHEAD"), conf("STAGE_PEAK_FRAC"))     # current + next stage minus its RSS now), so ot-run does not place onto a host the gate will refuse
+            gap = max(gap, _sg)                                                                                 # (max, not sum: the class-level reserve and the stage reserve estimate the same growth)
         can = max(0, math.floor(avail - conf("INV_HEADROOM_GB") - gap))
         try:
             v = os.statvfs(path)

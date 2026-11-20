@@ -80,3 +80,17 @@ class MeasuredGap(unittest.TestCase):
         src = open(P).read()
         self.assertIn('conf("MEASURED_GAP_CAP")', src)
         self.assertIn('conf("MEASURED_GAP_FACTOR")', src)
+
+
+class StageAdmit(unittest.TestCase):
+    def test_free_charges_stage_growth_when_stage_peak_is_on(self):
+        src = open(P).read()
+        self.assertIn('if conf("STAGE_PEAK"):    # STAGE-ADMIT-1119', src)
+        self.assertIn("gap = max(gap, _sg)", src)
+
+    def test_stage_growth_counts_peak_minus_rss_per_running_build(self):
+        table = {"global_route.tcl": 28.5, "detail_route.tcl": 40.7, "cts.tcl": 9.9}
+        procs = [("openroad", "openroad -exit global_route.tcl", 10.0), ("openroad", "openroad cts.tcl", 12.0), ("yosys", "yosys x.ys", 3.0)]
+        g0, n = R.stage_growth(table, 0, 1.0, procs)
+        self.assertEqual(n, 3)
+        self.assertAlmostEqual(g0, (28.5 - 10.0) + 0.0 + 0.0, places=3)     # cts already above its peak; an unknown script adds nothing
