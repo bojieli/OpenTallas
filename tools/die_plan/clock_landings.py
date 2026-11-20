@@ -1322,9 +1322,18 @@ class Landings:
                     if not info["mask"].get("observer"):
                         required.update(cland_up_ready="out",cland_up_fault="out")
                     if info["mask"]["up_seam"]:required["fclk_out_cland_up"]="out"
+                    import landing_tie_children as LTC
+                    lc = self.types[tn].get("clock", {}).get("landing_contract", {})
+                    use_ports = LTC.seam_use_ports(lc.get("tieable_children"))
                     for c in info["children"]:
                         required[c["ready"]]="in";required[c["fault"]]="in"
                         if c["seam"]:required[f"fclk_in_cland_dn_{c['index']}"]="in"
+                        if c["index"] in use_ports:
+                            if not c["seam"]:
+                                raise LandingError(f"{tn}: use strap on non-seam monitor child {c['index']}")
+                            required[use_ports[c["index"]]] = "in"
+                    if use_ports.keys() - {c["index"] for c in info["children"]}:
+                        raise LandingError(f"{tn}: use strap without a collector child")
             for name, direction in required.items():
                 b = declared.get(name)
                 if not b or b.get("dir") != direction or int(b.get("width", 0)) != 1:
@@ -2188,6 +2197,9 @@ class Landings:
             if collector_info["mask"]["up_seam"]:
                 extra.append("    output wire fclk_out_cland_up")
                 logic.append(f"    assign fclk_out_cland_up = {_exp('fclk_out_cland_up')};")
+            import landing_tie_children as LTC
+            lc = self.types[key].get("clock", {}).get("landing_contract", {})
+            use_ports = LTC.seam_use_ports(lc.get("tieable_children"))
             sources=list(collector_info["local_sources"])
             monitor_reset_copies = []
             for ch in collector_info["children"]:
@@ -2207,8 +2219,13 @@ class Landings:
                               f"        .fclk(fclk_in_cland_dn_{i}), .clk(clk), .rst_n({reset}),",
                               f"        .d({{{ch['fault']}, {ch['ready']}}}), .q(cland_dn_word_{i}),",
                               f"        .ready(cland_dn_trained_{i}), .fault(cland_dn_guard_{i}));"]
-                    src.update(ready=f"(cland_dn_word_{i}[0] && cland_dn_trained_{i} && !cland_dn_guard_{i})",
-                               fault=f"(cland_dn_word_{i}[1] || cland_dn_guard_{i})")
+                    use = use_ports.get(i)
+                    if use is not None:
+                        extra.append(f"    input wire {use}")
+                    ready, fault = LTC.qualified_status(
+                        f"cland_dn_word_{i}[0] && cland_dn_trained_{i} && !cland_dn_guard_{i}",
+                        f"cland_dn_word_{i}[1] || cland_dn_guard_{i}", use)
+                    src.update(ready=f"({ready})", fault=f"({fault})")
                 else:
                     ready, fault, faces = status_face(logic, i, ch["ready"], ch["fault"], ch.get("xy_um"))
                     monitor_reset_copies.extend(faces)
@@ -3174,7 +3191,9 @@ class Landings:
             tieable = ((self.types.get(p["type"], {}).get("clock", {}).get("landing_contract") or {}).get("tieable_children"))
             if tieable and self.collector:
                 import landing_tie_children as LTC
-                conn += LTC.tie_connections(tieable, {e["dst_index"] for e in self.collector["edges"] if e["dst"]==pn})
+                connected = {e["dst_index"] for e in self.collector["edges"] if e["dst"] == pn}
+                conn += LTC.tie_connections(tieable, connected)
+                conn += LTC.use_connections(tieable, connected)
             body = ",\n".join(conn + [body])
             text = text[:m.start()] + m.group(1) + body + m.group(3) + text[m.end():]
         if ansi and re.search(r"\(clk\)", text):
