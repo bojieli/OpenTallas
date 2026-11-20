@@ -71,13 +71,24 @@ exit 0
             return p.returncode, lines, p.stderr
 
     def test_existing_goal_execution_is_unchanged(self):
-        for goal in ['cts', 'route', 'finish']:
+        for goal in ['cts', 'route']:
             for margin in ['', '0']:
                 with self.subTest(goal=goal, margin=margin):
                     old = self.execute(self.old, goal, margin)
                     new = self.execute(self.new, goal, margin)
                     self.assertEqual(new[:2], old[:2])
                     self.assertEqual(new[0], 0, new)
+
+    def test_finish_takes_the_route_grt_path(self):
+        # FLOW-FIX-2045: goal finish skipped the FF-corner GRT step (and the TT / hold steps) and ran a plain make grt, which dies 'must explicitly select FF' on kits with non-port hold repair
+        for margin in ['', '0']:
+            with self.subTest(margin=margin):
+                route = self.execute(self.new, 'route', margin)
+                fin = self.execute(self.new, 'finish', margin)
+                self.assertEqual(fin[0], 0, fin)
+                mk = lambda r: [x for x in r[1] if x.startswith('make ') and 'grt' in x.split()]
+                self.assertEqual(mk(fin), mk(route))
+                self.assertEqual([x for x in fin[1] if 'hold_gate.tcl' in x], [x for x in route[1] if 'hold_gate.tcl' in x])
 
     def test_grt_runs_standard_gates_without_detail_route(self):
         for margin in ['', '0']:
