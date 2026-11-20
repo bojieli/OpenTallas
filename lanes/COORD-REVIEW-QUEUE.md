@@ -14537,3 +14537,6 @@ FAILED [AUTOPILOT d69ca60814dd] 2026-11-20 15:13:48 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-20 15:59 PST DONE [WAITER-STD-1600] ot-push-main otpush-tolerant-swine-3404185 on tolerant-swine: rc=0 after 1 s, ended 15:59:02, log none, cmd: ot-push-main 
 - 2026-11-20 15:59 PST DONE [WAITER-STD-1600] ot-push-main otpush-tolerant-swine-3404783 on tolerant-swine: rc=0 after 0 s, ended 15:59:02, log none, cmd: ot-push-main 
 - 2026-11-20 15:59 PST DONE [WAITER-STD-1600] ot-push-main otpush-tolerant-swine-3405420 on tolerant-swine: rc=0 after 1 s, ended 15:59:03, log none, cmd: ot-push-main 
+- 2026-11-20 15:59 PST DIED [WAITER-STD-1600] ot-push-main otpush-tolerant-swine-3405901 on tolerant-swine: rc=4 after 1 s, ended 15:59:04, log none, cmd: ot-push-main 
+- 2026-11-20 15:59 PST DIED [WAITER-STD-1600] ot-run otrun-tolerant-swine-3425495 on tolerant-swine: rc=1 after 0 s, ended 15:59:27, log none, cmd: --mem 1 --plan-job route -- true
+- 2026-11-20 15:59 PST DIED [WAITER-STD-1600] ot-run otrun-tolerant-swine-3425566 on tolerant-swine: rc=1 after 0 s, ended 15:59:27, log none, cmd: --mem 1 --priority plan -- bash run_kit.sh
