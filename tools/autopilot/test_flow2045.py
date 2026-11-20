@@ -122,3 +122,19 @@ def test_stop_kit_reaps_a_container_less_scope_under_a_cancelled_root_and_verifi
     finally:
         for u in (unit + ".scope", unit2 + ".scope"):
             subprocess.run(["systemctl", "--user", "stop", u], env=env, capture_output=True)
+
+
+def test_repeat_inputs_do_not_hold_the_plan_path_only_block_and_src(tmp_path):
+    """FLOW-FIX-2045: hd_host_e failed 6 times across tree switches: the ledger inputs named the plan file path of each tree"""
+    import json
+    d = tmp_path / "a"; d.mkdir()
+    (d / "spec.json").write_text(json.dumps({"plan": "/srv/tree_r8b/plan.json", "src_sha": "S1"}))
+    rec = {"die": "s81_head", "item": "hd_host_e", "block_sha": "B1", "dir": str(d)}
+    cfg = {"dies": {"s81_head": {"src_sha": "S1"}}}
+    a = KW.repeat_inputs(cfg, rec, "gen failed")
+    assert a == {"block": "B1", "src": "S1"}
+    st = {"repeat_ledger": {"s81_head|hd_host_e": {"inputs": a}}}
+    assert KW.repeat_inputs_now(cfg, st, "s81_head", "hd_host_e", "B1") == a                        # another tree with the same block and src sha: unchanged
+    cfg["dies"]["s81_head"]["src_sha"] = "S2"
+    assert KW.repeat_inputs_now(cfg, st, "s81_head", "hd_host_e", "B1")["src"] == "S2"           # a changed src sha releases
+    assert KW.repeat_inputs_now(cfg, st, "s81_head", "hd_host_e", "B2")["block"] == "B2"         # a changed block releases

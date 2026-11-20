@@ -13236,8 +13236,10 @@ def repeat_inputs(cfg, rec, why):
     paths = list(stage_reads(why))
     try:
         sp = json.loads((Path(rec["dir"]) / "spec.json").read_text())
-        if isinstance(sp.get("plan"), str) and sp["plan"].startswith("/"):
-            paths.append(sp["plan"])
+        # FLOW-FIX-2045 (class 4, HEAD hd_host_e failed 6 times across the r8b -> r9 -> r10 -> r11 tree switches): the plan FILE PATH is no input (every tree switch is a new path, so the
+        # ledger released on "inputs:file:<plan path>" with the plan block unchanged).  The plan block + the src sha decide, with the failing stage in the fingerprint.
+        if sp.get("src_sha"):
+            out["src"] = str(sp["src_sha"])
     except (OSError, ValueError, KeyError, TypeError):
         pass
     for p in dict.fromkeys(paths):
@@ -13252,6 +13254,8 @@ def repeat_inputs_now(cfg, st, die, item, block_sha=None):
     for k in (e.get("inputs") or {}):
         if k == "block":
             out[k] = str(block_sha or "") or e["inputs"][k]          # no block known at the gate: not a change
+        elif k == "src":
+            out[k] = str(((cfg.get("dies") or {}).get(die) or {}).get("src_sha") or "") or e["inputs"][k]
         elif k.startswith("file:"):
             out[k] = file_sha(cfg, die, k[5:])
     return out
