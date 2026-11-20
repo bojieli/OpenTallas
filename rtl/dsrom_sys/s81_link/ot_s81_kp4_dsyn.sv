@@ -18,9 +18,21 @@
 //   ot_s81_kp4_syn_mat.svh, cut at the 138-bit sc_q select copies) and sp0 = sq0 ^ sq1, sp1 = sq2 ^ sq3 one stage later.
 //   The S final stage, the RiBM load and the k_* results move one cycle (k_* +1 rck); x_q, lock and n_relock are
 //   unchanged.  The word delay tile must wait one more word: ot_s81_kp4_ddly DD +1 under OT_S81_RCK_RX_SPCYC.
+// AMPIPE (opt-in, default 0 = unchanged; define OT_S81_KP4_AMOK_PIPE sets 1; FABLE-FIX-S81-SERDES 11-19, COORD +1 cycle
+//   approved): serdes__t13 H22/H23 GRT TT worst io_pma_rck path is am_ok -> 12-buffer wire -> FSM -> xs (data ~955 ps, 833 ps
+//   period): am_ok is computed at the port face (am_face3) but read by the FSM next to the syndrome copies.  AMPIPE registers
+//   the AM compare, p_v and the word one more time (am_a / pv_a / pd_a) before am_ok / pv / x0, so am_ok is a free register
+//   between the face and the FSM and the wire is cut in two.  Every output (x_q, k_*, lock, n_relock) moves +1 cycle together:
+//   the tile is the AMPIPE=0 tile delayed by one clock (bench tb_s81_kp4_dsyn_ampipe.sv).
 // ---------------------------------------------------------------------------------------------------------------
 module ot_s81_kp4_dsyn #(parameter integer MUT = 0, parameter integer NBM = 3, parameter integer BMTHC = 0, parameter integer PIN_X = 0,
-    parameter integer SPCYC = 0, parameter integer NGB0 = 4) (
+    parameter integer SPCYC = 0, parameter integer NGB0 = 4,
+`ifdef OT_S81_KP4_AMOK_PIPE
+    parameter integer AMPIPE = 1
+`else
+    parameter integer AMPIPE = 0
+`endif
+    ) (
     input  wire          clk,
     input  wire          rst_n,
     input  wire          p_v,
@@ -49,10 +61,22 @@ module ot_s81_kp4_dsyn #(parameter integer MUT = 0, parameter integer NBM = 3, p
     reg        am_ok, pv;
 `ifdef OT_S81_KP4_AM_FACE3
     wire [3:0] am_distance = {1'b0, am_face3[2:0]} + {1'b0, am_face3[5:3]} + {1'b0, am_face3[8:6]};
-    always @(posedge clk) begin am_ok <= p_v && (am_distance <= 4'd2); pv <= p_v; end
+    wire       am_now = p_v && (am_distance <= 4'd2);
 `else
-    always @(posedge clk) begin am_ok <= p_v && (pop12(amx) <= 2); pv <= p_v; end
+    wire       am_now = p_v && (pop12(amx) <= 2);
 `endif
+    wire         am_in, pv_in;
+    wire [543:0] pd_in;
+    generate if (AMPIPE != 0) begin : g_ampipe
+        (* keep *) reg am_a;
+        reg pv_a;
+        reg [543:0] pd_a;
+        always @(posedge clk) begin am_a <= am_now; pv_a <= p_v; pd_a <= p_d; end
+        assign am_in = am_a; assign pv_in = pv_a; assign pd_in = pd_a;
+    end else begin : g_amdirect
+        assign am_in = am_now; assign pv_in = p_v; assign pd_in = p_d;
+    end endgenerate
+    always @(posedge clk) begin am_ok <= am_in; pv <= pv_in; end
     reg  [3:0] wc;
     reg        cand;
     reg  [1:0] miss;
@@ -80,7 +104,7 @@ module ot_s81_kp4_dsyn #(parameter integer MUT = 0, parameter integer NBM = 3, p
     reg  [543:0] x0, x2;
     (* keep = 1, dont_touch = 1 *) reg [543:0] x1; // internal syndrome/word history apart from optional face copy
     (* keep *) reg [9:0] xs [0:NRS-1];   // one-hot index of the word in x1 (zero = none)
-    always @(posedge clk) begin x0 <= p_d; x1 <= x0; x2 <= x1; end
+    always @(posedge clk) begin x0 <= pd_in; x1 <= x0; x2 <= x1; end
     always @(posedge clk)
         if (!rs_n[0]) for (i = 0; i < NRS; i = i + 1) xs[i] <= 10'd0;
         else for (i = 0; i < NRS; i = i + 1) xs[i] <= xsel;
