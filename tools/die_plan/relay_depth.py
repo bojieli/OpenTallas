@@ -69,6 +69,33 @@ ALIGN_GROUP = ((re.compile(r"^dsfd_cfifo_crs"), re.compile(r"^(xa|xb|x2|cc)$")),
                (re.compile(r"^ot_s81sl_xrt\d*$"), re.compile(r"^x_(sv|si|s)$")))
 
 
+# OPUS-FIX-S81-SLICEC 11-20 (slice C class A, c1x_C t9 -1,422): HALF-CYCLE core faces.  A hop that starts at a core output
+# launched on the falling edge, or ends at a core input that lands on the falling edge, has only part of a cycle; its share
+# of a full 405-um hop is the weight below.  (module, port, side "out" | "in", weight)
+#   xrt outputs: OLAT negedge flop, the pin leaves ~770 ps into the 833-ps cycle -> 0.1 (the first stage sits AT the pin)
+#   xrt inputs : FACE_LAND=2 negedge pin flop -> 0.5;  egg / egn outputs: negedge output flop -> 0.5
+# stations s on a path of L um: hops weigh w0 + (s - 1) + wl, so s = ceil(L / limit + 1 - w0 - wl) (w0 = wl = 1: the
+# old ceil(L / limit) - 1).  relay_mid.tcl HALF sites the stages with the same weights (plan budgets.relay_mid_half_types).
+HALF_FACE = ((re.compile(r"^ot_s81sl_xrt\d*$"), re.compile(r".*"), "out", 0.1),
+             (re.compile(r"^ot_s81sl_xrt\d*$"), re.compile(r".*"), "in", 0.5),
+             (re.compile(r"^ot_s81sl_eg[gn]$"), re.compile(r".*"), "out", 0.5))
+
+
+def _half_w(mod, port, side):
+    """hop weight of a (module, port) core face on `side` ("out" source / "in" sink): 1.0 = a full-cycle face"""
+    for a, b, sd, w in HALF_FACE:
+        if sd == side and a.search(mod or "") and b.search(port or ""):
+            return w
+    return 1.0
+
+
+def stations_needed(length, limit, w0=1.0, wl=1.0):
+    """stations so that every hop fits its share of the reach (weights w0 first hop, wl last hop)"""
+    if length == float("inf"):
+        return 0
+    return max(0, math.ceil(length / limit + 1.0 - w0 - wl - 1e-9))
+
+
 def _align_group(src_mod, src_port):
     """index of the aligned group (source module, port) belongs to, None when it is in none"""
     for i, (a, b) in enumerate(ALIGN_GROUP):
@@ -255,7 +282,8 @@ def type_rows(plan, tn, text, repo=None, plan_dir=None, limit=LIMIT, netlist=Non
                                         reason="fixed-latency loop (cfg ROM read, Engram norm -> gate) over the reach: move "
                                                "the cores (core placement), a pipeline stage here is a functional error"))
                 continue
-        need = max(0, math.ceil(worst / limit) - 1) if worst != float("inf") else 0
+        need = stations_needed(worst, limit, _half_w(hcs[src_core].get("module", ""), src_port, "out"),
+                               _half_w(hcs[p["core"]].get("module", ""), p["port"], "in"))
         extra = need - int(p["stages_existing"])
         if extra <= 0:
             continue

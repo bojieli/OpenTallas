@@ -14,7 +14,29 @@
 # the spot on its source-sink line (nearest to the j/(n+1) point) where the WHOLE cluster footprint plus
 # OT_RELAY_MID_CHAN_UM (default 20) clears every macro halo, with both legs (previous / next point of the chain)
 # <= OT_RELAY_MID_MAX_HOP_UM (default 405); then the same on rings around the midpoint; else the old fallback (logged).
+# HALF (OPUS-FIX-S81-SLICEC 11-20, S81 slice C class A/C; opt-in, unset = byte-identical): a hop that starts at a hard-core
+# output launched on the falling edge (OT_RELAY_MID_HALF_SRC_RE, regex on the core instance name) or ends at a core input
+# that lands on the falling edge (OT_RELAY_MID_HALF_SINK_RE) has part of a cycle, so it gets that share of a full hop:
+# stage j sits at (w0 + j - 1) / (w0 + n - 1 + wl) of the path (both 1 = the old j / (n + 1)).  Value: `RE[=W];RE[=W]..`,
+# W the hop weight of a matching core (default 0.5; the smallest matching W wins), the weights of relay_depth.HALF_FACE.  c1x_C t9: xr.x_scale (negedge OLAT) -> 2 stages -> egg.scale, 923 um: hops 185 / 369 / 369 um, was
+# 308 x 3 with 308 um in T/2; egg.g -> 2 stages -> xr.eg_d (both ends half): 206 / 412 / 206.
 uplevel #0 {
+proc rm_half_list {v} {
+  set r {}
+  foreach e [split $v ";"] {
+    if {$e eq ""} continue
+    if {[regexp {^(.*)=([0-9.]+)$} $e -> re w]} { lappend r [list $re $w] } else { lappend r [list $e 0.5] }
+  }
+  return $r
+}
+proc rm_half_w {lst name} {
+  set w 1.0
+  foreach e $lst { if {[regexp [lindex $e 0] $name] && [lindex $e 1] < $w} { set w [lindex $e 1] } }
+  return $w
+}
+set rm_half_src [rm_half_list [expr {[info exists ::env(OT_RELAY_MID_HALF_SRC_RE)] ? $::env(OT_RELAY_MID_HALF_SRC_RE) : ""}]]
+set rm_half_sink [rm_half_list [expr {[info exists ::env(OT_RELAY_MID_HALF_SINK_RE)] ? $::env(OT_RELAY_MID_HALF_SINK_RE) : ""}]]
+set rm_half {}
 set rm_blk [ord::get_db_block]
 set rm_dbu [[ord::get_db_tech] getDbUnitsPerMicron]
 set rm_re $::env(OT_RELAY_MID_RE)
@@ -63,7 +85,7 @@ proc rm_sig {inst io} {
 proc rm_end {it} {
   global rm_of
   set inst [$it getInst]
-  if {[[$inst getMaster] isBlock]} { return [concat P [rm_ctr [$it getBBox]]] }
+  if {[[$inst getMaster] isBlock]} { return [concat P [rm_ctr [$it getBBox]] [list [string map {\\ {}} [$inst getName]]]] }
   if {[dict exists $rm_of [$inst getName]]} { return [list G [dict get $rm_of [$inst getName]]] }
   if {[$inst getPlacementStatus] in {FIRM LOCKED}} { return [concat P [rm_ctr [$inst getBBox]]] }
   return {}
@@ -110,21 +132,24 @@ proc rm_loads {net depth} {
 # per group: fixed source / sink centroids, source / sink groups, soft (X) endpoints
 set rm_info {}
 dict for {g insts} $rm_grp {
-  set sp {}; set sg {}; set kp {}; set kg {}; set soft 0
+  set sp {}; set sg {}; set kp {}; set kg {}; set soft 0; set hs 1.0; set hk 1.0
   foreach i $insts {
     foreach d [rm_sig $i INPUT] {
       if {[[$d getMTerm] getName] ne "D"} continue
       foreach e [rm_drv [$d getNet] 0] {
+        if {$rm_half_src ne {} && [lindex $e 0] eq "P" && [llength $e] > 3} { set hs [expr {min($hs, [rm_half_w $rm_half_src [lindex $e 3]])}] }
         switch [lindex $e 0] { P { lappend sp [lrange $e 1 2] } G { if {[lindex $e 1] ne $g} { dict set sg [lindex $e 1] 1 } } default { incr soft } }
       }
     }
     foreach q [rm_sig $i OUTPUT] {
       foreach e [rm_loads [$q getNet] 0] {
+        if {$rm_half_sink ne {} && [lindex $e 0] eq "P" && [llength $e] > 3} { set hk [expr {min($hk, [rm_half_w $rm_half_sink [lindex $e 3]])}] }
         switch [lindex $e 0] { P { lappend kp [lrange $e 1 2] } G { if {[lindex $e 1] ne $g} { dict set kg [lindex $e 1] 1 } } default { incr soft } }
       }
     }
   }
   dict set rm_info $g [list $sp [dict keys $sg] $kp [dict keys $kg] $soft]
+  dict set rm_half $g [list $hs $hk]
 }
 proc rm_cent {pts} {
   set x 0; set y 0
@@ -389,33 +414,40 @@ dict for {g inf} $rm_info {
       puts "OT_RELAY_MID_TAIL chain [lindex $chain 0]..[lindex $chain end] ($n stations): sink spread [expr {$rm_spr / double($rm_dbu)}] um > even hop [expr {(abs($bx - $ax) + abs($by - $ay)) / ($n + 1.0) / $rm_dbu}] um, tail at the sink centroid [expr {$bx / double($rm_dbu)}] [expr {$by / double($rm_dbu)}]"
     }
   }
+  # HALF: hop weights (w0 first, wl last; the TAIL form has no last hop)
+  set rm_w0 [lindex [dict get $rm_half $g] 0]
+  set rm_wl [expr {$rm_den == $n ? 0.0 : [lindex [dict get $rm_half [lindex $chain end]] 1]}]
+  set rm_W [expr {$rm_w0 + $n - 1 + $rm_wl}]
+  if {$rm_w0 != 1.0 || ($rm_wl != 1.0 && $rm_den != $n)} {
+    puts "OT_RELAY_MID_HALF chain [lindex $chain 0]..[lindex $chain end] ($n stations): first hop x$rm_w0 last hop x$rm_wl, full hop [expr {(abs($bx - $ax) + abs($by - $ay)) / $rm_W / $rm_dbu}] um"
+  }
   set rm_pts {}
   if {$rm_poly} { set rm_pts [rm_polyline $g $ax $ay $bx $by] }
   if {$rm_pts ne {}} {
     set rm_tot [lindex $rm_pts end]
     set rm_tn [expr {$rm_den == $n ? $n : $n + 1}]
-    if {$rm_tot / double($rm_tn) > 405.0 * $rm_dbu} {
+    if {$rm_tot / $rm_W > 405.0 * $rm_dbu} {
       puts "OT_RELAY_POLY WARN $g path [expr {$rm_tot / $rm_dbu}] um, $rm_tn hops > 405 um"
       lappend rm_polybad [format "%s:%.0fum/%dhops" $g [expr {$rm_tot / $rm_dbu}] $rm_tn]
     }
     set j 0
     foreach c $chain {
       incr j
-      dict set rm_station $c [rm_along $rm_pts [expr {$rm_tot * $j / double($rm_tn)}]]
+      dict set rm_station $c [rm_along $rm_pts [expr {$rm_tot * ($rm_w0 + $j - 1) / $rm_W}]]
     }
     puts "OT_RELAY_POLY chain [lindex $chain 0]..[lindex $chain end] ($n stations): path [expr {$rm_tot / $rm_dbu}] um, hop [expr {$rm_tot / $rm_dbu / $rm_tn}] um"
     continue
   }
   # S81-COLGEN-3: the straight-line chain's hop is the Manhattan span / (n + 1)
-  if {(abs($bx - $ax) + abs($by - $ay)) / double($n + 1) > 405.0 * $rm_dbu} {
+  if {(abs($bx - $ax) + abs($by - $ay)) / $rm_W > 405.0 * $rm_dbu} {
     puts "OT_RELAY_POLY WARN $g straight path [expr {(abs($bx - $ax) + abs($by - $ay)) / $rm_dbu}] um, [expr {$n + 1}] hops > 405 um"
     lappend rm_polybad [format "%s:%.0fum/%dhops" $g [expr {(abs($bx - $ax) + abs($by - $ay)) / $rm_dbu}] [expr {$n + 1}]]
   }
   set j 0
   foreach c $chain {
     incr j
-    dict set rm_station $c [list [expr {int($ax + ($bx - $ax) * $j / $rm_den)}] [expr {int($ay + ($by - $ay) * $j / $rm_den)}]]
-    dict set rm_seg $c [list $ax $ay $bx $by $j $n]
+    dict set rm_station $c [list [expr {int($ax + ($bx - $ax) * ($rm_w0 + $j - 1) / $rm_W)}] [expr {int($ay + ($by - $ay) * ($rm_w0 + $j - 1) / $rm_W)}]]
+    dict set rm_seg $c [list $ax $ay $bx $by $j $n $rm_w0 $rm_W]
   }
 }
 # place: nearest point outside every halo (rings of 2.16 um), compact cluster, clusters at one spot stack upward
@@ -450,15 +482,18 @@ dict for {g st} $rm_station {
   lassign $st x y
   set rm_done 0
   if {$rm_fit && [dict exists $rm_seg $g]} {
-    lassign [dict get $rm_seg $g] ax ay bx by j n
+    lassign [dict get $rm_seg $g] ax ay bx by j n rm_fw0 rm_fW
+    # HALF: the chain points j - 1, j, j + 1 at the weighted fractions (1 / n + 1 = the even form)
+    set rm_fp [expr {$j == 1 ? 0.0 : ($rm_fw0 + $j - 2) / $rm_fW}]
+    set rm_fq [expr {$j == $n ? 1.0 : ($rm_fw0 + $j) / $rm_fW}]
     set nc0 [llength [dict get $rm_grp $g]]
     set ncol0 [expr {max(1, int(ceil(sqrt($nc0 * 4.0))))}]
     set fw [expr {$ncol0 * $rm_sw * 24}]
     set fh [expr {int(ceil(double($nc0) / $ncol0)) * $rm_rh}]
     # previous / next point of the chain on the line (source and sink for a single stage)
-    set px [expr {$ax + ($bx - $ax) * ($j - 1) / ($n + 1.0)}]; set py [expr {$ay + ($by - $ay) * ($j - 1) / ($n + 1.0)}]
-    set qx [expr {$ax + ($bx - $ax) * ($j + 1) / ($n + 1.0)}]; set qy [expr {$ay + ($by - $ay) * ($j + 1) / ($n + 1.0)}]
-    set f0 [expr {$j / ($n + 1.0)}]
+    set px [expr {$ax + ($bx - $ax) * $rm_fp}]; set py [expr {$ay + ($by - $ay) * $rm_fp}]
+    set qx [expr {$ax + ($bx - $ax) * $rm_fq}]; set qy [expr {$ay + ($by - $ay) * $rm_fq}]
+    set f0 [expr {($rm_fw0 + $j - 1) / $rm_fW}]
     set len [expr {abs($bx - $ax) + abs($by - $ay)}]
     set steps [expr {max(1, int($len / $rm_step))}]
     set best {}; set bestd {}

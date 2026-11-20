@@ -278,7 +278,21 @@ def test_slice_c_bundles_stay_aligned_and_norm_gate_gets_no_row(monkeypatch):
         dict(inst=i, origin_um=[x, y], outline_um=[w, h], pins=1, module=mods[i]) for i, (x, y, w, h) in cores.items()]}}}
     rows, rep = RD.type_rows(raw, "t", text)
     got = {(r["inst"], r["port"]): r["D"] for r in rows}
-    assert got == {("u_xr", "eg_v"): 2, ("u_xr", "eg_c"): 2, ("u_xr", "eg_d"): 2, ("u_cap", "cfg_v"): 1, ("u_cap", "cfg_d"): 1}
+    # OPUS-FIX-S81-SLICEC 11-20 HALF_FACE: egg (negedge out, 0.5) -> xr (negedge land, 0.5), 824 um: 3 stations; xr (OLAT
+    # out, 0.1) -> cap 690 um: 2 (was 1)
+    assert got == {("u_xr", "eg_v"): 3, ("u_xr", "eg_c"): 3, ("u_xr", "eg_d"): 3, ("u_cap", "cfg_v"): 2, ("u_cap", "cfg_d"): 2}
     assert len(rep["read_loops"]) == 1 and len(rep["unfixed"]) == 1 and rep["unfixed"][0]["port"] == "n_rh"
     assert RD._align_group("ot_s81sl_xrt1", "cfg_d") != RD._align_group("ot_s81sl_xrt1", "sw_d")
     assert RD._align_group("ot_s81sl_xrt1", "x_scale") is None and RD._align_group("ot_s81_sstn_base566", "g") is None
+
+
+def test_half_face_stations():
+    """OPUS-FIX-S81-SLICEC 11-20: weighted station count; full-cycle faces keep ceil(L / limit) - 1"""
+    import relay_depth as RD
+    for L in (100.0, 405.0, 406.0, 810.0, 811.0, 1300.0):
+        assert RD.stations_needed(L, 405.0) == max(0, -(-int(L * 1000) // 405000) - 1)
+    w = lambda m, side: RD._half_w(m, "p", side)
+    assert w("ot_s81sl_xrt1", "out") == 0.1 and w("ot_s81sl_xrt1", "in") == 0.5 and w("ot_s81sl_egg", "out") == 0.5
+    assert w("ot_s81sl_egg", "in") == 1.0 and w("ot_s81sl_capc5r", "out") == 1.0
+    assert RD.stations_needed(923.2, 405.0, 0.1, 1.0) == 3 and RD.stations_needed(724.9, 405.0, 0.1, 1.0) == 2
+    assert RD.stations_needed(800.9, 405.0, 0.5, 0.5) == 2 and RD.stations_needed(float("inf"), 405.0) == 0

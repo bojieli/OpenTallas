@@ -738,6 +738,13 @@ SCHEMA = {
                         # COORD 11-19 sink region rule (opt-in): W + H limit (um) of a tap's sink box; the kit's pair planner keeps
                         # every move inside it (OT_TAP_SPAN_UM) and clock_taps.tcl reports the as-built boxes against it
                         "tap_span_um": _pos,
+                        # OPUS-FIX-S81-SLICEC 11-20 (opt-in): taps from the PLACED sink count (tap_resolve.apply_density at gen
+                        # phys: a register dump of the type, span / target of the solve; appended taps keep the table's names)
+                        "tap_density": {"type": "object", "additionalProperties": False, "required": ["regs"],
+                                        "properties": {"regs": {"type": "string", "minLength": 1}, "span_um": _pos,
+                                                       "target": {"type": "integer", "minimum": 1},
+                                                       "max_add": {"type": "integer", "minimum": 1},
+                                                       "min_new": {"type": "integer", "minimum": 1}}},
                         # KV-PC-DELTA-1115 (opt-in): second cap-pass reach (um) of clock_taps.tcl for a tap with no room within
                         # half a pitch; and no grid tap over a hard macro (the tap takes no sink, is dropped when empty)
                         "tap_spill_um": {"type": "number", "exclusiveMinimum": 0},
@@ -1756,6 +1763,10 @@ _B["r_dly_lockup"] = {"type": "object", "additionalProperties": {"type": "object
     "seg": {"type": "integer", "minimum": 1}, "tail_groups": {"type": "integer", "minimum": 0},
     "r2r_margin_ps": {"type": "number", "minimum": 0, "maximum": 100}}}}   # XTAP-C 11-20 (gen_phys dly_lockup_cfg, kit_dly_lockup.py)
 _B["relay_mid_tail"] = {"type": "boolean"}
+_HALF = {"type": "object", "additionalProperties": False,
+         "properties": {"src": {"type": "string", "minLength": 1}, "sink": {"type": "string", "minLength": 1}}}
+_B["relay_mid_half"] = _HALF          # OPUS-FIX-S81-SLICEC 11-20: relay_mid.tcl HALF (gen_phys._relay_mid_half)
+_B["relay_mid_half_types"] = {"type": "object", "additionalProperties": _HALF}
 _B["relay_mid_tail_types"] = {"type": "array", "uniqueItems": True, "items": {"type": "string", "minLength": 1}}
 _B["relay_mid_soft_frac"] = {"type": "number", "minimum": 0, "maximum": 1}
 _B["relay_mid_soft_frac_types"] = {"type": "object", "additionalProperties": {"type": "number", "minimum": 0, "maximum": 1}}

@@ -216,6 +216,68 @@ def solve(exist, pts, legal, target, radius, core=(), max_add=80, min_new=40, sp
     return added
 
 
+def density_taps(P, tn, regs, span_um=300.0, target=1000, max_add=400, min_new=1, radius=160.0):
+    """OPUS-FIX-S81-SLICEC 11-20 (S81 slice C class B: 53 taps for 96k flops): the TAP-DENSITY rule from the PLACED sink
+    count -- the same solve as `tap_resolve.py --span-um SPAN --target TARGET` on a register dump of the type.
+    -> (append_to key, existing names, added [(x, y)], stats after [(load, beyond, p95, max, W+H)])."""
+    import schema, taps
+    from placement_obstacles import placement_boxes
+    t = P.types[tn]; ck = t.get("clock", {})
+    mode = ck.get("tap_mode", "grid")
+    if mode not in ("explicit", "grid+explicit"):
+        raise ValueError(f"tap density {tn}: clock.tap_mode {mode!r}; explicit or grid+explicit tables only")
+    clear = schema.type_tap_clear(t)
+    d = regs if isinstance(regs, dict) else json.load(open(regs))
+    boxes = list(placement_boxes(t, halo=clear).values()) + [(x0 - clear, y0 - clear, x1 + clear, y1 + clear) for x0, y0, x1, y1 in ck.get("keepouts_um", [])]
+    boxes += [(m[1] - clear, m[2] - clear, m[3] + clear, m[4] + clear) for m in d.get("macros", [])]
+    legal = make_legal(t["outline_um"], clear, boxes)
+    ex = taps.explicit_tap_sites(P, tn) if mode == "explicit" else taps.grid_explicit_sites(P, tn)
+    names = [n for n, _, _ in ex]; exist = [(x, y) for _, x, y in ex]
+    core = [(x, y) for _, x, y, _ in schema.core_taps(P, tn)]
+    pts = [((c[1] + c[3]) / 2, (c[2] + c[4]) / 2) for c in d["cells"]]
+    s0 = tap_stats(exist, pts, radius)
+    need = any(q[4] > span_um or q[0] > target for q in s0)
+    added = solve(exist, pts, legal, target, radius, core, max_add, min_new, span_um) if need else []
+    return ("taps" if mode == "explicit" else "added_taps"), names, added, tap_stats(exist + added, pts, radius)
+
+
+def apply_density(raw, plan_path, types=None):
+    """Plan clock.tap_density {"regs": placed register dump (tap_resolve --dump; path relative to the plan), "span_um": 300,
+    "target": 1000}: append the taps the placed sinks need to the type's table (existing taps keep name / xy) and set
+    clock.tap_span_um, in `raw`, before the kit is written.  Types without the key are untouched.  -> receipts."""
+    import schema
+    from pathlib import Path
+    out = []
+    for tn, t in sorted((raw.get("partition_types") or {}).items()):
+        td = (t.get("clock") or {}).get("tap_density")
+        if not td or (types and tn not in types):
+            continue
+        rp = Path(td["regs"])
+        if not rp.is_absolute() and plan_path:
+            rp = Path(plan_path).resolve().parent / rp
+        span = float(td.get("span_um", 300)); target = int(td.get("target", 1000))
+        P = schema.Plan(raw, plan_path)
+        key, names, added, s1 = density_taps(P, tn, str(rp), span, target, int(td.get("max_add", 400)), int(td.get("min_new", 1)))
+        ck = t["clock"]; ck["tap_span_um"] = span
+        tab = ck.setdefault(key, [])
+        n0 = len(names)
+        used = {x.get("name") for x in tab if isinstance(x, dict)} | set(names)
+        rows = []
+        for i, (x, y) in enumerate(added):
+            k = n0 + i
+            while f"clk_t{k}" in used:
+                k += 1
+            used.add(f"clk_t{k}")
+            rows.append({"name": f"clk_t{k}", "xy": [round(x, 3), round(y, 3)]})
+        tab.extend(rows)
+        r = dict(type=tn, regs=str(rp), span_um=span, target=target, taps_before=n0, added=len(rows),
+                 max_load=max((q[0] for q in s1), default=0), taps_over_span=sum(1 for q in s1 if q[4] > span))
+        print(f"TAP_DENSITY {tn}: {n0} -> {n0 + len(rows)} taps (span {span:g} um, target {target}); max load {r['max_load']}, "
+              f"over span {r['taps_over_span']}")
+        out.append(r)
+    return out
+
+
 def main(argv=None):
     import argparse
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])

@@ -254,6 +254,41 @@ def _relay_mid_tail(budgets, tn):
     return tn is not None and (tn in on or tn.split("__")[0] in on)
 
 
+def _relay_mid_half(budgets, tn):
+    """OPUS-FIX-S81-SLICEC 11-20 (relay_mid.tcl HALF; S81 slice C class A/C): regexes on hard-core instance names whose outputs
+    launch on the falling edge (src) / whose inputs land on the falling edge (sink); a relay hop from / to such a core gets
+    half the length of a full hop.  GEN env OT_RELAY_MID_HALF_SRC_RE / OT_RELAY_MID_HALF_SINK_RE (item_env), per type
+    budgets.relay_mid_half_types {type or unsplit base name: {"src": re, "sink": re}}, plan-wide budgets.relay_mid_half;
+    -> (src, sink), None each = no export (unchanged kits)."""
+    v = budgets.get("relay_mid_half") or {}
+    per = budgets.get("relay_mid_half_types") or {}
+    if tn is not None:
+        for k in (tn, tn.split("__")[0]):
+            if k in per:
+                v = per[k]
+                break
+    out = []
+    for key, env in (("src", "OT_RELAY_MID_HALF_SRC_RE"), ("sink", "OT_RELAY_MID_HALF_SINK_RE")):
+        r = os.environ.get(env) or v.get(key) or None
+        if r is not None:                     # `RE[=W];RE[=W]..` (relay_mid.tcl rm_half_list), W in (0, 1]
+            if any(c.isspace() for c in r):
+                raise ValueError(f"relay_mid_half {key} must not hold white space: {r!r}")
+            for e in filter(None, r.split(";")):
+                m = re.match(r"^(.*)=([0-9.]+)$", e)
+                re.compile(m.group(1) if m else e)
+                if m and not 0 < float(m.group(2)) <= 1:
+                    raise ValueError(f"relay_mid_half {key} weight must be in (0, 1]: {e!r}")
+        out.append(r)
+    return tuple(out)
+
+
+def _relay_mid_half_exports(budgets, tn):
+    src, sink = _relay_mid_half(budgets, tn)
+    mk = lambda v: v.replace("$", "$$")             # config.mk is a make include: $ of a regex anchor is $$
+    return ([f"export OT_RELAY_MID_HALF_SRC_RE = {mk(src)}"] if src else []) + \
+           ([f"export OT_RELAY_MID_HALF_SINK_RE = {mk(sink)}"] if sink else [])
+
+
 def _relay_mid_soft_frac(budgets, tn):
     """FABLE-FIX-KV-HG 11-18 (relay_mid.tcl OT_RELAY_MID_SOFT_FRAC, default 0.02 in the script): GEN env OT_RELAY_MID_SOFT_FRAC
     (item_env), per type budgets.relay_mid_soft_frac_types {type or unsplit base name: fraction}, plan-wide
@@ -7167,6 +7202,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
               "export BC_LIB_FILES = $(BC_NLDM_LIB_FILES)"] if not macros else []),
            *([f"export OT_RELAY_MID_RE = {_relay_mid_re(P.budgets, tn)}"] if macros else []),
            *(["export OT_RELAY_MID_TAIL = 1"] if macros and _relay_mid_tail(P.budgets, tn) else []),
+           *(_relay_mid_half_exports(P.budgets, tn) if macros else []),
            *([f"export OT_RELAY_MID_SOFT_FRAC = {_relay_mid_soft_frac(P.budgets, tn):g}"]
              if macros and _relay_mid_soft_frac(P.budgets, tn) is not None else []),
            # S81-TYPES-5 11-07 (opt-in plan budgets, absent = unchanged kits): relay clusters fit outside narrow
@@ -9191,6 +9227,13 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
             raise ValueError("private clock request requires the actual bound --kit-rtl readset")
     if not master_slice and not trial and MS.required(raw):     # 12.7c: refuse before writing anything
         raise SystemExit(MS.REFUSE)
+    # OPUS-FIX-S81-SLICEC 11-20 (class B, tap density from the placed sink count): plan clock.tap_density types get the taps
+    # their placed registers need (tap_resolve.apply_density) before anything is written; no key = unchanged kits
+    if any((t.get("clock") or {}).get("tap_density") for t in (raw.get("partition_types") or {}).values()):
+        import copy
+        import tap_resolve
+        raw = copy.deepcopy(raw)
+        tap_resolve.apply_density(raw, plan_path, types)
     # plan-relative declarations (hard-core pins_file for the reset wavefront) resolve against the plan file
     P = S.Plan(raw, plan_path)
     # KV-KITS-23: hard PHY partitions may contain ordinary mapped boundary glue.

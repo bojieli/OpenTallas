@@ -57,7 +57,9 @@ def test_tcl_tail_law_is_opt_in():
     assert "set rm_den [expr {$n + 1.0}]" in s
     i = s.index('::env(OT_RELAY_MID_TAIL) eq "1"')
     j = s.index("set rm_den [expr {double($n)}]")
-    k = s.index("dict set rm_station $c [list [expr {int($ax + ($bx - $ax) * $j / $rm_den)}]")
+    # OPUS-FIX-S81-SLICEC 11-20: the station law is the weighted form (HALF); rm_den picks the TAIL weights (wl 0)
+    assert "set rm_wl [expr {$rm_den == $n ? 0.0" in s
+    k = s.index("dict set rm_station $c [list [expr {int($ax + ($bx - $ax) * ($rm_w0 + $j - 1) / $rm_W)}]")
     assert i < j < k
     assert "* $j / ($n + 1.0))}] [expr {int($ay" not in s      # no second, unguarded copy of the old law
 
