@@ -3729,10 +3729,11 @@ def tick(args):
         except Exception as e:                         # a re-sign pass must never stop the chain
             log(f"AUTO-RESIGN failed: {type(e).__name__}: {e}")
     _mark("auto_resign")
-    try:
-        write_loop_gaps(st, rows, geom_text)
-    except Exception as e:                             # the gap report must never stop the chain
-        log(f"LOOP-GAPS failed: {type(e).__name__}: {e}")
+    if not loop_gaps_off_tick():
+        try:
+            write_loop_gaps(st, rows, geom_text)
+        except Exception as e:                         # the gap report must never stop the chain
+            log(f"LOOP-GAPS failed: {type(e).__name__}: {e}")
     _mark("loop_gaps")
     UU.step(sys.modules[__name__])                     # never raises; one UNDER-USE line (idle threads per host + top hold reasons)
     _mark("under_use")
@@ -3746,10 +3747,33 @@ def tick(args):
     return 0
 
 
+def loop_gaps_off_tick():
+    """COORD 11-20 (loop_gaps 85-110 s of every tick): when autopilot/AUX-LOOPGAPS exists the gap report runs in the aux timer (10 min, own process), not serially in the tick.  Remove the
+    marker to put it back into the tick"""
+    return (AP_DIR / "AUX-LOOPGAPS").exists()
+
+
+def aux_loop_gaps():
+    """the LOOP-GAPS.txt / OWNERS.tsv pass outside the tick, on a READ-ONLY copy of the state (no resolve_geom / AUTO-GEOM prepare: those mutate state and stay in the tick)"""
+    st = load_state()
+    rows = parse_queue(read_queue_text())
+    geom_text = read_coord("lanes/GEOM-REVIEW.md")
+    global GEOM_TEXT
+    GEOM_TEXT = geom_text
+    t0 = time.time()
+    write_loop_gaps(st, rows, geom_text)
+    log(f"LOOP-GAPS (aux) written in {time.time() - t0:.0f}s")
+
+
 def aux(args):
     """WF-1 11-14 (#4): the auto-resign pass outside the tick (own timer); auto_resign.step holds its own flock"""
     global DRY
     DRY = getattr(args, "dry_run", False)
+    if loop_gaps_off_tick():
+        try:
+            aux_loop_gaps()
+        except Exception as e:                          # a gap report never stops the aux pass
+            log(f"LOOP-GAPS (aux) failed: {type(e).__name__}: {e}")
     try:
         AR.step(sys.modules[__name__])
     except Exception as e:

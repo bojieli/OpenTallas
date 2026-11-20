@@ -773,3 +773,22 @@ def test_cancel_stop_is_detached_and_its_result_is_checked_next_tick(tmp_path, m
     assert A.check_pending_stops(st) == 0 and "epyc8:c1" in j["stopped_containers"]["checked"]
     found, ok, _ = WJ.stop_result_for("x stop-bg [J2] 1 root(s): none running", "J2")
     assert found and ok
+
+
+def test_loop_gaps_run_in_the_aux_timer_when_the_marker_exists(tmp_path, monkeypatch):
+    import autopilot as A
+    monkeypatch.setattr(A, "AP_DIR", tmp_path)
+    assert A.loop_gaps_off_tick() is False
+    (tmp_path / "AUX-LOOPGAPS").write_text("")
+    assert A.loop_gaps_off_tick() is True
+    calls = []
+    monkeypatch.setattr(A, "load_state", lambda: {"jobs": {}})
+    monkeypatch.setattr(A, "parse_queue", lambda t: {})
+    monkeypatch.setattr(A, "read_queue_text", lambda: "")
+    monkeypatch.setattr(A, "read_coord", lambda p: "")
+    monkeypatch.setattr(A, "write_loop_gaps", lambda st, rows, g: calls.append((st, rows, g)))
+    monkeypatch.setattr(A, "log", lambda m: None)
+    A.aux_loop_gaps()
+    assert len(calls) == 1 and calls[0][0] == {"jobs": {}}
+    src = open(A.__file__).read()
+    assert "if not loop_gaps_off_tick():" in src                  # the tick skips it
