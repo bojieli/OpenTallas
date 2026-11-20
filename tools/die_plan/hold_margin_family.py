@@ -14,9 +14,9 @@ Where it lands (all repair TARGETS; every hold GATE stays FF hold >= 0, ports un
   * GRT FF repair   config.mk  export OT_HOLD_FF_MARGIN = max(caller value, family)        (gen_phys.write_type_kit, core_flow.apply)
   * pre-route repair config.mk export OT_PREGRT_HOLD_R2R_MARGIN = family                   (pregrt_ff_hold.py extra reg-to-reg pass;
                                                                                              ports and cross-tap guard unchanged)
-  * setup guard      config.mk export OT_HOLD_SETUP_GUARD_PS = -30                         (hold_guard_grt.tcl: the chunked GRT hold repair
+  * setup guard      config.mk export OT_HOLD_SETUP_GUARD_PS = -209                        (hold_guard_grt.tcl: the chunked GRT hold repair
                                                                                              stops when worst setup falls below min(setup before the
-                                                                                             repair, -30); pregrt keeps its own fail-safe, TT setup
+                                                                                             repair, -209); pregrt keeps its own fail-safe, TT setup
                                                                                              rejected below the -42 ps R-MINIMAL gate)
   * evidence line    config.mk export OT_HOLD_FAMILY_MARGIN_PS = <ps>   (check_kit() reads it back)
 Precedence: per-item env OT_HOLD_FF_MARGIN_PS (kit_wave item_env) > die plan key die.hold_ff_margin_ps / type key hold_ff_margin_ps >
@@ -35,7 +35,8 @@ CORE_PS = 15.0
 # QC-HOLD-0030 11-20: was 0.  A floor of 0 made the guard refuse every hold pad on a kit whose setup was already negative at GRT
 # (min(before, 0) = before): 3 of 27 QC hold fails (slw_hc1 e683, sle_st_b_v2 pv41c, sle_hc1 7d36) stopped at hold ws -4..-9 after 1-2 chunks and
 # landed -29..-39 ps internal hold.  The sign-off setup gate is -42 ps (R-MINIMAL), so -30 keeps 12 ps of room for the routed move.
-SETUP_GUARD_PS = -30.0
+# 11-20 COORD: the setup floor of the die gate is -209 ps (die period 1000 ps: -(1000-833)-42); the guard carries it (was -30 at the 833 ps / -42 ps gate).
+SETUP_GUARD_PS = -209.0
 OFF_ENV = "OT_HOLD_FAMILY_MARGIN"
 
 

@@ -5,6 +5,12 @@ import subprocess
 from pathlib import Path
 import pytest
 import eco_loop as E
+
+@pytest.fixture(autouse=True)
+def _one_pass_legacy(monkeypatch):
+    """the loop-control tests below were written for one pass per loop; the live default is MAX_ITER = 3 (OWNER 11-20, see test_three_passes_by_default)"""
+    monkeypatch.setattr(E, "MAX_ITER", 1)
+
 from test_eco_loop import Fake, kit, rec, base_rec
 
 

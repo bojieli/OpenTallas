@@ -8,7 +8,7 @@ to stop.  Sign-off and LEC are unchanged (no gate, corner, derate or margin is t
 sign-off of a new routed DB.
 
 OWNER 11-07 05:3x: "real near misses should still use late stage fixes, but do not use multiple iterations of late stage
-fixes and do not use it to fix large misses".  So MAX_ITER = 1, --max-iter above 1 is refused, and a base record beyond
+fixes and do not use it to fix large misses".  So MAX_ITER was 1 (now 3, OWNER 11-20 decision 1: harvest routed builds with three hold ECO passes), --max-iter above MAX_ITER is refused, and a base record beyond
 the near-miss numbers (near_miss()) stops before any P&R as verdict NOT_NEAR_MISS unless --owner-override.  A form that
 does not sign off after its one iteration goes to GEOMETRY + REDESIGN, pin cycles first.
 
@@ -27,7 +27,7 @@ The iteration, from the kit's routed DB:
      run_kit.sh calls it (--run-dir D/run --kit D --corners tt,ff --image IMAGE).
 Stop rules: sign-off SIGNED (or LOCAL_PASS_NEEDS_PARENT with local SIGNED) -> PASS; no improvement vs the previous
 result (negative-WNS sum gain < 1 ps and neither the DRV nor the DRC count falling) -> EXHAUSTED; an iteration that
-cannot route / finish / sign off -> stop with the best result so far; MAX_ITER (1) reached -> EXHAUSTED.
+cannot route / finish / sign off -> stop with the best result so far; MAX_ITER (3) reached -> EXHAUSTED.
 
 The post-route LEC is the caller's (signoff_chain.py runs its usual routed LEC on the PASS netlist; the CLI runs the
 kit's lec.py with --lec).  Result: ROOT/eco_loop.json {schema opentallas.eco_loop.v1, kind eco, verdict, base routed
@@ -60,7 +60,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 PRD = HERE / "post_route_drv"
 SCHEMA = "opentallas.eco_loop.v1"
-MAX_ITER = 1                  # OWNER 11-07 05:3x: one late-stage iteration per routed form; was 3
+MAX_ITER = 3                  # OWNER 11-20 decision 1 (COORD ruling QC-HOLD-0030): up to three late hold ECO passes per routed form; 11-07 05:3x had lowered 3 -> 1
 # QC-HOLD-0030 11-20 (COORD ruling, owner 11-14 "remove conservative limits"): MAX_ITER stays 1 for the FULL pass.  When that pass leaves the kit
 # short by a handful of internal-hold ends the loop runs ONE residual-only pad pass: it pads only the failing ends of pass 1 (hold_eco_internal
 # plan, select 0 ps = failing ends only, no guard band), keeps the TT setup room check (hold_eco_internal TT_FLOOR_PS, sign-off gate -42 ps), and the
@@ -1171,7 +1171,7 @@ def residual_pass(best, kit, runner, so, root, hold_margin, mem, cpus, run, imag
         _BASE_SIGNOFF.reset(t1)
 
 
-def run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold_margin=HOLD_MARGIN_PS, mem=48,
+def run_loop(kit, base_signoff, root=None, runner=None, max_iter=None, hold_margin=HOLD_MARGIN_PS, mem=48,
              cpus=8, run=subprocess.call, tools=HERE, image=IMAGE, keep=False, repair_rc="", from_mode="",
              owner_override=False, strict_one_pass=False, route_hold_form=False):
     """Apply the core-owned repair/scoring default only for this late-ECO call."""
@@ -1189,7 +1189,7 @@ def run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold_
         _LATE_HOLD_SCOPE.reset(token)
 
 
-def _run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold_margin=HOLD_MARGIN_PS, mem=48,
+def _run_loop(kit, base_signoff, root=None, runner=None, max_iter=None, hold_margin=HOLD_MARGIN_PS, mem=48,
              cpus=8, run=subprocess.call, tools=HERE, image=IMAGE, keep=False, repair_rc="", from_mode="",
              owner_override=False, strict_one_pass=False, route_hold_form=False):
     """-> result dict (also written to ROOT/eco_loop.json).  verdict PASS | EXHAUSTED | ERROR | NOT_ELIGIBLE | NOT_NEAR_MISS
@@ -1201,6 +1201,8 @@ def _run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold
     retry, and the near-miss numbers are recorded (res near_miss) without stopping it.  A caller flag on a kit that does
     not declare the form is an ERROR.  Gates are unchanged.  A kit whose declared pass has run takes no ECO on top
     (NOT_ELIGIBLE)."""
+    if max_iter is None:                       # default = the live limit; the one-dispatch forms are one pass by definition
+        max_iter = 1 if (strict_one_pass or route_hold_form) else MAX_ITER
     if route_hold_form and (max_iter != 1 or not strict_one_pass):
         raise ValueError("route_hold_form requires max_iter=1 and strict_one_pass")
     if max_iter > MAX_ITER:
@@ -1454,7 +1456,7 @@ def capskew_fallback(res, kit, base_signoff, base_rec, root, run=subprocess.call
 
 
 def max_iter_refusal(n):
-    return (f"eco_loop: --max-iter {n} refused: one late-stage iteration per routed form, at most {MAX_ITER} (OWNER 11-07 05:3x). "
+    return (f"eco_loop: --max-iter {n} refused: late-stage iterations per routed form: at most {MAX_ITER} (OWNER 11-20 decision 1; was 1 from 11-07 05:3x). "
             "If it does not sign off: GEOMETRY + REDESIGN, pin cycles first.")
 
 
@@ -1514,7 +1516,7 @@ def main():
     r.add_argument("--signoff", help="base sign-off record (default: newest KIT/signoff*/signoff.json)")
     r.add_argument("--runner", help="the kit runner (its GOAL=post signs off a pass dir when supported)")
     r.add_argument("--out", help="loop root (new dir; default KIT/eco_<ts>)")
-    r.add_argument("--max-iter", type=int, default=MAX_ITER)
+    r.add_argument("--max-iter", type=int, default=None, help="default: MAX_ITER (3); 1 with --strict-one-pass")
     r.add_argument("--hold-margin", type=int, default=HOLD_MARGIN_PS)
     r.add_argument("--mem", type=int, default=48)
     r.add_argument("--cpus", type=int, default=8)
@@ -1555,7 +1557,7 @@ def main():
             return 2
         print("ECO_LOOP residual " + res["verdict"] + ": " + str(res.get("residual")))
         return 0 if res["verdict"] == "PASS" else 1
-    if a.max_iter > MAX_ITER:
+    if a.max_iter is not None and a.max_iter > MAX_ITER:
         print(max_iter_refusal(a.max_iter), file=sys.stderr)
         return 2
     base = Path(a.signoff) if a.signoff else newest_signoff(a.kit)

@@ -12,6 +12,12 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import eco_loop as E  # noqa: E402
 
+@pytest.fixture(autouse=True)
+def _one_pass_legacy(monkeypatch):
+    """the loop-control tests below were written for one pass per loop; the live default is MAX_ITER = 3 (OWNER 11-20, see test_three_passes_by_default)"""
+    monkeypatch.setattr(E, "MAX_ITER", 1)
+
+
 
 @pytest.mark.parametrize("failure", ["flexpa", "grt_hang", "stage_mismatch"])
 def test_strict_one_pass_disables_each_recovery_dispatch(tmp_path, monkeypatch, failure):
@@ -1446,3 +1452,18 @@ def test_residual_case_ignores_advisory_drv():
     m = dict(signed=False, min_hold_only=True, drc=0, drv=1913, ff_core_n=1, ff_core=-0.07, hold_score_exact=True)
     assert E.residual_case(m)
     assert not E.residual_case(dict(m, drc=1)) and not E.residual_case(dict(m, ff_core_n=6)) and not E.residual_case(dict(m, ff_core=-5.01))
+
+
+def test_three_passes_by_default(tmp_path, monkeypatch):
+    """OWNER 11-20 decision 1: the late hold ECO may run three passes; a fourth is refused; one-dispatch forms stay one pass"""
+    monkeypatch.setattr(E, "MAX_ITER", 3)
+    k = kit(tmp_path)
+    b = base_rec(k, rec(-30, -20))
+    f = Fake([rec(-20, -20), rec(-10, -20), rec(-5, -20)])
+    r = E.run_loop(k, b, run=f, mem=8, cpus=2)
+    assert r["max_iter"] == 3 and len(r["iterations"]) == 3 and r["verdict"] == "EXHAUSTED"
+    with pytest.raises(ValueError, match="refused"):
+        E.run_loop(k, b, run=Fake([]), max_iter=4)
+    k2 = kit(tmp_path / "s")
+    r2 = E.run_loop(k2, base_rec(k2, rec(-30, -20)), run=Fake([rec(-20, -20), rec(-10, -20)]), mem=8, cpus=2, strict_one_pass=True)
+    assert r2["max_iter"] == 1 and len(r2["iterations"]) == 1

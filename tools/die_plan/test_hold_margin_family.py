@@ -41,7 +41,7 @@ def test_grt_margin_only_raises_never_lowers_and_keeps_none():
 
 def test_config_lines():
     ls = F.config_lines(40.0)
-    assert ls == ["export OT_HOLD_FAMILY_MARGIN_PS = 40", "export OT_PREGRT_HOLD_R2R_MARGIN = 40", "export OT_HOLD_SETUP_GUARD_PS = -30"]
+    assert ls == ["export OT_HOLD_FAMILY_MARGIN_PS = 40", "export OT_PREGRT_HOLD_R2R_MARGIN = 40", "export OT_HOLD_SETUP_GUARD_PS = -209"]
     assert "OT_PREGRT_HOLD_R2R_MARGIN" not in "".join(F.config_lines(15.0, pregrt=False))
 
 
@@ -59,7 +59,7 @@ def test_check_kit_reads_config_mk_back(tmp_path):
 def test_core_flow_apply_carries_the_core_margin(tmp_path):
     import core_flow
     cfg = core_flow.apply(tmp_path, {"tt": 100.0, "ff": 80.0, "tol": 5.0, "basis": "t"}, "unit_core", hold_ff_margin=core_flow.HOLD_FF_MARGIN_DEFAULT)
-    assert "export OT_HOLD_FF_MARGIN = 15" in cfg and "export OT_HOLD_FAMILY_MARGIN_PS = 15" in cfg and "export OT_HOLD_SETUP_GUARD_PS = -30" in cfg
+    assert "export OT_HOLD_FF_MARGIN = 15" in cfg and "export OT_HOLD_FAMILY_MARGIN_PS = 15" in cfg and "export OT_HOLD_SETUP_GUARD_PS = -209" in cfg
     assert "OT_PREGRT_HOLD_R2R_MARGIN" not in "\n".join(cfg)
     cfg2 = core_flow.apply(tmp_path, {"tt": 100.0, "ff": 80.0, "tol": 5.0, "basis": "t"}, "unit_core", hold_ff_margin=25.0)
     assert "export OT_HOLD_FF_MARGIN = 25" in cfg2
