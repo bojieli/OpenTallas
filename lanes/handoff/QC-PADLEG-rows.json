@@ -1716,5 +1716,2031 @@
    },
    "note": "+1 reg toward measured core consumer centroid (216,1564), spread 15 um, last-reg->core worst 288 um"
   }
- ]
+ ],
+ "section2": {
+  "section": "2",
+  "lane": "QC-PADLEG-1119",
+  "status": "PROPOSED; follow-up to section 1 after COORD review 11-19",
+  "A_pass_through_rows": [
+   {
+    "op": "append",
+    "path": "partition_types.sle_fw_v1__clf58b4dfb.internal_stations",
+    "value": {
+     "conn": "bus:x_st_a_o",
+     "from_um": [
+      609.266,
+      46.066
+     ],
+     "to_um": [
+      548.371,
+      1825.693
+     ],
+     "regs_um": [
+      [
+       599.117,
+       342.671
+      ],
+      [
+       588.968,
+       639.275
+      ],
+      [
+       578.819,
+       935.88
+      ],
+      [
+       568.67,
+       1232.484
+      ],
+      [
+       558.52,
+       1529.089
+      ]
+     ],
+     "bits": 258,
+     "launch": "face l9_wi",
+     "capture": "face x_st_a_o",
+     "bit_route": "per_bit",
+     "note": "QC-PADLEG-1119 pass-through bus l9_wi -> x_st_a_o had no station: 258 legs, 1897 um direct"
+    },
+    "added_regs": 5,
+    "cycles": "+5 on pass-through l9_wi->x_st_a_o (pre-approved)",
+    "fixes": {
+     "legs": 258,
+     "worst_um": 1897.0
+    }
+   },
+   {
+    "op": "append",
+    "path": "partition_types.sle_fw_v1__clf58b4dfb.internal_stations",
+    "value": {
+     "conn": "bus:x_st_b_o",
+     "from_um": [
+      609.358,
+      89.938
+     ],
+     "to_um": [
+      609.702,
+      1247.228
+     ],
+     "regs_um": [
+      [
+       609.444,
+       379.26
+      ],
+      [
+       609.53,
+       668.583
+      ],
+      [
+       609.616,
+       957.905
+      ]
+     ],
+     "bits": 258,
+     "launch": "face l9_wi",
+     "capture": "face x_st_b_o",
+     "bit_route": "per_bit",
+     "note": "QC-PADLEG-1119 pass-through bus l9_wi -> x_st_b_o had no station: 258 legs, 1177 um direct"
+    },
+    "added_regs": 3,
+    "cycles": "+3 on pass-through l9_wi->x_st_b_o (pre-approved)",
+    "fixes": {
+     "legs": 258,
+     "worst_um": 1177.0
+    }
+   },
+   {
+    "op": "set",
+    "path": "partition_types.sle_fw_v1__clf58b4dfb.internal_stations[conn=bus:sc_eo]",
+    "value": {
+     "from_um": [
+      609.366,
+      1193.362
+     ],
+     "regs_um": [
+      [
+       457.024,
+       1064.361
+      ],
+      [
+       304.683,
+       935.36
+      ],
+      [
+       152.341,
+       806.359
+      ]
+     ]
+    },
+    "added_regs": 0,
+    "cycles": "+0 on lane bus:sc_eo",
+    "fixes": {
+     "legs": 47,
+     "worst_um": 867.9
+    },
+    "note": "QC-PADLEG-1119 pass-through source: plan from_um (622,6) is 1200 um from the placed input registers (609,1193)"
+   },
+   {
+    "op": "set",
+    "path": "partition_types.sle_fw_v1__clf58b4dfb.internal_stations[conn=bus:st_eo]",
+    "value": {
+     "from_um": [
+      609.501,
+      1603.672
+     ],
+     "regs_um": [
+      [
+       487.601,
+       1448.0
+      ],
+      [
+       365.701,
+       1292.328
+      ],
+      [
+       243.801,
+       1136.656
+      ],
+      [
+       121.9,
+       980.984
+      ]
+     ]
+    },
+    "added_regs": 1,
+    "cycles": "+1 on lane bus:st_eo",
+    "fixes": {
+     "legs": 543,
+     "worst_um": 487.5
+    },
+    "note": "QC-PADLEG-1119 pass-through source: plan from_um (622,1428) is 188 um from the placed input registers (610,1604)"
+   },
+   {
+    "op": "append",
+    "path": "partition_types.slw_fw_v2__cl8537f156.internal_stations",
+    "value": {
+     "conn": "bus:flt_wo",
+     "from_um": [
+      615.7,
+      1063.7
+     ],
+     "to_um": [
+      6.3,
+      428.1
+     ],
+     "regs_um": [
+      [
+       463.35,
+       904.8
+      ],
+      [
+       311.0,
+       745.9
+      ],
+      [
+       158.65,
+       587.0
+      ]
+     ],
+     "bits": 1,
+     "launch": "face x_sc_i",
+     "capture": "face flt_wo",
+     "bit_route": "per_bit",
+     "note": "QC-PADLEG-1119 pass-through bus x_sc_i -> flt_wo had no station: 1 legs, 1245 um direct"
+    },
+    "added_regs": 3,
+    "cycles": "+3 on pass-through x_sc_i->flt_wo (pre-approved)",
+    "fixes": {
+     "legs": 1,
+     "worst_um": 1245.0
+    }
+   },
+   {
+    "op": "set",
+    "path": "partition_types.slw_fw_v2__cl8537f156.internal_stations[conn=bus:sc_wo]",
+    "value": {
+     "from_um": [
+      609.84,
+      1068.326
+     ],
+     "regs_um": [
+      [
+       457.38,
+       970.584
+      ],
+      [
+       304.92,
+       872.842
+      ],
+      [
+       152.46,
+       775.1
+      ]
+     ]
+    },
+    "added_regs": 0,
+    "cycles": "+0 on lane bus:sc_wo",
+    "fixes": {
+     "legs": 47,
+     "worst_um": 741.7
+    },
+    "note": "QC-PADLEG-1119 pass-through source: plan from_um (622,6) is 1074 um from the placed input registers (610,1068)"
+   },
+   {
+    "op": "set",
+    "path": "partition_types.sle_fw_v2__cl6740750e.internal_stations[conn=bus:sc_eo]",
+    "value": {
+     "from_um": [
+      609.326,
+      1193.46
+     ],
+     "regs_um": [
+      [
+       487.46,
+       1115.254
+      ],
+      [
+       365.595,
+       1037.048
+      ],
+      [
+       243.73,
+       958.842
+      ],
+      [
+       121.865,
+       880.636
+      ]
+     ]
+    },
+    "added_regs": 0,
+    "cycles": "+0 on lane bus:sc_eo",
+    "fixes": {
+     "legs": 47,
+     "worst_um": 936.4
+    },
+    "note": "QC-PADLEG-1119 pass-through source: plan from_um (622,6) is 1200 um from the placed input registers (609,1193)"
+   },
+   {
+    "op": "set",
+    "path": "partition_types.sle_fw_v2__cl69f5e854.internal_stations[conn=bus:sc_eo]",
+    "value": {
+     "from_um": [
+      609.257,
+      1193.457
+     ],
+     "regs_um": [
+      [
+       487.406,
+       1115.252
+      ],
+      [
+       365.554,
+       1037.046
+      ],
+      [
+       243.703,
+       958.841
+      ],
+      [
+       121.851,
+       880.635
+      ]
+     ]
+    },
+    "added_regs": 0,
+    "cycles": "+0 on lane bus:sc_eo",
+    "fixes": {
+     "legs": 47,
+     "worst_um": 936.8
+    },
+    "note": "QC-PADLEG-1119 pass-through source: plan from_um (622,6) is 1200 um from the placed input registers (609,1193)"
+   },
+   {
+    "op": "append",
+    "path": "partition_types.slw_fw_v1__clf51c11d8__cl592e3d37.internal_stations",
+    "value": {
+     "conn": "bus:flt_wo",
+     "from_um": [
+      616.7,
+      1064.2
+     ],
+     "to_um": [
+      5.5,
+      428.4
+     ],
+     "regs_um": [
+      [
+       463.9,
+       905.25
+      ],
+      [
+       311.1,
+       746.3
+      ],
+      [
+       158.3,
+       587.35
+      ]
+     ],
+     "bits": 1,
+     "launch": "face x_sc_i",
+     "capture": "face flt_wo",
+     "bit_route": "per_bit",
+     "note": "QC-PADLEG-1119 pass-through bus x_sc_i -> flt_wo had no station: 1 legs, 1247 um direct"
+    },
+    "added_regs": 3,
+    "cycles": "+3 on pass-through x_sc_i->flt_wo (pre-approved)",
+    "fixes": {
+     "legs": 1,
+     "worst_um": 1247.1
+    }
+   },
+   {
+    "op": "set",
+    "path": "partition_types.slw_fw_v1__clf51c11d8__cl592e3d37.internal_stations[conn=bus:sc_wo]",
+    "value": {
+     "from_um": [
+      609.757,
+      1068.309
+     ],
+     "regs_um": [
+      [
+       487.806,
+       1015.133
+      ],
+      [
+       365.854,
+       961.957
+      ],
+      [
+       243.903,
+       908.781
+      ],
+      [
+       121.951,
+       855.606
+      ]
+     ]
+    },
+    "added_regs": 0,
+    "cycles": "+0 on lane bus:sc_wo",
+    "fixes": {
+     "legs": 47,
+     "worst_um": 810.6
+    },
+    "note": "QC-PADLEG-1119 pass-through source: plan from_um (622,6) is 1074 um from the placed input registers (610,1068)"
+   },
+   {
+    "op": "append",
+    "path": "partition_types.slw_fw_v1__clf51c11d8__clc7ddab13.internal_stations",
+    "value": {
+     "conn": "bus:flt_wo",
+     "from_um": [
+      615.8,
+      1063.7
+     ],
+     "to_um": [
+      6.3,
+      428.4
+     ],
+     "regs_um": [
+      [
+       463.425,
+       904.875
+      ],
+      [
+       311.05,
+       746.05
+      ],
+      [
+       158.675,
+       587.225
+      ]
+     ],
+     "bits": 1,
+     "launch": "face x_sc_i",
+     "capture": "face flt_wo",
+     "bit_route": "per_bit",
+     "note": "QC-PADLEG-1119 pass-through bus x_sc_i -> flt_wo had no station: 1 legs, 1245 um direct"
+    },
+    "added_regs": 3,
+    "cycles": "+3 on pass-through x_sc_i->flt_wo (pre-approved)",
+    "fixes": {
+     "legs": 1,
+     "worst_um": 1244.8
+    }
+   },
+   {
+    "op": "set",
+    "path": "partition_types.slw_fw_v1__clf51c11d8__clc7ddab13.internal_stations[conn=bus:sc_wo]",
+    "value": {
+     "from_um": [
+      609.774,
+      1068.317
+     ],
+     "regs_um": [
+      [
+       487.82,
+       1015.14
+      ],
+      [
+       365.865,
+       961.962
+      ],
+      [
+       243.91,
+       908.785
+      ],
+      [
+       121.955,
+       855.607
+      ]
+     ]
+    },
+    "added_regs": 0,
+    "cycles": "+0 on lane bus:sc_wo",
+    "fixes": {
+     "legs": 47,
+     "worst_um": 810.5
+    },
+    "note": "QC-PADLEG-1119 pass-through source: plan from_um (622,6) is 1074 um from the placed input registers (610,1068)"
+   },
+   {
+    "op": "append",
+    "path": "partition_types.sle_fw_v1__cl9d029624.internal_stations",
+    "value": {
+     "conn": "bus:x_st_a_o",
+     "from_um": [
+      609.356,
+      46.058
+     ],
+     "to_um": [
+      548.381,
+      1825.7
+     ],
+     "regs_um": [
+      [
+       599.194,
+       342.665
+      ],
+      [
+       589.031,
+       639.272
+      ],
+      [
+       578.869,
+       935.879
+      ],
+      [
+       568.706,
+       1232.486
+      ],
+      [
+       558.544,
+       1529.093
+      ]
+     ],
+     "bits": 258,
+     "launch": "face l9_wi",
+     "capture": "face x_st_a_o",
+     "bit_route": "per_bit",
+     "note": "QC-PADLEG-1119 pass-through bus l9_wi -> x_st_a_o had no station: 258 legs, 1896 um direct"
+    },
+    "added_regs": 5,
+    "cycles": "+5 on pass-through l9_wi->x_st_a_o (pre-approved)",
+    "fixes": {
+     "legs": 258,
+     "worst_um": 1896.4
+    }
+   },
+   {
+    "op": "append",
+    "path": "partition_types.sle_fw_v1__cl9d029624.internal_stations",
+    "value": {
+     "conn": "bus:x_st_b_o",
+     "from_um": [
+      609.4,
+      89.943
+     ],
+     "to_um": [
+      609.647,
+      1247.212
+     ],
+     "regs_um": [
+      [
+       609.462,
+       379.26
+      ],
+      [
+       609.523,
+       668.578
+      ],
+      [
+       609.585,
+       957.895
+      ]
+     ],
+     "bits": 258,
+     "launch": "face l9_wi",
+     "capture": "face x_st_b_o",
+     "bit_route": "per_bit",
+     "note": "QC-PADLEG-1119 pass-through bus l9_wi -> x_st_b_o had no station: 258 legs, 1178 um direct"
+    },
+    "added_regs": 3,
+    "cycles": "+3 on pass-through l9_wi->x_st_b_o (pre-approved)",
+    "fixes": {
+     "legs": 258,
+     "worst_um": 1177.5
+    }
+   },
+   {
+    "op": "set",
+    "path": "partition_types.sle_fw_v1__cl9d029624.internal_stations[conn=bus:sc_eo]",
+    "value": {
+     "from_um": [
+      609.44,
+      1193.338
+     ],
+     "regs_um": [
+      [
+       457.08,
+       1064.343
+      ],
+      [
+       304.72,
+       935.348
+      ],
+      [
+       152.36,
+       806.353
+      ]
+     ]
+    },
+    "added_regs": 0,
+    "cycles": "+0 on lane bus:sc_eo",
+    "fixes": {
+     "legs": 47,
+     "worst_um": 867.2
+    },
+    "note": "QC-PADLEG-1119 pass-through source: plan from_um (622,6) is 1200 um from the placed input registers (609,1193)"
+   },
+   {
+    "op": "set",
+    "path": "partition_types.sle_fw_v1__cl9d029624.internal_stations[conn=bus:st_eo]",
+    "value": {
+     "from_um": [
+      609.393,
+      1603.673
+     ],
+     "regs_um": [
+      [
+       487.515,
+       1448.001
+      ],
+      [
+       365.636,
+       1292.328
+      ],
+      [
+       243.757,
+       1136.656
+      ],
+      [
+       121.879,
+       980.984
+      ]
+     ]
+    },
+    "added_regs": 1,
+    "cycles": "+1 on lane bus:st_eo",
+    "fixes": {
+     "legs": 543,
+     "worst_um": 488.0
+    },
+    "note": "QC-PADLEG-1119 pass-through source: plan from_um (622,1428) is 188 um from the placed input registers (609,1604)"
+   },
+   {
+    "op": "append",
+    "path": "partition_types.slw_st_a_v2__cl9f076a5c.internal_stations",
+    "value": {
+     "conn": "bus:x_st_b_o",
+     "from_um": [
+      268.792,
+      664.869
+     ],
+     "to_um": [
+      608.67,
+      788.426
+     ],
+     "regs_um": [
+      [
+       438.731,
+       726.648
+      ]
+     ],
+     "bits": 209,
+     "launch": "face rs_s0",
+     "capture": "face x_st_b_o",
+     "bit_route": "per_bit",
+     "note": "QC-PADLEG-1119 pass-through bus rs_s0 -> x_st_b_o had no station: 209 legs, 515 um direct"
+    },
+    "added_regs": 1,
+    "cycles": "+1 on pass-through rs_s0->x_st_b_o (pre-approved)",
+    "fixes": {
+     "legs": 209,
+     "worst_um": 514.9
+    }
+   },
+   {
+    "op": "append",
+    "path": "partition_types.slw_st_a_v2__cl9f076a5c.internal_stations",
+    "value": {
+     "conn": "bus:x_st_b_o",
+     "from_um": [
+      300.838,
+      663.694
+     ],
+     "to_um": [
+      608.964,
+      793.948
+     ],
+     "regs_um": [
+      [
+       454.901,
+       728.821
+      ]
+     ],
+     "bits": 239,
+     "launch": "face rs_s1",
+     "capture": "face x_st_b_o",
+     "bit_route": "per_bit",
+     "note": "QC-PADLEG-1119 pass-through bus rs_s1 -> x_st_b_o had no station: 239 legs, 508 um direct"
+    },
+    "added_regs": 1,
+    "cycles": "+1 on pass-through rs_s1->x_st_b_o (pre-approved)",
+    "fixes": {
+     "legs": 239,
+     "worst_um": 508.1
+    }
+   }
+  ],
+  "B_macro_anchor_rows": [
+   {
+    "op": "set",
+    "path": "partition_types.sle_ctl__cl503337ff.internal_stations[conn=bus:b_hw_hc2_o]",
+    "value": {
+     "from_um": [
+      305.713,
+      328.4
+     ],
+     "leaf_um": [
+      305.713,
+      328.4
+     ],
+     "regs_um": [
+      [
+       395.319,
+       530.56
+      ],
+      [
+       484.925,
+       732.72
+      ],
+      [
+       574.531,
+       934.88
+      ],
+      [
+       664.138,
+       1137.04
+      ]
+     ]
+    },
+    "added_regs": 0,
+    "cycles": "+0 on lane bus:b_hw_hc2_o",
+    "fixes": {
+     "legs": 697,
+     "worst_um": 581.2
+    },
+    "note": "QC-PADLEG-1119 launch anchored at measured hard-macro output pins (306,328); plan anchor (440,400) is 206 um away"
+   },
+   {
+    "op": "set",
+    "path": "partition_types.sle_ctl__cl503337ff.internal_stations[conn=bus:b_hw_hc3_o]",
+    "value": {
+     "from_um": [
+      215.887,
+      328.4
+     ],
+     "leaf_um": [
+      215.887,
+      328.4
+     ],
+     "regs_um": [
+      [
+       468.635,
+       288.482
+      ],
+      [
+       721.384,
+       248.563
+      ],
+      [
+       974.132,
+       208.645
+      ]
+     ]
+    },
+    "added_regs": 1,
+    "cycles": "+1 on lane bus:b_hw_hc3_o",
+    "fixes": {
+     "legs": 549,
+     "worst_um": 580.4
+    },
+    "note": "QC-PADLEG-1119 launch anchored at measured hard-macro output pins (216,328); plan anchor (440,400) is 296 um away"
+   },
+   {
+    "op": "set",
+    "path": "partition_types.sle_ctl__cl503337ff.internal_stations[conn=bus:b_hw_hc0_o]",
+    "value": {
+     "from_um": [
+      219.003,
+      328.4
+     ],
+     "leaf_um": [
+      219.003,
+      328.4
+     ],
+     "regs_um": [
+      [
+       146.002,
+       265.739
+      ],
+      [
+       73.001,
+       203.078
+      ]
+     ]
+    },
+    "added_regs": 0,
+    "cycles": "+0 on lane bus:b_hw_hc0_o",
+    "fixes": {
+     "legs": 626,
+     "worst_um": 578.1
+    },
+    "note": "QC-PADLEG-1119 launch anchored at measured hard-macro output pins (219,328); plan anchor (440,400) is 293 um away"
+   },
+   {
+    "op": "set",
+    "path": "partition_types.sle_ctl__cl503337ff.internal_stations[conn=bus:x_fw_o]",
+    "value": {
+     "from_um": [
+      475.3,
+      369.872
+     ],
+     "leaf_um": [
+      475.3,
+      369.872
+     ],
+     "regs_um": [
+      [
+       316.867,
+       419.897
+      ],
+      [
+       158.433,
+       469.921
+      ]
+     ]
+    },
+    "added_regs": 0,
+    "cycles": "+0 on lane bus:x_fw_o",
+    "fixes": {
+     "legs": 29,
+     "worst_um": 416.1
+    },
+    "note": "QC-PADLEG-1119 launch anchored at measured hard-macro output pins (475,370); plan anchor (660,200) is 355 um away"
+   },
+   {
+    "op": "set",
+    "path": "partition_types.sle_ctl__cl503337ff.internal_stations[conn=bus:x_fw_p2_i]",
+    "value": {
+     "to_um": [
+      806.523,
+      593.19
+     ],
+     "leaf_um": [
+      806.523,
+      593.19
+     ],
+     "regs_um": [
+      [
+       1061.561,
+       457.789
+      ],
+      [
+       934.042,
+       525.489
+      ]
+     ]
+    },
+    "added_regs": 0,
+    "cycles": "+0 on lane bus:x_fw_p2_i",
+    "fixes": {
+     "legs": 91,
+     "worst_um": 486.2
+    },
+    "note": "QC-PADLEG-1119 capture anchored at measured hard-macro input pins (807,593); plan anchor (440,400) is 560 um away"
+   },
+   {
+    "op": "set",
+    "path": "partition_types.sle_ctl__cl503337ff.internal_stations[conn=bus:x_su_l1_i]",
+    "value": {
+     "to_um": [
+      747.188,
+      326.232
+     ],
+     "leaf_um": [
+      747.188,
+      326.232
+     ],
+     "regs_um": [
+      [
+       1034.903,
+       108.744
+      ],
+      [
+       891.045,
+       217.488
+      ]
+     ]
+    },
+    "added_regs": 1,
+    "cycles": "+1 on lane bus:x_su_l1_i",
+    "fixes": {
+     "legs": 74,
+     "worst_um": 438.8
+    },
+    "note": "QC-PADLEG-1119 capture anchored at measured hard-macro input pins (747,326); plan anchor (821,337) is 84 um away"
+   },
+   {
+    "op": "set",
+    "path": "partition_types.sle_ctl__cl372cea1c.internal_stations[conn=bus:b_hw_hc2_o]",
+    "value": {
+     "from_um": [
+      307.346,
+      328.4
+     ],
+     "leaf_um": [
+      307.346,
+      328.4
+     ],
+     "regs_um": [
+      [
+       396.625,
+       530.56
+      ],
+      [
+       485.905,
+       732.72
+      ],
+      [
+       575.185,
+       934.88
+      ],
+      [
+       664.464,
+       1137.04
+      ]
+     ]
+    },
+    "added_regs": 0,
+    "cycles": "+0 on lane bus:b_hw_hc2_o",
+    "fixes": {
+     "legs": 667,
+     "worst_um": 580.5
+    },
+    "note": "QC-PADLEG-1119 launch anchored at measured hard-macro output pins (307,328); plan anchor (440,400) is 204 um away"
+   },
+   {
+    "op": "set",
+    "path": "partition_types.sle_ctl__cl372cea1c.internal_stations[conn=bus:b_hw_hc3_o]",
+    "value": {
+     "from_um": [
+      215.84,
+      328.4
+     ],
+     "leaf_um": [
+      215.84,
+      328.4
+     ],
+     "regs_um": [
+      [
+       468.6,
+       288.482
+      ],
+      [
+       721.36,
+       248.563
+      ],
+      [
+       974.12,
+       208.645
+      ]
+     ]
+    },
+    "added_regs": 1,
+    "cycles": "+1 on lane bus:b_hw_hc3_o",
+    "fixes": {
+     "legs": 548,
+     "worst_um": 579.6
+    },
+    "note": "QC-PADLEG-1119 launch anchored at measured hard-macro output pins (216,328); plan anchor (440,400) is 296 um away"
+   },
+   {
+    "op": "set",
+    "path": "partition_types.sle_ctl__cl372cea1c.internal_stations[conn=bus:b_hw_hc0_o]",
+    "value": {
+     "from_um": [
+      219.002,
+      328.4
+     ],
+     "leaf_um": [
+      219.002,
+      328.4
+     ],
+     "regs_um": [
+      [
+       146.001,
+       265.739
+      ],
+      [
+       73.001,
+       203.078
+      ]
+     ]
+    },
+    "added_regs": 0,
+    "cycles": "+0 on lane bus:b_hw_hc0_o",
+    "fixes": {
+     "legs": 626,
+     "worst_um": 577.6
+    },
+    "note": "QC-PADLEG-1119 launch anchored at measured hard-macro output pins (219,328); plan anchor (440,400) is 293 um away"
+   },
+   {
+    "op": "set",
+    "path": "partition_types.sle_ctl__cl372cea1c.internal_stations[conn=bus:x_fw_o]",
+    "value": {
+     "from_um": [
+      475.3,
+      369.463
+     ],
+     "leaf_um": [
+      475.3,
+      369.463
+     ],
+     "regs_um": [
+      [
+       316.867,
+       419.624
+      ],
+      [
+       158.433,
+       469.784
+      ]
+     ]
+    },
+    "added_regs": 0,
+    "cycles": "+0 on lane bus:x_fw_o",
+    "fixes": {
+     "legs": 27,
+     "worst_um": 417.6
+    },
+    "note": "QC-PADLEG-1119 launch anchored at measured hard-macro output pins (475,369); plan anchor (660,200) is 354 um away"
+   },
+   {
+    "op": "set",
+    "path": "partition_types.sle_ctl__cl372cea1c.internal_stations[conn=bus:x_fw_p2_i]",
+    "value": {
+     "to_um": [
+      852.139,
+      525.759
+     ],
+     "leaf_um": [
+      852.139,
+      525.759
+     ],
+     "regs_um": [
+      [
+       1076.766,
+       435.312
+      ],
+      [
+       964.453,
+       480.536
+      ]
+     ]
+    },
+    "added_regs": 0,
+    "cycles": "+0 on lane bus:x_fw_p2_i",
+    "fixes": {
+     "legs": 128,
+     "worst_um": 490.4
+    },
+    "note": "QC-PADLEG-1119 capture anchored at measured hard-macro input pins (852,526); plan anchor (440,400) is 538 um away"
+   },
+   {
+    "op": "set",
+    "path": "partition_types.sle_ctl__cl372cea1c.internal_stations[conn=bus:x_fw_i]",
+    "value": {
+     "to_um": [
+      504.65,
+      596.1
+     ],
+     "leaf_um": [
+      504.65,
+      596.1
+     ],
+     "regs_um": [
+      [
+       168.217,
+       644.823
+      ],
+      [
+       336.433,
+       620.461
+      ]
+     ]
+    },
+    "added_regs": 0,
+    "cycles": "+0 on lane bus:x_fw_i",
+    "fixes": {
+     "legs": 12,
+     "worst_um": 416.7
+    },
+    "note": "QC-PADLEG-1119 capture anchored at measured hard-macro input pins (505,596); plan anchor (475,596) is 30 um away"
+   },
+   {
+    "op": "set",
+    "path": "partition_types.sle_ctl__cl67434795.internal_stations[conn=bus:b_hw_hc2_o]",
+    "value": {
+     "from_um": [
+      306.684,
+      328.4
+     ],
+     "leaf_um": [
+      306.684,
+      328.4
+     ],
+     "regs_um": [
+      [
+       396.096,
+       530.56
+      ],
+      [
+       485.508,
+       732.72
+      ],
+      [
+       574.92,
+       934.88
+      ],
+      [
+       664.332,
+       1137.04
+      ]
+     ]
+    },
+    "added_regs": 0,
+    "cycles": "+0 on lane bus:b_hw_hc2_o",
+    "fixes": {
+     "legs": 684,
+     "worst_um": 581.4
+    },
+    "note": "QC-PADLEG-1119 launch anchored at measured hard-macro output pins (307,328); plan anchor (440,400) is 205 um away"
+   },
+   {
+    "op": "set",
+    "path": "partition_types.sle_ctl__cl67434795.internal_stations[conn=bus:b_hw_hc3_o]",
+    "value": {
+     "from_um": [
+      215.934,
+      328.4
+     ],
+     "leaf_um": [
+      215.934,
+      328.4
+     ],
+     "regs_um": [
+      [
+       468.67,
+       288.482
+      ],
+      [
+       721.407,
+       248.563
+      ],
+      [
+       974.143,
+       208.645
+      ]
+     ]
+    },
+    "added_regs": 1,
+    "cycles": "+1 on lane bus:b_hw_hc3_o",
+    "fixes": {
+     "legs": 550,
+     "worst_um": 580.3
+    },
+    "note": "QC-PADLEG-1119 launch anchored at measured hard-macro output pins (216,328); plan anchor (440,400) is 296 um away"
+   },
+   {
+    "op": "set",
+    "path": "partition_types.sle_ctl__cl67434795.internal_stations[conn=bus:b_hw_hc0_o]",
+    "value": {
+     "from_um": [
+      219.003,
+      328.4
+     ],
+     "leaf_um": [
+      219.003,
+      328.4
+     ],
+     "regs_um": [
+      [
+       146.002,
+       265.739
+      ],
+      [
+       73.001,
+       203.078
+      ]
+     ]
+    },
+    "added_regs": 0,
+    "cycles": "+0 on lane bus:b_hw_hc0_o",
+    "fixes": {
+     "legs": 626,
+     "worst_um": 577.7
+    },
+    "note": "QC-PADLEG-1119 launch anchored at measured hard-macro output pins (219,328); plan anchor (440,400) is 293 um away"
+   },
+   {
+    "op": "set",
+    "path": "partition_types.sle_ctl__cl67434795.internal_stations[conn=bus:x_su_c_p1_o]",
+    "value": {
+     "from_um": [
+      830.155,
+      593.345
+     ],
+     "leaf_um": [
+      830.155,
+      593.345
+     ],
+     "regs_um": [
+      [
+       854.183,
+       395.564
+      ],
+      [
+       878.211,
+       197.782
+      ]
+     ]
+    },
+    "added_regs": 1,
+    "cycles": "+1 on lane bus:x_su_c_p1_o",
+    "fixes": {
+     "legs": 11,
+     "worst_um": 449.2
+    },
+    "note": "QC-PADLEG-1119 launch anchored at measured hard-macro output pins (830,593); plan anchor (660,200) is 563 um away"
+   },
+   {
+    "op": "set",
+    "path": "partition_types.sle_ctl__cl67434795.internal_stations[conn=bus:x_fw_o]",
+    "value": {
+     "from_um": [
+      475.3,
+      369.115
+     ],
+     "leaf_um": [
+      475.3,
+      369.115
+     ],
+     "regs_um": [
+      [
+       316.867,
+       419.392
+      ],
+      [
+       158.433,
+       469.668
+      ]
+     ]
+    },
+    "added_regs": 0,
+    "cycles": "+0 on lane bus:x_fw_o",
+    "fixes": {
+     "legs": 26,
+     "worst_um": 415.7
+    },
+    "note": "QC-PADLEG-1119 launch anchored at measured hard-macro output pins (475,369); plan anchor (660,200) is 354 um away"
+   },
+   {
+    "op": "set",
+    "path": "partition_types.sle_ctl__cl67434795.internal_stations[conn=bus:x_fw_p2_i]",
+    "value": {
+     "to_um": [
+      806.307,
+      595.306
+     ],
+     "leaf_um": [
+      806.307,
+      595.306
+     ],
+     "regs_um": [
+      [
+       1061.489,
+       458.494
+      ],
+      [
+       933.898,
+       526.9
+      ]
+     ]
+    },
+    "added_regs": 0,
+    "cycles": "+0 on lane bus:x_fw_p2_i",
+    "fixes": {
+     "legs": 98,
+     "worst_um": 491.2
+    },
+    "note": "QC-PADLEG-1119 capture anchored at measured hard-macro input pins (806,595); plan anchor (440,400) is 562 um away"
+   },
+   {
+    "op": "set",
+    "path": "partition_types.sle_ctl__cl67434795.internal_stations[conn=bus:x_fw_i]",
+    "value": {
+     "to_um": [
+      503.194,
+      596.1
+     ],
+     "leaf_um": [
+      503.194,
+      596.1
+     ],
+     "regs_um": [
+      [
+       167.731,
+       644.823
+      ],
+      [
+       335.462,
+       620.461
+      ]
+     ]
+    },
+    "added_regs": 0,
+    "cycles": "+0 on lane bus:x_fw_i",
+    "fixes": {
+     "legs": 16,
+     "worst_um": 417.0
+    },
+    "note": "QC-PADLEG-1119 capture anchored at measured hard-macro input pins (503,596); plan anchor (475,596) is 28 um away"
+   },
+   {
+    "op": "set",
+    "path": "partition_types.sle_ctl__cla4f6f12f.internal_stations[conn=bus:b_hw_hc2_o]",
+    "value": {
+     "from_um": [
+      307.521,
+      328.4
+     ],
+     "leaf_um": [
+      307.521,
+      328.4
+     ],
+     "regs_um": [
+      [
+       396.765,
+       530.56
+      ],
+      [
+       486.01,
+       732.72
+      ],
+      [
+       575.255,
+       934.88
+      ],
+      [
+       664.499,
+       1137.04
+      ]
+     ]
+    },
+    "added_regs": 0,
+    "cycles": "+0 on lane bus:b_hw_hc2_o",
+    "fixes": {
+     "legs": 664,
+     "worst_um": 581.2
+    },
+    "note": "QC-PADLEG-1119 launch anchored at measured hard-macro output pins (308,328); plan anchor (440,400) is 204 um away"
+   },
+   {
+    "op": "set",
+    "path": "partition_types.sle_ctl__cla4f6f12f.internal_stations[conn=bus:b_hw_hc3_o]",
+    "value": {
+     "from_um": [
+      215.887,
+      328.4
+     ],
+     "leaf_um": [
+      215.887,
+      328.4
+     ],
+     "regs_um": [
+      [
+       468.635,
+       288.482
+      ],
+      [
+       721.384,
+       248.563
+      ],
+      [
+       974.132,
+       208.645
+      ]
+     ]
+    },
+    "added_regs": 1,
+    "cycles": "+1 on lane bus:b_hw_hc3_o",
+    "fixes": {
+     "legs": 549,
+     "worst_um": 580.4
+    },
+    "note": "QC-PADLEG-1119 launch anchored at measured hard-macro output pins (216,328); plan anchor (440,400) is 296 um away"
+   },
+   {
+    "op": "set",
+    "path": "partition_types.sle_ctl__cla4f6f12f.internal_stations[conn=bus:b_hw_hc0_o]",
+    "value": {
+     "from_um": [
+      218.954,
+      328.4
+     ],
+     "leaf_um": [
+      218.954,
+      328.4
+     ],
+     "regs_um": [
+      [
+       145.969,
+       265.739
+      ],
+      [
+       72.985,
+       203.078
+      ]
+     ]
+    },
+    "added_regs": 0,
+    "cycles": "+0 on lane bus:b_hw_hc0_o",
+    "fixes": {
+     "legs": 625,
+     "worst_um": 578.1
+    },
+    "note": "QC-PADLEG-1119 launch anchored at measured hard-macro output pins (219,328); plan anchor (440,400) is 293 um away"
+   },
+   {
+    "op": "set",
+    "path": "partition_types.sle_ctl__cla4f6f12f.internal_stations[conn=bus:x_su_c_p1_o]",
+    "value": {
+     "from_um": [
+      835.54,
+      593.42
+     ],
+     "leaf_um": [
+      835.54,
+      593.42
+     ],
+     "regs_um": [
+      [
+       857.773,
+       395.613
+      ],
+      [
+       880.006,
+       197.807
+      ]
+     ]
+    },
+    "added_regs": 1,
+    "cycles": "+1 on lane bus:x_su_c_p1_o",
+    "fixes": {
+     "legs": 10,
+     "worst_um": 443.2
+    },
+    "note": "QC-PADLEG-1119 launch anchored at measured hard-macro output pins (836,593); plan anchor (660,200) is 569 um away"
+   },
+   {
+    "op": "set",
+    "path": "partition_types.sle_ctl__cla4f6f12f.internal_stations[conn=bus:x_fw_o]",
+    "value": {
+     "from_um": [
+      475.3,
+      369.72
+     ],
+     "leaf_um": [
+      475.3,
+      369.72
+     ],
+     "regs_um": [
+      [
+       316.867,
+       419.795
+      ],
+      [
+       158.433,
+       469.87
+      ]
+     ]
+    },
+    "added_regs": 0,
+    "cycles": "+0 on lane bus:x_fw_o",
+    "fixes": {
+     "legs": 30,
+     "worst_um": 417.5
+    },
+    "note": "QC-PADLEG-1119 launch anchored at measured hard-macro output pins (475,370); plan anchor (660,200) is 354 um away"
+   },
+   {
+    "op": "set",
+    "path": "partition_types.sle_ctl__cla4f6f12f.internal_stations[conn=bus:x_fw_p2_i]",
+    "value": {
+     "to_um": [
+      859.577,
+      491.214
+     ],
+     "leaf_um": [
+      859.577,
+      491.214
+     ],
+     "regs_um": [
+      [
+       1079.246,
+       423.797
+      ],
+      [
+       969.411,
+       457.505
+      ]
+     ]
+    },
+    "added_regs": 0,
+    "cycles": "+0 on lane bus:x_fw_p2_i",
+    "fixes": {
+     "legs": 136,
+     "worst_um": 496.3
+    },
+    "note": "QC-PADLEG-1119 capture anchored at measured hard-macro input pins (860,491); plan anchor (440,400) is 511 um away"
+   },
+   {
+    "op": "set",
+    "path": "partition_types.sle_ctl__cla4f6f12f.internal_stations[conn=bus:x_fw_i]",
+    "value": {
+     "to_um": [
+      504.038,
+      596.1
+     ],
+     "leaf_um": [
+      504.038,
+      596.1
+     ],
+     "regs_um": [
+      [
+       168.013,
+       644.823
+      ],
+      [
+       336.026,
+       620.461
+      ]
+     ]
+    },
+    "added_regs": 0,
+    "cycles": "+0 on lane bus:x_fw_i",
+    "fixes": {
+     "legs": 13,
+     "worst_um": 417.7
+    },
+    "note": "QC-PADLEG-1119 capture anchored at measured hard-macro input pins (504,596); plan anchor (475,596) is 29 um away"
+   },
+   {
+    "op": "set",
+    "path": "partition_types.sle_st_b_v2__clfde1249e.internal_stations[conn=bus:x_hc1_i]",
+    "value": {
+     "to_um": [
+      255.316,
+      346.317
+     ],
+     "leaf_um": [
+      255.316,
+      346.317
+     ],
+     "regs_um": [
+      [
+       63.829,
+       1047.293
+      ],
+      [
+       127.658,
+       813.635
+      ],
+      [
+       191.487,
+       579.976
+      ]
+     ]
+    },
+    "added_regs": 1,
+    "cycles": "+1 on lane bus:x_hc1_i",
+    "fixes": {
+     "legs": 64,
+     "worst_um": 614.1
+    },
+    "note": "QC-PADLEG-1119 capture anchored at measured hard-macro input pins (255,346); plan anchor (311,670) is 379 um away"
+   },
+   {
+    "op": "set",
+    "path": "partition_types.sle_st_b_v2__clfde1249e.internal_stations[conn=bus:x_st_a_i]",
+    "value": {
+     "to_um": [
+      326.627,
+      444.155
+     ],
+     "leaf_um": [
+      326.627,
+      444.155
+     ],
+     "regs_um": [
+      [
+       108.876,
+       672.9
+      ],
+      [
+       217.752,
+       558.527
+      ]
+     ]
+    },
+    "added_regs": 0,
+    "cycles": "+0 on lane bus:x_st_a_i",
+    "fixes": {
+     "legs": 84,
+     "worst_um": 611.8
+    },
+    "note": "QC-PADLEG-1119 capture anchored at measured hard-macro input pins (327,444); plan anchor (311,670) is 241 um away"
+   },
+   {
+    "op": "set",
+    "path": "partition_types.slw_su_c__cl19bb38ef.internal_stations[conn=bus:x_ctl_o]",
+    "value": {
+     "from_um": [
+      767.308,
+      516.927
+     ],
+     "leaf_um": [
+      767.308,
+      516.927
+     ],
+     "regs_um": [
+      [
+       634.363,
+       693.478
+      ],
+      [
+       501.418,
+       870.028
+      ],
+      [
+       368.473,
+       1046.579
+      ],
+      [
+       235.529,
+       1223.129
+      ]
+     ]
+    },
+    "added_regs": 1,
+    "cycles": "+1 on lane bus:x_ctl_o",
+    "fixes": {
+     "legs": 92,
+     "worst_um": 1050.0
+    },
+    "note": "QC-PADLEG-1119 launch anchored at measured hard-macro output pins (767,517); plan anchor (337,527) is 440 um away"
+   },
+   {
+    "op": "set",
+    "path": "partition_types.slw_su_c__cl19bb38ef.internal_stations[conn=bus:x_su_l0_o]",
+    "value": {
+     "from_um": [
+      1109.659,
+      361.899
+     ],
+     "leaf_um": [
+      1109.659,
+      361.899
+     ],
+     "regs_um": [
+      [
+       1148.733,
+       304.509
+      ],
+      [
+       1187.806,
+       247.118
+      ]
+     ]
+    },
+    "added_regs": 0,
+    "cycles": "+0 on lane bus:x_su_l0_o",
+    "fixes": {
+     "legs": 255,
+     "worst_um": 951.7
+    },
+    "note": "QC-PADLEG-1119 launch anchored at measured hard-macro output pins (1110,362); plan anchor (510,462) is 700 um away"
+   },
+   {
+    "op": "set",
+    "path": "partition_types.slw_su_c__cl19bb38ef.internal_stations[conn=bus:x_su_l1_p1_o]",
+    "value": {
+     "from_um": [
+      294.366,
+      317.806
+     ],
+     "leaf_um": [
+      294.366,
+      317.806
+     ],
+     "regs_um": [
+      [
+       196.244,
+       366.738
+      ],
+      [
+       98.122,
+       415.669
+      ]
+     ]
+    },
+    "added_regs": 0,
+    "cycles": "+0 on lane bus:x_su_l1_p1_o",
+    "fixes": {
+     "legs": 216,
+     "worst_um": 813.0
+    },
+    "note": "QC-PADLEG-1119 launch anchored at measured hard-macro output pins (294,318); plan anchor (665,168) is 520 um away"
+   },
+   {
+    "op": "set",
+    "path": "partition_types.slw_su_c__cl19bb38ef.internal_stations[conn=bus:x_su_l0_p1_o]",
+    "value": {
+     "from_um": [
+      528.443,
+      278.82
+     ],
+     "leaf_um": [
+      528.443,
+      278.82
+     ],
+     "regs_um": [
+      [
+       703.052,
+       322.527
+      ],
+      [
+       877.661,
+       366.234
+      ],
+      [
+       1052.271,
+       409.941
+      ]
+     ]
+    },
+    "added_regs": 0,
+    "cycles": "+0 on lane bus:x_su_l0_p1_o",
+    "fixes": {
+     "legs": 154,
+     "worst_um": 755.8
+    },
+    "note": "QC-PADLEG-1119 launch anchored at measured hard-macro output pins (528,279); plan anchor (294,168) is 345 um away"
+   },
+   {
+    "op": "set",
+    "path": "partition_types.slw_su_c__cl19bb38ef.internal_stations[conn=bus:x_ctl_p1_i]",
+    "value": {
+     "to_um": [
+      522.05,
+      329.848
+     ],
+     "leaf_um": [
+      522.05,
+      329.848
+     ],
+     "regs_um": [
+      [
+       785.216,
+       1185.714
+      ],
+      [
+       719.425,
+       971.747
+      ],
+      [
+       653.633,
+       757.781
+      ],
+      [
+       587.842,
+       543.814
+      ]
+     ]
+    },
+    "added_regs": 2,
+    "cycles": "+2 on lane bus:x_ctl_p1_i",
+    "fixes": {
+     "legs": 1628,
+     "worst_um": 1273.9
+    },
+    "note": "QC-PADLEG-1119 capture anchored at measured hard-macro input pins (522,330); plan anchor (613,700) is 461 um away"
+   },
+   {
+    "op": "set",
+    "path": "partition_types.slw_su_c__cl19bb38ef.internal_stations[conn=bus:x_ctl_p2_i]",
+    "value": {
+     "to_um": [
+      543.093,
+      359.312
+     ],
+     "leaf_um": [
+      543.093,
+      359.312
+     ],
+     "regs_um": [
+      [
+       865.566,
+       1191.606
+      ],
+      [
+       784.948,
+       983.533
+      ],
+      [
+       704.33,
+       775.459
+      ],
+      [
+       623.712,
+       567.386
+      ]
+     ]
+    },
+    "added_regs": 2,
+    "cycles": "+2 on lane bus:x_ctl_p2_i",
+    "fixes": {
+     "legs": 1565,
+     "worst_um": 1119.7
+    },
+    "note": "QC-PADLEG-1119 capture anchored at measured hard-macro input pins (543,359); plan anchor (613,700) is 411 um away"
+   },
+   {
+    "op": "set",
+    "path": "partition_types.slw_su_c__cl19bb38ef.internal_stations[conn=bus:x_su_l0_i]",
+    "value": {
+     "to_um": [
+      197.942,
+      55.3
+     ],
+     "leaf_um": [
+      197.942,
+      55.3
+     ],
+     "regs_um": [
+      [
+       969.645,
+       53.491
+      ],
+      [
+       712.411,
+       54.094
+      ],
+      [
+       455.176,
+       54.697
+      ]
+     ]
+    },
+    "added_regs": 0,
+    "cycles": "+0 on lane bus:x_su_l0_i",
+    "fixes": {
+     "legs": 36,
+     "worst_um": 531.7
+    },
+    "note": "QC-PADLEG-1119 capture anchored at measured hard-macro input pins (198,55); plan anchor (510,462) is 719 um away"
+   },
+   {
+    "op": "set",
+    "path": "partition_types.slw_su_c__cl19bb38ef.internal_stations[conn=bus:x_su_l0_p1_i]",
+    "value": {
+     "to_um": [
+      196.883,
+      55.44
+     ],
+     "leaf_um": [
+      196.883,
+      55.44
+     ],
+     "regs_um": [
+      [
+       1020.881,
+       271.914
+      ],
+      [
+       814.881,
+       217.795
+      ],
+      [
+       608.882,
+       163.677
+      ],
+      [
+       402.883,
+       109.558
+      ]
+     ]
+    },
+    "added_regs": 2,
+    "cycles": "+2 on lane bus:x_su_l0_p1_i",
+    "fixes": {
+     "legs": 30,
+     "worst_um": 528.6
+    },
+    "note": "QC-PADLEG-1119 capture anchored at measured hard-macro input pins (197,55); plan anchor (510,462) is 720 um away"
+   },
+   {
+    "op": "set",
+    "path": "partition_types.sle_st_b_v2__cl14c98df5__pvcd986c42.internal_stations[conn=bus:x_hc1_i]",
+    "value": {
+     "to_um": [
+      260.455,
+      317.489
+     ],
+     "leaf_um": [
+      260.455,
+      317.489
+     ],
+     "regs_um": [
+      [
+       65.114,
+       1040.086
+      ],
+      [
+       130.227,
+       799.221
+      ],
+      [
+       195.341,
+       558.355
+      ]
+     ]
+    },
+    "added_regs": 1,
+    "cycles": "+1 on lane bus:x_hc1_i",
+    "fixes": {
+     "legs": 64,
+     "worst_um": 651.2
+    },
+    "note": "QC-PADLEG-1119 capture anchored at measured hard-macro input pins (260,317); plan anchor (311,670) is 403 um away"
+   },
+   {
+    "op": "set",
+    "path": "partition_types.sle_st_b_v2__cl14c98df5__pvcd986c42.internal_stations[conn=bus:x_st_a_i]",
+    "value": {
+     "to_um": [
+      327.829,
+      499.327
+     ],
+     "leaf_um": [
+      327.829,
+      499.327
+     ],
+     "regs_um": [
+      [
+       109.276,
+       691.29
+      ],
+      [
+       218.553,
+       595.309
+      ]
+     ]
+    },
+    "added_regs": 0,
+    "cycles": "+0 on lane bus:x_st_a_i",
+    "fixes": {
+     "legs": 92,
+     "worst_um": 616.5
+    },
+    "note": "QC-PADLEG-1119 capture anchored at measured hard-macro input pins (328,499); plan anchor (311,670) is 187 um away"
+   }
+  ],
+  "C_stm_core_placement_guides": [
+   {
+    "op": "append",
+    "path": "partition_types.sle_stm_v1__cl27746664.placement_guides",
+    "value": {
+     "inst": "u_core.u_stream",
+     "bbox_um": [
+      88.0,
+      1241.0,
+      347.2,
+      1621.2
+     ],
+     "kind": "soft_region",
+     "note": "reuse outline 259x380; placed cells span x 136-368 y 1091-1636 (p10-p90 of long-leg endpoints), ~1.3x the outline area"
+    },
+    "status": "PROPOSED, needs compiler support (no placement_guides key in plan schema today); alternative: hard region via core floorplan"
+   },
+   {
+    "op": "append",
+    "path": "partition_types.sle_stm_v2__cl55be2264.placement_guides",
+    "value": {
+     "inst": "u_core.u_stream",
+     "bbox_um": [
+      99.3,
+      1247.4,
+      358.5,
+      1627.5
+     ],
+     "kind": "soft_region",
+     "note": "reuse outline 259x380; placed cells span x 155-325 y 1128-1606 (p10-p90 of long-leg endpoints), ~0.8x the outline area"
+    },
+    "status": "PROPOSED, needs compiler support (no placement_guides key in plan schema today); alternative: hard region via core floorplan"
+   },
+   {
+    "op": "append",
+    "path": "partition_types.sle_stm_v1__clbe630b9c.placement_guides",
+    "value": {
+     "inst": "u_core.u_stream",
+     "bbox_um": [
+      91.1,
+      1241.6,
+      350.3,
+      1621.8
+     ],
+     "kind": "soft_region",
+     "note": "reuse outline 259x380; placed cells span x 130-333 y 1096-1641 (p10-p90 of long-leg endpoints), ~1.1x the outline area"
+    },
+    "status": "PROPOSED, needs compiler support (no placement_guides key in plan schema today); alternative: hard region via core floorplan"
+   },
+   {
+    "op": "append",
+    "path": "partition_types.slw_stm_v1__cl05fc43f7__cl389df4e9.placement_guides",
+    "value": {
+     "inst": "u_core.u_stream",
+     "bbox_um": [
+      123.6,
+      1226.2,
+      382.8,
+      1606.4
+     ],
+     "kind": "soft_region",
+     "note": "reuse outline 259x380; placed cells span x 137-515 y 1124-1680 (p10-p90 of long-leg endpoints), ~2.1x the outline area"
+    },
+    "status": "PROPOSED, needs compiler support (no placement_guides key in plan schema today); alternative: hard region via core floorplan"
+   }
+  ],
+  "findings": {
+   "pass_through": "sle_fw_v1 bus l9_wi (514 bit, E face y 23-112) feeds x_st_a_o (N face, 258 bit) and x_st_b_o (E face y~1247, 258 bit) with NO internal station: 1177 and 1897 um direct legs; rows append a station set (+5/+3 regs). sc pass-through (x_sc_i -> sc_eo/sc_wo): plan from_um sits at E face y6 while input bits enter at y1064-1190 -> from_um re-anchored.",
+   "sle_ctl_internal": "REAL placed nets, not density: u_ctl (345x259) and u_tap (302x130) are hard macros whose pins sit on the bottom edge (y 328/337, x 189-340 and 646-726; inputs at y~596). Plan anchors are macro centres or off the macro (u_ctl anchor (660,200) lies 137 um below the macro, u_tap anchor (440,400) vs real centre (315,393)). First hop macro pin -> station 1 = 413-581 um. Fix = re-anchor at pins (rows B), no floorplan change.",
+   "stm_core_internal": "PLACEMENT-DENSITY problem: u_stm_u_stream is a 259x380 reuse core, but its flattened cells spread over ~500x680 (4-5x outline area), so wd_q->lane_c etc run 405-598 um. Fix = soft region guide (rows C) or hard-core floorplan; not a station problem.",
+   "cland": "u_cland_*/ring hard cores sit at the face (x~17); bins are placed at core centre (x~306): cland->bin 500-540 um, and slw_st_a cland rs_s -> bin 840 um. Plan has no bin site for these (relay_sites only exists on sle_ctl). Proposal: bin sites for sc_wi/ei/rs_* adjacent to cland (needs relay_sites rows in the type); not generated, positions require cland pin data.",
+   "su_st": "su (vm8q) and st (u_r4.., btab) kits: hard SRAM/ROM macros are scattered across the die (e.g. su twb pins y 333-346, twp y 298-412, vwa y 49-60) while the lpad/pd stations sit at y~1008-1048 -> 800-1222 um. Needs per-macro station chains (macro-anchored rows B cover the conns that exist in the plan; 24 conns not in plan are skipped). Largest, not closed here.",
+   "skipped": {
+    "pass-new": 9,
+    "bin-ist": 9,
+    "macro-src": 22,
+    "macro-skip": 24,
+    "macro-dst": 16
+   }
+  }
+ }
 }
