@@ -39,7 +39,7 @@ def test_the_exact_container_of_a_cancelled_job_is_stopped_by_name_after_the_sco
     assert [c[-1].split()[0] for c in calls] == ["ot-heavy-stop", "names=$(ps"]
     cmd = calls[1][-1]
     assert "grep -F -e otrun-hub-3010423- -e '-v /srv/opentallas-scratch2/claude/kw43/items/cbn_q00/gen/cbn_q00:'" in cmd
-    assert "docker stop -t 30" in cmd and "grep -v grep" not in cmd and "dpkit-[A-Za-z0-9_.-]*" in cmd and "docker rm" not in cmd and "docker ps" not in cmd
+    assert "docker stop -t 30" in cmd and "grep -v grep" not in cmd and "dpkit-[A-Za-z0-9_.-]*" in cmd and "docker rm" not in cmd and "docker ps -a" not in cmd
 
 
 def test_the_container_stop_command_selects_only_the_named_job(tmp_path):
@@ -54,5 +54,49 @@ def test_the_container_stop_command_selects_only_the_named_job(tmp_path):
         f.chmod(0o755)
     out = subprocess.run(["bash", "-c", RUN.container_stop_cmd("otrun-hub-3010423-", "/srv/x/lane/exact/gen/t")], capture_output=True, text=True, env=dict(os.environ, PATH=str(fake) + ":" + os.environ["PATH"])).stdout
     stopped = (tmp_path / "stopped").read_text().split("\n")
+    stopped = [x for x in stopped if x.startswith("stop")]
     assert sorted(x for x in stopped if x) == ["stop -t 30 dpkit-bymount-7", "stop -t 30 dpkit-cbn_q00-2769332"] and "dpkit-keep-1" not in out
     assert "dpkit-cbn_q00-2769332" in out
+
+
+def test_a_moved_job_is_found_and_stopped_on_the_host_where_it_runs(capsys):
+    """CANCEL-MOVED-1120 (CANCEL-UNSIGNABLE-1120: REHOST / spill moved 7 of 11 jobs off the client's --hosts): the client named epyc2, the container runs on epyc9; the fleet pass stops it there and confirms"""
+    calls = []
+
+    def run(cmd, **k):
+        calls.append(cmd)
+        host = cmd[-2] if cmd[0] == "ssh" else "local"
+        text = cmd[-1]
+        if "docker stop" in text:
+            out = "containers stopped: dpkit-moved-7\n" if host == "epyc9" else "containers stopped: none\n"
+        else:
+            out = "ot-heavy-stop: 0 scope(s) stopped\n"
+        return types.SimpleNamespace(stdout=out, stderr="")
+    got = RUN.stop_started([("epyc2", "otrun-hub-555-", 555)], run=run, path="/srv/x/items/t7/attempt_3/gen/t7", fleet=["epyc2", "intel1", "epyc9", "epyc10"])
+    out = capsys.readouterr().out
+    assert ("epyc9", "containers stopped: dpkit-moved-7") in got
+    assert "epyc9 (moved job, not in the client's --hosts): containers stopped: dpkit-moved-7" in out
+    stop_hosts = [c[-2] for c in calls if c[0] == "ssh" and "docker stop" in c[-1]]
+    assert stop_hosts == ["epyc2", "intel1", "epyc9", "epyc10"]            # client host first, then every other fleet host once; the client host is not asked twice
+    assert "no running container" not in out
+
+
+def test_nothing_anywhere_is_said_and_a_container_that_survives_is_reported(capsys):
+    RUN.stop_started([("epyc2", "otrun-hub-555-", 555)], fleet=["epyc2", "epyc9"], path=None,
+                     run=lambda cmd, **k: types.SimpleNamespace(stdout="containers stopped: none\n" if "docker stop" in cmd[-1] else "x\n", stderr=""))
+    assert "no running container of this job found on any fleet host" in capsys.readouterr().out
+    cmd = RUN.container_stop_cmd("otrun-hub-555-", "/srv/x/k")
+    assert "STILL RUNNING after docker stop" in cmd and "docker ps -q -f name=^$n$" in cmd
+
+
+def test_cancel_passes_the_whole_fleet_and_the_local_host_runs_without_ssh(monkeypatch):
+    seen = {}
+    orig = RUN.stop_started
+    monkeypatch.setattr(RUN, "clients", lambda: {9: (["--hosts", "epyc2", "--dir", "/srv/x/lane", "--", "bash", "k.sh"], "/srv/x/lane")})
+    monkeypatch.setattr(RUN.os, "kill", lambda p, s: None)
+    monkeypatch.setattr(RUN, "log_signal", lambda m: None)
+    monkeypatch.setattr(RUN, "stop_started", lambda t, **k: seen.update(k))
+    assert RUN.cancel("k.sh", False) == 0 and seen["fleet"] == list(RUN.HOSTS) and "localhost" in seen["fleet"]
+    calls = []
+    orig([("epyc2", "otrun-hub-1-", 1)], fleet=["localhost"], run=lambda cmd, **k: (calls.append(cmd), types.SimpleNamespace(stdout="containers stopped: none\n", stderr=""))[1])
+    assert any(c[0] == "bash" and "docker stop" in c[-1] for c in calls)                   # localhost: direct, no ssh

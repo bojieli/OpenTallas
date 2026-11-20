@@ -1286,18 +1286,47 @@ def container_stop_cmd(tag, path=None):
     (-v <path>:/work), stopped by name with docker stop.  The docker-run line of a kit carries the whole run_kit script text ("grep -q ..."), so our own pipeline is excluded by shape (a line that starts with grep or holds this command), never by `grep -v grep`.  Prints the names, nothing when none.  Never a pattern on a lane dir: only the tag or one exact path."""
     pats = " ".join("-e " + shlex.quote(p) for p in [tag] + ([f"-v {path.rstrip('/')}:"] if path and path.startswith("/srv/") else []))
     return ("names=$(ps -eo args | grep -F " + pats + " | awk '!/^grep / && !/names=[$][(]ps/' | grep -o -- '--name dpkit-[A-Za-z0-9_.-]*' | awk '{print $2}' | sort -u); "
-            "for n in $names; do docker stop -t 30 \"$n\" >/dev/null 2>&1; done; echo \"containers stopped: ${names:-none}\"")
+            "for n in $names; do docker stop -t 30 \"$n\" >/dev/null 2>&1; done; left=; for n in $names; do [ -z \"$(docker ps -q -f name=^$n$ 2>/dev/null)\" ] || left=\"$left $n\"; done; "
+            "if [ -n \"$left\" ]; then echo \"STILL RUNNING after docker stop:$left\"; else echo \"containers stopped: ${names:-none}\"; fi")
 
 
-def stop_started(targets, run=subprocess.run, path=None):
-    """ot-heavy-stop --match M on each host (stops the scope AND its containers; matches processes by cmdline / cwd = the job's own dir), then the exact dpkit container(s) of the job by name
-    (container_stop_cmd): a sealed / isolated job whose scope the first step does not find no longer runs on after its client is gone"""
+def _host_run(run, h, cmd, timeout=180):
+    """run cmd on host h over ssh; on the local host (localhost / this node) directly"""
+    if h == "localhost" or h == socket.gethostname().split(".")[0]:
+        return run(["bash", "-c", cmd], capture_output=True, text=True, timeout=timeout)
+    return run(["ssh", "-n", "-o", "BatchMode=yes", "-o", "ConnectTimeout=10", h, cmd], capture_output=True, text=True, timeout=timeout)
+
+
+def stop_started(targets, run=subprocess.run, path=None, fleet=()):
+    """ot-heavy-stop --match M on each of the client's hosts (stops the scope AND its containers; matches processes by cmdline / cwd = the job's own dir), then the exact dpkit container(s) of the job by name
+    (container_stop_cmd): a sealed / isolated job whose scope the first step does not find no longer runs on after its client is gone.
+    CANCEL-MOVED-1120 (COORD, CANCEL-UNSIGNABLE-1120: 7 of 11 cancels left the container running): a job moved by REHOST / spill runs on a host the client's --hosts list does not name.  The container step
+    therefore also runs on EVERY other fleet host (the tag and the exact kit mount identify the job wherever it runs) and every step prints its confirmation (containers stopped: <names> | none |
+    STILL RUNNING after docker stop).  -> [(host, confirmation line)]"""
+    stopped = []
+    tags = []
     for h, m, *_ in targets:
-        r = run(["ssh", "-n", "-o", "BatchMode=yes", "-o", "ConnectTimeout=10", h, "ot-heavy-stop --match " + shlex.quote(m)], capture_output=True, text=True, timeout=180)
+        r = _host_run(run, h, "ot-heavy-stop --match " + shlex.quote(m))
         print(f"ot-run --cancel: {h}: ot-heavy-stop --match {m}: " + ((r.stdout or r.stderr).strip().splitlines() or ["no output"])[-1][:160])
         if m.startswith("otrun-"):
-            r2 = run(["ssh", "-n", "-o", "BatchMode=yes", "-o", "ConnectTimeout=10", h, container_stop_cmd(m, path)], capture_output=True, text=True, timeout=180)
-            print(f"ot-run --cancel: {h}: " + ((r2.stdout or r2.stderr).strip().splitlines() or ["no output"])[-1][:200])
+            tags.append(m)
+            r2 = _host_run(run, h, container_stop_cmd(m, path))
+            line = ((r2.stdout or r2.stderr).strip().splitlines() or ["no output"])[-1][:200]
+            print(f"ot-run --cancel: {h}: " + line)
+            stopped.append((h, line))
+    done = {t[0] for t in targets}
+    for h in fleet:
+        if h in done or not tags:
+            continue
+        for m in dict.fromkeys(tags):
+            r = _host_run(run, h, container_stop_cmd(m, path))
+            line = ((r.stdout or r.stderr).strip().splitlines() or ["no output"])[-1][:200]
+            if "none" not in line:
+                print(f"ot-run --cancel: {h} (moved job, not in the client's --hosts): " + line)
+                stopped.append((h, line))
+    if tags and not any("containers stopped:" in l and "none" not in l for _h, l in stopped):
+        print("ot-run --cancel: no running container of this job found on any fleet host (already gone, or it never started)")
+    return stopped
 
 
 def cancel(sub, all_dirs):
@@ -1324,7 +1353,7 @@ def cancel(sub, all_dirs):
     print(f"ot-run --cancel: SIGTERM sent to {len(hit)} client(s); waiters are cancelled on their hosts")
     if not os.environ.get("OT_RUN_CANCEL_KEEP_STARTED"):
         try:
-            stop_started(stop_targets(hit, sub, [h for h in HOSTS if h != "localhost"]), path=sub if sub.startswith("/srv/") else None)
+            stop_started(stop_targets(hit, sub, [h for h in HOSTS if h != "localhost"]), path=sub if sub.startswith("/srv/") else None, fleet=list(HOSTS))
         except Exception as e:                 # the cancel itself already happened
             print(f"ot-run --cancel: stopping started jobs failed: {type(e).__name__}: {e}")
     log_signal(f"--cancel {sub!r} by pid {os.getpid()} parent {sender(os.getppid())}: {sorted(hit)}")
