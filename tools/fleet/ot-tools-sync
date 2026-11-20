@@ -377,16 +377,15 @@ def materialize(full):
     if d.is_dir() and ok.is_file():
         return d
     RT.mkdir(parents=True, exist_ok=True)
-    _mlock = materialize_lock(name)                        # held until this function returns (the file object stays referenced)
-    if d.is_dir() and ok.is_file():                        # the other builder finished while we waited
-        return d
-    RT.mkdir(parents=True, exist_ok=True)
     fg = free_gb(RT)
     if fg < MIN_FREE_GB:
         pruned = prune_snapshots(RT, protect=(current() or "",))          # make room by dropping the oldest unused snapshots first
         fg = free_gb(RT)
         if fg < MIN_FREE_GB:
             raise RuntimeError(f"{RT}: {fg:.0f} GB free < {MIN_FREE_GB:g} GB (OT_RT_MIN_FREE_GB); nothing written (pruned {len(pruned)})")
+    _mlock = materialize_lock(name)                        # held until this function returns; after the disk check so a refused write leaves RT untouched
+    if d.is_dir() and ok.is_file():                        # the other builder finished while we waited
+        return d
     if d.exists():                                         # a partial earlier attempt (no manifest): rebuild it if unused
         if set_aside_partial(d) is None:
             run(["git", "worktree", "remove", "--force", str(d)], cwd=REPO)
