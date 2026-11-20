@@ -763,3 +763,4 @@
 - 2026-11-20 00:15 PST ALERT [AUTO-CLEAN -> FLEET-OPS-R, COORD] epyc9: the automatic cleanup timer has not completed a pass for 110 min (limit 90 min): check `systemctl --user status ot-auto-clean.timer` on epyc9
 - 2026-11-20 00:30 PST DISK-RATE intel1 /srv/opentallas-scratch2: free 213 GB, falling 43 GB/h, floor 50 GB in 3.8 h (cron disk_rate.py; read-only)
 - 2026-11-20 00:53 PST ALERT [OT-TOOLS-SYNC -> COORD] runtime sync FAILED, rt/current stays 10160edf3b96: exit 4 (see /home/ubuntu/merge-queue/log)
+- 2026-11-20 00:53 PST ALERT [OT-TOOLS-SYNC -> COORD] runtime sync FAILED, rt/current stays 10160edf3b96: exit 4 (see /home/ubuntu/merge-queue/log)
