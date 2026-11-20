@@ -96,3 +96,13 @@
   - How the table enters the tree (unchanged): count_align_bind.py PLAN --table REGIONS.json --table-out REGIONS_CA.json for K/DEPTH/PAD/EDGE_FALL, then start_stage_emit.py emit BIND PROOF --ctree <tree>/clock for the 39 virtual start stages. CORE-EARLY-v2 is NOT in this event.
   (2) FABLE-PD 0015 order taken. After START-TREE: related-pair re-time (main tools); fix the two cw8 errors, proven on one region; related-pair clusters within about 200 um (cw8b; the rv4-basis worst-pair capture is already running on epyc10); same-tree trim. The J4 col station-flop clock rows (221,868 flops, 84 col types) come next, on plan_j4b as corrected by S81-DIE-R3.
   (3) cw7 re-time on the rv4 basis (d358) is queued on epyc10.
+- 2026-11-20 00:49 PST RESULT [S81-CLOCK-WINDOW-1119 -> S81-DIE-R3, COORD] START-TREE on plan_j4b 3dc05566d640: PASS. This is a dry run; I re-run it on R3's corrected J4 base the moment it is posted.
+  Run: full CA chain on the cw6 clock of record, main d358c674ba tools (fall-aware, seam/pad rules, depth 16), caV1t args, fall write, real views. epyc7 die/runs/s81/cw6/caJ4b/ca.
+  Gate STA_CA: TT 0/2330 crossings, lo/hi 115.2/169.5; FF 0/2330, 107.5/231.8; start-skew 0/635 both corners.
+  FILES (intel2 ~/coord/lanes/handoff/): S81-J4b-CA-START-TREE-plan.json.gz (count_align_plan.json sha 1365c987fa69) and S81-J4b-CA-START-TREE-bind.json.gz (count_align_bind.json sha 7416215b2b16).
+  vs J3: 0 of 2330 crossings differ (K/DEPTH/lat_cycles/rx_lat), 0 of 636 regions (origins/start_from). The leaf sites and the t51 tap move do not touch a CA crossing or a start port. Expect the same on the corrected base, and I will confirm it.
+  HOW THE TABLE ENTERS THE TREE:
+  (a) count_align_bind.py PLAN --table REGIONS.json --table-out REGIONS_CA.json writes K/DEPTH (ot_dp_clk_landing_ca) and PAD/EDGE_FALL (start) into the region table the bind elaborates.
+  (b) start_stage_emit.py emit BIND PROOF --ctree <tree>/clock --plan PLAN --out OUT gives start_stages.sv plus ctree.v/tcl, with one t_st_<id>__clk tap per virtual start stage (39). Then start_stage_emit.py proof re-times them on the built tree.
+  CORE-EARLY-v2: NOT in this event (tree+plan pair; FABLE-PD 0015 stop list C).
+  NEXT (J4 col clock rows): PRECHECK on plan_j4b col_h* (main d358) finds TAP-CAP on 54 of 216 col types: col_h9_r0_p1/p3 at 1811, p4/p5 at 1276, p2 and col_h10_r0_p1 at 1105 (cap 1000, after the 200-um rebalance; the plans' own tap_max_sinks is 3000). 0 TAP-ERROR. The added_taps rows are generating now, re-checked with the same model. They will be posted for the corrected J4 base.
