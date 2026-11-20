@@ -88,3 +88,10 @@ All relaunch after the 405 reach override (lever 1) lands for D8i.
   - s81-svc-h8-j6-manifest-delta-1120.json (svc hslice dissolve + ties; R7 pending)
   - the FABLE-PD-S81-1100 ranked list (items 1-8)
   - item 9 above
+
+## 11-20 13:3x COORD / FABLE-CLOSURE-1315 (J6 additions)
+- (a) Core-pin stages on the worst wires of the held leaf kits: t60, t57, t43, kv_leaf t1/t4. First confirm whether the J5/J6 rows already station those hops (check the J5 bound relay rows plus the S81-LEAF-SPREAD-J6.json rows).
+- (b) Slice C finish leg D=3 is required: no slice C build without those stages (check that S81-SLICEC-R3-J6-rows.json carries it).
+- (c) Pipeline the cland START and the reset relay at 300 um. Leaf t72/t8/t56 are limited by single-bit cland_start / reset-relay nets through 13-26 buffers. Added to the relay-tool helper scope (in-type legs listed as J6 row data).
+- (d) lepe row 4 plus the land.tag item.
+- STOP: no release or cancel call from a post-place WNS when the worst slew is over ~1 ns; CORE-LIB-LIMITS-1330 is testing core-pin transition limits. This applies to the t7 GRT read too: judge it on GRT overflow and routed numbers, not post-place WNS.
