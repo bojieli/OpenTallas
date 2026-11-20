@@ -66,7 +66,7 @@ def test_apply_is_optimistic_commits_starts_the_advisory_gate_and_posts(tmp_path
     def run(argv, **k):
         calls.append(argv)
         return types.SimpleNamespace(returncode=0, stdout="", stderr="")
-    a = types.SimpleNamespace(coord=str(c), candidate=str(cand), expect_source="/x/old", expect_event="E0", lane="QC-PLAN-R3", pilot_item=None, no_gate=False)
+    a = types.SimpleNamespace(coord=str(c), candidate=str(cand), expect_source="/x/old", expect_event="E0", lane="QC-PLAN-R3", pilot_item=None, no_gate=False, skip_out_check=True)
     assert PA.cmd_apply(a, run=run, apply_fn=apply_fn, commit_fn=lambda C, r: "ok") == 0
     assert seen["optimistic"] is True and seen["obj"]["optimistic"] is True
     gate = [x for x in calls if x[0] == "systemd-run"][0]
@@ -212,7 +212,7 @@ def test_apply_starts_the_post_apply_bind_in_a_copy_and_names_it(tmp_path):
         rcpt.write_text("{}")
         return {"applied": "s81", "event": "D8f", "source": str(t), "receipt": str(rcpt), "warnings": [], "gen_hosts": ["epyc8"]}
     a = types.SimpleNamespace(coord=str(c), candidate=str(cand), expect_source="/x/old", expect_event="E0", lane="S81-DIE-R3", pilot_item=None,
-                              no_gate=True, skip_bind_check=True)
+                              no_gate=True, skip_bind_check=True, skip_out_check=True)
     orig = PA.start_postbind
     PA.start_postbind = lambda C, obj, lane, die, run=None: orig(C, obj, lane, die, run=run, stamp="1118", log_dir=str(tmp_path / "pb"))
     try:
@@ -362,7 +362,7 @@ def _bf_setup(tmp_path):
 def test_bind_first_switches_tree_with_the_new_bind_and_bind_fails_only_the_stale_types(tmp_path):
     c, cand, seen, apply_fn = _bf_setup(tmp_path)
     calls, order = [], []
-    a = types.SimpleNamespace(coord=str(c), candidate=str(cand), expect_source="/x/old", expect_event="E0", lane="S81-DIE-R3", pilot_item=None, no_gate=True, no_precheck=True)
+    a = types.SimpleNamespace(coord=str(c), candidate=str(cand), expect_source="/x/old", expect_event="E0", lane="S81-DIE-R3", pilot_item=None, no_gate=True, no_precheck=True, skip_out_check=True)
     checks = iter([(False, "bind /x/oldbind does not match", ["t1", "t2"]), (False, "new bind: 1 type differs", ["t7"])])
     a.bind_check_fn = lambda o, run=None: next(checks)
     a.bind_first_fn = lambda C, o, lane, die, run=None, **k: (order.append("bind") or ("/x/new_bind_0101", "bind-first ok", []))
@@ -385,7 +385,7 @@ def test_bind_first_switches_tree_with_the_new_bind_and_bind_fails_only_the_stal
 
 def test_bind_first_without_bind_output_refuses_and_leaves_the_old_tree(tmp_path):
     c, cand, seen, apply_fn = _bf_setup(tmp_path)
-    a = types.SimpleNamespace(coord=str(c), candidate=str(cand), expect_source="/x/old", expect_event="E0", lane="L", pilot_item=None, no_gate=True, no_precheck=True)
+    a = types.SimpleNamespace(coord=str(c), candidate=str(cand), expect_source="/x/old", expect_event="E0", lane="L", pilot_item=None, no_gate=True, no_precheck=True, skip_out_check=True)
     a.bind_check_fn = lambda o, run=None: (False, "stale", ["t1"])
     a.bind_first_fn = lambda C, o, lane, die, run=None, **k: ("", "bind-first: no bind output", ["svc_a"])
     assert PA.cmd_apply(a, run=lambda *x, **k: types.SimpleNamespace(returncode=0, stdout="", stderr=""), apply_fn=apply_fn, commit_fn=lambda C, r: "ok") == 4
@@ -395,10 +395,10 @@ def test_bind_first_without_bind_output_refuses_and_leaves_the_old_tree(tmp_path
 def test_no_bind_first_keeps_the_old_refusal_and_a_matching_bind_applies_directly(tmp_path):
     c, cand, seen, apply_fn = _bf_setup(tmp_path)
     run = lambda *x, **k: types.SimpleNamespace(returncode=0, stdout="", stderr="")
-    a = types.SimpleNamespace(coord=str(c), candidate=str(cand), expect_source="/x/old", expect_event="E0", lane="L", pilot_item=None, no_gate=True, no_precheck=True, no_bind_first=True)
+    a = types.SimpleNamespace(coord=str(c), candidate=str(cand), expect_source="/x/old", expect_event="E0", lane="L", pilot_item=None, no_gate=True, no_precheck=True, no_bind_first=True, skip_out_check=True)
     a.bind_check_fn = lambda o, run=None: (False, "stale", ["t1"])
     assert PA.cmd_apply(a, run=run, apply_fn=apply_fn, commit_fn=lambda C, r: "ok") == 4
-    b = types.SimpleNamespace(coord=str(c), candidate=str(cand), expect_source="/x/old", expect_event="E0", lane="L", pilot_item=None, no_gate=True, no_precheck=True)
+    b = types.SimpleNamespace(coord=str(c), candidate=str(cand), expect_source="/x/old", expect_event="E0", lane="L", pilot_item=None, no_gate=True, no_precheck=True, skip_out_check=True)
     b.bind_check_fn = lambda o, run=None: (True, "matches", [])
     b.bind_first_fn = lambda *x, **k: (_ for _ in ()).throw(AssertionError("bind-first must not run when the bind matches"))
     assert PA.cmd_apply(b, run=run, apply_fn=apply_fn, commit_fn=lambda C, r: "ok") == 0
@@ -442,3 +442,79 @@ def test_bind_env_passes_the_die_bind_env_and_bind_first_has_no_fixed_wall_cap(t
         return types.SimpleNamespace(returncode=0, stdout="", stderr="")
     PA.bind_first(tmp_path, cand, "L", "s81", run=fake, host="epyc8", stamp="1", log_dir=tmp_path / "ld")
     assert seen["timeout"] is None and "BIND-NO-PROGRESS" in seen["body"] and "kill $pid" in seen["body"]
+
+
+def _local_ssh(calls=None):
+    """run the ssh'd probe command on this machine (the last argv element is the remote command)"""
+    import subprocess
+
+    def run(argv, **k):
+        if calls is not None:
+            calls.append(argv)
+        r = subprocess.run(["bash", "-c", argv[-1]], capture_output=True, text=True, timeout=120)
+        return types.SimpleNamespace(returncode=r.returncode, stdout=r.stdout, stderr=r.stderr)
+    return run
+
+
+def _bind_dirs(tmp_path, stale=True):
+    import os
+    t = tmp_path / "T"; sealed = tmp_path / "sealed_bind"
+    out = t / "physical/die_plan/s81/plan_of_record/native_bind/out"
+    for d, tag in ((sealed, "SEALED"), (out, "STALE")):
+        (d / "rtl").mkdir(parents=True)
+        for m in ("m1", "m2", "m3"):
+            (d / "rtl" / f"{m}.sv").write_text(f"module {m}; // {tag if (d == out and m != 'm3' and stale) else 'SEALED'}\nendmodule\n")
+        (d / "bind_report.json").write_text('{"tag": "%s"}' % ("OLD" if d == out and stale else "SEALED"))
+    for p in (out / "rtl", out):
+        os.chmod(p, 0o555)                                   # the base copy is sealed read-only, as publish leaves it
+    return t, sealed, out
+
+
+def test_out_sync_installs_the_sealed_bind_into_the_trees_out_and_verifies_the_hashes(tmp_path):
+    """FLOW-FIX-2045 (S81-DIE-R3: the applied D8i tree served 343 of 397 stale modules): the apply installs the sealed bind into <tree>/.../native_bind/out on every publish host and verifies"""
+    import hashlib
+    t, sealed, out = _bind_dirs(tmp_path)
+    obj = {"die": "s81", "marker": {"die": "s81", "tree": str(t), "plan": str(t / "p.json"), "config": {"gen_hosts": ["h1"], "kit_rtl": {"mode": "bind", "bind_out": str(sealed), "asbuilt": ""}}}}
+    ok, lines = PA.out_sync(obj, run=_local_ssh())
+    _chmod_back(tmp_path)
+    assert ok is True and "out == sealed bind" in lines[0] and "(installed)" in lines[0], lines
+    h = lambda p: hashlib.sha256(p.read_bytes()).hexdigest()
+    assert all(h(out / "rtl" / f"{m}.sv") == h(sealed / "rtl" / f"{m}.sv") for m in ("m1", "m2", "m3")) and h(out / "bind_report.json") == h(sealed / "bind_report.json")
+    ok2, lines2 = PA.out_sync(obj, run=_local_ssh())                       # already equal: verified, nothing installed
+    assert ok2 is True and "(installed)" not in lines2[0]
+
+
+def test_out_sync_refuses_when_the_sealed_bind_is_missing_or_a_host_does_not_answer(tmp_path):
+    t, sealed, out = _bind_dirs(tmp_path)
+    import shutil
+    obj = {"die": "s81", "marker": {"die": "s81", "tree": str(t), "plan": str(t / "p.json"), "config": {"gen_hosts": ["h1"], "kit_rtl": {"mode": "bind", "bind_out": str(tmp_path / "gone"), "asbuilt": ""}}}}
+    ok, lines = PA.out_sync(obj, run=_local_ssh())
+    _chmod_back(tmp_path)
+    assert ok is False and "no-sealed" in lines[0]
+    obj["marker"]["config"]["kit_rtl"]["bind_out"] = str(sealed)
+    ok, lines = PA.out_sync(obj, run=lambda argv, **k: types.SimpleNamespace(returncode=255, stdout="", stderr="ssh: down"))
+    assert ok is False and "no answer" in lines[0]
+    obj["marker"]["tree"] = str(tmp_path / "no_tree_here")
+    ok, lines = PA.out_sync(obj, run=_local_ssh())
+    assert ok is True and "no tree here" in lines[0]                         # a host without the tree is skipped, not a failure
+
+
+def test_a_kit_that_reads_the_trees_own_out_needs_no_install(tmp_path):
+    t = tmp_path / "T"
+    out = t / "physical/die_plan/s81/plan_of_record/native_bind/out"
+    obj = {"die": "s81", "marker": {"die": "s81", "tree": str(t), "plan": "p", "config": {"gen_hosts": ["h1"], "kit_rtl": {"mode": "bind", "bind_out": str(out)}}}}
+    assert PA.out_sync(obj, run=_local_ssh())[0] is None
+    assert PA.out_sync({"die": "s81", "marker": {"tree": str(t), "config": {"kit_rtl": {"mode": "off"}}}})[0] is None
+
+
+def test_apply_refuses_the_event_commit_when_the_out_cannot_be_synced(tmp_path, capsys):
+    c = coord(tmp_path)
+    t = tmp_path / "T"
+    cand = tmp_path / "cand.json"
+    cand.write_text(json.dumps(bind_candidate(t)))
+    committed = []
+    a = types.SimpleNamespace(coord=str(c), candidate=str(cand), expect_source="/x/old", expect_event="E0", lane="S81-DIE-R3", pilot_item=None, no_gate=True, no_precheck=True,
+                              skip_bind_check=True, out_sync_fn=lambda o, run=None: (False, ["epyc8: differs sealed=397 out=397 differing files=343"]))
+    rc = PA.cmd_apply(a, run=_local_ssh(), apply_fn=lambda *x, **k: committed.append("apply") or {}, commit_fn=lambda *x: committed.append("commit"))
+    out = capsys.readouterr().out
+    assert rc == 5 and committed == [] and "OUT-SYNC epyc8: differs" in out and "APPLY REFUSED" in out
