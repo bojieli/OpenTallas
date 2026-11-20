@@ -96,7 +96,7 @@ def test_grt_replays_constraints_and_restores_scope_before_output(tmp_path):
     assert 'define_scene TC -mode tt' in t and 'define_scene BC -mode ff' in t
     assert 'ot_mm_active' not in t
     assert 'estimate_parasitics -placement' not in t
-    assert t.index('ot_grt_pg_replay_begin $pg_grt_dir') < t.index('global_route -start_incremental') < t.index('repair_timing -hold')
+    assert t.index('ot_grt_pg_replay_begin $pg_grt_dir') < t.index('global_route -start_incremental') < t.index('pg_repair_hold $pg_tag')
     assert t.index('global_route -end_incremental\n  ot_grt_pg_replay_end') < t.index('  pg_refresh_rc', t.index('set pg_legal negotiation'))
     assert 'global_route -end_incremental -allow_congestion' not in t
     assert t.index('catch {pg_scope_end}') < t.index('pg_classes after $pg_open') < t.index('write_guides $pg_guide') < t.index('write_db $::env(ODB).pg_tmp')
