@@ -39,6 +39,13 @@ class InUse(unittest.TestCase):
         self.assertTrue(ar.post_text_hit("/srv/s/claude/s81-die-r3-e8/tools", "- handoff: build uses /srv/s/claude/s81-die-r3-e8/tools/bin/x\n"))
         self.assertFalse(ar.post_text_hit("/srv/s/claude/s81-die-r3-e8/tools", "- other lane /srv/s/claude/s81-die-r3-e9/tools\n"))
 
+    def test_child_of_a_named_lane_dir_is_refused(self):
+        posts = "- RESULT build in /srv/s/claude/kv-d23-compose8 (W/x)\n"
+        self.assertTrue(ar.post_text_hit("/srv/s/claude/kv-d23-compose8/gatein", posts))
+        self.assertTrue(ar.post_text_hit("/srv/s/claude/kv-d23-compose8", posts))
+        self.assertFalse(ar.post_text_hit("/srv/s/claude/kv-d23-compose9/gatein", posts))
+        self.assertFalse(ar.post_text_hit("/srv/s/claude/kv-d23-compose8x/gatein", posts))
+
     def test_runner_adds_handoffs_to_the_posts_input(self):
         sh = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "ot-auto-retire-run.sh")).read()
         self.assertGreaterEqual(sh.count("lanes/handoff"), 2)

@@ -261,8 +261,13 @@ def record_ref_hit(path, refs):
 
 
 def post_text_hit(path, posts):
-    """a lane tree named in a hub post of the last 24 h (the posts file is built by the hub driver) is in use by somebody"""
-    return bool(posts) and re.search(re.escape(path.rstrip("/")) + r"(?![A-Za-z0-9_.-])", posts) is not None
+    """a lane tree named in a hub post of the last 24 h (the posts file is built by the hub driver) is in use by somebody.  A tree whose ENCLOSING
+    lane dir (<claude>/<lane>) is named counts too: KV-D23-COMPOSE gatein/ was deleted while its lane dir was named (11-19)."""
+    if not posts:
+        return False
+    parts = path.rstrip("/").split("/")
+    cands = ["/".join(parts[:i]) for i in range(len(parts), 1, -1) if "claude" in parts[:i - 1]] or ["/".join(parts)]
+    return any(re.search(re.escape(c) + r"(?![A-Za-z0-9_.-])", posts) for c in cands)
 
 
 class LiveRefs:
