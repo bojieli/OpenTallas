@@ -13965,3 +13965,4 @@ FAILED [AUTOPILOT f100e96d18d5] 2026-11-20 11:27:17 PST AUTOPILOT -> KIT-WAVE-3:
   col_h9_r0_p5 (12): GRT 2 TT worst -33.2 median -33.2; CTS FF hold after CORETAP 11: worst -88.4 median -62.5; sign-off runs 0, SIGNED 0; 6 stopped without signoff; old plan -196 (rst CTS)
   col_h9_r1 (60): GRT 23 TT worst -61.6 median -46.7; CTS FF hold after CORETAP 49: worst -120.2 median -58.2; sign-off runs 6, SIGNED 0, routed TT worst -114.4, FF worst -164.1, DRC max 0; 29 stopped without signoff; old plan -181
   Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
+- 2026-11-20 11:36 PST ALERT STUCK-STATE s81: 1 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. slice_station__t48, 2026-11-19 13:08)
