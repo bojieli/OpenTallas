@@ -79,7 +79,7 @@ while :; do
   [ -f "${OT_HEAVY_CONF:-/etc/ot-heavy.conf}" ] && . "${OT_HEAVY_CONF:-/etc/ot-heavy.conf}"   # v5: every attempt, so a headroom change reaches queued waiters
   if ! ot_heavy_admit_lock; then
     if [[ "$MAXWAIT" =~ ^[0-9]+$ ]] && [ "$(( $(date +%s) - T0 ))" -ge "$MAXWAIT" ]; then
-      echo "ot-heavy: NOT RUN: admission lock busy on $(hostname) within ${MAXWAIT} s: $*" >&2
+      echo "ot-heavy: NOT RUN: admission lock busy on $(hostname) within ${MAXWAIT} s" >&2
       exit 75
     fi
     [ "$waited" = 0 ] && echo "ot-heavy: waiting for admission lock on $(hostname)" >&2
@@ -334,7 +334,7 @@ while :; do
   case "$WHY" in "load cap:"*|"load gate:"*) _wf=load;; "short pool:"*) _wf=short-slot;; *) _wf=memory;; esac
   [ $waited = 0 ] && echo "ot-heavy: waiting for $_wf on $(hostname): $WHY" >&2
   waited=1
-  case "$MAXWAIT" in ''|*[!0-9]*) ;; *) [ $(( $(date +%s) - T0 )) -ge "$MAXWAIT" ] && { echo "ot-heavy: NOT RUN: no memory on $(hostname) within ${MAXWAIT} s ($WHY): $*" >&2; exit 75; };; esac
+  case "$MAXWAIT" in ''|*[!0-9]*) ;; *) [ $(( $(date +%s) - T0 )) -ge "$MAXWAIT" ] && { echo "ot-heavy: NOT RUN: no memory on $(hostname) within ${MAXWAIT} s ($WHY)" >&2; exit 75; };; esac
   if [ "${OT_HEAVY_PRIO:-}" = die ]; then sleep 5; else sleep 20; fi   # v11: a die waiter re-tries first (DIE-FIRST v2 = order)
 done
-echo "ot-heavy: NOT RUN: internal error, admission loop ended: $*" >&2; exit 70   # unreachable; never fall off the end with 0
+echo "ot-heavy: NOT RUN: internal error, admission loop ended" >&2; exit 70   # unreachable; never fall off the end with 0

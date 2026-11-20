@@ -3781,7 +3781,7 @@ RULES = [
     # OOMKILL_1114 (OWNER 11-14 19:00, Fable fix 3): a host OOM victim (earlyoom SIGTERM -> make 'Error 241', SIGKILL -> 'Error 247', rc 137 / 143, 'exit -15') is booked
     # as OOM, not as the exit 2 make prints last; class INFRA, so the free INFRA retry (KILL_RE: 'earlyoom') relaunches it on another host
     ("INFRA", None, r"\] Error 24[17]\b|\bearlyoom\b|\brc[ =]+1(?:37|43)\b|\bexit -(?:9|15)\b|\bterminated by signal (?:9|15)\b", "OOM (host earlyoom SIGTERM/SIGKILL victim, make Error 241/247 / rc 137/143: not a design result, auto-retried as INFRA)"),
-    ("INFRA", None, r"ot-run: NOT RUN|ot-job: NOT RUN: input [^\n]*not in the store, not on this host|ot-run: NOT COMPLETED|exit 1(?:37|43)\b|Out of memory|oom-kill|OOMKilled|"
+    ("INFRA", None, r"(?:ot-run|ot-heavy): NOT RUN|ot-job: NOT RUN: input [^\n]*not in the store, not on this host|ot-run: NOT COMPLETED|exit 1(?:37|43)\b|Out of memory|oom-kill|OOMKilled|"
                     r"No space left on device|rsync error|Cannot connect to the Docker daemon|"
                     r"yosys elaboration failed rc[ =]+1(?:25|37|43)\b|"
                     # FIX-YOSYS 11-14: gen_lint yosys "elaboration failed rc 143" = earlyoom SIGTERM (epyc9 10:51 UTC, intel1; yosys RSS 1.3-11 GB at 3 % avail), was RTL
@@ -3943,7 +3943,7 @@ def guide_divergence_hit(text):
 
 
 ERROR_LINE = re.compile(r"Traceback \(most recent|^\w*(?:Error|Exception)\b|Error[: ]|ERROR|FAIL|KitError|S81_KIT_RTL|"
-                        r"ot-run: NOT (?:RUN|COMPLETED)|Connection (?:reset|refused|closed)|kex_exchange|exit 137\b")
+                        r"(?:ot-run|ot-heavy): NOT (?:RUN|COMPLETED)|Connection (?:reset|refused|closed)|kex_exchange|exit 137\b")
 
 
 def preflight_advisory(text):
@@ -3980,14 +3980,15 @@ def error_lines(text, n=16):
     """the last n error-looking lines of a whole stage log: classify() reads these first, so a long log whose decisive
     line (a Python exception, FACE_GUARD FAIL) sits before the kept tail is still classified (AUTOBUILD-PIPE-1 10-30:
     13 'unclassified' gen/kit_rtl FAILs had their ValueError > 3000 chars before the end of the log)"""
-    out = [ln.strip()[:600] for ln in (text or "").splitlines() if ERROR_LINE.search(ln)]
+    clean = drop_superseded_tries(strip_admission(text))
+    out = [ln.strip()[:600] for ln in clean.splitlines() if ERROR_LINE.search(ln)]
     return "\n".join(out[-n:])
 
 
 # ot-run / ot-heavy admission and progress chatter: never the item's error (KIT-TRIAGE-1/G26 11-01: reasons read
 # 'd on key-cardinal as oth-ubuntu-302855-... after 1 s Traceback ...' and hid the exception).  'RAN on ... exit N',
 # 'NOT RUN', 'NOT COMPLETED' and 'SSH probe exit 255' stay: the INFRA rules read them.
-ADMISSION = re.compile(r"^\s*(?:ot-run: (?:\S+\s+admits\b|-> |waiting\b|queued\b|wait\b)|"
+ADMISSION = re.compile(r"^\s*(?:ot-run: (?:\S+\s+admits\b|-> |waiting\b|queued\b|wait\b|REBALANCE:)|"
                        r"ot-heavy: (?:admitted|request|waiting|queued|charged|wait)\b|KW_SSH_RETRY\b|"
                        # OWNER 11-03: an advisory check is never the item's error (KW6-CLASS 11-04: "pins_canonical check
                        # could not run: ModuleNotFoundError" hid a place failure on 3 rows)
@@ -4011,9 +4012,19 @@ API_SKEW = re.compile(r"TypeError: \S+\(\) (?:takes|got an unexpected|missing \d
 ID_PARAM = re.compile(r"(?:_id|_tid|sidx|map_lane_j)$")
 
 
+# Older ot-heavy echoed the refused command, including multiline shell scripts. Its next launcher record
+# marks the end of that echo; the command did not run, so anything inside is source text, not output.
+ADMISSION_COMMAND_ECHO = re.compile(
+    r"^(ot-heavy: NOT RUN: (?:admission lock busy on \S+ within \d+ s|"
+    r"no memory on \S+ within \d+ s \([^\n]*?\))): .*?(?=^(?:(?:ot-run|ot-heavy): |KW_SSH_RETRY )|\Z)",
+    re.M | re.S,
+)
+
+
 def strip_admission(text):
-    """the log without ot-run/ot-heavy admission/progress lines (classification + reasons read this)"""
-    return "\n".join(ln for ln in (text or "").splitlines() if not ADMISSION.search(ln))
+    """Discard admission chatter and command echoes while preserving terminal refusal records."""
+    clean = ADMISSION_COMMAND_ECHO.sub(r"\1\n", text or "")
+    return "\n".join(ln for ln in clean.splitlines() if not ADMISSION.search(ln))
 
 
 # KW43-77 11-10: a try that was NOT RUN (admission refused: 'ot-heavy: NOT RUN ...', 'ot-run: NOT RUN on epyc2: ot-heavy
@@ -8171,7 +8182,8 @@ def run_item(spec_path):
         return argv
 
     def fail(stage, txt, evidence=""):
-        res.update(stage=stage, verdict="FAIL", tail=txt[-3000:], errors=error_lines(txt), evidence=evidence or f"{G}:{W}")
+        recorded = strip_admission(txt)
+        res.update(stage=stage, verdict="FAIL", tail=recorded[-3000:], errors=error_lines(recorded), evidence=evidence or f"{G}:{W}")
         (out / "result.json").write_text(json.dumps(res, indent=1))
         return 1
 
@@ -12839,7 +12851,16 @@ def _collect_body(AP, cfg, st, notices):
             notices.setdefault(rec["die"], []).append(f"{rec['item']}@{rec.get('attempt')} STOPPED-HELD ({_hold[:120]})")
             AP.log(f"KIT-WAVE STOPPED-HELD {rec['die']}/{rec['item']}@{rec.get('attempt')}: {_hold[:200]}")
             continue
-        cls, why = classify(res.get("stage", ""), (res.get("errors") or "") + "\n" + (res.get("tail") or ""))
+        stage = res.get("stage") or ""
+        cls, why = classify(stage, (res.get("errors") or "") + "\n" + (res.get("tail") or ""))
+        if cls == "UNCLASSIFIED" and not res.get("class") and stage not in RESULT_ONLY_STAGES:
+            # Older in-flight workers can write a shortened result that lost the decisive stage output.
+            try:
+                full = (jd / f"{stage}.log").read_text(errors="replace")
+            except OSError:
+                full = ""
+            if full:
+                cls, why = classify(stage, full)
         if res.get("class"):                             # KW-RESUME-1 'nochange': the previous attempt's class stands
             cls, why = res["class"], (res.get("reason") or why)
         if cls == "FLOW" and why.startswith(HOST_GAP_WHY):
