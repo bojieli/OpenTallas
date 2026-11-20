@@ -1494,6 +1494,86 @@ def parse_edge_pad(items, typ=int):
     return out
 
 
+PAD_STRAP_MAX = 15      # r8.STRAP_PAD_MAX: default 4-bit pad-count strap
+
+
+def seam_pad_inputs(die_plan, pad_capacity=PAD_STRAP_MAX, extra_groups=None):
+    """KV-CROSSING-1119 (COORD 11-20): the two bind rules a fall-aware re-plan can break, read from the die plan.
+    groups: [[port, ...]] = every port of a plan latency_groups[] member lane (lane L<n> owns ports L<n>_<k> / L<n>) plus
+            extra_groups; the members of a group must keep ONE common latency (seam groups shift equally).
+    floor:  {port: lat} = declared count_aligned_cycles - (pad_capacity - the lane's declared pad): a lane may not be
+            shortened past the headroom of its pad strap (a shortened landing makes the R8 pad of the lane longer).
+    -> (groups, floor); both empty for a plan that declares neither."""
+    lg = die_plan.get("latency_groups") or []
+    lanes = (die_plan.get("latency") or {}).get("lanes") or {}
+    base = (((die_plan.get("clock") or {}).get("landing_network") or {}).get("count_aligned_cycles")) or {}
+    by_lane = defaultdict(list)
+    for p in base:
+        by_lane[p.split("_")[0]].append(p)
+    groups = []
+    for g in lg:
+        ports = sorted({p for ln in g.get("lanes", []) for p in by_lane.get(ln, [])})
+        if len(ports) > 1:
+            groups.append(ports)
+    groups += [sorted(g) for g in (extra_groups or []) if len(g) > 1]
+    floor = {}
+    if lanes or lg:
+        for p, lat in base.items():
+            pad = int((lanes.get(p.split("_")[0]) or {}).get("pad", 0) or 0)
+            floor[p] = int(lat) - max(0, pad_capacity - pad)
+    return groups, floor
+
+
+def seam_pad_rules(out, groups, floor, T, ap, max_depth, write_fall=frozenset(), depth16_allow=frozenset()):
+    """Raise (never lower) the latency of non-tree crossings so that (a) every seam group has one common latency, the max
+    of its members, and (b) no lane sits below its pad-strap floor.  A raise of d cycles is K + d (lat_cycles, rx_lat_counts,
+    K_eff, rtl.K, L_lo / L_hi + d T, margins) and DEPTH is re-picked for the new L_hi; a start-tree crossing is not
+    touched (its K carries the origin offsets) and is reported in the returned summary."""
+    byp = {o["port"]: o for o in out if o.get("lat_cycles") is not None}
+    want = {}
+    for g in groups:
+        mem = [p for p in g if p in byp]
+        if len(mem) > 1:
+            m = max(byp[p]["lat_cycles"] for p in mem)
+            for p in mem:
+                want[p] = max(want.get(p, 0), m)
+    for p, fl in floor.items():
+        if p in byp:
+            want[p] = max(want.get(p, -10**9), fl)
+    raised, skipped, depth_up, fail = {}, [], 0, []
+    for p, tgt in sorted(want.items()):
+        o = byp[p]
+        d = tgt - o["lat_cycles"]
+        if d <= 0:
+            continue
+        if o.get("kind") != "nontree":
+            skipped.append(p)
+            continue
+        wf = 0.5 * T if p in write_fall else 0.0
+        o["K_eff"] += d
+        o["K"] += d
+        o["lat_cycles"] += d
+        if o.get("rx_lat_counts") is not None:
+            o["rx_lat_counts"] += d
+        o["L_lo_ps"] = round(o["L_lo_ps"] + d * T, 1)
+        o["L_hi_ps"] = round(o["L_hi_ps"] + d * T, 1)
+        dep = next((dd for dd in (4, 8, 16) if (dd <= max_depth or (dd == 16 and p in depth16_allow))
+                    and o["L_hi_ps"] + wf <= (dd - 0.5) * T - ap + 1e-9), None)
+        if dep != o["depth"]:
+            depth_up += 1
+        o["depth"] = dep
+        if dep:
+            o["margin_lo_ps"] = round(o["L_lo_ps"] + wf - 0.5 * T, 1)
+            o["margin_hi_ps"] = round((dep - 0.5) * T - o["L_hi_ps"] - wf, 1)
+            o["rtl"] = dict(module="ot_dp_clk_landing_ca", DEPTH=dep, K=o["K"], GUARD_LO=0, GUARD_HI=dep)
+        else:
+            o["lat_cycles"] = o["rx_lat_counts"] = o["rtl"] = o["margin_lo_ps"] = o["margin_hi_ps"] = None
+            fail.append(p)
+        raised[p] = d
+    return dict(groups=len(groups), floor_ports=len(floor), raised=len(raised), raised_cycles=sum(raised.values()),
+                depth_promoted=depth_up, no_depth=fail, skipped_tree=skipped, rows=raised)
+
+
 def apply_frame(summ, out, frame):
     """QC-REGION-1 COUNT FRAME (count_frame.py): lat_cycles -> the plan's wall-aligned frame, lat + f_dst - f_src (the
     edge-index value stays in lat_cycles_edge; RTL K, origins and margins are unchanged: the frame relabels the count).
@@ -1566,6 +1646,15 @@ def main(argv=None):
                     help="S81-CLOCK-WINDOW-1119 opt-in: die plan whose clock.ring_hold.write_edge fall (+ write_fall_types) "
                          "makes those crossings write on the fclk fall; K / DEPTH are chosen for lag L + T/2, the form "
                          "die_sta_related --ca-write-fall times (die_chain_ca passes it when the plan declares fall)")
+    ap.add_argument("--seam-pad-rules", metavar="PLAN.json",
+                    help="KV-CROSSING-1119 (COORD 11-20): die plan whose latency_groups (seam groups: one common latency, the max "
+                         "of the members) and latency.lanes pad / count_aligned_cycles (pad strap capacity --pad-capacity: no "
+                         "lane shortened past its strap) constrain the plan; default = --write-fall-plan / --sta-plan when it "
+                         "declares either; --no-seam-pad-rules switches it off")
+    ap.add_argument("--no-seam-pad-rules", action="store_true")
+    ap.add_argument("--pad-capacity", type=int, default=PAD_STRAP_MAX)
+    ap.add_argument("--seam-group", action="append", metavar="PORT,PORT,...",
+                    help="extra seam group (members share one latency); repeatable")
     ap.add_argument("--max-depth", type=int, choices=(8, 16), default=8,
                     help="DIE-S81-11 / 12.16 b(iii) opt-in: largest standard ring DEPTH (16 needs its RTL proof; default 8)")
     add_start_tree_args(ap)
@@ -1641,6 +1730,15 @@ def _main(a, ap, allow):
         apply_frame(summ, out, CF.load_path(a.frame_plan) if a.frame_plan else CF.load_optional(a.sta_plan))
     except CF.FrameError as ex:
         ap.error(str(ex))
+    sp_src = None if a.no_seam_pad_rules else (a.seam_pad_rules or getattr(a, "write_fall_plan", None) or a.sta_plan)
+    if sp_src:
+        sg, sf = seam_pad_inputs(json.load(open(sp_src)), a.pad_capacity, [x.split(",") for x in a.seam_group or []])
+        if sg or sf:
+            summ["seam_pad_rules"] = seam_pad_rules(out, sg, sf, a.period, a.aperture, a.max_depth,
+                                                    WRITE_FALL if getattr(a, "write_fall_plan", None) else frozenset(),
+                                                    DEPTH16_ALLOW)
+            summ["seam_pad_rules"]["source"] = sp_src
+            summ["fail"] = sum(1 for o in out if not o.get("depth"))
     if a.tree_parent:
         summ["tree_parent"] = parse_edge_pad(a.tree_parent, str)
     if any(a.start_skew):
