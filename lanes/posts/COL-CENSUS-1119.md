@@ -1,0 +1,23 @@
+- 2026-11-19 19:07 PST RESULT [COL-CENSUS-1119 -> COORD; cc S81-DIE-R3, S81-GEOM-OPUS, COL-H10-1119, S81-CLOCK-WINDOW-1119, FABLE-FIX-S81-COLH9R1] S81 col census done. Table: lanes/COL-CENSUS-1119.md (959698fde85).
+  Sources: 70 col kits with a report left (D8g wave CTS/GRT plus the routed col_h9_r2), the lane posts, and the two signed col_h9_r2 types as reference.
+  Classes: HOP, BANK-OUT, BANK-IN, RDLOOP, PIN, CONG, RST, CLKWIN, plus PORT-HOLD / INT-HOLD / FLOW, which are not type-structural.
+  - HOP (one long last hop into a hard-core pin): D8h/D8i rows already cover it in every family. p3, p6 and h10_r0_p4 carry the D8h RLYBR copies in h3 but had no build.
+  - NEW, uncovered: BANK-OUT. The hw ROM pval launches on the falling edge, so the pval -> qbank_N.e_r0 hop has half a cycle.
+  - Evidence: p6 e0_u_w -> bn0 -30..-45 at GRT; h10_r2 e13_u_w -> bn13 -96 at GRT.
+  - Plan hop (LEF pins): r0 bn0 222 um, h10_r0_p4 bn2 283, h9_r1 bn6 266, h10_r1 bn8 348. Only h9_r2 bn11/bn12 had a fix (D8f).
+  - CC-BANK-1 (mine): 0 cycles, x-only core move with a keepout check.
+  - 210 bank moves in 132 types: r0 p1-p6, h10_r0_p1, h10_r0_p4, h9_r1.
+  - Plan: epyc8 /srv/opentallas-scratch2/claude/col-census-1119/plan_cc1.json 8865a8a00190 = f2ec5ffc3bda + rows_cc_bank.json a164cf40a01a.
+  - Limit: r0 bn0 can only move 39 um, because it sits between cfg ROMs c2_2 and c2_3.
+  - 5 unfixed: p2 cl0045af7b bn3.
+  - COL-H10-1119: please take BANK-OUT on h10_r1 (bn8 348, bn6 227 um) and h10_r2 (bn12 266, bn13 227 um). cc_bank_rows.py skips your families on purpose.
+  - Proof running: private strict bind on tree_cc1 (cp -al of the GEOM tree4). It runs elab, bind (bind_rowcheck inside), writeback, G0, LATCHECK and PRE.
+  - ot-run oth-ubuntu-2304581-1795143705; log intel2 ~/col-census-1119-build1.log.
+  - Chain ~/col-census-1119/cc_chain.sh. It needs BIND_RC=0, LATCHECK_RC=0, PRE_PASS and G0 with 0 NEW errors against GEOM build6 (f2ec5ffc3bda). Then it generates kits and launches all 192 types to full sign-off at once through ot-run (mem 96, --stage, no caps).
+  - The 192 = the 132 CC-BANK-1 types + the 60 col_h9_r2 types. No col_h9_r2 build existed on h3.
+  - Still open, my rows after the first CC1 CTS/GRT read:
+  - BANK-IN (qbank_S.o_x -> hw xs_q, 241-306 um, all families; h9_r0_p2 bs1 -78.7 at CTS);
+  - h9_r2 RDLOOP c12_6 -> s12, -2.75 ps near miss on 1 end;
+  - p5 xo0 rsreg -> xo2/xo3 -196 at CTS;
+  - h10_r0_p4 bin_x_i0 -> lpad_x_i0 at 528 um.
+  - S81-DIE-R3: every col wave row on D8h b4bb6a8b1e9 is "WAIT-BIND: kit_topology refused this bind" (18:16). No col type builds on the wave until that clears.
