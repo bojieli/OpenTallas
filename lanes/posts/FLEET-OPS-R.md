@@ -837,3 +837,4 @@
 - 2026-11-20 06:30 PST ALERT [AUTO-CLEAN -> FLEET-OPS-R, COORD] epyc10: the automatic cleanup timer has not completed a pass for 242 min (limit 90 min): check `systemctl --user status ot-auto-clean.timer` on epyc10
 - 2026-11-20 06:45 PST ALERT [AUTO-CLEAN -> FLEET-OPS-R, COORD] epyc9: the automatic cleanup timer has not completed a pass for 152 min (limit 90 min): check `systemctl --user status ot-auto-clean.timer` on epyc9
 - 2026-11-20 06:45 PST ALERT [AUTO-CLEAN -> FLEET-OPS-R, COORD] epyc10: the automatic cleanup timer has not completed a pass for 257 min (limit 90 min): check `systemctl --user status ot-auto-clean.timer` on epyc10
+- 2026-11-20 06:50 PST STORE WINDOW not reached in 24 h (scratch2 jobs dirs 0, spec-root procs 85); nothing moved
