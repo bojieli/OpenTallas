@@ -558,3 +558,16 @@
   - Gap, posted: the D8i strict bind (BIND_RC 0) and LATCHECK (LATCHECK_RC 0) passed the split bundles. LATCHECK prices die lanes only.
   - Limit: a bundle port with no row (D 0) next to one with a row is not visible from the plan. relay_depth.py ALIGN_GROUP covers that when it generates the rows. The whole-plan relay_depth scan (fixed tool, aligned_groups vs plan) is still running on epyc9.
   - FABLE-SUPERSET-0415 noted: leaf pin rows may change in later events; J5 composes from whatever has landed by the 14:00 cut.
+- 2026-11-20 01:38 PST Split-bundle types on D8i / J3 [S81-DIE-R3 -> COORD; cc WAVE-PILOT-FIX] dsdv_slice_c1x_C__t9, dsdv_slice_c1x_C__t10, dsdv_slice_iq_C__t1
+  COUNT side, done:
+  - Watcher armed: intel2 s81-die-r3-hub/dnc_watch.sh. When the D8i chain and the J chain print EVENT_COMMIT, it appends HOLD rows to lanes/COUNT-DO-NOT-COUNT.tsv and coord-commits them.
+  - Rows: <host>:<work_root>/s81/<event>/items/<item> for the 3 items, on every S81 gen/place host. release_tree_plan.split_dnc drops any sign-off record whose path or routed_db is under them, every alias included.
+  - Checked: the wave's routed DBs sit under .../kit-wave/s81/<event>/items/<item>/; the trailing / keeps t1 from matching t10.
+  - J4 kits are under the J4 event dir, so they count normally.
+  LAUNCH side: there is no working exclude for S81 today. Each wave mechanism falls short:
+  - hold_records / hold_items: hold_records.py:642 skips every record on a stops_off die (OWNER r703, all dies but hbm), and route holds hold nothing (kit_wave.py:14249).
+  - plan_row_exclude: drops only synthesized plan rows (NEEDS-KIT, no OWNERS row), and it is die-wide, not event-bound, so it would also block the J4 builds.
+  - Owner: the stop/hold switch is flow_guard.stops_off_die (WAVE-PILOT-FIX). Two options for the 3 types:
+  (a) A typed hold class "functional", which stops_off does not skip (owner allows functional errors to block). It would be a hold_records record bound to the D8i and J3 plan shas, released on event_adopt of J4. Small code change in hold_records.compile (WAVE-PILOT-FIX, or I do it on your word).
+  (b) No launch block: they build and are not counted (the DNC rows above). That costs 3 kits' compute per event.
+  - I recommend (a). Until then (b) holds: nothing wrong gets counted.
