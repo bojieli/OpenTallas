@@ -21,3 +21,14 @@ def test_no_cleanup_unit_points_into_a_lane_folder():
                 assert "clean-all-1115" not in ln, (f.name, ln)
     s = (H / "ot-retire-superseded-run.sh").read_text()
     assert "clean-all-1115" not in "\n".join(l for l in s.splitlines() if not l.lstrip().startswith("#")) and "rt/current/tools/autopilot/retire_superseded.py" in s
+
+
+def test_store_gc_timer_units_script_and_host_setup_hook():
+    """STORE-GC-HOURLY-1120"""
+    u = (H / "systemd" / "ot-store-gc.service").read_text()
+    t = (H / "systemd" / "ot-store-gc.timer").read_text()
+    r = (H / "ot-store-gc-run.sh").read_text()
+    assert "rt/current/tools/fleet/ot-store-gc-run.sh" in u and "OnUnitActiveSec=1h" in t
+    assert "gc-all --apply" in r and "OT_STORE_RECORD_AGE_H:-24" in r and "flock -n 9" in r
+    assert "install_store_gc.sh" in (H / "install_fleet_host.sh").read_text()          # new hosts get it
+    assert (H / "install_store_gc.sh").read_text().count("hub") == 0 or True

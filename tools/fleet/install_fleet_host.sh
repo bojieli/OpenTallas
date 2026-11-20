@@ -82,3 +82,5 @@ line='*/2 * * * * /usr/local/bin/ot-heavy-reconcile >/dev/null 2>&1'
 echo "FLEET_HOST_OK $(hostname) role=$role scratch=$(df -BG --output=avail /srv/opentallas-scratch/claude/ | tail -1 | tr -d ' ') free" \
   "earlyoom=$(systemctl is-active earlyoom) die-protection=$(systemctl is-active ot-die-protection 2>/dev/null)" \
   "linger=$(loginctl show-user "$u" -p Linger --value) reconcile=$(/usr/local/bin/ot-heavy-reconcile --free / | head -c 80)"
+# STORE-GC-HOURLY-1120: every host collects its ot-store hourly (by reference, 24 h record age-out, signed records pinned); the units come from rt/current, so run after the first rt sync
+bash "$here/install_store_gc.sh" || echo "install_fleet_host: store GC timer NOT installed (rt/current not synced yet): run tools/fleet/install_store_gc.sh after the first sync" >&2

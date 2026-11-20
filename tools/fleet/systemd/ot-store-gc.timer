@@ -1,10 +1,9 @@
 [Unit]
-Description=Run the OpenTallas sealed-store GC once a day
-
+Description=ot-store GC hourly
 [Timer]
-OnCalendar=*-*-* 04:20:00
-RandomizedDelaySec=900
-Persistent=true
-
+OnBootSec=15min
+OnUnitActiveSec=1h
+RandomizedDelaySec=300
+AccuracySec=30
 [Install]
 WantedBy=timers.target
