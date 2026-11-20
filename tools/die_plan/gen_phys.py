@@ -8242,7 +8242,9 @@ def gpl_sparse_overflow(die=None):
         if not 0 <= r < 1:
             raise ValueError(f"OT_GPL_SPARSE_OVERFLOW must be 0 (off) or in (0, 1), got {v!r}")
         return r or None
-    return 0.25 if str(die or "").split("_")[0] == "s81" else None
+    # FLOW-NOADV-R2 11-20 (FABLE-FIX-HEAD-SERDES-R2): the S81 die by EXACT name.  The prefix test also matched s81_head, so every HEAD
+    # kit (hd_serdes: signed sd9g3 kit -1316 ps / GRT overflow 1428 with the exit) stopped global place at overflow 0.25 / 0.29
+    return 0.25 if str(die or "") == "s81" else None
 
 
 def gpl_sparse_overflow_cfg(die=None):
@@ -8288,7 +8290,7 @@ def gpl_overflow(die=None):
         if r != 0 and not 0 < r < 1:
             raise ValueError(f"OT_GPL_OVERFLOW must be 0 (off) or 0 < v < 1, got {v!r}")
         return r or None
-    return 0.2 if str(die or "").split("_")[0] == "s81" else None
+    return 0.2 if str(die or "") == "s81" else None            # exact name: s81_head is not the S81 strip (FLOW-NOADV-R2 11-20)
 
 
 def place_max_fanout(die=None):
