@@ -1963,7 +1963,16 @@ def peak_gap_gb(state_dir=None, scope_glob=None, min_gb=0.5):
     return gap
 
 
-def measured_gap_gb(units=None, hist=None, pct=0.9, min_n=3):
+PRIVATE_KIT_RE = re.compile(r"\.(?:sh|py)(?::|$)")
+
+
+def private_kit_class(cls):
+    """STAGE-PRIVATE-1120 (FLEET-WATCH-1015, FABLE-FLOW-1000 class 6): a lane's private / proof / chain / ECO / bind script (kit_w#.sh, chain_*.sh, eco_loop.py:residual, bind_*.sh ...), as opposed to a wave
+    kit generator (run_kit*.sh) or a closure-loop docker job.  Its size class is a script name shared by runs of very different stages."""
+    return bool(PRIVATE_KIT_RE.search(cls or "")) and not str(cls).startswith(("run_kit", "ot-job", "docker:"))
+
+
+def measured_gap_gb(units=None, hist=None, pct=0.9, min_n=3, skip=None):
     """GROWTH-AWARE ADMISSION (FABLE-FLOW-2355 A, COORD 11-19: 58 guard kills in 2 h): memory a running job is still expected to grow into = its class's MEASURED peak (pct-quantile of >= min_n
     completed runs on this host, never above its request) minus its current use (scope + container).  Units of a class with no history add nothing (their charge would be a request guess, which zeroed
     admission on 11-18).  Light path: cgroupfs + peaks.tsv only."""
@@ -1971,6 +1980,8 @@ def measured_gap_gb(units=None, hist=None, pct=0.9, min_n=3):
     hist = peak_history() if hist is None else hist
     gap = 0.0
     for u, req, cls, now in units:
+        if skip and skip(cls):
+            continue          # STAGE-PRIVATE-1120: charged by its stage peak (stage_growth), not by the class maximum
         v = hist.get(cls) or []
         if len(v) < min_n:
             continue
@@ -2030,7 +2041,9 @@ def free(path):
         gap = raw_gap * max(0.0, min(1.0, conf("PEAK_GAP_FACTOR")))
         plan_gap = min(plan_gap_gb(), 0.25 * avail) * max(0.0, min(1.0, conf("PLAN_GAP_FACTOR")))     # plan jobs charge their unreached peak (capped at 25 % of MemAvailable)
         gap += plan_gap
-        mgap = min(measured_gap_gb(), max(0.0, min(1.0, conf("MEASURED_GAP_CAP"))) * avail) * max(0.0, min(1.0, conf("MEASURED_GAP_FACTOR")))   # GROWTH-AWARE: charged by default, never more than half of MemAvailable (admission cannot fall to 0 from it)
+        # STAGE-PRIVATE-1120 (FLEET-WATCH-1015): with STAGE_PEAK on, private / proof kits are charged by the stage peak of their build processes (stage_growth below), the same arithmetic the gate uses,
+        # not by the class maximum minus their use (epyc9 11-20: 3 private coll_core GRT proofs held 384 GB of the view while using 48 GB; admit 0 with 23 waiters)
+        mgap = min(measured_gap_gb(skip=private_kit_class if conf("STAGE_PEAK") else None), max(0.0, min(1.0, conf("MEASURED_GAP_CAP"))) * avail) * max(0.0, min(1.0, conf("MEASURED_GAP_FACTOR")))   # GROWTH-AWARE: charged by default, never more than half of MemAvailable (admission cannot fall to 0 from it)
         gap += mgap
         if conf("STAGE_PEAK"):    # STAGE-ADMIT-1119 (COORD: 25 OOM kills on epyc2 at 22:xx): the status/placement view charges the SAME stage-peak growth the gate charges (stage_growth: table peak of each running build's
             _sg, _sn = stage_growth(load_stage_table(), conf("STAGE_LOOKAHEAD"), conf("STAGE_PEAK_FRAC"))     # current + next stage minus its RSS now), so ot-run does not place onto a host the gate will refuse
