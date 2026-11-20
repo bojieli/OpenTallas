@@ -25,7 +25,7 @@ A log without timestamps gets line times by interpolation between the stage star
 the samples this tool took on earlier passes, and the log's mtime.  A verdict needs >= WINDOW of evidence.
 
 PASSES: a job is cancelled only after an earlier pass listed it in a report-mode table (state `reported`), so every cancel
-was on a posted table first.  HBM (parked) skips the window but not that rule; superseded kit dirs are only listed (SUPERSEDED?) for COORD.  Excluded: --priority plan
+was on a posted table first.  HBM (parked) skips the window but not that rule; a kit whose plan is not the adopted one is NEVER a reason (FLOW-FIX-2045, OWNER: a type counts once signed on any plan; old-plan kits are never cancelled for a newer plan): only real no-progress cancels.  Excluded: --priority plan
 jobs (bind / LATCHECK / G0 / die-proto / chain), and anything matched by a NOPROG-KEEP.tsv line.  The kit dir is never cleaned.
 
 Cancel = `ot-heavy-stop --match <kit dir>` (exact `--unit` when the match would hit another scope), nothing else is killed.
@@ -534,7 +534,6 @@ def scan(now=None, act=False, probe_s=4):
     hostname = os.environ.get("NOPROG_HOST") or socket.gethostname()
     pol = os.path.join(STATE_DIR, "policy")
     keep = read_lines(os.path.join(pol, "keep.tsv"))
-    superseded = read_lines(os.path.join(pol, "superseded.txt"))
     state = load_state()
     ids = sh("docker", "ps", "-q").split()
     insp = json.loads(sh("docker", "inspect", *ids) or "[]") if ids else []
@@ -576,15 +575,12 @@ def scan(now=None, act=False, probe_s=4):
                "threads": int(th[1]) if th else 1, "gb": round(mem_gb(cg), 1), "prio": prio, "_cg": cg, "_cpu0": cpu_a}
         ident = " ".join([name, kit or "", work or ""])
         k = keep_match(keep, ident)
-        sup = [s for s in superseded if s.split("\t")[0] and s.split("\t")[0] in (kit or "") + " " + text]
         if k:
             row.update(verdict="KEEP", why=k.strip()[:120])
         elif is_plan(prio, text):
             row.update(verdict="EXCLUDED", why="plan priority job (bind/LATCHECK/G0/die-proto)")
         elif is_hbm(ident):
             row.update(verdict="CANCEL-NOW", why="HBM is parked")
-        elif sup:
-            row.update(verdict="CANCEL-NOW", why="SUPERSEDED: kit plan sha is not a live adopted plan (kit_wave_stages)")
         elif not log:
             row.update(verdict="NO-DATA", why="no log found")
         else:
@@ -701,31 +697,11 @@ def run_host(host, cmd, inp=None, timeout=60):
                           input=inp, capture_output=True, text=True, timeout=timeout)
 
 
-def derive_superseded(path):
-    """kit dirs whose plan is no longer the adopted one: every kit_wave_stages row of that kit dir carries a plan_sha that is not
-    among the plan shas the same die has with plan_current=yes (the live adopted plans).  Shared by the stages of one attempt
-    (geom / route / signoff), so one row alone never decides."""
-    rows, live = {}, {}
-    try:
-        for ln in open(path):
-            f = ln.rstrip("\n").split("\t")
-            if len(f) < 13 or f[0] == "die":
-                continue
-            if f[12] == "yes" and f[3]:
-                live.setdefault(f[0], set()).add(f[3])
-            if ":" in f[9] and f[3]:
-                rows.setdefault(f[9].split(":", 1)[1].strip().rstrip("/"), []).append((f[0], f[3]))
-    except OSError:
-        pass
-    return sorted(p for p, v in rows.items() if p.count("/") > 4 and live.get(v[0][0]) and all(sha not in live[d] for d, sha in v))
-
-
 def hub(now=None, post=True):
     now = now or time.time()
     keep = read_lines(os.path.join(COORD, "lanes/NOPROG-KEEP.tsv"))
-    sup = derive_superseded(os.path.join(COORD, "autopilot/kit_wave_stages.tsv"))
     for h in HOSTS:
-        for fname, lines in (("keep.tsv", keep), ("superseded.txt", sup)):
+        for fname, lines in (("keep.tsv", keep),):
             try:
                 d = f"{STATE_DIR}/policy"
                 run_host(h, f"mkdir -p {d} && cat > {d}/{fname}.new && mv {d}/{fname}.new {d}/{fname}", inp="".join(l + "\n" for l in lines))

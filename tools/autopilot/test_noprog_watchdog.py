@@ -183,16 +183,17 @@ def test_keep_list():
     assert not nw.keep_match(keep, "a /srv/y")
 
 
-def test_derive_superseded_is_plan_sha_not_live():
-    hdr = "die\titem\tparent\tplan_sha\tblock\tevent\tstage\tstatus\tclass\tkit\tevidence\tupdated\tplan_current\treason\n"
-    def r(die, sha, kit, cur):
-        return f"{die}\tx\t\t{sha}\tb\te\troute\tBUILDING\tNONE\tepyc7:{kit}\tev\tt\t{cur}\t\n"
-    live = "/srv/opentallas-scratch2/claude/kw/runs/s81/items/live/attempt_1/gen/live"
-    old = "/srv/opentallas-scratch2/claude/kw/runs/s81/items/old/attempt_1/gen/old"
-    mixed = "/srv/opentallas-scratch2/claude/kw/runs/s81/items/mix/attempt_1/gen/mix"
-    with tempfile.NamedTemporaryFile("w", suffix=".tsv", delete=False) as f:
-        f.write(hdr + r("s81", "AAA", live, "yes") + r("s81", "OLD", old, "no") + r("s81", "OLD", mixed, "no") + r("s81", "AAA", mixed, "yes"))
-    assert nw.derive_superseded(f.name) == [old]
+def test_an_old_plan_is_never_a_cancel_reason():
+    """FLOW-FIX-2045 (OWNER: never cancel old-plan kits for a newer plan; a type counts once signed on any plan): the plan-sha reason is gone from the watchdog"""
+    src = open(nw.__file__).read()
+    assert "derive_superseded" not in src and "superseded.txt" not in src and "not a live adopted plan" not in src
+    assert not hasattr(nw, "derive_superseded")
+    assert "NEVER a reason" in src
+    # the verdicts that remain are the documented ones: HBM parked, LEC > 24 h, and the judged window (NO-PROGRESS / DESIGN-FAIL)
+    assert set(nw.BAD_VERDICTS) == {"NO-PROGRESS", "CANCEL-NOW", "DESIGN-FAIL"}
+    import re
+    reasons = re.findall(r'verdict="CANCEL-NOW", why="([^"]+)"', src)
+    assert reasons == ["HBM is parked"], reasons
 
 
 def test_route_done(tmp_path):
