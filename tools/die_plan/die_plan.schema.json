@@ -9129,6 +9129,10 @@
         "type": "integer",
         "minimum": 0
        },
+       "pad_min_stations": {
+        "type": "integer",
+        "minimum": 0
+       },
        "r2r_margin_ps": {
         "type": "number",
         "minimum": 0,
