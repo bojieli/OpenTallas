@@ -186,8 +186,11 @@ def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=
     review = mc.get("review_before_route")
     if review is not None:
         assert isinstance(review, dict) and review.get("event") and review["event"] == mc.get("event"), "review_before_route must name the candidate event"
-        items = review.get("items")
-        assert isinstance(items, list) and items and all(isinstance(it, str) and it and not any(c in it for c in "*?[") for it in items), "review_before_route requires exact item names"
+        items = review.get("items", [])
+        all_items = review.get("all_items", False)
+        assert isinstance(all_items, bool), "review_before_route all_items must be boolean"
+        assert isinstance(items, list) and all(isinstance(it, str) and it and not any(c in it for c in "*?[") for it in items), "review_before_route requires exact item names"
+        assert items or all_items, "review_before_route requires exact item names or all_items"
     kr = marker_kit_rtl(marker)
     if kr:
         mc["kit_rtl"] = kr

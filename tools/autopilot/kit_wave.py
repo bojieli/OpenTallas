@@ -14400,7 +14400,8 @@ def visual_queue_publish(cfg, st):
     t0 = visual_gate_t0(cfg)
     for rec in (st.get("items") or {}).values():
         h = str(rec.get("route_hold") or "")
-        if rec.get("status") == "ROUTE-HELD" and h.startswith("WAIT-VISUAL"):
+        exact_policy = review_before_route(cfg, rec)
+        if rec.get("status") == "ROUTE-HELD" and h.startswith("WAIT-VISUAL") and not exact_policy:
             why = stale_visual_why(cfg, rec, t0)
             if why:
                 # KW-FIX-46 11-12 (GEOM-VIS-4 05:30): a WAIT-VISUAL row placed before the gate, or built on a plan that is no
@@ -14409,7 +14410,15 @@ def visual_queue_publish(cfg, st):
                 rec["route_hold"] = f"WAIT-FORM: stale for review ({why}); rebuild on the current form"
                 rec["updated"] = time.time()
                 continue
-        if rec.get("status") == "ROUTE-HELD" and h.startswith("WAIT-VISUAL"):
+        if rec.get("status") == "ROUTE-HELD" and h.startswith("WAIT-VISUAL") and exact_policy:
+            verdict = exact_kit_visual_verdict(rec)
+            if verdict in VISUAL_REJECT:
+                rec["route_hold"] = route_hold_reason(cfg, rec)
+                rec["updated"] = time.time()
+                continue
+            if verdict in VISUAL_ACCEPT and launch_held(cfg, rec):
+                continue
+        if rec.get("status") == "ROUTE-HELD" and h.startswith("WAIT-VISUAL") and not exact_policy:
             # KIT-OPS-1 11-12 (COORD, GEOM-VIS-10 found 9 such rows): a row whose own build already carries a non-accepting
             # verdict (BAD / ISSUES) needs no review: WAIT-FORM, off the queue.  Done here because enqueue_pass skips rows under
             # a hold_items pattern, so their route_hold text is never re-evaluated there.
@@ -14433,10 +14442,10 @@ def visual_queue_publish(cfg, st):
             pass
         else:
             continue
-        k = rec.get("kit") or ""
+        kit = review_kit_location(rec)
         rows.append("\t".join([rec["die"], rec["item"], kit_class(rec["die"], rec["item"]).split("|", 2)[2], str(rec.get("attempt")),
-                               h.split(":")[0], f"{rec.get('kit_host') or rec.get('gen_host') or ''}:{k}/run/layout_review",
-                               f"{rec.get('geom_dir') or ''}/auto_geom.png", str(rec.get("kit_host") or rec.get("gen_host") or "")]))
+                               h.split(":")[0], f"{kit}/run/layout_review",
+                               f"{rec.get('geom_dir') or ''}/auto_geom.png", kit.partition(":")[0]]))
     rows.sort()
     body = "die\ttype\tfamily\tattempt\tstate\trender_dir\tauto_geom\thost\n" + "\n".join(rows) + ("\n" if rows else "")
     p = Path.home() / "coord" / "lanes" / "VISUAL-QUEUE.tsv"
@@ -14461,17 +14470,33 @@ def review_before_route(cfg, rec):
     d = (cfg.get("dies") or {}).get(rec.get("die")) or {}
     policy = d.get("review_before_route") or {}
     event = policy.get("event")
-    return bool(event and d.get("event") == rec.get("event") == event and rec.get("item") in (policy.get("items") or ()))
+    return bool(event and d.get("event") == rec.get("event") == event
+                and (policy.get("all_items") is True or rec.get("item") in (policy.get("items") or ())))
+
+
+def review_kit_location(rec):
+    """Use the producer host carried by the kit, falling back to legacy separate host fields."""
+    kit = str(rec.get("kit") or "")
+    if re.fullmatch(r"[A-Za-z0-9_.-]+:/.*", kit):
+        return kit
+    host = rec.get("kit_host") or rec.get("gen_host")
+    return f"{host}:{kit}" if host and kit.startswith("/") else ""
+
+
+def exact_kit_visual_verdict(rec):
+    kit = review_kit_location(rec)
+    if not kit:
+        return None
+    visual_verdicts()
+    key = (rec["die"], rec["item"], int(rec.get("attempt") or 0), kit)
+    return (_VISUAL_CACHE.get("exact") or {}).get(key)
 
 
 def route_hold_reason(cfg, rec):
     """An optional die-owned hold on new ROUTE submissions, never on an admitted unit."""
     if review_before_route(cfg, rec):
-        host, path = rec.get("kit_host") or rec.get("gen_host"), rec.get("kit")
-        kit = f"{host}:{path}" if host and path else ""
-        visual_verdicts()
-        key = (rec["die"], rec["item"], int(rec.get("attempt") or 0), kit)
-        verdict = (_VISUAL_CACHE.get("exact") or {}).get(key)
+        kit = review_kit_location(rec)
+        verdict = exact_kit_visual_verdict(rec)
         if verdict in VISUAL_REJECT:
             return f"WAIT-FORM: exact kit {kit} visual verdict {verdict}; rebuild on a changed form"
         if verdict not in VISUAL_ACCEPT:

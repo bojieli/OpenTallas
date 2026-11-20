@@ -163,6 +163,7 @@ def test_event_review_blocks_only_its_changed_items_and_accepts_its_exact_kit(tm
         "GEOM VERDICT [viewed] s81/t1 attempt_1: GOOD\n"
         "GEOM VERDICT [viewed] s81/t1 attempt_2: BAD kit=epyc9:/new\n"
         "GEOM VERDICT [viewed] s81/t1 attempt_3: GOOD kit=epyc9:/new\n"
+        "GEOM VERDICT [viewed] s81/t1 attempt_4: BAD kit=epyc9:/prior\n"
     )
     monkeypatch.setattr(K.Path, "home", lambda: tmp_path)
     monkeypatch.setattr(K, "_VISUAL_CACHE", {"mtime": None, "v": {}})
@@ -178,7 +179,32 @@ def test_event_review_blocks_only_its_changed_items_and_accepts_its_exact_kit(tm
     assert K.route_hold_reason(cfg, dict(row, event="older")) is None
     assert K.route_hold_reason(cfg, dict(row, attempt=3, kit_host="epyc8")).startswith("WAIT-VISUAL")
 
-    admitted = dict(row, status="ENQUEUED", q_status="RUNNING")
+    policy["all_items"] = True
+    assert K.route_hold_reason(cfg, dict(row, item="rekeyed")).startswith("WAIT-VISUAL")
+    assert K.route_hold_reason(cfg, dict(row, item="rekeyed", event="older")) is None
+    assert K.route_hold_reason(cfg, dict(row, attempt=3)) is None
+    assert K.route_hold_reason(cfg, dict(row, attempt=3, kit="/replaced")).startswith("WAIT-VISUAL")
+    live_row = dict(row, attempt=3, kit="epyc9:/new", kit_host=None, gen_host="epyc8")
+    assert K.route_hold_reason(cfg, live_row) is None
+    assert K.route_hold_reason(cfg, dict(live_row, kit="epyc8:/new")).startswith("WAIT-VISUAL")
+    rejected = dict(live_row, attempt=2)
+    assert K.route_hold_reason(cfg, rejected).startswith("WAIT-FORM")
+
+    pending = dict(live_row, attempt=4, status="ROUTE-HELD", route_hold="WAIT-VISUAL",
+                   geom_dir="epyc9:/geom")
+    rejected.update(status="ROUTE-HELD", route_hold="WAIT-VISUAL")
+    monkeypatch.setattr(K.subprocess, "run", lambda *args, **kwargs: None)
+    assert K.visual_queue_publish(cfg, {"items": {"pending": pending, "rejected": rejected}}) == 1
+    assert rejected["route_hold"].startswith("WAIT-FORM")
+    queue = reviews.with_name("VISUAL-QUEUE.tsv").read_text().splitlines()[1].split("\t")
+    assert queue[-3:] == ["epyc9:/new/run/layout_review", "epyc9:/geom/auto_geom.png", "epyc9"]
+
+    notices = {}
+    rekeyed = dict(row, item="rekeyed")
+    K.enqueue_pass(FakeAP(), cfg, {}, rekeyed, notices)
+    assert rekeyed["status"] == "ROUTE-HELD"
+
+    admitted = dict(row, item="rekeyed", status="ENQUEUED", q_status="RUNNING")
     before = dict(admitted)
     K.enqueue_pass(None, cfg, {}, admitted, {})
     assert admitted == before

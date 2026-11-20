@@ -42,7 +42,7 @@ class Apply(unittest.TestCase):
     def test_event_and_exact_route_review_scope_commit_together(self):
         c = mk()
         cfgpath = c / "autopilot" / "kit_wave.json"
-        scope = {"event": "E1", "items": ["t1"]}
+        scope = {"event": "E1", "all_items": True}
         config = {"event": "E1", "review_before_route": scope}
         old = cfgpath.read_text()
         with self.assertRaisesRegex(AssertionError, "candidate event"):
