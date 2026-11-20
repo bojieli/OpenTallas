@@ -675,11 +675,11 @@ def record_clock_period(d):
             if v is not None and v > 0 and (best is None or v > best): best = v
     return best
 def period_problem(d):
-    # SIGN-PERIOD (OWNER 11-20 (1), tools/die_plan/signoff_profile.period_problem): a record timed above 833 ps counts only as a period
-    # re-sign record: signed_period_ps in [833, 1000] equal to the STA clock period (its checks are measured at that period)
+    # OWNER 11-20 (superseding the 1000 ps part of (1)): nothing signs above 833 ps (tools/die_plan/signoff_profile.period_problem):
+    # a record timed at a relaxed clock never counts, with or without signed_period_ps
     sp, cp = _fin(d.get('signed_period_ps')), record_clock_period(d)
     if sp is None: return cp is not None and cp > 833.5
-    return sp < 832.5 or sp > 1000.0 or cp is None or abs(cp - sp) > 0.5
+    return sp < 832.5 or sp > 833.5 or cp is None or abs(cp - sp) > 0.5
 def rminimal(d):
     # COUNT-FRICTION-1 11-14 (R-MINIMAL, OWNER 11-13 17:5x; same metrics as tools/die_plan/signoff_profile.py): a record counts when detailed-route
     # DRC is 0, TT setup WNS >= -42 ps (833 ps) and the INTERNAL FF hold >= 0 (a hold miss only at input ports is allowed); every other
@@ -1881,23 +1881,6 @@ def _inherit_schema(row):
     except (OSError, ValueError, KeyError): return None
 
 
-PERIOD_RE = re.compile(r' PERIOD (\d+(?:\.\d+)?)')
-
-
-def type_periods(st):
-    """SIGN-PERIOD: {type: period ps it signs at} = the smallest period over its counting refs (a ref without ' PERIOD n' = 833)"""
-    out = {}
-    for t, refs in (st or {}).items():
-        ps = [float(m.group(1)) if m else 833.0 for m in (PERIOD_RE.search(x) for x in refs or [])]
-        out[t] = min(ps) if ps else 833.0
-    return out
-
-
-def die_period(tp):
-    """the die runs at the slowest signed type's period (OWNER 11-20 (1)) -> ps"""
-    return max(tp.values()) if tp else 833.0
-
-
 def inherit_credit(die, st, tm, rows, ok=inherit_record_ok):
     """S81-COL-INHERIT (OWNER via COORD 11-14): a sibling pv identity counts when its representative counts and its inherited record
     (tools/fleet/col_inherit.py: gates of the representative's signoff.json, param-set sha, ROM image sha list, LEF/lib sha equal,
@@ -2091,8 +2074,6 @@ def refresh(log=lambda *a: None, old=None):
             except Exception as e:
                 errs.append('INHERIT credit %s: %s' % (d, e))
             ent['signed_types'] = st; ent['signed_cores'] = sc
-            ent['type_period_ps'] = {k: v for k, v in type_periods(st).items() if v > 833.0}
-            ent['die_period_ps'] = die_period(type_periods(st))
             if ent.get('type_blocks'):
                 try:
                     ent['digest_kept'] = digest_keep(ent['die'], ent.pop('type_blocks'), st, ledger, live, ent.get('plan_sha'))

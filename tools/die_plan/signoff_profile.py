@@ -49,12 +49,13 @@ def setup_tolerance_ps(die=None):
     """|min TT WNS at 833 ps| that still signs off: (P_die - 833) + 42"""
     return max(0.0, die_period_ps(die) - PERIOD_PS) + SETUP_TOL_PS
 HOLD_MIN_PS = 0.0            # internal FF hold, no tolerance
-# SIGN-PERIOD (OWNER 2026-11-20 decision (1), SIGN-PROFILE-0400): a type signs at 833 ps where its build passes; otherwise the SAME routed
-# DB is re-timed (no re-route) at a relaxed period up to SIGN_PERIOD_MAX_PS and signs there.  Such a record carries signed_period_ps and
-# its checks (setup_tt, hold_ff) are measured AT that period (tools/die_plan/period_resign.py: the golden SDC with every create_clock
-# period scaled, IO budgets unchanged); the 833 ps result is kept in at_833.  The gates are unchanged: DRC 0, setup >= -42 ps at the
-# signed period, internal hold >= 0.  A die runs at the slowest signed type's period (die_period_ps, count_hourly / DIE-PERIOD.tsv).
-SIGN_PERIOD_MAX_PS = 1000.0
+# Period (OWNER 11-20): every sign-off is timed at 833 ps.  A record whose STA ran at a relaxed clock (corners.<c>.periods above 833) is
+# NOT a sign-off, whether or not it declares signed_period_ps; period_problem() blocks its setup gate.
+# OWNER 11-20 (superseding the 1000 ps part of (1)): "Fix hold structurally, never by changing the clock. Fix setup misses with more
+# pipeline stages."  NOTHING signs above 833 ps: a signed_period_ps above 833 is refused like any other relaxed clock.  The achievable
+# period of a routed DB is a REPORT-ONLY number (tools/die_plan/period_resign.py period_report.json: how far a type is from 833).
+SIGN_PERIOD_MAX_PS = PERIOD_PS
+ACHIEVABLE_REPORT_MAX_PS = 1000.0
 PERIOD_MATCH_PS = 0.5
 MINIMAL_GATES = ("drc", "setup_tt", "hold_ff")
 PROFILES = ("minimal", "legacy")
@@ -295,28 +296,6 @@ def apply(rec, value=None):
                **({"signed_period_ps": signed_period_ps(rec)} if signed_period_ps(rec) is not None else {}),
                profile_rule="R-MINIMAL + R-PERIOD (OWNER 2026-11-13)")
     return rec
-
-
-def die_period_from_types(periods):
-    """SIGN-PERIOD: a die runs at the slowest signed type's period.  periods = iterable of signed type periods (None = 833) -> ps"""
-    vals = [PERIOD_PS if p is None else float(p) for p in periods]
-    return max(vals) if vals else PERIOD_PS
-
-
-def signed_die_period_ps(die, path=None):
-    """die_period_ps of a die from the count's lanes/DIE-PERIOD.tsv (count_hourly writes it: die, die_period_ps, slowest type, ...);
-    833 when the file or row is missing.  For the die STA (run the die at this period)."""
-    import pathlib
-    d = DIE_ALIAS.get(str(die or "").lower(), str(die or "").lower())
-    p = pathlib.Path(path or os.environ.get("OT_DIE_PERIOD_TSV") or pathlib.Path.home() / "coord/lanes/DIE-PERIOD.tsv")
-    try:
-        for ln in p.read_text().splitlines():
-            f = ln.split("\t")
-            if len(f) >= 2 and not ln.startswith("#") and DIE_ALIAS.get(f[0], f[0]) == d and _num(f[1]) is not None:
-                return _num(f[1])
-    except OSError:
-        pass
-    return PERIOD_PS
 
 
 def die_gate_thresholds(value=None):

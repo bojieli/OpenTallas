@@ -1,5 +1,4 @@
-"""SIGN-PERIOD (OWNER 2026-11-20 (1)): sign the same routed DB at the smallest period <= 1000 ps where TT setup >= -42 ps; hold re-checked;
-the 833 result kept; a record timed above 833 ps counts only with a matching signed_period_ps."""
+"""period_resign is REPORT ONLY (OWNER 11-20): the achievable period of a routed DB is measured; nothing signs above 833 ps."""
 import json
 import sys
 from pathlib import Path
@@ -67,20 +66,13 @@ def test_check_verdicts():
 def test_profile_period_gate():
     assert SP.judge(rec(-30, period=900))["verdict"] == "NOT SIGNED"                    # >833 clock without signed_period_ps
     assert "without signed_period_ps" in SP.judge(rec(-30, period=900))["reasons"][0]
-    j = SP.judge(rec(-30, period=900, sp=900))
-    assert j["verdict"] == "SIGNED" and j["signed_period_ps"] == 900 and j["achieved_period_ps"] == 900
+    assert SP.judge(rec(-30, period=900, sp=900))["verdict"] == "NOT SIGNED"            # OWNER 11-20: nothing signs above 833
+    assert SP.judge(rec(-30, period=833, sp=833))["verdict"] == "SIGNED"
     assert SP.judge(rec(-30, period=905, sp=900))["verdict"] == "NOT SIGNED"            # declared != measured
     assert SP.judge(rec(-30, period=1100, sp=1100))["verdict"] == "NOT SIGNED"          # above the 1000 cap
     assert SP.judge(rec(-50, period=900, sp=900))["verdict"] == "NOT SIGNED"            # -42 at the signed period
     assert SP.judge(rec(-30))["signed_period_ps"] == 833.0
     assert SP.judge(rec(10, ff=-1, period=900, sp=900))["verdict"] == "NOT SIGNED"      # hold unchanged
-
-
-def test_die_period_helpers(tmp_path):
-    assert SP.die_period_from_types([None, 900, 955]) == 955 and SP.die_period_from_types([]) == 833.0
-    f = tmp_path / "DIE-PERIOD.tsv"
-    f.write_text("# x\ns81\t935\tcol_a\t\nqwen_compute\t833\t\t\n")
-    assert SP.signed_die_period_ps("s81", f) == 935 and SP.signed_die_period_ps("qc", f) == 833 and SP.signed_die_period_ps("kv", f) == 833
 
 
 def fake_runner(results):
@@ -97,7 +89,7 @@ def fake_runner(results):
     return run
 
 
-def test_run_searches_and_writes_the_period_record(tmp_path):
+def test_run_reports_the_achievable_period_and_writes_no_signoff(tmp_path):
     unit = tmp_path / "kit"
     (unit / "signoff").mkdir(parents=True)
     (unit / "constraint.sdc").write_text(SDC)
@@ -113,13 +105,14 @@ def test_run_searches_and_writes_the_period_record(tmp_path):
     rc = PR.run(a, runner=fake_runner({895.0: -60.0, 915.0: -38.0}))
     assert rc == 0
     d = unit / "signoff_period"
-    fin = json.loads((d / "signoff.json").read_text())
-    assert fin["signed_period_ps"] == 915.0 and fin["verdict"] == "SIGNED"
+    assert not (d / "signoff.json").exists()
+    fin = json.loads((d / "period_report.json").read_text())
+    assert fin["achievable_period_ps"] == 915.0 and fin["report_only"] and "signed_period_ps" not in fin
     assert fin["at_833"]["tt_wns_ps"] == -100 and fin["at_833"]["sha256"]
     assert [x["period_ps"] for x in fin["period_search"]] == [895.0, 915.0]
     assert not (d / "trial_p895" / "signoff.json").exists() and (d / "trial_p895" / "sta_p895.json").exists()
-    assert json.loads((d / "period_resign.json").read_text())["verdict"] == "SIGNED_AT_PERIOD"
-    assert SP.judge(fin)["verdict"] == "SIGNED"
+    assert json.loads((d / "period_resign.json").read_text())["verdict"] == "ACHIEVABLE_AT_PERIOD"
+    assert SP.judge(fin)["verdict"] == "NOT SIGNED"                                       # a 915 ps STA never counts
     assert fin["period_eco_evidence"]["evidence"][0][1] == "EXHAUSTED"
 
 
@@ -142,7 +135,7 @@ def test_run_stops_above_1000(tmp_path):
     a = type("A", (), dict(signoff=str(unit / "signoff" / "signoff.json"), out=None, step=5, max=1000, image=None, dry=False,
                            no_eco_evidence=True))
     rc = PR.run(a, runner=fake_runner({995.0: -60.0, 1000.0: -50.0}))
-    assert rc == 1 and not (unit / "signoff_period" / "signoff.json").exists()
+    assert rc == 1 and not (unit / "signoff_period" / "period_report.json").exists()
     assert json.loads((unit / "signoff_period" / "period_resign.json").read_text())["verdict"] == "OVER_1000"
 
 

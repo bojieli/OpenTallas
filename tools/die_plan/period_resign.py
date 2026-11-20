@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
-"""period_resign.py -- sign a routed DB at the period it achieves (SIGN-PERIOD, OWNER 2026-11-20 decision (1), lane SIGN-PROFILE-0400).
+"""period_resign.py -- REPORT the period a routed DB achieves (report only; never a sign-off path).
+
+OWNER 11-20, superseding the 1000 ps part of decision (1): "Fix hold structurally, never by changing the clock. Fix setup misses with
+more pipeline stages."  Nothing signs above 833 ps.  This tool measures, on the SAME routed DB, the smallest period <= 1000 ps at which
+TT setup >= -42 ps, and writes it to <unit>/signoff_period/period_report.json (achievable_period_ps): it shows how far a type is from
+833 so its setup miss can be fixed with pipeline stages.  It never writes a signoff.json; signoff_profile refuses any record timed
+above 833 ps.  The text below describes the measurement (originally SIGN-PERIOD, lane SIGN-PROFILE-0400).
 
 OWNER 11-20: a type signs at 833 ps where its build passes.  Otherwise the SAME routed DB is signed at a relaxed period, up to
 1000 ps; the die then runs at the slowest signed type's period (up to -17 % tok/s accepted).  The gates are unchanged: detailed
@@ -53,7 +59,7 @@ import signoff_profile as SP  # noqa: E402
 
 SCHEMA = "opentallas.period_resign.v1"
 PERIOD_PS = SP.PERIOD_PS                      # 833
-PERIOD_MAX_PS = SP.SIGN_PERIOD_MAX_PS         # 1000
+PERIOD_MAX_PS = SP.ACHIEVABLE_REPORT_MAX_PS   # 1000 (report range; signing stays at 833)
 SETUP_TOL_PS = SP.SETUP_TOL_PS                # 42
 STEP_PS = 5.0
 RULE = ("SIGN-PERIOD (OWNER 2026-11-20 decision (1)): sign at 833 ps where the build passes, else the same routed DB at the smallest "
@@ -282,9 +288,10 @@ def run(a, runner=None):
             break
         if row["tt_wns_ps"] >= -SETUP_TOL_PS:
             fin = finalize(rec833, path833, trial, p, summary["search"], eco=dict(evidence=c.get("eco_evidence"), override=bool(c.get("eco_evidence_override"))))
-            (out / "signoff.json").write_text(json.dumps(fin, indent=1) + "\n")
-            summary.update(verdict="SIGNED_AT_PERIOD" if fin.get("verdict") == "SIGNED" else "NOT_SIGNED_AT_PERIOD",
-                           signed_period_ps=p, record=str(out / "signoff.json"), reasons=fin.get("reasons"))
+            fin.pop("signed_period_ps", None)
+            fin.update(achievable_period_ps=float(p), report_only=True, verdict="REPORT ONLY (not a sign-off: OWNER 11-20, nothing signs above 833)")
+            (out / "period_report.json").write_text(json.dumps(fin, indent=1) + "\n")
+            summary.update(verdict="ACHIEVABLE_AT_PERIOD", achievable_period_ps=p, record=str(out / "period_report.json"))
             break
         p = next_period(p, row["tt_wns_ps"], step)
     else:
@@ -292,8 +299,8 @@ def run(a, runner=None):
     if not a.dry:
         out.mkdir(parents=True, exist_ok=True)
         (out / "period_resign.json").write_text(json.dumps(summary, indent=1) + "\n")
-    print(json.dumps({k: summary.get(k) for k in ("verdict", "signed_period_ps", "record", "why")}))
-    return 0 if summary.get("verdict") == "SIGNED_AT_PERIOD" else 1
+    print(json.dumps({k: summary.get(k) for k in ("verdict", "achievable_period_ps", "record", "why")}))
+    return 0 if summary.get("verdict") == "ACHIEVABLE_AT_PERIOD" else 1
 
 
 def main(argv=None):

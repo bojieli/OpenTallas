@@ -1,4 +1,4 @@
-"""SIGN-PERIOD + SIGN-INHERIT in the counter (OWNER 2026-11-20 (1) and (3))."""
+"""Counter: nothing signs above 833 ps (OWNER 11-20); SIGN-INHERIT netlist records (OWNER 11-20 (3))."""
 import hashlib
 import json
 import pathlib
@@ -23,16 +23,11 @@ def test_counts_signed_period_rules():
     assert CS(rec())                                   # 833 record, no periods recorded (old records)
     assert CS(rec(period=833.0))
     assert not CS(rec(period=900.0))                   # relaxed clock without a declared period
-    assert CS(rec(period=900.0, sp=900))
+    assert not CS(rec(period=900.0, sp=900))           # OWNER 11-20: nothing signs above 833, even when declared
+    assert CS(rec(period=833.0, sp=833))
     assert not CS(rec(period=905.0, sp=900))           # declared != measured
     assert not CS(rec(period=1100.0, sp=1100))         # over the 1000 cap
     assert not CS(rec(tt=-50.0, period=900.0, sp=900))
-
-
-def test_type_and_die_period():
-    st = {"a": ["h:/x PERIOD 900", "h:/y"], "b": ["h:/z PERIOD 950"], "c": ["h:/q"]}
-    tp = R.type_periods(st)
-    assert tp == {"a": 833.0, "b": 950.0, "c": 833.0} and R.die_period(tp) == 950.0 and R.die_period({}) == 833.0
 
 
 def inherit_row(tmp_path, schema, iso=True, credit=True):
@@ -43,11 +38,10 @@ def inherit_row(tmp_path, schema, iso=True, credit=True):
 
 
 def test_netlist_inherit_credit_reason(tmp_path):
-    st = {"o": ["h:/o/signoff.json SIGNED-NO-TAG PERIOD 915"]}
+    st = {"o": ["h:/o/signoff.json SIGNED-NO-TAG"]}
     tm = {"o": "mo", "m": "mm"}
     done = R.inherit_credit("s81", st, tm, [inherit_row(tmp_path, R.NETLIST_INHERIT_SCHEMA)])
-    assert done == ["m"] and "INHERIT o" in st["m"][0] and "PERIOD 915" in st["m"][0]
-    assert R.type_periods(st)["m"] == 915.0           # an inheritor runs at its representative's period
+    assert done == ["m"] and "INHERIT o" in st["m"][0]
 
 
 def test_netlist_inherit_needs_proof_and_credit(tmp_path):
