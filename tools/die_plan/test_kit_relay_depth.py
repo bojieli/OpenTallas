@@ -109,3 +109,13 @@ def test_kit_rtl_runs_it_and_reports_it():
     j = body.index("except ValueError as exc:", body.index("kit_relay_depth.apply"))      # the same try: ValueError -> BindError
     assert "raise BindError" in body[j:j + 120] and "try:" not in body[body.index("kit_relay_depth.apply"):j]
     assert "kit_relay_depth.json" in body and "(kit_rd_rep or {}).get(\"applied\")" in body
+
+
+def test_relay_branch_copies_must_be_bound():
+    rows = [{"inst": "u_lep", "copies": [{"name": "u_lnl0", "sinks": ["x"], "D": 0}]}]
+    assert KRD.check_branch(BOUND, "t", rows, leaf) == 1
+    rows[0]["copies"].append({"name": "u_lep_c1", "sinks": ["y"], "D": 0})
+    with pytest.raises(ValueError, match="row u_lep copy u_lep_c1 is not in the bound module"):
+        KRD.check_branch(BOUND, "t", rows, leaf)
+    src = (Path(__file__).resolve().parent / "bind.py").read_text()
+    assert "kit_relay_depth.check_branch(btxt, tn, t.get(\"relay_branch\")" in src

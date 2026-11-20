@@ -136,3 +136,17 @@ def apply(btxt, tn, rows, leaf_id, sv_id):
     rec["applied"] = sum(1 for x in rec["rows"] if x["how"] == "kit-rtl")
     rec["bound"] = sum(1 for x in rec["rows"] if x["how"] == "bound")
     return btxt, rec
+
+
+def check_branch(btxt, tn, rows, leaf_id):
+    """plan relay_branch rows against the bound text: kit-rtl cannot make a relay copy, so every planned copy leaf must already be
+    a bound instance (bind.py relay_branch.apply); a missing copy raises ValueError naming the row and the copy.  Returns the
+    number of copies checked."""
+    n = 0
+    for r in rows or []:
+        for cp in r.get("copies") or []:
+            if not re.search(rf"(?<![\w$]){re.escape(leaf_id(cp['name']))}\s*\(", btxt):
+                raise ValueError(f"relay_branch {tn}: row {r.get('inst')} copy {cp['name']} is not in the bound module and kit-rtl "
+                                 "cannot add a relay copy: re-run bind.py on this plan")
+            n += 1
+    return n

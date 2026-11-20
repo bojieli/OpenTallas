@@ -6794,6 +6794,7 @@ def cmd_kit_rtl(a):
         import kit_relay_depth
         btxt, kit_rd_rep = kit_relay_depth.apply(btxt, tn, t.get("relay_depth"), lambda inst: short_id("u_" + sv_id(inst), 90),
                                                  sv_id)
+        kit_relay_depth.check_branch(btxt, tn, t.get("relay_branch"), lambda inst: short_id("u_" + sv_id(inst), 90))
     except ValueError as exc:
         raise BindError(f"kit-rtl {tn}: {exc}") from exc
     bports = [(m.group(1), int(m.group(2)) + 1 if m.group(2) else 1, m.group(3)) for m in
