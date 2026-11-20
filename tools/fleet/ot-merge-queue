@@ -1285,11 +1285,13 @@ def run_group(cmd, timeout):
 
 def stall_alert(st, pending):
     """ALERT once per STALL_SECS when nothing merged for STALL_SECS while approvals wait (a stuck tick cannot post at its end)"""
+    if not pending:
+        st.pop("pending_since_ts", None)
+        return
     now_ = time.time()
-    last = st.get("last_merge_ts")
-    if last is None:
-        st["last_merge_ts"] = last = now_
-    if pending and now_ - last > STALL_SECS and now_ - st.get("last_alert_ts", 0) > STALL_SECS:
+    pending_since = st.setdefault("pending_since_ts", now_)
+    last = max(pending_since, st.get("last_merge_ts") or pending_since)
+    if now_ - last > STALL_SECS and now_ - st.get("last_alert_ts", 0) > STALL_SECS:
         st["last_alert_ts"] = now_
         queue_post(st, "ALERT", "COORD", f"nothing merged for {int((now_ - last) // 60)} min with {pending} approval(s) pending; "
                                          f"tick pid {os.getpid()} (log ~/merge-queue/log). Items running > {ITEM_SECS // 60} min are set aside.")
@@ -1548,11 +1550,16 @@ def tick(args):
         except Exception as e:                            # noqa: BLE001 - the auto scan never stops approved items
             log(f"auto scan error: {type(e).__name__}: {e}")
     if not todo:
+        if not args.only:
+            stall_alert(st, 0)
         auto_digest(st)
         save_state(st)
         log(f"tick: {len(apps)} approval(s) in queue, none new")
         return 0
+    st.setdefault("pending_since_ts", time.time())
     process_todo(st, todo, text, args)
+    if not args.only and not any(it["key"] in items and it.get("status") not in TERMINAL for it in todo):
+        stall_alert(st, 0)
     auto_digest(st)
     save_state(st)
     return 0
