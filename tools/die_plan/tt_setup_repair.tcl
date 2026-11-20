@@ -157,7 +157,9 @@ if {$w0 < $mg || $ot_tt_design} {
   # r268: the GRT-stage pass must not rebuild fanouts the place stage split (sd2: 26 buffers removed, 11 pins / 20 fF -> 42 pins / 103 fF = +412 ps);
   # -skip_buffer_removal unless the caller's OT_TT_SETUP_ARGS already says so
   if {$ot_tt_rc eq "grt" && [lsearch -exact $extra -skip_buffer_removal] < 0} { lappend extra -skip_buffer_removal }
-  proc ::ot_tt_chunk {mg extra n} { repair_timing -setup -setup_margin $mg -repair_tns 100 -skip_last_gasp -verbose {*}$extra -max_iterations $n }
+  proc ::ot_tt_chunk {mg extra n} {
+  repair_timing -setup -setup_margin $mg -repair_tns 100 -skip_last_gasp -verbose {*}$extra -max_iterations $n
+  }
   proc ::ot_tt_measure {} { return [list [sta::worst_slack -max] ""] }
   set ot_tt_total 4000; if {[info exists ::env(OT_MAX_ITERATIONS)] && [string is integer -strict $::env(OT_MAX_ITERATIONS)]} { set ot_tt_total $::env(OT_MAX_ITERATIONS) }
   ot_bounded_repair tt_setup_repair [list ::ot_tt_chunk $mg $extra] ::ot_tt_measure $ot_tt_total
