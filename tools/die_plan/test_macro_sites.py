@@ -119,3 +119,38 @@ def test_strap_relay_and_tap_sites_are_obstacles():
     assert [k for k, _ in got] == ["strap", "relay", "tap", "tap"] and got[2][1] == [207.0, 588.0]
     src = (ROOT / "tools/die_plan/qc_add_macro_sites.py").read_text()
     assert "MS.site_points(t)" in src
+
+
+# ---- FABLE-PD-QC-2300 (QC-SUST-MACRO-1119): the target is legal too; overlap is illegal, never gap 0
+def occupied(t, placed=()):
+    pb = lambda q: [q[0] - 1, q[1] - 1, q[0] + 1, q[1] + 1]
+    return MS.hard_core_obstacles(t) + [pb(q) for _, q in MS.site_points(t)] + list(placed)
+
+
+def test_targets_and_sites_clear_straps_cores_relays_and_stay_in_reach():
+    # slw_st_b_v1__cle6023ec2: count-strap sites on the core input leaf, where 1ef667d1811f stacked 20 SRAMs
+    t, macros = st_b()
+    t["count_straps"] = [{"name": "strap_ca_efall", "sites_um": [[311.064, 673.92]]},
+                         {"name": "strap_ca_k_x_ctl_i", "sites_um": [[311.064, 665.28], [311.064, 682.56]]},
+                         {"name": "strap_ca_k_x_fw_ctl_p2_i", "sites_um": [[311.064, 660.96], [319.704, 669.6]]}]
+    t["hard_cores"] = [{"inst": "u_pin_core", "origin_um": [330.0, 600.0], "outline_um": [60.0, 140.0], "halo_um": 4.32}]
+    t["relay_sites"] = {"u_x/q[0]": [300.0, 640.0]}
+    placed = []
+    for n, (w, h) in macros:
+        obs = occupied(t, placed); x, y = MS.target("slw_st_b_v1__x", t, n, [w, h], obs)
+        assert MS.legal(t, [x, y, x + w, y + h], obs, MS.partners("slw_st_b_v1__x", t, n)), n
+        assert MS.worst_gap("slw_st_b_v1__x", t, n, [x, y], [w, h]) <= MS.REACH_UM, n
+        placed.append([x - 4.32, y - 4.32, x + w + 4.32, y + h + 4.32])
+
+
+def test_target_never_sits_on_a_partner_core():
+    t = st_a_with_region_cores(); inst, size = "u_bound.u_u_btab.u_bt.u_core.g_btb[2].u_m", [94.82, 41.07]
+    x, y = MS.target("slw_st_a_v2__x", t, inst, size, occupied(t))
+    box = [x, y, x + size[0], y + size[1]]
+    assert not any(MS.hits(box, MS.box_of(h)) for h in t["hard_cores"][:2])
+    assert MS.worst_gap("slw_st_a_v2__x", t, inst, [x, y], size) <= MS.REACH_UM
+
+
+def test_generator_aims_with_obstacles_and_skips_partner_cover():
+    src = (ROOT / "tools/die_plan/qc_add_macro_sites.py").read_text()
+    assert "pref=desires(tn,cc,t,occupied)" in src and "MS.covers(a,q)" in src and "g>MS.REACH_UM" in src

@@ -91,12 +91,12 @@ def cells(tn):
  if Counter(c['module'] for c in cc)!=Counter(inv[tn]['macros']):raise ValueError('macro count mismatch '+tn)
  return cc
 
-def desires(tn,cc,t):
+def desires(tn,cc,t,occ=None):
  W,H=t['outline_um'];ret={};counters=defaultdict(int)
  if tn.startswith(('sle_st_','slw_st_')):
   # connectivity, not a quarter-height grid: target = the origin closest to the macro's partner stations / bins / cores
   for c in sorted(cc,key=lambda c:c['inst']):
-   n=c['inst'];x,y=MS.target(tn,t,n,views[c['module']]['size']);ret[n]=(x,y,None)
+   n=c['inst'];x,y=MS.target(tn,t,n,views[c['module']]['size'],occ);ret[n]=(x,y,None)
  elif tn in ('coll_s','coll_n','coll_core'):
   groups=defaultdict(list);extras=[]
   for c in cc:
@@ -135,7 +135,8 @@ for tn in sorted(inv):
  # hard cores that are not re-sited here are obstacles (QC-PLAN-R3 11-20: 110 st_a KITFIT-OVERLAP in N46T)
  inner=[c['inst'] for c in cc if MS.inside_hard_core(c['inst'],t,sited)];cc=[c for c in cc if c['inst'] not in inner]
  if not cc:report[tn]={'macros':0,'inside_hard_core':len(inner)};continue
- pref=desires(tn,cc,t);occupied=obs(t,tn)+MS.hard_core_obstacles(t,sited)+[ptbox(p,1) for _,p in MS.site_points(t)];placed=[];fail=[]
+ # FABLE-PD-QC-2300: the target is aimed with the same obstacles and an overlap is illegal (not gap 0)
+ occupied=obs(t,tn)+MS.hard_core_obstacles(t,sited)+[ptbox(p,1) for _,p in MS.site_points(t)];pref=desires(tn,cc,t,occupied);placed=[];fail=[]
  # Larger macros first; all candidates are ranked by displacement within their own dataflow region.
  for c in sorted(cc,key=lambda c:(-math.prod(views[c['module']]['size']),pref[c['inst']][1],pref[c['inst']][0])):
   n=c['inst'];m=c['module'];w,h=views[m]['size'];px,py,bounds=pref[n];W,H=t['outline_um'];halo=4.32
@@ -148,10 +149,18 @@ for tn in sorted(inv):
     a=[x-halo,y-halo,x+w+halo,y+h+halo]
     if a[0]<bounds[0]-1e-6 or a[1]<bounds[1]-1e-6 or a[2]>bounds[2]+1e-6 or a[3]>bounds[3]+1e-6:continue
     candidates.append((abs(dx)+abs(dy),abs(dx),abs(dy),x,y,a))
-  choice=None
+  choice=None;st=tn.startswith(('sle_st_','slw_st_'));PN=MS.partners(tn,t,n) if st else [];best=None
   for _,_,_,x,y,a in sorted(candidates):
    if any(rect_hit(a,b) for b in occupied):continue
+   if st and any(MS.covers(a,q) for q in PN):continue
+   if st:
+    # nearest legal site that keeps every partner within reach; else the legal site with the smallest worst gap
+    g=MS.worst_gap(tn,t,n,[x-views[m]['offset'][0],y-views[m]['offset'][1]],[w,h])
+    if g>MS.REACH_UM:
+     if best is None or g<best[0]:best=(g,(x,y,a))
+     continue
    choice=x,y,a;break
+  if choice is None and best is not None:choice=best[1]
   if choice is None:fail.append(n);continue
   x,y,a=choice;occupied.append(a);v=views[m]
   placed.append({'inst':n,'module':m,'origin_um':[round(x-views[m]['offset'][0],6),round(y-views[m]['offset'][1],6)],'track_offset_um':[round(q,6) for q in views[m]['offset']],'pins_file':views[m]['pins_file'],'outline_um':v['size'],'orient':'R0','halo_um':halo,'lef':v['lef'],'lib':v['lib'],'obs_max':v['obs_max'],'note':'Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added.'})

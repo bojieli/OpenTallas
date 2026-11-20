@@ -55,8 +55,33 @@ def partners(tn, t, inst):
     return out
 
 
-def target(tn, t, inst, size):
-    """origin [x, y] for a size [w, h] macro that minimises max gap(macro box, partner) (coarse 8.64 grid, outline-clamped)"""
+HALO_UM = 4.32
+
+
+def hits(a, b):
+    """open-interior overlap of two boxes"""
+    return a[0] < b[2] - 1e-8 and b[0] < a[2] - 1e-8 and a[1] < b[3] - 1e-8 and b[1] < a[3] - 1e-8
+
+
+def covers(a, b):
+    """box a overlaps box b, or contains the point box b (zero size): a partner is never under the macro"""
+    if b[0] == b[2] and b[1] == b[3]:
+        return a[0] - 1e-8 <= b[0] <= a[2] + 1e-8 and a[1] - 1e-8 <= b[1] <= a[3] + 1e-8
+    return hits(a, b)
+
+
+def legal(t, box, obstacles, partner_boxes=()):
+    """FABLE-PD-QC-2300: macro box (halo added here) inside the outline margin, clear of every obstacle, covering no
+    partner.  Overlap is illegal, never 'gap 0'."""
+    W, H = t["outline_um"]; a = [box[0] - HALO_UM, box[1] - HALO_UM, box[2] + HALO_UM, box[3] + HALO_UM]
+    if a[0] < GRID_UM - 1e-6 or a[1] < GRID_UM - 1e-6 or a[2] > W - GRID_UM + 1e-6 or a[3] > H - GRID_UM + 1e-6:
+        return False
+    return not any(hits(a, b) for b in obstacles) and not any(covers(a, p) for p in partner_boxes)
+
+
+def target(tn, t, inst, size, obstacles=None):
+    """origin [x, y] for a size [w, h] macro that minimises max gap(macro box, partner) (coarse 8.64 grid, outline-clamped).
+    With obstacles (the generator's occupied list), only legal() boxes count; ValueError when none is legal."""
     W, H = t["outline_um"]; w, h = size; P = partners(tn, t, inst)
     xs = [p[0] for p in P] + [p[2] for p in P]; ys = [p[1] for p in P] + [p[3] for p in P]
     cx, cy = (min(xs) + max(xs)) / 2, (min(ys) + max(ys)) / 2
@@ -65,10 +90,14 @@ def target(tn, t, inst, size):
         for j in range(-30, 31):
             x = min(max(cx - w / 2 + i * GRID_UM, GRID_UM), W - GRID_UM - w)
             y = min(max(cy - h / 2 + j * GRID_UM, GRID_UM), H - GRID_UM - h)
+            if obstacles is not None and not legal(t, [x, y, x + w, y + h], obstacles, P):
+                continue
             v = max(gap([x, y, x + w, y + h], p) for p in P)
             k = (round(v, 3), abs(i) + abs(j))
             if best is None or k < best[0]:
                 best = (k, [x, y])
+    if best is None:
+        raise ValueError(f"macro_sites: {tn} {inst}: no legal site within 30 grid steps of its partners")
     return best[1]
 
 
