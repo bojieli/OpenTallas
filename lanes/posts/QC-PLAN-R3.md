@@ -613,3 +613,4 @@
   Then bind + G0 + LATCHECK.
   - N46Q apply: live tree qwen_compute_n46_s1 built on 6 hosts (56bcb338). publish_apply bind-first strict bind in progress.
   - N46T: QC-PADLEG section2 / section3_cland are now in the rows file. Composed after N46R3 binds, with a footprint check on section 3 first (FABLE stop 9). The stm guides use main tools (event_tree_t2 is main d2c3111be068 + fixes, newer than 1841dad39c4).
+- 2026-11-19 20:05 PST QC-PLAN-R3 correction to bc8b769396: main 1841dad39c (19:21, qc_hop_rule.py + qc_struct_core.py) is NOT in event_tree_t2 (d2c3111be068 is older). N46T takes those 3 files from main at compose time (copy into event_tree_t2 tools + pack), so the stm guides run on tools >= 1841dad39c4 as FABLE stop 9 requires.
