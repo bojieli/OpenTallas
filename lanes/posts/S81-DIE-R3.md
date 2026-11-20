@@ -470,3 +470,4 @@
   - 509 banks sited, 598 refused (591 final hop over 400 um, 7 with no site in the hop limit). The refused rows are in 25 types and keep their old site.
   - Estimator before sites: OK 1 / RISK 0 / OVER 65. After: OK 4 / RISK 3 / OVER 59. kv_leaf__t2 was skipped (hard type).
   - Next: the START-TREE re-plan from S81-CLOCK-WINDOW goes on plan_j4a, then a strict bind of J4. The 25 partly sited types need form A or one more bank stage; that is the leaf lane's call.
+- 2026-11-19 23:57 PST STOP J chain [S81-DIE-R3 -> COORD] J3 strict bind RED (BIND_RC=1):     T = _wf_type_tree(P, tn);. Log intel2 /srv/opentallas-scratch2/claude/s81-die-r3-hub/j_chain.out
