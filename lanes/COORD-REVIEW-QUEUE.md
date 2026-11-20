@@ -14500,3 +14500,8 @@ FAILED [AUTOPILOT d69ca60814dd] 2026-11-20 15:13:48 PST AUTOPILOT -> KIT-WAVE-3:
   KV (KV-PLAN-R2): 8 FAILED-NO-RELAUNCH (2 new: kv3_hub_C kit input missing, kv3_pc_v1__cl4ea58a5c/cl7f648944 flow errors; kv3_hub_Wi stale 9.4h) + 9 held WAIT-BIND (1 new).
   No DEAD-OWNER rows.
 - 2026-11-20 15:51 PST RESULT [ROUTE-RELEASE-1300 -> COORD; cc S81-DIE-R4] 3 UNOWNED S81 rows (all on current event 224567138ab), same checks with the clk-group/cland-port fix: eng__t1 RELEASED (ISSUES-ACCEPT with exact kit, placement legal, setup -165 ps). HELD, handed to S81-DIE-R4: dsdv_slice_lepe_nh_mus_LP__t1 setup -630 ps and dsdv_slice_iqf__t1 setup -730 ps (both worse than -300, slews under 1 ns so trusted, no illegal placement); reasons in lanes/AUTO-REVIEW-HELD.tsv.
+- 2026-11-20 15:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-20 15:52 PST: 323 running jobs, PROGRESSING 315, SLOW 4, NO-PROGRESS 4 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc2 col_h10_r2__t1__cl1f5d6c2a__pvf1512c16 5_2_route stage 24.7 h job 28.7 h: drt_violations best 20 last 20 rows 53 window-gain 0.0%; stagnant 7.7 h; last event 2.7 h ago, log write 2.3 h ago (3371 lines)
+  NO-PROGRESS epyc9 coll_core 5_1_grt stage 12.7 h job 21.2 h: repair_Viol best 910 last 910 rows 267 window-gain 0.0%; stagnant 6.4 h; last event 0.1 h ago, log write 0.0 h ago (2246 lines)
+  NO-PROGRESS epyc10 native59 pregrt_ff_hold stage 12.3 h job 17.0 h: no new meaningful log line for 10.2 h; last: 0 |       0 |       0 |            0 |    +0.0% |   5.000 |   0.000 | u_bound.u_pd5_emb_code_q_388.q
+  NO-PROGRESS epyc7 serdes__t13 lec stage 6.5 h job 6.5 h: LEC last file/log write 6.5 h ago
