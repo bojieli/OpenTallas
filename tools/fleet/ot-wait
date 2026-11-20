@@ -1,0 +1,140 @@
+#!/usr/bin/env python3
+"""ot-wait <unit|name|pid> [--timeout S] [--poll S] [--cmdline TEXT] [--dir DIR]     (WAITER-STD-1600, 2026-11-20)
+Wait for an ot-run job or an ot-push-main push, then print its status and exit with it.  Never `pgrep -f`: a pgrep waiter matches itself.
+
+  <name>   a status file name (otrun-<host>-<pid>, otpush-<host>-<pid>) in $OT_STATUS_DIR (default ~/.local/state/ot-status)
+  <unit>   an ot-heavy scope name oth-... (the file whose "unit" field equals it)
+  <pid>    a number: the pid of an ot-run / ot-push-main client of THIS host (status file otrun-<host>-<pid> or otpush-<host>-<pid>);
+           any other process is waited on by identity (kill -0, /proc starttime, /proc cmdline; a reused pid ends the wait)
+Output, one line on stdout:  DONE rc=0 unit=... end=HH:MM:SS log=...   |   DIED rc=N ...   |   ENDED rc=unknown ...
+Exit status: the job's own rc when a status file has it; 0 is returned only for a recorded rc 0.
+  66  nothing found for the target (never a silent success)       2  usage / refused (--cmdline mismatch)
+  70  a process ended and left no status (rc unknown)             71  the client died without writing a status (killed; treated as DIED)
+  124 --timeout reached, job still running
+Usage in a lane:  ot-wait otrun-$(hostname)-$PID > $LANE/wait.out &        or    ot-run ... & ; ot-wait $!
+--cmdline TEXT: refuse unless the target pid's /proc cmdline contains TEXT (guards against waiting on a pid someone else now owns)."""
+import argparse
+import json
+import os
+import sys
+import time
+
+sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)))
+import ot_status as S  # noqa: E402
+
+
+def find(target, d=None):
+    """-> (record, path) of the status file for target, or (None, None)"""
+    d = d or S.status_dir()
+    cands = [os.path.join(d, target + ".json")]
+    if target.isdigit():
+        cands = [os.path.join(d, f"otrun-{S.host()}-{target}.json"), os.path.join(d, f"otpush-{S.host()}-{target}.json")]
+    for p in cands:
+        try:
+            return json.load(open(p)), p
+        except (OSError, ValueError):
+            pass
+    if target.startswith("oth-") and os.path.isdir(d):
+        for fn in sorted(os.listdir(d), key=lambda f: os.path.getmtime(os.path.join(d, f)), reverse=True):
+            if not fn.endswith(".json") or fn.startswith("."):
+                continue
+            try:
+                r = json.load(open(os.path.join(d, fn)))
+            except (OSError, ValueError):
+                continue
+            if r.get("unit") == target:
+                return r, os.path.join(d, fn)
+    return None, None
+
+
+def alive(rec):
+    """the recorded client is still the same process"""
+    pid = rec.get("pid")
+    if not pid or not os.path.exists(f"/proc/{pid}"):
+        return False
+    try:
+        os.kill(pid, 0)
+    except PermissionError:
+        pass
+    except OSError:
+        return False
+    st = S.pid_start(pid)
+    return st is not None and (rec.get("pid_start") is None or st == rec["pid_start"])
+
+
+def line(word, rec):
+    end = time.strftime("%H:%M:%S", time.localtime(rec["t_end"])) if rec.get("t_end") else "?"
+    return f"{word} rc={rec.get('rc') if rec.get('rc') is not None else 'unknown'} unit={rec.get('unit') or rec.get('name')} host={rec.get('host')} end={end} log={rec.get('log') or 'none'}"
+
+
+def wait_status(target, a):
+    rec, path = find(target, a.dir)
+    if rec is None:
+        print(f"ot-wait: no status record for {target!r} in {a.dir or S.status_dir()} (and no such running ot-run/ot-push-main client); refusing to guess", file=sys.stderr)
+        return None, 66
+    t0 = time.time()
+    while True:
+        try:
+            rec = json.load(open(path))
+        except (OSError, ValueError):
+            pass
+        if rec.get("state") == "done":
+            rc = rec.get("rc")
+            print(line("DONE" if rc == 0 else "DIED", rec), flush=True)
+            return rec, (rc if isinstance(rc, int) else 71)
+        if not alive(rec):
+            time.sleep(1)                      # the client may have written the file between our read and the liveness check
+            try:
+                rec = json.load(open(path))
+            except (OSError, ValueError):
+                pass
+            if rec.get("state") == "done":
+                continue
+            print(line("DIED", rec) + " (client gone, no exit status written: killed)", flush=True)
+            return rec, 71
+        if a.timeout and time.time() - t0 >= a.timeout:
+            print(f"ot-wait: timeout after {a.timeout} s, {rec['name']} still running", flush=True)
+            return rec, 124
+        time.sleep(a.poll)
+
+
+def wait_pid(pid, a):
+    cl = S.cmdline(pid)
+    st = S.pid_start(pid)
+    if st is None or not cl:
+        print(f"ot-wait: no process {pid} (or empty cmdline); nothing to wait for", file=sys.stderr)
+        return 66
+    if a.cmdline and a.cmdline not in cl:
+        print(f"ot-wait: pid {pid} cmdline {cl[:120]!r} does not contain {a.cmdline!r}; refusing", file=sys.stderr)
+        return 2
+    t0 = time.time()
+    while True:
+        cur = S.pid_start(pid)
+        if cur is None or cur != st or S.cmdline(pid) != cl:
+            print(f"ENDED rc=unknown pid={pid} cmd={cl[:140]} end={time.strftime('%H:%M:%S')}", flush=True)
+            return 70
+        if a.timeout and time.time() - t0 >= a.timeout:
+            print(f"ot-wait: timeout after {a.timeout} s, pid {pid} still running", flush=True)
+            return 124
+        time.sleep(a.poll)
+
+
+def main(argv=None):
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("target")
+    ap.add_argument("--timeout", type=float, default=0)
+    ap.add_argument("--poll", type=float, default=5)
+    ap.add_argument("--cmdline", default="")
+    ap.add_argument("--dir", default="")
+    a = ap.parse_args(argv)
+    if a.target.isdigit():
+        rec, _ = find(a.target, a.dir)
+        cur = S.pid_start(int(a.target))
+        # a record of an older client that had this pid number is not this process (pid reuse)
+        if rec is None or (cur is not None and rec.get("pid_start") is not None and cur != rec["pid_start"]):
+            return wait_pid(int(a.target), a)
+    return wait_status(a.target, a)[1]
+
+
+if __name__ == "__main__":
+    sys.exit(main())

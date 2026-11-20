@@ -150,6 +150,11 @@ sigtimedwait, so the message names the SENDER (pid + command line), and one line
                          take other lanes' jobs; --all-dirs overrides after reading the list.  Never `pkill -f` ot-run.
 """
 import concurrent.futures as cf, json, os, re, shlex, signal, socket, subprocess, sys, threading, time
+sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)))
+try:
+    import ot_status as _OTS       # WAITER-STD-1600: exit-status file per client + DONE/DIED post; a host without it just runs unrecorded
+except ImportError:
+    _OTS = None
 
 NOTRUN_EXIT = 78   # FLOW-1700: every refusal before the unit starts ends with "NOT-RUN <reason>" on stderr and this status
 
@@ -1707,6 +1712,8 @@ def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun
         if (seen_unit := admission_unit(ln, tag)) is not None:
             state["started"] = True
             state["unit"] = seen_unit
+            if _OTS:
+                _OTS.set_unit(seen_unit)
             if on_start:
                 on_start(state["unit"])
             ln = ln.split(" OT_RUN_START")[0] + "\n"
@@ -3422,5 +3429,16 @@ def place(hosts, d, disk, mem, quiet=False):
     return ok
 
 
+MAINT_FLAGS = ("--selftest", "--status", "--spill-sweep", "--spill-handoff", "--cancel", "--cancel-dir")
+
+
+def _records_status(argv):
+    """a real job submission (a command after --) gets a status record; maintenance calls and --pick do not"""
+    return bool(_OTS) and "--" in argv and argv[0] not in MAINT_FLAGS and "--pick" not in argv
+
+
 if __name__ == "__main__":
-    main()
+    if _records_status(sys.argv[1:]):
+        _OTS.run_recorded("run", main, " ".join(sys.argv[1:]))
+    else:
+        main()

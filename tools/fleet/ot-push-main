@@ -18,6 +18,12 @@ import subprocess as S
 import sys
 from pathlib import Path
 
+sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)))     # python3 -I drops the script dir from sys.path
+try:
+    import ot_status as _OTS     # WAITER-STD-1600: exit-status file + DONE/DIED post per push
+except ImportError:
+    _OTS = None
+
 VENV_PY = "/srv/opentallas-scratch2/claude/mq-gate/venv/bin/python"
 
 
@@ -126,4 +132,4 @@ def main():
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(_OTS.run_recorded("push", main, "ot-push-main " + " ".join(sys.argv[1:])) if _OTS else main())
