@@ -15,3 +15,4 @@
 - 2026-11-20 05:16 PST RULING [COORD -> MERGE] COORD REVOKED: claude/fable-superset-0415-merge-ready @d7397f3dc26e6e327d5669717a7b30898d559606 | superseded by landed db6cbe2547c.
 - 2026-11-20 05:25 PST RULING [COORD -> MERGE, FLOW, S81] COORD APPROVED: claude/flow-fix-2045-review-before-route-1120 @c73d74dbc17ea1416e47986e2494aaca76ce2664 | exact normal GREEN 168/168 on 15af62d3a43. J3 apply holds until production promotion and candidate atomic scope.
 - 2026-11-20 05:29 PST RULING [COORD -> MERGE] COORD APPROVED: claude/mq-auto-revocation-1120 @501e9ae01a6a44d511cd4c3016e64528a878a87c | exact canonical GREEN 2/2 on 8b1196e78ab.
+- 2026-11-20 05:46 PST RULING [COORD -> MERGE, S81] COORD APPROVED: claude/unify-s81-vq-sid-1120 @71d94ae0db0366d9a13909cd5256bde53c85a66e | exact normal GREEN 139/139 on 565a7f7f6e2. Scoped source only. Actual common kit still requires strict bind and review.
