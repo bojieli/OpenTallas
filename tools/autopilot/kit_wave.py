@@ -1431,6 +1431,8 @@ def rearm_candidates(state, cfg, die, d, log=None):
 # source = a path under rt/current/tools (verbatim copy) or "gen_phys.RUN_KIT" (the generated runner text).  kit_flow_refresh.py (TOOLS-DECOUPLE) keeps handling the other verbatim kit scripts.
 FLOW_REFRESH_FILES = (
     ("kit", "stage_odb_cap.py", "die_plan/stage_odb_cap.py"),
+    ("kit", "tt_setup_repair.tcl", "die_plan/tt_setup_repair.tcl"),                          # lever 8: stall / wall-time bound of the TT setup repair
+    ("kit", "hold_cap.tcl", "../physical/die_plan/hbm_arch_cores/hold_cap.tcl"),             # lever 8: the same bound for the in-flow repair_timing_helper
     ("runner", "run_kit.sh", "gen_phys.RUN_KIT"),
 )
 _RUN_KIT_TEXT = {}

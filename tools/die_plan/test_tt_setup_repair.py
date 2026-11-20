@@ -140,3 +140,57 @@ def test_tcl_scales_layer_c_only_on_the_grt_basis_and_repairs_design_on_request(
     i = t.index("global_route -start_incremental -allow_congestion")
     assert i < t.index("repair_design -verbose") < t.index("repair_timing -setup -setup_margin") < t.index("global_route -end_incremental")
     assert "if {$w0 < $mg || $ot_tt_design}" in t
+
+
+def _bounded_tcl(script, env=None, delay_ms=0):
+    """run hold_cap.tcl's bounded repair in tclsh with stubs: repair_timing_helper_orig counts its calls, sta::worst_slack follows a slack script"""
+    hc = (HERE.parents[1] / "physical/die_plan/hbm_arch_cores/hold_cap.tcl").read_text()
+    prog = ("""
+namespace eval sta {}
+proc repair_timing_helper {args} {}
+set ::calls 0
+set ::seq {SEQ}
+set ::i 0
+proc sta::worst_slack {which} { set v [lindex $::seq [expr {min($::i, [llength $::seq]-1)}]]; return [lindex $v [expr {$which eq "-max" ? 0 : 1}]] }
+""" + hc + """
+rename ::ot_repair_timing_helper_orig ::ot_stub_orig
+proc ::ot_repair_timing_helper_orig {args} { incr ::calls; incr ::i; after DELAYMS; puts "CALL $args" }
+repair_timing_helper -setup
+puts "CALLS $::calls"
+""").replace("SEQ", script).replace("DELAYMS", str(delay_ms))
+    import os
+    e = dict(os.environ, **(env or {}))
+    return subprocess.run([TCLSH], input=prog, capture_output=True, text=True, env=e).stdout
+
+
+@pytest.mark.skipif(not TCLSH, reason="tclsh")
+def test_stalled_repair_stops_after_three_flat_chunks():
+    out = _bounded_tcl("{-270 -5} {-270 -5} {-270 -5} {-270 -5} {-270 -5} {-270 -5} {-270 -5}")
+    assert "OT_REPAIR_STALL repair_timing_helper stop after 600 iterations" in out and "CALLS 3" in out
+    assert out.count("-max_iterations 200") == 3
+
+
+@pytest.mark.skipif(not TCLSH, reason="tclsh")
+def test_improving_repair_continues_until_met_or_the_old_cap():
+    out = _bounded_tcl("{-300 -5} {-250 -5} {-200 -5} {-100 -5} {0 0}")
+    assert "CALLS 4" in out and "OT_REPAIR_STALL" not in out                          # slack >= 0 ends it
+    out = _bounded_tcl("{-300 -5} {-290 -5} {-280 -5} {-270 -5} {-260 -5} {-250 -5} {-240 -5}", {"OT_MAX_ITERATIONS": "600"})
+    assert "CALLS 3" in out and "OT_REPAIR_STALL" not in out                          # the old total cap (here 600 = 3 chunks) still bounds it
+
+
+@pytest.mark.skipif(not TCLSH, reason="tclsh")
+def test_wall_time_cap_stops_a_slowly_improving_repair():
+    seq = " ".join("{%d -5}" % (-300 + 10 * k) for k in range(40))
+    out = _bounded_tcl(seq, {"OT_REPAIR_MAX_S": "1", "OT_REPAIR_CHUNK": "50"}, delay_ms=1200)
+    assert "OT_REPAIR_WALLCAP repair_timing_helper stop after 50 iterations" in out and "OT_REPAIR_STALL" not in out and "CALLS 1" in out
+
+
+def test_tt_setup_step_and_hold_cap_use_the_bounded_repair_and_are_complete_tcl():
+    t = (HERE / "tt_setup_repair.tcl").read_text()
+    assert "ot_bounded_repair tt_setup_repair" in t and "-max_iterations $n" in t and "repair_timing -setup -setup_margin $mg -repair_tns 100 -skip_last_gasp -verbose {*}$extra\n" not in t
+    h = (HERE.parents[1] / "physical/die_plan/hbm_arch_cores/hold_cap.tcl").read_text()
+    assert "ot_bounded_repair repair_timing_helper" in h and "OT_REPAIR_STALL" in h and "OT_REPAIR_WALLCAP" in h
+    if TCLSH:
+        for f in (HERE / "tt_setup_repair.tcl", HERE.parents[1] / "physical/die_plan/hbm_arch_cores/hold_cap.tcl"):
+            out = subprocess.run([TCLSH], input=f"set f [open {f}]; puts [info complete [read $f]]\n", capture_output=True, text=True)
+            assert out.stdout.strip() == "1", f

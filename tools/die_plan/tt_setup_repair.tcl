@@ -105,6 +105,39 @@ if {[info exists ::env(OT_TT_SETUP_MEASURE)] && $::env(OT_TT_SETUP_MEASURE) eq "
   ot_tt_wns measure
   exit 0
 }
+# FLOW-FIX-2045 (COORD lever 8, FABLE-CLOSURE: S81 lepe proof5 ran 9 h / 3,200 repair iterations flat at -270 and left no DB): the repair is run in chunks of OT_REPAIR_CHUNK iterations
+# (default 200) and ends when neither measured slack improved by 1 ps over OT_REPAIR_STALL_CHUNKS chunks (default 3), when the wall time OT_REPAIR_MAX_S (default 7200 s, 0 = off) is used,
+# or when the old total cap is reached.  The caller then writes its DB and reports as if the repair had converged; "OT_REPAIR_STALL" / "OT_REPAIR_WALLCAP" lines name why it stopped.
+proc ::ot_bounded_repair {label run_chunk measure total} {
+  set chunk 200; set stall_n 3; set max_s 7200
+  if {[info exists ::env(OT_REPAIR_CHUNK)] && [string is integer -strict $::env(OT_REPAIR_CHUNK)] && $::env(OT_REPAIR_CHUNK) > 0} { set chunk $::env(OT_REPAIR_CHUNK) }
+  if {[info exists ::env(OT_REPAIR_STALL_CHUNKS)] && [string is integer -strict $::env(OT_REPAIR_STALL_CHUNKS)] && $::env(OT_REPAIR_STALL_CHUNKS) > 0} { set stall_n $::env(OT_REPAIR_STALL_CHUNKS) }
+  if {[info exists ::env(OT_REPAIR_MAX_S)] && [string is integer -strict $::env(OT_REPAIR_MAX_S)]} { set max_s $::env(OT_REPAIR_MAX_S) }
+  set t0 [clock seconds]; set done 0; set stall 0
+  lassign [{*}$measure] best_s best_h
+  while {$done < $total} {
+    set n [expr {min($chunk, $total - $done)}]
+    {*}$run_chunk $n
+    incr done $n
+    lassign [{*}$measure] s h
+    set better 0
+    if {$s ne "" && $best_s ne "" && $s > $best_s + 1.0} { set better 1 }
+    if {$h ne "" && $best_h ne "" && $h > $best_h + 1.0} { set better 1 }
+    if {$s ne "" && ($best_s eq "" || $s > $best_s)} { set best_s $s }
+    if {$h ne "" && ($best_h eq "" || $h > $best_h)} { set best_h $h }
+    if {$better} { set stall 0 } else { incr stall }
+    if {($s eq "" || $s >= 0) && ($h eq "" || $h >= 0)} { break }
+    if {$stall >= $stall_n} {
+      puts "OT_REPAIR_STALL $label stop after $done iterations: slack improved < 1 ps in the last $stall chunks of $chunk (setup $s hold $h)"
+      break
+    }
+    if {$max_s > 0 && [clock seconds] - $t0 >= $max_s} {
+      puts "OT_REPAIR_WALLCAP $label stop after $done iterations, [expr {[clock seconds] - $t0}] s (cap $max_s s; setup $s hold $h)"
+      break
+    }
+  }
+  return $done
+}
 lassign [ot_tt_wns before] w0 t0
 set mg 0; if {[info exists ::env(OT_TT_SETUP_MARGIN)] && $::env(OT_TT_SETUP_MARGIN) ne ""} { set mg $::env(OT_TT_SETUP_MARGIN) }
 set extra {}; if {[info exists ::env(OT_TT_SETUP_ARGS)]} { set extra $::env(OT_TT_SETUP_ARGS) }
@@ -124,7 +157,10 @@ if {$w0 < $mg || $ot_tt_design} {
   # r268: the GRT-stage pass must not rebuild fanouts the place stage split (sd2: 26 buffers removed, 11 pins / 20 fF -> 42 pins / 103 fF = +412 ps);
   # -skip_buffer_removal unless the caller's OT_TT_SETUP_ARGS already says so
   if {$ot_tt_rc eq "grt" && [lsearch -exact $extra -skip_buffer_removal] < 0} { lappend extra -skip_buffer_removal }
-  repair_timing -setup -setup_margin $mg -repair_tns 100 -skip_last_gasp -verbose {*}$extra
+  proc ::ot_tt_chunk {mg extra n} { repair_timing -setup -setup_margin $mg -repair_tns 100 -skip_last_gasp -verbose {*}$extra -max_iterations $n }
+  proc ::ot_tt_measure {} { return [list [sta::worst_slack -max] ""] }
+  set ot_tt_total 4000; if {[info exists ::env(OT_MAX_ITERATIONS)] && [string is integer -strict $::env(OT_MAX_ITERATIONS)]} { set ot_tt_total $::env(OT_MAX_ITERATIONS) }
+  ot_bounded_repair tt_setup_repair [list ::ot_tt_chunk $mg $extra] ::ot_tt_measure $ot_tt_total
   detailed_placement
   if {$ot_tt_rc eq "grt"} {
     global_route -end_incremental -allow_congestion
