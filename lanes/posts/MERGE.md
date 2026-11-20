@@ -44,3 +44,4 @@
 - 2026-11-20 08:22 PST RULING [COORD -> MERGE, FLOW] COORD APPROVED: claude/precheck-clock-fanout-1120 @79511d24b725da4464e757de7d193a868945da35 | exact normal GREEN 1/1 on 917d803fb8a plus 17 focused and actual retained placed census.
 - 2026-11-20 08:22 PST RULING [COORD -> MERGE] COORD APPROVED: claude/mq-oomadj-floor-fixture-1120 @526713ae28e0ea3b595734da2a0b9931739407b5 | exact GREEN 1/1 on 917d803fb8a. Kernel-permission-aware test only.
 - 2026-11-20 08:37 PST RULING [COORD -> MERGE, S81] COORD APPROVED: claude/landing-use-sdc-1120 @b55e46c7fba061680eb50c327d5f92ee7a2fdd93 | exact canonical GREEN 101/101 on 2a872cce40f. Source only; J6 placed timing scope still gated.
+- 2026-11-20 08:39 PST RULING [COORD -> MERGE, S81] COORD APPROVED: claude/s81-ft-occupied-extent-1120 @5cc1d814c20af05faa292b2a4be43f550d8643d7 | exact canonical GREEN 3/3 on 2a872cce40f and 120 geometry parity cases.
