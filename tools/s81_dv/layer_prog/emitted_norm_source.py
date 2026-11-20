@@ -7,6 +7,16 @@ from layer_prog.bound_control import BoundControl
 def _params(text):return {k:v.strip()for k,v in re.findall(r'\.(\w+)\(([^()]*)\)',text)}
 
 
+_XRT_BASE_PARAMETERS = {"FACE_LAND", "FOREG", "PDSK", "QDELAYS"}
+
+
+def _supported_xrt_parameters(parameters):
+    if not _XRT_BASE_PARAMETERS <= parameters.keys():
+        return False
+    extensions = {key: value for key, value in parameters.items() if key not in _XRT_BASE_PARAMETERS}
+    return extensions in ({}, {"OLAT": 1, "RING_LAND": 2})
+
+
 class EmittedNormSource:
     def __init__(self,record):
         r=json.loads(Path(record).read_text())if not isinstance(record,dict)else record
@@ -37,7 +47,7 @@ class EmittedNormSource:
             integers={k:BoundControl._integer(v)for k,v in params.items()}
             if any(type(v)is not int for v in row['params_integer'].values())or integers!=row['params_integer']:
                 raise ValueError('evaluated emitted XR parameters differ')
-            if set(integers)!={'FACE_LAND','FOREG','PDSK','QDELAYS'}or not 0<=integers['PDSK']<1<<15:raise ValueError('actual XR parameter ABI differs')
+            if not _supported_xrt_parameters(integers) or not 0<=integers['PDSK']<1<<15:raise ValueError('actual XR parameter ABI differs')
             sidexpr=re.search(r'\.sid\(([^)]+)\)',hit[2])
             if not sidexpr or sidexpr[1]!=row['sid_expression']:raise ValueError('actual XR SID connection differs')
             actualpath=re.findall(r'// as-built (\S+)',text[:hit.start()])[-1]
@@ -80,7 +90,9 @@ def inventory(bound, source_bind='explicit current bound source'):
         matches=list(re.finditer(r'^\s*(ot_s81sl_xrt[13])\s+#\((.*?)\)\s+(\w+)\s*\((.*?)^\s*\);',body,re.M|re.S))
         if len(matches)!=1:raise ValueError('one actual XRT instance required: '+str(file))
         xr=matches[0];params=_params(xr[2])
-        if set(params)!={'FACE_LAND','FOREG','PDSK','QDELAYS'}:raise ValueError('actual XRT parameter ABI differs')
+        parameters = {name: BoundControl._integer(value) for name, value in params.items()}
+        if not _supported_xrt_parameters(parameters):
+            raise ValueError("actual XRT parameter ABI differs")
         sid=re.search(r'\.sid\(([^)]+)\)',xr[4])
         name=re.fullmatch(r'(\w+)\[3:0\]',sid[1]if sid else '')
         if not name:raise ValueError('actual XRT SID parameter expression missing')
@@ -97,7 +109,7 @@ def inventory(bound, source_bind='explicit current bound source'):
                 sid_top_override=overrides.get(name),all_sid_literals={n:overrides.get(n,v).strip()
                     for n,v in defaults.items()if n.endswith('_sid')},xr_instance=xr[3],xr_master=xr[1],
                 canonical_emitted_leaf_path=canonical[-1],params_raw=params,
-                params_integer={n:BoundControl._integer(v)for n,v in params.items()},
+                params_integer=parameters,
                 wrapper_module=module,wrapper_file=str(file),wrapper_sha256=hashlib.sha256(file.read_bytes()).hexdigest()))
         sources[str(file)]=hashlib.sha256(file.read_bytes()).hexdigest()
     rows.sort(key=lambda row:row['sid'])
