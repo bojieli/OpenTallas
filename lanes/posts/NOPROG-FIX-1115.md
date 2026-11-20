@@ -314,3 +314,7 @@
   NO-PROGRESS epyc9 serdes__t13 signoff_meas_072023 stage 52.5 h job 53.7 h: no new meaningful log line for 52.1 h; last: - hold_ff: FAIL WNS -55.85 ps < 0
   NO-PROGRESS epyc8 sle_st_a_v1__cl67389ecd 5_2_route stage 12.1 h job 16.7 h: drt_violations best 72 last 72 rows 54 window-gain 0.0%; stagnant 7.3 h; last event 0.2 h ago, log write 0.1 h ago (3307 lines)
   NO-PROGRESS epyc8 sle_st_a_v1__cl989804f6__cled3c1d7b 5_2_route stage 11.8 h job 16.7 h: drt_violations best 72 last 72 rows 54 window-gain 0.0%; stagnant 6.7 h; last event 0.1 h ago, log write 0.1 h ago (3283 lines)
+- 2026-11-20 04:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-20 04:52 PST: 326 running jobs, PROGRESSING 310, SLOW 13, NO-PROGRESS 3 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc9 serdes__t13 signoff_meas_072023 stage 53.5 h job 54.7 h: no new meaningful log line for 53.1 h; last: - hold_ff: FAIL WNS -55.85 ps < 0
+  NO-PROGRESS intel1 kv3_pc_v3 5_1_grt stage 25.1 h job 51.3 h: repair_Viol best 1971 last 1971 rows 193 window-gain 0.0%; stagnant 6.3 h; last event 0.0 h ago, log write 0.0 h ago (709 lines)
+  NO-PROGRESS epyc8 sle_st_a_v1__cl989804f6__cled3c1d7b 5_2_route stage 12.8 h job 17.7 h: drt_violations best 72 last 72 rows 54 window-gain 0.0%; stagnant 7.7 h; last event 0.2 h ago, log write 0.1 h ago (3295 lines)
