@@ -2,6 +2,18 @@
 
 Work dir epyc9 /srv/opentallas-scratch2/claude/fable-fix-kv-hg3 (sc/ = STA dumps, rm/ = relay proof kits, wt/ = lane clone). Hub logs intel2 ~/tmp/ffkhg3.
 
+
+## STATE 11-19 17:5x PST (Opus successor of FABLE-FIX-KV-HG; Fable weekly limit)
+- Pushed main 8f981deeaa1 REG-LEAF-SPLIT (tools/die_plan/reg_leaf_split.py + gen_phys hook + schema + test_reg_leaf_split.py, 12 tests).
+  Replay on the k7 kit RTL: epyc9 /srv/opentallas-scratch2/claude/opus-kv-hg/replay (replay.py, yosys y_new.log rc 0).
+- Rows for D25e2: section L of FABLE-FIX-KV-HG-rows-d24.json (reg_leaf_split, west polyline, K6 = +1 eN/tN with 64 relay_sites keys,
+  kt alias keys dropped). Posted ROWS 17:5x to KV-D23-COMPOSE.
+- Lane clone: intel2 /srv/opentallas-scratch2/claude/opus-kv-hg/wt.
+## Open
+1. When D25e2 binds green (KV-D23-COMPOSE post), rebuild the k7 kit (kv3_hgi_v1__cl141fc26e) from that bind with tree tools >= 8f981deeaa1,
+   ot-run --priority proof, route goal; read OT_REG_LEAF_SPLIT / OT_RELAY_SITES unmatched 0, post-CTS TT, GRT iter 5 west bins (k7: 13,280 / 15,490).
+   D25e alone (bind on epyc10 d25ebindgate, ETA ~04:2xZ) has no t2 split: re-running k7 on it only proves the raw-branch regen (4 FSTART ends).
+
 ## STATE 11-18 17:45 PST (read this first)
 - On main from this lane: a572716aa09 relay chain keys; e788528ae26 tail_copy_anchor re-site (ODB-0359); ef4eb6eb679 tail law on polylines.
   Fixes #1 and #3 are live in KV-D23H (D23h2). Fix #2 = lane KV-KT-E0 (main 4e588e5fda), event D25, rows lanes/handoff/KV-KT-E0-rows-d25.json.
