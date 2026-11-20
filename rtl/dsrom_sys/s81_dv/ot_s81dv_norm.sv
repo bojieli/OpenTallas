@@ -765,7 +765,14 @@ module ot_s81dv_xfin #(
     // S81-KITS-RTLC 10-24 (OWNER DECISION 8, no constant pins): the S81 hardened master (defaults) takes s_i[6:0] -- its
     // producer xrt's x_si[7] is constant 0 (max index 59) and was dropped; s_i[7] is 0 inside.  ot_s81dv_norm (and DV
     // benches whose s_i may carry 8 bits) pass SIW = 8.
-    parameter integer SIW = 7
+    parameter integer SIW = 7,
+    // OPUS-FIX-S81-SLICEC 11-20 (slice C class D, reach inside xf): DLV = 1 puts one delivery stage per finish core between
+    // the ring-stop landing registers (u_x dl_*, one copy) and each of the five finish cores (u_f + 4 x u_e, a 950-um row):
+    // every core gets its own kept copy of f_v / f_t / f_base / f_d and of go (and eps for u_f), so the 817-um one-cycle
+    // fan-out becomes two placed hops.  rb_* and e_* leave one cycle later (consumers are valid-qualified); the result
+    // clear (epd, e_v) follows the delayed go; the finish faults are ignored in the delayed-go cycle (stale, sticky).
+    // DLV = 0 is the previous form bit for bit.
+    parameter integer DLV = 1
 ) (
     input  wire               clk,
     input  wire               rst_n,
@@ -895,8 +902,26 @@ module ot_s81dv_xfin #(
         .eng(md), .ej_v(ej_v), .ej_b({vtag, sid_c}), .ej_d(vdat), .ej_free(ej_free), .fault(xf));
     // ---------------------------------------------------------------- NORM finish (closed x5; ENG flits gated off)
     wire fr_v; wire [31:0] fr;
+    // go of the finish cores and of the result clear: go_c (DLV = 0) or one cycle later (DLV = 1)
+    wire go_f;
+    wire [2:0] nf_v; wire [3*8-1:0] nf_b; wire [3*NVL*32-1:0] nf_d; wire nf_go; wire [31:0] nf_eps;
+    generate
+        if (DLV != 0) begin : g_dlv_n
+            reg go_fr;
+            always @(posedge clk) go_fr <= go_c;
+            assign go_f = go_fr;
+            (* keep *) reg [2:0] v_r; (* keep *) reg [3*8-1:0] b_r; (* keep *) reg [3*NVL*32-1:0] d_r;
+            (* keep *) reg go_r; (* keep *) reg [31:0] eps_r;
+            always @(posedge clk or negedge rstn) if (!rstn) v_r <= 3'b000; else v_r <= dl_v & {3{!md}};
+            always @(posedge clk) begin b_r <= dl_b; d_r <= dl_d; go_r <= go_c; eps_r <= eps_c; end
+            assign nf_v = v_r; assign nf_b = b_r; assign nf_d = d_r; assign nf_go = go_r; assign nf_eps = eps_r;
+        end else begin : g_dlv_n0
+            assign go_f = go_c;
+            assign nf_v = dl_v & {3{!md}}; assign nf_b = dl_b; assign nf_d = dl_d; assign nf_go = go_c; assign nf_eps = eps_c;
+        end
+    endgenerate
     ot_s81dv_norm_finish #(.NV(NS * NVL), .K(NVL), .P(3), .D(64 * NVL * NS), .LM(LM), .LA(LA)) u_f (.clk(clk),
-        .rst_n(rstn), .go(go_c), .f_v(dl_v & {3{!md}}), .f_base(dl_b), .f_d(dl_d), .eps(eps_c), .r_v(fr_v), .r(fr), .fault(rf));
+        .rst_n(rstn), .go(nf_go), .f_v(nf_v), .f_base(nf_b), .f_d(nf_d), .eps(nf_eps), .r_v(fr_v), .r(fr), .fault(rf));
     always @(posedge clk or negedge rstn) if (!rstn) rb_v_q <= 1'b0; else rb_v_q <= fr_v;
     always @(posedge clk) rb_d_q <= fr;
     // ---------------------------------------------------------------- ENG finish: one per copy
@@ -914,8 +939,18 @@ module ot_s81dv_xfin #(
             for (pp = 0; pp < 3; pp = pp + 1) begin : g_v
                 assign fv[pp] = md && dl_v[pp] && dl_b[pp * 8 + 4 +: 2] == cc && dl_b[pp * 8 + 6 +: 2] != 2'd3;
             end
-            ot_s81dv_eng_finish #(.NV(NS * NVL), .K(NVL), .P(3), .LA(LA)) u_e (.clk(clk), .rst_n(rstn), .go(go_c),
-                .f_v(fv), .f_t(ft), .f_base(fb), .f_d(dl_d), .r_v(cr_v[cc]), .r_hh(chh[cc]), .r_kk(ckk[cc]), .r_dd(cdd[cc]),
+            wire [2:0] ef_v; wire [3*2-1:0] ef_t; wire [3*8-1:0] ef_b; wire [3*NVL*32-1:0] ef_d; wire ef_go;
+            if (DLV != 0) begin : g_dlv_e
+                (* keep *) reg [2:0] v_r; (* keep *) reg [3*2-1:0] t_r; (* keep *) reg [3*8-1:0] b_r;
+                (* keep *) reg [3*NVL*32-1:0] d_r; (* keep *) reg go_r;
+                always @(posedge clk or negedge rstn) if (!rstn) v_r <= 3'b000; else v_r <= fv;
+                always @(posedge clk) begin t_r <= ft; b_r <= fb; d_r <= dl_d; go_r <= go_c; end
+                assign ef_v = v_r; assign ef_t = t_r; assign ef_b = b_r; assign ef_d = d_r; assign ef_go = go_r;
+            end else begin : g_dlv_e0
+                assign ef_v = fv; assign ef_t = ft; assign ef_b = fb; assign ef_d = dl_d; assign ef_go = go_c;
+            end
+            ot_s81dv_eng_finish #(.NV(NS * NVL), .K(NVL), .P(3), .LA(LA)) u_e (.clk(clk), .rst_n(rstn), .go(ef_go),
+                .f_v(ef_v), .f_t(ef_t), .f_base(ef_b), .f_d(ef_d), .r_v(cr_v[cc]), .r_hh(chh[cc]), .r_kk(ckk[cc]), .r_dd(cdd[cc]),
                 .fault(cf[cc]));
         end
     endgenerate
@@ -926,7 +961,7 @@ module ot_s81dv_xfin #(
     integer d2;
     always @(posedge clk or negedge rstn)
         if (!rstn) begin epd <= 4'd0; e_v_q <= 1'b0; end
-        else if (go_c) begin epd <= 4'd0; e_v_q <= 1'b0; end
+        else if (go_f) begin epd <= 4'd0; e_v_q <= 1'b0; end
         else begin epd <= eall & ~eoh; e_v_q <= |eall; end
     always @(posedge clk) begin
         for (d2 = 0; d2 < 4; d2 = d2 + 1) if (cr_v[d2]) begin ehh[d2] <= chh[d2]; ekk[d2] <= ckk[d2]; edd[d2] <= cdd[d2]; end
@@ -946,7 +981,8 @@ module ot_s81dv_xfin #(
 `endif
     end
     (* keep = "true" *) reg flt;                        // sticky state (kept); the fault pin flop loads its next value
-    wire flt_set = xf || rf || eflt || (|tbad) || (|cf);
+    // DLV = 1: the finish faults (rf, cf: sticky until their own, delayed go) still show the previous go in the go_f cycle
+    wire flt_set = xf || eflt || (|tbad) || (!go_f && (rf || (|cf)));
     always @(posedge clk or negedge rstn)
         if (!rstn) begin flt <= 1'b0; fault_q <= 1'b0; end
         else if (go_c) begin flt <= 1'b0; fault_q <= 1'b0; end
