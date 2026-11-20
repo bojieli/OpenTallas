@@ -1,0 +1,1 @@
+- 2026-11-19 20:01 PST ALERT SELF-STOP qwen_compute: 2 job(s) stopped by the wave 14 s after its own REAP-REVIVE (latest tt_ctlm@2 at 19:07:19: superseded by attempt 2 of the same item)
