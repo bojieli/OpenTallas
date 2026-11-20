@@ -2465,7 +2465,7 @@ def tap_clock_pin(tap):
     return tap["port"][len(pre):] if str(tap.get("port", "")).startswith(pre) else None
 
 
-def kit_model(spec, corner, name, reg=None, port=None):
+def kit_model(spec, corner, name, reg=None, port=None, tree_ports=None):
     """signed type view.  lat_min/lat_max = measured clock arrival at the type's pin registers (required); clkq/setup/
     hold default to the characterised pin register reg when the kit spec does not carry them (REAL-VIEWS-1119: the
     signed record measures insertion_pinflops; the pin register is the same library cell the budget model uses)."""
@@ -2474,6 +2474,15 @@ def kit_model(spec, corner, name, reg=None, port=None):
     if pc:   # REAL-VIEWS-PORTS 11-19: this clock port's own pin-register arrival range (signoff port_pinflops)
         c = dict(c, lat_min_ps=pc["lat_min_ps"], lat_max_ps=pc["lat_max_ps"])
         name = f"{name}:{port}"
+    elif port and spec.get("ports") and tree_ports:
+        # DIE-LEVEL-CHECK-1119 (FABLE-PD-S81-2040 fix 2): a die tap whose clock port has no pin registers in the signed
+        # record takes the range over the record's ports that ARE die tree taps of this partition, never the whole-type
+        # range: that one also holds forwarded / landing clock ports (S81 col_h9_r2 fclk_in_cland_dn_0[0]: 8 ring flops
+        # at ~0 ps), which no die tree tap launches or captures.
+        pcs = [v[corner] for k, v in spec["ports"].items() if k in tree_ports and (v or {}).get(corner)]
+        if pcs:
+            c = dict(c, lat_min_ps=min(x["lat_min_ps"] for x in pcs), lat_max_ps=max(x["lat_max_ps"] for x in pcs))
+            name = f"{name}:tree-ports"
     dflt = dict(clkq_max_ps=reg["clkq_max_wire_ps"], clkq_min_ps=reg["clkq_min_nowire_ps"], setup_ps=reg["setup_ps"],
                 hold_ps=reg["hold_ps"]) if reg else {}
     g = lambda k: float(c[k] if k in c else dflt[k])
@@ -2724,10 +2733,13 @@ def build_views(plan, taps, corner, reg, lat, core_views, kits, load_ff, part_de
             real_taps.add(port)
     ptype = {x["name"]: x["type"] for x in plan["partitions"]}
     kit_parts = set()
+    part_pins = defaultdict(set)
+    for r in taps.values():
+        part_pins[r["part"]].add(tap_clock_pin(r))
     for p, r in taps.items():
         key = r["part"] if r["part"] in kits else ptype.get(r["part"]) if ptype.get(r["part"]) in kits else None
         if key:
-            views[p] = [kit_model(kits[key], corner, key, reg, tap_clock_pin(r))]
+            views[p] = [kit_model(kits[key], corner, key, reg, tap_clock_pin(r), tree_ports=part_pins.get(r["part"]))]
             real_taps.add(p)
             kit_parts.add(r["part"])
     tot = defaultdict(int)
