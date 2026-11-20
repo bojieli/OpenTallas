@@ -1337,7 +1337,13 @@ def rearm_changes(state, cfg, die, d, rec):
         out.append("hosts+" + ",".join(added))
     led = state.setdefault(REARM_LED, {})
     k, a = f"{die}|{rec.get('item')}", int(rec.get("attempt") or 0)
-    cur = stage_tools_digest()                       # the stage tool closure, not the whole tools tree (22 merges in 4 h re-armed every failed row)
+    pin = item_gen_tools_manifest(d, rec.get("item"))
+    if sp and (sp.get("gen_tools_manifest_sha") or "") != pin:
+        out.append("generator_source")
+    if pin and tools_group(rec.get("stage")):
+        cur = pin
+    else:
+        cur = stage_tools_digest()
     seen = led.get(k)
     if not isinstance(seen, dict) or seen.get("a") != a:
         led[k] = {"a": a, "tools": cur}
@@ -4530,12 +4536,30 @@ def stops_off_cell_env(cfg, die, env):
     return env
 
 
+def item_gen_tools_manifest(d, item):
+    """Select the source-tree tools for one item and immutable event snapshot.
+
+    item_inputs[item].gen_tools_pin names the event, source manifest, and
+    exact sealed bind path used by the source-tools GEN replay.
+    """
+    inputs = (d.get("item_inputs") or {}).get(item) or {}
+    pin = inputs.get("gen_tools_pin")
+    source = inputs.get("src_manifest_hash") or d.get("src_manifest_hash")
+    bind = (inputs.get("kit_rtl") or {}).get("bind_out", (d.get("kit_rtl") or {}).get("bind_out"))
+    if (source and d.get("event") and isinstance(bind, str) and os.path.isabs(bind)
+            and isinstance(pin, dict) and pin.get("event") == d["event"]
+            and pin.get("src_manifest_hash") == source and pin.get("bind_out") == bind):
+        return source
+    return ""
+
+
 def spec_for(cfg, die, item, hub, parent=None, kind="type"):
     d = cfg["dies"][die]
     root = f"{opt(cfg, die, 'work_root')}/{die}/{d['event']}"
     # KW-FIX-38 11-08 (COORD: HBM plan_final3 for 11 types only): die option item_inputs {item: {plan, kit_rtl: {...}}} builds
     # that item from its own plan and bind; row identity (block_sha, retry keys, counting) stays on the die plan
     item_in = (d.get("item_inputs") or {}).get(item) or {}
+    gen_tools_manifest = item_gen_tools_manifest(d, item)
     # KW-FIX-45 11-11 (COORD: HBM opsb_group private src copy): item_inputs may also name src / src_sha / queue_src, so one
     # item builds from its own source tree (cp -al copy plus real copies of the approved files); the die src stays shared.
     item_kr = dict(d.get("kit_rtl") or {}, **(item_in.get("kit_rtl") or {})) if item_in.get("kit_rtl") else (d.get("kit_rtl") or {})
@@ -4545,6 +4569,7 @@ def spec_for(cfg, die, item, hub, parent=None, kind="type"):
             "roam_hosts": roam_hosts(cfg, die, item),
             "src": item_in.get("src") or d["src"], "src_sha": item_in.get("src_sha") or d.get("src_sha", ""), "src_base": d.get("src_base", ""), "src_overlay": d.get("_src_overlay", ""), "queue_src": item_in.get("queue_src") or d.get("queue_src", ""), "root": root, "work": f"{root}/items/{item}",
             "kit_rtl": item_kr, "dedup_group": dedup_group(cfg, die, item),
+            **({"gen_tools_manifest_sha": gen_tools_manifest} if gen_tools_manifest else {}),
             # SRC-TREE-1115 (FABLE-FLOW-1000 classes 4/5): src tree manifest policy.  die/global option src_manifest: "off" |
             # "verify" (default: a tree with a manifest must verify, one without is noted) | "require" (no manifest = refuse);
             # src_manifest_hash = the manifest hash adoption pinned (item_inputs may pin its own).
@@ -8118,7 +8143,7 @@ def run_item(spec_path):
         """FABLE-FLOW-1000 (TOOLS-DECOUPLE): the kit K gets this attempt's rt flow scripts (verbatim older main copies replaced,
         KIT/flow_refresh.jsonl); one KIT_FLOW_REFRESH line per stage (gen right after the kit is written, place before PLACE),
         a loud SKIPPED line when it cannot run"""
-        if not sp.get("tools_rt"):
+        if not sp.get("tools_rt") and not sp.get("gen_tools_manifest_sha"):
             print(f"KIT_FLOW_REFRESH SKIPPED: stage {stage}: {T} spec has no tools_rt (not an rt-tools launch)", flush=True)
             return
         # FLOW-FIX-2045 (FABLE-FLOW-0245: the stage refresh ran from the kit's launch-pinned tools_rt: 0 of 251 refreshed kits got the subtree patch, 240 QC kits kept the pre-fix tools of fd0e65ccdd36):
@@ -8527,7 +8552,8 @@ def run_item(spec_path):
         probe = rt_tree_cmd(sp) + f"cd {q(tsrc)} && python3 -I tools/die_plan/bind.py kit-rtl -h 2>&1 | grep -q -e --src-tree"
         rcp, _tp = run("kit_rtl_probe", remote(probe), idempotent=True)
         kbind = "tools/die_plan/bind.py"
-        if rcp:
+        pinned_gen = bool(sp.get("gen_tools_manifest_sha"))
+        if rcp and not pinned_gen:
             rc, txt = run("kit_tools_dir", remote(f"mkdir -p {q(kt)}/main_dp"), idempotent=True)
             if rc:
                 return fail("kit_rtl", txt)
@@ -8548,12 +8574,13 @@ def run_item(spec_path):
             kbind = f"{kt}/tools/die_plan/bind.py"
         krb_cmd = lambda bnd, flag: (f"cd {q(tsrc)} && python3 {q(bnd)} kit-rtl {q(plan)} --out {q(bind)} --asbuilt {q(a)} --type {q(T)} "
                                     f"{flag}--kit {q(W)}/rtl" + kit_rtl_post_cmd(T, W, plan) + kit_rtl_closure_cmd(W, src))
-        rc, txt = run("kit_rtl", otrun(8, 2, W, krb_cmd(kbind, f"--src-tree {q(src)} "), gh, roam=False))
+        src_flag = "" if rcp and pinned_gen else f"--src-tree {q(src)} "
+        rc, txt = run("kit_rtl", otrun(8, 2, W, krb_cmd(kbind, src_flag), gh, roam=False))
         # KITRTL-FAIL-1115 (KV 7u: TypeError core_tap_early_ps, AttributeError reset_tree.pin_root_copies): the staged set mixes the
         # tree's modules with main's bind.py; when the tree's older modules do not fit main's bind.py (API skew, an import-time or
         # call-time error, never a design verdict) the tree runs its OWN bind.py unchanged, one consistent set, without --src-tree
         # (exactly how every kit_rtl ran before the flag existed).
-        if rc and rcp and API_SKEW.search(strip_admission(txt)):
+        if rc and rcp and not pinned_gen and API_SKEW.search(strip_admission(txt)):
             print("KW_KITRTL_LEGACY_BIND: staged set has API skew; retrying with the tree's own bind.py (no --src-tree)", flush=True)
             rc, txt = run("kit_rtl_legacy", otrun(8, 2, W, krb_cmd(f"{src}/tools/die_plan/bind.py" if tsrc != src else "tools/die_plan/bind.py", ""),
                                                   gh, roam=False))
@@ -9628,7 +9655,8 @@ try:
     # COORD 11-19 (FABLE-FLOW-1150 D: 76 kit_topology BIND_STALE fails / 75 items, all on d8g, preflight green): the kit_topology STAGE runs the rt launch tree's kit_topology.py,
     # not the die src tree's; the preflight imports the same copy (rt/current) when it exists on the host, else the die src tree
     _rt = os.environ.get("OT_BIND_PROBE_RT") or "/srv/opentallas-scratch2/claude/rt/current/tools/die_plan"      # rt/current/tools/die_plan
-    sys.path.insert(0, _rt if os.path.isfile(_rt + "/kit_topology.py") else str(Path(a["src"]) / "tools" / "die_plan"))
+    src_tools = str(Path(a["src"]) / "tools" / "die_plan")
+    sys.path.insert(0, _rt if not a.get("gen_tools_manifest_sha") and os.path.isfile(_rt + "/kit_topology.py") else src_tools)
     import kit_topology as kt
     raw = json.loads(Path(a["plan"]).read_text())
     ab = a.get("asbuilt") or None
@@ -9684,7 +9712,9 @@ a = json.loads(sys.argv[1])
 h = hashlib.sha1()
 try:
     _rt = (os.environ.get("OT_BIND_PROBE_RT") or "/srv/opentallas-scratch2/claude/rt/current/tools/die_plan") + "/kit_topology.py"      # rt/current/tools/die_plan/kit_topology.py
-    paths = [a["plan"], _rt if os.path.isfile(_rt) else str(Path(a["src"]) / "tools" / "die_plan" / "kit_topology.py"), a["bind_out"], a.get("asbuilt") or ""]
+    src_tool = str(Path(a["src"]) / "tools" / "die_plan" / "kit_topology.py")
+    topo = _rt if not a.get("gen_tools_manifest_sha") and os.path.isfile(_rt) else src_tool
+    paths = [a["plan"], topo, a["bind_out"], a.get("asbuilt") or ""]
     n = 0
     for p in paths:
         if not p:
@@ -9837,6 +9867,9 @@ def bind_preflight(AP, cfg, st, die, rows, now=None, rpy=None):
         g = dict(src=ii.get("src") or d.get("src"), plan=ii.get("plan") or d.get("plan"), bind_out=kr["bind_out"],
                  asbuilt=kr.get("asbuilt") or "", scope=env.get("OT_NATIVE_RESET_SCOPE") or "",
                  producer=env.get("OT_NATIVE_PRODUCER_CONTEXT") or "")
+        pin = item_gen_tools_manifest(d, item)
+        if pin:
+            g["gen_tools_manifest_sha"] = pin
         if not g["src"] or not g["plan"]:
             continue
         groups.setdefault(json.dumps(g, sort_keys=True), (g, []))[1].append(item)
@@ -11401,7 +11434,8 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
             sp["gen_host"] = _nh
             sp["place_prefer"] = [_nh] + [h for h in sp.get("place_prefer") or [] if h != _nh]
             sp["hosts"] = [_nh] + [h for h in sp.get("hosts") or [] if h != _nh]
-    sp.update(rt_tools_fields(cfg, die))                   # TOOLS-DECOUPLE-1118: tools = this scheduler's rt/<sha>, fixed for the attempt
+    if not sp.get("gen_tools_manifest_sha"):
+        sp.update(rt_tools_fields(cfg, die))               # tools = scheduler rt/<sha> unless the item pins the coherent generator cohort
     sp["item_disk_gb"] = item_disk_gb(cfg, die, r["item"], r.get("replicas"))
     sp["host_fall_gb_h"] = dict(cfg.get("_disk_fall") or {})
     _ret = spec_retired(cfg, sp)
@@ -13278,6 +13312,8 @@ def kit_digest_parts(cfg, die, rec=None, group="", files=None):
             sp = json.loads((Path(rec["dir"]) / "spec.json").read_text())
         except (OSError, ValueError, TypeError):
             sp = {}
+    item = (rec or {}).get("item")
+    pin = sp.get("gen_tools_manifest_sha") if sp else item_gen_tools_manifest(d, item)
     if sp:
         kr = sp.get("kit_rtl")
     else:
@@ -13287,7 +13323,8 @@ def kit_digest_parts(cfg, die, rec=None, group="", files=None):
         kr = dict(d.get("kit_rtl") or {}, **(ii.get("kit_rtl") or {}))
     return {"block": str((rec or {}).get("block_sha") or d.get("_plan_sha") or d.get("plan_sha") or ""),
             "src": str(sp.get("src_sha") or d.get("src_sha") or ""), "overlay": str(sp.get("src_overlay") or d.get("_src_overlay") or ""),
-            "tools": stage_tools_digest(group=group, files=files),
+            "tools": pin if pin and group in ("bind", "gen") else stage_tools_digest(group=group, files=files),
+            **({"gen_tools_manifest_sha": pin} if pin else {}),
             "bind_context": bind_context_digest(cfg, die, kr),
             "views": hashlib.sha1(json.dumps(view_inputs(cfg, die, (rec or {}).get("item")), sort_keys=True).encode()).hexdigest()[:16]
             if view_inputs(cfg, die, (rec or {}).get("item")) else "",
@@ -13494,7 +13531,15 @@ def input_parts(cfg, die, item, block_sha=None):
         pc["snapshot"] = str(d.get("src_manifest_hash") or "")
         spec.pop("tools", None)                               # the stage's executed files are hashed per family (exec_family_digests), not the whole gen / bind closure
         body = {"snapshot": str(d.get("src_manifest_hash") or ""), "spec": spec}
-        return {"v": 2, "noenv": hashlib.sha1(json.dumps(body, sort_keys=True, default=str).encode()).hexdigest()[:20], "env": env, "fam": exec_family_digests(), "stg": stage_tools_digests(), "pc": pc}
+        families, stages = exec_family_digests(), stage_tools_digests()
+        pin = spec.get("gen_tools_manifest_sha")
+        if pin:
+            # The verified source manifest seals the generator and bind tools.
+            # Runtime promotions still affect the stages that refresh flow files.
+            families = dict(families, gen=pin, bind=pin, kit=pin)
+            stages = {**stages, **dict.fromkeys((*BIND_STAGES, "gen"), pin)}
+        return {"v": 2, "noenv": hashlib.sha1(json.dumps(body, sort_keys=True, default=str).encode()).hexdigest()[:20],
+                "env": env, "fam": families, "stg": stages, "pc": pc}
     except Exception:
         return {}
 
