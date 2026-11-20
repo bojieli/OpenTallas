@@ -11864,3 +11864,6 @@ FAILED [AUTOPILOT cef0808057f2] 2026-11-20 01:52:15 PST AUTOPILOT -> KIT-WAVE-3:
   - ot_s81sl_leaf__t42: DESIGN, DPL-0033 (81 site-alignment failures, 44 shared-bank flops). Bank-in-core class.
   - Relaunch 01:55: kit gen for t42, t52, t37, t47, t51 (and t21) now runs in parallel on tree CW, epyc9 (was serial behind t60; that is why nothing launched in the last hour). Each kit launches to GRT as soon as its gen is clean: intel2 ~/lanes-fable-s81leaf-2140/cw_par_hub.log, per-kit logs cw_grt_CW_<type>.log. No live-plan wave relaunch: it would stop the same way until event J carries the form C rows.
   - State of the proofs: control C t31 is in GRT, t28 in CTS (t31 CTS TT -1,026.8 without WREG). CW t28 / t31 kits are clean and waiting on the t60 gen; AW bound, kits next.
+- 2026-11-20 01:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-20 01:52 PST: 475 running jobs, PROGRESSING 459, SLOW 14, NO-PROGRESS 2 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc9 serdes__t13 signoff_meas_072023 stage 50.5 h job 51.7 h: no new meaningful log line for 50.1 h; last: - hold_ff: FAIL WNS -55.85 ps < 0
+  NO-PROGRESS epyc7 kv3_hgi_v1__cl141fc26e 5_1_grt stage 31.6 h job 49.0 h: repair_Viol best 5670 last 5670 rows 451 window-gain 0.0%; stagnant 9.6 h; last event 0.0 h ago, log write 0.0 h ago (1242 lines)
