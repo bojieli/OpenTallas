@@ -70,7 +70,7 @@ def test_route_guard_is_cross_tap_only(tmp_path):
     # the guard pass: port hold excepted, every tap port early latency widened, repair, then both restored
     a = t.index("set_false_path -hold -from $pg_in", t.index('if {$pg_tag eq "xt"} {'))     # the xt pass (the rr pass has its own, HOLD-MARGIN-FAMILY)
     w = t.index("set_clock_latency -source -early -clock $pg_ck [expr {$pg_e - $pg_dg}] [get_ports $pg_p]")
-    r = t.index("repair_timing -hold -hold_margin $pg_mrg -max_buffer_percent 100")
+    r = t.index("pg_repair_hold $pg_tag $pg_mrg $pg_inst_before")
     z = t.index("set_clock_latency -source -early -clock $pg_ck $pg_e [get_ports $pg_p]")
     b = t.rindex("unset_path_exceptions -hold -from $pg_in")
     assert a < w < r < z < b
@@ -173,6 +173,48 @@ def test_tcl_parses(tmp_path):
                    'if {![info complete $t]} { puts INCOMPLETE; exit 1 }\nputs OK\n')
     r = subprocess.run([tclsh, str(chk), str(tmp_path / "pregrt_ff_hold.tcl")], capture_output=True, text=True)
     assert r.stdout.strip() == "OK", r.stdout + r.stderr
+
+
+def test_rr_buffer_chunks_are_opt_in_and_only_catch_native_cap(tmp_path):
+    tclsh = shutil.which("tclsh")
+    if not tclsh:
+        pytest.skip("no tclsh")
+    _kit(tmp_path, {"pregrt_ff_hold": True})
+    text = (tmp_path / "pregrt_ff_hold.tcl").read_text()
+    proc = text[text.index("proc pg_repair_hold"):text.index("\nif {[catch {", text.index("proc pg_repair_hold"))]
+    proof = tmp_path / "chunk.tcl"
+    proof.write_text(proc + """
+unset -nocomplain ::env(OT_PREGRT_HOLD_R2R_CHUNK_BUFS)
+set result ""
+proc repair_timing {args} {
+  puts $args
+  if {$::result ne ""} { error $::result }
+}
+puts "default [pg_repair_hold rr 40 400000]"
+set ::env(OT_PREGRT_HOLD_R2R_CHUNK_BUFS) 200
+puts "base [pg_repair_hold all 5 400000]"
+puts "cross-tap [pg_repair_hold xt 5 400000]"
+set result "RSZ-0060 Max buffer count"
+puts "target [pg_repair_hold rr 40 400000]"
+set result "placement failure"
+puts "unrelated [catch {pg_repair_hold rr 40 400000} msg] $msg"
+set ::env(OT_PREGRT_HOLD_R2R_CHUNK_BUFS) -2
+puts "invalid [catch {pg_repair_hold rr 40 400000} msg] $msg"
+""")
+    result = subprocess.run([tclsh, str(proof)], capture_output=True, text=True, check=True)
+    assert result.stdout.splitlines() == [
+        "-hold -hold_margin 40 -max_buffer_percent 100",
+        "default 0",
+        "-hold -hold_margin 5 -max_buffer_percent 100",
+        "base 0",
+        "-hold -hold_margin 5 -max_buffer_percent 100",
+        "cross-tap 0",
+        "-hold -hold_margin 40 -max_buffer_percent 0.050000",
+        "target 1",
+        "-hold -hold_margin 40 -max_buffer_percent 0.050000",
+        "unrelated 1 placement failure",
+        "invalid 1 OT_PREGRT_HOLD_R2R_CHUNK_BUFS must be a positive integer",
+    ]
 
 
 def test_marker_missing_fails_closed(tmp_path):
