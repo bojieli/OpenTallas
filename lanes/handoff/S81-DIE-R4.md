@@ -75,3 +75,16 @@ All relaunch after the 405 reach override (lever 1) lands for D8i.
   If it is flat, keep the hold and fold the leaf spread rows into J6 (item 1).
 - The pack chain stopped once on an ssh argv quoting bug in mk_cand_d8j5.py (fixed: script piped over stdin). It resumed via j5_tail.sh / j5_apply3.sh.
 - Lockup subagent ended with jobs still queued: LEC, envelope synths, placement measurement. Paths are under epyc8 s81-die-r4-e8/j6_lockup.
+
+## 11-20 13:2x COORD ruling (J5 accepted; J6 item 9)
+- J6 item 9 = die reset relays plus monitor clock relays, keeping the 300 um rule.
+  Fix tools/die_plan/reach_relay_plan.py to run on the J5 existing-clock form (no landing_network.start_tree.provider). Relay-tool agent launched 13:2x.
+  Fallback if it is not ready by the 11-21 13:00 cut: die reset hop 405 for J6 only, relays in J7.
+- Next: t7 GRT at iteration 10, then release the leaf holds; route the J6 masters.
+- J6 rows to fold in (all under lanes/handoff):
+  - S81-SLICEC-R3-J6-rows.json
+  - lepe rows 4/5 (FABLE-FIX-S81-LEPE-*.json; confirm which files are "rows 4/5" in OPUS-FIX-S81-LEPE.md)
+  - lockup station rows_s81_index.json
+  - s81-svc-h8-j6-manifest-delta-1120.json (svc hslice dissolve + ties; R7 pending)
+  - the FABLE-PD-S81-1100 ranked list (items 1-8)
+  - item 9 above
