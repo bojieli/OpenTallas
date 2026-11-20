@@ -864,3 +864,28 @@ def test_kit_windows_per_region_with_tap_offset_rows():
     w = R.kit_windows(pc, None, plan)["intra"]
     assert w["per_region"]["p0"] == 140.0          # span of the offsets form: (20 + 10) - (-100 - 10)
     assert w["per_region"]["p1"] == 180.0
+
+
+def test_kit_contract_judged_on_contract_arrivals():
+    """HEAD-CROSSING-1119 11-19 (COORD r10): legacy minmax early/late (pin-cap range) must not land as kit-contract damage; the
+    contract block uses one nominal arrival per tap.  Same pair, window 60: minmax damage 1050 - 880 - credit 60 = 110 -> FAIL
+    on the old basis; contract basis (single) damage 50 -> PASS.  contract=None keeps the old numbers."""
+    meta = dict(node_late_ps={"h0": 500.0}, node_early_ps={"h0": 440.0}, cppr_node_range_ps={"h0": 60.0})
+    taps = {"a": dict(late_ps=1000.0, early_ps=880.0, cppr_node="h0", part="p", tap="clk_t1"),
+            "b": dict(late_ps=1050.0, early_ps=924.0, cppr_node="h0", part="p", tap="clk_t2")}
+    rng = {"h0": 60.0}
+    hw = dict(ps=60.0, basis="t")
+    old = R.time_class([("a", "b", "p")], taps, rng, REG, 20.0, 833.333, 60.0, 25.0, hold_window=hw)
+    ko = old["kit_contract_hold"]
+    assert ko["window_needed_ps"] == 110.0 and ko["verdict"] == "FAIL" and "arrival_basis" not in ko
+    ct = R.contract_arrivals(meta, taps)
+    assert ct[1] == {"h0": 0.0} and ct[0]["a"]["early_ps"] == 1000.0 and taps["a"]["early_ps"] == 880.0
+    new = R.time_class([("a", "b", "p")], taps, rng, REG, 20.0, 833.333, 60.0, 25.0, hold_window=hw, contract=ct)
+    kc = new["kit_contract_hold"]
+    assert kc["window_needed_ps"] == 50.0 and kc["worst_hold_bound_ps"] == 10.0 and kc["verdict"] == "PASS"
+    assert kc["arrival_basis"] == R.CONTRACT_ARRIVAL_BASIS
+    # the zero-logic class numbers still use the run's own arrivals
+    assert new["worst_hold_slack_ps"] == old["worst_hold_slack_ps"]
+    # the kit window table is measured on the same basis: launch port clk_t1 needs 50, not 110
+    assert R.kit_port_needs([[("a", "b", "p")]], ct[0], ct[1])[("p", "clk_t1")] == 50.0
+    assert R.kit_port_needs([[("a", "b", "p")]], taps, rng)[("p", "clk_t1")] == 110.0

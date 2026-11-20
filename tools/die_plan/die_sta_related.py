@@ -710,6 +710,22 @@ SINGLE_PAIRS = (("late_ps", "early_ps"), ("abs_late_ps", "abs_early_ps"), ("fall
                 ("abs_fall_late_ps", "abs_fall_early_ps"))
 
 
+# HEAD-CROSSING-1119 11-19 (COORD r10): the kit window contract (clock.tap_window per_port_ps / per_type_ps, written by
+# --kit-window-out) is MEASURED on the nominal policy's arrivals: one nominal arrival per tap (single), no clock calibration.
+# A run on another basis (--margin-policy legacy = minmax early/late, a --clock-cal factor) used to judge the same windows on
+# its own arrivals: the ~12 % min/max liberty pin-cap spread of every inverter stage then landed as kit-contract damage the
+# windows never priced (HEAD e2/e5c: legacy -73.64 ps, 34,822 pairs, vs +1.43 / 0 on the contract basis, same proof, same
+# windows; worst sp0 hd_spn clk_t4 -> clk_t25).  kit_contract_hold and the kit window table are now always computed on the
+# contract basis (byte-identical under the default nominal policy + single arrivals, which already are that basis).
+CONTRACT_ARRIVAL_BASIS = "contract: single nominal arrival per tap, no clock calibration (the basis the kit windows are measured on)"
+
+
+def contract_arrivals(meta, taps):
+    """(taps, rng) on the kit contract arrival basis: single_arrival(..., 'single') of the UNCALIBRATED arrivals."""
+    m, t = single_arrival(meta, taps, "single")
+    return t, clock_cppr_ranges(m)
+
+
 def single_arrival(meta, taps, mode=NOMINAL_ARRIVAL_DEFAULT):
     """--nominal-arrival single: every early key := its late key (taps, node arrays, CPPR ranges 0); returns (meta, taps)"""
     if mode == "minmax":
@@ -1741,8 +1757,10 @@ def kit_window_table(needs, plan):
 
 
 def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=False, window=None, hold_window=None,
-               ocv=None, views=None, rec=None, dd=None, kit_offset=None, missing=None):
-    """ocv: optional callable (a_port, b_port, check) -> clock OCV pessimism ps on the non-common clock (CLK-AOCV,
+               ocv=None, views=None, rec=None, dd=None, kit_offset=None, missing=None, contract=None):
+    """contract: optional (taps, rng) of the KIT CONTRACT arrival basis (contract_arrivals: one nominal arrival per tap, no
+    clock calibration) for the kit_contract_hold block only; None = the class's own taps / rng (unchanged).
+    ocv: optional callable (a_port, b_port, check) -> clock OCV pessimism ps on the non-common clock (CLK-AOCV,
     opt-in --clock-ocv); None = unchanged (no clock derate in this gate).
     views: optional {port: [endpoint models]} (REAL VIEWS, opt-in); None = the declared register on every tap.
     rec: optional dict, filled {(a, b, tag): (gate setup, gate hold, has real endpoint, both real)} (HB4, opt-in).
@@ -1904,11 +1922,12 @@ def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=Fals
         out["data_droop_setup_max_ps"] = round(dd_max, 2)
     if hold_window is not None:
         hd = []
+        ctaps, crng = contract if contract is not None else (taps, rng)
         for a, b, tag in pairs:
-            A, B = taps[a], taps[b]
+            A, B = ctaps[a], ctaps[b]
             node = pair_node(A, B)
             la, ea, lc, ec = arr4(A, B, node)
-            cr = credit(rng, node, la, ea, lc, ec)
+            cr = credit(crng, node, la, ea, lc, ec)
             ko = (kit_offset.get(b, 0.0) - kit_offset.get(a, 0.0)) if kit_offset else 0.0
             hd.append((lc - ea - cr + ko, a, b, tag))
         hd.sort(reverse=True)
@@ -1919,6 +1938,8 @@ def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=Fals
             worst=dict(launch=hd[0][1], capture=hd[0][2], where=hd[0][3], damage_ps=round(hd[0][0], 2)),
             damage_pctl_ps={q: round(hd[min(len(hd) - 1, int(len(hd) * (1 - q / 100.0)))][0], 2) for q in (50, 99, 99.9)},
             verdict="PASS" if hd[0][0] <= w else "FAIL")
+        if contract is not None:
+            out["kit_contract_hold"]["arrival_basis"] = CONTRACT_ARRIVAL_BASIS
         pr = hold_window.get("per_region")
         if pr:
             # DIE-S81-41 per-type window: each pair is bounded by its region's W (pairs are intra-region)
@@ -3141,6 +3162,7 @@ def main(argv=None):
                                         masters_basis="tap/netlist/meta clock_masters" if any(
                                             v.get("clock_masters") for v in at.values()) or meta.get("clock_masters")
                                         else "clock cell master (no clock_masters declared or traced)")
+        kc_basis = contract_arrivals(meta, taps)    # kit contract basis: before calibration / policy arrivals
         meta, taps = apply_clock_cal(meta, taps, c, ccell, a.clock_cal, proof=d)
         meta, taps = single_arrival(meta, taps, a.nominal_arrival)
         rng = clock_cppr_ranges(meta)
@@ -3273,14 +3295,15 @@ def main(argv=None):
                       f"{rr['worst_hi_declared']})")
         vmiss = missing_views(views, taps, plan, ecm)
         if a.kit_window_out:
-            kw_needs.append(kit_port_needs([pairs["intra"], pairs["intra_cross_region"]], taps, rng, kit_off,
+            kw_needs.append(kit_port_needs([pairs["intra"], pairs["intra_cross_region"]], kc_basis[0], kc_basis[1], kit_off,
                                            related=kw_related, ptype={q["name"]: q["type"] for q in plan.get("partitions", [])}))
         for k, pl in pairs.items():
             hrec = hbrec.setdefault(c, {}).setdefault(k, {}) if a.hold_buffers != "none" else None
             cr["classes"][k] = time_class(pl, taps, rng, reg, a.core_tol_ps, period, unc_s, unc_h,
                                           landed=k.startswith("landed"), window=window,
                                           hold_window=hwin.get(k) if c == "FF" else None, ocv=ocv, views=views,
-                                          rec=hrec, dd=dd, kit_offset=kit_off, missing=vmiss)
+                                          rec=hrec, dd=dd, kit_offset=kit_off, missing=vmiss,
+                                          contract=kc_basis if c == "FF" and not a.mesh_signoff else None)
             cr["classes"][k]["label"] = ("real-view+budget" if real else "declared-budget") + (
                 f" + core-tap insertion {ci['mode']} (view {ci['source']['view']} / declared {ci['source']['declared']}"
                 f" / missing {ci['source']['missing']})" if ecm else "") + (

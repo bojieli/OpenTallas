@@ -300,3 +300,37 @@ def test_same_edge_absent_keeps_bytes_and_other_rows_refuse_multicycle():
 def test_same_edge_declaration_fails_closed(extra):
     with pytest.raises(ValueError):
         PC.pins(_same_edge_plan(**extra), 'mid')
+
+
+def test_export_insertion_is_plan_data_in_sidecar_and_keeps_sdc_bytes(tmp_path):
+    """HEAD-CROSSING-1119 11-19: an output pad clock's declared insertion is plan data: validated, in the sidecar, SDC unchanged."""
+    p = plan(); before = GP.sdc(p, 'mid', GP.type_pins(p, 'mid'))
+    assert PC.export_insertion(p, 'mid') == {}
+    b = p.types['mid']['clock']['pad_clock']['pins'][1]
+    b['export_insertion_ps'] = dict(TT=600.0, FF=500.0, basis='type insertion + 453 um fwd leg estimate')
+    assert PC.export_insertion(p, 'mid') == {'pma_tck': dict(TT=600.0, FF=500.0, basis='type insertion + 453 um fwd leg estimate')}
+    assert GP.sdc(p, 'mid', GP.type_pins(p, 'mid')) == before
+    PC.write_contract(p, 'mid', tmp_path)
+    side = json.loads((tmp_path / 'pad_clock.json').read_text())['pins']
+    assert [q['export_insertion_ps']['TT'] for q in side if q['name'] == 'pma_tck'] == [600.0]
+    item = schema.SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"][
+        "pad_clock"]["properties"]["pins"]["items"]["properties"]
+    assert item["export_insertion_ps"]["required"] == ["TT", "FF", "basis"]
+
+
+@pytest.mark.parametrize('mutation', ['input-pin', 'no-basis', 'negative', 'nan', 'over-period', 'ff-above-tt', 'extra-key',
+                                      'bool-value', 'measured-str'])
+def test_export_insertion_fails_closed(mutation):
+    p = plan(); a, b = p.types['mid']['clock']['pad_clock']['pins']
+    e = dict(TT=600.0, FF=500.0, basis='x')
+    if mutation == 'input-pin': a['export_insertion_ps'] = e
+    else: b['export_insertion_ps'] = e
+    if mutation == 'no-basis': e.pop('basis')
+    if mutation == 'negative': e['FF'] = -1.0
+    if mutation == 'nan': e['TT'] = float('nan')
+    if mutation == 'over-period': e['TT'] = b['period_ps'] + 1
+    if mutation == 'ff-above-tt': e['FF'] = 700.0
+    if mutation == 'extra-key': e['SS'] = 900.0
+    if mutation == 'bool-value': e['TT'] = True
+    if mutation == 'measured-str': e['measured'] = 'yes'
+    with pytest.raises(ValueError): PC.pins(p, 'mid')

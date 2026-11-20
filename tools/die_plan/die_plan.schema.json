@@ -3232,6 +3232,32 @@
                }
               }
              }
+            },
+            "export_insertion_ps": {
+             "type": "object",
+             "additionalProperties": false,
+             "required": [
+              "TT",
+              "FF",
+              "basis"
+             ],
+             "properties": {
+              "TT": {
+               "type": "number",
+               "minimum": 0
+              },
+              "FF": {
+               "type": "number",
+               "minimum": 0
+              },
+              "basis": {
+               "type": "string",
+               "minLength": 1
+              },
+              "measured": {
+               "type": "boolean"
+              }
+             }
             }
            }
           }

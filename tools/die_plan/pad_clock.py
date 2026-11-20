@@ -58,7 +58,7 @@ def pins(P, tn):
     periods.update({n: float(P.die['period_ps']) for n, *_ in gen_phys.clock_pins(P, tn) + gen_phys.core_tap_pins(P, tn)})
     periods.update({n: float(P.die['period_ps']) * m for n, _x, _y, m in gen_phys.edge_clock_pins(P, tn)})
     for p in c['pins']:
-        if not isinstance(p, dict) or required - set(p) or set(p) - required - {'source_clock_port', 'sink_pins', 'cdc', 'cdc_evidence', 'data_inputs', 'data_outputs', 'entries', 'star', 'die_trunk'}:
+        if not isinstance(p, dict) or required - set(p) or set(p) - required - {'source_clock_port', 'sink_pins', 'cdc', 'cdc_evidence', 'data_inputs', 'data_outputs', 'entries', 'star', 'die_trunk', 'export_insertion_ps'}:
             raise ValueError(f'{tn}: pad_clock pin requires name/dir/period_ps/source/layer/xy_um')
         n = p['name']; pad = pads.get(n)
         if not isinstance(n, str) or not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', n) or n in seen:
@@ -133,12 +133,44 @@ def pins(P, tn):
                     raise ValueError(f'{tn}.{n}: data_outputs requires finite min_ps <= max_ps')
                 if not isinstance(row['evidence'], str) or not row['evidence'].strip():
                     raise ValueError(f'{tn}.{n}: actual source-synchronous data-clock evidence required')
+        if 'export_insertion_ps' in p:
+            check_export_insertion(tn, p)
         if 'entries' in p:
             check_entries(tn, t, p, {q['name'] for q in t.get('pads', [])})
         result.append(dict(p))
     if seen != set(pads):
         raise ValueError(f'{tn}: pad_clock must cover every existing clock pad: {sorted(set(pads) - seen)}')
     return result
+
+
+EXPORT_INSERTION_KEYS = {'TT', 'FF', 'basis'}
+EXPORT_INSERTION_OPT = {'measured'}
+
+
+def check_export_insertion(tn, p):
+    """HEAD-CROSSING-1119 11-19: export_insertion_ps on an OUTPUT pad clock only: TT and FF finite numbers in [0, period_ps],
+    FF <= TT (the fast corner is never slower), a non-empty basis, optional measured bool.  Fails closed otherwise."""
+    n, e = p['name'], p['export_insertion_ps']
+    if p['dir'] != 'out':
+        raise ValueError(f'{tn}.{n}: export_insertion_ps is only for an output (forwarded) pad clock')
+    if not isinstance(e, dict) or not (EXPORT_INSERTION_KEYS <= set(e) <= EXPORT_INSERTION_KEYS | EXPORT_INSERTION_OPT):
+        raise ValueError(f'{tn}.{n}: export_insertion_ps requires TT/FF/basis and only the optional measured')
+    per = float(p['period_ps'])
+    for k in ('TT', 'FF'):
+        v = e[k]
+        if isinstance(v, bool) or not isinstance(v, (int, float)) or not math.isfinite(v) or not 0 <= v <= per:
+            raise ValueError(f'{tn}.{n}: export_insertion_ps.{k} must be a finite number in [0, period_ps], got {v!r}')
+    if e['FF'] > e['TT']:
+        raise ValueError(f'{tn}.{n}: export_insertion_ps FF {e["FF"]} above TT {e["TT"]}')
+    if not isinstance(e['basis'], str) or not e['basis'].strip():
+        raise ValueError(f'{tn}.{n}: export_insertion_ps needs a non-empty basis')
+    if 'measured' in e and not isinstance(e['measured'], bool):
+        raise ValueError(f'{tn}.{n}: export_insertion_ps.measured must be a bool')
+
+
+def export_insertion(P, tn):
+    """{output pad clock name: {TT, FF, basis[, measured]}} of type tn (validated through pins()); {} when none is declared."""
+    return {p['name']: dict(p['export_insertion_ps']) for p in pins(P, tn) if 'export_insertion_ps' in p}
 
 
 def _finite_xy(v):
