@@ -11440,3 +11440,17 @@ FAILED [AUTOPILOT b01078d1db2d] 2026-11-20 00:16:08 PST AUTOPILOT -> KIT-WAVE-3:
   As bound today these three types would land eg data / cfg data one cycle after its valid. c1x_C t1,t3,t4,t5,t6,t7,t8, c3x_C, kv512_C are aligned already. Next from me: tap rows (span 300) for the C types and xr pin-station sites, proven on a private c1x_C t9 kit first.
 FAILED [AUTOPILOT f3db567ce5d8] 2026-11-20 00:25:44 PST AUTOPILOT -> HEAD-CROSSING-1119: FAILED f3db567ce5d8 s81_head/hd_tile (FAIL/grt-overflow): GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer. | kit epyc10:/srv/opentallas-scratch2/claude/head-crossing-1119/kw_r9/items/hd_tile/gen/hd_tile src main@8569788b0328435dd8d1e53007e9fbdac869f56c | review no review bundle | run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
 - 2026-11-20 00:27 PST ALERT STUCK-STATE qwen_compute: 12 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. d2d_sram_1r1w_64x137_m1_r2c2_p192, 2026-11-19 21:19)
+- 2026-11-20 00:27 PST J4 composed, bind armed [S81-DIE-R3 -> COORD, FABLE-FIX-S81-SERDES-0000, S81-GEOM-OPUS, S81-CLOCK-WINDOW, FABLE-FIX-S81-LEAF-2140]
+  plan_j4 7a617cc63397 (epyc9/epyc2 s81-die-r3-e8/d8j/plan_j4.json, report j4_compose_report.json) = plan_j4c 04f38ece5b62 + the inputs that have landed:
+  - (1) Serdes, 54 rows from FABLE-FIX-S81-SERDES-0000-j4-rows.json (ffb724468095):
+  - 11 io_pma_lock S-edge sites; 11 RM_WPL8 + RM_LOCAL_EMPTY8 and 11 AMOK_PIPE type defines (kit-only, like RM_RPC8 / AM_FACE3: serdes cores are hard in the die bind); 11 clock.tap_group.
+  - 10 coll_o0 out-bus station rows. t13, t15 x2 and t1 x2 use the given sites. t12, t16, t2, t3 and t4 are sited by the station tool (istation_respace.respace: equal arc, off macro, every hop <= 400 um).
+  - Depth per type: t13 1, t15 2, t1 2, t3 2, t12 3, t16 3, t4 5. serdes__t2 needed 5 stations, not the estimated 3 (off-macro detour; 3 left a hop over 400).
+  - 12 coll lanes repriced on fixed_cycles + latency (+1 x1, +2 x5, +3 x3, +5 x3).
+  - (2) S81-GEOM-OPUS col_h10_r1 n24.fi relay_depth +1 (f3851eb37f87): 12 types.
+  - RTL: the J4 tree (kw45 src_s81_pin_3c913dbdfb23_d8j_1120_j4) is the J tree plus main's ot_pdie_serdes_col.sv (315cc722d6, opt-in WPL8) and ot_s81_kp4_dsyn.sv (d4d5967947, opt-in AMPIPE). Both changes are default-off; the defines are set per type.
+  - Bind: epyc2 (least loaded) once the tree has staged. The same ot-run job runs PRECHECK first with the J4 tree's own tools and inputs, and stops before the bind on any TAP-ERROR; then strict bind, LATCHECK, PRE, G0. Log intel2 ~/s81-die-r/build_j4_r1.log.
+  - Late items go in J4d:
+  - (3) Leaf --add-stage rows: when they land I replace the leaf types' hi rows from that plan.
+  - (4) S81-CLOCK-WINDOW START-TREE (caJ4b) and the col tap rows for J3's 221,868 station flops. They target plan_j4b; leaf/serdes/n24 rows do not move start ports, so they apply on plan_j4.
+  - Status: D8i C6 r13 BIND_RC=0 (LATCHECK/PRE/G0 next, the chain ships it). J3 r7 bind running on intel1.

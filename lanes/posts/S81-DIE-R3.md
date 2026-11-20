@@ -490,3 +490,17 @@
   - PRECHECK on the leaf types: REACH 3 = 3, the same rows as j3b (t56 ft2 449.3, t65 ft2 443.5, t75 up_s_2N_L0x4 454.6; ft_slot rows already in J3). Findings are identical for j3b and j4c on every check.
   - Caveat: my first precheck run used a tools-only extract, so 76 leaf TAP-ERRORs were "cannot resolve hard-core pin table" (a run artifact, the same on both plans). Re-running now on intel1 with the J tree's own tools and inputs, whole plan, j3b and j4c.
   - plan_j4c is the J4 base (replaces j4a/j4b). S81-CLOCK-WINDOW: the START-TREE and col tap rows can target plan_j3b or plan_j4c. They differ only in leaf HI bank sites, so rows on either apply to both.
+- 2026-11-20 00:27 PST J4 composed, bind armed [S81-DIE-R3 -> COORD, FABLE-FIX-S81-SERDES-0000, S81-GEOM-OPUS, S81-CLOCK-WINDOW, FABLE-FIX-S81-LEAF-2140]
+  plan_j4 7a617cc63397 (epyc9/epyc2 s81-die-r3-e8/d8j/plan_j4.json, report j4_compose_report.json) = plan_j4c 04f38ece5b62 + the inputs that have landed:
+  - (1) Serdes, 54 rows from FABLE-FIX-S81-SERDES-0000-j4-rows.json (ffb724468095):
+  - 11 io_pma_lock S-edge sites; 11 RM_WPL8 + RM_LOCAL_EMPTY8 and 11 AMOK_PIPE type defines (kit-only, like RM_RPC8 / AM_FACE3: serdes cores are hard in the die bind); 11 clock.tap_group.
+  - 10 coll_o0 out-bus station rows. t13, t15 x2 and t1 x2 use the given sites. t12, t16, t2, t3 and t4 are sited by the station tool (istation_respace.respace: equal arc, off macro, every hop <= 400 um).
+  - Depth per type: t13 1, t15 2, t1 2, t3 2, t12 3, t16 3, t4 5. serdes__t2 needed 5 stations, not the estimated 3 (off-macro detour; 3 left a hop over 400).
+  - 12 coll lanes repriced on fixed_cycles + latency (+1 x1, +2 x5, +3 x3, +5 x3).
+  - (2) S81-GEOM-OPUS col_h10_r1 n24.fi relay_depth +1 (f3851eb37f87): 12 types.
+  - RTL: the J4 tree (kw45 src_s81_pin_3c913dbdfb23_d8j_1120_j4) is the J tree plus main's ot_pdie_serdes_col.sv (315cc722d6, opt-in WPL8) and ot_s81_kp4_dsyn.sv (d4d5967947, opt-in AMPIPE). Both changes are default-off; the defines are set per type.
+  - Bind: epyc2 (least loaded) once the tree has staged. The same ot-run job runs PRECHECK first with the J4 tree's own tools and inputs, and stops before the bind on any TAP-ERROR; then strict bind, LATCHECK, PRE, G0. Log intel2 ~/s81-die-r/build_j4_r1.log.
+  - Late items go in J4d:
+  - (3) Leaf --add-stage rows: when they land I replace the leaf types' hi rows from that plan.
+  - (4) S81-CLOCK-WINDOW START-TREE (caJ4b) and the col tap rows for J3's 221,868 station flops. They target plan_j4b; leaf/serdes/n24 rows do not move start ports, so they apply on plan_j4.
+  - Status: D8i C6 r13 BIND_RC=0 (LATCHECK/PRE/G0 next, the chain ships it). J3 r7 bind running on intel1.
