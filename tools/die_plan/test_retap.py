@@ -81,3 +81,84 @@ def test_retap_cli_round_trip(tmp_path, monkeypatch):
     out = json.loads((tmp_path / "out.json").read_text())
     assert pins(out["partition_types"]["T"])["fclk_out_b"] == ("clk_t1", "clk_t1")
     assert set(json.loads((tmp_path / "r.json").read_text())) == {"T"}
+
+
+# ---- reset tree re-solve (COORD 11-20): N46V0/V0C bind 'control reset localization sle_sc_v2/v3: rst_n_t0:
+# emitted/published reset edge mismatch'.  The bind emits the relays of the tree it re-solves on the NEW taps; the plan
+# kept the collector_tree published on the OLD taps, so reset_consumers.localize saw relay d != published d.
+from reset_consumers import ResetConsumerError, localize  # noqa: E402
+
+# tree on the OLD taps: tap 0's terminal relay hangs on a0; tap 2 on b0
+OLD_TREE = {"relays": [dict(name=n, q=q, d=d, depth=dp, xy=[0, 0]) for n, q, d, dp in [
+    ("a", "a0", "rst_root_n", 1), ("a1", "rst_n_t0", "a0", 2), ("b", "b0", "rst_root_n", 1), ("b1", "rst_n_t2", "b0", 2)]]}
+# the same type re-solved on the NEW taps: tap 0 moved to the b branch, tap 2 to the a branch
+NEW_TREE = {"relays": [dict(name=n, q=q, d=d, depth=dp, xy=[0, 0]) for n, q, d, dp in [
+    ("a", "a0", "rst_root_n", 1), ("a1", "rst_n_t2", "a0", 2), ("b", "b0", "rst_root_n", 1), ("b1", "rst_n_t0", "b0", 2)]]}
+
+
+def emitted(tree):
+    """the bind's RTL for a tree (root relay + relays) with one localized consumer u_bin_c on rst_n"""
+    rel = "\n".join(f"ot_dp_rrelay {r['name']} (.clk(clk), .d({r['d']}), .q({r['q']}));" for r in tree["relays"])
+    return ("module fx(input wire clk, arst_n, input wire [7:0] d, input wire ea);\n"
+            "wire rst_root_n, a0, b0, rst_n_t0, rst_n_t2;\nwire rst_n = rst_n_t0;\n"
+            "ot_dp_rrelay u_rst_in (.clk(clk), .d(arst_n), .q(rst_root_n));\n" + rel + "\n"
+            "ot_dp_st #(.W(8)) u_bin_c (.clk(clk), .rst_n(rst_n), .d(d), .ea(ea), .q(q), .eq(eq));\nendmodule\n")
+
+
+def sc_type():
+    t = typ()
+    t["clock"]["landing_contract"]["collector_tree"] = copy.deepcopy(OLD_TREE)
+    t["reset"]["consumer_localization"] = [dict(instance="u_bin_c", pin="rst_n", old_reset="rst_n", new_reset="rst_n_t0",
+                                                clock_net="clk")]
+    return t
+
+
+def _fns():
+    taps = lambda r, _p: (lambda tn: NEW if r["partition_types"][tn]["clock"]["sink_bins_file"] == "placed.json" else OLD)  # noqa: E731
+    tree = lambda r, _p: (lambda tn: copy.deepcopy(NEW_TREE if r["partition_types"][tn]["clock"]["sink_bins_file"] == "placed.json" else OLD_TREE))  # noqa: E731
+    return taps, tree
+
+
+def test_stale_published_tree_reproduces_the_sc_rst_n_t0_mismatch():
+    t = sc_type()
+    t["clock"]["sink_bins_file"] = "placed.json"          # bins changed, tree NOT re-solved (V0C)
+    with pytest.raises(ResetConsumerError, match="rst_n_t0: emitted/published reset edge mismatch"):
+        localize(emitted(NEW_TREE), t["reset"]["consumer_localization"], t["clock"]["landing_contract"]["collector_tree"])
+
+
+def test_apply_resolves_and_republishes_the_reset_tree_in_the_same_step():
+    raw = dict(partition_types=dict(T=sc_type()))
+    taps, tree = _fns()
+    rep = SB.apply_bins(raw, {"T": "placed.json"}, None, taps_fn=taps, tree_fn=tree)
+    t = raw["partition_types"]["T"]
+    assert t["clock"]["landing_contract"]["collector_tree"] == NEW_TREE
+    assert any(c[0] == "landing_contract.collector_tree" for c in rep["T"])
+    # rst_n_t0 (old clk at 100,100) -> new clk; the republished tree is the one the bind emits: localize passes
+    assert t["reset"]["consumer_localization"][0]["new_reset"] == "rst_n_t0"
+    txt, rs = localize(emitted(NEW_TREE), t["reset"]["consumer_localization"], t["clock"]["landing_contract"]["collector_tree"])
+    assert ".rst_n(rst_n_t0)" in txt and rs[0]["depth"] == 2
+
+
+def test_unchanged_taps_keep_the_published_tree():
+    raw = dict(partition_types=dict(T=sc_type())); before = copy.deepcopy(raw)
+    taps, tree = _fns()
+    assert retap.repoint(copy.deepcopy(raw), raw, taps_fn=taps, tree_fn=tree) == {}
+    assert raw == before
+
+
+def test_hard_tree_is_never_republished():
+    raw = dict(partition_types=dict(T=sc_type()))
+    raw["partition_types"]["T"]["clock"]["landing_contract"]["collector_tree"]["hard"] = True
+    taps, tree = _fns()
+    SB.apply_bins(raw, {"T": "placed.json"}, None, taps_fn=taps, tree_fn=tree)
+    assert raw["partition_types"]["T"]["clock"]["landing_contract"]["collector_tree"]["relays"] == OLD_TREE["relays"]
+
+
+def test_foreign_or_stale_published_tree_is_reported_not_overwritten():
+    raw = dict(partition_types=dict(T=sc_type()))
+    foreign = dict(entry="sync", core_resets=[], relays=[])           # e.g. the cb landing collector form
+    raw["partition_types"]["T"]["clock"]["landing_contract"]["collector_tree"] = foreign
+    taps, tree = _fns()
+    rep = SB.apply_bins(raw, {"T": "placed.json"}, None, taps_fn=taps, tree_fn=tree)
+    assert raw["partition_types"]["T"]["clock"]["landing_contract"]["collector_tree"] == foreign
+    assert ["landing_contract.collector_tree", "tree_not_own", 0, 0, 0] in rep["T"]

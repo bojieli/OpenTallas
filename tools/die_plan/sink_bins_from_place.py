@@ -77,10 +77,10 @@ def read_tsv(path):
     return out
 
 
-def apply_bins(raw, bins_map, plan_path=None, taps_fn=None):
+def apply_bins(raw, bins_map, plan_path=None, taps_fn=None, tree_fn=None):
     """Set clock.sink_bins_file of each TYPE in bins_map {type: path} on plan dict raw (in place) and, in the SAME step,
     re-point the tap-named references the re-derived taps invalidate (retap.repoint: forwarded clock outputs and
-    reset consumer taps).  -> {type: [[where, key, was, now, um]]}"""
+    reset consumer taps) and re-solve + republish the collector_tree (reset tree) of every type whose taps moved.  -> {type: [[where, key, was, now, um]]}"""
     import copy
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     import retap
@@ -89,7 +89,7 @@ def apply_bins(raw, bins_map, plan_path=None, taps_fn=None):
         if tn not in raw["partition_types"]:
             raise SystemExit(f"apply: type {tn} not in plan")
         raw["partition_types"][tn].setdefault("clock", {})["sink_bins_file"] = f
-    return retap.repoint(old, raw, plan_path, plan_path, types=set(bins_map), taps_fn=taps_fn)
+    return retap.repoint(old, raw, plan_path, plan_path, types=set(bins_map), taps_fn=taps_fn, tree_fn=tree_fn)
 
 
 def main(argv=None):
