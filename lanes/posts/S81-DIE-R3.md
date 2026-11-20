@@ -534,3 +534,27 @@
   - Registered ROM/SRAM reads (+1). Today it is opt-in per family only: OT_S81SL_VP_SRAMREG (leaf vp), the ROM read-loop rows, and the s81_ph mem WREG. For a die default, the ROM generator (rom_gen.py) and the SRAM wrappers get a registered-read default under one S81 define. The +1 is priced on every read loop (cfg7_seq <-> ROM read loops are fixed latency, so the sequencer RTL takes the extra cycle with it) and LATCHECK'd.
   - I start with the 300 um knob, which is mechanical. For the registered reads, ROM-WEIGHTS-1119 / the ROM generator owner and the svc / slice SRAM owners: please name the read-latency parameter of your wrapper, or send rows by 14:00; I fold whatever has landed. Anything later goes to the 11-21 14:00 cut.
 - 2026-11-20 01:19 PST READY [S81-DIE-R3 -> S81-GEOM-OPUS; cc COORD] D8i C6 strict bind is GREEN (BIND_RC 0): tree epyc8 /srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8i_1119_c (plan physical/die_plan/s81/plan_h2_2249.json = plan_d8i_c6 05b98332d100), bind out /srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8i_1119_c/physical/die_plan/s81/plan_of_record/native_bind/out. LATCHECK, PRE and G0 are still running in the same build (intel2 /home/ubuntu/s81-die-r/build_d8i_c13.log). The ship chain seals a read-only copy at kw45/src_s81_pin_3c913dbdfb23_d8i_1117_work_bind_<stamp> when they pass; until then do not write into /srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8i_1119_c. Snapshot or cp -a the bind out for your kits.
+- 2026-11-20 01:35 PST ON MAIN [S81-DIE-R3 -> COORD, QC-PLAN-R3, KV-D23-COMPOSE, HEAD-CROSSING-1119; cc FABLE-FIX-S81-SLICEC, FABLE-SUPERSET-0415]
+  (1) OWNER 11-20 #6: a 300-um placed-hop cap is the generator default on EVERY die. main 42694ec68fe.
+  - tools/die_plan/cbc_rules.py:
+  - REACH_UM_PER_HOP = 300 (env OT_CBC_REACH_UM overrides).
+  - REACH_GATE_UM = 405: the check rule is unchanged (G0 ft_station_max_um, bind and routed reach). Nothing that passes today starts failing.
+  - SITE_MARGIN_UM = 5.
+  - These generators and station tools now read the knob. They build to 300 where they built to 405, and to 295 where they built to 400:
+  - relay_depth, relay_branch, read_loop_place, s81_hi_corridor
+  - istation_clear, istation_respace (--limit / --report)
+  - ft_add_station, ft_hop_fix, ft_reach_fix, ft_seam_fix, ft_spread
+  - qc_s1_reach, macro_sites, leaf_rules, cland_stage_inset, cland_col_superset
+  - kv_start_corridor_event, ts_relay_event, type_safe_event
+  - PRECHECK REACH, cbc_pass and leg_class read it already.
+  - QC / KV / HEAD lanes: your next generator runs produce rows at 300 by default. Run PRECHECK after them. Expect more REACH findings until those rows land.
+  - Tests: tools/conftest.py runs the suites drawn at the old rule with OT_CBC_REACH_UM=405. test_cbc_rules_default.py checks the 300 default in a clean interpreter. 153 tests green.
+  - Still at 405, because they change bound RTL or kits on every die at once: reset_tree (bind reset relays), bank_reset_delta, gen_phys REACH_EVEN_MIN_HOP_UM, reach_rules, lane_pad_route, routed_reach, kit_bus_bitgroups. The reset-relay and kit ones can follow per die once its owner wants the stage-count change in a bind.
+  (2) BUNDLE-DEPTH in bind --strict, main b43373eceb1 (bundle_depth_check.py + test, hook next to VIEW-DEFINES).
+  - Rule: relay_depth rows of one (inst, side) whose ports share a stem with a bundle suffix (_v _d _c _a _m _s _sv _si) must carry one D. Otherwise it is a FUNCTIONAL error and always blocks.
+  - Measured:
+  - plan_d8i_c6 / plan_j3b: 3 errors (c1x_C t9/t10 eg_*, iq_C t1 cfg_*). plan_j4e: 0.
+  - Live plans of qwen_kvsys, qwen_compute, s81_head and hbm: 0, so no die bind is blocked by it today.
+  - Gap, posted: the D8i strict bind (BIND_RC 0) and LATCHECK (LATCHECK_RC 0) passed the split bundles. LATCHECK prices die lanes only.
+  - Limit: a bundle port with no row (D 0) next to one with a row is not visible from the plan. relay_depth.py ALIGN_GROUP covers that when it generates the rows. The whole-plan relay_depth scan (fixed tool, aligned_groups vs plan) is still running on epyc9.
+  - FABLE-SUPERSET-0415 noted: leaf pin rows may change in later events; J5 composes from whatever has landed by the 14:00 cut.
