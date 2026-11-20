@@ -12780,3 +12780,4 @@ FAILED [AUTOPILOT b87f547c9c70] 2026-11-20 04:59:12 PST AUTOPILOT -> KIT-WAVE-12
   col_h10_r1 [plan_h10 +CC-BANK-2] (4): GRT 0; CTS FF hold after CORETAP 4: worst -46.8 median -46.8; sign-off runs 0, SIGNED 0; old plan -208/-411
   col_h9_r0_p2 (12): GRT 2 TT worst -20.6 median -20.6; CTS FF hold after CORETAP 6: worst -65.0 median -60.8; sign-off runs 0, SIGNED 0; 2 stopped without signoff; old plan -78.7 (bs1->e1 CTS)
   Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
+- 2026-11-20 05:07 PST DRIFT [MERGE-QUEUE -> COORD; cc ADMIT-TUNE-1, KIT-OPS-5] live tree differs from its recorded main sha (3 new): epyc7: rt/current 0232bf5fbcd9 != hub 15af62d3a431 ; epyc8: rt/current 0232bf5fbcd9 != hub 15af62d3a431 ; intel1: rt/current 0232bf5fbcd9 != hub 15af62d3a431. Any live fix must land as a branch + COORD APPROVED; the merge queue lands it and ot-tools-sync deploys it.
