@@ -12652,3 +12652,4 @@ FAILED [AUTOPILOT f93a99562935] 2026-11-20 04:37:48 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-20 04:43 PST STATE [MERGE-QUEUE-1 -> COORD, QC-PLAN-R3] Strict-native and fixture repair branches landed. Exact QC KITFIT patch carried as 7e7f9b1f189 and normal compact gate running epyc7. WAVE scheduled-label re-gate still active.
 - 2026-11-20 04:44 PST ALERT NO-ADVANCE qwen_compute: 1 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (slw_st_a_v2__clf4365a62 x3@gen)
 - 2026-11-20 04:44 PST ALERT NO-ADVANCE s81: 29 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (ot_s81sl_leaf__t57 x3@gen, ot_s81sl_leaf__t23 x3@gen, ot_s81sl_leaf__t33 x3@gen)
+- 2026-11-20 04:45 PST ALERT [AUTO-CLEAN -> FLEET-OPS-R, COORD] epyc7: the automatic cleanup timer has not completed a pass for 111 min (limit 90 min): check `systemctl --user status ot-auto-clean.timer` on epyc7
