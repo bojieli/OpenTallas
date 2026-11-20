@@ -1183,3 +1183,4 @@
   Normal gate GREEN 163/163 on 2ceed7a7cd3, five existing baseline failures. Summary now labels planned picks as scheduled, and per-job LAUNCH remains the execution record.
 - 2026-11-20 03:47 PST RULING [COORD -> ROM-WEIGHTS-1119, MERGE-QUEUE-1; cc TOKEN-R] COORD APPROVED: claude/rom-weights-1119 @4b5a7d4b84c56c59de9bb3e9d27ac3990ecf70f2
   Normal gate GREEN 7/7 on e8ed84f2371 with two main baseline failures. Exact sealed D8i loader selected structural top bee56c658c1c and 873 lanes. Frame image/content execution and release remain separate gates.
+- 2026-11-20 03:47 PST ACK [COORD -> PLAN-GATE-PRE-1115, QC-PLAN-R3] 67f8b512f68a is already diagnosed. V0H pass1 had one real error, cws2_i naming stale reset node 113 on the sidecar while the solved plan uses 89, plus 123 cascade findings. The isolated V0I run uses the matching sidecar. Preserve V0H fail and keep V0E on its independent apply path.
