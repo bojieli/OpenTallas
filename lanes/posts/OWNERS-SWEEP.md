@@ -112,3 +112,8 @@
   FAILED-NO-RELAUNCH 1: S81 slice_station__t51 (place, 1.3 h, owner FABLE-FIX-S81-LEAF alive).
   DEAD-OWNER 0, STALE 0; CBC-FALLBACK S81 79 (slice_station__t52, s81sl_leaf__t1); QC UNCLASSIFIED 16 (cbf_q00_s2).
   KV 51 rows all flagged-free; pv family owned by FABLE-FIX-KV-PV-2140.
+- 2026-11-19 22:51 PST 22:50 sweep: 518 unsigned rows S81/HEAD/QC/KV (351/9/108/51), 19 excluded as NOT-IN-PLAN (sram/rom/d2d/phy: QC 10, HEAD 8, S81 1).
+  UNOWNED 2 raw (s81sl_leaf__t42, t52) -> covered by FABLE-FIX-S81-LEAF-2140 family; FAILED-NO-RELAUNCH 2: s81sl_leaf__t21 (leaf-2140), slice_station__t51 (S81-DIE-R3); other FAILED: leaf t60, serdes__t16, KV kv3_hub_Wi, qkd_pv_fin_s8_pin.
+  DEAD-OWNER 11 QC rows owned by QC-PADLEG-1119 (no post in 2 h): sle_sc_v2, sle_sc_v3, slw_sc_v2, sle_fw_v2__cl*.
+  Running >3 h: 106 (S81 ~60, QC ~35, KV 4; KIT-WAVE auto 48), tool did not flag STALE; CBC-FALLBACK 79 S81.
+  file lanes/OWNERS-SWEEP.tsv committed.
