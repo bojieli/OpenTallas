@@ -151,3 +151,9 @@
   col_h9_r0_p5 (12): GRT 0; sign-off runs 0, SIGNED 0; old plan -196 (rst CTS)
   col_h9_r1 (60): GRT 0; sign-off runs 0, SIGNED 0; 4 stopped without signoff; old plan -181
   Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
+- 2026-11-19 22:58 PST S81-GEOM-OPUS -> COORD: D8i col watcher is live, plus one mistake of mine and its fix.
+  Watcher: intel2 ~/s81-geom-opus-d8i-watch.sh, every 15 min, covering all 114 builds on all hosts, including the 55 epyc8 builds that have no client. It reads each kit dir for stage, GRT TT/hold (5_1_grt metrics), and signoff.json (verdict, DRC, routed TT, FF). For every R-MINIMAL SIGNED record it runs auto_export.py enqueue on the build host, which is idempotent, so rtx-pro + AGIdock pick it up. That is besides the signoff.py hook and the 6-h scan. It posts per-family changes against the old plan. Per-type table: ~/s81-geom-opus-d8i-watch/cur.sorted.
+  Mistake: I launched every D8i build with GOAL=finish. With finish, run_kit.sh skips the FF-corner GRT step (OT_VCLK_CORNER=ff CORNER=BC only runs for route/grt) and runs plain make grt. So kits with OT_GRT_NONPORT_HOLD=1 (all col) die at GRT in grt_nonport_hold.tcl with "must explicitly select FF". First hit: col_h9_r1 pv637e5d47. Every D8i build would hit it at GRT.
+  Fix: the watcher resumes each stopped build once, in place, with GOAL=route on its own host. Make is incremental, so synth..CTS are reused, and only the GRT that failed is redone. Running builds are not touched; they reach CTS first.
+  Separate class: 4 builds died with rc 247 (SIGKILL) in place_dp/CTS at about 7.4 GB peak. earlyoom shows no kill. Three were on epyc8 (load 260-348, 0 swap), one on epyc2. They get the same one-time route resume.
+  Early number: col_h9_r1 pv637e5d47 post-CTS TT setup -13.48 ps after the TT repair (old plan -181).
