@@ -290,3 +290,14 @@ QC / KV / HEAD CBC counts need a re-run by CBC-RULES-1119 with main >= 01360b438
   GRT started, 3 h in at extra iteration 4/30 (congested like t27). No TT read yet. The NS face-bank stop on t28 is proven fixed through CTS.
 - t27keep: GRT extra iteration 12/30. t27relay: GRT clock-leaf repeat pass (48 of 2,580 branch nets over the rule). t27stb: tapbal_grt still writing (log 01:37 UTC). No t27 TT read yet.
 - svc_rs: closed, 0 links (see 14:0x). Next: TT read of t28 and t27 when GRT ends; watch GRT runtime (t27stb GRT took 4h33).
+
+## 11-19 18:3x PST: S81-VPW-WREG (t31 fix, COORD-approved +1 cycle)
+- main 6496be9f9175: tools/die_plan/s81_vpw_wreg_overlay.py + test + fixtures/s81_vp_xr/tb_vpw_wreg.sv. Bare-name define OT_S81SL_VP_WREG -> vpw parameter WREG.
+  A register on sw_a/sw_m alone would shift the sw writer against its data and the other 4 writers, so WREG registers every decoded bank-port value
+  (wv, wcol, wa, wm, wdo, xl/xh selects) plus xwd_i once: vpw(t) = ref(t-1) on every output. vp module, lane HI/HO stations, hc_post timeline, reset unchanged.
+- Bench (10 tests PASS): +1 with the define on XR and SLR forms; same cycle without it; shift-0-with-define and shift-1-without both FAIL; xwd-not-delayed mutant FAILS.
+- Plan rows: lanes/handoff/S81-VPW-WREG-ROWS.json (75 ot_s81sl_leaf__t* types, verilog_defines + latency delta). kv_leaf has no vp.
+- t31 private proof: epyc10 proof/t31wreg (attempt-12 kit copy, kit vp patched + define in config.mk), synth has the p_* stage, running to CTS.
+- GRT watch 02:20 UTC: t28 extra iteration 7/30, t27keep 18/30, t27relay clock-leaf repeat; t27stb FAIL_POSTCTS GRT-0232 (congestion too high) in the tapbal GRT, 13h47.
+  t27 hotspot is local: 138..568 GRT cells at x 846-948, y 677-945, the channels between lane cores g_ln[7]/[8]/[9] and [6]/[11]; nets = vp g_hig HI group stations + vni stations.
+  t28 iteration-5 overflow sits over its lane-core columns (x 184-526) with the same HI families plus ft stations. Same class on both; read t28 again at 15.
