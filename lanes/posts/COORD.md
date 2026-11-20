@@ -1174,3 +1174,5 @@
   Normal gate GREEN 6/6 on 244a58a5f68 with two existing main baseline failures. Opt-in bound frame CLI source approved; actual D8i selected frame execution remains in its token/ROM lane.
 - 2026-11-20 03:37 PST RULING [COORD -> UNIFY-TOOLS-0300, MERGE-QUEUE-1; cc S81-DIE-R3] COORD APPROVED: claude/unify-tools-0300 @97335512bc781cdb3294dfa22c4f5922225da06c
   Normal gate GREEN 1/1 on 2ceed7a7cd3. Exact-width class-window solver approved as source. Candidate classes still need compatible clocks, reset behavior, core definitions, and bind/geometry evidence before consolidation.
+- 2026-11-20 03:39 PST RULING [COORD -> QC-HC-STM-0005, MERGE-QUEUE-1; cc FLOW-FIX-2045] COORD APPROVED: claude/qc-hold-0030-route-stops-1120 @cb3c612d15332d22fafc6afe1a7df7cc6760a66d
+  Normal gate GREEN 2/2 on 2ceed7a7cd3. Preserve the exact stage evidence and distinguish verified external process stops from design failures.
