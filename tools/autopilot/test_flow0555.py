@@ -611,3 +611,25 @@ def test_unresolvable_event_ancestry_never_turns_a_die_off():
     cfg2 = {"dies": {"s81": dict(d)}}                                   # without stops_off the old refusal stands for a resolved non-descent
     assert KW.gate(cfg2, "s81", lambda sha, base: False)[0] is False
     assert KW.gate(cfg2, "s81", lambda sha, base: None)[0] is True
+
+
+def test_reap_never_supersedes_by_an_equal_attempt_or_another_events_row(tmp_path):
+    import json as _j
+    (tmp_path / "state.json").write_text(_j.dumps({"jobs": {}}))
+    stops = []
+    ap = type("AP", (), {"DRY": False, "AP_DIR": str(tmp_path), "log": staticmethod(lambda m: None), "HUB_NAME": "hub",
+                         "sh": staticmethod(lambda c, timeout=0, input=None: (stops.append(c) or (0, "", "")))})()
+    mk = lambda ev, att, st_: {"die": "d", "item": "i", "event": ev, "attempt": str(att), "status": "RUNNING", "unit": f"u-{ev}-{att}", "started": st_, "updated": st_, "dir": str(tmp_path)}
+    cfg = {"dies": {"d": {}}}
+    # same attempt number, two events: both keep running
+    st = {"items": {"a": mk("OLD", 2, 1.0), "b": mk("NEW", 2, 2.0)}}
+    KW.reap_stale_attempts(ap, cfg, st, {}, ap_dir=str(tmp_path))
+    assert st["items"]["a"]["status"] == "RUNNING" and st["items"]["b"]["status"] == "RUNNING"
+    # higher attempt of ANOTHER event: still both
+    st = {"items": {"a": mk("OLD", 2, 1.0), "b": mk("NEW", 3, 2.0)}}
+    KW.reap_stale_attempts(ap, cfg, st, {}, ap_dir=str(tmp_path))
+    assert st["items"]["a"]["status"] == "RUNNING"
+    # strictly higher attempt of the SAME event: the older one is superseded
+    st = {"items": {"a": mk("NEW", 2, 1.0), "b": mk("NEW", 3, 2.0)}}
+    KW.reap_stale_attempts(ap, cfg, st, {}, ap_dir=str(tmp_path))
+    assert st["items"]["a"]["status"] == "CANCELLED" and st["items"]["b"]["status"] == "RUNNING"

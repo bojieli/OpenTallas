@@ -14708,9 +14708,13 @@ def reap_stale_attempts(AP, cfg, st, notices, ap_dir=None):
         live = [r for r in rows if _row_live(r, jobs)]
         if len(live) > 1:
             live.sort(key=lambda r: (float(r.get("started") or 0), int(r.get("attempt") or 0)))
+            top = live[-1]
             for r in live[:-1]:
-                if float(r.get("started") or 0) < float(live[-1].get("started") or 0):
-                    todo.append((r, f"superseded by attempt {live[-1].get('attempt')} of the same item", True))
+                # FLOW-1949 (2) SELF-STOP (13 live jobs stopped in 2 h by "attempt N superseded by attempt N"): a row is superseded only by a STRICTLY higher attempt of the SAME event; a live row of
+                # another event is a parallel new-plan attempt (OWNER 11-19) and is never stopped for it
+                if int(top.get("attempt") or 0) > int(r.get("attempt") or 0) and str(top.get("event") or "") == str(r.get("event") or "") \
+                        and float(r.get("started") or 0) < float(top.get("started") or 0):
+                    todo.append((r, f"superseded by attempt {top.get('attempt')} of the same item", True))
         for r in rows:
             if r.get("status") == "CANCELLED" and not r.get("reaped") and now - float(r.get("updated") or 0) < float(cfg.get("reap_window_h") or 24) * 3600:
                 todo.append((r, "row CANCELLED", False))
