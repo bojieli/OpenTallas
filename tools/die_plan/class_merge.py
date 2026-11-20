@@ -14,18 +14,27 @@ tree, reader / writer start, bands: U2/U4/U6).  What may differ between members,
   - pad strap (U3): r8_strap_pad_max = the class maximum (the pad is a strap tied at the parent, OWNER 10-25 B).
   - landing role origin / relay: must be equal, or with --role-strap the class row takes every origin / relay start
     pin a member has, the count-strap union, strap_ca_relay and landing_role_strap (clock_landings ROLE-STRAP).
+  - OUT kit stations (UNIFY-TOOLS-R3): a moved instance now carries the representative's OUT-bus kit stations
+    (native_istations.kit_source_depth: internal_stations regs + declared core cycles).  Where that is deeper than the
+    member's own chain on a lane's source bus, the lane is priced for it: lane fixed_cycles and its latency row
+    fixed / cycles / natural all + delta (+cycles, OWNER pre-approved), so the bind's kit source pricing (fixed_cycles
+    >= depth) still cuts the whole chain from the receiver pad and the receiver pad is unchanged.  Without it the lane
+    is delivered late by the whole chain (LANE_ASBUILT UNPRICED_KIT_STATIONS).  Report rows: kit_priced.
+    --reprice-from PRE_PLAN applies only this step to an already merged PLAN (instance types taken from PRE_PLAN).
 
 Refused (exit 2, nothing written): a member child site the representative lacks, a different outline or bus / ft pin
 table, a member with data landing pins the representative lacks.  Per-type die tables keyed by a member type name
 (clock.tap_window / tap_offset, reset.in_sites, sidecar collector.types) are dropped; the representative's stay.
 
     class_merge.py PLAN SIDECAR OUT_PLAN OUT_SIDECAR --rep TYPE (--members T1,T2,.. | --stem STEM) [--report R.json]
+    class_merge.py PLAN SIDECAR OUT_PLAN OUT_SIDECAR --reprice-from PRE_PLAN [--report R.json]
 """
 import argparse, collections, copy, json, re, sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import landing_tie_children as LTC  # noqa: E402
+import native_istations as NI  # noqa: E402
 
 DN = re.compile(r"^(cland_dn_ready|cland_dn_fault|fclk_in_cland_dn)_(\d+)$")
 UP = ("cland_up_ready", "cland_up_fault", "fclk_out_cland_up")
@@ -146,6 +155,68 @@ def names_used(x, names):
 ROLE_PINS = ("cland_rstart_in", "cland_rstart_out", "cland_tstart_in", "cland_tstart_out")
 
 
+def price_out_stations(plan, before):
+    """price the representative's OUT kit stations on lanes leaving re-typed instances.  before: {part: pre-merge type
+    row} of the moved instances.  A lane is priced only where the bind priced the member chain (fixed_cycles >= member
+    depth; otherwise the lane never had kit source pricing), the class chain is deeper, and the lane is predicted late
+    with the class chain (late_by_kit: a receiver pad that still absorbs the change leaves the lane as it is).
+    -> [{lane, part, bus, member, rep, add, late}]"""
+    ports = {x["id"]: x for x in plan.get("ports", [])}
+    ptype = {x["name"]: x["type"] for x in plan["partitions"]}
+    tab = (plan.get("latency") or {}).get("lanes", {})
+    out = []
+    for ln in plan.get("lanes", []):
+        if ln.get("spine") or not ln.get("ports") or ln["ports"][0] not in ports:
+            continue
+        a, z = ports[ln["ports"][0]]["src"], ports[ln["ports"][-1]]["dst"]
+        old = before.get(a["part"])
+        if old is None:
+            continue
+        new = plan["partition_types"][ptype[a["part"]]]
+        if new.get("realize_internal_stations") or old.get("realize_internal_stations"):
+            continue
+        n_old, n_new = NI.kit_source_depth(old, a["bus"]), NI.kit_source_depth(new, a["bus"])
+        fx = int(ln.get("fixed_cycles", 0) or 0)
+        if n_new <= n_old or fx < n_old:
+            continue
+        add = n_new - n_old
+        row = tab.get(ln["id"])
+        if row is None:
+            raise MergeError(f"lane {ln['id']} leaves re-typed {a['part']} with +{add} kit stations but has no latency row")
+        if int(row.get("fixed", 0) or 0) != fx:
+            raise MergeError(f"lane {ln['id']}: latency row fixed {row.get('fixed')} != lane fixed_cycles {fx}")
+        m = dest_depth(plan["partition_types"].get(ptype.get(z["part"]), {}), z["bus"])
+        late = late_by_kit(row, fx, n_new, m)
+        if late <= 0:
+            continue
+        ln["fixed_cycles"] = fx + add
+        for k in ("fixed", "cycles", "natural"):
+            if k in row:
+                row[k] = int(row[k]) + add
+        out.append(dict(lane=ln["id"], part=a["part"], bus=a["bus"], member=n_old, rep=n_new, add=add, late=late))
+        left = late_by_kit(row, fx + add, n_new, m)
+        if left:
+            raise MergeError(f"lane {ln['id']}: still {left:+d} off the table after pricing +{add}")
+    return out
+
+
+def dest_depth(typ, bus):
+    """receiver IN-bus kit chain (deepest non-core internal_stations row; stage_kit_source_table_refresh._dest_depth)"""
+    return max((len(e.get("regs_um", [])) for e in typ.get("internal_stations", [])
+                if e.get("conn") == "bus:" + bus and not e.get("core")), default=0)
+
+
+def late_by_kit(row, fixed, n, m):
+    """predicted delivered - table cycles of a lane whose source kit chain is n and receiver IN chain m (LATCHECK
+    side_stages with native_istations.annotate_kit): the source chain is cut from the receiver pad only when fixed >= n;
+    a packed receiver pad >= 1 absorbs the receiver IN chain, a zero pad gets it kit-built."""
+    cyc = int(row["cycles"])
+    base = int(row.get("boundary", 2)) + int(row.get("stations", 0)) + int(row.get("clock_landing", 0))
+    cut = n if fixed >= n else 0
+    pad = max(0, cyc - base - cut)
+    return base + n + pad + (0 if pad else m) - cyc
+
+
 def merge(plan, side, rep, members, role_strap=False):
     P = plan["partition_types"]
     if rep not in P:
@@ -200,6 +271,7 @@ def merge(plan, side, rep, members, role_strap=False):
             e["dst_index"] = remap[part_type[e["dst"]]][int(e["dst_index"])]; rep_out["edges"]["sidecar"] += 1
     rdepth = (coll.get("boot_budget") or {}).get("local_registered_depths", {})
     rep_parts = [p["name"] for p in plan["partitions"] if p["type"] == rep]
+    before = {p["name"]: copy.deepcopy(P[p["type"]]) for p in plan["partitions"] if p["type"] in members}
     rep_depth = rdepth.get(rep_parts[0]) if rep_parts else None
     for p in plan["partitions"]:
         if p["type"] in members:
@@ -212,6 +284,7 @@ def merge(plan, side, rep, members, role_strap=False):
             if p["name"] in rdepth and rep_depth is not None and rdepth[p["name"]] != rep_depth:
                 rep_out.setdefault("boot_depth_changed", {})[p["name"]] = [rdepth[p["name"]], rep_depth]
                 rdepth[p["name"]] = rep_depth
+    rep_out["kit_priced"] = price_out_stations(plan, before)
     # ---- drop per-type die tables of the member types (the representative's apply to every instance)
     def drop(d, path):
         if isinstance(d, dict):
@@ -234,14 +307,35 @@ def merge(plan, side, rep, members, role_strap=False):
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("plan"); ap.add_argument("side"); ap.add_argument("oplan"); ap.add_argument("oside")
-    ap.add_argument("--rep", required=True)
-    g = ap.add_mutually_exclusive_group(required=True)
+    ap.add_argument("--rep")
+    ap.add_argument("--reprice-from", help="only price OUT kit stations of PLAN instances whose type differs in this plan")
+    g = ap.add_mutually_exclusive_group()
     g.add_argument("--members"); g.add_argument("--stem")
     ap.add_argument("--role-strap", action="store_true",
                     help="allow origin and relay copies in the class (landing_role_strap, strap_ca_relay)")
     ap.add_argument("--report")
     a = ap.parse_args(argv)
     plan = json.loads(Path(a.plan).read_text()); side = json.loads(Path(a.side).read_text())
+    if a.reprice_from:
+        pre = json.loads(Path(a.reprice_from).read_text())
+        pt0 = {p["name"]: p["type"] for p in pre["partitions"]}
+        before = {p["name"]: pre["partition_types"][pt0[p["name"]]] for p in plan["partitions"]
+                  if pt0.get(p["name"]) not in (None, p["type"])}
+        try:
+            rows = price_out_stations(plan, before)
+        except MergeError as exc:
+            print(f"CLASS-MERGE ERROR {exc}", file=sys.stderr); return 2
+        if a.report:
+            Path(a.report).write_text(json.dumps(dict(kit_priced=rows), indent=1) + "\n")
+        Path(a.oplan).write_text(json.dumps(plan, indent=1) + "\n")
+        Path(a.oside).write_text(json.dumps(side, separators=(",", ":")) + "\n")
+        print(f"CLASS-MERGE reprice: {len(before)} re-typed instances, {len(rows)} lanes "
+              f"+{sum(r['add'] for r in rows)} cycles")
+        for r in rows:
+            print("  KIT-PRICED", r)
+        return 0
+    if not a.rep or not (a.members or a.stem):
+        ap.error("--rep and --members/--stem are required unless --reprice-from")
     members = (a.members.split(",") if a.members else
                sorted(k for k in plan["partition_types"] if k.split("__")[0] == a.stem))
     try:
@@ -257,7 +351,8 @@ def main(argv=None):
     Path(a.oplan).write_text(json.dumps(plan, indent=1) + "\n")
     Path(a.oside).write_text(json.dumps(side, separators=(",", ":")) + "\n")
     print(f"CLASS-MERGE {a.rep}: {len(rep['members'])} member types -> 1, {rep['instances']} instances, "
-          f"edges plan {rep['edges']['plan']} sidecar {rep['edges']['sidecar']}, dropped {len(rep['dropped'])} rows")
+          f"edges plan {rep['edges']['plan']} sidecar {rep['edges']['sidecar']}, dropped {len(rep['dropped'])} rows, "
+          f"kit-priced {len(rep['kit_priced'])} lanes +{sum(r['add'] for r in rep['kit_priced'])} cycles")
     return 0
 
 

@@ -151,3 +151,55 @@ def test_role_strap_refuses_unknown_layer_collision():
     plan["partition_types"]["ctl__m2"]["clock"]["landing_contract"]["pins"].append(taken)
     rep = CM.merge(plan, side, "ctl__rep", ["ctl__m1", "ctl__m2"], role_strap=True)
     assert any("no free site" in r for r in rep["refused"])
+
+
+def _lane_plan(rep_regs, mem_regs, fixed, core_out=0):
+    """p0 (rep) and p1 (member) each source lane d_out -> kid.d_in; the member's OUT chain is shorter"""
+    plan, side = _plan()
+    P = plan["partition_types"]
+    for tn, regs in (("ctl__rep", rep_regs), ("ctl__m1", mem_regs), ("ctl__m2", rep_regs)):
+        P[tn]["buses"] = [dict(name="d_in", width=8), dict(name="d_out", width=8, dir="out")]
+        P[tn]["internal_stations"] = [dict(conn="bus:d_out", regs_um=[[1.0, 1.0]] * regs)] if regs else []
+        if core_out and tn == "ctl__rep":
+            P[tn]["hard_cores"][0]["core_latency"] = dict(out=dict(d_out=core_out))
+    plan["ports"], plan["lanes"], plan["latency"] = [], [], dict(lanes={})
+    for p in ("p0", "p1", "p2"):
+        plan["ports"].append(dict(id=f"pt_{p}", src=dict(part=p, bus="d_out"), dst=dict(part="kid", bus=f"d_in_{p}")))
+        plan["lanes"].append(dict(id=f"ln_{p}", ports=[f"pt_{p}"], fixed_cycles=fixed[p]))
+        plan["latency"]["lanes"][f"ln_{p}"] = dict(cycles=4 + fixed[p], stations=0, boundary=2, fixed=fixed[p],
+                                                  clock_landing=2, natural=4 + fixed[p], pad=0)
+    return plan, side
+
+
+def test_prices_representative_out_kit_stations_on_moved_lanes():
+    # rep chain 3 regs + 1 declared core cycle = 4; member m1 chain 2 = 2 (+0, its core declares none)
+    plan, side = _lane_plan(3, 2, dict(p0=4, p1=2, p2=4), core_out=1)
+    rep = CM.merge(plan, side, "ctl__rep", ["ctl__rep", "ctl__m1", "ctl__m2"])
+    assert rep["refused"] == []
+    # p1: member chain 2 cut from its pad, class chain 4 not cut (fixed 2 < 4) -> late 4; p2 (member 3, fixed 4):
+    # the class chain is cut from its receiver pad 1 -> on time, unchanged
+    assert rep["kit_priced"] == [dict(lane="ln_p1", part="p1", bus="d_out", member=2, rep=4, add=2, late=4)]
+    assert plan["latency"]["lanes"]["ln_p2"]["cycles"] == 8
+    row = plan["latency"]["lanes"]["ln_p1"]
+    assert (row["fixed"], row["cycles"], row["natural"], row["pad"]) == (4, 8, 8, 0)
+    assert next(x for x in plan["lanes"] if x["id"] == "ln_p1")["fixed_cycles"] == 4
+    assert plan["latency"]["lanes"]["ln_p0"]["cycles"] == 8      # the representative's own lane is unchanged
+
+
+def test_kit_pricing_skips_lane_that_never_priced_its_chain_and_reprice_cli(tmp_path):
+    plan, side = _lane_plan(3, 2, dict(p0=3, p1=0, p2=3))
+    rep = CM.merge(plan, side, "ctl__rep", ["ctl__rep", "ctl__m1", "ctl__m2"])
+    assert rep["kit_priced"] == []                      # p1 fixed 0 < member chain 2: not kit-priced before either
+    assert CM.late_by_kit(dict(cycles=14, boundary=2, stations=6, clock_landing=3), 3, 3, 1) == 1   # zero pad: IN chain
+    # --reprice-from on an already merged plan: same rule, instance types from the pre-merge plan
+    plan2, side2 = _lane_plan(3, 2, dict(p0=3, p1=2, p2=3))
+    pre = copy.deepcopy(plan2)
+    for p in plan2["partitions"]:
+        if p["type"] in ("ctl__m1", "ctl__m2"):
+            p["type"] = "ctl__rep"
+    for name, d in (("plan.json", plan2), ("side.json", side2), ("pre.json", pre)):
+        (tmp_path / name).write_text(json.dumps(d))
+    assert CM.main([str(tmp_path / "plan.json"), str(tmp_path / "side.json"), str(tmp_path / "o.json"),
+                    str(tmp_path / "os.json"), "--reprice-from", str(tmp_path / "pre.json")]) == 0
+    out = json.loads((tmp_path / "o.json").read_text())
+    assert out["latency"]["lanes"]["ln_p1"]["cycles"] == 7 and out["latency"]["lanes"]["ln_p2"]["cycles"] == 7
