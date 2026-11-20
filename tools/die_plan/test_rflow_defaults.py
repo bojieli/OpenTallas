@@ -91,7 +91,8 @@ def test_hold_budget_line_reports_and_never_stops():
 
 def test_values_are_the_rulebook_set():
     assert gen_phys.RFLOW == {"slew_margin": 50.0, "cap_margin": 20.0, "gpl_keep_overflow": 0.25,
-                              "place_max_fanout": 32, "max_wire_um": 120.0, "hold_budget_pct": 10.0,
+                              "place_max_fanout": 32, "place_max_transition": 320.0,
+                              "max_wire_um": 120.0, "hold_budget_pct": 10.0,
                               "pg_track_truth": 1, "pg_cell_keepout": 0}
 
 
