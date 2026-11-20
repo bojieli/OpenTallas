@@ -336,9 +336,14 @@ def derive_spec(pairs, rtl_dir, type_name, min_pairs=1, guard=None):
     hops, regs_out, census = [], [], []
     for key, n in sorted(cls.items(), key=lambda kv: -kv[1]):
         kind, rx, mt = key
+        # a global register class with a generic name (no index / hash: 'state', 'credit_pin_r') would latch that name in
+        # every module of the kit (reset relay cells included): only module-scoped or indexed names are emitted
+        generic = kind == "reg" and not re.search(r"\\d|\[0-9a-f\]", rx)
+        # reset relay cells have their own lockup form (reset.relay_lockup, RLK-1108); never latched here
+        generic = generic or (kind == "modreg" and bool(re.search(r"rrelay|rst|reset", mt or "")))
         census.append(dict(kind=kind, match=rx, module=mt, cross_tap=n, same_tap=same.get(key, 0),
-                           latched=n >= min_pairs))
-        if n < min_pairs:
+                           latched=n >= min_pairs and not generic, **({"skip": "generic_name_or_reset_cell"} if generic else {})))
+        if n < min_pairs or generic:
             continue
         if kind == "inst":
             hops.append({"inst": rx, "types": [mt], "ports": DATA_PORTS[mt], "allow_missing": True})
@@ -353,7 +358,7 @@ def derive_spec(pairs, rtl_dir, type_name, min_pairs=1, guard=None):
                same_tap_only_classes=sum(1 for k in same if k not in cls),
                unmapped=dict(unmapped.most_common(20)), unmapped_pairs=sum(unmapped.values()))
     rec["cross_tap"] = sum(1 for _a, _c, lt, ct, *_r in pairs if lt != ct)
-    rec["cross_tap_covered"] = sum(n for k, n in cls.items() if n >= min_pairs)
+    rec["cross_tap_covered"] = sum(c["cross_tap"] for c in census if c["latched"])
     return spec, rec
 
 

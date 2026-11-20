@@ -254,3 +254,12 @@ endmodule
     txt, lat, sk = zl.apply(src, {"guard": None, "regs": [{"reg": "d_o", "module": "ot_st"}]})
     assert len(lat) == 1 and lat[0]["width"] == "((W-1)-(0)+1)"
     assert "wire [((W-1)-(0)+1)-1:0] fl_d_o;" in txt and "ot_dp_lk #(.W(((W-1)-(0)+1))) u_fl_d_o (.clk(clk), .d(d_i), .q(fl_d_o));" in txt
+
+
+def test_generic_global_register_names_are_not_emitted(tmp_path):
+    (tmp_path / "top_bound.sv").write_text(BOUND.replace("g_logic_q", "state"))
+    pairs = [("u_bound.x/q$_DFF_P_", "u_bound.state[0]$_DFF_P_", "clk", "clk_t1", 10.0, "DFF", "DFF")]
+    tsv = tmp_path / "p.tsv"
+    tsv.write_text("".join("\t".join(map(str, r)) + "\n" for r in pairs))
+    spec, rec = SR.derive_spec(SR.read_pairs(tsv), tmp_path, "top")
+    assert spec["regs"] == [] and rec["classes"][0]["skip"] == "generic_name_or_reset_cell" and rec["cross_tap_covered"] == 0
