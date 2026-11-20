@@ -110,6 +110,7 @@ ALWAYS = (("kit", "stage_odb_cap.py", "tools/die_plan/stage_odb_cap.py"),
           ("kit", "tt_setup_repair.tcl", "tools/die_plan/tt_setup_repair.tcl"),
           ("kit", "hold_cap.tcl", "physical/die_plan/hbm_arch_cores/hold_cap.tcl"),
           ("runner", "run_kit.sh", "gen_phys.RUN_KIT"),
+          ("kit", "subtree_balance.tcl", "tools/die_plan/subtree_balance.tcl"),        # DIE-CORETAP-1119 (7109ee911ef): sourced by cts_post.tcl, standalone (sources nothing)
           ("kit+", "kit_reports.py", "tools/die_plan/kit_reports.py"))      # "kit+" = created when missing, so legacy kits get the helper the refreshed run_kit.sh calls
 
 
@@ -127,6 +128,37 @@ def _rt_run_kit_text(rtr):
         mod = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(mod)
     return getattr(mod, "RUN_KIT", None)
+
+
+TAP_LINE = "uplevel #0 [list source [file join $cp_dir tap_balance.tcl]]\n"
+STB_MARK = "# DIE-CORETAP-1119 (FABLE-CLOSURE lever 1, kit side)"
+
+
+def patch_cts_post(kit, rtr, rec, dry=False):
+    """FLOW-FIX-2045 (COORD, DIE-CORETAP 7109ee911ef): a kit's cts_post.tcl is a PER-KIT edit of tools/die_plan/cts_post.tcl (gen inserts hook lines: clock_edge_balance, the cland_fclk_target hook ...), so it is never
+    replaced whole.  A kit whose cts_post.tcl does not source subtree_balance.tcl yet gets rt's subtree-balance block (from the DIE-CORETAP comment to the line before the tap_balance source) inserted
+    right before that line; every other line of the kit's file stays.  Needs exactly one tap_balance source line in the kit; idempotent.  -> True when patched"""
+    p = os.path.join(kit, "cts_post.tcl")
+    sp = os.path.join(rtr, "tools/die_plan/cts_post.tcl")
+    if os.path.islink(p) or not os.path.isfile(p) or not os.path.isfile(sp):
+        return False
+    old, new = open(p).read(), open(sp).read()
+    if "subtree_balance.tcl" in old or new.count(TAP_LINE) != 1 or STB_MARK not in new or old.count(TAP_LINE) != 1:
+        return False
+    a, b = new.index(STB_MARK), new.index(TAP_LINE)
+    if a > b:
+        return False
+    block = new[a:b]
+    rec["replaced"].append({"file": "cts_post.tcl", "src": "tools/die_plan/cts_post.tcl (subtree-balance block)", "old": blob_id(old.encode())[:12], "new": "patched", "from": "always-patch"})
+    if dry:
+        return True
+    out = old.replace(TAP_LINE, block + TAP_LINE)
+    tmp = os.path.join(kit, f".cts_post.tcl.kfr.{os.getpid()}")
+    with open(tmp, "w") as f:
+        f.write(out)
+    os.chmod(tmp, os.stat(p).st_mode & 0o7777 | 0o200)
+    os.replace(tmp, p)
+    return True
 
 
 def always_pass(kit, rtr, rec, dry=False):
@@ -160,6 +192,8 @@ def always_pass(kit, rtr, rec, dry=False):
             f.write(new)
         os.chmod(tmp, (os.stat(p).st_mode & 0o7777 | 0o200) if os.path.isfile(p) else 0o644)
         os.replace(tmp, p)
+    if patch_cts_post(kit, rtr, rec, dry):
+        out.append("cts_post.tcl")
     return out
 
 

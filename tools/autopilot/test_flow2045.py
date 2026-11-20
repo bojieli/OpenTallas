@@ -237,3 +237,32 @@ def test_kit_flow_refresh_always_replaces_the_listed_flow_files_at_every_stage(t
     (kit / "stage_odb_cap.py").write_text("# a fix landed on main after the first stage\n")
     (kit / ".no_flow_refresh").write_text("")
     assert KFR.main(["--kit", str(kit), "--stage", "x", "--rt", str(rt)]) == 0 and "fix landed" in (kit / "stage_odb_cap.py").read_text()      # opt-out file keeps the kit as it is
+
+
+def test_stage_refresh_adds_the_subtree_balance_block_to_an_old_cts_post_without_losing_kit_edits(tmp_path):
+    """FLOW-FIX-2045 (DIE-CORETAP 7109ee911ef): cts_post.tcl is a per-kit edit, so only the missing block is inserted before the tap_balance line; subtree_balance.tcl is replaced"""
+    import subprocess
+    import shutil
+    import kit_flow_refresh as KFR
+    from pathlib import Path
+    rt = Path(__file__).resolve().parents[2]
+    kit = tmp_path / "w" / "t"; kit.mkdir(parents=True)
+    old = ("set cp_dir [file dirname [file normalize [info script]]]\n" + KFR.TAP_LINE + "uplevel #0 [list source [file join $cp_dir clock_edge_balance.tcl]]\n"
+           "uplevel #0 [list source [file join $cp_dir cland_fclk_hook.tcl]]\nuplevel #0 [list source [file join $cp_dir pg_connect.tcl]]\n")
+    (kit / "cts_post.tcl").write_text(old)
+    (kit / "subtree_balance.tcl").write_text("# old subtree balance\n")
+    rec = KFR.refresh(str(kit), "cts", rt=str(rt), index=str(tmp_path / "none.json"))
+    got = (kit / "cts_post.tcl").read_text()
+    assert "subtree_balance.tcl" in got and "OT_CTS_STB" in got and got.index("subtree_balance.tcl") < got.index("tap_balance.tcl")
+    assert "clock_edge_balance.tcl" in got and "cland_fclk_hook.tcl" in got and got.count(KFR.TAP_LINE) == 1             # the kit's own hook lines stay
+    assert "def " not in got and "DIE-CORETAP-1119" in got
+    assert "SUBTREE_BALANCE_OLD" not in (kit / "subtree_balance.tcl").read_text() and "# old subtree balance" not in (kit / "subtree_balance.tcl").read_text()
+    assert {r["file"] for r in rec["replaced"]} >= {"cts_post.tcl", "subtree_balance.tcl"}
+    rec2 = KFR.refresh(str(kit), "cts2", rt=str(rt), index=str(tmp_path / "none.json"))
+    assert (kit / "cts_post.tcl").read_text() == got and "cts_post.tcl" not in [r["file"] for r in rec2["replaced"]]       # idempotent
+    if shutil.which("tclsh"):
+        out = subprocess.run(["tclsh"], input="set f [open %s]; puts [info complete [read $f]]\n" % (kit / "cts_post.tcl"), capture_output=True, text=True)
+        assert out.stdout.strip() == "1"
+    (kit / "cts_post.tcl").write_text("no tap balance line here\n")                                                       # a kit without exactly one anchor is left alone
+    KFR.refresh(str(kit), "cts3", rt=str(rt), index=str(tmp_path / "none.json"))
+    assert (kit / "cts_post.tcl").read_text() == "no tap balance line here\n"
