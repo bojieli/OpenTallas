@@ -96,3 +96,29 @@ def test_native_strict_bound_live_and_spare_share_module(tmp_path, spare_name):
         'y_i': [[0,8]], 'y_o': [[0,8]]}
     body = (out / 'rtl/bt_tf.sv').read_text()
     assert body.count('ot_dp_st #(.W(8))') == 1 and '.ea(y_i[8])' in body
+
+
+@pytest.mark.skipif(not os.environ.get('OT_BIND_YOSYS') and not shutil.which('docker'), reason='needs Yosys')
+def test_kit_refuses_stale_or_incomplete_spare_ft_bind(tmp_path):
+    raw = vehicle()
+    raw['asbuilt']['base'] = str(HERE / 'examples/bind_tiny')
+    path = tmp_path / 'plan.json'
+    path.write_text(json.dumps(raw))
+    out = tmp_path / 'bind'
+    for cmd in ('elab', 'bind'):
+        assert bind.main([cmd, str(path), '--out', str(out)]) == 0
+    kit_args = ['kit-rtl', str(path), '--out', str(out), '--type', 'tf', '--kit', str(tmp_path / 'kit')]
+    assert bind.main(kit_args) == 0
+    details = json.loads((tmp_path / 'kit/kit_rtl.json').read_text())
+    assert not details['spare_ft_passthrough'] and not details['spare_out_bits']
+    receipt = out / 'bind_declared_ties.json'
+    original = receipt.read_text()
+    receipt.write_text('[]')
+    assert bind.main(kit_args) != 0
+    receipt.write_text(original)
+    source = out / 'rtl/bt_tf.sv'
+    body = source.read_text()
+    source.write_text(body.replace('u_ft_y_o_0', 'u_old_y_0'))
+    assert bind.main(kit_args) != 0
+    source.write_text(body.replace('output wire [8:0] y_o', 'output wire [7:0] y_o'))
+    assert bind.main(kit_args) != 0

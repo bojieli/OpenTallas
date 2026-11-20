@@ -6825,6 +6825,11 @@ def cmd_kit_rtl(a):
     bports = [(m.group(1), int(m.group(2)) + 1 if m.group(2) else 1, m.group(3)) for m in
               re.finditer(r"^\s*(input|output)\s+wire\s+(?:\[(\d+):0\]\s+)?(\w+)", btxt, re.M)]
     bmap = {n: (d, w) for d, w, n in bports}
+    import spare_ft
+    try:
+        spare_ft.check_native_kit(spare_ft.declared(raw, {tn}), bmap, btxt, out)
+    except ValueError as exc:
+        raise BindError(f"kit-rtl {tn}: {exc}") from exc
     eps = gen_rtl.bus_epochs(P) if P else {}
     plan = []                                  # (dir, name, width incl epoch, data width, epoch?)
     for b in t.get("buses", []):

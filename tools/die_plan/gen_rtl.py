@@ -890,6 +890,12 @@ def write_rtl(raw, out, rtl_root=None, types=None, plan_path=None, landing=None,
     errs = S.scope_errors_typed(S.validate(raw), scope, raw) if typed_scope else S.scope_errors(S.validate(raw), scope)
     if errs:
         raise GenError("plan invalid:\n  " + "\n  ".join(errs[:20]))
+    if not emit_die_top:
+        import spare_ft
+        try:
+            spare_ft.declared(raw, scope)
+        except ValueError as exc:
+            raise GenError(str(exc)) from exc
     P = S.Plan(raw, plan_path)
     out = Path(out)
     out.mkdir(parents=True, exist_ok=True)

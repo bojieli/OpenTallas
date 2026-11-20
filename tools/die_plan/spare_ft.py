@@ -6,12 +6,12 @@ from pathlib import Path
 import schema as S
 
 
-def declared(raw):
+def declared(raw, types=None):
     """Return {instance: {slot: slot row}}. A spare is an entire unobserved, unlanded epoch-carrying slot."""
     from gen_rtl import ft_hop_lockup
 
     parts = raw.get("partitions", [])
-    named = [p for p in parts if p.get("spare_ends")]
+    named = [p for p in parts if p.get("spare_ends") and (types is None or p["type"] in types)]
     if not named:
         return {}
     used = {(pr[side]["part"], pr[side]["bus"]): pr for pr in raw.get("ports", []) for side in ("src", "dst")}
@@ -93,6 +93,28 @@ def add_native_chains(binder, slots):
                     for link, hop in binder.ft_bus[pn] if hop["slot"] == n]
             if hops != [(sl["width"], sl["stations"], n + "_i", n + "_o")]:
                 raise ValueError(f"{pn}.{n}: native FT width/stages {hops} disagree with class slot")
+
+
+def check_native_kit(slots, ports, text, out):
+    """An opted-in class kit must contain the native chain and its per-instance parent proof."""
+    if not slots:
+        return
+    receipt_path = Path(out) / "bind_declared_ties.json"
+    if not receipt_path.is_file():
+        raise ValueError("spare FT kit needs a native bind with parent tie receipts")
+    rows = [r for r in json.loads(receipt_path.read_text()) if r.get("scope") == "parent_spare_ft"]
+    for pn, declared_slots in slots.items():
+        for n, sl in declared_slots.items():
+            width = sl["width"] + 1
+            ip, op = n + "_i", n + "_o"
+            if ports.get(ip) != ("input", width) or ports.get(op) != ("output", width):
+                raise ValueError(f"{pn}.{n}: native spare FT kit requires full {width}-bit input and output")
+            pattern = r"\bu_ft_" + re.escape(op) + r"_(\d+)\s*\("
+            if sorted(map(int, re.findall(pattern, text))) != list(range(sl["stations"])):
+                raise ValueError(f"{pn}.{n}: native spare FT chain differs from {sl['stations']} declared stages")
+            matches = [r for r in rows if r.get("instance") == pn and r.get("port") == ip]
+            if len(matches) != 1 or matches[0].get("value") != 0 or matches[0].get("bits") != list(range(width)):
+                raise ValueError(f"{pn}.{n}: missing or mismatched native spare FT parent tie receipt")
 
 
 def connections(slots):
