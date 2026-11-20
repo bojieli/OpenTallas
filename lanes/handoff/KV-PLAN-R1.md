@@ -4,6 +4,9 @@ Written 2026-11-20 09:5x PST. Posts: lanes/posts/KV-PLAN-R1.md. Lane dirs: epyc8
 (wt = proposal-3 clone, wt_rls, wt_pv = lane clones), intel2 same path (kR_copy, kR_rb, wait_r3.sh), hub logs intel2 ~/tmp/kvplanr1.
 
 ## Live (update 11:3x)
+- 15:0x MOVED: epyc8 R3b waiter (waited 3h20, never started) cancelled; R3b relaunched on epyc7 --priority plan --mem 56 --threads 3,
+  same dir (inputs + D25f2 tree copied to epyc7, TREE_RC 0). intel2 client pid 1918181, log ~/tmp/kvplanr1/d26_r3b_e7_gate.log.
+  Lines below about epyc8 PID 1927491 are superseded.
 - R3 first launch ran 10:4x and exited 3 before compose: the runtime check could not see the new rt sha in the unfetched warm repo.
   Relaunched as run_gate_r3b.sh (fetches first; candidate source_gate_r3b, outputs normal_g0_r3b / normal_gates_r3b), intel2 launcher
   PID 1927491, log ~/tmp/kvplanr1/d26_r3b_gate.log, proof priority epyc8. source_gate_r3 (copy only, never gated) is FREE FOR CLEANUP.
