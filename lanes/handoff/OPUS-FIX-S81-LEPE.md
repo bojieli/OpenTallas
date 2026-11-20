@@ -34,3 +34,9 @@ lepw_mus_LP__t2) carry the corrected lane LEF at b05c98f7919 (DRT-0073 crashes w
 - TT setup repair at GRT crashed: RSZ-0074 (route tree for net155182, rebuffer161029 guide not restored), tt_setup_repair.tcl:136,
   after 1350 iters flat at -367/-380 (3456 ends); 5_1_grt.odb is the UNREPAIRED DB. Gate line: TT setup_est -377 (SETUP_TRIAGE), FF PASS.
 - Worst class at every stage after GRT: u_u_land.tag[0][23] -> item6 is the J6 gating class; path read on 5_1_grt.odb next.
+
+## Update 11-20 ~16:30 PST: item6 path read (epyc7 /srv/opentallas-scratch2/claude/opus-sta6, sta.sh/sta.tcl, k/ = kit copy + 5_1_grt.odb)
+- All 31 u_u_land.tag ends start at u_u_land.u_rstr.rst_n placed at (1430.9,8.1) (E face), ~1,300 um to land logic at (~157,297): -348.5 TT placement RC.
+- Row 6 = proof7-spec item B (land rst_n sink relay D3 + u_rstr at (349.8,355.8)); proof7 tests it. Posted to S81-DIE-R4.
+- Next class: lnl3 k_li_d -> lep g_rx dq, 514 ends -396 placement RC on the unrepaired DB (-211.8 after GRT repair).
+- RSZ-0074 bug posted to FLEET-WATCH-1400 (hub bc7eb64eafd).
