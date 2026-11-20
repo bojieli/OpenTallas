@@ -133,3 +133,19 @@ decided past CTS: 4  passed 0  failed 4  (fail rate 100%);  not failures: 0 canc
   s81 setup timing: 1 (col_h9_r2__t1__clce45cab5__pv40e9fb5a)
   head DRC: 1 (hd_host_n)
   qc hold: 1 (slw_sc_v1__cl63e5a7a2)
+
+## 2026-11-20 02:1x PST ROUTE-RESULTS (HOURLY-WRITEUP-02xx, fast mode, window 01:05-02:05)
+
+ROUTE-RESULTS 11-20 01:05 to 11-20 02:05 (from kit run logs + signoff.json; gate = DRC 0, TT setup >= -42 ps, FF hold >= 0)  hosts local,epyc2,epyc7,epyc8,epyc9,epyc10,intel1
+| die | CTS | GRT | route | sign-off | pass | fail setup | fail hold | fail congestion | fail DRC | fail real crash | cancelled/superseded | dead, unexplained | routed, no sign-off |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| s81 | 14 | 20 | 6 | 1 | 0 | 1 | 0 | 0 | 1 | 0 | 0 | 0 | 5 |
+| head | 0 | 2 | 4 | 1 | 0 | 0 | 0 | 0 | 1 | 0 | 0 | 0 | 4 |
+| qc | 4 | 4 | 1 | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
+| kv | 0 | 2 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| other | 0 | 9 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| all | 18 | 37 | 11 | 3 | 1 | 1 | 0 | 0 | 2 | 0 | 0 | 0 | 10 |
+decided past CTS: 4  passed 1  failed 3  (fail rate 75%);  not failures: 0 cancelled/superseded, 0 dead unexplained, 10 routed awaiting sign-off
+  s81 DRC: 1 (col_h9_r2__t1__clce45cab5__pv37074264)
+  s81 setup timing: 1 (col_h9_r2__t1__clce45cab5__pv4754d912)
+  head DRC: 1 (hd_host_n)
