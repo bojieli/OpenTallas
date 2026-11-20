@@ -101,6 +101,8 @@ class SchedulerRt(unittest.TestCase):
         self.assertEqual(cds, ["for"], cds)            # only the legacy KITRTL farm (tree-own tools, never reached with rt tools)
         self.assertIn("--rtl-root {q(src)}", body)
         self.assertIn('--src-tree {q(src)} ', body)
+        self.assertIn('if rcp and not pinned_gen:', body)
+        self.assertIn('src_flag = "" if rcp and pinned_gen', body)
         self.assertIn('"rt_tools"', body)
 
 

@@ -8547,7 +8547,8 @@ def run_item(spec_path):
         probe = rt_tree_cmd(sp) + f"cd {q(tsrc)} && python3 -I tools/die_plan/bind.py kit-rtl -h 2>&1 | grep -q -e --src-tree"
         rcp, _tp = run("kit_rtl_probe", remote(probe), idempotent=True)
         kbind = "tools/die_plan/bind.py"
-        if rcp:
+        pinned_gen = bool(sp.get("gen_tools_manifest_sha"))
+        if rcp and not pinned_gen:
             rc, txt = run("kit_tools_dir", remote(f"mkdir -p {q(kt)}/main_dp"), idempotent=True)
             if rc:
                 return fail("kit_rtl", txt)
@@ -8568,12 +8569,13 @@ def run_item(spec_path):
             kbind = f"{kt}/tools/die_plan/bind.py"
         krb_cmd = lambda bnd, flag: (f"cd {q(tsrc)} && python3 {q(bnd)} kit-rtl {q(plan)} --out {q(bind)} --asbuilt {q(a)} --type {q(T)} "
                                     f"{flag}--kit {q(W)}/rtl" + kit_rtl_post_cmd(T, W, plan) + kit_rtl_closure_cmd(W, src))
-        rc, txt = run("kit_rtl", otrun(8, 2, W, krb_cmd(kbind, f"--src-tree {q(src)} "), gh, roam=False))
+        src_flag = "" if rcp and pinned_gen else f"--src-tree {q(src)} "
+        rc, txt = run("kit_rtl", otrun(8, 2, W, krb_cmd(kbind, src_flag), gh, roam=False))
         # KITRTL-FAIL-1115 (KV 7u: TypeError core_tap_early_ps, AttributeError reset_tree.pin_root_copies): the staged set mixes the
         # tree's modules with main's bind.py; when the tree's older modules do not fit main's bind.py (API skew, an import-time or
         # call-time error, never a design verdict) the tree runs its OWN bind.py unchanged, one consistent set, without --src-tree
         # (exactly how every kit_rtl ran before the flag existed).
-        if rc and rcp and API_SKEW.search(strip_admission(txt)):
+        if rc and rcp and not pinned_gen and API_SKEW.search(strip_admission(txt)):
             print("KW_KITRTL_LEGACY_BIND: staged set has API skew; retrying with the tree's own bind.py (no --src-tree)", flush=True)
             rc, txt = run("kit_rtl_legacy", otrun(8, 2, W, krb_cmd(f"{src}/tools/die_plan/bind.py" if tsrc != src else "tools/die_plan/bind.py", ""),
                                                   gh, roam=False))
