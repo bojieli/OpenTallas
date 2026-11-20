@@ -2,6 +2,42 @@
 
 Work dir epyc7 /srv/opentallas-scratch2/claude/kv-d23-compose (lane clone wt/ = sparse main worktree). Hub logs intel2 ~/tmp/kvd23c.
 
+## Status 2026-11-20 04:50Z (read this first; supersedes 02:45Z)
+LIVE = KV-D25e, applied bind-first at 04:41Z.
+- Commits and receipt: kit_wave 5d887cfc3e5; receipt lanes/handoff/qwen_kvsys_atomic_apply_1795149669406572244.json.
+- Tree: kw45/src_kv_pin_eb1e73448bd0_hg11_a5a8c6b9_tdcd5636_d25e (manifest dc58066d4f79, plan a5a8c6b96e5f).
+- Bind of record: kw45/..._d25e_bind_1120042203, on epyc8/9/10, intel1 and epyc2.
+- bound_trees = KV-D25d (bind 1119143244) + KV-D24.
+- Driver: intel2 ~/tmp/kvd23c/apply_d25.sh. New env: TOOLS, LF, NOTE_TXT. RT = the resolved rt/current (rt dirs get pruned).
+- Apply-time fix: the tree check on epyc10 refused inodes shared with a cp -al copy. Fix = delete your own copy, or replace the tree-side files with private copies (src_manifest.py links TREE lists them).
+
+D25e2: G0 PASS (0 errors / 2464 warnings), PRE 0.
+- Tree: kw45/src_kv_pin_eb1e73448bd0_hg12_d96baf37_ta2fb7e6_d25e2, plan d96baf37b98c, tools main a2fb7e625dd8. a2fb7e625dd8 contains 6e2f4ee27af8, 1b95661b75, 8b1909473d6/a2fb7e625dd and 8f981deeaa1.
+- Contents vs D25e (report W8/d25e2/build_report.json):
+  - hgi_v1 x2 section L+M:
+    - reg_leaf_split hst2 at x 40 and hst3 at x 650;
+    - polylines;
+    - tN station (200,950) +1;
+    - eN pad 2 via R8, with eN fixed staying 6 under the native_istations rule;
+    - 64 eN pd2 sites plus the eq key.
+  - KTALIAS: 1904 x 19 alias keys dropped.
+  - FALL: 32 sidecar ports (30 K-1, 2 K+1).
+  - PV: +500 route-priced set (compose_rows --cycles-405) with the tables from the bind head:
+    - r8_ev repinned;
+    - pv_col/v pads MINPAD 10 / EMINPAD 10;
+    - r8 scripts from main.
+  - R: 16 pv tail_clear sync rows.
+  - Latency: 172 lanes, +484.
+- Strict bind: started 03:53Z on epyc8, W8/d25e2bindgate, copy kw45/bindcopy_kv_d25e2.
+  - The bind head beforehand (W8/d25e2head2) gave head_r8_errors 0 and stale 0.
+- Seal: done, but verify refused because the bind copy shared the inodes. W8/reseal_unshare_d25e2.sh moves the sealed tree to kw45/bindsrc_kv_d25e2 (the bind copy's inode source), copies it back with cp -a, then verifies and replicates to epyc9/10, intel1 and epyc2 (W8/seal_rep_d25e2.out).
+- Next, when the bind is green:
+  1. On epyc8: `REPL_HOSTS="epyc9 epyc10 intel1 epyc2" bash W8/seal_bind_dest.sh d25e2 <tree>`.
+  2. On intel2: `RT=$(readlink -f rt/current) TOOLS=a2fb7e625dd89d4961fa633e35977e1e4a3577f5 HOSTS=epyc8,epyc9,epyc10,intel1,epyc2 BGH=epyc8 BIND_DEST=<dest> LIVE=<d25e tree> LIVE_EV=KV-D25e BC=d25e2 SKIP_SEAL=1 NOTE_TXT=... apply_d25.sh d25e2 KV-D25e2`.
+  3. Then ot-delete kw45/bindsrc_kv_d25e2 and kw45/bindcopy_kv_d25e2.
+- Watch the bind for two error classes QC hit (KV-CROSSING is checking): K-1 shifting one collective seam group unevenly, and pads past the 15-cycle strap. If they appear, ask KV-CROSSING for corrected rows; do not drop the fall rows.
+- Next event: 17-type rls rows (FABLE-FIX-KV-HG-rls-rows-all.json), together with the core-tap v2 + pcsink v2 tree pair (DIE-CORETAP).
+
 ## Status 2026-11-20 02:45Z (read this first; supersedes 11-19 21:30Z)
 LIVE = KV-D25d (d25d4). D25e (plan a5a8c6b96e5f, sealed manifest dc58066d4f79) is in its strict bind on epyc10 W/d25ebindgate (bindcopy kw45/bindcopy_kv_d25e, started 01:48Z).
 - When it is green: on epyc10 run `REPL_HOSTS="epyc8 epyc9 intel1 epyc2" bash seal_bind_dest.sh d25e <d25e tree>`, then on intel2 run `RT=rt/dcd56363d450 HOSTS=epyc8,epyc9,epyc10,intel1,epyc2 BGH=epyc10 BIND_DEST=<dest> LIVE=<d25d4> LIVE_EV=KV-D25d BC=d25e SKIP_SEAL=1 apply_d25.sh d25e KV-D25e`. COORD: ship as is, even though it carries the TRUNK-CHAIN defect from older tools.
