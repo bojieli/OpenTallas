@@ -346,14 +346,20 @@ def read_hold_ends(path):
     return out
 
 
-def derive_spec(pairs, rtl_dir, type_name, min_pairs=1, guard=None, hold_ends=None):
+def derive_spec(pairs, rtl_dir, type_name, min_pairs=1, guard=None, hold_ends=None, exclude=None):
     """zl_lockup spec for every capture class with >= min_pairs cross-tap zero-logic pairs, + the census.
     Forms: RTL instances (hops), flat netlist registers (netlist), SRAM wrappers -> tap_group rows (never latched)."""
     insts, _regs, modregs = _rtl_objects(rtl_dir)
     cls, same = collections.Counter(), collections.Counter()
     heads = collections.defaultdict(set)
+    ex = re.compile(exclude) if exclude else None
+    ends = collections.defaultdict(set)                     # class -> capture ENDS (one per register bit), not pairs
     for _a, cap, lt, ct, _d, *_m in pairs:
         form, rx, mt, head = classify(cap, insts, modregs)
+        if ex and ex.search(_clean_cell(cap)):
+            form = "excluded"
+        if lt != ct:
+            ends[(form, rx, mt)].add(_clean_cell(cap))
         key = (form, rx, mt)
         (cls if lt != ct else same)[key] += 1
         if head:
@@ -362,7 +368,8 @@ def derive_spec(pairs, rtl_dir, type_name, min_pairs=1, guard=None, hold_ends=No
     for key, n in sorted(cls.items(), key=lambda kv: -kv[1]):
         form, rx, mt = key
         emit = n >= min_pairs and form in ("inst", "netlist", "tap_group")
-        census.append(dict(form=form, match=rx, module=mt, cross_tap=n, same_tap=same.get(key, 0), emitted=emit))
+        census.append(dict(form=form, match=rx, module=mt, cross_tap=n, cross_tap_ends=len(ends[key]),
+                           same_tap=same.get(key, 0), emitted=emit))
         if not emit:
             continue
         if form == "inst":
@@ -381,6 +388,9 @@ def derive_spec(pairs, rtl_dir, type_name, min_pairs=1, guard=None, hold_ends=No
                classes=census, tap_group=tap_group)
     rec["cross_tap_covered"] = sum(c["cross_tap"] for c in census if c["emitted"] and c["form"] != "tap_group")
     rec["cross_tap_tap_group"] = sum(c["cross_tap"] for c in census if c["emitted"] and c["form"] == "tap_group")
+    rec["cross_tap_ends"] = sum(c["cross_tap_ends"] for c in census)
+    rec["cross_tap_ends_covered"] = sum(c["cross_tap_ends"] for c in census if c["emitted"] and c["form"] != "tap_group")
+    rec["cross_tap_ends_tap_group"] = sum(c["cross_tap_ends"] for c in census if c["emitted"] and c["form"] == "tap_group")
     if hold_ends is not None:
         inst_res = [re.compile(h["inst"]) for h in hops]
         net_res = [re.compile(r) for r in netlist]
@@ -494,6 +504,7 @@ def main(argv=None):
     d.add_argument("--out", required=True)
     d.add_argument("--min-pairs", type=int, default=1)
     d.add_argument("--guard")
+    d.add_argument("--exclude", help="regex on capture names left out (e.g. a later plan row rewrites them)")
     d.add_argument("--hold-ends", help="pregrt_ff_hold_open_before.tsv (OT_PREGRT_OPEN_BEFORE=1): coverage on hold ends")
     p = sub.add_parser("apply")
     p.add_argument("plan")
@@ -512,9 +523,10 @@ def main(argv=None):
         return 0
     if x.cmd == "derive":
         spec, rec = derive_spec(read_pairs(x.pairs), x.rtl_dir, x.type, x.min_pairs, x.guard,
-                                read_hold_ends(x.hold_ends) if x.hold_ends else None)
+                                read_hold_ends(x.hold_ends) if x.hold_ends else None, x.exclude)
         Path(x.out).write_text(json.dumps(dict(spec=spec, census=rec), indent=1) + "\n")
-        print(json.dumps({k: rec[k] for k in ("pairs", "cross_tap", "cross_tap_covered", "cross_tap_tap_group", "hold_ends")
+        print(json.dumps({k: rec[k] for k in ("pairs", "cross_tap", "cross_tap_covered", "cross_tap_tap_group", "cross_tap_ends",
+                                                   "cross_tap_ends_covered", "cross_tap_ends_tap_group", "hold_ends")
                           if k in rec}))
         return 0
     raw = json.loads(Path(x.plan).read_text())

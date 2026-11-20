@@ -1154,6 +1154,12 @@ def icg_to_enable(src, dst, side):
     return st
 
 
+def bb_free_out(cell, name):
+    """True for a black-box output stub flop: named '<inst>.lec_bbo_<pin>' and holding itself (D == Q)."""
+    c = cell.get("connections", {})
+    return f"{BB}o_" in str(name) and bool(c.get("D")) and c.get("D") == c.get("Q")
+
+
 def latch_to_wire(src, dst, side):
     """Latch abstraction (JSON src -> dst, both sides), phase-aware (LATCH-FACE, COORD 11-03 08:25).
 
@@ -1362,7 +1368,9 @@ def latch_to_wire(src, dst, side):
                 todo.append(dsel.get(dn, one(dn, "D")))
                 continue
             if FF_TYPE.match(cells[dn]["type"]):
-                if not rise_ff(dn):
+                # LOCKUP-STATION-1130: a black-box output stub (free self-loop flop '<inst>.lec_bbo_<pin>', stub_verilog)
+                # never changes in the cycle model, so a lockup latch reading it is a wire like one reading a flop
+                if not rise_ff(dn) and not bb_free_out(cells[dn], dn):
                     raise Unproven(f"latch {side}: {cn} data reads {cells[dn]['type']} {dn} (not a rising-edge flop "
                                    f"on a primary-input clock)")
                 srcs += 1

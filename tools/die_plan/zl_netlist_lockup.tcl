@@ -15,7 +15,8 @@ set zn_db [ord::get_db]
 set zn_m ""
 foreach zn_lib [$zn_db getLibs] { foreach zn_c [$zn_lib getMasters] { if {[regexp {^DLLx2_ASAP7_75t_[RLS]} [$zn_c getName]]} { set zn_m $zn_c; break } }; if {$zn_m ne ""} break }
 if {$zn_m eq ""} { puts "OT_ZL_NETLIST FAIL no DLLx2 master"; exit 1 }
-proc zn_is_reg {m} { return [regexp {^(DFF|ASYNC_DFF|SDF)} $m] }
+# rising-edge flops only (DFFL* falling-edge captures / launches keep their own timing; LEC models DFFH)
+proc zn_is_reg {m} { return [regexp {^(DFFH|ASYNC_DFFH)} $m] }
 set zn_n 0; set zn_skip 0; set zn_k 0
 foreach zn_i [$zn_blk getInsts] {
   set zn_nm [string map {\\ {}} [$zn_i getName]]
