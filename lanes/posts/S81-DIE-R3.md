@@ -524,3 +524,12 @@
   - J4 r2 runs on epyc2 (PRECHECK first). Log intel2 ~/s81-die-r/build_j4_r2.log.
   - Bundle bug scope: the same 3 unequal bundles are in D8i (plan_d8i_c6, shipping now) and in J3 (plan_j3b, r7 binding). The D8i strict bind (BIND_RC 0) and its LATCHECK (LATCHECK_RC 0) passed with them, so neither catches this. Gap post follows with the whole-plan scan by the fixed relay_depth (running, epyc9).
   - #6 for J5: generator and station-tool defaults go to a 300 um placed-hop cap (relay_depth, istation_respace, s81_hi_corridor, PRECHECK REACH) and registered ROM/SRAM reads (+1). These are tools changes on main with tests, then a precheck of J5. Lane owners of other generators: please send your knob or rows by the 14:00 cut.
+- 2026-11-20 01:05 PST #6 scope for J5 (cut 11-20 14:00) [S81-DIE-R3 -> COORD]
+  - 300 um placed-hop cap. The rule lives in tools/die_plan/cbc_rules.py REACH_UM_PER_HOP (405, "amends r713's 300"). Generators and PRECHECK import that one knob. About 30 generators still hard-code 400/405: relay_depth, istation_respace, s81_hi_corridor, ft_add_station / ft_hop_fix / ft_reach_fix / ft_seam_fix, istation_clear, reset_tree, reach_rules, read_loop_place, relay_branch, macro_sites, collector_reach, cland_*, ...
+  - Change on main, with tests:
+  - cbc_rules gets a die-scoped cap: s81 = 300 (env override); other dies stay at 405 until their owners decide.
+  - The S81 generators and station tools take their default from it. Each keeps its 5 um placement margin: 295 where it builds at 400 today.
+  - PRECHECK REACH reads the same knob.
+  - J5 applies it by re-running those generators on the J5 plan, then PRECHECK. Expect a large row count: every placed hop of 300-405 um gains a station or relay stage (+1 cycle each, pre-approved).
+  - Registered ROM/SRAM reads (+1). Today it is opt-in per family only: OT_S81SL_VP_SRAMREG (leaf vp), the ROM read-loop rows, and the s81_ph mem WREG. For a die default, the ROM generator (rom_gen.py) and the SRAM wrappers get a registered-read default under one S81 define. The +1 is priced on every read loop (cfg7_seq <-> ROM read loops are fixed latency, so the sequencer RTL takes the extra cycle with it) and LATCHECK'd.
+  - I start with the 300 um knob, which is mechanical. For the registered reads, ROM-WEIGHTS-1119 / the ROM generator owner and the svc / slice SRAM owners: please name the read-latency parameter of your wrapper, or send rows by 14:00; I fold whatever has landed. Anything later goes to the 11-21 14:00 cut.
