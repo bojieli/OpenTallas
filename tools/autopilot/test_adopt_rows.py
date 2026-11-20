@@ -15,12 +15,15 @@ def test_apply_replicates_to_the_current_gen_hosts_the_candidate_drops():
 
     def run(cmd):
         calls.append(cmd)
+        if "--hosts epyc10 --expect" in cmd and not any(" replicate " in c for c in calls):
+            return 1, "target needs a copy"
         return 0, "ok"
     hosts, info = AM.ensure_tree_on_hosts("/t/new", "h" * 64, ["epyc8", "epyc9", "epyc10"], ["epyc9", "epyc8"], "/rt", run=run, link_from="old")
     assert hosts == ["epyc9", "epyc8", "epyc10"] and info                                  # never narrowed: epyc10 stays, after replicate + verify
-    assert "hosts /t/new --hosts epyc9 --expect " + "h" * 64 in calls[0]                    # FABLE-FLOW-1400 (2): the source is verified first
-    assert calls[1].startswith("ssh ") and " epyc9 " in calls[1] and "replicate /t/new --hosts epyc10 --link-from old" in calls[1]   # and the copy runs ON it
-    assert "hosts /t/new --hosts epyc10 --expect " + "h" * 64 in calls[2]
+    assert "hosts /t/new --hosts epyc9 --expect " + "h" * 64 in calls[0]
+    assert "hosts /t/new --hosts epyc10 --expect " + "h" * 64 in calls[1]
+    assert calls[2].startswith("ssh ") and " epyc9 " in calls[2] and "replicate /t/new --hosts epyc10 --link-from old" in calls[2]
+    assert calls[3] == calls[1]                                                         # check the same manifest after copying
     assert AM.ensure_tree_on_hosts("/t/new", "h", ["epyc9"], ["epyc9", "epyc8"], "/rt", run=run) == (["epyc9", "epyc8"], [])      # nothing dropped: no work
 
 
@@ -30,7 +33,7 @@ def test_apply_drops_a_host_whose_replication_or_verification_fails():
     assert hosts == ["epyc9"] and notes and notes[0].startswith("DROPPED epyc10") and "disk full" in notes[0]
     hosts, notes = AM.ensure_tree_on_hosts("/t/n", "h", ["epyc10"], ["epyc9"], "/rt", run=lambda c: (1, "not a manifest tree"))
     assert hosts == ["epyc9"] and notes[0].startswith("DROPPED epyc10: no candidate host holds a verified copy")
-    seq = iter([(0, ""), (0, ""), (1, "hash differs")])
+    seq = iter([(0, ""), (1, "target needs a copy"), (0, ""), (1, "hash differs")])
     hosts, notes = AM.ensure_tree_on_hosts("/t/n", "h", ["epyc10"], ["epyc9"], "/rt", run=lambda c: next(seq))
     assert hosts == ["epyc9"] and "hash differs" in notes[0]
 
@@ -75,7 +78,11 @@ def test_replicate_never_runs_from_the_hub():
 
     def run(cmd):
         calls.append(cmd)
-        return (1, "not a manifest tree") if "--hosts epyc8 --expect" in cmd and "replicate" not in cmd and len(calls) == 1 else (0, "ok")
+        if "--hosts epyc8 --expect" in cmd:
+            return 1, "not a manifest tree"
+        if "--hosts epyc10 --expect" in cmd and not any(" replicate " in c for c in calls):
+            return 1, "target needs a copy"
+        return 0, "ok"
     hosts, notes = AM.ensure_tree_on_hosts("/t/n", "h", ["epyc10"], ["epyc8", "epyc9"], "/rt", run=run)
     assert hosts == ["epyc8", "epyc9", "epyc10"]
     rep = [c for c in calls if " replicate " in c]

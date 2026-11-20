@@ -71,13 +71,20 @@ def test_bind_check_refuses_a_stale_candidate_and_passes_a_matching_one():
     assert ok is False and len(calls) == 2 and "no candidate host answered" in txt     # fail closed, every host tried
 
 
-def test_apply_refuses_before_any_write_when_the_bind_check_fails(tmp_path):
+def test_apply_refuses_before_switch_when_rebind_fails(tmp_path):
     c = tmp_path / "cand.json"
     c.write_text(json.dumps(cand()))
+    rebounds = []
+
+    def bind_first(coord, obj, lane, die, run):
+        rebounds.append((coord, obj["tree"], lane, die))
+        return "", "strict bind produced no output", ["t1"]
+
     a = types.SimpleNamespace(candidate=str(c), expect_source="/old", expect_event="E", lane="L", pilot_item=None, coord=str(tmp_path), no_gate=True,
-                              skip_bind_check=False, bind_check_fn=lambda obj, run=None: (False, "stale"))
+                              skip_bind_check=False, bind_check_fn=lambda obj, run=None: (False, "stale"), bind_first_fn=bind_first)
     called = []
     assert PA.cmd_apply(a, apply_fn=lambda *x, **k: called.append(1)) == 4 and not called
+    assert rebounds == [(tmp_path, "/t", "L", "qc")]
 
 
 def test_derive_asbuilt_takes_the_tables_the_bind_used(tmp_path):
