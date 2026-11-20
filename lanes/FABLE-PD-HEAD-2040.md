@@ -1,6 +1,6 @@
 # FABLE-PD-HEAD-2040: HEAD die physical-design review (r10, hd_tile setup, die intra hold, hd_serdes)
 
-2026-11-19 21:25 PST. Reviewer lane, read-only. Plan reviewed: `head_rp21z20NF15f_r10` (published 20:54 while this review ran; snapshot `s81_head_r10_s0`, private tree epyc10 `/srv/opentallas-scratch2/claude/head-crossing-1119/tree_r10`). Findings against r10 are therefore inputs to the next event (called r11 below).
+2026-11-19 21:01 PST. Reviewer lane, read-only. Plan reviewed: `head_rp21z20NF15f_r10` (published 20:54 while this review ran; snapshot `s81_head_r10_s0`, private tree epyc10 `/srv/opentallas-scratch2/claude/head-crossing-1119/tree_r10`). Findings against r10 are therefore inputs to the next event (called r11 below).
 
 All host paths are epyc10 unless a host is named. My own runs (private, via ot-run, kit mounted read-only) are in `/srv/opentallas-scratch2/claude/fable-pd-head-2040/tc2/`.
 
