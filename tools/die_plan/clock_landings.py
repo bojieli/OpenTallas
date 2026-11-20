@@ -1082,7 +1082,10 @@ class Landings:
             if qreg and not rca:
                 rpar["QREG"] = 1
             cycles = (ring_cycles(self.ca, pid) if self.ca and not rca else 3) + int(capture) + int(qreg)
-            if (capture or qreg) and int(r.get("added_cycles", cycles)) != cycles:
+            # QC-PLAN-R3 11-19: the legacy ring price (3 + FREG + QREG) applies to legacy landings only; a count-aligned
+            # landing is priced by its sidecar sched_lat below (QC N46R fall-aware re-plan: QREG port at sched_lat 3 was
+            # refused as must be 4 although the CA branch then sets added_cycles = sched_lat).
+            if not rca and (capture or qreg) and int(r.get("added_cycles", cycles)) != cycles:
                 raise LandingError(f"{pid}: legacy landing added_cycles must be {cycles}")
             row = dict(r, src_bus=sb, dst_bus=db, added_cycles=cycles,
                        module=rmod, ring_params=rpar, ring_ports=rports,
@@ -1106,6 +1109,9 @@ class Landings:
                 if bool(qreg) != bool(c.get("output_qreg")):
                     raise LandingError(f"count-aligned landing {pid}: plan landing_output_qreg and the bind sidecar "
                                        "output_qreg disagree (the event must raise sched_lat and K by 1 and mark the port)")
+                if "added_cycles" in r and int(r["added_cycles"]) != int(c["sched_lat"]):
+                    raise LandingError(f"count-aligned landing {pid}: row added_cycles {r[added_cycles]} != bind sidecar "
+                                       f"sched_lat {c[sched_lat]}")
                 row.update(added_cycles=int(c["sched_lat"]), module="ot_dp_clk_landing_cas" if self.strap else
                            "ot_dp_clk_landing_ca", ring_depth=int(c["depth"]),
                            ring_offset=None, ring_k=int(c["K"]) - reader_depth + writer_depth - int(qreg),
