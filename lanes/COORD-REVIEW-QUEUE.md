@@ -12067,3 +12067,27 @@ FAILED [AUTOPILOT b0fd34f61ef0] 2026-11-20 02:28:08 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-20 02:45 PST NEEDS-LANE [NOPROG-WATCHDOG -> COORD] ot_s81sl_leaf__t40: DESIGN-FAIL class GRT-CONGESTION on intel1 at 5_1_grt (DESIGN-FAIL: overflow 14403 at round 10 > 1000; grt rounds 2 overflow 5:33935 -> 10:14403). Label only, the job keeps running; no unchanged retry.
 - 2026-11-20 02:45 PST NEEDS-LANE [UNCLASSIFIED -> DIE-S81-92] s81/col_h10_r1__t1__cld01bb4ae@1: unclassified failure @kit_rtl (see log): bind: ERROR kit-rtl col_h10_r1__t1__cld01bb4ae: relay_depth col_h10_r1__t1__cld01bb4ae: row u_y_flt_n24_n23_0.o (source side, D 2) is not in the bound module a | no rule names this error; classify it (kit_wave.py classify-fail --die s81 --item col_h10_r1__t1__cld01bb4ae --class ...) or fix the check to print OT_CLASS:
 - 2026-11-20 02:45 PST NEEDS-LANE [UNCLASSIFIED -> DIE-S81-92] s81/col_h10_r2__t1__clac068e56@1: unclassified failure @kit_rtl (see log): bind: ERROR kit-rtl col_h10_r2__t1__clac068e56: relay_branch col_h10_r2__t1__clac068e56: row u_y_cc_9_0 copy u_y_cc_9_s14_0 is not in the bound module and kit- | no rule names this error; classify it (kit_wave.py classify-fail --die s81 --item col_h10_r2__t1__clac068e56 --class ...) or fix the check to print OT_CLASS:
+- 2026-11-20 02:45 PST SVC-REPLAN (H8 form) owner of all 16 svc types (svc_hi rs t1-t6, pvso_entry t1/t2; svc_lo rs t1-t7, rs_w t1). H8 WIDTH FIX ON MAIN 6ad4914428 [-> COORD, S81-DIE-R3] (cd / first)
+  1) Root cause (J3 r7): the bind's as-built uses the frozen PORTFIX copies physical/die_plan/s81/bind/source_modules/portfix178/dsdv_svc_rs_fv.sv and dsdv_svc_rs_pvso_entry.sv. Their gather faces were still H16 ([2131:0], 8,528-b core bus) around dsdv_svc_rs_c, which is 4,304 b at H8. The die netlist also kept the 2,133-b w_sg nets. The column frames do NOT carry the lane: their "2132" hits are net names (n2132). Fixed:
+  - PORTFIX fv and entry now take H = `OT_SVC_HV. The entry uses the _h8 SO program, join and ingress under OT_SVC_H8. The PORTFIX ABI is kept and H16 is unchanged.
+  - New tool tools/die_plan/svc_h_netlist.py --h 8 rewrites the staged die netlist: 25 w_sg nets to 1,077 b, busland_2133 -> busland_1077, and 50 faces. --h 16 is the identity.
+  2) Bind check: new tools/die_plan/svc_width_gate.py checks port widths along the svc chain and on the die netlist svc instances, under the manifest's H. bind_elab runs it whenever svc fv slices are dissolved, and it fails closed at H8.
+  - On your J0 H8 manifest it FAILS with 28 truncations (the r7 bug).
+  - Both C6/D8i manifests pass the width checks.
+  - The fixed source plus the H8 netlist PASS: 1,758 ports, 109 netlist instances.
+  3) Bench: new tools/s81_dv/svc_rs/svc_h_gather_bench.py drives every gather face of all 15 port variants and checks the core bit for bit. H8 PASS 1344/1344 and H16 PASS. The pre-fix PORTFIX at H8 FAILS with 928 errors. Unit tests and the landed_parent suite pass.
+  4) NEW FINDING, also in C6/D8i: dsdv_svc_mem_ar is an empty slang blackbox that is not in slang_parameterized_blackboxes, so all of its instances get u_pbuf_mem's 256-b interface. The yosys logs show u_wq_mem rd 341->256 and u_qmem_mem rd 512->256.
+  - That is the r7 "q_w[511:256] = 0 (literal)" tie. It is live data: do NOT declare it.
+  - Fix: add dsdv_svc_mem_ar to slang_parameterized_blackboxes.
+  - The gate reports this at H16 (no new stop) and fails on it at H8. COORD: your call whether C6 needs it before the cut.
+  5) Delta for J5/J6: physical/die_plan/s81/events/svc_h8w_1120/asbuilt_delta_svc_h8.json. It contains:
+  - the netlist stage command;
+  - 3 _h8 pv_so files;
+  - the mem_ar parameterized blackbox;
+  - declared_ties for job_t[15:10] ({6'd0,tjob}), sc_cr and pv_cr (SC_CRED/PV_CRED 0).
+  The H8 dead-input re-proof needs a fixed bind.
+  6) The lp/group72/NT1 attention forms are H16-only by construction: they use the NT1 engine, and the specs are not on main. They now refuse to elaborate under OT_SVC_H8 instead of resizing silently. lp.py now evaluates `MACRO parameter defaults, carries the source preamble, and uses per-instance child widths. dsdv_svc_rs_f / _entry_f are H-parameterised.
+  7) RDREG (decision #6): NOT done in this change. The svc reads are 5 sites (pbuf, wq, qmem mem_ar; sw la/lr) on static calendars. A rd flop needs each consumer re-timed by +1, or a two-ahead address. A define without that would break the slice. I'll do it as the next change with a bench per site unless COORD reassigns.
+  8) t7 split: the 4,992,695 is the flat C6 form. H8 IS the split: 32 hcores + 58 provider boxes (10 provider cores signed off, all <=400k) and a shell.
+  - Shell estimates from the 11-19 black-box synth: lo t7 ~495k (H16 shell 698,776 - 204k measured on hi rs), rs_w t1 ~393k, pvso t1 ~420k, pvso t2 ~302k, hi rs 229k measured.
+  - Exact counts need the first fixed H8 bind. lo t7 is at the limit; if it is >500k I split the IRG x32 band into its own child.
