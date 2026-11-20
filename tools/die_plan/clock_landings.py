@@ -1110,8 +1110,8 @@ class Landings:
                     raise LandingError(f"count-aligned landing {pid}: plan landing_output_qreg and the bind sidecar "
                                        "output_qreg disagree (the event must raise sched_lat and K by 1 and mark the port)")
                 if "added_cycles" in r and int(r["added_cycles"]) != int(c["sched_lat"]):
-                    raise LandingError(f"count-aligned landing {pid}: row added_cycles {r[added_cycles]} != bind sidecar "
-                                       f"sched_lat {c[sched_lat]}")
+                    raise LandingError(f"count-aligned landing {pid}: row added_cycles {r['added_cycles']} != bind sidecar "
+                                       f"sched_lat {c['sched_lat']}")
                 row.update(added_cycles=int(c["sched_lat"]), module="ot_dp_clk_landing_cas" if self.strap else
                            "ot_dp_clk_landing_ca", ring_depth=int(c["depth"]),
                            ring_offset=None, ring_k=int(c["K"]) - reader_depth + writer_depth - int(qreg),

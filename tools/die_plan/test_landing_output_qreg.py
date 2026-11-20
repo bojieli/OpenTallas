@@ -65,6 +65,30 @@ def test_count_aligned_qreg_cycle_in_sched_lat_ring_k_unchanged(form):
     assert on.manifest()['reset_placements']['B'][bus]['output_qreg_added_data_cycles'] == 1
 
 
+@pytest.mark.parametrize('form', ['ca', 'strap'])
+def test_count_aligned_qreg_priced_by_sched_lat_not_legacy_ring(form):
+    # QC N46R: a re-planned count-aligned QREG port at sched_lat != 3 + QREG carries that sched_lat on its row
+    p, t = {'ca': ca_vehicle, 'strap': strap_vehicle}[form]()
+    base = CL.Landings(copy.deepcopy(p), copy.deepcopy(t))
+    bus = next(iter(base.ins['b']))
+    p['partition_types']['B'].setdefault('clock', {})['landing_output_qreg'] = [bus]
+    pids = {x['port'] for x in base.rows if base.parts[x['dst']]['type'] == 'B' and x['dst_bus'] == bus}
+    for lat in (2, 3, 5):
+        p2, t2 = copy.deepcopy(p), copy.deepcopy(t)
+        for q in pids:
+            t2['count_aligned']['ports'][q].update(sched_lat=lat, output_qreg=1)
+        for r in t2['ports']:
+            if r['port'] in pids:
+                r['added_cycles'] = lat
+        on = CL.Landings(copy.deepcopy(p2), copy.deepcopy(t2))
+        assert on.ins['b'][bus]['added_cycles'] == lat
+        for r in t2['ports']:
+            if r['port'] in pids:
+                r['added_cycles'] = lat + 1
+        with pytest.raises(CL.LandingError, match='!= bind sidecar sched_lat'):
+            CL.Landings(copy.deepcopy(p2), copy.deepcopy(t2))
+
+
 @pytest.mark.parametrize('bad', [True, ['y', 'y'], [1], ['y[0]']])
 def test_bad_selection_rejected(bad):
     p, t = vehicle(); p['partition_types']['B']['clock'] = {'landing_output_qreg': bad}
