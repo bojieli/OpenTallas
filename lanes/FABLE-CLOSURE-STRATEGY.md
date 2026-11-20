@@ -1,3 +1,206 @@
+# FABLE-CLOSURE-STRATEGY 2026-11-19 23:15 PST (2315): setup closes where the plan rows landed; the open class on every die is clock spread between related flops, in the die tree and inside the kit's own taps
+
+Reviewer: FABLE-CLOSURE-2315 (Fable). Read-only: no job launched, killed or patched. Technical PD only; HBM parked.
+Gate (R-MINIMAL): DRC 0, routed TT >= -42 ps, hold >= 0, bind + LATCHECK, hops <= 405 um. Nothing below is a new gate, hold or freeze.
+Marking: **V** = I opened the log or file this round. **R** = reported by the named lane or Fable report. **I** = inferred. **P** = proposal.
+`failure_breakdown.py` 23:12 (V): technical rows are S81 leaf detail_place 3 (t21 +2) and 2 "other flow error" (t52 +1), KV kv3_hub_Wi 1,
+KV core qkd_pv_fin_s8_pin (no recipe). Everything else is running. TAP-INSERTION advisory: kit tap skew max S81 288 ps, QC 208 ps, HEAD 77 ps.
+
+## 0. Headline
+
+1. **The first D8i col kits close setup at CTS (V).** 11 of 11 col_h9_r1 kits that have a TT repair log on epyc8
+   (`s81-geom-opus-d8g/d8i/tree6/kb_d8i/kits/*/gen/*/tt_setup_repair.log`) read -15.4..-16.0 -> **-13.5..-13.6**, tns -131 (old plan -181).
+   Stage census of the 114 builds (V, intel2 `~/s81-geom-opus-d8i-watch/cur.sorted`, 22:58): place 82, CTS 28, GRT 4. No GRT TT yet.
+2. **The same kit shows where it fails next (V, `pve3f8a86c/.../run_finish.log`, `hold_gate.log`).** `OT_HOLD_GATE PASS FF wns -120.21
+   endpoints 3603` against a structural limit of -140. Tap balance ends with every tap's latest flop near 460 to 499 ps, but the
+   earliest flop of a tap is far below it: clk_t9 318..483 (98 sinks), clk 378..469 (1,084), clk_t27 380..487, clk_t14 382..482,
+   clk_t10 365..469. Tap means are 388..479 against `OT_TAP_WINDOW` 40. The spread is inside one tap's CTS subtree.
+3. **Per-pin offsets on the die tree are measured worse and dropped (R, S81-CLOCK-WINDOW 22:20).** cw7 intra hold TT / FF -336 / -288
+   against cw6 -309 / -266; kit-contract FF -269 against -100. KV `actual_max` 300 is also worse (seam -213 against -122), 200 fails
+   to build (R, DIE-CORETAP 23:13). Both lanes name one cause: the worst related taps share no tree node for about 17 stages.
+   cw8 (clusters of <= 16 taps as one matched sink) built its kit at 23:09 and started GRT (V, epyc10 `s81-clock-window/die/runs/s81/cw8/CHAIN.log`).
+4. **HEAD hd_tile at placement RC, one CTS pass (V, epyc10 `fable-fix-head-mesh/tilecomb3*/gen/hd_tile/tt_setup_repair.log`).**
+   Control -52.63; ring status + guard registers and flt stations (3s) **+1.18**; the same with form A windows (3sa) **+16.83**.
+   All three are in route. r11 (ring registers, `reserved_pg_cut` tools) applied 21:54 (R).
+5. **Two QC types and one S81 family fail on a memory read that cannot fit one cycle.** coll_core SRAM 434 ps + 278 ps logic leaves
+   49 ps of wire (R, FABLE-PD-QC-2300); pkw3 with the rec_tx stations starts at -628.05, pkw2b at -607.23 (V), so stations do not
+   touch it. tt_ctlm r1b -106.09 on two ROM read ends with 591 / 520 ps access (V repair log; R paths).
+6. **QC N46T was rebuilt before bind as N46T5** after FABLE-PD-QC-2300 found 59 station rows that stop kit gen and 899 bit sites in
+   hard cores (R, QC-PLAN-R3 23:15: FORM 0, LEAF 0, INSIDE 0). Fall fold is N46U4, still timed on the old clock n46ct_e.
+7. **KV D25e2 did not bind** (ECTL round trip 25 / 26, R). D25e3 is in G0; D25f rebases on it and lacks five items (R, FABLE-PD-KV-2300).
+
+## 1. Levers ranked by closure impact
+
+| # | die | lever | unblocks | owner |
+|---|---|---|---|---|
+| 1 | all 4 | related taps within few unshared stages (cw8 form); in-tap range inside the kit; zero-logic chains on one tap or a lockup | die hold on 4 dies; S81 col 216 + slice_station 37 + svc 13; QC cb / hc / su_l0 about 30; KV pv 16; hd_host_w | S81-CLOCK-WINDOW-1119, DIE-CORETAP-1119, DIE-LEVEL-CHECK-1119, FABLE-FIX-KV-PV-2140 |
+| 2 | S81 | col: read the 114 D8i kits by family at GRT; bind event J3 (face-bus chains, read loop, SWR), then J4 with START-TREE | 216 col types (incl. 30 h9_r0 p4 to p6 and 60 h9_r2) | S81-GEOM-OPUS, S81-DIE-R3, COL-CENSUS-1119 |
+| 3 | QC, S81 | memory read path: register at the macro or early macro clock, as a family rule | coll_core, tt_ctlm; 60 col_h9_r2 (read loop); any type with a ROM / SRAM read cone | OPUS-FIX-QC-COLLCORE, QC-TTCTLM-1119, COL-CENSUS-1119 |
+| 4 | QC | N46T5 bind, then proof kits by family; sink bins from placed kits; U4 re-timed on a rebuilt clock | 26 st / su + 22 pad-leg types of 98 | QC-PLAN-R3, QC-SUST-MACRO-1119 |
+| 5 | KV | D25e3, then D25f with its five missing items; hg hop with a core between stations; pc PDN | hg / hgi 19, pv 16, pc 6 of 50 | KV-D23-COMPOSE, FABLE-FIX-KV-HG, FABLE-FIX-KV-PV-2140 |
+| 6 | S81 | leaf form C sites into the next event (apply first), SWR already in J; keep_firm release | 75 leaf types | FABLE-FIX-S81-LEAF-2140, S81-DIE-R3 |
+| 7 | HEAD | hd_tile routed read of 3s / 3sa; hd_host_w tap balance; r12 hd_serdes | last HEAD type; HEAD die hold | FABLE-FIX-HEAD-MESH, HEAD-CROSSING-1119 |
+| 8 | S81 | singles: lepe proof6 (RIP1), serdes H25 (AMPIPE), bk_sel core view; bound the in-GRT setup repair | 3 families, about 15 types | FABLE-FIX-S81-LEPE, FABLE-FIX-S81-SERDES, S81-GEOM-OPUS |
+
+### Lever 1. Clock spread between related flops: tree, tap and chain
+**Evidence.**
+- Die tree. S81 rv4 (R, DIE-LEVEL 22:51, tools d358c674ba): FF intra -301.91, TT hold -309.05; worst FF pair slice_station__t22
+  clk_t18 -> clk_t15 with 74 ps of die clock damage on a per-port view; the TT worst is still an in-type range bound (record on rtx-pro only).
+  QC (R, FABLE-PD-QC-2300, `kitwin.json`): port window p50 / p90 / max 43 / 92 / 283 ps over 15,964 ports; 30 % need more than the
+  57 ps the kits carry; cb tiles up to 283, hc1 / hc2 168, su_l0 200. The -355 pair has 42.8 ps of real die difference.
+  KV (R, FABLE-PD-KV-2300): on 466 related pv_N_0 tap pairs the damage is p95 48, max 115 ps; 4 pairs exceed the 75 ps kit window.
+  HEAD (R, DIE-LEVEL 21:44): hd_host_w tap means 343 (clk_t1) to 459 (clk_t36) FF, plus 16 flops on one depth-18 leaf at 509.
+- Window need follows unshared stage count (R, S81-CLOCK-WINDOW 21:44, cw6): 0 to 2 stages median 1 ps; 6 to 8 median 16;
+  18 to 20 median 47 (p90 93). Every limiting partner is in the same partition.
+- Inside the kit (V, headline 2): in-tap range 100 to 165 ps on five taps of col_h9_r1; 3,603 FF hold ends at -120 after CTS.
+- Chains (R): KV pv has 142,464 zero-logic stage transfers, 37.6k of 47.5k cross-tap ends inside `ot_dp_dly`; coll_core `ur_rec -> u_d5`
+  has clocks 198 ps apart and 8,826 hold buffers at 336k cells.
+**Root cause.** Three layers of one fault. (a) The region tree balances to one target, so related taps hang on sub-trees that part
+17 stages up. (b) The kit balancer lines up each tap's latest flop; the earliest flop of a wide tap stays early. (c) Zero-logic
+delay lines are spread by distance, so neighbours land on different taps. Offsets cannot fix (a): the re-tree moves its own error.
+**Fix (P).**
+1. S81-CLOCK-WINDOW-1119: read cw8 on two marks per family: unshared stages between related taps (target about 5) and port window
+   (target <= 40 ps TT and FF). Re-run on tools >= d358c674ba; the cw7 run predates both pricing fixes. If the marks hold, DIE-CORETAP-1119
+   ports the same env-gated patch to KV pv regions and QC cb tiles / hc1 / hc2 / su_l0 first (the families over 150 ps).
+2. Kit balancer (owner of `OT_TAP_BALANCE`; S81-GEOM-OPUS has the 114 kits to measure on): report min / max per tap as it does now and
+   act on range, not only on the mean: a tap with range over about 60 ps gets its CTS sub-tree rebuilt with a smaller sink cluster
+   diameter, or is split in the plan by PRECHECK `TAP-CAP` style rows. Estimator first: count taps over 60 ps on the D8i col kits.
+3. Chains: KV form C (lockup at each tap-group boundary, 0 cycles, main 29d0a6105e4c) is the general form. When v8h / v8j place,
+   take it for QC pad-delay stages (`u_d5`) and the S81 slice_station chains with the same plan key. No hold buffers for this class.
+4. DIE-LEVEL-CHECK-1119: die STA on connected pairs only (bind net graph), and pass the partition type to `common_latency_ps`
+   (R, S81-CLOCK-WINDOW item 5: a 450-override type reads about 200 ps late against its own flops). Until then quote the
+   port-window table per die, not -302 / -355 / -248 / -165.
+
+### Lever 2. S81 col: from CTS to sign-off, and event J
+**Evidence.**
+- V: headline 1 and 2. R (S81-GEOM-OPUS 22:58): every D8i build was launched with GOAL=finish, which skipped the FF GRT step, so
+  col kits stop in `grt_nonport_hold.tcl` ("must explicitly select FF"; V on pve3f8a86c). Fixed on main bf63fa6b676 (R, FLOW-FIX-2045);
+  the watcher resumes each stopped kit with GOAL=route. 4 builds died rc 247 at about 7.4 GB peak with no earlyoom line (R).
+- V (intel2 `~/s81-die-r/build_j3_r6.log`): J3 r6 admitted on intel1, plan f925a42b1336. R: r5 failed elab on three blackbox
+  masters now inside provider cores; r12 / r13 of D8i C6 failed on an absolute path in asbuilt (both fixed in the tree).
+- R (COL-CENSUS 21:55): J col rows = 252 face-bus chains in 156 types (108 re-sited, 144 +1 station), form A on 30 h9_r0 p4 to p6
+  types (far bit 892 um, 2 stations, 297 um), read loop c12_6 405 -> 59 um on 60 h9_r2. 162 lanes repriced, 174 (type, bus) +1.
+  The die side of the frame_int +1 is static only. cc3 bank rows were refused once: 126 banks sat on a tap keepout edge (fixed, cc3b).
+- R (S81-CLOCK-WINDOW 22:52): START-TREE on J3 passes CA 0 / 2330; CORE-EARLY-v2 must not go in with J3 (it needs its own tree).
+**Fix (P).**
+1. S81-GEOM-OPUS: per family, post CTS TT, pre-GRT FF hold ends by class (same tap / cross tap / port) and GRT TT. h9_r1 needs no
+   further plan row for setup; its risk is the 3,603 hold ends, so read `OT_PREGRT_FF_HOLD` hold cells and the setup after it.
+2. S81-DIE-R3: bind J3 as it is; its LATCHECK is the first measure of the frame_int +1 on the die side. J4 = START-TREE table
+   + leaf form C sites (lever 6). Keep D8i kits running; an any-plan sign-off counts.
+3. COL-CENSUS-1119: the bank-in +1 stage (CC-BANK-2S) only for families whose cc3b kit is under -42 on `o_x -> xs_q`.
+4. The rc 247 kills at 7.4 GB are not a memory size problem; read `dmesg` / cgroup events on one before the resume repeats it (not checked).
+
+### Lever 3. Memory read in one cycle (QC coll_core, tt_ctlm; S81 col_h9_r2)
+**Evidence.**
+- R (FABLE-PD-QC-2300, `pkw2b_coll/.../4_cts_post_hook.rpt`): SRAM clk -> rd_out 433.6, 8 cells 278.1, 13 buffers 656.6;
+  budget for wire 49.5 ps. V: pkw2b -607.23 -> -558.72; pkw3 before repair -628.05 (epyc9 `fable-fix-qc-collcore/opus/pkits/`).
+- V (epyc7 `qc-ttctlm-1119-r1/{r1a,r1b}/gen/tt_ctlm/tt_setup_repair.log`): r1a -143.66 -> -128.48; r1b -106.09 (repair to -95.66 raised
+  tns to -909). R (QC-TTCTLM 23:13): the two ROM ends are check paths (`fault`, header `h_good`), ROM input slack 607 to 652 (cal)
+  and 176 to 211 (leaf); early ROM clock estimate on the r1b DB: -106.09 -> -25.55.
+- R (COL-CENSUS): the h9_r2 cfg ROM read loop is the same shape (access time plus a 405 um loop), closed by moving the ROM.
+**Root cause.** Macro access time is 52 to 71 % of the period; whatever follows it in the same cycle has under 250 ps.
+**Fix (P).**
+1. OPUS-FIX-QC-COLLCORE: pkw4 (read one cycle earlier, register at the SRAM column, cycle-neutral, LATCHECK delta 0) is the right
+   form; read it by class (sring -> out_data, sring -> g_xf), not by WNS. Keep the `u_d5` chain for lever 1 item 3.
+2. QC-TTCTLM-1119: r1be (early ROM clock, no cells) and the registered-read form in parallel; because both ends are checks, a
+   register on `fault` / `h_good` costs a cycle on a flag only. Read r1b at GRT TT first: 123 ps of the calrom path is buffers.
+3. PRECHECK-1119 (estimator row, all dies): for every ROM / SRAM in a type, macro clk -> Q + 150 ps against the period, and the
+   placed distance from its `rd_out` pins to the first register. One row per type; it would have named all three families.
+
+### Lever 4. QC: N46T5, proofs, bins
+**Evidence (R unless marked).** N46R3 applied 22:40 (hard-core overlaps 0, straps in cores 70 -> 0). N46T5 (plan 94ab55a0a9ae) and N46U4
+(b4381fc956ea) binding; `station_rows_check.py` and the fixed macro-site generator are on main be5f37c39b. PRECHECK 22:49 on N46R3:
+STALE-BINS on 24 types, e.g. sle_st_a_v1 kits see 25,855 clock sinks where the plan bins hold 97,712 (0.26x), sle_ctl 1.69x.
+V: pk46_cbf1 after TT repair +28.46 (in FABLE-PD-QC-2300); pk46_s2b measures the old bind.
+**Fix (P).**
+1. QC-PLAN-R3: when N46T5 binds, proof kits to GRT TT side by side: one st_a (per_bit rows), slw_st_b_v1__cle6023ec2 (generator
+   sites), one v3-row st_b, one fw, one sle_ctl. Read `OT_TAP_BALANCE` spread and empty taps in each (23 types have moved macros
+   under N46R3 clock inputs).
+2. Next event: `sink_bins` rebuilt from those placements for the 24 STALE-BINS types; a tap planned for 4x its real load is a tap-spread source (lever 1).
+3. U4: re-time TT + FF on a die clock built from the N46T5 plan before it applies; min margins 123.2 / 118.6 sit on a clock
+   whose per-port offsets differ by tens of ps between builds.
+
+### Lever 5. KV: D25e3, D25f content, hg and pc
+**Evidence.**
+- R (KV-D23-COMPOSE 23:10): D25e3 = D25e2 + 4 ECTL rq rows, PRE pass, G0 running, bind after it.
+- R (FABLE-PD-KV-2300): staged D25f lacks `r_dly_spread_station_um`, `r_dly_lockup`, pc core-tap v2 rows, depth-16 sidecar rows, M2;
+  every DIE-CORETAP tree is on the D25c tap set (127 of the v8b kit's 343 taps are not in it). hg k10: 54 % of 21,073 overflow is
+  inside core outlines, 8,504 over head2_e6 (tN hop r0 -> s1 with e6 between its stations), 3,431 where the hst3 leg crosses the
+  clock entry cluster. k11 (M2) 19,249, moves the load into the middle column gap. rls rows put 807 bits through an 8.64 um gap on 7 hg types.
+- V (epyc9 `opus-kv-hg/{k10,k11}/gen/.../tt_setup_repair.log`, `pregrt_ff_hold.log`, `4_cts_post_hook.rpt`): k10 -204.52 -> -187.44;
+  k11 -198.63 unchanged. The first five k11 ends start at input port `ri_head2_u_score_rst_n[0]` and end on reset relays
+  `u_rs_ri_head2_u_score_rst_n_r*`; pre-GRT FF hold is all `port_in` (166 ends, -107.2; same-tap 0, cross-tap 0).
+- R (23:14, lane just started): kv3_pc pilot stops at PDN-0006: pcc core LEF has M5-only PG pins under M6 / M7 obstructions; 6 pc types.
+**Fix (P).**
+1. FABLE-FIX-KV-HG: no new polyline round. Re-site the tN stations so no hop has head2_e6 between its ends, and move the hst3 leg
+   off (639, 760). On the 7 hg_v1-family types either widen the krsp gap to about 19 um or split the 807-bit trunk over both sides.
+   The k11 WNS is a reset input port to relay path: check the reset port's input delay and first relay site before reading it as a station result.
+2. KV-D23-COMPOSE: D25f = rebase on D25e3 + tools >= 29d0a6105e4c + rows_C + pc core-tap v2 rows with the v3 tree, together.
+   DIE-CORETAP-1119 reruns v3_pvsnake on the D25f tap set before quoting -165 / -156 for it.
+3. pc PDN: take the kit-side pdngen cut first (no re-harden of 4 signed cores); the M5 / M6 / M7 core PDN variant only if the cut
+   leaves the core rails unconnected. Owner: the lane that posted 23:14.
+4. FABLE-FIX-KV-PV-2140: on v8h / v8j, read clock sink count per tap first (54,196 new latches with `OT_TAP_CAP_RECHECK=0`), then hold by class.
+
+### Lever 6. S81 leaf
+**Evidence.** R (FABLE-FIX-S81-LEAF-2140 21:55 to 22:53): form C sites `plan_famC.json` 750f33553a0e; tree CW = C + 5 SWR rows + WREG in
+strict bind on epyc9 (V: `fable-fix-s81-leaf-2140/cw/build_CW` at 22:29, no kit yet). t21 / t60 DPL-0033 = `keep_firm` station flops on
+TAPCELL / PHY_EDGE (fixed, main 069b960d0b85); t42 DPL-0033 = shared bank g_hig_3 split (the form C class); t52 HPWL 1.40x.
+SWR is in J (5 nibbles, netlist 3340107e82f0). No leaf GRT number exists for C or A.
+**Fix (P).** Under r712, S81-DIE-R3 takes the form C site rows into J4 now (0 cycles, sites only, 16 / 16 banks out of cores) and
+FABLE-FIX-S81-LEAF-2140 proves t28 / t31 / t60 / t42 alongside. Marks unchanged: GRT overflow 0 inside 5 extra iterations, HI path under
+one cycle. Form A only where the corridor check still shows bits over core tracks. The permanent rule goes into `kit_istations`.
+
+### Lever 7. HEAD
+**Evidence.** V: headline 4. V (`pregrt_ff_hold.log`): 3sa ends the pre-GRT hold build with 17,047 hold cells, setup 16.83 -> 0.61,
+cross-tap +45, and a final line "after wns -89.34 endpoints 2300"; control 26,274 cells, setup -52.63, "after -91.37 endpoints 2269".
+I did not read which class the 2,300 ends are. R: hd_host_w (lever 1); r12 = hd_serdes 37-tap table and a ring reset copy (main 4691070201).
+**Fix (P).** FABLE-FIX-HEAD-MESH: routed TT and FF hold of 3s and 3sa decide; take 3sa's windows into the wave kit if both route, since
+it needs 9,000 fewer hold cells than the control. Name the class of the 2,300 residual ends before route ends. HEAD-CROSSING-1119:
+hd_host_w tap balance to the 390 ps band and the leaf_74 tail in r12, then re-time die hold with its per-port view.
+
+### Lever 8. S81 singles
+**Evidence (R).** lepe proof5: DRT-0073 gone with the corrected LEF, GRT overflow 0, then 9 h and 3,200 iterations of in-GRT setup
+repair stuck at -270.3 on `u_u_lep.u.rid[834]/D`, killed, no DB. proof6 (RIP1) has 151 flops FIRM, max hop 382 um. serdes H23 GRT TT -73.5 (H22 -179, H18 -192; rck span 89 ps), left on the decoder `am_ok -> xs` path; H25 (AMPIPE,
++1 rck) registers that path, in synth; T15P resumed on epyc10. bk_sel G0 street gap 2 -> 0, core re-harden running.
+**Fix (P).** Flow owner: the in-GRT setup repair writes its DB and stops when WNS has not moved for a set number of iterations, so a
+structural path costs minutes and leaves a DB to time (a setting, not a gate). The lanes: no change; read proof6 and H25 at GRT TT.
+
+## 2. The 21:15 levers: outcome
+
+| 21:15 lever | outcome |
+|---|---|
+| 1 valid proof flow | Landed: cleaner and route start (main de25a4bcef8, 77973bd52d2), GOAL=finish runs the FF GRT step (bf63fa6b676). Not yet confirmed on a fresh wave kit (R). hd_tile re-proved on one pass (V). GOAL=cts still skips TT repair (pk46 numbers withdrawn by their lane). |
+| 2 S81 col window, bank hops, event J | cw7 measured and dropped; cw8 kit built 23:09. cc3 bind refused on a keepout edge, redone as cc3b. Rows went into J3 (binding, r6). First D8i number -13.5. |
+| 3 leaf HI corridor | No GRT number. Tree CW in bind; SWR on main and in J; keep_firm DPL fix on main. |
+| 4 QC N46R3 then one event | N46R3 applied. N46T rebuilt twice (KITFIT overlap, then the row-form findings) and is binding as T5. Generator fixed on main. |
+| 5 KV next event | D25e2 bind failed on one ECTL error; D25e3 in G0. pv form changed from A to C (lockup). v3_pvsnake adopted as clock config. |
+| 6 HEAD r11 | Applied 21:54 with ring registers, flt stations, cut tools. 3s +1.18, 3sa +16.83 at placement RC. Seven-tap cluster: e5c rerun in DME. |
+| 7 die hold per-port | S81 re-timed (-438 -> -302 FF) with 28 per-port types; KV and QC classes separated by the two Fable reports. HEAD not re-timed. |
+| 8 QC singles | tt_ctlm depth class closed (-17.6), ROM ends named. coll_core wall form -559, cause is the SRAM read. cbf sibling +28.46. |
+
+## 3. Stop list (the 21:15 list stands, plus these)
+- No further per-pin offset round on any die tree (cw7 worse on every number), and no `actual_max` round on KV (300 worse, 200 does not build).
+- No die hold verdict from an all-pairs number; no S81 CORE-EARLY-v2 on the cw6 tree.
+- No coll_core kit read by WNS while the SRAM read is single-cycle; no further wall or station row for the sring -> out_data class.
+- No tt_ctlm relaunch of r1a or r2a; no further repair pass on r1b (it raised tns).
+- No third hst3 polyline, and no M2 rows from k11 (19,249, load moved into the clock entry gap). No rls rows on the 7 hg_v1-family
+  types as they are (807 bits through 8.64 um).
+- No pv setup or hold number for D25f from a D25c-plan clock tree; no D25f without tools >= 29d0a6105e4c.
+- No quote of a GOAL=cts kit as a TT number; no D8i col kit relaunch from synth for the GRT FF stop (resume from CTS).
+- No lepe relaunch unchanged after a stuck in-GRT repair; no hd_tile PICK_SPLIT (3s closes without it).
+- No QC exact bit-site rows without `station_rows_check.py`; no N46U4 called proven on n46ct_e.
+
+## 4. Not checked
+- cw8 STA (kit only); J3 r6 and D8i C6 r13 bind results; any col family other than h9_r1; any D8i GRT TT; the cause of the rc 247 kills.
+- Why the kit balancer leaves 100 to 165 ps inside a tap (lever 1 item 2 is from one kit's `OT_TAP_BALANCE` line; I did not open the CTS tree).
+- The class of the 2,300 residual pre-GRT hold ends on hd_tile; routed results of 3s / 3sa / control; r12 content beyond the posts.
+- N46T5 and N46U4 bind results; the 24 STALE-BINS types beyond the two examples; pkw3 after repair; pkw4 and r1be (queued / started).
+- The slack of the k11 reset-port ends (I read endpoints, not the path table); D25e3 G0; v8h / v8j past gen; the pc PDN lane's forms.
+- Leaf tree CW bind and its kits; lepe proof6, serdes H25 / T15P, bk_sel kit; whether S81 slice_station has the zero-logic cross-tap pattern.
+- FABLE-PD-S81-2040 and FABLE-PD-HEAD-2040: read for state and stop lists; their per-path numbers are quoted as R, not re-measured.
+
+---
+
 # FABLE-CLOSURE-STRATEGY 2026-11-19 21:15 PST (2115): several proofs were built by an FF-only second pass; the die hold numbers are range bounds; four type families now have a named structural cause
 
 Reviewer: FABLE-CLOSURE-2115 (Fable). Read-only: no job launched, killed or patched. Technical PD only; HBM parked.
