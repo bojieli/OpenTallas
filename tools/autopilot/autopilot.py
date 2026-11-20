@@ -3566,6 +3566,28 @@ def retry_pending(st):
 
 
 # ------------------------------------------------------------------------------------------------ commands
+def tick_progress(ap_dir, t0, phase, done=False):
+    """FLOW-1355 (2): .tick.progress = {start, phase, t, done}, rewritten at every phase mark; a tick killed by the service timeout leaves done=false"""
+    try:
+        (Path(ap_dir) / ".tick.progress").write_text(json.dumps({"start": t0, "phase": phase, "t": time.time(), "done": bool(done)}))
+    except OSError:
+        pass
+
+
+def tick_killed_check(ap_dir, now_start):
+    """at the start of a tick: the previous tick left done=false = it was killed (autopilot.service TimeoutStartSec) or crashed: one TICK-KILLED line with its last phase and age"""
+    try:
+        d = json.loads((Path(ap_dir) / ".tick.progress").read_text())
+    except (OSError, ValueError):
+        return None
+    if d.get("done") or float(d.get("start") or 0) >= now_start:
+        return None
+    msg = "TICK-KILLED previous tick started %s was cut off in phase '%s' after %.0f s (killed by the service timeout or crashed; the launch pass may not have run)" % (
+        time.strftime("%H:%M:%S", time.localtime(float(d.get("start") or 0))), d.get("phase"), float(d.get("t") or 0) - float(d.get("start") or 0))
+    log(msg)
+    return msg
+
+
 def bad_hosts_from_status(text, hub=None):
     """hosts that are unreadable (no ot-run status row of a known fleet host) or over 2x their cores"""
     stt = KW.parse_otrun_status(text)
@@ -3597,11 +3619,13 @@ def tick(args):
         return 0
     _t0 = time.time()
     _ph = {}                                           # WF-1 11-14: per-phase wall seconds, one TICK-TIMES line at the end
+    tick_killed_check(AP_DIR, _t0)
 
     def _mark(name, _last=[time.time()]):
         n = time.time()
         _ph[name] = round(n - _last[0], 1)
         _last[0] = n
+        tick_progress(AP_DIR, _t0, name)
     st = load_state()
     try:
         mark_bad_hosts()
@@ -3675,6 +3699,7 @@ def tick(args):
     _mark("loop_gaps")
     UU.step(sys.modules[__name__])                     # never raises; one UNDER-USE line (idle threads per host + top hold reasons)
     _mark("under_use")
+    tick_progress(AP_DIR, _t0, "done", done=True)
     log("TICK-TIMES total=%.0fs " % (time.time() - _t0) + " ".join(f"{k}={v}s" for k, v in _ph.items()))
     counts = {}
     for j in st["jobs"].values():

@@ -7092,6 +7092,14 @@ def repick_queued_waits(AP, cfg, st, notices, jobs=None, now=None):
         host = "localhost" if host == hub else host
         why = queued_host_bad(stt, host, hub)
         if not why:
+            # COORD 11-19 (FLOW-1803 3: 75 of 624 threads idle while epyc8/9 refused work): a queued wait on a host AT OR OVER its cores moves when another gen host of the die is under its cores
+            v_ = stt.get("localhost" if host == hub else host) or {}
+            if v_.get("cores") and float(v_.get("load") or 0) >= float(v_["cores"]):
+                gh_ = [h for h in gen_hosts(cfg, r["die"], r.get("item")) if h != host and h not in (hub, "localhost")]
+                free_ = [h for h in gh_ if (stt.get(h) or {}).get("cores") and float((stt.get(h) or {}).get("load") or 0) < float(stt[h]["cores"]) and int((stt.get(h) or {}).get("admit") or 0) > 0]
+                if free_:
+                    why = f"{host} load {v_.get('load'):g}/{int(v_['cores'])} is at its cores while {free_[0]} has room"
+        if not why:
             continue
         kit = str(j.get("kit") or r.get("kit") or "").partition(":")[2]
         if not AP.DRY:

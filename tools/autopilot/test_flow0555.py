@@ -531,3 +531,31 @@ def test_stage_refused_bind_on_the_live_tree_becomes_stale_for_the_launch_check(
 def test_plan_dies_source_prints_die_off_and_no_launch_lines():
     src = open(KW.__file__).read()
     assert "KIT-WAVE DIE-OFF {_die}" in src and "KIT-WAVE NO-LAUNCH {_die}" in src
+
+
+def test_tick_killed_line_when_the_previous_tick_never_finished(tmp_path):
+    import autopilot as A
+    lines = []
+    old, A.log = A.log, lines.append
+    try:
+        assert A.tick_killed_check(tmp_path, 1000.0) is None                    # no marker
+        A.tick_progress(tmp_path, 500.0, "poll")
+        m = A.tick_killed_check(tmp_path, 1000.0)
+        assert m and "TICK-KILLED" in m and "'poll'" in m and lines
+        A.tick_progress(tmp_path, 500.0, "done", done=True)
+        assert A.tick_killed_check(tmp_path, 1000.0) is None                    # it finished
+    finally:
+        A.log = old
+
+
+def test_queued_wait_on_a_host_at_its_cores_moves_when_another_host_has_room(tmp_path):
+    import unittest.mock as M
+    ap = type("AP", (), {"DRY": False, "AP_DIR": str(tmp_path), "log": staticmethod(lambda m: None), "sh": staticmethod(lambda c, timeout=0, input=None: (0, "", "")),
+                         "ssh_host": staticmethod(lambda h: h)})()
+    cfg = {"dies": {"s81": {"gen_host": "epyc8", "gen_hosts": ["epyc8", "epyc9", "epyc2"], "work_root": "/srv/x/claude/l"}}, "_hub": "intel2",
+           "_otrun_status": {"epyc8": {"load": 120, "cores": 96, "admit": 5}, "epyc9": {"load": 150, "cores": 96, "admit": 5}, "epyc2": {"load": 40, "cores": 128, "admit": 300}}}
+    st = {"items": {"a": {"die": "s81", "item": "t1", "status": "ENQUEUED", "q_id": "j1", "started": 1.0, "attempt": "1"}}}
+    jobs = {"j1": {"status": "QUEUED", "host": "epyc8", "kit": "epyc8:/k/1"}}
+    with M.patch.object(KW, "pick_gen_host", return_value="epyc2"):
+        assert KW.repick_queued_waits(ap, cfg, st, {}, jobs=jobs, now=1e9) == 1
+    assert st["items"]["a"]["restage_host"] == "epyc2"
