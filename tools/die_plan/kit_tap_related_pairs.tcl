@@ -4,7 +4,18 @@
 # A pair (p, q) is listed when a register (or hard-core pin) clocked from tap port p reaches the D of one clocked from q through at
 # most OT_KTP_DEPTH combinational cells (nets above 512 loads are skipped as clock/reset trees).  Same-port pairs are not listed
 # (OpenSTA CRPR credits them).  No netlist or timing change; read-only.
+# DIE-LEVEL-CHECK-1119: OT_KTP_ODB = read this database first (a bare kit ODB, no liberty: registers are then recognised by
+# the ASAP7 sequential master names, below).
+if {[info exists ::env(OT_KTP_ODB)]} { read_db $::env(OT_KTP_ODB) }
 set blk [ord::get_db_block]
+set ktp_libseq 0
+foreach i [$blk getInsts] { if {[[$i getMaster] isSequential]} { set ktp_libseq 1; break } }
+proc ktp_seq {m} {
+ global ktp_libseq
+ if {$ktp_libseq} { return [$m isSequential] }
+ set mn [$m getName]
+ return [expr {[string match "DFF*" $mn] || [string match "ASYNC_DFF*" $mn] || [string match "SDF*" $mn] || [string match "DHL*" $mn] || [string match "DLL*" $mn]}]
+}
 set depth [expr {[info exists ::env(OT_KTP_DEPTH)] ? $::env(OT_KTP_DEPTH) : 8}]
 set tp [expr {[info exists ::env(OT_KTP_TYPE)] ? $::env(OT_KTP_TYPE) : [$blk getName]}]
 # clock tap port of an instance: the port at the top of the clock tree feeding a clock pin of the instance.  After CTS the tap
@@ -45,7 +56,7 @@ proc ktp_port {inst} {
 set port {}
 foreach i [$blk getInsts] {
  set m [$i getMaster]
- if {[$m isBlock] || [$m isSequential]} { set p [ktp_port $i]; if {$p ne ""} { dict set port [$i getName] $p } }
+ if {[$m isBlock] || [ktp_seq $m]} { set p [ktp_port $i]; if {$p ne ""} { dict set port [$i getName] $p } }
 }
 set pairs [dict create]
 dict for {iname p} $port {
@@ -62,7 +73,7 @@ dict for {iname p} $port {
    foreach s [$net getITerms] {
     if {![$s isInputSignal]} continue
     set si [$s getInst]; set sm [$si getMaster]
-    if {[$sm isBlock] || [$sm isSequential]} {
+    if {[$sm isBlock] || [ktp_seq $sm]} {
      set q [expr {[dict exists $port [$si getName]] ? [dict get $port [$si getName]] : ""}]
      if {$q ne "" && $q ne $p} { dict set pairs [lsort [list $p $q]] 1 }
      continue

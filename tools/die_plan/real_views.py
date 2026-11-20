@@ -371,6 +371,23 @@ def ports_from(rec, sidecar=None):
     return {p: v for p, v in out.items() if all(C in v for _, C in CORNERS)} or None
 
 
+def related_pairs_for(spec, t, out, fetch):
+    """DIE-LEVEL-CHECK-1119: the kit-exported related tap pairs (related_pairs.json, kit_tap_related_pairs.tcl) beside a
+    signed record -> <out>/related_pairs/<type>.json keyed by the plan TYPE (the export is keyed by the block name).
+    Returns the pair count, or None when the record has no export."""
+    if not spec:
+        return None
+    f = _fetch(str(Path(spec).with_name("related_pairs.json")), out, fetch)
+    doc = _json(f) if f else None
+    prs = list((doc or {}).get("related_pairs", {}).values()) if isinstance(doc, dict) else []
+    if len(prs) != 1 or not isinstance(prs[0], list):
+        return None
+    d = Path(out) / "related_pairs"
+    d.mkdir(parents=True, exist_ok=True)
+    (d / f"{t}.json").write_text(json.dumps({"related_pairs": {t: prs[0]}}) + "\n")
+    return len(prs[0])
+
+
 def kit_from_record(rec, sidecar=None):
     corners = {}
     for c, C in CORNERS:
@@ -468,6 +485,9 @@ def resolve_types(plan, records, out, fetch, digests=()):
         kit, st = next((c for c in cands if c[0].get("ports")), cands[0])
         kf = Path(out) / "kits" / f"{t}.json"
         kf.write_text(json.dumps(kit, indent=1) + "\n")
+        rp = related_pairs_for(kit.get("source"), t, out, fetch)
+        if rp is not None:
+            st["related_pairs"] = rp
         args.append(f"--kit={t}={kf}")
         status[t] = dict(st, status="REAL", lat=kit["corners"], per_port=len(kit.get("ports") or {}),
                          candidates=len(cands))
@@ -551,7 +571,9 @@ def main(argv=None):
     cargs, cst = resolve_cores(plan, a.plan, a.view_root, out, recs, a.fetch)
     targs, tst = resolve_types(plan, recs, out, a.fetch,
                                [d for d in (_json(x) for x in a.digest) if d])
-    (out / "args.txt").write_text("".join(x + "\n" for x in cargs + targs))
+    rpd = out / "related_pairs"
+    rargs = [f"--related-pairs={rpd}"] if rpd.is_dir() and any(rpd.glob("*.json")) else []
+    (out / "args.txt").write_text("".join(x + "\n" for x in cargs + targs + rargs))
     rep = dict(plan=str(a.plan), plan_sha256=_sha(a.plan), die=die, view_roots=a.view_root, records=a.records,
                digests=a.digest, cores=cst, types=tst,
                summary=dict(cores_real=sum(v["status"] == "REAL" for v in cst.values()), cores=len(cst),

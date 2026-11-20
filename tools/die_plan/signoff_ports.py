@@ -70,7 +70,11 @@ def sidecar(rec_path, rec, disc, results):
 
 
 def publish_sidecar(src, record_dir):
-    """append only: copy the sidecar into a signed-store record dir when it has none; never overwrite."""
+    """append only: copy the sidecar into a signed-store record dir when it has none; never overwrite.  A related_pairs.json
+    beside the sidecar (the kit tap-pair export of the same session) is published the same way."""
+    rp = Path(src).with_name("related_pairs.json")
+    if rp.is_file() and not (Path(record_dir) / "related_pairs.json").exists():
+        shutil.copyfile(rp, Path(record_dir) / "related_pairs.json")
     dst = Path(record_dir) / "signoff_ports.json"
     if dst.exists():
         return False
@@ -101,6 +105,7 @@ def main(argv=None):
     if a.dry:
         print(json.dumps({c: r.get("cmd") for c, r in res.items()}, indent=1))
         return 0
+    SO.collect_related_pairs(out)
     sc = sidecar(a.record, rec, disc, res)
     (out / "signoff_ports.json").write_text(json.dumps(sc, indent=1) + "\n")
     print(f"SIGNOFF_PORTS {sc['verdict']} {rec.get('name')} ports "

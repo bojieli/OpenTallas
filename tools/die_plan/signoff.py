@@ -1966,6 +1966,34 @@ def pair_skew_result(kv):
     return out
 
 
+RELATED_PAIRS_TCL = """
+# ---- DIE-LEVEL-CHECK-1119 (FABLE-PD-KV-2300 C): kit-exported related tap pairs (die_sta_related --related-pairs) ----
+if {[catch {set ::env(OT_KTP_OUT) /out/related_pairs.json; source /out/kit_tap_related_pairs.tcl} ktp_err]} { puts "OT_KTP_ERROR $ktp_err" }
+"""
+
+
+def export_related_pairs_tcl(od):
+    """append the read-only related-tap-pair export (kit_tap_related_pairs.tcl) to a corner session: writes
+    <corner dir>/related_pairs.json {related_pairs: {block: [[port, port], ...]}}.  Missing tcl -> nothing (loud)."""
+    ktp = Path(__file__).resolve().parent / "kit_tap_related_pairs.tcl"
+    if not ktp.is_file():
+        print(f"RELATED_PAIRS not exported: {ktp} missing")
+        return False
+    shutil.copyfile(ktp, Path(od) / "kit_tap_related_pairs.tcl")
+    with open(Path(od) / "session.tcl", "a") as fh:
+        fh.write(RELATED_PAIRS_TCL)
+    return True
+
+
+def collect_related_pairs(out):
+    """copy <out>/tt/related_pairs.json to <out>/related_pairs.json (beside signoff.json); True when present."""
+    src = Path(out) / "tt" / "related_pairs.json"
+    if not src.is_file():
+        return False
+    shutil.copyfile(src, Path(out) / "related_pairs.json")
+    return True
+
+
 def run_corner(corner, disc, out, image=IMAGE, docker="sudo docker", dry=False, ff_vclk="sdc", droop=None,
                margin_policy=None, retain_child_clock_witness=False, parent_boundary_instances=(), parent_boundary_std_limit=0):
     od = Path(out) / corner
@@ -2013,6 +2041,8 @@ def run_corner(corner, disc, out, image=IMAGE, docker="sudo docker", dry=False, 
                                                 parent_boundary_std_limit=parent_boundary_std_limit,
                                                 static_straps=declared_static_straps(disc.get("kit"), Path(disc["sdc"]).read_text()),
                                                 tt_vclk=disc.get("tt_vclk", "sdc")))
+    if corner == "tt":
+        export_related_pairs_tcl(od)
     ncd = nomcap_dir()
     if ncd is not None:                                  # NOMCAP-1118 r708: nominal clock-pin load (ot_lib_nomcap)
         mounts.append(("nomcap", str(ncd)))
@@ -2922,6 +2952,7 @@ def cmd_run(a):
         except (OSError, ValueError, KeyError) as exc:
             rec["child_clock_witness"] = {"status": "FAILED", "error": str(exc), "qualification": "NOT_ASSERTED"}
             print(f"CHILD_CLOCK_WITNESS FAILED: {exc}")
+    collect_related_pairs(out)
     (out / "signoff.json").write_text(json.dumps(rec, indent=1) + "\n")
     auto_export_enqueue(out / "signoff.json", rec)
     print("SIGNOFF " + summary_line(rec))

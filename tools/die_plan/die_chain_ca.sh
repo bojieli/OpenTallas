@@ -37,9 +37,10 @@ rv_resolve(){ # RVTOOLS PLAN OUTDIR -> RVA (args) + RVMSG; never fails the chain
 }
 # --kit needs a die_sta_related with the kit register fallback (kit_model reg=); older tool copies get the core views only
 rv_for(){ # STA_TOOLS -> RVF (RVA filtered for that die_sta_related)
-  RVF=("${RVA[@]}"); grep -q "def kit_model(spec, corner, name, reg" "$1/die_sta_related.py" 2>/dev/null && return 0
-  RVF=(); local x; for x in "${RVA[@]}"; do case $x in --kit=*) ;; *) RVF+=("$x");; esac; done
-  RVMSG="$RVMSG | kits SKIPPED for $1 (no kit register fallback)"
+  local x k=1 r=1; RVF=()
+  grep -q "def kit_model(spec, corner, name, reg" "$1/die_sta_related.py" 2>/dev/null || { k=0; RVMSG="$RVMSG | kits SKIPPED for $1 (no kit register fallback)"; }
+  grep -q -e "--related-pairs" "$1/die_sta_related.py" 2>/dev/null || r=0
+  for x in "${RVA[@]}"; do case $x in --kit=*) [ $k = 1 ] && RVF+=("$x");; --related-pairs=*) [ $r = 1 ] && RVF+=("$x");; *) RVF+=("$x");; esac; done
 }
 RVF=()
 if [ "${REAL_VIEWS_GIVEN:-0}" = 1 ]; then log "REAL_VIEWS passed by caller"
