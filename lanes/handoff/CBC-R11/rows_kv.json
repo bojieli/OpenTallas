@@ -1,0 +1,48 @@
+{
+ "rows": [
+  {
+   "rule": "R11",
+   "type": "kv3_io_ft_v1",
+   "paths": 1,
+   "worst_slack_ps": -62.7,
+   "worst_start": "ft2_i[90]",
+   "worst_end": "u_bound.u_cland_ft2_i/u_ring.dch[1].sd_c[154]$_DFFE_NP_",
+   "max_straight_um": 0.0,
+   "hop_cap_um": 300.0,
+   "half_cycle": false,
+   "kind": "internal_stations_add",
+   "conn": "bus:ft2_i",
+   "add_regs": 1,
+   "cycles": 1,
+   "sites_um": null,
+   "existing_entries": 0,
+   "note": "+1 station register(s) on bus:ft2_i (+1 cycle on its lanes, LATCHECK reprices)",
+   "length": "unmeasured (STA log names only; sized by the read-only dump of this kit)"
+  }
+ ],
+ "rtl_requests": [
+  {
+   "rule": "R11",
+   "type": "kv3_sys_SD",
+   "paths": 1,
+   "worst_slack_ps": -81.1,
+   "worst_start": "u_bound.u_core.u_fdi_cdc.u_crs.reset_pipe[1]$_DFF_PN0_",
+   "worst_end": "u_bound.u_core.u_fdi_cdc.u_tx.g_sp.g_c[28].wsel[5]$_DFF_PN0_",
+   "max_straight_um": 0.0,
+   "hop_cap_um": 300.0,
+   "half_cycle": false,
+   "kind": "rtl_pipeline",
+   "module": "u_core.u_fdi_cdc",
+   "levels": 2,
+   "cell_ps": 0.0,
+   "wire_ps": 0.0,
+   "ask": "unmeasured cause (STA log names only, 2 logic cells on the worst path): the read-only dump decides cone split (+1 RTL pipeline register) vs wire (+1 register mid-path); owner lane please name the register boundary in u_core.u_fdi_cdc",
+   "length": "unmeasured (STA log names only; sized by the read-only dump of this kit)"
+  }
+ ],
+ "tool": "setup_to_stage harvest-rows",
+ "rule": "R11",
+ "die": "kv",
+ "source": "lanes/HARVEST-SETUP.tsv",
+ "guard_ps": -42.0
+}
