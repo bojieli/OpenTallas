@@ -10438,3 +10438,4 @@ FAILED [AUTOPILOT cebdd9f1f536] 2026-11-19 21:17:24 PST AUTOPILOT -> KIT-WAVE-3:
   - Fixed: the bank moves now keep 0.1 um beyond the keepout, and a plan-level tapcheck (the bind's rule) passes. The bank-in distances are unchanged.
   - Relaunched: plan_cc3b 0fd8e22f13ce (192 types) and plan_cc3sb 3bcfddc2d610 (+1 stage proof on p6). Both binds are queued on epyc8 behind memory admission (53 waiters).
   - Watcher cc_watch3b.sh on intel2: once the cc3b kits have timed, every type whose bank-in hop is still below -42 ps gets the CC-BANK-2S +1 relay stage rows (rows_cc_bank2s_die.json, on plan_cc3b). It checks them with tapcheck and posts them to S81-DIE-R3 automatically.
+- 2026-11-19 21:23 PST ALERT NO-ADVANCE s81: 2 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (ot_s81sl_leaf__t56 x5@kit_rtl, s81p_slice_station__t51_ot_s81_station_t51_native_w x2@kit_rtl)
