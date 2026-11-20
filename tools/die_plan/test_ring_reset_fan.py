@@ -111,7 +111,18 @@ def test_cluster_rule_hd_serdes_r11_geometry():
     # monitor output collect at cland_up_ready_coll_o0
     home = [tuple(BAND[:2]), tuple(BAND[2:]), tuple(TAP19)]
     groups = [("origin", [(1452.0, 77.728), (1714.4, 2.656)]), ("u_cland_up_coll_o0", [(1710.048, 2.656)])]
-    before, kept, far = CL.reset_fan_clusters(home, groups)
+    before, kept, far = CL.reset_fan_clusters(home, groups, reach=405)
     assert round(before, 1) == 653.2 and kept == ["u_cland_up_coll_o0"]
-    assert [n for n, _p in far] == [["origin"]] and CL._bbox_spread(far[0][1]) <= 405
-    assert CL.reset_fan_clusters(home, groups[1:]) == (CL._bbox_spread(home + groups[1][1]), ["u_cland_up_coll_o0"], [])
+    assert [names for names, _points in far] == [["origin"]]
+    assert CL._bbox_spread(far[0][1]) <= 405
+
+    # CBC rule 4 uses a 300 um reset cap. The collector's site plus the home
+    # band spans 380 um, so it requires its own same-cycle reset copy.
+    capped_before, kept, far = CL.reset_fan_clusters(home, groups, reach=300)
+    assert capped_before == before
+    assert kept == []
+    assert sorted(names for names, _points in far) == [["origin"], ["u_cland_up_coll_o0"]]
+    collector = groups[1]
+    assert CL.reset_fan_clusters(home, [collector], reach=300) == (
+        CL._bbox_spread(home + collector[1]), [], [([collector[0]], collector[1])]
+    )
