@@ -64,3 +64,34 @@ depth 6, 11 branches, worst hop 235.7 um, each stage with a local raw reset. All
 needs no new row; it needs J5 bound and a private place + GRT. Everything else over 300 um on t41 is the planned 380-um
 hop of the J3 bind (ft stations 376-394, reset relays 380), which the J5 reach 300 changes die-wide.
 Other t41 flags are advisory: local density 0.848, col_v 0.674 at [720,397], pin_reg_max 201 (cland_fstart_in_ft3_i).
+
+## 4. State 11-20 12:30 PST and next steps
+
+Done:
+- OT_BKSEL_A3P on main d174c71d874. Bench BKSEL_A3P PASS (epyc7 lane dir bench_a3p: eco3 PASS, a3p PASS 6/6 variants 0 errors,
+  a3pxdm FAIL 802 errors, a2p PASS).
+- u_c A3P kit (epyc7 lane dir ucore/dsdv_bksel_c_rfda3p, recipe recipes_a3p.json, kit_hash 583e3ea9b4b18b48): LEC EQUIVALENT
+  31,696 / 31,696, 0 differ.
+- Per-type private GEN is not possible for bk_sel__t2: prepare-stations stops at KIT_TOPOLOGY_BIND_STALE and
+  bind.py component-proof fails the type even as an identity control (17 errors). A native bind is required.
+
+In flight (all on epyc7, clients on intel2 ~/fable-fix-s81-bksel-r2):
+- u_c A3P kit to sign-off: unit oth-ubuntu-2237101-1795198176, log ucore_a3p.otrun.log (run_kit.sh finish 48 16). In GRT at 12:15.
+- Private native bind of plan bbd8567d93b1 (J3 300c06c6dda4 + rows 53956fe8b195): unit oth-ubuntu-1952795-1795205595, log
+  bk_build1.otrun.log, script bk_build_e7.sh = the die lane's build_tree.sh on tree_b (hard-linked copy of j3src), outputs in
+  build_b1. HARD_CORE_PARAM is expected to flag u_c (XDX 7 against the bound qrx view) until the A3P view is in the plan.
+
+Next, in order:
+1. u_c signs (DRC 0, TT >= -42, internal FF hold >= 0, LEC done): export the view (LEF, tt/ff lib, built params) as
+   cores/views/bksel_c_a3p_1120, archive to AGIdock /archive/opentallas-signed-1114/s81/ and rtx-pro
+   ~/signed-export-1114/s81/ with INDEX rows on both (as dsdv_bksel_q__fx6_hei3_1116 was), and add the plan row
+   hard_cores u_bk_sel.u_sel.u_c lef/lib -> that view to the J6 rows.
+2. Bind out ready: private bk_sel__t2 GEN with gen_pilot_e7.sh on tree_b (S = tree_b, B = its native_bind/out), then
+   run_kit.sh place, geometry review (the r2r.py scan in the lane dir lists every pair over 300 um by family), then GRT TT.
+3. From the placed form: size the face-bus internal_stations (draft counts in section 2 item 4), check the
+   u_g.vo_s -> u_tx.vo link (308-488 um; u_g MX at the same origin gives 135-316 um, c.vd -> g.vd 167-335 um, RLN 5 hops
+   <= 294 um; needs a PINBAND / G0 check of the MX track offset), and re-derive the Astra reset anchors.
+4. slice_station__t41: when S81-DIE-R4 has a J5 bound out, GEN + place + GRT the type privately; no row is owed.
+
+Stale paths: intel1 kw45/src_s81_pin_3c913dbdfb23_d8j_1119_j0 was removed by ot-auto-retire at 11:31:46; intel1 lane dir
+tree_bk has dangling links into it and is unused. Use the epyc7 lane dir (j3src = full copy, completed from d8j_1117_work).
