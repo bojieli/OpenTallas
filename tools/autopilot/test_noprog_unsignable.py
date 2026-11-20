@@ -94,3 +94,55 @@ def test_cancel_goes_through_ot_run_cancel_with_the_exact_unit():
 
 def test_unsignable_is_not_a_host_cancel_verdict():
     assert nw.UNSIGNABLE not in nw.BAD_VERDICTS            # a host scan never cancels it; only the hub, after the report hour
+
+
+def tree(d, name, text, mtime):
+    p = d / name
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(text)
+    os.utime(p, (mtime, mtime))
+    return p
+
+
+SETUP_FINAL = ("   Iter   | Removed | Resized | Inserted | Cloned |  Pin  |   Area   |    WNS   |   StTNS    |   EnTNS    |  Viol  |  Worst  \n"
+               "          | Buffers |  Gates  | Buffers  |  Gates | Swaps |          |          |            |            | Endpts | St/EnPt \n"
+               "---------------------------------------------------------------------\n"
+               "       0* |       0 |       0 |        0 |      0 |     0 |    +0.0% |  -52.600 |      -37.5 |      -37.5 |      3 | a/d\n"
+               "      40* |       0 |       2 |        0 |      0 |     0 |    +0.0% |   -0.494 |       -4.0 |       -4.0 |      3 | a/d\n"
+               "   final  |       0 |       2 |        0 |      0 |     0 |    +0.0% |   -0.494 |       -4.0 |       -4.0 |      3 | a/d\n")
+HOLD = ("Iteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint\n---------\n"
+        "        0 |       0 |       0 |            0 |    +0.0% | -465.900 | -1019987.938 | x\n")
+
+
+def test_the_newest_stage_number_wins_over_post_cts(tmp_path):
+    """FABLE-FLOW-1200: slw_st_b was cancelled on post-CTS -405 while its GRT repair had reached -0.494 ps"""
+    cts(tmp_path, -404.82, NOW - 5000)
+    tree(tmp_path, "run/logs/asap7/dp_x/base/5_1_grt.log", HOLD + SETUP_FINAL, NOW - 100)
+    assert nw.latest_setup([str(tmp_path)], NOW - 20000) == (-0.494, str(tmp_path / "run/logs/asap7/dp_x/base/5_1_grt.log"))
+    assert ev(nw.latest_setup([str(tmp_path)], NOW - 20000)[0]) is None                       # -0.494 is inside the -42 gate: never cancelled
+
+
+def test_the_tt_repair_log_and_stage_jsons_count_and_the_last_wns_is_the_result(tmp_path):
+    cts(tmp_path, -648.0, NOW - 9000)
+    tree(tmp_path, "tt_setup_keep.log", "OT_TT_SETUP_KEEP KEEP repaired: reloaded DB improved (wns -238.37 -> -196.78, tns -1 -> -2)\n", NOW - 50)
+    assert nw.latest_setup([str(tmp_path)], NOW - 20000)[0] == -196.78
+    tree(tmp_path, "run/logs/asap7/dp_x/base/5_1_grt.json", json.dumps({"globalroute__timing__setup__ws": -216.6}), NOW - 10)
+    assert nw.latest_setup([str(tmp_path)], NOW - 20000)[0] == -216.6
+
+
+def test_a_repair_still_improving_or_a_newer_hold_pass_is_unmeasured_not_the_stale_number(tmp_path):
+    cts(tmp_path, -651.0, NOW - 9000)
+    rows = "".join(f"{i * 10:8d}* |       0 |       2 |        0 |      0 |     0 |    +0.0% | {-600 + i * 8:8.3f} |      -4.0 |      -4.0 |      3 | a/d\n" for i in range(25))
+    head = SETUP_FINAL.splitlines(True)[:3]
+    tree(tmp_path, "run/logs/asap7/dp_x/base/5_1_grt.tmp.log", "".join(head) + rows, NOW - 5)
+    assert nw.latest_setup([str(tmp_path)], NOW - 20000) is None                               # improving 8 ps per row: not final, not flat
+    flat = "".join(f"{i * 10:8d}* |       0 |       2 |        0 |      0 |     0 |    +0.0% |  -311.700 |      -4.0 |      -4.0 |      3 | a/d\n" for i in range(25))
+    tree(tmp_path, "run/logs/asap7/dp_x/base/5_1_grt.tmp.log", "".join(head) + flat, NOW - 5)
+    assert nw.latest_setup([str(tmp_path)], NOW - 20000)[0] == -311.7                          # flat over 10 rows: the genuinely stuck case still counts
+    tree(tmp_path, "run/logs/asap7/dp_x/base/5_1_grt.tmp.log", HOLD, NOW - 1)                    # newest file is a hold pass with no setup number
+    assert nw.latest_setup([str(tmp_path)], NOW - 20000) is None
+
+
+def test_a_resumed_job_is_unmeasured_until_it_reports(tmp_path):
+    cts(tmp_path, -900.0, NOW - 40000)
+    assert nw.latest_setup([str(tmp_path)], NOW - 3600) is None                                # the container started after the files were written

@@ -344,13 +344,94 @@ def measured_setup(dirs, started):
     return (best[1], best[2]) if best else None
 
 
+STAGE_JSON_KEYS = ("cts", "globalroute", "detailedroute", "finish")
+SETUP_LOG_GLOBS = ("run/logs/*/*/*/5_*.tmp.log", "run/logs/*/*/*/5_*.log", "gen/*/run/logs/*/*/*/5_*.tmp.log", "gen/*/run/logs/*/*/*/5_*.log", "5_*.tmp.log", "5_*.log")
+TT_LOG_GLOBS = ("tt_setup_*.log", "gen/*/tt_setup_*.log")
+TT_WNS_RE = re.compile(r"\bwns\s+(-?\d+(?:\.\d+)?)(?:\s*->\s*(-?\d+(?:\.\d+)?))?")
+FLAT_ROWS, FLAT_TAIL, FLAT_FRAC = 20, 10, 0.01
+
+
+def setup_table_wns(text):
+    """-> WNS (ps) of the LAST setup repair_timing table of a log (header with WNS and StTNS; hold tables and repair_design are never read), else None.  A table still being written counts only
+    when it is FLAT (>= FLAT_ROWS rows, the last FLAT_TAIL rows within FLAT_FRAC of the value); otherwise the job is still repairing and the number is not final -> None."""
+    last = None
+    for t in parse_tables(text.splitlines()):
+        cols = t["cols"]
+        if "WNS" not in cols or "StTNS" not in cols:
+            continue
+        i = cols.index("WNS")
+        vals = [r[i] for _ln, r in t["rows"] if i < len(r) and r[i] is not None]
+        if not vals:
+            continue
+        if t["final"]:
+            last = vals[-1]
+        elif len(vals) >= FLAT_ROWS and (max(vals[-FLAT_TAIL:]) - min(vals[-FLAT_TAIL:])) <= FLAT_FRAC * abs(vals[-1]):
+            last = vals[-1]
+        else:
+            last = None            # still improving: a number that is not the stage result
+    return last
+
+
+def latest_setup(dirs, started):
+    """COORD 11-20 (FABLE-FLOW-1200: cancels on the post-CTS number while GRT repair had moved one job to -0.494 ps): the NEWEST setup number THIS job wrote (mtime >= its container start - 60 s, so a resumed
+    run is unmeasured until it reports): stage jsons (cts / globalroute / detailedroute), OT_TT_SETUP_* logs (last wns), the last finished or flat setup repair table of a 5_* stage log.  A newer stage
+    file of the job that yields no setup number (repair still improving, hold pass) makes the job UNMEASURED.  -> (ws_ps, source path) or None."""
+    cands, newest_unread = [], 0.0
+    def fresh(p):
+        try:
+            mt = os.path.getmtime(p)
+        except OSError:
+            return None
+        return mt if mt >= started - 60 else None
+    for d in dict.fromkeys(x for x in dirs if x):
+        for g in ("run/logs/*/*/*/[45]_*.json", "gen/*/run/logs/*/*/*/[45]_*.json", "[45]_*.json"):
+            for p in glob.glob(os.path.join(d, g)):
+                mt = fresh(p)
+                if mt is None:
+                    continue
+                try:
+                    j = json.load(open(p))
+                except (OSError, ValueError):
+                    newest_unread = max(newest_unread, mt); continue
+                v = next((j[f"{k}__timing__setup__ws"] for k in STAGE_JSON_KEYS if isinstance(j.get(f"{k}__timing__setup__ws"), (int, float)) and not isinstance(j.get(f"{k}__timing__setup__ws"), bool)), None)
+                if v is not None:
+                    cands.append((mt, float(v), p))
+        for g in TT_LOG_GLOBS:
+            for p in glob.glob(os.path.join(d, g)):
+                mt = fresh(p)
+                if mt is None:
+                    continue
+                ms = TT_WNS_RE.findall(read_text(p))
+                if ms:
+                    a, b = ms[-1]
+                    cands.append((mt, float(b or a), p))
+                else:
+                    newest_unread = max(newest_unread, mt)
+        for g in SETUP_LOG_GLOBS:
+            for p in glob.glob(os.path.join(d, g)):
+                mt = fresh(p)
+                if mt is None:
+                    continue
+                v = setup_table_wns(read_text(p))
+                if v is None:
+                    newest_unread = max(newest_unread, mt)
+                else:
+                    cands.append((mt, v, p))
+    if not cands:
+        return None
+    mt, v, p = max(cands)
+    if newest_unread > mt:
+        return None                      # a newer stage file carries no setup number yet: unmeasured, never the stale one
+    return v, p
+
+
 def unsignable_evidence(ident, prio, kind, age_h, setup):
     """-> evidence text when the rule applies, else None.  Pure."""
     if setup is None or age_h <= UNSIGNABLE_MIN_AGE_H or setup[0] >= UNSIGNABLE_SETUP_PS:
         return None
     if prio in ("plan", "proof") or kind == "lec" or ECO_RE.search(ident) or PROOF_RE.search(ident) or is_hbm(ident):
         return None
-    return f"{os.path.basename(setup[1])} cts__timing__setup__ws {setup[0]:.2f} ps (< {UNSIGNABLE_SETUP_PS:.0f}, gate TT >= -42); job age {age_h} h > {UNSIGNABLE_MIN_AGE_H:g} h"
+    return f"{os.path.basename(setup[1])} latest setup WNS {setup[0]:.2f} ps (< {UNSIGNABLE_SETUP_PS:.0f}, gate TT >= -42); job age {age_h} h > {UNSIGNABLE_MIN_AGE_H:g} h"
 
 
 def is_plan(env_prio, text):
@@ -663,7 +744,7 @@ def scan(now=None, act=False, probe_s=4):
         row["ident"] = ident[:400]
         if row["verdict"] not in ("KEEP", "EXCLUDED") and row["age_h"] > UNSIGNABLE_MIN_AGE_H:
             # a 4_1_cts.json under the kit / work dir written by THIS container; the verdict is only a label here (the HUB cancels, host scans never do)
-            ms = measured_setup([kit, work], started)
+            ms = latest_setup([kit, work], started)
             ev = unsignable_evidence(ident, prio, kind, row["age_h"], ms)
             if ms:
                 row["setup_ps"] = ms[0]

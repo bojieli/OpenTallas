@@ -10614,7 +10614,8 @@ def tree_on_host(AP, cfg, host, tree):
     return cache[key]
 
 
-HOST_RECEIPT_TTL_S = 900          # a PASS receipt is trusted this long between probes (the probe walks the whole tree); a MISS is re-probed on every pass
+HOST_RECEIPT_TTL_S = 3600         # a PASS receipt of (host, tree, manifest hash) is trusted this long between probes (the probe stats the whole tree); the tree is published, so its hash never changes
+HOST_RECEIPT_MISS_TTL_S = 120     # a MISS is re-probed after this long (its own verification runs meanwhile), not on every tick: the tick grew 315 -> 716 s on 8 repeated misses
 
 
 def _receipt_cache_path(AP):
@@ -10626,7 +10627,7 @@ def _receipt_start_verify(AP, host, tree, expect, script, hub):
     tag = hashlib.md5(f"{tree}|{expect}".encode()).hexdigest()[:12]
     q = shlex.quote
     remote = ("mkdir -p ~/.cache/src-manifest && cat > ~/.cache/src-manifest/sm_receipt.py && "
-              f"(flock -n ~/.cache/src-manifest/rcpt.{tag}.lock nohup python3 -I ~/.cache/src-manifest/sm_receipt.py verify {q(tree)} --expect {expect} --ro "
+              f"(flock -n ~/.cache/src-manifest/rcpt.{tag}.lock nohup python3 -I ~/.cache/src-manifest/sm_receipt.py verify {q(tree)} --expect {expect} "
               f">~/.cache/src-manifest/rcpt.{tag}.log 2>&1 </dev/null &) ; true")
     argv = ["bash", "-c", remote] if hub else ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=15", "-o", "ControlPath=none", host, remote]
     try:
@@ -10655,13 +10656,16 @@ def host_tree_receipt(AP, cfg, host, tree, expect):
     if now - float(disk.get(ck) or 0) < HOST_RECEIPT_TTL_S:
         cache[key] = True
         return True
+    if now - float(disk.get("miss|" + ck) or 0) < HOST_RECEIPT_MISS_TTL_S:
+        cache[key] = False                          # missed a moment ago: its verification is running; do not probe again every tick
+        return False
     try:
         script = Path(verifier_path()).read_text()
     except OSError:
         cache[key] = True                           # unknown
         return True
     hub = host in ((cfg.get("_hub") or getattr(AP, "HUB_NAME", "") or ""), "localhost")
-    cmd = f"python3 -I -c {shlex.quote(script)} cached-receipt {shlex.quote(tree)} --expect {expect}"
+    cmd = f"python3 -I -c {shlex.quote(script)} receipt {shlex.quote(tree)} --expect {expect}"
     argv = ["bash", "-c", cmd] if hub else ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=15", "-o", "ControlPath=none", host, cmd]
     try:
         rc, out, err = AP.sh(argv, timeout=180)
@@ -10683,6 +10687,15 @@ def host_tree_receipt(AP, cfg, host, tree, expect):
         return True
     if rc == 1 and "SRC_MANIFEST" in txt:
         cache[key] = False
+        try:
+            p = _receipt_cache_path(AP)
+            disk = {k: v for k, v in disk.items() if now - float(v or 0) < 86400}
+            disk["miss|" + ck] = now
+            tmp = p.with_suffix(f".tmp{os.getpid()}")
+            tmp.write_text(json.dumps(disk))
+            os.replace(tmp, p)
+        except OSError:
+            pass
         AP.log(f"KIT-WAVE HOST-RECEIPT-MISS {host}: no matching file-hash receipt for {tree} ({expect[:12]}): {txt.strip().splitlines()[0][:160] if txt.strip() else '?'}; host skipped for this tree, its own verification started")
         _receipt_start_verify(AP, host, tree, expect, script, hub)
         return False

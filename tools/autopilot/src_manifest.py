@@ -344,6 +344,38 @@ def cached_receipt(root, expect=""):
                 basis="completed content verification cache plus current read-only unshared inventory" + (f" (inodes shared only with link base {lbase})" if lbase else ""))
     return errs, info
 
+def host_receipt(root, expect=""):
+    """HOST-RECEIPT-1120 (FLEET-WATCH-1015, fix after COORD 11-20: cached_receipt also demands read-only + unshared inodes, which rejected the live hardlinked _work trees: 8 misses, 7 launch defers).
+    A host's COMPLETENESS receipt: the manifest hashes to `expect`, the published hash file says the same, and a completed content verification ON THIS HOST (the verify cache, written only after an
+    error-free full hash pass) still matches the tree's file count / newest mtime / total size.  Immutability (read-only, unshared) is not asked.  Stat-only: no payload is read.  -> (errs, info)"""
+    root = os.path.realpath(root)
+    m = load_manifest(root)
+    if m is None:
+        return [f"SRC_MANIFEST RECEIPT MISS {root}: no manifest"], {}
+    try:
+        h = manifest_hash(m)
+    except (KeyError, TypeError, ValueError) as e:
+        return [f"SRC_MANIFEST RECEIPT MISS {root}: malformed manifest ({e})"], {}
+    errs = []
+    if h != m.get("manifest_hash"):
+        errs.append("SRC_MANIFEST RECEIPT MISS manifest content does not match its hash")
+    if expect and h != expect:
+        errs.append(f"SRC_MANIFEST RECEIPT MISS hash {h[:12]} is not expected {expect[:12]}")
+    try:
+        if Path(root, HASHFILE).read_text().strip() != h:
+            errs.append("SRC_MANIFEST RECEIPT MISS published hash file differs from manifest")
+    except OSError as e:
+        errs.append(f"SRC_MANIFEST RECEIPT MISS hash file: {e}")
+    cf = os.path.join(CACHE_DIR, hashlib.md5(root.encode()).hexdigest() + ".json")
+    try:
+        cached = json.loads(Path(cf).read_bytes())
+    except (OSError, ValueError) as e:
+        return errs + [f"SRC_MANIFEST RECEIPT MISS no completed verification on this host ({cf}: {e})"], {}
+    if cached.get("hash") != h or cached.get("sig") != signature(root):
+        errs.append("SRC_MANIFEST RECEIPT MISS the completed verification on this host no longer matches the tree (files added, removed or changed)")
+    return errs, dict(verdict="PASS" if not errs else "MISS", source=root, manifest_hash=h, files=len(m.get("files") or {}))
+
+
 def shared_inodes(root, limit=0):
     """stat-only scan (no hashing: cheap enough for every tick): [(relpath, nlink)] of every regular file with nlink > 1, i.e. a file
     another path (a `cp -al` copy in some lane's tree) can change.  A published tree must have none (TOOLS-CONVERGE-1116, 2nd
@@ -965,6 +997,9 @@ def main(argv=None):
     cr = sp.add_parser("cached-receipt", help="reuse an exact completed verification plus current immutable metadata, no payload rehash")
     cr.add_argument("tree")
     cr.add_argument("--expect", default="")
+    hr = sp.add_parser("receipt", help="completeness receipt of this host: hash file + completed verification on this host still match the tree (stat only)")
+    hr.add_argument("tree")
+    hr.add_argument("--expect", default="")
     dm = sp.add_parser("delta-make", help="pack of the paths that differ between the tree's main sha and --sha (small)")
     dm.add_argument("tree")
     dm.add_argument("--repo", required=True)
@@ -1019,6 +1054,12 @@ def main(argv=None):
             report(errs)
             return 1
         print(f"SRC_MANIFEST OK {info['manifest_hash']} main {str(info.get('main_sha'))[:12]} files {info.get('files')}")
+    elif a.cmd == "receipt":
+        errs, info = host_receipt(a.tree, a.expect)
+        if errs:
+            report(errs)
+            return 1
+        print(json.dumps(info, sort_keys=True))
     elif a.cmd == "cached-receipt":
         errs, info = cached_receipt(a.tree, a.expect)
         if errs:
