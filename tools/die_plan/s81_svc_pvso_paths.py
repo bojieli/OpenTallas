@@ -12,7 +12,7 @@ CASES = {'svc_hi_dsdv_svc_pvso_entry__t1': '05',
 SMALL = 'ot_sram_1r1w_32x128_m1_r0c0'
 BIG = 'ot_sram_1r1w_160x256_m1_r0c0'
 
-def specifications(type_name):
+def specifications(type_name, heads=16, scan_read_pipe=False):
     r = CASES[type_name]
     old = f'u_bound.u_u_rsv_{r}_u_u_'
     actual = f'u_u_rsv_{r}_u_u_u_'
@@ -28,12 +28,13 @@ def specifications(type_name):
                               f'.g_m[{g}].g_32.u_mem', SMALL))
     for g in range(4):
         specs.append((old+f'att_u_qmem_mem.g_m[{g}].g_32.u_mem', actual+'att_u_qmem_mem',
-                      ab+'att.u_qmem_mem', 'dsdv_svc_mem_ar', {'AW':4,'DEPTH':16,'W':512},
+                      ab+'att.u_qmem_mem', 'dsdv_svc_mem_ar', {'AW':4,'DEPTH':heads,'W':512},
                       f'.g_m[{g}].g_32.u_mem', SMALL))
+    scan_module = 'dsdv_svc_mem_lr' if scan_read_pipe else 'dsdv_svc_mem_la'
     for b in range(2):
         for g in range(4):
             specs.append((old+f'att_u_sw_mem.g_b[{b}].g_m[{g}].u_mem', actual+'att_u_sw_mem',
-                          ab+'att.u_sw_mem', 'dsdv_svc_mem_la', {'AW':5,'W':512},
+                          ab+'att.u_sw_mem', scan_module, {'AW':5,'W':512},
                           f'.g_b[{b}].g_m[{g}].u_mem', SMALL))
     specs.append((old+'pbuf_mem.g_m[0].g_160.u_mem', actual+'pbuf_mem', ab+'pbuf_mem',
                   'dsdv_svc_mem_ar', {'AW':6,'DEPTH':40,'W':256}, '.g_m[0].g_160.u_mem', BIG))
@@ -49,7 +50,9 @@ def resolve(type_name, t, bound_text):
     """
     if type_name not in CASES:
         return []
-    specs = specifications(type_name)
+    defines = {d.removeprefix("-D").partition("=")[0] for d in t.get("verilog_defines", [])}
+    specs = specifications(type_name, heads=8 if "OT_SVC_H8" in defines else 16,
+                           scan_read_pipe="OT_SVC_ATT_RDPIPE" in defines)
     by = {}
     for c in t.get('contents', []):
         by.setdefault(c['inst'], []).append(c)

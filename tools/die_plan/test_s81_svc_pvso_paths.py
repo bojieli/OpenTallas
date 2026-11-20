@@ -5,8 +5,8 @@ import s81_svc_pvso_paths as P
 import bound_macro_paths as B
 
 
-def fixture(tn):
-    specs = P.specifications(tn)
+def fixture(tn, heads=16, scan_read_pipe=False):
+    specs = P.specifications(tn, heads, scan_read_pipe)
     contents = [dict(inst=x[0], module=x[-1], lef='macro.lef', origin_um=[i, 7],
                      outline_um=[51.432,20.808], orient='R0') for i,x in enumerate(specs)]
     leaves = {}
@@ -45,3 +45,17 @@ def test_refuses_unresolved_or_ambiguous_actual_contract(mutation):
 
 def test_other_type_unaffected():
     assert P.resolve('svc_hi_dsdv_svc_rs__t3',{},'')==[]
+
+
+@pytest.mark.parametrize("scan_read_pipe", [False, True])
+def test_h8_projection_uses_selected_qmem_and_scan_shapes(scan_read_pipe):
+    tn = next(iter(P.CASES))
+    t, bound = fixture(tn, heads=8, scan_read_pipe=scan_read_pipe)
+    t["verilog_defines"] = ["OT_SVC_H8"] + (["OT_SVC_ATT_RDPIPE"] if scan_read_pipe else [])
+    assert len(P.resolve(tn, t, bound)) == 31
+    with pytest.raises(ValueError, match=r"u_qmem_mem.DEPTH"):
+        P.resolve(tn, t, bound.replace(".DEPTH(8), .W(512)", ".DEPTH(16), .W(512)"))
+    wrong = "dsdv_svc_mem_la" if scan_read_pipe else "dsdv_svc_mem_lr"
+    actual = "dsdv_svc_mem_lr" if scan_read_pipe else "dsdv_svc_mem_la"
+    with pytest.raises(ValueError, match=r"u_sw_mem"):
+        P.resolve(tn, t, bound.replace(actual, wrong))
