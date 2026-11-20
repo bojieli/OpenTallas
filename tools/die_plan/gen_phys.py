@@ -8053,6 +8053,9 @@ if [ "${OT_KEEP_STAGE_ODBS:-0}" != 1 ] && [ ! -f "$K/.keep_stage_odbs" ] && [ -f
   nohup python3 -I "$K/stage_odb_cap.py" --watch "$K/run/results/asap7" --kit "$K" --max-hours 36 --parent $$ >>"$K/stage_odb_cap.log" 2>&1 </dev/null &
 fi
 # KWRS-END
+# STAGE-ODB-GUARD (FLOW-FIX-2045, FABLE-PD-HEAD-2040): older STAGE-CAP watchers deleted 2_x / 3_x / 4_1 ODBs that make lists as prerequisites; say so when this run starts on such a kit  # KWRS-BEGIN
+[ ! -f "$K/stage_odb_cap.py" ] || python3 -I "$K/stage_odb_cap.py" --guard "$K" --need 5_1_grt.odb >&2 || exit 13
+# KWRS-END
 if [ -f "$K/signed_parent_source.json" ]; then
   if [ "$GOAL" = synth ] && [ "${OT_SIGNED_PARENT_PREP_SYNTH:-0}" = 1 ]; then
     [ -f "$K/signed_parent_synth_prep.sh" ] || { echo 'HELD: missing explicit SYNTH-only PREP helper'; exit 78; }
@@ -8492,6 +8495,7 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
     else HM=\$(printf '%s\\n' \"\$HMR\" | sed -nE 's/^OT_HOLD_FF_MARGIN[[:space:]]*[:=][[:space:]]*//p'); \
       if [ -n \"\$HM\" ] && ! python3 -c 'import math,re,sys; s=sys.argv[1].strip(); valid=re.fullmatch(r\"[+-]?(?:[0-9]+(?:[.][0-9]*)?|[.][0-9]+)(?:[eE][+-]?[0-9]+)?\",s); x=float(s) if valid else float(\"nan\"); sys.exit(not math.isfinite(x))' \"\$HM\" > /work/hold_margin_value.log 2>&1; then \
         echo \"FAIL_POSTCTS invalid OT_HOLD_FF_MARGIN [\$HM]: expected a finite number\" | tee -a /work/FAIL_POSTCTS; rc=9; fi; fi; fi; \
+  if [ \$rc = 0 ] && [ -n \"\$HM\" ] && [ -f /work/stage_odb_cap.py ]; then python3 -I /work/stage_odb_cap.py --guard /work --need 4_cts.odb > /work/stage_odb_guard.log 2>&1; sgr=\$?; cat /work/stage_odb_guard.log; if [ \$sgr != 0 ]; then echo 'FAIL_POSTCTS stage ODB missing: the FF GRT make would rebuild from floorplan (stage_odb_guard.log)' | tee -a /work/FAIL_POSTCTS; rc=\$sgr; fi; fi; \\
   if [ \$rc = 0 ] && [ -n \"\$HM\" ] && { [ $GOAL = route ] || [ $GOAL = grt ]; }; then MF=\$M; if [ -f /work/macro_ff_repair.mk ]; then MF=\"\$M DESIGN_CONFIG=/work/macro_ff_repair.mk\"; fi; OT_VCLK_CORNER=ff \$MF grt CORNER=BC CORNERS=bc HOLD_SLACK_MARGIN=\$HM; rc=\$?; fi; \
   if [ \$rc = 0 ] && [ -n \"\$HM\" ] && { [ $GOAL = route ] || [ $GOAL = grt ]; } && [ -f /work/tt_setup_repair.tcl ] && grep -Eq '^(grt|both)' /work/tt_setup_repair.on 2>/dev/null; then TG5=\$(ls /work/run/results/asap7/*/base/5_1_grt.odb 2>/dev/null | head -1); \
     if [ -n \"\$TG5\" ]; then cp -p \"\$TG5\" /work/5_1_grt_pre_tt.odb; OT_TT_SETUP_RC=grt OT_TT_SETUP_GUIDE=\"\$(dirname \"\$TG5\")/route.guide.tt\" ODB=\"\$TG5\" OUT=\"\$TG5.tt\" openroad -exit /work/tt_setup_repair.tcl > /work/tt_setup_repair_grt.log 2>&1; trc=\$?; grep -h 'OT_TT_SETUP_REPAIR' /work/tt_setup_repair_grt.log | tail -3; \

@@ -161,12 +161,45 @@ for pid in filter(str.isdigit, os.listdir('/proc')):
                     scopes.add(u)
     except (OSError, IndexError):
         pass
+# FLOW-FIX-2045 (FABLE-FLOW-1949 class 5: 11 scopes of CANCELLED attempts lived 17-28 h at cpu 0): an ot-heavy scope with NO container (a waiting / dead-client scope) is named by no mount, so the
+# container pass above never found it.  Match every active oth-* scope whose processes name a path under a cancelled attempt's root (cmdline words or cwd).
+if not os.environ.get('XDG_RUNTIME_DIR'):
+    os.environ['XDG_RUNTIME_DIR'] = '/run/user/%d' % os.getuid()
+try:
+    act = [l.split()[0][:-6] for l in subprocess.run(['systemctl', '--user', 'list-units', '--type=scope', '--state=active', '--no-legend', '--plain', 'oth-*'], capture_output=True, text=True, timeout=60).stdout.splitlines() if l.split()]
+except Exception:
+    act = []
+for u in act:
+    if u + '.scope' in scopes:
+        continue
+    pids = []
+    for root, dirs, files in os.walk('/sys/fs/cgroup/user.slice'):
+        if os.path.basename(root) == u + '.scope':
+            try:
+                pids = [int(x) for x in open(os.path.join(root, 'cgroup.procs')).read().split()]
+            except OSError:
+                pass
+            dirs[:] = []
+    for p in pids:
+        try:
+            av = open('/proc/%d/cmdline' % p, 'rb').read().decode('utf-8', 'replace').split('\0')
+            av.append(os.readlink('/proc/%d/cwd' % p))
+        except OSError:
+            continue
+        if any(w.startswith('/') and under(w) for w in av):
+            scopes.add(u + '.scope')
+            break
+left = []
 if not dry:
     for u in sorted(scopes):
         subprocess.run(['systemctl', '--user', 'stop', u], capture_output=True, timeout=120)
     for n in names:
         subprocess.run(['docker', 'stop', '-t', '30', n], capture_output=True, timeout=120)
-print(json.dumps({'containers': names, 'scopes': sorted(scopes)}))
+    # verify by unit name: a scope that is still active after the stop is reported so the caller keeps the row's reap pending
+    for u in sorted(scopes):
+        if subprocess.run(['systemctl', '--user', 'is-active', '--quiet', u], capture_output=True).returncode == 0:
+            left.append(u)
+print(json.dumps({'containers': names, 'scopes': sorted(scopes), 'left': left}))
 '''
 
 

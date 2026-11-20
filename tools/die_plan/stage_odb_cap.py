@@ -13,16 +13,22 @@ usage: stage_odb_cap.py --watch RESULTS_ROOT [--kit DIR] [--interval 60] [--max-
 import argparse, glob, gzip, os, re, shutil, sys, time
 
 MIN_AGE_S = 120
-RULES = (  # (regex of the victim, successor file that must exist)
+# FLOW-FIX-2045 (COORD, FABLE-PD-HEAD-2040): make lists 2_1..2_4, 3_1..3_5 and 4_1_cts as prerequisites of the boundary files, so a make that starts after the watcher deleted
+# them rebuilds the chain from floorplan (the wave route job re-ran floorplan + place in 223 of 223 route logs on 11-19; the hd_tile private proofs re-ran CTS in an FF-only session and skipped the
+# TT setup repair and the hold gate).  The early-stage rules therefore run only for a run that has ended (once(ended=True) / --ended, called by a reaper on a dead kit), never from the live watcher.
+EARLY_RULES = (
     (re.compile(r"^2_[1-4]_.*\.odb$"), "2_floorplan.odb"),
     (re.compile(r"^3_[1-5]_.*\.odb$"), "3_place.odb"),
     (re.compile(r"^4_1_cts\.odb$"), "4_cts.odb"),
+)
+RULES = (  # (regex of the victim, successor file that must exist)
     # LATE-ECO 11-18 (COORD: 11 of 12 late ECOs died in prd_mk.sh "lacks 5_2_route.odb"): 5_2_route.odb is the route-keeping ECO seed
     # (prd_mk OT_PRD_FROM=route, eco_loop's default for R-MINIMAL near misses) and is KEPT like the other step anchors.
     (re.compile(r"^5_3_fillcell\.odb$"), "5_route.odb"),
     (re.compile(r"^5_route\.odb$"), "6_final.odb"),
     (re.compile(r"^6_1_fill\.odb$"), "6_final.odb"),
 )
+BOUNDARIES = ("2_floorplan.odb", "3_place.odb", "4_cts.odb", "5_1_grt.odb")
 EXTRA_SUCCESSOR = {"5_route.odb": "6_final.v", "6_1_fill.odb": "6_final.v"}
 FINISH = ("5_3_fillcell.odb", "5_route.odb", "6_1_fill.odb", "6_final.odb")      # the finish stages write byte-identical ODBs (KIT-SLIM-1118)
 LOG_GZ_BYTES = 100 << 20
@@ -72,8 +78,9 @@ def kept_by_env(kit):
     return ""
 
 
-def plan(base, now=None, open_files=(), min_age=MIN_AGE_S):
-    """-> [(path, size)] the deletable stage ODBs of one results base dir (pure: files given in open_files are skipped)"""
+def plan(base, now=None, open_files=(), min_age=MIN_AGE_S, ended=False):
+    """-> [(path, size)] the deletable stage ODBs of one results base dir (pure: files given in open_files are skipped).  ended: the run is over, the early-stage rules apply too"""
+    rules = (EARLY_RULES + RULES) if ended else RULES
     now = now or time.time()
     out = []
     try:
@@ -87,7 +94,7 @@ def plan(base, now=None, open_files=(), min_age=MIN_AGE_S):
             return False
         return st.st_size > 0 and now - st.st_mtime >= min_age
     for n in sorted(names):
-        for rx, succ in RULES:
+        for rx, succ in rules:
             if not rx.match(n):
                 continue
             if succ in names and ok(succ) and (EXTRA_SUCCESSOR.get(n) is None or ok(EXTRA_SUCCESSOR[n])):
@@ -181,7 +188,43 @@ def gzip_logs(kit, now=None, open_files=(), min_age=MIN_AGE_S, big=None, tail=No
     return out
 
 
-def once(base, kit=None, dry=False, now=None, log=print, scan=open_procs, alive=lambda: True):
+def capped_missing(kit):
+    """FLOW-FIX-2045: names of the early-stage ODBs this kit's STAGE-CAP log says it deleted (older watchers) that are absent from every results base of the kit now.
+    -> sorted [name]"""
+    names = set()
+    try:
+        for ln in open(os.path.join(kit, "stage_odb_cap.log"), errors="replace"):
+            m = re.search(r"STAGE-CAP deleted \S*/([^/\s]+\.odb) \d+", ln)
+            if m and any(rx.match(m.group(1)) for rx, _ in EARLY_RULES):
+                names.add(m.group(1))
+    except OSError:
+        return []
+    bases = glob.glob(os.path.join(kit, "run", "results", "asap7", "*", "base"))
+    return sorted(n for n in names if bases and not any(os.path.exists(os.path.join(b, n)) for b in bases))
+
+
+def guard(kit, need="4_cts.odb", log=print):
+    """FLOW-FIX-2045 (item 2): the next make would silently rebuild the chain from floorplan.  Returns 0 when nothing the make needs is missing; 13 (loud) when an early-stage ODB the cap
+    deleted is missing while a boundary file >= need exists (the rebuild would run in a new corner session and skip the CTS-to-GRT steps of the flow); 0 with a STAGE-ODB-REBUILD line when only
+    earlier boundaries exist (a place-then-route kit: the rebuild is slow but the whole flow runs).  OT_ALLOW_STAGE_REBUILD=1 lets it through."""
+    miss = capped_missing(kit)
+    if not miss:
+        return 0
+    bases = glob.glob(os.path.join(kit, "run", "results", "asap7", "*", "base"))
+    order = BOUNDARIES.index(need) if need in BOUNDARIES else 2
+    late = [b for b in BOUNDARIES[order:] if any(os.path.getsize(os.path.join(x, b)) > 0 for x in bases if os.path.exists(os.path.join(x, b)))]
+    if not late:
+        log("STAGE-ODB-REBUILD %d early-stage ODB(s) deleted by STAGE-CAP are missing (%s ...): make re-runs floorplan / place in this run (set .keep_stage_odbs in the kit to stop the cap)" % (len(miss), ", ".join(miss[:3])))
+        return 0
+    if os.environ.get("OT_ALLOW_STAGE_REBUILD") == "1":
+        log("STAGE-ODB-REBUILD allowed (OT_ALLOW_STAGE_REBUILD=1): %s" % ", ".join(miss[:4]))
+        return 0
+    log("FAIL_STAGE_ODB_MISSING %s exists but %d early-stage ODB(s) STAGE-CAP deleted are missing (%s): the next make would rebuild floorplan, place and CTS in a fresh session and skip the "
+        "TT setup repair / hold gate; refusing. Re-run from the place job on a kit with .keep_stage_odbs, or OT_ALLOW_STAGE_REBUILD=1 to rebuild on purpose" % (late[0], len(miss), ", ".join(miss[:4])))
+    return 13
+
+
+def once(base, kit=None, dry=False, now=None, log=print, scan=open_procs, alive=lambda: True, ended=False):
     why = kept_by_env(kit or base)
     if why:
         return []
@@ -190,7 +233,7 @@ def once(base, kit=None, dry=False, now=None, log=print, scan=open_procs, alive=
         log("STAGE-CAP skip %s: eco/resume process active: %s" % (base, busy[0]))
         return []
     done = []
-    for p, size in plan(base, now, files):
+    for p, size in plan(base, now, files, ended=ended):
         if not alive():      # the kit's run_kit.sh has ended: the job's publish may be walking this tree, never delete under it
             log("STAGE-CAP parent gone: no more deletions"); break
         if dry:
@@ -237,11 +280,15 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--watch"); ap.add_argument("--once"); ap.add_argument("--kit"); ap.add_argument("--interval", type=float, default=60)
     ap.add_argument("--max-hours", type=float, default=36); ap.add_argument("--dry", action="store_true")
-    ap.add_argument("--parent", type=int, default=0, help="pid of the run_kit.sh that started this watcher: the watcher stops deleting when it ends")
+    ap.add_argument("--ended", action="store_true", help="the kit's run is over: the early-stage ODBs (2_x, 3_x, 4_1) may go too (never from a live watcher)")
+    ap.add_argument("--guard", metavar="KIT", help="exit 13 when the next make would rebuild from floorplan after STAGE-CAP deleted early-stage ODBs (see guard())")
+    ap.add_argument("--need", default="4_cts.odb"); ap.add_argument("--parent", type=int, default=0, help="pid of the run_kit.sh that started this watcher: the watcher stops deleting when it ends")
     a = ap.parse_args(argv)
     lg = lambda m: print(time.strftime("%F %T"), m, file=sys.stderr, flush=True)
+    if a.guard:
+        return guard(a.guard, a.need, lg)
     if a.once:
-        once(a.once, a.kit, a.dry, log=lg)
+        once(a.once, a.kit, a.dry, log=lg, ended=a.ended)
     elif a.watch:
         watch(a.watch, a.kit, a.interval, a.max_hours, lg, a.parent)
     else:

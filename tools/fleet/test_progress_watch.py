@@ -1,3 +1,4 @@
+from pathlib import Path
 import pathlib
 import sys
 import unittest
@@ -74,6 +75,22 @@ class Rules(unittest.TestCase):
         succ = dict(row, status="RUNNING", **{"class": ""})
         self.assertFalse([f for f in P.detect([], now, {"rows": [row, succ]}) if f["cls"] == "STUCK-STATE"])
         self.assertFalse([f for f in P.detect([], D(2026, 11, 19, 9, 30), {"rows": [row]}) if f["cls"] == "STUCK-STATE"])
+
+    def test_signed_and_deferred_rows_are_not_stuck(self):
+        """FLOW-FIX-2045: a CANCELLED/SUPERSEDED row of a type signed on that event, or retired by OWNER r711 (resign-defer), is terminal / waiting on purpose, not stuck"""
+        import csv, json, tempfile
+        d = Path(tempfile.mkdtemp()); ap = d / "autopilot"; ap.mkdir()
+        (ap / "kit_wave.json").write_text(json.dumps({"dies": {"s81": {}}}))
+        cols = ("die", "item", "event", "status", "class", "plan_current", "updated", "block_sha")
+        rows = [dict(die="s81", item=i, event="E", status="CANCELLED", **{"class": "SUPERSEDED"}, plan_current="yes", updated="2026-11-19 09:00", block_sha="b") for i in ("signed", "deferred", "stuck")]
+        with open(ap / "kit_wave_stages.tsv", "w", newline="") as f:
+            w = csv.DictWriter(f, cols, delimiter="\t"); w.writeheader(); w.writerows(rows)
+        (ap / "kit_wave_state.json").write_text(json.dumps({"items": {
+            "a": {"die": "s81", "item": "signed", "event": "E", "q_status": "SIGNED"},
+            "b": {"die": "s81", "item": "deferred", "event": "E", "retire": "resign-defer"}}}))
+        st = P.load_state(d)
+        out = [f for f in P.detect([], D(2026, 11, 19, 10, 30), st) if f["cls"] == "STUCK-STATE"]
+        self.assertEqual(len(out), 1); self.assertIn("1 current-plan row", out[0]["text"]); self.assertIn("stuck", out[0]["text"])
 
     def test_dedup_one_per_die_class_hour(self):
         f = [{"die": "s81", "cls": "NO-PROGRESS", "state": "alert", "text": "t"}]

@@ -20,7 +20,7 @@ def test_parent_alive_and_gone():
 
 def test_once_deletes_nothing_when_the_parent_is_gone(tmp_path, monkeypatch):
     logs = []
-    monkeypatch.setattr(C, "plan", lambda base, now, files: [(str(tmp_path / "2_3_floorplan_tapcell.odb"), 1)])
+    monkeypatch.setattr(C, "plan", lambda base, now, files, ended=False: [(str(tmp_path / "2_3_floorplan_tapcell.odb"), 1)])
     (tmp_path / "2_3_floorplan_tapcell.odb").write_text("x")
     monkeypatch.setattr(C, "kept_by_env", lambda kit: None)
     done = C.once(str(tmp_path), str(tmp_path), False, log=logs.append, scan=lambda k: ([], []), alive=lambda: False)

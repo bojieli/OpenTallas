@@ -199,6 +199,10 @@ def detect(events, now, state=None, parked=PARKED_DEFAULT):
     succ = {(r["die"], r["item"]) for r in rows if r.get("status") not in ("CANCELLED", "LINT-ADVISORY")}
     stuck = {}
     for r in rows:
+        # FLOW-FIX-2045: a row whose type is signed on this plan block is terminal (the wave prints "signed off on this plan block" and never relaunches it) and a row retired by OWNER r711
+        # (resign-defer) waits for spare capacity on purpose; neither is stuck (16 s81 / 18 s81_head rows read STUCK-STATE although 28 of 34 were signed)
+        if r.get("_terminal"):
+            continue
         if r.get("status") == "CANCELLED" and r.get("class") == "SUPERSEDED" and r.get("plan_current") == "yes" and (r["die"], r["item"]) not in succ:
             try:
                 if now - datetime.strptime(r["updated"][:16], "%Y-%m-%d %H:%M") >= timedelta(minutes=STUCK_MIN):
@@ -229,6 +233,15 @@ def load_state(coord):
             st["rows"] = list(csv.DictReader(f, delimiter="\t"))
     except OSError:
         return st
+    try:
+        items = json.load(open(ap / "kit_wave_state.json")).get("items") or {}
+        done = {(r.get("die"), r.get("item"), str(r.get("event") or "")) for r in items.values()
+                if r.get("q_status") in ("SIGNED", "SIGNED-LINKED") or r.get("retire") == "resign-defer"}
+        for r in st["rows"]:
+            if (r.get("die"), r.get("item"), r.get("event") or "") in done:
+                r["_terminal"] = "1"
+    except (OSError, ValueError):
+        pass
     # eligible = current-plan rows that were cancelled/superseded and are waiting for a relaunch (not in flight, LINT, WAIT-*, held)
     for r in st["rows"]:
         if r.get("plan_current") == "yes" and r.get("status") == "CANCELLED" and (r.get("class") or "") in ("SUPERSEDED", "QUEUE-CANCELLED", ""):

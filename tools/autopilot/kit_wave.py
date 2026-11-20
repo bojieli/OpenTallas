@@ -1426,6 +1426,28 @@ def rearm_candidates(state, cfg, die, d, log=None):
     return out
 
 
+LOG_HOURLY_S = 3600
+
+
+def log_hourly(AP, st, key, msg, now=None):
+    """FLOW-FIX-2045 (FABLE-FLOW-1949 class 6): one line per key per hour for lines the wave repeats every tick while nothing changed (REPEAT, SKIP-SAME-INPUT, TOOL-SKEW).  The key names what the
+    line is about (die / item / kind); a changed message under the same key still waits for the hour, the count of lines held back is added to the next one.  -> True when the line was written"""
+    now = time.time() if now is None else now
+    seen = st.setdefault("log_hourly", {}) if isinstance(st, dict) else {}
+    ent = seen.get(key) or {}
+    if ent and now - float(ent.get("t") or 0) < LOG_HOURLY_S:
+        ent["n"] = int(ent.get("n") or 0) + 1
+        seen[key] = ent
+        return False
+    held = int(ent.get("n") or 0)
+    seen[key] = {"t": now, "n": 0}
+    if len(seen) > 4000:
+        for k in [k for k, v in seen.items() if now - float(v.get("t") or 0) > 2 * LOG_HOURLY_S]:
+            seen.pop(k, None)
+    AP.log(msg + (f" [+{held} identical line(s) in the last hour]" if held else ""))
+    return True
+
+
 def item_key(die, event, item, block=None):
     """OWNER 12.20 (plans hard-frozen): a kit is keyed on its plan block sha, so a new event with the same
     block reuses the record (no regeneration); only a changed block makes a new wave item"""
@@ -6002,7 +6024,11 @@ def pick_gen_host(cfg, die, take=0, threads=0, item=None):
     else:
         on = cfg.get("load_hold") is not False
         low = cfg.get("_workroot_low") or {}
-        room = [h for h in hs if host_room(key(h), die_disk_low(cfg, die, h, key(h))) and die not in low.get(h, {})] if on else []
+        # FLOW-FIX-2045 (FABLE-FLOW-1949 class 3, 179 S81 launches in one tick: epyc8 85, epyc2 38, epyc10 20 ... while ot-run showed epyc2/epyc10 with room): with load_hold false (no hold; the config
+        # since r703) `room` was [] and the whole load-ordered pick below was skipped: the choice fell to the memory score x host_share alone, so cores were never looked at while the burst
+        # filled the host with the most admit GB.  The room list (under the ot-heavy load cap, over the disk floors: the same rails) now orders the pick whether or not load_hold holds rows;
+        # load_hold false only means no hold (load_hold() stays "")
+        room = [h for h in hs if host_room(key(h), die_disk_low(cfg, die, h, key(h))) and die not in low.get(h, {})]
         sc = lambda h: die_score(cfg, die, h, key(h))
         fits = [h for h in room if sc(h) >= max(take, 1)]
         # WAVE-BALANCE-1 11-11 (COORD 23:4x): among hosts that fit, the one with the most (free cores x admits), not the
@@ -6013,7 +6039,8 @@ def pick_gen_host(cfg, die, take=0, threads=0, item=None):
         uncapped = [h for h in hs if key(h) and not over_load_cap(key(h)) and not die_disk_low(cfg, die, h, key(h))
                     and die not in low.get(h, {})]
         best = (min(fits, key=lambda h: load_rank(cfg, h, key(h)) + (-hs.index(h),)) if fits
-                else max(_calm(cfg, room or uncapped or hs, key), key=lambda h: (sc(h) * host_share(cfg, h), -hs.index(h))))   # LOADRANK-NOFIT-1119: with no host fitting, hosts above NOFIT_LOAD_X x cores are skipped while a calmer one exists (epyc7 at 473/96 took 325 launches), the memory score still balances the rest
+                else (max(_calm(cfg, room or uncapped or hs, key), key=lambda h: (sc(h) * host_share(cfg, h), -hs.index(h))) if on else
+                      min(_calm(cfg, room or uncapped or hs, key), key=lambda h: (load_rank(cfg, h, key(h))[0], -(sc(h) * host_share(cfg, h)), hs.index(h)))))   # LOADRANK-NOFIT-1119; FLOW-FIX-2045: with no hold (load_hold false) nothing waits for room, so when no host fits the least loaded calm host takes it (5 % steps, each pick adds its threads) and the memory score breaks ties: with no host fitting, hosts above NOFIT_LOAD_X x cores are skipped while a calmer one exists (epyc7 at 473/96 took 325 launches), the memory score still balances the rest
     if key(best) is not None and len(hs) >= 2 and take:
         charge(key(best), take)
     alt_charge(cfg, best)
@@ -6789,14 +6816,27 @@ def prune_stale_fail_entries(cfg, st):
     dies = cfg.get("dies") or {}
     nk = ns = 0
     fs = st.get("fail_sigs") or {}
+    fk = st.get("fail_keys") or {}
+    # FLOW-FIX-2045 (FABLE-FLOW-1949 class 4): the label of the event is display only.  A repeat counter is keyed on the input digest: an entry whose failure was on another event label
+    # but whose plan block and src sha are the ones the item builds on now stays (46 fail_keys + 46 fail_sigs were dropped when b4bb6a8b1e9 was relabelled b05c98f7919 on the same plan 8dfedade987b)
+    try:
+        cblocks = current_blocks(cfg, st)
+    except Exception:
+        cblocks = {}
+    same = set()
+    for k, e in fk.items():
+        die, _, item = k.partition("|")
+        parts, d = e.get("parts") or {}, dies.get(die) or {}
+        blk = str((cblocks.get(die) or {}).get(item) or "")
+        if blk and parts.get("block") and parts.get("src") and str(parts["block"])[:12] == blk[:12] and str(parts["src"]) == str(d.get("src_sha") or ""):
+            same.add(k)
     for k in list(fs):
         die = k.split("|", 1)[0]
         cur = (dies.get(die) or {}).get("event")
         evs = {str(a).rsplit("@", 1)[0] for a in (fs[k].get("attempts") or [])}
-        if cur and evs and str(cur) not in evs:
+        if cur and evs and str(cur) not in evs and k not in same:
             fs.pop(k, None)
             ns += 1
-    fk = st.get("fail_keys") or {}
     latest = {}
     for r in (st.get("items") or {}).values():
         if r.get("status") == "FAIL" or r.get("q_status") == "FAIL":
@@ -6807,7 +6847,7 @@ def prune_stale_fail_entries(cfg, st):
         die = k.split("|", 1)[0]
         cur = (dies.get(die) or {}).get("event")
         ev = fk[k].get("event") or (latest.get(k) or {}).get("event")
-        if cur and ev and str(ev) != str(cur):
+        if cur and ev and str(ev) != str(cur) and k not in same:
             fk.pop(k, None)
             nk += 1
     return nk, ns
@@ -10286,12 +10326,12 @@ def tool_skew_measure(AP, cfg, st, die):
     cache[die] = res
     n, tot = len(res["refused"]), res.get("n_closure", 0)
     if not res["measured"]:
-        AP.log(f"KIT-WAVE TOOL-SKEW UNMEASURED {die}: {res.get('why') or 'tree ' + str(d['src']) + ' not readable'}")
+        log_hourly(AP, st, f"TS|{die}|unmeasured", f"KIT-WAVE TOOL-SKEW UNMEASURED {die}: {res.get('why') or 'tree ' + str(d['src']) + ' not readable'}")
     elif not res["ok"]:
         if mode == "warn":
-            AP.log(f"KIT-WAVE TOOL-SKEW WARN {die}: {n} of {tot} import-closure module(s) differ from {'pin ' + res['pin'] if res.get('pin') else 'main'} (warn, launching)")
+            log_hourly(AP, st, f"TS|{die}|warn", f"KIT-WAVE TOOL-SKEW WARN {die}: {n} of {tot} import-closure module(s) differ from {'pin ' + res['pin'] if res.get('pin') else 'main'} (warn, launching)")
         else:
-            AP.log(f"KIT-WAVE TOOL-SKEW REFUSE {die}: {n} of {tot} import-closure module(s) differ from {'pin ' + res['pin'] if res.get('pin') else 'main'} (launches refused)")
+            log_hourly(AP, st, f"TS|{die}|refuse", f"KIT-WAVE TOOL-SKEW REFUSE {die}: {n} of {tot} import-closure module(s) differ from {'pin ' + res['pin'] if res.get('pin') else 'main'} (launches refused)")
         posted = st.setdefault("tool_skew_posted", {})
         sig = TS.signature(res)
         if posted.get(die) != sig and not AP.DRY:
@@ -10299,7 +10339,7 @@ def tool_skew_measure(AP, cfg, st, die):
             AP.coord_append("lanes/COORD-REVIEW-QUEUE.md",
                             f"- {now_s()} " + TS.needs_lane_text(die, d["src"], res, d.get("owner_lane", "")))
     else:
-        AP.log(f"KIT-WAVE TOOL-SKEW OK {die}: 0 of {tot} import-closure module(s) differ")
+        log_hourly(AP, st, f"TS|{die}|ok", f"KIT-WAVE TOOL-SKEW OK {die}: 0 of {tot} import-closure module(s) differ")
         st.get("tool_skew_posted", {}).pop(die, None)
     return res
 
@@ -10875,11 +10915,11 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
         elif _so and (_rb or _fk_same(cfg, st, die, r)):            # OWNER 11-18 (r705 (2)): a relaunch is skipped ONLY on the full input hash of a failed attempt
             _same = _fk_same(cfg, st, die, r)
             if _same:
-                AP.log(f"KIT-WAVE SKIP-SAME-INPUT {die}/{r.get('item')} [owner {die_owner(cfg, die)[0]}]: full input hash {_same} equals the attempt that failed in the tool "
-                       f"(rt sha, design snapshot, spec digest, env keys); any code / plan / env change releases it")
+                log_hourly(AP, st, f"SSI|{die}|{r.get('item')}", f"KIT-WAVE SKIP-SAME-INPUT {die}/{r.get('item')} [owner {die_owner(cfg, die)[0]}]: full input hash {_same} equals the attempt that failed in the tool "
+                           f"(rt sha, design snapshot, spec digest, env keys); any code / plan / env change releases it")
                 return None
         if _rb and _so:                                          # OWNER 11-18 (r704): stops_off: otherwise an unchanged relaunch is logged for its owner, never refused
-            AP.log(f"KIT-WAVE REPEAT {die}/{r.get('item')} [owner {die_owner(cfg, die)[0]}]: unchanged relaunch after a repeated failure ({str(_rwhy)[:200]})")
+            log_hourly(AP, st, f"REPEAT|{die}|{r.get('item')}|rs", f"KIT-WAVE REPEAT {die}/{r.get('item')} [owner {die_owner(cfg, die)[0]}]: unchanged relaunch after a repeated failure ({str(_rwhy)[:200]})")
         elif _rb:
             if not (st.get("repeat_ledger") or {}).get(f"{die}|{r.get('item')}", {}).get("held_logged"):
                 st["repeat_ledger"][f"{die}|{r.get('item')}"]["held_logged"] = time.time()
@@ -10887,7 +10927,7 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
             return None
         _bl, _why, _chg = fail_key_gate(cfg, st, die, r.get("item"), r.get("block_sha"))
         if _bl and _so:                                          # OWNER 11-18 (r704): same-fail-key refusal off; REPEAT line names the owner lane
-            AP.log(f"KIT-WAVE REPEAT {die}/{r.get('item')} [owner {die_owner(cfg, die)[0]}]: relaunch with an unchanged fail key ({str(_why)[:200]})")
+            log_hourly(AP, st, f"REPEAT|{die}|{r.get('item')}|fk", f"KIT-WAVE REPEAT {die}/{r.get('item')} [owner {die_owner(cfg, die)[0]}]: relaunch with an unchanged fail key ({str(_why)[:200]})")
             _bl = False
         if _bl:
             _rk = (st.get("fail_keys") or {}).get(f"{die}|{r.get('item')}", {}).get("key", "")
@@ -13411,7 +13451,8 @@ def breaker_inputs(cfg, die):
     key new): plan sha, src sha + source content hash, gen env, kit_rtl form, event"""
     d = (cfg.get("dies") or {}).get(die) or {}
     try:
-        body = [d.get("_plan_sha") or d.get("plan_sha"), d.get("src_sha"), d.get("_src_overlay"), d.get("gen_env"), d.get("kit_rtl"), d.get("event")]
+        # FLOW-FIX-2045 (class 4): no event label in the digest (a relabel of an unchanged plan made every breaker cohort / retry window new); plan sha + src decide
+        body = [d.get("_plan_sha") or d.get("plan_sha"), d.get("src_sha"), d.get("_src_overlay"), d.get("gen_env"), d.get("kit_rtl")]
         if d.get("breaker_fix"):                 # PROBE-ONE-1116: a config change naming the class (dies.<die>.breaker_fix = any text) opens the probe window
             body.append(d["breaker_fix"])
         return hashlib.sha1(json.dumps(body, sort_keys=True, default=str).encode()).hexdigest()[:16]
@@ -14819,7 +14860,8 @@ def reap_stale_attempts(AP, cfg, st, notices, ap_dir=None):
         res = WJ.stop_on_fleet(AP.sh, AP.HUB_NAME, roots)
         AP.log(f"KIT-WAVE REAP remote stop: {' '.join(WJ.stopped_names(res))[:600] or 'queued in background (autopilot/remote_stops.log)'}"
                + "".join(f"; {h} not checked: {v['error']}" for h, v in res.items() if v.get("error")))
-        if any(v.get("error") for v in res.values()):    # WAVE-LONGRUN-1: a host that could not be reached means "not stopped": retry next tick
+        # WAVE-LONGRUN-1: a host that could not be reached means "not stopped": retry next tick.  FLOW-FIX-2045 (class 5): so does a scope still active after its stop (verified by unit name on the host)
+        if any(v.get("error") or v.get("left") for v in res.values()):
             for r in marked:
                 r.pop("reaped", None)
     return n
