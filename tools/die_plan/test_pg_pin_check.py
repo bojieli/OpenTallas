@@ -63,6 +63,8 @@ def test_kit_hook_wired_last_in_post_pdn(tmp_path, monkeypatch):
         raw["die"]["name"] = "s81_head"
         kd = Path(gen_phys.write_type_kit(schema.Plan(raw), "mid", d, [], util=0.5))
         return kd, (kd / "config.mk").read_text()
+    # Isolate the pin check; the default-on rail check has its own last-hook test.
+    monkeypatch.setenv("OT_PG_RAIL_CHECK", "0")
     kd, cfg = mk(tmp_path / "off")
     assert "pg_pin_check_hook" not in cfg and not (kd / "pg_pin_check_hook.tcl").exists()
     monkeypatch.setenv("OT_PG_PIN_CHECK", "1")

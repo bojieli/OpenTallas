@@ -140,6 +140,7 @@ def test_stop_failure_never_blocks_the_cancel(monkeypatch):
 
 
 def test_autopilot_cancel_stops_and_records(monkeypatch):
+    monkeypatch.setenv("OT_STOP_INLINE", "1")
     got = []
     monkeypatch.setattr(WJ, "stop_on_fleet", lambda sh, hub, roots, hosts=None, dry=False:
                         got.append(roots) or {"epyc7": {"containers": ["dpkit-col-9"]}})

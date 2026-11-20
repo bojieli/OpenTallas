@@ -45,6 +45,7 @@ import math
 import random
 import sys
 from collections import defaultdict
+from pathlib import Path
 
 
 def interval_boundaries(lo, hi, T, off):
@@ -1848,9 +1849,12 @@ def _main(a, ap, allow):
         apply_frame(summ, out, CF.load_path(a.frame_plan) if a.frame_plan else CF.load_optional(a.sta_plan))
     except CF.FrameError as ex:
         ap.error(str(ex))
-    sp_src = None if a.no_seam_pad_rules else (a.seam_pad_rules or getattr(a, "write_fall_plan", None) or a.sta_plan)
-    if sp_src:
-        sg, sf = seam_pad_inputs(json.load(open(sp_src)), a.pad_capacity, [x.split(",") for x in a.seam_group or []])
+    sp_src = a.seam_pad_rules or a.write_fall_plan
+    if not sp_src and a.sta_plan and Path(a.sta_plan).is_file():
+        sp_src = a.sta_plan
+    if sp_src and not a.no_seam_pad_rules:
+        with open(sp_src) as f:
+            sg, sf = seam_pad_inputs(json.load(f), a.pad_capacity, [x.split(",") for x in a.seam_group or []])
         if sg or sf:
             summ["seam_pad_rules"] = seam_pad_rules(out, sg, sf, a.period, a.aperture, a.max_depth,
                                                     WRITE_FALL if getattr(a, "write_fall_plan", None) else frozenset(),
