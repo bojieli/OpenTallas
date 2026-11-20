@@ -598,3 +598,16 @@ def test_two_events_same_item_and_attempt_never_share_a_queue_job(tmp_path):
     assert KW.superseded_live_job(cfg, old_row, jobs) == ""              # REAP-REVIVE does not adopt the other event's job
     new_row.update(status="CANCELLED", **{"class": "SUPERSEDED"}, stage="geom")
     assert KW.superseded_live_job(cfg, new_row, jobs) == "ad4d52b9ea00"
+
+
+def test_unresolvable_event_ancestry_never_turns_a_die_off():
+    d = {"enabled": True, "event": "b4bb6a8b1e9", "plan": "/p", "gen_host": "h", "src": "/s", "gate": {"g0c": "PASS", "clock": "PASS", "bind": "PASS"}}
+    cfg = {"dies": {"s81": d}, "stops_off": True}
+    ok, why = KW.gate(cfg, "s81", lambda sha, base: None)               # commit not in the mirror
+    assert ok, why
+    assert "unresolvable" in d.pop("_descend_warn")
+    ok, why = KW.gate(cfg, "s81", lambda sha, base: False)              # resolved, no descent: ignored under stops_off
+    assert ok and "ignored under stops_off" in d.pop("_descend_warn")
+    cfg2 = {"dies": {"s81": dict(d)}}                                   # without stops_off the old refusal stands for a resolved non-descent
+    assert KW.gate(cfg2, "s81", lambda sha, base: False)[0] is False
+    assert KW.gate(cfg2, "s81", lambda sha, base: None)[0] is True

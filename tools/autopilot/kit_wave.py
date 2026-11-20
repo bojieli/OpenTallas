@@ -1155,8 +1155,15 @@ def gate(cfg, die, descends=None):
             if not re.fullmatch(r"[0-9a-f]{7,40}", ev):
                 return False, f"event '{ev}' is not a commit (needs {base} or newer)"
             if not (ev.startswith(base) or base.startswith(ev)):
-                if descends is None or not descends(ev, base):
-                    return False, f"event {ev} does not descend from {base}"
+                dres = descends(ev, base) if descends is not None else False
+                if dres is None:
+                    # r703/r704: an unresolvable ancestry never turns a die off; the applied event is current by definition (the apply wrote it), a WARN goes out once per tick (plan_dies)
+                    d["_descend_warn"] = f"event {ev} is not in the repo mirror: ancestry from {base} unresolvable, treated as current"
+                elif not dres:
+                    if FG.stops_off_die(cfg, die):
+                        d["_descend_warn"] = f"event {ev} does not descend from {base}: ignored under stops_off (r703)"
+                    else:
+                        return False, f"event {ev} does not descend from {base}"
     g = d.get("gate") or {}
     bad = [k for k in GATE_KEYS if str(g.get(k, "")).upper() != "PASS"]
     # COORD 11-19 (KV D25d applied 12:40, no D25d row for 5 h: "bind not PASS in the config", the apply wrote bind = 'POST-APPLY r712 ...'): under stops_off (r703, not hbm) the bind
@@ -8885,6 +8892,10 @@ def _kr_json(txt, tag):
 # ------------------------------------------------------------------------------------------------ tick stage
 def _descends(AP):
     def f(sha, base):
+        # COORD 11-19 (S81 off 4.6 h: the D8h apply event b4bb6a8b1e9 is not in the hub mirror): an event commit the repo does not have is UNKNOWN (None), not "does not descend"
+        rc0, _, _ = AP.sh(["git", "-C", str(AP.REPO), "cat-file", "-e", sha + "^{commit}"], timeout=60)
+        if rc0 != 0:
+            return None
         rc, _, _ = AP.sh(["git", "-C", str(AP.REPO), "merge-base", "--is-ancestor", base, sha], timeout=60)
         return rc == 0
     return f
@@ -9678,6 +9689,9 @@ def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
     for die in sorted(set(list(cfg.get("dies") or {}) + list(GATE_EVENTS) + list(COORD_ONLY))):
         stop = stop_reason(cfg, die, AP.AP_DIR if AP else None)
         ok, why = (False, stop) if stop else gate(cfg, die, _descends(AP) if AP else None)
+        _dw = ((cfg.get("dies") or {}).get(die) or {}).pop("_descend_warn", "") if isinstance(((cfg.get("dies") or {}).get(die)), dict) else ""
+        if _dw and ok:
+            (AP.log if AP else log)(f"KIT-WAVE WARN {die}: {_dw}")
         if ok and AP and probe:
             if "_spill_marked" not in cfg:              # the dry plan does not pass the tick's probe
                 try:
