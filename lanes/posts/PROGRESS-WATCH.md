@@ -95,3 +95,4 @@
 - 2026-11-20 13:35 PST ALERT STUCK-STATE s81_head: 1 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. hd_mesh, 2026-11-20 11:28)
 - 2026-11-20 13:56 PST ALERT NO-PROGRESS s81_head: 17 eligible rows, 0 KIT-WAVE LAUNCH for 372 min (last 07:43); NO-LAUNCH x38
 - 2026-11-20 13:56 PST ALERT NO-ADVANCE qwen_compute: 31 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (sle_su_l0__cl7a55c676 x7@gen, slw_su_l0__cl1a1c1f8f x5@gen, sle_su_l1__cl5ea486db x5@gen)
+- 2026-11-20 14:06 PST ALERT NO-ADVANCE s81: 21 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (ot_s81sl_leaf__t52 x5@gen, ot_s81sl_kv_leaf__t4 x4@gen, ot_s81sl_leaf__t1 x4@gen)
