@@ -942,6 +942,23 @@ class Stages(unittest.TestCase):
             got = {dict(zip(rows[0], r))["item"]: dict(zip(rows[0], r))["plan_current"] for r in rows[1:]}
             self.assertEqual(got, {"t1": "yes", "t2": "no", "h1": ""})
 
+    def test_a_retired_partition_does_not_match_its_current_hard_core_block(self):
+        cfg = {"dies": {"qwen_compute": {"gen_host": "e", "plan": "/p", "event": "V0E"}}}
+        block = "a" * 64
+        common = {"die": "qwen_compute", "item": "d2d_sram", "block_sha": block, "updated": 0}
+        state = {
+            "plans": {"e:/p|V0E": {"blocks": {"live_type": "b" * 64, "d2d_sram": block}, "types": ["live_type"]}},
+            "items": {
+                "old": dict(common, event="N46C", kind="type", status="CANCELLED"),
+                "core": dict(common, event="V0E", kind="core", status="SIGNED"),
+            },
+        }
+        with tempfile.TemporaryDirectory() as d:
+            KW.write_stages(state, d, cfg)
+            lines = (Path(d) / KW.STAGES_FILE).read_text().splitlines()
+            records = [dict(zip(lines[0].split("\t"), line.split("\t"))) for line in lines[1:]]
+        self.assertEqual({x["status"]: x["plan_current"] for x in records}, {"CANCELLED": "no", "SIGNED": "yes"})
+
 
 class Overlay(unittest.TestCase):
     def test_overlay(self):
