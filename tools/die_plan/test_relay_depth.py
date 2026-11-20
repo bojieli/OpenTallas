@@ -252,3 +252,33 @@ def test_rows_match_dotted_leaf_names():
     b2.rel_of = lambda ci: ("u_r0.u_y_rt_1", "u_r0.u_sink")[ci]
     text2, _ = b2.emit_type("src", part2)
     assert "u_y_xd_" in text2
+
+
+def test_slice_c_bundles_stay_aligned_and_norm_gate_gets_no_row(monkeypatch):
+    """FABLE-FIX-S81-SLICEC 11-20: egg.g_v / g_c (800 um, D 1) and egg.g (824 um, D 2) are one valid / data bundle into xr:
+    all three get D 2.  xr.cfg_v / cfg_d into cap are another group of the same source module.  egn.o_r -> egg.n_rh is the
+    fixed-latency norm -> gate wire: never a row, `unfixed` (core placement) over the reach."""
+    cores = {"u_xr": (0.0, 0.0, 40.0, 40.0), "u_gg": (800.0, 0.0, 40.0, 40.0), "u_cap": (0.0, 300.0, 40.0, 40.0),
+             "u_nh": (300.0, 0.0, 40.0, 40.0)}
+    pins = {"u_gg": {"g_v": {"0": (800.0, 0.0)}, "g_c": {"0": (800.0, 2.0)}, "g": {"0": (824.0, 0.0)}, "n_rh": {"0": (800.0, 30.0)}},
+            "u_xr": {"eg_v": {"0": (0.0, 0.0)}, "eg_c": {"0": (0.0, 2.0)}, "eg_d": {"0": (0.0, 0.0)},
+                     "cfg_v": {"0": (0.0, 40.0)}, "cfg_d": {"0": (0.0, 40.0)}, "x_scale": {"0": (40.0, 0.0)}},
+            "u_cap": {"cfg_v": {"0": (430.0, 300.0)}, "cfg_d": {"0": (100.0, 300.0)}},
+            "u_nh": {"o_r": {"0": (300.0, 30.0)}}}
+    mk = lambda core, port, partner: dict(dir="in", core=core, port=port, partner=partner, bit_ranges=[[0, 0]], stages_existing=0, via=[])
+    paths = [mk("u_xr", "eg_v", "u_gg.g_v"), mk("u_xr", "eg_c", "u_gg.g_c"), mk("u_xr", "eg_d", "u_gg.g"),
+             mk("u_cap", "cfg_v", "u_xr.cfg_v"), mk("u_cap", "cfg_d", "u_xr.cfg_d"), mk("u_gg", "n_rh", "u_nh.o_r")]
+    text = "module t;\n    a u_u_xr (.x(n));\n    b u_u_gg (.x(n));\n    c u_u_cap (.x(n));\n    d u_u_nh (.x(n));\nendmodule\n"
+    import core_conns_from_bind as CC
+    import relay_depth as RD
+    monkeypatch.setattr(CC, "trace", lambda plan_, tn, text_, repo=None: {"paths": paths})
+    monkeypatch.setattr(RD, "_pin_table", lambda hc, plan_dir: pins[hc["inst"]])
+    mods = {"u_xr": "ot_s81sl_xrt1", "u_gg": "ot_s81sl_egg", "u_cap": "ot_s81sl_capc5r", "u_nh": "ot_s81sl_egn"}
+    raw = {"partition_types": {"t": {"outline_um": [1200.0, 400.0], "hard_cores": [
+        dict(inst=i, origin_um=[x, y], outline_um=[w, h], pins=1, module=mods[i]) for i, (x, y, w, h) in cores.items()]}}}
+    rows, rep = RD.type_rows(raw, "t", text)
+    got = {(r["inst"], r["port"]): r["D"] for r in rows}
+    assert got == {("u_xr", "eg_v"): 2, ("u_xr", "eg_c"): 2, ("u_xr", "eg_d"): 2, ("u_cap", "cfg_v"): 1, ("u_cap", "cfg_d"): 1}
+    assert len(rep["read_loops"]) == 1 and len(rep["unfixed"]) == 1 and rep["unfixed"][0]["port"] == "n_rh"
+    assert RD._align_group("ot_s81sl_xrt1", "cfg_d") != RD._align_group("ot_s81sl_xrt1", "sw_d")
+    assert RD._align_group("ot_s81sl_xrt1", "x_scale") is None and RD._align_group("ot_s81_sstn_base566", "g") is None

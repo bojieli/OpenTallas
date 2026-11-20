@@ -45,15 +45,36 @@ GRID_UM = 4.0
 PAD_UM = 6.5
 # a fixed-latency read loop: (source module, source port) -> (sink module, sink port); never pipelined by a row
 READ_LOOP = ((re.compile(r"^ot_s81_cfg7_seq"), re.compile(r"^(a|ce\d+)$"), re.compile(r"^ot_rom_"), re.compile(r"^(addr_in|ce_in)$")),
-             (re.compile(r"^ot_rom_"), re.compile(r"^rd_out$"), re.compile(r"^ot_s81_cfg7_seq"), re.compile(r"^q\d+$")))
+             (re.compile(r"^ot_rom_"), re.compile(r"^rd_out$"), re.compile(r"^ot_s81_cfg7_seq"), re.compile(r"^q\d+$")),
+             # FABLE-FIX-S81-SLICEC 11-20: the Engram gate core delays dd / copy internally by the FIXED latency of the two
+             # norm cores (ot_s81sl_eg: egn.o_* -> egg.n_*, "a norm-pair valid mismatch is a sticky fault"); a stage on that
+             # wire shifts the norms against dd inside egg.  Never a row; over the reach = core placement.
+             (re.compile(r"^ot_s81sl_egn$"), re.compile(r"^o_(v|f|r)$"), re.compile(r"^ot_s81sl_egg$"), re.compile(r"^n_(v|f|rh|rk)$")))
 
 
 # aligned source groups: (source module, ports whose direct sinks must carry one common depth)
-ALIGN_GROUP = ((re.compile(r"^dsfd_cfifo_crs"), re.compile(r"^(xa|xb|x2|cc)$")),)
+# FABLE-FIX-S81-SLICEC 11-20 (plan_j3b: c1x_C t9 / t10 carried xr.eg_v D1, eg_c D1, eg_d D2 and iq_C t1 cap.cfg_d D1, cfg_v D2:
+# the 810-um step fell between the pins of ONE valid / data bundle, so the data would land a cycle after its valid): every
+# valid / data bundle of the slice-C hub cores is one group.  The entries of one module are separate groups (egg.g* against
+# xr is one stream, xr.cfg_* against cap another); a port belongs to the first entry it matches.
+ALIGN_GROUP = ((re.compile(r"^dsfd_cfifo_crs"), re.compile(r"^(xa|xb|x2|cc)$")),
+               (re.compile(r"^ot_s81sl_egg$"), re.compile(r"^(g|g_c|g_v)$")),
+               (re.compile(r"^ot_s81sl_xrt\d*$"), re.compile(r"^cfg_(v|d)$")),
+               (re.compile(r"^ot_s81sl_xrt\d*$"), re.compile(r"^is_(v|d)$")),
+               (re.compile(r"^ot_s81sl_xrt\d*$"), re.compile(r"^c_(v|d)$")),
+               (re.compile(r"^ot_s81sl_xrt\d*$"), re.compile(r"^sw_(v|a|m|d)$")),
+               (re.compile(r"^ot_s81sl_xrt\d*$"), re.compile(r"^lo_(v|d)$")),
+               (re.compile(r"^ot_s81sl_xrt\d*$"), re.compile(r"^rb_(v|d)$")),
+               (re.compile(r"^ot_s81sl_xrt\d*$"), re.compile(r"^g_(v|c|d)$")),
+               (re.compile(r"^ot_s81sl_xrt\d*$"), re.compile(r"^x_(sv|si|s)$")))
 
 
 def _align_group(src_mod, src_port):
-    return any(a.search(src_mod) and b.search(src_port) for a, b in ALIGN_GROUP)
+    """index of the aligned group (source module, port) belongs to, None when it is in none"""
+    for i, (a, b) in enumerate(ALIGN_GROUP):
+        if a.search(src_mod) and b.search(src_port):
+            return i
+    return None
 
 
 def _is_read_loop(src_mod, src_port, sink_mod, sink_port):
@@ -217,8 +238,9 @@ def type_rows(plan, tn, text, repo=None, plan_dir=None, limit=LIMIT, netlist=Non
             worst = abs(a[0] - b[0]) + abs(a[1] - b[1])
             padded = router.length(a, b)
             loop = _is_read_loop(hcs[src_core].get("module", ""), src_port, hcs[p["core"]].get("module", ""), p["port"])
-            if _align_group(hcs[src_core].get("module", ""), src_port) and leaf_rel(p["core"]) is not None:
-                agroup[src_core].append((leaf_rel(p["core"]), p["port"], p["bit_ranges"], round(worst, 1)))
+            gi = _align_group(hcs[src_core].get("module", ""), src_port)
+            if gi is not None and leaf_rel(p["core"]) is not None:
+                agroup[(src_core, gi)].append((leaf_rel(p["core"]), p["port"], p["bit_ranges"], round(worst, 1)))
             if loop or padded > limit:
                 (loops if loop else flight).append(dict(
                     core=p["core"], port=p["port"], partner=p["partner"], path_um=round(worst, 1),
@@ -230,8 +252,8 @@ def type_rows(plan, tn, text, repo=None, plan_dir=None, limit=LIMIT, netlist=Non
                 # on ROM 5 / 6: FAIL).  Never a row; over the reach = a core placement item, listed as unfixed.
                 if worst > limit:
                     unfixed.append(dict(core=p["core"], port=p["port"], partner=p["partner"], path_um=round(worst, 1), extra=0,
-                                        reason="fixed-latency ROM read loop over the reach: move the sequencer / ROM "
-                                               "(core placement), a pipeline stage here is a functional error"))
+                                        reason="fixed-latency loop (cfg ROM read, Engram norm -> gate) over the reach: move "
+                                               "the cores (core placement), a pipeline stage here is a functional error"))
                 continue
         need = max(0, math.ceil(worst / limit) - 1) if worst != float("inf") else 0
         extra = need - int(p["stages_existing"])
@@ -269,7 +291,7 @@ def type_rows(plan, tn, text, repo=None, plan_dir=None, limit=LIMIT, netlist=Non
     # control word (cc) of the SAME edge; a stage on one of them alone shifts payload against control for every consumer
     # behind.  When any link of the group needs D stages, every link of the group gets D: the frame sees one stream D edges
     # later (the same as a D-deeper landing), aligned as built.
-    for src_core, links in sorted(agroup.items()):
+    for (src_core, _gi), links in sorted(agroup.items()):
         dmax = max((d for rel, port, _br, _l in links for d, _ in direct.get((rel, port), {}).values()), default=0)
         if not dmax:
             continue
