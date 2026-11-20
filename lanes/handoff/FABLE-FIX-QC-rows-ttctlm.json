@@ -1,0 +1,50 @@
+{
+ "schema": "SONNET-FIX-QC-rows-ttctlm.v1",
+ "for": "QC-PLAN-R3 (event after N46Q) + the tt_ctlm core owner",
+ "date": "2026-11-19",
+ "measured_on": "tt_ctlm N46C kit epyc8 .../s29q103S4Q9N46C/items/tt_ctlm/gen/tt_ctlm 4_cts_pre_tt.odb (placement RC, wns -196.24 tns -63,568) and 5_1_grt_pre_tt.odb (GR RC, wns -167.08 tns -82,923); logs epyc8 /srv/opentallas-scratch2/claude/sonnet-fix-qc-ttc/{cts,grt}.log",
+ "classification_worst_50": {
+  "cts": {
+   "logic-depth": 49,
+   "other": 1
+  },
+  "grt": {
+   "logic-depth": 49,
+   "other": 1
+  },
+  "long_hop_over_405um": 0,
+  "congestion_detour": 0,
+  "clock_skew": "capture clock arrives about 25-35 ps EARLIER than launch (not the cause)",
+  "same_start_flop": "49 of 50 ends in both DBs start at ONE flop u_bound.u_core.u_75259/Q (DFFASRHQNx1, async-reset state flop) in the HP13 core qfd_hp13_cpub39_rp_alt",
+  "path_shape": "median 24 logic cells (11..24 cts, 11..28 grt) = ~600 ps (cts) / 541 ps (grt) of cell delay + 7-9 repair buffers = ~310-340 ps; one start flop fans through INV,INV,AND2 then a flat chain of AND/OR/AO21 to ~50 destination flops (u_8868..u_8879, u_53159.., u_74258..) with ~830 ps period: depth, not distance"
+ },
+ "why_no_plan_row_helps": "hops are short (no wire class), clock is fine, so a station / core move does nothing; the combinational cone from u_75259 is 24-28 levels in a 833 ps cycle",
+ "draft_rows": [
+  {
+   "id": "TTCTLM-R1",
+   "kind": "core RTL retime (cycles pre-approved)",
+   "what": "insert ONE register rank in the cone of u_75259 at logic level ~12 (after the AO21 u_45583 / OR2 u_39179 group, cumulative ~470-530 ps in the cts path), i.e. precompute the decoded enable one cycle earlier (a next-state flag registered in the cycle before)",
+   "cost": "+1 cycle on the ctlm control path; declare in the lane latency row for tt_ctlm (ctlm sched lane), LATCHECK",
+   "owner": "core RTL owner of qfd_hp13_cpub39 (FABLE-FIX-S81-GLUE did the earlier resynth + fence)",
+   "status": "NOT WRITTEN: needs the RTL name of u_75259 (post-synthesis name; map it from 1_2_yosys.v / bound RTL)"
+  },
+  {
+   "id": "TTCTLM-R2",
+   "kind": "synthesis effort / fanout split (no cycles)",
+   "what": "u_75259 drives the whole cone: duplicate the state flop (2-4 copies, each driving ~12-25 of the 50 endpoint groups) and re-run abc with the depth goal; may cut 3-5 levels (~100 ps), NOT the 200 ps missing",
+   "cost": "0 cycles, +3 flops",
+   "status": "fallback only"
+  },
+  {
+   "id": "TTCTLM-R3",
+   "kind": "plan",
+   "what": "no station / core move / outline change: nothing in the plan is the cause",
+   "status": "not needed"
+  }
+ ],
+ "honest_limits": [
+  "only the worst 50 ends per DB; the tail (tns -64k / -83k) is the same cone but I did not count its endpoints",
+  "no RTL mapped for u_75259",
+  "gate -150 ps SETUP_TRIAGE stop on the kit is what ends the wave attempts at post-CTS (setup_est -274 / -321); the kit TT repair cannot recover 200 ps of depth"
+ ]
+}
