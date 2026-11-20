@@ -8,7 +8,7 @@ SUDO='sudo -n ' if sh('sudo -n true')[0]==0 else ''
 def inuse():
     _,o=sh(SUDO+"bash -c 'for p in /proc/[0-9]*; do readlink $p/cwd; ls -l $p/fd 2>/dev/null | sed -n \"s/.* -> //p\"; done' 2>/dev/null")
     s=set(x for x in o.split('\n') if x.startswith('/'))
-    _,dm=sh(SUDO+"bash -c 'docker ps -q | xargs -r docker inspect -f \"{{range .Mounts}}{{.Source}} {{end}}\"' 2>/dev/null"); s|=set(dm.split())
+    _,dm=sh(SUDO+"bash -c 'docker ps -q | xargs -r timeout -k 2 30 docker inspect -f \"{{range .Mounts}}{{.Source}} {{end}}\"' 2>/dev/null"); s|=set(dm.split())
     _,cm=sh(SUDO+"bash -c 'cat /proc/[0-9]*/cmdline 2>/dev/null | tr \"\\0\" \" \"'")
     return s,cm
 if mode=='eval':

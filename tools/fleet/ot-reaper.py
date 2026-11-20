@@ -83,7 +83,7 @@ def procs():
                 try: out.append(os.readlink(f"/proc/{p}/fd/{fd}"))
                 except OSError: pass
         except OSError: pass
-    try: out.append(subprocess.run("docker ps -q | xargs -r docker inspect -f '{{range .Mounts}}{{.Source}} {{end}}'",
+    try: out.append(subprocess.run("docker ps -q | xargs -r timeout -k 2 30 docker inspect -f '{{range .Mounts}}{{.Source}} {{end}}'",
                                    shell=True, capture_output=True, text=True, timeout=60).stdout)
     except Exception: pass
     return "\n".join(out)

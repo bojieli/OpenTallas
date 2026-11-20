@@ -172,6 +172,46 @@ def sh(*a):
         return ""
 
 
+# DOCKERTO-1400 (FLEET-WATCH-1400, COORD 15:2x: epyc7 stopped admitting): `docker inspect` of a container whose stop is wedged in dockerd never returns.  This pass called it with no timeout (and a bulk call
+# blocks on its worst id), so one hung container hung the whole reconcile and every admission behind it; later passes piled up more hung inspects.  Every docker call here runs under coreutils
+# `timeout -k 2` (the client dies, not just the Python wait), and a bulk inspect that times out is redone one container at a time, skipping the ones that do not answer.
+DOCKER_TIMEOUT_S, DOCKER_ONE_S = 20, 8
+
+
+def docker_cmd(*a, t=None):
+    """-> (rc, stdout); rc 124 = timed out, 127 = no docker"""
+    t = DOCKER_TIMEOUT_S if t is None else t
+    try:
+        r = subprocess.run(["timeout", "-k", "2", str(t), "docker", *a], capture_output=True, text=True, timeout=t + 10)
+        return r.returncode, r.stdout
+    except (OSError, subprocess.SubprocessError):
+        return 127, ""
+
+
+def docker_inspect_all(ids):
+    """inspect records of the given container ids: one bulk call, else per container in parallel; a container that does not answer in DOCKER_ONE_S is left out"""
+    if not ids:
+        return []
+    rc, out = docker_cmd("inspect", *ids)
+    if rc == 0:
+        try:
+            got = json.loads(out)
+            if isinstance(got, list):
+                return got
+        except ValueError:
+            pass
+    from concurrent.futures import ThreadPoolExecutor
+
+    def one(i):
+        rc1, o1 = docker_cmd("inspect", i, t=DOCKER_ONE_S)   # read at call time
+        try:
+            return json.loads(o1)[0] if rc1 == 0 else None
+        except (ValueError, IndexError, TypeError):
+            return None
+    with ThreadPoolExecutor(max_workers=16) as ex:
+        return [x for x in ex.map(one, ids) if x]
+
+
 def rd(p):
     try:
         return open(p).read()
@@ -258,11 +298,8 @@ _containers = None
 def containers():
     global _containers
     if _containers is None:
-        ids = sh("docker", "ps", "-q", "--no-trunc").split()
-        try:
-            _containers = json.loads(sh("docker", "inspect", *ids)) if ids else []
-        except ValueError:
-            _containers = []
+        ids = docker_cmd("ps", "-q", "--no-trunc")[1].split()
+        _containers = docker_inspect_all(ids)
     return _containers
 
 
@@ -1188,14 +1225,10 @@ def _reap_completed_thread_charges_locked():
             candidates.append((unit, path))
     if not candidates:
         return []
-    try:
-        ids = subprocess.run(["docker", "ps", "-q"], capture_output=True, text=True, check=True).stdout.split()
-        running = json.loads(subprocess.run(["docker", "inspect", *ids], capture_output=True,
-                                            text=True, check=True).stdout) if ids else []
-        if not isinstance(running, list):
-            return []
-    except (OSError, ValueError, subprocess.SubprocessError):
+    rc_ps, out_ps = docker_cmd("ps", "-q")
+    if rc_ps != 0:
         return []
+    running = docker_inspect_all(out_ps.split())
     inventory = json.dumps(running)
     commands = launches()
     retired = []

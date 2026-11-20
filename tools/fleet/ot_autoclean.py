@@ -1250,7 +1250,7 @@ def ssh(host):
 
 def remote_live(host):
     prog = ("for p in /proc/[0-9]*; do tr '\\0' ' ' < $p/cmdline 2>/dev/null; echo; done | grep -v ot_autoclean; "
-            "docker ps -q | xargs -r docker inspect -f '{{range .Mounts}}{{.Source}} {{end}}'")
+            "docker ps -q | xargs -r timeout -k 2 30 docker inspect -f '{{range .Mounts}}{{.Source}} {{end}}'")
     r = subprocess.run(ssh(host) + [prog], capture_output=True, text=True, timeout=120)
     if r.returncode:
         raise RuntimeError(f"{host}: rc {r.returncode}")
