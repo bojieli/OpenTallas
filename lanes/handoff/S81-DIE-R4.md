@@ -115,3 +115,9 @@ All relaunch after the 405 reach override (lever 1) lands for D8i.
 - postbind-s81-1120135739: elab 0, bind running (intel1). Adopt if GREEN.
 - J6 donor proofs after bound_ready (s81-die-r3-hub/j5_r4_rehomed_<d>.log): f0_q 0; vp_sr exit 11 (stale dead-input defines); rom bind 0, compare crashed on missing gate_r3/latcheck.json; r1_frame restore refuses internal_stations[].sites; t31 HI pack must be regenerated. A donor-repair helper is working on all four (epyc10 s81-die-r4-donors/).
 - bk_sel rows 53956fe8b195 stay out of J6 until the successor delivers per-stage station sites + 11 face-bus stations + reset anchors. t41: no row needed.
+
+## 11-20 15:2x FABLE-CLOSURE-1515 J6 order
+1. Col master latch rows. The r2 env synth + 2 LECs were moved to epyc7 (outputs on epyc7 j6_lockup/*.e7.out); the r1 synths are still on epyc8.
+2. reset/monitor relays: tool owned by RESET-RELAY-GEN-1530; my handoff is epyc10 s81-die-r4-relay/HANDOFF-RESET-RELAY-GEN.md (patch unpushed).
+3. Leaf spread rows + core-pin stages.
+- Lockup rows go in only after LOCKUP-STATION re-solves the taps.
