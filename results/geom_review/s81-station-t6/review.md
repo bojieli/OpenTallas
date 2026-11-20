@@ -25,3 +25,5 @@ A read-only OpenROAD run on the retained a13 pre-repair global-route database re
 | ft3 | +33.30 | −305.0 | 949.9 | 1,031.9 | 23 |
 
 The worst sampled endpoint outside the four writer faces is reader ft5_i_0/g_x[8]/D at −104.4 ps, driven by START origin s2/QN. The four-copy candidate leaves this reader path in place. The retained DB precedes the final −207.19 ps TT gate. The gate log records ft3 as the worst endpoint during repair. The twelve constrained raw path reports, group-worst sample, mapped cell coordinates, read-only run scripts and tool log are in the a13_tt archive. The group-worst report begins with OpenSTA's warning about the optional nets display field, followed by its JSON object.
+
+The a13 ft3 mapped reset AND is at (518.454, 5.130) µm and its capture flop at (657.720, 4.590) µm, 139.806 µm apart by Manhattan distance. The R4 candidate's ft3 copy is 154.440 µm from that historical AND site. Its 34.904 µm copy-to-face-pin estimate therefore cannot stand in for a placed reset-to-gate distance. The first candidate placement should report the AND and flop locations together with separate A/B timing.
