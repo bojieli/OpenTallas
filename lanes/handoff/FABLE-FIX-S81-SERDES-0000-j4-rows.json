@@ -785,11 +785,126 @@
    "class": "serdes-rx-out-stations",
    "status": "ASK S81-DIE-R3: generate bit_sites_um with your station tool (serdes__t14 has this row: 3 stations)",
    "evidence": "placed hop > 405 um (R-MINIMAL): same macro sites as t1__clb45db5be. 2 station(s), equal hops of 369 um. T15P TT at CTS: u_rm g_rd q -673 (913 ends), about 730 ps of wire buffers between the read mux and q. serdes__t14 already carries internal_stations bus:coll_o0 (regs x 1854/2172/2485) and its rm.q sits at mem."
+  },
+  {
+   "type": "serdes__t12",
+   "path": "internal_stations[conn=bus:coll_o0]",
+   "set": {
+    "conn": "bus:coll_o0",
+    "from_um": [
+     1595,
+     826
+    ],
+    "to_um": [
+     831.0,
+     0.0
+    ],
+    "stations": 3
+   },
+   "cycles": {
+    "lane": "coll_o0",
+    "clk": 3
+   },
+   "class": "serdes-rx-out-stations",
+   "status": "ESTIMATE (no placed DB on the current event): confirm from_um with placed_hops_or.py on the first 3_place.odb, or take it now: the distance is set by the macro sites and the face window",
+   "evidence": "rate matcher site (estimate) -> coll_o0 face window centre: L1 1590 um, 0 stations in the D8h plan, needs 3 for hops <= 405 um. Station sites (regs_um, bit_sites_um) by the station tool, clear of u_chn / u_dmem / u_cmem. Same class as t15 / t1 (measured 1180 / 1073 um)."
+  },
+  {
+   "type": "serdes__t16",
+   "path": "internal_stations[conn=bus:coll_o0]",
+   "set": {
+    "conn": "bus:coll_o0",
+    "from_um": [
+     1710,
+     267
+    ],
+    "to_um": [
+     2885.76,
+     62.0
+    ],
+    "stations": 3
+   },
+   "cycles": {
+    "lane": "coll_o0",
+    "clk": 3
+   },
+   "class": "serdes-rx-out-stations",
+   "status": "ESTIMATE (no placed DB on the current event): confirm from_um with placed_hops_or.py on the first 3_place.odb, or take it now: the distance is set by the macro sites and the face window",
+   "evidence": "rate matcher site (estimate) -> coll_o0 face window centre: L1 1381 um, 0 stations in the D8h plan, needs 3 for hops <= 405 um. Station sites (regs_um, bit_sites_um) by the station tool, clear of u_chn / u_dmem / u_cmem. Same class as t15 / t1 (measured 1180 / 1073 um)."
+  },
+  {
+   "type": "serdes__t2",
+   "path": "internal_stations[conn=bus:coll_o0]",
+   "set": {
+    "conn": "bus:coll_o0",
+    "from_um": [
+     1687,
+     408
+    ],
+    "to_um": [
+     2885.76,
+     62.0
+    ],
+    "stations": 3
+   },
+   "cycles": {
+    "lane": "coll_o0",
+    "clk": 3
+   },
+   "class": "serdes-rx-out-stations",
+   "status": "ESTIMATE (no placed DB on the current event): confirm from_um with placed_hops_or.py on the first 3_place.odb, or take it now: the distance is set by the macro sites and the face window",
+   "evidence": "rate matcher site (estimate) -> coll_o0 face window centre: L1 1545 um, 0 stations in the D8h plan, needs 3 for hops <= 405 um. Station sites (regs_um, bit_sites_um) by the station tool, clear of u_chn / u_dmem / u_cmem. Same class as t15 / t1 (measured 1180 / 1073 um)."
+  },
+  {
+   "type": "serdes__t3",
+   "path": "internal_stations[conn=bus:coll_o0]",
+   "set": {
+    "conn": "bus:coll_o0",
+    "from_um": [
+     1784,
+     500
+    ],
+    "to_um": [
+     2885.76,
+     513.0
+    ],
+    "stations": 2
+   },
+   "cycles": {
+    "lane": "coll_o0",
+    "clk": 2
+   },
+   "class": "serdes-rx-out-stations",
+   "status": "ESTIMATE (no placed DB on the current event): confirm from_um with placed_hops_or.py on the first 3_place.odb, or take it now: the distance is set by the macro sites and the face window",
+   "evidence": "rate matcher site (estimate) -> coll_o0 face window centre: L1 1115 um, 0 stations in the D8h plan, needs 2 for hops <= 405 um. Station sites (regs_um, bit_sites_um) by the station tool, clear of u_chn / u_dmem / u_cmem. Same class as t15 / t1 (measured 1180 / 1073 um)."
+  },
+  {
+   "type": "serdes__t4",
+   "path": "internal_stations[conn=bus:coll_o0]",
+   "set": {
+    "conn": "bus:coll_o0",
+    "from_um": [
+     1699,
+     730
+    ],
+    "to_um": [
+     401.0,
+     0.0
+    ],
+    "stations": 5
+   },
+   "cycles": {
+    "lane": "coll_o0",
+    "clk": 5
+   },
+   "class": "serdes-rx-out-stations",
+   "status": "ESTIMATE (no placed DB on the current event): confirm from_um with placed_hops_or.py on the first 3_place.odb, or take it now: the distance is set by the macro sites and the face window",
+   "evidence": "rate matcher site (estimate) -> coll_o0 face window centre: L1 2028 um, 0 stations in the D8h plan, needs 5 for hops <= 405 um. Station sites (regs_um, bit_sites_um) by the station tool, clear of u_chn / u_dmem / u_cmem. Same class as t15 / t1 (measured 1180 / 1073 um)."
   }
  ],
  "notes": [
   "Order of trust: class serdes-lock-site-s is READY (cause + arithmetic, same mechanism passes on t14/t15/t1 with S-edge pins). The define rows are proven in RTL benches and are in routed proof R1 / H25 on serdes__t13; the station rows are measured placed hops and need the station tool + bind.",
-  "Not measured (no placed DB on the current event: every attempt died OOM at place): coll_o0 hop of serdes__t12, t16, t2, t3, t4. Take their rows from placed_hops_or.py on the first 3_place.odb.",
+  "Family finding: in the D8h plan only serdes__t14 has internal_stations on bus:coll_o0 (3). The other 10 types run rate matcher -> u_bout_coll_o0 in one cycle over 669..2028 um (5 measured, 5 estimated from macro sites + face windows).",
   "rck clock form: no row. The kits of b05c98f7919 carry OT_RCK_STAR HOP_UM 92 / SUB_HUBS 14 / HUB_AT_PAD 0 = the H22 form (GRT TT -179). H21 (one-hub star) measured GRT TT -30.4 / hold +10.7 on its final 5_1_grt.odb (my STA, epyc9 fable-fix-s81-serdes-0000/sta/h21_grt) but dies DRT-0255 at the hub; H23 (hub at pad, 200 um hops) has span 89 and is in GRT. The star row with hub_at_pad 1 / hop_um 200 follows H23's GRT TT and DRT."
  ]
 }
