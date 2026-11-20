@@ -19,8 +19,8 @@ NO serdes type is signed off. Nothing was exported to rtx-pro ~/signed-export-11
 ### Root causes (per limiter)
 1. CORRECTION (V): the "H23 GRT TT -73.5" is the H21 log. H23/H25 kit tt_setup_repair_grt.log = H21 file (same md5, mtime 11-19 10:49 UTC, copied by
    h23_mk.sh). H23 real: rck span 89.0 PASS, post-CTS TT -47.77 (TT repair crashed rc 139, 4_cts unrepaired), GRT not finished.
-   Ladder at GRT on t13: H21 one-hub star -30.4 / hold +10.7 on its final 5_1_grt.odb (V my STA; the kit log line -73.51 is the pinreg estimate after
-   repair) but DRT-0255 at the hub; H22 two-level 31 stages -179; H23 pending. Read any tt_setup*/hold_gate log in an H kit only if its mtime is after
+   Ladder at GRT on t13: H21 one-hub star -73.51 in the kit repair log, -30.4 / hold +10.7 by my STA on its final 5_1_grt.odb (plain TT libs + kit SDC + setRC,
+   global-routing RC; the 43 ps gap to the kit number is NOT explained: derates or a later DB state), DRT-0255 at the hub; H22 two-level 31 stages -179; H23 pending. Read any tt_setup*/hold_gate log in an H kit only if its mtime is after
    the kit's own run start.
 2. Reset anchor (serdes__t16, V): pads io_pma_lock has no sites_um on any of the 11 types (plan_h2_2249.json of the D8h tree), ORFS auto-places the pin.
    t16 got N (1416.96,1222.29) inside u_ptx; t14/t15/t1 got S and pass. The 11-19 03:11 rows were never applied and their site (PHY east end, north edge)
