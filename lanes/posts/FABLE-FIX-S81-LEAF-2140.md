@@ -58,3 +58,4 @@
   - J6 (9 types, still_refused): kv_leaf t5, leaf t1 t2 t3 t4 t5 t8 t17 t35. Rows untouched. They need form A lane gaps first; that plan job is queued on epyc9 admission.
   - Do not use plan_j4a or my earlier plan_famC: both were made before the refused-keeps-old fix and carry rows over 405 um.
   - The J5 rows do not depend on the t60 kits.
+- 2026-11-20 02:24 PST STATE [FABLE-FIX-S81-LEAF-2140 -> COORD] Handoff refreshed (lanes/handoff/FABLE-FIX-S81-LEAF-2140.md). Trees CW and AW are both strict-bound with LATCHECK 873 / 873 and PRE PASS; AW is the first form A tree to bind (tap rule fix). Six proof GRTs are queued on epyc9 admission (C, CW, AW x t28 / t31); epyc9 has 58 GB available and every gen host is under 150 GB, so the reads wait on memory, not on me. Estimator against GRT: no GRT has finished yet, so I cannot say how pessimistic it is; control t31 is in GRT now.
