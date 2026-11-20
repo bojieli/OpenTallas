@@ -1337,3 +1337,106 @@ def test_postroute_lec_without_any_lec_py_is_a_named_tool_gap(tmp_path):
     assert not E.run_lec(k, res, 8, 2, run=lambda *a, **k: ran.append(a) or 0, tools=empty)
     assert not ran and res["lec"]["verdict"] == "NO_LEC_TOOL" and "not a design verdict" in res["lec"]["reason"]
     assert json.loads((d / "eco_loop.json").read_text())["lec"]["verdict"] == "NO_LEC_TOOL"
+
+
+# ---- QC-HOLD-0030 11-20: residual-only pad pass (COORD ruling) ----
+
+def _residual_env(monkeypatch, n_ends=1, worst=None, plan=True):
+    """reg2reg scoring from the fake record (ff<0 -> n_ends failing internal ends at that wns); static plan faked"""
+    monkeypatch.setenv("OT_HOLD_REPAIR_SCOPE", "reg2reg")
+    monkeypatch.delenv("OT_ECO_RESIDUAL", raising=False)
+    sel = []
+
+    def core(signoff_path):
+        ff = json.loads(Path(signoff_path).read_text())["checks"]["hold_ff"]["wns_ps"]
+        return (ff, n_ends if ff < 0 else 0, True)
+    monkeypatch.setattr(E, "core_hold", core)
+    monkeypatch.setattr(E, "minimal_hold_only", lambda r: r["checks"]["hold_ff"]["verdict"] == "FAIL")   # R-MINIMAL judge: fixture lacks its inputs
+
+    def hp(kit, base_signoff, out_dir, tools=E.HERE, select=None):
+        sel.append((str(base_signoff), select))
+        if not plan:
+            return None
+        Path(out_dir).mkdir(parents=True, exist_ok=True)
+        (Path(out_dir) / "plan.tsv").write_text("x\t1\n")
+        return dict(plan=str(Path(out_dir) / "plan.tsv"), endpoints=n_ends, rows=1, summary={})
+    monkeypatch.setattr(E, "static_hold_plan", hp)
+    return sel
+
+
+def test_residual_pass_signs_the_leftover_end(tmp_path, monkeypatch):
+    sel = _residual_env(monkeypatch)
+    k = kit(tmp_path, mm=False)
+    b = base_rec(k, rec(5, -15))
+    f = Fake([rec(5, -0.4), rec(5, 3)])
+    r = E.run_loop(k, b, run=f, mem=8, cpus=2)
+    assert r["verdict"] == "PASS" and len(r["iterations"]) == 2 and r["max_iter"] == 1
+    assert r["iterations"][1]["residual"] and r["iterations"][1]["variant"] == f"b{E.HOLD_MARGIN_PS}"
+    assert r["residual"]["before"] == dict(ff_core=-0.4, ff_core_n=1) and r["residual"]["after"]["signed"]
+    assert r["best"]["n"] == 2 and "residual" in r["reason"]
+    # the plan of pass 2 is priced on pass 1's own sign-off tables and selects only failing ends (0 ps, no guard band)
+    assert sel[-1][1] == E.RESIDUAL_SELECT_PS == 0.0 and sel[-1][0] == r["iterations"][0]["signoff"]
+    mk = [c for c, _ in f.calls if c[0] == "bash" and c[1].endswith("prd_mk.sh")]
+    assert len(mk) == 2 and mk[1][2] == r["iterations"][0]["dir"]            # from pass 1's routed dir
+    env2 = [e for c, e in f.calls if c[0] == "bash" and c[1].endswith("prd_run.sh")][1]
+    assert env2["OT_PRD_HOLD_PLAN"].endswith("plan.tsv") and "OT_PRD_HOLD_TARGETED" not in env2
+
+
+def test_residual_pass_not_signed_keeps_exhausted_and_better_best(tmp_path, monkeypatch):
+    _residual_env(monkeypatch)
+    k = kit(tmp_path, mm=False)
+    b = base_rec(k, rec(5, -15))
+    f = Fake([rec(5, -2.0), rec(5, -0.5)])
+    r = E.run_loop(k, b, run=f, mem=8, cpus=2)
+    assert r["verdict"] == "EXHAUSTED" and r["best"]["n"] == 2 and "residual pad pass" in r["reason"]
+    assert len(r["iterations"]) == 2
+
+
+@pytest.mark.parametrize("n_ends,worst,why", [(6, -2.0, "more than 5 ends"), (2, -5.5, "worse than -5 ps")])
+def test_residual_pass_only_for_a_handful_of_shallow_ends(tmp_path, monkeypatch, n_ends, worst, why):
+    _residual_env(monkeypatch, n_ends=n_ends)
+    k = kit(tmp_path, mm=False)
+    b = base_rec(k, rec(5, -15))
+    f = Fake([rec(5, worst), rec(5, 3)])
+    r = E.run_loop(k, b, run=f, mem=8, cpus=2)
+    assert r["verdict"] == "EXHAUSTED" and len(r["iterations"]) == 1 and "residual" not in r, why
+
+
+def test_residual_pass_off_switch_and_missing_plan(tmp_path, monkeypatch):
+    _residual_env(monkeypatch)
+    monkeypatch.setenv("OT_ECO_RESIDUAL", "0")
+    k = kit(tmp_path, mm=False)
+    r = E.run_loop(k, base_rec(k, rec(5, -15)), run=Fake([rec(5, -0.4), rec(5, 3)]), mem=8, cpus=2)
+    assert r["verdict"] == "EXHAUSTED" and len(r["iterations"]) == 1
+    # no priced plan: the pass refuses, it never falls back to a global repair_timing
+    _residual_env(monkeypatch, plan=False)
+    k2 = kit(tmp_path / "b", mm=False)
+    f = Fake([rec(5, -0.4), rec(5, 3)])
+    r = E.run_loop(k2, base_rec(k2, rec(5, -15)), run=f, mem=8, cpus=2)
+    assert r["verdict"] == "EXHAUSTED" and r["residual"]["status"] == "ERROR" and "no sign-off priced plan" in r["residual"]["reason"]
+    assert len([c for c, _ in f.calls if c[0] == "bash" and c[1].endswith("prd_mk.sh")]) == 1
+
+
+def test_residual_pass_strict_one_pass_and_full_pass_limit(tmp_path, monkeypatch):
+    _residual_env(monkeypatch)
+    k = kit(tmp_path, mm=False)
+    r = E.run_loop(k, base_rec(k, rec(5, -15)), run=Fake([rec(5, -0.4), rec(5, 3)]), mem=8, cpus=2, strict_one_pass=True)
+    assert len(r["iterations"]) == 1 and "residual" not in r
+    with pytest.raises(ValueError, match="refused"):
+        E.run_loop(k, base_rec(k, rec(5, -15)), run=Fake([]), max_iter=2)      # the full pass stays one
+
+
+def test_residual_cli_on_a_finished_loop(tmp_path, monkeypatch):
+    _residual_env(monkeypatch)
+    monkeypatch.setenv("OT_ECO_RESIDUAL", "0")                               # the loop itself stops after pass 1
+    k = kit(tmp_path, mm=False)
+    r1 = E.run_loop(k, base_rec(k, rec(5, -15)), run=Fake([rec(5, -0.4)]), mem=8, cpus=2)
+    assert r1["verdict"] == "EXHAUSTED"
+    monkeypatch.delenv("OT_ECO_RESIDUAL")
+    f = Fake([rec(5, 3)])
+    f.n = 0
+    res = E.run_residual(k, r1["root"], mem=8, cpus=2, run=f)
+    assert res["verdict"] == "PASS" and res["best"]["n"] == 2 and (Path(r1["root"]) / "eco_loop.pass1.json").is_file()
+    assert res["iterations"][-1]["dir"].startswith(str(Path(r1["root"]) / "residual"))
+    again = E.run_residual(k, r1["root"], mem=8, cpus=2, run=f)
+    assert "residual_refused" in again                                         # PASS / already ran: nothing to do

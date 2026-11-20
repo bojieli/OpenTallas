@@ -61,6 +61,14 @@ HERE = Path(__file__).resolve().parent
 PRD = HERE / "post_route_drv"
 SCHEMA = "opentallas.eco_loop.v1"
 MAX_ITER = 1                  # OWNER 11-07 05:3x: one late-stage iteration per routed form; was 3
+# QC-HOLD-0030 11-20 (COORD ruling, owner 11-14 "remove conservative limits"): MAX_ITER stays 1 for the FULL pass.  When that pass leaves the kit
+# short by a handful of internal-hold ends the loop runs ONE residual-only pad pass: it pads only the failing ends of pass 1 (hold_eco_internal
+# plan, select 0 ps = failing ends only, no guard band), keeps the TT setup room check (hold_eco_internal TT_FLOOR_PS, sign-off gate -42 ps), and the
+# result is signed off like any pass.  Case = DRC 0, hold the only failing gate (R-MINIMAL), at most RESIDUAL_MAX_ENDS exact internal ends, none
+# worse than RESIDUAL_FLOOR_PS.  OT_ECO_RESIDUAL=0 turns it off.
+RESIDUAL_MAX_ENDS = 5
+RESIDUAL_FLOOR_PS = -5.0
+RESIDUAL_SELECT_PS = 0.0
 HOLD_MARGIN_PS = 10           # HOLD-FLOW-R 11-16 (lever 1): hold REPAIR TARGET 10 ps on internal (reg2reg) endpoints, was 5 (COORD 11-09 KW-FIX-42): a repair to +0..+5 lands negative after re-extraction (9-17 ps) for every wave ECO (ECOs aimed at 0 ps landed at -0.0x..-1.4 ps under sign-off uncertainty + calibrated RC); the GATE is unchanged: FF hold slack >= 0 (OWNER 11-02 FLOW-22, 25 ps FF hold uncertainty stays); was 0 (11-02), 10 (12.19)
 MIN_WNS_GAIN_PS = 1.0         # stop rule: < 1 ps gain and DRV/DRC not falling = no improvement
 DRC_SMALL = 50                # = autopilot NEAR_DRC_MAX: above it the route is a ROUTING problem, not an ECO
@@ -192,7 +200,7 @@ def targeted_hold_case(base_signoff):
 _BASE_SIGNOFF = ContextVar("late_eco_base_signoff", default=None)
 
 
-def static_hold_plan(kit, base_signoff, out_dir, tools=HERE):
+def static_hold_plan(kit, base_signoff, out_dir, tools=HERE, select=None):
     """ROUTE-LOSS 11-18 (FABLE-FIX-ROUTE-LOSS): the targeted internal hold insert of a SINGLE-MODE kit, priced in both sign-off corners.
     The b<N> pass is an FF-only session, so the in-session planner (hold_eco_internal_plan.tcl) read the 'TT setup room' of every capture
     pin at the FF corner: far too large, and a pad on a TT-critical pin then cost setup unseen (QC sle_hc1: FF hold fixed, TT -59.5 -> -141).
@@ -216,7 +224,8 @@ def static_hold_plan(kit, base_signoff, out_dir, tools=HERE):
         out_dir.mkdir(parents=True, exist_ok=True)
         n = mods["hold_eco_internal_run"].merge_endpoints(so, out_dir / "hold_endpoints.tsv")
         hei = mods["hold_eco_internal"]
-        p = hei.plan(hei.read_endpoints((out_dir / "hold_endpoints.tsv").read_text()))
+        eps = hei.read_endpoints((out_dir / "hold_endpoints.tsv").read_text())
+        p = hei.plan(eps) if select is None else hei.plan(eps, select=select)
         hei.write_plan(p, str(out_dir / "plan.tsv"))
         rows = [ln for ln in (out_dir / "plan.tsv").read_text().splitlines() if ln and not ln.startswith("#")]
     except Exception as e:                                      # noqa: BLE001  a planning failure keeps the in-session planner
@@ -358,6 +367,20 @@ def passes(kit, prev, hm):
     need_b = (ff is not None and ff < 0) or prev.get("drv_ff", 0) > 0 or prev.get("drc", 0) > 0
     out = (["t" + str(hm)] if need_t else []) + (["b" + str(hm)] if need_b or not need_t else [])
     return out
+
+
+def residual_enabled(env=None):
+    return str((os.environ if env is None else env).get("OT_ECO_RESIDUAL", "1")).strip() != "0"
+
+
+def residual_case(m):
+    """metrics of the best pass -> True when the residual-only pad pass applies (see RESIDUAL_MAX_ENDS)"""
+    if not m or m.get("signed") or not m.get("min_hold_only") or m.get("drc") or m.get("drv"):
+        return False
+    n, w = m.get("ff_core_n"), m.get("ff_core")
+    if not m.get("hold_score_exact") or n is None or w is None:
+        return False
+    return 1 <= int(n) <= RESIDUAL_MAX_ENDS and float(w) >= RESIDUAL_FLOOR_PS
 
 
 def eligible(rec, signoff_path=None):
@@ -881,15 +904,17 @@ def stage_mismatch(pd):
 
 
 def iterate(n, src, root, kit, runner, so, mode, hm, mem, cpus, run, image=IMAGE, prev=None, tag="", repair_rc="",
-            trim=True, keep_route=True, watch_stop=None):
+            trim=True, keep_route=True, watch_stop=None, residual=False):
     """one ECO iteration from routed dir src into root/i<n><tag> (a single-mode kit's t<N> pass first into
     root/i<n><tag>t); repair_rc 'placement' = OT_PRD_REPAIR_RC (FlexPA SIG11 class); -> iteration record (metrics None
     when no sign-off)"""
     d = Path(root) / f"i{n}{tag}"
     t0 = time.time()
-    vs = passes(kit, prev or {}, hm)
+    vs = ["b" + str(hm)] if residual else passes(kit, prev or {}, hm)
     it = dict(n=n, dir=str(d), source=str(src), mode=mode, variant="+".join(vs), started=t0, commands=[], rc={},
               pass_dirs=[], repair_rc=repair_rc or "auto")
+    if residual:
+        it["residual"] = True
 
     def step(name, cmd, **kw):
         it["commands"].append(" ".join(shlex.quote(str(c)) for c in cmd))
@@ -928,10 +953,16 @@ def iterate(n, src, root, kit, runner, so, mode, hm, mem, cpus, run, image=IMAGE
             env["OT_BUSFIT_PY"] = str(Path(kit) / "kwrs_busfit.py")
         if repair_rc:
             env["OT_PRD_REPAIR_RC"] = repair_rc
+        if residual and not _HOLD_TARGETED.get():
+            return end("ERROR", "residual pad pass needs the targeted internal hold case")
         if _HOLD_TARGETED.get() and v[0] in "mb":
             # ROUTE-LOSS 11-18: a single-mode b pass gets the plan priced in the sign-off's own FF and TT frames (static_hold_plan);
             # no tables (older sign-off) or a two-mode kit = the in-session planner as before
-            hp = static_hold_plan(kit, _BASE_SIGNOFF.get(), Path(root) / f"i{n}{tag}_holdplan") if v[0] == "b" else None
+            hp = (static_hold_plan(kit, _BASE_SIGNOFF.get(), Path(root) / f"i{n}{tag}_holdplan",
+                                   select=RESIDUAL_SELECT_PS if residual else None) if v[0] == "b" else None)
+            if residual and not hp:
+                return end("ERROR", "residual pad pass: no sign-off priced plan (ep_ff/ep_tt tables missing or no failing end selected); "
+                                    "no global repair run")
             if hp:
                 env["OT_PRD_HOLD_PLAN"] = hp["plan"]
                 it["hold_plan"] = hp
@@ -1127,6 +1158,19 @@ def route_hold_ran(kit):
         return False
 
 
+def residual_pass(best, kit, runner, so, root, hold_margin, mem, cpus, run, image=IMAGE, repair_rc="", keep=False):
+    """ONE residual-only pad pass on the best pass dir of a loop (residual_case): plan = the failing ends of that pass's own sign-off
+    tables.  -> iteration record (n = best n + 1, dir root/i<n>r)"""
+    t1 = _BASE_SIGNOFF.set(str(best["signoff"]))
+    t2 = _HOLD_TARGETED.set(True)
+    try:
+        return iterate(int(best["n"]) + 1, Path(best["dir"]), root, kit, runner, so, "route", hold_margin, mem, cpus, run, image,
+                       prev=best["metrics"], tag="r", repair_rc=repair_rc, trim=not keep, residual=True)
+    finally:
+        _HOLD_TARGETED.reset(t2)
+        _BASE_SIGNOFF.reset(t1)
+
+
 def run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold_margin=HOLD_MARGIN_PS, mem=48,
              cpus=8, run=subprocess.call, tools=HERE, image=IMAGE, keep=False, repair_rc="", from_mode="",
              owner_override=False, strict_one_pass=False, route_hold_form=False):
@@ -1287,6 +1331,24 @@ def _run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold
             stop = f"no improvement at iteration {n} (WNS gain < {MIN_WNS_GAIN_PS} ps, DRV/DRC not falling)"
             break
         src, prev = Path(it["dir"]), m
+    if (verdict == "EXHAUSTED" and best is not None and not strict_one_pass and not route_hold_form and residual_enabled()
+            and residual_case(best["metrics"])):
+        pre = best["metrics"]
+        print(f"ECO_LOOP residual pad pass: iteration {best['n']} left {pre['ff_core_n']} internal end(s), worst {pre['ff_core']} ps", flush=True)
+        rit = residual_pass(best, kit, runner, so, root, hold_margin, mem, cpus, run, image, repair_rc=repair_rc, keep=keep)
+        res["iterations"].append(rit)
+        rm = rit.get("metrics")
+        res["residual"] = dict(from_n=best["n"], status=rit.get("status"), reason=rit.get("reason", ""), before=dict(
+            ff_core=pre["ff_core"], ff_core_n=pre["ff_core_n"]), after=(dict(ff_core=rm.get("ff_core"), ff_core_n=rm.get("ff_core_n"),
+                                                                           signed=rm["signed"]) if rm else None))
+        if rm and (rm["signed"] or better(rm, best["metrics"])):
+            old, best = best, rit
+            if old is not None and not keep and os.environ.get("OT_ECO_KEEP_ROUTED") != "1":
+                prune(old)
+            if rm["signed"]:
+                verdict, stop = "PASS", f"signed off after {best['n']} iteration(s) (residual pad pass on {pre['ff_core_n']} end(s))"
+        if verdict != "PASS":
+            stop += f" | residual pad pass: {rit.get('status')} {rit.get('reason', '')}".rstrip()
     if best is None:
         if verdict not in ("ECO_OOM", "ABORTED"):
             verdict = "ERROR"
@@ -1310,6 +1372,47 @@ def _run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold
                 best.setdefault("trimmed", []).extend(gone)
                 res["best_trimmed"] = len(gone)
     return done(verdict, stop)
+
+
+def run_residual(kit, eco_root, mem=48, cpus=8, hold_margin=HOLD_MARGIN_PS, run=subprocess.call, tools=HERE, image=IMAGE, runner=None):
+    """the residual-only pad pass on an EXISTING finished loop (ECO_ROOT/eco_loop.json, best pass dir intact): -> result dict, written back to
+    ECO_ROOT/eco_loop.json (the pass-1 record is kept as eco_loop.pass1.json).  New work goes to ECO_ROOT/residual/."""
+    kit, eco_root = Path(kit).resolve(), Path(eco_root).resolve()
+    rec_p = eco_root / "eco_loop.json"
+    res = json.loads(rec_p.read_text())
+    best = res.get("best")
+    if res.get("verdict") not in ("EXHAUSTED",) or not best or not residual_case(best.get("metrics")):
+        res["residual_refused"] = "not a residual case (verdict %s, best %s)" % (res.get("verdict"), (best or {}).get("metrics"))
+        return res
+    if res.get("residual"):
+        res["residual_refused"] = "the residual pass already ran on this loop"
+        return res
+    token = _LATE_HOLD_SCOPE.set(late_hold_scope(kit))
+    try:
+        mem, _peak = eco_mem(kit, mem)
+        root = eco_root / "residual"
+        so = stage_so(kit, root, tools)
+        pre = best["metrics"]
+        t0 = time.time()
+        rit = residual_pass(best, kit, runner, so, root, hold_margin, mem, cpus, run, image, keep=True)
+        rm = rit.get("metrics")
+        shutil.copy2(rec_p, eco_root / "eco_loop.pass1.json")
+        res["iterations"].append(rit)
+        res["residual"] = dict(from_n=best["n"], status=rit.get("status"), reason=rit.get("reason", ""),
+                               before=dict(ff_core=pre["ff_core"], ff_core_n=pre["ff_core_n"]),
+                               after=(dict(ff_core=rm.get("ff_core"), ff_core_n=rm.get("ff_core_n"), signed=rm["signed"]) if rm else None),
+                               wall_s=round(time.time() - t0, 1))
+        if rm and (rm["signed"] or better(rm, pre)):
+            res["best"] = dict(n=rit["n"], dir=rit["dir"], signoff=rit["signoff"], base=rit["base"], metrics=rm)
+            if rm["signed"]:
+                res["verdict"] = "PASS"
+                res["reason"] = f"signed off after the residual pad pass ({pre['ff_core_n']} end(s) left by iteration {best['n']})"
+        if res["verdict"] != "PASS":
+            res["reason"] = str(res.get("reason", "")) + f" | residual pad pass: {rit.get('status')} {rit.get('reason', '')}".rstrip()
+        rec_p.write_text(json.dumps(res, indent=1) + "\n")
+        return res
+    finally:
+        _LATE_HOLD_SCOPE.reset(token)
 
 
 def capskew_enabled(env=None):
@@ -1426,6 +1529,13 @@ def main():
                    help="seed of every iteration (default: route when the DB has no DRC, else grt)")
     r.add_argument("--repair-rc", choices=["placement", "grt"], default="",
                    help="OT_PRD_REPAIR_RC from iteration 1 (default: the hook decides, a wired seed repairs on placement; a fresh one after a FlexPA SIG11)")
+    q = sub.add_parser("residual", help="the residual-only pad pass on a finished loop that left <= %d internal ends" % RESIDUAL_MAX_ENDS)
+    q.add_argument("--kit", required=True)
+    q.add_argument("--eco-root", required=True, help="the finished loop root (holds eco_loop.json)")
+    q.add_argument("--runner")
+    q.add_argument("--hold-margin", type=int, default=HOLD_MARGIN_PS)
+    q.add_argument("--mem", type=int, default=48)
+    q.add_argument("--cpus", type=int, default=8)
     c = sub.add_parser("check")
     c.add_argument("record")
     a = ap.parse_args()
@@ -1438,6 +1548,13 @@ def main():
         near, far, warn = near_miss(rec, a.record)
         print(("ECO_NEAR_MISS" if near else "ECO_NOT_NEAR_MISS " + "; ".join(far)) + ("" if not warn else " | advisory: " + "; ".join(warn)))
         return 0 if near else 1
+    if a.cmd == "residual":
+        res = run_residual(a.kit, a.eco_root, a.mem, a.cpus, a.hold_margin, runner=a.runner)
+        if res.get("residual_refused"):
+            print("ECO_LOOP residual REFUSED: " + res["residual_refused"])
+            return 2
+        print("ECO_LOOP residual " + res["verdict"] + ": " + str(res.get("residual")))
+        return 0 if res["verdict"] == "PASS" else 1
     if a.max_iter > MAX_ITER:
         print(max_iter_refusal(a.max_iter), file=sys.stderr)
         return 2
