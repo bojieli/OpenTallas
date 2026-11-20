@@ -867,3 +867,18 @@ def test_state_follows_the_host_ot_run_actually_uses():
     assert n == 1 and st["items"]["a"]["ran_on"] == "epyc10" and "HOST-MOVED" in lines[0]
     assert "ran_on" not in st["items"]["b"] and "ran_on" not in st["items"]["c"]               # same host: unchanged; two hosts: ambiguous, untouched
     assert all(r["host_checked"] == 1.0 for r in st["items"].values())
+
+
+def test_col_h9_landing_variants_are_the_families(tmp_path):
+    import json as _j
+    (tmp_path / "classes.json").write_text(_j.dumps({"s81": {}, "qc": [], "kv": []}))
+    rows = lambda names, sig: [{"member": n, "pins": sig[0], "edges": sig[1], "reset": sig[2]} for n in names]
+    (tmp_path / "FABLE-SUPERSET-0415-unify.json").write_text(_j.dumps({"classes": [
+        {"die": "s81", "cls": "col_h9_r1", "role_rows": rows(["col_h9_r1__a", "col_h9_r1__b", "col_h9_r1__c"], ["p", "e", "r0"]) + rows(["col_h9_r1__d"], ["q", "f", "r1"]) + rows(["col_h9_r1__e"], ["q", "f", "r2"])},
+        {"die": "s81", "cls": "col_h9_r2", "role_rows": rows(["col_h9_r2__a"], ["p", "e", "r"])},
+        {"die": "qwen_compute", "cls": "sle_ctl", "role_rows": rows(["sle_ctl__x"], ["p", "e", "r"])}]}))
+    t = KW.family_table(str(tmp_path / "classes.json"))
+    f = lambda i: KW.family_of("s81", i, t)
+    assert f("col_h9_r1__a") == f("col_h9_r1__b") == f("col_h9_r1__c") == "s81:col_h9_r1:v1"
+    assert len({f("col_h9_r1__d"), f("col_h9_r1__e"), f("col_h9_r1__a")}) == 3 and f("col_h9_r2__a") == "s81:col_h9_r2:v1"
+    assert f("col_h9_r1__unknown") == "col_h9_r1"                                                      # not listed: the name key

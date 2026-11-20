@@ -3096,6 +3096,25 @@ FAMILY_TABLE_DIE = {"s81": "s81", "qwen_compute": "qc", "qwen_kvsys": "kv"}
 _FAMILY_CACHE = {}
 
 
+def landing_variants(classes_path):
+    """FABLE-SUPERSET 10.6: the landing-variant groups of the S81 col_h9_r1 / col_h9_r2 classes from the unify file next to the classes file (role_rows: member -> pins, edges, reset)
+    -> {member: "s81:<class>:v<k>"}; variants numbered by size (largest first, then signature).  Missing or unreadable -> {}"""
+    up = os.environ.get("OT_FAMILY_UNIFY") or os.path.join(os.path.dirname(classes_path), "FABLE-SUPERSET-0415-unify.json")
+    out = {}
+    try:
+        for e in json.load(open(up)).get("classes") or []:
+            if e.get("die") != "s81" or str(e.get("cls")) not in ("col_h9_r1", "col_h9_r2"):
+                continue
+            rows = [r for r in (e.get("role_rows") or []) if isinstance(r, dict) and r.get("member")]
+            sig = {r["member"]: json.dumps([r.get("pins"), r.get("edges"), r.get("reset")], sort_keys=True) for r in rows}
+            order = sorted(set(sig.values()), key=lambda g: (-sum(1 for v in sig.values() if v == g), g))
+            for m, g in sig.items():
+                out[m] = f"s81:{e['cls']}:v{order.index(g) + 1}"
+    except (OSError, ValueError, TypeError, AttributeError):
+        return {}
+    return out
+
+
 def family_table(path=None):
     """COORD 11-20: the real family table (FABLE-SUPERSET-0415-classes.json), cached by mtime -> {die: {"types": {type: class id}, "stems": [stem, ...] longest first}}.  s81: the explicit member lists of the
     leaf / station / serdes / kvleaf class sets (leaf_cap7786 is an alternative cut of the same leaves and is ignored); qc / kv: the per-stem lists (a type belongs to the longest stem it equals or
@@ -3105,6 +3124,11 @@ def family_table(path=None):
         mt = os.stat(path).st_mtime
     except OSError:
         return {}
+    up = os.environ.get("OT_FAMILY_UNIFY") or os.path.join(os.path.dirname(path), "FABLE-SUPERSET-0415-unify.json")
+    try:
+        mt = (mt, os.stat(up).st_mtime)
+    except OSError:
+        pass
     c = _FAMILY_CACHE.get(path)
     if c and c[0] == mt:
         return c[1]
@@ -3123,6 +3147,8 @@ def family_table(path=None):
             for cl in cls_ or []:
                 for m in cl.get("members") or []:
                     types.setdefault(str(m[0]), f"s81:{cl.get('id')}")
+        for m, cid in landing_variants(path).items():                       # COORD 11-20: col_h9_r1 / r2 -> one family per landing variant (FABLE-SUPERSET 10.6), over the whole-class entry
+            types[m] = cid
         out["s81"] = {"types": types, "stems": []}
         for key in ("qc", "kv"):
             stems = sorted({str(e.get("stem")) for e in (d.get(key) or []) if isinstance(e, dict) and e.get("stem")}, key=lambda x: (-len(x), x))
