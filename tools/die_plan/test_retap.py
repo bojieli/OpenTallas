@@ -177,4 +177,36 @@ def test_start_transport_raw_resets_follow_the_tap_map():
     assert [s["raw_reset"] for s in st] == ["rr_t2", "rr_t1"]          # old t3 -> new t2, old t2 -> new t1
     assert t["clock"]["landing_reader_start"]["branches"]["x_i"]["stages"][0]["raw_reset"] == "rr_t0"
     assert t["clock"]["landing_local_resets"][0]["raw"] == "rst_rl_7"   # relay names: reset_anchor at bind
-    assert ["landing_writer_start", "raw_reset", "rr_t3", "rr_t2", 5.0] in ch
+    assert ["clock.landing_writer_start.branches.x_ctl_o.stages.raw_reset", "raw_reset", "rr_t3", "rr_t2", 5.0] in ch
+
+
+def test_foreign_tree_keeps_its_reset_names_but_clocks_move():
+    """N46V0G bind: re-pointing START rr_t / rst_n_t names on a type whose published tree is NOT re-solved gave
+    'writer START raw reset rr_t125 has no registered wavefront driver': those names belong to the kept tree."""
+    raw = dict(partition_types=dict(T=sc_type()))
+    tt = raw["partition_types"]["T"]
+    tt["clock"]["landing_contract"]["collector_tree"] = dict(entry="sync", core_resets=[], relays=[])   # foreign
+    tt["clock"]["landing_writer_start"] = {"branches": {"x": {"stages": [{"raw_reset": "rr_t3"}]}}}
+    taps, tree = _fns()
+    SB.apply_bins(raw, {"T": "placed.json"}, None, taps_fn=taps, tree_fn=tree)
+    assert tt["clock"]["landing_writer_start"]["branches"]["x"]["stages"][0]["raw_reset"] == "rr_t3"
+    assert tt["reset"]["consumer_localization"][0]["new_reset"] == "rst_n_t0"
+    assert pins(tt)["fclk_out_a"] == ("clk_t2", "clk_t2")                # clock refs still follow the taps
+
+
+def test_own_tree_moves_every_tap_indexed_reset_name():
+    """N46V0G: 'collector source cws2_i: reset tap rst_n_t113 absent' (slw_sc_v1, republished tree): every rst_n_t /
+    rr_t outside the tree moves with it (collector_local_sources node, collector_children node, START raws)."""
+    raw = dict(partition_types=dict(T=sc_type()))
+    tt = raw["partition_types"]["T"]
+    lc = tt["clock"]["landing_contract"]
+    lc["collector_local_sources"] = [{"name": "cws2_i", "node": "rst_n_t3"}]
+    lc["collector_children"] = [{"node": "rst_n_t2", "tap": 2}, {"node": f"rst_n_t{len(OLD)}", "tap": len(OLD)}]
+    tt["clock"]["landing_reader_start"] = {"branches": {"x": {"stages": [{"raw_reset": "rr_t3"}]}}}
+    taps, tree = _fns()
+    SB.apply_bins(raw, {"T": "placed.json"}, None, taps_fn=taps, tree_fn=tree)
+    assert lc["collector_local_sources"][0]["node"] == "rst_n_t2"
+    assert lc["collector_children"][0] == {"node": "rst_n_t1", "tap": 1}
+    assert lc["collector_children"][1]["node"] == f"rst_n_t{len(NEW)}"   # seam output: shifts with the tap count
+    assert tt["clock"]["landing_reader_start"]["branches"]["x"]["stages"][0]["raw_reset"] == "rr_t2"
+    assert lc["collector_tree"] == NEW_TREE                                # replaced whole, not walked

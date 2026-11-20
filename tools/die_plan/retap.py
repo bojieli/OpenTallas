@@ -56,8 +56,9 @@ def tap_map(old, new):
     return {n: min(new, key=lambda s: (abs(s[1] - x) + abs(s[2] - y), s[0]))[0] for n, x, y in old}
 
 
-def repoint_type(t, old, new):
-    """Rewrite the tap references of type dict t (in place) from tap set old to new.  -> [[where, key, was, now, um]]"""
+def repoint_type(t, old, new, reset=True):
+    """Rewrite the tap references of type dict t (in place) from tap set old to new: forwarded clock sources always,
+    tap-indexed reset names when reset (see below).  -> [[where, key, was, now, um]]"""
     key = lambda ts: [(n, round(x, 6), round(y, 6)) for n, x, y in ts]  # noqa: E731
     if key(old) == key(new):
         return []
@@ -78,39 +79,50 @@ def repoint_type(t, old, new):
                 raise RetapError(f"pin {q.get('name')} {k} {s} is neither an old nor a new tap")
             out.append([f"landing_contract.{q.get('name')}", k, s, m[s], um(s, m[s])])
             q[k] = m[s]
+    if not reset:
+        return out
+    # Tap-indexed RESET names: rst_n_t<i> (terminal relay of tap i: reset.consumer_localization new_reset,
+    # landing_contract collector_children / collector_local_sources node, ...) and rr_t<i> (its raw copy: START
+    # transport stages raw_reset, local resets raw).  They name nodes of the type's reset tree, so they move with the
+    # taps ONLY when that tree is re-solved on the new taps (reset=True: no published tree, or an own tree that
+    # repoint() republishes).  A type that keeps a foreign / stale published tree keeps its names (they name that tree;
+    # N46V0G bind: re-pointing them gave 'writer START raw reset rr_t125 has no registered wavefront driver').
+    # The published collector_tree itself is replaced whole, never walked; rst_rl_<k> stays with reset_anchor at bind.
     by_idx = {tap_index(n): n for n in site}
     nidx = {n: tap_index(n) for n in nsite}
-    for r in t.get("reset", {}).get("consumer_localization", []) or []:
-        g = TAPQ.match(str(r.get("new_reset", "")))
-        if not g:
-            continue
-        o = by_idx.get(int(g.group(1)))
-        if o is None:
-            raise RetapError(f"consumer {r.get('instance')}.{r.get('pin')} {r['new_reset']}: no tap {g.group(1)} in the old tap set")
-        now = f"rst_n_t{nidx[m[o]]}"
-        if now != r["new_reset"]:
-            out.append([f"consumer_localization.{r.get('instance')}.{r.get('pin')}", "new_reset", r["new_reset"], now, um(o, m[o])])
-            r["new_reset"] = now
-    # START transport / local resets name the raw reset of tap i (rr_t<i>, reset_tree START plan): same tap map
-    # (N46V0F bind EMIT 'x_ctl_o: writer START raw reset rr_t99 has no registered wavefront driver').
-    # rst_rl_<k> relay names stay with reset_anchor.py at bind.
+
     def walk(o, where):
-        items = o.items() if isinstance(o, dict) else enumerate(o) if isinstance(o, list) else ()
+        items = list(o.items()) if isinstance(o, dict) else list(enumerate(o)) if isinstance(o, list) else ()
         for k, v in items:
-            if isinstance(v, str) and k in ("raw_reset", "raw") and RAWQ.match(v):
-                oi = by_idx.get(int(RAWQ.match(v).group(1)))
-                if oi is None:
-                    raise RetapError(f"{where}: {v}: no tap {RAWQ.match(v).group(1)} in the old tap set")
-                now = f"rr_t{nidx[m[oi]]}"
+            if isinstance(o, dict) and k == "collector_tree":
+                continue
+            w = f"{where}.{k}" if isinstance(o, dict) else where
+            if isinstance(v, str):
+                g = TAPQ.match(v) or RAWQ.match(v)
+                if not g:
+                    continue
+                i = int(g.group(1))
+                oi = by_idx.get(i)
+                if oi is not None:
+                    ni, d_um = nidx[m[oi]], um(oi, m[oi])
+                elif i >= len(old) and not w.startswith("reset."):
+                    # reset-tree outputs (rst_o seams) follow the consumer taps: index n_taps + j (sle_sc_v3
+                    # collector_children node rst_n_t69 with 69 taps); they shift with the tap count.  A localized
+                    # consumer (reset.*) lands on a tap, so an unknown index there fails closed.
+                    ni, d_um = i - len(old) + len(new), 0.0
+                else:
+                    raise RetapError(f"{w}: {v}: no tap {i} in the old tap set")
+                now = ("rst_n_t" if v.startswith("rst_n_t") else "rr_t") + str(ni)
                 if now != v:
-                    out.append([where, k, v, now, um(oi, m[oi])])
+                    out.append([w.lstrip("."), k if isinstance(o, dict) else "item", v, now, d_um])
                     o[k] = now
+                    if isinstance(o, dict) and o.get("tap") == i:
+                        o["tap"] = ni
             elif isinstance(v, (dict, list)):
-                walk(v, where)
-    ck = t.get("clock", {})
-    for sk in START_KEYS:
-        if sk in ck:
-            walk(ck[sk], sk)
+                walk(v, w)
+    for sec in ("clock", "reset"):
+        if sec in t:
+            walk(t[sec], sec)
     return out
 
 
@@ -163,35 +175,34 @@ def repoint(old_raw, new_raw, old_path=None, new_path=None, types=None, taps_fn=
     to, tn_ = tf(old_raw, old_path), tf(new_raw, new_path)
     rep, moved = {}, []
     key = lambda ts: [(n, round(x, 6), round(y, 6)) for n, x, y in ts]  # noqa: E731
+    todo = []
     for tn, t in new_raw["partition_types"].items():
         if types and tn not in types:
             continue
         if tn not in old_raw["partition_types"]:
             continue
-        has_fwd = any(q.get("kind") == "clock" and q.get("dir") == "out" and any(q.get(k) for k in FWD_KEYS)
-                      for q in t.get("clock", {}).get("landing_contract", {}).get("pins", []) or [])
-        has_rst = any(TAPQ.match(str(r.get("new_reset", ""))) for r in t.get("reset", {}).get("consumer_localization", []) or [])
-        has_tree = _published(t) is not None
-        has_start = any(RAWQ.search(json.dumps(t.get("clock", {}).get(k))) or "rr_t" in json.dumps(t.get("clock", {}).get(k))
-                        for k in START_KEYS if k in t.get("clock", {}))
-        if not (has_fwd or has_rst or has_tree or has_start):
-            continue
         a, b = to(tn), tn_(tn)
         if key(a) == key(b):
             continue
-        ch = repoint_type(t, a, b)
+        todo.append((tn, a, b))
+    tr_old = tr = None
+    if any(_published(new_raw["partition_types"][tn]) is not None for tn, _, _ in todo):
+        tr_old = (tree_fn or _plan_tree)(old_raw, old_path)
+    for tn, a, b in todo:
+        t = new_raw["partition_types"][tn]
+        pub = _published(old_raw["partition_types"][tn])
+        own = pub is None or _norm(pub) == _norm(tr_old(tn))
+        ch = repoint_type(t, a, b, reset=own)
         if ch:
             rep[tn] = ch
-        if has_tree:
-            moved.append(tn)
+        if pub is not None:
+            if own:
+                moved.append(tn)
+            else:
+                rep.setdefault(tn, []).append(["landing_contract.collector_tree", "tree_not_own", 0, 0, 0])
     if moved:
-        tr_old = (tree_fn or _plan_tree)(old_raw, old_path)
         tr = (tree_fn or _plan_tree)(new_raw, new_path)
         for tn in moved:
-            pub = old_raw["partition_types"][tn]["clock"]["landing_contract"]["collector_tree"]
-            if _norm(pub) != _norm(tr_old(tn)):
-                rep.setdefault(tn, []).append(["landing_contract.collector_tree", "tree_not_own", 0, 0, 0])
-                continue
             ch = republish_tree(new_raw["partition_types"][tn], tr(tn))
             if ch:
                 rep.setdefault(tn, []).extend(ch)
