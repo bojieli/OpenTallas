@@ -4,6 +4,29 @@ Owner of the S81 svc family (16 H8 types, 112 do-not-count on D8i) and the svc H
 Deliverable: J6 rows to S81-DIE-R4 by 11-21 13:30; one representative svc kit through place, GRT, sign-off; post every 2 h.
 Nothing is bound, placed or delivered yet.
 
+## Update 12:15 PST (newest; read first)
+- Driver R5b strict bind: exit 1, 458 errors. Root cause of the 224 hslice reset errors: u_irg_00..06 are `dsdv_idx_rg3`, bound as ONE
+  leaf (not in the manifest `dissolve`), so the 32 plan hslice rows of lo rs t1-t6 and rs_w t1 find no leaf. u_irg_07 (t7) is
+  `dsdv_idx_rg3_nq`, dissolved, and its hslice reset leaves bind (0 reset errors on t7). Plan rows need no change.
+- TIED: the 199 printed lines are a 200-line cap, all u_irg_07. The full set is 1,881 tied bits on 285 leaf pins in 14 classes
+  (`bind_tied.json`), on hi AND lo types: hslice cs_in / cf_in / first, ksadd_k b / cin, dsdv_idx_rg2_m1k ra / wa / wd / re / we,
+  ot_hdc_v41x_dly d, sml_fold2 sk_en, smd_fold2 cfg_p. My 11:50 post "svc_hi 0 errors" was wrong; corrected at 12:15.
+- J6 manifest delta: `lanes/handoff/s81-svc-h8-j6-manifest-delta-1120.json` (generator epyc9 `fable-fix-s81-svc-r2/mkties.py`):
+  `dissolve` += `dsdv_idx_rg3`, 23 `declared_ties` rows with path regexes; covers 1,881 / 1,881 tied bits of R5b. Five classes have a
+  reviewed source line (hslice x3, ksadd x2); the other nine carry proof "UNVERIFIED": review dsdv_idx_rg2_m1k, ot_hdc_v41x_dly,
+  sml sk_en, smd cfg_p sources (or get the per-site bench) before adoption. `first`, `sk_en`, `cfg_p` are per-instance config straps:
+  S81-DIE-R4 may prefer the manifest `straps` list over declared_ties.
+- R7 validation chain (ELAB + BIND on the r5b plan with manifest `ksrc/asbuilt_svc_d8i_h8_proto_r7.json`): intel2 client 2427234, log
+  `~/fable-fix-s81-svc-r2/r7.log`, out epyc9 `fable-fix-s81-svc-r2/bind_r7`; prints `R7_ERRORS n` and `R7_CLASS` lines. About 2.5 h.
+  Expect: 0 EMIT wavefront core reset, 0 TIED on svc; new TIED classes may appear on u_irg_00..06 after the dissolve -> add rows, rerun.
+  Risk not checked: dissolving dsdv_idx_rg3 changes the lo t1-t6 / rs_w parent (the reader body becomes parent glue, as on t7) and
+  its internal station pricing / LATCHECK.
+- Private hi rs t4 proof kit: `prep_kit.py` -> epyc9 `fable-fix-s81-svc-r2/kit_hi4_a`, log intel2 `~/fable-fix-s81-svc-r2/kit_hi4_a.log`.
+  Uncounted, unpublished (COORD OK 11:5x). It binds with the undeclared sml / smd / dly ties of R5b.
+- RDPIPE bench relaunched at 96 GB: log `~/fable-fix-s81-svc-r2/rdpipe2.log`, result epyc9 `rdpipe/done.txt`. First run was killed in compile
+  (39.8 GB peak vs 24 GB request).
+- Counts run B (epyc8) queued since 10:50: `count/<type>.B.stat.txt`.
+
 ## Update 10:55 PST (supersedes "In flight" item 1 and 3 below)
 - R6 is DEAD: BIND exit 2, stale dead-input source `dsdv_pv_so_ingress_h8.sv` (both proof files record an older module hash than the
   bind source). It duplicated the driver. Do not launch an R7.
