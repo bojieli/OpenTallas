@@ -199,7 +199,7 @@ if not dry:
     for u in sorted(scopes):
         if subprocess.run(['systemctl', '--user', 'is-active', '--quiet', u], capture_output=True).returncode == 0:
             left.append(u)
-print(json.dumps({'containers': names, 'scopes': sorted(scopes), 'left': left}))
+print(json.dumps(dict({'containers': names, 'scopes': sorted(scopes)}, **({'left': left} if left else {}))))
 '''
 
 

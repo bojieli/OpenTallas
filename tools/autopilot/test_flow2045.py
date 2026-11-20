@@ -116,7 +116,7 @@ def test_stop_kit_reaps_a_container_less_scope_under_a_cancelled_root_and_verifi
         assert subprocess.run(["systemctl", "--user", "is-active", "--quiet", unit + ".scope"], env=env).returncode == 0      # dry stops nothing
         real = subprocess.run(["python3", "-I", "-", json.dumps({"roots": [str(root)]})], input=WJ.STOP_KIT, capture_output=True, text=True, env=env, timeout=120)
         out = json.loads(real.stdout.strip().splitlines()[-1])
-        assert unit + ".scope" in out["scopes"] and unit2 + ".scope" not in out["scopes"] and out["left"] == []
+        assert unit + ".scope" in out["scopes"] and unit2 + ".scope" not in out["scopes"] and not out.get("left")
         assert subprocess.run(["systemctl", "--user", "is-active", "--quiet", unit + ".scope"], env=env).returncode != 0
         assert subprocess.run(["systemctl", "--user", "is-active", "--quiet", unit2 + ".scope"], env=env).returncode == 0     # the next attempt's scope (a sibling dir) is untouched
     finally:
