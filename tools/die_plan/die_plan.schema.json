@@ -5935,6 +5935,11 @@
           "maxItems": 2
          }
         },
+        "sites": {
+         "enum": [
+          "float"
+         ]
+        },
         "native_width": {
          "type": "integer",
          "minimum": 1

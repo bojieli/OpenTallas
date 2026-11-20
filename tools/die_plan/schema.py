@@ -1055,6 +1055,10 @@ SCHEMA = {
                                        "bit_sites_um": {"type": "array", "items": {"type": "array", "items": _xy}},
                                        "bit_site_cell_um": _xy,
                                        "face_bit_sites_um": {"type": "array", "items": _xy},
+                                       # WIDE-FLOAT-1 (kit_istations.chain_floats): "float" on EVERY entry of one bus
+                                       # chain keeps its stage count (the lane cycles) but gives its stages no FIRM
+                                       # site; GPL places them toward the real consumers (whole-chain form only)
+                                       "sites": {"enum": ["float"]},
                                        # Selected native bound width of a narrowed input bus (bind_component.py reads it
                                        # to accept a proven dead-input narrowing); metadata only, no generator effect.
                                        "native_width": {"type": "integer", "minimum": 1}}}},
