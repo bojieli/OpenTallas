@@ -32,6 +32,7 @@ from pathlib import Path
 
 import cores as _CR
 import schema as S
+from kit_fit import CORE_MARGIN_UM, kit_core_area
 import taps as T
 from schema import DIE_PART
 
@@ -99,7 +100,6 @@ def _common_flow_file(name, repo):
         return Path(repo) / "physical/common_flow" / name
     return common_flow_file(name, repo)
 
-CORE_MARGIN_UM = 4.32        # multiple of row 0.27 and site 0.054
 IO_BUDGET = 0.2
 PIN_LEN_UM = 0.192
 LAYER_W = dict(M2=0.018, M3=0.018, M4=0.024, M5=0.024, M6=0.032, M7=0.032, M8=0.04, M9=0.04)
@@ -5968,44 +5968,6 @@ def stage_includes(rtl_files, rtl_dir):
                 if not dst.exists():
                     shutil.copyfile(src, dst)
                 todo.append(src)
-
-
-def kit_core_area(t):
-    """Exact type outline with optional [W,S,E,N] row/site-aligned core insets.
-
-    Die-edge PHYs may consume the full outline width; the per-type opt-in changes
-    placement rows only, without shifting the outline, macro origins or plan pins.
-    """
-    w,h=t["outline_um"]
-    margins=t.get("kit_core_margins_um")
-    if margins is None:
-        margins=[CORE_MARGIN_UM]*4
-        # KW-FIX-45 11-11 (DIE-HBM-100, hbm-phy-place: IFP-0002 / MPL-0034 on PHY_NC/NE/NW): a hard wrapper whose single hard
-        # macro reaches a die edge (within CORE_MARGIN_UM of it) gets no core margin on that side: the macro sits at the die
-        # origin / spans the frozen outline, so a 4.32 um inset core can neither contain nor place it.  Every other type is
-        # unchanged; an explicit kit_core_margins_um still wins.
-        hc=[c for c in t.get("hard_cores",[]) if c.get("lef") and c.get("outline_um") and c.get("origin_um")]
-        if not hc and S.full_area_hard_ip(t):       # QC-PHY-1 11-14: bare full-area hard IP in contents[] (same rule)
-            hc=list(t["contents"])
-        if t.get("hard") and len(hc)==1:
-            (ox,oy),(mw,mh)=hc[0]["origin_um"],hc[0]["outline_um"]
-            eps=1e-6
-            margins=[0.0 if ox<=CORE_MARGIN_UM+eps else CORE_MARGIN_UM,      # W
-                     0.0 if oy<=CORE_MARGIN_UM+eps else CORE_MARGIN_UM,      # S
-                     0.0 if ox+mw>=w-CORE_MARGIN_UM-eps else CORE_MARGIN_UM, # E
-                     0.0 if oy+mh>=h-CORE_MARGIN_UM-eps else CORE_MARGIN_UM] # N
-    if not isinstance(margins,(list,tuple)) or len(margins)!=4:
-        raise ValueError("kit_core_margins_um must be [W,S,E,N]")
-    for v,step in zip(margins,(0.054,0.27,0.054,0.27)):
-        if isinstance(v,bool) or not isinstance(v,(int,float)) or not math.isfinite(v) or v<0:
-            raise ValueError("kit_core_margins_um entries must be finite nonnegative numbers")
-        if abs(v/step-round(v/step))>1e-6:
-            raise ValueError("kit_core_margins_um must align W/E to 0.054 um and S/N to 0.27 um")
-    west,south,east,north=margins
-    if west+east>=w or south+north>=h:
-        raise ValueError("kit_core_margins_um leaves no placement core")
-    return [west,south,w-east,h-north]
-
 
 
 def write_lec_options(kd, typ):

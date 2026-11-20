@@ -58,3 +58,24 @@ class Outline(unittest.TestCase):
         self.assertTrue(f[0].startswith("KITFIT-OUTLINE type t: u_ahi") and "0.012" in f[0], f)
         t["hard_cores"][0]["origin_um"][1] = 1071.216
         self.assertEqual(KF.findings({"t": t}, core_margin=KF.CORE_MARGIN_UM), [])
+
+    def test_asymmetric_explicit_phy_margins(self):
+        t = {"outline_um": [777.6, 1641.6], "kit_core_margins_um": [0.0, 0.0, 0.0, 4.32],
+             "contents": [core("u_phy", 0.0, 0.0, 777.6, 777.6)]}
+        self.assertEqual(KF.findings({"phy_wrap": t}, core_margin=KF.CORE_MARGIN_UM), [])
+        t["contents"][0]["origin_um"][0] = -0.054
+        f = KF.findings({"phy_wrap": t}, core_margin=KF.CORE_MARGIN_UM)
+        self.assertTrue(f[0].startswith("KITFIT-OUTLINE") and "0.054" in f[0], f)
+
+    def test_hard_ip_receives_only_its_generated_insets(self):
+        t = {"outline_um": [777.6, 777.6], "hard": True,
+             "contents": [core("u_phy", 0.0, 0.0, 777.6, 777.6)]}
+        self.assertEqual(KF.findings({"bare_phy": t}, core_margin=KF.CORE_MARGIN_UM), [])
+        t["contents"][0]["origin_um"][1] = -0.27
+        f = KF.findings({"bare_phy": t}, core_margin=KF.CORE_MARGIN_UM)
+        self.assertTrue(f[0].startswith("KITFIT-OUTLINE") and "0.27" in f[0], f)
+
+    def test_malformed_kit_margin_is_a_finding(self):
+        t = {"outline_um": [777.6, 777.6], "kit_core_margins_um": [0, 0, 0, -1]}
+        f = KF.findings({"bad": t}, core_margin=KF.CORE_MARGIN_UM)
+        self.assertTrue(f[0].startswith("KITFIT-CORE-AREA"), f)
