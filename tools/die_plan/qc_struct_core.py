@@ -31,6 +31,7 @@ sys.path.insert(0, SRC + "/tools/die_plan")
 import geom_rules as G  # noqa: E402
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import istation_knee as KN  # noqa: E402
+import qc_hop_rule as HR  # noqa: E402   QC-PADLEG-1119: first hop from the bit-span edge, last hop to the consumer centroid
 
 K = Path(KIT)
 pins = json.loads((K / "pins.json").read_text())
@@ -255,6 +256,11 @@ print("n_out", {b: n for b, n in n_out.items() if n}, "n_in", {b: n for b, n in 
 stations, report = [], dict(reach_um=REACH, out=[], inn=[], hops={})
 
 
+def bus_span(bus):
+    pts = [PIN[(bus, k)] for k in range(0, 4096) if (bus, k) in PIN] or [PC[bus]]
+    return max(max(x for x, _ in pts) - min(x for x, _ in pts), max(y for _, y in pts) - min(y for _, y in pts))
+
+
 def line(a, b, f):
     return (round(a[0] + (b[0] - a[0]) * f, 3), round(a[1] + (b[1] - a[1]) * f, 3))
 
@@ -265,7 +271,7 @@ for bus, n in sorted(n_out.items()):
         continue
     c = out_leaf[bus]
     st_out[bus] = dict(conn=f"bus:{bus}", from_um=list(c), to_um=[round(PC[bus][0], 3), round(PC[bus][1], 3)],
-                       regs_um=[list(line(c, PC[bus], (j + 1) / (n + 1))) for j in range(n)], bits=OUTW[bus] + 1,
+                       regs_um=[list(r) for r in reversed(HR.plan_chain(PC[bus], c, n, bus_span(bus))[0])], bits=OUTW[bus] + 1,
                        launch="u_core", capture=f"face {bus}", bit_route="per_bit", leaf_um=list(c),
                        note=f"STRUCT-FWV3-1 DIE-QC-97 11-09: +{n} pin cycles, launch -> {bus} pins p99 {out_d[bus]:.0f} um")
     report["out"].append(dict(bus=bus, stations=n, p99_um=round(out_d[bus], 1), leaf=c))
@@ -276,7 +282,7 @@ for bus, n in sorted(n_in.items()):
     rc = PC[bus]
     tot = n + 2
     st_in[bus] = dict(conn=f"bus:{bus}", from_um=[round(rc[0], 3), round(rc[1], 3)], to_um=list(c),
-                      regs_um=[list(line(rc, c, (j + 2) / tot)) for j in range(n)], bits=INW[bus] + 1,
+                      regs_um=HR.plan_chain(rc, c, n, bus_span(bus))[0], bits=INW[bus] + 1,
                       launch=f"face {bus}", capture="u_core", bit_route="per_bit", leaf_um=list(c),
                       note=f"STRUCT-FWV3-1 DIE-QC-97 11-09: +{n} pin cycles, {bus} ring -> consumers p99 "
                            f"{pct(in_d[bus]):.0f} um")
