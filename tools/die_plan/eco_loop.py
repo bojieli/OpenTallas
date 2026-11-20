@@ -258,14 +258,23 @@ def late_hold_scope(kit):
     return "reg2reg" if scope is None else scope
 
 
+def _ff_corner(signoff_path):
+    """Return the FF corner unless a recorded producer failure makes it unusable."""
+    corner = load(Path(signoff_path).parent / "ff" / "corner.json")
+    # Old corner receipts may not have completion metadata. Preserve their
+    # census checks, but reject explicit aborts even when the partial split
+    # happens to contain zero counts and no truncation.
+    if (not isinstance(corner, dict) or corner.get("done") is False
+            or corner.get("rc", 0) != 0 or corner.get("errors")):
+        return {}
+    return corner
+
+
 def nonport_score(signoff_path):
     """KW-FIX-32 11-07 (COORD 21:4x (3), DIE-KV-91 M5 e1): (wns_ps, endpoints) the loop scores hold on when the repair
     scope is nonport: the FF census non-port split.  A clean census with no non-port violator scores (0.0, 0) (signoff
     prints STD_MIN_NONPORT only when there is one).  None when the split cannot be read: the whole number is scored."""
-    try:
-        s = json.loads((Path(signoff_path).parent / "ff" / "corner.json").read_text()).get("std_min_start")
-    except (OSError, ValueError, AttributeError, TypeError):
-        return None
+    s = _ff_corner(signoff_path).get("std_min_start")
     if not isinstance(s, dict) or s.get("err") != 0 or s.get("trunc") != 0:
         return None
     if s.get("nonport_n") is None:
@@ -411,8 +420,10 @@ def eligible(rec, signoff_path=None):
 def port_only_hold(signoff_path):
     """signoff.port_only_hold on the record's FF corner: every hold violator starts at an input port (parent's)"""
     import importlib.util
+    corner = _ff_corner(signoff_path)
+    if not corner:
+        return False
     try:
-        corner = json.loads((Path(signoff_path).parent / "ff" / "corner.json").read_text())
         spec = importlib.util.spec_from_file_location("ot_signoff_for_eco", HERE / "signoff.py")
         mod = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(mod)
@@ -425,9 +436,8 @@ def nonport_hold(signoff_path):
     """DIE-KV-88 11-07 (COORD ruling): (wns_ps, endpoints) of the hold violators not started at an input port, from the
     FF corner's std_min_start, the source signoff.port_only_hold reads.  None when the split cannot be read: no census,
     a census with an error or truncated, or an older record without the non-port fields."""
-    try:
-        s = json.loads((Path(signoff_path).parent / "ff" / "corner.json").read_text()).get("std_min_start") or {}
-    except (OSError, ValueError, AttributeError):
+    s = _ff_corner(signoff_path).get("std_min_start")
+    if not isinstance(s, dict):
         return None
     w, n = s.get("nonport_wns"), s.get("nonport_n")
     if w is None or n is None or s.get("err") != 0 or s.get("trunc") != 0:
@@ -441,9 +451,8 @@ def core_hold(signoff_path):
     None when the split cannot be read, as nonport_hold.  A record older than core_n has one bound only: endpoints =
     min(nonport_n, other + reg); wns stays the unsplit non-port wns (it may be set by an output endpoint), so the
     alignment gives an older record no easier number than the census it holds; re-sign for the exact split."""
-    try:
-        s = json.loads((Path(signoff_path).parent / "ff" / "corner.json").read_text()).get("std_min_start") or {}
-    except (OSError, ValueError, AttributeError):
+    s = _ff_corner(signoff_path).get("std_min_start")
+    if not isinstance(s, dict):
         return None
     if s.get("err") != 0 or s.get("trunc") != 0:
         return None

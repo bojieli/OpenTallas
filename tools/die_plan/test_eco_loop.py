@@ -1467,3 +1467,30 @@ def test_three_passes_by_default(tmp_path, monkeypatch):
     k2 = kit(tmp_path / "s")
     r2 = E.run_loop(k2, base_rec(k2, rec(-30, -20)), run=Fake([rec(-20, -20), rec(-10, -20)]), mem=8, cpus=2, strict_one_pass=True)
     assert r2["max_iter"] == 1 and len(r2["iterations"]) == 1
+
+
+@pytest.mark.parametrize("scope", ["reg2reg", "nonport"])
+@pytest.mark.parametrize("failure", [{"done": False, "rc": 137}, {"rc": 137}, {"done": False}])
+def test_partial_ff_census_does_not_score_as_clean(tmp_path, monkeypatch, scope, failure):
+    monkeypatch.setenv("OT_HOLD_REPAIR_SCOPE", scope)
+    report = tmp_path / "signoff.json"
+    ff = tmp_path / "ff"
+    ff.mkdir()
+    census = {"err": 0, "trunc": 0, "core_n": 0, "core_wns": 0.0, "nonport_n": 0, "nonport_wns": 0.0,
+              "port": 519, "other": 0, "reg": 0, "ports": ["arst_n"]}
+    record = {"verdict": "NOT SIGNED", "checks": {"hold_ff": {"verdict": "NOT RUN"},
+                                                   "drc": {"verdict": "PASS", "count": 0}}}
+    (ff / "corner.json").write_text(json.dumps({"std_min_start": census, **failure}))
+
+    result = E.metrics(record, report)
+    assert result["drc"] == 0
+    assert result["ff"] is None
+    assert result.get("ff_core") is None
+    assert result.get("ff_core_n") is None
+    assert result.get("ff_np") is None
+    assert result.get("ff_np_n") is None
+    assert not E.port_only_hold(report)
+
+    (ff / "corner.json").write_text(json.dumps({"std_min_start": census, "done": True, "rc": 0}))
+    clean = E.metrics(record, report)
+    assert clean["ff_np"] == 0.0 and clean["ff_np_n"] == 0
