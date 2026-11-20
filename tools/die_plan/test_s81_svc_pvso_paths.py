@@ -20,9 +20,9 @@ def test_exact31_project_preserves_logical_geometry_provenance(tn,tmp_path,monke
     t,b=fixture(tn);raw={'partition_types':{tn:t}};before=copy.deepcopy(raw)
     (tmp_path/'cut.sv').write_text(b);fl=tmp_path/'kit_rtl.f';fl.write_text(str(tmp_path/'cut.sv')+'\n')
     (tmp_path/'kit_rtl.json').write_text(json.dumps({'bound_module':'cut'}))
-    monkeypatch.delenv('OT_S81_SVC_PVSO_PATHS',raising=False)
-    default,rec=B.project(raw,{tn:str(fl)});assert default is raw and not rec
-    monkeypatch.setenv('OT_S81_SVC_PVSO_PATHS','1')
+    monkeypatch.setenv('OT_S81_SVC_PVSO_PATHS','0')
+    default,rec=B.project(raw,{tn:str(fl)});assert default is raw and not rec          # opt-out
+    monkeypatch.delenv('OT_S81_SVC_PVSO_PATHS',raising=False)                          # default ON (COORD 11-19)
     out,rec=B.project(raw,{tn:str(fl)});assert len(rec[tn]['rows'])==31
     assert raw==before
     for old,new in zip(t['contents'],out['partition_types'][tn]['contents']):

@@ -221,7 +221,7 @@ def project(raw, kit_rtl):
             continue
         bound_text = bf.read_text(errors="replace")
         rows = resolve(t, bound_text)
-        if os.environ.get("OT_S81_SVC_PVSO_PATHS") == "1":
+        if os.environ.get("OT_S81_SVC_PVSO_PATHS", "1") != "0":          # COORD 11-19: default ON (it only acts on the two pvso_entry types); OT_S81_SVC_PVSO_PATHS=0 opts out
             import s81_svc_pvso_paths
             rows += s81_svc_pvso_paths.resolve(tn, t, bound_text)
         kr = json.loads(Path(fl).with_name("kit_rtl.json").read_text())
