@@ -1,0 +1,62 @@
+{
+  "source_commit": "ca8544530de44acfb880ac9553669523de46d3b1",
+  "main": "d097c0494c0c8e03c9b9b9dbaca2423f9d205e19",
+  "runtime": "a27da3553ae5",
+  "runner_sha256": "ce660fb9b8f50b76ab6703f55142d98e8b4952c9e74bfa85cb30ef76a0ca978f",
+  "runtime_helper_sha256": "f3591844a3b7a2be69d4bdc317dbca6002e55a986186eb2f8d563183a951a0c0",
+  "time": "2026-11-20T07:12:16.305164-08:00",
+  "basis": "Read-only replay of immutable failed attempts. Older GEN logs have no captured/solved comparison detail.",
+  "cases": [
+    {
+      "die": "qwen_compute",
+      "item": "tt_ctlm",
+      "event": "s29q103S4Q9N46V0E",
+      "attempt": 5,
+      "historical_tools_sha": "ce17289579515824459bef4fcf27a45038199875",
+      "bind_out": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_n46v0e_s2_bind_1120034616",
+      "source_manifest": "4f3ad616c1817c3592872fded5ae0647dac3bfe7d691b88c939545028528cdf1",
+      "block": "f40776605edf210993a91a5b0a846fd5f4dbf2f693cba54834465b2c7c6f9b6f",
+      "refusal": "gen phys: ERROR type tt_ctlm: physical collector_tree differs from captured bound reset identity; preserve original IDs/edges/coordinates",
+      "sha256": {
+        "spec.json": "2abebc465f9ffed7b3d114f32f1592ff82b61f813895dab2b4e9ffd2772b4038",
+        "gen.log": "c0d6571454b0a4afd265cca3526eb82ba109fd4863b9aa2afd938ca3faefd877",
+        "result.json": "5adce31e7135784e064ec79e81dabbff90112572681ddc5189a3676290c67903"
+      },
+      "reported": "Representative tt_ctlm s29q103S4Q9N46V0E@5, GEN runtime ce1728957951, /home/ubuntu/coord/autopilot/kit_wave/qwen_compute_tt_ctlm_bf40776605edf/a5/gen.log"
+    },
+    {
+      "die": "qwen_kvsys",
+      "item": "kv3_hg_v3",
+      "event": "KV-D25e3",
+      "attempt": 4,
+      "historical_tools_sha": "ce17289579515824459bef4fcf27a45038199875",
+      "bind_out": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg12_983443ee_ta2fb7e6_d25e3_bind_1120113734",
+      "source_manifest": "5705fa378e1c0f8f22070d432763ab014d3b3fa23b5a0479e0b55509ee76057f",
+      "block": "597223f1d0517d6977f4a0ae054891bbfc21edf8c30a9a62fd92a16711c108fb",
+      "refusal": "gen phys: ERROR type kv3_hg_v3: physical collector_tree differs from captured bound reset identity; preserve original IDs/edges/coordinates",
+      "sha256": {
+        "spec.json": "0a49d8d139d5c901fc77a6d10330db12cf534be089858ecb37391d8c0f3514d0",
+        "gen.log": "c5033b837752998ba55e1d0493541cbc5ddceb9e9e9c18c1c892a1c49c082c0d",
+        "result.json": "063cbd30c35895cd85936b1227dd6f7e0c82026983b8818ba4f60578d092567f"
+      },
+      "reported": "Representative kv3_hg_v3 KV-D25e3@4, GEN runtime ce1728957951, /home/ubuntu/coord/autopilot/kit_wave/qwen_kvsys_kv3_hg_v3_b597223f1d051/a4/gen.log"
+    },
+    {
+      "die": "s81",
+      "item": "svc_hi_dsdv_svc_rs__t5",
+      "event": "465cb9fe2d3",
+      "attempt": 19,
+      "historical_tools_sha": "ce17289579515824459bef4fcf27a45038199875",
+      "bind_out": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8i_1117_work_bind_1120040121",
+      "source_manifest": "d7462b520b09348972656938a2d3a10c182622b7233d9fe69b12f2a9bc38737a",
+      "block": "0ebccefa8b481a501386df14510320317a23f83f0339c33edf7347005458a9a1",
+      "refusal": "gen phys: ERROR type svc_hi_dsdv_svc_rs__t5: physical collector_tree differs from captured bound reset identity; preserve original IDs/edges/coordinates",
+      "sha256": {
+        "spec.json": "687099e67a05f8b71125c05cc3aa08ac089d8c5d717ad357a47535a88a06abb1",
+        "gen.log": "9060c02caff413f5d18590d0e883ccffcc768a4f0bd2c710a425baf3458375e7",
+        "result.json": "720ff0d133de27b439cb2a9d7fffccd5d1ef1403d43ed9367d751626d0274208"
+      },
+      "reported": "Representative svc_hi_dsdv_svc_rs__t5 465cb9fe2d3@19, GEN runtime ce1728957951, /home/ubuntu/coord/autopilot/kit_wave/s81_svc_hi_dsdv_svc_rs__t5_b0ebccefa8b48/a19/gen.log"
+    }
+  ]
+}

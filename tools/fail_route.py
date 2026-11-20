@@ -22,6 +22,7 @@ import hashlib
 import json
 import os
 import re
+import runpy
 import subprocess
 import sys
 import time
@@ -197,6 +198,23 @@ def build_classes(coord, state, posts, now, window_h, live_h):
     return classes
 
 
+RUNTIME_FAIL_ROUTE = Path("/srv/opentallas-scratch2/claude/rt/current/tools/autopilot/fail_route.py")
+
+
+def reset_note(state, cls):
+    if cls["kind"] != "kit":
+        return ""
+    item = max(cls["items"], key=cls["items"].get)
+    sig = (state.get("fail_sigs") or {}).get(f"{cls['die']}|{item}") or {}
+    if "physical collector_tree differs from captured bound reset identity" not in sig.get("reason", ""):
+        return ""
+    try:
+        report = runpy.run_path(str(RUNTIME_FAIL_ROUTE)).get("reset_evidence")
+    except OSError:
+        return ""
+    return report(state, cls["die"], item) if report else ""
+
+
 def names_line(c):
     ns = sorted(c["items"], key=lambda n: -c["items"][n])
     s = ", ".join(ns[:MAX_NAMES])
@@ -248,7 +266,7 @@ def run(coord, state_f, post_sh, window_h=3.0, live_h=3.0, ack_min=30, dry=False
         if not rec:
             to = f"{c['owner']}, COORD" if c["owner"] != "COORD" else "COORD"
             text = (f"NEEDS-ACTION [{LANE} -> {to}] FAIL-CLASS {c['cid']} owner {c['owner']} {c['label']}: {len(c['items'])} item(s) "
-                    f"failed and not answered: {names_line(c)}. Owner: post RESULT or ACK naming {c['cid']} (or an item) with the "
+                    f"failed and not answered: {names_line(c)}{reset_note(kw, c)}. Owner: post RESULT or ACK naming {c['cid']} (or an item) with the "
                     f"cause and the next step within {ack_min} min, else NEEDS-LANE goes to COORD. One post per class; no repeat.")
             if do_post(text):
                 st["classes"][rec_k] = {"t": now, "items": sorted(c["items"]), "label": c["label"]}

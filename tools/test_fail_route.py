@@ -2,6 +2,7 @@ import importlib.util
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import patch
 
 spec = importlib.util.spec_from_file_location("fr", Path(__file__).with_name("fail_route.py"))
 fr = importlib.util.module_from_spec(spec)
@@ -55,6 +56,20 @@ class CoordinatorSummaryTests(unittest.TestCase):
         self.assertEqual(set(cls["items"]), {"CODEX-TOKEN@19:46"})
         self.assertNotIn("CODEX", fr.live_lanes(posts, 101, 3))
         self.assertIn("CODEX-TOKEN", fr.live_lanes(posts, 101, 3))
+
+
+class ResetEvidenceTests(unittest.TestCase):
+    def test_only_exact_gen_failure_receives_the_runtime_evidence(self):
+        state = {"fail_sigs": {"s81|col": {"reason": "physical collector_tree differs from captured bound reset identity"}}}
+        cls = {"kind": "kit", "die": "s81", "items": {"old": 10, "col": 20}}
+        with tempfile.TemporaryDirectory() as td:
+            helper = Path(td) / "runtime.py"
+            with patch.object(fr, "RUNTIME_FAIL_ROUTE", helper):
+                self.assertEqual(fr.reset_note(state, cls), "")
+                helper.write_text("def reset_evidence(state, die, item): return f' {die}/{item}'")
+                self.assertEqual(fr.reset_note(state, cls), " s81/col")
+                self.assertEqual(fr.reset_note(state, dict(cls, kind="waiter")), "")
+                self.assertEqual(fr.reset_note({}, cls), "")
 
 
 if __name__ == "__main__":
