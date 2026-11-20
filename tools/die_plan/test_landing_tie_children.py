@@ -64,3 +64,47 @@ def test_check_without_declaration_keeps_the_strict_rule():
     import landing_contract as LCO
     errs = [e for e in LCO.check(_P(None))["errors"] if "used 0 times" in e]
     assert len(errs) == 4        # 2 dn inputs + 2 up outputs, all unused, nothing declared
+
+
+def test_seam_use_only_masks_optional_children():
+    assert LTC.seam_use_ports(TIE) == {0: "strap_cland_use_0"}
+    assert LTC.use_connections(TIE, {0}) == ["        .strap_cland_use_0(1'b1)"]
+    assert LTC.use_connections(TIE, {1}) == ["        .strap_cland_use_0(1'b0)"]
+    ready = "word[0] && trained && !guard"
+    fault = "word[1] || guard"
+    assert LTC.qualified_status(ready, fault, None) == (ready, fault)
+    assert LTC.qualified_status(ready, fault, "use") == (
+        "(!use || (word[0] && trained && !guard))", "(use && (word[1] || guard))")
+
+
+def test_monitor_use_literally_matches_the_real_parent_edges():
+    pin_names = ("cland_dn_ready_0", "cland_dn_fault_0", "fclk_in_cland_dn_0")
+    plan = {
+        "partition_types": {"T": {"clock": {"landing_contract": {"tieable_children": TIE}}}},
+        "partitions": [{"name": part, "type": "T"} for part in ("present", "spare")],
+        "clock": {"landing_network": {"edges": [
+            {"dst": {"part": "present", "bus": pin}} for pin in pin_names]}}}
+    expect = LTC.instance_use(plan)
+    assert expect == {"present": {"strap_cland_use_0": (1, 1)}, "spare": {"strap_cland_use_0": (1, 0)}}
+    top = "bt_T present (\n .strap_cland_use_0(1'b1)\n);\nbt_T spare (\n .strap_cland_use_0(1'b0)\n);"
+    assert STR.audit_count_strap_values(top, expect, prefix=LTC.MONITOR_USE_PREFIX)["verdict"] == "PASS"
+    mutant = top.replace("1'b1", "1'b0")
+    assert STR.audit_count_strap_values(mutant, expect, prefix=LTC.MONITOR_USE_PREFIX)["verdict"] == "FAIL"
+    import pytest
+    with pytest.raises(ValueError, match="partial landing monitor child"):
+        plan["clock"]["landing_network"]["edges"].pop()
+        LTC.instance_use(plan)
+
+
+def test_use_pin_preserves_existing_pins_and_avoids_their_tracks():
+    pins = [
+        {"name": "cland_dn_ready_0", "xy_um": [2.0, 5.0], "layer": "M7"},
+        {"name": "cland_dn_fault_0", "xy_um": [2.0, 6.0], "layer": "M7"},
+        {"name": "fclk_in_cland_dn_0", "xy_um": [2.0, 4.0], "layer": "M7"},
+        {"name": "neighbor", "xy_um": [2.0, 7.0], "layer": "M7"},
+    ]
+    result = LTC.with_use_pins(pins, TIE, [10, 10])
+    assert result[:-1] == pins
+    assert result[-1] == {"name": "strap_cland_use_0", "xy_um": [2.0, 8.0], "dir": "in",
+                          "kind": "ctl", "epoch": False, "layer": "M7"}
+    assert LTC.with_use_pins(result, TIE, [10, 10]) == result

@@ -16,7 +16,8 @@ def _tie_unused_ok(t):
     import landing_tie_children as LTC
     lc=(t.get("clock") or {}).get("landing_contract") or {}
     tie=LTC.tie_ports(lc.get("tieable_children"))
-    return set(tie)|{"cland_up_ready","cland_up_fault","fclk_out_cland_up"} if tie else set()
+    uses = set(LTC.seam_use_ports(lc.get("tieable_children")).values())
+    return set(tie)|uses|{"cland_up_ready","cland_up_fault","fclk_out_cland_up"} if tie else set()
 
 
 def check(P,sidecar=None):
@@ -40,6 +41,11 @@ def check(P,sidecar=None):
             if p.get("kind")=="clock" and p.get("dir")=="in":
                 ec=[e for e in t.get("clock",{}).get("edge_clocks",[]) if e["port"]==name]
                 if len(ec)!=1 or ec[0].get("period_mult",1)!=1:errors.append(f"{tn}.{name}: declared same-frequency clock required")
+        import landing_tie_children as LTC
+        for name in LTC.seam_use_ports(c.get("tieable_children")).values():
+            pin = ps.get(name, {})
+            if (pin.get("dir"), pin.get("kind")) != ("in", "ctl"):
+                errors.append(f"{tn}.{name}: missing declared physical seam-child use strap")
         pinmap[tn]=ps
     uses={};maxhop=0;groups={}
     for edge in net.get("edges",[]):
