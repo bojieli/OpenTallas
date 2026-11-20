@@ -756,6 +756,39 @@ def type_pins(P, tn):
                 else:
                     y = 0.0
                 out.append((pr[side]["bus"], bit, ln, round(x, 4), round(y, 4), tf))
+    out += superset_spare_pins(P, tn, {b for b, *_ in out})
+    return out
+
+
+def superset_spare_pins(P, tn, have):
+    """SUPERSET-1 (FABLE-SUPERSET-0415, OWNER 2026-11-20 shared superset pinouts): pins of the type-declared buses / ft-slot ends
+    that have NO die port on the first instance.  A superset type (plan key partition_types[T].superset, any true value) carries
+    the union pin set of its family: an instance binds the lanes it uses and leaves the others as spare lanes (bind kit-rtl
+    chains a spare ft slot through its own stations; spare inputs are tied at the parent like strap pins, spare outputs stay
+    open).  The hardened pin table must hold every declared pin whichever instance comes first, so the unbound ends get their
+    pins from the type's own window with the same pin_positions() a bound port uses (type frame, no instance transform).
+    Types without the key return [] (every existing kit is byte-identical)."""
+    t = P.types[tn]
+    if not t.get("superset"):
+        return []
+    w, h = t["outline_um"]
+    ends = [(b["name"], b["width"], b.get("kind", "data") in ("data", "ctl") if "epoch" not in b else bool(b["epoch"]), b.get("kind", "data"))
+            for b in t.get("buses", [])]
+    for sl in t.get("ft_slots", []):
+        ends += [(sl["name"] + sfx, sl["width"], True, "data") for sfx in ("_i", "_o")]
+    inst = next(n for n, p in P.parts.items() if p["type"] == tn)
+    out = []
+    for name, width, epoch, kind in ends:
+        if name in have:
+            continue
+        g = S.Plan._type_geom(P, inst, name)
+        if g is None:
+            raise ValueError(f"superset type {tn}: spare end {name} declares no face/window/layers")
+        tf, win, lays, order = g
+        port = dict(id=f"{tn}.{name}", width=width, kind=kind, epoch=epoch, face=tf, window_um=win, layers=lays, order=order)
+        for bit, ln, c in S.pin_positions(port, P.layers):
+            x, y = ((w if tf == "E" else 0.0), c) if tf in "EW" else (c, (h if tf == "N" else 0.0))
+            out.append((name, bit, ln, round(x, 4), round(y, 4), tf))
     return out
 
 
