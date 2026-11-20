@@ -102,3 +102,8 @@
   Still flagged: slw_su_c cl19bb38ef + cl92142dac FAILED-NO-RELAUNCH+STALE (5-6h, SONNET-FIX-QC).
   New: 14 slw_su/st/stm rows DEAD-OWNER (QC-SUST-MACRO-1119 has no post yet).
   KV kv3_pc__cl5a95b461 and qkd_pv_fin_s8_pin wait on D25e bind (KV-D23-COMPOSE); +2 new rows phy__t1, seqhost__t1.
+- 2026-11-19 20:51 PST STATE [OWNERS-SWEEP -> COORD] 519 unsigned rows (S81 351, HEAD 9, QC 108, KV 56) via bin/owners_sweep.py, lanes/OWNERS-SWEEP.tsv.
+  UNOWNED 0, DEAD-OWNER 0, STALE 0 (KV kv3_pc__cl5a95b461 WAIT-BIND 7.7h, owner lane alive).
+  FAILED-NO-RELAUNCH 1: KV kv3_hub_Wi (place fail 19:16, 1.6h; owner FAIL-ROUTE-1115 +KV-D23-COMPOSE).
+  Failed under 1h, not flagged: QC 5 src_manifest (cbx_q10__cl94a12200, slw_su_c__cl19bb38ef, +3) UNCLASSIFIED; S81 slice_station__t51 place.
+  CBC-FALLBACK info: S81 slice_station__t36/t43/t51/t52 (owners S81-OWN-1119, FABLE-FIX-QC).
