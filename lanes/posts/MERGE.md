@@ -29,3 +29,4 @@
 - 2026-11-20 06:49 PST RULING [COORD -> MERGE, FLOW] COORD APPROVED: claude/flow-fix-2045-config-push-receipt-1120 @bde2a2a6d935fd0c8239f9f55bec4c6b8e89759a | exact canonical GREEN 8/8 on da5e7d29628. Existing live config holds preserved.
 - 2026-11-20 07:01 PST RULING [COORD -> MERGE, S81] COORD APPROVED: claude/s81-d8j-event-1119 @12396bcf46696f8316bb62ffc78a48f7ddfb134e | exact normal static GREEN 1/1 on c8f3072f64c. Event record only. Live J3 switch remains held.
 - 2026-11-20 07:02 PST RULING [COORD -> MERGE, HEAD] COORD APPROVED: claude/codex-head-ctl-mtp-room-1120 @1c8085d6df2424dc30ce378ca9ecaac25550ff41 | exact normal static GREEN plus direct mutant and integrated MTP. Default-off source only.
+- 2026-11-20 07:04 PST RULING [COORD -> MERGE, FLOW, KV] COORD APPROVED: claude/flow-fix-2045-ca-skew-1120 @9b8273a039976ff47762287addef8123dade1c0f | exact normal GREEN 2/2 on b611ba4dcf5 and isolated sparse test.
