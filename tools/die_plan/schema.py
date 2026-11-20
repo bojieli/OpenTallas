@@ -1589,6 +1589,13 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["p
                    "util": {"type": "number", "minimum": 0.1, "maximum": 0.9},
                    "centre_um": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "number"}},
                    "near_re": {"type": "string", "minLength": 1}, "note": {"type": "string"}}}}
+# UNIFY-TOOLS-0300 11-20 (FABLE-SUPERSET-0415 section 10, U5): a SUPERSET type carries the union pin set of its class.
+# true / object (e.g. {"class": "slw_fe"}) = on; gen_phys.superset_spare_pins pins the ends no die port binds.  Each
+# instance then names its unbound ends in partitions[].spare_ends (a spare input is tied 0 at the parent, a spare output
+# is open); an unbound end that is not declared stays a G0 error, as on every other type.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["superset"] = {"type": ["boolean", "object"]}
+SCHEMA["properties"]["partitions"]["items"]["properties"]["spare_ends"] = {
+    "type": "array", "uniqueItems": True, "items": _name}
 # TYPE-SAFE-2 11-06: gen-time ft station spread opt-out (ft_spread.py; absent = on)
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["ft_spread"] = {"type": "boolean"}
 # FT-HOP-M2-WIRE 11-12 (GEN-CLASS-1): per-type repeater pitch of the ft-station hop nets (gen_phys FT_HOP_MAXWIRE_UM; 0 = off)
@@ -2518,6 +2525,16 @@ class Plan:
                                          slot=s["name"], face=s["out_face"])
         return out
 
+    def spare_ends(self, part):
+        """UNIFY-TOOLS-0300: the declared spare bus ends of a superset-type instance (partitions[].spare_ends; an ft slot
+        name stands for both its _i and _o), as plan bus names.  Empty for every other partition."""
+        if part == DIE_PART or part not in self.parts:
+            return frozenset()
+        out = set()
+        for n in self.parts[part].get("spare_ends", []):
+            out |= {n + "_i", n + "_o"} if self.slot(part, n) is not None else {n}
+        return frozenset(out)
+
     def slot(self, part, name):
         for s in self.ptype(part).get("ft_slots", []):
             if s["name"] == name:
@@ -3324,6 +3341,35 @@ def scope_errors_typed(errs, types, raw):
     return out
 
 
+def spare_end_errors(P, use):
+    """UNIFY-TOOLS-0300 (FABLE-SUPERSET-0415 U5, OWNER 11-20 superset pinouts): partitions[].spare_ends rules.
+    A spare end is legal only on a superset type, must name a declared bus / ft slot (or slot end) of that type, must not
+    be bound by any port (a spare is the absence of a lane), and an ft slot is spare at both ends or at neither (a lane
+    passes a slot _i -> _o).  use: {(part, bus): [port ids]}."""
+    errs = []
+    for part, p in P.parts.items():
+        names = p.get("spare_ends") or []
+        if not names:
+            continue
+        t = P.ptype(part)
+        if not t.get("superset"):
+            errs.append(f"partition {part}: spare_ends {names[:3]} on type {p['type']} without the superset key")
+            continue
+        buses = P.buses(part)
+        for n in names:
+            if n not in buses and P.slot(part, n) is None:
+                errs.append(f"partition {part}: spare end '{n}' is not a bus or ft slot of type {p['type']}")
+        spare = P.spare_ends(part)
+        for bn in sorted(spare):
+            if use.get((part, bn)):
+                errs.append(f"partition {part}: spare end '{bn}' is bound by port(s) {use[(part, bn)]}")
+        for sl in t.get("ft_slots", []):
+            ends = {sl["name"] + "_i", sl["name"] + "_o"}
+            if len(ends & spare) == 1:
+                errs.append(f"partition {part}: ft slot '{sl['name']}' is spare at one end only {sorted(ends & spare)}")
+    return errs
+
+
 def validate(raw):
     """Structure + references + local consistency.  Returns a list of error strings (empty = valid).
     Geometric / budget checks (abutment, cuts, faces, hops) are the G0 checker's job (check.py)."""
@@ -3501,11 +3547,14 @@ def validate(raw):
             e = pr[side]
             if e["part"] != DIE_PART:
                 use.setdefault((e["part"], e["bus"]), []).append(pr["id"])
+    errs += spare_end_errors(P, use)
     for part in P.parts:
+        spare = P.spare_ends(part)
         for bn in P.buses(part):
             u = use.get((part, bn), [])
             if not u:
-                errs.append(f"partition {part}: bus '{bn}' is unbound (no port; tie-offs are not allowed)")
+                if bn not in spare:
+                    errs.append(f"partition {part}: bus '{bn}' is unbound (no port; tie-offs are not allowed)")
             elif len(u) > 1:
                 errs.append(f"partition {part}: bus '{bn}' bound by {len(u)} ports {u}")
     # lanes: continuity through ft slots, each port in exactly one lane

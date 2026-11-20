@@ -692,6 +692,9 @@ def check_abutment(P, R):
                     break
     # replicated types: identical pin tables
     for tn, insts in type_tables.items():
+        if P.types[tn].get("superset"):
+            superset_pin_tables(P, R, tn, insts)
+            continue
         ref_name, ref = None, None
         for inst, tab in sorted(insts.items()):
             if ref is None:
@@ -704,6 +707,27 @@ def check_abutment(P, R):
                       f"entries, e.g. {k[0][0]}[{k[0][1]}] {k[1]}) -- a replicated type must have identical pins",
                       type=tn)
     return face_pins
+
+
+def superset_pin_tables(P, R, tn, insts):
+    """UNIFY-TOOLS-0300 (FABLE-SUPERSET-0415 5: compare the full type table, not the bound subset): every instance of a
+    superset type carries the class pin table.  A pin two instances both bind must sit at the same type-frame place; a
+    bus an instance does not bind must be one of its declared spare_ends (gen_phys pins it from the type window)."""
+    union, owner = {}, {}
+    for inst, tab in sorted(insts.items()):
+        for k, v in tab.items():
+            if k in union and union[k] != v:
+                R.err("abutment", f"type {tn}: superset pin {k[0]}[{k[1]}] {v} on {inst} != {union[k]} on {owner[k]} "
+                      "-- a superset type must have one pin table", type=tn)
+                return
+            union.setdefault(k, v)
+            owner.setdefault(k, inst)
+    buses = {k[0] for k in union}
+    for inst, tab in sorted(insts.items()):
+        lack = sorted(buses - {k[0] for k in tab} - P.spare_ends(inst))
+        if lack:
+            R.err("abutment", f"type {tn}: instance {inst} lacks bus(es) {lack[:3]} of the superset pin table and "
+                  "does not declare them in spare_ends", type=tn)
 
 
 # ------------------------------------------------------------------------------------------------------ faces

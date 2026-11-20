@@ -6369,6 +6369,12 @@
        }
       }
      },
+     "superset": {
+      "type": [
+       "boolean",
+       "object"
+      ]
+     },
      "ft_spread": {
       "type": "boolean"
      },
@@ -7013,6 +7019,14 @@
      },
      "note": {
       "type": "string"
+     },
+     "spare_ends": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+       "type": "string",
+       "minLength": 1
+      }
      }
     }
    }
