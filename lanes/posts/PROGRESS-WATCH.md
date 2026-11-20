@@ -64,3 +64,4 @@
 - 2026-11-20 06:58 PST ALERT NO-ADVANCE qwen_kvsys: 5 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (kv3_pv_v8 x4@gen, kv3_hg_v3 x4@gen, kv3_hg_v1p5 x3@gen)
 - 2026-11-20 07:08 PST ALERT STUCK-STATE qwen_compute: 1 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. coll_ftc, 2026-11-20 05:28)
 - 2026-11-20 07:29 PST ALERT STUCK-STATE s81: 2 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. col_h9_r0_p3__t1__cl31d0dc4b, 2026-11-20 03:51)
+- 2026-11-20 07:49 PST ALERT NO-ADVANCE qwen_compute: 18 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (sle_su_l0__cl7a55c676 x9@gen, slw_st_a_v1__clfc5867a6__pvf82a6c28 x8@gen, cbn_q01__clab6e67f2 x8@gen)
