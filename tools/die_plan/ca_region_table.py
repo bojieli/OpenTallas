@@ -15,13 +15,10 @@ usage: ca_region_table.py PLAN.json --regions MAP.json --out TABLE.json
 import argparse
 import collections
 import json
-import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "s81_head"))
-import fallback_land as F  # noqa: E402
-
 SCHEMA = "opentallas.fallback_head_regions.v1"
+NOMINAL_RING_CYCLES = 3  # Ring offset 2 plus the receiver register, as in clock_landings.network_lane_cycles.
 
 
 def declared_table(plan, part_region):
@@ -33,13 +30,19 @@ def declared_table(plan, part_region):
     if extra:
         raise ValueError(f"region map names {len(extra)} partitions not in the plan: {extra[:5]}")
     reg = {n: part_region[n] for n in names}
-    B = F.part_boxes(plan)
     members = collections.defaultdict(list)
-    for n, tag in reg.items():
-        members[tag].append(n)
+    boxes = {}
+    for part in plan["partitions"]:
+        name = part["name"]
+        width, height = plan["partition_types"][part["type"]]["outline_um"]
+        if part.get("orient", "R0") in ("R90", "R270", "MXR90", "MYR90"):
+            width, height = height, width
+        x, y = part["origin_um"]
+        boxes[name] = (x, y, x + width, y + height)
+        members[reg[name]].append(name)
     rows = []
     for tag, parts in sorted(members.items()):
-        bs = [B[p] for p in parts]
+        bs = [boxes[p] for p in parts]
         rows.append(dict(tag=tag, box_um=[min(b[0] for b in bs), min(b[1] for b in bs), max(b[2] for b in bs),
                                           max(b[3] for b in bs)], parts=len(parts), members=sorted(parts)))
     lane_of = {pid: ln["id"] for ln in plan["lanes"] for pid in ln["ports"]}
@@ -49,9 +52,9 @@ def declared_table(plan, part_region):
         if "@" in (a[:1] + b[:1]) or reg[a] == reg[b]:
             continue
         ports.append(dict(port=pr["id"], lane=lane_of.get(pr["id"]), src=a, dst=b, src_region=reg[a],
-                          dst_region=reg[b], width=int(pr["width"]), kind=pr.get("kind", "data"), added_cycles=F.CYC))
+                          dst_region=reg[b], width=int(pr["width"]), kind=pr.get("kind", "data"), added_cycles=NOMINAL_RING_CYCLES))
     return dict(schema=SCHEMA, granularity="declared", region_resolution="declared (part_region), boxes may overlap",
-                added_cycles_per_crossing=F.CYC, regions=rows, part_region=reg, ports=ports)
+                added_cycles_per_crossing=NOMINAL_RING_CYCLES, regions=rows, part_region=reg, ports=ports)
 
 
 def main(argv=None):

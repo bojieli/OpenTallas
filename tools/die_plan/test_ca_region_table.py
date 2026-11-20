@@ -42,8 +42,12 @@ def test_fallback_land_refuses_the_same_map(tmp_path):
     import json
     m = tmp_path / "m.json"
     m.write_text(json.dumps({"part_region": MAP}))
+    fallback_script = Path(__file__).resolve().parents[1] / "s81_head" / "fallback_land.py"
+    fallback_spec = importlib.util.spec_from_file_location("head_fallback_land", fallback_script)
+    fallback = importlib.util.module_from_spec(fallback_spec)
+    fallback_spec.loader.exec_module(fallback)
     with pytest.raises(SystemExit):
-        crt.F.table(plan(), "map:" + str(m))
+        fallback.table(plan(), "map:" + str(m))
 
 
 def test_identity_map_gives_partition_regions():
@@ -65,6 +69,29 @@ def test_cli(tmp_path):
     m.write_text(json.dumps({"part_region": MAP}))
     assert crt.main([str(p), "--regions", str(m), "--out", str(o)]) == 0
     assert json.loads(o.read_text())["granularity"] == "declared"
+
+
+def test_isolated_cli_without_head_tool(tmp_path):
+    import json
+    import shutil
+    import subprocess
+    import sys
+
+    tools = tmp_path / "tools" / "die_plan"
+    tools.mkdir(parents=True)
+    script = shutil.copyfile(crt.__file__, tools / "ca_region_table.py")
+    shutil.copyfile(Path(__file__).with_name("fallback_land.py"), tools / "fallback_land.py")
+    p, m, o = tmp_path / "p.json", tmp_path / "m.json", tmp_path / "t.json"
+    data = plan()
+    data["partition_types"]["T"]["outline_um"] = [10, 4]
+    data["partitions"][1]["orient"] = "MYR90"
+    p.write_text(json.dumps(data))
+    m.write_text(json.dumps({"part_region": MAP}))
+    subprocess.run([sys.executable, "-I", script, str(p), "--regions", str(m), "--out", str(o)], check=True)
+    table = json.loads(o.read_text())
+    assert table["regions"][1]["box_um"] == [10, 0, 14, 10]
+    assert table["added_cycles_per_crossing"] == 3
+    assert all(port["added_cycles"] == 3 for port in table["ports"])
 
 
 def test_clock_landings_uses_declared_regions_with_overlapping_boxes():
