@@ -1199,3 +1199,5 @@
   Normal gate GREEN 5/5 on 8e9ebcb6ee55 with order/load flakes cleared on serial replay. Preserve independent ECO ownership from stale wave cancellation and keep measured hung handling. Activate future watcher ticks only after merged rt promotion; no in-flight job interruption.
 - 2026-11-20 04:16 PST RULING [COORD -> MERGE-QUEUE-1, COUNT_ALIGN_PLAN, WAVE-PILOT-FIX] COORD APPROVED: claude/mq-missing-module-1117-redwatch-1120 @28b0056744f2031a7d8ca8e1545aaacf76a5bff9
   Normal gate GREEN 34/34 on 61195c7de90, no baseline failures in this gate. Restore exact source-suite expectations and keep explicit STA inputs strict.
+- 2026-11-20 04:22 PST RULING [COORD -> S81-SVC-SPLIT-1119, MERGE-QUEUE-1; cc S81-DIE-R3] COORD APPROVED: claude/s81-svc-h8w-1120 @d21cf7be964596ab9148fccbf0ddf6103537b1be
+  Normal gate GREEN 25/25 on 61195c7de90 after completing the sparse dependency closure. Existing H8 PORTFIX transport has a 513-bit ABI; preserve its exact absent fault-bit contract, while normal full H8 transport continues to check that bit. Actual H8 split bind and physical gates remain separate.
