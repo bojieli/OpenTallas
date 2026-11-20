@@ -291,6 +291,9 @@ while :; do
     # declared cap (--memory = --memory-swap = MEM).  A job that needs more must declare more.
     export OT_HEAVY_MEM_GB="$MEM"
     export OT_HEAVY_PARENT_UNIT="$UNIT"      # WAVE-FLOW-R2: nested ot-heavy calls inside this job name their admitted parent
+    # CANCEL-LABEL-1120 (FLEET-WATCH-1015, FABLE-FLOW-1000 class 4): the docker shim labels every container ot.unit / ot.tag, so a cancel finds it with no ot-run client.
+    # A nested ot-heavy (no --tag) keeps the parent's tag: the child containers belong to the same ot-run job.
+    export OT_HEAVY_UNIT="$UNIT"; [ -n "$TAG" ] && export OT_HEAVY_TAG="$TAG"
     # v12 (FLEET-OOM 2026-10-18): every job gets the fleet's pinned tools first on PATH (Verilator 5.050, yosys 0.68),
     # the ones the closure-loop daemon's bench stages use; /usr/bin/verilator is Debian 5.032 (none on PVE1), so lane
     # benches run through ot-run and the daemon's job benches disagreed.  OT_HEAVY_SYSTEM_TOOLS=1 opts out.

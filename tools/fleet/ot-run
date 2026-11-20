@@ -1286,7 +1286,10 @@ def container_stop_cmd(tag, path=None):
     (-v <path>:/work), stopped by name with docker stop.  The docker-run line of a kit carries the whole run_kit script text ("grep -q ..."), so our own pipeline is excluded by shape (a line that starts with grep or holds this command), never by `grep -v grep`.  Prints the names, nothing when none.  Never a pattern on a lane dir: only the tag or one exact path."""
     pats = " ".join("-e " + shlex.quote(p) for p in [tag] + ([f"-v {path.rstrip('/')}:"] if path and path.startswith("/srv/") else []))
     return ("names=$(ps -eo args | grep -F " + pats + " | awk '!/^grep / && !/names=[$][(]ps/' | grep -o -- '--name dpkit-[A-Za-z0-9_.-]*' | awk '{print $2}' | sort -u); "
+            # CANCEL-LABEL-1120 (FLEET-WATCH-1015): containers the ot-heavy docker shim labelled ot.tag=<client tag...> are found by label too, whatever their name; stop, re-check, docker kill what is left, re-check
+            "lab=$(docker ps --format " + shlex.quote('{{.Names}}|{{.Label "ot.tag"}}') + " 2>/dev/null | awk -F'|' -v t=" + shlex.quote(tag) + " 'index($2,t)==1{print $1}'); names=$(printf '%s\\n%s\\n' \"$names\" \"$lab\" | awk NF | sort -u); "
             "for n in $names; do docker stop -t 30 \"$n\" >/dev/null 2>&1; done; left=; for n in $names; do [ -z \"$(docker ps -q -f name=^$n$ 2>/dev/null)\" ] || left=\"$left $n\"; done; "
+            "for n in $left; do docker kill \"$n\" >/dev/null 2>&1; done; left2=; for n in $left; do [ -z \"$(docker ps -q -f name=^$n$ 2>/dev/null)\" ] || left2=\"$left2 $n\"; done; left=$left2; "
             "if [ -n \"$left\" ]; then echo \"STILL RUNNING after docker stop:$left\"; else echo \"containers stopped: ${names:-none}\"; fi")
 
 
@@ -1329,8 +1332,42 @@ def stop_started(targets, run=subprocess.run, path=None, fleet=()):
     return stopped
 
 
+def cancel_unit(sub, run=None, fleet=None):
+    run = run or subprocess.run
+    """CANCEL-LABEL-1120 (FLEET-WATCH-1015, FABLE-FLOW-1000 class 4: 3 of 31 cancels had no ot-run client): a job with no local client is cancelled by its EXACT unit (oth-...) or client tag prefix
+    (otrun-<host>-<pid>-): every fleet host runs `ot-heavy-stop --unit|--tag`, which stops the scope and every container labelled with it, re-checks it is gone and docker kills what is left.
+    Refuses (rc 1) a selector that is not an exact unit / tag, and when no host found anything.  -> rc"""
+    fleet = list(HOSTS if fleet is None else fleet)
+    if re.fullmatch(r"oth-[A-Za-z0-9_-]+", sub):
+        flag = "--unit"
+    elif re.fullmatch(r"otrun-[A-Za-z0-9_.-]+-\d+-(\d+)?", sub):
+        flag = "--tag"
+    else:
+        print(f"ot-run --cancel: no local ot-run client matches {sub!r} (and it is not an exact unit oth-... or tag otrun-<host>-<pid>-)")
+        return 1
+    found, bad = [], []
+    for h in fleet:
+        r = _host_run(run, h, f"ot-heavy-stop {flag} {shlex.quote(sub)}")
+        out = (r.stdout or "") + (r.stderr or "")
+        print(f"ot-run --cancel: {h}: " + (out.strip().splitlines() or ["no output"])[-1][:200])
+        if "STILL RUNNING" in out:
+            bad.append(h)
+        if re.search(r"containers stopped: (?!none)", out) or re.search(r"(?<![0-9])[1-9][0-9]* scope\(s\) stopped", out):
+            found.append(h)
+    if bad:
+        print(f"ot-run --cancel: STILL RUNNING after stop and kill on {bad}")
+        return 3
+    if not found:
+        print(f"ot-run --cancel: nothing found for {sub!r} on any fleet host (already gone, or never started)")
+        return 1
+    log_signal(f"--cancel {sub!r} (no client) by pid {os.getpid()} parent {sender(os.getppid())}: stopped on {found}")
+    return 0
+
+
 def cancel(sub, all_dirs):
     hit = {p: v for p, v in clients().items() if sub in " ".join(v[0])}
+    if not hit and sub.startswith(("oth-", "otrun-")):
+        return cancel_unit(sub)
     dirs = sorted({str(v[1]) for v in hit.values()})
     for p, (rest, d) in sorted(hit.items()):
         print(f"ot-run --cancel: pid {p} dir {d}: {' '.join(rest)[:200]}")

@@ -48,6 +48,9 @@ done
 # (never -1000: that also exempts it from its own --memory cgroup OOM, a livelock at the cap), anything else >= 0.
 if [ "${OT_HEAVY_PRIO:-}" = die ]; then out=("--oom-score-adj=-999" "--label=opentallas.priority=die" "${out[@]}")
 elif [ -z "$hadj" ]; then out=("--oom-score-adj=0" "${out[@]}"); fi
+# CANCEL-LABEL-1120 (FLEET-WATCH-1015): every container carries its admitting unit and ot-run tag as labels; ot-heavy-stop / ot-run --cancel find it by them (no client needed).
+[ -n "${OT_HEAVY_UNIT:-}" ] && out=("--label=ot.unit=$OT_HEAVY_UNIT" "${out[@]}")
+[ -n "${OT_HEAVY_TAG:-}" ] && out=("--label=ot.tag=$OT_HEAVY_TAG" "${out[@]}")
 # CRIT_1101 (FLOW-21, COORD 11-01 09:1x/09:2x): a crit job's container competes where the volume runs, as a sibling of
 # the kit containers in system.slice: --cpu-shares 17600 = cpu.weight ~1000 (Docker 29 cgroup v2 mapping; default 100).
 # An explicit --cpu-shares is kept.

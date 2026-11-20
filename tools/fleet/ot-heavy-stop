@@ -25,6 +25,40 @@ def select_containers(names, pids):
     return [n for n in names if owner_pid(n) in pids]
 
 
+LABEL_FMT = '{{.Names}}|{{.Label "ot.unit"}}|{{.Label "ot.tag"}}'
+
+
+def labelled(rows, unit=None, tag=None):
+    """CANCEL-LABEL-1120: container names whose ot.unit label is EXACTLY unit, or whose ot.tag label starts with tag (the client's otrun-<host>-<pid>- prefix).  rows = 'name|unit|tag' lines.
+    An empty selector selects nothing (never every container)."""
+    out = []
+    for r in rows:
+        n, u, t = (r.split("|") + ["", ""])[:3]
+        if n and ((unit and u == unit) or (tag and t and t.startswith(tag))):
+            out.append(n)
+    return out
+
+
+def running(names):
+    live = set(sh("docker", "ps", "--format", "{{.Names}}").split())
+    return [n for n in names if n in live]
+
+
+def stop_labelled(unit=None, tag=None, dry=False):
+    """stop the labelled containers, re-check, docker kill what is still up, re-check.  -> (found, still_running)"""
+    if not (unit or tag):
+        return [], []
+    found = labelled(sh("docker", "ps", "--format", LABEL_FMT).splitlines(), unit, tag)
+    if dry or not found:
+        return found, []
+    for c in found:
+        subprocess.run(["docker", "stop", "-t", "20", c], capture_output=True)
+    left = running(found)
+    for c in left:
+        subprocess.run(["docker", "kill", c], capture_output=True)
+    return found, running(found)
+
+
 def scope_pids(unit):
     out = []
     for base in ("/sys/fs/cgroup/user.slice",):
@@ -66,15 +100,25 @@ def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--unit")
     ap.add_argument("--match")
+    ap.add_argument("--tag", help="ot-run tag prefix otrun-<host>-<pid>-: stop every container labelled with it (no scope needed)")
     ap.add_argument("--dry-run", action="store_true")
     a = ap.parse_args(argv)
-    if not (a.unit or a.match):
-        ap.error("--unit or --match required")
+    if not (a.unit or a.match or a.tag):
+        ap.error("--unit, --match or --tag required")
     if not os.environ.get("XDG_RUNTIME_DIR"):
         os.environ["XDG_RUNTIME_DIR"] = f"/run/user/{os.getuid()}"
     names = sh("docker", "ps", "--format", "{{.Names}}").split()
     hit = 0
     own = own_pids()
+    if a.unit or a.tag:       # CANCEL-LABEL-1120: containers found by their label, whatever started them
+        found, left = stop_labelled(a.unit, a.tag, a.dry_run)
+        print(f"ot-heavy-stop: labelled containers {'found' if a.dry_run else 'stopped'}: {' '.join(found) or 'none'}")
+        if left:
+            print(f"ot-heavy-stop: STILL RUNNING after docker stop and kill: {' '.join(left)}")
+            return 3
+        hit += len(found)
+        if a.tag and not a.unit:
+            return 0 if hit else 1
     for u in ([a.unit] if a.unit else units()):
         pids = scope_pids(u)
         if not pids:
