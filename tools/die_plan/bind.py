@@ -5625,6 +5625,11 @@ def cmd_bind(a):
         import view_define_check
         verrs, strict_info["view_defines"] = view_define_check.gate(raw, B.ab, B.base)
         B.errors.extend(verrs)
+        # BUNDLE-DEPTH (COORD 11-20, FABLE-FIX-S81-SLICEC): one valid / data bundle at one relay depth, else the data lands
+        # a cycle off its valid (D8i / J3 c1x_C t9 t10 eg_*, iq_C t1 cfg_*); functional, always blocking
+        import bundle_depth_check
+        berrs, strict_info["bundle_depth"] = bundle_depth_check.gate(raw)
+        B.errors.extend(berrs)
     rep["files"] = [str(f) for f in files]
     rep["findings"] = B.findings
     rep["extra_lib"] = B.extra_lib
