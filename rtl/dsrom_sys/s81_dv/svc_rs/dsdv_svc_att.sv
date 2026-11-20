@@ -811,9 +811,11 @@ module dsdv_svc_att #(
 `endif
     localparam integer QMEM_SYNC = 1;
 `endif
-    dsdv_svc_mem_ar #(.W(D*16), .DEPTH(H), .AW(4), .SYNC(QMEM_SYNC)) u_qmem_mem (
+    // P2 only writes rows 0 through 7. Keep the four-bit read address for rc=0.
+    localparam integer QMEM_WAW = P2 ? 3 : 4;
+    dsdv_svc_mem_ar #(.W(D*16), .DEPTH(H), .AW(4), .SYNC(QMEM_SYNC), .WAW(QMEM_WAW)) u_qmem_mem (
         .clk(clk), .ra_n(qmem_addr), .we(q_word),
-        .wa(P2 ? 4'(f_idx[6:4]) : {f_hdr[448], f_idx[6:4]}), .wd(q_d),
+        .wa(QMEM_WAW'({f_hdr[448], f_idx[6:4]})), .wd(q_d),
 `ifdef OT_S81_SVC_QMEM_RDREG
         .rd(qmem_prefetch));
 `else

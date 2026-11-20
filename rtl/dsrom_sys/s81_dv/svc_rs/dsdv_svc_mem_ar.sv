@@ -15,12 +15,14 @@ module dsdv_svc_mem_ar #(
     parameter integer AW = 5,
     parameter integer MACRO = 0,
     parameter integer SYNC = 0,
-    parameter integer MUT = 0
+    parameter integer MUT = 0,
+    // A writer can address fewer rows while preserving invalid-read encoding.
+    parameter integer WAW = AW
 )(
     input  wire          clk,
     input  wire [AW-1:0] ra_n,
     input  wire          we,
-    input  wire [AW-1:0] wa,
+    input  wire [WAW-1:0] wa,
     input  wire [W-1:0]  wd,
     output wire [W-1:0]  rd
 );
@@ -37,8 +39,8 @@ module dsdv_svc_mem_ar #(
     wire [N*MW-1:0] rdp;
     genvar g;
     generate
-        if (DEPTH > MD || AW > MAW) begin : g_bad
-            $error("dsdv_svc_mem_ar: DEPTH / AW exceed the macro");
+        if (DEPTH > MD || AW > MAW || WAW < 1 || WAW > MAW) begin : g_bad
+            $error("dsdv_svc_mem_ar: invalid depth or address width for the macro");
         end
         for (g = 0; g < N; g = g + 1) begin : g_m
             if (MACRO == 1) begin : g_160

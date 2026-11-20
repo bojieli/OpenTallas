@@ -81,7 +81,7 @@ module dsdv_svc_rs_pvso_entry #(parameter integer PVSO_ENABLE=0, parameter integ
       assign joined_v=0;assign joined_quarter=0;assign joined_d=0;assign join_fault=0;
     end endgenerate
 `ifdef OT_SVC_H8
-    dsdv_pv_so_ingress_h8 #(.ENABLE(PVSO_ENABLE),.HEADER_DEN(1)) u_ingress(.clk(ck),.rst_n(rst),
+    dsdv_pv_so_ingress_h8 #(.ENABLE(PVSO_ENABLE),.HEADER_DEN(1),.EXTERNAL_DEN_EVENT(0)) u_ingress(.clk(ck),.rst_n(rst),
       .cfg_v(so_cfg_v),.cfg_owner(so_owner),.cfg_position(so_position),.cfg_se_jid(so_se_jid),.cfg_so_jid(so_jid),
       .pv_v(joined_v),.pv_quarter(joined_quarter),.pv_d(joined_d),
       .param_v(so_param_v),.param_row(so_param_row),.param_owner(so_param_owner),.param_position(so_param_position),.param_d(so_param_d),
