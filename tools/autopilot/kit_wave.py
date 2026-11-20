@@ -9677,7 +9677,26 @@ def bind_preflight(AP, cfg, st, die, rows, now=None, rpy=None):
     for k in [k for k, v in cache.items() if now - float(v.get("t") or 0) > BIND_PREFLIGHT_TTL_S]:
         del cache[k]
     out = {}
-    for key, (g, items) in groups.items():
+    # COORD 11-20 (tick time): the groups of one die probe in parallel (thread pool, each rpy has its own ssh timeout); results merge in order
+    if len(groups) > 1 and not os.environ.get("OT_BIND_PREFLIGHT_SERIAL"):
+        from concurrent.futures import ThreadPoolExecutor
+        ordered = list(groups.items())
+
+        def _one(kv):
+            sub = {}
+            _bind_preflight_groups(AP, d, st, die, [kv], cache, now, rpy, sub)
+            return sub
+        with ThreadPoolExecutor(max_workers=min(8, len(ordered))) as ex:
+            for sub in ex.map(_one, ordered):
+                out.update(sub)
+        return out
+    _bind_preflight_groups(AP, d, st, die, list(groups.items()), cache, now, rpy, out)
+    return out
+
+
+def _bind_preflight_groups(AP, d, st, die, group_items, cache, now, rpy, out):
+    """the body of bind_preflight's per-group loop (cache check, signature recheck, probe, verdict) for the given [(key, (g, items))]; fills `out`"""
+    for key, (g, items) in group_items:
         c = cache.get(key)
         if c and c.get("sig") and now - float(c.get("sig_t") or 0) >= BIND_SIG_RECHECK_S:
             # WAVE-TICK-1119 (COORD 2): the verdict stands while the plan, the bind and kit_topology.py are byte-for-byte what they were (size + mtime walk);
@@ -9708,7 +9727,6 @@ def bind_preflight(AP, cfg, st, die, rows, now=None, rpy=None):
             if item in c["stale"]:
                 out[item] = (f"KIT_TOPOLOGY_BIND_STALE preflight: bind {g['bind_out']} does not match plan {g['plan']} "
                              f"(kit_topology.bind_matches); regenerate the canonical bind or repoint kit_rtl.bind_out")
-    return out
 
 
 # KW-FIX-46 11-12 (COORD, PSPLIT-SIDECAR-STALE): S81 switched plan/bind to the param-split ready11p while gen_args
@@ -9969,9 +9987,41 @@ def core_view_names(names, core_views):
     return out
 
 
+def prewarm_probes(AP, cfg, st, owners):
+    """COORD 11-20 (tick time: the per-die ssh probes ran one die after another, 57 s of bind probes + the plan reads): before the per-die loop, every enabled die's plan read and bind preflight
+    (over its OWNERS type rows, a superset of what it will pick) run IN PARALLEL, one thread per die, each ssh with its own timeout; the loop then hits the caches (plan_names by file mtime,
+    bind_preflight by group).  Never raises into the plan; a die whose prewarm failed is simply probed in the loop as before."""
+    from concurrent.futures import ThreadPoolExecutor
+    dies = [x for x, v in (cfg.get("dies") or {}).items() if isinstance(v, dict) and v.get("enabled") and v.get("plan") and v.get("gen_host")]
+    if len(dies) < 2 or os.environ.get("OT_PREWARM_OFF"):
+        return 0
+
+    def one(die):
+        d = cfg["dies"][die]
+        try:
+            plan_names(AP, st, d)
+        except Exception:
+            pass
+        rows = [dict(r) for r in owners if r.get("die") == die and (r.get("kind") or "type") == "type" and r.get("item")]
+        if rows and d.get("bind_preflight") is not False:
+            try:
+                bind_preflight(AP, cfg, st, die, rows)
+            except Exception:
+                pass
+        return die
+    with ThreadPoolExecutor(max_workers=min(8, len(dies))) as ex:
+        done = list(ex.map(one, dies))
+    return len(done)
+
+
 def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
     """-> list of (die, ok, why, picks, skip) and the launch list [(die, row)] respecting capacity"""
     out, launch, per_die = [], [], []
+    if AP and probe:
+        try:
+            prewarm_probes(AP, cfg, st, owners)
+        except Exception as e:                           # a prewarm never stops the plan
+            AP.log(f"KIT-WAVE probe prewarm skipped: {type(e).__name__}: {e}")
     for die in sorted(set(list(cfg.get("dies") or {}) + list(GATE_EVENTS) + list(COORD_ONLY))):
         stop = stop_reason(cfg, die, AP.AP_DIR if AP else None)
         ok, why = (False, stop) if stop else gate(cfg, die, _descends(AP) if AP else None)

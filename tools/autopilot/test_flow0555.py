@@ -717,3 +717,59 @@ def test_tool_digests_of_an_immutable_rt_tree_are_computed_once_and_persisted(tm
 
 def test_bind_signature_recheck_interval_is_half_an_hour():
     assert KW.BIND_SIG_RECHECK_S == 1800
+
+
+def test_bind_preflight_groups_and_dies_probe_in_parallel_with_the_same_result(monkeypatch):
+    import threading
+    import time as _t
+    seen, lock = [], threading.Lock()
+
+    class A:
+        def log(self, m): pass
+
+        def rpy(self, host, code, args, timeout=0):
+            if code == KW.PROBE_BIND_SIG:
+                return {"sig": "s"}
+            with lock:
+                seen.append(args.get("bind_out"))
+            _t.sleep(0.3)
+            return {"stale": ["t2"] if args.get("bind_out") == "/b1" else []}
+    ap = A()
+    cfg = {"dies": {"d": {"gen_host": "h", "src": "/s", "plan": "/p", "kit_rtl": {"mode": "bind", "bind_out": "/b0", "asbuilt": ""},
+                          "item_inputs": {"t2": {"kit_rtl": {"bind_out": "/b1"}}}}}}
+    rows = [{"item": "t1", "kind": "type"}, {"item": "t2", "kind": "type"}]
+    t0 = _t.time()
+    out = KW.bind_preflight(ap, cfg, {}, "d", rows, rpy=ap.rpy)
+    dt = _t.time() - t0
+    assert set(out) == {"t2"} and sorted(seen) == ["/b0", "/b1"]
+    assert dt < 0.55                                              # two 0.3 s probes ran concurrently
+    # prewarm: two dies, probed concurrently, caches filled so the per-die loop makes no further probe
+    cfg2 = {"dies": {k: {"enabled": True, "gen_host": "h", "src": "/s", "plan": "/p", "kit_rtl": {"mode": "bind", "bind_out": "/b0"}} for k in ("a", "b")}}
+    owners = [{"die": k, "item": "t1", "kind": "type"} for k in ("a", "b")]
+    seen.clear()
+    st = {}
+    monkeypatch.setattr(KW, "plan_names", lambda AP, st, d: {})
+    t0 = _t.time()
+    n = KW.prewarm_probes(type("AP2", (), {"log": staticmethod(lambda m: None), "rpy": staticmethod(ap.rpy)})(), cfg2, st, owners)
+    assert n == 2 and _t.time() - t0 < 0.55
+
+
+def test_cancel_stop_is_detached_and_its_result_is_checked_next_tick(tmp_path, monkeypatch):
+    import autopilot as A
+    import wave_jobs as WJ
+    spawned, lines = [], []
+    monkeypatch.setattr(WJ, "stop_bg_spawn", lambda hub, roots, logp, tag="": spawned.append((roots, str(logp), tag)) or True)
+    monkeypatch.setattr(A, "AP_DIR", tmp_path)
+    monkeypatch.setattr(A, "log", lines.append)
+    monkeypatch.setattr(A, "DRY", False)
+    j = {"id": "J1", "die": "qc", "type": "t", "path": "h:/k/attempt_1"}
+    assert A.stop_cancelled(j, "explicit cancel") == "" and spawned and spawned[0][2] == "J1"
+    assert j["stopped_containers"]["queued"] and "detached" in lines[-1]
+    st = {"jobs": {"J1": j}}
+    assert A.check_pending_stops(st) == 0 and not j["stopped_containers"].get("checked")            # no result yet
+    (tmp_path / "remote_stops.log").write_text("2026-11-20 00:30:00 stop-bg [J1] 1 root(s): none running; epyc7 not checked: timeout\n")
+    assert A.check_pending_stops(st) == 1 and j["stopped_containers"]["retry"] == 1 and len(spawned) == 2   # a host was not checked: started once more
+    (tmp_path / "remote_stops.log").write_text("2026-11-20 00:31:00 stop-bg [J1] 1 root(s): epyc8:c1\n")
+    assert A.check_pending_stops(st) == 0 and "epyc8:c1" in j["stopped_containers"]["checked"]
+    found, ok, _ = WJ.stop_result_for("x stop-bg [J2] 1 root(s): none running", "J2")
+    assert found and ok

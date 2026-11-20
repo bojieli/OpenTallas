@@ -1877,6 +1877,12 @@ def wave_superseded(j):
 def stop_cancelled(j, why):
     """FAILFAST-1 11-12 (orphan leak: containers ran 24-70 h after their rows went CANCELLED): a job that goes CANCELLED stops its
     containers by exact name on every host and records which (j['stopped_containers'] + the log).  Never raises."""
+    if not DRY and j.get("path") and os.environ.get("OT_STOP_INLINE") != "1":
+        # COORD 11-20: fire and forget; the detached stop appends its result to remote_stops.log tagged with the job id, check_pending_stops() reads it next tick
+        if WJ.stop_bg_spawn(HUB_NAME, [j.get("path")], AP_DIR / "remote_stops.log", j["id"]):
+            j["stopped_containers"] = {"at": now_s(), "names": "", "why": why[:120], "errors": "", "queued": time.time(), "retry": 0}
+            log(f"CANCEL-STOP {j['id']} {j['die']}/{j['type']} ({why[:80]}): fleet stop started detached (result next tick)")
+            return ""
     try:
         names, errs = WJ.stop_row_containers(sh, HUB_NAME, [j.get("path")], dry=DRY)
     except Exception as e:                           # noqa: a cancel is recorded even when the stop could not run
@@ -1884,6 +1890,33 @@ def stop_cancelled(j, why):
     j["stopped_containers"] = {"at": now_s(), "names": names, "why": why[:120], "errors": errs[:300]}
     log(f"CANCEL-STOP {j['id']} {j['die']}/{j['type']} ({why[:80]}): containers [{names or 'none running'}]{errs}")
     return names
+
+
+def check_pending_stops(st):
+    """the result of last tick's detached cancel-stops: a stop that finished with a host 'not checked' is started ONCE more; the outcome is logged (CANCEL-STOP-RESULT).  -> n re-started"""
+    try:
+        txt = (AP_DIR / "remote_stops.log").read_text(errors="replace")
+    except OSError:
+        txt = ""
+    n = 0
+    for j in (st.get("jobs") or {}).values():
+        sc = j.get("stopped_containers") or {}
+        if not sc.get("queued") or sc.get("checked"):
+            continue
+        found, ok, line = WJ.stop_result_for(txt, j["id"])
+        if not found:
+            if time.time() - float(sc["queued"]) > 1800:
+                sc["checked"] = "no result after 30 min"
+            continue
+        if ok or int(sc.get("retry") or 0) >= 1:
+            sc["checked"] = line[:300]
+            log(f"CANCEL-STOP-RESULT {j['id']} {j.get('die')}/{j.get('type')}: {line[20:260]}")
+        else:
+            sc["retry"] = int(sc.get("retry") or 0) + 1
+            sc["queued"] = time.time()
+            WJ.stop_bg_spawn(HUB_NAME, [j.get("path")], AP_DIR / "remote_stops.log", j["id"])
+            n += 1
+    return n
 
 
 def stop_survivors(j):
@@ -3627,6 +3660,10 @@ def tick(args):
         _last[0] = n
         tick_progress(AP_DIR, _t0, name)
     st = load_state()
+    try:
+        check_pending_stops(st)
+    except Exception as _e:                            # a result check never stops the tick
+        log(f"CANCEL-STOP-RESULT skipped: {type(_e).__name__}: {_e}")
     try:
         mark_bad_hosts()
     except Exception as _e:                            # a host-status read never stops the tick

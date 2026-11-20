@@ -334,6 +334,29 @@ def orphan_scopes(sh, hub, rows, hosts=None, dry=False, min_age=1800, cap=40):
         return dict(ex.map(one, hosts))
 
 
+def stop_bg_spawn(hub, roots, log_path, tag=""):
+    """COORD 11-20 (tick poll_running 140 s: one fleet-wide ssh stop per cancelled job inside the tick): fire and forget; the detached process appends `<time> stop-bg [<tag>] ...` to log_path.
+    -> True when started"""
+    import subprocess as _sp
+    roots = sorted({r for r in roots if r})
+    if not roots:
+        return False
+    try:
+        _sp.Popen([sys.executable, "-I", os.path.abspath(__file__), "stop-bg", str(hub), json.dumps(roots), str(log_path), str(tag)],
+                  stdin=_sp.DEVNULL, stdout=_sp.DEVNULL, stderr=_sp.DEVNULL, start_new_session=True)
+        return True
+    except OSError:
+        return False
+
+
+def stop_result_for(log_text, tag):
+    """the last `stop-bg [<tag>]` line of the log: -> (found, ok, text); ok False when a host was not checked"""
+    hit = [l for l in (log_text or "").splitlines() if f"stop-bg [{tag}]" in l]
+    if not hit:
+        return False, False, ""
+    return True, "not checked" not in hit[-1], hit[-1]
+
+
 def stop_row_containers(sh, hub, roots, hosts=None, dry=False):
     """FAILFAST-1 11-12: what a cancel does to its row's running containers, in one call.  -> (names 'host:container ...', errors text)
     Exact names only (stop_on_fleet); the caller stores both on the row and logs them."""
@@ -361,8 +384,9 @@ def _cli(argv):
         except _sp.TimeoutExpired:
             return 124, "", "timeout"
     hub, roots = argv[1], json.loads(argv[2])
+    tag = argv[4] if len(argv) > 4 else ""
     res = stop_on_fleet(sh, hub, roots)
-    line = "%s stop-bg %d root(s): %s%s" % (_t.strftime("%F %T"), len(roots), " ".join(stopped_names(res))[:400] or "none running",
+    line = "%s stop-bg [%s] %d root(s): %s%s" % (_t.strftime("%F %T"), tag, len(roots), " ".join(stopped_names(res))[:400] or "none running",
                                           "".join("; %s not checked: %s" % (h, v["error"]) for h, v in res.items() if v.get("error")))
     if len(argv) > 3:
         with open(argv[3], "a") as f:

@@ -123,6 +123,9 @@ class StopKit(unittest.TestCase):
 
 
 class CancelSuperseded(unittest.TestCase):
+    def setUp(self):
+        WJ.BAD_HOSTS = set()                      # a tick test earlier in the session may have marked hosts bad (module global)
+
     def test_cancel_stops_remote_attempt_root(self):
         t = Path(tempfile.mkdtemp())
         (t / 'w').mkdir()
