@@ -43,3 +43,15 @@ Original optimistic publisher left parked. cw9b unit oth-ubuntu-3303151-17951937
 p1 pva2e3974f: src_manifest = D8i drift window (fixed 03:24, not flow); latest failure FLOW @place resize.tcl empty explicit buffer set -> FLOW-NOADV-0915.
 p3 cl31d0dc4b / p6 pv0012ba28: CANCELLED geom SUPERSEDED, last guard ssh TimeoutExpired (infra). Not superseded by J6 (J6 = r1/r2 only).
 All relaunch after the 405 reach override (lever 1) lands for D8i.
+
+## Update 11:05 (COORD from FABLE-PD-S81-1100)
+- J5 applies if bind green (no functional error found). j5_apply.sh now also holds every ot_s81sl_leaf__* type except the form-C representative
+  ot_s81sl_leaf__t7 (hold_items via kit_wave_edit, re-set after apply if publish_apply drops them). NEXT OWNER ACTION: read t7 GRT at iteration 10,
+  then release the leaf holds (kit_wave_edit --unset of those keys) if the overflow trend is sane. J5 raises leaf GRT top tiles (t7 station bits 4,190 -> 21,442).
+- Stop: no hold-buffer ECO on col_h9_r0/col_h10 before one kit's hold ends are read.
+- J6 fix list (ranked): 1 leaf per-lane spread rows instead of form C, incl t44/t53/t54 (S81-LEAF-SPREAD-J6.json; proof on epyc9);
+  2 lockup rows for col_h9_r0 + col_h10 (96 types) plus the two masters; 3 re-derive reset relay form at 275 um (38 col trees lost negedge incl both J6
+  masters: no J6 master route until bound RTL confirms negedge); 4 data hops to 300: serdes coll_o0 334-401, col_h9_r0 frame_int_o0, slice C, iq_C t1 416 leg;
+  5 slice C taps: c1x t1 1,289-sink tap, kv512_C row; 6 SRAMREG: 0/75 leaf types carry it in the J5 base because VP_SRAMREG was staged only in the separate
+  vp_sr donor tree (stage_vp_sramreg.py, gate_vp_sr) -> bring into J6 base; 7 bk_sel A3P rows (FABLE-FIX-S81-BKSEL-R2); 8 svc H8 (FABLE-FIX-S81-SVC-R2).
+- Another waiter (s81-die-r3-hub/j5_r4_iq_output_map_wait.sh, 10:22, not mine) reads iq_C rb map after the repair bind; read-only.
