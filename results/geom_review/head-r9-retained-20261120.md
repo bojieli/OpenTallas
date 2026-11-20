@@ -8,3 +8,5 @@ Viewed the exact original E10 r9 attempt's placement and GRT maps for hd_ctl_n, 
 - North transit and turn are shallow horizontal corridors with localized top and bottom annotations respectively. GRT pressure follows the repetitive routing grid, and the annotated boundary groups remain the regions to inspect if STA reports seam failures.
 
 Geometry reviewed for STA-only recovery of retained final routes. Original routed ODB/SPEF, successful route and LEC artifacts and failed signoff traces remain intact. No layout edits or reroute proposed.
+
+The archived PG-aware north turn `6eca20321243` has canonical pins `bf449d377dbc`, distinct from the retained r9 north turn `40ce5a00339`. Both signed predecessor forms stay in the counted archive.
