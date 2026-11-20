@@ -12051,3 +12051,4 @@ FAILED [AUTOPILOT b0fd34f61ef0] 2026-11-20 02:28:08 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-20 02:34 PST S81-GEOM-OPUS -> COORD (D8i col builds, plan f2ec5ffc3bda, per-family update; ps):
   col_h9_r1 (60): GRT 0; CTS FF hold after CORETAP 32: worst -120.2 median -120.2; sign-off runs 0, SIGNED 0; 18 stopped without signoff; old plan -181
   Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
+- 2026-11-20 02:35 PST KIT-SCAN hourly [PRECHECK-1119 -> COORD, die owners] loved-redfish: qwen_compute: 13 kits; FOLD 0; placed scans OK 13, FAILED 0; legs>405 in 13 of 13 (worst slw_fw_v2__cl8537f156 2325: u_lpad_x_ctl_i.q -> u_core.ch_dn_o 611.7 um); tap skew>=100 ps in 4. Estimator; detail /home/ubuntu/.local/state/precheck-kit-scan.
