@@ -1,0 +1,3523 @@
+{
+ "before": "strict default-off R5b bind control",
+ "after": "assembled physical model",
+ "changed_K_count": 116,
+ "K": [
+  {
+   "port": "attnh__svc_5__svc_4__0",
+   "source": {
+    "bus": "attnh_o0",
+    "part": "svc_5"
+   },
+   "receiver": {
+    "bus": "attnh_i0",
+    "part": "svc_4"
+   },
+   "K": [
+    127,
+    0
+   ],
+   "kw": 7,
+   "W": [
+    0,
+    6
+   ],
+   "R": [
+    1,
+    6
+   ],
+   "depth": 8
+  },
+  {
+   "port": "attnh__svc_4__svc_5__0",
+   "source": {
+    "bus": "attnh_o0",
+    "part": "svc_4"
+   },
+   "receiver": {
+    "bus": "attnh_i0",
+    "part": "svc_5"
+   },
+   "K": [
+    7,
+    9
+   ],
+   "kw": 7,
+   "W": [
+    0,
+    8
+   ],
+   "R": [
+    1,
+    7
+   ],
+   "depth": 8
+  },
+  {
+   "port": "hbm__svc_5__svc_4__0",
+   "source": {
+    "bus": "hbm_o0",
+    "part": "svc_5"
+   },
+   "receiver": {
+    "bus": "hbm_i0",
+    "part": "svc_4"
+   },
+   "K": [
+    127,
+    122
+   ],
+   "kw": 7,
+   "W": [
+    0,
+    0
+   ],
+   "R": [
+    1,
+    6
+   ],
+   "depth": 8
+  },
+  {
+   "port": "hbm__svc_4__svc_5__0",
+   "source": {
+    "bus": "hbm_o0",
+    "part": "svc_4"
+   },
+   "receiver": {
+    "bus": "hbm_i0",
+    "part": "svc_5"
+   },
+   "K": [
+    7,
+    9
+   ],
+   "kw": 7,
+   "W": [
+    0,
+    8
+   ],
+   "R": [
+    1,
+    7
+   ],
+   "depth": 8
+  },
+  {
+   "port": "attn__svc_4__svc_5__0",
+   "source": {
+    "bus": "attn_o1",
+    "part": "svc_4"
+   },
+   "receiver": {
+    "bus": "attn_i3",
+    "part": "svc_5"
+   },
+   "K": [
+    7,
+    9
+   ],
+   "kw": 7,
+   "W": [
+    0,
+    8
+   ],
+   "R": [
+    1,
+    7
+   ],
+   "depth": 8
+  },
+  {
+   "port": "attn__svc_5__svc_4__0",
+   "source": {
+    "bus": "attn_o3",
+    "part": "svc_5"
+   },
+   "receiver": {
+    "bus": "attn_i1",
+    "part": "svc_4"
+   },
+   "K": [
+    127,
+    0
+   ],
+   "kw": 7,
+   "W": [
+    0,
+    6
+   ],
+   "R": [
+    1,
+    6
+   ],
+   "depth": 8
+  },
+  {
+   "port": "rsv__svc_4__svc_5__0",
+   "source": {
+    "bus": "rsv_o0",
+    "part": "svc_4"
+   },
+   "receiver": {
+    "bus": "rsv_i0",
+    "part": "svc_5"
+   },
+   "K": [
+    6,
+    8
+   ],
+   "kw": 7,
+   "W": [
+    0,
+    8
+   ],
+   "R": [
+    1,
+    7
+   ],
+   "depth": 8
+  },
+  {
+   "port": "idx__svc_14__bk_sel__1",
+   "source": {
+    "bus": "ft1_o",
+    "part": "svc_12"
+   },
+   "receiver": {
+    "bus": "ft1_i",
+    "part": "svc_13"
+   },
+   "K": [
+    10,
+    17
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    14
+   ],
+   "R": [
+    1,
+    8
+   ],
+   "depth": 4
+  },
+  {
+   "port": "hbm__svc_13__svc_12__0",
+   "source": {
+    "bus": "hbm_o0",
+    "part": "svc_13"
+   },
+   "receiver": {
+    "bus": "hbm_i0",
+    "part": "svc_12"
+   },
+   "K": [
+    123,
+    114
+   ],
+   "kw": 7,
+   "W": [
+    0,
+    4
+   ],
+   "R": [
+    1,
+    14
+   ],
+   "depth": 8
+  },
+  {
+   "port": "xtier__eng__s_6N_C__2",
+   "source": {
+    "bus": "ft2_o",
+    "part": "svc_12"
+   },
+   "receiver": {
+    "bus": "ft2_i",
+    "part": "svc_13"
+   },
+   "K": [
+    10,
+    3
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    0
+   ],
+   "R": [
+    1,
+    8
+   ],
+   "depth": 4
+  },
+  {
+   "port": "hbm__svc_12__svc_13__0",
+   "source": {
+    "bus": "hbm_o0",
+    "part": "svc_12"
+   },
+   "receiver": {
+    "bus": "hbm_i0",
+    "part": "svc_13"
+   },
+   "K": [
+    10,
+    17
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    14
+   ],
+   "R": [
+    1,
+    8
+   ],
+   "depth": 4
+  },
+  {
+   "port": "attn__svc_13__svc_12__0",
+   "source": {
+    "bus": "attn_o1",
+    "part": "svc_13"
+   },
+   "receiver": {
+    "bus": "attn_i1",
+    "part": "svc_12"
+   },
+   "K": [
+    123,
+    114
+   ],
+   "kw": 7,
+   "W": [
+    0,
+    4
+   ],
+   "R": [
+    1,
+    14
+   ],
+   "depth": 8
+  },
+  {
+   "port": "attn__svc_12__svc_13__0",
+   "source": {
+    "bus": "attn_o1",
+    "part": "svc_12"
+   },
+   "receiver": {
+    "bus": "attn_i1",
+    "part": "svc_13"
+   },
+   "K": [
+    10,
+    17
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    14
+   ],
+   "R": [
+    1,
+    8
+   ],
+   "depth": 4
+  },
+  {
+   "port": "xtier__s_6S_C__eng__4",
+   "source": {
+    "bus": "ft0_o",
+    "part": "svc_13"
+   },
+   "receiver": {
+    "bus": "ft0_i",
+    "part": "svc_12"
+   },
+   "K": [
+    123,
+    110
+   ],
+   "kw": 7,
+   "W": [
+    0,
+    0
+   ],
+   "R": [
+    1,
+    14
+   ],
+   "depth": 8
+  },
+  {
+   "port": "xtier__eng__s_6S_C__2",
+   "source": {
+    "bus": "ft3_o",
+    "part": "svc_12"
+   },
+   "receiver": {
+    "bus": "ft3_i",
+    "part": "svc_13"
+   },
+   "K": [
+    10,
+    3
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    0
+   ],
+   "R": [
+    1,
+    8
+   ],
+   "depth": 4
+  },
+  {
+   "port": "rsv__svc_12__svc_13__0",
+   "source": {
+    "bus": "rsv_o0",
+    "part": "svc_12"
+   },
+   "receiver": {
+    "bus": "rsv_i0",
+    "part": "svc_13"
+   },
+   "K": [
+    9,
+    16
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    14
+   ],
+   "R": [
+    1,
+    8
+   ],
+   "depth": 4
+  },
+  {
+   "port": "attnh__svc_10__svc_11__0",
+   "source": {
+    "bus": "attnh_o0",
+    "part": "svc_10"
+   },
+   "receiver": {
+    "bus": "attnh_i0",
+    "part": "svc_11"
+   },
+   "K": [
+    10,
+    12
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    6
+   ],
+   "R": [
+    1,
+    5
+   ],
+   "depth": 4
+  },
+  {
+   "port": "hbm__svc_11__svc_10__0",
+   "source": {
+    "bus": "hbm_o0",
+    "part": "svc_11"
+   },
+   "receiver": {
+    "bus": "hbm_i0",
+    "part": "svc_10"
+   },
+   "K": [
+    123,
+    2
+   ],
+   "kw": 7,
+   "W": [
+    0,
+    7
+   ],
+   "R": [
+    1,
+    1
+   ],
+   "depth": 8
+  },
+  {
+   "port": "hbm__svc_10__svc_11__0",
+   "source": {
+    "bus": "hbm_o0",
+    "part": "svc_10"
+   },
+   "receiver": {
+    "bus": "hbm_i0",
+    "part": "svc_11"
+   },
+   "K": [
+    10,
+    12
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    6
+   ],
+   "R": [
+    1,
+    5
+   ],
+   "depth": 4
+  },
+  {
+   "port": "attn__svc_11__svc_10__0",
+   "source": {
+    "bus": "attn_o3",
+    "part": "svc_11"
+   },
+   "receiver": {
+    "bus": "attn_i1",
+    "part": "svc_10"
+   },
+   "K": [
+    123,
+    2
+   ],
+   "kw": 7,
+   "W": [
+    0,
+    7
+   ],
+   "R": [
+    1,
+    1
+   ],
+   "depth": 8
+  },
+  {
+   "port": "attn__svc_10__svc_11__0",
+   "source": {
+    "bus": "attn_o1",
+    "part": "svc_10"
+   },
+   "receiver": {
+    "bus": "attn_i3",
+    "part": "svc_11"
+   },
+   "K": [
+    10,
+    12
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    6
+   ],
+   "R": [
+    1,
+    5
+   ],
+   "depth": 4
+  },
+  {
+   "port": "rsv__svc_10__svc_11__0",
+   "source": {
+    "bus": "rsv_o0",
+    "part": "svc_10"
+   },
+   "receiver": {
+    "bus": "rsv_i0",
+    "part": "svc_11"
+   },
+   "K": [
+    9,
+    11
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    6
+   ],
+   "R": [
+    1,
+    5
+   ],
+   "depth": 4
+  },
+  {
+   "port": "attnh__svc_3__svc_2__0",
+   "source": {
+    "bus": "attnh_o0",
+    "part": "svc_3"
+   },
+   "receiver": {
+    "bus": "attnh_i0",
+    "part": "svc_2"
+   },
+   "K": [
+    2,
+    122
+   ],
+   "kw": 7,
+   "W": [
+    0,
+    4
+   ],
+   "R": [
+    1,
+    13
+   ],
+   "depth": 8
+  },
+  {
+   "port": "hbm__svc_3__svc_2__0",
+   "source": {
+    "bus": "hbm_o0",
+    "part": "svc_3"
+   },
+   "receiver": {
+    "bus": "hbm_i0",
+    "part": "svc_2"
+   },
+   "K": [
+    2,
+    122
+   ],
+   "kw": 7,
+   "W": [
+    0,
+    4
+   ],
+   "R": [
+    1,
+    13
+   ],
+   "depth": 8
+  },
+  {
+   "port": "attnh__svc_2__svc_3__0",
+   "source": {
+    "bus": "attnh_o0",
+    "part": "svc_2"
+   },
+   "receiver": {
+    "bus": "attnh_i0",
+    "part": "svc_3"
+   },
+   "K": [
+    3,
+    11
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    12
+   ],
+   "R": [
+    1,
+    5
+   ],
+   "depth": 4
+  },
+  {
+   "port": "hbm__svc_2__svc_3__0",
+   "source": {
+    "bus": "hbm_o0",
+    "part": "svc_2"
+   },
+   "receiver": {
+    "bus": "hbm_i0",
+    "part": "svc_3"
+   },
+   "K": [
+    3,
+    11
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    12
+   ],
+   "R": [
+    1,
+    5
+   ],
+   "depth": 4
+  },
+  {
+   "port": "attn__svc_2__svc_3__0",
+   "source": {
+    "bus": "attn_o0",
+    "part": "svc_2"
+   },
+   "receiver": {
+    "bus": "attn_i1",
+    "part": "svc_3"
+   },
+   "K": [
+    3,
+    11
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    12
+   ],
+   "R": [
+    1,
+    5
+   ],
+   "depth": 4
+  },
+  {
+   "port": "attn__svc_3__svc_2__0",
+   "source": {
+    "bus": "attn_o1",
+    "part": "svc_3"
+   },
+   "receiver": {
+    "bus": "attn_i0",
+    "part": "svc_2"
+   },
+   "K": [
+    2,
+    122
+   ],
+   "kw": 7,
+   "W": [
+    0,
+    4
+   ],
+   "R": [
+    1,
+    13
+   ],
+   "depth": 8
+  },
+  {
+   "port": "rsv__svc_2__svc_3__0",
+   "source": {
+    "bus": "rsv_o0",
+    "part": "svc_2"
+   },
+   "receiver": {
+    "bus": "rsv_i0",
+    "part": "svc_3"
+   },
+   "K": [
+    2,
+    10
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    12
+   ],
+   "R": [
+    1,
+    5
+   ],
+   "depth": 4
+  },
+  {
+   "port": "attnh__svc_9__svc_8__0",
+   "source": {
+    "bus": "attnh_o0",
+    "part": "svc_9"
+   },
+   "receiver": {
+    "bus": "attnh_i0",
+    "part": "svc_8"
+   },
+   "K": [
+    125,
+    127
+   ],
+   "kw": 7,
+   "W": [
+    0,
+    6
+   ],
+   "R": [
+    1,
+    5
+   ],
+   "depth": 8
+  },
+  {
+   "port": "hbm__svc_9__svc_8__0",
+   "source": {
+    "bus": "hbm_o0",
+    "part": "svc_9"
+   },
+   "receiver": {
+    "bus": "hbm_i0",
+    "part": "svc_8"
+   },
+   "K": [
+    125,
+    121
+   ],
+   "kw": 7,
+   "W": [
+    0,
+    0
+   ],
+   "R": [
+    1,
+    5
+   ],
+   "depth": 8
+  },
+  {
+   "port": "hbm__svc_8__svc_9__0",
+   "source": {
+    "bus": "hbm_o0",
+    "part": "svc_8"
+   },
+   "receiver": {
+    "bus": "hbm_i0",
+    "part": "svc_9"
+   },
+   "K": [
+    8,
+    9
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    7
+   ],
+   "R": [
+    1,
+    7
+   ],
+   "depth": 4
+  },
+  {
+   "port": "attn__svc_8__svc_9__0",
+   "source": {
+    "bus": "attn_o0",
+    "part": "svc_8"
+   },
+   "receiver": {
+    "bus": "attn_i1",
+    "part": "svc_9"
+   },
+   "K": [
+    8,
+    9
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    7
+   ],
+   "R": [
+    1,
+    7
+   ],
+   "depth": 4
+  },
+  {
+   "port": "attn__svc_9__svc_8__0",
+   "source": {
+    "bus": "attn_o1",
+    "part": "svc_9"
+   },
+   "receiver": {
+    "bus": "attn_i0",
+    "part": "svc_8"
+   },
+   "K": [
+    125,
+    127
+   ],
+   "kw": 7,
+   "W": [
+    0,
+    6
+   ],
+   "R": [
+    1,
+    5
+   ],
+   "depth": 8
+  },
+  {
+   "port": "rsv__svc_8__svc_9__0",
+   "source": {
+    "bus": "rsv_o0",
+    "part": "svc_8"
+   },
+   "receiver": {
+    "bus": "rsv_i0",
+    "part": "svc_9"
+   },
+   "K": [
+    7,
+    1
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    0
+   ],
+   "R": [
+    1,
+    7
+   ],
+   "depth": 4
+  },
+  {
+   "port": "attnh__svc_7__svc_6__0",
+   "source": {
+    "bus": "attnh_o0",
+    "part": "svc_7"
+   },
+   "receiver": {
+    "bus": "attnh_i0",
+    "part": "svc_6"
+   },
+   "K": [
+    125,
+    0
+   ],
+   "kw": 7,
+   "W": [
+    0,
+    8
+   ],
+   "R": [
+    1,
+    6
+   ],
+   "depth": 8
+  },
+  {
+   "port": "attnh__svc_6__svc_7__0",
+   "source": {
+    "bus": "attnh_o0",
+    "part": "svc_6"
+   },
+   "receiver": {
+    "bus": "attnh_i0",
+    "part": "svc_7"
+   },
+   "K": [
+    8,
+    12
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    8
+   ],
+   "R": [
+    1,
+    5
+   ],
+   "depth": 4
+  },
+  {
+   "port": "hbm__svc_7__svc_6__0",
+   "source": {
+    "bus": "hbm_o0",
+    "part": "svc_7"
+   },
+   "receiver": {
+    "bus": "hbm_i0",
+    "part": "svc_6"
+   },
+   "K": [
+    125,
+    0
+   ],
+   "kw": 7,
+   "W": [
+    0,
+    8
+   ],
+   "R": [
+    1,
+    6
+   ],
+   "depth": 8
+  },
+  {
+   "port": "attn__svc_6__svc_7__0",
+   "source": {
+    "bus": "attn_o0",
+    "part": "svc_6"
+   },
+   "receiver": {
+    "bus": "attn_i1",
+    "part": "svc_7"
+   },
+   "K": [
+    8,
+    12
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    8
+   ],
+   "R": [
+    1,
+    5
+   ],
+   "depth": 4
+  },
+  {
+   "port": "hbm__svc_6__svc_7__0",
+   "source": {
+    "bus": "hbm_o0",
+    "part": "svc_6"
+   },
+   "receiver": {
+    "bus": "hbm_i0",
+    "part": "svc_7"
+   },
+   "K": [
+    8,
+    12
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    8
+   ],
+   "R": [
+    1,
+    5
+   ],
+   "depth": 4
+  },
+  {
+   "port": "attn__svc_7__svc_6__0",
+   "source": {
+    "bus": "attn_o1",
+    "part": "svc_7"
+   },
+   "receiver": {
+    "bus": "attn_i0",
+    "part": "svc_6"
+   },
+   "K": [
+    125,
+    0
+   ],
+   "kw": 7,
+   "W": [
+    0,
+    8
+   ],
+   "R": [
+    1,
+    6
+   ],
+   "depth": 8
+  },
+  {
+   "port": "rsv__svc_6__svc_7__0",
+   "source": {
+    "bus": "rsv_o0",
+    "part": "svc_6"
+   },
+   "receiver": {
+    "bus": "rsv_i0",
+    "part": "svc_7"
+   },
+   "K": [
+    7,
+    11
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    8
+   ],
+   "R": [
+    1,
+    5
+   ],
+   "depth": 4
+  },
+  {
+   "port": "x_E0_in__4",
+   "source": {
+    "bus": "ft1_o",
+    "part": "svc_15"
+   },
+   "receiver": {
+    "bus": "ft1_i",
+    "part": "s_7S_x13"
+   },
+   "K": [
+    115,
+    125
+   ],
+   "kw": 7,
+   "W": [
+    0,
+    10
+   ],
+   "R": [
+    8,
+    8
+   ],
+   "depth": 8
+  },
+  {
+   "port": "rt_E0_in_0__1",
+   "source": {
+    "bus": "ft6_o",
+    "part": "s_7S_x13"
+   },
+   "receiver": {
+    "bus": "ft4_i",
+    "part": "svc_15"
+   },
+   "K": [
+    19,
+    7
+   ],
+   "kw": 6,
+   "W": [
+    9,
+    9
+   ],
+   "R": [
+    1,
+    13
+   ],
+   "depth": 4
+  },
+  {
+   "port": "rt_E0_in_1__2",
+   "source": {
+    "bus": "ft7_o",
+    "part": "s_7S_x13"
+   },
+   "receiver": {
+    "bus": "ft5_i",
+    "part": "svc_15"
+   },
+   "K": [
+    19,
+    7
+   ],
+   "kw": 6,
+   "W": [
+    9,
+    9
+   ],
+   "R": [
+    1,
+    13
+   ],
+   "depth": 4
+  },
+  {
+   "port": "rt_E0_in_2__3",
+   "source": {
+    "bus": "ft8_o",
+    "part": "s_7S_x13"
+   },
+   "receiver": {
+    "bus": "ft6_i",
+    "part": "svc_15"
+   },
+   "K": [
+    19,
+    7
+   ],
+   "kw": 6,
+   "W": [
+    9,
+    9
+   ],
+   "R": [
+    1,
+    13
+   ],
+   "depth": 4
+  },
+  {
+   "port": "x_E0_out__4",
+   "source": {
+    "bus": "ft2_o",
+    "part": "svc_15"
+   },
+   "receiver": {
+    "bus": "ft0_i",
+    "part": "s_7S_x13"
+   },
+   "K": [
+    115,
+    125
+   ],
+   "kw": 7,
+   "W": [
+    0,
+    10
+   ],
+   "R": [
+    8,
+    8
+   ],
+   "depth": 8
+  },
+  {
+   "port": "rt_E0_out_0__4",
+   "source": {
+    "bus": "ft9_o",
+    "part": "s_7S_x13"
+   },
+   "receiver": {
+    "bus": "ft7_i",
+    "part": "svc_15"
+   },
+   "K": [
+    19,
+    7
+   ],
+   "kw": 6,
+   "W": [
+    9,
+    9
+   ],
+   "R": [
+    1,
+    13
+   ],
+   "depth": 4
+  },
+  {
+   "port": "rt_E0_out_1__5",
+   "source": {
+    "bus": "ft10_o",
+    "part": "s_7S_x13"
+   },
+   "receiver": {
+    "bus": "ft8_i",
+    "part": "svc_15"
+   },
+   "K": [
+    19,
+    7
+   ],
+   "kw": 6,
+   "W": [
+    9,
+    9
+   ],
+   "R": [
+    1,
+    13
+   ],
+   "depth": 4
+  },
+  {
+   "port": "rt_E0_out_2__6",
+   "source": {
+    "bus": "ft11_o",
+    "part": "s_7S_x13"
+   },
+   "receiver": {
+    "bus": "ft9_i",
+    "part": "svc_15"
+   },
+   "K": [
+    19,
+    7
+   ],
+   "kw": 6,
+   "W": [
+    9,
+    9
+   ],
+   "R": [
+    1,
+    13
+   ],
+   "depth": 4
+  },
+  {
+   "port": "hbm__svc_1__svc_0__0",
+   "source": {
+    "bus": "hbm_o0",
+    "part": "svc_1"
+   },
+   "receiver": {
+    "bus": "hbm_i0",
+    "part": "svc_0"
+   },
+   "K": [
+    2,
+    58
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    8
+   ],
+   "R": [
+    1,
+    17
+   ],
+   "depth": 4
+  },
+  {
+   "port": "attnh__svc_0__svc_1__0",
+   "source": {
+    "bus": "attnh_o0",
+    "part": "svc_0"
+   },
+   "receiver": {
+    "bus": "attnh_i0",
+    "part": "svc_1"
+   },
+   "K": [
+    1,
+    6
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    16
+   ],
+   "R": [
+    1,
+    12
+   ],
+   "depth": 4
+  },
+  {
+   "port": "hbm__svc_0__svc_1__0",
+   "source": {
+    "bus": "hbm_o0",
+    "part": "svc_0"
+   },
+   "receiver": {
+    "bus": "hbm_i0",
+    "part": "svc_1"
+   },
+   "K": [
+    1,
+    6
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    16
+   ],
+   "R": [
+    1,
+    12
+   ],
+   "depth": 4
+  },
+  {
+   "port": "attn__svc_1__svc_0__0",
+   "source": {
+    "bus": "attn_o1",
+    "part": "svc_1"
+   },
+   "receiver": {
+    "bus": "attn_i0",
+    "part": "svc_0"
+   },
+   "K": [
+    2,
+    58
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    8
+   ],
+   "R": [
+    1,
+    17
+   ],
+   "depth": 4
+  },
+  {
+   "port": "attn__svc_0__svc_1__0",
+   "source": {
+    "bus": "attn_o0",
+    "part": "svc_0"
+   },
+   "receiver": {
+    "bus": "attn_i1",
+    "part": "svc_1"
+   },
+   "K": [
+    1,
+    6
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    16
+   ],
+   "R": [
+    1,
+    12
+   ],
+   "depth": 4
+  },
+  {
+   "port": "rsv__svc_0__svc_1__0",
+   "source": {
+    "bus": "rsv_o0",
+    "part": "svc_0"
+   },
+   "receiver": {
+    "bus": "rsv_i0",
+    "part": "svc_1"
+   },
+   "K": [
+    0,
+    5
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    16
+   ],
+   "R": [
+    1,
+    12
+   ],
+   "depth": 4
+  },
+  {
+   "port": "vid_seqhost__svc_0__4",
+   "source": {
+    "bus": "ft3_o",
+    "part": "svc_1"
+   },
+   "receiver": {
+    "bus": "vid_i0",
+    "part": "svc_0"
+   },
+   "K": [
+    1,
+    57
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    8
+   ],
+   "R": [
+    1,
+    17
+   ],
+   "depth": 4
+  },
+  {
+   "port": "idx__s_3S_C__iqf__7",
+   "source": {
+    "bus": "ft2_o",
+    "part": "svc_1"
+   },
+   "receiver": {
+    "bus": "ft0_i",
+    "part": "svc_0"
+   },
+   "K": [
+    2,
+    58
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    8
+   ],
+   "R": [
+    1,
+    17
+   ],
+   "depth": 4
+  },
+  {
+   "port": "x_W0_in__4",
+   "source": {
+    "bus": "ft0_o",
+    "part": "svc_1"
+   },
+   "receiver": {
+    "bus": "ft1_i",
+    "part": "s_0S_x01"
+   },
+   "K": [
+    59,
+    3
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    8
+   ],
+   "R": [
+    8,
+    8
+   ],
+   "depth": 4
+  },
+  {
+   "port": "rt_W0_in_0__1",
+   "source": {
+    "bus": "ft12_o",
+    "part": "s_0S_x01"
+   },
+   "receiver": {
+    "bus": "ft4_i",
+    "part": "svc_1"
+   },
+   "K": [
+    10,
+    63
+   ],
+   "kw": 6,
+   "W": [
+    9,
+    9
+   ],
+   "R": [
+    1,
+    12
+   ],
+   "depth": 4
+  },
+  {
+   "port": "rt_W0_in_1__2",
+   "source": {
+    "bus": "ft13_o",
+    "part": "s_0S_x01"
+   },
+   "receiver": {
+    "bus": "ft5_i",
+    "part": "svc_1"
+   },
+   "K": [
+    10,
+    63
+   ],
+   "kw": 6,
+   "W": [
+    9,
+    9
+   ],
+   "R": [
+    1,
+    12
+   ],
+   "depth": 4
+  },
+  {
+   "port": "rt_W0_in_2__3",
+   "source": {
+    "bus": "ft14_o",
+    "part": "s_0S_x01"
+   },
+   "receiver": {
+    "bus": "ft6_i",
+    "part": "svc_1"
+   },
+   "K": [
+    10,
+    63
+   ],
+   "kw": 6,
+   "W": [
+    9,
+    9
+   ],
+   "R": [
+    1,
+    12
+   ],
+   "depth": 4
+  },
+  {
+   "port": "x_W0_out__4",
+   "source": {
+    "bus": "ft1_o",
+    "part": "svc_1"
+   },
+   "receiver": {
+    "bus": "ft0_i",
+    "part": "s_0S_x01"
+   },
+   "K": [
+    59,
+    3
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    8
+   ],
+   "R": [
+    8,
+    8
+   ],
+   "depth": 4
+  },
+  {
+   "port": "rt_W0_out_0__4",
+   "source": {
+    "bus": "ft15_o",
+    "part": "s_0S_x01"
+   },
+   "receiver": {
+    "bus": "ft7_i",
+    "part": "svc_1"
+   },
+   "K": [
+    10,
+    63
+   ],
+   "kw": 6,
+   "W": [
+    9,
+    9
+   ],
+   "R": [
+    1,
+    12
+   ],
+   "depth": 4
+  },
+  {
+   "port": "rt_W0_out_1__5",
+   "source": {
+    "bus": "ft16_o",
+    "part": "s_0S_x01"
+   },
+   "receiver": {
+    "bus": "ft8_i",
+    "part": "svc_1"
+   },
+   "K": [
+    10,
+    63
+   ],
+   "kw": 6,
+   "W": [
+    9,
+    9
+   ],
+   "R": [
+    1,
+    12
+   ],
+   "depth": 4
+  },
+  {
+   "port": "rt_W0_out_2__6",
+   "source": {
+    "bus": "ft17_o",
+    "part": "s_0S_x01"
+   },
+   "receiver": {
+    "bus": "ft9_i",
+    "part": "svc_1"
+   },
+   "K": [
+    10,
+    63
+   ],
+   "kw": 6,
+   "W": [
+    9,
+    9
+   ],
+   "R": [
+    1,
+    12
+   ],
+   "depth": 4
+  },
+  {
+   "port": "unit__svc_14__eng__0",
+   "source": {
+    "bus": "unit_o1",
+    "part": "svc_14"
+   },
+   "receiver": {
+    "bus": "unit_i0",
+    "part": "eng"
+   },
+   "K": [
+    59,
+    15
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    20
+   ],
+   "R": [
+    1,
+    1
+   ],
+   "depth": 4
+  },
+  {
+   "port": "xtier__eng__s_6N_C__0",
+   "source": {
+    "bus": "xtier_o1",
+    "part": "eng"
+   },
+   "receiver": {
+    "bus": "ft3_i",
+    "part": "svc_14"
+   },
+   "K": [
+    8,
+    52
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    0
+   ],
+   "R": [
+    1,
+    21
+   ],
+   "depth": 4
+  },
+  {
+   "port": "xtier__s_6N_C__eng__12",
+   "source": {
+    "bus": "ft2_o",
+    "part": "svc_14"
+   },
+   "receiver": {
+    "bus": "xtier_i1",
+    "part": "eng"
+   },
+   "K": [
+    59,
+    15
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    20
+   ],
+   "R": [
+    1,
+    1
+   ],
+   "depth": 4
+  },
+  {
+   "port": "hbmrd__phy_hbm__svc_14__1",
+   "source": {
+    "bus": "ft1_o",
+    "part": "eng"
+   },
+   "receiver": {
+    "bus": "hbmrd_i0",
+    "part": "svc_14"
+   },
+   "K": [
+    8,
+    52
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    0
+   ],
+   "R": [
+    1,
+    21
+   ],
+   "depth": 4
+  },
+  {
+   "port": "dfi__svc_14__phy_hbm__0",
+   "source": {
+    "bus": "dfi_o0",
+    "part": "svc_14"
+   },
+   "receiver": {
+    "bus": "ft0_i",
+    "part": "eng"
+   },
+   "K": [
+    59,
+    15
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    20
+   ],
+   "R": [
+    1,
+    1
+   ],
+   "depth": 4
+  },
+  {
+   "port": "xtier__s_6S_C__eng__6",
+   "source": {
+    "bus": "ft0_o",
+    "part": "svc_14"
+   },
+   "receiver": {
+    "bus": "xtier_i0",
+    "part": "eng"
+   },
+   "K": [
+    59,
+    15
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    20
+   ],
+   "R": [
+    1,
+    1
+   ],
+   "depth": 4
+  },
+  {
+   "port": "xtier__eng__s_6S_C__0",
+   "source": {
+    "bus": "xtier_o0",
+    "part": "eng"
+   },
+   "receiver": {
+    "bus": "ft4_i",
+    "part": "svc_14"
+   },
+   "K": [
+    8,
+    52
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    0
+   ],
+   "R": [
+    1,
+    21
+   ],
+   "depth": 4
+  },
+  {
+   "port": "unit__eng__svc_14__0",
+   "source": {
+    "bus": "unit_o0",
+    "part": "eng"
+   },
+   "receiver": {
+    "bus": "unit_i1",
+    "part": "svc_14"
+   },
+   "K": [
+    7,
+    51
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    0
+   ],
+   "R": [
+    1,
+    21
+   ],
+   "depth": 4
+  },
+  {
+   "port": "unit__seqhost__eng__6",
+   "source": {
+    "bus": "ft1_o",
+    "part": "svc_14"
+   },
+   "receiver": {
+    "bus": "unit_i1",
+    "part": "eng"
+   },
+   "K": [
+    58,
+    14
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    20
+   ],
+   "R": [
+    1,
+    1
+   ],
+   "depth": 4
+  },
+  {
+   "port": "flt__eng__svc_14__0",
+   "source": {
+    "bus": "flt_o0",
+    "part": "eng"
+   },
+   "receiver": {
+    "bus": "flt_i0",
+    "part": "svc_14"
+   },
+   "K": [
+    7,
+    51
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    0
+   ],
+   "R": [
+    1,
+    21
+   ],
+   "depth": 4
+  },
+  {
+   "port": "idx__svc_14__bk_sel__0",
+   "source": {
+    "bus": "idx_o0",
+    "part": "svc_14"
+   },
+   "receiver": {
+    "bus": "ft1_i",
+    "part": "svc_12"
+   },
+   "K": [
+    59,
+    2
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    20
+   ],
+   "R": [
+    1,
+    14
+   ],
+   "depth": 4
+  },
+  {
+   "port": "xtier__eng__s_6N_C__1",
+   "source": {
+    "bus": "ft3_o",
+    "part": "svc_14"
+   },
+   "receiver": {
+    "bus": "ft2_i",
+    "part": "svc_12"
+   },
+   "K": [
+    59,
+    2
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    20
+   ],
+   "R": [
+    1,
+    14
+   ],
+   "depth": 4
+  },
+  {
+   "port": "xtier__s_6S_C__eng__5",
+   "source": {
+    "bus": "ft0_o",
+    "part": "svc_12"
+   },
+   "receiver": {
+    "bus": "ft0_i",
+    "part": "svc_14"
+   },
+   "K": [
+    8,
+    2
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    14
+   ],
+   "R": [
+    1,
+    21
+   ],
+   "depth": 4
+  },
+  {
+   "port": "xtier__eng__s_6S_C__1",
+   "source": {
+    "bus": "ft4_o",
+    "part": "svc_14"
+   },
+   "receiver": {
+    "bus": "ft3_i",
+    "part": "svc_12"
+   },
+   "K": [
+    59,
+    2
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    20
+   ],
+   "R": [
+    1,
+    14
+   ],
+   "depth": 4
+  },
+  {
+   "port": "idx__svc_12__svc_14__0",
+   "source": {
+    "bus": "idx_o0",
+    "part": "svc_12"
+   },
+   "receiver": {
+    "bus": "idx_i0",
+    "part": "svc_14"
+   },
+   "K": [
+    8,
+    2
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    14
+   ],
+   "R": [
+    1,
+    21
+   ],
+   "depth": 4
+  },
+  {
+   "port": "unit__svc_12__svc_14__0",
+   "source": {
+    "bus": "unit_o1",
+    "part": "svc_12"
+   },
+   "receiver": {
+    "bus": "unit_i0",
+    "part": "svc_14"
+   },
+   "K": [
+    8,
+    2
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    14
+   ],
+   "R": [
+    1,
+    21
+   ],
+   "depth": 4
+  },
+  {
+   "port": "unit__svc_14__svc_12__0",
+   "source": {
+    "bus": "unit_o0",
+    "part": "svc_14"
+   },
+   "receiver": {
+    "bus": "unit_i1",
+    "part": "svc_12"
+   },
+   "K": [
+    58,
+    1
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    20
+   ],
+   "R": [
+    1,
+    14
+   ],
+   "depth": 4
+  },
+  {
+   "port": "vid_svc_12__svc_14__0",
+   "source": {
+    "bus": "vid_o0",
+    "part": "svc_12"
+   },
+   "receiver": {
+    "bus": "vid_i0",
+    "part": "svc_14"
+   },
+   "K": [
+    7,
+    1
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    14
+   ],
+   "R": [
+    1,
+    21
+   ],
+   "depth": 4
+  },
+  {
+   "port": "idx__svc_0__svc_2__0",
+   "source": {
+    "bus": "idx_o0",
+    "part": "svc_0"
+   },
+   "receiver": {
+    "bus": "idx_i0",
+    "part": "svc_2"
+   },
+   "K": [
+    0,
+    4
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    16
+   ],
+   "R": [
+    1,
+    13
+   ],
+   "depth": 4
+  },
+  {
+   "port": "unit__svc_0__svc_2__0",
+   "source": {
+    "bus": "unit_o0",
+    "part": "svc_0"
+   },
+   "receiver": {
+    "bus": "unit_i1",
+    "part": "svc_2"
+   },
+   "K": [
+    0,
+    4
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    16
+   ],
+   "R": [
+    1,
+    13
+   ],
+   "depth": 4
+  },
+  {
+   "port": "unit__svc_2__svc_0__0",
+   "source": {
+    "bus": "unit_o1",
+    "part": "svc_2"
+   },
+   "receiver": {
+    "bus": "unit_i0",
+    "part": "svc_0"
+   },
+   "K": [
+    2,
+    62
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    12
+   ],
+   "R": [
+    1,
+    17
+   ],
+   "depth": 4
+  },
+  {
+   "port": "vid_svc_0__svc_2__0",
+   "source": {
+    "bus": "vid_o0",
+    "part": "svc_0"
+   },
+   "receiver": {
+    "bus": "vid_i0",
+    "part": "svc_2"
+   },
+   "K": [
+    63,
+    3
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    16
+   ],
+   "R": [
+    1,
+    13
+   ],
+   "depth": 4
+  },
+  {
+   "port": "dfi__svc_0__phy_hbm__0",
+   "source": {
+    "bus": "dfi_o0",
+    "part": "svc_0"
+   },
+   "receiver": {
+    "bus": "ft0_i",
+    "part": "svc_2"
+   },
+   "K": [
+    0,
+    4
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    16
+   ],
+   "R": [
+    1,
+    13
+   ],
+   "depth": 4
+  },
+  {
+   "port": "hbmrd__phy_hbm__svc_0__1",
+   "source": {
+    "bus": "ft1_o",
+    "part": "svc_2"
+   },
+   "receiver": {
+    "bus": "hbmrd_i0",
+    "part": "svc_0"
+   },
+   "K": [
+    3,
+    63
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    12
+   ],
+   "R": [
+    1,
+    17
+   ],
+   "depth": 4
+  },
+  {
+   "port": "attn__svc_13__svc_15__0",
+   "source": {
+    "bus": "attn_o2",
+    "part": "svc_13"
+   },
+   "receiver": {
+    "bus": "attn_i0",
+    "part": "svc_15"
+   },
+   "K": [
+    2,
+    58
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    4
+   ],
+   "R": [
+    1,
+    13
+   ],
+   "depth": 4
+  },
+  {
+   "port": "attn__svc_15__svc_13__0",
+   "source": {
+    "bus": "attn_o0",
+    "part": "svc_15"
+   },
+   "receiver": {
+    "bus": "attn_i2",
+    "part": "svc_13"
+   },
+   "K": [
+    1,
+    4
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    10
+   ],
+   "R": [
+    1,
+    8
+   ],
+   "depth": 4
+  },
+  {
+   "port": "vid_svc_15__svc_13__0",
+   "source": {
+    "bus": "vid_o0",
+    "part": "svc_15"
+   },
+   "receiver": {
+    "bus": "vid_i0",
+    "part": "svc_13"
+   },
+   "K": [
+    0,
+    3
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    10
+   ],
+   "R": [
+    1,
+    8
+   ],
+   "depth": 4
+  },
+  {
+   "port": "idx__s_3S_C__iqf__8",
+   "source": {
+    "bus": "ft0_o",
+    "part": "svc_0"
+   },
+   "receiver": {
+    "bus": "idx_i0",
+    "part": "iqf"
+   },
+   "K": [
+    60,
+    12
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    16
+   ],
+   "R": [
+    1,
+    1
+   ],
+   "depth": 4
+  },
+  {
+   "port": "idx__iqf__svc_0__0",
+   "source": {
+    "bus": "idx_o0",
+    "part": "iqf"
+   },
+   "receiver": {
+    "bus": "idx_i0",
+    "part": "svc_0"
+   },
+   "K": [
+    6,
+    54
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    0
+   ],
+   "R": [
+    1,
+    17
+   ],
+   "depth": 4
+  },
+  {
+   "port": "flt__iqf__svc_0__0",
+   "source": {
+    "bus": "flt_o0",
+    "part": "iqf"
+   },
+   "receiver": {
+    "bus": "flt_i0",
+    "part": "svc_0"
+   },
+   "K": [
+    5,
+    53
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    0
+   ],
+   "R": [
+    1,
+    17
+   ],
+   "depth": 4
+  },
+  {
+   "port": "attn__svc_11__svc_5__0",
+   "source": {
+    "bus": "attn_o0",
+    "part": "svc_11"
+   },
+   "receiver": {
+    "bus": "ft1_i",
+    "part": "svc_9"
+   },
+   "K": [
+    1,
+    59
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    0
+   ],
+   "R": [
+    1,
+    7
+   ],
+   "depth": 4
+  },
+  {
+   "port": "attn__svc_5__svc_11__2",
+   "source": {
+    "bus": "ft0_o",
+    "part": "svc_9"
+   },
+   "receiver": {
+    "bus": "attn_i0",
+    "part": "svc_11"
+   },
+   "K": [
+    1,
+    3
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    6
+   ],
+   "R": [
+    1,
+    5
+   ],
+   "depth": 4
+  },
+  {
+   "port": "attn__svc_11__svc_9__0",
+   "source": {
+    "bus": "attn_o1",
+    "part": "svc_11"
+   },
+   "receiver": {
+    "bus": "attn_i2",
+    "part": "svc_9"
+   },
+   "K": [
+    1,
+    2
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    7
+   ],
+   "R": [
+    1,
+    7
+   ],
+   "depth": 4
+  },
+  {
+   "port": "attn__svc_9__svc_11__0",
+   "source": {
+    "bus": "attn_o2",
+    "part": "svc_9"
+   },
+   "receiver": {
+    "bus": "attn_i1",
+    "part": "svc_11"
+   },
+   "K": [
+    1,
+    3
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    6
+   ],
+   "R": [
+    1,
+    5
+   ],
+   "depth": 4
+  },
+  {
+   "port": "vid_svc_11__svc_9__0",
+   "source": {
+    "bus": "vid_o0",
+    "part": "svc_11"
+   },
+   "receiver": {
+    "bus": "vid_i0",
+    "part": "svc_9"
+   },
+   "K": [
+    0,
+    1
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    7
+   ],
+   "R": [
+    1,
+    7
+   ],
+   "depth": 4
+  },
+  {
+   "port": "attn__svc_5__svc_7__0",
+   "source": {
+    "bus": "attn_o1",
+    "part": "svc_5"
+   },
+   "receiver": {
+    "bus": "attn_i2",
+    "part": "svc_7"
+   },
+   "K": [
+    2,
+    4
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    6
+   ],
+   "R": [
+    1,
+    5
+   ],
+   "depth": 4
+  },
+  {
+   "port": "attn__svc_11__svc_5__2",
+   "source": {
+    "bus": "ft0_o",
+    "part": "svc_7"
+   },
+   "receiver": {
+    "bus": "attn_i0",
+    "part": "svc_5"
+   },
+   "K": [
+    1,
+    3
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    8
+   ],
+   "R": [
+    1,
+    7
+   ],
+   "depth": 4
+  },
+  {
+   "port": "attn__svc_5__svc_11__0",
+   "source": {
+    "bus": "attn_o0",
+    "part": "svc_5"
+   },
+   "receiver": {
+    "bus": "ft1_i",
+    "part": "svc_7"
+   },
+   "K": [
+    2,
+    62
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    0
+   ],
+   "R": [
+    1,
+    5
+   ],
+   "depth": 4
+  },
+  {
+   "port": "attn__svc_7__svc_5__0",
+   "source": {
+    "bus": "attn_o2",
+    "part": "svc_7"
+   },
+   "receiver": {
+    "bus": "attn_i1",
+    "part": "svc_5"
+   },
+   "K": [
+    1,
+    3
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    8
+   ],
+   "R": [
+    1,
+    7
+   ],
+   "depth": 4
+  },
+  {
+   "port": "vid_svc_7__svc_5__0",
+   "source": {
+    "bus": "vid_o0",
+    "part": "svc_7"
+   },
+   "receiver": {
+    "bus": "vid_i0",
+    "part": "svc_5"
+   },
+   "K": [
+    0,
+    2
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    8
+   ],
+   "R": [
+    1,
+    7
+   ],
+   "depth": 4
+  },
+  {
+   "port": "attnh__svc_15__svc_14__0",
+   "source": {
+    "bus": "attnh_o0",
+    "part": "svc_15"
+   },
+   "receiver": {
+    "bus": "attnh_i0",
+    "part": "svc_14"
+   },
+   "K": [
+    63,
+    53
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    10
+   ],
+   "R": [
+    1,
+    21
+   ],
+   "depth": 4
+  },
+  {
+   "port": "hbm__svc_15__svc_14__0",
+   "source": {
+    "bus": "hbm_o0",
+    "part": "svc_15"
+   },
+   "receiver": {
+    "bus": "hbm_i0",
+    "part": "svc_14"
+   },
+   "K": [
+    63,
+    53
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    10
+   ],
+   "R": [
+    1,
+    21
+   ],
+   "depth": 4
+  },
+  {
+   "port": "attnh__svc_14__svc_15__0",
+   "source": {
+    "bus": "attnh_o0",
+    "part": "svc_14"
+   },
+   "receiver": {
+    "bus": "attnh_i0",
+    "part": "svc_15"
+   },
+   "K": [
+    4,
+    12
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    20
+   ],
+   "R": [
+    1,
+    13
+   ],
+   "depth": 4
+  },
+  {
+   "port": "hbm__svc_14__svc_15__0",
+   "source": {
+    "bus": "hbm_o0",
+    "part": "svc_14"
+   },
+   "receiver": {
+    "bus": "hbm_i0",
+    "part": "svc_15"
+   },
+   "K": [
+    4,
+    12
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    20
+   ],
+   "R": [
+    1,
+    13
+   ],
+   "depth": 4
+  },
+  {
+   "port": "xtier__s_6N_C__eng__11",
+   "source": {
+    "bus": "ft0_o",
+    "part": "svc_15"
+   },
+   "receiver": {
+    "bus": "ft2_i",
+    "part": "svc_14"
+   },
+   "K": [
+    63,
+    53
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    10
+   ],
+   "R": [
+    1,
+    21
+   ],
+   "depth": 4
+  },
+  {
+   "port": "attn__svc_14__svc_15__0",
+   "source": {
+    "bus": "attn_o0",
+    "part": "svc_14"
+   },
+   "receiver": {
+    "bus": "attn_i1",
+    "part": "svc_15"
+   },
+   "K": [
+    4,
+    12
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    20
+   ],
+   "R": [
+    1,
+    13
+   ],
+   "depth": 4
+  },
+  {
+   "port": "attn__svc_15__svc_14__0",
+   "source": {
+    "bus": "attn_o1",
+    "part": "svc_15"
+   },
+   "receiver": {
+    "bus": "attn_i0",
+    "part": "svc_14"
+   },
+   "K": [
+    63,
+    53
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    10
+   ],
+   "R": [
+    1,
+    21
+   ],
+   "depth": 4
+  },
+  {
+   "port": "unit__seqhost__eng__5",
+   "source": {
+    "bus": "ft3_o",
+    "part": "svc_15"
+   },
+   "receiver": {
+    "bus": "ft1_i",
+    "part": "svc_14"
+   },
+   "K": [
+    62,
+    52
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    10
+   ],
+   "R": [
+    1,
+    21
+   ],
+   "depth": 4
+  },
+  {
+   "port": "rsv__svc_14__svc_15__0",
+   "source": {
+    "bus": "rsv_o0",
+    "part": "svc_14"
+   },
+   "receiver": {
+    "bus": "rsv_i0",
+    "part": "svc_15"
+   },
+   "K": [
+    3,
+    11
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    20
+   ],
+   "R": [
+    1,
+    13
+   ],
+   "depth": 4
+  },
+  {
+   "port": "vid_svc_14__svc_15__0",
+   "source": {
+    "bus": "vid_o0",
+    "part": "svc_14"
+   },
+   "receiver": {
+    "bus": "vid_i0",
+    "part": "svc_15"
+   },
+   "K": [
+    3,
+    11
+   ],
+   "kw": 6,
+   "W": [
+    0,
+    20
+   ],
+   "R": [
+    1,
+    13
+   ],
+   "depth": 4
+  }
+ ],
+ "latency": {
+  "bus_deltas": {},
+  "lanes": {},
+  "rule_broken": [],
+  "latency": {
+   "x_W0_in": [
+    37,
+    38
+   ],
+   "rt_W0_in_0": [
+    43,
+    44
+   ],
+   "rt_W0_in_1": [
+    49,
+    50
+   ],
+   "rt_W0_in_2": [
+    58,
+    59
+   ],
+   "rt_W0_out_0": [
+    63,
+    64
+   ],
+   "rt_W0_out_1": [
+    72,
+    73
+   ],
+   "rt_W0_out_2": [
+    76,
+    78
+   ],
+   "x_E0_in": [
+    35,
+    36
+   ],
+   "rt_E0_in_0": [
+    43,
+    44
+   ],
+   "rt_E0_in_1": [
+    50,
+    51
+   ],
+   "rt_E0_in_2": [
+    59,
+    60
+   ],
+   "x_E0_out": [
+    57,
+    58
+   ],
+   "rt_E0_out_0": [
+    64,
+    65
+   ],
+   "rt_E0_out_1": [
+    73,
+    74
+   ],
+   "rt_E0_out_2": [
+    78,
+    79
+   ],
+   "idx__svc_14__bk_sel": [
+    99,
+    100
+   ],
+   "xtier__eng__s_6N_C": [
+    94,
+    95
+   ],
+   "xtier__s_6N_C__eng": [
+    90,
+    92
+   ],
+   "attn__svc_11__svc_5": [
+    18,
+    19
+   ],
+   "attn__svc_5__svc_11": [
+    19,
+    20
+   ],
+   "dfi__svc_0__phy_hbm": [
+    8,
+    9
+   ],
+   "hbmrd__phy_hbm__svc_0": [
+    10,
+    11
+   ],
+   "xtier__eng__s_6S_C": [
+    59,
+    60
+   ],
+   "unit__seqhost__eng": [
+    48,
+    49
+   ]
+  },
+  "lane_cycles_added": 26
+ },
+ "physical_model_receipt": "lanes/handoff/s81-h8-assembled-physical-intake-1120.json",
+ "boot_wavefront": {
+  "root": "s_3S_L3",
+  "types": [
+   394,
+   394
+  ],
+  "parts": 398,
+  "max_release": [
+   207,
+   216
+  ],
+  "max_die_hop_um": [
+   378.0,
+   378.0
+  ],
+  "changed_parts": {
+   "eng": {
+    "before": 126,
+    "after": 134,
+    "source_before": "svc_14.rst_o_0",
+    "source_after": "svc_14.rst_o_0"
+   },
+   "fE0_p1_b0": {
+    "before": 143,
+    "after": 147,
+    "source_before": "s_7S_x13.rst_o_1",
+    "source_after": "s_7S_x13.rst_o_1"
+   },
+   "fE0_p1_b1": {
+    "before": 135,
+    "after": 143,
+    "source_before": "s_7S_x12.rst_o_2",
+    "source_after": "s_7S_x12.rst_o_2"
+   },
+   "fE0_p1_b2": {
+    "before": 136,
+    "after": 144,
+    "source_before": "s_7S_x12.rst_o_0",
+    "source_after": "s_7S_x12.rst_o_0"
+   },
+   "fE0_p2_b0": {
+    "before": 150,
+    "after": 154,
+    "source_before": "fE0_p1_b0.rst_o_1",
+    "source_after": "fE0_p1_b0.rst_o_1"
+   },
+   "fE0_p2_b1": {
+    "before": 144,
+    "after": 152,
+    "source_before": "fE0_p1_b1.rst_o_1",
+    "source_after": "fE0_p1_b1.rst_o_1"
+   },
+   "fE0_p2_b2": {
+    "before": 143,
+    "after": 151,
+    "source_before": "fE0_p1_b2.rst_o_2",
+    "source_after": "fE0_p1_b2.rst_o_2"
+   },
+   "fE0_p3_b0": {
+    "before": 153,
+    "after": 157,
+    "source_before": "fE1_p2_b2.rst_o_1",
+    "source_after": "fE1_p2_b2.rst_o_1"
+   },
+   "fE0_p3_b1": {
+    "before": 153,
+    "after": 161,
+    "source_before": "fE0_p2_b1.rst_o_2",
+    "source_after": "fE0_p2_b1.rst_o_2"
+   },
+   "fE0_p3_b2": {
+    "before": 150,
+    "after": 158,
+    "source_before": "fE0_p2_b2.rst_o_2",
+    "source_after": "fE0_p2_b2.rst_o_2"
+   },
+   "fE0_p4_b0": {
+    "before": 160,
+    "after": 164,
+    "source_before": "fE0_p3_b0.rst_o_1",
+    "source_after": "fE0_p3_b0.rst_o_1"
+   },
+   "fE0_p4_b1": {
+    "before": 161,
+    "after": 169,
+    "source_before": "fE0_p3_b1.rst_o_0",
+    "source_after": "fE0_p3_b1.rst_o_0"
+   },
+   "fE0_p4_b2": {
+    "before": 170,
+    "after": 178,
+    "source_before": "fE0_p4_b1.rst_o_0",
+    "source_after": "fE0_p4_b1.rst_o_0"
+   },
+   "fE0_p5_b0": {
+    "before": 167,
+    "after": 171,
+    "source_before": "fE0_p4_b0.rst_o_0",
+    "source_after": "fE0_p4_b0.rst_o_0"
+   },
+   "fE0_p5_b1": {
+    "before": 170,
+    "after": 178,
+    "source_before": "fE0_p4_b1.rst_o_1",
+    "source_after": "fE0_p4_b1.rst_o_1"
+   },
+   "fE0_p5_b2": {
+    "before": 177,
+    "after": 185,
+    "source_before": "fE0_p4_b2.rst_o_2",
+    "source_after": "fE0_p4_b2.rst_o_2"
+   },
+   "fE0_p6_b0": {
+    "before": 174,
+    "after": 178,
+    "source_before": "fE0_p5_b0.rst_o_0",
+    "source_after": "fE0_p5_b0.rst_o_0"
+   },
+   "fE0_p6_b1": {
+    "before": 179,
+    "after": 187,
+    "source_before": "fE0_p5_b1.rst_o_2",
+    "source_after": "fE0_p5_b1.rst_o_2"
+   },
+   "fE0_p6_b2": {
+    "before": 184,
+    "after": 192,
+    "source_before": "fE0_p5_b2.rst_o_2",
+    "source_after": "fE0_p5_b2.rst_o_2"
+   },
+   "fE1_p1_b2": {
+    "before": 138,
+    "after": 142,
+    "source_before": "s_7S_x14.rst_o_1",
+    "source_after": "s_7S_x14.rst_o_1"
+   },
+   "fE1_p2_b2": {
+    "before": 145,
+    "after": 149,
+    "source_before": "fE1_p1_b2.rst_o_2",
+    "source_after": "fE1_p1_b2.rst_o_2"
+   },
+   "fE1_p3_b2": {
+    "before": 152,
+    "after": 156,
+    "source_before": "fE1_p2_b2.rst_o_2",
+    "source_after": "fE1_p2_b2.rst_o_2"
+   },
+   "fE1_p4_b2": {
+    "before": 161,
+    "after": 165,
+    "source_before": "fE1_p3_b2.rst_o_0",
+    "source_after": "fE1_p3_b2.rst_o_0"
+   },
+   "fE1_p5_b2": {
+    "before": 168,
+    "after": 172,
+    "source_before": "fE1_p4_b2.rst_o_2",
+    "source_after": "fE1_p4_b2.rst_o_2"
+   },
+   "fE1_p6_b2": {
+    "before": 175,
+    "after": 179,
+    "source_before": "fE1_p5_b2.rst_o_2",
+    "source_after": "fE1_p5_b2.rst_o_2"
+   },
+   "fW0_p1_b0": {
+    "before": 151,
+    "after": 156,
+    "source_before": "s_0S_x01.rst_o_1",
+    "source_after": "s_0S_x01.rst_o_1"
+   },
+   "fW0_p1_b1": {
+    "before": 158,
+    "after": 167,
+    "source_before": "s_0S_x00.rst_o_2",
+    "source_after": "s_0S_x00.rst_o_2"
+   },
+   "fW0_p1_b2": {
+    "before": 159,
+    "after": 168,
+    "source_before": "s_0S_x00.rst_o_0",
+    "source_after": "s_0S_x00.rst_o_0"
+   },
+   "fW0_p2_b0": {
+    "before": 158,
+    "after": 163,
+    "source_before": "fW0_p1_b0.rst_o_1",
+    "source_after": "fW0_p1_b0.rst_o_1"
+   },
+   "fW0_p2_b1": {
+    "before": 167,
+    "after": 176,
+    "source_before": "fW0_p1_b1.rst_o_1",
+    "source_after": "fW0_p1_b1.rst_o_1"
+   },
+   "fW0_p2_b2": {
+    "before": 166,
+    "after": 175,
+    "source_before": "fW0_p1_b2.rst_o_2",
+    "source_after": "fW0_p1_b2.rst_o_2"
+   },
+   "fW0_p3_b0": {
+    "before": 161,
+    "after": 166,
+    "source_before": "fW1_p2_b2.rst_o_1",
+    "source_after": "fW1_p2_b2.rst_o_1"
+   },
+   "fW0_p3_b1": {
+    "before": 176,
+    "after": 185,
+    "source_before": "fW0_p2_b1.rst_o_2",
+    "source_after": "fW0_p2_b1.rst_o_2"
+   },
+   "fW0_p3_b2": {
+    "before": 173,
+    "after": 182,
+    "source_before": "fW0_p2_b2.rst_o_2",
+    "source_after": "fW0_p2_b2.rst_o_2"
+   },
+   "fW0_p4_b0": {
+    "before": 168,
+    "after": 173,
+    "source_before": "fW0_p3_b0.rst_o_1",
+    "source_after": "fW0_p3_b0.rst_o_1"
+   },
+   "fW0_p4_b1": {
+    "before": 184,
+    "after": 193,
+    "source_before": "fW0_p3_b1.rst_o_0",
+    "source_after": "fW0_p3_b1.rst_o_0"
+   },
+   "fW0_p4_b2": {
+    "before": 193,
+    "after": 202,
+    "source_before": "fW0_p4_b1.rst_o_0",
+    "source_after": "fW0_p4_b1.rst_o_0"
+   },
+   "fW0_p5_b0": {
+    "before": 175,
+    "after": 180,
+    "source_before": "fW0_p4_b0.rst_o_0",
+    "source_after": "fW0_p4_b0.rst_o_0"
+   },
+   "fW0_p5_b1": {
+    "before": 193,
+    "after": 202,
+    "source_before": "fW0_p4_b1.rst_o_1",
+    "source_after": "fW0_p4_b1.rst_o_1"
+   },
+   "fW0_p5_b2": {
+    "before": 200,
+    "after": 209,
+    "source_before": "fW0_p4_b2.rst_o_2",
+    "source_after": "fW0_p4_b2.rst_o_2"
+   },
+   "fW0_p6_b0": {
+    "before": 182,
+    "after": 187,
+    "source_before": "fW0_p5_b0.rst_o_0",
+    "source_after": "fW0_p5_b0.rst_o_0"
+   },
+   "fW0_p6_b1": {
+    "before": 202,
+    "after": 211,
+    "source_before": "fW0_p5_b1.rst_o_2",
+    "source_after": "fW0_p5_b1.rst_o_2"
+   },
+   "fW0_p6_b2": {
+    "before": 207,
+    "after": 216,
+    "source_before": "fW0_p5_b2.rst_o_2",
+    "source_after": "fW0_p5_b2.rst_o_2"
+   },
+   "fW1_p1_b2": {
+    "before": 146,
+    "after": 151,
+    "source_before": "s_0S_x02.rst_o_1",
+    "source_after": "s_0S_x02.rst_o_1"
+   },
+   "fW1_p2_b2": {
+    "before": 153,
+    "after": 158,
+    "source_before": "fW1_p1_b2.rst_o_2",
+    "source_after": "fW1_p1_b2.rst_o_2"
+   },
+   "fW1_p3_b2": {
+    "before": 160,
+    "after": 165,
+    "source_before": "fW1_p2_b2.rst_o_2",
+    "source_after": "fW1_p2_b2.rst_o_2"
+   },
+   "fW1_p4_b2": {
+    "before": 169,
+    "after": 174,
+    "source_before": "fW1_p3_b2.rst_o_0",
+    "source_after": "fW1_p3_b2.rst_o_0"
+   },
+   "fW1_p5_b2": {
+    "before": 176,
+    "after": 181,
+    "source_before": "fW1_p4_b2.rst_o_2",
+    "source_after": "fW1_p4_b2.rst_o_2"
+   },
+   "fW1_p6_b2": {
+    "before": 183,
+    "after": 188,
+    "source_before": "fW1_p5_b2.rst_o_2",
+    "source_after": "fW1_p5_b2.rst_o_2"
+   },
+   "iqf": {
+    "before": 157,
+    "after": 166,
+    "source_before": "s_0S_x00.rst_o_1",
+    "source_after": "s_0S_x00.rst_o_1"
+   },
+   "lk_ES0": {
+    "before": 138,
+    "after": 146,
+    "source_before": "s_7S_x10.rst_o_0",
+    "source_after": "s_7S_x10.rst_o_0"
+   },
+   "lk_ES1": {
+    "before": 147,
+    "after": 155,
+    "source_before": "lk_ES0.rst_o_0",
+    "source_after": "lk_ES0.rst_o_0"
+   },
+   "lk_WS0": {
+    "before": 169,
+    "after": 178,
+    "source_before": "fW0_p1_b2.rst_o_1",
+    "source_after": "fW0_p1_b2.rst_o_1"
+   },
+   "lk_WS1": {
+    "before": 176,
+    "after": 185,
+    "source_before": "fW0_p2_b2.rst_o_1",
+    "source_after": "fW0_p2_b2.rst_o_1"
+   },
+   "lk_WS2": {
+    "before": 202,
+    "after": 211,
+    "source_before": "fW0_p4_b2.rst_o_0",
+    "source_after": "fW0_p4_b2.rst_o_0"
+   },
+   "lk_WS3": {
+    "before": 149,
+    "after": 158,
+    "source_before": "svc_0.rst_o_0",
+    "source_after": "svc_0.rst_o_0"
+   },
+   "phy_hbm": {
+    "before": 131,
+    "after": 139,
+    "source_before": "svc_6.rst_o_0",
+    "source_after": "svc_6.rst_o_0"
+   },
+   "s_0S_x00": {
+    "before": 150,
+    "after": 159,
+    "source_before": "svc_0.rst_o_1",
+    "source_after": "svc_0.rst_o_1"
+   },
+   "s_0S_x01": {
+    "before": 144,
+    "after": 149,
+    "source_before": "s_0S_x02.rst_o_0",
+    "source_after": "s_0S_x02.rst_o_0"
+   },
+   "s_0S_x02": {
+    "before": 137,
+    "after": 142,
+    "source_before": "svc_1.rst_o_1",
+    "source_after": "svc_1.rst_o_1"
+   },
+   "s_7S_x10": {
+    "before": 127,
+    "after": 135,
+    "source_before": "svc_14.rst_o_0",
+    "source_after": "svc_14.rst_o_0"
+   },
+   "s_7S_x11": {
+    "before": 135,
+    "after": 143,
+    "source_before": "s_7S_x12.rst_o_1",
+    "source_after": "s_7S_x12.rst_o_1"
+   },
+   "s_7S_x12": {
+    "before": 127,
+    "after": 135,
+    "source_before": "svc_14.rst_o_1",
+    "source_after": "svc_14.rst_o_1"
+   },
+   "s_7S_x13": {
+    "before": 136,
+    "after": 140,
+    "source_before": "s_7S_x14.rst_o_0",
+    "source_after": "s_7S_x14.rst_o_0"
+   },
+   "s_7S_x14": {
+    "before": 129,
+    "after": 133,
+    "source_before": "svc_15.rst_o_0",
+    "source_after": "svc_15.rst_o_0"
+   },
+   "svc_0": {
+    "before": 142,
+    "after": 151,
+    "source_before": "svc_1.rst_o_0",
+    "source_after": "svc_1.rst_o_0"
+   },
+   "svc_1": {
+    "before": 129,
+    "after": 134,
+    "source_before": "s_0S_x13.rst_o_1",
+    "source_after": "s_0S_x13.rst_o_1"
+   },
+   "svc_10": {
+    "before": 116,
+    "after": 124,
+    "source_before": "svc_11.rst_o_1",
+    "source_after": "svc_11.rst_o_1"
+   },
+   "svc_11": {
+    "before": 104,
+    "after": 108,
+    "source_before": "s_5S_x00.rst_o_1",
+    "source_after": "s_5S_x00.rst_o_1"
+   },
+   "svc_12": {
+    "before": 117,
+    "after": 125,
+    "source_before": "svc_11.rst_o_0",
+    "source_after": "svc_11.rst_o_0"
+   },
+   "svc_13": {
+    "before": 106,
+    "after": 110,
+    "source_before": "s_5S_x00.rst_o_0",
+    "source_after": "s_5S_x00.rst_o_0"
+   },
+   "svc_14": {
+    "before": 119,
+    "after": 127,
+    "source_before": "svc_13.rst_o_0",
+    "source_after": "svc_13.rst_o_0"
+   },
+   "svc_15": {
+    "before": 121,
+    "after": 125,
+    "source_before": "s_6S_L4.rst_o_0",
+    "source_after": "s_6S_L4.rst_o_0"
+   },
+   "svc_2": {
+    "before": 119,
+    "after": 127,
+    "source_before": "svc_5.rst_o_0",
+    "source_after": "svc_5.rst_o_0"
+   },
+   "svc_3": {
+    "before": 110,
+    "after": 114,
+    "source_before": "s_2S_x00.rst_o_0",
+    "source_after": "s_2S_x00.rst_o_0"
+   },
+   "svc_4": {
+    "before": 117,
+    "after": 125,
+    "source_before": "svc_7.rst_o_0",
+    "source_after": "svc_7.rst_o_0"
+   },
+   "svc_5": {
+    "before": 106,
+    "after": 110,
+    "source_before": "seqhost.rst_o_0",
+    "source_after": "seqhost.rst_o_0"
+   },
+   "svc_6": {
+    "before": 116,
+    "after": 124,
+    "source_before": "svc_7.rst_o_1",
+    "source_after": "svc_7.rst_o_1"
+   },
+   "svc_7": {
+    "before": 104,
+    "after": 108,
+    "source_before": "seqhost.rst_o_1",
+    "source_after": "seqhost.rst_o_1"
+   },
+   "svc_8": {
+    "before": 127,
+    "after": 134,
+    "source_before": "svc_9.rst_o_0",
+    "source_after": "svc_9.rst_o_0"
+   },
+   "svc_9": {
+    "before": 115,
+    "after": 119,
+    "source_before": "s_4S_L4.rst_o_0",
+    "source_after": "s_4S_L4.rst_o_0"
+   }
+  },
+  "delta_histogram": {
+   "4": 21,
+   "5": 15,
+   "7": 1,
+   "8": 25,
+   "9": 19
+  }
+ }
+}
