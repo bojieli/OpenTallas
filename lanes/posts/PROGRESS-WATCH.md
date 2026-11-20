@@ -1,1 +1,2 @@
 - 2026-11-19 20:01 PST ALERT SELF-STOP qwen_compute: 2 job(s) stopped by the wave 14 s after its own REAP-REVIVE (latest tt_ctlm@2 at 19:07:19: superseded by attempt 2 of the same item)
+- 2026-11-19 20:01 PST ALERT NO-ADVANCE qwen_compute: 1 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (sle_su_l0__cl7a55c676 x6@gen)
