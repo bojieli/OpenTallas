@@ -69,3 +69,18 @@ Fix class: early_ps := signed max_clock_tree_path - common, per module.
 - CORRECTION, S81 core-tap table (DIE-CORETAP-1119 18:04): my cw6_d8g core-tap count (3614/6255 >50 ps late) used common 250 for every core. Most S81 core types are override types with a 450 budget (schema.core_tap_early_ps, COORD r104), so the count OVERSTATES lateness by about 200 ps on those types (attn_hcore need 0, not 126). Per-module scalars also hide per-pin spread (capc5r ck_rt/cw/rn 167/103/293). The cw6 tree already delivers the corrected targets, so there is NO sink retry. With a signed-insertion plan, cw6 is -274 TT and the sink tree -510. S81 intra hold stays -242.4/-218.8 on the plan of record; the worst pair is xrt1 <-> capc5r (per-pin ETM). Action (S81-DIE-R3 / S81-CLOCK-WINDOW-1119): revert any CORE-EARLY values taken into D8i for the 450-budget types and per-module-scalar modules. KV/QC core-tap tables used 250 as well; any override types there need the same re-basing before their counts are used.
 - KV fall-aware re-run p5f (pcsink_fix proof, main 0a56e37ba7 tools in die-level-1119/wt_fall, P4 args) is in flight. QC re-plan is with QC-PLAN-R3.
 - ALL DIES, measurement gap (S81-CLOCK-WINDOW-1119 18:25): proto_die / die_chain_ca never pass --kit or --core-view to die_sta_related. So every intra hold in this file is MEASURED-HOLD 0 (kit-contract / declared insertion only), even where signed views exist. S81: 436 missing views (395 types + 41 cores; 21 cores signed and loadable via --core-view MODULE=DIR, 20 have only prov views). The same gap applies to KV/QC/HEAD (each run prints BLOCKED(kits)). Lever (a): the chain passes --core-view for signed cores. When it lands on main, I re-run every die with it and report measured hold alongside the contract numbers.
+## REAL-VIEWS measured vs contract hold (11-19 20:1x PST)
+
+Tools: main bd65fc7d872 + f22d0e5f72 (tools/die_plan/real_views.py; die_chain_ca.sh / proto_die.sh pass every signed,
+pin-matched --core-view and --kit; FF HOLD-REPORT per class in CHAIN.log). Store: epyc10 ~/.local/state/real-views.
+Runs: epyc10 /srv/opentallas-scratch2/claude/die-level-1119/runs/<die>/rv1 (S81 rv2), same proof + bind as each die gate run.
+
+| Die | views cores / types | FF intra CONTRACT | FF intra MEASURED (pairs measured / unmeasured) | note |
+|---|---|---|---|---|
+| KV plan_c 4a40f1db | 38/68 / 4/56 | -174.16 (kit-contract -135.55) | -119.91 (1692 / 1527976) FAIL | TT intra setup -95.28 (5 pairs) with real core ETMs: hub_Wi qkd_hr_cdc_ci -> qkd_hr_core_guard |
+| HEAD r8b NF15f | 0/13 / 20/26 | kit-contract +1.43 | -248.44 (518810 / 52314) FAIL | all type kits: in-type range bound |
+| QC n46_ct | 60/80 / 27/133 | -263.42 (kit-contract -213.93) | -355.17 (471668 / 5441104) FAIL | mostly in-type range bound |
+| S81 D8g cw6 | 28/66 / 36/395 | -218.8 (kit-contract -99.99) | -438.25 (104310 / 1234034) FAIL | worst = col_h9_r2 kit self-pair; 8 signed views lack ETM out arcs |
+
+A type kit carries only the record insertion_pinflops min/max, so pairs touching it are timed with the full in-type range:
+a bound, not a per-pin measurement. Per-port pin-register arrivals in signed records are needed (ASK posted).
