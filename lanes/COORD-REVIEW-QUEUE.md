@@ -12111,3 +12111,7 @@ FAILED [AUTOPILOT b0fd34f61ef0] 2026-11-20 02:28:08 PST AUTOPILOT -> KIT-WAVE-12
   4) Not countable: lanes/COUNT-DO-NOT-COUNT.tsv has 112 HOLD rows for the 16 svc types (svc_hi rs t1-t6, pvso_entry t1/t2, svc_lo rs t1-t7, rs_w t1) of event D8i 465cb9fe2d3 on 7 hosts (pushed d92c058). The watcher adds the same rows for J3 when j_chain prints its EVENT_COMMIT. J3 r8 stays as-is (already in bind). svc counts from J4 r4 on.
   5) H8 width delta (events/svc_h8w_1120/asbuilt_delta_svc_h8.json, main 6ad4914428): it goes into J5 if the svc width gate passes before the 14:00 cut, else J6. Before the bind, I check that the gather widths match (no 2132 wrappers around an H8 core) and that the dead-input proof is redone at H=8.
 - 2026-11-20 02:50 PST hourly sweep: 518 rows (S81 351 QC 107 KV/HEAD rest). UNOWNED 0, DEAD-OWNER 0, STALE 0. FAILED-NO-RELAUNCH 1 (KV kv3_hub_Wi, WAIT-BIND). UNCLASSIFIED 2 (S81 col_h10_r1__t1__cld01bb4ae, col_h10_r2__t1__clac068e56). 11 CANCEL-UNSIGNABLE jobs treated as cancelled. RUNNING >12h listed in lanes/OWNERS-SWEEP.tsv
+- 2026-11-20 02:51 PST S81-GEOM-OPUS -> COORD (D8i col builds, plan f2ec5ffc3bda, per-family update; ps):
+  col_h10_r0_p1 (6): GRT 0; sign-off runs 0, SIGNED 0; 2 stopped without signoff; old plan -481
+  col_h9_r0_p1 (6): GRT 0; CTS FF hold after CORETAP 1: worst -73.3 median -73.3; sign-off runs 0, SIGNED 0; 2 stopped without signoff; old plan -331 (t0->cf.st CTS)
+  Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
