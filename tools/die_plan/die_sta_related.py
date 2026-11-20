@@ -1599,6 +1599,42 @@ def kit_port_needs(pair_lists, taps, rng, kit_offset=None, related=None, ptype=N
     return need
 
 
+
+def pair_tap_kind(port, row):
+    """'core' for an early core tap kit port (clk_c<k>), else 'reg' (DIE-CORETAP-1119 kit-contract class split)."""
+    return "core" if kit_port(port, row).startswith("clk_c") else "reg"
+
+
+def part_family(part):
+    """the family of a part name = its first _-separated token (kv pv_S_0 -> pv, phy_EN_3 -> phy, s81 s_2N_C -> s)."""
+    return str(part or "").split("_")[0] or str(part)
+
+
+def kit_contract_classes(hd, taps, w_of, top=12):
+    """{kind: {...}, family: {...}} worst kit-contract hold bound per pair class: hd = [(damage, launch, capture, where)], w_of(row)
+    = the pair's window.  kind = '<launch kind>-><capture kind>' (core / reg); family = '<part family>:<kind>' (top classes by
+    worst bound).  Additive report: the gate stays the overall bound."""
+    acc = {}
+    for r in hd:
+        d, a, b = r[0], r[1], r[2]
+        A, B = taps[a], taps[b]
+        kind = pair_tap_kind(a, A) + "->" + pair_tap_kind(b, B)
+        bound = w_of(r) - d
+        for key in (("kind", kind), ("family", part_family(A.get("part")) + ":" + kind)):
+            c = acc.setdefault(key, [None, 0, 0])
+            c[2] += 1
+            if bound < 0:
+                c[1] += 1
+            if c[0] is None or bound < c[0][0]:
+                c[0] = (bound, a, b, r[3])
+    out = {"kind": {}, "family": {}}
+    for (grp, k), (wst, neg, n) in sorted(acc.items(), key=lambda kv: kv[1][0][0]):
+        if grp == "family" and len(out["family"]) >= top:
+            continue
+        out[grp][k] = dict(worst_hold_bound_ps=round(wst[0], 2), neg_pairs=neg, pairs=n,
+                           worst=dict(launch=wst[1], capture=wst[2], where=wst[3]))
+    return out
+
 def kit_offset_arrivals(taps):
     """R-CLOCK-7 (FABLE-REVIEW-CLK 1b, COORD 11-14): {(part, kit port): arrival ps} of one corner = the tap's routed mid arrival
     (late + early) / 2 on the die clock of record (abs_* when a mesh re-reference keeps it)."""
@@ -1906,6 +1942,12 @@ def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=Fals
                 worst=dict(launch=m[1], capture=m[2], where=m[3], damage_ps=round(m[0], 2)),
                 verdict="PASS" if not neg else "FAIL", window_mode="per_port",
                 neg_regions=sorted({r[3] for r in neg}))
+        # DIE-CORETAP-1119 (COORD 11-20, additive, gate unchanged): the kit-contract hold split by pair class, so a die-level
+        # change is traced to the class it moves: tap kind of each end (core = clk_c*, reg = any other kit port) and the
+        # part family (part name less its _<side>_<k> suffix).  Each class has its own worst bound against the same window.
+        out["kit_contract_hold"]["per_class"] = kit_contract_classes(
+            hd, taps, lambda r: (pp.get(r[3]) or {}).get(kit_port(r[1], taps[r[1]]), (pr or {}).get(r[3], w)) if pp
+            else (pr or {}).get(r[3], w))
         if kit_offset:
             out["kit_contract_hold"]["core_tap_offset"] = dict(
                 taps=len(kit_offset), basis="kit SDC set_clock_latency -source -early_ps on each early core tap "
