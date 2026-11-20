@@ -33,7 +33,8 @@ NO serdes type is signed off. Nothing was exported to rtx-pro ~/signed-export-11
 5. RM -> coll_o0 face hop (V geometry probes): rm.mem to u_bout_coll_o0 is 1180 um on t15, 1073 um on t1, 450..580 um on t13, one cycle, no station;
    GPL drags the 512 q flops to the face (t15) or stretches them (t1). T15P TT at CTS -673 (913 ends) is this. serdes__t14 already has
    internal_stations bus:coll_o0 (3 stations) and is clean there. Fix = internal_stations rows (t15 x2 and t1 x2: 2 stations, t13: 1), lane coll_o0 +cycles.
-   Not measured: t12, t16, t2, t3, t4 (no placed DB on the current event).
+   FAMILY-WIDE: the D8h plan has internal_stations bus:coll_o0 on t14 only. Estimated from macro sites + face windows (no placed DB): t16 1381 um,
+   t2 1545, t3 1115, t12 1590, t4 2028 -> 3 / 3 / 2 / 3 / 5 stations (ESTIMATE rows). The TX side (coll_i0 -> landing ring -> u_enc) was NOT measured.
 6. t15 other classes at CTS before repair (V, epyc10 sta/t15p_cts): u_syn g_bm -285 (850 ends, ldr fanout chain 450 ps), u_rm mem -196 (1959, rp_g2 ->
    fill -> push -> we: the RM write side; the RM_WFULL8 form exists only under RM_STAGED), xs -188, u_enc rem_q -108 (encoder split over clk_t30 322 ps /
    clk_t42 247 ps with a -99 window; tap means 188..436, clk_t46/t47 at 436). T15P's own TT repair is still running: re-read these after it.
@@ -56,4 +57,5 @@ NO serdes type is signed off. Nothing was exported to rtx-pro ~/signed-export-11
 4. Worst type proof (r712): one private serdes__t15 kit from the J4 bind (stations + defines + lock site + H23 rck form) to GRT TT/FF. t15 cannot be
    proven before the stations exist in the bound RTL.
 5. Remaining types through the wave on J4; placed_hops_or.py on the first 3_place.odb of t12/t16/t2/t3/t4 for their coll_o0 rows.
-6. Open question to the serdes lane (asked 23:27): are the uncommitted kp4 eq bench edits in the localhost owner checkout its work? Not touched.
+6. kp4 eq bench files in the localhost owner checkout (read without git, not touched): mtimes 11-15; dchn, tb_s81_kp4_eq and run_kp4_eq_bench.sh are
+   byte-identical to main 315cc722d68, ot_s81_kp4_ddly.sv is an older text than main. The serdes lane has not answered whether to keep them.
