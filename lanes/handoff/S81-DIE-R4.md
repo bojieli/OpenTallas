@@ -105,3 +105,8 @@ All relaunch after the 405 reach override (lever 1) lands for D8i.
 - (2) Post-apply bind: elab yosys rc 137 at OT_POSTBIND_MEM=96. Rerun postbind-s81-1120135739 on intel1 at 160 GB (log ~/.local/state/ot-postbind/). If GREEN: publish_apply.py adopt-bind.
 - (3) Staged: kit_wave_edit --set /dies/s81/die_gen_env/OT_PLACE_MAX_TRANSITION="320". Apply only when the CORE-LIB-LIMITS-1330 proof is green; flow_regen re-pins the unstarted J5 rows.
 - RISK: die_gen_env OT_CBC_REACH_UM=405 vs J5 bound at 300. Watch the first J5 gen result for bound reset identity differs.
+
+## 11-20 14:1x COORD on the 405 risk
+- Gen solves each type reset under its bind-receipt cap (9172a65b43, eae5825732), so J5 300 um receipts win over the env.
+- OT_CBC_REACH_UM=405 stays on s81 for the placed-hop estimator only; OT_RESET_HOP_CAP_UM is dropped.
+- If a J5 gen still refuses with bound reset identity differs, post it to FLOW-NOADV-R2.
