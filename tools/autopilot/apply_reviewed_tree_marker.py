@@ -153,6 +153,13 @@ def marker_event_of(mc, d):
     return mc.get("event") or d.get("event")
 
 
+def marker_kit_rtl(marker):
+    legacy = {}
+    if marker.get("asbuilt") and marker.get("bind_out"):
+        legacy = dict(mode="bind", asbuilt=marker["asbuilt"], bind_out=marker["bind_out"])
+    return dict(legacy, **(marker.get("kit_rtl") or {})) | ((marker.get("config") or {}).get("kit_rtl") or {})
+
+
 def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=False, TC=None, rt=None, keep_gen_hosts=False, PG=None, optimistic=None, host_verify=None):
     """optimistic (COORD 11-18, OWNER "build all types directly from the latest plan"; candidate key optimistic: true or --optimistic): the publish gate record,
     the normal source guard and the smoke flag are ADVISORY (logged in the receipt as warnings, never a refusal) and no pilot hold is added (every type of the
@@ -166,6 +173,9 @@ def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=
     tree = marker["tree"]
     want = marker.get("manifest_hash") or marker["src_manifest_sha"]
     mc = dict(marker.get("config") or {})
+    kr = marker_kit_rtl(marker)
+    if kr:
+        mc["kit_rtl"] = kr
     hosts = list(mc.get("gen_hosts") or marker.get("hosts") or [])
     keep = bool(keep_gen_hosts or obj.get("keep_gen_hosts"))
     if keep:
@@ -189,7 +199,7 @@ def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=
         warnings += [x for x in replicated if x.startswith("DROPPED")]
     if PG is not False:      # SNAP-RO-1119 (c): PG False is only publish_gate projecting the apply on a scratch copy; a real apply proves the tree whole on every host first
         _fn = host_verify or verify_tree_on_all_hosts
-        _bad, _unreach = _fn(tree, want, list(hosts), rt or HERE, bind_out=str(((mc.get("kit_rtl") or marker.get("kit_rtl") or {}).get("bind_out")) or ""))
+        _bad, _unreach = _fn(tree, want, list(hosts), rt or HERE, bind_out=str(kr.get("bind_out") or "") if kr.get("mode") == "bind" else "")
         if _unreach:
             warnings.append("ADVISORY src_manifest not answered on " + ", ".join(f"{h} ({t[:60]})" for h, t in sorted(_unreach.items())))
         if _bad:
@@ -275,8 +285,6 @@ def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=
                 d["queue_src"] = "main@" + main
         HR._deep_set(d.setdefault("die_gen_env", {}), marker.get("die_gen_env") or {})
         repoint_gen_env(d, old["src"], tree)
-        if marker.get("asbuilt") and marker.get("bind_out"):
-            HR._deep_set(d.setdefault("kit_rtl", {}), dict(mode="bind", asbuilt=marker["asbuilt"], bind_out=marker["bind_out"]))
         additions = list(obj.get("hold_records_add") or [])
         if obj.get("hold_record"):
             additions.append(obj["hold_record"])

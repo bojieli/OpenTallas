@@ -470,27 +470,29 @@ def _bind_dirs(tmp_path, stale=True):
     return t, sealed, out
 
 
-def test_out_sync_installs_the_sealed_bind_into_the_trees_out_and_verifies_the_hashes(tmp_path):
-    """FLOW-FIX-2045 (S81-DIE-R3: the applied D8i tree served 343 of 397 stale modules): the apply installs the sealed bind into <tree>/.../native_bind/out on every publish host and verifies"""
-    import hashlib
+def test_out_sync_verifies_selected_bind_without_rewriting_published_out(tmp_path):
     t, sealed, out = _bind_dirs(tmp_path)
-    obj = {"die": "s81", "marker": {"die": "s81", "tree": str(t), "plan": str(t / "p.json"), "config": {"gen_hosts": ["h1"], "kit_rtl": {"mode": "bind", "bind_out": str(sealed), "asbuilt": ""}}}}
+    before = {p.relative_to(out): p.read_bytes() for p in out.rglob("*") if p.is_file()}
+    obj = bind_candidate(t)
+    marker = obj["marker"]
+    marker.update(die="s81", bind_out=str(out), asbuilt="legacy.json")
+    marker["config"]["kit_rtl"].update(bind_out=str(sealed), asbuilt="selected.json")
+    selected = PA.A.marker_kit_rtl(marker)
+    assert selected["bind_out"] == str(sealed) and selected["asbuilt"] == "selected.json"
+    assert PA.candidate_bind_args(obj)[0]["bind_out"] == str(sealed)
     ok, lines = PA.out_sync(obj, run=_local_ssh())
     _chmod_back(tmp_path)
-    assert ok is True and "out == sealed bind" in lines[0] and "(installed)" in lines[0], lines
-    h = lambda p: hashlib.sha256(p.read_bytes()).hexdigest()
-    assert all(h(out / "rtl" / f"{m}.sv") == h(sealed / "rtl" / f"{m}.sv") for m in ("m1", "m2", "m3")) and h(out / "bind_report.json") == h(sealed / "bind_report.json")
-    ok2, lines2 = PA.out_sync(obj, run=_local_ssh())                       # already equal: verified, nothing installed
-    assert ok2 is True and "(installed)" not in lines2[0]
+    assert ok is True and "selected bind verified" in lines[0], lines
+    assert before == {p.relative_to(out): p.read_bytes() for p in out.rglob("*") if p.is_file()}
+
 
 
 def test_out_sync_refuses_when_the_sealed_bind_is_missing_or_a_host_does_not_answer(tmp_path):
     t, sealed, out = _bind_dirs(tmp_path)
-    import shutil
     obj = {"die": "s81", "marker": {"die": "s81", "tree": str(t), "plan": str(t / "p.json"), "config": {"gen_hosts": ["h1"], "kit_rtl": {"mode": "bind", "bind_out": str(tmp_path / "gone"), "asbuilt": ""}}}}
     ok, lines = PA.out_sync(obj, run=_local_ssh())
     _chmod_back(tmp_path)
-    assert ok is False and "no-sealed" in lines[0]
+    assert ok is False and "bind has no RTL modules" in lines[0]
     obj["marker"]["config"]["kit_rtl"]["bind_out"] = str(sealed)
     ok, lines = PA.out_sync(obj, run=lambda argv, **k: types.SimpleNamespace(returncode=255, stdout="", stderr="ssh: down"))
     assert ok is False and "no answer" in lines[0]
@@ -499,11 +501,12 @@ def test_out_sync_refuses_when_the_sealed_bind_is_missing_or_a_host_does_not_ans
     assert ok is True and "no tree here" in lines[0]                         # a host without the tree is skipped, not a failure
 
 
-def test_a_kit_that_reads_the_trees_own_out_needs_no_install(tmp_path):
-    t = tmp_path / "T"
-    out = t / "physical/die_plan/s81/plan_of_record/native_bind/out"
+def test_a_kit_that_reads_the_trees_own_out_is_verified(tmp_path):
+    t, _, out = _bind_dirs(tmp_path)
     obj = {"die": "s81", "marker": {"die": "s81", "tree": str(t), "plan": "p", "config": {"gen_hosts": ["h1"], "kit_rtl": {"mode": "bind", "bind_out": str(out)}}}}
-    assert PA.out_sync(obj, run=_local_ssh())[0] is None
+    ok, lines = PA.out_sync(obj, run=_local_ssh())
+    _chmod_back(tmp_path)
+    assert ok is True and "selected bind verified" in lines[0]
     assert PA.out_sync({"die": "s81", "marker": {"tree": str(t), "config": {"kit_rtl": {"mode": "off"}}}})[0] is None
 
 
