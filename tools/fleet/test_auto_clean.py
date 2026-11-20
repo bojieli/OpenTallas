@@ -326,3 +326,7 @@ def test_failed_units_are_listed_per_host_and_reach_the_report():
     assert HUB.failed_units("h", run) == ["ot-disk-autoprune.service", "wt-reaper.service"]
     assert HUB.failed_units("h", lambda *a, **k: types.SimpleNamespace(returncode=0, stdout="", stderr="")) == []
     assert HUB.failed_units("h", lambda *a, **k: (_ for _ in ()).throw(OSError("x"))) is None
+
+
+def test_explorer_service_lane_folders_are_never_idle_lane_candidates():
+    assert {"explorer-fable-1", "explorer-2-work"} <= set(AR.LANE_SKIP)

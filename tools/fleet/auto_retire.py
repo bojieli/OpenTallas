@@ -404,7 +404,7 @@ def lane_idle_h(idle_h):
     return max(float(idle_h), LANE_MIN_IDLE_H)
 
 
-LANE_SKIP = frozenset({"kw45", "rt", "hub-coord", "mq1", "mq-gate", "git", "clean-all-1115", "tools-converge", "fleet-ops-r", "signed-store", "autopilot", "moved"})   # moved: ~/.cache and ~/OpenTallas link into it (COORD 11-18)
+LANE_SKIP = frozenset({"kw45", "rt", "hub-coord", "mq1", "mq-gate", "git", "clean-all-1115", "tools-converge", "fleet-ops-r", "signed-store", "autopilot", "moved", "explorer-fable-1", "explorer-2-work"})   # EXPLORER-KEEP-1119: live explorer user services run from these lane folders   # moved: ~/.cache and ~/OpenTallas link into it (COORD 11-18)
 
 
 def newest_mtime(path, stop_after=None):
