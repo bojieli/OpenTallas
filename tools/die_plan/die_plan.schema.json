@@ -8118,6 +8118,84 @@
       }
      }
     },
+    "zl_lockup": {
+     "type": "object",
+     "additionalProperties": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+       "guard": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "note": {
+        "type": "string"
+       },
+       "hops": {
+        "type": "array",
+        "items": {
+         "type": "object",
+         "additionalProperties": false,
+         "required": [
+          "inst"
+         ],
+         "properties": {
+          "inst": {
+           "type": "string"
+          },
+          "ports": {
+           "type": "array",
+           "items": {
+            "type": "string",
+            "minLength": 1
+           }
+          },
+          "groups": {
+           "type": "array",
+           "items": {
+            "type": "array",
+            "items": {
+             "type": "string",
+             "minLength": 1
+            }
+           }
+          },
+          "types": {
+           "type": "array",
+           "items": {
+            "type": "string",
+            "minLength": 1
+           }
+          },
+          "allow_missing": {
+           "type": "boolean"
+          }
+         }
+        }
+       },
+       "regs": {
+        "type": "array",
+        "items": {
+         "type": "object",
+         "additionalProperties": false,
+         "required": [
+          "reg"
+         ],
+         "properties": {
+          "reg": {
+           "type": "string"
+          },
+          "allow_missing": {
+           "type": "boolean"
+          }
+         }
+        }
+       }
+      }
+     }
+    },
     "core_input_lockup": {
      "type": "object",
      "additionalProperties": false,
