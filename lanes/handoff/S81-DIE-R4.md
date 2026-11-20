@@ -95,3 +95,7 @@ All relaunch after the 405 reach override (lever 1) lands for D8i.
 - (c) Pipeline the cland START and the reset relay at 300 um. Leaf t72/t8/t56 are limited by single-bit cland_start / reset-relay nets through 13-26 buffers. Added to the relay-tool helper scope (in-type legs listed as J6 row data).
 - (d) lepe row 4 plus the land.tag item.
 - STOP: no release or cancel call from a post-place WNS when the worst slew is over ~1 ns; CORE-LIB-LIMITS-1330 is testing core-pin transition limits. This applies to the t7 GRT read too: judge it on GRT overflow and routed numbers, not post-place WNS.
+
+## 11-20 13:5x OWNERS-SWEEP
+- OWN posted for 52 held leaf rows plus t25 (DEAD-OWNER), all J5 representative-first holds.
+- On leaf release: regenerate the kits so they carry the CORE-LIB-LIMITS-1330 320 ps core-pin slew limit (e7ebced0c4e). First confirm rt/current includes e7ebced0c4e.
