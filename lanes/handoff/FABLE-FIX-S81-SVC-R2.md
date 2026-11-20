@@ -4,6 +4,17 @@ Owner of the S81 svc family (16 H8 types, 112 do-not-count on D8i) and the svc H
 Deliverable: J6 rows to S81-DIE-R4 by 11-21 13:30; one representative svc kit through place, GRT, sign-off; post every 2 h.
 Nothing is bound, placed or delivered yet.
 
+## Update 10:55 PST (supersedes "In flight" item 1 and 3 below)
+- R6 is DEAD: BIND exit 2, stale dead-input source `dsdv_pv_so_ingress_h8.sv` (both proof files record an older module hash than the
+  bind source). It duplicated the driver. Do not launch an R7.
+- Use the driver's R5b instead: epyc9 `s81-svc-split-1119/t7_resolve_1120/bind_d8i_h8_bind_source_r5b`, plan
+  `prototype_src_r4/physical/die_plan/s81/plan_svc_d8i_h8_bind_source_r5b_1120.json`, manifest `asbuilt_svc_d8i_h8_proto_r5b.json`,
+  log intel2 `~/svc-t7-bind-die-proto-r5b-e9-1120.log` (markers `H8_D8I_BIND_RC=0`, `H8_D8I_LATCHECK_RC=0`). In BIND at 10:50.
+  `ksrc` predates the r5b plan and manifest: copy those two files in (and commit) before fresh_kit.
+- Count jobs: run A failed (ROM model unparsable by yosys read_verilog). Run B relaunched 10:50 with ROM files excluded:
+  intel2 `~/fable-fix-s81-svc-r2/count-*-B.log`, output epyc8 `count/<type>.B.stat.txt`.
+- RDPIPE bench still compiling at 10:50.
+
 ## Do not touch
 A detached driver (posts as S81-SVC-SPLIT-1119 / S81-DIE-R3) still launches the 16-type FT / clock / START closure in
 epyc8 (and a copy on epyc9) `/srv/opentallas-scratch2/claude/s81-svc-split-1119/t7_resolve_1120`. Read only. Latest whole
