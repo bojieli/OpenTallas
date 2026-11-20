@@ -12432,6 +12432,40 @@ def release_infra_stops(AP, cfg, st):
     return n1, n2
 
 
+HOST_FOLLOW_PER_TICK = 8
+
+
+def follow_actual_hosts(AP, cfg, st, now=None, scan=None, limit=HOST_FOLLOW_PER_TICK):
+    """COORD 11-20 (LONG-RUN-0315: ~16 rows name the wrong host because ot-run moved their jobs): the host that actually runs a live queue row (ENQUEUED, queue job RUNNING) is found by an exact
+    container scan of its attempt root on the fleet (the cancel-stop scanner in dry mode, bad hosts skipped); r['ran_on'] follows it and a changed host is logged once (HOST-MOVED).  At most
+    `limit` rows per tick, the least recently checked first, in parallel.  scan(root) -> {host: [container names]} (tests).  -> n rows whose host was corrected"""
+    from concurrent.futures import ThreadPoolExecutor
+    now = time.time() if now is None else now
+    rows = [r for r in (st.get("items") or {}).values() if r.get("status") == "ENQUEUED" and r.get("q_status") == "RUNNING" and attempt_root(r)]
+    rows.sort(key=lambda r: float(r.get("host_checked") or 0))
+    rows = rows[:limit]
+    if not rows:
+        return 0
+    if scan is None:
+        def scan(root):
+            res = WJ.stop_on_fleet(AP.sh, AP.HUB_NAME, [root], dry=True)
+            return {h: v.get("containers") or [] for h, v in res.items() if isinstance(v, dict) and not v.get("error")}
+    with ThreadPoolExecutor(max_workers=min(8, len(rows))) as ex:
+        found = list(ex.map(lambda r: scan(attempt_root(r)), rows))
+    n = 0
+    for r, hosts in zip(rows, found):
+        r["host_checked"] = now
+        live = sorted(h for h, c in (hosts or {}).items() if c)
+        if len(live) == 1:
+            old = str(r.get("ran_on") or (r.get("kit") or "").partition(":")[0] or "")
+            if live[0] != old:
+                r["ran_on"] = live[0]
+                if AP:
+                    AP.log(f"KIT-WAVE HOST-MOVED {r.get('die')}/{r.get('item')}@{r.get('attempt')}: ot-run runs it on {live[0]} (state said {old or '-'})")
+                n += 1
+    return n
+
+
 def unreadable_host_rows(AP, cfg, st, notices, now=None, hours=UNREADABLE_HOST_H):
     """COORD 11-19 (ghost rows on epyc7: KV kv3_sys_c attempt_5 RUNNING 8.5 h, last log 10:13, no openroad; 7 more S81 ghosts): a RUNNING row whose gen host has no ot-run status
     row (unreadable: ssh refused / timed out) is UNKNOWN for `hours` (2 h) since its last update and is left alone; after that it is declared INFRA-DEAD: its hub unit is stopped
@@ -15838,6 +15872,10 @@ def _step(AP, ap_dir):
         AP.log(f"KIT-WAVE src probe skipped: {e}")
     load_counter_signed(cfg)
     restage_waiters(AP, cfg, st, notices)
+    try:
+        follow_actual_hosts(AP, cfg, st)
+    except Exception as e:                               # a host-follow sweep never stops the tick
+        AP.log(f"KIT-WAVE HOST-MOVED skipped: {type(e).__name__}: {e}")
     try:
         release_infra_stops(AP, cfg, st)
     except Exception as e:                               # a sweep never stops the tick

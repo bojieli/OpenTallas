@@ -855,3 +855,15 @@ def test_full_input_hash_does_not_move_with_the_rt_tools_digest(monkeypatch):
     assert h1 and KW.full_input_hash(cfg, "d", "i", "B") == h1
     monkeypatch.setattr(KW, "kit_digest_parts", lambda cfg, die, rec=None, **k: {"plan": "P2", "tools": "T"})
     assert KW.full_input_hash(cfg, "d", "i", "B") != h1                                # a plan row change moves it
+
+
+def test_state_follows_the_host_ot_run_actually_uses():
+    lines = []
+    ap = type("AP", (), {"log": staticmethod(lines.append)})()
+    row = lambda i, kit: {"die": "qwen_compute", "item": i, "attempt": "1", "status": "ENQUEUED", "q_status": "RUNNING", "kit": kit, "dir": "/nonexistent"}
+    st = {"items": {"a": row("sle_ctl", "epyc9:/r/E/items/sle_ctl/gen/sle_ctl"), "b": row("ok", "epyc8:/r/E/items/ok/gen/ok"), "c": row("two", "epyc8:/r/E/items/two/gen/two")}}
+    scans = {"/r/E/items/sle_ctl/gen/sle_ctl": {"epyc10": ["dpkit-x"], "epyc9": []}, "/r/E/items/ok/gen/ok": {"epyc8": ["dpkit-y"]}, "/r/E/items/two/gen/two": {"epyc2": ["a"], "epyc7": ["b"]}}
+    n = KW.follow_actual_hosts(ap, {}, st, now=1.0, scan=lambda root: scans[root])
+    assert n == 1 and st["items"]["a"]["ran_on"] == "epyc10" and "HOST-MOVED" in lines[0]
+    assert "ran_on" not in st["items"]["b"] and "ran_on" not in st["items"]["c"]               # same host: unchanged; two hosts: ambiguous, untouched
+    assert all(r["host_checked"] == 1.0 for r in st["items"].values())
