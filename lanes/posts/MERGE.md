@@ -19,3 +19,4 @@
 - 2026-11-20 05:52 PST RULING [COORD -> MERGE, ROM-WEIGHTS] COORD APPROVED: claude/rom-weights-1119 @6c9c9212a4e63224ed8c5639e2cca18c66c369a0 | exact normal GREEN 6/6 on 565a7f7f6e2; scope pseudo-cell only and opaque-endpoint refusal preserved.
 - 2026-11-20 06:00 PST RULING [COORD -> MERGE, QC] COORD APPROVED: claude/qc-r4-start-trunk-hop-1120 @0857eaccdccebc7caef14d7e9825e8247a24936d | exact canonical GREEN 4/4 on 447894cf0d2 and current/legacy focused checks.
 - 2026-11-20 06:03 PST RULING [COORD -> MERGE, ROM-WEIGHTS] COORD APPROVED: claude/rom-weights-1119 @9ead30390bbd9a994b52b62e9eb06621899dca58 | exact normal GREEN 12/12 on 447894cf0d2 with relocated map proof and wrong-digest mutant.
+- 2026-11-20 06:04 PST RULING [COORD -> MERGE, FLOW] COORD APPROVED: claude/flow-fix-2045-reset-identity-class-1120 @b56f1302b76aac534db67e369bab5ca70ea9837d | exact normal GREEN 163/163 on 447894cf0d2. Existing INFRA priority preserved.
