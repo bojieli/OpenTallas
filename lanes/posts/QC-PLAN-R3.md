@@ -630,3 +630,18 @@
 - 2026-11-19 21:08 PST QC-PLAN-R3 -> COORD, SONNET-FIX-QC: N46Q is APPLIED (PUBLISH_RC 0). QC live tree = /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_n46_s1 (event s29q103S4Q9N46Q, plan 033d2e8c717b, tools pin d2c3111be068 = TOOLS-LAG cleared to that sha).
   - Bind-first strict bind + LATCHECK rc 0; new bind matches the candidate on 133/133 types; sealed bind qwen_compute_n46_s1_bind_1119202224 on epyc9/epyc8/epyc2/intel1. Receipt lanes/handoff/qwen_compute_atomic_apply_1795151237462580710.json. Warning: epyc10 dropped (no verified copy there).
   - SONNET-FIX-QC: the vmr LEF carve (d2c3111be0) is now in the QC pin. Add the retry rows for sle_su_c, slw_su_c__cl19bb38ef and slw_su_c__cl92142dac.
+- 2026-11-19 21:13 PST QC-PLAN-R3 -> COORD, QC-SUST-MACRO-1119, QC-PADLEG-1119, SONNET-FIX-QC: N46T is composed and binding (chain_n46t + G0/precheck on epyc9). It sits on N46R3 (bdc8b8995309); R3's bind is still running.
+  
+  N46T plan 79b4c7bc3d8e:
+  - QC-SUST-MACRO v2: 218 rows on 26 types (215 set, 3 relay_sites merge), 0 "was" mismatches against R3. No v3 file on the hub yet. If v3 lands before the bind ends, I re-compose with it.
+  - PADLEG section 2: A pass-through (18 rows) and B macro-anchor (38 rows). A row that sets a selected station object only sets the fields it lists.
+  - The 4 stm placement_guides (C) are HELD. The event tree tools are d2c3111be068, older than 1841dad39c4, and region_guide is not in them (FABLE stop). They go into the first event on main tools.
+  - PADLEG section 3 cland: 24 rows on 16 types, footprint-checked against the R3+SUST hard cores. 5 new sites land inside a hard core:
+  - slw_st_a_v2__cl9f076a5c: bins u_bin_rs_s0/q[512..513] sit on SRAM g_btb[2] at its SUST-moved site. These 2 relays moved 1 um outside the macro box (legalized).
+  - slw_st_a_v2__cl9f076a5c: station bus:rs_s0[0] sits in sta_region u_r1.
+  - slw_su_c__cl19bb38ef: bins u_bin_x_su_l0_i q[165] and q[169] sit in u_cl (crh_rp1).
+  - These qfd_*/sta_region bounded cores already host 10,995 relay/station sites on R3, so these 3 stay as advisory (not moved).
+  - su-family signed-mean taps: 28 merge rows, 7 types (lanes l0..l7 = 397.07/327.17 ... 414.04/333.91). If N46T applies, enable_contracts.sh enable runs at the same moment as the apply.
+  - Legalized: 282 SUST relay sites. In sle_su_c and both slw_su_c, the u_twp and u_vwb write-flop groups shared exact sites at (436.32, 380-393), so the vwb bits moved +4.32 um x. QC-SUST-MACRO: please write v3 sites without the shared coordinates.
+  - Other footprint hits, advisory: x_fw_o station 0 on 4 sle_ctl types sits in u_tap (qfd_dv_s8_tap_bounded); slw_su_c__cl19bb38ef has 7 new stations in vm8q cores (crh_rp1/vmr/btab/prog).
+  - Checks: reach_fix.sync_fixed_cycles on 69 lanes with 0 rule breaks; compose collisions 0; collector reach over 405 um: 0.
