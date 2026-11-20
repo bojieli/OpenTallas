@@ -41,7 +41,10 @@ def test_decide(before, after, keep):
 def test_tcl_measure_mode_and_no_buffer_removal_at_grt():
     t = (HERE / "tt_setup_repair.tcl").read_text()
     assert "OT_TT_SETUP_MEASURE" in t and "ot_tt_wns measure" in t
-    assert t.index("ot_tt_wns measure") < t.index("  repair_timing -setup -setup_margin")
+    repair_dispatch = "ot_bounded_repair tt_setup_repair [list ::ot_tt_chunk"
+    assert t.index("ot_tt_wns measure") < t.index(repair_dispatch)
+    chunk = t.split("proc ::ot_tt_chunk", 1)[1].split("proc ::ot_tt_measure", 1)[0]
+    assert "repair_timing -setup -setup_margin" in chunk
     line = [l for l in t.splitlines() if "lappend extra -skip_buffer_removal" in l][0]
     assert 'ot_tt_rc eq "grt"' in line
 
