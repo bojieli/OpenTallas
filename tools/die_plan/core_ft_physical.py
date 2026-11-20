@@ -165,9 +165,16 @@ def detail_view(selected,captured,receipt):
     return dict(signed_view_ok='via detail receipt',base_sha256=receipt['base_sha256'],out_sha256=receipt['out_sha256'],layers_detailed=sorted(rects),rects=rects)
 
 def receipt_beside(lef):
-    """the detail receipt prov_view.py stages next to a selected detailed LEF (<module>.detail_receipt.json), or None"""
-    p=Path(lef).with_name(Path(lef).name[:-len('.lef')]+'.detail_receipt.json') if str(lef).endswith('.lef') else None
-    return json.loads(p.read_text()) if p and p.is_file() else None
+    """the detail receipt next to a selected detailed LEF, or None: <module>.detail_receipt.json (prov_view.py), else the
+    abstract_detail splice receipt <module>.splice.json that a gen LEF override (lef_override.py, lef_overrides/) keeps
+    beside its corrected LEF.  QC-SUST-MACRO-1119: without the second form every su_c kit stopped in gen ('selected lef
+    differs from captured qualified FT view') once the vmr DRT-0073 override applied; detail_view still checks all of it."""
+    if not str(lef).endswith('.lef'):return None
+    stem=Path(lef).name[:-len('.lef')]
+    for suffix in ('.detail_receipt.json','.splice.json'):
+        p=Path(lef).with_name(stem+suffix)
+        if p.is_file():return json.loads(p.read_text())
+    return None
 
 def load(entry,module,lef,tt,ff,root=None,ppins=None,plan_dir=None,detail_receipt=None):
     spec=entry.get('physical_ft')
