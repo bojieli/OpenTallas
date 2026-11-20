@@ -7,7 +7,8 @@ API: reset_cohort_model.py INPUT.tsv OUTPUT.json [--type TYPE] [--hop-um 405]
 Rows accepted (tab-separated):
   TAP name x_um y_um
   NODE RRL|COLLECTOR|ENCODER id instance x_um y_um status clock_net [...]
-  FANIN RRL|COLLECTOR id instance input_pin comma-separated-actual-RRL-ids
+  FANIN RRL|COLLECTOR id instance input_pin comma-separated-actual-RRL-ids (+ token 'root' when the trace
+        reached a root-reset-fed register or chain collector; a collector with no RRL id and 'root' is its own cohort)
 Other rows (e.g. CORE/MACRO) are retained by the caller's source dump, ignored here.
 The caller must extract only the intended logical clock family; this script does
 not infer domains or authorize clock rewiring. Geometry is FF-origin based.
@@ -29,6 +30,7 @@ def model(path: Path, *, hop_um=405.0, excluded_roots=(), auto_encoder=True,
     owners = defaultdict(set)
     edges = set()
     taps = {}
+    root_fed = set()
     encoder = []
     rrl_ff = collector_ff = 0
     for row in rows:
@@ -46,16 +48,25 @@ def model(path: Path, *, hop_um=405.0, excluded_roots=(), auto_encoder=True,
             elif row[1] == 'ENCODER':
                 encoder.append(item['xy'])
         elif row[0] == 'FANIN':
-            src = {int(s) for s in (row[5] if len(row) > 5 else '').split(',') if s}
+            toks = [s for s in (row[5] if len(row) > 5 else '').split(',') if s]
+            src = {int(s) for s in toks if s != 'root'}
             if row[1] == 'COLLECTOR':
                 owners[int(row[2])] |= src
+                if 'root' in toks:
+                    root_fed.add(int(row[2]))
             elif row[1] == 'RRL':
                 edges |= {(s, int(row[2])) for s in src if s != int(row[2])}
     if not nodes or not taps:
         raise ValueError('compiled RRL nodes and explicit local clock taps required')
+    root_collectors = {}
     rrl_only = {i: list(members) for i, members in nodes.items()}
     for cid, members in collectors.items():
         actual = owners[cid]
+        if not actual and cid in root_fed:
+            # RESET-COHORT-1119: driven only by the chain predecessor / a root-reset-fed register (the graph stops at registers):
+            # its own cohort member at its fixed site, not an RRL cohort member.
+            root_collectors[cid] = members
+            continue
         if len(actual) != 1:
             raise ValueError(f'collector{cid} ambiguous/missing actual driver: {sorted(actual)}')
         owner = next(iter(actual))
@@ -141,6 +152,23 @@ def model(path: Path, *, hop_um=405.0, excluded_roots=(), auto_encoder=True,
                                   center_um=centroid(ids),
                                   root_candidates=choices,
                                   light_root_fit=bool(choices)))
+    root_groups = []
+    for cid, members in sorted(root_collectors.items()):
+        pts = [m['xy'] for m in members]
+        choices = []
+        for name, xy in taps.items():
+            if name in excluded:
+                continue
+            reach = max(distance(p, xy) for p in pts)
+            if reach <= hop_um:
+                choices.append(dict(name=name, xy_um=xy, total_manhattan_um=sum(distance(p, xy) for p in pts),
+                                    max_radius_um=reach))
+        choices.sort(key=lambda x: (x['total_manhattan_um'], x['name']))
+        xs, ys = zip(*pts)
+        root_groups.append(dict(key=f'c{cid}', collector_id=cid, FF_count=len(pts),
+                                bbox_um=[min(xs), min(ys), max(xs), max(ys)],
+                                bbox_span_um=max(xs) - min(xs) + max(ys) - min(ys),
+                                root_candidates=choices, light_root_fit=bool(choices)))
     remaining = [dict(edge=[a, b], centroid_span_um=edge_length((a, b)))
                  for a, b in sorted(edges) if root(a) != root(b)]
     overreach = [dict(edge=[a, b], centroid_span_um=edge_length((a, b)))
@@ -154,8 +182,9 @@ def model(path: Path, *, hop_um=405.0, excluded_roots=(), auto_encoder=True,
                 model_delta=dict(RTL_cells=0, mission_cycles=0, reset_cycles=0),
                 hop_budget_um=hop_um,
                 algorithm='atomic actual RRL+its compiled collectors, then ascending actual edge distance unions only when whole resulting bbox Manhattan diameter fits hop budget; no all-tree union',
+                root_collector_groups=root_groups,
                 RRL_modules=len(nodes), RRL_FF=rrl_ff, collector_FF=collector_ff,
-                collector_actual_owners={str(c): next(iter(v)) for c, v in owners.items()},
+                collector_actual_owners={str(c): next(iter(v)) for c, v in owners.items() if v},
                 actual_RRL_edges=[list(e) for e in sorted(edges)],
                 encoder=enc, excluded_roots=sorted(excluded), groups=result_groups,
                 remaining_cross_group_edges=remaining, rejected_unions=rejected,
@@ -164,7 +193,7 @@ def model(path: Path, *, hop_um=405.0, excluded_roots=(), auto_encoder=True,
                 actual_RRL_FF_origin_endpoint_bounds=endpoint_bounds,
                 actual_RRL_FF_origin_endpoint_bounds_over_budget=[e for e in endpoint_bounds if e['maximum_FF_origin_span_um'] > hop_um],
                 endpoint_bound_scope='RRL-only FF-origin pairwise upper bound; actual source-Q/capture-D pin-net extraction remains authoritative', 
-                unfit_light_root_groups=[g['key'] for g in result_groups if not g['light_root_fit']],
+                unfit_light_root_groups=[g['key'] for g in result_groups + root_groups if not g['light_root_fit']],
                 preserved_contract='caller must preserve actual clock family, source early/late window, FIRM anchors and all RTL/net/stage identities; source latency and actual CTS/repair remain measured gates')
 
 

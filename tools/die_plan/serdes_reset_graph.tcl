@@ -20,6 +20,7 @@ proc run {out} {
    if {[[$p getMTerm] getIoType] ne "OUTPUT"} continue
    set i [$p getInst];set n [$i getName];set clock [ck $i]
    if {[regexp {(?:^|[/.])u_rrl_([0-9]+)[/.]} $n -> id] && $clock ne {} && [$clock getNet] ne "NULL" && [regexp $rr_clock_re [[$clock getNet] getName]]} {dict set out $id 1;continue}
+   if {$clock ne {} && [regexp {(?:^|[/.])u_cland_(?:reset_rst_rl|collect_rst_rl)_[0-9]+[/.]} $n]} {dict set out root 1;continue}
    if {$clock ne {} || [[$i getMaster] isBlock]} continue
    foreach inp [$i getITerms] {
     if {[[$inp getMTerm] getIoType] ne "INPUT" || [[$inp getMTerm] getName] in {VDD VSS VPWR VGND}} continue
@@ -27,6 +28,11 @@ proc run {out} {
    }
   }
   return $out
+ }
+ proc fanin_tokens {d} {
+  set ids [lsort -integer [lsearch -all -inline -regexp [dict keys $d] {^[0-9]+$}]]
+  if {[dict exists $d root]} {lappend ids root}
+  return [join $ids ,]
  }
  set f [open $out w]
  set c [$b getCoreArea];puts $f "CORE\t[expr {[$c xMin]/$dbu}]\t[expr {[$c yMin]/$dbu}]\t[expr {[$c xMax]/$dbu}]\t[expr {[$c yMax]/$dbu}]"
@@ -52,7 +58,7 @@ proc run {out} {
   foreach inp [$i getITerms] {
    set pin [[$inp getMTerm] getName]
    if {$pin ni {D RESETN SETN}} continue
-   puts $f "FANIN\t$kind\t$id\t$n\t$pin\t[join [lsort -integer [dict keys [sources [$inp getNet] 12 {}]]] ,]"
+   puts $f "FANIN\t$kind\t$id\t$n\t$pin\t[ot_rg::fanin_tokens [sources [$inp getNet] 12 {}]]"
   }
  }
  close $f

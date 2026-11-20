@@ -22,7 +22,11 @@ def env_values(model, existing_fixed=""):
         if g["bbox_span_um"] > budget or not g["root_candidates"]:
             raise SystemExit(f"cohort model: group {g['key']} span {g['bbox_span_um']} roots {len(g['root_candidates'])}")
     cohorts = ";".join(",".join(str(i) for i in g["rrl_ids"]) for g in groups)
-    fixed = ",".join(f"serdes_rst_{g['key']}:{g['root_candidates'][0]['name']}" for g in groups)
+    rc = model.get("root_collector_groups", [])
+    for g in rc:
+        if g["bbox_span_um"] > budget or not g["root_candidates"]:
+            raise SystemExit(f"cohort model: root collector {g['key']} span {g['bbox_span_um']} roots {len(g['root_candidates'])}")
+    fixed = ",".join(f"serdes_rst_{g['key']}:{g['root_candidates'][0]['name']}" for g in groups + rc)
     return {"OT_SERDES_RESET_COHORT": "1", "OT_SERDES_RELAY_COHORTS": cohorts,
             "OT_TAP_GROUP_FIXED": (existing_fixed + "," if existing_fixed else "") + fixed}
 

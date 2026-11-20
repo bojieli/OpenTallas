@@ -352,6 +352,7 @@ proc ct_rl_sources {net depth seen} {
     if {[regexp {(?:^|[/.])u_rrl_([0-9]+)[/.]} $name -> owner] && [ct_clk_iterm $inst] ne ""} {
       dict set found $owner 1;continue
     }
+    if {[ct_has_clock_pin $inst] && [regexp {(?:^|[/.])u_cland_(?:reset_rst_rl|collect_rst_rl)_[0-9]+[/.]} $name]} {dict set found root 1;continue}
     if {[ct_has_clock_pin $inst]} continue
     if {![catch {[[$inst getMaster] isBlock]} hard] && $hard eq "1"} continue
     foreach input [$inst getITerms] {
@@ -396,8 +397,19 @@ if {$ct_reset_family} {
         set owners [dict merge $owners [ct_rl_sources [$pin getNet] 12 {}]]
       }
     }
-    if {[dict size $owners]!=1} {error "OT_SERDES_RESET_COHORT ambiguous/missing compiled RRL authority for $collector: [dict keys $owners]"}
-    set owner [lindex [dict keys $owners] 0]
+    # root-owned collector (RESET-COHORT-1119): no u_rrl relay, D is the chain predecessor / u_cland_reset_rst_rl_N register fed from the root reset
+    # (the trace stops at those registers and reports "root").  It is its own cohort member c<N>; a collector with no authority at all still fails closed.
+    set ct_rrl_owners [lsearch -all -inline -regexp [dict keys $owners] {^[0-9]+$}]
+    if {![llength $ct_rrl_owners] && [dict exists $owners root] && [regexp {u_cland_collect_rst_rl_([0-9]+)$} $collector -> ct_cid]} {
+      set owner c$ct_cid
+      dict set ct_reset_map $owner $owner
+      dict set ct_reset_used $owner 1
+      dict for {name inst} $instances {dict set ct_reset_members $name $owner}
+      puts "OT_SERDES_RESET_COHORT compiled $collector <- root reset (own cohort $owner, [dict size $instances] clock pins)"
+      continue
+    }
+    if {[llength $ct_rrl_owners]!=1} {error "OT_SERDES_RESET_COHORT ambiguous/missing compiled RRL authority for $collector: [dict keys $owners]"}
+    set owner [lindex $ct_rrl_owners 0]
     dict set ct_reset_used $owner 1
     dict for {name inst} $instances {dict set ct_reset_members $name $owner}
     puts "OT_SERDES_RESET_COHORT compiled $collector <- u_rrl_$owner ([dict size $instances] clock pins)"
