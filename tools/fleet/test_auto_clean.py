@@ -115,8 +115,12 @@ def test_a_lane_named_in_a_recent_post_is_kept():
     assert not AR.post_text_hit("/srv/opentallas-scratch2/claude/other", posts)
 
 
-def test_run_lanes_skips_git_and_post_hits(tmp_path):
-    c = str(tmp_path); mk(c, "keepme/x", OLD); mk(c, "postlane/x", OLD); mk(c, "goner/x", OLD)
+def test_run_lanes_skips_git_and_post_hits(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    # A gate can place its temp root inside a real /claude/<lane>. Keep the
+    # synthetic lane paths relative so that enclosing real lane does not match.
+    c = "."
+    mk(c, "keepme/x", OLD); mk(c, "postlane/x", OLD); mk(c, "goner/x", OLD)
     seen = []
     res = AR.run_lanes(c, set(), lambda p: None, seen.append, 10**9, apply=False, now=NOW, idle_h=12.0, mtime=lambda p, cut: OLD,
                        posts="- 2026-11-17 %s/postlane" % c, git_check=lambda p: "git work tree with uncommitted changes" if p.endswith("keepme") else "")
