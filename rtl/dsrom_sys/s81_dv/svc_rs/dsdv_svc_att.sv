@@ -1150,37 +1150,3 @@ module dsdv_pv_source_identity #(parameter integer ENABLE=0)(
   assign bad=launch && (!launch_ok || !valid || pending[17:0]!={user_id,tag_id});
  end endgenerate
 endmodule
-
-
-// Move write-head selection behind the existing request register edge.
-module dsdv_svc_wq_capture (
-    input wire clk,
-    input wire [340:0] head_0, head_1, head_2,
-    input wire valid,
-    input wire [2:0] source,
-    input wire [340:0] read_req,
-    output reg [340:0] request
-);
-    reg [340:0] head_0_q, head_1_q, head_2_q, read_req_q;
-    reg [2:0] source_q;
-    reg valid_q;
-    always @(posedge clk) begin
-        head_0_q <= head_0;
-        head_1_q <= head_1;
-        head_2_q <= head_2;
-        read_req_q <= read_req;
-        source_q <= source;
-        valid_q <= valid;
-    end
-    always_comb begin
-        request = '0;
-        if (valid_q) begin
-            case (source_q)
-                3'd0: request = head_0_q;
-                3'd1: request = head_1_q;
-                3'd2: request = head_2_q;
-                default: request = read_req_q;
-            endcase
-        end
-    end
-endmodule
