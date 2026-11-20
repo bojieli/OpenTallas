@@ -8916,6 +8916,29 @@ def _bound_reset_identity(tree):
     return tree
 
 
+def _report_bound_reset_mismatch(tn, captured, solved, solve_error):
+    """Emit the GEN worker's actual comparison, including hierarchy-wide changes on locally short trees."""
+    import bound_reset_contract as BRC
+
+    def summary(tree):
+        return dict(sha256=BRC.digest(tree), relays=len(tree.get("relays") or []),
+                    depth=tree.get("depth"), reach_um=tree.get("reach_um"), max_hop_um=tree.get("max_hop_um"))
+
+    detail = dict(type=tn, captured=summary(captured))
+    if isinstance(solved, dict):
+        detail["solved"] = summary(solved)
+        detail["changed"] = sorted(k for k in captured.keys() | solved.keys()
+                                   if k not in captured or k not in solved or captured[k] != solved[k])
+        old = {r["name"]: r for r in captured.get("relays") or [] if isinstance(r, dict) and isinstance(r.get("name"), str)}
+        new = {r["name"]: r for r in solved.get("relays") or [] if isinstance(r, dict) and isinstance(r.get("name"), str)}
+        name = next((n for n in sorted(old.keys() | new.keys()) if old.get(n) != new.get(n)), None)
+        if name is not None:
+            detail["first_changed_relay"] = dict(name=name, captured=old.get(name), solved=new.get(name))
+    else:
+        detail["solve_error"] = solve_error or "no solved tree"
+    print("gen phys: RESET_IDENTITY " + json.dumps(detail, sort_keys=True), flush=True)
+
+
 def install_collector_event(P, tn, lands, rtl_files, plan_tree=None):
     """KW-FIX-27 11-07 three-reset-tree class (DIE-S81-73, Codex): the collector RTL comes from the sidecar event tree,
     the native u_rrl_* relays from the captured solve, and install_bound_native_reset puts that solve in the contract's
@@ -8984,11 +9007,15 @@ def install_bound_native_reset(P, tn, rtl_files, source_contract=None):
             # The plan's published collector_tree is a snapshot; bind emits RT.for_type(plan). A snapshot older than the
             # solve is provably stale when the current solve IS the captured tree: the RTL is right, use its tree and say so.
             # Any other difference (bind from another plan, edited graph) still stops.
+            solve_error = None
             try:
-                solved = json.loads(json.dumps(RT.for_type(P, tn)))
-            except Exception:
+                solved = _bound_reset_identity(RT.for_type(P, tn))
+            except Exception as exc:
                 solved = None
-            if _bound_reset_identity(solved) != _bound_reset_identity(tree):
+                solve_error = f"{type(exc).__name__}: {exc}"
+            captured = _bound_reset_identity(tree)
+            if solved != captured:
+                _report_bound_reset_mismatch(tn, captured, solved, solve_error)
                 raise gen_rtl.GenError(f"type {tn}: physical collector_tree differs from captured bound reset identity; preserve original IDs/edges/coordinates")
             P.types[tn].setdefault("clock", {}).setdefault("landing_contract", {})["collector_tree"] = copy.deepcopy(tree)
             print(f"gen phys: NOTE type {tn}: published collector_tree is stale, the current solve equals the captured bound reset tree; using the captured tree", flush=True)

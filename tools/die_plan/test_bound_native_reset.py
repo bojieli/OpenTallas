@@ -168,6 +168,36 @@ def test_wrapper_tied_reset_and_recomputed_tree_rejected(tmp_path):
     with pytest.raises(gen_rtl.GenError,match='exact passthrough'):G.install_bound_native_reset(p,'t',[f])
 
 
+def test_refusal_reports_exact_solve_on_locally_short_tree(tmp_path, monkeypatch, capsys):
+    import bound_reset_contract as B
+    p, f = fixture(tmp_path)
+    captured = tree()
+    rec = B.emitted(f, "t", captured)
+    p.types["t"]["clock"]["landing_contract"]["collector_tree"]["relays"][0]["xy"] = [30, 30]
+    solved = copy.deepcopy(captured)
+    solved["reach_um"] = 300
+    solved["depth"] += 1
+    solved["relays"][0]["d"] = "different_parent"
+    monkeypatch.setattr(R, "for_type", lambda *args: solved)
+    with pytest.raises(gen_rtl.GenError, match="physical collector_tree differs from captured bound reset identity"):
+        G.install_bound_native_reset(p, "t", [f], source_contract=rec)
+    detail = json.loads(capsys.readouterr().out.split("gen phys: RESET_IDENTITY ")[-1])
+    assert detail["captured"]["sha256"] == B.digest(captured)
+    assert detail["solved"]["sha256"] == B.digest(solved)
+    assert detail["captured"]["max_hop_um"] == detail["solved"]["max_hop_um"] == 17.28
+    assert detail["changed"] == ["depth", "reach_um", "relays"]
+    assert detail["first_changed_relay"]["solved"]["d"] == "different_parent"
+
+    def broken_solve(*args):
+        raise R.ResetError("missing ancestor site")
+    monkeypatch.setattr(R, "for_type", broken_solve)
+    with pytest.raises(gen_rtl.GenError, match="differs from captured"):
+        G.install_bound_native_reset(p, "t", [f], source_contract=rec)
+    detail = json.loads(capsys.readouterr().out.split("gen phys: RESET_IDENTITY ")[-1])
+    assert detail["solve_error"] == "ResetError: missing ancestor site"
+    assert "solved" not in detail
+
+
 def test_stale_published_tree_accepted_only_when_solve_is_the_captured_tree(tmp_path,monkeypatch):
     # the plan's collector_tree is an older snapshot; the RTL receipt equals the current solve (TYPE-SAFE-3 11-06 class)
     import bound_reset_contract as B
