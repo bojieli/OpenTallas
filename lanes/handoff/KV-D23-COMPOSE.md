@@ -14,6 +14,7 @@ Work dir epyc7 /srv/opentallas-scratch2/claude/kv-d23-compose (lane clone wt/ = 
   4. qkd_hr_ingest_eng: early tap 106/78 ps + core-input lockup latches, no re-CTS (KV-HUB-0005 / DIE-CORETAP-1119, §6).
   5. kv3_pc: form B is DISPROVED (0 of 688 core PG pins connect). Form A re-harden is owned by KV-PC-PG-2330; take its new pcc/pcf/h_head_p views when posted, plus the lattice row (§2).
   6. Hub core-tap rows when posted.
+- KV-D26 item 7, superset forms (COORD 09:5xZ; FABLE-SUPERSET-0415-classes.json sha c6b142d032c7, on the D25f2 plan, 56 -> 24 builds). New step TYPEMERGE-KV in build_d26: rep = widest member; partition_types[rep].superset (SUPERSET-1 e00be6bb60); members re-pointed with the class orient; keep per-member added_taps; re-key rows to rep; kv_regen dry run; latency unchanged. hg v1..v1p6 -> 1 (needs FABLE-FIX-KV-HG-0000 netlist-superset confirm); hgi 11 -> 1-3 (KV-PC-HGI-1119). Ask posted 1bf4075a805.
 - Not in D26 unless reposted: M2 (k11), HST3FB (stop list), depth-16 rows.
 
 ## Status 2026-11-20 08:45Z (read this first; supersedes 07:05Z)
