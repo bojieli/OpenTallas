@@ -4,6 +4,8 @@ import stat
 import subprocess
 from pathlib import Path
 
+import pytest
+
 HERE = Path(__file__).resolve().parent
 SH = HERE / "die_chain_ca.sh"
 
@@ -16,19 +18,23 @@ def test_order_and_flags():
     assert os.access(SH, os.X_OK) or True
 
 
-def test_runs_all_steps_with_stub_tools(tmp_path):
+@pytest.mark.parametrize("ca_rc, legacy_rc", [(0, 0), (37, 0), (0, 38)])
+def test_runs_all_steps_with_stub_tools(tmp_path, ca_rc, legacy_rc):
     tmp_path.mkdir(parents=True, exist_ok=True); t = tmp_path / "die_plan"; (tmp_path / "s81_head").mkdir(); t.mkdir()
     calls = tmp_path / "calls.txt"
     for n, d in (("landed_phase_ocv.py", tmp_path / "s81_head"), ("count_align_plan.py", t), ("count_align_bind.py", t), ("die_sta_related.py", t)):
-        (d / n).write_text(f"import sys\nopen({str(calls)!r},'a').write('{n} '+' '.join(sys.argv[1:])+'\\n')\n")
+        script = f"import sys\nopen({str(calls)!r},'a').write('{n} '+' '.join(sys.argv[1:])+'\\n')\n"
+        if n == "die_sta_related.py":
+            script += f"sys.exit({ca_rc} if '--count-align' in sys.argv else {legacy_rc})\n"
+        (d / n).write_text(script)
     r = subprocess.run(["bash", str(SH), str(tmp_path / "proof"), "plan.json", str(tmp_path / "out")], capture_output=True, text=True,
-                       env=dict(os.environ, CA_TOOLS=str(t)))
-    assert r.returncode == 0, r.stderr
+                       env=dict(os.environ, CA_TOOLS=str(t), REAL_VIEWS="0"))
+    assert r.returncode == ca_rc, r.stderr
     got = calls.read_text().splitlines()
     assert [g.split()[0] for g in got] == ["landed_phase_ocv.py", "count_align_plan.py", "count_align_bind.py", "die_sta_related.py", "die_sta_related.py"]
     assert "--count-align" in got[3] and "--count-align" not in got[4]
     log = (tmp_path / "out" / "CHAIN.log").read_text()
-    assert "STA_CA 0" in log and "LEGACY" in log
+    assert f"STA_CA {ca_rc}" in log and f"STA_LEGACY {legacy_rc}" in log
 
 
 def test_proto_die_calls_the_ca_chain():

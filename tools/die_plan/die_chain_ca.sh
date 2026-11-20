@@ -47,10 +47,16 @@ if [ "${REAL_VIEWS_GIVEN:-0}" = 1 ]; then log "REAL_VIEWS passed by caller"
 else rt=$T; [ -f "$rt/real_views.py" ] || rt=$HERE; rv_resolve "$rt" "$PLAN" "$OUT/real_views"; rv_for "$T"; log "$RVMSG"; fi
 if [ $rc -eq 0 ]; then
   ( cd "$T" && python3 -s die_sta_related.py "$PROOF" --plan "$PLAN" --out "$OUT/sta_ca" --corner TT --corner FF --core-insertion declared --cppr-lca --clock-cell "$CC" \
-      --count-align "$OUT/count_align_bind.json" --count-align-key part $WF "${RVF[@]}" "$@" ) > "$OUT/sta_ca.log" 2>&1; log "STA_CA $?"
-  # measured vs contract hold per pair class (CONTRACT = declared/kit-contract window; MEASURED = both endpoints real views)
-  python3 -I "$HERE/real_views.py" report "$OUT/sta_ca" > "$OUT/hold_report.log" 2>&1
-  while read -r l; do log "$l"; done < "$OUT/hold_report.log"
+      --count-align "$OUT/count_align_bind.json" --count-align-key part $WF "${RVF[@]}" "$@" ) > "$OUT/sta_ca.log" 2>&1
+  r=$?
+  log "STA_CA $r"
+  if [ "$r" -eq 0 ]; then
+    # measured vs contract hold per pair class (CONTRACT = declared/kit-contract window; MEASURED = both endpoints real views)
+    python3 -I "$HERE/real_views.py" report "$OUT/sta_ca" > "$OUT/hold_report.log" 2>&1
+    while read -r l; do log "$l"; done < "$OUT/hold_report.log"
+  else
+    rc=$r
+  fi
 else log "STA_CA SKIPPED (a CA step failed: the legacy result below is NOT a landed verdict)"; fi
 ( cd "$T" && python3 -s die_sta_related.py "$PROOF" --plan "$PLAN" --out "$OUT/sta_legacy" --corner TT --corner FF --core-insertion declared --cppr-lca --clock-cell "$CC" "${RVF[@]}" "$@" ) > "$OUT/sta_legacy.log" 2>&1
 log "STA_LEGACY $? (LEGACY T/2 landed result: informational only, not the landed gate)"
