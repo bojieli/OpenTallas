@@ -13432,3 +13432,9 @@ FAILED [AUTOPILOT a83917e7d77b] 2026-11-20 07:47:39 PST AUTOPILOT -> KIT-WAVE-5:
   col_h10_r1 (12): GRT 0; CTS FF hold after CORETAP 7: worst -53.5 median -44.8; sign-off runs 0, SIGNED 0; 4 stopped without signoff; old plan -208/-411
   col_h10_r2 [plan_h10 +CC-BANK-2] (5): GRT 2 TT worst -54.1 median -54.1; CTS FF hold after CORETAP 5: worst -100.9 median -94.7; sign-off runs 0, SIGNED 0; 1 stopped without signoff; old plan -172
   Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
+- 2026-11-20 07:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-20 07:52 PST: 324 running jobs, PROGRESSING 305, SLOW 14, NO-PROGRESS 5 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc9 serdes__t13 signoff_meas_072023 stage 56.5 h job 57.7 h: no new meaningful log line for 56.1 h; last: - hold_ff: FAIL WNS -55.85 ps < 0
+  NO-PROGRESS intel1 kv3_io_cor 5_2_route stage 44.9 h job 55.2 h: drt_violations best 246 last 246 rows 53 window-gain 0.4%; stagnant 9.0 h; last event 0.3 h ago, log write 0.4 h ago (3355 lines)
+  NO-PROGRESS epyc7 dsdv_slice_lepe_mu_LP__t2 stage_odb_cap stage 38.1 h job 38.1 h: last event 2.2 h ago, log write 2.2 h ago (2133 lines), cpu idle (hung)
+  NO-PROGRESS intel1 kv3_pc_v3 5_1_grt stage 28.1 h job 54.3 h: repair_Viol best 1971 last 1971 rows 289 window-gain 0.0%; stagnant 9.3 h; last event 0.1 h ago, log write 0.1 h ago (805 lines)
+  NO-PROGRESS epyc9 ot_s81sl_leaf__t27 stage_odb_cap stage 16.9 h job 16.9 h: no new meaningful log line for 8.6 h; last: 2026-11-20 07:17:00 STAGE-CAP skip /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave
