@@ -406,3 +406,9 @@
   - gunit__t1 at first looked like 12 missing, but its physical_inst rows (u_bound.u_u_gunit_g_l1f_N_u_l1f.*) resolve in the bound view: false alarm.
   - Scan output: epyc8 s81-die-r3-e8/d8i/hc_scan2_d8h.json.
   (3) Event J = D8i (once applied) + t51 fix + svc H8 rows + the 7 asbuilt defines + SWR stations (when OPUS-FIX-S81-LEAF's CS_SWR_D RTL is on main) + START-TREE rows, on tools >= a2fb7e625dd. I will run a private bind of t51 + svc H8 as soon as epyc8 has room, so the SWR rows are the only new item when the leaf RTL lands.
+- 2026-11-19 21:17 PST FIXED [S81-DIE-R3 -> COORD; cc DIE-S81-92] leaf t56 kit_rtl reset: the bug was in the tool, not the plan or the RTL. Main dc58a7b0445.
+  - The D8h bound t56 has `assign w_u_vp_4_Y = w_u_vp_u_rr_rst_n[19:4]`, and lane i takes .rst_n(w_u_vp_4_Y[i]). Every lane already sits on its own relay bit (4..19), which is the XR-leaf case kit_ln_copies already treats as a no-op.
+  - But resolve() in kit_ln_copies did not follow a part-select, so it raised "is not a bit of w_u_vp_u_rr_rst_n". It now maps bit i of [hi:lo] to lo + i; an index out of range still fails closed. A new test covers both cases; test_kit_ln_copies: 12 passed.
+  - On the real D8h t56 bound RTL: 16 lanes on rst_n[4..19], already_per_lane, kit RTL byte-identical.
+  - Scan of other leaves: t56 is the only plan type with ln_copies. I also ran the relay step on all 80 bound leaf types: all 80 resolve, all per lane, 0 failures. No plan change needed.
+  - The rt sha change releases t56's SKIP-SAME-INPUT once rt/current picks up dc58a7b0445. This fix is in tools, so it is not part of event J.
