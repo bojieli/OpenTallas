@@ -107,7 +107,7 @@ def test_render_has_table_and_rate(tmp_path):
     kit(tmp_path, "s81", "col_p", ("cts", "grt", "route"), so())
     kit(tmp_path, "s81", "col_f", ("cts", "grt", "route"), so(hold=-1.0))
     out = rr.render(table(tmp_path), SINCE, UNTIL)
-    assert "ROUTE-RESULTS" in out and "| s81 | 2 | 2 | 2 | 2 | 1 | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 |" in out
+    assert "ROUTE-RESULTS" in out and "| s81 | 2 | 2 | 2 | 2 | 1 | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |" in out
     assert "failed 1" in out and "50%" in out
 
 
@@ -189,3 +189,20 @@ def test_retired_host_dropped():
     with contextlib.redirect_stdout(buf):
         rr.main(["--hosts", "epyc4,local", "--roots", "/nonexistent", "--since", "2026-11-19 00:00"])
     assert "epyc4" not in buf.getvalue()
+
+
+def test_outer_signal_exit_matches_current_incomplete_stage(tmp_path):
+    current = kit(tmp_path, "qwen_compute", "slw_stop", ("cts",),
+                  log_only="grt", log_text="Elapsed time: 01:33:02.28\n", log_t=IN - 1)
+    _write(current / "run_route.log", "make[1]: *** [Makefile:585: do-5_1_grt] Error 247\n", IN)
+    stale = kit(tmp_path, "qwen_compute", "slw_old_stop", ("cts",),
+                log_only="grt", log_text="new GRT progress\n", log_t=NOW - 2.5 * 3600,
+                stage_t=NOW - 2.6 * 3600)
+    _write(stale / "run_route.log", "make[1]: *** [Makefile:585: do-5_1_grt] Error 247\n", OLD)
+    different = kit(tmp_path, "qwen_compute", "slw_other_stop", ("cts",),
+                    log_only="grt", log_text="Segmentation fault\n")
+    _write(different / "run_route.log", "make[1]: *** [Makefile:585: do-5_2_route] Error 247\n", IN)
+    t = table(tmp_path)["qc"]
+    assert t["names"]["infra_stop"] == ["slw_stop"]
+    assert t["names"]["dead"] == ["slw_old_stop"]
+    assert t["names"]["crash"] == ["slw_other_stop"]

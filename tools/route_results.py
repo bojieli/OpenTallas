@@ -37,12 +37,13 @@ from concurrent.futures import ThreadPoolExecutor
 STAGES = ("cts", "grt", "route", "signoff")
 STAGE_FILE = {"cts": "4_1_cts", "grt": "5_1_grt", "route": "5_2_route"}
 CLASSES = ("setup", "hold", "congestion", "drc", "crash")     # the failures
-APART = ("cancelled", "dead")                                   # not failures: cancelled/superseded, unexplained dead
+APART = ("infra_stop", "cancelled", "dead")                                   # external or unresolved outcomes, outside the design fail rate
 SIGNALS_LOG = os.path.expanduser("~/.local/state/ot-run/signals.log")
 WAVE_STATE = os.path.expanduser("~/coord/autopilot/kit_wave_state.json")
 CANCEL_RE = re.compile(r"signal (?:15|9|2) from .* -> ot-run .* dir (/[^\s:,]+)")
 KIT_RE = re.compile(r"/kit-wave/(?P<die>[^/]+)/(?P<event>[^/]+)/items/(?P<item>[^/]+)/(?:attempt_(?P<n>\d+)/)?gen/")
 CLASS_LABEL = {"setup": "setup timing", "hold": "hold", "congestion": "congestion/overflow", "drc": "DRC", "crash": "real tool crash (signature)",
+               "infra_stop": "external stage stop (signal exit)",
                "cancelled": "cancelled/superseded", "dead": "dead, unexplained"}
 DIES = ("s81", "head", "qc", "kv", "hbm", "other")
 SETUP_MIN_PS = -42.0     # academic profile: TT setup >= -42 ps
@@ -57,6 +58,13 @@ MAX_DEPTH = 14
 CRASH_RE = re.compile(r"Segmentation fault|terminate called|std::bad_alloc|\bKilled\b|Traceback \(most recent|core dumped|"
                       r"\[ERROR (?!GRT-0116)[A-Z]+-\d+\]|signal \d+ received|Out of memory", re.I)
 CONG_RE = re.compile(r"GRT-0116|GRT-0183|Global routing finished with (?:overflow|congestion)|routing congestion", re.I)
+
+# ORFS can close its stage log with a timing summary and report the
+# signal exit only in the outer runner. A signal exit does not name its sender.
+OUTER_STOP_RE = re.compile(
+    r"^make(?:\[\d+\])?: \*\*\* \[[^\]\n]*\bdo-(?P<stage>4_1_cts|5_1_grt|5_2_route)\] "
+    r"Error (?:137|143|241|247)[ \t]*$", re.MULTILINE
+)
 
 
 KEY_DIE = {"s81": "s81", "s81_head": "head", "qwen_compute": "qc", "qwen_kvsys": "kv", "hbm": "hbm"}
@@ -231,11 +239,18 @@ def record(base, live="", cancel=()):
     if "route" in rec["t"]:
         d = load_json(os.path.join(base, "5_2_route.json")) or {}
         rec["res"]["route_drc"] = d.get("detailedroute__route__drc_errors")
-    # a stage that wrote a log but no result: keep the tail verdict (crash / congestion signature)
-    for st, f in STAGE_FILE.items():
-        if st in rec["log_t"] and st not in rec["t"]:
-            tx = tail(os.path.join(base, f + ".log"))
-            rec["res"]["fail_" + st] = "congestion" if CONG_RE.search(tx) else ("crash" if CRASH_RE.search(tx) else "")
+    incomplete = {st: f for st, f in STAGE_FILE.items() if st in rec["log_t"] and st not in rec["t"]}
+    route_log = os.path.join(kit, "run_route.log")
+    route_log_time = mtime(route_log) if incomplete else None
+    stopped = set()
+    if own(route_log_time) and any(route_log_time >= rec["log_t"][st] for st in incomplete):
+        stopped = {m["stage"] for m in OUTER_STOP_RE.finditer(tail(route_log))}
+    for st, f in incomplete.items():
+        if f in stopped and route_log_time >= rec["log_t"][st]:
+            rec["res"]["fail_" + st] = "infra_stop"
+            continue
+        tx = tail(os.path.join(base, f + ".log"))
+        rec["res"]["fail_" + st] = "congestion" if CONG_RE.search(tx) else ("crash" if CRASH_RE.search(tx) else "")
     return rec
 
 
@@ -359,7 +374,7 @@ def aggregate(recs, since, until, now, stale_s, wave=frozenset()):
             if st in r["t"] and since <= r["t"][st] < until:
                 row[st] += 1
         oc = outcome(r, now, stale_s, is_cancelled(r, wave))
-        if oc is not None and oc[1] in ("dead", "crash", "cancelled") and r["design"] in running and not (r.get("live") or (r.get("act") is not None and now - r["act"] < ACTIVE_S)):
+        if oc is not None and oc[1] in ("dead", "crash", "infra_stop", "cancelled") and r["design"] in running and not (r.get("live") or (r.get("act") is not None and now - r["act"] < ACTIVE_S)):
             continue
         if oc is None or not (since <= oc[0] < until):
             continue
@@ -377,11 +392,11 @@ def aggregate(recs, since, until, now, stale_s, wave=frozenset()):
 
 def render(tab, since, until, hosts_note=""):
     f = lambda t: time.strftime("%m-%d %H:%M", time.localtime(t))
-    cols = ("cts", "grt", "route", "signoff", "pass", "setup", "hold", "congestion", "drc", "crash", "cancelled", "dead", "pending")
+    cols = ("cts", "grt", "route", "signoff", "pass", "setup", "hold", "congestion", "drc", "crash", "infra_stop", "cancelled", "dead", "pending")
     lines = ["ROUTE-RESULTS %s to %s (from kit run logs + signoff.json; gate = DRC 0, TT setup >= %d ps, FF hold >= 0)%s"
              % (f(since), f(until), SETUP_MIN_PS, hosts_note),
-             "| die | CTS | GRT | route | sign-off | pass | fail setup | fail hold | fail congestion | fail DRC | fail real crash | cancelled/superseded | dead, unexplained | routed, no sign-off |",
-             "|" + "---|" * 14]
+             "| die | CTS | GRT | route | sign-off | pass | fail setup | fail hold | fail congestion | fail DRC | fail real crash | external stop | cancelled/superseded | dead, unexplained | routed, no sign-off |",
+             "|" + "---|" * 15]
     tot = {k: 0 for k in cols}
     for d in DIES:
         r = tab[d]
@@ -393,9 +408,9 @@ def render(tab, since, until, hosts_note=""):
     lines.append("| all | %s |" % " | ".join(str(tot[k]) for k in cols))
     fails = sum(tot[c] for c in CLASSES)
     done = tot["pass"] + fails
-    lines.append("decided past CTS: %d  passed %d  failed %d%s;  not failures: %d cancelled/superseded, %d dead unexplained, %d routed awaiting sign-off"
+    lines.append("decided past CTS: %d  passed %d  failed %d%s;  not failures: %d external stops, %d cancelled/superseded, %d dead unexplained, %d routed awaiting sign-off"
                  % (done, tot["pass"], fails, "  (fail rate %.0f%%)" % (100.0 * fails / done) if done else "",
-                    tot["cancelled"], tot["dead"], tot["pending"]))
+                    tot["infra_stop"], tot["cancelled"], tot["dead"], tot["pending"]))
     if tot["dead"]:
         lines.append("  dead unexplained = no process, no crash signature, log idle >= %d min, no ot-run cancel or wave CANCELLED row" % STALE_MIN)
     for d in DIES:
