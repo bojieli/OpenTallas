@@ -767,6 +767,33 @@ def dly_spread_station_um(budgets, tn):
     v = budgets.get("r_dly_spread_station_um") or {}
     hit = [b for b in v if b and tn and str(tn).startswith(b)]
     return float(v[max(hit, key=len)]) if hit else None
+
+
+def dly_lockup_cfg(budgets, tn):
+    """budgets.r_dly_lockup {type base: {"seg": N, "tail_groups": G}} (XTAP-C, FABLE-FIX-KV-PV 11-20, kit_dly_lockup.py): the pad delay
+    lines of the types whose name starts with a listed base (longest base wins) are split into segments of <= N stages (default 8;
+    tail copies into G groups, default 2) with a hop lockup latch on every segment boundary, delay -> delay input and
+    delay -> hard-core output; a segment is one tap group and one placement station.  0 cycles.  Absent = off."""
+    v = budgets.get("r_dly_lockup") or {}
+    hit = [b for b in v if b and tn and str(tn).startswith(b)]
+    if not hit:
+        return None
+    c = v[max(hit, key=len)] or {}
+    return dict(seg=int(c.get("seg", 8)), tail_groups=int(c.get("tail_groups", 2)))
+
+
+def dly_lockup_exports(budgets, tn, t):
+    """kit config of a budgets.r_dly_lockup type: segment stations in dly_spread, every segment on one tap (tap_chain_affinity,
+    the plan's own clock.tap_chain_affinity wins), and no single-sink shedding after the hop latches joined their launch taps
+    (the cap recheck would split a segment again; an over-cap tap is reported)."""
+    if not dly_lockup_cfg(budgets, tn):
+        return []
+    if not dly_spread_mode(budgets, tn):
+        raise ValueError(f"type {tn}: budgets.r_dly_lockup needs budgets.r_dly_spread for the type (segment stations)")
+    out = ["export OT_DLY_SPREAD_SEG = 1", "export OT_TAP_CAP_RECHECK = 0"]
+    if "tap_chain_affinity" not in t.get("clock", {}):
+        out += ["export OT_TAP_CHAIN_AFFINITY = 1", "export OT_TAP_CHAIN_RADIUS_UM = 400", "export OT_TAP_CHAIN_MAX_GROUP = 24"]
+    return out
 # R-REACH-5 (RULEBOOK 11-13, RULES-REACH-1): the generated zero-logic register chains every kit has -- landing bin ->
 # lane pad stages (u_lpad_<bus> r[k] / q, u_pd<n>_<bus>) -> their consumer -- get equal hops after GPL when a hop is over
 # the reach.  Evidence: S81 leaf t21 u_bin_leafdn_i0 -> u_lpad q 587 um (104 captures), KV hub_Eo u_lpad r -> q 824 um,
@@ -6672,6 +6699,14 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     # registered leaf, one per consumer pin group, sited FIRM below (istations.tcl); absent = nothing changes
     import reg_leaf_split as _RLS
     rls_rec, rls_cells = _RLS.apply(kd / "rtl", tn, t)
+    # XTAP-C 11-20 (FABLE-FIX-KV-PV, budgets.r_dly_lockup): pad delay lines split into segments + hop lockup latches, on the
+    # staged bound RTL; the bound statement of a tail copy stays as a record line (tail_copies.tsv below).  Absent = nothing.
+    dlk_cfg = dly_lockup_cfg(P.budgets, tn)
+    if dlk_cfg:
+        import kit_dly_lockup as _DLK
+        dlk_rec = _DLK.apply_kit(kd / "rtl", core_types={mod for _i, mod, *_r in macros}, **dlk_cfg)
+        (kd / "dly_lockup.json").write_text(json.dumps(dict(cfg=dlk_cfg, files=dlk_rec), indent=1) + "\n")
+        print(f"gen phys: type {tn}: OT_DLY_LOCKUP {json.dumps(dlk_rec)}")
     if rls_cells is not None:
         append_new_src(srcs, f"/work/rtl/{rls_cells.name}")
     # DIE-HEAD-53 11-01 (HEAD class LEP-BB): a hard macro instantiated with a parameter override (hd_lep0N
@@ -7224,6 +7259,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     if hold_ff_margin is not None:
         cfg += _HMF.config_lines(_fam, pregrt=_pregrt_ff_hold.enabled(t))     # HOLD-MARGIN-FAMILY: evidence + pre-route r2r target + setup guard
     cfg += tap_chain_affinity_exports(t)
+    cfg += dly_lockup_exports(P.budgets, tn, t)
     cfg += tap_pair_affinity_exports(t)
     cfg += tap_span_exports(t)
     if t.get("clock", {}).get("tap_reset_affinity") is True:        # S81-SEAM-RST-1115, opt-in, clock pin only

@@ -1752,6 +1752,8 @@ _B = SCHEMA["properties"]["budgets"]["properties"]
 _B["relay_mid_re"] = {"type": "string", "minLength": 1}
 _B["r_dly_spread_station_um"] = {"type": "object", "additionalProperties": {"type": "number", "exclusiveMinimum": 0}}   # XTAP-A 11-20 (gen_phys dly_spread_station_um)
 _B["relay_mid_re_types"] = {"type": "object", "additionalProperties": {"type": "string", "minLength": 1}}
+_B["r_dly_lockup"] = {"type": "object", "additionalProperties": {"type": "object", "additionalProperties": False, "properties": {
+    "seg": {"type": "integer", "minimum": 1}, "tail_groups": {"type": "integer", "minimum": 0}}}}   # XTAP-C 11-20 (gen_phys dly_lockup_cfg, kit_dly_lockup.py)
 _B["relay_mid_tail"] = {"type": "boolean"}
 _B["relay_mid_tail_types"] = {"type": "array", "uniqueItems": True, "items": {"type": "string", "minLength": 1}}
 _B["relay_mid_soft_frac"] = {"type": "number", "minimum": 0, "maximum": 1}

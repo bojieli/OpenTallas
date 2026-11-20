@@ -161,3 +161,26 @@ endmodule
     subprocess.run(["iverilog", "-g2005", "-o", str(tmp_path / "a.out"), str(tmp_path / "a.v")], check=True)
     out = subprocess.run(["vvp", str(tmp_path / "a.out")], check=True, capture_output=True, text=True).stdout
     assert "DLK_EQ PASS" in out, out
+
+
+def test_plan_key_and_kit_entry(tmp_path):
+    import gen_phys
+    import schema
+    c = gen_phys.dly_lockup_cfg
+    assert c({}, "kv3_pv_v8") is None and c({"r_dly_lockup": {"kv3_pv": {}}}, "kv3_hub_C") is None
+    assert c({"r_dly_lockup": {"kv3_pv": {}, "kv3_pv_v8": {"seg": 6, "tail_groups": 3}}}, "kv3_pv_v8__x") == dict(seg=6, tail_groups=3)
+    assert c({"r_dly_lockup": {"kv3_pv": {}}}, "kv3_pv_v1") == dict(seg=8, tail_groups=2)
+    b = {"r_dly_lockup": {"kv3_pv": {}}, "r_dly_spread": ["kv3_pv"]}
+    ex = gen_phys.dly_lockup_exports(b, "kv3_pv_v8", {"clock": {}})
+    assert "export OT_DLY_SPREAD_SEG = 1" in ex and "export OT_TAP_CAP_RECHECK = 0" in ex and "export OT_TAP_CHAIN_AFFINITY = 1" in ex
+    assert "export OT_TAP_CHAIN_AFFINITY = 1" not in gen_phys.dly_lockup_exports(b, "kv3_pv_v8", {"clock": {"tap_chain_affinity": {}}})
+    assert gen_phys.dly_lockup_exports({}, "kv3_pv_v8", {}) == []
+    with pytest.raises(ValueError):
+        gen_phys.dly_lockup_exports({"r_dly_lockup": {"kv3_pv": {}}}, "kv3_pv_v8", {})
+    assert schema.SCHEMA["properties"]["budgets"]["properties"]["r_dly_lockup"]["type"] == "object"
+    # kit entry: hard cores by module type, only *_bound.sv, in place
+    (tmp_path / "top_bound.sv").write_text(RTL)
+    (tmp_path / "other.sv").write_text(RTL)
+    rec = dl.apply_kit(tmp_path, core_types={"core"})
+    assert list(rec) == ["top_bound.sv"] and rec["top_bound.sv"]["by_kind"]["out"] == 3
+    assert (tmp_path / "other.sv").read_text() == RTL and "u_fl_pd5_x_0_pvg0_p1_25_o" in (tmp_path / "top_bound.sv").read_text()

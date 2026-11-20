@@ -26,6 +26,10 @@ Form (0 cycles, existing cells only: ot_dp_dly, ot_dp_dly_keep, ot_dp_lk):
   Never latched: an input fed by a port, by logic or by a hard core (a launch-clock latch on a core tap is not a lockup:
   v8b dry ECO, 613 pair ts -> join ends at -946 ps), and an output read only by logic.
 
+Plan key: budgets.r_dly_lockup {type base: {"seg": 8, "tail_groups": 2}} (gen_phys.dly_lockup_cfg: the kit's staged bound RTL
+is post-processed at GEN, hard cores = the kit's macro modules; the kit gets OT_DLY_SPREAD_SEG, tap_chain_affinity and
+OT_TAP_CAP_RECHECK=0).
+
 Usage: kit_dly_lockup.py RTL.sv [--out OUT.sv] [--report R.json] [--seg 8] [--inst-re RE] [--cores CORE_CLOCKS.json]
                          [--core-re RE] [--guard NAME] [--tail-groups 2]
   --cores   kit_core_clocks.json of the kit ({"rows": [{"instance": ...}]}): the hard-core instances
@@ -60,7 +64,7 @@ def seg_sizes(d, seg):
 TAIL_MARK = "landing pad tail copy for core"
 
 
-def apply(txt, seg=8, inst_re=DEFAULT_RE, cores=(), core_re=None, guard=None, tail_groups=2):
+def apply(txt, seg=8, inst_re=DEFAULT_RE, cores=(), core_re=None, guard=None, tail_groups=2, core_types=()):
     if seg < 1:
         raise LkError("seg must be >= 1")
     mod = re.search(r"\bmodule\s+\w+\s*(#\((?:[^()]|\([^()]*\))*\))?\s*\(", txt)
@@ -71,6 +75,7 @@ def apply(txt, seg=8, inst_re=DEFAULT_RE, cores=(), core_re=None, guard=None, ta
     rx = re.compile(inst_re)
     crx = re.compile(core_re) if core_re else None
     cores = set(cores)
+    core_types = set(core_types)
     insts = instances(body)
     names = {i[2] for i in insts}
     sel, qdrv = {}, {}
@@ -93,7 +98,7 @@ def apply(txt, seg=8, inst_re=DEFAULT_RE, cores=(), core_re=None, guard=None, ta
     # readers of every selected q net: hard cores (out latch) / other instances
     core_read = set()
     for mt, params, name, s, e, lp in insts:
-        if not (name in cores or (crx and crx.fullmatch(name))):
+        if not (name in cores or mt in core_types or (crx and crx.fullmatch(name))):
             continue
         for port, (expr, _a, _b) in conns(body, lp, e).items():
             for w in set(IDENT.findall(expr)):
@@ -174,6 +179,23 @@ def apply(txt, seg=8, inst_re=DEFAULT_RE, cores=(), core_re=None, guard=None, ta
                  by_kind={k: sum(l["W"] for l in lat if l["kind"] == k) for k in ("seg", "in", "out")},
                  stages=sum(x["W"] * x["D"] for x in sel.values()))
     return txt[:hdr_end] + body, lat, stats
+
+
+def apply_kit(rtl_dir, seg=8, tail_groups=2, core_types=(), cores=()):
+    """gen_phys entry (budgets.r_dly_lockup): the post-pass on every staged *_bound.sv of the kit that instantiates a delay cell.
+    Returns {file: stats}; writes each file in place (tmp + rename)."""
+    out = {}
+    for f in sorted(Path(rtl_dir).glob("*_bound.sv")):
+        src = f.read_text()
+        if "ot_dp_dly" not in src:
+            continue
+        txt, lat, stats = apply(src, seg=seg, tail_groups=tail_groups, core_types=core_types, cores=cores)
+        if txt != src:
+            tmp = f.with_name(f.name + ".dlk_tmp")
+            tmp.write_text(txt)
+            tmp.replace(f)
+        out[f.name] = stats
+    return out
 
 
 def main(argv):

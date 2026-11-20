@@ -8886,6 +8886,23 @@
       "minLength": 1
      }
     },
+    "r_dly_lockup": {
+     "type": "object",
+     "additionalProperties": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+       "seg": {
+        "type": "integer",
+        "minimum": 1
+       },
+       "tail_groups": {
+        "type": "integer",
+        "minimum": 0
+       }
+      }
+     }
+    },
     "relay_mid_tail": {
      "type": "boolean"
     },
