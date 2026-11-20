@@ -11,10 +11,18 @@ def digest(value):
  value=json.loads(json.dumps(value))
  return hashlib.sha256(json.dumps(value,sort_keys=True,separators=(',',':')).encode()).hexdigest()
 
+def reach_cap_um(x):
+  """the reset hop cap (um) a bound tree was solved with: the receipt's reach_cap_um, else the captured tree's own reach_um
+  (receipts written before the field carry it in the tree).  None when neither is a positive number."""
+  x=x or {}
+  for v in (x.get('reach_cap_um'),x.get('reach_um'),(x.get('tree') or {}).get('reach_um')):
+    if isinstance(v,(int,float)) and not isinstance(v,bool) and v>0: return float(v)
+  return None
+
 def emitted(path,tn,tree,provenance=None):
  path=Path(path);tree=copy.deepcopy(tree)
  rec=dict(schema=SCHEMA,plan_type=tn,bound_module=path.stem,tree=tree,tree_sha256=digest(tree),
-          bound_rtl_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),authority='tree used by this bound RTL emission',provenance=provenance)
+          bound_rtl_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),reach_cap_um=reach_cap_um(tree),authority='tree used by this bound RTL emission',provenance=provenance)
  path.with_suffix('.reset_tree.json').write_text(json.dumps(rec,indent=1)+'\n')
  import reset_tree as RT
  path.with_suffix('.reset_tree.tcl').write_text(RT.tcl_text(tree))

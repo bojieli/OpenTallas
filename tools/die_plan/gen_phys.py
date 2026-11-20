@@ -9059,7 +9059,11 @@ def install_bound_native_reset(P, tn, rtl_files, source_contract=None):
             # Any other difference (bind from another plan, edited graph) still stops.
             solve_error = None
             try:
-                solved = _bound_reset_identity(RT.for_type(P, tn))
+                # FLOW-NOADV-R2 11-20: solve with the cap the tree was BOUND with (receipt reach_cap_um / tree.reach_um), not the
+                # tool default or env; a default change (405 -> 300) then cannot refuse a live bind.
+                import cbc_rules as _CBC
+                with _CBC.bound_reset_hop_cap(BRC.reach_cap_um(source_contract) or BRC.reach_cap_um(tree)):
+                    solved = _bound_reset_identity(RT.for_type(P, tn))
             except Exception as exc:
                 solved = None
                 solve_error = f"{type(exc).__name__}: {exc}"

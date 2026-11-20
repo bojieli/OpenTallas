@@ -44,9 +44,37 @@ TAP_SKEW_PS_PER_UM = 0.065      # fit 11-19 (14 S81 kits, 413 taps): skew ~ 0.06
 RESET_HOP_CAP_UM = 300.0
 
 
+_BOUND_CAP = []          # FLOW-NOADV-R2 11-20: stack of caps pushed by bound_reset_hop_cap(); the innermost wins over default AND env
+
+
+class bound_reset_hop_cap:
+    """FLOW-NOADV-R2 11-20 (FABLE-FLOW-1000 class 1): a bound tree is solved with the cap it was BOUND with (the bind records it
+    as reach_cap_um in the reset receipt, tree.reach_um before that field), never with the tool default or an env value.  A default change (aced0fb210: 405 ->
+    300) then only touches new binds.  `with bound_reset_hop_cap(405.0): ...`; None / non-positive pushes nothing."""
+
+    def __init__(self, um):
+        try:
+            self.um = float(um) if um is not None and float(um) > 0 else None
+        except (TypeError, ValueError):
+            self.um = None
+
+    def __enter__(self):
+        if self.um is not None:
+            _BOUND_CAP.append(self.um)
+        return self
+
+    def __exit__(self, *exc):
+        if self.um is not None:
+            _BOUND_CAP.pop()
+        return False
+
+
 def reset_hop_cap_um(die=None):
-    """the reset hop cap (um) every reset generator applies by default (die reserved for a die-scoped override)"""
+    """the reset hop cap (um) every reset generator applies by default (die reserved for a die-scoped override); inside
+    bound_reset_hop_cap() the bound tree's own cap"""
     import os
+    if _BOUND_CAP:
+        return _BOUND_CAP[-1]
     v = os.environ.get("OT_RESET_HOP_CAP_UM")
     try:
         return float(v) if v else RESET_HOP_CAP_UM
