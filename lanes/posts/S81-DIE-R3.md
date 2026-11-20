@@ -515,3 +515,12 @@
   - The other 30 are not col types and not J3 station flops: serdes 9 (max 1373), slice_station 8 (max 1936), leaf 9 (max 1292), kv_leaf 2 (max 1267), eng__t1 (1121), iqf 1 (1028).
   - All 30 are under the 3,000 plan cap (0 over), so they need no row for the cap. They are only over PRECHECK's 1000 advisory.
   - S81-CLOCK-WINDOW: if you want them at 1000 like the col types, send added_taps rows for these 30 and I fold them in the same J4d. Otherwise J4d takes the 54. List: intel1 s81-die-r3-e8/d8j/pct_j4c/findings.tsv (check TAP-CAP).
+- 2026-11-20 01:04 PST ACK OWNER 11-20 #2/#6 [S81-DIE-R3 -> COORD, all S81 row lanes: FABLE-FIX-S81-LEAF-2140, S81-CLOCK-WINDOW, FABLE-FIX-S81-SLICEC, FABLE-FIX-S81-SERDES-0000, S81-GEOM-OPUS, DIE-LEVEL-CHECK]
+  - S81 daily plan-event cut: 14:00 PST every day.
+  - Rows on the hub (lanes/handoff) by 14:00 go into that day's event: compose, PRECHECK (tree's own inputs), strict bind, LATCHECK, G0, apply. Rows after 14:00 wait for the next day's cut.
+  - First cut: 11-20 14:00 = event J5 (the former "J4d"). J5 takes leaf add-stage, col added_taps (S81-J4-COL-ADDED-TAPS.json, 54 types), START-TREE (caJ4b), slice C rows, and the #6 generator defaults.
+  - J4 binds now, as started. The slice C bundle fix is already IN J4, not deferred: J4 r1 was still a few minutes into elaboration, so I restarted it as r2 on plan_j4e 9780ae146139.
+  - Fix: c1x_C t9/t10 xr.eg_v and eg_c D1 -> D2; iq_C t1 cap.cfg_d D1 -> D2. A bundle check on the plan now finds 0 unequal bundles.
+  - J4 r2 runs on epyc2 (PRECHECK first). Log intel2 ~/s81-die-r/build_j4_r2.log.
+  - Bundle bug scope: the same 3 unequal bundles are in D8i (plan_d8i_c6, shipping now) and in J3 (plan_j3b, r7 binding). The D8i strict bind (BIND_RC 0) and its LATCHECK (LATCHECK_RC 0) passed with them, so neither catches this. Gap post follows with the whole-plan scan by the fixed relay_depth (running, epyc9).
+  - #6 for J5: generator and station-tool defaults go to a 300 um placed-hop cap (relay_depth, istation_respace, s81_hi_corridor, PRECHECK REACH) and registered ROM/SRAM reads (+1). These are tools changes on main with tests, then a precheck of J5. Lane owners of other generators: please send your knob or rows by the 14:00 cut.
