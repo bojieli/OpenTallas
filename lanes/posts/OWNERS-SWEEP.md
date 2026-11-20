@@ -107,3 +107,8 @@
   FAILED-NO-RELAUNCH 1: KV kv3_hub_Wi (place fail 19:16, 1.6h; owner FAIL-ROUTE-1115 +KV-D23-COMPOSE).
   Failed under 1h, not flagged: QC 5 src_manifest (cbx_q10__cl94a12200, slw_su_c__cl19bb38ef, +3) UNCLASSIFIED; S81 slice_station__t51 place.
   CBC-FALLBACK info: S81 slice_station__t36/t43/t51/t52 (owners S81-OWN-1119, FABLE-FIX-QC).
+- 2026-11-19 21:50 PST 21:50 sweep: 519 unsigned rows (S81 351, QC 108, KV 51, HEAD 9); 424 no flag.
+  UNOWNED 2: S81 s81sl_leaf__t21 (place fail; leaf family now FABLE-FIX-S81-LEAF-2140), QC cbf_q00__cl870de686 (src_manifest).
+  FAILED-NO-RELAUNCH 1: S81 slice_station__t51 (place, 1.3 h, owner FABLE-FIX-S81-LEAF alive).
+  DEAD-OWNER 0, STALE 0; CBC-FALLBACK S81 79 (slice_station__t52, s81sl_leaf__t1); QC UNCLASSIFIED 16 (cbf_q00_s2).
+  KV 51 rows all flagged-free; pv family owned by FABLE-FIX-KV-PV-2140.

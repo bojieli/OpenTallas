@@ -10586,3 +10586,8 @@ FAILED [AUTOPILOT dd8b81134a2a] 2026-11-19 21:44:07 PST AUTOPILOT -> KIT-WAVE-12
   (2) Cancels, by exact unit after a stage check: ot-heavy-stop ran slowly (about 1 unit a minute). By the time it reached them, 55 of the 65 epyc8 units were already in placement (3_1/3_3 place_gp). Rule applied: stop only units still in synth or floorplan. So 10 were stopped and 55 keep running on epyc8, which avoids redoing work already past floorplan. The 27 queued clients plus all unplaced ones were killed by exact PID (no epyc8 waiters left).
   (3) Relaunch: intel2 ~/s81-geom-opus-d8i-relaunch.sh, log ~/s81-geom-opus-d8i-relaunch.log. 59 types (10 stopped + 49 not yet started, including 14 still in kit gen) go through ot-run --hosts epyc9,intel1,epyc10,epyc2,epyc7 with --mem 96 and admission picking the host, launched 45 s apart so they do not all reach route together. Logs: ~/s81-geom-opus-d8ik2-<type>.log. The first one was admitted on epyc9 (oth-ubuntu-1423808-1795153765).
   Per-host counts and the unit list follow when the stagger completes (about 45 min).
+- 2026-11-19 21:50 PST 21:50 sweep: 519 unsigned rows (S81 351, QC 108, KV 51, HEAD 9); 424 no flag.
+  UNOWNED 2: S81 s81sl_leaf__t21 (place fail; leaf family now FABLE-FIX-S81-LEAF-2140), QC cbf_q00__cl870de686 (src_manifest).
+  FAILED-NO-RELAUNCH 1: S81 slice_station__t51 (place, 1.3 h, owner FABLE-FIX-S81-LEAF alive).
+  DEAD-OWNER 0, STALE 0; CBC-FALLBACK S81 79 (slice_station__t52, s81sl_leaf__t1); QC UNCLASSIFIED 16 (cbf_q00_s2).
+  KV 51 rows all flagged-free; pv family owned by FABLE-FIX-KV-PV-2140.
