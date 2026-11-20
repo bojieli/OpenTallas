@@ -1,3 +1,150 @@
+# FABLE-CLOSURE-STRATEGY 2026-11-20 01:25 PST (lane FABLE-CLOSURE-0530): what the routed builds say after the 11-20 decisions; the 1000 ps rule signs nothing without a hold pass; three measurement bugs move the die tree down the list
+
+Reviewer: FABLE-CLOSURE-0530 (Fable). Read-only: no job launched, killed or patched; no STA run. Technical PD only; HBM parked.
+Gate (R-MINIMAL): DRC 0, routed TT >= -42 ps (owner 11-20: up to 1000 ps on the same routed DB, i.e. >= -209), internal FF hold >= 0, bind + LATCHECK.
+Marking: **V** = I opened the file this round. **R** = reported by the named lane. **I** = inferred. **P** = proposal.
+This round builds on FABLE-CONVERGE-0215 and the owner decisions of 11-20. Levers below are either not in those decisions and lanes, or covered ones whose evidence says they fall short. The 23:15 list stands where not changed here.
+`failure_breakdown.py` 01:11 (V): technical rows are S81 leaf t42 detail_place, serdes__t16 global_place, KV kv3_hub_Wi (no plan view until D25f2). All else is running.
+
+## 0. Headline
+
+1. **Sign-off verdicts of the last 26 h, all hosts (V, `route_results.py --collect` on 7 hosts, then each kit's `signoff/signoff.json` and `eco_*/eco_loop.json`): 80 verdicts, 66 NOT SIGNED.**
+
+| Class | Builds | Detail |
+|---|---|---|
+| Internal FF hold only (DRC 0, TT >= -42) | 34 | worst -41.4 ps, at most 308 ends, median about -14 ps. 9 of them then passed the late ECO; 25 are open: ECO ERROR 12, EXHAUSTED 8, no ECO 5 |
+| TT between -42 and -209, with internal hold also failing | 9 | hd_ctl x3, hd_host_w, sle_su_l1, slw_fw_v2, slw_sc_v1, slice_station t40 / t41; hold -0.4 to -21 ps on 1 to 47 ends |
+| S81 col_h9_r2, old plan | 16 | TT -397 to -553 (read loop; J3 moves the ROM); 8 also have 4 or 8 DRC |
+| DRC only | 3 | hd_host_n, 3 violations, TT +28 to +32, hold clean, on three plans |
+| QC st_a | 4 | 72 DRC each, TT -67 to -100 |
+
+2. **The 1000 ps rule alone signs 0 of the 66.** No build fails on setup alone inside -209. With internal hold brought to zero on the same routed DB it signs 25 + 9 = 34 builds, about 26 distinct types (24 QC, slice_station t40 / t41). The hold pass is the lever; the period is what gives it room.
+3. **Buffer padding for hold is what breaks setup at GRT (R, FABLE-FIX-HEAD-MESH 00:28 / 00:48).** hd_tile 3sa: +0.61 at placement RC with 17,047 hold cells, then -711.75 at GRT RC (-201.86 after 1,573 repair cells). 3s, same netlist with no hold cells kept, was at -78.55 and converging. hd_host_w: 28,963 + 30,158 pad cells, -153 at GRT RC, -56.32 routed (R, FABLE-PD-HEAD-0015).
+4. **The kit-side clock fix is measured; three die-tree forms are measured worse.** `subtree_balance` before `tap_balance` (main 7109ee911ef): taps over 60 ps 11 -> 0 of 31, worst in-tap range 165 -> 41 ps, FF hold gate -120.2 / 3,603 ends -> -58.2 / 3,201 (R, DIE-CORETAP 00:18, A/B on one col_h9_r1 kit). cw8 is slightly worse than cw6 on every line (R, FABLE-PD-S81-0015).
+5. **Two DRC classes repeat with identical counts across plan events (V).** QC st_a: 55 shorts + 17 spacing on M5 at hard-core edges, on the 4.32 um PG lattice. hd_host_n: 3 "Rect Only" on M7, one net.
+6. **Placed hops exceed the plan cap in almost every placed kit, even on the box measure that under-reports (V, PRECHECK KIT-SCAN posts 23:27 to 00:59).** S81 13 of 14, 8 of 8, 4 of 4, 7 of 8 kits; every QC kit scanned. A 300 um plan cap does not bound these by itself.
+
+## 1. Levers ranked by closure impact
+
+| # | Die | Lever | Unblocks | Owner |
+|---|---|---|---|---|
+| 1 | QC, S81, HEAD | Internal hold to zero on the routed DB: ECO re-run, residual passes, GRT hold margin sized to the measured GRT-to-route loss | 34 routed builds, about 26 types | QC-HOLD-0030 lane with flow owner (FLOW-FIX-2045); COORD for the iteration rule |
+| 2 | all 4 | Latch, not buffers, for cross-tap hold; a second lockup proof on a fast type; half-cycle rule for every latch | hd_tile, hd_host_w, QC hc / st_b / sc chains, S81 col bin -> lpad; the die-wide decision | FABLE-FIX-HEAD-MESH (proof), QC-PLAN-R3, COL-CENSUS-1119, FABLE-FIX-KV-PV-2140 |
+| 3 | all 4 | Tap table from a placed census as the generator default; regenerate kits in flight with the subtree balance | S81 col 216 + slice C 11 + 30 more types; QC 24; hd_host_w, hd_lep0N; KV hub | generator owner (`gen_phys` / `tap_resolve`), DIE-CORETAP-1119, per-die plan owners |
+| 4 | all 4 | Placed hop = planned hop: pin-centroid and clock-edge census, firm site for the first rank after a face register | every type with a hard core or a negedge face; the routed TT misses of -50 to -130 with no named class | LONG-LEG-0040, PRECHECK-1119, kit generator owner |
+| 5 | QC, KV, S81 | Core M5 pins against the parent M5 PG lattice: static check and one construction rule | 11 st_a types, 6 kv3_pc, col_h9_r2 (60, to confirm on J3) | FABLE-CBC-QK-0130 (rule), QC-SUST-MACRO-1119, KV-PC-PG-2330, PRECHECK-1119 |
+| 6 | HEAD, S81 | DRC residue ECO: rip up and re-route the named nets on the routed DB | hd_host_n on the current plan; any build with under about 10 DRC | flow owner (late ECO), HEAD-CROSSING-1119 |
+| 7 | KV, then all | Reserved die-clock sites block M1 to M7; limit them to M1 to M3 plus a via column | KV hg / hgi 19 types; HEAD and S81 channels under clock rows | FABLE-FIX-KV-HG-0000 (kR / kSR read), DIE-CORETAP-1119 |
+| 8 | all 4 | Re-time die hold on related pairs with the core-tap pricing fix before any further die-tree form | order of work on S81 / KV / QC die clocks | DIE-LEVEL-CHECK-1119, S81-CLOCK-WINDOW-1119 |
+
+### Lever 1. Internal hold to zero on the routed DB
+**Evidence (V).** Table in section 0. Per kit: `signoff.json` `internal_hold.wns_ps` / `violators`, `eco_loop.json` verdict. Examples: slice_station__t41 -0.38 ps / 1 end (TT -127.3), t40 -0.99 / 3; sle_sc_v1 -1.38 / 2; slw_sc_v1 -6.87 / 1; slw_hc1 -30.66 / 104; sle_hc0 -41.41 / 308.
+R (QC-HOLD-0030): the GRT hold repair ended at +1 to +27 ps on GRT RC with margin 40 in every kit; routed lands -1 to -41. 12 ECOs failed on `prd_mk.sh` "pass dir not staged" (fixed on main 8f3d1679753 / 7e9768a9388); 6 EXHAUSTED kits are within 0.07 to 2.1 ps on 1 or 2 ends; ECO is one iteration by an 11-07 rule.
+**Root cause.** The hold repair is sized on GRT RC and the routed RCX moves each end by up to about 65 ps. One ECO pass then pads to a 10 ps target and stops. The setup guard stopped 4 GRT repairs early because setup had no room at 833 ps.
+**Fix (P).**
+1. Re-run the late ECO on the 12 ERROR kits with the current `prd_mk.sh` (QC-HOLD-0030 action A). No rebuild.
+2. Residual passes: up to 3 ECO iterations, each on the ends still negative. This is in FABLE-CONVERGE move 1, which the owner accepted, but QC-HOLD-0030 left `MAX_ITER` at 1 as an owner rule. COORD to state that the 11-20 decision lifts it.
+3. Carry the 1000 ps rule into the hold tools: the setup floor of the GRT hold guard and of the ECO is -209 + margin, not -30 (`hold_margin_family.py SETUP_GUARD_PS`, changed 0 -> -30 tonight on main 503558b280b).
+4. New kits: GRT hold margin per family = 40 + the measured GRT-to-route loss (p90 of routed minus GRT-RC hold on that family's last builds; about 40 ps on QC hc). An estimator table from the 34 kits, no gate.
+5. The 9 builds with TT -46 to -127 sign at 1000 ps once their 1 to 47 hold ends are padded.
+**Limit.** This harvests old-plan builds (N3, N4, 3fa87b84b18). They count under the any-plan rule; they do not prove the current plans.
+
+### Lever 2. Latch instead of buffers; do not wait for v8j to route
+**Evidence.** Headline 3 (R). R (FABLE-PD-HEAD-0015): each cross-tap pair is padded to window + 25 ps uncertainty + 45 ps guard, so the window is paid twice; form A needs 9,200 fewer cells than the r8 windows and still loses 700 ps at GRT. R (QC-HOLD-0030 class C): the QC internal ends are zero-logic flop -> flop chains (xl write data, lpad / ist pads, st_b hi_pad). R (FABLE-PD-S81-0015): col_h9_r1 has 1,334 cross-tap ends on the zero-logic `u_bin_* -> u_lpad_*` transfer. R (FABLE-FIX-KV-PV-2140 01:07): v8j is in global place; routed not before about 14:00 PST; it carries 32 chained trunk pieces that will fail TT for a reason unrelated to the latch.
+V: the latch form is older than KV form C. `ft_hop_lockup_item_event.py` (FTLOCK-S81, 11-10) puts `ot_dp_lk` on the launch station's tap, FIRM at the hop midpoint, 0 pin cycles; `kit_zl_lockup.py` and `test_core_input_lockup.py` are on main. I found no routed record of it in the lane files.
+**Root cause.** Buffers buy hold with delay on a shared net, and the delay lands on the setup path at routed RC. A launch-clocked latch buys half a cycle of hold with no delay cell.
+**Fix (P).**
+1. Read v8j at CTS, not at route: the `pregrt_ff_hold.log` class split (cross_tap near 2k from 47.5k) is the proof of the latch form. Its routed TT will be coloured by the 32-piece class.
+2. A second proof on the fastest round trip (HEAD, 2.1 h median): hd_tile with latches on its cross-tap zero-logic and low-logic transfers, pre-GRT hold build off for the cross_tap class. FABLE-FIX-HEAD-MESH owns the kit. If it holds TT near +0.6 through GRT RC, the 700 ps loss is confirmed as the pad cells.
+3. Same form as rows for QC hc / st_b / sc chains (QC-PLAN-R3 V1 cut) and S81 `bin -> lpad` (J5). These rows are already asked; this sets their rank above any hold-buffer work.
+4. Rule for every latch, to go into PRECHECK as a row (I, from the latch timing; FABLE-PD-KV-2300 A3 found the same on KV): the latch is clocked by the launch tap, and the leg from the latch to the capture flop has T/2, about 200 um. A latch in the receiving type on the receiver's clock adds no margin against skew between the two types. For "a lockup at every type input port" this means the latch sits in the sending type, or the boundary hop is split so the latch is within 200 um of the capture station. Check this on the die-wide design before it is bound.
+5. Until latches land on a type: set the pre-GRT cross-tap guard from 45 ps to 0 to 10 where a per-port window already covers the pair (FABLE-PD-HEAD-0015 B.3). A setting on private kits first.
+
+### Lever 3. Tap table from a placed census, as the default
+**Evidence.**
+- R: hd_host_w: 40 taps in one quarter of the outline, seven near 3,000 sinks, routed NOT SIGNED -56.32 / -21.08 (V in my verdict table). hd_lep0N: 33 taps over the 800 cap, clk_t130 6,597 sinks. Slice C: 53 taps for 95,939 flops (clk_t31 15,011), tap means 217 to 733 ps, about 5,800 ends to -972. QC: placed / planned sink ratio 0.26 to 2.64 on 20 types (QC-PLAN-R3 00:04). S81 J3: 221,868 new station flops on existing taps, TAP-CAP on 84 types, 30 non-col types at 1,028 to 1,936 per tap (S81-DIE-R3 00:58).
+- R (FABLE-FIX-S81-SLICEC-0045): `tap_resolve --span-um 300 --target 1000` on placed registers: 53 -> 171 taps, predicted spread 13.7 ps.
+- R (DIE-CORETAP 00:18): 508 of 1,499 register taps over 60 ps in 45 D8i kits before the fix.
+**Root cause.** The tap table and sink bins come from a census older than the stage tuple, and the kit balancer pads to the latest sink. Each lane found this separately tonight (HEAD r13, QC N46V0, slice C, J5 col taps).
+**Fix (P).**
+1. Generator default on all four dies: any event that adds or moves stations re-derives taps for the touched types from the newest placed DB of that type (`tap_resolve`, span 300, target 1000), with the die clock rerun in the same event. Types with no placed DB take a density estimate from the plan sites.
+2. Kits in flight keep running; a kit that stops after CTS with FF hold under about -60 on cross-tap ends is regenerated on tools >= 7109ee911ef rather than resumed.
+3. S81-GEOM-OPUS: the 00:56 table still reads -120.2 median on 24 col_h9_r1 kits "after CORETAP". Check for the `delaybuf_otstb_c*` cells in one of them; if absent, CTS was not re-run and the number is the old one.
+4. KV has no such pass yet (hub_Eo, ingest_eng 117 ps internal range): KV-D23-COMPOSE takes it into D26.
+
+### Lever 4. Placed hop = planned hop
+**Evidence.**
+- R (FABLE-CBC-HEAD-0130): `placed_scan` measures to the macro box. hd_lep0N coll_i3 is 861 um to the pin against 467 scanned; 272 bits over one cycle against 7.
+- R (FABLE-FIX-S81-SLICEC-0045): hops from a negedge face have T/2: xr <-> eg 725 to 923 um, wire alone 1,000 to 1,280 ps, 131 ends at -1,422. The station sites were drawn from one source core of a bus.
+- V (KIT-SCAN posts): on the box measure, `u_bin_x_i0 -> u_lpad_x_i0` 528 and 547 um on col_h9_r0_p4; `u_bin_leafup_i3 -> u_lpad_leafup_i3` 508 um on c1x_C t6; QC slw_fe_v2 `u_bin_x_stm_p1_i -> u_lpad` 508; tt_ctlm 509; hd_tile 568; kv3_pv_v1n 1,360. The plans of these types pass REACH at 405.
+- R (FABLE-PD-S81-0015): `OT_RELAY_POLY WARN` relay chains at 416 to 867 um per hop as placed on five col families.
+**Root cause.** Reach is checked on plan sites and measured on placed cells with a box-centre shortcut. The first rank behind a face register is not held at its site, and legs into hard-core pins are not seen.
+**Fix (P).**
+1. LONG-LEG-0040: finish the pin-centroid and edge-class census (classes: full cycle 405, half cycle 200) and re-summarise every placed kit from raw. One table per die before its next cut: S81 J5 14:00 PST, KV D26 04:00Z, QC V1 06:00Z, HEAD r13.
+2. Kit generator owner: the first rank after each face register (`u_lpad_*.r[0]`, relay heads) is placed FIRM at its plan site, as `keep_firm` does for leaf stations. Estimator first: plan site against placed centroid for these ranks on ten kits.
+3. Station and relay tools measure from every source core of a bus, and site the last relay at a half-cycle sink (the slice C rule).
+4. The 300 um default (S81-DIE-R3 J5) is applied by generators on plan sites; it needs item 2 to hold in the kit.
+
+### Lever 5. Core M5 pins on the parent M5 PG lattice
+**Evidence.**
+- V (intel1 `.../s29q103S4Q9N46C/items/sle_st_a_v2__pv4242de79/.../5_route_drc.rpt`): 72 = 55 Short + 17 Metal Spacing, all M5, 0.024 um wide, at x 295.836, 300.156, 304.476, 308.796, 313.116 (pitch 4.32) and at y 567.6 / 913.2 / 1250.2, the edges of `u_u_r1 / r2 / r3`. Sources are `pd5_x_hc1_i_*` nets against VSS or against the core. The same 72 on four builds of three types over two events (fable-fix-qc-sta k5 and N46C).
+- R (FABLE-CBC-QK-0130 00:58): kv3_pc form B leaves 0 of 688 core PG stripes connected; die M5 stripes stop 1.8 um outside the core, pins start 4.3 um inside; core origin 0.384 um off the 4.32 lattice.
+- V (epyc8 `ot-jobs/col_h9_r2__t1__clce45cab5__pv06a1adf6-route-*/work`): 4 M5 shorts of one net against the `u_u_t6` obstruction at (743.2, 49.1) and (744.6, 52.0); the same count on 7 builds.
+**Root cause (I for st_a).** Signal pins of a hard core on M5 sit on tracks where the parent's M5 PG stripe ends at the core edge, so the pin access shape shorts to the stripe stub or the core obstruction.
+**Fix (P).**
+1. PRECHECK row `PG-PIN` (static, LEF + plan): for each hard core, M5 / M4 signal pin shapes against the parent PG lattice at the placed origin and orientation, and core PG pins against parent stripes. It would name st_a and pc before a build.
+2. Construction rule (FABLE-CBC-QK form): a core is fed by orthogonal crossings only, and the parent stripe of the pin layer is cut one pitch before a pin face (`sstn_m5_block.tcl` is the existing hook for stations).
+3. QC-SUST-MACRO-1119: apply to the 11 st_a types in V1. S81-GEOM-OPUS: read the col_h9_r2 DRC on the first J3 kit; if the 4 shorts remain, the same rule on `u_u_t6`.
+
+### Lever 6. DRC residue ECO
+**Evidence (V).** hd_host_n on r3 / r6e / r8b: `5_route_drc.rpt` has 3 "Rect Only" on M7, all on net `rst_start_raw_0` near (510.2, 339.2). TT +28.45 to +32.23, hold gate PASS. The late ECO ran and ended EXHAUSTED: it only handles hold.
+**Fix (P).** A DRC scope in the late ECO for builds with few violations: delete the routes of the named nets, re-route them, re-extract, re-sign. For hd_host_n one net. Flow owner; HEAD-CROSSING-1119 runs it on the r8b DB. The type is counted from an older plan, so this is for the current plan and for die composition.
+
+### Lever 7. Reserved die-clock sites as walls
+**Evidence (R, FABLE-FIX-KV-HG-0000).** hgi_v1: 106,508 overflow at 9.9 % usage, growing with iterations. 151 reserved rects obstruct M1 to M7; they close 95 of 95 um of the h3mid channel at y 644 and y 1255, and 46 of 95 um of the middle gap. Kits kR / kSR (M1 to M3 only) are in GRT.
+**Fix (P).** If kR or kSR clears the capacity-0 overflow, the generator default for reserved clock sites becomes M1 to M3 plus one via column per site, on all dies. HEAD r12 and S81 use the same reservation form; PRECHECK counts channel width lost to reserved rects per type as an estimator.
+
+### Lever 8. Die hold: measure before another tree form
+See section 2, bug 1. Order (P): (1) related-pair re-time of S81 cw6, KV D25e v3 and QC with the type-latency fix; (2) kit-side levers 2 and 3; (3) only then cw9 relation clusters within 200 um, on the pairs that remain.
+
+## 2. Do tonight's measurement bugs change the priorities? Yes, in three places
+
+| Bug | What it distorted | Change |
+|---|---|---|
+| 1. `die_sta_related` prices core taps at the type latency (R: a 450-override type reads about 200 ps late against its own flops) | The die hold bounds -302 / -355 / -248 / -165 and every "window need" derived from them. cw7 / cw8 / `actual_max` were judged on this metric, which also carries 12 to 17 ps per tap of build noise | Die-tree form work drops below the kit-side levers. No die-tree choice and no latch sizing from these numbers until the related-pair re-time with the fix. The latch decision does not depend on them: it tolerates T/2 |
+| 2. `placed_scan` / `placed_hops_or.py` measure to the macro box or instance centre (R); they also filter at 0.9 x 405 and hide half-cycle legs | KIT-SCAN "legs > 405", AUTO-GEOM NEED-STATION classes, and every station row chosen from them. Hard-core legs are under-reported by up to 2x | Lever 4 moves up: the pin-centroid census comes before each die's daily cut. Routed TT misses with no named class (st_a -67 to -100, hd_ctl -86 to -99, sle_su_l1 -79, slw_fw_v2 -76, slice_station t41 -127) get this scan before any new row |
+| 3. Stale logs copied into kits (R: serdes H23 "-73.5" is the H21 file; hd_tile `pregrt_ff_hold_fallback.log` from tilecomb2) | The 23:15 lever 8 serdes ladder; any fork-kit number | The serdes rck hub-at-pad form has no GRT number: no rck star row for 11 types until H23 or R1 reads at GRT. Kit fork scripts exclude result logs; readers compare log mtime with the run start |
+| 4. New (V): `signoff/ff/ep_ff.tsv` port-start rows carry slack values near -7.7e13 ps (slice_station__t24__cl64811a5d) | Any per-end read of port hold from that file | Advisory only; internal rows look sane. Signoff tool owner to fix the unit on port rows |
+
+Also (R, FABLE-FIX-HEAD-MESH 00:28): after `RSZ-0074` inside the GRT TT repair, the step falls back to the unrepaired DB, so `OT_POSTCTS_GATE` -642 on 3s is not a repaired number.
+
+## 3. Stop list (the 23:15 list stands, plus these)
+- No further hold buffers for cross-tap or zero-logic classes on any die; no pre-GRT hold build of more than a few thousand cells read as progress.
+- No reading of the 1000 ps rule as a harvest by itself; no rebuild of a type whose routed DB is within -42 ps of hold on under about 300 ends.
+- No cw8-form build, no port of it to KV or QC, no cw9 before the related-pair re-time; no tree verdict from one build's worst pair.
+- No die hold number quoted from an all-pairs or pre-fix run.
+- No station row chosen from a box-measured scan on a type with hard cores; no hop judged at 405 um when either end is a negedge face.
+- No relaunch of st_a on unchanged M5 pin / stripe geometry; no kv3_pc kit on PDN form B.
+- No relaunch of hd_host_w, hd_lep0N, c1x_C or iq_C on their current tap tables; no latency-target balancing of taps over about 2,000 sinks.
+- No relaunch of hd_host_n from synthesis for 3 DRC on one net.
+- No rck star rows for the serdes family from the H23 number; no log in a forked kit read without its mtime.
+- No lockup latch placed at the launch flop of a hop longer than about 200 um, and none clocked by the capture side.
+- No J4a / J4b bind (withdrawn); no D8i col kit resumed in place without `resume.json`.
+- No wait for the v8j routed TT as the only proof of the latch form.
+
+## 4. Not checked
+- The 26 h window: builds whose kit directory was cleaned are not in it. I did not dedupe exactly by type; "about 26 types" is from the names.
+- Whether the 25 open hold-only DBs still hold `5_1_grt.odb` / `6_final.odb` (QC-HOLD-0030 verified its 12).
+- Lever 2 item 4 is reasoning from the latch form, not a measurement; I did not read the die-wide type-root design, which is not written yet.
+- Lever 5: the st_a cause is read from the DRC report geometry only; I did not open the core LEF or the PDN script. col_h9_r2: I did not trace net84128.
+- Lever 4: which end moved on the `bin -> lpad` legs (no placed-against-plan diff run).
+- Whether any FTLOCK-S81 latch kit ever routed (no record found in lanes/).
+- kR / kS / kSR, v8j / v8k, R1, p1, proof_rxr, pkw4, r1be / rae at GRT: none had a number when read (01:1x).
+- `lanes/LONG-LEG-CENSUS.*` and a `FABLE-SUPERSET-0415` lane file do not exist yet; I read `posts/LONG-LEG-0040.md` and the 01:17 superset census post.
+- FABLE-PD-QC-2300 and FABLE-PD-KV-2300 were read through the 23:15 round; their per-path numbers are R.
+
+---
+
 # FABLE-CLOSURE-STRATEGY 2026-11-19 23:15 PST (2315): setup closes where the plan rows landed; the open class on every die is clock spread between related flops, in the die tree and inside the kit's own taps
 
 Reviewer: FABLE-CLOSURE-2315 (Fable). Read-only: no job launched, killed or patched. Technical PD only; HBM parked.
