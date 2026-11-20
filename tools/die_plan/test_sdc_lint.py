@@ -39,6 +39,28 @@ def test_generated_kit_sdcs_pass(raw):
         assert _errs(txt, sdc_lint.kit_context(P, tn)) == [], tn
 
 
+def test_generated_kit_sdc_covers_only_declared_monitor_use_straps():
+    raw = json.loads(json.dumps(TINY))
+    clock = raw["partition_types"]["src"].setdefault("clock", {})
+    clock["landing_contract"] = {
+        "tieable_children": [{"index": 0, "seam": True}, {"index": 2, "seam": True}],
+        "pins": [
+            {"name": f"strap_cland_use_{index}", "dir": "in", "kind": "ctl",
+             "xy_um": [2, 8 + index], "layer": "M7"}
+            for index in (0, 2, 9)
+        ],
+    }
+    txt, ctx = _kit(raw, "src")
+    line = "set_false_path -from [get_ports {strap_cland_use_0 strap_cland_use_2}]"
+    assert line in txt
+    assert ctx["straps"] == ["strap_cland_use_0", "strap_cland_use_2"]
+    assert _errs(txt, ctx) == []
+    assert any("declared strap strap_cland_use_2 has no set_false_path" in err
+               for err in _errs(txt.replace(line, line.replace(" strap_cland_use_2", "")), ctx))
+    assert any("non-strap object" in err
+               for err in _errs(txt.replace(line, line.replace("_use_2", "_use_9")), ctx))
+
+
 def test_kit_generation_writes_and_runs_the_lint():
     P = schema.Plan(TINY)
     with tempfile.TemporaryDirectory() as d:
