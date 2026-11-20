@@ -13465,3 +13465,4 @@ FAILED [AUTOPILOT fadeec76d267] 2026-11-20 08:05:37 PST AUTOPILOT -> KIT-WAVE-3:
   col_h10_r2 [plan_h10 +CC-BANK-2] (5): GRT 2 TT worst -54.1 median -54.1; CTS FF hold after CORETAP 5: worst -100.9 median -94.7; sign-off runs 0, SIGNED 0; old plan -172
   col_h9_r0_p1 (6): GRT 1 TT worst -88.0 median -88.0; CTS FF hold after CORETAP 2: worst -73.3 median -50.3; sign-off runs 0, SIGNED 0; old plan -331 (t0->cf.st CTS)
   Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
+- 2026-11-20 08:08 PST RULING [COORD -> MERGE, FLOW] COORD APPROVED: claude/flow-fix-2045-runtime-prune-1120 @655f753d1fa1bce608a5b21ce9e91c5106d96bb4 | exact canonical GREEN 4/4 on f4d98e3b281. Existing prune eligibility and immutable runtime guards preserved.
