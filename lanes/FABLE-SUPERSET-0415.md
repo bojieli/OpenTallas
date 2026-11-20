@@ -233,3 +233,66 @@ S81 total with this form: 395 -> about 105 (leaf 33 instead of 17); about 98 at 
 - Handoff file rewritten (sha 728d928f6546): `s81.leaf`, `s81.leaf_cap7786`, and the mixed-outline `s81.station`, `s81.serdes`, `s81.kvleaf` are removed. Valid keys: `s81.leaf_nogrowth_j4e`, `s81.station_nogrowth_j4e` (46 -> 16 at 6,000 bits), `s81.serdes_nogrowth_j4e` (11 -> 2, one outline already), `s81.kvleaf_nogrowth_j4e` (5 -> 3), all on plan_j4e with one outline per class.
 - QC and KV rows never changed an outline (tap / strap union, v1 / v2 ports, hg bus width); they stand.
 - The t38 pilot is unchanged.
+
+## 10. Class unification spec (COORD 11-20 02:2x; SIGN-PROFILE-0400 found 0 inherit)
+
+Owner of this spec: FABLE-SUPERSET-0415. Acceptance test: `tools/fleet/netlist_inherit.py` (main 8f21fff40b3) `summary` = one hash group per class, then `prove` per member against the signed representative. No outline growth.
+Per-class rows (superset port list + what each member lacks today): `lanes/handoff/FABLE-SUPERSET-0415-unify.json` (sha 2ae9ece21c46), made by `class_unify.py` from the plans (V). Plans read: S81 plan_j4e, QC N46R3, KV D25f2.
+
+### 10.1 The rule (P), same for every class
+
+A class is unified when every member's plan row is a copy of ONE class row; only the type name and the ROM image selectors differ.
+
+- **U1 Links.** The class row carries every cland link any member has: `cland_dn_ready_k` / `cland_dn_fault_k` / `fclk_in_cland_dn_k` for k up to the class maximum of collector children, the up pins, every `cland_*start_*` of every landed bus. A member that does not use link k ties its inputs at the parent and excludes it from the ready / fault aggregate by one strap bit per link (`strap_cland_use[k]`). Existing tool for the col form: `cland_col_superset.py` (CLAND-TIE-1).
+- **U2 Taps.** One tap table per class: the representative's `clock.taps`, `added_taps`, `sink_sites_um`, by name and site. The die clock delivers the same taps to every instance. Where the class has the type root of owner decision #5, this is the root plus the kit sub-tree.
+- **U3 IDs.** Every ID that is a constant in the bound wrapper (S81 leaf `S_*_sid`, `S_*_k`; count K values; pad counts) becomes a `strap_*` input pin at the class maximum width, tied at the parent (OWNER 10-25 B). No parameter in the wrapper may differ between members.
+- **U4 Reset / start.** One reset tree per class: the representative's depth, with the class maximum number of outs (`rst_o_k`, `start_o_k`); unused outs are open at the parent. All members take the collector form if any member has it.
+- **U5 Data.** Union of buses at the maximum width and the class ft-slot superset (section 9). Unused inputs tied at the parent, outputs open, spare ft lanes chained through their stations (bind kit-rtl does this). Type key `superset` gives the spare ends pins (main e00be6bb605).
+- **U6 Floorplan.** One set of hard-core origins, internal stations and bands: the representative's.
+- **U7 One synthesis.** The kit RTL comes from the class row, not from each instance: bind must emit one bound module for the class (a TYPE_SPLIT inside a class is a spec error to fix, not to accept). Synthesis runs once per class with one flow tag and one config; a member's netlist is that netlist with the top name replaced. Golden SDC equal after the name placeholder. This removes the +-20k gate differences SIGN-PROFILE measured between separately synthesised members.
+
+Acceptance per class, in order: (a) plan: `class_unify.py` reports 0 members with a missing or narrow item and 0 off-representative taps / cores; (b) bind: one bound module, strict bind and LATCHECK pass, `bind_declared_ties.json` lists only the U1 / U5 ties; (c) `netlist_inherit.py summary`: 1 hash group; (d) representative routes and signs; (e) `prove` per member, record in `autopilot/inherit_members.tsv`.
+
+### 10.2 The classes (V: plan-level numbers)
+
+| Die | Class | Members / inst | Signed | Taps equal today | Cores placed equal | What differs today | Work |
+|---|---|---|---|---|---|---|---|
+| S81 | col_h9_r1 | 60 / 60 | 0 | yes (14 each) | yes | links: 51 members lack the 6 monitor links (2 variants); reset outs 0 / 1 / 2, depth 8 or none; ROM image | U1 + U4 only |
+| S81 | col_h9_r2 | 60 / 60 | 0 | yes (14) | yes | links: 9 in the union, 3 variants; reset outs 0 / 3, depth 6 or none; ROM image | U1 + U4 only |
+| S81 | leaf_F4500_00 | 28 / 28 | 0 | no: 24 taps each at different sites (union 530) | no (27 of 28 differ) | 58 links, 24 link variants; 11 straps, 17 members narrower; reset outs 0 to 7, depth 6 / 7 / 8; `sid` / `k` constants; ft slots | U1 to U7, needs the class floorplan |
+| QC | sle_ctl | 7 / 12 | 0 | yes (19) | yes | 99 links, 4 variants (children 0 / 2 / 3 / 5); reset outs 0 / 2 / 4; pad straps | U1 + U4 (+ strap pads at maximum) |
+| QC | slw_stm | 6 / 6 | 2 | yes (2) | no (5 of 6) | 61 links, 6 variants; 2 members lack 2 straps; v1 / v2 / v3 contents | U1, U3, U6; keep the 2 signed as they are |
+| QC | slw_fw | 6 / 6 | 0 | no (2 each, union 4) | yes (no cores) | 6 members lack a bus (v1 / v2 / v3: 46 buses in the union, 14,052 bits vs 13,895); 89 links; reset depth 6 / 7 | U1 to U5 |
+| KV | kv3_hg | 8 / 32 | 0 | 6 of 8 | 6 of 8 | `kvs_hroot` bus 5 to 40 bits; 106 links, 4 variants; 25 straps; reset depth 6 / 7 / 8 | v1 .. v1p6 (6 types, 24 inst) first: U1, U3, U5 |
+| KV | kv3_hgi | 11 / 32 | 0 | no (18 to 25 taps, union 91) | no | 146 links, 11 variants; 34 straps; ft 1,072 to 5,311 bits; reset depth 6 to 9 | U1 to U7 |
+| KV | kv3_pv | 16 / 16 | 0 | no (24 to 36, union 185) | no | 62 buses in the union at 21,054 bits vs 15,622 largest (+35 %); 369 links; 85 straps | not one class: split into the 4 content sets first |
+
+Why these three per die: they are the three largest classes on each die. S81 col h9_r1 and h9_r2 are added because they are larger than any superset class and need the least work; S81 station classes F00 / F01 are larger than the next leaf classes but all their members are signed.
+
+### 10.3 Rows per plan lane
+
+**S81-DIE-R3, J6 (cut 11-21 14:00 PST)**
+1. col_h9_r1 and col_h9_r2 (120 types): U1 = every member takes the collector form with the union monitor links (h9_r1: 1 child; h9_r2: 2 children), unused ones tied (`cland_col_superset.py`, then `landing_tie_children.py`); U4 = reset outs 2 (r1) / 3 (r2) on all, depth 8 / 6. Taps, cores, buses already equal. Cost: about 700 flops on the die, 0 data cycles; reset release moves on the 51 + 44 plain tiles (inside the 64-clk hold; `bind_reset` re-proof). Expected after bind: 2 hash groups for 120 types.
+2. leaf_F4500_00 (28 types): class row = t40__clf8bbdae1's floorplan and tap table + the F00 ft superset (N>S 597, 597, 276, 1; S>N 668, 668, 562, 1) + 58 links + straps at maximum + `strap_sid[3:0]`, `strap_k[2:0]`. Only if the t38 pilot routes. This is the slice-region re-pin of section 2.1 item 6.
+
+**QC-PLAN-R3, V2 (cut 11-22 06:00 UTC)**
+1. sle_ctl (7 types, 12 inst): union of the 99 links (5 children), reset outs 4, pad straps 31 on all. Taps and cores already equal. Expected: 7 -> 1 hash group.
+2. slw_stm: unsigned members take the v1 row of `slw_stm_v1__cle34a73c3` (floorplan, 14 straps, 61 links); the 2 signed stay.
+3. slw_fw: union row = v1 buses + the 4 v3-only buses (`ccm_wo`, `cct_wo`, `ccv_wo`, `ss_wo`) + 89 links; one tap table (4 sites).
+
+**KV-D23-COMPOSE, D26 (cut 11-21 04:00Z) or D27**
+1. kv3_hg v1 .. v1p6: `i_kvs_hroot_Q_o_cN` 35 / `o_` 30 on all six, links at the union (2 children), 25 straps, reset depth 8, the v1p6 floorplan and taps. Expected: 6 -> 1.
+2. kv3_hgi: one row from v8 (25 taps, 25 cores, ft superset 6,441 bits is above v8's 5,311: check the faces first).
+3. kv3_pv: no class row yet; split first.
+
+### 10.4 Measured count within a day
+
+The cheap path is 10.3 S81 row 1 and QC row 1: no floorplan or tap work, plan row edits only. After their bind, gen + synth of the members (no P&R) and `netlist_inherit.py summary` give the first measured hash-group count: target 120 + 7 types in 3 groups.
+
+### 10.5 Not checked
+
+- That bind emits one bound module when member rows are equal copies (U7); that member synthesis from an equal row is bit-stable without the rename step.
+- Reset release re-proof on the plain col tiles (TYPEMERGE R3b called it medium risk).
+- Whether `strap_cland_use` exists in `ot_dp_clk_landing` or needs RTL.
+- QC and KV numbers are on N46R3 and D25f2, not on today's V0 / D25e3.
+- The die clock can deliver one tap table to every instance of a class (U2) without the type root.
