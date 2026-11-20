@@ -206,6 +206,28 @@ def test_ensure_tree_drops_a_host_that_cannot_take_the_tree():
     assert any(n.startswith("DROPPED intel1") for n in notes) and notes[0].startswith("replicated from epyc9 and verified on epyc8")
 
 
+def test_ensure_tree_prefers_a_verified_receipt_over_full_rehash_on_first_host():
+    calls = []
+
+    def run(cmd):
+        calls.append(cmd)
+        if " replicate " in cmd:
+            assert " epyc9 " in cmd
+            return 0, "replicated"
+        if "--cached-receipts" in cmd:
+            return (0, "valid receipt") if "--hosts epyc9 " in cmd else (1, "cache miss")
+        if "--hosts epyc7 " in cmd:
+            replicated = any(" replicate " in prev for prev in calls)
+            return (0, "verified") if replicated else (1, "missing")
+        raise AssertionError(f"unexpected candidate source rehash: {cmd}")
+
+    hosts, notes = A.ensure_tree_on_hosts(
+        "/t", "h", ["epyc8", "epyc9", "epyc7"], ["epyc8", "epyc9"], "/rt", run=run,
+    )
+    assert hosts == ["epyc8", "epyc9", "epyc7"]
+    assert notes[0] == "replicated from epyc9 and verified on epyc7"
+
+
 def test_ensure_tree_keeps_a_host_that_already_holds_a_verified_copy_without_replicating():
     """QC N4.2 11-19: epyc10 was dropped 3 times with 'target exists' because replicate ran against a finished copy; verify first, keep, no replicate"""
     cmds = []
