@@ -142,6 +142,49 @@ class Guard(unittest.TestCase):
         gone = m.prune_snapshots(d, keep=1, text="")
         self.assertNotIn(names[0], gone); self.assertEqual(len(gone), 1)          # keep=1 is raised to the minimum 3: only names[1] goes (names[0] is in use)
 
+    def test_prune_skips_while_the_same_root_is_locked(self):
+        import fcntl
+        m = self.load()
+        names = ["%012x" % i for i in range(1, 6)]
+        d = self.mk(names)
+        with (d / ".prune.lock").open("a") as held:
+            fcntl.flock(held, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            self.assertEqual(m.prune_snapshots(d, keep=3, text=""), [])
+            self.assertTrue(all((d / name).is_dir() for name in names))
+        self.assertEqual(set(m.prune_snapshots(d, keep=3, text="")), set(names[:2]))
+
+    def test_remote_prune_is_parallel_bounded_and_reports_all_hosts(self):
+        import threading
+        from types import SimpleNamespace
+
+        m = self.load()
+        barrier = threading.Barrier(3, timeout=5)
+        lock = threading.Lock()
+        active = set()
+        peaks = []
+        calls = []
+        logs = []
+        m.log = logs.append
+
+        def remote(argv, **kw):
+            host = argv[-2]
+            with lock:
+                calls.append((host, kw["input"], kw["timeout"]))
+                active.add(host)
+                peaks.append(len(active))
+            if host in {"H1", "H2", "H3"}:
+                barrier.wait()
+            with lock:
+                active.remove(host)
+            return SimpleNamespace(returncode=1 if host == "H2" else 0, stdout="", stderr="receipt")
+
+        m.run = remote
+        m.prune_build_hosts("pinned-snapshot", hosts=["H1", "H2", "H3", "H3", "H4"])
+        self.assertEqual(max(peaks), 3)
+        self.assertEqual(sorted(calls), [(host, "pinned-snapshot", 900) for host in ("H1", "H2", "H3", "H4")])
+        self.assertEqual({line.split()[0] for line in logs}, {"H1", "H2", "H3", "H4"})
+        self.assertTrue(any(line.startswith("H2 prune") and "rc=1 receipt" in line for line in logs))
+
     def test_low_disk_refuses_to_write(self):
         m = self.load(); d = pathlib.Path(tempfile.mkdtemp())
         m.RT = d; m.MIN_FREE_GB = 10 ** 9
