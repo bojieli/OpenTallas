@@ -2,7 +2,7 @@
  "schema": "fable-fix-kv-hg.rows.v1",
  "from": "FABLE-FIX-KV-HG 2026-11-18",
  "to": "KV-HG-OPUS (D23c / D24)",
- "status": "DO_NOT_COUNT (proposal; proof kit running)",
+ "status": "DO_NOT_COUNT (proposal); section L = rows for D25e2",
  "evidence": "epyc9:/srv/opentallas-scratch2/claude/fable-fix-kv-hg3/sc/<hg_v1|hg|hgi_v1|hgi_v4|pc_v1>/out/{ends.tsv,trace.txt} = per-endpoint TT setup on the HG6 4_cts.odb (placement RC)",
  "A_flow_keys_0_cycles": {
   "tools": "main >= a572716aa09 (gen_phys _relay_mid_re/_relay_mid_tail/_relay_mid_soft_frac, relay_mid.tcl OT_RELAY_MID_TAIL / OT_RELAY_MID_SOFT_FRAC / OT_RELAY_MID_DEBUG; absent keys = byte-identical kits)",
@@ -430,5 +430,341 @@
     "R8 / latency: both lanes +1 on hgi types only -> r8_ev derive pass as for section B"
    ]
   }
+ },
+ "L_d25e2_final_rows": {
+  "by": "FABLE-FIX-KV-HG (Opus successor) 11-19 17:5x PST",
+  "status": "UNPROVEN geometry; prove on the D25e2-bound k7 repeat",
+  "tool": "main 8f981deeaa1 (REG-LEAF-SPLIT): plan partition_types[T].reg_leaf_split, gen_phys kit stage, 0 cycles, receipt reg_leaf_split.json, log line OT_REG_LEAF_SPLIT; replay on k7 hgi_v1 cl141fc26e: 1575 bits -> a 807 / b 1063 / c 807, yosys elab rc 0; 12 tests incl iverilog cycle equivalence",
+  "types": [
+   "kv3_hgi_v1__cl141fc26e",
+   "kv3_hgi_v1__cl42bc8b12"
+  ],
+  "per_type_rows": {
+   "reg_leaf_split": [
+    {
+     "leaf": "u_hst2_t2",
+     "copies": [
+      {
+       "name": "a",
+       "pins": [
+        "u_head2_e0.*",
+        "u_head2_e2.g_front_1_u_front__c_in",
+        "u_head2_e2.g_front_1_u_front__e_in",
+        "u_head2_e2.g_front_1_u_front__lt_in",
+        "u_head2_e2.g_front_1_u_front__q_valid_in",
+        "u_head2_e2.g_front_1_u_front__q_beat_in",
+        "u_head2_e2.g_front_1_u_front__q_data_in"
+       ],
+       "site_um": [
+        40.0,
+        285.0
+       ]
+      },
+      {
+       "name": "b",
+       "pins": [
+        "u_head2_e2.g_front_1_u_front__row_in",
+        "u_head2_e4.*"
+       ],
+       "site_um": [
+        40.0,
+        618.0
+       ]
+      },
+      {
+       "name": "c",
+       "pins": [
+        "u_head2_e6.*"
+       ],
+       "site_um": [
+        40.0,
+        950.0
+       ]
+      }
+     ]
+    }
+   ],
+   "relay_polylines": [
+    {
+     "group_re": "u_hst2_g$",
+     "polyline_um": [
+      [
+       40.0,
+       1080.0
+      ],
+      [
+       40.0,
+       618.0
+      ]
+     ]
+    }
+   ],
+   "relay_polylines_note": "REPLACES the W3 x 340 entry (re:u_hst2_g$ 340 950.4 340 618). Source (40,1080) assumes the tN station row below; without it use [[40.0,1270.08],[40.0,618.0]]",
+   "relay_sites_remove": "the 32 W5 keys u_pd1_i_ectl_Q_N_eN_<b>.q -> [45,560] (b 0..31)",
+   "relay_sites_add": {
+    "u_pd2_i_ectl_Q_N_eN_0.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_0.q": [
+     140.0,
+     680.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_1.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_1.q": [
+     140.0,
+     680.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_2.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_2.q": [
+     140.0,
+     680.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_3.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_3.q": [
+     140.0,
+     680.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_4.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_4.q": [
+     140.0,
+     680.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_5.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_5.q": [
+     140.0,
+     680.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_6.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_6.q": [
+     140.0,
+     680.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_7.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_7.q": [
+     140.0,
+     680.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_8.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_8.q": [
+     140.0,
+     680.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_9.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_9.q": [
+     140.0,
+     680.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_10.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_10.q": [
+     140.0,
+     680.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_11.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_11.q": [
+     140.0,
+     680.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_12.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_12.q": [
+     140.0,
+     680.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_13.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_13.q": [
+     140.0,
+     680.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_14.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_14.q": [
+     140.0,
+     680.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_15.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_15.q": [
+     140.0,
+     680.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_16.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_16.q": [
+     140.0,
+     680.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_17.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_17.q": [
+     140.0,
+     680.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_18.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_18.q": [
+     140.0,
+     680.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_19.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_19.q": [
+     140.0,
+     680.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_20.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_20.q": [
+     140.0,
+     680.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_21.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_21.q": [
+     140.0,
+     680.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_22.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_22.q": [
+     140.0,
+     680.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_23.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_23.q": [
+     140.0,
+     680.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_24.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_24.q": [
+     140.0,
+     680.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_25.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_25.q": [
+     140.0,
+     680.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_26.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_26.q": [
+     140.0,
+     680.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_27.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_27.q": [
+     140.0,
+     680.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_28.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_28.q": [
+     140.0,
+     680.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_29.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_29.q": [
+     140.0,
+     680.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_30.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_30.q": [
+     140.0,
+     680.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_31.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_31.q": [
+     140.0,
+     680.0
+    ]
+   },
+   "lanes": "i_ectl_Q_N_eN landing pad depth 1 -> 2 (fixed_cycles +1) on these 2 types; bind then emits u_pd2_i_ectl_Q_N_eN_<b> (D=2: r[0] + q)",
+   "internal_stations": "bus:i_ectl_Q_N_tN regs_um [[133.0,1270.08]] -> [[133.0,1270.08],[60.0,1080.0]] (+1 cycle, keeps eN / tN aligned at hst_g)",
+   "r8_latency": "both lanes +1 on these 2 types only -> r8_ev derive pass + latency rows (pre-approved cycles)"
+  },
+  "K6_choice": "+1 on eN AND tN (form (i)); the 0-cycle land_pad_tail_split does not apply: eN pad consumers are the soft leaves u_hst2_g / u_hst3_g, not hard-core pins, and bin -> g2 is 1,011 um / g3 1,379 um (one pad stage = hop >= 505 / 690 um; k7 794 um hop = -27 ps)",
+  "kt_keys": "CONFIRMED (section J withdrawn): k7 run_route.log OT_RELAY_SITES placed 1936 FIRM = 1904 kst (kp_o/kpv_o/gf_o port-name form) + 32 eN pad; the 1904 unmatched g_r.r[b] keys are unused aliases, drop them",
+  "acceptance": "next k7 kit: OT_REG_LEAF_SPLIT line with 3 copies; OT_RELAY_SITES unmatched 0; post-CTS TT >= -42 (the 4 FSTART ends gone with D25e raw-branch regen, the 8 eN->hst3_g ends gone); GRT iter 5 bins x0-200 y400-800 and x200-400 y600-800 well below k7 13,280 / 15,490"
  }
 }
