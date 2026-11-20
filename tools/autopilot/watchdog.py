@@ -22,7 +22,8 @@ Progress signal per step (WATCHDOG-1 11-03):
                           threaded and logs once per 1,000 nets: busy, it may stay silent for the full 12 h (KW43-63, COORD 11-10).
 Superseded (any log age; tools/autopilot/wave_jobs.py judge):
   STOP    wave row CANCELLED; attempt older than a live attempt of the same item on the current plan; running since before
-          its row FAILED; an older second container on the same kit /work that has lost its ot-run client
+          its row FAILED; an older second container on the same kit /work that has lost its ot-run client.
+          An independent late ECO does not inherit the source wave attempt's lifecycle.
   REPORT  plan_current=no but not cancelled, or superseded in a way not proven (owner: in-flight variants may finish)
 
 Verdicts:
@@ -147,6 +148,19 @@ def job_wave(row):
     return WJ.wave_id([row.get('log'), row.get('run')])
 
 
+ECO_RUN = re.compile(r"""(?:^|[\s'"/])eco_loop\.py['"]?\s+run(?:$|[\s'"])""")
+ECO_CONTAINER = re.compile(r"\bprd-eco_\d{8}_\d{6}_\d+-")
+ECO_OUT = re.compile(r"/eco_\d{8}_\d{6}_\d+(?:/|$)")
+
+
+def independent_eco(row):
+    """An ECO can use a kit-wave attempt as its source without owning that attempt."""
+    if ECO_RUN.search(row.get("cmd") or "") or ECO_CONTAINER.search(row.get("id") or ""):
+        return True
+    paths = [row.get("run"), row.get("log"), *(row.get("wave_paths") or ()), *(row.get("work") or ())]
+    return any(ECO_OUT.search(str(path or "")) for path in paths)
+
+
 def skip_hit(row, skip):
     """(stop_only, substr) of the first WATCHDOG.skip line naming this job, else None"""
     paths = ' '.join(str(x) for x in (row.get('id'), row.get('run'), row.get('log'), row.get('cmd')))
@@ -230,7 +244,7 @@ def duplicates(rows, verdicts):
     A client-owned older job with a newer detached one is reported, for the lane: which should go is not this tool's call."""
     by = {}
     for r in rows:
-        if (verdicts.get(id(r)) or ('', ''))[0] == 'STOP':
+        if independent_eco(r) or (verdicts.get(id(r)) or ('', ''))[0] == 'STOP':
             continue
         for w in r.get('work') or []:
             by.setdefault(w, []).append(r)
@@ -513,6 +527,8 @@ def main(argv=None):
     wave_rows = WJ.load_rows(apdir)
     sup = {}
     for r in rows:
+        if independent_eco(r):
+            continue
         age = r.get('age_s')
         j = WJ.judge(wave_rows, job_wave(r), now - age if age is not None else None)
         if j:
