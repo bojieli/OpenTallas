@@ -861,6 +861,17 @@ def zl_netlist_files(kd, spec):
     return True
 
 
+def hop_latch_leaf_lines(kd, spec):
+    """LOCKUP-STATION-1130 (FABLE-CLOSURE-1515 (1)(2)): a type with a clock.zl_lockup spec parks its hop latches before CTS
+    and hangs each on its launch flop's leaf after CTS (clock_taps.tcl OT_HOP_LATCH_LEAF, hop_latch_leaf.tcl), unless the
+    spec says leaf: false.  No spec = no line, byte-identical kits."""
+    if not spec or spec.get("leaf") is False:
+        return []
+    shutil.copyfile(Path(__file__).with_name("hop_latch_leaf.tcl"), Path(kd) / "hop_latch_leaf.tcl")
+    return ["# LOCKUP-STATION-1130: hop latches off the tap solve / CTS, then onto their launch flop's leaf (POST_CTS)",
+            "export OT_HOP_LATCH_LEAF = 1"]
+
+
 ZL_NETLIST_LINE = "if {[file exists /work/zl_netlist.txt]} { source /work/zl_netlist_lockup.tcl }\n"
 
 
@@ -6942,6 +6953,10 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         print(f"gen phys: type {tn}: OT_ZL_LOCKUP " + json.dumps({f: {k: r[k] for k in ("latches", "bits")} for f, r in zlk_rec.items()
                                                                 if isinstance(r, dict) and "latches" in r}))
         zl_netlist_files(kd, zlk_spec)
+        if zlk_spec.get("ports"):      # FABLE-CLOSURE-1515 (4): sender-side seam latches on the abutted output buses
+            zlp_rec = _ZLK.apply_ports_kit(kd / "rtl", t["module"], zlk_spec["ports"], zlk_spec.get("clk", "clk"))
+            (kd / "zl_ports.json").write_text(json.dumps(zlp_rec, indent=1) + "\n")
+            print(f"gen phys: type {tn}: OT_ZL_PORTS {json.dumps(zlp_rec)}")
     if rls_cells is not None:
         append_new_src(srcs, f"/work/rtl/{rls_cells.name}")
     # DIE-HEAD-53 11-01 (HEAD class LEP-BB): a hard macro instantiated with a parameter override (hd_lep0N
@@ -7518,6 +7533,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     cfg += explicit_pg_cfg(cfg)  # Explicit PG intent survives an ordinary RFLOW=0 profile.
     cfg += txl_mid_exports(cfg, kd, defines=type_verilog_defines(t, kit_defines))
     cfg += post_dpl_hook_lines(cfg, kd)
+    cfg += hop_latch_leaf_lines(kd, zlk_spec)
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     if macros and hold_ff_margin is not None:
         macro_ff_repair_stage(kd, macros, mlib)

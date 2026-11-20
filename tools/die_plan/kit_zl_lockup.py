@@ -411,6 +411,86 @@ def apply_kit(rtl_dir, spec):
     return out
 
 
+# ------------------------------------------------------------------ sender-side seam latch (FABLE-CLOSURE-1515 (4))
+def _paren_end(txt, i):
+    """index just past the ')' closing the '(' at txt[i]"""
+    d = 0
+    for j in range(i, len(txt)):
+        if txt[j] == "(":
+            d += 1
+        elif txt[j] == ")":
+            d -= 1
+            if d == 0:
+                return j + 1
+    raise LkError("unbalanced port list")
+
+
+def apply_ports(txt, top, ports, clk="clk"):
+    """one ot_dp_lk u_fl_po_<p> between the driver of each named OUTPUT port of module `top` and the port (ANSI header
+    'output [wire|reg|logic] [hi:lo] p' only): the port changes in the low phase, so a receiver on an abutted seam keeps
+    ~T/2 of hold (port_out / the neighbour's port_in class) at 0 cycles.  The body's every use of p becomes p__fl (the
+    pre-latch value: equal in the cycle model, lec.py latch_to_wire + port phase 'low' on both sides).
+    -> (text, [{port, width}], {skip reason: n})"""
+    m = re.search(rf"\bmodule\s+{re.escape(top)}\b", txt)
+    if not m:
+        raise LkError(f"module {top} not found")
+    end = re.compile(r"\bendmodule\b").search(txt, m.end())
+    mod = txt[m.start():end.end()]
+    i = m.end() - m.start()
+    j = re.compile(r"\s*(#\s*)?").match(mod, i).end()
+    if mod[j - 1:j] == "#" or mod[i:j].strip() == "#":
+        j = _paren_end(mod, mod.index("(", j - 1))
+        j = re.compile(r"\s*").match(mod, j).end()
+    if mod[j:j + 1] != "(":
+        raise LkError(f"module {top}: no port list")
+    hdr_end = _paren_end(mod, j)
+    hdr, body = mod[:hdr_end], mod[hdr_end:]
+    out, skipped = [], collections.Counter()
+    decls, insts = [], []
+    for p in ports:
+        dm = re.search(rf"\boutput\s+(?:(wire|reg|logic)\s+)?(?:(signed)\s+)?(\[\s*([^\]:]+?)\s*:\s*([^\]:]+?)\s*\])?\s*{re.escape(p)}\b(?=\s*[,)/])", hdr)
+        if not dm:
+            skipped["not_an_ansi_output"] += 1
+            continue
+        if re.search(rf"(?<![.\w$])u_fl_po_{re.escape(p)}\b", body):
+            skipped["already_latched"] += 1
+            continue
+        kind, rng = dm.group(1) or "wire", dm.group(3) or ""
+        w = _rw(dm.group(4), dm.group(5)) if rng else 1
+        hdr = hdr[:dm.start()] + "output wire " + (rng + " " if rng else "") + p + hdr[dm.end():]
+        body = re.sub(rf"(?<![.\w$\\]){re.escape(p)}\b", p + "__fl", body)
+        decls.append(f"    {'reg' if kind in ('reg', 'logic') else 'wire'} {rng + ' ' if rng else ''}{p}__fl;")
+        insts.append(f"    ot_dp_lk #(.W({w})) u_fl_po_{p} (.clk({clk}), .d({p}__fl), .q({p}));")
+        out.append(dict(port=p, width=w))
+    if not out:
+        return txt, out, dict(skipped)
+    k = body.rfind("endmodule")
+    sc = body.find(";")
+    if sc < 0 or body[:sc].strip():
+        raise LkError(f"module {top}: header not closed by ';'")
+    body = (body[:sc + 1] + "\n    // LOCKUP-STATION-1130: sender-side seam lockup latches (kit_zl_lockup.apply_ports)\n"
+            + "\n".join(decls) + body[sc + 1:k] + "\n".join(insts) + "\n" + body[k:])
+    return txt[:m.start()] + hdr + body + txt[end.end():], out, dict(skipped)
+
+
+def apply_ports_kit(rtl_dir, top, ports, clk="clk"):
+    """apply_ports on the staged file that defines `top`; adds ot_dp_lk when no staged file defines it."""
+    files = sorted(Path(rtl_dir).glob("*.sv")) + sorted(Path(rtl_dir).glob("*.v"))
+    hit = [f for f in files if re.search(rf"\bmodule\s+{re.escape(top)}\b", f.read_text(errors="replace"))]
+    if not hit:
+        raise LkError(f"no staged file defines {top}")
+    f = hit[0]
+    txt, lat, sk = apply_ports(f.read_text(errors="replace"), top, ports, clk)
+    if lat:
+        if not any(re.search(r"\bmodule\s+ot_dp_lk\b", g.read_text(errors="replace")) for g in files):
+            txt += LK_MODULE
+        tmp = f.with_name(f.name + ".zlk_tmp")
+        tmp.write_text(txt)
+        tmp.replace(f)
+    return {f.name: dict(port_latches=len(lat), bits=_bits([l["width"] for l in lat]), skipped=sk)}
+
+
+
 def main(argv):
     if len(argv) < 2:
         raise SystemExit(__doc__)

@@ -8208,6 +8208,20 @@
          "type": "string",
          "minLength": 3
         }
+       },
+       "leaf": {
+        "type": "boolean"
+       },
+       "ports": {
+        "type": "array",
+        "items": {
+         "type": "string",
+         "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+        }
+       },
+       "clk": {
+        "type": "string",
+        "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
        }
       }
      }

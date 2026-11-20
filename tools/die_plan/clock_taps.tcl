@@ -782,6 +782,11 @@ ct_reassert_fixed_groups
 # above (nearest / group / cap / min-merge / chain affinity), so the station -> latch check shares the launch tap
 # (CRPR) and only the latch -> capture check crosses a port, with ~T/2 of hold margin.  No u_fl_ cell = no change.
 set ct_hlu {}; set ct_hcap {}
+# LOCKUP-STATION-1130 (FABLE-CLOSURE-1515 (1)(2)): OT_HOP_LATCH_LEAF=1 parks each traced hop latch (CLK disconnected) and
+# lists it with its launch flop in /work/hop_latch_leaf.tsv: the tap solve, the cap passes and CTS see the kit's sinks
+# without latch pins; hop_latch_leaf.tcl (POST_CTS) hangs each latch on its launch flop's leaf.
+set ct_hleaf [expr {[info exists ::env(OT_HOP_LATCH_LEAF)] && $::env(OT_HOP_LATCH_LEAF) eq "1"}]
+set ct_hlpark {}
 if {[llength $ct_taps] >= 2} {
   set ct_hl 0; set ct_hlm 0; set ct_hlx 0
   foreach ct_i [$ct_blk getInsts] {
@@ -812,11 +817,16 @@ if {[llength $ct_taps] >= 2} {
     }
     if {$ct_drv eq ""} { incr ct_hlx; continue }
     set ct_dit [ct_clk_iterm $ct_drv]
+    if {$ct_hleaf && !$ct_hf} { lappend ct_hlpark "[$ct_i getName]\t[$ct_drv getName]"; $ct_cit disconnect; incr ct_hl; continue }
     set ct_tn [$ct_dit getNet]
     if {[$ct_cit getNet] ne $ct_tn} { $ct_cit disconnect; $ct_cit connect $ct_tn; incr ct_hlm }
     # VSN6-B 11-11: remember latch -> launch flop clock pin for the cap recheck below (they move as one unit)
     dict set ct_hlu $ct_cit $ct_dit
     incr ct_hl
+  }
+  if {$ct_hleaf} {
+    set ct_hlf [open /work/hop_latch_leaf.tsv w]; foreach r $ct_hlpark { puts $ct_hlf $r }; close $ct_hlf
+    puts "OT_CLOCK_TAPS hop latches: [llength $ct_hlpark] parked for their launch flop's leaf (OT_HOP_LATCH_LEAF, POST_CTS hop_latch_leaf.tcl), not counted on any tap"
   }
   if {$ct_hl || $ct_hlx} { puts "OT_CLOCK_TAPS hop latches: $ct_hl on their launch station's tap ($ct_hlm re-hung), $ct_hlx without a tapped launch flop" }
 }

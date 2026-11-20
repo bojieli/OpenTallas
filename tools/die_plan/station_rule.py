@@ -346,7 +346,7 @@ def read_hold_ends(path):
     return out
 
 
-def derive_spec(pairs, rtl_dir, type_name, min_pairs=1, guard=None, hold_ends=None, exclude=None):
+def derive_spec(pairs, rtl_dir, type_name, min_pairs=1, guard=None, hold_ends=None, exclude=None, ends_only=False):
     """zl_lockup spec for every capture class with >= min_pairs cross-tap zero-logic pairs, + the census.
     Forms: RTL instances (hops), flat netlist registers (netlist), SRAM wrappers -> tap_group rows (never latched)."""
     insts, _regs, modregs = _rtl_objects(rtl_dir)
@@ -411,6 +411,19 @@ def derive_spec(pairs, rtl_dir, type_name, min_pairs=1, guard=None, hold_ends=No
                 by["uncovered"] += 1
         rec["hold_ends"] = dict(total=len(hold_ends), by=dict(by),
                                 covered=by.get("inst", 0) + by.get("netlist", 0), tap_group=by.get("tap_group", 0))
+    if ends_only:
+        if hold_ends is None:
+            raise ValueError("--ends-only needs --hold-ends (pregrt_ff_hold_open_before.tsv)")
+        # FABLE-CLOSURE-1515 (3): latch ONLY the captures that violate hold before repair, on a cross-tap zero-logic pair
+        # of an emitted (non tap_group) class: one exact netlist name each, no RTL hop classes
+        xt = {_clean_cell(c) for _a, c, lt, ct, *_r in pairs if lt != ct}
+        live = {(c["form"], c["match"]) for c in census if c["emitted"] and c["form"] in ("inst", "netlist")}
+        keep = sorted({end for sl, hc, _st, end in hold_ends if sl < 0 and hc == "cross_tap" and end in xt
+                       and classify(end, insts, modregs)[:2] in live})
+        spec = dict(spec, hops=[], netlist=["=" + e for e in keep],
+                    note=spec["note"] + "; ends-only: the cross-tap ends that violate hold before repair")
+        rec["ends_only"] = dict(violating_cross_tap=sum(1 for sl, hc, *_r in hold_ends if sl < 0 and hc == "cross_tap"),
+                                latched=len(keep))
     return spec, rec
 
 
@@ -488,6 +501,29 @@ def summary(rows):
                 worst_line_hop_um=max((r["worst_hop_um"] for r in rows if r.get("site_form") != "needs_route"), default=0.0))
 
 
+def seam_rows(P, types_re=None):
+    """FABLE-CLOSURE-1515 (4): per type, the OUTPUT buses that are abutted (no die.channels entry, partner is a partition,
+    not the die edge) on EVERY instance of the type: the sender-side seam lockup latch (kit_zl_lockup.apply_ports,
+    plan clock.zl_lockup.<T>.ports) goes only there.  -> {type: {"ports": [...], "abutted": n, "channel_or_edge": m}}"""
+    import gen_phys as G
+    rx = re.compile(types_re) if types_re else None
+    by = collections.defaultdict(lambda: collections.defaultdict(lambda: [0, 0]))
+    for pid, pr in P.ports.items():
+        src, dst = pr["src"]["part"], pr["dst"]["part"]
+        if src == G.DIE_PART or src not in P.parts:
+            continue
+        tn = P.parts[src]["type"]
+        if rx and not rx.search(tn):
+            continue
+        ok = dst != G.DIE_PART and dst in P.parts and P.channel_of(pid) is None
+        by[tn][pr["src"]["bus"]][0 if ok else 1] += 1
+    out = {}
+    for tn, buses in sorted(by.items()):
+        ports = sorted(b for b, (a, c) in buses.items() if a and not c)
+        out[tn] = dict(ports=ports, abutted=len(ports), channel_or_edge=sum(1 for a, c in buses.values() if c))
+    return out
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -504,8 +540,13 @@ def main(argv=None):
     d.add_argument("--out", required=True)
     d.add_argument("--min-pairs", type=int, default=1)
     d.add_argument("--guard")
+    d.add_argument("--ends-only", action="store_true", help="exact netlist names of the violating cross-tap ends only")
     d.add_argument("--exclude", help="regex on capture names left out (e.g. a later plan row rewrites them)")
     d.add_argument("--hold-ends", help="pregrt_ff_hold_open_before.tsv (OT_PREGRT_OPEN_BEFORE=1): coverage on hold ends")
+    e = sub.add_parser("seams")
+    e.add_argument("plan")
+    e.add_argument("--out", required=True)
+    e.add_argument("--types")
     p = sub.add_parser("apply")
     p.add_argument("plan")
     p.add_argument("rows")
@@ -521,12 +562,19 @@ def main(argv=None):
         Path(x.out).write_text(json.dumps(dict(summary=summary(rows), rows=rows), indent=1) + "\n")
         print(json.dumps(summary(rows)))
         return 0
+    if x.cmd == "seams":
+        import schema as S
+        rows = seam_rows(S.Plan(json.loads(Path(x.plan).read_text())), x.types)
+        Path(x.out).write_text(json.dumps(rows, indent=1) + "\n")
+        print(json.dumps({"types": len(rows), "abutted_ports": sum(r["abutted"] for r in rows.values())}))
+        return 0
     if x.cmd == "derive":
         spec, rec = derive_spec(read_pairs(x.pairs), x.rtl_dir, x.type, x.min_pairs, x.guard,
-                                read_hold_ends(x.hold_ends) if x.hold_ends else None, x.exclude)
+                                read_hold_ends(x.hold_ends) if x.hold_ends else None, x.exclude,
+                                x.ends_only)
         Path(x.out).write_text(json.dumps(dict(spec=spec, census=rec), indent=1) + "\n")
         print(json.dumps({k: rec[k] for k in ("pairs", "cross_tap", "cross_tap_covered", "cross_tap_tap_group", "cross_tap_ends",
-                                                   "cross_tap_ends_covered", "cross_tap_ends_tap_group", "hold_ends")
+                                                   "cross_tap_ends_covered", "cross_tap_ends_tap_group", "hold_ends", "ends_only")
                           if k in rec}))
         return 0
     raw = json.loads(Path(x.plan).read_text())

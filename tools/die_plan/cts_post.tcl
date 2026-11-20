@@ -4,6 +4,10 @@
 # ORFS sources POST_CTS inside a procedure. Both helpers define global procs
 # whose state must live at global scope too.
 set cp_dir [file dirname [file normalize [info script]]]
+# LOCKUP-STATION-1130 (OT_HOP_LATCH_LEAF=1): parked hop latches onto their launch flop's leaf, before every balance pass
+if {[info exists ::env(OT_HOP_LATCH_LEAF)] && $::env(OT_HOP_LATCH_LEAF) eq "1" && [file exists [file join $cp_dir hop_latch_leaf.tcl]]} {
+  uplevel #0 [list source [file join $cp_dir hop_latch_leaf.tcl]]; hop_latch_leaf cts
+}
 # DIE-CORETAP-1119 (FABLE-CLOSURE lever 1, kit side): in-tap range.  TritonCTS balances each tap tree, then the post-CTS
 # clock edits (clk_leaf_repeat.tcl repeaters, repair_clock_nets long-wire buffers) add 1-3 stages on SOME branches only; the
 # tap balance pads the whole tap at its root and caps the pad at the LATEST sink (target + window), so the unedited majority
@@ -26,6 +30,7 @@ if {(![info exists ::env(OT_CTS_STB)] || $::env(OT_CTS_STB) ne "0") && [file exi
 }
 uplevel #0 [list source [file join $cp_dir tap_balance.tcl]]
 if {![info exists ::env(OT_LEAF_AFFINITY)] || $::env(OT_LEAF_AFFINITY) ne "0"} { uplevel #0 [list source [file join $cp_dir leaf_affinity.tcl]] }
+if {[info exists ::env(OT_HOP_LATCH_LEAF)] && $::env(OT_HOP_LATCH_LEAF) eq "1" && [llength [info procs hop_latch_leaf]]} { hop_latch_leaf after_leaf_affinity }
 # S81 AM half-cycle correction, opt-in and guarded by the baseline affinity checks.
 if {[info exists ::env(OT_S81_RCK_AM_COHORT)] && $::env(OT_S81_RCK_AM_COHORT) eq "1"} { uplevel #0 [list source [file join $cp_dir rck_am_cohort.tcl]] }
 # Kit-built pad-clock trunk (plan die_trunk host type, pad_clock_trunk.tcl at PRE_CTS): report the trunk-end arrival.

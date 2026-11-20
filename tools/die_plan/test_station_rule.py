@@ -282,3 +282,69 @@ def test_zl_netlist_hook(tmp_path):
     assert gen_phys.zl_netlist_files(tmp_path, {"netlist": [r"u_a\.q\d+"]}) and gen_phys.zl_netlist_hook(tmp_path)
     assert (tmp_path / "zl_netlist_lockup.tcl").exists() and "zl_netlist_lockup" in (tmp_path / "face_keep_release.tcl").read_text()
     assert not gen_phys.zl_netlist_hook(tmp_path)
+
+
+def test_ends_only_latches_the_violating_cross_tap_ends(tmp_path):
+    (tmp_path / "top_bound.sv").write_text(BOUND)
+    s0 = "g_u_lf1_u_cst_gd_s_0_u_src_9471b6ecb0af15f07fde_q"
+    pairs = [("u_bound.a/q$_DFF_P_", f"u_bound.{s0}[1]$_DFF_PN0_", "clk_t1", "clk_t2", 120.0, "DFF", "DFF"),
+             ("u_bound.a/q$_DFF_P_", f"u_bound.{s0}[2]$_DFF_PN0_", "clk_t1", "clk_t2", 120.0, "DFF", "DFF"),
+             ("u_bound.a/q$_DFF_P_", f"u_bound.{s0}[3]$_DFF_PN0_", "clk_t1", "clk_t1", 120.0, "DFF", "DFF")]
+    tsv = tmp_path / "p.tsv"
+    tsv.write_text("".join("\t".join(map(str, r)) + "\n" for r in pairs))
+    ends = tmp_path / "ends.tsv"
+    ends.write_text("slack\tclass\tstart\tend\n"
+                    f"-50\tcross_tap\ta\tu_bound.{s0}[1]$_DFF_PN0_/D\n"      # violating, cross-tap pair: latched
+                    f"3\tcross_tap\ta\tu_bound.{s0}[2]$_DFF_PN0_/D\n"        # meets hold: not latched
+                    f"-9\tsame_tap\ta\tu_bound.{s0}[3]$_DFF_PN0_/D\n")       # same tap: not latched
+    with pytest.raises(ValueError):
+        SR.derive_spec(SR.read_pairs(tsv), tmp_path, "top", ends_only=True)
+    spec, rec = SR.derive_spec(SR.read_pairs(tsv), tmp_path, "top", hold_ends=SR.read_hold_ends(ends), ends_only=True)
+    assert spec["hops"] == [] and spec["netlist"] == [f"=u_bound.{s0}[1]$_DFF_PN0_"]
+    assert rec["ends_only"] == {"violating_cross_tap": 1, "latched": 1}
+
+
+def test_hop_latch_leaf_lines_and_hooks(tmp_path):
+    import gen_phys
+    assert gen_phys.hop_latch_leaf_lines(tmp_path, None) == [] and not (tmp_path / "hop_latch_leaf.tcl").exists()
+    assert gen_phys.hop_latch_leaf_lines(tmp_path, {"netlist": ["=x"], "leaf": False}) == []
+    assert gen_phys.hop_latch_leaf_lines(tmp_path, {"netlist": ["=x"]})[-1] == "export OT_HOP_LATCH_LEAF = 1"
+    assert (tmp_path / "hop_latch_leaf.tcl").exists()
+    here = Path(__file__).resolve().parent
+    ct = (here / "clock_taps.tcl").read_text()
+    assert "OT_HOP_LATCH_LEAF" in ct and "/work/hop_latch_leaf.tsv" in ct and "$ct_cit disconnect; incr ct_hl; continue" in ct
+    cp = (here / "cts_post.tcl").read_text()
+    assert cp.index("hop_latch_leaf cts") < cp.index("source [file join $cp_dir subtree_balance.tcl]") and "hop_latch_leaf after_leaf_affinity" in cp
+    zn = (here / "zl_netlist_lockup.tcl").read_text()
+    assert "dict set zn_exact" in zn and "^(DFFH|ASYNC_DFFH)" in zn
+
+
+def test_seam_port_latch_text_and_lockstep(tmp_path):
+    src = '''module top (
+    input  wire clk,
+    input  wire [3:0] a,
+    output reg  [3:0] y,
+    output wire z
+);
+    always @(posedge clk) y <= a;
+    assign z = y[0];
+endmodule
+'''
+    txt, lat, sk = zl.apply_ports(src, "top", ["y", "nope"])
+    assert [l["port"] for l in lat] == ["y"] and sk == {"not_an_ansi_output": 1}
+    assert "output wire [3:0] y" in txt and "reg [3:0] y__fl;" in txt and "y__fl <= a" in txt and "assign z = y__fl[0]" in txt
+    assert "ot_dp_lk #(.W(4)) u_fl_po_y (.clk(clk), .d(y__fl), .q(y));" in txt
+    assert zl.apply_ports(txt, "top", ["y"])[1] == []          # idempotent
+    if not shutil.which("iverilog"):
+        pytest.skip("iverilog")
+    (tmp_path / "a.v").write_text(src.replace("module top", "module top_o") + txt.replace("module top", "module top_l") + zl.LK_MODULE)
+    (tmp_path / "tb.v").write_text('''module tb; reg clk = 0; reg [3:0] a = 0; wire [3:0] yo, yl; wire zo, zl; integer i, bad = 0;
+  top_o o(.clk(clk), .a(a), .y(yo), .z(zo)); top_l l(.clk(clk), .a(a), .y(yl), .z(zl));
+  initial begin for (i = 0; i < 40; i = i + 1) begin #5 clk = 1; #1 a = $random; #4 clk = 0; end
+    if (bad) $display("BAD %0d", bad); else $display("OK"); $finish; end
+  always @(posedge clk) if (yo !== yl || zo !== zl) bad = bad + 1;
+endmodule
+''')
+    r = subprocess.run(["iverilog", "-o", str(tmp_path / "s"), str(tmp_path / "a.v"), str(tmp_path / "tb.v")], capture_output=True, text=True)
+    assert r.returncode == 0, r.stderr
+    assert "OK" in subprocess.run(["vvp", str(tmp_path / "s")], capture_output=True, text=True).stdout

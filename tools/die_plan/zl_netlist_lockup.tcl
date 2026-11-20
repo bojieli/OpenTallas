@@ -7,8 +7,13 @@
 # lec.py latch_to_wire).  Covers registers the RTL pass cannot edit (generate-block and nested-module registers).
 set zn_f /work/zl_netlist.txt
 if {![file exists $zn_f]} { return }
-set zn_res {}
-foreach l [split [read [set zn_h [open $zn_f]]] "\n"] { set l [string trim $l]; if {$l ne "" && ![string match "#*" $l]} { lappend zn_res $l } }
+# a line "=<name>" is one exact register (station_rule derive --ends-only: the ends that violate hold before repair)
+set zn_res {}; set zn_exact [dict create]
+foreach l [split [read [set zn_h [open $zn_f]]] "\n"] {
+  set l [string trim $l]
+  if {$l eq "" || [string match "#*" $l]} continue
+  if {[string index $l 0] eq "="} { dict set zn_exact [string range $l 1 end] 1 } else { lappend zn_res $l }
+}
 close $zn_h
 set zn_blk [ord::get_db_block]
 set zn_db [ord::get_db]
@@ -21,8 +26,8 @@ set zn_n 0; set zn_skip 0; set zn_k 0
 foreach zn_i [$zn_blk getInsts] {
   set zn_nm [string map {\\ {}} [$zn_i getName]]
   if {![zn_is_reg [[$zn_i getMaster] getName]]} continue
-  set zn_hit 0
-  foreach zn_re $zn_res { if {[regexp -- "^(?:$zn_re)\$" $zn_nm]} { set zn_hit 1; break } }
+  set zn_hit [dict exists $zn_exact $zn_nm]
+  if {!$zn_hit} { foreach zn_re $zn_res { if {[regexp -- "^(?:$zn_re)\$" $zn_nm]} { set zn_hit 1; break } } }
   if {!$zn_hit} continue
   set zn_d ""; set zn_ck ""
   foreach zn_t [$zn_i getITerms] {
@@ -57,4 +62,4 @@ foreach zn_i [$zn_blk getInsts] {
   $zn_d connect $zn_q
   incr zn_n
 }
-puts "OT_ZL_NETLIST inserted $zn_n lockup latches ([llength $zn_res] patterns, $zn_skip matching registers not a direct register hop)"
+puts "OT_ZL_NETLIST inserted $zn_n lockup latches ([llength $zn_res] patterns, [dict size $zn_exact] exact, $zn_skip matching registers not a direct register hop)"
