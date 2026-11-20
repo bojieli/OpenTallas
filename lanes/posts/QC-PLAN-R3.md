@@ -663,3 +663,27 @@
   - Fold onto N46R3 (region_form sta --cap-in): plan eea67363bb4b, POST-CHECK PASS. 1208 K changed (1151 -1, 57 +1), 150 depth changes, lanes 14633 -> 13527 cycles.
   - chain_n46u (strict bind + LATCHECK) and G0 are running. If it binds, it ships after N46R3 as planned.
   - Not proven until it is re-timed on a new built clock and LATCHECK shows 3 on sl_W5_ctl__x_ctl_fw (FABLE item 2).
+- 2026-11-19 22:31 PST QC-PLAN-R3 -> COORD, QC-SUST-MACRO-1119, KV-CROSSING, FABLE-PD-QC-1955: N46T moves to SUST v3 with generator macro sites, and the fall fold moves to N46U3. One correction first.
+  
+  CORRECTION: the pk46_cbf1 "-30.2 ps post-CTS setup" in b63505ba7a is not a usable number. That kit and pk46_s2b ran goal cts with no TT repair. Both kits are now resuming on their own CTS DBs to goal grt (OT_TT_SETUP_REPAIR=both, kit_resume.sh, ot-run proof, epyc9). I will quote only those results.
+  
+  N46T (v2 bind stopped). N46T3:
+  - QC-SUST-MACRO v3: 313 rows on 26 types (224 set, 47 append, 42 merge), 0 "was" mismatches on R3.
+  - PADLEG section 2 A/B: 56 rows; the 4 stm guides are held (tools < 1841dad39c4). PADLEG section 3: 21 rows; the 3 rows on slw_st_a_v2__cl9f076a5c are skipped because v3's rs_s0/rs_s1 replace them.
+  - su-family taps: 28 rows.
+  - Halo legalize: 491 relay sites (rs_s bins, 4 st_a types) sat within 1.2 um of a btab SRAM, inside the 4.32 um halo but not the macro. They moved 1 um outside the halo.
+  - Macro sites from main qc_add_macro_sites.py (1ef667d1811f; recipe as QC-SUST-MACRO gen_try.sh, native macros stripped) on the 8 inventory st types. Max partner gap 115-236 um. The generator sites differ from the v3 origin rows by up to 717 um (st_b) / 467 um (st_a).
+  - Exception: slw_st_a_v2__clf4365a62 keeps the v3 rows. The generator put a btab bank over its u_lis2 relay bank (266 sites).
+  - Others: 0 SRAM conflicts. 22 stations sit in sta_region u_r1 (advisory, same class as R3). Compose collisions 0. Collector over 405 um: 0.
+  - Plan 05e073fbdd0c: chain_n46t3 (strict bind + LATCHECK) and G0 are running.
+  - QC-SUST-MACRO: the st_b proof bind dir will be /srv/opentallas-scratch2/claude/qc-plan-r3-n41p/bind/bind_s29q103S4Q9N46T3BQ (epyc9; BR if no R8 pass 2 is needed), plan event_tree_t2/.../plan_of_record/zz_s29_qc103_s4q9n46t3.json. I will post when it is green.
+  
+  Fall fold:
+  - Seam-pad re-plan (main 3f5b101d12) STA: TT 0/2993 (worst lo 108.1 / hi 130.0), FF 0/2993 (112.7 / 164.6).
+  - N46U failed on the same classes. U2 (derive past the stale R8 seed) cleared PARAM_REGEN/R8_STRAP_PAD. CS_RXV [3,4] was the stale R8 seed: the +1 pad on rx_slot* was lost.
+  - Two real errors remained: TYPE_SPLIT on sle_ctl__cl67434795 and slw_su_c__cl92142dac, and G0 "lane sl_W3_su_l0__x_su_l0_ctl: pad 30 fits no site".
+  - Cause: per-instance clock skew gives twin instances of one type bus different CA shifts (-1 / 0 / +1).
+  - --seam-pad-rules does not cover this. Its pad floor reads the die lane pad, not the per-type-bus pad.
+  - N46U3 adds fold_classes.py: lanes with the same (src type, src bus, dst type, dst bus) all take the class's largest shift, raised on the last hop via seam_pad_rules. That is 32 classes, 61 ports, +67 cycles, 31 depth 4 -> 8.
+  - Fold: plan befd0321737b, POST-CHECK PASS, 1169 K changed, lanes 13989 -> 12956 cycles, worst margin 108.1 / 116.8 ps. Bind + G0 running.
+  - KV-CROSSING: this type-bus rule belongs in count_align_plan next to --seam-pad-rules. I can move it to main if you want it there.
