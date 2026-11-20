@@ -4,7 +4,7 @@
 // Issue authority is compiled START dates; physical codecs are in ot_s81hd_ctl_core.
 // The current spine root already merges north/south; feeding both comparison inputs the same
 // root record preserves that record exactly and retains the established two-edge pick latency.
-module ot_s81hd_ctl_hsf0_static #(parameter integer SK=11, parameter integer MUT_STATIC=0, parameter integer MUT_DRAFT_EARLY=0, parameter integer ING_STAGE=0, parameter integer SEQ_WB=0, parameter integer SEQ_FAN=0, parameter integer SEQ_RST=0, parameter integer SRAM_RAW_CAPTURE=0, parameter integer SRAM_PARTIAL_CAPTURE=0, parameter integer CTL_PRE=0, parameter integer CTL_WINDOW_PRE=0, parameter integer MCHK_LOCAL=0) (
+module ot_s81hd_ctl_hsf0_static #(parameter integer SK=11, parameter integer MUT_STATIC=0, parameter integer MUT_DRAFT_EARLY=0, parameter integer ING_STAGE=0, parameter integer SEQ_WB=0, parameter integer SEQ_FAN=0, parameter integer SEQ_RST=0, parameter integer SRAM_RAW_CAPTURE=0, parameter integer SRAM_PARTIAL_CAPTURE=0, parameter integer CTL_PRE=0, parameter integer CTL_WINDOW_PRE=0, parameter integer MCHK_LOCAL=0, parameter integer SRAM_WRITE_CAPTURE=0) (
     input wire start_i, input wire adapter_fault,
     output wire job_active_o,
     input  wire              ck,
@@ -261,18 +261,53 @@ module ot_s81hd_ctl_hsf0_static #(parameter integer SK=11, parameter integer MUT
     wire go0 = busy && n == 14'd0;
     wire xv0 = busy && n >= 14'd5;
     wire [13:0] m0 = n - 14'd5;
+    wire wa1_ce, wb1_ce;
+    wire [5:0] wa1_addr, wb1_addr;
+    wire [511:0] wa1_data, wb1_data;
+    generate if (SRAM_WRITE_CAPTURE != 0) begin : g_sram_write_capture
+        // Capture each high-half bank's complete write beat at its own face.
+        // The issue gate waits for all 80 beats and the first SRAM read samples at busy n=5.
+        // The later high-half write completes six edges before that read at the earliest issue date.
+        (* keep = "true" *) reg wa1_ce_q, wb1_ce_q;
+        (* keep = "true" *) reg [5:0] wa1_addr_q, wb1_addr_q;
+        (* keep = "true" *) reg [511:0] wa1_data_q, wb1_data_q;
+        always @(posedge ck or negedge rr[0]) begin
+            if (!rr[0]) begin
+                wa1_ce_q <= 1'b0;
+                wb1_ce_q <= 1'b0;
+            end else begin
+                wa1_ce_q <= wv2 && wa_xa;
+                wb1_ce_q <= wv2 && !wa_xa;
+            end
+        end
+        always @(posedge ck) begin
+            if (wv2 && wa_xa) begin
+                wa1_addr_q <= wa2[5:0];
+                wa1_data_q <= wd2[1023:512];
+            end
+            if (wv2 && !wa_xa) begin
+                wb1_addr_q <= {2'b00, wa2[3:0]};
+                wb1_data_q <= wd2[1023:512];
+            end
+        end
+        assign {wa1_ce, wa1_addr, wa1_data} = {wa1_ce_q, wa1_addr_q, wa1_data_q};
+        assign {wb1_ce, wb1_addr, wb1_data} = {wb1_ce_q, wb1_addr_q, wb1_data_q};
+    end else begin : g_sram_write_original
+        assign {wa1_ce, wa1_addr, wa1_data} = {wv2 && wa_xa, wa2[5:0], wd2[1023:512]};
+        assign {wb1_ce, wb1_addr, wb1_data} = {wv2 && !wa_xa, 2'b00, wa2[3:0], wd2[1023:512]};
+    end endgenerate
     wire [511:0] ra0, ra1, rb0, rb1;
     ot_sram_1r1w_64x512_m1_r2c2 u_xa0 (.clk(ck), .r_ce_in(xv0), .r_addr_in(m0[7:2]), .rd_out(ra0),
         .w_ce_in(wv2 && wa_xa), .w_addr_in(wa2[5:0]), .wd_in(wd2[511:0]), .w_mask_in({512{1'b1}}),
         .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));
     ot_sram_1r1w_64x512_m1_r2c2 u_xa1 (.clk(ck), .r_ce_in(xv0), .r_addr_in(m0[7:2]), .rd_out(ra1),
-        .w_ce_in(wv2 && wa_xa), .w_addr_in(wa2[5:0]), .wd_in(wd2[1023:512]), .w_mask_in({512{1'b1}}),
+        .w_ce_in(wa1_ce), .w_addr_in(wa1_addr), .wd_in(wa1_data), .w_mask_in({512{1'b1}}),
         .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));
     ot_sram_1r1w_64x512_m1_r2c2 u_xb0 (.clk(ck), .r_ce_in(xv0), .r_addr_in({2'b00, m0[5:2]}), .rd_out(rb0),
         .w_ce_in(wv2 && !wa_xa), .w_addr_in({2'b00, wa2[3:0]}), .wd_in(wd2[511:0]), .w_mask_in({512{1'b1}}),
         .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));
     ot_sram_1r1w_64x512_m1_r2c2 u_xb1 (.clk(ck), .r_ce_in(xv0), .r_addr_in({2'b00, m0[5:2]}), .rd_out(rb1),
-        .w_ce_in(wv2 && !wa_xa), .w_addr_in({2'b00, wa2[3:0]}), .wd_in(wd2[1023:512]), .w_mask_in({512{1'b1}}),
+        .w_ce_in(wb1_ce), .w_addr_in(wb1_addr), .wd_in(wb1_data), .w_mask_in({512{1'b1}}),
         .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));
     // ================================================================== STREAM (P0 ctl -> P1 macro -> P2 mux -> P3 pins)
     reg [30:0] tf0, tf1; reg [1:0] tfn; reg tfw, tfr;                 // tag FIFO of issued streams {user, pos}
