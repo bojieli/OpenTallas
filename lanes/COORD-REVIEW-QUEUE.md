@@ -12115,3 +12115,4 @@ FAILED [AUTOPILOT b0fd34f61ef0] 2026-11-20 02:28:08 PST AUTOPILOT -> KIT-WAVE-12
   col_h10_r0_p1 (6): GRT 0; sign-off runs 0, SIGNED 0; 2 stopped without signoff; old plan -481
   col_h9_r0_p1 (6): GRT 0; CTS FF hold after CORETAP 1: worst -73.3 median -73.3; sign-off runs 0, SIGNED 0; 2 stopped without signoff; old plan -331 (t0->cf.st CTS)
   Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
+- 2026-11-20 02:51 PST WAITER [FABLE-FIX-S81-SERDES-0000] R1 (serdes__t13: H23 rck form + AMPIPE + RM_LOCAL_EMPTY8 + RM_WPL8, synth->route) ended: ot-run: RAN on epyc7 (unit oth-ubuntu-564596-1795161073): exit 2 |  | kit epyc7 /srv/opentallas-scratch2/claude/fable-fix-s81-serdes-0000/R1/serdes__t13/gen/serdes__t13 (logs are this run's own: stale H25 logs were excluded at copy)
