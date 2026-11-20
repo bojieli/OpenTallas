@@ -1,0 +1,64 @@
+{
+ "lane": "FABLE-CBC-HEAD-0130",
+ "type": "hd_lep0N",
+ "for": "HEAD-CROSSING-1119 r13 (or r14); additions to r13/lep0N/r13_lep0N_rows.json, same row formats",
+ "basis": "r8b placed geom.tsv (kw43-wave-1109n head_rp21z20NF15f_r8b items/hd_lep0N/geom), pair LEF pin sites (kit macros/ot_s81hd_lep_pair.lef; orient pp0/pp1 R0, pp2 MX, pp3 R180), plan r13 draft plan_r13_lep0N.json. Sites are targets: legalise against bands/reserved sites as for the r13 rows.",
+ "A_internal_stations_add": [
+  {"conn": "bus:coll_i3", "regs_um": [[1765.0, 600.0], [1765.0, 320.0]], "bits": 514, "capture": "u_core.coll_i3",
+   "lane": "coll_WN3_u", "add_cycles": 2, "hops_um": [287, 280, 293], "now_um": 861, "now_over405": 482, "now_over_cycle": 272,
+   "note": "E face window y 646..759 -> pair3 coll_i pin column x 1745.28, y 508 (b0) .. 47 (b511). placed_scan showed 467/7 because it clamps to the macro box."},
+  {"conn": "bus:coll_o3", "regs_um": [[1765.0, 280.0], [1765.0, 520.0]], "bits": 512, "launch": "u_core.coll_o3",
+   "lane": "coll_WN3_d", "add_cycles": 2, "hops_um": [255, 240, 242], "now_um": 616, "now_over405": 311, "now_over_cycle": 55,
+   "note": "pair3 coll_o pins -> E face window y 521..635. One station (1790,370) gives 367/370: no margin, not recommended."},
+  {"conn": "bus:coll_o2", "regs_um": [[40.0, 300.0]], "bits": 512, "launch": "u_core.coll_o2",
+   "lane": "coll_WN2_d", "add_cycles": 1, "hops_um": [284, 287], "now_um": 565, "now_over405": 123, "now_over_cycle": 0,
+   "note": "pair2 (MX) coll_o pins x 69.12, y 508..45 -> W face window y 342..547."},
+  {"conn": "bus:coll_i1", "regs_um": [[40.0, 970.0]], "bits": 514, "capture": "u_core.coll_i1",
+   "lane": "coll_WN1_u", "add_cycles": 1, "hops_um": [370, 369], "now_um": 417, "now_over405": 6, "optional": true,
+   "note": "Optional. Without it: site u_bin_coll_i1 at the leg midpoint; pin-to-pin leg is 534 um."}
+ ],
+ "B_native_stage_groups_change_0_cycles": [
+  {"rule": "g_rxr stage j takes the rect+tag of g_rxf stage N-1-j (rxr runs centre -> pair; today both share stage j's band)",
+   "lanes": {"1": 6, "2": 6, "3": 2},
+   "now_um": {"li2_r->s0": 762, "rxv_r->s0": 708, "li1_r->s0": 686, "li3_r->s0": 448, "s5->pair1.k_li_r": 685, "s5->pair2.k_li_r": 609},
+   "after_um": {"li1_r->s0": 43, "li2_r->s0": 149, "rxv_r->s0": 235, "li3_r->s0": 484, "s5->pair1 pin": 140, "s5->pair2 pin": 392, "chain hops": "= rxf hops, <= 274"},
+   "residual": "li3_r (1100,684) -> lane-3 s0 484 um: add a stage row for u_core.u.u_lep.u.li3_r near (1400,600), or KRX lane 3 2->3",
+   "proof": "kit-level patch epyc10 /srv/opentallas-scratch2/claude/fable-cbc-head-0130/patch_rows.py on a fork of the private r11b kit (proof_rxr)"},
+  {"tag": "stage:plw_s2", "prefix": "u_core.u.g_plw.g_s[2]", "rect_um": [1819.6, 822.04, 1869.6, 834.04], "was": [1819.6, 1037.44, 1869.6, 1049.44],
+   "now_um": {"s1->s2": 560, "s2->u_bout_lw_o": 131}, "after_um": {"s1->s2": 337, "s2->u_bout_lw_o": 339}},
+  {"alt_to": "r13 internal_stations bus:unit_i0 and bus:ctrl_o0 (+1 cycle each)", "cycles": 0,
+   "why": "g_pin / g_pout are one rank for buses with different face windows; the 1,104-bit lepk slice sets the band. Split the SLICE rows instead; lane latencies and the lepk/unit/ctrl relative timing stay as signed off.",
+   "rows": [
+    {"tag": "stage:pin_s0u", "prefix": "g_pin.g_s[0] bits q[1..45] (unit_i0) + g_c.qc (lepf_i0)", "site_um": [1815.0, 650.0], "after_um": {"u_bin_unit_i0->s0": 310, "u_bin_lepf_i0->s0": 329, "s0->s1": 130}, "now_um": 640},
+    {"tag": "stage:pin_s5u", "prefix": "g_pin.g_s[5] bits q[1..45]", "site_um": [1190.0, 640.0], "after_um": {"s4->s5": 346, "s5->u_land.rcq": 350}, "now_um": 470},
+    {"tag": "stage:pout_s7c", "prefix": "g_pout.g_s[7] bits q[1..32] (ctrl_o0)", "site_um": [1845.0, 690.0], "after_um": {"s6->s7": 198, "s7->u_bout_ctrl_o0": 191}, "now_um": 602},
+    {"tag": "stage:pout_s7f", "prefix": "g_pout.g_s[7] g_c.qc (fault_o0)", "site_um": [1845.0, 800.0], "after_um": {"s6->s7": 332, "s7->u_bout_fault_o0": 327}, "now_um": 845}
+   ],
+   "check": "the whole-stage rows (u_core.u.g_pin.g_s[0][/.].* etc.) also match these flops: put the slice rows first or narrow the stage regex."}
+ ],
+ "C_relay_sites_reset_locals": {
+  "u_core.u.u_lep.u.g_reset_balanced.u_rstr.g_local[1].local_r": [850.3, 678.4],
+  "u_core.u.u_lep.u.g_reset_balanced.u_rstr.g_local[953].local_r": [818.7, 683.4],
+  "u_core.u.u_lep.u.g_reset_balanced.u_rstr.g_local[3].local_r": [1188.5, 735.7],
+  "_note": "minimax centre of each local's loads; local->load 500 / 579 / 445 um now, 282 / 263 / 225 after. local[1] also drives the two rxvb flops at x 572 and x 1503 (931 um apart): give rxvb[1] its lane local in the RST-FAN RTL. Key names follow g_reset_mapped if RTG > 0."
+ },
+ "D_rtl_small": [
+  {"item": "credit return stage count split from KTX: g_txr .N(KTR[4i+:4]); rows per stage",
+   "values": {"lane3": 3, "lane0": 2, "lane1": 1, "lane2": 1},
+   "sites_um": {"lane3": [[1700, 543], [1475, 560], [1246, 571]], "lane0": [[1000, 760], [1142, 612]], "lane1": [[260, 700]], "lane2": [[260, 640]]},
+   "now_um": {"lane3 kr->credit_pin_r": 735, "lane0": 472, "lane1": 421, "lane2": 421, "pair1.k_lo_r->txr s0": 407},
+   "after_um": {"lane3": [242, 240, 304], "lane0": [117, 290, 244], "lane1": [336, 330]},
+   "note": "18 credit_pin_r copies per lane span up to 556 um (lane 3). Credit link: a stage adds round trip only (KCRED 28). Simpler but dearer: KTX lane 3 = 3."}
+ ],
+ "E_clock_taps": {
+  "finding": "r8b kit split (4_1_cts OT_CLOCK_TAPS): 191 taps, 82,529 sinks; clk_t130 6,597 at (1264.68,653.4), clk_t127 5,994 at (999,655.56), 33 taps over tap_max_sinks 800, 9 over 1,500, 45 taps <= 10 sinks, 105 under 200. sink_bins_file is the r4 NF6 census, before the NF15f stage tuple added about 30k corridor flops.",
+  "ask": "density taps for hd_lep0N from the r8b 3_place census (the r13 hd_host_w method), then die clock rerun, reserved rows, offsets and windows in the same event. Note tap_model frozen_anchor: the reset relay graph and landing raw_reset names depend on the taps."
+ },
+ "F_open_in_r13_draft": [
+  "rr_check_r13.tsv still has rule 1 start_reach 416 um (coll_i0) and start_writer_reach 485 um (coll_o1, 3 pins): run reach_rules.py fix --rules 1",
+  "coll_i0 st1: y 1130 instead of 1150 gives 330/333 instead of 310/353 (per-bit max to the 500-um g_c0i capture column)",
+  "coll_o0: add stage rows for g_c0o.g_s[0..1] and g_c0i.g_s[0..1] (no native_stage_groups row today, both stages bunch at the pair pins); g_c0o -> st is 377 um only because of where GPL left them",
+  "unit_lep +1 / ctrl_lep +1 change the unit-vs-lepk (kd) and ctrl-vs-lepk (ku) offsets; PIN/POUT are documented as one count for all legs. Run tb_head_lepk_stages (MUSKEW class) on the r13 wrapper, or use rows B instead"
+ ],
+ "G_tool": "tools/autopilot/placed_scan.py clamps a hard-core end to the macro box (pos(k, other)); with pin names in geom_dump N lines it can use LEF pin sites. Until then r2r / NEED-STATION under-report every flop <-> hard-core leg."
+}
