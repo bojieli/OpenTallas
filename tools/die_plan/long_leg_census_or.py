@@ -104,16 +104,17 @@ log("clock/power nets", len(clock_nets))
 
 # capture edge per register (COORD 11-19: a negedge face has half a cycle): DFFL* / DLL* masters, or a CLK pin driven by an inverter
 neg = set()
+clock_driver_cache = {}
 for rn in regs:
     mn = mast[rn].upper()
     inv = mn.startswith(("DFFL", "ASYNC_DFFL", "DLL"))
     inst = block.findInst(rn)
     if inst is not None:
         for it in inst.getITerms():
-            if CLKPIN.match(it.getMTerm().getName()) and it.getNet() is not None:
-                for jt in it.getNet().getITerms():
-                    if jt.isOutputSignal() and "INV" in jt.getInst().getMaster().getName().upper():
-                        inv = not inv
+            if CLKPIN.match(it.getMTerm().getName()):
+                net = it.getNet()
+                if net is not None and LLC.clock_inverter_drivers(net, clock_driver_cache) % 2:
+                    inv = not inv
     if inv:
         neg.add(rn)
 log("negedge registers", len(neg))
