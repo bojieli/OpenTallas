@@ -1,503 +1,521 @@
-# OWNERS-SWEEP 2026-11-19 19:50 PST (bin/owners_sweep.py + overlay: S81-GEOM-OPUS D8i, COL-CENSUS-1119 cc3, COL-H10-1119, S81-OWN-1119, QC-TTCTLM-1119, QC-SUST-MACRO-1119 (no post yet), SONNET-FIX-QC, KV-D23-COMPOSE waits D25e bind; S81 wave DIE-OFF 14:52-19:45 not flagged STALE; HBM skipped)
-die	type	state	owner_lane	owner_posted_2h	last_action	flag
-s81_head	hd_lep0N	running	WAVE-PILOT-FIX (+HEAD-CROSSING-1119)	yes	RUNNING place @2026-11-19 18:17	
-qwen_kvsys	kv3_pc__cl5a95b461	stale:6.7h (waits D25e bind)	KV-PC-HGI-1119 (+KV-D23-COMPOSE)	yes	CANCELLED geom QUEUE-CANCELLED @2026-11-19 13:08	
-qwen_kvsys	kv3_hg	running	KV-PC-HGI-1119	yes	RUNNING place @2026-11-19 19:00	
-qwen_kvsys	kv3_hg_v1	running	FABLE-FIX-KV-HG (+KV-PC-HGI-1119)	yes	RUNNING place @2026-11-19 18:06	
-qwen_kvsys	kv3_hg_v1p2	running	KV-PC-HGI-1119	yes	RUNNING place @2026-11-19 18:07	
-qwen_kvsys	kv3_hg_v1p3	running	KV-PC-HGI-1119	yes	RUNNING place @2026-11-19 18:07	
-qwen_kvsys	kv3_hg_v1p4	running	KV-PC-HGI-1119	yes	RUNNING place @2026-11-19 18:07	
-qwen_kvsys	kv3_hg_v1p5	running	KV-PC-HGI-1119	yes	RUNNING place @2026-11-19 18:07	
-qwen_kvsys	kv3_hg_v1p6	running	KV-PC-HGI-1119	yes	RUNNING place @2026-11-19 18:17	
-qwen_kvsys	kv3_hg_v3	running	KV-PC-HGI-1119	yes	RUNNING place @2026-11-19 18:06	
-qwen_kvsys	kv3_hgi	running	KV-PC-HGI-1119	yes	RUNNING geom @2026-11-19 18:07	
-qwen_kvsys	kv3_hgi_v1__cl141fc26e	running	KV-PC-HGI-1119 (+KV-D23-COMPOSE,FABLE-FIX-KV-HG)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-qwen_kvsys	kv3_hgi_v1__cl42bc8b12	running	KV-D23-COMPOSE (+KV-PC-HGI-1119,FABLE-FIX-KV-HG)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-qwen_kvsys	kv3_hgi_v2__cl2862d491	running	KV-PC-HGI-1119	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-qwen_kvsys	kv3_hgi_v2__cle0015330	running	KV-PC-HGI-1119	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-qwen_kvsys	kv3_hgi_v3	running	KV-PC-HGI-1119	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-qwen_kvsys	kv3_hgi_v4	running	KV-PC-HGI-1119	yes	RUNNING place @2026-11-19 18:06	
-qwen_kvsys	kv3_hgi_v5	running	KV-PC-HGI-1119	yes	RUNNING place @2026-11-19 18:07	
-qwen_kvsys	kv3_hgi_v6	running	KV-PC-HGI-1119	yes	RUNNING place @2026-11-19 18:07	
-qwen_kvsys	kv3_hgi_v7	running	KV-PC-HGI-1119	yes	RUNNING place @2026-11-19 18:06	
-qwen_kvsys	kv3_hgi_v8	running	KV-PC-HGI-1119	yes	RUNNING place @2026-11-19 18:07	
-qwen_kvsys	kv3_hroot	running	FABLE-FIX-KV-HG	yes	RUNNING place @2026-11-19 18:07	
-qwen_kvsys	kv3_hub_C	waits on child core	KV-PC-HGI-1119	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-qwen_kvsys	kv3_hub_Ei	running	KIT-WAVE(auto)	yes	RUNNING place @2026-11-19 18:07	
-qwen_kvsys	kv3_hub_Eo	running	KIT-WAVE(auto)	yes	RUNNING place @2026-11-19 18:07	
-qwen_kvsys	kv3_hub_Wi	failed:other-flow-error	FAIL-ROUTE-1115 (+KV-D23-COMPOSE)	yes	FAIL place PLAN @2026-11-19 19:16	
-qwen_kvsys	kv3_hub_Wo	running	KV-PC-HGI-1119 (+KV-D23-COMPOSE)	yes	RUNNING place @2026-11-19 18:07	
-qwen_kvsys	kv3_io_cor	running	KV-PC-HGI-1119	yes	RUNNING route @2026-11-18 00:39	
-qwen_kvsys	kv3_io_cor_v1	running	KV-PC-HGI-1119	yes	RUNNING place @2026-11-19 18:07	
-qwen_kvsys	kv3_pc__cl254f2e73	running	KV-PC-HGI-1119 (+KV-D23-COMPOSE)	yes	RUNNING route @2026-11-18 03:07	
-qwen_kvsys	kv3_pc_v1__cl23f6a148	waits on child core	KV-PC-HGI-1119 (+KV-D23-COMPOSE,FABLE-FIX-KV-HG)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-qwen_kvsys	kv3_pc_v1__cl4ea58a5c	waits on child core	KV-PC-HGI-1119 (+KV-D23-COMPOSE,FABLE-FIX-KV-HG)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-qwen_kvsys	kv3_pc_v1__cl7f648944	waits on child core	KV-PC-HGI-1119 (+KV-D23-COMPOSE,FABLE-FIX-KV-HG)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-qwen_kvsys	kv3_pc_v3	running	KV-PC-HGI-1119 (+KV-D23-COMPOSE)	yes	RUNNING route @2026-11-18 01:29	
-qwen_kvsys	kv3_pv	running	KV-PC-HGI-1119 (+FABLE-FIX-KV-PV,KV-D23-COMPOSE)	yes	RUNNING place @2026-11-19 18:07	
-qwen_kvsys	kv3_pv_v1	running	KV-PC-HGI-1119 (+FABLE-FIX-KV-PV,KV-D23-COMPOSE)	yes	RUNNING place @2026-11-19 18:07	
-qwen_kvsys	kv3_pv_v12	running	KV-PC-HGI-1119 (+FABLE-FIX-KV-PV,KV-D23-COMPOSE)	yes	RUNNING place @2026-11-19 18:49	
-qwen_kvsys	kv3_pv_v1n	running	KV-PC-HGI-1119 (+FABLE-FIX-KV-PV,KV-D23-COMPOSE)	yes	RUNNING place @2026-11-19 18:07	
-qwen_kvsys	kv3_pv_v2	running	FABLE-FIX-KV-HG (+KV-PC-HGI-1119,FABLE-FIX-KV-PV)	yes	RUNNING place @2026-11-19 18:07	
-qwen_kvsys	kv3_pv_v2n	running	KV-PC-HGI-1119 (+WAVE-PILOT-FIX,FABLE-FIX-KV-PV)	yes	RUNNING place @2026-11-19 18:07	
-qwen_kvsys	kv3_pv_v3	running	KV-PC-HGI-1119 (+FABLE-FIX-KV-PV,KV-D23-COMPOSE)	yes	RUNNING place @2026-11-19 18:07	
-qwen_kvsys	kv3_pv_v3n	running	KV-PC-HGI-1119 (+FABLE-FIX-KV-PV,KV-D23-COMPOSE)	yes	RUNNING place @2026-11-19 18:07	
-qwen_kvsys	kv3_pv_v4	running	KV-PC-HGI-1119 (+FABLE-FIX-KV-PV,KV-D23-COMPOSE)	yes	RUNNING place @2026-11-19 18:07	
-qwen_kvsys	kv3_pv_v4n	running	KV-PC-HGI-1119 (+FABLE-FIX-KV-PV,KV-D23-COMPOSE)	yes	RUNNING place @2026-11-19 18:07	
-qwen_kvsys	kv3_pv_v5	running	KV-PC-HGI-1119 (+FABLE-FIX-KV-PV,KV-D23-COMPOSE)	yes	RUNNING place @2026-11-19 18:07	
-qwen_kvsys	kv3_pv_v5n	running	KV-PC-HGI-1119 (+FABLE-FIX-KV-PV,KV-D23-COMPOSE)	yes	RUNNING place @2026-11-19 18:07	
-qwen_kvsys	kv3_pv_v6	running	KV-PC-HGI-1119 (+FABLE-FIX-KV-PV,KV-D23-COMPOSE)	yes	RUNNING place @2026-11-19 18:07	
-qwen_kvsys	kv3_pv_v6n	running	FABLE-FIX-KV-HG (+KV-PC-HGI-1119,FABLE-FIX-KV-PV)	yes	RUNNING place @2026-11-19 18:07	
-qwen_kvsys	kv3_pv_v7	running	KV-PC-HGI-1119 (+FABLE-FIX-KV-PV,KV-D23-COMPOSE)	yes	RUNNING place @2026-11-19 18:07	
-qwen_kvsys	kv3_pv_v8	running	FABLE-FIX-KV-PV (+KV-PC-HGI-1119,KV-D23-COMPOSE)	yes	RUNNING place @2026-11-19 18:27	
-qwen_kvsys	kv3_sys_c	running	WAVE-PILOT-FIX	yes	RUNNING place @2026-11-19 18:07	
-qwen_kvsys	qkd_pv_fin_s8_pin	running (waits D25e bind)	KV-D23-COMPOSE (+KV-PC-HGI-1119)	yes	RUNNING @2026-11-19 19:45	
-qwen_compute	slw_su_c__cl19bb38ef	failed:detail-route-error stale:5.2h	SONNET-FIX-QC (+QC-PLAN-R3)	yes	FAIL route FLOW @2026-11-19 14:38	FAILED-NO-RELAUNCH,STALE
-qwen_compute	slw_su_c__cl92142dac	failed:detail-route-error stale:5.7h	QC-PLAN-R3 (+PRECHECK-1119,SONNET-FIX-QC)	yes	FAIL route FLOW @2026-11-19 14:09	FAILED-NO-RELAUNCH,STALE
-qwen_compute	cbf_q00__cl1b5a6458	running	QC-PLAN-R3	yes	RUNNING place @2026-11-19 18:17	
-qwen_compute	cbf_q00__cl870de686	running	KIT-WAVE(auto)	yes	RUNNING route @2026-11-19 13:06	
-qwen_compute	cbf_q00_s2	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,QC-PLAN-R3)	yes	RUNNING place @2026-11-19 18:17	
-qwen_compute	cbf_q01	running	KIT-WAVE(auto)	yes	RUNNING route @2026-11-19 15:07	
-qwen_compute	cbf_q01_s2	running	SONNET-FIX-QC	yes	RUNNING route @2026-11-19 14:38	
-qwen_compute	cbf_q11	running	FABLE-FIX-S81-LEAF (+SONNET-FIX-QC)	yes	RUNNING route @2026-11-19 14:49	
-qwen_compute	cbn_q00__cl622f65d2	running	FABLE-FIX-S81-LEAF	yes	RUNNING route @2026-11-19 15:07	
-qwen_compute	cbn_q00__cld7bf7197	running	PRECHECK-1119	yes	RUNNING route @2026-11-19 11:49	
-qwen_compute	cbn_q00__cldbcda913	running	FABLE-FIX-S81-LEAF	yes	RUNNING place @2026-11-19 18:17	
-qwen_compute	cbn_q01__clab6e67f2	running	KIT-WAVE(auto)	yes	RUNNING route @2026-11-19 18:33	
-qwen_compute	cbn_q01__cld9ff4c40	running	KIT-WAVE(auto)	yes	RUNNING place @2026-11-19 18:17	
-qwen_compute	cbn_q01__cldd6ea846	running	KIT-WAVE(auto)	yes	RUNNING place @2026-11-19 18:17	
-qwen_compute	cbn_q11__cl49ae4555	running	WAVE-PILOT-FIX (+QC-PLAN-R3,SONNET-FIX-QC)	yes	RUNNING gen @2026-11-19 19:11	
-qwen_compute	cbn_q11__cl5cc92dfe	running	SONNET-FIX-QC (+WAVE-PILOT-FIX)	yes	RUNNING gen @2026-11-19 19:11	
-qwen_compute	cbx_q10__cl89936551	running	QC-PLAN-R3	yes	RUNNING gen @2026-11-19 19:23	
-qwen_compute	cbx_q10__cl89936551_h	running	QC-PLAN-R3	yes	RUNNING place @2026-11-19 19:00	
-qwen_compute	cbx_q10__cl94a12200	running	FABLE-FIX-S81-LEAF (+QC-PLAN-R3)	yes	RUNNING route @2026-11-19 11:16	
-qwen_compute	cbx_q10__cl94a12200_h	running	QC-PLAN-R3	yes	RUNNING route @2026-11-19 15:24	
-qwen_compute	coll_core	running	OPUS-FIX-QC-COLLCORE	yes	RUNNING route @2026-11-19 14:49	
-qwen_compute	coll_ftc	running	FABLE-FIX-QC	yes	RUNNING place @2026-11-19 18:17	
-qwen_compute	glue	running	FABLE-FIX-S81-LEAF	yes	RUNNING route @2026-11-19 17:51	
-qwen_compute	native59	running	KIT-WAVE(auto)	yes	RUNNING place @2026-11-19 18:17	
-qwen_compute	sle_ctl__cl372cea1c	running	FABLE-FIX-QC (+QC-PADLEG-1119)	yes	RUNNING route @2026-11-19 13:06	
-qwen_compute	sle_ctl__cl503337ff	running	PRECHECK-1119 (+FABLE-FIX-QC,QC-PADLEG-1119)	yes	RUNNING route @2026-11-19 11:40	
-qwen_compute	sle_ctl__cl503337ff__padE0	running	FABLE-FIX-QC (+QC-PADLEG-1119)	yes	RUNNING place @2026-11-19 18:17	
-qwen_compute	sle_ctl__cl503337ff__padE4	running	FABLE-FIX-QC (+QC-PADLEG-1119)	yes	RUNNING place @2026-11-19 18:17	
-qwen_compute	sle_ctl__cl67434795	running	FABLE-FIX-QC (+QC-PADLEG-1119)	yes	RUNNING place @2026-11-19 18:17	
-qwen_compute	sle_ctl__cl67434795__padW5	running	FABLE-FIX-QC (+QC-PADLEG-1119)	yes	RUNNING place @2026-11-19 18:17	
-qwen_compute	sle_ctl__cla4f6f12f	running	PRECHECK-1119 (+FABLE-FIX-QC,QC-PADLEG-1119)	yes	RUNNING route @2026-11-19 13:06	
-qwen_compute	sle_fe_v1__cl8210183c	running	QC-PADLEG-1119	yes	RUNNING route @2026-11-19 13:06	
-qwen_compute	sle_fw_v1__cl9d029624	running	QC-PADLEG-1119	yes	RUNNING route @2026-11-19 14:38	
-qwen_compute	sle_fw_v1__clf58b4dfb	running	PRECHECK-1119 (+QC-PADLEG-1119)	yes	RUNNING route @2026-11-19 14:58	
-qwen_compute	sle_fw_v2__cl6740750e	running	QC-PADLEG-1119	yes	RUNNING place @2026-11-19 18:17	
-qwen_compute	sle_fw_v2__cl69f5e854	running	QC-PADLEG-1119	yes	RUNNING geom @2026-11-19 18:17	
-qwen_compute	sle_hc0__cl05696ed1	running	KIT-WAVE(auto)	yes	RUNNING route @2026-11-19 15:16	
-qwen_compute	sle_hc0__cl929603c0__cl38badc56	running	KIT-WAVE(auto)	yes	RUNNING route @2026-11-19 15:24	
-qwen_compute	sle_hc0__cl929603c0__cl4baa7c9c	running	KIT-WAVE(auto)	yes	RUNNING route @2026-11-19 15:24	
-qwen_compute	sle_hc1__cl7d360508	running	KIT-WAVE(auto)	yes	RUNNING route @2026-11-19 11:02	
-qwen_compute	sle_sc_v1__cl115da35f	running	QC-PADLEG-1119	yes	RUNNING place @2026-11-19 18:17	
-qwen_compute	sle_sc_v1__cl7479a5ec	running	QC-PADLEG-1119	yes	RUNNING route @2026-11-19 13:20	
-qwen_compute	sle_sc_v2	running	QC-PADLEG-1119	yes	RUNNING route @2026-11-19 09:22	
-qwen_compute	sle_sc_v3	running	QC-PADLEG-1119	yes	RUNNING route @2026-11-19 11:02	
-qwen_compute	sle_st_a_v1__cl67389ecd	running	FABLE-FIX-KV-PV	yes	RUNNING route @2026-11-19 11:02	
-qwen_compute	sle_st_a_v1__cl989804f6__cl18eece69	running	FABLE-FIX-KV-PV	yes	RUNNING place @2026-11-19 19:00	
-qwen_compute	sle_st_a_v1__cl989804f6__cled3c1d7b	running	FABLE-FIX-KV-PV	yes	RUNNING route @2026-11-19 11:02	
-qwen_compute	sle_st_a_v2__pv30dda31f__pv88773f93	running	FABLE-FIX-KV-PV (+FABLE-FIX-QC,QC-PLAN-R3)	yes	RUNNING route @2026-11-19 11:02	
-qwen_compute	sle_st_a_v2__pv30dda31f__pvd2ec7769	running	FABLE-FIX-KV-PV (+QC-PLAN-R3,FABLE-FIX-QC)	yes	RUNNING route @2026-11-19 11:02	
-qwen_compute	sle_st_a_v2__pv4242de79	running	FABLE-FIX-KV-PV (+FABLE-FIX-QC,QC-PLAN-R3)	yes	RUNNING route @2026-11-19 11:02	
-qwen_compute	sle_st_b_v1__pvc5a85fd4__pv38472fb8	running	SONNET-FIX-QC (+FABLE-FIX-QC)	yes	RUNNING place @2026-11-19 18:17	
-qwen_compute	sle_st_b_v1__pvc5a85fd4__pv7b7fafb4	running	SONNET-FIX-QC (+FABLE-FIX-QC)	yes	RUNNING route @2026-11-19 11:40	
-qwen_compute	sle_st_b_v2__cl14c98df5__pv41c959f3	running	SONNET-FIX-QC (+FABLE-FIX-QC)	yes	RUNNING route @2026-11-19 11:16	
-qwen_compute	sle_st_b_v2__cl14c98df5__pvcd986c42	running	FABLE-FIX-QC (+SONNET-FIX-QC)	yes	RUNNING route @2026-11-19 11:27	
-qwen_compute	sle_st_b_v2__clfde1249e	running	SONNET-FIX-QC (+FABLE-FIX-QC)	yes	RUNNING route @2026-11-19 11:02	
-qwen_compute	sle_stm_v1__cl27746664	running	QC-PADLEG-1119 (+QC-PLAN-R3)	yes	RUNNING place @2026-11-19 18:17	
-qwen_compute	sle_stm_v1__clbe630b9c	running	QC-PADLEG-1119 (+QC-PLAN-R3)	yes	RUNNING @2026-11-19 19:45	
-qwen_compute	sle_stm_v2__cl55be2264	running	QC-PADLEG-1119 (+QC-PLAN-R3,PRECHECK-1119)	yes	RUNNING route @2026-11-19 11:02	
-qwen_compute	sle_stm_v2__cl7b3062fa	running	QC-PLAN-R3	yes	RUNNING place @2026-11-19 18:17	
-qwen_compute	sle_su_c	running	QC-PLAN-R3 (+SONNET-FIX-QC,PRECHECK-1119)	yes	RUNNING route @2026-11-19 17:42	
-qwen_compute	sle_su_l1__cl5ea486db	running	KIT-WAVE(auto)	yes	RUNNING route @2026-11-19 19:29	
-qwen_compute	sle_su_l1__clc6d66f5b	running	KIT-WAVE(auto)	yes	RUNNING route @2026-11-19 16:28	
-qwen_compute	slw_fe_v1__cl95cd1d0c	running	QC-PADLEG-1119	yes	RUNNING place @2026-11-19 18:17	
-qwen_compute	slw_fe_v1__clfe325744__cldb4efe33	running	PRECHECK-1119 (+QC-PADLEG-1119)	yes	RUNNING route @2026-11-19 11:02	
-qwen_compute	slw_fe_v2__clf110fab2	running	QC-PADLEG-1119	yes	RUNNING place @2026-11-19 18:17	
-qwen_compute	slw_fw_v1__cl51d45468	running	QC-PADLEG-1119	yes	RUNNING place @2026-11-19 18:17	
-qwen_compute	slw_fw_v1__clf51c11d8__cl592e3d37	running	QC-PADLEG-1119	yes	RUNNING place @2026-11-19 18:17	
-qwen_compute	slw_fw_v1__clf51c11d8__clc7ddab13	running	PRECHECK-1119 (+QC-PADLEG-1119)	yes	RUNNING place @2026-11-19 18:17	
-qwen_compute	slw_fw_v2__cl8537f156	running	PRECHECK-1119 (+QC-PADLEG-1119)	yes	RUNNING route @2026-11-19 18:13	
-qwen_compute	slw_fw_v2__cl8f84514c	running	QC-PADLEG-1119	yes	RUNNING route @2026-11-19 11:16	
-qwen_compute	slw_fw_v3	running	QC-PADLEG-1119	yes	RUNNING place @2026-11-19 18:17	
-qwen_compute	slw_hc0__cl1bc59e1c	running	KIT-WAVE(auto)	yes	RUNNING route @2026-11-19 15:24	
-qwen_compute	slw_hc0__cl4f54b7a3	running	KIT-WAVE(auto)	yes	RUNNING place @2026-11-19 18:17	
-qwen_compute	slw_hc1__cl3449ea95	running	KIT-WAVE(auto)	yes	RUNNING route @2026-11-19 16:18	
-qwen_compute	slw_hc1__cl68f9248e__cl144ee7b3	running	KIT-WAVE(auto)	yes	RUNNING route @2026-11-19 19:29	
-qwen_compute	slw_hc2__cl6bcaba89	running	KIT-WAVE(auto)	yes	RUNNING place @2026-11-19 18:17	
-qwen_compute	slw_hc2__cla3497502__cl16607c7a	running	KIT-WAVE(auto)	yes	RUNNING route @2026-11-19 11:02	
-qwen_compute	slw_sc_v1__cl63e5a7a2	running	WAVE-PILOT-FIX (+FLEET-OPS-R,QC-PADLEG-1119)	yes	RUNNING route @2026-11-19 13:20	
-qwen_compute	slw_sc_v1__cl64543eaf__cl4590432d	running	WAVE-PILOT-FIX (+FLEET-OPS-R,QC-PADLEG-1119)	yes	RUNNING route @2026-11-19 19:29	
-qwen_compute	slw_sc_v1__cl64543eaf__cl5e017c6f	running	WAVE-PILOT-FIX (+FLEET-OPS-R,QC-PADLEG-1119)	yes	RUNNING place @2026-11-19 18:07	
-qwen_compute	slw_sc_v2	running	QC-PADLEG-1119	yes	RUNNING route @2026-11-19 13:06	
-qwen_compute	slw_st_a_v1__clb036e152	running	QC-SUST-MACRO-1119 (+FABLE-FIX-KV-PV)	no	RUNNING route @2026-11-19 14:09	DEAD-OWNER
-qwen_compute	slw_st_a_v1__clfc5867a6__pvdf8e5ca4	running	QC-SUST-MACRO-1119 (+FABLE-FIX-KV-PV)	no	RUNNING route @2026-11-19 11:02	DEAD-OWNER
-qwen_compute	slw_st_a_v1__clfc5867a6__pvf82a6c28	running	QC-SUST-MACRO-1119 (+FABLE-FIX-KV-PV)	no	RUNNING route @2026-11-19 11:02	DEAD-OWNER
-qwen_compute	slw_st_a_v2__cl9f076a5c	failed:other-flow-error	FLEET-OPS-R (+FABLE-FIX-KV-PV,SONNET-FIX-QC)	yes	ORPHAN queue @2026-11-19 19:35	
-qwen_compute	slw_st_a_v2__clf4365a62	running	SONNET-FIX-QC (+FABLE-FIX-KV-PV)	yes	RUNNING route @2026-11-19 11:02	
-qwen_compute	slw_st_b_v1__cl6357f1cc__pv6ace3e48	running	QC-SUST-MACRO-1119 (+KIT-WAVE(auto))	no	RUNNING place @2026-11-19 18:17	DEAD-OWNER
-qwen_compute	slw_st_b_v1__cle6023ec2	running	QC-SUST-MACRO-1119 (+PRECHECK-1119)	no	RUNNING route @2026-11-19 13:40	DEAD-OWNER
-qwen_compute	slw_st_b_v2__pva66d0f22__pv3d7bec84	running	QC-SUST-MACRO-1119 (+KIT-WAVE(auto))	no	RUNNING place @2026-11-19 18:17	DEAD-OWNER
-qwen_compute	slw_st_b_v2__pva66d0f22__pvb80e2003	running	QC-SUST-MACRO-1119 (+KIT-WAVE(auto))	no	RUNNING place @2026-11-19 18:17	DEAD-OWNER
-qwen_compute	slw_st_b_v2__pvc2ec5bfb	running	QC-SUST-MACRO-1119 (+KIT-WAVE(auto))	no	RUNNING route @2026-11-19 14:29	DEAD-OWNER
-qwen_compute	slw_stm_v1__cl05fc43f7__cl2086fa2c	running	QC-SUST-MACRO-1119 (+QC-PLAN-R3)	no	RUNNING route @2026-11-19 11:02	DEAD-OWNER
-qwen_compute	slw_stm_v1__cl05fc43f7__cl389df4e9	running	QC-SUST-MACRO-1119 (+PRECHECK-1119)	no	RUNNING route @2026-11-19 17:22	DEAD-OWNER
-qwen_compute	slw_stm_v2__cl1ca9c415	running	QC-SUST-MACRO-1119 (+KIT-WAVE(auto))	no	RUNNING route @2026-11-19 11:02	DEAD-OWNER
-qwen_compute	slw_stm_v2__cl9beb65e6	running	QC-SUST-MACRO-1119 (+KIT-WAVE(auto))	no	RUNNING route @2026-11-19 11:02	DEAD-OWNER
-qwen_compute	slw_su_l1__cla2a78701	running	QC-SUST-MACRO-1119 (+QC-PLAN-R3)	no	RUNNING route @2026-11-19 14:49	DEAD-OWNER
-qwen_compute	slw_su_l1__clcc9d0155	running	QC-SUST-MACRO-1119 (+QC-PLAN-R3)	no	RUNNING route @2026-11-19 15:07	DEAD-OWNER
-qwen_compute	tt_ctlm	running	WAVE-PILOT-FIX (+FLEET-OPS-R,QC-TTCTLM-1119)	yes	RUNNING @2026-11-19 19:46	
-s81	bk_sel__t2	running	FABLE-FIX-S81-LEAF (+S81-GEOM-OPUS,S81-OWN-1119)	yes	RUNNING @2026-11-19 19:46	
-s81	col_h10_r0_p1__t1__cl574cc59d__pv3d0d4d97	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,S81-GEOM-OPUS)	yes	RUNNING @2026-11-19 19:46	
-s81	col_h10_r0_p1__t1__cl574cc59d__pv67036687	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,S81-GEOM-OPUS)	yes	RUNNING @2026-11-19 19:46	
-s81	col_h10_r0_p1__t1__cl574cc59d__pvb095fa2f	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,S81-GEOM-OPUS)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h10_r0_p1__t1__cl574cc59d__pvd7af8531	running	PRECHECK-1119 (+FABLE-FIX-S81-LEAF,FABLE-FIX-QC)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h10_r0_p1__t1__cl574cc59d__pvf60ac9dc	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,S81-GEOM-OPUS)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h10_r0_p1__t1__cl911743eb	running	PRECHECK-1119 (+FABLE-FIX-S81-LEAF,FABLE-FIX-QC)	yes	RUNNING @2026-11-19 19:46	
-s81	col_h10_r0_p4__t1__pv07945c1e	running	S81-CLOCK-WINDOW-1119 (+S81-GEOM-OPUS)	yes	RUNNING @2026-11-19 19:46	
-s81	col_h10_r0_p4__t1__pv5b623e07	running	S81-CLOCK-WINDOW-1119 (+S81-GEOM-OPUS)	yes	RUNNING @2026-11-19 19:46	
-s81	col_h10_r0_p4__t1__pvc9270d09	running	S81-CLOCK-WINDOW-1119 (+S81-GEOM-OPUS)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h10_r0_p4__t1__pvcc166a6d	running	S81-CLOCK-WINDOW-1119 (+S81-GEOM-OPUS)	yes	RUNNING @2026-11-19 19:46	
-s81	col_h10_r0_p4__t1__pvd11cc58b	running	S81-CLOCK-WINDOW-1119 (+S81-GEOM-OPUS)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h10_r0_p4__t1__pvd8c0565f	running	S81-CLOCK-WINDOW-1119 (+S81-GEOM-OPUS)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h10_r1__t1__cl95b37463__pv0713a75a	running	FABLE-FIX-S81-LEAF (+COL-H10-1119,S81-GEOM-OPUS)	yes	RUNNING @2026-11-19 19:46	
-s81	col_h10_r1__t1__cl95b37463__pv1a6ec9c2	running	FABLE-FIX-S81-LEAF (+COL-H10-1119,S81-GEOM-OPUS)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h10_r1__t1__cl95b37463__pv69c7e9a6	running	FABLE-FIX-S81-LEAF (+COL-H10-1119,S81-GEOM-OPUS)	yes	RUNNING @2026-11-19 19:46	
-s81	col_h10_r1__t1__cl95b37463__pv6a7ae122	running	FABLE-FIX-S81-LEAF (+COL-H10-1119,S81-GEOM-OPUS)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h10_r1__t1__cl95b37463__pv74ebbc00	running	PRECHECK-1119 (+FABLE-FIX-S81-LEAF,COL-H10-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h10_r1__t1__cl95b37463__pv799da6f8	running	FABLE-FIX-S81-LEAF (+COL-H10-1119,S81-GEOM-OPUS)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h10_r1__t1__cl95b37463__pv86f5e3b9	running	FABLE-FIX-S81-LEAF (+COL-H10-1119,S81-GEOM-OPUS)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h10_r1__t1__cl95b37463__pva3a8bfd1	running	FABLE-FIX-S81-LEAF (+COL-H10-1119,S81-GEOM-OPUS)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h10_r1__t1__cl95b37463__pvce76611c	running	FABLE-FIX-S81-LEAF (+COL-H10-1119,S81-GEOM-OPUS)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h10_r1__t1__cl95b37463__pve28d14fa	running	FABLE-FIX-S81-LEAF (+COL-H10-1119,S81-GEOM-OPUS)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h10_r1__t1__cl95b37463__pvf724da2a	running	FABLE-FIX-S81-LEAF (+COL-H10-1119,S81-GEOM-OPUS)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h10_r1__t1__cld01bb4ae	running	FABLE-FIX-S81-LEAF (+COL-H10-1119,S81-GEOM-OPUS)	yes	RUNNING @2026-11-19 19:46	
-s81	col_h10_r2__t1__cl1f5d6c2a__pv0c1de895	running	FABLE-FIX-S81-LEAF (+COL-H10-1119,FABLE-FIX-QC)	yes	RUNNING @2026-11-19 19:46	
-s81	col_h10_r2__t1__cl1f5d6c2a__pv16277ca6	running	FABLE-FIX-S81-LEAF (+COL-H10-1119,FABLE-FIX-QC)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h10_r2__t1__cl1f5d6c2a__pv418d3dc0	running	FABLE-FIX-S81-LEAF (+COL-H10-1119,FABLE-FIX-QC)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h10_r2__t1__cl1f5d6c2a__pvcd889288	running	FABLE-FIX-S81-LEAF (+COL-H10-1119,FABLE-FIX-QC)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h10_r2__t1__cl1f5d6c2a__pvec003743	running	FABLE-FIX-S81-LEAF (+COL-H10-1119,FABLE-FIX-QC)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h10_r2__t1__cl1f5d6c2a__pvf1512c16	running	FABLE-FIX-S81-LEAF (+COL-H10-1119,FABLE-FIX-QC)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h10_r2__t1__cl8b686b3e	running	COL-H10-1119 (+FABLE-FIX-S81-LEAF,FABLE-FIX-QC)	yes	RUNNING @2026-11-19 19:46	
-s81	col_h10_r2__t1__cl99efd374__pv1619ecc6	running	FABLE-FIX-S81-LEAF (+COL-H10-1119,FABLE-FIX-QC)	yes	RUNNING @2026-11-19 19:46	
-s81	col_h10_r2__t1__cl99efd374__pv4c1f67ff	running	FABLE-FIX-S81-LEAF (+COL-H10-1119,FABLE-FIX-QC)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h10_r2__t1__cl99efd374__pv7a8a5452	running	FABLE-FIX-S81-LEAF (+COL-H10-1119,FABLE-FIX-QC)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h10_r2__t1__cl99efd374__pv9ae398c2	running	FABLE-FIX-S81-LEAF (+COL-H10-1119,FABLE-FIX-QC)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h10_r2__t1__clac068e56	running	COL-H10-1119 (+FABLE-FIX-S81-LEAF,FABLE-FIX-QC)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r0_p1__t1__pv697f40c9	running	S81-GEOM-OPUS (+S81-CLOCK-WINDOW-1119)	yes	RUNNING @2026-11-19 19:46	
-s81	col_h9_r0_p1__t1__pv8c197f8e	running	S81-GEOM-OPUS (+S81-CLOCK-WINDOW-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r0_p1__t1__pva2e3974f	running	S81-GEOM-OPUS (+S81-CLOCK-WINDOW-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r0_p1__t1__pvb3e2a60a	running	S81-GEOM-OPUS (+S81-CLOCK-WINDOW-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r0_p1__t1__pvb49c16c8	running	S81-GEOM-OPUS (+S81-CLOCK-WINDOW-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r0_p1__t1__pvf9acce4c	running	S81-GEOM-OPUS (+S81-CLOCK-WINDOW-1119)	yes	RUNNING @2026-11-19 19:46	
-s81	col_h9_r0_p2__t1__cl0045af7b__pv622a6f97	running	S81-GEOM-OPUS (+COL-CENSUS-1119,FABLE-FIX-S81-LEAF)	yes	RUNNING @2026-11-19 19:46	
-s81	col_h9_r0_p2__t1__cl0045af7b__pv6882e5ea	running	COL-CENSUS-1119 (+S81-GEOM-OPUS,FABLE-FIX-S81-LEAF)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r0_p2__t1__cl0045af7b__pva2793873	running	COL-CENSUS-1119 (+S81-GEOM-OPUS,FABLE-FIX-S81-LEAF)	yes	RUNNING @2026-11-19 19:46	
-s81	col_h9_r0_p2__t1__cl0045af7b__pvd86cb19a	running	COL-CENSUS-1119 (+S81-GEOM-OPUS,FABLE-FIX-S81-LEAF)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r0_p2__t1__cl0045af7b__pve183b536	running	COL-CENSUS-1119 (+S81-GEOM-OPUS,FABLE-FIX-S81-LEAF)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r0_p2__t1__cl9f71e63d__pv11b73b67	running	S81-GEOM-OPUS (+FABLE-FIX-S81-LEAF,S81-CLOCK-WINDOW-1119)	yes	RUNNING @2026-11-19 19:46	
-s81	col_h9_r0_p2__t1__cl9f71e63d__pv2744f675	running	S81-GEOM-OPUS (+FABLE-FIX-S81-LEAF,S81-CLOCK-WINDOW-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r0_p2__t1__cl9f71e63d__pv291547b4	running	S81-GEOM-OPUS (+FABLE-FIX-S81-LEAF,S81-CLOCK-WINDOW-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r0_p2__t1__cl9f71e63d__pv5752c4ff	running	S81-GEOM-OPUS (+FABLE-FIX-S81-LEAF,S81-CLOCK-WINDOW-1119)	yes	RUNNING @2026-11-19 19:46	
-s81	col_h9_r0_p2__t1__cl9f71e63d__pva4376595	running	S81-GEOM-OPUS (+FABLE-FIX-S81-LEAF,S81-CLOCK-WINDOW-1119)	yes	RUNNING @2026-11-19 19:46	
-s81	col_h9_r0_p2__t1__cl9f71e63d__pvabc9823e	running	S81-GEOM-OPUS (+FABLE-FIX-S81-LEAF,S81-CLOCK-WINDOW-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r0_p2__t1__cl9f71e63d__pvef55eb84	running	S81-GEOM-OPUS (+FABLE-FIX-S81-LEAF,S81-CLOCK-WINDOW-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r0_p3__t1__cl0cd90c0e__pv110cabb8	running	S81-CLOCK-WINDOW-1119 (+S81-GEOM-OPUS)	yes	RUNNING @2026-11-19 19:46	
-s81	col_h9_r0_p3__t1__cl0cd90c0e__pv13474472	running	S81-CLOCK-WINDOW-1119 (+S81-GEOM-OPUS)	yes	RUNNING @2026-11-19 19:46	
-s81	col_h9_r0_p3__t1__cl0cd90c0e__pv4cfde03b	running	S81-CLOCK-WINDOW-1119 (+S81-GEOM-OPUS)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r0_p3__t1__cl0cd90c0e__pv5b02e93b	running	S81-CLOCK-WINDOW-1119 (+S81-GEOM-OPUS)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r0_p3__t1__cl0cd90c0e__pv8d734760	running	S81-CLOCK-WINDOW-1119 (+S81-GEOM-OPUS)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r0_p3__t1__cl0cd90c0e__pvcb7f0079	running	S81-CLOCK-WINDOW-1119 (+S81-GEOM-OPUS)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r0_p3__t1__cl31d0dc4b	running	S81-CLOCK-WINDOW-1119 (+S81-GEOM-OPUS)	yes	RUNNING @2026-11-19 19:46	
-s81	col_h9_r0_p3__t1__cl8ce97bcb__pv1489a898	running	S81-CLOCK-WINDOW-1119 (+S81-GEOM-OPUS)	yes	RUNNING @2026-11-19 19:46	
-s81	col_h9_r0_p3__t1__cl8ce97bcb__pv625eef47	running	S81-CLOCK-WINDOW-1119 (+S81-GEOM-OPUS)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r0_p3__t1__cl8ce97bcb__pvc11684b5	running	S81-CLOCK-WINDOW-1119 (+S81-GEOM-OPUS)	yes	RUNNING @2026-11-19 19:46	
-s81	col_h9_r0_p3__t1__cl8ce97bcb__pvcd8810ba	running	S81-CLOCK-WINDOW-1119 (+S81-GEOM-OPUS)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r0_p3__t1__cl8ce97bcb__pvd2159f4a	running	S81-CLOCK-WINDOW-1119 (+S81-GEOM-OPUS)	yes	RUNNING @2026-11-19 19:46	
-s81	col_h9_r0_p4__t1__cl8ef405e8__pv70731479	running	S81-GEOM-OPUS (+S81-CLOCK-WINDOW-1119)	yes	RUNNING @2026-11-19 19:46	
-s81	col_h9_r0_p4__t1__cl8ef405e8__pv775e5cef	running	S81-GEOM-OPUS (+S81-CLOCK-WINDOW-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r0_p4__t1__cl8ef405e8__pv89bf360c	running	S81-GEOM-OPUS (+S81-CLOCK-WINDOW-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r0_p4__t1__cl8ef405e8__pv91095415	running	S81-GEOM-OPUS (+S81-CLOCK-WINDOW-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r0_p4__t1__clcb2fbfe8__pv3544fb31	running	S81-GEOM-OPUS (+S81-CLOCK-WINDOW-1119)	yes	RUNNING @2026-11-19 19:46	
-s81	col_h9_r0_p4__t1__clcb2fbfe8__pvec137455	running	S81-GEOM-OPUS (+S81-CLOCK-WINDOW-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r0_p5__t1__pv35382794	running	S81-GEOM-OPUS (+S81-CLOCK-WINDOW-1119)	yes	RUNNING @2026-11-19 19:46	
-s81	col_h9_r0_p5__t1__pv5c8f2166	running	S81-GEOM-OPUS (+S81-CLOCK-WINDOW-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r0_p5__t1__pv8995e794	running	S81-GEOM-OPUS (+S81-CLOCK-WINDOW-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r0_p5__t1__pvb22875c0	running	S81-GEOM-OPUS (+S81-CLOCK-WINDOW-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r0_p5__t1__pvbca8d846	running	S81-GEOM-OPUS (+S81-CLOCK-WINDOW-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r0_p5__t1__pvc1b82625	running	S81-GEOM-OPUS (+S81-CLOCK-WINDOW-1119)	yes	RUNNING @2026-11-19 19:46	
-s81	col_h9_r0_p5__t1__pvc6e5797f	running	S81-GEOM-OPUS (+S81-CLOCK-WINDOW-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r0_p5__t1__pvc93af856	running	S81-GEOM-OPUS (+S81-CLOCK-WINDOW-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r0_p5__t1__pveda1ecc9	running	S81-GEOM-OPUS (+S81-CLOCK-WINDOW-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r0_p5__t1__pvee6f8140	running	S81-GEOM-OPUS (+S81-CLOCK-WINDOW-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r0_p5__t1__pvf71da13a	running	S81-GEOM-OPUS (+S81-CLOCK-WINDOW-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r0_p5__t1__pvf731e6ec	running	S81-GEOM-OPUS (+S81-CLOCK-WINDOW-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r0_p6__t1__pv0012ba28	running	COL-CENSUS-1119 (+S81-GEOM-OPUS,S81-CLOCK-WINDOW-1119)	yes	RUNNING @2026-11-19 19:46	
-s81	col_h9_r0_p6__t1__pv082a7609	running	COL-CENSUS-1119 (+S81-GEOM-OPUS,S81-CLOCK-WINDOW-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r0_p6__t1__pv6398a5b7	running	COL-CENSUS-1119 (+S81-GEOM-OPUS,S81-CLOCK-WINDOW-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r0_p6__t1__pv7808008f	running	COL-CENSUS-1119 (+S81-GEOM-OPUS,S81-CLOCK-WINDOW-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r0_p6__t1__pv8241ebb8	running	COL-CENSUS-1119 (+S81-GEOM-OPUS,S81-CLOCK-WINDOW-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r0_p6__t1__pv87853a7e	running	COL-CENSUS-1119 (+S81-GEOM-OPUS,S81-CLOCK-WINDOW-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r0_p6__t1__pv8d617470	running	COL-CENSUS-1119 (+S81-GEOM-OPUS,S81-CLOCK-WINDOW-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r0_p6__t1__pv9da72aa7	running	COL-CENSUS-1119 (+S81-GEOM-OPUS,S81-CLOCK-WINDOW-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r0_p6__t1__pvb38a9d6c	running	COL-CENSUS-1119 (+S81-GEOM-OPUS,S81-CLOCK-WINDOW-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r0_p6__t1__pvbdbd69f2	running	COL-CENSUS-1119 (+S81-GEOM-OPUS,S81-CLOCK-WINDOW-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r0_p6__t1__pvde240d6d	running	COL-CENSUS-1119 (+S81-GEOM-OPUS,S81-CLOCK-WINDOW-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r0_p6__t1__pvea45abf3	running	COL-CENSUS-1119 (+S81-GEOM-OPUS,S81-CLOCK-WINDOW-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r1__t1__cl49d7a23e__pv047ea3b3	running	WAVE-PILOT-FIX (+FABLE-FIX-S81-LEAF,FABLE-FIX-QC)	yes	RUNNING @2026-11-19 19:45	
-s81	col_h9_r1__t1__cl49d7a23e__pv0a45e191	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r1__t1__cl49d7a23e__pv0bab1162	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r1__t1__cl49d7a23e__pv0bdbc3f3	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r1__t1__cl49d7a23e__pv11c696bc	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r1__t1__cl49d7a23e__pv11dcdcd2	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r1__t1__cl49d7a23e__pv152ea348	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r1__t1__cl49d7a23e__pv15cef3f7	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r1__t1__cl49d7a23e__pv1c15776f	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r1__t1__cl49d7a23e__pv2cabd9a9	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r1__t1__cl49d7a23e__pv2ec9c8a9	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r1__t1__cl49d7a23e__pv2f96c04f	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	RUNNING @2026-11-19 19:45	
-s81	col_h9_r1__t1__cl49d7a23e__pv36da905c	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	RUNNING @2026-11-19 19:46	
-s81	col_h9_r1__t1__cl49d7a23e__pv3a0a8b60	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r1__t1__cl49d7a23e__pv4108910d	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r1__t1__cl49d7a23e__pv4593e8e5	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r1__t1__cl49d7a23e__pv461b5256	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r1__t1__cl49d7a23e__pv47efee8f	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r1__t1__cl49d7a23e__pv49636389	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r1__t1__cl49d7a23e__pv49f0ba38	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r1__t1__cl49d7a23e__pv4bd36c74	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r1__t1__cl49d7a23e__pv4ef1b59c	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r1__t1__cl49d7a23e__pv534ef85e	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r1__t1__cl49d7a23e__pv58f6356d	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r1__t1__cl49d7a23e__pv5bdf9f51	running	PRECHECK-1119 (+FABLE-FIX-S81-LEAF,FABLE-FIX-QC)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r1__t1__cl49d7a23e__pv5ffbfb8b	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r1__t1__cl49d7a23e__pv62bca836	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r1__t1__cl49d7a23e__pv637e5d47	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r1__t1__cl49d7a23e__pv6c1e320a	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r1__t1__cl49d7a23e__pv70f04488	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r1__t1__cl49d7a23e__pv7466df46	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r1__t1__cl49d7a23e__pv87d52780	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r1__t1__cl49d7a23e__pv88891f20	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r1__t1__cl49d7a23e__pv8aaf8508	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r1__t1__cl49d7a23e__pv8ea75ee5	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r1__t1__cl49d7a23e__pv9a5bd576	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r1__t1__cl49d7a23e__pv9c5966b7	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r1__t1__cl49d7a23e__pva2370bfd	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	RUNNING @2026-11-19 19:46	
-s81	col_h9_r1__t1__cl49d7a23e__pva7e46565	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r1__t1__cl49d7a23e__pvac06e607	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r1__t1__cl49d7a23e__pvadb6c679	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r1__t1__cl49d7a23e__pvadbd1880	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r1__t1__cl49d7a23e__pvafa6f454	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r1__t1__cl49d7a23e__pvb2dac3cf	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r1__t1__cl49d7a23e__pvbb600efe	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r1__t1__cl49d7a23e__pvc22584f3	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r1__t1__cl49d7a23e__pvc25aad1b	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r1__t1__cl49d7a23e__pvc382fb14	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r1__t1__cl49d7a23e__pvcb813ee7	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r1__t1__cl49d7a23e__pve273b259	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r1__t1__cl49d7a23e__pve3f8a86c	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r1__t1__cl49d7a23e__pvebe696ff	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r1__t1__cl49d7a23e__pvf0f1ccb2	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r1__t1__cl49d7a23e__pvfed9fee6	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r1__t1__clf32cde8d__pv387d6579	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r1__t1__clf32cde8d__pv3b9ba75c	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r1__t1__clf32cde8d__pv48cfde67	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r1__t1__clf32cde8d__pv63f488e9	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r1__t1__clf32cde8d__pvd9381c1d	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r1__t1__clf32cde8d__pvee46d7b8	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r2__t1__cl774acf45__pv858fb2ba	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	RUNNING @2026-11-19 19:46	
-s81	col_h9_r2__t1__cl774acf45__pve3ab90e7	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r2__t1__cl774acf45__pvea45273b	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r2__t1__cl774acf45__pvf8d9f9e5	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r2__t1__cl87f3ff59	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	RUNNING @2026-11-19 19:46	
-s81	col_h9_r2__t1__clb8d86cd5__pv6a2b031b	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	RUNNING @2026-11-19 19:46	
-s81	col_h9_r2__t1__clb8d86cd5__pv8d57997d	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r2__t1__clb8d86cd5__pv982ec12c	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r2__t1__clb8d86cd5__pvb2cd22a7	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r2__t1__clb8d86cd5__pvf0595d0f	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r2__t1__clb8d86cd5__pvf1445dce	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r2__t1__clc9ad8f7e__pv45d0c698	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	RUNNING @2026-11-19 19:46	
-s81	col_h9_r2__t1__clc9ad8f7e__pv81a5dbf4	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	RUNNING @2026-11-19 19:46	
-s81	col_h9_r2__t1__clc9ad8f7e__pvcf44b14c	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r2__t1__clc9ad8f7e__pvf079625b	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r2__t1__clc9ad8f7e__pvfef7c177	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r2__t1__clce45cab5__pv06a1adf6	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	RUNNING @2026-11-19 19:46	
-s81	col_h9_r2__t1__clce45cab5__pv09b9967e	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r2__t1__clce45cab5__pv14626557	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r2__t1__clce45cab5__pv1aac64f0	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r2__t1__clce45cab5__pv22267ca0	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r2__t1__clce45cab5__pv2833ee2b	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r2__t1__clce45cab5__pv2f87774f	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r2__t1__clce45cab5__pv31e47bd5	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r2__t1__clce45cab5__pv37074264	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r2__t1__clce45cab5__pv40e9fb5a	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r2__t1__clce45cab5__pv467913cc	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r2__t1__clce45cab5__pv4754d912	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r2__t1__clce45cab5__pv4937edd4	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r2__t1__clce45cab5__pv6827937d	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r2__t1__clce45cab5__pv7b8853b5	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r2__t1__clce45cab5__pv7c30fd4e	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r2__t1__clce45cab5__pv843b0fff	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r2__t1__clce45cab5__pv8b5a5980	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r2__t1__clce45cab5__pv9a22736e	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r2__t1__clce45cab5__pv9cc104a8	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r2__t1__clce45cab5__pv9e92407b	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r2__t1__clce45cab5__pva119e808	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r2__t1__clce45cab5__pva8c07948	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r2__t1__clce45cab5__pvaa9a1324	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r2__t1__clce45cab5__pvb11188eb	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r2__t1__clce45cab5__pvb3258867	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r2__t1__clce45cab5__pvb3f647ea	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r2__t1__clce45cab5__pvb6ec679e	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r2__t1__clce45cab5__pvb7e88dd2	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r2__t1__clce45cab5__pvc6132d1e	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r2__t1__clce45cab5__pvcd1d9f5f	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r2__t1__clce45cab5__pvd2454d1a	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r2__t1__clce45cab5__pvd60e699f	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r2__t1__clce45cab5__pvdc7d4221	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	RUNNING @2026-11-19 19:46	
-s81	col_h9_r2__t1__clce45cab5__pve0486b40	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r2__t1__clce45cab5__pve0bffaf8	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r2__t1__clce45cab5__pve171243a	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r2__t1__clce45cab5__pvf390b1f5	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r2__t1__clce45cab5__pvf57acd2b	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r2__t1__clce45cab5__pvf9c773d5	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r2__t1__clce45cab5__pvfb42a1ad	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	col_h9_r2__t1__clce45cab5__pvfd79e8b6	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	yes	LINT-ADVISORY prelint LINT @2026-11-19 19:42	
-s81	dsdv_slice_c1x_C__t1	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,S81-GEOM-OPUS)	yes	RUNNING route @2026-11-19 17:04	
-s81	dsdv_slice_c1x_C__t10	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,S81-GEOM-OPUS)	yes	RUNNING route @2026-11-19 03:10	
-s81	dsdv_slice_c1x_C__t3	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,S81-GEOM-OPUS)	yes	RUNNING route @2026-11-19 06:34	
-s81	dsdv_slice_c1x_C__t4	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,S81-GEOM-OPUS)	yes	RUNNING route @2026-11-19 01:51	
-s81	dsdv_slice_c1x_C__t5	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,S81-GEOM-OPUS)	yes	RUNNING route @2026-11-19 03:28	
-s81	dsdv_slice_c1x_C__t6	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,S81-GEOM-OPUS)	yes	RUNNING route @2026-11-19 17:13	
-s81	dsdv_slice_c1x_C__t7	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,S81-GEOM-OPUS)	yes	RUNNING route @2026-11-19 01:13	
-s81	dsdv_slice_c1x_C__t8	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,S81-GEOM-OPUS)	yes	RUNNING route @2026-11-18 15:32	
-s81	dsdv_slice_c1x_C__t9	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,S81-GEOM-OPUS)	yes	RUNNING route @2026-11-19 16:00	
-s81	dsdv_slice_c3x_C__t1	running	KIT-WAVE(auto)	yes	RUNNING route @2026-11-18 19:26	
-s81	dsdv_slice_iq_C__t1	running	KIT-WAVE(auto)	yes	RUNNING route @2026-11-18 10:22	
-s81	dsdv_slice_kv512_C__t1	running	KIT-WAVE(auto)	yes	RUNNING route @2026-11-18 11:31	
-s81	dsdv_slice_lepe_mu_C__t1	running	KIT-WAVE(auto)	yes	RUNNING route @2026-11-19 06:34	
-s81	dsdv_slice_lepe_mu_LP__t2	running	FABLE-FIX-S81-LEPE	yes	RUNNING @2026-11-19 19:46	
-s81	dsdv_slice_lepe_nh_mus_C__t1	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	dsdv_slice_lepe_nh_mus_LP__t1	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	dsdv_slice_lepw_mu_C__t1	running	FABLE-FIX-S81-LEPE	yes	RUNNING @2026-11-19 19:46	
-s81	dsdv_slice_lepw_mu_LP__t2	running	PRECHECK-1119	yes	RUNNING @2026-11-19 19:46	
-s81	dsdv_slice_lepw_mus_C__t1	running	KIT-WAVE(auto)	yes	RUNNING route @2026-11-18 15:19	
-s81	dsdv_slice_lepw_mus_LP__t2	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	eng__t1	running	S81-GEOM-OPUS	yes	RUNNING @2026-11-19 19:46	
-s81	gunit__t1	running	FABLE-FIX-S81-LEAF (+S81-CLOCK-WINDOW-1119)	yes	RUNNING @2026-11-19 19:46	
-s81	iqf__t1	running	PRECHECK-1119	yes	RUNNING @2026-11-19 19:46	
-s81	phy__t1	NOT-IN-PLAN	S81-GEOM-OPUS	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_kv_leaf__t1	running	PRECHECK-1119	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_kv_leaf__t2	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_kv_leaf__t3	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_kv_leaf__t4	running	PRECHECK-1119	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_kv_leaf__t5	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t1	running	PRECHECK-1119	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t10	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t11	running	NOPROG-FIX-1115	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t12	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t13	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t14	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t15	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t16	running	PRECHECK-1119	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t17	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t2	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t21	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t22	running	PRECHECK-1119	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t23	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t24__cl2456157b	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t24__cl81374cd8	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t25__cl431c660f	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t25__cl55642d17	running	FABLE-FIX-S81-LEAF	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t26	running	NOPROG-FIX-1115	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t27	running	PRECHECK-1119	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t28	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t29	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t3	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t30	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t31	running	FABLE-FIX-S81-LEAF	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t32	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t33	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t34	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t35	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t36	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t37	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t38	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t39	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t4	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t40__cl86ea32b3	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t40__cl86ea32b3__sid5S	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t40__clf8bbdae1	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t41	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t42	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t43	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t44__clf4ea6d4b	running	PRECHECK-1119	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t44__clf6cf8492	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t45	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t46	running	PRECHECK-1119	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t47	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t5	running	PRECHECK-1119	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t50	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t51	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t52	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t53__cl958451dd	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t53__clb66fa5cb	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t54__cl501e5681	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t54__cl706d9749	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t55	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t56	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t57	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t58	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t59	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t6	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t60	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t61	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t62	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t65	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t66	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t67	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t68	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t69	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t7	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t70	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t71	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t72	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t73	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t74	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t75	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t8	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	s81sl_leaf__t9	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	seqhost__t1	running	S81-CLOCK-WINDOW-1119 (+S81-DIE-R3)	yes	RUNNING @2026-11-19 19:46	
-s81	serdes__t12	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,S81-OWN-1119)	yes	RUNNING @2026-11-19 19:46	
-s81	serdes__t13	running	NOPROG-FIX-1115 (+FABLE-FIX-S81-LEAF,FABLE-FIX-QC)	yes	RUNNING @2026-11-19 19:46	
-s81	serdes__t14	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,S81-OWN-1119)	yes	RUNNING @2026-11-19 19:46	
-s81	serdes__t15__cla2127225	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,S81-OWN-1119)	yes	RUNNING @2026-11-19 19:46	
-s81	serdes__t15__cla3d02796	running	RESET-COHORT-1119 (+FABLE-FIX-S81-LEAF,FABLE-FIX-QC)	yes	RUNNING @2026-11-19 19:46	
-s81	serdes__t16	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,S81-OWN-1119)	yes	RUNNING @2026-11-19 19:46	
-s81	serdes__t1__clb45db5be	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,S81-OWN-1119)	yes	RUNNING @2026-11-19 19:46	
-s81	serdes__t1__clfe1f0815	running	FABLE-FIX-S81-SERDES (+RESET-COHORT-1119,FABLE-FIX-S81-LEAF)	yes	RUNNING @2026-11-19 19:46	
-s81	serdes__t2	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,S81-OWN-1119)	yes	RUNNING @2026-11-19 19:46	
-s81	serdes__t3	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,S81-OWN-1119)	yes	RUNNING @2026-11-19 19:46	
-s81	serdes__t4	running	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,S81-OWN-1119)	yes	RUNNING @2026-11-19 19:46	
-s81	slice_station__t36	running	S81-OWN-1119 (+S81-CLOCK-WINDOW-1119,FABLE-FIX-QC)	yes	RUNNING @2026-11-19 19:46	
-s81	slice_station__t43	running	S81-CLOCK-WINDOW-1119 (+FABLE-FIX-QC,S81-OWN-1119)	yes	RUNNING @2026-11-19 19:46	
-s81	slice_station__t51	running	FABLE-FIX-S81-LEAF (+S81-GEOM-OPUS,S81-OWN-1119)	yes	RUNNING @2026-11-19 19:46	
-s81	slice_station__t52	running	S81-CLOCK-WINDOW-1119 (+FABLE-FIX-QC,S81-OWN-1119)	yes	RUNNING route @2026-11-19 11:02	
-s81	svc_hi_dsdv_svc_pvso_entry__t1	running	S81-OWN-1119	yes	RUNNING @2026-11-19 19:46	
-s81	svc_hi_dsdv_svc_pvso_entry__t2	running	KIT-WAVE(auto)	yes	RUNNING @2026-11-19 19:46	
-s81	svc_hi_dsdv_svc_rs__t1	running	S81-CLOCK-WINDOW-1119 (+FABLE-FIX-S81-LEAF)	yes	RUNNING @2026-11-19 19:46	
-s81	svc_hi_dsdv_svc_rs__t2	running	FABLE-FIX-S81-LEAF (+S81-CLOCK-WINDOW-1119)	yes	RUNNING @2026-11-19 19:46	
-s81	svc_hi_dsdv_svc_rs__t3	running	NOPROG-FIX-1115 (+S81-CLOCK-WINDOW-1119,FABLE-FIX-S81-LEAF)	yes	RUNNING @2026-11-19 19:46	
-s81	svc_hi_dsdv_svc_rs__t4	running	S81-CLOCK-WINDOW-1119 (+FABLE-FIX-S81-LEAF)	yes	RUNNING @2026-11-19 19:46	
-s81	svc_hi_dsdv_svc_rs__t5	running	S81-CLOCK-WINDOW-1119 (+FABLE-FIX-S81-LEAF)	yes	RUNNING @2026-11-19 19:46	
-s81	svc_hi_dsdv_svc_rs__t6	running	S81-CLOCK-WINDOW-1119 (+FABLE-FIX-S81-LEAF)	yes	RUNNING @2026-11-19 19:46	
-s81	svc_lo_dsdv_svc_rs__t1	running	S81-CLOCK-WINDOW-1119	yes	RUNNING @2026-11-19 19:46	
-s81	svc_lo_dsdv_svc_rs__t2	running	S81-CLOCK-WINDOW-1119	yes	RUNNING @2026-11-19 19:46	
-s81	svc_lo_dsdv_svc_rs__t3	running	S81-CLOCK-WINDOW-1119	yes	RUNNING place @2026-11-19 08:00	
-s81	svc_lo_dsdv_svc_rs__t4	running	S81-CLOCK-WINDOW-1119	yes	RUNNING @2026-11-19 19:46	
-s81	svc_lo_dsdv_svc_rs__t5	running	PRECHECK-1119 (+S81-CLOCK-WINDOW-1119)	yes	RUNNING place @2026-11-19 09:16	
-s81	svc_lo_dsdv_svc_rs__t6	running	S81-CLOCK-WINDOW-1119	yes	RUNNING place @2026-11-19 09:16	
-s81	svc_lo_dsdv_svc_rs__t7	running	S81-CLOCK-WINDOW-1119	yes	RUNNING place @2026-11-19 09:16	
-s81	svc_lo_dsdv_svc_rs_w__t1	running	KIT-WAVE(auto)	yes	RUNNING place @2026-11-19 09:16	
+# OWNERS-SWEEP 2026-11-19 20:51 PST (tools: ~/coord/bin/owners_sweep.py); one row per unsigned type/core on S81, HEAD, QC, KV; HBM skipped
+die	type	kind	state	age_h	owning_lane	match	owner_alive	lane_last_post	agent_id	kit_last_action	kit_last_time	lane_last_mention	flags
+HEAD	hd_lep0N	type	running	2.6	WAVE-PILOT-FIX (+HEAD-CROSSING-1119)	type	yes	11-19 20:25	ace6bf6d149abd088	RUNNING geom	2026-11-19 18:17	"11-19 18:12 - 2026-11-19 18:12 PST [to COORD] KV D25d ROOT CAUSE + FIX: the die gate said ""plan event "	
+HEAD	sram_1r1w2c_256x64_m1	type	NOT-IN-PLAN	0.2			no			RUNNING	2026-11-19 20:40		
+HEAD	sram_1r1w2c_32x64_m1	type	NOT-IN-PLAN	0.2			no			RUNNING	2026-11-19 20:40		
+HEAD	sram_1r1w2c_64x546_m1	type	NOT-IN-PLAN	0.2			no			RUNNING	2026-11-19 20:40		
+HEAD	sram_1r1w_128x256_m1_r0c0	type	NOT-IN-PLAN	0.2			no			RUNNING	2026-11-19 20:40		
+HEAD	sram_1r1w_32x128_m1_r0c0	type	NOT-IN-PLAN	0.2			no			RUNNING	2026-11-19 20:40		
+HEAD	sram_1r1w_32x546_m1	type	NOT-IN-PLAN	0.2			no			RUNNING	2026-11-19 20:40		
+HEAD	sram_1r1w_512x128_m4_r0c0	type	NOT-IN-PLAN	0.2			no			RUNNING	2026-11-19 20:40		
+HEAD	sram_1r1w_64x512_m1_r2c2	type	NOT-IN-PLAN	0.2			no			RUNNING	2026-11-19 20:40		
+KV	kv3_hub_Wi	type	FAILED other flow error	1.6	FAIL-ROUTE-1115 (+KV-D23-COMPOSE)	type	yes	11-19 20:48		FAIL place PLAN	2026-11-19 19:16	11-19 20:48 - 2026-11-19 20:48 PST NEEDS-LANE [FAIL-ROUTE-1115 -> COORD] FAIL-CLASS 50e22a9d11 qwen_kv	FAILED-NO-RELAUNCH
+KV	kv3_pc__cl5a95b461	type	cancelled (superseded) (stale 7.7h)	7.7	KIT-SYNTH-TARGET-1119 (+KV-D23-COMPOSE,KV-PC-HGI-1119)	family	yes	11-19 20:49	acb019e84dc075c63	CANCELLED geom QUEUE-CANCELLED	2026-11-19 13:08	11-19 20:49 - 2026-11-19 20:49 PST DEFAULT=kit again (main 9dbd155d25d). BASELINE LEC ROOT CAUSES (sam	WAIT-BIND
+KV	kv3_hg	type	running	1.9	FABLE-FIX-KV-HG (+KV-PC-HGI-1119)	type	yes	11-19 20:04	aa56cef1453b24d68	RUNNING place	2026-11-19 19:00	11-19 19:56 - 2026-11-19 19:56 PST ROWS [FABLE-FIX-KV-HG (Opus successor) -> KV-D23-COMPOSE, COORD; cc	
+KV	kv3_hg_v1	type	running	2.8	FABLE-FIX-KV-HG (+KV-PC-HGI-1119)	type	yes	11-19 20:04	aa56cef1453b24d68	RUNNING place	2026-11-19 18:06	11-19 17:57 # FABLE-FIX-KV-HG handoff (third instance, started 2026-11-18 07:35 PST; KV-HG-OPUS owns D	
+KV	kv3_hg_v1p2	type	running	2.7	FABLE-FIX-KV-HG (+KV-PC-HGI-1119)	family	yes	11-19 20:04	aa56cef1453b24d68	RUNNING place	2026-11-19 18:07	11-19 19:56 - 2026-11-19 19:56 PST ROWS [FABLE-FIX-KV-HG (Opus successor) -> KV-D23-COMPOSE, COORD; cc	
+KV	kv3_hg_v1p3	type	running	2.7	FABLE-FIX-KV-HG (+KV-PC-HGI-1119)	family	yes	11-19 20:04	aa56cef1453b24d68	RUNNING place	2026-11-19 18:07	11-19 19:56 - 2026-11-19 19:56 PST ROWS [FABLE-FIX-KV-HG (Opus successor) -> KV-D23-COMPOSE, COORD; cc	
+KV	kv3_hg_v1p4	type	running	2.7	FABLE-FIX-KV-HG (+KV-PC-HGI-1119)	family	yes	11-19 20:04	aa56cef1453b24d68	RUNNING place	2026-11-19 18:07	11-19 19:56 - 2026-11-19 19:56 PST ROWS [FABLE-FIX-KV-HG (Opus successor) -> KV-D23-COMPOSE, COORD; cc	
+KV	kv3_hg_v1p5	type	running	2.7	FABLE-FIX-KV-HG (+KV-PC-HGI-1119)	family	yes	11-19 20:04	aa56cef1453b24d68	RUNNING place	2026-11-19 18:07	11-19 19:56 - 2026-11-19 19:56 PST ROWS [FABLE-FIX-KV-HG (Opus successor) -> KV-D23-COMPOSE, COORD; cc	
+KV	kv3_hg_v1p6	type	running	2.6	FABLE-FIX-KV-HG (+KV-PC-HGI-1119)	family	yes	11-19 20:04	aa56cef1453b24d68	RUNNING place	2026-11-19 18:17	11-19 19:56 - 2026-11-19 19:56 PST ROWS [FABLE-FIX-KV-HG (Opus successor) -> KV-D23-COMPOSE, COORD; cc	
+KV	kv3_hg_v3	type	running	2.8	FABLE-FIX-KV-HG (+KV-PC-HGI-1119)	family	yes	11-19 20:04	aa56cef1453b24d68	RUNNING place	2026-11-19 18:06	11-19 19:56 - 2026-11-19 19:56 PST ROWS [FABLE-FIX-KV-HG (Opus successor) -> KV-D23-COMPOSE, COORD; cc	
+KV	kv3_hgi	type	running	1.0	FABLE-FIX-KV-HG (+KV-PC-HGI-1119)	type	yes	11-19 20:04	aa56cef1453b24d68	RUNNING route	2026-11-19 19:52	11-19 19:56 - 2026-11-19 19:56 PST ROWS [FABLE-FIX-KV-HG (Opus successor) -> KV-D23-COMPOSE, COORD; cc	
+KV	kv3_hgi_v1__cl141fc26e	type	running (lint advisory)	0.2	KV-D23-COMPOSE (+KV-PC-HGI-1119,FABLE-FIX-KV-HG)	type	yes	11-19 20:47		LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:47 # KV-D23-COMPOSE handoff (helper of KV-HG-OPUS; started 2026-11-18 06:0x PST) Work dir epy	
+KV	kv3_hgi_v1__cl42bc8b12	type	running (lint advisory)	0.2	KV-D23-COMPOSE (+KV-PC-HGI-1119,FABLE-FIX-KV-HG)	type	yes	11-19 20:47		LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:47 # KV-D23-COMPOSE handoff (helper of KV-HG-OPUS; started 2026-11-18 06:0x PST) Work dir epy	
+KV	kv3_hgi_v2__cl2862d491	type	running (lint advisory)	0.2	KV-PC-HGI-1119 (+FABLE-FIX-KV-HG)	type	yes	11-19 19:22	af67ecf228cf9fde0	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 19:22 # KV-PC-HGI-1119 handoff (11-19) Scope: 4 qkd_kvs_pc* rows + 13 kv3_hgi_v1/v2 cl* and kv3_	
+KV	kv3_hgi_v2__cle0015330	type	running (lint advisory)	0.2	KV-PC-HGI-1119 (+FABLE-FIX-KV-HG)	cluster	yes	11-19 19:22	af67ecf228cf9fde0	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 19:22 # KV-PC-HGI-1119 handoff (11-19) Scope: 4 qkd_kvs_pc* rows + 13 kv3_hgi_v1/v2 cl* and kv3_	
+KV	kv3_hgi_v3	type	running (lint advisory)	0.2	KV-PC-HGI-1119 (+FABLE-FIX-KV-HG)	type	yes	11-19 19:22	af67ecf228cf9fde0	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 19:22 # KV-PC-HGI-1119 handoff (11-19) Scope: 4 qkd_kvs_pc* rows + 13 kv3_hgi_v1/v2 cl* and kv3_	
+KV	kv3_hgi_v4	type	running	0.8	FABLE-FIX-KV-HG (+KV-PC-HGI-1119)	family	yes	11-19 20:04	aa56cef1453b24d68	RUNNING route	2026-11-19 20:04	11-19 19:56 - 2026-11-19 19:56 PST ROWS [FABLE-FIX-KV-HG (Opus successor) -> KV-D23-COMPOSE, COORD; cc	
+KV	kv3_hgi_v5	type	running	2.7	FABLE-FIX-KV-HG (+KV-PC-HGI-1119)	family	yes	11-19 20:04	aa56cef1453b24d68	RUNNING geom	2026-11-19 18:07	11-19 19:56 - 2026-11-19 19:56 PST ROWS [FABLE-FIX-KV-HG (Opus successor) -> KV-D23-COMPOSE, COORD; cc	
+KV	kv3_hgi_v6	type	running	2.7	FABLE-FIX-KV-HG (+KV-PC-HGI-1119)	family	yes	11-19 20:04	aa56cef1453b24d68	RUNNING place	2026-11-19 18:07	11-19 19:56 - 2026-11-19 19:56 PST ROWS [FABLE-FIX-KV-HG (Opus successor) -> KV-D23-COMPOSE, COORD; cc	
+KV	kv3_hgi_v7	type	running	2.8	FABLE-FIX-KV-HG (+KV-PC-HGI-1119)	family	yes	11-19 20:04	aa56cef1453b24d68	RUNNING geom	2026-11-19 18:06	11-19 19:56 - 2026-11-19 19:56 PST ROWS [FABLE-FIX-KV-HG (Opus successor) -> KV-D23-COMPOSE, COORD; cc	
+KV	kv3_hgi_v8	type	running	2.7	FABLE-FIX-KV-HG (+KV-PC-HGI-1119)	family	yes	11-19 20:04	aa56cef1453b24d68	RUNNING place	2026-11-19 18:07	11-19 19:56 - 2026-11-19 19:56 PST ROWS [FABLE-FIX-KV-HG (Opus successor) -> KV-D23-COMPOSE, COORD; cc	
+KV	kv3_hroot	type	running	0.8	FABLE-FIX-KV-HG	type	yes	11-19 20:04	aa56cef1453b24d68	RUNNING route	2026-11-19 20:04	11-19 17:57 # FABLE-FIX-KV-HG handoff (third instance, started 2026-11-18 07:35 PST; KV-HG-OPUS owns D	
+KV	kv3_hub_C	type	waits on child core	0.2	FABLE-FIX-KV-PV (+KV-PC-HGI-1119)	type	yes	11-19 20:25	a52fb84be37157fcd	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 19:59 - 2026-11-19 19:59 PST RESULT [FABLE-FIX-KV-PV -> COORD; cc PROGRESS-WATCH, KV-D23-COMPOSE	
+KV	kv3_hub_Ei	type	running	2.7	KIT-WAVE(auto)	autopilot	yes			RUNNING place	2026-11-19 18:07		
+KV	kv3_hub_Eo	type	running	2.7	KIT-WAVE(auto)	autopilot	yes			RUNNING place	2026-11-19 18:07		
+KV	kv3_hub_Wo	type	running	2.7	KV-D23-COMPOSE (+KV-PC-HGI-1119)	type	yes	11-19 20:47		RUNNING place	2026-11-19 18:07	11-19 20:47 # KV-D23-COMPOSE handoff (helper of KV-HG-OPUS; started 2026-11-18 06:0x PST) Work dir epy	
+KV	kv3_io_cor	type	running	44.2	KV-PC-HGI-1119	type	yes	11-19 19:22	af67ecf228cf9fde0	RUNNING route	2026-11-18 00:39	11-19 19:22 # KV-PC-HGI-1119 handoff (11-19) Scope: 4 qkd_kvs_pc* rows + 13 kv3_hgi_v1/v2 cl* and kv3_	
+KV	kv3_io_cor_v1	type	running	1.0	KV-PC-HGI-1119	family	yes	11-19 19:22	af67ecf228cf9fde0	RUNNING route	2026-11-19 19:52	11-19 19:22 # KV-PC-HGI-1119 handoff (11-19) Scope: 4 qkd_kvs_pc* rows + 13 kv3_hgi_v1/v2 cl* and kv3_	
+KV	kv3_pc__cl254f2e73	type	running	41.7	KV-PC-HGI-1119 (+KIT-SYNTH-TARGET-1119,KV-D23-COMPOSE)	type	yes	11-19 19:22	af67ecf228cf9fde0	RUNNING route	2026-11-18 03:07	11-19 19:22 # KV-PC-HGI-1119 handoff (11-19) Scope: 4 qkd_kvs_pc* rows + 13 kv3_hgi_v1/v2 cl* and kv3_	
+KV	kv3_pc_v1__cl23f6a148	type	waits on child core	0.2	KV-PC-HGI-1119 (+KIT-SYNTH-TARGET-1119,KV-D23-COMPOSE)	type	yes	11-19 19:22	af67ecf228cf9fde0	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 19:22 # KV-PC-HGI-1119 handoff (11-19) Scope: 4 qkd_kvs_pc* rows + 13 kv3_hgi_v1/v2 cl* and kv3_	
+KV	kv3_pc_v1__cl4ea58a5c	type	waits on child core	0.2	KV-PC-HGI-1119 (+KIT-SYNTH-TARGET-1119,KV-D23-COMPOSE)	type	yes	11-19 19:22	af67ecf228cf9fde0	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 19:22 # KV-PC-HGI-1119 handoff (11-19) Scope: 4 qkd_kvs_pc* rows + 13 kv3_hgi_v1/v2 cl* and kv3_	
+KV	kv3_pc_v1__cl7f648944	type	waits on child core	0.2	KV-PC-HGI-1119 (+KIT-SYNTH-TARGET-1119,KV-D23-COMPOSE)	type	yes	11-19 19:22	af67ecf228cf9fde0	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 19:22 # KV-PC-HGI-1119 handoff (11-19) Scope: 4 qkd_kvs_pc* rows + 13 kv3_hgi_v1/v2 cl* and kv3_	
+KV	kv3_pc_v3	type	running	43.4	KV-PC-HGI-1119 (+KIT-SYNTH-TARGET-1119,KV-D23-COMPOSE)	type	yes	11-19 19:22	af67ecf228cf9fde0	RUNNING route	2026-11-18 01:29	11-19 19:22 # KV-PC-HGI-1119 handoff (11-19) Scope: 4 qkd_kvs_pc* rows + 13 kv3_hgi_v1/v2 cl* and kv3_	
+KV	kv3_pv	type	running	2.7	KV-D23-COMPOSE (+KV-PC-HGI-1119,FABLE-FIX-KV-PV)	type	yes	11-19 20:47		RUNNING place	2026-11-19 18:07	11-19 20:47 # KV-D23-COMPOSE handoff (helper of KV-HG-OPUS; started 2026-11-18 06:0x PST) Work dir epy	
+KV	kv3_pv_v1	type	running	2.7	KV-D23-COMPOSE (+KV-PC-HGI-1119,FABLE-FIX-KV-PV)	family	yes	11-19 20:47		RUNNING place	2026-11-19 18:07	11-19 20:47 # KV-D23-COMPOSE handoff (helper of KV-HG-OPUS; started 2026-11-18 06:0x PST) Work dir epy	
+KV	kv3_pv_v12	type	running	2.0	KV-D23-COMPOSE (+KV-PC-HGI-1119,FABLE-FIX-KV-PV)	family	yes	11-19 20:47		RUNNING place	2026-11-19 18:49	11-19 20:47 # KV-D23-COMPOSE handoff (helper of KV-HG-OPUS; started 2026-11-18 06:0x PST) Work dir epy	
+KV	kv3_pv_v1n	type	running	2.7	KV-PC-HGI-1119 (+KV-D23-COMPOSE,FABLE-FIX-KV-PV)	type	yes	11-19 19:22	af67ecf228cf9fde0	RUNNING place	2026-11-19 18:07	11-19 19:22 # KV-PC-HGI-1119 handoff (11-19) Scope: 4 qkd_kvs_pc* rows + 13 kv3_hgi_v1/v2 cl* and kv3_	
+KV	kv3_pv_v2	type	running	2.7	FABLE-FIX-KV-HG (+KV-D23-COMPOSE,KV-PC-HGI-1119)	type	yes	11-19 20:04	aa56cef1453b24d68	RUNNING place	2026-11-19 18:07	11-19 17:57 # FABLE-FIX-KV-HG handoff (third instance, started 2026-11-18 07:35 PST; KV-HG-OPUS owns D	
+KV	kv3_pv_v2n	type	running	2.7	KV-PC-HGI-1119 (+WAVE-PILOT-FIX,KV-D23-COMPOSE)	type	yes	11-19 19:22	af67ecf228cf9fde0	RUNNING place	2026-11-19 18:07	11-19 19:22 # KV-PC-HGI-1119 handoff (11-19) Scope: 4 qkd_kvs_pc* rows + 13 kv3_hgi_v1/v2 cl* and kv3_	
+KV	kv3_pv_v3	type	running	2.7	KV-D23-COMPOSE (+KV-PC-HGI-1119,FABLE-FIX-KV-PV)	family	yes	11-19 20:47		RUNNING place	2026-11-19 18:07	11-19 20:47 # KV-D23-COMPOSE handoff (helper of KV-HG-OPUS; started 2026-11-18 06:0x PST) Work dir epy	
+KV	kv3_pv_v3n	type	running	2.7	KV-D23-COMPOSE (+KV-PC-HGI-1119,FABLE-FIX-KV-PV)	family	yes	11-19 20:47		RUNNING place	2026-11-19 18:07	11-19 20:47 # KV-D23-COMPOSE handoff (helper of KV-HG-OPUS; started 2026-11-18 06:0x PST) Work dir epy	
+KV	kv3_pv_v4	type	running	2.7	KV-D23-COMPOSE (+KV-PC-HGI-1119,FABLE-FIX-KV-PV)	family	yes	11-19 20:47		RUNNING place	2026-11-19 18:07	11-19 20:47 # KV-D23-COMPOSE handoff (helper of KV-HG-OPUS; started 2026-11-18 06:0x PST) Work dir epy	
+KV	kv3_pv_v4n	type	running	2.7	KV-D23-COMPOSE (+KV-PC-HGI-1119,FABLE-FIX-KV-PV)	family	yes	11-19 20:47		RUNNING place	2026-11-19 18:07	11-19 20:47 # KV-D23-COMPOSE handoff (helper of KV-HG-OPUS; started 2026-11-18 06:0x PST) Work dir epy	
+KV	kv3_pv_v5	type	running	2.7	KV-D23-COMPOSE (+KV-PC-HGI-1119,FABLE-FIX-KV-PV)	family	yes	11-19 20:47		RUNNING place	2026-11-19 18:07	11-19 20:47 # KV-D23-COMPOSE handoff (helper of KV-HG-OPUS; started 2026-11-18 06:0x PST) Work dir epy	
+KV	kv3_pv_v5n	type	running	2.7	KV-D23-COMPOSE (+KV-PC-HGI-1119,FABLE-FIX-KV-PV)	family	yes	11-19 20:47		RUNNING place	2026-11-19 18:07	11-19 20:47 # KV-D23-COMPOSE handoff (helper of KV-HG-OPUS; started 2026-11-18 06:0x PST) Work dir epy	
+KV	kv3_pv_v6	type	running	2.7	KV-D23-COMPOSE (+KV-PC-HGI-1119,FABLE-FIX-KV-PV)	family	yes	11-19 20:47		RUNNING place	2026-11-19 18:07	11-19 20:47 # KV-D23-COMPOSE handoff (helper of KV-HG-OPUS; started 2026-11-18 06:0x PST) Work dir epy	
+KV	kv3_pv_v6n	type	running	2.7	FABLE-FIX-KV-HG (+KV-D23-COMPOSE,KV-PC-HGI-1119)	type	yes	11-19 20:04	aa56cef1453b24d68	RUNNING place	2026-11-19 18:07	11-19 17:57 # FABLE-FIX-KV-HG handoff (third instance, started 2026-11-18 07:35 PST; KV-HG-OPUS owns D	
+KV	kv3_pv_v7	type	running	2.7	KV-D23-COMPOSE (+KV-PC-HGI-1119,FABLE-FIX-KV-PV)	family	yes	11-19 20:47		RUNNING place	2026-11-19 18:07	11-19 20:47 # KV-D23-COMPOSE handoff (helper of KV-HG-OPUS; started 2026-11-18 06:0x PST) Work dir epy	
+KV	kv3_pv_v8	type	running	2.4	FABLE-FIX-KV-PV (+KV-D23-COMPOSE,KV-PC-HGI-1119)	type	yes	11-19 20:25	a52fb84be37157fcd	RUNNING place	2026-11-19 18:27	11-19 18:11 - 2026-11-19 18:11 PST RESULT [FABLE-FIX-KV-PV (Opus successor) -> COORD, KV-D23-COMPOSE; 	
+KV	kv3_sys_c	type	running	0.3	WAVE-PILOT-FIX	type	yes	11-19 20:25	ace6bf6d149abd088	QUEUED queue	2026-11-19 20:34	"11-19 18:12 - 2026-11-19 18:12 PST [to COORD] KV D25d ROOT CAUSE + FIX: the die gate said ""plan event "	
+KV	qkd_pv_fin_s8_pin	core	running	0.2	FAIL-ROUTE-1115 (+PROGRESS-WATCH,FABLE-FIX-KV-PV)	type	yes	11-19 20:48		RUNNING	2026-11-19 20:39	11-19 20:18 - 2026-11-19 20:18 PST NEEDS-ACTION [FAIL-ROUTE-1115 -> FABLE-FIX-KV-PV, COORD] FAIL-CLASS	
+QC	cbx_q10__cl94a12200	type	FAILED other flow error	0.3	FAIL-ROUTE-1115 (+FABLE-FIX-S81-LEAF,QC-PLAN-R3)	type	yes	11-19 20:48		FAIL src_manifest UNCLASSIFIED	2026-11-19 20:34	11-19 20:48 - 2026-11-19 20:48 PST NEEDS-ACTION [FAIL-ROUTE-1115 -> COORD] FAIL-CLASS 813130305d owner	UNCLASSIFIED
+QC	sle_st_a_v2__pv30dda31f__pvd2ec7769	type	FAILED other flow error	0.3	FAIL-ROUTE-1115 (+FABLE-FIX-KV-PV,QC-PLAN-R3)	type	yes	11-19 20:48		FAIL src_manifest UNCLASSIFIED	2026-11-19 20:34	11-19 20:48 - 2026-11-19 20:48 PST NEEDS-ACTION [FAIL-ROUTE-1115 -> COORD] FAIL-CLASS 813130305d owner	UNCLASSIFIED
+QC	sle_stm_v2__cl7b3062fa	type	FAILED other flow error	0.3	FAIL-ROUTE-1115 (+QC-PLAN-R3)	type	yes	11-19 20:48		FAIL src_manifest UNCLASSIFIED	2026-11-19 20:34	11-19 20:48 - 2026-11-19 20:48 PST NEEDS-ACTION [FAIL-ROUTE-1115 -> COORD] FAIL-CLASS 813130305d owner	UNCLASSIFIED
+QC	slw_su_c__cl19bb38ef	type	FAILED other flow error	0.3	FAIL-ROUTE-1115 (+QC-PLAN-R3,PRECHECK-1119)	type	yes	11-19 20:48		FAIL src_manifest UNCLASSIFIED	2026-11-19 20:34	11-19 20:48 - 2026-11-19 20:48 PST NEEDS-ACTION [FAIL-ROUTE-1115 -> COORD] FAIL-CLASS 813130305d owner	UNCLASSIFIED
+QC	slw_su_c__cl92142dac	type	FAILED other flow error	0.3	FAIL-ROUTE-1115 (+QC-PLAN-R3,PRECHECK-1119)	type	yes	11-19 20:48		FAIL src_manifest UNCLASSIFIED	2026-11-19 20:34	11-19 20:48 - 2026-11-19 20:48 PST NEEDS-ACTION [FAIL-ROUTE-1115 -> COORD] FAIL-CLASS 813130305d owner	UNCLASSIFIED
+QC	cbf_q00__cl1b5a6458	type	running	2.6	QC-PLAN-R3	type	yes	11-19 20:05	a1edc1ebb5b4f249c	RUNNING place	2026-11-19 18:17	11-19 18:05 - 2026-11-19 18:05 PST QC-PLAN-R3 status 18:0x: - N46P (N4.6e6 on f4a: x_fw_ctl stations, 	
+QC	cbf_q00__cl870de686	type	running	7.8	KIT-WAVE(auto)	autopilot	yes			RUNNING route	2026-11-19 13:06		
+QC	cbf_q00_s2	type	running	2.6	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,QC-PLAN-R3)	type	yes	11-19 20:39	a01350e9ff27da214	RUNNING place	2026-11-19 18:17	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+QC	cbf_q01	type	running	5.7	KIT-WAVE(auto)	autopilot	yes			RUNNING route	2026-11-19 15:07		
+QC	cbf_q01_s2	type	running	6.2	SONNET-FIX-QC	type	yes	11-19 20:22	a274b1b04dbde2cb2	RUNNING route	2026-11-19 14:38	11-19 17:57 - 2026-11-19 17:57 PST HEARTBEAT 17:57 7 QC rows (type, state, stage, age): cbf_q01_s2 run	
+QC	cbf_q11	type	running	0.9	FABLE-FIX-S81-LEAF (+SONNET-FIX-QC)	type	yes	11-19 20:39	a01350e9ff27da214	RUNNING gen	2026-11-19 19:57	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+QC	cbn_q00__cl622f65d2	type	running	5.7	FABLE-FIX-S81-LEAF	type	yes	11-19 20:39	a01350e9ff27da214	RUNNING route	2026-11-19 15:07	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+QC	cbn_q00__cld7bf7197	type	running	9.0	KIT-WAVE(auto)	autopilot	yes			RUNNING route	2026-11-19 11:49		
+QC	cbn_q00__cldbcda913	type	running	2.6	FABLE-FIX-S81-LEAF	type	yes	11-19 20:39	a01350e9ff27da214	RUNNING place	2026-11-19 18:17	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+QC	cbn_q01__clab6e67f2	type	running	2.3	KIT-WAVE(auto)	autopilot	yes			RUNNING route	2026-11-19 18:33		
+QC	cbn_q01__cld9ff4c40	type	running	2.6	KIT-WAVE(auto)	autopilot	yes			RUNNING place	2026-11-19 18:17		
+QC	cbn_q01__cldd6ea846	type	running	2.6	KIT-WAVE(auto)	autopilot	yes			RUNNING place	2026-11-19 18:17		
+QC	cbn_q11__cl49ae4555	type	running	1.7	WAVE-PILOT-FIX (+QC-PLAN-R3,SONNET-FIX-QC)	type	yes	11-19 20:25	ace6bf6d149abd088	RUNNING place	2026-11-19 19:11	11-19 19:02 - 2026-11-19 19:02 PST [to COORD, SONNET-FIX-QC] QC retry rows: root cause = SKIP-SAME-INP	
+QC	cbn_q11__cl5cc92dfe	type	running	1.7	WAVE-PILOT-FIX (+QC-PLAN-R3,SONNET-FIX-QC)	type	yes	11-19 20:25	ace6bf6d149abd088	RUNNING place	2026-11-19 19:11	11-19 19:02 - 2026-11-19 19:02 PST [to COORD, SONNET-FIX-QC] QC retry rows: root cause = SKIP-SAME-INP	
+QC	cbx_q10__cl89936551	type	running	1.5	QC-PLAN-R3	type	yes	11-19 20:05	a1edc1ebb5b4f249c	RUNNING place	2026-11-19 19:23	11-19 18:58 - 2026-11-19 18:58 PST QC-PLAN-R3 strap pins in hard-core halos, whole family in N46R (COO	
+QC	cbx_q10__cl89936551_h	type	running	1.9	QC-PLAN-R3	type	yes	11-19 20:05	a1edc1ebb5b4f249c	RUNNING geom	2026-11-19 19:00	11-19 18:58 - 2026-11-19 18:58 PST QC-PLAN-R3 strap pins in hard-core halos, whole family in N46R (COO	
+QC	cbx_q10__cl94a12200_h	type	running	5.5	QC-PLAN-R3	type	yes	11-19 20:05	a1edc1ebb5b4f249c	RUNNING route	2026-11-19 15:24	11-19 18:58 - 2026-11-19 18:58 PST QC-PLAN-R3 strap pins in hard-core halos, whole family in N46R (COO	
+QC	coll_core	type	running	6.0	OPUS-FIX-QC-COLLCORE	type	yes	11-19 19:48	a7773d82a1b9ead3e	RUNNING route	2026-11-19 14:49	11-19 19:46 - 2026-11-19 19:46 PST RESULT [OPUS-FIX-QC-COLLCORE -> QC-PLAN-R3, COORD] Second private b	
+QC	coll_ftc	type	running	0.6	FABLE-FIX-QC	type	yes	11-19 20:22	afc09fa1b09613c20	RUNNING route	2026-11-19 20:17	11-19 20:22 # FABLE-TYPE-REDUCE-S81-REST handoff (started 11-19 01:16 PST) Scope: S81 families leaf, s	
+QC	d2d_sram_1r1w_64x137_m1_r2c2_p192	type	NOT-IN-PLAN	0.2			no			RUNNING	2026-11-19 20:40		
+QC	glue	type	running	3.0	FABLE-FIX-S81-LEAF	type	yes	11-19 20:39	a01350e9ff27da214	RUNNING route	2026-11-19 17:51	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+QC	native59	type	running	2.6	KIT-WAVE(auto)	autopilot	yes			RUNNING place	2026-11-19 18:17		
+QC	rom_4096x266_m8	type	NOT-IN-PLAN	0.2	ROM-WEIGHTS-1119	type	no	11-19 18:42	a377a9fbc766b2203	RUNNING	2026-11-19 20:40	"11-19 18:42 - 2026-11-19 18:42 PST SCOPE [ROM-WEIGHTS-1119 -> COORD] OWNER 11-19 ""ROMs must carry real"	
+QC	rom_4096x72_m8	type	NOT-IN-PLAN	0.2	ROM-WEIGHTS-1119	type	no	11-19 18:42	a377a9fbc766b2203	RUNNING	2026-11-19 20:40	"11-19 18:42 - 2026-11-19 18:42 PST SCOPE [ROM-WEIGHTS-1119 -> COORD] OWNER 11-19 ""ROMs must carry real"	
+QC	sle_ctl__cl372cea1c	type	running	7.8	FABLE-FIX-QC (+QC-PADLEG-1119)	family	yes	11-19 20:22	afc09fa1b09613c20	RUNNING route	2026-11-19 13:06	11-19 20:22 # FABLE-TYPE-REDUCE-S81-REST handoff (started 11-19 01:16 PST) Scope: S81 families leaf, s	
+QC	sle_ctl__cl503337ff	type	running	9.2	FABLE-FIX-QC (+QC-PADLEG-1119)	family	yes	11-19 20:22	afc09fa1b09613c20	RUNNING route	2026-11-19 11:40	11-19 20:22 # FABLE-TYPE-REDUCE-S81-REST handoff (started 11-19 01:16 PST) Scope: S81 families leaf, s	
+QC	sle_ctl__cl503337ff__padE0	type	running	2.6	FABLE-FIX-QC (+QC-PADLEG-1119)	family	yes	11-19 20:22	afc09fa1b09613c20	RUNNING place	2026-11-19 18:17	11-19 20:22 # FABLE-TYPE-REDUCE-S81-REST handoff (started 11-19 01:16 PST) Scope: S81 families leaf, s	
+QC	sle_ctl__cl503337ff__padE4	type	running	2.6	FABLE-FIX-QC (+QC-PADLEG-1119)	family	yes	11-19 20:22	afc09fa1b09613c20	RUNNING place	2026-11-19 18:17	11-19 20:22 # FABLE-TYPE-REDUCE-S81-REST handoff (started 11-19 01:16 PST) Scope: S81 families leaf, s	
+QC	sle_ctl__cl67434795	type	running	2.6	FABLE-FIX-QC (+QC-PADLEG-1119)	family	yes	11-19 20:22	afc09fa1b09613c20	RUNNING place	2026-11-19 18:17	11-19 20:22 # FABLE-TYPE-REDUCE-S81-REST handoff (started 11-19 01:16 PST) Scope: S81 families leaf, s	
+QC	sle_ctl__cl67434795__padW5	type	running	2.6	FABLE-FIX-QC (+QC-PADLEG-1119)	family	yes	11-19 20:22	afc09fa1b09613c20	RUNNING geom	2026-11-19 18:17	11-19 20:22 # FABLE-TYPE-REDUCE-S81-REST handoff (started 11-19 01:16 PST) Scope: S81 families leaf, s	
+QC	sle_ctl__cla4f6f12f	type	running	7.8	PRECHECK-1119 (+FABLE-FIX-QC,QC-PADLEG-1119)	type	yes	11-19 20:45	a4318c31cd2fd0c66	RUNNING route	2026-11-19 13:06	11-19 17:15 - 2026-11-19 17:15 PST KIT-SCAN hourly [PRECHECK-1119 -> COORD, die owners] civil-redfish:	
+QC	sle_fe_v1__cl8210183c	type	running	7.8	QC-PADLEG-1119	family	yes	11-19 19:41	a1a9621831c357334	RUNNING route	2026-11-19 13:06	11-19 19:41 - 2026-11-19 19:41 PST QC-PADLEG-1119 -> QC-PLAN-R3: (1) cland: section3_cland in lanes/ha	
+QC	sle_fw_v1__cl9d029624	type	running	6.2	QC-PADLEG-1119	family	yes	11-19 19:41	a1a9621831c357334	RUNNING route	2026-11-19 14:38	11-19 19:16 - 2026-11-19 19:16 PST QC-PADLEG-1119 section 2 in lanes/handoff/QC-PADLEG-rows.json (sect	
+QC	sle_fw_v1__clf58b4dfb	type	running	5.9	PRECHECK-1119 (+QC-PADLEG-1119)	type	yes	11-19 20:45	a4318c31cd2fd0c66	RUNNING route	2026-11-19 14:58	11-19 17:41 - 2026-11-19 17:41 PST KIT-SCAN hourly [PRECHECK-1119 -> COORD, die owners] loved-redfish:	
+QC	sle_fw_v2__cl6740750e	type	running	0.3	QC-PADLEG-1119	family	yes	11-19 19:41	a1a9621831c357334	QUEUED queue	2026-11-19 20:34	11-19 19:12 - 2026-11-19 19:12 PST QC-PADLEG-1119 rows ready for QC-PLAN-R3 (event after N46R, plan cd	
+QC	sle_fw_v2__cl69f5e854	type	running	1.0	QC-PADLEG-1119	family	yes	11-19 19:41	a1a9621831c357334	RUNNING route	2026-11-19 19:52	11-19 19:12 - 2026-11-19 19:12 PST QC-PADLEG-1119 rows ready for QC-PLAN-R3 (event after N46R, plan cd	
+QC	sle_hc0__cl05696ed1	type	running	5.6	KIT-WAVE(auto)	autopilot	yes			RUNNING route	2026-11-19 15:16		
+QC	sle_hc0__cl929603c0__cl38badc56	type	running	5.5	KIT-WAVE(auto)	autopilot	yes			RUNNING route	2026-11-19 15:24		
+QC	sle_hc0__cl929603c0__cl4baa7c9c	type	running	5.5	KIT-WAVE(auto)	autopilot	yes			RUNNING route	2026-11-19 15:24		
+QC	sle_hc1__cl7d360508	type	running	9.8	KIT-WAVE(auto)	autopilot	yes			RUNNING route	2026-11-19 11:02		
+QC	sle_sc_v1__cl115da35f	type	running	2.6	QC-PADLEG-1119	family	yes	11-19 19:41	a1a9621831c357334	RUNNING place	2026-11-19 18:17	11-19 19:12 - 2026-11-19 19:12 PST QC-PADLEG-1119 rows ready for QC-PLAN-R3 (event after N46R, plan cd	
+QC	sle_sc_v1__cl7479a5ec	type	running	7.5	QC-PADLEG-1119	family	yes	11-19 19:41	a1a9621831c357334	RUNNING route	2026-11-19 13:20	11-19 19:12 - 2026-11-19 19:12 PST QC-PADLEG-1119 rows ready for QC-PLAN-R3 (event after N46R, plan cd	
+QC	sle_sc_v2	type	running	11.5	QC-PADLEG-1119	family	yes	11-19 19:41	a1a9621831c357334	RUNNING route	2026-11-19 09:22	11-19 19:12 - 2026-11-19 19:12 PST QC-PADLEG-1119 rows ready for QC-PLAN-R3 (event after N46R, plan cd	
+QC	sle_sc_v3	type	running	9.8	QC-PADLEG-1119	family	yes	11-19 19:41	a1a9621831c357334	RUNNING route	2026-11-19 11:02	11-19 19:12 - 2026-11-19 19:12 PST QC-PADLEG-1119 rows ready for QC-PLAN-R3 (event after N46R, plan cd	
+QC	sle_st_a_v1__cl67389ecd	type	running	9.8	FABLE-FIX-KV-PV	type	yes	11-19 20:25	a52fb84be37157fcd	RUNNING route	2026-11-19 11:02	11-19 18:22 - 2026-11-19 18:22 PST RESULT [FABLE-FIX-KV-PV -> COORD, KV-D23-COMPOSE, QC-PLAN-R3; cc FA	
+QC	sle_st_a_v1__cl989804f6__cl18eece69	type	running	1.0	FABLE-FIX-KV-PV	type	yes	11-19 20:25	a52fb84be37157fcd	RUNNING route	2026-11-19 19:52	11-19 18:22 - 2026-11-19 18:22 PST RESULT [FABLE-FIX-KV-PV -> COORD, KV-D23-COMPOSE, QC-PLAN-R3; cc FA	
+QC	sle_st_a_v1__cl989804f6__cled3c1d7b	type	running	9.8	FABLE-FIX-KV-PV	type	yes	11-19 20:25	a52fb84be37157fcd	RUNNING route	2026-11-19 11:02	11-19 18:22 - 2026-11-19 18:22 PST RESULT [FABLE-FIX-KV-PV -> COORD, KV-D23-COMPOSE, QC-PLAN-R3; cc FA	
+QC	sle_st_a_v2__pv30dda31f__pv88773f93	type	running	0.9	FABLE-FIX-KV-PV (+FABLE-FIX-QC,QC-PLAN-R3)	type	yes	11-19 20:25	a52fb84be37157fcd	RUNNING place	2026-11-19 19:57	11-19 18:22 - 2026-11-19 18:22 PST RESULT [FABLE-FIX-KV-PV -> COORD, KV-D23-COMPOSE, QC-PLAN-R3; cc FA	
+QC	sle_st_a_v2__pv4242de79	type	running	0.9	FABLE-FIX-KV-PV (+FABLE-FIX-QC,QC-PLAN-R3)	type	yes	11-19 20:25	a52fb84be37157fcd	RUNNING place	2026-11-19 19:58	11-19 18:22 - 2026-11-19 18:22 PST RESULT [FABLE-FIX-KV-PV -> COORD, KV-D23-COMPOSE, QC-PLAN-R3; cc FA	
+QC	sle_st_b_v1__pvc5a85fd4__pv38472fb8	type	running	0.3	SONNET-FIX-QC (+FABLE-FIX-QC)	type	yes	11-19 20:22	a274b1b04dbde2cb2	QUEUED queue	2026-11-19 20:34	11-19 17:57 - 2026-11-19 17:57 PST HEARTBEAT 17:57 7 QC rows (type, state, stage, age): cbf_q01_s2 run	
+QC	sle_st_b_v1__pvc5a85fd4__pv7b7fafb4	type	running	9.2	SONNET-FIX-QC (+FABLE-FIX-QC)	type	yes	11-19 20:22	a274b1b04dbde2cb2	RUNNING route	2026-11-19 11:40	11-19 17:57 - 2026-11-19 17:57 PST HEARTBEAT 17:57 7 QC rows (type, state, stage, age): cbf_q01_s2 run	
+QC	sle_st_b_v2__cl14c98df5__pv41c959f3	type	running	9.6	SONNET-FIX-QC (+FABLE-FIX-QC)	type	yes	11-19 20:22	a274b1b04dbde2cb2	RUNNING route	2026-11-19 11:16	11-19 17:57 - 2026-11-19 17:57 PST HEARTBEAT 17:57 7 QC rows (type, state, stage, age): cbf_q01_s2 run	
+QC	sle_st_b_v2__cl14c98df5__pvcd986c42	type	running	9.4	FABLE-FIX-QC (+SONNET-FIX-QC)	type	yes	11-19 20:22	afc09fa1b09613c20	RUNNING route	2026-11-19 11:27	11-19 20:22 # FABLE-TYPE-REDUCE-S81-REST handoff (started 11-19 01:16 PST) Scope: S81 families leaf, s	
+QC	sle_st_b_v2__clfde1249e	type	running	9.8	SONNET-FIX-QC (+FABLE-FIX-QC)	type	yes	11-19 20:22	a274b1b04dbde2cb2	RUNNING route	2026-11-19 11:02	11-19 17:57 - 2026-11-19 17:57 PST HEARTBEAT 17:57 7 QC rows (type, state, stage, age): cbf_q01_s2 run	
+QC	sle_stm_v1__cl27746664	type	running	2.6	QC-PADLEG-1119 (+QC-PLAN-R3)	type	yes	11-19 19:41	a1a9621831c357334	RUNNING geom	2026-11-19 18:17	11-19 19:41 - 2026-11-19 19:41 PST QC-PADLEG-1119 -> QC-PLAN-R3: (1) cland: section3_cland in lanes/ha	
+QC	sle_stm_v1__clbe630b9c	type	running	1.1	QC-PADLEG-1119 (+QC-PLAN-R3)	type	yes	11-19 19:41	a1a9621831c357334	RUNNING place	2026-11-19 19:45	11-19 19:41 - 2026-11-19 19:41 PST QC-PADLEG-1119 -> QC-PLAN-R3: (1) cland: section3_cland in lanes/ha	
+QC	sle_stm_v2__cl55be2264	type	running	9.8	QC-PADLEG-1119 (+QC-PLAN-R3)	type	yes	11-19 19:41	a1a9621831c357334	RUNNING route	2026-11-19 11:02	11-19 19:41 - 2026-11-19 19:41 PST QC-PADLEG-1119 -> QC-PLAN-R3: (1) cland: section3_cland in lanes/ha	
+QC	sle_su_c	type	running	3.2	QC-SUST-MACRO-1119 (+PRECHECK-1119,SONNET-FIX-QC)	type	yes	11-19 20:45	a70034495b504b3cb	RUNNING route	2026-11-19 17:42	11-19 20:45 - 2026-11-19 20:45 PST proof kits past synth, running to GRT TT on epyc9 /srv/opentallas-s	
+QC	sle_su_l1__cl5ea486db	type	running	1.4	SONNET-FIX-QC	cluster	yes	11-19 20:22	a274b1b04dbde2cb2	RUNNING route	2026-11-19 19:29	11-19 20:13 - 2026-11-19 20:13 PST su-LANE FAMILY ROWS for QC-PLAN-R3 N46T: lanes/handoff/FABLE-FIX-QC	
+QC	sle_su_l1__clc6d66f5b	type	running	4.4	SONNET-FIX-QC	cluster	yes	11-19 20:22	a274b1b04dbde2cb2	RUNNING route	2026-11-19 16:28	11-19 20:13 - 2026-11-19 20:13 PST su-LANE FAMILY ROWS for QC-PLAN-R3 N46T: lanes/handoff/FABLE-FIX-QC	
+QC	slw_fe_v1__cl95cd1d0c	type	running	0.3	QC-PADLEG-1119	family	yes	11-19 19:41	a1a9621831c357334	QUEUED queue	2026-11-19 20:34	11-19 19:12 - 2026-11-19 19:12 PST QC-PADLEG-1119 rows ready for QC-PLAN-R3 (event after N46R, plan cd	
+QC	slw_fe_v1__clfe325744__cldb4efe33	type	running	9.8	PRECHECK-1119 (+QC-PADLEG-1119)	type	yes	11-19 20:45	a4318c31cd2fd0c66	RUNNING route	2026-11-19 11:02	11-19 18:16 - 2026-11-19 18:16 PST KIT-SCAN hourly [PRECHECK-1119 -> COORD, die owners] civil-redfish:	
+QC	slw_fe_v2__clf110fab2	type	running	0.3	QC-PADLEG-1119	family	yes	11-19 19:41	a1a9621831c357334	QUEUED queue	2026-11-19 20:34	11-19 19:41 - 2026-11-19 19:41 PST QC-PADLEG-1119 -> QC-PLAN-R3: (1) cland: section3_cland in lanes/ha	
+QC	slw_fw_v1__cl51d45468	type	running	2.6	QC-PADLEG-1119	family	yes	11-19 19:41	a1a9621831c357334	RUNNING geom	2026-11-19 18:17	11-19 19:12 - 2026-11-19 19:12 PST QC-PADLEG-1119 rows ready for QC-PLAN-R3 (event after N46R, plan cd	
+QC	slw_fw_v1__clf51c11d8__cl592e3d37	type	running	0.3	QC-PADLEG-1119	family	yes	11-19 19:41	a1a9621831c357334	QUEUED queue	2026-11-19 20:34	11-19 19:12 - 2026-11-19 19:12 PST QC-PADLEG-1119 rows ready for QC-PLAN-R3 (event after N46R, plan cd	
+QC	slw_fw_v1__clf51c11d8__clc7ddab13	type	running	2.6	PRECHECK-1119 (+QC-PADLEG-1119)	type	yes	11-19 20:45	a4318c31cd2fd0c66	RUNNING place	2026-11-19 18:17	11-19 16:10 - 2026-11-19 16:10 PST KIT-SCAN hourly [PRECHECK-1119 -> COORD, die owners] renewed-glider	
+QC	slw_fw_v2__cl8537f156	type	running	2.6	PRECHECK-1119 (+QC-PADLEG-1119)	type	yes	11-19 20:45	a4318c31cd2fd0c66	RUNNING route	2026-11-19 18:13	11-19 18:44 - 2026-11-19 18:44 PST KIT-SCAN hourly [PRECHECK-1119 -> COORD, die owners] loved-redfish:	
+QC	slw_fw_v2__cl8f84514c	type	running	9.6	QC-PADLEG-1119	family	yes	11-19 19:41	a1a9621831c357334	RUNNING route	2026-11-19 11:16	11-19 19:12 - 2026-11-19 19:12 PST QC-PADLEG-1119 rows ready for QC-PLAN-R3 (event after N46R, plan cd	
+QC	slw_fw_v3	type	running	0.3	QC-PADLEG-1119	family	yes	11-19 19:41	a1a9621831c357334	QUEUED queue	2026-11-19 20:34	11-19 19:12 - 2026-11-19 19:12 PST QC-PADLEG-1119 rows ready for QC-PLAN-R3 (event after N46R, plan cd	
+QC	slw_hc0__cl1bc59e1c	type	running	5.5	KIT-WAVE(auto)	autopilot	yes			RUNNING route	2026-11-19 15:24		
+QC	slw_hc0__cl4f54b7a3	type	running	1.0	KIT-WAVE(auto)	autopilot	yes			RUNNING route	2026-11-19 19:52		
+QC	slw_hc1__cl3449ea95	type	running	4.6	KIT-WAVE(auto)	autopilot	yes			RUNNING route	2026-11-19 16:18		
+QC	slw_hc1__cl68f9248e__cl144ee7b3	type	running	1.4	KIT-WAVE(auto)	autopilot	yes			RUNNING route	2026-11-19 19:29		
+QC	slw_hc2__cl6bcaba89	type	running	1.0	KIT-WAVE(auto)	autopilot	yes			RUNNING route	2026-11-19 19:52		
+QC	slw_hc2__cla3497502__cl16607c7a	type	running	9.8	KIT-WAVE(auto)	autopilot	yes			RUNNING route	2026-11-19 11:02		
+QC	slw_sc_v1__cl63e5a7a2	type	running	7.5	WAVE-PILOT-FIX (+FLEET-OPS-R,QC-PADLEG-1119)	family	yes	11-19 20:25	ace6bf6d149abd088	RUNNING route	2026-11-19 13:20	11-19 19:48 - 2026-11-19 19:48 PST [to COORD, FLEET-OPS-R] ORPHAN closure done 19:48: ad4d52b9ea00 (tt	
+QC	slw_sc_v1__cl64543eaf__cl4590432d	type	running	1.4	WAVE-PILOT-FIX (+FLEET-OPS-R,QC-PADLEG-1119)	type	yes	11-19 20:25	ace6bf6d149abd088	RUNNING route	2026-11-19 19:29	11-19 19:46 - 2026-11-19 19:46 PST [to COORD, S81-DIE-R3, FLEET-OPS-R] (1) S81 DIE-OFF fixed: f0fe518f	
+QC	slw_sc_v1__cl64543eaf__cl5e017c6f	type	running	0.6	WAVE-PILOT-FIX (+FLEET-OPS-R,QC-PADLEG-1119)	family	yes	11-19 20:25	ace6bf6d149abd088	RUNNING route	2026-11-19 20:17	11-19 19:48 - 2026-11-19 19:48 PST [to COORD, FLEET-OPS-R] ORPHAN closure done 19:48: ad4d52b9ea00 (tt	
+QC	slw_sc_v2	type	running	7.8	QC-PADLEG-1119	family	yes	11-19 19:41	a1a9621831c357334	RUNNING route	2026-11-19 13:06	11-19 19:12 - 2026-11-19 19:12 PST QC-PADLEG-1119 rows ready for QC-PLAN-R3 (event after N46R, plan cd	
+QC	slw_st_a_v1__clb036e152	type	running	0.2	FABLE-FIX-KV-PV	type	yes	11-19 20:25	a52fb84be37157fcd	RUNNING	2026-11-19 20:40	11-19 18:22 - 2026-11-19 18:22 PST RESULT [FABLE-FIX-KV-PV -> COORD, KV-D23-COMPOSE, QC-PLAN-R3; cc FA	
+QC	slw_st_a_v1__clfc5867a6__pvdf8e5ca4	type	running	9.8	FABLE-FIX-KV-PV	type	yes	11-19 20:25	a52fb84be37157fcd	RUNNING route	2026-11-19 11:02	11-19 18:22 - 2026-11-19 18:22 PST RESULT [FABLE-FIX-KV-PV -> COORD, KV-D23-COMPOSE, QC-PLAN-R3; cc FA	
+QC	slw_st_a_v1__clfc5867a6__pvf82a6c28	type	running	9.8	FABLE-FIX-KV-PV	type	yes	11-19 20:25	a52fb84be37157fcd	RUNNING route	2026-11-19 11:02	11-19 18:22 - 2026-11-19 18:22 PST RESULT [FABLE-FIX-KV-PV -> COORD, KV-D23-COMPOSE, QC-PLAN-R3; cc FA	
+QC	slw_st_a_v2__cl9f076a5c	type	running	0.9	WAVE-PILOT-FIX (+FLEET-OPS-R,FABLE-FIX-KV-PV)	type	yes	11-19 20:25	ace6bf6d149abd088	RUNNING place	2026-11-19 19:58	11-19 20:02 - 2026-11-19 20:02 PST [to COORD, PROGRESS-WATCH] SELF-STOP timestamps: the two qwen_compu	
+QC	slw_st_a_v2__clf4365a62	type	running	9.8	FABLE-FIX-KV-PV (+WAVE-PILOT-FIX,QC-PADLEG-1119)	type	yes	11-19 20:25	a52fb84be37157fcd	RUNNING route	2026-11-19 11:02	11-19 18:22 - 2026-11-19 18:22 PST RESULT [FABLE-FIX-KV-PV -> COORD, KV-D23-COMPOSE, QC-PLAN-R3; cc FA	
+QC	slw_st_b_v1__cl6357f1cc__pv6ace3e48	type	running	0.2	KIT-WAVE(auto)	autopilot	yes			RUNNING	2026-11-19 20:40		
+QC	slw_st_b_v1__cle6023ec2	type	running	0.9	PRECHECK-1119	type	yes	11-19 20:45	a4318c31cd2fd0c66	RUNNING place	2026-11-19 19:58	11-19 19:16 - 2026-11-19 19:16 PST KIT-SCAN hourly [PRECHECK-1119 -> COORD, die owners] renewed-glider	
+QC	slw_st_b_v2__pva66d0f22__pv3d7bec84	type	running	0.3	KIT-WAVE(auto)	autopilot	yes			QUEUED queue	2026-11-19 20:34		
+QC	slw_st_b_v2__pva66d0f22__pvb80e2003	type	running	0.3	KIT-WAVE(auto)	autopilot	yes			QUEUED queue	2026-11-19 20:34		
+QC	slw_st_b_v2__pvc2ec5bfb	type	running	6.4	KIT-WAVE(auto)	autopilot	yes			RUNNING route	2026-11-19 14:29		
+QC	slw_stm_v1__cl05fc43f7__cl2086fa2c	type	running	9.8	QC-PLAN-R3	type	yes	11-19 20:05	a1edc1ebb5b4f249c	RUNNING route	2026-11-19 11:02	11-19 18:58 - 2026-11-19 18:58 PST QC-PLAN-R3 strap pins in hard-core halos, whole family in N46R (COO	
+QC	slw_stm_v1__cl05fc43f7__cl389df4e9	type	running	3.5	PRECHECK-1119 (+QC-PADLEG-1119,QC-PLAN-R3)	type	yes	11-19 20:45	a4318c31cd2fd0c66	RUNNING route	2026-11-19 17:22	11-19 19:44 - 2026-11-19 19:44 PST KIT-SCAN hourly [PRECHECK-1119 -> COORD, die owners] loved-redfish:	
+QC	slw_stm_v2__cl1ca9c415	type	running	9.8	KIT-WAVE(auto)	autopilot	yes			RUNNING route	2026-11-19 11:02		
+QC	slw_stm_v2__cl9beb65e6	type	running	9.8	KIT-WAVE(auto)	autopilot	yes			RUNNING route	2026-11-19 11:02		
+QC	slw_su_l1__cla2a78701	type	running	6.0	QC-PLAN-R3 (+SONNET-FIX-QC,FABLE-FIX-QC)	type	yes	11-19 20:05	a1edc1ebb5b4f249c	RUNNING route	2026-11-19 14:49	11-19 18:58 - 2026-11-19 18:58 PST QC-PLAN-R3 strap pins in hard-core halos, whole family in N46R (COO	
+QC	slw_su_l1__clcc9d0155	type	running	5.7	QC-PLAN-R3 (+SONNET-FIX-QC,FABLE-FIX-QC)	type	yes	11-19 20:05	a1edc1ebb5b4f249c	RUNNING route	2026-11-19 15:07	11-19 18:58 - 2026-11-19 18:58 PST QC-PLAN-R3 strap pins in hard-core halos, whole family in N46R (COO	
+QC	sram_1r1w2c_64x546_m1	type	NOT-IN-PLAN	0.2			no			RUNNING	2026-11-19 20:40		
+QC	sram_1r1w_128x256_m1_r2c2	type	NOT-IN-PLAN	0.2			no			RUNNING	2026-11-19 20:40		
+QC	sram_1r1w_32x128_m1	type	NOT-IN-PLAN	0.2			no			RUNNING	2026-11-19 20:40		
+QC	sram_1r1w_32x546_m1	type	NOT-IN-PLAN	0.2			no			RUNNING	2026-11-19 20:40		
+QC	sram_1r1w_32x64_m1	type	NOT-IN-PLAN	0.2			no			RUNNING	2026-11-19 20:40		
+QC	sram_1r1w_512x128_m4_r2c2	type	NOT-IN-PLAN	0.2			no			RUNNING	2026-11-19 20:40		
+QC	sram_1r1w_64x512_m1_r2c2	type	NOT-IN-PLAN	0.2			no			RUNNING	2026-11-19 20:40		
+QC	tt_ctlm	type	running	1.1	FABLE-FIX-QC (+WAVE-PILOT-FIX,PROGRESS-WATCH)	type	yes	11-19 20:22	afc09fa1b09613c20	RUNNING place	2026-11-19 19:46	11-19 20:22 # FABLE-TYPE-REDUCE-S81-REST handoff (started 11-19 01:16 PST) Scope: S81 families leaf, s	
+S81	slice_station__t36	type	running	1.1	S81-OWN-1119 (+FABLE-FIX-QC,S81-CLOCK-WINDOW-1119)	type	yes	11-19 20:04	a7410cf93fc9c64fb	RUNNING gen	2026-11-19 19:46	11-19 18:59 - 2026-11-19 18:59 PST STATE [S81-OWN-1119 -> COORD; cc S81-DIE-R3] (1) slice_station__t36	CBC-FALLBACK
+S81	slice_station__t43	type	running	1.1	FABLE-FIX-QC (+S81-OWN-1119,S81-CLOCK-WINDOW-1119)	family	yes	11-19 20:22	afc09fa1b09613c20	RUNNING place	2026-11-19 19:46	11-19 20:22 # FABLE-TYPE-REDUCE-S81-REST handoff (started 11-19 01:16 PST) Scope: S81 families leaf, s	CBC-FALLBACK
+S81	slice_station__t51	type	FAILED other flow error	0.3	FAIL-ROUTE-1115 (+FABLE-FIX-S81-LEAF,S81-GEOM-OPUS)	type	yes	11-19 20:48		FAIL place PLAN	2026-11-19 20:34	11-19 20:48 - 2026-11-19 20:48 PST NEEDS-ACTION [FAIL-ROUTE-1115 -> DIE-S81-92, COORD] FAIL-CLASS af4d	CBC-FALLBACK
+S81	slice_station__t52	type	running	9.8	FABLE-FIX-QC (+S81-OWN-1119,S81-CLOCK-WINDOW-1119)	family	yes	11-19 20:22	afc09fa1b09613c20	RUNNING route	2026-11-19 11:02	11-19 20:22 # FABLE-TYPE-REDUCE-S81-REST handoff (started 11-19 01:16 PST) Scope: S81 families leaf, s	CBC-FALLBACK
+S81	bk_sel__t2	type	running	1.1	FABLE-FIX-S81-LEAF (+S81-GEOM-OPUS,S81-OWN-1119)	type	yes	11-19 20:39	a01350e9ff27da214	RUNNING place	2026-11-19 19:46	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h10_r0_p1__t1__cl574cc59d__pv3d0d4d97	type	running	1.1	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,S81-GEOM-OPUS)	family	yes	11-19 20:39	a01350e9ff27da214	RUNNING place	2026-11-19 19:46	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h10_r0_p1__t1__cl574cc59d__pv67036687	type	running	1.1	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,S81-GEOM-OPUS)	family	yes	11-19 20:39	a01350e9ff27da214	RUNNING gen	2026-11-19 19:46	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h10_r0_p1__t1__cl574cc59d__pvb095fa2f	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,S81-GEOM-OPUS)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h10_r0_p1__t1__cl574cc59d__pvd7af8531	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,S81-GEOM-OPUS)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h10_r0_p1__t1__cl574cc59d__pvf60ac9dc	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,S81-GEOM-OPUS)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h10_r0_p1__t1__cl911743eb	type	running	1.1	PRECHECK-1119 (+FABLE-FIX-S81-LEAF,FABLE-FIX-QC)	type	yes	11-19 20:45	a4318c31cd2fd0c66	RUNNING place	2026-11-19 19:46	11-19 15:03 - 2026-11-19 15:03 PST KIT-SCAN hourly [PRECHECK-1119 -> COORD, die owners] renewed-glider	
+S81	col_h10_r0_p4__t1__pv07945c1e	type	running	1.1	S81-CLOCK-WINDOW-1119 (+S81-GEOM-OPUS)	family	yes	11-19 19:24	a8c1817c3b70e7e8b	RUNNING gen	2026-11-19 19:46	11-19 18:28 - 2026-11-19 18:28 PST RESULT (2b) kit-contract hold -99.99 [S81-CLOCK-WINDOW-1119 -> COOR	
+S81	col_h10_r0_p4__t1__pv5b623e07	type	running	1.1	S81-CLOCK-WINDOW-1119 (+S81-GEOM-OPUS)	family	yes	11-19 19:24	a8c1817c3b70e7e8b	RUNNING place	2026-11-19 19:46	11-19 18:28 - 2026-11-19 18:28 PST RESULT (2b) kit-contract hold -99.99 [S81-CLOCK-WINDOW-1119 -> COOR	
+S81	col_h10_r0_p4__t1__pvc9270d09	type	running (lint advisory)	0.2	S81-CLOCK-WINDOW-1119 (+S81-GEOM-OPUS)	family	yes	11-19 19:24	a8c1817c3b70e7e8b	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 18:28 - 2026-11-19 18:28 PST RESULT (2b) kit-contract hold -99.99 [S81-CLOCK-WINDOW-1119 -> COOR	
+S81	col_h10_r0_p4__t1__pvcc166a6d	type	running	1.1	S81-CLOCK-WINDOW-1119 (+S81-GEOM-OPUS)	family	yes	11-19 19:24	a8c1817c3b70e7e8b	RUNNING place	2026-11-19 19:46	11-19 18:28 - 2026-11-19 18:28 PST RESULT (2b) kit-contract hold -99.99 [S81-CLOCK-WINDOW-1119 -> COOR	
+S81	col_h10_r0_p4__t1__pvd11cc58b	type	running (lint advisory)	0.2	S81-CLOCK-WINDOW-1119 (+S81-GEOM-OPUS)	family	yes	11-19 19:24	a8c1817c3b70e7e8b	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 18:28 - 2026-11-19 18:28 PST RESULT (2b) kit-contract hold -99.99 [S81-CLOCK-WINDOW-1119 -> COOR	
+S81	col_h10_r0_p4__t1__pvd8c0565f	type	running (lint advisory)	0.2	S81-CLOCK-WINDOW-1119 (+S81-GEOM-OPUS)	family	yes	11-19 19:24	a8c1817c3b70e7e8b	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 18:28 - 2026-11-19 18:28 PST RESULT (2b) kit-contract hold -99.99 [S81-CLOCK-WINDOW-1119 -> COOR	
+S81	col_h10_r1__t1__cl95b37463__pv0713a75a	type	running	1.1	FABLE-FIX-S81-LEAF (+COL-H10-1119,S81-GEOM-OPUS)	family	yes	11-19 20:39	a01350e9ff27da214	RUNNING place	2026-11-19 19:46	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h10_r1__t1__cl95b37463__pv1a6ec9c2	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+COL-H10-1119,S81-GEOM-OPUS)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h10_r1__t1__cl95b37463__pv69c7e9a6	type	running	1.1	FABLE-FIX-S81-LEAF (+COL-H10-1119,S81-GEOM-OPUS)	family	yes	11-19 20:39	a01350e9ff27da214	RUNNING place	2026-11-19 19:46	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h10_r1__t1__cl95b37463__pv6a7ae122	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+COL-H10-1119,S81-GEOM-OPUS)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h10_r1__t1__cl95b37463__pv74ebbc00	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+COL-H10-1119,S81-GEOM-OPUS)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h10_r1__t1__cl95b37463__pv799da6f8	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+COL-H10-1119,S81-GEOM-OPUS)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h10_r1__t1__cl95b37463__pv86f5e3b9	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+COL-H10-1119,S81-GEOM-OPUS)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h10_r1__t1__cl95b37463__pva3a8bfd1	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+COL-H10-1119,S81-GEOM-OPUS)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h10_r1__t1__cl95b37463__pvce76611c	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+COL-H10-1119,S81-GEOM-OPUS)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h10_r1__t1__cl95b37463__pve28d14fa	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+COL-H10-1119,S81-GEOM-OPUS)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h10_r1__t1__cl95b37463__pvf724da2a	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+COL-H10-1119,S81-GEOM-OPUS)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h10_r1__t1__cld01bb4ae	type	running	1.1	FABLE-FIX-S81-LEAF (+COL-H10-1119,S81-GEOM-OPUS)	family	yes	11-19 20:39	a01350e9ff27da214	RUNNING place	2026-11-19 19:46	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h10_r2__t1__cl1f5d6c2a__pv0c1de895	type	running	1.1	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-H10-1119)	family	yes	11-19 20:39	a01350e9ff27da214	RUNNING place	2026-11-19 19:46	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h10_r2__t1__cl1f5d6c2a__pv16277ca6	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-H10-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h10_r2__t1__cl1f5d6c2a__pv418d3dc0	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-H10-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h10_r2__t1__cl1f5d6c2a__pvcd889288	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-H10-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h10_r2__t1__cl1f5d6c2a__pvec003743	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-H10-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h10_r2__t1__cl1f5d6c2a__pvf1512c16	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-H10-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h10_r2__t1__cl8b686b3e	type	running	1.1	COL-H10-1119 (+FABLE-FIX-S81-LEAF,FABLE-FIX-QC)	cluster	yes	11-19 19:24	ad30a6db077b47328	RUNNING place	2026-11-19 19:46	11-19 18:55 - 2026-11-19 18:55 PST ACK+LAUNCH [COL-H10-1119 -> COORD; cc S81-GEOM-OPUS, S81-DIE-R3] Ta	
+S81	col_h10_r2__t1__cl99efd374__pv1619ecc6	type	running	1.1	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-H10-1119)	family	yes	11-19 20:39	a01350e9ff27da214	RUNNING place	2026-11-19 19:46	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h10_r2__t1__cl99efd374__pv4c1f67ff	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-H10-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h10_r2__t1__cl99efd374__pv7a8a5452	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-H10-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h10_r2__t1__cl99efd374__pv9ae398c2	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-H10-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h10_r2__t1__clac068e56	type	running (lint advisory)	0.2	COL-H10-1119 (+FABLE-FIX-S81-LEAF,FABLE-FIX-QC)	cluster	yes	11-19 19:24	ad30a6db077b47328	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 18:55 - 2026-11-19 18:55 PST ACK+LAUNCH [COL-H10-1119 -> COORD; cc S81-GEOM-OPUS, S81-DIE-R3] Ta	
+S81	col_h9_r0_p1__t1__pv697f40c9	type	running	1.1	S81-GEOM-OPUS (+S81-CLOCK-WINDOW-1119)	family	yes	11-19 19:41	aee65426f583ae834	RUNNING gen	2026-11-19 19:46	11-19 18:45 - 2026-11-19 18:45 PST S81-GEOM-OPUS -> COORD, S81-DIE-R3 (re hub 7b97ebca). Launch base f	
+S81	col_h9_r0_p1__t1__pv8c197f8e	type	running (lint advisory)	0.2	S81-GEOM-OPUS (+S81-CLOCK-WINDOW-1119)	family	yes	11-19 19:41	aee65426f583ae834	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 18:45 - 2026-11-19 18:45 PST S81-GEOM-OPUS -> COORD, S81-DIE-R3 (re hub 7b97ebca). Launch base f	
+S81	col_h9_r0_p1__t1__pva2e3974f	type	running (lint advisory)	0.2	S81-GEOM-OPUS (+S81-CLOCK-WINDOW-1119)	family	yes	11-19 19:41	aee65426f583ae834	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 18:45 - 2026-11-19 18:45 PST S81-GEOM-OPUS -> COORD, S81-DIE-R3 (re hub 7b97ebca). Launch base f	
+S81	col_h9_r0_p1__t1__pvb3e2a60a	type	running (lint advisory)	0.2	S81-GEOM-OPUS (+S81-CLOCK-WINDOW-1119)	family	yes	11-19 19:41	aee65426f583ae834	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 18:45 - 2026-11-19 18:45 PST S81-GEOM-OPUS -> COORD, S81-DIE-R3 (re hub 7b97ebca). Launch base f	
+S81	col_h9_r0_p1__t1__pvb49c16c8	type	running (lint advisory)	0.2	S81-GEOM-OPUS (+S81-CLOCK-WINDOW-1119)	family	yes	11-19 19:41	aee65426f583ae834	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 18:45 - 2026-11-19 18:45 PST S81-GEOM-OPUS -> COORD, S81-DIE-R3 (re hub 7b97ebca). Launch base f	
+S81	col_h9_r0_p1__t1__pvf9acce4c	type	running	1.1	S81-GEOM-OPUS (+S81-CLOCK-WINDOW-1119)	family	yes	11-19 19:41	aee65426f583ae834	RUNNING place	2026-11-19 19:46	11-19 18:45 - 2026-11-19 18:45 PST S81-GEOM-OPUS -> COORD, S81-DIE-R3 (re hub 7b97ebca). Launch base f	
+S81	col_h9_r0_p2__t1__cl0045af7b__pv622a6f97	type	running	1.1	S81-GEOM-OPUS (+COL-CENSUS-1119,FABLE-FIX-S81-LEAF)	type	yes	11-19 19:41	aee65426f583ae834	RUNNING place	2026-11-19 19:46	11-19 17:54 # S81-GEOM-OPUS handoff (successor of FABLE-FIX-S81-STRIP + FABLE-FIX-S81-BANKLEAF; starte	
+S81	col_h9_r0_p2__t1__cl0045af7b__pv6882e5ea	type	running (lint advisory)	0.2	COL-CENSUS-1119 (+S81-GEOM-OPUS,FABLE-FIX-S81-LEAF)	cluster	yes	11-19 19:26	aae88b611d368016c	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 19:15 - 2026-11-19 19:15 PST STATE [COL-CENSUS-1119 -> COORD; cc S81-GEOM-OPUS, S81-CLOCK-WINDOW	
+S81	col_h9_r0_p2__t1__cl0045af7b__pva2793873	type	running	1.1	COL-CENSUS-1119 (+S81-GEOM-OPUS,FABLE-FIX-S81-LEAF)	cluster	yes	11-19 19:26	aae88b611d368016c	RUNNING place	2026-11-19 19:46	11-19 19:15 - 2026-11-19 19:15 PST STATE [COL-CENSUS-1119 -> COORD; cc S81-GEOM-OPUS, S81-CLOCK-WINDOW	
+S81	col_h9_r0_p2__t1__cl0045af7b__pvd86cb19a	type	running (lint advisory)	0.2	COL-CENSUS-1119 (+S81-GEOM-OPUS,FABLE-FIX-S81-LEAF)	cluster	yes	11-19 19:26	aae88b611d368016c	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 19:15 - 2026-11-19 19:15 PST STATE [COL-CENSUS-1119 -> COORD; cc S81-GEOM-OPUS, S81-CLOCK-WINDOW	
+S81	col_h9_r0_p2__t1__cl0045af7b__pve183b536	type	running (lint advisory)	0.2	COL-CENSUS-1119 (+S81-GEOM-OPUS,FABLE-FIX-S81-LEAF)	cluster	yes	11-19 19:26	aae88b611d368016c	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 19:15 - 2026-11-19 19:15 PST STATE [COL-CENSUS-1119 -> COORD; cc S81-GEOM-OPUS, S81-CLOCK-WINDOW	
+S81	col_h9_r0_p2__t1__cl9f71e63d__pv11b73b67	type	running	1.1	S81-GEOM-OPUS (+FABLE-FIX-S81-LEAF,S81-CLOCK-WINDOW-1119)	cluster	yes	11-19 19:41	aee65426f583ae834	RUNNING resume_fp	2026-11-19 19:46	11-19 17:54 # S81-GEOM-OPUS handoff (successor of FABLE-FIX-S81-STRIP + FABLE-FIX-S81-BANKLEAF; starte	
+S81	col_h9_r0_p2__t1__cl9f71e63d__pv2744f675	type	running (lint advisory)	0.2	S81-GEOM-OPUS (+FABLE-FIX-S81-LEAF,S81-CLOCK-WINDOW-1119)	cluster	yes	11-19 19:41	aee65426f583ae834	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 17:54 # S81-GEOM-OPUS handoff (successor of FABLE-FIX-S81-STRIP + FABLE-FIX-S81-BANKLEAF; starte	
+S81	col_h9_r0_p2__t1__cl9f71e63d__pv291547b4	type	running (lint advisory)	0.2	S81-GEOM-OPUS (+FABLE-FIX-S81-LEAF,S81-CLOCK-WINDOW-1119)	cluster	yes	11-19 19:41	aee65426f583ae834	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 17:54 # S81-GEOM-OPUS handoff (successor of FABLE-FIX-S81-STRIP + FABLE-FIX-S81-BANKLEAF; starte	
+S81	col_h9_r0_p2__t1__cl9f71e63d__pv5752c4ff	type	running	1.1	S81-GEOM-OPUS (+FABLE-FIX-S81-LEAF,S81-CLOCK-WINDOW-1119)	cluster	yes	11-19 19:41	aee65426f583ae834	RUNNING place	2026-11-19 19:46	11-19 17:54 # S81-GEOM-OPUS handoff (successor of FABLE-FIX-S81-STRIP + FABLE-FIX-S81-BANKLEAF; starte	
+S81	col_h9_r0_p2__t1__cl9f71e63d__pva4376595	type	running	1.1	S81-GEOM-OPUS (+FABLE-FIX-S81-LEAF,S81-CLOCK-WINDOW-1119)	cluster	yes	11-19 19:41	aee65426f583ae834	RUNNING place	2026-11-19 19:46	11-19 17:54 # S81-GEOM-OPUS handoff (successor of FABLE-FIX-S81-STRIP + FABLE-FIX-S81-BANKLEAF; starte	
+S81	col_h9_r0_p2__t1__cl9f71e63d__pvabc9823e	type	running (lint advisory)	0.2	S81-GEOM-OPUS (+FABLE-FIX-S81-LEAF,S81-CLOCK-WINDOW-1119)	cluster	yes	11-19 19:41	aee65426f583ae834	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 17:54 # S81-GEOM-OPUS handoff (successor of FABLE-FIX-S81-STRIP + FABLE-FIX-S81-BANKLEAF; starte	
+S81	col_h9_r0_p2__t1__cl9f71e63d__pvef55eb84	type	running (lint advisory)	0.2	S81-GEOM-OPUS (+FABLE-FIX-S81-LEAF,S81-CLOCK-WINDOW-1119)	cluster	yes	11-19 19:41	aee65426f583ae834	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 17:54 # S81-GEOM-OPUS handoff (successor of FABLE-FIX-S81-STRIP + FABLE-FIX-S81-BANKLEAF; starte	
+S81	col_h9_r0_p3__t1__cl0cd90c0e__pv110cabb8	type	running	1.1	S81-CLOCK-WINDOW-1119 (+S81-GEOM-OPUS)	family	yes	11-19 19:24	a8c1817c3b70e7e8b	RUNNING place	2026-11-19 19:46	11-19 18:28 - 2026-11-19 18:28 PST RESULT (2b) kit-contract hold -99.99 [S81-CLOCK-WINDOW-1119 -> COOR	
+S81	col_h9_r0_p3__t1__cl0cd90c0e__pv13474472	type	running	1.1	S81-CLOCK-WINDOW-1119 (+S81-GEOM-OPUS)	family	yes	11-19 19:24	a8c1817c3b70e7e8b	RUNNING resume_fp	2026-11-19 19:46	11-19 18:28 - 2026-11-19 18:28 PST RESULT (2b) kit-contract hold -99.99 [S81-CLOCK-WINDOW-1119 -> COOR	
+S81	col_h9_r0_p3__t1__cl0cd90c0e__pv4cfde03b	type	running (lint advisory)	0.2	S81-CLOCK-WINDOW-1119 (+S81-GEOM-OPUS)	family	yes	11-19 19:24	a8c1817c3b70e7e8b	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 18:28 - 2026-11-19 18:28 PST RESULT (2b) kit-contract hold -99.99 [S81-CLOCK-WINDOW-1119 -> COOR	
+S81	col_h9_r0_p3__t1__cl0cd90c0e__pv5b02e93b	type	running (lint advisory)	0.2	S81-CLOCK-WINDOW-1119 (+S81-GEOM-OPUS)	family	yes	11-19 19:24	a8c1817c3b70e7e8b	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 18:28 - 2026-11-19 18:28 PST RESULT (2b) kit-contract hold -99.99 [S81-CLOCK-WINDOW-1119 -> COOR	
+S81	col_h9_r0_p3__t1__cl0cd90c0e__pv8d734760	type	running (lint advisory)	0.2	S81-CLOCK-WINDOW-1119 (+S81-GEOM-OPUS)	family	yes	11-19 19:24	a8c1817c3b70e7e8b	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 18:28 - 2026-11-19 18:28 PST RESULT (2b) kit-contract hold -99.99 [S81-CLOCK-WINDOW-1119 -> COOR	
+S81	col_h9_r0_p3__t1__cl0cd90c0e__pvcb7f0079	type	running (lint advisory)	0.2	S81-CLOCK-WINDOW-1119 (+S81-GEOM-OPUS)	family	yes	11-19 19:24	a8c1817c3b70e7e8b	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 18:28 - 2026-11-19 18:28 PST RESULT (2b) kit-contract hold -99.99 [S81-CLOCK-WINDOW-1119 -> COOR	
+S81	col_h9_r0_p3__t1__cl31d0dc4b	type	running	1.1	S81-CLOCK-WINDOW-1119 (+S81-GEOM-OPUS)	family	yes	11-19 19:24	a8c1817c3b70e7e8b	RUNNING place	2026-11-19 19:46	11-19 18:28 - 2026-11-19 18:28 PST RESULT (2b) kit-contract hold -99.99 [S81-CLOCK-WINDOW-1119 -> COOR	
+S81	col_h9_r0_p3__t1__cl8ce97bcb__pv1489a898	type	running	1.1	S81-CLOCK-WINDOW-1119 (+S81-GEOM-OPUS)	family	yes	11-19 19:24	a8c1817c3b70e7e8b	RUNNING place	2026-11-19 19:46	11-19 18:28 - 2026-11-19 18:28 PST RESULT (2b) kit-contract hold -99.99 [S81-CLOCK-WINDOW-1119 -> COOR	
+S81	col_h9_r0_p3__t1__cl8ce97bcb__pv625eef47	type	running (lint advisory)	0.2	S81-CLOCK-WINDOW-1119 (+S81-GEOM-OPUS)	family	yes	11-19 19:24	a8c1817c3b70e7e8b	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 18:28 - 2026-11-19 18:28 PST RESULT (2b) kit-contract hold -99.99 [S81-CLOCK-WINDOW-1119 -> COOR	
+S81	col_h9_r0_p3__t1__cl8ce97bcb__pvc11684b5	type	running	1.1	S81-CLOCK-WINDOW-1119 (+S81-GEOM-OPUS)	family	yes	11-19 19:24	a8c1817c3b70e7e8b	RUNNING resume_fp	2026-11-19 19:46	11-19 18:28 - 2026-11-19 18:28 PST RESULT (2b) kit-contract hold -99.99 [S81-CLOCK-WINDOW-1119 -> COOR	
+S81	col_h9_r0_p3__t1__cl8ce97bcb__pvcd8810ba	type	running (lint advisory)	0.2	S81-CLOCK-WINDOW-1119 (+S81-GEOM-OPUS)	family	yes	11-19 19:24	a8c1817c3b70e7e8b	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 18:28 - 2026-11-19 18:28 PST RESULT (2b) kit-contract hold -99.99 [S81-CLOCK-WINDOW-1119 -> COOR	
+S81	col_h9_r0_p3__t1__cl8ce97bcb__pvd2159f4a	type	running	1.1	S81-CLOCK-WINDOW-1119 (+S81-GEOM-OPUS)	family	yes	11-19 19:24	a8c1817c3b70e7e8b	RUNNING place	2026-11-19 19:46	11-19 18:28 - 2026-11-19 18:28 PST RESULT (2b) kit-contract hold -99.99 [S81-CLOCK-WINDOW-1119 -> COOR	
+S81	col_h9_r0_p4__t1__cl8ef405e8__pv70731479	type	running	1.1	S81-GEOM-OPUS (+S81-CLOCK-WINDOW-1119)	family	yes	11-19 19:41	aee65426f583ae834	RUNNING place	2026-11-19 19:46	11-19 18:45 - 2026-11-19 18:45 PST S81-GEOM-OPUS -> COORD, S81-DIE-R3 (re hub 7b97ebca). Launch base f	
+S81	col_h9_r0_p4__t1__cl8ef405e8__pv775e5cef	type	running (lint advisory)	0.2	S81-GEOM-OPUS (+S81-CLOCK-WINDOW-1119)	family	yes	11-19 19:41	aee65426f583ae834	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 18:45 - 2026-11-19 18:45 PST S81-GEOM-OPUS -> COORD, S81-DIE-R3 (re hub 7b97ebca). Launch base f	
+S81	col_h9_r0_p4__t1__cl8ef405e8__pv89bf360c	type	running (lint advisory)	0.2	S81-GEOM-OPUS (+S81-CLOCK-WINDOW-1119)	family	yes	11-19 19:41	aee65426f583ae834	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 18:45 - 2026-11-19 18:45 PST S81-GEOM-OPUS -> COORD, S81-DIE-R3 (re hub 7b97ebca). Launch base f	
+S81	col_h9_r0_p4__t1__cl8ef405e8__pv91095415	type	running (lint advisory)	0.2	S81-GEOM-OPUS (+S81-CLOCK-WINDOW-1119)	family	yes	11-19 19:41	aee65426f583ae834	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 18:45 - 2026-11-19 18:45 PST S81-GEOM-OPUS -> COORD, S81-DIE-R3 (re hub 7b97ebca). Launch base f	
+S81	col_h9_r0_p4__t1__clcb2fbfe8__pv3544fb31	type	running	1.1	S81-GEOM-OPUS (+S81-CLOCK-WINDOW-1119)	family	yes	11-19 19:41	aee65426f583ae834	RUNNING gen	2026-11-19 19:46	11-19 18:45 - 2026-11-19 18:45 PST S81-GEOM-OPUS -> COORD, S81-DIE-R3 (re hub 7b97ebca). Launch base f	
+S81	col_h9_r0_p4__t1__clcb2fbfe8__pvec137455	type	running (lint advisory)	0.2	S81-GEOM-OPUS (+S81-CLOCK-WINDOW-1119)	family	yes	11-19 19:41	aee65426f583ae834	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 18:45 - 2026-11-19 18:45 PST S81-GEOM-OPUS -> COORD, S81-DIE-R3 (re hub 7b97ebca). Launch base f	
+S81	col_h9_r0_p5__t1__pv35382794	type	running	1.1	S81-GEOM-OPUS (+S81-CLOCK-WINDOW-1119)	family	yes	11-19 19:41	aee65426f583ae834	RUNNING place	2026-11-19 19:46	11-19 18:45 - 2026-11-19 18:45 PST S81-GEOM-OPUS -> COORD, S81-DIE-R3 (re hub 7b97ebca). Launch base f	
+S81	col_h9_r0_p5__t1__pv5c8f2166	type	running (lint advisory)	0.2	S81-GEOM-OPUS (+S81-CLOCK-WINDOW-1119)	family	yes	11-19 19:41	aee65426f583ae834	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 18:45 - 2026-11-19 18:45 PST S81-GEOM-OPUS -> COORD, S81-DIE-R3 (re hub 7b97ebca). Launch base f	
+S81	col_h9_r0_p5__t1__pv8995e794	type	running (lint advisory)	0.2	S81-GEOM-OPUS (+S81-CLOCK-WINDOW-1119)	family	yes	11-19 19:41	aee65426f583ae834	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 18:45 - 2026-11-19 18:45 PST S81-GEOM-OPUS -> COORD, S81-DIE-R3 (re hub 7b97ebca). Launch base f	
+S81	col_h9_r0_p5__t1__pvb22875c0	type	running (lint advisory)	0.2	S81-GEOM-OPUS (+S81-CLOCK-WINDOW-1119)	family	yes	11-19 19:41	aee65426f583ae834	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 18:45 - 2026-11-19 18:45 PST S81-GEOM-OPUS -> COORD, S81-DIE-R3 (re hub 7b97ebca). Launch base f	
+S81	col_h9_r0_p5__t1__pvbca8d846	type	running (lint advisory)	0.2	S81-GEOM-OPUS (+S81-CLOCK-WINDOW-1119)	family	yes	11-19 19:41	aee65426f583ae834	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 18:45 - 2026-11-19 18:45 PST S81-GEOM-OPUS -> COORD, S81-DIE-R3 (re hub 7b97ebca). Launch base f	
+S81	col_h9_r0_p5__t1__pvc1b82625	type	running	1.1	S81-GEOM-OPUS (+S81-CLOCK-WINDOW-1119)	family	yes	11-19 19:41	aee65426f583ae834	RUNNING resume_fp	2026-11-19 19:46	11-19 18:45 - 2026-11-19 18:45 PST S81-GEOM-OPUS -> COORD, S81-DIE-R3 (re hub 7b97ebca). Launch base f	
+S81	col_h9_r0_p5__t1__pvc6e5797f	type	running (lint advisory)	0.2	S81-GEOM-OPUS (+S81-CLOCK-WINDOW-1119)	family	yes	11-19 19:41	aee65426f583ae834	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 18:45 - 2026-11-19 18:45 PST S81-GEOM-OPUS -> COORD, S81-DIE-R3 (re hub 7b97ebca). Launch base f	
+S81	col_h9_r0_p5__t1__pvc93af856	type	running (lint advisory)	0.2	S81-GEOM-OPUS (+S81-CLOCK-WINDOW-1119)	family	yes	11-19 19:41	aee65426f583ae834	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 18:45 - 2026-11-19 18:45 PST S81-GEOM-OPUS -> COORD, S81-DIE-R3 (re hub 7b97ebca). Launch base f	
+S81	col_h9_r0_p5__t1__pveda1ecc9	type	running (lint advisory)	0.2	S81-GEOM-OPUS (+S81-CLOCK-WINDOW-1119)	family	yes	11-19 19:41	aee65426f583ae834	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 18:45 - 2026-11-19 18:45 PST S81-GEOM-OPUS -> COORD, S81-DIE-R3 (re hub 7b97ebca). Launch base f	
+S81	col_h9_r0_p5__t1__pvee6f8140	type	running (lint advisory)	0.2	S81-GEOM-OPUS (+S81-CLOCK-WINDOW-1119)	family	yes	11-19 19:41	aee65426f583ae834	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 18:45 - 2026-11-19 18:45 PST S81-GEOM-OPUS -> COORD, S81-DIE-R3 (re hub 7b97ebca). Launch base f	
+S81	col_h9_r0_p5__t1__pvf71da13a	type	running (lint advisory)	0.2	S81-GEOM-OPUS (+S81-CLOCK-WINDOW-1119)	family	yes	11-19 19:41	aee65426f583ae834	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 18:45 - 2026-11-19 18:45 PST S81-GEOM-OPUS -> COORD, S81-DIE-R3 (re hub 7b97ebca). Launch base f	
+S81	col_h9_r0_p5__t1__pvf731e6ec	type	running (lint advisory)	0.2	S81-GEOM-OPUS (+S81-CLOCK-WINDOW-1119)	family	yes	11-19 19:41	aee65426f583ae834	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 18:45 - 2026-11-19 18:45 PST S81-GEOM-OPUS -> COORD, S81-DIE-R3 (re hub 7b97ebca). Launch base f	
+S81	col_h9_r0_p6__t1__pv0012ba28	type	running	1.1	COL-CENSUS-1119 (+S81-GEOM-OPUS,S81-CLOCK-WINDOW-1119)	family	yes	11-19 19:26	aae88b611d368016c	RUNNING place	2026-11-19 19:46	11-19 19:15 - 2026-11-19 19:15 PST STATE [COL-CENSUS-1119 -> COORD; cc S81-GEOM-OPUS, S81-CLOCK-WINDOW	
+S81	col_h9_r0_p6__t1__pv082a7609	type	running (lint advisory)	0.2	COL-CENSUS-1119 (+S81-GEOM-OPUS,S81-CLOCK-WINDOW-1119)	family	yes	11-19 19:26	aae88b611d368016c	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 19:15 - 2026-11-19 19:15 PST STATE [COL-CENSUS-1119 -> COORD; cc S81-GEOM-OPUS, S81-CLOCK-WINDOW	
+S81	col_h9_r0_p6__t1__pv6398a5b7	type	running (lint advisory)	0.2	COL-CENSUS-1119 (+S81-GEOM-OPUS,S81-CLOCK-WINDOW-1119)	family	yes	11-19 19:26	aae88b611d368016c	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 19:15 - 2026-11-19 19:15 PST STATE [COL-CENSUS-1119 -> COORD; cc S81-GEOM-OPUS, S81-CLOCK-WINDOW	
+S81	col_h9_r0_p6__t1__pv7808008f	type	running (lint advisory)	0.2	COL-CENSUS-1119 (+S81-GEOM-OPUS,S81-CLOCK-WINDOW-1119)	family	yes	11-19 19:26	aae88b611d368016c	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 19:15 - 2026-11-19 19:15 PST STATE [COL-CENSUS-1119 -> COORD; cc S81-GEOM-OPUS, S81-CLOCK-WINDOW	
+S81	col_h9_r0_p6__t1__pv8241ebb8	type	running (lint advisory)	0.2	COL-CENSUS-1119 (+S81-GEOM-OPUS,S81-CLOCK-WINDOW-1119)	family	yes	11-19 19:26	aae88b611d368016c	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 19:15 - 2026-11-19 19:15 PST STATE [COL-CENSUS-1119 -> COORD; cc S81-GEOM-OPUS, S81-CLOCK-WINDOW	
+S81	col_h9_r0_p6__t1__pv87853a7e	type	running (lint advisory)	0.2	COL-CENSUS-1119 (+S81-GEOM-OPUS,S81-CLOCK-WINDOW-1119)	family	yes	11-19 19:26	aae88b611d368016c	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 19:15 - 2026-11-19 19:15 PST STATE [COL-CENSUS-1119 -> COORD; cc S81-GEOM-OPUS, S81-CLOCK-WINDOW	
+S81	col_h9_r0_p6__t1__pv8d617470	type	running (lint advisory)	0.2	COL-CENSUS-1119 (+S81-GEOM-OPUS,S81-CLOCK-WINDOW-1119)	family	yes	11-19 19:26	aae88b611d368016c	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 19:15 - 2026-11-19 19:15 PST STATE [COL-CENSUS-1119 -> COORD; cc S81-GEOM-OPUS, S81-CLOCK-WINDOW	
+S81	col_h9_r0_p6__t1__pv9da72aa7	type	running (lint advisory)	0.2	COL-CENSUS-1119 (+S81-GEOM-OPUS,S81-CLOCK-WINDOW-1119)	family	yes	11-19 19:26	aae88b611d368016c	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 19:15 - 2026-11-19 19:15 PST STATE [COL-CENSUS-1119 -> COORD; cc S81-GEOM-OPUS, S81-CLOCK-WINDOW	
+S81	col_h9_r0_p6__t1__pvb38a9d6c	type	running (lint advisory)	0.2	COL-CENSUS-1119 (+S81-GEOM-OPUS,S81-CLOCK-WINDOW-1119)	type	yes	11-19 19:26	aae88b611d368016c	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 19:26 - 2026-11-19 19:26 PST STATE [COL-CENSUS-1119 -> COORD; cc S81-DIE-R3] CC-BANK-2S, the par	
+S81	col_h9_r0_p6__t1__pvbdbd69f2	type	running (lint advisory)	0.2	COL-CENSUS-1119 (+S81-GEOM-OPUS,S81-CLOCK-WINDOW-1119)	family	yes	11-19 19:26	aae88b611d368016c	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 19:15 - 2026-11-19 19:15 PST STATE [COL-CENSUS-1119 -> COORD; cc S81-GEOM-OPUS, S81-CLOCK-WINDOW	
+S81	col_h9_r0_p6__t1__pvde240d6d	type	running (lint advisory)	0.2	COL-CENSUS-1119 (+S81-GEOM-OPUS,S81-CLOCK-WINDOW-1119)	family	yes	11-19 19:26	aae88b611d368016c	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 19:15 - 2026-11-19 19:15 PST STATE [COL-CENSUS-1119 -> COORD; cc S81-GEOM-OPUS, S81-CLOCK-WINDOW	
+S81	col_h9_r0_p6__t1__pvea45abf3	type	running (lint advisory)	0.2	COL-CENSUS-1119 (+S81-GEOM-OPUS,S81-CLOCK-WINDOW-1119)	family	yes	11-19 19:26	aae88b611d368016c	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 19:15 - 2026-11-19 19:15 PST STATE [COL-CENSUS-1119 -> COORD; cc S81-GEOM-OPUS, S81-CLOCK-WINDOW	
+S81	col_h9_r1__t1__cl49d7a23e__pv047ea3b3	type	running	1.1	WAVE-PILOT-FIX (+FABLE-FIX-S81-LEAF,FABLE-FIX-QC)	type	yes	11-19 20:25	ace6bf6d149abd088	RUNNING place	2026-11-19 19:45	11-19 19:46 - 2026-11-19 19:46 PST [to COORD, S81-DIE-R3, FLEET-OPS-R] (1) S81 DIE-OFF fixed: f0fe518f	
+S81	col_h9_r1__t1__cl49d7a23e__pv0a45e191	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__cl49d7a23e__pv0bab1162	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__cl49d7a23e__pv0bdbc3f3	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__cl49d7a23e__pv11c696bc	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__cl49d7a23e__pv11dcdcd2	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__cl49d7a23e__pv152ea348	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__cl49d7a23e__pv15cef3f7	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__cl49d7a23e__pv1c15776f	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__cl49d7a23e__pv2cabd9a9	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__cl49d7a23e__pv2ec9c8a9	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__cl49d7a23e__pv2f96c04f	type	running	1.1	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	RUNNING place	2026-11-19 19:45	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__cl49d7a23e__pv36da905c	type	running	1.1	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	RUNNING place	2026-11-19 19:46	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__cl49d7a23e__pv3a0a8b60	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__cl49d7a23e__pv4108910d	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__cl49d7a23e__pv4593e8e5	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__cl49d7a23e__pv461b5256	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__cl49d7a23e__pv47efee8f	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__cl49d7a23e__pv49636389	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__cl49d7a23e__pv49f0ba38	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__cl49d7a23e__pv4bd36c74	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__cl49d7a23e__pv4ef1b59c	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__cl49d7a23e__pv534ef85e	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__cl49d7a23e__pv58f6356d	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__cl49d7a23e__pv5bdf9f51	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__cl49d7a23e__pv5ffbfb8b	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__cl49d7a23e__pv62bca836	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__cl49d7a23e__pv637e5d47	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__cl49d7a23e__pv6c1e320a	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__cl49d7a23e__pv70f04488	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__cl49d7a23e__pv7466df46	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__cl49d7a23e__pv87d52780	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__cl49d7a23e__pv88891f20	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__cl49d7a23e__pv8aaf8508	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__cl49d7a23e__pv8ea75ee5	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__cl49d7a23e__pv9a5bd576	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__cl49d7a23e__pv9c5966b7	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__cl49d7a23e__pva2370bfd	type	running	1.1	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	RUNNING place	2026-11-19 19:46	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__cl49d7a23e__pva7e46565	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__cl49d7a23e__pvac06e607	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__cl49d7a23e__pvadb6c679	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__cl49d7a23e__pvadbd1880	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__cl49d7a23e__pvafa6f454	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__cl49d7a23e__pvb2dac3cf	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__cl49d7a23e__pvbb600efe	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__cl49d7a23e__pvc22584f3	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__cl49d7a23e__pvc25aad1b	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__cl49d7a23e__pvc382fb14	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__cl49d7a23e__pvcb813ee7	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__cl49d7a23e__pve273b259	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__cl49d7a23e__pve3f8a86c	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__cl49d7a23e__pvebe696ff	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__cl49d7a23e__pvf0f1ccb2	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__cl49d7a23e__pvfed9fee6	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__clf32cde8d__pv387d6579	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__clf32cde8d__pv3b9ba75c	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__clf32cde8d__pv48cfde67	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__clf32cde8d__pv63f488e9	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__clf32cde8d__pvd9381c1d	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r1__t1__clf32cde8d__pvee46d7b8	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__cl774acf45__pv858fb2ba	type	running	1.1	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	RUNNING resume_fp	2026-11-19 19:46	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__cl774acf45__pve3ab90e7	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__cl774acf45__pvea45273b	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__cl774acf45__pvf8d9f9e5	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__cl87f3ff59	type	running	1.1	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	RUNNING preflight	2026-11-19 19:46	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__clb8d86cd5__pv6a2b031b	type	running	1.1	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	RUNNING place	2026-11-19 19:46	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__clb8d86cd5__pv8d57997d	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__clb8d86cd5__pv982ec12c	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__clb8d86cd5__pvb2cd22a7	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__clb8d86cd5__pvf0595d0f	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__clb8d86cd5__pvf1445dce	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__clc9ad8f7e__pv45d0c698	type	running	1.1	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	RUNNING place	2026-11-19 19:46	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__clc9ad8f7e__pv81a5dbf4	type	running	1.1	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	RUNNING place	2026-11-19 19:46	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__clc9ad8f7e__pvcf44b14c	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__clc9ad8f7e__pvf079625b	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__clc9ad8f7e__pvfef7c177	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__clce45cab5__pv06a1adf6	type	running	1.1	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	RUNNING place	2026-11-19 19:46	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__clce45cab5__pv09b9967e	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__clce45cab5__pv14626557	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__clce45cab5__pv1aac64f0	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__clce45cab5__pv22267ca0	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__clce45cab5__pv2833ee2b	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__clce45cab5__pv2f87774f	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__clce45cab5__pv31e47bd5	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__clce45cab5__pv37074264	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__clce45cab5__pv40e9fb5a	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__clce45cab5__pv467913cc	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__clce45cab5__pv4754d912	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__clce45cab5__pv4937edd4	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__clce45cab5__pv6827937d	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__clce45cab5__pv7b8853b5	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__clce45cab5__pv7c30fd4e	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__clce45cab5__pv843b0fff	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__clce45cab5__pv8b5a5980	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__clce45cab5__pv9a22736e	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__clce45cab5__pv9cc104a8	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__clce45cab5__pv9e92407b	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__clce45cab5__pva119e808	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__clce45cab5__pva8c07948	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__clce45cab5__pvaa9a1324	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__clce45cab5__pvb11188eb	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__clce45cab5__pvb3258867	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__clce45cab5__pvb3f647ea	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__clce45cab5__pvb6ec679e	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__clce45cab5__pvb7e88dd2	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__clce45cab5__pvc6132d1e	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__clce45cab5__pvcd1d9f5f	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__clce45cab5__pvd2454d1a	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__clce45cab5__pvd60e699f	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__clce45cab5__pvdc7d4221	type	running	1.1	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	RUNNING place	2026-11-19 19:46	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__clce45cab5__pve0486b40	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__clce45cab5__pve0bffaf8	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__clce45cab5__pve171243a	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__clce45cab5__pvf390b1f5	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__clce45cab5__pvf57acd2b	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__clce45cab5__pvf9c773d5	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__clce45cab5__pvfb42a1ad	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	col_h9_r2__t1__clce45cab5__pvfd79e8b6	type	running (lint advisory)	0.2	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,COL-CENSUS-1119)	family	yes	11-19 20:39	a01350e9ff27da214	LINT-ADVISORY prelint LINT	2026-11-19 20:38	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	dsdv_slice_c1x_C__t1	type	running	3.8	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,S81-GEOM-OPUS)	family	yes	11-19 20:39	a01350e9ff27da214	RUNNING route	2026-11-19 17:04	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	dsdv_slice_c1x_C__t10	type	running	17.7	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,S81-GEOM-OPUS)	family	yes	11-19 20:39	a01350e9ff27da214	RUNNING route	2026-11-19 03:10	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	dsdv_slice_c1x_C__t3	type	running	14.3	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,S81-GEOM-OPUS)	family	yes	11-19 20:39	a01350e9ff27da214	RUNNING route	2026-11-19 06:34	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	dsdv_slice_c1x_C__t4	type	running	19.0	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,S81-GEOM-OPUS)	family	yes	11-19 20:39	a01350e9ff27da214	RUNNING route	2026-11-19 01:51	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	dsdv_slice_c1x_C__t5	type	running	17.4	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,S81-GEOM-OPUS)	family	yes	11-19 20:39	a01350e9ff27da214	RUNNING route	2026-11-19 03:28	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	dsdv_slice_c1x_C__t6	type	running	3.6	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,S81-GEOM-OPUS)	family	yes	11-19 20:39	a01350e9ff27da214	RUNNING route	2026-11-19 17:13	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	dsdv_slice_c1x_C__t7	type	running	19.6	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,S81-GEOM-OPUS)	family	yes	11-19 20:39	a01350e9ff27da214	RUNNING route	2026-11-19 01:13	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	dsdv_slice_c1x_C__t8	type	running	29.3	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,S81-GEOM-OPUS)	family	yes	11-19 20:39	a01350e9ff27da214	RUNNING route	2026-11-18 15:32	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	dsdv_slice_c1x_C__t9	type	running	4.9	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,S81-GEOM-OPUS)	family	yes	11-19 20:39	a01350e9ff27da214	RUNNING route	2026-11-19 16:00	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	dsdv_slice_c3x_C__t1	type	running	25.4	KIT-WAVE(auto)	autopilot	yes			RUNNING route	2026-11-18 19:26		
+S81	dsdv_slice_iq_C__t1	type	running	34.5	KIT-WAVE(auto)	autopilot	yes			RUNNING route	2026-11-18 10:22		
+S81	dsdv_slice_kv512_C__t1	type	running	33.3	KIT-WAVE(auto)	autopilot	yes			RUNNING route	2026-11-18 11:31		
+S81	dsdv_slice_lepe_mu_C__t1	type	running	14.3	KIT-WAVE(auto)	autopilot	yes			RUNNING route	2026-11-19 06:34		
+S81	dsdv_slice_lepe_mu_LP__t2	type	running	1.1	FABLE-FIX-S81-LEPE	type	yes	11-19 19:31	ac3841222ce73635c	RUNNING place	2026-11-19 19:46	11-19 18:03 - 2026-11-19 18:03 PST PROOF [FABLE-FIX-S81-LEPE watcher -> S81-DIE-R3; cc COORD] private 	
+S81	dsdv_slice_lepe_nh_mus_C__t1	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING gen_lint	2026-11-19 19:46		
+S81	dsdv_slice_lepe_nh_mus_LP__t1	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING place	2026-11-19 19:46		
+S81	dsdv_slice_lepw_mu_C__t1	type	running	1.1	FABLE-FIX-S81-LEPE	type	yes	11-19 19:31	ac3841222ce73635c	RUNNING gen_lint	2026-11-19 19:46	11-19 19:31 - 2026-11-19 19:31 PST ALERT [FABLE-FIX-S81-LEPE -> COORD, S81-DIE-R3, WAVE-PILOT-FIX] S81	
+S81	dsdv_slice_lepw_mu_LP__t2	type	running	1.1	PRECHECK-1119	type	yes	11-19 20:45	a4318c31cd2fd0c66	RUNNING place	2026-11-19 19:46	11-19 17:13 - 2026-11-19 17:13 PST KIT-SCAN hourly [PRECHECK-1119 -> COORD, die owners] renewed-glider	
+S81	dsdv_slice_lepw_mus_C__t1	type	running	29.5	KIT-WAVE(auto)	autopilot	yes			RUNNING route	2026-11-18 15:19		
+S81	dsdv_slice_lepw_mus_LP__t2	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING place	2026-11-19 19:46		
+S81	eng__t1	type	running	1.1	S81-GEOM-OPUS	type	yes	11-19 19:41	aee65426f583ae834	RUNNING place	2026-11-19 19:46	11-19 17:54 # S81-GEOM-OPUS handoff (successor of FABLE-FIX-S81-STRIP + FABLE-FIX-S81-BANKLEAF; starte	
+S81	gunit__t1	type	running	1.1	FABLE-FIX-S81-LEAF (+S81-CLOCK-WINDOW-1119)	family	yes	11-19 20:39	a01350e9ff27da214	RUNNING place	2026-11-19 19:46	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	iqf__t1	type	running	1.1	PRECHECK-1119	type	yes	11-19 20:45	a4318c31cd2fd0c66	RUNNING place	2026-11-19 19:46	11-19 15:09 - 2026-11-19 15:09 PST KIT-SCAN hourly [PRECHECK-1119 -> COORD, die owners] civil-redfish:	
+S81	phy__t1	type	NOT-IN-PLAN	1.1	S81-GEOM-OPUS	type	yes	11-19 19:41	aee65426f583ae834	RUNNING gen	2026-11-19 19:46	11-19 17:54 # S81-GEOM-OPUS handoff (successor of FABLE-FIX-S81-STRIP + FABLE-FIX-S81-BANKLEAF; starte	
+S81	s81sl_kv_leaf__t1	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING place	2026-11-19 19:46		
+S81	s81sl_kv_leaf__t2	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING kit_rtl	2026-11-19 19:46		
+S81	s81sl_kv_leaf__t3	type	running	0.5	KIT-WAVE(auto)	autopilot	yes			RUNNING gen	2026-11-19 20:24		
+S81	s81sl_kv_leaf__t4	type	running	1.1	PRECHECK-1119	type	yes	11-19 20:45	a4318c31cd2fd0c66	RUNNING place	2026-11-19 19:46	11-19 15:09 - 2026-11-19 15:09 PST KIT-SCAN hourly [PRECHECK-1119 -> COORD, die owners] civil-redfish:	
+S81	s81sl_kv_leaf__t5	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING gen	2026-11-19 19:46		
+S81	s81sl_leaf__t1	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING gen	2026-11-19 19:46		
+S81	s81sl_leaf__t10	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING kit_rtl	2026-11-19 19:46		
+S81	s81sl_leaf__t11	type	running	1.1	NOPROG-FIX-1115	type	yes	11-19 19:52	sonnet	RUNNING place	2026-11-19 19:46	11-19 14:52 - 2026-11-19 14:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-19 14:52 PST	
+S81	s81sl_leaf__t12	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING kit_rtl	2026-11-19 19:46		
+S81	s81sl_leaf__t13	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING place	2026-11-19 19:46		
+S81	s81sl_leaf__t14	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING kit_rtl	2026-11-19 19:46		
+S81	s81sl_leaf__t15	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING gen	2026-11-19 19:46		
+S81	s81sl_leaf__t16	type	running	1.1	PRECHECK-1119	type	yes	11-19 20:45	a4318c31cd2fd0c66	RUNNING kit_rtl	2026-11-19 19:46	11-19 17:13 - 2026-11-19 17:13 PST KIT-SCAN hourly [PRECHECK-1119 -> COORD, die owners] renewed-glider	
+S81	s81sl_leaf__t17	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING place	2026-11-19 19:46		
+S81	s81sl_leaf__t2	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING kit_rtl	2026-11-19 19:46		
+S81	s81sl_leaf__t21	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING place	2026-11-19 19:46		
+S81	s81sl_leaf__t22	type	running	1.1	PRECHECK-1119	type	yes	11-19 20:45	a4318c31cd2fd0c66	RUNNING kit_rtl	2026-11-19 19:46	11-19 17:13 - 2026-11-19 17:13 PST KIT-SCAN hourly [PRECHECK-1119 -> COORD, die owners] renewed-glider	
+S81	s81sl_leaf__t23	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING gen	2026-11-19 19:46		
+S81	s81sl_leaf__t24__cl2456157b	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING gen	2026-11-19 19:46		
+S81	s81sl_leaf__t24__cl81374cd8	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING kit_rtl	2026-11-19 19:46		
+S81	s81sl_leaf__t25__cl431c660f	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING place	2026-11-19 19:46		
+S81	s81sl_leaf__t25__cl55642d17	type	running	1.1	FABLE-FIX-S81-LEAF	cluster	yes	11-19 20:39	a01350e9ff27da214	RUNNING place	2026-11-19 19:46	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	s81sl_leaf__t26	type	running	1.1	NOPROG-FIX-1115	type	yes	11-19 19:52	sonnet	RUNNING kit_rtl	2026-11-19 19:46	11-19 19:52 - 2026-11-19 19:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-19 19:52 PST	
+S81	s81sl_leaf__t27	type	running	1.1	PRECHECK-1119	type	yes	11-19 20:45	a4318c31cd2fd0c66	RUNNING gen	2026-11-19 19:46	11-19 16:10 - 2026-11-19 16:10 PST KIT-SCAN hourly [PRECHECK-1119 -> COORD, die owners] renewed-glider	
+S81	s81sl_leaf__t28	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING kit_rtl	2026-11-19 19:46		
+S81	s81sl_leaf__t29	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING place	2026-11-19 19:46		
+S81	s81sl_leaf__t3	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING kit_rtl	2026-11-19 19:46		
+S81	s81sl_leaf__t30	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING place	2026-11-19 19:46		
+S81	s81sl_leaf__t31	type	running	1.1	FABLE-FIX-S81-LEAF	type	yes	11-19 20:39	a01350e9ff27da214	RUNNING gen	2026-11-19 19:46	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	s81sl_leaf__t32	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING kit_rtl	2026-11-19 19:46		
+S81	s81sl_leaf__t33	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING gen	2026-11-19 19:46		
+S81	s81sl_leaf__t34	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING kit_rtl	2026-11-19 19:46		
+S81	s81sl_leaf__t35	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING kit_rtl	2026-11-19 19:46		
+S81	s81sl_leaf__t36	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING kit_rtl	2026-11-19 19:46		
+S81	s81sl_leaf__t37	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING kit_rtl	2026-11-19 19:46		
+S81	s81sl_leaf__t38	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING kit_rtl	2026-11-19 19:46		
+S81	s81sl_leaf__t39	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING kit_rtl	2026-11-19 19:46		
+S81	s81sl_leaf__t4	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING kit_rtl	2026-11-19 19:46		
+S81	s81sl_leaf__t40__cl86ea32b3	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING gen	2026-11-19 19:46		
+S81	s81sl_leaf__t40__cl86ea32b3__sid5S	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING place	2026-11-19 19:46		
+S81	s81sl_leaf__t40__clf8bbdae1	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING kit_rtl	2026-11-19 19:46		
+S81	s81sl_leaf__t41	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING gen	2026-11-19 19:46		
+S81	s81sl_leaf__t42	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING gen	2026-11-19 19:46		
+S81	s81sl_leaf__t43	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING kit_rtl	2026-11-19 19:46		
+S81	s81sl_leaf__t44__clf4ea6d4b	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING gen	2026-11-19 19:46		
+S81	s81sl_leaf__t44__clf6cf8492	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING place	2026-11-19 19:46		
+S81	s81sl_leaf__t45	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING kit_rtl	2026-11-19 19:46		
+S81	s81sl_leaf__t46	type	running	1.1	PRECHECK-1119	type	yes	11-19 20:45	a4318c31cd2fd0c66	RUNNING kit_rtl	2026-11-19 19:46	11-19 17:13 - 2026-11-19 17:13 PST KIT-SCAN hourly [PRECHECK-1119 -> COORD, die owners] renewed-glider	
+S81	s81sl_leaf__t47	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING kit_rtl	2026-11-19 19:46		
+S81	s81sl_leaf__t5	type	running	1.1	PRECHECK-1119	type	yes	11-19 20:45	a4318c31cd2fd0c66	RUNNING kit_rtl	2026-11-19 19:46	11-19 17:15 - 2026-11-19 17:15 PST KIT-SCAN hourly [PRECHECK-1119 -> COORD, die owners] civil-redfish:	
+S81	s81sl_leaf__t50	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING kit_rtl	2026-11-19 19:46		
+S81	s81sl_leaf__t51	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING kit_rtl	2026-11-19 19:46		
+S81	s81sl_leaf__t52	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING kit_rtl	2026-11-19 19:46		
+S81	s81sl_leaf__t53__cl958451dd	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING place	2026-11-19 19:46		
+S81	s81sl_leaf__t53__clb66fa5cb	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING place	2026-11-19 19:46		
+S81	s81sl_leaf__t54__cl501e5681	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING place	2026-11-19 19:46		
+S81	s81sl_leaf__t54__cl706d9749	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING place	2026-11-19 19:46		
+S81	s81sl_leaf__t55	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING kit_rtl	2026-11-19 19:46		
+S81	s81sl_leaf__t56	type	running	0.2	PROGRESS-WATCH	type	yes	11-19 20:42		RUNNING	2026-11-19 20:39	11-19 20:21 - 2026-11-19 20:21 PST ALERT NO-ADVANCE s81: 1 item(s) with 2+ attempts in 6 h ending on t	
+S81	s81sl_leaf__t57	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING kit_rtl	2026-11-19 19:46		
+S81	s81sl_leaf__t58	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING kit_rtl	2026-11-19 19:46		
+S81	s81sl_leaf__t59	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING kit_rtl	2026-11-19 19:46		
+S81	s81sl_leaf__t6	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING kit_rtl	2026-11-19 19:46		
+S81	s81sl_leaf__t60	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING gen	2026-11-19 19:46		
+S81	s81sl_leaf__t61	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING kit_rtl	2026-11-19 19:46		
+S81	s81sl_leaf__t62	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING kit_rtl	2026-11-19 19:46		
+S81	s81sl_leaf__t65	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING kit_rtl	2026-11-19 19:46		
+S81	s81sl_leaf__t66	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING kit_rtl	2026-11-19 19:46		
+S81	s81sl_leaf__t67	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING kit_rtl	2026-11-19 19:46		
+S81	s81sl_leaf__t68	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING kit_rtl	2026-11-19 19:46		
+S81	s81sl_leaf__t69	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING kit_rtl	2026-11-19 19:46		
+S81	s81sl_leaf__t7	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING kit_rtl	2026-11-19 19:46		
+S81	s81sl_leaf__t70	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING kit_rtl	2026-11-19 19:46		
+S81	s81sl_leaf__t71	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING kit_rtl	2026-11-19 19:46		
+S81	s81sl_leaf__t72	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING kit_rtl	2026-11-19 19:46		
+S81	s81sl_leaf__t73	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING kit_rtl	2026-11-19 19:46		
+S81	s81sl_leaf__t74	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING kit_rtl	2026-11-19 19:46		
+S81	s81sl_leaf__t75	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING kit_rtl	2026-11-19 19:46		
+S81	s81sl_leaf__t8	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING gen	2026-11-19 19:46		
+S81	s81sl_leaf__t9	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING kit_rtl	2026-11-19 19:46		
+S81	seqhost__t1	type	running	1.1	S81-DIE-R3 (+S81-CLOCK-WINDOW-1119)	family	yes	11-19 20:43	a1102934d57448142	RUNNING place	2026-11-19 19:46	11-19 20:43 - 2026-11-19 20:43 PST STATE [S81-DIE-R3 -> COORD; cc FABLE-FIX-S81-LEAF, S81-SVC-SPLIT-11	
+S81	serdes__t12	type	running	1.1	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,S81-OWN-1119)	family	yes	11-19 20:39	a01350e9ff27da214	RUNNING gen	2026-11-19 19:46	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	serdes__t13	type	running	1.1	NOPROG-FIX-1115 (+FABLE-FIX-S81-LEAF,FABLE-FIX-QC)	type	yes	11-19 19:52	sonnet	RUNNING gen	2026-11-19 19:46	11-19 19:52 - 2026-11-19 19:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-19 19:52 PST	
+S81	serdes__t14	type	running	1.1	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,S81-OWN-1119)	family	yes	11-19 20:39	a01350e9ff27da214	RUNNING place	2026-11-19 19:46	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	serdes__t15__cla2127225	type	running	1.1	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,S81-OWN-1119)	family	yes	11-19 20:39	a01350e9ff27da214	RUNNING place	2026-11-19 19:46	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	serdes__t15__cla3d02796	type	running	1.1	RESET-COHORT-1119 (+FABLE-FIX-S81-LEAF,FABLE-FIX-QC)	type	yes	11-19 18:04	a00f1a94604f78ecf	RUNNING place	2026-11-19 19:46	11-19 18:04 - 2026-11-19 18:04 PST FIX [RESET-COHORT-1119 -> WAVE-PILOT-FIX, FABLE-FIX-S81-SERDES; cc 	
+S81	serdes__t16	type	running	1.1	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,S81-OWN-1119)	family	yes	11-19 20:39	a01350e9ff27da214	RUNNING place	2026-11-19 19:46	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	serdes__t1__clb45db5be	type	running	1.1	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,S81-OWN-1119)	family	yes	11-19 20:39	a01350e9ff27da214	RUNNING place	2026-11-19 19:46	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	serdes__t1__clfe1f0815	type	running	1.1	FABLE-FIX-S81-SERDES (+RESET-COHORT-1119,FABLE-FIX-S81-LEAF)	type	yes	11-19 18:48	ae942768a47bd1db9	RUNNING place	2026-11-19 19:46	11-19 18:48 - 2026-11-19 18:48 PST PROOF [cc COORD, S81-DIE-R3, RESET-COHORT-1119, WAVE-PILOT-FIX] T1P	
+S81	serdes__t2	type	running	1.1	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,S81-OWN-1119)	type	yes	11-19 20:39	a01350e9ff27da214	RUNNING place	2026-11-19 19:46	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	serdes__t3	type	running	1.1	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,S81-OWN-1119)	family	yes	11-19 20:39	a01350e9ff27da214	RUNNING gen	2026-11-19 19:46	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	serdes__t4	type	running	1.1	FABLE-FIX-S81-LEAF (+FABLE-FIX-QC,S81-OWN-1119)	family	yes	11-19 20:39	a01350e9ff27da214	RUNNING gen	2026-11-19 19:46	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	svc_hi_dsdv_svc_pvso_entry__t1	type	running	1.1	S81-DIE-R3 (+S81-OWN-1119)	type	yes	11-19 20:43	a1102934d57448142	RUNNING kit_rtl	2026-11-19 19:46	11-19 20:43 - 2026-11-19 20:43 PST STATE [S81-DIE-R3 -> COORD; cc FABLE-FIX-S81-LEAF, S81-SVC-SPLIT-11	
+S81	svc_hi_dsdv_svc_pvso_entry__t2	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING kit_rtl	2026-11-19 19:46		
+S81	svc_hi_dsdv_svc_rs__t1	type	running	1.1	S81-CLOCK-WINDOW-1119 (+FABLE-FIX-S81-LEAF)	family	yes	11-19 19:24	a8c1817c3b70e7e8b	RUNNING kit_rtl	2026-11-19 19:46	11-19 18:28 - 2026-11-19 18:28 PST RESULT (2b) kit-contract hold -99.99 [S81-CLOCK-WINDOW-1119 -> COOR	
+S81	svc_hi_dsdv_svc_rs__t2	type	running	1.1	FABLE-FIX-S81-LEAF (+S81-CLOCK-WINDOW-1119)	type	yes	11-19 20:39	a01350e9ff27da214	RUNNING kit_rtl	2026-11-19 19:46	11-19 20:39 # FABLE-FIX-S81-LEAF handoff (owner of ot_s81sl_leaf__t*, started 11-18 23:0x PST) Lane di	
+S81	svc_hi_dsdv_svc_rs__t3	type	running	1.1	NOPROG-FIX-1115 (+S81-CLOCK-WINDOW-1119,FABLE-FIX-S81-LEAF)	type	yes	11-19 19:52	sonnet	RUNNING kit_rtl	2026-11-19 19:46	11-19 14:52 - 2026-11-19 14:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-19 14:52 PST	
+S81	svc_hi_dsdv_svc_rs__t4	type	running	1.1	S81-CLOCK-WINDOW-1119 (+FABLE-FIX-S81-LEAF)	family	yes	11-19 19:24	a8c1817c3b70e7e8b	RUNNING kit_rtl	2026-11-19 19:46	11-19 18:28 - 2026-11-19 18:28 PST RESULT (2b) kit-contract hold -99.99 [S81-CLOCK-WINDOW-1119 -> COOR	
+S81	svc_hi_dsdv_svc_rs__t5	type	running	1.1	S81-CLOCK-WINDOW-1119 (+FABLE-FIX-S81-LEAF)	family	yes	11-19 19:24	a8c1817c3b70e7e8b	RUNNING kit_rtl	2026-11-19 19:46	11-19 18:28 - 2026-11-19 18:28 PST RESULT (2b) kit-contract hold -99.99 [S81-CLOCK-WINDOW-1119 -> COOR	
+S81	svc_hi_dsdv_svc_rs__t6	type	running	1.1	S81-CLOCK-WINDOW-1119 (+FABLE-FIX-S81-LEAF)	family	yes	11-19 19:24	a8c1817c3b70e7e8b	RUNNING kit_rtl	2026-11-19 19:46	11-19 18:28 - 2026-11-19 18:28 PST RESULT (2b) kit-contract hold -99.99 [S81-CLOCK-WINDOW-1119 -> COOR	
+S81	svc_lo_dsdv_svc_rs__t1	type	running	1.1	S81-CLOCK-WINDOW-1119	family	yes	11-19 19:24	a8c1817c3b70e7e8b	RUNNING kit_rtl	2026-11-19 19:46	11-19 18:39 - 2026-11-19 18:39 PST RESULT (2a) S81 intra hold, worst 200 pairs [S81-CLOCK-WINDOW-1119 	
+S81	svc_lo_dsdv_svc_rs__t2	type	running	1.1	S81-CLOCK-WINDOW-1119	family	yes	11-19 19:24	a8c1817c3b70e7e8b	RUNNING kit_rtl	2026-11-19 19:46	11-19 18:39 - 2026-11-19 18:39 PST RESULT (2a) S81 intra hold, worst 200 pairs [S81-CLOCK-WINDOW-1119 	
+S81	svc_lo_dsdv_svc_rs__t3	type	running	12.9	S81-CLOCK-WINDOW-1119	family	yes	11-19 19:24	a8c1817c3b70e7e8b	RUNNING place	2026-11-19 08:00	11-19 18:39 - 2026-11-19 18:39 PST RESULT (2a) S81 intra hold, worst 200 pairs [S81-CLOCK-WINDOW-1119 	
+S81	svc_lo_dsdv_svc_rs__t4	type	running	1.1	S81-CLOCK-WINDOW-1119	family	yes	11-19 19:24	a8c1817c3b70e7e8b	RUNNING kit_rtl	2026-11-19 19:46	11-19 18:39 - 2026-11-19 18:39 PST RESULT (2a) S81 intra hold, worst 200 pairs [S81-CLOCK-WINDOW-1119 	
+S81	svc_lo_dsdv_svc_rs__t5	type	running	0.9	PRECHECK-1119 (+S81-CLOCK-WINDOW-1119)	type	yes	11-19 20:45	a4318c31cd2fd0c66	RUNNING lec_tools_copy	2026-11-19 19:57	11-19 16:12 - 2026-11-19 16:12 PST KIT-SCAN hourly [PRECHECK-1119 -> COORD, die owners] civil-redfish:	
+S81	svc_lo_dsdv_svc_rs__t6	type	running	11.6	S81-CLOCK-WINDOW-1119	family	yes	11-19 19:24	a8c1817c3b70e7e8b	RUNNING place	2026-11-19 09:16	11-19 18:39 - 2026-11-19 18:39 PST RESULT (2a) S81 intra hold, worst 200 pairs [S81-CLOCK-WINDOW-1119 	
+S81	svc_lo_dsdv_svc_rs__t7	type	running	11.6	S81-CLOCK-WINDOW-1119	family	yes	11-19 19:24	a8c1817c3b70e7e8b	RUNNING place	2026-11-19 09:16	11-19 18:39 - 2026-11-19 18:39 PST RESULT (2a) S81 intra hold, worst 200 pairs [S81-CLOCK-WINDOW-1119 	
+S81	svc_lo_dsdv_svc_rs_w__t1	type	running	11.6	KIT-WAVE(auto)	autopilot	yes			RUNNING place	2026-11-19 09:16		
