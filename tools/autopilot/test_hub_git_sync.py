@@ -143,6 +143,21 @@ class HubSync(unittest.TestCase):
         for line in ("q1", "hub q2", "remote q3"):
             self.assertEqual(got.count(line), 1, got)
 
+    def test_dirty_lane_handoff_json_rows_file_is_committed(self):
+        # FLOW-HEALTH-2 11-19: lanes/handoff/QC-PADLEG-rows.json edited in the hub tree failed the sync (19:32)
+        self.git(self.other, "pull", "-q", "--no-rebase", "origin", B)
+        (self.other / "lanes/handoff").mkdir(parents=True, exist_ok=True)
+        (self.other / "lanes/handoff/L-rows.json").write_text("[1]\n")
+        self.git(self.other, "add", "lanes/handoff/L-rows.json")
+        self.git(self.other, "commit", "-qm", "rows")
+        self.git(self.other, "push", "-q", "origin", B)
+        self.assertEqual(self.sync().returncode, 0)
+        (self.hub / "lanes/handoff/L-rows.json").write_text("[1, 2]\n")
+        r = self.sync()
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        self.assertFalse((self.hub / "autopilot/HUB-SYNC-FAILED").exists())
+        self.assertEqual(self.remote_file("lanes/handoff/L-rows.json").strip(), "[1, 2]")
+
     def test_deeper_handoff_path_is_not_an_append_log(self):
         self.git(self.other, "pull", "-q", "--no-rebase", "origin", B)
         (self.other / "lanes/handoff/sub").mkdir(parents=True, exist_ok=True)
