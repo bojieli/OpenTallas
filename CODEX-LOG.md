@@ -14028,3 +14028,6 @@ Owner approved proceeding with physical representatives and exact instance perso
 - KV D25e3 BIND 0 / LAT 2404 / G0 0, atomic apply 5-host guard. D26 PV6 83/83 raw role proof, 172 disjoint sites and 300 um final endpoints, +3 boot and 0 mission cycles; proposed source tree viewed. Keep v1n distinct.
 - Shared flow: 100 fallback refusals fixed in main 4f48b414967; scheduled-label approved; QC external-stop taxonomy main e6e6213ad88; watchdog ECO scope, native GRT FF, per-item gen pin and sealed-bind publisher fixes in source gates. Archive recount 409 current, 474 any last automatic, seven build pools all in use. HBM parked.
 - Tokens/ROM: C1 HEAD37 exact 141,080 writes / 1,776 completions on 12x37x4, patch 779d2c32d9 gated source, missing authenticated 48 production witnesses remain. D8i CAP 72 returns and 80 leaf paths exact path ledger, no full token claim. HEAD and QC VIA1 two-instance pilots read back; complete mask packs staged, D8i FSA queued.
+
+OWNER?
+Which authenticated ASAP7 base-ROM GDS and array-origin contract should be authoritative for final HEAD and QC VIA1 personalization? Recommend using the base master corresponding to the signed macro LEF and its documented array origin. Exact mask data and pilot overlays are available. ROM work continues on current binds and content in parallel.
