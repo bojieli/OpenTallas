@@ -9,3 +9,12 @@ Viewed the exact [candidate reset anchor map](head-r13r-reset-exact.png) at plan
 The inherited 405-µm START scan passes for these three types. For the next event's 300-µm design target, exact emitted-region Manhattan results are LEP reader 354.0 µm (four branches), writer 380.1 µm (five), SerDes reader 388.0 µm (one), writer 337.5 µm (one). Host-west reads 286.6 µm and writes 268.9 µm. The 300-µm RST-FAN-1d local reset tree and the 405-µm die START checks cover different paths.
 
 Source-only preview GEN is queued for the three exact candidate kits. Review their emitted geometry before P&R. CTS, east-aisle GRT and placed per-bit reach remain open.
+
+## Prospective 300-µm START stage layout
+
+Viewed [LEP and SerDes candidate stage sites](head-next-start300-layout.png). Lines connect successive logical stations. The rectangles, corridor solver and Manhattan checks price the underlying candidate geometry.
+
+- LEP keeps its existing origin and four reader stages across seven branches. It uses five writer stages across eight branches, one additional local stage compared with r13r. Site checks report 269.6 µm reader, 287.1 µm writer, and 181.12 µm maximum raw-reset hop with matching registered role and depth. New stage rectangles do not overlap one another or a hard macro. The inherited origin window retains 58.98% free rows. The central shelves and side bays carry the stages, and the east writer chain still needs a placed congestion read.
+- SerDes adds one local stage in each direction inside the south bay. The installed sites and final writer face are clear of the three macro footprints. The reader and writer estimates are 233.5 µm and 176.6 µm respectively, with nearest matching raw producers 49.856 µm and 13.515 µm away.
+
+Source-scoped model artifacts are on E9 under `head-crossing-1119/r13/r1_300_codex`. Both next-event options keep r13r outlines. Full bind, START phase and token schedule remain to be checked before inclusion.
