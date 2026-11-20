@@ -10,5 +10,11 @@
   "sha256": "558ead4d85b6f4bc15046f2ee75834183bcc8ac72e95da81f0aa2cefb03e6af1",
   "md5": "ccfd26ab6b2777bc7192cf50eff55516",
   "source": "FABLE-FIX-S81-LEPE 11-19 DRT-0073: ck[0] is an interior M5 pin under the blanket M6 OBS; abstract_detail.py splice --pin-window-um 1.0 --top-layer M7 on the signed routed ODB (window 2.05 x 2.53 um on M6, exact core metal kept: 0.99 of 5.18 um2); receipt dsfd_coll_lane_w_safe8_ntf.splice.json"
+ },
+ "qfd_dv_s8x_vmr.lef": {
+  "base_sha256": "6dd379d21ce4d095f3b08683b4d0124ba1d3fb057d4787fc54daa28196ae270b",
+  "sha256": "c6bb9dd3255ae6695a778d614d1b1be7e2e7a5408a7978eced5b4c48c2ab5ccb",
+  "md5": "3954803f44ca2406facfaa8edbf97fef",
+  "source": "SONNET-FIX-QC 11-19 DRT-0073 (slw_su_c cl92142dac, sle_su_c, slw_su_c cl19bb38ef): ck, ft_ck_i/o, ft_rst_i/o are interior M5 pins under the blanket M6 OBS; abstract_detail.py splice (default layers above the PG pin layer = M6: exact M6 from the bloat-0 export of the signed routed ODB, 79 rects, replaces the blanket) on signed-export-1114/qwen_compute/qfd_dv_s8x_vmr/6_final.odb; the signed DEF has no M6 metal within 1.5 um of any of the 5 pins; receipt qfd_dv_s8x_vmr.splice.json"
  }
 }
