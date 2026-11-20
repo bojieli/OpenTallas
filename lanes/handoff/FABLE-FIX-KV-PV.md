@@ -1,3 +1,38 @@
+# FABLE-FIX-KV-PV handoff to FABLE-FIX-KV-PV-2140, status 2026-11-20 05:25Z (Opus successor; newest first, SUPERSEDES all below)
+## pv FF hold class measured; two structural forms built; four private timing-only kits in flight. No GRT TT number yet.
+Base dir (epyc10, kit runs may stage to epyc8): /srv/opentallas-scratch2/claude/fable-fix-kv-pv-1119/compose. Hub scripts intel2 ~/tmp/ffkpv/compose.
+- CLASS (v8b 4_cts, all 52,111 FF hold ends, same session as pregrt_ff_hold; rows epyc8 ../diaghold_v8b/hold_rows.tsv): cross_tap 47,549
+  ws -135.1; 42,662 (90%) = stage k -> k+1 inside zero-logic pad delay lines (u_pd<N>_i_vport_*_t_<pad> trunks and pvg copies, 100+
+  stages; dly_spread puts each stage at span/(n+1), so back-to-back flops sit on different taps); 4,270 top tap -> join core
+  (u_pd3 ctl_cmd tail -> u_pv_u_g*_j/join_go, the -135.1 WNS); ~4.6k pair macro outs (s*__pv2/pe2, -82); 613 pair ts -> join ts0
+  (core tap -> core tap). port_in 4,448 (excepted by PREGRT-NONPORT), same_tap 118 (-20.3).
+- FORM A (same tap, plan rows, 0 cycles, no RTL): dly_spread STATION form, main 9cdfbe5bc0f. Plan key
+  budgets.r_dly_spread_station_um {"kv3_pv": 405} -> kit config OT_DLY_SPREAD_STATION_UM=405: stages of each run grouped on
+  ceil(L/405)-1 stations, only station hops (<=405 um of route) can cross a tap. Absent = byte-identical. Test test_dly_spread.py (6).
+  ROW for KV-D23-COMPOSE (proposed, NOT yet proved): budgets.r_dly_spread_station_um = {"kv3_pv": 405} (needs r_dly_spread on for
+  kv3_pv types, already true in the pv kits: OT_DLY_SPREAD lines present). Tools >= 9cdfbe5bc0f.
+- FORM B (lockup per crossing, private kit pass only, NOT a tool on main): ../xtap_lockup.tcl, sourced in pregrt_ff_hold.tcl before
+  "pg_classes before": DLLx1 per violating cross-tap end, CLK = launch flop clock net, sited at the capture pin, DB written at once.
+  Dry run on v8b DB (47,549 latches): cross_tap 47,549 -> 1,412 (ws -77.8), FF hold ends 52,111 -> 6,406, BUT 613 latches behind
+  pair-core ts launches gave -946.6 (latch on the clk_c port net vs ETM launch) and flop -> latch same-tap 4,381 ends ws -51.3
+  (avg -13); setup -674.8 -> -773.0 (legalizer moved latches: 1,402 s DPL). Fixed in the kit copy: macro launches skipped.
+  Netlist change post-CTS: would need LEC latch_to_wire and an RTL/bind form before it can be a plan row. A is the cleaner form.
+- KITS (all TIMING-ONLY, DO_NOT_COUNT, private bind copy with error list emptied, read reports only):
+  v8b  tree2/bind2 (dense +843, old tools): in pregrt_ff_hold since 01:34Z (buffer repair, 54,601 ends, slow). epyc8.
+  v8d  tree4/bind4 (D25e form +464, old tools): same stage. epyc8. v8b/v8d tt_setup_repair: worst -675/-629 = u_pd3 ctl_cmd tail copies.
+  v8f  = v8b inputs + FORM A (redkit_xtap.sh v8f tree2 bind2 epyc10 A), launched 04:43Z on epyc10. Waiter by74r0b0j watches
+       pregrt "class before" (compare with v8b line above). Log intel2 ~/tmp/ffkpv/compose/{redkit,kit}_v8f.log.
+  v8g  = v8b inputs + FORM B (macro launches skipped), kit-rtl since 05:23Z (launched before COORD's stop on new forms; stop it if
+       not wanted: ot-heavy-stop --match compose/kit/v8g).
+  v8e  TRUNK-CHAIN proof: tree4 + tools main 3557ca1cb3d8 (>= a2fb7e6), strict rebind bind4c/bindgate4c on epyc10 since 03:53Z
+       (ot-run unit oth-ubuntu-2783636-1795146816), then redkit v8e automatically (chain intel2 ~/tmp/ffkpv/compose/chain_v8e.sh,
+       log chain_v8e.log). Compare tt_setup_repair worst end and u_pd3 ctl_cmd ends with v8d; run ../xmerge.py on 1_2_yosys.v
+       (cross-copy merged pad flops should be 0).
+- Done and posted earlier tonight: 16 pv tail_clear sync rows (rows_R) are in D25e2; qkd_pv_fin_s8_pin wave failures = D25d plan
+  lacks pvfin lef/lib (class E), fixed in D25e2, no relaunch (post 782a137d).
+- Read results: pregrt_ff_hold.log "class before/after", hold_gate.log, tt_setup_repair.log, 4_cts_post_hook.rpt,
+  run/reports/asap7/dp_kv3_pv_v8/base/5_global_route.tt.rpt. Diag script for any kit: ../diaghold.sh KIT OUT (ot-run, ~60 GB).
+
 # FABLE-FIX-KV-PV handoff, status 2026-11-19 16:25Z (newest first; SUPERSEDES the 13:40Z and 12:55Z sections below)
 ## One timing-only kv3_pv_v8 proof kit RUNNING. All private die binds RED (4 pv errors fixed on main, 2 hgi_v1 errors are in the control too). No TT number.
 - Private trees epyc7 + epyc10 /srv/opentallas-scratch2/claude/fable-fix-kv-pv-1119/compose/: tree2 dense 300-um +843 (plan 3e5f74e1cf88),
