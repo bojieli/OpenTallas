@@ -7059,6 +7059,12 @@ QUEUED_WAIT_STATUS = ("QUEUED", "WAITING", "WAIT-GEOM")
 QUEUE_REPICK_LOAD_X = 2.0
 
 
+def host_unreadable(stt, host, hub=""):
+    """FLOW-1949 (5): only a host with NO ot-run status row is skipped by the cancel / stop / scope-scan paths; an overloaded host that still answers ssh must still get its leaked scopes torn down
+    (11 cancelled attempts lived 17-28 h at 0 CPU: the stop skipped hosts over 2x cores)"""
+    return bool(stt) and not stt.get("localhost" if host == hub else host)
+
+
 def queued_host_bad(stt, host, hub=""):
     """COORD 11-19 (34 KV units queued on epyc7, load 965, ssh refused): the host is over 2x its cores, or has no ot-run status row (unreadable).  No status at all = unknown, not bad"""
     if not stt:
@@ -11981,7 +11987,7 @@ def unreadable_host_rows(AP, cfg, st, notices, now=None, hours=UNREADABLE_HOST_H
         return 0
     try:                                                  # the stop / reap / orphan-scan paths of this tick skip these hosts (wave_jobs.BAD_HOSTS)
         WJ.BAD_HOSTS = {h for h in set(WJ.FLEET) | {h for d_ in (cfg.get("dies") or {}).values() if isinstance(d_, dict) for h in (d_.get("gen_hosts") or [])}
-                        if h not in (hub, "localhost") and queued_host_bad(stt, h, hub)}
+                        if h not in (hub, "localhost") and host_unreadable(stt, h, hub)}
     except Exception:
         pass
     now = time.time() if now is None else now

@@ -3595,7 +3595,7 @@ def bad_hosts_from_status(text, hub=None):
         return set()
     hub = hub or HUB_NAME
     names = set(WJ.FLEET) | set(stt)
-    return {h for h in names if h not in (hub, "localhost") and KW.queued_host_bad(stt, h, hub)}
+    return {h for h in names if h not in (hub, "localhost") and KW.host_unreadable(stt, h, hub)}      # FLOW-1949 (5): overloaded hosts still get their stops / scope teardown
 
 
 def mark_bad_hosts():

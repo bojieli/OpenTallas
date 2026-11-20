@@ -459,7 +459,7 @@ def test_tick_start_marks_unreadable_and_overloaded_hosts_for_the_stop_helpers()
     import wave_jobs as WJ
     txt = ("intel2 admits 100 GB load 10/96 run 1 | epyc8 admits 50 GB load 80/96 run 3 | epyc9 admits 50 GB load 400/96 run 9")
     bad = A.bad_hosts_from_status(txt, "intel2")
-    assert "epyc9" in bad and "epyc8" not in bad and "epyc7" in bad            # epyc7: a fleet host with no status row
+    assert "epyc9" not in bad and "epyc8" not in bad and "epyc7" in bad        # epyc7: no status row = unreadable; epyc9 over 2x still gets its stops (FLOW-1949 5)
     assert A.bad_hosts_from_status("", "intel2") == set()                       # nothing readable: nothing marked
     assert WJ.STOP_SSH_S <= 30
 
@@ -646,3 +646,8 @@ def test_kit_wave_edit_refuses_a_die_event_the_gate_cannot_resolve():
     ok_listed = {"dies": {"qwen_kvsys": {"enabled": True, "event": "KV-D26", "gate_events_extra": ["KV-D26"]}}}
     assert E.event_problems(old, ok_listed) == []
     assert E.event_problems(old, {"dies": {"s81": {"enabled": True, "event": "xyz"}}}) != []              # not hex
+
+
+def test_overloaded_hosts_are_not_in_the_stop_skip_set():
+    stt = {"epyc9": {"load": 900, "cores": 96}, "epyc8": {"load": 10, "cores": 96}}
+    assert KW.host_unreadable(stt, "epyc9") is False and KW.host_unreadable(stt, "epyc7") is True and KW.host_unreadable({}, "epyc7") is False
