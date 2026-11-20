@@ -33,6 +33,7 @@ module ot_s81hd_lep_core_nr #(
 ) (
     input  wire            clk,
     input  wire            rst_n,
+    input  wire [15:0]     rst_nr,     // RST-FAN-1d: per-root-copy resets of the mapped tree (RTG > 0; else unread)
     // slice outward line port
     input  wire [1103:0]   ro,
     output wire [1103:0]   ri,
@@ -121,8 +122,8 @@ module ot_s81hd_lep_core_nr #(
     generate if(SAFE_FIFO && RTG==0) begin:g_reset_balanced
       ot_rst_relay_tree3 #(.REGIONS(4+NRX_RST+NXR)) u_rstr(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
     end else if(SAFE_FIFO) begin:g_reset_mapped   // RST-FAN-1: root copies + free group boundaries, same 3 edges
-      ot_rst_relay_tree3m #(.REGIONS(4+NRX_RST+NXR+NRV),.GROUPS(RTG),.ROOTS(RTR),.GS(RTGS[16*RTG-1:0]),.RM(RTRM[4*RTG-1:0]))
-        u_rstr(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
+      ot_rst_relay_tree3m #(.REGIONS(4+NRX_RST+NXR+NRV),.GROUPS(RTG),.ROOTS(RTR),.GS(RTGS[16*RTG-1:0]),.RM(RTRM[4*RTG-1:0]),.RIN(1))
+        u_rstr(.clk(clk),.rst_n_in(rst_n),.rst_n_rt(rst_nr[RTR-1:0]),.rst_n(rr));
     end else begin:g_reset_legacy
       ot_rst_relay #(.REGIONS(4+NRX_RST), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rstr (.clk(clk), .rst_n_in(rst_n), .rst_n(rr));
     end endgenerate
@@ -1282,6 +1283,7 @@ module ot_s81hd_lep_idx_nr #(
 ) (
     input  wire            clk,
     input  wire            rst_n,
+    input  wire [15:0]     rst_nr,     // RST-FAN-1d: per-root-copy resets of the mapped tree (RTG > 0; else unread)
     input  wire [1103:0]   ro,
     output wire [1103:0]   ri,
     output wire            lo0_v, input wire lo0_r, output wire [552:0] lo0_d,
@@ -1314,7 +1316,7 @@ module ot_s81hd_lep_idx_nr #(
     ot_s81hd_lep_core_nr #(.DT(DT), .DR(DR), .CRED(CRED), .SRAM(SRAM), .HOST_EN(0), .MU_EN(1), .RX_SRAM(RX_SRAM), .AB_EN(1), .NB(NB),
         .IN_PIPE(IN_PIPE), .NATIVE32(NATIVE32), .IDX_EN(IDX_EN), .TXI(TXI), .RXH(RXH),
         .RTG(RTG), .RTR(RTR), .RTGS(RTGS), .RTRM(RTRM)) u (   // L5B-LEPMU 10-21: native32 / face-stage opt-ins exposed (defaults 0 = unchanged)
-        .clk(clk), .rst_n(rst_n), .ro(ro), .ri(ri),
+        .clk(clk), .rst_n(rst_n), .rst_nr(rst_nr), .ro(ro), .ri(ri),
         .lo0_v(lo0_v), .lo0_r(lo0_r), .lo0_d(lo0_d), .lo1_v(lo1_v), .lo1_r(lo1_r), .lo1_d(lo1_d),
         .li0_v(li0_v), .li0_r(li0_r), .li0_d(li0_d), .li1_v(li1_v), .li1_r(li1_r), .li1_d(li1_d), .rxv(rxv),
         .sl_f(sl_f), .l0_f(l0_f), .l1_f(l1_f), .l0_st(2'b00), .l1_st(2'b00),

@@ -37,12 +37,15 @@
 //  RFAN = levels of an ot_rst_fan (rtl/lib) between the core rst_n and EVERY soft reset consumer group: each leg stage
 //         g_*.g_s[j] (PIN / POUT / PLW / COL0 / KTX / KRX, both directions), lw_r, u_land and u_lep (PAIR 0: each g_lane)
 //         gets its own kept leaf flop u_rfan.g_leaf[l].leaf_r; RFN1 / RFN2 = copies on levels 1 / 2, RFMX 1 = explicit
-//         parent maps RFPL (leaf -> parent, 8 bits each, leaf order = RL_* below) / RFPM (n2 -> n1).  Every leaf releases
+//         parent maps RFPL (leaf -> parent, 8 bits each, leaf order = RL_* below) / RFPM (n2 -> n1) / RFPQ (n3 -> n2,
+//         RFAN 5 with RFN3 level-3 copies: RST-FAN-1d, COORD 300 um hop cap).  Every leaf releases
 //         on the same edge, RFAN edges after rst_n: the whole soft core releases +RFAN cycles, UNIFORMLY (relative order of
 //         every soft consumer unchanged).  The pair hard cores g_pp[k].u_pair keep rst_n: the bind wires their reset pins
 //         to their own depth-7 die taps (core_resets), so their release does not move.
 //  RTG / RTR / RTGS / RTRM = u_lep's internal SAFE_FIFO reset tree (generated ot_s81hd_lep_nr.sv, RST-FAN-1): RTG > 0 =
-//         ot_rst_relay_tree3m, RTR root copies + RTG groups with explicit boundaries, same 3 edges (0 cycles).
+//         ot_rst_relay_tree3m, RTR root copies + RTG groups with explicit boundaries, same 3 edges (0 cycles).  RST-FAN-1d:
+//         each root copy r takes its own fan leaf (u_lep rst_nr[r]: r 0 = the RL_LEP leaf, r >= 1 = leaves RL_LR + r - 1),
+//         so the core fan reaches every root copy at the same depth and no u_lep input net spans the die.
 //  KTR  = FABLE-CBC-HEAD-0130 row 5 (default KTX = unchanged): stages on lane i's K-link CREDIT RETURN lo_r (g_txr)
 //         counted apart from the forward lo_v / lo_d (g_txf, KTX), so the credit leg can carry more stages than the data
 //         leg (hd_lep0N: kr fanned to 18 credit_pin_r copies, lane 3 735 um).  Credit based: each stage adds one edge to
@@ -105,7 +108,7 @@ module ot_s81hd_lep0N_core #(
  parameter integer PIN=0, parameter integer POUT=0, parameter integer PLW=0, parameter integer COL0=0,
  parameter integer RXH=0, parameter integer KCRED=12,
  parameter integer RFAN=0, parameter integer RFN1=1, parameter integer RFN2=1, parameter integer RFMX=0,
- parameter [1023:0] RFPL=1024'd0, parameter [511:0] RFPM=512'd0,
+ parameter [1023:0] RFPL=1024'd0, parameter [511:0] RFPM=512'd0, parameter integer RFN3=1, parameter [511:0] RFPQ=512'd0,
  parameter integer RTG=0, parameter integer RTR=1, parameter [1023:0] RTGS=1024'd0, parameter [255:0] RTRM=256'd0
 )(
  input wire ck,rst_n,
@@ -123,23 +126,25 @@ module ot_s81hd_lep0N_core #(
  wire[1103:0]lepk_ix,lepk_ox;wire lepf_ix,fault_ox;wire[44:0]unit_ix;wire[31:0]ctrl_ox;
  reg[10:0]lw_r;
  // RST-FAN-1 reset leaves (see the header).  Leaf order: u_lep, u_land, lw_r, PIN, POUT, PLW, COL0 stages, then per lane
- // i the K stages txf[KTX_i] txr[KTR_i] rxf[KRX_i] rxr[KRX_i], then (PAIR 0) one leaf per g_lane.  rl[NRL] = rst_n spare
+ // i the K stages txf[KTX_i] txr[KTR_i] rxf[KRX_i] rxr[KRX_i], then (PAIR 0) one leaf per g_lane, then (RTG > 0) u_lep
+ // root copies 1 .. RTR-1 (root 0 = the u_lep leaf).  rl[NRL] = rst_n spare
  // (keeps every zero-width slice in range); RFAN 0: rl = rst_n on every bit (no flop, the nets above unchanged).
  function integer rl_k(input integer n);
   integer j; begin rl_k=0; for(j=0;j<n;j=j+1)rl_k=rl_k+KTX[4*j+:4]+KTR[4*j+:4]+2*KRX[4*j+:4]; end
  endfunction
  localparam integer RL_LEP=0, RL_LAND=1, RL_LW=2, RL_PIN=3, RL_POUT=RL_PIN+PIN, RL_PLW=RL_POUT+POUT, RL_C0=RL_PLW+PLW,
-  RL_K=RL_C0+COL0, RL_LN=RL_K+rl_k(4), NRL=RL_LN+(PAIR?0:4), RV=(RFAN>0)?1:0;
+  RL_K=RL_C0+COL0, RL_LN=RL_K+rl_k(4), RL_LR=RL_LN+(PAIR?0:4), NLR=(RTG>0)?RTR-1:0, NRL=RL_LR+NLR, RV=(RFAN>0)?1:0;
  wire[NRL:0]rl;
  assign rl[NRL]=rst_n;
  generate if(RFAN>0)begin:g_rfan
-  ot_rst_fan #(.LEAVES(NRL),.LEVELS(RFAN),.N1(RFN1),.N2(RFN2),.MAPX(RFMX),.PL(RFPL[8*NRL-1:0]),.PM(RFPM[8*RFN2-1:0]))u_rfan(
+  ot_rst_fan #(.LEAVES(NRL),.LEVELS(RFAN),.N1(RFN1),.N2(RFN2),.N3(RFN3),.MAPX(RFMX),.PL(RFPL[8*NRL-1:0]),.PM(RFPM[8*RFN2-1:0]),
+   .PQ(RFPQ[8*RFN3-1:0]))u_rfan(
    .clk(ck),.rst_n_in(rst_n),.rst_n(rl[NRL-1:0]));
  end else begin:g_rfan0
   assign rl[NRL-1:0]={NRL{rst_n}};
  end endgenerate
 `ifndef SYNTHESIS
- initial if(RFAN>0 && (NRL>128 || RFN2>64 || RFAN>4))$fatal(1,"RFAN: at most 128 leaves / 64 level-2 copies / 4 levels (RFPL / RFPM widths)");
+ initial if((RFAN>0 && (NRL>128 || RFN2>64 || RFN3>64 || RFAN>5)) || RTR>16)$fatal(1,"RFAN: at most 128 leaves / 64 level-2 or level-3 copies / 5 levels (RFPL / RFPM / RFPQ widths); RTR <= 16");
 `endif
  wire rfan_all=&rl[NRL-1:0], rfan_any=|rl[NRL-1:0];    // bench witnesses (tb_head_lepk_stages; unread, no cell after opt_clean)
  ot_s81hd_lep_pipe #(.W(1+45+1104),.WC(1),.N(PIN),.RV(RV))g_pin(.ck(ck),.rst_n(rst_n),.rst_nv(rl[RL_PIN+:(PIN>0?PIN:1)]),
@@ -170,10 +175,16 @@ module ot_s81hd_lep0N_core #(
  // The controller counts these notifications before issuing its replay command.
  always@(posedge ck or negedge rl[RL_LW])
   if(!rl[RL_LW])lw_r<=0;else lw_r<={mwd[1056:1047],mwv};
+ wire[15:0]lrn;                                       // u_lep per-root resets (RST-FAN-1d; RTG 0: unread)
+ generate if(RTG>0 && RTR>1)begin:g_lrn
+  assign lrn={{(17-RTR){1'b1}},rl[RL_LR+:(RTR>1?RTR-1:1)],rl[RL_LEP]};
+ end else begin:g_lrn1
+  assign lrn={15'h7fff,rl[RL_LEP]};
+ end endgenerate
  ot_s81hd_lep_idx_nr #(.DT(512),.DR(KCRED),.CRED(KCRED),.SRAM(1),
   .NB(80),.RX_SRAM(1),.IN_PIPE(1),.NATIVE32(1),.IDX_EN(IDX_EN),.TXI(TXI),.RXH(RXH),
   .RTG(RTG),.RTR(RTR),.RTGS(RTGS),.RTRM(RTRM))u_lep(
-  .clk(ck),.rst_n(rl[RL_LEP]),.ro(lepk_ix),.ri(lepk_ox),
+  .clk(ck),.rst_n(rl[RL_LEP]),.rst_nr(lrn),.ro(lepk_ix),.ri(lepk_ox),
   .lo0_v(kv[0]),.lo0_r(kr[0]),.lo0_d(kd[0]),
   .lo1_v(kv[1]),.lo1_r(kr[1]),.lo1_d(kd[1]),
   .lo2_v(kv[2]),.lo2_r(kr[2]),.lo2_d(kd[2]),
@@ -249,7 +260,7 @@ module ot_s81hd_lep0N_noidx_core #(parameter[3:0]CH_B=4'b1111,parameter integer 
  parameter[15:0]KTX=16'h0000,parameter[15:0]KRX=16'h0000,parameter[15:0]TXI=16'h0000,parameter[15:0]KTR=KTX,
  parameter integer PIN=0,parameter integer POUT=0,parameter integer PLW=0,parameter integer COL0=0,parameter integer RXH=0,parameter integer KCRED=12,
  parameter integer RFAN=0,parameter integer RFN1=1,parameter integer RFN2=1,parameter integer RFMX=0,
- parameter[1023:0]RFPL=1024'd0,parameter[511:0]RFPM=512'd0,
+ parameter[1023:0]RFPL=1024'd0,parameter[511:0]RFPM=512'd0,parameter integer RFN3=1,parameter[511:0]RFPQ=512'd0,
  parameter integer RTG=0,parameter integer RTR=1,parameter[1023:0]RTGS=1024'd0,parameter[255:0]RTRM=256'd0)(
  input wire ck,rst_n,
  input wire[513:0]coll_i0,coll_i1,coll_i2,coll_i3,
@@ -259,7 +270,7 @@ module ot_s81hd_lep0N_noidx_core #(parameter[3:0]CH_B=4'b1111,parameter integer 
  output wire[31:0]ctrl_o0,output wire fault_o0,output wire[10:0]lw_o
 );
  ot_s81hd_lep0N_core #(.CH_B(CH_B),.IDX_EN(0),.PAIR(PAIR),.KTX(KTX),.KRX(KRX),.TXI(TXI),.KTR(KTR),.PIN(PIN),.POUT(POUT),.PLW(PLW),.COL0(COL0),.RXH(RXH),.KCRED(KCRED),
- .RFAN(RFAN),.RFN1(RFN1),.RFN2(RFN2),.RFMX(RFMX),.RFPL(RFPL),.RFPM(RFPM),.RTG(RTG),.RTR(RTR),.RTGS(RTGS),.RTRM(RTRM))u(
+ .RFAN(RFAN),.RFN1(RFN1),.RFN2(RFN2),.RFMX(RFMX),.RFPL(RFPL),.RFPM(RFPM),.RFN3(RFN3),.RFPQ(RFPQ),.RTG(RTG),.RTR(RTR),.RTGS(RTGS),.RTRM(RTRM))u(
  .ck(ck),.rst_n(rst_n),.coll_i0(coll_i0),.coll_i1(coll_i1),.coll_i2(coll_i2),.coll_i3(coll_i3),
  .coll_o0(coll_o0),.coll_o1(coll_o1),.coll_o2(coll_o2),.coll_o3(coll_o3),
  .lepk_i0(lepk_i0),.lepk_o0(lepk_o0),.lepf_i0(lepf_i0),.unit_i0(unit_i0),

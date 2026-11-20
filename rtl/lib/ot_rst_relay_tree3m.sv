@@ -9,11 +9,13 @@
 // so the root -> group and group -> local hops can each be sited inside the 405 um register reach.  0 added cycles.
 //   GS[16*g+:16] = first local of group g (GS[0] = 0, strictly ascending, each group 1..32 locals)
 //   RM[4*g+:4]   = root copy of group g (< ROOTS)
+//   RIN 1 (RST-FAN-1d): root copy r is cleared by its own input rst_n_rt[r] (each fed by a same-edge leaf of the
+//   parent's reset fan, sited beside it) instead of the one rst_n_in, so no single input net has to reach every root.
 // Async assertion cascades through reset pins; D = 1 on every flop; every flop kept (copies are logically identical).
 module ot_rst_relay_tree3m #(parameter integer REGIONS = 32, parameter integer GROUPS = 1, parameter integer ROOTS = 1,
                              parameter [16*GROUPS-1:0] GS = {(16*GROUPS){1'b0}},
-                             parameter [4*GROUPS-1:0] RM = {(4*GROUPS){1'b0}})(
- input wire clk, rst_n_in, output wire [REGIONS-1:0] rst_n);
+                             parameter [4*GROUPS-1:0] RM = {(4*GROUPS){1'b0}}, parameter integer RIN = 0)(
+ input wire clk, rst_n_in, input wire [ROOTS-1:0] rst_n_rt, output wire [REGIONS-1:0] rst_n);
  function integer grp_of(input integer l);
   integer g;
   begin
@@ -25,10 +27,11 @@ module ot_rst_relay_tree3m #(parameter integer REGIONS = 32, parameter integer G
  wire [GROUPS-1:0] group_q;
  genvar r, g, l;
  generate for (r = 0; r < ROOTS; r = r + 1) begin : g_root
+     wire rin = (RIN != 0) ? rst_n_rt[r] : rst_n_in;
      (* keep="true",dont_touch="true",async_reg="true" *) reg root_r;
      assign root_q[r] = root_r;
-     always @(posedge clk or negedge rst_n_in)
-         if (!rst_n_in) root_r <= 1'b0; else root_r <= 1'b1;
+     always @(posedge clk or negedge rin)
+         if (!rin) root_r <= 1'b0; else root_r <= 1'b1;
  end
  for (g = 0; g < GROUPS; g = g + 1) begin : g_group
      localparam integer R = RM[4*g+:4];

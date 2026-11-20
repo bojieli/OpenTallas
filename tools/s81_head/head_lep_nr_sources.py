@@ -112,8 +112,8 @@ RTREE_TREE_OLD=("    generate if(SAFE_FIFO) begin:g_reset_balanced\n"
 RTREE_TREE_NEW=("    generate if(SAFE_FIFO && RTG==0) begin:g_reset_balanced\n"
                 "      ot_rst_relay_tree3 #(.REGIONS(4+NRX_RST+NXR)) u_rstr(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));\n"
                 "    end else if(SAFE_FIFO) begin:g_reset_mapped   // RST-FAN-1: root copies + free group boundaries, same 3 edges\n"
-                "      ot_rst_relay_tree3m #(.REGIONS(4+NRX_RST+NXR+NRV),.GROUPS(RTG),.ROOTS(RTR),.GS(RTGS[16*RTG-1:0]),.RM(RTRM[4*RTG-1:0]))\n"
-                "        u_rstr(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));\n"
+                "      ot_rst_relay_tree3m #(.REGIONS(4+NRX_RST+NXR+NRV),.GROUPS(RTG),.ROOTS(RTR),.GS(RTGS[16*RTG-1:0]),.RM(RTRM[4*RTG-1:0]),.RIN(1))\n"
+                "        u_rstr(.clk(clk),.rst_n_in(rst_n),.rst_n_rt(rst_nr[RTR-1:0]),.rst_n(rr));\n"
                 "    end else begin:g_reset_legacy\n")
 # RST-FAN-1 (FABLE-CBC-HEAD-0130 row 7): under RTG > 0 the two pair-B receiver-valid flops rxvb_q[0] / [1] (lanes 2 / 3,
 # ~930 um apart on hd_lep0N) leave shared region 1 for two locals of their own (rr[4+NRX_RST+NXR +: 2], NRV = 2), same
@@ -129,6 +129,13 @@ RTREE_RXB_NEW=("        if (NRV == 0) begin : g_rxvb_r1\n"
                "            always @(posedge clk or negedge rnb0) if (!rnb0) rxvb_q[0] <= 1'b0; else rxvb_q[0] <= 1'b1;\n"
                "            always @(posedge clk or negedge rnb1) if (!rnb1) rxvb_q[1] <= 1'b0; else rxvb_q[1] <= 1'b1;\n"
                "        end\n")
+# RST-FAN-1d (COORD 300 um cap): the mapped tree's root copies take their own inputs rst_nr[r] (RIN 1), each a same-edge
+# leaf of the hd_lep0N core reset fan sited beside its root; RTG 0 leaves rst_nr unread (tree3 on rst_n as before).
+RTREE_PORT_OLD="    input  wire            rst_n,\n"
+RTREE_PORT_NEW=("    input  wire            rst_n,\n"
+                "    input  wire [15:0]     rst_nr,     // RST-FAN-1d: per-root-copy resets of the mapped tree (RTG > 0; else unread)\n")
+RTREE_IDXC_OLD=".clk(clk), .rst_n(rst_n), .ro(ro), .ri(ri),"
+RTREE_IDXC_NEW=".clk(clk), .rst_n(rst_n), .rst_nr(rst_nr), .ro(ro), .ri(ri),"
 RTREE_IDXP_OLD="parameter [15:0] TXI = 16'h0000, parameter integer RXH = 0\n"
 RTREE_IDXP_NEW=("parameter [15:0] TXI = 16'h0000, parameter integer RXH = 0,\n"
                 "    parameter integer RTG = 0, parameter integer RTR = 1, parameter [1023:0] RTGS = 1024'd0, parameter [255:0] RTRM = 256'd0\n")
@@ -137,8 +144,10 @@ RTREE_IDXI_NEW=".TXI(TXI), .RXH(RXH),\n        .RTG(RTG), .RTR(RTR), .RTGS(RTGS)
 
 def rtree(text):
  """RST-FAN-1 opt-in mapped reset tree (see RTREE_*); applied to the derived core + idx texts (or the whole master)."""
+ if text.count(RTREE_PORT_OLD)!=2:raise ValueError('RST-FAN-1d rst_n port pattern changed')
+ text=text.replace(RTREE_PORT_OLD,RTREE_PORT_NEW)
  for old,new in [(RTREE_PARAM_OLD,RTREE_PARAM_NEW),(RTREE_TREE_OLD,RTREE_TREE_NEW),(RTREE_IDXP_OLD,RTREE_IDXP_NEW),
-                 (RTREE_RR_OLD,RTREE_RR_NEW),(RTREE_RXB_OLD,RTREE_RXB_NEW),
+                 (RTREE_RR_OLD,RTREE_RR_NEW),(RTREE_RXB_OLD,RTREE_RXB_NEW),(RTREE_IDXC_OLD,RTREE_IDXC_NEW),
                  (RTREE_IDXI_OLD,RTREE_IDXI_NEW)]:
   if text.count(old)!=1:raise ValueError('RST-FAN-1 source pattern changed: '+old[:60])
   text=text.replace(old,new)

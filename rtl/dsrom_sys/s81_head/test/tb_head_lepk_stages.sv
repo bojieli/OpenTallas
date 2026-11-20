@@ -85,6 +85,12 @@ module tb_head_lepk_stages;
 `ifndef RFPM_DUT
 `define RFPM_DUT 512'd0
 `endif
+`ifndef RFN3_DUT
+`define RFN3_DUT 1
+`endif
+`ifndef RFPQ_DUT
+`define RFPQ_DUT 512'd0
+`endif
 `ifndef RTG_DUT
 `define RTG_DUT 0
 `endif
@@ -107,7 +113,7 @@ module tb_head_lepk_stages;
     .coll_o0(co_r[0]), .coll_o1(co_r[1]), .coll_o2(co_r[2]), .coll_o3(co_r[3]),
     .lepk_i0(ro), .lepk_o0(ri_r), .lepf_i0(lepf), .unit_i0(unit), .ctrl_o0(rt_r), .fault_o0(f_r), .lw_o(lw_r));
   ot_s81hd_lep0N_noidx_core #(.CH_B(4'b1111), .PAIR(0), .KTX(`KTX_DUT), .KRX(`KRX_DUT), .TXI(`TXI_DUT), .KTR(`KTR_DUT), .PIN(`PIN_DUT), .POUT(`POUT_DUT), .PLW(`PLW_DUT), .COL0(`COL0_DUT), .RXH(`RXH_DUT), .KCRED(`KCRED_DUT),
-    .RFAN(`RFAN_DUT), .RFN1(`RFN1_DUT), .RFN2(`RFN2_DUT), .RFMX(`RFMX_DUT), .RFPL(`RFPL_DUT), .RFPM(`RFPM_DUT),
+    .RFAN(`RFAN_DUT), .RFN1(`RFN1_DUT), .RFN2(`RFN2_DUT), .RFMX(`RFMX_DUT), .RFPL(`RFPL_DUT), .RFPM(`RFPM_DUT), .RFN3(`RFN3_DUT), .RFPQ(`RFPQ_DUT),
     .RTG(`RTG_DUT), .RTR(`RTR_DUT), .RTGS(`RTGS_DUT), .RTRM(`RTRM_DUT)) u_dut(
     .ck(ck), .rst_n(rs),
     .coll_i0(ci_d[0]), .coll_i1(ci_d[1]), .coll_i2(ci_d[2]), .coll_i3(ci_d[3]),
