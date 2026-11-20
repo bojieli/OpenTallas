@@ -1,5 +1,6 @@
 """S81-SVC-H8W 11-20: svc_width_gate fails on an H16 lane bound into an H8 core and on an H16 die gather net; the
 netlist H stage is exact (identity at H16)."""
+import json
 import sys
 from pathlib import Path
 
@@ -111,3 +112,17 @@ def test_portfix_overlays_are_fresh():
     r = subprocess.run([sys.executable, "-I", str(gen), "--root", str(root), "--check", "--only-portfix"],
                        capture_output=True, text=True)
     assert r.returncode == 0, r.stdout + r.stderr
+
+
+def test_manifest_preserves_define_starting_with_d(tmp_path):
+    (tmp_path / "svc_rs_core.sv").write_text(CORE)
+    (tmp_path / "svc_rs_fv.sv").write_text(
+        "`ifdef DSFD_PQ_STATIC_X2\n" + NEW + "`else\n" + OLD + "`endif\n"
+    )
+    manifest = tmp_path / "asbuilt.json"
+    for flag in ("DSFD_PQ_STATIC_X2", "-DDSFD_PQ_STATIC_X2"):
+        manifest.write_text(json.dumps({
+            "defines": ["OT_SVC_H8", flag],
+            "files": ["svc_rs_core.sv", "svc_rs_fv.sv"],
+        }))
+        assert G.main(["--root", str(tmp_path), "--asbuilt", str(manifest)]) == 0

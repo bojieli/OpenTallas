@@ -758,7 +758,7 @@ def elab(ab, base, out_dir, mem_gb=32, idx=None):
             _sys.path.insert(0, str(Path(__file__).resolve().parent))
         import svc_width_gate as SWG
         svc_src = [f for f in list(full) + list(lib) + list(tops) if SWG.SVC_FILE.search(f)]
-        defs = [d.lstrip("-D") for d in ab.get("defines", [])]
+        defs = [d.removeprefix("-D") for d in ab.get("defines", [])]
         bb = pbb = ()
         if ab.get("frontend", "native") == "slang":
             names = set(SWG.library([SWG.prep(Path(f).read_text(errors="replace"), defs) for f in svc_src]))
