@@ -1,6 +1,5 @@
-"""R-MINIMAL + R-PERIOD sign-off profile (OWNER 2026-11-13, PROFILE-1): the only blocking type gates are DRC 0, TT setup
-WNS >= -(P_die - 833) - 42 ps (P_die 1000 by default), internal FF hold >= 0; everything else is advisory.
-OT_SIGNOFF_PROFILE=legacy keeps the previous verdicts."""
+"""R-MINIMAL type sign-off at 833 ps with a -42 ps TT setup tolerance.
+OT_SIGNOFF_PROFILE=legacy retains the legacy checks."""
 import json
 import sys
 from pathlib import Path
@@ -59,18 +58,19 @@ def test_default_gate_is_minus_42_r_period_held():
     assert SP.judge(rec(tt=-42.0))["verdict"] == "SIGNED" and SP.judge(rec(tt=-42.5))["verdict"] == "NOT SIGNED"
 
 
-def test_r_period_setup_tolerance_and_achieved_period(monkeypatch):
+def test_stale_period_environment_cannot_widen_setup_tolerance(monkeypatch):
     monkeypatch.setenv("OT_DIE_PERIOD_PS", "1000")
-    assert SP.die_period_ps("s81") == 1000.0 and SP.setup_tolerance_ps("s81") == pytest.approx(209.0)
-    j = SP.judge(rec(tt=-209.0))
-    assert j["verdict"] == "SIGNED" and j["achieved_period_ps"] == pytest.approx(1042.0) and j["die"] == "s81"
-    assert SP.judge(rec(tt=-209.5))["verdict"] == "NOT SIGNED"
-    assert SP.judge(rec(tt=25.0))["achieved_period_ps"] == 833.0
+    r = rec(tt=-43.0)
+    r["corners"]["tt"] = {"periods": {"clk": 833.0, "vclk": 833.0}}
+    j = SP.judge(r)
+    assert j["verdict"] == "NOT SIGNED" and j["gates"]["setup_tt"] == "FAIL"
+    assert j["achieved_period_ps"] == 876.0 and j["signed_period_ps"] is None
+    assert j["die_period_ps"] == 833.0 and j["setup_tolerance_ps"] == 42.0
     monkeypatch.setenv("OT_DIE_PERIOD_PS_S81", "1250")
-    assert SP.judge(rec(tt=-450.0))["verdict"] == "SIGNED"
-    assert SP.setup_tolerance_ps("qwen_kvsys") == pytest.approx(209.0)
-    monkeypatch.setenv("OT_DIE_PERIOD_PS", "833")
-    assert SP.setup_tolerance_ps("qwen_kvsys") == 42.0 and SP.judge(dict(drc=0, tt_wns=-43, ff_wns=0, die="kv"))["verdict"] == "NOT SIGNED"
+    assert SP.judge(r)["verdict"] == "NOT SIGNED"
+    r["checks"]["setup_tt"]["wns_ps"] = -42.0
+    j = SP.judge(r)
+    assert j["verdict"] == "SIGNED" and j["signed_period_ps"] == 833.0
 
 
 def test_hold_has_no_tolerance_but_port_start_only_is_advisory():
@@ -118,8 +118,8 @@ def _related(setup, hold, contract):
 def test_die_clock_gate_minimal(monkeypatch):
     assert PSG.from_related(_related(setup=-1.0, hold=0.0, contract=2))["verdict"] == "FAIL"   # 833 ps default
     monkeypatch.setenv("OT_DIE_PERIOD_PS", "1000")
-    v = PSG.from_related(_related(setup=-100.0, hold=0.0, contract=2))   # judged at P_die 1000: -100 + 167 >= 0
-    assert v["verdict"] == "PASS" and v["profile"] == "minimal" and any("advisory" in w for w in v["warnings"])
+    v = PSG.from_related(_related(setup=-100.0, hold=0.0, contract=2))
+    assert v["verdict"] == "FAIL" and v["profile"] == "minimal" and any("advisory" in w for w in v["warnings"])
     assert PSG.from_related(_related(setup=-200.0, hold=0.0, contract=0))["verdict"] == "FAIL"
     assert PSG.from_related(_related(setup=10.0, hold=-0.1, contract=0))["verdict"] == "FAIL"
     assert PSG.from_related(_related(setup=10.0, hold=0.0, contract=2))["verdict"] == "PASS"

@@ -25,29 +25,16 @@ import os
 
 PERIOD_PS = 833.0
 SETUP_TOL_PS = 42.0          # 5 % of 833 ps
-# R-PERIOD (OWNER 11-13 "we can accept cost in area, performance, clock frequency"; EXPERT-REVIEW-3): each die signs off
-# at P_die (PROPOSAL, HELD by COORD 11-13: default stays 833 ps = the -42 ps gate until the owner decides; 1000 / 1250 via env).  Gate 2 = routed TT WNS at 833 ps >= -(P_die - 833) - 42.
-# Override: env OT_DIE_PERIOD_PS (all dies) or OT_DIE_PERIOD_PS_<DIE> (DIE = s81, s81_head, qwen_compute, qwen_kvsys, hbm;
-# upper case), e.g. OT_DIE_PERIOD_PS_QWEN_KVSYS=1250.
-DIE_PERIOD_DEFAULT_PS = 833.0   # COORD 11-13 18:2x: R-PERIOD held (owner to decide); 1000 = proposal
-DIE_ALIAS = {"qc": "qwen_compute", "kv": "qwen_kvsys", "head": "s81_head", "results": "s81_head", "cp1": "s81"}
-
-
 def die_period_ps(die=None):
-    """P_die of a die (R-PERIOD); legacy profile: 833"""
-    if not is_minimal():
-        return PERIOD_PS
-    d = DIE_ALIAS.get(str(die or "").lower(), str(die or "").lower())
-    for k in ([f"OT_DIE_PERIOD_PS_{d.upper()}"] if d else []) + ["OT_DIE_PERIOD_PS"]:
-        v = _num(os.environ.get(k))
-        if v is not None:
-            return v
-    return DIE_PERIOD_DEFAULT_PS
+    """Return the 833 ps sign-off period for every die."""
+    return PERIOD_PS
 
 
 def setup_tolerance_ps(die=None):
-    """|min TT WNS at 833 ps| that still signs off: (P_die - 833) + 42"""
-    return max(0.0, die_period_ps(die) - PERIOD_PS) + SETUP_TOL_PS
+    """Return the allowed routed TT setup miss at 833 ps."""
+    return SETUP_TOL_PS
+
+
 HOLD_MIN_PS = 0.0            # internal FF hold, no tolerance
 # Period (OWNER 11-20): every sign-off is timed at 833 ps.  A record whose STA ran at a relaxed clock (corners.<c>.periods above 833) is
 # NOT a sign-off, whether or not it declares signed_period_ps; period_problem() blocks its setup gate.
@@ -189,9 +176,7 @@ def signed_period_ps(rec):
 
 
 def period_problem(rec):
-    """None when the record's timing period is admissible: no signed_period_ps and no clock above 833 ps, or a signed_period_ps in
-    [833, 1000] that equals the period the STA really ran at.  Else the reason (blocks the setup gate: the setup number is not a
-    measurement at an admissible period)."""
+    """Return the setup gate failure reason if the timing period violates the 833 ps policy."""
     sp, cp = signed_period_ps(rec), record_clock_period_ps(rec)
     if sp is None:
         if cp is not None and cp > PERIOD_PS + PERIOD_MATCH_PS:
@@ -235,7 +220,7 @@ def judge(rec, die=None):
     drc, tt, ff, src = metrics(rec)
     die = die or record_die(rec)
     sp, pprob = signed_period_ps(rec), period_problem(rec)
-    tol = SETUP_TOL_PS if sp is not None else setup_tolerance_ps(die)   # a period record is timed AT its period: plain -42 ps
+    tol = setup_tolerance_ps(die)
     gates = gate_verdicts(drc, tt, ff, tol)
     if pprob and gates["setup_tt"] == "PASS":
         gates["setup_tt"] = "FAIL"

@@ -13,9 +13,9 @@ def test_policy_period_follows_signoff_profile(monkeypatch):
     assert R.die_policy_period_ps("s81") == 833.0
     assert R.period_policy(833.0, "s81")["verdict"] == "PASS"
     monkeypatch.setenv("OT_DIE_PERIOD_PS_S81", "1000")
-    assert R.die_policy_period_ps("s81") == 1000.0
-    assert R.period_policy(1000.0, "s81")["verdict"] == "PASS"
-    assert R.period_policy(833.0, "s81")["verdict"] == "FAIL"
+    assert R.die_policy_period_ps("s81") == 833.0
+    assert R.period_policy(1000.0, "s81")["verdict"] == "FAIL"
+    assert R.period_policy(833.0, "s81")["verdict"] == "PASS"
     assert R.period_policy(833.0)["verdict"] == "PASS"          # no die: canonical 833 (unchanged API)
 
 

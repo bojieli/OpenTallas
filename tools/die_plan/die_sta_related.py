@@ -3027,8 +3027,7 @@ def kit_windows(pc, intra_override=None, plan=None):
 
 
 def die_policy_period_ps(die=None):
-    """OWNER 11-20 (#1): the die runs at the slowest signed type's period, up to 1000 ps; the policy period of a die is the
-    sign-off profile's die_period_ps (signoff_profile.die_period_ps: SIGN-PROFILE record / env, default 833)."""
+    """Return the die sign-off period from the current sign-off profile."""
     try:
         import signoff_profile as SP
         return float(SP.die_period_ps(die))
@@ -3037,8 +3036,7 @@ def die_policy_period_ps(die=None):
 
 
 def period_policy(period, die=None):
-    """Keep noncanonical what-if timing available without qualifying it as policy timing.  Canonical = the die's policy
-    period (die_policy_period_ps; 833 unless the sign-off profile records a die period)."""
+    """Distinguish timing at the sign-off period from what-if timing."""
     req = die_policy_period_ps(die) if die is not None else PERIOD_PS
     ok = math.isfinite(period) and period == req
     return dict(period_ps=period, required_period_ps=req,
