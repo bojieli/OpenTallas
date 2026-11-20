@@ -3,7 +3,8 @@
 
     svc_h_gather_bench.py --h {8,16} --out DIR [--fv FILE] [--entry FILE] [--rsc FILE] [--pvso DIR] [--vectors N]
 
-For each of the 15 port variants in the die's dsdv_svc_rs_fv.sv (13 dsdv_svc_rs_fv_<FM> + 2 dsdv_svc_rs_pvso_entry_fv_<FM>,
+Superset pins (bind178 PORTFIX, owner 11-20): a face port is GP = `OT_SVC_GP b (2132); the lane is checked in its low
+GW bits and the go pad [GP-1:GW] must be 0.  For each of the 15 port variants in the die's dsdv_svc_rs_fv.sv (13 dsdv_svc_rs_fv_<FM> + 2 dsdv_svc_rs_pvso_entry_fv_<FM>,
 through the bind178 PORTFIX dsdv_svc_rs_pvso_entry for the entries) the bench drives N random words on EVERY gather
 input face the variant carries (gi_d_<f>, GW = H*132+20 b) and a random 4-quarter word on the core's go_d, and checks
 bit for bit, in iverilog:
@@ -57,20 +58,25 @@ def variants(fv_text, defines):
             continue
         par, pt, _ = SWG.header(m.group(2))
         ps = SWG.ports(pt)
-        out.append(dict(name=name, entry="pvso_entry" in name, ports=ps, has_h=bool(re.search(r"\bH\s*=", par))))
+        out.append(dict(name=name, entry="pvso_entry" in name, ports=ps, has_h=bool(re.search(r"\bH\s*=", par)), pw_err=None))
     return out
 
 
-def tb(vs, h, n):
+def tb(vs, h, n, gp=2132):
     gw = h * 132 + 20
+    env = {"H": str(h), "GP": str(gp)}
     L = ["`timescale 1ns/1ps", "module tb;", f"    localparam integer GW = {gw};",
          "    reg [4*GW-1:0] go_pat; integer errs = 0, checks = 0, v, k;"]
     for i, x in enumerate(vs):
         conns = []
+        if x["pw_err"]:
+            raise SystemExit(x["pw_err"])
         for p, (d, r) in x["ports"].items():
-            w = SWG.width(r, {"H": str(h)}) if r else 1
+            w = SWG.width(r, env) if r else 1
             L.append(f"    {'reg' if d == 'input' else 'wire'} [{w - 1}:0] v{i}_{p};")
             conns.append(f".{p}(v{i}_{p})")
+        pw = SWG.width(x["ports"][next(p for p in x["ports"] if p.startswith(("gi_d_", "go_d_")))][1], env)
+        x["pw"] = pw
         L.append(f"    {x['name']} {'#(.H(' + str(h) + ')) ' if x['has_h'] else ''}d{i} ({', '.join(conns)});")
     L += ["    initial begin"]
     L.append(f"        for (v = 0; v < {n}; v = v + 1) begin")
@@ -79,21 +85,24 @@ def tb(vs, h, n):
         core = f"d{i}.u.u" if x["entry"] else f"d{i}.u"
         for p, (d, r) in x["ports"].items():
             if d == "input":
-                w = SWG.width(r, {"H": str(h)}) if r else 1
+                w = SWG.width(r, env) if r else 1
                 L.append(f"            for (k = 0; k < {w}; k = k + 32) v{i}_{p}[k +: 32] = $urandom;" if w > 1
                          else f"            v{i}_{p} = $urandom;")
         L.append("            #1;")
         for q, f in enumerate("nesw"):
             gi, go = f"gi_d_{f}", f"go_d_{f}"
             if gi in x["ports"]:
-                L.append(f"            checks = checks + 1; if ({core}.gi_d[GW*{q} +: GW] !== v{i}_{gi}) begin errs = errs + 1; "
+                L.append(f"            checks = checks + 1; if ({core}.gi_d[GW*{q} +: GW] !== v{i}_{gi}[GW-1:0]) begin errs = errs + 1; "
                          f"if (errs < 20) $display(\"FAIL {x['name']} gi quarter {q} ({f})\"); end")
             else:
                 L.append(f"            checks = checks + 1; if ({core}.gi_d[GW*{q} +: GW] !== {{GW{{1'b0}}}}) begin errs = errs + 1; "
                          f"if (errs < 20) $display(\"FAIL {x['name']} gi quarter {q} ({f}) not zero\"); end")
             if go in x["ports"]:
-                L.append(f"            checks = checks + 1; if (v{i}_{go} !== go_pat[GW*{q} +: GW]) begin errs = errs + 1; "
+                L.append(f"            checks = checks + 1; if (v{i}_{go}[GW-1:0] !== go_pat[GW*{q} +: GW]) begin errs = errs + 1; "
                          f"if (errs < 20) $display(\"FAIL {x['name']} go quarter {q} ({f})\"); end")
+                if x["pw"] > gw:
+                    L.append(f"            checks = checks + 1; if (v{i}_{go}[{x['pw'] - 1}:GW] !== 0) begin errs = errs + 1; "
+                             f"if (errs < 20) $display(\"FAIL {x['name']} go pad {q} ({f}) not 0\"); end")
     L += ["        end",
           "        $display(\"GATHER_BENCH H=%0d GW=%0d variants=%0d checks=%0d errors=%0d %s\", "
           f"{h}, GW, {len(vs)}, checks, errs, errs ? \"FAIL\" : \"PASS\");",

@@ -767,10 +767,19 @@ def elab(ab, base, out_dir, mem_gb=32, idx=None):
         r = SWG.run(Path(base), defs, svc_src, SWG.DEFAULT_MODULES, nl[0] if nl else None, bb, pbb)
         (out / "svc_width_gate.json").write_text(json.dumps(r, indent=1) + "\n")
         rec["svc_width_gate"] = {k: v for k, v in r.items() if k != "examples"}
-        # H16 (the C6 form in flight): a shared slang blackbox interface is REPORTED (svc_width_gate.json), not a stop;
-        # under OT_SVC_H8 every finding fails closed
-        only_shared = all(r[k] == 0 for k in ("width_mismatch", "unknown", "unresolved"))
-        if r["verdict"] != "PASS" and not (r["H"] == 16 and only_shared):
+        # COORD 11-20: every finding fails closed at every H (width mismatch, unknown port, unresolved width, and a
+        # shared slang blackbox interface: dsdv_svc_mem_ar must be in slang_parameterized_blackboxes)
+        if any(f.endswith("portfix178/dsdv_svc_rs_fv.sv") for f in svc_src):
+            # FRESH (FABLE-PD-S81-SVC-0245): the PORTFIX overlays are generator outputs; a copy the generator did not just
+            # write stops the bind (J3 r7: a 10-25 H16 hand copy shadowed the H-aware form)
+            gen = Path(__file__).resolve().parents[1] / "s81_dv" / "svc_rs" / "svc_rs_faces.py"
+            fr = subprocess.run([_sys.executable, "-I", str(gen), "--root", str(base), "--check", "--only-portfix"],
+                                capture_output=True, text=True)
+            rec["svc_portfix_fresh"] = dict(rc=fr.returncode, out=(fr.stdout + fr.stderr)[-400:])
+            if fr.returncode != 0:
+                raise ElabError(f"svc PORTFIX overlays are stale (regenerate: tools/s81_dv/svc_rs/svc_rs_faces.py): "
+                                f"{(fr.stdout + fr.stderr)[-400:]}")
+        if r["verdict"] != "PASS":
             raise ElabError(f"svc_width_gate FAIL (H{r['H']}): {json.dumps({k: v for k, v in r.items() if k != 'examples'})} "
                             f"{json.dumps(r['examples'])[:1500]}")
     if ab.get("release_full"):

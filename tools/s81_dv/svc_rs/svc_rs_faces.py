@@ -20,7 +20,17 @@ Outputs (default, repo root):
   rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs_fv.sv       one port variant per distinct (kind, FM): dsdv_svc_rs_fv_<FM hex>
                                                       (the 14 tree slices) and dsdv_svc_rs_pvso_entry_fv_<FM hex> (entries)
   results/arch/s81_dv_1016/svc_rs/faces.json          per sid: masks, variant, kept / dropped face bits
-Usage: python3 tools/s81_dv/svc_rs/svc_rs_faces.py [--root REPO] [--check]   (--check: fail if the outputs are stale)
+  physical/die_plan/s81/bind/source_modules/portfix178/dsdv_svc_rs_fv.sv
+  physical/die_plan/s81/bind/source_modules/portfix178/dsdv_svc_rs_pvso_entry.sv
+                                                      S81-SVC-H8W 11-20: the bind178 PORTFIX overlays the die bind reads,
+                                                      GENERATED here too (a stale H16 hand copy shadowed the H-aware rtl
+                                                      form in J3 r7).  PORTFIX ABI: entry q [512:0], no so_* status ports
+                                                      (fault sticky inside the entry).  SUPERSET gather pins (owner 11-20):
+                                                      every gather face port is GP = `OT_SVC_GP b (default 2132, the die
+                                                      netlist / plan attnh lane), the H lane GW = H*132+20 low-aligned in it;
+                                                      the pad bits above GW are inputs with no reader and outputs driven 0.
+Usage: python3 tools/s81_dv/svc_rs/svc_rs_faces.py [--root REPO] [--check]   (--check: fail if the outputs are stale;
+       the bind runs it on the PORTFIX overlays: FRESH)
 """
 import argparse
 import json
@@ -40,6 +50,8 @@ PORTS = {
     "SI": [("si_v", "input", 1), ("si_d", "input", 1076)], "SO": [("so_v", "output", 1), ("so_d", "output", 1076)],
 }
 ENTRIES = (5, 11)
+PORTFIX_FV = "physical/die_plan/s81/bind/source_modules/portfix178/dsdv_svc_rs_fv.sv"
+PORTFIX_EN = "physical/die_plan/s81/bind/source_modules/portfix178/dsdv_svc_rs_pvso_entry.sv"
 
 
 def _cases(text, fn):
@@ -120,6 +132,9 @@ def svh(ms):
 COMMON_IN = ("input wire ck, input wire rst, input wire [3:0] sid,\n"
              "    output wire [2*341-1:0] rq, input wire [1:0] rk, input wire [1:0] wd, input wire [1:0] rv,\n"
              "    input wire [2*256-1:0] r_data, input wire [2*17-1:0] r_tag, input wire [2*4-1:0] r_beat, input wire [1:0] hs")
+ENTRY_IO_PORTFIX = ("input wire [32:0] j, output wire [1:0] jd, input wire [512:0] q, input wire [291:0] hw, output wire [8:0] hc,\n"
+                    "    output wire fault, output wire [1:0] st_rg, output wire pv_v, output wire [512:0] pv_d, output wire [47:0] pv_x,\n"
+                    "    input wire [561:0] local_pv_landed, input wire [561:0] peer_pv")
 ENTRY_IO = ("input wire [32:0] j, output wire [1:0] jd, input wire [512:0] q, input wire [291:0] hw, output wire [8:0] hc,\n"
             "    output wire fault, output wire [1:0] st_rg, output wire pv_v, output wire [512:0] pv_d, output wire [47:0] pv_x,\n"
             "    input wire [561:0] local_pv_landed, input wire [561:0] peer_pv,\n"
@@ -128,24 +143,29 @@ OBS = ("`ifdef RS_OBS\n    , output wire w_v, output wire [13:0] w_a, output wir
        " output wire [11:0] w_st\n    , output wire [H*132+566:0] obs\n`endif\n")
 
 
-def module(kind_entry, m):
+def module(kind_entry, m, portfix=False):
     name = ("dsdv_svc_rs_pvso_entry_fv_" if kind_entry else "dsdv_svc_rs_fv_") + fm_hex(m)
     fp = face_ports(m)
-    ports = [COMMON_IN] + ([ENTRY_IO] if kind_entry else [])
+    ports = [COMMON_IN] + ([ENTRY_IO_PORTFIX if portfix else ENTRY_IO] if kind_entry else [])
+    gwr = "[GP-1:0]" if portfix else "[H*132+19:0]"
     for np_, _cp, d, w, _f in fp:
-        ports.append(f"{d} wire [H*132+19:0] {np_}" if w == "GW" else
+        ports.append(f"{d} wire {gwr} {np_}" if w == "GW" else
                      f"{d} wire [{w - 1}:0] {np_}" if w > 1 else f"{d} wire {np_}")
     hdr = (f"// slice role faces: " + ", ".join(f"{g} {''.join(FACES[f].upper() for f in range(4) if m[g] >> f & 1) or '-'}"
                                                  for g in GROUPS) + "\n")
     L = [hdr + f"module {name} #(parameter integer MUT = 0, parameter integer DIE_ID = 0, parameter integer ST = 0,\n"
          f"    parameter bit SRAM_MACRO = 0, parameter integer PV_IDENTITY = 0, parameter bit SMT = 1"
-         + (", parameter integer PVSO_ENABLE = 0" if kind_entry else "") + ",\n    parameter integer H = `OT_SVC_HV) (\n    "
+         + (", parameter integer PVSO_ENABLE = 0" if kind_entry else "") + ",\n    parameter integer H = `OT_SVC_HV"
+         + (", parameter integer GP = `OT_SVC_GP" if portfix else "") + ") (\n    "
          + ",\n    ".join(ports) + "\n" + OBS + ");",
          "    /*verilator hier_block*/",
          "`ifndef RS_OBS",
          "    wire w_v; wire [13:0] w_a; wire [15:0] w_m; wire [511:0] w_d; wire [11:0] w_st;",
          "`endif",
          "    localparam integer GW = H * 132 + 20;   // gather lane (S81-SVCRS R5)"]
+    if portfix:
+        L += ["    // superset gather pins: GP >= GW or the variant refuses to elaborate (no silent resize)",
+              "    if (GP < GW) begin : g_gp_short", "        dsdv_svc_gather_pin_narrower_than_lane u_gp_guard ();", "    end"]
     # packed core-side buses: kept faces wired to the variant ports; dropped faces do not exist in the core (FM generate)
     # so the inputs below carry no logic and the outputs are not driven by any register
     conn = {}
@@ -160,7 +180,11 @@ def module(kind_entry, m):
                 if m[g] >> f & 1:
                     sl = sl_(f)
                     if d == "input":
-                        L.append(f"    assign {sl} = {p}_{FACES[f]};")
+                        src = f"{p}_{FACES[f]}[GW-1:0]" if (portfix and w == "GW") else f"{p}_{FACES[f]}"
+                        L.append(f"    assign {sl} = {src};" + ("   // lane low-aligned; pad [GP-1:GW] has no reader"
+                                                                 if portfix and w == "GW" else ""))
+                    elif portfix and w == "GW":
+                        L.append(f"    assign {p}_{FACES[f]} = GP'({sl});   // lane low-aligned; pad [GP-1:GW] driven 0")
                     else:
                         L.append(f"    assign {p}_{FACES[f]} = {sl};")
                 elif d == "input":
@@ -171,14 +195,16 @@ def module(kind_entry, m):
     fmv = f"40'h{fm_hex(m)}"
     pc = ", ".join(f".{p}({n})" for p, n in conn.items())
     if kind_entry:
+        qx = "q" if portfix else "{2'b00, q}"
         L.append(f"    dsdv_svc_rs_pvso_entry #(.PVSO_ENABLE(PVSO_ENABLE), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), "
                  f".SRAM_MACRO(SRAM_MACRO), .PV_IDENTITY(PV_IDENTITY), .SMT(SMT), .FM({fmv}), .H(H)) u (\n"
-                 f"        .ck(ck), .rst(rst), .sid(sid), .j(j), .jd(jd), .q({{2'b00, q}}), .hw(hw), .hc(hc), .fault(fault), .st_rg(st_rg),\n"
+                 f"        .ck(ck), .rst(rst), .sid(sid), .j(j), .jd(jd), .q({qx}), .hw(hw), .hc(hc), .fault(fault), .st_rg(st_rg),\n"
                  f"        {pc},\n"
                  f"        .rq(rq), .rk(rk), .wd(wd), .rv(rv), .r_data(r_data), .r_tag(r_tag), .r_beat(r_beat), .hs(hs),\n"
-                 f"        .pv_v(pv_v), .pv_d(pv_d), .pv_x(pv_x), .local_pv_landed(local_pv_landed), .peer_pv(peer_pv),\n"
-                 f"        .so_ready(so_ready), .so_done(so_done), .so_fault_code(so_fault_code)\n"
-                 "`ifdef RS_OBS\n        , .w_v(w_v), .w_a(w_a), .w_m(w_m), .w_d(w_d), .w_st(w_st), .obs(obs)\n`endif\n        );")
+                 + (f"        .pv_v(pv_v), .pv_d(pv_d), .pv_x(pv_x), .local_pv_landed(local_pv_landed), .peer_pv(peer_pv)\n" if portfix else
+                    f"        .pv_v(pv_v), .pv_d(pv_d), .pv_x(pv_x), .local_pv_landed(local_pv_landed), .peer_pv(peer_pv),\n"
+                    f"        .so_ready(so_ready), .so_done(so_done), .so_fault_code(so_fault_code)\n")
+                 + "`ifdef RS_OBS\n        , .w_v(w_v), .w_a(w_a), .w_m(w_m), .w_d(w_d), .w_st(w_st), .obs(obs)\n`endif\n        );")
     else:
         L.append("    wire [1:0] jd_nc; wire [8:0] hc_nc; wire fault_nc; wire pv_v_nc; wire [512:0] pv_d_nc; wire [47:0] pv_x_nc;"
                  " wire [1:0] st_rg_nc;")
@@ -193,7 +219,7 @@ def module(kind_entry, m):
     return name, "\n".join(L)
 
 
-def sv(ms):
+def sv(ms, portfix=False):
     out = ["`timescale 1ns/1ps",
            "`ifndef OT_SVC_HV",
            "`ifdef OT_SVC_H8",
@@ -201,7 +227,9 @@ def sv(ms):
            "`else",
            "`define OT_SVC_HV 16",
            "`endif",
-           "`endif",
+           "`endif"] + (["`ifndef OT_SVC_GP",
+                         "`define OT_SVC_GP 2132   // superset gather pin lane (die netlist w_sg / plan attnh, owner 11-20)",
+                         "`endif"] if portfix else []) + [
            "// generated by tools/s81_dv/svc_rs/svc_rs_faces.py (S81-P9-FACE 2026-10-23) -- do not edit.",
            "// Port variants of the regional service slice: one per distinct (kind, FM) of the 16 slices' role faces (the",
            "// role ROMs dsdv_svc_rs_roles.svh / dsdv_svc_sx_roles.svh).  A variant carries ONLY the faces its role uses, as",
@@ -209,16 +237,26 @@ def sv(ms):
            "// The 14 tree slices instantiate dsdv_svc_rs_c (ENTRY 0) like dsdv_svc_rs; the entries (rsv_05 / rsv_11) wrap",
            "// dsdv_svc_rs_pvso_entry #(.FM).  The strap sid must select the role the variant was made for (core: sticky",
            "// fault on a role face outside FM).  Entry q is the die's 513-b q lane {d 512, v}: the all-faces port's two",
-           "// upper bits (q[514] transport fault / q[513], never driven by the die's slice bo source) are not ports.",
+           "// upper bits (q[514] transport fault / q[513], never driven by the die's slice bo source) are not ports"
+           + (" (PORTFIX-DEAD:\n// dsdv_svc_rs_pvso_entry q is [512:0]; its program has TF 0, so no q[514] reader)." if portfix else "."),
            ""]
+    if portfix:
+        out[-1:-1] = ["// bind178 PORTFIX overlay (--portfix form of this generator): superset gather pins GP = `OT_SVC_GP, the H lane",
+                      "// GW = H*132+20 low-aligned (S81-SVC-H8W 11-20); entry ABI q [512:0], no so_* ports."]
     seen = set()
     for s in range(16):
         k = (s in ENTRIES, fm_hex(ms[s]))
         if k in seen:
             continue
         seen.add(k)
-        out.append(module(s in ENTRIES, ms[s])[1])
+        out.append(module(s in ENTRIES, ms[s], portfix)[1])
     return "\n".join(out)
+
+
+# The PORTFIX service entry (bind178 ABI: q [512:0], no so_* ports, sticky fault, H16 program TF 0 / ingress_hden),
+# H-parameterised (S81-SVC-H8W 11-20): under OT_SVC_H8 the _h8 SO program / half join / ingress of the rtl entry.
+PORTFIX_ENTRY = "`timescale 1ns/1ps\n`ifndef OT_SVC_HV\n`ifdef OT_SVC_H8\n`define OT_SVC_HV 8\n`else\n`define OT_SVC_HV 16\n`endif\n`endif\n// Existing service entry ABI plus static all-quarter SO source assembly.\n// S81-SVC-H8W 11-20 (S81-SVC-SPLIT-1119, COORD/S81-DIE-R3 J3 r7): H-parameterised.  The gather lane is H*132+20 b a\n// face (H = `OT_SVC_HV: 16 = the frozen bind178 ABI byte for byte in behaviour, 8 under OT_SVC_H8), passed to\n// dsdv_svc_rs_c as .H(H); under OT_SVC_H8 the SO program / half join / ingress are the _h8 forms of the source\n// rtl/dsrom_sys/s81_dv/pv_so/dsdv_svc_rs_pvso_entry.sv.  The PORTFIX ABI (q [512:0], no so_* status ports, sticky\n// fault flop) is kept in both forms.  Width gate: tools/die_plan/svc_width_gate.py.\nmodule dsdv_svc_rs_pvso_entry #(parameter integer PVSO_ENABLE=0, parameter integer MUT = 0, parameter integer DIE_ID = 0, parameter integer ST = 0,\n                           parameter bit SRAM_MACRO = 0, parameter integer PV_IDENTITY = 0, parameter bit SMT = 1,\n                           parameter logic [39:0] FM = {40{1'b1}},\n                           parameter integer H = `OT_SVC_HV) (   // S81-P9-FACE face mask / S81-SVCRS R5 heads per pass -> dsdv_svc_rs_c\n    input  wire ck, rst, input wire [3:0] sid,\n    input  wire [32:0] j, output wire [1:0] jd, input wire [512:0] q,   // the die's 513-b q lane {d 512, v}\n    input wire [291:0] hw, output wire [8:0] hc,\n    output wire fault, output wire [1:0] st_rg,\n    input  wire [4*805-1:0] dn_i, output wire [4*805-1:0] dn_o, input wire [4*16-1:0] up_i, output wire [4*16-1:0] up_o,\n    input  wire [4*514-1:0] ri, output wire [4*514-1:0] ro,\n    input  wire [3:0] gi_v, input wire [4*(H*132+20)-1:0] gi_d, output wire [3:0] go_v, output wire [4*(H*132+20)-1:0] go_d,\n    input  wire [3:0] si_v, input wire [4*1076-1:0] si_d, output wire [3:0] so_v, output wire [4*1076-1:0] so_d,\n    output wire [2*341-1:0] rq, input wire [1:0] rk, wd, rv, input wire [2*256-1:0] r_data, input wire [2*17-1:0] r_tag,\n    input  wire [2*4-1:0] r_beat, input wire [1:0] hs,\n    output wire pv_v, output wire [512:0] pv_d, output wire [47:0] pv_x,\n    input wire [561:0] local_pv_landed,peer_pv\n    // S81/PORTFIX-FLT 10-25 (S81 DECISION 4): the SO status outputs so_ready / so_done (status) and so_fault_code[11:0]\n    // (detail code) are dropped; the ingress fault (= |so_fault_code, sticky) stays OR-ed into the one fault output.\n\n`ifdef RS_OBS\n    , output wire w_v, output wire [13:0] w_a, output wire [15:0] w_m, output wire [511:0] w_d, output wire [11:0] w_st\n    , output wire [H*132+566:0] obs\n`endif\n);\n    /*verilator hier_block*/\n`ifndef RS_OBS\n    wire w_v; wire [13:0] w_a; wire [15:0] w_m; wire [511:0] w_d; wire [11:0] w_st;\n`endif\n    wire so_cfg_v,so_param_v,so_launch,program_fault;\n    wire so_ready,so_done;wire[11:0]so_fault_code;   // internal (bench taps only)\n    wire[19:0]so_owner,so_param_owner;wire[20:0]so_position,so_param_position;\n    wire[7:0]so_se_jid,so_jid;wire[15:0]so_local_first,so_peer_first;\n    wire[2:0]so_param_row;wire[511:0]so_param_d;wire[514:0]q_filtered;\n`ifdef OT_SVC_H8\n    wire[15:0]so_local_first1,so_peer_first1;\n    dsdv_pv_so_program_h8 #(.ENABLE(PVSO_ENABLE)) u_program(.clk(ck),.rst_n(rst),.q({2'b00,q}),.q_pass(q_filtered),\n      .cfg_v(so_cfg_v),.owner(so_owner),.position(so_position),.se_jid(so_se_jid),.so_jid(so_jid),\n      .local_first(so_local_first),.peer_first(so_peer_first),.local_first1(so_local_first1),.peer_first1(so_peer_first1),\n      .param_v(so_param_v),.param_row(so_param_row),\n`else\n    dsdv_pv_so_program #(.ENABLE(PVSO_ENABLE),.TF(0)) u_program(.clk(ck),.rst_n(rst),.q({2'b00,q}),.q_pass(q_filtered),\n      .cfg_v(so_cfg_v),.owner(so_owner),.position(so_position),.se_jid(so_se_jid),.so_jid(so_jid),\n      .local_first(so_local_first),.peer_first(so_peer_first),.param_v(so_param_v),.param_row(so_param_row),\n`endif\n      .param_owner(so_param_owner),.param_position(so_param_position),.param_d(so_param_d),.launch(so_launch),.fault(program_fault));\n    wire generated_v,ingress_fault,join_fault,entry_fault;\n    wire[511:0]generated_d;wire[514:0]q_entry;\n    wire joined_v;wire[1:0]joined_quarter;wire[512:0]joined_d;\n    reg collision;\n    always @(posedge ck or negedge rst)if(!rst)collision<=0;else if(generated_v && q_filtered[0])collision<=1;\n    assign q_entry=generated_v?{2'd0,generated_d,1'b1}:q_filtered;\n    // S81/PORTFIX-FLT 10-25: the one fault output leaves a sticky flop (pin registered; +1 edge on the fault level only)\n    reg fault_q;\n    always @(posedge ck or negedge rst)if(!rst)fault_q<=0;else fault_q<=fault_q|entry_fault|ingress_fault|join_fault|collision|program_fault;\n    assign fault=fault_q;\n    generate if(PVSO_ENABLE!=0)begin:g_join\n`ifdef OT_SVC_H8\n      dsdv_pv_half_join_h8 u_join(.clk(ck),.rst_n(rst),.cfg_v(so_cfg_v),\n       .local_first(so_local_first),.peer_first(so_peer_first),.local_first1(so_local_first1),.peer_first1(so_peer_first1),\n       .local_pv(local_pv_landed),.peer_pv(peer_pv),\n`else\n      dsdv_pv_half_join u_join(.clk(ck),.rst_n(rst),.cfg_v(so_cfg_v),\n       .local_first(so_local_first),.peer_first(so_peer_first),.local_pv(local_pv_landed),.peer_pv(peer_pv),\n`endif\n       .pv_v(joined_v),.pv_quarter(joined_quarter),.pv_d(joined_d),.fault(join_fault));\n    end else begin:g_nojoin\n      assign joined_v=0;assign joined_quarter=0;assign joined_d=0;assign join_fault=0;\n    end endgenerate\n`ifdef OT_SVC_H8\n    dsdv_pv_so_ingress_h8 #(.ENABLE(PVSO_ENABLE),.HEADER_DEN(1)) u_ingress(.clk(ck),.rst_n(rst),\n      .cfg_v(so_cfg_v),.cfg_owner(so_owner),.cfg_position(so_position),.cfg_se_jid(so_se_jid),.cfg_so_jid(so_jid),\n      .pv_v(joined_v),.pv_quarter(joined_quarter),.pv_d(joined_d),\n      .param_v(so_param_v),.param_row(so_param_row),.param_owner(so_param_owner),.param_position(so_param_position),.param_d(so_param_d),\n      .den_v(1'b0),.den_mask(16'd0),.den_owner(20'd0),.den_jid(8'd0),.launch(so_launch),\n`else\n    dsdv_pv_so_ingress_hden #(.ENABLE(PVSO_ENABLE)) u_ingress(.clk(ck),.rst_n(rst),\n      .cfg_v(so_cfg_v),.cfg_owner(so_owner),.cfg_position(so_position),.cfg_se_jid(so_se_jid),.cfg_so_jid(so_jid),\n      .pv_v(joined_v),.pv_quarter(joined_quarter),.pv_d(joined_d),\n      .param_v(so_param_v),.param_row(so_param_row),.param_owner(so_param_owner),.param_position(so_param_position),.param_d(so_param_d),\n      .launch(so_launch),\n`endif\n      .q_v(generated_v),.q_d(generated_d),.ready(so_ready),.done(so_done),.fault(ingress_fault),.fault_code(so_fault_code));\n    dsdv_svc_rs_c #(.ENTRY(1), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .SMT(SMT), .PV_IDENTITY(PVSO_ENABLE!=0?1:PV_IDENTITY), .FM(FM), .H(H)) u (.ck(ck),\n        .rst(rst), .sid(sid), .j(j), .jd(jd), .q(q_entry), .hw(hw), .hc(hc), .fault(entry_fault), .st_rg(st_rg), .dn_i(dn_i),\n        .dn_o(dn_o), .up_i(up_i), .up_o(up_o), .ri(ri), .ro(ro), .gi_v(gi_v), .gi_d(gi_d), .go_v(go_v), .go_d(go_d),\n        .si_v(si_v), .si_d(si_d), .so_v(so_v), .so_d(so_d), .rq(rq), .rk(rk), .wd(wd), .rv(rv), .r_data(r_data),\n        .r_tag(r_tag), .r_beat(r_beat), .hs(hs), .pv_v(pv_v), .pv_d(pv_d), .pv_x(pv_x), .w_v(w_v), .w_a(w_a), .w_m(w_m),\n        .w_d(w_d), .w_st(w_st)\n`ifdef RS_OBS\n        , .obs(obs)\n`endif\n        );\nendmodule\n"
+
 
 
 def table(ms):
@@ -241,12 +279,16 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--root", default=os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", ".."))
     ap.add_argument("--check", action="store_true")
+    ap.add_argument("--only-portfix", action="store_true", help="only the two bind178 PORTFIX overlays (the bind's FRESH check)")
     a = ap.parse_args()
     root = os.path.abspath(a.root)
     ms = masks(root)
     outs = {"rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs_faces.svh": svh(ms),
             "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs_fv.sv": sv(ms),
-            "results/arch/s81_dv_1016/svc_rs/faces.json": json.dumps(table(ms), indent=1) + "\n"}
+            "results/arch/s81_dv_1016/svc_rs/faces.json": json.dumps(table(ms), indent=1) + "\n",
+            PORTFIX_FV: sv(ms, portfix=True), PORTFIX_EN: PORTFIX_ENTRY}
+    if a.only_portfix:
+        outs = {k: v for k, v in outs.items() if k in (PORTFIX_FV, PORTFIX_EN)}
     bad = []
     for rel, txt in outs.items():
         p = os.path.join(root, rel)

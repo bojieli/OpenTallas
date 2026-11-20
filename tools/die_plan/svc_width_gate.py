@@ -58,6 +58,8 @@ def prep(text, defines):
     t = re.sub(r"/\*.*?\*/", " ", t, flags=re.S)
     t = re.sub(r"//[^\n]*", "", t)
     mac = macros(defines)
+    for m in re.finditer(r"(?m)^[ \t]*`define\s+(\w+)[ \t]+([^\n]+)", t):   # live `define values (e.g. OT_SVC_GP)
+        mac.setdefault(m.group(1), m.group(2).strip())
     t = re.sub(r"^[ \t]*`(define|undef|timescale|default_nettype|include)\b[^\n]*", "", t, flags=re.M)
     return re.sub(r"`(\w+)", lambda m: mac.get(m.group(1), m.group(0)), t)
 
