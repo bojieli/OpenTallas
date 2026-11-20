@@ -614,3 +614,15 @@
   - N46Q apply: live tree qwen_compute_n46_s1 built on 6 hosts (56bcb338). publish_apply bind-first strict bind in progress.
   - N46T: QC-PADLEG section2 / section3_cland are now in the rows file. Composed after N46R3 binds, with a footprint check on section 3 first (FABLE stop 9). The stm guides use main tools (event_tree_t2 is main d2c3111be068 + fixes, newer than 1841dad39c4).
 - 2026-11-19 20:05 PST QC-PLAN-R3 correction to bc8b769396: main 1841dad39c (19:21, qc_hop_rule.py + qc_struct_core.py) is NOT in event_tree_t2 (d2c3111be068 is older). N46T takes those 3 files from main at compose time (copy into event_tree_t2 tools + pack), so the stm guides run on tools >= 1841dad39c4 as FABLE stop 9 requires.
+- 2026-11-19 20:53 PST QC-PLAN-R3 -> COORD, FABLE-PD-QC-1955, KV-CROSSING: N46R3 composed and in bind; seam-pad fall fold re-plan running.
+  
+  N46R3 (plan bdc8b8995309 on N46Q e6, no count-align fold). chain_n46r3 bind+LATCHECK+hcparam and G0/precheck launched on epyc9.
+  - (1) strap pins: hard_cores[] rule (main 1a6837b0817). Only real-halo pins move: 90 sites on 8 types (sle_stm_v1 x2, sle_stm_v2 x2, slw_stm_v1 x2, slw_su_l1 x2), each to the nearest free lattice site. The 408 stale-contents pins (cbn_q11/cbx_q10 IDs) stay at the edge.
+  - (3) x_ctl_i: first hop 378 um re-spaced to 252/252/252 on 11 fw types (sle_fw_v1 x2, v2 x2, v3, slw_fw_v1 x3, v2 x2, v3). 0 regs, 0 cycles.
+  - (4) cbf_q00_s2 collector: 10 sources/children re-picked by position on its own tree (child0 t30->t149, child1 t28->t72, child2 t29->t148, bc_i00 t0->t9, na/nb/serdes sources t24-27->t137-145). Max source hop 209.7 um (was 1.3-3.0 mm). Sidecar synced (22 fields). My compose check now refuses any collector source/child >405 um from its node (4 tests).
+  - QC-PADLEG-1119: 59 rows, 22 types, +48 stations, folded here (was N46S).
+  
+  Fall fold with --seam-pad-rules (KV e181750c72, on main as 0f0273ac18):
+  - Tool fix on main de95785cb6: seam_pad_inputs mapped ports to lanes by p.split("_")[0]. On QC that is "sl"/"c"/"glue", so ONE latency_groups row would pull every sl_* crossing to a common latency, and the pad floor found no lane. A port's "<lane>__<k>" stem (or the port itself) now maps to its declared lane; KV L<n>_<k> unchanged. Test added; all test_count_align* pass. KV-CROSSING: the default-on path was not safe on QC before this.
+  - Seam groups from regen_constants.QC_SEAM_BUNDLES: CS_TXS (3 ports), CS_RXV (4: glue__native_rx_v/rx_slot/rx_slot_kind/rx_slot_beat), SC_TX (2), SC_X3 (3), passed as --seam-group; --pad-capacity 15; pad floors from plan e6.
+  - Re-plan running on epyc10 (n46ct_e chain, caf/n46ct_e_sp). Then fold onto N46R3, bind strict. If it binds it ships as its own event after N46R3, and per FABLE it is not called proven until re-timed on a new built clock.
