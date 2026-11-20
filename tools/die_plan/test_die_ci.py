@@ -304,7 +304,9 @@ def test_split_run_collect(tmp_path):
     assert run["verdict"] == "FAIL" and (rd / "SUMMARY.md").is_file()
 
 
-def test_external_sta_tool(tmp_path):
+def test_external_sta_tool(tmp_path, monkeypatch):
+    # load_die_sta registers the external module under this name.
+    monkeypatch.setitem(sys.modules, "die_sta", None)
     f = tmp_path / "die_sta.py"
     f.write_text("UNC_SETUP_PS = 60.0\nimport schema\nMARK = schema.__name__\n")
     mod = C.load_die_sta(REPO, f)
