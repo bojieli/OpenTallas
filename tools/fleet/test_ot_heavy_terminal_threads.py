@@ -22,4 +22,16 @@ class TerminalThreads(unittest.TestCase):
   with patch.object(m,'sh',self.sh),patch.object(m.subprocess,'run',side_effect=OSError('daemon unavailable')):self.assertEqual(m._reap_completed_thread_charges_locked(),[])
   self.assertTrue((self.p/('cthr.'+self.u)).exists())
  def test_prior_receipt_preserves_reused_charge(self):self.reap();(self.p/('cthr.'+self.u)).write_text('8\n');self.kept()
+class ThreadReapAdmission(unittest.TestCase):
+    def test_gate_reaps_only_when_thread_admission_is_enabled(self):
+        for factor in (0, 1):
+            with self.subTest(factor=factor), \
+                 patch.dict(m.os.environ, {"THREAD_CAP_FACTOR": str(factor)}), \
+                 patch.object(m, "_reap_completed_thread_charges_locked") as reap, \
+                 patch.object(m, "sizes", side_effect=RuntimeError("stop after admission housekeeping")):
+                with self.assertRaisesRegex(RuntimeError, "admission housekeeping"):
+                    m.gate_locked(8, ["bash", "run.sh"])
+                self.assertEqual(reap.call_count, factor)
+
+
 if __name__=='__main__':unittest.main()
