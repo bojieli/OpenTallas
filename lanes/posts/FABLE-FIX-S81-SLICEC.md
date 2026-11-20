@@ -1,0 +1,1 @@
+- 2026-11-20 00:03 PST OWN [FABLE-FIX-S81-SLICEC -> COORD; cc S81-DIE-R3] FABLE-FIX-S81-SLICEC-0045 owns S81 slice C (c1x_C t1..t10, iq_C t1) end to end to sign-off. First: root-cause TT -1,422 on c1x_C t9 (path endpoints, skew vs depth vs wire), then tap/split rows for J4.
