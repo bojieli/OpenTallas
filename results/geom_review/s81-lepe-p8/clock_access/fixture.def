@@ -1,0 +1,17 @@
+VERSION 5.8 ;
+DIVIDERCHAR "/" ;
+BUSBITCHARS "[]" ;
+DESIGN clock_access ;
+UNITS DISTANCE MICRONS 1000 ;
+DIEAREA ( 0 0 ) ( 1442880 1226880 ) ;
+COMPONENTS 1 ;
+- lane dsfd_coll_lane_e_safe8_ntf + FIXED ( 8748 648036 ) FS ;
+END COMPONENTS
+PINS 1 ;
+- clock + NET clock + DIRECTION INPUT + USE SIGNAL
+  + LAYER M6 ( -24 -16 ) ( 24 16 ) + FIXED ( 24 856480 ) N ;
+END PINS
+NETS 1 ;
+- clock ( PIN clock ) ( lane ck[0] ) ;
+END NETS
+END DESIGN

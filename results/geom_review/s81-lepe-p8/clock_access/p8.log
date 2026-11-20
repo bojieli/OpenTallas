@@ -1,0 +1,123 @@
+OpenROAD 6cb3f2b704604a8961573218e1c8adaae9fe9937 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 2 thread(s).
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /input/p8.lef, created 1 library cells
+[INFO ODB-0127] Reading DEF file: /input/fixture.def
+[INFO ODB-0128] Design: clock_access
+[INFO ODB-0130]     Created 1 pins.
+[INFO ODB-0131]     Created 1 components and 2145 component-terminals.
+[INFO ODB-0133]     Created 1 nets and 1 connections.
+[INFO ODB-0134] Finished DEF file: /input/fixture.def
+INSTANCE_BOX 8748 648036 304668 1092996 MX PIN 1 156696 856500
+[INFO DRT-0149] Reading tech and libs.
+
+Units:                1000
+Number of layers:     21
+Number of macros:     1
+Number of vias:       9
+Number of viarulegen: 11
+
+[INFO DRT-0150] Reading design.
+
+Design:                   clock_access
+Die area:                 ( 0 0 ) ( 1442880 1226880 )
+Number of track patterns: 30
+Number of DEF vias:       0
+Number of components:     1
+Number of terminals:      1
+Number of snets:          0
+Number of nets:           1
+
+[INFO DRT-0167] List of default vias:
+  Layer V2
+    default via: VIA23
+  Layer V3
+    default via: VIA34
+  Layer V4
+    default via: VIA45
+  Layer V5
+    default via: VIA56
+  Layer V6
+    default via: VIA67
+  Layer V7
+    default via: VIA78
+  Layer V8
+    default via: VIA89
+  Layer V9
+    default via: VIA9Pad
+[INFO DRT-0162] Library cell analysis.
+[INFO DRT-0163] Instance analysis.
+[INFO DRT-0164] Number of unique instances = 1.
+[INFO DRT-0168] Init region query.
+[INFO DRT-0024]   Complete Active.
+[INFO DRT-0024]   Complete V0.
+[INFO DRT-0024]   Complete M1.
+[INFO DRT-0024]   Complete V1.
+[INFO DRT-0024]   Complete M2.
+[INFO DRT-0024]   Complete V2.
+[INFO DRT-0024]   Complete M3.
+[INFO DRT-0024]   Complete V3.
+[INFO DRT-0024]   Complete M4.
+[INFO DRT-0024]   Complete V4.
+[INFO DRT-0024]   Complete M5.
+[INFO DRT-0024]   Complete V5.
+[INFO DRT-0024]   Complete M6.
+[INFO DRT-0024]   Complete V6.
+[INFO DRT-0024]   Complete M7.
+[INFO DRT-0024]   Complete V7.
+[INFO DRT-0024]   Complete M8.
+[INFO DRT-0024]   Complete V8.
+[INFO DRT-0024]   Complete M9.
+[INFO DRT-0024]   Complete V9.
+[INFO DRT-0024]   Complete Pad.
+[INFO DRT-0033] Active shape region query size = 0.
+[INFO DRT-0033] V0 shape region query size = 0.
+[INFO DRT-0033] M1 shape region query size = 1.
+[INFO DRT-0033] V1 shape region query size = 0.
+[INFO DRT-0033] M2 shape region query size = 1.
+[INFO DRT-0033] V2 shape region query size = 0.
+[INFO DRT-0033] M3 shape region query size = 1.
+[INFO DRT-0033] V3 shape region query size = 0.
+[INFO DRT-0033] M4 shape region query size = 6.
+[INFO DRT-0033] V4 shape region query size = 0.
+[INFO DRT-0033] M5 shape region query size = 2139.
+[INFO DRT-0033] V5 shape region query size = 0.
+[INFO DRT-0033] M6 shape region query size = 211.
+[INFO DRT-0033] V6 shape region query size = 0.
+[INFO DRT-0033] M7 shape region query size = 0.
+[INFO DRT-0033] V7 shape region query size = 0.
+[INFO DRT-0033] M8 shape region query size = 0.
+[INFO DRT-0033] V8 shape region query size = 0.
+[INFO DRT-0033] M9 shape region query size = 0.
+[INFO DRT-0033] V9 shape region query size = 0.
+[INFO DRT-0033] Pad shape region query size = 0.
+[INFO DRT-0165] Start pin access.
+[INFO DRT-0076]   Complete 1000 pins.
+[INFO DRT-0076]   Complete 2000 pins.
+[INFO DRT-0078]   Complete 2145 pins.
+[INFO DRT-0081]   Complete 0 unique inst patterns.
+[INFO DRT-0084]   Complete 0 groups.
+#scanned instances     = 1
+#unique  instances     = 1
+#stdCellGenAp          = 0
+#stdCellValidPlanarAp  = 0
+#stdCellValidViaAp     = 0
+#stdCellPinNoAp        = 0
+#stdCellPinCnt         = 0
+#instTermValidViaApCnt = 0
+#macroGenAp            = 8
+#macroValidPlanarAp    = 0
+#macroValidViaAp       = 6
+#macroNoAp             = 0
+[INFO DRT-0166] Complete pin access.
+[INFO DRT-0267] cpu time = 00:00:01, elapsed time = 00:00:01, memory = 120.59 (MB), peak = 119.75 (MB)
+CLOCK_AP 147948 208252
+CLOCK_AP 147948 208316
+CLOCK_AP 147948 208380
+CLOCK_AP 147948 208444
+CLOCK_AP 147948 208508
+CLOCK_AP 147948 208572
+CLOCK_ACCESS_POINTS 6
