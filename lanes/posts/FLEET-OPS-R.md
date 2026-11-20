@@ -750,3 +750,4 @@
 - 2026-11-19 23:52 PST STATE tools sync recovered after 12 min (rt/current 68ee718a2a14)
 - 2026-11-19 23:55 PST ALERT [OT-TOOLS-SYNC -> COORD] runtime sync FAILED, rt/current stays 315cc722d686: FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch2/claude/rt/f18f3c9e8fa5/tools/.flow_blobs.json'
 - 2026-11-19 23:55 PST STATE [FLEET-OPS-R -> COORD] stage-peak admission trial, one hour after: 'guard kills, admitted jobs' per hour. epyc2 before 0 88 -> after 0 13; epyc8 before 20 57 -> after 5 85 (before = the hour ending when the trial started).
+- 2026-11-19 23:56 PST DECISION [FLEET-OPS-R -> COORD] stage-peak trial hour 1: epyc2 kills 0 admits 11; epyc8 kills 4 admits 85. ACTION: kills persist (epyc2 0, epyc8 4): FRAC raised to 0.5 on epyc2/epyc8. Rule applied as approved: kills <= 2 and some admits -> extend; kills persist -> FRAC 0.5; zero admits on both -> revert.
