@@ -570,3 +570,15 @@ def test_plan_current_no_never_cancels_a_queued_or_running_job_under_stops_off()
     assert KW.finishes_on_old_plan(cfg, "s81", {"status": "ENQUEUED", "q_id": "j"}, {"j": {"status": "DONE-CRASH"}}) is False
     assert KW.finishes_on_old_plan(cfg, "s81", {"status": "FAIL"}, {}) is False
     assert KW.finishes_on_old_plan(cfg, "hbm", {"status": "ENQUEUED"}, {}) is False        # hbm keeps its holds
+
+
+def test_explicit_retry_key_overrides_skip_same_input():
+    P = {"v": 2, "noenv": "N1", "env": {}, "fam": {"gen": "F"}, "stg": {"gen": "G"}}
+    st = {"items": {"a": {"die": "d", "item": "i", "attempt": "14", "status": "FAIL", "started": 2, "input_parts": P, "class": "FLOW"}}}
+    cfg = {"dies": {"d": {"retry": ["i@14", "i@2"]}}}
+    assert KW.explicit_retry_pending(cfg, st, "d", "i") is True                 # i@14 names the failed attempt: released
+    cfg = {"dies": {"d": {"retry": ["i@2"]}}}
+    assert KW.explicit_retry_pending(cfg, st, "d", "i") is False                # stale key (consumed long ago)
+    cfg = {"dies": {"d": {"retry": ["i@15"]}}}
+    assert KW.explicit_retry_pending(cfg, st, "d", "i") is True                 # pre-release of the next attempt
+    assert KW.explicit_retry_pending({"dies": {"d": {}}}, st, "d", "i") is False

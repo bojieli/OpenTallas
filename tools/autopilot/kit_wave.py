@@ -10688,6 +10688,23 @@ def struct_cmd(a):
         lk.close()
 
 
+def explicit_retry_pending(cfg, st, die, item):
+    """True when dies.<die>.retry holds item@N with N >= the item's latest attempt number and the key is not consumed (retry_key_decision: release or pre-release)"""
+    d = (cfg.get("dies") or {}).get(die) or {}
+    for ia in d.get("retry") or []:
+        it, _, n = str(ia).rpartition("@")
+        if it != item or not n.isdigit():
+            continue
+        ok, _why = retry_key_decision(st, die, item, n)
+        if ok is True:
+            return True
+        if ok is None:                                   # no judgement: a key for an attempt that does not exist yet (pre-release) counts; one naming an attempt still in flight does not
+            last = max((int(x.get("attempt") or 0) for x in (st.get("items") or {}).values() if x.get("die") == die and x.get("item") == item), default=0)
+            if int(n) > last:
+                return True
+    return False
+
+
 def _fk_same(cfg, st, die, r):
     """the full input hash when this launch is byte-identical to the attempt that last failed in the tool (stored fail_keys.full_hash), else ''"""
     prev = (st.get("fail_keys") or {}).get(f"{die}|{r.get('item')}") or {}
@@ -10768,7 +10785,11 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
         _rb, _rwhy, _rrel = RS.gate(st, die, r.get("item"), repeat_inputs_now(cfg, st, die, r.get("item"), r.get("block_sha")), cfg.get("_unblocks") or ())
         if _rrel:
             AP.log(f"KIT-WAVE REPEAT-STOP RELEASE {die}/{r.get('item')}: {_rrel}")
-        if _so and (_rb or _fk_same(cfg, st, die, r)):            # OWNER 11-18 (r705 (2)): a relaunch is skipped ONLY on the full input hash of a failed attempt
+        if _so and explicit_retry_pending(cfg, st, die, r.get("item")):
+            # COORD 11-19 (SONNET-FIX-QC: cbn_q11 retry rows listed in kit_wave.json never launched, SKIP-SAME-INPUT every tick): a lane / COORD retry key item@N that names the failed attempt (or the next one)
+            # is an explicit relaunch request, not an automatic one: the input hash does not veto it (the key is consumed by the relaunch)
+            AP.log(f"KIT-WAVE RETRY-KEY-LAUNCH {die}/{r.get('item')}: explicit retry key in the die config overrides SKIP-SAME-INPUT")
+        elif _so and (_rb or _fk_same(cfg, st, die, r)):            # OWNER 11-18 (r705 (2)): a relaunch is skipped ONLY on the full input hash of a failed attempt
             _same = _fk_same(cfg, st, die, r)
             if _same:
                 AP.log(f"KIT-WAVE SKIP-SAME-INPUT {die}/{r.get('item')} [owner {die_owner(cfg, die)[0]}]: full input hash {_same} equals the attempt that failed in the tool "
