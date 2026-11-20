@@ -39,3 +39,10 @@ Written 2026-11-20 09:5x PST. Posts: lanes/posts/KV-PLAN-R1.md. Lane dirs: epyc8
 3. pv over-core traffic: 67% of pv_v8 overflow = ft + pad nets crossing pv_pair core boxes; route around or channels in core; read v8k at GRT it5.
 4. classify the first pc GRT.
 5. hg/hgi superset class (FABLE-SUPERSET 01:59: union links), hgi residual clk_c8 + rst_n relay inside u_head2_e0 at DRT.
+6. (FABLE-PD-KV-1500) efault / monitor-fault collection staged with 300 um relays: hub_Wo -1040 from ot_dp_efault reducing ~2,700 um
+   in one cycle; ot_dp_efault in 29/56 types.
+7. sys_c lane L356 (-987, ~3 mm, no station): 9-10 stations or move it to the E side.
+8. reset relay reach on sys_c and hub_Wo.
+9. confirm KV-SYSC-1119 station rows are bound.
+Stop list add: no route/repair of hub_Wo / sys_c; no route of D25e3 hgi kits. hgi v3-v8 -315..-353 = cland port path with ideal
+clock (clk group >= -5 ps); their blocker is head-core hold = D26 lockups.
