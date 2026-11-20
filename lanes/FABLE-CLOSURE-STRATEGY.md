@@ -1,3 +1,210 @@
+# FABLE-CLOSURE-STRATEGY 2026-11-19 19:15 PST (1915, the 20:0x round): crossings are closed; the open items are tap balance inside a type's port set, half-cycle ROM hops, and station geometry
+
+Reviewer: FABLE-CLOSURE-STRATEGY-20xx (Fable). Read-only: no job launched, killed or patched. Technical PD only; HBM parked.
+Gate (R-MINIMAL): DRC 0, routed TT >= -42 ps, internal FF hold >= 0, bind + lane latency.
+Marking: **V** = I opened the log or file this round. **R** = reported by the named lane. **B** = stated in the COORD brief, not found by me in a
+post or log. **I** = inferred. **P** = proposal.
+State (V, failure_breakdown 19:10): types signed S81 44 / 394, QC 32 / 130, KV 6 / 56, HEAD 25 / 26; cores S81 64 / 64, QC 70 / 70, KV 68 / 69,
+HEAD 5 / 5. The breakdown lists no technical class this round (rows are running, superseded or lint); the classes below come from kit logs and
+lane posts since 18:00.
+
+## 0. Headline
+
+1. **Die crossings pass in fall form on S81, KV and QC (V and R).** S81 caV1t 0 / 2,330 TT and FF with start-skew 0 / 635 (39 retime start
+   stages). KV F1 0 / 3,915, repeated by DIE-LEVEL p5f. QC n43cb and n46ct_e 0 / 2,993, no crossing under 100 ps. The bound KV sidecar is not
+   fall-safe as it stands: 32 of 3,595 ports fail, 21 negative, worst hi -232.0; the K rows are in D25e2. Lever 1 of 18:05 is done.
+2. **The S81 col types cannot absorb the cw6 windows (R).** At 87 to 140 ps every family lands at -95 to -170 against routed -44.75 and
+   -41.49 today. The ends are fixed-latency config-ROM read loops and half-cycle ROM hops, so no stage can be added. The window has to stay
+   at 40 ps, and the tree has to deliver it. Lever 1.
+3. **The same tree fault is the S81 die hold (R).** All 200 worst intra pairs capture at a core tap that the region DME lands 33 to 142 ps
+   after the launching tap; 144 TT / 155 FF of them are attn_hcore. HEAD e5c shows the fix form works: a matched sub-branch merged as one
+   composite sink took the hd_tile cluster worst from 82.7 to 44.2 TT and 35.8 FF without moving the tile root. Lever 1.
+4. **My 18:05 reading of the S81 sink tree was wrong.** I inferred the -266 ps was the declared-against-signed difference. Under a plan with
+   signed insertions the sink tree is still -510 and cw6 -274 (R, DIE-CORETAP 18:04). The cause is the target file: it priced every core at
+   common 250 where most S81 core types have a 450 budget, and it used one value per module where pins differ (capc5r 167 / 103 / 293).
+5. **QC legs over 405 um are station geometry, not pad sites (V, `QC-PADLEG-rows.json`).** Every QC kit scanned has them (R: 509, 456, 612 um).
+   The first hop is planned from the window centre and the last hop to the core centre. Lever 3.
+6. **Three leaf kits use all 30 extra GRT iterations for a residual of a few hundred tracks (V).** t27relay ends at total overflow 344 on
+   6.3 % usage; t27stb stops with GRT-0232 at 679. That is a local hot spot, not a capacity problem. Lever 5.
+
+## 1. Levers ranked by closure impact
+
+| # | die | lever | unblocks | owner |
+|---|---|---|---|---|
+| 1 | S81 (form shared with HEAD) | matched port cluster per col / slice_station instance and core-tap balance in the cw6 region DME; col window stays 40 ps | 216 col + 37 slice_station + 13 svc_rs types; S81 die hold -242 -> about -120 | S81-CLOCK-WINDOW-1119 (tool: DIE-CORETAP-1119) |
+| 2 | S81 | col half-cycle ROM hops: CC-BANK-1 (BANK-OUT), CC-BANK-2 (BANK-IN), RDLOOP; D8i hop rows | the same 216 col types (internal setup) | COL-CENSUS-1119, COL-H10-1119, S81-GEOM-OPUS, S81-DIE-R3 |
+| 3 | QC | station geometry rule (first hop from window extremes, last station at the consumer centroid) + strap pins off core halos | 22 pad-leg types and 17 strap types of 98 unsigned | QC-PADLEG-1119, QC-PLAN-R3 |
+| 4 | KV | D25e2 as one event: hg section L, sidecar fall rows, pv +500, TRUNK-CHAIN tools, pv reset tail; section M next | hg / hgi 19 + pv 16 of 50 unsigned; KV crossing gate on the bound form | KV-D23-COMPOSE, FABLE-FIX-KV-HG, FABLE-FIX-KV-PV |
+| 5 | S81 | leaf: WREG stage on the write port; locate the residual GRT hot spot | 75 leaf types | FABLE-FIX-S81-LEAF, S81-DIE-R3 |
+| 6 | all 4 | die intra hold on real views: per-pin core-tap targets; structural hold on zero-logic tap-to-tap pairs | die hold on 4 dies | DIE-LEVEL-CHECK-1119, DIE-CORETAP-1119, die clock owners |
+| 7 | HEAD | e5c as the r9 clock row; keepouts off the x 6.38 VDD strap; hd_serdes 590 um leg | HEAD die hold; hd_tile re-sign; hd_lep0N | HEAD-CROSSING-1119, FABLE-FIX-HEAD-MESH-O |
+| 8 | S81, QC | singles with a known cause: serdes H23 form, lepe RIP1, tt_ctlm retime, coll_core stations, su_c LEF | serdes 16, LP 4, QC 6 types | FABLE-FIX-S81-SERDES, FABLE-FIX-S81-LEPE, SONNET-FIX-QC, OPUS-FIX-QC-COLLCORE |
+
+### Lever 1. S81 clock: deliver the 40 ps window and the core taps from the tree
+**Evidence.**
+- R (S81-CLOCK-WINDOW 18:28): 7,630 of 21,610 ports are short of the plan window. col_h9_r1 1,879 / 2,700 (gap 100), col_h9_r2 1,619 / 2,400
+  (98), slice_station 359 / 2,016 (97), col_h10_r1 599 / 828 (90), svc_hi rs 235 / 807 (79). cw6 delivers median 34 to 49 ps with tails to 87 to 121.
+- R (COL-CENSUS 19:08): with the wider rows col_h9_r2 -44.75 -> about -140, col_h9_r1 -41.49 -> about -141, h10_r2 -96 -> about -170,
+  p6 about -118 to -133. V (S81-GEOM-OPUS 19:11): the 114 D8i col kits and the 192 CC1 kits carry the flat 40 ps window.
+- R (S81-CLOCK-WINDOW 18:39, `cw6/holdpairs.json`): worst 200 intra pairs TT -242.4 to -215.1. Class A attn_hcore 144 / 155 pairs, core tap
+  +124 to +142 ps late (plan ins 364, lib max 376, budget 450, need 0). B vn_a / vn_b / ve_m in leaf +52 to 82. C capc5r +43 to 54.
+  D bksel_c / gunit_l5 +33 to 38. No trunk or seam pair in the top 200.
+- R (HEAD-CROSSING 18:34): e5c cluster spread worst 82.7 -> 44.2 TT, 78.3 -> 35.8 FF; all-tap tile spread 112 -> 95.1; die numbers unchanged.
+- R (DIE-CORETAP 11:44, 18:04): the sink-offset tool delivers. KV 482 / 512 ports within 50 ps; S81 5,961 / 6,256 within 50 ps of the (wrong) targets.
+
+**Root cause.** The region DME balances all sinks of a region to one target and treats a core tap like a leaf. Ports of one type instance
+come from different sub-trees, and a core tap gets its own long last leg. The spread inside one instance is then tree depth, not distance.
+**Fix (P).**
+1. S81-CLOCK-WINDOW-1119: in the cw6 kit config, build the clock ports of each col_h9 / col_h10 / slice_station instance as one matched
+   sub-branch and merge it into the region DME as one composite sink with snake (the e5c form; do not join at the region root cut).
+   Pass mark: port spread per instance <= 40 ps TT and FF on all 216 col types, 50 at most on named exceptions.
+2. Same build: core-tap sink offsets from `S81-CW6-CORE-EARLY-v2.json` (per pin, schema budget) for classes A to D. Pass mark: capture
+   minus launch <= 25 ps on the 200 pairs; intra hold about -120.
+3. The D8i follow-up event carries the tree, the v2 rows and the START-TREE K / DEPTH together, re-planned on the D8i clock.
+4. p6 (one port at 129 ps) and col_h9_r2 (rows up to 76 ps from the F2s pilot) still carry wide rows in plan_h3_d8i; set them to 40 in the
+   same event, or their kits measure the wrong contract.
+
+### Lever 2. S81 col: the half-cycle ROM hops
+**Evidence (R, COL-CENSUS 19:07; reads from 70 kits with a report left).**
+- BANK-OUT: hw ROM `pval` launches on the falling edge. p6 e0_u_w -> bn0 -30 to -45 at GRT; h10_r2 e13_u_w -> bn13 -96. Plan hop 214 to 348 um.
+- BANK-IN: qbank_S.o_x -> hw `xs_q`, 241 to 306 um in every family; h9_r0_p2 bs1 -78.7 at CTS on 557 ends. No row yet.
+- RDLOOP: h9_r2 c12_6 -> s12 -44.75 routed, one end; h9_r1 u_s5 / q6 -41.49. HOP class: covered by D8h / D8i rows in every family.
+- V: CC-BANK-1 = 210 bank moves in 132 types, 0 cycles (plan_cc1 8865a8a00190). The tree_cc1 bind is past elab; D8i C5 bind r9 `ELAB_RC=0`.
+
+**Root cause.** A half-cycle path with a 620 ps ROM clk-to-q has room for about 180 um of wire; the banks sit 214 to 348 um away.
+**Fix (P).**
+1. COL-CENSUS-1119: write CC-BANK-2 now from plan distances (same script, S banks, hop <= 180 um), not after the first CC1 read. BANK-IN is
+   in every family and already measured at -78.7.
+2. r0 bn0 can move only 39 um (211.68 left). If p6 still shows bn0 under -42 at GRT, shift c2_2 after a read-loop check. Parallel form
+   (P, not measured): a capture-side lead on `e_r0` as D8f did on bn11 / bn12 (lead -45).
+3. RDLOOP is a 2.75 ps miss on one end: take the c12_6 move (CC-RDLOOP-1); it also gives margin against Lever 1 residue.
+4. COL-H10-1119: BANK-OUT on h10_r1 bn8 (348 um) and h10_r2 bn12 / bn13 uses the same rule. Write the h10_r1 west-trunk row for
+   lpad_frame_int_i0 -> lpl_7/8/9 now: 815 to 881 um placed is two hops over reach, so the GRT read cannot pass.
+
+### Lever 3. QC: station geometry as a generator rule
+**Evidence.**
+- V (`lanes/handoff/QC-PADLEG-rows.json`, 19:12): legs over 405 um by family: sle_ctl other -> ist 13,120 and ist -> ist 5,150; sle_fw pad -> core
+  2,301; slw_fw pad -> core 1,668, bin -> pd 1,540; slw_fe bin -> pad 1,578; qfd_qc core -> ist 1,877. Cause as written there: first hop 387 to
+  435 nominal becomes 456 to 509 placed (bits span about 100 um of window plus pad spread); consumers spread y 500 to 1,190 while `leaf_um`
+  is the core centre, so the last hop is 530 to 612 um; out-buses launch 150 to 400 um south of the plan leaf.
+- R (PRECHECK 18:15 to 18:44): legs over 405 um in 9 of 9 QC kits scanned; worst 509.0, 456.2, 611.7 um.
+- R (QC-PLAN-R3 18:58): 498 strap pin sites inside hard-core halos on 17 types (cbx_q10 x4 70 each, cbn_q11 x2 48, slw_su_l1 x2 35); moved in N46R.
+- R (SONNET-FIX-QC 18:23): su_c DRT-0073 was a blanket M6 OBS over 5 pins of qfd_dv_s8x_vmr; override on main `d2c3111be0`, 0 of 1,513 pins without access.
+
+**Fix (P).**
+1. QC-PLAN-R3: take the QC-PADLEG rows in the event after N46R (+cycles pre-approved).
+2. Make it a `region_form` rule so the next event does not regenerate the legs: first hop measured from the window extremes plus pad
+   spread with 85 um margin; last station aimed at the consumer centroid (CBC r713), not `leaf_um`; out-bus first station at the launch flops.
+3. The halo scan (footprint + 5.4 um, clock sites + 1.08 um) runs on every plan as a PRECHECK estimator row; HEAD and KV have not been scanned (not checked).
+4. sle_ctl has 13,120 + 5,150 station-to-station legs: that is a trunk laid without intermediate sites, not a pad class. Read it separately before pricing cycles.
+
+### Lever 4. KV: D25e2 in one event
+**Evidence.**
+- V (epyc9 `opus-kv-hg/k8`, post-CTS): setup wns -198.98, hold gate PASS FF -102.3. R (FABLE-FIX-KV-HG 19:05): 5 failing ends (k7 had 12); 4 are
+  NORAWB FSTART ends that the D25e raw-branch regen removes; 1 is a dead flop `eq` at (437, 972). hst2 slacks +293 to +597. eN -> g3 is 1,047 um
+  at +10 ps because GPL put g3 at (594, 1265).
+- V (epyc8 `fable-fix-kv-pv-1119/compose/kit/v8b`, `v8d`): CTS TT -1223.2 -> -674.8 and -1175.2 -> -533.4 after repair; hold PASS -135.1 / -120.8.
+  R: the worst path is the TRUNK-CHAIN defect: Yosys merged 194 tail-copy flops on 32 command buses, a 43 um pair built 2.2 mm. Fixed on main `1b95661b75`.
+- R (KV-CROSSING 18:21): sidecar fall rows 30 ports K - 1, 2 ports K + 1; a lower bound, start-edge ambiguity not included.
+
+**Fix (P).**
+1. KV-D23-COMPOSE: D25e2 as composed (L + fall rows + pv +500 + tools at or after `1b95661b75` + reset tail class R needs `6e2f4ee27af8`).
+2. Add the two section M site keys that cost nothing to D25e2 if the bind head has not started: g3 at (451, 948) and `eq` at (44, 40). A
+   1,047 um hop at +10 ps is a GPL accident away from failing. The rest of M (tN station, hst3 polyline, t2 split at x 650) waits on k9.
+3. First read after the D25e2 bind: pv_v8 worst 50 at CTS. -533 after repair includes the merged flops; no pv row before that read.
+4. Time the D25e2 bound sidecar in fall form with the real bind JSON (`write_fall_ports` printed). The 32-port set is a lower bound.
+
+### Lever 5. S81 leaf
+**Evidence.**
+- V (epyc10 `fable-fix-s81-leaf/proof`): t27relay at extra iteration 30 / 30, total overflow 344 (M5 92, M6 80, M8 74) at 6.32 % usage; t27keep 23 / 30;
+  t28wide 10 / 30; t27stb `GRT-0232` in `tapbal_grt.tcl`, overflow 679. t31wreg is in CTS, no TT yet.
+- R (FABLE-FIX-S81-LEAF 18:21): WREG on main `6496be9f9175`: one register between the vpw write decode and the bank registers, bench 10 / 10; rows
+  `S81-VPW-WREG-ROWS.json` for all 75 leaf types, write availability +1 clock. Target path t31 `sw_a_q -> wmw_q` -1,263 (5 gates + about 40 repeaters, 11 hops).
+
+**Root cause (I).** A few hundred overflowed tracks at 6 % usage means gcells with almost no capacity, as on col_h9_r0_p2 (two capacity-0 gcells
+at lpad_xo_i0.q, 77,186 layer-assignment overflow). I did not open the congestion report by gcell.
+**Fix (P).**
+1. FABLE-FIX-S81-LEAF: dump the overflowed gcells of t27relay (x, y, layer, capacity). If they sit under a keepout, a halo or a pad-station
+   column, the fix is a site or blockage row, and 30 iterations are not needed. Pass mark: overflow 0 inside 5 extra iterations.
+2. WREG goes into the D8i follow-up for all 75 types when t31wreg posts CTS TT >= -42 on the write-port group.
+3. Classes B (vn_a / vn_b / ve_m, +52 to 82 ps) are leaf core taps; they ride Lever 1 item 2.
+
+### Lever 6. Die intra hold on real views
+**Evidence.**
+- R (DIE-LEVEL 19:02): `bd65fc7d872` wires signed views into die STA. Coverage: S81 cores 37 / 66, types 36 / 395; HEAD 0 / 13, 20 / 26; QC 60 / 80,
+  27 / 133; KV 38 / 68, 4 / 56. V: the rv1 runs exist on epyc10 with no result yet (S81 `no die_sta_related.json`).
+- Contract numbers (R): S81 -242.4 / -218.8; KV -182.6 / -174.2; QC -267.9 / -263.4; HEAD e2 -186.2 / -172.3 on the r8 snapshot tools.
+- R (S81-CLOCK-WINDOW 18:39): a budget-to-budget pair fails once skew passes about 1.5 ps (clkq_min 51.6 - hold 25.1 - uncertainty 25).
+- R (HEAD-CROSSING 18:34): kit-contract -73.64 with 37,504 negative pairs on e2, where DIE-LEVEL has +1.4 and 0 on r8. The worst pair sp0 hd_spn
+  clk_t4 -> clk_t25 is charged to clk_t25 (row 95) by kitwin and to clk_t4 (row 13) by the gate.
+
+**Root cause.** Zero-logic tap-to-tap paths have 1.5 ps of hold margin, so no tree closes them; they close through the type window (in-kit hold
+cells) or a structural stage. The targets fed to the trees used the wrong basis on S81 and probably on KV and QC (same common 250).
+**Fix (P).**
+1. DIE-LEVEL-CHECK-1119: when rv1 posts, split each die's negative pairs into zero-logic tap-to-tap, core-tap late, and other. Only the
+   second class is a tree item.
+2. DIE-CORETAP-1119: regenerate KV and QC targets per pin from `schema.core_tap_early_ps` before any new sink build (QC 1,081 taps "short"
+   was counted on common 250).
+3. HEAD-CROSSING-1119 with DIE-LEVEL: fix the window attribution (the pair's need goes to the port the gate reads) before r9 rows are derived.
+4. Zero-logic cross-tap pairs that exceed the 40 ps window after Lever 1: lockup latch or a half-cycle stage on that link (owner 10-27, both forms).
+
+### Lever 7. HEAD
+**Evidence.** R: e5c numbers as in the headline; 3 tiles over 40 ps TT by at most 4.2. V (epyc10 `tilecomb2n`, `tilecomb2` run_route.log):
+`OT_PG_RAIL_CHECK rows 9680 bad 8`, rail without stack via at x 4.320 to 6.642, y 646.1 to 648.3; both kits are in global placement, no timing yet.
+R (FABLE-FIX-HEAD-MESH 18:56): that rail's only VDD M5 strap (x 6.384) runs through the M5-M7 keepouts at x 4.832 to 6.508, so the die clock
+cell there has no type VDD path. R (PRECHECK 18:16): hd_serdes u_bin_coll_i0/q -> u_phy.u_link.u_enc.dN 590.3 um.
+**Fix (P).**
+1. HEAD-CROSSING-1119: e5c is the r9 clock row. Re-derive the keepouts from the e5c tree with one added rule: no M5-M7 keepout within 0.3 um
+   of a VDD or VSS strap that is the only strap of a rail segment. Check all 264 tiles, not only the one found.
+2. FABLE-FIX-HEAD-MESH-O: tile proof on the e5c windows (five ports at about 50 ps). tilecomb2n decides the keepout effect only.
+3. hd_serdes: one station on coll_i0 -> u_enc (+1 cycle) or the bin site moved to within 405 um of u_enc; owner HEAD-CROSSING-1119 for the row.
+
+### Lever 8. Singles with a known cause
+- **S81 serdes (V, epyc9 `fable-fix-s81-serdes3/H23`):** `OT_STB_SPAN io_pma_rck[0] sinks 26234 min 1705.3 max 1794.3 span 89.0 limit 110.0 PASS`.
+  T1P on the H18 form: span 225.4 FAIL. H22 missed on u_dec.u_syn am_ok -> xs[*], 955 ps of data with a 12-buffer wire chain (R). P: H23 form on
+  every serdes type; a station on am_ok -> xs (+1 cycle) if H23 GRT TT still shows that path; H24 M8 trunk only for the insertion (1.7 ns).
+- **S81 lepe LP x4 (R, 19:08):** proof5 GRT overflow 0, no DRT-0073, but TT setup -530.5 at CTS. RIP1 rows 1 to 3 are final; rows 4 and 5 wait on the post-GRT report.
+- **QC tt_ctlm (R, 19:08):** 49 of 50 worst ends are one cone of 24 logic levels from u_core.u_75259 (541 to 602 ps of cells). P: R1 retime (+1 cycle) in the
+  qfd_hp13_cpub39 RTL; R2 fanout split recovers about 100 of 200 ps and does not close alone.
+- **QC coll_core (R 13:57; B for the pkw2b / pkw3 split):** -998 = about 60 % SRAM-read detour at the wall, 25 % g_wd -> g_sxo distance (906 to 976 um in one
+  cycle), the rest START raw resets. V: pkw2b is at the start of GRT; no pkw3 kit dir exists on epyc9 yet. The form to adopt is w3 (wall + rec_tx stations, latency 21 -> 23).
+- **QC su_c x3:** vmr LEF override proofs are in GRT (V, epyc10); N46Q carries the tools.
+
+## 2. The 18:05 levers: outcome
+
+| 18:05 lever | outcome |
+|---|---|
+| 1 fall-form crossing plan | **Done on 3 dies.** S81 0 / 2,330 + start-skew 0 / 635; KV 0 / 3,915; QC 0 / 2,993. Bound KV sidecar: 32 ports, rows in D25e2. |
+| 2 HEAD e6 | Built as e5b / e5c. e5c meets every mark except 3 tiles at <= 44.2 TT. The one-tap parallel form was not tried. No tile proof number. |
+| 3 S81 core taps | **My cause was wrong.** Targets were wrong (450 budget, per pin); sink tree withdrawn. The hold classes A to D are now known. |
+| 4 D8i | C4 stopped; C5 (core taps back to step C values) binding, elab done. WREG on main. t28 worst path still not printed. |
+| 5 KV D25e2 | Composing with L, fall rows, pv +500. k8 confirms the split (12 -> 5 ends). Section M drafted. |
+| 6 bk_sel | No post since 18:05. Not checked. |
+| 7 QC | w2 bind green; N46P bind green; cbn_q11 running privately with the stretch stop off; pkw2b in GRT. |
+
+## 3. Stop list (the 18:05 list stands, plus these)
+- No cw6 per-port window rows on col_h9 / col_h10 or slice_station. A col kit closed against 87 to 140 ps is not a result.
+- No S81 sink tree or plan row from `S81-CW6-CORE-EARLY.json` v1 (common 250, one value per module). No core-tap lateness count on common 250 for any die.
+- Do not try to close zero-logic tap-to-tap hold with the tree; the margin is 1.5 ps.
+- No die hold verdict from a contract number; the gate number is the real-view run (`MEASURED-HOLD` above 0).
+- No pv row and no pv verdict from a bind older than `1b95661b75` (194 merged tail flops). No hgi verdict from a kit without the D25e raw-branch regen.
+- Do not ship the d25d4 sidecar K unchanged: it fails 32 ports on the fall and 37 on the rise.
+- No pad-site or port-edge move for the QC legs; the cause is station geometry. No QC station row aimed at `leaf_um`.
+- No relaunch of tt_ctlm as it is, and no station or core-move row for it (0 long hops, 0 detour).
+- Wall rows alone do not close coll_core; do not adopt w2 without the rec_tx stations.
+- No subtree-balance tap pre-pass on the leaf as built (GRT-0232). No further leaf GRT run to 30 iterations before the hot gcells are located.
+- No H22 or H18 rck form on a new serdes kit. Do not read col_h10_r1 from `4_cts_final.rpt` (the -208 is before the tap hook).
+- No M5-M7 clock keepout across a rail's only strap. No su_c kit without the vmr LEF override.
+- col_h10_r1 lpad_frame_int_i0 -> lpl at 815 to 881 um: do not wait for a GRT read to write the row.
+
+## 4. Not checked
+- Any routed TT / FF of a D8i, CC1 or col_h10_r2 col kit (binds still running); whether a matched col cluster fits the cw6 sink and reach caps.
+- rv1 real-view hold on all four dies; KV and QC core-tap counts on the schema basis.
+- pkw2b GRT round 5 and pkw3; the brief's 60 / 25 split is the 13:57 pk45 read, not a pkw result.
+- H23 GRT TT; t31wreg CTS TT; lepe proof5 post-GRT TT; tilecomb2n timing; k9.
+- Overflowed gcell positions on t27 / t28 (the capacity-0 cause is inferred).
+- The QC-PADLEG rows themselves (I read the header, the class table and the type count 22, not each row); bk_sel; halo scans on KV, HEAD and S81.
+
 # FABLE-CLOSURE-STRATEGY 2026-11-19 18:05 PST (1805): the kit-side window is spent on hd_tile; three dies need a fall-form crossing plan
 
 Reviewer: FABLE-CLOSURE-STRATEGY-18xx (Fable). Read-only: no job launched, killed or patched. Technical PD only; HBM parked.
