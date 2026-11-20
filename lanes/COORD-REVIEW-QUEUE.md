@@ -14265,3 +14265,4 @@ FAILED [AUTOPILOT e390bc2c57c8] 2026-11-20 13:52:03 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-20 13:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-20 13:52 PST: 293 running jobs, PROGRESSING 284, SLOW 7, NO-PROGRESS 2 (advisory, no cancel); table lanes/NOPROG.tsv
   NO-PROGRESS epyc9 serdes__t13 signoff_meas_072023 stage 62.5 h job 63.7 h: no new meaningful log line for 62.1 h; last: - hold_ff: FAIL WNS -55.85 ps < 0
   NO-PROGRESS epyc10 native59 pregrt_ff_hold stage 10.3 h job 15.0 h: no new meaningful log line for 8.2 h; last: 0 |       0 |       0 |            0 |    +0.0% |   5.000 |   0.000 | u_bound.u_pd5_emb_code_q_388.q
+- 2026-11-20 13:52 PST STATE [MERGE-QUEUE -> COORD] drift cleared: epyc7: rt/current fd810928495b != hub e7ebced0c4e3 ; intel1: rt/current fd810928495b != hub e7ebced0c4e3
