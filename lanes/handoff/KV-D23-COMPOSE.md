@@ -2,6 +2,21 @@
 
 Work dir epyc7 /srv/opentallas-scratch2/claude/kv-d23-compose (lane clone wt/ = sparse main worktree). Hub logs intel2 ~/tmp/kvd23c.
 
+## Status 2026-11-20 05:30Z (read this first; corrects 04:50Z)
+- RULE (learned the hard way): a bind dest reads ABSOLUTE paths inside kw45/bindcopy_kv_<ev> (bind.f, asbuilt.ys, kit_rtl.json). The bindcopy of an applied or bound event is a live kit input on every gen host; NEVER delete it. The 04:50Z note "then ot-delete kw45/bindcopy_kv_d25e2" is WRONG: keep it and replicate it with the dest.
+  - Deleting bindcopy_kv_d25e caused KIT_INPUT_MISSING for KV-D25e on all hosts.
+  - Rebuilt 05:1xZ as a sparse private copy of the 183 referenced paths (W8/mk_sparse_bc.py: bind_of_record from the sealed dest, everything else from the tree) on epyc7, epyc8, epyc9, epyc10, intel1 and epyc2.
+- D25e2 tree: resealed unshared, SRC_MANIFEST OK 619dc622ee98, RC_VERIFY 0, replicated to epyc9, epyc10, intel1 and epyc2. Strict bind running on epyc8 (W8/d25e2bindgate).
+- kv3_hub_Wi ORD-2013: u_bound.u_kvs_emb.u_rowtx.u_row = ot_sram_1r1w_64x512_m1_r2c2 has no plan view.
+  - Row: W8/hubwi_macro_row.py, a physical_parts leaf on content kvs_emb at origin (1097.28,1587.6) R0. KITFIT clean.
+  - The other hub types have no gap (static walk W8/hubmacros3.py).
+- D25f (on D25e2 after it applies; COORD lever 5):
+  - rls rows for the 15 types without a split (lanes/handoff/FABLE-FIX-KV-HG-rls-rows-all.json 470ed6c0684d; keep D25e2's section-M rows on hgi_v1 x2);
+  - the hst3 polyline swapped to the k10 fallback [[200,950],[650,950],[650,618]], or M2 if k11 holds (tN/eN D=3, +1 cycle each);
+  - DIE-CORETAP pc v3 offsets + pv DME (final after the snake runs; no DME on hg/hgi);
+  - FABLE-FIX-KV-PV budgets.r_dly_spread_station_um {kv3_pv: 405} + lockup rows (after the v8f read);
+  - the hub_Wi macro row.
+
 ## Status 2026-11-20 04:50Z (read this first; supersedes 02:45Z)
 LIVE = KV-D25e, applied bind-first at 04:41Z.
 - Commits and receipt: kit_wave 5d887cfc3e5; receipt lanes/handoff/qwen_kvsys_atomic_apply_1795149669406572244.json.
