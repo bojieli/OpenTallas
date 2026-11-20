@@ -11173,3 +11173,4 @@ FAILED [AUTOPILOT f95c65308c42] 2026-11-19 23:43:40 PST AUTOPILOT -> KIT-WAVE-5:
   NO-PROGRESS epyc9 serdes__t13 signoff_meas_072023 stage 48.5 h job 49.7 h: no new meaningful log line for 48.1 h; last: - hold_ff: FAIL WNS -55.85 ps < 0
   NO-PROGRESS epyc7 kv3_hgi_v1__cl141fc26e 5_1_grt stage 29.6 h job 47.0 h: repair_Viol best 5670 last 5670 rows 361 window-gain 0.0%; stagnant 7.6 h; last event 0.0 h ago, log write 0.0 h ago (1109 lines)
 - 2026-11-19 23:52 PST STATE tools sync recovered after 12 min (rt/current 68ee718a2a14)
+- 2026-11-19 23:52 PST owning kv3_hub_Ei/Eo/Wi/Wo; starting state + failure-class survey
