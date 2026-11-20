@@ -235,3 +235,10 @@ def test_fill_second_pass_and_reset_sink_count_are_wired_and_printed():
     # a boundary register needs the D pin, direct or through buffers
     assert SRC.count("if {[nc_data_pin [[$l getMTerm] getName]]} { lappend nx_bnd $li } else { incr nx_rst }") == 1
     assert SRC.count("if {[nc_data_pin [[$xt getMTerm] getName]]} { lappend nx_bnd $xi } else { incr nx_rst }") == 1
+
+
+def test_xstn_stretch_is_advisory_by_default():
+    """SONNET-FIX-QC 11-19: the b_d stretch count stops the kit only with OT_NK_STRETCH_STOP=1 (default report-only)."""
+    assert 'eq "1"} {\n    error "OT_XSTN_STRETCH' in SRC
+    assert "OT_XSTN_STRETCH ADVISORY" in SRC
+    assert 'ne "0")} {\n    error "OT_XSTN_STRETCH' not in SRC

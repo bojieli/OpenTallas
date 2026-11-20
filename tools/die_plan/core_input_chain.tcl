@@ -516,8 +516,12 @@ catch {puts "OT_NK_HEADHOP_RESITE shared_hops $nc_hh_shared shared_hop_cells_res
 if {[dict size $nx_moved] || [info exists ::env(OT_NK_STRETCH_ALWAYS)]} {
   lassign [nc_tree_stretch] nx_sp nx_sb nx_sh
   puts "OT_XSTN_STRETCH b_d_paths $nx_sp stretched_over_3x_and_100um $nx_sb heads $nx_sh"
+  if {$nx_sb > 0 && (![info exists ::env(OT_NK_STRETCH_STOP)] || $::env(OT_NK_STRETCH_STOP) ne "1")} { puts "OT_XSTN_STRETCH ADVISORY $nx_sb stretched b_d paths (not a stop; OT_NK_STRETCH_STOP=1 stops)" }
   set nx_smax 0; if {[info exists ::env(OT_NK_STRETCH_MAX)]} { set nx_smax $::env(OT_NK_STRETCH_MAX) }
-  if {$nx_sb > $nx_smax && (![info exists ::env(OT_NK_STRETCH_STOP)] || $::env(OT_NK_STRETCH_STOP) ne "0")} {
+  # SONNET-FIX-QC 11-19 (OWNER r703 11-18 no stops; academic profile 11-13: blocking gates are DRC0 route, setup, hold, bind): the stretch
+  # count is REPORTED by default (cbn_q11 cl5cc92dfe 147 / cl49ae4555 132 of ~2,700 b_d paths stopped both kits at 3_4 before any
+  # timing was read).  OT_NK_STRETCH_STOP=1 restores the stop.
+  if {$nx_sb > $nx_smax && [info exists ::env(OT_NK_STRETCH_STOP)] && $::env(OT_NK_STRETCH_STOP) eq "1"} {
     error "OT_XSTN_STRETCH stretched b_d paths $nx_sb > $nx_smax (heads $nx_sh of $nx_sp paths): a b_d buffer tree is longer than 3x its direct distance; fix the siting, do not repair"
   }
 }
