@@ -1,0 +1,85 @@
+{
+ "tool": "setup_to_stage",
+ "rule": "R11",
+ "die": "qc",
+ "type": "sle_su_l1__cl5ea486db",
+ "kit": "/srv/opentallas-scratch/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N42/items/sle_su_l1__cl5ea486db/gen/sle_su_l1__cl5ea486db",
+ "plan": "",
+ "paths_file": "/srv/opentallas-scratch2/claude/cbc-all-0200/sts/qc/sle_su_l1__cl5ea486db/sts_paths.json",
+ "failing_paths": 8,
+ "rows": [
+  {
+   "rule": "R11",
+   "type": "sle_su_l1__cl5ea486db",
+   "paths": 2,
+   "worst_slack_ps": -78.5,
+   "worst_start": "u_bound.u_lpad_flt_su_c_i.q[0]$_DFF_P_/QN",
+   "worst_end": "u_bound.u_ist_flt_su_c_i__u_lane6_2_0/q$_DFF_P_/D",
+   "max_straight_um": 937.2,
+   "hop_cap_um": 300.0,
+   "half_cycle": false,
+   "kind": "internal_stations_add",
+   "conn": "bus:flt_su_c_i",
+   "add_regs": 3,
+   "cycles": 3,
+   "sites_um": [
+    [
+     397.678,
+     301.185
+    ],
+    [
+     314.486,
+     451.845
+    ],
+    [
+     231.295,
+     602.505
+    ]
+   ],
+   "existing_entries": 0,
+   "note": "+3 station register(s) on bus:flt_su_c_i (+3 cycle on its lanes, LATCHECK reprices)"
+  },
+  {
+   "rule": "R11",
+   "type": "sle_su_l1__cl5ea486db",
+   "paths": 4,
+   "worst_slack_ps": -45.3,
+   "worst_start": "u_bound.u_cland_rsn_i/u_ring.dch[3].u_dsel/y[25]$_DFF_P_/QN",
+   "worst_end": "u_bound.u_ft_rsn_o_0/q[217]$_DFF_P_/D",
+   "max_straight_um": 499.0,
+   "hop_cap_um": 300.0,
+   "half_cycle": false,
+   "kind": "internal_stations_add",
+   "conn": "bus:rsn_i",
+   "add_regs": 1,
+   "cycles": 1,
+   "sites_um": [
+    [
+     128.168,
+     123.12
+    ]
+   ],
+   "existing_entries": 0,
+   "note": "+1 station register(s) on bus:rsn_i (+1 cycle on its lanes, LATCHECK reprices)"
+  }
+ ],
+ "rtl_requests": [
+  {
+   "rule": "R11",
+   "type": "sle_su_l1__cl5ea486db",
+   "paths": 2,
+   "worst_slack_ps": -58.8,
+   "worst_start": "u_bound.u_ft_rsf_o_1/q[102]$_DFF_P_/QN",
+   "worst_end": "u_bound.u_ft_rsf_o_2/q[102]$_DFF_P_/D",
+   "max_straight_um": 361.4,
+   "hop_cap_um": 300.0,
+   "half_cycle": false,
+   "kind": "rtl_pipeline",
+   "module": "<type top>",
+   "levels": 0,
+   "cell_ps": 499.7,
+   "wire_ps": 302.5,
+   "ask": "split the cone: +1 pipeline register (levels 0, cells 500 ps)"
+  }
+ ]
+}

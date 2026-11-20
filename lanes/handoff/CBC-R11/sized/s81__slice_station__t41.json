@@ -1,0 +1,110 @@
+{
+ "tool": "setup_to_stage",
+ "rule": "R11",
+ "die": "s81",
+ "type": "slice_station__t41",
+ "kit": "/srv/opentallas-scratch/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/slice_station__t41/attempt_8/gen/slice_station__t41",
+ "plan": "",
+ "paths_file": "/srv/opentallas-scratch2/claude/cbc-all-0200/sts/s81/slice_station__t41/sts_paths.json",
+ "failing_paths": 3,
+ "rows": [
+  {
+   "rule": "R11",
+   "type": "slice_station__t41",
+   "paths": 1,
+   "worst_slack_ps": -127.3,
+   "worst_start": "u_bound.u_cland_origin/s2$_SDFF_PN0_/QN",
+   "worst_end": "u_bound.u_cland_fstart_ft0_o/q$_SDFF_PN0_/D",
+   "max_straight_um": 1336.9,
+   "hop_cap_um": 300.0,
+   "half_cycle": false,
+   "kind": "internal_stations_add",
+   "conn": "bus:fstart_ft0_o",
+   "add_regs": 4,
+   "cycles": 4,
+   "sites_um": [
+    [
+     250.558,
+     959.013
+    ],
+    [
+     189.089,
+     753.111
+    ],
+    [
+     127.619,
+     547.209
+    ],
+    [
+     66.15,
+     341.307
+    ]
+   ],
+   "existing_entries": 0,
+   "note": "+4 station register(s) on bus:fstart_ft0_o (+4 cycle on its lanes, LATCHECK reprices)"
+  },
+  {
+   "rule": "R11",
+   "type": "slice_station__t41",
+   "paths": 1,
+   "worst_slack_ps": -29.9,
+   "worst_start": "u_bound.u_rrl_153/q$_DFF_P_/QN",
+   "worst_end": "u_bound.u_cland_fstart_ft12_o/q$_SDFF_PN0_/D",
+   "max_straight_um": 1056.3,
+   "hop_cap_um": 300.0,
+   "half_cycle": false,
+   "kind": "internal_stations_add",
+   "conn": "bus:fstart_ft12_o",
+   "add_regs": 3,
+   "cycles": 3,
+   "sites_um": [
+    [
+     265.634,
+     1170.855
+    ],
+    [
+     512.963,
+     1187.595
+    ],
+    [
+     760.293,
+     1204.335
+    ]
+   ],
+   "existing_entries": 0,
+   "note": "+3 station register(s) on bus:fstart_ft12_o (+3 cycle on its lanes, LATCHECK reprices)"
+  },
+  {
+   "rule": "R11",
+   "type": "slice_station__t41",
+   "paths": 1,
+   "worst_slack_ps": -17.5,
+   "worst_start": "u_bound.u_cland_origin/s2$_SDFF_PN0_/QN",
+   "worst_end": "u_bound.u_cland_fstart_ft1_o/q$_SDFF_PN0_/D",
+   "max_straight_um": 1096.0,
+   "hop_cap_um": 300.0,
+   "half_cycle": false,
+   "kind": "internal_stations_add",
+   "conn": "bus:fstart_ft1_o",
+   "add_regs": 3,
+   "cycles": 3,
+   "sites_um": [
+    [
+     235.259,
+     967.68
+    ],
+    [
+     158.489,
+     770.445
+    ],
+    [
+     81.719,
+     573.21
+    ]
+   ],
+   "existing_entries": 0,
+   "note": "+3 station register(s) on bus:fstart_ft1_o (+3 cycle on its lanes, LATCHECK reprices)"
+  }
+ ],
+ "rtl_requests": []
+}

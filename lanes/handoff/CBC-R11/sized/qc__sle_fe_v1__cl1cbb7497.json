@@ -1,0 +1,54 @@
+{
+ "tool": "setup_to_stage",
+ "rule": "R11",
+ "die": "qc",
+ "type": "sle_fe_v1__cl1cbb7497",
+ "kit": "/srv/opentallas-scratch/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9L2/items/sle_fe_v1__cl1cbb7497/attempt_4/gen/sle_fe_v1__cl1cbb7497",
+ "plan": "",
+ "paths_file": "/srv/opentallas-scratch2/claude/cbc-all-0200/sts/qc/sle_fe_v1__cl1cbb7497/sts_paths.json",
+ "failing_paths": 31,
+ "rows": [
+  {
+   "rule": "R11",
+   "type": "sle_fe_v1__cl1cbb7497",
+   "paths": 30,
+   "worst_slack_ps": -15.2,
+   "worst_start": "x_su_l0_sc_i[22]",
+   "worst_end": "u_bound.u_cland_x_su_l0_sc_i/u_ring.s_d[2][22]$_DFFE_NP_/D",
+   "max_straight_um": 248.5,
+   "hop_cap_um": 200.0,
+   "half_cycle": true,
+   "kind": "internal_stations_add",
+   "conn": "bus:x_su_l0_sc_i",
+   "add_regs": 1,
+   "cycles": 1,
+   "sites_um": [
+    [
+     86.845,
+     119.186
+    ]
+   ],
+   "existing_entries": 0,
+   "note": "+1 station register(s) on bus:x_su_l0_sc_i (+1 cycle on its lanes, LATCHECK reprices)"
+  }
+ ],
+ "rtl_requests": [
+  {
+   "rule": "R11",
+   "type": "sle_fe_v1__cl1cbb7497",
+   "paths": 1,
+   "worst_slack_ps": -48.7,
+   "worst_start": "u_bound.u_cland_origin/s2$_SDFF_PN0_/QN",
+   "worst_end": "u_bound.u_cland_rstart_tx/q$_SDFF_PN0_/D",
+   "max_straight_um": 858.4,
+   "hop_cap_um": 300.0,
+   "half_cycle": false,
+   "kind": "rtl_pipeline",
+   "module": "<type top>",
+   "levels": 2,
+   "cell_ps": 516.3,
+   "wire_ps": 256.1,
+   "ask": "split the cone: +1 pipeline register (levels 2, cells 516 ps)"
+  }
+ ]
+}
