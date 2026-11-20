@@ -322,3 +322,55 @@ class Daily(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class PutSnapshot(unittest.TestCase):
+    """SNAP-RO-1119: a pinned snapshot is read-only, so `put --apply` makes a NEW snapshot version with the file (QC-HOLD-0030: ERROR with no reason on every host)"""
+
+    def mod(self):
+        import importlib.machinery, importlib.util
+        ld = importlib.machinery.SourceFileLoader("ot_src_refresh_mod", P)
+        spec = importlib.util.spec_from_loader("ot_src_refresh_mod", ld)
+        m = importlib.util.module_from_spec(spec)
+        ld.exec_module(m)
+        return m
+
+    def test_error_text_carries_the_note(self):
+        m = self.mod()
+        self.assertEqual(m.fmt_put_result({"results": [{"path": "a.py", "status": "ERROR", "note": "[Errno 13] Permission denied: '/t/.mqref.x'"}, {"path": "b.py", "status": "SAME"}]}),
+                         "a.py=ERROR ([Errno 13] Permission denied: '/t/.mqref.x') b.py=SAME")
+        self.assertEqual(m.fmt_put_result({"error": "no tree /x"}), "ERROR no tree /x")
+
+    def test_new_snapshot_version_carries_the_file_and_the_old_one_is_untouched(self):
+        import base64, hashlib
+        sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent / "autopilot"))
+        import live_tree as LT
+        import src_manifest as SM
+        m = self.mod()
+        t = pathlib.Path(tempfile.mkdtemp())
+        files = {"tools/die_plan/a.py": b"A = 1\n"}
+        pub = t / "src_x_r1"
+        for p, b in files.items():
+            (pub / p).parent.mkdir(parents=True, exist_ok=True)
+            (pub / p).write_bytes(b)
+        mf = {"version": 1, "main_sha": "a" * 40, "scope": ["tools"], "overlay": {}, "files": {p: hashlib.sha256(b).hexdigest() for p, b in files.items()}}
+        mf["manifest_hash"] = SM.manifest_hash(mf)
+        (pub / SM.MANIFEST).write_text(json.dumps(mf))
+        (pub / SM.HASHFILE).write_text(mf["manifest_hash"] + "\n")
+        SM.make_ro(str(pub))
+        live, snaps = LT.live_path("d", str(t)), LT.snap_root("d", str(t))
+        LT.host_seed(str(pub), live)
+        LT.host_apply(live, "", snaps, "s2")
+        jobs = [{"path": "tools/die_plan/hold_margin_family.py", "new": base64.b64encode(b"H = 2\n").decode()}]
+        pack = str(t / "pk")
+        m.build_put_pack(jobs, mf["manifest_hash"], pack)
+        LT.host_apply(live, pack, snaps, "s2_p1")
+        s2, s3 = snaps + "/s2", snaps + "/s2_p1"
+        self.assertFalse(os.path.exists(s2 + "/tools/die_plan/hold_margin_family.py"))
+        self.assertEqual(open(s3 + "/tools/die_plan/hold_margin_family.py", "rb").read(), b"H = 2\n")
+        m3 = json.load(open(s3 + "/" + SM.MANIFEST))
+        self.assertIn("tools/die_plan/hold_margin_family.py", m3["overlay"])
+        self.assertEqual(SM.verify(s3, expect=m3["manifest_hash"], ro=True, full=True)[0], [])
+        self.assertEqual(LT.writable_names(s3), [])
+        for dp, dn, fn in os.walk(t):
+            os.chmod(dp, 0o755)
