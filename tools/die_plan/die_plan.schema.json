@@ -8196,6 +8196,13 @@
           }
          }
         }
+       },
+       "netlist": {
+        "type": "array",
+        "items": {
+         "type": "string",
+         "minLength": 3
+        }
        }
       }
      }

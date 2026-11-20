@@ -1516,7 +1516,8 @@ _ZL_REG = {"type": "object", "additionalProperties": False, "required": ["reg"],
 SCHEMA["properties"]["clock"]["properties"]["zl_lockup"] = {"type": "object", "additionalProperties": {
     "type": "object", "additionalProperties": False, "properties": {
         "guard": {"type": ["string", "null"]}, "note": {"type": "string"},
-        "hops": {"type": "array", "items": _ZL_HOP}, "regs": {"type": "array", "items": _ZL_REG}}}}
+        "hops": {"type": "array", "items": _ZL_HOP}, "regs": {"type": "array", "items": _ZL_REG},
+        "netlist": {"type": "array", "items": {"type": "string", "minLength": 3}}}}}
 SCHEMA["properties"]["clock"]["properties"]["core_input_lockup"] = {
     "type": "object", "additionalProperties": False, "required": ["modules"],
     "properties": {"modules": {"type": "object", "minProperties": 1, "additionalProperties": {

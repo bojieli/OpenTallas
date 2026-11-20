@@ -166,8 +166,15 @@ def test_derive_spec_from_pairs(tmp_path):
     spec, rec = SR.derive_spec(SR.read_pairs(tsv), tmp_path, "top")
     assert spec["guard"] is None and [h["types"] for h in spec["hops"]] == [["ot_dp_st"]]
     assert spec["hops"][0]["ports"] == ["d", "ea"] and re.fullmatch(spec["hops"][0]["inst"], "u_ft_ft7_o_12")
-    assert len(spec["regs"]) == 1 and re.fullmatch(spec["regs"][0]["reg"], "g_u_lf2_u_cst_gd_s_3_u_src_0123456789abcdef01_q")
-    assert rec["cross_tap"] == 3 and rec["cross_tap_covered"] == 2 and rec["unmapped_pairs"] == 1
+    # flat registers go to the post-synth netlist form (generate-block registers need no RTL parser)
+    assert len(spec["netlist"]) == 2
+    assert re.fullmatch(spec["netlist"][0], "u_bound.g_u_lf2_u_cst_gd_s_3_u_src_0123456789abcdef01_q[7]$_DFF_PN0_")
+    assert rec["cross_tap"] == 3 and rec["cross_tap_covered"] == 3
+    ends = tmp_path / "ends.tsv"
+    ends.write_text("slack\tclass\tstart\tend\n-50\tcross_tap\ta\tu_bound.u_ft_ft1_o_4/q[2]$_DFF_P_/D\n"
+                    "-40\tport_in\tp\tu_bound.x/q$_DFF_P_/D\n-30\tsame_tap\ta\tu_bound.zz_q[1]$_DFF_P_/D\n")
+    _s, rec = SR.derive_spec(SR.read_pairs(tsv), tmp_path, "top", hold_ends=SR.read_hold_ends(ends))
+    assert rec["hold_ends"]["total"] == 3 and rec["hold_ends"]["covered"] == 1 and rec["hold_ends"]["by"]["port_in"] == 1
     assert SR._cell_obj("u_lpad_leafdn_i3.q[4]$_DFF_P_") == ("u_lpad_leafdn_i3", "q")
 
 
@@ -238,8 +245,8 @@ def test_module_scoped_register_and_ifdef_headers(tmp_path):
     tsv = tmp_path / "p.tsv"
     tsv.write_text("".join("\t".join(map(str, r)) + "\n" for r in pairs))
     spec, rec = SR.derive_spec(SR.read_pairs(tsv), tmp_path, "top2")
-    assert spec["regs"] == [{"reg": "d_o", "module": "ot_ctl", "allow_missing": True}] and rec["cross_tap_covered"] == 1
-    out = zl.apply_kit(tmp_path, spec)
+    assert spec["netlist"] == [SR.generalize("u_core.u_ctl/d_o[1]$_DFF_P_")] and rec["cross_tap_covered"] == 1
+    out = zl.apply_kit(tmp_path, {"guard": None, "regs": [{"reg": "d_o", "module": "ot_ctl", "allow_missing": True}]})
     txt = (tmp_path / "lep.sv").read_text()
     ctl, other = txt.split("module ot_other")
     assert "u_fl_d_o" in ctl and "u_fl_d_o" not in other and out["lep.sv"]["latches"] == 1
@@ -256,10 +263,22 @@ endmodule
     assert "wire [((W-1)-(0)+1)-1:0] fl_d_o;" in txt and "ot_dp_lk #(.W(((W-1)-(0)+1))) u_fl_d_o (.clk(clk), .d(d_i), .q(fl_d_o));" in txt
 
 
-def test_generic_global_register_names_are_not_emitted(tmp_path):
-    (tmp_path / "top_bound.sv").write_text(BOUND.replace("g_logic_q", "state"))
-    pairs = [("u_bound.x/q$_DFF_P_", "u_bound.state[0]$_DFF_P_", "clk", "clk_t1", 10.0, "DFF", "DFF")]
+def test_reset_cells_skipped_and_sram_wrappers_tap_grouped(tmp_path):
+    (tmp_path / "top_bound.sv").write_text(BOUND)
+    pairs = [("u_bound.x/q$_DFF_P_", "u_bound.u_rrl_3/q[0]$_DFF_P_", "clk", "clk_t1", 10.0, "DFF", "DFF"),
+             ("u_bound.x/q$_DFF_P_", "u_bound.u_lf.u_sram_w2/wreg[4]$_DFF_P_", "clk", "clk_t1", 10.0, "DFF", "DFF")]
     tsv = tmp_path / "p.tsv"
     tsv.write_text("".join("\t".join(map(str, r)) + "\n" for r in pairs))
     spec, rec = SR.derive_spec(SR.read_pairs(tsv), tmp_path, "top")
-    assert spec["regs"] == [] and rec["classes"][0]["skip"] == "generic_name_or_reset_cell" and rec["cross_tap_covered"] == 0
+    assert spec["netlist"] == [] and spec["hops"] == [] and rec["cross_tap_covered"] == 0
+    assert rec["cross_tap_tap_group"] == 1 and re.match(rec["tap_group"]["re"], "u_bound.u_lf.u_sram_w7/wreg[1]")
+
+
+def test_zl_netlist_hook(tmp_path):
+    import gen_phys
+    (tmp_path / "face_keep_release.tcl").write_text("puts x\n")
+    assert not gen_phys.zl_netlist_files(tmp_path, {"hops": []}) and not gen_phys.zl_netlist_hook(tmp_path)
+    assert (tmp_path / "face_keep_release.tcl").read_text() == "puts x\n"
+    assert gen_phys.zl_netlist_files(tmp_path, {"netlist": [r"u_a\.q\d+"]}) and gen_phys.zl_netlist_hook(tmp_path)
+    assert (tmp_path / "zl_netlist_lockup.tcl").exists() and "zl_netlist_lockup" in (tmp_path / "face_keep_release.tcl").read_text()
+    assert not gen_phys.zl_netlist_hook(tmp_path)

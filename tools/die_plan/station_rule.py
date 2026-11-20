@@ -310,55 +310,97 @@ def _rtl_objects(rtl_dir):
     return insts, regs, modregs
 
 
-def derive_spec(pairs, rtl_dir, type_name, min_pairs=1, guard=None):
-    """kit_zl_lockup spec for every capture class with >= min_pairs cross-tap zero-logic pairs, + the census."""
-    insts, regs, modregs = _rtl_objects(rtl_dir)
-    cls = collections.Counter()
-    same = collections.Counter()
-    unmapped = collections.Counter()
-    kinds = {}
+RESET_RE = re.compile(r"(rrelay|rst|reset|u_[rs]rl_\d)")
+SRAM_RE = re.compile(r"sram")
+
+
+def _clean_cell(name):
+    return name.replace("\\", "")
+
+
+def classify(cap, insts, modregs):
+    """capture register (flat netlist name) -> (form, class regex, module, wrapper prefix)
+       form: "inst" (RTL instance data ports, kit_zl_lockup hops), "netlist" (post-synth DLL latch on the flat register,
+       FABLE-CLOSURE-1315 (2): generate-block / nested registers need no RTL parser), "tap_group" (inside an SRAM wrapper:
+       the wrapper goes on one tap instead, (3)), "reset" (reset relay cells: reset.relay_lockup owns them)."""
+    inst, reg = _cell_obj(cap)
+    mt = insts.get(inst)
+    flat = _clean_cell(cap)
+    if mt in DATA_PORTS and mt != "ot_dp_rrelay":
+        return "inst", generalize(inst), mt, None
+    if RESET_RE.search(mt or "") or RESET_RE.search(inst or "") or mt == "ot_dp_rrelay":
+        return "reset", generalize(inst or reg), mt, None
+    if SRAM_RE.search(mt or "") or re.search(r"(^|[./])u_[^./]*sram[^./]*/", flat):
+        head = re.split(r"[/]", flat)[0] if "/" in flat else flat.rsplit(".", 1)[0]
+        return "tap_group", generalize(head), mt, head
+    return "netlist", generalize(flat), mt, None
+
+
+def read_hold_ends(path):
+    """pregrt_ff_hold_open(_before).tsv -> [(slack, class, start, end)] (end = register pin, '/D' dropped)"""
+    out = []
+    for ln in Path(path).read_text().splitlines()[1:]:
+        f = ln.split("\t")
+        if len(f) >= 4:
+            out.append((float(f[0]), f[1], f[2], re.sub(r"/[A-Za-z0-9_]+$", "", f[3].replace("\\", ""))))
+    return out
+
+
+def derive_spec(pairs, rtl_dir, type_name, min_pairs=1, guard=None, hold_ends=None):
+    """zl_lockup spec for every capture class with >= min_pairs cross-tap zero-logic pairs, + the census.
+    Forms: RTL instances (hops), flat netlist registers (netlist), SRAM wrappers -> tap_group rows (never latched)."""
+    insts, _regs, modregs = _rtl_objects(rtl_dir)
+    cls, same = collections.Counter(), collections.Counter()
+    heads = collections.defaultdict(set)
     for _a, cap, lt, ct, _d, *_m in pairs:
-        inst, reg = _cell_obj(cap)
-        if inst in insts and insts[inst] in DATA_PORTS:
-            key = ("inst", generalize(inst), insts[inst])
-        elif reg in regs and not (inst in insts and reg in modregs.get(insts[inst], ())):
-            key = ("reg", generalize(reg), None)
-        elif inst in insts and reg in modregs.get(insts[inst], ()):
-            key = ("modreg", generalize(reg), insts[inst])         # the register inside the capture's own module
-        elif inst in insts:
-            unmapped[f"{insts[inst]} (no data-port map)"] += 1
-            continue
-        else:
-            unmapped[generalize(reg)[:80]] += 1
-            continue
+        form, rx, mt, head = classify(cap, insts, modregs)
+        key = (form, rx, mt)
         (cls if lt != ct else same)[key] += 1
-        kinds[key] = key
-    hops, regs_out, census = [], [], []
+        if head:
+            heads[key].add(head)
+    hops, netlist, groups, census = [], [], set(), []
     for key, n in sorted(cls.items(), key=lambda kv: -kv[1]):
-        kind, rx, mt = key
-        # a global register class with a generic name (no index / hash: 'state', 'credit_pin_r') would latch that name in
-        # every module of the kit (reset relay cells included): only module-scoped or indexed names are emitted
-        generic = kind == "reg" and not re.search(r"\\d|\[0-9a-f\]", rx)
-        # reset relay cells have their own lockup form (reset.relay_lockup, RLK-1108); never latched here
-        generic = generic or (kind == "modreg" and bool(re.search(r"rrelay|rst|reset", mt or "")))
-        census.append(dict(kind=kind, match=rx, module=mt, cross_tap=n, same_tap=same.get(key, 0),
-                           latched=n >= min_pairs and not generic, **({"skip": "generic_name_or_reset_cell"} if generic else {})))
-        if n < min_pairs or generic:
+        form, rx, mt = key
+        emit = n >= min_pairs and form in ("inst", "netlist", "tap_group")
+        census.append(dict(form=form, match=rx, module=mt, cross_tap=n, same_tap=same.get(key, 0), emitted=emit))
+        if not emit:
             continue
-        if kind == "inst":
+        if form == "inst":
             hops.append({"inst": rx, "types": [mt], "ports": DATA_PORTS[mt], "allow_missing": True})
-        elif kind == "modreg":
-            regs_out.append({"reg": rx, "module": mt, "allow_missing": True})
+        elif form == "netlist":
+            netlist.append(rx)
         else:
-            regs_out.append({"reg": rx, "allow_missing": True})   # netlist -> RTL register names are a heuristic map
+            groups.add(rx)
     spec = {"guard": guard, "note": f"LOCKUP-STATION-1130 station_rule.derive {type_name}: launch-side lockup on every "
-                                   f"capture class with >= {min_pairs} cross-tap zero-logic pair(s) (measured)",
-            "hops": hops, "regs": regs_out}
-    rec = dict(type=type_name, pairs=len(pairs), cross_tap=sum(cls.values()) + 0, classes=census,
-               same_tap_only_classes=sum(1 for k in same if k not in cls),
-               unmapped=dict(unmapped.most_common(20)), unmapped_pairs=sum(unmapped.values()))
-    rec["cross_tap"] = sum(1 for _a, _c, lt, ct, *_r in pairs if lt != ct)
-    rec["cross_tap_covered"] = sum(c["cross_tap"] for c in census if c["latched"])
+                                   f"capture class with >= {min_pairs} cross-tap zero-logic pair(s) (measured); RTL "
+                                   f"instances via hops, flat registers via netlist (post-synth)", "hops": hops,
+            "netlist": netlist}
+    tap_group = {"re": "^(" + "|".join(sorted(groups)) + ")[./]", "note": "LOCKUP-STATION-1130: one tap per SRAM wrapper "
+                 "(FABLE-CLOSURE-1315 (3)); fold into partition_types.<T>.clock.tap_group"} if groups else None
+    rec = dict(type=type_name, pairs=len(pairs), cross_tap=sum(1 for _a, _c, lt, ct, *_r in pairs if lt != ct),
+               classes=census, tap_group=tap_group)
+    rec["cross_tap_covered"] = sum(c["cross_tap"] for c in census if c["emitted"] and c["form"] != "tap_group")
+    rec["cross_tap_tap_group"] = sum(c["cross_tap"] for c in census if c["emitted"] and c["form"] == "tap_group")
+    if hold_ends is not None:
+        inst_res = [re.compile(h["inst"]) for h in hops]
+        net_res = [re.compile(r) for r in netlist]
+        grp_re = re.compile(tap_group["re"]) if tap_group else None
+        by = collections.Counter()
+        for _s, hc, _st, end in hold_ends:
+            if hc in ("port_in", "port_out"):
+                by[hc] += 1
+                continue
+            ei = _cell_obj(end)[0] or ""
+            if any(r.fullmatch(ei) for r in inst_res):
+                by["inst"] += 1
+            elif any(r.fullmatch(end) for r in net_res):
+                by["netlist"] += 1
+            elif grp_re and grp_re.match(end):
+                by["tap_group"] += 1
+            else:
+                by["uncovered"] += 1
+        rec["hold_ends"] = dict(total=len(hold_ends), by=dict(by),
+                                covered=by.get("inst", 0) + by.get("netlist", 0), tap_group=by.get("tap_group", 0))
     return spec, rec
 
 
@@ -452,6 +494,7 @@ def main(argv=None):
     d.add_argument("--out", required=True)
     d.add_argument("--min-pairs", type=int, default=1)
     d.add_argument("--guard")
+    d.add_argument("--hold-ends", help="pregrt_ff_hold_open_before.tsv (OT_PREGRT_OPEN_BEFORE=1): coverage on hold ends")
     p = sub.add_parser("apply")
     p.add_argument("plan")
     p.add_argument("rows")
@@ -468,9 +511,11 @@ def main(argv=None):
         print(json.dumps(summary(rows)))
         return 0
     if x.cmd == "derive":
-        spec, rec = derive_spec(read_pairs(x.pairs), x.rtl_dir, x.type, x.min_pairs, x.guard)
+        spec, rec = derive_spec(read_pairs(x.pairs), x.rtl_dir, x.type, x.min_pairs, x.guard,
+                                read_hold_ends(x.hold_ends) if x.hold_ends else None)
         Path(x.out).write_text(json.dumps(dict(spec=spec, census=rec), indent=1) + "\n")
-        print(json.dumps({k: rec[k] for k in ("pairs", "cross_tap", "cross_tap_covered", "unmapped_pairs")}))
+        print(json.dumps({k: rec[k] for k in ("pairs", "cross_tap", "cross_tap_covered", "cross_tap_tap_group", "hold_ends")
+                          if k in rec}))
         return 0
     raw = json.loads(Path(x.plan).read_text())
     rows = json.loads(Path(x.rows).read_text())["rows"]

@@ -164,7 +164,7 @@ proc pg_classes {when {open ""}} {
   puts $line
   if {$open ne ""} {
     set f [open $open w]; puts $f "slack_ps\tclass\tstart\tend\tlaunch_tap\tcapture_tap"
-    foreach r [lrange [lsort -real -index 0 $rows] 0 4999] { puts $f [join $r "\t"] }
+    foreach r [lrange [lsort -real -index 0 $rows] 0 [expr {$when eq "before" ? 999999 : 4999}]] { puts $f [join $r "\t"] }
     close $f
   }
 }
@@ -172,7 +172,8 @@ if {[file exists /work/hold_sdc_guard.tcl]} { source /work/hold_sdc_guard.tcl } 
 set pg_w0 [pg_hold]; set pg_n0 [sta::endpoint_violation_count min]; set pg_s0 [pg_setup]; set pg_tn0 [pg_tns]
 set pg_i0 [llength [$pg_blk getInsts]]; set pg_t0 [clock seconds]
 puts "OT_PREGRT_FF_HOLD before wns $pg_w0 endpoints $pg_n0 insts $pg_i0 setup_wns $pg_s0 scenes [expr {$pg_two ? {TC+BC} : {BC only (no TLIBS: setup guard at FF)}}] guard $pg_guard"
-pg_classes before
+# LOCKUP-STATION-1130: OT_PREGRT_OPEN_BEFORE=1 also lists every violating end BEFORE repair (station_rule.py derive --hold-ends)
+pg_classes before [expr {[info exists ::env(OT_PREGRT_OPEN_BEFORE)] && $::env(OT_PREGRT_OPEN_BEFORE) eq "1" ? "/work/pregrt_ff_hold_open_before.tsv" : ""}]
 # HOLD-MARGIN-1119 (FABLE-CLOSURE-STRATEGY lever 5): a kit whose CTS TT setup estimate is below OT_PREGRT_SKIP_SETUP_PS (default -1000; "off" disables)
 # is a setup failure, 1,500 to 4,300 ps from closure (S81 slice C: 8-9 h and 65-75k hold cells for nothing).  Skip the hold build, leave 4_cts.odb
 # untouched, write /work/HOLD_SKIPPED_SETUP (the GRT hold repair step in run_kit honours it) and rc 0: the existing triage owns the setup failure.

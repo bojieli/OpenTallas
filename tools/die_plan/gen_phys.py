@@ -848,6 +848,33 @@ def zl_lockup_spec(raw, tn):
     return v[max(hit, key=len)] if hit else None
 
 
+def zl_netlist_files(kd, spec):
+    """clock.zl_lockup.<T>.netlist (LOCKUP-STATION-1130, FABLE-CLOSURE-1315 (2)): flat register-name regexes whose direct
+    register -> register hops get a DLL lockup latch in the synthesized netlist (zl_netlist_lockup.tcl, POST_SYNTH_TCL via
+    face_keep_release.tcl); run_kit then proves LEC on the ODB export.  No netlist list = nothing written."""
+    pats = list((spec or {}).get("netlist") or [])
+    if not pats:
+        return False
+    kd = Path(kd)
+    (kd / "zl_netlist.txt").write_text("\n".join(pats) + "\n")
+    shutil.copyfile(Path(__file__).with_name("zl_netlist_lockup.tcl"), kd / "zl_netlist_lockup.tcl")
+    return True
+
+
+ZL_NETLIST_LINE = "if {[file exists /work/zl_netlist.txt]} { source /work/zl_netlist_lockup.tcl }\n"
+
+
+def zl_netlist_hook(kd):
+    """append the netlist lockup source line to the POST_SYNTH_TCL of the kit (face_keep_release.tcl) when zl_netlist.txt
+    was written; every other kit keeps the file byte-identical."""
+    kd = Path(kd)
+    fk = kd / "face_keep_release.tcl"
+    if (kd / "zl_netlist.txt").exists() and fk.exists() and ZL_NETLIST_LINE not in fk.read_text():
+        fk.write_text(fk.read_text() + ZL_NETLIST_LINE)
+        return True
+    return False
+
+
 def dly_lockup_cfg(budgets, tn):
     """budgets.r_dly_lockup {type base: {"seg": N, "tail_groups": G}} (XTAP-C, FABLE-FIX-KV-PV 11-20, kit_dly_lockup.py): the pad delay
     lines of the types whose name starts with a listed base (longest base wins) are split into segments of <= N stages (default 8;
@@ -6904,7 +6931,9 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         import kit_zl_lockup as _ZLK
         zlk_rec = _ZLK.apply_kit(kd / "rtl", dict(zlk_spec, guard=None))
         (kd / "zl_lockup.json").write_text(json.dumps(dict(spec=zlk_spec, files=zlk_rec), indent=1) + "\n")
-        print(f"gen phys: type {tn}: OT_ZL_LOCKUP " + json.dumps({f: {k: r[k] for k in ("latches", "bits")} for f, r in zlk_rec.items()}))
+        print(f"gen phys: type {tn}: OT_ZL_LOCKUP " + json.dumps({f: {k: r[k] for k in ("latches", "bits")} for f, r in zlk_rec.items()
+                                                                if isinstance(r, dict) and "latches" in r}))
+        zl_netlist_files(kd, zlk_spec)
     if rls_cells is not None:
         append_new_src(srcs, f"/work/rtl/{rls_cells.name}")
     # DIE-HEAD-53 11-01 (HEAD class LEP-BB): a hard macro instantiated with a parameter override (hd_lep0N
@@ -7943,6 +7972,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     shutil.copyfile(Path(__file__).with_name("adder_map_dontuse.py"), kd / "adder_map_dontuse.py")   # ruling 4 (10-25)
     for f in ("face_keep.tcl", "face_keep_release.tcl"):   # CP1-R10 (restored: lost in main merge 0ce45ab03c)
         shutil.copyfile(Path(__file__).with_name(f), kd / f)
+    zl_netlist_hook(kd)   # LOCKUP-STATION-1130: POST_SYNTH netlist lockup when clock.zl_lockup.<T>.netlist wrote zl_netlist.txt
     # Copy the current shared hook and its conditional helpers beside each generated kit.
     for f in KEEP_REGS_HOOK:
         shutil.copyfile(_common_flow_file(f, Path(__file__).resolve().parents[2]), kd / f)
@@ -8692,7 +8722,7 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
   if [ \$rc = 0 ]; then \$M synth; rc=\$?; fi; \
   if [ \$rc = 0 ] && [ -f /work/adder_map_dontuse.py ]; then python3 -I /work/adder_map_dontuse.py check --platform-dir /OpenROAD-flow-scripts/flow/platforms/asap7 --netlist \$(ls /work/run/results/asap7/*/base/1_2_yosys.v | tail -1) --report /work/dont_use_check.json; rc=\$?; if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR dont_use_check' | tee -a /work/FAIL_PREFLOOR; fi; fi; \
   if [ -n \"\$SRP\" ]; then wait \$SRP; S=\$(cat /work/selrange.rc 2>/dev/null || echo 2); tail -3 /work/selrange.log; if [ \"\$S\" = 75 ]; then echo 'FAIL_PREFLOOR selrange KILLED (yosys signal, host memory; not a design result)' | tee -a /work/FAIL_PREFLOOR; rc=3; elif [ \"\$S\" != 0 ]; then echo 'FAIL_PREFLOOR selrange (FAIL or NOT RUN)' | tee -a /work/FAIL_PREFLOOR; rc=3; fi; fi; \
-  N=\$(ls /work/run/results/asap7/*/base/1_2_yosys.v 2>/dev/null | tail -1); \
+  N=\$(ls /work/run/results/asap7/*/base/1_2_yosys.v 2>/dev/null | tail -1); LN=\$N; [ -f /work/zl_netlist.txt ] && LN=/work/1_synth_odb.v; \
   if [ \$rc = 0 ]; then python3 -I /work/port_bind_gate.py \"\$N\" /work > /work/port_bind.log 2>&1; rc=\$?; tail -2 /work/port_bind.log; if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR port_bind' | tee -a /work/FAIL_PREFLOOR; fi; fi; \
   FG=\$(grep -c '^export OT_FACE_GUARD_GATE = 1' /work/config.mk); \
   if [ \$rc = 0 ]; then python3 -I /work/face_guard.py \$N --pins /work/pins.json --out /work/face_guard.json; fg=\$?; if [ \$fg != 0 ]; then if [ \$FG != 0 ]; then echo 'FAIL_PREFLOOR face_guard' | tee -a /work/FAIL_PREFLOOR; rc=\$fg; else echo 'WARN face_guard ADVISORY (R-MINIMAL: pin registration is not a blocking gate, see face_guard.json; export OT_FACE_GUARD_GATE = 1 restores the stop)'; fi; fi; fi; \
@@ -8706,8 +8736,8 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
   if [ \$rc = 0 ] && [ -s /work/1_synth_odb.v ] && [ \"\${OT_FLOORPLAN_REPAIR:-auto}\" = auto ]; then FPN=\$(grep -cE '^ +[^ ]+ +[^ ]+ +[(]' /work/1_synth_odb.v); FPC=\${OT_FLOORPLAN_REPAIR_MAX_INST:-1500000}; \
     if [ \"\${FPN:-0}\" -gt \"\$FPC\" ]; then M=\"\$M REMOVE_ABC_BUFFERS=1\"; echo \"OT_FLOORPLAN_REPAIR SKIPPED class=SIZE: \$FPN instances > \$FPC: the floorplan-stage repair_timing (wire-load model, every endpoint) is not run, only remove_buffers (S81 svc_lo_dsdv_svc_rs__t7: 4,992,695 instances, 45,249 endpoints, RSZ-0505 runtime 21,913 s, then 30 min per metrics report); OT_FLOORPLAN_REPAIR=on keeps it\" | tee -a /work/floorplan_repair_skipped.log; fi; fi; \
   if [ \$rc = 0 ] && [ -f /work/lec_async.sh ] && { [ -f /work/lec_async.on ] || [ -f /work/lec_async.identity ]; }; then bash /work/lec_async.sh check-synth /work '$NAME'; rc=\$?; fi; \
-  if [ \$rc = 0 ] && [ -f /work/lec.py ] && { [ -f /work/lec_async.on ] || [ -f /work/lec_async.identity ]; } && [ ! -f /work/lec_async.ready ]; then if [ -f /work/lec_preplace.off ]; then printf '1\\necho LEC_PREPLACE_DROPPED R-MINIMAL\\n' > /work/lec_async.ready; else printf '1\\npython3 -I /work/lec.py /work --netlist %s --out /work/lec > /work/lec_run.log 2>&1\\n' \$N > /work/lec_async.ready; fi; echo 'LEC_ASYNC: pre-route LEC runs beside the flow (lec_async.log)'; fi; \
-  if [ \$rc = 0 ] && [ -f /work/lec.py ] && [ ! -f /work/lec_preplace.off ] && [ ! -f /work/lec_async.on ] && [ ! -f /work/lec_async.identity ]; then python3 -I /work/lec.py /work --netlist \$N --out /work/lec > /work/lec_run.log 2>&1; lr=\$?; tail -1 /work/lec_run.log; \
+  if [ \$rc = 0 ] && [ -f /work/lec.py ] && { [ -f /work/lec_async.on ] || [ -f /work/lec_async.identity ]; } && [ ! -f /work/lec_async.ready ]; then if [ -f /work/lec_preplace.off ]; then printf '1\\necho LEC_PREPLACE_DROPPED R-MINIMAL\\n' > /work/lec_async.ready; else printf '1\\npython3 -I /work/lec.py /work --netlist %s --out /work/lec > /work/lec_run.log 2>&1\\n' \$LN > /work/lec_async.ready; fi; echo 'LEC_ASYNC: pre-route LEC runs beside the flow (lec_async.log)'; fi; \
+  if [ \$rc = 0 ] && [ -f /work/lec.py ] && [ ! -f /work/lec_preplace.off ] && [ ! -f /work/lec_async.on ] && [ ! -f /work/lec_async.identity ]; then python3 -I /work/lec.py /work --netlist \$LN --out /work/lec > /work/lec_run.log 2>&1; lr=\$?; tail -1 /work/lec_run.log; \
     if [ \$lr = 1 ]; then echo 'FAIL_PREFLOOR LEC NOT EQUIVALENT (lec/lec.json)' | tee -a /work/FAIL_PREFLOOR; rc=5; elif [ \$lr != 0 ]; then echo \"LEC WARNING (exit \$lr): not proved, recorded in lec/lec.json; the flow continues\"; fi; fi; \
   if [ \$rc = 0 ] && [ -f /work/hop_census.on ] && { [ $GOAL = cts ] || [ $GOAL = grt ] || [ $GOAL = route ] || [ $GOAL = finish ]; }; then \$M place; rc=\$?; \
     if [ \$rc = 0 ]; then PO=\$(ls /work/run/results/asap7/*/base/3_place.odb 2>/dev/null | head -1); GATE=1 ODB=\$PO TAG='$NAME' OUT=/work/hop_census.json openroad -python -exit /work/hop_census.py > /work/hop_census.log 2>&1; hc=\$?; grep -h -E '^HOPSUM|^OT_HOP_CENSUS' /work/hop_census.log; \
