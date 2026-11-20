@@ -77,7 +77,8 @@ def _plan_tree(tmp_path, view_pins, plan_pins, signed=True):
 PINS = {"pins": [{"name": "clk", "layer": "M5", "x": 1.0, "y": 0.0}, {"name": "d", "layer": "M5", "x": 2.0, "y": 0.0}]}
 
 
-def test_signed_core_with_matching_pins_is_real(tmp_path):
+def test_signed_core_with_matching_pins_is_real(tmp_path, monkeypatch):
+    monkeypatch.setattr(R, "parse_etm", lambda path, load: {})       # dummy libs
     plan, root = _plan_tree(tmp_path, PINS, PINS)
     args, st = V.resolve_cores(json.loads(plan.read_text()), plan, [root], tmp_path / "rv")
     assert st["cmod"]["status"] == "REAL" and st["cmod"]["verdict"] == "SIGNED"
@@ -86,7 +87,8 @@ def test_signed_core_with_matching_pins_is_real(tmp_path):
     assert (vdir / "cmod_tt.lib").exists() and json.loads((vdir / "provenance.json").read_text())["kit"]["pins_sha256"]
 
 
-def test_unsigned_or_moved_core_stays_contract(tmp_path):
+def test_unsigned_or_moved_core_stays_contract(tmp_path, monkeypatch):
+    monkeypatch.setattr(R, "parse_etm", lambda path, load: {})       # dummy libs
     plan, root = _plan_tree(tmp_path / "a", PINS, PINS, signed=False)
     args, st = V.resolve_cores(json.loads(plan.read_text()), plan, [root], tmp_path / "a" / "rv")
     assert args == [] and st["cmod"]["status"] == "CONTRACT" and "verdict None" in st["cmod"]["reasons"][-1]
@@ -174,3 +176,14 @@ def test_chain_drops_kits_for_tools_without_register_fallback(tmp_path):
     assert "kits SKIPPED" in chain
     a = argv("sta_ca")
     assert "--core-view=cmod=/v/cmod" in a and not any(x.startswith("--kit=") for x in a)
+
+
+def test_core_view_without_boundary_arcs_stays_contract(tmp_path, monkeypatch):
+    plan, root = _plan_tree(tmp_path, PINS, PINS)
+
+    def etm(path, load):
+        raise SystemExit(f"{path}: missing boundary arcs (out 0 setup 9 hold 9)")
+    monkeypatch.setattr(R, "parse_etm", etm)
+    args, st = V.resolve_cores(json.loads(plan.read_text()), plan, [root], tmp_path / "rv")
+    assert args == [] and st["cmod"]["status"] == "CONTRACT"
+    assert "ETM unusable (tt: missing boundary arcs" in st["cmod"]["reasons"][-1]
