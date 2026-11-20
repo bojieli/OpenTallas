@@ -1,0 +1,1720 @@
+{
+ "schema": "qc-padleg.rows.v1",
+ "lane": "QC-PADLEG-1119",
+ "date": "2026-11-19",
+ "for": "QC-PLAN-R3 event after N46R",
+ "plan": "QC N46R plan_n46_r.json sha256 cd014b8d62ac (epyc9 qc-plan-r3-n41p/n46r/out_all)",
+ "status": "PROPOSED; estimator (reach 405 um, margin 85 um first hop from face window + pad spread); +cycles pre-approved; rows touch only internal_stations[conn].regs_um (op set); no plan edited",
+ "cause": "(1) first hop face->station 1 uses window-centre geometry but bits span the window (~100 um) plus pad spread: hop 387-435 nominal -> 456-509 placed; (2) core consumers are spread y~500-1190 (core ~700 um deep) while plan leaf_um is core centre (~917), so last station->core consumers = 530-612 um; (3) out-buses launch at core flops 150-400 um south of plan leaf. No pad-site or port-edge fault; stations needed.",
+ "classes_by_family_all_kits_legs_over_405": {
+  "slw_fe": {
+   "bin->pad": 1578,
+   "other->other": 58,
+   "other->bin": 21,
+   "core->ist": 19,
+   "pd->other": 18,
+   "pad->other": 12
+  },
+  "sle_fw": {
+   "pad->core": 2301,
+   "bin->ist": 1278,
+   "bin->other": 1032,
+   "core->ist": 923,
+   "pad->pad": 280,
+   "other->bin": 113
+  },
+  "slw_fw": {
+   "pad->core": 1668,
+   "bin->pd": 1540,
+   "pad->pd": 1462,
+   "core->ist": 725,
+   "pd->other": 516,
+   "bin->pad": 440
+  },
+  "sle_ctl": {
+   "other->ist": 13120,
+   "other->other": 5737,
+   "ist->ist": 5150,
+   "pad->ist": 1852,
+   "pad->other": 864,
+   "pd->other": 79
+  },
+  "sle_fe": {
+   "bin->pad": 1035,
+   "other->other": 30,
+   "other->bin": 16,
+   "pd->other": 6,
+   "core->other": 2
+  },
+  "qfd_qc": {
+   "core->ist": 1877,
+   "pad->core": 836,
+   "other->bin": 572,
+   "pad->pd": 490,
+   "bin->pd": 215,
+   "bin->pad": 148
+  },
+  "sle_stm": {
+   "core->core": 1061,
+   "core->other": 535,
+   "pad->core": 127,
+   "other->core": 36,
+   "pd->core": 32,
+   "bin->core": 28
+  },
+  "sle_sc": {
+   "pad->core": 65,
+   "pad->pad": 1
+  },
+  "slw_sc": {
+   "pad->core": 197,
+   "other->other": 4,
+   "bin->pad": 3
+  },
+  "slw_stm": {
+   "core->core": 313,
+   "core->other": 48,
+   "pd->core": 14,
+   "other->core": 12,
+   "bin->core": 7,
+   "other->other": 2
+  }
+ },
+ "types": [
+  "sle_fe_v1__cl1cbb7497",
+  "sle_fe_v1__cl8210183c",
+  "sle_fw_v1__cl9d029624",
+  "sle_fw_v1__clf58b4dfb",
+  "sle_fw_v2__cl6740750e",
+  "sle_fw_v2__cl69f5e854",
+  "sle_sc_v1__cl7479a5ec",
+  "sle_stm_v1__cl27746664",
+  "sle_stm_v1__clbe630b9c",
+  "sle_stm_v2__cl55be2264",
+  "slw_fe_v1__cl95cd1d0c",
+  "slw_fe_v1__clfe325744__cl08d14f0d",
+  "slw_fe_v1__clfe325744__cldb4efe33",
+  "slw_fe_v2__cle312294d",
+  "slw_fe_v2__clf110fab2",
+  "slw_fw_v1__clf51c11d8__cl592e3d37",
+  "slw_fw_v1__clf51c11d8__clc7ddab13",
+  "slw_fw_v2__cl8537f156",
+  "slw_sc_v1__cl63e5a7a2",
+  "slw_sc_v1__cl64543eaf__cl4590432d",
+  "slw_sc_v1__cl64543eaf__cl5e017c6f",
+  "slw_stm_v1__cl05fc43f7__cl389df4e9"
+ ],
+ "total_added_regs": 48,
+ "rows": [
+  {
+   "op": "set",
+   "path": "partition_types.slw_fe_v2__cle312294d.internal_stations[conn=bus:x_stm_p1_i].regs_um",
+   "value": [
+    [
+     82.944,
+     1486.197
+    ],
+    [
+     165.888,
+     1278.795
+    ],
+    [
+     248.832,
+     1071.392
+    ]
+   ],
+   "bits": 544,
+   "added_regs": 0,
+   "cycles": "0 (re-site only)",
+   "fixes": {
+    "bin_pad_legs": 391,
+    "pad_core_legs": 0,
+    "worst_um": 509.0
+   },
+   "note": "re-space first hops equal (window half-spread 51 + pad half-spread 34 margin), 3 hops <= 290 um"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.slw_fe_v2__cle312294d.internal_stations[conn=bus:x_stm_i].regs_um",
+   "value": [
+    [
+     116.64,
+     1204.76
+    ],
+    [
+     233.28,
+     1031.408
+    ]
+   ],
+   "bits": 544,
+   "added_regs": 0,
+   "cycles": "0 (re-site only)",
+   "fixes": {
+    "bin_pad_legs": 148,
+    "pad_core_legs": 0,
+    "worst_um": 463.5
+   },
+   "note": "re-space first hops equal (window half-spread 51 + pad half-spread 34 margin), 2 hops <= 290 um"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.slw_fe_v1__clfe325744__cldb4efe33.internal_stations[conn=bus:x_stm_p1_i].regs_um",
+   "value": [
+    [
+     69.12,
+     1498.346
+    ],
+    [
+     138.24,
+     1331.915
+    ],
+    [
+     207.36,
+     1165.485
+    ]
+   ],
+   "bits": 544,
+   "added_regs": 1,
+   "cycles": "+1 on lane bus:x_stm_p1_i (pre-approved)",
+   "fixes": {
+    "bin_pad_legs": 27,
+    "pad_core_legs": 0,
+    "worst_um": 425.3
+   },
+   "note": "re-space first hops equal (window half-spread 51 + pad half-spread 34 margin), 3 hops <= 236 um"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.slw_fe_v1__clfe325744__cldb4efe33.internal_stations[conn=bus:x_stm_i].regs_um",
+   "value": [
+    [
+     116.64,
+     1205.325
+    ],
+    [
+     233.28,
+     1031.634
+    ]
+   ],
+   "bits": 544,
+   "added_regs": 0,
+   "cycles": "0 (re-site only)",
+   "fixes": {
+    "bin_pad_legs": 141,
+    "pad_core_legs": 0,
+    "worst_um": 456.2
+   },
+   "note": "re-space first hops equal (window half-spread 51 + pad half-spread 34 margin), 2 hops <= 290 um"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.sle_fw_v1__clf58b4dfb.internal_stations[conn=bus:x_fe_p1_i].regs_um",
+   "value": [
+    [
+     518.4,
+     882.267
+    ],
+    [
+     414.72,
+     899.053
+    ],
+    [
+     360.679,
+     715.513
+    ]
+   ],
+   "bits": 552,
+   "added_regs": 1,
+   "cycles": "+1 on lane bus:x_fe_p1_i (pre-approved)",
+   "fixes": {
+    "bin_pad_legs": 0,
+    "pad_core_legs": 18,
+    "worst_um": 508.3
+   },
+   "note": "+1 reg toward measured core consumer centroid (307,532), spread 61 um, last-reg->core worst 298 um"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.sle_fw_v1__clf58b4dfb.internal_stations[conn=bus:x_ctl_i].regs_um",
+   "value": [
+    [
+     317.408,
+     1466.026
+    ],
+    [
+     311.032,
+     1283.199
+    ],
+    [
+     304.655,
+     1100.371
+    ],
+    [
+     306.802,
+     867.427
+    ]
+   ],
+   "bits": 631,
+   "added_regs": 1,
+   "cycles": "+1 on lane bus:x_ctl_i (pre-approved)",
+   "fixes": {
+    "bin_pad_legs": 0,
+    "pad_core_legs": 555,
+    "worst_um": 562.8
+   },
+   "note": "+1 reg toward measured core consumer centroid (309,634), spread 95 um, last-reg->core worst 330 um"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.sle_fw_v1__clf58b4dfb.internal_stations[conn=bus:x_ctl_p1_o].regs_um",
+   "value": [
+    [
+     335.297,
+     553.55
+    ],
+    [
+     410.186,
+     428.793
+    ],
+    [
+     516.133,
+     387.464
+    ]
+   ],
+   "bits": 536,
+   "added_regs": 1,
+   "cycles": "+1 on lane bus:x_ctl_p1_o (pre-approved)",
+   "fixes": {
+    "core_ist_legs": 26,
+    "worst_um": 421.7
+   },
+   "note": "+1 reg at core producer side (centroid 260,678 spread 11)"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.sle_fw_v1__clf58b4dfb.internal_stations[conn=bus:x_stm_p1_o].regs_um",
+   "value": [
+    [
+     250.493,
+     1248.213
+    ],
+    [
+     305.435,
+     1408.461
+    ],
+    [
+     410.984,
+     1516.376
+    ],
+    [
+     516.532,
+     1624.291
+    ]
+   ],
+   "bits": 548,
+   "added_regs": 1,
+   "cycles": "+1 on lane bus:x_stm_p1_o (pre-approved)",
+   "fixes": {
+    "core_ist_legs": 14,
+    "worst_um": 412.2
+   },
+   "note": "+1 reg at core producer side (centroid 196,1088 spread 9)"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.sle_fw_v1__clf58b4dfb.internal_stations[conn=bus:x_ctl_o].regs_um",
+   "value": [
+    [
+     295.949,
+     883.827
+    ],
+    [
+     348.797,
+     1089.554
+    ],
+    [
+     376.561,
+     1336.929
+    ],
+    [
+     404.324,
+     1584.305
+    ]
+   ],
+   "bits": 536,
+   "added_regs": 1,
+   "cycles": "+1 on lane bus:x_ctl_o (pre-approved)",
+   "fixes": {
+    "core_ist_legs": 1,
+    "worst_um": 406.4
+   },
+   "note": "+1 reg at core producer side (centroid 243,678 spread 0)"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.slw_fw_v2__cl8537f156.internal_stations[conn=bus:x_fe_p1_i].regs_um",
+   "value": [
+    [
+     466.56,
+     785.096
+    ],
+    [
+     311.04,
+     829.44
+    ]
+   ],
+   "bits": 552,
+   "added_regs": 1,
+   "cycles": "+1 on lane bus:x_fe_p1_i (pre-approved)",
+   "fixes": {
+    "bin_pad_legs": 147,
+    "pad_core_legs": 0,
+    "worst_um": 461.9
+   },
+   "note": "re-space first hops equal (window half-spread 51 + pad half-spread 34 margin), 2 hops <= 200 um"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.slw_fw_v2__cl8537f156.internal_stations[conn=bus:x_ctl_i].regs_um",
+   "value": [
+    [
+     317.408,
+     1466.026
+    ],
+    [
+     311.032,
+     1283.199
+    ],
+    [
+     304.655,
+     1100.371
+    ],
+    [
+     306.321,
+     864.01
+    ]
+   ],
+   "bits": 631,
+   "added_regs": 1,
+   "cycles": "+1 on lane bus:x_ctl_i (pre-approved)",
+   "fixes": {
+    "bin_pad_legs": 0,
+    "pad_core_legs": 555,
+    "worst_um": 611.7
+   },
+   "note": "+1 reg toward measured core consumer centroid (308,628), spread 131 um, last-reg->core worst 369 um"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.slw_fw_v2__cl8537f156.internal_stations[conn=bus:x_ctl_p1_i].regs_um",
+   "value": [
+    [
+     419.495,
+     200.994
+    ],
+    [
+     384.905,
+     388.894
+    ]
+   ],
+   "bits": 631,
+   "added_regs": 1,
+   "cycles": "+1 on lane bus:x_ctl_p1_i (pre-approved)",
+   "fixes": {
+    "bin_pad_legs": 0,
+    "pad_core_legs": 501,
+    "worst_um": 512.8
+   },
+   "note": "+1 reg toward measured core consumer centroid (350,577), spread 88 um, last-reg->core worst 311 um"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.slw_fw_v2__cl8537f156.internal_stations[conn=bus:x_ctl_p1_o].regs_um",
+   "value": [
+    [
+     353.661,
+     527.332
+    ],
+    [
+     410.186,
+     387.311
+    ],
+    [
+     516.133,
+     304.498
+    ]
+   ],
+   "bits": 536,
+   "added_regs": 1,
+   "cycles": "+1 on lane bus:x_ctl_p1_o (pre-approved)",
+   "fixes": {
+    "core_ist_legs": 100,
+    "worst_um": 511.5
+   },
+   "note": "+1 reg at core producer side (centroid 297,667 spread 18)"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.slw_fw_v2__cl8537f156.internal_stations[conn=bus:x_ctl_o].regs_um",
+   "value": [
+    [
+     326.514,
+     873.675
+    ],
+    [
+     371.299,
+     1089.554
+    ],
+    [
+     421.565,
+     1336.929
+    ],
+    [
+     471.83,
+     1584.305
+    ]
+   ],
+   "bits": 536,
+   "added_regs": 1,
+   "cycles": "+1 on lane bus:x_ctl_o (pre-approved)",
+   "fixes": {
+    "core_ist_legs": 409,
+    "worst_um": 493.8
+   },
+   "note": "+1 reg at core producer side (centroid 282,658 spread 76)"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.sle_fe_v1__cl1cbb7497.internal_stations[conn=bus:x_stm_p1_i].regs_um",
+   "value": [
+    [
+     82.944,
+     1471.396
+    ],
+    [
+     165.888,
+     1269.375
+    ],
+    [
+     248.832,
+     1067.355
+    ]
+   ],
+   "bits": 544,
+   "added_regs": 0,
+   "cycles": "0 (re-site only)",
+   "fixes": {
+    "bin_pad_legs": 354,
+    "pad_core_legs": 0,
+    "worst_um": 499.1
+   },
+   "note": "re-space first hops equal (window half-spread 51 + pad half-spread 34 margin), 3 hops <= 285 um"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.sle_fe_v1__cl1cbb7497.internal_stations[conn=bus:x_stm_i].regs_um",
+   "value": [
+    [
+     116.64,
+     1211.665
+    ],
+    [
+     233.28,
+     1034.17
+    ]
+   ],
+   "bits": 544,
+   "added_regs": 0,
+   "cycles": "0 (re-site only)",
+   "fixes": {
+    "bin_pad_legs": 164,
+    "pad_core_legs": 0,
+    "worst_um": 464.5
+   },
+   "note": "re-space first hops equal (window half-spread 51 + pad half-spread 34 margin), 2 hops <= 294 um"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.sle_fw_v2__cl6740750e.internal_stations[conn=bus:x_fe_p1_i].regs_um",
+   "value": [
+    [
+     518.4,
+     882.267
+    ],
+    [
+     414.72,
+     899.053
+    ],
+    [
+     359.392,
+     714.865
+    ]
+   ],
+   "bits": 552,
+   "added_regs": 1,
+   "cycles": "+1 on lane bus:x_fe_p1_i (pre-approved)",
+   "fixes": {
+    "bin_pad_legs": 0,
+    "pad_core_legs": 17,
+    "worst_um": 505.7
+   },
+   "note": "+1 reg toward measured core consumer centroid (304,531), spread 37 um, last-reg->core worst 276 um"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.sle_fw_v2__cl6740750e.internal_stations[conn=bus:x_ctl_i].regs_um",
+   "value": [
+    [
+     317.408,
+     1466.026
+    ],
+    [
+     311.032,
+     1283.199
+    ],
+    [
+     304.655,
+     1100.371
+    ],
+    [
+     306.693,
+     867.414
+    ]
+   ],
+   "bits": 631,
+   "added_regs": 1,
+   "cycles": "+1 on lane bus:x_ctl_i (pre-approved)",
+   "fixes": {
+    "bin_pad_legs": 0,
+    "pad_core_legs": 556,
+    "worst_um": 605.9
+   },
+   "note": "+1 reg toward measured core consumer centroid (309,634), spread 115 um, last-reg->core worst 350 um"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.sle_fw_v2__cl6740750e.internal_stations[conn=bus:x_ctl_o].regs_um",
+   "value": [
+    [
+     326.158,
+     873.927
+    ],
+    [
+     371.299,
+     1089.554
+    ],
+    [
+     421.565,
+     1336.929
+    ],
+    [
+     471.83,
+     1584.305
+    ]
+   ],
+   "bits": 536,
+   "added_regs": 1,
+   "cycles": "+1 on lane bus:x_ctl_o (pre-approved)",
+   "fixes": {
+    "core_ist_legs": 403,
+    "worst_um": 479.8
+   },
+   "note": "+1 reg at core producer side (centroid 281,658 spread 78)"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.sle_fw_v2__cl6740750e.internal_stations[conn=bus:x_ctl_p1_o].regs_um",
+   "value": [
+    [
+     333.057,
+     553.608
+    ],
+    [
+     410.186,
+     428.793
+    ],
+    [
+     516.133,
+     387.464
+    ]
+   ],
+   "bits": 536,
+   "added_regs": 1,
+   "cycles": "+1 on lane bus:x_ctl_p1_o (pre-approved)",
+   "fixes": {
+    "core_ist_legs": 21,
+    "worst_um": 432.8
+   },
+   "note": "+1 reg at core producer side (centroid 256,678 spread 14)"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.sle_fw_v2__cl69f5e854.internal_stations[conn=bus:x_fe_p1_i].regs_um",
+   "value": [
+    [
+     518.4,
+     882.267
+    ],
+    [
+     414.72,
+     899.053
+    ],
+    [
+     359.284,
+     714.932
+    ]
+   ],
+   "bits": 552,
+   "added_regs": 1,
+   "cycles": "+1 on lane bus:x_fe_p1_i (pre-approved)",
+   "fixes": {
+    "bin_pad_legs": 0,
+    "pad_core_legs": 17,
+    "worst_um": 505.3
+   },
+   "note": "+1 reg toward measured core consumer centroid (304,531), spread 36 um, last-reg->core worst 275 um"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.sle_fw_v2__cl69f5e854.internal_stations[conn=bus:x_ctl_i].regs_um",
+   "value": [
+    [
+     317.408,
+     1466.026
+    ],
+    [
+     311.032,
+     1283.199
+    ],
+    [
+     304.655,
+     1100.371
+    ],
+    [
+     306.668,
+     867.413
+    ]
+   ],
+   "bits": 631,
+   "added_regs": 1,
+   "cycles": "+1 on lane bus:x_ctl_i (pre-approved)",
+   "fixes": {
+    "bin_pad_legs": 0,
+    "pad_core_legs": 556,
+    "worst_um": 605.5
+   },
+   "note": "+1 reg toward measured core consumer centroid (309,634), spread 115 um, last-reg->core worst 350 um"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.sle_fw_v2__cl69f5e854.internal_stations[conn=bus:x_ctl_o].regs_um",
+   "value": [
+    [
+     326.224,
+     873.849
+    ],
+    [
+     371.299,
+     1089.554
+    ],
+    [
+     421.565,
+     1336.929
+    ],
+    [
+     471.83,
+     1584.305
+    ]
+   ],
+   "bits": 536,
+   "added_regs": 1,
+   "cycles": "+1 on lane bus:x_ctl_o (pre-approved)",
+   "fixes": {
+    "core_ist_legs": 402,
+    "worst_um": 480.0
+   },
+   "note": "+1 reg at core producer side (centroid 281,658 spread 77)"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.sle_fw_v2__cl69f5e854.internal_stations[conn=bus:x_ctl_p1_o].regs_um",
+   "value": [
+    [
+     334.019,
+     553.583
+    ],
+    [
+     410.186,
+     428.793
+    ],
+    [
+     516.133,
+     387.464
+    ]
+   ],
+   "bits": 536,
+   "added_regs": 1,
+   "cycles": "+1 on lane bus:x_ctl_p1_o (pre-approved)",
+   "fixes": {
+    "core_ist_legs": 23,
+    "worst_um": 432.1
+   },
+   "note": "+1 reg at core producer side (centroid 258,678 spread 16)"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.sle_stm_v1__cl27746664.internal_stations[conn=bus:x_fe_i].regs_um",
+   "value": [
+    [
+     527.04,
+     455.744
+    ],
+    [
+     527.04,
+     778.672
+    ],
+    [
+     527.04,
+     1101.6
+    ],
+    [
+     455.542,
+     1173.176
+    ],
+    [
+     384.045,
+     1244.753
+    ]
+   ],
+   "bits": 544,
+   "added_regs": 2,
+   "cycles": "+2 on lane bus:x_fe_i (pre-approved)",
+   "fixes": {
+    "bin_pad_legs": 0,
+    "pad_core_legs": 17,
+    "worst_um": 468.6
+   },
+   "note": "+2 reg toward measured core consumer centroid (313,1316), spread 214 um, last-reg->core worst 357 um"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.sle_stm_v2__cl55be2264.internal_stations[conn=bus:x_fe_i].regs_um",
+   "value": [
+    [
+     588.6,
+     436.572
+    ],
+    [
+     568.08,
+     658.248
+    ],
+    [
+     547.56,
+     879.924
+    ],
+    [
+     527.04,
+     1101.6
+    ],
+    [
+     399.535,
+     1184.773
+    ]
+   ],
+   "bits": 544,
+   "added_regs": 2,
+   "cycles": "+2 on lane bus:x_fe_i (pre-approved)",
+   "fixes": {
+    "bin_pad_legs": 3,
+    "pad_core_legs": 30,
+    "worst_um": 473.6
+   },
+   "note": "re-space first hops equal (window half-spread 51 + pad half-spread 34 margin), 4 hops <= 242 um; +1 reg toward measured core consumer centroid (272,1268), spread 94 um, last-reg->core worst 305 um"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.sle_stm_v2__cl55be2264.internal_stations[conn=bus:x_su_l0_i].regs_um",
+   "value": [
+    [
+     131.424,
+     278.64
+    ],
+    [
+     131.424,
+     552.96
+    ],
+    [
+     131.424,
+     827.28
+    ],
+    [
+     131.424,
+     1101.6
+    ],
+    [
+     173.562,
+     1297.4
+    ]
+   ],
+   "bits": 228,
+   "added_regs": 1,
+   "cycles": "+1 on lane bus:x_su_l0_i (pre-approved)",
+   "fixes": {
+    "bin_pad_legs": 0,
+    "pad_core_legs": 16,
+    "worst_um": 463.4
+   },
+   "note": "+1 reg toward measured core consumer centroid (216,1493), spread 14 um, last-reg->core worst 252 um"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.slw_fe_v1__cl95cd1d0c.internal_stations[conn=bus:x_stm_p1_i].regs_um",
+   "value": [
+    [
+     69.12,
+     1498.346
+    ],
+    [
+     138.24,
+     1331.915
+    ],
+    [
+     207.36,
+     1165.485
+    ]
+   ],
+   "bits": 544,
+   "added_regs": 1,
+   "cycles": "+1 on lane bus:x_stm_p1_i (pre-approved)",
+   "fixes": {
+    "bin_pad_legs": 27,
+    "pad_core_legs": 0,
+    "worst_um": 424.5
+   },
+   "note": "re-space first hops equal (window half-spread 51 + pad half-spread 34 margin), 3 hops <= 236 um"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.slw_fe_v1__cl95cd1d0c.internal_stations[conn=bus:x_stm_i].regs_um",
+   "value": [
+    [
+     116.64,
+     1205.325
+    ],
+    [
+     233.28,
+     1031.634
+    ]
+   ],
+   "bits": 544,
+   "added_regs": 0,
+   "cycles": "0 (re-site only)",
+   "fixes": {
+    "bin_pad_legs": 142,
+    "pad_core_legs": 0,
+    "worst_um": 458.2
+   },
+   "note": "re-space first hops equal (window half-spread 51 + pad half-spread 34 margin), 2 hops <= 290 um"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.slw_fe_v1__clfe325744__cl08d14f0d.internal_stations[conn=bus:x_stm_p1_i].regs_um",
+   "value": [
+    [
+     69.12,
+     1498.346
+    ],
+    [
+     138.24,
+     1331.915
+    ],
+    [
+     207.36,
+     1165.485
+    ]
+   ],
+   "bits": 544,
+   "added_regs": 1,
+   "cycles": "+1 on lane bus:x_stm_p1_i (pre-approved)",
+   "fixes": {
+    "bin_pad_legs": 26,
+    "pad_core_legs": 0,
+    "worst_um": 425.7
+   },
+   "note": "re-space first hops equal (window half-spread 51 + pad half-spread 34 margin), 3 hops <= 236 um"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.slw_fe_v1__clfe325744__cl08d14f0d.internal_stations[conn=bus:x_stm_i].regs_um",
+   "value": [
+    [
+     116.64,
+     1205.325
+    ],
+    [
+     233.28,
+     1031.634
+    ]
+   ],
+   "bits": 544,
+   "added_regs": 0,
+   "cycles": "0 (re-site only)",
+   "fixes": {
+    "bin_pad_legs": 141,
+    "pad_core_legs": 0,
+    "worst_um": 457.9
+   },
+   "note": "re-space first hops equal (window half-spread 51 + pad half-spread 34 margin), 2 hops <= 290 um"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.slw_fe_v2__clf110fab2.internal_stations[conn=bus:x_stm_p1_i].regs_um",
+   "value": [
+    [
+     82.944,
+     1486.197
+    ],
+    [
+     165.888,
+     1278.795
+    ],
+    [
+     248.832,
+     1071.392
+    ]
+   ],
+   "bits": 544,
+   "added_regs": 0,
+   "cycles": "0 (re-site only)",
+   "fixes": {
+    "bin_pad_legs": 387,
+    "pad_core_legs": 0,
+    "worst_um": 508.2
+   },
+   "note": "re-space first hops equal (window half-spread 51 + pad half-spread 34 margin), 3 hops <= 290 um"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.slw_fe_v2__clf110fab2.internal_stations[conn=bus:x_stm_i].regs_um",
+   "value": [
+    [
+     116.64,
+     1204.76
+    ],
+    [
+     233.28,
+     1031.408
+    ]
+   ],
+   "bits": 544,
+   "added_regs": 0,
+   "cycles": "0 (re-site only)",
+   "fixes": {
+    "bin_pad_legs": 148,
+    "pad_core_legs": 0,
+    "worst_um": 463.4
+   },
+   "note": "re-space first hops equal (window half-spread 51 + pad half-spread 34 margin), 2 hops <= 290 um"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.slw_fw_v1__clf51c11d8__cl592e3d37.internal_stations[conn=bus:x_fe_p1_i].regs_um",
+   "value": [
+    [
+     466.56,
+     785.096
+    ],
+    [
+     311.04,
+     829.44
+    ]
+   ],
+   "bits": 552,
+   "added_regs": 1,
+   "cycles": "+1 on lane bus:x_fe_p1_i (pre-approved)",
+   "fixes": {
+    "bin_pad_legs": 147,
+    "pad_core_legs": 0,
+    "worst_um": 461.4
+   },
+   "note": "re-space first hops equal (window half-spread 51 + pad half-spread 34 margin), 2 hops <= 200 um"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.slw_fw_v1__clf51c11d8__cl592e3d37.internal_stations[conn=bus:x_ctl_i].regs_um",
+   "value": [
+    [
+     317.408,
+     1466.026
+    ],
+    [
+     311.032,
+     1283.199
+    ],
+    [
+     304.655,
+     1100.371
+    ],
+    [
+     305.606,
+     942.719
+    ],
+    [
+     306.557,
+     785.067
+    ]
+   ],
+   "bits": 631,
+   "added_regs": 2,
+   "cycles": "+2 on lane bus:x_ctl_i (pre-approved)",
+   "fixes": {
+    "bin_pad_legs": 0,
+    "pad_core_legs": 558,
+    "worst_um": 659.3
+   },
+   "note": "+2 reg toward measured core consumer centroid (308,627), spread 180 um, last-reg->core worst 339 um"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.slw_fw_v1__clf51c11d8__cl592e3d37.internal_stations[conn=bus:x_ctl_p1_i].regs_um",
+   "value": [
+    [
+     419.495,
+     200.994
+    ],
+    [
+     384.721,
+     387.418
+    ]
+   ],
+   "bits": 631,
+   "added_regs": 1,
+   "cycles": "+1 on lane bus:x_ctl_p1_i (pre-approved)",
+   "fixes": {
+    "bin_pad_legs": 0,
+    "pad_core_legs": 464,
+    "worst_um": 501.9
+   },
+   "note": "+1 reg toward measured core consumer centroid (350,574), spread 77 um, last-reg->core worst 298 um"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.slw_fw_v1__clf51c11d8__cl592e3d37.internal_stations[conn=bus:x_ctl_p1_o].regs_um",
+   "value": [
+    [
+     352.565,
+     527.406
+    ],
+    [
+     410.186,
+     387.311
+    ],
+    [
+     516.133,
+     304.498
+    ]
+   ],
+   "bits": 536,
+   "added_regs": 1,
+   "cycles": "+1 on lane bus:x_ctl_p1_o (pre-approved)",
+   "fixes": {
+    "core_ist_legs": 100,
+    "worst_um": 529.7
+   },
+   "note": "+1 reg at core producer side (centroid 295,668 spread 71)"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.slw_fw_v1__clf51c11d8__cl592e3d37.internal_stations[conn=bus:x_fe_p2_o].regs_um",
+   "value": [
+    [
+     321.774,
+     1007.408
+    ],
+    [
+     404.761,
+     765.029
+    ],
+    [
+     513.42,
+     883.276
+    ]
+   ],
+   "bits": 538,
+   "added_regs": 1,
+   "cycles": "+1 on lane bus:x_fe_p2_o (pre-approved)",
+   "fixes": {
+    "core_ist_legs": 8,
+    "worst_um": 466.8
+   },
+   "note": "+1 reg at core producer side (centroid 239,1250 spread 10)"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.slw_fw_v1__clf51c11d8__clc7ddab13.internal_stations[conn=bus:x_fe_p1_i].regs_um",
+   "value": [
+    [
+     466.56,
+     785.096
+    ],
+    [
+     311.04,
+     829.44
+    ]
+   ],
+   "bits": 552,
+   "added_regs": 1,
+   "cycles": "+1 on lane bus:x_fe_p1_i (pre-approved)",
+   "fixes": {
+    "bin_pad_legs": 146,
+    "pad_core_legs": 0,
+    "worst_um": 461.1
+   },
+   "note": "re-space first hops equal (window half-spread 51 + pad half-spread 34 margin), 2 hops <= 200 um"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.slw_fw_v1__clf51c11d8__clc7ddab13.internal_stations[conn=bus:x_ctl_i].regs_um",
+   "value": [
+    [
+     317.408,
+     1466.026
+    ],
+    [
+     311.032,
+     1283.199
+    ],
+    [
+     304.655,
+     1100.371
+    ],
+    [
+     306.279,
+     864.061
+    ]
+   ],
+   "bits": 631,
+   "added_regs": 1,
+   "cycles": "+1 on lane bus:x_ctl_i (pre-approved)",
+   "fixes": {
+    "bin_pad_legs": 0,
+    "pad_core_legs": 555,
+    "worst_um": 612.0
+   },
+   "note": "+1 reg toward measured core consumer centroid (308,628), spread 121 um, last-reg->core worst 359 um"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.slw_fw_v1__clf51c11d8__clc7ddab13.internal_stations[conn=bus:x_ctl_p1_i].regs_um",
+   "value": [
+    [
+     419.495,
+     200.994
+    ],
+    [
+     384.784,
+     388.424
+    ]
+   ],
+   "bits": 631,
+   "added_regs": 1,
+   "cycles": "+1 on lane bus:x_ctl_p1_i (pre-approved)",
+   "fixes": {
+    "bin_pad_legs": 0,
+    "pad_core_legs": 497,
+    "worst_um": 517.9
+   },
+   "note": "+1 reg toward measured core consumer centroid (350,576), spread 88 um, last-reg->core worst 310 um"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.slw_fw_v1__clf51c11d8__clc7ddab13.internal_stations[conn=bus:x_ctl_p1_o].regs_um",
+   "value": [
+    [
+     353.21,
+     527.709
+    ],
+    [
+     410.186,
+     387.311
+    ],
+    [
+     516.133,
+     304.498
+    ]
+   ],
+   "bits": 536,
+   "added_regs": 1,
+   "cycles": "+1 on lane bus:x_ctl_p1_o (pre-approved)",
+   "fixes": {
+    "core_ist_legs": 100,
+    "worst_um": 509.7
+   },
+   "note": "+1 reg at core producer side (centroid 296,668 spread 26)"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.slw_fw_v1__clf51c11d8__clc7ddab13.internal_stations[conn=bus:x_fe_p2_o].regs_um",
+   "value": [
+    [
+     321.512,
+     1007.764
+    ],
+    [
+     404.761,
+     765.029
+    ],
+    [
+     513.42,
+     883.276
+    ]
+   ],
+   "bits": 538,
+   "added_regs": 1,
+   "cycles": "+1 on lane bus:x_fe_p2_o (pre-approved)",
+   "fixes": {
+    "core_ist_legs": 8,
+    "worst_um": 469.6
+   },
+   "note": "+1 reg at core producer side (centroid 238,1250 spread 10)"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.sle_fe_v1__cl8210183c.internal_stations[conn=bus:x_stm_p1_i].regs_um",
+   "value": [
+    [
+     82.944,
+     1471.396
+    ],
+    [
+     165.888,
+     1269.375
+    ],
+    [
+     248.832,
+     1067.355
+    ]
+   ],
+   "bits": 544,
+   "added_regs": 0,
+   "cycles": "0 (re-site only)",
+   "fixes": {
+    "bin_pad_legs": 350,
+    "pad_core_legs": 0,
+    "worst_um": 498.9
+   },
+   "note": "re-space first hops equal (window half-spread 51 + pad half-spread 34 margin), 3 hops <= 285 um"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.sle_fe_v1__cl8210183c.internal_stations[conn=bus:x_stm_i].regs_um",
+   "value": [
+    [
+     116.64,
+     1211.665
+    ],
+    [
+     233.28,
+     1034.17
+    ]
+   ],
+   "bits": 544,
+   "added_regs": 0,
+   "cycles": "0 (re-site only)",
+   "fixes": {
+    "bin_pad_legs": 167,
+    "pad_core_legs": 0,
+    "worst_um": 463.5
+   },
+   "note": "re-space first hops equal (window half-spread 51 + pad half-spread 34 margin), 2 hops <= 294 um"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.sle_fw_v1__cl9d029624.internal_stations[conn=bus:x_fe_p1_i].regs_um",
+   "value": [
+    [
+     518.4,
+     882.267
+    ],
+    [
+     414.72,
+     899.053
+    ],
+    [
+     363.888,
+     724.384
+    ]
+   ],
+   "bits": 552,
+   "added_regs": 1,
+   "cycles": "+1 on lane bus:x_fe_p1_i (pre-approved)",
+   "fixes": {
+    "bin_pad_legs": 0,
+    "pad_core_legs": 27,
+    "worst_um": 508.1
+   },
+   "note": "+1 reg toward measured core consumer centroid (313,550), spread 67 um, last-reg->core worst 292 um"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.sle_fw_v1__cl9d029624.internal_stations[conn=bus:x_ctl_i].regs_um",
+   "value": [
+    [
+     317.408,
+     1466.026
+    ],
+    [
+     311.032,
+     1283.199
+    ],
+    [
+     304.655,
+     1100.371
+    ],
+    [
+     306.856,
+     867.408
+    ]
+   ],
+   "bits": 631,
+   "added_regs": 1,
+   "cycles": "+1 on lane bus:x_ctl_i (pre-approved)",
+   "fixes": {
+    "bin_pad_legs": 0,
+    "pad_core_legs": 555,
+    "worst_um": 559.7
+   },
+   "note": "+1 reg toward measured core consumer centroid (309,634), spread 97 um, last-reg->core worst 332 um"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.sle_fw_v1__cl9d029624.internal_stations[conn=bus:x_ctl_p1_o].regs_um",
+   "value": [
+    [
+     335.854,
+     553.729
+    ],
+    [
+     410.186,
+     428.793
+    ],
+    [
+     516.133,
+     387.464
+    ]
+   ],
+   "bits": 536,
+   "added_regs": 1,
+   "cycles": "+1 on lane bus:x_ctl_p1_o (pre-approved)",
+   "fixes": {
+    "core_ist_legs": 32,
+    "worst_um": 421.3
+   },
+   "note": "+1 reg at core producer side (centroid 262,679 spread 17)"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.sle_fw_v1__cl9d029624.internal_stations[conn=bus:x_ctl_o].regs_um",
+   "value": [
+    [
+     295.999,
+     884.077
+    ],
+    [
+     348.797,
+     1089.554
+    ],
+    [
+     376.561,
+     1336.929
+    ],
+    [
+     404.324,
+     1584.305
+    ]
+   ],
+   "bits": 536,
+   "added_regs": 1,
+   "cycles": "+1 on lane bus:x_ctl_o (pre-approved)",
+   "fixes": {
+    "core_ist_legs": 1,
+    "worst_um": 405.3
+   },
+   "note": "+1 reg at core producer side (centroid 243,679 spread 0)"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.sle_stm_v1__clbe630b9c.internal_stations[conn=bus:x_fe_i].regs_um",
+   "value": [
+    [
+     527.04,
+     455.744
+    ],
+    [
+     527.04,
+     778.672
+    ],
+    [
+     527.04,
+     1101.6
+    ],
+    [
+     404.093,
+     1196.51
+    ]
+   ],
+   "bits": 544,
+   "added_regs": 1,
+   "cycles": "+1 on lane bus:x_fe_i (pre-approved)",
+   "fixes": {
+    "bin_pad_legs": 0,
+    "pad_core_legs": 80,
+    "worst_um": 517.8
+   },
+   "note": "+1 reg toward measured core consumer centroid (281,1291), spread 115 um, last-reg->core worst 333 um"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.sle_stm_v1__clbe630b9c.internal_stations[conn=bus:x_su_l0_i].regs_um",
+   "value": [
+    [
+     131.424,
+     278.64
+    ],
+    [
+     131.424,
+     552.96
+    ],
+    [
+     131.424,
+     827.28
+    ],
+    [
+     131.424,
+     1101.6
+    ],
+    [
+     176.346,
+     1325.278
+    ]
+   ],
+   "bits": 228,
+   "added_regs": 1,
+   "cycles": "+1 on lane bus:x_su_l0_i (pre-approved)",
+   "fixes": {
+    "bin_pad_legs": 0,
+    "pad_core_legs": 16,
+    "worst_um": 508.5
+   },
+   "note": "+1 reg toward measured core consumer centroid (221,1549), spread 7 um, last-reg->core worst 276 um"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.sle_sc_v1__cl7479a5ec.internal_stations[conn=bus:x_ctl_i].regs_um",
+   "value": [
+    [
+     205.224,
+     1665.36
+    ],
+    [
+     350.56,
+     1582.18
+    ]
+   ],
+   "bits": 160,
+   "added_regs": 1,
+   "cycles": "+1 on lane bus:x_ctl_i (pre-approved)",
+   "fixes": {
+    "bin_pad_legs": 0,
+    "pad_core_legs": 65,
+    "worst_um": 501.8
+   },
+   "note": "+1 reg toward measured core consumer centroid (496,1499), spread 48 um, last-reg->core worst 277 um"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.slw_sc_v1__cl63e5a7a2.internal_stations[conn=bus:x_ctl_i].regs_um",
+   "value": [
+    [
+     205.224,
+     1665.36
+    ],
+    [
+     350.165,
+     1582.18
+    ]
+   ],
+   "bits": 160,
+   "added_regs": 1,
+   "cycles": "+1 on lane bus:x_ctl_i (pre-approved)",
+   "fixes": {
+    "bin_pad_legs": 0,
+    "pad_core_legs": 66,
+    "worst_um": 501.1
+   },
+   "note": "+1 reg toward measured core consumer centroid (495,1499), spread 51 um, last-reg->core worst 280 um"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.slw_sc_v1__cl63e5a7a2.internal_stations[conn=bus:flt_fe_i].regs_um",
+   "value": [
+    [
+     595.712,
+     265.965
+    ],
+    [
+     577.984,
+     527.417
+    ],
+    [
+     560.256,
+     788.87
+    ]
+   ],
+   "bits": 1,
+   "added_regs": 0,
+   "cycles": "0 (re-site only)",
+   "fixes": {
+    "bin_pad_legs": 1,
+    "pad_core_legs": 0,
+    "worst_um": 412.2
+   },
+   "note": "re-space first hops equal (window half-spread 51 + pad half-spread 34 margin), 3 hops <= 279 um"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.slw_sc_v1__cl64543eaf__cl4590432d.internal_stations[conn=bus:x_ctl_i].regs_um",
+   "value": [
+    [
+     205.224,
+     1665.36
+    ],
+    [
+     350.165,
+     1582.18
+    ]
+   ],
+   "bits": 160,
+   "added_regs": 1,
+   "cycles": "+1 on lane bus:x_ctl_i (pre-approved)",
+   "fixes": {
+    "bin_pad_legs": 0,
+    "pad_core_legs": 66,
+    "worst_um": 501.8
+   },
+   "note": "+1 reg toward measured core consumer centroid (495,1499), spread 51 um, last-reg->core worst 280 um"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.slw_sc_v1__cl64543eaf__cl4590432d.internal_stations[conn=bus:flt_fe_i].regs_um",
+   "value": [
+    [
+     595.712,
+     265.965
+    ],
+    [
+     577.984,
+     527.417
+    ],
+    [
+     560.256,
+     788.87
+    ]
+   ],
+   "bits": 1,
+   "added_regs": 0,
+   "cycles": "0 (re-site only)",
+   "fixes": {
+    "bin_pad_legs": 1,
+    "pad_core_legs": 0,
+    "worst_um": 412.0
+   },
+   "note": "re-space first hops equal (window half-spread 51 + pad half-spread 34 margin), 3 hops <= 279 um"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.slw_sc_v1__cl64543eaf__cl5e017c6f.internal_stations[conn=bus:x_ctl_i].regs_um",
+   "value": [
+    [
+     205.224,
+     1665.36
+    ],
+    [
+     350.56,
+     1582.18
+    ]
+   ],
+   "bits": 160,
+   "added_regs": 1,
+   "cycles": "+1 on lane bus:x_ctl_i (pre-approved)",
+   "fixes": {
+    "bin_pad_legs": 0,
+    "pad_core_legs": 65,
+    "worst_um": 500.5
+   },
+   "note": "+1 reg toward measured core consumer centroid (496,1499), spread 48 um, last-reg->core worst 277 um"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.slw_sc_v1__cl64543eaf__cl5e017c6f.internal_stations[conn=bus:flt_fe_i].regs_um",
+   "value": [
+    [
+     595.712,
+     265.965
+    ],
+    [
+     577.984,
+     527.417
+    ],
+    [
+     560.256,
+     788.87
+    ]
+   ],
+   "bits": 1,
+   "added_regs": 0,
+   "cycles": "0 (re-site only)",
+   "fixes": {
+    "bin_pad_legs": 1,
+    "pad_core_legs": 0,
+    "worst_um": 413.2
+   },
+   "note": "re-space first hops equal (window half-spread 51 + pad half-spread 34 margin), 3 hops <= 279 um"
+  },
+  {
+   "op": "set",
+   "path": "partition_types.slw_stm_v1__cl05fc43f7__cl389df4e9.internal_stations[conn=bus:x_su_l0_i].regs_um",
+   "value": [
+    [
+     131.424,
+     278.64
+    ],
+    [
+     131.424,
+     552.96
+    ],
+    [
+     131.424,
+     827.28
+    ],
+    [
+     131.424,
+     1101.6
+    ],
+    [
+     173.612,
+     1332.768
+    ]
+   ],
+   "bits": 228,
+   "added_regs": 1,
+   "cycles": "+1 on lane bus:x_su_l0_i (pre-approved)",
+   "fixes": {
+    "bin_pad_legs": 0,
+    "pad_core_legs": 14,
+    "worst_um": 430.1
+   },
+   "note": "+1 reg toward measured core consumer centroid (216,1564), spread 15 um, last-reg->core worst 288 um"
+  }
+ ]
+}
