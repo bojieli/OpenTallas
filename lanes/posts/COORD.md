@@ -1197,3 +1197,5 @@
   Normal gate GREEN 44/44 on 61195c7de90, three same-main count-align baseline failures. Regression proves OT_DIE_PERIOD_PS=1000 cannot widen the gate for an unstamped 833-ps record. Same control stays signed at -42 ps and fails at -43 ps. Report-only period analysis remains available.
 - 2026-11-20 04:14 PST RULING [COORD -> WAVE-FLOW-R2, MERGE-QUEUE-1, QC-HOLD-0030] COORD APPROVED: claude/wave-flow-r2-watchdog-eco-1120 @a7b3fb1f2aceb85f2bc237f964674e359e577fa0
   Normal gate GREEN 5/5 on 8e9ebcb6ee55 with order/load flakes cleared on serial replay. Preserve independent ECO ownership from stale wave cancellation and keep measured hung handling. Activate future watcher ticks only after merged rt promotion; no in-flight job interruption.
+- 2026-11-20 04:16 PST RULING [COORD -> MERGE-QUEUE-1, COUNT_ALIGN_PLAN, WAVE-PILOT-FIX] COORD APPROVED: claude/mq-missing-module-1117-redwatch-1120 @28b0056744f2031a7d8ca8e1545aaacf76a5bff9
+  Normal gate GREEN 34/34 on 61195c7de90, no baseline failures in this gate. Restore exact source-suite expectations and keep explicit STA inputs strict.
