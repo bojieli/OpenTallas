@@ -1,244 +1,178 @@
-# FABLE-FLOW-1600: procedural and flow failures, ranked by fleet time wasted
+# FABLE-FLOW-1600: procedural / flow review, window 11-20 13:55 to 15:51 PST
 
-Reviewer: FABLE FLOW (read-only). Measured 2026-11-15 15:43-15:50 PST on hub intel2.
-Window: autopilot/log.txt 13:45-15:48 PST, lanes/FLOW-HEALTH.tsv, kit_wave.json + kit_wave_state.json (15:35/15:37),
-failure_breakdown.py (15:43), `ot-run --status`, df / free / ps on 7 hosts, queue rulings r152-r177.
-Scope: process and tooling only. Previous review: FABLE-FLOW-1350.
+Lane FABLE-FLOW-1600 (Fable 5.2). Read-only review, flow only. Previous: lanes/FABLE-FLOW-1400.md.
+Sources: autopilot/log.txt (1,322 lines from 13:40), ot-run --status and ot-heavy-reconcile --free on the 6 build hosts
+(15:45, 15:50), tools/failure_breakdown.py (15:46), process tables on 6 build hosts + localhost, docker ps on epyc7,
+lane posts, intel2 /tmp/push-*.log, lanes/FLOW-HEALTH.tsv (15:08).
 
 ## Headline
 
-1. The wave launched 4 items in the 80 min from 14:25 to 15:44 (3 HEAD, 1 KV). The fleet had 2.6 TB of admissible
-   memory and about 140 idle threads (epyc2 53/128, epyc7 52/96, epyc8 76/96) the whole time. This is the largest
-   waste of the afternoon, and it is a hold, not a failure: the die-level `*` holds on S81 and QC waited 88 min for
-   one merge (kitrtl-fail-1115, ETA 14:35, landed 15:35).
-2. KV cannot launch on kvgeom7u on any host. Since the 15:24 switch every one of the 5 KV gen hosts is
-   SRC-INCOMPLETE (15 lines, 3 ticks). The one KV launch failed at kit_rtl. No lane has posted on it.
-3. S81 is 88% held by item: 352 of 398 items carry a hold (249 from the 13:32 B6gE adopt, 88 for the tap-offset
-   tables, 11 signed). The die-level lift at 15:37 frees about 48 S81 items only.
-4. The `--src-tree` class is closed in code (main 3813f569afe, rt/current 85738b82470d equal on 6 hosts). First
-   post-lift tick started 15:44: 36 launches in 3 min (S81 28, QC 8) at 15:47:48, still launching; 0 fails, no
-   kit_rtl result yet.
-5. Three fixes of 13:50 are still not on main: class breaker + hub disk precondition (flow-health-1115b, green at
-   15:41, first in the train), signed-terminal (MERGE-FAIL 15:09, r2 in gate), watchdog exclusion (no code).
+1. epyc7 starts containers again (since about 15:28, dockerd not restarted). The reconcile with timeouts is installed on
+   all 6 build hosts (same file, 15:47). The watchdog now sees containers on epyc8, epyc9, epyc10 (39, 50, 44).
+2. Placement is still wrong after the fix. At 15:50 five hosts admit 0 GB with 183 waiters asking for 6.3 TB; epyc7
+   admits 150 GB and has 0 waiters. S81 cannot use epyc7, and lane jobs started with ot-run --dir cannot move at all.
+3. The auto-visual reviewer is NOT on main. Its push failed at 15:01 (a sparse-clone test artefact) and nobody noticed:
+   the last ROUTE-RELEASE-1300 post (14:50) says "push running". WAIT-VISUAL went from 34 (14:59) to 64 (15:51).
+4. Waiting by pgrep is a fleet-wide habit, not one accident: 181 waiter shells on 6 build hosts + localhost match only
+   themselves; 168 are older than one day. Each is a job whose end nobody was told about.
+5. Launches: 181 (hour 13, the J5 apply), 36 (hour 14), 31 (hour 15 to :51). The fall is mostly five memory-full hosts,
+   not epyc7 alone: all 624 threads are used and load is 1.3 to 3.7 x cores.
 
-## Kit wave, 13:45-15:48
+## What 14:00 asked for and what happened
 
-| 10-min bucket | 13:4x | 13:5x | 14:0x | 14:1x | 14:2x | 14:3x-15:3x (70 min) | 15:44-15:48 |
-|---|---|---|---|---|---|---|---|
-| LAUNCH | 10 | 56 | 92 | 0 | 0 | 4 | 36 (tick running) |
-| FAIL | 55 | 0 | 110 | 77 | 14 | 3 | 0 so far |
+| 14:00 item | state at 15:51 |
+|---|---|
+| Watchdog blind on epyc8/9/10 | fixed: scans list 39 / 50 / 44 containers |
+| HUNG-WATCH cancels admission waiters | 5 cancels (was 16); not fixed in code, see class 4 |
+| Cancel classed as OOM (marker) | not seen landed; 2 hub lines with Error 241/247 in the window |
+| Host OOM kills | not measured: the earlyoom journal is not readable from this user; hub shows 2 kill lines |
+| J5 tree on epyc7 + gen_hosts | tree is there (55 GB); no verified receipt, s81 gen_hosts still without epyc7 |
+| RESUME-MOVE source host | 1 more failure, same cause (13:40, rc 11) |
+| Mechanical route release in the autopilot | written, push failed, not landed (class 3) |
+| Proofs with priority | done by hand at 15:2x: t60 and cbf run on epyc7 (t60 container up since 15:37) |
+| Unchanged design retries | REPEAT-STOP landed 6ea719be97; 3 LAUNCH-HELD at 15:17 |
+| J5 pins, post-apply bind, t7 priority | not re-checked here (die owner scope) |
 
-2 h totals: FAIL 259, LAUNCH 162 (13:50 review: 120 / 212). FLOW-HEALTH.tsv hour 14: launches 92, fail before
-P&R 187, passes 0.
+## Classes
 
-| Count | Die | Stage | Class | State at 15:45 |
-|---|---|---|---|---|
-| 177 | S81 | kit_rtl | `--src-tree`, logged as "KW_ROAM kit_rtl: ran on X, outputs copied back to Y" | closed by merge 15:35 |
-| 74 | S81 | kit_rtl | `bind.py: unrecognized arguments: --src-tree` (B6gE/src) | closed |
-| 5 | QC | kit_rtl | same (qc-s29-tree2) | closed |
-| 1 | KV | kit_rtl | same, on the new tree src_kv_kvgeom7u, 15:33 (2 min before the merge) | closed; see class 2 |
-| 2 | HEAD | resume | "relaunch refused: every kit input ... equals the previous attempt" | correct refusal; see class 6 |
+### 1. A host that admits but cannot start (epyc7)
 
-257 of 259 fails are one procedural class. No ENOSPC, no GEN-DISK-LOW, no GEN_LINT, no KIT_NOT_SELF_CONTAINED,
-no design-class wave fail in the window. 0 fails since 14:25 other than the 3 above, because nothing was launched.
+- Count, trend: 1 event. Last container 14:30, none until 15:2x (1 at 15:20 to 15:29, 11 at 15:30 to 15:39). About 55 min.
+- Root cause: ot-heavy-reconcile called docker inspect with no timeout; 9 containers with dead cgroups made it hang;
+  sweep and reaper scans piled 20 more hung clients. Admission kept advertising 128 GB.
+- The second half of the cause is still open: the hub believed the number. RESTAGE moved 30 waiters to epyc7 between
+  14:40 and 15:29 (8, 5, 5, 6, 6 per 10 min), into a host that could start nothing.
+- Structural fix: admission is proven, not computed. A host reports admit 0 unless a no-op container started under a
+  timeout in the last 10 min (the reconcile writes last_start_ok). The hub posts once when a host admits over 32 GB, the
+  fleet has waiters, and that host created no container for 15 min.
+- Owner: FLEET-WATCH-1400 (timeouts done; start canary and hub line open).
+- Fleet time: epyc7 had 367 to 397 GB available of about 6 TB, so about 6 percent of fleet memory for 55 min, plus 30
+  moved rows delayed up to 50 min.
 
-## Is the wave under-launching? Yes, from 14:10 to 15:44; it is recovering now, partly
+### 2. Waiters stay on full hosts while another host has room
 
-Eligible versus launched, from kit_wave.json (15:37) and kit_wave_state.json (15:35), items of the current event:
+- Count, trend: 15:45 and 15:50: epyc2 0 GB / 38 to 41 waiters, intel1 0 / 49 to 51, epyc8 0 / 31 to 32 (1,990 GB asked,
+  62 GB each), epyc9 0 / 29 to 33, epyc10 0 / 29 to 34; epyc7 admits 135 to 150 GB, 0 waiters. Same picture as 13:43.
+- Should waiters move automatically: yes, and the mechanism already exists in two halves. Neither half is complete.
+  - ot-run REBALANCE (300 s requeue) only moves between hosts that already hold --dir. Lane jobs (proofs, bisects) are
+    therefore pinned: proof/t60 and proof/cbf sat about 2 h behind 33 waiters (1.2 TB) on epyc10 until a lane copied them
+    by hand; the FLOW-NOADV-R2 t10 bisect is still queued on epyc9.
+  - Autopilot RESTAGE works (73 moves in the window, all to epyc7) but runs once per tick (264 to 717 s) and only for
+    dies whose gen_hosts include the target. s81 gen_hosts are epyc8, epyc2, epyc9, epyc10, intel1. 29 GEN-HOST-TREE and
+    42 RETRY-HOST lines read "gen host epyc7 -> <full host>". The J5 tree is now on epyc7 but HOST-RECEIPT-MISS (15:24,
+    15:31) keeps it out: copied, never verified.
+- Structural fix:
+  - ot-run: when a waiter is not admitted after REQUEUE_S and another host admits the request, ot-run copies the declared
+    inputs (--stage paths, or the sealed job spec) to that host and requeues there. Data locality becomes a cost, not a
+    limit. A request with no declared inputs prints "PINNED: no --stage" at submit, so the lane knows at once.
+  - Plan apply: a die tree is synced and receipt-verified on every gen host as part of the apply; derive_gen_hosts fails
+    loudly when a host that admits over 100 GB is missing the tree of the die with the most waiters.
+- Owner: FLEET-WATCH-1400.
+- Fleet time: 135 to 150 GB admit idle, about 2.5 percent of fleet memory, continuous since 13:43 (3 to 4 jobs of 32 to
+  62 GB at any moment). Lane time is the larger loss: about 2 h on each of two proofs.
 
-| Die | Event | Items | Held by item | Free, no row | Free, failed kit_rtl | Running/queued | Launched 14:25-15:44 |
-|---|---|---|---|---|---|---|---|
-| S81 | B6gE 3fa87b84 | 398 | 352 | 5 | 37 (+4 retry-infra) | 2 free, 38 held | 0 |
-| QC | S4Q3C | 130 | 46 | 89 | 7 | 0 (33 run on S4Q3B) | 0 |
-| KV | kvgeom7u | 89 | 41 | 49 | 1 | 0 | 1 (failed) |
-| HEAD | rp21z20NF6 | 26 | 5 | 6 | 2 refused | 13 | 3 |
-| HBM | pEv11c | 154 | 107 (+ die `*`) | 88 | 0 | 5 | 0 (parked, owner) |
+### 3. Jobs that die without anyone noticing
 
-"Free, no row" is an upper bound: it includes items already signed on an equal type block (QC 6, KV 5 signed).
+- Count, trend: 181 pgrep-style waiter shells whose pattern matches no process except shells that carry the pattern in
+  their own command line: epyc7 46, epyc9 23, intel1 21, epyc2 16, epyc8 11, epyc10 5, localhost 59. Age: 13 under a day,
+  93 between 1 and 7 days, 75 over 7 days. 6 waiters have a live target. intel2 not scanned.
+  Limit of the check: for localhost waiters that run pgrep over ssh, I tested the pattern locally; the remote shell
+  carries the pattern too, so the result holds, but those rows were not tested on the remote host.
+- Cases in this window:
+  - lepe proof7: died 11-19 23:55, noticed after 16 h.
+  - ROUTE-RELEASE-1300 push: "TESTS FAILED rc=1; nothing pushed" at 15:01
+    (test_kit_wave_kit_rtl_post::test_script_mode_uses_the_same_step, FileNotFoundError on
+    physical/die_plan/s81/kit_wave/kit_rtl.sh, which is outside the lane clone's sparse cone). No post after 14:50, no
+    push process on intel2 at 15:50. rt/current (ec16babe0dfb) has no auto_visual file; the log has 0 AUTO-VISUAL lines.
+  - A waiter on epyc7 for "ot-push-main --test-timeout 1500" is 88 min old with no target.
+- Root cause: the waiter asks "does a process with this text exist" instead of "what was the exit status". The question
+  is true of the waiter itself, and a job that died and a job that passed look the same.
+- Structural fix: one standard waiter, and the job reports its own end.
+  - ot-run and ot-push-main write <dir>/.ot-exit (rc, end time, last log line) from an EXIT trap and call post.sh
+    themselves with DONE rc=N or DIED. A lane then needs no waiter for the two most common cases.
+  - ot-wait <unit or pidfile>: waits on the systemd unit or on the exact PID with its start time, then prints the rc
+    from .ot-exit; "unit gone and no .ot-exit" prints DIED and exits non-zero. No pattern matching anywhere.
+  - rules.txt: "never wait with pgrep; use ot-wait". The reaper lists waiter shells that match only themselves for
+    over 1 h and posts them once (report only).
+- Owner: new (WAITER-STD-1600), with FLEET-WATCH-1400 for the ot-run part.
+- Fleet time: compute near 0. Lane time: 16 h on the lepe critical path; 50 min and counting on the route release, which
+  holds 64 placed kits.
 
-Reasons, in order of size:
-- S81 + QC die-level `*` holds 14:07-15:37: about 48 S81 and 96 QC items were launchable and waited 88 min.
-  Running attempts past kit_rtl were not touched, which was right. The hold was right at 14:07; it was 60 min too
-  long because its release term (merge of kitrtl-fail-1115) sat behind a serial merge-queue gate (class 3).
-- KV: 50 free items, 0 launchable hosts (class 2).
-- S81: 352 item holds. 249 of them say "13:32 B6gE adopt" with release on Event F/G/G1d plan events. These are
-  design holds and outside this review, but the wave count must be read with them: S81 volume cannot return
-  before G1d adopts, whatever the flow does.
-- Launch rate inside a tick is about 13 per minute (one launch per 4.5 s, serial). 140 items need 11 min. This is
-  not a limit today; it adds to the tick length (229 s at 15:36, 873 s on the 13:4x adoption tick).
+### 4. HUNG-WATCH cancels rows with no container
 
-There is no launch cap in the config (max_launch_per_tick 100000) and no admission refusal on a build host.
+- Count, trend: 5 cancels (13:46, 14:07 x2, 15:22 x2), was 16 in the previous window. All "containers none", CPU 37 to
+  468 s, 35 to 47 min. One correct no-cancel (c1x_C__t5, CPU busy).
+- At least 3 of the 5 (sle_fe_v1__cl8210183c, slw_hc0__cl4f54b7a3, cbf_q01_s2) are rows whose epyc7 containers were among
+  the 9 with dead cgroups, so for them the cancel was right and the cause was class 1. The other 2 were not checked.
+- Root cause and fix: as 14:00 class 4 (a row waiting for admission is not judged; use hung_watch_min). Not landed.
+- Owner: FLEET-WATCH-1400. Fleet time: under 1 percent.
 
-## Summary, ranked by waste
+### 5. WAIT-VISUAL with no reviewer
 
-| # | Class | Count | Trend vs 13:50 | Fleet share wasted | Owner |
-|---|---|---|---|---|---|
-| 1 | Die-level hold waits on a merge that waits on a serial gate | 2 dies, 88 min, about 144 launchable items | new (follows class 1 of 13:50) | about 20% of fleet threads idle for 1.5 h; zero new S81/QC kits for 2.5 h | MERGE-QUEUE-1, WAVE-HOLDS-1115 |
-| 2 | KV switch to 7u: bind report names origin-host paths; no gen host is whole | 5 of 5 gen hosts, 15 SRC-INCOMPLETE lines, 50 items | new at 15:24 | KV wave at 0 since 15:24 (and at 2 launches in the 2 h before) | KIT-OPS-5 (staged by WAVE-HOLDS-1115) |
-| 3 | Merge queue gate throughput | 14 READY in hour 14, 4 MERGED; 7 waiting at 15:1x; lanes hand-gating 35-90 min | worse, then fixed 15:1x-15:40 | under 1% CPU; it set the length of class 1 | MERGE-QUEUE-1 |
-| 4 | `--src-tree` tool skew | 257 fails, 2 h | 118 -> 257, then 0 after 14:25 (hold) and merged 15:35 | 0 CPU; one more hour of S81/QC kit_rtl loss before the hold | KITRTL-FAIL-1115 (closed) |
-| 5 | No-progress watchdog cannot fire | EXCLUDED 66 of 109 rows; openroad over 6 h: 38 | flat (83 of 106; 43) | about 8% | new Sonnet lane (WAVE-PREPNR-1115 silent) |
-| 6 | Signed type relaunched | 13 SIGNED-UNVERSIONED lines, 7 items; hd_spn_eshim_tx and hd_turn_a relaunched then refused | falling (20 items); 14 held by name | under 1% in this window | SIGNED-TERMINAL-1115 (fix red at 15:09) |
-| 7 | Test leaves `lec_async.sh watch` processes | 15 on the hub (oldest 8.7 h), 16 on epyc8, 3 on epyc9, 2 on epyc2 | new finding | 0 CPU; cause of the 2400 s gate timeouts with class 3 | FLOW-HEALTH-1 |
-| 8 | Copied kit carries the source kit's gate logs and signoff.json | 2 cases (HEAD v1f, S81 hwC) | new finding | 2 false results; one lane-hour each | KIT-OPS-5 |
-| 9 | Class breaker and BLOCKED still not on main | 28 BLOCKED lines, kit_wave_blocked.tsv has 0 rows (file of 08:14) | open, third review | under 1% CPU | FLOW-HEALTH-1 |
-| 10 | Scratch disks at the floor | hub 131 GB (97%, 165 at 14:00), epyc7 114 GB (99%), epyc2 115 GB, epyc8 140 GB, localhost REFUSED (139 < 150) | worse on the hub: minus 17 GB/h | 0 now; hub reaches the 64 GB launch stop in about 4 h | CLEAN-ALL-1115 |
-| 11 | Bookkeeping | STALE 141 current (+108 superseded); S81 unowned 144; PLAN-CORE-NOT-IN-ONLY hbm 22 cores every tick | flat (136; 150) | none | FLOW-HEALTH-1 |
+- Count, trend: 34 (14:59), 36, 46, 47, 54, 60 (15:43), 64 (15:51): about 35 per hour. WAIT-FORM 40, flat.
+- Root cause: class 3. The by-hand pass at 14:09 released 30; the code that would repeat it each tick did not land.
+- Structural fix: land it from a full clone, or make the test skip with a reason when its file is outside the cone.
+- Owner: ROUTE-RELEASE-1300. Fleet time: 0 compute; 64 placed kits wait at route, the rows nearest to sign-off.
 
-Closed since 13:50: adoption without a tool test (adopt_guard.tool_smoke merged 14:34), typed hold release
-(apply_hold_release_on is in rt/current, r165), sparse-gate false timeouts (mq-gate-deps merged 15:40), config
-drift (kit_wave.json equals origin/coord/state; rt/current equal on 6 hosts).
+### 6. Unchanged retries and misread failures
 
-## 1. A die-level hold that waits on the merge queue
+- Count, trend: FAIL lines 14 (13:45 to 13:59), 10 (hour 14), 8 (hour 15). REPEAT-STOP works after 6ea719be97: 3 rows
+  LAUNCH-HELD at 15:17, 21 SKIP-SAME-INPUT lines.
+- Left over: (a) one class on several types is not seen as one class. MPL-0020 at macro_place hit 4 S81 svc_hi types
+  (14:47, 15:03, 15:29, 15:37), each counted alone. (b) kv3_pc_v1 has two forms with separate streaks (15:37 fail on the
+  second form). (c) the FAIL reason is an info line: ot_s81sl_leaf__t7 and ot_s81sl_kv_leaf__t1 failed at gen at 13:57
+  and the recorded reason is "TAP-LIMIT-INFO ... (info: not blocking)", class INFRA. t7 is the row the 74 leaf holds wait
+  for; its real gen error is not in the log line.
+- Structural fix: the reason extractor skips lines marked info / not blocking and takes the last ERROR; when one
+  fingerprint reaches 3 types of one family in an event, the autopilot posts one CLASS line to the die owner (a post,
+  not a hold).
+- Owner: FLOW-NOADV-R2. Fleet time: under 0.5 percent (all fail at gen or early place).
 
-Measured: 14:07 WAVE-HOLDS set `*` on S81 and QC with release on merge:claude/kitrtl-fail-1115 plus a smoke
-result. KITRTL gave ETA 14:35. The branch was approved in r175 at 15:19 and merged at 15:35 through a manual
-`tick --only`. The config lift is 15:37; the first launch is 15:44:42. From 14:25 to 15:44 the wave launched 4
-items. ot-run at 15:43: epyc2 admits 605 GB, epyc8 584, epyc10 418, epyc9 400, intel1 319, epyc7 299.
+### 7. Push gate
 
-Root cause in the process: a fix that unblocks two dies had the same queue position as 13 other READY lines, and
-the 14:15 tick spent 19 min gating 114 files for one branch. The hold itself has no priority link to its release
-term. r165 auto-release would have saved the last 2-9 min only (it needs the merge).
+- Count: intel2 /tmp push logs hold 8 PUSHED and 3 TESTS FAILED. In the window: ROUTE-RELEASE-1300 failed (15:01),
+  FABLE-FIX-KV-PV-R2 failed 14:19 then pushed 15:10. I found no timeout line in these logs; the 900 s limit is the
+  ot-push-main default (--test-timeout 900) and the gate takes about 35 min, so lanes pass 1500 or 2400 by hand.
+- Root cause: the default is below the measured run time, and the test set assumes a full checkout.
+- Structural fix: default timeout from the measured p95 of the selected tests; tests that need a path outside the clone
+  skip with a reason; ot-push-main posts PUSHED or FAILED itself (class 3).
+- Owner: FLOW-NOADV-R2. Fleet time: lane time only, 35 min per attempt.
 
-Structural fix:
-- MERGE-QUEUE-1: a branch named in any `hold_release_on` term of kit_wave.json is gated and landed first. The queue
-  reads the config; no ruling is needed. With parallel gates (r175) this is an ordering rule, 10 lines.
-- WAVE-HOLDS-1115: a die-level `*` hold must carry a number: launchable items behind it. The loop-gap line prints
-  "die hold S81: 48 items, 52 min, waits on merge X (queue position N)". Over 30 min it is a COORD line.
-- KITRTL-FAIL-1115 form for the next time: the same-hour bypass existed (the lane's main-tool-on-tree form could run
-  from the branch through `die_gen_env` for two dies). Rule for COORD: a wave fix that unblocks a die may run from
-  its branch tree behind the hold for a 3-item smoke, so that the smoke term is met when the merge lands.
+### 8. Skew checks that measure nothing
 
-## 2. KV on kvgeom7u: no whole gen host (new, open, unowned)
+- TOOL-SKEW UNMEASURED for qwen_kvsys and s81_head (pin manifest missing on the hub); TOOLS-LAG s81 unmeasured (bad
+  revision 'j5tree..main'). Three of five dies have no tool or src skew reading. WARN: s81 489 of 18,020 modules differ
+  from the pin, qwen_compute 485 of 17,987, 7 times an hour, unchanged. No SRC-INCOMPLETE line since 13:20.
+- Structural fix: the manifest is written when the pin is made (a pin without one is refused at edit time);
+  UNMEASURED becomes a FLOW-HEALTH row with an owner.
+- Owner: FLOW-NOADV-R2. Fleet time: 0; risk only.
 
-Measured at 15:45 on the hosts:
+### 9. STALE and non-design classes (failure_breakdown 15:46)
 
-| Host | src_kv_kvgeom7u | kw45/kvbind_kvgeom7u/out | kv-102/kvgeom7/out4_kvgeom7u/bind/out/rtl |
-|---|---|---|---|
-| epyc7 | present | missing | 167 files (origin) |
-| epyc8, epyc9, epyc10, intel1 | present | present, rtl 167 files | missing |
-| epyc2 | missing | missing | missing (not a KV gen host) |
+- STALE 105: HBM 104 (parked: 42 lint advisory, 51 cancelled superseded, 6 no row, 5 route-held since 11-13) and KV 1
+  (core qkd_pv_fin_s8_pin, cancelled superseded 09:28, unowned).
+- Non-design rows: kit input missing 1 (kv3_hub_C, failed 14:07 and 14:47), bind stale 1 (kv3_pv_v8), cancelled
+  superseded 2. Count line: signed any plan 474, current plan 409.
+- Owner: KV-PLAN-R1 for the 3 KV rows. No fleet time.
 
-The wave reports on epyc8/9/10/intel1 "kv-102/kvgeom7/out4_kvgeom7u/bind/out/rtl/bind_cells.sv missing" and on
-epyc7 "kvbind_kvgeom7u/out/bind_report.json missing". So the bind report (or the manifest the completeness check
-reads) names the files by the absolute path of the host where the bind ran, and the staged copy sits at another
-path. Every gen host fails the check; the die has none. The 15:24:39 launch of kv3_pc__cl254f2e73 came 16 s
-after the first SRC-INCOMPLETE lines and failed at 15:33 (kit_rtl, `--src-tree`, before the merge). The 2 hg/hgi
-pilots of r168 have not launched. WAVE-HOLDS posted "staged epyc7/8/9/10/intel1" at 15:24.
+### 10. Disk and admission refusals
 
-This is the 10-25 class again (bind manifest with absolute paths of a frozen worktree).
+- Disk: no refusal in the window. Free: epyc8 scratch 93 percent used, intel1 scratch2 92, epyc9 89, epyc10 88, epyc2
+  root 85. 14 delete-guard refusals on RESULT-RECLAIM, all protected trees (intended).
+- Admission: 1 "NOT RUN: admission lock busy within 3600 s" (epyc8, 14:45): a request dropped after one hour waiting
+  for the lock, not for memory. epyc8 runs 547 threads on 96 cores (load 349 to 363) and still charges peak 0.
+- Structural fix: the lock holder is bounded by the new timeouts; confirm on epyc8 that no hold exceeds 60 s, and have
+  NOT RUN name the holder PID.
+- Owner: FLEET-WATCH-1400. Fleet time: 1 job.
 
-Fix now (KIT-OPS-5, one step): make the bind out exist at the path the report names, or rebind the report to the
-staged path: copy epyc7 `kv-102/kvgeom7/out4_kvgeom7u/bind/out` to `kw45/kvbind_kvgeom7u/out` on epyc7 and rewrite
-the rtl paths in the staged bind_report.json to the kw45 path with the tool that stages it (not by hand per host).
-Structural fix (new test in the staging tool, FLOW-HEALTH-1 or KIT-OPS-5): the stage step ends with the wave's own
-`src_incomplete` check on every gen host and refuses the config commit when fewer than 2 hosts are whole. A wave
-switch that leaves 0 gen hosts must not be committable. Bind reports store paths relative to the bind out root.
-adopt_guard (r154) checks tool flags; add this data check to the same guard.
+## Do now (ordered)
 
-## 3. Merge queue throughput
+1. ROUTE-RELEASE-1300: push the auto-visual reviewer again from a full clone. 64 placed kits wait on it.
+2. FLEET-WATCH-1400: verify the J5 tree on epyc7 (receipt), add epyc7 to s81 gen_hosts. Then the start canary.
+3. FLEET-WATCH-1400: ot-run requeue that stages inputs to the admitting host.
+4. New lane WAITER-STD-1600: .ot-exit + self-post in ot-run and ot-push-main, ot-wait, the rule line.
+5. FLOW-NOADV-R2: reason extractor (t7 real gen error first), CLASS post, push timeout default, manifest at pin.
 
-Hour 14: 14 READY, 4 MERGED, 2 BOUNCE. Hour 15: 6 READY, 7 MERGED, 2 MERGE-FAIL, 1 BOUNCE. The two BOUNCE lines at
-14:35 and 14:40 are the same sha bounced twice. GENBUG's hub gate for drt0255 was silent 1.5 h. At 15:45 the hub
-runs three `gate claude/signed-terminal-1115*` processes (23, 21, 6 min old), two of them for the same r2 sha.
-The fixes landed: gate deps (15:40), parallel gates + remote runner + land on a green record (r175).
-
-Remaining structural items for MERGE-QUEUE-1:
-- One gate per (branch sha, main sha): a second `gate` call for a sha that is in gate attaches to the first run.
-- A superseded sha leaves the queue when its branch gets a new head (7 waiting at 15:1x included superseded shas).
-- Lanes stop hand-rolled gates: READY without a GATE stamp enters the remote runner instead of a BOUNCE. The
-  BOUNCE-for-stamp rule costs a lane 35-90 min per branch and the queue re-gates anyway.
-- A gate run kills its own process group at exit (see class 7).
-
-## 5. No-progress watchdog (third review, no code)
-
-NOPROG-TABLE 15:30: EXCLUDED 66, YOUNG 34, NO-DATA 4, KEEP 3, PROGRESS 2. 15:45 run: 0 flagged, 0 cancelled.
-openroad over 6 h: intel1 7, epyc9 9, epyc2 8, epyc10 7, epyc7 4, epyc8 3 = 38. Still YOUNG: epyc2
-col_h9_r0_p2 at 25.5 h, kv3_hgi_v2 GRT at 13.0 and 16.5 h with best = last ("series started inside the last 6 h").
-r169 merged the stage-aware GRT metric; the exclusion on command text and the series-restart reset are unchanged.
-REAP-DEAD SILENT prints QC glue and native59 every tick (no output 1034 min) and correctly keeps them.
-
-Fix as before: exclude on the declared priority in the unit environment; evidence age runs from the best value
-across series restarts and is bounded by process age. Owner: WAVE-PREPNR-1115 has not posted since 08:33. COORD:
-start a new Sonnet lane NOPROG-EXCL-1115 from this section; do not wait for the old lane.
-This is a stop for jobs with no progress evidence; it adds no limit on a run that improves.
-
-## 6. Signed types relaunched
-
-13 SIGNED-UNVERSIONED lines since 13:45, 7 items (HEAD hd_tile, hd_turn_a, hd_turn_b, hd_spn_eshim_tx; QC
-sle_su_l0, slw_su_l0; KV kv3_io_ft_v1). HEAD launched hd_spn_eshim_tx (14:34) and hd_turn_a (15:04) after their
-sign-off; both ended 9 min later in "relaunch refused: every kit input equals the previous attempt". The refusal
-works, the launch should not exist. 14 items are held by name (r152). signed-terminal-1115 failed 2 tests at 15:09;
-r2 @8ee6a2d068c is in gate. QC sle_su_l0__cl086d85ba signed at 15:42 on S4Q3B and is the next candidate for a
-relaunch on S4Q3C if its type block is equal. Fix unchanged; MERGE-QUEUE-1 lands r2 after flow-health.
-
-## 7. Tests leave `lec_async.sh watch` processes
-
-Hub, 15:44: 15 `lec_async.sh watch` processes. 4 from wt/flow-health-1 and /tmp/fh_pt* (485-522 min), 8 from
-/tmp/fh_main2 with /tmp/otst-* kits (296-306 min), 2 from fh_pt61/fh_pt71, and 2 from the merge queue's own gate
-trees (mq1/wt/gc-b91c191fd6, 84 min; gc-954e9e3302, 10 min). Every one belongs to
-`test_missing_proof_reference` or an otst kit route1 test. epyc8 has 16 pytest/watch processes over 1 h old,
-epyc9 3, epyc2 2 (the remote runner hosts). So the leak is in the test, on every run, on every host that gates.
-
-Root cause: the test starts the watcher detached and its proof never arrives, so the watcher polls for ever. A
-watcher that holds the pytest worker's stdout keeps `pytest -n` from returning; that is the likely form of the
-three 2400 s kv-pvgen timeouts after the sparse-tree fix (not proven here; I did not read that gate log).
-
-Structural fix (FLOW-HEALTH-1, it owns lec_async r128):
-- lec_async.sh watch exits when its kit dir is gone and takes a deadline from the caller in tests
-  (`LEC_ASYNC_WATCH_MAX_S`, unset in production).
-- conftest fixture: each test runs in its own session id; teardown kills the session. The merge-queue gate runs
-  under `systemd-run --scope` (or setsid + kill of the group) so that a gate cannot leave a process.
-- CLEAN-ALL-1115 removes the present ones by exact pid after an owner check (no pattern kill; hook rule).
-
-## 8. Copied kits carry old results
-
-Two cases today (HEAD v1f, S81 hwC): a lane copied a kit dir to try a variant; the copy kept the source's gate
-logs and signoff/signoff.json; the lane's report read them as the variant's result. Same class as the 10-27 stale
-sign-off log.
-
-Structural fix (KIT-OPS-5): one tool `kit_fork` is the only way to copy a kit. It copies inputs and the chosen
-resume ODB and nothing under signoff/, logs/, reports/, gate records; it writes `FORKED_FROM` with the source
-path and time. The result readers (classify, signoff reader, lane summary script) refuse a signoff.json whose
-recorded input digest does not equal the kit's current digest; the digest is already computed for the relaunch
-refusal (class 6 shows it works). Then a stale result cannot be read as current even after a plain `cp -a`.
-
-## 9. Class breaker
-
-28 BLOCKED lines 13:45-14:20 (S81 kit_rtl 3x), each followed by more launches until the die hold at 14:07. With
-a breaker of 10 per hour per (die, stage, class) the 13:4x S81 burst stops after 10 fails, not 251.
-flow-health-1115b @954e9e33029 has a green gate record (193/193) and is first in the train since 15:41. COORD:
-check MERGED by 16:15; this is the third review that lists it.
-
-## 10. Disk
-
-Hub scratch2 131 GB free, 97% (165 GB at 14:00, 204 at 12:35): minus 17-20 GB per hour; 140 rt trees (128 at 14:00,
-118 at 12:00; each merge adds one, 7 merges per hour now). The 64 GB precondition of flow-health will stop all
-launches at about 19:30 at this rate. epyc7 114 GB (99%), epyc2 115 GB, epyc8 140 GB; gen floor is 70 GB.
-localhost is REFUSED by ot-run (139 GB < 150 GB floor).
-
-Fix (CLEAN-ALL-1115, this hour): prune rt trees on the hub to the ones named by a live unit, a queued job or the
-last 10 merges; run the aggressive pass on the hub, epyc7 and localhost. Structural: ot-tools-sync deletes an rt
-tree when no process or unit references it and it is not one of the last 10; the tree count then stays flat.
-
-## 11. Bookkeeping
-
-STALE 141 current-event (+108 superseded): S81 165 (unowned 144), most of them DEDUP/SUPERSEDED rows of 11-14 on
-col types that are held for Event F/G. They are not launchable work; failure_breakdown should not count a row
-whose item has a `hold_items` entry with a plan-event release as STALE unowned (FLOW-HEALTH-1, one filter). Then
-"unowned" shows real gaps only: today S81 kit_rtl 12 rows, QC "other flow error" 7 and "kit input missing" 2.
-PLAN-CORE-NOT-IN-ONLY hbm prints 22 cores every tick (12 lines in 2 h); HBM is parked, print once per change.
-
-## For COORD, in order
-
-1. KIT-OPS-5 now: KV 7u bind out path (class 2). KV has 0 gen hosts; r168 pilots cannot start.
-2. MERGE-QUEUE-1: land flow-health-1115b @954e9e33029, then signed-terminal r2; add "hold release branches first".
-3. Read the 15:44 tick result: if S81/QC kit_rtl passes, class 4 is closed; if any `--src-tree` or new kit_rtl
-   class appears, the breaker is not there yet, so WAVE-HOLDS re-holds by hand the same tick.
-4. CLEAN-ALL-1115: hub rt trees and scratch2 (131 GB, minus 17 GB/h).
-5. New Sonnet lane NOPROG-EXCL-1115 (class 5, about 8% of the fleet, third review).
-6. FLOW-HEALTH-1 after the merge: lec_async watcher deadline + gate process scope (class 7); KIT-OPS-5: kit_fork
-   and digest check on signoff.json (class 8).
-
-Not checked: the content of the kv-pvgen gate logs; whether the QC 89 no-row items include items signed on an
-equal block beyond the 6 counted; the result of the 15:44 tick beyond its first 3 min.
+Not checked: OOM kills (journal not readable); how epyc7 recovered (no post, dockerd start time unchanged); the 2
+HUNG-WATCH cancels outside epyc7; whether the 13 young waiter shells have remote targets; intel2 waiter shells;
+J5 bind, tool pins and the t7 hold (die owner scope); wait time per waiter (ot-run reports counts, not ages).
