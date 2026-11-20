@@ -657,7 +657,7 @@ def test_every_plan_type_gets_a_row_variants_included():
     d = {"event": "E", "plan_core_items": ["core_a"], "only_items": ["hd_ctl"], "owner_lane": "L", "plan": "/p"}
     cfg = {"dies": {"s81_head": d}, "stops_off": True}
     rows = [{"die": "s81_head", "item": "hd_ctl", "kind": "type", "state": "NEEDS-KIT", "owner": "L", "live_job": "none", "replicas": "1", "members": "", "last_activity": ""}]
-    plan = {"hd_ctl": {}, "hd_ctl_e": {}, "hd_spn_eshim_rx": {}, "hd_ctl__cl1": {}, "core_a": {}}
+    plan = {"hd_ctl": {}, "hd_ctl_e": {}, "hd_spn_eshim_rx": {}, "hd_ctl__cl1": {}, "core_a": {}, "ot_sram_1r1w_32x546_m1": {}}      # a memory macro master gets no row
     got = {r["item"] for r in KW.plan_type_rows(cfg, "s81_head", d, rows, plan)}
     assert got == {"hd_ctl_e", "hd_spn_eshim_rx"}                  # hd_ctl known; hd_ctl__cl1 expands from its parent; core_a is a core
     assert all(r["_plan_row"] for r in KW.plan_type_rows(cfg, "s81_head", d, rows, plan))

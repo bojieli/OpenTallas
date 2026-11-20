@@ -3004,6 +3004,9 @@ def retire_resign_unstarted(AP, cfg, st):
     return n
 
 
+PLAN_ROW_EXCLUDE = ("ot_sram_*", "ot_rom_*", "ot_regfile_*")      # generated memory / ROM macro masters: no kit of their own (die option plan_row_exclude replaces the list)
+
+
 def plan_type_rows(cfg, die, d, rows, plan_types):
     """COORD 11-19 (HEAD-CROSSING: variant types hd_ctl_e, hd_spn_eshim_rx, hd_st_n3_turn ... 18 rows never relaunched on a new event, the HEAD builder took types only from the ownership table
     that lists base names): under stops_off (not hbm) EVERY type of the current plan (partition_types) is a wave row, whether or not OWNERS names it.  Not rows already known (an OWNERS row, or a
@@ -3018,6 +3021,9 @@ def plan_type_rows(cfg, die, d, rows, plan_types):
         if item in known or item in cores or any(item.startswith(k + "__") for k in known):
             continue
         if template_member(d, item):
+            continue
+        # 20:31 first tick: HEAD synthesized rows for the generated memory macros (ot_sram_* : 8 FLOW kit_rtl fails): a macro master is a plan block with no kit of its own
+        if any(fnmatch.fnmatchcase(item, g) for g in (d.get("plan_row_exclude") or PLAN_ROW_EXCLUDE)):
             continue
         out.append(dict(die=die, item=item, kind="type", state="NEEDS-KIT", owner="KIT-WAVE", live_job="none", last_activity="",
                         next_step="plan type with no OWNERS row (rows_from_plan)", evidence=d.get("plan", ""),
