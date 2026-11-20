@@ -9906,3 +9906,4 @@ FAILED [AUTOPILOT f01afc6c4335] 2026-11-19 18:55:47 PST AUTOPILOT -> KIT-WAVE-5:
   - sle_stm_v1__cl27746664 5, sle_stm_v1__clbe630b9c 4, sle_stm_v2__cl7b3062fa 5, sle_stm_v2__cl55be2264 4
   - slw_stm_v1__cl05fc43f7__cl2086fa2c 1, slw_stm_v1__cl05fc43f7__cl389df4e9 1
   n46r_all.py (N46R_ALL=1) re-sites the blocked pins of all 17 to free strap-lattice sites (4.32 um M5, nearest to the type anchor, same rule region_form uses for new bits). Unblocked pins stay put. It then folds the n46ct_e fall-aware K/DEPTH/sched_lat (region_form sta --cap-in). Moves are logged in n46r/out_all/strap_resite.json. N46R = this plan + bind + G0, as its own event after N46Q. Running on epyc9.
+- 2026-11-19 18:58 PST QC-PLAN-R3 correction to 51f42a7026: the 17 blocked types hold 498 strap pin sites, not 538 (sum of the listed per-type counts).
