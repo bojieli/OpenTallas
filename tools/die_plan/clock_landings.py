@@ -1080,6 +1080,11 @@ class Landings:
         # pins on the region clock, no ring) from clock_landing_plan.compose(monitor="region").
         self.region_monitor = bool(self.collector) and self.collector.get("monitor", "reset") == "region"
         self.dataflow = bool(self.collector) and self.collector.get("monitor", "reset") in ("dataflow", "region")
+        if self.dataflow:
+            import landing_tie_children as LTC
+            if any(LTC.seam_use_ports(t.get("clock", {}).get("landing_contract", {}).get("tieable_children"))
+                   for t in plan["partition_types"].values()):
+                raise LandingError("seam-child use straps require the registered reset-collector form")
         if self.collector and self.collector.get("monitor", "reset") not in ("reset", "dataflow", "region"):
             raise LandingError(f"clock landing: unknown monitor mode {self.collector.get('monitor')}")
         self.parts = {p["name"]: p for p in plan["partitions"]}
