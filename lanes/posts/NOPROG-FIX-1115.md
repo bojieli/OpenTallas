@@ -323,3 +323,9 @@
   NO-PROGRESS intel1 kv3_io_cor 5_2_route stage 42.9 h job 53.2 h: drt_violations best 247 last 247 rows 52 window-gain 0.0%; stagnant 7.0 h; last event 0.8 h ago, log write 0.8 h ago (3299 lines)
   NO-PROGRESS intel1 kv3_pc_v3 5_1_grt stage 26.1 h job 52.3 h: repair_Viol best 1971 last 1971 rows 218 window-gain 0.0%; stagnant 7.3 h; last event 0.1 h ago, log write 0.0 h ago (734 lines)
   NO-PROGRESS epyc9 ot_s81sl_leaf__t27 stage_odb_cap stage 14.9 h job 14.9 h: no new meaningful log line for 6.6 h; last: 2026-11-20 07:17:00 STAGE-CAP skip /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave
+- 2026-11-20 06:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-20 06:52 PST: 317 running jobs, PROGRESSING 301, SLOW 11, NO-PROGRESS 5 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc9 serdes__t13 signoff_meas_072023 stage 55.5 h job 56.7 h: no new meaningful log line for 55.1 h; last: - hold_ff: FAIL WNS -55.85 ps < 0
+  NO-PROGRESS intel1 kv3_io_cor 5_2_route stage 43.9 h job 54.2 h: drt_violations best 246 last 246 rows 53 window-gain 0.4%; stagnant 8.0 h; last event 0.5 h ago, log write 0.6 h ago (3345 lines)
+  NO-PROGRESS epyc7 dsdv_slice_lepe_mu_LP__t2 stage_odb_cap stage 37.1 h job 37.1 h: last event 1.2 h ago, log write 1.2 h ago (2133 lines), cpu idle (hung)
+  NO-PROGRESS intel1 kv3_pc_v3 5_1_grt stage 27.1 h job 53.3 h: repair_Viol best 1971 last 1971 rows 249 window-gain 0.0%; stagnant 8.3 h; last event 0.0 h ago, log write 0.0 h ago (765 lines)
+  NO-PROGRESS epyc9 ot_s81sl_leaf__t27 stage_odb_cap stage 15.9 h job 15.9 h: no new meaningful log line for 7.6 h; last: 2026-11-20 07:17:00 STAGE-CAP skip /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave
