@@ -105,3 +105,29 @@ def test_apply_clears_added_tap_left_under_moved_lane():
     x, y = t["clock"]["added_taps"][0]["xy"]
     assert not (new[0] - 8.65 < x < new[0] + L + 8.65 and new[1] - 8.65 < y < new[1] + L + 8.65)
     assert t["clock"]["added_taps"][1]["xy"] == [900.0, 1100.0]
+
+
+def test_apply_keeps_added_taps_legal_against_grid_taps_and_halos():
+    """A3 bind failure 11-19 (leaf__t28 clk_t38 'violates outline/halo/tap spacing'): the old rule looked only at the
+    moved lane boxes and the other added taps.  Now every added tap must pass the bind's rule after the move: outline
+    margin, every placed box + tap clear, tap clear to every grid tap (the grid is re-derived on the moved cores)."""
+    P = plan()
+    t = P["partition_types"]["ot_s81sl_leaf__t99"]
+    _, _, grid0 = H._tap_rule(t)
+    gx, gy = grid0[4]                                             # an interior grid tap
+    o = t["hard_cores"][4]["origin_um"]
+    new = [o[0] + 30.24, o[1]]
+    t["clock"] = {"tap_mode": "grid+explicit", "added_taps": [
+        {"name": f"clk_t{len(grid0)}", "xy": [o[0] + L + 20.0, o[1] + 50.0]},        # free now, under the moved lane after
+        {"name": f"clk_t{len(grid0) + 1}", "xy": [gx + 2.16, gy + 2.16]},            # on a grid tap, no lane near it
+        {"name": f"clk_t{len(grid0) + 2}", "xy": [900.0, 1100.0]}]}                  # legal: must not move
+    assert H.added_tap_errors(t) == [f"clk_t{len(grid0) + 1}"]                       # before the move only the grid one
+    n = H.move_lanes(t, {"u_lf.u_vp.g_ln[3].u_l": {"origin_um": new, "orient": "MX"}}, 2)
+    assert {m[0] for m in n["taps_moved"]} == {f"clk_t{len(grid0)}", f"clk_t{len(grid0) + 1}"}
+    assert H.added_tap_errors(t) == []
+    assert t["clock"]["added_taps"][2]["xy"] == [900.0, 1100.0]
+    clear, B, grid = H._tap_rule(t)
+    for a in t["clock"]["added_taps"]:
+        x, y = a["xy"]
+        assert all(abs(x - p) >= clear or abs(y - q) >= clear for p, q in grid)
+        assert not any(x0 < x < x1 and y0 < y < y1 for x0, y0, x1, y1 in B)

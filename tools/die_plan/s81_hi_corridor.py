@@ -328,7 +328,7 @@ def _shift(v, d):
     return [round(v[0] + d[0], 4), round(v[1] + d[1], 4)] + list(v[2:])
 
 
-def move_lanes(t, sd, gs, near=30.0):
+def move_lanes(t, sd, gs, near=30.0, budgets=None):
     """rigid lane moves (same orient): the lane, every clock / landing record of that lane (inst / name prefix),
     the end points of station rows on it, and the registers of those rows near the old lane box (hi rows: the
     per-lane stages >= gs only; the shared banks are re-sited by `sites`) move by the lane's delta."""
@@ -378,43 +378,86 @@ def move_lanes(t, sd, gs, near=30.0):
                 if max(dx, dy) <= near:
                     e["regs_um"][j] = _shift(r, d); n["regs"] += 1
             e["note"] = e.get("note", "") + f" | S81-HI-CORRIDOR lane move {inst} by {d[0]:.2f},{d[1]:.2f}"
-    n["taps_moved"] = clear_added_taps(t, only=set(D))
+    n["taps_moved"] = clear_added_taps(t, only=set(D), budgets=budgets)
     return n
 
 
-def clear_added_taps(t, clear=8.65, rmax=200.0, step=2.16, only=None):
-    """clock.added_taps under a hard core (+ tap halo) after a lane move -> nearest legal point (outline margin, outside
-    every core + halo, >= halo Chebyshev from every other tap), as taps.grid_explicit_sites checks them."""
-    ck = t.get("clock") or {}
-    adds = ck.get("added_taps") or []
+def _tap_rule(t, budgets=None):
+    """the bind's own added-tap rule (taps.grid_explicit_sites): clear = schema.type_tap_clear, obstacles =
+    placement_obstacles.placement_boxes(halo=clear) (every placed macro and probe blockage, not only hard_cores), and the
+    R4 grid taps of the type AS IT IS NOW (schema._grid_taps: a grid tap moves when a core moves under it)."""
+    import schema
+    from placement_obstacles import placement_boxes
+
+    class _P:                                   # _grid_taps / tap_pitch read only P.types[tn] and P.budgets
+        types = {"_": t}
+    _P.budgets = dict(budgets or {})
+    clear = schema.type_tap_clear(t)
+    grid = [(x, y) for _, x, y in schema._grid_taps(_P, "_")]
+    return clear, list(placement_boxes(t, halo=clear).values()), grid
+
+
+def added_tap_errors(t, budgets=None):
+    """names of clock.added_taps the bind would refuse ("violates outline/halo/tap spacing"), checked in table order
+    against the grid taps and the added taps before them, exactly as taps.grid_explicit_sites does."""
+    adds = (t.get("clock") or {}).get("added_taps") or []
     if not adds:
         return []
-    W, H = t["outline_um"]
-    B = [(b[1] - clear, b[2] - clear, b[3] + clear, b[4] + clear) for b in boxes(t)]
-    others = lambda me: [tuple(x["xy"][:2]) for x in adds if x.get("xy") and x is not me]  # noqa: E731
-    Bm = [(b[1] - clear, b[2] - clear, b[3] + clear, b[4] + clear) for b in boxes(t) if only is None or b[0] in only]
-    under = lambda x, y: any(a < x < c and b < y < d for a, b, c, d in Bm)  # noqa: E731
-    ok = lambda x, y, me: (clear <= x <= W - clear and clear <= y <= H - clear  # noqa: E731
-                           and not any(a < x < c and b < y < d for a, b, c, d in B)
-                           and not any(abs(x - a) < clear and abs(y - b) < clear for a, b in others(me)))
-    moved = []
+    clear, B, grid = _tap_rule(t, budgets)
+    W, H = t["outline_um"]; eps = 1e-8; taken = list(grid); bad = []
     for tp in adds:
         x, y = map(float, tp["xy"][:2])
-        if not under(x, y):
-            continue
-        best = None
-        for r in range(1, int(rmax / step) + 1):
-            for i in range(-r, r + 1):
-                for j in ((-r, r) if abs(i) != r else range(-r, r + 1)):
-                    q = (round(x + i * step, 3), round(y + j * step, 3))
-                    if ok(*q, tp) and (best is None or md(q, (x, y)) < md(best, (x, y))):
-                        best = q
-            if best:
-                break
-        if best is None:
-            raise SystemExit(f"HI_CORRIDOR_APPLY: added tap {tp.get('name')} has no legal point within {rmax} um")
-        tp["xy"] = [best[0], best[1]] + list(tp["xy"][2:])
-        moved.append([tp.get("name"), round(x, 3), round(y, 3), best[0], best[1]])
+        if not (clear - eps <= x <= W - clear + eps and clear - eps <= y <= H - clear + eps
+                and not any(abs(x - a) < clear - eps and abs(y - c) < clear - eps for a, c in taken)
+                and not any(a + eps < x < c - eps and b2 + eps < y < d - eps for a, b2, c, d in B)):
+            bad.append(tp.get("name"))
+        taken.append((x, y))
+    return bad
+
+
+def clear_added_taps(t, rmax=200.0, step=2.16, only=None, budgets=None, margin=0.01):
+    """after a lane move: every clock.added_tap the bind's rule refuses (under a moved core + halo, inside any placed
+    macro / probe blockage + halo, closer than the tap clear to a GRID tap or to another added tap, outside the outline
+    margin) -> the nearest point that passes that rule against the grid taps and ALL other added taps.  The rule is
+    _tap_rule (the bind's taps.grid_explicit_sites), so a plan this leaves is one the bind accepts.  `only` is kept for
+    callers and ignored: a tap can become illegal without sitting under a moved lane (a grid tap re-centres)."""
+    adds = (t.get("clock") or {}).get("added_taps") or []
+    if not adds:
+        return []
+    clear, B, grid = _tap_rule(t, budgets)
+    W, H = t["outline_um"]; c = clear + margin
+    B = [(x0 - margin, y0 - margin, x1 + margin, y1 + margin) for x0, y0, x1, y1 in B]
+
+    def ok(x, y, me):
+        return (c <= x <= W - c and c <= y <= H - c
+                and not any(x0 < x < x1 and y0 < y < y1 for x0, y0, x1, y1 in B)
+                and not any(abs(x - gx) < c and abs(y - gy) < c for gx, gy in grid)
+                and not any(abs(x - float(o["xy"][0])) < c and abs(y - float(o["xy"][1])) < c for o in adds if o is not me))
+    moved = []
+    for _ in range(3):                           # a moved tap never lands near another one, so one pass settles; 3 = guard
+        bad = set(added_tap_errors(t, budgets))
+        if not bad:
+            break
+        for tp in adds:
+            if tp.get("name") not in bad:
+                continue
+            x, y = map(float, tp["xy"][:2])
+            best = None
+            for r in range(1, int(rmax / step) + 1):
+                for i in range(-r, r + 1):
+                    for j in ((-r, r) if abs(i) != r else range(-r, r + 1)):
+                        q = (round(x + i * step, 3), round(y + j * step, 3))
+                        if ok(*q, tp) and (best is None or md(q, (x, y)) < md(best, (x, y))):
+                            best = q
+                if best:
+                    break
+            if best is None:
+                raise SystemExit(f"HI_CORRIDOR_APPLY: added tap {tp.get('name')} has no legal point within {rmax} um")
+            tp["xy"] = [best[0], best[1]] + list(tp["xy"][2:])
+            moved.append([tp.get("name"), round(x, 3), round(y, 3), best[0], best[1]])
+    left = added_tap_errors(t, budgets)
+    if left:
+        raise SystemExit(f"HI_CORRIDOR_APPLY: added taps still refused by the bind rule: {left}")
     return moved
 
 
@@ -447,7 +490,7 @@ def main():
         S = json.load(open(a.seed))
         for tn, sd in S.items():
             if re.search(a.types, tn):
-                print(tn, "HI_CORRIDOR_APPLY", move_lanes(P["partition_types"][tn], sd, a.gs))
+                print(tn, "HI_CORRIDOR_APPLY", move_lanes(P["partition_types"][tn], sd, a.gs, budgets=P.get("budgets")))
         json.dump(P, open(a.out, "w"), indent=1)
     else:
         rows = sites(P, a.types, a.gs, a.min_clear)
