@@ -33,7 +33,9 @@ lanes/FABLE-PD-KV-1500.md (D27 rows 1-4 evidence, stop list). Lane dirs: epyc8 /
   ot_dp_dly_keep per bit at sites, fail-closed on multi-driver loads). Neither stations the eq[] input of a plan cell. Needed: a staged
   efault form (per-rank eq relayed in <= 300 um ot_dp_dly_keep chains, or local partial efault cells + relayed fault OR), with AGE += stage
   depth so the armed check still samples after the eq arrives. Generator change, 29 types; measure on hub_Wo and hgi_v1 collector leg.
-- Rows 3 (reset relay reach u_rrl_172/u_rrl_16) and 4 (KV-SYSC-1119 station rows bound): not started.
+- Row 4 checked: KV-SYSC-1119 rows are NOT bound. D25f2 sys_c has only R-REACH-2 rows (405-era): o_dNd_kv_rx_payload 1 st (656 um -> 328 um hops),
+  srx 1 (517), svc 1 (435), svc_d1 4 (1519), emb_tx_payload 2 (947); no link_cfg_data row. Needed at 300 um: rx_payload 2+, srx 1, svc 1, svc_d1 5, emb_tx 3, link_cfg_data 2 (re-measure).
+- Row 3 (reset relay reach u_rrl_172/u_rrl_16): not started.
 - Build all D27 rows as a private G0 proof on the D26 plan once D26 applies (compose_d27.sh like kv-plan-r1/compose_r3.sh), for the 11-21 cut.
 
 ## Stop list (unchanged)
