@@ -15,3 +15,8 @@ State (2026-11-20 ~14:30 PST):
 - t60 measured (no DPL): with limit, clk WNS -963.94 -> -288.05, TNS -47,016 -> -7,015, core pins >320 ps 950 -> 0; control unchanged. Logs epyc10 tr/t60_base2, tr/t60_slew2.
 - PLACE-SLEW pushed main e7ebced0c4e (gen_phys.place_max_transition + gp_noconverge_gate.tcl + test_place_max_transition.py). Applies to new gens; running/bound kits unchanged.
 - Open: (1) a legalized A/B through CTS on one regenerated kit (t60 or t57); (2) the dly_spread post-repair move class (cbf; 5,051 residual slew violations on t60 3_place) needs its owner; (3) optional: emit default_max_transition in ETM lib writers.
+
+## Next steps (COORD, 11-20 ~14:50)
+- DONE (1) DLY-REPAIR-1 pushed main f2e64e5d3b2 (dly_spread.tcl + test_dly_spread.py).
+- (2) proofs on epyc10 /srv/opentallas-scratch2/claude/core-lib-limits-1330/proof/{t60,cbf}/gen: kit_fork of D8i t60 attempt_14 and QC R3 cbf attempt_3, main gp_noconverge_gate.tcl + dly_spread.tcl copied in, config line OT_PLACE_MAX_TRANSITION = 320. Launched from localhost: ot-run ... run_kit.sh KIT cts 32|48 8 (clients write scratchpad proof_*.out). Read run/reports/asap7/*/base/3_detailed_place.rpt and 4_cts reports; compare with the original kits (place WNS t60 -1123, cbf -1532).
+- (3) When green: post to S81-DIE-R4 / QC-PLAN-R5 to relaunch held placed kits from place (leaf t57/t60/t72/t1/t56, kv_leaf t1/t4, QC cbf_q01_s2) on the new runtime; existing kits need the config line OT_PLACE_MAX_TRANSITION = 320 (or a regen) since kit_flow_refresh only swaps scripts.
