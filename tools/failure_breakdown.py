@@ -54,6 +54,7 @@ FAIL_MAP = [
     (r'memory_bits|SYNTH_MEMORY_MAX_BITS', 'memory over synth cap (needs macro)'),
     (r"Can't resolve task name|GEN_LINT FAIL rtl_check", 'RTL lint at gen'),
     (r'differs from captured bound reset identity|KIT_TOPOLOGY_BIND_STALE|KIT_TOPOLOGY_', 'bind stale vs plan (re-bind)'),
+    (r'is not in the bound module and kit-rtl cannot add|kit-rtl cannot add a (?:source-side stage|relay copy)', 'bound module lacks plan relay rows (re-run bind)'),  # S81-COL-KITRTL-0310
     (r'KIT_NOT_SELF_CONTAINED|KIT_INPUT_MISSING|preferred HDL source missing|names missing files|tool input file missing',
      'kit input missing'),
     (r'gpl-noconverge|KW_PLACE_RC', 'place error'),
