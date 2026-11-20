@@ -1,0 +1,31 @@
+# KV-PLAN-R1 handoff (KV plan + hg owner; successor of KV-D23-COMPOSE, FABLE-FIX-KV-HG, OPUS hg lane, Codex)
+
+Written 2026-11-20 09:5x PST. Posts: lanes/posts/KV-PLAN-R1.md. Lane dirs: epyc8 /srv/opentallas-scratch2/claude/kv-plan-r1
+(wt = proposal-3 clone, wt_rls, wt_pv = lane clones), intel2 same path (kR_copy, kR_rb, wait_r3.sh), hub logs intel2 ~/tmp/kvplanr1.
+
+## Live
+- D26 R2 dc02d274deb3 (reset-only baseline): queued epyc8, intel2 client 2895973, log ~/tmp/kvd23c/d26_typed_r2_gate.log.
+- D26 R3 = R2 + rows: epyc8 kv-d23-compose8/d26_raw/d26_contracts/run_gate_r3.sh (R2 script + compose_r3.sh + runtime check
+  b699b5b678 / 8899ba10e9 / c6ab8bd7be). Launched by intel2 waiter wait_r3.sh (proof priority, epyc8), log ~/tmp/kvplanr1/d26_r3_gate.log.
+  compose_r3.sh is read when the gate runs (edit before admission = in R3):
+  1. d26r3_cil/apply_cil.py: clock.core_input_lockup kv3_head_eighth_e0/e2/e6 fronts + u_kt kp/kpv/gf + 16 rst_n pins (40 ports),
+     19 hg/hgi types, 0 cycles; clock.core_link_pipe ot_qkh_head_score4_native.pack_fault D=1 (+1 status cycle).
+  2. d26r3_rows/n3_rows.py: hgi_v1 x2 section N at <= 300 um (max 299), eN/tN +2 cycles each, aligned at hst_g; check eN pad name u_pd4 after bind.
+  3. d26r3_rows/pv_station300.py: budgets.r_dly_spread_station_um kv3_pv 405 -> 300 (16 types, 0 cycles).
+  4. d26r3_cil/apply_p3rows.py p3_rows.json: CLKSITE-SPLIT reserved rows, 56 types, 17,031 rects, walls 0 (tree die-level-1119/e3 d25e3_pvsnake3).
+  Dry compose on D25f2 plan: schema VALID. Apply at the 20:00 PST cut if strict + G0 + LATCHECK green.
+- k13i / k13ci containers on intel2 still run (ot-run --cancel removed clients only); h1/h2 (krsp) on intel2, waiter wait5h.sh -> ~/tmp/opuskvhg/h_grt5.txt.
+
+## Decided
+- Proposal 3 on main b699b5b678. krsp: keep h1 (COORD 09:5x, FABLE-PD-KV-0945); h2 not used.
+- kR: TT is 1 real path (pack_fault, fixed by row 1); the -310 repair figure is hold-driven (5,105 rls copy -> head-core ends to -277.6,
+  fixed by core_input_lockup; reg_leaf_split sees through u_lk_nk since 8899ba10e9). Stop list: no kR late-repair retry; v8j not a latch proof.
+- pv trunk inverter: generic dly_spread repeater anchor c6ab8bd7be (main).
+- FAIL-ROUTE 50e22a9d11 (hub_Wi SRAM row) and ae70c86fe1 (reset identity) answered: fixed by D26.
+
+## D27 (ranked, FABLE-PD-KV-0945)
+1. astk setup: register sc_v at the memory pin (h1 -577 on u_ep.sc_v -> u_sc0 WE), stage eo_q -> owner.fault, seat the bin rank.
+2. astk tap rows: split taps 565-588 um wide with 1,200 sinks (1,862 cross-tap ends to -195).
+3. pv over-core traffic: 67% of pv_v8 overflow = ft + pad nets crossing pv_pair core boxes; route around or channels in core; read v8k at GRT it5.
+4. classify the first pc GRT.
+5. hg/hgi superset class (FABLE-SUPERSET 01:59: union links), hgi residual clk_c8 + rst_n relay inside u_head2_e0 at DRT.
