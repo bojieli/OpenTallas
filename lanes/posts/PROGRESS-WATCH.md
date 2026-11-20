@@ -81,3 +81,4 @@
 - 2026-11-20 10:33 PST ALERT STUCK-STATE s81: 1 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. slice_station__t48, 2026-11-19 13:08)
 - 2026-11-20 10:53 PST ALERT NO-PROGRESS s81_head: 16 eligible rows, 0 KIT-WAVE LAUNCH for 190 min (last 07:43); NO-LAUNCH x22
 - 2026-11-20 10:56 PST ALERT NO-ADVANCE qwen_compute: 40 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (cbn_q01__clab6e67f2 x12@gen, sle_su_l0__cl7a55c676 x12@gen, sle_st_a_v2__pv4242de79 x10@gen)
+- 2026-11-20 11:06 PST ALERT NO-ADVANCE qwen_kvsys: 19 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (kv3_hg_v3 x6@gen, kv3_pv_v6n x5@gen, kv3_pv_v5n x4@gen)
