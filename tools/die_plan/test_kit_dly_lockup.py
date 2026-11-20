@@ -240,3 +240,67 @@ endmodule
     subprocess.run(["iverilog", "-g2005", "-o", str(tmp_path / "a.out"), str(tmp_path / "a.v")], check=True)
     out = subprocess.run(["vvp", str(tmp_path / "a.out")], check=True, capture_output=True, text=True).stdout
     assert "DLK_EQ PASS" in out, out
+
+
+def test_pad_min_stations_cuts_sparse_pad_lines_only():
+    """FABLE-FIX-KV-PV-R2 11-20: a sparse pad line gets a segment (= a placement station) per transport hop; dense pad lines, tail
+    copies and non-pad lines keep the SEG form; 0 / absent is the form as first built."""
+    base, lat0, st0 = run()
+    assert dl.apply(RTL, cores=["u_pvg0_p1"], tail_groups=2, pad_min_stations=0)[0] == base
+    txt, lat, st = run(pad_min_stations=16)
+    # D 20 pad trunk: 20 // 16 = 1 stage per segment, 20 stations (was 7 + 7 + 6)
+    segs = [int(d) for d in re.findall(r"ot_dp_dly #\(\.W\(1\), \.D\((\d+)\)\) u_pd20_x_0_t_25_sg\d+ ", txt)]
+    assert segs == [1] * 20 and sum(1 for l in lat if l["inst"].startswith("u_fl_pd20_x_0_t_25_sg")) == 19
+    # D 4 pad trunk piece: 4 segments of 1 (it was one instance)
+    assert [int(d) for d in re.findall(r"\.D\((\d+)\)\) u_pd4_x_0_t_29_sg\d+ ", txt)] == [1] * 4
+    # the non-pad line u_d17_w keeps <= 8, the marked tail copy keeps its 2 groups, the unselected line its text
+    assert sorted(int(d) for d in re.findall(r"\.D\((\d+)\)\) u_d17_w_sg\d+ ", txt)) == [5, 6, 6]
+    assert "ot_dp_dly_keep #(.W(1), .D(3)) u_pd5_x_0_pvg0_p1_25_sg0 " in txt and "u_other (.clk(clk), .d(x_i[0]), .q(other_q));" in txt
+    # dense pad line: D 136 with N 16 -> segment size min(8, 136 // 16) = 8, unchanged
+    dense = RTL.replace("ot_dp_dly #(.W(1), .D(20)) u_pd20_x_1_t_25", "ot_dp_dly #(.W(1), .D(136)) u_pd20_x_1_t_25")
+    a = dl.apply(dense, cores=["u_pvg0_p1"], tail_groups=2)[0]
+    b = dl.apply(dense, cores=["u_pvg0_p1"], tail_groups=2, pad_min_stations=16)[0]
+    pick = lambda t: re.findall(r"\.D\((\d+)\)\) u_pd20_x_1_t_25_sg\d+ ", t)
+    assert pick(a) == pick(b) and len(pick(a)) == 17
+    # D 40: 40 // 16 = 2 stages per segment, 20 stations
+    mid = RTL.replace("ot_dp_dly #(.W(1), .D(20)) u_pd20_x_1_t_25", "ot_dp_dly #(.W(1), .D(40)) u_pd20_x_1_t_25")
+    assert pick(dl.apply(mid, cores=["u_pvg0_p1"], tail_groups=2, pad_min_stations=16)[0]) == ["2"] * 20
+    # same stage total on every line
+    for nm, d in (("u_pd20_x_0_t_25", 20), ("u_pd20_x_1_t_25", 20), ("u_pd4_x_0_t_29", 4)):
+        assert sum(int(x) for x in re.findall(r"\.D\((\d+)\)\) %s_sg\d+ " % nm, txt)) == d
+
+
+def test_pad_min_stations_plan_key():
+    import gen_phys
+    import schema
+    c = gen_phys.dly_lockup_cfg
+    assert c({"r_dly_lockup": {"kv3_pv": {"pad_min_stations": 16}}}, "kv3_pv_v8") == dict(seg=8, tail_groups=0, pad_min_stations=16)
+    assert c({"r_dly_lockup": {"kv3_pv": {"pad_min_stations": 0}}}, "kv3_pv_v8") == dict(seg=8, tail_groups=0)
+    props = schema.SCHEMA["properties"]["budgets"]["properties"]["r_dly_lockup"]["additionalProperties"]["properties"]
+    assert props["pad_min_stations"] == {"type": "integer", "minimum": 0}
+
+
+@pytest.mark.skipif(shutil.which("iverilog") is None, reason="iverilog not installed")
+def test_pad_min_stations_same_outputs_iverilog(tmp_path):
+    txt, lat, st = dl.apply(RTL, cores=["u_pvg0_p1"], pad_min_stations=16)
+    tb = """`timescale 1ps/1ps
+module tb;
+    reg clk = 0; reg [1:0] x = 0; wire [2:0] ya, yb; wire za, zb; integer k, bad = 0;
+    top_a a (.clk(clk), .x_i(x), .y_o(ya), .z_o(za));
+    top_b b (.clk(clk), .x_i(x), .y_o(yb), .z_o(zb));
+    always #50 clk = ~clk;
+    initial begin
+        for (k = 0; k < 400; k = k + 1) begin
+            @(posedge clk); #7 x = $random;
+            if (k > 80 && (ya !== yb || za !== zb)) bad = bad + 1;
+        end
+        if (bad == 0) $display("SAME"); else $display("DIFF %0d", bad);
+        $finish;
+    end
+endmodule
+"""
+    (tmp_path / "a.v").write_text(CELLS + RTL.replace("module top (", "module top_a ("))
+    (tmp_path / "b.v").write_text(txt.replace("module top (", "module top_b ("))
+    (tmp_path / "tb.v").write_text(tb)
+    subprocess.run(["iverilog", "-g2012", "-o", str(tmp_path / "s"), str(tmp_path / "a.v"), str(tmp_path / "b.v"), str(tmp_path / "tb.v")], check=True)
+    assert "SAME" in subprocess.run(["vvp", str(tmp_path / "s")], capture_output=True, text=True, check=True).stdout

@@ -30,6 +30,11 @@ Form (0 cycles, existing cells only: ot_dp_dly, ot_dp_dly_keep, ot_dp_lk):
              chain's source.  The chained piece has to cross from one pad's trunk end to the other's in D stages: kv3_pv_v8
              D25e form, 32 ctl_cmd pieces of 1-2 stages between trunk ends about 1 mm apart.  Same depth, +229 flops there;
              the copies are kept cells (ot_dp_dly_keep), so Yosys cannot fold them back.  --no-unchain keeps the chain.
+  5. PAD STATIONS (pad_min_stations N > 0, FABLE-FIX-KV-PV-R2 11-20): a pad line that is not a tail copy (u_pd<N>_* trunk or
+             single-reader pad) is cut so that it has at least min(D, N) segments: segment size min(SEG, max(1, D // N)).  A segment
+             is ONE placement station, so a sparse transport line needs a boundary per transport hop: kv3_pv_v8 astk owner
+             response, D 7..11 over 3.1 to 3.6 mm, SEG 8 gave 2 stations and a 1,404-um hop (v8j / v8m / v8c dly_spread max_hop,
+             TT setup -8,203 with the wrong-side inverter, about -1,000 without).  Dense lines (D >= SEG x N) are unchanged.
   Never latched: an input fed by a port, by logic or by a hard core (a launch-clock latch on a core tap is not a lockup:
   v8b dry ECO, 613 pair ts -> join ends at -946 ps), and an output read only by logic.
 
@@ -38,7 +43,7 @@ is post-processed at GEN, hard cores = the kit's macro modules; the kit gets OT_
 OT_TAP_CAP_RECHECK=0).
 
 Usage: kit_dly_lockup.py RTL.sv [--out OUT.sv] [--report R.json] [--seg 8] [--inst-re RE] [--cores CORE_CLOCKS.json]
-                         [--core-re RE] [--guard NAME] [--tail-groups 0] [--no-unchain]
+                         [--core-re RE] [--guard NAME] [--tail-groups 0] [--no-unchain] [--pad-min-stations 0]
   --cores   kit_core_clocks.json of the kit ({"rows": [{"instance": ...}]}): the hard-core instances
   --guard   put the latches under `ifdef NAME (else plain wires); default: unguarded
 Never run = no change.  The split alone (no latch) is the same circuit: D stages in the same order on the same clock.
@@ -70,9 +75,11 @@ def seg_sizes(d, seg):
 
 TAIL_MARK = "landing pad tail copy for core"
 TRUNK_MARK = "landing pad trunk"
+PAD_RE = re.compile(r"u_pd\d+_")
 
 
-def apply(txt, seg=8, inst_re=DEFAULT_RE, cores=(), core_re=None, guard=None, tail_groups=0, core_types=(), unchain=True):
+def apply(txt, seg=8, inst_re=DEFAULT_RE, cores=(), core_re=None, guard=None, tail_groups=0, core_types=(), unchain=True,
+          pad_min_stations=0):
     if seg < 1:
         raise LkError("seg must be >= 1")
     mod = re.search(r"\bmodule\s+\w+\s*(#\((?:[^()]|\([^()]*\))*\))?\s*\(", txt)
@@ -162,7 +169,10 @@ def apply(txt, seg=8, inst_re=DEFAULT_RE, cores=(), core_re=None, guard=None, ta
     nsplit = nseg = 0
     for name, x in sel.items():
         W, base = x["W"], x["base"]
-        sizes = seg_sizes(x["D"], seg)
+        seg_x = seg
+        if pad_min_stations > 0 and not x["tail"] and PAD_RE.match(name):
+            seg_x = min(seg, max(1, x["D"] // pad_min_stations))
+        sizes = seg_sizes(x["D"], seg_x)
         if x["tail"]:
             g = x["D"] if tail_groups <= 0 else min(x["D"], tail_groups)
             sizes = [x["D"] // g + (1 if j < x["D"] % g else 0) for j in range(g)]
@@ -217,7 +227,7 @@ def apply(txt, seg=8, inst_re=DEFAULT_RE, cores=(), core_re=None, guard=None, ta
     return txt[:hdr_end] + body, lat, stats
 
 
-def apply_kit(rtl_dir, seg=8, tail_groups=0, core_types=(), cores=(), unchain=True):
+def apply_kit(rtl_dir, seg=8, tail_groups=0, core_types=(), cores=(), unchain=True, pad_min_stations=0):
     """gen_phys entry (budgets.r_dly_lockup): the post-pass on every staged *_bound.sv of the kit that instantiates a delay cell.
     Returns {file: stats}; writes each file in place (tmp + rename)."""
     out = {}
@@ -225,7 +235,8 @@ def apply_kit(rtl_dir, seg=8, tail_groups=0, core_types=(), cores=(), unchain=Tr
         src = f.read_text()
         if "ot_dp_dly" not in src:
             continue
-        txt, lat, stats = apply(src, seg=seg, tail_groups=tail_groups, core_types=core_types, cores=cores, unchain=unchain)
+        txt, lat, stats = apply(src, seg=seg, tail_groups=tail_groups, core_types=core_types, cores=cores, unchain=unchain,
+                                pad_min_stations=pad_min_stations)
         if txt != src:
             tmp = f.with_name(f.name + ".dlk_tmp")
             tmp.write_text(txt)
@@ -247,7 +258,8 @@ def main(argv):
         cores = [r["instance"] for r in json.loads(Path(opt("--cores")).read_text())["rows"]]
     txt, lat, stats = apply(rtl.read_text(), seg=int(opt("--seg", "8")), inst_re=opt("--inst-re", DEFAULT_RE), cores=cores,
                             core_re=opt("--core-re"), guard=opt("--guard"),
-                            tail_groups=int(opt("--tail-groups", "0")), unchain="--no-unchain" not in argv)
+                            tail_groups=int(opt("--tail-groups", "0")), unchain="--no-unchain" not in argv,
+                            pad_min_stations=int(opt("--pad-min-stations", "0")))
     tmp = out.with_name(out.name + ".dlk_tmp")
     tmp.write_text(txt)
     tmp.replace(out)

@@ -885,7 +885,10 @@ def dly_lockup_cfg(budgets, tn):
     if not hit:
         return None
     c = v[max(hit, key=len)] or {}
-    return dict(seg=int(c.get("seg", 8)), tail_groups=int(c.get("tail_groups", 0)))
+    out = dict(seg=int(c.get("seg", 8)), tail_groups=int(c.get("tail_groups", 0)))
+    if c.get("pad_min_stations"):          # absent / 0 = the form as first built (same call, same kit)
+        out["pad_min_stations"] = int(c["pad_min_stations"])
+    return out
 
 
 def dly_lockup_r2r_margin(budgets, tn):
