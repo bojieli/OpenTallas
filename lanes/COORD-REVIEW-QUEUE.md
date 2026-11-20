@@ -12957,3 +12957,4 @@ FAILED [AUTOPILOT a1f0fe325bef] 2026-11-20 05:34:22 PST AUTOPILOT -> KIT-WAVE-3:
   Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
 - 2026-11-20 05:40 PST DISK-RATE intel1 /srv/opentallas-scratch2: free 245 GB, falling 102 GB/h, floor 50 GB in 1.9 h AUTO-RETIRE rc 0: df before: 229G / df after: 229G; deleted 0, REFUSED: live input: a running process / queued or waiting ot-run job names /srv/opentallas-scratch2/claude/kw45/snap_qwen_comput; REFUSED: live input: a running process / queued or waiting ot-run job (cron disk_rate.py; read-only)
 - 2026-11-20 05:40 PST DISK-RATE epyc2 /srv/opentallas-scratch2: free 154 GB, falling 75 GB/h, floor 50 GB in 1.4 h AUTO-RETIRE rc 0: ; deleted 0,  (cron disk_rate.py; read-only)
+- 2026-11-20 05:40 PST DISK-RATE epyc10 /srv/opentallas-scratch2: free 1065 GB, falling 170 GB/h, floor 50 GB in 6.0 h (cron disk_rate.py; read-only)
