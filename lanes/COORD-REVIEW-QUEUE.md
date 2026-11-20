@@ -10170,3 +10170,4 @@ FAILED [AUTOPILOT f94b11164602] 2026-11-19 20:04:08 PST AUTOPILOT -> KIT-WAVE-12
   Then bind + G0 + LATCHECK.
   - N46Q apply: live tree qwen_compute_n46_s1 built on 6 hosts (56bcb338). publish_apply bind-first strict bind in progress.
   - N46T: QC-PADLEG section2 / section3_cland are now in the rows file. Composed after N46R3 binds, with a footprint check on section 3 first (FABLE stop 9). The stm guides use main tools (event_tree_t2 is main d2c3111be068 + fixes, newer than 1841dad39c4).
+- 2026-11-19 20:05 PST HOST-REPORT 2026-11-19 20:05 | tolera L74.54/112 units0 free437G | key-ca L154.21/112 units242 free717G | dear-c L176.90/128 units501 free439G | loved- L403.48/96 units67 free1964G | outgoi L350.92/96 units362 free826G | renewe L134.71/96 units78 free1264G | civil- L176.79/96 units56 free736G
