@@ -816,14 +816,36 @@ def encode_bank72(words):
     return phys
 
 
-def cmd_frame(a):
+def load_die(a):
     import dv_layer_compile as C
+
+    tree = C.die_tree(a.die_ref, a.die_src)
+    if not getattr(a, 'bound_data', None):
+        return C.Die(tree)
+    from layer_prog import bound_data as BD
+
+    bind = BD.load_bind(a.bound_data, a.bound_data_manifest, C.ROOT)
+    manifest = C.ROOT / a.bound_data_manifest
+    frame_root, selected = LX.frame_manifest()
+    explicit = os.environ.get('OT_S81_FRAME_ASBUILT_MANIFEST')
+    if explicit and C.manifest_content(frame_root / selected) != C.manifest_content(manifest):
+        raise ValueError(f'explicit frame manifest {explicit} differs from the strict bind manifest {manifest}')
+    os.environ['OT_S81_FRAME_ASBUILT_MANIFEST'] = str(manifest)
+    die = C.Die(tree, netlist=bind['netlist_path'], netlist_sha=bind['netlist_sha256'],
+                bound_rtl=bind['bound'] / 'rtl')
+    BD.rebind_links(die, bind)
+    return die
+
+
+def cmd_frame(a):
     import xs_capacity as XCAP   # S81-ROMOPT-B: the die compile refuses a stage map that overfills the ROM / cfg7
     if XCAP.enabled():
         XCAP.verdict(stage=os.environ.get("OT_XS_STAGE"))
-    die = C.Die(C.die_tree(a.die_ref, a.die_src))
+    die = load_die(a)
     rec, field = compile_frame(die, a.frame, a.fixtures, a.ops or XS_OPS['L0'] + BF_OPS['L0'], iters=a.iters,
                                only=None if a.only is None else set(a.only))
+    if getattr(a, 'bound_data', None):
+        rec['die_source'] = die.die_source
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
     if getattr(a, 'images', False) or getattr(a, 'rank_tags', False):
@@ -847,13 +869,12 @@ def cmd_frame(a):
 
 def cmd_gen(a):
     """bench vectors of ONE phase of the frame's full multi-phase field (every phase legalised, as compiled)"""
-    import dv_layer_compile as C
-    import hdc_golden_v41 as G
-    import v41_die_images_w17w10 as I
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
-    die = C.Die(C.die_tree(a.die_ref, a.die_src))
+    die = load_die(a)
     rec, field = compile_frame(die, a.frame, a.fixtures, a.ops or XS_OPS['L0'] + BF_OPS['L0'], iters=a.iters)
+    if getattr(a, 'bound_data', None):
+        (out / 'die_source.json').write_text(json.dumps(die.die_source, indent=1) + '\n')
     if a.phase:
         rc = 0
         for k_ in a.phase:
@@ -1262,7 +1283,12 @@ def main(argv=None):
     k.add_argument('--res', default=None, help='results dir (repo-relative); default the bench_xsp record')
     k.add_argument('--fixtures', default=None)
     k.add_argument('vec', nargs='+')
+    for command in (f, g):
+        command.add_argument('--bound-data', type=Path, help='clean strict bind output with its emitted RTL')
+        command.add_argument('--bound-data-manifest', help='the matching as-built manifest of that bind')
     a = ap.parse_args(argv)
+    if a.cmd in ('frame', 'gen') and (a.bound_data is None) != (a.bound_data_manifest is None):
+        ap.error('--bound-data needs --bound-data-manifest')
     return {'tie': cmd_tie, 'frame': cmd_frame, 'gen': cmd_gen, 'check': cmd_check, 'collect': cmd_collect}[a.cmd](a)
 
 
