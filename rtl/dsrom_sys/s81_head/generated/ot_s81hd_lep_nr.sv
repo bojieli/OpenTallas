@@ -25,7 +25,11 @@ module ot_s81hd_lep_core_nr #(
     parameter integer IN_PIPE = 0,     // 1 (LEPCAP 10-19): one registered face stage on ro / t_host / t_kd / mu_c (+1 edge on
                                        // each, same relative timing); ro[0] / t_kd[53] re-fanned by 6 KEPT copies <= 28 loads
     parameter [15:0]  TXI = 16'h0000,  // DIE-HEAD-84: per-lane TX ingress stages (see g_tx); 0 = none
-    parameter integer RXH = 0          // HEAD-PLAN-R4 NF15f: RX head rank before ri / ml_wd (see g_rxh); 0 = none
+    parameter integer RXH = 0,         // HEAD-PLAN-R4 NF15f: RX head rank before ri / ml_wd (see g_rxh); 0 = none
+    parameter integer RTG = 0,         // RST-FAN-1: reset tree groups (0 = ot_rst_relay_tree3; >0 = ot_rst_relay_tree3m)
+    parameter integer RTR = 1,         // RST-FAN-1: root copies of the mapped tree (RTG > 0)
+    parameter [1023:0] RTGS = 1024'd0, // RST-FAN-1: first local of group g at [16g+:16] (RTG > 0)
+    parameter [255:0]  RTRM = 256'd0   // RST-FAN-1: root copy of group g at [4g+:4] (RTG > 0)
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -113,8 +117,11 @@ module ot_s81hd_lep_core_nr #(
     // reset pins (native census); same release edge as every leaf.
     localparam integer NXR=(SAFE_FIFO && NL==4)?2:0;
     wire [3+NRX_RST+NXR:0] rr;
-    generate if(SAFE_FIFO) begin:g_reset_balanced
+    generate if(SAFE_FIFO && RTG==0) begin:g_reset_balanced
       ot_rst_relay_tree3 #(.REGIONS(4+NRX_RST+NXR)) u_rstr(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
+    end else if(SAFE_FIFO) begin:g_reset_mapped   // RST-FAN-1: root copies + free group boundaries, same 3 edges
+      ot_rst_relay_tree3m #(.REGIONS(4+NRX_RST+NXR),.GROUPS(RTG),.ROOTS(RTR),.GS(RTGS[16*RTG-1:0]),.RM(RTRM[4*RTG-1:0]))
+        u_rstr(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
     end else begin:g_reset_legacy
       ot_rst_relay #(.REGIONS(4+NRX_RST), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rstr (.clk(clk), .rst_n_in(rst_n), .rst_n(rr));
     end endgenerate
@@ -1263,7 +1270,8 @@ endmodule
 
 module ot_s81hd_lep_idx_nr #(
     parameter integer DT = 512, parameter integer DR = 8, parameter integer CRED = 8, parameter integer SRAM = 1,
-    parameter integer NB = 80, parameter integer RX_SRAM = 0, parameter integer IN_PIPE = 0, parameter integer NATIVE32 = 0, parameter integer IDX_EN = 1, parameter [15:0] TXI = 16'h0000, parameter integer RXH = 0
+    parameter integer NB = 80, parameter integer RX_SRAM = 0, parameter integer IN_PIPE = 0, parameter integer NATIVE32 = 0, parameter integer IDX_EN = 1, parameter [15:0] TXI = 16'h0000, parameter integer RXH = 0,
+    parameter integer RTG = 0, parameter integer RTR = 1, parameter [1023:0] RTGS = 1024'd0, parameter [255:0] RTRM = 256'd0
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -1297,7 +1305,8 @@ module ot_s81hd_lep_idx_nr #(
     output wire [275:0]    cb
 );
     ot_s81hd_lep_core_nr #(.DT(DT), .DR(DR), .CRED(CRED), .SRAM(SRAM), .HOST_EN(0), .MU_EN(1), .RX_SRAM(RX_SRAM), .AB_EN(1), .NB(NB),
-        .IN_PIPE(IN_PIPE), .NATIVE32(NATIVE32), .IDX_EN(IDX_EN), .TXI(TXI), .RXH(RXH)) u (   // L5B-LEPMU 10-21: native32 / face-stage opt-ins exposed (defaults 0 = unchanged)
+        .IN_PIPE(IN_PIPE), .NATIVE32(NATIVE32), .IDX_EN(IDX_EN), .TXI(TXI), .RXH(RXH),
+        .RTG(RTG), .RTR(RTR), .RTGS(RTGS), .RTRM(RTRM)) u (   // L5B-LEPMU 10-21: native32 / face-stage opt-ins exposed (defaults 0 = unchanged)
         .clk(clk), .rst_n(rst_n), .ro(ro), .ri(ri),
         .lo0_v(lo0_v), .lo0_r(lo0_r), .lo0_d(lo0_d), .lo1_v(lo1_v), .lo1_r(lo1_r), .lo1_d(lo1_d),
         .li0_v(li0_v), .li0_r(li0_r), .li0_d(li0_d), .li1_v(li1_v), .li1_r(li1_r), .li1_d(li1_d), .rxv(rxv),

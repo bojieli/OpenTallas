@@ -95,6 +95,40 @@ def rxh_core(core):
   if k==0:raise ValueError('RXH: g_rxm no longer reads '+n)
  return core[:a]+blk+core[b:]
 
+# RST-FAN-1 11-20 (HEAD-CROSSING-1119, COORD ruling on hd_lep0N; opt-in RTG, default 0 = the g_reset_balanced.u_rstr
+# ot_rst_relay_tree3 line and every rr net unchanged): RTG > 0 replaces the SAFE_FIFO reset tree by ot_rst_relay_tree3m
+# (rtl/lib): RTR kept root copies + RTG groups with explicit first-local indices RTGS[16g+:16] and root map RTRM[4g+:4],
+# the same 3-edge release of every rr bit (0 added cycles; only which copy flop drives which reset pins changes).  On the
+# r8b hd_lep0N placement tree3's one root_r reached its 30 group_r over 412-659 um and group 14 held locals ~1300 um apart.
+RTREE_PARAM_OLD="    parameter integer RXH = 0          // HEAD-PLAN-R4 NF15f: RX head rank before ri / ml_wd (see g_rxh); 0 = none\n) ("
+RTREE_PARAM_NEW=("    parameter integer RXH = 0,         // HEAD-PLAN-R4 NF15f: RX head rank before ri / ml_wd (see g_rxh); 0 = none\n"
+                 "    parameter integer RTG = 0,         // RST-FAN-1: reset tree groups (0 = ot_rst_relay_tree3; >0 = ot_rst_relay_tree3m)\n"
+                 "    parameter integer RTR = 1,         // RST-FAN-1: root copies of the mapped tree (RTG > 0)\n"
+                 "    parameter [1023:0] RTGS = 1024'd0, // RST-FAN-1: first local of group g at [16g+:16] (RTG > 0)\n"
+                 "    parameter [255:0]  RTRM = 256'd0   // RST-FAN-1: root copy of group g at [4g+:4] (RTG > 0)\n) (")
+RTREE_TREE_OLD=("    generate if(SAFE_FIFO) begin:g_reset_balanced\n"
+                "      ot_rst_relay_tree3 #(.REGIONS(4+NRX_RST+NXR)) u_rstr(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));\n"
+                "    end else begin:g_reset_legacy\n")
+RTREE_TREE_NEW=("    generate if(SAFE_FIFO && RTG==0) begin:g_reset_balanced\n"
+                "      ot_rst_relay_tree3 #(.REGIONS(4+NRX_RST+NXR)) u_rstr(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));\n"
+                "    end else if(SAFE_FIFO) begin:g_reset_mapped   // RST-FAN-1: root copies + free group boundaries, same 3 edges\n"
+                "      ot_rst_relay_tree3m #(.REGIONS(4+NRX_RST+NXR),.GROUPS(RTG),.ROOTS(RTR),.GS(RTGS[16*RTG-1:0]),.RM(RTRM[4*RTG-1:0]))\n"
+                "        u_rstr(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));\n"
+                "    end else begin:g_reset_legacy\n")
+RTREE_IDXP_OLD="parameter [15:0] TXI = 16'h0000, parameter integer RXH = 0\n"
+RTREE_IDXP_NEW=("parameter [15:0] TXI = 16'h0000, parameter integer RXH = 0,\n"
+                "    parameter integer RTG = 0, parameter integer RTR = 1, parameter [1023:0] RTGS = 1024'd0, parameter [255:0] RTRM = 256'd0\n")
+RTREE_IDXI_OLD=".TXI(TXI), .RXH(RXH)) u ("
+RTREE_IDXI_NEW=".TXI(TXI), .RXH(RXH),\n        .RTG(RTG), .RTR(RTR), .RTGS(RTGS), .RTRM(RTRM)) u ("
+
+def rtree(text):
+ """RST-FAN-1 opt-in mapped reset tree (see RTREE_*); applied to the derived core + idx texts (or the whole master)."""
+ for old,new in [(RTREE_PARAM_OLD,RTREE_PARAM_NEW),(RTREE_TREE_OLD,RTREE_TREE_NEW),(RTREE_IDXP_OLD,RTREE_IDXP_NEW),
+                 (RTREE_IDXI_OLD,RTREE_IDXI_NEW)]:
+  if text.count(old)!=1:raise ValueError('RST-FAN-1 source pattern changed: '+old[:60])
+  text=text.replace(old,new)
+ return text
+
 def derive(root):
  src=[(root/p).read_text() for p in SOURCES]
  core=module(src[0],'ot_s81sl_lep_core').replace('module ot_s81sl_lep_core','module ot_s81hd_lep_core_nr',1)
@@ -177,6 +211,7 @@ def derive(root):
  idx=idx.replace("parameter [15:0] TXI = 16'h0000\n","parameter [15:0] TXI = 16'h0000, parameter integer RXH = 0\n",1)
  idx=idx.replace('.TXI(TXI)) u','.TXI(TXI), .RXH(RXH)) u',1)
  if '.RXH(RXH)) u' not in idx or 'parameter integer RXH = 0' not in idx:raise ValueError('idx RXH pattern changed')
+ both=rtree(core+'\n\x00\n'+idx);core,idx=both.split('\n\x00\n')
  txi=r"""module ot_s81hd_lep_txi #(parameter integer W = 553, parameter integer NG = 18, parameter integer N = 0) (
     input  wire          clk, rn,
     input  wire          psh_i, input wire [NG-1:0] pg_i, input wire [W-1:0] wd_i,
@@ -245,7 +280,8 @@ endmodule"""
                       'opt-in TXI per-lane TX ingress stages (DIE-HEAD-84 11-07; default 0 = no added cycle)',
                       'MU landing slot index wsi/rsi = (NS>1) ? ws/rs : 0 (no X array index; LEC safe form, 11-09)',
                       'opt-in RXH RX head rank before ri / ml_wd (HEAD-PLAN-R4 NF15f 11-17; default 0 = no added cycle)',
-                      'TXI lanes: late push select on count_r / wp_r (HEAD-TYPES-OPUS 11-18; TXI 0 = original statements; no added cycle)'],added_cycles=0,
+                      'TXI lanes: late push select on count_r / wp_r (HEAD-TYPES-OPUS 11-18; TXI 0 = original statements; no added cycle)',
+                      'opt-in RTG mapped reset tree: root copies + free group boundaries (RST-FAN-1 11-20; RTG 0 = tree3 unchanged; no added cycle)'],added_cycles=0,
              physical='new head provider; no inherited physical view or signoff')
  header='`timescale 1ns/1ps\n// Generated by tools/s81_head/head_lep_nr_sources.py; do not edit.\n'
  return header+core+'\n\n'+idx+'\n\n'+mem+'\n\n'+land+'\n\n'+show+'\n\n'+txi+'\n'+RXH_LEAVES+'\n',record

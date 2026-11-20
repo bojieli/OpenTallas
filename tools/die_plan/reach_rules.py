@@ -5,6 +5,7 @@ fanout and reach locality of every die plan, checked at G0 and fixed by ONE dete
     reach_rules.py check  PLAN [--repo SRC] [--types RE] [--json OUT] [--tsv OUT]      exit 1 = R-REACH errors
     reach_rules.py fix    PLAN --out-plan NEW.json --report REP.json [--repo SRC] [--types RE] [--rules 1,4]
     reach_rules.py census PLAN [PLAN ...] [--repo SRC]                                  affected types per die
+    reach_rules.py rstspan TYPE=GEOM.tsv [TYPE=GEOM.tsv ...] [--json OUT] [--tsv OUT]   R-REACH-6 placed reset census
 
 THE RULES (numbers; the why and the evidence are in ~/coord/lanes/RULEBOOK-1113.md section R-REACH):
   R-REACH-1 start_fan   One register (or one kept copy) drives <= FANOUT_MAX (48) loads, all within REACH_UM (405 um,
@@ -72,6 +73,17 @@ THE RULES (numbers; the why and the evidence are in ~/coord/lanes/RULEBOOK-1113.
                         0 cycles); the finding names the copies it will emit and any cluster still over the reach.
                         FIX: none needed in the plan (generator default); a residual cluster (one load group alone
                         wider than the reach) needs an origin home (landing_origin_rect_um) or landing_local_resets.
+                        (b) RST-FAN-1 11-20 (COORD ruling on hd_lep0N u_rrl_657 -> core rst_n: 157 loads up to 1311 um,
+                        minimax radius 992 um), PLACED census, any type (`rstspan TYPE=GEOM.tsv`, geom_dump.tcl format, the
+                        same parse as placed_scan / rstgeo): every reset relay flop (RESET_RELAY_RE: wrapper u_rrl_<k> /
+                        u_srl_<k> taps, u_cland_rst / u_cland_rfan, tree3 / tree3m root_r / group_r / local_r, ot_rst_fan
+                        n1_r / n2_r / leaf_r, ot_rst_relay sync, rr_t<i>) and its placed loads (through buffers):
+                          reset_relay_span  the loads' minimax radius (the best single site) > REACH_UM: no siting closes
+                                            it; the net needs same-edge copies (ot_rst_fan leaves, tree3m root copies,
+                                            RING-RSTFAN-1) or a pipelined fan (+cycles, LATCHECK);
+                          reset_relay_site  placed hop (relay -> farthest load) > REACH_UM but the minimax radius is within
+                                            it: re-site the relay (relay_sites) at the minimax point the finding names.
+                        Warning only.  The plan has no soft-load geometry, so this census reads a placed DB (kit geom/).
 
 G0: check.py calls check_plan(); a finding is a WARNING (check "r_reach") by default; budgets.r_reach "error" makes it
 an ERROR (opt-in, REACH-FIN-2 11-13: defaults of existing plans preserved), "off" skips; rule 3 is always a warning.  The fix is idempotent: a fixed plan run again changes nothing.
@@ -781,6 +793,101 @@ def ring_reset_fan_findings(t, tn, reach=REACH_UM):
                           f"home or landing_local_resets)" if resid > reach + EPS else ""))]
 
 
+# ------------------------------------------------------------------- rule 6 (b): placed reset relay span (RST-FAN-1)
+RESET_RELAY_RE = re.compile(r"(?:^|[./])(?:u_[rs]rl_\d+/q|u_cland_r(?:st|fan)_\w+/q|rr_t\d+(?:/q)?|root_r|group_r|local_r|"
+                            r"n1_r|n2_r|leaf_r|sync(?:\[\d+\])?)$")
+
+
+def _cell_name(n):
+    """geom cell name -> RTL register name (escapes and the yosys $_DFF_* suffix dropped; bit index kept)"""
+    return re.sub(r"\$_.*$", "", n.replace("\\", ""))
+
+
+def reset_relay_spans(geom, tn, reach=REACH_UM, rx=RESET_RELAY_RE, loaded=None):
+    """-> (rows, [finding]) of R-REACH-6 (b) for one placed type.  geom: geom.tsv path (or loaded=(C, P, drv) from
+    placed_scan.load).  A relay is a flop ('S' cell) whose register name matches rx; its loads are the flops / macros it
+    drives through buffers / inverters ('B' cells), as tools/autopilot placed_scan traces them."""
+    if loaded is None:
+        sys.path.insert(0, str(HERE.parent / "autopilot"))
+        import placed_scan as PS
+        loaded = PS.load(geom)
+    C, _P, drv = loaded
+
+    def pos(k):
+        c = C[k[1:]]
+        return ((c[1] + c[3]) / 2.0, (c[2] + c[4]) / 2.0)
+
+    def trace(d):
+        cur, n = d, 0
+        while cur[0] == "i" and cur[1:] in C and C[cur[1:]][0] == "B" and n < 200:
+            ds = drv.get(cur, [])
+            if len(ds) != 1:
+                return None
+            cur, n = ds[0], n + 1
+        return cur
+    relays = {"i" + i: _cell_name(c[5]) for i, c in C.items() if c[0] == "S" and rx.search(_cell_name(c[5]))}
+    loads = defaultdict(list)
+    for i, c in C.items():
+        if c[0] not in "SM":
+            continue
+        e = "i" + i
+        for d in drv.get(e, []):
+            s = trace(d)
+            if s in relays:
+                loads[s].append(pos(e))
+    rows, out = [], []
+    for k, pts in sorted(loads.items(), key=lambda kv: relays[kv[0]]):
+        at = pos(k)
+        u = [p[0] + p[1] for p in pts]
+        w = [p[0] - p[1] for p in pts]
+        uc, wc = (min(u) + max(u)) / 2.0, (min(w) + max(w)) / 2.0
+        mmx = ((uc + wc) / 2.0, (uc - wc) / 2.0)
+        r_mm = max(man(p, mmx) for p in pts)
+        r_now = max(man(p, at) for p in pts)
+        spread = (max(p[0] for p in pts) - min(p[0] for p in pts)) + (max(p[1] for p in pts) - min(p[1] for p in pts))
+        row = dict(type=tn, relay=relays[k], n=len(pts), at=[round(at[0], 1), round(at[1], 1)], r_now=round(r_now, 1),
+                   minimax=[round(mmx[0], 1), round(mmx[1], 1)], r_minimax=round(r_mm, 1), spread_um=round(spread, 1))
+        rows.append(row)
+        if r_mm > reach + EPS:
+            out.append(dict(rule="6", kind="reset_relay_span", type=tn, value=round(r_mm, 1), limit=reach, n=len(pts), warn=True,
+                            msg=f"reset relay {relays[k]} drives {len(pts)} loads up to {r_now:.0f} um away; their minimax "
+                                f"radius {r_mm:.0f} um > {reach:g} um (spread {spread:.0f} um): no single site closes it -> "
+                                f"same-edge copies (ot_rst_fan leaves / tree3m root copies / RING-RSTFAN-1) or a pipelined "
+                                f"fan (+cycles, LATCHECK)"))
+        elif r_now > reach + EPS:
+            out.append(dict(rule="6", kind="reset_relay_site", type=tn, value=round(r_now, 1), limit=reach, n=len(pts), warn=True,
+                            msg=f"reset relay {relays[k]} at ({at[0]:.0f}, {at[1]:.0f}) reaches its {len(pts)} loads over "
+                                f"{r_now:.0f} um > {reach:g} um; minimax site ({mmx[0]:.0f}, {mmx[1]:.0f}) closes it at "
+                                f"{r_mm:.0f} um (relay_sites)"))
+    return rows, out
+
+
+def cmd_rstspan(a):
+    rows, fs = [], []
+    for spec in a.geoms:
+        tn, _eq, g = spec.partition("=")
+        if not g:
+            raise SystemExit(f"rstspan: expected TYPE=GEOM.tsv, got {spec!r}")
+        r, f = reset_relay_spans(g, tn, a.reach)
+        rows += r
+        fs += f
+    if a.json:
+        Path(a.json).write_text(json.dumps(dict(schema=SCHEMA, rule="R-REACH-6b", rows=rows, findings=fs), indent=1))
+    if a.tsv:
+        with open(a.tsv, "w") as o:
+            o.write("kind\ttype\tvalue\tlimit\tn\tmsg\n")
+            for f in fs:
+                o.write("\t".join(str(f[k]) for k in ("kind", "type", "value", "limit", "n", "msg")) + "\n")
+    per = defaultdict(int)
+    for f in fs:
+        per[f["kind"]] += 1
+    print(f"R-REACH-6b reset relay census: {len(rows)} relays, " + ", ".join(f"{k} {v}" for k, v in sorted(per.items()))
+          if per else f"R-REACH-6b reset relay census: {len(rows)} relays, no finding")
+    for f in sorted(fs, key=lambda f: -f["value"])[:a.top]:
+        print(f"  [{f['kind']}] {f['type']}: {f['msg']}")
+    return 0
+
+
 # ------------------------------------------------------------------------------ rules 2 + 3: barriers and windows
 def _bus_points(P, tn):
     import check as CK
@@ -1329,6 +1436,12 @@ def main(argv=None):
     c.add_argument("--reset-tree", action="store_true",
                    help="R-REACH-5 (b): also check every falling-edge reset tree hop (~10 s per negedge type)")
     f.add_argument("--rules", default="1,4")
+    g = sub.add_parser("rstspan", help="R-REACH-6 (b): placed reset relay span census (warning only)")
+    g.add_argument("geoms", nargs="+", metavar="TYPE=GEOM.tsv")
+    g.add_argument("--json")
+    g.add_argument("--tsv")
+    g.add_argument("--reach", type=float, default=REACH_UM)
+    g.add_argument("--top", type=int, default=20)
     n = sub.add_parser("census")
     n.add_argument("plans", nargs="+")
     n.add_argument("--repo")
@@ -1339,7 +1452,7 @@ def main(argv=None):
             setattr(a, k, str(Path(getattr(a, k)).resolve()))
     if getattr(a, "plans", None):
         a.plans = [str(Path(x).resolve()) for x in a.plans]
-    return dict(check=cmd_check, fix=cmd_fix, census=cmd_census)[a.cmd](a)
+    return dict(check=cmd_check, fix=cmd_fix, census=cmd_census, rstspan=cmd_rstspan)[a.cmd](a)
 
 
 if __name__ == "__main__":

@@ -62,6 +62,37 @@ module tb_head_lepk_stages;
 `ifndef KCRED_DUT
 `define KCRED_DUT 12
 `endif
+// RST-FAN-1 11-20: the core reset fan (RFAN levels + maps) and u_lep's mapped reset tree (RTG ...); 0 = off.
+`ifndef RFAN_DUT
+`define RFAN_DUT 0
+`endif
+`ifndef RFN1_DUT
+`define RFN1_DUT 1
+`endif
+`ifndef RFN2_DUT
+`define RFN2_DUT 1
+`endif
+`ifndef RFMX_DUT
+`define RFMX_DUT 0
+`endif
+`ifndef RFPL_DUT
+`define RFPL_DUT 1024'd0
+`endif
+`ifndef RFPM_DUT
+`define RFPM_DUT 512'd0
+`endif
+`ifndef RTG_DUT
+`define RTG_DUT 0
+`endif
+`ifndef RTR_DUT
+`define RTR_DUT 1
+`endif
+`ifndef RTGS_DUT
+`define RTGS_DUT 1024'd0
+`endif
+`ifndef RTRM_DUT
+`define RTRM_DUT 256'd0
+`endif
   reg ck = 0; always #1 ck = ~ck;
   reg rs = 0;
   reg [1103:0] ro; reg [44:0] unit; reg lepf;
@@ -71,7 +102,9 @@ module tb_head_lepk_stages;
     .coll_i0(ci_r[0]), .coll_i1(ci_r[1]), .coll_i2(ci_r[2]), .coll_i3(ci_r[3]),
     .coll_o0(co_r[0]), .coll_o1(co_r[1]), .coll_o2(co_r[2]), .coll_o3(co_r[3]),
     .lepk_i0(ro), .lepk_o0(ri_r), .lepf_i0(lepf), .unit_i0(unit), .ctrl_o0(rt_r), .fault_o0(f_r), .lw_o(lw_r));
-  ot_s81hd_lep0N_noidx_core #(.CH_B(4'b1111), .PAIR(0), .KTX(`KTX_DUT), .KRX(`KRX_DUT), .TXI(`TXI_DUT), .PIN(`PIN_DUT), .POUT(`POUT_DUT), .PLW(`PLW_DUT), .COL0(`COL0_DUT), .RXH(`RXH_DUT), .KCRED(`KCRED_DUT)) u_dut(
+  ot_s81hd_lep0N_noidx_core #(.CH_B(4'b1111), .PAIR(0), .KTX(`KTX_DUT), .KRX(`KRX_DUT), .TXI(`TXI_DUT), .PIN(`PIN_DUT), .POUT(`POUT_DUT), .PLW(`PLW_DUT), .COL0(`COL0_DUT), .RXH(`RXH_DUT), .KCRED(`KCRED_DUT),
+    .RFAN(`RFAN_DUT), .RFN1(`RFN1_DUT), .RFN2(`RFN2_DUT), .RFMX(`RFMX_DUT), .RFPL(`RFPL_DUT), .RFPM(`RFPM_DUT),
+    .RTG(`RTG_DUT), .RTR(`RTR_DUT), .RTGS(`RTGS_DUT), .RTRM(`RTRM_DUT)) u_dut(
     .ck(ck), .rst_n(rs),
     .coll_i0(ci_d[0]), .coll_i1(ci_d[1]), .coll_i2(ci_d[2]), .coll_i3(ci_d[3]),
     .coll_o0(co_d[0]), .coll_o1(co_d[1]), .coll_o2(co_d[2]), .coll_o3(co_d[3]),
@@ -97,6 +130,21 @@ module tb_head_lepk_stages;
       if (rt_d[31]) begin ev_rt_d[n_rt_d] <= rt_d; n_rt_d <= n_rt_d + 1; end
       if (lw_r[0]) begin ev_lw_r[n_lw_r] <= lw_r; n_lw_r <= n_lw_r + 1; end
       if (lw_d[0]) begin ev_lw_d[n_lw_d] <= lw_d; n_lw_d <= n_lw_d + 1; end
+    end
+  end
+  // ------------------------------------------------------------------ RST-FAN-1 release edges
+  // every core reset leaf (rfan_all / rfan_any: the fan leaves, or rst_n itself at RFAN 0) and every u_lep rr bit must
+  // release on ONE edge: core leaves RFAN edges after rs, u_lep rr 3 more (its own tree3 / tree3m); ref: 0 and 3.
+  integer rs_c = -1, cl_r = -1, cl_d = -1, rr_r = -1, rr_d = -1, rf_err = 0;
+  always @(posedge ck) begin
+    if (rs && rs_c < 0) rs_c <= cyc;
+    if (u_ref.u.rfan_all && cl_r < 0) cl_r <= cyc;
+    if (u_dut.u.rfan_all && cl_d < 0) cl_d <= cyc;
+    if ((&u_ref.u.u_lep.u.rr) && rr_r < 0) rr_r <= cyc;
+    if ((&u_dut.u.u_lep.u.rr) && rr_d < 0) rr_d <= cyc;
+    if (u_dut.u.rfan_all != u_dut.u.rfan_any || u_ref.u.rfan_all != u_ref.u.rfan_any ||
+        (&u_dut.u.u_lep.u.rr) != (|u_dut.u.u_lep.u.rr) || (&u_ref.u.u_lep.u.rr) != (|u_ref.u.u_lep.u.rr)) begin
+      if (rf_err < 5) $display("FAIL reset leaves not uniform at cyc %0d", cyc); rf_err <= rf_err + 1;
     end
   end
   // ------------------------------------------------------------------ first-fault trace (which collector term, when)
@@ -236,6 +284,10 @@ module tb_head_lepk_stages;
     $display("LEPK_STAGES COL0=%0d RXH=%0d KCRED=%0d", `COL0_DUT, `RXH_DUT, `KCRED_DUT);
     rtt_report;
     $display("LEPK_STAGES release gap A<->B min ref=%0d dut=%0d (collisions dut %0d)", gmin_r, gmin_d, gcol_d);
+    $display("LEPK_STAGES RFAN=%0d RTG=%0d release (edges after rs): core ref %0d dut %0d, u_lep rr ref %0d dut %0d",
+      `RFAN_DUT, `RTG_DUT, cl_r - rs_c, cl_d - rs_c, rr_r - rs_c, rr_d - rs_c);
+    if (rf_err != 0 || cl_r - rs_c != 0 || cl_d - rs_c != `RFAN_DUT || rr_r - rs_c != 3 || rr_d - rs_c != `RFAN_DUT + 3) begin
+      $display("FAIL reset release edges (expect core 0 / %0d, rr 3 / %0d, uniform)", `RFAN_DUT, `RFAN_DUT + 3); err = err + 1; end
     if (gcol_d != 0) begin $display("FAIL release gap: %0d dut cycles release both pairs", gcol_d); err = err + 1; end
     $display("LEPK_STAGES KTX=%h KRX=%h TXI=%h PIN=%0d POUT=%0d PLW=%0d sent=%0d landed=%0d ri ref=%0d dut=%0d rt ref=%0d dut=%0d lw ref=%0d dut=%0d",
       16'(`KTX_DUT), 16'(`KRX_DUT), 16'(`TXI_DUT), `PIN_DUT, `POUT_DUT, `PLW_DUT, sent, landed, n_ri_r, n_ri_d, n_rt_r, n_rt_d, n_lw_r, n_lw_d);
