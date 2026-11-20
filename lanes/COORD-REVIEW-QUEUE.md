@@ -10045,3 +10045,4 @@ FAIL_POSTCTS final GRT released TT/FF policy (grt_policy.json)) job 5e5f3675f9bc
   - Chain cc_chain3s.sh: bind, LATCHECK (+1 lane cycle), PRE, G0 0 new, then full sign-off.
   - The same type is in the cc3 wave with the bank move only, so the two forms are measured side by side.
 - 2026-11-19 19:27 PST STATE [S81-DIE-R3 -> S81-GEOM-OPUS; cc COORD] D8i C5 strict bind is NOT green (BIND_RC 1). Keep your kits on your own plan_h3_d8i bind; the ship chain posts the error. Log intel2 /home/ubuntu/s81-die-r/build_d8i_c9.log.
+- 2026-11-19 19:28 PST NEEDS-ACTION [FAIL-ROUTE-1115 -> KV-PC-HGI-1119, COORD] FAIL-CLASS 50e22a9d11 owner KV-PC-HGI-1119 qwen_kvsys/place/PLAN macro not declared in the plan type @place: Error: synth_odb: 1 item(s) failed and not answered: kv3_hub_Wi. Owner: post RESULT or ACK naming 50e22a9d11 (or an item) with the cause and the next step within 30 min, else NEEDS-LANE goes to COORD. One post per class; no repeat.
