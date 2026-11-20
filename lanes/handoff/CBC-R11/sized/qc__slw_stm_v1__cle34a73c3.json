@@ -1,0 +1,94 @@
+{
+ "tool": "setup_to_stage",
+ "rule": "R11",
+ "die": "qc",
+ "type": "slw_stm_v1__cle34a73c3",
+ "kit": "/srv/opentallas-scratch/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q6D/items/slw_stm_v1__cle34a73c3/attempt_12/gen/slw_stm_v1__cle34a73c3",
+ "plan": "",
+ "paths_file": "/srv/opentallas-scratch2/claude/cbc-all-0200/sts/qc/slw_stm_v1__cle34a73c3/sts_paths.json",
+ "failing_paths": 41,
+ "rows": [
+  {
+   "rule": "R11",
+   "type": "slw_stm_v1__cle34a73c3",
+   "paths": 10,
+   "worst_slack_ps": -24.6,
+   "worst_start": "x_fe_fw_i[59]",
+   "worst_end": "u_bound.u_cland_x_fe_fw_i/u_ring.dch[0].sd_c[59]$_DFFE_NP_/D",
+   "max_straight_um": 220.6,
+   "hop_cap_um": 200.0,
+   "half_cycle": true,
+   "kind": "internal_stations_add",
+   "conn": "bus:x_fe_fw_i",
+   "add_regs": 1,
+   "cycles": 1,
+   "sites_um": [
+    [
+     565.267,
+     517.697
+    ]
+   ],
+   "existing_entries": 0,
+   "note": "+1 station register(s) on bus:x_fe_fw_i (+1 cycle on its lanes, LATCHECK reprices)"
+  },
+  {
+   "rule": "R11",
+   "type": "slw_stm_v1__cle34a73c3",
+   "paths": 2,
+   "worst_slack_ps": -12.9,
+   "worst_start": "x_fe_fw_p1_i[59]",
+   "worst_end": "u_bound.u_cland_x_fe_fw_p1_i/u_ring.dch[0].sd_c[123]$_DFFE_NP_/D",
+   "max_straight_um": 203.7,
+   "hop_cap_um": 200.0,
+   "half_cycle": true,
+   "kind": "internal_stations_add",
+   "conn": "bus:x_fe_fw_p1_i",
+   "add_regs": 1,
+   "cycles": 1,
+   "sites_um": [
+    [
+     564.188,
+     803.899
+    ]
+   ],
+   "existing_entries": 0,
+   "note": "+1 station register(s) on bus:x_fe_fw_p1_i (+1 cycle on its lanes, LATCHECK reprices)"
+  }
+ ],
+ "rtl_requests": [
+  {
+   "rule": "R11",
+   "type": "slw_stm_v1__cle34a73c3",
+   "paths": 24,
+   "worst_slack_ps": -46.6,
+   "worst_start": "u_bound.u_core.u_stream.wd_q[97]$_DFF_P_/QN",
+   "worst_end": "u_bound.u_core.u_stream.lane_c[319]$_DFF_P_/D",
+   "max_straight_um": 586.2,
+   "hop_cap_um": 300.0,
+   "half_cycle": false,
+   "kind": "rtl_pipeline",
+   "module": "u_core.u_stream",
+   "levels": 11,
+   "cell_ps": 621.1,
+   "wire_ps": 164.9,
+   "ask": "split the cone: +1 pipeline register (levels 11, cells 592 ps)"
+  },
+  {
+   "rule": "R11",
+   "type": "slw_stm_v1__cle34a73c3",
+   "paths": 5,
+   "worst_slack_ps": -45.0,
+   "worst_start": "u_bound.u_core.u_tload.u_ld.g_capture.meta[0].ff/bits_q[1]$_DFF_P_/QN",
+   "worst_end": "u_bound.u_core.u_tload.u_ld.g_wek.cp[8].ff/q$_DFF_PN0_/D",
+   "max_straight_um": 419.9,
+   "hop_cap_um": 300.0,
+   "half_cycle": false,
+   "kind": "rtl_pipeline",
+   "module": "u_core.u_tload.u_ld",
+   "levels": 5,
+   "cell_ps": 512.1,
+   "wire_ps": 217.5,
+   "ask": "split the cone: +1 pipeline register (levels 5, cells 512 ps)"
+  }
+ ]
+}
