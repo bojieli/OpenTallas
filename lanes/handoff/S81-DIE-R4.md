@@ -99,3 +99,9 @@ All relaunch after the 405 reach override (lever 1) lands for D8i.
 ## 11-20 13:5x OWNERS-SWEEP
 - OWN posted for 52 held leaf rows plus t25 (DEAD-OWNER), all J5 representative-first holds.
 - On leaf release: regenerate the kits so they carry the CORE-LIB-LIMITS-1330 320 ps core-pin slew limit (e7ebced0c4e). First confirm rt/current includes e7ebced0c4e.
+
+## 11-20 14:0x FABLE-FLOW-1400
+- (1) J5 gen units of t7 / kv_leaf t1 cancelled by exact name (pinned to eae58 without the slew fix); waiting for the wave to relaunch them on f2e64. Move them to epyc7 once FLEET-WATCH adds it to s81 gen_hosts.
+- (2) Post-apply bind: elab yosys rc 137 at OT_POSTBIND_MEM=96. Rerun postbind-s81-1120135739 on intel1 at 160 GB (log ~/.local/state/ot-postbind/). If GREEN: publish_apply.py adopt-bind.
+- (3) Staged: kit_wave_edit --set /dies/s81/die_gen_env/OT_PLACE_MAX_TRANSITION="320". Apply only when the CORE-LIB-LIMITS-1330 proof is green; flow_regen re-pins the unstarted J5 rows.
+- RISK: die_gen_env OT_CBC_REACH_UM=405 vs J5 bound at 300. Watch the first J5 gen result for bound reset identity differs.
