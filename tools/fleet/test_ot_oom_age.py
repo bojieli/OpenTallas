@@ -227,3 +227,19 @@ def test_victim_ident_names_unit_container_cwd_path():
     out = m.victim_ident(os.getpid(), {})
     assert out.startswith("unit ") and " container " in out and " cwd " in out and " path " in out
     assert m.victim_ident(2**30, {}) == "unit - container - cwd - path -"
+
+
+def test_routed_final_signoff_inventory_requires_producer_label_and_signoff_name(monkeypatch):
+    from types import SimpleNamespace
+
+    out = (
+        "a so_1762351_ff_64868 routed-final-signoff\n"
+        "b so_1762351_tt_64868 \n"
+        "c dpkit-probe-99 routed-final-signoff\n"
+        "d prd-fin-4242\n"
+    )
+    monkeypatch.setattr(M.subprocess, "run", lambda *a, **k: SimpleNamespace(stdout=out))
+    names, late = M.container_inventory()
+    assert names == {"a": "so_1762351_ff_64868", "b": "so_1762351_tt_64868",
+                     "c": "dpkit-probe-99", "d": "prd-fin-4242"}
+    assert late == {"a"}

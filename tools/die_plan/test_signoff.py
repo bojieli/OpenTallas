@@ -620,3 +620,22 @@ def test_shared_native_tt_and_scoped_native_ff_with_macro(tmp_path):
         "export TC_LIB_FILES = " + native.format("TT") + "\n"
         "export BC_LIB_FILES = " + native.format("FF") + "\n")
     assert signoff.macro_libs(tmp_path, "ff") == ([str(tmp_path / "child_ff.lib")], [])
+
+
+def test_final_routed_signoff_requires_matching_odb_and_spef(tmp_path):
+    from signoff import final_routed_inputs
+
+    odb = tmp_path / "6_final.odb"
+    spef = tmp_path / "6_final.spef"
+    odb.touch()
+    assert not final_routed_inputs({"odb": str(odb), "spef": str(spef)})
+    spef.touch()
+    assert final_routed_inputs({"odb": str(odb), "spef": str(spef)})
+    probe = tmp_path / "5_route.odb"
+    probe.touch()
+    assert not final_routed_inputs({"odb": str(probe), "spef": str(spef)})
+    assert not final_routed_inputs({"odb": str(odb), "spef": None})
+    other = tmp_path / "other"
+    other.mkdir()
+    (other / spef.name).touch()
+    assert not final_routed_inputs({"odb": str(odb), "spef": str(other / spef.name)})
