@@ -558,8 +558,7 @@ def compile_frame(die, frame, fixd, ops, iters=LX.ITERS, only=None):
     q, bf = B.frame_pairs(LX.base_master(master))
     fxa = LX.load_fixture(fixd)
     fx = Fix(fixd)
-    _, pl = LX.placement(die, sl, fxa)
-    p0 = pl[j]
+    _, (p0,) = LX.placement(die, sl, fxa, selected_frame=frame)
     phases = []
     if p0['rows']:
         mats, gidx = LX.frame_mats(fxa, p0['rows'])

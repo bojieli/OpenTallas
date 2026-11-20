@@ -101,6 +101,30 @@ def tensor_of(r):
 
 
 # ------------------------------------------------------------------------------------------------ tests
+
+def test_selected_frame_placement_only_prices_its_landing(monkeypatch):
+    die = FakeDie(TOPOS[84])
+    sl = 's00'
+    frame = die.frames_of(sl)[1]
+    for topo, split in (('1', 'B'), ('1', 'X'), ('0', 'B')):
+        monkeypatch.setenv('OT_XS_APROJ_TOPO', topo)
+        monkeypatch.setenv('OT_XS_DENSE_SPLIT2', split)
+        monkeypatch.setenv('OT_XS_DENSE_SPLIT2_ROWS', '224')
+        with monkeypatch.context() as m:
+            expected = LX.placement(die, sl, FX)
+            calls = []
+
+            def landing(_die, requested):
+                assert requested == frame, requested
+                calls.append(requested)
+                return 0x249
+
+            m.setattr(LX, 'frame_lk', landing)
+            actual = LX.placement(die, sl, FX, selected_frame=frame)
+            assert actual == (expected[0], [expected[1][1]])
+            assert calls == [frame]
+
+
 def test_default_identical():
     set_split(None)
     for F in (112, 116, 122):

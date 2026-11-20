@@ -192,11 +192,15 @@ def dense_split2_rows(total):
     return {'A': (0, r), 'B': (r, total), 'X': (0, 0)}[v]
 
 
-def placement(die, sl, fx=None):
+def placement(die, sl, fx=None, *, selected_frame=None):
+    """Assign rows over the full topology, then price the requested frame tables."""
     frames = die.frames_of(sl)
+    if selected_frame is not None and selected_frame not in frames:
+        raise ValueError(f'{selected_frame} is not a frame of {sl}')
+    selected = frames if selected_frame is None else [selected_frame]
     g = slice_index(die, sl)
     if dense_split2() == 'X':
-        return g, [dict(frame=f, master=die.inst[f]['master'], lk=frame_lk(die, f), rows=[]) for f in frames]
+        return g, [dict(frame=f, master=die.inst[f]['master'], lk=frame_lk(die, f), rows=[]) for f in selected]
     if aproj_topology_enabled():
         # One real phase on EVERY real frame: preserve tensor row order, keep
         # wq_a/wkv in separate frames, and never exceed the measured four rows.
@@ -255,9 +259,11 @@ def placement(die, sl, fx=None):
         assert fi == sum(counts) and row0 == (total if own is None else own[1])
         for frame in all_frames:
             assigned.setdefault(frame, [])
-        return g, [dict(frame=f, master=die.inst[f]['master'], lk=frame_lk(die, f), rows=assigned[f]) for f in frames]
+        return g, [dict(frame=f, master=die.inst[f]['master'], lk=frame_lk(die, f), rows=assigned[f]) for f in selected]
     out = []
     for j, f in enumerate(frames):
+        if f not in selected:
+            continue
         r0 = ROWS_PER_SLICE * g + ROWS_PER_FRAME * j
         rows = list(range(r0, r0 + ROWS_PER_FRAME)) if ROWS_PER_FRAME * (j + 1) <= ROWS_PER_SLICE else []
         out.append(dict(frame=f, master=die.inst[f]['master'], lk=frame_lk(die, f), rows=rows))

@@ -177,8 +177,8 @@ def frame_alloc(die, frame, fixd, spec):
         g = orig[1](fx, op)
         return g if shared or op != 'ffn.down' else [x for x in g if x.get('expert') != 'shared']
 
-    def pl(die_, sl, fx=None):
-        g, p = orig[2](die_, sl, fx)
+    def pl(die_, sl, fx=None, *, selected_frame=None):
+        g, p = orig[2](die_, sl, fx, selected_frame=selected_frame)
         return g, ([dict(r, rows=[]) for r in p] if spec.get('dense_layer') is None else p)
     XP.op_groups, LX.placement = og, pl
     try:
@@ -236,7 +236,8 @@ def frame_signature(die, frame, fixd, spec):
     sl, g, j = XP.frame_slot(die, frame)
     master = die.inst[frame]['master']
     q, bfp = FB.frame_pairs(LX.base_master(master))
-    p0 = [] if spec.get('dense_layer') is None else LX.placement(die, sl, LX.load_fixture(fixd))[1][j]['rows']
+    p0 = [] if spec.get('dense_layer') is None else LX.placement(
+        die, sl, LX.load_fixture(fixd), selected_frame=frame)[1][0]['rows']
     rows = []
     shared = spec.get('dense_layer') is not None and spec.get('dense_split2') != 'A'
     for op, gi, c, nseg, R in XP.phase_list(fx, [o for o in xs]):
