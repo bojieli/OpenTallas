@@ -29,4 +29,36 @@ Source: physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/<core>/<core>_{tt,ff}.l
 - core_order/core_peer/cdc_ch/phy_pad TT max 308-362: above 290 target.
 - phy_pad: plan note says dedicated clock, not a die-clock sink; keep out of the 250 target.
 - Request to KV-D23-COMPOSE / DIE-CORETAP-1119: write measured insertion_ps + insertion_ff_ps (convention to confirm: plan 273.7 for order sits near TT min 270.2/295.0; 253.6 for cdc_pc sits near neither min 167 nor max 226, so convention must be confirmed from c1_rows.json) for the 14 cores x 21 taps in the same event as the v3 clock config.
-- 2026-11-20 00:00 PST OWNING Ei/Eo/Wi/Wo. Only Wi has SRAM (u_row 64x512) - ORD-2013 covered by D25f HUBWI row; Ei/Eo/Wo have no macros (Ei OR cells, Eo/Wo astk cores), not that class; Ei/Wo wave-place alive. Measured core taps from kvd23_hr_views_1118 ETM libs: prompt TT max 313 (not 406), ingest_eng 431 outlier; table in lanes/posts/KV-HUB-0005.md, to KV-D23-COMPOSE + DIE-CORETAP-1119 for same event as v3 clock. Wave unblock: none needed, no stuck Ei/Eo/Wo row seen.
+
+# ADDENDUM 2026-11-20 00:1x (COORD asks 1-3)
+
+## (1) kv3_hub_Eo
+It HAS a live row (state: ~/coord autopilot hub-coord kit_wave_state.json): qwen_kvsys|kv3_hub_Eo|bc9ec3f93c635, attempt 2, event KV-D25d, event_adopted KV-D25e, ENQUEUED stage geom, unit kw-qwenkv-kv3hubEo-2-40431 (epyc2); progress-watch shows a dpkit job running 3_1_place_gp_skip_io on intel1 (PROGRESSING). So it was neither ineligible nor skipped: the ~/tsh/ap2 state copy I first read was stale (14 Nov). Build on D25e = already adopted; nothing to release.
+Real problem: the geom report on attempt 2 is AUTO-GEOM FAIL (pin_reg_p90 196, pin_reg_max 487 um, pin_unreg 64, r2r 1742 um / 1275 pairs, relay_collapse 51, channel_h 0.925, col_v 1.71, partial_face 2). Earlier attempts show the same class since kvgeom4: pin registration on the astk face pins. No owner row for that class: I take it as KV-HUB-0005 (geometry of astk_EN/ES pin-reg), to be visual-reviewed once place ends.
+
+## (2) insertion_ps convention (schema.py L528-532, L1849-1861; signoff.py L1960-1976)
+- insertion_ps = TT, insertion_ff_ps = FF: the signed view's routed RCX MEAN pin-register insertion (not min, not max); `insertion_basis` says which. Absent FF -> 0.81 x TT.
+- Early delivery = max(0, core insertion - clock.insertion_ps) at the SAME corner (die common 250 TT / 202.5 FF). A tap below 250 cannot be made later; early taps act only when clock.core_taps == "early". hub_Wi has core_taps = "internal", so any row is inert until that flag moves.
+- c1_rows.json is not in the D25f tree or repo (not found); the 273.7/253.6/406 values cannot be traced and do not match the current views.
+- Signed? NOT CONFIRMED. kvd23_hr_views_1118 has no provenance/signoff file; every qkd_hr_* wave row is CANCELLED/SUPERSEDED (event28w_c, not items of current plan); ref_tile gate_results are 10-17..19 WARN/FAIL; KIT-050 lists ingest_eng not signed. The ETM libs only give min/max_clock_tree_path, not the mean. Rows below use mid(min,max) averaged over rise/fall as an ESTIMATE; replace by the RCX mean when signed views exist.
+
+Estimated rows (TT / FF, ps; early vs 250/202.5; TT min-max spread):
+- qkd_hr_ingest_eng: insertion_ps 356.2 insertion_ff_ps 280.5 (early vs 250/202.5: TT 106.2 FF 78.0; TT min-max spread 117.4)
+- qkd_hr_core_order: insertion_ps 329.2 insertion_ff_ps 260.6 (early vs 250/202.5: TT 79.2 FF 58.1; TT min-max spread 93.2)
+- qkd_hr_cdc_ch: insertion_ps 283.2 insertion_ff_ps 226.4 (early vs 250/202.5: TT 33.2 FF 23.9; TT min-max spread 74.3)
+- qkd_hr_cdc_pc: insertion_ps 204.0 insertion_ff_ps 162.3 (early vs 250/202.5: TT 0.0 FF 0.0; TT min-max spread 59.2)
+- qkd_hr_core_peer: insertion_ps 290.2 insertion_ff_ps 230.7 (early vs 250/202.5: TT 40.2 FF 28.2; TT min-max spread 71.8)
+- qkd_hr_core_tx: insertion_ps 198.2 insertion_ff_ps 157.3 (early vs 250/202.5: TT 0.0 FF 0.0; TT min-max spread 48.8)
+- qkd_hr_core_rx: insertion_ps 255.0 insertion_ff_ps 203.8 (early vs 250/202.5: TT 5.0 FF 1.3; TT min-max spread 53.7)
+- qkd_hr_core_guard: insertion_ps 183.6 insertion_ff_ps 144.6 (early vs 250/202.5: TT 0.0 FF 0.0; TT min-max spread 40.7)
+- qkd_hr_core_queue: insertion_ps 169.3 insertion_ff_ps 135.5 (early vs 250/202.5: TT 0.0 FF 0.0; TT min-max spread 45.2)
+- qkd_hr_core_prompt: insertion_ps 263.3 insertion_ff_ps 205.0 (early vs 250/202.5: TT 13.3 FF 2.5; TT min-max spread 77.0)
+- qkd_hr_cdc_hi: insertion_ps 166.7 insertion_ff_ps 132.9 (early vs 250/202.5: TT 0.0 FF 0.0; TT min-max spread 37.5)
+- qkd_hr_cdc_ci: insertion_ps 168.3 insertion_ff_ps 134.2 (early vs 250/202.5: TT 0.0 FF 0.0; TT min-max spread 44.7)
+- qkd_hr_phy_pad: insertion_ps 305.5 insertion_ff_ps 230.9 (early vs 250/202.5: TT 55.5 FF 28.4; TT min-max spread 54.4)
+- qkd_hr_phy_adp: insertion_ps 201.4 insertion_ff_ps 161.5 (early vs 250/202.5: TT 0.0 FF 0.0; TT min-max spread 63.6)
+
+## (3) qkd_hr_ingest_eng early-tap row (die STA pricing)
+Tap host__qkd_hr_ingest_eng.ck[0] (xy 207.384,1373.76): insertion_ps 356.2, insertion_ff_ps 280.5, insertion_basis "ETM mid(min,max) of kvd23_hr_views_1118, unsigned", core_taps = "early" on hub_Wi (same event). Spine must deliver the tap 106 ps (TT) / 78 ps (FF) early.
+Pricing: left on 250, the core clock is ~106 ps late at TT, which comes straight off setup on every ingest_eng-launched path (833 ps period; a path needs >=42 ps margin after) and off hold slack on its capture side in the opposite sense (FF: late launch helps hold, late capture hurts by 78). Early-tapped, the residual is the intra-core spread 117 ps TT (max-min, 431-283 => +-59 around the mean): that cannot be tapped away and is the die STA OCV-like term; if the die gate keeps the 40 ps tolerance, ingest_eng exceeds it by ~77 ps and needs either a core re-CTS (the 431 max is >1.5x the 250 target; core is not signed) or a latency-group relax row. Recommend: early-tap row + request ingest_eng clock-tree rebuild (target max <=330).
+- 2026-11-20 00:04 PST ADDENDUM: (1) Eo has a live row bc9ec3f93c635 adopted on D25e (ENQUEUED geom, dpkit running place on intel1); my earlier read used a stale state copy. Class is AUTO-GEOM FAIL on astk pin-reg (pin_reg_max 487um), I own it. (2) convention: insertion_ps=signed RCX mean pin-reg insertion TT, FF separate; early = max(0, ins - 250/202.5); inert while hub_Wi core_taps=internal. c1_rows.json not found. hr views NOT confirmed signed (all qkd_hr wave rows SUPERSEDED); rows are ETM mid(min,max) estimates. (3) ingest_eng tap row 356.2/280.5, early 106/78 ps, residual spread 117 ps needs core re-CTS. Details lanes/posts/KV-HUB-0005.md
