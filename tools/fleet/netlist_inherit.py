@@ -710,7 +710,8 @@ def summary(g):
     masters = Counter(g.cell_master)
     consts = Counter(t for t in g.net_label_text if t.startswith("const:"))
     tie = Counter(m for m in g.cell_master if re.match(r"(?i)TIE(HI|LO)", m))
-    return dict(cells=len(g.cell_label), nets=len(g.net_label), ports=len(ports),
+    buses = Counter(re.sub(r"\[\d+\]$", "", x.split("|")[0].split(":", 2)[-1]) for x in ports)
+    return dict(cells=len(g.cell_label), nets=len(g.net_label), ports=len(ports), port_buses=dict(buses),
                 ports_sha=hashlib.sha256("\n".join(ports).encode()).hexdigest()[:16],
                 masters_sha=hashlib.sha256(json.dumps(sorted(masters.items())).encode()).hexdigest()[:16],
                 masters=dict(masters), port_names=ports, rom=len(g.rom), const_nets=dict(consts), tie_cells=dict(tie))
