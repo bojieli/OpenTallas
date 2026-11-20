@@ -119,3 +119,4 @@ bash tools/fleet/col_template_rows.sh TREE BASE_PLAN SIDECAR OUT [--all-members]
 - 17:50: ring-group v2 proof failed (spans 359, GRT RSZ-0060), opt-in stays off; 7 QC rows all running, none failed.
 - 18:15 5 failed rows: sc_v1 cl4590432d re-enqueued (4b00aa7c9228), cl5e017c6f pending ORPHAN flip; cbn_q11 x2 stretch gate advisory (main becd71085d) + wave retry; slw_su_c vmr LEF OBS blocks interior M5 pins (DRT-0073) needs decision.
 - 18:45 vmr DRT-0073: lef_overrides on main d2c3111be0 (exact M6 from signed ODB, 5 pins access ok); relaunch of 3 su_c types waits for the N4.6e tools snapshot (QC-PLAN-R3).
+- 18:50 vmr proof kit running epyc10 sonnet-fix-qc-vmrproof (pid file ~/sfq-l6/vmrproof.pid); retry rows pending QC-PLAN-R3 N46P confirm.
