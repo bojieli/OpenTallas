@@ -26,3 +26,9 @@
 ## Rules in force
 - 833 ps; one plan event per 24 h; apply via publish_apply bind-first seal + OUT-SYNC (intel2 ~/qc-plan-r3/apply_n46r4_a4.sh pattern).
 - Post every 2 h; next due ~12:15.
+
+## UPDATE ~11:05 PST (supersedes the pass-1/pass-2 lines above)
+- Pass 1 (tag p1) FAILED in bind elaboration, class NATIVE-STATION ACCOUNTING: "native stations sl_W5_hc0__cwn0: fixed_cycles must equal source 3 + destination 2". Column-entry lanes sl_<s>_hc0/hc2__cw[ns]0/2 (+2) carry native station chains, so fixed_cycles alone cannot carry the raise. Column pads cannot absorb it either (re-priced r5/fabric_level_price_b.json: no pad <=9 balances; near and far share one pad per column).
+- Fix in r5_apply_option_a.py: for those lanes the source type internal_stations row bus:cw_n0/cw_n2 gets +2 stations, chain re-spaced evenly from launch to face (11 sle/slw hc0/hc2 types; cw_s* have no native row). Plan regenerated (216 lanes, 48 INNER, 11 chains).
+- Round 2 chain running on intel2: ~/qc-plan-r5/chain_r2.sh (cbf relay, then strict q1 with R8 from A4, then strict q2 with R8 from q1). Results: chain_r2.out, strict_q1/q2.log/.rc, epyc9 v1_cbc/r5/strict_q{1,2}. Old p1 dir and chain_p2.sh are dead ends.
+- If q2 is clean: run G0 on r5/strict_q2 tree, read LATCHECK token impact, post. If another class appears, classify and fix the plan the same way (no unchanged retries).
