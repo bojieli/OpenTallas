@@ -2,6 +2,20 @@
 
 Work dir epyc7 /srv/opentallas-scratch2/claude/kv-d23-compose (lane clone wt/ = sparse main worktree). Hub logs intel2 ~/tmp/kvd23c.
 
+## Status 2026-11-20 07:05Z (read this first; supersedes 05:30Z for D25e2)
+- D25e2 strict bind FAILED with exactly one error: PARAM_REGEN kv_regen 'ECTL: K round trips differ per frame [25, 26]'.
+  - Cause: the 28 fall rows moved 28 ECTL rq lanes down one cycle; the 4 hg->pc pairs without a fall row (WN_1/WN_3/WS_3/WS_6) stayed at RT 26.
+  - Rest of the gate: R8_RECHECK changed 0, LATCHECK 0.
+  - KV-CROSSING posted ROWS-KV-ECTL-RT-FIX.json (W8/d25e2_in, 4b55c5b15800): 4 rq rows K-1/sched_lat-1.
+- D25e3 = D25e2 + those 4 rows (W8/build_d25e3.py, tools a2fb7e6 unchanged).
+  - Chain W8/run_d25e3.sh (log W8/run_d25e3.out): build -> PRE+G0 -> seal/replicate -> PRIVATE cp -a bindcopy kw45/bindcopy_kv_d25e3 -> strict bind (W8/d25e3bindgate).
+  - When green: seal the bind dest (W8/seal_bind_dest.sh d25e3 <tree>, REPL_HOSTS="epyc9 epyc10 intel1 epyc2"), then apply_d25.sh d25e3 KV-D25e3 (TOOLS=a2fb7e625dd8..., LIVE=d25e tree, LIVE_EV=KV-D25e, BC=d25e3).
+  - KEEP kw45/bindcopy_kv_d25e3 after apply.
+- D25f (lever 5, gen-only) staged on D25e2: plan ba57226730de, G0 PASS, sealed.
+  - Must be REBASED on D25e3: rerun W8/build_d25f.py on the D25e3 tree, then W8/fix_hubwi_d25f.py is no longer needed (the hubwi row script has the tap-clear site).
+  - Old D25f tree kw45/src_kv_pin_eb1e73448bd0_hg13_ba572267_t99007dc_d25f and its replicas are scrap.
+  - kw45/bindcopy_kv_d25f is an empty guard dir; rmdir it once seal_bind_d25f.sh has exited.
+
 ## Status 2026-11-20 05:30Z (read this first; corrects 04:50Z)
 - RULE (learned the hard way): a bind dest reads ABSOLUTE paths inside kw45/bindcopy_kv_<ev> (bind.f, asbuilt.ys, kit_rtl.json). The bindcopy of an applied or bound event is a live kit input on every gen host; NEVER delete it. The 04:50Z note "then ot-delete kw45/bindcopy_kv_d25e2" is WRONG: keep it and replicate it with the dest.
   - Deleting bindcopy_kv_d25e caused KIT_INPUT_MISSING for KV-D25e on all hosts.
