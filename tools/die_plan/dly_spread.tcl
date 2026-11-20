@@ -19,6 +19,14 @@
 #                        T/2 setup after it).  A chain with a latch is always placed, also when its GPL hops are within
 #                        reach (GPL spreads the stages of one segment over taps).  A run without a latch keeps the forms above.
 #   OT_DLY_SPREAD_MAX_STAGES  (64; 1024 in SEGMENT form)  longest chain walked
+#   STATION reach (KV-PLAN-R1 11-20, CBC 300 um rule): with OT_DLY_SPREAD_STATION_UM set, a chain counts as inside the reach only
+#                        when every hop is within min(::ot_dly_min_hop_um, S): the station form also re-spreads 300-405 um
+#                        chains instead of leaving them at their GPL hops (kv3_pv D25e3: 15/16 types kept hops up to 406 um).
+#   REPEATER ANCHOR (KV-PLAN-R1 11-20, FABLE-CLOSURE 09:05 lever 8): a chain whose stage hops are inside the reach is not
+#                        re-spread, but every movable BUF / INV / HB repeater of one of its hops whose detour off that hop
+#                        (|a-r| + |r-b| - |a-b|) is over OT_DLY_REP_DETOUR_UM (20) goes to its fraction of the hop, as in a
+#                        re-spread chain: a cell on a relay trunk sits between its driver and its sink register.
+#                        kv3_pv v8j: the mapped inverter of a pad tail hop sat 1,909 um from both ends (hop 192 um, -8,287 ps).
 #   OT_DLY_SPREAD_RE     discovery regexp (default: any <inst>.g_reg.r[k][b] / <inst>.r[k][b] / <inst>.q[b])
 # Flops that are FIRM/LOCKED or sited by the plan (ot_face_flops.txt) are anchors, never moved; a run of movable stages between
 # two anchors is spread between them.
@@ -32,6 +40,9 @@ set ds_halo [expr {round(9.0 * $ds_dbu)}]
 set ds_minum [expr {[info exists ::ot_dly_min_hop_um] ? $::ot_dly_min_hop_um : 405.0}]
 set ds_min [expr {round($ds_minum * $ds_dbu)}]
 set ds_st [expr {[info exists ::env(OT_DLY_SPREAD_STATION_UM)] && [string is double -strict $::env(OT_DLY_SPREAD_STATION_UM)] && $::env(OT_DLY_SPREAD_STATION_UM) > 0 ? round($::env(OT_DLY_SPREAD_STATION_UM) * $ds_dbu) : 0}]
+if {$ds_st > 0 && $ds_st < $ds_min} { set ds_min $ds_st }
+set ds_rdet [expr {round(([info exists ::env(OT_DLY_REP_DETOUR_UM)] && [string is double -strict $::env(OT_DLY_REP_DETOUR_UM)] ? $::env(OT_DLY_REP_DETOUR_UM) : 20.0) * $ds_dbu)}]
+set ds_nrep 0
 set ds_ratio [expr {[info exists ::ot_dly_fail_ratio] ? $::ot_dly_fail_ratio : 1.5}]
 set ds_seg [expr {[info exists ::env(OT_DLY_SPREAD_SEG)] && $::env(OT_DLY_SPREAD_SEG) eq "1"}]
 set ds_maxst [expr {[info exists ::env(OT_DLY_SPREAD_MAX_STAGES)] && [string is integer -strict $::env(OT_DLY_SPREAD_MAX_STAGES)] ? $::env(OT_DLY_SPREAD_MAX_STAGES) : ($ds_seg ? 1024 : 64)}]
@@ -197,8 +208,29 @@ proc ds_atpl {pts f} {
   return [lindex $pts end]
 }
 # the whole pass is one proc: a kit hook shares the global namespace of face_flops_release.tcl, so its loop variables stay local
+# REPEATER ANCHOR: repeaters of hop j (0 = before the head, backwards; j >= 1 after stage j) of a chain that keeps its stage sites
+proc ds_repfix {P hb segb n} {
+  global ds_rdet ds_nrep
+  for {set j 0} {$j <= $n} {incr j} {
+    if {$j == 0} { set bs {}; set k 0; foreach b $hb { lappend bs [list $k $b]; incr k } } else { set bs [lindex $segb [expr {$j-1}]] }
+    if {![llength $bs]} continue
+    set a [lindex $P $j]; set b [lindex $P [expr {$j+1}]]
+    set md 0; foreach x $bs { set md [expr {max($md, [lindex $x 0])}] }
+    set rt {}
+    foreach x $bs {
+      lassign $x d bi
+      if {![ds_movable $bi]} continue
+      set c [ds_ctr [$bi getBBox]]
+      if {[ds_md $a $c] + [ds_md $c $b] - [ds_md $a $b] <= $ds_rdet} continue
+      if {$rt eq {}} { set rt [ds_route $a $b] }
+      if {$j == 0} { set f [expr {1.0 - double($d+1)/($md+2)}] } else { set f [expr {double($d+1)/($md+2)}] }
+      lassign [ds_atpl $rt $f] x y
+      ds_put $bi $x $y; incr ds_nrep
+    }
+  }
+}
 proc ds_main {} {
-global ds_blk ds_dbu ds_core ds_min ds_ratio ds_re ds_mac ds_sited ds_st ds_seg ds_maxst
+global ds_blk ds_dbu ds_core ds_min ds_ratio ds_re ds_mac ds_sited ds_st ds_seg ds_maxst ds_nrep ds_rdet
 # candidates by name (discovery only)
 set ds_cand {}
 foreach i [$ds_blk getInsts] {
@@ -260,7 +292,7 @@ dict for {nm head} $ds_cand {
       lappend lkh $h; if {$h} { set haslk 1 }
     }
   }
-  if {$wb <= $ds_min && !$haslk} { set wa $wb } else {
+  if {$wb <= $ds_min && !$haslk} { set wa $wb; ds_repfix $P $hb $segb $n } else {
     # anchors: indexes (0 = src, n+1 = T) plus every stage that is not movable; run of movable stages between anchors -> equal hops
     set nmovable 0; foreach s_ $seq { if {[ds_movable $s_]} { incr nmovable } }
     set anch [list 0]
@@ -331,6 +363,7 @@ dict for {nm head} $ds_cand {
     if {$wa > $ds_min && $r > $ds_ratio && $nmovable > 0} { incr ds_nfail; if {$ds_nfail <= 5} { puts "OT_DLY_SPREAD WORST [ds_clean [$head getName]] stages $n hop [format %.0f [expr {$wa/double($ds_dbu)}]] um ideal [format %.0f [expr {$ideal/double($ds_dbu)}]] um" } }
   }
 }
+puts "OT_DLY_SPREAD REPFIX repeaters $ds_nrep moved onto their hop (detour > [format %.0f [expr {$ds_rdet/double($ds_dbu)}]] um)"
 puts "OT_DLY_SPREAD chains $ds_nch stages $ds_nst moved $ds_nmv skipped $ds_nskip max_hop [format %.0f [expr {$ds_hb/double($ds_dbu)}]] -> [format %.0f [expr {$ds_ha/double($ds_dbu)}]] um (chains over [format %.0f [expr {$ds_min/double($ds_dbu)}]] um: $ds_ob -> $ds_oa) worst/ideal [format %.2f $ds_wr] fail $ds_nfail"
 if {$ds_nfail > 0 && (![info exists ::env(OT_DLY_SPREAD)] || $::env(OT_DLY_SPREAD) ne "warn")} {
   puts "OT_DLY_SPREAD FAIL: $ds_nfail chain(s) keep a hop over $ds_ratio x their ideal hop and over the reach (OT_DLY_SPREAD=warn downgrades)"

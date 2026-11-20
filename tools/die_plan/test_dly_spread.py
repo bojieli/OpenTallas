@@ -283,3 +283,88 @@ def test_dly_spread_segment_form_latch_groups():
         # the last stage is FIRM at 2400: its group sits there, the two free groups at 1/3 and 2/3 of 100 -> 2400
         assert all(abs(v - 2400) <= 30 for v in seg(2)), (seg(2), out[-1500:])
         assert all(abs(v - 867) <= 30 for v in seg(0)) and all(abs(v - 1633) <= 30 for v in seg(1)), (seg(0), seg(1))
+
+
+def _netlist_rep():
+    """REPEATER ANCHOR: a 2-stage pad tail whose hops are inside the reach, its D fed by the trunk Q through an INV + BUF that GPL
+    left 1,800 um away (kv3_pv v8j); plus a 3-stage chain with 200/350/350/300 um hops (inside 405, over a 300 um station reach)."""
+    w = ["a", "g_i", "g_b", "h"]
+    body = [f"  {FF} trunk (.CLK(clk), .D(1'b0), .QN(a));",
+            "  INVx1_ASAP7_75t_R inv_far (.A(a), .Y(g_i));",
+            f"  {BUF} buf_far (.A(g_i), .Y(g_b));"]
+    d = "g_b"
+    for k, nm in enumerate(("r[0]", "q")):
+        o = f"F_{k}"
+        w.append(o)
+        body.append(f"  {FF} \\u_bound.u_pd2_tail.{nm}$_DFF_P_  (.CLK(clk), .D({d}), .QN({o}));")
+        d = o
+    body.append(f"  {FF} ldF (.CLK(clk), .D({d}), .QN());")
+    body.append(f"  {FF} src3 (.CLK(clk), .D(1'b0), .QN(h));")
+    d = "h"
+    for k, nm in enumerate(("r[0]", "r[1]", "q")):
+        o = f"G_{k}"
+        w.append(o)
+        body.append(f"  {FF} \\u_bound.u_pd3_mid.{nm}$_DFF_P_  (.CLK(clk), .D({d}), .QN({o}));")
+        d = o
+    body.append(f"  {FF} ldG (.CLK(clk), .D({d}), .QN());")
+    return "\n".join(["module t(input wire clk, output wire y);"] + [f"  wire {x};" for x in w] + body + ["  assign y = 1'b0;\nendmodule\n"])
+
+
+TCL_REP = r"""
+set P /OpenROAD-flow-scripts/flow/platforms/asap7/lef
+read_lef $P/asap7_tech_1x_201209.lef
+read_lef $P/asap7sc7p5t_28_R_1x_220121a.lef
+read_verilog /w/t.v
+link_design t
+initialize_floorplan -die_area "0 0 3000 600" -core_area "5 5 2995 595" -site asap7sc7p5t
+set blk [ord::get_db_block]
+set u [[ord::get_db_tech] getDbUnitsPerMicron]
+set XY [dict create trunk {2000 300 FIRM} inv_far {200 500 PLACED} buf_far {220 500 PLACED} ldF {2300 300 FIRM} \
+  {u_bound.u_pd2_tail.r[0]$_DFF_P_} {2100 300 PLACED} {u_bound.u_pd2_tail.q$_DFF_P_} {2200 300 PLACED} \
+  src3 {100 100 FIRM} {u_bound.u_pd3_mid.r[0]$_DFF_P_} {300 100 PLACED} {u_bound.u_pd3_mid.r[1]$_DFF_P_} {650 100 PLACED} \
+  {u_bound.u_pd3_mid.q$_DFF_P_} {1000 100 PLACED} ldG {1300 100 FIRM}]
+foreach i [$blk getInsts] {
+  set n [string map {\\ {}} [$i getName]]
+  lassign [dict get $XY $n] x y st
+  $i setLocation [expr {int($x * $u)}] [expr {int($y * $u)}]; $i setPlacementStatus $st
+}
+set ::env(OT_DLY_SPREAD) warn
+@STATION@
+source /w/dly_spread.tcl
+foreach i [$blk getInsts] { set n [string map {\\ {}} [$i getName]]; set b [$i getBBox]; puts "POS $n [expr {[$b xMin]/double($u)}] [expr {[$b yMin]/double($u)}]" }
+"""
+
+
+def _run_rep(tcl, d):
+    (Path(d) / "t.v").write_text(_netlist_rep())
+    (Path(d) / "t.tcl").write_text(tcl)
+    shutil.copy(HERE / "dly_spread.tcl", d)
+    cmd = "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; openroad -exit /w/t.tcl; chmod -R a+rwX /w"
+    r = subprocess.run(["docker", "run", "--rm", "--memory=4g", "--memory-swap=4g", "-v", f"{d}:/w",
+                        "openroad/orfs:asap7lock", "bash", "-lc", cmd], capture_output=True, text=True, timeout=600)
+    if r.returncode and "Unable to find image" in r.stderr:
+        pytest.skip("image missing")
+    return r.stdout
+
+
+def test_dly_spread_repeater_anchor_and_station_reach():
+    """KV-PLAN-R1 11-20: (1) a far repeater of an in-reach hop moves onto its hop (trunk 2000 -> tail r[0] 2100), the stages stay;
+    (2) without a station reach the 350 um chain is inside 405 and stays; with OT_DLY_SPREAD_STATION_UM 300 it is re-spread."""
+    if not shutil.which("docker"):
+        pytest.skip("no docker")
+    with tempfile.TemporaryDirectory() as d:
+        out = _run_rep(TCL_REP.replace("@STATION@", ""), d)
+        pos = {m.group(1): (float(m.group(2)), float(m.group(3))) for m in re.finditer(r"POS (\S+) ([0-9.]+) ([0-9.]+)", out)}
+        assert pos, out[-3000:]
+        assert 1990 <= pos["inv_far"][0] <= 2110 and 1990 <= pos["buf_far"][0] <= 2110, (pos["inv_far"], pos["buf_far"])
+        assert pos["inv_far"][0] <= pos["buf_far"][0]                          # driver side first
+        assert pos["u_bound.u_pd2_tail.r[0]$_DFF_P_"] == (2100.0, 300.0) and pos["u_bound.u_pd2_tail.q$_DFF_P_"] == (2200.0, 300.0)
+        assert re.search(r"OT_DLY_SPREAD REPFIX repeaters 2 ", out), out[-2000:]
+        assert [pos[f"u_bound.u_pd3_mid.{n}$_DFF_P_"][0] for n in ("r[0]", "r[1]", "q")] == [300.0, 650.0, 1000.0]
+        assert "chains over 405 um" in out and "fail 0" in out
+    with tempfile.TemporaryDirectory() as d:
+        out = _run_rep(TCL_REP.replace("@STATION@", "set ::env(OT_DLY_SPREAD_STATION_UM) 300"), d)
+        pos = {m.group(1): (float(m.group(2)), float(m.group(3))) for m in re.finditer(r"POS (\S+) ([0-9.]+) ([0-9.]+)", out)}
+        xs = [pos[f"u_bound.u_pd3_mid.{n}$_DFF_P_"][0] for n in ("r[0]", "r[1]", "q")]
+        assert all(abs(x - e) <= 30 for x, e in zip(xs, (400, 700, 1000))), xs   # re-spread to 300 um hops under the station reach
+        assert "chains over 300 um" in out and "fail 0" in out, out[-2000:]
