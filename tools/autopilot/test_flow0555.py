@@ -485,3 +485,11 @@ def test_infra_class_breakers_and_repeat_stops_are_released():
     assert KW.release_infra_stops(ap, {}, st) == (1, 1)
     assert "CLASS s81|gen|FLOW: real error" in FG.fg_state(st)["open"]
     assert st["repeat_ledger"]["s81|a"]["state"] == "" and st["repeat_ledger"]["s81|b"]["state"] == "BLOCKED-REPEAT"
+
+
+def test_live_attempt_on_another_plan_block_does_not_block_a_stops_off_launch():
+    import unittest.mock as M
+    src = open(KW.__file__).read()
+    assert "None if (arm or FG.stops_off_die(cfg, die)) else live_attempt_elsewhere" in src
+    st = {"items": {"old": {"die": "s81_head", "item": "hd_mesh", "status": "ENQUEUED", "q_status": "RUNNING"}}}
+    assert KW.live_attempt_elsewhere(st, "s81_head", "hd_mesh", "newkey") is not None          # the helper still sees it (hbm keeps the rule)

@@ -10735,7 +10735,9 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
     if prev.get("status") in ("RUNNING", "LAUNCHING", "ROUTE-HELD"):
         AP.log(f"KIT-WAVE LAUNCH-KEEP {die}/{r['item']}: active producer {prev.get('unit', '')}")
         return None
-    other = None if arm else live_attempt_elsewhere(st, die, r["item"], key)
+    # COORD 11-19 (HEAD r8b: hd_host_e / hd_lep0N / hd_mesh got no r8b kit, LAUNCH-KEEP "one live attempt per item" on the r3 attempt): OWNER: the new-plan attempt launches IN PARALLEL and the
+    # old one is never cancelled; under stops_off (not hbm) a live attempt on ANOTHER plan block does not block this block's launch (memory admission is the only limit)
+    other = None if (arm or FG.stops_off_die(cfg, die)) else live_attempt_elsewhere(st, die, r["item"], key)
     if other:                                    # WAVE-LONGRUN-1 (b): one live attempt per item, whatever its plan block
         AP.log(f"KIT-WAVE LAUNCH-KEEP {die}/{r['item']}: one live attempt per item; {other.get('status')} attempt {other.get('attempt')} "
                f"of block {str(other.get('block_sha') or '')[:12]} ({other.get('unit') or other.get('q_id') or '-'}) still runs")
