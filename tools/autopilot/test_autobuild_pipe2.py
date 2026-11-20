@@ -159,6 +159,17 @@ class CoreKit(unittest.TestCase):
             self.assertIn("CORE_VIEW FAIL m@*: 2 views", r.stderr)
             self.assertEqual(KW.classify("gen", r.stderr)[0], "PLAN")
 
+    def test_stale_child_wait_does_not_rebuild_signed_child(self):
+        state = {"wait_child": {"kv": {"child": {"first": 100, "seen": 7000, "parents": ["parent"]}}}}
+        d = {"_plan_flags": {"parent": "noview"}, "_prov_deps": {"parent": ["child"]}}
+        plan_types = {"parent": "a", "child": "b"}
+        with mock.patch.object(KW.time, "time", return_value=7100):
+            rows = KW.auto_core_rows({}, state, "kv", d, [], plan_types)
+            self.assertEqual([r["item"] for r in rows], ["child"])
+            d["_plan_flags"] = {}
+            d["_prov_deps"] = {}
+            self.assertEqual(KW.auto_core_rows({}, state, "kv", d, [], plan_types), [])
+
     def test_generated_views_and_core_gen_share_admitted_host(self):
         with tempfile.TemporaryDirectory() as t:
             local = Path(t)

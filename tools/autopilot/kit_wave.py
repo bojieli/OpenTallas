@@ -2926,11 +2926,19 @@ def auto_core_rows(cfg, state, die, d, rows, plan_types):
     hold = set(d.get("auto_core_hold") or [])
     min_wait = float(d.get("auto_core_min_wait_h", 0.5)) * 3600.0
     now = time.time()
+    provisional_deps = d.get("_prov_deps") or {}
+    plan_deps = d.get("_plan_deps") or {}
     out = []
     for m, e in sorted(wc.items()):
         if now - float(e.get("seen") or 0) > 3 * 3600 or now - float(e.get("first") or now) < min_wait:
             continue                         # no longer waited on, or not waiting long enough to need a request
         if m in known or m in hold or any(fnmatch.fnmatchcase(m, pat) for pat in (d.get("hold_items") or {})):
+            continue
+        # Wait records outlive adoption. The current plan must still need the
+        # same child for at least one parent before starting a standalone build.
+        if not any(p in plan_types and prov_item(d, p) and
+                   m in (provisional_deps.get(p) or plan_deps.get(p) or [])
+                   for p in e.get("parents") or []):
             continue
         if not any(x == m or core_module(x) == m for x in plan_types):
             continue                         # the plan of record has no such core: nothing to build
