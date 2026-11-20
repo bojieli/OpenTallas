@@ -360,3 +360,8 @@
 - 2026-11-20 13:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-20 13:52 PST: 293 running jobs, PROGRESSING 284, SLOW 7, NO-PROGRESS 2 (advisory, no cancel); table lanes/NOPROG.tsv
   NO-PROGRESS epyc9 serdes__t13 signoff_meas_072023 stage 62.5 h job 63.7 h: no new meaningful log line for 62.1 h; last: - hold_ff: FAIL WNS -55.85 ps < 0
   NO-PROGRESS epyc10 native59 pregrt_ff_hold stage 10.3 h job 15.0 h: no new meaningful log line for 8.2 h; last: 0 |       0 |       0 |            0 |    +0.0% |   5.000 |   0.000 | u_bound.u_pd5_emb_code_q_388.q
+- 2026-11-20 14:53 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-20 14:52 PST: 272 running jobs, PROGRESSING 261, SLOW 7, NO-PROGRESS 4 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc2 col_h10_r2__t1__cl1f5d6c2a__pvf1512c16 5_2_route stage 23.7 h job 27.7 h: drt_violations best 20 last 20 rows 53 window-gain 0.0%; stagnant 6.7 h; last event 1.7 h ago, log write 1.3 h ago (3371 lines)
+  NO-PROGRESS epyc2 col_h10_r2__t1__cl1f5d6c2a__pvcd889288 5_2_route stage 23.7 h job 27.7 h: drt_violations best 20 last 20 rows 53 window-gain 0.0%; stagnant 6.5 h; last event 1.2 h ago, log write 0.7 h ago (3371 lines)
+  NO-PROGRESS epyc2 col_h10_r2__t1__cl1f5d6c2a__pv16277ca6 5_2_route stage 23.7 h job 27.7 h: drt_violations best 20 last 20 rows 53 window-gain 0.0%; stagnant 6.5 h; last event 1.2 h ago, log write 0.9 h ago (3371 lines)
+  NO-PROGRESS epyc10 native59 pregrt_ff_hold stage 11.3 h job 16.0 h: no new meaningful log line for 9.2 h; last: 0 |       0 |       0 |            0 |    +0.0% |   5.000 |   0.000 | u_bound.u_pd5_emb_code_q_388.q
