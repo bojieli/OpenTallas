@@ -14005,3 +14005,4 @@ FAILED [AUTOPILOT f9d3d209a614] 2026-11-20 11:44:29 PST AUTOPILOT -> KIT-WAVE-12
   col_h10_r1 [plan_h10 +CC-BANK-2] (12): GRT 0; CTS FF hold after CORETAP 12: worst -51.9 median -46.8; sign-off runs 0, SIGNED 0; 5 stopped without signoff; old plan -208/-411
   col_h9_r0_p5 (12): GRT 3 TT worst -33.2 median -33.2; CTS FF hold after CORETAP 11: worst -88.4 median -62.5; sign-off runs 0, SIGNED 0; 6 stopped without signoff; old plan -196 (rst CTS)
   Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
+- 2026-11-20 11:48 PST NEEDS-LANE [FAIL-ROUTE-1115 -> COORD] FAIL-CLASS 3315da202b qwen_compute/place/FLOW tool / Tcl error @place: Error: global_place.tcl, N exact pa: 2 item(s), no RESULT/ACK from QC-PLAN-R3 in 69 min: slw_st_a_v1__clfc5867a6__pvf82a6c28, slw_st_a_v2__clf4365a62. COORD: start or assign a lane for this class; this relay does not repeat (class 3315da202b).
