@@ -89,6 +89,24 @@ def test_count_aligned_qreg_priced_by_sched_lat_not_legacy_ring(form):
             CL.Landings(copy.deepcopy(p2), copy.deepcopy(t2))
 
 
+@pytest.mark.parametrize('form', ['ca', 'strap'])
+def test_count_aligned_plain_row_stale_added_cycles_priced_by_sched_lat(form):
+    # HEAD-CROSSING-1119: a count-aligned row WITHOUT QREG keeps the sidecar sched_lat price and ignores a stale
+    # ports[].added_cycles (s81_head NF15 chE0_o0__0: row 3 vs sched_lat 2 failed every HEAD kit bootstrap GEN)
+    p, t = {'ca': ca_vehicle, 'strap': strap_vehicle}[form]()
+    base = CL.Landings(copy.deepcopy(p), copy.deepcopy(t))
+    bus = next(iter(base.ins['b']))
+    pids = {x['port'] for x in base.rows if base.parts[x['dst']]['type'] == 'B' and x['dst_bus'] == bus}
+    lat = {q: int(t['count_aligned']['ports'][q]['sched_lat']) for q in pids}
+    for r in t['ports']:
+        if r['port'] in pids:
+            r['added_cycles'] = lat[r['port']] + 1
+    on = CL.Landings(copy.deepcopy(p), copy.deepcopy(t))
+    priced = {x['port']: x['added_cycles'] for x in on.rows if x['port'] in pids}
+    assert priced == lat
+    assert on.manifest()['lane_added_cycles'] == base.manifest()['lane_added_cycles']
+
+
 @pytest.mark.parametrize('bad', [True, ['y', 'y'], [1], ['y[0]']])
 def test_bad_selection_rejected(bad):
     p, t = vehicle(); p['partition_types']['B']['clock'] = {'landing_output_qreg': bad}

@@ -1109,7 +1109,11 @@ class Landings:
                 if bool(qreg) != bool(c.get("output_qreg")):
                     raise LandingError(f"count-aligned landing {pid}: plan landing_output_qreg and the bind sidecar "
                                        "output_qreg disagree (the event must raise sched_lat and K by 1 and mark the port)")
-                if "added_cycles" in r and int(r["added_cycles"]) != int(c["sched_lat"]):
+                # HEAD-CROSSING-1119: only a QREG row's price is checked (it replaces the legacy 3+QREG check above).
+                # Other count-aligned rows keep the earlier rule: sched_lat is the price and overrides a stale sidecar
+                # ports[].added_cycles (s81_head NF15: 81 of 427 CA rows differ; the unguarded check failed every HEAD
+                # kit_rtl bootstrap GEN from 11-19 on chE0_o0__0).
+                if qreg and "added_cycles" in r and int(r["added_cycles"]) != int(c["sched_lat"]):
                     raise LandingError(f"count-aligned landing {pid}: row added_cycles {r['added_cycles']} != bind sidecar "
                                        f"sched_lat {c['sched_lat']}")
                 row.update(added_cycles=int(c["sched_lat"]), module="ot_dp_clk_landing_cas" if self.strap else
