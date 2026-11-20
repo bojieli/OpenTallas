@@ -34,6 +34,8 @@ import time
 DEFAULTS = {
     "OT_FAILFAST": 1,
     "OT_FF_DRT": 1, "OT_FF_DRT_ITER": 20, "OT_FF_DRT_MAX_VIOL": 10000, "OT_FF_DRT_MIN_DROP_PCT": 5, "OT_FF_DRT_WINDOW": 3,
+    # FLOW-FIX-2045 (LONG-RUN-0300: KV kv3_io_cor 38 h in detail_route, iteration 51, violations bobbing around 250, no cap): (b2) DRT_STALL, below the 10000-violation floor of (b)
+    "OT_FF_DRT_STALL": 1, "OT_FF_DRT_STALL_ITER": 40, "OT_FF_DRT_STALL_WINDOW": 12, "OT_FF_DRT_STALL_MIN_DROP_PCT": 1,
     "OT_FF_HOLD": 1, "OT_FF_HOLD_CAPS": 0,
 }
 
@@ -152,10 +154,32 @@ def report_cum(n, cum_now, cur, prev_len, round_len=30):
 
 
 # ------------------------------------------------------------------------------------------------ (b) DRT
+def drt_stall(series, c):
+    """(b2) FLOW-FIX-2045: from completed iteration OT_FF_DRT_STALL_ITER (40), stop when the best violation count of the last OT_FF_DRT_STALL_WINDOW (12) iterations is not lower than the best before
+    them by OT_FF_DRT_STALL_MIN_DROP_PCT (1 %): the route is bobbing, not converging, whatever the count.  A count of 0 ends the stage by itself.  -> None or the stop record"""
+    if not c["OT_FF_DRT"] or not c.get("OT_FF_DRT_STALL"):
+        return None
+    w, n = c["OT_FF_DRT_STALL_WINDOW"], len(series)
+    if n < max(c["OT_FF_DRT_STALL_ITER"], w + 1):
+        return None
+    best_before = min(v for _l, v in series[:-w])
+    best_win = min(v for _l, v in series[-w:])
+    pct = c["OT_FF_DRT_STALL_MIN_DROP_PCT"]
+    if best_before <= 0 or best_win <= best_before * (1 - pct / 100.0):
+        return None
+    return {"rule": "DRT_STALL", "iteration": n, "violations": series[-1][1], "best": best_before, "window": w, "min_drop_pct": pct,
+            "tail": [v for _l, v in series[-w:]]}
+
+
 def drt_decide(series, c):
     """series [(label, violations)] of completed iterations -> None or the stop record"""
     if not c["OT_FF_DRT"]:
         return None
+    d = _drt_floor(series, c)
+    return d or drt_stall(series, c)
+
+
+def _drt_floor(series, c):
     w = c["OT_FF_DRT_WINDOW"]
     if len(series) < max(c["OT_FF_DRT_ITER"], w + 1):
         return None
@@ -170,6 +194,10 @@ def drt_decide(series, c):
 
 
 def drt_line(d, stamp=True):
+    if d.get("rule") == "DRT_STALL":
+        return ("OT_DRT_NO_PROGRESS stage=route class=DRT_STALL: iteration %d has %d violations and none of the last %d iterations beat the earlier best %d by %g%%: %s; stopping the stage (FLOW-FIX-2045)%s"
+                % (d["iteration"], d["violations"], d["window"], d["best"], d["min_drop_pct"], " ".join(str(v) for v in d["tail"]),
+                   time.strftime(" %Y-%m-%d %H:%M:%S", time.gmtime()) if stamp else ""))
     return ("OT_DRT_NO_PROGRESS stage=route class=DRT_NO_PROGRESS: iteration %d has %d violations > %d and the last %d iterations fell "
             "%.1f%% in all (< %g%% per iteration): %s; stopping the stage (FAILFAST-1)%s"
             % (d["iteration"], d["violations"], d["max"], d["window"], d["fall_pct"], d["min_drop_pct"],

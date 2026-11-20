@@ -216,3 +216,19 @@ def test_grt_is_never_stopped_on_overflow(tmp_path):
     for rounds in ([30], [30, 30], [30, 30, 30]):
         write_run(k, log_iters(*rounds), {n: rep(90000) for n in (5, 10, 15, 20, 25, 30)}, t0 + 100)
         assert R.judge(str(k), t0, str(st), env={}, settle_s=0) == []
+
+
+def test_drt_stall_stops_a_bobbing_route_below_the_10000_floor():
+    """FLOW-FIX-2045 (kv3_io_cor: 38 h, iteration 51, violations bobbing around 250): no new best by 1 % in 12 iterations from iteration 40"""
+    bob = [4000 - 60 * i for i in range(30)] + [260, 255, 252, 250, 258, 262, 249, 251, 256, 250, 254, 252, 249, 253, 250, 255, 251, 249]
+    d = R.drt_decide(drt(bob), C)
+    assert d and d["rule"] == "DRT_STALL" and d["window"] == 12 and d["best"] <= 252
+    line = R.drt_line(d, stamp=False)
+    assert line.startswith("OT_DRT_NO_PROGRESS stage=route class=DRT_STALL") and "FLOW-FIX-2045" in line
+    assert R.drt_decide(drt(bob[:36]), C) is None                                    # before iteration 40
+    assert R.drt_decide(drt(bob), R.config_values({"OT_FF_DRT_STALL": "0"})) is None
+    improving = [4000 - 70 * i for i in range(50)]
+    assert R.drt_decide(drt(improving), C) is None                                   # still falling: kept running
+    assert R.drt_decide(drt([3000] * 39 + [0] * 5), C) is None                       # converged to zero
+    slow = [2000 - 15 * i for i in range(55)]                                         # 15 per iteration: a new best by > 1 % inside every window of 12
+    assert R.drt_decide(drt(slow), C) is None

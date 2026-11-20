@@ -225,7 +225,7 @@ def test_kit_flow_refresh_always_replaces_the_listed_flow_files_at_every_stage(t
         (kit / n).write_text("# old copy of " + n + "\n")
     held = open(kit / "stage_odb_cap.py"); ino = (kit / "stage_odb_cap.py").stat().st_ino
     rec = KFR.refresh(str(kit), "route", rt=str(rt), index=str(tmp_path / "no_index.json"))
-    assert sorted(r["file"] for r in rec["replaced"] if r["from"] == "always") == ["hold_cap.tcl", "kit_reports.py", "run_kit.sh", "stage_odb_cap.py", "tt_setup_repair.tcl"]      # kit_reports.py is created in a legacy kit
+    assert sorted(r["file"] for r in rec["replaced"] if r["from"] == "always") == ["hold_cap.tcl", "kit_reports.py", "repair_bound.tcl", "run_kit.sh", "stage_odb_cap.py", "tt_setup_repair.tcl"]      # kit_reports.py is created in a legacy kit
     assert "EARLY_RULES" in (kit / "stage_odb_cap.py").read_text() and "ot_bounded_repair" in (kit / "hold_cap.tcl").read_text()
     assert "[ $GOAL = finish ]; }; then" in runner.read_text() and stat.S_IMODE(runner.stat().st_mode) == 0o755
     assert (kit / "stage_odb_cap.py").stat().st_ino != ino and held.read().startswith("# old copy")
@@ -266,3 +266,23 @@ def test_stage_refresh_adds_the_subtree_balance_block_to_an_old_cts_post_without
     (kit / "cts_post.tcl").write_text("no tap balance line here\n")                                                       # a kit without exactly one anchor is left alone
     KFR.refresh(str(kit), "cts3", rt=str(rt), index=str(tmp_path / "none.json"))
     assert (kit / "cts_post.tcl").read_text() == "no tap balance line here\n"
+
+
+def test_grt_hook_gets_the_repair_bound_line_once_and_only_at_the_end(tmp_path):
+    """FLOW-FIX-2045 (LONG-RUN-0300): the PRE_GLOBAL_ROUTE hook file named in config.mk sources repair_bound.tcl last, so the bound wraps every earlier repair_timing_helper wrapper"""
+    import kit_flow_refresh as KFR
+    from pathlib import Path
+    rt = Path(__file__).resolve().parents[2]
+    kit = tmp_path / "w" / "t"; kit.mkdir(parents=True)
+    (kit / "config.mk").write_text("export CORNER = TC\nexport PRE_GLOBAL_ROUTE_TCL = /work/grt_pre_core.tcl\n")
+    (kit / "grt_pre_core.tcl").write_text("source /work/grt_pre.tcl\nsource /work/rsz_cap_continue.tcl\n")
+    rec = KFR.refresh(str(kit), "gen", rt=str(rt), index=str(tmp_path / "none.json"))
+    body = (kit / "grt_pre_core.tcl").read_text()
+    assert (kit / "repair_bound.tcl").exists() and body.startswith("source /work/grt_pre.tcl\nsource /work/rsz_cap_continue.tcl\n") and body.rstrip().endswith("source /work/repair_bound.tcl] }")
+    assert "grt_pre_core.tcl" in [r["file"] for r in rec["replaced"] if r["from"] == "always-patch"]
+    KFR.refresh(str(kit), "place", rt=str(rt), index=str(tmp_path / "none.json"))
+    assert (kit / "grt_pre_core.tcl").read_text() == body                                  # once
+    k2 = tmp_path / "w2" / "t"; k2.mkdir(parents=True)
+    (k2 / "config.mk").write_text("export PRE_GLOBAL_ROUTE_TCL = /work/missing.tcl\n")
+    KFR.refresh(str(k2), "gen", rt=str(rt), index=str(tmp_path / "none.json"))
+    assert not (k2 / "missing.tcl").exists()                                              # a hook file that is not there is not invented

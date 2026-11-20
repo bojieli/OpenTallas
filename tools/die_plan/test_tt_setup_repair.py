@@ -251,3 +251,42 @@ def test_post_repair_steps_and_final_measure_never_discard_the_repaired_db():
     t = (HERE / "tt_setup_repair.tcl").read_text()
     assert "a step after the repair failed" in t and "final measure failed" in t
     assert t.index("a step after the repair failed") < t.index("write_db $out")
+
+
+def _rb_tcl(seq, env=None):
+    """physical/common_flow/repair_bound.tcl sourced over a stub ORFS repair_timing_helper (counts calls and prints its args)"""
+    rb = HERE.parents[1] / "physical/common_flow/repair_bound.tcl"
+    prog = (f"""
+namespace eval sta {{}}
+set ::calls 0
+set ::i 0
+proc repair_timing_helper {{args}} {{ incr ::calls; incr ::i; puts "HELPER $args" }}
+proc sta::worst_slack {{w}} {{ set v [lindex {{SEQ}} [expr {{min($::i, 99)}}]]; return [lindex $v [expr {{$w eq "-max" ? 0 : 1}}]] }}
+source {rb}
+repair_timing_helper -setup_margin 0 -repair_tns 100
+puts "CALLS $::calls"
+""").replace("{SEQ}", "[list " + seq + "]")
+    import os
+    return subprocess.run([TCLSH], input=prog, capture_output=True, text=True, env=dict(os.environ, **(env or {}))).stdout
+
+
+@pytest.mark.skipif(not TCLSH, reason="tclsh")
+def test_post_grt_repair_with_wns_stuck_at_minus_242_stops_after_three_chunks_of_50():
+    out = _rb_tcl("{-242.069 -3} " * 30)
+    assert "OT_REPAIR_STALL post_grt_repair stop after 150 iterations" in out and "CALLS 3" in out
+    assert out.count("-max_iterations 50") == 3 and "HELPER -setup_margin 0 -repair_tns 100 -max_iterations 50" in out
+
+
+@pytest.mark.skipif(not TCLSH, reason="tclsh")
+def test_post_grt_repair_keeps_going_while_it_improves_and_can_be_switched_off():
+    out = _rb_tcl(" ".join("{%d 0}" % (-242 + 20 * k) for k in range(30)))
+    assert "OT_REPAIR_STALL" not in out and "CALLS 13" in out                              # reaches slack >= 0 after 13 chunks
+    off = _rb_tcl("{-242 -3} " * 5, {"OT_REPAIR_BOUND": "0"})
+    assert "CALLS 1" in off and "max_iterations" not in off                                 # the original helper, untouched
+
+
+def test_repair_bound_is_complete_tcl():
+    f = HERE.parents[1] / "physical/common_flow/repair_bound.tcl"
+    if TCLSH:
+        out = subprocess.run([TCLSH], input=f"set f [open {f}]; puts [info complete [read $f]]\n", capture_output=True, text=True)
+        assert out.stdout.strip() == "1"

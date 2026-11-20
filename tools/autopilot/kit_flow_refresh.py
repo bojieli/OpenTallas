@@ -26,6 +26,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import socket
 import sys
 import time
@@ -111,6 +112,8 @@ ALWAYS = (("kit", "stage_odb_cap.py", "tools/die_plan/stage_odb_cap.py"),
           ("kit", "hold_cap.tcl", "physical/die_plan/hbm_arch_cores/hold_cap.tcl"),
           ("runner", "run_kit.sh", "gen_phys.RUN_KIT"),
           ("kit", "subtree_balance.tcl", "tools/die_plan/subtree_balance.tcl"),        # DIE-CORETAP-1119 (7109ee911ef): sourced by cts_post.tcl, standalone (sources nothing)
+          ("kit", "failfast_rules.py", "physical/common_flow/failfast_rules.py"),      # DRT_STALL rule (the judge is run from the kit copy at each poll of the NEXT route stage)
+          ("kit+", "repair_bound.tcl", "physical/common_flow/repair_bound.tcl"),      # post-GRT repair_timing_helper chunk + stall + wall-time bound, hooked below
           ("kit+", "kit_reports.py", "tools/die_plan/kit_reports.py"))      # "kit+" = created when missing, so legacy kits get the helper the refreshed run_kit.sh calls
 
 
@@ -161,6 +164,38 @@ def patch_cts_post(kit, rtr, rec, dry=False):
     return True
 
 
+BOUND_LINE = "uplevel #0 [list source /work/repair_bound.tcl]"
+
+
+def patch_grt_hook(kit, rec, dry=False):
+    """FLOW-FIX-2045: the kit's PRE_GLOBAL_ROUTE_TCL file (named in config.mk; grt_pre.tcl, cons_grt_pre.tcl, grt_pre_core.tcl, macro_ff_pre_grt.tcl ...) gets one guarded line at its END that sources
+    /work/repair_bound.tcl, so the bound wraps the repair_timing_helper every earlier hook has already wrapped.  Missing config line / hook file / repair_bound.tcl in the kit = nothing.  Idempotent.  -> True when patched"""
+    cfg = os.path.join(kit, "config.mk")
+    try:
+        txt = open(cfg).read()
+    except OSError:
+        return False
+    ms = re.findall(r"(?m)^(?:override\s+)?export\s+PRE_GLOBAL_ROUTE_TCL\s*(?::=|=)\s*(/work/\S+\.tcl)\s*$", txt)
+    if not ms or not os.path.isfile(os.path.join(kit, "repair_bound.tcl")):
+        return False
+    p = os.path.join(kit, ms[-1][len("/work/"):])
+    if os.path.islink(p) or not os.path.isfile(p):
+        return False
+    body = open(p).read()
+    if "repair_bound.tcl" in body:
+        return False
+    rec["replaced"].append({"file": os.path.basename(p), "src": "repair_bound hook line", "old": blob_id(body.encode())[:12], "new": "patched", "from": "always-patch"})
+    if dry:
+        return True
+    out = body + ("" if body.endswith("\n") else "\n") + "# FLOW-FIX-2045: bound the post-GRT repair_timing_helper (chunk + stall + wall time)\nif {[file exists /work/repair_bound.tcl]} { " + BOUND_LINE + " }\n"
+    tmp = os.path.join(os.path.dirname(p), f".{os.path.basename(p)}.kfr.{os.getpid()}")
+    with open(tmp, "w") as f:
+        f.write(out)
+    os.chmod(tmp, os.stat(p).st_mode & 0o7777 | 0o200)
+    os.replace(tmp, p)
+    return True
+
+
 def always_pass(kit, rtr, rec, dry=False):
     """replace the ALWAYS files present in the kit by rt's copy when they differ.  -> list of replaced names (also appended to rec['replaced'] with from='always')"""
     out = []
@@ -194,6 +229,8 @@ def always_pass(kit, rtr, rec, dry=False):
         os.replace(tmp, p)
     if patch_cts_post(kit, rtr, rec, dry):
         out.append("cts_post.tcl")
+    if patch_grt_hook(kit, rec, dry):
+        out.append("grt_hook")
     return out
 
 
