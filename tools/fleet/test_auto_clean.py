@@ -317,3 +317,12 @@ def test_cleanup_unit_is_not_idle_io_class():
     """a saturated disk starves an idle-class cleanup for hours (epyc7 11-19: pass held the lock 43 min, no pass for 90 min)"""
     u = (H / "systemd" / "ot-auto-clean.service").read_text()
     assert "IOSchedulingClass=idle" not in u.replace("# ", "#").split("\n", 0)[0] and "\nIOSchedulingClass=best-effort" in u and "IOSchedulingPriority=6" in u
+
+
+def test_failed_units_are_listed_per_host_and_reach_the_report():
+    """FAILED-UNITS-1119: a failed ot-disk-autoprune.service must be named in the report"""
+    out = "ot-disk-autoprune.service loaded failed failed Auto-prune\\nwt-reaper.service loaded failed failed Reaper\\noth-ubuntu-1.scope loaded failed failed x\\n"
+    run = lambda *a, **k: types.SimpleNamespace(returncode=0, stdout=out, stderr="")
+    assert HUB.failed_units("h", run) == ["ot-disk-autoprune.service", "wt-reaper.service"]
+    assert HUB.failed_units("h", lambda *a, **k: types.SimpleNamespace(returncode=0, stdout="", stderr="")) == []
+    assert HUB.failed_units("h", lambda *a, **k: (_ for _ in ()).throw(OSError("x"))) is None

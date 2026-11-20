@@ -59,6 +59,21 @@ def watchdog(hosts, st, now=None, run=subprocess.run, poster=None):
     return logs, alerts
 
 
+FAILED_UNITS_RE = re.compile(r"^[^A-Za-z0-9]*((?:ot-[A-Za-z0-9_.@-]+|wt-reaper)\.service)\s", re.M)
+
+
+def failed_units(host, run=subprocess.run):
+    """FAILED-UNITS-1119 (COORD, FABLE-FLOW-1355: the disk auto-prune unit failed 203/EXEC every 10 min on intel1 and epyc2 for 15 h, unseen): the ot-* / wt-reaper user units of a host that are in
+    state failed.  -> sorted unit names ([] when none, None when the host did not answer)"""
+    try:
+        r = run(SSH + [host, "systemctl --user --failed --no-legend --plain 2>/dev/null"], capture_output=True, text=True, timeout=60)
+    except Exception:
+        return None
+    if r.returncode not in (0, 1):
+        return None
+    return sorted({m.group(1) for m in FAILED_UNITS_RE.finditer(r.stdout or "")})
+
+
 def top_writers(host, run=subprocess.run, window_h=4):
     cmd = "timeout 900 python3 -I %s/lane_quota.py scan --root /srv/opentallas-scratch2/claude --window-h %d --quota-gb 0" % (RT, window_h)
     try:
@@ -77,7 +92,11 @@ def report(freed, now=None, run=subprocess.run, poster=None):
     for h in HOSTS:
         w = tw.get(h)
         parts.append("%s freed %.0f GB, top writers 4 h: %s" % (h, freed.get(h, 0.0), ", ".join("%s %.0f GB" % kv for kv in w) if w else "scan did not return"))
+    with cf.ThreadPoolExecutor(max_workers=len(HOSTS)) as ex:
+        fu = dict(zip(HOSTS, ex.map(lambda h: failed_units(h, run), HOSTS)))
+    bad = ["%s: %s" % (h, ", ".join(u)) for h, u in fu.items() if u]
     text = "INFO [AUTO-CLEAN -> COORD] 4-hourly cleanup report: " + " | ".join(parts)
+    text += " | FAILED UNITS: " + ("; ".join(bad) if bad else "none") + "".join(" | %s unit state unreadable" % h for h, u in fu.items() if u is None)
     (poster or (lambda t: subprocess.run(["bash", POST, "FLEET-OPS-R", t], capture_output=True, timeout=120)))(text)
     return text
 
