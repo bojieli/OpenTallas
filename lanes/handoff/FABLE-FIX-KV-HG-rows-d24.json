@@ -2,7 +2,7 @@
  "schema": "fable-fix-kv-hg.rows.v1",
  "from": "FABLE-FIX-KV-HG 2026-11-18",
  "to": "KV-HG-OPUS (D23c / D24)",
- "status": "DO_NOT_COUNT (proposal); section L = rows for D25e2",
+ "status": "DO_NOT_COUNT (proposal); sections L + M = rows for D25e2",
  "evidence": "epyc9:/srv/opentallas-scratch2/claude/fable-fix-kv-hg3/sc/<hg_v1|hg|hgi_v1|hgi_v4|pc_v1>/out/{ends.tsv,trace.txt} = per-endpoint TT setup on the HG6 4_cts.odb (placement RC)",
  "A_flow_keys_0_cycles": {
   "tools": "main >= a572716aa09 (gen_phys _relay_mid_re/_relay_mid_tail/_relay_mid_soft_frac, relay_mid.tcl OT_RELAY_MID_TAIL / OT_RELAY_MID_SOFT_FRAC / OT_RELAY_MID_DEBUG; absent keys = byte-identical kits)",
@@ -766,5 +766,443 @@
   "K6_choice": "+1 on eN AND tN (form (i)); the 0-cycle land_pad_tail_split does not apply: eN pad consumers are the soft leaves u_hst2_g / u_hst3_g, not hard-core pins, and bin -> g2 is 1,011 um / g3 1,379 um (one pad stage = hop >= 505 / 690 um; k7 794 um hop = -27 ps)",
   "kt_keys": "CONFIRMED (section J withdrawn): k7 run_route.log OT_RELAY_SITES placed 1936 FIRM = 1904 kst (kp_o/kpv_o/gf_o port-name form) + 32 eN pad; the 1904 unmatched g_r.r[b] keys are unused aliases, drop them",
   "acceptance": "next k7 kit: OT_REG_LEAF_SPLIT line with 3 copies; OT_RELAY_SITES unmatched 0; post-CTS TT >= -42 (the 4 FSTART ends gone with D25e raw-branch regen, the 8 eN->hst3_g ends gone); GRT iter 5 bins x0-200 y400-800 and x200-400 y600-800 well below k7 13,280 / 15,490"
+ },
+ "M_k8_and_hst3_rows": {
+  "by": "FABLE-FIX-KV-HG (Opus successor) 11-19 19:xx PST",
+  "k8": "epyc9 /srv/opentallas-scratch2/claude/opus-kv-hg/k8 = k7 GEN output (d25d4 bind) + section L applied with reg_leaf_split.py (main 8f981deeaa1) + eN pad D=2 + L relay_sites, polyline no-tN form [[40,1270.08],[40,618]] (tN station is bind-only). Script k8/k8_edit.py",
+  "k8_post_cts_tt": {
+   "wns": -199.0,
+   "tns": -467.1,
+   "failing_ends": 5,
+   "classes": [
+    "4 x u_cland_rst_ft0_i -> FSTART (-199/-166/-26/-25) = NORAWB, fixed by the D25e raw-branch regen (not in this kit)",
+    "1 x cland eN ring dsel -> u_bin_i_ectl_Q_N_eN/eq -51.8: eq drives NOTHING (i_ectl_Q_N_eN_eq unused); GPL left the dead flop at (437,972). Row: relay_sites u_bin_i_ectl_Q_N_eN.eq -> [44,40]"
+   ],
+   "gone": "the 8 eN pad -> hst3_g ends of k7 (-27); kt class 0",
+   "stations_slack_ps": {
+    "hst2_g in": 293,
+    "hst2_t1 in": 437,
+    "rls_a/b/c in": [
+     461,
+     597,
+     455
+    ],
+    "rls -> e0/e4/e6 pins": [
+     359,
+     356,
+     461
+    ],
+    "hst3_g in (from eN pd2 q at (140,680), g3 at (594,1265), 1047 um)": 10,
+    "g3 -> ftg (447 um hop)": 384,
+    "ftg -> t2": 354,
+    "hst3_t2 -> head3 e6": 217
+   },
+   "siting": "OT_REG_LEAF_SPLIT 3 copies; OT_RELAY_SITES 1968 FIRM (1904 kst + 64 eN pd2), unmatched 1904 = the alias keys only; OT_ISTATIONS 4236 FIRM; hst2 chain on the polyline: path 757 um, hop 378, t1 at (40.6,617.6)"
+  },
+  "hst3_finding": "the 447-um hst3 hops close with +354..+384 ps, but they and the eN -> g3 hop (1047 um, +10 ps; k7 assumed g3 at (451,948), GPL put it at (594,1265)) break the 405 rule. 0-cycle fix below; it re-sites the K6 tN station (+1 already approved) and adds the same 3-copy split on u_hst3_t2 (t2 -> head3 sinks spread 525 um otherwise)",
+  "rows_replacing_L_where_named": {
+   "reg_leaf_split": [
+    {
+     "leaf": "u_hst2_t2",
+     "copies": [
+      {
+       "name": "a",
+       "pins": [
+        "u_head2_e0.*",
+        "u_head2_e2.g_front_1_u_front__c_in",
+        "u_head2_e2.g_front_1_u_front__e_in",
+        "u_head2_e2.g_front_1_u_front__lt_in",
+        "u_head2_e2.g_front_1_u_front__q_valid_in",
+        "u_head2_e2.g_front_1_u_front__q_beat_in",
+        "u_head2_e2.g_front_1_u_front__q_data_in"
+       ],
+       "site_um": [
+        40.0,
+        285.0
+       ]
+      },
+      {
+       "name": "b",
+       "pins": [
+        "u_head2_e2.g_front_1_u_front__row_in",
+        "u_head2_e4.*"
+       ],
+       "site_um": [
+        40.0,
+        618.0
+       ]
+      },
+      {
+       "name": "c",
+       "pins": [
+        "u_head2_e6.*"
+       ],
+       "site_um": [
+        40.0,
+        950.0
+       ]
+      }
+     ]
+    },
+    {
+     "leaf": "u_hst3_t2",
+     "copies": [
+      {
+       "name": "a",
+       "pins": [
+        "u_head3_e0.*",
+        "u_head3_e2.g_front_1_u_front__c_in",
+        "u_head3_e2.g_front_1_u_front__e_in",
+        "u_head3_e2.g_front_1_u_front__lt_in",
+        "u_head3_e2.g_front_1_u_front__q_valid_in",
+        "u_head3_e2.g_front_1_u_front__q_beat_in",
+        "u_head3_e2.g_front_1_u_front__q_data_in"
+       ],
+       "site_um": [
+        650.0,
+        285.0
+       ]
+      },
+      {
+       "name": "b",
+       "pins": [
+        "u_head3_e2.g_front_1_u_front__row_in",
+        "u_head3_e4.*"
+       ],
+       "site_um": [
+        650.0,
+        618.0
+       ]
+      },
+      {
+       "name": "c",
+       "pins": [
+        "u_head3_e6.*"
+       ],
+       "site_um": [
+        650.0,
+        950.0
+       ]
+      }
+     ]
+    }
+   ],
+   "reg_leaf_split_note": "dry-applied with the tool on the d25d4 bound RTL of BOTH hgi_v1 types: hst3 copies 807/1063/807, self-check pass. hst3 copies sit in the x 604.8-699.84 column gap next to the head3 west faces",
+   "internal_stations": "bus:i_ectl_Q_N_tN regs_um [[133.0,1270.08],[200.0,950.0]]   (K6 had [60,1080]; lpad -> S 387 um)",
+   "relay_polylines": [
+    {
+     "group_re": "u_hst2_g$",
+     "polyline_um": [
+      [
+       200.0,
+       950.0
+      ],
+      [
+       40.0,
+       950.0
+      ],
+      [
+       40.0,
+       618.0
+      ]
+     ]
+    },
+    {
+     "group_re": "u_hst3_g$",
+     "polyline_um": [
+      [
+       200.0,
+       950.0
+      ],
+      [
+       340.0,
+       950.0
+      ],
+      [
+       340.0,
+       640.0
+      ],
+      [
+       650.0,
+       640.0
+      ],
+      [
+       650.0,
+       618.0
+      ]
+     ]
+    }
+   ],
+   "hops_um": {
+    "hst2": "S->g2 246, g2->t1 246 (g2 ~(40,864))",
+    "hst3": "S->g3 391, g3->ftg 391 (g3 ~(340,699) middle channel, ftg = tail at (650,618)), ftg->copies 333/0/332",
+    "eN": "bin->E0 360, E0->E1 380, E1->g2 184, E1->g3 281"
+   },
+   "relay_sites": {
+    "u_pd2_i_ectl_Q_N_eN_0.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_0.q": [
+     60.0,
+     700.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_1.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_1.q": [
+     60.0,
+     700.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_2.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_2.q": [
+     60.0,
+     700.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_3.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_3.q": [
+     60.0,
+     700.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_4.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_4.q": [
+     60.0,
+     700.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_5.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_5.q": [
+     60.0,
+     700.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_6.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_6.q": [
+     60.0,
+     700.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_7.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_7.q": [
+     60.0,
+     700.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_8.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_8.q": [
+     60.0,
+     700.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_9.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_9.q": [
+     60.0,
+     700.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_10.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_10.q": [
+     60.0,
+     700.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_11.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_11.q": [
+     60.0,
+     700.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_12.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_12.q": [
+     60.0,
+     700.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_13.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_13.q": [
+     60.0,
+     700.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_14.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_14.q": [
+     60.0,
+     700.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_15.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_15.q": [
+     60.0,
+     700.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_16.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_16.q": [
+     60.0,
+     700.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_17.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_17.q": [
+     60.0,
+     700.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_18.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_18.q": [
+     60.0,
+     700.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_19.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_19.q": [
+     60.0,
+     700.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_20.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_20.q": [
+     60.0,
+     700.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_21.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_21.q": [
+     60.0,
+     700.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_22.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_22.q": [
+     60.0,
+     700.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_23.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_23.q": [
+     60.0,
+     700.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_24.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_24.q": [
+     60.0,
+     700.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_25.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_25.q": [
+     60.0,
+     700.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_26.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_26.q": [
+     60.0,
+     700.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_27.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_27.q": [
+     60.0,
+     700.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_28.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_28.q": [
+     60.0,
+     700.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_29.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_29.q": [
+     60.0,
+     700.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_30.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_30.q": [
+     60.0,
+     700.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_31.r[0]": [
+     40.0,
+     340.0
+    ],
+    "u_pd2_i_ectl_Q_N_eN_31.q": [
+     60.0,
+     700.0
+    ],
+    "u_bin_i_ectl_Q_N_eN.eq": [
+     44.0,
+     40.0
+    ]
+   },
+   "relay_sites_note": "REPLACES L relay_sites_add (eN stage 1 moves (140,680) -> (60,700) in the west channel) + 1 dead-flop key",
+   "cycles": "none beyond L/K6 (+1 eN, +1 tN on these 2 types)"
+  },
+  "risk": "the hst3 trunk now uses the middle channel x 293.76-388.8 from y 950 to 640 (one 1575-bit trunk; k7 15,490 there came from the hst2 chain + t2 + ft2 column). Unproven: needs k9"
  }
 }
