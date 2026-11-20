@@ -272,3 +272,27 @@ def test_hosts_are_pushed_in_parallel_with_one_result_line_each():
     assert time.time() - t0 < 1.0
     assert notes[0] == "h1:ok" and notes[1].startswith("h2:SKIP") and notes[2].startswith("h3:FAIL") and notes[3] == "h4:ok"
     assert sum(1 for l in lines if l.startswith(("h1:", "h2:", "h3:", "h4:"))) == 4
+
+
+def test_one_push_per_host_at_a_time_second_waits_and_a_stuck_one_gives_up(tmp_path):
+    """HOST-LOCK-1119: two threads pushing the same host never overlap; different hosts do; a held lock past the wait returns busy"""
+    import importlib.machinery, importlib.util, os, threading, time
+    ld = importlib.machinery.SourceFileLoader("ots_lock", os.path.join(os.path.dirname(os.path.abspath(__file__)), "ot-tools-sync"))
+    m = importlib.util.module_from_spec(importlib.util.spec_from_loader("ots_lock", ld)); ld.exec_module(m)
+    live, peak, lock = [], [0], threading.Lock()
+    def inner(h, name, prev, flip, smoke):
+        with lock:
+            live.append(h); peak[0] = max(peak[0], live.count(h))
+        time.sleep(0.3)
+        with lock:
+            live.remove(h)
+        return True, "ok"
+    ts = [threading.Thread(target=lambda: m.host_sync("hA", "n", "", lock_dir=tmp_path, _inner=inner)) for _ in range(3)]
+    ts.append(threading.Thread(target=lambda: m.host_sync("hB", "n", "", lock_dir=tmp_path, _inner=inner)))
+    [t.start() for t in ts]; [t.join(30) for t in ts]
+    assert peak[0] == 1                                                     # never two pushes of hA at once
+    import fcntl
+    held = open(tmp_path / ".hostsync.hC.lock", "w"); fcntl.flock(held, fcntl.LOCK_EX)
+    m.HOST_LOCK_WAIT_S = 1.2
+    ok, note = m.host_sync("hC", "n", "", lock_dir=tmp_path, _inner=inner)
+    assert not ok and note.startswith("busy")

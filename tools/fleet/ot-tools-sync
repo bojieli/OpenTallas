@@ -415,7 +415,36 @@ def gen_red(name):
     return False
 
 
-def host_sync(host, name, prev, do_flip=True, smoke_here=False):
+HOST_LOCK_WAIT_S = float(os.environ.get("OT_SYNC_HOST_LOCK_WAIT_S", "900"))
+
+
+def host_sync(host, name, prev, do_flip=True, smoke_here=False, lock_dir=None, _inner=None):
+    """HOST-LOCK-1119 (COORD, FABLE-FLOW-0035: three failed syncs in 45 min and epyc10 one revision behind: the follower, the catch-up timer and manual syncs pushed the same host's .partial dir at the
+    same time): ONE push per host at a time, under a flock on RT/.hostsync.<host>.lock; a second pusher waits up to HOST_LOCK_WAIT_S (a push that finished meanwhile is then a no-op because the
+    manifest is already there) and gives up with a 'busy' note instead of colliding."""
+    import fcntl
+    ld = Path(lock_dir) if lock_dir else RT
+    try:
+        ld.mkdir(parents=True, exist_ok=True)
+    except OSError:
+        pass
+    lf = open(ld / f".hostsync.{host}.lock", "w")
+    t_end = time.time() + HOST_LOCK_WAIT_S
+    while True:
+        try:
+            fcntl.flock(lf, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            break
+        except OSError:
+            if time.time() > t_end:
+                return False, f"busy: another sync has been pushing {host} for over {HOST_LOCK_WAIT_S:.0f} s"
+            time.sleep(1.0)
+    try:
+        return (_inner or _host_sync_unlocked)(host, name, prev, do_flip, smoke_here)
+    finally:
+        lf.close()
+
+
+def _host_sync_unlocked(host, name, prev, do_flip=True, smoke_here=False):
     """copy RT/<name> (HOST_PATHS) to host, check it there (manifest + parse; with smoke_here also gen_smoke), flip host RT/current -> (ok, note).
     A note starting 'RED ' means the content is wrong (not the host)."""
     r = run(SSH + [host, f"test -f {RT}/{name}.manifest.json && echo HAVE || df -BG --output=avail {RT}/.. | tail -n1"], input="")
