@@ -3551,6 +3551,17 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["r
                    "polyline_um": {"type": "array", "minItems": 1, "items": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "number"}}},
                    "max_hop_um": {"type": "number"}}}}
 
+# REG-LEAF-SPLIT 11-19 (FABLE-FIX-KV-HG K): kept copies of a pure registered soft leaf per consumer pin group (opt-in, absent =
+# unchanged kits); gen_phys.write_type_kit -> reg_leaf_split.apply / install read it
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["reg_leaf_split"] = {
+    "type": "array", "items": {"type": "object", "required": ["leaf", "copies"], "additionalProperties": False,
+    "properties": {"leaf": {"type": "string", "minLength": 1},
+                   "copies": {"type": "array", "minItems": 2, "items": {
+                       "type": "object", "required": ["name", "pins", "site_um"], "additionalProperties": False,
+                       "properties": {"name": {"type": "string", "minLength": 1},
+                                      "pins": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 3}},
+                                      "site_um": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "number"}}}}}}}}
+
 # DIE-S81-92 R-COL-2 (B3x2): plan budgets that gen_phys already reads (gutter_block.tcl) were not in the schema -> G0 schema ERROR x3
 SCHEMA["properties"]["budgets"]["properties"]["gutter_block_um"] = {"type": "number", "exclusiveMinimum": 0}
 SCHEMA["properties"]["budgets"]["properties"]["gutter_block_min_span_um"] = {"type": "number", "exclusiveMinimum": 0}

@@ -6350,6 +6350,12 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         srcs.append(f"/work/rtl/{Path(f).name}")
     stage_includes(rtl_files, kd / "rtl")
     serdes_boot_stage_param(kd / "rtl", P.types[tn].get("verilog_defines") or [])
+    # REG-LEAF-SPLIT 11-19 (FABLE-FIX-KV-HG K, KV-D23-COMPOSE D25e2): plan reg_leaf_split = kept copies of a pure 1-stage
+    # registered leaf, one per consumer pin group, sited FIRM below (istations.tcl); absent = nothing changes
+    import reg_leaf_split as _RLS
+    rls_rec, rls_cells = _RLS.apply(kd / "rtl", tn, t)
+    if rls_cells is not None:
+        append_new_src(srcs, f"/work/rtl/{rls_cells.name}")
     # DIE-HEAD-53 11-01 (HEAD class LEP-BB): a hard macro instantiated with a parameter override (hd_lep0N
     # g_pp[k].u_pair = ot_s81hd_lep_pair #(.CHB(..))) has only a Liberty cell, which declares no parameters, so
     # yosys elaboration (GEN_LINT rtl_check, synth) stops with "does not have a parameter named ..".  Stage a
@@ -7181,6 +7187,8 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         # DIE-KV-60 11-01: plan relay_sites on a bound kit without a native station sidecar (KV hard PHY wrappers)
         import kit_istations
         (kd / "istations.tcl").write_text(kit_istations.relay_sites_only_tcl(tn, t))
+    if rls_rec is not None:
+        _RLS.install(kd, rls_rec)     # REG-LEAF-SPLIT: copy sites into istations.tcl + kd/reg_leaf_split.json
     # OWNER RESET RULE 10-24 (tools/die_plan/reset_tree.py): FIRM sites of the reset entry stage + synchronous relay
     # tree.  kit_rsync writes reset_tree.tcl next to bound kit RTL; a gen_rtl kit of a pipelined plan gets it from the
     # plan (the same tree gen_rtl emitted).
