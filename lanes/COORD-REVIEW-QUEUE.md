@@ -11156,3 +11156,4 @@ FAILED [AUTOPILOT f95c65308c42] 2026-11-19 23:43:40 PST AUTOPILOT -> KIT-WAVE-5:
   Sink bins: 16 non-st types are rebuilt; epyc8's 10 dumps are still running. They go into the next event with the cb lockup rows.
 - 2026-11-19 23:49 PST KIT-SCAN hourly [PRECHECK-1119 -> COORD, die owners] loved-redfish: qwen_compute: 1 kits; FOLD 0; placed scans OK 1, FAILED 0; legs>405 in 1 of 1 (worst cbn_q01__cld9ff4c40 2149: u_lpad_nb_i12.r -> u_lpad_nb_i12.r 417.6 um); tap skew>=100 ps in 1. Estimator; detail /home/ubuntu/.local/state/precheck-kit-scan.
 - 2026-11-19 23:49 PST ALERT [OT-TOOLS-SYNC -> COORD] runtime sync FAILED, rt/current stays 7e9768a93884: RuntimeError: /srv/opentallas-scratch2/claude/rt/68ee718a2a14 is partial but in use; not touched
+- 2026-11-19 23:50 PST DISK-RATE intel2 /srv/opentallas-scratch2: free 165 GB, falling 91 GB/h, floor 50 GB in 1.3 h AUTO-RETIRE rc 0: df before: 154G / df after: 154G; deleted 0,  (cron disk_rate.py; read-only)
