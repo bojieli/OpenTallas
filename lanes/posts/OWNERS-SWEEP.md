@@ -92,3 +92,8 @@
   DEAD-OWNER 0 (S81-OWN-1119 in agent_ids, resumed 17:50).
   FAILED-NO-RELAUNCH 15 (S81 10 mostly bind stale re-bind, QC 5); STALE 16, worst 4.7 h (S81 slice_station t36, svc_hi_pvso_entry t1).
   Detail lanes/OWNERS-SWEEP.tsv
+- 2026-11-19 18:51 PST 499 unsigned rows (prev 481): +18 QC, 0 gone. Flags 18 -> 11 (FNR 14->7, STALE 15->7, UNOWNED 3->1, WAIT-BIND 24->2).
+  New owners applied: COL-H10-1119 24 col_h10_r1/r2 rows, COL-CENSUS-1119 93 other S81 col rows (no posts yet, not DEAD-flagged); S81-GEOM-OPUS keeps D8i col types.
+  UNOWNED: s81 dsdv_slice_lepw_mu_C__t1 (failed, stale). STALE s81: slice_station__t36, svc_hi_dsdv_svc_pvso_entry__t1 (S81-OWN-1119).
+  FAILED-NO-RELAUNCH qwen_compute 6: cbn_q11__cl49ae4555, cbn_q11__cl5cc92dfe, slw_su_c__cl19bb38ef, slw_su_c__cl92142dac, slw_st_a_v2__cl9f076a5c, tt_ctlm.
+  KV 2 WAIT-BIND (kv3_pc__cl5a95b461, qkd_pv_fin_s8_pin); s81_head clean.
