@@ -296,3 +296,14 @@ def test_one_push_per_host_at_a_time_second_waits_and_a_stuck_one_gives_up(tmp_p
     m.HOST_LOCK_WAIT_S = 1.2
     ok, note = m.host_sync("hC", "n", "", lock_dir=tmp_path, _inner=inner)
     assert not ok and note.startswith("busy")
+
+
+def test_a_partial_dir_in_use_is_set_aside_not_refused(tmp_path):
+    """MATERIALIZE-FRESH-1119"""
+    import importlib.machinery, importlib.util, os
+    ld = importlib.machinery.SourceFileLoader("ots_ma", os.path.join(os.path.dirname(os.path.abspath(__file__)), "ot-tools-sync"))
+    m = importlib.util.module_from_spec(importlib.util.spec_from_loader("ots_ma", ld)); ld.exec_module(m)
+    d = tmp_path / "abc123"; d.mkdir(); (d / "f").write_text("x")
+    assert m.set_aside_partial(d, in_use_fn=lambda p: [], rt=tmp_path) is None and d.exists()        # unused: caller removes it as before
+    st = m.set_aside_partial(d, in_use_fn=lambda p: [1234], rt=tmp_path)                              # in use: renamed aside, name is free again
+    assert st is not None and st.name.startswith(".stale-abc123-") and (st / "f").exists() and not d.exists()

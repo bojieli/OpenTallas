@@ -341,12 +341,44 @@ def write_flow_blobs(d, full):
     (d / FLOW_BLOB_REL).write_text(json.dumps({"sha": full, "days": FLOW_BLOB_DAYS, "blobs": blobs}, sort_keys=True))
 
 
+def set_aside_partial(d, in_use_fn=None, rt=None):
+    """MATERIALIZE-FRESH-1119 (COORD: rt sync died 'rt/88537c5e1383 is partial but in use; not touched', rt/current stuck behind main): a partial build dir is NEVER a reason to refuse.  Not in use -> it is
+    removed by the caller as before.  In use (another sync still building it, or a stray cwd) -> it is RENAMED aside to RT/.stale-<name>-<pid> (processes keep their cwd; git worktree metadata is pruned) and
+    the caller builds a fresh dir under the real name.  -> the stale path or None"""
+    import os as _os
+    rt = rt or RT
+    if not (in_use_fn or in_use)(d):
+        return None
+    st = Path(rt) / f".stale-{Path(d).name}-{_os.getpid()}"
+    _os.rename(d, st)
+    return st
+
+
+def materialize_lock(name):
+    """one materialize of a given sha at a time (the follower, the catch-up timer and manual syncs raced into the same partial dir): flock RT/.materialize.<name>.lock, waits up to 20 min"""
+    import fcntl
+    lf = open(RT / f".materialize.{name}.lock", "w")
+    t_end = time.time() + 1200
+    while True:
+        try:
+            fcntl.flock(lf, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            return lf
+        except OSError:
+            if time.time() > t_end:
+                raise RuntimeError(f"another sync has been building rt/{name} for over 20 min")
+            time.sleep(2.0)
+
+
 def materialize(full):
     """hub: RT/<sha12> as a detached sparse worktree, files read-only, manifest beside it -> dir"""
     name = sha12(full)
     d = RT / name
     ok = RT / f"{name}.manifest.json"
     if d.is_dir() and ok.is_file():
+        return d
+    RT.mkdir(parents=True, exist_ok=True)
+    _mlock = materialize_lock(name)                        # held until this function returns (the file object stays referenced)
+    if d.is_dir() and ok.is_file():                        # the other builder finished while we waited
         return d
     RT.mkdir(parents=True, exist_ok=True)
     fg = free_gb(RT)
@@ -356,11 +388,10 @@ def materialize(full):
         if fg < MIN_FREE_GB:
             raise RuntimeError(f"{RT}: {fg:.0f} GB free < {MIN_FREE_GB:g} GB (OT_RT_MIN_FREE_GB); nothing written (pruned {len(pruned)})")
     if d.exists():                                         # a partial earlier attempt (no manifest): rebuild it if unused
-        if in_use(d):
-            raise RuntimeError(f"{d} is partial but in use; not touched")
-        run(["git", "worktree", "remove", "--force", str(d)], cwd=REPO)
-        if d.exists():
-            run(["rm", "-rf", "--one-file-system", str(d)])
+        if set_aside_partial(d) is None:
+            run(["git", "worktree", "remove", "--force", str(d)], cwd=REPO)
+            if d.exists():
+                run(["rm", "-rf", "--one-file-system", str(d)])
     run(["git", "worktree", "prune"], cwd=REPO)
     git("worktree", "add", "-q", "--detach", "--no-checkout", str(d), full)
     git("sparse-checkout", "set", "--no-cone", *SPARSE, cwd=d)
