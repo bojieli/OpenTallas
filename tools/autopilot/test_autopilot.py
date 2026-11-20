@@ -10,6 +10,7 @@ import tempfile
 import time
 import unittest
 from pathlib import Path
+from unittest import mock
 import pytest  # noqa: E402
 
 @pytest.fixture(autouse=True)
@@ -103,6 +104,8 @@ def so(verdict="NOT SIGNED", tt=5.0, ff=-3.0, fails=("hold_ff",), drc=0, pg="PAS
 class Base(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.enterContext(mock.patch.dict(os.environ))
         os.environ["AP_DIR"] = self.tmp.name
         os.environ["AP_QUEUE_FILE"] = str(Path(self.tmp.name) / "queue.tsv")
         os.environ["AP_COORD_FILES"] = str(Path(self.tmp.name) / "coord")
@@ -111,17 +114,13 @@ class Base(unittest.TestCase):
         os.environ["AP_WATCHDOG_LOG"] = str(Path(self.tmp.name) / "no_watchdog.log")    # never the hub's real log
         (Path(self.tmp.name) / "coord" / "lanes").mkdir(parents=True)
         import autopilot
+        # Other suites import this module too. Keep their real functions and caches.
+        self.enterContext(mock.patch.dict(vars(autopilot)))
         self.ap = importlib.reload(autopilot)
         self.ap.DRY = False
         self.ap.stage_admission_tools = lambda: dict(dir="/srv/opentallas-scratch2/claude/ap-tools/v1",
             chain="/srv/opentallas-scratch2/claude/ap-tools/v1/signoff_chain.py",
             preflight="/srv/opentallas-scratch2/claude/ap-tools/v1/die_plan/kit_preflight.py", sha256="tools-v1")
-
-    def tearDown(self):
-        self.tmp.cleanup()
-        for k in ("AP_DIR", "AP_QUEUE_FILE", "AP_COORD_FILES", "AP_RELEASE_CACHE", "AP_REPO_FILES", "AP_OT_RUN_SIGNALS",
-                  "AP_WATCHDOG_LOG"):
-            os.environ.pop(k, None)
 
     def queue(self, *rows):
         Path(os.environ["AP_QUEUE_FILE"]).write_text("\n".join("\t".join(r) for r in rows) + "\n")
