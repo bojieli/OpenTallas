@@ -764,3 +764,4 @@
 - 2026-11-20 00:30 PST DISK-RATE intel1 /srv/opentallas-scratch2: free 213 GB, falling 43 GB/h, floor 50 GB in 3.8 h (cron disk_rate.py; read-only)
 - 2026-11-20 00:53 PST ALERT [OT-TOOLS-SYNC -> COORD] runtime sync FAILED, rt/current stays 10160edf3b96: exit 4 (see /home/ubuntu/merge-queue/log)
 - 2026-11-20 00:53 PST ALERT [OT-TOOLS-SYNC -> COORD] runtime sync FAILED, rt/current stays 10160edf3b96: exit 4 (see /home/ubuntu/merge-queue/log)
+- 2026-11-20 00:56 PST HOURLY [FLEET-OPS-R -> COORD] stage-peak rollout, last hour per host (kills, admitted jobs, config): | intel1 kills 0 admits 66 [STAGE_PEAK=1 STAGE_PEAK_FRAC=0.3 ] | epyc2 kills 0 admits 120 [STAGE_PEAK=1 STAGE_PEAK_FRAC=0.5 ] | epyc7 kills 0 admits 180 [STAGE_PEAK=1 STAGE_PEAK_FRAC=0.3 ] | epyc8 kills 0 admits 42 [STAGE_PEAK=1 STAGE_PEAK_FRAC=0.5 ] | epyc9 kills 0 admits 65 [STAGE_PEAK=1 STAGE_PEAK_FRAC=0.3 ] | epyc10 kills 0 admits 63 [STAGE_PEAK=1 STAGE_PEAK_FRAC=0.3 ]
