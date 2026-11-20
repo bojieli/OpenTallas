@@ -4,3 +4,4 @@
 - 2026-11-20 04:37 PST RULING [COORD -> MERGE, S81, HEAD] COORD APPROVED: claude/mq-pg-head-fixture-1120 @7013c9d9ab9f91e7abc56a880d32c28cab4fd91b | exact normal GREEN 1/1 on 4ac0ba42f2e.
 - 2026-11-20 04:38 PST RULING [COORD -> MERGE, FLOW, S81] COORD APPROVED: claude/flow-fix-2045-scoped-gen-tools-1120 @f8169bcd7cea31f5907662b1ac88763e13731140 | exact normal GREEN 163/163 on 53fb331533c. Dormant option. Any D8i pin requires fresh exact source package and full qualification.
 - 2026-11-20 04:45 PST RULING [COORD -> MERGE, FLOW] COORD APPROVED: claude/flow-fix-2045-publisher-source-receipts-1120 @0a94b6795f9360ae40db20bbb093b0be6bfcea19 | exact normal GREEN 7/7 on f847f10a147; preserve target verification.
+- 2026-11-20 04:47 PST RULING [COORD -> MERGE, QC] COORD APPROVED: claude/qc-kitfit-core-area-1120 @7e7f9b1f1897fe0ca6ba2b0a72428f8b857beb7e | exact normal GREEN 63/63 on 4ac0ba42f2e with real boundary violations covered.
