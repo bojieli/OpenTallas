@@ -65,12 +65,19 @@ class DockerShim(unittest.TestCase):
 class OtHeavy(unittest.TestCase):
     def block_adj(self, start, prio):
         """the ot-heavy OOMADJ block, run in a shell whose oom_score_adj is `start`"""
-        script = f"echo {start} > /proc/self/oom_score_adj || exit 9\n" + INS.HEAVY_BLOCK + "cat /proc/self/oom_score_adj\n"
+        # Redwatch can inherit a positive kernel floor from the user service
+        # manager. Probe in the disposable child before exercising the block.
+        reset_allowed = "echo 0 > /proc/self/oom_score_adj 2>/dev/null || exit 10\n" if not prio else ""
+        script = (reset_allowed + f"echo {start} > /proc/self/oom_score_adj || exit 9\n"
+                  + INS.HEAVY_BLOCK + "cat /proc/self/oom_score_adj\n")
         env = dict(os.environ); env.pop("OT_HEAVY_PRIO", None)
         if prio: env["OT_HEAVY_PRIO"] = prio
         r = subprocess.run(["bash", "-c", script], capture_output=True, text=True, env=env)
         if r.returncode == 9:
             self.skipTest("cannot raise own oom_score_adj here")
+        if r.returncode == 10:
+            self.skipTest("kernel does not permit resetting inherited oom_score_adj to zero")
+        self.assertEqual(r.returncode, 0, r.stderr)
         return r.stdout.strip()
 
     def test_non_die_scope_starts_at_zero(self):
