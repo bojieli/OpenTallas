@@ -3,6 +3,9 @@
 
 This is an opt-in check of METHODOLOGY 12.1e's existing repeater reach,
 not a timing sign-off or a check of the pre-legalisation topology.
+
+  clock_reach.py TREE [--max-um N] [--json OUT]                 actual reach (+ frozen site digest match)
+  clock_reach.py apply TREE MOVES OUT --reason TEXT             apply site moves AND re-freeze the digest
 """
 import argparse
 import hashlib
@@ -63,7 +66,45 @@ def actual_reach(tree, max_um=450.0):
     return result
 
 
+def apply_moves(tree, moves, reason):
+    """Post-freeze site edits (row nudge, pin-access nudge, moved-cell repair) in ONE place: set tree['sites'][cell] =
+    [x, y] for each move AND re-freeze meta.physical_dme to the new sites, recording the previous digest, the moved cells
+    and the reason.  A tool that edits sites and leaves the old digest makes actual_reach FAIL on frozen_home_match
+    (HEAD r12 and r13 nudges); every site editor calls this instead of writing sites itself.  Returns the tree."""
+    if not reason:
+        raise ValueError('apply_moves needs a reason (recorded in meta.physical_dme)')
+    sites = tree['sites']
+    for cell, xy in moves.items():
+        if cell not in sites:
+            raise KeyError(f'apply_moves: {cell} is not a tree site')
+        if (not isinstance(xy, (list, tuple)) or len(xy) != 2
+                or any(isinstance(v, bool) or not isinstance(v, (int, float)) or not math.isfinite(v) for v in xy)):
+            raise ValueError(f'apply_moves: bad site for {cell}: {xy!r}')
+        sites[cell] = [float(xy[0]), float(xy[1])]
+    frozen = (tree.setdefault('meta', {})).get('physical_dme')
+    if frozen:
+        hist = list(frozen.get('site_edits', []))
+        hist.append(dict(reason=reason, cells=len(moves), previous_frozen_sites_sha256=frozen.get('frozen_sites_sha256')))
+        frozen['frozen_sites_sha256'] = sites_digest(sites)
+        frozen['site_edits'] = hist
+    return tree
+
+
 def main(argv=None):
+    if argv is None:
+        import sys
+        argv = sys.argv[1:]
+    if argv[:1] == ['apply']:
+        ap = argparse.ArgumentParser(description='apply site moves {cell: [x, y]} (or {"moves": {...}}) to a tree and re-freeze its site digest')
+        ap.add_argument('cmd'); ap.add_argument('tree'); ap.add_argument('moves'); ap.add_argument('out')
+        ap.add_argument('--reason', required=True)
+        a = ap.parse_args(argv)
+        mv = json.loads(Path(a.moves).read_text())
+        mv = mv.get('moves', mv) if isinstance(mv, dict) else mv
+        tree = apply_moves(json.loads(Path(a.tree).read_text()), mv, a.reason)
+        Path(a.out).write_text(json.dumps(tree))
+        print(json.dumps(dict(moved=len(mv), frozen_sites_sha256=((tree.get('meta') or {}).get('physical_dme') or {}).get('frozen_sites_sha256'))))
+        return 0
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('tree', help='final tree.json carrying actual sites and parent_of')
     ap.add_argument('--max-um', type=float, default=450.0)
