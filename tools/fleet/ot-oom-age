@@ -31,13 +31,24 @@ def item_key(name):
     return re.sub(r"-\d+$", "", name) if name else None
 
 
-def container_names():
-    """{container id: name} (one docker call; empty when docker is unavailable)"""
+def container_inventory():
+    """Read names and the producer's routed-final signoff classification in one Docker call."""
+    fmt = '{{.ID}} {{.Names}} {{.Label "org.opentallas.stage"}}'
     try:
-        out = subprocess.run(["docker", "ps", "--no-trunc", "--format", "{{.ID}} {{.Names}}"], capture_output=True, text=True, timeout=30).stdout
+        out = subprocess.run(["docker", "ps", "--no-trunc", "--format", fmt],
+                             capture_output=True, text=True, timeout=30).stdout
     except (OSError, subprocess.SubprocessError):
-        return {}
-    return {ln.split()[0]: ln.split()[1] for ln in out.splitlines() if len(ln.split()) == 2}
+        return {}, set()
+    names, final_signoff = {}, set()
+    for line in out.splitlines():
+        fields = line.split()
+        if len(fields) < 2:
+            continue
+        cid, name = fields[:2]
+        names[cid] = name
+        if fields[2:] == ["routed-final-signoff"] and re.fullmatch(r"so_\d+_(?:tt|ff)_\d+", name):
+            final_signoff.add(cid)
+    return names, final_signoff
 
 
 def container_id(pid):
@@ -252,7 +263,8 @@ def guard(seconds, pct, dry=False, kill=os.kill, log=None, sleep=time.sleep, mem
         if plans:
             mi = (meminfo or (lambda: {k: int(v.split()[0]) for k, v in (l.split(":", 1) for l in open("/proc/meminfo"))}))()
             if mi["MemAvailable"] * 100.0 / mi["MemTotal"] < pct:
-                procs, spared, names = [], [], container_names()
+                procs, spared = [], []
+                names, final_signoff = container_inventory()
                 proofs = plan_pids(prefix="proof.job.") | proof_regex_pids()      # PROOF-PRIO-1119: r712 proof kits are victims only when no wave job is
                 for p in os.listdir("/proc"):
                     if not p.isdigit():
@@ -261,6 +273,8 @@ def guard(seconds, pct, dry=False, kill=os.kill, log=None, sleep=time.sleep, mem
                         comm = open(f"/proc/{p}/comm").read().strip()
                         if comm not in COMMS or plan_key(p, names) in plans or plan_ancestor(p, plans):
                             continue
+                        if final_signoff and container_id(p) in final_signoff:
+                            continue  # a fresh STA corner may start after the last adj update
                         rss = int(re.search(r"VmRSS:\s+(\d+)", open(f"/proc/{p}/status").read()).group(1)) / 1048576
                         row = (int(p), comm, int(open(f"/proc/{p}/oom_score_adj").read()), int(open(f"/proc/{p}/oom_score").read()), rss)
                         (spared if proofs and (plan_key(p, names) in proofs or plan_ancestor(p, proofs) or container_owner_in(p, names, proofs)) else procs).append(row)
@@ -362,7 +376,8 @@ def main(argv=None):
     now = time.time() + a.now_offset
     pids = [str(p) for p in a.pid] or [p for p in os.listdir("/proc") if p.isdigit()]
     changed = seen = 0
-    first, names = load_state(a.state), container_names()
+    first = load_state(a.state)
+    names, final_signoff = container_inventory()
     plans = plan_pids()
     for p in pids:
         try:
@@ -381,14 +396,16 @@ def main(argv=None):
             if not managed(cur):
                 continue
             age = proc_age(p, now, hz)
-            key = item_key(names.get(container_id(p) or ""))
+            cid = container_id(p)
+            name = names.get(cid or "")
+            key = item_key(name)
             _age = credited_age(first, key, age, now)
             try:
                 _rss = int(re.search(r"VmRSS:\s+(\d+)", open(f"/proc/{p}/status").read()).group(1)) / 1048576
             except (OSError, AttributeError, ValueError):
                 _rss = 0.0
             want = victim_adj(open(f"/proc/{p}/cmdline").read().replace("\0", " "), _age, _rss)
-            if late_eco_container(names.get(container_id(p) or "")):
+            if cid in final_signoff or late_eco_container(name):
                 want = 0
             seen += 1
             if want != cur:

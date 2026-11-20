@@ -1994,6 +1994,14 @@ def collect_related_pairs(out):
     return True
 
 
+def final_routed_inputs(disc):
+    """The final signoff STA session has both the routed database and its SPEF."""
+    if not disc.get("odb") or not disc.get("spef"):
+        return False
+    odb, spef = Path(disc["odb"]), Path(disc["spef"])
+    return odb.name == "6_final.odb" and spef == odb.with_suffix(".spef") and odb.is_file() and spef.is_file()
+
+
 def run_corner(corner, disc, out, image=IMAGE, docker="sudo docker", dry=False, ff_vclk="sdc", droop=None,
                margin_policy=None, retain_child_clock_witness=False, parent_boundary_instances=(), parent_boundary_std_limit=0):
     od = Path(out) / corner
@@ -2048,7 +2056,8 @@ def run_corner(corner, disc, out, image=IMAGE, docker="sudo docker", dry=False, 
         mounts.append(("nomcap", str(ncd)))
     vol = " ".join(f"-v {shlex.quote(h)}:/{c}" + ("" if c == "out" or c == "sdc" else ":ro") for c, h in mounts)
     vol += " -e OT_NOMCAP_DIR=/nomcap" if ncd is not None else " -e OT_NOMCAP=0"
-    cmd = (f"{docker} run --rm --name so_{os.getpid()}_{corner}_{abs(hash(disc['base'])) % 100000} {vol} {image} "
+    stage = " --label org.opentallas.stage=routed-final-signoff" if final_routed_inputs(disc) else ""
+    cmd = (f"{docker} run --rm --name so_{os.getpid()}_{corner}_{abs(hash(disc['base'])) % 100000}{stage} {vol} {image} "
            f"{OPENROAD} -no_init -exit /out/session.tcl")
     (od / "cmd.sh").write_text(cmd + "\n")
     if dry:
