@@ -3039,6 +3039,15 @@ def plain_seam_split(P):
     return P._plain_seam_split
 
 
+def _ft_in_max_ps(P, fixed_ps):
+    """ft seam input max delay (lib units, before the tap-window shift): the fixed share budget, capped by the CBC
+    registered-sender hop budget (cbc_rules.ft_in_budget_ps: clk->q + hop-cap wire, 245 ps at 300 um; COORD 11-20
+    QC-HOLD-0030-INDELAY).  Receiver-side relaxation only: the sender keeps its output budget."""
+    import cbc_rules
+    b = cbc_rules.ft_in_budget_ps(P.die.get("name") if isinstance(P.die, dict) else None)
+    return fixed_ps if b is None else min(fixed_ps, t_lib(b))
+
+
 def _ft_delay_lines(kind, ports, base, spl, fmt):
     """ft slot IO delay lines: the base value on the ports the plain-lane split leaves alone, one line per split value."""
     grp = {}
@@ -4246,16 +4255,17 @@ def sdc(P, tn, pins):
     if slots:
         sh = ft_hop_in_share(P)
         spl = plain_seam_split(P)
+        ft_in_ps = _ft_in_max_ps(P, (1 - sh) * per)
         s_in, s_out = spl["in"].get(tn, {}), spl["out"].get(tn, {})
         if not s_in and not s_out:
             out += (f"# ft slots: hop share {sh:g} T at the face, the rest is the last station segment\n"
-                    f"set_input_delay -max {(1 - sh) * per + t_lib(tw_in):.4f} -clock vclk [get_ports {{{ft_in}}}]\n"
+                    f"set_input_delay -max {ft_in_ps + t_lib(tw_in):.4f} -clock vclk [get_ports {{{ft_in}}}]\n"
                     f"set_output_delay -max {sh * per:.4f} -clock vclk [get_ports {{{ft_out}}}]\n")
         else:
             out += (f"# ft slots: hop share {sh:g} T at the face, the rest is the last station segment; plan "
                     f"clock.plain_seam_split (plain-lane input budget event): plain-lane inputs "
                     f"{len(s_in)}, registered plain-lane senders {len(s_out)}\n"
-                    + _ft_delay_lines("input", [f"{n}_i" for n in slots], (1 - sh) * per,
+                    + _ft_delay_lines("input", [f"{n}_i" for n in slots], ft_in_ps,
                                       {k: t_lib(v) for k, v in s_in.items()}, lambda v: f"{v + t_lib(tw_in):.4f}")
                     + _ft_delay_lines("output", [f"{n}_o" for n in slots], sh * per,
                                       {k: t_lib(v) for k, v in s_out.items()}, lambda v: f"{v:.4f}"))

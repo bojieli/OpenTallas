@@ -184,8 +184,9 @@ def _ring_max(P, tn, b):
 def test_ft_ring_max_replaces_the_ft_budget_on_fall_types_and_is_the_lint_floor(monkeypatch):
     P, tn, b, _raw = _ft_ring_plan(350.0)
     _ft_port(monkeypatch, b)
-    assert abs(_ring_max(P, tn, b) - 350.0) < 1e-6
-    assert abs(sdc_lint.kit_context(P, tn)["io_floor_ps"][b] - 350.0) < 1e-6
+    exp = gen_phys._ft_in_max_ps(P, 350.0)   # CBC hop budget caps the plan sender max (CBC-ALL-0200)
+    assert abs(_ring_max(P, tn, b) - exp) < 1e-6
+    assert abs(sdc_lint.kit_context(P, tn)["io_floor_ps"][b] - exp) < 1e-6
 
 
 def test_ft_ring_max_absent_or_rise_keeps_the_ft_budget(monkeypatch):
@@ -193,7 +194,7 @@ def test_ft_ring_max_absent_or_rise_keeps_the_ft_budget(monkeypatch):
         P, tn, b, _raw = _ft_ring_plan(mx, edge)
         _ft_port(monkeypatch, b)
         per = gen_phys.t_lib(P.die["period_ps"])
-        assert abs(_ring_max(P, tn, b) - (1 - gen_phys.ft_hop_in_share(P)) * per) < 1e-3
+        assert abs(_ring_max(P, tn, b) - gen_phys._ft_in_max_ps(P, (1 - gen_phys.ft_hop_in_share(P)) * per)) < 1e-3
 
 
 def test_ft_ring_max_non_ft_ring_keeps_the_io_budget():
@@ -206,7 +207,7 @@ def test_ft_ring_max_scoped_by_write_fall_types(monkeypatch):
     _ft_port(monkeypatch, b)
     raw["clock"]["ring_hold"]["write_fall_types"] = ["some_other_type"]
     P2 = schema.Plan(raw)
-    assert abs(_ring_max(P2, tn, b) - (1 - gen_phys.ft_hop_in_share(P2)) * gen_phys.t_lib(P2.die["period_ps"])) < 1e-3
+    assert abs(_ring_max(P2, tn, b) - gen_phys._ft_in_max_ps(P2, (1 - gen_phys.ft_hop_in_share(P2)) * gen_phys.t_lib(P2.die["period_ps"]))) < 1e-3
 
 
 def test_ft_ring_max_schema_rejects_non_positive():

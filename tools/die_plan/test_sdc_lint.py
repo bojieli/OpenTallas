@@ -174,7 +174,7 @@ def test_ft_hop_in_share_plan_field():
     P = schema.Plan(raw)
     per = float(P.die["period_ps"])
     txt = gen_phys.sdc(P, tn, gen_phys.type_pins(P, tn))
-    assert f"set_input_delay -max {gen_phys.t_lib(0.84 * per):.4f}" in txt
+    assert f"set_input_delay -max {gen_phys._ft_in_max_ps(P, gen_phys.t_lib(0.84 * per)):.4f}" in txt   # CBC hop budget caps it
     assert f"set_output_delay -max {gen_phys.t_lib(0.16 * per):.4f}" in txt
     assert _errs(txt, sdc_lint.kit_context(P, tn)) == []
     old = gen_phys.sdc(P0, tn, gen_phys.type_pins(P0, tn))

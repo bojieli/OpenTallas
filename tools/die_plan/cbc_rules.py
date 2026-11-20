@@ -54,6 +54,24 @@ def reset_hop_cap_um(die=None):
         return RESET_HOP_CAP_UM
 
 
+# CBC seam input budget (COORD 11-20 QC-HOLD-0030-INDELAY, CBC-ALL-0200): under CBC the sender of an ft / ring hop is a
+# registered station whose last segment is a placed hop <= the hop cap, so the time the hop spends OUTSIDE the receiving
+# kit is clk->q + that segment's wire, not the fixed (1 - ft_hop_in_share) x T = 0.92 T (766 ps) or the QC ring
+# ft_ring_max_ps 350 ps.  Priced with the FABLE-METHOD s1 buffered-wire model (plan_timing_audit: 50 ps + 0.65 ps/um):
+# 50 + 0.65 x 300 = 245 ps.  The receiver kit's input max delay is min(old budget, this); the sender kit's output budget
+# is unchanged (tightening only on no side; the die STA prices the real crossing).  OT_FT_IN_BUDGET=fixed = old rule.
+SEAM_CLKQ_PS = 50.0
+SEAM_PS_PER_UM = 0.65
+
+
+def ft_in_budget_ps(die=None):
+    """max input delay (ps, before tap-window shift) of an ft / ring seam input under CBC, or None (env opt-out)"""
+    import os
+    if os.environ.get("OT_FT_IN_BUDGET", "").lower() == "fixed":
+        return None
+    return SEAM_CLKQ_PS + SEAM_PS_PER_UM * REACH_UM_PER_HOP
+
+
 def rules():
     """the rule set as a dict (records, posts)"""
     return {k: v for k, v in globals().items() if k.isupper()}
