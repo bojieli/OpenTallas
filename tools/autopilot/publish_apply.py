@@ -173,14 +173,14 @@ print("AP_JSON " + json.dumps(res))
 """
 
 
-def out_sync(obj, run=subprocess.run):
-    """Verify identical selected bind output on hosts that hold the tree."""
-    args, hosts = candidate_bind_args(obj)
+def out_sync(obj, run=subprocess.run, hosts=None):
+    """Verify identical selected bind output across the applicable replicas."""
+    args, candidate_hosts = candidate_bind_args(obj)
     if not args:
         return None, ["no bind output to verify"]
     probe = dict(tree=args["src"], bind=args["bind_out"])
     lines, bad, digest = [], False, None
-    for h in hosts:
+    for h in candidate_hosts if hosts is None else hosts:
         p = run(["ssh", "-n", "-o", "BatchMode=yes", "-o", "ControlPath=none", "-o", "ConnectTimeout=15", h,
                  "python3 -I -c " + shlex.quote(OUT_PROBE) + " " + shlex.quote(json.dumps(probe))], capture_output=True, text=True, timeout=900)
         row = [x for x in (p.stdout or "").splitlines() if x.startswith("AP_JSON ")]
@@ -190,7 +190,8 @@ def out_sync(obj, run=subprocess.run):
             continue
         result = json.loads(row[-1][8:])
         if result["state"] == "no-tree":
-            lines.append(f"{h}: no tree here (checked during replication)")
+            bad |= hosts is not None
+            lines.append(f"{h}: no tree here" + (" (checked during replication)" if hosts is None else " after replication"))
         elif result["state"] == "ok" and digest in (None, result["digest"]):
             digest = result["digest"]
             lines.append(f"{h}: selected bind verified ({result['count']} files, {digest[:12]})")
@@ -537,6 +538,10 @@ def cmd_post_bind(a, run=subprocess.run):
     return 0 if unit else 2
 
 
+class SelectedBindVerificationError(Exception):
+    pass
+
+
 def cmd_apply(a, run=subprocess.run, apply_fn=None, commit_fn=None):
     C = Path(a.coord)
     obj = json.loads(Path(a.candidate).read_text())
@@ -566,15 +571,27 @@ def cmd_apply(a, run=subprocess.run, apply_fn=None, commit_fn=None):
         elif ok is False:
             print("APPLY REFUSED: the candidate's bind does not match it (the wave would hold every type BIND-STALE); fix the candidate or pass --skip-bind-check")
             return 4
-    if not getattr(a, "skip_out_check", False):
-        ok_o, lines_o = (getattr(a, "out_sync_fn", None) or out_sync)(obj, run=run)
-        for ln in lines_o:
-            print(f"OUT-SYNC {ln}", flush=True)
-        if ok_o is False:
-            print("APPLY REFUSED: the candidate's selected bind output could not be verified across publish hosts; fix the host named above or pass --skip-out-check")
-            return 5
+    def verify_selected_bind(hosts=None):
+        if hosts is None:
+            ok, lines = (getattr(a, "out_sync_fn", None) or out_sync)(obj, run=run)
+        else:
+            ok, lines = out_sync(obj, run=run, hosts=hosts)
+        for line in lines:
+            print(f"OUT-SYNC {line}", flush=True)
+        if ok is False:
+            raise SelectedBindVerificationError
+
     t0 = time.time()
-    res = (apply_fn or A.apply_marker)(C, obj, a.expect_source, a.expect_event, pilot_item=a.pilot_item, optimistic=True)
+    try:
+        kwargs = {}
+        if not getattr(a, "skip_out_check", False):
+            verify_selected_bind()
+            if apply_fn is None:
+                kwargs["verify_retained_bind"] = verify_selected_bind
+        res = (apply_fn or A.apply_marker)(C, obj, a.expect_source, a.expect_event, pilot_item=a.pilot_item, optimistic=True, **kwargs)
+    except SelectedBindVerificationError:
+        print("APPLY REFUSED: the candidate's selected bind output could not be verified across publish hosts; fix the host named above or pass --skip-out-check")
+        return 5
     res["commit"] = (commit_fn or A.commit_apply)(C, res)
     res["plan_probe"] = A.start_plan_probe(res) if commit_fn is None else "skipped: custom commit"      # COORD FABLE-FLOW-0200 C: the new event's plan blocks are cached before the next tick
     res["apply_s"] = round(time.time() - t0, 1)
