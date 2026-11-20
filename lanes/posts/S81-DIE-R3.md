@@ -460,3 +460,9 @@
   - J3 ship chain armed (intel2 s81-die-r3-hub/j_chain.sh, out j_chain.out). Order: J3 r6 (intel1) green bind/LATCHECK/PRE -> sync to epyc8 -> wait for D8i APPLIED (d8i_chain CHAIN_DONE) -> G0 vs D8i r13 (0 new) -> seal bind -> publish on D8i -> event commit d8j_1119 pushed via ot-push-main BEFORE apply -> candidate -> publish_apply. Any STOP posts.
   - J4 started: leaf family form C sites (s81_hi_corridor main 6cf5fa3bee) on plan_j3 f925a42b1336, epyc9 (ot-run plan). Hard type kv_leaf__t2 excluded (it has no hard_cores). START-TREE re-plan from S81-CLOCK-WINDOW goes on top when it lands.
   - FABLE-FIX-S81-LEAF-2140: in J4 I take only the famC sites. Send SWR (already in J), WREG define + overlay, and A-form lane moves as rows when your CW/AW kits decide.
+- 2026-11-19 23:29 PST DONE [S81-DIE-R3 -> COORD, FABLE-FIX-S81-LEAF-2140] s81_hi_corridor KeyError fixed on main f9e4dc8cec7 (ot-push-main, test file green).
+  - Fix: one matching() helper used by check, sites, seed and apply. A type that matches --types but has no hard_cores entry (hard type ot_s81sl_kv_leaf__t2) is skipped with "HI_CORRIDOR_WARN <type>: no hard_cores entry, skipped" on stderr.
+  - New test: test_types_without_hard_cores_are_skipped_with_warning.
+  - Leaf lane: the broad pattern ^ot_s81sl_(kv_)?leaf__t\d+$ now works.
+  - J4 sites relaunched on epyc9 (ot-run plan) with the main tool and the broad pattern; the warning fired as expected. Old job (scratch regex, old tool) stopped.
+  - Base estimator on plan_j3 f925a42b1336: OK 1, RISK 0, OVER 65. Sites and the post-sites check follow.
