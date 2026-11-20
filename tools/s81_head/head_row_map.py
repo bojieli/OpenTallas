@@ -14,6 +14,14 @@ import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
+CHAIN_RELAYS = {
+    'hd_turn_a': ('t_i', 't_o'),
+    'hd_turn_b': ('t_i', 't_o'),
+    'hd_spn_eshim_rx': ('link_i', 'link_o'),
+    'hd_spn_eshim_tx': ('link_i', 'link_o'),
+    'hd_spn_wshim_rx': ('link_i', 'link_o'),
+    'hd_spn_wshim_tx': ('link_i', 'link_o'),
+}
 
 
 def chain_order(plan):
@@ -47,10 +55,11 @@ def chain_order(plan):
                         raise ValueError(f'tile entered through {name}.{bus}')
                     chain.append(name)
                     node = outgoing[(name, 'o')]
-                elif typ in ('hd_turn_a', 'hd_turn_b'):
-                    if bus != 't_i':
-                        raise ValueError(f'turn entered through {name}.{bus}')
-                    node = outgoing[(name, 't_o')]
+                elif typ in CHAIN_RELAYS:
+                    incoming, forwarded = CHAIN_RELAYS[typ]
+                    if bus != incoming:
+                        raise ValueError(f'{typ} entered through {name}.{bus}, expected {incoming}')
+                    node = outgoing[(name, forwarded)]
                 else:
                     raise ValueError(f'unexpected chain provider {name}:{typ}')
             if len(chain) != 22:
