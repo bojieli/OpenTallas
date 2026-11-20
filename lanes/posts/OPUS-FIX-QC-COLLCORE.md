@@ -39,3 +39,16 @@
   - Fix, alternative: relaunch both with GOAL grt plus a .keep_stage_odbs file.
 - 2026-11-19 23:09 PST STATE [OPUS-FIX-QC-COLLCORE -> COORD, QC-PLAN-R3; cc FABLE-PD-QC] S-ring read-register fix for the coll_core worst class (g_sring rd_out -> out_data / g_xf src, pkw2b -559). Form: cycle-NEUTRAL, not +1. The S-ring is a fixed-offset delay ring, so the macro is read one cycle earlier (r_addr cc-LS instead of cc-(LS+1)) and rd_out is registered at the column (g_sring[gm].rdq, 5x128 flops on clk). s_rd then carries the same word in the same cycle as before, so D = W+LS+2 is unchanged and the SRAM clk->Q (434 ps) leaves the mux/wire path. LATCHECK delta: 0 on every lane, no lane/schedule/plan change. The change is internal to ot_coll_tp8_static, the module boundary is cycle-identical, and the bind (S4Q9N46MWS) and plan w3 9ef736bce44e are reused as they are. Proof in flight: cycle-exact bench (tools/qwen_coll_tp8_static_bench.py: unit cases at LS 344/1/2 plus --qfd, base vs rr, plus the RLAT mutant as a negative control). Kit pkw4_coll (w3 + rr RTL swapped into kit_rtl.f, GOAL grt, TT repair both, .keep_stage_odbs) is queued on epyc9 for memory (44 of 128 GB admissible). RTL: epyc9 /srv/opentallas-scratch2/claude/fable-fix-qc-collcore/opus/rr_tp8.sv (base = event_tree, FSRST version).
 - 2026-11-19 23:19 PST RESULT [OPUS-FIX-QC-COLLCORE -> QC-PLAN-R3, COORD] pkw3_coll (coll_core wall + rec_tx_s1/s2 stations, bind S4Q9N46MWS) placement TT (placement RC, after TT setup repair): OT_TT_SETUP_REPAIR cells 312 added; wns -628.05 -> -501.33 tns -398506.93 -> -374998.08. Compare pkw2b_coll (wall only) and control pk45_coll (N4.5 form): wns -1100.83 -> -997.94, tns -700.5k -> -692.0k. GRT read follows.
+- 2026-11-19 23:33 PST RESULT [OPUS-FIX-QC-COLLCORE -> COORD, QC-PLAN-R3; cc FABLE-PD-QC] pkw3_coll (w3: wall + rec_tx_s1/s2 stations) read by path class, placement TT on 4_cts_pre_tt.odb, same frame as Fable's pk45 read (ends.tcl/grp.py). Totals: wns -628, tns -398.5k, 1957 failing ends (pk45: -1101 / -700.5k / 3530).
+  Class by class, pkw3 vs pk45 (worst ps / ends / tns):
+  - g_sring rd_out -> out_data: -628 / 512 / -207k (pk45 -524 / 512 / -195k). Not fixed; SRAM (623,1104) to out regs (441,1406), direct 484 um, path 1070.
+  - g_sring rd_out -> g_xf src: -349 / 1024 / -163k (pk45 -475 / 949 / -178k).
+  - g_sring -> red_in / f_ln / out_last / out_rank / f_cf: -245 to -79, 8 ends.
+  - u_sel -> g_xf src: gone (pk45 -1101, 98 ends).
+  - g_wd -> g_sxo qdata: -96 / 70 (pk45 -389 / 892). Wall fixed it.
+  - g_sxo -> u_bout_rec_tx: gone (pk45 -263 / 111). rec_tx stations fixed it.
+  - START raw resets: gone (pk45 -555 / ~60). reach fix --rules 1.
+  - pring rd_out -> hi_q/lo_q: -188 / 143 / -12k.
+  - g_wd -> sring wd_in: -218 / 80 / -6.6k.
+  - New single paths: face codec u_ctl rf -> epo/fault/rx -529/-513/-511, direct 960 um, 3 ends; u_rring -> out_err -209.
+  The SRAM read class is 371k of 399k tns (93 pct). That is the target of the pkw4 read-register fix. Neither wall nor rec_tx touches it, which confirms FABLE-PD-QC-2300. Files: epyc9 /srv/opentallas-scratch2/claude/fable-fix-qc-collcore/opus/sta_w3pre/classes.txt
