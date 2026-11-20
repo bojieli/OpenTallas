@@ -829,9 +829,19 @@ def load_die(a):
     manifest = root / a.bound_data_manifest
     frame_root, selected = LX.frame_manifest()
     explicit = os.environ.get('OT_S81_FRAME_ASBUILT_MANIFEST')
-    if explicit and C.manifest_content(frame_root / selected) != C.manifest_content(manifest):
-        raise ValueError(f'explicit frame manifest {explicit} differs from the strict bind manifest {manifest}')
-    os.environ['OT_S81_FRAME_ASBUILT_MANIFEST'] = str(manifest)
+    if explicit:
+        frame_content = C.manifest_content(frame_root / selected)
+        bound_content = C.manifest_content(manifest)
+        frame_top = frame_content.pop('netlist')
+        bound_top = bound_content.pop('netlist')
+        # A relocated schedule can bind the prepared top that Yosys actually read.
+        candidate = frame_top[0] if len(frame_top) == 1 else frame_top
+        prepared = (isinstance(candidate, list) and len(candidate) == 3 and
+                    candidate[0] == 'FILE' and candidate[2] == bind['netlist_sha256'])
+        if frame_content != bound_content or (frame_top != bound_top and not prepared):
+            raise ValueError(f'explicit frame manifest {explicit} differs from the strict bind manifest {manifest}')
+    else:
+        os.environ['OT_S81_FRAME_ASBUILT_MANIFEST'] = str(manifest)
     die = C.Die(tree, netlist=bind['netlist_path'], netlist_sha=bind['netlist_sha256'],
                 bound_rtl=bind['bound'] / 'rtl')
     BD.rebind_links(die, bind)
