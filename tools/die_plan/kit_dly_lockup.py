@@ -20,18 +20,20 @@ Form (0 cycles, existing cells only: ot_dp_dly, ot_dp_dly_keep, ot_dp_lk):
                  latched net and get no input latch of their own)
              launch -> latch stays inside one tap; latch -> capture gains T/2 of hold.
   3. TAIL    a landing-pad tail copy (`// landing pad tail copy for core <tag>` statement of the bind) is split into TAIL_GROUPS
-             groups (default 2) whatever its K: tail_copy_anchor.tcl sites group g at (g+1)/G of the trunk end -> pin route, the
-             last group at the pin.  The bound statement stays as a comment line, so gen_phys lists the copy under its bound name
+             groups whatever SEG says; default 0 = one group per stage, because the bind sizes K from the trunk end -> pin route,
+             so every stage hop of the farthest copy is a real transport hop (D25e form: 8 cores on one trunk end, hops to 412 um).
+             G > 0 = G groups (fewer latches; only where every copy route fits G hops).  tail_copy_anchor.tcl sites group g at
+             (g+1)/G of the route, the last group at the pin.  The bound statement stays as a comment line, so gen_phys lists the copy under its bound name
              and K (tail_copies.tsv); tail_copy_anchor.tcl maps <copy>_sg<j> back to it.
   Never latched: an input fed by a port, by logic or by a hard core (a launch-clock latch on a core tap is not a lockup:
   v8b dry ECO, 613 pair ts -> join ends at -946 ps), and an output read only by logic.
 
-Plan key: budgets.r_dly_lockup {type base: {"seg": 8, "tail_groups": 2}} (gen_phys.dly_lockup_cfg: the kit's staged bound RTL
+Plan key: budgets.r_dly_lockup {type base: {"seg": 8, "tail_groups": 0}} (gen_phys.dly_lockup_cfg: the kit's staged bound RTL
 is post-processed at GEN, hard cores = the kit's macro modules; the kit gets OT_DLY_SPREAD_SEG, tap_chain_affinity and
 OT_TAP_CAP_RECHECK=0).
 
 Usage: kit_dly_lockup.py RTL.sv [--out OUT.sv] [--report R.json] [--seg 8] [--inst-re RE] [--cores CORE_CLOCKS.json]
-                         [--core-re RE] [--guard NAME] [--tail-groups 2]
+                         [--core-re RE] [--guard NAME] [--tail-groups 0]
   --cores   kit_core_clocks.json of the kit ({"rows": [{"instance": ...}]}): the hard-core instances
   --guard   put the latches under `ifdef NAME (else plain wires); default: unguarded
 Never run = no change.  The split alone (no latch) is the same circuit: D stages in the same order on the same clock.
@@ -64,7 +66,7 @@ def seg_sizes(d, seg):
 TAIL_MARK = "landing pad tail copy for core"
 
 
-def apply(txt, seg=8, inst_re=DEFAULT_RE, cores=(), core_re=None, guard=None, tail_groups=2, core_types=()):
+def apply(txt, seg=8, inst_re=DEFAULT_RE, cores=(), core_re=None, guard=None, tail_groups=0, core_types=()):
     if seg < 1:
         raise LkError("seg must be >= 1")
     mod = re.search(r"\bmodule\s+\w+\s*(#\((?:[^()]|\([^()]*\))*\))?\s*\(", txt)
@@ -127,8 +129,8 @@ def apply(txt, seg=8, inst_re=DEFAULT_RE, cores=(), core_re=None, guard=None, ta
     for name, x in sel.items():
         W, base = x["W"], x["base"]
         sizes = seg_sizes(x["D"], seg)
-        if x["tail"] and tail_groups > 0:
-            g = min(x["D"], tail_groups)
+        if x["tail"]:
+            g = x["D"] if tail_groups <= 0 else min(x["D"], tail_groups)
             sizes = [x["D"] // g + (1 if j < x["D"] % g else 0) for j in range(g)]
         d0 = x["d"]
         if x["in"]:
@@ -181,7 +183,7 @@ def apply(txt, seg=8, inst_re=DEFAULT_RE, cores=(), core_re=None, guard=None, ta
     return txt[:hdr_end] + body, lat, stats
 
 
-def apply_kit(rtl_dir, seg=8, tail_groups=2, core_types=(), cores=()):
+def apply_kit(rtl_dir, seg=8, tail_groups=0, core_types=(), cores=()):
     """gen_phys entry (budgets.r_dly_lockup): the post-pass on every staged *_bound.sv of the kit that instantiates a delay cell.
     Returns {file: stats}; writes each file in place (tmp + rename)."""
     out = {}
@@ -211,7 +213,7 @@ def main(argv):
         cores = [r["instance"] for r in json.loads(Path(opt("--cores")).read_text())["rows"]]
     txt, lat, stats = apply(rtl.read_text(), seg=int(opt("--seg", "8")), inst_re=opt("--inst-re", DEFAULT_RE), cores=cores,
                             core_re=opt("--core-re"), guard=opt("--guard"),
-                            tail_groups=int(opt("--tail-groups", "2")))
+                            tail_groups=int(opt("--tail-groups", "0")))
     tmp = out.with_name(out.name + ".dlk_tmp")
     tmp.write_text(txt)
     tmp.replace(out)

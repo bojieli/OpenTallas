@@ -772,14 +772,14 @@ def dly_spread_station_um(budgets, tn):
 def dly_lockup_cfg(budgets, tn):
     """budgets.r_dly_lockup {type base: {"seg": N, "tail_groups": G}} (XTAP-C, FABLE-FIX-KV-PV 11-20, kit_dly_lockup.py): the pad delay
     lines of the types whose name starts with a listed base (longest base wins) are split into segments of <= N stages (default 8;
-    tail copies into G groups, default 2) with a hop lockup latch on every segment boundary, delay -> delay input and
+    tail copies one group per stage, or G groups) with a hop lockup latch on every segment boundary, delay -> delay input and
     delay -> hard-core output; a segment is one tap group and one placement station.  0 cycles.  Absent = off."""
     v = budgets.get("r_dly_lockup") or {}
     hit = [b for b in v if b and tn and str(tn).startswith(b)]
     if not hit:
         return None
     c = v[max(hit, key=len)] or {}
-    return dict(seg=int(c.get("seg", 8)), tail_groups=int(c.get("tail_groups", 2)))
+    return dict(seg=int(c.get("seg", 8)), tail_groups=int(c.get("tail_groups", 0)))
 
 
 def dly_lockup_exports(budgets, tn, t):

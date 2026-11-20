@@ -67,6 +67,7 @@ endmodule
 
 def run(**kw):
     kw.setdefault("cores", ["u_pvg0_p1"])
+    kw.setdefault("tail_groups", 2)
     return dl.apply(RTL, **kw)
 
 
@@ -128,6 +129,8 @@ def test_no_cores_no_out_latch_and_guard():
 def test_out_latched_driver_feeds_no_input_latch():
     rtl = RTL.replace(".b(pd5_x_0_pvg0_p1_29),", ".b(pd4_x_0_t_29),")
     txt, lat, st = dl.apply(rtl, cores=["u_pvg0_p1"])
+    # default: one group per stage of a marked tail copy (K 5 -> 5 instances, 4 latches)
+    assert len(re.findall(r"u_pd5_x_0_pvg0_p1_25_sg\d+ \(", txt)) == 5 and len([l for l in lat if l["inst"].startswith("u_fl_pd5_x_0_pvg0_p1_25_sg")]) == 4
     by = {l["inst"] for l in lat}
     assert "u_fl_pd4_x_0_t_29_o" in by and "u_fl_pd5_x_0_pvg0_p1_29_i" not in by
 
@@ -169,7 +172,7 @@ def test_plan_key_and_kit_entry(tmp_path):
     c = gen_phys.dly_lockup_cfg
     assert c({}, "kv3_pv_v8") is None and c({"r_dly_lockup": {"kv3_pv": {}}}, "kv3_hub_C") is None
     assert c({"r_dly_lockup": {"kv3_pv": {}, "kv3_pv_v8": {"seg": 6, "tail_groups": 3}}}, "kv3_pv_v8__x") == dict(seg=6, tail_groups=3)
-    assert c({"r_dly_lockup": {"kv3_pv": {}}}, "kv3_pv_v1") == dict(seg=8, tail_groups=2)
+    assert c({"r_dly_lockup": {"kv3_pv": {}}}, "kv3_pv_v1") == dict(seg=8, tail_groups=0)
     b = {"r_dly_lockup": {"kv3_pv": {}}, "r_dly_spread": ["kv3_pv"]}
     ex = gen_phys.dly_lockup_exports(b, "kv3_pv_v8", {"clock": {}})
     assert "export OT_DLY_SPREAD_SEG = 1" in ex and "export OT_TAP_CAP_RECHECK = 0" in ex and "export OT_TAP_CHAIN_AFFINITY = 1" in ex
