@@ -7749,6 +7749,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     # FLOW-21 / COORD 11-01: the pre-route LEC runs beside place/CTS/route (lec_async.sh, OT_LEC_ASYNC=0 = inline)
     shutil.copyfile(Path(__file__).with_name("lec_async.sh"), kd / "lec_async.sh")
     shutil.copyfile(Path(__file__).with_name("stage_odb_cap.py"), kd / "stage_odb_cap.py")   # STAGE-CAP 11-17
+    shutil.copyfile(Path(__file__).with_name("kit_reports.py"), kd / "kit_reports.py")       # FLOW-FIX-2045: run_kit.sh quarantines reports that are not this kit's own
     import core_flow; core_flow.stage_grt183(kd)   # FLOW-28 11-04: GRT-0183 fresh-process re-run (run_kit.sh)
     shutil.copyfile(Path(__file__).with_name("adder_map_dontuse.py"), kd / "adder_map_dontuse.py")   # ruling 4 (10-25)
     for f in ("face_keep.tcl", "face_keep_release.tcl"):   # CP1-R10 (restored: lost in main merge 0ce45ab03c)
@@ -8099,6 +8100,10 @@ if [ "$GOAL" != synth ] && [ "${OT_ALLOW_RESYNTH:-0}" != 1 ] && [ ! -f "$K/resum
     fi
   fi
 fi
+# KWRS-END
+# KIT-REPORTS block (FLOW-FIX-2045; COORD, FABLE-FIX-S81-SERDES: H23 / H25 carried H21's tt_setup_repair_grt.log): reports older than this kit's own synthesis start (or present before it has synthesised) are
+# copies from another kit; move them to stale_reports/ so no reader quotes them.  Refusal-free; no physical step  # KWRS-BEGIN
+[ ! -f "$K/kit_reports.py" ] || python3 -I "$K/kit_reports.py" quarantine "$K" >&2 || true
 # KWRS-END
 # STAGE-CAP block (COORD 11-17, FLEET-OPS-R): bounds the stage ODBs this kit writes from now on; refusal-free, no physical step  # KWRS-BEGIN
 # Keeps 1_synth, the step boundaries (2_floorplan 3_place 4_cts 5_1_grt = diagnosis anchors) and the latest final; drops the

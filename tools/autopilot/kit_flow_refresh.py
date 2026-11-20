@@ -109,7 +109,8 @@ def write_tools_rev(kit, rec, rt_files, die_only):
 ALWAYS = (("kit", "stage_odb_cap.py", "tools/die_plan/stage_odb_cap.py"),
           ("kit", "tt_setup_repair.tcl", "tools/die_plan/tt_setup_repair.tcl"),
           ("kit", "hold_cap.tcl", "physical/die_plan/hbm_arch_cores/hold_cap.tcl"),
-          ("runner", "run_kit.sh", "gen_phys.RUN_KIT"))
+          ("runner", "run_kit.sh", "gen_phys.RUN_KIT"),
+          ("kit+", "kit_reports.py", "tools/die_plan/kit_reports.py"))      # "kit+" = created when missing, so legacy kits get the helper the refreshed run_kit.sh calls
 
 
 def _rt_run_kit_text(rtr):
@@ -132,8 +133,8 @@ def always_pass(kit, rtr, rec, dry=False):
     """replace the ALWAYS files present in the kit by rt's copy when they differ.  -> list of replaced names (also appended to rec['replaced'] with from='always')"""
     out = []
     for where, name, srcrel in ALWAYS:
-        p = os.path.join(kit, name) if where == "kit" else os.path.join(os.path.dirname(kit.rstrip("/")), name)
-        if not os.path.isfile(p) or os.path.islink(p):
+        p = os.path.join(kit, name) if where in ("kit", "kit+") else os.path.join(os.path.dirname(kit.rstrip("/")), name)
+        if os.path.islink(p) or (not os.path.isfile(p) and where != "kit+"):
             continue
         try:
             if srcrel == "gen_phys.RUN_KIT":
@@ -147,8 +148,8 @@ def always_pass(kit, rtr, rec, dry=False):
             continue
         if not new:
             continue
-        data = open(p, "rb").read()
-        if new == data:
+        data = open(p, "rb").read() if os.path.isfile(p) else b""
+        if new == data and os.path.isfile(p):
             continue
         rec["replaced"].append({"file": name, "src": srcrel, "old": blob_id(data)[:12], "new": blob_id(new)[:12], "from": "always"})
         out.append(name)
@@ -157,7 +158,7 @@ def always_pass(kit, rtr, rec, dry=False):
         tmp = os.path.join(os.path.dirname(p), f".{name}.kfr.{os.getpid()}")
         with open(tmp, "wb") as f:
             f.write(new)
-        os.chmod(tmp, os.stat(p).st_mode & 0o7777 | 0o200)
+        os.chmod(tmp, (os.stat(p).st_mode & 0o7777 | 0o200) if os.path.isfile(p) else 0o644)
         os.replace(tmp, p)
     return out
 
