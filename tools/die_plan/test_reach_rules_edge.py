@@ -106,3 +106,29 @@ def test_tree_half_hops_counts_falling_edge_launches():
     assert hops == [(300.0, "u_rrl_0", "u_rrl_1"), (100.0, "u_rrl_1", "u_rrl_2")]
     T["relay_lockup"] = None
     assert RR.tree_half_hops(None, "mid", T) == []
+
+
+@pytest.mark.parametrize("lowered", [False, True])
+def test_kit_relay_phase_controls_start_and_tree_reach(monkeypatch, lowered):
+    raw = _neg(_start_plan())
+    t = raw["partition_types"]["mid"]
+    if lowered:
+        t["reset_relay_full"] = True
+    P = _P(raw)
+    tree = dict(relay_lockup="negedge", taps=[(0, 200.0, 0.0)], relays=[
+        dict(name="u_rrl_5", d="rst_root_n", q="rst_rl_5", xy=[0.0, 0.0], tap=None),
+        dict(name="u_rrl_6", d="rst_rl_5", q="rst_n_t0", xy=[200.0, 0.0], tap=0)])
+    monkeypatch.setattr(RT, "for_type", lambda *_: tree)
+    t["clock"]["landing_reader_start"] = dict(branches=dict(f0=dict(stages=[
+        dict(raw_reset="rst_rl_5", xy_um=[200.0, 0.0]),
+        dict(raw_reset="rst_rl_5", xy_um=[RR.REACH_UM + 1.0, 0.0]),
+        dict(raw_reset="rst_rl_99", xy_um=[0.0, 0.0])])))
+    row, findings = RR.edge_findings(P, t, "mid", tree_hops=True)
+    assert row["negedge"] is (not lowered)
+    assert row["raw_missing"] == 1
+    assert row["raw_half"] == (0 if lowered else 2)
+    assert row["raw_over"] == (1 if lowered else 2)
+    assert RR.tree_half_hops(P, "mid", tree) == ([] if lowered else [(200.0, "u_rrl_5", "u_rrl_6")])
+    assert {f["kind"]: f["limit"] for f in findings} == (
+        {"start_raw_net": 0, "edge_reach": RR.REACH_UM} if lowered else
+        {"start_raw_net": 0, "edge_reach": RR.HALF_REACH_UM, "reset_half_cycle": RR.HALF_REACH_UM})
