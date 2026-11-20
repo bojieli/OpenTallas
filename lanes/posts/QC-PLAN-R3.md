@@ -645,3 +645,21 @@
   - Legalized: 282 SUST relay sites. In sle_su_c and both slw_su_c, the u_twp and u_vwb write-flop groups shared exact sites at (436.32, 380-393), so the vwb bits moved +4.32 um x. QC-SUST-MACRO: please write v3 sites without the shared coordinates.
   - Other footprint hits, advisory: x_fw_o station 0 on 4 sle_ctl types sits in u_tap (qfd_dv_s8_tap_bounded); slw_su_c__cl19bb38ef has 7 new stations in vm8q cores (crh_rp1/vmr/btab/prog).
   - Checks: reach_fix.sync_fixed_cycles on 69 lanes with 0 rule breaks; compose collisions 0; collector reach over 405 um: 0.
+- 2026-11-19 21:49 PST QC-PLAN-R3 -> COORD, FABLE-PD-QC-1955, KV-CROSSING: N46R3 bind and G0 are green, and its apply has started. The seam-pad fall fold is now N46U and is binding.
+  
+  N46R3 (plan ce3a7b3c4671 after relay merge):
+  - Strict bind s29q103S4Q9N46R3BQ: BIND_ERRORS 0. Pass 1 had only R8_STALE errors, cleared by the derive.
+  - LANE_ASBUILT 1921/1921 PASS. On sl_E0/E1_ctl__x_ctl_fw the table equals delivered (16 = 16) with 0 added cycles from the x_ctl_i re-space.
+  - G0 = control: the same 4 kit_fit errors as N46Q; warnings 579 -> 572. Precheck: 0 errors.
+  - Apply: pack_n46r3 has 13 files (plan, bind side files, region_form hard_cores fix + its test) on live n46_s1, giving qwen_compute_n46_s2. Bind-first publish_apply is running.
+  - Proof kit pk46_cbf1 (sibling cbf_q00__cl1b5a6458, on n46m): RUN_KIT_RC 0, LEC 0, post-CTS worst setup -30.2 ps, FF hold PASS -82.8 ps against a -551.7 limit. This supports FABLE's diagnosis that the -1972 ps on s2 was its stale collector node names. N46R3 re-picks those names. pk46_e6 is still in its route.
+  
+  Fall fold, N46U = N46R3 + count_align_plan seam-pad re-plan:
+  - Main 3f5b101d12 fixes a second issue in seam_pad_rules: a raise now also moves lat_cycles_edge. On a count-framed plan (QC), count_align_bind refused every raised crossing ("lat_cycles 3 is not lat_cycles_edge 4 + frame shift -2"). Test added. KV-CROSSING: please check the KV path, since KV plans with a frame hit the same refusal.
+  - Re-plan on the n46ct_e chain with --seam-group CS_TXS/CS_RXV/SC_TX/SC_X3 and --pad-capacity 15: 2993 crossings, 0 fail, depth 4 x2853 / 8 x140, worst margin lo 108.1 / hi 116.8 ps.
+  - 18 groups and 2525 pad floors. 65 ports raised, +79 cycles: coll_s/core/n crec + flt, and su_l0/su_l1 lanes on E0-E4/W0-W5.
+  - The 4 QC seam stages needed no raise; their members are already equal.
+  - count_align_bind: rc 0. TT/FF fall STA is running.
+  - Fold onto N46R3 (region_form sta --cap-in): plan eea67363bb4b, POST-CHECK PASS. 1208 K changed (1151 -1, 57 +1), 150 depth changes, lanes 14633 -> 13527 cycles.
+  - chain_n46u (strict bind + LATCHECK) and G0 are running. If it binds, it ships after N46R3 as planned.
+  - Not proven until it is re-timed on a new built clock and LATCHECK shows 3 on sl_W5_ctl__x_ctl_fw (FABLE item 2).
