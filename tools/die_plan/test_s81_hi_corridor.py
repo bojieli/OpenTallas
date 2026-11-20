@@ -82,3 +82,26 @@ def test_apply_moves_lane_with_riding_coordinates_only():
     assert e3["regs_um"][:2] == shared
     assert [e for e in t["internal_stations"] if e["capture"] == "u_lf.u_vp.g_ln[4].u_l"][0]["regs_um"] == e4["regs_um"]
     assert t["clock"]["taps"][0]["xy"] == [9.32, 13.64, 1]
+
+
+def test_seed_A_gaps_at_least_corridor_and_no_overlap():
+    sd, rep = H.seed(plan(), r"t99", "A", 30.24)
+    pos = [v["origin_um"] for v in sd["ot_s81sl_leaf__t99"].values()]
+    for i, a in enumerate(pos):
+        for b in pos[i + 1:]:
+            gx = max(b[0] - (a[0] + L), a[0] - (b[0] + L)); gy = max(b[1] - (a[1] + L), a[1] - (b[1] + L))
+            assert max(gx, gy) >= 30.24 - 1e-6
+
+
+def test_apply_clears_added_tap_left_under_moved_lane():
+    P = plan()
+    t = P["partition_types"]["ot_s81sl_leaf__t99"]
+    o = t["hard_cores"][4]["origin_um"]
+    new = [o[0] + 30.24, o[1]]
+    t["clock"] = {"added_taps": [{"name": "clk_t0", "xy": [new[0] + 50.0, new[1] + 50.0]},
+                                 {"name": "clk_t1", "xy": [900.0, 1100.0]}]}
+    n = H.move_lanes(t, {"u_lf.u_vp.g_ln[3].u_l": {"origin_um": new, "orient": "MX"}}, 2)
+    assert [m[0] for m in n["taps_moved"]] == ["clk_t0"]
+    x, y = t["clock"]["added_taps"][0]["xy"]
+    assert not (new[0] - 8.65 < x < new[0] + L + 8.65 and new[1] - 8.65 < y < new[1] + L + 8.65)
+    assert t["clock"]["added_taps"][1]["xy"] == [900.0, 1100.0]

@@ -266,13 +266,13 @@ def seed(P, rex, form, cor):
                     a_, b_ = pos[i], pos[j]
                     ox = min(a_[0], b_[0]) + lw - max(a_[0], b_[0])      # x overlap (>0: stacked in y)
                     oy = min(a_[1], b_[1]) + lh - max(a_[1], b_[1])
-                    if ox > 0 and oy <= 0:
+                    if ox > 0 and (oy <= 0 or ox >= oy):     # stacked in y (an overlap separates along y)
                         lo_, hi_ = (i, j) if a_[1] < b_[1] else (j, i)
                         gap = pos[hi_][1] - pos[lo_][1] - lh
                         if gap < cor - 1e-6:
                             far = hi_ if abs(pos[hi_][1] + lh / 2 - fy) >= abs(pos[lo_][1] + lh / 2 - fy) else lo_
                             pos[far][1] = snap(pos[far][1] + (cor - gap + G / 2) * (1 if far == hi_ else -1)); moved = True
-                    elif oy > 0 and ox <= 0:
+                    elif oy > 0:
                         lo_, hi_ = (i, j) if a_[0] < b_[0] else (j, i)
                         gap = pos[hi_][0] - pos[lo_][0] - lw
                         if gap < cor - 1e-6:
@@ -378,7 +378,44 @@ def move_lanes(t, sd, gs, near=30.0):
                 if max(dx, dy) <= near:
                     e["regs_um"][j] = _shift(r, d); n["regs"] += 1
             e["note"] = e.get("note", "") + f" | S81-HI-CORRIDOR lane move {inst} by {d[0]:.2f},{d[1]:.2f}"
+    n["taps_moved"] = clear_added_taps(t, only=set(D))
     return n
+
+
+def clear_added_taps(t, clear=8.65, rmax=200.0, step=2.16, only=None):
+    """clock.added_taps under a hard core (+ tap halo) after a lane move -> nearest legal point (outline margin, outside
+    every core + halo, >= halo Chebyshev from every other tap), as taps.grid_explicit_sites checks them."""
+    ck = t.get("clock") or {}
+    adds = ck.get("added_taps") or []
+    if not adds:
+        return []
+    W, H = t["outline_um"]
+    B = [(b[1] - clear, b[2] - clear, b[3] + clear, b[4] + clear) for b in boxes(t)]
+    others = lambda me: [tuple(x["xy"][:2]) for x in adds if x.get("xy") and x is not me]  # noqa: E731
+    Bm = [(b[1] - clear, b[2] - clear, b[3] + clear, b[4] + clear) for b in boxes(t) if only is None or b[0] in only]
+    under = lambda x, y: any(a < x < c and b < y < d for a, b, c, d in Bm)  # noqa: E731
+    ok = lambda x, y, me: (clear <= x <= W - clear and clear <= y <= H - clear  # noqa: E731
+                           and not any(a < x < c and b < y < d for a, b, c, d in B)
+                           and not any(abs(x - a) < clear and abs(y - b) < clear for a, b in others(me)))
+    moved = []
+    for tp in adds:
+        x, y = map(float, tp["xy"][:2])
+        if not under(x, y):
+            continue
+        best = None
+        for r in range(1, int(rmax / step) + 1):
+            for i in range(-r, r + 1):
+                for j in ((-r, r) if abs(i) != r else range(-r, r + 1)):
+                    q = (round(x + i * step, 3), round(y + j * step, 3))
+                    if ok(*q, tp) and (best is None or md(q, (x, y)) < md(best, (x, y))):
+                        best = q
+            if best:
+                break
+        if best is None:
+            raise SystemExit(f"HI_CORRIDOR_APPLY: added tap {tp.get('name')} has no legal point within {rmax} um")
+        tp["xy"] = [best[0], best[1]] + list(tp["xy"][2:])
+        moved.append([tp.get("name"), round(x, 3), round(y, 3), best[0], best[1]])
+    return moved
 
 
 def main():
