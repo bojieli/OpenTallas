@@ -5,6 +5,25 @@
 // bare names only (gen_phys.type_verilog_defines): RC 3, RS 3, RO 4, RLN 3, for the re-placed bk_sel__t2 core layout where every
 // control <-> quarter / glue -> quarter link is <= (D + 1) x 405 um.  The control core dsdv_bksel_c MUST be hardened with the same
 // macro (XDX = 1 + ceil((RC + RS + QRX) / 2) = 5 with the eco3 QRX 1); quarters unchanged (DMX 0).  Explicit OT_BKSEL_* defines win.
+// FABLE-FIX-S81-BKSEL-R2 11-20 (J3 placed bk_sel__t2 BAD: core links 0 stages; 300 um hop cap): OT_BKSEL_A3P = the S81-A2 station
+// profile for the 300-um hop cap as ONE bare macro name: RC 5, RS 5, RO 7, RLN 5 (BK-PLACE core layout: control <-> quarter /
+// glue -> quarter links <= 1,613 / 1,590 / 2,265 / 1,602 um pin to pin, every hop <= 283 um).  The control core dsdv_bksel_c MUST be
+// hardened with the same macro (XDX = 1 + ceil((RC + RS + QRX) / 2) = 7 with the eco3 QRX 1); quarters unchanged (DMX 0).
+// Listed before OT_BKSEL_A2P, so A3P wins when both are set; explicit OT_BKSEL_* defines win over both.  Inert when undefined.
+`ifdef OT_BKSEL_A3P
+`ifndef OT_BKSEL_RC
+`define OT_BKSEL_RC 5
+`endif
+`ifndef OT_BKSEL_RS
+`define OT_BKSEL_RS 5
+`endif
+`ifndef OT_BKSEL_RO
+`define OT_BKSEL_RO 7
+`endif
+`ifndef OT_BKSEL_RLN
+`define OT_BKSEL_RLN 5
+`endif
+`endif
 `ifdef OT_BKSEL_A2P
 `ifndef OT_BKSEL_RC
 `define OT_BKSEL_RC 3
