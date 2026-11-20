@@ -113,7 +113,7 @@ proc ::ot_bounded_repair {label run_chunk measure total} {
   if {[info exists ::env(OT_REPAIR_CHUNK)] && [string is integer -strict $::env(OT_REPAIR_CHUNK)] && $::env(OT_REPAIR_CHUNK) > 0} { set chunk $::env(OT_REPAIR_CHUNK) }
   if {[info exists ::env(OT_REPAIR_STALL_CHUNKS)] && [string is integer -strict $::env(OT_REPAIR_STALL_CHUNKS)] && $::env(OT_REPAIR_STALL_CHUNKS) > 0} { set stall_n $::env(OT_REPAIR_STALL_CHUNKS) }
   if {[info exists ::env(OT_REPAIR_MAX_S)] && [string is integer -strict $::env(OT_REPAIR_MAX_S)]} { set max_s $::env(OT_REPAIR_MAX_S) }
-  set t0 [clock seconds]; set done 0; set stall 0
+  set t0 [clock seconds]; set done 0; set stall 0; set ::ot_repair_abort 0
   lassign [{*}$measure] best_s best_h
   while {$done < $total} {
     set n [expr {min($chunk, $total - $done)}]
@@ -127,6 +127,10 @@ proc ::ot_bounded_repair {label run_chunk measure total} {
     if {$h ne "" && ($best_h eq "" || $h > $best_h)} { set best_h $h }
     if {$better} { set stall 0 } else { incr stall }
     if {($s eq "" || $s >= 0) && ($h eq "" || $h >= 0)} { break }
+    if {$::ot_repair_abort} {
+      puts "OT_REPAIR_ABORT $label stop after $done iterations: the chunk could not be repaired (route / estimate); the DB reached so far is kept (setup $s hold $h)"
+      break
+    }
     if {$stall >= $stall_n} {
       puts "OT_REPAIR_STALL $label stop after $done iterations: slack improved < 1 ps in the last $stall chunks of $chunk (setup $s hold $h)"
       break
@@ -138,6 +142,21 @@ proc ::ot_bounded_repair {label run_chunk measure total} {
   }
   return $done
 }
+# FLOW-FIX-2045 (COORD, HEAD hd_tile tilecomb3s: RSZ-0074 inside repair_timing aborted the step and the flow kept the UNREPAIRED DB, WNS -78 -> -642): the error is caught PER CHUNK.  The DB reached so far (every
+# chunk that improved) stays in this session; the route / estimate of the touched nets is repaired with the ladder of ot_tt_est_after_repair (incremental re-route, then full global_route); the repair then goes on with
+# the next chunk, or stops (OT_REPAIR_ABORT, ::ot_repair_abort) when the route cannot be repaired.  The DB is written either way, so an improved chunk is never thrown away.  Any other error still propagates.
+proc ::ot_tt_chunk {mg extra n} {
+  if {![catch {
+  repair_timing -setup -setup_margin $mg -repair_tns 100 -skip_last_gasp -verbose {*}$extra -max_iterations $n
+  } err]} { return }
+  if {![string match "*RSZ-0074*" $err]} { error $err }
+  puts "OT_TT_SETUP_REPAIR WARNING RSZ-0074 inside repair_timing ($err): keeping the DB reached so far, repairing the route / estimate"
+  if {[catch {ot_tt_est_after_repair} err2]} {
+    puts "OT_TT_SETUP_REPAIR WARNING route not repairable after the chunk ($err2): the repair stops, the DB reached so far is kept"
+    set ::ot_repair_abort 1
+  }
+}
+proc ::ot_tt_measure {} { return [list [sta::worst_slack -max] ""] }
 lassign [ot_tt_wns before] w0 t0
 set mg 0; if {[info exists ::env(OT_TT_SETUP_MARGIN)] && $::env(OT_TT_SETUP_MARGIN) ne ""} { set mg $::env(OT_TT_SETUP_MARGIN) }
 set extra {}; if {[info exists ::env(OT_TT_SETUP_ARGS)]} { set extra $::env(OT_TT_SETUP_ARGS) }
@@ -157,22 +176,26 @@ if {$w0 < $mg || $ot_tt_design} {
   # r268: the GRT-stage pass must not rebuild fanouts the place stage split (sd2: 26 buffers removed, 11 pins / 20 fF -> 42 pins / 103 fF = +412 ps);
   # -skip_buffer_removal unless the caller's OT_TT_SETUP_ARGS already says so
   if {$ot_tt_rc eq "grt" && [lsearch -exact $extra -skip_buffer_removal] < 0} { lappend extra -skip_buffer_removal }
-  proc ::ot_tt_chunk {mg extra n} {
-  repair_timing -setup -setup_margin $mg -repair_tns 100 -skip_last_gasp -verbose {*}$extra -max_iterations $n
-  }
-  proc ::ot_tt_measure {} { return [list [sta::worst_slack -max] ""] }
   set ot_tt_total 4000; if {[info exists ::env(OT_MAX_ITERATIONS)] && [string is integer -strict $::env(OT_MAX_ITERATIONS)]} { set ot_tt_total $::env(OT_MAX_ITERATIONS) }
   ot_bounded_repair tt_setup_repair [list ::ot_tt_chunk $mg $extra] ::ot_tt_measure $ot_tt_total
-  detailed_placement
-  if {$ot_tt_rc eq "grt"} {
-    global_route -end_incremental -allow_congestion
-    ot_grt_pg_replay_end
+  if {[catch {
+    detailed_placement
+    if {$ot_tt_rc eq "grt"} {
+      global_route -end_incremental -allow_congestion
+      ot_grt_pg_replay_end
+    }
+    ot_tt_est_after_repair
+    # after any re-route, so the guide holds the final routes  (a comment may NOT trail an if body on the same line: Tcl reads it as extra if-arguments and the whole step dies)
+    if {$ot_tt_rc eq "grt" && [info exists ::env(OT_TT_SETUP_GUIDE)] && $::env(OT_TT_SETUP_GUIDE) ne ""} { write_guides $::env(OT_TT_SETUP_GUIDE) }
+  } perr]} {
+    puts "OT_TT_SETUP_REPAIR WARNING a step after the repair failed ($perr): the repaired DB is written anyway; the keep step measures it in a fresh session and decides"
   }
-  ot_tt_est_after_repair
-  # after any re-route, so the guide holds the final routes  (a comment may NOT trail an if body on the same line: Tcl reads it as extra if-arguments and the whole step dies)
-  if {$ot_tt_rc eq "grt" && [info exists ::env(OT_TT_SETUP_GUIDE)] && $::env(OT_TT_SETUP_GUIDE) ne ""} { write_guides $::env(OT_TT_SETUP_GUIDE) }
 }
-lassign [ot_tt_wns after] w1 t1
+if {[catch {ot_tt_wns after} ot_tt_r]} {
+  puts "OT_TT_SETUP_REPAIR WARNING final measure failed ($ot_tt_r): wns / tns of the written DB unknown here"
+  set ot_tt_r [list $w0 $t0]
+}
+lassign $ot_tt_r w1 t1
 puts "OT_TT_SETUP_REPAIR cells [expr {[llength [get_cells *]] - $n0}] added; wns [format %.2f $w0] -> [format %.2f $w1] tns [format %.2f $t0] -> [format %.2f $t1]"
 set out $::env(ODB); if {[info exists ::env(OUT)] && $::env(OUT) ne ""} { set out $::env(OUT) }
 write_db $out

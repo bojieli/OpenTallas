@@ -138,7 +138,8 @@ def test_tcl_scales_layer_c_only_on_the_grt_basis_and_repairs_design_on_request(
     assert 'if {$ot_tt_rc eq "grt" && $ot_tt_cs != 1.0}' in t and "-capacitance [expr {$c * $ot_tt_cs}]" in t
     assert "OT_TT_SETUP_MARGIN|OT_TT_SETUP_CSCALE|OT_TT_SETUP_CLAYERS|OT_TT_SETUP_DESIGN" in t          # read from config.mk
     i = t.index("global_route -start_incremental -allow_congestion")
-    assert i < t.index("repair_design -verbose") < t.index("repair_timing -setup -setup_margin") < t.index("global_route -end_incremental")
+    assert i < t.index("repair_design -verbose") < t.index("ot_bounded_repair tt_setup_repair") < t.index("global_route -end_incremental")      # the chunk proc (repair_timing) runs between them
+    assert "repair_timing -setup -setup_margin" in t.split("proc ::ot_tt_chunk")[1].split("proc ::ot_tt_measure")[0]
     assert "if {$w0 < $mg || $ot_tt_design}" in t
 
 
@@ -194,3 +195,59 @@ def test_tt_setup_step_and_hold_cap_use_the_bounded_repair_and_are_complete_tcl(
         for f in (HERE / "tt_setup_repair.tcl", HERE.parents[1] / "physical/die_plan/hbm_arch_cores/hold_cap.tcl"):
             out = subprocess.run([TCLSH], input=f"set f [open {f}]; puts [info complete [read $f]]\n", capture_output=True, text=True)
             assert out.stdout.strip() == "1", f
+
+
+def _chunk_tcl(rsz_at, est_fails, other_error_at=0, seq="{-300} {-250} {-200} {-150} {-100} {-50} {0}"):
+    """FLOW-FIX-2045: the real procs of tt_setup_repair.tcl (estimate ladder, bounded loop, chunk) in tclsh; repair_timing throws RSZ-0074 at call rsz_at, estimate_parasitics fails est_fails times after it"""
+    t = (HERE / "tt_setup_repair.tcl").read_text()
+    a = t.index("proc ot_tt_est {}")
+    b = t.index("ot_tt_est\n# r222")
+    c = t.index("proc ::ot_bounded_repair")
+    d = t.index("lassign [ot_tt_wns before]")
+    prog = ("""
+namespace eval sta {}
+set ot_tt_rc grt
+set ::calls 0
+set ::i 0
+set ::seq [list SEQ]
+set ::estfail 0
+proc sta::worst_slack {w} { return [lindex $::seq [expr {min($::i, [llength $::seq]-1)}]] }
+proc repair_timing {args} {
+  incr ::calls
+  if {$::calls == RSZAT} { incr ::i; set ::estfail ESTFAILS; error "RSZ-0074 found route to 3 pins, expected 4" }
+  if {$::calls == OTHERAT} { error "RSZ-0001 something else" }
+  incr ::i
+}
+proc global_route {args} { puts "GR $args" }
+proc estimate_parasitics {args} { if {$::estfail > 0} { incr ::estfail -1; error "RSZ-0074 still broken" } }
+""" + t[a:b] + t[c:d] + """
+set rc [catch {ot_bounded_repair tt_setup_repair [list ::ot_tt_chunk 0 {}] ::ot_tt_measure 4000} done]
+puts "RC $rc DONE $done CALLS $::calls"
+""").replace("SEQ", seq).replace("RSZAT", str(rsz_at)).replace("ESTFAILS", str(est_fails)).replace("OTHERAT", str(other_error_at))
+    return subprocess.run([TCLSH], input=prog, capture_output=True, text=True).stdout
+
+
+@pytest.mark.skipif(not TCLSH, reason="tclsh")
+def test_rsz_0074_inside_a_chunk_keeps_the_repair_and_goes_on():
+    out = _chunk_tcl(rsz_at=2, est_fails=1)                      # the first estimate after the error fails once: the incremental re-route clears it
+    assert "WARNING RSZ-0074 inside repair_timing" in out and "RSZ-0074 cleared by an incremental re-route" in out
+    assert "OT_REPAIR_ABORT" not in out and "RC 0" in out and "CALLS 6" in out          # slack reaches 0 after 6 chunks (the errored one included): the repair went on after the error
+
+
+@pytest.mark.skipif(not TCLSH, reason="tclsh")
+def test_unrepairable_route_stops_the_repair_but_keeps_the_dbs_improvement():
+    out = _chunk_tcl(rsz_at=2, est_fails=99)
+    assert "route not repairable after the chunk" in out and "OT_REPAIR_ABORT tt_setup_repair stop after 400 iterations" in out
+    assert "RC 0 DONE 400 CALLS 2" in out                                                  # no error escapes: the caller goes on to write the DB
+
+
+@pytest.mark.skipif(not TCLSH, reason="tclsh")
+def test_other_errors_still_propagate():
+    out = _chunk_tcl(rsz_at=99, est_fails=0, other_error_at=2)
+    assert "RC 1" in out and "OT_REPAIR_ABORT" not in out
+
+
+def test_post_repair_steps_and_final_measure_never_discard_the_repaired_db():
+    t = (HERE / "tt_setup_repair.tcl").read_text()
+    assert "a step after the repair failed" in t and "final measure failed" in t
+    assert t.index("a step after the repair failed") < t.index("write_db $out")
