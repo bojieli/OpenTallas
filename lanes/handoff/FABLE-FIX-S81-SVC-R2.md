@@ -4,7 +4,17 @@ Owner of the S81 svc family (16 H8 types, 112 do-not-count on D8i) and the svc H
 Deliverable: J6 rows to S81-DIE-R4 by 11-21 13:30; one representative svc kit through place, GRT, sign-off; post every 2 h.
 Nothing is bound, placed or delivered yet.
 
-## Update 12:15 PST (newest; read first)
+## Update 13:40 PST (newest; read first)
+- R7 (dissolve dsdv_idx_rg3 + 23 tie rows) finished 13:32: ELAB ok, BIND 82 errors (R5b 458). 0 reset-leaf errors, 0 hslice / irg / dly /
+  sml / m1k TIED; lo t1 now has 32 hslice cells. Left: 64 TIED on smd_fold2 cfg_p (my generator read the value string in the wrong bit
+  order) + 18 HARD_CORE_PARAM_ALL on non-svc types (records missing in the private source; not mine).
+- R8 = R7 ELAB reused (hardlink), BIND + LATCHECK with manifest `ksrc/asbuilt_svc_d8i_h8_proto_r8.json` (value order fixed; rows cover the
+  64 leftover bits offline). intel2 client 194920, log `~/fable-fix-s81-svc-r2/r8.log`, out epyc9 `bind_r8`; prints `R8_ERRORS n svc m`,
+  `R8_LATCHECK_RC=0` or `R8_LATCHECK_EXIT`. About 1.5 h. The hub delta file was regenerated with the fix (same name).
+- Starved since launch, never admitted (non-die priority on full hosts): kit_hi4_a prep (11:55), rdpipe2 (11:22), counts B (10:50).
+  If still waiting, relaunch the kit prep on `bind_r8` instead of R5b once R8 is done (edit `bind`, plan and manifest in prep_kit.py).
+
+## Update 12:15 PST
 - Driver R5b strict bind: exit 1, 458 errors. Root cause of the 224 hslice reset errors: u_irg_00..06 are `dsdv_idx_rg3`, bound as ONE
   leaf (not in the manifest `dissolve`), so the 32 plan hslice rows of lo rs t1-t6 and rs_w t1 find no leaf. u_irg_07 (t7) is
   `dsdv_idx_rg3_nq`, dissolved, and its hslice reset leaves bind (0 reset errors on t7). Plan rows need no change.
