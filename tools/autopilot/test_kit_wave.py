@@ -1217,3 +1217,14 @@ class SrcSkewAdvisory(unittest.TestCase):
         # KIT-OPS-5 11-14 (COORD): the QC src runs ahead of the queue lint copy; src_skew is logged for qwen_compute, never a fail
         self.assertIn("qwen_compute", KW.SRC_SKEW_ADVISORY_DIES)
         self.assertNotIn("s81", KW.SRC_SKEW_ADVISORY_DIES)
+
+
+def test_gen_bound_reset_identity_has_a_plan_class_after_infrastructure():
+    diagnostic = (
+        "gen phys: ERROR type kv3_hgi_v8: physical collector_tree differs from captured bound reset identity; "
+        "preserve original IDs/edges/coordinates"
+    )
+    cls, reason = KW.classify("gen", diagnostic)
+    assert cls == "PLAN" and diagnostic in reason
+    assert KW.classify("kit_rtl", diagnostic)[0] == "UNCLASSIFIED"
+    assert KW.classify("gen", diagnostic + "\not-run: NOT RUN on epyc8: ot-heavy exit 75\n")[0] == "INFRA"

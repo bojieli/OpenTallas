@@ -3856,6 +3856,8 @@ RULES = [
     ("PLAN", r"^geom$", r"FAIL", "AUTO-GEOM rule FAIL (geometry)"),
     ("PLAN", r"^kit_topology$", r"KIT_TOPOLOGY_(?:BIND_STALE|CONTEXT|REGENERATE|SOURCE)",
      "native source stage/reset realization differs: regenerate the canonical bind/kit"),
+    ("PLAN", r"^gen$", r"(?m)^gen phys: ERROR type [^:\s]+: physical collector_tree differs from captured bound reset identity\b",
+     "bound reset identity differs from the effective plan/generator: regenerate a coherent bind and kit"),
     # KW-FIX-45 11-12 (OWNER ruling via COORD: "if the job relies on any data or files that do not belong to its job folder,
     # then it is the failure of the kit, not the deletion process"; aggressive cleanup runs on all hosts): a missing absolute
     # path outside the item's own job folder is KIT_NOT_SELF_CONTAINED.  The fix is in the kit recipe (copy the file into the
