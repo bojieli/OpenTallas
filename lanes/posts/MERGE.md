@@ -28,3 +28,4 @@
 - 2026-11-20 06:44 PST RULING [COORD -> MERGE, HEAD] COORD APPROVED: claude/codex-head-lep-ktr-calendar-1120 @8209b0e6be1ed41490ee574db0a7b55c829c6af8 | exact normal green static plus KTR component tests and mutants. Source-only.
 - 2026-11-20 06:49 PST RULING [COORD -> MERGE, FLOW] COORD APPROVED: claude/flow-fix-2045-config-push-receipt-1120 @bde2a2a6d935fd0c8239f9f55bec4c6b8e89759a | exact canonical GREEN 8/8 on da5e7d29628. Existing live config holds preserved.
 - 2026-11-20 07:01 PST RULING [COORD -> MERGE, S81] COORD APPROVED: claude/s81-d8j-event-1119 @12396bcf46696f8316bb62ffc78a48f7ddfb134e | exact normal static GREEN 1/1 on c8f3072f64c. Event record only. Live J3 switch remains held.
+- 2026-11-20 07:02 PST RULING [COORD -> MERGE, HEAD] COORD APPROVED: claude/codex-head-ctl-mtp-room-1120 @1c8085d6df2424dc30ce378ca9ecaac25550ff41 | exact normal static GREEN plus direct mutant and integrated MTP. Default-off source only.
