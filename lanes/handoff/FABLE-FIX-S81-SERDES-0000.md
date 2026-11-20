@@ -12,6 +12,11 @@ NO serdes type is signed off. Nothing was exported to rtx-pro ~/signed-export-11
   client log intel2 ~/fable-fix-s81-serdes-0000/R1-route-1120.out, kit log R1_run_route.out. Waiter intel2 ~/fable-fix-s81-serdes-0000/wait.sh posts at the end.
   Built by epyc7 .../fable-fix-s81-serdes-0000/r1_mk.sh (rsync of the H25 inputs from epyc9, stale result logs excluded; patch_rm.py on the kit copy of
   dedup/ot_pdie_serdes_col.sv). lec_async.sh was excluded by mistake, so async LEC is skipped in R1 (advisory). Stop only with ot-run --cancel on that unit.
+- Hub-side one-shot posters for R1 (intel2, both under ~/fable-fix-s81-serdes-0000): wait.sh (posts when the ot-run client ends) and r1_synth_chk.sh
+  (posts the DFF inventory of the synth netlist via r1_cnt.sh: expect wpl 32, wp_g3 4, rpw 8, rpq 24, wp_g2 4, am_a >= 1; a zero on wpl / wp_g3 means
+  yosys merged the kept copies and R1 does not test the RM fix: then add them to the kit keep list (ot_keep_regs.tcl) and rerun from synth).
+- Queued read: FF census of the H21 GRT DB (epyc9 sta/h21_grt_ff, client log intel2 ~/fable-fix-s81-serdes-0000/sta-h21_grt_ff.out; unit name in that log).
+  IO classes are not valid there (the SDC carries the TT vclk latency); read the internal classes only.
 - Not mine, kept as data points (serdes lane, waiters armed by it): H23 epyc9 oth-ubuntu-509933-1795140762 (in GRT hold repair), H25 epyc9
   oth-ubuntu-1203239-1795153255 (AMPIPE, in global place), T15P epyc10 oth-ubuntu-1444535-1795153600 (t15 on the H23 rck form, post-CTS TT repair).
 - Wave rows of event b05c98f7919 (11 types) belong to the wave; 247 errors there are OOM kills (infra).
