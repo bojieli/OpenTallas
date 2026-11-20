@@ -137,6 +137,20 @@ def record_pins(d, spec_lines, out, fetch):
     return None
 
 
+def etm_problem(module, d):
+    """None when die_sta_related can model both corner ETMs of the view (boundary out/setup/hold arcs), else the reason;
+    one unusable signed view must leave that core on contract, not stop the die STA (S81 dsdv_bksel_c: no out arcs)."""
+    import die_sta_related as R
+    for c in ("tt", "ff"):
+        try:
+            R.parse_etm(Path(d) / f"{module}_{c}.lib", 1.0)
+        except SystemExit as e:
+            return f"{c}: {str(e).split(': ', 1)[-1][:120]}"
+        except Exception as e:                         # unreadable / unparsable liberty
+            return f"{c}: {type(e).__name__} {str(e)[:100]}"
+    return None
+
+
 def resolve_cores(plan, plan_path, roots, out, records=None, fetch=False):
     import schema as S
     import die_sta_related as R
@@ -175,6 +189,10 @@ def resolve_cores(plan, plan_path, roots, out, records=None, fetch=False):
                     meta = view_meta(vdir)
             if meta is None:
                 why.append(f"{d}: signed, no pins identity (no provenance pins sha, no pins.json)")
+                continue
+            bad = etm_problem(mod, d)
+            if bad:
+                why.append(f"{d}: ETM unusable ({bad})")
                 continue
             hit = [h for h in hs if R.pins_match(meta, h.get("pins_file"), plan_dir, h.get("outline_um")) is None]
             if not hit:
