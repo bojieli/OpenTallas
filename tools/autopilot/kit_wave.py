@@ -14900,6 +14900,14 @@ def _retry_enqueue_body(AP, cfg, st, notices):
     except Exception as e:           # a parse-check problem never stops the wave
         AP.log(f"KIT-WAVE VISUAL-PARSE check failed: {e}")
     try:
+        # ROUTE-RELEASE-1300 11-20: owner rule "visual review never blocks": the wave reviews its own WAIT-VISUAL rows
+        # (legal placement + post-place setup > -300 ps -> ISSUES-ACCEPT verdict); the rest is listed in AUTO-REVIEW-HELD.tsv
+        if cfg.get("auto_visual_review", True) is not False:
+            import auto_visual_review as AVR
+            AVR.auto_review_pass(cfg, st, review_before_route, review_kit_location, log=AP.log)
+    except Exception as e:           # a review problem never stops the wave
+        AP.log(f"KIT-WAVE AUTO-VISUAL-REVIEW failed: {e}")
+    try:
         visual_queue_publish(cfg, st)
     except Exception as e:           # a publish problem never stops the wave
         AP.log(f"KIT-WAVE VISUAL-QUEUE publish failed: {e}")
