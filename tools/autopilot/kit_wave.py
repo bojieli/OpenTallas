@@ -11481,9 +11481,9 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
                 log_hourly(AP, st, f"SSI|{die}|{r.get('item')}", f"KIT-WAVE SKIP-SAME-INPUT {die}/{r.get('item')} [owner {die_owner(cfg, die)[0]}]: full input hash {_same} equals the attempt that failed in the tool "
                            f"(rt sha, design snapshot, spec digest, env keys); any code / plan / env change releases it")
                 return None
-        if _rb and _so:                                          # OWNER 11-18 (r704): stops_off: otherwise an unchanged relaunch is logged for its owner, never refused
-            log_hourly(AP, st, f"REPEAT|{die}|{r.get('item')}|rs", f"KIT-WAVE REPEAT {die}/{r.get('item')} [owner {die_owner(cfg, die)[0]}]: unchanged relaunch after a repeated failure ({str(_rwhy)[:200]})")
-        elif _rb:
+        if _rb and _so and explicit_retry_pending(cfg, st, die, r.get("item")):
+            log_hourly(AP, st, f"REPEAT|{die}|{r.get('item')}|rs", f"KIT-WAVE REPEAT {die}/{r.get('item')} [owner {die_owner(cfg, die)[0]}]: explicit retry key overrides the repeat stop ({str(_rwhy)[:200]})")
+        elif _rb:                                                # FLOW-NOADV-R2 11-20 (COORD): REPEAT-STOP skips an unchanged relaunch after IDENT_N identical fails, also with stops_off: it is a stop on wasted work, not a design gate; released by a changed own input digest (plan block, src tree, failing-stage files, runtime tools sha) or an `unblock` line
             if not (st.get("repeat_ledger") or {}).get(f"{die}|{r.get('item')}", {}).get("held_logged"):
                 st["repeat_ledger"][f"{die}|{r.get('item')}"]["held_logged"] = time.time()
                 AP.log(f"KIT-WAVE LAUNCH-HELD {die}/{r.get('item')}: {_rwhy[:260]}")
@@ -13895,6 +13895,7 @@ def repeat_inputs(cfg, rec, why):
     die = rec.get("die")
     out = {"block": str(rec.get("block_sha") or "")}
     paths = list(stage_reads(why))
+    sp = {}
     try:
         sp = json.loads((Path(rec["dir"]) / "spec.json").read_text())
         # FLOW-FIX-2045 (class 4, HEAD hd_host_e failed 6 times across the r8b -> r9 -> r10 -> r11 tree switches): the plan FILE PATH is no input (every tree switch is a new path, so the
@@ -13905,6 +13906,8 @@ def repeat_inputs(cfg, rec, why):
         pass
     for p in dict.fromkeys(paths):
         out["file:" + p] = file_sha(cfg, die, p)
+    if sp.get("tools_sha"):                                  # FLOW-NOADV-R2 11-20: a new runtime (a tool fix) releases the stop; absent outside an rt snapshot
+        out["tools"] = str(sp["tools_sha"])
     return out
 
 
@@ -13919,6 +13922,8 @@ def repeat_inputs_now(cfg, st, die, item, block_sha=None):
             out[k] = str(((cfg.get("dies") or {}).get(die) or {}).get("src_sha") or "") or e["inputs"][k]
         elif k.startswith("file:"):
             out[k] = file_sha(cfg, die, k[5:])
+        elif k == "tools":
+            out[k] = str(rt_tools_fields(cfg, die).get("tools_sha") or "") or e["inputs"][k]     # not in an rt snapshot: not a change
     return out
 
 

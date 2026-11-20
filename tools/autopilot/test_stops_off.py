@@ -122,7 +122,7 @@ class HbmIsExcluded(unittest.TestCase):
 class RepeatLinesInsteadOfRefusals(unittest.TestCase):
     """OWNER 11-18 (r704): repeat-stop and same-fail-key refusals are off under stops_off; a REPEAT line names the owner lane"""
 
-    def run_launch(self, off):
+    def run_launch(self, off, rs_block=True):
         logs = []
         ap = type("AP", (), {"DRY": True, "HUB_NAME": "hub", "AP_DIR": "/tmp", "log": staticmethod(logs.append)})()
         c = {"dies": {"s81": {"event": "E", "gen_host": "h", "gen_hosts": ["h"], "die_owner": "S81-DIE-R3"}}}
@@ -131,7 +131,7 @@ class RepeatLinesInsteadOfRefusals(unittest.TestCase):
         st = {"items": {}, "repeat_ledger": {"s81|x": {}}, "fail_keys": {"s81|x": {"key": "k1", "n": 3, "cls": "FLOW", "stage": "gen"}}}
         orig = KW.fail_key_gate, KW.RS.gate
         KW.fail_key_gate = lambda cfg, st_, die, item, blk: (True, "same fail key k1 (FLOW @gen, x3)", [])
-        KW.RS.gate = lambda *a, **k: (True, "REPEAT-STOP: same failure 3x", None)
+        KW.RS.gate = lambda *a, **k: ((True, "REPEAT-STOP: same failure 3x", None) if rs_block else (False, "", ""))
         try:
             try:
                 KW.launch(ap, c, st, "s81", {"item": "x", "kind": "type"}, "hub")
@@ -146,10 +146,14 @@ class RepeatLinesInsteadOfRefusals(unittest.TestCase):
         self.assertTrue(any("LAUNCH-HELD" in m and "REPEAT-STOP" in m for m in logs))
         self.assertFalse(any("KIT-WAVE REPEAT " in m for m in logs))
 
-    def test_logged_not_refused_with_the_option(self):
+    def test_repeat_stop_holds_even_with_the_option_the_fail_key_line_is_log_only(self):
+        # COORD 11-20 (FLOW-NOADV-R2): REPEAT-STOP is a stop on wasted work and holds under stops_off too; the same-fail-key refusal stays log-only
         logs = self.run_launch(True)
+        self.assertTrue(any("LAUNCH-HELD" in m and "REPEAT-STOP" in m for m in logs))
+        self.assertFalse(any("KIT-WAVE REPEAT " in m for m in logs))
+        logs = self.run_launch(True, rs_block=False)
         rep = [m for m in logs if "KIT-WAVE REPEAT " in m]
-        self.assertEqual(len(rep), 2)                                                 # the repeat-stop line and the fail-key line
+        self.assertEqual(len(rep), 1)
         self.assertTrue(all("[owner S81-DIE-R3]" in m for m in rep))
         self.assertFalse(any("LAUNCH-HELD" in m or "LAUNCH-REFUSED" in m for m in logs))
 

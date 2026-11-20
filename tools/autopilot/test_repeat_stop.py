@@ -1,3 +1,4 @@
+import json
 """FLOW-HEALTH-1 11-16 (FABLE-FLOW-0513 class 3, COORD): REPEAT-STOP.  Replays: coll_n (6x DRT-0255 same net + routeBox), hd_serdes (5x post-CTS), kv3_pc_v1 (OOM at --mem 48)."""
 import repeat_stop as RS
 import kit_wave as KW
@@ -136,3 +137,39 @@ def test_class_relabel_keeps_the_streak_and_the_fail_key():
     ev = [RS.record(st, D, "t1", n, "gen", cls, why) for n, cls in enumerate(["UNCLASSIFIED", "PLAN", "CRASH"], 1)]
     assert ev[-1] and ev[-1]["event"] == "BLOCKED-REPEAT"
     assert RS.ident("gen|PLAN|ValueError x") == RS.ident("gen|CRASH|ValueError x") != RS.ident("gen|PLAN|ValueError y")
+
+
+def test_repeat_stop_refuses_with_stops_off_and_releases_on_a_new_input(monkeypatch, tmp_path):
+    # FLOW-NOADV-R2 11-20 (COORD): sle_su_l0 relaunched unchanged 8 times because stops_off made REPEAT-STOP advisory
+    class AP:
+        logs, q = [], []
+        log = staticmethod(lambda m: AP.logs.append(m))
+        coord_append = staticmethod(lambda rel, line: AP.q.append(line))
+        launched = []
+    cfg = {"stops_off": True, "dies": {D: {"enabled": True, "event": "e", "owner_lane": "DIE-QC-103"}}}
+    (tmp_path / "spec.json").write_text('{"src_sha": "s1", "tools_sha": "rt1"}')
+    rec = {"die": D, "item": I, "block_sha": "b1", "dir": str(tmp_path)}
+    monkeypatch.setattr(KW, "file_sha", lambda *a, **k: "")
+    why = "plan contract metadata missing for this type @gen: ContractError: x.lib: no SIGNED mean clock contract"
+    st = {}
+    for n in range(1, 4):
+        rec["attempt"] = n
+        ev = RS.record(st, D, I, n, "gen", "PLAN", why, inputs=KW.repeat_inputs(cfg, rec, why), t=n)
+        if ev:
+            KW.repeat_event(AP, cfg, st, rec, ev)
+    assert RS.state_of(st, D, I)[0] == "BLOCKED-REPEAT"
+    monkeypatch.setattr(KW, "scheduler_current", lambda a: True)
+    monkeypatch.setattr(KW, "tool_skew_refuse", lambda *a, **k: False, raising=False)
+    monkeypatch.setattr(KW, "rt_tools_fields", lambda c, d, root=None: {"tools_sha": "rt1"})
+    same = {"items": {}, **st}
+    assert KW.launch(AP, cfg, same, D, {"item": I, "block_sha": "b1"}, "hub") is None
+    assert any("LAUNCH-HELD" in m and "BLOCKED-REPEAT" in m for m in AP.logs)
+    # a new plan block, a new runtime each release it automatically (gate level: same inputs held, changed inputs released)
+    cur = KW.repeat_inputs_now(cfg, st, D, I, "b1")
+    assert RS.gate(st, D, I, cur)[0] is True
+    st2 = json.loads(json.dumps(st))
+    st3 = json.loads(json.dumps(st))
+    assert RS.gate(st3, D, I, dict(cur, block="b2"))[2].startswith("inputs:block")
+    monkeypatch.setattr(KW, "rt_tools_fields", lambda c, d, root=None: {"tools_sha": "rt2"})
+    cur2 = KW.repeat_inputs_now(cfg, st2, D, I, "b1")
+    assert cur2["tools"] == "rt2" and RS.gate(st2, D, I, cur2)[2].startswith("inputs:tools")
