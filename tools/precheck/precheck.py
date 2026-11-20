@@ -474,6 +474,15 @@ def reset_findings(t, limit=RESET_FLOPS, leaf=RESET_LEAF):
 
 
 def taps_and_sinks(ctx, tn):
+    memo = getattr(ctx, "_taps_memo", None)
+    if memo is None:
+        memo = ctx._taps_memo = {}
+    if tn not in memo:
+        memo[tn] = _taps_and_sinks(ctx, tn)
+    return memo[tn]
+
+
+def _taps_and_sinks(ctx, tn):
     import schema as S
     import taps as T
     P = ctx.P
@@ -703,6 +712,47 @@ def write_outputs(out, die, plan, findings, errors, nt, dt, raw):
                                                        findings=len(findings), errors=errors[:200]), indent=1))
 
 
+def cbc_score_outputs(out, a, ctx, raw, types):
+    """CBC-ALL-0200: per-type CBC score (rules R1-R9, cbc_score.py) -> cbc_score.tsv + a family_summary.md section"""
+    if str(HERE) not in sys.path:
+        sys.path.insert(0, str(HERE))       # python3 -I does not put the script dir on sys.path
+    import cbc_score as CS
+    try:
+        try:
+            import bundle_depth_check as BD
+        except ImportError:                 # a plan tree older than b43373eceb: the check from this checkout
+            sys.path.insert(0, str(HERE.parent / "die_plan"))
+            import bundle_depth_check as BD
+        berrs = BD.check(raw)
+    except Exception as e:  # noqa: BLE001
+        berrs = []
+        print(f"PRECHECK cbc_score: bundle check unavailable: {e}")
+    try:
+        import reset_tree as RT
+        rdef = float(getattr(RT, "REACH_UM", 405.0))
+    except Exception:  # noqa: BLE001
+        rdef = 405.0
+    rows = []
+    for tn in types:
+        t = ctx.P.types[tn]
+        taps = sinks = None
+        if not t.get("hard"):
+            try:
+                with contextlib.redirect_stdout(io.StringIO()):
+                    taps, sinks = taps_and_sinks(ctx, tn)
+            except Exception:  # noqa: BLE001 -- an estimator reports, never stops
+                taps = sinks = None
+        try:
+            sc = CS.score_type(a.die, raw, tn, t, taps, sinks, lambda tt, r, m: reach_findings(tt, r, m), berrs, rdef)
+        except Exception as e:  # noqa: BLE001
+            sc = {r: ("n/a", "", f"score error {type(e).__name__}: {str(e)[:80]}") for r in CS.RULES}
+        rows.append((tn, family(tn), sc))
+    CS.write_tsv(out / "cbc_score.tsv", rows)
+    with open(out / "family_summary.md", "a") as fh:
+        fh.write("\n".join(CS.summary_md(rows, a.die, CS.hop_cap(a.die))) + "\n")
+    print(f"PRECHECK cbc_score {a.die}: {len(rows)} types -> {out / 'cbc_score.tsv'}")
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--die", required=True)
@@ -725,6 +775,7 @@ def main(argv=None):
     ap.add_argument("--cells", default="", help="JSON {type: cells} for types whose plan has no cells (kit synth counts)")
     ap.add_argument("--kit-sinks", default="", help="kit_sinks.py JSON file(s), comma-separated (STALE-BINS)")
     ap.add_argument("--stale-frac", type=float, default=STALE_FRAC)
+    ap.add_argument("--no-cbc-score", action="store_true", help="skip the per-type CBC score (cbc_score.tsv)")
     a = ap.parse_args(argv)
     a.cells_map = json.loads(Path(a.cells).read_text()) if a.cells else {}
     a.kit_sinks_map = {}
@@ -759,6 +810,8 @@ def main(argv=None):
             if len(errors) < 3:
                 traceback.print_exc()
     write_outputs(Path(a.out), a.die, a.plan, findings, errors, len(types), time.time() - t0, raw)
+    if not a.no_cbc_score:
+        cbc_score_outputs(Path(a.out), a, ctx, raw, [tn for tn in types if tn in placed])
     c = collections.Counter(f["check"] for f in findings)
     print(f"PRECHECK {a.die}: {len(types)} types, {len(findings)} findings {dict(c)}, {len(errors)} errors, {time.time() - t0:.0f} s -> {a.out}")
     return 0
