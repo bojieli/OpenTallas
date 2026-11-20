@@ -114,6 +114,37 @@ class LiveTree(unittest.TestCase):
         errs, _ = SM.verify(self.pub, ro=True, full=True)
         self.assertTrue(any("NOT-READY" in e for e in errs))
 
+    def test_republished_wrapper_redigests_wave_prepare(self):
+        """HEAD-CROSSING-1119 r11b: a pack that republishes a wrapper (and the plan) without touching wave_prepare.json
+        still yields a snapshot whose receipt digests match the applied files (kit_rtl 'published wrapper changed')."""
+        LT.host_seed(self.pub, self.live)
+        os.chmod(self.live + "/physical", 0o755)
+        prep = os.path.join(self.live, "physical/prep")
+        for r, b in (("source_plan.json", "{}"), ("source_sidecar.json", "{}"), ("published/ot_x.sv", "module ot_x; endmodule\n")):
+            LT.write_new(os.path.join(prep, r), b)
+        w = {"prepared_plan_sha256": LT.sha256_file(os.path.join(prep, "source_plan.json")),
+             "sidecar_sha256": LT.sha256_file(os.path.join(prep, "source_sidecar.json")),
+             "published_wrappers": {"x": {"module": "ot_x", "sha256": LT.sha256_file(os.path.join(prep, "published/ot_x.sv"))}}}
+        LT.write_new(os.path.join(prep, "wave_prepare.json"), json.dumps(w, indent=1, sort_keys=True) + "\n")
+        m = json.load(open(os.path.join(self.live, SM.MANIFEST)))
+        for r in ("source_plan.json", "source_sidecar.json", "published/ot_x.sv", "wave_prepare.json"):
+            m["files"]["physical/prep/" + r] = LT.sha256_file(os.path.join(prep, r))
+        m["manifest_hash"] = SM.manifest_hash(m)
+        LT.write_new(os.path.join(self.live, SM.MANIFEST), json.dumps(m))
+        pk = os.path.join(self.t, "pk")
+        make_pack(pk, m["manifest_hash"], {"physical/prep/published/ot_x.sv": b"module ot_x(input a); endmodule\n",
+                                           "physical/prep/source_plan.json": b'{"v": 2}'})
+        LT.host_apply(self.live, pk, self.snaps, "s1")
+        s1 = os.path.join(self.snaps, "s1/physical/prep")
+        w1 = json.load(open(os.path.join(s1, "wave_prepare.json")))
+        self.assertEqual(w1["published_wrappers"]["x"]["sha256"], LT.sha256_file(os.path.join(s1, "published/ot_x.sv")))
+        self.assertEqual(w1["prepared_plan_sha256"], LT.sha256_file(os.path.join(s1, "source_plan.json")))
+        self.assertEqual(w1["sidecar_sha256"], w["sidecar_sha256"])
+        m1 = json.load(open(os.path.join(self.snaps, "s1", SM.MANIFEST)))
+        e1, _ = SM.verify(os.path.join(self.snaps, "s1"), expect=m1["manifest_hash"], ro=True, full=True)
+        self.assertEqual(e1, [])
+        self.assertEqual(m1["files"]["physical/prep/wave_prepare.json"], LT.sha256_file(os.path.join(s1, "wave_prepare.json")))
+
     def test_reloc_pack_rewrites_self_paths_and_digest(self):
         LT.host_seed(self.pub, self.live)
         pk = os.path.join(self.t, "rp")

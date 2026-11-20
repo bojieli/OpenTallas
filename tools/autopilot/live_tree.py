@@ -122,6 +122,51 @@ def host_seed(src, live):
     print(f"LIVE_TREE SEEDED {live} from {src} hash {m['manifest_hash']} files {len(m['files'])}")
 
 
+def redigest_wave_prepare(live, touched, files, ov):
+    """HEAD-CROSSING-1119 r11b: a pack that changes a prepared plan, its sidecar or a published wrapper also re-digests the
+    wave_prepare.json receipt beside it (prepared_plan_sha256 / sidecar_sha256 / published_wrappers[*].sha256) from the
+    applied files, so a gen-pass republish can never leave a receipt that kit_rtl refuses ("published wrapper changed").
+    Rename-only write; the manifest entry and overlay follow.  Returns {rel: [changed keys]}."""
+    preps = set()
+    for rel in touched:
+        d = os.path.dirname(rel)
+        if os.path.basename(d) == "published":
+            d = os.path.dirname(d)
+        if os.path.exists(os.path.join(live, d, "wave_prepare.json")):
+            preps.add(d)
+    out = {}
+    for d in sorted(preps):
+        rel = os.path.join(d, "wave_prepare.json")
+        path = os.path.join(live, rel)
+        raw = open(path).read()
+        w = json.loads(raw)
+        changed = []
+        for key, name in (("prepared_plan_sha256", "source_plan.json"), ("sidecar_sha256", "source_sidecar.json")):
+            q = os.path.join(live, d, name)
+            if key in w and os.path.exists(q):
+                h = sha256_file(q)
+                if w[key] != h:
+                    w[key] = h
+                    changed.append(key)
+        for typ, e in sorted((w.get("published_wrappers") or {}).items()):
+            q = os.path.join(live, d, "published", str(e.get("module")) + ".sv")
+            if isinstance(e, dict) and os.path.exists(q):
+                h = sha256_file(q)
+                if e.get("sha256") != h:
+                    e["sha256"] = h
+                    changed.append("published_wrappers." + typ)
+        if not changed:
+            continue
+        ind = 1 if raw.startswith('{\n "') else 2
+        srt = json.dumps(json.loads(raw), indent=ind, sort_keys=True) + ("\n" if raw.endswith("\n") else "") == raw
+        data = json.dumps(w, indent=ind, sort_keys=srt) + ("\n" if raw.endswith("\n") else "")
+        write_new(path, data)
+        files[rel] = ov[rel] = sha256_file(path)
+        out[rel] = changed
+        print(f"LIVE_TREE WAVE-PREPARE {rel} re-digested: {', '.join(changed)}")
+    return out
+
+
 def host_apply(live, pack, snaps, name):
     """pack (may be '') -> live, then snapshot live -> snaps/name.  Prints LIVE_TREE SNAP <path> <hash>."""
     m = json.load(open(os.path.join(live, MANIFEST)))
@@ -151,6 +196,7 @@ def host_apply(live, pack, snaps, name):
         for k in d.get("overlay_drop") or []:
             ov.pop(k, None)
         ov.update(d.get("overlay_add") or {})
+        redigest_wave_prepare(live, set(d.get("add") or {}) | set(d.get("delete") or []), files, ov)
         m = {"version": 1, "main_sha": d.get("new_main") or m["main_sha"], "scope": m["scope"], "overlay": ov, "files": files}
         m["manifest_hash"] = manifest_hash(m)
         write_new(os.path.join(live, MANIFEST), json.dumps(m, indent=0, sort_keys=True))
