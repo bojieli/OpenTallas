@@ -690,8 +690,14 @@ def _writer_start_groups(t):
     if cfg.get('share_trunk'):      # R-REACH-1: a shared trunk stage is one instance, placed once (its owner's group)
         import clock_landings as _CL
         owners = _CL.reader_start_owners(cfg)
-    for bus, branch in sorted(cfg['branches'].items()):
-        for i, rect in enumerate(_chain_clear_of_hard_cores(t, origin_xy, branch['stages'])):
+    direct = cfg.get('direct_fstart_buses', [])
+    if not isinstance(direct, list) or any(not isinstance(bus, str) for bus in direct) or len(set(direct)) != len(direct):
+        raise ValueError('landing_writer_start.direct_fstart_buses must list distinct bus names')
+    if set(direct) & cfg['branches'].keys():
+        raise ValueError('direct FSTART face must not have writer transport stages')
+    for bus in sorted(cfg['branches'].keys() | set(direct)):
+        stages = [] if bus in direct else cfg['branches'][bus]['stages']
+        for i, rect in enumerate(_chain_clear_of_hard_cores(t, origin_xy, stages)):
             if owners is not None and owners[bus][i] != bus:
                 continue
             groups.append((f'u_cland_writer_start_{safe(bus)}_{i}', rect, 'writer-start:'+bus))
@@ -702,6 +708,8 @@ def _writer_start_groups(t):
         pins = [p for p in (t or {}).get('clock', {}).get('landing_contract', {}).get('pins', [])
                 if p.get('name') == 'cland_fstart_out_' + bus and p.get('dir') == 'out']
         if len(pins) != 1:
+            if bus in direct:
+                raise ValueError(f'direct FSTART {bus} requires one output pin')
             continue  # parameter-form/older plans without a final face site stay unchanged
         width, height = t['outline_um']
         x, y = pins[0]['xy_um']
