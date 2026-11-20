@@ -1783,6 +1783,9 @@ def stage_admission_tools(source_chain=None, source_tools=None, root=None):
     if kfr.is_file() and blobs.is_file():
         payload[Path("__flow__/kit_flow_refresh.py")] = kfr.read_bytes()
         payload[Path("__flow__/flow_blobs.json")] = blobs.read_bytes()
+        kr = Path(__file__).with_name("kit_resume.py")           # FLOW-FIX-2045: the ALWAYS list creates it in a kit that lacks it (in-place restart resume)
+        if kr.is_file():
+            payload[Path("__flow__/kit_resume.py")] = kr.read_bytes()
         for cf in sorted((tools.parents[1] / "physical/common_flow").glob("*")):
             if cf.is_file() and cf.suffix in (".tcl", ".py", ".sh"):
                 payload[Path("__flow__/common_flow") / cf.name] = cf.read_bytes()

@@ -286,3 +286,36 @@ def test_grt_hook_gets_the_repair_bound_line_once_and_only_at_the_end(tmp_path):
     (k2 / "config.mk").write_text("export PRE_GLOBAL_ROUTE_TCL = /work/missing.tcl\n")
     KFR.refresh(str(k2), "gen", rt=str(rt), index=str(tmp_path / "none.json"))
     assert not (k2 / "missing.tcl").exists()                                              # a hook file that is not there is not invented
+
+
+def test_stage_refresh_in_a_sealed_job_finds_the_flow_files_through_the_bundle_roots(tmp_path):
+    """FLOW-FIX-2045 (FABLE-FLOW-0245): the refresher of a stage job runs from an admission bundle (no rt tree): --src roots say where tools/die_plan, physical/common_flow, tools/autopilot live; every ALWAYS file
+    and the cts_post patch must be found through them, not under --rt"""
+    import kit_flow_refresh as KFR
+    from pathlib import Path
+    repo = Path(__file__).resolve().parents[2]
+    bundle = tmp_path / "bundle"; fl = bundle / "die_plan" / "__flow__"; fl.mkdir(parents=True)
+    (fl / "kit_resume.py").write_text((repo / "tools/autopilot/kit_resume.py").read_text())
+    roots = {"tools/die_plan": str(repo / "tools/die_plan"), "physical/common_flow": str(repo / "physical/common_flow"), "tools/autopilot": str(fl)}
+    kit = tmp_path / "w" / "t"; kit.mkdir(parents=True)
+    runner = kit.parent / "run_kit.sh"; runner.write_text("#!/bin/bash\n# old\n")
+    (kit / "config.mk").write_text("export PRE_GLOBAL_ROUTE_TCL = /work/grt_pre.tcl\n")
+    (kit / "grt_pre.tcl").write_text("# hook\n")
+    (kit / "stage_odb_cap.py").write_text("# old\n"); (kit / "tt_setup_repair.tcl").write_text("# old\n"); (kit / "subtree_balance.tcl").write_text("# old\n")
+    (kit / "cts_post.tcl").write_text("set cp_dir x\n" + KFR.TAP_LINE + "uplevel #0 [list source [file join $cp_dir clock_edge_balance.tcl]]\n")
+    rec = KFR.refresh(str(kit), "route", rt=str(bundle), index=str(tmp_path / "none.json"), src=roots)
+    got = {r["file"] for r in rec["replaced"]}
+    assert {"stage_odb_cap.py", "tt_setup_repair.tcl", "subtree_balance.tcl", "run_kit.sh", "kit_resume.py", "repair_bound.tcl", "kit_reports.py", "cts_post.tcl", "grt_pre.tcl"} <= got, got
+    assert "subtree_balance.tcl" in (kit / "cts_post.tcl").read_text() and "ot_bounded_repair" in (kit / "tt_setup_repair.tcl").read_text()
+    assert "RSZ-0074 inside repair_timing" in (kit / "tt_setup_repair.tcl").read_text() and "repair_bound.tcl" in (kit / "grt_pre.tcl").read_text()
+    assert (kit / "kit_resume.py").exists() and "[ $GOAL = finish ]; }; then" in runner.read_text()
+
+
+def test_the_wave_stage_refresh_runs_from_rt_current_not_the_launch_pin():
+    src = open(KW.__file__).read()
+    i = src.index("def flow_refresh(stage):")
+    body = src[i:i + 3200]
+    assert "_rtc = RT_CURRENT" in body and "--rt {q(_rtc)}" in body and body.index("--rt {q(_rtc)}") < body.index("--rt {q(tsrc)}")
+    assert KW.RT_CURRENT == "/srv/opentallas-scratch2/claude/rt/current"
+    bundle = open(os.path.join(os.path.dirname(KW.__file__), "signoff_chain.py")).read()
+    assert '"--src", f"tools/autopilot={fl}"' in bundle

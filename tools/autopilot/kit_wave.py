@@ -1429,6 +1429,7 @@ def rearm_candidates(state, cfg, die, d, log=None):
 # FLOW-FIX-2045: the flow scripts the wave puts into every kit from rt/current at launch, because a kit copies them at gen time from the die's PINNED snapshot (older than the fixes: the old STAGE-CAP
 # watcher, the run_kit.sh whose goal finish skipped the FF GRT step).  (where, name, source): where = "kit" (<kit>/<name>) or "runner" (<work>/gen/<name>, the generated run_kit.sh);
 # source = a path under rt/current/tools (verbatim copy) or "gen_phys.RUN_KIT" (the generated runner text).  kit_flow_refresh.py (TOOLS-DECOUPLE) keeps handling the other verbatim kit scripts.
+RT_CURRENT = "/srv/opentallas-scratch2/claude/rt/current"       # FLOW-FIX-2045: where the stage refresh takes the flow scripts from (never the launch-pinned tree)
 FLOW_REFRESH_FILES = (
     ("kit", "stage_odb_cap.py", "die_plan/stage_odb_cap.py"),
     ("kit", "tt_setup_repair.tcl", "die_plan/tt_setup_repair.tcl"),                          # lever 8: stall / wall-time bound of the TT setup repair
@@ -8088,9 +8089,15 @@ def run_item(spec_path):
         if not sp.get("tools_rt"):
             print(f"KIT_FLOW_REFRESH SKIPPED: stage {stage}: {T} spec has no tools_rt (not an rt-tools launch)", flush=True)
             return
-        _kfr = f"{tsrc}/tools/autopilot/kit_flow_refresh.py"
+        # FLOW-FIX-2045 (FABLE-FLOW-0245: the stage refresh ran from the kit's launch-pinned tools_rt: 0 of 251 refreshed kits got the subtree patch, 240 QC kits kept the pre-fix tools of fd0e65ccdd36):
+        # the refresher AND the flow scripts it patches come from rt/current on the host that holds the kit; the pin stays for the design inputs (plan, src, snapshot) only.  The pinned launch tree
+        # is the fallback when rt/current is not there.
+        _rtc = RT_CURRENT
+        _kfr = f"{_rtc}/tools/autopilot/kit_flow_refresh.py"
+        _kfp = f"{tsrc}/tools/autopilot/kit_flow_refresh.py"
         run("flow_refresh" if stage == "place" else f"flow_refresh_{stage}",
-            remote(f"if [ -f {q(_kfr)} ]; then python3 -I {q(_kfr)} --kit {q(K)} --stage {q(stage)} --rt {q(tsrc)} "
+            remote(f"if [ -f {q(_kfr)} ]; then python3 -I {q(_kfr)} --kit {q(K)} --stage {q(stage)} --rt {q(_rtc)} --die-src {q(src)}; "
+                   f"elif [ -f {q(_kfp)} ]; then python3 -I {q(_kfp)} --kit {q(K)} --stage {q(stage)} --rt {q(tsrc)} "
                    f"--sha {q(sp.get('tools_sha') or '')} --die-src {q(src)}; else echo 'KIT_FLOW_REFRESH SKIPPED: stage {stage}: '{q(_kfr)}' missing on this host'; fi"),
             idempotent=True)
 

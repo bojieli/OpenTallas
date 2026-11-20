@@ -118,9 +118,18 @@ ALWAYS = (("kit", "stage_odb_cap.py", "tools/die_plan/stage_odb_cap.py"),
           ("kit+", "kit_reports.py", "tools/die_plan/kit_reports.py"))      # "kit+" = created when missing, so legacy kits get the helper the refreshed run_kit.sh calls
 
 
-def _rt_run_kit_text(rtr):
+def src_file(rtr, rel, roots=None):
+    """FLOW-FIX-2045: path of an rt file by its repo-relative path.  In a stage job the refresher runs from an admission BUNDLE (die_plan/ + __flow__/), not from an rt tree: roots {rel dir: directory
+    holding its current files} (the --src arguments) say where each repo dir lives, rt/<rel> otherwise"""
+    for d in sorted((roots or {}), key=len, reverse=True):
+        if rel == d or rel.startswith(d + "/"):
+            return os.path.join(roots[d], rel[len(d) + 1:]) if rel != d else roots[d]
+    return os.path.join(rtr, rel)
+
+
+def _rt_run_kit_text(rtr, roots=None):
     import importlib.util
-    dd = os.path.join(rtr, "tools", "die_plan")
+    dd = src_file(rtr, "tools/die_plan", roots)
     gp = os.path.join(dd, "gen_phys.py")
     if not os.path.isfile(gp):
         return None
@@ -138,12 +147,12 @@ TAP_LINE = "uplevel #0 [list source [file join $cp_dir tap_balance.tcl]]\n"
 STB_MARK = "# DIE-CORETAP-1119 (FABLE-CLOSURE lever 1, kit side)"
 
 
-def patch_cts_post(kit, rtr, rec, dry=False):
+def patch_cts_post(kit, rtr, rec, dry=False, roots=None):
     """FLOW-FIX-2045 (COORD, DIE-CORETAP 7109ee911ef): a kit's cts_post.tcl is a PER-KIT edit of tools/die_plan/cts_post.tcl (gen inserts hook lines: clock_edge_balance, the cland_fclk_target hook ...), so it is never
     replaced whole.  A kit whose cts_post.tcl does not source subtree_balance.tcl yet gets rt's subtree-balance block (from the DIE-CORETAP comment to the line before the tap_balance source) inserted
     right before that line; every other line of the kit's file stays.  Needs exactly one tap_balance source line in the kit; idempotent.  -> True when patched"""
     p = os.path.join(kit, "cts_post.tcl")
-    sp = os.path.join(rtr, "tools/die_plan/cts_post.tcl")
+    sp = src_file(rtr, "tools/die_plan/cts_post.tcl", roots)
     if os.path.islink(p) or not os.path.isfile(p) or not os.path.isfile(sp):
         return False
     old, new = open(p).read(), open(sp).read()
@@ -197,7 +206,7 @@ def patch_grt_hook(kit, rec, dry=False):
     return True
 
 
-def always_pass(kit, rtr, rec, dry=False):
+def always_pass(kit, rtr, rec, dry=False, roots=None):
     """replace the ALWAYS files present in the kit by rt's copy when they differ.  -> list of replaced names (also appended to rec['replaced'] with from='always')"""
     out = []
     for where, name, srcrel in ALWAYS:
@@ -206,10 +215,10 @@ def always_pass(kit, rtr, rec, dry=False):
             continue
         try:
             if srcrel == "gen_phys.RUN_KIT":
-                txt = _rt_run_kit_text(rtr)
+                txt = _rt_run_kit_text(rtr, roots)
                 new = txt.encode() if txt else None
             else:
-                sp = os.path.join(rtr, srcrel)
+                sp = src_file(rtr, srcrel, roots)
                 new = open(sp, "rb").read() if os.path.isfile(sp) else None
         except Exception as e:                       # noqa: BLE001 - a missing / broken rt file never stops a stage
             rec.setdefault("kept_old", []).append(f"{name}: {type(e).__name__}: {e}")
@@ -228,7 +237,7 @@ def always_pass(kit, rtr, rec, dry=False):
             f.write(new)
         os.chmod(tmp, (os.stat(p).st_mode & 0o7777 | 0o200) if os.path.isfile(p) else 0o644)
         os.replace(tmp, p)
-    if patch_cts_post(kit, rtr, rec, dry):
+    if patch_cts_post(kit, rtr, rec, dry, roots):
         out.append("cts_post.tcl")
     if patch_grt_hook(kit, rec, dry):
         out.append("grt_hook")
@@ -252,7 +261,7 @@ def refresh(kit, stage, rt=RT, dry=False, index=None, src=None, sha=None, die_sr
         idx = json.load(open(ip))
     except (OSError, ValueError):
         rec["note"] = f"SKIPPED: no flow blob index {ip}: nothing replaced by the index pass"
-        always_pass(kit, rtr, rec, dry)
+        always_pass(kit, rtr, rec, dry, roots)
         if die_src:
             _die_pass(kit, rec, rtr, die_src, dry)
         return rec
@@ -290,7 +299,7 @@ def refresh(kit, stage, rt=RT, dry=False, index=None, src=None, sha=None, die_sr
             f.write(new)
         os.chmod(tmp, os.stat(p).st_mode & 0o7777 | 0o200)
         os.replace(tmp, p)
-    always_pass(kit, rtr, rec, dry)
+    always_pass(kit, rtr, rec, dry, roots)
     if die_src:
         _die_pass(kit, rec, rtr, die_src, dry)
     return rec

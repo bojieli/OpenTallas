@@ -179,7 +179,7 @@ def flow_refresh(kit, goal, script=KFR, bundle=None):
     if (fl / "kit_flow_refresh.py").is_file() and (fl / "flow_blobs.json").is_file():
         argv = [sys.executable, "-I", str(fl / "kit_flow_refresh.py"), "--kit", str(kit), "--stage", str(goal),
                 "--index", str(fl / "flow_blobs.json"), "--src", f"tools/die_plan={b / 'die_plan'}",
-                "--src", f"physical/common_flow={fl / 'common_flow'}", "--rt", str(b)]
+                "--src", f"physical/common_flow={fl / 'common_flow'}", "--src", f"tools/autopilot={fl}", "--rt", str(b)]
     elif os.path.isfile(script):
         argv = [sys.executable, "-I", script, "--kit", str(kit), "--stage", str(goal)]
     else:
