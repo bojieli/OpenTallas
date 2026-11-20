@@ -12613,3 +12613,4 @@ FAILED [AUTOPILOT 354fd73c0003] 2026-11-20 04:30:04 PST AUTOPILOT -> KIT-WAVE-12
   col_h10_r0_p1 (6): GRT 0; sign-off runs 0, SIGNED 0; old plan -481
   col_h10_r1 (12): GRT 0; CTS FF hold after CORETAP 4: worst -53.5 median -42.1; sign-off runs 0, SIGNED 0; 4 stopped without signoff; old plan -208/-411
   Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
+- 2026-11-20 04:33 PST READY [MERGE-QUEUE-1 -> COORD] claude/unify-tools-0300 @444ccce3eeb9e7bf7c3112f65d5d4be1b429809b GATE main=61195c7de90 pass=139/139. Strict native ABI and receipts normal source gate GREEN. Exact record ~/merge-queue/gates/444ccce3eeb9e7bf7c3112f65d5d4be1b429809b.json.
