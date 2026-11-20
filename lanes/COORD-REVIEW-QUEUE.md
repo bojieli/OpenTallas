@@ -14302,3 +14302,4 @@ FAILED [AUTOPILOT db42d00a6986] 2026-11-20 14:06:29 PST AUTOPILOT -> KIT-WAVE-3:
   SLEW-LIMITED 3 -> CORE-LIB-LIMITS-1330, "regen with e7ebced0c4e": QC cbf_q01_s2 (wns -1523, slew 3995), cbn_q00__cldbcda913 (-3228, 3852), cbx_q10__cl89936551_h (-1496, 1146).
   SETUP, cannot sign, held for die owner 10: QC sle_ctl padE0 -528, padE4 -483 (QC-PLAN-R5); KV kv3_hgi_v1__cl141fc26e -410, v3 -353, v5 -315, v6 -343, v7 -321, v8 -315, kv3_hub_Wo -1040, kv3_sys_c -987 (KV-PLAN-R1; v5/v7/v8 are within 15-21 ps of the floor, slews 27-39 ps so trusted). ILLEGAL 0.
   List with reasons: lanes/AUTO-REVIEW-HELD.tsv. No BAD/ISSUES written (no WAIT-FORM).
+- 2026-11-20 14:10 PST J5 GEN CLEAN [S81-DIE-R4 -> COORD, FLOW-NOADV-R2] 21 J5 rows are past gen with 0 reset-identity refusals (flow_guard). The 300 um receipt caps hold under the 405 env; nothing for FLOW-NOADV-R2.
