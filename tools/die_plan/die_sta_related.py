@@ -2436,11 +2436,23 @@ def core_view_model(module, view_dir, corner, load_ff, part_delay_ps):
     return result
 
 
-def kit_model(spec, corner, name, reg=None):
+def tap_clock_pin(tap):
+    """the type clock pin of a die tap ('t_<part>__<pin>' port names, or an explicit 'pin')."""
+    if tap.get("pin"):
+        return tap["pin"]
+    pre = f"t_{tap.get('part')}__"
+    return tap["port"][len(pre):] if str(tap.get("port", "")).startswith(pre) else None
+
+
+def kit_model(spec, corner, name, reg=None, port=None):
     """signed type view.  lat_min/lat_max = measured clock arrival at the type's pin registers (required); clkq/setup/
     hold default to the characterised pin register reg when the kit spec does not carry them (REAL-VIEWS-1119: the
     signed record measures insertion_pinflops; the pin register is the same library cell the budget model uses)."""
     c = spec["corners"][corner]
+    pc = ((spec.get("ports") or {}).get(port) or {}).get(corner) if port else None
+    if pc:   # REAL-VIEWS-PORTS 11-19: this clock port's own pin-register arrival range (signoff port_pinflops)
+        c = dict(c, lat_min_ps=pc["lat_min_ps"], lat_max_ps=pc["lat_max_ps"])
+        name = f"{name}:{port}"
     dflt = dict(clkq_max_ps=reg["clkq_max_wire_ps"], clkq_min_ps=reg["clkq_min_nowire_ps"], setup_ps=reg["setup_ps"],
                 hold_ps=reg["hold_ps"]) if reg else {}
     g = lambda k: float(c[k] if k in c else dflt[k])
@@ -2663,7 +2675,7 @@ def build_views(plan, taps, corner, reg, lat, core_views, kits, load_ff, part_de
     for p, r in taps.items():
         key = r["part"] if r["part"] in kits else ptype.get(r["part"]) if ptype.get(r["part"]) in kits else None
         if key:
-            views[p] = [kit_model(kits[key], corner, key, reg)]
+            views[p] = [kit_model(kits[key], corner, key, reg, tap_clock_pin(r))]
             real_taps.add(p)
             kit_parts.add(r["part"])
     tot = defaultdict(int)
