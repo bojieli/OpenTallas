@@ -174,3 +174,16 @@ Notes and scripts: epyc8 /srv/opentallas-scratch2/claude/s81-geom-opus-d8h-l4/FI
 - Density rows: rows_d8h_geom_1119b.json (4f89db41a2f0) = respace 42 + t51 transform + ft_track_frac t2 .38 t22 .34 t57 .33 t66 .33 (cause: D8e TYPE-REDUCE-2 leaf core rows on die y 10500/10750). h + rows bf0a60fa290c G0 PASS (control h 2 cut errors). Posted.
 - C fix pushed main 9e13173c S81-SUPUP-1 (keep_own_up). B+C row: bc/bc_compose.py; private tree bc/tree build: bind only RESET_ANCHOR t47/t75 (shared with R3, fixed by R3 in h3), LATCHECK 873 PASS, PRE PASS, G0 = control. 21 layouts. Posted.
 - Proof kit col_h10_r0_p4 (pvcc166a6d + pv5b623e07): kit-rtl refused on failed global bind (snapshot pk/src of h). Waiting R3 h3 bind (intel2 ~/s81-die-r/build_d8h_h3.log), then re-snapshot to pk2 and kit/kits_d8h.sh, route via run_kit.sh.
+
+## 2026-11-19 late: D8i rows posted (e4441245)
+- Rows epyc8 /srv/opentallas-scratch2/claude/s81-geom-opus-d8g/d8i/: d8i_rows.py, rows_d8i_geom.json dad9d06b4899, plan_h3_d8i.json 328a95d9b121 (base h3 8dfedade987b). 114 types; includes the col_h9_r1 STRIP row (o0 middle bank + clk_t22 -> x 610) and the I0 under-wall row (+1).
+- Proof build3: ot-run unit oth-ubuntu-615155-1795118634, log intel2 ~/s81-geom-opus-d8i-build3.log, out d8i/build3. Control G0: ~/s81-geom-opus-g0-h3ctl.log, out g0_h3ctl/g0. Next: diff G0 + BIND/LATCHECK/PRE, post to S81-DIE-R3.
+- R3 tools + gitshim were auto-retired again; I use d8i/build_tree_own.sh + s81-geom-opus-d8g/gitshim (rev-parse -> 54d289d9).
+- p4 proof kits pk2 col_h10_r0_p4 pvcc166a6d/pv5b623e07 are still routing (logs intel2 ~/s81-geom-opus-pk2-*.log).
+
+## 2026-11-19 ~18:xx: bank-leaf (bk_sel__t2) + D8i lane fix
+- D8i: rows 150e5d5abfd2 / plan f2ec5ffc3bda (60 lanes fixed_cycles 4->5 + latency row fixed/natural/cycles +1). build5 log intel2 ~/s81-geom-opus-d8i-build5.log. R3 warned (post 598ccd93).
+- bk_sel: A2P RTL pushed main e21f466924 (OT_BKSEL_A2P = RC3 RS3 RO4 RLN3). Bench BKSEL_A2 PASS + BKSEL_A2P PASS (negatives FAIL as expected): epyc8 s81-geom-opus-d8g/bksel/bench_a2r2, bench_a2p.
+- BK-PLACE rows: bksel/bk_rows.py -> plan_h3_bk.json 22d55e96e075, rows_bk.json 3c632455897c (street-aware layout r2). G0 bk (r1 layout) = control 2 errors; street findings -> r2 layout, G0 bk2 log intel2 ~/s81-geom-opus-g0-bk2.log.
+- u_c re-harden: kit epyc8 s81-geom-opus-d8g/ucore/dsdv_bksel_c_rfda2p (recipe bksel/recipes_a2p.json), running on intel1 (spill), log intel2 ~/s81-geom-opus-ucore-a2p.log.
+- Next: on SIGNED export view cores/views/bksel_c_a2p_1119, plan hard_core u_c lef/lib -> new view, private strict bind of BK plan (build_tree_own.sh), kit from it (pk3 kit gen needs fresh bind: KIT_TOPOLOGY_BIND_STALE), route to GRT TT.
