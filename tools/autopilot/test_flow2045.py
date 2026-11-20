@@ -154,3 +154,34 @@ def test_stage_cap_refresh_replaces_an_old_watcher_copy_in_the_kit(tmp_path):
     bare = tmp_path / "bare"; bare.mkdir()
     assert subprocess.run(["bash", "-c", KW.stage_cap_refresh_cmd(bare)]).returncode == 0
     assert not (bare / "stage_odb_cap.py").exists()
+
+
+def test_self_heal_copies_run_when_every_host_is_over_2x_cores(tmp_path, monkeypatch):
+    """FLOW-FIX-2045: the postbind tree sat on epyc9 only for hours because the heal skipped every host over 2x its cores (all of them); launches piled on epyc9"""
+    monkeypatch.setenv("HOME", str(tmp_path)); monkeypatch.setenv("OT_SELF_HEAL_STATE", str(tmp_path / "tries.json"))
+    p = "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/x_postbind_1/_postbind/out/rtl/bind_cells.sv"
+
+    class AP2(_AP):
+        DRY = False
+        HUB_NAME = "intel2"
+
+        def __init__(self):
+            super().__init__(); self.units = []
+
+        def launch_unit(self, unit, log, argv):
+            self.units.append((unit, argv))
+
+        def unit_active(self, unit):
+            return False
+
+    stt = {h: {"load": 300, "cores": 96, "admit": 0} for h in ("epyc9", "epyc8", "intel1")}
+    cfg = {"_hub": "intel2", "_otrun_status": stt, "_src_incomplete": {"epyc8": {"qwen_compute": p + " missing"}, "intel1": {"qwen_compute": p + " missing"}},
+           "dies": {"qwen_compute": {"gen_host": "epyc9", "gen_hosts": ["epyc9", "epyc8", "intel1"]}}}
+    ap = AP2()
+    KW.sync_die_inputs(ap, cfg)
+    assert len(ap.units) == 2, ap.lines                                              # epyc9 (3x its cores) is the source, epyc8 and intel1 get a detached copy
+    assert any("epyc9->epyc8" in x for x in ap.lines) and any("epyc9->intel1" in x for x in ap.lines)
+    stt["epyc8"] = None                                                              # an unreadable host is still skipped
+    ap2 = AP2(); (tmp_path / "tries.json").unlink(missing_ok=True)
+    KW.sync_die_inputs(ap2, cfg)
+    assert len(ap2.units) == 1

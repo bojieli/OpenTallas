@@ -5622,6 +5622,22 @@ def tar_extract_cmd(paths):
     return f"T=''; {pre}eval tar -C / -xf - --keep-old-files $T"
 
 
+def heal_host_bad(detached, stt, host, hub=""):
+    """FLOW-FIX-2045: a host the self-heal copy must not touch.  The 2x-cores rule of queued_host_bad guarded the tick against a copy that blocked it (FLOW-1150 B); the live copies are detached units now,
+    so only an UNREADABLE host (no ot-run row, mirror stuck) is skipped.  With the whole fleet over 2x its cores every host was skipped as source and target: the QC postbind tree stayed on epyc9
+    alone for hours (SRC-INCOMPLETE on epyc8 / intel1 / epyc2) and 46 of 50 launches went to epyc9 at load 395/96.  An injected (synchronous) run keeps the old rule"""
+    if not detached:
+        return queued_host_bad(stt, host, hub)
+    if not stt:
+        return ""
+    v = stt.get("localhost" if host == hub else host)
+    if not v:
+        return f"{host} unreadable (no ot-run status row)"
+    if v.get("mirror_stuck"):
+        return f"{host} rt-tools mirror stuck for {v['mirror_stuck']} rows"
+    return ""
+
+
 def sync_die_inputs(AP, cfg, run=None):
     """SRC-HEAL-1116 (COORD 11-16: epyc9 lacked bind_cells.sv + the cb*.sv bind files, the rows were dropped as BIND-STALE): a die input file
     that the SRC-INCOMPLETE probe lists as missing on a gen host is copied from a gen host of the same die whose probe for that die is
@@ -5642,7 +5658,7 @@ def sync_die_inputs(AP, cfg, run=None):
     tries, live = heal_tries_load(), set()
     stt_, hub_ = cfg.get("_otrun_status") or {}, cfg.get("_hub") or ""
     for h in sorted(inc):
-        if queued_host_bad(stt_, h, hub_):               # COORD 11-19 (FLOW-1150 B: one tick took 2,581 s blocked on epyc7): no self-heal copy to or from an unreadable / over-2x host
+        if heal_host_bad(detached, stt_, h, hub_):       # COORD 11-19 (FLOW-1150 B: one tick took 2,581 s blocked on epyc7): no self-heal copy to or from an unreadable host (over-2x hosts only when the copy runs inline)
             continue
         for die, why in sorted(inc[h].items()):
             d = (cfg.get("dies") or {}).get(die) or {}
@@ -5659,7 +5675,7 @@ def sync_die_inputs(AP, cfg, run=None):
             if not paths:
                 continue
             hosts = [x for x in list(d.get("gen_hosts") or []) + [d.get("gen_host")] if x]
-            src = next((g for g in sorted(set(hosts)) if g != h and die not in (inc.get(g) or {}) and not queued_host_bad(stt_, g, hub_)), None)
+            src = next((g for g in sorted(set(hosts)) if g != h and die not in (inc.get(g) or {}) and not heal_host_bad(detached, stt_, g, hub_)), None)
             if not src:
                 continue                                         # no host whose copy verifies: nothing to copy from
             ok = 0
