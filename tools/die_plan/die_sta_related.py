@@ -2486,6 +2486,38 @@ def budget_model(reg, lat):
                 clkq_min=reg["clkq_min_nowire_ps"], setup=reg["setup_ps"], hold=reg["hold_ps"])
 
 
+def tap_budget_latency(plan, taps, corner, default):
+    """DIE-LEVEL-CHECK-1119 (FABLE-PD-S81-2040 fix 1): {port: declared plain-tap insertion at a corner}.  A plain (budget)
+    tap is priced at its partition TYPE's declared insertion (schema.common_latency_ps with the type: a type with
+    clock.insertion_target_override carries its own budget, e.g. S81 col/leaf/serdes 450 TT / 364.5 FF), else the die
+    value `default`.  Before this every plain tap was priced at the die common latency (250), which charged ~200 ps to
+    every budget-vs-real pair on a 450-type die."""
+    import schema as S
+    types = plan.get("partition_types", {}) or {}
+    ptype = {x["name"]: x["type"] for x in plan.get("partitions", [])}
+    memo, out = {}, {}
+    for p, r in taps.items():
+        t = ptype.get(r.get("part"))
+        if t not in memo:
+            ck = S.type_override_clock(types.get(t))
+            if ck is None:
+                memo[t] = float(default)
+            elif S._corner(corner) == "TT":
+                memo[t] = float(ck["insertion_ps"])
+            else:
+                memo[t] = float(ck.get("insertion_ff_ps", round(S.FF_TT_INSERTION_RATIO * float(ck["insertion_ps"]), 3)))
+        out[p] = memo[t]
+    return out
+
+
+def budget_views(plan, taps, corner, reg, lat):
+    """{port: [budget model]} with each plain tap at its type's declared insertion (tap_budget_latency); models shared
+    per latency value."""
+    bl = tap_budget_latency(plan, taps, corner, lat)
+    models = {v: budget_model(reg, v) for v in set(bl.values())}
+    return {p: [models[bl[p]]] for p in taps}
+
+
 def map_cores_to_taps(plan, taps):
     """{(part, inst): (module, port, distance_um, pins_file)} every plan hard-core instance -> nearest tap of its
     partition (core outline centre, die frame via schema.Plan.to_die)."""
@@ -2659,8 +2691,7 @@ def build_views(plan, taps, corner, reg, lat, core_views, kits, load_ff, part_de
     different physical core and stay budget (listed in pin_view_mismatch, by reason in pin_view_mismatch_reason).
     exclude: {(part, inst)} cores clocked by their own early core tap (FLOW-ONEMODEL-3, core_tap_views): never mapped
     to the nearest tap (their clock pin is not there); counted under early_core_tap_instances."""
-    budget = budget_model(reg, lat)
-    views = {p: [budget] for p in taps}
+    views = budget_views(plan, taps, corner, reg, lat)
     cmodels = {m: core_view_model(m, d, corner, load_ff, part_delay_ps) for m, d in core_views.items()}
     cmap = map_cores_to_taps(plan, taps) if core_views else {}
     real_inst, real_taps = defaultdict(int), set()
@@ -3195,8 +3226,7 @@ def main(argv=None):
                                       exclude={(m["part"], m["inst"]) for ms in ecm.values() for m in ms})
             cr_real = rcov
         elif ecm:
-            bm = budget_model(reg, clat)
-            views = {p: [bm] for p in taps}
+            views = budget_views(plan, taps, c, reg, clat)
         if ecm:
             cmods = {m: core_view_model(m, vd, c, a.seam_wire_um * a.wire_ff_per_um, a.core_part_delay_ps)
                      for m, vd in core_views.items()}
