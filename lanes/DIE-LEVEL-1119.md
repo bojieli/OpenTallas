@@ -84,3 +84,10 @@ Runs: epyc10 /srv/opentallas-scratch2/claude/die-level-1119/runs/<die>/rv1 (S81 
 
 A type kit carries only the record insertion_pinflops min/max, so pairs touching it are timed with the full in-type range:
 a bound, not a per-pin measurement. Per-port pin-register arrivals in signed records are needed (ASK posted).
+
+## 2026-11-19 22:5x S81 tool fixes + re-time
+- main 7696cb76ce: plain taps priced at their type declared insertion (450/364.5 on 321/395 S81 types). S81 kit-contract FF -218.8 -> -99.99.
+- main d358c674ba: a tap without a per-port range takes the union of the record ports that are die tree taps (excludes forwarded ports). The col_h9_r2 pv11b6518d 8 flops = u_bound.u_cland_monitor_0/u_ring.s_d[0..3][0..1] on fclk_in_cland_dn_0[0].
+- S81 rv4: FF intra MEASURED -438.25 -> -301.91 (worst s_7S_x05 slice_station__t22 t18->t15); TT hold -309.05 (s_7S_x16 slice_station__t27, rtx-pro-only record, BOUND).
+- hd_host_w 211 ps = unbalanced taps (clk_t1 mean 343 vs clk_t36 459 FF) + 16-flop leaf_74 tail (depth 18); posted to HEAD-CROSSING.
+- Open: bulk per-port (53 MATCH published beside fleet records, 10 epyc7 re-runs); HEAD/QC/KV re-time with per-port; KV D25e2 bind pending (ECTL RT rows).
