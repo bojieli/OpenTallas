@@ -110,3 +110,8 @@ All relaunch after the 405 reach override (lever 1) lands for D8i.
 - Gen solves each type reset under its bind-receipt cap (9172a65b43, eae5825732), so J5 300 um receipts win over the env.
 - OT_CBC_REACH_UM=405 stays on s81 for the placed-hop estimator only; OT_RESET_HOP_CAP_UM is dropped.
 - If a J5 gen still refuses with bound reset identity differs, post it to FLOW-NOADV-R2.
+
+## 11-20 14:3x FABLE-FIX-S81-BKSEL-R2
+- postbind-s81-1120135739: elab 0, bind running (intel1). Adopt if GREEN.
+- J6 donor proofs after bound_ready (s81-die-r3-hub/j5_r4_rehomed_<d>.log): f0_q 0; vp_sr exit 11 (stale dead-input defines); rom bind 0, compare crashed on missing gate_r3/latcheck.json; r1_frame restore refuses internal_stations[].sites; t31 HI pack must be regenerated. A donor-repair helper is working on all four (epyc10 s81-die-r4-donors/).
+- bk_sel rows 53956fe8b195 stay out of J6 until the successor delivers per-stage station sites + 11 face-bus stations + reset anchors. t41: no row needed.
