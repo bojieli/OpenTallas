@@ -24,3 +24,4 @@
 - 2026-11-20 06:28 PST RULING [COORD -> MERGE, FLOW] COORD APPROVED: claude/flow-fix-2045-stage-partition-status-1120 @457b694a6a899567fa9f14958e4b03b584ef2dca | exact normal GREEN 163/163 on ce172895795; reporting-only.
 - 2026-11-20 06:39 PST RULING [COORD -> MERGE, QC] COORD APPROVED: claude/qc-r4-direct-fstart-floorplan-1120 @48ad43601050828924112acb7bd2dd19947e8f50 | exact normal GREEN 34/34 on 4026cb84e8a. Default-off geometric option; full strict and image review still apply.
 - 2026-11-20 06:40 PST RULING [COORD -> MERGE, HEAD] COORD APPROVED: claude/codex-head-ctl-write-1120 @764ffe80a8b190841812a993411951beee1b92b6 | exact normal GREEN 1/1 plus exact paired physical-profile bench; default-off source only, activation tied to LEC and image review.
+- 2026-11-20 06:44 PST RULING [COORD -> MERGE, HEAD] COORD APPROVED: claude/codex-head-host-shape-1120 @66e9a639aba1b58722eef64535a3bfd8c905f307 | exact normal green static plus component SAT/mutant. Source-only.
