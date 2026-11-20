@@ -26,7 +26,7 @@ def test_once_deletes_nothing_when_the_parent_is_gone(tmp_path, monkeypatch):
     done = C.once(str(tmp_path), str(tmp_path), False, log=logs.append, scan=lambda k: ([], []), alive=lambda: False)
     assert done == [] and (tmp_path / "2_3_floorplan_tapcell.odb").exists() and any("parent gone" in m for m in logs)
     done = C.once(str(tmp_path), str(tmp_path), False, log=logs.append, scan=lambda k: ([], []), alive=lambda: True)
-    assert len(done) == 1 and not (tmp_path / "2_3_floorplan_tapcell.odb").exists()
+    assert len(done) == 1 and (tmp_path / "2_3_floorplan_tapcell.odb").stat().st_size == 0      # FLOW-FIX-2045: a live run empties it (placeholder)
 
 
 def test_watch_returns_without_deleting_when_the_parent_is_gone(tmp_path):

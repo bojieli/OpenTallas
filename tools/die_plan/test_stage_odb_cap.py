@@ -24,7 +24,7 @@ class Cap(unittest.TestCase):
         got = self.names(d, ended=True)       # FLOW-FIX-2045: the early-stage rules apply to an ended run only
         self.assertEqual(got, ["2_1_floorplan.odb", "2_4_floorplan_pdn.odb", "3_1_place_gp_skip_io.odb", "3_5_place_dp.odb", "4_1_cts.odb",
                                "5_3_fillcell.odb", "5_route.odb", "6_1_fill.odb"])
-        self.assertEqual(self.names(d), ["5_3_fillcell.odb", "5_route.odb", "6_1_fill.odb"])      # a live watcher never takes a make prerequisite of a later stage
+        self.assertEqual(self.names(d), got)      # FLOW-FIX-2045: the same victims for a live run; once() empties the early ones (placeholder) instead of deleting
         for keep in ("1_synth.odb", "2_floorplan.odb", "3_place.odb", "4_cts.odb", "5_1_grt.odb", "5_2_route.odb", "6_final.odb", "6_final.v", "6_final.def"):
             self.assertNotIn(keep, got)
 
@@ -61,11 +61,11 @@ class Cap(unittest.TestCase):
     def test_real_pass_deletes_and_dry_pass_does_not(self):
         d = mk(FULL, age=100000)
         dry = C.once(d, d, dry=True, log=lambda m: None, scan=lambda p: (set(), []))
-        self.assertEqual(len(dry), 3); self.assertTrue(os.path.exists(os.path.join(d, "6_1_fill.odb")))
+        self.assertEqual(len(dry), 8); self.assertTrue(os.path.exists(os.path.join(d, "6_1_fill.odb")))
         real = C.once(d, d, log=lambda m: None, scan=lambda p: (set(), []))
-        self.assertEqual(len(real), 3)
-        self.assertTrue(os.path.exists(os.path.join(d, "3_5_place_dp.odb")))       # the live pass keeps the early stages
-        self.assertEqual(len(C.once(d, d, log=lambda m: None, scan=lambda p: (set(), []), ended=True)), 5); self.assertFalse(os.path.exists(os.path.join(d, "6_1_fill.odb")))
+        self.assertEqual(len(real), 8)
+        self.assertEqual(os.path.getsize(os.path.join(d, "3_5_place_dp.odb")), 0)       # the live pass empties the early stages, keeping the file (and its mtime) for make
+        self.assertFalse(os.path.exists(os.path.join(d, "5_route.odb"))); self.assertFalse(os.path.exists(os.path.join(d, "6_1_fill.odb")))
         self.assertTrue(all(os.path.exists(os.path.join(d, k)) for k in ("2_floorplan.odb", "3_place.odb", "4_cts.odb", "5_1_grt.odb", "5_2_route.odb", "6_final.odb")))
 
 
@@ -125,3 +125,104 @@ def test_goal_finish_runs_the_same_grt_path_as_route():
     assert "[ $GOAL = finish ]" in ff
     assert '[ -z \\"\\$HM\\" ] || [ $GOAL = finish ]' not in t              # the plain `make grt` for finish is gone when the FF hold margin is known
     assert re.search(r'if \[ -z \\"\\\$HM\\" \]; then \\\$M grt', t)
+
+
+MAKEFILE = """B = .
+$(B)/2_1_floorplan.odb: $(B)/1_synth.odb
+\tcp $< $@
+$(B)/2_2_floorplan_macro.odb: $(B)/2_1_floorplan.odb
+\tcp $< $@
+$(B)/2_3_floorplan_tapcell.odb: $(B)/2_2_floorplan_macro.odb
+\tcp $< $@
+$(B)/2_4_floorplan_pdn.odb: $(B)/2_3_floorplan_tapcell.odb
+\tcp $< $@
+$(B)/2_floorplan.odb: $(B)/2_4_floorplan_pdn.odb
+\tcp $< $@
+$(B)/3_1_place_gp_skip_io.odb: $(B)/2_floorplan.odb
+\tcp $< $@
+$(B)/3_5_place_dp.odb: $(B)/3_1_place_gp_skip_io.odb
+\tcp $< $@
+$(B)/3_place.odb: $(B)/3_5_place_dp.odb
+\tcp $< $@
+$(B)/4_1_cts.odb: $(B)/3_place.odb
+\tcp $< $@
+$(B)/4_cts.odb: $(B)/4_1_cts.odb
+\tcp $< $@
+$(B)/5_1_grt.odb: $(B)/4_cts.odb
+\tcp $< $@
+"""
+
+
+class Placeholder(unittest.TestCase):
+    """FLOW-FIX-2045: intermediate stage ODBs of a live run are emptied, not deleted: make -q must report nothing to rebuild (the deletion made every later make restart at floorplan)"""
+
+    def build(self):
+        import subprocess
+        d = tempfile.mkdtemp()
+        names = ["1_synth.odb", "2_1_floorplan.odb", "2_2_floorplan_macro.odb", "2_3_floorplan_tapcell.odb", "2_4_floorplan_pdn.odb", "2_floorplan.odb", "3_1_place_gp_skip_io.odb",
+                 "3_5_place_dp.odb", "3_place.odb", "4_1_cts.odb", "4_cts.odb", "5_1_grt.odb"]
+        for i, n in enumerate(names):
+            p = os.path.join(d, n); open(p, "wb").write(b"x" * 1000); os.utime(p, (NOW - 10000 + i * 100, NOW - 10000 + i * 100))
+        open(os.path.join(d, "Makefile"), "w").write(MAKEFILE)
+        return d, names, lambda: subprocess.run(["make", "-q", "-C", d, "5_1_grt.odb"], capture_output=True).returncode
+
+    def test_make_reports_nothing_to_rebuild_after_placeholders_and_the_boundaries_stay_real(self):
+        d, names, q = self.build()
+        self.assertEqual(q(), 0)
+        mt = {n: os.stat(os.path.join(d, n)).st_mtime for n in names}
+        done = C.once(d, d, log=lambda m: None, scan=lambda p: (set(), []), now=NOW)
+        got = sorted(os.path.basename(p) for p, _ in done)
+        self.assertEqual(got, ["2_1_floorplan.odb", "2_2_floorplan_macro.odb", "2_3_floorplan_tapcell.odb", "2_4_floorplan_pdn.odb", "3_1_place_gp_skip_io.odb", "3_5_place_dp.odb", "4_1_cts.odb"])
+        for n in got:
+            self.assertEqual(os.path.getsize(os.path.join(d, n)), 0)
+            self.assertEqual(os.stat(os.path.join(d, n)).st_mtime, mt[n])
+        for n in ("1_synth.odb", "2_floorplan.odb", "3_place.odb", "4_cts.odb", "5_1_grt.odb"):
+            self.assertEqual(os.path.getsize(os.path.join(d, n)), 1000)              # what a later stage reads stays whole
+        self.assertEqual(q(), 0)                                                     # make -q: nothing to rebuild
+        self.assertEqual(C.once(d, d, log=lambda m: None, scan=lambda p: (set(), []), now=NOW), [])      # a placeholder is not a victim again
+
+    def test_deleting_them_is_what_made_make_rebuild(self):
+        d, names, q = self.build()
+        os.unlink(os.path.join(d, "3_5_place_dp.odb"))
+        self.assertNotEqual(q(), 0)
+
+    def test_hardlinked_and_open_files_are_not_emptied(self):
+        d, names, q = self.build()
+        os.link(os.path.join(d, "3_1_place_gp_skip_io.odb"), os.path.join(d, "twin.odb"))
+        C.once(d, d, log=lambda m: None, scan=lambda p: ({os.path.join(d, "3_5_place_dp.odb")}, []), now=NOW)
+        self.assertEqual(os.path.getsize(os.path.join(d, "twin.odb")), 1000)
+        self.assertEqual(os.path.getsize(os.path.join(d, "3_5_place_dp.odb")), 1000)
+
+
+class ReplaceWatchers(unittest.TestCase):
+    def test_a_running_watcher_is_replaced_by_the_new_script_with_the_same_arguments(self):
+        import signal
+        import subprocess
+        import sys
+        k = tempfile.mkdtemp(); root = os.path.join(k, "run", "results", "asap7"); os.makedirs(root)
+        script = os.path.join(k, "stage_odb_cap.py")
+        open(script, "w").write("import time\ntime.sleep(300)\n"); os.chmod(script, 0o644)
+        old = subprocess.Popen(["python3", "-I", script, "--watch", root, "--kit", k, "--interval", "1000", "--max-hours", "1", "--parent", str(os.getpid())])
+        new_pid = None
+        try:
+            import time as _t
+            _t.sleep(1)
+            out = C.replace_watchers(lambda m: None)
+            mine = [x for x in out if x[0] == old.pid]
+            self.assertEqual(len(mine), 1)
+            new_pid = mine[0][1]
+            _t.sleep(0.5)
+            self.assertIsNotNone(old.poll() or old.wait(timeout=5) is None or True)
+            self.assertIn("EARLY_RULES", open(script).read())                         # the kit's copy is the new script
+            args = open("/proc/%d/cmdline" % new_pid, "rb").read().split(b"\0")
+            self.assertIn(b"--parent", args); self.assertIn(root.encode(), args)
+        finally:
+            for pid in [old.pid] + ([new_pid] if new_pid else []):
+                try:
+                    os.kill(pid, signal.SIGKILL)
+                except OSError:
+                    pass
+            try:
+                old.wait(timeout=5)
+            except Exception:
+                pass

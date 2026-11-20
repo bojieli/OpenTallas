@@ -80,7 +80,7 @@ def kept_by_env(kit):
 
 def plan(base, now=None, open_files=(), min_age=MIN_AGE_S, ended=False):
     """-> [(path, size)] the deletable stage ODBs of one results base dir (pure: files given in open_files are skipped).  ended: the run is over, the early-stage rules apply too"""
-    rules = (EARLY_RULES + RULES) if ended else RULES
+    rules = EARLY_RULES + RULES       # FLOW-FIX-2045: early-stage victims are zero-byte placeholders while the run lives (once()), deleted only for an ended run
     now = now or time.time()
     out = []
     try:
@@ -103,7 +103,7 @@ def plan(base, now=None, open_files=(), min_age=MIN_AGE_S, ended=False):
                     st = os.lstat(p)
                 except OSError:
                     break
-                if st.st_nlink == 1 and not os.path.islink(p) and p not in open_files and now - st.st_mtime >= min_age:
+                if st.st_size > 0 and st.st_nlink == 1 and not os.path.islink(p) and p not in open_files and now - st.st_mtime >= min_age:      # a zero-byte file is a placeholder already
                     out.append((p, st.st_size))
             break
     return out
@@ -224,6 +224,19 @@ def guard(kit, need="4_cts.odb", log=print):
     return 13
 
 
+def placeholder(path):
+    """FLOW-FIX-2045: empty the file in place and give it back its mtime (and atime): make still finds the prerequisite present and not newer than its target, so no later make
+    re-runs the stage, while the 0.4-0.6 GB per ODB are freed.  Only a file with one link (the caller checked): truncating a hardlink would empty its twin."""
+    st = os.stat(path)
+    with open(path, "r+b") as f:
+        f.truncate(0)
+    os.utime(path, ns=(st.st_atime_ns, st.st_mtime_ns))
+
+
+def is_early(name):
+    return any(rx.match(name) for rx, _ in EARLY_RULES)
+
+
 def once(base, kit=None, dry=False, now=None, log=print, scan=open_procs, alive=lambda: True, ended=False):
     why = kept_by_env(kit or base)
     if why:
@@ -236,16 +249,56 @@ def once(base, kit=None, dry=False, now=None, log=print, scan=open_procs, alive=
     for p, size in plan(base, now, files, ended=ended):
         if not alive():      # the kit's run_kit.sh has ended: the job's publish may be walking this tree, never delete under it
             log("STAGE-CAP parent gone: no more deletions"); break
+        keep_name = is_early(os.path.basename(p)) and not ended       # a live run: a make prerequisite stays as an empty placeholder with its old mtime
         if dry:
-            log("STAGE-CAP would delete %s %d" % (p, size)); done.append((p, size)); continue
+            log("STAGE-CAP would %s %s %d" % ("placeholder" if keep_name else "delete", p, size)); done.append((p, size)); continue
         try:
-            os.unlink(p); done.append((p, size)); log("STAGE-CAP deleted %s %d" % (p, size))
+            if keep_name:
+                placeholder(p); done.append((p, size)); log("STAGE-CAP placeholder %s %d" % (p, size))
+            else:
+                os.unlink(p); done.append((p, size)); log("STAGE-CAP deleted %s %d" % (p, size))
         except OSError as e:
             log("STAGE-CAP keep %s: %s" % (p, e))
     if not dry:       # what the deletion rules do not remove yet (successor still being written): identical finish ODBs share one inode meanwhile
         for p, size in link_dups(base, now, files):
             log("STAGE-CAP linked %s (%d bytes shared)" % (p, size))
     return done
+
+
+def replace_watchers(log=print, dry=False):
+    """FLOW-FIX-2045: ship this script into the watchers of kits that are running now.  For every process `python3 -I <kit>/stage_odb_cap.py --watch ROOT --kit K ... --parent P` on this host:
+    refresh <kit>/stage_odb_cap.py from this file (copy then mv: a new inode), start a new watcher with the same arguments, then stop the old one (exact pid; it only watches).  -> [(old pid, new pid)]"""
+    me = os.path.abspath(__file__)
+    src = open(me, "rb").read()
+    out = []
+    for p in glob.glob("/proc/[0-9]*"):
+        try:
+            av = open(p + "/cmdline", "rb").read().decode("utf-8", "replace").split("\0")
+        except OSError:
+            continue
+        av = [a for a in av if a != ""]
+        if len(av) < 5 or not av[0].endswith("python3") or "--watch" not in av or not av[2].endswith("/stage_odb_cap.py") or av[1] != "-I":
+            continue
+        script, pid = av[2], int(p[6:])
+        if os.path.abspath(script) == me:
+            continue
+        if dry:
+            log("WATCHER would replace pid %d %s" % (pid, script)); out.append((pid, 0)); continue
+        try:
+            new = script + ".new"
+            with open(new, "wb") as f:
+                f.write(src)
+            os.chmod(new, os.stat(script).st_mode & 0o7777)
+            os.replace(new, script)
+            import subprocess
+            kitdir = os.path.dirname(script)
+            lf = open(os.path.join(kitdir, "stage_odb_cap.log"), "a")
+            np = subprocess.Popen(["python3", "-I", script] + av[3:], stdout=lf, stderr=lf, stdin=subprocess.DEVNULL, start_new_session=True, cwd=kitdir)
+            os.kill(pid, 15)
+            out.append((pid, np.pid)); log("WATCHER replaced pid %d -> %d %s" % (pid, np.pid, script))
+        except OSError as e:
+            log("WATCHER keep pid %d: %s" % (pid, e))
+    return out
 
 
 def parent_alive(pid):
@@ -280,11 +333,15 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--watch"); ap.add_argument("--once"); ap.add_argument("--kit"); ap.add_argument("--interval", type=float, default=60)
     ap.add_argument("--max-hours", type=float, default=36); ap.add_argument("--dry", action="store_true")
+    ap.add_argument("--replace-watchers", action="store_true", help="restart the watchers of running kits on this host with this script (FLOW-FIX-2045)")
     ap.add_argument("--ended", action="store_true", help="the kit's run is over: the early-stage ODBs (2_x, 3_x, 4_1) may go too (never from a live watcher)")
     ap.add_argument("--guard", metavar="KIT", help="exit 13 when the next make would rebuild from floorplan after STAGE-CAP deleted early-stage ODBs (see guard())")
     ap.add_argument("--need", default="4_cts.odb"); ap.add_argument("--parent", type=int, default=0, help="pid of the run_kit.sh that started this watcher: the watcher stops deleting when it ends")
     a = ap.parse_args(argv)
     lg = lambda m: print(time.strftime("%F %T"), m, file=sys.stderr, flush=True)
+    if a.replace_watchers:
+        replace_watchers(lg, a.dry)
+        return 0
     if a.guard:
         return guard(a.guard, a.need, lg)
     if a.once:
