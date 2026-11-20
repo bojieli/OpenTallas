@@ -161,3 +161,47 @@ def test_existing_keep_cell_not_duplicated(tmp_path):
 def test_schema_accepts_row():
     sub = schema.SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["reg_leaf_split"]
     assert sub["items"]["required"] == ["leaf", "copies"]
+
+
+# KV-PLAN-R1 11-20: a bind core-input lockup latch between the leaf output and a core pin is seen through.
+PART_LK = PART.replace("""    wire [5:0] w_o0, w_o1;""", """    wire [5:0] w_o0, w_o1;
+    wire [3:0] lk_u_c1_r;""").replace("""    cons u_c1 (
+        .x(w_t2_ti_b[1:0]),
+        .y(w_t2_e_b[1:0]),
+        .r(w_t2_ti_b[9:6]),""", """    ot_dp_lk #(.W(4)) u_lk_nk_u_c1_r (.clk(clk), .d(w_t2_ti_b[9:6]), .q(lk_u_c1_r));  // core_input_lockup (NK hold class)
+    cons u_c1 (
+        .x(w_t2_ti_b[1:0]),
+        .y(w_t2_e_b[1:0]),
+        .r(lk_u_c1_r),""")
+
+
+def test_core_input_lockup_latch_is_seen_through():
+    assert "u_lk_nk_u_c1_r" in PART_LK and ".r(lk_u_c1_r)" in PART_LK
+    new, rec = R.split_text(PART_LK, ROW)
+    b = [c for c in rec["copies"] if c["name"] == "b"][0]
+    assert b["via_latch"] == ["u_lk_nk_u_c1_r->u_c1.r"]
+    lk = [l for l in new.split("\n") if "u_lk_nk_u_c1_r" in l][0]
+    assert ".d(w_t2_rls_b_q[" in lk and ".q(lk_u_c1_r)" in lk and "w_t2_ti_b" not in lk
+    assert ".r(lk_u_c1_r)" in new          # the core pin keeps its latch
+    assert "qkh_head_gather_stage #(.MUT(0)) u_t2 (" not in new
+
+
+def test_core_input_lockup_latch_pattern_on_latch_name_does_not_match():
+    row = {"leaf": "u_t2", "copies": [{"name": "a", "pins": ["u_c0.*", "u_lk_nk_u_c1_r.d"], "site_um": [10, 20]},
+                                      {"name": "b", "pins": ["u_c1.x", "u_c1.y"], "site_um": [30.5, 40]}]}
+    with pytest.raises(ValueError, match="matches 0 copies"):
+        R.split_text(PART_LK, row)
+
+
+def test_core_input_lockup_latch_with_two_readers_fails_closed():
+    bad = PART_LK.replace("""        .o(w_o1)
+    );""", """        .o(w_o1)
+    );
+    cons u_c2 (
+        .x(lk_u_c1_r[1:0]),
+        .y(w_t1_e_b[1:0]),
+        .r(w_t1_ti_b[3:0]),
+        .o()
+    );""")
+    with pytest.raises(ValueError, match="not exactly one whole core port"):
+        R.split_text(bad, ROW)

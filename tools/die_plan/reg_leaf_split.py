@@ -14,7 +14,11 @@ Opt-in plan key (absent = byte-identical kit):
                   {"name": "b", "pins": ["u_head2_e2.g_front_1_u_front__row_in", "u_head2_e4.*"], "site_um": [40.0, 618.0]},
                   {"name": "c", "pins": ["u_head2_e6.*"], "site_um": [40.0, 950.0]}]}]
 
-pins are fnmatch patterns on "<consumer inst>.<port>" (bound instance names of the type's bound RTL).
+pins are fnmatch patterns on "<consumer inst>.<port>" (bound instance names of the type's bound RTL).  A bind core-input lockup
+latch (clock.core_input_lockup: one-line `ot_dp_lk #(.W(n)) u_lk_nk_* (.clk(..), .d(<leaf output slice>), .q(<lk wire>));` whose
+<lk wire> is one whole hard-core port connection) is seen through: its d is matched as "<core inst>.<core port>" and re-pointed
+to the copy, so the copy -> latch -> core order stays (KV-PLAN-R1 11-20: kR GRT readback FF hold 5,105 rls copy -> head-core
+pins to -277.6 ps; the core ETM books its clock insertion as hold, the same class QC NK closed with core_input_lockup).
 
 Applied by gen_phys.write_type_kit on the kit copy of the bound RTL (kd/rtl): the leaf instance is replaced by one
 ot_dp_dly_keep #(.W(n), .D(1)) <leaf>_rls_<name> per copy (W = the leaf output bits that copy's pins read), and every consumer
@@ -49,6 +53,8 @@ ID = r"[A-Za-z_]\w*"
 HEAD = re.compile(rf"^\s*({ID})\s*(#\s*\((.*)\))?\s+({ID})\s*\(\s*$")
 PORT = re.compile(rf"^\s*\.({ID})\s*\((.*)\)\s*,?\s*(//.*)?$")
 SEL = re.compile(rf"^({ID})(?:\[(\d+)(?::(\d+))?\])?$")
+LK1 = re.compile(rf"^(\s*)ot_dp_lk\s*#\(\s*\.W\((\d+)\)\s*\)\s+({ID})\s*\(\s*\.clk\(([^()]*)\)\s*,\s*\.d\(([^()]*)\)\s*,"
+                 rf"\s*\.q\(({ID})\)\s*\)\s*;\s*(//.*)?$")
 
 
 def config(t):
@@ -100,6 +106,23 @@ def _block(lines, h):
             raise ValueError(f"{KEY}: unexpected instance line {k + 1}: {lines[k].strip()!r}")
         ports[m.group(1)] = m.group(2).strip()
     raise ValueError(f"{KEY}: instance at line {h + 1} not closed")
+
+
+def _latch_core(lines, a, b, qw, leaf):
+    """the "<core inst>.<core port>" a core-input lockup latch output wire qw drives: exactly one whole port connection"""
+    hits, inst = [], None
+    for k in range(a, b):
+        hm = HEAD.match(lines[k])
+        if hm:
+            inst = hm.group(4)
+        m = PORT.match(lines[k])
+        if m and m.group(2).strip() == qw and inst is not None:
+            hits.append(f"{inst}.{m.group(1)}")
+        elif re.search(rf"\b{re.escape(qw)}\b", lines[k]) and not re.match(rf"^\s*wire\b", lines[k]) and not LK1.match(lines[k]):
+            hits.append(None)
+    if len(hits) != 1 or hits[0] is None:
+        raise ValueError(f"{KEY} {leaf}: latch output {qw} is not exactly one whole core port connection ({hits})")
+    return hits[0]
 
 
 def _params(txt):
@@ -204,11 +227,20 @@ def split_text(text, row, what="bound RTL"):
         if any(n not in src for n, v in decls.items() if v[2] == k):
             raise ValueError(f"{KEY} {leaf}: line {k + 1} declares a leaf output together with other wires")
     pins = []   # (line, inst, port, wire, bits)
+    alias = {}  # line of a core-input lockup latch -> "<core inst>.<core port>" it feeds
     inst = None
     for k in range(a, b):
         if HEAD.match(lines[k]):
             inst = HEAD.match(lines[k]).group(4)
         if h <= k <= e or k in drop or not pat.search(lines[k]):
+            continue
+        lm = LK1.match(lines[k])
+        if lm:
+            w, bb = _bits(lm.group(5).strip(), decls, f"{lm.group(3)}.d")
+            if w not in src or max(bb) >= len(src[w]):
+                raise ValueError(f"{KEY} {leaf}: line {k + 1}: latch d {lm.group(5)!r} is not a slice of one leaf output")
+            pins.append((k, lm.group(3), "d", w, bb))
+            alias[k] = _latch_core(lines, a, b, lm.group(6), leaf)
             continue
         m = PORT.match(lines[k])
         if not m or inst is None:
@@ -224,7 +256,8 @@ def split_text(text, row, what="bound RTL"):
     # assign pins to copies
     owner = {}
     for k, ins, prt, w, bb in pins:
-        hit = [c["name"] for c in row["copies"] if any(fnmatch.fnmatchcase(f"{ins}.{prt}", p) for p in c["pins"])]
+        key = alias.get(k, f"{ins}.{prt}")
+        hit = [c["name"] for c in row["copies"] if any(fnmatch.fnmatchcase(key, p) for p in c["pins"])]
         if len(hit) != 1:
             raise ValueError(f"{KEY} {leaf}: pin {ins}.{prt} matches {len(hit)} copies {hit}")
         owner[k] = hit[0]
@@ -251,7 +284,8 @@ def split_text(text, row, what="bound RTL"):
         new_wires.append(f"    wire [{n - 1}:0] {qn};   // {KEY} {leaf} copy {c['name']}")
         new_inst.append(f"    {KEEP_MODULE} #(.W({n}), .D(1)) {cn} (.clk({clk}), .d({d}), .q({qn}));")
         rec["copies"].append(dict(name=c["name"], inst=cn, bits=n, site_um=[float(v) for v in c["site_um"]],
-                                  pins=sorted(f"{p[1]}.{p[2]}" for p in mine)))
+                                  pins=sorted(f"{p[1]}.{p[2]}" for p in mine),
+                                  via_latch=sorted(f"{p[1]}->{alias[p[0]]}" for p in mine if p[0] in alias)))
     out = []
     for k, l in enumerate(lines):
         if k == h:
@@ -263,7 +297,10 @@ def split_text(text, row, what="bound RTL"):
             continue
         if h < k <= e or k in drop:
             continue
-        if k in rewire:
+        if k in rewire and k in alias:
+            lm = LK1.match(l)
+            l = l[:lm.start(5)] + rewire[k][1] + l[lm.end(5):]
+        elif k in rewire:
             prt, ex = rewire[k]
             ind = l[:len(l) - len(l.lstrip())]
             tail = "," if l.rstrip().split("//")[0].rstrip().endswith(",") else ""
@@ -307,6 +344,10 @@ def _self_check(new, rec, clk, want):
         hm = HEAD.match(l)
         if hm:
             inst = hm.group(4)
+        lm = LK1.match(l)
+        if lm and (lm.group(3), "d") in want and any(q in lm.group(5) for q in qsrc):
+            got[(lm.group(3), "d")] = [qsrc[w][x] for w, x in _concat_bits(lm.group(5))]
+            continue
         m = PORT.match(l)
         if m and (inst, m.group(1)) in want and any(q in m.group(2) for q in qsrc):
             got[(inst, m.group(1))] = [qsrc[w][x] for w, x in _concat_bits(m.group(2))]
