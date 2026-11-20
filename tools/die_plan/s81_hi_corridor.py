@@ -24,6 +24,7 @@ LN = re.compile(r"g_ln\[(\d+)\]\.u_l$")
 TRK = 10.0          # measured over-core tracks/um per direction (t28 GRT gcell 0.57 um: H cap 5-8, V cap 6)
 LIMIT = 400.0
 G = 4.32
+SEP = 21.6         # um between two shared banks
 md = lambda a, b: abs(a[0] - b[0]) + abs(a[1] - b[1])          # noqa: E731
 snap = lambda v: round(round(v / G) * G, 3)                      # noqa: E731
 
@@ -138,7 +139,7 @@ def check(P, rex, gs):
     return rep
 
 
-def free_points(t, B, mincl, step=2.16):
+def free_points(t, B, mincl, step=4.32):
     W, H = t["outline_um"]
     pts = []
     y = step
@@ -165,6 +166,9 @@ def sites(P, rex, gs, mincl):
         FP = free_points(t, B, mincl)
         if not FP:
             rows.append(dict(type=tn, result="no free point")); continue
+        used = []          # banks already sited in this type: keep >= SEP um apart (one bank per channel spot)
+        hop0 = {id(e): max(md(a, b) for a, b in zip([e["from_um"]] + e["regs_um"], e["regs_um"] + [e["to_um"]]))
+                for es in Q.values() for e in es}
         for g, es in sorted(Q.items()):
             prev = None
             for j in range(gs):
@@ -181,12 +185,13 @@ def sites(P, rex, gs, mincl):
                         a = prev if prev is not None else (e["regs_um"][j - 1] if j else e["from_um"])
                         w = max(w, md(a, p), md(p, nxt(e, j)) if j == gs - 1 else 0)
                     return w
+                FPu = [q for q in FP if md(q[0], c) <= 2 * LIMIT and all(md(q[0], u) >= SEP for u in used)]
                 if j == 0:
-                    cand = sorted(FP, key=lambda q: md(q[0], c))[:400]
+                    cand = sorted(FPu, key=lambda q: md(q[0], c))[:400]
                     cand = [q for q in cand if worst(q[0]) <= lim]
                     pick = cand[0][0] if cand else None
                 else:
-                    cand = [(worst(q[0]), -q[1], q[0]) for q in FP]
+                    cand = [(worst(q[0]), -q[1], q[0]) for q in FPu]
                     cand = [q for q in cand if q[0] <= lim]
                     pick = min(cand)[2] if cand else None
                 if pick is None:
@@ -198,6 +203,13 @@ def sites(P, rex, gs, mincl):
                 rows.append(dict(type=tn, quad=g, stage=j, result="sited", old=[round(c[0], 2), round(c[1], 2)], new=pick,
                                  clear_um=round(clear(pick, B), 1), max_hop_before=round(before, 1), max_hop_after=round(after, 1)))
                 prev = pick
+                used.append(pick)
+        for es in Q.values():          # final hop check over the whole rows (both stages moved)
+            for e in es:
+                h = max(md(a, b) for a, b in zip([e["from_um"]] + e["regs_um"], e["regs_um"] + [e["to_um"]]))
+                if h > max(LIMIT, hop0[id(e)]) + 1e-6:
+                    rows.append(dict(type=tn, capture=e["capture"], result="REFUSED final hop", hop=round(h, 1),
+                                     before=round(hop0[id(e)], 1)))
     return rows
 
 
