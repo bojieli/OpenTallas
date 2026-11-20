@@ -10368,10 +10368,10 @@ def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
             if _ok and _dd.get("_family_meta"):                           # OWNER 11-20 (#8): representative count per die per tick
                 _fm = _dd["_family_meta"]
                 (AP.log if AP else log)(f"KIT-WAVE FAMILIES {_die}: {_fm['families']} famil(ies), {len(_fm['reps'])} representative(s) (high priority), "
-                                        f"{_fm['siblings']} sibling(s) (spare capacity), {_fm['held']} held by a failed representative; picks this tick {len(_picks)}, launched {_lp.get(_die, 0)}")
+                                        f"{_fm['siblings']} sibling(s) (spare capacity), {_fm['held']} held by a failed representative; picks this tick {len(_picks)}, scheduled {_lp.get(_die, 0)}")
             if _ok and (_dd.get("_plan_rows_n") is not None):          # COORD 11-19: the synthesized-rows counter, one line per die per tick
                 (AP.log if AP else log)(f"KIT-WAVE PLAN-ROWS {_die}: {_dd.get('_plan_rows_n')} plan type(s) with no OWNERS row synthesized, "
-                                        f"{sum(1 for r in _picks if r.get('_plan_row'))} picked, {sum(1 for x in launch if x[0] == _die and x[1].get('_plan_row'))} launched this tick")
+                                        f"{sum(1 for r in _picks if r.get('_plan_row'))} picked, {sum(1 for x in launch if x[0] == _die and x[1].get('_plan_row'))} scheduled this tick")
             if not _ok:
                 # FLOW-HEALTH-2 11-19 (FABLE-FLOW-1949 class 6): a parked die (HBM) printed DIE-OFF every tick; same die + same reason = one line per hour
                 _k = f"{_die}|{str(_why)[:120]}"; _seen = st.setdefault("die_off_logged", {})
@@ -10381,7 +10381,7 @@ def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
                         _seen.pop(_o, None)           # a changed reason replaces the old key, the map stays one entry per die
                     (AP.log if AP else log)(f"KIT-WAVE DIE-OFF {_die}: no launches this tick, the die gate says: {str(_why)[:300]}")
             elif _picks and not _lp.get(_die):
-                (AP.log if AP else log)(f"KIT-WAVE NO-LAUNCH {_die}: {len(_picks)} eligible row(s), 0 launched this tick; skipped: "
+                (AP.log if AP else log)(f"KIT-WAVE NO-LAUNCH {_die}: {len(_picks)} eligible row(s), 0 scheduled this tick; skipped: "
                                         + "; ".join(f"{len(v)}x {str(k)[:80]}" for k, v in sorted((_skip or {}).items(), key=lambda kv: -len(kv[1]))[:5]) + f"; launch room {room}")
     except Exception as _e:                           # a summary line never stops the plan
         log(f"KIT-WAVE NO-LAUNCH summary skipped: {_e}")
