@@ -8,6 +8,7 @@ Per row (conn bus:<name>, width = the type's bus width):
            payload/epoch sites; ...)
   LEAF     bit_route per_bit without leaf_um and without exact sites (kit_istations: "bit_route per_bit needs leaf_um");
            the leaf is the core end of the row: to_um on an in bus, from_um on an out bus
+  OVERLAP  sites of two different rows overlap (cell footprints; kit_istations.cross_row_site_overlaps)
   INSIDE   a bit_sites_um / face_bit_sites_um site inside a hard_cores[] box grown by its halo_um (nominal regs_um of a
            per_bit row are centroids and are not checked)
 Estimator for the compose step, not a gate: prints findings, exit 0 unless --strict and findings (new vs --base) exist.
@@ -33,6 +34,7 @@ def row_findings(tn, t):
     import kit_istations as KI
     width = {b["name"]: int(b.get("width", 1)) for b in t.get("buses") or [] if isinstance(b, dict) and "name" in b}
     boxes = _boxes(t); out = []
+    claims = []
     for i, e in enumerate(t.get("internal_stations") or []):
         c = e.get("conn", "")
         if not c.startswith("bus:"):
@@ -40,7 +42,9 @@ def row_findings(tn, t):
         bus = c[4:]; key = f"{tn} {c} #{i}"
         if bus in width:
             try:
-                KI.exact_banks(e, width[bus])
+                ex = KI.exact_banks(e, width[bus])
+                if ex is not None:
+                    claims.append((f"{c} #{i}", ex[0], ex[1]))
             except (ValueError, KeyError, TypeError, IndexError, AssertionError) as ex:
                 out.append(("FORM", key, str(ex)[:200]))
         if e.get("bit_route") == "per_bit" and "leaf_um" not in e and e.get("bit_sites_um") is None:
@@ -55,6 +59,8 @@ def row_findings(tn, t):
                         break
         for nm in sorted(n):
             out.append(("INSIDE", key, f"{n[nm]} bit sites inside {nm} (+halo), up to {worst[nm]:.1f} um deep"))
+    for a, b, pa, pb in KI.cross_row_site_overlaps(claims, limit=5):
+        out.append(("OVERLAP", f"{tn} {a} x {b}", f"sites {list(pa)} / {list(pb)} of two rows overlap (kit_istations refuses at gen; global_place otherwise)"))
     return out
 
 
@@ -72,7 +78,7 @@ def main(argv=None):
     f = check(json.load(open(a.plan)), types)
     old = set((k, key) for k, key, _ in check(json.load(open(a.base)), types)) if a.base else set()
     new = [x for x in f if (x[0], x[1]) not in old]
-    summ = {k: sum(1 for x in new if x[0] == k) for k in ("FORM", "LEAF", "INSIDE")}
+    summ = {k: sum(1 for x in new if x[0] == k) for k in ("FORM", "LEAF", "INSIDE", "OVERLAP")}
     for x in new:
         print(*x, sep="  ")
     print("STATION-ROWS", "new" if a.base else "all", json.dumps(summ), "types", len({x[1].split()[0] for x in new}))

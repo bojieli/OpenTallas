@@ -35,3 +35,35 @@ def test_bit_site_inside_hard_core_halo():
 def test_clean_per_bit_row():
     row = dict(conn="bus:x", regs_um=[[10, 10]], bit_route="per_bit", leaf_um=[5, 5])
     assert SRC.row_findings("t", t_of([row])) == []
+
+
+CELL = [1.404, 0.27]
+
+
+def row_at(conn, x, y, dx=0.0):
+    return dict(conn=conn, regs_um=[[10, 10]], bit_sites_um=[[[x + dx * i, y] for i in range(W + 1)]], bit_site_cell_um=CELL)
+
+
+def test_two_rows_claiming_the_same_sites_overlap():
+    # FABLE-PD-QC-1600 (QC st_a rs_s0 / rs_s1): same sites in two rows passed gen and failed at global_place
+    a, b = row_at("bus:x", 50, 50, 2.0), row_at("bus:x", 50, 50, 2.0)
+    f = [x for x in SRC.row_findings("t", t_of([a, b])) if x[0] == "OVERLAP"]
+    assert len(f) >= 1 and "#0" in f[0][1] and "#1" in f[0][1]
+
+
+def test_a_partial_overlap_is_found_and_adjacent_rows_are_clean():
+    a = row_at("bus:x", 50, 50, 2.0)
+    shifted = row_at("bus:x", 50.7, 50.1, 2.0)                      # overlaps in x and y by part of a cell
+    assert [x[0] for x in SRC.row_findings("t", t_of([a, shifted]))].count("OVERLAP") >= 1
+    touching = row_at("bus:x", 50, 50.27, 2.0)                      # next row up, edges touch only
+    assert [x for x in SRC.row_findings("t", t_of([a, touching])) if x[0] == "OVERLAP"] == []
+    far = row_at("bus:x", 80, 50, 2.0)
+    assert [x for x in SRC.row_findings("t", t_of([a, far])) if x[0] == "OVERLAP"] == []
+
+
+def test_cross_row_function_ignores_overlap_inside_one_row():
+    import kit_istations as KI
+    one = ("a", [[[1, 1], [1.2, 1]]], (1.404, 0.27))                # overlaps itself: packed_exact_geometry's job, not this check
+    assert KI.cross_row_site_overlaps([one]) == []
+    two = ("b", [[[1.5, 1.1]]], (1.404, 0.27))
+    assert KI.cross_row_site_overlaps([one, two])[0][:2] in (("a", "b"), ("b", "a"))

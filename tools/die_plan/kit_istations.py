@@ -265,6 +265,25 @@ def exact_banks(entry, width):
                            bit_sites_um=[face], bit_site_cell_um=cell))
     return banks, cell, face
 
+def cross_row_site_overlaps(rows, limit=20):
+    """FLOW-NOADV-R2 11-20 (FABLE-PD-QC-1600, QC st_a rs_s0 / rs_s1): packed_exact_geometry checks overlap only among the sites of ONE
+    row, so two rows (internal_stations entries) that claim the same sites passed gen and failed at global_place.  rows =
+    [(label, banks, (fw, fh))] (banks = per stage [[x, y], ...], the cell footprint of each site); -> [(label_a, label_b, site_a, site_b)]
+    for sites of DIFFERENT rows whose footprints overlap.  Touching edges are not an overlap."""
+    rects = sorted((float(p[0]), float(p[1]), float(p[0]) + float(cell[0]), float(p[1]) + float(cell[1]), label, (p[0], p[1]))
+                   for label, banks, cell in rows for bank in banks for p in bank)
+    out, active = [], []
+    for r in rects:
+        active = [a for a in active if a[2] > r[0] + 1e-9]
+        for a in active:
+            if a[4] != r[4] and min(a[3], r[3]) > max(a[1], r[1]) + 1e-9:
+                out.append((a[4], r[4], a[5], r[5]))
+                if len(out) >= limit:
+                    return out
+        active.append(r)
+    return out
+
+
 RELAY_TCL = """# DIE-KV-59 10-31 plan relay_sites (opt-in partition_types[].relay_sites): FIRM sites for EXISTING RTL stage
 # flops (0 added cycles).  Keys are the Yosys flop names below the bound instance, cell suffix dropped
 # (u_kvs_hroot.u_rly.fan[13]); a plan key that matches no flop is reported as missing.
@@ -1702,6 +1721,7 @@ def main(argv):
             raise SystemExit("kit_istations: " + "; ".join(gerr[:6]) + (f" (+{len(gerr) - 6} more)" if len(gerr) > 6 else ""))
     txt = core_pin_stations(tn, t, txt, man, tcl, rep, Path(plan).resolve().parent)      # SUL0-PINFACE-1 per-core chains
     claimed = set()
+    row_claims = []
     if station_forms:       # HBM-KITIST-1 11-12: per-bit pad landing / station trees (default off: no plan key = no-op)
         import kit_istation_forms as KF
         txt, claimed = KF.apply_forms(tn, t, txt, man, tcl, rep, bound_bus_width)
@@ -1717,6 +1737,12 @@ def main(argv):
         W = bound_bus_width(tn, b, txt, man)
         e = IR.apply_ordered_rows(e, W)      # S81-COL-ROWS: ordered rows (opt-in OT_IST_ROWS=1), else e unchanged
         exact = exact_banks(e, W)
+        if exact is not None:                # FLOW-NOADV-R2 11-20: sites of one row against every row seen before it in this type
+            row_claims.append((conn, exact[0], exact[1]))
+            clash = cross_row_site_overlaps(row_claims)
+            if clash:
+                raise SystemExit(f"kit_istations: {tn}: station rows {clash[0][0]} and {clash[0][1]} claim overlapping sites "
+                                 f"{clash[0][2]} / {clash[0][3]} ({len(clash)} overlaps); one site per flop across rows")
         floating = chain_floats(t, conn)
         if floating and (exact is not None or e.get("bit_route") or "bit_sites_um" in e or "face_bit_sites_um" in e):
             raise SystemExit(f"kit_istations: {tn} {bus}: sites=float is a whole-chain form only "
