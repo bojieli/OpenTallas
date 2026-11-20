@@ -661,6 +661,10 @@ def test_every_plan_type_gets_a_row_variants_included():
     got = {r["item"] for r in KW.plan_type_rows(cfg, "s81_head", d, rows, plan)}
     assert got == {"hd_ctl_e", "hd_spn_eshim_rx"}                  # hd_ctl known; hd_ctl__cl1 expands from its parent; core_a is a core
     assert all(r["_plan_row"] for r in KW.plan_type_rows(cfg, "s81_head", d, rows, plan))
+    assert d["_plan_rows_n"] == 2                                                                              # the counter the tick logs (KIT-WAVE PLAN-ROWS)
+    d["_plan_part_types"] = {"hd_ctl", "hd_ctl_e"}                                                             # only real partition types get a row (kv_cland_* etc. are plan names, not types)
+    assert {r["item"] for r in KW.plan_type_rows(cfg, "s81_head", d, rows, plan)} == {"hd_ctl_e"}
+    d.pop("_plan_part_types")
     assert KW.plan_type_rows({"dies": {"s81_head": d}}, "s81_head", d, rows, plan) == []                       # not stops_off
     assert KW.plan_type_rows(cfg, "s81_head", dict(d, rows_from_plan=False), rows, plan) == []                # opt-out
     picks, skip = KW.select(rows, cfg, "s81_head", {"items": {}}, plan)
@@ -674,3 +678,7 @@ def test_src_manifest_extra_files_alone_never_refuse_a_kit():
     assert "extra file" in KW.src_manifest_verdict(sp, 1, extra)[1]
     mixed = extra + "SRC_MANIFEST DRIFT physical/y.json (changed: sha differs)\n"
     assert KW.src_manifest_verdict(sp, 1, mixed)[0].startswith("SRC_MANIFEST FAIL")
+
+
+def test_tick_source_logs_the_plan_rows_counter():
+    assert "KIT-WAVE PLAN-ROWS {_die}" in open(KW.__file__).read()

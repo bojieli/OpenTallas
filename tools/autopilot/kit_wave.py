@@ -3016,9 +3016,12 @@ def plan_type_rows(cfg, die, d, rows, plan_types):
         return []
     known = {r["item"] for r in rows if r["die"] == die}
     cores = set(d.get("plan_core_items") or [])
+    part = d.get("_plan_part_types")                    # the plan's real partition types: names / blocks that are not partition types (kv_cland_*, bound children, macros) get no row
     out = []
     for item in sorted(plan_types):
         if item in known or item in cores or any(item.startswith(k + "__") for k in known):
+            continue
+        if part and item not in part:
             continue
         if template_member(d, item):
             continue
@@ -3028,6 +3031,7 @@ def plan_type_rows(cfg, die, d, rows, plan_types):
         out.append(dict(die=die, item=item, kind="type", state="NEEDS-KIT", owner="KIT-WAVE", live_job="none", last_activity="",
                         next_step="plan type with no OWNERS row (rows_from_plan)", evidence=d.get("plan", ""),
                         default_owner=d.get("owner_lane", ""), replicas="1", members="", _plan_row=True))
+    d["_plan_rows_n"] = len(out)
     return out
 
 
@@ -9774,6 +9778,7 @@ def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
                     AP.log(f"KIT-WAVE {die}: {why}")
                 else:
                     names = dict(pn.get("blocks") or {}) or (set(pn.get("types") or []) | set(pn.get("cores") or []))
+                    d["_plan_part_types"] = set(pn.get("types") or [])
                     d["_plan_sha"] = pn.get("plan_sha")
                     d["_plan_flags"] = pn.get("flags") or {}
                     d["_templates"] = pn.get("templates") or {}
@@ -9898,6 +9903,9 @@ def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
             _dd = (cfg.get("dies") or {}).get(_die) or {}
             if not _dd.get("enabled"):
                 continue
+            if _ok and (_dd.get("_plan_rows_n") is not None):          # COORD 11-19: the synthesized-rows counter, one line per die per tick
+                (AP.log if AP else log)(f"KIT-WAVE PLAN-ROWS {_die}: {_dd.get('_plan_rows_n')} plan type(s) with no OWNERS row synthesized, "
+                                        f"{sum(1 for r in _picks if r.get('_plan_row'))} picked, {sum(1 for x in launch if x[0] == _die and x[1].get('_plan_row'))} launched this tick")
             if not _ok:
                 # FLOW-HEALTH-2 11-19 (FABLE-FLOW-1949 class 6): a parked die (HBM) printed DIE-OFF every tick; same die + same reason = one line per hour
                 _k = f"{_die}|{str(_why)[:120]}"; _seen = st.setdefault("die_off_logged", {})
