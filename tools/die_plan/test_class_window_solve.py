@@ -38,3 +38,39 @@ def test_repin_clears_stale_ft_end_override():
 
     assert "in_layers" not in slot and "in_order" not in slot
     assert slot["in_window_um"] == [2.0, 8.0]
+
+
+def _column(target, original):
+    raw = json.loads((HERE / "examples/tiny_plan.json").read_text())
+    types = raw["partition_types"]
+    layers = ["M6", "M4"]
+    C.set_type_end(types["src"], "x_o", "E", target, layers, "lsb_low")
+    C.set_type_end(types["mid"], "fx_i", "W", original, layers, "lsb_low")
+    C.set_type_end(types["mid"], "fx_o", "E", original, layers, "lsb_low")
+    C.set_type_end(types["sink"], "x_i", "W", original, layers, "lsb_low")
+    return raw
+
+
+def test_two_anchors_conflict_without_column_mode():
+    raw = _column([420, 440], [400, 420])
+    report = C.solve(raw, ["src", "mid"])
+    assert report["conflicts"] and all(m["type"] != "mid" for m in report["moved"])
+
+
+def test_column_mode_weaker_anchor_takes_stronger_window_and_propagates():
+    """UNIFY-TOOLS whole column: src and mid are both class rows; src is stronger, so mid's ends move to src's window
+    and the move propagates on to sink in the same pass; no conflict."""
+    target = [420, 440]
+    raw = _column(target, [400, 420])
+    report = C.solve(raw, ["src", "mid"], column=True)
+    assert report["conflicts"] == [] and report["overlaps"] == []
+    assert [(d["type"], d["bus"]) for d in report["moved"]] == [("mid", "fx_i"), ("mid", "fx_o"), ("sink", "x_i")]
+    assert report["mismatches_after"] == 0
+    assert [p["window_um"] for p in raw["ports"] if p["id"] in {"x0", "x1", "x2"}] == [target] * 3
+
+
+def test_column_mode_order_decides_the_winner():
+    raw = _column([420, 440], [400, 420])
+    report = C.solve(raw, ["mid", "src"], column=True)
+    assert ("src", "x_o") in [(d["type"], d["bus"]) for d in report["moved"]]
+    assert report["conflicts"] == [] and report["mismatches_after"] == 0

@@ -115,8 +115,15 @@ def set_type_end(t, bus, tf, win, lays, order):
     return old
 
 
-def solve(raw, anchors, parts_re=None):
+def solve(raw, anchors, parts_re=None, column=False):
+    """column=True (UNIFY-TOOLS whole-column mode): `anchors` is a priority list (first = strongest) of the class rows
+    of EVERY class in the column.  Where two anchors meet with different windows, the weaker anchor's (type, bus) end
+    takes the stronger one's geometry (once per bus, then propagates like any moved end) instead of a conflict, so all
+    classes of a column settle in one event.  A window still conflicts when instances of one type need different
+    windows (that type is not one class), or when two ends of equal strength disagree."""
+    order = list(dict.fromkeys(anchors))
     anchors = set(anchors)
+    rank = {(t, None): i for i, t in enumerate(order)}      # strength of a pinned whole type / solved bus
     rx = re.compile(parts_re) if parts_re else None
     pinned = {(t, None) for t in anchors}  # whole anchors or windows already solved
     moved, conflicts, skipped = [], [], {}
@@ -151,13 +158,22 @@ def solve(raw, anchors, parts_re=None):
                     continue          # no type window on that end: the port's own geometry follows (below)
                 if same(ga, go):
                     continue
-                if (ot, None) in pinned or (ot, pr[o_side]["bus"]) in pinned:
+                ob = (ot, pr[o_side]["bus"])
+                a_rank = rank.get((at, pr[a_side]["bus"]), rank.get((at, None)))
+                o_rank = rank.get(ob, rank.get((ot, None)))
+                weaker_anchor = (column and ob not in pinned and (ot, None) in pinned and a_rank is not None
+                                 and o_rank is not None and a_rank < o_rank)
+                if (column and (at, pr[a_side]["bus"]) not in pinned and (at, None) in pinned and a_rank is not None
+                        and o_rank is not None and o_rank < a_rank):
+                    continue          # this end is the weaker anchor: the other direction moves it
+                if ((ot, None) in pinned or ob in pinned) and not weaker_anchor:
                     conflicts.append(dict(port=pr["id"], why=f"two pinned ends disagree: {at}.{pr[a_side]['bus']} {ga} "
                                                              f"vs {ot}.{pr[o_side]['bus']} {go}"))
                     continue
                 df = ga[0] if o_side == "src" else S.OPP[ga[0]]       # the other end's die face
                 tf, win, order = die_to_type(P, op, df, ga[1], ga[3])
-                demands.setdefault((ot, pr[o_side]["bus"]), []).append(((tf, win, list(ga[2]), order), pr["id"], op))
+                demands.setdefault((ot, pr[o_side]["bus"]), []).append(((tf, win, list(ga[2]), order), pr["id"], op,
+                                                                        a_rank))
         frontier = set()
         for (tn, bus), ds in sorted(demands.items()):
             g0 = ds[0][0]
@@ -171,6 +187,9 @@ def solve(raw, anchors, parts_re=None):
                 skipped[(tn, bus)] = dict(type=tn, bus=bus, why="bus has no type-frame window to move")
                 continue
             old = set_type_end(raw["partition_types"][tn], bus, *g0)
+            rs = [d[3] for d in ds if d[3] is not None]
+            if rs:
+                rank[(tn, bus)] = min(rs)
             moved.append(dict(type=tn, bus=bus, old=old, new=dict(face=g0[0], window_um=g0[1], layers=g0[2], order=g0[3]),
                               ports=sorted({d[1] for d in ds})))
             frontier.add((tn, bus))
@@ -235,6 +254,9 @@ def main(argv=None):
     ap.add_argument("--parts-re", help="only ports whose two partitions both match (e.g. one slice column)")
     ap.add_argument("--out", required=True)
     ap.add_argument("--report")
+    ap.add_argument("--column", action="store_true",
+                    help="whole-column mode: --anchors is a priority list of every class row in the column; a weaker "
+                         "anchor end takes a stronger one's window instead of a conflict")
     a = ap.parse_args(argv)
     raw = json.loads(Path(a.plan).read_text())
     anchors = [x for x in a.anchors.split(",") if x]
@@ -242,7 +264,7 @@ def main(argv=None):
     if miss:
         print(f"class_window_solve: unknown anchor types {miss}", file=sys.stderr)
         return 2
-    rep = solve(raw, anchors, a.parts_re)
+    rep = solve(raw, anchors, a.parts_re, column=a.column)
     Path(a.out).write_text(json.dumps(raw, indent=1) + "\n")
     if a.report:
         Path(a.report).write_text(json.dumps(rep, indent=1) + "\n")
