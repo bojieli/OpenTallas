@@ -552,3 +552,54 @@ def test_relay_sites_match_separator_blind_when_the_exact_name_is_absent(tmp_pat
     assert got[r"u_bound.u_x.r\[1\]$_DFF_P_"] == (5.0, 6.0)
     assert got[r"u_bound.u_amb.q$_DFF_P_"] == (9.0, 9.0)               # the exact key wins over the separator-blind one
     assert "plan keys unmatched: 2 of 6" in out                            # u_gone/q and the unused u_amb/q
+
+
+RELAY_IDX_MOCK = r"""
+proc ff_put_near {i x y} { return [list $x $y] }
+# netlist: name master {pin dir net ...}
+set ::nl {
+  {u_bound.u_g.u_crg.g_rl.r\[0\]$_DFF_PN0_} DFFASRHQNx1 {D in nd QN out n1}
+  i1 INVx1 {A in n1 Y out n2}
+  {u_bound.u_g.u_crg.q$_DFF_PN0_} DFFASRHQNx1 {D in n2 QN out n3}
+  {u_bound.u_k.x$_DFF_P_} DFFHQNx1 {D in n3 QN out n4}
+  g1 NAND2x1 {A in n3 B in n4 Y out n5}
+  {u_bound.u_h.r\[0\]$_DFF_P_} DFFHQNx1 {D in n6 QN out n7}
+  {u_bound.u_h.s0$_DFF_P_} DFFHQNx1 {D in n7 QN out n8}
+  {u_bound.u_h.s1$_DFF_P_} DFFHQNx1 {D in n7 QN out n9}
+}
+set ::insts {}; set ::nets [dict create]; set n 0
+foreach {nm m pins} $::nl {
+  set c ::ins[incr n]; set its {}
+  foreach {p d w} $pins {
+    set t ::it[incr n]
+    proc $t {cmd} [format {switch -- $cmd { isOutputSignal {return %d} isInputSignal {return %d} getNet {return ::net_%s} getInst {return %s} }} [expr {$d eq "out"}] [expr {$d eq "in"}] $w $c]
+    lappend its $t; dict lappend ::nets $w $t
+  }
+  proc $c {cmd} [format {switch -- $cmd { getName {return %s} getMaster {return ::m_%s} getITerms {return %s} }} [list $nm] $m [list $its]]
+  proc ::m_$m {cmd} [format {return %s} $m]
+  lappend ::insts $c
+}
+dict for {w ts} $::nets { proc ::net_$w {cmd} [format {return %s} [list $ts]] }
+proc ::blk {cmd} { return $::insts }
+set ff_blk ::blk; set ff_dbu 1000; set is_fh stdout; set is_miss {}
+"""
+
+
+def test_relay_sites_index_key_sites_the_aliased_last_stage(tmp_path):
+    """RELAY-IDX (FABLE-FIX-S81-LEPE 11-20): S81 lep u_crg `reg [1:0] r; assign q = r[1]` synthesises to flops g_rl.r[0] and u_crg.q,
+    so the plan key u_crg.g_rl.r[1] matched nothing.  NAME[k] now sites the only flop NAME[k-1] reaches through buffers / inverters;
+    a stage that also feeds logic, or two flops, is not a shift stage and stays unmatched."""
+    import shutil
+    import kit_istations as KI
+    if shutil.which("tclsh") is None:
+        pytest.skip("tclsh")
+    f = tmp_path / "t.tcl"
+    f.write_text(RELAY_IDX_MOCK + KI.RELAY_TCL + "\nrs_place_all [dict create {u_g.u_crg.g_rl.r[0]} {1 2} {u_g.u_crg.g_rl.r[1]} {3 4} "
+                 "{u_g.u_crg.g_rl.r[2]} {5 6} {u_h.r[0]} {7 8} {u_h.r[1]} {9 9} {u_k.x} {2 2}]\n")
+    out = subprocess.run(["tclsh", str(f)], capture_output=True, text=True, check=True).stdout
+    got = {r[0]: (float(r[2]), float(r[3])) for r in (ln.split("\t") for ln in out.splitlines()) if len(r) > 3 and r[1] == "relay"}
+    assert got[r"u_bound.u_g.u_crg.g_rl.r\[0\]$_DFF_PN0_"] == (1.0, 2.0)      # exact name, as before
+    assert got[r"u_bound.u_g.u_crg.q$_DFF_PN0_"] == (3.0, 4.0)                # r[1] = the stage after r[0] (through an inverter)
+    assert got[r"u_bound.u_k.x$_DFF_P_"] == (2.0, 2.0)                        # placed by its own key: r[2] never re-sites it
+    assert r"u_bound.u_h.s0$_DFF_P_" not in got and r"u_bound.u_h.s1$_DFF_P_" not in got   # r[0] fans to two flops: no stage
+    assert "RELAY-IDX: 1 keys" in out and "plan keys unmatched: 2 of 6" in out

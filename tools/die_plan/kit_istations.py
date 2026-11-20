@@ -268,9 +268,35 @@ def exact_banks(entry, width):
 RELAY_TCL = """# DIE-KV-59 10-31 plan relay_sites (opt-in partition_types[].relay_sites): FIRM sites for EXISTING RTL stage
 # flops (0 added cycles).  Keys are the Yosys flop names below the bound instance, cell suffix dropped
 # (u_kvs_hroot.u_rly.fan[13]); a plan key that matches no flop is reported as missing.
+# RELAY-IDX (FABLE-FIX-S81-LEPE 11-20): a key NAME[k] (k > 0) that matches no flop names the flop one shift stage after
+# NAME[k-1]: the only flip-flop that NAME[k-1]'s output reaches through <= 3 buffers / inverters, nothing else on the way.
+# Yosys names the LAST stage of a register chain after the wire it aliases (S81 lep u_crg: `reg [1:0] r; assign q = r[1]`
+# gives flops g_rl.r[0] and u_crg.q, so the key u_crg.g_rl.r[1] matched nothing), and which alias wins changes with the flow.
+# Plan rows therefore address every stage by its RTL index.  A flop already placed by its own key is never re-sited.
+proc rs_dff_succ {i} {
+  set front {}
+  foreach t [$i getITerms] { if {[$t isOutputSignal] && [$t getNet] ne "NULL"} { lappend front [$t getNet] } }
+  set hits {}
+  for {set d 0} {$d < 4 && [llength $front]} {incr d} {
+    set nxt {}
+    foreach w $front {
+      foreach t [$w getITerms] {
+        if {![$t isInputSignal]} continue
+        set s [$t getInst]; set m [[$s getMaster] getName]
+        if {[string match "*DFF*" $m]} { lappend hits $s; continue }
+        if {$d == 3 || ![regexp {^(BUF|INV|HB)} $m]} { return "" }
+        foreach o [$s getITerms] { if {[$o isOutputSignal] && [$o getNet] ne "NULL"} { lappend nxt [$o getNet] } }
+      }
+    }
+    set front $nxt
+  }
+  set hits [lsort -unique $hits]
+  if {[llength $hits] == 1} { return [lindex $hits 0] }
+  return ""
+}
 proc rs_place_all {sites} {
   global ff_blk ff_dbu is_fh is_miss
-  set n 0; set hit [dict create]
+  set n 0; set hit [dict create]; set hit_i [dict create]; set used [dict create]; set al 0
   # RELAY-SEP (FABLE-FIX-QC 11-18): Yosys writes `inst.q[3]` for a register of a flattened instance and `inst/q[3]` where the
   # hierarchy is kept, and which one a module gets changes with the flow.  A key that matches no flop as written is tried with
   # '/' and '.' taken as the same separator (QC su_c x3: 1,034 of 1,034 keys u_u_suvm_u_vm8q_u_twb/q[N] matched nothing, the
@@ -296,8 +322,25 @@ proc rs_place_all {sites} {
     if {$got eq ""} { lappend is_miss $nm; continue }
     # raw (escaped) inst name: face_flops_release.tcl findInst releases it to PLACED before DPL
     puts $is_fh "[$i getName]\\trelay\\t[expr {[lindex $got 0] / double($ff_dbu)}]\\t[expr {[lindex $got 1] / double($ff_dbu)}]\\t-"
-    dict set hit $k 1; incr n
+    dict set hit $k 1; dict set hit_i $k $i; dict set used $i 1; incr n
   }
+  set more 1
+  while {$more} {
+    set more 0
+    dict for {k v} $sites {
+      if {[dict exists $hit $k] || ![regexp {^(.*)\\[([0-9]+)\\]$} $k -> rb ri] || $ri == 0} continue
+      set pk "$rb\\[[expr {$ri - 1}]\\]"
+      if {![dict exists $hit_i $pk]} continue
+      set i [rs_dff_succ [dict get $hit_i $pk]]
+      if {$i eq "" || [dict exists $used $i]} continue
+      lassign $v x y
+      set got [ff_put_near $i [expr {round($x * $ff_dbu)}] [expr {round($y * $ff_dbu)}]]
+      if {$got eq ""} { lappend is_miss [$i getName]; continue }
+      puts $is_fh "[$i getName]\\trelay\\t[expr {[lindex $got 0] / double($ff_dbu)}]\\t[expr {[lindex $got 1] / double($ff_dbu)}]\\t-"
+      dict set hit $k 1; dict set hit_i $k $i; dict set used $i 1; incr n; incr al; set more 1
+    }
+  }
+  if {$al} { puts "OT_RELAY_SITES RELAY-IDX: $al keys NAME\\[k\\] sited on the shift-stage successor of NAME\\[k-1\\]" }
   set miss [expr {[dict size $sites] - [dict size $hit]}]
   if {$miss} { lappend is_miss "relay_sites:$miss" }
   puts "OT_RELAY_SITES placed $n flops FIRM (plan keys unmatched: $miss of [dict size $sites])"
