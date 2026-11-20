@@ -1,3 +1,157 @@
+# FABLE-CLOSURE-STRATEGY 2026-11-20 11:20 PST (lane FABLE-CLOSURE-1115): the hold repair before GRT adds 9 to 14 % of the cells on the families that stall in GRT; hop stations, hold and lane pads are one construction rule
+
+Reviewer: FABLE-CLOSURE-1115 (Fable). Read-only: no job launched, cancelled or patched; no STA run. Technical PD only; S81, HEAD, QC, KV; HBM parked.
+Gate: DRC 0, routed TT >= -42 ps at 833 ps, internal FF hold >= 0, LEC, bind + LATCHECK. Hop cap 300 um. Nothing below is a new gate or hold.
+Marking: **V** = I opened the file or ran the read this round. **R** = reported by the named lane. **I** = inferred. **P** = proposal.
+Delta on 09:05 and on FABLE-PD-QC-0945, FABLE-PD-KV-0945, FABLE-PD-S81-1100. Their fixes and stop lists stand; this section adds what crosses dies, and HEAD.
+
+## 0. Headline
+
+1. **Hold repair before GRT is a congestion source on every die (V, new).** I read the `OT_PREGRT_FF_HOLD after` line of 80 running builds on epyc8 / epyc9 / epyc10. The repair adds 1 to 4 % of the instances on the col types and 9 to 14 % on the families that stall in GRT. It takes up to 7.3 h. The count follows the type's clock tap window (section 1.1).
+2. **The 300 um rule is drawn for reset on all four dies and for data on none (R, the three per-die reviews).** S81 J5: rows with a leg over 300 um 5,408 -> 8,064. QC A4: 1,030 of 4,692 hops. HEAD r13r and KV D26: reset and a few named rows. Where data was re-stationed in packed banks (S81 leaf form C) the station bits per tile rose 2 to 5 times on the GRT hot tiles.
+3. **hd_lep0N, the one unsigned HEAD type, has the same two classes (V).** Tap window 140.3 ps; 14,941 to 17,040 hold ends before repair on three builds; 17,151 hold cells; then GRT flat at 46,652 with 79 % of it in one band. The r14 kit changes relay sites and one band; it does not change this.
+4. **hd_serdes proof is not running (V).** `sdr2` ended exit 143 at 10:18; `sdr2b` has waited on epyc10 since 10:19 (admits 0 GB, 16 waiters).
+5. **Only one lever is measured in sign-offs: the residual hold pass on kept routed DBs.** 11 of the 17 exports today came from an `eco_*` directory (12 of 18 on 11-19) (V, `posts/AUTO-EXPORT.md`). Every other lever is measured at bind, place or GRT at most (section 3).
+
+## 1. Cross-die levers
+
+### 1.1 Hold cells before GRT (V)
+
+Source: `docker logs` of each `dpkit-*` container, last `OT_PREGRT_FF_HOLD after ... hold_cells N insts M ... secs S` line, and the `OT_HOLD_GATE structural limit` line. 80 builds; script `scratchpad/hc.sh`.
+
+| Family (builds read) | Tap window (ps) | Hold cells | Share of instances | Repair time | wns after (ps) |
+|---|---|---|---|---|---|
+| S81 col_h9 / col_h10 (44) | 40 | 1,800 to 9,475 | 1.0 to 4.3 % | 0.2 to 2.0 h | -36 to -71 |
+| S81 leaf (19) | 186 | 3,189 to 60,455; 16 of 19 over 20,000 | 1.4 to 13.8 %, median about 10 % | 0.1 to 2.4 h | -1 to -252 |
+| S81 slice C c1x t1 / t6 / t9 | 154 | 55,131 to 64,552 | 8.2 to 10.0 % | 5.3 to 7.3 h | -221 to -263 |
+| S81 lepe_mu_LP t2 | not read | 32,839 | 8.9 % | 5.7 h | -116 |
+| QC sle_su_c / slw_su_c (4) | 229.6 | 55,664 to 66,197 (one at 9,326) | 10.0 to 11.5 % | 2.4 to 3.4 h | -82 to -129 |
+| QC coll_core (2) | 57.1 | 52,026 and 54,813 | 11.2 and 11.5 % | 5.0 and 5.6 h | -54 and -75 |
+| QC slw_fe_v2 | 75.9 | 46,576 | 10.2 % | 1.8 h | -121 |
+| QC cbf_q00, sle_ctl | not read | 23,021; 6,998 | 5.9 %; 1.4 % | 2.4 h; 0.3 h | -83; -86 |
+| HEAD hd_lep0N (r3) | 140.3 | 17,151 | 3.7 % | 2.8 h | +4.4 |
+| HEAD hd_tile, hd_spn | 106; not read | 25,166; 18,485 | 18.0 %; 7.5 % | 0.5 h; 0.3 h | +2.4; -113 |
+
+Reading.
+- The families with over 20,000 hold cells are the ones GRT-TRIAGE lists as STALLED (leaf, slice C, coll_core); the su_c builds are in GRT extra iterations now. The col_h10_r1 rows, at 40 ps, are CONVERGING there. sle_ctl is the exception: 1.4 % and stalled, and FABLE-PD-QC-0945 already names its cause (two hub cores 8 um apart).
+- hd_lep0N congestion report at iteration 10 (V): 34 % of the net references in the hot band are buffer-made nets (`netN`); 91 % of the 13,968 markers there carry at least one. That count includes setup and placement buffers, so it is an upper bound for hold.
+- The repair does not finish the job either: after it the remaining ends are `port_in` (col_h10_r1 1,651 at -44.8; c1x t1 2,936 at -221; slw_fe_v2 3,558 at -121). Three QC kits and hd_lep0N print `cross-tap guard not applied (no tap window lines in the kit SDC)`.
+
+**Root cause (I).** A type whose taps arrive within 40 ps needs almost no padding. A type with a 150 to 230 ps window needs every short register-to-register path between two taps padded by that much: several buffers per end, placed where the stations are. The hop rule then adds more zero-logic hops between taps (tap radius 200 um, hop up to 300 um), so the next 300 um event raises the count again.
+
+**Not measured.** Which hold class takes the cells (the log has the class split only after repair), and where the cells sit against the GRT hot tiles. Both are one read on a kept `4_cts.odb`.
+
+### 1.2 One station rule for all dies (P)
+
+The per-die reviews each propose a piece of this. Put together it is one generator rule, in the shared station / landing compiler, not rows per family:
+
+1. **Count from length.** Stations per bit lane n = ceil(pin-to-pin / 300) - 1. CBC-ALL-0200 R11 already sizes rows this way.
+2. **Site per lane, on its own line.** Each bit's stations sit at equal pitch on that bit's own source-to-sink route, so stage k of a bus is a line across the bus width, not a point. The bus keeps its spread and no bit detours to a bank. This is the S81 `S81-LEAF-SPREAD-J6` form (a station per lane, hops <= 295 um) and the opposite of J5 form C (distinct sites 13,878 -> 7,339; peak tile 4,190 -> 21,442 bits on t7). A packed bank is allowed only where one tap radius holds the whole bank and the consumers are within one hop of it.
+3. **First rank at the pin.** Stage 0 is seated FIRM at the port or core pin window before any stage is counted (09:05 lever 6; QC fe 744.6 -> 189.8 um at 0 cycles).
+4. **Lockup in the station cell.** When the launch tap and the capture tap of a zero-logic hop differ, the generator emits the launch-side transparent-low latch with the station. KV has the cell and the LEC see-through on main (`ot_dp_lk`, 8899ba10e9); S81 has it in two private J6 masters; QC has 0 latch rows on 2,941 cross-tap hops; HEAD has none. One primitive, four dies, 0 cycles.
+5. **Two numbers before a build.** Peak station bits per 100 um tile, and detour = sum of legs / pin-to-pin distance per bit. FABLE-PD-S81-1100 section 1.3 computed the first from plan JSON in minutes and matched 7 GRT top tiles. Both go into PRECHECK as estimators.
+
+Margin of item 4 (I, from the KV arithmetic): half period 416.5 ps against tap-to-tap skew + library hold. It holds for windows up to about 290 ps; the widest read here is 229.6.
+
+First check: the t39 `tree_SP` against `tree_Cc` A/B that S81-DIE-R4 already runs. Read hold_cells and overflow at iteration 10 on both. Then one su_c kit with item 4 only.
+
+### 1.3 Lane pads become hop stations (P)
+
+Evidence (R). UNIFY-TOOLS-R2 11:04: per-instance lane pads still split every merged class; sle_ctl `x_su_l0_i` is 1 / 3 cycles on the E instances and 29 / 30 on W, 457 bits wide. QC-PLAN-R5 10:01: A4 holds a 12-stage R8 pad at the fabric root; V1 raises 264 legs for 395k flops, most of it 300 um repricing. FABLE-PD-S81-1100: 3,279 `ft_slots` legs at 301 to 405 um, held back because re-pitching changes lane latency.
+
+The ruling (hoist the pads out of the partition) and the 300 um rule ask for the same flops. A pad is a delay chain at the end of a long lane; a 300 um lane needs more stations along that same lane. So:
+- Spend each lane's pad cycles first as stations on that lane's route in the parent (channels, `ft_slots`), at 1.2 item 2 pitch. Lane latency is unchanged, so LATCHECK dates do not move.
+- Only the remainder stays a chain, at parent level, never inside a type.
+- The type then holds stations that depend on its own geometry only, so its hash is the same for every instance and `class_merge` binds one module.
+
+It also takes the delay chains out of sle_ctl, the congested QC type (up to 30 x 457 bits per W instance).
+
+First check (estimator, PRECHECK-1119 with UNIFY-TOOLS-R2): per lane, pad cycles available against stations needed at 300 um. Count the lanes where pad >= need: those re-pitch at 0 cycles. I did not compute it.
+
+### 1.4 Tap window as a plan number (P)
+
+col has 40 ps and closes hold with 2 % cells; leaf has 186 and su_c 229.6. KV astk (FABLE-PD-KV-0945): the 1,200 sinks-per-tap spill makes taps 565 to 588 um wide and 1,862 cross-tap ends. QC: 125 types with a tap over 1,000 sinks, 25 with stale bins. hd_lep0N: 800 sinks per tap, insertion 441 to 486 ps, skew inside one tap up to 107.3 ps (r3) and 152.9 ps (r8b `clk_t95`) (V).
+Rule: tap rows are made after the station rows (bins from the newest placed kit), each tap's sink box inside the 300 um span, and the window that the kit SDC declares is the plan's. Where the window stays over about 100 ps, item 1.2.4 carries the hold, not buffers.
+
+## 2. HEAD
+
+State (V unless marked): 25 of 26 types signed; hd_lep0N open. Five hd_lep0N builds run on four plans.
+
+| Build | Plan | Stage | TT after repair | FF hold before repair |
+|---|---|---|---|---|
+| epyc9 `dpkit-hd_lep0N-579160` | r3 private | GRT run 9, 44 h | -121.63 | -270.08 on 14,941 ends |
+| epyc10 `dpkit-hd_lep0N-304519` | r8b wave | pre-GRT hold, quiet 5.4 h | -88.44 | -277.89 on 15,914 |
+| intel2 `dpkit-hd_lep0N-830501` | r8b (Codex) | pre-GRT hold | -293.24 | -292.29 on 17,040 |
+| epyc10 `dpkit-hd_lep0N-2362622` | r11b | CTS, 3 h | not reached | not reached |
+| epyc7 `dpkit-hd_lep0N-3749933` | r14 `lep_hop300` + h4 band | resumed at floorplan 11:0x | not reached | not reached |
+
+### 2.1 hd_lep0N
+- Hold (V): structural limit -240.3 = `in_min` -90 + tap window 140.3. All three builds are beyond it before repair. r3: 17,151 hold cells in 10,156 s, guard 45 ps, ends at +4.37 with 0 ends. So the base hold closes by buffers, each time.
+- GRT (V, r3 `congestion-10.rpt`): overflow 49,837 at iteration 5, 46,652 at 10, nine GRT runs. 36,845 (79 %) lies in x 800 to 1300, y 500 to 700; vertical 64 %; zero-capacity 3 %. Net owners in that band: flat logic 51.6 %, `g_tx` 13.7 %, `g_rxh.g_l` 8.3 %, `g_rx` 7.1 %, `g_inpipe.rop` 5.4 %. This is demand in open area, not a wall. Utilization 65 %, place density 0.5.
+- r13r / r14 (R, HEAD-R14 10:46): four global-place failures on the `mlwd_h4` band (80 flops in a 5.13 um channel between two SRAM banks); the band moved; two reset anchors at 299.16 / 298.08 um.
+
+Reading (I). r14 fixes the place failure. Nothing in it changes the tap window or the band. If its post-CTS line again reads about 15,000 ends beyond -240, it will add about 17,000 cells and reach the same GRT.
+
+Fixes, ranked (P; owner HEAD-R14):
+1. Read r14 at post-CTS: `OT_HOLD_GATE INFO` ends and, after repair, `hold_cells`. If over about 5,000 cells, stop reading that build for GRT and take fix 2 into the HEAD event.
+2. Tap window lines in the LEP kit SDC (the guard and the class split are off without them), then 1.2 item 4 on the cross-tap zero-logic classes; `g_pin.g_s[].u_st` is the one end the log names.
+3. Split the 800-sink taps whose own skew is over 100 ps (`clk_t93`, `clk_t95` on r3; `clk_t95` on r8b).
+4. The band: view the r3 `3_place.odb` density in x 800 to 1300, y 500 to 700 against the tx / rx bank positions before any row. I did not open it.
+5. Old builds: r3 (44 h, flat at 46,652 at iteration 10, TT -121.6) does not meet the cancel rule yet (no iteration 20 read: each GRT run restarts before it). It can still sign in principle, so it stays; it is not evidence for r13r.
+
+### 2.2 hd_serdes
+- R (FABLE-FIX-HEAD-SERDES-R2 09:35): the live plan lost `OT_S81_RM_STAGED` and `OT_S81_KP4_ENC_LA` from `verilog_defines`; a8 and the NOMCAP kit build the unstaged rate matcher (-878 ps at place, 538.8 um reset box). The signed sd9he form (11-18, TT -27.16, hold 0) had all four. Landing reset 513.6 um is a parent choice; the row exists (`serdes_r1_300_trial_v2.json`, worst hop 233.5 um).
+- V: `sdr2` (signed defines + RLEAF) ended exit 143 at 10:18, no cause in the client log. `sdr2b` queued 10:19 on epyc10 and is not admitted.
+
+Fixes (P):
+1. Run `sdr2b` where memory admits (ot-run spill to another host at plan priority). It is the only proof of the staged form on r13r pins.
+2. HEAD-R14 carries both rows in the next HEAD event: the five-define list and the reset parent row. Until then every new serdes kit builds the form that cannot sign.
+3. No more reading of a8 or the unstaged NOMCAP place for timing; keep NOMCAP only as the tap-census comparator Codex asked for.
+4. hd_serdes counts as signed on sd9he (any plan). The r13r re-sign is spare-capacity work; hd_lep0N is the type that moves the HEAD count.
+
+## 3. Levers: measured or predicted, and types per day
+
+| Lever | Furthest measured point | Sign-offs from it | Types per day |
+|---|---|---|---|
+| Residual hold pass on kept routed DBs (09:05 lever 5) | sign-off | 11 exports today by 11:05, 12 on 11-19 (V) | about 1 per h while the queue lasts; about 25 open builds at 01:25, so one more day |
+| Base route, old plan (S81 slice_station) | sign-off | 6 today (5 S81) (V) | about 0.5 per h |
+| Reach from the bound plan / A4 live (lever 1) | gen | 0; QC 252 launches in 1 h (R); reset-identity refusals 33 of 305 gen logs in 2 h against 723 of 816 in 6 h (V) | feeds every QC type; first sign-offs about 24 h after 09:43 |
+| S81 col 120 -> 2 (J6) | bind + SDC + synth: identical `constraint.sdc`, `config.mk`, isomorphic netlists (R, S81-DIE-R4 10:13) | 0; every D8i col kit read is at -36 to -71 after the pre-GRT hold repair (V) | 120 on two builds, largest on any die; predicted; needs the latch in both masters and the relay form settled |
+| Proposal 3 split clock rows (KV) | GRT: hgi k13i overflow 10,201 -> 4 (R, V in FABLE-PD-KV) | 0; kR ended TT -310 | 0 until D27 astk rows; clears 19 hg / hgi for congestion only |
+| coll_core read register (pkw4) | GRT round 5: 529 against 75,675 (R) | 0; -479 on 392 ends at place | 1 type |
+| First rank seated (QC fe) | private place | 0; not in A4 | predicted |
+| M5 halo (QC st_a) | place-only pass | 0; route held | 11 types, predicted |
+| Leaf spread rows | plan geometry only | 0 | 75 leaf types depend on it; predicted |
+| class_merge / role strap | tools on main, tests green | 0; binds still split on pads | 0 until 1.3 |
+| GRT triage cancel | 25 of 40 long jobs cancelled (R) | frees hosts, signs nothing | - |
+
+Answer. Today's count comes from the residual hold pass. It is a backlog and runs out in about a day. The largest predicted gain is J6 col, and it is gated by the same thing as leaf, su_c, slice C and hd_lep0N: hold by structure (1.2 item 4, 1.4). So the lockup station is the lever with the most types behind it, and it has no built kit on any die yet. One representative per die with it (a J6 col master, QC su_c, hd_lep0N, a KV R3 hgi) is the most useful set of builds to start today.
+
+## 4. Stop list (09:05 and the three per-die lists stand; plus)
+
+- No packed-bank station form on a bus whose consumers are more than one hop apart (S81 leaf form C, QC st_a 405 reseat as the V1 form).
+- No 300 um re-station of data by adding bits to existing bank sites; count from length, site per lane.
+- No lane or R8 pad chain inside a partition type in a new event; no `class_merge` acceptance run before the pads are out.
+- No hold-buffer repair read as closure on a type whose tap window is over about 100 ps: check `hold_cells` first. Over about 20,000 cells, do not wait 30 GRT iterations; read iteration 10.
+- No new kit without tap window lines in its SDC (the cross-tap guard and the class split are off without them).
+- No further hd_lep0N build on r3 / r8b / r11b geometry. The five in flight stay.
+- No hd_serdes kit without `OT_S81_RM_STAGED` and `OT_S81_KP4_ENC_LA`.
+- No J5 leaf wave on form C before the t7 iteration-10 read (already ACKed by S81-DIE-R4).
+- No kv512_C route: hops 1,560.7 / 1,142.3 um, pre-CTS -1,603 ps (R, S81-SLICEC-R3). It needs the +5 / +3 stages first.
+- No QC st_a relaunch that stops at global place on the rs_s0 / rs_s1 collision with unchanged rows; no KV hg kit relaunch on the `kiss_st_cols` GEN_LINT guard with unchanged inputs.
+
+## 5. Not checked
+
+- 1.1 is a correlation over 80 builds on three hosts. I did not read the hold class before repair, nor place the hold cells against the hot tiles. Tap windows are from one build per family.
+- 1.2 and 1.3 are proposals. No kit carries the lockup station outside KV R3 (not built) and the J6 masters (synth queued). The pad-against-need count per lane is not computed.
+- The 290 ps bound of the latch form is arithmetic.
+- HEAD: I did not open any placed image, the r13r plan, or the r14 kit; the r11b and r14 builds had not reached CTS. The `netN` share is an upper bound for hold cells.
+- Why `sdr2` got signal 15.
+- Whether the S81 serdes types (11) have a define list edited the same way as hd_serdes.
+- The KV `kiss_st_cols` guard, the QC A4 collision and the kv512_C numbers are taken from the brief and the lanes, not re-read.
+- Sign-off exports include re-signs of a type already counted (sle_su_l1 twice today), so exports are more than the count gain.
+- Token, ROM content, LEC and procedural items are out of scope.
+
 # FABLE-CLOSURE-STRATEGY 2026-11-20 09:05 PST (lane FABLE-CLOSURE-0905): one tool default stopped kit generation on three dies; the count is flat because nothing new can start, not because builds fail timing
 
 Reviewer: FABLE-CLOSURE-0905 (Fable). Read-only: no job launched, cancelled or patched; no STA run. Technical PD only; HBM parked.
