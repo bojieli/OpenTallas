@@ -23,6 +23,9 @@
 #            380 um) from a capture, or that is only partly sited, is sited again from the netlist;
 #   all      every chain (derived sites replace plan rows);   off  nothing.
 # Tail-split copies and trunks (tail_copies.tsv, tail_copy_anchor.tcl) are never touched.
+# OT_PAD_CHAIN_PITCH_CAP_UM (plan budgets.pad_chain_pitch_cap_um, FABLE-CBC-QK-0130 s3; unset = as before): a chain whose depth
+# cannot keep every hop <= the cap (pcs_cap_ok) keeps its equal spread and is listed in ot_pad_chain_cap.tsv (dry:
+# $OT_PAD_CHAIN_SITE_OUT.cap.tsv) with the stages it needs, for +pad stages on its latency group in the plan.
 # OT_PAD_CHAIN_SITE_DRY=1: no cell moves; the targets go to $OT_PAD_CHAIN_SITE_OUT (tsv) for a read on any placed DB (placed cells
 # count as anchors); =firm: the same read with FIRM anchors only (3_3_place_gp.odb still holds the PRE_GLOBAL_PLACE FIRM set).
 proc pcs_chain_of {nm} {
@@ -148,6 +151,17 @@ proc pcs_stage_points {route n rb} {
   }
   return $out
 }
+# PAD-PITCH-CAP (FABLE-CBC-QK-0130 section 3, plan key budgets.pad_chain_pitch_cap_um -> OT_PAD_CHAIN_PITCH_CAP_UM): the fewest
+# stages whose hops all stay <= cap on a chain of route length len plus capture fan rb beyond the tail (all in one unit):
+# ceil((len + rb) / cap) - 1.  The equal spread of pcs_stage_points keeps every hop <= cap exactly when n >= that count and
+# rb <= cap (hops are (len + rb) / (n + 1); stages past the tail wait at the tail, the consumer end).  Otherwise 0 cycles cannot
+# hold the cap: the chain keeps today's spread and is reported, and the plan owner adds pad stages on the latency group.
+proc pcs_cap_need {len rb cap} {
+  return [expr {max(0, int(ceil(double($len + $rb) / $cap - 1e-9)) - 1)}]
+}
+proc pcs_cap_ok {len rb n cap} {
+  return [expr {$rb <= $cap * (1 + 1e-9) && [pcs_cap_need $len $rb $cap] <= $n}]
+}
 proc pcs_run {} {
   set mode [expr {[info exists ::env(OT_PAD_CHAIN_SITE)] ? $::env(OT_PAD_CHAIN_SITE) : "unsited"}]
   if {$mode eq "off" || $mode eq "0"} { puts "OT_PAD_CHAIN_SITE off"; return }
@@ -158,6 +172,8 @@ proc pcs_run {} {
   set blk [ord::get_db_block]
   set dbu [$blk getDbUnitsPerMicron]
   set hop_um [expr {[info exists ::env(OT_PAD_CHAIN_HOP_UM)] ? $::env(OT_PAD_CHAIN_HOP_UM) : 380.0}]
+  # PAD-PITCH-CAP: unset / empty = no cap check (the kit and its log line are as before)
+  set cap_um [expr {[info exists ::env(OT_PAD_CHAIN_PITCH_CAP_UM)] && $::env(OT_PAD_CHAIN_PITCH_CAP_UM) ne "" ? double($::env(OT_PAD_CHAIN_PITCH_CAP_UM)) : 0.0}]
   set halo [expr {round(9.0 * $dbu)}]
   set cb [$blk getCoreArea]; set core [list [$cb xMin] [$cb yMin] [$cb xMax] [$cb yMax]]
   set row [lindex [$blk getRows] 0]
@@ -166,6 +182,13 @@ proc pcs_run {} {
   set boxes {}; set raw {}
   foreach i [$blk getInsts] {
     if {[[$i getMaster] isBlock]} { set b [$i getBBox]; lappend raw [list [$b xMin] [$b yMin] [$b xMax] [$b yMax]]; lappend boxes [list [expr {[$b xMin] - $halo}] [expr {[$b yMin] - $halo}] [expr {[$b xMax] + $halo}] [expr {[$b yMax] + $halo}]] }
+  }
+  set capf ""; set capbad 0; set capover 0; set capbus [dict create]
+  if {$cap_um > 0} {
+    # one row per chain the cap cannot hold at its depth: type, chain, bus, span (route + capture fan), fan, D, stages needed
+    set capp ""
+    if {!$dry} { set capp $::env(RESULTS_DIR)/ot_pad_chain_cap.tsv } elseif {[info exists ::env(OT_PAD_CHAIN_SITE_OUT)]} { set capp $::env(OT_PAD_CHAIN_SITE_OUT).cap.tsv }
+    if {$capp ne ""} { set capf [open $capp w]; puts $capf "# type\tchain\tbus\tspan_um\tfan_um\tD\tstages_needed\tcap_um" }
   }
   set copies [dict create]
   if {[file exists /work/tail_copies.tsv]} { set copies [tcs_read_tsv /work/tail_copies.tsv] }
@@ -228,6 +251,15 @@ proc pcs_run {} {
     set rb 0; foreach p $ext { set l [lindex [tcs_route $b $p $raw $halo] 0]; if {$l > $rb} { set rb $l } }
     set route [tcs_route [lrange $a 0 1] $b $raw $halo]
     set tg [pcs_stage_points $route $k $rb]
+    if {$cap_um > 0 && ![pcs_cap_ok [lindex $route 0] $rb $k [expr {$cap_um * $dbu}]]} {
+      # PAD-PITCH-CAP: D cannot hold the cap at 0 cycles; keep the equal spread (fail-open) and report the chain
+      set need [pcs_cap_need [lindex $route 0] $rb [expr {$cap_um * $dbu}]]
+      set cbus $c; regexp {^u_pd[0-9]+_(.*)_[0-9]+$} $c -> cbus
+      set span [expr {([lindex $route 0] + $rb) / double($dbu)}]
+      incr capbad
+      if {![dict exists $capbus $cbus] || $need > [lindex [dict get $capbus $cbus] 2]} { dict set capbus $cbus [list $span $k $need] }
+      if {$capf ne ""} { puts $capf [format "%s\t%s\t%s\t%.1f\t%.1f\t%d\t%d\t%g" [$blk getName] [string map {\\ {}} $c] $cbus $span [expr {$rb / double($dbu)}] $k $need $cap_um] }
+    }
     set q [lrange $a 0 1]; set worst 0.0
     for {set s_ 0} {$s_ < $k} {incr s_} {
       set f [lindex $chain $s_]
@@ -251,15 +283,22 @@ proc pcs_run {} {
     }
     set h [expr {$rb / double($dbu)}]; if {$h > $worst} { set worst $h }
     if {$worst > $maxhop} { set maxhop $worst }; if {$worst > $hop_um} { incr over }
+    if {$cap_um > 0 && $worst > $cap_um} { incr capover }
     regexp {^u_pd[0-9]+_(.*)_[0-9]+$} $c -> bus
     if {![dict exists $bybus $bus] || $worst > [dict get $bybus $bus]} { dict set bybus $bus $worst }
     incr nchain
   }
   if {$out ne ""} { close $out }
   if {$tsv ne ""} { close $tsv }
+  if {$capf ne ""} { close $capf }
   set bb {}; dict for {bus w} $bybus { lappend bb [format "%s %.0f" $bus $w] }
   puts [format "OT_PAD_CHAIN_SITE mode %s%s chains %d of %d sited (%d cells, %d stale plan-sited re-sited) kept_plan_sited %d broken %d no_launch %d no_capture %d (soft only %d) max_hop %.1f um over_%g %d in_halo %d | worst hop per bus: %s" \
           $mode [expr {$dry ? " DRY" : ""}] $nchain [dict size $cff] $ncell $stale $kept $broken $nolaunch $nocap $softonly $maxhop $hop_um $over $inside [join $bb ", "]]
+  if {$cap_um > 0} {
+    set cbb {}; dict for {bus r} $capbus { lassign $r span d need; lappend cbb [format "%s span %.0f D %d needs %d" $bus $span $d $need] }
+    puts [format "OT_PAD_CHAIN_PITCH_CAP %g um: %d chains over the cap at their depth (kept, +pad stages on the latency group) %d sited chains with a hop over the cap after snap | %s" \
+            $cap_um $capbad $capover [join $cbb ", "]]
+  }
 }
 # hard-macro input pins of core mac reached from flop f through unary repeaters only
 proc tcs_sinks_macro {f mac} {

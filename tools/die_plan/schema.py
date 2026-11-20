@@ -1762,6 +1762,7 @@ _B["relay_mid_re_types"] = {"type": "object", "additionalProperties": {"type": "
 _B["r_dly_lockup"] = {"type": "object", "additionalProperties": {"type": "object", "additionalProperties": False, "properties": {
     "seg": {"type": "integer", "minimum": 1}, "tail_groups": {"type": "integer", "minimum": 0},
     "r2r_margin_ps": {"type": "number", "minimum": 0, "maximum": 100}}}}   # XTAP-C 11-20 (gen_phys dly_lockup_cfg, kit_dly_lockup.py)
+_B["pad_chain_pitch_cap_um"] = {"type": "number", "exclusiveMinimum": 0}   # PAD-PITCH-CAP 11-20 (FABLE-CBC-QK-0130 s3, gen_phys pad_chain_pitch_cap_um, pad_chain_site.tcl)
 _B["relay_mid_tail"] = {"type": "boolean"}
 _HALF = {"type": "object", "additionalProperties": False,
          "properties": {"src": {"type": "string", "minLength": 1}, "sink": {"type": "string", "minLength": 1}}}

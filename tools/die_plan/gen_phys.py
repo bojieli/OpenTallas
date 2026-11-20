@@ -1142,16 +1142,21 @@ PAD_CHAIN_SITE_HOOK = ("\n# PAD-CHAIN-SITE (FABLE-FIX-QC 11-18): landing-pad cha
 PAD_CHAIN_SITE_MODES = ("unsited", "auto", "all")
 
 
-def pad_chain_site_place(kd, env=None):
+def pad_chain_site_place(kd, env=None, cap_um=None):
     """PAD-CHAIN-SITE (FABLE-FIX-QC 11-18), opt-in by the gen env OT_PAD_CHAIN_SITE = unsited | auto | all (unset / off / 0 = nothing,
     the kit is byte-identical).  Copies pad_chain_site.tcl (and tail_copy_anchor.tcl, whose route helpers it uses; without a
     tail_copies.tsv that file does nothing by itself), sources it at the end of face_flops.tcl (PRE_GLOBAL_PLACE, after the plan
     relay_sites / stations and the tail copies) and records the mode in config.mk.  The hook sites every landing-pad chain
     u_pd<D>_<bus>_<bit> on a route from what drives it to what it feeds, read from the kit netlist: plan relay_sites rows keyed by
     the pad depth go stale when the depth changes (QC sle_ctl x7: 10,100..13,316 of 21,808 keys matched nothing, and the matched
-    x_fw_i chain ended 651 um from its core pin, -97.9 ps at CTS).  Returns the mode or None."""
+    x_fw_i chain ended 651 um from its core pin, -97.9 ps at CTS).  Returns the mode or None.
+    cap_um (plan budgets.pad_chain_pitch_cap_um, pad_chain_pitch_cap_um): with the hook on, also exported as
+    OT_PAD_CHAIN_PITCH_CAP_UM (PAD-PITCH-CAP report of chains whose depth cannot hold the cap); None = config.mk as before."""
     mode = str((os.environ if env is None else env).get("OT_PAD_CHAIN_SITE", "")).strip()
     if mode in ("", "0", "off"):
+        if cap_um is not None:
+            print(f"WARN pad_chain_pitch_cap_um {cap_um:g} set but OT_PAD_CHAIN_SITE is off: no pad chain siting, no cap report",
+                  file=sys.stderr)
         return None
     if mode not in PAD_CHAIN_SITE_MODES:
         raise ValueError(f"OT_PAD_CHAIN_SITE={mode!r}: expected one of {', '.join(PAD_CHAIN_SITE_MODES)} (or off)")
@@ -1162,8 +1167,84 @@ def pad_chain_site_place(kd, env=None):
     with (kd / "face_flops.tcl").open("a") as f_:
         f_.write(PAD_CHAIN_SITE_HOOK)
     mk = (kd / "config.mk").read_text()
-    (kd / "config.mk").write_text(mk.rstrip("\n") + f"\nexport OT_PAD_CHAIN_SITE = {mode}\n")
+    cap = "" if cap_um is None else f"export OT_PAD_CHAIN_PITCH_CAP_UM = {float(cap_um):g}\n"
+    (kd / "config.mk").write_text(mk.rstrip("\n") + f"\nexport OT_PAD_CHAIN_SITE = {mode}\n" + cap)
     return mode
+
+
+# PAD-PITCH-CAP (FABLE-CBC-QK-0130 section 3, QC V1): "a pad chain spreads its D stages at span / (D + 1); cap the pitch at 380 um
+# and put the surplus stages at the consumer end.  0 cycles where D allows it.  Where it does not, +1 pad stage on the whole latency
+# group."  Evidence: cb legs u_lpad_nb_i12.r[0] -> r[1] 417.6 um, r[1] -> q 417.1 um (one-cycle reach ~580 um, target 405 um).
+# The python below mirrors pad_chain_site.tcl (pcs_stage_points / pcs_cap_need / pcs_cap_ok) on a straight route of length L with
+# the capture fan rb beyond the tail; the kit hook applies it on the real route and writes ot_pad_chain_cap.tsv.
+_PAD_CHAIN_BUS_RE = re.compile(r"^u_pd[0-9]+_(.*)_[0-9]+$")
+
+
+def pad_chain_pitch_cap_um(budgets):
+    """budgets.pad_chain_pitch_cap_um (um > 0) or None (absent: no cap, kits byte-identical)."""
+    v = (budgets or {}).get("pad_chain_pitch_cap_um")
+    if v is None:
+        return None
+    v = float(v)
+    if not v > 0:
+        raise ValueError(f"budgets.pad_chain_pitch_cap_um must be > 0 (got {v})")
+    return v
+
+
+def pad_chain_stage_points(length, n, rb=0.0, cap=None):
+    """Path positions of the n stages of a pad chain on a route of `length` (launch at 0, tail at length) with the capture fan rb
+    beyond the tail, as pcs_stage_points: equal hops d = (length + rb) / (n + 1), stage j at min(length, j d) (surplus stages, those
+    past the tail, wait at the tail = the consumer end).  cap: when n stages can hold every hop <= cap (pad_chain_cap_ok) the pitch
+    is min(d, cap) from the producer, which is d (n + 1 hops of d cover length + rb); when they cannot, the spread is kept (fail-open)
+    and the chain goes to pad_chain_cap_rows.  So the sites never depend on cap; it decides only the report."""
+    d = float(length + rb) / (n + 1)
+    if cap is not None and pad_chain_cap_ok(length, n, rb, cap):
+        d = min(d, float(cap))
+    return [min(float(length), j * d) for j in range(1, n + 1)]
+
+
+def pad_chain_hops(length, points, rb=0.0):
+    """hop lengths launch -> stage 1 -> .. -> stage n -> farthest capture (tail + rb)."""
+    pts = [0.0] + list(points) + [float(length)]
+    return [b - a for a, b in zip(pts, pts[1:-1])] + [pts[-1] - pts[-2] + rb]
+
+
+def pad_chain_cap_need(length, rb, cap):
+    """fewest stages that keep every hop <= cap on length + rb: ceil((length + rb) / cap) - 1 (as pcs_cap_need)."""
+    return max(0, math.ceil(float(length + rb) / cap - 1e-9) - 1)
+
+
+def pad_chain_cap_ok(length, n, rb, cap):
+    """True when the n stages hold every hop <= cap at 0 added cycles (the fan beyond the tail is within the cap too)."""
+    return rb <= cap * (1 + 1e-9) and pad_chain_cap_need(length, rb, cap) <= n
+
+
+def pad_chain_cap_rows(tn, chains, cap):
+    """PAD-PITCH-CAP report for the plan owner: chains = [(chain, length_um, fan_um, D)] (u_pd<D>_<bus>_<bit> names) ->
+    [dict(type, chain, bus, span_um, fan_um, D, stages_needed)] of the chains whose D cannot hold the cap (sites unchanged:
+    +pad stages on the whole latency group is a plan change, never made here).  cap None -> []."""
+    if cap is None:
+        return []
+    out = []
+    for chain, length, fan, d in chains:
+        if pad_chain_cap_ok(length, d, fan, cap):
+            continue
+        m = _PAD_CHAIN_BUS_RE.match(chain)
+        out.append(dict(type=tn, chain=chain, bus=m.group(1) if m else chain, span_um=round(float(length + fan), 1),
+                        fan_um=round(float(fan), 1), D=int(d), stages_needed=pad_chain_cap_need(length, fan, cap)))
+    return out
+
+
+def read_pad_chain_cap_report(path):
+    """rows of a kit's ot_pad_chain_cap.tsv (pad_chain_site.tcl) in the pad_chain_cap_rows form (+ cap_um)."""
+    out = []
+    for ln in Path(path).read_text().splitlines():
+        if not ln.strip() or ln.startswith("#"):
+            continue
+        t, c, b, span, fan, d, need, cap = ln.split("\t")
+        out.append(dict(type=t, chain=c, bus=b, span_um=float(span), fan_um=float(fan), D=int(d), stages_needed=int(need),
+                        cap_um=float(cap)))
+    return out
 
 
 LP_EVEN_HOOK = "\n# KV-PVGEN: core_link_pipe stages (u_pc_lp_*) spread to equal hops between their driver and loads\nsource /work/lp_even.tcl\n"
@@ -7527,7 +7608,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         else:
             (kd / "config.mk").write_text(mk.rstrip("\n") + "\nexport PRE_RESIZE_TCL = /work/core_input_chain.tcl\n")
     tail_copy_place(kd)
-    pad_chain_site_place(kd)
+    pad_chain_site_place(kd, cap_um=pad_chain_pitch_cap_um(P.budgets))
     if core_link_pipe_place(P.raw, tn):
         shutil.copyfile(Path(__file__).with_name("lp_even.tcl"), kd / "lp_even.tcl")
         mk = (kd / "config.mk").read_text()
