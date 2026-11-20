@@ -123,3 +123,24 @@ def with_use_pins(pins, tieable, outline):
         else:
             raise ValueError(f"{name}: no free neighboring control pin site")
     return placed
+
+
+def physical_use_pins(type_row):
+    """Placed scalar strap declarations from the landing contract."""
+    lc = type_row.get("clock", {}).get("landing_contract", {})
+    expected = set(seam_use_ports(lc.get("tieable_children")).values())
+    return {p["name"]: 1 for p in lc.get("pins", []) if p["name"] in expected
+            and p.get("dir") == "in" and p.get("kind") == "ctl"}
+
+
+def with_use_manifest(manifest, types, expected):
+    """Include use straps in the ordinary die parent tie/physical contract."""
+    from copy import deepcopy
+    manifest = deepcopy(manifest)
+    for tn, t in types.items():
+        for pin, width in physical_use_pins(t).items():
+            manifest["types"].setdefault(tn, {})[pin] = dict(width=width, kind="landing_monitor_use")
+    for part, pins in expected.items():
+        for pin, (width, value) in pins.items():
+            manifest["instances"].setdefault(part, {})[pin] = dict(width=width, value=value, kind="landing_monitor_use")
+    return manifest

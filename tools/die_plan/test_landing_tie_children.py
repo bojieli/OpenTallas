@@ -108,3 +108,37 @@ def test_use_pin_preserves_existing_pins_and_avoids_their_tracks():
     assert result[-1] == {"name": "strap_cland_use_0", "xy_um": [2.0, 8.0], "dir": "in",
                           "kind": "ctl", "epoch": False, "layer": "M7"}
     assert LTC.with_use_pins(result, TIE, [10, 10]) == result
+
+
+def test_monitor_manifest_uses_the_placed_scalar_landing_pin():
+    t = {"clock": {"landing_contract": {"tieable_children": TIE, "pins": [
+        {"name": "strap_cland_use_0", "dir": "in", "kind": "ctl"},
+        {"name": "strap_cland_use_9", "dir": "in", "kind": "ctl"},
+    ]}}}
+    assert LTC.physical_use_pins(t) == {"strap_cland_use_0": 1}
+    original = {"types": {}, "instances": {}}
+    manifest = LTC.with_use_manifest(original, {"T": t}, {"m": {"strap_cland_use_0": (1, 0)}})
+    assert original == {"types": {}, "instances": {}}
+    assert STR.manifest_straps(manifest) == {"T": {"strap_cland_use_0": 1}}
+    assert manifest["instances"]["m"]["strap_cland_use_0"]["value"] == 0
+    top = "T m (\n .strap_cland_use_0(1'b0)\n);"
+    assert STR.audit_top_ties(top, manifest)["verdict"] == "PASS"
+
+
+def test_bound_kit_intake_recognizes_the_static_scalar_use_pin(tmp_path):
+    import gen_phys
+    import gen_rtl
+    import pytest
+    from types import SimpleNamespace
+
+    cell = {"module": "T", "clock": {"landing_contract": {"tieable_children": TIE, "pins": [
+        {"name": "strap_cland_use_0", "dir": "in", "kind": "ctl"},
+    ]}}}
+    assert gen_phys.logical_strap_names(cell) == ["strap_cland_use_0"]
+    plan = SimpleNamespace(types={"T": cell})
+    source = tmp_path / "T.sv"
+    source.write_text("module T(input wire strap_cland_use_0); endmodule\n")
+    gen_rtl.check_kit_rtl_ports(plan, "T", {}, [source])
+    source.write_text("module T(input wire [0:0] strap_cland_use_0); endmodule\n")
+    with pytest.raises(gen_rtl.GenError, match="expected a one-bit monitor use input"):
+        gen_rtl.check_kit_rtl_ports(plan, "T", {}, [source])
