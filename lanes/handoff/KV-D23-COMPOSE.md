@@ -19,6 +19,7 @@ Work dir epyc7 /srv/opentallas-scratch2/claude/kv-d23-compose (lane clone wt/ = 
   8. CBC-ALL-0200: build the D26 tree from main >= 595df01cf9d (reset hop cap 300 = aced0fb210) and run PRECHECK; quote the cbc_score.tsv per-die PASS counts in the event post. rt/current sync is blocked (hub disk): use a main clone for TOOLS.
   9. kv3_pv raw branches: re-run kv_start_corridor_event.py raw (tools >= aced0fb210) on the D26 start plan. 15 of 16 pv types have hops > 300 in D25f2 (audit lanes/handoff/CBC-R4/kv_pv_rawbranch_audit_d25f2.json ac25321b3b06).
   10. hgi_v1 k12 rows (wns +14.2 TT post-CTS): section N of lanes/handoff/FABLE-FIX-KV-HG-rows-d24.json (6e210594fbd): reg_leaf_split, tN/eN internal_stations D=3, 2 polylines, 2 relay_sites, eN +2 / tN +2 cycles, one hst3 move. Order: apply k12 rows to hgi_v1 BEFORE the hgi superset merge, so the representative carries them.
+  11. (COORD 10:3xZ) Re-emit the type SDCs from main >= 76ea03e4ae9 (new seam budget default). Also re-run the raw-branch AND reset generators from aced0fb210 (300 um) on ALL kv3_pv types, not only the 15 flagged. Item 10 (section N) plus the OPUS-FIX-KV-HG proposal-3 tools are taken only once k13 proves out; otherwise they wait for the next cut.
 - Not in D26 unless reposted: M2 (k11), HST3FB (stop list), depth-16 rows.
 
 ## Status 2026-11-20 08:45Z (read this first; supersedes 07:05Z)
