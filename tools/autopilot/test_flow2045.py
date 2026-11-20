@@ -185,3 +185,27 @@ def test_self_heal_copies_run_when_every_host_is_over_2x_cores(tmp_path, monkeyp
     ap2 = AP2(); (tmp_path / "tries.json").unlink(missing_ok=True)
     KW.sync_die_inputs(ap2, cfg)
     assert len(ap2.units) == 1
+
+
+def test_flow_files_refresh_covers_the_runner_and_the_watcher_with_a_new_inode(tmp_path):
+    """FLOW-FIX-2045: one list (FLOW_REFRESH_FILES); the generated run_kit.sh beside the kit and stage_odb_cap.py inside it are replaced by new inodes with the old mode; nothing is created"""
+    import stat
+    import subprocess
+    work = tmp_path / "w"; kit = work / "gen" / "t"; kit.mkdir(parents=True)
+    runner, cap = work / "gen" / "run_kit.sh", kit / "stage_odb_cap.py"
+    runner.write_text("#!/bin/bash\n# old runner: goal finish skips the FF GRT step\n"); runner.chmod(0o755)
+    cap.write_text("# old watcher\n")
+    ino = (runner.stat().st_ino, cap.stat().st_ino)
+    held = open(runner)                                                              # a running shell holds the old file open
+    cmd = KW.flow_files_refresh_cmd(kit, work)
+    assert subprocess.run(["bash", "-c", cmd]).returncode == 0
+    assert "[ $GOAL = finish ]; }; then" in runner.read_text() and "EARLY_RULES" in cap.read_text()
+    assert (runner.stat().st_ino, cap.stat().st_ino) != ino and held.read().startswith("#!/bin/bash\n# old runner")
+    assert stat.S_IMODE(runner.stat().st_mode) == 0o755
+    assert not list((work / "gen").glob("*.new")) and not list(kit.glob("*.new"))
+    before = (runner.stat().st_ino, cap.stat().st_ino)
+    assert subprocess.run(["bash", "-c", cmd]).returncode == 0 and (runner.stat().st_ino, cap.stat().st_ino) == before   # identical: untouched
+    bare = tmp_path / "b"; (bare / "gen" / "t").mkdir(parents=True)
+    assert subprocess.run(["bash", "-c", KW.flow_files_refresh_cmd(bare / "gen" / "t", bare)]).returncode == 0
+    assert not (bare / "gen" / "run_kit.sh").exists() and not (bare / "gen" / "t" / "stage_odb_cap.py").exists()
+    assert [x[1] for x in KW.FLOW_REFRESH_FILES] == ["stage_odb_cap.py", "run_kit.sh"]

@@ -1426,19 +1426,53 @@ def rearm_candidates(state, cfg, die, d, log=None):
     return out
 
 
-def stage_cap_refresh_cmd(kit):
-    """FLOW-FIX-2045: shell command that replaces <kit>/stage_odb_cap.py by the runtime tools' copy (content sent in the command, so the host needs no matching rt path); only when the kit
-    already has the file (a kit without it never ran a watcher) and the copy differs"""
+# FLOW-FIX-2045: the flow scripts the wave puts into every kit from rt/current at launch, because a kit copies them at gen time from the die's PINNED snapshot (older than the fixes: the old STAGE-CAP
+# watcher, the run_kit.sh whose goal finish skipped the FF GRT step).  (where, name, source): where = "kit" (<kit>/<name>) or "runner" (<work>/gen/<name>, the generated run_kit.sh);
+# source = a path under rt/current/tools (verbatim copy) or "gen_phys.RUN_KIT" (the generated runner text).  kit_flow_refresh.py (TOOLS-DECOUPLE) keeps handling the other verbatim kit scripts.
+FLOW_REFRESH_FILES = (
+    ("kit", "stage_odb_cap.py", "die_plan/stage_odb_cap.py"),
+    ("runner", "run_kit.sh", "gen_phys.RUN_KIT"),
+)
+_RUN_KIT_TEXT = {}
+
+
+def _flow_source_bytes(src):
+    here = Path(__file__).resolve()
+    if src == "gen_phys.RUN_KIT":
+        if "t" not in _RUN_KIT_TEXT:
+            import importlib.util as _iu
+            dd = here.parents[1] / "die_plan"
+            if str(dd) not in sys.path:
+                sys.path.insert(0, str(dd))
+            spec = _iu.spec_from_file_location("gen_phys", str(dd / "gen_phys.py"))
+            mod = sys.modules.get("gen_phys") or _iu.module_from_spec(spec)
+            if "gen_phys" not in sys.modules:
+                spec.loader.exec_module(mod)
+            _RUN_KIT_TEXT["t"] = mod.RUN_KIT
+        return _RUN_KIT_TEXT["t"].encode()
+    return (here.parents[1] / src).read_bytes()
+
+
+def flow_files_refresh_cmd(kit, work=None, files=None):
+    """FLOW-FIX-2045: ONE shell command that refreshes every FLOW_REFRESH_FILES entry already present in the kit (kit) or beside it (runner: <work>/gen/<name>) from the runtime tools.  Content travels
+    in the command (the host needs no matching rt path).  Copy to <file>.new, keep the mode, then mv: a new inode, so a shell or watcher already running the old file keeps it.  A missing target
+    is never created; an identical file is left alone."""
     import base64
-    src = Path(__file__).resolve().with_name("stage_odb_cap.py")
-    if not src.exists():
-        src = Path(__file__).resolve().parents[1] / "die_plan" / "stage_odb_cap.py"
-    try:
-        b64 = base64.b64encode(src.read_bytes()).decode()
-    except OSError:
-        return "true"
-    k = shlex.quote(str(kit) + "/stage_odb_cap.py")
-    return f"[ ! -f {k} ] || {{ echo {b64} | base64 -d > {k}.new && ! cmp -s {k}.new {k} && mv -f {k}.new {k} || rm -f {k}.new; }}"
+    parts = []
+    for where, name, src in (files if files is not None else FLOW_REFRESH_FILES):
+        if where == "runner" and not work:
+            continue
+        try:
+            b64 = base64.b64encode(_flow_source_bytes(src)).decode()
+        except Exception:
+            continue
+        k = shlex.quote((str(kit) if where == "kit" else str(work) + "/gen") + "/" + name)
+        parts.append(f"if [ -f {k} ]; then echo {b64} | base64 -d > {k}.new && {{ cmp -s {k}.new {k} || {{ chmod --reference={k} {k}.new && mv -f {k}.new {k}; }}; }}; rm -f {k}.new; fi")
+    return "; ".join(parts) or "true"
+
+
+def stage_cap_refresh_cmd(kit):
+    return flow_files_refresh_cmd(kit, None, [x for x in FLOW_REFRESH_FILES if x[0] == "kit"])
 
 
 LOG_HOURLY_S = 3600
@@ -8494,7 +8528,7 @@ def run_item(spec_path):
         res["future_lec"] = lt
     # FLOW-FIX-2045: the STAGE-CAP watcher a kit runs is the stage_odb_cap.py gen copied from the die's PINNED snapshot (HEAD r11b: older than the fix), so every wave kit still deleted the early
     # stage ODBs and its route job re-ran floorplan + place.  The wave puts rt/current's copy into the kit (before the inputs are fingerprinted); a kit without the file is left alone.
-    run("stage_cap_refresh", remote(stage_cap_refresh_cmd(K)), idempotent=True)
+    run("flow_files_refresh", remote(flow_files_refresh_cmd(K, None if core else W)), idempotent=True)
     # KW-RESUME-1: record the kit's gen-time inputs (K/.kw_inputs.json) before any gate writes into K; a later
     # relaunch fingerprints against this record.  Advisory: a failure only means the next relaunch uses the mtime rule.
     run("resume_inputs", remote(kr_cmd(f"inputs {q(K)}")), idempotent=True)
