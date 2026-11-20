@@ -24,6 +24,8 @@ def run(root,instances,stubs,out,manifest="physical/die_plan/s81/bind/asbuilt_b1
  man=json.loads((root/manifest).read_text())
  src={}
  wanted={'dsdv_svc_sx','dsdv_svc_rs_up','dsdv_pv_so_ingress','dsdv_pv_so_program'}
+ if 'OT_SVC_H8' in man['defines']:
+  wanted.update(('dsdv_pv_so_ingress_h8','dsdv_pv_so_program_h8'))
  for f in man['prefer']:
   p=root/f
   if not p.is_file():continue

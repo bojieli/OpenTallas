@@ -47,7 +47,7 @@ module dsdv_svc_rs_pvso_entry #(parameter integer PVSO_ENABLE=0, parameter integ
     wire[2:0]so_param_row;wire[511:0]so_param_d;wire[514:0]q_filtered;
 `ifdef OT_SVC_H8
     wire[15:0]so_local_first1,so_peer_first1;
-    dsdv_pv_so_program_h8 #(.ENABLE(PVSO_ENABLE)) u_program(.clk(ck),.rst_n(rst),.q({2'b00,q}),.q_pass(q_filtered),
+    dsdv_pv_so_program_h8 #(.ENABLE(PVSO_ENABLE),.TF(0)) u_program(.clk(ck),.rst_n(rst),.q({2'b00,q}),.q_pass(q_filtered),
       .cfg_v(so_cfg_v),.owner(so_owner),.position(so_position),.se_jid(so_se_jid),.so_jid(so_jid),
       .local_first(so_local_first),.peer_first(so_peer_first),.local_first1(so_local_first1),.peer_first1(so_peer_first1),
       .param_v(so_param_v),.param_row(so_param_row),
