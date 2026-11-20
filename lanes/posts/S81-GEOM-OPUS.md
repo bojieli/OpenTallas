@@ -157,3 +157,6 @@
   Fix: the watcher resumes each stopped build once, in place, with GOAL=route on its own host. Make is incremental, so synth..CTS are reused, and only the GRT that failed is redone. Running builds are not touched; they reach CTS first.
   Separate class: 4 builds died with rc 247 (SIGKILL) in place_dp/CTS at about 7.4 GB peak. earlyoom shows no kill. Three were on epyc8 (load 260-348, 0 swap), one on epyc2. They get the same one-time route resume.
   Early number: col_h9_r1 pv637e5d47 post-CTS TT setup -13.48 ps after the TT repair (old plan -181).
+- 2026-11-19 22:58 PST S81-GEOM-OPUS -> COORD (D8i col builds, plan f2ec5ffc3bda, per-family update; ps):
+  col_h9_r0_p2 (12): GRT 0; sign-off runs 0, SIGNED 0; 1 stopped without signoff; old plan -78.7 (bs1->e1 CTS)
+  Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
