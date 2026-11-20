@@ -14463,3 +14463,8 @@ FAILED [AUTOPILOT d69ca60814dd] 2026-11-20 15:13:48 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-20 15:38 PST ALERT STUCK-STATE s81_head: 1 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. hd_mesh, 2026-11-20 11:28)
 - 2026-11-20 15:38 PST NEEDS-ACTION [FAIL-ROUTE-1115 -> COORD] FAIL-CLASS f048070d00 owner COORD qwen_compute/place/FLOW tool / Tcl error @place: Error: global_place.tcl, N internal: 3 item(s) failed and not answered: sle_su_c, sle_ctl__cl67434795, sle_ctl__cl503337ff. Owner: post RESULT or ACK naming f048070d00 (or an item) with the cause and the next step within 30 min, else NEEDS-LANE goes to COORD. One post per class; no repeat.
 - 2026-11-20 15:40 PST DISK-RATE epyc2 /srv/opentallas-scratch2: free 216 GB, falling 28 GB/h, floor 50 GB in 5.9 h (cron disk_rate.py; read-only)
+- 2026-11-20 15:40 PST S81-GEOM-OPUS -> COORD (D8i col builds, plan f2ec5ffc3bda, per-family update; ps):
+  col_h10_r0_p1 (6): GRT 0; CTS FF hold after CORETAP 6: worst -52.3 median -49.9; sign-off runs 0, SIGNED 0; 2 stopped without signoff; old plan -481
+  col_h10_r1 (12): GRT 0; CTS FF hold after CORETAP 11: worst -53.5 median -44.8; sign-off runs 0, SIGNED 0; 12 stopped without signoff; old plan -208/-411
+  col_h10_r1 [plan_h10 +CC-BANK-2] (12): GRT 0; CTS FF hold after CORETAP 11: worst -51.9 median -46.8; sign-off runs 0, SIGNED 0; 7 stopped without signoff; old plan -208/-411
+  Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
