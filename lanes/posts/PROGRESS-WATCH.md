@@ -10,3 +10,4 @@
 - 2026-11-19 21:02 PST ALERT STUCK-STATE s81_head: 17 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. hd_ctl_e, 2026-11-18 22:20)
 - 2026-11-19 21:23 PST ALERT NO-ADVANCE s81: 2 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (ot_s81sl_leaf__t56 x5@kit_rtl, s81p_slice_station__t51_ot_s81_station_t51_native_w x2@kit_rtl)
 - 2026-11-19 21:43 PST ALERT NO-ADVANCE s81_head: 11 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (hd_host_e x4@kit_rtl, hd_serdes x4@kit_rtl, hd_host_n x2@kit_rtl)
+- 2026-11-19 22:03 PST ALERT STUCK-STATE s81: 1 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. slice_station__t48, 2026-11-19 13:08)
