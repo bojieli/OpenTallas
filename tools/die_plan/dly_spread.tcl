@@ -12,6 +12,12 @@
 #                        (each <= S um of route, carrying real wire) can cross a tap.  kv3_pv_v8 v8b: 42,662 of 47,549 FF hold
 #                        cross-tap ends were stage k -> k+1 of 100+ stage pad trunks spread at span/(n+1) ~ 10 um per hop.
 #                        A run with no more stages than stations keeps the equal spread.
+#   OT_DLY_SPREAD_SEG=1  (unset = off, byte-identical)  SEGMENT form (FABLE-FIX-KV-PV XTAP-C 11-20, kit_dly_lockup.py): a hop lockup
+#                        latch u_fl_* (DLL / DHL) is a repeater of the chain, and the stages between two latches are ONE station:
+#                        the latch-delimited groups of a run sit at equal route fractions (a group that touches an anchor stage sits
+#                        at the anchor), the latch mid-hop.  A chain with a latch is always placed, also when its GPL hops are within
+#                        reach (GPL spreads the stages of one segment over taps).  A run without a latch keeps the forms above.
+#   OT_DLY_SPREAD_MAX_STAGES  (64; 1024 in SEGMENT form)  longest chain walked
 #   OT_DLY_SPREAD_RE     discovery regexp (default: any <inst>.g_reg.r[k][b] / <inst>.r[k][b] / <inst>.q[b])
 # Flops that are FIRM/LOCKED or sited by the plan (ot_face_flops.txt) are anchors, never moved; a run of movable stages between
 # two anchors is spread between them.
@@ -26,6 +32,8 @@ set ds_minum [expr {[info exists ::ot_dly_min_hop_um] ? $::ot_dly_min_hop_um : 4
 set ds_min [expr {round($ds_minum * $ds_dbu)}]
 set ds_st [expr {[info exists ::env(OT_DLY_SPREAD_STATION_UM)] && [string is double -strict $::env(OT_DLY_SPREAD_STATION_UM)] && $::env(OT_DLY_SPREAD_STATION_UM) > 0 ? round($::env(OT_DLY_SPREAD_STATION_UM) * $ds_dbu) : 0}]
 set ds_ratio [expr {[info exists ::ot_dly_fail_ratio] ? $::ot_dly_fail_ratio : 1.5}]
+set ds_seg [expr {[info exists ::env(OT_DLY_SPREAD_SEG)] && $::env(OT_DLY_SPREAD_SEG) eq "1"}]
+set ds_maxst [expr {[info exists ::env(OT_DLY_SPREAD_MAX_STAGES)] && [string is integer -strict $::env(OT_DLY_SPREAD_MAX_STAGES)] ? $::env(OT_DLY_SPREAD_MAX_STAGES) : ($ds_seg ? 1024 : 64)}]
 set ds_re [expr {[info exists ::env(OT_DLY_SPREAD_RE)] ? $::env(OT_DLY_SPREAD_RE) : {^(.*?)[./](?:g_reg[./])?(?:r\[[0-9]+\](?:\[[0-9]+\])?|q(?:\[[0-9]+\])?)(?:\$.*|_reg)?$}}]
 set ds_mac {}
 foreach i [$ds_blk getInsts] { if {[[$i getMaster] isBlock]} { set b [$i getBBox]; lappend ds_mac [list [expr {[$b xMin]-$ds_halo}] [expr {[$b yMin]-$ds_halo}] [expr {[$b xMax]+$ds_halo}] [expr {[$b yMax]+$ds_halo}]] } }
@@ -37,7 +45,8 @@ if {[info exists ::env(RESULTS_DIR)] && [file exists $::env(RESULTS_DIR)/ot_face
 }
 proc ds_clean {n} { return [string map {\\ {}} $n] }
 proc ds_isff {i} { return [string match "*DFF*" [[$i getMaster] getName]] }
-proc ds_isrep {i} { set m [[$i getMaster] getName]; return [expr {![[$i getMaster] isBlock] && ([string match "BUF*" $m] || [string match "INV*" $m] || [string match "HB*" $m])}] }
+proc ds_islk {i} { global ds_seg; if {!$ds_seg} { return 0 }; set m [[$i getMaster] getName]; return [expr {([string match "DLL*" $m] || [string match "DHL*" $m]) && [regexp {(^|[./])u_fl_} [$i getName]]}] }
+proc ds_isrep {i} { set m [[$i getMaster] getName]; return [expr {![[$i getMaster] isBlock] && ([string match "BUF*" $m] || [string match "INV*" $m] || [string match "HB*" $m] || [ds_islk $i])}] }
 proc ds_movable {i} { global ds_sited; return [expr {[$i getPlacementStatus] ni {FIRM LOCKED COVER} && ![dict exists $ds_sited [ds_clean [$i getName]]]}] }
 proc ds_ctr {b} { return [list [expr {([$b xMin]+[$b xMax])/2}] [expr {([$b yMin]+[$b yMax])/2}]] }
 proc ds_xy {o} {
@@ -188,7 +197,7 @@ proc ds_atpl {pts f} {
 }
 # the whole pass is one proc: a kit hook shares the global namespace of face_flops_release.tcl, so its loop variables stay local
 proc ds_main {} {
-global ds_blk ds_dbu ds_core ds_min ds_ratio ds_re ds_mac ds_sited ds_st
+global ds_blk ds_dbu ds_core ds_min ds_ratio ds_re ds_mac ds_sited ds_st ds_seg ds_maxst
 # candidates by name (discovery only)
 set ds_cand {}
 foreach i [$ds_blk getInsts] {
@@ -218,7 +227,7 @@ dict for {nm head} $ds_cand {
   if {[dict exists $ds_has_prev $nm]} continue
   # walk the chain
   set seq [list $head]; set segb {}; set cur $head; set guard 0
-  while {[dict exists $ds_next [$cur getName]] && [incr guard] < 64} {
+  while {[dict exists $ds_next [$cur getName]] && [incr guard] < $ds_maxst} {
     lassign [dict get $ds_next [$cur getName]] nx bufs
     lappend segb $bufs; lappend seq $nx; set cur $nx
   }
@@ -242,7 +251,15 @@ dict for {nm head} $ds_cand {
   set wb 0; for {set k 1} {$k < [llength $P]} {incr k} { set wb [expr {max($wb, [ds_md [lindex $P [expr {$k-1}]] [lindex $P $k]])}] }
   incr ds_nch; incr ds_nst $n
   set ds_hb [expr {max($ds_hb, $wb)}]; if {$wb > $ds_min} { incr ds_ob }
-  if {$wb <= $ds_min} { set wa $wb } else {
+  # SEGMENT form: lkh[j-1] = 1 when the hop after stage j (1 <= j < n) carries a hop lockup latch
+  set lkh {}; set haslk 0
+  if {$ds_seg} {
+    for {set j 1} {$j < $n} {incr j} {
+      set h 0; foreach b_ [lindex $segb [expr {$j-1}]] { if {[ds_islk [lindex $b_ 1]]} { set h 1; break } }
+      lappend lkh $h; if {$h} { set haslk 1 }
+    }
+  }
+  if {$wb <= $ds_min && !$haslk} { set wa $wb } else {
     # anchors: indexes (0 = src, n+1 = T) plus every stage that is not movable; run of movable stages between anchors -> equal hops
     set nmovable 0; foreach s_ $seq { if {[ds_movable $s_]} { incr nmovable } }
     set anch [list 0]
@@ -258,9 +275,28 @@ dict for {nm head} $ds_cand {
       # route fraction of every point of the run: equal hops, or (STATION form) ns stations with the stages grouped on them
       set nr [expr {$k1 - $k0 - 1}]; set ns $nr
       if {$ds_st > 0} { set ns [expr {max(1, int(ceil([ds_plen $rt] / double($ds_st))) - 1)}]; if {$ns >= $nr} { set ns $nr } }
+      set runlk 0
+      if {$haslk && $nr > 0} { for {set j [expr {max(1, $k0)}]} {$j < $k1 && $j < $n} {incr j} { if {[lindex $lkh [expr {$j-1}]]} { set runlk 1; break } } }
+      if {$runlk} {
+        # groups of the run's movable stages k0+1 .. k1-1, cut at every latch hop; ga / gb: the first / last group has no latch
+        # between it and the anchor STAGE k0 / k1, so it sits at that anchor
+        set gid {}; set g 0
+        for {set k [expr {$k0+1}]} {$k < $k1} {incr k} { if {$k > $k0+1 && [lindex $lkh [expr {$k-2}]]} { incr g }; dict set gid $k $g }
+        set ng [expr {$g + 1}]
+        set ga [expr {$k0 >= 1 && ![lindex $lkh [expr {$k0-1}]]}]
+        set gb [expr {$k1 <= $n && ![lindex $lkh [expr {$k1-2}]]}]
+        if {$ng == 1 && $ga && $gb} { set gb 0 }
+        set nfree [expr {$ng - $ga - $gb}]
+        dict set fr $k0 0.0; dict set fr $k1 1.0; incr nhop [expr {$nfree + 1}]
+        for {set k [expr {$k0+1}]} {$k < $k1} {incr k} {
+          set g [dict get $gid $k]
+          if {$ga && $g == 0} { dict set fr $k 0.0 } elseif {$gb && $g == $ng - 1} { dict set fr $k 1.0 } else { dict set fr $k [expr {double($g - $ga + 1) / ($nfree + 1)}] }
+        }
+      } else {
       dict set fr $k0 0.0; dict set fr $k1 1.0; incr nhop [expr {$ns + 1}]
       for {set k [expr {$k0+1}]} {$k < $k1} {incr k} {
         if {$ns == $nr} { dict set fr $k [expr {double($k-$k0)/($k1-$k0)}] } else { dict set fr $k [expr {double(int(($k-$k0-1) * $ns / $nr) + 1) / ($ns + 1)}] }
+      }
       }
       for {set k [expr {$k0+1}]} {$k < $k1} {incr k} {
         lassign [ds_atpl $rt [dict get $fr $k]] x y
@@ -287,7 +323,7 @@ dict for {nm head} $ds_cand {
   }
   set ds_ha [expr {max($ds_ha, $wa)}]; if {$wa > $ds_min} { incr ds_oa }
   if {[info exists ::env(OT_DLY_SPREAD_DEBUG)] && [string match $::env(OT_DLY_SPREAD_DEBUG) $nm]} { puts "OT_DLY_SPREAD DEBUG [ds_clean $nm] stages $n loads [llength $tl] hops [format %.0f [expr {$wb/double($ds_dbu)}]] -> [format %.0f [expr {$wa/double($ds_dbu)}]] um" }
-  set ideal [expr {(($wb <= $ds_min) ? [ds_md $src $T] : $rlen) / double(($wb > $ds_min && $ds_st > 0) ? $nhop : $n + 1)}]   ;# route length: a detour around a core is not a defect
+  set ideal [expr {(($wb <= $ds_min && !$haslk) ? [ds_md $src $T] : $rlen) / double((($wb > $ds_min && $ds_st > 0) || $haslk) ? $nhop : $n + 1)}]   ;# route length: a detour around a core is not a defect
   if {$ideal > 0} {
     set r [expr {$wa / $ideal}]
     if {$r > $ds_wr} { set ds_wr $r }

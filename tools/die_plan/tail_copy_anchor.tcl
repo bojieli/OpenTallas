@@ -139,6 +139,8 @@ proc tcs_copy_of {nm copies} {
   set nm [string map {\\ {}} $nm]
   if {![regexp {(?:^|[.])(u_[A-Za-z0-9_]+)[./][^./]+$} $nm -> c]} { return "" }
   if {[dict exists $copies $c]} { return $c }
+  # XTAP-C 11-20: a copy split by kit_dly_lockup.py keeps its listed name plus _sg<j>
+  if {[regexp {^(.*)_sg[0-9]+$} $c -> c0] && [dict exists $copies $c0]} { return $c0 }
   return ""
 }
 # tail_copies.tsv rows `copy K group tag` -> dict copy -> {K group}
@@ -157,10 +159,11 @@ proc tcs_read_tsv {path} {
 # 1 when the flop name is a trunk stage GPL owns: a pad trunk u_pdN_.._t_<pad> or (KV-D23-REACH) a pipe trunk u_dN_.._t
 proc tcs_is_trunk {nm} {
   set nm [string map {\\ {}} $nm]
-  return [expr {[regexp {(?:^|[.])u_pd[0-9]+_[A-Za-z0-9_]*_t_[0-9]+[./][^./]+$} $nm] || [regexp {(?:^|[.])u_d[0-9]+_[A-Za-z0-9_]*_t[./][^./]+$} $nm]}]
+  return [expr {[regexp {(?:^|[.])u_pd[0-9]+_[A-Za-z0-9_]*_t_[0-9]+(?:_sg[0-9]+)?[./][^./]+$} $nm] || [regexp {(?:^|[.])u_d[0-9]+_[A-Za-z0-9_]*_t(?:_sg[0-9]+)?[./][^./]+$} $nm]}]
 }
 proc tcs_isff {i} { return [regexp {^(DFF|SDF)} [[$i getMaster] getName]] }
-proc tcs_isrep {i} { set m [$i getMaster]; return [expr {![$m isBlock] && [regexp {^(BUF|INV|HB)} [$m getName]]}] }
+# XTAP-C 11-20 (kit_dly_lockup.py): a hop lockup latch u_fl_* (DLL / DHL) on the trunk -> copy or copy -> core-pin hop is a repeater
+proc tcs_isrep {i} { set m [$i getMaster]; return [expr {![$m isBlock] && ([regexp {^(BUF|INV|HB)} [$m getName]] || ([regexp {^(DLL|DHL)} [$m getName]] && [regexp {(^|[./])u_fl_} [$i getName]]))}] }
 proc tcs_out {i} {
   foreach it [$i getITerms] { if {[[$it getMTerm] getIoType] eq "OUTPUT"} { set n [$it getNet]; if {$n ne "" && $n ne "NULL"} { return $n } } }
   return ""
@@ -180,7 +183,7 @@ proc tcs_macro_src {n} {
     if {[[$di getMaster] isBlock]} { return $drv }
     if {![tcs_isrep $di]} { return "" }
     set ins {}
-    foreach it [$di getITerms] { if {[[$it getMTerm] getIoType] eq "INPUT"} { set x [$it getNet]; if {$x ne "" && $x ne "NULL"} { lappend ins $x } } }
+    foreach it [$di getITerms] { if {[[$it getMTerm] getIoType] eq "INPUT" && [[$it getMTerm] getName] ne "CLK"} { set x [$it getNet]; if {$x ne "" && $x ne "NULL"} { lappend ins $x } } }
     if {[llength $ins] != 1} { return "" }
     set n [lindex $ins 0]
   }
@@ -203,7 +206,7 @@ proc tcs_ffdriver {n} {
     if {![tcs_isrep $drv]} { return {} }
     lappend reps $drv
     set ins {}
-    foreach it [$drv getITerms] { if {[[$it getMTerm] getIoType] eq "INPUT"} { set x [$it getNet]; if {$x ne "" && $x ne "NULL"} { lappend ins $x } } }
+    foreach it [$drv getITerms] { if {[[$it getMTerm] getIoType] eq "INPUT" && [[$it getMTerm] getName] ne "CLK"} { set x [$it getNet]; if {$x ne "" && $x ne "NULL"} { lappend ins $x } } }
     if {[llength $ins] != 1} { return {} }
     set n [lindex $ins 0]
   }
@@ -319,10 +322,17 @@ proc tcs_run {} {
     foreach it $s { set dd [tcs_md [tcs_pin_xy $it] $t]; if {$dd < $best} { set best $dd; set pin $it } }
     set l [tcs_out_pos $pin 1.5 $dbu]
     set k [llength $chain]
+    # XTAP-C 11-20: a hop lockup latch after stage s (kit_dly_lockup.py split) ends a group; the ng groups sit at (g+1)/ng of
+    # the route, the last one at the pin, so the stages of one group share a station (and a clock tap).  No latch: ng = 1.
+    set lkb {}; set ng 1
+    for {set s_ 0} {$s_ < $k - 1} {incr s_} {
+      set h_ 0; foreach r_ [lindex [tcs_follow [lindex $chain $s_]] 0] { if {[regexp {^(DLL|DHL)} [[$r_ getMaster] getName]]} { set h_ 1 } }
+      lappend lkb $h_; incr ng $h_
+    }
     set route [tcs_route $t $l $raw $halo]
     if {[lindex $route 1]} { incr crossing }
     set tg [tcs_along $route $k]
-    set rh [expr {[lindex $route 0] / double($k) / $dbu}]
+    set rh [expr {[lindex $route 0] / double($ng > 1 ? $ng : $k) / $dbu}]
     if {$rh > $maxrhop} { set maxrhop $rh }; if {$rh > $hop_um} { incr rover }
     # FABLE-FIX-QC-STA 11-18: a single-stage copy fed straight by a hard macro (QC st_a rs_s control copies: cland q -> copy -> row
     # pin) has no trunk end; at the pin the whole source -> pin run is ONE hop behind a slow macro output (slw_st_a_v2 r3: cland
@@ -333,16 +343,17 @@ proc tcs_run {} {
     set pts {}
     for {set s_ 0} {$s_ < $k} {incr s_} {
       set f [lindex $chain $s_]
+      set gi_ 0; for {set j_ 0} {$j_ < $s_} {incr j_} { incr gi_ [lindex $lkb $j_] }
       if {$s_ == $k - 1 && $srcp ne ""} {
         lassign [tcs_frac [tcs_route $srcp $l $raw $halo] $sfrac] x y
         lassign [tcs_push_out $x $y $boxes $sw] x y clear
         if {!$clear} { incr inside }
         set p [tcs_snap $x $y $core $ox $oy $sw $sh]
         incr nsrc
-      } elseif {$s_ == $k - 1} {
+      } elseif {$s_ == $k - 1 || ($ng > 1 && $gi_ == $ng - 1)} {
         set p $l
       } else {
-        lassign [lindex $tg $s_] x y
+        if {$ng > 1} { lassign [tcs_frac $route [expr {double($gi_ + 1) / $ng}]] x y } else { lassign [lindex $tg $s_] x y }
         lassign [tcs_push_out $x $y $boxes $sw] x y clear
         if {!$clear} { incr inside }
         set p [tcs_snap $x $y $core $ox $oy $sw $sh]
