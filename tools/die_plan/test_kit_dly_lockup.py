@@ -187,3 +187,51 @@ def test_plan_key_and_kit_entry(tmp_path):
     rec = dl.apply_kit(tmp_path, core_types={"core"})
     assert list(rec) == ["top_bound.sv"] and rec["top_bound.sv"]["by_kind"]["out"] == 3
     assert (tmp_path / "other.sv").read_text() == RTL and "u_fl_pd5_x_0_pvg0_p1_25_o" in (tmp_path / "top_bound.sv").read_text()
+
+
+RTL_CH = RTL.replace("    wire [0:0] other_q;\n", "    wire [0:0] other_q;\n    wire [0:0] pd2_x_0_t_27;\n    wire [0:0] pd3_x_0_pvg0_p1_27;\n") \
+    .replace("(.clk(clk), .d(x_i[0]), .q(pd20_x_0_t_25));  // trunk", "(.clk(clk), .d(x_i[0]), .q(pd20_x_0_t_25));  // landing pad trunk: shared stages of pad 25 (tail split)") \
+    .replace("    core u_pvg0_p1 (", "    ot_dp_dly_keep #(.W(1), .D(2)) u_pd2_x_0_t_27 (.clk(clk), .d(pd20_x_0_t_25[0]), .q(pd2_x_0_t_27));  // landing pad trunk: shared stages of pad 27 (tail split)\n"
+             "    ot_dp_dly_keep #(.W(1), .D(3)) u_pd3_x_0_pvg0_p1_27 (.clk(clk), .d(pd2_x_0_t_27[0]), .q(pd3_x_0_pvg0_p1_27));\n    core u_pvg0_p1 (") \
+    .replace("assign z_o = ^d17_w ^ other_q;", "assign z_o = ^d17_w ^ other_q ^ pd3_x_0_pvg0_p1_27;")
+
+
+def test_unchain_trunk_piece():
+    assert "u_pd2_x_0_t_27" in RTL_CH and RTL_CH.count("landing pad trunk") == 2
+    txt, lat, st = dl.apply(RTL_CH, cores=["u_pvg0_p1"], tail_groups=2)
+    # the 2-stage piece behind the pad-25 trunk end becomes a 22-stage trunk from the source x_i[0]: 3 segments, no input latch
+    segs = re.findall(r"ot_dp_dly_keep #\(\.W\(1\), \.D\((\d+)\)\) u_pd2_x_0_t_27_sg(\d+) \(\.clk\(clk\), \.d\((\S+?)\),", txt)
+    assert [int(s[0]) for s in segs] == [8, 7, 7] and segs[0][2] == "x_i[0]"
+    assert st["unchained"] == 1 and st["unchained_stages"] == 20
+    assert "u_fl_pd2_x_0_t_27_i" not in {l["inst"] for l in lat} and "u_fl_pd3_x_0_pvg0_p1_27_i" in {l["inst"] for l in lat}
+    # the shallower trunk is untouched by it (still 20 stages), and --no-unchain keeps the chain with an input latch
+    assert sum(int(x) for x in re.findall(r"\.D\((\d+)\)\) u_pd20_x_0_t_25_sg\d+ ", txt)) == 20
+    txt2, lat2, st2 = dl.apply(RTL_CH, cores=["u_pvg0_p1"], tail_groups=2, unchain=False)
+    assert st2["unchained"] == 0 and "u_fl_pd2_x_0_t_27_i" in {l["inst"] for l in lat2}
+
+
+@pytest.mark.skipif(shutil.which("iverilog") is None, reason="iverilog not installed")
+@pytest.mark.parametrize("unchain", [True, False])
+def test_unchain_same_outputs_iverilog(tmp_path, unchain):
+    txt, lat, st = dl.apply(RTL_CH, cores=["u_pvg0_p1"], unchain=unchain)
+    tb = """`timescale 1ps/1ps
+module tb;
+    reg clk = 0; reg [1:0] x = 0; wire [2:0] ya, yb; wire za, zb; integer n, bad = 0;
+    top_a a (.clk(clk), .x_i(x), .y_o(ya), .z_o(za));
+    top_b b (.clk(clk), .x_i(x), .y_o(yb), .z_o(zb));
+    always #416 clk = ~clk;
+    initial begin
+        for (n = 0; n < 400; n = n + 1) begin
+            @(negedge clk); x = $random;
+            @(posedge clk); #1;
+            if (n > 60 && (ya !== yb || za !== zb)) bad = bad + 1;
+        end
+        if (bad == 0) $display("DLK_EQ PASS"); else $display("DLK_EQ FAIL %0d", bad);
+        $finish;
+    end
+endmodule
+"""
+    (tmp_path / "a.v").write_text(CELLS + RTL_CH.replace("module top", "module top_a") + txt.replace("module top", "module top_b") + tb)
+    subprocess.run(["iverilog", "-g2005", "-o", str(tmp_path / "a.out"), str(tmp_path / "a.v")], check=True)
+    out = subprocess.run(["vvp", str(tmp_path / "a.out")], check=True, capture_output=True, text=True).stdout
+    assert "DLK_EQ PASS" in out, out

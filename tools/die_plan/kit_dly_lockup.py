@@ -25,6 +25,11 @@ Form (0 cycles, existing cells only: ot_dp_dly, ot_dp_dly_keep, ot_dp_lk):
              G > 0 = G groups (fewer latches; only where every copy route fits G hops).  tail_copy_anchor.tcl sites group g at
              (g+1)/G of the route, the last group at the pin.  The bound statement stays as a comment line, so gen_phys lists the copy under its bound name
              and K (tail_copies.tsv); tail_copy_anchor.tcl maps <copy>_sg<j> back to it.
+  4. UNCHAIN a pad trunk piece fed by another pad trunk's end (bind TRUNK-CHAIN form: `// landing pad trunk` statements, one chain per
+             bit, the deeper pad's piece = pad difference, often 1 stage) becomes an independent trunk of the full depth from the
+             chain's source.  The chained piece has to cross from one pad's trunk end to the other's in D stages: kv3_pv_v8
+             D25e form, 32 ctl_cmd pieces of 1-2 stages between trunk ends about 1 mm apart.  Same depth, +229 flops there;
+             the copies are kept cells (ot_dp_dly_keep), so Yosys cannot fold them back.  --no-unchain keeps the chain.
   Never latched: an input fed by a port, by logic or by a hard core (a launch-clock latch on a core tap is not a lockup:
   v8b dry ECO, 613 pair ts -> join ends at -946 ps), and an output read only by logic.
 
@@ -33,7 +38,7 @@ is post-processed at GEN, hard cores = the kit's macro modules; the kit gets OT_
 OT_TAP_CAP_RECHECK=0).
 
 Usage: kit_dly_lockup.py RTL.sv [--out OUT.sv] [--report R.json] [--seg 8] [--inst-re RE] [--cores CORE_CLOCKS.json]
-                         [--core-re RE] [--guard NAME] [--tail-groups 0]
+                         [--core-re RE] [--guard NAME] [--tail-groups 0] [--no-unchain]
   --cores   kit_core_clocks.json of the kit ({"rows": [{"instance": ...}]}): the hard-core instances
   --guard   put the latches under `ifdef NAME (else plain wires); default: unguarded
 Never run = no change.  The split alone (no latch) is the same circuit: D stages in the same order on the same clock.
@@ -64,9 +69,10 @@ def seg_sizes(d, seg):
 
 
 TAIL_MARK = "landing pad tail copy for core"
+TRUNK_MARK = "landing pad trunk"
 
 
-def apply(txt, seg=8, inst_re=DEFAULT_RE, cores=(), core_re=None, guard=None, tail_groups=0, core_types=()):
+def apply(txt, seg=8, inst_re=DEFAULT_RE, cores=(), core_re=None, guard=None, tail_groups=0, core_types=(), unchain=True):
     if seg < 1:
         raise LkError("seg must be >= 1")
     mod = re.search(r"\bmodule\s+\w+\s*(#\((?:[^()]|\([^()]*\))*\))?\s*\(", txt)
@@ -93,10 +99,38 @@ def apply(txt, seg=8, inst_re=DEFAULT_RE, cores=(), core_re=None, guard=None, ta
         eol = body.find("\n", end)
         rest = body[end:eol if eol >= 0 else len(body)]
         sel[name] = dict(mt=mt, W=_param(params, "W"), D=_param(params, "D"), d=cs["d"][0], q=cs["q"][0], clk=cs.get("clk", ("clk",))[0],
-                         span=(s, end), tail=TAIL_MARK in rest, stmt=body[s:end].strip() + rest.rstrip(), base=re.sub(r"\W", "_", name[2:] if name.startswith("u_") else name))
+                         span=(s, end), tail=TAIL_MARK in rest, trunk=TRUNK_MARK in rest, unch=0, stmt=body[s:end].strip() + rest.rstrip(), base=re.sub(r"\W", "_", name[2:] if name.startswith("u_") else name))
         if cs["q"][0] in qdrv:
             raise LkError(f"two selected instances drive {cs['q'][0]}")
         qdrv[cs["q"][0]] = name
+    # UNCHAIN: a trunk piece fed by another trunk's end restarts from the source of the chain with the summed depth
+    nunch = unch_stages = 0
+    if unchain:
+        orig = {n: (x["D"], x["d"]) for n, x in sel.items()}
+
+        def parent(n, dexpr):
+            m = IDENT.match(dexpr.strip())
+            a = qdrv.get(m.group(0)) if m else None
+            if not a or not sel[a]["trunk"] or sel[a]["W"] != sel[n]["W"]:
+                return None
+            ok = dexpr.strip() == sel[a]["q"] or (sel[a]["W"] == 1 and dexpr.strip() == sel[a]["q"] + "[0]")
+            return a if ok else None
+        for n, x in sel.items():
+            if not x["trunk"]:
+                continue
+            extra, dexpr, seen = 0, x["d"], {n}
+            a = parent(n, dexpr)
+            while a and a not in seen:
+                seen.add(a)
+                extra += orig[a][0]
+                dexpr = orig[a][1]
+                a = parent(n, dexpr)
+            if extra:
+                x["D"] += extra
+                x["d"] = dexpr
+                x["unch"] = extra
+                nunch += 1
+                unch_stages += extra * x["W"]
     # readers of every selected q net: hard cores (out latch) / other instances
     core_read = set()
     for mt, params, name, s, e, lp in insts:
@@ -140,7 +174,7 @@ def apply(txt, seg=8, inst_re=DEFAULT_RE, cores=(), core_re=None, guard=None, ta
         if x["out"]:
             qn = wire(f"{x['q']}__pl", W)
             lat.append(dict(inst=fresh(f"u_fl_{base}_o"), W=W, d=qn, q=x["q"], kind="out", of=name, clk=x["clk"]))
-        if len(sizes) == 1 and not x["in"] and not x["out"]:
+        if len(sizes) == 1 and not x["in"] and not x["out"] and not x["unch"]:
             continue
         ind = re.match(r"[ \t]*", body[x["span"][0]:]).group(0)
         lines = [f"{ind}// kit_dly_lockup, as bound: {x['stmt']}"] if x["tail"] else []
@@ -156,7 +190,7 @@ def apply(txt, seg=8, inst_re=DEFAULT_RE, cores=(), core_re=None, guard=None, ta
         if len(sizes) > 1:
             nsplit += 1
             nseg += len(sizes)
-        edits.append((x["span"][0], x["span"][1], "\n".join(lines) + f"  // kit_dly_lockup: {name} D {x['D']}"))
+        edits.append((x["span"][0], x["span"][1], "\n".join(lines) + f"  // kit_dly_lockup: {name} D {x['D']}" + (f" (unchained, +{x['unch']} stages)" if x["unch"] else "")))
     if not lat and not edits:
         return txt, [], dict(selected=len(sel), split=0, segments=0, skipped=skipped)
     for a, b, new in sorted(edits, reverse=True):
@@ -179,11 +213,11 @@ def apply(txt, seg=8, inst_re=DEFAULT_RE, cores=(), core_re=None, guard=None, ta
     stats = dict(selected=len(sel), split=nsplit, segments=nseg, skipped=skipped,
                  latches=len(lat), bits=sum(l["W"] for l in lat),
                  by_kind={k: sum(l["W"] for l in lat if l["kind"] == k) for k in ("seg", "in", "out")},
-                 stages=sum(x["W"] * x["D"] for x in sel.values()))
+                 stages=sum(x["W"] * x["D"] for x in sel.values()), unchained=nunch, unchained_stages=unch_stages)
     return txt[:hdr_end] + body, lat, stats
 
 
-def apply_kit(rtl_dir, seg=8, tail_groups=0, core_types=(), cores=()):
+def apply_kit(rtl_dir, seg=8, tail_groups=0, core_types=(), cores=(), unchain=True):
     """gen_phys entry (budgets.r_dly_lockup): the post-pass on every staged *_bound.sv of the kit that instantiates a delay cell.
     Returns {file: stats}; writes each file in place (tmp + rename)."""
     out = {}
@@ -191,7 +225,7 @@ def apply_kit(rtl_dir, seg=8, tail_groups=0, core_types=(), cores=()):
         src = f.read_text()
         if "ot_dp_dly" not in src:
             continue
-        txt, lat, stats = apply(src, seg=seg, tail_groups=tail_groups, core_types=core_types, cores=cores)
+        txt, lat, stats = apply(src, seg=seg, tail_groups=tail_groups, core_types=core_types, cores=cores, unchain=unchain)
         if txt != src:
             tmp = f.with_name(f.name + ".dlk_tmp")
             tmp.write_text(txt)
@@ -213,7 +247,7 @@ def main(argv):
         cores = [r["instance"] for r in json.loads(Path(opt("--cores")).read_text())["rows"]]
     txt, lat, stats = apply(rtl.read_text(), seg=int(opt("--seg", "8")), inst_re=opt("--inst-re", DEFAULT_RE), cores=cores,
                             core_re=opt("--core-re"), guard=opt("--guard"),
-                            tail_groups=int(opt("--tail-groups", "0")))
+                            tail_groups=int(opt("--tail-groups", "0")), unchain="--no-unchain" not in argv)
     tmp = out.with_name(out.name + ".dlk_tmp")
     tmp.write_text(txt)
     tmp.replace(out)
