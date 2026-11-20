@@ -357,6 +357,127 @@
   },
   {
    "type": "serdes__t12",
+   "path": "clock.tap_group",
+   "set": {
+    "re": "(?:^|[/.])u_core[.](?:g_rst_tree[.]rt_d|u_rm[.]g_rd)\\\\?\\[([0-7])(?=\\\\?\\])"
+   },
+   "cycles": 0,
+   "class": "serdes-rm-tap-group",
+   "status": "take together with class serdes-rm-wpl8 (the H kits H18..H25 and R1 run this grouping inside their OT_TAP_GROUP_RE)",
+   "evidence": "Each read bank k of the rate matcher (g_rd[k]: 64 q + rpq + rpw + wpl, and its reset leaf rt_d[k]) on ONE clk tap, the one nearest the bank centroid (gen_phys tap_group_exports -> OT_TAP_GROUP_RE, clock_taps.tcl group form for compact blocks). Generated kits have no group rule: on T15P the rpq copies sit on clk_t4 (banks 0,3), clk_t55 (1,2,4,5,6) and clk_t12 (7) while every q is on clk_t32, so the bank-local cone crosses taps (window + hold cells on setup paths). The string is the config.mk text: backslashes as in the H kit."
+  },
+  {
+   "type": "serdes__t13",
+   "path": "clock.tap_group",
+   "set": {
+    "re": "(?:^|[/.])u_core[.](?:g_rst_tree[.]rt_d|u_rm[.]g_rd)\\\\?\\[([0-7])(?=\\\\?\\])"
+   },
+   "cycles": 0,
+   "class": "serdes-rm-tap-group",
+   "status": "take together with class serdes-rm-wpl8 (the H kits H18..H25 and R1 run this grouping inside their OT_TAP_GROUP_RE)",
+   "evidence": "Each read bank k of the rate matcher (g_rd[k]: 64 q + rpq + rpw + wpl, and its reset leaf rt_d[k]) on ONE clk tap, the one nearest the bank centroid (gen_phys tap_group_exports -> OT_TAP_GROUP_RE, clock_taps.tcl group form for compact blocks). Generated kits have no group rule: on T15P the rpq copies sit on clk_t4 (banks 0,3), clk_t55 (1,2,4,5,6) and clk_t12 (7) while every q is on clk_t32, so the bank-local cone crosses taps (window + hold cells on setup paths). The string is the config.mk text: backslashes as in the H kit."
+  },
+  {
+   "type": "serdes__t14",
+   "path": "clock.tap_group",
+   "set": {
+    "re": "(?:^|[/.])u_core[.](?:g_rst_tree[.]rt_d|u_rm[.]g_rd)\\\\?\\[([0-7])(?=\\\\?\\])"
+   },
+   "cycles": 0,
+   "class": "serdes-rm-tap-group",
+   "status": "take together with class serdes-rm-wpl8 (the H kits H18..H25 and R1 run this grouping inside their OT_TAP_GROUP_RE)",
+   "evidence": "Each read bank k of the rate matcher (g_rd[k]: 64 q + rpq + rpw + wpl, and its reset leaf rt_d[k]) on ONE clk tap, the one nearest the bank centroid (gen_phys tap_group_exports -> OT_TAP_GROUP_RE, clock_taps.tcl group form for compact blocks). Generated kits have no group rule: on T15P the rpq copies sit on clk_t4 (banks 0,3), clk_t55 (1,2,4,5,6) and clk_t12 (7) while every q is on clk_t32, so the bank-local cone crosses taps (window + hold cells on setup paths). The string is the config.mk text: backslashes as in the H kit."
+  },
+  {
+   "type": "serdes__t15__cla2127225",
+   "path": "clock.tap_group",
+   "set": {
+    "re": "(?:^|[/.])u_core[.](?:g_rst_tree[.]rt_d|u_rm[.]g_rd)\\\\?\\[([0-7])(?=\\\\?\\])"
+   },
+   "cycles": 0,
+   "class": "serdes-rm-tap-group",
+   "status": "take together with class serdes-rm-wpl8 (the H kits H18..H25 and R1 run this grouping inside their OT_TAP_GROUP_RE)",
+   "evidence": "Each read bank k of the rate matcher (g_rd[k]: 64 q + rpq + rpw + wpl, and its reset leaf rt_d[k]) on ONE clk tap, the one nearest the bank centroid (gen_phys tap_group_exports -> OT_TAP_GROUP_RE, clock_taps.tcl group form for compact blocks). Generated kits have no group rule: on T15P the rpq copies sit on clk_t4 (banks 0,3), clk_t55 (1,2,4,5,6) and clk_t12 (7) while every q is on clk_t32, so the bank-local cone crosses taps (window + hold cells on setup paths). The string is the config.mk text: backslashes as in the H kit."
+  },
+  {
+   "type": "serdes__t15__cla3d02796",
+   "path": "clock.tap_group",
+   "set": {
+    "re": "(?:^|[/.])u_core[.](?:g_rst_tree[.]rt_d|u_rm[.]g_rd)\\\\?\\[([0-7])(?=\\\\?\\])"
+   },
+   "cycles": 0,
+   "class": "serdes-rm-tap-group",
+   "status": "take together with class serdes-rm-wpl8 (the H kits H18..H25 and R1 run this grouping inside their OT_TAP_GROUP_RE)",
+   "evidence": "Each read bank k of the rate matcher (g_rd[k]: 64 q + rpq + rpw + wpl, and its reset leaf rt_d[k]) on ONE clk tap, the one nearest the bank centroid (gen_phys tap_group_exports -> OT_TAP_GROUP_RE, clock_taps.tcl group form for compact blocks). Generated kits have no group rule: on T15P the rpq copies sit on clk_t4 (banks 0,3), clk_t55 (1,2,4,5,6) and clk_t12 (7) while every q is on clk_t32, so the bank-local cone crosses taps (window + hold cells on setup paths). The string is the config.mk text: backslashes as in the H kit."
+  },
+  {
+   "type": "serdes__t16",
+   "path": "clock.tap_group",
+   "set": {
+    "re": "(?:^|[/.])u_core[.](?:g_rst_tree[.]rt_d|u_rm[.]g_rd)\\\\?\\[([0-7])(?=\\\\?\\])"
+   },
+   "cycles": 0,
+   "class": "serdes-rm-tap-group",
+   "status": "take together with class serdes-rm-wpl8 (the H kits H18..H25 and R1 run this grouping inside their OT_TAP_GROUP_RE)",
+   "evidence": "Each read bank k of the rate matcher (g_rd[k]: 64 q + rpq + rpw + wpl, and its reset leaf rt_d[k]) on ONE clk tap, the one nearest the bank centroid (gen_phys tap_group_exports -> OT_TAP_GROUP_RE, clock_taps.tcl group form for compact blocks). Generated kits have no group rule: on T15P the rpq copies sit on clk_t4 (banks 0,3), clk_t55 (1,2,4,5,6) and clk_t12 (7) while every q is on clk_t32, so the bank-local cone crosses taps (window + hold cells on setup paths). The string is the config.mk text: backslashes as in the H kit."
+  },
+  {
+   "type": "serdes__t1__clb45db5be",
+   "path": "clock.tap_group",
+   "set": {
+    "re": "(?:^|[/.])u_core[.](?:g_rst_tree[.]rt_d|u_rm[.]g_rd)\\\\?\\[([0-7])(?=\\\\?\\])"
+   },
+   "cycles": 0,
+   "class": "serdes-rm-tap-group",
+   "status": "take together with class serdes-rm-wpl8 (the H kits H18..H25 and R1 run this grouping inside their OT_TAP_GROUP_RE)",
+   "evidence": "Each read bank k of the rate matcher (g_rd[k]: 64 q + rpq + rpw + wpl, and its reset leaf rt_d[k]) on ONE clk tap, the one nearest the bank centroid (gen_phys tap_group_exports -> OT_TAP_GROUP_RE, clock_taps.tcl group form for compact blocks). Generated kits have no group rule: on T15P the rpq copies sit on clk_t4 (banks 0,3), clk_t55 (1,2,4,5,6) and clk_t12 (7) while every q is on clk_t32, so the bank-local cone crosses taps (window + hold cells on setup paths). The string is the config.mk text: backslashes as in the H kit."
+  },
+  {
+   "type": "serdes__t1__clfe1f0815",
+   "path": "clock.tap_group",
+   "set": {
+    "re": "(?:^|[/.])u_core[.](?:g_rst_tree[.]rt_d|u_rm[.]g_rd)\\\\?\\[([0-7])(?=\\\\?\\])"
+   },
+   "cycles": 0,
+   "class": "serdes-rm-tap-group",
+   "status": "take together with class serdes-rm-wpl8 (the H kits H18..H25 and R1 run this grouping inside their OT_TAP_GROUP_RE)",
+   "evidence": "Each read bank k of the rate matcher (g_rd[k]: 64 q + rpq + rpw + wpl, and its reset leaf rt_d[k]) on ONE clk tap, the one nearest the bank centroid (gen_phys tap_group_exports -> OT_TAP_GROUP_RE, clock_taps.tcl group form for compact blocks). Generated kits have no group rule: on T15P the rpq copies sit on clk_t4 (banks 0,3), clk_t55 (1,2,4,5,6) and clk_t12 (7) while every q is on clk_t32, so the bank-local cone crosses taps (window + hold cells on setup paths). The string is the config.mk text: backslashes as in the H kit."
+  },
+  {
+   "type": "serdes__t2",
+   "path": "clock.tap_group",
+   "set": {
+    "re": "(?:^|[/.])u_core[.](?:g_rst_tree[.]rt_d|u_rm[.]g_rd)\\\\?\\[([0-7])(?=\\\\?\\])"
+   },
+   "cycles": 0,
+   "class": "serdes-rm-tap-group",
+   "status": "take together with class serdes-rm-wpl8 (the H kits H18..H25 and R1 run this grouping inside their OT_TAP_GROUP_RE)",
+   "evidence": "Each read bank k of the rate matcher (g_rd[k]: 64 q + rpq + rpw + wpl, and its reset leaf rt_d[k]) on ONE clk tap, the one nearest the bank centroid (gen_phys tap_group_exports -> OT_TAP_GROUP_RE, clock_taps.tcl group form for compact blocks). Generated kits have no group rule: on T15P the rpq copies sit on clk_t4 (banks 0,3), clk_t55 (1,2,4,5,6) and clk_t12 (7) while every q is on clk_t32, so the bank-local cone crosses taps (window + hold cells on setup paths). The string is the config.mk text: backslashes as in the H kit."
+  },
+  {
+   "type": "serdes__t3",
+   "path": "clock.tap_group",
+   "set": {
+    "re": "(?:^|[/.])u_core[.](?:g_rst_tree[.]rt_d|u_rm[.]g_rd)\\\\?\\[([0-7])(?=\\\\?\\])"
+   },
+   "cycles": 0,
+   "class": "serdes-rm-tap-group",
+   "status": "take together with class serdes-rm-wpl8 (the H kits H18..H25 and R1 run this grouping inside their OT_TAP_GROUP_RE)",
+   "evidence": "Each read bank k of the rate matcher (g_rd[k]: 64 q + rpq + rpw + wpl, and its reset leaf rt_d[k]) on ONE clk tap, the one nearest the bank centroid (gen_phys tap_group_exports -> OT_TAP_GROUP_RE, clock_taps.tcl group form for compact blocks). Generated kits have no group rule: on T15P the rpq copies sit on clk_t4 (banks 0,3), clk_t55 (1,2,4,5,6) and clk_t12 (7) while every q is on clk_t32, so the bank-local cone crosses taps (window + hold cells on setup paths). The string is the config.mk text: backslashes as in the H kit."
+  },
+  {
+   "type": "serdes__t4",
+   "path": "clock.tap_group",
+   "set": {
+    "re": "(?:^|[/.])u_core[.](?:g_rst_tree[.]rt_d|u_rm[.]g_rd)\\\\?\\[([0-7])(?=\\\\?\\])"
+   },
+   "cycles": 0,
+   "class": "serdes-rm-tap-group",
+   "status": "take together with class serdes-rm-wpl8 (the H kits H18..H25 and R1 run this grouping inside their OT_TAP_GROUP_RE)",
+   "evidence": "Each read bank k of the rate matcher (g_rd[k]: 64 q + rpq + rpw + wpl, and its reset leaf rt_d[k]) on ONE clk tap, the one nearest the bank centroid (gen_phys tap_group_exports -> OT_TAP_GROUP_RE, clock_taps.tcl group form for compact blocks). Generated kits have no group rule: on T15P the rpq copies sit on clk_t4 (banks 0,3), clk_t55 (1,2,4,5,6) and clk_t12 (7) while every q is on clk_t32, so the bank-local cone crosses taps (window + hold cells on setup paths). The string is the config.mk text: backslashes as in the H kit."
+  },
+  {
+   "type": "serdes__t12",
    "path": "verilog_defines",
    "append": [
     "OT_S81_KP4_AMOK_PIPE"

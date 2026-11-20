@@ -43,7 +43,7 @@ NO serdes type is signed off. Nothing was exported to rtx-pro ~/signed-export-11
 - main 315cc722d68: opt-in OT_S81_SERDES_RM_WPL8 (ot_s81_rate_match_rt LOCAL_WP), bench rtl/dsrom_sys/s81_link/tb_s81_rate_match_rt_wpl.sv +
   tools/s81_link/run_rm_wpl_bench.sh (PASS x2, mutant FAIL), gen_phys source contract + test (test_txl_mid_exports.py 14 pass).
 - Rows: lanes/handoff/FABLE-FIX-S81-SERDES-0000-j4-rows.json (= intel2 .../fable-fix-s81-serdes-0000/rows/serdes-j4-rows.json, made by mk_rows.py):
-  11 io_pma_lock sites READY; 11 RM define rows and 11 AMPIPE rows (proof running); 5 internal_stations asks (bit sites by S81-DIE-R3's tool).
+  11 io_pma_lock sites READY; 11 RM define rows + 11 clock.tap_group rows (one clk tap per RM read bank) and 11 AMPIPE rows (proof running); 5 internal_stations asks (bit sites by S81-DIE-R3's tool).
 - Tools: sta_census.tcl + sta_run.sh (class census + worst-path reports; note sta::worst_slack prints raw units, class lines are ps),
   geo.py + geo_run.sh (placed group geometry), in intel2 ~/fable-fix-s81-serdes-0000 and on the hosts.
 
