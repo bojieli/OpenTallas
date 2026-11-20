@@ -22,3 +22,17 @@ partition (parent/ft stations), internal pad = class minimum.
 4. netlist_inherit summary/prove once a merged kit is synthesized.
 
 Clones: epyc7 /srv/opentallas-scratch2/claude/unify-tools-r2 (work), /srv/opentallas-scratch2/claude/unify-tools-r2-push (push, cone tools+rtl+physical).
+
+## Update 2026-11-20 ~23:00 UTC (COORD ruling (b) executed)
+- pad_hoist.py on main fd810928495 + f179a47a139 (tests 8/8): ft-slot station hoist of per-instance receiver pads,
+  kit IN-station floor, --raise-cycles level-up where no free slot exists (+cycles, pre-approved), FIXEDCYC-consistent cuts.
+- QC proof plan: epyc9 /srv/opentallas-scratch2/claude/unify-tools-r2-work/ph5/plan.json (+ side.json = rs/side.json, report_bind.json);
+  = A4+CBX base + class_merge sle_ctl 7->1 + role-strap slw_stm/slw_fw v1 merges + pad_hoist (14 slot raises +208 stations,
+  22 lanes +45 cycles) + slw_stm r8_strap_pad_max 63.  Strict bind ph5/bind_r1: sle_ctl 12 inst, slw_fw, slw_stm, slw_hc3,
+  slw_su_c each ONE module; plan_gate_pre clean; 36 errors left:
+  * R8_STALE 30 (dvs_E1 u_tap.hw): pinned R8 table derived from the old seed bus_groups; re-derive from ph5 bind bus_groups.
+  * LANE_ASBUILT 5 UNPRICED_KIT_STATIONS: lanes leaving merged instances now carry the representative OUT-bus kit stations
+    (sl_E0/E4/W5_ctl b_hw_ctl_hc3 kit 4, sl_W0_fw flte kit 3, sl_W0_fw x_fw_fe_p2 kit 3) not priced in their rows -> price them
+    (fixed_cycles >= kit, cycles +delta) in class_merge; next tool item.
+- S81 leaf column solver (s81.leaf_nogrowth_j4e F4500_00): rows epyc9 .../s81col/s81_leaf_col_rows.json NOT J6-ready
+  (rep lacks F00 ft-superset windows; 45 new overlaps).
