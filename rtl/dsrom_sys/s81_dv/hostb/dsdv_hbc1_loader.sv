@@ -65,9 +65,13 @@ module dsdv_hbc1_loader #(
   wire[47:0] status_sample=shadow[441:394],return_send=shadow[489:442];
   wire[7:0] data_stage=shadow[497:490];wire[1:0] data_rank=shadow[499:498];
   wire[48:0] commit_epoch_wide={1'b0,seed}+{1'b0,COMMIT_DELTA}+49'd1;
-  wire[13:0] header_span={words-10'd1,4'b0};
+  localparam [9:0] FIXED_BODY_WORDS=10'd417;
+  // The fixed profile rejects every other count below. Use that same count
+  // for the end-header range check so the validated count stays off its adder.
+  wire[9:0] span_words=VARIABLE_WORDS!=0 ? words : FIXED_BODY_WORDS;
+  wire[13:0] header_span={span_words-10'd1,4'b0};
   wire[48:0] end_header_wide={1'b0,first_header}+{35'd0,header_span}+49'd4;
-  wire body_shape=!commit_epoch_wide[48]&&!end_header_wide[48]&&(VARIABLE_WORDS!=0 ? words!=0 : words==417)&&stride==16&&target_gap==4&&transit_gap==4&&data_stage<241&&data_rank<4&&
+  wire body_shape=!commit_epoch_wide[48]&&!end_header_wide[48]&&(VARIABLE_WORDS!=0 ? words!=0 : words==FIXED_BODY_WORDS)&&stride==16&&target_gap==4&&transit_gap==4&&data_stage<241&&data_rank<4&&
    shadow[511:500]==0&&shadow[163:100]==expected_programme&&
    first_header>seed+COMMIT_DELTA+4&&ks_capture>end_header_wide[47:0]&&
    prev_input>ks_capture&&status_sample<return_send&&return_send<prev_input;
