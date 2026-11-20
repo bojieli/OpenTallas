@@ -32,6 +32,18 @@ md = lambda a, b: abs(a[0] - b[0]) + abs(a[1] - b[1])          # noqa: E731
 snap = lambda v: round(round(v / G) * G, 3)                      # noqa: E731
 
 
+def matching(P, rex):
+    """(name, type) of every partition type matching rex that has hard cores; a matching type with no hard_cores entry
+    (a hard type such as ot_s81sl_kv_leaf__t2) has no lane cores to route around, so it is skipped with a warning."""
+    for tn, t in sorted(P["partition_types"].items()):
+        if not re.search(rex, tn):
+            continue
+        if not t.get("hard_cores"):
+            print(f"HI_CORRIDOR_WARN {tn}: no hard_cores entry, skipped", file=sys.stderr)
+            continue
+        yield tn, t
+
+
 def boxes(t):
     out = []
     for h in t["hard_cores"]:
@@ -99,9 +111,7 @@ def crossing(seg, box):
 
 def check(P, rex, gs):
     rep = {}
-    for tn, t in sorted(P["partition_types"].items()):
-        if not re.search(rex, tn):
-            continue
+    for tn, t in matching(P, rex):
         B = boxes(t); Q = hi_rows(t)
         if not Q:
             continue
@@ -159,9 +169,7 @@ def free_points(t, B, mincl, step=4.32):
 
 def sites(P, rex, gs, mincl):
     rows = []
-    for tn, t in sorted(P["partition_types"].items()):
-        if not re.search(rex, tn):
-            continue
+    for tn, t in matching(P, rex):
         Q = hi_rows(t)
         if not Q:
             continue
@@ -246,9 +254,7 @@ def columns(L, tol=30.0):
 
 def seed(P, rex, form, cor):
     out, rep = {}, {}
-    for tn, t in sorted(P["partition_types"].items()):
-        if not re.search(rex, tn):
-            continue
+    for tn, t in matching(P, rex):
         L = lanes_of(t)
         if len(L) != 16:
             continue
@@ -492,9 +498,10 @@ def main():
             print(tn, r)
     elif a.cmd == "apply":
         S = json.load(open(a.seed))
+        ok = dict(matching(P, a.types))
         for tn, sd in S.items():
-            if re.search(a.types, tn):
-                print(tn, "HI_CORRIDOR_APPLY", move_lanes(P["partition_types"][tn], sd, a.gs, budgets=P.get("budgets")))
+            if tn in ok:
+                print(tn, "HI_CORRIDOR_APPLY", move_lanes(ok[tn], sd, a.gs, budgets=P.get("budgets")))
         json.dump(P, open(a.out, "w"), indent=1)
     else:
         rows = sites(P, a.types, a.gs, a.min_clear)

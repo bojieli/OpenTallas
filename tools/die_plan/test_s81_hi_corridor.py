@@ -146,3 +146,16 @@ def test_cli_apply_runs_isolated(tmp_path):
                         "--seed", str(tmp_path / "seed.json"), "--out", str(tmp_path / "o.json")], capture_output=True, text=True)
     assert r.returncode == 0, r.stderr[-600:]
     assert "clk_t9" in r.stdout
+
+
+def test_types_without_hard_cores_are_skipped_with_warning(capsys):
+    P = plan()
+    P["partition_types"]["ot_s81sl_kv_leaf__t2"] = dict(outline_um=[100.0, 100.0], hard=True, internal_stations=[])
+    rex = r"^ot_s81sl_(kv_)?leaf__t\d+$"
+    rep = H.check(copy.deepcopy(P), rex, 2)
+    assert "ot_s81sl_kv_leaf__t2" not in rep and "ot_s81sl_leaf__t99" in rep
+    Q = copy.deepcopy(P)
+    rows = H.sites(Q, rex, 2, 8.64)
+    assert rows and all(r["type"] == "ot_s81sl_leaf__t99" for r in rows)
+    assert Q["partition_types"]["ot_s81sl_kv_leaf__t2"] == P["partition_types"]["ot_s81sl_kv_leaf__t2"]
+    assert "HI_CORRIDOR_WARN ot_s81sl_kv_leaf__t2" in capsys.readouterr().err
