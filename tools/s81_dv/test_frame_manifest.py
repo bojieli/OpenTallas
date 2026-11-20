@@ -56,3 +56,25 @@ def test_manifest_content_options(tmp_path):
     p1 = d1 / 'm.json'; p1.write_text(json.dumps(dict(base=str(src), files=[str(src / 'rtl/a.sv')], prefer=['x'])))
     p2 = d2 / 'm.json'; p2.write_text(json.dumps(dict(base=str(src), files=['rtl/a.sv'], prefer=['y'])))
     assert C.manifest_content(p1) != C.manifest_content(p2)
+
+
+
+def test_manifest_content_relative_map(tmp_path):
+    source = tmp_path / 'source'
+    bind = source / 'plan/native_bind'
+    relocated = tmp_path / 'relocated'
+    bind.mkdir(parents=True)
+    relocated.mkdir()
+    native_map = bind / 'map.json'
+    native_map.write_text('{"parts": []}')
+    (source / 'map.json').write_text('{"parts": ["wrong base"]}')
+    (relocated / 'maps').mkdir()
+    copied_map = relocated / 'maps/map.json'
+    copied_map.write_bytes(native_map.read_bytes())
+    native = bind / 'asbuilt.json'
+    native.write_text(json.dumps(dict(base='../..', map_file='map.json')))
+    replay = relocated / 'asbuilt.json'
+    replay.write_text(json.dumps(dict(base='.', map_file='maps/map.json')))
+    assert C.manifest_content(native) == C.manifest_content(replay)
+    copied_map.write_text('{"parts": ["changed"]}')
+    assert C.manifest_content(native) != C.manifest_content(replay)

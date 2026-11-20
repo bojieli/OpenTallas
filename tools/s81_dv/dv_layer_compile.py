@@ -155,10 +155,10 @@ def check_transport_self(text):
 
 
 def manifest_content(path):
-    """an as-built manifest's selection by CONTENT: every key except 'base' compared exactly, with each string that
-    names an existing file (absolute, or relative to the manifest base) replaced by (basename, sha256).  A repo-relative
-    copy of a manifest with absolute paths therefore matches iff it selects the same bytes with the same options; a
-    path that resolves in one copy and not the other stays a raw string and differs (fail closed)."""
+    """Compare selected manifest files by basename and SHA-256, along with the other options.
+    The binder resolves map_file from the manifest's directory. Other file strings use the manifest base and
+    repository fallback. Unresolved paths stay strings, so a missing relocated file fails the comparison.
+    """
     path = Path(path)
     m = json.loads(path.read_text())
     b = Path(m.get('base', '.'))
@@ -175,7 +175,10 @@ def manifest_content(path):
                 if r.is_file():
                     return ['FILE', r.name, hashlib.sha256(r.read_bytes()).hexdigest()]
         return v
-    return canon({k: v for k, v in m.items() if k not in ('base', 'frame_root_note')})   # frame_root.py provenance note
+    selection = {k: v for k, v in m.items() if k not in ('base', 'frame_root_note')}
+    if map_file := selection.get('map_file'):
+        selection['map_file'] = str(path.parent.resolve() / map_file)
+    return canon(selection)
 
 
 class Die:
