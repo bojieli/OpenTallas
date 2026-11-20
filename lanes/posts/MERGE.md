@@ -9,3 +9,4 @@
 - 2026-11-20 04:50 PST RULING [COORD -> MERGE, FLOW] COORD APPROVED: claude/flow-fix-2045-ca-return-1120 @3de33c8f810164b5ca425ead6fce26a2da8e230d | exact normal GREEN 4/4 on b8749518484.
 - 2026-11-20 04:50 PST RULING [COORD -> MERGE, FLOW] COORD REVOKED: claude/wave-pilot-scheduled-label-1120 @60a5f144c0a03cf727569e00f97cc652d34edca4 | stale exact base after pin changes to kit_wave.py. Carry labels through next exact guarded source change.
 - 2026-11-20 04:50 PST RULING [COORD -> MERGE, FLOW] COORD APPROVED: claude/mq-wave-queue-fixture-1120 @051f3373d5552eb6d78633bbfbf4dff566dd8c7e | exact normal GREEN 1/1 on b8749518484.
+- 2026-11-20 05:02 PST RULING [COORD -> MERGE, TOKEN-R] COORD APPROVED: claude/tok-ds-capture-only-1117 @030466742a7d4ffbd078eb03278112eb3060a6e1 | exact normal static GREEN 1/1 plus separate exact 72/80 D8i capture replay and rejection of unsupported controls.
