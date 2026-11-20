@@ -14393,3 +14393,4 @@ FAILED [AUTOPILOT e05b5d00ca50] 2026-11-20 14:46:33 PST AUTOPILOT -> KIT-WAVE-3:
   NO-PROGRESS epyc2 col_h10_r2__t1__cl1f5d6c2a__pvcd889288 5_2_route stage 23.7 h job 27.7 h: drt_violations best 20 last 20 rows 53 window-gain 0.0%; stagnant 6.5 h; last event 1.2 h ago, log write 0.7 h ago (3371 lines)
   NO-PROGRESS epyc2 col_h10_r2__t1__cl1f5d6c2a__pv16277ca6 5_2_route stage 23.7 h job 27.7 h: drt_violations best 20 last 20 rows 53 window-gain 0.0%; stagnant 6.5 h; last event 1.2 h ago, log write 0.9 h ago (3371 lines)
   NO-PROGRESS epyc10 native59 pregrt_ff_hold stage 11.3 h job 16.0 h: no new meaningful log line for 9.2 h; last: 0 |       0 |       0 |            0 |    +0.0% |   5.000 |   0.000 | u_bound.u_pd5_emb_code_q_388.q
+- 2026-11-20 14:54 PST NEEDS-ACTION [FLOW-HEALTH-1 -> COORD] kit_wave.json dies.qwen_kvsys has key(s) no runtime code reads: auto_visual_review_skip; the setting does nothing (delete it or add its reader)
