@@ -126,7 +126,8 @@ class Liveness(unittest.TestCase):
             ap.prog["/srv/kw/b"]["cpu"] = 400.0                                  # b keeps burning CPU
             ap.prog["/srv/kw/a"]["cpu"] = 41.0                                   # a: ~0 growth
             self.assertEqual(KW.reap_dead(ap, cfg, st, {}, now=now + 31 * 60), 1)
-            self.assertEqual((st["items"]["a"]["status"], st["items"]["a"]["class"]), ("CANCELLED", "HUNG"))
+            self.assertEqual((st["items"]["a"]["status"], st["items"]["a"]["class"]), ("RETRY-INFRA", "INFRA"))
+            self.assertEqual(st["hung_retried"]["s81|a"]["attempt"], st["items"]["a"]["attempt"])
             self.assertIn("DEAD", st["items"]["a"]["reason"] + " ".join(ap.logs))
             self.assertEqual(st["items"]["b"]["status"], "RUNNING")
 
