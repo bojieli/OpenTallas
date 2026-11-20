@@ -39,6 +39,20 @@ def cand():
 
 
 class Apply(unittest.TestCase):
+    def test_event_and_exact_route_review_scope_commit_together(self):
+        c = mk()
+        cfgpath = c / "autopilot" / "kit_wave.json"
+        scope = {"event": "E1", "items": ["t1"]}
+        config = {"event": "E1", "review_before_route": scope}
+        old = cfgpath.read_text()
+        with self.assertRaisesRegex(AssertionError, "candidate event"):
+            apply(c, dict(cand(), config=dict(config, event="E2")), "/x/old", "E0", pilot_item="t1", TC=TC)
+        self.assertEqual(cfgpath.read_text(), old)
+        apply(c, dict(cand(), config=config), "/x/old", "E0", pilot_item="t1", TC=TC)
+        d = json.loads(cfgpath.read_text())["dies"]["kv"]
+        self.assertEqual(d["event"], "E1")
+        self.assertEqual(d["review_before_route"], scope)
+
     def test_atomic_apply_adds_the_pilot_hold_and_queues_the_old_tree(self):
         c = mk()
         r = apply(c, cand(), "/x/old", "E0", pilot_item="t1", TC=TC)

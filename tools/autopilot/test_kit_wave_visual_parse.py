@@ -153,3 +153,32 @@ class Wave(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def test_event_review_blocks_only_its_changed_items_and_accepts_its_exact_kit(tmp_path, monkeypatch):
+    reviews = tmp_path / "coord" / "lanes" / "GEOM-REVIEW.md"
+    reviews.parent.mkdir(parents=True)
+    reviews.write_text(
+        "GEOM VERDICT [viewed] s81/t1 attempt_1: GOOD kit=epyc9:/old\n"
+        "GEOM VERDICT [viewed] s81/t1 attempt_1: GOOD\n"
+        "GEOM VERDICT [viewed] s81/t1 attempt_2: BAD kit=epyc9:/new\n"
+        "GEOM VERDICT [viewed] s81/t1 attempt_3: GOOD kit=epyc9:/new\n"
+    )
+    monkeypatch.setattr(K.Path, "home", lambda: tmp_path)
+    monkeypatch.setattr(K, "_VISUAL_CACHE", {"mtime": None, "v": {}})
+    policy = {"event": "J", "items": ["t1"]}
+    cfg = {"dies": {"s81": {"event": "J", "review_before_route": policy}},
+           "stops_off": True, "wait_visual": False, "visual_gate": "signoff"}
+    row = {"die": "s81", "event": "J", "item": "t1", "attempt": 1,
+           "kit_host": "epyc9", "kit": "/new", "status": "PASS"}
+    assert K.route_hold_reason(cfg, row).startswith("WAIT-VISUAL")
+    assert K.route_hold_reason(cfg, dict(row, attempt=2)).startswith("WAIT-FORM")
+    assert K.route_hold_reason(cfg, dict(row, attempt=3)) is None
+    assert K.route_hold_reason(cfg, dict(row, item="unchanged")) is None
+    assert K.route_hold_reason(cfg, dict(row, event="older")) is None
+    assert K.route_hold_reason(cfg, dict(row, attempt=3, kit_host="epyc8")).startswith("WAIT-VISUAL")
+
+    admitted = dict(row, status="ENQUEUED", q_status="RUNNING")
+    before = dict(admitted)
+    K.enqueue_pass(None, cfg, {}, admitted, {})
+    assert admitted == before
