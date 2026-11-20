@@ -55,3 +55,14 @@ All relaunch after the 405 reach override (lever 1) lands for D8i.
   5 slice C taps: c1x t1 1,289-sink tap, kv512_C row; 6 SRAMREG: 0/75 leaf types carry it in the J5 base because VP_SRAMREG was staged only in the separate
   vp_sr donor tree (stage_vp_sramreg.py, gate_vp_sr) -> bring into J6 base; 7 bk_sel A3P rows (FABLE-FIX-S81-BKSEL-R2); 8 svc H8 (FABLE-FIX-S81-SVC-R2).
 - Another waiter (s81-die-r3-hub/j5_r4_iq_output_map_wait.sh, 10:22, not mine) reads iq_C rb map after the repair bind; read-only.
+
+## 11-20 12:05 update
+- J5 repaired strict (gate_r5_repair): bind 0 errors, LATCHECK 0, G0 adds 85 errors vs D8i. 84 are clock_landings monitor hops (cland_mon_*, up to 5,005 um, 0 relays; D8i had 48 relay edges); 1 is the reset wavefront (38 partitions with no rst_o within 300).
+  Cause: CBC rule 4 caps the die reset hop at 300 (reset_tree.relay_um); the landing monitor tree follows the wavefront; reach_relay_plan needs start_tree.provider (J5 existing-clock form has none).
+  Accepted as non-functional (DECISION post 12:0x). J6 item 9: die reset hop 405 (die.reach_um), or die reset relays plus monitor relays.
+- Re-armed after that decision. epyc10 s81-die-r4-relay/j5_pre.sh (PRE + touch rehome_input/bound_ready, via ot-run) -> hub j5_accept.log.
+  The R3 donor watchers (svcref, t31, f0_q, vp_sr, r1_frame, rom) start on bound_ready.
+  hub j5_chain2.sh (waits on j5_accept.log + svcref) -> j5_chain2.out CHAIN_PACKED -> j5_apply2.sh -> j5_apply2.out APPLY_DONE.
+  The old j5_chain/j5_apply exited at CHAIN_STOP.
+- Leaf t21 (a13) and t26 (a6) on D8i: GEOM VERDICT ISSUES-ACCEPT posted, released to route. No hold count is available at placement.
+- svc_lo_dsdv_svc_rs__t6 is covered by FABLE-FIX-S81-SVC-R2.
