@@ -36,7 +36,7 @@ Cell count: 496,913 placed = 95,939 flops + 108,252 buffers + 124,467 anonymous 
 ## 4. Proof p1 (c1x_C t9, private kit, to GRT TT)
 
 Form: D8h bound module (tree `kw45/src_s81_pin_3c913dbdfb23_d8h_1117_work`, tools overlay `rt_tools_launch/...d8h_1117_work@5802101050d7` = KIT-RD-1) + R1 + R2 rows + R3 leafdn sites. Scripts on epyc9 `fable-fix-s81-slicec`: `mkplan.py`, `p1_taps.sh`, `p1_kit.sh` (kit-rtl + gen phys), `p1_launch.sh HOST`, `p1_run.sh`. Private plan `p1/s81/plan_h2_2249.json`; kit `p1/dsdv_slice_c1x_C__t9/gen/dsdv_slice_c1x_C__t9`.
-Status 2026-11-20 00:50 PST: kit-rtl PASS (relay_depth rows staged, receipt `p1/dsdv_slice_c1x_C__t9/rtl/kit_relay_depth.json`); gen phys running (`p1_kit.log`); not yet launched. Launch: `bash p1_launch.sh <host>` on epyc9 (copies the kit, starts `ot-run --mem 72 ... p1_run.sh ... grt`).
+Status 2026-11-20 01:1x PST: kit generated (kit-rtl PASS with the relay_depth rows staged, receipt `p1/dsdv_slice_c1x_C__t9/rtl/kit_relay_depth.json`; gen phys P1_KIT_OK, 158 soft taps in the SDC). Run QUEUED on epyc9 under ot-run (--mem 72, 26 waiters / 1,496 GB ahead; every host admits 0 GB), log `p1_run.log`. NO timing number exists yet for p1: nothing in section 3 is proven. The register dumps (`dump2.sh`) are also queued with --max-wait 2400 and may end NOT RUN: rerun `dump2.sh HOST TYPE...`, then `taps_all.sh` (writes `rows/slicec_tap_rows.json`).
 Read at CTS: `OT_TAP_BALANCE` (spread, was 273), `OT_TAP_CHECK` trees over 270 (was 36), `OT_CTS_POST_TIMING` (was -1,422 / tns -2.23M), then run `eps2.sh` + `ana.py` on the new 4_cts.odb and compare class by class with section 1. Expected residue: class D whole, rb_d S face, d1 relays at xr.
 
 ## 5. Next steps for the successor
