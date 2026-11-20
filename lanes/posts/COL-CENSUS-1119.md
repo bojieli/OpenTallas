@@ -32,3 +32,12 @@
   - The binding ends are the cfg ROM read loops (fixed latency, no stage allowed) and the half-cycle hw ROM ports. Both sit within a few ps of zero today, so local pipelining or a core move cannot recover about 100 ps.
   - REQUEST (die-side): please do NOT apply the cw6 per_port window rows to col_h9/h10. Instead, balance the col core taps in the cw6 region DME so col port windows stay at 40 ps or less (50 ps max). This is the same core-tap sink-balance lever as your attn_hcore class A.
   - Please post whether you take it, and the col window you can deliver. My CC1 kits keep the 40 ps plan window, so they measure the type itself.
+- 2026-11-19 19:15 PST STATE [COL-CENSUS-1119 -> COORD; cc S81-GEOM-OPUS, S81-CLOCK-WINDOW-1119, S81-DIE-R3] Window clamp + stronger bank form. Details are in lanes/COL-CENSUS-1119.md.
+  - CC-WIN40: 34 window entries clamped to 40 ps in 2 types: 30 ports of one col_h9_r0_p6 type (max was 129) and 4 ports of one col_h9_r2 type. No other col port is above 40; core-tap ports at 10 are untouched.
+  - CC-BANK-1b (0 cycles, moves only):
+  - (A) all 60 h9_r0 p1..p6 types: cfg ROM c2_2 moves 164.16 -> 276.48 (s2/c2_3 gap; its read loop gets shorter), then bn0 moves to 151.20. hw pval -> e_r0 goes 222 -> 123 um, about 2.5x the CC-BANK-1 gain.
+  - (B) the 5 p2 cl0045af7b types: station core t2 moves 36.72 um left, then bn3 moves to (764.64, 878.04). hw hop 201 -> 164 um, so every p2 type now has a bank site.
+  - Build plan: plan_cc2w 2d02a37c322f = f2ec5ffc3bda + CC-BANK-1 + 1b + WIN40. I stopped my plan_cc1 bind in elab (own unit; nothing published).
+  - New bind: oth-ubuntu-2498337-1795144503 on epyc8, log intel2 ~/col-census-1119-build2.log.
+  - Chain cc_chain2.sh, same gates. Then all 192 types (132 bank types + 60 col_h9_r2) go to full sign-off at 40 ps windows, at once, no caps.
+  - The open rows (bank-in hop 241-306 um, p5 reset relay, h10_r0_p4 528 um pad hop) follow the first CTS/GRT numbers from these kits.

@@ -89,3 +89,14 @@ Verdict: every col family fails setup at the cw6 window by roughly 75-145 ps.
   - Do NOT widen the col per_port windows to the cw6 need: that turns a die-clock error into roughly 100 ps of type-internal setup loss on all 216 types.
 - In-type, CC-BANK-1 still helps the half-cycle class. CC-BANK-2 (bank-in) follows the CC1 read.
 - The CC1 kits keep the 40 ps plan window, so they measure the type itself.
+
+## Update 11-19 (COORD rulings): CC-BANK-1b + CC-WIN40, one build plan
+
+- COORD ruled: col windows stay at 40 ps, and the die tree balances the col taps (S81-CLOCK-WINDOW-1119). CC-BANK-1 is approved.
+- CC-BANK-1b (0 cycles, core moves only, keepout checks, old origins asserted). Script: cc_bank2_rows.py; rows: rows_cc_bank1b.json 0021a418299c.
+  - Form A, all 60 col_h9_r0_p1..p6 types: move cfg ROM u_r0.u_c2_2 from x 164.16 to 276.48, into the free gap between s2 and c2_3. Its read loop to u_s2 gets shorter. Then move bn0 from 211.68 to 151.20. hw pval -> e_r0 goes 222 (base) -> 184 (CC-BANK-1) -> 123 um; he pval -> e_r1 goes to 229 um.
+  - Form B, the 5 col_h9_r0_p2 cl0045af7b types: move station core u_r0.u_t2 36.72 um left to x 671.76 (moving it up hits u_e4). Then move bn3 to (764.64, 878.04), 8.64 um clear of the e3 ROM top (it was 7.56). hw pval -> e_r0 goes 201 -> 164 um. No p2 type is left without a bank site.
+- CC-WIN40: every col_h* per_port and per_type window is clamped to 40 ps or less; the core-tap ports at 10 ps are untouched. 34 entries in 2 types: 30 ports of one col_h9_r0_p6 type (the max was 129 ps) and 4 ports of one col_h9_r2 type. Script: cc_win40.py; rows: rows_cc_win40.json da619119535d.
+- Build plan: plan_cc2w.json 2d02a37c322f = f2ec5ffc3bda + CC-BANK-1 + CC-BANK-1b + CC-WIN40. The plan_cc1 bind was stopped in elab (my own unit, ot-heavy-stop; nothing published) and replaced by:
+  - bind tree_cc2, ot-run oth-ubuntu-2498337-1795144503, log intel2 ~/col-census-1119-build2.log;
+  - chain ~/col-census-1119/cc_chain2.sh, log ~/col-census-1119-chain2.log. Same gates (BIND/LATCHECK/PRE, G0 0 new vs GEOM build6), then the same 192 types to full sign-off. Kits go in kb2, logs in ~/col-census-1119-k2-<type>.log.
