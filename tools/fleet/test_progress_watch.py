@@ -55,6 +55,15 @@ class Rules(unittest.TestCase):
         f = "2026-11-19 10:%02d:00 PST AUTOPILOT: KIT-WAVE FAIL qwen_compute/it PLAN: x @place: y"
         e = self.ev(f % 0, f % 30)
         self.assertEqual([x["cls"] for x in P.detect(e, D(2026, 11, 19, 10, 40)) if x["cls"] == "NO-ADVANCE"], ["NO-ADVANCE"])
+        # a changed input digest between the attempts is not a repeat
+        la = "2026-11-19 10:%02d:00 PST AUTOPILOT: KIT-WAVE LAUNCH qwen_compute/it (type, 1 replicas) event-key k%d plan p.json@sha%d src s unit u"
+        e2 = self.ev(la % (0, 1, 1), f % 1, la % (20, 2, 2), f % 30)
+        self.assertFalse([x for x in P.detect(e2, D(2026, 11, 19, 10, 40)) if x["cls"] == "NO-ADVANCE"])
+        e3 = self.ev(la % (0, 1, 1), f % 1, la % (20, 1, 1), f % 30)
+        self.assertTrue([x for x in P.detect(e3, D(2026, 11, 19, 10, 40)) if x["cls"] == "NO-ADVANCE"])
+        # live: an item with no current-plan row in the stages tsv is ignored
+        rows = [{"die": "s81", "item": "z", "plan_current": "yes", "status": "RUNNING"}]
+        self.assertFalse([x for x in P.detect(e, D(2026, 11, 19, 10, 40), {"rows": rows}) if x["cls"] == "NO-ADVANCE"])
         g = "2026-11-19 10:30:00 PST AUTOPILOT: KIT-WAVE FAIL qwen_compute/it PLAN: x @route: y"
         self.assertFalse([x for x in P.detect(self.ev(f % 0, g), D(2026, 11, 19, 10, 40)) if x["cls"] == "NO-ADVANCE"])
 

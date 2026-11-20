@@ -54,7 +54,8 @@ def parse_lines(lines):
         if rest.startswith("KIT-WAVE LAUNCH "):
             tok = rest.split()[2]
             if "/" in tok:
-                ev.append({"t": t, "kind": "launch", "die": tok.split("/")[0], "item": tok.split("/", 1)[1]})
+                dg = re.search(r"event-key (\S+) plan (\S+)", rest)
+                ev.append({"t": t, "kind": "launch", "die": tok.split("/")[0], "item": tok.split("/", 1)[1], "digest": dg.groups() if dg else None})
         elif rest.startswith("KIT-WAVE DIE-OFF "):
             ev.append({"t": t, "kind": "die_off", "die": rest.split()[2].rstrip(":")})
         elif rest.startswith("KIT-WAVE NO-LAUNCH "):
@@ -167,23 +168,32 @@ def detect(events, now, state=None, parked=PARKED_DEFAULT):
         out.append({"die": die, "cls": "SELF-STOP", "state": "alert",
                     "text": f"SELF-STOP {die}: {len(recent)} job(s) stopped by the wave {int(dt.total_seconds())} s after its own "
                             f"{'REAP-REVIVE' if k == 'revive' else 'SUBMIT'} (latest {row} at {e['t'].strftime('%H:%M:%S')}: {e['why']})"})
-    # 3. NO-ADVANCE: 2+ FAIL attempts of an item in 6 h, the later one not past the earlier stages
-    byitem = {}
+    # 3. NO-ADVANCE: 2+ attempts of an item in 6 h that ended on the SAME failing stage with an UNCHANGED input digest
+    #    (digest = event-key + plan@sha of the LAUNCH the attempt came from).  Live: only items with a current-plan row in the stages tsv.
+    cur = {(r["die"], r["item"]) for r in state.get("rows") or [] if r.get("plan_current") == "yes"}
+    dig, byitem = {}, {}
     for e in ev:
-        if e["kind"] == "fail" and now - e["t"] <= timedelta(hours=NO_ADVANCE_H):
-            byitem.setdefault((e["die"], e["item"]), []).append(e)
+        if e["kind"] == "launch":
+            dig[(e["die"], e["item"])] = e["digest"]
+        elif e["kind"] == "fail" and now - e["t"] <= timedelta(hours=NO_ADVANCE_H) and stage_rank(e["stage"]) >= 0:
+            if not state.get("rows") or (e["die"], e["item"]) in cur:
+                byitem.setdefault((e["die"], e["item"]), []).append((e, dig.get((e["die"], e["item"]))))
     bad = {}
     for (die, item), fs in byitem.items():
-        fs = [f for f in fs if stage_rank(f["stage"]) >= 0]  # only attempts that name a known wave stage
-        if len(fs) >= 2 and stage_rank(fs[-1]["stage"]) <= max(stage_rank(f["stage"]) for f in fs[:-1]):
-            bad.setdefault(die, []).append((item, len(fs), fs[-1]["stage"], fs[-1]["t"]))
+        groups = {}
+        for e, d in fs:
+            groups.setdefault((e["stage"], d), []).append(e)
+        n, g = max(((len(v), k) for k, v in groups.items()), key=lambda x: x[0])
+        if n >= 2:
+            last = max(e["t"] for e in groups[g])
+            bad.setdefault(die, []).append((item, n, g[0], last))
     for die, xs in sorted(bad.items()):
         if die in parked or not any(now - x[3] <= timedelta(minutes=DEDUP_MIN) for x in xs):
             continue
         xs.sort(key=lambda x: -x[1])
         out.append({"die": die, "cls": "NO-ADVANCE", "state": "alert",
-                    "text": f"NO-ADVANCE {die}: {len(xs)} item(s) failed 2+ times in {NO_ADVANCE_H} h without a later stage "
-                            f"({', '.join(f'{i} x{n}@{s}' for i, n, s, _ in xs[:3])})"})
+                    "text": f"NO-ADVANCE {die}: {len(xs)} item(s) with 2+ attempts in {NO_ADVANCE_H} h ending on the same failing stage "
+                            f"with an unchanged input digest ({', '.join(f'{i} x{n}@{s}' for i, n, s, _ in xs[:3])})"})
     # 4. STUCK-STATE: current-plan CANCELLED/SUPERSEDED rows without a successor row for 60 min (stages tsv)
     rows = state.get("rows") or []
     succ = {(r["die"], r["item"]) for r in rows if r.get("status") not in ("CANCELLED", "LINT-ADVISORY")}
