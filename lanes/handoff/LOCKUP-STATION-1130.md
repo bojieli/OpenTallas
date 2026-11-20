@@ -60,3 +60,18 @@ hold ends before/after); hand rows to S81-DIE-R4 (J6), QC-PLAN-R5 (V1), KV-PLAN-
   OT_PREGRT_OPEN_BEFORE=1 writes pregrt_ff_hold_open_before.tsv; station_rule derive --hold-ends.
 - (5) lepe roq/rop excluded (--exclude). New-form specs: intel2 /srv/opentallas-scratch2/claude/lockup-station-1130-rows/*_spec_nl.json
   (spec = hops + netlist; plan key clock.zl_lockup.<T>).
+
+## Update (FABLE-CLOSURE-1515, t39 regression) -- J6 rows NOT handed to S81-DIE-R4 yet
+- Diagnosis (proof_t39, epyc7 meas/sta/proof_4_cts.odb.log): 26,592 latch pins hung on launch taps -> 10 taps over cap
+  (clk_t41 6,122, clk_t6 15,062; baseline 3,295 / 7,040); CTS setup tns -400k vs -37k. Worst TT setup -471.15:
+  u_fl_ist_leafup_o0_0/q[161] (DLATCH_N on clk_t41, opens ~970 ps down a 20-level tree) -> u_ist_leafup_o0_0/q[161].
+- Tool fixes (commit 65585309b3, push in flight): OT_HOP_LATCH_LEAF (park latches pre-CTS, hop_latch_leaf.tcl hangs
+  each on its launch flop's leaf post-CTS); station_rule derive --ends-only (exact violating cross-tap ends);
+  kit_zl_lockup.apply_ports + station_rule seams (sender-side seam latch on buses abutted on every instance).
+- Baseline pre-repair end list: epyc7 meas/sta/base_cts.odb.open_before.tsv (14,251 cross_tap; matches the kit log).
+  Ends-only t39: 10,879 latched of 14,251 (rest not zero-logic). Seams: meas/plans/seams_{s81,qwen_kvsys,qwen_compute,s81_head}.json.
+- proof2 (epyc7 meas/proof2, launch.sh, run.log): pristine kw_inputs-verified kit + 9 seam latches (3,808 bits) +
+  10,879 netlist latches + OT_HOP_LATCH_LEAF + lec bb fix, GOAL=grt. Read: CTS log OT_CLOCK_TAPS/OT_HOP_LATCH_LEAF,
+  OT_CTS_POST_TIMING, tt_setup_keep.log, pregrt_ff_hold.log class before/after + hold_cells, worst setup path, GRT it5/it10.
+- proof_t39 (first proof) still in pregrt repair; read its after line for the record.
+- Stop rule: no lockup spec on wave kits without re-solved taps (leaf mode); J6 only after proof2 wins.
