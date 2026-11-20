@@ -68,3 +68,11 @@ def test_qc_port_names_map_to_their_own_lane():
     g, f = CAP.seam_pad_inputs(d)
     assert g == [["sl_E0_su_l0__x_su_l0_ctl__0", "sl_E0_su_l1__x_su_l1_ctl__1"]]
     assert f["sl_E2_hc2__cws2__3"] == 3 - (15 - 9) and f["glue__native_rx_v_native_rx_v__0"] == 2 - 15
+
+
+def test_raise_keeps_the_count_frame_identity():
+    # QC plans carry a count frame: lat_cycles = lat_cycles_edge + frame_shift (count_align_bind refuses otherwise)
+    o = xing("coll_s__crec_rx_s1__0", 3)
+    o.update(lat_cycles_edge=5, frame_shift=-2)
+    CAP.seam_pad_rules([o, xing("coll_s__crec_rx_s1__1", 4)], [["coll_s__crec_rx_s1__0", "coll_s__crec_rx_s1__1"]], {}, T, AP, 8)
+    assert o["lat_cycles"] == 4 and o["lat_cycles_edge"] == 6 and o["lat_cycles"] == o["lat_cycles_edge"] + o["frame_shift"]

@@ -1565,6 +1565,8 @@ def seam_pad_rules(out, groups, floor, T, ap, max_depth, write_fall=frozenset(),
         o["K_eff"] += d
         o["K"] += d
         o["lat_cycles"] += d
+        if o.get("lat_cycles_edge") is not None:      # count frame (apply_frame): lat_cycles = lat_cycles_edge + frame_shift
+            o["lat_cycles_edge"] += d
         if o.get("rx_lat_counts") is not None:
             o["rx_lat_counts"] += d
         o["L_lo_ps"] = round(o["L_lo_ps"] + d * T, 1)
