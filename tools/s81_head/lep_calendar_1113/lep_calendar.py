@@ -3,7 +3,7 @@
 This prices explicit register legs, never FIFO residence or a token period.
 The vF physical candidate preserves the current N-face collective-0 pins.
 """
-from dataclasses import dataclass
+from dataclasses import dataclass, replace as replace_stages
 
 @dataclass(frozen=True)
 class Stages:
@@ -18,12 +18,16 @@ class Stages:
     rxh: int = 0      # HEAD-PLAN-R4 NF15f: RX head rank (u_lep g_rxh) before ri / ml_wd
     kcred: int = 12   # FABLE-PLAN-HEAD-NF15F 1: K-link credit depth, both ends (u_lep DR / CRED, lane CORE_CRED)
 
+    ktr: int | None = None  # TX credit-return depths; omitted means KTX, as in the RTL.
+
     def __post_init__(self):
         if self.pair not in (0,1):
             raise ValueError('PAIR must select original lanes0 or hardened pairs1')
         for name in ('ktx', 'krx', 'txi'):
             if not 0 <= getattr(self, name) <= 0xffff:
                 raise ValueError(f'{name} must contain four unsigned 4-bit depths')
+        if self.ktr is not None and not 0 <= self.ktr <= 0xffff:
+            raise ValueError('ktr must contain four unsigned 4-bit depths')
         for name in ('pin', 'pout', 'plw', 'col0'):
             if not 0 <= getattr(self, name) <= 15:
                 raise ValueError(f'{name} stage depth outside 0..15')
@@ -35,23 +39,28 @@ class Stages:
     # K-link credit round trip in edges, MEASURED by tb_head_lepk_stages LEPK_RTT at the u_lep boundary (11-17): RX = credit
     # out -> next beat in (exact while credit-bound: KRX 6 lanes 21 at D 12) + beat in -> credit out; TX = beat out -> credit
     # back + turnaround (upper bound, the bench never starves TX).  Per lane at 0 stages: RX 14 / 12 / 12 / 17, TX 15; each
-    # K stage +2.  A link of depth D runs at D / RTT beats per cycle; the pre-R4 tuples run RX lanes 1 / 2 at 12 / 16 = 0.75,
+    # paired K stage adds two edges. KTR can price the return leg independently.
+    # A link of depth D runs at D / RTT beats per cycle; the pre-R4 tuples run RX lanes 1 / 2 at 12 / 16 = 0.75,
     # under the 0.764 off-die lane cap, so they pass; NF15f needs D >= 24 (bench: 16 FAIL, 24 / 28 PASS).
     TX_RTT0, RX_RTT0 = 15, (14, 12, 12, 17)
 
     def credit_rtt(self, lane):
-        return dict(tx=self.TX_RTT0 + 2 * self.lane('ktx', lane), rx=self.RX_RTT0[lane] + 2 * self.lane('krx', lane))
+        return dict(tx=self.TX_RTT0 + self.lane('ktx', lane) + self.lane('ktr', lane),
+                    rx=self.RX_RTT0[lane] + 2 * self.lane('krx', lane))
 
     def credit_ok(self):
         return all(self.kcred >= max(self.credit_rtt(i).values()) for i in range(4))
 
     def lane(self, field, lane):
-        if field not in ('ktx', 'krx', 'txi') or lane not in range(4):
-            raise ValueError('expected a KTX/KRX/TXI lane 0..3')
-        return (getattr(self, field) >> (4 * lane)) & 15
+        if field not in ('ktx', 'ktr', 'krx', 'txi') or lane not in range(4):
+            raise ValueError('expected a KTX/KTR/KRX/TXI lane 0..3')
+        depths = getattr(self, field)
+        if depths is None:
+            depths = self.ktx
+        return (depths >> (4 * lane)) & 15
 
     def legs(self):
-        """Forward tuples and reverse credit tuples have the same leg depth."""
+        """Price each forward and credit-return leg at its own depth."""
         answer = {
             'input.lepk_i0+unit_i0+lepf_i0': self.pin,
             'output.lepk_o0+ctrl_o0+fault_o0': self.pout,
@@ -62,7 +71,7 @@ class Stages:
         for i in range(4):
             answer[f'lane{i}.tx_fifo_ingress'] = self.lane('txi', i)
             answer[f'lane{i}.tx_k.forward.valid+data'] = self.lane('ktx', i)
-            answer[f'lane{i}.tx_k.reverse.credit'] = self.lane('ktx', i)
+            answer[f'lane{i}.tx_k.reverse.credit'] = self.lane('ktr', i)
             answer[f'lane{i}.rx_k.forward.valid+data+rxv+fault'] = self.lane('krx', i)
             answer[f'lane{i}.rx_k.reverse.credit'] = self.lane('krx', i)
         # RXH: shared by the four lanes (pair release -> ri / mu_rt / ml_w); forward only, no credit leg
@@ -96,7 +105,8 @@ class Stages:
         lanes = range(4)
         return (1150*self.pin + 1137*self.pout + 11*self.plw
                 + (514+512)*self.col0
-                + 555*sum(self.lane('ktx',i) for i in lanes)
+                + 554*sum(self.lane('ktx',i) for i in lanes)
+                + sum(self.lane('ktr',i) for i in lanes)
                 + 559*sum(self.lane('krx',i) for i in lanes)
                 + 572*sum(self.lane('txi',i) for i in lanes)
                 + (4*552 + 44)*self.rxh)       # RXH: 2,208 head-word bits + 44 ring-side control copies
@@ -106,10 +116,12 @@ class Stages:
                     KRX=f"16'h{self.krx:04x}", TXI=f"16'h{self.txi:04x}",
                     PIN=self.pin, POUT=self.pout, PLW=self.plw, COL0=self.col0,
                     **({'RXH': self.rxh} if self.rxh else {}),   # RXH 0: the pre-R4 parameter set, unchanged
-                    **({'KCRED': self.kcred} if self.kcred != 12 else {}))   # KCRED 12: unchanged
+                    **({'KCRED': self.kcred} if self.kcred != 12 else {}),   # KCRED 12: unchanged
+                    **({'KTR': f"16'h{self.ktr:04x}"} if self.ktr is not None else {}))
 
 VF = Stages(ktx=0x0000, krx=0x1220, txi=0x1221, pin=2, pout=3, plw=3, col0=2)
 NF15F = Stages(ktx=0x1111, krx=0x2660, txi=0x2442, pin=6, pout=8, plw=3, col0=2, rxh=1, kcred=28)   # HEAD-PLAN-R4 11-17
+NF15F_R13 = replace_stages(NF15F, ktr=0x3112)
 STRESS = Stages(ktx=0x3333, krx=0x4444, txi=0x4444, pin=4, pout=4, plw=4, col0=2, pair=0)
 
 
@@ -118,8 +130,12 @@ def require_matching_receipt(stages, receipt, programme_sha256):
     if (len(programme_sha256) != 64 or any(c not in '0123456789abcdef' for c in programme_sha256)
             or receipt.get('programme_sha256') != programme_sha256):
         raise ValueError('handoff receipt programme differs from selected static programme')
-    actual = {key: receipt['params'][key] for key in stages.params()}
-    if actual != stages.params():
+    expected = stages.params()
+    source_params = receipt['params']
+    actual = {key: source_params[key] for key in expected if key != 'KTR'}
+    if 'KTR' in expected:
+        actual['KTR'] = source_params.get('KTR', actual['KTX'])
+    if actual != expected or source_params.get('KTR', actual['KTX']) != expected.get('KTR', expected['KTX']):
         raise ValueError('handoff receipt stage tuple differs from selected provider')
     if receipt.get('static_replay') != 'PASS' or receipt.get('removed_reservation_mutant') != 'CAUGHT':
         raise ValueError('fixed static replay and removed-reservation control required')
