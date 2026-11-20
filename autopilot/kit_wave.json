@@ -47111,7 +47111,11 @@
     "epyc2"
    ],
    "pilot_max_prev_kw45_1111": 2,
-   "route_hold_items": {},
+   "route_hold_items": {
+    "sle_st_a_v2__pv4242de79": "V0E E3 st_a representative: inspect exact generated kit before first route release",
+    "sle_st_b_v2__clfde1249e": "V0E east st_b representative: inspect exact generated kit before first route release",
+    "slw_st_b_v1__cle6023ec2": "V0E west st_b representative: inspect exact generated kit before first route release"
+   },
    "gen_hosts_prev_kw45_1111": [
     "epyc8",
     "epyc9"
