@@ -1,0 +1,5 @@
+{"lane": "CBC-ALL-0200", "event": "S81 J5 (cut 11-20 14:00 PST)", "type": "slice_station__t51",
+ "class": "PLAN-SRC-MACRO (plan item, not a flow error): wave b05c98f7919 place FAIL 11-19 20:34; plan_d8i_c6 (05b98332d100) still declares hard_cores s81p_slice_station__t51_ot_s81_station_t51_native_w (origin 8.64,8.64; 613.44 x 1209.6) and _native_e (639.36,8.64; 794.88 x 1209.6); no RTL module of either name exists in the D8i tree and the D8i bound s81p_slice_station__t51.sv instantiates neither (only t51 of all 394 types has native_* hard cores)",
+ "row": {"op": "set", "path": "partition_types.slice_station__t51.hard_cores", "value": []},
+ "why": "option (a) of the 11-19 FAIL-ROUTE note: the station logic is bound flat; the phantom macros block 1.70 mm2 of the 1.85 mm2 outline from placement",
+ "cycles": 0, "relaunch": "a wave relaunch on b05c98f7919 / D8i fails identically at place; t51 relaunches when J5 applies (new plan sha = new block)"}
