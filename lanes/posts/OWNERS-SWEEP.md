@@ -117,3 +117,4 @@
   DEAD-OWNER 11 QC rows owned by QC-PADLEG-1119 (no post in 2 h): sle_sc_v2, sle_sc_v3, slw_sc_v2, sle_fw_v2__cl*.
   Running >3 h: 106 (S81 ~60, QC ~35, KV 4; KIT-WAVE auto 48), tool did not flag STALE; CBC-FALLBACK 79 S81.
   file lanes/OWNERS-SWEEP.tsv committed.
+- 2026-11-19 23:51 PST 23:55 sweep: 500 plan rows (19 sram/rom/NOT-IN-PLAN excluded). UNOWNED 31 (S81 16 dsdv_*/svc_*, QC 13 hc*/cbf_q01/native59, KV 2 kv3_hub_E*). DEAD-OWNER 14 (KV-PC-PG-2330 no post today: 6 kv3_pc*; coll_ftc FABLE-FIX-QC; COL-H10-1119 2). FAILED-NO-RELAUNCH 5 (leaf t42/t52, slice_station__t51, serdes__t16, kv3_hub_Wi). STALE ~14 (leaf t38/t50/t57, QC slw_hc0/hc2, kv3_hroot). 36 QC src_manifest failures 23:02 hit 1h at 00:02.
