@@ -1,12 +1,17 @@
 #!/usr/bin/env python3
-"""Add physical-only SRAM/ROM hard-core records for exact existing native cells; never logical contents."""
+"""Add physical-only SRAM/ROM hard-core records for exact existing native cells; never logical contents.
+usage: qc_add_macro_sites.py [DATA_DIR]   (default results/qc_codex_kits_2249: base_plan.json, macro_inventory.json,
+macro_exact_map.json in; macro_plan.json, macro_plan_delta.json, macro_site_report.json out).
+QC-SUST-MACRO-1119 (FABLE-CLOSURE lever 4): moved here from results/qc_codex_kits_2249/add_macro_sites.py; the QC st
+families are sited by connectivity (macro_sites.py: next to their partner stations / bins / cores, <= 405 um), no longer
+on the quarter-height grid that left them 450-740 um away."""
 import json,re,math,sys
 from pathlib import Path
 from collections import Counter,defaultdict
-ROOT=Path(__file__).resolve().parents[2] if '/results/' in str(Path(__file__).resolve()) else Path('/srv/opentallas-scratch/claude/wt/codex-qc-kits-2249')
-R=ROOT/'results/qc_codex_kits_2249';base=json.loads((R/'base_plan.json').read_text());inv=json.loads((R/'macro_inventory.json').read_text());exact=json.loads((R/'macro_exact_map.json').read_text())
+ROOT=Path(__file__).resolve().parents[2]
+R=Path(sys.argv[1]).resolve() if len(sys.argv)>1 else ROOT/'results/qc_codex_kits_2249';base=json.loads((R/'base_plan.json').read_text());inv=json.loads((R/'macro_inventory.json').read_text());exact=json.loads((R/'macro_exact_map.json').read_text())
 sys.path.insert(0,str(ROOT/'tools/die_plan'))
-import schema as S,check as C,gen_phys as GP
+import schema as S,check as C,gen_phys as GP,macro_sites as MS
 P=S.Plan(base,path=R/'base_plan.json')
 (R/'macro_pins').mkdir(exist_ok=True)
 views={}
@@ -89,12 +94,9 @@ def cells(tn):
 def desires(tn,cc,t):
  W,H=t['outline_um'];ret={};counters=defaultdict(int)
  if tn.startswith(('sle_st_','slw_st_')):
+  # connectivity, not a quarter-height grid: target = the origin closest to the macro's partner stations / bins / cores
   for c in sorted(cc,key=lambda c:c['inst']):
-   n=c['inst'];m=c['module'];r=re.search(r'\.u_u_r([0-7])\.',n)
-   if r:
-    k=int(r[1])%4;i=counters[k];counters[k]+=1;cx=264+(i%3)*43.2;cy=(k+.5)*H/4-26+(i//3)*30.24;ret[n]=(cx,cy,None)
-   else:
-    k=int(re.search(r'g_btb\[(\d+)\]',n)[1]);ret[n]=(453.6,(k+.5)*H/4-20.52,None)
+   n=c['inst'];x,y=MS.target(tn,t,n,views[c['module']]['size']);ret[n]=(x,y,None)
  elif tn in ('coll_s','coll_n','coll_core'):
   groups=defaultdict(list);extras=[]
   for c in cc:
@@ -134,8 +136,9 @@ for tn in sorted(inv):
   n=c['inst'];m=c['module'];w,h=views[m]['size'];px,py,bounds=pref[n];W,H=t['outline_um'];halo=4.32
   bounds=bounds or [8.64,8.64,W-8.64,H-8.64]
   candidates=[]
-  for dx in range(-60 if tn=='tt_ctlm' else -24,61 if tn=='tt_ctlm' else 25):
-   for dy in range(-60 if tn=='tt_ctlm' else -24,61 if tn=='tt_ctlm' else 25):
+  win=60 if tn=='tt_ctlm' or tn.startswith(('sle_st_','slw_st_')) else 24
+  for dx in range(-win,win+1):
+   for dy in range(-win,win+1):
     x=round((px+dx*8.64)/8.64)*8.64+views[m]['offset'][0];y=round((py+dy*8.64)/8.64)*8.64+views[m]['offset'][1]
     a=[x-halo,y-halo,x+w+halo,y+h+halo]
     if a[0]<bounds[0]-1e-6 or a[1]<bounds[1]-1e-6 or a[2]>bounds[2]+1e-6 or a[3]>bounds[3]+1e-6:continue
@@ -150,5 +153,8 @@ for tn in sorted(inv):
  if fail:raise ValueError('No macro site '+tn+' '+str(fail))
  area=sum(math.prod(c['outline_um']) for c in placed);W,H=t['outline_um']
  report[tn]={'macros':len(placed),'macro_area_um2':round(area,3),'fraction':round(area/(W*H),5),'added_cells':0,'added_cycles':0,'max_shift_from_group_target_um':max(round(abs(c['origin_um'][0]-pref[c['inst']][0])+abs(c['origin_um'][1]-pref[c['inst']][1]),3) for c in placed)}
+ if tn.startswith(('sle_st_','slw_st_')):
+  g=max(MS.worst_gap(tn,t,c['inst'],c['origin_um'],c['outline_um']) for c in placed);report[tn]['max_partner_gap_um']=round(g,1)
+  if g>MS.REACH_UM:print('WARN macro partner gap',tn,round(g,1),'>',MS.REACH_UM,file=sys.stderr)
  t.setdefault('hard_cores',[]).extend(placed);t['core_pg_connect']=True;delta[tn]={'hard_cores':placed,'core_pg_connect':True}
 (R/'macro_plan.json').write_text(json.dumps(base,indent=2)+'\n');(R/'macro_plan_delta.json').write_text(json.dumps(delta,indent=2)+'\n');(R/'macro_site_report.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report,indent=2))
