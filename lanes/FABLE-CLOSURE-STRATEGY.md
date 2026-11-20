@@ -1,3 +1,118 @@
+# FABLE-CLOSURE-STRATEGY 2026-11-20 15:35 PST (lane FABLE-CLOSURE-1515, the 15:15 round): a late reset or start leg is the worst placed path class on three dies; the lockup proof moved the port classes through the clock taps; two proofs that later rows wait on are not running
+
+Reviewer: FABLE-CLOSURE-1515 (Fable). Read-only: no job launched, cancelled or patched; no STA run, no DB opened.
+Gate: DRC 0, routed TT >= -42 ps at 833 ps, internal FF hold >= 0, LEC, bind + LATCHECK. Hop cap 300 um. No die or outline growth. Nothing below is a new gate or hold.
+Marking: **V** = I opened the file or ran the read this round. **R** = reported by the named lane. **I** = inferred. **P** = proposal.
+Delta on 13:25, FABLE-PD-KV-1500 and FABLE-FLOW-1400. Their levers and stop lists stand.
+
+## 0. Headline
+
+1. **Question (a): yes, it is a family, and it is wider than "reset flop at the port" (V).** I read the worst path per group of every `3_detailed_place.rpt` written in the last 3 days on six hosts (scan `scratchpad/r1515/rs.py`). 207 kit builds have a negative path that starts at a reset relay or ends on a reset pin. On the current or recent events: QC A4 10 of 11 kits read are under -42 (8 under -300); S81 D8i / b05c / J5 28 of 31 kit builds on the relay form (19 under -300, the kit WNS on 19); KV D25e3 5 of 5, the three pv kits under -300 (section 1).
+2. **Question (b): the port_out rise is a clock-tap effect, not new paths (I from V numbers).** On the t39 proof the port_in worst end also moved, -33.5 -> -128.3, with no latch on any port path; same_tap rose 41 -> 238; setup before repair fell -354.6 -> -471.2. The latches add about 24,400 instances (+8.2 %), each a clock sink on a launch tap (section 2).
+3. **Two proofs that J6 rows wait on are not running (V).** lepe proof7 (`epyc9 fable-lepe/opus-p7/run.log`) ended exit 2 at 23:55 PST on 11-19 on a missing `s81/plan_h2_2249.json`; no lepe container is up; the handoff calls it queued. The slew-limit proofs `core-lib-limits-1330/proof/{t60,cbf}` have no run directory 1.5 h after launch.
+4. **No new-plan type signs off tonight on any die.** Tonight's count is the residual hold pass and old-plan base routes, as at 11:20 (section 3).
+
+## 1. (a) Reset and start legs: one family, three forms
+
+Source (V): scan above; one worst path per path group and kit, placed, ideal clock. So the counts are lower bounds and the values are before CTS.
+
+| Form | Path | Where (kits under -42 / read; worst) |
+|---|---|---|
+| L. Module-local relay outside the kit reset tree | `ot_rst_relay u_rstr` / `u_rr`, `g_rsreg.rq`, `u_vport.rst_q` to or from its module | S81 lepe_nh_mus_LP `u_u_land.u_rstr` -456 and -620 (22 to 25 buffers); lepe_mu_LP proof6 -348.5 after GRT (R); S81 leaf `lpad_leafdn_i0.q[0]` -> `u_vp.u_rr.rst_n` 16 / 28, -511 (14 buffers); bk_sel `g_rsreg.rq` -740; col_h9_r0 / col_h10 `g_rsreg.rq` 5 / 5, -84 to -119; KV pv `u_vport.rst_q` -1,015 (D23H) |
+| R. Kit relay `u_rrl_*` to a sink more than one hop away | to `u_bin_*.eq` face ranks, fab `u_st.g_seg` counters, `u_xg.u_r` | QC A4 cbx / cbn / cbf 9 / 9, -293 to -1,746, 17 to 36 buffers; KV D25e3 pv_v2 -2,218, pv_v2n -2,145, sys_c -242, hub_Wo -120; S81 gunit -1,107, c1x_C -473, iq_C -396, kv512_C -318 |
+| S. Kit relay to a clock-landing start or monitor flop | `u_rrl_*` -> `cland_fstart_*`, `cland_monitor/u_ring` | S81 leaf 4 / 5, -982; iqf -388; col_h9_r0 7 / 7, -167; slice_station -353 to -543 on earlier events; J5 slice_station t36 -724 (monitor ring, the kit's second worst), t6 -424 |
+
+Reading.
+- Form L root cause (V for the script, I for the placement). `reset_taps.tcl` seats one synchroniser per clock tap and re-points FIRM flops only; its header says leaf flops keep their RTL synchroniser. A module-local relay is in no tree row and has no site. It is a short flop chain between a 2-pin net from the kit tap and one wide net to its module, so wirelength is the same wherever the long leg falls. On lepe it fell after the relay (the relay sits at (1430.9, 8.1), 1,300 um from land); on leaf it fell before `u_rr`. 397 RTL files mention `ot_rst_relay*` (V, grep; tests and copies included), 76 of them under `s81_dv` and `s81_ph`.
+- Form R is the 300 um reset rule applied to relay-to-relay hops only. The last leg, relay to sink, is not counted. QC A4 carries the 300 um reset tree and still shows 17 to 36 buffers on that leg.
+- Form S is not a predictor on slice_station: that family signed off on old plans with -353 to -543 at place (ideal clock on a forwarded-clock flop). It is real where the buffer count is high (leaf t72 / t8 / t56, 13 to 26 buffers, 13:25 class C).
+- The lepe / lepw LP rows `u_rrl -> u_u_ln3` at -979 to -1,939 with 0 to 1 buffers are the unbuffered core-pin class of 13:25, not this family. KIT-RD-1 covers them.
+
+**Generator-level fix (P). Owner: the relay-tool helper under S81-DIE-R4 (`reach_relay_plan.py`, J6 item 9), used unchanged by QC-PLAN-R5 and KV-PLAN-R2.** One rule: every reset or start sink has a position, and the leg into it is a hop.
+1. Sink list from the bound netlist, not from tap ids: FIRM face ranks (`u_bin_*`, `cland_fstart_*`, monitors; XY known from `face_flops.tcl` / `landing_placement.tcl`), hard-core reset pins (LEF pin XY; KIT-RD-1 does this), and every module-local relay instance (`ot_rst_relay*`, `g_rsreg`, `rst_q`), found by module name.
+2. A local relay's last stage is seated FIRM at the centroid of its fanout, from the newest placed kit (`placed_scan.json`) or else the module's region rect. It goes into `reset_taps.tcl` before global place. For lepe that is item 6 as OPUS-FIX-S81-LEPE wrote it by hand.
+3. Leg from the nearest kit relay to each sink over 300 um: add `relay_depth` stages on that sink (`kit_relay_depth.py`), pitch <= 300 um, and pad every sink of the type to the same depth so release stays one cycle. +cycles of reset latency only; `rst_n` already holds 64 clocks.
+4. A local relay whose fanout box is over 300 um half-perimeter gets `REGIONS` raised and split by placed quadrant. The parameter exists.
+5. PRECHECK prints the legs over 300 um per type from plan and pin XY. Estimator only.
+
+First check: run steps 1 and 5 on QC cbx_q10 (A4) and S81 leaf t60. The list must name `u_rrl_424 -> u_st.g_seg` and `lpad_leafdn_i0 -> u_vp.u_rr`. No build needed.
+
+## 2. (b) Port classes after the lockup pass
+
+t39, before the pre-GRT repair (V, `pregrt_ff_hold.log` of both builds):
+
+| | baseline D8i | proof (131 RTL latch arrays, 28,323 bits, + 1,583 netlist latches) |
+|---|---|---|
+| instances | 296,538 | 320,974 |
+| hold ends | 17,372 | 7,181 |
+| cross_tap | 14,281, worst -275.3 | 3,221, worst -289.9 |
+| port_out | 1,884, worst -152.8 | 2,513, worst -117.6 |
+| port_in | 1,167, worst -33.5 | 1,210, worst -128.3 |
+| same_tap | 41, worst -43.8 | 238, worst -97.2 |
+| TT setup before repair | -354.6 | -471.2 |
+
+- Contract in both: `in_min` -40, `out_min` 68, vclk latency 364.5, tap window 208 (V). A port end is the face flop's tap arrival against a fixed virtual clock. Port counts moved in both directions and same_tap rose, so tap arrivals moved. The proof's repair "after" line was not written at 15:15 (repair started 13:38).
+- Cause (I): each latch is a clock sink on its launch tap. 24,000 to 30,000 more clock pins on 56 taps were not in the sink counts the tap rows were solved for.
+- The remaining 3,221 cross_tap ends have a worse worst end than before. Which pairs they are was not read.
+
+**Structural fix (P), in this order. Owner LOCKUP-STATION-1130 for 1 to 3; die owners for 4.**
+1. Solve the tap rows after the lockup spec, with latch clock pins counted (`tap_resolve`, cap 1,000, span 300 um, S81-SLICEC-R3 38cdd37cec9d). This is 11:20 section 1.4 with the latches included.
+2. Each latch on the same tap leaf as its launch flop and seated next to it. A latch at the hop midpoint (the J6 col master form) takes whichever tap is nearest there.
+3. Prefer the netlist form on the ends that violate (`OT_PREGRT_OPEN_BEFORE=1`, `derive --hold-ends`) over the RTL register form on every pair. The baseline has 14,281 violating cross-tap ends on 23,153 pairs; the proof latched 28,323 bits.
+4. Port classes close at the seam, not by buffers: the sender's out-face rank carries the launch-side latch (type-root lockup, owner decision 11-20), and the receiver's `in_min` is raised by what the latch guarantees. That removes the port_in residue every repaired kit still shows (t39 1,142; col_h10_r1 1,651; c1x t1 2,936; slw_fe_v2 3,558; hd_lep0N 8,396 before repair). Limit (I, arithmetic): half period 416.5 >= die tap window + seam hop delay, so it fits abutted seams with the first rank at the pin; a 300 um channel hop under a 208 ps window does not fit and keeps its buffers or gets a narrower window.
+
+First check, one read on the two kept t39 CTS DBs: clock sinks per tap, and the port_out ends by tap. Then the proof's "after" line: hold cells against 47,483, and the path at -471.
+
+## 3. What blocks the first new-plan sign-offs
+
+| Die | State (failure_breakdown 15:13, V) | Tonight | Tomorrow |
+|---|---|---|---|
+| S81 | types 44 / 394; 192 held for the plan event, 157 running | Old-plan exports only. J5 (applied 13:14): 21 rows past gen; leaf held behind t7 (relaunched 13:59); post-apply bind rerun at 160 GB open; five of six hosts admit 0 GB (R, FABLE-FLOW-1400) | J6 cut 14:00. Needs both col masters routed with the latch (synth still queued on epyc8), item 9 relay tool, lepe row 4 + item 6 unproved (headline 3) |
+| HEAD | 25 / 26; hd_lep0N running | r14 in CTS on epyc7. Nothing in r14 changes the 140 ps window, so expect about 15,000 hold ends and the same GRT band (11:20). epyc7 has started no container since 14:38 (R, BKSEL-R2 15:12) | lockup + tap split rows are on the next HEAD event, not in r13r; no sign-off before that event builds |
+| QC | 37 / 130; 53 running, 20 placed route-held, 15 global-place errors (sle_ctl) | A4 kits launched 09:43 reach route late tonight at best. cb* kits carry form R at -293 to -1,746 | V1 cut 09:30: fabric strict (q2 / q3) and the merged-class bind (ph6, 36 errors: 30 R8_STALE re-derived, 5 unpriced stations priced, R) |
+| KV | 6 / 56; 20 running, 9 placed route-held, 8 hg held | D26 R3b gate admitted on epyc7 15:0x for the 20:00 cut: same container risk. It fixes hg generation (8 types) and head-core hold (19 types) | hub_Wo, sys_c, hgi_v1 collector and pv reset legs have no row before D27 (cut 20:00) |
+
+## 4. Levers, ranked by closure impact
+
+| # | Lever | Measured evidence | Root cause | Fix | Owner |
+|---|---|---|---|---|---|
+| 1 | Reset / start legs as hops, by generator | section 1: form R / S on 43 of 47 current-event kit builds read under -42, the kit WNS on 22; form L on 23 more (S81) | last leg and local relays are outside the reach rule | section 1 steps 1 to 5 | S81-DIE-R4 relay tool; rows to QC-PLAN-R5 (V1), KV-PLAN-R2 (D27) |
+| 2 | Core-pin slew limit on every new gen | t60 -964 -> -288, TNS -47,016 -> -7,015, pins over 320 ps 950 -> 0 (R; no legalised CTS A/B yet) | core libs carry no limits | e7ebced0c4e + f2e64e5d3b2 are on main; run the two proofs (not started, V); regen the 3 SLEW-LIMITED QC rows and sys_c | CORE-LIB-LIMITS-1330 successor; die owners |
+| 3 | Lockup with taps re-solved | section 2: cross_tap -77 %, all ends -59 %; port, same_tap and setup worse | latch clock pins overload launch taps | section 2 steps 1 to 4 | LOCKUP-STATION-1130; S81-DIE-R4, HEAD-R14 |
+| 4 | S81 col masters (120 types on 2 builds) | bind, SDC, synth isomorphic (R); no routed master | synth queued on a host that admits 0 GB | move both masters to a host that admits; route before the J6 cut | S81-DIE-R4 |
+| 5 | KV efault staged reduce | hub_Wo -1,040 (2,700 um, 1 end); hgi_v1 -410; cell in 29 of 56 types (R, PD-KV-1500) | one-cycle reduce across the die | local reduce + 300 um relays, +cycles on a status path | KV-PLAN-R2, D27 row 1 |
+| 6 | lepe row 4 + item 6 | proof6: hold +4.6 after GRT, setup -154 on 692 ends; land reset 1,300 um (R) | form L; roq | relaunch proof7 with the plan file path fixed; RSZ-0074 catch around `repair_timing` | OPUS-FIX-S81-LEPE; FLEET-WATCH for the catch |
+| 7 | KV pv pad segments | v8m / v8c `dly_spread` max_hop 1,404 um, fail 70 / 66 (R, PV-R2) | form C makes one segment one station | `pad_min_stations 16` (branch not pushed) + flip rows after the v8m / v8c GRT iteration 5 read | FABLE-FIX-KV-PV-R2 -> D27 |
+| 8 | QC pad hoist + sle_ctl | ph5: five merged classes bind as one module each; sle_ctl -483 / -528 at place and 15 global-place errors (R, V) | per-instance pads inside the type; hub cores 8 um apart | ph6 bind, then `u_ctl` move in V1 | UNIFY-TOOLS-R3, QC-PLAN-R5 |
+
+## 5. (c) Which rows matter most
+
+- **J6 (S81, 11-21 14:00):** 1 col master latch rows + SDC envelope (120 types); 2 item 9 with the section 1 scope (every J5 type with a landing monitor or a local relay); 3 leaf: per-lane spread rows, SRAMREG into the base, core-pin stages on t60 / t57 / t43 and kv_leaf t1 / t4 (75 types); 4 slice C finish leg D=3 and taps (11 types); 5 lepe row 4 + item 6 (4 types, unproved). svc H8 and bk_sel A3P only if their binds are green in time.
+- **V1 (QC, 11-21 09:30):** 1 fabric option (a) at strict 0, since every QC type regenerates on it; 2 reach rows for `u_rrl -> u_st.g_seg` on cbx / cbn / cbf (new this round); 3 st_a `rs_s0` / `rs_s1` stages (11 types); 4 sle_ctl move + hoisted pads; 5 re-bin and retap the 25 stale-bin types. No latch rows yet: slw_fe_v2 has 0 cross-tap hold ends; su_l0 / su_l1 need a census first.
+- **D27 (KV, 11-21 20:00):** 1 efault staged reduce (29 types); 2 reset legs on pv, sys_c, hub_Wo by the same tool as J6; 3 pv `pad_min_stations` + flip (16 types); 4 astk `sc_v` register and tap split (8 hg types); 5 sys_c L356 stations (1 type).
+
+## 6. Stop list (13:25 and FABLE-PD-KV-1500 stand; plus)
+
+- No hand rows per type for local reset relays after lepe item 6; the generator rule replaces them.
+- No reading of a placed `u_rrl -> cland_fstart` end as unsignable on slice_station; check the buffer count on the path.
+- No regen of QC cbn_q00, cbx_q10 or cbf_q01_s2 "for the slew limit" expecting them to pass: each has a second class at -293 to -1,746 from form R.
+- No lockup spec applied to a wave kit without re-solved taps; no RTL register form where the netlist form on violating ends covers it; no J6 master with the latch at the hop midpoint until its tap is checked.
+- No pair or end count from the t39 proof reported as a win before its "after" line and the -471 setup path are read.
+- No port hold buffers as the plan for port_in / port_out on a type that gets a seam latch.
+- No waiting on lepe proof7 or on the t60 / cbf proofs as if they ran.
+- No route or repair retry on KV pv_v2 / pv_v2n D25e3 for the -2,145 / -2,218 reset legs.
+
+## 7. Not checked
+
+- Section 1 is worst path per group, placed, ideal clock, 3-day window, old events included in the 207. Endpoint counts per form were not read. Whether J5's 300 um reset tree shortened the last legs was read on 3 J5 kits only.
+- Why the placer leaves a local relay at the port is inferred from the net shape; no placement was opened.
+- Section 2: the tap-load cause is inferred from class counts. Sinks per tap, the port_out ends by tap and the -471 path were not read; two CTS runs can differ by this much without latches (no repeat build exists).
+- The half-period arithmetic of the seam latch; no kit carries it.
+- proof7: I read `run.log` and `docker ps` on epyc9 only; a client waiting on another host would not show there.
+- epyc7 container stall and host admission are taken from BKSEL-R2 and FABLE-FLOW-1400.
+- HEAD r14 pre-GRT line, KV D26 gate result, QC q2 / q3 and ph6 results: none written when read.
+- Several handoff update stamps (OPUS-FIX-S81-LEPE "15:45", "16:30") are later than the wall clock at my read (15:10); I used post times.
+
 # FABLE-CLOSURE-STRATEGY 2026-11-20 13:25 PST (lane FABLE-CLOSURE-1315): the held kits at -300 to -1,500 ps are mostly one unbuffered wire into a hard-core pin; hold cells are not shown to cause GRT overflow
 
 Reviewer: FABLE-CLOSURE-1315 (Fable). Read-only: no job launched, cancelled or patched; no STA run. Technical PD only; S81, HEAD, QC, KV; HBM parked.
