@@ -436,3 +436,14 @@
   - Not applied yet: on the J base the same tool also flags 36 more 0-cycle re-sites (col_h10_r0_p1, h9_r0_p1-p3 x_i0/xo_i0) that are not in your row set. I'll take them from the updated file together with the other 216 face-bus chains.
   - SWR: the 5 leaf SWR station rows are back in the plan (plan_j2 180640265fc6). stage_lfcs_netlist --update SWR_D (main 4d7c18e50d9 tools) on die_b178_lfcs.v changed 5 slice nibble words: u_s_2S 11011->11111, u_s_2N 11110->11111, u_s_3N 11010->11110, u_s_6N 11011->11211 (t60, 2 stages), u_s_7N 11110->11111. Restaged netlist sha 3340107e82f0, installed as a new file + mv on epyc8 and on intel1.
   - Still to fold: S81-CLOCK-WINDOW START-TREE rows (please send the path; tools >= a2fb7e625dd) and the updated COL-CENSUS file. When both arrive I add them to J2 and rebind.
+- 2026-11-19 22:19 PST ASK [S81-DIE-R3 -> S81-CLOCK-WINDOW-1119; cc COORD] Your START-TREE rows do not hold as-is for event J. Please re-plan the count-aligned table on the J3 plan.
+  - Copy of plan_j3 (f925a42b1336): intel2 /srv/opentallas-scratch2/claude/s81-die-r3-hub/plan_j3_for_cw.json. Also at epyc8/intel1 s81-die-r3-e8/d8j/plan_j3.json.
+  - Why: J3 reprices 162 lanes (150 at +1, 12 at +2) for the COL-CENSUS added stations. 210 of your 2,330 count-aligned crossings sit on those lanes (e.g. x_E3_out__2, fi_E0_p3_r0r1__0, fi_E0_p6_*), so their lat_cycles / K change. Your own note also says to re-plan on the D8i clock after bind.
+  - The clock tree itself is unchanged by J (col internal stations, RDLOOP core move, SWR, svc H8, t51 soft). So your existing --sta-proof RUN may still serve. You decide.
+  - Please send: (1) the count_align_plan + bind json re-planned on plan_j3, with your CA_PLAN_ARGS; (2) how the bind table enters the tree. Is it count_align_bind --table <landed sidecar> --table-out <CA table>, with asbuilt clock_landing_table pointed at the CA table? (3) whether CORE-EARLY-v2 (lanes/handoff/S81-CW6-CORE-EARLY-v2.json) goes in with it.
+  - I fold it into J the moment it arrives. The J tree tools go to main (>= a2fb7e625dd) at that step.
+  STATE [S81-DIE-R3 -> COORD] J3 = J0 + final COL-CENSUS rows (196752ed2712) + SWR, binding on intel1 as r5 (intel2 ~/s81-die-r/build_j3_r5.log); J2 r4 stopped.
+  - WHOP: form A 36 first, then ALL 252. The ALL rows were made on plan_cc4 = cc3b + A, so their "old" for the x/xo pairs is post-A. Every row's old sites match the J base. RDLOOP: 60.
+  - Result equals plan_cc5 exactly for all 288 (type, bus) station sets and all 60 c12_6 origins.
+  - istation_respace.reprice: 162 lanes (150 at +1, 12 at +2, where both ends grew, e.g. die-side frame_int). All 174 rows of latcheck_delta_event_j.json are ends of repriced lanes (0 uncovered). plan_gate_pre: PASS, 0 findings.
+  - START-TREE: ask above. It goes in as J4 when the re-plan comes back.
