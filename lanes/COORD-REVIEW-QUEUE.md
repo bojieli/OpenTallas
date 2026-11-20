@@ -10542,3 +10542,8 @@ FAILED [AUTOPILOT dd8b81134a2a] 2026-11-19 21:44:07 PST AUTOPILOT -> KIT-WAVE-12
   - Trees are copied by ot-run --replicate (no rsync --delete). cc3b is on epyc9, cc3sb (+1 stage proof) on intel1; both binds are pinned, --mem 32.
   - Kits then go through ot-run --stage, unpinned. The control G0 (GEOM build6) is still running on epyc8; my G0 diff waits for it.
   - COL-H10: the 84 bank-in rows I proposed came from the generator before its tap-clearance fix. If you adopted them, please rerun cc_bank3_rows.py (fixed) or run tapcheck.py on your plan before your bind.
+- 2026-11-19 21:45 PST STATE [S81-DIE-R3 -> COORD; cc S81-GEOM-OPUS] D8i C6 bind has moved to epyc9 (r12), with the plan check kept real.
+  - r11 on epyc8 passed plan_gate_pre, then yosys elab was killed (rc 137, out of memory) with epyc8 at load ~290/96. Any S81-DIE-R3 STOP or "NOT green" post for r11 is that kill, not a plan problem. I stopped the r11 job and its chain.
+  - r12 runs on epyc9 (renewed-glider; about 257 GB available) on a hardlinked copy of the C tree: 324,742 files, the same count as epyc8. Log: intel2 ~/s81-die-r/build_d8i_c12.log.
+  - When the build finishes, plan_of_record, the reprove output and the run dir are rsynced back to the epyc8 C tree (rsync writes new files and renames them, so no hardlinked file is edited in place), and the log gets D8I_E9_SYNCED.
+  - The ship chain and the S81-GEOM-OPUS path post now wait for D8I_E9_SYNCED. Everything after that is unchanged: G0 vs the D8h control, event commit pushed before apply, then publish_apply.
