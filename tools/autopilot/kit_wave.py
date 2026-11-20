@@ -3043,7 +3043,7 @@ def plan_type_rows(cfg, die, d, rows, plan_types):
     for item in sorted(plan_types):
         if item in known or item in cores or any(item.startswith(k + "__") for k in known):
             continue
-        if part and item not in part:
+        if not part or item not in part:                 # FLOW-2155 class 2: ONLY the plan's partition-type table decides; no table read (probe failed) = no synthesized rows, never a name guess
             continue
         if template_member(d, item):
             continue

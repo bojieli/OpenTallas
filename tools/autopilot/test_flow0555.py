@@ -658,7 +658,11 @@ def test_every_plan_type_gets_a_row_variants_included():
     cfg = {"dies": {"s81_head": d}, "stops_off": True}
     rows = [{"die": "s81_head", "item": "hd_ctl", "kind": "type", "state": "NEEDS-KIT", "owner": "L", "live_job": "none", "replicas": "1", "members": "", "last_activity": ""}]
     plan = {"hd_ctl": {}, "hd_ctl_e": {}, "hd_spn_eshim_rx": {}, "hd_ctl__cl1": {}, "core_a": {}, "ot_sram_1r1w_32x546_m1": {}}      # a memory macro master gets no row
+    assert KW.plan_type_rows(cfg, "s81_head", d, rows, plan) == []                                    # no partition-type table read: nothing synthesized
+    d["_plan_part_types"] = {"hd_ctl", "hd_ctl_e", "hd_spn_eshim_rx", "hd_ctl__cl1", "core_a"}
+    plan["qkd_kvs_pcc_h_head_p"] = {}                                                                 # a name in the plan blocks that is NOT a partition type (FLOW-2155 class 2)
     got = {r["item"] for r in KW.plan_type_rows(cfg, "s81_head", d, rows, plan)}
+    assert "qkd_kvs_pcc_h_head_p" not in got
     assert got == {"hd_ctl_e", "hd_spn_eshim_rx"}                  # hd_ctl known; hd_ctl__cl1 expands from its parent; core_a is a core
     assert all(r["_plan_row"] for r in KW.plan_type_rows(cfg, "s81_head", d, rows, plan))
     assert d["_plan_rows_n"] == 2                                                                              # the counter the tick logs (KIT-WAVE PLAN-ROWS)
@@ -667,6 +671,7 @@ def test_every_plan_type_gets_a_row_variants_included():
     d.pop("_plan_part_types")
     assert KW.plan_type_rows({"dies": {"s81_head": d}}, "s81_head", d, rows, plan) == []                       # not stops_off
     assert KW.plan_type_rows(cfg, "s81_head", dict(d, rows_from_plan=False), rows, plan) == []                # opt-out
+    d["_plan_part_types"] = {"hd_ctl", "hd_ctl_e", "hd_spn_eshim_rx"}
     picks, skip = KW.select(rows, cfg, "s81_head", {"items": {}}, plan)
     assert {"hd_ctl_e", "hd_spn_eshim_rx"} <= {r["item"] for r in picks}                                       # exempt from only_items
 
