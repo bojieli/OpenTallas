@@ -13,7 +13,7 @@ usage:
   clksite_reserve.py PLAN.json OUT_ROWS.json --tree TREE.json [TREE.json..]   (die_trial kit clock/tree.json, die frame)
   clksite_reserve.py PLAN.json OUT_ROWS.json --from-islands                    (plan clock.die_islands_um template;
                                                                                die_islands_um is deleted by the row)
-options: --max-rects 100  --margin-um 0.25  --layers M1-M7  --lane NAME  --types T,T
+options: --max-rects 100  --margin-um 0.25  --layers M1-M7  --lane NAME  --types T,T  --types-uncovered
 Existing reserved_sites_um rows of another kind (landing_ring_bank) are kept.  A merged rect that would touch a planned
 hard core is not formed (the members stay separate).  Neither is one that would run more than 10 um along a hard core
 within --edge-gap-um (5) of it: a reserved rect is an M1-M7 obstruction, so that would wall in the core's edge pins.
@@ -210,6 +210,38 @@ def plan_rows(plan, windows, max_rects=100, layers=LAYERS, lane="CLKSITE-RESERVE
     return dict(lane=lane, rows=rows), rep
 
 
+def _covered(w, rows, eps=1e-6):
+    """window w inside the UNION of rows (a tall clock cell spans several merged row rects): split w at every row edge
+    that crosses it and require each piece to sit in one row"""
+    if any(w[0] >= r[0] - eps and w[1] >= r[1] - eps and w[2] <= r[2] + eps and w[3] <= r[3] + eps for r in rows):
+        return True
+    near = [r for r in rows if _touch(r, w)]
+    xs = sorted({w[0], w[2]} | {v for r in near for v in (r[0], r[2]) if w[0] < v < w[2]})
+    ys = sorted({w[1], w[3]} | {v for r in near for v in (r[1], r[3]) if w[1] < v < w[3]})
+    for x0, x1 in zip(xs, xs[1:]):
+        for y0, y1 in zip(ys, ys[1:]):
+            cx, cy = (x0 + x1) / 2, (y0 + y1) / 2
+            if not any(r[0] - eps <= cx <= r[2] + eps and r[1] - eps <= cy <= r[3] + eps for r in near):
+                return False
+    return True
+
+
+def uncovered_types(plan_types, windows):
+    """HEAD-CROSSING-1119 r12 (FABLE-PD-HEAD-0015 A1): after a die clock rerun, the types whose cell windows are not all
+    inside their existing die_clock_tree rows (M5-M7-only keepout rows excluded) -> {type: uncovered window count}.
+    These are exactly the types whose rows must be regenerated; a fixed type list missed 12 moved trunk cells.  A type
+    with no die_clock_tree row at all is not reserved by design and is not reported (the contain-check rule).
+    Pass margin-0 windows (cell bodies) so a cell that moved inside its merged row is not reported."""
+    out = {}
+    for tn, rs in windows.items():
+        rows = [r["rect_um"] for r in ((plan_types.get(tn) or {}).get("clock") or {}).get("reserved_sites_um", [])
+                if r.get("kind") == "die_clock_tree" and r.get("route_layers", LAYERS) != "M5-M7"]
+        n = sum(1 for w in rs if not _covered(w, rows))
+        if n and rows:
+            out[tn] = n
+    return out
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("plan")
@@ -226,6 +258,9 @@ def main(argv=None):
     ap.add_argument("--layers", default=LAYERS)
     ap.add_argument("--lane", default="CLKSITE-RESERVE-1115")
     ap.add_argument("--types")
+    ap.add_argument("--types-uncovered", action="store_true",
+                    help="regenerate only the types with a tree cell window outside their current die_clock_tree rows "
+                         "(after a die clock rerun: every type whose cells moved, never a fixed list); combines with --types")
     a = ap.parse_args(argv)
     if bool(a.tree) == a.from_islands:
         ap.error("give exactly one of --tree or --from-islands")
@@ -239,9 +274,16 @@ def main(argv=None):
         import abstract_cutout as AC
         sites = [s for p in a.tree for s in AC.tree_sites(p)]
         win, _ = D.island_windows(P, sites, snap=0.0, margin=a.margin_um, native_origins=a.native_origins)
+    if a.types_uncovered and a.from_islands:
+        ap.error("--types-uncovered needs --tree")
     if a.types:
         keep = set(a.types.split(","))
         win = {k: v for k, v in win.items() if k in keep}
+    if a.types_uncovered:
+        win0, _ = D.island_windows(P, sites, snap=0.0, margin=0.0, native_origins=a.native_origins)
+        moved = uncovered_types(P.types, win0)
+        print("UNCOVERED " + json.dumps(moved, sort_keys=True))
+        win = {k: v for k, v in win.items() if k in moved}
     rows, rep = plan_rows(P, win, a.max_rects, a.layers, a.lane, delete_islands=a.from_islands, max_waste_frac=a.max_waste_frac,
                           edge_gap_um=a.edge_gap_um, protect_points=a.protect_points)
     Path(a.out).write_text(json.dumps(rows, indent=1) + "\n")

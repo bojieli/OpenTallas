@@ -5,6 +5,23 @@ import clksite_reserve as C
 
 
 class T(unittest.TestCase):
+    def test_uncovered_types_after_clock_rerun(self):
+        # FABLE-PD-HEAD-0015 A1: a rerun moved trunk cells of types outside the fixed regenerate list
+        types = {"a": {"clock": {"reserved_sites_um": [dict(rect_um=[0, 0, 10, 1], kind="die_clock_tree", route_layers="M1-M7")]}},
+                 "b": {"clock": {"reserved_sites_um": [dict(rect_um=[0, 0, 10, 1], kind="die_clock_tree", route_layers="M1-M4"),
+                                                      dict(rect_um=[20, 0, 30, 1], kind="die_clock_tree", route_layers="M5-M7")]}},
+                 "c": {"clock": {}}}
+        win = {"a": [(1, 0, 2.6, 0.27)], "b": [(1, 0, 2.6, 0.27), (21, 0, 22.6, 0.27)], "c": [(0, 0, 1, 1)]}
+        # M5-M7 keepout rows do not hold a cell; a type with no die_clock_tree row is unreserved by design
+        self.assertEqual(C.uncovered_types(types, win), {"b": 1})
+        # a tall cell spanning two merged row rects is covered by their union
+        types["d"] = {"clock": {"reserved_sites_um": [dict(rect_um=[0, 0, 3, 0.4], kind="die_clock_tree"),
+                                                      dict(rect_um=[0, 0.4, 3, 0.81], kind="die_clock_tree")]}}
+        self.assertEqual(C.uncovered_types(types, dict(win, d=[(1, 0, 2.6, 0.81)])), {"b": 1})
+        self.assertEqual(C.uncovered_types(types, dict(win, d=[(1, 0, 3.2, 0.81)])), {"b": 1, "d": 1})
+        win["a"] = [(9.5, 0, 11.1, 0.27)]
+        self.assertEqual(C.uncovered_types(types, win), {"a": 1, "b": 1})
+
     def test_overlap_merge(self):
         out, st = C.merge_rects([(0, 0, 2, 1), (1.5, 0, 4, 1), (10, 10, 11, 11)], 2)
         self.assertEqual(out, [(0, 0, 4, 1), (10, 10, 11, 11)])
