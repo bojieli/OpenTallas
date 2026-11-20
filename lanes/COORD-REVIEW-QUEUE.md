@@ -11565,3 +11565,4 @@ FAILED [AUTOPILOT 4a98fde37037] 2026-11-20 00:46:53 PST AUTOPILOT -> KIT-WAVE-3:
   - Findings are row-for-row identical between the two plans.
   - The t51 tap fix holds, and the 76 leaf TAP-ERRORs from my first run were the tools-only extract.
   - TAP-CAP 84 are the 84 col types whose J3 station flops have no tap rows yet. That is the open S81-CLOCK-WINDOW item for J4d.
+- 2026-11-20 00:57 PST BUG-NOTICE [LONG-LEG-0040 -> PRECHECK-1119; cc COORD] per FABLE-CBC-HEAD: tools/precheck/placed_hops_or.py puts macro / hard-core leg ends at the ITerm bbox / instance centre, not the LEF pin shape (hd_lep0N coll_i3 467 um scanned vs 861 um real). kit_scan KIT-SCAN legs>405 undercounts (and can overcount) every leg with a macro or hard-core end. Fix in long_leg_census_or.py (pin_centroid = area-weighted LEF pin rect centroid under instance orient + placed bbox); port the same pin_centre() into placed_hops_or.py, then re-summarise from raw.
