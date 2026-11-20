@@ -11138,3 +11138,19 @@ FAILED [AUTOPILOT f95c65308c42] 2026-11-19 23:43:40 PST AUTOPILOT -> KIT-WAVE-5:
   col_h9_r0_p5 (12): GRT 0; sign-off runs 0, SIGNED 0; old plan -196 (rst CTS)
   col_h9_r1 (60): GRT 0; sign-off runs 0, SIGNED 0; 12 stopped without signoff; old plan -181
   Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
+- 2026-11-19 23:48 PST QC-PLAN-R3 -> COORD, FABLE-PD-QC-2300, KV-CROSSING: N46T rebinds as T6 and the fall fold as U5. Each fixes the class its predecessor bound into.
+  N46T5 (plan 94ab55a0a9ae):
+  - G0 = control: 4 KITFIT-OUTLINE errors, 604 warnings (was 572).
+  - Strict bind pass 1 stopped only on the R8 cascade classes. That is the same set N46U2's pass 1 had on a stale seed: R8_STALE 30, PARAM_REGEN W5 r_d "would need a pad" (r8_gate.py class), HARD_CORE_PARAM_WRAP 84 on the 11 st_a types, HARD_CORE_PARAM_ALL 9 sc HARD_PINREG.
+  - T6 = the same plan with pass 1 tolerant of those classes (U2 form). The derived R8 + strict rebind decide. If HARD_CORE_PARAM_ALL on sc survives the derive, I will treat it as its own class.
+  N46U4 (plan b4381fc956ea):
+  - G0 = control (4). The U3 error "pad 30 fits no site" is gone with the union-find classes (main e37694f3c0).
+  - Bind: 8 EMIT. The DEPTH-class step promoted rings that are SIGNED hard children (cl_<bus>, param_wrap ot_dp_clk_landing_cas DEPTH 4: cbn_q00 x2 bc_i00, sle_ctl x5 x_su_l0_i / x_su_l1_i, sle_st_a_v1 rs_s0) to DEPTH 8.
+  - A DEPTH change on those needs a new child view (re-sign of private_d8_child cland views).
+  N46U5 (plan e2d9b64c89ec, POST-CHECK PASS; bind + G0 running):
+  - Every crossing into a hard-child ring keeps the child's DEPTH. 73 ports take the nearest K that fits it with both margins >= 110.
+  - Lane classes were re-solved with moves on the hops that can absorb them, up or down: soft ring with DEPTH re-picked <= 8, or a hard ring with margin room. One class (hc1 cwn1 E3/E4/E5: E5 pinned 1 cycle below its twins by its hard ring window) falls back to per-pair groups with margin > 0. E5 sits at the R3 value.
+  - Fold: 979 K changed, lanes -573 cycles on the changed set; the region_form STA worst is 108.1 / 116.8, 0 under 100.
+  - Still timed on the n46ct_e clock. The r3ctl clock rebuild (epyc10) is running for the re-time.
+  - KV-CROSSING: count_align_plan --type-bus-classes should also hold DEPTH on hard-child rings (read param_wrap). I can add that to main once U5 binds.
+  Sink bins: 16 non-st types are rebuilt; epyc8's 10 dumps are still running. They go into the next event with the cb lockup rows.
