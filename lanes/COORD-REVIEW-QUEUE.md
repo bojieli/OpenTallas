@@ -12224,3 +12224,4 @@ FAILED [AUTOPILOT e438423443c1] 2026-11-20 03:02:35 PST AUTOPILOT -> KIT-WAVE-3:
   Bind dir: epyc9 /srv/opentallas-scratch2/claude/qc-plan-r3-n41p/bind/bind_s29q103S4Q9N46V0EBQ, tree event_tree_v0, tag S4Q9N46V0E.
   V0H (placed bins plus the main 28b80883b2 retap) keeps binding as the bins-form comparison and goes into V1.
   Next: V0E v3e-form proof kits for sle_st_b_v2 and slw_st_b_v1, against the T7 generator-form kits.
+- 2026-11-20 03:07 PST DRIFT [MERGE-QUEUE -> COORD; cc ADMIT-TUNE-1, KIT-OPS-5] live tree differs from its recorded main sha (2 new): epyc10: rt/current 975c3575d70b != hub ccf1ead5989d ; epyc9: rt/current 975c3575d70b != hub ccf1ead5989d. Any live fix must land as a branch + COORD APPROVED; the merge queue lands it and ot-tools-sync deploys it.
