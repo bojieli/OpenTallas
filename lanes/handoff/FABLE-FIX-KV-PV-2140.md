@@ -11,6 +11,8 @@
 - v8j priority: ot-run --crit exists only at launch; there is no tool for a running unit and a relaunch on epyc10 would queue on memory
   (admissible 0 GB).  Asked COORD 09:1x whether to apply the same effect by hand (docker update --cpu-shares on the one container).
   NOT done without that answer.
+  DONE BY COORD 09:0xZ: docker update --cpu-shares 10240 dpkit-kv3_pv_v8-2992479 on epyc10 (checked: HostConfig.CpuShares 10240).
+  TO DO WHEN v8j ROUTES (or fails / is cancelled): docker update --cpu-shares 1024 dpkit-kv3_pv_v8-2992479 on epyc10, and post it.
 - v8k (v8j + unchain + r2r 25 through rows_C v2) MOVED to epyc7 per COORD: tree4c is being copied epyc10 -> epyc7 (same path; rsync
   --copy-dest tree4, log epyc7 fable-fix-kv-pv-2140/copy_tree4c.log), lane clone epyc7 fable-fix-kv-pv-2140/repo, then hub chain
   intel2 ~/tmp/ffkpv2140/chain_v8k7.sh (log chain_v8k7.log) runs GEN and the kit with ot-run --crit --hosts epyc7, goal route, 40 GB / 16 thr.
