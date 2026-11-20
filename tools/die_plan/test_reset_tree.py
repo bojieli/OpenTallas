@@ -13,6 +13,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import reset_tree as RT  # noqa: E402
 import schema  # noqa: E402
+import cbc_rules as CBC  # noqa: E402  CBC rule 4 reset hop cap
 
 TINY = json.loads((HERE / "examples" / "tiny_plan.json").read_text())
 PAIR = json.loads((HERE / "examples" / "s81_pair" / "s81_pair_plan.json").read_text())
@@ -384,7 +385,7 @@ def test_per_type_relay_reach_only_tightens():
     raw["partition_types"][tn].setdefault("reset", {})["relay_um"] = 200.0
     assert schema.validate(raw) == []
     P = schema.Plan(raw)
-    assert RT.relay_um(P, tn) == 200.0 and RT.relay_um(P) == 405.0
+    assert RT.relay_um(P, tn) == 200.0 and RT.relay_um(P) == min(405.0, CBC.reset_hop_cap_um())   # CBC rule 4 cap
     T = RT.for_type(P, tn)
     assert RT.verify(T) == [] and T["max_hop_um"] <= 200.0 - RT.MARGIN_UM + 1e-6 and _hops_ok(T, 200.0)
     assert len(T["relays"]) > len(T0["relays"])
@@ -400,3 +401,14 @@ def test_per_type_relay_reach_only_tightens():
     bad = piped(PAIR)
     bad["partition_types"][tn].setdefault("reset", {})["relay_um"] = 500.0
     assert schema.validate(bad) != []
+
+
+
+def test_cbc_rule4_reset_hop_cap_is_the_default(monkeypatch):
+    # CBC-ALL-0200 (OWNER 11-20): every reset hop <= 300 um by default, whatever the plan's relay_um; env restores the old rule
+    P = schema.Plan(piped(PAIR))
+    assert RT.relay_um(P) == 300.0 == CBC.reset_hop_cap_um()
+    tn = max(P.types, key=lambda t: RT.for_type(P, t)["max_hop_um"])
+    assert RT.for_type(P, tn)["max_hop_um"] <= 300.0 + 1e-6
+    monkeypatch.setenv("OT_RESET_HOP_CAP_UM", "405")
+    assert RT.relay_um(P) == 405.0

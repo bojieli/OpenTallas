@@ -38,6 +38,21 @@ TAP_SKEW_FAIL_PS = 100.0        # >= 100 ps: 0 of 23 closed (FABLE-CLOSURE-STRAT
 TAP_SKEW_PS_PER_UM = 0.065      # fit 11-19 (14 S81 kits, 413 taps): skew ~ 0.065 x (p98 - p2) + 44, R2 0.013 -- NOT predictive;
                                 # kit_scan posts the measured CTS skew (OT_TAP_INSERTION) instead
 
+# CBC rule 4 (OWNER 11-20 #6 + COORD 11-20, CBC-ALL-0200): every RESET hop -- reset relay tree, ring reset relay copies
+# (u_cland_rst_* / u_cland_rfan_*), literal raw START / reset branches -- is <= 300 um, all copies releasing on the same
+# edge.  The reset tools take min(plan value, this cap) as their reach; OT_RESET_HOP_CAP_UM overrides (e.g. 405 = old rule).
+RESET_HOP_CAP_UM = 300.0
+
+
+def reset_hop_cap_um(die=None):
+    """the reset hop cap (um) every reset generator applies by default (die reserved for a die-scoped override)"""
+    import os
+    v = os.environ.get("OT_RESET_HOP_CAP_UM")
+    try:
+        return float(v) if v else RESET_HOP_CAP_UM
+    except ValueError:
+        return RESET_HOP_CAP_UM
+
 
 def rules():
     """the rule set as a dict (records, posts)"""

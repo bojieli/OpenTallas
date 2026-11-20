@@ -747,7 +747,16 @@ def pick_local_reset_raw(raw, xy, need_depth, relays, ported, reach_um):
 # width + height, the REACH_UM of reach_rules / METHODOLOGY 12.1e), the far load groups take a kept same-D copy
 # u_cland_rfan_<bus>_<k> (same D as u_cland_rst_<bus>: same parent, same depth, the SAME release edge; 0 cycles, +1 flop
 # per far group).  Loads within reach: no copy, byte-identical RTL.
-RING_RESET_FAN_UM = LOCAL_RESET_REACH_UM
+def _reset_cap():
+    import sys as _s
+    from pathlib import Path as _P
+    _s.path.insert(0, str(_P(__file__).resolve().parent))
+    import cbc_rules
+    return cbc_rules.reset_hop_cap_um()
+
+
+# CBC rule 4 (OWNER 11-20, CBC-ALL-0200): the ring reset fan reach is the reset hop cap (300 um), not the 405-um data reach
+RING_RESET_FAN_UM = min(LOCAL_RESET_REACH_UM, _reset_cap())
 
 
 def _bbox_spread(pts):

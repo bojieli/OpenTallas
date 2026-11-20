@@ -75,6 +75,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import schema as S  # noqa: E402
+import cbc_rules as _CBC  # noqa: E402  CBC rule 4: reset hop cap (cbc_rules.reset_hop_cap_um)
 
 REACH_UM = 405.0        # owner rule: relay flops every <= 405 um
 # RESET-SLEW (REACH-FIX-2 11-12, COORD): the longest reset relay hop ONE relay stage (its INVx3 output driver) drives
@@ -104,16 +105,17 @@ def relay_um(P, tn=None):
     die = float(P.reset.get("relay_um", SLEW_SAFE_RELAY_UM if P.reset.get("relay_rule") == "slew_safe" else REACH_UM))
     if P.reset.get("relay_rule") == "slew_safe":
         die = min(die, SLEW_SAFE_RELAY_UM)
+    cap = _CBC.reset_hop_cap_um()        # CBC rule 4 (OWNER 11-20): every reset hop <= 300 um by default, any plan value
     if tn is None:
-        return die
+        return min(die, cap)
     t = (P.types.get(tn) or {}).get("reset") or {}
     v = t.get("relay_um")
     if v is None:
-        return die
+        return min(die, cap)
     v = float(v)
     if not (MARGIN_UM < v <= die):
         raise ResetError(f"type {tn}: reset.relay_um {v:g} must be in ({MARGIN_UM:g}, die relay_um {die:g}]")
-    return v
+    return min(v, cap)
 
 
 def sync_stages(P, tn=None):

@@ -54,8 +54,9 @@ STEP_UM = 340.0          # target hop of a START stage (r2r gate 405; margin for
 import os as _os_cbc, sys as _sys_cbc
 _sys_cbc.path.insert(0, _os_cbc.path.dirname(_os_cbc.path.abspath(__file__)))
 import cbc_rules as _CBC  # noqa: E402  OWNER 11-20 #6: generator hop default (300 um), one knob for every die
-MAX_HOP_UM = _CBC.REACH_UM_PER_HOP
-NEED_UM = 380.0          # writer branches only for output rings whose START corridor is longer than this
+MAX_HOP_UM = min(_CBC.REACH_UM_PER_HOP, _CBC.reset_hop_cap_um())   # START / raw-reset stages are reset hops (CBC rule 4)
+STEP_UM = min(STEP_UM, MAX_HOP_UM - 40.0)                             # same GPL margin under the cap as 340 under 405
+NEED_UM = min(380.0, MAX_HOP_UM)          # writer branches only for output rings whose START corridor is longer than this
 EDGE_Y = 12.0            # origin row (inside core rows, clear of the M7 strap/pin sites)
 CLEAR_UM = 4.32          # corridor clearance around macros (= reset_tree.CLEAR_UM)
 REL = re.compile(r"ot_dp_rrelay\s+(\w+)\s*\(\.clk\(clk\),\s*\.d\((\w+)\),\s*\.q\((\w+)\)\);\s*//[^\n]*?depth (\d+) "

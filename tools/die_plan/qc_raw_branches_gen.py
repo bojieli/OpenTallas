@@ -81,6 +81,15 @@ def relays(text, pins):
     return by_q
 
 
+
+def _reset_hop_default():
+    """CBC rule 4 (OWNER 11-20): raw reset branch hops <= min(330, cbc_rules.reset_hop_cap_um())"""
+    import sys as _s
+    from pathlib import Path as _P
+    _s.path.insert(0, str(_P(__file__).resolve().parent))
+    import cbc_rules
+    return min(330.0, cbc_rules.reset_hop_cap_um())
+
 def gen_type(plan, rtl_dir, tn, hop_um, need_um):
     if tn not in plan.get("partition_types", {}):
         raise GenError(f"{tn}: not a partition type of the plan")
@@ -143,13 +152,13 @@ def main(argv=None):
     ap.add_argument("rtl_dir")
     ap.add_argument("out")
     ap.add_argument("--types", nargs="+", required=True)
-    ap.add_argument("--hop", type=float, default=330.0)
+    ap.add_argument("--hop", type=float, default=None, help="max raw-branch hop, um (default min(330, cbc_rules.reset_hop_cap_um()): CBC rule 4)")
     ap.add_argument("--need", type=float, default=300.0)
     a = ap.parse_args(argv)
     plan = json.load(open(a.plan))
     res = {}
     for tn in a.types:
-        r = gen_type(plan, a.rtl_dir, tn, a.hop, a.need)
+        r = gen_type(plan, a.rtl_dir, tn, a.hop if a.hop is not None else _reset_hop_default(), a.need)
         res[tn] = r
         hops = [v.get("max_hop_um", v["direct_um"]) for v in r["report"].values()]
         print(tn, r["raw"], r["raw_xy"], "branches", len(r["branches"]),
