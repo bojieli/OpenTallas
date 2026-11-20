@@ -782,6 +782,18 @@ def dly_lockup_cfg(budgets, tn):
     return dict(seg=int(c.get("seg", 8)), tail_groups=int(c.get("tail_groups", 0)))
 
 
+def dly_lockup_r2r_margin(budgets, tn):
+    """budgets.r_dly_lockup.<base>.r2r_margin_ps: the reg-to-reg FF hold REPAIR TARGET of a delay-line type (pre-route rr pass and GRT
+    repair), in place of the die-family value (hold_margin_family, KV 40 ps).  Why: a same-tap zero-logic pair has about
+    35 (CK->QN) + 7 (INV) - 2 (hold) = 40 ps of FF hold, and kv3_pv_v8 has about 97k such pairs inside delay-line segments, so a 40 ps
+    target pads a large share of them (pregrt_ff_hold.tcl note: a uniform guard above about 25 ps pads the ordinary zero-logic
+    pairs of the whole kit).  The cross-tap guard pass and every hold GATE (FF hold >= 0) are unchanged.  Absent = family value."""
+    v = budgets.get("r_dly_lockup") or {}
+    hit = [b for b in v if b and tn and str(tn).startswith(b)]
+    c = (v[max(hit, key=len)] or {}) if hit else {}
+    return float(c["r2r_margin_ps"]) if c.get("r2r_margin_ps") is not None else None
+
+
 def dly_lockup_exports(budgets, tn, t):
     """kit config of a budgets.r_dly_lockup type: segment stations in dly_spread, every segment on one tap (tap_chain_affinity,
     the plan's own clock.tap_chain_affinity wins), and no single-sink shedding after the hop latches joined their launch taps
@@ -793,6 +805,9 @@ def dly_lockup_exports(budgets, tn, t):
     out = ["export OT_DLY_SPREAD_SEG = 1", "export OT_TAP_CAP_RECHECK = 0"]
     if "tap_chain_affinity" not in t.get("clock", {}):
         out += ["export OT_TAP_CHAIN_AFFINITY = 1", "export OT_TAP_CHAIN_RADIUS_UM = 400", "export OT_TAP_CHAIN_MAX_GROUP = 24"]
+    r2r = dly_lockup_r2r_margin(budgets, tn)
+    if r2r is not None:     # after the family lines in config.mk: the last assignment wins
+        out += [f"export OT_PREGRT_HOLD_R2R_MARGIN = {r2r:g}", f"export OT_HOLD_FF_MARGIN = {r2r:g}"]
     return out
 # R-REACH-5 (RULEBOOK 11-13, RULES-REACH-1): the generated zero-logic register chains every kit has -- landing bin ->
 # lane pad stages (u_lpad_<bus> r[k] / q, u_pd<n>_<bus>) -> their consumer -- get equal hops after GPL when a hop is over

@@ -178,6 +178,11 @@ def test_plan_key_and_kit_entry(tmp_path):
     assert "export OT_DLY_SPREAD_SEG = 1" in ex and "export OT_TAP_CAP_RECHECK = 0" in ex and "export OT_TAP_CHAIN_AFFINITY = 1" in ex
     assert "export OT_TAP_CHAIN_AFFINITY = 1" not in gen_phys.dly_lockup_exports(b, "kv3_pv_v8", {"clock": {"tap_chain_affinity": {}}})
     assert gen_phys.dly_lockup_exports({}, "kv3_pv_v8", {}) == []
+    assert not [x for x in ex if "R2R_MARGIN" in x or "OT_HOLD_FF_MARGIN" in x]
+    b2 = {"r_dly_lockup": {"kv3_pv": {"r2r_margin_ps": 25}}, "r_dly_spread": ["kv3_pv"]}
+    ex2 = gen_phys.dly_lockup_exports(b2, "kv3_pv_v8", {"clock": {}})
+    assert "export OT_PREGRT_HOLD_R2R_MARGIN = 25" in ex2 and "export OT_HOLD_FF_MARGIN = 25" in ex2
+    assert c(b2, "kv3_pv_v8") == dict(seg=8, tail_groups=0) and gen_phys.dly_lockup_r2r_margin(b2, "kv3_hub_C") is None
     with pytest.raises(ValueError):
         gen_phys.dly_lockup_exports({"r_dly_lockup": {"kv3_pv": {}}}, "kv3_pv_v8", {})
     assert schema.SCHEMA["properties"]["budgets"]["properties"]["r_dly_lockup"]["type"] == "object"
