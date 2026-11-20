@@ -11,3 +11,4 @@ time	die	class	state	posted	text
 2026-11-19 21:02:29	s81	STUCK-STATE	alert	yes	STUCK-STATE s81: 17 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. slice_station__t12, 2026-11-18 23:41)
 2026-11-19 21:02:29	s81_head	STUCK-STATE	alert	yes	STUCK-STATE s81_head: 17 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. hd_ctl_e, 2026-11-18 22:20)
 2026-11-19 21:23:12	s81	NO-ADVANCE	alert	yes	NO-ADVANCE s81: 2 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (ot_s81sl_leaf__t56 x5@kit_rtl, s81p_slice_station__t51_ot_s81_station_t51_native_w x2@kit_rtl)
+2026-11-19 21:43:28	s81_head	NO-ADVANCE	alert	yes	NO-ADVANCE s81_head: 11 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (hd_host_e x4@kit_rtl, hd_serdes x4@kit_rtl, hd_host_n x2@kit_rtl)
