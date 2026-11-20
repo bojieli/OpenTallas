@@ -45,7 +45,7 @@ class ThreadCap(unittest.TestCase):
         self.load.write_text('1.0 1.0 1.0 1/1 1\n')
         env = dict(os.environ, PATH=f'{self.d}/bin:' + os.environ['PATH'], OUT_ARGS=str(self.d / 'args'), OT_VL_JCAP='0',
                    OT_HEAVY_SYSTEM_TOOLS='1', OT_HEAVY_THREADS=threads)
-        for k in ('OT_HEAVY_CPU', 'OT_HEAVY_PRIO', 'OT_HEAVY_CONF', 'OT_HEAVY_DIRECT'):
+        for k in ('OT_HEAVY_CPU', 'OT_HEAVY_PRIO', 'OT_HEAVY_CONF', 'OT_HEAVY_DIRECT', 'OT_HEAVY_PARENT_UNIT'):
             env.pop(k, None)
         env.update(extra or {})
         try:

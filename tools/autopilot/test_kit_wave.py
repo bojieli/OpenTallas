@@ -528,6 +528,24 @@ class FirstRealClassWins(unittest.TestCase):
         self.assertEqual(cls, "FLOW")
         self.assertIn("OT_CLAND", why)
 
+    def test_completed_generator_error_survives_multiline_refused_commands(self):
+        actual = "gen phys: ERROR type T: physical collector_tree differs from captured bound reset identity"
+        echoed = (
+            "ot-heavy: NOT RUN: admission lock busy on host7 within 120 s: bash -c cat <<'SCRIPT'\n"
+            + "print('ERROR: No space left on device')\n" * 25
+            + "SCRIPT\n"
+            + "ot-run: REBALANCE: not admitted on epyc7 within 120 s; placing again\n"
+        )
+        admitted = "ot-heavy: admitted on host9 as oth-1 after 9 s\n"
+        ran = "ot-run: RAN on epyc9 (unit oth-1): exit 1\n"
+        full = f"{actual}\n" + echoed * 16 + admitted + ran
+        self.assertEqual(KW.error_lines(full), actual)
+        for text in (full, KW.error_lines(full) + "\n" + KW.strip_admission(full)[-3000:]):
+            cls, why = KW.classify("gen", text)
+            self.assertEqual(cls, "PLAN")
+            self.assertIn("bound reset identity", why)
+        self.assertEqual(KW.classify("gen", echoed.rstrip())[0], "INFRA")
+
     def test_not_run_without_a_later_run_stays_infra(self):
         self.assertEqual(KW.classify("place", "ot-run: NOT RUN on epyc2: ot-heavy exit 75\n")[0], "INFRA")
         # a step that ran, then the stage's own try refused: the refusal is the last word
