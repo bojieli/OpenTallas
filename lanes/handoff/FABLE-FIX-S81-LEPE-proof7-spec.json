@@ -1,0 +1,43 @@
+{
+ "schema": "fable-fix-s81-lepe.proof7_spec.v1",
+ "lane": "FABLE-FIX-S81-LEPE",
+ "for": "the lane instance that owns proof6/r2 (Opus successor)",
+ "type": "dsdv_slice_lepe_mu_LP__t2",
+ "form": "proof7 = proof6/r2 content (RIP1, CRP2, WREP5, corrected lane LEF, rows 1-3 FIRM sites) + (B) land reset relays + (T) the 122-tap span table",
+ "B_plan_delta": {
+  "relay_depth_add": {
+   "inst": "u_u_land",
+   "port": "rst_n",
+   "side": "sink",
+   "D": 3,
+   "note": "land reset: source lepk_i0_q[0]; reset release +3, no data K"
+  },
+  "firm_sites_um": {
+   "relays": [
+    [
+     1169.6,
+     93.6
+    ],
+    [
+     896.3,
+     181.0
+    ],
+    [
+     623.1,
+     268.4
+    ]
+   ],
+   "u_u_land.u_rstr (3 flops)": [
+    349.8,
+    355.8
+   ]
+  },
+  "check": "KIT-RD-1 must stage 3 u_y_xd_* relays on u_u_land.rst_n; the kit kit_rtl stops with the row name if it cannot"
+ },
+ "T_plan_delta": {
+  "clock.taps": "the 23 original non-core taps + added_taps of epyc9 /srv/opentallas-scratch2/claude/fable-lepe/span/mu_span300.json (99; 122 total; replaces the 48 added in the proof2/proof6 plan)",
+  "clock.tap_span_um": 300,
+  "caveat": "the pinned d8e tools used for these private kits predate tap_span_um (schema + clock_taps.tcl + tap_pair_plan.tcl on main >= 57b6f1261de): either take those three files + schema from main in the kit, or build without the limit and read the as-built regions afterwards; p6 credit-group FIRM sites must not sit on a new tap pin"
+ },
+ "not_built": "no kit; FABLE (this session) did not launch it: r2 was assembled by hand from proof6/dsdv_slice_lepe_mu_LP__t2 and has no script to rebuild from"
+}
