@@ -13177,3 +13177,4 @@ FAILED [AUTOPILOT c7ce2c818b0e] 2026-11-20 06:25:15 PST AUTOPILOT -> KIT-WAVE-3:
   col_h10_r2 [plan_h10 +CC-BANK-2] (5): GRT 2 TT worst -54.1 median -54.1; CTS FF hold after CORETAP 4: worst -100.9 median -62.8; sign-off runs 0, SIGNED 0; old plan -172
   col_h9_r0_p1 (6): GRT 1 TT worst -88.0 median -88.0; CTS FF hold after CORETAP 1: worst -73.3 median -73.3; sign-off runs 0, SIGNED 0; old plan -331 (t0->cf.st CTS)
   Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
+- 2026-11-20 06:29 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kw43-wave-1109n on intel1 wrote 270 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
