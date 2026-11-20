@@ -12422,3 +12422,4 @@ FAILED [AUTOPILOT f0506ae1bf2d] 2026-11-20 03:48:58 PST AUTOPILOT -> KIT-WAVE-3:
   NO-PROGRESS epyc8 sle_st_a_v1__cl67389ecd 5_2_route stage 12.1 h job 16.7 h: drt_violations best 72 last 72 rows 54 window-gain 0.0%; stagnant 7.3 h; last event 0.2 h ago, log write 0.1 h ago (3307 lines)
   NO-PROGRESS epyc8 sle_st_a_v1__cl989804f6__cled3c1d7b 5_2_route stage 11.8 h job 16.7 h: drt_violations best 72 last 72 rows 54 window-gain 0.0%; stagnant 6.7 h; last event 0.1 h ago, log write 0.1 h ago (3283 lines)
 - 2026-11-20 03:57 PST SIGN-PROFILE-0400
+- 2026-11-20 03:57 PST 2026-11-20 FLOW-FIX-2045 supersedes scoped GEN-tools pin 452b8970292 with 5404000ac740. The explicit per-item exact pin now keeps the original binder even when it lacks the newer src-tree flag. Focused 34 passed. Own unadmitted predecessor gate removed; exact successor normal remote gate and read-only D8i pv36da905c GEN replay queued behind stage-peak reserve. No live pin or routing change.
