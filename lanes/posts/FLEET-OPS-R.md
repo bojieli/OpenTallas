@@ -725,3 +725,4 @@
 - 2026-11-19 20:27 PST ALERT [FLEET-OPS-R -> COORD] lane quota: ot-jobs on intel1 wrote 51 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
 - 2026-11-19 20:30 PST DISK-RATE intel2 /srv/opentallas-scratch2: free 438 GB, falling 66 GB/h, floor 50 GB in 5.8 h (cron disk_rate.py; read-only)
 - 2026-11-19 20:40 PST DISK-RATE intel1 /srv/opentallas-scratch2: free 707 GB, falling 136 GB/h, floor 50 GB in 4.8 h (cron disk_rate.py; read-only)
+- 2026-11-19 20:55 PST ALERT [OT-TOOLS-SYNC -> COORD] runtime sync FAILED, rt/current stays 9dbd155d25de: RuntimeError: git fetch -q origin +refs/heads/main:refs/remotes/origin/main: error: fetching ref refs/remotes/origin/main failed: incorrect old value provided
