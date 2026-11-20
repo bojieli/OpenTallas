@@ -158,6 +158,17 @@ def is_ancestor(a, b):
     return git("merge-base", "--is-ancestor", a, b, check=False).returncode == 0
 
 
+def only_rejected_updates(err):
+    """GIT-MIRROR-1119: `git fetch` exits 1 with ' ! [rejected] <lane ref> (non-fast-forward)' when GitHub moved a claude/* branch differently from the mirror (here claude/s81-col-prd-obs-1117 since
+    11-17).  The fetch of main and of every other ref succeeded, so the unit must not sit in 'failed' for 2 days: warn (the line is printed), exit 0.  Any other error text keeps rc 1."""
+    ls = [l.strip() for l in (err or "").splitlines() if l.strip()]
+    if not ls:
+        return False
+    rej = [l for l in ls if l.startswith("!") and "[rejected]" in l and "refs/heads/main" not in l and " main " not in l and "-> main" not in l]
+    other = [l for l in ls if l not in rej and not l.startswith(("From ", "remote:"))]
+    return bool(rej) and not other
+
+
 def sync(fetch_only=False, forward=True):
     """fetch main + claude/* from GitHub, then re-forward claude/* refs the mirror has ahead of GitHub -> exit code.
     11-17: a ref GitHub rejected REJECT_LIMIT times at the same sha is skipped (logged once, listed in rejected.json, retried
@@ -173,7 +184,7 @@ def sync(fetch_only=False, forward=True):
     if f.returncode:
         # a rejected non-forced claude/* update (GitHub moved a branch the mirror holds differently) is reported, not fatal
         print(f"fetch rc={f.returncode}: {f.stderr.strip()[-600:]}")
-        rc = 1
+        rc = 0 if only_rejected_updates(f.stderr) else 1
     up = upstream_heads() if forward and not fetch_only else None
     rej = load_rejected()
     if up is not None:
