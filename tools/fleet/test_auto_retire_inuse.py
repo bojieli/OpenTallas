@@ -46,6 +46,24 @@ class InUse(unittest.TestCase):
         self.assertFalse(ar.post_text_hit("/srv/s/claude/kv-d23-compose9/gatein", posts))
         self.assertFalse(ar.post_text_hit("/srv/s/claude/kv-d23-compose8x/gatein", posts))
 
+    def test_superseded_src_tree_named_in_a_post_is_kept(self):
+        p = "- STATE build5 needs kw45/src_s81_pin_3c913dbdfb23_d8h_1119_work (D8i base)\n"
+        self.assertTrue(ar.name_hit("/srv/s/claude/kw45/src_s81_pin_3c913dbdfb23_d8h_1119_work", p))
+        self.assertFalse(ar.name_hit("/srv/s/claude/kw45/src_s81_pin_3c913dbdfb23_d8h_1119", p + "x"))
+        self.assertFalse(ar.name_hit("/srv/s/claude/kw45/src_s81_other", p))
+
+    def test_run_refuses_a_src_tree_a_live_job_or_post_names(self):
+        import tempfile, os
+        with tempfile.TemporaryDirectory() as d:
+            root = os.path.join(d, "kw45"); os.makedirs(root + "/src_s81_x_work")
+            log = []
+            class L:
+                def hit(self, p): return p + "/f"
+            ar.run(root, {}, [""], set(), lambda t: "", log.append, 0, apply=True, posts="", live=L())
+            self.assertTrue(os.path.isdir(root + "/src_s81_x_work"))
+            for r in log:
+                self.assertTrue(r.get("stop") or r["result"].startswith("REFUSED"))
+
     def test_runner_adds_handoffs_to_the_posts_input(self):
         sh = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "ot-auto-retire-run.sh")).read()
         self.assertGreaterEqual(sh.count("lanes/handoff"), 2)

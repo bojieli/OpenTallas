@@ -350,7 +350,16 @@ def free_gb(path):
     return s.f_bavail * s.f_frsize / 1e9
 
 
-def run(root, cfg, texts, ids, refuse, log, target_gb, apply=False, delete=None, free=None):
+def name_hit(path, posts):
+    """FLOW-HEALTH-2 11-19: a superseded src_ tree is kept when a hub post / handoff / plan text of the last 24 h names its full path or its directory name
+    (S81-GEOM-OPUS d8h base tree was deleted at 23:03Z the moment no process held it, while its queued build5 depended on it)"""
+    if not posts:
+        return False
+    path = path.rstrip("/")
+    return any(re.search(re.escape(c) + r"(?![A-Za-z0-9_.-])", posts) for c in (path, os.path.basename(path)))
+
+
+def run(root, cfg, texts, ids, refuse, log, target_gb, apply=False, delete=None, free=None, posts="", live=None):
     texts = live_reference_texts(cfg, texts)
     free = free or (lambda: free_gb(root))
     if not os.path.isdir(root):                           # a host with no kw45 (the hub): nothing to retire, not an error
@@ -363,9 +372,12 @@ def run(root, cfg, texts, ids, refuse, log, target_gb, apply=False, delete=None,
             res.append(dict(stop="target", free=round(free(), 1))); break
         t = os.path.join(root, n)
         rec = dict(tree=t, t=time.strftime("%F %T"), die=die_of(n))
-        why = refuse(t)
+        h = live.hit(t) if live else ""
+        why = ("live input: a running process / queued or waiting ot-run job names " + h) if h else refuse(t)
         if not why and ref_count(n, texts):
             why = "referenced"
+        if not why and name_hit(t, posts):
+            why = "named in a hub post / handoff / plan of the last 24 h"
         if not why:
             sn, miss = signed_not_in_store(t, ids)
             rec.update(signed_units=sn, signed_not_in_store=miss)
@@ -709,11 +721,11 @@ def main(argv=None):
     texts = [cfgt, open(a.state).read(), open(a.markers).read()]
     ids = {l.strip() for l in open(a.store_ids) if l.strip()}
     with open(a.log, "a") as lf:
-        res = run(a.root, json.loads(cfgt), texts, ids, lambda t: g.refuse(t, prot), lambda r: lf.write(json.dumps(r) + "\n"), a.target, a.apply)
         claude = os.path.dirname(a.root.rstrip("/"))
         deadline = time.time() + a.max_s if a.max_s else None
         posts = open(a.posts, errors="replace").read() if a.posts else ""
         live = LiveRefs(claude)
+        res = run(a.root, json.loads(cfgt), texts, ids, lambda t: g.refuse(t, prot), lambda r: lf.write(json.dumps(r) + "\n"), a.target, a.apply, posts=posts, live=live)
         if a.attempts:                                  # attempts first (the biggest, most certain dead weight), then idle lanes
             res += run_attempts(claude, json.loads(cfgt), json.loads(texts[1]), open(a.refs, errors="replace").read() if a.refs else "", ids, g, prot,
                                 lambda r: lf.write(json.dumps(r) + "\n"), a.apply, old_idle_h=a.idle_h, deadline=deadline, live=live)
