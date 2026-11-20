@@ -322,3 +322,26 @@ Rows, corrected:
 - **QC V1:** strap / pad union on sle_ctl (already planned). **V2 with UNIFY-TOOLS:** spare dn links + reset outs. slw_stm / slw_fw wait for the origin / relay strap.
 
 Not checked: sle_ctl bound wrappers (QC bind out not read); that synthesis of text-equal bound wrappers is bit-stable across member kits; col members on the J5 / J6 plan (rows read on j4e, wrappers on D8i).
+
+### 10.7 Step-1 rows: one class each for S81 col_h9_r1, col_h9_r2 and QC sle_ctl (OWNER approved the merging tools 11-20)
+
+Rows: `lanes/handoff/FABLE-SUPERSET-0415-step1-rows.json` (sha dd01e8c3deca, `step1_rows.py`). They are valid once UNIFY-TOOLS step 1 (schema spare ends + spare-lane bind) is on main. They are also that step's test inputs; the role and variant tables are in `FABLE-SUPERSET-0415-unify.json` (`role_rows`).
+
+| Class | Class type (representative) | Union monitor children | Union reset outs | Depth | Member variants | Spare inputs tied (die total) | Outputs open (die total) |
+|---|---|---|---|---|---|---|---|
+| S81 col_h9_r1, 60 types | `col_h9_r1__t1__clf32cde8d__pvee46d7b8` | 3 sites (the representative has 1) | 3 (rep 2) | 8 | plain 51; collector with 1 child 9 | 513 pins | 316 |
+| S81 col_h9_r2, 60 types | `col_h9_r2__t1__cl87f3ff59` | 4 sites (rep 2) | 4 (rep 3) | 6 | plain 44; 1 child 14; 2 children 2 | 666 | 324 |
+| QC sle_ctl, 7 types / 12 inst | `sle_ctl__cla4f6f12f` | 5 (rep has all 5) | 4 (rep has all 4) | 7 | 0 / 2 / 3 / 5 children | 132 | 34 |
+
+- **Correction to 10.2 / 10.3:** the col children sit at different pin sites on different members, so the union keyed by pin position is 3 (r1) and 4 (r2) children, not 1 and 2. The class row is the representative plus 2 added child sites and 1 added reset out. Each added child is 3 pins, one monitor band (320 flops, about 400 um2) and one pad chain; the outline is unchanged. `cland_col_superset.py` may fold sites within reach into one canonical site; then the count falls and the neighbour's up pin moves.
+- sle_ctl needs no added site: the representative already has every child and reset out; the other six members only tie or open what they do not use.
+- Per member the file gives: children used (union index), `strap_cland_use` bits, child index remap, the exact spare input pins, the open outputs, and the instances.
+- The 51 + 44 plain col tiles take the collector form: all child inputs tied, `cland_up_*` and `fclk_out_cland_up` open, reset outs open. Reset release moves by the tree depth on those tiles (8 / 6 cycles, inside the 64-clk hold); `bind_reset` must re-prove it.
+
+Rows for the lanes:
+- **S81-DIE-R3 J6:** col_h9_r1 and col_h9_r2 each as ONE class from the file (member rows = class row + name + ROM selectors; spare ends per instance). Gate on step 1 being on main at the cut; if it is not, J6 takes the today's-tools path of 10.6 (inheritance inside each variant) and the one-class rows go to J7.
+- **QC-PLAN-R3 V2:** sle_ctl as ONE class from the file, with the V1 strap / pad union already applied.
+
+Expected after bind + member gen + synth: 3 hash groups for 127 types.
+
+Review of UNIFY-TOOLS pushes (spec fit): none on main yet at 03:0x. Checks I will apply to each push: (1) spare ends are declared on the type row and per instance, never inferred; (2) a spare input is tied at the parent and appears in `bind_declared_ties.json`, no tie cell inside the type; (3) types without the key are byte-identical; (4) `type_pins` / G0 compare the full type pin table; (5) the three classes above bind to one module each with exactly the listed ties; (6) no outline or pin-window change on any member.
