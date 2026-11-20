@@ -16,6 +16,7 @@ detailed-place log + report) and decides:
 It never writes BAD / ISSUES (those would send the row to WAIT-FORM): a row that does not pass simply stays held and is listed
 in lanes/AUTO-REVIEW-HELD.tsv with its reason.  The remote read is a few greps on the kit host, not heavy work.
 """
+import fnmatch
 import json
 import re
 import subprocess
@@ -96,7 +97,8 @@ def parse_report(text):
     if start >= 0:
         end = text.find("\ndetailed place ", start + 10)
         sect = text[start:end if end > 0 else len(text)]
-    best = None                          # (slack, max slew)
+    best = None                          # (slack, max slew) over the paths that count (see port_into_cland)
+    all_worst = None
     paths = 0
     cur = []
     for ln in sect.splitlines() + ["Startpoint: END"]:
@@ -118,18 +120,35 @@ def parse_report(text):
                                 pass
                 if slack is not None:
                     paths += 1
-                    if best is None or slack < best[0]:
+                    all_worst = slack if all_worst is None else min(all_worst, slack)
+                    if not port_into_cland(cur) and (best is None or slack < best[0]):
                         best = (slack, slew)
             cur = [ln]
         else:
             cur.append(ln)
-    return dict(wns=wns, worst_slew=best[1] if best else None, path_slack=best[0] if best else None, paths=paths)
+    return dict(wns=wns, worst_slew=best[1] if best else None, path_slack=best[0] if best else None,
+                paths=paths, all_worst=all_worst)
+
+
+def port_into_cland(block_lines):
+    """True for an input-port -> hard landing core (cland) path.  Its setup floor under an ideal clock is fixed by the core's
+    macro tree (kv_cland_*: -275 ps at zero wire) and the kit pads the clock at POST_CTS (cland_fclk_target.tcl), so the
+    placed estimate says nothing about signability (FABLE-PD-KV-1500 11-20: KV hgi v3-v8 -315..-353, clk group -5 ps)."""
+    sp = ep = ""
+    for c in block_lines:
+        if c.startswith("Startpoint:"):
+            sp = c
+        elif c.startswith("Endpoint:"):
+            ep = c
+    return "input port" in sp and "cland" in ep
 
 
 def decide(info):
     """info = remote JSON (rpt text included) -> (CLASS, reason, facts dict)"""
     rep = parse_report(info.get("rpt"))
-    facts = dict(wns=rep["wns"], worst_slew=rep["worst_slew"], **(info.get("scan") or {}))
+    # setup estimate = worst path that counts (ports into cland cores excluded); falls back to the report wns when no path is readable
+    setup = rep["path_slack"] if rep.get("path_slack") is not None else rep["wns"]
+    facts = dict(wns=setup, wns_report=rep["wns"], worst_slew=rep["worst_slew"], **(info.get("scan") or {}))
     if info.get("rpt") is None or rep["wns"] is None or info.get("dp") is None or info.get("cells_on_macros") is None:
         return "NODATA", "placed report / auto_geom / place log not readable", facts
     illegal = []
@@ -143,13 +162,14 @@ def decide(info):
             illegal.append(l[:80])
     if illegal:
         return "ILLEGAL", "; ".join(illegal[:3]), facts
-    if rep["wns"] > SETUP_FLOOR_PS:
-        return "ACCEPT", f"placement legal, post-place setup estimate wns {rep['wns']:.0f} ps", facts
+    if setup > SETUP_FLOOR_PS:
+        extra = "" if rep["wns"] == setup else f" (report wns {rep['wns']:.0f} ps is port->cland paths, floored until POST_CTS)"
+        return "ACCEPT", f"placement legal, post-place setup estimate {setup:.0f} ps{extra}", facts
     if rep["worst_slew"] is not None and rep["worst_slew"] > SLEW_LIMIT_PS:
         return ("SLEW-LIMITED",
-                f"wns {rep['wns']:.0f} ps but worst-path slew {rep['worst_slew']:.0f} ps > {SLEW_LIMIT_PS:.0f}: untrustworthy; "
+                f"setup {setup:.0f} ps but worst-path slew {rep['worst_slew']:.0f} ps > {SLEW_LIMIT_PS:.0f}: untrustworthy; "
                 "slew-limited -> regen with e7ebced0c4e (CORE-LIB-LIMITS-1330)", facts)
-    return "SETUP", f"post-place setup wns {rep['wns']:.0f} ps worse than {SETUP_FLOOR_PS:.0f}: cannot sign", facts
+    return "SETUP", f"post-place setup {setup:.0f} ps worse than {SETUP_FLOOR_PS:.0f}: cannot sign", facts
 
 
 def remote_info(kit_loc, timeout=120):
@@ -187,6 +207,9 @@ def auto_review_pass(cfg, st, review_before_route, review_kit_location, hold_tex
             continue
         if not review_before_route(cfg, rec):
             continue
+        skip = (((cfg.get("dies") or {}).get(rec["die"]) or {}).get("auto_visual_review_skip") or [])
+        if any(fnmatch.fnmatchcase(str(rec["item"]), g) for g in skip):
+            continue                      # die-owner exclusion (e.g. items superseded by a pending plan event)
         kit = review_kit_location(rec)
         key = f"{rec['die']}|{rec['item']}|{rec.get('attempt')}|{kit}"
         if not kit or key in done:

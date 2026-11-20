@@ -60,12 +60,50 @@ class Auto(unittest.TestCase):
                                     coord=coord, commit=False)
         self.assertEqual(sum(cnt2.values()), 0)
 
+    def test_die_skip_pattern(self):
+        st = {"items": {"s81|kv3_hgi_v3|1": {"die": "s81", "item": "kv3_hgi_v3", "attempt": 1, "status": "ROUTE-HELD",
+                                             "kit": "h:/k/x", "route_hold": "WAIT-VISUAL: x"}}}
+        cfg = {"dies": {"s81": {"auto_visual_review_skip": ["kv3_hgi*"]}}}
+        cnt = AVR.auto_review_pass(cfg, st, lambda c, r: True, lambda r: r["kit"], info_fn=lambda k: info(-10),
+                                   coord=Path(tempfile.mkdtemp()), commit=False)
+        self.assertEqual(sum(cnt.values()), 0)
+        self.assertNotIn("auto_review", st) if False else None
+
     def test_line_parses_as_exact_verdict(self):
         import kit_wave as KW
         rec = {"die": "s81", "item": "t1", "attempt": 5}
         ln = AVR.verdict_line(rec, "epyc2:/srv/x/y", "placement legal, wns -61 ps", {"over_reach": 2, "bits_over_cycle": 3})
         self.assertEqual(KW.parse_visual_line(ln), ("s81", "t1", 5, "ISSUES-ACCEPT"))
         self.assertIn("kit=epyc2:/srv/x/y", ln)
+
+
+def kvrpt():
+    blk = lambda g, sp, ep, slack, slew: (f"Startpoint: {sp}\nEndpoint: {ep}\nPath Group: {g}\nPath Type: max\n"
+                                          f"                 {slew}   10.00  100.00 ^ x/A (BUF)\n"
+                                          f"                               {slack}   slack (VIOLATED)\n")
+    return ("detailed place report_worst_slack\n" + "-" * 9 + "\nworst slack max -353.00\n\n" +
+            "detailed place report_checks -path_delay max\n" + "-" * 9 + "\n" +
+            blk("clk", "u_hst2.ti_b[1] (rising edge-triggered flip-flop)", "u_head2_e0 (rising)", -4.65, 90.0) +
+            blk("fclk_in_ft27_i", "ft27_i[6] (input port clocked by fclk_in_ft27_i)", "u_bound.u_cland_ft27_i", -352.56, 80.0) +
+            "detailed place report_checks -unconstrained\n")
+
+
+class PortIntoCland(unittest.TestCase):
+    def test_port_paths_into_cland_do_not_count(self):
+        r = AVR.parse_report(kvrpt())
+        self.assertEqual((r["path_slack"], r["all_worst"], r["wns"]), (-4.65, -352.56, -353.0))
+        i = info(-353); i["rpt"] = kvrpt()
+        c, why, f = AVR.decide(i)
+        self.assertEqual(c, "ACCEPT"); self.assertEqual(f["wns"], -4.65); self.assertIn("cland", why)
+
+    def test_other_port_path_still_counts(self):
+        i = info(-353); i["rpt"] = kvrpt().replace("u_bound.u_cland_ft27_i", "u_bound.u_core_q")
+        self.assertEqual(AVR.decide(i)[0], "SETUP")
+
+    def test_real_clk_violation_still_holds(self):
+        i = info(-353); i["rpt"] = kvrpt().replace("-4.65", "-420.00")
+        self.assertEqual(AVR.decide(i)[0], "SETUP")
+
 
 if __name__ == "__main__":
     unittest.main()
