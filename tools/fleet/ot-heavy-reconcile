@@ -631,6 +631,7 @@ def scope_cg(unit):
 
 
 def main():
+    start_canary()
     reap_completed_thread_charges()
     try:
         st = json.load(open(STATE))
@@ -2129,6 +2130,67 @@ def free(path):
                                          phase_extra=round(inv.get("phase_extra", 0.0), 1), phase_raw=round(inv.get("phase_raw", 0.0), 1)))))
 
 
+# STARTCANARY-1400 (COORD 15:3x, FABLE-FLOW-1600 item 3): epyc7 admitted 128 GB on paper for 70 min while dockerd could not create a container, and RESTAGE kept sending rows to it.  Every reconcile pass
+# (cron, 5 min) starts a no-op container (docker run --rm --network none ... true, under timeout) and records the time of the last success.  --free reports admit 0 when no start succeeded in the last
+# CANARY_MAX_S (10 min), so ot-run places nothing on a host that cannot start containers.  No record (no image, first pass) = unknown = no gate.
+CANARY_MAX_S, CANARY_RUN_S = 600, 40
+
+
+def canary_path(base=None):
+    return os.path.join(base or D, "start-canary.json")
+
+
+def start_canary(base=None, now=None, run=None):
+    """one start probe; writes {t, ok, last_ok, secs}; -> the record, or None when there is no image to probe with"""
+    now = now or time.time()
+    run = run or docker_cmd
+    rc, out = run("images", "--format", "{{.Repository}}:{{.Tag}}")
+    img = next((l.strip() for l in out.splitlines() if l.startswith("opentallas/orfs:") and "<none>" not in l), "")
+    if rc != 0 or not img:
+        return None
+    t0 = time.time()
+    rc, _ = run("run", "--rm", "--network", "none", "--memory", "64m", "--name", f"ot-canary-{os.getpid()}", img, "true", t=CANARY_RUN_S)
+    prev = canary_read(base) or {}
+    rec = {"t": now, "ok": rc == 0, "rc": rc, "secs": round(time.time() - t0, 1), "last_ok": now if rc == 0 else prev.get("last_ok", 0)}
+    try:
+        tmp = canary_path(base) + ".tmp"
+        json.dump(rec, open(tmp, "w")); os.replace(tmp, canary_path(base))
+    except OSError:
+        pass
+    return rec
+
+
+def canary_read(base=None):
+    try:
+        return json.load(open(canary_path(base)))
+    except (OSError, ValueError):
+        return None
+
+
+def canary_bad(base=None, now=None):
+    """-> reason string when no container start succeeded within CANARY_MAX_S, else ''"""
+    c = canary_read(base)
+    now = now or time.time()
+    if not c or not c.get("last_ok") and c.get("ok") is None:
+        return ""
+    if now - float(c.get("last_ok") or 0) > CANARY_MAX_S:
+        return f"no container start succeeded for {(now - float(c.get('last_ok') or 0)) / 60:.0f} min (last probe rc {c.get('rc')})"
+    return ""
+
+
+def apply_canary(text, base=None, now=None):
+    """--free output with admit 0 on a host whose start canary is red (and the reason in 'canary')"""
+    why = canary_bad(base, now)
+    if not why:
+        return text
+    try:
+        o = json.loads(text)
+    except ValueError:
+        return text
+    o.update(admit_gb=0, die_admit_gb=0, free_gb=-int(o.get("waiting_gb") or 0), canary=why)
+    return json.dumps(o)
+
+
 def committed_threads():
     """THREADCAP_1116: sum of the declared threads (cthr.<unit>) of the units that still hold a res.<unit>; ot-heavy writes cthr at admission"""
     tot = 0
@@ -2489,7 +2551,11 @@ if __name__ == "__main__":
         sys.exit(selftest())
     elif "--free" in sys.argv:
         i = sys.argv.index("--free")
-        free(sys.argv[i + 1] if len(sys.argv) > i + 1 else "/")
+        import contextlib, io
+        _buf = io.StringIO()
+        with contextlib.redirect_stdout(_buf):
+            free(sys.argv[i + 1] if len(sys.argv) > i + 1 else "/")
+        print(apply_canary(_buf.getvalue().strip()))
     elif "--sizes" in sys.argv:
         for c, e in sorted(sizes().items(), key=lambda kv: -kv[1]["peak_gb"]):
             print(f"{e['peak_gb']:8.1f} GB peak  suggest {e['suggest_gb']:4d}  requested {e['req_gb']:4d}  n={e['n']} proved={e['proved']} live={e['live']}  {c}")
