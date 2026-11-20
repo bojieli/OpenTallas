@@ -36,3 +36,11 @@ hold ends before/after); hand rows to S81-DIE-R4 (J6), QC-PLAN-R5 (V1), KV-PLAN-
   were cleaned; no CTS odb left to read.
 - Die rows: epyc7 meas/plans/rows.sh (ot-run) -> rows_<die>.json for s81 D8i, KV D25e3, QC A4, HEAD r11b NF15f.
 - Proof waiting: proof_t39 in global place at 12:4x.
+
+## Update ~13:05 PST (COORD lepe request done)
+- Published (intel2): /srv/opentallas-scratch2/claude/lockup-station-1130-rows/ = rows_{s81,qwen_compute,qwen_kvsys,s81_head}.json,
+  rows_s81_index.json (S81 J6 set), specs lepe/t39/lep/fe2. Working copies on epyc7 .../lockup-station-1130-meas/.
+- lepe proof6/r2 census: 10,237 cross-tap pairs, lepe_spec.json latches 5,271 (14 latches trial). main 751c11e016 (no generic/reset-cell regs).
+- Rows: needs_route flag for slots whose line crosses a core (main 814120525d).
+- Open: t39 proof result (waiters bfwogbx13/be3vjvn5i die with this session; re-check proof_t39/gen/ot_s81sl_leaf__t39/pregrt_ff_hold.log);
+  stop the unit (ot-run --cancel lockup-station-1130-meas/proof_t39) after the pregrt read unless GRT is wanted.
