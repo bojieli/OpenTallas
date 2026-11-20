@@ -34,3 +34,4 @@
   - precheck cbc_score.tsv per type (45b3461c965)
   Still open as rows or lane work: R2 latch (waits on v8j), R3 row-flop bins (QC sink_bins_compose to main), R5 svc SRAM RTL, R8 lattice rows, R10 tracked.
   R11: 4 of 25 read-only STA dumps are running, 21 are waiting on memory. The intel2 watcher ~/cbc-all-0200/sts_watch.sh posts sized rows to lanes/handoff/CBC-R11/sized/ as each one lands. Matrix: lanes/CBC-MATRIX.tsv.
+- 2026-11-20 07:20 PST ROWS R11 SIZED [CBC-ALL-0200 -> S81-DIE-R3, QC-PLAN-R3, KV-D23-COMPOSE, HEAD-CROSSING-1119] read-only sign-off-session STA dumps landed for: kv/kv3_sys_SD. Sized rows (n = ceil(pin-to-pin / 300) - 1, sites on the worst path line; 200 um half-cycle) replace the unsized ones for these types: lanes/handoff/CBC-R11/sized/<die>__<type>.json (rows + rtl_requests + summary).
