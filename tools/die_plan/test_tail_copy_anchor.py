@@ -185,3 +185,100 @@ foreach n [list {u_bound.u_d60_vport_W_out_v_hi_t.r[55][7]$_DFF_P_} {u_bound.u_p
 }
 """)
     assert out == ["u_rs_ri_pv_u_g0_j_rst_n_r3", "-", "-", "u_pd4_d60_vport_W_out_v_hi_7_pvg0_p2_60", "1", "1", "0", "0", "0"]
+
+
+# ---- XTAP-C 11-20 (FABLE-FIX-KV-PV, kit_dly_lockup.py): the hook in OpenROAD with hop lockup latches and a split copy
+_XC_LEF = """VERSION 5.8 ;
+BUSBITCHARS "[]" ;
+DIVIDERCHAR "/" ;
+MACRO core_m
+  CLASS BLOCK ;
+  ORIGIN 0 0 ;
+  SIZE 100 BY 100 ;
+  SYMMETRY X Y ;
+  PIN a
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT 0.0 50.0 0.5 50.2 ;
+    END
+  END a
+  PIN clk
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT 0.0 60.0 0.5 60.2 ;
+    END
+  END clk
+END core_m
+END LIBRARY
+"""
+_XC_V = r"""module t(input wire clk, output wire y);
+  wire a0, t0, l0, s0, m0, s1, o1, e0, e1;
+  DFFHQNx1_ASAP7_75t_R src (.CLK(clk), .D(1'b0), .QN(a0));
+  DFFHQNx1_ASAP7_75t_R \u_bound.u_pd3_x_t_5.q$_DFF_P_  (.CLK(clk), .D(a0), .QN(t0));
+  DLLx1_ASAP7_75t_R \u_bound.u_fl_pd2_x_c_5_i.q$_DLATCH_N_  (.CLK(clk), .D(t0), .Q(l0));
+  DFFHQNx1_ASAP7_75t_R \u_bound.u_pd2_x_c_5_sg0.q$_DFF_P_  (.CLK(clk), .D(l0), .QN(s0));
+  DLLx1_ASAP7_75t_R \u_bound.u_fl_pd2_x_c_5_sg1.q$_DLATCH_N_  (.CLK(clk), .D(s0), .Q(m0));
+  DFFHQNx1_ASAP7_75t_R \u_bound.u_pd2_x_c_5_sg1.q$_DFF_P_  (.CLK(clk), .D(m0), .QN(s1));
+  DLLx1_ASAP7_75t_R \u_bound.u_fl_pd2_x_c_5_o.q$_DLATCH_N_  (.CLK(clk), .D(s1), .Q(o1));
+  core_m u_core (.a(o1), .clk(clk));
+  DFFHQNx1_ASAP7_75t_R \u_bound.u_pd2_x_d_5.r[0]$_DFF_P_  (.CLK(clk), .D(t0), .QN(e0));
+  DFFHQNx1_ASAP7_75t_R \u_bound.u_pd2_x_d_5.q$_DFF_P_  (.CLK(clk), .D(e0), .QN(e1));
+  core_m u_core2 (.a(e1), .clk(clk));
+  assign y = 1'b0;
+endmodule
+"""
+_XC_TCL = r"""
+set P /OpenROAD-flow-scripts/flow/platforms/asap7/lef
+read_lef $P/asap7_tech_1x_201209.lef
+read_lef $P/asap7sc7p5t_28_R_1x_220121a.lef
+read_lef /work/core_m.lef
+read_verilog /work/t.v
+link_design t
+initialize_floorplan -die_area "0 0 3000 600" -core_area "5 5 2995 595" -site asap7sc7p5t
+set blk [ord::get_db_block]
+set u [[ord::get_db_tech] getDbUnitsPerMicron]
+foreach i [$blk getInsts] {
+  set n [string map {\\ {}} [$i getName]]
+  if {$n eq "u_core"} { $i setLocation [expr {2000*$u}] [expr {200*$u}]; $i setPlacementStatus FIRM
+  } elseif {$n eq "u_core2"} { $i setLocation [expr {400*$u}] [expr {200*$u}]; $i setPlacementStatus FIRM
+  } else { $i setLocation [expr {100*$u}] [expr {400*$u}]; $i setPlacementStatus PLACED }
+}
+set ::env(RESULTS_DIR) /work
+source /work/tail_copy_anchor.tcl
+foreach i [$blk getInsts] { set n [string map {\\ {}} [$i getName]]; set b [$i getBBox]; puts "POS $n [expr {[$b xMin]/double($u)}] [expr {[$b yMin]/double($u)}] [$i getPlacementStatus]" }
+"""
+
+
+def test_hook_in_openroad_with_hop_latches_and_a_split_copy(tmp_path):
+    import shutil
+    import subprocess
+    if not shutil.which("docker"):
+        pytest.skip("no docker")
+    d = tmp_path
+    (d / "t.v").write_text(_XC_V)
+    (d / "core_m.lef").write_text(_XC_LEF)
+    (d / "t.tcl").write_text(_XC_TCL)
+    (d / "tail_copies.tsv").write_text("# copy\tK\tgroup\tcore\nu_pd2_x_c_5\t2\tt0/2\tc1\nu_pd2_x_d_5\t2\tt0/2\tc2\n")
+    shutil.copy(HERE / "tail_copy_anchor.tcl", d)
+    d.chmod(0o777)
+    cmd = "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; openroad -exit /work/t.tcl; chmod -R a+rwX /work"
+    r = subprocess.run(["docker", "run", "--rm", "--memory=4g", "--memory-swap=4g", "-v", f"{d}:/work",
+                        "openroad/orfs:asap7lock", "bash", "-lc", cmd], capture_output=True, text=True, timeout=600)
+    if r.returncode and "Unable to find image" in r.stderr:
+        pytest.skip("image missing")
+    out = r.stdout
+    pos = {m.group(1): (float(m.group(2)), float(m.group(3)), m.group(4)) for m in re.finditer(r"POS (\S+) ([0-9.]+) ([0-9.]+) (\S+)", out)}
+    assert "OT_TAIL_SITE copies 2 of 2 sited" in out and "merged 0" in out, out[-3000:] + r.stderr[-2000:]
+    x = lambda n: pos[n][0]  # noqa: E731
+    te = x("u_bound.u_pd3_x_t_5.q$_DFF_P_")          # trunk end: between the two core pins (500 .. 2000)
+    s0, s1 = x("u_bound.u_pd2_x_c_5_sg0.q$_DFF_P_"), x("u_bound.u_pd2_x_c_5_sg1.q$_DFF_P_")
+    assert 1100 <= te <= 1400 and abs(s1 - 1998) <= 5, (te, s1)
+    assert abs(s0 - (te + s1) / 2) <= 40                                             # group 0 of 2 at half the route
+    assert abs(x("u_bound.u_fl_pd2_x_c_5_i.q$_DLATCH_N_") - (te + s0) / 2) <= 40      # input latch mid-hop
+    assert abs(x("u_bound.u_fl_pd2_x_c_5_sg1.q$_DLATCH_N_") - (s0 + s1) / 2) <= 40    # stage latch mid-hop
+    assert abs(x("u_bound.u_fl_pd2_x_c_5_o.q$_DLATCH_N_") - s1) <= 5                  # output latch at the pin with the last stage
+    assert all(pos[n][2] == "FIRM" for n in pos if n.startswith("u_bound."))

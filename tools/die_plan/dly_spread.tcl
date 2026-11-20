@@ -15,7 +15,8 @@
 #   OT_DLY_SPREAD_SEG=1  (unset = off, byte-identical)  SEGMENT form (FABLE-FIX-KV-PV XTAP-C 11-20, kit_dly_lockup.py): a hop lockup
 #                        latch u_fl_* (DLL / DHL) is a repeater of the chain, and the stages between two latches are ONE station:
 #                        the latch-delimited groups of a run sit at equal route fractions (a group that touches an anchor stage sits
-#                        at the anchor), the latch at its launch station.  A chain with a latch is always placed, also when its GPL hops are within
+#                        at the anchor), the latch mid-hop like any repeater of the hop (half a hop of wire on each side: same-tap hold before it,
+#                        T/2 setup after it).  A chain with a latch is always placed, also when its GPL hops are within
 #                        reach (GPL spreads the stages of one segment over taps).  A run without a latch keeps the forms above.
 #   OT_DLY_SPREAD_MAX_STAGES  (64; 1024 in SEGMENT form)  longest chain walked
 #   OT_DLY_SPREAD_RE     discovery regexp (default: any <inst>.g_reg.r[k][b] / <inst>.r[k][b] / <inst>.q[b])
@@ -314,8 +315,6 @@ dict for {nm head} $ds_cand {
         lassign $b d bi
         if {![ds_movable $bi]} continue
         if {$j == 0} { set f [expr {1.0 - double($d+1)/($md+2)}] } else { set f [expr {double($d+1)/($md+2)}] }
-        # SEGMENT form: the hop latch sits with its launch station (same clock leaf as the flop that drives it); the hop wire follows it
-        if {[ds_islk $bi]} { set f 0.0 }
         set f0 [dict get $fr $j]; set f1 [dict get $fr [expr {$j+1}]]
         lassign [ds_atpl $rt [expr {$f0 + $f * ($f1 - $f0)}]] x y
         ds_put $bi $x $y

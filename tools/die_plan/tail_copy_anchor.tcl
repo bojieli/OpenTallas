@@ -359,9 +359,32 @@ proc tcs_run {} {
         set p [tcs_snap $x $y $core $ox $oy $sw $sh]
       }
       lappend pts $p
+    }
+    for {set s_ 0} {$s_ < $k} {incr s_} {
+      set f [lindex $chain $s_]; set p [lindex $pts $s_]
       lassign [tcs_follow $f] reps _
+      set pm $p; set lk_ 0
       foreach cell [concat [list $f] $reps] {
-        tcs_unfix $cell; $cell setLocation {*}$p; $cell setPlacementStatus FIRM; puts $out [$cell getName]; incr ncell
+        # XTAP-C 11-20: the hop lockup latch after a stage (not the last one: that latch feeds the core pin) sits MID-HOP with the
+        # repeaters behind it: launch -> latch keeps half a hop of wire for its same-tap hold, latch -> capture half a hop in T/2
+        if {!$lk_ && $s_ < $k - 1 && [regexp {^(DLL|DHL)} [[$cell getMaster] getName]]} {
+          set lk_ 1; lassign $p x0_ y0_; lassign [lindex $pts [expr {$s_ + 1}]] x1_ y1_
+          lassign [tcs_push_out [expr {($x0_ + $x1_) / 2}] [expr {($y0_ + $y1_) / 2}] $boxes $sw] xm_ ym_ c_
+          set pm [tcs_snap $xm_ $ym_ $core $ox $oy $sw $sh]
+        }
+        tcs_unfix $cell; $cell setLocation {*}$pm; $cell setPlacementStatus FIRM; puts $out [$cell getName]; incr ncell
+      }
+    }
+    # XTAP-C 11-20: this copy's own input hop lockup latch (trunk end -> first stage) and the repeaters behind it: mid-hop;
+    # the repeaters before it stay with the trunk end below
+    set d_ [tcs_ffdriver [tcs_dnet [lindex $chain 0]]]; set pre_ {}; set post_ {}
+    if {[llength $d_]} {
+      foreach cell [lreverse [lindex $d_ 1]] { if {[llength $post_] || [regexp {^(DLL|DHL)} [[$cell getMaster] getName]]} { lappend post_ $cell } else { lappend pre_ $cell } }
+      if {[llength $post_]} {
+        lassign $t x0_ y0_; lassign [lindex $pts 0] x1_ y1_
+        lassign [tcs_push_out [expr {($x0_ + $x1_) / 2}] [expr {($y0_ + $y1_) / 2}] $boxes $sw] xm_ ym_ c_
+        set pm [tcs_snap $xm_ $ym_ $core $ox $oy $sw $sh]
+        foreach cell $post_ { tcs_unfix $cell; $cell setLocation {*}$pm; $cell setPlacementStatus FIRM; puts $out [$cell getName]; incr ncell }
       }
     }
     set q [expr {$srcp ne "" ? $srcp : $t}]
@@ -370,9 +393,10 @@ proc tcs_run {} {
     # trunk last stage: the flop that feeds this copy's first stage, when it is a trunk stage (u_pdN_..._t_<pad>) GPL owns
     if {![dict exists $tdone $g]} {
       dict set tdone $g 1
-      set d [tcs_ffdriver [tcs_dnet [lindex $chain 0]]]
+      set d $d_
       if {[llength $d]} {
         lassign $d tf treps
+        set treps $pre_
         if {[tcs_is_trunk [$tf getName]] &&
             [$tf getPlacementStatus] ni {FIRM LOCKED COVER}} {
           foreach cell [concat [list $tf] $treps] {

@@ -262,7 +262,7 @@ def _run_seg(tcl, d):
 
 def test_dly_spread_segment_form_latch_groups():
     """XTAP-C (FABLE-FIX-KV-PV 11-20): OT_DLY_SPREAD_SEG=1: the stages between two hop lockup latches are one station, the
-    latch sits with its launch station; a group that reaches a FIRM stage with no latch between sits at that stage."""
+    latch sits mid-hop; a group that reaches a FIRM stage with no latch between sits at that stage."""
     if not shutil.which("docker"):
         pytest.skip("no docker")
     with tempfile.TemporaryDirectory() as d:
@@ -274,7 +274,7 @@ def test_dly_spread_segment_form_latch_groups():
         for j, x in enumerate((700, 1300, 1900)):
             assert all(abs(v - x) <= 30 for v in seg(j)), (j, seg(j), out[-1500:])
             if j:
-                assert abs(pos[f"u_bound.u_fl_pd9_x_t_5_sg{j}.q$_DLATCH_N_"] - (x - 600)) <= 30
+                assert abs(pos[f"u_bound.u_fl_pd9_x_t_5_sg{j}.q$_DLATCH_N_"] - (x - 300)) <= 30   # mid-hop
         assert "fail 0" in out, out[-2000:]
     with tempfile.TemporaryDirectory() as d:
         out = _run_seg(TCL_SEG.replace("@ANCHOR@", "u_bound.u_pd9_x_t_5_sg2.q\\$_DFF_P_"), d)
