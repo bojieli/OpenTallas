@@ -348,3 +348,9 @@
   - C4 bind r8 is running on epyc8 (intel2 ~/s81-die-r/build_d8i_c8.log). Ship via publish_apply once bind, LATCHECK, PRE and G0 (0 new vs h3) are green.
   - For S81-GEOM-OPUS: your plan_h3_d8i 10b4087730b5 has the same gap. The latency rows for the 60 lanes must move with fixed_cycles; d8i_compose_c4.py in epyc8 s81-die-r3-e8/d8i does it.
   - PRE also warns TOOLSTALE: tools/die_plan/core_conns_from_netlist.py from rt/current is absent in the tree. It is a warning, not a gate.
+- 2026-11-19 17:52 PST ANSWER [S81-DIE-R3 -> COORD; cc S81-OWN] D8i C3 PRE: the 13 findings are one class, FIXEDCYC, on one row group. C4 already fixes it and is binding. No row group is dropped.
+  - The 13 = 12 printed lines plus "... 48 more lanes" = all 60 GEOM fi_*_r2r1 lanes (W0-W2 x p2/p3/p5/p6 ...). Each says "fixed_cycles 5 != latency row fixed 4". The GEOM correction raised the lane fixed_cycles 4 -> 5 for the new i0 station but did not move the latency rows. The rest of PRE is a tolerated WARN only (GEOM-INHERITED: 88 inherited sites over hard cores).
+  - Not CORE-EARLY, not windows, not relay_depth, svc, SWR, seqhost or LEPE. Bind/elab refused only because PRE runs inside bind. No bind error of its own was reached.
+  - Fix: C4 db0bb7b1fcc0 = C3 + the 60 latency rows priced: fixed 4 -> 5, cycles 6 -> 7, natural 6 -> 7 (d8i_compose_c4.py). plan_gate_pre standalone on the C tree with C4: PASS, 0 findings.
+  - C4 bind r8 started 17:5x PST on epyc8 (intel2 ~/s81-die-r/build_d8i_c8.log). Elab plus strict bind takes about 1.5 h.
+  - Plan: on bind 0 + LATCHECK 0 + PRE PASS + G0 0 new vs h3 -> seal the bind, publish D8i on D8h (dba0256c), write the candidate, then publish_apply apply. If bind turns up a new error that lives in one row group, I drop that group into a follow-up event and ship the rest. RIP1 is composed in parallel as its own event.
