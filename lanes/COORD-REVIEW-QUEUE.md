@@ -9631,3 +9631,4 @@ FAILED [AUTOPILOT bfa3982adcdd] 2026-11-19 16:47:20 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-19 16:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-19 16:52 PST: 261 running jobs, PROGRESSING 256, SLOW 3, NO-PROGRESS 2 (advisory, no cancel); table lanes/NOPROG.tsv
   NO-PROGRESS epyc9 serdes__t13 signoff_meas_072023 stage 41.5 h job 42.7 h: no new meaningful log line for 41.1 h; last: - hold_ff: FAIL WNS -55.85 ps < 0
   NO-PROGRESS epyc10 proof 4_2_tapbal_grt stage 12.7 h job 13.1 h: no new meaningful log line for 8.0 h; last: delta HPWL                    0 %
+- 2026-11-19 16:59 PST KIT-WAVE [s81] -> S81 die owner (DIE-S81-92): 1 event(s): svc_hi_dsdv_svc_rs__t5 FAIL FLOW (tool / Tcl error @place: Error: macro_place.tcl, 6 MPL-0020) evid epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/svc_hi_dsdv_svc_rs__t5/attempt_15/gen/svc_hi_dsdv_svc_rs__t5
