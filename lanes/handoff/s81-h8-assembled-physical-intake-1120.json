@@ -1,0 +1,406 @@
+{
+ "collector_depths": {
+  "svc_hi_dsdv_svc_pvso_entry__t1": [
+   16,
+   16
+  ],
+  "svc_hi_dsdv_svc_pvso_entry__t2": [
+   14,
+   14
+  ],
+  "svc_hi_dsdv_svc_rs__t1": [
+   16,
+   16
+  ],
+  "svc_hi_dsdv_svc_rs__t2": [
+   16,
+   16
+  ],
+  "svc_hi_dsdv_svc_rs__t3": [
+   14,
+   14
+  ],
+  "svc_hi_dsdv_svc_rs__t4": [
+   14,
+   14
+  ],
+  "svc_hi_dsdv_svc_rs__t5": [
+   16,
+   16
+  ],
+  "svc_hi_dsdv_svc_rs__t6": [
+   16,
+   16
+  ],
+  "svc_lo_dsdv_svc_rs__t1": [
+   16,
+   16
+  ],
+  "svc_lo_dsdv_svc_rs__t2": [
+   16,
+   16
+  ],
+  "svc_lo_dsdv_svc_rs__t3": [
+   15,
+   15
+  ],
+  "svc_lo_dsdv_svc_rs__t4": [
+   14,
+   14
+  ],
+  "svc_lo_dsdv_svc_rs__t5": [
+   15,
+   15
+  ],
+  "svc_lo_dsdv_svc_rs__t6": [
+   16,
+   16
+  ],
+  "svc_lo_dsdv_svc_rs__t7": [
+   16,
+   16
+  ],
+  "svc_lo_dsdv_svc_rs_w__t1": [
+   16,
+   16
+  ]
+ },
+ "missing_types": [],
+ "reviewed_types": {
+  "svc_lo_dsdv_svc_rs__t7": {
+   "review": "Canonical t7 R9 exact geometry",
+   "source": "ede3c9915012"
+  },
+  "svc_lo_dsdv_svc_rs__t5": {
+   "source": "h8_lo5_clock_intake_1120.json",
+   "image": "results/geom_review/s81-h8-svc-lo-t5-clock-r5b-1120.png",
+   "image_sha256": "7425ce4e956dba871d375113e71105c8fbe4bc75d13d552eb74c1b05213fe162"
+  },
+  "svc_hi_dsdv_svc_pvso_entry__t1": {
+   "source": "h8_hi_pvso_rs2_clock_intake_1120.json",
+   "image": "results/geom_review/s81-h8-svc_hi_dsdv_svc_pvso_entry__t1.clock_review_r2.png",
+   "image_sha256": "504413b991d7adf162848a6a08e9824280d1a7d059804e4e7c2001af69a1705b"
+  },
+  "svc_hi_dsdv_svc_pvso_entry__t2": {
+   "source": "h8_hi_pvso_rs2_clock_intake_1120.json",
+   "image": "results/geom_review/s81-h8-svc_hi_dsdv_svc_pvso_entry__t2.clock_review_r2.png",
+   "image_sha256": "dc21bedb71cd498d8e350f7fa62fcfa6c68e3320417c1082218d867720af6bbe"
+  },
+  "svc_hi_dsdv_svc_rs__t2": {
+   "source": "h8_hi_pvso_rs2_clock_intake_1120.json",
+   "image": "results/geom_review/s81-h8-svc_hi_dsdv_svc_rs__t2.clock_review_r2.png",
+   "image_sha256": "52dac50acbac984e6813e1e8b4c60f47cda470df13c1ee87d592814c5d56b416"
+  },
+  "svc_lo_dsdv_svc_rs__t2": {
+   "source": "h8_lo234_clock_intake_r2_1120.json",
+   "image": "results/geom_review/s81-h8-svc_lo_dsdv_svc_rs__t2.clock_review_r6.png",
+   "image_sha256": "51bbacb0399af9fa33b9dffde034be53f4b1a6d3848af0c7b26fa13b6ecb668d"
+  },
+  "svc_lo_dsdv_svc_rs__t3": {
+   "source": "h8_lo234_clock_intake_r2_1120.json",
+   "image": "results/geom_review/s81-h8-svc_lo_dsdv_svc_rs__t3.clock_review_r6.png",
+   "image_sha256": "39ae6dfbdbbcf76ef0844e8ea9688183fd18777f2d0215ed697b7449221195dd"
+  },
+  "svc_lo_dsdv_svc_rs__t4": {
+   "source": "h8_lo234_clock_intake_r2_1120.json",
+   "image": "results/geom_review/s81-h8-svc_lo_dsdv_svc_rs__t4.joint_review_1120.png",
+   "image_sha256": "490da7e572ae519ab41447f79186d1f1c4ebffc81f396e28403b3f5e34a2cb2d"
+  },
+  "svc_hi_dsdv_svc_rs__t6": {
+   "source": "h8_joint_t6_clock_ft_intake_1120.json",
+   "image": "results/geom_review/s81-h8-svc_hi_dsdv_svc_rs__t6.joint_review_1120.png",
+   "image_sha256": "b052efb35346a92d299847f656eb78aff07dcecc62a7288b93d160fc13321c12"
+  },
+  "svc_lo_dsdv_svc_rs__t6": {
+   "source": "h8_joint_t6_clock_ft_intake_1120.json",
+   "image": "results/geom_review/s81-h8-svc_lo_dsdv_svc_rs__t6.joint_review_1120.png",
+   "image_sha256": "14db11611f6f53e6b2b6a5af8911f7183236263ec73dee65851b198813f675e8"
+  },
+  "svc_hi_dsdv_svc_rs__t4": {
+   "source": "h8_joint_hi45_clock_ft_intake_1120.json",
+   "image": "results/geom_review/s81-h8-svc_hi_dsdv_svc_rs__t4.joint_review_1120.png",
+   "image_sha256": "472b1db0ae693758a806134f5f49ebb577fc04a7eb1c5dcb10ea96ec2816fa54"
+  },
+  "svc_hi_dsdv_svc_rs__t5": {
+   "source": "h8_joint_hi45_clock_ft_intake_1120.json",
+   "image": "results/geom_review/s81-h8-svc_hi_dsdv_svc_rs__t5.joint_review_1120.png",
+   "image_sha256": "46d3132d0808d445042aa9f99272699c8fd8f1664427188689110ba0e50195f3"
+  },
+  "svc_lo_dsdv_svc_rs_w__t1": {
+   "source": "h8_joint_low_w_clock_ft_intake_1120.json",
+   "image": "results/geom_review/s81-h8-svc_lo_dsdv_svc_rs_w__t1.joint_review_1120.png",
+   "image_sha256": "5e79d02062816ce7c725de6c984e5d8adf7564cb6451b75e27de5d3b4d2a508b"
+  },
+  "svc_hi_dsdv_svc_rs__t1": {
+   "source": "h8_joint_hi1_clock_ft_intake_1120.json",
+   "image": "results/geom_review/s81-h8-svc_hi_dsdv_svc_rs__t1.joint_review_1120.png",
+   "image_sha256": "d18fc1adb539e290d037fa618a050d426dea6c88be48f6d44d34fdc275bac01c"
+  },
+  "svc_hi_dsdv_svc_rs__t3": {
+   "source": "h8_joint_hi3_clock_ft_intake_1120.json",
+   "image": "results/geom_review/s81-h8-svc_hi_dsdv_svc_rs__t3.joint_review_1120.png",
+   "image_sha256": "c756c7f76a86535c63dcef9d7042341c2c858e449383c611bf99f52c4cba7f4a"
+  },
+  "svc_lo_dsdv_svc_rs__t1": {
+   "source": "h8_joint_lo1_clock_ft_intake_1120.json",
+   "image": "results/geom_review/s81-h8-svc_lo_dsdv_svc_rs__t1.joint_review_1120.png",
+   "image_sha256": "eaf9857787cc7f10c82f963fe3fbc5d475992650ec6e3d00c667047022ad2a76",
+   "native_cap_assignment": {
+    "cap": 800,
+    "radius_um": 200.0,
+    "sinks": 27668,
+    "clock_sites": 148,
+    "max_load": 800.0,
+    "max_distance_um": 199.48400000000012,
+    "nearest_max_load": 1117.0,
+    "nearest_over": 2,
+    "reassigned": 446,
+    "transfers": [
+     {
+      "source": "clk_t132",
+      "destination": "clk_t131",
+      "kind": "plan",
+      "count": 129
+     },
+     {
+      "source": "clk_t19",
+      "destination": "clk_t133",
+      "kind": "plan",
+      "count": 123
+     },
+     {
+      "source": "clk_t19",
+      "destination": "clk_t133",
+      "kind": "relay",
+      "count": 1
+     },
+     {
+      "source": "clk_t19",
+      "destination": "clk_t52",
+      "kind": "plan",
+      "count": 193
+     }
+    ]
+   }
+  }
+ },
+ "collector_updates": {
+  "svc_hi_dsdv_svc_pvso_entry__t1": {
+   "fields": 0,
+   "max_hop_um": 275.0,
+   "depth": 16
+  },
+  "svc_hi_dsdv_svc_pvso_entry__t2": {
+   "fields": 0,
+   "max_hop_um": 275.0,
+   "depth": 14
+  },
+  "svc_hi_dsdv_svc_rs__t1": {
+   "fields": 0,
+   "max_hop_um": 275.0,
+   "depth": 16
+  },
+  "svc_hi_dsdv_svc_rs__t2": {
+   "fields": 0,
+   "max_hop_um": 275.0,
+   "depth": 16
+  },
+  "svc_hi_dsdv_svc_rs__t3": {
+   "fields": 0,
+   "max_hop_um": 275.0,
+   "depth": 14
+  },
+  "svc_hi_dsdv_svc_rs__t4": {
+   "fields": 0,
+   "max_hop_um": 275.0,
+   "depth": 14
+  },
+  "svc_hi_dsdv_svc_rs__t5": {
+   "fields": 0,
+   "max_hop_um": 275.0,
+   "depth": 16
+  },
+  "svc_hi_dsdv_svc_rs__t6": {
+   "fields": 0,
+   "max_hop_um": 275.0,
+   "depth": 16
+  },
+  "svc_lo_dsdv_svc_rs__t1": {
+   "fields": 0,
+   "max_hop_um": 275.0,
+   "depth": 16
+  },
+  "svc_lo_dsdv_svc_rs__t2": {
+   "fields": 0,
+   "max_hop_um": 275.0,
+   "depth": 16
+  },
+  "svc_lo_dsdv_svc_rs__t3": {
+   "fields": 0,
+   "max_hop_um": 275.0,
+   "depth": 15
+  },
+  "svc_lo_dsdv_svc_rs__t4": {
+   "fields": 0,
+   "max_hop_um": 275.0,
+   "depth": 14
+  },
+  "svc_lo_dsdv_svc_rs__t5": {
+   "fields": 0,
+   "max_hop_um": 275.0,
+   "depth": 15
+  },
+  "svc_lo_dsdv_svc_rs__t6": {
+   "fields": 0,
+   "max_hop_um": 275.0,
+   "depth": 16
+  },
+  "svc_lo_dsdv_svc_rs__t7": {
+   "fields": 0,
+   "max_hop_um": 275.0,
+   "depth": 16
+  },
+  "svc_lo_dsdv_svc_rs_w__t1": {
+   "fields": 0,
+   "max_hop_um": 275.0,
+   "depth": 16
+  }
+ },
+ "pricing": {
+  "bus_deltas": {},
+  "lanes": {},
+  "rule_broken": [],
+  "latency": {
+   "x_W0_in": [
+    37,
+    38
+   ],
+   "rt_W0_in_0": [
+    43,
+    44
+   ],
+   "rt_W0_in_1": [
+    49,
+    50
+   ],
+   "rt_W0_in_2": [
+    58,
+    59
+   ],
+   "rt_W0_out_0": [
+    63,
+    64
+   ],
+   "rt_W0_out_1": [
+    72,
+    73
+   ],
+   "rt_W0_out_2": [
+    76,
+    78
+   ],
+   "x_E0_in": [
+    35,
+    36
+   ],
+   "rt_E0_in_0": [
+    43,
+    44
+   ],
+   "rt_E0_in_1": [
+    50,
+    51
+   ],
+   "rt_E0_in_2": [
+    59,
+    60
+   ],
+   "x_E0_out": [
+    57,
+    58
+   ],
+   "rt_E0_out_0": [
+    64,
+    65
+   ],
+   "rt_E0_out_1": [
+    73,
+    74
+   ],
+   "rt_E0_out_2": [
+    78,
+    79
+   ],
+   "idx__svc_14__bk_sel": [
+    99,
+    100
+   ],
+   "xtier__eng__s_6N_C": [
+    94,
+    95
+   ],
+   "xtier__s_6N_C__eng": [
+    91,
+    92
+   ],
+   "attn__svc_11__svc_5": [
+    18,
+    19
+   ],
+   "attn__svc_5__svc_11": [
+    19,
+    20
+   ],
+   "dfi__svc_0__phy_hbm": [
+    8,
+    9
+   ],
+   "hbmrd__phy_hbm__svc_0": [
+    10,
+    11
+   ],
+   "xtier__eng__s_6S_C": [
+    59,
+    60
+   ]
+  },
+  "lane_cycles_added": 24
+ },
+ "strap_values_declarations_unchanged_against_start_closed_base": true,
+ "plan_sha256": "105b68c8524b4e2cc60076e8b96759bd4a68ba65d8210931b72f1a5622df6c87",
+ "sidecar_sha256": "272cd23f8feda763ff191fca47468d97b29a3b95c4ca96e0e9a065b1936924b3",
+ "stage": "reviewed assembled physical model",
+ "boot": {
+  "root": "s_3S_L3",
+  "types": [
+   394,
+   394
+  ],
+  "parts": 398,
+  "max_release": [
+   216,
+   216
+  ],
+  "max_die_hop_um": [
+   378.0,
+   378.0
+  ],
+  "changed_parts": {}
+ },
+ "exterior": {
+  "bits": 24434,
+  "over_before": 1163,
+  "over_after": 0,
+  "newly_over": 0,
+  "resolved": 1163
+ },
+ "exterior_limit_um": 405.0,
+ "exterior_ports": 63,
+ "hbm_guarded_ft1": {
+  "exact_bits": 1121,
+  "worst_um": 404.499
+ },
+ "plan": "epyc7:/srv/opentallas-scratch2/claude/s81-svc-split-1119/t7_resolve_1120/h8_reviewed_geometry_full_1120/plan.json",
+ "sidecar": "epyc7:/srv/opentallas-scratch2/claude/s81-svc-split-1119/t7_resolve_1120/h8_reviewed_geometry_full_1120/sidecar.json",
+ "production_gate": "Typed source, synthesis macro census and placed pre-CTS cap/radius remain required."
+}
