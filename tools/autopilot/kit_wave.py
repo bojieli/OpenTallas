@@ -1340,7 +1340,10 @@ def rearm_changes(state, cfg, die, d, rec):
     pin = item_gen_tools_manifest(d, rec.get("item"))
     if sp and (sp.get("gen_tools_manifest_sha") or "") != pin:
         out.append("generator_source")
-    cur = pin if pin and tools_group(rec.get("stage")) else stage_tools_digest()
+    if pin and tools_group(rec.get("stage")):
+        cur = pin
+    else:
+        cur = stage_tools_digest()
     seen = led.get(k)
     if not isinstance(seen, dict) or seen.get("a") != a:
         led[k] = {"a": a, "tools": cur}
