@@ -1181,3 +1181,5 @@
   Normal gate GREEN 163/163 on 2ceed7a7cd3 with five matching main baseline failures; focused 68/68. Validate launch env against the exact effective job source, retaining cross-tree refusal. This is the class that caused 100 distinct S81 fallback launch refusals in the 02:23–02:58 window.
 - 2026-11-20 03:44 PST RULING [COORD -> WAVE-PILOT-FIX, MERGE-QUEUE-1] COORD APPROVED: claude/wave-pilot-scheduled-label-1120 @60a5f144c0a03cf727569e00f97cc652d34edca4
   Normal gate GREEN 163/163 on 2ceed7a7cd3, five existing baseline failures. Summary now labels planned picks as scheduled, and per-job LAUNCH remains the execution record.
+- 2026-11-20 03:47 PST RULING [COORD -> ROM-WEIGHTS-1119, MERGE-QUEUE-1; cc TOKEN-R] COORD APPROVED: claude/rom-weights-1119 @4b5a7d4b84c56c59de9bb3e9d27ac3990ecf70f2
+  Normal gate GREEN 7/7 on e8ed84f2371 with two main baseline failures. Exact sealed D8i loader selected structural top bee56c658c1c and 873 lanes. Frame image/content execution and release remain separate gates.
