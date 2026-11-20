@@ -50,6 +50,55 @@ class Edit(unittest.TestCase):
         self.assertEqual(json.loads(g("show", "HEAD:autopilot/kit_wave.json").stdout)["max_inflight"], 7)
         self.assertEqual(g("status", "--short").stdout.strip(), "")
 
+    def test_append_only_followup_does_not_trigger_cas_repair(self):
+        d, g = repo()
+        messages = []
+
+        def commit(msg, rel):
+            messages.append(msg)
+            g("add", "--", rel)
+            g("commit", "-q", "-m", msg)
+            own = g("rev-parse", "HEAD").stdout.strip()
+            (Path(d) / "journal").write_text("a concurrent append\n")
+            g("add", "journal")
+            g("commit", "-q", "-m", "journal append")
+            return own
+
+        ops = [{"op": "test", "path": "/max_inflight", "value": 5},
+               {"op": "replace", "path": "/max_inflight", "value": 7}]
+        self.assertEqual(json.loads(KE.edit(d, ops, "own edit", commit_cmd=commit))["max_inflight"], 7)
+        self.assertEqual(messages, ["own edit"])
+        self.assertEqual(g("log", "-2", "--format=%s").stdout.splitlines(), ["journal append", "own edit"])
+
+    def test_real_intervening_config_commit_still_gets_repaired(self):
+        d, g = repo()
+        work = Path(d) / KE.REL
+        messages = []
+
+        def commit(msg, rel):
+            if not messages:
+                patched = work.read_text()
+                work.write_text(KE.dump(dict(CFG, unmatched_key=42)))
+                g("add", "--", rel)
+                g("commit", "-q", "-m", "intervening config")
+                work.write_text(patched)
+            messages.append(msg)
+            g("add", "--", rel)
+            g("commit", "-q", "-m", msg)
+            own = g("rev-parse", "HEAD").stdout.strip()
+            (Path(d) / "journal").write_text(msg + "\n")
+            g("add", "journal")
+            g("commit", "-q", "-m", "journal append")
+            return own
+
+        ops = [{"op": "test", "path": "/max_inflight", "value": 5},
+               {"op": "replace", "path": "/max_inflight", "value": 7}]
+        result = json.loads(KE.edit(d, ops, "own edit", commit_cmd=commit))
+        self.assertEqual((result["max_inflight"], result["unmatched_key"]), (7, 42))
+        self.assertEqual(len(messages), 2)
+        self.assertIn("CAS repair", messages[-1])
+        self.assertEqual(json.loads(work.read_text()), result)
+
     def test_dirty_working_copy_is_refused(self):
         d, g = repo()
         (Path(d) / "autopilot/kit_wave.json").write_text(KE.dump(dict(CFG, max_inflight=99)))

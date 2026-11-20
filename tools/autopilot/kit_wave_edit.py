@@ -16,6 +16,7 @@ import copy
 import fcntl
 import json
 import os
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -226,13 +227,32 @@ def blob_sha(coord):
     return git(coord, "rev-parse", f"HEAD:{REL}").stdout.strip()
 
 
+def commit_config(coord, message, commit_cmd):
+    """Return the config commit itself, even when other journal commits move HEAD."""
+    if commit_cmd:
+        pushed = commit_cmd(message, REL)
+        if isinstance(pushed, str) and pushed:
+            return pushed
+        return git(coord, "log", "-1", "--first-parent", "--format=%H", "HEAD", "--", REL).stdout.strip()
+    result = subprocess.run(
+        ["bash", os.path.expanduser("~/coord/bin/coord-commit.sh"), message, REL],
+        check=True, timeout=600, stdout=subprocess.PIPE, text=True,
+    )
+    sys.stdout.write(result.stdout)
+    receipts = re.findall(r"(?m)^PUSHED ([0-9a-f]{40,64})$", result.stdout)
+    if not receipts:
+        raise SystemExit("kit_wave_edit: push command returned no exact commit receipt")
+    return receipts[-1]
+
+
 def _edit_once(coord, ops, message, dry, commit_cmd):
     """one read-modify-write.  WAVE-PILOT-FIX 11-17 (COORD, 17:5x: a patch applied to a copy of HEAD read minutes earlier reverted another lane's
     commit): the base is the blob sha of HEAD:file read just now; before the commit it is compared again (compare-and-swap) and the patch is
-    re-applied to the new HEAD when it moved; after the commit the commit's PARENT blob must equal the base, else the commit overwrote a commit
+    re-applied to the new HEAD when it moved; the pushed commit receipt's PARENT blob must equal the base, else the commit overwrote a commit
     that slipped in while coord-commit waited for its lock, and the patch is re-applied on top of that parent immediately (repair)."""
-    base = blob_sha(coord)
-    head = git(coord, "show", f"HEAD:{REL}").stdout
+    base_ref = git(coord, "rev-parse", "HEAD").stdout.strip()
+    base = git(coord, "rev-parse", f"{base_ref}:{REL}").stdout.strip()
+    head = git(coord, "show", f"{base_ref}:{REL}").stdout
     work_p = coord / REL
     work = work_p.read_text() if work_p.exists() else head
     if work != head:
@@ -260,33 +280,29 @@ def _edit_once(coord, ops, message, dry, commit_cmd):
     tmp.write_text(new)
     os.replace(tmp, work_p)                            # atomic: a reader never sees half a file
     try:
-        if commit_cmd:
-            commit_cmd(message, REL)
-        else:
-            subprocess.run(["bash", os.path.expanduser("~/coord/bin/coord-commit.sh"), message, REL], check=True, timeout=600)
+        pushed = commit_config(coord, message, commit_cmd)
     except Exception:
         work_p.write_text(head)                        # failed commit: put the committed text back, never leave an unpushed edit
         raise
-    if git(coord, "show", f"HEAD:{REL}").stdout != new:
-        work_p.write_text(git(coord, "show", f"HEAD:{REL}").stdout)
+    tip = git(coord, "show", f"HEAD:{REL}").stdout
+    if tip != new or git(coord, "show", f"{pushed}:{REL}").stdout != new:
+        work_p.write_text(tip)
         raise SystemExit("kit_wave_edit: coord-commit did not leave the patched config at HEAD; working file restored")
-    parent = git(coord, "rev-parse", f"HEAD~1:{REL}", check=False).stdout.strip()
+    parent = git(coord, "rev-parse", f"{pushed}~1:{REL}", check=False).stdout.strip()
     if parent and parent != base:                        # a commit slipped in between our read and our commit and was overwritten: put it back
         print(f"kit_wave_edit: CAS repair: parent blob {parent[:12]} != base {base[:12]}, re-applying the patch on the parent")
-        old_parent = git(coord, "show", f"HEAD~1:{REL}").stdout
+        old_parent = git(coord, "show", f"{pushed}~1:{REL}").stdout
         try:
             fixed = dump(apply_patch(json.loads(old_parent), ops))
         except (PatchError, ValueError) as e:
             raise SystemExit(f"kit_wave_edit: CAS repair failed, the committed file lost another commit's change; fix by hand: {e}")
-        tmp2 = work_p.with_name(work_p.name + f".repair{os.getpid()}")
-        tmp2.write_text(fixed)
-        os.replace(tmp2, work_p)
-        if commit_cmd:
-            commit_cmd(message + " (CAS repair: keeps the commit that landed in between)", REL)
-        else:
-            subprocess.run(["bash", os.path.expanduser("~/coord/bin/coord-commit.sh"), message + " (CAS repair: keeps the commit that landed in between)", REL], check=True, timeout=600)
-        new = fixed
-    print(f"kit_wave_edit: committed {REL} at {git(coord, 'rev-parse', 'HEAD').stdout.strip()}")
+        if fixed != new:
+            tmp2 = work_p.with_name(work_p.name + f".repair{os.getpid()}")
+            tmp2.write_text(fixed)
+            os.replace(tmp2, work_p)
+            pushed = commit_config(coord, message + " (CAS repair: keeps the commit that landed in between)", commit_cmd)
+            new = fixed
+    print(f"kit_wave_edit: committed {REL} at {pushed}")
     return new
 
 
