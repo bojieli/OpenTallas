@@ -84,3 +84,35 @@ decided past CTS: 83  passed 12  failed 71  (fail rate 86%);  not failures: 12 c
   other hold: 1 (sle_hc0__cl929603c0__cl38badc56)
 
 The 11-19 first block (23:5x) counted 79 'tool crash'; only 5 have a crash signature. 12 were cancelled/superseded (ot-run cancel signal or wave CANCELLED row) and 62 have no record at all (no process, log idle >= 120 min), mostly the d8i col_h10_r1 and QC cbx/cbf kits: those are not counted as failures but need an owner to say why they stopped.
+
+### 2026-11-20 00:2x recount of 11-19 after the liveness fix (tools/route_results.py 9acceb6c9034 on main via ot-push-main)
+
+ROUTE-RESULTS 11-19 00:00 to 11-20 00:00 (from kit run logs + signoff.json; gate = DRC 0, TT setup >= -42 ps, FF hold >= 0)  hosts local,epyc2,epyc7,epyc8,epyc9,epyc10,intel1
+| die | CTS | GRT | route | sign-off | pass | fail setup | fail hold | fail congestion | fail DRC | fail real crash | cancelled/superseded | dead, unexplained | routed, no sign-off |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| s81 | 313 | 188 | 40 | 25 | 4 | 8 | 7 | 1 | 6 | 0 | 4 | 4 | 12 |
+| head | 35 | 28 | 17 | 9 | 2 | 4 | 0 | 0 | 3 | 0 | 0 | 0 | 8 |
+| qc | 180 | 115 | 43 | 40 | 6 | 3 | 27 | 0 | 4 | 1 | 2 | 8 | 3 |
+| kv | 15 | 3 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 |
+| other | 7 | 0 | 0 | 1 | 0 | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 |
+| all | 550 | 334 | 100 | 75 | 12 | 15 | 35 | 1 | 13 | 1 | 6 | 13 | 23 |
+decided past CTS: 77  passed 12  failed 65  (fail rate 84%);  not failures: 6 cancelled/superseded, 13 dead unexplained, 23 routed awaiting sign-off
+  dead unexplained = no process, no crash signature, log idle >= 120 min, no ot-run cancel or wave CANCELLED row
+  s81 cancelled/superseded: 4 (ot_s81sl_leaf__t16, ot_s81sl_leaf__t36, seqhost__t1, slice_station__t52)
+  s81 congestion/overflow: 1 (ot_s81sl_leaf__t27)
+  s81 dead, unexplained: 4 (ot_s81sl_leaf__t22, ot_s81sl_leaf__t22, slice_station__t52, svc_hi_dsdv_svc_rs__t3)
+  s81 DRC: 6 (col_h9_r2__t1__clce45cab5__pv31e47bd5, col_h9_r2__t1__clce45cab5__pv37074264, col_h9_r2__t1__clce45cab5__pv467913cc, col_h9_r2__t1__clce45cab5__pvb7e88dd2, ...)
+  s81 hold: 7 (slice_station__t24__cl64811a5d, slice_station__t24__cl66b71008, slice_station__t24__cleece78ec, slice_station__t30__cl1653104c, ...)
+  s81 setup timing: 8 (col_h9_r2__t1__cl774acf45__pvea45273b, col_h9_r2__t1__clc9ad8f7e__pv45d0c698, col_h9_r2__t1__clce45cab5__pv6827937d, col_h9_r2__t1__clce45cab5__pvcd1d9f5f, ...)
+  head DRC: 3 (hd_host_n, hd_host_n, hd_host_n)
+  head setup timing: 4 (hd_ctl, hd_ctl, hd_ctl, hd_host_w)
+  qc cancelled/superseded: 2 (slw_fw_v1__clf51c11d8__clc7ddab13, slw_fw_v1__clf51c11d8__clc7ddab13)
+  qc real tool crash (signature): 1 (cbx_q10__cl94a12200)
+  qc dead, unexplained: 8 (cbx_q10__cl94a12200, cbx_q10__cl94a12200_h, sle_fw_v1__cl9d029624, sle_fw_v1__clf58b4dfb, ...)
+  qc DRC: 4 (sle_st_a_v1__cl67389ecd, sle_st_a_v2__pv30dda31f__pv88773f93, sle_st_a_v2__pv30dda31f__pvd2ec7769, sle_st_a_v2__pv4242de79)
+  qc hold: 27 (coll_s, sle_hc0__cl05696ed1, sle_hc0__cl05696ed1, sle_hc0__cl929603c0__cl38badc56, ...)
+  qc setup timing: 3 (sle_su_l1__cl5ea486db, slw_fw_v2__cl8537f156, slw_sc_v1__cl63e5a7a2)
+  kv dead, unexplained: 1 (kv3_pv_v5)
+  other hold: 1 (sle_hc0__cl929603c0__cl38badc56)
+
+Fix: a build with any log written in the last 30 min is alive (sealed ot-job/bwrap runs live in claude/ot-jobs/<job>/work and hide their processes); a crash signature counts only after the log has been quiet 5 min; an old kit dir is not dead while the same design runs elsewhere; epyc4 is dropped from --hosts. The 62 'dead' fall to 13.
