@@ -9,7 +9,9 @@ fclk_in* ring flops are not on those nets), and writes the bins file in the exis
 {bin_um, n, bins: [[x_centre, y_centre, count]], type, placed_kit, source}.
 
   dump  ODB OUT.tsv [--image openroad/orfs:latest]   (docker OpenROAD; one line per sink: net inst master x y, um)
-  bins  TSV --type T --out FILE [--bin-um 10.8] [--placed-kit K] [--source S]
+  bins  TSV --type T --out FILE [--bin-um 10.8] [--placed-kit K] [--source S] [--native-only]
+        --native-only: drop the plan-row instances (sink_bins_compose.ROW_INST_RE: stations, lane pads, hop lockups, landing
+        rings), so the file holds native logic only and sink_bins_compose.py adds the rows at their sites (FABLE-CBC-QK-0130 s7)
   apply PLAN OUT --bins TYPE=FILE [...] [--report R.json]   set clock.sink_bins_file AND re-point the tap-named rows the
         re-derived taps invalidate (retap.py: forwarded clock outputs, reset consumer taps) in the same step.  Run from
         the tree root the bins paths are relative to.
@@ -68,11 +70,15 @@ def bins(rows, bin_um=10.8):
     return [[x, y, n] for (x, y), n in sorted(acc.items())]
 
 
-def read_tsv(path):
+def read_tsv(path, native_only=False):
     out = []
+    row_re = None
+    if native_only:
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        from sink_bins_compose import ROW_INST_RE as row_re
     for line in Path(path).read_text().splitlines():
         p = line.split("\t")
-        if len(p) == 5:
+        if len(p) == 5 and not (row_re is not None and row_re.search(p[1])):
             out.append((float(p[3]), float(p[4])))
     return out
 
@@ -98,6 +104,7 @@ def main(argv=None):
     d = sub.add_parser("dump"); d.add_argument("odb"); d.add_argument("out"); d.add_argument("--image", default="openroad/orfs:latest")
     b = sub.add_parser("bins"); b.add_argument("tsv"); b.add_argument("--type", required=True); b.add_argument("--out", required=True)
     b.add_argument("--bin-um", type=float, default=10.8); b.add_argument("--placed-kit", default=""); b.add_argument("--source", default="")
+    b.add_argument("--native-only", action="store_true")
     p = sub.add_parser("apply"); p.add_argument("plan"); p.add_argument("out")
     p.add_argument("--bins", action="append", required=True, metavar="TYPE=FILE"); p.add_argument("--report")
     a = ap.parse_args(argv)
@@ -112,11 +119,13 @@ def main(argv=None):
     if a.cmd == "dump":
         dump(a.odb, a.out, a.image); print("DUMP", a.out, len(read_tsv(a.out)))
         return 0
-    rows = read_tsv(a.tsv)
+    rows = read_tsv(a.tsv, a.native_only)
     if not rows:
         raise SystemExit("no clock sinks in " + a.tsv)
     doc = dict(bin_um=a.bin_um, n=len(rows), bins=bins(rows, a.bin_um), type=a.type, placed_kit=a.placed_kit or a.type,
                source=a.source or f"sink_bins_from_place.py {a.tsv}")
+    if a.native_only:
+        doc["native_only"] = True
     Path(a.out).write_text(json.dumps(doc) + "\n")
     print("BINS", a.type, doc["n"], len(doc["bins"]), a.out)
     return 0
