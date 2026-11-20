@@ -750,6 +750,29 @@ def elab(ab, base, out_dir, mem_gb=32, idx=None):
     ab["netlist"] = nl
     tops, full, lib, rec = plan_sources(ab, base, idx, shim_dir=out)
     rec["aliased"] = alias
+    if any(re.match(r"dsdv_svc_rs(_pvso_entry)?_fv_", m) for m in ab.get("dissolve", [])):
+        # S81-SVC-H8W 11-20 (J3 r7: 26,540 live gather bits tied by a silent H16 -> H8 port resize): the service-slice
+        # chain and the die netlist's svc instances must agree bit for bit under the manifest's H (fails closed)
+        import sys as _sys
+        if str(Path(__file__).resolve().parent) not in _sys.path:
+            _sys.path.insert(0, str(Path(__file__).resolve().parent))
+        import svc_width_gate as SWG
+        svc_src = [f for f in list(full) + list(lib) + list(tops) if SWG.SVC_FILE.search(f)]
+        defs = [d.lstrip("-D") for d in ab.get("defines", [])]
+        bb = pbb = ()
+        if ab.get("frontend", "native") == "slang":
+            names = set(SWG.library([SWG.prep(Path(f).read_text(errors="replace"), defs) for f in svc_src]))
+            bb = names - set(ab.get("dissolve", [])) - {ab["top"]}
+            pbb = set(ab.get("slang_parameterized_blackboxes", []))
+        r = SWG.run(Path(base), defs, svc_src, SWG.DEFAULT_MODULES, nl[0] if nl else None, bb, pbb)
+        (out / "svc_width_gate.json").write_text(json.dumps(r, indent=1) + "\n")
+        rec["svc_width_gate"] = {k: v for k, v in r.items() if k != "examples"}
+        # H16 (the C6 form in flight): a shared slang blackbox interface is REPORTED (svc_width_gate.json), not a stop;
+        # under OT_SVC_H8 every finding fails closed
+        only_shared = all(r[k] == 0 for k in ("width_mismatch", "unknown", "unresolved"))
+        if r["verdict"] != "PASS" and not (r["H"] == 16 and only_shared):
+            raise ElabError(f"svc_width_gate FAIL (H{r['H']}): {json.dumps({k: v for k, v in r.items() if k != 'examples'})} "
+                            f"{json.dumps(r['examples'])[:1500]}")
     if ab.get("release_full"):
         rf_idx = idx if idx is not None else module_index(ab.get("rtl_roots", ["rtl"]), ab.get("files", []), base)
         rf_prefer = [str(Path(base) / f) if not Path(f).is_absolute() else f for f in ab.get("prefer", [])]

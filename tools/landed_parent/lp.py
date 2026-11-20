@@ -188,6 +188,48 @@ def preprocess(text: str, defines) -> str:
     return "\n".join(out)
 
 
+def source_macros(texts, defines) -> dict:
+    """S81-SVC-H8W 11-20: `define NAME VALUE values the sources set under the spec's defines (a parameter default such as
+    H = `OT_SVC_HV is then evaluated, not refused); spec defines NAME=VALUE win."""
+    defs = {str(d).split("=", 1)[0].lstrip("-D"): (str(d).split("=", 1)[1] if "=" in str(d) else "1") for d in defines or []}
+    for text in texts:
+        text = re.sub(r"/\*.*?\*/", " ", text, flags=re.S)
+        stack = []
+        for line in text.splitlines():
+            line = re.sub(r"//.*", "", line)
+            m = re.match(r"\s*`(ifdef|ifndef|elsif|else|endif|define)\b\s*(\w*)\s*(.*)", line)
+            if not m:
+                continue
+            kw, name, val = m.groups()
+            live = all(x[0] for x in stack)
+            if kw in ("ifdef", "ifndef"):
+                on = (name in defs) == (kw == "ifdef")
+                stack.append([on, on])
+            elif kw == "elsif" and stack:
+                on = not stack[-1][1] and name in defs
+                stack[-1] = [on, stack[-1][1] or on]
+            elif kw == "else" and stack:
+                stack[-1] = [not stack[-1][1], True]
+            elif kw == "endif" and stack:
+                stack.pop()
+            elif kw == "define" and live and name not in defs:
+                defs[name] = val.strip()
+    return defs
+
+
+def macro_expand(v: str, macros: dict) -> str:
+    return re.sub(r"`(\w+)", lambda m: macros.get(m.group(1), m.group(0)), str(v))
+
+
+def source_preamble(text: str, top: str) -> str:
+    """the compiler-directive lines (`ifndef / `ifdef / `define / `else / `endif / `undef) before `module <top>`, verbatim:
+    the generated parent carries them so a parameter default written with a macro elaborates as in the source"""
+    m = re.search(rf"(?m)^\s*module\s+{re.escape(top)}\b", text)
+    head = text[:m.start()] if m else ""
+    keep = [ln for ln in head.splitlines() if re.match(r"\s*`(ifndef|ifdef|elsif|else|endif|define|undef)\b", ln)]
+    return "\n".join(keep)
+
+
 def split_top(s: str, sep=","):
     """split on sep outside (), [], {}"""
     out, depth, cur = [], 0, []
@@ -478,10 +520,13 @@ def regional_bindings(spec, insts, csrc):
 class Parent:
     def __init__(self, spec: dict):
         self.S = spec
-        src = "\n".join(preprocess((ROOT / f).read_text(errors="replace"), spec.get("defines")) for f in spec["sources"])
+        raw = [(ROOT / f).read_text(errors="replace") for f in spec["sources"]]
+        craw = [(ROOT / f).read_text(errors="replace") for f in spec.get("child_sources", [])]
+        self.macros = source_macros(raw + craw, spec.get("defines"))
+        self.preamble = "\n".join(x for x in (source_preamble(r, spec["top"]) for r in raw) if x)
+        src = "\n".join(preprocess(r, spec.get("defines")) for r in raw)
         self.mod = parse_module(src, spec["top"])
-        csrc = "\n".join(preprocess((ROOT / f).read_text(errors="replace"), spec.get("defines"))
-                         for f in spec.get("child_sources", []))
+        csrc = "\n".join(preprocess(r, spec.get("defines")) for r in craw)
         self.wires, self.assigns, self.insts = parse_body(self.mod["body"])
         hard = spec.get("synthesis_hard_instances", [])
         if not isinstance(hard, list) or any(not isinstance(x, str) for x in hard) or len(set(hard)) != len(hard):
@@ -489,16 +534,27 @@ class Parent:
         unknown = set(hard) - {ins["inst"] for ins in self.insts}
         if unknown:
             raise SystemExit(f"unknown synthesis hard instances: {sorted(unknown)}")
-        self.env = {k: v for k, v in self.mod["params"].items()}
+        self.env = {k: macro_expand(v, self.macros) for k, v in self.mod["params"].items()}
         self.env.update({k: str(v) for k, v in (spec.get("params") or {}).items()})
         self.regional_bindings = regional_bindings(spec, self.insts, csrc)
-        self.cports, self.cwidth = {}, {}
+        self.cports, self.cwidth, self.iwidth, cmods = {}, {}, {}, {}
         for ins in self.insts:
             m = ins["module"]
             if m not in self.cports:
-                cm = parse_module(csrc, m)
+                cm = cmods[m] = parse_module(csrc, m)
                 self.cports[m] = {p["name"]: p["dir"] for p in cm["ports"]}
-                self.cwidth[m] = {p["name"]: eval_width(p["range"], dict(cm["params"])) for p in cm["ports"]}
+                self.cwidth[m] = {p["name"]: eval_width(p["range"], {k: macro_expand(v, self.macros) for k, v in cm["params"].items()})
+                                  for p in cm["ports"]}
+            # S81-SVC-H8W 11-20: a child's pin widths under ITS instance parameters (.H(H) etc.), evaluated in the parent
+            cenv = {k: macro_expand(v, self.macros) for k, v in cmods[m]["params"].items()}
+            for it in split_top(ins.get("params") or ""):
+                pm = re.match(r"\s*\.(\w+)\s*\((.*)\)\s*$", it, re.S)
+                if pm:
+                    try:
+                        cenv[pm.group(1)] = str(eval_width(f"[{pm.group(2)}:0]", self.env) - 1)
+                    except Exception:
+                        cenv[pm.group(1)] = pm.group(2)
+            self.iwidth[ins["inst"]] = {p["name"]: eval_width(p["range"], cenv) for p in cmods[m]["ports"]}
         self.ports = {p["name"]: p for p in self.mod["ports"]}
         self.ck = set(spec.get("clock_ports") or [])
         self.preserve_ck = set(spec.get("preserve_clock_ports") or [])
@@ -1093,6 +1149,8 @@ class Parent:
             items += [f"input wire {self.rst}_{r}" for r in self.regions]
         par = (self.mod["params_txt"] + ",\n    " if self.mod["params_txt"] and self.mod["params_txt"].strip() else "")
         w("`timescale 1ns/1ps")
+        if self.preamble:
+            w(self.preamble)
         w(f"// GENERATED by tools/landed_parent/lp.py from {S['top']} ({', '.join(S['sources'])}) -- do not edit.")
         w(f"// LANDED PARENT (PARENTS-LANDED 10-18): {len(self.regions)} clock regions ({', '.join(self.regions)}), "
           f"{len(P['lands'])} landed crossings (D {D}, E = K = {E}, +{self.A} edges each), {len(P['pads'])} alignment pads,")
@@ -1289,7 +1347,7 @@ class Parent:
                     ex = ('{' + ', '.join('ck_'+r for r in reversed(binding['regions'])) + '}'
                           if binding['role']=='clocks' else brsub[i,pin])
                 elif pin in (S.get("clock_pins") or []) and idents(ex) & self.ck:
-                    cw = self.cwidth[ins["module"]].get(pin, 1)
+                    cw = self.iwidth.get(ins["inst"], self.cwidth[ins["module"]]).get(pin, 1)
                     ex = f"ck_{r}" if cw == 1 else f"{{{cw}{{ck_{r}}}}}"
                 elif i in rsub and self.cports[ins["module"]][pin] == "in" and pin in (S.get("reset_pins") or []) and ex.strip() == self.rst:
                     ex = rsub[i]
@@ -1542,7 +1600,7 @@ class Parent:
         warm = rcy + RB + maxoff + self.A + 8
         tbs = S.get("tb_static") or {}
         sticky = {k: int(v) for k, v in (S.get("sticky_outputs") or {}).items()}
-        L = ["`timescale 1ns/1ps", f"// GENERATED by tools/landed_parent/lp.py: lockstep {S['top']} (flat, reset delayed {RB}) vs "
+        L = ["`timescale 1ns/1ps"] + ([self.preamble] if self.preamble else []) + [f"// GENERATED by tools/landed_parent/lp.py: lockstep {S['top']} (flat, reset delayed {RB}) vs "
              f"{top_lp}; every input presented off_in edges later, every output compared off_out edges later.",
              f"module tb_{top_lp};", "    parameter integer MUT = 0;", "    reg clk = 1'b0;  always #0.5 clk = ~clk;",
              f"    reg rst = {'1' if not act_low else '0'};  reg [{RB - 1}:0] rst_dl;",

@@ -30,6 +30,11 @@ module dsdv_svc_group72 #(parameter integer DIE_ID=0, ST=0, SRAM_MACRO=1,
     output wire [8191:0] w_d,
     output wire [191:0] w_st
 );
+`ifdef OT_SVC_H8
+    // S81-SVC-H8W 11-20: H16-ONLY form (gather lane 16*132+20 = 2132 b, NT1 engine).  Under OT_SVC_H8 it refuses to
+    // elaborate instead of binding an H16 lane into an H8 die (J3 r7).  The H8 slice is dsdv_svc_rs_c / dsdv_svc_rs_fv.
+    dsdv_svc_h16_only_form_refuses_OT_SVC_H8 u_h8_guard ();
+`endif
     wire [15:0] rst_c;
     ot_reset_sync #(.ASYNC_STAGES(2)) u_rst_0 (.clk(ck[0]), .async_rst_n(rst[0]), .sync_rst_n(rst_c[0]));
     wire [3219:0] dn_i_0, dn_o_0;

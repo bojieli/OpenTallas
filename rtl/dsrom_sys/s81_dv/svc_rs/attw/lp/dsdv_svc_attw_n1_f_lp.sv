@@ -43,6 +43,11 @@ module dsdv_svc_attw_n1_f_lp #(
     input wire ck_c,
     input wire ck_t0
 );
+`ifdef OT_SVC_H8
+    // S81-SVC-H8W 11-20: H16-ONLY form (gather lane 16*132+20 = 2132 b, NT1 engine).  Under OT_SVC_H8 it refuses to
+    // elaborate instead of binding an H16 lane into an H8 die (J3 r7).  The H8 slice is dsdv_svc_rs_c / dsdv_svc_rs_fv.
+    dsdv_svc_h16_only_form_refuses_OT_SVC_H8 u_h8_guard ();
+`endif
     wire [1617:0] txi0;
     wire [528:0]  txo0;
     // ---- regional reset runs (1-bit plain hops: they define the landing epochs; region c holds the root)

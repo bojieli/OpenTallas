@@ -40,6 +40,11 @@ module dsdv_svc_attw_n1_f #(parameter integer AMUT = 0, parameter integer DIE_ID
     output wire [31:0] fault_code, output wire [15:0] pio_o, pvo_o, jc_o, output wire [1:0] st_o,
     input wire [21:0] role_i, input wire [7:0] pvs_i
 );
+`ifdef OT_SVC_H8
+    // S81-SVC-H8W 11-20: H16-ONLY form (gather lane 16*132+20 = 2132 b, NT1 engine).  Under OT_SVC_H8 it refuses to
+    // elaborate instead of binding an H16 lane into an H8 die (J3 r7).  The H8 slice is dsdv_svc_rs_c / dsdv_svc_rs_fv.
+    dsdv_svc_h16_only_form_refuses_OT_SVC_H8 u_h8_guard ();
+`endif
     wire [1617:0] txi0;
     wire [528:0]  txo0;
     dsdv_svc_rs_attw1 #(.MUT(AMUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .ROOT(ROOT), .PMEM(PMEM), .TEXT(1), .NTP(1), .ROLE_EXT(ROLE_EXT),

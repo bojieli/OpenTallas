@@ -80,7 +80,7 @@ endmodule
 module dsdv_svc_rs_attw #(parameter integer MUT = 0, parameter integer DIE_ID = 0, parameter integer ST = 0,
                           parameter integer SRAM_MACRO = 0, parameter integer ROOT = 0, parameter integer PMEM = 1,
                           parameter integer TEXT = 0, parameter integer TLX = 0, parameter integer TXD = 0,
-                          parameter integer NTP = `SVC_ATT_NTP) (   // ATTN1: NTP 1 = one physical engine tile (tx_i0 / tx_o0 only)
+                          parameter integer NTP = `SVC_ATT_NTP, parameter integer H = 16) (   // ATTN1: NTP 1 = one physical engine tile (tx_i0 / tx_o0 only)
     input  wire             ck,
     input  wire             rst,
     input  wire [3:0]       sid,
@@ -93,7 +93,7 @@ module dsdv_svc_rs_attw #(parameter integer MUT = 0, parameter integer DIE_ID = 
     input  wire [2*17-1:0]  qr_tag,
     input  wire [2*4-1:0]   qr_beat,
     output wire             l_v,
-    output wire [2131:0]    l_d,
+    output wire [H*132+19:0] l_d,
     output wire             pv_ov,
     output wire [512:0]     pv_od,
     output wire             sm_st,
@@ -115,6 +115,10 @@ module dsdv_svc_rs_attw #(parameter integer MUT = 0, parameter integer DIE_ID = 
     output wire [1617:0]    tx_i0, output wire [1617:0] tx_i1, output wire [1617:0] tx_i2, output wire [1617:0] tx_i3,
     input  wire [528:0]     tx_o0, input  wire [528:0]  tx_o1, input  wire [528:0]  tx_o2, input  wire [528:0]  tx_o3
 );
+    // S81-SVC-H8W 11-20: the NT1 engine below is H16 only; any other H refuses to elaborate (no silent lane resize)
+    if (H != 16) begin : g_h16_only
+        dsdv_svc_h16_only_form_refuses_OT_SVC_H8 u_h8_guard ();
+    end
     wire rn; wire [21:0] role; wire [7:0] pvs;
     dsdv_svc_rs_rl #(.ST(ST)) u_rl (.ck(ck), .rst(rst), .sid(sid), .rn(rn), .role(role), .pvs(pvs));
     wire [3:0] tile = role[3:0];
@@ -147,7 +151,7 @@ endmodule
 module dsdv_svc_rs_attw1 #(parameter integer MUT = 0, parameter integer DIE_ID = 0, parameter integer ST = 0,
                           parameter integer SRAM_MACRO = 0, parameter integer ROOT = 0, parameter integer PMEM = 1,
                           parameter integer TEXT = 0, parameter integer TLX = 0, parameter integer TXD = 0,
-                          parameter integer NTP = 1, parameter integer ROLE_EXT = 0) (   // ATTN1: one physical engine tile (only tx_i0 / tx_o0)
+                          parameter integer NTP = 1, parameter integer ROLE_EXT = 0, parameter integer H = 16) (   // ATTN1: one physical engine tile (only tx_i0 / tx_o0)
     input  wire             ck,
     input  wire             rst,
     input  wire [3:0]       sid,
@@ -160,7 +164,7 @@ module dsdv_svc_rs_attw1 #(parameter integer MUT = 0, parameter integer DIE_ID =
     input  wire [2*17-1:0]  qr_tag,
     input  wire [2*4-1:0]   qr_beat,
     output wire             l_v,
-    output wire [2131:0]    l_d,
+    output wire [H*132+19:0] l_d,
     output wire             pv_ov,
     output wire [512:0]     pv_od,
     output wire             sm_st,
@@ -184,6 +188,10 @@ module dsdv_svc_rs_attw1 #(parameter integer MUT = 0, parameter integer DIE_ID =
     output wire [1617:0]    tx_i0,
     input  wire [528:0]     tx_o0
 );
+    // S81-SVC-H8W 11-20: the NT1 engine below is H16 only; any other H refuses to elaborate (no silent lane resize)
+    if (H != 16) begin : g_h16_only
+        dsdv_svc_h16_only_form_refuses_OT_SVC_H8 u_h8_guard ();
+    end
     wire rn; wire [21:0] role, role_local; wire [7:0] pvs, pvs_local;
     assign role=ROLE_EXT ? role_i : role_local; assign pvs=ROLE_EXT ? pvs_i : pvs_local;
     dsdv_svc_rs_rl #(.ST(ST)) u_rl (.ck(ck), .rst(rst), .sid(sid), .rn(rn), .role(role_local), .pvs(pvs_local));

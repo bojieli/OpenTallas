@@ -57,6 +57,11 @@ module dsdv_svc_rs_entry_lp #(
     input wire ck_c,
     input wire ck_sm
 );
+`ifdef OT_SVC_H8
+    // S81-SVC-H8W 11-20: H16-ONLY form (gather lane 16*132+20 = 2132 b, NT1 engine).  Under OT_SVC_H8 it refuses to
+    // elaborate instead of binding an H16 lane into an H8 die (J3 r7).  The H8 slice is dsdv_svc_rs_c / dsdv_svc_rs_fv.
+    dsdv_svc_h16_only_form_refuses_OT_SVC_H8 u_h8_guard ();
+`endif
     wire [804:0] cs;
     wire dstray;
     wire [2*341-1:0] qrq; wire [1:0] qrk, qwd, qrv; wire [2*256-1:0] qr_data; wire [2*17-1:0] qr_tag; wire [2*4-1:0] qr_beat;

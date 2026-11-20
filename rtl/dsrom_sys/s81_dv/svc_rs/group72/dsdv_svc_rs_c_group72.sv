@@ -58,6 +58,11 @@ module dsdv_svc_rs_c_group72 #(
     , output wire [2678:0]   obs
 `endif
 );
+`ifdef OT_SVC_H8
+    // S81-SVC-H8W 11-20: H16-ONLY form (gather lane 16*132+20 = 2132 b, NT1 engine).  Under OT_SVC_H8 it refuses to
+    // elaborate instead of binding an H16 lane into an H8 die (J3 r7).  The H8 slice is dsdv_svc_rs_c / dsdv_svc_rs_fv.
+    dsdv_svc_h16_only_form_refuses_OT_SVC_H8 u_h8_guard ();
+`endif
 `include "dsdv_svc_rs_roles_group72.svh"
     localparam integer DW = 805, UW = 16;
     reg [1:0] rs;

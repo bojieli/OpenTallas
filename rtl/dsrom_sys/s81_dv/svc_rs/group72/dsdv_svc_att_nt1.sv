@@ -147,6 +147,11 @@ module dsdv_svc_att_nt1_core #(
     output wire [NTX*1618-1:0]  tx_i,
     input  wire [NTX*529-1:0]   tx_o
 );
+`ifdef OT_SVC_H8
+    // S81-SVC-H8W 11-20: H16-ONLY form (gather lane 16*132+20 = 2132 b, NT1 engine).  Under OT_SVC_H8 it refuses to
+    // elaborate instead of binding an H16 lane into an H8 die (J3 r7).  The H8 slice is dsdv_svc_rs_c / dsdv_svc_rs_fv.
+    dsdv_svc_h16_only_form_refuses_OT_SVC_H8 u_h8_guard ();
+`endif
     localparam integer H = 16, D = 32, TD = 32, NL = 4, NT = NL * (D / TD), R = TD / H;
     localparam integer PFW = $clog2(PFIFO);
     localparam integer TR = 640;
@@ -872,6 +877,11 @@ module dsdv_svc_att_nt1 #(
     output wire [15:0] pio_o, pvo_o, jc_o, output wire [1:0] st_o,
     output wire [NTX*1618-1:0] tx_i, input wire [NTX*529-1:0] tx_o
 );
+`ifdef OT_SVC_H8
+    // S81-SVC-H8W 11-20: H16-ONLY form (gather lane 16*132+20 = 2132 b, NT1 engine).  Under OT_SVC_H8 it refuses to
+    // elaborate instead of binding an H16 lane into an H8 die (J3 r7).  The H8 slice is dsdv_svc_rs_c / dsdv_svc_rs_fv.
+    dsdv_svc_h16_only_form_refuses_OT_SVC_H8 u_h8_guard ();
+`endif
 `ifdef OT_SVC_ATT_PINREG
     reg pq_v, phw_v; reg [511:0] pq_d; reg [290:0] phw_d;
     reg [1:0] pqrk, pqwd, pqrv; reg [2*256-1:0] pqr_data; reg [2*17-1:0] pqr_tag; reg [2*4-1:0] pqr_beat;

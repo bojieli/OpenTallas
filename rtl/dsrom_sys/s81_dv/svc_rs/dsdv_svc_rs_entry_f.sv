@@ -1,4 +1,11 @@
 `timescale 1ns/1ps
+`ifndef OT_SVC_HV
+`ifdef OT_SVC_H8
+`define OT_SVC_HV 8
+`else
+`define OT_SVC_HV 16
+`endif
+`endif
 // ---------------------------------------------------------------------------------------------------------------------
 // PL-SVC (PARENTS-LANDED, 10-18): dsdv_svc_rs_entry_f, the WIRES-ONLY flat form of the ENTRY service slice
 // dsdv_svc_rs_entry (rsv_05 W / rsv_11 E; ENTRY = 1 of dsdv_svc_rs_c), the input of tools/landed_parent/lp.py.
@@ -17,7 +24,8 @@ module dsdv_svc_rs_entry_f #(
     parameter integer DIE_ID = 0,
     parameter integer ST = 0,
     parameter integer SRAM_MACRO = 0,
-    parameter integer PMEM = 1              // SVCB: att p store (0 = dropped: kits for non-owner positions)
+    parameter integer PMEM = 1,             // SVCB: att p store (0 = dropped: kits for non-owner positions)
+    parameter integer H = `OT_SVC_HV        // S81-SVC-H8W 11-20: heads per pass; gather lane H*132+20 b a face
 ) (
     input  wire              ck,
     input  wire              rst,
@@ -38,9 +46,9 @@ module dsdv_svc_rs_entry_f #(
     input  wire [4*514-1:0]  ri,
     output wire [4*514-1:0]  ro,
     input  wire [3:0]        gi_v,
-    input  wire [4*2132-1:0] gi_d,
+    input  wire [4*(H*132+20)-1:0] gi_d,
     output wire [3:0]        go_v,
-    output wire [4*2132-1:0] go_d,
+    output wire [4*(H*132+20)-1:0] go_d,
     input  wire [3:0]        si_v,
     input  wire [4*1076-1:0] si_d,
     output wire [3:0]        so_v,
@@ -64,10 +72,10 @@ module dsdv_svc_rs_entry_f #(
     wire [804:0] cs;
     wire dstray;
     wire [2*341-1:0] qrq; wire [1:0] qrk, qwd, qrv; wire [2*256-1:0] qr_data; wire [2*17-1:0] qr_tag; wire [2*4-1:0] qr_beat;
-    wire l_v; wire [2131:0] l_d; wire a_pv_v; wire [512:0] a_pv_d;
+    wire l_v; wire [H*132+19:0] l_d; wire a_pv_v; wire [512:0] a_pv_d;
     wire sm_st, sm_rv, sm_rp; wire [3:0] sm_kind; wire [7:0] sm_jid; wire [2:0] sm_rj; wire [511:0] sm_rd;
     wire go, done; wire [9:0] tjob; wire [7:0] tagj; wire [1:0] hcr, hack; wire a_f;
-    wire rt_v, t_v, x_f; wire [2131:0] rt_d; wire [19:0] t_tag; wire [127:0] t_y; wire [3:0] t_f;
+    wire rt_v, t_v, x_f; wire [H*132+19:0] rt_d; wire [19:0] t_tag; wire [127:0] t_y; wire [3:0] t_f;
     wire r_v, r_p, rcol; wire [2:0] r_j; wire [511:0] r_d;
     wire o_fo, r_f;
     wire [804:0] hst; wire [1:0] jdc; wire [12:0] ucd; wire [2:0] ucf; wire hl;
@@ -85,13 +93,13 @@ module dsdv_svc_rs_entry_f #(
         .r_beat(r_beat[7:4]), .qrv(qrv[1]), .qr_data(qr_data[511:256]), .qr_tag(qr_tag[33:17]),
         .qr_beat(qr_beat[7:4]));
 
-    dsdv_svc_rs_attw #(.MUT(AMUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM), .ROOT(1)) u_att (.ck(ck), .rst(rst), .sid(sid),
+    dsdv_svc_rs_attw #(.MUT(AMUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM), .H(H), .ROOT(1)) u_att (.ck(ck), .rst(rst), .sid(sid),
         .cs(cs), .qrq(qrq), .qrk(qrk), .qwd(qwd), .qrv(qrv), .qr_data(qr_data), .qr_tag(qr_tag), .qr_beat(qr_beat),
         .l_v(l_v), .l_d(l_d), .pv_ov(a_pv_v), .pv_od(a_pv_d),
         .sm_st(sm_st), .sm_kind(sm_kind), .sm_jid(sm_jid), .sm_rv(sm_rv), .sm_rp(sm_rp), .sm_rj(sm_rj), .sm_rd(sm_rd),
         .go_o(go), .tjob_o(tjob), .done(done), .tagj(tagj), .hcr(hcr), .hack(hack), .fault(a_f));
 
-    dsdv_svc_sx #(.MUT(0)) u_sx (.ck(ck), .rst(rst), .sid(sid), .l_v(l_v), .l_d(l_d),
+    dsdv_svc_sx #(.MUT(0), .H(H)) u_sx (.ck(ck), .rst(rst), .sid(sid), .l_v(l_v), .l_d(l_d),
         .gi_v(gi_v), .gi_d(gi_d), .go_v(go_v), .go_d(go_d), .si_v(si_v), .si_d(si_d), .so_v(so_v), .so_d(so_d),
         .rt_v(rt_v), .rt_d(rt_d), .t_v(t_v), .t_tag(t_tag), .t_y(t_y), .t_f(t_f), .fault(x_f));
 
