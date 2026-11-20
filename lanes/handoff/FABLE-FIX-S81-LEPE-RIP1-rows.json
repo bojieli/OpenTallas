@@ -1,0 +1,45 @@
+{
+ "schema": "fable-fix-s81-lepe.rip1_rows.v1",
+ "lane": "FABLE-FIX-S81-LEPE (Opus successor)",
+ "for": "S81-DIE-R3: the RIP1 follow-up event after D8i",
+ "types": ["dsdv_slice_lepe_mu_LP__t2", "dsdv_slice_lepe_nh_mus_LP__t1", "dsdv_slice_lepw_mu_LP__t2", "dsdv_slice_lepw_mus_LP__t2"],
+ "basis": "mu_LP full form post-CTS TT, placement RC (epyc9 fable-lepe/out4/setup400.json = proof4 4_cts, -530.49). Pin xy are from plan_d8i_c3 (epyc8 s81-die-r3-e8/d8i) hard_cores + pins_file. proof5 has NOT reached GRT yet (pre-GRT FF hold repair still running at 17:48 PST), so nothing here is confirmed at GRT.",
+ "item1_li_credit_station": {
+  "what": "lep RX credit return li<N>_r (lep lir[N] = registered credit pulse per pop) -> u_lnl<N>.k_li_r. Measured li3_r (612,360) -> lnl3 k_li_r (1218.3,516.2): -496 ps, 762 um, 0 logic + 1 buffer",
+  "row": "partition_types[T].relay_depth += {inst u_lnl<N>, port k_li_r, side sink, D 1} for every lnl core of the type (same mechanism as the existing n_flt D1 rows; relay_mid places the stage on the source-to-sink line)",
+  "per_type_k_li_r_pins_um": {
+   "dsdv_slice_lepe_mu_LP__t2": {"u_lnl0": [95.1, 516.2], "u_lnl1": [406.1, 516.2], "u_lnl2": [907.2, 516.2], "u_lnl3": [1218.3, 516.2]},
+   "dsdv_slice_lepw_mu_LP__t2": {"u_lnl0": [95.1, 516.2], "u_lnl1": [406.1, 516.2], "u_lnl2": [907.2, 516.2], "u_lnl3": [1218.3, 516.2]},
+   "dsdv_slice_lepw_mus_LP__t2": {"u_lnl0": [95.1, 702.1], "u_lnl1": [406.1, 702.1], "u_lnl2": [907.2, 702.1], "u_lnl3": [1218.3, 702.1]},
+   "dsdv_slice_lepe_nh_mus_LP__t1": {"u_lnl0": [95.1, 702.1], "u_lnl1": [406.1, 702.1]}
+  },
+  "legs_from_measured_li3_r_site": "lnl0 673, lnl1 362, lnl2 451, lnl3 762 um. All four get D1 so the four RX lanes stay symmetric",
+  "cycles": "credit return +1 only. Data K 0, no die lane: k_li_r is core-internal (lep RTL -> lnl hard core). The RX credit round trip goes ~6 -> ~7 cycles, which stays within DR 8 credits (ot_s81sl_slice_lep header): full beat rate",
+  "not_done": "No bench with li_r delayed by one cycle. The lep TB models the lane core, so tb_s81sl_lep with a 1-cycle li_r delay is the proof to run before apply"
+ },
+ "item2_lpc_i0_inband_reset_fanout": {
+  "what": "lane bit lpc_i0_q[0] (in-band reset, lane lpc__s_7N_C__s_7N_LP, 5 cycles = u_bin + u_lpad D3) drives u_u_lep.rst_n AND rs_k of every lnl core. The plan station row internal_stations bus:lpc_i0 (3 regs at y 531 towards lnl0) is NOT realized: these types have no istations sidecar (kit_istations not run, no realize_internal_stations), so the 3 pad stages are free and GPL put the last one at (1216,622) beside lnl3. Measured: q -> lnl0 rs_k -438 ps (1117 um), lnl1 rs_k -340 ps (806 um)",
+  "row": "0 cycles, branch copies of the LAST pad stage, bit 0 only. Bits 1 (sl_f) and epoch keep the single chain. r[0] at (1090,560), r[1] at (760,600). From r[1], three kept identical copies of q[0]: qW (420,Y) -> lnl0 + lnl1 rs_k; qE (1060,Y) -> lnl2 + lnl3 rs_k; qL at the lep reset relay root (~650,450) -> u_u_lep.rst_n. Y = 622 (mu types) / 596 (mus, nh_mus). nh_mus has only qW + qL. The plan's bus:lpc_i0 internal_stations row is replaced by these sites",
+  "legs_um": "face(1442.9,531) -> r0 382; r0 -> r1 370; r1 -> qW 362, qE 322, qL ~260; qW -> lnl0 rs_k 321, lnl1 10; qE -> lnl2 149, lnl3 163",
+  "mechanism_needed": "Bind: emit u_lpad_lpc_i0 with its final stage of bit 0 replicated per sink group (kept, identical D/clk; the ot_rst_copies identity argument), each copy driving only its group, and site the stages FIRM via relay_sites. No existing key does this. relay_depth adds cycles; core_pin_stations adds a chain after the pads. If the bind cannot do it in this event, the fallback is to realize the plan's existing 3-station row (kit_istations / relay_sites), which only fixes lnl0/lnl1 and leaves lnl3 at ~1100 um",
+  "related": "Fable reach-row item 1 (u_rrl_11 -> east core rs / rs_k/rs_n via collector_tree core_resets, two depth-6 branch copies at (1015,640) and (1326,640)) stays a separate 0-cycle row. It did not show in the 400 worst ends of the full form but is over 405 um; carry it too (lanes/handoff/FABLE-FIX-S81-LEPE-reach-row.json item 1)",
+  "cycles": 0
+ },
+ "item3_tx_credit_loop": {
+  "what": "lnl<t>.k_lo_r -> lep g_tx[t].g_safe_write.g_address[c].u_crg.g_rl.r (CRP 2). Measured -250 (lnl3 -> group at (38,342), 1467 um in ONE leg: GPL bunched the fanout-1 chain at its group) and -220 (lnl0)",
+  "finding": "RTL cannot close this at r713 legs. TX_NS = 70 slices -> NA = 18 regional credit copies per lane, spread over bank columns x 52..1218. Pin -> far column is up to ~1,400 um, and the CRP chain gives 3 legs (r0, r1, credit_pin_r): at least ~467 um per leg. CRP 3 would give 4 legs but its rate bound 8/11 = 0.727 is below the 0.764 cap, and CRED 8 is the hard landing depth. A shared-head tree form does not shorten the far legs (the head lands at the column centroid, ~770 um from lnl3's pin). So I wrote no RTL; a bench would only prove an equivalence that buys no timing",
+  "row": "0 cycles, positions: site r[0] and r[1] of each g_tx[t].g_address[c].u_crg at 1/3 and 2/3 of the line from lnl<t> k_lo_r (mu: lnl0 (101.2,622) lnl1 (412.3,622) lnl2 (913.4,622) lnl3 (1224.4,622); mus/nh_mus y 596.2) to that group's credit_pin_r. Far legs ~470 um. Estimate from the li3 path (852 ps of wire on 762 um): ~525 ps of wire + ~80 ps clk-q/setup per leg, against 773 ps",
+  "mechanism_needed": "chain_even with a hard-core OUTPUT PIN as chain head (today heads must be flops), or relay_sites keyed per group from the placed credit_pin_r. The real cure is Fable item 4: each lane's TX bank column near its lane core (bank siting), owner = plan",
+  "cycles": 0
+ },
+ "item4_ring_in_rop_roq": {
+  "what": "lep g_inpipe rop (E face, 1436,9) -> roq (104,258): 30 ends, -166 ps, 1581 um; and roq -> g_tx wdata -237 ps, 1595 um. roq (1104 b) feeds the TX write data of all 5 bank columns, so GPL puts it west",
+  "row_provisional": "(a) 0 cycles: WREP-style kept copies of roq per bank column (5), each sited at its column, plus rop sited at the face. Near columns close; columns x 52/242 stay at ~700 um per leg. (b) For the west columns: IN_PIPE 2 (asbuilt param on the 4 LP lep instances, data K +1 on the lepk_i0 ring-in lane) with the second stage at ~(740,200). Choose (a) alone if GRT shows the west legs inside -42; otherwise (a)+(b)",
+  "confirm": "on proof5 GRT TT (pending)"
+ },
+ "item5_htx_status_ph_r": {
+  "what": "p.u.g_htx.g_native_status.g_region[*].u_status/now_status (104,222) -> lep g_frame_local.g_slice[*].ph_r (1105,405): 6 ends, -218 ps, 1184 um",
+  "row_provisional": "0 cycles: the status register is already per region (g_region[*]). Site the region copies that feed the frame_local slices at x >= 900 next to those slices, with relay_sites from the placed slice centroid. If a region copy also feeds west logic over 405 um, split it (one more kept copy per side). Not +1",
+  "confirm": "on proof5 GRT TT (pending)"
+ }
+}
