@@ -100,3 +100,18 @@ Verdict: every col family fails setup at the cw6 window by roughly 75-145 ps.
 - Build plan: plan_cc2w.json 2d02a37c322f = f2ec5ffc3bda + CC-BANK-1 + CC-BANK-1b + CC-WIN40. The plan_cc1 bind was stopped in elab (my own unit, ot-heavy-stop; nothing published) and replaced by:
   - bind tree_cc2, ot-run oth-ubuntu-2498337-1795144503, log intel2 ~/col-census-1119-build2.log;
   - chain ~/col-census-1119/cc_chain2.sh, log ~/col-census-1119-chain2.log. Same gates (BIND/LATCHECK/PRE, G0 0 new vs GEOM build6), then the same 192 types to full sign-off. Kits go in kb2, logs in ~/col-census-1119-k2-<type>.log.
+
+## Update 11-19 ~19:3x: CC-BANK-2 (bank-in hop), written from plan distances (Fable 19:15 lever 2)
+
+- CC-BANK-2 adds no cycles; it only moves cores, with no reshape. Script: cc_bank3_rows.py; rows: rows_cc_bank2.json 50e4e0b000f7.
+  - Each dsfd_qbank_S u_bsN moves on the 4.32 grid (x within ±80 steps, y within ±12 steps) to the site that minimises the worst pin-span Manhattan distance from o_x0/o_x1 to the xs_q pins of both ROM halves eN.u_w and eN.u_e. The distance is orientation-aware and taken at the worst-case corners.
+  - Each site keeps the 8.64 um keepout and has no station reg, relay site, tap or sink site inside it. The centre moves at most 160 um, because the bank input is a full-cycle registered hop. A move is applied only when it gains at least 20 um.
+- Applied: 768 banks in all 192 build types.
+  - Every family goes from 237–306 um worst to 194–207 um. Examples: h9_r0 p1–p6 271–284 -> 194–202; h10_r0_p1 306 -> 196; h9_r1 and h9_r2 237–241 -> 194–207.
+  - 12 banks gained nothing (under 20 um).
+  - About 195 um is close to the floor for one bank serving two ROM halves 268 um apart. If the CC3 CTS still shows the hop failing, the next form needs a bank split or a stage (+1 cycle).
+- col_h10_r1/r2 (COL-H10-1119): 84 bank rows (48 h10_r1, 36 h10_r2), each 237–241 -> 194–196 um. They are written as PROPOSED only, under proposed_not_applied in the same rows file, and handed to COL-H10 to adopt.
+- The cc2w bind was still in elab, before G0, so I stopped it (own unit) and restarted it with everything included:
+  - plan_cc3.json 4c0809267941 = f2ec5ffc3bda + CC-BANK-1 + CC-BANK-1b + CC-WIN40 + CC-BANK-2;
+  - bind tree_cc3, unit oth-ubuntu-2562904-1795144815, log intel2 ~/col-census-1119-build3.log;
+  - chain cc_chain3.sh, log ~/col-census-1119-chain3.log. It runs the same gates, then sends the same 192 types to full sign-off. Kits go in kb3, logs in ~/col-census-1119-k3-<type>.log.

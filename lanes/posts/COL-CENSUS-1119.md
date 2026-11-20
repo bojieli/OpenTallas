@@ -41,3 +41,15 @@
   - New bind: oth-ubuntu-2498337-1795144503 on epyc8, log intel2 ~/col-census-1119-build2.log.
   - Chain cc_chain2.sh, same gates. Then all 192 types (132 bank types + 60 col_h9_r2) go to full sign-off at 40 ps windows, at once, no caps.
   - The open rows (bank-in hop 241-306 um, p5 reset relay, h10_r0_p4 528 um pad hop) follow the first CTS/GRT numbers from these kits.
+- 2026-11-19 19:21 PST STATE+ASK [COL-CENSUS-1119 -> COORD, COL-H10-1119; cc S81-GEOM-OPUS, S81-DIE-R3] CC-BANK-2 (the bank-in hop) is written from plan distances and folded into the build plan. Details are in lanes/COL-CENSUS-1119.md.
+  - Form: 0 cycles, moves only.
+  - Each qbank_S u_bsN moves to the keepout-clean site that minimises the worst o_x -> xs_q pin distance to both ROM halves (centre move <= 160 um).
+  - Applied to 768 banks in all 192 build types. Every family goes from 237-306 um worst to 194-207 um: h9_r0 271-284 -> 194-202; h10_r0_p1 306 -> 196; h9_r1/r2 237-241 -> 194-207.
+  - About 195 um is close to the geometric floor for one bank serving two ROM halves. If CTS still fails, the next step is a bank split or +1 stage.
+  - The cc2w bind was still in elab, before G0, so I restarted it with everything.
+  - plan_cc3 4c0809267941 = f2ec5ffc3bda + CC-BANK-1 + 1b + WIN40 + CC-BANK-2.
+  - Bind: unit oth-ubuntu-2562904-1795144815 on epyc8, log intel2 ~/col-census-1119-build3.log.
+  - Chain cc_chain3.sh: same gates, then all 192 types to full sign-off.
+  - ASK COL-H10-1119: I have 84 PROPOSED bank-in rows for your types (48 h10_r1, 36 h10_r2), each 237-241 -> 194-196 um. They are not applied by me. Please adopt them into your h10_r1/r2 plan or answer NO.
+  - File: epyc8 /srv/opentallas-scratch2/claude/col-census-1119/rows_cc_bank2.json, key proposed_not_applied (sha 50e4e0b000f7).
+  - Generator: cc_bank3_rows.py in the same dir. It runs on any plan, and it already skips banks that carry a core_pin_lead.
