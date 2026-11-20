@@ -14,11 +14,19 @@ still needs >= k (lanes outside the hoist set need 0, so a slot they share is ne
 the rest is reported as unplaced (exit 3, nothing written unless --partial).
 
 Writes OUT_PLAN with ft_slots[].stations raised (+ a note), and a report {hoists, lanes, unplaced}.  The latency table
-is left to gen.py latency (stations/natural rise, pad falls, cycles unchanged)."""
+is left to gen.py latency (stations/natural rise, pad falls, cycles unchanged).
+
+UNIFY-TOOLS-R3: a raised slot is re-sited (resite_slots) so its sites match the new count (schema: len(regs_um) ==
+stations, bit_sites_um = stations - 1 internal stages, G0 refuses anything else).  A slot with planned per-bit sites
+keeps them (they follow the slot's own, often macro-avoiding, route) and each added stage splits the longest hop at
+its per-bit midpoint, snapped to the sites' own row / site grid (split_sites).  A slot with only regs_um is re-sited
+by station_rule.slot_row (LOCKUP-STATION rule: stage 0 at the in pin, stage j at j / n of each bit's pin -> pin route).
+    pad_hoist.py PLAN - OUT_PLAN --resite-only [--no-snap]   re-site every slot whose site count != stations"""
 import argparse, json, re, sys
 from collections import defaultdict
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 LPAD = re.compile(r"ot_dp_dly\s*#\(\s*\.W\(\d+\),\s*\.D\((\d+)\)\)\s*u_lpad_(\w+)\s*\(")
 INB = re.compile(r"^\s*input\s+wire\s+\[\d+:0\]\s+(\w+)\s*,?\s*//.*\blane\b", re.M)
 
@@ -213,6 +221,106 @@ def apply(plan, hoists, tag="UNIFY-TOOLS pad_hoist"):
     return stale
 
 
+def stale_slots(plan):
+    """[(type, slot)] whose regs_um / bit_sites_um count does not match its stations"""
+    out = []
+    for tn, t in sorted(plan["partition_types"].items()):
+        for sl in t.get("ft_slots", []) or []:
+            n = int(sl.get("stations", 1))
+            bs = sl.get("bit_sites_um")
+            if ("regs_um" in sl and len(sl["regs_um"]) != n) or (
+                    bs is not None and len(bs) != n - 1 and not (sl.get("explicit_stage0") and len(bs) == n)):
+                out.append((tn, sl["name"]))
+    return out
+
+
+SITE_W, ROW_H = 0.054, 0.27
+
+
+def _hop(a, b):
+    return max(abs(p[0] - q[0]) + abs(p[1] - q[1]) for p, q in zip(a, b))
+
+
+def split_sites(s):
+    """add the missing stages of a slot that has per-bit sites: each one at the per-bit midpoint of the longest hop
+    between consecutive stages (stage 0 = the first internal stage moved back by regs_um[1] - regs_um[0] when it has
+    no own sites), snapped to the grid of the slot's existing sites, a taken site moved one site column.
+    -> worst hop (um) after"""
+    regs, bs = [list(r) for r in s["regs_um"]], [[list(p) for p in st] for st in s["bit_sites_um"]]
+    n = int(s.get("stations", 1))
+    own0 = bool(s.get("explicit_stage0")) and len(bs) == len(regs)
+    if own0:
+        stages = bs
+    else:
+        dx, dy = regs[0][0] - regs[1][0], regs[0][1] - regs[1][1]
+        stages = [[[x + dx, y + dy] for x, y in bs[0]]] + bs
+    x0, y0 = bs[0][0][0] % SITE_W, bs[0][0][1] % ROW_H
+    taken = {(round((x - x0) / SITE_W), round((y - y0) / ROW_H)) for st in bs for x, y in st}
+    while len(stages) < n:
+        j = max(range(len(stages) - 1), key=lambda i: _hop(stages[i], stages[i + 1]))
+        new = []
+        for (ax, ay), (bx, by) in zip(stages[j], stages[j + 1]):
+            c, r = round(((ax + bx) / 2 - x0) / SITE_W), round(((ay + by) / 2 - y0) / ROW_H)
+            while (c, r) in taken:
+                c += 1
+            taken.add((c, r))
+            new.append([round(x0 + c * SITE_W, 6), round(y0 + r * ROW_H, 6)])
+        stages.insert(j + 1, new)
+    cen = [[round(sum(p[0] for p in st) / len(st), 4), round(sum(p[1] for p in st) / len(st), 4)] for st in stages]
+    if own0:
+        s["bit_sites_um"], s["regs_um"] = stages, cen
+    else:
+        s["bit_sites_um"], s["regs_um"] = stages[1:], [regs[0]] + cen[1:]
+    return round(max(_hop(a, b) for a, b in zip(stages, stages[1:])), 1) if len(stages) > 1 else 0.0
+
+
+def resite_slots(plan, keys, snap=True):
+    """re-site the given (type, slot)s at their current station count (station_rule.slot_row) -> [{type, slot,
+    stations, form, worst_hop_um}]; a slot the rule cannot site keeps its count and is reported form=unsited"""
+    import schema as S
+    import station_rule as SR
+    if not keys:
+        return []
+    try:
+        P = S.Plan(plan)
+    except Exception:          # a plan schema.Plan cannot load (unit fixtures): window-centre pins, no tap grid
+        P = None
+    out = []
+    for tn in sorted({k[0] for k in keys}):
+        t = plan["partition_types"][tn]
+        try:
+            taps = S.tap_grid(P, tn) if P is not None else []
+        except Exception:
+            taps = []
+        cache = {}
+        for s in t.get("ft_slots", []):
+            if (tn, s["name"]) not in keys or ("regs_um" not in s and "bit_sites_um" not in s):
+                continue                # a slot without planned sites has nothing to re-site
+            n = int(s.get("stations", 1))
+            if s.get("bit_sites_um") and len(s.get("regs_um", [])) >= 2 and len(s["regs_um"]) < n:
+                worst = split_sites(s)
+                out.append(dict(type=tn, slot=s["name"], stations=n, form="split", worst_internal_hop_um=worst))
+                continue
+            try:
+                pins = SR._plan_pins(P, tn, s) if P is not None else (None, None)
+            except Exception:
+                pins = (None, None)
+            sn = (lambda ideal, _t=t, _c=cache: SR._snap(ideal, _t, _c)) if snap else None
+            r = SR.slot_row(tn, t, s, pins=pins if pins[0] else None, taps=taps, snap=sn)
+            n = int(s.get("stations", 1))
+            if len(r["regs_um"]) != n:
+                out.append(dict(type=tn, slot=s["name"], stations=n, form="unsited"))
+                continue
+            s["regs_um"] = r["regs_um"]
+            s["bit_sites_um"] = r["bit_sites_um"]
+            s["bit_site_cell_um"] = list(SR.CELL)
+            s["explicit_stage0"] = True
+            s["keep_firm"] = True
+            out.append(dict(type=tn, slot=s["name"], stations=n, form=r["site_form"], worst_hop_um=r["worst_hop_um"],
+                            snapped=r["snapped"]))
+    return out
+
+
 def raise_cycles(plan, pads, unplaced):
     """fallback for a (type, bus) no free slot can level (its only hop is itself a class type or a shared type, e.g. QC
     slw_fw x_ctl_p1_i through slw_stm): level UP instead -- every instance lane whose pad is below the bus maximum gets
@@ -243,8 +351,21 @@ def main(argv=None):
     ap.add_argument("--partial", action="store_true", help="write the plan even when some pad is unplaced")
     ap.add_argument("--raise-cycles", action="store_true",
                     help="level the unplaced buses UP: +cycles on the lanes of the lower instances")
+    ap.add_argument("--resite-only", action="store_true",
+                    help="only re-site every slot whose site count != stations (bind_dir unused, give -)")
+    ap.add_argument("--no-snap", action="store_true", help="re-site at the ideal route points (no row-site snap)")
     a = ap.parse_args(argv)
     plan = json.loads(Path(a.plan).read_text())
+    if a.resite_only:
+        rs = resite_slots(plan, set(stale_slots(plan)), snap=not a.no_snap)
+        left = stale_slots(plan)
+        if a.report:
+            Path(a.report).write_text(json.dumps(dict(resited=rs, still_stale=left), indent=1) + "\n")
+        print(f"pad_hoist resite: {len(rs)} slots re-sited, {len(left)} still stale")
+        for r in rs:
+            print("  RESITE", r)
+        Path(a.out_plan).write_text(json.dumps(plan, indent=1) + "\n")
+        return 3 if left else 0
     pads = bound_pads(a.bind_dir, set(filter(None, a.types.split(","))) or None)
     hoists, lanes, unplaced = solve(plan, pads)
     rep = dict(types=sorted(pads), hoists=[dict(type=t, slot=s, add=k) for (t, s), k in sorted(hoists.items())],
@@ -278,6 +399,7 @@ def main(argv=None):
             return 3
         try:
             rep["stale_table_rows"] = apply(plan, hoists)
+            rep["resited"] = resite_slots(plan, set(hoists), snap=not a.no_snap)
             break
         except CutError as e:
             lid = e.args[0]

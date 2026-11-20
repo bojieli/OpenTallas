@@ -130,3 +130,20 @@ def test_in_station_floor_raises_the_instances_below_it():
     assert hoists == {} and [(u["lane"], u["below"], u["target"]) for u in unplaced] == [("L2", True, 2)]
     assert PH.raise_cycles(plan, {"ctl": {"ctl0": {"d_i": 2}, "ctl1": {"d_i": 2}, "ctl2": {"d_i": 1}}}, unplaced) == \
         [dict(type="ctl", bus="d_i", lane="L2", add=1)]
+
+
+def test_resite_raised_slot_matches_its_station_count(tmp_path):
+    """UNIFY-TOOLS-R3: G0 refused raised slots whose regs_um / bit_sites_um kept the old count"""
+    slot = dict(name="d_ctl", in_face="W", out_face="E", width=3, stations=4, in_window_um=[100.0, 110.0],
+                out_window_um=[100.0, 110.0], regs_um=[[0.0, 105.0], [600.0, 105.0]],
+                bit_site_cell_um=[1.404, 0.27], bit_sites_um=[[[600.0, 105.0 + i] for i in range(4)]])
+    plan = dict(partition_types={"fa": dict(outline_um=[1200.0, 400.0], ft_slots=[slot])}, partitions=[])
+    assert PH.stale_slots(plan) == [("fa", "d_ctl")]
+    rs = PH.resite_slots(plan, {("fa", "d_ctl")}, snap=False)
+    s = plan["partition_types"]["fa"]["ft_slots"][0]
+    assert rs[0]["stations"] == 4 and len(s["regs_um"]) == 4 and len(s["bit_sites_um"]) == 3
+    assert all(len(st) == 4 for st in s["bit_sites_um"]) and rs[0]["form"] == "split"
+    assert rs[0]["worst_internal_hop_um"] <= 300.1                   # 600 um: longest hop split twice (300, 150, 150)
+    assert PH.stale_slots(plan) == []
+    import ft_bit_sites
+    ft_bit_sites.validate_slot(s)
