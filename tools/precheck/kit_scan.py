@@ -234,6 +234,14 @@ def scan_kit(kit, do_post=False, mem_gb=14):
             if worst[1][1] >= CBC.TAP_SKEW_PASS_PS:
                 msgs.append(f"CTS IN-TAP SKEW worst {worst[0]} {worst[1][1]:.0f} ps; {len(over)} of {len(big)} taps >= "
                             f"{CBC.TAP_SKEW_FAIL_PS:.0f} ps (< 60 ps: 58 of 111 kits closed; >= 100 ps: 0 of 23)")
+    s7 = STATE / f"{kit.name}.r7.json"
+    if not s7.exists() and cts:
+        r7 = r7_scan(kit, cts[0])
+        if r7["stb"] != "pending" and r7["guard"] != "pending":
+            s7.write_text(json.dumps(r7, indent=1))
+        bad = [k for k in ("stb", "guard") if r7[k] in ("OFF", "MISSING")]
+        if bad:
+            msgs.append("R7 CBC kit rule not live: " + "; ".join(f"{k} {r7[k]} ({r7[k + '_why']})" for k in bad))
     if msgs:
         print(f"KIT-SCAN {tn} ({kit.name}): " + " | ".join(msgs))
     if sf.exists() or sp.exists() or sc.exists():
@@ -246,6 +254,42 @@ def scan_kit(kit, do_post=False, mem_gb=14):
                      worst_pair=(p.get("pairs") or [[None, None, 0, 0]])[0][:4], skew=c.get("worst_ps"),
                      skew60=len(c.get("over_pass") or []), skew100=len(c.get("over_fail") or []))] if msgs else []
     return []
+
+
+GUARD_OFF = re.compile(r"OT_PREGRT_FF_HOLD cross-tap guard not applied \(([^)]*)\)")
+GUARD_ON = re.compile(r"OT_PREGRT_FF_HOLD pass xt\b")
+
+
+def r7_scan(kit, cts_log):
+    """CBC rule 7 (CBC-ALL-0200): is the kit-side clock rule LIVE in this kit?  stb = CTS subtree balance before the tap
+    pad (main 7109ee911e: 'OT_STB done' in 4_1_cts.log; OT_CTS_STB=0 or tools older -> OFF / MISSING); guard = the
+    pre-GRT cross-tap hold guard (main 7755352068: 'pass xt' in pregrt_ff_hold.log; 'cross-tap guard not applied' -> OFF).
+    -> {stb, stb_why, guard, guard_why}; 'pending' while the stage has not run."""
+    kit = Path(kit)
+    out = {}
+    txt = Path(cts_log).read_text(errors="replace")
+    cfg = (kit / "work" / "config.mk")
+    cfg_t = cfg.read_text(errors="replace") if cfg.exists() else ""
+    if "OT_STB done" in txt:
+        out.update(stb="ON", stb_why="OT_STB done in 4_1_cts.log")
+    elif re.search(r"OT_CTS_STB\s*\??=\s*0\b", cfg_t):
+        out.update(stb="OFF", stb_why="OT_CTS_STB=0 in config.mk")
+    elif "OT_TAP_INSERTION" in txt or "cts_post" in txt:
+        out.update(stb="MISSING", stb_why="CTS ran without subtree_balance (kit tools older than 7109ee911e)")
+    else:
+        out.update(stb="pending", stb_why="CTS not finished")
+    logs = [q for q in (kit / "work" / "pregrt_ff_hold.log", kit / "pregrt_ff_hold.log") if q.exists()]
+    g = logs[0].read_text(errors="replace") if logs else ""
+    m = GUARD_OFF.search(g)
+    if GUARD_ON.search(g):
+        out.update(guard="ON", guard_why="pass xt in pregrt_ff_hold.log")
+    elif m:
+        out.update(guard="OFF", guard_why=m.group(1)[:80] + ("; kit tools older than 7755352068" if "no tap window" in m.group(1) else ""))
+    elif g:
+        out.update(guard="n/a", guard_why="no cross-tap pass line (no tap windows / single tap)")
+    else:
+        out.update(guard="pending", guard_why="pre-GRT hold not run")
+    return out
 
 
 PENDING = STATE / "pending.jsonl"
