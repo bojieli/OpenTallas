@@ -358,7 +358,8 @@ def relay_depth_index(mod, extra):
     cells of that station only; a sink row on an end point (black box) delays that pin.  A row that names nothing raises."""
     cells = mod['cells']
     nn = {k.lstrip('\\'): v for k, v in mod['netnames'].items()}
-    cn_of = {k.lstrip('\\'): k for k in cells}
+    # Flattening preserves $scopeinfo for relay instances whose ports are nets.
+    cn_of = {k.lstrip('\\'): k for k, cell in cells.items() if cell['type'] != '$scopeinfo'}
     paths = {}
     for name in list(cn_of) + list(nn):
         parts = name.split('.')
