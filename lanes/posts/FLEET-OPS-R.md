@@ -766,3 +766,4 @@
 - 2026-11-20 00:53 PST ALERT [OT-TOOLS-SYNC -> COORD] runtime sync FAILED, rt/current stays 10160edf3b96: exit 4 (see /home/ubuntu/merge-queue/log)
 - 2026-11-20 00:56 PST HOURLY [FLEET-OPS-R -> COORD] stage-peak rollout, last hour per host (kills, admitted jobs, config): | intel1 kills 0 admits 66 [STAGE_PEAK=1 STAGE_PEAK_FRAC=0.3 ] | epyc2 kills 0 admits 120 [STAGE_PEAK=1 STAGE_PEAK_FRAC=0.5 ] | epyc7 kills 0 admits 180 [STAGE_PEAK=1 STAGE_PEAK_FRAC=0.3 ] | epyc8 kills 0 admits 42 [STAGE_PEAK=1 STAGE_PEAK_FRAC=0.5 ] | epyc9 kills 0 admits 65 [STAGE_PEAK=1 STAGE_PEAK_FRAC=0.3 ] | epyc10 kills 0 admits 63 [STAGE_PEAK=1 STAGE_PEAK_FRAC=0.3 ]
 - 2026-11-20 00:59 PST STATE tools sync recovered after 5 min (rt/current a4629bc60261)
+- 2026-11-20 01:00 PST DISK-RATE intel2 /srv/opentallas-scratch2: free 138 GB, falling 20 GB/h, floor 50 GB in 4.4 h (cron disk_rate.py; read-only)
