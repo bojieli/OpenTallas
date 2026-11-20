@@ -3090,6 +3090,55 @@ def family_key(item):
     return _FAM_TAIL.sub("", head) or head
 
 
+FAMILY_TABLE_PATH = os.environ.get("OT_FAMILY_TABLE") or os.path.expanduser("~/coord/lanes/handoff/FABLE-SUPERSET-0415-classes.json")
+FAMILY_TABLE_DIE = {"s81": "s81", "qwen_compute": "qc", "qwen_kvsys": "kv"}
+_FAMILY_CACHE = {}
+
+
+def family_table(path=None):
+    """COORD 11-20: the real family table (FABLE-SUPERSET-0415-classes.json), cached by mtime -> {die: {"types": {type: class id}, "stems": [stem, ...] longest first}}.  s81: the explicit member lists of the
+    leaf / station / serdes / kvleaf class sets (leaf_cap7786 is an alternative cut of the same leaves and is ignored); qc / kv: the per-stem lists (a type belongs to the longest stem it equals or
+    extends with '_' / '__').  Unreadable -> {} (callers fall back to the name key)"""
+    path = path or FAMILY_TABLE_PATH
+    try:
+        mt = os.stat(path).st_mtime
+    except OSError:
+        return {}
+    c = _FAMILY_CACHE.get(path)
+    if c and c[0] == mt:
+        return c[1]
+    out = {}
+    try:
+        d = json.load(open(path))
+        types = {}
+        for sec, v in (d.get("s81") or {}).items():
+            if sec == "leaf_cap7786" or not isinstance(v, dict):
+                continue
+            for cl in v.get("classes") or []:
+                for m in cl.get("members") or []:
+                    types.setdefault(str(m[0]), f"s81:{cl.get('id')}")
+        out["s81"] = {"types": types, "stems": []}
+        for key in ("qc", "kv"):
+            stems = sorted({str(e.get("stem")) for e in (d.get(key) or []) if isinstance(e, dict) and e.get("stem")}, key=lambda x: (-len(x), x))
+            out[key] = {"types": {}, "stems": stems}
+    except (OSError, ValueError, TypeError, AttributeError):
+        out = {}
+    _FAMILY_CACHE[path] = (mt, out)
+    return out
+
+
+def family_of(die, item, table=None):
+    """the family of a type: the real class (table) when the type is in it, else the name key"""
+    t = (table if table is not None else family_table()).get(FAMILY_TABLE_DIE.get(die, ""))
+    if t:
+        if item in t["types"]:
+            return t["types"][item]
+        for stem in t["stems"]:
+            if item == stem or item.startswith(stem + "__") or item.startswith(stem + "_"):
+                return f"{FAMILY_TABLE_DIE[die]}:{stem}"
+    return family_key(item)
+
+
 def family_plan(cfg, st, die, picks):
     """OWNER 11-20 (#8): representatives first.  Per die, the picked type rows are grouped by family_key; ONE representative per family (the most-failed type, then the name) launches at
     high priority (ot-run --crit via spec crit); siblings launch after every representative (spare capacity, default priority).  When the representative of a family FAILED on the current
@@ -3100,7 +3149,7 @@ def family_plan(cfg, st, die, picks):
     fam = collections.defaultdict(list)
     for r in picks:
         if (r.get("kind") or "type") == "type":
-            fam[family_key(r["item"])].append(r)
+            fam[family_of(die, r["item"])].append(r)
     reps, held, sibs = {}, {}, set()
     ev = d.get("event")
     for k, members in fam.items():

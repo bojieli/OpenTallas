@@ -800,7 +800,8 @@ def test_family_key_groups_generator_families_and_variants():
     assert KW.family_key("kv3_pv_v3") == KW.family_key("kv3_pv_v3n") == "kv3_pv" and KW.family_key("hd_ctl_e") == "hd_ctl_e"
 
 
-def test_representatives_first_hold_siblings_while_the_representative_fails_and_release_on_a_new_attempt():
+def test_representatives_first_hold_siblings_while_the_representative_fails_and_release_on_a_new_attempt(monkeypatch, tmp_path):
+    monkeypatch.setattr(KW, "FAMILY_TABLE_PATH", str(tmp_path / "none.json"))      # hermetic: name-key families
     cfg = {"dies": {"s81": {"event": "E"}}, "stops_off": True}
     mk = lambda i: {"die": "s81", "item": i, "kind": "type"}
     picks = [mk("ot_s81sl_leaf__t1"), mk("ot_s81sl_leaf__t2"), mk("ot_s81sl_leaf__t3"), mk("slice_station__t1")]
@@ -818,3 +819,20 @@ def test_representatives_first_hold_siblings_while_the_representative_fails_and_
     st["items"]["c"]["status"] = "FAIL"
     st["items"]["c"].update(**{"class": "INFRA"}, reason="make Error 247")
     assert not KW.family_plan(cfg, st, "s81", picks)[1]                                                       # an INFRA failure of the representative holds nothing
+
+
+def test_real_family_table_is_used_then_the_name_key(tmp_path):
+    import json as _j
+    f = tmp_path / "classes.json"
+    f.write_text(_j.dumps({"s81": {"leaf": {"classes": [{"id": "leaf_S00", "members": [["ot_s81sl_leaf__t13", "R0"], ["ot_s81sl_leaf__t53__clb66fa5cb", "MX"]]}]},
+                                    "leaf_cap7786": {"classes": [{"id": "leaf_T00", "members": [["ot_s81sl_leaf__t99", "R0"]]}]}},
+                           "qc": [{"stem": "cbf_q01", "types": "1"}, {"stem": "cbf_q01_s2", "types": "1"}, {"stem": "sle_ctl", "types": "7"}], "kv": [{"stem": "kv3_pv", "types": "16"}]}))
+    t = KW.family_table(str(f))
+    assert KW.family_of("s81", "ot_s81sl_leaf__t13", t) == KW.family_of("s81", "ot_s81sl_leaf__t53__clb66fa5cb", t) == "s81:leaf_S00"
+    assert KW.family_of("s81", "ot_s81sl_leaf__t99", t) == KW.family_key("ot_s81sl_leaf__t99")           # the cap7786 cut is ignored: name key
+    assert KW.family_of("s81", "col_h9_r1__t1__cl1", t) == "col_h9_r1"                                      # not in the table: name key
+    assert KW.family_of("qwen_compute", "sle_ctl__cl372cea1c", t) == "qc:sle_ctl" and KW.family_of("qwen_compute", "cbf_q01_s2", t) == "qc:cbf_q01_s2"
+    assert KW.family_of("qwen_compute", "cbf_q01", t) == "qc:cbf_q01"
+    assert KW.family_of("qwen_kvsys", "kv3_pv_v3n", t) == "kv:kv3_pv"
+    assert KW.family_table(str(tmp_path / "none.json")) == {}
+    assert KW.family_of("hbm", "x_t1", t) == "x"
