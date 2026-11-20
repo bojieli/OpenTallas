@@ -2,6 +2,30 @@
 
 Work dir epyc7 /srv/opentallas-scratch2/claude/kv-d23-compose (lane clone wt/ = sparse main worktree). Hub logs intel2 ~/tmp/kvd23c.
 
+## Status 2026-11-20 02:45Z (read this first; supersedes 11-19 21:30Z)
+LIVE = KV-D25d (d25d4). D25e (plan a5a8c6b96e5f, sealed manifest dc58066d4f79) is in its strict bind on epyc10 W/d25ebindgate (bindcopy kw45/bindcopy_kv_d25e, started 01:48Z).
+- When it is green: on epyc10 run `REPL_HOSTS="epyc8 epyc9 intel1 epyc2" bash seal_bind_dest.sh d25e <d25e tree>`, then on intel2 run `RT=rt/dcd56363d450 HOSTS=epyc8,epyc9,epyc10,intel1,epyc2 BGH=epyc10 BIND_DEST=<dest> LIVE=<d25d4> LIVE_EV=KV-D25d BC=d25e SKIP_SEAL=1 apply_d25.sh d25e KV-D25e`. COORD: ship as is, even though it carries the TRUNK-CHAIN defect from older tools.
+
+D25e2: STAGED (unsealed). Tree kw45/src_kv_pin_eb1e73448bd0_hg12_9939c1eb_t0a56e37_d25e2, plan 9939c1eb044e, tools main 0a56e37ba7f1 (contains 1b95661b75, 8f981deeaa1, e9ad080d925).
+- Steps, from W8/build_d25e2.py and then W8/build_d25e2_more.py; report W8/d25e2/build_report.json:
+  - LS: hgi_v1 x2 reg_leaf_split u_hst2_t2 a/b/c at x 40. A dry run on the d25d4 RTL gives 1575 -> 807/1063/807.
+  - POLY: u_hst2_g polyline [(40,1080),(40,618)].
+  - K6: eN lanes +1 (pad 1->2, 64 u_pd2 sites) and tN lanes +1 with a station at (60,1080): 24 lanes, +24.
+  - KTALIAS: 1904 kst alias keys dropped on each of the 19 hg/hgi types.
+  - FALL: ROWS-KV-SIDECAR-FALL.json bab36e6bd90c, 32 ports (30 K-1/sched-1, 2 K+1/sched+1), net -28.
+  - PV: compose_rows --cycles-405, 128 lanes +500.
+  - Total vs D25e: 184 lanes, +496.
+- Running now on epyc8:
+  - W8/d25e2g0pre: early G0/PRE against D25e.
+  - W8/d25e2head: elab + r8-prepass on kw45/bindcopy_kv_d25e2_head, with OT_BIND_PLAN_PACKAGE off.
+- Next:
+  1. `L_TREE=<d25e tree> K=<d25e2 tree> MINPAD=10 EMINPAD=10 bash W8/tables_d25e2.sh W8/d25e2head W8/d25e2tables install` installs r8_ev, the pv pad tables and asbuilt land_r8_extra.
+  2. G0 again.
+  3. Seal and replicate.
+  4. Strict bind on epyc10 (gate_bind_d25.sh). Check that R8_RECHECK changed 0 and REACH short == 0 for pv.
+  5. Apply as KV-D25e2.
+- After the D25e2 bind, DIE-LEVEL times the bound sidecar in fall form; any further fails go into the next event.
+
 ## Status 2026-11-19 21:30Z (read this first; supersedes 15:15Z)
 LIVE = KV-D25d = d25d4, applied bind-first 20:39Z. Receipt: lanes/handoff/qwen_kvsys_atomic_apply_1795120745379255041.json.
 - Bind of record: kw45/src_kv_pin_eb1e73448bd0_hg10_a1e1d4d0_tb3c4d97_d25d4_bind_1119194238. It is sealed and on epyc7/8/9/10, intel1 and epyc2.
