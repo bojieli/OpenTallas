@@ -117,3 +117,4 @@ bash tools/fleet/col_template_rows.sh TREE BASE_PLAN SIDECAR OUT [--all-members]
 - 11-19: ring-group v2 on main 822e8ca0f1 (dry-place group); grp2 kit running epyc8/10 (spill possible), ring_pid_grp2; v1 had broken test_landing_column_fill (fixed in v2). RSZ-0074 on net87045: read pending after grp2.
 - 11-19 14:20: 7 DEAD-OWNER QC rows owned by SONNET-FIX-QC; all alive (st_b_v1 pv38472fb8 old-plan N4 route job f8916312e802 live, left alone); heartbeat ~/sfq-l6/hb.sh every 2 h.
 - 17:50: ring-group v2 proof failed (spans 359, GRT RSZ-0060), opt-in stays off; 7 QC rows all running, none failed.
+- 18:15 5 failed rows: sc_v1 cl4590432d re-enqueued (4b00aa7c9228), cl5e017c6f pending ORPHAN flip; cbn_q11 x2 stretch gate advisory (main becd71085d) + wave retry; slw_su_c vmr LEF OBS blocks interior M5 pins (DRT-0073) needs decision.
