@@ -1,4 +1,4 @@
-# NOPROG-TABLE (NOPROG-WATCHDOG, generated 2026-11-19 17:00 PST)
+# NOPROG-TABLE (NOPROG-WATCHDOG, generated 2026-11-19 17:15 PST)
 
 Window 6 h, improvement >= 2 % from best. Verdict counts: {'YOUNG': 79, 'NO-DATA': 1, 'KEEP': 3, 'EXCLUDED': 31, 'PROGRESS': 14}. Hosts without report: none.
 
@@ -74,16 +74,16 @@ Window 6 h, improvement >= 2 % from best. Verdict counts: {'YOUNG': 79, 'NO-DATA
 | intel1 | dpkit-slw_fw_v2__cl8f84514c-2549308 | slw_fw_v2 | stage_odb_cap | 5.6 | last meaningful line 0.0 h ago (413/413 lines) | YOUNG: evidence 5.6 h < 7.5 h |  |
 | intel1 | dpkit-svc_lo_dsdv_svc_rs_w__t1-886113 | svc_lo_dsdv_svc_rs_w__t1 | stage_odb_cap | 7.0 | last meaningful line 0.0 h ago (418/418 lines) | YOUNG: evidence 7.0 h < 7.5 h |  |
 | intel1 | otc-2295728-27466 | 2295728 | - | 12.6 |  | NO-DATA: no log found |  |
-| intel2 | dpkit-col_h10_r2__t1__cl1f5d6c2a__pv418d3dc0-2688718 | col_h10_r2__t1 | 5_2_route | 3.2 | last meaningful line 0.0 h ago (31/31 lines) | YOUNG: evidence 0.0 h < 7.5 h |  |
-| intel2 | dpkit-dsdv_slice_c1x_C__t3-1117539 | dsdv_slice_c1x_C__t3 | pregrt_ff_hold | 10.3 | repair_Violations best 184 last 290 rows 76 | YOUNG: evidence 4.7 h < 7.5 h |  |
-| intel2 | dpkit-sle_hc0__cl05696ed1-1266312 | sle_hc0 | stage_odb_cap | 1.6 | last meaningful line 0.0 h ago (147/147 lines) | YOUNG: evidence 1.6 h < 7.5 h |  |
-| intel2 | dpkit-sle_hc0__cl929603c0__cl38badc56-1455458 | sle_hc0 | stage_odb_cap | 1.5 | last meaningful line 0.0 h ago (140/140 lines) | YOUNG: evidence 1.5 h < 7.5 h |  |
-| intel2 | dpkit-sle_hc0__cl929603c0__cl4baa7c9c-1455485 | sle_hc0 | stage_odb_cap | 1.5 | last meaningful line 0.0 h ago (151/151 lines) | YOUNG: evidence 1.5 h < 7.5 h |  |
-| intel2 | dpkit-sle_hc1__cl7d360508-2156222 | sle_hc1 | 5_2_route | 5.8 | last meaningful line 0.0 h ago (277/278 lines) | YOUNG: evidence 1.2 h < 7.5 h |  |
-| intel2 | dpkit-sle_st_a_v2__pv30dda31f__pv88773f93-2158182 | sle_st_a_v2 | 5_2_route | 5.8 | drt_violations best 72 last 72 rows 32 | YOUNG: evidence 2.5 h < 7.5 h |  |
-| intel2 | dpkit-sle_st_a_v2__pv30dda31f__pvd2ec7769-2159387 | sle_st_a_v2 | 5_2_route | 5.8 | drt_violations best 72 last 72 rows 35 | YOUNG: evidence 2.7 h < 7.5 h |  |
-| intel2 | dpkit-sle_st_a_v2__pv4242de79-2159609 | sle_st_a_v2 | 5_2_route | 5.8 | drt_violations best 72 last 72 rows 38 | YOUNG: evidence 2.8 h < 7.5 h |  |
-| intel2 | dpkit-sle_st_b_v1__pv0e7b1dcc-2444359 | sle_st_b_v1 | stage_odb_cap | 0.3 | last meaningful line 0.0 h ago (20/20 lines) | YOUNG: evidence 0.3 h < 7.5 h |  |
+| intel2 | dpkit-col_h10_r2__t1__cl1f5d6c2a__pv418d3dc0-2688718 | col_h10_r2__t1 | 5_2_route | 3.4 | last meaningful line 0.0 h ago (254/255 lines) | YOUNG: evidence 0.3 h < 7.5 h |  |
+| intel2 | dpkit-dsdv_slice_c1x_C__t3-1117539 | dsdv_slice_c1x_C__t3 | pregrt_ff_hold | 10.5 | repair_Violations best 97 last 104 rows 119 | YOUNG: evidence 4.9 h < 7.5 h |  |
+| intel2 | dpkit-sle_hc0__cl05696ed1-1266312 | sle_hc0 | stage_odb_cap | 1.9 | last meaningful line 0.0 h ago (162/162 lines) | YOUNG: evidence 1.9 h < 7.5 h |  |
+| intel2 | dpkit-sle_hc0__cl929603c0__cl38badc56-1455458 | sle_hc0 | stage_odb_cap | 1.7 | last meaningful line 0.0 h ago (155/155 lines) | YOUNG: evidence 1.7 h < 7.5 h |  |
+| intel2 | dpkit-sle_hc0__cl929603c0__cl4baa7c9c-1455485 | sle_hc0 | stage_odb_cap | 1.7 | last meaningful line 0.0 h ago (166/166 lines) | YOUNG: evidence 1.7 h < 7.5 h |  |
+| intel2 | dpkit-sle_hc1__cl7d360508-2156222 | sle_hc1 | 5_2_route | 6.1 | last meaningful line 0.1 h ago (281/282 lines) | YOUNG: evidence 1.5 h < 7.5 h |  |
+| intel2 | dpkit-sle_st_a_v2__pv30dda31f__pv88773f93-2158182 | sle_st_a_v2 | 5_2_route | 6.1 | drt_violations best 72 last 72 rows 38 | YOUNG: evidence 2.8 h < 7.5 h |  |
+| intel2 | dpkit-sle_st_a_v2__pv30dda31f__pvd2ec7769-2159387 | sle_st_a_v2 | 5_2_route | 6.1 | drt_violations best 72 last 72 rows 41 | YOUNG: evidence 2.9 h < 7.5 h |  |
+| intel2 | dpkit-sle_st_a_v2__pv4242de79-2159609 | sle_st_a_v2 | stage_odb_cap | 6.1 | last meaningful line 0.0 h ago (395/395 lines) | YOUNG: evidence 6.1 h < 7.5 h |  |
+| intel2 | dpkit-sle_st_b_v1__pv0e7b1dcc-2444359 | sle_st_b_v1 | 3_3_place_gp | 0.6 | overflow best 0.6485 last 0.6485 rows 21 | YOUNG: evidence 0.3 h < 7.5 h |  |
 | epyc2 | dpkit-col_h10_r1__t1__cl95b37463__pv799da6f8-372309 | col_h10_r1__t1 | stage_odb_cap | 5.8 |  | KEEP: col_h10_r1__t1__cl95b37463__pv799da6f8	S81-COL-INHERIT	representative (COORD 11- |  |
 | epyc2 | dpkit-col_h10_r2__t1__cl1f5d6c2a__pvf1512c16-387127 | col_h10_r2__t1 | stage_odb_cap | 5.8 |  | KEEP: col_h10_r2__t1__cl1f5d6c2a__pvf1512c16	S81-COL-INHERIT	representative (COORD 11- |  |
 | epyc2 | dpkit-dsdv_slice_c1x_C__t7-2914199 | dsdv_slice_c1x_C__t7 | stage_odb_cap | 15.6 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
@@ -113,11 +113,11 @@ Window 6 h, improvement >= 2 % from best. Verdict counts: {'YOUNG': 79, 'NO-DATA
 | intel1 | prd-eco_20261119_151642_453926-i1t-2871885 | eco_20261119_151642_453926-i1t | 5_2_route | 1.7 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | intel1 | prd-eco_20261119_161551_3648698-i1t-3613839 | eco_20261119_161551_3648698-i1t | 5_1_grt | 0.7 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | intel1 | prd-eco_20261119_161926_3434744-i1-3661202 | eco_20261119_161926_3434744-i1 | 5_1_grt | 0.6 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| intel2 | dpkit-cbf_q00__cl1b5a6458-4059423 | cbf_q00 | stage_odb_cap | 17.4 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| intel2 | dpkit-col_h10_r2__t1__cl1f5d6c2a__pv0c1de895-1681005 | col_h10_r2__t1 | stage_odb_cap | 16.0 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| intel2 | dpkit-hd_lep0N-1818676 | hd_lep0N | stage_odb_cap | 15.9 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| intel2 | dpkit-kv3_pv_v8-376552 | kv3_pv_v8 | stage_odb_cap | 16.9 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| intel2 | prd-eco_20261119_113056_4159781-i1-1536425 | eco_20261119_113056_4159781-i1 | 5_2_route | 1.4 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| intel2 | dpkit-cbf_q00__cl1b5a6458-4059423 | cbf_q00 | stage_odb_cap | 17.6 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| intel2 | dpkit-col_h10_r2__t1__cl1f5d6c2a__pv0c1de895-1681005 | col_h10_r2__t1 | 5_2_route | 16.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| intel2 | dpkit-hd_lep0N-1818676 | hd_lep0N | stage_odb_cap | 16.1 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| intel2 | dpkit-kv3_pv_v8-376552 | kv3_pv_v8 | stage_odb_cap | 17.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| intel2 | prd-eco_20261119_113056_4159781-i1-1536425 | eco_20261119_113056_4159781-i1 | 5_2_route | 1.6 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | epyc2 | dhr1-drt7-cut_small-p16g | dhr1-drt7-cut_small-p16g | drt_TT | 57.2 | last meaningful line 0.4 h ago (1612/1612 lines) | PROGRESS: log still growing |  |
 | epyc2 | dpkit-col_h9_r2__t1__clce45cab5__pv31e47bd5-1168592 | col_h9_r2__t1 | stage_odb_cap | 7.7 | last meaningful line 0.0 h ago (488/488 lines) | PROGRESS: log still growing |  |
 | epyc2 | dpkit-col_h9_r2__t1__clce45cab5__pv37074264-1171094 | col_h9_r2__t1 | stage_odb_cap | 7.7 | last meaningful line 0.0 h ago (488/488 lines) | PROGRESS: log still growing |  |
@@ -130,5 +130,5 @@ Window 6 h, improvement >= 2 % from best. Verdict counts: {'YOUNG': 79, 'NO-DATA
 | intel1 | dpkit-phy__t1-963292 | phy__t1 | stage_odb_cap | 13.9 | last meaningful line 0.0 h ago (1069/1069 lines) | PROGRESS: log still growing |  |
 | intel1 | dpkit-svc_lo_dsdv_svc_rs__t6-872521 | svc_lo_dsdv_svc_rs__t6 | stage_odb_cap | 7.0 | last meaningful line 0.0 h ago (418/418 lines) | PROGRESS: log still growing |  |
 | intel1 | dpkit-svc_lo_dsdv_svc_rs__t7-888978 | svc_lo_dsdv_svc_rs__t7 | stage_odb_cap | 7.0 | last meaningful line 0.0 h ago (418/418 lines) | PROGRESS: log still growing |  |
-| intel2 | dpkit-dsdv_slice_lepe_mu_C__t1-1117806 | dsdv_slice_lepe_mu_C__t1 | stage_odb_cap | 10.3 | last meaningful line 0.0 h ago (564/564 lines) | PROGRESS: log still growing |  |
-| intel2 | dpkit-sle_ctl__cl372cea1c-3983628 | sle_ctl | stage_odb_cap | 17.5 | last meaningful line 0.0 h ago (1044/1044 lines) | PROGRESS: log still growing |  |
+| intel2 | dpkit-dsdv_slice_lepe_mu_C__t1-1117806 | dsdv_slice_lepe_mu_C__t1 | stage_odb_cap | 10.5 | last meaningful line 0.0 h ago (579/579 lines) | PROGRESS: log still growing |  |
+| intel2 | dpkit-sle_ctl__cl372cea1c-3983628 | sle_ctl | stage_odb_cap | 17.7 | last meaningful line 0.0 h ago (1059/1059 lines) | PROGRESS: log still growing |  |
