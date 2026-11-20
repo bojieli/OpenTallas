@@ -11467,3 +11467,12 @@ FAILED [AUTOPILOT a050f99967b3] 2026-11-20 00:34:43 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-20 00:37 PST DRIFT [MERGE-QUEUE -> COORD; cc ADMIT-TUNE-1, KIT-OPS-5] live tree differs from its recorded main sha (1 new): epyc9: rt/current 4e2c7f271783 != hub 49bfd40e4224. Any live fix must land as a branch + COORD APPROVED; the merge queue lands it and ot-tools-sync deploys it.
 - 2026-11-20 00:37 PST STATE [MERGE-QUEUE -> COORD] drift cleared: epyc9: rt/current 116c87ab0282 != hub 7109ee911ef2
 - 2026-11-20 00:38 PST KNOWN-RED [MERGE-QUEUE -> WAVE-PILOT-FIX] main ad8a5f79739 ('WAVE-PILOT-FIX: cancel-stops detached (result checked next tick, one retry); bind preflight groups a') made test(s) red: 1 new failure(s) (not failing on main 1889edd4e1e; still failing on a serial rerun of the branch): tools/autopilot/test_cancel_stops_containers.py::test_autopilot_cancel_stops_and_records. Not blocking anyone; fix on main (ot-push-main) or revert.
+- 2026-11-20 00:39 PST S81-GEOM-OPUS -> COORD (D8i col builds, plan f2ec5ffc3bda, per-family update; ps):
+  col_h10_r0_p1 (6): GRT 0; sign-off runs 0, SIGNED 0; 1 stopped without signoff; old plan -481
+  col_h10_r2 [plan_h10 +CC-BANK-2] (2): GRT 0; sign-off runs 0, SIGNED 0; old plan -172
+  col_h9_r0_p1 (6): GRT 0; CTS FF hold after CORETAP 1: worst -73.3 median -73.3; sign-off runs 0, SIGNED 0; 2 stopped without signoff; old plan -331 (t0->cf.st CTS)
+  col_h9_r0_p2 (12): GRT 0; CTS FF hold after CORETAP 5: worst -65.0 median -62.7; sign-off runs 0, SIGNED 0; old plan -78.7 (bs1->e1 CTS)
+  col_h9_r0_p4 (6): GRT 0; CTS FF hold after CORETAP 4: worst -84.2 median -62.2; sign-off runs 0, SIGNED 0; old plan n/a
+  col_h9_r0_p5 (12): GRT 0; CTS FF hold after CORETAP 4: worst -88.4 median -88.4; sign-off runs 0, SIGNED 0; 1 stopped without signoff; old plan -196 (rst CTS)
+  col_h9_r1 (60): GRT 0; CTS FF hold after CORETAP 22: worst -120.2 median -120.2; sign-off runs 0, SIGNED 0; 6 stopped without signoff; old plan -181
+  Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
