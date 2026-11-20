@@ -88,7 +88,8 @@ while :; do
     continue
   fi
   # v8: the gate decides (class size of the request, charge of every running unit, the 25 % rule, the real floor)
-  GATE=$(timeout -k 2 30 /usr/local/bin/ot-heavy-reconcile --gate "$MEM" -- "$@" 2>/dev/null)
+  _thread_cap_factor=$(ot_heavy_thread_cap_factor)  # re-evaluate after this attempt reads host config
+  GATE=$(THREAD_CAP_FACTOR="$_thread_cap_factor" timeout -k 2 30 /usr/local/bin/ot-heavy-reconcile --gate "$MEM" -- "$@" 2>/dev/null)
   V=${GATE%% *}; R=${GATE#* }; RES=${R%% *}; R=${R#* }; CLS=${R%% *}; WHY=${GATE#*| }
   case "$RES" in ''|*[!0-9]*) V="";; esac
   if [ "$V" != OK ] && [ "$V" != NO ]; then
@@ -218,7 +219,6 @@ while :; do
   # committed + its threads > THREAD_CAP_FACTOR (default 1.0) x nproc, unless the host has nothing committed (an empty host always
   # takes one job).  Exempt: --priority plan, --direct, --crit (owner bypass rules), short-pool stages.  Running jobs are never touched.
   # THREAD_CAP_FACTOR=0 (/etc/ot-heavy.conf or env) disables it.
-  _thread_cap_factor=$(ot_heavy_thread_cap_factor)  # re-evaluate after this attempt reads host config
   if [ "$V" = OK ] && [ "$_thread_cap_factor" != 0 ] && [ "${OT_HEAVY_PRIO:-}" != plan ] && [ "${OT_HEAVY_DIRECT:-}" != 1 ] &&
      [ "${OT_HEAVY_CPU:-}" != crit ] && [ "$_short" = 0 ]; then
     _ct=0

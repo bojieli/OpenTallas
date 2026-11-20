@@ -878,7 +878,7 @@ try:   # YOUNG_S_1114 ADMIT-TUNE-1: fresh-reservation window from /etc/ot-heavy.
     YOUNG_S = int(re.search(r"^YOUNG_S=(\d+)", open(os.environ.get("OT_HEAVY_CONF", "/etc/ot-heavy.conf")).read(), re.M)[1])
 except Exception:
     pass
-DEFAULTS = dict(GROWTH_FACTOR=0.5, NEED_FACTOR=0.7, MIN_AVAIL_FRAC=0.05,     # v8 (owner 2026-10-17), see the module text
+DEFAULTS = dict(THREAD_CAP_FACTOR=1.0, GROWTH_FACTOR=0.5, NEED_FACTOR=0.7, MIN_AVAIL_FRAC=0.05,     # v8 (owner 2026-10-17), see the module text
                 GROW_WINDOW_S=600, GROWING_FACTOR=1.0, LAUNCH_HOLD_S=120,    # v12 GROWING RESERVATION (SCHED-MEM 10-21)
                 RATE_HORIZON_S=600, RATE_MULT=2.0, SETTLED_FLOOR_FRAC=0.0,   # v13 GROWTH RATE (SCHED-TUNE 10-21); OWNER 10-22 20:10: 0
                 OLD_S=600, OLD_SLOW_GB=5.0, OLD_MULT=3.0, OLD_HORIZON_S=1800, OLD_CAP_GB=32.0,
@@ -1481,7 +1481,11 @@ def waiter_pid(start=None):
 
 
 def gate_locked(mem, argv):
-    _reap_completed_thread_charges_locked()
+    # With thread admission disabled, let the scheduled reconciler collect
+    # terminal thread receipts. The Docker scan would otherwise hold the
+    # global admission lock for work that cannot affect this decision.
+    if conf("THREAD_CAP_FACTOR") != 0:
+        _reap_completed_thread_charges_locked()
     cls = classify(argv)
     table = sizes()
     a = admit_size(mem, cls, table, argv)
