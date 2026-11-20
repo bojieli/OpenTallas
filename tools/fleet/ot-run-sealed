@@ -237,7 +237,8 @@ JOB_ROOTS = ("/srv/opentallas-scratch2/claude/ot-jobs", "/srv/opentallas-scratch
 # refused any root-fs --dir).  ot-run now authorizes scratch3 as a second root on every build host (ROOT_SCRATCH_ROOTS_HOSTS, usable = root free - 150 GB floor), so the job root is
 # the one with the most usable space: scratch2 stays unless scratch3's usable space (root fs: free - ROOT_FLOOR_GB) is 20 GB larger; both need >= FETCH_DISK_GB.  Existing job dirs are not moved.
 ROOT_FLOOR_GB = 150
-JOB_ROOT_SH = ("best=; bf=-1; for r in " + " ".join(JOB_ROOTS) + "; do c=$(dirname $r); [ -d $c ] || continue; "
+def job_root_sh(roots):
+    return ("best=; bf=-1; for r in " + " ".join(roots) + "; do c=$(dirname $r); [ -d $c ] || continue; "
                "f=$(df --output=avail -BG $c | tail -1 | tr -dc 0-9); f=${f:-0}; "
                f"[ \"$(stat -c %d $c)\" = \"$(stat -c %d /)\" ] && f=$((f-{ROOT_FLOOR_GB})); "
                f"[ \"$f\" -ge {FETCH_DISK_GB} ] || continue; "
@@ -245,10 +246,17 @@ JOB_ROOT_SH = ("best=; bf=-1; for r in " + " ".join(JOB_ROOTS) + "; do c=$(dirna
                "[ -n \"$best\" ] && mkdir -p $best && echo JOBROOT=$best")
 
 
+JOB_ROOT_SH = job_root_sh(JOB_ROOTS)
+
+
 def job_root(host):
-    """-> the job root to use on `host` (JOB_ROOTS order, >= FETCH_DISK_GB free), or None"""
+    """-> the job root to use on `host` (JOB_ROOTS order, >= FETCH_DISK_GB free), or None.
+    JOBROOT-HUB-1120 (COORD: 6 QC place jobs failed 'no host qualifies' when the hub's scratch2 was low and the job root fell to /srv/opentallas-scratch3, a path the other hosts reject): the hub / localhost
+    takes ONLY the first root (scratch2); with it full the answer is None and the caller waits (gen: 'no job root ... (gen unsealed)'; place/finish: the job keeps ot-run's own default root) instead of
+    inventing a root no target accepts."""
+    roots = JOB_ROOTS[:1] if host in HUB_LOCAL or host == os.environ.get("OT_HUB_NAME", "intel2") else JOB_ROOTS
     try:
-        p = subprocess.run(on(host, JOB_ROOT_SH), capture_output=True, text=True, timeout=60)
+        p = subprocess.run(on(host, job_root_sh(roots)), capture_output=True, text=True, timeout=60)
     except (OSError, subprocess.TimeoutExpired):
         return None
     m = [w[len("JOBROOT="):] for w in p.stdout.split() if w.startswith("JOBROOT=")]

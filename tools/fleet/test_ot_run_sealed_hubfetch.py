@@ -97,3 +97,16 @@ def test_job_root_sh_prefers_the_root_with_more_usable_space_and_counts_the_root
     assert "ROOT_FLOOR_GB" in dir(m) and m.ROOT_FLOOR_GB == 150
     assert "-gt $((bf+20))" in m.JOB_ROOT_SH and "f-150" in m.JOB_ROOT_SH      # scratch3 only when 20 GB larger, root fs minus its floor
     assert "&& continue; " not in m.JOB_ROOT_SH.replace("|| continue", "")      # the old 'skip a root-fs scratch3' rule is gone
+
+
+def test_the_hub_job_root_never_falls_to_scratch3_and_build_hosts_keep_both():
+    """JOBROOT-HUB-1120"""
+    import importlib.machinery, importlib.util, os
+    ld = importlib.machinery.SourceFileLoader("sl_hub", os.path.join(os.path.dirname(__file__), "ot-run-sealed"))
+    m = importlib.util.module_from_spec(importlib.util.spec_from_loader("sl_hub", ld)); ld.exec_module(m)
+    seen = []
+    m.on = lambda host, cmd: (seen.append((host, cmd)), ["true"])[1]
+    m.job_root("intel2"); m.job_root("localhost"); m.job_root("epyc2")
+    assert "opentallas-scratch3" not in seen[0][1] and "opentallas-scratch3" not in seen[1][1]     # hub: scratch2 only
+    assert "opentallas-scratch3" in seen[2][1]                                                     # a build host: both roots, most usable space wins
+    assert m.JOB_ROOT_SH == m.job_root_sh(m.JOB_ROOTS)
