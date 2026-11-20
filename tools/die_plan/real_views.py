@@ -338,7 +338,10 @@ def digest(export, die, out, names=None):
         rec = _json(so) if so.exists() else None
         if not isinstance(rec, dict):
             continue
-        kit = kit_from_record(rec)
+        sc = _json(d / "signoff_ports.json") if (d / "signoff_ports.json").exists() else None
+        if isinstance(sc, dict) and sc.get("record_sha256") not in (None, _sha(so)):
+            sc = None                                   # a sidecar of another record: ignore
+        kit = kit_from_record(rec, sc)
         df = d / "6_final.def"
         want = kit and signed_verdict_str(rec.get("verdict")) in SIGNED_OK and (names is None or VARIANT.sub("", d.name) in names)
         res[d.name] = dict(verdict=rec.get("verdict"), name=rec.get("name"), signoff_sha256=_sha(so), kit=kit,
@@ -348,14 +351,38 @@ def digest(export, die, out, names=None):
     print(f"DIGEST {die}: {len(res)} records, {sum(1 for v in res.values() if v['pins'])} with DEF pins -> {out}")
 
 
-def kit_from_record(rec):
+def ports_from(rec, sidecar=None):
+    """{clock port: {TT|FF: {lat_min_ps, lat_max_ps, n}}} from the record's own corners.<c>.port_pinflops (sign-offs
+    after REAL-VIEWS-PORTS) or a MATCH signoff_ports.json sidecar of that record (existing sign-offs, signoff_ports.py).
+    Port '-' (pin flops not traced to a clock port) is left out."""
+    src = {}
+    for c, C in CORNERS:
+        pp = ((rec.get("corners") or {}).get(c) or {}).get("port_pinflops")
+        if pp:
+            src[C] = pp
+    if not src and isinstance(sidecar, dict) and sidecar.get("verdict") == "MATCH":
+        src = {C: v for C, v in (sidecar.get("corners") or {}).items() if v}
+    out = {}
+    for C, pp in src.items():
+        for port, v in pp.items():
+            if port == "-" or not v or v.get("min") is None:
+                continue
+            out.setdefault(port, {})[C] = dict(lat_min_ps=float(v["min"]), lat_max_ps=float(v["max"]), n=v.get("n"))
+    return {p: v for p, v in out.items() if all(C in v for _, C in CORNERS)} or None
+
+
+def kit_from_record(rec, sidecar=None):
     corners = {}
     for c, C in CORNERS:
         ip = ((rec.get("corners") or {}).get(c) or {}).get("insertion_pinflops") or {}
         if ip.get("min") is None or ip.get("max") is None:
             return None
         corners[C] = dict(lat_min_ps=float(ip["min"]), lat_max_ps=float(ip["max"]), n=ip.get("n"))
-    return dict(schema="real_views.kit.v1", corners=corners)
+    k = dict(schema="real_views.kit.v1", corners=corners)
+    pts = ports_from(rec, sidecar)
+    if pts:
+        k["ports"] = pts
+    return k
 
 
 VARIANT = re.compile(r"__(a\d+_\d{4}|legalrows_\d+)$")   # count_hourly: re-sign suffixes of the same type
@@ -394,7 +421,7 @@ def resolve_types(plan, records, out, fetch, digests=()):
             kf.write_text(json.dumps(kit, indent=1) + "\n")
             args.append(f"--kit={t}={kf}")
             status[t] = dict(status="REAL", record=v.get("record"), verdict=signed_verdict_str(v.get("verdict")),
-                             via="export DEF pins", lat=kit["corners"])
+                             via="export DEF pins", lat=kit["corners"], per_port=len(kit.get("ports") or {}))
             done = True
             break
         if done:
@@ -409,7 +436,11 @@ def resolve_types(plan, records, out, fetch, digests=()):
             if not isinstance(rec, dict) or signed_verdict_str(rec.get("verdict")) not in SIGNED_OK:
                 why.append(f"{spec}: verdict {rec.get('verdict') if isinstance(rec, dict) else None}")
                 continue
-            kit = kit_from_record(rec)
+            scf = _fetch(str(Path(spec).with_name("signoff_ports.json")), out, fetch)
+            sc = _json(scf) if scf else None
+            if isinstance(sc, dict) and sc.get("record_sha256") not in (None, _sha(f)):
+                sc = None
+            kit = kit_from_record(rec, sc)
             if kit is None:
                 why.append(f"{spec}: no insertion_pinflops")
                 continue
@@ -434,7 +465,7 @@ def resolve_types(plan, records, out, fetch, digests=()):
             kf = Path(out) / "kits" / f"{t}.json"
             kf.write_text(json.dumps(kit, indent=1) + "\n")
             args.append(f"--kit={t}={kf}")
-            status[t] = dict(status="REAL", record=spec, lat=kit["corners"])
+            status[t] = dict(status="REAL", record=spec, lat=kit["corners"], per_port=len(kit.get("ports") or {}))
             done = True
             break
         if not done:
@@ -525,8 +556,10 @@ def main(argv=None):
                summary=dict(cores_real=sum(v["status"] == "REAL" for v in cst.values()), cores=len(cst),
                             types_real=sum(v["status"] == "REAL" for v in tst.values()), types=len(tst)))
     (out / "real_views.json").write_text(json.dumps(rep, indent=1) + "\n")
+    rep["summary"]["types_per_port"] = sum(1 for v in tst.values() if v.get("per_port"))
     s = rep["summary"]
     print(f"REAL_VIEWS cores {s['cores_real']}/{s['cores']} types {s['types_real']}/{s['types']} "
+          f"(per-port {s['types_per_port']}; type views without per-port arrivals are an in-type range BOUND) "
           f"(rest on contract; reasons in {out / 'real_views.json'})")
     return 0
 

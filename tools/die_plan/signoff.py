@@ -1126,6 +1126,8 @@ so PAIR_DONE 1
 set so_regs {}
 foreach p [all_registers -clock_pins] { dict set so_regs [regsub {/[^/]+$} [get_full_name $p] {}] $p }
 set so_bnd {}
+set so_bin {}
+set so_bout {}
 set so_data {}
 set so_async {}
 foreach p [all_registers -async_pins] { dict set so_async [get_full_name $p] 1 }
@@ -1135,14 +1137,50 @@ if {[llength $so_din]} {
     set n [get_full_name $p]
     if {![dict exists $so_data $n]} continue
     set i [regsub {/[^/]+$} $n {}]
-    if {[dict exists $so_regs $i]} { dict set so_bnd $i 1 }
+    if {[dict exists $so_regs $i]} { dict set so_bnd $i 1; dict set so_bin $i 1 }
   }
 }
 if {[llength [all_outputs]]} {
   foreach p [get_fanin -to [all_outputs] -flat -startpoints_only -trace_arcs all] {
     set i [regsub {/[^/]+$} [get_full_name $p] {}]
-    if {[dict exists $so_regs $i]} { dict set so_bnd $i 1 }
+    if {[dict exists $so_regs $i]} { dict set so_bnd $i 1; dict set so_bout $i 1 }
   }
+}
+# REAL-VIEWS-PORTS 11-19 (COORD): the clock source port of every pin flop, so the die STA can use per-port arrivals
+# The clock port is found in the routed DB: register clock pin net -> its driver -> the driver's clock input net ...
+# up to a net with a top-level BTerm (get_fanin from a clock pin does not cross the clock network).  Memo per net.
+set so_cknet_memo {}
+proc so_ckport_of {it} {
+  # it = the register clock pin's dbITerm (sta::sta_to_db_pin: escaped bus names never miss a findInst)
+  global so_cknet_memo
+  if {$it eq "NULL" || $it eq ""} { return - }
+  set net [$it getNet]
+  set seen {}
+  set r -
+  for {set d 0} {$d < 128} {incr d} {
+    if {$net eq "NULL" || $net eq ""} break
+    set nn [$net getName]
+    if {[dict exists $so_cknet_memo $nn]} { set r [dict get $so_cknet_memo $nn]; break }
+    lappend seen $nn
+    set bts [$net getBTerms]
+    if {[llength $bts]} { set r [[lindex $bts 0] getName]; break }
+    set drv ""
+    foreach t [$net getITerms] { if {[$t getIoType] eq "OUTPUT" && [$t getSigType] ni {POWER GROUND}} { set drv $t; break } }
+    if {$drv eq ""} break
+    set nxt ""
+    foreach t [[$drv getInst] getITerms] {
+      if {[$t getIoType] ne "INPUT" || [$t getSigType] in {POWER GROUND}} continue
+      set n2 [$t getNet]
+      if {$n2 eq "NULL" || $n2 eq ""} continue
+      set ck [expr {[lsearch -exact {CLK CK A I IN clk} [[$t getMTerm] getName]] >= 0}]
+      if {$nxt eq "" || $ck} { set nxt $n2 }
+      if {$ck} break
+    }
+    if {$nxt eq ""} break
+    set net $nxt
+  }
+  foreach x $seen { dict set so_cknet_memo $x $r }
+  return $r
 }
 foreach c [all_clocks] { if {[llength [get_property $c sources]]} { set_clock_latency -source 0 $c } }
 set so_ck_err 0
@@ -1160,6 +1198,14 @@ dict for {i p} $so_regs {
   }
   if {$a eq "" || ![string is double -strict $a]} { incr so_ck_err; continue }
   puts "SO_CK [expr {[dict exists $so_bnd $i] ? 1 : 0}] [format %.2f $a] [get_full_name [lindex $cl 0]]"
+  if {[dict exists $so_bnd $i]} {
+    set amin ""
+    catch {set amin [get_property $p arrival_min_rise]}
+    if {$amin eq "" || ![string is double -strict $amin]} { set amin $a }
+    set cp -
+    catch {set cp [so_ckport_of [sta::sta_to_db_pin $p]]}
+    puts "SO_CKP [expr {[dict exists $so_bin $i] ? 1 : 0}] [expr {[dict exists $so_bout $i] ? 1 : 0}] [format %.2f $a] [format %.2f $amin] $cp"
+  }
 }
 so CK_ERRORS $so_ck_err
 so DONE 1
@@ -1620,6 +1666,13 @@ def parse_session(text):
             except (ValueError, IndexError):
                 pass
             continue
+        if ln.startswith("SO_CKP "):
+            f = ln.split()
+            try:
+                r.setdefault("ckp", []).append((int(f[1]), int(f[2]), float(f[3]), float(f[4]), f[5]))
+            except (ValueError, IndexError):
+                pass
+            continue
         if re.fullmatch(r"SO_STATIC_STRAP_ENDPOINT \S+", ln):
             r.setdefault("static_strap_endpoints", []).append(ln.split(None, 1)[1])
             continue
@@ -1642,6 +1695,23 @@ def _f(x):
         return None if v != v else v
     except (TypeError, ValueError):
         return None
+
+
+def port_pinflops(ckp):
+    """REAL-VIEWS-PORTS 11-19: {clock port: {n, min, max, in: {n,min,max}, out: {n,min,max}}} of the pin flops (registers
+    fed by a data input or feeding an output) per clock source port; min = arrival_min_rise, max = arrival_max_rise at
+    the register clock pin (source latency 0, as insertion_pinflops).  in = input-side pin flops (capture), out =
+    output-side pin flops (launch).  Port '-' = pin flops whose clock pin traces to no clock source port."""
+    if not ckp:
+        return None
+    by = {}
+    for bi, bo, amax, amin, port in ckp:
+        by.setdefault(port, []).append((bi, bo, amax, amin))
+
+    def rng(rows):
+        return dict(n=len(rows), min=round(min(r[3] for r in rows), 2), max=round(max(r[2] for r in rows), 2)) if rows else None
+    return {p: dict(rng(rows), **{"in": rng([r for r in rows if r[0]]), "out": rng([r for r in rows if r[1]])})
+            for p, rows in sorted(by.items())}
 
 
 def stats(v):
@@ -1805,6 +1875,8 @@ def corner_result(parsed):
     out["pg_first_open"] = pg[2] if len(pg) > 2 and pg[2] != "-" else None
     out["insertion_all"] = stats(allck)
     out["insertion_pinflops"] = stats(bnd)
+    if parsed.get("ckp"):
+        out["port_pinflops"] = port_pinflops(parsed["ckp"])
     out["pair_skew"] = pair_skew_result(kv)
     out["clock_endpoint_masters"] = kv["CLOCK_ENDPOINT_MASTERS"].split() if "CLOCK_ENDPOINT_MASTERS" in kv else None
     out["clock_endpoint_mapping_errors"] = _f(kv.get("CLOCK_ENDPOINT_MAPPING_ERRORS"))
