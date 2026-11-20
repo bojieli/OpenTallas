@@ -1,3 +1,192 @@
+# FABLE-CLOSURE-STRATEGY 2026-11-19 18:05 PST (1805): the kit-side window is spent on hd_tile; three dies need a fall-form crossing plan
+
+Reviewer: FABLE-CLOSURE-STRATEGY-18xx (Fable). Read-only: no job launched, killed or patched. Technical PD only; HBM parked.
+Gate (R-MINIMAL): DRC 0, routed TT >= -42 ps, internal FF hold >= 0, bind + lane latency.
+Marking: **V** = I opened the log or file this round. **R** = reported by the named lane. **I** = inferred. **P** = proposal.
+State (V, failure_breakdown 17:49): types signed S81 44 / 394, QC 32 / 130, KV 6 / 56, HEAD 25 / 26. Since 13:15: HEAD r8b applied
+13:51; no S81, KV or QC event applied (D8i C4 bind, D25e bind and N46P bind are running). Lanes were quiet 14:00 to 17:45.
+Wave rows changed in the last 6 h (V, `kit_wave_state.json`): technical stops are only S81 `KIT_TOPOLOGY_BIND_STALE` 46 rows (col_h10 and
+others, wait on the D8i bind), QC `OT_XSTN_STRETCH` 2 (cbn_q11 132 and 147 paths), QC sle_su_l0 gen contract 1. Nothing below is a hold (r703).
+
+## 0. Headline
+
+1. **Every crossing verdict before 13:30 was rise-form; the fall form fails on three dies (V and R).** S81 caV0 136 / 2,330 (hi -304.4),
+   KV p4f 252 / 3,915 (hi -174.2) and the p4f2 bind refuses the plan (61,972 MC violations, R), QC n43cb 258 / 2,993 (hi -302.3) and
+   n46ct_e 395 (R). The fall-aware planner is on main `ce33771ee32` (V). S81 caV1f with it: plan fail 136 -> 2 (V). Lever 1.
+2. **The hd_tile window proofs reached GRT and both fail setup and hold together (V).** tilehold (78 to 114): TT setup_est -271.4, hold_est
+   -189.6. tilecomb (84 to 123, M1-M4): TT -157.5, hold_est -219.8; its hold pass stopped after 202 buffers because setup fell to -178.7.
+   The related-pair window and the per-port offset forms charge the same 80 to 113 ps (R). No kit-side form is left. Lever 2.
+3. **The e5 die-tree cluster meets the target and breaks the rest of the tile (R).** Cluster spread worst 82.7 -> 45.0 TT / 36.2 FF, but
+   all-tap tile spread worst 112 -> 160 and kit-contract +1.4 -> -90.4. The join point is wrong, not the idea. Lever 2.
+4. **The S81 per-port sink-offset tree reads -508.6 / -451.0 against -242.4 / -218.8 (V).** Skew 141.7 -> 522.2 and setup +466 -> +200:
+   the same 266 ps on both sides. The STA plan still declares the old early values, so a tap built early by its signed need is read as
+   skew (I). Not a tree verdict yet. Lever 3.
+5. **bk_sel was bound with 0 stations because plan defines take bare names only (V, main `e21f466924d`).** Lever 6.
+
+## 1. Levers ranked by closure impact
+
+| # | die | lever | unblocks | owner |
+|---|---|---|---|---|
+| 1 | S81, KV, QC | fall-form crossing plan on the bound form; depth 16 where the fall lag passes depth 8 | die crossing gate on 3 dies (580 types bind to its K / DEPTH) | S81-CLOCK-WINDOW-1119, KV-CROSSING-1119, QC-PLAN-R3 |
+| 2 | HEAD | balance clk / t7 / t8 / t10 / t12 inside the tile DME tree; keepouts in two steps; r8b kits for 3 types | HEAD die hold; hd_lep0N (last type) | HEAD-CROSSING-1119, FABLE-FIX-HEAD-MESH-O |
+| 3 | S81 | core taps: signed early rows in the plan and the offsets in the tree, timed together | S81 die hold (3,614 of 6,255 taps late) | DIE-CORETAP-1119, S81-CLOCK-WINDOW-1119 |
+| 4 | S81 | D8i C4 on main tools; first reads; leaf write-port stage | 46 stale rows now; leaf 78, col about 150 | S81-DIE-R3, FABLE-FIX-S81-LEAF |
+| 5 | KV | D25e2: t2 split in 3 copies + west channel at x 40 + K6 | hg 8 + hgi 11 of 50 unsigned | OPUS-FIX-KV-HG, KV-D23-COMPOSE |
+| 6 | S81 | bk_sel: `OT_BKSEL_A2P` define + BK-PLACE row + re-harden dsdv_bksel_c | bk_sel__t2 (16 links over 405 um) | bk_sel lane (author of e21f466924d), S81-DIE-R3 |
+| 7 | QC | coll_core wall rows w2 to a GRT read; N46P; cbn_q11 b_d siting | coll_core, cbn_q11 x2, st_a, cbf_q00 | OPUS-FIX-QC-COLLCORE, QC-PLAN-R3 |
+
+### Lever 1. Crossings: plan for the edge the ring writes on
+**Evidence.**
+- V (epyc10 `s81-clock-window/die/runs/s81/cw6/caV1f/ca`): `count_align_plan.json` fail 2, max_path_ambiguous_cycles 3, max_depth 8, note
+  "K/DEPTH chosen for lag L + T/2". CHAIN.log: CA_PLAN 1, CA_BIND 1, STA_CA skipped. caV1g (`--max-depth 16`) has ca_plan and ca_ocv only.
+- R (S81-CLOCK-WINDOW 17:49): the 2 fails are xtier s_4S_C <-> bk_sel, width 5,202 ps, L_hi + T/2 = 6,387 > 6,143. Fall ports take K - 1:
+  S81 lat_total_vs_old3 -1,478 against -477 in rise form, so the fix lowers latency.
+- R (DIE-LEVEL 17:4x, QC-PLAN-R3 13:58): KV and QC numbers as in the headline. QC low side keeps 278 to 294 ps; all fails are the high guard.
+- R (KV-CROSSING 13:36): the KV RTL carries the d25d4 sidecar (1,688 parts, K up to 69). Its driver is lost. P4 and ST4 are re-plans in
+  another form (ST4: 280 parts, K differs on 3,595 / 3,595 ports).
+
+**Root cause.** `count_align_plan` chose K and depth on the unshifted lag; the gate adds T/2 for a fall write, so each fall port lands T/2 high.
+**Fix (P).**
+1. S81-CLOCK-WINDOW-1119: post the caV1g gate STA. Pass mark 0 / 2,330 TT and FF with `write_fall_ports` printed in the STA output.
+   The new K / DEPTH table rides the event after D8i (with RIP1); D8i is not held for it.
+2. KV-CROSSING-1119: the open number is the bound sidecar, not P4. Time the d25d4 `eW_sidecar.json` K / DEPTH as bound, with
+   `--ca-write-fall` and `--plan-die`, on the pcsink_fix arrivals. If it fails, the ST4 recipe plus `--write-fall-plan --max-depth 16`
+   becomes the KV record form (it already binds with 0 errors and verifies 0 / 2,000), and D25e2 carries its table.
+3. QC-PLAN-R3: re-plan on the n46m form with main tools (2,972 of 2,993 ports fall), re-bind, re-time. Same pass mark.
+4. HEAD: 28 crossings fall and the numbers do not move (R). No action.
+
+### Lever 2. HEAD hd_tile: the die tree, in a form that keeps the tile root
+**Evidence.**
+- V (epyc10 `fable-fix-head-mesh/{tilehold,tilecomb}/gen/hd_tile/run_route.log`, OT_POSTCTS_GATE at global route):
+
+| kit | window | TT setup_est / hold_est | FF setup_est / hold_est | note |
+|---|---|---|---|---|
+| tilehold | 78 to 114 | -271.4 / -189.6 | -158.4 / -168.4 | RSZ-0062, 156 setup ends left |
+| tilecomb | 84 to 123 | -157.5 / -219.8 | -19.7 / -192.5 | hold ws -136.3 -> -106.6, 202 buffers, then `OT_HOLD_SETUP_GUARD stop: worst setup -178.68` |
+
+  Pin-register clock mean 631 TT against the 450 bound on both. tilecomb2 (keepouts) restarted at 2_4 PDN at 17:50; no number.
+- R (FABLE-FIX-HEAD-MESH-O 13:31): 67 of 70 negative setup ends are pairs inside clk / t7 / t8 / t10 / t12. Per-port mean offsets are
+  within 9 ps of 0; the instance range is 90 to 114 ps per port (tolerance 45 to 57). So no constraint can encode it.
+- R (HEAD-CROSSING 17:48): e5 result as in the headline; the sub-branch joins at the tile region root cut, so the other 38 taps lose the
+  shared top and tile latency moves up to 320 ps in some tiles.
+- R (HEAD-CROSSING 13:37, 13:59): reservation rects were centred on the cell's lower-left corner since r3; r8b re-derives 5 types.
+  PG straps over the M5-M7 keepouts block 2,044 cells (5.4 %) unless cut. tilecomb2 run 1: PDN-0179 when the M1-M4 rects came before PDN.
+
+**Root cause.** The five taps exchange data and the die tree delivers them from different sub-trees per tile instance. A window can only
+move the damage from hold to setup; at 80 to 113 ps it exceeds what the tile's paths have.
+**Fix (P).**
+1. HEAD-CROSSING-1119: form e6 = the 5-tap matched sub-branch merged inside the tile DME tree (balanced merge with the other 38 taps,
+   snake on), tile root unchanged. Pass marks: cluster worst <= 40 ps TT and FF on all 264 tiles; all-tap tile spread worst <= the e2
+   value of 112; kit-contract on the r8 windows >= 0.
+2. Parallel form (P, not measured): one die tap for the five, with the kit's own tree splitting to the five regions. CPPR then covers the
+   pairs by construction. Check the sink count of the merged tap against the 1,200 cap and the insertion against the 631 ps already seen.
+3. FABLE-FIX-HEAD-MESH-O: when e6 posts, cut the window on the five ports to about 50 ps (related pairs) and rerun the tile proof.
+   Until then tilehold and tilecomb decide nothing more; the control (22 to 38) is the form that had TT -0.32 at placement.
+4. Flow order for r9: M5-M7 keepouts before pdngen, M1-M4 rects in PRE_GLOBAL_PLACE.
+5. hd_host_e, hd_lep0N and hd_mesh have no r8b kit yet (R 17:48). hd_lep0N is the last unsigned HEAD type; its r8b kit is the next read.
+
+### Lever 3. S81 core taps: plan rows and tree offsets in one timing
+**Evidence.**
+- V (epyc10 `die-coretap-1119/runs/s81/c1119_cw6_sink/ca/sta_legacy.log`): TT intra setup 200.32, hold -508.55 (452,471 neg), skew
+  522.21; FF hold -450.98, kit-contract -339.15 (need 446); `hold_pairs_measured 0`, missing views `core:dsdv_bk_g`, ... (36 or more).
+- V (`s81_cw6_sink_offsets.json`): 6,256 offsets are the full early value per module (bk_sel c0 to c3 262.4, c4 607.7; attn 126.3; fE0
+  225.6 / 283.0 / 303.2). `s81_cw6_sink.yaml` adds `sink_offsets` and nothing else.
+- R (DIE-LEVEL): cw6_d8g has 3,614 of 6,255 core taps over 50 ps late against the signed need; attn_hcore plan early 0, need 126.
+- R: on KV the same tool form gained 39 ps (-222.0 -> -182.6); there the declared insertions equal the signed ones.
+- V: `runs/s81/sigsta/` (plan_signed.json, ROWS 0, APPLY 0) started at 17:51.
+
+**Root cause (I).** The tree was moved to the signed need while the timed plan still declares the old early per core. The tap-level STA has
+no core views, so it prices each core by its declared insertion; the 266 ps on both setup and hold is that difference, not delivery error.
+**Fix (P).**
+1. DIE-CORETAP-1119: finish sigsta (plan rows early_ps := signed max_clock_tree_path - 250 on the 40 modules) and time c1119_cw6_sink
+   against that plan. Post the delivered-against-planned table per module. Pass mark: 90 % of ports within 25 ps and intra hold better
+   than -242.4 / -218.8 in the same STA class.
+2. If delivery overshoots as on KV's first tree (1.83 x + 85), iterate with feedback once; S81 is snake-all, so the KV leaf fix does not apply.
+3. If the result holds, the rows and the tree go to S81-DIE-R3 as one clock event after D8i. rom_elem (1,787 taps) stays unsigned; keep
+   its plan early.
+4. The kit windows (S81-CW6-WINDOW-ROWS) were measured on cw6 taps; regenerate them from the adopted tree in the same event.
+
+### Lever 4. S81: D8i on main tools, and the leaf write port
+**Evidence.**
+- R (S81-DIE-R3 17:51): C3 refused by PRE FIXEDCYC (60 GEOM fi_*_r2r1 lanes at fixed_cycles 5, latency rows at 4). C4 `db0bb7b1fcc0`
+  prices them; bind r8 running on epyc8.
+- V (wave): 46 S81 rows FAIL `KIT_TOPOLOGY_BIND_STALE` on event b4bb6a8b; they need the D8i bind.
+- R (FABLE-FIX-S81-LEAF 13:43, 17:49): t28 with the face-bank fix `b482c7548f1` places (HPWL 1.003), CTS WNS -265, TNS -32,537; GRT at
+  extra iteration 4 / 30 after 3 h. t27 GRT at 12 / 30.
+- R (13:59): t31 worst CTS path -1,263: `u_vp.g_wr1.u_w sw_a_q -> wmw_q`, 2,160 ps = 5 gates + about 40 repeaters over 11 hops. It is
+  the 0-cycle 5-writer write-port decode across the leaf. svc_rs: 0 core-to-core links, no row possible.
+
+**Fix (P).**
+1. S81-DIE-R3: the D8i tree carries main at or after `f5d3f6de3fc` (face bank, serdes boot detour, pre-route hold margin `ad516f62`,
+   lepe LEF override `5eddbd1bfbd`). Without them t14 / t28 / t67, serdes t1 and the lepe kits repeat known stops.
+2. FABLE-FIX-S81-LEAF: print the worst CTS path of t28 and t27. If it is the same `g_wr1` decode, add one register on sw_a / sw_m at
+   the bank in the leaf RTL (+1 cycle on the write port, priced on its lanes) as a family row for the leaf types with `u_vp`. If not,
+   read the t28 GRT congestion map before any row.
+3. First D8i reads at CTS: col_h9_r0_p1 and col_h10_r1 (the two proof kits asked at 11:45 and 13:15 still have no post), iq_C t1.
+
+### Lever 5. KV hgi_v1: the chain form
+**Evidence (R, FABLE-FIX-KV-HG 13:34 to 13:39).** k7 on d25d4: post-CTS TT -172.5 on 12 ends (4 FSTART, 8 eN pad at -27); the kt class
+is gone. GRT iteration 5: landing strip 13,000 to 15,000 -> 17 (W1 proven); total 41,887 (capped); x 200-400 y 600-800 15,490 (W3 at
+x 340), x 0-200 y 400-800 13,280 (tail strip). V: no `reg_leaf_split` commit on main since 13:00.
+**Root cause.** The t2 stage feeds three consumer channels from one site and W3 shares x 340 with it.
+**Fix (P).** OPUS-FIX-KV-HG pushes `reg_leaf_split`. KV-D23-COMPOSE builds D25e2: three kept copies at (40, 285), (40, 618), (40, 950);
+polyline `u_hst2_g` [[40, 1270.08], [40, 618]]; K6 = +1 on both i_ectl lanes with sites (40, 340) and (140, 680). Pass mark on k7 repeated:
+GRT total under 5,000 at iteration 5, no tile over 2,000, CTS TT >= -42. D25e (bind running) does not carry this; hg / hgi stay off
+the count until D25e2. kv3_pc waits on the E2 views in D25e; kv3_pv on the `e9ad080d925` rows.
+
+### Lever 6. S81 bk_sel
+**Evidence (V, main `e21f466924d`).** 22 core-to-core links, 7,847 bits, 0 stages, 16 over 405 um. The A2 station hooks exist in the RTL;
+plan `verilog_defines` take bare names, so `OT_BKSEL_RC/RS/RO/RLN` bound at 0. `OT_BKSEL_A2P` sets RC 3, RS 3, RO 4, RLN 3.
+**Fix (P).** One event: `OT_BKSEL_A2P` in the plan defines, the BK-PLACE core layout row, and dsdv_bksel_c re-hardened with the same macro
+(XDX 5 with QRX 1); quarters unchanged. Check in the bind: every control <-> quarter and glue -> quarter link <= (D + 1) x 405 um, and the
+control XDX priced on its lanes. The signed dsdv_bksel_c (eco3) stays counted until the new one signs. The 2 remaining S81 CA fails
+(s_4S_C <-> bk_sel) should be re-planned after BK-PLACE, since the move changes that lag.
+
+### Lever 7. QC
+**Evidence (R).** OPUS-FIX-QC-COLLCORE 17:50: wall rows w2 on n46m, G0 = control; R-REACH-5 238 hops (worst 1,762 um) -> 3; 5 core clock
+taps and 282 relay sites moved with their cores (missed by the first rows); a kit on the n46m bind is refused (reset tree differs), so a
+private bind is running. QC-PLAN-R3 13:42: n46l / n46n failed PARAM_REGEN (bcf 3 -> 4), n46m green, N46P = f4a + e4 + e5. SONNET-FIX-QC
+17:48: ring-group v2 failed (RSZ-0060 at GRT, CTS TT -54.08 against -54.76). V (wave): cbn_q11 x2 stop on OT_XSTN_STRETCH on N46C.
+**Fix (P).**
+1. OPUS-FIX-QC-COLLCORE: coll_core kit to GRT round 5. Pass mark sum under 5,000 and inside-core share under 30 %; then the worst 20 TT ends.
+2. QC-PLAN-R3: N46P is the next event; the cbn_q11 b_d re-site is in f4a. Pass mark on the first cbn_q11 kit: stretched paths 0.
+3. QC intra hold is -267.9 with 1,081 taps short of the planned early; it follows Lever 3's method once S81 shows the result.
+
+## 2. The 13:15 levers: outcome
+
+| 13:15 lever | outcome |
+|---|---|
+| 1 window setup cost | **Measured at GRT: fails** (-157 and -271). Related-pair and offset forms give no gain. QC window rows: no post. |
+| 2 S81 CA depth 16 | **Superseded.** The cause was the write edge, not depth; depth 16 is still needed for 2 crossings. |
+| 3 D8i one event | C3 refused, C4 binding. cw6 windows in C: not checked. Proof kits not launched. |
+| 4 KV D25e | Sealed, bind running. P4 refused in fall form. pc pilot: no GRT read found. |
+| 5 QC structure | Wall rows rebased and extended; f4 dropped for f4a as proposed; b_tw bits 0 to 28 solved by re-siting (e5). |
+| 6 bk_sel | **Cause found** (define form), macro on main. |
+| 7 HEAD via-stack keepouts | Rows ready, origin bug fixed; proof restarted after PDN-0179. |
+| 8 `pass rr` | lepe proof5 at 16:37 still prints `pass all 3 margin 5.0` (private kit older than ad516f62). No routed result posted. |
+
+## 3. Stop list (the 13:15 list stands, plus these)
+- No further kit-side window form on hd_tile (all-pairs, related-pairs, offsets): all charge 80 to 113 ps. No r9 window raise.
+- Do not adopt e5 as built. Do not join a tap sub-branch at a region root cut.
+- Do not emit the M1-M4 reservation rects before PDN (PDN-0179); do not run a keepout proof without the strap cut.
+- A crossing verdict whose STA output has no `write_fall_ports` is void on S81, KV and QC. Do not fold P4 into any KV event.
+- Do not use `--depth-guard-ps 420` (caV3) as the fall fix; it leaves 7 crossings without a depth.
+- Do not adopt the S81 sink-offset tree on the -508 read, and do not drop it on that read either; time it against the signed plan rows first.
+- No `region.early` and no region DME on KV (stands).
+- Do not relaunch hgi_v1 / hg kits on D25d or D25e; the route needs D25e2.
+- Do not relaunch the 46 S81 BIND_STALE rows on D8h, or cbn_q11 on N46C.
+- No plan define with a value for bk_sel (bare names only); no bk_sel__t2 kit before the macro, the BK-PLACE row and the new bksel_c.
+- No reach rows for svc_rs (0 links). No retry of QC f4 (bcf 3 -> 4). Ring-group stays off.
+
+## 4. Not checked
+- caV1g gate STA; the d25d4 sidecar in fall form (nobody has run it); the QC re-plan.
+- Whether the -266 ps on the S81 sink tree is fully the declared-early difference (I); the tap arrival files are keyed by tree node, and
+  I did not map them to ports.
+- D8i C4 bind result and whether C carries the cw6 window rows; D25e bind; N46P bind; the w2 private bind.
+- tilecomb2 past PDN; any routed hd_tile number; the sink count of a merged five-tap.
+- The KV pc_v1 pilot at GRT; t28 / t27 GRT TT; whether t28's worst path is the write-port decode.
+- BK-PLACE row content and the bksel_c re-harden state.
+
 # FABLE-CLOSURE-STRATEGY 2026-11-19 13:15 PST (1315): the window moves die hold into the type; the type proof shows what it costs
 
 Reviewer: FABLE-CLOSURE-STRATEGY-13xx (Fable). Read-only: no job launched, killed or patched. Technical PD only; HBM parked.
