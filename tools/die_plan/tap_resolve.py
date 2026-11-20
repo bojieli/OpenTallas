@@ -70,24 +70,50 @@ def parse_cts_log(text):
     return out
 
 
-def assign(taps, pts):
-    """nearest tap (Manhattan) of every point: list of index lists."""
+def assign(taps, pts, cap=None, max_extra=None):
+    """nearest tap (Manhattan) of every point: list of index lists.
+    cap: capacity-balanced like the kit (clock_taps.tcl cap pass): a tap over `cap` hands the sinks that cost the least extra
+    distance to their next-nearest tap with room (extra <= max_extra um, None = any); repeated until no tap is over or nothing moves."""
     import numpy as np
     A = np.array(taps, dtype=float).reshape(-1, 2); P = np.array(pts, dtype=float).reshape(-1, 2)
     idx = np.empty(len(P), dtype=int)
     for i in range(0, len(P), 4096):
         c = P[i:i + 4096]
         idx[i:i + 4096] = (np.abs(c[:, None, 0] - A[None, :, 0]) + np.abs(c[:, None, 1] - A[None, :, 1])).argmin(axis=1)
+    if cap and len(A) > 1:
+        load = np.bincount(idx, minlength=len(A))
+        for _ in range(20):
+            moved = 0
+            for k in [int(k) for k in np.argsort(-load) if load[k] > cap]:
+                mem = np.nonzero(idx == k)[0]
+                D = np.abs(P[mem][:, None, 0] - A[None, :, 0]) + np.abs(P[mem][:, None, 1] - A[None, :, 1])
+                own = D[:, k].copy(); D[:, k] = np.inf
+                cand = []
+                for j in range(len(mem)):
+                    for t in np.argsort(D[j])[:6]:
+                        e = D[j, t] - own[j]
+                        if max_extra is not None and e > max_extra:
+                            break
+                        if load[t] < cap:
+                            cand.append((e, j, int(t))); break
+                cand.sort()
+                for e, j, t in cand:
+                    if load[k] <= cap:
+                        break
+                    if load[t] < cap:
+                        idx[mem[j]] = t; load[t] += 1; load[k] -= 1; moved += 1
+            if not moved:
+                break
     g = [[] for _ in taps]
     for i, k in enumerate(idx):
         g[k].append(i)
     return g
 
 
-def tap_stats(taps, pts, radius):
-    """per tap: (load, sinks beyond radius, p95 distance, max distance)."""
+def tap_stats(taps, pts, radius, cap=None):
+    """per tap: (load, sinks beyond radius, p95 distance, max distance, region W+H); cap: capacity-balanced assignment."""
     out = []
-    for (x, y), s in zip(taps, assign(taps, pts)):
+    for (x, y), s in zip(taps, assign(taps, pts, cap, radius)):
         ds = sorted(abs(pts[i][0] - x) + abs(pts[i][1] - y) for i in s) or [0.0]
         span = (max(pts[i][0] for i in s) - min(pts[i][0] for i in s)) + (max(pts[i][1] for i in s) - min(pts[i][1] for i in s)) if s else 0.0
         out.append((len(s), sum(1 for v in ds if v > radius), ds[int(0.95 * (len(ds) - 1))], ds[-1], span))
@@ -142,7 +168,7 @@ def solve(exist, pts, legal, target, radius, core=(), max_add=80, min_new=40, sp
     def relax(n):
         nonlocal added
         for _ in range(n):
-            g = assign(exist + added, pts); new = []
+            g = assign(exist + added, pts, target, radius); new = []
             for k, xy in enumerate(added):
                 s = g[len(exist) + k]
                 new.append(legalize(med(s, 0), med(s, 1), exist + core + new + added[k + 1:], legal) if s else xy)
@@ -174,7 +200,7 @@ def solve(exist, pts, legal, target, radius, core=(), max_add=80, min_new=40, sp
 
     blocked = set()
     while len(added) < max_add:
-        T = exist + added; g = assign(T, pts); s_ = tap_stats(T, pts, radius)
+        T = exist + added; g = assign(T, pts, target, radius); s_ = tap_stats(T, pts, radius, target)
         sc = [max(q[0] / target, (q[4] / span) if span else (1.0 + q[1] / FAR_MIN if q[1] >= FAR_MIN else 0.0)) for q in s_]
         order = [i for i in sorted(range(len(T)), key=lambda i: -sc[i]) if sc[i] > 1.0 and T[i] not in blocked]
         if not order:
@@ -200,7 +226,7 @@ def solve(exist, pts, legal, target, radius, core=(), max_add=80, min_new=40, sp
                 added = keep + [site]
                 if do_relax:
                     relax(2)
-                s2 = tap_stats(exist + added, pts, radius)
+                s2 = tap_stats(exist + added, pts, radius, target)
                 if excess(s2) < before and min(q[0] for q in s2[len(exist):]) >= min_new:
                     ok = True; break
             if ok:
@@ -209,9 +235,9 @@ def solve(exist, pts, legal, target, radius, core=(), max_add=80, min_new=40, sp
             blocked.clear()
         else:
             added = keep; blocked.add(T[k])
-    keep = list(added); before = excess(tap_stats(exist + added, pts, radius)) if added else 0
+    keep = list(added); before = excess(tap_stats(exist + added, pts, radius, target)) if added else 0
     relax(3)
-    if added and excess(tap_stats(exist + added, pts, radius)) > before:
+    if added and excess(tap_stats(exist + added, pts, radius, target)) > before:
         added = keep                                   # the final relax may not undo what the splits reached
     return added
 
@@ -235,10 +261,10 @@ def density_taps(P, tn, regs, span_um=300.0, target=1000, max_add=400, min_new=1
     names = [n for n, _, _ in ex]; exist = [(x, y) for _, x, y in ex]
     core = [(x, y) for _, x, y, _ in schema.core_taps(P, tn)]
     pts = [((c[1] + c[3]) / 2, (c[2] + c[4]) / 2) for c in d["cells"]]
-    s0 = tap_stats(exist, pts, radius)
+    s0 = tap_stats(exist, pts, radius, target)
     need = any(q[4] > span_um or q[0] > target for q in s0)
     added = solve(exist, pts, legal, target, radius, core, max_add, min_new, span_um) if need else []
-    return ("taps" if mode == "explicit" else "added_taps"), names, added, tap_stats(exist + added, pts, radius)
+    return ("taps" if mode == "explicit" else "added_taps"), names, added, tap_stats(exist + added, pts, radius, target)
 
 
 def apply_density(raw, plan_path, types=None):
@@ -324,7 +350,7 @@ def main(argv=None):
     over0 = sum(1 for q in s0 if a.span_um and q[4] > a.span_um)
     min_new = a.min_new if a.min_new is not None else (8 if a.span_um else 40)
     added = solve(exist, pts, legal, target, radius, core, a.max_add, min_new, a.span_um) if (crit["verdict"] == "SPLIT" or over0) else []
-    T = exist + added; s1 = tap_stats(T, pts, radius)
+    T = exist + added; s1 = tap_stats(T, pts, radius, target)
     allnames = names + [f"clk_t{len(exist) + i}" for i in range(len(added))]
     after = criterion({n: predicted_ps(q[0], q[2]) for n, q in zip(allnames, s1)}, {n: q[0] for n, q in zip(allnames, s1)}, tol, a.min_share)
     for n, (x, y), q in zip(allnames, T, s1):

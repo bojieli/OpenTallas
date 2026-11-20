@@ -65,6 +65,30 @@ def test_split_loop_does_not_stall_on_many_dense_and_wide_taps():
     pts += [(rnd.uniform(20, 1380), rnd.choice((20.0, 180.0, 340.0, 500.0))) for _ in range(2500)]
     legal = TR.make_legal((1400.0, 520.0), 8.64, boxes)
     added = TR.solve([(17.28, 17.28)], pts, legal, target=1000, radius=160.0, max_add=400, min_new=1, span=300.0)
-    s = TR.tap_stats([(17.28, 17.28)] + added, pts, 160.0)
+    s = TR.tap_stats([(17.28, 17.28)] + added, pts, 160.0, 1000)
     assert max(q[0] for q in s) <= 1000 and max(q[4] for q in s) <= 300.0, (len(added), max(q[0] for q in s), max(q[4] for q in s))
     assert len(added) < 120 and all(legal(x, y, []) for x, y in added)
+
+
+def test_capacity_balanced_assignment_spills_to_taps_with_room():
+    """COORD 11-20 (c1x_C t1 clk_t13 1289 > 1000): like the kit cap pass, an over-cap tap hands its cheapest sinks to the next
+    tap with room; the plain nearest assignment keeps them all on the dense tap."""
+    rnd = random.Random(5)
+    pts = [(rnd.uniform(380, 420), rnd.uniform(200, 240)) for _ in range(1289)] + [(rnd.uniform(500, 560), rnd.uniform(200, 240)) for _ in range(100)]
+    taps = [(400.0, 220.0), (530.0, 220.0)]
+    assert len(TR.assign(taps, pts)[0]) >= 1289
+    g = TR.assign(taps, pts, 1000, 160.0)
+    assert len(g[0]) == 1000 and len(g[1]) == 389 and sorted(i for s in g for i in s) == list(range(len(pts)))
+    assert max(q[0] for q in TR.tap_stats(taps, pts, 160.0, 1000)) <= 1000
+    # nobody moves farther than max_extra
+    assert len(TR.assign(taps, pts, 1000, 5.0)[0]) > 1000
+    # no cap given: identical to the nearest assignment
+    assert TR.assign(taps, pts) == TR.assign(taps, pts, None, 160.0)
+
+
+def test_solver_leaves_a_tap_that_balanced_assignment_already_fits():
+    rnd = random.Random(9)
+    pts = [(rnd.uniform(380, 420), rnd.uniform(200, 240)) for _ in range(1289)]
+    taps = [(400.0, 220.0), (470.0, 220.0)]
+    legal = TR.make_legal((800.0, 400.0), 8.64, [])
+    assert TR.solve(taps, pts, legal, 1000, 160.0, min_new=1, span=300.0) == []
