@@ -7412,6 +7412,10 @@ def src_manifest_verdict(sp, rc, txt):
     if missing and mode != "require" and not sp.get("src_manifest_hash"):
         return "", f"KW_NOTE src_manifest: {sp.get('src')} has no manifest (not a built tree); not judged in mode {mode}"
     lines = [ln for ln in txt.splitlines() if ln.startswith("SRC_MANIFEST")] or [txt[-600:] or f"verifier rc {rc}"]
+    # COORD 11-19 (22 QC rows failed at src_manifest 20:17-20:50: a lane renamed 8 clock_contract.json to *.SONNET-DISABLED-1120 inside the pinned tree on every host): files that are only EXTRA
+    # (not in the manifest) change no tracked content; they are a note, never a refusal.  Any missing / changed tracked file still refuses.
+    if lines and all(ln.startswith("SRC_MANIFEST DRIFT") and ln.rstrip().endswith("(extra: not in the manifest)") for ln in lines) and not missing:
+        return "", f"KW_NOTE src_manifest: {len(lines)} extra file(s) in {sp.get('src')} not in the manifest (first: {lines[0][22:150]}); tracked files match, not refused"
     return (f"SRC_MANIFEST FAIL {sp.get('src')}: tree is not main {sp.get('src_sha', '')[:12]} + its overlay manifest "
             f"({len(lines)} finding(s); first: {lines[0][:300]})\n" + "\n".join(lines[:20])
             + ("\nOT_CLASS: flow src_manifest: published tree shares inodes with another path (cp -al copy); unshare it"

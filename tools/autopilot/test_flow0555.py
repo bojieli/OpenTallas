@@ -665,3 +665,12 @@ def test_every_plan_type_gets_a_row_variants_included():
     assert KW.plan_type_rows(cfg, "s81_head", dict(d, rows_from_plan=False), rows, plan) == []                # opt-out
     picks, skip = KW.select(rows, cfg, "s81_head", {"items": {}}, plan)
     assert {"hd_ctl_e", "hd_spn_eshim_rx"} <= {r["item"] for r in picks}                                       # exempt from only_items
+
+
+def test_src_manifest_extra_files_alone_never_refuse_a_kit():
+    sp = {"src": "/t", "src_sha": "abc"}
+    extra = "SRC_MANIFEST DRIFT physical/x/clock_contract.json.SONNET-DISABLED-1120 (extra: not in the manifest)\n" * 3
+    assert KW.src_manifest_verdict(sp, 1, extra)[0] == ""
+    assert "extra file" in KW.src_manifest_verdict(sp, 1, extra)[1]
+    mixed = extra + "SRC_MANIFEST DRIFT physical/y.json (changed: sha differs)\n"
+    assert KW.src_manifest_verdict(sp, 1, mixed)[0].startswith("SRC_MANIFEST FAIL")
