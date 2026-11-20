@@ -197,7 +197,7 @@ def test_tt_setup_step_and_hold_cap_use_the_bounded_repair_and_are_complete_tcl(
             assert out.stdout.strip() == "1", f
 
 
-def _chunk_tcl(rsz_at, est_fails, other_error_at=0, seq="{-300} {-250} {-200} {-150} {-100} {-50} {0}"):
+def _chunk_tcl(rsz_at, est_fails, other_error_at=0, msg="RSZ-0074 found route to 3 pins, expected 4", seq="{-300} {-250} {-200} {-150} {-100} {-50} {0}"):
     """FLOW-FIX-2045: the real procs of tt_setup_repair.tcl (estimate ladder, bounded loop, chunk) in tclsh; repair_timing throws RSZ-0074 at call rsz_at, estimate_parasitics fails est_fails times after it"""
     t = (HERE / "tt_setup_repair.tcl").read_text()
     a = t.index("proc ot_tt_est {}")
@@ -214,16 +214,18 @@ set ::estfail 0
 proc sta::worst_slack {w} { return [lindex $::seq [expr {min($::i, [llength $::seq]-1)}]] }
 proc repair_timing {args} {
   incr ::calls
-  if {$::calls == RSZAT} { incr ::i; set ::estfail ESTFAILS; error "RSZ-0074 found route to 3 pins, expected 4" }
+  if {$::calls == RSZAT} { incr ::i; set ::estfail ESTFAILS; error RSZMSG }
   if {$::calls == OTHERAT} { error "RSZ-0001 something else" }
   incr ::i
 }
+proc set_dont_touch {args} { puts "DT $args" }
+proc get_nets {n} { return "N:$n" }
 proc global_route {args} { puts "GR $args" }
 proc estimate_parasitics {args} { if {$::estfail > 0} { incr ::estfail -1; error "RSZ-0074 still broken" } }
 """ + t[a:b] + t[c:d] + """
 set rc [catch {ot_bounded_repair tt_setup_repair [list ::ot_tt_chunk 0 {}] ::ot_tt_measure 4000} done]
 puts "RC $rc DONE $done CALLS $::calls"
-""").replace("SEQ", seq).replace("RSZAT", str(rsz_at)).replace("ESTFAILS", str(est_fails)).replace("OTHERAT", str(other_error_at))
+""").replace("SEQ", seq).replace("RSZAT", str(rsz_at)).replace("ESTFAILS", str(est_fails)).replace("OTHERAT", str(other_error_at)).replace("RSZMSG", "{" + msg + "}")
     return subprocess.run([TCLSH], input=prog, capture_output=True, text=True).stdout
 
 
@@ -290,3 +292,18 @@ def test_repair_bound_is_complete_tcl():
     if TCLSH:
         out = subprocess.run([TCLSH], input=f"set f [open {f}]; puts [info complete [read $f]]\n", capture_output=True, text=True)
         assert out.stdout.strip() == "1"
+
+
+@pytest.mark.skipif(not TCLSH, reason="tclsh")
+def test_rsz_0074_names_a_net_it_is_set_dont_touch_before_the_reroute_and_the_repair_resumes():
+    """FABLE-FIX-S81-LEPE 11-20: 'Failed to build tree from global routes for pin wire155183/Y and net net155182 at grid (216885, 311505)' inside repair_timing"""
+    out = _chunk_tcl(rsz_at=2, est_fails=1, msg="RSZ-0074 Failed to build tree from global routes for pin wire155183/Y and net net155182 at grid (216885, 311505): found route to 1 pins, expected 2")
+    assert "DT N:net155182" in out and "net net155182 set dont_touch (1 so far)" in out
+    assert out.index("DT N:net155182") < out.index("GR -allow_congestion -start_incremental")     # before the re-route
+    assert "RSZ-0074 cleared by an incremental re-route" in out and "OT_REPAIR_ABORT" not in out and "RC 0" in out and "CALLS 6" in out
+
+
+@pytest.mark.skipif(not TCLSH, reason="tclsh")
+def test_a_message_without_a_net_sets_nothing_dont_touch():
+    out = _chunk_tcl(rsz_at=2, est_fails=1)
+    assert "DT " not in out and "dont_touch" not in out

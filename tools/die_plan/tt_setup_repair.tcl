@@ -151,6 +151,23 @@ proc ::ot_tt_chunk {mg extra n} {
   } err]} { return }
   if {![string match "*RSZ-0074*" $err]} { error $err }
   puts "OT_TT_SETUP_REPAIR WARNING RSZ-0074 inside repair_timing ($err): keeping the DB reached so far, repairing the route / estimate"
+  # FLEET-WATCH-1400 (FABLE-FIX-S81-LEPE BUG 11-20 14:03, proof6 lepe_mu_LP__t2: 'Failed to build tree from global routes for pin wire155183/Y and net net155182'): the net the message names
+  # (a rebuffered net whose guide could not be restored) is set dont_touch BEFORE the re-route, so the next chunk does not rebuild the same net and die on it again.  More than
+  # OT_TT_DONT_TOUCH_MAX (default 25) such nets = the route cannot be trusted: the repair stops and keeps its DB.
+  if {![info exists ::ot_dont_touch]} { set ::ot_dont_touch {} }
+  if {[regexp {and net (\S+) at grid} $err -> ot_nn]} {
+    if {[catch {set_dont_touch [get_nets $ot_nn]} ot_e3]} {
+      puts "OT_TT_SETUP_REPAIR WARNING dont_touch of net $ot_nn failed ($ot_e3)"
+    } else {
+      lappend ::ot_dont_touch $ot_nn
+      puts "OT_TT_SETUP_REPAIR RSZ-0074 net $ot_nn set dont_touch ([llength $::ot_dont_touch] so far), repair resumes after the re-route"
+    }
+    set ot_dmax 25; if {[info exists ::env(OT_TT_DONT_TOUCH_MAX)] && [string is integer -strict $::env(OT_TT_DONT_TOUCH_MAX)]} { set ot_dmax $::env(OT_TT_DONT_TOUCH_MAX) }
+    if {[llength $::ot_dont_touch] > $ot_dmax} {
+      puts "OT_TT_SETUP_REPAIR WARNING more than $ot_dmax nets failed RSZ-0074: the repair stops, the DB reached so far is kept"
+      set ::ot_repair_abort 1
+    }
+  }
   if {[catch {ot_tt_est_after_repair} err2]} {
     puts "OT_TT_SETUP_REPAIR WARNING route not repairable after the chunk ($err2): the repair stops, the DB reached so far is kept"
     set ::ot_repair_abort 1
