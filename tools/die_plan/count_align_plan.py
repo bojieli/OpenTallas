@@ -1497,6 +1497,18 @@ def parse_edge_pad(items, typ=int):
 PAD_STRAP_MAX = 15      # r8.STRAP_PAD_MAX: default 4-bit pad-count strap
 
 
+def _lane_of(port, lanes):
+    """count_aligned_cycles port -> latency lane.  KV ports are L<n>_<k> / L<n>; QC ports are <lane>__<k> where the lane
+    name itself holds '_' and '__' (sl_E2_hc2__cws2__3 -> sl_E2_hc2__cws2).  A port whose '__<k>' stem or own name is a
+    declared lane maps to it; only otherwise the KV L<n> prefix is used (QC-PLAN-R3 11-20: the bare split('_') put every
+    QC sl_* port in one lane 'sl', so one latency_groups entry raised all sl_* crossings to a common latency)."""
+    if "__" in port and port.rsplit("__", 1)[0] in lanes:
+        return port.rsplit("__", 1)[0]
+    if port in lanes:
+        return port
+    return port.split("_")[0]
+
+
 def seam_pad_inputs(die_plan, pad_capacity=PAD_STRAP_MAX, extra_groups=None):
     """KV-CROSSING-1119 (COORD 11-20): the two bind rules a fall-aware re-plan can break, read from the die plan.
     groups: [[port, ...]] = every port of a plan latency_groups[] member lane (lane L<n> owns ports L<n>_<k> / L<n>) plus
@@ -1509,7 +1521,7 @@ def seam_pad_inputs(die_plan, pad_capacity=PAD_STRAP_MAX, extra_groups=None):
     base = (((die_plan.get("clock") or {}).get("landing_network") or {}).get("count_aligned_cycles")) or {}
     by_lane = defaultdict(list)
     for p in base:
-        by_lane[p.split("_")[0]].append(p)
+        by_lane[_lane_of(p, lanes)].append(p)
     groups = []
     for g in lg:
         ports = sorted({p for ln in g.get("lanes", []) for p in by_lane.get(ln, [])})
@@ -1519,7 +1531,7 @@ def seam_pad_inputs(die_plan, pad_capacity=PAD_STRAP_MAX, extra_groups=None):
     floor = {}
     if lanes or lg:
         for p, lat in base.items():
-            pad = int((lanes.get(p.split("_")[0]) or {}).get("pad", 0) or 0)
+            pad = int((lanes.get(_lane_of(p, lanes)) or {}).get("pad", 0) or 0)
             floor[p] = int(lat) - max(0, pad_capacity - pad)
     return groups, floor
 

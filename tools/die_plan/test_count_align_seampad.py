@@ -56,3 +56,15 @@ def test_no_groups_no_change():
     before = [dict(o) for o in out]
     CAP.seam_pad_rules(out, [], {}, T, AP, 8)
     assert out == before
+
+
+def test_qc_port_names_map_to_their_own_lane():
+    # QC ports are <lane>__<k>; lane names hold '_' and '__'.  Only the grouped lanes may form a group, and the pad
+    # floor reads the port's own lane (not one lane 'sl' for every sl_* port).
+    d = plan_doc([["sl_E0_su_l0__x_su_l0_ctl", "sl_E0_su_l1__x_su_l1_ctl"]],
+                 {"sl_E0_su_l0__x_su_l0_ctl": 0, "sl_E0_su_l1__x_su_l1_ctl": 0, "sl_E2_hc2__cws2": 9},
+                 {"sl_E0_su_l0__x_su_l0_ctl__0": 5, "sl_E0_su_l1__x_su_l1_ctl__1": 6, "sl_E2_hc2__cws2__3": 3,
+                  "glue__native_rx_v_native_rx_v__0": 2})
+    g, f = CAP.seam_pad_inputs(d)
+    assert g == [["sl_E0_su_l0__x_su_l0_ctl__0", "sl_E0_su_l1__x_su_l1_ctl__1"]]
+    assert f["sl_E2_hc2__cws2__3"] == 3 - (15 - 9) and f["glue__native_rx_v_native_rx_v__0"] == 2 - 15
