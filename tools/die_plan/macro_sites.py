@@ -75,3 +75,44 @@ def target(tn, t, inst, size):
 def worst_gap(tn, t, inst, origin, size):
     x, y = origin; w, h = size
     return max(gap([x, y, x + w, y + h], p) for p in partners(tn, t, inst))
+
+
+def _paths(h):
+    return {h["inst"], h.get("physical_inst") or h["inst"]}
+
+
+def inside_hard_core(inst, t, sited=()):
+    """QC-PLAN-R3 (COORD 11-20): the hard core (plan inst) whose RTL path holds inst, else None.  The st_a inventory lists
+    the 5 SRAMs of each region core u_r<k> (physical_inst u_bound.u_u_r<k>); they are inside that core's LEF, so a
+    separate record for them is a KITFIT-OVERLAP with the core.  Cores being re-sited themselves (sited) never count."""
+    for h in t.get("hard_cores") or []:
+        if h["inst"] in sited:
+            continue
+        if any(inst.startswith(p + ".") for p in _paths(h)):
+            return h["inst"]
+    return None
+
+
+def hard_core_obstacles(t, sited=()):
+    """boxes (grown by each core's halo_um) of the type's existing hard cores that are not being re-sited: a new macro
+    site may not overlap them (N46T: generator st_a g_btb banks on top of region core u_r0, 110 KITFIT-OVERLAP)"""
+    out = []
+    for h in t.get("hard_cores") or []:
+        if h["inst"] in sited or not (h.get("origin_um") and h.get("outline_um")):
+            continue
+        b = box_of(h); g = float(h.get("halo_um") or 0.0)
+        out.append([b[0] - g, b[1] - g, b[2] + g, b[3] + g])
+    return out
+
+
+def site_points(t):
+    """[(kind, [x, y])]: the point sites a macro (box + halo) may not cover: count strap pins, relay_sites (firm stage
+    flops), reset consumer / clock tap sites and the reset tap (FABLE-PD-QC-2300 F4: generator st_b SRAMs on the type's
+    count straps and tap sites, the class N46R3 had just removed)"""
+    out = [("strap", p) for s in t.get("count_straps") or [] for p in s.get("sites_um") or []]
+    out += [("relay", p) for p in (t.get("relay_sites") or {}).values() if isinstance(p, (list, tuple)) and len(p) == 2]
+    r = t.get("reset") or {}
+    out += [("tap", p[1:3]) for p in r.get("consumer_sites_um") or [] if isinstance(p, (list, tuple)) and len(p) >= 3]
+    if r.get("tap_um"):
+        out.append(("tap", r["tap_um"]))
+    return [(k, [float(p[0]), float(p[1])]) for k, p in out]

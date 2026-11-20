@@ -1588,6 +1588,84 @@ def seam_pad_rules(out, groups, floor, T, ap, max_depth, write_fall=frozenset(),
                 depth_promoted=depth_up, no_depth=fail, skipped_tree=skipped, rows=raised)
 
 
+def type_bus_class_floor(die_plan, out):
+    """QC-PLAN-R3 (COORD 11-20) opt-in --type-bus-classes: twin instances of one type bus must take ONE count-align shift.
+    The lanes of one class share (source partition type, source bus, destination partition type, destination bus) of
+    their first / last hop; a re-plan that gives twin instances different shifts vs the plan's count_aligned_cycles
+    (per-instance clock skew: -1 on one, 0 on its twin) makes them bind as different variants of one type (TYPE_SPLIT,
+    R8 pad that fits no site).  Every member's lane total takes the class's largest (least negative) shift; the difference
+    goes on the lane's last hop.  -> ({port: lat floor}, summary) for seam_pad_rules (raise only, never lower).
+    Lanes are die_plan lanes[] {id, ports} when declared, else count_aligned_cycles ports grouped by _lane_of."""
+    base = (((die_plan.get("clock") or {}).get("landing_network") or {}).get("count_aligned_cycles")) or {}
+    ptype = {p["name"]: p.get("type", p["name"]) for p in die_plan.get("partitions", [])}
+    ports = {p["id"]: p for p in die_plan.get("ports", []) if isinstance(p, dict) and "id" in p}
+    byp = {o["port"]: o for o in out if o.get("lat_cycles") is not None}
+    if isinstance(die_plan.get("lanes"), list):
+        lanes = [list(ln.get("ports") or []) for ln in die_plan["lanes"]]
+    else:
+        by = defaultdict(list)
+        names = (die_plan.get("latency") or {}).get("lanes") or {}
+        for p in sorted(base):
+            by[_lane_of(p, names)].append(p)
+        lanes = list(by.values())
+
+    def end(pid, side):
+        e = (ports.get(pid) or {}).get(side) or {}
+        part = e.get("part")
+        return (ptype.get(part, part), e.get("bus")) if part is not None else None
+
+    cls = defaultdict(list)
+    for ln in lanes:
+        ps = [p for p in ln if p in byp and p in base]
+        if not ps:
+            continue
+        a, b = end(ln[0], "src"), end(ln[-1], "dst")
+        if a is None or b is None:
+            continue
+        cls[a + b].append(ps)
+    floor, n = {}, 0
+    for lns in cls.values():
+        if len(lns) < 2:
+            continue
+        sh = [sum(byp[p]["lat_cycles"] - int(base[p]) for p in ln) for ln in lns]
+        m = max(sh)
+        if min(sh) == m:
+            continue
+        n += 1
+        for ln, x in zip(lns, sh):
+            if x < m:
+                floor[ln[-1]] = byp[ln[-1]]["lat_cycles"] + (m - x)
+    return floor, dict(classes=sum(1 for v in cls.values() if len(v) > 1), classes_unequal=n, ports_floored=len(floor))
+
+
+def type_bus_class_depth(die_plan, out, T, ap, write_fall=frozenset()):
+    """FABLE-PD-QC-2300 (COORD 11-20): equal shift is not enough; the ring DEPTH is a type parameter of the receiving bus,
+    so every crossing into one (destination partition type, destination bus) takes the class's largest DEPTH (N46U3: 18
+    type buses with instances at DEPTH 4 and 8 -> TYPE_SPLIT).  A larger DEPTH keeps K and the lag and only widens
+    margin_hi.  -> summary {classes_mixed, ports_promoted}."""
+    ptype = {p["name"]: p.get("type", p["name"]) for p in die_plan.get("partitions", [])}
+    ports = {p["id"]: p for p in die_plan.get("ports", []) if isinstance(p, dict) and "id" in p}
+    cls = defaultdict(list)
+    for o in out:
+        d = (ports.get(o["port"]) or {}).get("dst") or {}
+        if o.get("depth") and d.get("part") is not None:
+            cls[(ptype.get(d["part"], d["part"]), d.get("bus"))].append(o)
+    mixed, up = 0, 0
+    for os_ in cls.values():
+        m = max(o["depth"] for o in os_)
+        if min(o["depth"] for o in os_) == m:
+            continue
+        mixed += 1
+        for o in os_:
+            if o["depth"] < m:
+                wf = 0.5 * T if o["port"] in write_fall else 0.0
+                o["depth"] = m; up += 1
+                o["margin_hi_ps"] = round((m - 0.5) * T - o["L_hi_ps"] - wf, 1)
+                if isinstance(o.get("rtl"), dict):
+                    o["rtl"]["DEPTH"] = m; o["rtl"]["GUARD_HI"] = m
+    return dict(classes_mixed=mixed, ports_promoted=up)
+
+
 def apply_frame(summ, out, frame):
     """QC-REGION-1 COUNT FRAME (count_frame.py): lat_cycles -> the plan's wall-aligned frame, lat + f_dst - f_src (the
     edge-index value stays in lat_cycles_edge; RTL K, origins and margins are unchanged: the frame relabels the count).
@@ -1667,6 +1745,12 @@ def main(argv=None):
                          "declares either; --no-seam-pad-rules switches it off")
     ap.add_argument("--no-seam-pad-rules", action="store_true")
     ap.add_argument("--pad-capacity", type=int, default=PAD_STRAP_MAX)
+    ap.add_argument("--type-bus-classes", metavar="PLAN.json",
+                    help="QC-PLAN-R3 (COORD 11-20) opt-in: die plan whose lanes / ports / partition types define type-bus "
+                         "classes (same source type+bus and destination type+bus); every lane of a class takes the class's "
+                         "largest count-align shift vs the plan's count_aligned_cycles, so twin instances of one type bus "
+                         "never bind as different variants (TYPE_SPLIT / R8 pad fits no site), and every crossing into one "
+                         "destination type bus takes the class's largest DEPTH; raise only")
     ap.add_argument("--seam-group", action="append", metavar="PORT,PORT,...",
                     help="extra seam group (members share one latency); repeatable")
     ap.add_argument("--max-depth", type=int, choices=(8, 16), default=8,
@@ -1753,6 +1837,15 @@ def _main(a, ap, allow):
                                                     DEPTH16_ALLOW)
             summ["seam_pad_rules"]["source"] = sp_src
             summ["fail"] = sum(1 for o in out if not o.get("depth"))
+    if getattr(a, "type_bus_classes", None):
+        tf, ts = type_bus_class_floor(json.load(open(a.type_bus_classes)), out)
+        r = seam_pad_rules(out, [], tf, a.period, a.aperture, a.max_depth,
+                           WRITE_FALL if getattr(a, "write_fall_plan", None) else frozenset(), DEPTH16_ALLOW)
+        ts.update({k: v for k, v in r.items() if k not in ("groups", "floor_ports")}, source=a.type_bus_classes)
+        ts["depth"] = type_bus_class_depth(json.load(open(a.type_bus_classes)), out, a.period, a.aperture,
+                                           WRITE_FALL if getattr(a, "write_fall_plan", None) else frozenset())
+        summ["type_bus_classes"] = ts
+        summ["fail"] = sum(1 for o in out if not o.get("depth"))
     if a.tree_parent:
         summ["tree_parent"] = parse_edge_pad(a.tree_parent, str)
     if any(a.start_skew):

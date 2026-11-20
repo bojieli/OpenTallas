@@ -130,7 +130,12 @@ def desires(tn,cc,t):
 
 report={};delta={}
 for tn in sorted(inv):
- t=base['partition_types'][tn];cc=cells(tn);pref=desires(tn,cc,t);occupied=obs(t,tn);placed=[];fail=[]
+ t=base['partition_types'][tn];cc=cells(tn);sited={c['inst'] for c in cc}
+ # SRAMs inside an existing hard core (st_a region cores u_r<k>) are part of that core: no own record; existing
+ # hard cores that are not re-sited here are obstacles (QC-PLAN-R3 11-20: 110 st_a KITFIT-OVERLAP in N46T)
+ inner=[c['inst'] for c in cc if MS.inside_hard_core(c['inst'],t,sited)];cc=[c for c in cc if c['inst'] not in inner]
+ if not cc:report[tn]={'macros':0,'inside_hard_core':len(inner)};continue
+ pref=desires(tn,cc,t);occupied=obs(t,tn)+MS.hard_core_obstacles(t,sited)+[ptbox(p,1) for _,p in MS.site_points(t)];placed=[];fail=[]
  # Larger macros first; all candidates are ranked by displacement within their own dataflow region.
  for c in sorted(cc,key=lambda c:(-math.prod(views[c['module']]['size']),pref[c['inst']][1],pref[c['inst']][0])):
   n=c['inst'];m=c['module'];w,h=views[m]['size'];px,py,bounds=pref[n];W,H=t['outline_um'];halo=4.32
@@ -153,8 +158,9 @@ for tn in sorted(inv):
  if fail:raise ValueError('No macro site '+tn+' '+str(fail))
  area=sum(math.prod(c['outline_um']) for c in placed);W,H=t['outline_um']
  report[tn]={'macros':len(placed),'macro_area_um2':round(area,3),'fraction':round(area/(W*H),5),'added_cells':0,'added_cycles':0,'max_shift_from_group_target_um':max(round(abs(c['origin_um'][0]-pref[c['inst']][0])+abs(c['origin_um'][1]-pref[c['inst']][1]),3) for c in placed)}
+ report[tn]['inside_hard_core']=len(inner)
  if tn.startswith(('sle_st_','slw_st_')):
   g=max(MS.worst_gap(tn,t,c['inst'],c['origin_um'],c['outline_um']) for c in placed);report[tn]['max_partner_gap_um']=round(g,1)
   if g>MS.REACH_UM:print('WARN macro partner gap',tn,round(g,1),'>',MS.REACH_UM,file=sys.stderr)
- t.setdefault('hard_cores',[]).extend(placed);t['core_pg_connect']=True;delta[tn]={'hard_cores':placed,'core_pg_connect':True}
+ t['hard_cores']=[h for h in t.get('hard_cores',[]) if h['inst'] not in sited]+placed;t['core_pg_connect']=True;delta[tn]={'hard_cores':placed,'core_pg_connect':True}
 (R/'macro_plan.json').write_text(json.dumps(base,indent=2)+'\n');(R/'macro_plan_delta.json').write_text(json.dumps(delta,indent=2)+'\n');(R/'macro_site_report.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report,indent=2))

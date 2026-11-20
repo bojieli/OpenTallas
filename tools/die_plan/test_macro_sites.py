@@ -79,3 +79,43 @@ def test_generator_uses_connectivity_for_st():
     src = (ROOT / "tools/die_plan/qc_add_macro_sites.py").read_text()
     st = src[src.index("def desires"):src.index("elif tn in ('coll_s'")]
     assert "MS.target(" in st and "H/4" not in st
+
+
+def st_a_with_region_cores():
+    t = {"outline_um": [W, H], "internal_stations": [],
+         "hard_cores": [{"inst": "u_r0", "physical_inst": "u_bound.u_u_r0", "origin_um": [267.84, 77.76], "outline_um": [162.0, 162.0]},
+                        {"inst": "cl_b_tw_data_i", "origin_um": [561.61, 276.49], "outline_um": [45.36, 186.19]},
+                        {"inst": "u_bound.u_u_btab.u_bt.u_core.g_btb[0].u_m", "origin_um": [449.28, 328.32], "outline_um": [94.82, 41.07]}]}
+    return t
+
+
+def test_srams_inside_a_region_core_get_no_record():
+    # QC-PLAN-R3 11-20: the st_a inventory lists u_bound.u_u_r0.* SRAMs that live inside region core u_r0
+    t = st_a_with_region_cores(); bank = "u_bound.u_u_btab.u_bt.u_core.g_btb[0].u_m"
+    assert MS.inside_hard_core("u_bound.u_u_r0.u_hb.u_m.g_bank[0].u_m", t, {bank}) == "u_r0"
+    assert MS.inside_hard_core(bank, t, {bank}) is None
+    assert MS.inside_hard_core("u_bound.u_u_r00.u_x", t) is None          # path prefix, not string prefix
+
+
+def test_existing_region_cores_are_obstacles_resited_macros_are_not():
+    t = st_a_with_region_cores(); bank = "u_bound.u_u_btab.u_bt.u_core.g_btb[0].u_m"
+    obs = MS.hard_core_obstacles(t, {bank})
+    assert [267.84, 77.76, 429.84, 239.76] in obs and len(obs) == 2
+    # the N46T overlap: a g_btb bank at (328.32, 190.09) hits u_r0
+    a = [328.32, 190.09, 423.14, 231.16]
+    assert any(a[0] < b[2] and b[0] < a[2] and a[1] < b[3] and b[1] < a[3] for b in obs)
+
+
+def test_generator_skips_inner_srams_and_avoids_cores():
+    src = (ROOT / "tools/die_plan/qc_add_macro_sites.py").read_text()
+    assert "MS.inside_hard_core(" in src and "MS.hard_core_obstacles(" in src
+
+
+def test_strap_relay_and_tap_sites_are_obstacles():
+    t = {"count_straps": [{"name": "strap_ca_efall", "sites_um": [[311.064, 673.92]]}],
+         "relay_sites": {"u_cland_rstart_tx_p0/q": [196.2, 723.9]},
+         "reset": {"consumer_sites_um": [["clk_t49", 207.0, 588.0]], "tap_um": [296.99, 674.98]}}
+    got = MS.site_points(t)
+    assert [k for k, _ in got] == ["strap", "relay", "tap", "tap"] and got[2][1] == [207.0, 588.0]
+    src = (ROOT / "tools/die_plan/qc_add_macro_sites.py").read_text()
+    assert "MS.site_points(t)" in src
