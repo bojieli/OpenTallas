@@ -110,7 +110,8 @@ def predicted_edges(schedule, die, q_after_root):
     arrivals = Q.arrivals(snake)
     if set(arrivals) != set(slices) or any(len(v) != 16 for v in arrivals.values()):
         raise ValueError('quant encoder requires all 16 norm flits on every slice')
-    roots = {inst: Q.finish_root(dl) for inst, dl in arrivals.items()}
+    delivery = schedule.get('timing_contract', {}).get('xfin', {}).get('delivery_cycles', 0)
+    roots = {inst: Q.finish_root(dl, delivery) for inst, dl in arrivals.items()}
     return roots, {inst: edge + q_after_root for inst, edge in roots.items()}
 
 

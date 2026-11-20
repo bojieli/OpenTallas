@@ -435,7 +435,7 @@ def memh(words, width):
 
 
 # ================================================================================================= op-level schedule
-def layer_schedule(tree, layer, workload='ar'):
+def layer_schedule(tree, layer, workload='ar', xfin_delivery_cycles=0):
     """the priced p4l static schedule of one layer (dv_layer_price.py: dv_price dv_base deltas + p4l land plan,
     half-cycle), node start / end rebased to the layer's first start"""
     import dv_layer_price as lp
@@ -445,7 +445,7 @@ def layer_schedule(tree, layer, workload='ar'):
     land = tree / 'results/arch/s81_dv_1016/landing/p4l/land_plan.json'
     g = lp.facts(plan, land, True)
     doc = json.loads((dp.TP / ('ds_rom.json' if workload == 'ar' else 'ds_rom_mtp.json')).read_text())
-    delta, _ = dp.dv_deltas(doc, g, 8, 0.0, 1.0, False, ())
+    delta, _ = dp.dv_deltas(doc, g, 8, 0.0, 1.0, False, (), xfin_delivery_cycles=xfin_delivery_cycles)
     # CAPC5k with explicit C->CAP and CAP->C landings: six child edges plus
     # three edges in each direction. Keep dependent issues behind capture.
     # Opt-in must match ot_s81sl_slice_c1x_k8_cap5_lp; old parents unchanged.
@@ -836,7 +836,8 @@ def lower_norm_smoke(die, prog, sl, t0, eps=None, r_h=0, r_gain=64, which='attn'
     # previous faulting serializer restarted at each leaf, so adding another
     # four edges after the last command would double count that delay.
     last_partial = go[-1] + BEAT['go_to_partial_normr'] + XFIN['dl'] + XFIN['collector']
-    rstd = last_partial + XFIN['last_partial_to_rstd']
+    xfin_delivery = die.timing_contract.get('xfin', {}).get('delivery_cycles', 0)
+    rstd = last_partial + XFIN['last_partial_to_rstd'] + xfin_delivery
     xq = rstd + XFIN['rstd_to_xq_ring']
     gap16 = ('the norm is lowered on ONE slice (smoke); the xfin NX snake (rstop K_NX) and the XQ all-gather are '
              'exchanges among all 16 slices whose beat cycles follow from every slice\'s go edge: the words need the '
@@ -1183,7 +1184,14 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
         bound_rec['frame_manifest'] = os.environ['OT_S81_FRAME_ASBUILT_MANIFEST']
         (out / 'bound_data_links.json').write_text(json.dumps(bound_rec, indent=1) + '\n')
     wl = workload or ('mtp' if layer == 'mtp_draft' else 'ar')
-    sched = layer_schedule(tree, layer, wl)
+    selected_root = os.environ.get('OT_S81_SELECTED_SOURCE_ROOT')
+    selected_manifest = os.environ.get('OT_S81_SELECTED_ASBUILT_MANIFEST')
+    if selected_root and selected_manifest:
+        from layer_prog.slice_source import xfin_delivery_contract
+        bound_rtl = Path(B['bound']) / 'rtl' if bound_data is not None else None
+        die.timing_contract['xfin'] = xfin_delivery_contract(selected_root, selected_manifest, bound_rtl)
+    xfin_delivery = die.timing_contract.get('xfin', {}).get('delivery_cycles', 0)
+    sched = layer_schedule(tree, layer, wl, xfin_delivery_cycles=xfin_delivery)
     if dense_stage is not None:
         required = dict(OT_XS_DENSE_SPLIT2=dense_stage, OT_XS_APROJ_TOPO='1',
                         OT_XS_APROJ_ALIGN4='1', OT_XS_APROJ_RANK_TAGS='1', OT_XS_APROJ_CAP_PLAN='1')

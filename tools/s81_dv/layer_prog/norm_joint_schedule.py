@@ -31,9 +31,11 @@ def run(schedule,report,bound,out,fast_lib=None):
             side='e' if e['port']=='ro_e' else 'w'
             dst=byct[(col+(1 if side=='e' else -1),tier)];age=geo['age'][inst,side]
         words.append(dict(inst=inst,port=e['port'],edge=e['cycle'],hops=h,origin=origin,dst=dst,land=e['cycle']+age,own=inst==bysid[origin] and h in (8,7)))
-    base=Q.arrivals(words); roots={i:Q.finish_root(base[i]) for i in names}
+    delivery = schedule.get('timing_contract', {}).get('xfin', {}).get('delivery_cycles', 0)
+    base=Q.arrivals(words); roots={i:Q.finish_root(base[i], delivery) for i in names}
     assert all(roots[i]==sl[i]['root_wb'] for i in names),(roots,sl)
-    finish=Q.finish_root
+    def finish(dl):
+        return Q.finish_root(dl, delivery)
     if fast_lib:
         import ctypes
         library=ctypes.CDLL(str(Path(fast_lib).resolve()))
@@ -42,7 +44,7 @@ def run(schedule,report,bound,out,fast_lib=None):
         def finish(dl):
             result=compiled((ctypes.c_int*16)(*(dl[5*i] for i in range(16))))
             if result<0:raise ValueError('compiled finisher did not complete')
-            return result
+            return result + delivery
         assert all(finish(base[i])==roots[i] for i in names)
     options={}
     for i in names:
