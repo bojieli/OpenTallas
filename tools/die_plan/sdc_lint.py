@@ -1095,7 +1095,7 @@ def kit_context(P, tn):
         floor[ni] = spl["in"].get(tn, {}).get(ni, gen_phys._ft_in_max_ps(P, (1 - gen_phys.ft_hop_in_share(P)) * per))   # CBC hop budget
         floor[no] = spl["out"].get(tn, {}).get(no, gen_phys.ft_hop_in_share(P) * per)
     floor["arst_n"] = gen_phys.IO_BUDGET * per
-    ids = [sp["name"] for sp in t.get("id_straps", []) + t.get("count_straps", [])]      # HEAD-BIND-4: partition ID straps (OWNER 10-25 B)
+    ids = gen_phys.logical_strap_names(t)
     for n in ids:
         ins.append(n)
         floor[n] = gen_phys.IO_BUDGET * per

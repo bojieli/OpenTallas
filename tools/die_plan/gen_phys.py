@@ -4297,14 +4297,10 @@ def sdc(P, tn, pins):
         # downstream (rst_por_n, the lock qualifier, the wavefront relays) is timed (recovery / removal, data).
         out += ("# die reset pad (reset_tree.pad_false_path_pins): raw pad -> u_rst_root async + PLL analog pin only\n"
                 f"set_false_path -from [get_ports arst_n] -to [get_pins {{{' '.join(fp)}}}]\n")
-    ids = [sp["name"] for sp in P.types[tn].get("id_straps", [])]
-    # MESO-STRAP-1 (OWNER 12.15a): count straps strap_ca_* (clock_landing_plan types[].count_straps), same rule 2
-    ids += [sp["name"] for sp in P.types[tn].get("count_straps", [])]
-    if ids:
-        # HEAD-BIND-4 10-27 (OWNER 10-25 option B rule 2): declared partition ID straps are quasi-static, tied per
-        # instance at the die top; the one allowed exception (sdc_lint straps)
-        out += ("# OWNER 10-25 option B: per-instance ID straps (plan id_straps), tied at the parent\n"
-                f"set_false_path -from [get_ports {{{' '.join(ids)}}}]\n")
+    straps = logical_strap_names(P.types[tn])
+    if straps:
+        out += ("# OWNER 10-25 option B: declared quasi-static inputs tied at the parent\n"
+                f"set_false_path -from [get_ports {{{' '.join(straps)}}}]\n")
     out += (f"set_load {IO_LOAD_FF / LIB_CAP_UNIT_FF:g} [all_outputs]\n"
             "set_driving_cell -lib_cell BUFx4_ASAP7_75t_R -pin Y $non_clk_in\n")
     out += edge_cdc_sdc(P, tn)
