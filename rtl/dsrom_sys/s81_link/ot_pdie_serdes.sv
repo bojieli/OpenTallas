@@ -25,7 +25,8 @@ module ot_pdie_serdes #(parameter integer PMA_LAT = 4, parameter integer EMUT = 
     parameter integer DNGB = 4,     // u_dec.u_syn base-form PE groups (ot_s81_kp4_dsyn NGB0); 4 = unchanged
     parameter integer RMRPC = 1,    // u_rm read-pointer copies (ot_s81_rate_match RPC); 1 = unchanged
     parameter integer DKREG = 0,    // u_dec k_* seam register in front of u_chn (+1 pma_rck RX latency); 0 = unchanged
-    parameter integer DOREG = 0) (  // u_dec chn -> out seam register (+1 pma_rck RX latency); 0 = unchanged
+    parameter integer DOREG = 0,    // u_dec chn -> out seam register (+1 pma_rck RX latency); 0 = unchanged
+    parameter integer RMRLEAF = 0) ( // u_rm registered read-side reset leaves (ot_s81_rate_match RLEAF; needs OT_S81_RM_STAGED); 0 = unchanged
 
     input  wire          clk,
     input  wire          rst,
@@ -71,7 +72,7 @@ module ot_pdie_serdes #(parameter integer PMA_LAT = 4, parameter integer EMUT = 
         .n_relock(n_rl));
     reg unc_r; always @(posedge pma_rck or negedge rn_r) if (!rn_r) unc_r <= 1'b0; else if (q_v && q_first && q_unc) unc_r <= 1'b1;
     wire rm_flt;
-    ot_s81_rate_match #(.RPC(RMRPC)) u_rm (.wclk(pma_rck), .wrst_n(rn_r), .w_v(q_v), .w_d(q_d), .rclk(clk), .rrst_n(rn_t_rm), .r_d(rx),
+    ot_s81_rate_match #(.RLEAF(RMRLEAF), .RPC(RMRPC)) u_rm (.wclk(pma_rck), .wrst_n(rn_r), .w_v(q_v), .w_d(q_d), .rclk(clk), .rrst_n(rn_t_rm), .r_d(rx),
         .fault(rm_flt));
     // ---- status (ck)
     reg [1:0] lk_s, uf_s;
@@ -370,8 +371,12 @@ module ot_s81_rate_match #(parameter integer RLEAF = 0, parameter integer RPC = 
             localparam integer LO = gc * RSW, SW = (LO + RSW > 512) ? (512 - LO) : RSW;
             (* keep *) reg [2:0] rpq;
             wire [511:0] rw = mem[rpq];
-            always @(posedge rclk or negedge rrn_c)
-                if (!rrn_c) rpq <= 3'd0;
+            // FABLE-FIX-HEAD-SERDES-R2 11-20: the selector copy of slice group LO/64 takes the registered reset leaf of
+            // that group (rrn_s[g], RLEAF=1: 8 kept rclk leaf flops beside their slices, same edge as rl_c); RLEAF=0:
+            // rrn_s[g] is rrst_n = rrn_c, unchanged.  Was one reset net to all RPC copies across the 480-um read row.
+            wire rrn_g = rrn_s[LO / 64];
+            always @(posedge rclk or negedge rrn_g)
+                if (!rrn_g) rpq <= 3'd0;
                 else if (!empty) begin
 `ifdef RMSTAGED_MUT_STALE
                     if (gc != 5 || rp[3]) rpq <= rpq + 3'd1;

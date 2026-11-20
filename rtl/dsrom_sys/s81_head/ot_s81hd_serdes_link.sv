@@ -29,7 +29,15 @@ module ot_s81hd_serdes_link #(
     // FABLE-FIX-HEAD-SERDES 11-16: fanout copies only (KP4 PE groups 4 -> 12, rate-match read select 1 -> 32), +0 pin cycles
     // HEAD-SERDES-O 11-16: + k_* seam register in front of the hard tile u_chn (DKREG 1): +1 pma_rck RX latency
     // HEAD-SERDES-O 11-16 sd7: + chn -> out seam register (DOREG 1): +1 more pma_rck RX latency (+2 total)
-    ot_pdie_serdes #(.PMA_LAT(PMA_LAT), .DNGB(12), .RMRPC(32), .DKREG(1), .DOREG(1)) u_link (
+    // FABLE-FIX-HEAD-SERDES-R2 11-20 OT_S81HD_SERDES_RLEAF (opt-in, needs OT_S81_RM_STAGED): registered read-side reset
+    // leaves of the rate matcher (1 control + 8 per 64-bit slice group); read side releases one ck edge later, together;
+    // +0 data cycles.  Undefined = unchanged.
+`ifdef OT_S81HD_SERDES_RLEAF
+    localparam integer RMRLEAF = 1;
+`else
+    localparam integer RMRLEAF = 0;
+`endif
+    ot_pdie_serdes #(.PMA_LAT(PMA_LAT), .DNGB(12), .RMRPC(32), .DKREG(1), .DOREG(1), .RMRLEAF(RMRLEAF)) u_link (
         .clk(ck), .rst(rst_n), .tx(coll_i0), .rx(rx), .st(st),
         .pma_tx(pma_tx), .pma_tck(pma_tck), .pma_rx(pma_rx), .pma_rck(pma_rck)
     );
