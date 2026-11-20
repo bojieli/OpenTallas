@@ -2091,6 +2091,12 @@ class Binder:
                 self.members[L["src"]] = []
             if L["dst"] not in self.members:
                 self.members[L["dst"]] = []
+        import spare_ft
+        try:
+            self.spare_ft = spare_ft.declared(self.plan)
+            spare_ft.add_native_chains(self, self.spare_ft)
+        except ValueError as exc:
+            raise BindError(str(exc)) from exc
         import reset_carriers
         try:
             reset_carriers.register(self)
@@ -3607,6 +3613,13 @@ class Binder:
         files.append(f)
         if P is not None:
             self.write_wavefront_open_pads(P, f, top_text)
+        import spare_ft
+        try:
+            slots = getattr(self, "spare_ft", {})
+            masters = {pn: self.types[self.parts[pn]["type"]]["module"] for pn in slots}
+            self.spare_ft_ties = spare_ft.write_pads(slots, f, top_text, sv_id, masters)
+        except ValueError as exc:
+            raise BindError(str(exc)) from exc
         if P is not None and self._por_spec():
             # PATH-KV-POR 10-25: fail-closed die reset pad gate on the emitted RTL (por_gate.py G1-G4)
             import por_gate
@@ -3646,7 +3659,7 @@ class Binder:
         import straps as STR
         import landing_tie_children as LTC
         aud = STR.audit_top_ties(f.read_text(), man, {self.types[tn]["module"]: tn for tn in self.types},
-                                 landing_ties=LTC.landing_ties(self.types))
+                                 landing_ties=LTC.landing_ties(self.types), spare_ft_ties=self.spare_ft_ties)
         (out.parent / "bind_tie_audit.json").write_text(json.dumps(aud, indent=1) + "\n")
         if aud["verdict"] != "PASS":
             raise BindError(f"tie-off audit: {aud['reason']}")
@@ -5108,6 +5121,9 @@ class Binder:
                              (f"  // lane {L['lane']}" if L.get("lane") else "  // reset spine" if L.get("spine") else ""))
                 conn[sp].append((sb, nm))
                 conn[dp].append((db, nm))
+        import spare_ft
+        for p, sp in getattr(self, "spare_ft", {}).items():
+            conn[p].extend(spare_ft.connections(sp))
         for p in sorted(self.members):
             tn = self.parts[p]["type"]
             t = self.types[tn]
@@ -5589,8 +5605,12 @@ def cmd_bind(a):
     (out / "bind_tied.json").write_text(json.dumps(
         [dict(path=k[0], port=k[1], module=k[2], bits=[b[0] for b in v], values="".join(str(b[1]) for b in v),
               sources=sorted({b[2] for b in v})) for k, v in sorted(B.tied_pins.items())], indent=0) + "\n")
+    parent_ft_ties = [dict(type=B.parts[p]["type"], module=B.types[B.parts[p]["type"]]["module"], instance=p,
+                           port=n + "_i", scope="parent_spare_ft", bits=list(range(sl["width"] + 1)),
+                           n=sl["width"] + 1, value=0)
+                      for p, slots in sorted(getattr(B, "spare_ft", {}).items()) for n, sl in sorted(slots.items())]
     (out / "bind_declared_ties.json").write_text(json.dumps(
-        [dict(type=k[0], module=k[1], port=k[2], bits=sorted(set(v)), n=len(v)) for k, v in sorted(B.declared_tied.items())],
+        [dict(type=k[0], module=k[1], port=k[2], bits=sorted(set(v)), n=len(v)) for k, v in sorted(B.declared_tied.items())] + parent_ft_ties,
         indent=0) + "\n")
     rep, lat = B.report()
     if B.instance_path_params:
@@ -6805,6 +6825,11 @@ def cmd_kit_rtl(a):
     bports = [(m.group(1), int(m.group(2)) + 1 if m.group(2) else 1, m.group(3)) for m in
               re.finditer(r"^\s*(input|output)\s+wire\s+(?:\[(\d+):0\]\s+)?(\w+)", btxt, re.M)]
     bmap = {n: (d, w) for d, w, n in bports}
+    import spare_ft
+    try:
+        spare_ft.check_native_kit(spare_ft.declared(raw, {tn}), bmap, btxt, out)
+    except ValueError as exc:
+        raise BindError(f"kit-rtl {tn}: {exc}") from exc
     eps = gen_rtl.bus_epochs(P) if P else {}
     plan = []                                  # (dir, name, width incl epoch, data width, epoch?)
     for b in t.get("buses", []):

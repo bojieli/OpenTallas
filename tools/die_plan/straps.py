@@ -129,7 +129,7 @@ _INST_RE = re.compile(r"^\s*(\\?[A-Za-z_][\w$]*)\s*(?:#\s*\((?:[^()]|\([^()]*\))
 _CONN_RE = re.compile(r"\.\s*(\\?[\w$]+)\s*\(\s*(\d+\s*'\s*[bBhHdD]\s*[0-9a-fA-FxXzZ_]+|1'b[01])\s*\)")
 
 
-def audit_top_ties(top_text, manifest, module_type=None, landing_ties=None):
+def audit_top_ties(top_text, manifest, module_type=None, landing_ties=None, spare_ft_ties=None):
     """audit a bound die top: every literal constant on a partition instance pin must be a declared parent ID strap
     (strap_*) of that instance's type (binder manifest); any other literal FAILs.  module_type: {module: type}
     (default: module bt_<type>).  -> audit_ties-style result + rows [(inst, port, literal)] for tie_check_tcl."""
@@ -152,7 +152,7 @@ def audit_top_ties(top_text, manifest, module_type=None, landing_ties=None):
             if STRAP_RE.match(port) and port in decl.get(tn, {}) and len(literal_bits(lit)) == decl[tn][port]:
                 ok.append((f"{inst}.{port}", lit))
                 rows.append((inst, port, lit))
-            elif lt.get(tn, {}).get(port) == lit:
+            elif lt.get(tn, {}).get(port) == lit or (spare_ft_ties or {}).get((inst, port)) == lit:
                 ok.append((f"{inst}.{port}", lit))
                 rows.append((inst, port, lit))
             else:
