@@ -134,3 +134,8 @@
   S81: col_h9_r0_p1__t1__pva2e3974f src_manifest UNCLASSIFIED 7.5h, no relaunch, owner S81-DIE-R4 alive.
   S81: dsdv_slice_kv512_C__t1 placed/route held, DEAD-OWNER OPUS-FIX-S81-SLICEC no post 2h.
   QC: 3 UNCLASSIFIED other flow errors (sle_ctl padE0, sle_stm_v1, slw_hc2), owner FAIL-ROUTE-1115 alive; HEAD none.
+- 2026-11-20 11:50 PST 11:50 sweep: 496 rows, 13 flagged.
+  KV: kv3_hub_Wi 5.4h, kv3_pv_v8 5.7h, kv3_pc_v1__cl23f6a148 FAILED-NO-RELAUNCH (owners alive); kv3_hgi_v1, kv3_hub_Ei, qkd_pv_fin_s8_pin on dead FABLE-FIX-KV-HG/KV-D23-COMPOSE (WAIT-BIND).
+  QC: slw_hc2 (UNCLASSIFIED) and slw_st_a_v2 (global_place) FAILED-NO-RELAUNCH, owner FAIL-ROUTE-1115 alive.
+  S81: col_h9_r0_p1__t1__pva2e3974f 8.5h STALE/UNCLASSIFIED; dsdv_slice_kv512_C__t1 DEAD-OWNER; s81sl_leaf__t21, t26, svc_lo_dsdv_svc_rs__t6 UNOWNED.
+  HEAD: none flagged.

@@ -14007,3 +14007,8 @@ FAILED [AUTOPILOT f9d3d209a614] 2026-11-20 11:44:29 PST AUTOPILOT -> KIT-WAVE-12
   Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
 - 2026-11-20 11:48 PST NEEDS-LANE [FAIL-ROUTE-1115 -> COORD] FAIL-CLASS 3315da202b qwen_compute/place/FLOW tool / Tcl error @place: Error: global_place.tcl, N exact pa: 2 item(s), no RESULT/ACK from QC-PLAN-R3 in 69 min: slw_st_a_v1__clfc5867a6__pvf82a6c28, slw_st_a_v2__clf4365a62. COORD: start or assign a lane for this class; this relay does not repeat (class 3315da202b).
 - 2026-11-20 11:48 PST NEEDS-LANE [FAIL-ROUTE-1115 -> COORD] FAIL-CLASS 51c6869ebf qwen_compute/lec_tools/UNCLASSIFIED unclassified failure @lec_tools (see log): Connection to N.N: 1 item(s), no RESULT/ACK from QC-PLAN-R3 in 69 min: slw_hc2__cla3497502__cl16607c7a. COORD: start or assign a lane for this class; this relay does not repeat (class 51c6869ebf).
+- 2026-11-20 11:50 PST 11:50 sweep: 496 rows, 13 flagged.
+  KV: kv3_hub_Wi 5.4h, kv3_pv_v8 5.7h, kv3_pc_v1__cl23f6a148 FAILED-NO-RELAUNCH (owners alive); kv3_hgi_v1, kv3_hub_Ei, qkd_pv_fin_s8_pin on dead FABLE-FIX-KV-HG/KV-D23-COMPOSE (WAIT-BIND).
+  QC: slw_hc2 (UNCLASSIFIED) and slw_st_a_v2 (global_place) FAILED-NO-RELAUNCH, owner FAIL-ROUTE-1115 alive.
+  S81: col_h9_r0_p1__t1__pva2e3974f 8.5h STALE/UNCLASSIFIED; dsdv_slice_kv512_C__t1 DEAD-OWNER; s81sl_leaf__t21, t26, svc_lo_dsdv_svc_rs__t6 UNOWNED.
+  HEAD: none flagged.
