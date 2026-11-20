@@ -420,6 +420,29 @@ class MainTest(unittest.TestCase):
             self.assertEqual(len(calls), 1)
             self.assertIn('stop oth-ubuntu-1-2.scope', calls[0][1])
 
+    def test_independent_eco_is_not_stopped_when_source_wave_attempt_was_cancelled(self):
+        with tempfile.TemporaryDirectory() as d:
+            self._wave_state(d, reason="older plan event", **{"class": "SUPERSEDED"})
+            eco = self.W + "/eco_20261120_020253_1252148"
+            cases = (
+                row(cmd="python3 -I /home/ubuntu/opentallas-tools/qc-hold-0030-rt/tools/die_plan/eco_loop.py run --kit " + self.W),
+                row(id="oth-ubuntu-1104563-1795168723.scope [prd-eco_20261120_020253_1252148-i1t-1271562]"),
+                row(work=[eco + "/residual/i2r"], client_gone=True),
+            )
+            for candidate in cases:
+                candidate.update(idle_s=60, log=self.W + "/x.log", wave_paths=[self.W])
+                self.assertEqual(self.run_main([candidate], VERIFY_OK, True, d), [])
+
+    def test_independent_eco_still_uses_the_measured_hang_check(self):
+        with tempfile.TemporaryDirectory() as d:
+            self._wave_state(d)
+            r = row(cmd="python3 -I /tools/die_plan/eco_loop.py run --kit " + self.W,
+                    log=self.W + "/5_2_route.log", wave_paths=[self.W], stage="5_2_route")
+            self.assertEqual(self.run_main([r], dict(VERIFY_OK, cpu_delta_s=60), True, d), [])
+            calls = self.run_main([r], dict(VERIFY_OK, cpu_delta_s=0), True, d)
+            self.assertEqual(len(calls), 1)
+            self.assertIn("stop oth-ubuntu-1-2.scope", calls[0][1])
+
     def test_superseded_report_only_for_plan_current_no(self):
         with tempfile.TemporaryDirectory() as d:
             self._wave_state(d, status='RUNNING')
