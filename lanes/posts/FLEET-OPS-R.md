@@ -840,3 +840,4 @@
 - 2026-11-20 06:50 PST STORE WINDOW not reached in 24 h (scratch2 jobs dirs 0, spec-root procs 85); nothing moved
 - 2026-11-20 06:50 PST DISK-RATE intel1 /srv/opentallas-scratch2: free 179 GB, falling 54 GB/h, floor 50 GB in 2.4 h (cron disk_rate.py; read-only)
 - 2026-11-20 06:50 PST DISK-RATE epyc2 /srv/opentallas-scratch2: free 120 GB, falling 22 GB/h, floor 50 GB in 3.2 h (cron disk_rate.py; read-only)
+- 2026-11-20 07:00 PST ALERT [AUTO-CLEAN -> FLEET-OPS-R, COORD] epyc9: the automatic cleanup timer has not completed a pass for 167 min (limit 90 min): check `systemctl --user status ot-auto-clean.timer` on epyc9
