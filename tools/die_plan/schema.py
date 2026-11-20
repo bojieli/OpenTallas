@@ -1505,6 +1505,18 @@ SCHEMA["properties"]["clock"]["properties"]["ft_hop_lockup"] = {
 # QC-EVENT-S25 11-11 (QC-NK-HOLD ap2 claude/qc-nk-hold-ap2-1111@fc999610864d, COORD 17:10 APPROVED): plan
 # clock.core_input_lockup, read by bind.core_input_lockup / core_input_pipe and gen_phys.core_input_place (absent = off,
 # byte-identical kits).  The code read the key; the schema rejected it (clock additionalProperties false).
+# LOCKUP-STATION-1130 11-20 (station_rule.py derive / gen_phys.zl_lockup_spec): per type (exact name or 'prefix*') the
+# kit_zl_lockup spec of its measured cross-tap zero-logic capture classes; absent = off, byte-identical kits.
+_ZL_HOP = {"type": "object", "additionalProperties": False, "required": ["inst"], "properties": {
+    "inst": {"type": "string"}, "ports": {"type": "array", "items": _name},
+    "groups": {"type": "array", "items": {"type": "array", "items": _name}},
+    "types": {"type": "array", "items": _name}, "allow_missing": {"type": "boolean"}}}
+_ZL_REG = {"type": "object", "additionalProperties": False, "required": ["reg"], "properties": {
+    "reg": {"type": "string"}, "allow_missing": {"type": "boolean"}}}
+SCHEMA["properties"]["clock"]["properties"]["zl_lockup"] = {"type": "object", "additionalProperties": {
+    "type": "object", "additionalProperties": False, "properties": {
+        "guard": {"type": ["string", "null"]}, "note": {"type": "string"},
+        "hops": {"type": "array", "items": _ZL_HOP}, "regs": {"type": "array", "items": _ZL_REG}}}}
 SCHEMA["properties"]["clock"]["properties"]["core_input_lockup"] = {
     "type": "object", "additionalProperties": False, "required": ["modules"],
     "properties": {"modules": {"type": "object", "minProperties": 1, "additionalProperties": {

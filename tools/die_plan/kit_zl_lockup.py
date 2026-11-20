@@ -18,10 +18,19 @@ is never latched (the port loads its face flop directly).
 With "guard" (default "OT_ZL_LOCKUP") the latches sit under `ifdef <guard>` and the else branch is a plain wire, so
 the patched file without the define is the original circuit; the kit turns the latches on with -D<guard>.
 Never run = no change.  Spec (JSON): {"guard": "OT_ZL_LOCKUP", "hops": [{"inst": "<regex>", "ports": ["d", "ea"]} | {"inst": "<regex>",
-"groups": [["i"], ["iw"]], "types": [module types], "allow_missing": true}, ...]}  (first matching entry wins)
+"groups": [["i"], ["iw"]], "types": [module types], "allow_missing": true}, ...],
+"regs": [{"reg": "<regex>", "allow_missing": true}, ...]}  (first matching entry wins)
+LOCKUP-STATION-1130 11-20 (station_rule.py): "regs" entries latch FLATTENED registers of a bound netlist-style RTL
+(`reg [W-1:0] R; always @(posedge clk ..) .. R <= X;`): a register whose every non-constant assignment is the same wire
+expression X (identifier / slice / concatenation: zero logic) gets ot_dp_lk u_fl_<R> on X, clocked by the always
+block's posedge clock; a register with logic, two data sources, a port source or no posedge block is skipped and
+counted.  "guard": null emits the latches unguarded (gen_phys clock.zl_lockup: the kit takes no define).
+apply_kit(RTL_DIR, SPEC) runs the pass on every staged *.sv that has a match and adds the ot_dp_lk module when no
+staged file defines it.
 
 Usage: kit_zl_lockup.py RTL.sv SPEC.json [--out OUT.sv] [--report REPORT.json]
 """
+import collections
 import json
 import re
 import sys
@@ -141,10 +150,79 @@ def input_ports(txt, hdr):
     return set(re.findall(r"^\s*input\s+(?:wire|reg|logic)?\s*(?:\[[^\]]*\])?\s*([A-Za-z_]\w*)", hdr, re.M))
 
 
+CONST_RE = re.compile(r"^\s*(?:\d*'[sS]?[bBhHdDoO][0-9a-fA-FxXzZ_?]+|\d+|\{\s*\d+\s*\{[^{}]*\}\s*\})\s*$")
+LK_MODULE = """
+// ot_dp_lk: negative-level lockup latch (transparent while clk is LOW), kit_zl_lockup (LOCKUP-STATION-1130); same text as
+// gen_rtl.py.  LEC: tools/die_plan/lec.py latch_to_wire.
+(* keep_hierarchy, keep *)
+module ot_dp_lk #(parameter integer W = 1) (
+    input  wire         clk,
+    input  wire [W-1:0] d,
+    output reg  [W-1:0] q
+);
+    always @(*) if (!clk) q = d;  // Verilog-2001 latch (read_verilog without -sv; yosys infers $dlatch)
+endmodule
+"""
+
+
+def _reg_edits(txt, hdr_end, regs, ins, widths, used, latches, edits, skipped):
+    """flattened register captures (spec "regs"): edits + latches; returns the per-entry hit counts."""
+    hit = [0] * len(regs)
+    body = txt[hdr_end:]
+    names = sorted(set(re.findall(r"\breg\b\s*(?:\[[^\]]*\])?\s*([A-Za-z_]\w*)\s*;", body)))
+    alw = [(m.start(), m.group(1), m.group(2)) for m in
+           re.finditer(r"\balways\s*@\s*\(\s*(posedge|negedge)\s+([A-Za-z_]\w*)", body)]
+    for nm in names:
+        sel = next((i for i, (rx, _am) in enumerate(regs) if rx.fullmatch(nm)), None)
+        if sel is None:
+            continue
+        dm = re.search(r"\breg\b\s*(?:\[[^\]]*\])?\s*" + re.escape(nm) + r"\s*;", body)
+        pre_txt = body[:dm.start()]
+        depth = (len(re.findall(r"\bbegin\b", pre_txt)) - len(re.findall(r"\bend\b", pre_txt))
+                 + len(re.findall(r"\bgenerate\b", pre_txt)) - len(re.findall(r"\bendgenerate\b", pre_txt)))
+        if depth:
+            skipped["scope"] += 1                     # declared in a generate / named block: not visible at module end
+            continue
+        hit[sel] += 1
+        asg = [m for m in re.finditer(r"\b" + re.escape(nm) + r"\s*<=\s*([^;]+);", body)]
+        data = [m for m in asg if not CONST_RE.match(m.group(1))]
+        if not data:
+            skipped["const"] += 1
+            continue
+        exprs = {re.sub(r"\s+", "", m.group(1)) for m in data}
+        if len(exprs) != 1:
+            skipped["logic"] += 1
+            continue
+        x = data[0].group(1).strip()
+        try:
+            w = expr_width(x, widths)
+        except LkError:
+            skipped["logic"] += 1
+            continue
+        if w != widths.get(nm, w):
+            skipped["logic"] += 1
+            continue
+        if (re.match(r"[A-Za-z_]\w*", x.lstrip("{ ")) or [None])[0] in ins:
+            skipped["port"] += 1
+            continue
+        pre = [a for a in alw if a[0] < data[0].start()]
+        if not pre or pre[-1][1] != "posedge":
+            skipped["clock"] += 1
+            continue
+        ln = f"fl_{nm}"
+        while ln in used:
+            ln += "_x"
+        used.add(ln)
+        latches.append(dict(inst=f"u_{ln}", net=ln, width=w, src=x, capture=nm, ports=["<="], clk=pre[-1][2]))
+        for m in data:
+            edits.append((hdr_end + m.start(1), hdr_end + m.end(1), ln))
+    return hit
+
+
 def apply(txt, spec):
     guard = spec.get("guard", "OT_ZL_LOCKUP")
     hops = []
-    for h in spec["hops"]:
+    for h in spec.get("hops") or []:
         groups = h.get("groups") or [h["ports"]]
         types = set(h.get("types") or [])
         hops.append((re.compile(h["inst"]), [list(g) for g in groups], types, bool(h.get("allow_missing"))))
@@ -157,7 +235,7 @@ def apply(txt, spec):
     insts = instances(txt[hdr_end:])
     edits, latches, used = [], [], set()
     hit = {i: 0 for i in range(len(hops))}
-    skipped = dict(reset=0, port=0)
+    skipped = dict(reset=0, port=0, logic=0, const=0, clock=0, scope=0)
     for mt, params, name, s, e, lp in insts:
         if mt == "ot_dp_lk" or name.startswith("u_fl_"):
             continue
@@ -182,6 +260,9 @@ def apply(txt, spec):
                 if RESET_NET.fullmatch(x):
                     skipped["reset"] += 1
                     continue
+                if CONST_RE.match(x):
+                    skipped["const"] += 1
+                    continue
                 if (re.match(r"[A-Za-z_]\w*", x.lstrip("{ ")) or [None])[0] in ins:
                     skipped["port"] += 1
                     continue
@@ -198,7 +279,8 @@ def apply(txt, spec):
                 ln += "_x"
             used.add(ln)
             src = exprs[0] if len(exprs) == 1 else "{" + ", ".join(reversed(exprs)) + "}"
-            latches.append(dict(inst=f"u_{ln}", net=ln, width=tot, src=src, capture=name, ports=ports))
+            ck = cs["clk"][0] if "clk" in cs and re.fullmatch(r"[A-Za-z_]\w*", cs["clk"][0]) else "clk"
+            latches.append(dict(inst=f"u_{ln}", net=ln, width=tot, src=src, capture=name, ports=ports, clk=ck))
             lo = 0
             for p, w in zip(ports, ws):
                 if tot == 1:
@@ -210,24 +292,94 @@ def apply(txt, spec):
                 edits.append((cs[p][1], cs[p][2], sl))
                 lo += w
     for i, n in hit.items():
-        if n == 0:
+        if n == 0 and not hops[i][3]:
             raise LkError(f"spec hop {spec['hops'][i]['inst']!r} matched no instance")
+    regs = [(re.compile(r["reg"]), bool(r.get("allow_missing"))) for r in spec.get("regs") or []]
+    if regs:
+        rh = _reg_edits(txt, hdr_end, regs, ins, widths, used, latches, edits, skipped)
+        for i, n in enumerate(rh):
+            if n == 0 and not regs[i][1]:
+                raise LkError(f"spec reg {spec['regs'][i]['reg']!r} matched no register")
+    if not latches:
+        return txt, latches, skipped
     for a, b, sl in sorted(edits, reverse=True):
         txt = txt[:a] + sl + txt[b:]
     decl = [f"    // kit_zl_lockup (DIE-HEAD-86/SPN 11-08): {len(latches)} zero-logic hop lockup latches, "
-            f"{sum(l['width'] for l in latches)} bits; on with -D{guard}"]
+            f"{sum(l['width'] for l in latches)} bits; " + (f"on with -D{guard}" if guard else "unguarded")]
     for l in latches:
         decl.append(f"    wire [{l['width'] - 1}:0] {l['net']};  // kit_zl_lockup: {l['capture']}.{'+'.join(l['ports'])}")
-    body = [f"`ifdef {guard}",
-            "    // negative-level lockup latches (ot_dp_lk: transparent while clk is LOW), 0 cycles; clock_taps.tcl hangs",
-            "    // each u_fl_* latch on its LAUNCH flop's tap, face_flops.tcl places it at the hop midpoint"]
-    body += [f"    ot_dp_lk #(.W({l['width']})) {l['inst']} (.clk(clk), .d({l['src']}), .q({l['net']}));" for l in latches]
-    body.append("`else")
-    body += [f"    assign {l['net']} = {l['src']};" for l in latches]
-    body.append("`endif")
+    lk = ["    // negative-level lockup latches (ot_dp_lk: transparent while clk is LOW), 0 cycles; clock_taps.tcl hangs",
+          "    // each u_fl_* latch on its LAUNCH flop's tap, face_flops.tcl places it at the hop midpoint"]
+    lk += [f"    ot_dp_lk #(.W({l['width']})) {l['inst']} (.clk({l.get('clk', 'clk')}), .d({l['src']}), .q({l['net']}));"
+           for l in latches]
+    if guard:
+        body = [f"`ifdef {guard}"] + lk + ["`else"] + [f"    assign {l['net']} = {l['src']};" for l in latches] + ["`endif"]
+    else:
+        body = lk
     txt = txt[:hdr_end] + "\n" + "\n".join(decl) + txt[hdr_end:]
     txt = re.sub(r"(\n\s*endmodule\b)", lambda m: "\n" + "\n".join(body) + m.group(1), txt, count=1)
     return txt, latches, skipped
+
+
+def apply_kit(rtl_dir, spec):
+    """gen_phys entry (plan clock.zl_lockup, LOCKUP-STATION-1130): the pass on every staged *.sv / *.v of the kit that
+    has a match (an entry may match in one file only; an entry that matches in NO file fails closed unless
+    allow_missing).  Adds ot_dp_lk to the first patched file when no staged file defines it.  -> {file: stats}"""
+    files = sorted(Path(rtl_dir).glob("*.sv")) + sorted(Path(rtl_dir).glob("*.v"))
+    out, any_hit, patched = {}, set(), []
+    hop_rx = [re.compile(h["inst"]) for h in spec.get("hops") or []]
+    reg_rx = [re.compile(r["reg"]) for r in spec.get("regs") or []]
+    for f in files:
+        src = f.read_text(errors="replace")
+        if not re.search(r"\bmodule\b", src) or re.search(r"\bmodule\s+ot_dp_lk\b", src):
+            continue
+        sub = dict(spec, hops=[dict(h, allow_missing=True) for h in spec.get("hops") or []],
+                   regs=[dict(r, allow_missing=True) for r in spec.get("regs") or []])
+        words = set(re.findall(r"[A-Za-z_]\w*", src))
+        if not any(rx.fullmatch(w) for w in words for rx in hop_rx + reg_rx):
+            continue                                  # no name of this file can match: never parsed, never touched
+        # one pass per module of the file (a staged leaf file may hold several modules)
+        pieces, lat, sk, k = [], [], collections.Counter(), 0
+        for m in re.finditer(r"(?s)\bmodule\s+[A-Za-z_]\w*.*?\bendmodule\b", src):
+            pieces.append(src[k:m.start()])
+            chunk = m.group(0)
+            try:
+                ctxt, clat, csk = apply(chunk + "\n", sub)
+            except LkError:
+                if any(rx.search(chunk) for rx in hop_rx + reg_rx):
+                    raise
+                ctxt, clat, csk = chunk + "\n", [], {}
+            pieces.append(ctxt[:-1] if ctxt.endswith("\n") and not chunk.endswith("\n") else ctxt)
+            lat += clat
+            sk.update(csk)
+            k = m.end()
+        pieces.append(src[k:])
+        txt, sk = "".join(pieces), dict(sk)
+        if not lat:
+            continue
+        for l in lat:
+            for i, rx in enumerate(hop_rx):
+                if rx.fullmatch(l["capture"]):
+                    any_hit.add(("h", i))
+            for i, rx in enumerate(reg_rx):
+                if rx.fullmatch(l["capture"]):
+                    any_hit.add(("r", i))
+        tmp = f.with_name(f.name + ".zlk_tmp")
+        tmp.write_text(txt)
+        tmp.replace(f)
+        patched.append(f)
+        out[f.name] = dict(latches=len(lat), bits=sum(l["width"] for l in lat), skipped=sk)
+    for i, h in enumerate(spec.get("hops") or []):
+        if ("h", i) not in any_hit and not h.get("allow_missing"):
+            raise LkError(f"spec hop {h['inst']!r} matched no instance in {rtl_dir}")
+    for i, r in enumerate(spec.get("regs") or []):
+        if ("r", i) not in any_hit and not r.get("allow_missing"):
+            raise LkError(f"spec reg {r['reg']!r} matched no register in {rtl_dir}")
+    if patched and not any(re.search(r"\bmodule\s+ot_dp_lk\b", f.read_text(errors="replace")) for f in files):
+        with open(patched[0], "a") as fh:
+            fh.write(LK_MODULE)
+        out[patched[0].name]["ot_dp_lk_module"] = True
+    return out
 
 
 def main(argv):

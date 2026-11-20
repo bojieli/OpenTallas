@@ -837,6 +837,17 @@ def dly_spread_station_um(budgets, tn):
     return float(v[max(hit, key=len)]) if hit else None
 
 
+def zl_lockup_spec(raw, tn):
+    """plan clock.zl_lockup {type: kit_zl_lockup spec} (LOCKUP-STATION-1130, station_rule.py derive): launch-side lockup
+    latches on the measured cross-tap zero-logic capture classes of the type, applied to the staged kit RTL at GEN,
+    unguarded (no define).  Key = the exact type name, or a prefix ending in '*'.  Absent = None (kit unchanged)."""
+    v = ((raw or {}).get("clock") or {}).get("zl_lockup") or {}
+    if tn in v:
+        return v[tn]
+    hit = [b for b in v if b.endswith("*") and tn and str(tn).startswith(b[:-1])]
+    return v[max(hit, key=len)] if hit else None
+
+
 def dly_lockup_cfg(budgets, tn):
     """budgets.r_dly_lockup {type base: {"seg": N, "tail_groups": G}} (XTAP-C, FABLE-FIX-KV-PV 11-20, kit_dly_lockup.py): the pad delay
     lines of the types whose name starts with a listed base (longest base wins) are split into segments of <= N stages (default 8;
@@ -6885,6 +6896,15 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         dlk_rec = _DLK.apply_kit(kd / "rtl", core_types={mod for _i, mod, *_r in macros}, **dlk_cfg)
         (kd / "dly_lockup.json").write_text(json.dumps(dict(cfg=dlk_cfg, files=dlk_rec), indent=1) + "\n")
         print(f"gen phys: type {tn}: OT_DLY_LOCKUP {json.dumps(dlk_rec)}")
+    # LOCKUP-STATION-1130 (station_rule.py, plan clock.zl_lockup): launch-side lockup latches u_fl_* on the type's measured
+    # cross-tap zero-logic captures (kit_zl_lockup.apply_kit, unguarded); clock_taps.tcl hangs each on its launch tap,
+    # lec.py latch_to_wire.  0 cycles.  Absent = nothing.
+    zlk_spec = zl_lockup_spec(getattr(P, "raw", None), tn)
+    if zlk_spec:
+        import kit_zl_lockup as _ZLK
+        zlk_rec = _ZLK.apply_kit(kd / "rtl", dict(zlk_spec, guard=None))
+        (kd / "zl_lockup.json").write_text(json.dumps(dict(spec=zlk_spec, files=zlk_rec), indent=1) + "\n")
+        print(f"gen phys: type {tn}: OT_ZL_LOCKUP " + json.dumps({f: {k: r[k] for k in ("latches", "bits")} for f, r in zlk_rec.items()}))
     if rls_cells is not None:
         append_new_src(srcs, f"/work/rtl/{rls_cells.name}")
     # DIE-HEAD-53 11-01 (HEAD class LEP-BB): a hard macro instantiated with a parameter override (hd_lep0N
