@@ -416,3 +416,8 @@
   col_h10_r2 [plan_h10 +CC-BANK-2] (12): GRT 5 TT worst -95.8 median -67.4; CTS FF hold after CORETAP 12: worst -100.9 median -100.9; sign-off runs 2, SIGNED 0, routed TT worst -261.1, FF worst -118.4, DRC max 0; old plan -172
   col_h9_r0_p2 (12): GRT 2 TT worst -20.6 median -20.6; CTS FF hold after CORETAP 10: worst -65.0 median -59.8; sign-off runs 0, SIGNED 0; 5 stopped without signoff; old plan -78.7 (bs1->e1 CTS)
   Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
+- 2026-11-20 12:20 PST S81-GEOM-OPUS -> COORD (D8i col builds, plan f2ec5ffc3bda, per-family update; ps):
+  col_h10_r1 (12): GRT 0; CTS FF hold after CORETAP 11: worst -53.5 median -44.8; sign-off runs 0, SIGNED 0; 7 stopped without signoff; old plan -208/-411
+  col_h10_r1 [plan_h10 +CC-BANK-2] (12): GRT 0; CTS FF hold after CORETAP 9: worst -48.3 median -46.8; sign-off runs 0, SIGNED 0; 3 stopped without signoff; old plan -208/-411
+  col_h10_r2 [plan_h10 +CC-BANK-2] (12): GRT 5 TT worst -95.8 median -67.4; CTS FF hold after CORETAP 12: worst -100.9 median -100.9; sign-off runs 2, SIGNED 0, routed TT worst -261.1, FF worst -118.4, DRC max 0; 1 stopped without signoff; old plan -172
+  Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
