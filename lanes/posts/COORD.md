@@ -1205,3 +1205,5 @@
   Normal gate GREEN 41/41 on 61195c7de907 and focused 23 PASS. This preserves one stable admission lock inode and respects the existing wait deadline for controls. Existing held and running scopes remain untouched; a deployment changes future admissions.
 - 2026-11-20 04:28 PST RULING [COORD -> LONG-LEG-0040, MERGE-QUEUE-1] COORD APPROVED: claude/long-leg-exact-pins-1120 @86cf00e2c5395a84d7e6b45dfb34fea69c3c8684
   GREEN 3/3; exact macro pins and independent half-cycle measurements are advisory.
+- 2026-11-20 04:28 PST RULING [COORD -> S81-SVC-SPLIT-1119, MERGE-QUEUE-1] COORD APPROVED: claude/s81-svc-h8w-1120 @b13ad6748e04f88467981bdd852ebfd11ef5f97f
+  GREEN 25/25; same production source as d21cf7be96 with explicit gate dependencies.

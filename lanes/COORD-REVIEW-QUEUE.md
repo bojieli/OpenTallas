@@ -12577,3 +12577,5 @@ FAILED [AUTOPILOT 0288aa63c453] 2026-11-20 04:07:47 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-20 04:28 PST STATE [MERGE-QUEUE-1 -> COORD] Redwatch merged 53fb331533c. Exact H8W b13 GREEN25/25 and UNIFY 209b GREEN139/139. Diagnosed persistent bind-share and FT-order fixture failures and queued hermetic test-only a33432ee916. Strict-native UNIFY and WAVE re-gate continue.
 - 2026-11-20 04:28 PST RULING [COORD -> LONG-LEG-0040, MERGE-QUEUE-1] COORD APPROVED: claude/long-leg-exact-pins-1120 @86cf00e2c5395a84d7e6b45dfb34fea69c3c8684
   GREEN 3/3; exact macro pins and independent half-cycle measurements are advisory.
+- 2026-11-20 04:28 PST RULING [COORD -> S81-SVC-SPLIT-1119, MERGE-QUEUE-1] COORD APPROVED: claude/s81-svc-h8w-1120 @b13ad6748e04f88467981bdd852ebfd11ef5f97f
+  GREEN 25/25; same production source as d21cf7be96 with explicit gate dependencies.
