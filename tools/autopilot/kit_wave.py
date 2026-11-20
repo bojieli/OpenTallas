@@ -16267,7 +16267,7 @@ def current_norm_blocks(cfg, st):
     return out
 
 
-def current_keys(cfg, st):
+def current_keys(cfg, st, partition_types_only=False):
     """KIT-TRIAGE-1 11-01: item keys of the CURRENT plan of record per die (the keys select() would look up), from the
     cached plan probe (plan_names, raw block identity).  -> {die: set(keys)}; a die without a cached probe is absent
     (its rows stay plan_current '' = unknown).  419 FAIL rows on 11-01 04:0x were only ~142 on current blocks: the
@@ -16280,6 +16280,8 @@ def current_keys(cfg, st):
         if not p or not p.get("blocks"):
             continue
         names = core_view_names(dict(p["blocks"]), p.get("core_views"))
+        if partition_types_only and "types" in p:
+            names = {t: names[t] for t in p["types"] if t in names}
         out[die] = {item_key(die, d["event"], t, b) for t, b in names.items()}
     return out
 
@@ -16291,11 +16293,15 @@ def write_stages(st, ap_dir, cfg=None):
     superseded block/event (history only: count burn-down on 'yes' rows; its FAIL reads status/class SUPERSEDED), '' = no
     cached plan probe for the die."""
     cur = current_keys(cfg, st)
+    partitions = current_keys(cfg, st, partition_types_only=True)
     rows = ["\t".join(STAGE_COLS)]
     for r in sorted((st.get("items") or {}).values(), key=lambda r: (r.get("die", ""), r.get("item", ""))):
+        # A former partition must not match a current hard-core view through
+        # the combined block index, even if its name and raw block hash match.
+        current = partitions if (r.get("kind") or "type") == "type" else cur
         v = dict(r, plan_sha=(r.get("plan_sha") or "")[:12], block_sha=(r.get("block_sha") or "")[:12],
-                 plan_current=("" if r.get("die") not in cur else "yes" if item_key(
-                     r.get("die"), r.get("event"), r.get("item"), r.get("block_sha")) in cur[r.get("die")] else "no"),
+                 plan_current=("" if r.get("die") not in current else "yes" if item_key(
+                     r.get("die"), r.get("event"), r.get("item"), r.get("block_sha")) in current[r.get("die")] else "no"),
                  stage="queue:route" if r.get("status") == "ENQUEUED" else (r.get("stage") or ""),
                  updated=time.strftime("%Y-%m-%d %H:%M", time.localtime(r.get("updated") or 0)),
                  reason=(r.get("reason") or "")[:240])
