@@ -1,0 +1,540 @@
+{
+  "schema": "s81.svc_h8_width_event.v1",
+  "type_buses": {
+    "svc_hi_dsdv_svc_pvso_entry__t1": {
+      "attnh_i0": {
+        "old_width": 2133,
+        "width": 1077
+      },
+      "attn_i4": {
+        "old_width": 2663,
+        "width": 1607
+      },
+      "attn_o1": {
+        "old_width": 2938,
+        "width": 1882
+      },
+      "attnh_o0": {
+        "old_width": 2133,
+        "width": 1077
+      }
+    },
+    "svc_hi_dsdv_svc_pvso_entry__t2": {
+      "attnh_i0": {
+        "old_width": 2133,
+        "width": 1077
+      },
+      "attn_i4": {
+        "old_width": 3740,
+        "width": 2684
+      },
+      "attn_o1": {
+        "old_width": 2938,
+        "width": 1882
+      },
+      "attn_o4": {
+        "old_width": 4015,
+        "width": 2959
+      }
+    },
+    "svc_hi_dsdv_svc_rs__t1": {
+      "attnh_i0": {
+        "old_width": 2133,
+        "width": 1077
+      },
+      "attn_o0": {
+        "old_width": 2663,
+        "width": 1607
+      }
+    },
+    "svc_hi_dsdv_svc_rs__t2": {
+      "attnh_i0": {
+        "old_width": 2133,
+        "width": 1077
+      },
+      "attn_i2": {
+        "old_width": 2663,
+        "width": 1607
+      },
+      "attn_o0": {
+        "old_width": 2663,
+        "width": 1607
+      },
+      "attnh_o0": {
+        "old_width": 2133,
+        "width": 1077
+      }
+    },
+    "svc_hi_dsdv_svc_rs__t3": {
+      "attnh_i0": {
+        "old_width": 2133,
+        "width": 1077
+      },
+      "attn_i2": {
+        "old_width": 2938,
+        "width": 1882
+      },
+      "attn_o0": {
+        "old_width": 2133,
+        "width": 1077
+      },
+      "attnh_o0": {
+        "old_width": 2133,
+        "width": 1077
+      }
+    },
+    "svc_hi_dsdv_svc_rs__t4": {
+      "attn_i0": {
+        "old_width": 2133,
+        "width": 1077
+      },
+      "attn_i2": {
+        "old_width": 2938,
+        "width": 1882
+      },
+      "attnh_o0": {
+        "old_width": 2133,
+        "width": 1077
+      }
+    },
+    "svc_hi_dsdv_svc_rs__t5": {
+      "attn_i0": {
+        "old_width": 4015,
+        "width": 2959
+      },
+      "attn_i2": {
+        "old_width": 3740,
+        "width": 2684
+      },
+      "attn_o0": {
+        "old_width": 3740,
+        "width": 2684
+      },
+      "attn_o2": {
+        "old_width": 4015,
+        "width": 2959
+      }
+    },
+    "svc_hi_dsdv_svc_rs__t6": {
+      "attn_i0": {
+        "old_width": 4015,
+        "width": 2959
+      },
+      "attnh_i0": {
+        "old_width": 2133,
+        "width": 1077
+      },
+      "attn_o0": {
+        "old_width": 3740,
+        "width": 2684
+      },
+      "attnh_o0": {
+        "old_width": 2133,
+        "width": 1077
+      }
+    },
+    "svc_lo_dsdv_svc_rs__t1": {
+      "attnh_i0": {
+        "old_width": 2133,
+        "width": 1077
+      },
+      "attnh_o0": {
+        "old_width": 2133,
+        "width": 1077
+      }
+    },
+    "svc_lo_dsdv_svc_rs__t2": {
+      "attn_i0": {
+        "old_width": 3210,
+        "width": 2154
+      },
+      "attnh_i0": {
+        "old_width": 2133,
+        "width": 1077
+      },
+      "attn_o0": {
+        "old_width": 3210,
+        "width": 2154
+      },
+      "attnh_o0": {
+        "old_width": 2133,
+        "width": 1077
+      }
+    },
+    "svc_lo_dsdv_svc_rs__t3": {
+      "attnh_i0": {
+        "old_width": 2133,
+        "width": 1077
+      },
+      "attn_i1": {
+        "old_width": 3210,
+        "width": 2154
+      },
+      "attnh_o0": {
+        "old_width": 2133,
+        "width": 1077
+      },
+      "attn_o1": {
+        "old_width": 3210,
+        "width": 2154
+      }
+    },
+    "svc_lo_dsdv_svc_rs__t4": {
+      "attnh_i0": {
+        "old_width": 2133,
+        "width": 1077
+      },
+      "attn_o1": {
+        "old_width": 2133,
+        "width": 1077
+      }
+    },
+    "svc_lo_dsdv_svc_rs__t5": {
+      "attn_i0": {
+        "old_width": 2133,
+        "width": 1077
+      },
+      "attn_i2": {
+        "old_width": 3210,
+        "width": 2154
+      },
+      "attnh_o0": {
+        "old_width": 2133,
+        "width": 1077
+      },
+      "attn_o2": {
+        "old_width": 3210,
+        "width": 2154
+      }
+    },
+    "svc_lo_dsdv_svc_rs__t6": {
+      "attn_i0": {
+        "old_width": 3210,
+        "width": 2154
+      },
+      "attn_o0": {
+        "old_width": 3210,
+        "width": 2154
+      }
+    },
+    "svc_lo_dsdv_svc_rs__t7": {
+      "attnh_i0": {
+        "old_width": 2133,
+        "width": 1077
+      },
+      "attnh_o0": {
+        "old_width": 2133,
+        "width": 1077
+      }
+    },
+    "svc_lo_dsdv_svc_rs_w__t1": {
+      "attnh_o0": {
+        "old_width": 2133,
+        "width": 1077
+      }
+    }
+  },
+  "external_ports": {
+    "attnh__svc_3__svc_2__0": {
+      "old_width": 2133,
+      "width": 1077,
+      "src": {
+        "bus": "attnh_o0",
+        "part": "svc_3"
+      },
+      "dst": {
+        "bus": "attnh_i0",
+        "part": "svc_2"
+      }
+    },
+    "attnh__svc_7__svc_6__0": {
+      "old_width": 2133,
+      "width": 1077,
+      "src": {
+        "bus": "attnh_o0",
+        "part": "svc_7"
+      },
+      "dst": {
+        "bus": "attnh_i0",
+        "part": "svc_6"
+      }
+    },
+    "attnh__svc_9__svc_8__0": {
+      "old_width": 2133,
+      "width": 1077,
+      "src": {
+        "bus": "attnh_o0",
+        "part": "svc_9"
+      },
+      "dst": {
+        "bus": "attnh_i0",
+        "part": "svc_8"
+      }
+    },
+    "attnh__svc_15__svc_14__0": {
+      "old_width": 2133,
+      "width": 1077,
+      "src": {
+        "bus": "attnh_o0",
+        "part": "svc_15"
+      },
+      "dst": {
+        "bus": "attnh_i0",
+        "part": "svc_14"
+      }
+    },
+    "attnh__svc_5__svc_4__0": {
+      "old_width": 2133,
+      "width": 1077,
+      "src": {
+        "bus": "attnh_o0",
+        "part": "svc_5"
+      },
+      "dst": {
+        "bus": "attnh_i0",
+        "part": "svc_4"
+      }
+    },
+    "attn__svc_8__svc_10__0": {
+      "old_width": 2133,
+      "width": 1077,
+      "src": {
+        "bus": "attn_o1",
+        "part": "svc_8"
+      },
+      "dst": {
+        "bus": "attn_i0",
+        "part": "svc_10"
+      }
+    },
+    "attn__svc_1__svc_3__0": {
+      "old_width": 2663,
+      "width": 1607,
+      "src": {
+        "bus": "attn_o0",
+        "part": "svc_1"
+      },
+      "dst": {
+        "bus": "attn_i2",
+        "part": "svc_3"
+      }
+    },
+    "attn__svc_4__svc_6__0": {
+      "old_width": 3210,
+      "width": 2154,
+      "src": {
+        "bus": "attn_o0",
+        "part": "svc_4"
+      },
+      "dst": {
+        "bus": "attn_i1",
+        "part": "svc_6"
+      }
+    },
+    "attnh__svc_4__svc_5__0": {
+      "old_width": 2133,
+      "width": 1077,
+      "src": {
+        "bus": "attnh_o0",
+        "part": "svc_4"
+      },
+      "dst": {
+        "bus": "attnh_i0",
+        "part": "svc_5"
+      }
+    },
+    "attn__svc_3__svc_5__0": {
+      "old_width": 2663,
+      "width": 1607,
+      "src": {
+        "bus": "attn_o0",
+        "part": "svc_3"
+      },
+      "dst": {
+        "bus": "attn_i4",
+        "part": "svc_5"
+      }
+    },
+    "attnh__svc_2__svc_3__0": {
+      "old_width": 2133,
+      "width": 1077,
+      "src": {
+        "bus": "attnh_o0",
+        "part": "svc_2"
+      },
+      "dst": {
+        "bus": "attnh_i0",
+        "part": "svc_3"
+      }
+    },
+    "attnh__svc_6__svc_7__0": {
+      "old_width": 2133,
+      "width": 1077,
+      "src": {
+        "bus": "attnh_o0",
+        "part": "svc_6"
+      },
+      "dst": {
+        "bus": "attnh_i0",
+        "part": "svc_7"
+      }
+    },
+    "attnh__svc_10__svc_11__0": {
+      "old_width": 2133,
+      "width": 1077,
+      "src": {
+        "bus": "attnh_o0",
+        "part": "svc_10"
+      },
+      "dst": {
+        "bus": "attnh_i0",
+        "part": "svc_11"
+      }
+    },
+    "attnh__svc_0__svc_1__0": {
+      "old_width": 2133,
+      "width": 1077,
+      "src": {
+        "bus": "attnh_o0",
+        "part": "svc_0"
+      },
+      "dst": {
+        "bus": "attnh_i0",
+        "part": "svc_1"
+      }
+    },
+    "attnh__svc_14__svc_15__0": {
+      "old_width": 2133,
+      "width": 1077,
+      "src": {
+        "bus": "attnh_o0",
+        "part": "svc_14"
+      },
+      "dst": {
+        "bus": "attnh_i0",
+        "part": "svc_15"
+      }
+    },
+    "attn__svc_5__svc_7__0": {
+      "old_width": 2938,
+      "width": 1882,
+      "src": {
+        "bus": "attn_o1",
+        "part": "svc_5"
+      },
+      "dst": {
+        "bus": "attn_i2",
+        "part": "svc_7"
+      }
+    },
+    "attn__svc_7__svc_9__0": {
+      "old_width": 2133,
+      "width": 1077,
+      "src": {
+        "bus": "attn_o0",
+        "part": "svc_7"
+      },
+      "dst": {
+        "bus": "attn_i0",
+        "part": "svc_9"
+      }
+    },
+    "attn__svc_13__svc_15__0": {
+      "old_width": 4015,
+      "width": 2959,
+      "src": {
+        "bus": "attn_o2",
+        "part": "svc_13"
+      },
+      "dst": {
+        "bus": "attn_i0",
+        "part": "svc_15"
+      }
+    },
+    "attn__svc_11__svc_13__0": {
+      "old_width": 4015,
+      "width": 2959,
+      "src": {
+        "bus": "attn_o4",
+        "part": "svc_11"
+      },
+      "dst": {
+        "bus": "attn_i0",
+        "part": "svc_13"
+      }
+    },
+    "attn__svc_10__svc_12__0": {
+      "old_width": 3210,
+      "width": 2154,
+      "src": {
+        "bus": "attn_o2",
+        "part": "svc_10"
+      },
+      "dst": {
+        "bus": "attn_i0",
+        "part": "svc_12"
+      }
+    },
+    "attn__svc_15__svc_13__0": {
+      "old_width": 3740,
+      "width": 2684,
+      "src": {
+        "bus": "attn_o0",
+        "part": "svc_15"
+      },
+      "dst": {
+        "bus": "attn_i2",
+        "part": "svc_13"
+      }
+    },
+    "attn__svc_12__svc_10__0": {
+      "old_width": 3210,
+      "width": 2154,
+      "src": {
+        "bus": "attn_o0",
+        "part": "svc_12"
+      },
+      "dst": {
+        "bus": "attn_i2",
+        "part": "svc_10"
+      }
+    },
+    "attn__svc_6__svc_4__0": {
+      "old_width": 3210,
+      "width": 2154,
+      "src": {
+        "bus": "attn_o1",
+        "part": "svc_6"
+      },
+      "dst": {
+        "bus": "attn_i0",
+        "part": "svc_4"
+      }
+    },
+    "attn__svc_13__svc_11__0": {
+      "old_width": 3740,
+      "width": 2684,
+      "src": {
+        "bus": "attn_o0",
+        "part": "svc_13"
+      },
+      "dst": {
+        "bus": "attn_i4",
+        "part": "svc_11"
+      }
+    },
+    "attn__svc_11__svc_9__0": {
+      "old_width": 2938,
+      "width": 1882,
+      "src": {
+        "bus": "attn_o1",
+        "part": "svc_11"
+      },
+      "dst": {
+        "bus": "attn_i2",
+        "part": "svc_9"
+      }
+    }
+  },
+  "notes": "Exactly 25 gather connections change, including 14 compounded attn buses. Select OT_SVC_GP=1076. Regenerate landing groups, bus bit rows and LATCHECK from sealed source."
+}
