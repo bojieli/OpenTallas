@@ -41,6 +41,7 @@ import shutil
 import socket
 import sqlite3
 import stat
+import subprocess
 import sys
 import time
 
@@ -756,10 +757,42 @@ def fetch(snap_dir, from_host, copy=None):
             raise StoreError(f"KIT-SNAP FETCH failed; partial retained at {partial}: {exc}") from exc
 
 
-def snap_gc(snap_root, keep_days=SNAP_KEEP_DAYS, apply=False, now=None, log=print):
-    """delete snapshots no item used for keep_days (.used mtime); dry run unless apply.  Blobs follow the store gc."""
+def live_snap_ids(snap_root, proc="/proc"):
+    """FLEET-OPS-R2 11-20: snapshot ids named by a running process (cmdline, environ, cwd, open fds) or a queued ot-run job's argv/env; those are never collected."""
+    ids, rx = set(), re.compile(re.escape(snap_root.rstrip("/")) + r"/([0-9a-f]{40})")
+    try:
+        pids = [p for p in os.listdir(proc) if p.isdigit()]
+    except OSError:
+        raise StoreError("snap gc: /proc unreadable, live snapshots unknown")
+    for p in pids:
+        for f in ("cmdline", "environ"):
+            try:
+                ids.update(rx.findall(open(f"{proc}/{p}/{f}", "rb").read().decode("utf-8", "replace").replace("\0", " ")))
+            except OSError:
+                pass
+        for l in ("cwd",):
+            try:
+                ids.update(rx.findall(os.readlink(f"{proc}/{p}/{l}")))
+            except OSError:
+                pass
+        try:
+            for fd in os.listdir(f"{proc}/{p}/fd"):
+                try:
+                    ids.update(rx.findall(os.readlink(f"{proc}/{p}/fd/{fd}")))
+                except OSError:
+                    pass
+        except OSError:
+            pass
+    return ids
+
+
+def snap_gc(snap_root, keep_days=SNAP_KEEP_DAYS, apply=False, now=None, log=print, live=None):
+    """delete snapshots no item used for keep_days (.used mtime) and no running process names; dry run unless apply.  Blobs follow the store gc.
+    A snapshot is a cache of the sha-addressed store (kit_snap rebuilds it from the blobs at the next launch), so the window is hours, not weeks: one snapshot per distinct input set
+    is 6-10 GB and ~150 are made per day per host (intel1 301 / epyc2 188 snapshots = 300-420 GB on 11-20 with this gc never scheduled)."""
     now = now or time.time()
-    out = {"snap_root": snap_root, "kept": 0, "delete": 0, "apply": apply}
+    live = live_snap_ids(snap_root) if live is None else live
+    out = {"snap_root": snap_root, "kept": 0, "delete": 0, "apply": apply, "live": 0}
     for n in sorted(os.listdir(snap_root)) if os.path.isdir(snap_root) else []:
         d = os.path.join(snap_root, n)
         if not os.path.isdir(d) or not re.fullmatch(r"[0-9a-f]{40}", n):
@@ -772,8 +805,12 @@ def snap_gc(snap_root, keep_days=SNAP_KEEP_DAYS, apply=False, now=None, log=prin
         if now - used <= keep_days * 86400:
             out["kept"] += 1
             continue
+        if n in live:
+            out["kept"] += 1; out["live"] += 1
+            continue
         out["delete"] += 1
         if apply:
+            subprocess.run(["find", d, "-type", "d", "-exec", "chmod", "u+w", "{}", "+"], check=False)
             shutil.rmtree(d)
             for x in (d + ".lock",):
                 if os.path.exists(x):

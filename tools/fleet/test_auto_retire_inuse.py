@@ -80,5 +80,18 @@ class InUse(unittest.TestCase):
         self.assertIn("-mtime -1", sh)
 
 
+
+
+class SharedPool(unittest.TestCase):
+    def test_kw45_children_are_live_only_by_their_own_path(self):
+        d = tempfile.mkdtemp(); proc = os.path.join(d, "proc"); os.makedirs(proc + "/7")
+        claude = os.path.join(d, "claude"); os.makedirs(claude + "/kw45/snap_a"); os.makedirs(claude + "/kw45/src_old"); os.makedirs(claude + "/lane1/x"); os.makedirs(claude + "/lane1/y")
+        open(proc + "/7/cmdline", "wb").write((claude + "/kw45/snap_a/f\0" + claude + "/lane1/x/g\0").encode())
+        live = ar.LiveRefs(claude, proc=proc)
+        self.assertEqual(live.hit(claude + "/kw45/src_old"), "")             # FLEET-OPS-R2: an unreferenced pool tree is not kept by its neighbour
+        self.assertTrue(live.hit(claude + "/kw45/snap_a"))
+        self.assertTrue(live.hit(claude + "/lane1/y"))                       # a real lane stays whole
+
+
 if __name__ == "__main__":
     unittest.main()

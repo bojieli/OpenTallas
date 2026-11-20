@@ -300,6 +300,11 @@ def guard_with_protected_dbs(g, dbs):
     return g
 
 
+# FLEET-OPS-R2 11-20: kw45 is the shared pool of die source trees, not one lane.  The lane-root rule below treated every src_* tree as "a child of a lane that holds a live ref" the moment
+# ANY job used kw45/snap_* (always), so auto-retire refused all 77 trees on intel1 ("live input") and deleted 0 while the disk fell 44 GB/h.  A pool child is live only by its own path.
+SHARED_POOLS = frozenset({"kw45"})
+
+
 class LiveRefs:
     """LIVE-INPUT GUARD (COORD 11-18: 03:11 UTC epyc8, s81-die-r3-e8/gitshim and /d8t went on age alone, gitshim was a live input of S81 D8f bind r3): every absolute path a running
     process names - cmdline args, environment values (PATH / colon lists split), cwd, exe, root, open fd and map targets, mount sources - and so every queued ot-run job's argv and env (a waiter is a
@@ -359,7 +364,7 @@ class LiveRefs:
                 return r
         if path.startswith(self.claude):
             rel = path[len(self.claude):].split("/")
-            if len(rel) == 2:                               # claude/<lane>/<child>: any live ref inside the lane root keeps its children
+            if len(rel) == 2 and rel[0] not in SHARED_POOLS:   # claude/<lane>/<child>: any live ref inside the lane root keeps its children
                 root = self.claude + rel[0] + "/"
                 for r in self.refs:
                     if r.startswith(root):

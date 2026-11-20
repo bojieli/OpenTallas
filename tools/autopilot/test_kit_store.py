@@ -386,6 +386,18 @@ class Snap(unittest.TestCase):
         KS.snap_gc(self.snaps, apply=True, now=late, log=lambda *x: None)
         self.assertFalse(os.path.exists(a["dir"]))
 
+    def test_snap_gc_keeps_a_snapshot_a_live_process_names_and_takes_hours(self):
+        a = self.snap()
+        soon = time.time() + 7 * 3600
+        self.assertEqual(KS.snap_gc(self.snaps, keep_days=0.25, now=soon, live={a["id"]}, log=lambda *x: None)["delete"], 0)
+        self.assertEqual(KS.snap_gc(self.snaps, keep_days=0.25, now=soon, live=set(), log=lambda *x: None)["delete"], 1)
+
+    def test_live_snap_ids_reads_a_proc_stand_in(self):
+        pr = os.path.join(self.t if hasattr(self, "t") else tempfile.mkdtemp(), "proc123"); os.makedirs(pr + "/42")
+        sid = "a" * 40
+        open(pr + "/42/cmdline", "wb").write(("x\0" + self.snaps + "/" + sid + "/root/f\0").encode())
+        self.assertEqual(KS.live_snap_ids(self.snaps, proc=pr), {sid})
+
 
 def re_hex(n):
     import re
