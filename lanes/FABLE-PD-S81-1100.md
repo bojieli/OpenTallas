@@ -19,7 +19,7 @@ J5 state at 10:44 (V): repaired strict bind running, 0 EMIT, 0 ERROR in `gate_r5
 |---|---|---|---|
 | `die.reach_um`, `budgets.ft_station_max_um`, `core_internal_reach_um` | 405 | 405 | no `cbc` key in the plan (V) |
 | Reset collector trees: `reach_um` / worst hop | 405 / 380-388 | 300 / 275 (seqhost 296, serdes 287; leaf 180 / 155) | 0 trees over 300 (V) |
-| `internal_stations` rows with a leg over 300 | 5,408 of 24,808 | 8,064 of 24,814 | 327 of 395 types; max 404.9 (V) |
+| `internal_stations` rows with a leg over 300 | 5,408 of 24,788 | 8,064 of 24,814 | 327 of 395 types; max 404.9 (V) |
 | ... of which leaf | 4,335 | 7,125 | register-to-register legs over 300: 1,991 -> 3,190 of 31,832 (V) |
 | `ft_slots` station-to-station legs over 300 | 3,279 of 5,140 | 3,279 of 5,140 | leaf 1,830, slice_station 847, svc 161; unchanged (V) |
 | Legs over the 405 check | 1 | 1 | `dsdv_slice_iq_C__t1` `bus:leafdn_o0` legs 296 / 416 (V) |
@@ -33,7 +33,7 @@ Limit of this count: it is plan geometry. The reach estimator does not count cor
 - `reset.relay_lockup` (negedge relay types) is the same 184-type list in D8i and J5 (V). It was derived from the plain-relay hop hold estimate at the 380 um hop. The hop is now 275 um, about 68 ps less wire at 0.65 ps/um (I). The list was not re-derived.
 - 38 col trees changed form (V): D8i trees read `relay_lockup: negedge` on col_h9_r1 (9), col_h9_r2 (16), col_h9_r0_p2 (12), col_h10_r0_p1 (6), col_h10_r2 (4), none of them in the die list; the J5 trees of those families read `null` (6, 11, 12, 6, 3). Either the D8i trees were stale or J5 turns negedge reset relays into plain ones on shorter hops. The two J6 masters are in this set.
 - The plan has no data lockup anywhere: no `lockup` / `latch` key outside the reset tree, no `ZL` define (V). The `bin -> lpad` latch exists only in the two private J6 masters (R, S81-DIE-R4).
-- Clock taps: J5 adds 617 taps on five slice C types (c1x 464 -> 963 over 9 types, iq 59 -> 177) and 78 on col_h9_r0 / h10_r0_p1; leaf stays at 5,294 (V). Slice C keeps `tap_max_sinks` 1500; the row file reports max load 1,289 on c1x_C__t1 against the 1,000 cap, 993-998 on the other four (R, OPUS-FIX-S81-SLICEC rows). c1x t3 / t4 / t5 / t7 / t10 got depth rows but no tap rows.
+- Clock taps: J5 adds 617 taps on five slice C types (c1x 464 -> 963 over 9 types, iq 59 -> 177) and 90 on col_h9_r0 / h10_r0_p1; leaf stays at 5,294 (V). Slice C keeps `tap_max_sinks` 1500; the row file reports max load 1,289 on c1x_C__t1 against the 1,000 cap, 993-998 on the other four (R, OPUS-FIX-S81-SLICEC rows). c1x t3 / t4 / t5 / t7 / t10 got depth rows but no tap rows.
 - Measured hold on D8i col kits (R, S81-GEOM-OPUS 10:05; V on `~/s81-geom-opus-d8i-watch/cur.sorted`): col_h9_r0 26 kits with a CTS FF hold value, -47.3 to -88.4 ps, 0 signed; col_h10_r0_p1 -52.3; col_h10_r1 -46.8 median; col_h10_r2 -94.7 median, routed FF -118.4; col_h9_r1 -76.8 median, routed FF -164.1.
 
 ### 1.3 Leaf congestion bands: J5 does not address them, it loads them
