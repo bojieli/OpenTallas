@@ -131,3 +131,18 @@ def test_apply_keeps_added_taps_legal_against_grid_taps_and_halos():
         x, y = a["xy"]
         assert all(abs(x - p) >= clear or abs(y - q) >= clear for p, q in grid)
         assert not any(x0 < x < x1 and y0 < y < y1 for x0, y0, x1, y1 in B)
+
+
+def test_cli_apply_runs_isolated(tmp_path):
+    """python3 -I (the lane rule) leaves the script directory off sys.path: the tap rule must still import schema"""
+    P = plan()
+    t = P["partition_types"]["ot_s81sl_leaf__t99"]
+    o = t["hard_cores"][4]["origin_um"]
+    t["clock"] = {"tap_mode": "grid+explicit", "added_taps": [{"name": "clk_t9", "xy": [o[0] + L + 20.0, o[1] + 50.0]}]}
+    (tmp_path / "p.json").write_text(json.dumps(P))
+    (tmp_path / "seed.json").write_text(json.dumps({"ot_s81sl_leaf__t99": {
+        "u_lf.u_vp.g_ln[3].u_l": {"origin_um": [o[0] + 30.24, o[1]], "orient": "MX"}}}))
+    r = subprocess.run([sys.executable, "-I", str(HERE / "s81_hi_corridor.py"), "apply", str(tmp_path / "p.json"),
+                        "--seed", str(tmp_path / "seed.json"), "--out", str(tmp_path / "o.json")], capture_output=True, text=True)
+    assert r.returncode == 0, r.stderr[-600:]
+    assert "clk_t9" in r.stdout

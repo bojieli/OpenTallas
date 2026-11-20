@@ -386,6 +386,10 @@ def _tap_rule(t, budgets=None):
     """the bind's own added-tap rule (taps.grid_explicit_sites): clear = schema.type_tap_clear, obstacles =
     placement_obstacles.placement_boxes(halo=clear) (every placed macro and probe blockage, not only hard_cores), and the
     R4 grid taps of the type AS IT IS NOW (schema._grid_taps: a grid tap moves when a core moves under it)."""
+    import os
+    here = os.path.dirname(os.path.abspath(__file__))
+    if here not in sys.path:                    # python3 -I leaves the script directory off sys.path
+        sys.path.insert(0, here)
     import schema
     from placement_obstacles import placement_boxes
 
