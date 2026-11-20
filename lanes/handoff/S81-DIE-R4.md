@@ -66,3 +66,12 @@ All relaunch after the 405 reach override (lever 1) lands for D8i.
   The old j5_chain/j5_apply exited at CHAIN_STOP.
 - Leaf t21 (a13) and t26 (a6) on D8i: GEOM VERDICT ISSUES-ACCEPT posted, released to route. No hold count is available at placement.
 - svc_lo_dsdv_svc_rs__t6 is covered by FABLE-FIX-S81-SVC-R2.
+
+## 11-20 13:14 J5 APPLIED
+- S81 live = event 224567138ab, src kw45/src_s81_pin_3c913dbdfb23_d8j5_1117_work, bind ..._d8j5_1117_work_bind_11201213, manifest c75b12bc6707.
+  Receipt lanes/handoff/s81_atomic_apply_1795209203163827642.json; candidate lanes/handoff/S81_D8J5_source_candidate_1120.json.
+- Hold_items: 76 (col_h9_r1__*, col_h9_r2__* for the J6 masters; every ot_s81sl_leaf__* except representative t7).
+- NEXT: read the t7 J5 kit GRT at iteration 10. If overflow is falling, release the leaf holds via kit_wave_edit (set /dies/s81/hold_items to just the 2 col patterns).
+  If it is flat, keep the hold and fold the leaf spread rows into J6 (item 1).
+- The pack chain stopped once on an ssh argv quoting bug in mk_cand_d8j5.py (fixed: script piped over stdin). It resumed via j5_tail.sh / j5_apply3.sh.
+- Lockup subagent ended with jobs still queued: LEC, envelope synths, placement measurement. Paths are under epyc8 s81-die-r4-e8/j6_lockup.
