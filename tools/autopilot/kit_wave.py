@@ -4539,14 +4539,16 @@ def stops_off_cell_env(cfg, die, env):
 def item_gen_tools_manifest(d, item):
     """Select the source-tree tools for one item and immutable event snapshot.
 
-    item_inputs[item].gen_tools_pin names both event and src_manifest_hash.
-    The coordinator supplies it after replaying GEN with the source tools.
+    item_inputs[item].gen_tools_pin names the event, source manifest, and
+    exact sealed bind path used by the source-tools GEN replay.
     """
     inputs = (d.get("item_inputs") or {}).get(item) or {}
     pin = inputs.get("gen_tools_pin")
     source = inputs.get("src_manifest_hash") or d.get("src_manifest_hash")
-    if (source and d.get("event") and isinstance(pin, dict) and pin.get("event") == d["event"]
-            and pin.get("src_manifest_hash") == source):
+    bind = (inputs.get("kit_rtl") or {}).get("bind_out", (d.get("kit_rtl") or {}).get("bind_out"))
+    if (source and d.get("event") and isinstance(bind, str) and os.path.isabs(bind)
+            and isinstance(pin, dict) and pin.get("event") == d["event"]
+            and pin.get("src_manifest_hash") == source and pin.get("bind_out") == bind):
         return source
     return ""
 

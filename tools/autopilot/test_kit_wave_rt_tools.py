@@ -35,21 +35,26 @@ class SchedulerRt(unittest.TestCase):
             self.assertEqual(KW.rt_tools_fields(cfg, "qc"), {})
             self.assertFalse(KW.tool_skew_refuse(None, cfg, {}, "s81"))
 
-    def test_item_pin_matches_only_its_event_and_effective_source(self):
+    def test_item_pin_matches_only_its_event_source_and_effective_bind(self):
         source = "c" * 64
-        d = {"event": "E1", "src_manifest_hash": "d" * 64,
+        d = {"event": "E1", "src_manifest_hash": "d" * 64, "kit_rtl": {"bind_out": "/x/bind"},
              "item_inputs": {"t": {"src_manifest_hash": source,
-                                   "gen_tools_pin": {"event": "E1", "src_manifest_hash": source}}}}
+                                   "gen_tools_pin": {"event": "E1", "src_manifest_hash": source, "bind_out": "/x/bind"}}}}
         self.assertEqual(KW.item_gen_tools_manifest(d, "t"), source)
         self.assertEqual(KW.item_gen_tools_manifest(d, "other"), "")
         self.assertEqual(KW.item_gen_tools_manifest(dict(d, event="E2"), "t"), "")
+        self.assertEqual(KW.item_gen_tools_manifest(dict(d, kit_rtl={"bind_out": "/x/next"}), "t"), "")
+        d["item_inputs"]["t"]["kit_rtl"] = {"bind_out": "/x/override"}
+        self.assertEqual(KW.item_gen_tools_manifest(d, "t"), "")
+        d["item_inputs"]["t"]["gen_tools_pin"]["bind_out"] = "/x/override"
+        self.assertEqual(KW.item_gen_tools_manifest(d, "t"), source)
         d["item_inputs"]["t"]["src_manifest_hash"] = "e" * 64
         self.assertEqual(KW.item_gen_tools_manifest(d, "t"), "")
 
     def test_item_pin_rekeys_gen_and_keeps_late_flow_on_runtime(self):
         source = "a" * 64
-        d = {"event": "E1", "src_manifest_hash": source,
-             "item_inputs": {"t": {"gen_tools_pin": {"event": "E1", "src_manifest_hash": source}}}}
+        d = {"event": "E1", "src_manifest_hash": source, "kit_rtl": {"bind_out": "/x/bind"},
+             "item_inputs": {"t": {"gen_tools_pin": {"event": "E1", "src_manifest_hash": source, "bind_out": "/x/bind"}}}}
         cfg = {"dies": {"s81": d}}
         for rt in ("runtime-before", "runtime-after"):
             with mock.patch.object(KW, "exec_family_digests", return_value={"gen": rt, "kit": rt, "flow": rt}), \
@@ -66,7 +71,7 @@ class SchedulerRt(unittest.TestCase):
         source = "c" * 64
         d = {"event": "E1", "src_manifest_hash": source, "src": "/x/src", "plan": "/x/plan",
              "kit_rtl": {"mode": "bind", "bind_out": "/x/bind"},
-             "item_inputs": {"t": {"gen_tools_pin": {"event": "E1", "src_manifest_hash": source}}}}
+             "item_inputs": {"t": {"gen_tools_pin": {"event": "E1", "src_manifest_hash": source, "bind_out": "/x/bind"}}}}
         calls = {}
 
         def probe(host, code, args, timeout):
