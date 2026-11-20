@@ -129,3 +129,8 @@
   KV: kv3_hub_Wi FAILED other flow error 3.4h and kv3_pv_v8 bind stale vs plan 3.7h, both FAILED-NO-RELAUNCH, owner KV-PLAN-R1 alive (posted 09:35).
   S81: col_h9_r0_p1__t1__pva2e3974f FAILED src_manifest UNCLASSIFIED 6.5h (owner FAIL-ROUTE-1115, posted 09:28, no relaunch); col_h9_r0_p3__t1__cl31d0dc4b cancelled-superseded STALE 6.0h (PROGRESS-WATCH alert only).
   S81 col_h9_r0_p6__t1__pv0012ba28 cancelled-superseded 2h UNOWNED. HEAD hd_lep0N running 13h, owned (GRT-TRIAGE/HEAD-R14). QC: none flagged; no reset-identity rows flagged.
+- 2026-11-20 10:50 PST 10:50 sweep: 8 flagged of ~500 rows, owners incl QC-PLAN-R5, FLEET-WATCH-1015, FABLE-PD-S81-1100.
+  KV: kv3_hub_Wi other flow error 4.4h, kv3_pv_v8 bind stale 4.7h: FAILED-NO-RELAUNCH, owners alive (KV-PLAN-R1, PROGRESS-WATCH).
+  S81: col_h9_r0_p1__t1__pva2e3974f src_manifest UNCLASSIFIED 7.5h, no relaunch, owner S81-DIE-R4 alive.
+  S81: dsdv_slice_kv512_C__t1 placed/route held, DEAD-OWNER OPUS-FIX-S81-SLICEC no post 2h.
+  QC: 3 UNCLASSIFIED other flow errors (sle_ctl padE0, sle_stm_v1, slw_hc2), owner FAIL-ROUTE-1115 alive; HEAD none.
