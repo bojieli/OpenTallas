@@ -1,0 +1,75 @@
+{
+ "advisory": [
+  "contained",
+  "hashes",
+  "pre_g0",
+  "schema"
+ ],
+ "checks": {
+  "contained": {
+   "verdict": "FAIL",
+   "why": "no PG_STATIC line (rc 1): ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<string>\", line 387, in run_static\n    bp = check_bound_params(tree, bind_out)\n  File \"<string>\", line 338, in check_bound_params\n    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / \"die_plan\"))\n                                ^^^^^^^^\nNameError: name '__file__' is not defined. Did you mean: '__name__'?\n"
+  },
+  "dry_gen": {
+   "dir": "/home/ubuntu/.local/state/publish-gate/qwen_kvsys/dc58066d4f79/kv3_hg_v1",
+   "gen_host": "epyc8",
+   "item": "kv3_hg_v1",
+   "kind": "type",
+   "origin": "/home/ubuntu/.local/state/publish-gate/qwen_kvsys/dc58066d4f79/kv3_hg_v1/published_gen_origin.json",
+   "origin_sha256": "749386c5824c8103b8aa3ed560af2cfdb0068e1880d8b78f5b17e9486fb0ec98",
+   "preflight_fail_advisory": null,
+   "proof_kind": "published-gen",
+   "rc": 0,
+   "result": "DRY-PASS",
+   "result_sha256": "3eae89eaeafef9ce66cd232febdb0b1ef6ae3cb898df84de90fef61b7ac38daa",
+   "spec_sha256": "fee54bc480cb3a682c40e35a34c8faf33b82ab38eb3b132137f6165e86586acc",
+   "spec_src": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg11_a5a8c6b9_tdcd5636_d25e",
+   "stage": "preflight",
+   "unit_log_sha256": "692fdb2834aef543b91ff8e60278060647b3b7d8a4d025177cef2bc58c721762",
+   "verdict": "PASS"
+  },
+  "hashes": {
+   "verdict": "FAIL",
+   "why": "no PG_STATIC line (rc 1): ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<string>\", line 387, in run_static\n    bp = check_bound_params(tree, bind_out)\n  File \"<string>\", line 338, in check_bound_params\n    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / \"die_plan\"))\n                                ^^^^^^^^\nNameError: name '__file__' is not defined. Did you mean: '__name__'?\n"
+  },
+  "pre_g0": {
+   "verdict": "FAIL",
+   "why": "no PG_STATIC line (rc 1): ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<string>\", line 387, in run_static\n    bp = check_bound_params(tree, bind_out)\n  File \"<string>\", line 338, in check_bound_params\n    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / \"die_plan\"))\n                                ^^^^^^^^\nNameError: name '__file__' is not defined. Did you mean: '__name__'?\n"
+  },
+  "schema": {
+   "verdict": "FAIL",
+   "why": "no PG_STATIC line (rc 1): ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<string>\", line 387, in run_static\n    bp = check_bound_params(tree, bind_out)\n  File \"<string>\", line 338, in check_bound_params\n    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / \"die_plan\"))\n                                ^^^^^^^^\nNameError: name '__file__' is not defined. Did you mean: '__name__'?\n"
+  }
+ },
+ "die": "qwen_kvsys",
+ "foreign_tree_scan": {
+  "asbuilts": [
+   "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg11_a5a8c6b9_tdcd5636_d25e_bind_1120042203/asbuilt_manifest_injected.json"
+  ],
+  "bind_out": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg11_a5a8c6b9_tdcd5636_d25e_bind_1120042203",
+  "files": [
+   "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg11_a5a8c6b9_tdcd5636_d25e/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json",
+   "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg11_a5a8c6b9_tdcd5636_d25e_bind_1120042203/bind.f",
+   "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg11_a5a8c6b9_tdcd5636_d25e_bind_1120042203/asbuilt_manifest_injected.json"
+  ]
+ },
+ "gate_s": 4159.0,
+ "hosts": [
+  "epyc8",
+  "epyc9",
+  "epyc10",
+  "intel1",
+  "epyc2",
+  "epyc7"
+ ],
+ "item": "kv3_hg_v1",
+ "manifest_hash": "dc58066d4f79ee8c9a986cdc3bdd32a5a627d0bce46c620ae84a0b9fbee52cb1",
+ "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg11_a5a8c6b9_tdcd5636_d25e/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+ "plan_sha256": "a5a8c6b96e5f2d2b351ac4222c90474f6f9946d363c4a6755ac92558a1263c40",
+ "rows_proofs": [],
+ "schema": "opentallas.publish_gate.v1",
+ "static_s": 1504.2,
+ "t": 1795149680.8837752,
+ "tree": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg11_a5a8c6b9_tdcd5636_d25e",
+ "verdict": "FAIL"
+}
