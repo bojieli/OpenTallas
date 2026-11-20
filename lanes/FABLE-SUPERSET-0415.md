@@ -345,3 +345,20 @@ Rows for the lanes:
 Expected after bind + member gen + synth: 3 hash groups for 127 types.
 
 Review of UNIFY-TOOLS pushes (spec fit): none on main yet at 03:0x. Checks I will apply to each push: (1) spare ends are declared on the type row and per instance, never inferred; (2) a spare input is tied at the parent and appears in `bind_declared_ties.json`, no tie cell inside the type; (3) types without the key are byte-identical; (4) `type_pins` / G0 compare the full type pin table; (5) the three classes above bind to one module each with exactly the listed ties; (6) no outline or pin-window change on any member.
+
+### 10.8 Review of UNIFY-TOOLS push 1a (main 975c3575d70) and a correction: the col / sle_ctl merge does not wait for it
+
+**Review, spec fit (V, diff read):** FITS for buses and ft slots.
+- Spare ends are declared: type key `superset` plus `partitions[].spare_ends`; an undeclared unbound end stays a G0 error; a spare end must be a declared end, must not be bound, needs the key; an ft slot is spare at both ends or neither. Matches U5 and the kit-rtl spare-lane form.
+- Types without the key take the old path (the new check runs only under `superset`).
+- G0 compares a superset type against the union pin table.
+- Gaps to close in 1b: (A) the union table is built from instances that bind a pin; a bus that is spare on the FIRST instance gets its kit pins from the type window (gen_phys SUPERSET-1), so G0 should also compare bound pins against the type-window pins for every bus that is spare somewhere, or require type-declared geometry (`_geom_from`) on superset types. (B) a bus bound at a narrower width (KV hg 10 .. 35 bits) is not a spare end; it needs a declared spare bit range or stays out. (C) `spare_ends` names buses and ft slots only: landing pins and reset outs are not covered, and do not need to be (below).
+
+**Correction (V):** the spare ends of col_h9_r1, col_h9_r2 and sle_ctl are landing monitor pins, and main already has their mechanism since 11-14: `clock.landing_contract.tieable_children` (CLAND-TIE-1 / 2). A declared child that an instance does not use is tied ready 1, fault 0, clock 0 at the die top (a neutral child, so no use strap is needed); `cland_up_*` may float on an instance outside the collector; the bind tie audit accepts exactly that set. The live plans carry 0 `tieable_children`: the 11-14 col delta was never applied.
+
+Dry run on a private copy (epyc8 `/srv/opentallas-scratch2/claude/fable-superset-0415/colsup`, D8i plan + sidecar, `cland_col_superset.py --fam "col_h9_r[12]$"`): RC 0; col_h9_r1 60 types -> **1 identity** (union 3 children, 12 pins), col_h9_r2 60 -> **2 identities** (union 4 children, 15 pins); 81 plan edges and 27 sidecar edges re-indexed; no outliers. This is plan level only: no G0, bind or bind_reset was run on it.
+
+So:
+- **S81 J6 can take col_h9_r1 / r2 as one class each on today's tools**: run `cland_col_superset.py` on the J6 plan and sidecar, then G0, strict bind, `bind_reset`, LATCHECK. It does not depend on UNIFY-TOOLS. The step-1 rows file stays valid as the expected tie list (drop `strap_cland_use`: not needed).
+- **QC V2 sle_ctl**: same mechanism, `tieable_children` = the 5 union children on every member, plus the V1 strap / pad union. `cland_col_superset.py` is written for col families; QC needs its `--fam` matching extended or the rows applied by a compose script. Still open for sle_ctl: reader / writer start hang on different reset relays per member (4 variants), which the class row must fix to the representative's.
+- UNIFY-TOOLS step 1 is needed for data buses and ft slots (QC v1 / v2, S81 leaf), not for these three classes.
