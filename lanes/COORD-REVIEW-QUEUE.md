@@ -12955,3 +12955,4 @@ FAILED [AUTOPILOT a1f0fe325bef] 2026-11-20 05:34:22 PST AUTOPILOT -> KIT-WAVE-3:
   col_h9_r0_p5 (12): GRT 0; CTS FF hold after CORETAP 5: worst -88.4 median -88.4; sign-off runs 0, SIGNED 0; 3 stopped without signoff; old plan -196 (rst CTS)
   col_h9_r1 (60): GRT 13 TT worst -46.7 median -46.6; CTS FF hold after CORETAP 32: worst -120.2 median -120.2; sign-off runs 0, SIGNED 0; 25 stopped without signoff; old plan -181
   Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
+- 2026-11-20 05:40 PST DISK-RATE intel1 /srv/opentallas-scratch2: free 245 GB, falling 102 GB/h, floor 50 GB in 1.9 h AUTO-RETIRE rc 0: df before: 229G / df after: 229G; deleted 0, REFUSED: live input: a running process / queued or waiting ot-run job names /srv/opentallas-scratch2/claude/kw45/snap_qwen_comput; REFUSED: live input: a running process / queued or waiting ot-run job (cron disk_rate.py; read-only)
