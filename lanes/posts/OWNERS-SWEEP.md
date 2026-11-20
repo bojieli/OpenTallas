@@ -97,3 +97,8 @@
   UNOWNED: s81 dsdv_slice_lepw_mu_C__t1 (failed, stale). STALE s81: slice_station__t36, svc_hi_dsdv_svc_pvso_entry__t1 (S81-OWN-1119).
   FAILED-NO-RELAUNCH qwen_compute 6: cbn_q11__cl49ae4555, cbn_q11__cl5cc92dfe, slw_su_c__cl19bb38ef, slw_su_c__cl92142dac, slw_st_a_v2__cl9f076a5c, tt_ctlm.
   KV 2 WAIT-BIND (kv3_pc__cl5a95b461, qkd_pv_fin_s8_pin); s81_head clean.
+- 2026-11-19 19:51 PST 19:50 sweep 6a62fd41387: 502 unsigned rows (s81 351, qc 98, kv 51, head 1); flags 16 vs 11 prior.
+  Cleared since 18:51: cbn_q11 x2, tt_ctlm, slw_st_a_v2, slice_station__t36, svc_hi t1, dsdv_slice_lepw_mu_C__t1 (relaunched/running).
+  Still flagged: slw_su_c cl19bb38ef + cl92142dac FAILED-NO-RELAUNCH+STALE (5-6h, SONNET-FIX-QC).
+  New: 14 slw_su/st/stm rows DEAD-OWNER (QC-SUST-MACRO-1119 has no post yet).
+  KV kv3_pc__cl5a95b461 and qkd_pv_fin_s8_pin wait on D25e bind (KV-D23-COMPOSE); +2 new rows phy__t1, seqhost__t1.
