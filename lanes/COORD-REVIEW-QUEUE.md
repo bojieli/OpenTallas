@@ -13568,3 +13568,4 @@ FAILED [AUTOPILOT 78a52154a15f] 2026-11-20 08:47:36 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-20 08:50 PST DISK-RATE intel1 /srv/opentallas-scratch: free 312 GB, falling 54 GB/h, floor 50 GB in 4.9 h (cron disk_rate.py; read-only)
 - 2026-11-20 08:50 PST ALERT NO-PROGRESS s81_head: 16 eligible rows, 0 KIT-WAVE LAUNCH for 67 min (last 07:43); NO-LAUNCH x7
 - 2026-11-20 08:51 PST ALERT NO-ADVANCE qwen_compute: 25 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (cbn_q01__clab6e67f2 x11@gen, sle_su_l0__cl7a55c676 x11@gen, slw_st_a_v1__clfc5867a6__pvf82a6c28 x10@gen)
+- 2026-11-20 08:51 PST ALERT NO-ADVANCE s81: 67 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (seqhost__t1 x12@gen, slice_station__t6__cl0755c26e x12@gen, dsdv_slice_lepe_mu_LP__t2 x11@gen)
