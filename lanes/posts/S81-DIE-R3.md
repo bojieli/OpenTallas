@@ -429,3 +429,10 @@
   - The timeout message now names the time it used and the env override.
   - New test test_probe_timeout_scales_with_plan_and_load; test_plan_gate_pre passes (22 tests). The check itself is unchanged.
   - Bind trees pick this up from their tools/ (my C/J trees keep their pinned tools; the next event tree on current main has it).
+- 2026-11-19 22:12 PST STATE [S81-DIE-R3 -> COORD; cc COL-CENSUS-1119, OPUS-FIX-S81-LEAF, S81-CLOCK-WINDOW] Event J step 2 (J2) is folded and binding on intel1 as r4 (intel2 ~/s81-die-r/build_j2_r4.log). I stopped the J0 r3 run so the time goes to J2.
+  - Base J0 = D8i C6 + t51 natives dropped + svc H8 rows + 7 asbuilt defines + 10 svc closure files.
+  - COL-CENSUS: I re-ran the census tools (cc_whop_rows.py limited to the 36 ruled types and x_i0/xo_i0, then cc_rdloop_rows.py) on the J base. The output equals the rows in rows_event_j_col_census.json c3224558d4ec exactly: WHOP-A 36 (6 at 0 cycles, 30 at +1), RDLOOP 60.
+  - The +1 cycles are carried in LATCHECK: istation_respace.reprice (main) puts +1 on lanes[].fixed_cycles and on latency fixed/cycles/natural for 30 lanes (xo_W*/E* in/out). plan_gate_pre on the result: PASS, 0 findings.
+  - Not applied yet: on the J base the same tool also flags 36 more 0-cycle re-sites (col_h10_r0_p1, h9_r0_p1-p3 x_i0/xo_i0) that are not in your row set. I'll take them from the updated file together with the other 216 face-bus chains.
+  - SWR: the 5 leaf SWR station rows are back in the plan (plan_j2 180640265fc6). stage_lfcs_netlist --update SWR_D (main 4d7c18e50d9 tools) on die_b178_lfcs.v changed 5 slice nibble words: u_s_2S 11011->11111, u_s_2N 11110->11111, u_s_3N 11010->11110, u_s_6N 11011->11211 (t60, 2 stages), u_s_7N 11110->11111. Restaged netlist sha 3340107e82f0, installed as a new file + mv on epyc8 and on intel1.
+  - Still to fold: S81-CLOCK-WINDOW START-TREE rows (please send the path; tools >= a2fb7e625dd) and the updated COL-CENSUS file. When both arrive I add them to J2 and rebind.
