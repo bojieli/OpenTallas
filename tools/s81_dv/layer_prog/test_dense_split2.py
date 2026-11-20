@@ -20,6 +20,7 @@ Checks:
 import os
 import sys
 from pathlib import Path
+from unittest.mock import patch
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
@@ -175,9 +176,12 @@ def test_build_split():
     c = dict(slope=82.3, phases_per_expert=6.0, dense_split2_rows=224,
              dense_split2=dict(A={k: dict(q=300, bf=0, phases=1) for k in cls},
                                B={k: dict(q=900 + 40 * i, bf=1400, phases=60) for i, k in enumerate(cls)}))
-    nmin = SM.min_stages_split(c)
-    for nst in (nmin, nmin + 9):
-        m = SM.build_split(nst, c, 't')
+    layers = [dict(experts=SM.NE, calendar_rows=0, q_tensors={}, bf_tensors={}, xs_ops=[], bf_ops=[])
+              for _ in range(SM.NL)]
+    with patch.object(SM, 'census', return_value=(layers, {})):
+        nmin = SM.min_stages_split(c)
+        builds = [(nst, SM.build_split(nst, c, 't')) for nst in (nmin, nmin + 9)]
+    for nst, m in builds:
         assert m['stages_count'] <= nst
         st = m['stages']
         where = {}

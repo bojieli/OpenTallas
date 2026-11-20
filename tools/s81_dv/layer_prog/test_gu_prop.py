@@ -43,7 +43,7 @@ def test_default():
     print('PASS test_default')
 
 
-def test_gu_prop(topo, R=4):
+def check_gu_prop(topo, R=4):
     from cap_model import decode
     XP = load(True)
     XP.TP.TOPO = topo
@@ -71,8 +71,15 @@ def test_gu_prop(topo, R=4):
     print('PASS test_gu_prop', sum(topo), 'frames', [len(x) for x in js])
 
 
+def test_gu_prop():
+    try:
+        check_gu_prop(T98)
+        check_gu_prop(T84)
+    finally:
+        load(False).TP.TOPO = T98
+
+
 if __name__ == '__main__':
     test_default()
-    test_gu_prop(T98)
-    test_gu_prop(T84)
+    test_gu_prop()
     test_default()
