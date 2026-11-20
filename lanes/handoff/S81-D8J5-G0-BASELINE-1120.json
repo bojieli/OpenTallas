@@ -1,0 +1,21 @@
+{
+ "schema": "opentallas.publish_gate.g0_baseline.v1",
+ "accepted_errors": [
+  {
+   "check": "cuts",
+   "level": "ERROR",
+   "msg": "horizontal cut at 10500: s_0S_L0 segment carries 4464 bits on 6686 tracks = 0.67 > 0.6",
+   "part": "s_0S_L0"
+  },
+  {
+   "check": "cuts",
+   "level": "ERROR",
+   "msg": "horizontal cut at 10750: s_6S_L0 segment carries 4186 bits on 6672 tracks = 0.63 > 0.6",
+   "part": "s_6S_L0"
+  }
+ ],
+ "review": "S81-DIE-R4 2026-11-20: event J5 on D8i = J4f + serdes TX, slice C, leaf HI (300 um), CBC R11 native names, START-TREE, col added_taps, svc mem_ar per-instance, PIN-NOSITE, R4 local FSTART; strict gate compared G0 ERRORs to the D8i comparator: 85 new (84 clock_landings monitor hops + 1 reset wavefront, CBC rule 4 300-um die reset hop), accepted by S81-DIE-R4 as non-functional J6 item 9; bind 0 errors, LATCHECK 0, PRE PASS.",
+ "reviewed_g0_sha256": "63e0d8ce3bc9fc66d06e4030fb40b6ca404fb3c66009700f39d3e85940ef7ac8",
+ "reviewed_g0_source": "epyc10:/srv/opentallas-scratch2/claude/kw45/s81_j5_existing_clock_r4_1120/rehome_input/gate_r5_repair/g0/g0_report.json",
+ "reviewed_plan_sha256": "913a7026b922a4a70df8ca037a629a04a7b6706896234e159c1cadcf55fa1204"
+}
