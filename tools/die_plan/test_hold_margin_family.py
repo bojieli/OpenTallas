@@ -84,8 +84,9 @@ def test_pregrt_tcl_has_the_reg_to_reg_pass_with_ports_excepted_and_restored():
     assert "OT_PREGRT_HOLD_R2R_MARGIN" in t and "foreach pg_tag {all rr xt}" in t
     rr = t[t.index('if {$pg_tag eq "rr"} {'):]
     assert "set_false_path -hold -from $pg_in" in rr and "set pg_mrg $pg_rm" in rr
-    assert "unset_path_exceptions -hold -from $pg_in" in t[t.index('if {$pg_tag eq "rr"} {', t.index("repair_timing -hold")):]
-    assert "repair_timing -hold -hold_margin $pg_mrg" in t and "repair_timing -hold -hold_margin $pg_pm" not in t
+    repair = t.index("pg_repair_hold $pg_tag $pg_mrg $pg_inst_before")
+    assert "unset_path_exceptions -hold -from $pg_in" in t[t.index('if {$pg_tag eq "rr"} {', repair):]
+    assert "pg_repair_hold $pg_tag $pg_pm" not in t
 
 
 def test_grt_hold_guard_has_the_setup_floor():
@@ -185,7 +186,8 @@ def test_run_kit_passes_r2r_margin_and_skip_to_the_pregrt_tcl():
     src = (HERE / "gen_phys.py").read_text()
     i = src.index("openroad -exit /work/pregrt_ff_hold.tcl")
     env = src[src.rindex("OT_PREGRT_HOLD_GUARD=", 0, i):i]
-    for k in ("OT_PREGRT_HOLD_GUARD", "OT_PREGRT_HOLD_PORT_MARGIN", "OT_PREGRT_HOLD_R2R_MARGIN", "OT_PREGRT_SKIP_SETUP_PS"):
+    for k in ("OT_PREGRT_HOLD_GUARD", "OT_PREGRT_HOLD_PORT_MARGIN", "OT_PREGRT_HOLD_R2R_MARGIN",
+              "OT_PREGRT_HOLD_R2R_CHUNK_BUFS", "OT_PREGRT_SKIP_SETUP_PS"):
         assert f"{k}=\\$(sed -n 's/^export {k} = //p' /work/config.mk)" in env, k
 
 
