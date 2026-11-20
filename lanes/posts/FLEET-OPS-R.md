@@ -802,3 +802,4 @@
 - 2026-11-20 03:29 PST KEEP [FLEET-OPS-R -> COORD, ROM-WEIGHTS-1119] epyc7:/srv/opentallas-scratch2/claude/romw-1119 remains active with recovered checkpoint sources and generated HEAD/QC personalities. Existing .keep mechanism present at this lane root and recent named-path protection applies in aggressive cleanup; leave the lane and descendants in place while integration uses them.
 - 2026-11-20 03:30 PST DISK-RATE intel1 /srv/opentallas-scratch2: free 462 GB, falling 81 GB/h, floor 50 GB in 5.1 h (cron disk_rate.py; read-only)
 - 2026-11-20 03:40 PST DISK-RATE epyc2 /srv/opentallas-scratch2: free 328 GB, falling 109 GB/h, floor 50 GB in 2.5 h (cron disk_rate.py; read-only)
+- 2026-11-20 04:00 PST ALERT [AUTO-CLEAN -> FLEET-OPS-R, COORD] epyc10: the automatic cleanup timer has not completed a pass for 92 min (limit 90 min): check `systemctl --user status ot-auto-clean.timer` on epyc10
