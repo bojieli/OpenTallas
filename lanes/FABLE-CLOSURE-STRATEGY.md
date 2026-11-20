@@ -1,3 +1,123 @@
+# FABLE-CLOSURE-STRATEGY 2026-11-20 09:05 PST (lane FABLE-CLOSURE-0905): one tool default stopped kit generation on three dies; the count is flat because nothing new can start, not because builds fail timing
+
+Reviewer: FABLE-CLOSURE-0905 (Fable). Read-only: no job launched, cancelled or patched; no STA run. Technical PD only; HBM parked.
+Gate: DRC 0, routed TT >= -42 ps at 833 ps (fixed; the 1000 ps reading is withdrawn, sign profile 96d058623b7), internal FF hold >= 0, bind + LATCHECK.
+Marking: **V** = I opened the file or ran the read this round. **R** = reported by the named lane. **I** = inferred. **P** = proposal.
+Delta on 01:25. Its levers stand unless changed here. Count 09:02 (V, `failure_breakdown.py`): 474 any plan / 409 current plan. S81 types 44/394, QC 34/130, KV 6/56, HEAD 25/26.
+
+## 0. Headline
+
+1. **723 of the 816 kit `gen` attempts of the last 6 h ended on one message (V, grep over hub `autopilot/kit_wave/*/a*/gen.log` newer than 6 h).** `gen phys: ERROR type X: physical collector_tree differs from captured bound reset identity`. It is the only gen error in the window. Distinct types: S81 74, QC 59, KV 32 = 165. This is the whole NO-ADVANCE alert (S81 67, QC 25, KV 12 at 08:51 / 09:01, all `@gen`).
+2. **Cause (V).** `cbc_rules.REACH_UM_PER_HOP` became 300 on main at 01:34 PST (42694ec68fe, owner 11-20 #6). `gen_phys.install_bound_native_reset` re-solves the reset collector tree with the tool default and compares it with the tree captured at bind. The live binds (S81 D8i, QC V0E, KV D25e3) were captured at 405. Example `cbn_q01__clab6e67f2` a11: captured reach 405 / max hop 380 / depth 11 / 683 relays, solved 300 / 275 / 14 / 790. The guard is right; the reach it solves with is not a property of the tool, it is a property of the bound plan.
+3. **Effect.** No new kit can generate on S81, QC or KV until each die binds a 300 um event (S81 J5 cut 14:00 PST, KV D26 20:00, QC V1 22:00). The wave relaunches the same input meanwhile: up to 12 attempts per item (`seqhost__t1`, `slice_station__t6`, `cbn_q01`, `sle_su_l0`). Lanes ACKed the class as PLAN and wait for the events (R: DIE-S81-92 07:07, KV-D23-COMPOSE 07:08). Nobody proposed reading the reach from the bind.
+4. **Builds in flight are slow in GRT, not failing sign-off (V, `NOPROG.tsv` 08:52).** 100 jobs in `5_1_grt`: 28 for 12 to 24 h, 11 over 24 h, most in "extra iteration N/30" at about one iteration per hour (leaf t43 / t44, hd_lep0N 42 h, kv3_hg_v1p6 35 h, sle_ctl 24 h, lepe_nh_mus_C 27 h). 55 in `5_2_route`.
+5. **Three near-miss builds signed overnight on a residual ECO at 833 ps (R, HARVEST-0330, QC-HOLD-0030):** HEAD LEP pair TT +28.66, coll_ft +23.38, slw_hc1 -32.99, all hold 0/0. One did not: HC-E0 at -0.05 ps on 1 end, no second pass. One lost its sign-off run to the memory guard (slw_st_b_v2 i2r, both corners rc 137).
+6. **S81 col (120 types to 2 layouts, J6) is the largest single count on any die and is not a build yet.** Private strict + LATCHECK 873/873, all date fields equal to D8i, 4 GEN pass (R, S81-DIE-R3 07:56). Open: the R1 / R2 pairs differ in measured SDC and in 43 ROM instance identities each. On the live D8i col kits the CTS FF hold after CORETAP is -45 to -53 ps median (r2 -95), 0 signed (R, S81-GEOM-OPUS 08:58).
+
+## 1. Levers ranked by types unblocked
+
+| # | Die | Lever | Unblocks | Owner |
+|---|---|---|---|---|
+| 1 | S81, QC, KV | Reset reach comes from the bound plan, not the tool default; no relaunch on an unchanged PLAN refusal | 165 types can generate again today; 723 wasted attempts per 6 h | FLOW-FIX-2045 (`gen_phys` / `reset_tree`), WAVE-FLOW-R2 (retry key) |
+| 2 | S81 | J6 col 120 -> 2: close the two open proofs (SDC superset, ROM identity by personalization), with the `bin -> lpad` lockup in the two masters | 120 types by 2 builds | S81-DIE-R3, FABLE-FIX-S81-COL, UNIFY-TOOLS-0300 |
+| 3 | all 4 | Superset pinout for the other classes: 0 of 275 classes inherit today | S81 leaf 75 types -> 23 to 46 classes; QC 31 classes, KV 7 | UNIFY-TOOLS-0300, SIGN-PROFILE-0400, plan lanes |
+| 4 | S81, QC, KV, HEAD | GRT that does not converge: read the overflow trajectory at iteration 10, fix the wall, do not wait 30 iterations | 39 kits over 12 h in GRT; KV hg / hgi 19 types | LONG-RUN-0315 (list), FABLE-FIX-KV-HG, die owners |
+| 5 | QC, HEAD, S81 | Residual hold pass at 833 ps on kept routed DBs; sign-off corners serialized | about 25 builds (01:25 lever 1), 3 signed tonight | QC-HOLD-0030, HARVEST-0330, FLOW-FIX-2045 |
+| 6 | all 4 | Seat the first rank, then stage: the placed-pin census now gives the numbers | col_h10_r1, lepe_mu_LP, hd_tile, QC fe / ctl, slice C 11 types | LONG-LEG-0040, PRECHECK-1119, kit generator owner |
+| 7 | QC, KV, S81 | 1.296 um M5 halo on hard-core pin faces | 11 st_a types; kv3_pc 6; col_h9_r2 to confirm | QC-SUST-MACRO-1119, KV-PC-PG-2330 |
+| 8 | KV | pv shared trunk: anchor the mapped inverter at the trunk end | kv3_pv family (v5, v5n, v6n, v8, v12 seen) | FABLE-FIX-KV-PV-2140 |
+
+### Lever 1. Reach is a plan property
+**Evidence (V).** Headline 1 to 3. Code on main a67025cea20: `tools/die_plan/cbc_rules.py:7` reads `OT_CBC_REACH_UM`, default 300; `gen_phys.py` near line 9010 calls `RT.for_type(P, tn)` and raises when the solve differs from the captured tree; `tools/conftest.py:15` already pins 405 for suites drawn at the old rule. The captured tree carries `reach_um` and `plan_reach_um` (`reset_tree.py:699`).
+**Root cause.** A die-wide rule change went in as a tool default while three live plans were bound under the old value. The plan does not carry its own reach into the kit generator.
+**Fix (P).**
+1. `install_bound_native_reset`: solve with the captured tree's `plan_reach_um` (fall back to the default only when the tree has none). The identity guard stays as is; a bind from another plan or an edited graph still stops.
+2. Until that is on `rt/current`: the wave sets `OT_CBC_REACH_UM` per plan event from the bind's captured value (405 for D8i, V0E, D25e3) in the kit_rtl / gen environment. One marker field, no tool change.
+3. New events bind at 300 and carry 300; nothing changes for them.
+4. Retry key (FABLE-FLOW-0245 class 2, still open): digest of the item inputs without the rt sha, so a PLAN-class refusal is not relaunched until an input changes.
+**Check.** After the fix, `gen` on `cbn_q01__clab6e67f2` and `seqhost__t1` passes the guard with 0 changed fields. If any field still differs, that item has a second cause and goes to its die owner.
+**Limit.** Kits on D8i / V0E / D25e3 are at the 405 reach. They count under the any-plan rule and keep the fleet on real builds for the 5 to 13 h until the 300 um events bind.
+
+### Lever 2. S81 col 120 -> 2 (J6)
+**Evidence (R).** Headline 6. J6 repaired 2 colliding union taps; 120 reset trees within 185.4 um at unchanged boot depth; miter 28,800 neutral + 6,000 live comparisons pass (CODEX-LOG 03:52, 05:03, 06:48). Live col kits: `u_bin_* -> u_lpad_*` zero-logic cross-tap ends (01:25 lever 2), hold -45 to -100 at CTS after the subtree balance.
+**Root cause of the two open items (I).** R1 and R2 are one layout with different measured boundary dates and different ROM content. Both are personalization, not structure.
+**Fix (P).**
+1. SDC: one SDC per master = per-port worst case over the members (earliest arrival for hold, latest for setup). Members sign by inheritance when their own window is inside the master's. Estimator first: the window spread per port over the 60 members; if it is under about 40 ps it costs nothing.
+2. ROM: the 43 instance identities differ by content only if the macro LEF and timing view are the same. Bind them as one ROM master + per-instance mask (owner yes on ROM / name inherit, 11-20). Check the 43 for equal LEF and lib before anything else.
+3. Put the `bin -> lpad` lockup latch (launch tap, hop under 200 um) into the two masters in the same event. Without it the two builds fail hold as the 24 D8i kits do.
+4. Run the two masters as representatives first (owner: reps first); no 120-kit wave.
+
+### Lever 3. Superset pinout on the other classes
+**Evidence (R, SIGN-PROFILE-0400 02:26).** 275 classes, 681 members hashed, 0 classes inherit. Members differ in cland link count and direction (S81 68 classes), clock tap ports (68), straps (64), reset / start outputs (54).
+**Done tonight (R).** UNIFY step 1b 30852a695c8 on main; class-window solver 97335512bc7; leaf VQ 4-bit SID strap 71d94ae0db0 GREEN 139/139; t40 native alias strict 0 errors, LATCHECK 873/873, 0 added data cycles.
+**Fix (P).** Same four moves per class, in class-size order: (a) link ports to the class maximum, unused ones tied neutral at the parent; (b) one tap set per class (union, then `tap_resolve`); (c) ID as `strap_*` pins tied at the parent (owner 10-25); (d) reset / start outputs to the class maximum. Then re-run the structural hash: a class is done when its members hash equal with ROM masked. S81 leaf first (FABLE-SUPERSET-0415 section 9.2, no growth), then station, then QC st_a / st_b / su.
+
+### Lever 4. GRT that does not converge
+**Evidence.** Headline 4 (V). R (FABLE-FIX-KV-HG 03:22, 08:53): kR with reserved clock sites on M1 to M3 only went 3,581 -> 1,223 -> 195 overflow by iteration 20, 191 of 195 inside head-core boxes; it then ended at TT -310, FF hold -489.5 (PLAN-TRIAGE, a timing class separate from congestion). k13i split form: overflow 6 against 42.
+**Root cause.** Overflow at zero capacity (reserved rects, core boxes, PG stubs) cannot be removed by iterations. The 11-14 rule removed the early stop, so these run 30 iterations at about 1 h each.
+**Fix (P).**
+1. LONG-RUN-0315: for each kit over 12 h in GRT, one row with overflow at iterations 5 / 10 / 20 and the share at zero capacity. Falling by 3x per 10 iterations = keep. Flat or over half at zero capacity = measured unable to sign; the owner's cancel rule applies, and the row names the wall.
+2. Reserved clock sites M1 to M3 + one via column becomes the generator default (01:25 lever 7; kR measured it for congestion).
+3. This is an estimator on the congestion report, not a new stop inside the flow.
+
+### Lever 5. Residual hold pass at 833 ps
+**Evidence.** Headline 5 (R).
+**Fix (P).** (1) Up to 3 residual passes on ends still negative; HC-E0 at -0.05 ps / 1 end is the case. (2) Sign-off corners run one after the other under measured admission; slw_st_b_v2 i2r needs only the sign-off rerun on the kept `6_final.odb`. (3) Watchdog fix a7b3fb1f2ac (ECO runner is not the cancelled parent row) is GREEN 45/45 and still in a gate; it stopped 4 ECOs last night. Merge it before more ECOs start.
+**Limit.** Small ECO on understood local ends only (owner 10-25). The zero-logic cross-tap classes take the latch (lever 2 item 3), not buffers.
+
+### Lever 6. Seat first, then stage
+**Evidence (R).** LONG-LEG pin3 scan 08:52: col_h10_r1 peak 879.8 um; lepe_mu_LP t2 1,529.3 um, of which a macro-pin leg of 1,457.9 um. PRECHECK 08:26: hd_tile worst 988.4 um (cached scan, 8 s). QC-PLAN-R3 08:41: slw_fe_v1 with 10 existing registers seated, worst hops 744.6 -> 189.8, 707.5 -> 179.1, 731.3 -> 147.6 um, 0 cycles added. OPUS-FIX-S81-SLICEC 08:41: kv512_C needs +5 / +3 stages (8,840 flops, 56 taps against 40) and fits at 299.6 / 299.9 um.
+**Fix (P).** Order per type: (1) seat the existing first-rank registers FIRM at their plan sites (the QC fe form) and re-scan; (2) only legs still over the reach get a stage row (owner: setup by pipeline stages), priced as kv512_C was. The pin3 scanner (86cf00e2c53 GREEN) is the measure; one table per die before its cut.
+
+### Lever 7. M5 halo on core pin faces
+**Evidence (R, QC-SUST-MACRO-1119 08:21).** 1.296 um halo, A/B on epyc10: M5 near-signal pins 78 -> 0; all 20 macro VDD / VSS contact counts equal (minimum 231) in both arms; 0 overlaps. Place-only pilot queued on E7.
+**Fix (P).** If the pilot's detailed route shows 0 of the 72 M5 violations, the halo is the construction rule for every hard core with M5 signal pins: QC st_a (11), kv3_pc (6), and col_h9_r2 `u_u_t6` when a J-event kit reaches route.
+
+### Lever 8. KV pv shared trunk
+**Evidence (R, FABLE-FIX-KV-PV-2140 04:36, 07:46).** v8h / v8j post-CTS setup -8,430 / -8,287 ps on the east owner-response pad trunk. The mapped inverter sits at (480.7, 1019.3) and drives 1,908.8 um to the terminal Q; folded chain about 3,437 um.
+**Fix (P, the lane's).** Anchor the inverter at (1775.5, 596.2): two legs of 192 um, same cycle count. Generic form: a cell on a relay trunk inherits the site of its sink register. v8j's routed result says nothing about the latch form until this is in.
+
+## 2. Closed by Codex tonight (do not redo)
+
+| Item | State (R, CODEX-LOG 03:23 to 08:13 and lane posts) |
+|---|---|
+| QC V0E | applied on 6 hosts; bind 0, LATCHECK 1,921; controller common master G0 + strict + LATCHECK pass; 130 soft START windows closed at 300 um |
+| QC R4 / A3 | strict + LATCHECK 1,921/1,921; A4 fixes one stale release number (2c1e1ca66262); G0 running |
+| KV D25e3 | BIND 0 / LAT 2,404 / G0 0; applied; post-apply bind PASS 08:03 |
+| KV D26 draft | 56 types; G0 + precheck pass; dc02d274deb3 corrects 77 START roles; strict running |
+| S81 D8i bind | wave used the source-tree bind (121 of 125 attempts on differing RTL); sealed bind pointer d8810348da8 + manifest restored on 5 hosts; breaker closed 03:24 |
+| S81 J6 | private strict + LATCHECK 873/873, dates equal to D8i, 4 GEN pass |
+| S81 J3 | sealed on 5 hosts, parked: bk_sel placed form BAD (reset fanout, south data return) |
+| S81 t40 / t7 | t40 native alias strict clean; t7 private strict + LATCHECK pass |
+| HEAD r13r | strict bind 26 masters / 358 instances / 0 unbound; LATCHECK 329/329; NOMCAP SerDes + LEP GEN pass; 6 retained r9 routes R-MINIMAL (5 at 833 ps, CTL north 846.7) |
+| Signed | HEAD LEP pair (+28.66), coll_ft ECO i1 (+23.38), slw_hc1 residual i2r (-32.99) |
+| Flow on main | 100 fallback refusals 4f48b414967; QC external-stop taxonomy e6e6213ad88; UNIFY 1b 30852a695c8; reset-identity evidence classifier ca8544530de |
+| Flow in gate | watchdog ECO a7b3fb1f2ac; native GRT FF fallback e56a64de3b8; bind selection a56b75ebec5; fixed-833 sign profile 96d058623b7 (GREEN) |
+| Measurement | LONG-LEG pin3 scanner 86cf00e2c53; PRECHECK cached fanout scan 79511d24b72; QC SUST halo A/B; kv512_C corridor price; QC fe reseat |
+
+## 3. Stop list (01:25 stands except its 1000 ps items, plus these)
+- No relaunch of a kit whose `gen` ended on the reset identity message with unchanged inputs. No bypass of that guard either.
+- No waiting for J5 / V1 / D26 as the only way to generate kits; lever 1 item 2 is one environment value.
+- No reading of -209 ps anywhere: 833 ps is fixed and the sign profile refuses -43.
+- No late-repair retry of KV kR (TT -310, hold -489.5 after the congestion fix); the hg class is timing now.
+- No v8h / v8j result read as proof or disproof of the latch form before the trunk inverter is anchored.
+- No J3 apply (parked BAD). No cw9a / cw9b DME form: tap legs 425.9 to 477.5 um against 405, and the J3 fix / no-fix pair both read FF intra -301.91 ps (R, S81-CLOCK-WINDOW 09:00).
+- No die hold verdict from the legacy comparator (KV base / v3 -240 / -165 with zero real-view coverage); the type-root clock + boundary lockup proof replaces it.
+- No 120-kit col wave before the two J6 masters route. No J6 master without the `bin -> lpad` lockup.
+- No station row before the first rank is seated and re-scanned; no east xring station centres for kv512_C (all four hit fixed macros).
+- No number from `sta_st_a.sh` (+25.1 ps, no parasitics; the hook result is -121.75).
+- No second serdes rck form kit until one of R1 / H25 / T15P is read: T15P ended at setup_est -606 at GRT; R1 and H25 ended exit 2, cause not read.
+- No hold-buffer ECO on a zero-logic cross-tap class (unchanged from 01:25).
+
+## 4. Not checked
+- Lever 1: I read the guard and the default, not `relay_um`; whether `for_type` takes the reach as an argument or needs a plan field. I did not run gen with `OT_CBC_REACH_UM=405`. The 165 types are distinct kit_wave directory names in 6 h; some may be the same type under two class hashes.
+- Whether 300 um on the current binds changes any signed type's captured tree (signed kits are not regenerated, so no).
+- Headline 4: `NOPROG.tsv` labels 96 of 358 jobs `stage_odb_cap` (the last log line, not the build stage), so the GRT counts are a lower bound.
+- Lever 2: the SDC window spread and the ROM LEF / lib equality are not measured; both are named as the first checks.
+- Lever 4: I did not open the congestion reports of the 39 kits; the kR numbers are the lane's.
+- HEAD: 16 eligible rows with 0 launches for 67 min at 08:50 (r13r gates); LEP relay place found 27 FIRM overlaps with macros (HEAD-CROSSING 08:54). Not analysed.
+- Token, ROM content, LEC and procedural items are out of scope.
+
 # FABLE-CLOSURE-STRATEGY 2026-11-20 01:25 PST (lane FABLE-CLOSURE-0530): what the routed builds say after the 11-20 decisions; the 1000 ps rule signs nothing without a hold pass; three measurement bugs move the die tree down the list
 
 Reviewer: FABLE-CLOSURE-0530 (Fable). Read-only: no job launched, killed or patched; no STA run. Technical PD only; HBM parked.
