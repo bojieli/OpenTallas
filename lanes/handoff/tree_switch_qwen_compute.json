@@ -1,9 +1,9 @@
 {
  "die": "qwen_compute",
- "tree": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_n46v0e_s2",
- "manifest_hash": "4f3ad616c1817c3592872fded5ae0647dac3bfe7d691b88c939545028528cdf1",
- "src_manifest_sha": "4f3ad616c1817c3592872fded5ae0647dac3bfe7d691b88c939545028528cdf1",
- "tools_sha": "30d6bd509d604bfccd292cc884aca6a33cd9e58d",
+ "tree": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_n46r4_a4",
+ "manifest_hash": "b4d7f328b637c5c47a037d8d25e73f393263e0af4c31e49c35f72e3360dd1036",
+ "src_manifest_sha": "b4d7f328b637c5c47a037d8d25e73f393263e0af4c31e49c35f72e3360dd1036",
+ "tools_sha": "22a689dfc0920ece6e219df61e309db9d2ed17e9",
  "hosts": [
   "epyc10",
   "epyc2",
@@ -13,13 +13,12 @@
   "intel1"
  ],
  "smoke": "PASS",
- "smoke_detail": "QC N46V0E epyc9 strict bind V0EBQ with 0 errors, LATCHECK 1921/1921, 0 hard-core parameter mismatches. G0: only 4 baseline KITFIT-OUTLINE errors. PRE passed. Floorplan reviewed on epyc9 under qc-plan-r3-n41p/results/geom_review/V0E. Exact schema and coherent tools from the passing private bind are installed. Published source closure includes 17 private st bin sidecars missing in s1; all six host manifests agree.",
- "plan": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_n46v0e_s2/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9n46v0e.json",
- "plan_sha256": "f9fc9321ab1000f7d4f589857ec63c57775ffcaa7ce858cb1fc3b8ee1086d759",
- "asbuilt": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_n46v0e_s2/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_n46v0e_portable.json",
- "asbuilt_sha256": "0529a06d0aac617f41e0885c7ed50602539fbae9aecebea0d878728a97d30dec",
- "bind_out": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_n46v0e_s2_bind_1120034616",
- "sidecar": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_n46v0e_s2/physical/die_plan/qwen_compute/qc_start_1106/runtime/zz_sidecar_s29q103S4Q9N46V0EBQ.json",
+ "smoke_detail": "Exact QC local300/global405 primary A4: 0-error full G0, 377 instances / 133 named types, 1921/1921 strict-bound lane dates and six full native representative GEN passes. All-route review gate. Representative actual placement and independent sealed strict bind required before activation.",
+ "plan": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_n46r4_a4/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9n46r4_final_preview.json",
+ "plan_sha256": "2c1e1ca6626233c84366473e4ac38cce5b4153b15c08c6b042f8571adb852be5",
+ "asbuilt": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_n46r4_a4/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_n46r4_final_preview.json",
+ "asbuilt_sha256": "0afc0170b6f9cb13745a28b64fd6fe97b34dd7d1d9350ab7ace2a1b6f663191e",
+ "sidecar": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_n46r4_a4/physical/die_plan/qwen_compute/qc_start_1106/runtime/zz_sidecar_n46r4_final_preview.json",
  "die_gen_env": {
   "OT_PLACE_MAX_FANOUT": "64",
   "OT_GRT_NONPORT_HOLD": "1",
@@ -37,7 +36,7 @@
   "OT_GPL_SPARSE_UTIL": "0.10"
  },
  "config": {
-  "event": "s29q103S4Q9N46V0E",
+  "event": "s29q103S4Q9N46R4A4",
   "plan_event": "s29q103S4Q9N1B",
   "gen_hosts": [
    "epyc9",
@@ -47,19 +46,19 @@
    "epyc10",
    "epyc7"
   ],
-  "gen_host": "epyc9",
+  "gen_host": "epyc10",
   "gen_args": [
    "--hold-ff-margin",
    "0",
    "--max-wire-um",
    "120",
    "--clock-landing",
-   "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_n46v0e_s2/physical/die_plan/qwen_compute/qc_start_1106/runtime/zz_sidecar_s29q103S4Q9N46V0EBQ.json"
+   "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_n46r4_a4/physical/die_plan/qwen_compute/qc_start_1106/runtime/zz_sidecar_n46r4_final_preview.json"
   ],
   "kit_rtl": {
    "mode": "bind",
-   "asbuilt": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_n46v0e_s2/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_n46v0e_portable.json",
-   "bind_out": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_n46v0e_s2_bind_1120034616"
+   "asbuilt": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_n46r4_a4/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_n46r4_final_preview.json",
+   "bind_out": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_n46r4_a4_bind_1120085722"
   },
   "cancel_superseded": false,
   "planned_events": [
@@ -74,7 +73,11 @@
    "s29q103S4Q9M",
    "s29q103S4Q9N1B",
    "s29q103S4Q9N3"
-  ]
+  ],
+  "review_before_route": {
+   "event": "s29q103S4Q9N46R4A4",
+   "all_items": true
+  }
  },
  "rows_proofs": [
   "physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9n2b.rows_proof.json"
@@ -85,13 +88,14 @@
   "receipt": "/srv/opentallas-scratch2/claude/kw45/qcbind_pin_eb1e73448bd0_s4q9n4/bind_s29q103S4Q9N43BQ/RELOCATED.json"
  },
  "live_tree": {
-  "snapshot": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_n46v0e_s2",
-  "made": "2026-11-20 03:45:49 PST",
+  "snapshot": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_n46r4_a4",
+  "made": "2026-11-20 08:55:45 PST",
   "tool": "live_tree.py (TOOLS-DECOUPLE phase 2)"
  },
- "sidecar_sha256": "8ab652857fd154c3afd921c41b17b3b51d44a63ab8f14650e3b7ffda018744ed",
+ "sidecar_sha256": "ae2d3fc9ec9df309e25f8d68d2b73df842532901ef8a58b0cb04d4f0557c6dfb",
+ "bind_out": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_n46r4_a4_bind_1120085722",
  "optimistic": true,
- "_path": "cand_qc_n46v0e_s2_bound.json",
+ "_path": "cand_qc_n46r4_a4_bound.json",
  "status": "ADOPTED reviewed tuple",
  "written_by": "root-authorized lane atomic apply"
 }
