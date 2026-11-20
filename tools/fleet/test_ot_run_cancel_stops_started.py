@@ -39,7 +39,7 @@ def test_the_exact_container_of_a_cancelled_job_is_stopped_by_name_after_the_sco
     assert [c[-1].split()[0] for c in calls] == ["ot-heavy-stop", "names=$(ps"]
     cmd = calls[1][-1]
     assert "grep -F -e otrun-hub-3010423- -e '-v /srv/opentallas-scratch2/claude/kw43/items/cbn_q00/gen/cbn_q00:'" in cmd
-    assert "docker stop -t 30" in cmd and "dpkit-[A-Za-z0-9_.-]*" in cmd and "docker rm" not in cmd and "docker ps" not in cmd
+    assert "docker stop -t 30" in cmd and "grep -v grep" not in cmd and "dpkit-[A-Za-z0-9_.-]*" in cmd and "docker rm" not in cmd and "docker ps" not in cmd
 
 
 def test_the_container_stop_command_selects_only_the_named_job(tmp_path):
@@ -47,7 +47,7 @@ def test_the_container_stop_command_selects_only_the_named_job(tmp_path):
     import os, subprocess
     fake = tmp_path / "bin"; fake.mkdir()
     (fake / "ps").write_text("#!/bin/bash\ncat <<'E'\n/usr/bin/docker run --rm --name dpkit-keep-1 --cpus=8 -v /srv/x/lane/other:/work img\n"
-                             "/bin/bash /usr/local/lib/ot-heavy/bin/docker run --rm --name dpkit-cbn_q00-2769332 -e TAG=otrun-hub-3010423-1795 -v /srv/x/lane/kit:/work img\n"
+                             "/bin/bash /usr/local/lib/ot-heavy/bin/docker run --rm --name dpkit-cbn_q00-2769332 -e TAG=otrun-hub-3010423-1795 -v /srv/x/lane/kit:/work img bash -lc if grep -q x /work/y; then :; fi\n"
                              "/usr/bin/docker run --rm --name dpkit-bymount-7 -v /srv/x/lane/exact/gen/t:/work img\nE\n")
     (fake / "docker").write_text("#!/bin/bash\necho \"$@\" >> " + str(tmp_path / "stopped") + "\n")
     for f in fake.iterdir():

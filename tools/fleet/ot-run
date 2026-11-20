@@ -1283,9 +1283,9 @@ def stop_targets(hit, sub, hosts_all, node=None):
 def container_stop_cmd(tag, path=None):
     """CANCEL-CONTAINER-1120 (COORD, S81-GEOM-OPUS: `ot-run --cancel` SIGTERMed the QC route client of cbn_q00__cld7bf7197, ot-heavy-stop --match found 0 scopes and the dpkit container ran on for hours): the
     EXACT container(s) of the cancelled job on a host: every `docker run ... --name dpkit-<x>` process whose command line carries the client's own tag (otrun-<host>-<pid>-) or mounts the exact kit dir
-    (-v <path>:/work), stopped by name with docker stop.  Prints the names, nothing when none.  Never a pattern on a lane dir: only the tag or one exact path."""
+    (-v <path>:/work), stopped by name with docker stop.  The docker-run line of a kit carries the whole run_kit script text ("grep -q ..."), so our own pipeline is excluded by shape (a line that starts with grep or holds this command), never by `grep -v grep`.  Prints the names, nothing when none.  Never a pattern on a lane dir: only the tag or one exact path."""
     pats = " ".join("-e " + shlex.quote(p) for p in [tag] + ([f"-v {path.rstrip('/')}:"] if path and path.startswith("/srv/") else []))
-    return ("names=$(ps -eo args | grep -F " + pats + " | grep -v grep | grep -o -- '--name dpkit-[A-Za-z0-9_.-]*' | awk '{print $2}' | sort -u); "
+    return ("names=$(ps -eo args | grep -F " + pats + " | awk '!/^grep / && !/names=[$][(]ps/' | grep -o -- '--name dpkit-[A-Za-z0-9_.-]*' | awk '{print $2}' | sort -u); "
             "for n in $names; do docker stop -t 30 \"$n\" >/dev/null 2>&1; done; echo \"containers stopped: ${names:-none}\"")
 
 
