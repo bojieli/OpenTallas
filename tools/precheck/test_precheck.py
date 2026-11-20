@@ -278,3 +278,25 @@ def test_kit_scan_counts_reach_legs_only():
                                                   [500, 500, "u_strap_id.q", "u_c.d", "D", [0, 100], [500, 100]]])
     s = KS.summarise_placed(Path("/nonexistent/kit"), ph)
     assert s["legs_over"] == 1 and s["by_class"] == {"core": 1, "logic": 1, "strap": 1} and s["leg_rule"] == KS.LEG_RULE
+
+
+def test_reach_face_bus_uses_worst_bit_of_the_window():
+    """WINDOW-HOP (COL-CENSUS-1119 11-19, FABLE-PD-S81-2040 1c): col_h10_r0_p4 x_i0, 1,104 bits on the E face over y 980.7-1220.7;
+    plan from_um = the window centre (hop 392 um), worst bit = the top end (hop 512 um)."""
+    t = {"outline_um": [1442.88, 1296.0],
+         "buses": [{"name": "x_i0", "dir": "in", "face": "E", "width": 1104, "window_um": [980.736, 1220.7]},
+                   {"name": "f_o0", "dir": "out", "face": "N", "width": 8, "window_um": [100.0, 500.0]}],
+         "internal_stations": [{"conn": "bus:x_i0", "from_um": [1442.88, 1100.718], "regs_um": [[1438.56, 712.8]],
+                                "to_um": [1430.028, 518.412]}]}
+    f = PC.reach_findings(t, 405, margin=1.0)
+    assert len(f) == 1 and abs(f[0][0] - (4.32 + 1220.7 - 712.8)) < 0.2 and "hop 0" in f[0][1]
+    assert len(PC.reach_findings(t)) == 1                       # 512 > 439 (wide calibration) as well
+    t["internal_stations"][0]["regs_um"] = [[1442.88, 864.0]]  # the CC-WHOP-1 re-site: both hops <= 357 um
+    assert PC.reach_findings(t, 405, margin=1.0) == []
+    # out bus: the last hop goes to the window end farther from the last register
+    t["internal_stations"] = [{"conn": "bus:f_o0", "from_um": [300.0, 700.0], "regs_um": [[120.0, 900.0]], "to_um": [300.0, 1296.0]}]
+    f = PC.reach_findings(t, 405, margin=1.0)
+    assert len(f) == 1 and f[0][0] == 380 + 396
+    # a chain whose end is not on the bus face (an inner launch) keeps its own coordinates
+    t["internal_stations"] = [{"conn": "bus:f_o0", "from_um": [300.0, 700.0], "regs_um": [[120.0, 900.0]], "to_um": [300.0, 1000.0]}]
+    assert PC.reach_findings(t, 405, margin=1.0) == []

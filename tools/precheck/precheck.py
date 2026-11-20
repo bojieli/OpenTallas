@@ -8,6 +8,7 @@ die_plan tools that the kits use: schema, taps, gen_phys) and writes, per type, 
 seen on 11-18:
 
   REACH       a station chain hop (internal_stations from -> regs -> to, ft_slots in pin -> regs -> out pin,
+              a face-bus chain measured from the worst bit = the far end of its pin window, WINDOW-HOP 11-19,
               relay_polylines) longer than the per-cycle reach (405 um, Manhattan).
   MISAIM      a face-bus receiver chain (internal_stations conn bus:X, launch "face flop") sited toward a capture pin
               that carries a small fraction of the bus bits (col_h9_r1 frame_int_i1 -> 1-bit u_bn5.rs, 1,100 bits end
@@ -154,6 +155,20 @@ def face_point(face, window, w, h, toward=None):
 
 # ---------------------------------------------------------------- pure geometry checks (unit tested)
 
+def face_end_worst(face, window, w, h, toward):
+    """COL-CENSUS-1119 11-19 (FABLE-PD-S81-2040 1c WINDOW-HOP): the end of a face pin window [lo, hi] FARTHER from `toward`
+    = the worst bit of a face bus.  A face-bus station chain's from_um / to_um is the window centre: on a 240-um window the
+    worst bit's hop is up to 120 um longer (col E-face x/xo buses: plan 388-392 um, worst bit 508-512 um, 528-531 um placed)."""
+    lo, hi = sorted((float(window[0]), float(window[1])))
+    ends = [{"N": (c, h), "S": (c, 0.0), "E": (w, c), "W": (0.0, c)}[face] for c in (lo, hi)]
+    return max(ends, key=lambda p: man(p, toward))
+
+
+def on_face(face, p, w, h, tol=1.0):
+    return abs((p[1] - h) if face == "N" else p[1] if face == "S" else (p[0] - w) if face == "E" else p[0]) <= tol
+
+
+
 def chain_hops(points):
     return [man(a, b) for a, b in zip(points, points[1:])]
 
@@ -168,10 +183,12 @@ NARROW_MARGIN = 1.25
 
 def reach_findings(t, reach=REACH_UM, margin=None):
     """[(value, detail)] station hops above the calibrated limit: reach x 1.085 on >= 256-bit chains, reach x 1.25 on
-    narrower ones (margin overrides both).  internal_stations from -> regs -> to, ft_slots in pin -> regs -> out pin."""
+    narrower ones (margin overrides both).  internal_stations from -> regs -> to (a face-bus chain from / to the worst bit
+    of its pin window, WINDOW-HOP), ft_slots in pin -> regs -> out pin."""
     w, h = t.get("outline_um") or (0, 0)
     out = []
     widths = {b.get("name"): int(b.get("width") or 0) for b in t.get("buses") or []}
+    buses = {b.get("name"): b for b in t.get("buses") or []}
 
     def limit(bits):
         if margin is not None:
@@ -181,8 +198,16 @@ def reach_findings(t, reach=REACH_UM, margin=None):
         if not e.get("from_um") or not e.get("to_um"):
             continue
         pts = [tuple(e["from_um"])] + [tuple(r) for r in (e.get("regs_um") or [])] + [tuple(e["to_um"])]
-        hops = chain_hops(pts)
         conn = e.get("conn", "")
+        # WINDOW-HOP (COL-CENSUS-1119 11-19): a face-bus chain is measured from / to the worst bit (the window end farther
+        # from the adjacent register), not the window centre that from_um / to_um carry
+        bus = buses.get(conn[4:]) if conn.startswith("bus:") else None
+        if bus and bus.get("face") in ("N", "S", "E", "W") and bus.get("window_um") and len(pts) >= 2:
+            if bus.get("dir") == "in" and on_face(bus["face"], pts[0], w, h):
+                pts[0] = face_end_worst(bus["face"], bus["window_um"], w, h, pts[1])
+            elif bus.get("dir") == "out" and on_face(bus["face"], pts[-1], w, h):
+                pts[-1] = face_end_worst(bus["face"], bus["window_um"], w, h, pts[-2])
+        hops = chain_hops(pts)
         bits = int(e.get("bits") or 0) or widths.get(conn[4:] if conn.startswith("bus:") else "", 0)
         if hops and max(hops) > limit(bits):
             j = max(range(len(hops)), key=hops.__getitem__)
