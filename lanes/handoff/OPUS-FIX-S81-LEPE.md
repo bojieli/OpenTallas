@@ -27,3 +27,10 @@ lepw_mus_LP__t2) carry the corrected lane LEF at b05c98f7919 (DRT-0073 crashes w
 ## Open
 1. item6 land.tag path read; 2. lockup rows for lepe cross_tap (LOCKUP-STATION-1130 s81 rows not published; derive on a lepe CTS kit);
 3. setup -149 > -42 gate: rows 4 (a)+(b) + item6 needed for J6; 4. Waiters biou3b6k9 (proof6) / bsipkaewt (proof7) die with this session.
+
+## Update 11-20 ~15:45 PST: proof6/r2 ENDED
+- Post-GRT hold: -24.07/144 viol -> +4.59 / 0 viol (+200 buffers, 1 chunk). HOLD >= 0 MET after GRT on this form.
+- Setup cost: hold buffers pushed worst setup -149.06 -> -217.71 (guard stop), recovery pass ended -153.94 / 692 ends / EnTNS -32,227.
+- TT setup repair at GRT crashed: RSZ-0074 (route tree for net155182, rebuffer161029 guide not restored), tt_setup_repair.tcl:136,
+  after 1350 iters flat at -367/-380 (3456 ends); 5_1_grt.odb is the UNREPAIRED DB. Gate line: TT setup_est -377 (SETUP_TRIAGE), FF PASS.
+- Worst class at every stage after GRT: u_u_land.tag[0][23] -> item6 is the J6 gating class; path read on 5_1_grt.odb next.
