@@ -22,8 +22,14 @@ class RoomTest(unittest.TestCase):
         self.m.SPILL_RESV_DIR = self.t + "/resv"
         self.root = self.t + "/lane"
         os.makedirs(self.root)
-        v = os.statvfs(self.t)
-        self.free = v.f_bavail * v.f_frsize / 1e9
+        # Keep the subprocess probe stable while exercising the real disk
+        # reservation logic. Fleet cleanup can free gigabytes during the test.
+        self.free = 250
+        self.m.SPILL_ROOM_PY = (
+            "import os\nfrom types import SimpleNamespace\n"
+            f"os.statvfs = lambda _: SimpleNamespace(f_bavail={self.free}, f_frsize=10**9)\n"
+            + self.m.SPILL_ROOM_PY
+        )
 
     def tearDown(self):
         subprocess.run(["rm", "-rf", self.t])
