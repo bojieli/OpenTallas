@@ -218,7 +218,11 @@ def slot_row(tn, t, s, pins=None, taps=(), reach_um=None, snap=None):
     in_c = (sum(p[0] for p in a) / len(a), sum(p[1] for p in a) / len(a))
     regs = [[round(in_c[0], 4), round(in_c[1], 4)]] + [
         [round(sum(p[0] for p in st) / len(st), 4), round(sum(p[1] for p in st) / len(st), 4)] for st in sites]
-    return dict(type=tn, slot=s["name"], width=int(s.get("width", 1)), pin_to_pin_um=round(L, 1),
+    lim = float(reach_um or RULES.REACH_UM_PER_HOP) + RULES.SITE_MARGIN_UM
+    # a straight per-bit line that crosses a hard core snaps far off its line: those slots need the macro-aware route
+    # (ft_channel_route.py / ft_spread) before sites are written; count, first rank and lockup rows stay valid
+    form = "line" if not hops or max(hops) <= lim else "needs_route"
+    return dict(type=tn, slot=s["name"], width=int(s.get("width", 1)), pin_to_pin_um=round(L, 1), site_form=form,
                 stations_have=have, stations_need=need, delta_cycles=max(0, need - have),
                 first_rank="pin", worst_hop_um=round(max(hops), 1) if hops else 0.0,
                 hops_um=[round(h, 1) for h in hops], snapped=bool(snap and sites is not ideal),
@@ -388,7 +392,7 @@ def apply_rows(raw, rows, specs=None, sites=False, note=None):
     moved = []
     if sites:
         for r in rows:
-            if r["stations_need"] > r["stations_have"]:
+            if r["stations_need"] > r["stations_have"] or r.get("site_form", "line") != "line":
                 continue
             t = new["partition_types"][r["type"]]
             s = next(x for x in t.get("ft_slots", []) if x["name"] == r["slot"])
@@ -423,7 +427,8 @@ def summary(rows):
                 added_stations=sum(r["delta_cycles"] for r in rows),
                 latch_hops=sum(len(r["lockup_hops"]) for r in rows),
                 latch_bits=sum(len(r["lockup_hops"]) * (r["width"] + 1) for r in rows),
-                worst_hop_um=max((r["worst_hop_um"] for r in rows), default=0.0))
+                needs_route=sum(1 for r in rows if r.get("site_form") == "needs_route"),
+                worst_line_hop_um=max((r["worst_hop_um"] for r in rows if r.get("site_form") != "needs_route"), default=0.0))
 
 
 def main(argv=None):

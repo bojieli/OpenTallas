@@ -49,6 +49,7 @@ def test_slot_row_counts_seats_and_lockups():
     assert (r["stations_have"], r["stations_need"], r["delta_cycles"]) == (2, 4, 2)
     assert r["first_rank"] == "pin" and r["regs_um"][0] == [0.0, 105.0]          # stage 0 at the in pin
     assert len(r["regs_um"]) == 4 and len(r["bit_sites_um"]) == 3 and r["worst_hop_um"] <= 300
+    assert r["site_form"] == "line"
     assert r["lockup_hops"] == [2]                       # stages x 0/250/500/750: only 500 -> 750 changes tap
     one = SR.slot_row("T", t, s, taps=[("clk", 500.0, 200.0)], reach_um=300)
     assert one["lockup_hops"] == []                      # one tap: nothing to latch
