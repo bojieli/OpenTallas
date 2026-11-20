@@ -1,0 +1,674 @@
+{
+ "schema": "opentallas.plan_rows.v1",
+ "owner": "FABLE-FIX-S81-SERDES-0000",
+ "event": "J4",
+ "rows": [
+  {
+   "type": "serdes__t12",
+   "path": "pads[name=io_pma_lock]",
+   "set": {
+    "sites_um": [
+     [
+      1595.25,
+      0.24
+     ]
+    ],
+    "layer": "M5"
+   },
+   "cycles": 0,
+   "class": "serdes-lock-site-s",
+   "status": "READY",
+   "evidence": "FABLE-FIX-S81-SERDES-0000 11-20: io_pma_lock has no sites_um in the D8h plan (all 11 types), so ORFS auto-places it; serdes__t16 b05c98f7919 a1 got N (1416.96,1222.29) inside u_ptx -> OT_RESET_ANCHOR stop. Site = S edge at the x of the rs sync centroid (E u_cmem 1345.248,676.092); pin register lock_sync[1] FIRM on the first row (y 4.32), no macro within 50 um of the S edge. Boot path anchor -> centroid L1 <= 972 um = 4 hops of <= 243 um (limit 405). Supersedes the 11-19 03:11 D8h rows (PHY east end, north edge): those give 1865 um = 4 x 466 um on t16. S-edge explicit pins within 3 um of x: none (kit io.tcl checked). Generator snaps x to the M5 track (signal_pad_sites). Same port/flops, 0 cycles."
+  },
+  {
+   "type": "serdes__t13",
+   "path": "pads[name=io_pma_lock]",
+   "set": {
+    "sites_um": [
+     [
+      1698.93,
+      0.24
+     ]
+    ],
+    "layer": "M5"
+   },
+   "cycles": 0,
+   "class": "serdes-lock-site-s",
+   "status": "READY",
+   "evidence": "FABLE-FIX-S81-SERDES-0000 11-20: io_pma_lock has no sites_um in the D8h plan (all 11 types), so ORFS auto-places it; serdes__t16 b05c98f7919 a1 got N (1416.96,1222.29) inside u_ptx -> OT_RESET_ANCHOR stop. Site = S edge at the x of the rs sync centroid (E u_cmem 1448.928,581.052 (generated kit; the H lineage used a north-strip pin)); pin register lock_sync[1] FIRM on the first row (y 4.32), no macro within 50 um of the S edge. Boot path anchor -> centroid L1 <= 877 um = 4 hops of <= 219 um (limit 405). Supersedes the 11-19 03:11 D8h rows (PHY east end, north edge): those give 1865 um = 4 x 466 um on t16. S-edge explicit pins within 3 um of x: none (kit io.tcl checked). Generator snaps x to the M5 track (signal_pad_sites). Same port/flops, 0 cycles."
+  },
+  {
+   "type": "serdes__t14",
+   "path": "pads[name=io_pma_lock]",
+   "set": {
+    "sites_um": [
+     [
+      1661.67,
+      0.24
+     ]
+    ],
+    "layer": "M5"
+   },
+   "cycles": 0,
+   "class": "serdes-lock-site-s",
+   "status": "READY",
+   "evidence": "FABLE-FIX-S81-SERDES-0000 11-20: io_pma_lock has no sites_um in the D8h plan (all 11 types), so ORFS auto-places it; serdes__t16 b05c98f7919 a1 got N (1416.96,1222.29) inside u_ptx -> OT_RESET_ANCHOR stop. Site = S edge at the x of the rs sync centroid (M b05c98f7919 intel1 run_place.log); pin register lock_sync[1] FIRM on the first row (y 4.32), no macro within 50 um of the S edge. Boot path anchor -> centroid L1 <= 355 um = 4 hops of <= 89 um (limit 405). Supersedes the 11-19 03:11 D8h rows (PHY east end, north edge): those give 1865 um = 4 x 466 um on t16. S-edge explicit pins within 3 um of x: none (kit io.tcl checked). Generator snaps x to the M5 track (signal_pad_sites). Same port/flops, 0 cycles."
+  },
+  {
+   "type": "serdes__t15__cla2127225",
+   "path": "pads[name=io_pma_lock]",
+   "set": {
+    "sites_um": [
+     [
+      1687.65,
+      0.24
+     ]
+    ],
+    "layer": "M5"
+   },
+   "cycles": 0,
+   "class": "serdes-lock-site-s",
+   "status": "READY",
+   "evidence": "FABLE-FIX-S81-SERDES-0000 11-20: io_pma_lock has no sites_um in the D8h plan (all 11 types), so ORFS auto-places it; serdes__t16 b05c98f7919 a1 got N (1416.96,1222.29) inside u_ptx -> OT_RESET_ANCHOR stop. Site = S edge at the x of the rs sync centroid (E same macro sites as t15__cla3d02796); pin register lock_sync[1] FIRM on the first row (y 4.32), no macro within 50 um of the S edge. Boot path anchor -> centroid L1 <= 319 um = 4 hops of <= 80 um (limit 405). Supersedes the 11-19 03:11 D8h rows (PHY east end, north edge): those give 1865 um = 4 x 466 um on t16. S-edge explicit pins within 3 um of x: none (kit io.tcl checked). Generator snaps x to the M5 track (signal_pad_sites). Same port/flops, 0 cycles."
+  },
+  {
+   "type": "serdes__t15__cla3d02796",
+   "path": "pads[name=io_pma_lock]",
+   "set": {
+    "sites_um": [
+     [
+      1687.65,
+      0.24
+     ]
+    ],
+    "layer": "M5"
+   },
+   "cycles": 0,
+   "class": "serdes-lock-site-s",
+   "status": "READY",
+   "evidence": "FABLE-FIX-S81-SERDES-0000 11-20: io_pma_lock has no sites_um in the D8h plan (all 11 types), so ORFS auto-places it; serdes__t16 b05c98f7919 a1 got N (1416.96,1222.29) inside u_ptx -> OT_RESET_ANCHOR stop. Site = S edge at the x of the rs sync centroid (M b05c98f7919 intel1 run_place.log); pin register lock_sync[1] FIRM on the first row (y 4.32), no macro within 50 um of the S edge. Boot path anchor -> centroid L1 <= 319 um = 4 hops of <= 80 um (limit 405). Supersedes the 11-19 03:11 D8h rows (PHY east end, north edge): those give 1865 um = 4 x 466 um on t16. S-edge explicit pins within 3 um of x: none (kit io.tcl checked). Generator snaps x to the M5 track (signal_pad_sites). Same port/flops, 0 cycles."
+  },
+  {
+   "type": "serdes__t16",
+   "path": "pads[name=io_pma_lock]",
+   "set": {
+    "sites_um": [
+     [
+      1710.26,
+      0.24
+     ]
+    ],
+    "layer": "M5"
+   },
+   "cycles": 0,
+   "class": "serdes-lock-site-s",
+   "status": "READY",
+   "evidence": "FABLE-FIX-S81-SERDES-0000 11-20: io_pma_lock has no sites_um in the D8h plan (all 11 types), so ORFS auto-places it; serdes__t16 b05c98f7919 a1 got N (1416.96,1222.29) inside u_ptx -> OT_RESET_ANCHOR stop. Site = S edge at the x of the rs sync centroid (M b05c98f7919 intel1 run_place.log (the failing kit)); pin register lock_sync[1] FIRM on the first row (y 4.32), no macro within 50 um of the S edge. Boot path anchor -> centroid L1 <= 263 um = 4 hops of <= 66 um (limit 405). Supersedes the 11-19 03:11 D8h rows (PHY east end, north edge): those give 1865 um = 4 x 466 um on t16. S-edge explicit pins within 3 um of x: none (kit io.tcl checked). Generator snaps x to the M5 track (signal_pad_sites). Same port/flops, 0 cycles."
+  },
+  {
+   "type": "serdes__t1__clb45db5be",
+   "path": "pads[name=io_pma_lock]",
+   "set": {
+    "sites_um": [
+     [
+      1752.64,
+      0.24
+     ]
+    ],
+    "layer": "M5"
+   },
+   "cycles": 0,
+   "class": "serdes-lock-site-s",
+   "status": "READY",
+   "evidence": "FABLE-FIX-S81-SERDES-0000 11-20: io_pma_lock has no sites_um in the D8h plan (all 11 types), so ORFS auto-places it; serdes__t16 b05c98f7919 a1 got N (1416.96,1222.29) inside u_ptx -> OT_RESET_ANCHOR stop. Site = S edge at the x of the rs sync centroid (M b05c98f7919 intel1 run_place.log); pin register lock_sync[1] FIRM on the first row (y 4.32), no macro within 50 um of the S edge. Boot path anchor -> centroid L1 <= 224 um = 4 hops of <= 56 um (limit 405). Supersedes the 11-19 03:11 D8h rows (PHY east end, north edge): those give 1865 um = 4 x 466 um on t16. S-edge explicit pins within 3 um of x: none (kit io.tcl checked). Generator snaps x to the M5 track (signal_pad_sites). Same port/flops, 0 cycles."
+  },
+  {
+   "type": "serdes__t1__clfe1f0815",
+   "path": "pads[name=io_pma_lock]",
+   "set": {
+    "sites_um": [
+     [
+      1757.84,
+      0.24
+     ]
+    ],
+    "layer": "M5"
+   },
+   "cycles": 0,
+   "class": "serdes-lock-site-s",
+   "status": "READY",
+   "evidence": "FABLE-FIX-S81-SERDES-0000 11-20: io_pma_lock has no sites_um in the D8h plan (all 11 types), so ORFS auto-places it; serdes__t16 b05c98f7919 a1 got N (1416.96,1222.29) inside u_ptx -> OT_RESET_ANCHOR stop. Site = S edge at the x of the rs sync centroid (M T1P epyc10 run_place.log); pin register lock_sync[1] FIRM on the first row (y 4.32), no macro within 50 um of the S edge. Boot path anchor -> centroid L1 <= 230 um = 4 hops of <= 58 um (limit 405). Supersedes the 11-19 03:11 D8h rows (PHY east end, north edge): those give 1865 um = 4 x 466 um on t16. S-edge explicit pins within 3 um of x: none (kit io.tcl checked). Generator snaps x to the M5 track (signal_pad_sites). Same port/flops, 0 cycles."
+  },
+  {
+   "type": "serdes__t2",
+   "path": "pads[name=io_pma_lock]",
+   "set": {
+    "sites_um": [
+     [
+      1661.67,
+      0.24
+     ]
+    ],
+    "layer": "M5"
+   },
+   "cycles": 0,
+   "class": "serdes-lock-site-s",
+   "status": "READY",
+   "evidence": "FABLE-FIX-S81-SERDES-0000 11-20: io_pma_lock has no sites_um in the D8h plan (all 11 types), so ORFS auto-places it; serdes__t16 b05c98f7919 a1 got N (1416.96,1222.29) inside u_ptx -> OT_RESET_ANCHOR stop. Site = S edge at the x of the rs sync centroid (E same macro sites as t14 (u_cmem 1373.76,62.652)); pin register lock_sync[1] FIRM on the first row (y 4.32), no macro within 50 um of the S edge. Boot path anchor -> centroid L1 <= 358 um = 4 hops of <= 90 um (limit 405). Supersedes the 11-19 03:11 D8h rows (PHY east end, north edge): those give 1865 um = 4 x 466 um on t16. S-edge explicit pins within 3 um of x: none (kit io.tcl checked). Generator snaps x to the M5 track (signal_pad_sites). Same port/flops, 0 cycles."
+  },
+  {
+   "type": "serdes__t3",
+   "path": "pads[name=io_pma_lock]",
+   "set": {
+    "sites_um": [
+     [
+      1783.6,
+      0.24
+     ]
+    ],
+    "layer": "M5"
+   },
+   "cycles": 0,
+   "class": "serdes-lock-site-s",
+   "status": "READY",
+   "evidence": "FABLE-FIX-S81-SERDES-0000 11-20: io_pma_lock has no sites_um in the D8h plan (all 11 types), so ORFS auto-places it; serdes__t16 b05c98f7919 a1 got N (1416.96,1222.29) inside u_ptx -> OT_RESET_ANCHOR stop. Site = S edge at the x of the rs sync centroid (E u_cmem 1533.6,352.092); pin register lock_sync[1] FIRM on the first row (y 4.32), no macro within 50 um of the S edge. Boot path anchor -> centroid L1 <= 648 um = 4 hops of <= 162 um (limit 405). Supersedes the 11-19 03:11 D8h rows (PHY east end, north edge): those give 1865 um = 4 x 466 um on t16. S-edge explicit pins within 3 um of x: none (kit io.tcl checked). Generator snaps x to the M5 track (signal_pad_sites). Same port/flops, 0 cycles."
+  },
+  {
+   "type": "serdes__t4",
+   "path": "pads[name=io_pma_lock]",
+   "set": {
+    "sites_um": [
+     [
+      1698.93,
+      0.24
+     ]
+    ],
+    "layer": "M5"
+   },
+   "cycles": 0,
+   "class": "serdes-lock-site-s",
+   "status": "READY",
+   "evidence": "FABLE-FIX-S81-SERDES-0000 11-20: io_pma_lock has no sites_um in the D8h plan (all 11 types), so ORFS auto-places it; serdes__t16 b05c98f7919 a1 got N (1416.96,1222.29) inside u_ptx -> OT_RESET_ANCHOR stop. Site = S edge at the x of the rs sync centroid (E u_cmem 1448.928,581.052); pin register lock_sync[1] FIRM on the first row (y 4.32), no macro within 50 um of the S edge. Boot path anchor -> centroid L1 <= 877 um = 4 hops of <= 219 um (limit 405). Supersedes the 11-19 03:11 D8h rows (PHY east end, north edge): those give 1865 um = 4 x 466 um on t16. S-edge explicit pins within 3 um of x: none (kit io.tcl checked). Generator snaps x to the M5 track (signal_pad_sites). Same port/flops, 0 cycles."
+  },
+  {
+   "type": "serdes__t12",
+   "path": "verilog_defines",
+   "append": [
+    "OT_S81_SERDES_RM_LOCAL_EMPTY8",
+    "OT_S81_SERDES_RM_WPL8"
+   ],
+   "cycles": {
+    "lane": "rx (u_rm read side, bus coll_o0)",
+    "clk": 1
+   },
+   "class": "serdes-rm-wpl8",
+   "status": "PROOF-RUNNING R1 (take with the J4 bind; drop if R1 GRT TT misses)",
+   "evidence": "main 315cc722d68 (commit 03e067a1b0e): third rclk stage of the synchronised write pointer, one kept copy per read bank (g_rd[k]...g_wp_local.wpl) + wp_g3 for the read control; with LOCAL_EMPTY8 every bank compares its own copies, the only transfer leaving the control tap is flop-to-flop. Cause measured on t13: H22 GRT clk u_rm wp_g2 -> g_rd q -76; H23 CTS -37 (29 ends), launch clk_t43, capture clk_t41, 53 ps tap window + 4 HB4 hold cells (297 ps) on the shared start. RX +1 clk on every beat (bench tools/s81_link/run_rm_wpl_bench.sh: lag exactly 1, banked == 3-stage form every cycle, mutant caught). gen_phys contract: WPL8 needs LOCAL_EMPTY8. LATCHECK: +1 clk on the serdes RX lane."
+  },
+  {
+   "type": "serdes__t13",
+   "path": "verilog_defines",
+   "append": [
+    "OT_S81_SERDES_RM_LOCAL_EMPTY8",
+    "OT_S81_SERDES_RM_WPL8"
+   ],
+   "cycles": {
+    "lane": "rx (u_rm read side, bus coll_o0)",
+    "clk": 1
+   },
+   "class": "serdes-rm-wpl8",
+   "status": "PROOF-RUNNING R1 (take with the J4 bind; drop if R1 GRT TT misses)",
+   "evidence": "main 315cc722d68 (commit 03e067a1b0e): third rclk stage of the synchronised write pointer, one kept copy per read bank (g_rd[k]...g_wp_local.wpl) + wp_g3 for the read control; with LOCAL_EMPTY8 every bank compares its own copies, the only transfer leaving the control tap is flop-to-flop. Cause measured on t13: H22 GRT clk u_rm wp_g2 -> g_rd q -76; H23 CTS -37 (29 ends), launch clk_t43, capture clk_t41, 53 ps tap window + 4 HB4 hold cells (297 ps) on the shared start. RX +1 clk on every beat (bench tools/s81_link/run_rm_wpl_bench.sh: lag exactly 1, banked == 3-stage form every cycle, mutant caught). gen_phys contract: WPL8 needs LOCAL_EMPTY8. LATCHECK: +1 clk on the serdes RX lane."
+  },
+  {
+   "type": "serdes__t14",
+   "path": "verilog_defines",
+   "append": [
+    "OT_S81_SERDES_RM_LOCAL_EMPTY8",
+    "OT_S81_SERDES_RM_WPL8"
+   ],
+   "cycles": {
+    "lane": "rx (u_rm read side, bus coll_o0)",
+    "clk": 1
+   },
+   "class": "serdes-rm-wpl8",
+   "status": "PROOF-RUNNING R1 (take with the J4 bind; drop if R1 GRT TT misses)",
+   "evidence": "main 315cc722d68 (commit 03e067a1b0e): third rclk stage of the synchronised write pointer, one kept copy per read bank (g_rd[k]...g_wp_local.wpl) + wp_g3 for the read control; with LOCAL_EMPTY8 every bank compares its own copies, the only transfer leaving the control tap is flop-to-flop. Cause measured on t13: H22 GRT clk u_rm wp_g2 -> g_rd q -76; H23 CTS -37 (29 ends), launch clk_t43, capture clk_t41, 53 ps tap window + 4 HB4 hold cells (297 ps) on the shared start. RX +1 clk on every beat (bench tools/s81_link/run_rm_wpl_bench.sh: lag exactly 1, banked == 3-stage form every cycle, mutant caught). gen_phys contract: WPL8 needs LOCAL_EMPTY8. LATCHECK: +1 clk on the serdes RX lane."
+  },
+  {
+   "type": "serdes__t15__cla2127225",
+   "path": "verilog_defines",
+   "append": [
+    "OT_S81_SERDES_RM_LOCAL_EMPTY8",
+    "OT_S81_SERDES_RM_WPL8"
+   ],
+   "cycles": {
+    "lane": "rx (u_rm read side, bus coll_o0)",
+    "clk": 1
+   },
+   "class": "serdes-rm-wpl8",
+   "status": "PROOF-RUNNING R1 (take with the J4 bind; drop if R1 GRT TT misses)",
+   "evidence": "main 315cc722d68 (commit 03e067a1b0e): third rclk stage of the synchronised write pointer, one kept copy per read bank (g_rd[k]...g_wp_local.wpl) + wp_g3 for the read control; with LOCAL_EMPTY8 every bank compares its own copies, the only transfer leaving the control tap is flop-to-flop. Cause measured on t13: H22 GRT clk u_rm wp_g2 -> g_rd q -76; H23 CTS -37 (29 ends), launch clk_t43, capture clk_t41, 53 ps tap window + 4 HB4 hold cells (297 ps) on the shared start. RX +1 clk on every beat (bench tools/s81_link/run_rm_wpl_bench.sh: lag exactly 1, banked == 3-stage form every cycle, mutant caught). gen_phys contract: WPL8 needs LOCAL_EMPTY8. LATCHECK: +1 clk on the serdes RX lane."
+  },
+  {
+   "type": "serdes__t15__cla3d02796",
+   "path": "verilog_defines",
+   "append": [
+    "OT_S81_SERDES_RM_LOCAL_EMPTY8",
+    "OT_S81_SERDES_RM_WPL8"
+   ],
+   "cycles": {
+    "lane": "rx (u_rm read side, bus coll_o0)",
+    "clk": 1
+   },
+   "class": "serdes-rm-wpl8",
+   "status": "PROOF-RUNNING R1 (take with the J4 bind; drop if R1 GRT TT misses)",
+   "evidence": "main 315cc722d68 (commit 03e067a1b0e): third rclk stage of the synchronised write pointer, one kept copy per read bank (g_rd[k]...g_wp_local.wpl) + wp_g3 for the read control; with LOCAL_EMPTY8 every bank compares its own copies, the only transfer leaving the control tap is flop-to-flop. Cause measured on t13: H22 GRT clk u_rm wp_g2 -> g_rd q -76; H23 CTS -37 (29 ends), launch clk_t43, capture clk_t41, 53 ps tap window + 4 HB4 hold cells (297 ps) on the shared start. RX +1 clk on every beat (bench tools/s81_link/run_rm_wpl_bench.sh: lag exactly 1, banked == 3-stage form every cycle, mutant caught). gen_phys contract: WPL8 needs LOCAL_EMPTY8. LATCHECK: +1 clk on the serdes RX lane."
+  },
+  {
+   "type": "serdes__t16",
+   "path": "verilog_defines",
+   "append": [
+    "OT_S81_SERDES_RM_LOCAL_EMPTY8",
+    "OT_S81_SERDES_RM_WPL8"
+   ],
+   "cycles": {
+    "lane": "rx (u_rm read side, bus coll_o0)",
+    "clk": 1
+   },
+   "class": "serdes-rm-wpl8",
+   "status": "PROOF-RUNNING R1 (take with the J4 bind; drop if R1 GRT TT misses)",
+   "evidence": "main 315cc722d68 (commit 03e067a1b0e): third rclk stage of the synchronised write pointer, one kept copy per read bank (g_rd[k]...g_wp_local.wpl) + wp_g3 for the read control; with LOCAL_EMPTY8 every bank compares its own copies, the only transfer leaving the control tap is flop-to-flop. Cause measured on t13: H22 GRT clk u_rm wp_g2 -> g_rd q -76; H23 CTS -37 (29 ends), launch clk_t43, capture clk_t41, 53 ps tap window + 4 HB4 hold cells (297 ps) on the shared start. RX +1 clk on every beat (bench tools/s81_link/run_rm_wpl_bench.sh: lag exactly 1, banked == 3-stage form every cycle, mutant caught). gen_phys contract: WPL8 needs LOCAL_EMPTY8. LATCHECK: +1 clk on the serdes RX lane."
+  },
+  {
+   "type": "serdes__t1__clb45db5be",
+   "path": "verilog_defines",
+   "append": [
+    "OT_S81_SERDES_RM_LOCAL_EMPTY8",
+    "OT_S81_SERDES_RM_WPL8"
+   ],
+   "cycles": {
+    "lane": "rx (u_rm read side, bus coll_o0)",
+    "clk": 1
+   },
+   "class": "serdes-rm-wpl8",
+   "status": "PROOF-RUNNING R1 (take with the J4 bind; drop if R1 GRT TT misses)",
+   "evidence": "main 315cc722d68 (commit 03e067a1b0e): third rclk stage of the synchronised write pointer, one kept copy per read bank (g_rd[k]...g_wp_local.wpl) + wp_g3 for the read control; with LOCAL_EMPTY8 every bank compares its own copies, the only transfer leaving the control tap is flop-to-flop. Cause measured on t13: H22 GRT clk u_rm wp_g2 -> g_rd q -76; H23 CTS -37 (29 ends), launch clk_t43, capture clk_t41, 53 ps tap window + 4 HB4 hold cells (297 ps) on the shared start. RX +1 clk on every beat (bench tools/s81_link/run_rm_wpl_bench.sh: lag exactly 1, banked == 3-stage form every cycle, mutant caught). gen_phys contract: WPL8 needs LOCAL_EMPTY8. LATCHECK: +1 clk on the serdes RX lane."
+  },
+  {
+   "type": "serdes__t1__clfe1f0815",
+   "path": "verilog_defines",
+   "append": [
+    "OT_S81_SERDES_RM_LOCAL_EMPTY8",
+    "OT_S81_SERDES_RM_WPL8"
+   ],
+   "cycles": {
+    "lane": "rx (u_rm read side, bus coll_o0)",
+    "clk": 1
+   },
+   "class": "serdes-rm-wpl8",
+   "status": "PROOF-RUNNING R1 (take with the J4 bind; drop if R1 GRT TT misses)",
+   "evidence": "main 315cc722d68 (commit 03e067a1b0e): third rclk stage of the synchronised write pointer, one kept copy per read bank (g_rd[k]...g_wp_local.wpl) + wp_g3 for the read control; with LOCAL_EMPTY8 every bank compares its own copies, the only transfer leaving the control tap is flop-to-flop. Cause measured on t13: H22 GRT clk u_rm wp_g2 -> g_rd q -76; H23 CTS -37 (29 ends), launch clk_t43, capture clk_t41, 53 ps tap window + 4 HB4 hold cells (297 ps) on the shared start. RX +1 clk on every beat (bench tools/s81_link/run_rm_wpl_bench.sh: lag exactly 1, banked == 3-stage form every cycle, mutant caught). gen_phys contract: WPL8 needs LOCAL_EMPTY8. LATCHECK: +1 clk on the serdes RX lane."
+  },
+  {
+   "type": "serdes__t2",
+   "path": "verilog_defines",
+   "append": [
+    "OT_S81_SERDES_RM_LOCAL_EMPTY8",
+    "OT_S81_SERDES_RM_WPL8"
+   ],
+   "cycles": {
+    "lane": "rx (u_rm read side, bus coll_o0)",
+    "clk": 1
+   },
+   "class": "serdes-rm-wpl8",
+   "status": "PROOF-RUNNING R1 (take with the J4 bind; drop if R1 GRT TT misses)",
+   "evidence": "main 315cc722d68 (commit 03e067a1b0e): third rclk stage of the synchronised write pointer, one kept copy per read bank (g_rd[k]...g_wp_local.wpl) + wp_g3 for the read control; with LOCAL_EMPTY8 every bank compares its own copies, the only transfer leaving the control tap is flop-to-flop. Cause measured on t13: H22 GRT clk u_rm wp_g2 -> g_rd q -76; H23 CTS -37 (29 ends), launch clk_t43, capture clk_t41, 53 ps tap window + 4 HB4 hold cells (297 ps) on the shared start. RX +1 clk on every beat (bench tools/s81_link/run_rm_wpl_bench.sh: lag exactly 1, banked == 3-stage form every cycle, mutant caught). gen_phys contract: WPL8 needs LOCAL_EMPTY8. LATCHECK: +1 clk on the serdes RX lane."
+  },
+  {
+   "type": "serdes__t3",
+   "path": "verilog_defines",
+   "append": [
+    "OT_S81_SERDES_RM_LOCAL_EMPTY8",
+    "OT_S81_SERDES_RM_WPL8"
+   ],
+   "cycles": {
+    "lane": "rx (u_rm read side, bus coll_o0)",
+    "clk": 1
+   },
+   "class": "serdes-rm-wpl8",
+   "status": "PROOF-RUNNING R1 (take with the J4 bind; drop if R1 GRT TT misses)",
+   "evidence": "main 315cc722d68 (commit 03e067a1b0e): third rclk stage of the synchronised write pointer, one kept copy per read bank (g_rd[k]...g_wp_local.wpl) + wp_g3 for the read control; with LOCAL_EMPTY8 every bank compares its own copies, the only transfer leaving the control tap is flop-to-flop. Cause measured on t13: H22 GRT clk u_rm wp_g2 -> g_rd q -76; H23 CTS -37 (29 ends), launch clk_t43, capture clk_t41, 53 ps tap window + 4 HB4 hold cells (297 ps) on the shared start. RX +1 clk on every beat (bench tools/s81_link/run_rm_wpl_bench.sh: lag exactly 1, banked == 3-stage form every cycle, mutant caught). gen_phys contract: WPL8 needs LOCAL_EMPTY8. LATCHECK: +1 clk on the serdes RX lane."
+  },
+  {
+   "type": "serdes__t4",
+   "path": "verilog_defines",
+   "append": [
+    "OT_S81_SERDES_RM_LOCAL_EMPTY8",
+    "OT_S81_SERDES_RM_WPL8"
+   ],
+   "cycles": {
+    "lane": "rx (u_rm read side, bus coll_o0)",
+    "clk": 1
+   },
+   "class": "serdes-rm-wpl8",
+   "status": "PROOF-RUNNING R1 (take with the J4 bind; drop if R1 GRT TT misses)",
+   "evidence": "main 315cc722d68 (commit 03e067a1b0e): third rclk stage of the synchronised write pointer, one kept copy per read bank (g_rd[k]...g_wp_local.wpl) + wp_g3 for the read control; with LOCAL_EMPTY8 every bank compares its own copies, the only transfer leaving the control tap is flop-to-flop. Cause measured on t13: H22 GRT clk u_rm wp_g2 -> g_rd q -76; H23 CTS -37 (29 ends), launch clk_t43, capture clk_t41, 53 ps tap window + 4 HB4 hold cells (297 ps) on the shared start. RX +1 clk on every beat (bench tools/s81_link/run_rm_wpl_bench.sh: lag exactly 1, banked == 3-stage form every cycle, mutant caught). gen_phys contract: WPL8 needs LOCAL_EMPTY8. LATCHECK: +1 clk on the serdes RX lane."
+  },
+  {
+   "type": "serdes__t12",
+   "path": "verilog_defines",
+   "append": [
+    "OT_S81_KP4_AMOK_PIPE"
+   ],
+   "cycles": {
+    "lane": "rx (decoder, rck side)",
+    "rck": 1
+   },
+   "class": "serdes-amok-pipe",
+   "status": "PROOF-RUNNING H25 + R1 (serdes lane main d4d59679470)",
+   "evidence": "u_dec.u_syn am_ok -> xs: t13 H22 GRT -138 (955 ps data, 12 wire buffers), H23 CTS -47.8 (34 ends, 536 ps of wire buffers). Placed distance am_ok -> its FSM loads: t15 1040 um (2041,902 -> 1369,534), t1__clb45 1214 um (1988,838 -> 1342,270), t13 H23 6 um but a stale 10-buffer chain, t14 3 um. One register between the AM face and the FSM (+1 rck, all dsyn outputs together)."
+  },
+  {
+   "type": "serdes__t13",
+   "path": "verilog_defines",
+   "append": [
+    "OT_S81_KP4_AMOK_PIPE"
+   ],
+   "cycles": {
+    "lane": "rx (decoder, rck side)",
+    "rck": 1
+   },
+   "class": "serdes-amok-pipe",
+   "status": "PROOF-RUNNING H25 + R1 (serdes lane main d4d59679470)",
+   "evidence": "u_dec.u_syn am_ok -> xs: t13 H22 GRT -138 (955 ps data, 12 wire buffers), H23 CTS -47.8 (34 ends, 536 ps of wire buffers). Placed distance am_ok -> its FSM loads: t15 1040 um (2041,902 -> 1369,534), t1__clb45 1214 um (1988,838 -> 1342,270), t13 H23 6 um but a stale 10-buffer chain, t14 3 um. One register between the AM face and the FSM (+1 rck, all dsyn outputs together)."
+  },
+  {
+   "type": "serdes__t14",
+   "path": "verilog_defines",
+   "append": [
+    "OT_S81_KP4_AMOK_PIPE"
+   ],
+   "cycles": {
+    "lane": "rx (decoder, rck side)",
+    "rck": 1
+   },
+   "class": "serdes-amok-pipe",
+   "status": "PROOF-RUNNING H25 + R1 (serdes lane main d4d59679470)",
+   "evidence": "u_dec.u_syn am_ok -> xs: t13 H22 GRT -138 (955 ps data, 12 wire buffers), H23 CTS -47.8 (34 ends, 536 ps of wire buffers). Placed distance am_ok -> its FSM loads: t15 1040 um (2041,902 -> 1369,534), t1__clb45 1214 um (1988,838 -> 1342,270), t13 H23 6 um but a stale 10-buffer chain, t14 3 um. One register between the AM face and the FSM (+1 rck, all dsyn outputs together)."
+  },
+  {
+   "type": "serdes__t15__cla2127225",
+   "path": "verilog_defines",
+   "append": [
+    "OT_S81_KP4_AMOK_PIPE"
+   ],
+   "cycles": {
+    "lane": "rx (decoder, rck side)",
+    "rck": 1
+   },
+   "class": "serdes-amok-pipe",
+   "status": "PROOF-RUNNING H25 + R1 (serdes lane main d4d59679470)",
+   "evidence": "u_dec.u_syn am_ok -> xs: t13 H22 GRT -138 (955 ps data, 12 wire buffers), H23 CTS -47.8 (34 ends, 536 ps of wire buffers). Placed distance am_ok -> its FSM loads: t15 1040 um (2041,902 -> 1369,534), t1__clb45 1214 um (1988,838 -> 1342,270), t13 H23 6 um but a stale 10-buffer chain, t14 3 um. One register between the AM face and the FSM (+1 rck, all dsyn outputs together)."
+  },
+  {
+   "type": "serdes__t15__cla3d02796",
+   "path": "verilog_defines",
+   "append": [
+    "OT_S81_KP4_AMOK_PIPE"
+   ],
+   "cycles": {
+    "lane": "rx (decoder, rck side)",
+    "rck": 1
+   },
+   "class": "serdes-amok-pipe",
+   "status": "PROOF-RUNNING H25 + R1 (serdes lane main d4d59679470)",
+   "evidence": "u_dec.u_syn am_ok -> xs: t13 H22 GRT -138 (955 ps data, 12 wire buffers), H23 CTS -47.8 (34 ends, 536 ps of wire buffers). Placed distance am_ok -> its FSM loads: t15 1040 um (2041,902 -> 1369,534), t1__clb45 1214 um (1988,838 -> 1342,270), t13 H23 6 um but a stale 10-buffer chain, t14 3 um. One register between the AM face and the FSM (+1 rck, all dsyn outputs together)."
+  },
+  {
+   "type": "serdes__t16",
+   "path": "verilog_defines",
+   "append": [
+    "OT_S81_KP4_AMOK_PIPE"
+   ],
+   "cycles": {
+    "lane": "rx (decoder, rck side)",
+    "rck": 1
+   },
+   "class": "serdes-amok-pipe",
+   "status": "PROOF-RUNNING H25 + R1 (serdes lane main d4d59679470)",
+   "evidence": "u_dec.u_syn am_ok -> xs: t13 H22 GRT -138 (955 ps data, 12 wire buffers), H23 CTS -47.8 (34 ends, 536 ps of wire buffers). Placed distance am_ok -> its FSM loads: t15 1040 um (2041,902 -> 1369,534), t1__clb45 1214 um (1988,838 -> 1342,270), t13 H23 6 um but a stale 10-buffer chain, t14 3 um. One register between the AM face and the FSM (+1 rck, all dsyn outputs together)."
+  },
+  {
+   "type": "serdes__t1__clb45db5be",
+   "path": "verilog_defines",
+   "append": [
+    "OT_S81_KP4_AMOK_PIPE"
+   ],
+   "cycles": {
+    "lane": "rx (decoder, rck side)",
+    "rck": 1
+   },
+   "class": "serdes-amok-pipe",
+   "status": "PROOF-RUNNING H25 + R1 (serdes lane main d4d59679470)",
+   "evidence": "u_dec.u_syn am_ok -> xs: t13 H22 GRT -138 (955 ps data, 12 wire buffers), H23 CTS -47.8 (34 ends, 536 ps of wire buffers). Placed distance am_ok -> its FSM loads: t15 1040 um (2041,902 -> 1369,534), t1__clb45 1214 um (1988,838 -> 1342,270), t13 H23 6 um but a stale 10-buffer chain, t14 3 um. One register between the AM face and the FSM (+1 rck, all dsyn outputs together)."
+  },
+  {
+   "type": "serdes__t1__clfe1f0815",
+   "path": "verilog_defines",
+   "append": [
+    "OT_S81_KP4_AMOK_PIPE"
+   ],
+   "cycles": {
+    "lane": "rx (decoder, rck side)",
+    "rck": 1
+   },
+   "class": "serdes-amok-pipe",
+   "status": "PROOF-RUNNING H25 + R1 (serdes lane main d4d59679470)",
+   "evidence": "u_dec.u_syn am_ok -> xs: t13 H22 GRT -138 (955 ps data, 12 wire buffers), H23 CTS -47.8 (34 ends, 536 ps of wire buffers). Placed distance am_ok -> its FSM loads: t15 1040 um (2041,902 -> 1369,534), t1__clb45 1214 um (1988,838 -> 1342,270), t13 H23 6 um but a stale 10-buffer chain, t14 3 um. One register between the AM face and the FSM (+1 rck, all dsyn outputs together)."
+  },
+  {
+   "type": "serdes__t2",
+   "path": "verilog_defines",
+   "append": [
+    "OT_S81_KP4_AMOK_PIPE"
+   ],
+   "cycles": {
+    "lane": "rx (decoder, rck side)",
+    "rck": 1
+   },
+   "class": "serdes-amok-pipe",
+   "status": "PROOF-RUNNING H25 + R1 (serdes lane main d4d59679470)",
+   "evidence": "u_dec.u_syn am_ok -> xs: t13 H22 GRT -138 (955 ps data, 12 wire buffers), H23 CTS -47.8 (34 ends, 536 ps of wire buffers). Placed distance am_ok -> its FSM loads: t15 1040 um (2041,902 -> 1369,534), t1__clb45 1214 um (1988,838 -> 1342,270), t13 H23 6 um but a stale 10-buffer chain, t14 3 um. One register between the AM face and the FSM (+1 rck, all dsyn outputs together)."
+  },
+  {
+   "type": "serdes__t3",
+   "path": "verilog_defines",
+   "append": [
+    "OT_S81_KP4_AMOK_PIPE"
+   ],
+   "cycles": {
+    "lane": "rx (decoder, rck side)",
+    "rck": 1
+   },
+   "class": "serdes-amok-pipe",
+   "status": "PROOF-RUNNING H25 + R1 (serdes lane main d4d59679470)",
+   "evidence": "u_dec.u_syn am_ok -> xs: t13 H22 GRT -138 (955 ps data, 12 wire buffers), H23 CTS -47.8 (34 ends, 536 ps of wire buffers). Placed distance am_ok -> its FSM loads: t15 1040 um (2041,902 -> 1369,534), t1__clb45 1214 um (1988,838 -> 1342,270), t13 H23 6 um but a stale 10-buffer chain, t14 3 um. One register between the AM face and the FSM (+1 rck, all dsyn outputs together)."
+  },
+  {
+   "type": "serdes__t4",
+   "path": "verilog_defines",
+   "append": [
+    "OT_S81_KP4_AMOK_PIPE"
+   ],
+   "cycles": {
+    "lane": "rx (decoder, rck side)",
+    "rck": 1
+   },
+   "class": "serdes-amok-pipe",
+   "status": "PROOF-RUNNING H25 + R1 (serdes lane main d4d59679470)",
+   "evidence": "u_dec.u_syn am_ok -> xs: t13 H22 GRT -138 (955 ps data, 12 wire buffers), H23 CTS -47.8 (34 ends, 536 ps of wire buffers). Placed distance am_ok -> its FSM loads: t15 1040 um (2041,902 -> 1369,534), t1__clb45 1214 um (1988,838 -> 1342,270), t13 H23 6 um but a stale 10-buffer chain, t14 3 um. One register between the AM face and the FSM (+1 rck, all dsyn outputs together)."
+  },
+  {
+   "type": "serdes__t13",
+   "path": "internal_stations[conn=bus:coll_o0]",
+   "set": {
+    "conn": "bus:coll_o0",
+    "from_um": [
+     1045,
+     198
+    ],
+    "regs_um": [
+     [
+      809.5,
+      99.0
+     ]
+    ],
+    "to_um": [
+     574.0,
+     0.0
+    ]
+   },
+   "cycles": {
+    "lane": "coll_o0",
+    "clk": 1
+   },
+   "class": "serdes-rx-out-stations",
+   "status": "ASK S81-DIE-R3: generate bit_sites_um with your station tool (serdes__t14 has this row: 3 stations)",
+   "evidence": "placed hop > 405 um (R-MINIMAL): rm.q (980..1097,9..96) -> u_bout_coll_o0 (517..617,4): 450..580 um (H23 4_cts). 1 station(s), equal hops of 334 um. T15P TT at CTS: u_rm g_rd q -673 (913 ends), about 730 ps of wire buffers between the read mux and q. serdes__t14 already carries internal_stations bus:coll_o0 (regs x 1854/2172/2485) and its rm.q sits at mem."
+  },
+  {
+   "type": "serdes__t15__cla2127225",
+   "path": "internal_stations[conn=bus:coll_o0]",
+   "set": {
+    "conn": "bus:coll_o0",
+    "from_um": [
+     1699,
+     293
+    ],
+    "regs_um": [
+     [
+      2094.6,
+      291.1
+     ],
+     [
+      2490.2,
+      289.3
+     ]
+    ],
+    "to_um": [
+     2885.76,
+     287.4
+    ]
+   },
+   "cycles": {
+    "lane": "coll_o0",
+    "clk": 2
+   },
+   "class": "serdes-rx-out-stations",
+   "status": "ASK S81-DIE-R3: generate bit_sites_um with your station tool (serdes__t14 has this row: 3 stations)",
+   "evidence": "placed hop > 405 um (R-MINIMAL): same sites as t15__cla3d02796. 2 station(s), equal hops of 397 um. T15P TT at CTS: u_rm g_rd q -673 (913 ends), about 730 ps of wire buffers between the read mux and q. serdes__t14 already carries internal_stations bus:coll_o0 (regs x 1854/2172/2485) and its rm.q sits at mem."
+  },
+  {
+   "type": "serdes__t15__cla3d02796",
+   "path": "internal_stations[conn=bus:coll_o0]",
+   "set": {
+    "conn": "bus:coll_o0",
+    "from_um": [
+     1699,
+     293
+    ],
+    "regs_um": [
+     [
+      2094.6,
+      291.1
+     ],
+     [
+      2490.2,
+      289.3
+     ]
+    ],
+    "to_um": [
+     2885.76,
+     287.4
+    ]
+   },
+   "cycles": {
+    "lane": "coll_o0",
+    "clk": 2
+   },
+   "class": "serdes-rx-out-stations",
+   "status": "ASK S81-DIE-R3: generate bit_sites_um with your station tool (serdes__t14 has this row: 3 stations)",
+   "evidence": "placed hop > 405 um (R-MINIMAL): rm.mem (1699,293) -> u_bout_coll_o0 (2879,231..333): 1180 um in one cycle; GPL moved all 512 q flops to x 2864..2879 (T15P 4_cts). 2 station(s), equal hops of 397 um. T15P TT at CTS: u_rm g_rd q -673 (913 ends), about 730 ps of wire buffers between the read mux and q. serdes__t14 already carries internal_stations bus:coll_o0 (regs x 1854/2172/2485) and its rm.q sits at mem."
+  },
+  {
+   "type": "serdes__t1__clb45db5be",
+   "path": "internal_stations[conn=bus:coll_o0]",
+   "set": {
+    "conn": "bus:coll_o0",
+    "from_um": [
+     1806,
+     259
+    ],
+    "regs_um": [
+     [
+      2165.9,
+      268.5
+     ],
+     [
+      2525.8,
+      277.9
+     ]
+    ],
+    "to_um": [
+     2885.76,
+     287.4
+    ]
+   },
+   "cycles": {
+    "lane": "coll_o0",
+    "clk": 2
+   },
+   "class": "serdes-rx-out-stations",
+   "status": "ASK S81-DIE-R3: generate bit_sites_um with your station tool (serdes__t14 has this row: 3 stations)",
+   "evidence": "placed hop > 405 um (R-MINIMAL): rm.mem (1806,259) -> u_bout_coll_o0 (2879,231..333): 1073 um; q flops stretched over x 2322..2741 (b05c98f7919 3_place). 2 station(s), equal hops of 369 um. T15P TT at CTS: u_rm g_rd q -673 (913 ends), about 730 ps of wire buffers between the read mux and q. serdes__t14 already carries internal_stations bus:coll_o0 (regs x 1854/2172/2485) and its rm.q sits at mem."
+  },
+  {
+   "type": "serdes__t1__clfe1f0815",
+   "path": "internal_stations[conn=bus:coll_o0]",
+   "set": {
+    "conn": "bus:coll_o0",
+    "from_um": [
+     1806,
+     259
+    ],
+    "regs_um": [
+     [
+      2165.9,
+      268.5
+     ],
+     [
+      2525.8,
+      277.9
+     ]
+    ],
+    "to_um": [
+     2885.76,
+     287.4
+    ]
+   },
+   "cycles": {
+    "lane": "coll_o0",
+    "clk": 2
+   },
+   "class": "serdes-rx-out-stations",
+   "status": "ASK S81-DIE-R3: generate bit_sites_um with your station tool (serdes__t14 has this row: 3 stations)",
+   "evidence": "placed hop > 405 um (R-MINIMAL): same macro sites as t1__clb45db5be. 2 station(s), equal hops of 369 um. T15P TT at CTS: u_rm g_rd q -673 (913 ends), about 730 ps of wire buffers between the read mux and q. serdes__t14 already carries internal_stations bus:coll_o0 (regs x 1854/2172/2485) and its rm.q sits at mem."
+  }
+ ],
+ "notes": [
+  "Order of trust: class serdes-lock-site-s is READY (cause + arithmetic, same mechanism passes on t14/t15/t1 with S-edge pins). The define rows are proven in RTL benches and are in routed proof R1 / H25 on serdes__t13; the station rows are measured placed hops and need the station tool + bind.",
+  "Not measured (no placed DB on the current event: every attempt died OOM at place): coll_o0 hop of serdes__t12, t16, t2, t3, t4. Take their rows from placed_hops_or.py on the first 3_place.odb.",
+  "rck clock form: no row. The kits of b05c98f7919 carry OT_RCK_STAR HOP_UM 92 / SUB_HUBS 14 / HUB_AT_PAD 0 = the H22 form (GRT TT -179). H21 (one-hub star) measured GRT TT -30.4 / hold +10.7 on its final 5_1_grt.odb (my STA, epyc9 fable-fix-s81-serdes-0000/sta/h21_grt) but dies DRT-0255 at the hub; H23 (hub at pad, 200 um hops) has span 89 and is in GRT. The star row with hub_at_pad 1 / hop_um 200 follows H23's GRT TT and DRT."
+ ]
+}
