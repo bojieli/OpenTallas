@@ -10,6 +10,9 @@ fclk_in* ring flops are not on those nets), and writes the bins file in the exis
 
   dump  ODB OUT.tsv [--image openroad/orfs:latest]   (docker OpenROAD; one line per sink: net inst master x y, um)
   bins  TSV --type T --out FILE [--bin-um 10.8] [--placed-kit K] [--source S]
+  apply PLAN OUT --bins TYPE=FILE [...] [--report R.json]   set clock.sink_bins_file AND re-point the tap-named rows the
+        re-derived taps invalidate (retap.py: forwarded clock outputs, reset consumer taps) in the same step.  Run from
+        the tree root the bins paths are relative to.
 """
 import argparse
 import json
@@ -74,13 +77,38 @@ def read_tsv(path):
     return out
 
 
+def apply_bins(raw, bins_map, plan_path=None, taps_fn=None):
+    """Set clock.sink_bins_file of each TYPE in bins_map {type: path} on plan dict raw (in place) and, in the SAME step,
+    re-point the tap-named references the re-derived taps invalidate (retap.repoint: forwarded clock outputs and
+    reset consumer taps).  -> {type: [[where, key, was, now, um]]}"""
+    import copy
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import retap
+    old = copy.deepcopy(raw)
+    for tn, f in bins_map.items():
+        if tn not in raw["partition_types"]:
+            raise SystemExit(f"apply: type {tn} not in plan")
+        raw["partition_types"][tn].setdefault("clock", {})["sink_bins_file"] = f
+    return retap.repoint(old, raw, plan_path, plan_path, types=set(bins_map), taps_fn=taps_fn)
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest="cmd", required=True)
     d = sub.add_parser("dump"); d.add_argument("odb"); d.add_argument("out"); d.add_argument("--image", default="openroad/orfs:latest")
     b = sub.add_parser("bins"); b.add_argument("tsv"); b.add_argument("--type", required=True); b.add_argument("--out", required=True)
     b.add_argument("--bin-um", type=float, default=10.8); b.add_argument("--placed-kit", default=""); b.add_argument("--source", default="")
+    p = sub.add_parser("apply"); p.add_argument("plan"); p.add_argument("out")
+    p.add_argument("--bins", action="append", required=True, metavar="TYPE=FILE"); p.add_argument("--report")
     a = ap.parse_args(argv)
+    if a.cmd == "apply":
+        raw = json.loads(Path(a.plan).read_text())
+        rep = apply_bins(raw, dict(x.split("=", 1) for x in a.bins), a.plan)
+        Path(a.out).write_text(json.dumps(raw, indent=1) + "\n")
+        if a.report:
+            Path(a.report).write_text(json.dumps(rep, indent=1) + "\n")
+        print("APPLY bins", len(a.bins), "retap types", len(rep), "refs", sum(len(c) for c in rep.values()))
+        return 0
     if a.cmd == "dump":
         dump(a.odb, a.out, a.image); print("DUMP", a.out, len(read_tsv(a.out)))
         return 0
