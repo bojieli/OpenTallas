@@ -14461,7 +14461,8 @@ def review_before_route(cfg, rec):
     d = (cfg.get("dies") or {}).get(rec.get("die")) or {}
     policy = d.get("review_before_route") or {}
     event = policy.get("event")
-    return bool(event and d.get("event") == rec.get("event") == event and rec.get("item") in (policy.get("items") or ()))
+    return bool(event and d.get("event") == rec.get("event") == event
+                and (policy.get("all_items") is True or rec.get("item") in (policy.get("items") or ())))
 
 
 def route_hold_reason(cfg, rec):

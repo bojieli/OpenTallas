@@ -178,7 +178,17 @@ def test_event_review_blocks_only_its_changed_items_and_accepts_its_exact_kit(tm
     assert K.route_hold_reason(cfg, dict(row, event="older")) is None
     assert K.route_hold_reason(cfg, dict(row, attempt=3, kit_host="epyc8")).startswith("WAIT-VISUAL")
 
-    admitted = dict(row, status="ENQUEUED", q_status="RUNNING")
+    policy["all_items"] = True
+    assert K.route_hold_reason(cfg, dict(row, item="rekeyed")).startswith("WAIT-VISUAL")
+    assert K.route_hold_reason(cfg, dict(row, item="rekeyed", event="older")) is None
+    assert K.route_hold_reason(cfg, dict(row, attempt=3)) is None
+    assert K.route_hold_reason(cfg, dict(row, attempt=3, kit="/replaced")).startswith("WAIT-VISUAL")
+    notices = {}
+    rekeyed = dict(row, item="rekeyed")
+    K.enqueue_pass(FakeAP(), cfg, {}, rekeyed, notices)
+    assert rekeyed["status"] == "ROUTE-HELD"
+
+    admitted = dict(row, item="rekeyed", status="ENQUEUED", q_status="RUNNING")
     before = dict(admitted)
     K.enqueue_pass(None, cfg, {}, admitted, {})
     assert admitted == before
