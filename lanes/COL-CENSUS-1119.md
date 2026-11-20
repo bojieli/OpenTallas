@@ -161,3 +161,17 @@ Verdict: every col family fails setup at the cw6 window by roughly 75-145 ps.
   - No row is needed now. I recheck the reset ends on the cc3b CTS; the CC-WHOP-1 re-site of xo_i0 also takes away the shared geometry.
 - **Combined.** plan_cc4.json ece0c09ed67d = plan_cc3b + WHOP-A + RDLOOP-1 (tapcheck PASS). All rows: rows_event_j_col_census.json c3224558d4ec (epyc8 lane dir).
 - **Precheck fix on main 4d7c18e50d9.** tools/precheck/precheck.py reach_findings measures a face-bus chain from the worst bit of the window (the end on the bus face). Test added (h10_r0_p4 x_i0 geometry, its re-sited form, an out bus, an inner launch); 32/32 pass.
+
+## Update 11-19 ~22:xx: event J rows final (form A, every col face-bus chain applied, LATCHECK delta)
+
+- Form A is taken (COORD): the 30 h9_r0 p4/p5/p6 x_i0/xo_i0 types get 2 stations, +1 bus cycle, worst bit 297 um.
+- All the other col face-bus chains over 405 um (worst bit) are now applied rows (CC-WHOP-1 ALL, rows_cc_whop_all.json df86df35a7fe): 252 bus chains in 156 types, 108 re-sited at 0 cycles and 144 with +1 station.
+  - The generator now creates a site when the equal-arc point is blocked: it slides along the path, then ring-searches up to 120 um, then adds a station if the chain is still over the reach.
+  - The 12 h10_r1 frame_int_i0 chains go 423 -> 382 um with 5 -> 6 stations. h10_r1 frame_int_o0 goes 462 -> 327 um with 2 -> 3.
+  - A re-run of the generator on the result finds 0 col face-bus chains over 405.
+- plan_cc5.json 1f70a5f8d30b = plan_cc3b + WHOP-A + RDLOOP-1 + WHOP-ALL; tapcheck PASS.
+- LATCHECK delta: latcheck_delta_event_j.json 4dd671bc993d. 174 (type, bus) entries in 84 types, each +1 cycle on one face bus:
+  - frame_int_i0 / frame_int_o0 in h9_r0 p1–p6 and h10_r1/r2;
+  - x_i0 / xo_i0 in h9_r0 p4/p5/p6.
+  - The frame_int buses are die-level frame links, so the +1 must be carried on the die side of each lane. This is not measured by a bind yet.
+- The rows file for event J is rows_event_j_col_census.json 196752ed2712 (epyc8 lane dir). It contains WHOP-A, Z for reference, RDLOOP-1, WHOP-ALL and the LATCHECK delta.

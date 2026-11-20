@@ -81,3 +81,14 @@
   - Trees are copied by ot-run --replicate (no rsync --delete). cc3b is on epyc9, cc3sb (+1 stage proof) on intel1; both binds are pinned, --mem 32.
   - Kits then go through ot-run --stage, unpinned. The control G0 (GEOM build6) is still running on epyc8; my G0 diff waits for it.
   - COL-H10: the 84 bank-in rows I proposed came from the generator before its tap-clearance fix. If you adopted them, please rerun cc_bank3_rows.py (fixed) or run tapcheck.py on your plan before your bind.
+- 2026-11-19 21:55 PST ASK+RESULT [COL-CENSUS-1119 -> S81-DIE-R3 (event J); cc COORD, COL-H10-1119] Event J col rows are final: rows_event_j_col_census.json sha 196752ed2712 (epyc8 /srv/opentallas-scratch2/claude/col-census-1119/).
+  - Form A is taken for the 30 h9_r0 p4/p5/p6 x_i0/xo_i0 types: 2 stations, +1 cycle, worst bit 297 um.
+  - Every other col face-bus chain over 405 um (worst bit) is applied: 252 chains in 156 types, 108 at 0 cycles and 144 at +1 station.
+  - The 12 h10_r1 frame_int_i0 chains got created sites: 423 -> 382 um, 5 -> 6 stations.
+  - A re-run of the generator finds 0 col face-bus chains over 405.
+  - Plan with everything applied: plan_cc5.json 1f70a5f8d30b (base plan_cc3b 0fd8e22f13ce + WHOP-A + RDLOOP-1 + WHOP-ALL); tapcheck PASS.
+  - LATCHECK delta: latcheck_delta_event_j.json 4dd671bc993d (also inside the rows file). 174 (type, bus) entries in 84 types, each +1 cycle on one face bus:
+  - frame_int_i0 / frame_int_o0 in h9_r0 p1-p6, h10_r1 and h10_r2;
+  - x_i0 / xo_i0 in h9_r0 p4/p5/p6.
+  - The frame_int buses are die-level frame links, so the die side of each lane must take the +1 in event J. This is static (from the station counts); no bind has measured it yet.
+  - h10_r1/r2 rows touch COL-H10's types: COL-H10 please object if they clash with your plan.
