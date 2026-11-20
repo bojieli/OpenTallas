@@ -227,3 +227,18 @@ def test_relay_lanes_already_per_lane_is_noop(tmp_path):
     t, m, r = K.apply(b, True, _dir(tmp_path))
     assert r["relay"]["already_per_lane"] and r["relay"]["regions"] == 4
     assert ".rst_n(w_u_vp_4_Y[1])" in t
+
+
+def test_relay_lanes_through_part_select_is_noop(tmp_path):
+    """S81-DIE-R3 11-19: the D8h bind gives t56 lanes `assign w_u_vp_4_Y = w_u_vp_u_rr_rst_n[3:2]` read as w_u_vp_4_Y[i]
+    (= relay bit 2 + i): per-lane bits already, kit unchanged; an index past the slice stays fail-closed"""
+    b = BOUND.replace("wire [1:0] w_u_vp_u_rr_rst_n;", "wire [3:0] w_u_vp_u_rr_rst_n;").replace(".REGIONS(2)", ".REGIONS(4)")
+    b = b.replace("    wire [0:0] w_u_vp_2_Y;", "    wire [0:0] w_u_vp_2_Y;\n    wire [1:0] w_u_vp_4_Y;\n    assign w_u_vp_4_Y = w_u_vp_u_rr_rst_n[3:2];")
+    b = b.replace(".rst_n(w_u_vp_2_Y[0])", ".rst_n(w_u_vp_4_Y[1])", 1).replace(".rst_n(w_u_vp_2_Y[0])", ".rst_n(w_u_vp_4_Y[0])", 1)
+    t, m, r = K.apply(b, True, _dir(tmp_path))
+    assert r["relay"]["already_per_lane"] and r["relay"]["regions"] == 4
+    assert [x["rst_n"] for x in r["relay"]["lanes"]] == ["w_u_vp_u_rr_rst_n[2]", "w_u_vp_u_rr_rst_n[3]"]
+    assert ".rst_n(w_u_vp_4_Y[1])" in t
+    bad = b.replace(".rst_n(w_u_vp_4_Y[1])", ".rst_n(w_u_vp_4_Y[2])", 1)
+    with pytest.raises(K.LnCopyError):
+        K.apply(bad, True, _dir(tmp_path))

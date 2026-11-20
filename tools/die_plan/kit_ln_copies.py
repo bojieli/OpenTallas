@@ -330,6 +330,13 @@ def copy_relay(btxt, cfg):
                 return resolve(parts[-1 - i], depth + 1) if i < len(parts) else None
             ks = {resolve(q, depth + 1) for q in parts}
             return ks.pop() if len(ks) == 1 else None
+        ps = re.fullmatch(r"(\w+)\[(\d+):(\d+)\]", rhs)
+        if ps:
+            # S81-DIE-R3 11-19 (t56 bind D8h: `assign w_u_vp_4_Y = w_u_vp_u_rr_rst_n[19:4]`, lane rst_n = w_u_vp_4_Y[i]):
+            # bit i of a descending part-select [hi:lo] is source bit lo + i (out of range -> unresolved, fail closed)
+            hi, lo = int(ps.group(2)), int(ps.group(3))
+            i = int(m.group(2) or 0)
+            return resolve(f"{ps.group(1)}[{lo + i}]", depth + 1) if hi >= lo and lo + i <= hi else None
         if m.group(2) not in (None, "0") and not re.fullmatch(r"\w+\[\d+\]", rhs):
             return None
         return resolve(rhs, depth + 1)
