@@ -22,6 +22,12 @@ Result, next to the 833 record in the same unit (so the counter's scan, the stor
                                         signed_period_ps anyway)
   <unit>/signoff_period/period_resign.json   the search summary (verdict SIGNED_AT_PERIOD | SIGNED_AT_833 | NOT_ELIGIBLE | OVER_1000 | ERROR)
 
+LAST RESORT (COORD 11-20 on the owner decision): sign at 833 wherever possible.  A DB is eligible only after its 833 late-stage
+repair failed: an eco_loop.json (tools/die_plan/eco_loop.py) for that kit or ECO pass with a verdict other than PASS (EXHAUSTED,
+NOT_NEAR_MISS, FAIL ...), found beside the record, in its kit's eco_*/ dirs, or named with --eco-evidence.  Without one the verdict is
+ECO_FIRST.  --no-eco-evidence (lane / owner override, recorded in the record) skips it.  DIE-PERIOD.tsv names the types that force each
+die's period so they can be targeted for a real 833 fix.
+
 Hold: a record whose internal hold fails is not eligible here (verdict HOLD_FIRST): the late hold ECO and its residual pass
 (eco_loop.py run --kit K) come first, on the 833 constraint, and this tool then runs on the ECO's signed-off pass dir record.
 
@@ -123,6 +129,32 @@ def next_period(p, tt_wns, step=STEP_PS):
     return on_grid(p + max(step, deficit), step)
 
 
+ECO_FAIL_VERDICTS = ("EXHAUSTED", "NOT_NEAR_MISS", "FAIL", "NOT_ELIGIBLE", "LEC_FAIL")
+
+
+def eco_evidence(path833, rec, extra=()):
+    """-> [(eco_loop.json path, verdict)] of failed 833 late-stage repairs of this DB's kit (any PASS means 833 is reachable: [])"""
+    p = Path(path833).resolve()
+    kit = Path((rec.get("inputs") or {}).get("kit") or unit_dir(p))
+    cands = [Path(x) for x in extra]
+    for d in [p.parent, p.parent.parent, p.parent.parent.parent, kit]:
+        cands += [d / "eco_loop.json"] + sorted(d.glob("eco_*/eco_loop.json"))
+    out, seen = [], set()
+    for c in cands:
+        try:
+            if c in seen or not c.is_file():
+                continue
+            seen.add(c)
+            v = json.loads(c.read_text()).get("verdict")
+        except (OSError, ValueError):
+            continue
+        if v == "PASS":
+            return []
+        if v in ECO_FAIL_VERDICTS:
+            out.append((str(c), v))
+    return out
+
+
 def check(rec):
     """-> dict(verdict ELIGIBLE | SIGNED_AT_833 | HOLD_FIRST | NOT_ELIGIBLE | OVER_1000, why, first_period_ps, tt, ff, drc)"""
     j = SP.judge(rec)
@@ -174,7 +206,7 @@ def trial_row(p, r):
                 clock_period_ps=SP.record_clock_period_ps(r), gates=j["gates"])
 
 
-def finalize(rec833, path833, trial, p, search):
+def finalize(rec833, path833, trial, p, search, eco=None):
     """the period record: the trial record measured at p + signed_period_ps + at_833, judged by the profile"""
     j833 = SP.judge(rec833)
     out = dict(trial)
@@ -184,6 +216,7 @@ def finalize(rec833, path833, trial, p, search):
                          ff_hold_wns_ps=j833["ff_hold_wns_ps"], drc=j833["drc"], gates=j833["gates"])
     out["period_search"] = search
     out["period_rule"] = RULE
+    out["period_eco_evidence"] = eco
     out["generated_period_resign"] = datetime.datetime.now().astimezone().isoformat(timespec="seconds")
     return SP.apply(out)
 
@@ -192,6 +225,14 @@ def run(a, runner=None):
     path833 = Path(a.signoff).resolve()
     rec833 = json.loads(path833.read_text())
     c = check(rec833)
+    if c["verdict"] == "ELIGIBLE":
+        ev = eco_evidence(path833, rec833, getattr(a, "eco_evidence", None) or ())
+        c["eco_evidence"] = ev
+        if getattr(a, "no_eco_evidence", False):
+            c["eco_evidence_override"] = True
+        elif not ev:
+            c.update(verdict="ECO_FIRST", why="no failed 833 late-stage repair (eco_loop.json) for this DB: run eco_loop.py run --kit K "
+                     "first; the relaxed period is the last resort (COORD 11-20)")
     out = Path(a.out).resolve() if a.out else unit_dir(path833) / "signoff_period"
     summary = dict(schema=SCHEMA, signoff_833=str(path833), check=c, rule=RULE, out=str(out), search=[])
     if c["verdict"] != "ELIGIBLE":
@@ -240,7 +281,7 @@ def run(a, runner=None):
             summary.update(verdict="ERROR", why="no TT result at %g ps" % p)
             break
         if row["tt_wns_ps"] >= -SETUP_TOL_PS:
-            fin = finalize(rec833, path833, trial, p, summary["search"])
+            fin = finalize(rec833, path833, trial, p, summary["search"], eco=dict(evidence=c.get("eco_evidence"), override=bool(c.get("eco_evidence_override"))))
             (out / "signoff.json").write_text(json.dumps(fin, indent=1) + "\n")
             summary.update(verdict="SIGNED_AT_PERIOD" if fin.get("verdict") == "SIGNED" else "NOT_SIGNED_AT_PERIOD",
                            signed_period_ps=p, record=str(out / "signoff.json"), reasons=fin.get("reasons"))
@@ -271,6 +312,8 @@ def main(argv=None):
     r.add_argument("--max", type=float, default=PERIOD_MAX_PS)
     r.add_argument("--image")
     r.add_argument("--dry", action="store_true")
+    r.add_argument("--eco-evidence", action="append", help="eco_loop.json of the failed 833 repair (else searched beside the record)")
+    r.add_argument("--no-eco-evidence", action="store_true", help="override: run without a failed 833 repair (recorded)")
     a = ap.parse_args(argv)
     if a.cmd == "check":
         print(json.dumps(check(json.loads(Path(a.signoff).read_text())), indent=1))

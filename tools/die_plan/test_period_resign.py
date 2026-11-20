@@ -104,6 +104,11 @@ def test_run_searches_and_writes_the_period_record(tmp_path):
     r833 = rec(-100, sdc=str(unit / "constraint.sdc"))
     (unit / "signoff" / "signoff.json").write_text(json.dumps(r833))
     a = type("A", (), dict(signoff=str(unit / "signoff" / "signoff.json"), out=None, step=5, max=1000, image=None, dry=False))
+    # last resort (COORD 11-20): no failed 833 ECO yet -> ECO_FIRST, nothing timed
+    assert PR.run(a, runner=lambda *x: pytest.fail("timed before the 833 ECO")) == 3
+    assert json.loads((unit / "signoff_period" / "period_resign.json").read_text())["verdict"] == "ECO_FIRST"
+    (unit / "eco_1").mkdir()
+    (unit / "eco_1" / "eco_loop.json").write_text(json.dumps(dict(verdict="EXHAUSTED")))
     # half-cycle paths: 895 gives only -60, 915 passes
     rc = PR.run(a, runner=fake_runner({895.0: -60.0, 915.0: -38.0}))
     assert rc == 0
@@ -115,6 +120,18 @@ def test_run_searches_and_writes_the_period_record(tmp_path):
     assert not (d / "trial_p895" / "signoff.json").exists() and (d / "trial_p895" / "sta_p895.json").exists()
     assert json.loads((d / "period_resign.json").read_text())["verdict"] == "SIGNED_AT_PERIOD"
     assert SP.judge(fin)["verdict"] == "SIGNED"
+    assert fin["period_eco_evidence"]["evidence"][0][1] == "EXHAUSTED"
+
+
+def test_a_passing_833_eco_blocks_the_relaxed_period(tmp_path):
+    unit = tmp_path / "kit"
+    (unit / "signoff").mkdir(parents=True)
+    for n, v in (("eco_1", "EXHAUSTED"), ("eco_2", "PASS")):
+        (unit / n).mkdir()
+        (unit / n / "eco_loop.json").write_text(json.dumps(dict(verdict=v)))
+    r = rec(-100)
+    r["inputs"]["kit"] = str(unit)
+    assert PR.eco_evidence(unit / "signoff" / "signoff.json", r) == []
 
 
 def test_run_stops_above_1000(tmp_path):
@@ -122,7 +139,8 @@ def test_run_stops_above_1000(tmp_path):
     (unit / "signoff").mkdir(parents=True)
     (unit / "constraint.sdc").write_text(SDC)
     (unit / "signoff" / "signoff.json").write_text(json.dumps(rec(-200, sdc=str(unit / "constraint.sdc"))))
-    a = type("A", (), dict(signoff=str(unit / "signoff" / "signoff.json"), out=None, step=5, max=1000, image=None, dry=False))
+    a = type("A", (), dict(signoff=str(unit / "signoff" / "signoff.json"), out=None, step=5, max=1000, image=None, dry=False,
+                           no_eco_evidence=True))
     rc = PR.run(a, runner=fake_runner({995.0: -60.0, 1000.0: -50.0}))
     assert rc == 1 and not (unit / "signoff_period" / "signoff.json").exists()
     assert json.loads((unit / "signoff_period" / "period_resign.json").read_text())["verdict"] == "OVER_1000"
