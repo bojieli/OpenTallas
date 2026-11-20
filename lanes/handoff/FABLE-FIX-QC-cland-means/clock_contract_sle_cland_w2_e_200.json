@@ -1,0 +1,37 @@
+{
+ "schema": "opentallas.core_clock_contract.v1",
+ "view_lib_sha256": "b72f9c32e32548878fe129148cbce3225095ce2e3255efee8e083feb4796cadc",
+ "signed": true,
+ "signoff_source": "/archive/opentallas-signed-1114/qwen_compute/sle_cland_w2_e_200/signoff.json",
+ "signoff_verdict": "SIGNED",
+ "pins": {
+  "clk": {
+   "tt": {
+    "mean_ps": 56.99,
+    "n": 37,
+    "basis": "pin_register_mean",
+    "source": "/archive/opentallas-signed-1114/qwen_compute/sle_cland_w2_e_200/signoff.json:clk:tt:insertion_pinflops (extraction check 57.013 ps)"
+   },
+   "ff": {
+    "mean_ps": 42.62,
+    "n": 37,
+    "basis": "pin_register_mean",
+    "source": "/archive/opentallas-signed-1114/qwen_compute/sle_cland_w2_e_200/signoff.json:clk:ff:insertion_pinflops (extraction check 42.638 ps)"
+   }
+  },
+  "fclk": {
+   "tt": {
+    "mean_ps": 54.95,
+    "n": 39,
+    "basis": "pin_register_mean",
+    "source": "SONNET-FIX-QC 11-20 STA extraction on the signed export 6_final.v+6_final.spef+6_final.sdc (sle_cland_w2_e_200), mean over fclk register clock pins of the rise arrival, same method reproduces the signoff clk mean within 0.06 ps"
+   },
+   "ff": {
+    "mean_ps": 41.131,
+    "n": 39,
+    "basis": "pin_register_mean",
+    "source": "SONNET-FIX-QC 11-20 STA extraction on the signed export 6_final.v+6_final.spef+6_final.sdc (sle_cland_w2_e_200), mean over fclk register clock pins of the rise arrival, same method reproduces the signoff clk mean within 0.06 ps"
+   }
+  }
+ }
+}

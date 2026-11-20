@@ -1,0 +1,31 @@
+{
+ "tt_clk": {
+  "n": 592,
+  "mean_max": 93.441,
+  "mean_min": 87.738,
+  "not_found": 0
+ },
+ "tt_fclk": {
+  "n": 2131,
+  "mean_max": 123.696,
+  "mean_min": 116.032,
+  "not_found": 0
+ },
+ "ff_clk": {
+  "n": 592,
+  "mean_max": 74.971,
+  "mean_min": 70.483,
+  "not_found": 0
+ },
+ "ff_fclk": {
+  "n": 2131,
+  "mean_max": 99.133,
+  "mean_min": 93.059,
+  "not_found": 0
+ },
+ "signoff_pinflops_mean": {
+  "tt": 93.45,
+  "ff": 74.98
+ },
+ "signoff_pinflops_n": 584
+}
