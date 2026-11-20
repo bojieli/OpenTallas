@@ -1,3 +1,119 @@
+# FABLE-CLOSURE-STRATEGY 2026-11-20 13:25 PST (lane FABLE-CLOSURE-1315): the held kits at -300 to -1,500 ps are mostly one unbuffered wire into a hard-core pin; hold cells are not shown to cause GRT overflow
+
+Reviewer: FABLE-CLOSURE-1315 (Fable). Read-only: no job launched, cancelled or patched; no STA run. Technical PD only; S81, HEAD, QC, KV; HBM parked.
+Gate: DRC 0, routed TT >= -42 ps at 833 ps, internal FF hold >= 0, LEC, bind + LATCHECK. Hop cap 300 um. Nothing below is a new gate or hold.
+Marking: **V** = I opened the file this round. **R** = reported by the named lane. **I** = inferred. **P** = proposal.
+Delta on 11:20. Its sections 1.2 to 1.4 and 2 stand. Its headline 1 is corrected in section 1 below.
+
+## 0. Headline
+
+1. **Correction to 11:20: hold cells are correlated with GRT stalls, not shown to cause them.** lepe proof6 carries 32,839 hold cells (8.9 %) and GRT ends at extra iteration 6 with overflow 0 and usage 9.55 % (V). Do not cancel or hold a build on its hold-cell count (section 1).
+2. **Seven placed kits have the same worst path: one unbuffered wire, slew 2.6 to 5.0 ns, wire delay 815 to 1,586 ps (V).** Five end on a hard-core pin. The core view libs carry no `max_transition` and no `max_capacitance` (V on `ot_s81sl_vs_tt.lib`), so place repair sees no violation on those nets (I). The post-place WNS that ROUTE-RELEASE used is therefore set by a flow default on these kits, not by the plan (section 2).
+3. **Three more leaf kits are set by a single-bit clock-landing start or reset relay net** with 13 to 26 buffers in series (V).
+4. **The generate-block gap: fix it at the netlist, not in the RTL parser; no latch for SRAM-wrapper internals** (section 3).
+
+## 1. Is hold-cell congestion causal?
+
+No evidence that it is. Four reads against it, one open test.
+
+| Build | Hold cells | Share | GRT |
+|---|---|---|---|
+| S81 lepe_mu_LP t2 proof6/r2 (V, `5_1_grt.tmp.log`) | 32,839 | 8.9 % | overflow 0 at extra iteration 6; usage 9.55 % |
+| HEAD hd_tile (11:20 table) | 25,166 | 18.0 % | type is signed off (R) |
+| HEAD hd_lep0N r3 (11:20) | 17,151 | 3.7 % | 46,652, flat |
+| QC sle_ctl (11:20) | 6,998 | 1.4 % | stalled |
+| S81 leaf t39 D8i baseline (V) | 47,483 | 13.8 % | 20,000 markers (report cap) at iterations 5, 10 and 15 |
+
+- The largest share on any type routed and signed off. A type with 3.7 % has the worst overflow. So the count is neither sufficient nor necessary.
+- What moved overflow by two orders of magnitude was structure each time: lepe RIP1 removed the rid class (R); coll_core read register 75,675 -> 529 (R); KV hgi split clock rows 10,201 -> 4 (R).
+- Reading (I): the families with wide tap windows are also the bus-heavy families with core arrays, so both numbers rise together. Hold cells add demand only where the tile is already near capacity.
+- What hold cells do cost on proof6 (V): 20,362 s of repair before GRT; then 200 more buffers in GRT moved setup from -149.06 to -217.71 and the setup guard stopped the pass. So the cost is hours and setup, which is still a reason for the lockup form.
+- QC slw_fe_v2 (R, LOCKUP-STATION-1130): 41,091 cross-tap pairs and 0 cross-tap hold ends at a 57.8 ps window. The window makes the ends, as 11:20 section 1.4 says.
+
+**The one controlled test:** `proof_t39` (epyc7, same kit with 131 latches) against the baseline above. It was in CTS at 13:14 (V). Its handoff says to stop it before GRT. Keep it to GRT iteration 10 and read markers against the baseline. That answers the question with one build.
+
+## 2. The held kits: common setup mechanism
+
+Source (V): `3_detailed_place.rpt` worst max path and `geom/placed_scan.json` of each kit, event D8i 465cb9fe2d3 (QC A4 for cbf). Scripts `scratchpad/sig.py`, `held.py`, `rel.py`.
+
+| Kit | Place WNS | Worst path | Largest single delay / slew (ps) | Buffers on path |
+|---|---|---|---|---|
+| leaf t60 | -1,123 | core `u_vsw/o_f` -> core `u_vs/sw_fi` (66 bits, 423 um, no flop) | 1,576 / 4,998 | 0 |
+| kv_leaf t4 | -955 | `ln_15 cst_hi` src flop -> lane core `g_ln_12/c3` | 1,586 / 4,998 | 0 |
+| kv_leaf t1 | -708 | `ln_9 cst_hi` src flop -> lane core `g_ln_5/y` | 1,296 / 4,101 | 1 |
+| leaf t57 | -306 | `cst_sw` src flop -> core `u_vsw/i_d` | 815 / 2,578 | 0 |
+| leaf t43 (not in the 12) | -779 | src flop -> core `u_vq/m_v` | 1,342 / 4,253 | 2 |
+| slice C c1x t9 | -1,278 | `xf driver go_c` -> finish core `g_cp_0/go` | 1,291 / 4,082 | 6 |
+| QC cbf_q01_s2 | -1,523 | `d3 t_1_2 t_out.q` -> `pc_nk t_0_2 n_b.q` D pin | 1,261 / 3,995 | 3 |
+| leaf t72 | -1,381 | `cland_origin/s2` -> `cland_reader_start_ft0_i_0` (net `cland_start`) | 70 / 48 | 26 |
+| leaf t8 (not in the 12) | -982 | `u_rrl_18` -> `cland_fstart_ft10_o` | 74 / 68 | 18 |
+| leaf t56 | -484 | `u_rrl_554` -> `cland_fstart_ft1_o` | 74 / 68 | 13 |
+| leaf t1 | -739 | `vp g_wr1 hi_sw` -> `wdo_q[0][80]` (soft logic) | 85 / 270 | 18 |
+
+Three classes.
+
+**U. One unbuffered wire (7 kits).** The final net has slew 2.6 to 5.0 ns. Place `repair_design` ran on t60 (62,289 buffers in 31,995 nets) and left this net alone. `ot_s81sl_vs_tt.lib` and `ot_s81sl_vsw_tt.lib` have 0 `max_transition` and 0 `max_capacitance` lines, so a net whose loads are core pins has no limit to violate (I for the link; the cbf case ends on a flop D pin, so it has a second cause I did not find). The scan's own buffered estimate for the t60 hop is 525 ps against 1,576 measured.
+- With the wire buffered, t60 is about 208 (core clock-to-out) + 525 + 85 (setup) + 257 (macro clock tree) - 833 = -242 (I). t57 goes under the release line. kv_leaf t4 at 716 um stays near -500 and needs a stage.
+- Every core input also loses 227 to 309 ps to `macro clock tree delay` against the ideal 250 ps clock at this stage. Whether the tap offset gives it back after CTS was not read. Slice C p1/p2 (R) show the same wire after CTS at -953 / -998, so CTS does not cure the class.
+
+**C. Clock-landing start and reset relay, single bit (t72, t8, t56; second path on t60, t56 at -374 to -391).** A broadcast or relay net crossing the type through 13 to 26 buffers in one cycle. Few bits, so the cost of pipelining is flops in the tens.
+
+**S. Soft logic spread (t1).** One kit; `vp g_wr1` write path. Not a family signal yet.
+
+Two side results.
+- `placed_scan` bits over cycle do not rank the kits: t68 726 bits at -125, t56 80 bits at -484, t72 212 bits at -1,381 (V, 24 D8i leaf and kv_leaf kits). The scan uses a buffered estimate and does not see class U or the core pin budget.
+- The split at -300 kept t57 (-306, class U) and passed kits whose worst path is real logic. Class, not the number, should sort them.
+
+## 3. Is the generate-block latch gap worth a tool fix?
+
+Yes for a small fix in another place; no for the two obvious ones.
+
+Numbers (R, LOCKUP-STATION-1130): lepe 5,271 of 10,237 cross-tap pairs covered; roq/rop generate regs 1,123 pairs; core and SRAM-wrapper internals 5,531. hd_lep0N 17,066 of 44,659.
+
+- **Pairs are not hold ends.** lepe has 7,622 cross-tap ends on 10,237 pairs; QC fe has 0 ends on 41,091 pairs. Coverage has to be counted on the pre-repair ends in `pregrt_ff_hold.log` joined to the spec. That is one read on the kept `4_cts_pre_tt.odb`, and it comes first.
+- **Do not extend the RTL scope parser into generate blocks (P).** `zl_pairs.tcl` already names the exact launch flop instances in the placed netlist. Insert the launch-side latch on those instances in the kit's synthesized netlist; generate scopes, parameter widths and module scoping stop mattering. `ot_dp_lk` and its LEC see-through are on main. Whether the kit flow has a post-synth hook for it was not checked.
+- **lepe roq/rop: no fix.** Row 4 rewrites roq (per-column copies, IN_PIPE 2), so its names and pairs change in J6. Re-derive after.
+- **SRAM-wrapper and core internals: no latch.** Pairs inside one wrapper mean its flops are split across taps. Put a wrapper's registers on one tap in the tap rows (11:20 section 1.4).
+- **hd_lep0N is the type that pays:** 62 % of pairs uncovered and it is the one unsigned HEAD type. Its other half, 8,396 `port_in` ends, is a sender-side class no latch in this kit covers.
+
+## 4. Levers, ranked by types unblocked per day
+
+| # | Lever | Evidence | Types | Owner | First check |
+|---|---|---|---|---|---|
+| 1 | Limits on core pins, so place repair buffers core-pin nets: `max_transition` / `max_capacitance` in the core view lib, or `set_max_transition` on core pins in the kit SDC | section 2 class U, 7 kits (V) | 5 of the 12 held now; every type with hard cores on four dies; count not known | kit flow owner (WAVE-FLOW-R2) with S81-DIE-R4 | t60 `3_place.odb`: set the limit, `repair_design`, re-read WNS. Minutes, via ot-run. Predicted about -240 (I) |
+| 2 | KV D26 at the 20:00 cut | hg GEN_LINT is the ECTL cycle (R); krsp lanes 5 -> 6 | 8 hg types generate again; 19 hg/hgi get the head-core lockup | KV-PLAN-R1 | R3b gate log |
+| 3 | S81 J6: a stage at the core pin on core-to-core and src-to-core hops over 300 um (`relay_depth` sink rows, KIT-RD-1 on main); slice C finish leg D=3 | t60 core-to-core 423 um with no flop; kv_leaf 623 to 716 um, no row; finish leg 941 um (R) | leaf and kv_leaf with a class U end (5 of 24 read); slice C 11 | S81-DIE-R4, S81-SLICEC-R3 | after lever 1, list the core-pin ends still under -42 |
+| 4 | Pipeline the clock-landing start and the reset relay to `cland_fstart` at 300 um, same depth to every reader | class C: t72, t8, t56 (V) | 3 of 24 leaf kits as WNS; generator class, so every type with landings | S81-DIE-R4 with the landing generator owner | count `cland_start` and `rrl -> cland_fstart` ends under -42 on the 24 placed reports |
+| 5 | lepe row 4 + item 6 (`u_u_land.tag`) | proof6: GRT 0, TT -149 (R, V) | 4 LP lane-core types | OPUS-FIX-S81-LEPE | path report on `land.tag`, then proof7 |
+| 6 | Lockup station by netlist instance (section 3) | t39 proof in CTS; col 120 -> 2 and hd_lep0N wait on it | col, leaf, hd_lep0N; 0 until a kit shows hold ends before repair near 0 | LOCKUP-STATION-1130; HEAD-R14 | t39 pregrt class line; then GRT iteration 10 A/B |
+| 7 | QC V1: rows on `rrl_369 -> fab u_st.g_seg` (80 bits, 710 to 1,228 um, no row) and `d3 t_out -> pc_nk` | cbf_q01_s2 (V); V1 priced at +15 cycles (R) | cbf family; V1 feeds all QC | QC-PLAN-R5 | send LOCKUP one kept su_c or coll_core `4_cts.odb` |
+| 8 | Sort placed kits by worst-path class before the WNS line | section 2 side results | re-sorts the 12 held; t57 first | ROUTE-RELEASE successor / S81-DIE-R4 | `sig.py` on the queue rows |
+
+Lever 1 is ranked first because it is a flow default, costs one line, and changes the number every triage lane reads. It is predicted, not measured.
+
+## 5. Stop list (11:20 stands except as corrected; plus)
+
+- No cancel and no route hold on hold-cell count alone. This withdraws my 11:20 reading and the "over 10k cells: cancel before GRT" plan that HEAD-R14 took from it. Read GRT iteration 10 instead.
+- Do not stop `proof_t39` before GRT iteration 10.
+- No release or cancel judgement from a post-place WNS whose worst net has slew over about 1 ns. Class it first.
+- No `placed_scan` bits-over-cycle count as a predictor of WNS.
+- No pair coverage reported as hold coverage.
+- No RTL-parser work for generate-block latches; no latch rows for SRAM-wrapper internals; no lepe roq/rop lockup rows before row 4.
+- No further slice C build without the finish-leg stages (p1 and p2 ended on the same path).
+- No further lepe proof without row 4; roq is measured.
+- No KV hg relaunch before D26 applies.
+
+## 6. Not checked
+
+- Why the class U nets stay unbuffered: the missing lib limits are a fact, the causal link is inferred, and cbf_q01_s2 ends on a flop pin. No `repair_design` trial was run.
+- The -240 prediction for t60 and whether CTS returns the 227 to 309 ps macro clock term.
+- Whether J5 / J6 rows already station the named leaf hops; I read D8i kits only.
+- Where hold cells sit against hot tiles (still open from 11:20). The t39 A/B replaces it.
+- hd_tile sign-off is taken from the 25-of-26 count, not from its export.
+- Post-synth hook for netlist latches; LEC on any latch spec (LOCKUP ran none on lepe).
+- HEAD r14 pre-GRT line: nothing in the log at 13:14. KV D26 gate and QC V1 strict runs were not opened.
+- Leaf sample: 24 placed D8i leaf and kv_leaf kits on five hosts, worst path only.
+
 # FABLE-CLOSURE-STRATEGY 2026-11-20 11:20 PST (lane FABLE-CLOSURE-1115): the hold repair before GRT adds 9 to 14 % of the cells on the families that stall in GRT; hop stations, hold and lane pads are one construction rule
 
 Reviewer: FABLE-CLOSURE-1115 (Fable). Read-only: no job launched, cancelled or patched; no STA run. Technical PD only; S81, HEAD, QC, KV; HBM parked.
