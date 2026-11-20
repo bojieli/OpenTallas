@@ -756,7 +756,12 @@ def _reset_cap():
 
 
 # CBC rule 4 (OWNER 11-20, CBC-ALL-0200): the ring reset fan reach is the reset hop cap (300 um), not the 405-um data reach
-RING_RESET_FAN_UM = min(LOCAL_RESET_REACH_UM, _reset_cap())
+RING_RESET_FAN_UM = min(LOCAL_RESET_REACH_UM, _reset_cap())      # import-time snapshot for old callers
+
+
+def ring_reset_fan_um():
+    """FLOW-NOADV-R2 11-20: the ring reset fan reach AT CALL TIME (inside cbc_rules.bound_reset_hop_cap: the bound tree's cap)"""
+    return min(LOCAL_RESET_REACH_UM, _reset_cap())
 
 
 def _bbox_spread(pts):
@@ -764,11 +769,12 @@ def _bbox_spread(pts):
     return (max(xs) - min(xs)) + (max(ys) - min(ys)) if pts else 0.0
 
 
-def reset_fan_clusters(home, groups, reach=RING_RESET_FAN_UM):
+def reset_fan_clusters(home, groups, reach=None):
     """RING-RSTFAN-1 grouping.  home = [(x, y)] sites that stay on the original reset (ring band corners + the relay
     site), groups = [(name, [(x, y)])] movable load groups.  -> (spread of everything, [home group names],
     [(names, pts)] far clusters, each spread <= reach unless a single group alone is wider).  Deterministic: groups join
     home, else the first far cluster that stays within reach, else open a new one, nearest-to-home first."""
+    reach = ring_reset_fan_um() if reach is None else reach
     every = list(home) + [p for _n, ps in groups for p in ps]
     before = _bbox_spread(every)
     if before <= reach + 1e-6:
@@ -2878,7 +2884,7 @@ class Landings:
                 cx = (min(p[0] for p in pts) + max(p[0] for p in pts)) / 2
                 cy = (min(p[1] for p in pts) + max(p[1] for p in pts)) / 2
                 dx, dy = sites[d][1] if d in sites else (float(xy[0]), float(xy[1]))
-                if abs(cx - dx) + abs(cy - dy) > RING_RESET_FAN_UM:
+                if abs(cx - dx) + abs(cy - dy) > ring_reset_fan_um():
                     cx, cy = (cx + dx) / 2, (cy + dy) / 2
                 cx, cy = round(cx, 3), round(cy, 3)
                 decl += [f"    wire {cnet};",
@@ -2906,7 +2912,7 @@ class Landings:
             at = text.index("\n", drv.start()) if "\n" in text[drv.start():] else len(text)
             text = text[:at] + "\n" + "\n".join(decl) + text[at:]
             home_pts = home + [p for g, ps in movable if g in kept for p in ps]
-            rp[b]["ring_reset_fan"] = dict(rule="RING-RSTFAN-1", reach_um=RING_RESET_FAN_UM, spread_before_um=round(before, 1),
+            rp[b]["ring_reset_fan"] = dict(rule="RING-RSTFAN-1", reach_um=ring_reset_fan_um(), spread_before_um=round(before, 1),
                                            spread_home_um=round(_bbox_spread(home_pts), 1), copies=copies,
                                            added_flops=len(copies), added_cycles=0)
             changed = True

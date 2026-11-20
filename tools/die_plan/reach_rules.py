@@ -546,7 +546,7 @@ def _fix_start(P, t, tn, obs, reach=REACH_UM):
         for b in ([] if reuse_writer else si["outs"]):
             pin = si["pins"]["cland_fstart_out_" + b]
             q = free(_inside(pin, W, H, 4.32))
-            if (man(o, pin) > reach + EPS or man(o, q) > min(reach, KS.NEED_UM)
+            if (man(o, pin) > reach + EPS or man(o, q) > min(reach, KS.need_um())
                     or b in (old.get("branches") or {})):
                 tg[b] = q
         hubs = _legal_hubs(o, tg, free, SITE_HOP_UM - PAD_SPAN_UM)

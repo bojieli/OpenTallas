@@ -9493,7 +9493,10 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
     root = Path(rtl_root) if rtl_root else Path(__file__).resolve().parent.parent.parent
     rs = root / "rtl" / "lib" / "ot_reset_sync.sv"
     kits = []
+    import contextlib as _ctxl
+    _bound_cap_scope = _ctxl.ExitStack()           # FLOW-NOADV-R2 11-20: one type's bound reset cap is in force for that type only
     for tn, t in sorted(P.types.items()):
+        _bound_cap_scope.close()
         if (t.get("hard") and tn not in wrappers) or (types and tn not in types):
             continue
         if kit_rtl and tn in kit_rtl:
@@ -9516,6 +9519,8 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
                          if Path(f).resolve() not in have]
         import bound_reset_contract as BRC
         captured_reset = BRC.kit(mine, tn)
+        import cbc_rules as _CBC_scope
+        _bound_cap_scope.enter_context(_CBC_scope.bound_reset_hop_cap(BRC.reach_cap_um(captured_reset)))
         # DIE-S81-85: the plan collector_tree the bind walked, kept before a native reset install replaces it
         plan_ctree = json.loads(json.dumps(t.get("clock", {}).get("landing_contract", {}).get("collector_tree")))
         if tn in native_reset_types or captured_reset:
@@ -9572,6 +9577,7 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
             if (out / f).is_file():
                 (Path(k) / f).write_text((out / f).read_text())
     (out / "run_kit.sh").chmod(0o755)
+    _bound_cap_scope.close()
     return kits
 
 

@@ -57,6 +57,22 @@ import cbc_rules as _CBC  # noqa: E402  OWNER 11-20 #6: generator hop default (3
 MAX_HOP_UM = min(_CBC.REACH_UM_PER_HOP, _CBC.reset_hop_cap_um())   # START / raw-reset stages are reset hops (CBC rule 4)
 STEP_UM = min(STEP_UM, MAX_HOP_UM - 40.0)                             # same GPL margin under the cap as 340 under 405
 NEED_UM = min(380.0, MAX_HOP_UM)          # writer branches only for output rings whose START corridor is longer than this
+
+
+def max_hop_um():
+    """FLOW-NOADV-R2 11-20: the START / raw-reset hop cap AT CALL TIME (inside cbc_rules.bound_reset_hop_cap it is the bound tree's cap);
+    MAX_HOP_UM / STEP_UM / NEED_UM stay as the import-time snapshot for old callers"""
+    return min(_CBC.REACH_UM_PER_HOP, _CBC.reset_hop_cap_um())
+
+
+def step_um():
+    return min(340.0, max_hop_um() - 40.0)
+
+
+def need_um():
+    return min(380.0, max_hop_um())
+
+
 EDGE_Y = 12.0            # origin row (inside core rows, clear of the M7 strap/pin sites)
 CLEAR_UM = 4.32          # corridor clearance around macros (= reset_tree.CLEAR_UM)
 REL = re.compile(r"ot_dp_rrelay\s+(\w+)\s*\(\.clk\(clk\),\s*\.d\((\w+)\),\s*\.q\((\w+)\)\);\s*//[^\n]*?depth (\d+) "
@@ -219,12 +235,12 @@ def sited(o, tgt, r, depth, obs, occupied, W, H):
     (bands carry wires but no relay cells).  -> (sites | None, route used)"""
     from start_obstacle_path import relay_sites
     try:
-        return relay_sites(r, depth, max_hop_um=MAX_HOP_UM, site_boxes=occupied, clearance_um=CLEAR_UM), r
+        return relay_sites(r, depth, max_hop_um=max_hop_um(), site_boxes=occupied, clearance_um=CLEAR_UM), r
     except ValueError:
         pass
     try:
         r2 = _route(o, tgt, obs + [list(x) for x in occupied], W, H)
-        return relay_sites(r2, depth, max_hop_um=MAX_HOP_UM, site_boxes=occupied, clearance_um=CLEAR_UM), r2
+        return relay_sites(r2, depth, max_hop_um=max_hop_um(), site_boxes=occupied, clearance_um=CLEAR_UM), r2
     except ValueError:
         return None, r
 
@@ -299,7 +315,7 @@ def istations_type(t, margin, min_um):
             continue
         st, r = sited(a, b, r, len(regs), obs, bands, W, H)
         if st is None:
-            need = max(0, math.ceil(length(r) / MAX_HOP_UM) - 1)
+            need = max(0, math.ceil(length(r) / max_hop_um()) - 1)
             rep["reported"].append(f"{tag}: corridor {length(r):.0f} um needs {need} stations, has {len(regs)}")
             continue
         e["regs_um"] = st
@@ -342,11 +358,11 @@ def start_type(P, tn, t, margin, min_um):
             except ValueError as e:
                 fails.append(dict(group=key, bus=b, error=str(e)))
                 continue
-            if key == "landing_writer_start" and length(r) <= NEED_UM:
+            if key == "landing_writer_start" and length(r) <= need_um():
                 continue
             routes[b] = r
         old = (ck.get(key) or {}).get("depth", 0)
-        depth = max([max(0, math.ceil(length(r) / STEP_UM) - 1) for r in routes.values()] + [old])
+        depth = max([max(0, math.ceil(length(r) / step_um()) - 1) for r in routes.values()] + [old])
         groups[key] = (routes, depth, tgt_of)
     if fails:
         raise SystemExit(f"kv_start_corridor_event start {tn}: no legal corridor: {fails[:3]}")
@@ -447,7 +463,7 @@ def raw_type(P, tn, t, rtl_dir, margin, min_um):
             rep[role]["target_um"] = [round(v, 3) for v in xy]
             rep[role]["pin_offset_um"] = round(man(xy, pin_xy), 1)
     if fails:
-        raise SystemExit(f"kv_start_corridor_event raw {tn}: no corridor with hops <= {MAX_HOP_UM}: {fails}")
+        raise SystemExit(f"kv_start_corridor_event raw {tn}: no corridor with hops <= {max_hop_um()}: {fails}")
     ck["landing_raw_branches"] = branches
     return dict(raw=raw, chain_depth=len(chain), branches=len(branches),
                 copies=sum(len(b["stages"]) for b in branches), consumers=rep)

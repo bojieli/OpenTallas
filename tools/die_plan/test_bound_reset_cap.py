@@ -85,3 +85,18 @@ def test_reach_cap_reads_receipt_then_tree():
     assert BRC.reach_cap_um({"reach_cap_um": 405, "tree": {"reach_um": 300}}) == 405.0
     assert BRC.reach_cap_um({"tree": {"reach_um": 300}}) == 300.0
     assert BRC.reach_cap_um({"tree": {}}) is None and BRC.reach_cap_um(None) is None
+
+
+def test_ring_fan_and_start_corridor_read_the_cap_at_call_time(monkeypatch):
+    # FLOW-NOADV-R2 11-20 (COORD): clock_landings.RING_RESET_FAN_UM / kv_start_corridor_event MAX_HOP_UM were import-time constants
+    import clock_landings as CL
+    import kv_start_corridor_event as KS
+    monkeypatch.delenv("OT_RESET_HOP_CAP_UM", raising=False)
+    assert CL.ring_reset_fan_um() == 300.0 and KS.max_hop_um() == 300.0 and KS.step_um() == 260.0 and KS.need_um() == 300.0
+    with CBC.bound_reset_hop_cap(405):
+        assert CL.ring_reset_fan_um() == 405.0 and KS.max_hop_um() == 405.0 and KS.step_um() == 340.0 and KS.need_um() == 380.0
+        # a 350-um spread is one group under the bound 405 cap, a far cluster under the 300 default
+        home, groups = [(0.0, 0.0)], [("a", [(350.0, 0.0)])]
+        assert CL.reset_fan_clusters(home, groups)[2] == []
+    assert len(CL.reset_fan_clusters(home, groups)[2]) == 1
+    assert CBC.reset_hop_cap_um() == 300.0
