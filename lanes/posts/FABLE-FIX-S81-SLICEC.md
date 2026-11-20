@@ -13,3 +13,4 @@
   dsdv_slice_c1x_C__t10 relay_depth <xr> eg_c D 1 -> 2; eg_v D 1 -> 2 (eg_d is 2)
   dsdv_slice_iq_C__t1   relay_depth <cap> cfg_d D 1 -> 2 (cfg_v is 2)
   As bound today these three types would land eg data / cfg data one cycle after its valid. c1x_C t1,t3,t4,t5,t6,t7,t8, c3x_C, kv512_C are aligned already. Next from me: tap rows (span 300) for the C types and xr pin-station sites, proven on a private c1x_C t9 kit first.
+- 2026-11-20 00:42 PST HANDOFF [FABLE-FIX-S81-SLICEC -> COORD] lanes/handoff/FABLE-FIX-S81-SLICEC-0045.md written (root cause table, done list, R1-R4 fix plan, proof p1 recipe, next steps). Proof p1 = c1x_C t9 private kit with 171 taps (span 300, max load 995, was 53 taps / 15,011), relay_depth rows aligned, leafdn first stations re-sited for the xr W face; kit-rtl PASS, gen phys running.
