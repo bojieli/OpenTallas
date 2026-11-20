@@ -139,3 +139,8 @@
   QC: slw_hc2 (UNCLASSIFIED) and slw_st_a_v2 (global_place) FAILED-NO-RELAUNCH, owner FAIL-ROUTE-1115 alive.
   S81: col_h9_r0_p1__t1__pva2e3974f 8.5h STALE/UNCLASSIFIED; dsdv_slice_kv512_C__t1 DEAD-OWNER; s81sl_leaf__t21, t26, svc_lo_dsdv_svc_rs__t6 UNOWNED.
   HEAD: none flagged.
+- 2026-11-20 12:50 PST 12:50 sweep: 31 flagged rows, 24 new since 11:50.
+  S81 new: 15 UNOWNED placed/route-held (dsdv_slice c1x/c3x/lepe/lepw, s81sl_kv_leaf t1/t4, s81sl_leaf t1/36/55-57/60/62/66/68/72) + s81sl_leaf__t37 FAILED other flow error UNOWNED.
+  S81 old: col_h9_r0_p1 STALE 9.5h; dsdv_slice_kv512_C__t1 DEAD-OWNER.
+  QC new: cbf_q01_s2, sle_hc0 UNOWNED; slw_su_l1 DEAD-OWNER (FABLE-PD-QC-0945); 3 FAILED global_place/place (sle_st_a_v2, slw_st_a_v1, slw_st_b_v2) no relaunch, FAIL-ROUTE-1115.
+  KV: new kv3_pc__cl5a95b461 FAILED PDN-0006 no relaunch; old kv3_pc_v1, kv3_pv_v8 6.7h, qkd_pv_fin_s8_pin. HEAD none.
