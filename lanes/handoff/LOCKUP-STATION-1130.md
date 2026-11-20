@@ -25,3 +25,14 @@ hold ends before/after); hand rows to S81-DIE-R4 (J6), QC-PLAN-R5 (V1), KV-PLAN-
 ## Next
 - Rows per die: station_rule.py rows on each live plan (ft slots) + derive specs from one CTS kit per heavy family (QC su_c, coll_core, HEAD hd_lep0N).
 - Post results to the four die owners; post every 2 h.
+
+## Update ~13:00 PST
+- main cce380131d: module-scoped regs ({"reg","module"}), parameter widths, `ifdef headers skipped, unreadable modules recorded.
+- Census: HEAD hd_lep0N (epyc10 civil-redfish-285021 4_cts): 44,659/54,536 pairs cross taps; pre-repair ends port_in 8,396 /
+  cross_tap 7,227 / same_tap 291. derive maps 17,066; trial apply on a copy = 1,003 latches (epyc7 meas/lep_spec.json, lep_rtl_lk).
+  Remaining unmapped = regs in generate blocks (scope skip) and ot_s81hd_lep_rxh_st internals.
+- QC slw_fe_v2 (epyc8 outgoing-giraffe-478782): 41,091/64,562 pairs cross taps, 40,576 mapped (meas/fe2_spec.json), but its
+  pre-repair census is port_in 3,558 only (window 57.8 ps): cross-tap pairs do not cost hold there. QC su_c/coll_core kits
+  were cleaned; no CTS odb left to read.
+- Die rows: epyc7 meas/plans/rows.sh (ot-run) -> rows_<die>.json for s81 D8i, KV D25e3, QC A4, HEAD r11b NF15f.
+- Proof waiting: proof_t39 in global place at 12:4x.
