@@ -1,0 +1,27 @@
+{
+  "data_bits": 2208,
+  "epoch_footprints": 8,
+  "all_slots": 8840,
+  "macro_clear_spur_failures": [],
+  "worst_data_segment_um": {
+    "in": [
+      299.91,
+      {
+        "bit": "315",
+        "segment": 1
+      }
+    ],
+    "out": [
+      299.5920000000001,
+      {
+        "bit": "806",
+        "segment": 2
+      }
+    ]
+  },
+  "site_grid_um": [
+    0.054,
+    0.27
+  ],
+  "macro_keepout_um": 2.16
+}
