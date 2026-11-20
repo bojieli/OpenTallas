@@ -154,3 +154,8 @@
   QC: 15 FAILED-NO-RELAUNCH global_place (5 new, 10 old; 3 STALE) + 1 place error UNCLASSIFIED STALE; owner QC-PLAN-R5 (FAIL-ROUTE-1115).
   KV: 4 FAILED-NO-RELAUNCH (PDN-0006 x2, bind stale, flow errors; CLAND ring band), 19 WAIT-BIND held/placed; all old, owner KV-PLAN-R1.
   New since 13:50: only 5 QC global_place failures.
+- 2026-11-20 15:50 PST 15:50 sweep (14:50 mapping + new COORD owners): 495 rows, 37 flagged (was 35).
+  S81: 3 new UNOWNED placed/route-held: dsdv_slice_lepe_nh_mus_LP__t1, eng__t1, iqf__t1. HEAD hd_lep0N running 19h, owner FABLE-FIX-HEAD-LEP0N, not flagged.
+  QC (QC-PLAN-R5): 15 FAILED-NO-RELAUNCH global_place (9 STALE, all old) + place error stale; 1 new other flow error sle_su_l1__cl5ea486db.
+  KV (KV-PLAN-R2): 8 FAILED-NO-RELAUNCH (2 new: kv3_hub_C kit input missing, kv3_pc_v1__cl4ea58a5c/cl7f648944 flow errors; kv3_hub_Wi stale 9.4h) + 9 held WAIT-BIND (1 new).
+  No DEAD-OWNER rows.
