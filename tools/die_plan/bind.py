@@ -5165,10 +5165,12 @@ class Binder:
                                           if kk[0] == "strap" and kk[1] == r and kk[2] == port}
                         if not parameter_bits or set(actual_bits) != parameter_bits or any(val not in "01" for val in actual_bits.values()):
                             raise BindError(f"parent ID {p}.{r}.{port}: unknown or missing as-built ID parameter bits")
-                        expr = f"{width}'b{''.join(reversed(v))}"
-                        parent_ids.append((nm, expr))
-                        self.__dict__.setdefault("parent_id_values", {}).setdefault(p, {})[nm] = dict(width=width,
-                            value=int(''.join(reversed(v)), 2))
+                        literal = ''.join(reversed(v))
+                        value = int(literal, 2)
+                        if port == "sid" and self.parts[p].get("id_straps", {}).get(nm) != value:
+                            raise BindError(f"parent ID {p}.{r}.{port}: plan strap does not match bound value {value}")
+                        parent_ids.append((nm, f"{width}'b{literal}"))
+                        self.__dict__.setdefault("parent_id_values", {}).setdefault(p, {})[nm] = dict(width=width, value=value)
                     else:
                         ov.append(f".{nm}({width}'b{''.join(reversed(v))})")
                 else:

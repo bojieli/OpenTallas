@@ -146,6 +146,10 @@ _parent_id_straps = {"type": "object", "additionalProperties": False, "propertie
                           "value": {"type": "integer", "minimum": 0,
                                     **({"maximum": (1 << _physical_id_widths[name])-1} if name in _physical_id_widths else {})}}}
     for name in ("tile_id", "tile_tid", "map_lane_j", "lane_lane_id", "sidx", "strap_lane_id", *_physical_id_widths)}}
+_parent_id_straps["properties"]["sid"] = {
+    "type": "object", "required": ["width", "value"], "additionalProperties": False,
+    "properties": {"width": {"type": "integer", "const": 4},
+                   "value": {"type": "integer", "minimum": 0, "maximum": 15}}}
 _parent_id_straps["properties"].update({
     name: {"type": "object", "required": ["width", "value"], "additionalProperties": False,
            "properties": {"width": {"type": "integer", "const": w},
@@ -2240,15 +2244,19 @@ def _id_strap_errors(obj):
     """HEAD-BIND-4: partition ID straps = approved strap_* port + exact width; every instance of a declaring type gives
     exactly one value per declared strap, fitting its width; instances of other types give none."""
     try:
-        from .parent_id_straps import PHYSICAL_ID_WIDTHS
+        from . import parent_id_straps as PID
     except ImportError:
-        from parent_id_straps import PHYSICAL_ID_WIDTHS
+        import parent_id_straps as PID
     errs, decl = [], {}
     for tn, t in obj.get("partition_types", {}).items():
         d = {}
         for s in t.get("id_straps", []):
             n, w = s["name"], s["width"]
-            if PHYSICAL_ID_WIDTHS.get(n) != w:
+            expected_width = PID.PHYSICAL_ID_WIDTHS.get(n)
+            if n == PID.VQ_SID_PARENT_STRAP:
+                child = PID.type_parent_id_straps(t).get(PID.VQ_SID_BOUND_LEAF, {})
+                expected_width = child.get("sid", {}).get("width")
+            if expected_width != w:
                 errs.append(f"partition type {tn}: id_strap {n} width {w}: not an approved ID strap of that width "
                             f"(parent_id_straps.PHYSICAL_ID_WIDTHS)")
             if n in d:
