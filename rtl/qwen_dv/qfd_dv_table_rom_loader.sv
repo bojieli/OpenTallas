@@ -30,9 +30,11 @@ module qfd_dv_table_rom_loader #(
 );
     localparam integer MAX_STAGE = 36 + HEAD_STAGE37;
     localparam integer TAIL_BASE = 106 * MAX_STAGE;
+    localparam bit HEAD_C0_PROFILE = CAPTURE_STAGE==0 && LOCAL_CTRL==0 && WE_COPIES==34;
+    localparam bit HEAD_C1_PROFILE = CAPTURE_STAGE==1 && LOCAL_CTRL==1 && WE_COPIES==67;
     generate if (HEAD_STAGE37!=0 && (HEAD_STAGE37!=1 || BTAB_COMPACT!=1 ||
-                  CAPTURE_STAGE!=0 || LOCAL_CTRL!=0 || WE_COPIES!=34)) begin:g_head_profile_bad
-        initial $fatal(1,"HEAD_STAGE37 requires native compact C0/LOCAL0/WE34 profile");
+                  !(HEAD_C0_PROFILE || HEAD_C1_PROFILE))) begin:g_head_profile_bad
+        initial $fatal(1,"HEAD_STAGE37 requires a native compact loader profile");
     end endgenerate
     localparam integer LAST_SLOT = (MONITOR_TAIL!=0) ? 89 : 87;
     generate if (MONITOR_TAIL!=0 && (MONITOR_TAIL!=1 || BTAB_COMPACT!=1 ||
@@ -104,14 +106,17 @@ module qfd_dv_table_rom_loader #(
     end else begin:g_ofields
         assign data_owner=owner;assign data_valid=cap_v;assign data_last=cap_last;assign data_other=p_other;
     end endgenerate
+    wire shared_head = (HEAD_STAGE37!=0) && base==12'd3816;
     wire [3:0] we_group;
     generate for(rg=0;rg<4;rg=rg+1)begin:g_validation
         if(CAPTURE_STAGE!=0)begin:g_c
             wire [39:0] b=cm_bits[40*rg+:40];
             wire [1:0] k=b[2:1];
             wire [23:0] a=b[26:3];
-            wire bad=(b[39:27]!=0)||(k==0)||((k==3)&&(a>=64))||((k!=3)&&(a>=128))||
-                     ((BTAB_COMPACT!=0)&&(k==2)&&(a>=72))||((k==2)&&(a[1:0]!=0));
+            wire bad=(b[39:27]!=0)||(k==0)||((k==3)&&(a>=64))||
+                     ((k!=3)&&(a>=128)&&!(shared_head && k==2))||
+                     ((BTAB_COMPACT!=0)&&(k==2)&&(shared_head ? (a<72 || a>=272) : a>=72))||
+                     ((k==2)&&(a[1:0]!=0));
             assign we_group[rg]=cm_valid[rg]&&b[0]&&!bad;
         end else begin:g_o
             assign we_group[rg]=cap_v&&data[1024]&&!invalid;
@@ -142,7 +147,6 @@ module qfd_dv_table_rom_loader #(
 `endif
         (.clk(ck),.ce_in(active),.addr_in(rom_addr),.rd_out(rom_data[1063:798]));
     // The base stays fixed through the capture/output tail; no new request may enter while busy.
-    wire shared_head = (HEAD_STAGE37!=0) && base==12'd3816;
     wire [1:0] kind=data[1026:1025];
     wire [23:0] local_addr=data[1050:1027];
     wire invalid=data[1063:1051]!=0 || kind==0 ||
