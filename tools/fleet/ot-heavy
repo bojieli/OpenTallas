@@ -35,31 +35,22 @@ ot_heavy_thread_cap_factor() {
   fi
 }
 
-# STALE-LOCK (COORD 11-18): admission sat ~70 min on admit.lock whose holder had exited: a flock lives as long as ANY process holds the inherited fd 8 (a child of the
-# holder outlived it).  The holder writes its pid to admit.lock.pid after taking the lock; a waiter that has waited OT_HEAVY_LOCK_WAIT_S (30) and finds that pid gone replaces
-# the lock FILE (a new inode: the leaked fd keeps the dead inode) under a short break guard, and logs it.  A live holder is waited for as before.
+# Keep the host lock inode stable. Replacing it lets queued waiters on the
+# old inode enter concurrently with jobs using the replacement. Recheck after
+# flock for waiters racing a legacy launcher during an upgrade.
 ot_heavy_admit_lock() {
-  local _w="${OT_HEAVY_LOCK_WAIT_S:-30}" _hp _ino
-  exec 8>>"$D/admit.lock"
-  if ! flock -w "$_w" 8; then
-    _hp=$(cat "$D/admit.lock.pid" 2>/dev/null)
-    if [ -z "$_hp" ] || ! kill -0 "$_hp" 2>/dev/null; then
-      _ino=$(stat -c %i "$D/admit.lock" 2>/dev/null)
-      exec 7>>"$D/admit.break"
-      if flock -n 7; then
-        if [ "$(stat -c %i "$D/admit.lock" 2>/dev/null)" = "$_ino" ]; then
-          echo "$(date -Is) $UNIT STALE-LOCK holder pid ${_hp:-none} is gone but admit.lock is still held (leaked fd): replacing the lock file" >> "$D/admit.log"
-          rm -f "$D/admit.lock"
-        fi
-        flock -u 7; exec 7>&-
-      else
-        exec 7>&-
-      fi
-      exec 8>>"$D/admit.lock"
-    fi
-    flock 8
+  local lock="$D/admit.lock" wait="${OT_HEAVY_LOCK_WAIT_S:-30}" remaining
+  if [[ "$MAXWAIT" =~ ^[0-9]+$ ]]; then
+    remaining=$(( 10#$MAXWAIT - ($(date +%s) - T0) ))
+    [ "$remaining" -ge 0 ] || return 1
+    if [ "$remaining" -lt "$wait" ]; then wait=$remaining; fi
   fi
-  echo $$ > "$D/admit.lock.pid" 2>/dev/null
+  exec 8>>"$lock" || return 1
+  if flock -w "$wait" 8 && [ /proc/self/fd/8 -ef "$lock" ]; then
+    return 0
+  fi
+  exec 8>&-
+  return 1
 }
 
 MEM=""; TAG=""; MAXWAIT=""
@@ -86,9 +77,18 @@ if /usr/local/bin/ot-heavy-reconcile --is-die -- "$@" || /usr/local/bin/ot-prote
 elif [ "${OT_HEAVY_PRIO:-}" != plan ] && /usr/local/bin/ot-heavy-reconcile --is-plan -- "$@"; then export OT_HEAVY_PRIO=plan; fi   # PLANBYPASS_1114
 while :; do
   [ -f "${OT_HEAVY_CONF:-/etc/ot-heavy.conf}" ] && . "${OT_HEAVY_CONF:-/etc/ot-heavy.conf}"   # v5: every attempt, so a headroom change reaches queued waiters
-  ot_heavy_admit_lock
+  if ! ot_heavy_admit_lock; then
+    if [[ "$MAXWAIT" =~ ^[0-9]+$ ]] && [ "$(( $(date +%s) - T0 ))" -ge "$MAXWAIT" ]; then
+      echo "ot-heavy: NOT RUN: admission lock busy on $(hostname) within ${MAXWAIT} s: $*" >&2
+      exit 75
+    fi
+    [ "$waited" = 0 ] && echo "ot-heavy: waiting for admission lock on $(hostname)" >&2
+    waited=1
+    sleep 1
+    continue
+  fi
   # v8: the gate decides (class size of the request, charge of every running unit, the 25 % rule, the real floor)
-  GATE=$(timeout 30 /usr/local/bin/ot-heavy-reconcile --gate "$MEM" -- "$@" 2>/dev/null)
+  GATE=$(timeout -k 2 30 /usr/local/bin/ot-heavy-reconcile --gate "$MEM" -- "$@" 2>/dev/null)
   V=${GATE%% *}; R=${GATE#* }; RES=${R%% *}; R=${R#* }; CLS=${R%% *}; WHY=${GATE#*| }
   case "$RES" in ''|*[!0-9]*) V="";; esac
   if [ "$V" != OK ] && [ "$V" != NO ]; then
