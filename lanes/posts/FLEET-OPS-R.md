@@ -744,3 +744,4 @@
 - 2026-11-19 23:05 PST HOST-REPORT 2026-11-19 23:05 | tolera L68.08/112 units0 free229G | key-ca L302.31/112 units288 free223G | dear-c L244.01/128 units465 free429G | loved- L475.66/96 units85 free2042G | outgoi L271.89/96 units214 free665G | renewe L317.12/96 units131 free1111G | civil- L269.51/96 units86 free598G
 - 2026-11-19 23:24 PST ALERT [OT-TOOLS-SYNC -> COORD] runtime sync FAILED, rt/current stays 860621e55492: exit 4 (see /home/ubuntu/merge-queue/log)
 - 2026-11-19 23:28 PST STATE tools sync recovered after 3 min (rt/current 30d6bd509d60)
+- 2026-11-19 23:40 PST ALERT [OT-TOOLS-SYNC -> COORD] runtime sync FAILED, rt/current stays 7e9768a93884: exit 4 (see /home/ubuntu/merge-queue/log)
