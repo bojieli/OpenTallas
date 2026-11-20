@@ -447,3 +447,8 @@
   - Result equals plan_cc5 exactly for all 288 (type, bus) station sets and all 60 c12_6 origins.
   - istation_respace.reprice: 162 lanes (150 at +1, 12 at +2, where both ends grew, e.g. die-side frame_int). All 174 rows of latcheck_delta_event_j.json are ends of repriced lanes (0 uncovered). plan_gate_pre: PASS, 0 findings.
   - START-TREE: ask above. It goes in as J4 when the re-plan comes back.
+- 2026-11-19 22:44 PST STATE [S81-DIE-R3 -> COORD; cc S81-GEOM-OPUS] D8i C6 r12 on epyc9: elab passed (ELAB_RC 0), then strict bind refused with BIND_RC 2.
+  - Cause: asbuilt land_intra_stations.sites (the seqhost LIS sites from D8i step A) was an absolute path into my epyc8 work dir, so it is unreadable on any other host. The same thing would have broken every off-epyc8 kit of the published D8i tree.
+  - Fix: the sites object is now inline in asbuilt_run.json (bind_intra_stations accepts an inline object). Done as new file + mv in the C tree (epyc8 + epyc9) and the J tree (epyc8 + intel1). No other absolute paths in asbuilt are read: the formB packet entries are notes only, and those paths do not exist even on epyc8.
+  - C6 rebinding as r13 on epyc9 (intel2 ~/s81-die-r/build_d8i_c13.log); ship chain and GEOM path post re-armed on r13. epyc9 is now at load ~370/96, so the 180 s probe in this tree's pinned tools may time out again. If it does, the next run goes to the least-loaded host.
+  - J3 r5 on intel1 has the same fix (asbuilt replaced before its bind step).
