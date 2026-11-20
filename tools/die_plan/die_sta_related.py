@@ -1468,11 +1468,15 @@ def ca_named_pairs(ports):
     return out
 
 
-def build_pairs(plan, taps, ca_pairs=None):
+def build_pairs(plan, taps, ca_pairs=None, related=None):
     """complete pair sets from the plan ports and the tap table (one corner's rows; ports are corner independent).
     ca_pairs (KIT-OPS-6 11-15, FABLE-TRIAGE-HEADKV 21: KV 320 'no taps' crossings): partition pairs {(src, dst)} that count-aligned ports name.  Their tap pairs
     of the SAME clock region were classed 'seam' (single-cycle) and never reached count_align_port_intervals, so every CA port inside one region got no
-    interval; those pairs now go to 'landed' (the CA crossing's own class) and leave 'seam'.  None = unchanged."""
+    interval; those pairs now go to 'landed' (the CA crossing's own class) and leave 'seam'.  None = unchanged.
+    related (DIE-LEVEL-CHECK-1119, FABLE-PD-KV-2300 C): {type: {frozenset({kit port, kit port})}} from the kit-exported tap-pair
+    lists (kit_tap_related_pairs.tcl): intra / intra_cross_region pairs of a LISTED type are kept only when their two kit ports
+    carry data (a register on one reaches a register or hard-core pin on the other); a type with no list keeps every pair
+    (all-pair, counted under related.unlisted_types).  None = every pair (unchanged)."""
     by_part = defaultdict(list)
     # DIE-HEAD-13 10-28: a tap with part None is a die-level start stage (start_stage_emit '__st__<path>' / virtual_tap):
     # it belongs to no partition, so it never forms intra/seam pairs (HEAD: 193 stage taps were grouped as ONE
@@ -1487,8 +1491,22 @@ def build_pairs(plan, taps, ca_pairs=None):
     for v in by_part.values():
         v.sort()
     intra, seam, landed, straddle = [], [], [], []
+    ptype = {x["name"]: x["type"] for x in plan.get("partitions", [])} if related is not None else {}
+    rel = dict(kept=0, dropped=0, unlisted=0, listed_types=set(), unlisted_types=defaultdict(int)) if related is not None else None
     for part, tl in by_part.items():
+        lst = related.get(ptype.get(part)) if related is not None else None
         for a, b in itertools.permutations(tl, 2):
+            if rel is not None:
+                if lst is None:
+                    rel["unlisted"] += 1
+                    rel["unlisted_types"][ptype.get(part)] += 1
+                elif frozenset((kit_port(a, taps[a]), kit_port(b, taps[b]))) in lst:
+                    rel["kept"] += 1
+                    rel["listed_types"].add(ptype.get(part))
+                else:
+                    rel["dropped"] += 1
+                    rel["listed_types"].add(ptype.get(part))
+                    continue
             (intra if taps[a]["cppr_node"] == taps[b]["cppr_node"] else straddle).append((a, b, part))
     conn, uncovered = defaultdict(int), defaultdict(int)
     for pr in plan["ports"]:
@@ -1506,7 +1524,11 @@ def build_pairs(plan, taps, ca_pairs=None):
                 (seam if same and (ca_pairs is None or (s, t) not in ca_pairs) else landed).append((a, b, f"{s}->{t}"))
     return dict(intra=intra, intra_cross_region=straddle, seam=seam, landed=landed), dict(
         partitions_with_taps=len(by_part), connected_part_pairs=len(conn), uncovered_bits=dict(uncovered),
-        **({"start_stage_taps_no_pairs": unpart} if unpart else {}))
+        **({"start_stage_taps_no_pairs": unpart} if unpart else {}),
+        **({"related_pairs": dict(mode="kit-exported related tap pairs (unlisted types: all pairs)", kept=rel["kept"],
+                                  dropped=rel["dropped"], unlisted=rel["unlisted"], listed_types=len(rel["listed_types"]),
+                                  unlisted_types=dict(sorted(rel["unlisted_types"].items(), key=lambda x: -x[1])))}
+           if rel is not None else {}))
 
 
 def nearest_pairs(d, plan_path, tool, taps):
@@ -1570,6 +1592,18 @@ def endpoint_slacks(A, B, la, ea, lc, ec, cr, period, unc_s, unc_h, models_a, mo
             h = ae - (lc + mb["lat_late"] + mb["hold"]) - unc_h + cr
             out.append((s, h, ma["real"] or mb["real"], ma["name"], mb["name"], ma["real"] and mb["real"]))
     return out
+
+
+def load_related_pairs(paths):
+    """{type: {frozenset(pair)}} merged over kit_tap_related_pairs.tcl JSON files (a directory = every *.json in it).  A type
+    present in any file is LISTED (an empty list = no data-carrying tap pair: every intra pair of it drops)."""
+    out = defaultdict(set)
+    for p in paths:
+        p = Path(p)
+        for f in (sorted(p.glob("*.json")) if p.is_dir() else [p]):
+            for t, prs in kit_related_pairs(f).items():
+                out[t] |= prs
+    return dict(out)
 
 
 def kit_port(port, row):
@@ -3054,6 +3088,11 @@ def main(argv=None):
                     help="KW-FIX-4-SDC (opt-in): write the measured per-port kit windows {per_port_ps: {type: {port: "
                          "ps}}} (max over corners / regions of the cross-port damage with CPPR credit) for plan "
                          "clock.tap_window.per_port_ps; default = not written")
+    ap.add_argument("--related-pairs", action="append", metavar="JSON_OR_DIR",
+                    help="DIE-LEVEL-CHECK-1119 (FABLE-PD-KV-2300 C): kit-exported tap-pair lists ({related_pairs: {type: [[port, "
+                         "port], ...]}}, kit_tap_related_pairs.tcl; a DIR = every *.json in it; repeatable, merged per type): intra "
+                         "pairs of a listed type are timed only when their kit ports carry data; unlisted types stay all-pair "
+                         "(coverage.related_pairs); default = every pair")
     ap.add_argument("--kit-window-related", metavar="JSON",
                     help="KIT-OPS-6 (opt-in): {related_pairs: {type: [[port, port], ...]}} from kit_tap_related_pairs.tcl; the "
                          "per-port kit window of a listed type is the maximum over tap pairs that carry data only; default = all pairs")
@@ -3189,6 +3228,7 @@ def main(argv=None):
     ecm, ci_recs = None, []
     kw_needs = []
     kw_related = kit_related_pairs(a.kit_window_related) if a.kit_window_related else None
+    related = load_related_pairs(a.related_pairs) if a.related_pairs else None
     ko_arr = {}
     for c in corners:
         meta, taps = load_taps(d, c)
@@ -3223,7 +3263,8 @@ def main(argv=None):
         rng = clock_cppr_ranges(meta)
         slew = max(r["slew_ps"] for r in taps.values())
         reg = characterise(out, c, slew, a.seam_wire_um * a.wire_ff_per_um)
-        pairs, cov = build_pairs(plan, taps, ca_named_pairs(json.loads(Path(a.count_align).read_text()).get("ports")) if a.count_align else None)
+        pairs, cov = build_pairs(plan, taps, ca_named_pairs(json.loads(Path(a.count_align).read_text()).get("ports")) if a.count_align else None,
+                                 related=related)
         views = None
         if ecm is None:
             ecm = early_core_map(plan, taps, plan_path=a.plan)
