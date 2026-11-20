@@ -63,3 +63,8 @@
   - It has its own bind, running now in parallel with cc3: oth-ubuntu-2636363-1795145161 on epyc8.
   - Chain cc_chain3s.sh: bind, LATCHECK (+1 lane cycle), PRE, G0 0 new, then full sign-off.
   - The same type is in the cc3 wave with the bank move only, so the two forms are measured side by side.
+- 2026-11-19 21:22 PST STATE [COL-CENSUS-1119 -> COORD; cc S81-DIE-R3, FABLE-CLOSURE] Lever 2 is acknowledged: no third bank-move round. Correction: the cc3 kits have not timed. The cc3 and cc3s binds were refused (20:32/20:41), so no kit was generated.
+  - Cause: CC-BANK-2 left 126 banks exactly on the 8.64 um keepout edge of an added tap (h9_r0_p4 bs0 x6, h9_r1 bs6 x60, h9_r2 bs14 x60). The bind's tap check measures from the placed macro box, which is offset about 0.012 um, so those taps counted as inside.
+  - Fixed: the bank moves now keep 0.1 um beyond the keepout, and a plan-level tapcheck (the bind's rule) passes. The bank-in distances are unchanged.
+  - Relaunched: plan_cc3b 0fd8e22f13ce (192 types) and plan_cc3sb 3bcfddc2d610 (+1 stage proof on p6). Both binds are queued on epyc8 behind memory admission (53 waiters).
+  - Watcher cc_watch3b.sh on intel2: once the cc3b kits have timed, every type whose bank-in hop is still below -42 ps gets the CC-BANK-2S +1 relay stage rows (rows_cc_bank2s_die.json, on plan_cc3b). It checks them with tapcheck and posts them to S81-DIE-R3 automatically.

@@ -128,3 +128,17 @@ Verdict: every col family fails setup at the cw6 window by roughly 75-145 ps.
   - Its own bind, tree_cc3s, runs in parallel with cc3: unit oth-ubuntu-2636363-1795145161, log intel2 ~/col-census-1119-build3s.log.
   - Its chain, cc_chain3s.sh (log ~/col-census-1119-chain3s.log), requires a green bind, LATCHECK (which checks the +1 lane cycle), PRE and G0 0 new. It then sends this one type to full sign-off; the kit goes in kb3s, the log in ~/col-census-1119-k3s-<type>.log.
   - The same type is also in the cc3 wave with the bank move only, so the two forms are measured side by side.
+
+## Update 11-19 21:3x: cc3 bind refused; fixed and relaunched as cc3b/cc3sb; bank-in rows go to S81-DIE-R3
+
+- The cc3 and cc3s binds failed (BIND_RC=1 at 20:32/20:41: "added tap clk_t41 violates outline/halo/tap spacing"). No kit was generated. Cause:
+  - CC-BANK-2 put 126 banks exactly on the 8.64 um keepout edge of an added tap (u_r0.u_bs0 in 6 h9_r0_p4 types, u_r1.u_bs6 in 60 h9_r1, u_r2.u_bs14 in 60 h9_r2).
+  - The bind measures the tap clearance from the placed macro box, which is offset about 0.012 um, so a tap on the edge counts as inside the box.
+- Fix: cc_bank3_rows.py now keeps 0.1 um beyond the keepout. The new tapcheck.py (the bind's added-tap rule run on the plan) passes on both new plans. The bank-in distances are unchanged (194–207 um).
+  - plan_cc3b.json 0fd8e22f13ce (rows_cc_bank2b.json aa26472dd3a5); plan_cc3sb.json 3bcfddc2d610 (stage proof on p6, same 16 rows).
+  - Binds are queued on epyc8 behind memory admission (53 waiters), logs ~/col-census-1119-build3b.log and build3sb.log. Chains: cc_chain3b.sh (192 types) and cc_chain3sb.sh (proof type).
+- FABLE-CLOSURE 21:15 lever 2: there is no third bank-move round. Watcher ~/col-census-1119/cc_watch3b.sh (log ~/col-census-1119-watch3b.log) handles the follow-up:
+  - It runs bankin_scan.py on the cc3b kits every 30 min.
+  - Once every type has timed, each type whose bank-in hop is still below -42 ps gets the CC-BANK-2S rows: relay_depth source D=1 on o_x0/o_x1/o_cfg/o_go of every bank.
+  - It writes them to rows_cc_bank2s_die.json and plan_cc3b_2s.json, checks the plan with tapcheck, and posts them to S81-DIE-R3 for the follow-up event.
+  - cc_bank2s_rows.py now uses the bound leaf name: u_r0_u_bsN for h9_r0_p1/p2/p4/p5 and h10_r0_p1/p4, u_bsN for the others.
