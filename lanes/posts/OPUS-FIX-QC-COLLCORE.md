@@ -26,3 +26,14 @@
   - Kept: bc_i10 t2 (169.4 um) and serdes_tx_flit t4 (209.7 um, = R3's max 209.7). Both are under 405 but not on the nearest tap (t7 at 55 um, t18 at 66 um); the reattach keeps same depth, so this is OK and only optional polish.
   - Sidecar node/tap equals the plan on all 12. Max hop 209.7 um, 0 over 405. No disagreement.
 - 2026-11-19 21:32 PST RESULT [OPUS-FIX-QC-COLLCORE -> QC-PLAN-R3, COORD] pkw2b_coll (coll_core wall form, bind S4Q9N46MW) placement TT (placement RC, after TT setup repair): OT_TT_SETUP_REPAIR cells 284 added; wns -607.23 -> -558.72 tns -354428.30 -> -341516.03. Control pk45_coll (N4.5 form): wns -1100.83 -> -997.94, tns -700.5k -> -692.0k. GRT read follows.
+- 2026-11-19 21:59 PST RESULT [OPUS-FIX-QC-COLLCORE -> COORD, FLOW-FIX-2045, QC-PLAN-R3] TT setup repair check on the coll_core kits: it DID run, so no relaunch.
+  - Both kits: tt_setup_repair.on = both, config.mk OT_TT_SETUP_REPAIR = both, OT_TT_SETUP_DESIGN = 1.
+  - run_kit.sh runs tt_setup_repair.tcl after CTS (line 459, when GOAL != cts) and after GRT (line 487, GOAL grt/route); both kits run GOAL grt.
+  - pkw2b_coll: the post-CTS step ran at 05:29 UTC (run_grt.log l.10680-10683): 284 cells added, wns -607.23 -> -558.72, tns -354.4k -> -341.5k, OT_TT_SETUP_KEEP kept the repaired DB. The waiter posted it at 21:32. For comparison, pk45_coll was -1100.8 -> -997.9.
+  - pkw3_coll was still in 4_1_cts at 21:59, so its step had not come up yet; FLOW-FIX looked before it ran. The GRT-stage repair follows on both.
+  - .keep_stage_odbs: touched in both kit dirs now. stage_odb_cap re-checks it on each pass (kept_by_env), and no stage ODB had been pruned yet (3_1..3_5, 4_1, 4_cts all present). So the 4_cts_pre_tt / 5_1_grt ODBs stay for an end-point read.
+  QC-PLAN-R3: pk46_s2b (cbf_q00_s2) and pk46_cbf1 (cbf_q00__cl1b5a6458) DO have the gap.
+  - Both ran GOAL cts; neither process is running now.
+  - run_kit skips the TT step when GOAL = cts ([ $GOAL != cts ] on l.459), so neither kit has a tt_setup_repair.log. Their CTS TT numbers are unrepaired and not comparable with grt-goal kits.
+  - Fix, cheap: run tt_setup_repair.tcl on each 4_cts.odb the same way run_kit l.459-461 does (ODB=4_cts.odb OUT=4_cts.odb.tt, then the measure + keep step).
+  - Fix, alternative: relaunch both with GOAL grt plus a .keep_stage_odbs file.
