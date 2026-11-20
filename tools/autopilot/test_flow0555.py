@@ -493,3 +493,20 @@ def test_live_attempt_on_another_plan_block_does_not_block_a_stops_off_launch():
     assert "None if (arm or FG.stops_off_die(cfg, die)) else live_attempt_elsewhere" in src
     st = {"items": {"old": {"die": "s81_head", "item": "hd_mesh", "status": "ENQUEUED", "q_status": "RUNNING"}}}
     assert KW.live_attempt_elsewhere(st, "s81_head", "hd_mesh", "newkey") is not None          # the helper still sees it (hbm keeps the rule)
+
+
+def test_previous_detached_copy_exit_code_and_error_are_read(tmp_path):
+    f = tmp_path / "ss-x.log"
+    f.write_text("AP_START 1 ss-x\ntar: Removing leading `/' from member names\ntar: a/b: Cannot mkdir: No such file or directory\nAP_RC=2\n")
+    assert KW.src_sync_prev_result(f) == (2, "tar: a/b: Cannot mkdir: No such file or directory")
+    assert KW.src_sync_prev_result(tmp_path / "none.log") == (None, "")
+    f.write_text("AP_START 1 ss-x\nAP_RC=0\n")
+    assert KW.src_sync_prev_result(f) == (0, "")
+
+
+def test_retry_host_prefers_room_under_cores_over_free_memory():
+    cfg = {"dies": {"s81": {"gen_host": "epyc2", "gen_hosts": ["epyc2", "epyc7"], "work_root": "/srv/x/claude/l"}}, "_hub": "intel2",
+           "_otrun_status": {"epyc2": {"admit": 600, "load": 140, "cores": 128}, "epyc7": {"admit": 300, "load": 38, "cores": 96}}}
+    assert KW.retry_gen_host(cfg, "s81", "t1", [], "epyc2") == "epyc7"          # epyc2 has more memory but is over its cores
+    cfg["_otrun_status"]["epyc7"]["load"] = 200
+    assert KW.retry_gen_host(cfg, "s81", "t1", [], "epyc2") == "epyc2"          # both over: memory decides, nothing is capped

@@ -5514,6 +5514,17 @@ def sync_item_inputs(AP, cfg, run=None):
 SRC_SYNC_BATCH = 100
 
 
+def src_sync_prev_result(logf):
+    """-> (exit code of the last finished detached copy or None, its first tar / ssh error line) from the unit log (launch_unit writes AP_RC=<rc> at the end)"""
+    try:
+        txt = Path(logf).read_text(errors="replace")
+    except OSError:
+        return None, ""
+    m = re.findall(r"(?m)^AP_RC=(\d+)", txt)
+    err = next((l.strip() for l in txt.splitlines() if l.strip() and not l.startswith(("AP_START", "AP_RC", "tar: Removing leading"))), "")
+    return (int(m[-1]) if m else None), err
+
+
 def tar_extract_cmd(paths):
     """COORD 11-19 (FABLE-FLOW-1150 E: the hard-link fix did not help, 30/30 still failed): REAL CAUSE, found with strace on epyc2: GNU tar 1.35 refuses to extract through a symlink that crosses
     filesystems (/srv/opentallas-scratch2/claude/kw45 -> /srv/opentallas-scratch3/claude/kw45): 'Cannot open: Invalid cross-device link' before any mkdir.  The destination command resolves the
@@ -5576,6 +5587,11 @@ def sync_die_inputs(AP, cfg, run=None):
                         # members to "/" ("tar: bindcopy_kv_d25d4/rtl: Cannot mkdir", 13:41-13:51, KV D25d never synced)
                         sd = Path(os.path.expanduser("~/.local/state/ap-src-sync"))
                         sd.mkdir(parents=True, exist_ok=True)
+                        # COORD 11-19 (FLOW-1355 5: the same 191+119 files exited 2 every run and the background copy's exit code was never read): the PREVIOUS run's AP_RC and first error line
+                        # of this exact copy are read and logged before it is started again; a failing copy stops after SELF_HEAL_MAX_TRIES (heal_count above) instead of looping
+                        prc, perr = src_sync_prev_result(sd / (unit + ".log"))
+                        if prc not in (None, 0):
+                            AP.log(f"KIT-WAVE SRC-SYNC {src}->{h} {die}: the previous copy {unit} exited {prc}: {perr[:200]}")
                         (sd / (unit + ".sh")).write_text("set -o pipefail\n" + pipe + "\n")
                         AP.launch_unit(unit, sd / (unit + ".log"), ["bash", str(sd / (unit + ".sh"))])
                         AP.log(f"KIT-WAVE SRC-SYNC {src}->{h} {die}: {len(part)} file(s) copying in detached unit {unit} (next probe verifies)")
@@ -5978,7 +5994,10 @@ def retry_gen_host(cfg, die, item, avoid, default, take=0):
         return default
     key = lambda h: stt.get("localhost" if h == hub else h) or {}
     free = lambda h: int(key(h).get("admit", 0) or 0) - int(key(h).get("wait_gb", 0) or 0)
-    best = max(cand, key=lambda h: (free(h), -hs.index(h)))
+    # COORD 11-19 (FLOW-1355 6: epyc2 had 8 memory-guard kills while epyc7 had 625 GB free): a host with room UNDER ITS CORES ranks before one at or over them; memory is the tiebreak (an ordering, no cap:
+    # when every host is over its cores the old rule decides)
+    under = lambda h: bool(key(h).get("cores")) and float(key(h).get("load", 0) or 0) < float(key(h)["cores"])
+    best = max(cand, key=lambda h: (under(h), free(h), -hs.index(h)))
     if not key(best):
         return default
     if take:                                            # FABLE-FLOW-0200 A: book this retry on the host (6 retries went to intel1 in one tick): the next pick sees less free memory there
