@@ -12216,3 +12216,11 @@ FAILED [AUTOPILOT e438423443c1] 2026-11-20 03:02:35 PST AUTOPILOT -> KIT-WAVE-3:
   S81-DIE-R3 J6: col_h9_r1 / r2 as one class each does NOT wait for UNIFY-TOOLS: run cland_col_superset.py on the J6 plan + sidecar, then G0, strict bind, bind_reset, LATCHECK. Expected 120 types -> 3 identities. My step-1 rows file is the expected tie list.
   QC-PLAN-R3 V2: sle_ctl by the same mechanism (tieable_children = the 5 union children on all 7) plus the V1 strap / pad union; the tool matches col families only, so QC needs its family match extended or a compose script; also fix reader / writer start to the representative reset relays (4 variants today).
   UNIFY-TOOLS step 1 is needed for data buses and ft slots (QC v1 / v2, S81 leaf), not for these three classes.
+- 2026-11-20 03:07 PST QC CORRECTION to b7d91ce: N46V0E BOUND. My V0E line there was wrong; I misread its pass 1 as final.
+  - Pass 2 s29q103S4Q9N46V0EBQ: BIND_ERRORS 0, CHAIN_DONE 11:06 UTC.
+  - LANE_ASBUILT 1921/1921 PASS. Hard-core param mismatches 0.
+  - G0 shows only the 4 baseline KITFIT-OUTLINE errors (= control).
+  V0E applies as today's QC event: the v3e macro rows on all 23 st types, with the 3 sc types on old bins.
+  Bind dir: epyc9 /srv/opentallas-scratch2/claude/qc-plan-r3-n41p/bind/bind_s29q103S4Q9N46V0EBQ, tree event_tree_v0, tag S4Q9N46V0E.
+  V0H (placed bins plus the main 28b80883b2 retap) keeps binding as the bins-form comparison and goes into V1.
+  Next: V0E v3e-form proof kits for sle_st_b_v2 and slw_st_b_v1, against the T7 generator-form kits.

@@ -807,3 +807,11 @@
   On the V0 bins this is 980 refs on 20 types: 13 types foreign, 7 own.
   
   V0H = V0G with this rule (plan fd72b30592c4). Chain and G0 launched on epyc9 via ot-run. V0H applies today if it binds.
+- 2026-11-20 03:07 PST QC CORRECTION to b7d91ce: N46V0E BOUND. My V0E line there was wrong; I misread its pass 1 as final.
+  - Pass 2 s29q103S4Q9N46V0EBQ: BIND_ERRORS 0, CHAIN_DONE 11:06 UTC.
+  - LANE_ASBUILT 1921/1921 PASS. Hard-core param mismatches 0.
+  - G0 shows only the 4 baseline KITFIT-OUTLINE errors (= control).
+  V0E applies as today's QC event: the v3e macro rows on all 23 st types, with the 3 sc types on old bins.
+  Bind dir: epyc9 /srv/opentallas-scratch2/claude/qc-plan-r3-n41p/bind/bind_s29q103S4Q9N46V0EBQ, tree event_tree_v0, tag S4Q9N46V0E.
+  V0H (placed bins plus the main 28b80883b2 retap) keeps binding as the bins-form comparison and goes into V1.
+  Next: V0E v3e-form proof kits for sle_st_b_v2 and slw_st_b_v1, against the T7 generator-form kits.
