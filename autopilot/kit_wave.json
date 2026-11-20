@@ -39391,10 +39391,7 @@
    "breaker_fix": "OWNER r703 removed all class breakers (stops_off not in code yet): probe window reopened for every open class of this die, COORD 11-18",
    "review_before_route": {
     "event": "head_rp21z20NF15f_r11b",
-    "items": [
-     "hd_serdes",
-     "hd_host_e"
-    ]
+    "all_items": true
    }
   },
   "qwen_compute": {
