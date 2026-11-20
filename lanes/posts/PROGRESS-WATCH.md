@@ -97,3 +97,4 @@
 - 2026-11-20 13:56 PST ALERT NO-ADVANCE qwen_compute: 31 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (sle_su_l0__cl7a55c676 x7@gen, slw_su_l0__cl1a1c1f8f x5@gen, sle_su_l1__cl5ea486db x5@gen)
 - 2026-11-20 14:06 PST ALERT NO-ADVANCE s81: 21 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (ot_s81sl_leaf__t52 x5@gen, ot_s81sl_kv_leaf__t4 x4@gen, ot_s81sl_leaf__t1 x4@gen)
 - 2026-11-20 14:16 PST ALERT NO-ADVANCE qwen_kvsys: 11 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (kv3_pc_v1__cl7f648944 x9@kit_topology, kv3_hub_C x8@gen, kv3_pc_v1__cl4ea58a5c x5@kit_topology)
+- 2026-11-20 14:37 PST ALERT STUCK-STATE s81_head: 1 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. hd_mesh, 2026-11-20 11:28)
