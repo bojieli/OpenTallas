@@ -115,7 +115,6 @@ class StageGuard(unittest.TestCase):
 
 def test_goal_finish_runs_the_same_grt_path_as_route():
     """FLOW-FIX-2045 (114 S81 D8i col builds launched with goal finish: the FF-corner GRT step and the TT / hold steps were skipped, the plain GRT then died 'must explicitly select FF')"""
-    import re
     import gen_phys
     t = gen_phys.RUN_KIT
     lines = [l for l in t.splitlines() if "[ $GOAL = route ] || [ $GOAL = grt ]" in l]
@@ -124,7 +123,8 @@ def test_goal_finish_runs_the_same_grt_path_as_route():
     ff = [l for l in t.splitlines() if "OT_VCLK_CORNER=ff \\$MF grt CORNER=BC" in l][0]
     assert "[ $GOAL = finish ]" in ff
     assert '[ -z \\"\\$HM\\" ] || [ $GOAL = finish ]' not in t              # the plain `make grt` for finish is gone when the FF hold margin is known
-    assert re.search(r'if \[ -z \\"\\\$HM\\" \]; then \\\$M grt', t)
+    assert 'if [ -z \\"\\$HM\\" ]; then' in t
+    assert 'else \\$M grt; rc=\\$?; fi;' in t
 
 
 MAKEFILE = """B = .
