@@ -17,6 +17,26 @@ class CaptureWiring(Wiring):
     def __init__(self,text):
         super().__init__(text)
         self.capture_bitdelays={}
+        self.bound_source_stations = {}
+        landing = r"^\s*ot_dp_clk_landing_cas\s+#\((.*?)\)\s+\w+\s*\((.*?)\);"
+        for params, ports in re.findall(landing, text, re.M | re.S):
+            width = int(_params(params)["W"])
+            conn = _params(ports)
+            if len(self.bits(conn["d"])) != width or len(self.bits(conn["q"])) != width:
+                raise ValueError("selected CAS landing width mismatch")
+            self.landings[conn["q"]] = conn["d"]
+        station = r"^\s*ot_dp_st\s+#\((.*?)\)\s+u_ist_(\w+)_(\d+)\s*\((.*?)\);\s*// kit_istations: FIRM plan station"
+        for params, bus, stage, ports in re.findall(station, text, re.M):
+            width = int(_params(params)["W"])
+            conn = _params(ports)
+            if len(self.bits(conn["d"])) != width or len(self.bits(conn["q"])) != width:
+                raise ValueError("selected source station width mismatch")
+            if conn["q"] in self.delays:
+                raise ValueError("duplicate driver on selected source station")
+            self.bound_source_stations.setdefault(bus, set()).add(int(stage))
+            # LATCHECK includes these stations in the bound lane. Follow the
+            # CAP bit identities through them without counting the stages twice.
+            self.delays[conn["q"]] = (conn["d"], 0)
         for params,ports in re.findall(r'^\s*ot_dp_dly\s+#\((.*?)\)\s+\w+\s*\((.*?)\);',text,re.M):
             p=_params(params);c=_params(ports)
             if not c['q'].startswith('{'):continue
@@ -25,6 +45,13 @@ class CaptureWiring(Wiring):
             for a,b in zip(source,target):
                 assert b not in self.capture_bitdelays
                 self.capture_bitdelays[b]=(a,int(p['D']))
+    def bits(self, expr):
+        value = expr.strip()
+        zero = re.fullmatch(r"(\d+)'b0+", value) or re.fullmatch(r"{(\d+){1'b0}}", value)
+        if zero:
+            return [("$cap_zero", index) for index in range(int(zero[1]))]
+        return super().bits(value)
+
     def trace(self,bit,terminals,stack=()):
         if bit in self.capture_bitdelays:
             assert bit[0] not in stack
@@ -38,10 +65,14 @@ def collect(bound):
     bound=Path(bound);source=inventory(bound);raw=json.load(open(bound/'bind_latency.json'))
     assert raw['schema']=='opentallas.die_plan.bind.v1'
     lanes={b['lane']:b for b in raw['buses']};assert len(lanes)==len(raw['buses'])
+    lane_trace_path = bound / "bind_lane_asbuilt.json"
+    lane_trace = {}
+    if lane_trace_path.is_file():
+        lane_trace = {row["lane"]: row for row in json.loads(lane_trace_path.read_text())["lanes"]}
     rows=[];returns=[]
     for sl in source['slices']:
         text=Path(sl['wrapper_file']).read_text();w=CaptureWiring(text)
-        matches=list(re.finditer(r'^\s*(ot_s81sl_capc5r_e6|ot_s81sl_capc5r_w3|ot_s81sl_capc2_w3)\s*(?:#\((.*?)\))?\s+(\w+)\s*\((.*?)^\s*\);',text,re.M|re.S))
+        matches=list(re.finditer(r'^\s*(ot_s81sl_capc5r(?:_e6|_w3)?|ot_s81sl_capc2_w3)\s*(?:#\((.*?)\))?\s+(\w+)\s*\((.*?)^\s*\);',text,re.M|re.S))
         assert len(matches)==1,'one actual selected CAP constructor required'
         m=matches[0];family=m[1]
         assert _params(m[2] or '') == ({} if family=='ot_s81sl_capc2_w3' else {'MUT':'0'}), 'selected CAP parameter profile differs'
@@ -52,6 +83,11 @@ def collect(bound):
             if port not in ports:continue
             pinbits=w.bits(ports[port]);assert len(pinbits)%70==0
             for k in range(len(pinbits)//70):
+                idle = [name == "$cap_zero" for name, _ in pinbits[70*k:70*(k+1)]]
+                if all(idle):
+                    continue
+                if any(idle):
+                    raise ValueError("selected CAP return lane mixes zero ties and live bits")
                 traced=[];input_lane=None
                 for field_bit in [1,*range(3,68)]:
                     q,index,local=w.trace(pinbits[70*k+field_bit],receiver_names)
@@ -96,9 +132,19 @@ def collect(bound):
                 mapping[field]=mapped
             assert len(ages)==1,'CAP valid/address/data local pipeline differs'
             local=ages.pop()
+            stations = w.bound_source_stations.get(lane["bus_out"], set())
+            if stations:
+                observed = lane_trace.get(lane["lane"])
+                if (stations != set(range(len(stations))) or not observed
+                        or observed["verdict"] != "PASS"
+                        or observed["source"]["bound_ist"] != len(stations)
+                        or observed["delivered"] != lane["bound_stages"]):
+                    raise ValueError(f"source stations disagree with LATCHECK on {lane['lane']}")
             rows.append(dict(sid=sl['sid'],slice=sl['logical_slice'],leaf=leaf,CAP_family=family,CAP_instance=m[3],lane=lane['lane'],active_width=width,
                 CAP_output_to_registered_leafdn_edges=lane['bound_stages']+local,local_edges=local,bound_lane_edges=lane['bound_stages'],bus_bits=mapping,
                 event_basis='CAP wrapper output pins -> registered native leafdn_i0_q; receiver stages included once'))
+            if stations:
+                rows[-1]["bound_source_stations"] = len(stations)
     assert len(rows)==80 and len(returns)==72 and len({r['frame'] for r in returns})==72
     return dict(status='PASS_ACTUAL_CAPTURE_BOUNDARY_WIRING',source_top_sha256=source['source_top_sha256'],source_files_sha256=source['source_files_sha256'],
         bind_latency_sha256=hashlib.sha256((bound/'bind_latency.json').read_bytes()).hexdigest(),leaves=rows,frame_returns=returns,
