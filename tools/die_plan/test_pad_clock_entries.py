@@ -83,7 +83,7 @@ def test_hook_moves_by_region_and_identity_without_dont_touch():
 
 
 def _delta():
-    path = HERE.parents[1] / 'physical' / 'die_plan' / 's81' / 'delta_rck2_1109.py'
+    path = HERE.parents[1] / 'physical/die_plan/s81/delta_rck2_1109.py'
     spec = importlib.util.spec_from_file_location('delta_rck2_1109', path)
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)

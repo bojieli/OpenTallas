@@ -40,6 +40,7 @@ def test_nested_fails_on_old_unbound_serdes_form():
 @pytest.fixture(scope="module")
 def gen_new(tmp_path_factory):
     raw = S.load(str(PLAN))
+    assert "rtl/dsrom_sys/s81_head/ot_s81hd_serdes_link.sv" in raw["partition_types"]["hd_serdes"]["sources"]
     out = tmp_path_factory.mktemp("gen")
     files = gen_rtl.write_rtl(raw, out, str(ROOT), ["hd_serdes", "hd_tile"], plan_path=PLAN)
     return raw, out, files
