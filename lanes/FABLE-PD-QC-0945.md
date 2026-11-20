@@ -1,225 +1,164 @@
-# FABLE-PD-QC-0945: S4q3 / S4q3b against the QC failure classes, S4fw4b, sta_region masters
+# FABLE-PD-QC-0945 2026-11-20 09:45 PST: QC event R4 A4 (s29q103S4Q9N46R4A4) structural review; fixes ranked for V1
 
-2026-11-15 10:3x PST (18:3x UTC), FABLE-PD-QC-0945. Technical PD and plan only. Read-only; nothing launched, stopped or changed.
-Read: FABLE-PD-QC-0700, PD-QC-SUC-0800, PD-QCC-0740, FABLE-CLOSURE-STRATEGY levers 4 and 6, `failure_breakdown.py` (09:51),
-QC `KIT-WAVE FAIL` 06:20-09:57, queue to line 14105, handoffs STRAP-MASTER-1115 and QC-PHYSERDES.
+Reviewer: FABLE-PD-QC-0945 (Fable). Read-only: no job launched, cancelled or patched; no plan edited; no STA run.
+Marking: **V** = I opened the plan, report, log or image this round. **R** = reported by the named lane. **I** = inferred. **P** = proposal.
+Gate: DRC 0, routed TT >= -42 ps at 833 ps, internal FF hold >= 0, LEC, bind + LATCHECK. Hop cap 300 um. Nothing below is a new gate or hold.
 
-MEASURED = read or computed by me today from a plan json, bind report, bound RTL, placed report, placed dump or sign-off json.
-REPLAY = `qc_fabric_transport.derive` (the bind's own code, the 0700 harness) on the bind's own `bus_groups.json` + derived table.
-REPORTED = from a lane post or an earlier review. INFERENCE is marked.
-Work dir: epyc9 and epyc8 `/srv/opentallas-scratch2/claude/fable-pd-qc-0945/` (`pdiff.py`, `fam.py`, `rd.py`, `wp.py`, `zl_*.out`).
+Sources (V):
+- Plan `zz_s29_qc103_s4q9n46r4_final_preview.json` (sha 2c1e1ca66262) in the live tree `kw45/snap_qwen_compute/qwen_compute_n46r4_a4`; my scripts ran on epyc2.
+- PRECHECK on A4, epyc9 `/srv/opentallas-scratch2/claude/precheck-runs/qwen_compute_s29q103S4Q9N46R4A4_11201735/` (133 types, 278 s), and the V0E run `..._N46V0E_11201232/` for comparison.
+- G0 A4, epyc10 `qc-plan-r3-n41p/n46/v1_cbc/r4_direct/g0_a4/g0.log`: PASS, 0 errors, 571 warnings.
+- Congestion reports of the two kept sle_ctl kits: intel1 `ot-jobs/sle_ctl__cl372cea1c-route-key-cardinal-779827-1795122315` and epyc10 `ot-jobs/sle_ctl__cla4f6f12f-route-civil-redfish-276253-1795122318`, `congestion-10.rpt` of each.
+- E3 st_a evidence, epyc7 `.../r4_direct/gen_representative_a3_retry/sust_e3_s1_reseat_evidence/{s1_reseat_405.json,review.md,e3_s1_reseat.png}` and `sust_e3_private_halo_overlay/e3_halo_plan.png`. Both images viewed.
+- `lanes/GRT-TRIAGE-1120.tsv`, `lanes/QC-HOLD-0030.md`, `lanes/QC-HOLD-0030-INDELAY.md`, `lanes/posts/QC-PLAN-R4.md`, `lanes/FABLE-CLOSURE-STRATEGY.md` (09:05).
 
-State change during the review: DIE-QC-103 posted READY+ADOPT of S4q3b at 18:0x UTC (queue 14105). Sections 1-2 judge it as adopted.
+## 0. Headline
 
-Not available: no S4q2 kit is past placement (the kits are 2 h old), so there is no CTS, GRT or route report on the current
-plan. Placed reports are ideal-clock. No kit exists on S4q3b or S4fw4b. I ran no STA.
+1. **A4 is a reset-reach and bind-coherence event. Its data geometry is the V0E geometry (V).** The PRECHECK score table of A4 equals the V0E table in every column except R4 (reset reach 405 -> 300). Hops, taps and cross-tap hold structure did not change. Kits on A4 will generate again, and will then meet the same placement, GRT and hold results as V0E kits.
+2. **The E3 rs_s0 / rs_s1 FIRM conflict is in all 11 st_a types, not only E3 (V).** 51 to 77 colliding sites per type. The proven reseat covers one type and uses 391 / 405 um legs.
+3. **sle_ctl congestion has one cause (V).** 72 % and 79 % of the overflow of the two kept kits lies in x 300 to 600. 43 % of the nets in those markers belong to the four `b_hw_hc*_o` station chains, which all leave the `u_tap` core from one corner, 8 um from `u_ctl`.
+4. **No lockup latch row exists in the plan (V).** 2,941 of 3,141 zero-logic station hops have launch and capture on different nearest taps.
 
-## 0. Answers
-
-1. **S4q3b is a 2-item delta and closes none of the six named classes.** MEASURED diff S4q2 -> S4q3b: 32 values
-   (SKEW_N / SKEW_S on 16 `param_wrap` rows of the 4 st_a_v2 types) + `budgets.r_dly_spread = ["cbf_","cbn_","cbx_"]`.
-   Nothing else. S4q3 differs from S4q3b in that one key only. No station row, no sidecar row, no phy field, no clock-site row.
-2. **The st_a_v2 fix in S4q3b is half done and is now a functional hazard.** The 16 rows carry the bound parameters
-   (9/10, 9/11) but still name the old masters `sta_region_nb0_h17_n6_s7`, `h18_n6_s7`, `h18_n6_s8`. Those three masters
-   are signed and archived with depth 6/7 and 6/8. `hard_core_param.py` compares parameters, not the master name, so it
-   reports 0 mismatches. The 4 parents were released at 18:0x UTC. The right masters exist and are signed (section 3).
-3. **S4fw4b, the delta that does carry the su_c / fw / st_b rows, does not bind.** MEASURED `S4FW4BBQ` and `S4FW4BQ`
-   bind_report: 1 error, `PARAM_REGEN W5: r_d of region 0 is not the latest`. It is the S4x error of 0700 section 2.1.
-   LATCHECK 1921/1921 passes on it and hides this. Cause and fix in section 2.
-4. **S4fw4b is built on S4q2, not on S4q3b.** It has the old 6/7 skew rows and no `r_dly_spread`. Adopted as built it
-   undoes S4q3b.
-5. **Two families are in no delta at all: sc (9 types) and fe (9 types).** MEASURED on S4q2 placed kits: slw_sc_v3
-   -366 ps on a 771 um one-cycle hop; sle_fe_v1 has 7,686 zero-logic bits over 405 um. Section 4.
-6. **The hc0 / hc1 / hc2 / su_l0 / su_l1 placed WNS of -47 to -225 ps is not a failure class.** It is the forwarded
-   landing clock at placement (section 4.2). Do not open lanes on it.
-7. **CORE-ROWS-1115 (COORD addition): no structural failure.** 15 of 16 builds are SIGNED after one hold ECO. The
-   "13 NOT SIGNED" are the base verdicts before the ECO. Section 3.
-
-## 1. Class by class
-
-| class | in S4q3b | in S4fw4b | verdict |
-|---|---|---|---|
-| su_c one-cycle crossings (3 types) | nothing | rows of SUC-0800 section 3 on 3 types (18 / 18 / 9 station rows) | open until S4fw4b binds |
-| fw one-cycle crossings (11 types) | nothing | sle_fw_v1 / v2 +48 rows each family, slw_fw 15 -> 75, 10 -> 50, 5 -> 22 | open until S4fw4b binds |
-| st_b (11 types) | nothing | 3 rows per type | open; st_b logic path at -42 ps placed is not addressed by either (0700 2.3) |
-| hc / st_a_v1 | nothing (byte-equal to S4q2) | nothing | no plan defect measured (section 4.2); st_a_v1 fails on kit inputs, not design |
-| st_a_v2 (4 types) | params fixed, master name not | old rows (6/7) | wrong hardware by name (section 3) |
-| cb (15 held types) | `r_dly_spread` list form, warn mode | not carried | partial (below) |
-| slw_hc3 LEC, xl3 l3 read path | nothing; type RTL changed at S4q2 already | nothing | not a plan item; open until the S4q2 LEC reruns |
-| phy_serdes, phy_serdes_b, phy_ucie_kv | nothing; QC-PHYSERDES fields not folded | nothing | flow error stays (section 5) |
-| die clock-cell sites (strategy lever 1) | nothing | nothing | every QC type signed now re-keys once more |
-
-cb detail (REPORTED, TYPE-QCCB-GEN and 0650): gate-mode proof on cbn_q11 took zero-logic hops over 405 um from 3,804 to
-1,539; the pad chain and d-chain go to 0. The 1,539 left are ring -> `u_bin_bc_i*` -> `u_st` tap_d, whose fix was the
-bc_i stations + sidecar of S4v / S4v2. S4v2 is dropped and S4q3b has the small sidecar (6.7 kB, against 25.6 kB in
-S4fw4b). The 2 reset-relay hops of 1,411-1,466 um and the cbn_q11 CTS -861 ps have no named endpoint yet. S4q3b runs
-the hook in warn mode, so a stage-count shortfall does not stop a cb kit.
-
-## 2. S4fw4b PARAM_REGEN: cause and fix
-
-MEASURED from the derived tables (`rd.py`, W5, same on all 12 slices):
-
-| lane | S4q3b bound / landed | S4fw4b bound / landed |
+| check | A4 result (V) | verdict |
 |---|---|---|
-| `st_a__x_st_a_ctl` (r_d, regions 0-3) | 7 / 20 | 9 / **20** |
-| `st_a__x_st_a_fe` (nb_od, regions 0-3) | 18 / 18 | 20 / 20 |
-| `st_b__x_st_b_ctl` (r_d, regions 4-7) | 8 / 8 | 8 / 8 |
-| `st_b__x_st_b_fe` | 5 / 5 | 7 / 7 |
-| `x_st_a_st_b` into regions 4-7 | +11 | +13 |
+| reset collector trees | 129 of 129 at reach 300; worst hop 298.6 um (coll_s); depth up to 15 (cbn_q00) | sound |
+| landing START stage chains | 13,500 stage hops, 0 over 300 um | sound |
+| data station hops | 1,030 of 4,692 nominal hops over 300 um, 102 over 405; 99 types, 311 instances | unchanged from V0E |
+| die-level reach fields | `die.reach_um` 405, `reset.hop_um` 405, `budgets.ft_station_max_um` 405 | local 300 only |
+| first rank | 178,437 of 1,212,611 port bits on 102 types have no planned register within 50 um | unchanged |
+| exact-bank site conflicts | 11 st_a types, rs_s0 against rs_s1 | open |
+| clock taps | 125 types have a tap over 1,000 sinks; 25 types have stale sink bins; 0 tap sites in or within 4.32 um of an SRAM / ROM | bins stale |
+| hold structure | 113 types flagged; 0 latch rows | open |
+| congestion | sle_ctl one zone; coll_core 45.6 % hard-core area with 4 to 13 um channels | open |
 
-QC-FWST added +2 fixed_cycles on the st_a ctl return lane (0700 lever 3). The derive step then cut the R8 pad on that
-lane from 13 to 11, so the landed depth stayed 20. Region 4 moved by +2, region 0 did not: the 0700 warning ("check
-landed after the derive, not only fixed_cycles"). The fe lane has no pad and did move.
+## 1. Hops over 300 um
 
-REPLAY on `S4FW4BB` with the landed depth of r_d regions 0-3 raised:
+**Evidence (V, my scan of `internal_stations`, chain `from_um -> regs_um -> to_um`, Manhattan; PRECHECK R1 agrees: 100 types FLAG, worst 678.2 um).**
+- 1,295 rows: 1,091 `per_bit`, 168 bank, 36 exact. 412 rows on 99 types carry a hop over 300 um; 334,401 bit-hops.
+- Position of the 1,030 long hops: 399 are the first hop of the chain, 353 middle, 278 last.
 
-| r_d(0-3) landed | nb_od(0-3) | result |
-|---|---|---|
-| 20 (as built) | 20 | FAIL, same message as the bind |
-| 21 | 20 | OK, RD_PAD {0, 12} |
-| **22** | 20 | **OK, RD_PAD {0, 1, 13} (the S4p shape), SKEW_S 10..11, SKEW_N 9, HI_PAD {15, 16, 17, 28, 29, 30}, 218,768 flops** |
-| 23 | 22 | OK, RD_PAD {0, 2, 14} |
+| family | bus | form | worst chain (um) | bits | types |
+|---|---|---|---|---|---|
+| cbf_q00, cbf_q00_s2, cbx_q10, cbn_q00 | bc_i00 / bc_i10 / bc_i30 | bank | 634 + 637; 614 + 611 | 517 | 10 |
+| slw_fe_v2, sle_fe_v1 | arv, arm | per_bit | 549 + 275; 511 + 256 | 1 | 3 |
+| slw_stm_v1 / v2 / v3 | flt_o | bank | 544 + 536 + 548 | 1 | 6 |
+| fe (4 families) | ard, x_stm_p1_i | per_bit | 463 + 3 x 232 | 512 to 544 | 8 |
+| fw (5 families) | cmd | per_bit | 456 + 2 x 228 | 116 | 10 |
+| slw_su_c, sle_su_c | x_su_l0_i | per_bit | 451 + 3 x 225 | 452 | 3 |
+| cbf_q01, cbn_q01 | nb_i12 | bank | 418, 415, 415, 411 | 515 | 5 |
+| sle_ctl | b_hw_hc2_o and 12 others | per_bit | up to 369 | 16,589 total | 7 |
 
-Fix: keep the pad of the 12 `sl_*_st_a__x_st_a_ctl` members at 13 (landed 22) by pinning those members in the R8
-table, as KV did for its 91 pad members. No more fixed_cycles; the nb_od lane needs nothing.
+**Root cause.** Two classes. (a) The first register after the port or core pin is not at the port: the first hop carries the distance the later equal hops do not (fe, fw, su_c). (b) The chain has too few stations for its length (cb `bc_i` two hops of about 630 um; stm `flt_o`).
 
-Two consequences:
-- The bound st_a_v2 parameters in `S4FW4BBQ` (HI_PAD 0, SKEW 14 / 14) are the defaults of a failed regen. They are not
-  a target. No master may be built or strapped to them.
-- With the fix, SKEW_N / SKEW_S stay 9 / 10..11 but the HI_PAD set moves from {17, 18, 19, ..} to {15, 16, 17, ..}.
-  INFERENCE: the st_a_v2 rows go from HI_PAD 17 / 18 to 15 / 16, so the fixed-depth masters signed today (section 3)
-  are stale again after S4fw4b. Only the strap master with `strap_hi_pad` survives it.
+**Limit of this scan.** It is the nominal centroid chain. On `per_bit` rows the per-bit leg differs. On the st_a exact rows the nominal chain reads 268 / 255 um while the measured per-bit legs are up to 428.5 um (section 6).
 
-Other S4fw4b facts (MEASURED): G0 did not run on S4fw4 or S4fw4b. Both logs end in `FileNotFoundError ...
-tree7/.../sink_bins/hf1c/slw_su_c__cl19bb38ef.json`. The same file is the `KIT_NOT_SELF_CONTAINED` wave failure of
-slw_su_c__cl19bb38ef (07:14-07:34). The S4q3b adoption post names no G0 run either.
+## 2. First-rank seating
 
-## 3. sta_region masters (CORE-ROWS-1115) and the st_a_v2 rows
+**Evidence.**
+- V, PRECHECK BOUNDARY-REG: 102 types; worst slw_sc_v1 6,317 of 18,840 port bits on 18 ports, sle_sc_v2 6,123, sle_stm_v1 3,725, coll_ftc 2,796.
+- V, `QC-HOLD-0030-INDELAY.md`: 106 of 131 variants have an input delay over 416.5 ps; the fw / fe / stm families sit at 84 to 88 % of the period. The first rank has 100 to 130 ps for its wire.
+- R, QC-PLAN-R3 08:41: slw_fe_v1 with its 10 existing scalar registers seated: 744.6 -> 189.8, 707.5 -> 179.1, 731.3 -> 147.6 um, 0 cycles added. This is a private V0E attempt. It is not in A4: the A4 fe rows are the V0E rows.
 
-MEASURED on epyc9 `core-rows-1115/eco_*/eco_loop.json` and `i1/signoff/signoff.json`:
+**Root cause.** The plan gives the first rank a centroid, not a site at the port window. The placer then pulls it toward its fanout.
 
-| set | builds | base verdict | after 1 hold ECO (margin 5) |
-|---|---|---|---|
-| n6_s7 / n6_s8 (S3R3 depth) | 3 | DRC 0, TT +13..+21, FF hold -2.7..-7.0 | 3 SIGNED |
-| p = S4p depth (n8_s9, n8_s10), util 0.4 and 0.5 | 6 | DRC 0, TT +8..+19, FF -2.9..-6.9 | 6 SIGNED |
-| q = S4q2 depth (h17_n9_s10, h18_n9_s10, h18_n9_s11) | 6 | DRC 0, TT +7..+20, FF -3.4..-5.6; q_h18b_u5 SIGNED at base (FF +0.26) | q_h17_u5, q_h18a_u4, q_h18a_u5, q_h18b_u4 SIGNED; **q_h17_u4 ECO failed** |
-| `sta_region_strap_s2` (skew + HI_PAD straps), u4 and u5 | 2 | DRC 0, TT +9.7 / +11.0, FF -0.9 / -3.5 | 2 SIGNED (17:29, 17:37 UTC) |
+## 3. Density and congestion zones
 
-- Shared cause of every NOT SIGNED base verdict: `min_hold_only` true on all 16, FF hold -0.9 to -7 ps on a few
-  non-port endpoints, zero DRC, positive TT setup. This is risk R2 of QCC-0740 (SRAM clock branch + zero-logic pad
-  stages). It is not utilisation: both 0.4 and 0.5 show it, and the spread between twins is within 3 ps. It is not the
-  strap form: the strap masters have the smallest violation. One ECO closes it every time it routes.
-- q_h17_u4: `[ERROR DRT-1231] Pin u_r.u_sks.g_out[1].u_v/q/RESETN does not have access point` in the ECO detail route
-  (route_rc 2). One pin, after hold cells were placed beside the flop. Its twin q_h17_u5 is SIGNED, so nothing waits on it.
-- Fix for the class (flow, CORE-ROWS-1115): keep "base build -> one automatic hold ECO" as the recipe and report the
-  post-ECO verdict only. Build one twin with `HOLD_SLACK_MARGIN 25` in CTS when the next master is needed (untested).
-  For the pin-access case, the ECO should keep hold buffers off the row sites next to a flop's RESETN / D pins or retry
-  once with another buffer site.
-- CORE-ROWS-1115 posted the same reading at 10:29 PST (queue 14137). Its table shows signed builds with a residual
-  negative FF hold (for example p_h17_u4 -1.42 on 2 endpoints). Those builds carry the `io_hold_parent` check, so the
-  residue should be port hold left to the parent; CORE-ROWS-1115 should state that per build, since hold >= 0 is a blocking gate.
-- So all three S4q2-depth masters are signed (h17_n9_s10 = q_h17_u5; h18_n9_s10 = q_h18a_u4 / u5; h18_n9_s11 =
-  q_h18b_u4 / u5), and the strap master is signed too.
+### 3.1 sle_ctl (7 types, 12 instances)
+**Evidence (V, `congestion-10.rpt` of the two kept kits; first 20,000 markers of each).**
 
-The gap (MEASURED, plan `zz_s29_qc103_s4q3b.json`, 4 types, rows u_r0..u_r3):
+| kit | overflow | H / V | share in x 300 to 600 | top zones (x, y: overflow) | zero-capacity markers |
+|---|---|---|---|---|---|
+| cl372cea1c, intel1 | 43,104 | 22,652 / 20,452 | 79 % | 400,300: 15,293; 400,400: 13,139; 600,300: 8,786 | 5.8 % |
+| cla4f6f12f, epyc10 | 40,250 | 21,923 / 18,327 | 72 % | 400,300: 13,924; 600,300: 11,237; 400,400: 9,694 | 5.8 % |
 
-| type | `module` in the row | params in the row | bound RTL `S4Q3BBQ` |
-|---|---|---|---|
-| sle_st_a_v2__pv4242de79 | sta_region_nb0_h17_n6_s7 | HI 17, N 9, S 10 | 17, 9, 10 |
-| sle_st_a_v2__pv30dda31f | sta_region_nb0_h18_n6_s7 | HI 18, N 9, S 10 | 18, 9, 10 |
-| slw_st_a_v2__cl9f076a5c, __clf4365a62 | sta_region_nb0_h18_n6_s8 | HI 18, N 9, S 11 | 18, 9, 11 |
+Net owners in the x 300 to 600 markers, both kits: `u_ist_b_hw_hc*_o` 43 %, flat core nets 31 to 32 %, `u_ist_b_tw_data_st_a_o` 16 %, `u_ft_cws*_o` 7 %, `u_ist_x_fw_o` 2 %.
 
-`param_wrap.wrap_bound` matches the parameter text and writes `<module> inst (`. The text now matches, so the parent
-netlist instantiates the n6 master, whose signed view exists under that name. Result if the kits build: 4 types (48
-region instances) with 3 cycles too few on both skew lines, no check failing. I did not run a kit to prove the view is
-picked; HCPARAM-ALL's built-parameter check reports "116 no built record" on QC, so it does not cover it.
-Fix: one rows-only change, `module` (and `physical_master` if set) -> `sta_region_nb0_h17_n9_s10`, `h18_n9_s10`,
-`h18_n9_s11`, with the view packs of the signed q builds registered on all hosts. Hold the 4 parents until then.
+Plan geometry of sle_ctl__cl372cea1c (V), outline 1226.88 x 1339.2:
+- `u_tap` box x 164 to 467, y 328 to 458. `u_ctl` box x 475 to 821, y 337 to 596. The channel between them is 8 um.
+- The four `b_hw_hc*_o` chains (1,574 bits each) start at (219, 328), (440, 400), (307, 328) and (216, 328): 6,296 bits leave `u_tap` from its south-west edge and its east corner.
+- `b_tw_data_i` (2,103 bits) ends at (475, 337), the south-west corner of `u_ctl`. `b_tw_data_st_a_o` (1,081 bits) runs from (660, 200) west to the W face at y 371, under `u_tap`.
+- FT `cws1` (516 bits, N -> S) leaves in window x 367 to 457, the `u_tap` column. FT `cws2` leaves in x 618 to 707, the `u_ctl` column.
+- My demand estimate from the station rows alone puts the peak in the 100 um bins (400, 200), (300, 200), (200, 300), (300, 300). It matches the measured zones.
 
-## 4. Families that fail again
+**Root cause.** Two hub cores side by side with 8 um between them, and about 10,100 bus bits that start, end or pass at their shared corner. The zero-capacity markers are in the same bins. Iterations cannot remove this.
 
-### 4.1 Will fail on S4q3b as built (and on S4q2 today)
+### 3.2 coll_core
+**Evidence.**
+- V, plan: 29 hard cores cover 45.6 % of the outline. Channels: `g_xf_0` to `g_xf_1` 4 um, `g_xf_1` to `g_xf_2` 13 um, `rring` SRAM top (y 1101) to `g_xf` bottom (y 1106) 5 um.
+- V, plan: stations `rec_tx_s0` (548 bits) and `io_collective__out_data` (512 bits) run north at x 262 to 275 from y 1041 / 1169 to y 1351 / 1473, across the `g_xf_1` box (x 203 to 393, y 1106 to 1318).
+- R, GRT-TRIAGE: zones 300,1100 / 400,1100 / 300,1200 / 200,1000; overflow 30,528 and 33,196 at iteration 20; both jobs ended at TT -701.6 and -575.8.
+- R, OPUS-FIX-QC-COLLCORE 09:10: pkw4 (read register) still has -479 on 392 ends `rdq -> out_data`.
 
-| family, types | mechanism | evidence (MEASURED unless marked) |
-|---|---|---|
-| su_c, 3 | one register feeds both side faces; no station rows in S4q3b | slw_su_c__cl19bb38ef a5 on S4q2 (epyc8, placed 17:57 UTC): WNS -835.8, TNS -552,232; path `procdff_60309_q[205]` -> `u_bout_x_su_l1_o`, 18 buffers. The wave launched it on S4q2 at 08:30 PST and again at 10:04 PST (attempt 6) against the QC-FWST hold |
-| fw, 11 | 0 station rows on sle_fw_v1 / v2; slw_fw old 1-station rows | REPORTED 0700: sle_fw_v2 -467.6 placed, 7,097 hops over 405 um. S4q3b rows are byte-equal to S4q2 |
-| st_b, 11 | 0 station rows | REPORTED 0700: 854 hops over 405 um, WNS -42.2 placed on S4k |
-| sc, 9 (sle / slw sc_v1, v2, v3) | `u_bin_x_fe_i` -> hard core `u_core.dn_i` and `u_core` -> `u_bout_x_fe_o` cross the type in one cycle; the core clock is 156 ps early, which takes that much from the input path | slw_sc_v3 a10 on S4q2: clk-group WNS -366.5, TNS -504,931, 9 buffers. Dump: bin_x_fe_i -> core 47 bits 765 um; core -> bout_x_fe_o 48 bits 784 um; core -> bout_x_ctl_o 119 bits 496 um. sle_sc_v2 at CTS (S2, 11-14): -104.7, TNS -162,803, and core -> `u_bout_x_fe_o` -31.5. 0 `internal_stations` in S4q3b and in S4fw4b |
-| fe, 9 (sle_fe_v1..v3, slw_fe_v1, v2) | pass-through and core-output buses cross the type; ring -> `u_bin` far | sle_fe_v1__cl1cbb7497 a12 on S4q2: 7,686 zero-logic bits over 405 um in the dump. `u_core.se` -> `u_bout_x_stm_p1_o` 544 bits, mean 757; `u_bin_x_stm_i` -> `u_bout_st_wo` 544 bits, mean 833; `u_core.se` -> `u_bout_x_stm_o` 517, 837; ring -> `u_bin_ard_wi` 512, 677; ring -> `u_bin_dd_wi` 449, 662; `u_bin_x_sc_i` -> `u_bout_sc_wo` 48, 1,034. 0 station rows in both plans. The placed clk group is still positive (+91), so this is the route-length risk of the 405 um rule (8-11 buffers per hop), not yet a measured timing failure |
-| st_a_v2, 4 | wrong master by name | section 3 |
-| cbn_q11, cbf_q11 (3 types) | ring -> u_bin -> tap_d hops not covered; reset-relay hops | REPORTED: 1,539 hops over 405 um left after the spread; CTS -861 ps unexplained |
-| slw_hc3, 2 | LEC, not plan | REPORTED: 17 points x 3 xl3 leaves on the S3R form; the S4q2 form has new RTL and no LEC result yet. Last wave line for clccfc3e6b is a `plan geometry / site` place failure at 08:28 |
-| phy_serdes x3 | hard wrapper needs a placed macro with LEF and TT/FF views | section 5 |
+**Root cause.** Timing first (single-cycle SRAM read and its 140 to 493 um legs), then a wall of abutted cores under two wide north-bound buses. I did not open a coll_core congestion report: both containers are gone.
 
-### 4.2 Not a failure class: placed WNS on the landing input groups
+## 4. Clock taps
 
-MEASURED on the 22 S4q2 placed kits (5 hosts): the WNS of hc0 (-119), hc1 (-136, -178), hc2 (-47), su_l0 (-85, -116), su_l1 (-153 to
--225), fe_v1 (-134) is in path groups `fclk_in_*`: input port -> `u_cland_*/u_ring` negative-edge capture at 416.5 ps
-with a forwarded clock that has 0 insertion at placement. Control: slw_su_l0__cl1e5219ea and sle_su_l0__cl7a55c676
-reached CTS on S4C today with WNS 0.00, TNS 0. In the `clk` group the same kits show hc1 -3.7 (xl1 logic, 28 stages),
-slw_su_l0 -34.6 (station -> lane core), hc0 and hc2 no violation. The hc dumps have 37-193 long bits, all straps, reset
-relays or single fault bits. So there is no plan defect on hc0 / hc1 / hc2 / su_l0 at placement; they should be left to route.
-The placed TNS (-120 k to -350 k) should not be used to rank QC types before CTS.
+**Evidence (V).**
+- PRECHECK R3: 125 types have a tap over the 1,000-sink cap on bins + planned row registers. Worst: sle_ctl__cla4f6f12f 5,130 on one tap (28 taps over), slw_su_l1 4,061 and 4,001, sle_ctl__cl67434795 3,709, slw_fw_v1__cl51d45468 3,650.
+- STALE-BINS, 25 types: kits saw more clock sinks than the plan bins hold. slw_su_l1 3.12x, slw_fe_v2 1.75x, slw_stm_v1 1.72x, sle_ctl 1.69x (106,822 against 63,131), sle_su_l0 1.63x.
+- TAP-CAP after the 200 um rebalance: cbn_q11__cl5cc92dfe 1 tap, coll_ft__cla4a25d77 6 of 9 taps.
+- My scan: 14,554 clock / reset tap sites, 0 inside an SRAM or ROM box, 0 within 4.32 um. (The N46T draft had 14.)
+- R, QC-PLAN-R3 07:46: V1A "coherent native-plus-row bins and retap" draft, 127 types, 0 errors. Not in A4.
 
-### 4.3 Wave failures 06:20-09:57 (MEASURED from the log): no design class
+**Root cause.** Density taps are computed from bins measured before the station rows and landing rings were added. The sle_ctl family is the worst case and is also the congested one.
 
-274 lines. Pruned bind worktree sources (`treeA/... redstn2_gsafe.sv`, serdes `_bb.v`): 52. `count frame files not found:
-feed_s29.json` and other gen tool refusals: about 130 (06:33 burst). `INFRA-VIEW-MISSING sle_cland_w517_n_s10_1` on sle_ctl: 18.
-`prov_view` input not staged on st_a_v1: 17. `place RC=0, no 3_place.odb`: 17, and 17 more of the same quoted as
-"plan geometry / site". `KIT_NOT_SELF_CONTAINED` (sink_bins of slw_su_c__cl19bb38ef; cland `signoff.json` of sle_ctl and
-st_a_v1): 11. Missing S4P attempt RTL on sc / stm: 10. LEC: 1 (slw_hc3__cld86a7ad4). The one design line is the LEC.
-The rest are kit inputs on the die-qc-103 trees; S4q3b changes none of them.
+## 5. Hold structure at 833 ps
 
-## 5. phy_serdes
+**Evidence.**
+- V, PRECHECK R2: 113 types FLAG. 2,941 of 3,141 zero-logic station hops have launch and capture on different nearest taps and no latch. Worst: sle_su_l1 101 of 116 per type, sle_su_l0 88 and 82 of 96, slw_su_l1 85 and 80 of 113, slw_su_l0 82 and 80 of 92.
+- V, plan: no `internal_stations` row carries a latch or lockup key. `clock.tap_window.per_type_ps` runs 20 to 190 ps, median 70.
+- V, `QC-HOLD-0030.md`: 27 kits failed sign-off on internal FF hold of -1.4 to -41 ps on 1 to 308 ends. Class C names the ends: zero-logic `u_lpad_*.r[] -> r[]`, `u_ist` pad chains and `xl` write-data chains.
+- R2 is an upper bound: hops inside 5 unshared clock stages also pass, and that needs the built tree.
 
-MEASURED: S4q3b rows of phy_serdes / phy_serdes_b / phy_ucie_kv are those of S4q2 (phy_serdes_b still names
-`ot_qfd_serdes_112g_x12_phy_s597`, no lef / lib / origin fields). The QC-PHYSERDES fields (approved 07:1x, handoff
-`lanes/handoff/QC-PHYSERDES.md`: lef, lib, origin_um, the `_e` master for serdes_b, `local_reset_pins` for `phy_rst_i`)
-are in no delta. The wave error stays `hard wrapper ... requires a placed macro with LEF and TT/FF views`.
-Either the fields go into the next delta or the 3 types leave the wave count as hard IP (the COORD change in that handoff).
+**Root cause.** Station hops are 225 to 300 um and the tap radius is 200 um, so consecutive banks are on different taps by construction. With no logic between them the hold margin is the tap-to-tap skew. Buffers repair it after GRT and the routed RC moves it back.
 
-## 6. Fix list, ranked
+## 6. E3 rs_s1 FIRM conflict
 
-| # | fix | owner | evidence | unblocks |
+**Evidence (V).**
+- My scan of exact `bit_sites_um` (cell 1.404 x 0.27 um) on every type: rs_s0 stage 0 against rs_s1 stage 0 collide on all 11 st_a types. sle / slw st_a_v2 (5 types, 6 instances): 51 each. sle_st_a_v1: 65, 65, 63. slw_st_a_v1: 77, 77, 77. The other exact rows (su_c, x_ctl_o) have 0. No exact site lies in a hard-core box or halo.
+- The nominal `regs_um` of both rows lie inside the `u_r1` box on all 11 types (22 rows).
+- `s1_reseat_405.json` for E3: 51 sites moved by at most 29.4 um, overlap 51 -> 0. Legs of the moved bits after the reseat: input median 270.9, max 391.1 um; output median 311.0, max 405.0 um. 24 of the 51 go to `u_r3`, 24 to `u_r2`, 3 to `u_r1`. The script is named `reseat_405.py`; its review says the two-leg form "fits the original 405 um data price".
+- Plan: landing rings at y 69; `u_r0` to `u_r3` stacked to y 1240. Ring to core box: `u_r1` 337 to 404 um, `u_r2` 683 to 741 um, `u_r3` 1,020 to 1,069 um, with one station stage. The lane measured 777.6 to 794.2 um from bin sites to the `u_r3` pins.
+- R, QC-SUST-MACRO 09:09: the E3 place stopped rc 2 at GPL on the collision. The halo PDN passed (8,044 pin and 10,563 rail checks).
+
+**Root cause.** One packed bank per bus serves four consumers at 15 to 1,069 um. Each bit sits at the midpoint of its own leg, so the two banks crowd the same rows beside `u_r1` and `u_r2`. One stage cannot carry 794 um under 300 um legs: it needs three legs.
+
+**I.** The other 10 st_a types will stop at GPL the same way when they reach place on A4.
+
+## 7. Fixes for V1, ranked (P). Owner of the event: QC-PLAN-R4
+
+| # | fix | evidence | owner | check |
 |---|---|---|---|---|
-| 1 | Hold the 4 st_a_v2 parents. Rows-only delta on S4q3b: `module` -> the signed q masters (h17_n9_s10, h18_n9_s10, h18_n9_s11); register their view packs on all hosts; then release | DIE-QC-103 (rows), CORE-ROWS-1115 (views) | section 3 | 4 types; removes a silent 3-cycle error |
-| 2 | S4fw4b: pin the R8 pad of the 12 `st_a__x_st_a_ctl` members at 13 (landed 22); rebind; read `bind_report.errors`, not LATCHECK | QC-FWST | section 2, replay OK | S4fw4b binds: su_c 3, fw 11, st_b 11 |
-| 3 | Rebase S4fw4b onto S4q3b (carry `r_dly_spread` and the fix-1 rows) as S4q4; one bind chain with `bind_chain3.sh` | QC-FWST builds, DIE-QC-103 adopts | section 0 item 4 | no regression of S4q3b |
-| 4 | S4q4 st_a_v2 rows: `sta_region_strap_s2` with strap ties from the bound RTL of the passing S4q4 bind (HI_PAD moves) | DIE-QC-103, HCPARAM-ALL (wrap_bound strap ties, branch param-wrap-straps-1115-2) | section 2, section 3 | 4 types on every later station event; no master rebuild |
-| 5 | sc family, 9 types: station rows on `x_fe_i` (bin -> core, +2) and `x_fe_o`, `x_ctl_o` (core -> bout, +2 / +1), or move `u_core` to the middle of the x_fe run; list the family first from the slw_sc_v3 a10 dump | new lane (QC-SC-STN), rows into S4q4 if ready, else S4q5 | section 4.1 | 9 types |
-| 6 | fe family, 9 types: rows on x_stm_o, x_stm_p1_o, st_wo, x_fw_p1_o, sc_wo, rd_wo, hr_wo; sidecar `u_bin` mid-hop for ard_wi, dd_wi, st_wi | QC-FWST after fix 2 (same generator), or the new lane of fix 5 | section 4.1 | 9 types |
-| 7 | Placed-dump scan (`zl.py`, 580 um, non-strap groups) on every S4q2 placed kit now, table to DIE-QC-103; ignore `fclk_in_*` groups and `PIN:strap_*` rows | PLACED-SCAN-1115 | sections 4.1, 4.2; my 10 outputs are in `zl_*.out` | finds the next sc / fe before route |
-| 8 | Stop slw_su_c__cl19bb38ef a5 / a6 on S4q2 and set the su_c hold key for all 3 types; copy `sink_bins/hf1c/slw_su_c__cl19bb38ef.json` into tree7 and the kit staging so G0 runs on S4q4 | KIT-OPS-5 (hold), DIE-QC-103 (file) | sections 2, 4.1 | frees the slot; G0 on the next delta |
-| 9 | cb: bc_i stations + the large sidecar (S4v2 content) re-cut on S4q3b; switch the cb list to gate mode after the first cb kit passes the stage count | DIE-QC-103, TYPE-QCCB-GEN | section 1 | cbn_q11, cbf_q11; the other 12 cb types get the spread now |
-| 10 | Clock-site reserve rows for QC into S4q4, before the 54 running types sign | CLKSITE-RESERVE-1115 | strategy lever 1; none posted | one re-key of all QC types avoided |
-| 11 | phy fields of QC-PHYSERDES into S4q4, or drop the 3 PHY types from the wave | DIE-QC-103, KIT-OPS-5 | section 5 | 3 flow errors |
-| 12 | slw_hc3: read the S4q2-form `lec.json` when it lands; open the l3 cone diff only if the 17 x 3 points return | DIE-QC-103 | queue 14042 | 2 types |
-| 13 | Core masters: report post-ECO verdicts; `HOLD_SLACK_MARGIN 25` twin on the next master; ECO buffer sites off RESETN access | CORE-ROWS-1115 | section 3 | no false "NOT SIGNED" tables |
+| 1 | st_a rs_s0 / rs_s1 on all 11 types: two station stages (+1 cycle, pre-approved), every leg at or under 300 um, banks generated disjoint. Stage 1 beside `u_r1`, stage 2 beside `u_r2`; `u_r0` / `u_r1` take the pad cycle. Run the cross-bank overlap test on every exact row in compose. | section 6 | QC-SUST-MACRO-1119 (rows), QC-PLAN-R4 (compose, latency) | overlap 0 on 11 types; max per-bit leg <= 300; one st_a_v1 and one st_a_v2 place-only |
+| 2 | sle_ctl hub, all 7 types: move `u_ctl` east to open a channel of at least 60 um beside `u_tap` (move only, no re-shape, no outline change); put the stage-0 banks of the four `b_hw_hc*_o` chains on four different sides of `u_tap`; take `b_tw_data_st_a_o` south of y 328; move the `cws1` FT window off the `u_tap` column. | section 3.1 | QC-PLAN-R4; FABLE lead if a hub split is wanted | my station-demand estimate before build; then one kit: overflow under 1,000 by iteration 10 |
+| 3 | Sink bins from the newest placed kit for the 25 STALE-BINS types, then retap; take the V1A retap draft. sle_ctl first, with fix 2. | section 4 | QC-PLAN-R4, PRECHECK-1119 | R3: no tap over 1,000 on bins + rows; STALE-BINS 0 |
+| 4 | First rank seated FIRM at the port window on the fe, fw, su_c, sc and stm families (the slw_fe_v1 form), then re-scan; stage rows only for legs still over 300 um. | sections 1, 2 | QC-PLAN-R4, LONG-LEG-0040 | BOUNDARY-REG bits fall; first-hop count of 399 falls |
+| 5 | cb `bc_i00 / bc_i10 / bc_i30` (10 types, 517 bits): two more stations per chain (+2 cycles), or move the ring to the core side. stm `flt_o` (1 bit): one more station. | section 1 | QC-PLAN-R4 | R1 worst under 300 on cb |
+| 6 | Lockup latch at the launch side of zero-logic station chains, su_l0 / su_l1 first (80 to 101 hops per type), then lpad / ist pad chains named in QC-HOLD-0030 class C. Where two banks fit one tap radius, share the tap instead. | section 5 | QC-PLAN-R4 (rows), QC-HOLD-0030 (ends list) | R2 unlatched count; first su kit CTS FF hold on those ends >= 0 without buffers |
+| 7 | Global 300: `die.reach_um`, `reset.hop_um`, `ft_station_max_um` to 300 with the priced BOOT 1492. | section 0 table; R QC-PLAN-R3 08:41 | QC-PLAN-R4 | G0 0; LATCHECK 1921 |
+| 8 | coll_core: no row in V1 unless the R4-bound successor of pkw4 / pkw5 reads the `rdq -> out_data` class at or above -42 at GRT TT. Then open the `g_xf_0 / 1 / 2` channels for the two north buses. | section 3.2 | OPUS-FIX-QC-COLLCORE | class read, not WNS |
 
-Order: 1 and 8 now (minutes). 2 + 3 next, one bind. 4 in the same bind if the strap ties are in `wrap_bound`, else the
-q masters carry S4q3b and the strap rows follow. 5-7 in parallel.
+Order of proof (owner: reps first): one st_a_v2, one sle_ctl, one su_l1 and one fe kit on the V1 draft to GRT TT before the cut.
 
-## 7. Stop list
+## 8. Stop list
 
-1. No kit of the 4 st_a_v2 types on the S4q3b rows as written (n6 master names).
-2. No adoption of S4fw4 / S4fw4b as built: bind error 1, based on S4q2, st_a_v2 rows old.
-3. No master and no strap tie at HI_PAD 0 / SKEW 14 / 14: those are the defaults of the failed regen.
-4. No further fixed-depth sta_region masters (p, q or a new set for S4q4). The strap master is signed; q_h17_u4 needs no rerun.
-5. No more fixed_cycles on the st_a ctl / fe return lanes; the pad is what must be held.
-6. No su_c, fw or st_b launch on S4q2 or S4q3b; stop the running slw_su_c__cl19bb38ef attempt.
-7. No lane, re-floor or ECO for hc0 / hc1 / hc2 / su_l0 / su_l1 from the placed WNS: it is the `fclk_in_*` groups before CTS.
-8. No reading of LATCHECK PASS as "the delta binds": S4FW4BBQ passes LATCHECK with a PARAM_REGEN error.
-9. No relaunch of sc or fe types as a fix; they need rows.
-10. Still in force: 0700 stop list 1, 4, 5, 6 and the strategy stop list items 8, 10, 13.
+- No reading of A4 as a 300 um event. Only the reset trees are at 300.
+- No relaunch of an st_a kit that stopped at GPL on the rs_s0 / rs_s1 collision with unchanged rows.
+- No hand reseat of the other 10 st_a types in the 405 form (legs 391 / 405 um) as the V1 form.
+- No new sle_ctl kit on the A4 geometry run to 30 GRT iterations. Read overflow at iteration 10; the zone is known. The two kept jobs stay as admitted.
+- No coll_core wave kit before the read-register class passes on an R4 bind.
+- No retap from the current bins on the 25 STALE-BINS types.
+- No station row before the first rank is seated and re-scanned (09:05 list).
+- No hold-buffer ECO on a zero-logic cross-tap chain (09:05 list).
+- No E3 result read as family proof: it is one type of 11, and the halo and the reseat are separate changes.
 
-## 8. Not verified
+## 9. Not checked
 
-- That a parent kit really resolves the n6 view by name (section 3): read from `wrap_bound` behaviour as described in
-  QCC-0740 and STRAP-MASTER-1115, and from the plan rows; no kit run.
-- The HI_PAD values of the st_a_v2 rows after the S4fw4b fix: the replay gives the set, not the per-type value.
-- sc and fe station counts: from box and dump distances of one type each (slw_sc_v3, sle_fe_v1__cl1cbb7497), no
-  street or track check, no PARAM_REGEN replay of the lane bumps. sle_fe_v2 / v3, slw_fe and sle_sc_v1 dumps not read.
-- cb numbers are TYPE-QCCB-GEN's and 0650's; no cb kit exists on S4q3b.
-- The fw and st_b rows of S4fw4b were not re-checked for the slw_fw face error of 0700 2.2 (QC-FWST reports 0 hops over 405 um).
-- tt_ctlm placed WNS -165 (TNS -62,508): group not identified.
+- Die-level lane hops between partitions (ports, FT stations): G0 passes at the 405 die reach; I did not re-scan them at 300.
+- Per-bit legs of the 1,091 `per_bit` rows; only nominal chains and the 51 E3 bits.
+- No placed A4 kit exists yet (E0 ctl place is running, R). Nothing here is a placed or routed A4 measurement; the congestion reports are V0E-geometry kits.
+- Hold is static structure only; no STA. R2 is an upper bound.
+- Routing blockage layers of `u_tap`, `u_ctl` and `ot_coll_fold_slice` (plan `obs_max` is empty); the 60 um channel in fix 2 is a first estimate, not a track count.
+- Whether the four st_a_v2 types held by exact key launch on A4.
+- Marker lists are capped at 20,000 per report, so zone shares are of the listed markers.
+- Token, ROM content, LEC and procedural items are out of scope.
