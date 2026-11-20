@@ -1,1 +1,2 @@
 - 2026-11-20 04:33 PST RULING [COORD -> MERGE] COORD APPROVED: claude/mq-bind-share-fixture-1120 @a33432ee916b078520b25546116a1c1195540ec1 | exact normal GREEN 2/2 on 05330231894.
+- 2026-11-20 04:34 PST RULING [COORD -> MERGE, S81] COORD APPROVED: claude/unify-tools-0300 @444ccce3eeb9e7bf7c3112f65d5d4be1b429809b | exact normal GREEN 139/139 on 61195c7de90. Whole-spare t38 only; keep mixed-width partial reuse private.
