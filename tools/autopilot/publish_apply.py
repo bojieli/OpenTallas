@@ -357,12 +357,27 @@ def cmd_adopt_bind(a, run=subprocess.run, check_fn=None):
         print(f"ADOPT-BIND {a.die}: sealing the bind output on {a.host} failed rc {r.returncode}: {(r.stderr or r.stdout)[-200:]}; nothing switched")
         return 2
     e = "ssh -o BatchMode=yes -o ControlPath=none -o ConnectTimeout=15"
+    out_ = shlex.quote(plan_["out"] + "/")
     for h in plan_["hosts"]:
+        # SNAP-RO-1119 (FABLE-FLOW-0035): the kits name HDL files INSIDE the post-bind copy (<copy>/_postbind/out/rtl/...); the sealed bind alone left the copy on the bind host only
+        # (QC n46_s1_postbind and KV D25e: SRC-INCOMPLETE on every other gen host).  Both travel, to the same paths.
         r = run(["ssh", "-o", "BatchMode=yes", "-o", "ControlPath=none", a.host,
+                 f"ssh -n -o BatchMode=yes -o ControlPath=none {h} {shlex.quote('mkdir -p ' + shlex.quote(plan_['out']))} && rsync -a -e {shlex.quote(e)} {out_} {h}:{out_} && "
                  f"rsync -a -e {shlex.quote(e)} {shlex.quote(plan_['dest'] + '/')} {h}:{shlex.quote(plan_['dest'] + '/')}"], capture_output=True, text=True, timeout=1800)
         if r.returncode:
             print(f"ADOPT-BIND {a.die}: replicating the bind to {h} failed rc {r.returncode}: {(r.stderr or r.stdout)[-200:]}; nothing switched")
             return 2
+    # the same all-host proof as the apply (verify_tree_on_all_hosts): the sealed bind and the post-bind rtl are on EVERY gen host before kit_rtl.bind_out moves
+    bad = []
+    for h in [a.host] + list(plan_["hosts"]):
+        r = run(["ssh", "-n", "-o", "BatchMode=yes", "-o", "ControlPath=none", "-o", "ConnectTimeout=15", h,
+                 f"test -f {shlex.quote(plan_['dest'] + '/native_topology.json')} && test -d {shlex.quote(plan_['out'])} && "
+                 f"{{ test ! -d {shlex.quote(plan_['out'] + '/rtl')} || test -n \"$(ls -A {shlex.quote(plan_['out'] + '/rtl')} | head -1)\"; }}"], capture_output=True, text=True, timeout=300)
+        if r.returncode:
+            bad.append(f"{h} (rc {r.returncode})")
+    if bad:
+        print(f"ADOPT-BIND {a.die}: the sealed bind {plan_['dest']} or the post-bind copy {plan_['out']} is not complete on {', '.join(bad)}; nothing switched")
+        return 2
     ok, txt = (check_fn or bind_check)(adopt_bind_candidate(cfg, a.die, plan_["dest"]), run=run)
     print(f"ADOPT-BIND {a.die}: {txt}")
     if ok is not True:
@@ -374,6 +389,11 @@ def cmd_adopt_bind(a, run=subprocess.run, check_fn=None):
             run([sys.executable, "-I", str(HERE / "publish_apply.py"), "bind-fail", "--die", a.die, "--lane", a.lane, "--id", a.id or "adopt-bind", "--types", ",".join(names),
                  "--coord", str(C)], capture_output=True, text=True, timeout=600)
         return 1
+    n_items = len(plan_["patch"]) - 1
+    # a bind of record's source copy is a live reference: any absolute scratch path in a die block is on the delete guard's protected list (build_protected walks every key), so the copy is
+    # registered under dies.<die>.bind_copy_of_record (newest 4, like bound_trees); a lane can no longer delete the tree the bind of record reads (KV D25e)
+    prev = [p for p in ((cfg["dies"][a.die].get("bind_copy_of_record")) or []) if isinstance(p, str) and p != a.copy][:3]
+    plan_["patch"] = plan_["patch"] + [{"op": "add", "path": f"/dies/{a.die}/bind_copy_of_record", "value": [a.copy] + prev}]
     with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False) as f:
         json.dump(plan_["patch"], f)
     r = run([sys.executable, "-I", str(HERE / "kit_wave_edit.py"), "--coord", str(C), "--message",
@@ -384,7 +404,7 @@ def cmd_adopt_bind(a, run=subprocess.run, check_fn=None):
         print(f"ADOPT-BIND {a.die}: the kit_wave.json edit failed: {(r.stdout + r.stderr)[-300:]}")
         return 2
     post(C, a.lane, f"ADOPT-BIND [{a.lane} -> COORD] {a.die}: post-bind GREEN and matching on every type; kit_rtl.bind_out {plan_['old_bind']} -> {plan_['dest']} "
-                    f"({len(plan_['patch']) - 1} item_inputs repointed, hosts {a.host},{','.join(plan_['hosts'])}); the BIND-STALE rows relaunch on the next wave pass", run=run)
+                    f"({n_items} item_inputs repointed, hosts {a.host},{','.join(plan_['hosts'])}); the BIND-STALE rows relaunch on the next wave pass", run=run)
     return 0
 
 

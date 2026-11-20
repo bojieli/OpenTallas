@@ -153,6 +153,58 @@ class ApplyHosts(Tmp):
         self.assertEqual((c / "autopilot/kit_wave.json").read_text(), before)
 
 
+class AdoptBind(Tmp):
+    def _run_factory(self, fail_host=None, calls=None):
+        from test_publish_apply import _R
+
+        def run(argv, **k):
+            calls.append(argv)
+            if argv[0] == "ssh" and "bash -s" in argv[-1]:
+                return _R(0, "ADOPT_SEAL /t/tree_bind_0101\n")
+            if argv[0] == "ssh" and argv[1] == "-n" and argv[5 if False else -2] == fail_host:
+                return _R(1)
+            return _R(0)
+        return run
+
+    def test_post_bind_copy_travels_with_the_bind_is_proved_on_every_host_and_registered(self):
+        import argparse
+        import publish_apply as PA
+        from test_publish_apply import _adopt_cfg
+        C, cfg = _adopt_cfg(Path(self.t))
+        calls = []
+        a = argparse.Namespace(die="s81", lane="L", tree="/t/tree", copy="/t/tree_postbind_0101", host="epyc8", id="u1", stamp="0101", coord=str(C))
+        rc = PA.cmd_adopt_bind(a, run=self._run_factory(calls=calls), check_fn=lambda *x, **y: (True, "ok"))
+        self.assertEqual(rc, 0)
+        rs = [c[-1] for c in calls if c[0] == "ssh" and "rsync" in c[-1]]
+        self.assertTrue(all("/t/tree_postbind_0101/_postbind/out/" in r and "/t/tree_bind_0101/" in r for r in rs) and len(rs) == 2)
+        proofs = [c[-2] for c in calls if c[0] == "ssh" and c[1] == "-n" and "native_topology.json" in c[-1]]
+        self.assertEqual(sorted(proofs), ["epyc10", "epyc8", "intel1"])                      # every gen host, the bind host included
+        edit = [c for c in calls if any("kit_wave_edit.py" in str(x) for x in c)][0]
+        patch = json.load(open(edit[edit.index("--patch-file") + 1])) if os.path.exists(edit[edit.index("--patch-file") + 1]) else None
+        if patch is not None:
+            self.assertIn({"op": "add", "path": "/dies/s81/bind_copy_of_record", "value": ["/t/tree_postbind_0101"]}, patch)
+
+    def test_a_host_without_the_copy_refuses_the_adopt(self):
+        import argparse
+        import publish_apply as PA
+        from test_publish_apply import _adopt_cfg
+        C, cfg = _adopt_cfg(Path(self.t))
+        calls = []
+        a = argparse.Namespace(die="s81", lane="L", tree="/t/tree", copy="/t/tree_postbind_0101", host="epyc8", id="u1", stamp="0101", coord=str(C))
+        rc = PA.cmd_adopt_bind(a, run=self._run_factory(fail_host="intel1", calls=calls), check_fn=lambda *x, **y: (True, "ok"))
+        self.assertEqual(rc, 2)
+        self.assertFalse(any(any("kit_wave_edit.py" in str(x) for x in c) for c in calls))
+
+    def test_registered_copy_is_on_the_delete_guards_protected_list(self):
+        sys.path.insert(0, str(HERE.parent / "fleet"))
+        import ot_delete_guard as G
+        c = Path(self.t) / "coord"
+        (c / "autopilot").mkdir(parents=True)
+        cp = "/srv/opentallas-scratch2/claude/kw45/src_kv_x_postbind_1119"
+        (c / "autopilot/kit_wave.json").write_text(json.dumps({"dies": {"kv": {"bind_copy_of_record": [cp]}}}))
+        self.assertIn(cp, G.build_protected(str(c)))
+
+
 class Breaker(unittest.TestCase):
     CFG = {"dies": {"qc": {"src": "/k/snap/n46_s1", "gen_host": "epyc9", "src_manifest_hash": "h"}}}
     WHY = "SRC_MANIFEST FAIL /k/snap/n46_s1: tree is not main abc + its overlay manifest (1 finding(s); first: SRC_MANIFEST DRIFT x (missing))"
