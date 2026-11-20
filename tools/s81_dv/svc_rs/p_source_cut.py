@@ -5,11 +5,14 @@ import sys
 src=Path('rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv').read_text()
 module=src[src.index('module dsdv_svc_p_source #'):]
 out=Path(sys.argv[1]);out.mkdir(parents=True,exist_ok=True)
-if len(sys.argv)>2 and sys.argv[2]=='mut':
- module=module.replace('assign fire=pon &&','assign fire=pon && hsel &&')
+mode = sys.argv[2] if len(sys.argv) > 2 else 'base'
+if mode == 'mut':
+ module=module.replace('assign fire = pon &&','assign fire = pon && hsel &&')
+elif mode == 'capture_mut':
+ module=module.replace('index_q <= pk;', 'index_q <= pk + 1;')
 (out/'producer.sv').write_text(module)
 (out/'tb.sv').write_text('''module tb;
-localparam H=8,LW=1076;
+localparam H=8,LW=1076,CAPTURE=USE_CAPTURE;
 reg ck=0;always #5 ck=~ck;
 reg go=0,hb_h=0,hb_p=0;reg[15:0]jc=0;reg[7:0]pk=0;
 wire[15:0]fire,missing;wire[LW-1:0]beat[0:15];reg[15:0]pl_v=0;reg[LW-1:0]pl_d[0:15];
@@ -18,9 +21,11 @@ genvar g;
 generate for(g=0;g<16;g=g+1)begin
  assign hsel[g]=(g/8)==hb_p;
  wire[15:0]val=16'h3f80+16'(g)+16'(pk/4);
- dsdv_svc_p_source u(.pon(1'b1),.hsel(hsel[g]),.pk(pk),.tile(4'(g)),.tjob(10'd128),
+ dsdv_svc_p_source #(.RDREG(CAPTURE)) u(.ck(ck),.pon(1'b1),.hsel(hsel[g]),.pk(pk),.tile(4'(g)),.tjob(10'd128),
  .jcs(jc),.pio(16'd20),.prw({16{val}}),.rows_ready(hsel[g]&&pk!=3?6'd8:6'd0),.fire(fire[g]),.missing(missing[g]),.beat(beat[g]));
- always@(posedge ck)begin pl_v[g]<=fire[g];pl_d[g]<=beat[g];end
+ always@(posedge ck) pl_v[g]<=fire[g];
+ if (CAPTURE) always @* pl_d[g]=beat[g];
+ else always @(posedge ck) pl_d[g]<=beat[g];
 end endgenerate
 // Same register/counter equations as the production parent; no extra stages.
 always@(posedge ck)begin
@@ -52,4 +57,4 @@ initial begin
  $finish;
 end
 endmodule
-''')
+'''.replace('USE_CAPTURE', str(int(mode.startswith('capture')))))

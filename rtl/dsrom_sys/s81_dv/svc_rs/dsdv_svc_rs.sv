@@ -338,10 +338,20 @@ module dsdv_svc_rs_c #(
 `endif
 `ifdef OT_SVC_H8
     wire pfire, p_missing; wire [LW-1:0] pl_next;
-    dsdv_svc_p_source #(.H(H)) u_p_source (.pon(pon), .hsel(hsel), .pk(pk), .tile(tile),
+`ifdef OT_S81_SVC_PBUF_RDREG
+    localparam integer PBUF_RDREG = 1;
+`else
+    localparam integer PBUF_RDREG = 0;
+`endif
+    dsdv_svc_p_source #(.H(H), .RDREG(PBUF_RDREG)) u_p_source (
+        .ck(ck), .pon(pon), .hsel(hsel), .pk(pk), .tile(tile),
         .tjob(tjob), .jcs(jcs), .pio(pio), .prw(prw), .rows_ready(pb_n),
         .fire(pfire), .missing(p_missing), .beat(pl_next));
+`ifdef OT_S81_SVC_PBUF_RDREG
+    always_comb pl_d = pl_next;
+`else
     always @(posedge ck) pl_d <= pl_next;
+`endif
 `else
     wire pfire = pon && hsel && 10'(pk) < nbt && jcs == pio + {7'd0, pk, 1'b0};
     always @(posedge ck) begin
@@ -777,23 +787,67 @@ module dsdv_svc_selq #(parameter integer MUT = 0) (
         end
 endmodule
 
-// Soft combinational P producer. All dimension tiles retain the fixed gather valid;
-// inactive head halves supply zero. Existing parent registers/counter are unchanged.
-module dsdv_svc_p_source #(parameter integer H=8) (
- input wire pon,hsel, input wire [7:0]pk, input wire [3:0]tile,
- input wire [9:0]tjob, input wire [15:0]jcs,pio, input wire [255:0]prw,
- input wire [5:0]rows_ready, output wire fire,missing, output reg [H*132+19:0]beat
+// The P beat keeps its scheduled output edge. RDREG moves the existing
+// beat register ahead of formatting, at the SRAM word and its metadata.
+module dsdv_svc_p_source #(
+    parameter integer H = 8,
+    parameter integer RDREG = 0
+)(
+    input wire ck,
+    input wire pon, hsel,
+    input wire [7:0] pk,
+    input wire [3:0] tile,
+    input wire [9:0] tjob,
+    input wire [15:0] jcs, pio,
+    input wire [255:0] prw,
+    input wire [5:0] rows_ready,
+    output wire fire, missing,
+    output reg [H*132+19:0] beat
 );
- localparam integer LW=H*132+20;
- wire [9:0]nbt=(tjob+10'd3)>>2;
- wire [9:0]prow={pk,2'b00};
- assign fire=pon && 10'(pk)<nbt && jcs==pio+{7'd0,pk,1'b0};
- assign missing=fire && hsel && {2'b00,rows_ready}<={2'b00,pk[7:2]};
- always @* begin
-  beat='0; beat[LW-1-:16]=16'(prow);
-  for(integer i=0;i<4;i=i+1)if(32'(prow)+i<32'(tjob))begin
-   beat[LW-20+i]=1'b1;
-   beat[4*H+(H*i+32'(tile)%H)*32+:32]=hsel?{prw[16*(4*pk[1:0]+i)+:16],16'h0000}:32'd0;
-  end
- end
+    localparam integer LW = H*132 + 20;
+    wire [9:0] nbt = (tjob + 10'd3) >> 2;
+    assign fire = pon && 10'(pk) < nbt && jcs == pio + {7'd0, pk, 1'b0};
+    assign missing = fire && hsel && {2'b00, rows_ready} <= {2'b00, pk[7:2]};
+
+    wire [255:0] word;
+    wire [7:0] beat_index;
+    wire [3:0] beat_tile;
+    wire [9:0] job_length;
+    wire head_selected;
+    if (RDREG) begin : g_read_capture
+        reg [255:0] word_q;
+        reg [7:0] index_q;
+        reg [3:0] tile_q;
+        reg [9:0] length_q;
+        reg head_selected_q;
+        always @(posedge ck) begin
+            word_q <= prw;
+            index_q <= pk;
+            tile_q <= tile;
+            length_q <= tjob;
+            head_selected_q <= hsel;
+        end
+        assign word = word_q;
+        assign beat_index = index_q;
+        assign beat_tile = tile_q;
+        assign job_length = length_q;
+        assign head_selected = head_selected_q;
+    end else begin : g_format_first
+        assign word = prw;
+        assign beat_index = pk;
+        assign beat_tile = tile;
+        assign job_length = tjob;
+        assign head_selected = hsel;
+    end
+
+    wire [9:0] row = {beat_index, 2'b00};
+    always @* begin
+        beat = '0;
+        beat[LW-1 -: 16] = 16'(row);
+        for (int i = 0; i < 4; i++) if (32'(row) + i < 32'(job_length)) begin
+            beat[LW-20+i] = 1'b1;
+            beat[4*H+(H*i+32'(beat_tile)%H)*32 +: 32] =
+                head_selected ? {word[16*(4*beat_index[1:0]+i) +: 16], 16'h0000} : 32'd0;
+        end
+    end
 endmodule

@@ -15,7 +15,7 @@ module tb_svc_feedback;
  for(genvar i=0;i<16;i++)assign pb_wd[16*i+:16]=bf16(wd[32*i+:32]);
  wire[7:0]pk_n=fire?pk+1'b1:pk;
  dsdv_svc_mem_ar #(.W(256),.DEPTH(40),.AW(6),.MACRO(1)) u_pb(.clk(ck),.ra_n(pk_n[7:2]),.we(pb_w),.wa(pb_n),.wd(pb_wd),.rd(prw));
- dsdv_svc_p_source #(.H(8))u_p(.pon(pon),.hsel(1'b1),.pk(pk),.tile(4'd0),.tjob(tjob),.jcs(jcs),.pio(pio),.prw(prw),.rows_ready(pb_n),.fire(fire),.missing(missing),.beat(beat));
+ dsdv_svc_p_source #(.H(8))u_p(.ck(ck),.pon(pon),.hsel(1'b1),.pk(pk),.tile(4'd0),.tjob(tjob),.jcs(jcs),.pio(pio),.prw(prw),.rows_ready(pb_n),.fire(fire),.missing(missing),.beat(beat));
  integer cyc=0,errors=0,writes=0,fires=0,misses=0,nonzero_rows=0,last_row=0,first_write=0,last_write=0,first_fire=0;reg[255:0]expected[0:39];
  always@(posedge ck)begin
   cyc<=cyc+1;
