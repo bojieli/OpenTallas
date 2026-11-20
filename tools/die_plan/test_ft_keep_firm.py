@@ -76,3 +76,51 @@ def test_generator_flag_and_schema_are_default_off_and_synchronized():
     jsonschema.validate(row, item)
     with pytest.raises(jsonschema.ValidationError):
         jsonschema.validate(dict(row, keep_firm='yes'), item)
+
+
+def _grown(tmp_path, keep):
+    """CLAND_RELEASE_GROWN_TCL on a mock row: tap | ft0 flop on the tap | ft0 flop free | ft1 flop on a tap | cland on a tap"""
+    import re
+    rel = (BASE / "face_flops_release.tcl").read_text()
+    proc = re.search(r"^proc ff_ft_keep_slot \{nm\} \{.*?^\}", rel, re.S | re.M).group(0)
+    cells = [("TAP_1", "FIXED", 0, 54), ("u_bound.u_ft_ft0_o_0/q1", "FIRM", 27, 351), ("u_bound.u_ft_ft0_o_0/q2", "FIRM", 400, 724),
+             ("TAP_2", "FIXED", 1000, 1054), ("u_bound.u_ft_ft1_o_0/q1", "FIRM", 1027, 1351),
+             ("TAP_3", "FIXED", 2000, 2054), ("u_cland_a/x", "FIRM", 2027, 2100)]
+    mock = proc + r'''
+proc block {method} {return $::insts}
+proc master {method} {return 0}
+proc bbox {id method} {return [expr {$method eq "yMin" ? 0 : ($method eq "xMin" ? $::x0($id) : $::x1($id))}]}
+proc inst {id method args} {
+ switch $method {
+  getName {return $::nm($id)}
+  getMaster {return master}
+  getBBox {return b$id}
+  getPlacementStatus {return $::state($id)}
+  setPlacementStatus {set ::state($id) [lindex $args 0]}
+ }
+}
+set ff_blk block
+'''
+    for i, (n, st, a, b) in enumerate(cells):
+        mock += f'set nm({i}) {{{n}}}\nset state({i}) {st}\nset x0({i}) {a}\nset x1({i}) {b}\ninterp alias {{}} c{i} {{}} inst {i}\ninterp alias {{}} b{i} {{}} bbox {i}\nlappend insts c{i}\n'
+    if keep:
+        mock += f'set ::env(OT_FT_KEEP_FIRM) {{{keep}}}\n'
+    mock += G.CLAND_RELEASE_GROWN_TCL + '\nputs "STATES $state(1) $state(2) $state(4) $state(6)"\n'
+    return subprocess.run(['tclsh'], input=mock, text=True, capture_output=True)
+
+
+def test_keep_firm_flop_on_a_tap_cell_is_released_for_dpl(tmp_path):
+    """leaf__t21 11-19: 3_5 DPL-0033, 202 of 11,050 keep_firm ft2 / ft3 flops FIRM on TAPCELL / PHY_EDGE sites"""
+    p = _grown(tmp_path, 'ft0')
+    assert p.returncode == 0, p.stderr
+    # the ft0 flop on the tap goes to PLACED, the free ft0 flop stays FIRM, ft1 (not keep_firm) is not this block's, cland as before
+    assert 'STATES PLACED FIRM FIRM PLACED' in p.stdout, p.stdout
+    assert 'OT_FT_KEEP_FIRM released 1 keep_firm ft station cells' in p.stdout
+    assert 'OT_CLAND released 1 FIRM cland cells' in p.stdout
+
+
+def test_without_keep_firm_the_scan_releases_cland_only(tmp_path):
+    p = _grown(tmp_path, None)
+    assert p.returncode == 0, p.stderr
+    assert 'STATES FIRM FIRM FIRM PLACED' in p.stdout, p.stdout
+    assert 'OT_FT_KEEP_FIRM released' not in p.stdout

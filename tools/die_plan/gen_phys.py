@@ -110,6 +110,10 @@ LAYER_W = dict(M2=0.018, M3=0.018, M4=0.024, M5=0.024, M6=0.032, M7=0.032, M8=0.
 # cannot move a FIRM cell, so 3_5 fails DPL-0033 (KV io_cor: 19 dsel INVx1 -> INVx2 over TAPCELLs under the legacy no-fit
 # form, which io_cor needs because the resize reserve leaves no status site). Only those overlapping CLAND cells go back
 # to PLACED, so DPL moves each to the nearest free site; every CLAND cell that still fits stays FIRM.
+# S81 leaf 11-19 (FABLE-FIX-S81-LEAF-2140; leaf__t21 3_5 DPL-0033, 202 overlaps): ft_slots.keep_firm keeps the station flops
+# FIRM through DPL, and the station comb does not see TAPCELL / PHY_EDGE cells, so 202 of 11,050 kept flops sat on one.
+# The same scan sends only those overlapping keep_firm cells back to PLACED (DPL moves each to the next free site);
+# every keep_firm flop on a free site stays FIRM.  Other FIRM cells are never released here.
 CLAND_RELEASE_GROWN_TCL = """
 set cg_rows [dict create]
 foreach cg_i [$ff_blk getInsts] {
@@ -118,7 +122,7 @@ foreach cg_i [$ff_blk getInsts] {
  set cg_b [$cg_i getBBox]
  dict lappend cg_rows [$cg_b yMin] [list [$cg_b xMin] [$cg_b xMax] $cg_i]
 }
-set cg_bad [dict create]
+set cg_bad [dict create]; set cg_ft [dict create]
 dict for {cg_y cg_l} $cg_rows {
  set cg_px -1; set cg_pi ""
  foreach cg_e [lsort -integer -index 0 $cg_l] {
@@ -126,6 +130,7 @@ dict for {cg_y cg_l} $cg_rows {
   if {$cg_pi ne "" && $cg_x0 < $cg_px} {
    foreach cg_c [list $cg_i $cg_pi] {
     if {[$cg_c getPlacementStatus] eq "FIRM" && [string match *u_cland_* [$cg_c getName]]} { dict set cg_bad [$cg_c getName] $cg_c }
+    if {[$cg_c getPlacementStatus] eq "FIRM" && [info procs ff_ft_keep_slot] ne "" && [ff_ft_keep_slot [$cg_c getName]] ne ""} { dict set cg_ft [$cg_c getName] $cg_c }
    }
   }
   if {$cg_x1 > $cg_px} { set cg_px $cg_x1; set cg_pi $cg_i }
@@ -133,6 +138,8 @@ dict for {cg_y cg_l} $cg_rows {
 }
 dict for {cg_n cg_c} $cg_bad { $cg_c setPlacementStatus PLACED }
 puts "OT_CLAND released [dict size $cg_bad] FIRM cland cells grown into an occupied site (in-place resize) for DPL"
+dict for {cg_n cg_c} $cg_ft { $cg_c setPlacementStatus PLACED }
+if {[dict size $cg_ft]} { puts "OT_FT_KEEP_FIRM released [dict size $cg_ft] keep_firm ft station cells placed on an occupied site (tap / edge cell) for DPL" }
 """
 
 
