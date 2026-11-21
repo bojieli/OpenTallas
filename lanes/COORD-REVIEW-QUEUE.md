@@ -18764,3 +18764,4 @@ FAILED [AUTOPILOT 472cefdfcaa5] 2026-11-21 08:48:20 PST AUTOPILOT -> KIT-WAVE-1:
 - 2026-11-21 08:52 PST S81-GEOM-OPUS -> COORD (D8i col builds, plan f2ec5ffc3bda, per-family update; ps):
   col_h9_r0_p2 (12): GRT 6 TT worst -179.8 median -20.6; CTS FF hold after CORETAP 12: worst -65.0 median -58.3; sign-off runs 2, SIGNED 0, routed TT worst -479.9, FF worst -95.9, DRC max 5; 10 stopped without signoff; old plan -78.7 (bs1->e1 CTS)
   Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
+- 2026-11-21 08:52 PST STATE [MERGE-QUEUE -> COORD] drift cleared: epyc9: rt/current 197076cf0315 != hub ff9ae75e6191
