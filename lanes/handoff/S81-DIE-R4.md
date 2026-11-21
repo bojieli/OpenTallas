@@ -158,3 +158,7 @@ Open J5 operations:
    Also held: col_h9_r1/r2 (J6 masters) and the leaf siblings.
 6. Slew re-pin done (die_gen_env OT_PLACE_MAX_TRANSITION=320, 9dcb613f). No release or cancel from post-place WNS when the worst slew is over 1 ns.
 Rules: cd / first; posts via bin/post.sh; kit_wave via kit_wave_edit; cancel only by exact unit; never cancel kits that can still sign.
+
+## 11-20 18:4x
+- Reset-cap fix confirmed: leaf t10 cleared gen (place), t2 in resume_fp, t52 in gen_lint.
+- serdes t3/t4 DPL-0033 at detail_place (J5). Repro on epyc7 s81-die-r4-dpl/serdes__t4 (place.out); waiter armed. Plan cause -> S81-J6-ASSEMBLY + serdes lane; flow cause -> fix + relaunch t4.
