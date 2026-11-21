@@ -1,3 +1,190 @@
+# FABLE-PD-HEAD-0700: HEAD serdes / host family physical-design review (2026-11-21 06:35-07:05 PST)
+
+Read-and-analyse only. No build, no kit, DB or job touched. HEAD is 25/26 signed off (only hd_lep0N is not); hd_serdes
+and hd_host_e here are deferred re-signs.
+
+Evidence (read-only copies and my STA outputs):
+- epyc9 `/srv/opentallas-scratch2/claude/fable-pd-head-0700/sdr2d_evidence/`: final GRT DB of the first GRT
+  (`5_1_grt.final_1353.odb`, 05:53 PST), `route.guide.1352`, stage reports, GRT/CTS/gate logs.
+- epyc10 `/srv/opentallas-scratch2/claude/fable-pd-head-0700/{db,kit,q}`: same DB + `4_cts.odb`, kit small files,
+  `q/grt.hold.rpt` (483 paths), `q/cts.hold.rpt` (262 paths), scripts `hold.tcl`, `pads.tcl`, `nets.tcl`, `bar.tcl`.
+- STA basis of my numbers: FF libraries of the kit gate receipt, kit SDC, `setRC_rcx.tcl`, propagated clocks,
+  `estimate_parasitics -global_routing` (GRT DB) / `-placement` (CTS DB). The kit gate also swaps in the signal-C table
+  (OT_RC_SIGNAL x1.13), so its slacks are deeper than mine on the same paths (gate -188.58, mine -116.5 on the same
+  worst path). Classes and causes are the same; where I quote the gate I say so.
+
+## 0. Live finding (posted 06:44, not acted on)
+
+The sdr2d "route" job (epyc9 `oth-ubuntu-3513796-1795271147`, `run_kit.sh ... route 96 16`) is not in detailed route.
+The route goal re-ran the CTS-stage TT setup repair (29.38 -> 43.38, 0 cells added), kept it and rewrote `4_cts.odb` at
+06:32 PST. That made it newer than `5_1_grt.odb` (05:53), so make restarted `global_route.tcl` at 06:38
+(`5_1_grt.tmp.log`). About 3 h of GRT is being repeated; the first final GRT DB, guide and reports will be overwritten
+(copies above). The DRT-0255 / ring read of sdr2d is therefore about 3 h later than the 06:30 post implies.
+
+## 1. Event 2: sdr2d. Setup collapse dropped; FF hold root cause
+
+Setup: dropped per COORD. `5_global_route.rpt` (-189.74 / TNS -8293) was written 05:24, before the GRT-stage TT repair
+(`tt_setup_keep.log`: -424.03 -> +2.60 in the kit session, 2,271 cells; R4 reads +45.45 on the final DB). No setup
+path is below 0 on the final GRT DB.
+
+FF hold, final GRT DB. Gate (`postcts_gate_FF.log`, vclk bound to the measured 467.19): 2,937 violating endpoints =
+1,954 ring-input ports (worst -68.30, `coll_i0[507]`), 420 output ports (worst -47.03, `rst_start_raw_3`), 563
+internal reg-to-reg, worst -188.58. Only the 563 internal ones are against the owner gate (internal FF hold >= 0).
+
+Internal class (my session: 483 clk-group endpoints, worst -116.5; pma_rck group has no internal violator, only
+`pma_rx` port inputs):
+
+| launch tap -> capture tap | endpoints | worst (ps) | launch insertion | capture insertion | SDC tap window |
+|---|---|---|---|---|---|
+| clk_t14 -> clk_t4 | 178 | -106.2 | 351 | 464 | 94 |
+| clk_t14 -> clk_t5 | 108 | -116.5 | 350 | 476 | 94 |
+| clk_t20 -> clk_t4 | 63 | -92.9 | 455 | 466 | 50 |
+| clk_t7 / t8 / t13 / t11 / t15 -> clk_t20 | 83 | -61.8 | 345-365 | 455-459 | 50-92 |
+| clk_t20 -> clk_t5 | 22 | -108.6 | 455 | 507 | 50 |
+| clk_t22 -> clk_t4 | 12 | -62.4 | 354 | 457 | 94 |
+| t4/t5 same or mixed, t20 same | 17 | -93.9 | 451-457 | 547-567 | 50-64 |
+
+Every violator is captured on clk_t4 (258), clk_t5 (139) or clk_t20 (86). All are `u_ptx` (l[0..2] -> q, pma_tx
+output pipeline) or `u_enc` <-> neighbours. Worst: `u_ptx.l[2][135]` (clk_t14) -> `u_ptx.q[135]` (clk_t5).
+
+Wire RC versus clock latency, same 262 start/end pairs on post-CTS `4_cts.odb` (placement RC) and the final GRT DB:
+
+    slack +63.8 -> -35.2 (change -99.0) = data +4.4, launch insertion +17.5, capture insertion +118.8
+
+It is a clock-latency change on three capture taps, not data wire RC. Per tap (FF, CTS -> GRT):
+
+| tap | CTS | GRT | change | where the change sits (mean per path) |
+|---|---|---|---|---|
+| clk_t4 (1,000 sinks) | 344 | 467 (to 578) | +123 | tap-balance pad chain +112.3, leaf buffer +8.9, sink wire +5.6 |
+| clk_t5 (541 sinks) | 348 | 481 (to 608) | +133 to +255 | pad chain +90.9, GRT leaf repeaters +46.1 (max +94.6), sink wire +11.4 (max +109) |
+| clk_t20 (11,321 sinks, u_enc) | 406 | 456 | +50 | GRT leaf repeaters +38.3, trunk +10.1 |
+| clk_t14, t22, t7, t8, t13, t11 | 341-360 | 345-367 | +1 to +9 | none |
+
+Root cause 1 (new, measured): the pad chain crosses a reserved clock-site wall. The tap pins clk_t4 (1240.336,
+16.928) and clk_t5 (1284.24, 16.928) are M7 pins inside one reserved clock-site obstruction, M1-M7,
+(1214.19, 16.2)-(1330.88, 18.36): 116.7 um long, 2.16 um tall, with a placement blockage. OT_CLK_OBS_HALO / legalisation
+put the BUFx4 pad chain (`clk_t4_tb0_d0..d13`, `clk_t5_tb0_d0..d14`) on both sides of it, rows y 15.4/15.7 and y 18.6.
+A chain net that crosses has pins 3.2-4.0 um apart and must route around the end of the wall:
+
+| net | pin HPWL (um) | GRT guide length (um) | guide bbox x |
+|---|---|---|---|
+| clk_t4_tb0_n0, n1, n2, n4, n5 | 3.2-3.6 | 79.8, 87.8, 89.5, 88.9, 82.1 | 1207-1245 (wall end 1214.19) |
+| clk_t5_tb0_n1, n2 | 3.7-4.0 | 142.5, 140.2 | 1285-1351 (wall end 1330.88) |
+| same-row chain nets (t4 n6-n12, t5 n3-n13, all of t14) | 0.5 | 0.0-1.1 | local |
+
+Placement RC priced every chain stage at 16.6-16.9 ps; GRT RC prices the crossing stages at 22-61 ps
+(`clk_t5_tb0_d2` 61.1, `d3` 52.8; `clk_t4_tb0_d1..d6` 22-40). clk_t14 sits at a 5.2 x 1.9 um site, its chain stays on
+one side, and it does not move. CTS tap balance (602 delay cells, tap means 429..509 TT) was therefore balanced on a
+delay the route cannot deliver.
+
+Root cause 2 (FLOW-LEAFREP-1121 class, second die): OT_CLK_LEAF_REPEAT in the GRT step added repeaters on clk_t5
+(`clkleafrepg_149454` + `_849461`: +19.9 +74.7 ps on that branch) and clk_t20 (`_749460` + `_949462`: +38 ps), on
+single branches, with no re-balance. Same mechanism FLOW-LEAFREP-1121 confirmed on KV hroot at 06:56.
+
+Contributing, settings: `OT_TAP_GRT_PRE` (GRT-RC tap re-balance, `tapbal_grt.tcl`, in the kit) is not set in the sdr2d
+config.mk nor in the r16 wave hd_serdes attempt_2 config.mk. The sd9d a4 lineage set it by hand. I did not check the
+signed sd9he kit.
+
+Contributing, repair budget: the GRT hold guard got one 200-buffer chunk (2,224 s): ws -197.09 -> -138.16, then
+RSZ-0060 and the setup guard stop. A 100+ ps cross-tap skew on 563 endpoints is not a buffer-repair problem; the
+pre-GRT hold pass had already spent 17,718 hold cells for a +5 ps start.
+
+Not established: whether the routed DB would show the same pad-chain detours (DRT follows the guides, so I expect
+yes); the hd_ptx placement itself (q regs y 4.3-8.6, l regs y 5.7-112) was not reviewed.
+
+## 2. Event 1: DRT-0255 (sdr2c, hd_host_e) and the FLOW-OBS-GCELL-1121 fix
+
+What is proven: two instances, both a horizontal-layer guide (M4 sdr2c, M6 host_e) in a gcell row that a reserved
+clock-site obstruction covers across its tracks, with 1 (sdr2c) and 2 (host_e) tracks left. Why DRT cannot use
+tracks that are spacing-legal by the fix's own test (346.464 - 0.048 > 346.41) is not explained; "fewer than 3 tracks"
+is a threshold that covers both observed cases, not a derived rule. A gcell left with exactly 3 tracks is untested.
+
+The fix (`obs_gcell_cap.tcl`, commit e44fcd0731 in the lane clone, not pushed; read in full): logic is sound for the
+class as stated; the planner handles both edges, thin obstructions, partial along-track cover (conservative), M2-M7
+(reserved sites are M1-M7 only, so M8 needs nothing). Probe on hd_host_e: 668 of 2,125 partly covered gcells cut,
+GRT ends at 0 overflow. The proof run (host_e GRT + route, epyc8 `oth-ubuntu-2792729-1795271476`) had not reported.
+
+It is NOT complete. Gaps, in order of risk:
+
+1. Fresh-session incremental GRT does not get the cap. Region adjustments live in GlobalRouter, not in the ODB.
+   `grt_pg_replay.tcl` (used by `tt_setup_repair.tcl` at the GRT stage) restores only OT_PG_CELL_KEEPOUT,
+   OT_PG_TRACK_TRUTH and OT_PGCAP. On sdr2d that session added 2,271 cells and re-routed 1,524+ nets with no cap, so
+   those nets can land in the same sliver gcells and DRT-0255 returns after a "fixed" GRT. Add the cap to the replay
+   list; then check the other scripts that open a routed DB and route (`final_ff_hold.tcl`, `core_final_repair.tcl`,
+   `core_drv_repair.tcl`, `grt_final_full.tcl`, `grt_stall_resume.tcl`) for the same omission. I did not audit those.
+2. It runs before PG-track-truth and counts only dbObstruction shapes. A gcell with 3+ tracks clear of the
+   obstruction but fewer than 3 once the PG-illegal tracks are removed (M5/M6/M7: 2,484 / 963 / 1,856 PG-truth
+   obstructions on sdr2d) is still a sliver. Count free tracks against obstruction + PG-truth shapes together.
+3. Pin exemption is per whole strip: one BTerm shape anywhere along the strip exempts every gcell of it (102 of 2,125
+   on host_e). On vertical layers a strip is the full obstruction height (up to 40 gcells on the sdr2c column).
+   Exempt only the gcells the pin shape touches.
+4. Macro OBS and fixed-instance blockages (hd_serdes 3 macros, hd_lep0N 4 cores) are not dbObstructions and are not
+   examined. No failure seen from them; same geometry class.
+5. The A/B that would settle the mechanism (sdr2e, lattice snap) is on its 3rd launch and has no result.
+
+Exposure of other HEAD types: not measured per type (my host sweep for kit `reserved_sites.tcl` returned nothing in
+time). What is measured: hd_serdes has 177 reserved sites / 1,263 obstruction rects, all off the 0.57-um gcell grid,
+20,611 guide boxes of 5,368 nets partly overlapping (R4, sdr2c); hd_host_e has 2,125 partly covered gcells. Reserved
+die-clock sites are generated for every HEAD type that hosts die clock cells, so every re-sign and hd_lep0N is exposed
+until the fix and gap 1 are on the runtime. The 25 signed types passed DRT without it, so the per-build hit rate is
+below one, not zero.
+
+The same reserved obstructions also cause section 1 (pad chains straddling a long strip). Types whose tap pins sit in
+long strips are exposed to that; in hd_serdes the strips over 20 um are 116.7, 108.4, 31.4 and 30.2 um long.
+
+## 3. Event 3: hd_serdes / hd_host classes with two or more failures
+
+| class | instances | state |
+|---|---|---|
+| DRT-0255 at a reserved-site sliver gcell | sdr2c, hd_host_e | fix in test, incomplete (section 2) |
+| stage report quoted before the stage's own repair / wrong frame | sdr2d GRT -189.74; sd9c / sd9d gate on the unrepaired fallback DB (-166.87 / -169.19); the 11-20 CTS pre-hook case | rule exists (final stage DB only); the reports are still written before the repair |
+| resume or route goal redoes or kills upstream work | sdr2d route re-running GRT now; sdr2e try1 RESYNTH-GUARD (exit 12); sdr2d false PLACE-SETUP-STOP (fixed eda19506a55); 11-18 SWITCH-SUPERSEDE kills | open for the route goal (section 0) |
+| GRT-stage TT repair crash (RSZ-0074 / GRT-0228) | sd9c, sd9d a3, a4, private ttfix | fixed on main (504fcadebf); did not recur on sdr2c / sdr2d |
+| clock insertion moves between CTS and GRT, cross-tap hold or setup follows | sdr2d t4/t5/t20 (this note); sd9d u_rm.mem (tree 1,148 ps); hd_lep0N tap window classes; KV hroot | section 1 fixes |
+| encoder wire-dominated setup (rem_q / ch_q / pw / pi2) | sd9c, sd9d, sdr2c, sdr2d (-424 before GRT repair) | closed on sdr2d by one tap + repair (+79 or better); costs 2,271 cells |
+| private kit env differs from the wave env | sdr2c (-allow_congestion, GPL exit), lep0N shelf_bf / col_bf, OT_TAP_GRT_PRE here | check per kit |
+
+hd_host_e: GRT TT -64.98 (gate -42 at route) then DRT-0255. One build, no second class yet. hd_host_w / host_n: no
+failure of a repeated class found in the 11-19..11-21 posts.
+
+## 4. Ranked fix list
+
+1. FLOW-OBS-GCELL-1121: add the obstruction cap to `grt_pg_replay.tcl` (gap 1) before pushing. Without it the cap is
+   lost in the GRT-stage TT repair session of exactly the kits that need it. Then gaps 2 and 3. Proof = host_e route
+   with a GRT-stage repair session in the chain, DRT past iteration 0.
+2. FLOW-OBS-GCELL-1121 (obstruction placement side; hand to FLOW-LEAFREP-1121 if COORD prefers the clock lane): keep a
+   tap's whole pad chain and its first tree buffer on one side of the reserved obstruction that holds the tap pin (the
+   sink-centroid side, contiguous rows), in `clk_obs_halo.tcl` / `tap_balance.tcl`. Add an estimator line at GRT: any
+   `*_tb*` chain net whose guide length exceeds 10x its pin HPWL. This removes +91 to +112 ps on clk_t4 / clk_t5.
+3. FLOW-LEAFREP-1121: the GRT leaf-repeat pass must re-balance the tap it changes (OT_CLK_LEAF_GRT_BAL in test). Add
+   sdr2d clk_t5 / clk_t20 to its A/B set (DB copy above). Removes +38 to +95 ps.
+4. OPUS-FIX-HEAD-SERDES-R4: for the next hd_serdes kit only (no new build now): set `OT_TAP_GRT_PRE = 1` so taps are
+   re-balanced on GRT RC, and diff config.mk against the signed sd9he kit before launch. Row for the HEAD plan owner:
+   clk_t4 (1,000 sinks, at cap) and clk_t5 carry the `u_ptx` output pipeline while its launch side is on clk_t14 with a
+   94 ps window; put `u_ptx.l[*]` and `u_ptx.q` on one tap (tap_group, as done for u_enc) so the 298 t14/t22 -> t4/t5
+   pairs become same-tap.
+5. FLOW-OBS-GCELL-1121 (flow, small): the route goal must not rewrite `4_cts.odb` when `5_1_grt.odb` exists
+   (section 0); and write `5_global_route.rpt` after the GRT-stage repair, or stamp it PRE-REPAIR in its first line.
+6. FABLE-FIX-HEAD-LEP0N: before col_we / shelf_we reach GRT, read the reserved strips against the tap pins and the pad
+   chains of the 4-core type (same check as fix 2, estimator only), and take the cap with gap 1 fixed for its DRT.
+   hd_lep0N is the only unsigned HEAD type, so it should not find these two classes at route.
+
+## 5. Stop list
+
+- Stop quoting kit stage `.rpt` slacks (`5_global_route.rpt`, `4_cts_final.rpt`); read the final stage DB.
+- Stop pushing e44fcd0731 as the complete DRT-0255 fix; it needs the replay hook first.
+- Stop treating the sdr2d FF hold as a repair-budget question (more hold chunks, more HB4 pads, ECO passes). The
+  563 endpoints are one skew of 100+ ps on three taps.
+- Stop expecting the OT_RESERVED_SNAP lattice snap (42fa174c180) to cure DRT-0255; R4 computed that it keeps both
+  tracks open. Let sdr2e finish as the A/B, no relaunch if it dies again.
+- Stop chaining "route" onto a finished GRT kit through `run_kit.sh route` until fix 5 lands; it repeats GRT.
+- No new hd_serdes / hd_host_e builds (deferred re-signs); no cancel of sdr2d, host_e proof, sdr2e or the r16 wave
+  hd_serdes attempt_2: none is measured below the -300 line.
+
+---
+
+(Earlier review under the same lane name, 2026-11-15, kept below unchanged.)
+
 # FABLE-PD-HEAD-0700: HEAD die route by region-net units, why the count is flat (2026-11-15 08:1x PST)
 
 Scope: physical design only. Evidence: epyc2 `/srv/opentallas-scratch3/claude/die-head-route-1/head/p20nc_gate/unitruns/probe_u201_b`
