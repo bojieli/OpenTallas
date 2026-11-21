@@ -200,6 +200,25 @@ def soft_rows(tn, t, sv, pos, reach, leaf_max, far=None, taps=None):
     return rows, rep, unplaced
 
 
+def snap_local_tap(t, xy):
+    """a local tap must be a LEGAL reset site: inside the outline less CLEAR_UM and outside every grown core / macro / keepout
+    (reset_tree.push_off).  Pass 1 first placed them at the bank centroid: kv3_pv_v3/v3n 'blocked', v7 'outside the legal interior'."""
+    import reset_tree as RT
+    try:
+        w, h = t["outline_um"]
+        c = RT.CLEAR_UM
+        box = (c, c, w - c, h - c)
+        p = (min(max(xy[0], box[0]), box[2]), min(max(xy[1], box[1]), box[3]))
+        try:
+            boxes = RT.blockages(t)
+        except Exception:
+            boxes = []
+        q = RT.push_off(p, boxes, box) if boxes else p
+        return (round(q[0], 3), round(q[1], 3))
+    except Exception:
+        return tuple(xy)
+
+
 def local_tap_sites(far, reach, leaf_max):
     """greedy clusters of far banks (every member <= reach/2 of the site, <= leaf_max banks) -> [(site, [insts])]:
     the reset.local_taps_um terminals that give each far bank a tree tap within reach (the tree pads them to the common depth:
@@ -296,6 +315,7 @@ def type_delta(tn, t, sv, pos=None, reach=REACH_UM, leaf_max=LEAF_MAX, local_tap
     if rows:
         rs["bank_taps"] = (rs.get("bank_taps") or []) + rows
     lt = local_tap_sites(far, reach, leaf_max) if far else []
+    lt = [(snap_local_tap(t, c[0]), c[1]) for c in lt]
     if lt:
         rs["local_taps_um"] = list(rs.get("local_taps_um") or []) + [list(c[0]) for c in lt]
     return dict(form="bank_taps", rows=rows, detail=rep, unplaced=unplaced, added_reset_cycles=0, flops=0,

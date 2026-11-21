@@ -242,3 +242,13 @@ def test_second_pass_uses_plan_taps_and_check_flags_missing_and_stale_ids():
     stale = B.check_bank_taps("s", [dict(tap=2, sinks=["x"])], taps, bound_taps={2: (10.0, 10.0)})
     assert len(stale) == 1 and "STALE" in stale[0]
     assert B.check_bank_taps("s", [dict(tap=2, sinks=["x"])], taps, bound_taps=dict(taps)) == []
+
+
+def test_local_tap_site_is_snapped_inside_the_legal_interior():
+    """RESET-RELAY-GEN-R3 11-21: v7 local tap at (2138.3, 0.0) was 'outside the legal interior'; the site is clamped to the
+    outline less CLEAR_UM (and pushed off cores when the type has blockages)"""
+    import reset_tree as RT
+    t = dict(outline_um=[1000.0, 1000.0], reset=dict(sync_stages=2))
+    q = B.snap_local_tap(t, (1050.0, 0.0))
+    assert q == (1000.0 - RT.CLEAR_UM, RT.CLEAR_UM)
+    assert B.snap_local_tap(t, (500.0, 500.0)) == (500.0, 500.0)
