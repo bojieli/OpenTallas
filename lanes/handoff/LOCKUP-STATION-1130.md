@@ -75,3 +75,20 @@ hold ends before/after); hand rows to S81-DIE-R4 (J6), QC-PLAN-R5 (V1), KV-PLAN-
   OT_CTS_POST_TIMING, tt_setup_keep.log, pregrt_ff_hold.log class before/after + hold_cells, worst setup path, GRT it5/it10.
 - proof_t39 (first proof) still in pregrt repair; read its after line for the record.
 - Stop rule: no lockup spec on wave kits without re-solved taps (leaf mode); J6 only after proof2 wins.
+
+## HANDOFF (context > 300k) -- state at FABLE-CLOSURE-1930 lever 2
+Main has (ae58c0fd97): station_rule.py rows/derive(--ends-only/--hold-ends/--exclude)/seams/apply; zl_pairs.tcl;
+kit_zl_lockup.py (RTL hops/regs + apply_ports seam latch); zl_netlist_lockup.tcl (post-synth, exact "=" names or regexes);
+hop_latch_leaf.tcl + clock_taps.tcl/cts_post.tcl OT_HOP_LATCH_LEAF (latches parked pre-CTS, hung on launch leaf post-CTS);
+gen_phys: clock.zl_lockup.<T> {hops, regs, netlist, ports, clk, leaf} hooks; lec.py bb_free_out. Lane clone intel1
+/srv/opentallas-scratch2/claude/lockup-station-1130 (sparse adds done). Scratch tools: epyc7 .../lockup-station-1130-meas.
+proof2 (epyc7 meas/proof2, unit via launch.sh, GOAL=grt) = pristine t39 + 9 seam latches + 10,835 ends-only netlist latches + leaf mode:
+- taps: 14,629 latches parked, only baseline over-cap taps (t37/t41/t6) remain; hung on launch leaf (10,863 moved to launch flop).
+- TT setup after keep: wns -294.11 tns -133.7k (baseline -354.63/-16.4k; proof1 -471.15/-320k). TNS cost = latch T/2 legs; READ meas/sta/p2_cts.odb.log worst paths.
+- pre-repair hold: cross_tap 6,603 ws -335.53 (base 14,251/-275.27), port_out 5 (base 1,884), port_in 1,912 ws -44.69 (base 1,167/-33.54), same_tap 70 (41).
+- still to read: pregrt after line + hold_cells (base 47,483), GRT it5/it10 markers (base 20k cap).
+proof_t39 (first proof, latches on launch taps) still in pregrt repair (-31 ps at last look); read its after line for the record.
+Baseline pre-repair end list: meas/sta/base_cts.odb.open_before.tsv. Seams rows: meas/plans/seams_<die>.json (also intel2 rows dir after next post).
+Next (lever 2): generator applies rows by default from plan (ft_hop_lockup + zl_lockup ports) with leaf mode for every lockup type;
+post rows to S81-J6-ASSEMBLY, QC-PLAN-R7, KV-PLAN-R2. Open problem: cross_tap ws worse (-335) and TT tns 8x: find the classes (likely
+latch -> capture legs across far taps; consider latch at capture side for long hops = clock.ft_hop_lockup.tap capture / latch_frac).
