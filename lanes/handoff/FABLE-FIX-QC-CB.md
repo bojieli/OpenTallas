@@ -98,3 +98,30 @@ NOTE: every W/*.py / *.sh named here lives on epyc9 in W; the session scratchpad
   <inst>_sg<j>.q names of that split. If R7 drops seg 1, re-run the tool without --seg (keys then follow seg 8).
 - Proof GEN p1 (representative, rows of W/rep3: nb_i00 9, bc_i 4): prepare-stations PASS (planned = bound pads on all rows), gen.py phys
   running since 20:19 (same long step after m8_grant.json as the V1 proof GEN). Kit not launched yet.
+
+## State 21:00 PST: proof kit p1 launched (successor: start here)
+- Proof GEN p1 PASS 20:53 (PROOF_GEN_RC 0, rt 1c1857d4d157 = rt/current at 20:19). dly_lockup.json: seg 1, 4 lines selected (u_d6 x2, u_d3, u_d10),
+  25 segments, 21 latches, 10,814 latch bits. istations.tcl carries the new station sites (u_lpad_bc_i10 r[0..3] etc).
+- Kit: epyc9 W/proof/p1, launched 20:54 with OT_LANE=FABLE-FIX-QC-CB:
+  ot-run --priority proof --mem 64 --threads 16 --hosts epyc9 --dir W/proof/p1 -- bash W/proof/p1/gen/run_kit.sh W/proof/p1/gen/cbn_q00__cl622f65d2 route 64 16
+  log W/proof/p1/kit.log (ot-run posts DONE/DIED to lanes/posts/FABLE-FIX-QC-CB.md). At 20:55 it was waiting for memory admission on epyc9
+  (unit name = the oth-ubuntu-* line in kit.log once admitted; cancel only with ot-run --cancel <that unit>). A4 kits of this type took
+  about 4 h to a placed DB on loaded hosts.
+- READ, in this order, under W/proof/p1/gen/cbn_q00__cl622f65d2/run:
+  1. logs .../2_* or 3_1 place log: "OT_RELAY_SITES placed N flops FIRM (plan keys unmatched: M of 38818)". M must be small. A large M =
+     key names wrong (first suspect: <inst>_sg<j>.q of the seg-1 split, or '/' vs '.'); fix names in link_sites.py put() and re-GEN.
+  2. reports .../3_resizer.rpt + 3_detailed_place.rpt: WNS; worst paths must NOT be u_d*_sg* / u_r8b_* -> u_pc_nk_* (class A). The -296
+     u_lk_nk_* DLATCH -> u_tXY/n_b class L is an ideal-clock artefact that clears at CTS (do not count it).
+  3. 4_cts_final.rpt: setup >= -42, and the COORD lever-6 pair: clock arrival of u_lk_nk_* / u_pc_nk_* vs u_tXY/ck (was about 690 ps on N46C);
+     report the pair and which tap the pin registers landed on. Then GRT, route, sign-off (gates: DRC 0, TT >= -42, FF hold >= 0).
+  4. Hold failing on the u_r8b_* strap pads (not in the lockup selection) -> plan clock.zl_lockup rows, never a clock change.
+- This kit is a PHYSICAL proof only: its bound RTL has the lane-pad depths hand-set from the plan rows (proof.sh), so it is not a
+  die-plan sign-off and must not be exported. The countable sign-off is the representative rebuilt on the V2 bind.
+- After V2 applies (QC-PLAN-R7, target 11-21 20:00): relaunch the representative + 16 siblings through the wave (R7 lifts the cb
+  hold_items only after this proof posts place / CTS numbers and COORD agrees), take them to sign-off, export to AGIdock + rtx-pro
+  ~/signed-export-1114.
+- Still to do in the tool before a push to main (W/src branch fable-fix-qc-cb, 9fbc898cd1 is older than W/link_sites.py: copy + commit):
+  unit test (two cores, one chain around them, one row grown to the cap), then ot-push-main (never --no-test).
+- Incident 20:16-20:18: the session scratchpad on localhost is shared by all lanes; my handoff.md there was replaced by FLOW-NOADV-R4's and
+  I committed two wrong copies of this file, then appended to their scratch file. Both repaired (their file back to its 7 lines 20:18).
+  My local files now live in scratchpad/fable-fix-qc-cb/.
