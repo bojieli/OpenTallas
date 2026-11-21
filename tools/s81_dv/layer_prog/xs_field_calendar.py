@@ -97,6 +97,31 @@ FLOORS_K = {
 }
 
 
+# TOKEN-1121-R3 (FABLE-FIX-S81-COLROM-R2/R3, COORD option 2): the col ROM-field pipes of the colrom delta.  Selected by
+# OT_COLROM=1 (the J7 delta: cfg ROM-input stage + ot_s81_cfg7_seq go guard); default off = the J6 r1 die, which has neither.
+#   * ROM-input stage: every cfg ROM read gains one lc edge (bench M/bench1, same records each +1 cycle), so go0 -> last
+#     frame-root RET of every field op is COLROM_INPUT_STAGE edges later (span tail + 1); it also lengthens the stale-ef
+#     window (go at the lc pin -> next cfg_go) from 9 to 10 lc cycles.
+#   * sequencer go guard (RD_EXTRA=1): the load is held (pend path) for COLROM_GO_GUARD edges after the sequencer's own go,
+#     so the phase calendar must keep go(n) -> cfg_go(n+1) = P - cfg_lead >= COLROM_GO_GUARD edges, else the load is
+#     delayed: a COMPILE FAULT here (never a silent runtime stall).  Bench: spacing 1..12, 14, 20, 30, 150 PASS with the
+#     guard, NOGUARD mutant FAIL at 9.  The measured op floors (P >= 125) clear it by 60+ edges.
+COLROM_INPUT_STAGE = 1
+COLROM_GO_GUARD = 13
+
+
+def colrom_on():
+    return os.environ.get('OT_COLROM', '0') == '1'
+
+
+def colrom_record(P, cfg_lead, nphases):
+    spacing = P - cfg_lead
+    return dict(enabled=colrom_on(), input_stage_edges=COLROM_INPUT_STAGE, go_guard_edges=COLROM_GO_GUARD,
+                go_to_next_cfg_go_edges=spacing if nphases > 1 else None,
+                guard_pass=nphases < 2 or spacing >= COLROM_GO_GUARD,
+                priced='span_tail += input_stage_edges (every op); go guard checked per phase pair')
+
+
 def floor_rec(op):
     """FLOORS[op], or FLOORS_K[(op, k)] when the op is compiled with k > 1 segment classes per element"""
     import xs_place as XP
@@ -185,6 +210,11 @@ def op_calendar(op, phase, stream, phases, slc=0, period=None, cfg_lead=CFG_LEAD
         cal['span_tail'] = tail
         cal['span_metric'] = 'spine_go0_to_last_frame_root_ret_edges'
         cal['span_evidence'] = f'results/rtl/s81_romopt_1020/a/{ROMOPT_DIR[rk]}/*/{op.split(".")[-1]}/check_P{P}.json'
+    cal['colrom'] = colrom_record(P, cfg_lead, len(per))
+    if colrom_on():
+        tail += COLROM_INPUT_STAGE
+        cal['span_tail'] = tail
+        cal['span_evidence'] = (cal.get('span_evidence') or 'base tail') + ' + colrom cfg ROM-input stage (1 lc edge)'
     cal['predicted_span'] = (len(per) - 1) * P + tail
     return cal
 
@@ -215,6 +245,8 @@ def static_checks(cal, allow_below_floor=False):
     need('pipe_cfg_window_2P_ge_195_plus_cfg_lead', 2 * P >= 195 + cal['cfg_lead'])
     need('pipe_cfg_lead_ge_48', cal['cfg_lead'] >= 48)
     need('period_ge_measured_floor', P >= cal['floor'], (op, P, cal['floor']))
+    if colrom_on():
+        need('colrom_go_to_next_cfg_go_ge_guard', len(per) < 2 or P - cal['cfg_lead'] >= COLROM_GO_GUARD, (op, P, cal['cfg_lead']))
     if cal['fam'] == 'bf16':
         need('bf_go_spacing_ge_seg_label_floor_231', P >= BF_SEG_LABEL_FLOOR, P)
     soft = {'period_ge_measured_floor', 'bf_go_spacing_ge_seg_label_floor_231'}
