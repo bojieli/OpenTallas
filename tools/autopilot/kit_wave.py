@@ -4600,6 +4600,15 @@ def spec_retired(cfg, sp):
     return retired_src_hit(cfg, [sp.get("src"), sp.get("plan")] + abs_paths(sp.get("kit_rtl") or {}))
 
 
+def drop_capped_hosts(hosts, caps, stt, hub=""):
+    """FLEET-WATCH-R5 11-21 (KV sys_c D26 place went to intel1 under its 250 GB admit cap: the launch spec froze `hosts` while gen_hosts still listed it): drop the hosts whose ot-run
+    scratch_gb is under their gen_host_min_free_gb cap while another host stays.  caps {host: GB}, stt = parse_otrun_status rows."""
+    def under(h):
+        v = (stt or {}).get("localhost" if h == hub else h)
+        return bool(caps.get(h)) and bool(v) and v.get("scratch_gb") is not None and int(v["scratch_gb"]) < int(caps[h])
+    return [h for h in hosts if not under(h)] or list(hosts)
+
+
 def tree_hosts(cfg, die, item, listed, keep_order=False):
     """COORD class fix (KV D22 rc97 'die tree missing'): a stage may run only on a host that HOLDS the die's current src tree = the die's gen_hosts (derive_gen_hosts writes exactly the hosts
     whose tree hash matches).  dies.<die>.hosts / place_prefer are static lists and listed intel1, epyc2 and the hub without the tree; the effective lists are built from gen_hosts, the static
@@ -4708,6 +4717,7 @@ def spec_for(cfg, die, item, hub, parent=None, kind="type"):
             # COORD 10-30 23:1x (GEOM-84 ring key order): every wave kit places landing-ring slot flops in pin order
             # (gen phys --cland-pinslot; a kit without ring bands is unchanged).  Die opt-out: cland_pinslot false.
             "cland_pinslot": cland_pinslot_arg(d),
+            "host_caps": dict(d.get("gen_host_min_free_gb") or {}),
             "hosts": tree_hosts(cfg, die, item, opt(cfg, die, "hosts")), "hub": hub, "place_prefer": tree_hosts(cfg, die, item, opt(cfg, die, "place_prefer") or [], keep_order=True),
             "place_mem_gb": place_mem_gb(cfg, die, item), "place_threads": int(opt(cfg, die, "place_threads")),
             "kit_self_contained": str((d.get("kit_self_contained_by_item") or {}).get(item) or opt(cfg, die, "kit_self_contained") or cfg.get("kit_self_contained") or "list"),
@@ -9141,6 +9151,12 @@ def run_item(spec_path):
                 return fail(f"sync_{h}", txt)
         m, t = sp["place_mem_gb"], sp["place_threads"]
         phosts = [G] if rs else sp["hosts"]
+        if sp.get("host_caps") and not rs:      # FLEET-WATCH-R5: the spec's frozen host list is re-checked against the admit caps at place time
+            try:
+                _p = subprocess.run([sp["ot_run"], "--status"], capture_output=True, text=True, timeout=120)
+                phosts = drop_capped_hosts(phosts, sp["host_caps"], parse_otrun_status(_p.stdout if _p.returncode == 0 else ""), hub)
+            except Exception:
+                pass
         pref = [h for h in sp.get("place_prefer") or [] if h in phosts]
         if pref and not rs:                                             # COORD 10-30 01:2x: PLACE on epyc2 first while it has headroom
             p = subprocess.run([sp["ot_run"], "--status"], capture_output=True, text=True, timeout=120)
