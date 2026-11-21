@@ -14546,3 +14546,7 @@ FAILED [AUTOPILOT d69ca60814dd] 2026-11-20 15:13:48 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-20 16:00 PST DONE [WAITER-STD-1600] ot-push-main otpush-tolerant-swine-3497175 on tolerant-swine: rc=0 after 0 s, ended 16:00:53, log none, cmd: ot-push-main 
 - 2026-11-20 16:00 PST DONE [WAITER-STD-1600] ot-push-main otpush-tolerant-swine-3497894 on tolerant-swine: rc=0 after 0 s, ended 16:00:54, log none, cmd: ot-push-main 
 - 2026-11-20 16:00 PST DIED [WAITER-STD-1600] ot-push-main otpush-tolerant-swine-3498442 on tolerant-swine: rc=3 after 1 s, ended 16:00:55, log none, cmd: ot-push-main 
+- 2026-11-20 16:00 PST DIED [WAITER-STD-1600] ot-push-main otpush-tolerant-swine-3498794 on tolerant-swine: rc=2 after 0 s, ended 16:00:55, log none, cmd: ot-push-main 
+- 2026-11-20 16:00 PST DONE [WAITER-STD-1600] ot-push-main otpush-tolerant-swine-3499056 on tolerant-swine: rc=0 after 1 s, ended 16:00:56, log none, cmd: ot-push-main 
+- 2026-11-20 16:00 PST DONE [WAITER-STD-1600] ot-push-main otpush-tolerant-swine-3499994 on tolerant-swine: rc=0 after 0 s, ended 16:00:56, log none, cmd: ot-push-main 
+- 2026-11-20 16:00 PST DONE [WAITER-STD-1600] ot-push-main otpush-tolerant-swine-3500604 on tolerant-swine: rc=0 after 1 s, ended 16:00:57, log none, cmd: ot-push-main 
