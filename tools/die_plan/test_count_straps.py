@@ -263,3 +263,28 @@ def test_plan_declares_strap_pins_and_kit_sdc_false_path():
                                                                       ("strap_ca_pad", 1)]
     assert len(tb["buses"]) == nb and "count_straps" not in raw["partition_types"]["A"]   # no plan bus (like id_straps)
     assert st["summary"]["lec_variants"] == 3
+
+
+def test_count_aligned_seam_relay_without_data_rings():
+    from test_clock_landings import ca_relay_vehicle, C_BODY
+
+    plan, table = ca_relay_vehicle()
+    plan["ports"] = [p for p in plan["ports"] if p["id"] != "Q"]
+    table["ports"] = [p for p in table["ports"] if p["port"] != "Q"]
+    ca = table["count_aligned"]
+    ca["ports"].pop("Q")
+    ca["strap_form"] = True
+    assert "C" not in CAB.strap_ties(ca, plan)["types"]
+
+    plan.setdefault("clock", {})["landing_network"] = {"edges": [
+        dict(id="cland_relay__c", src=dict(part="b", bus="cland_rstart_out"),
+             dst=dict(part="c", bus="cland_rstart_in")),
+    ]}
+    types = CAB.strap_ties(ca, plan)["types"]
+    assert types["C"]["origin"]["relay_rx"] and not types["C"]["buses"]
+    assert types["B"]["origin"]["relay_tx"]
+    for name, info in types.items():
+        plan["partition_types"][name]["count_straps"] = [cs(p, w) for p, w in info["straps"].items()]
+    land = Landings(plan, table)
+    assert "u_cland_rstart_rx" in land.type_rtl("C", C_BODY)
+    assert "u_cland_rstart_tx" in land.type_rtl("B", B_BODY)
