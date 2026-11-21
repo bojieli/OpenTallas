@@ -37,3 +37,9 @@ Base plan: lanes/handoff/KV-PLAN-R2.md (sections 1-4 + stop list still hold).
   Fix = measured sender_ps_types row in D27 (sub-agent), no hold buffers / lockups.
 - D27c plan 19af3841ef74 (HOP 19 rows / 6 types, fwd 0/358, replay 44, event_census 0 REGRESS); G0+bind epyc8 oth-ubuntu-1280452/1280476-1795240768;
   expect R8_STALE -> sub-agent re-derives r8 and rebinds.
+
+## 23:xx update
+- R8-FAIL-FAST on main 43264da9f7 (lane clone epyc8 /srv/opentallas-scratch2/claude/kv-plan-r3/wt, 33 GB with physical/ cone; ot-delete when
+  the lane ends): strict bind stops after the head on R8 errors and writes OUT/r8_derived.json. D27c sub-agent puts it in the D27c tree tools.
+- D27b run-6 bind (proof source, kv-plan-r3/d27b6gate) likely R8_STALE too; if R8_STALE is its only error, launch the proof kits anyway
+  (private, info only) — chain.sh stops on non-green, so launch by hand with proofs/proof_kit.sh <type> <cts|grt>. Add kv3_pc_v3 proof.
