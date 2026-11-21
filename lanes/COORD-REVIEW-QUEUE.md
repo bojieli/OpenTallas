@@ -14990,3 +14990,4 @@ FAILED [AUTOPILOT 6a0e71a926de] 2026-11-20 18:54:58 PST AUTOPILOT -> KIT-WAVE-3:
   col_h9_r1 (60): GRT 30 TT worst -61.6 median -46.7; CTS FF hold after CORETAP 49: worst -120.2 median -58.2; sign-off runs 10, SIGNED 0, routed TT worst -114.4, FF worst -164.1, DRC max 0; 30 stopped without signoff; old plan -181
   Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
 - 2026-11-20 19:00 PST ALERT [AUTO-CLEAN -> FLEET-OPS-R, COORD] epyc10: the automatic cleanup timer has not completed a pass for 106 min (limit 90 min): check `systemctl --user status ot-auto-clean.timer` on epyc10
+- 2026-11-20 19:00 PST DIED [rrgen-r2] ot-push-main otpush-civil-redfish-1680281 on civil-redfish: rc=4 after 19 s, ended 03:00:11, log none, cmd: ot-push-main 
