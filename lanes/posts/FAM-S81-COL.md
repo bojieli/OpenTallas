@@ -11,3 +11,4 @@
 - 2026-11-21 00:48 PST DONE [fam-s81-col] ot-push-main otpush-key-cardinal-3823546 on key-cardinal: rc=0 after 36 s, ended 00:48:07, log none, cmd: ot-push-main 
 - 2026-11-21 01:27 PST DONE [FAM-S81-COL] ot-run oth-ubuntu-2902890-1795248665 on key-cardinal: rc=0 after 4573 s, ended 01:27:15, log /srv/opentallas-scratch2/claude/fam-s81-col/bind_otrun.log, cmd: --mem 48 --threads 4 --plan-job bind --hosts intel1 --dir /srv/opentallas-scratch2/claude/fam-s81-col -- bash bind.sh
 - 2026-11-21 01:28 PST lever-1 proof: private strict bind + LATCHECK PASS (+2 cycles on ROM loop declared); starting kit run-item
+- 2026-11-21 01:28 PST lever-1 proof: run-item ended without 3_place.odb (hub /srv/opentallas-scratch2/claude/fam-s81-col/wave/root/items/col_h10_r0_p1__t1__cl574cc59d__pvb095fa2f/attempt_1/result.json, /srv/opentallas-scratch2/claude/fam-s81-col/wave/run_item.log); chain stopped
