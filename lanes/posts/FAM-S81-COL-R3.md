@@ -6,3 +6,4 @@
 - 2026-11-21 04:04 PST DIED [FAM-S81-COL-R3] ot-run oth-ubuntu-603969-1795262484 on key-cardinal: rc=1 after 185 s, ended 04:04:27, log /srv/opentallas-scratch2/claude/fam-s81-col-r3/bind_otrun.log, cmd: --mem 48 --threads 4 --plan-job bind --priority plan --hosts intel1 --dir /srv/opentallas-scratch2/claude/fam-s81-col-r3 -- bash /srv/openta
 - 2026-11-21 04:08 PST DIED [FAM-S81-COL-R3] ot-push-main otpush-key-cardinal-735053 on key-cardinal: rc=4 after 138 s, ended 04:08:53, log none, cmd: ot-push-main 
 - 2026-11-21 04:09 PST DIED [FAM-S81-COL-R3] ot-push-main otpush-key-cardinal-798977 on key-cardinal: rc=4 after 9 s, ended 04:09:23, log /srv/opentallas-scratch2/claude/fam-s81-col-r3/push2.log, cmd: ot-push-main 
+- 2026-11-21 04:10 PST DONE [FAM-S81-COL-R3] ot-push-main otpush-key-cardinal-807190 on key-cardinal: rc=0 after 24 s, ended 04:10:01, log /srv/opentallas-scratch2/claude/fam-s81-col-r3/push3.log, cmd: ot-push-main 
