@@ -44,7 +44,7 @@ Post-hook CTS lines, same 66 builds:
 | measure | range |
 |---|---|
 | zero-logic pairs under 64 um on two taps (`OT_TAP_PAIR ... cross-tap short pairs`) | 15 to 14,398 |
-| clock pins the pairing pass moved | 0 on 25 builds, at most 566 |
+| clock pins the pairing pass moved | 0 on 24 builds, at most 566 |
 | taps over the 1,000-sink cap | 0 to 31 per type, largest tap 13,264 sinks; each warns `no tap with room within 200 um` |
 | taps with sink box W+H over 300 um (`OT_TAP_SPAN`) | 2 to 107 per type, max 306 to 683 um |
 | tap mean insertion after balance (target 250) | spread 28 to 147 ps on slices, 205 and 409 on two cb |
@@ -64,7 +64,7 @@ Cost of closing it by padding (pre-GRT pass, margin 40 + cross-tap guard 45):
 
 - **Internal: yes.** At GRT 0 to 277 endpoints reappear at -2 to -76 and close to +19 to +40 in at most 3 chunks. After detail route, 5 sign-offs read: internal hold violators 0 / 0 / 0 / 0 / 1 (-8.50, slw_fw_v1__clf51c11d8__cl592e3d37); sle_fw_v2__cl69f5e854 -1.67 (log line). R: one late ECO took slw_fe_v1 from -60.89 / 126 endpoints to -3.63 / 1.
 - **port_in: no, and it should not try.** It is outside the repair set; only a parent run on real views decides it.
-- **It has a price.** su_l1: `OT_HOLD_SETUP_GUARD stop: worst setup -201.60` after one hold chunk; `OT_REPAIR_STALL` on 12 builds.
+- **It has a price.** su_l1: `OT_HOLD_SETUP_GUARD stop: worst setup -201.60` after one hold chunk; `OT_REPAIR_STALL` on 32 of the 66 builds.
 - Routed setup, the real blocker: sle_su_l1__cl5ea486db -43.05 (`u_ft_rsf_o_1 -> u_ft_rsf_o_2`), sle_fw_v2 -49.46 (`u_bin_x_sc_i -> u_ist_sc_eo_0`) and -47.52, slw_hc1 -49.73, slw_fw_v1 -74.03 (`u_bin_x_sc_i -> u_bout_flt_wo`, 17 buffers, 846 ps of data path, 1 endpoint), slw_hc0 -75.63, slw_fw_v3 -84.28. Violators 1 to 49 per build.
 
 ### 1.4 Ranked fixes
