@@ -161,6 +161,45 @@ def independent_eco(row):
     return any(ECO_OUT.search(str(path or "")) for path in paths)
 
 
+NODE = os.uname().nodename          # the hub's own name in ot-run client tags (otrun-<node>-<pid>-<ms>)
+TAG_RX = re.compile(r'^otrun-(.+)-(\d+)-\d*$')
+SENDER = 'watchdog.py'
+
+
+def client_cgroup(pid):
+    """the cgroup line of a live hub process, '' when it is gone (tests replace this)"""
+    try:
+        return open('/proc/%d/cgroup' % int(pid)).read()
+    except (OSError, ValueError):
+        return ''
+
+
+def wave_owns(r, wrow):
+    """FLOW-OPS-1000 (FABLE-FLOW-1000 b: rule SUPERSEDED stopped a lane's routed LEC in a retired row's SIGNED kit 3x, rc 143, no sender named):
+    a superseded stop may hit ONLY the unit the wave launched for that row: the job's ot-run client is a process on this hub inside the
+    row's own systemd unit (kw-* / ap-*).  -> (True, '') or (False, why); a lane unit (OT_LANE, a client on another host or outside the
+    row's unit), a SIGNED row or an unprovable owner is reported, never stopped."""
+    if r.get('ot_lane'):
+        return False, 'lane-owned unit (OT_LANE=%s)' % r['ot_lane']
+    if wrow and (wrow.get('status') == 'SIGNED' or wrow.get('q_signoff') in ('SIGNED', True) or wrow.get('signed')):
+        return False, 'row result is SIGNED'
+    if r.get('kind') != 'ot-run':
+        return False, 'container with no ot-run scope: owner not provable'
+    m = TAG_RX.match(r.get('tag') or '')
+    if not m:
+        return False, 'no ot-run client tag on the scope: owner not provable'
+    host, pid = m.group(1), int(m.group(2))
+    if host != NODE:
+        return False, 'lane-owned unit: ot-run client on %s pid %d, not the wave' % (host, pid)
+    unit = (wrow or {}).get('unit') or ''
+    cg = client_cgroup(pid)
+    if not unit or not cg:
+        return False, 'ot-run client pid %d %s: owner not provable' % (pid, 'is gone' if not cg else 'but the row names no unit')
+    if '/%s.service' % unit not in cg and '/%s.scope' % unit not in cg:
+        return False, 'ot-run client pid %d is not in the row unit %s (a lane or another tool launched it)' % (pid, unit)
+    return True, ''
+
+
 def skip_hit(row, skip):
     """(stop_only, substr) of the first WATCHDOG.skip line naming this job, else None"""
     paths = ' '.join(str(x) for x in (row.get('id'), row.get('run'), row.get('log'), row.get('cmd')))
@@ -471,6 +510,9 @@ def relaunch_script(v, unit, containers, tag):
 def stop_script(unit, containers):
     s = []
     if unit:
+        # FLOW-OPS-1000: every stop names its sender in the target host's journal and ~/.local/state/ot-run/stops.log
+        s.append('mkdir -p ~/.local/state/ot-run; echo "$(date +%%FT%%T) %s sender=%s" >> ~/.local/state/ot-run/stops.log; '
+                 'logger -t ot-stop "%s stopped by %s" 2>/dev/null' % (shlex.quote(unit), SENDER, shlex.quote(unit), SENDER))
         s.append('systemctl --user stop %s' % shlex.quote(unit))
     for c in containers:
         s.append('docker stop -t 30 %s >/dev/null 2>&1' % shlex.quote(c))
@@ -531,6 +573,10 @@ def main(argv=None):
             continue
         age = r.get('age_s')
         j = WJ.judge(wave_rows, job_wave(r), now - age if age is not None else None)
+        if j and j[0] == 'STOP':
+            own, why_not = wave_owns(r, WJ.judged_row(wave_rows, job_wave(r)))
+            if not own:
+                j = ('REPORT', '%s; not stopped: %s' % (j[1], why_not))
         if j:
             sup[id(r)] = j
     for rid, (gone, why) in duplicates(rows, sup).items():
@@ -643,13 +689,14 @@ def main(argv=None):
             continue
         rc, msg = ssh_sh(r['host'], stop_script(unit, conts))
         # KW-FIX-44 11-09: the reason goes on the line (autopilot classify names it for the 137/143 the stop causes)
-        append(logf, '%s STOP %s %s %s idle %s lane %s kit %s rc %s why %s' % (ts, r['host'], step, r['id'], stall_watch.hm(r['idle_s']),
-                                                                             r['lane'], key, rc, ' '.join(str(reason).split())[:240]))
+        rule = 'SUPERSEDED' if (s_ and s_[0] == 'STOP') else ('HUNG-' + verdict)
+        append(logf, '%s STOP %s %s %s idle %s lane %s kit %s rc %s sender %s rule %s why %s' % (ts, r['host'], step, r['id'], stall_watch.hm(r['idle_s']),
+                                                                             r['lane'], key, rc, SENDER, rule, ' '.join(str(reason).split())[:240]))
         if verdict == 'STOP':
             lf = os.path.join(a.coord, 'lanes', '%s.md' % r['lane'])
             if r['lane'] not in ('?', 'CODEX') and os.path.isfile(lf):
-                append(lf, '[WATCHDOG %s] %s %s (%s, idle %s): stopped, not relaunched. %s. Kit %s.'
-                       % (ts, r['host'], r['id'][:80], step, stall_watch.hm(r['idle_s']), reason[:200], key))
+                append(lf, '[WATCHDOG %s] %s %s (%s, idle %s): stopped by %s rule %s, not relaunched. %s. Kit %s.'
+                       % (ts, r['host'], r['id'][:80], step, stall_watch.hm(r['idle_s']), SENDER, rule, reason[:200], key))
             state.setdefault(key, {})['stopped_at'] = ts
         elif verdict == 'FIX':
             line = ('FIX [WATCHDOG %s] %s %s hung twice (%s, idle %s; first relaunch %s): stopped, NOT relaunched (OWNER 12.22). '

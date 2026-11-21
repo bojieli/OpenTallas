@@ -78,6 +78,18 @@ def _live(r):
     return r.get('status') in LIVE and not str(r.get('q_status') or '').startswith(('DONE', 'CANCELLED', 'WITHDRAWN'))
 
 
+def judged_row(rows_by, wid):
+    """FLOW-OPS-1000: the kit_wave_state row judge() decides on for identity wid (same attempt, else the newest newer one), or None"""
+    if not wid:
+        return None
+    die, event, item, attempt = wid
+    rows = rows_by.get((die, event, item)) or []
+    a = lambda r: int(r.get('attempt') or 1)
+    same = [r for r in rows if a(r) == attempt]
+    newer = [r for r in rows if a(r) > attempt]
+    return max(same or newer, key=lambda x: (a(x), x.get('updated') or 0)) if (same or newer) else None
+
+
 def judge(rows_by, wid, start):
     """does the wave still want the job (identity wid, started at epoch start or None)?
     -> ('STOP', why): row CANCELLED; older than a live attempt of the item on the current plan and running since before

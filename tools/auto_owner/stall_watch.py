@@ -166,7 +166,17 @@ for u in units:
     except Exception:
         pass
     cmd = ''; cwds = set(); wfiles = []; names = []; unnamed_docker = False
+    tag = ''; olane = ''
     for pid in pids:
+        if not tag:   # FLOW-OPS-1000: the ot-run client tag (otrun-<client host>-<client pid>-) and OT_LANE name the job's owner
+            try:
+                for kv in open('/proc/%d/environ' % pid, 'rb').read().split(b'\0'):
+                    if kv.startswith(b'OT_HEAVY_TAG='):
+                        tag = kv[13:].decode('utf-8', 'replace')
+                    elif kv.startswith(b'OT_LANE='):
+                        olane = kv[8:].decode('utf-8', 'replace')
+            except OSError:
+                pass
         try:
             argv = open('/proc/%d/cmdline' % pid, 'rb').read().split(b'\0')
             argv = [a.decode('utf-8', 'replace') for a in argv if a]
@@ -226,7 +236,8 @@ for u in units:
     if ev2['mtime'] > ev['mtime']:
         ev['mtime'], ev['log'] = ev2['mtime'], ev2['log']
     res['scopes'].append({'unit': u, 'start': t0, 'cmd': cmd[:400], 'cwds': sorted(cwds)[:4], 'containers': names,
-                          'unnamed_docker': unnamed_docker, 'npids': len(pids), 'ev': ev, 'orphan': orphan})
+                          'unnamed_docker': unnamed_docker, 'npids': len(pids), 'ev': ev, 'orphan': orphan,
+                          'tag': tag, 'ot_lane': olane})
 print(json.dumps(res))
 '''
 
@@ -305,6 +316,7 @@ def analyse(probes, lanes, a, now):
                          'start': s['start'], 'ev': ev, 'paths': paths, 'cmd': s['cmd'],
                          'wave_paths': [p for p in s['cwds'] + [b for c in evs for b in c['binds']] if p not in ('/', '/tmp', '/home/ubuntu') and '/wt/' not in p],
                          'work': [w for c in evs for w in c.get('work', [])], 'client_gone': s.get('orphan', False),
+                         'tag': s.get('tag') or '', 'ot_lane': s.get('ot_lane') or '',
                          'note': 'docker run w/o --name: container reported separately' if s['unnamed_docker'] and not evs else ''})
         for c in r['containers']:
             if c['name'] in claimed:
@@ -327,7 +339,10 @@ def analyse(probes, lanes, a, now):
             row = {'host': hn, 'kind': j['kind'], 'id': j['id'], 'lane': lane, 'dir': d, 'stage': o.get('stage', '-'),
                    'drt': drt, 'idle_s': idle, 'age_s': now - start if j['start'] else None, 'log': ev.get('log') or '-',
                    'run': run or '-', 'last': o.get('last', ''), 'note': j['note'], 'cmd': j['cmd'][:160],
-                   'wave_paths': j['wave_paths'], 'work': j['work'], 'client_gone': j['client_gone']}
+                   'wave_paths': j['wave_paths'], 'work': j['work'], 'client_gone': j['client_gone'],
+                   'tag': j.get('tag') or '', 'ot_lane': j.get('ot_lane') or ''}
+            if row['ot_lane'] and re.fullmatch(r'[A-Za-z0-9_.-]{1,80}', row['ot_lane']):
+                row['lane'] = row['ot_lane']           # FLOW-OPS-1000: the job's own OT_LANE beats the path guess
             if idle > lim:
                 row['verdict'] = 'STALLED'
             elif o.get('running') and o.get('stage_start') and now - o['stage_start'] > a.stage_hours * 3600 and idle < lim:

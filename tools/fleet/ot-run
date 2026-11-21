@@ -1734,6 +1734,11 @@ def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun
     if disk is None:
         disk = DIE_DISK_GB if "OT_HEAVY_PRIO=die" in env else 20
     env += f"OT_HEAVY_DISK_GB={int(disk)} "
+    # FLOW-OPS-1000 (FABLE-FLOW-1000 b): the job carries its lane into the remote scope, so the hub watchdog and stop tools see a
+    # lane-owned unit (never stopped by a wave rule) and name the lane in their notes
+    _lane = os.environ.get("OT_LANE", "")
+    if re.fullmatch(r"[A-Za-z0-9_.-]{1,80}", _lane):
+        env = f"OT_LANE={_lane} " + env              # first: the disk / ot-heavy tail of the line stays as it was
     inner = f"{env}/usr/local/bin/ot-heavy --mem {mem} --tag {tag}" + (f" --max-wait {int(max_wait)}" if max_wait else "") \
         + " -- " + " ".join(shlex.quote(x) for x in cmd)
     # Recheck before output placement: never recreate an input directory that

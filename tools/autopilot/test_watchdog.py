@@ -420,12 +420,43 @@ class MainTest(unittest.TestCase):
 
     W = '/srv/opentallas-scratch2/claude/kit-wave/s81/e8c/items/t18/attempt_4/gen/t18'
 
+    def _own(self, unit='kw-s81-t18-4-1'):
+        """the job's ot-run client is pid 77 on this hub inside the wave row's unit"""
+        orig = (wd.NODE, wd.client_cgroup)
+        self.addCleanup(lambda: (setattr(wd, 'NODE', orig[0]), setattr(wd, 'client_cgroup', orig[1])))
+        wd.NODE = 'hubnode'
+        wd.client_cgroup = lambda pid: ('0::/user.slice/app.slice/%s.service\n' % unit) if pid == 77 else ''
+        return 'otrun-hubnode-77-123'
+
     def test_cancelled_row_stops_a_moving_log_without_relaunch(self):
         with tempfile.TemporaryDirectory() as d:
-            self._wave_state(d)
-            calls = self.run_main([row(idle_s=60, log=self.W + '/x.log', wave_paths=[self.W])], VERIFY_OK, True, d)
+            self._wave_state(d, unit='kw-s81-t18-4-1')
+            tag = self._own()
+            calls = self.run_main([row(idle_s=60, log=self.W + '/x.log', wave_paths=[self.W], tag=tag)], VERIFY_OK, True, d)
             self.assertEqual(len(calls), 1)
             self.assertIn('stop oth-ubuntu-1-2.scope', calls[0][1])
+            self.assertIn('sender=watchdog.py', calls[0][1])
+            log = open(os.path.join(d, 'autopilot', 'WATCHDOG.log')).read()
+            self.assertIn('sender watchdog.py rule SUPERSEDED', log)
+
+    def test_superseded_never_stops_a_lane_unit_in_a_retired_kit(self):
+        """FABLE-FLOW-1000 (b): FAM-QC-FEFW-R2's routed LEC in the kit dir of a CANCELLED SUPERSEDED row, stopped 3x (rc 143)"""
+        with tempfile.TemporaryDirectory() as d:
+            self._wave_state(d, unit='kw-s81-t18-4-1', **{'class': 'SUPERSEDED'})
+            self._own()
+            base = dict(idle_s=60, log=self.W + '/x.log', wave_paths=[self.W])
+            cases = (row(tag='otrun-rtx-pro-4242-9', **base),             # client on a lane host
+                     row(tag='otrun-hubnode-88-9', **base),               # hub process outside the row unit
+                     row(tag='otrun-hubnode-77-9', ot_lane='FAM-QC-FEFW-R2', **base),
+                     row(**base))                                          # no tag: owner unknown
+            for c in cases:
+                self.assertEqual(self.run_main([c], VERIFY_OK, True, d), [], c.get('tag'))
+
+    def test_superseded_skips_a_signed_row(self):
+        with tempfile.TemporaryDirectory() as d:
+            self._wave_state(d, unit='kw-s81-t18-4-1', status='CANCELLED', signed=True)
+            tag = self._own()
+            self.assertEqual(self.run_main([row(idle_s=60, log=self.W + '/x.log', wave_paths=[self.W], tag=tag)], VERIFY_OK, True, d), [])
 
     def test_independent_eco_is_not_stopped_when_source_wave_attempt_was_cancelled(self):
         with tempfile.TemporaryDirectory() as d:
@@ -481,10 +512,11 @@ class MainTest(unittest.TestCase):
 
     def test_stop_cap(self):
         with tempfile.TemporaryDirectory() as d:
-            self._wave_state(d)
+            self._wave_state(d, unit='kw-s81-t18-4-1')
+            tag = self._own()
             calls = []
             wd.ssh_sh = lambda host, sh, timeout=300: (calls.append(sh), (0, ''))[1]
-            rows = [row(id='oth-%d.scope [c%d]' % (i, i), idle_s=60, log=self.W + '/x.log', wave_paths=[self.W]) for i in range(3)]
+            rows = [row(id='oth-%d.scope [c%d]' % (i, i), idle_s=60, log=self.W + '/x.log', wave_paths=[self.W], tag=tag) for i in range(3)]
             p = os.path.join(d, 'rows.json'); json.dump(rows, open(p, 'w'))
             wd.main(['--rows', p, '--coord', d, '--act', '--max-stops', '2'])
             self.assertEqual(len(calls), 2)
