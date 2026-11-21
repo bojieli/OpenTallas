@@ -11,6 +11,12 @@ lane clone epyc9 /srv/opentallas-scratch2/claude/unify-tools-r3 (cone tools, rtl
 3. b837420ef3d pad_hoist --raise-cycles puts each add on lane fixed_cycles (+ row natural/fixed), so G0 latency
    (table == lane_latency) and bind FIXEDCYC (cycles == natural + pad) both hold; landing_contract lets a
    landing_role_strap type leave cland_tstart_in / cland_rstart_in / cland_rstart_out unused (bind ties them 1'b0/open).
+4. b8ab33d192d class_merge --ft-superset: rep = union of member ft slots, superset type, spare_ends per instance;
+   stable names (own name unless another pin set in the class uses it -> <name>_c<sha1(pins)[:6]>); same pins collapse;
+   per-slot landing pins + edges follow; deepest station copy wins, shallower lanes +delta (ft_stations_raised);
+   overlap report.  Tests 12/12.  Interface + naming posted to S81-LEAF-CLASS-1730 (awaiting its agreement).
+   S81 F00 dry run (W/s81ft.py, W/s81try.py): 0 ft refusals; union 43 slots, 381 window overlaps (members' ft0..ft5
+   are shifted copies of a few channels: floorplan must snap them); left 23 bus window diffs + 11 collector sites.
 
 ## QC private proof chain (base A4+CBX plan_n46cbxm_r4_provider27 + R2 ph5 merges)
 - ph6 = ph5 + reprice (5 lanes) + hc3 level-up (+3 on sl_E0/E4/W5_ctl__b_hw_ctl_hc3). R8 re-derived from ph6 bind
