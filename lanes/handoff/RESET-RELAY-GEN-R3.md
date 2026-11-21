@@ -12,3 +12,7 @@ On main (9cf14ee057): lockup default + relay_site_scan.py (d9505ec2fa), core-pin
 4 relay_site_scan: J6 done; KV D26 queued (rrgen-r3/scan_kv_d26.json); QC V1 needs sibling files (not yet resolved).
 5 S81 leaf t72/t56 with lockup: epyc10 rrgen-1530/leg3_t72, leg3_t56 (plan1.json carries lockup:true; legs 6->0 +3 cycles, 5->0 +5). t1: geom dump on epyc9 rrgen-r2/gd_t1 done, source kit/bound.sv not identified.
 6 four proofs: none read yet (see R2 handoff units).
+
+## CODEX notes 11-21 02:25 PST
+
+- Both inherited KV place proofs finished rc0. hub_Eo form M/L placed WNS -147.73 ps, new worst external START to landing ring, and the old host-reset-to-astk -747 ps path no longer appears among the worst groups. pv_v2 revised reset place WNS -6077.22 vs same-event -6215.90 ps. Dominant path is a count-pad trunk stage u_pd13_i_vport_E_N_vo_69_t_16 r[11] to q; physical endpoints only 143.6 um apart but a repair buffer chain detours north to y=1325 um and back, with last segment delay 4292 ps. D28 must address the detour on its split banks with the exact post-place net chain exposed, and rederive two-pass reset tap IDs on the final halves. No old full-plan overlay.
