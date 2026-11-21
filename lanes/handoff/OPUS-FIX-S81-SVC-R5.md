@@ -4,6 +4,17 @@ Owner of the S81 svc family (16 types: svc_hi rs t1-t6, pvso_entry t1-t2, svc_lo
 Succeeds FABLE-FIX-S81-SVC (R3 stood down on context; R4 stopped on the Fable limit). Read lanes/handoff/FABLE-FIX-S81-SVC.md for older state.
 Nothing pushed to main. Nothing signed, nothing exported.
 
+## 11-21 04:0x PST (COORD: build in parallel; benches gate adoption/export only; a bench FAIL cancels the kit)
+- E9 3370152 (global old-H8 ELAB, land SRAM manifest) ended PASS: split-hi4/elab_r5_retry/asbuilt.json, svc_width_gate PASS.
+- CHAIN epyc9 opus-fix-s81-svc-r5/bind_hi4x/chain.sh PID 246949: waits PID 3968457 (hi4 scoped ELAB) -> needs svc_width_gate PASS ->
+  cp -a elab_tree_r5 -> tree/, adds x_epoch plan_c.json as physical/die_plan/s81/plan_svc_hi4_x_epoch_split.json (md5 10de7c47b7)
+  + census_map_split_0.json -> ot-run (priority plan, bind) bind.py bind --strict --all-gaps --asbuilt asbuilt_svc_r5_hi4_only_local.json
+  -> lane_asbuilt_latency.py LATCHECK -> STATE file + post.
+- KIT CHAIN bind_hi4x/kit_chain.sh PID 290179: waits STATE "rc=0 BIND_RC=0 LATCHECK_RC=0" -> prep.py (fresh_kit partition of
+  svc_hi_dsdv_svc_rs__t4_att, wave gen env, clock landing bind/inputs/sidecar_svc_h8_1120.json) -> run_kit place -> route goal. KSTATE + posts.
+  If bench 2295988 or 2412579 FAILS: cancel the kit's ot-run units (from bind_hi4x/place.log / route.log) and kill PID 290179 after a cmdline check.
+- Sign-off read (signoff gates) after route is NOT automated: lane reads it.
+
 ## 11-21 03:4x PST RESUMED after the Codex takeover (02:18-03:32); read CODEX-LOG "## Handoff to Claude 2026-11-21 03:32" S81 SVC line
 MEASURED (epyc9 opus-fix-s81-svc-r5/census, yosys hierarchical synth, abc -D 833, hard cores + SRAMs black boxes):
 - land store native module 4c805 alone: 3,215,315 generic gates (163,840 DFFE, 461k MUX, 1.29M AND, 1.29M OR).
