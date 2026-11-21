@@ -18801,3 +18801,4 @@ FAILED [AUTOPILOT 472cefdfcaa5] 2026-11-21 08:48:20 PST AUTOPILOT -> KIT-WAVE-1:
   - So origins drift with tree depth (ctl 35, lep0N 37), and every ring lane is off by delta_dst - delta_src.
   Next, tr10 (epyc10 oth-ubuntu-2590447, provider_p6r with the 9 relays) is running. It prints the real START origin cycle of every part, so I can check this prediction against all 78 failing lanes. If it matches, the bench needs per-edge plan-J START timing (real clock + planned START data delay), and no RTL fix is needed.
 - 2026-11-21 09:00 PST DISK-RATE epyc9 /srv/opentallas-scratch2: free 126 GB, falling 13 GB/h, floor 50 GB in 5.7 h (state 1, was 0) LSOF+L1 holders: none (>=10 MB) on /srv/opentallas-scratch2 (cron disk_rate.py; read-only)
+- 2026-11-21 09:00 PST DONE [FLOW-OPS-0900] ot-push-main otpush-civil-redfish-2470684 on civil-redfish: rc=0 after 598 s, ended 17:00:14, log none, cmd: ot-push-main 
