@@ -1,0 +1,19 @@
+{
+ "schema": "fam-qc-coll.rows.v1",
+ "set": "wall-respace-v3",
+ "status": "PROPOSED for QC-PLAN-R11 (V3); geometry-checked against the V2 plan (no core overlap, all cores inside core area); no routed proof yet",
+ "why": "coll_core auto-geom macro_channels FAIL (W channel 4.33 um < 10.8) is FABLE-PD-QC-1230 11-19 sec 1 root cause, unfixed in V2: each ot_coll_fold_slice has 512 src pins (M4) on its W face; g_xf_0/g_pf_3 face 4.3 um to the core edge, g_xf_1 a 4.3 um slot, g_xf_2 a 13 um slot. 75-90 % of attempt_7/pk45 overflow sat in those faces.",
+ "rows": [
+  {"op": "set", "path": "partition_types.coll_core.hard_cores[inst=g_xf_0].origin_um", "old": [8.64, 1105.92], "value": [51.84, 1105.92]},
+  {"op": "set", "path": "partition_types.coll_core.hard_cores[inst=g_pf_3].origin_um", "old": [8.64, 1321.92], "value": [51.84, 1321.92]},
+  {"op": "set", "path": "partition_types.coll_core.hard_cores[inst=g_xf_1].origin_um", "old": [203.04, 1105.92], "value": [289.92, 1105.92]},
+  {"op": "set", "path": "partition_types.coll_core.hard_cores[inst=g_xf_2].origin_um", "old": [406.08, 1123.2], "value": [528.0, 1123.2]},
+  {"op": "set", "path": "partition_types.coll_core.hard_cores[inst=g_xf_3].origin_um", "old": [406.08, 1339.2], "value": [528.0, 1339.2]},
+  {"op": "set", "path": "partition_types.coll_core.hard_cores[inst=*g_sring[0..4].u_m].origin_um[0]", "old": 449.28, "value": 530.0,
+   "note": "required: g_sring[4] (y 1088.6-1118.4) overlaps the moved g_xf_1 (x 289.9-480, y from 1105.9) at x 449; at x 530 it clears g_pf_0 (y top 894.2) and g_xf_2 (y 1123.2)"},
+  {"op": "move_site", "path": "partition_types.coll_core.relay_sites[u_lpad_rec_rx_s0_i.q*]", "old": [200.0, 1454.9], "value": "re-derive at compose (link_sites); the old x 200 lies inside the moved g_pf_3 (x 51.8-241.9)"}
+ ],
+ "result_channels_um": {"g_xf_0/g_pf_3 W": 47.5, "g_xf_0 E / g_xf_1 W": 48.0, "g_xf_1 E / g_xf_2 W": 48.0},
+ "pass_mark": "FABLE: GRT round-5 overflow sum < 5,000 and inside-core share < 30 %",
+ "proof": "needs a private strict bind + LATCHECK + kit (core moves change relay/station sites); FAM-QC-COLL-R3 builds it after pkit7/pkit8 read, or R11 carries it in the V3 G0"
+}
