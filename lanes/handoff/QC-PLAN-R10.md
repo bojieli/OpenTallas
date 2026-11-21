@@ -19,3 +19,13 @@
 - Cause: R7 fix-7 x_su_l0_ctl bumps non-uniform per slice + su_l1 fixed 5->10 -> per-slice pads 2/4/3/4/1/4 at shared sle_ctl x_su_l0_i / sle_su_l0 x_ctl_o.
 - b18 = b17 plan_ctl + compose_b18.py (14 slots -> V1 stations: x_su_l0_ctl on 8 st_b + sle_fe_v1__cl8210183c, native59 x5). Pad check 0 conflicts (E pad 4, W 3).
   LIVE epyc7 qc-plan-r9/chain_b18.sh (log chain_b18.log, bind b18.out, dir b18/, static G0 g0c/b18). Reverted rows -> V3 (with R9's 9 + 12 ENDPOINT_REACH).
+
+## 08:5x state
+- b18 static G0 PASS 0 (0 new vs V1). b18 strict: R8_STALE 30 only because rt/7ff721a00978 (r8_refresh) was reaped fleet-wide.
+  bind_b18.sh = bind_b15.sh with RR pinned to own copy qc-plan-r9/rr_tools/tools (rt 24af28ef7d3c, r8_refresh sha cc66 = R8's).
+- b18r (refresh works): TYPE_SPLIT sle_ctl E vs W on x_su_l0_i (E pad 4: su_l1 fixed 10; W pad 3: su_l1 fixed 9) + EMIT.
+- b19 = b18 + compose_b19.py: E su_l0 x_su_l0_ctl lanes fixed_cycles 7->8 (0 end-to-end cycles; pad 3 on all 12, schema 0 conflicts).
+  LIVE epyc7 chain_b19.sh (log chain_b19.log, bind b19.out, dir b19/, static G0 g0c/b19) -> G0 + census + 8 GENs.
+- Apply prep: epyc7 qc-plan-r9/pack_b18.py (pack_b12 pattern; edit base/log names to b19 before use). Pinned rt 639df6b7b26533093f1c002e50f1cd35f430f272
+  exists on epyc7/epyc8/epyc9 only. Apply steps = R6 handoff "Apply steps" + R7 seal_v1.sh / publish_apply (expect-source qwen_compute_v1r6, expect-event s29q103S4Q9N46R6V1).
+- Cleanup debt (R10's own, ot-delete): epyc7 qc-plan-r9/b17, b18, b18r bind dirs; epyc7 qc-plan-r8/v2b_host/{b12,b13,...} partial copy.
