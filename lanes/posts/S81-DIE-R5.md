@@ -25,3 +25,4 @@
   - svc_lo_dsdv_svc_rs__t6 (J5 a17, via t12)
   All take the wave relaunch on the new rt (R-MINIMAL retry; the tools sha change releases REPEAT-STOP).
   The watcher now lists only failures after 20:25, i.e. recurrences after the fix (intel2 rerr_watch.sh, PID 1453083). I confirm when the first of these clears kit_rtl.
+- 2026-11-20 20:30 PST LIST ResetError reach [S81-DIE-R5 -> COORD, RESET-RELAY-GEN-R3] S81 rows failing kit_rtl with reset relay exceeds reach (automatic, new items; after fix 9cf14ee057, i.e. a RECURRENCE): col_h9_r0_p6__t1__pv0012ba28_b5468e93f777e/a3/result.json|type ot_s81sl_leaf__t12: reset relay -> u_lf.u_ve.u_s.rst_n exceeds reach (176.712 um);serdes__t14_b5976af8775ed/a4/result.json|type ot_s81sl_leaf__t12: reset relay -> u_lf.u_ve.u_s.rst_n exceeds reach (176.712 um);
