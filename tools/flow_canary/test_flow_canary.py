@@ -62,11 +62,13 @@ def test_reg_fanout_cli(tmp_path):
     assert RF.main([str(tmp_path / "x.v")]) == 2                  # crash = NOT RUN, never a PASS
 
 
-def test_run_kit_has_reg_fanout_gate():
+def test_run_kit_reports_reg_fanout_before_lec():
     import gen_phys
     rk = gen_phys.RUN_KIT
     i_fg, i_rf, i_lec = rk.index("/work/face_guard.py"), rk.index("/work/reg_fanout_gate.py"), rk.index("/work/lec.py")
-    assert i_fg < i_rf < i_lec and "FAIL_PREFLOOR reg_fanout" in rk and "rc=7" in rk
+    assert i_fg < i_rf < i_lec
+    fanout_stage = rk[i_rf:rk.index("\n", i_rf)]
+    assert "/work/reg_fanout.json" in fanout_stage and "WARN reg_fanout ADVISORY" in fanout_stage
     assert 'with_name("reg_fanout_gate.py")' in (HERE.parent / "die_plan" / "gen_phys.py").read_text()
 
 
@@ -390,3 +392,22 @@ def test_class_canaries_declare_class_and_frozen_inputs():
         assert "{inputs}/rtl/kit_rtl.f" in c["gen"] and "--cland-pinslot all" in c["gen"] and "MANIFEST.json" in c["prep"][0]
     assert specs["s81_head_cl"]["item"] == specs["s81_head"]["item"]   # same item, landing form
     assert "--clock-landing {inputs}/prepared/source_sidecar.json" in specs["s81_head_cl"]["gen"]
+
+
+def test_routed_canary_lec_requires_exact_final_netlist_and_all_shown(tmp_path):
+    final = tmp_path / "run/results/asap7/dp/base/6_final.v"
+    final.parent.mkdir(parents=True)
+    final.write_text(NET)
+    proof = tmp_path / "canary_lec/lec.json"
+    proof.parent.mkdir()
+    assert C.lec_stage(tmp_path)["verdict"] == "NOT RUN"
+    result = {"verdict": "EQUIVALENT", "netlist": str(final), "superset_vec": {"all_shown": True}}
+    proof.write_text(json.dumps(result))
+    assert C.lec_stage(tmp_path)["verdict"] == "PASS"
+    result["superset_vec"]["all_shown"] = False
+    proof.write_text(json.dumps(result))
+    assert C.lec_stage(tmp_path)["verdict"] == "FAIL"
+    result["superset_vec"]["all_shown"] = True
+    result["netlist"] = str(final.with_name("different.v"))
+    proof.write_text(json.dumps(result))
+    assert C.lec_stage(tmp_path)["verdict"] == "FAIL"
