@@ -18771,3 +18771,4 @@ FAILED [AUTOPILOT 472cefdfcaa5] 2026-11-21 08:48:20 PST AUTOPILOT -> KIT-WAVE-1:
   Real QC 4: FAILED-NO-RELAUNCH 3 (cbn_q01__clab6e67f2 also STALE 5.2h, sle_ctl__cla4f6f12f, slw_st_a_v2__clf4365a62), CBC-FALLBACK running 1 (slw_st_a_v2__cl9f076a5c); owners alive.
   S81 0 real flags, HEAD 0 rows, UNOWNED 0, DEAD-OWNER 0 (all S81 UNOWNED 74 / DEAD-OWNER 15 / STALE rows are held or cancelled). Successor lanes (11 listed) already in agent_ids.
   Details lanes/OWNERS-SWEEP.tsv
+- 2026-11-21 08:53 PST DONE [FABLE-FIX-S81-LEAF-R6] ot-run oth-ubuntu-2224917-1795279221 on tolerant-swine: rc=0 after 797 s, ended 08:53:35, log /srv/opentallas-scratch2/claude/fable-fix-s81-leaf-r6/t39spec/s1/gen.live.log, cmd: --mem 16 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/dc92652f0d5/private/FABLE-FIX-S81-LEAF-R6/o
