@@ -15622,3 +15622,4 @@ FAILED [AUTOPILOT f87b60ebab7c] 2026-11-20 21:45:17 PST AUTOPILOT -> KIT-WAVE-12
   PDN-0006 views (d27b/pcsplit_reexport) and hub_C re-frozen views (d27b/hubc_views, main a06e2ecc71) are installed in the tree.
   Pushed: cca0222940, 15883a0706, 1c1857d4d1.
   Not done: strict bind + LATCHECK; proof kits; reset u_bin rows; 706 ft slots over reach (+1,168 stations reported, not applied).
+- 2026-11-20 21:52 PST DIED [LOCKUP-STATION-R2] ot-run oth-ubuntu-113658-1795235032 on loved-redfish: rc=2 after 5298 s, ended 05:52:08, log /srv/opentallas-scratch2/claude/lockup-station-r2/proof4_t39/run.log, cmd: --mem 56 --threads 8 --hosts epyc7 --dir /srv/opentallas-scratch2/claude/lockup-station-r2/proof4_t39 -- bash /srv/opentallas-scratch2/claud
