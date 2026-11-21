@@ -218,3 +218,13 @@ def test_replicated_relay_seats_each_copy(tmp_path):
     assert "u_u_land.u_rstr.sync_q[1]" not in rs                           # inner stage of a replicated relay stays
     assert not any(k.startswith("u_y_xd_") for k in rs)
     assert not t.get("relay_depth")                                        # source within reach of the synchroniser
+
+
+def test_hard_core_sinks_are_not_retapped(tmp_path):
+    """a macro reset sink is positioned by its pin, which the dump does not carry: form R leaves hard cores alone"""
+    cells, nets = cells_nets()
+    cells = [(("M",) + c[1:]) if i in (4, 5) else c for i, c in enumerate(cells)]
+    D = dump(tmp_path, cells, nets)
+    t = plan_type()
+    rep = RLP.type_delta("x", t, BOUND, D, reach=300)
+    assert not rep["inst_taps"] and "inst_taps" not in t.get("reset", {})

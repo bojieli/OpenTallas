@@ -302,6 +302,8 @@ def type_delta(tn, t, sv, D, reach=REACH_UM, local_taps=False, sites=True, stage
         on_tap = {}                                  # sink cell -> the tap that drives it in the PLACED netlist
         for i, c in sorted(taps.items()):
             for s in G.fanout([c]):
+                if G.kind.get(s) == "M":         # a hard core: its reset PIN, not the macro centre, is the sink (KIT-RD-1 class);
+                    continue                     # cbx proof: u_t30 moved by its centre went -296 -> -763 ps
                 ti = top_inst(G.name[s])
                 if ti in by_inst:
                     sinks_of[ti].add(s)
