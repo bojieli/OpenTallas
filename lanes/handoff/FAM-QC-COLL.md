@@ -1,17 +1,20 @@
-# FAM-QC-COLL handoff (11-20 23:5x PST)
-Family: unsigned QC coll types = coll_core, coll_ftc (coll_ft cl78c7b300/cla4a25d77, coll_s, coll_ftm signed or harvest-redundant).
-- Representative: coll_core pkw4 (epyc9, container dpkit-coll_core-987854, /srv/opentallas-scratch2/claude/fable-fix-qc-collcore/opus/pkits/pkw4_coll/gen/coll_core). Read-register class proof. GRT overflow converged; in GRT setup repair (log run/logs/asap7/dp_coll_core/base/5_1_grt.tmp.log): 221 endpoints, WNS floor -82 (u_coll.out_data[22]), oscillates to -215; TNS -915; other worst endpoints face u_ctl epoch_abort and u_rring wd_in (write side, Fable CBC-QK-0130 sec: write-data register). Gate -42 not met yet. Post-CTS (post-hook) -478.6/hold -389.6.
-- Cancelled 23:5x: kit-wave coll_core s29q103S4Q9N46R4A4 attempt_2 (epyc8 oth-ubuntu-4190430-1795235565, 3 h 10, post-CTS -1154, no read register).
-- coll_ftc: epyc2 dpkit-coll_ftc-1206090 (5 h, detail route) kept.
-- Next: read pkw4 final GRT TT per class; if rdq->out_data class >= -42 hand row (registered reads + write-data register + 2 stations for u_ctl face codec) to QC-PLAN-R8 V2; else add out_data output register row.
+# FAM-QC-COLL handoff (11-21 ~09:50 PST) -> successor FAM-QC-COLL-R2
+Family: unsigned QC coll types = coll_core (representative), coll_ftc (FLEET-WATCH-R6 owns its restage after the DRT-0255 drt-nopath fix 42fa174c180; read its ODB if resumed, do not relaunch).
 
-## 2026-11-21 02:29 PST Codex notes
-- PASS ODPRE latency-aware lockstep: 26/26 plain/QFD cases at +1 visible output cycle; both no-ODPRE controls fail at that schedule. PASS 8/8 corresponding production-shape cases. All input/write/link slots unchanged. epyc9 `fam-qc-coll/odpre_{lockstep,production}/record.json`. The tracked benchmark/model and default-off SWDREG/ODPRE candidate are staged in the existing lane clone. Fresh source QFD production and rank-mutant runs `codex_{production,mutant}.client.log` are active.
-- FAIL `coll_ftc` N46R4A4 attempt 5: after +32.8 ps TT through GRT, DRT-0255 could not escape ring select net `u_bound.u_cland_tl_st_wi_i/u_ring.dch[10].u_dsel/net158717` at x166.44–170.43, y912.57–916.56 µm. Original run logs preserved at epyc2 scratch3 `ot-job-failed-logs/coll_ftc-route-dear-crayfish-1204101-1795228109`. Fresh V1 attempt 6 is in GPL on epyc2 `oth-ubuntu-1674772-1795255290`. Compare ring pin/guide access there before any shape release. No identical reroute launched.
-- `coll_core` pkw4 was still in setup repair, recurring best TT about -82 ps and 221 endpoints. Output pipeline remains a separate +1 candidate until geometry and routed timing support it.
+## State
+- pkw4 final (epyc9, GRT 20.9 h): rdq->out_data floor -82; GRT hold repair bought 55,013 HB4 pads and pushed setup -82 -> -425 -> final -255 / TNS -27k on 916 ends (classes xr_q, u_rring wd_in, ir_q). Root cause = input hold. Row set = b+c+d together (COORD).
+- RTL on main 867126d928d: OT_TP8S_SRDREG, SWDREG, ODPRE (earlier), INLOCK (falling-edge staging of all input pin registers, 0 cycles), RRWD (R ring write register, 0 cycles), XRPIPE (+1 cycle reduce only). Bench 13/13 each + combined, plain + qfd (epyc10 fam-qc-coll/bench10). Bench flags: --sring-io-regs --output-pipe --input-lockup --ring-wd-reg --xr-pipe.
+- Rows: lanes/handoff/FAM-QC-COLL-rows_a.json / rows_b.json (older; update to b+c+d = defines SRDREG,SWDREG,ODPRE,INLOCK,RRWD,XRPIPE on partition_types.coll_core.verilog_defines + stations by measured length on 6,975 hops + srl/rrl chains one tap each + one 60 um street + 2 stations on u_ctl face codec) -> QC-PLAN-R10 (V3, 11-22) as ONE row set, after the kit read.
 
+## Running (leave running)
+- Private proof kit run-item on epyc10: ot-run client pid 1781433 (epyc10), unit oth-ubuntu-1782833-1795278360, log epyc10 /srv/opentallas-scratch2/claude/fam-qc-coll/pkit_run.log, spec fam-qc-coll/pspec/spec.json (kit_wave.py private-spec, wave env), work fam-qc-coll/pkit. Currently in stage src_manifest. RISK: SRC-TREE-1115 wants tree = git archive of a main sha + overlay manifest (sha256 per file); my tree is a hardlinked copy (cp -al) with ONE patched file, so src_manifest may refuse. If so: build the tree as the rule says (main sha archive of the scope + overlay of rtl/rom/ot_coll_tp8_static.sv), regenerate private-spec (kit_wave_cfg2.json = hub config with ot_run pointed at ~/.local/bin/ot-run, because kit_wave.json ot_run /home/ubuntu/.local/lib/kw44/ot-run-wave does not exist on epyc10), relaunch with ot-run --mem 72 --threads 8 --hosts epyc10 (not epyc9; --priority plan is refused for type builds).
+- Tree path: epyc10 /srv/opentallas-scratch2/claude/fam-qc-coll/tree_bcd (hardlink copy of kw45/snap_qwen_compute/qwen_compute_v1r6 + patched rtl/rom/ot_coll_tp8_static.sv; plan physical/die_plan/qwen_compute/plan_of_record/zz_famqc_bcd.json = R4 final preview + 6 defines). Lane clone: epyc10 fam-qc-coll/clone10 (main).
+- Waiter in my session (b2w8n1ybi) dies with me: re-arm run_in_background on `pgrep -f fam-qc-coll/pspec/spec.json` on epyc10.
+- Wave R6V1 coll_core attempt_4 went QUEUED/prelint again at 06:48-06:54 (not mine).
 
-## 2026-11-21 02:50 PST Codex notes
-- Source/model branch `claude/fam-qc-coll-1121 @c6c55f5c722b6998d9a828398e942ea028f08fee` pushed from existing lane clone. Exact QFD production 4/4 PASS, zero word mismatches; rank-swap mutant rejected with 40 mismatches and no extra words. Exact remote gate GREEN 1/1 (static gate, no selected tests, main e75e9f9ab9e), record intel2 `~/merge-queue/gates/c6c55f5c722b6998d9a828398e942ea028f08fee.json`.
-- Proposed `odpre_b10_plan.json` and `odpre_b10_cycles.json` in epyc9 `fam-qc-coll` price data/rank/valid 18→19 and err/last 17→18. The optional write-side SRAM register costs zero interface cycles. Plan and geometry remain staged ahead of private bind/route proof.
+## What to measure in the kit (COORD)
+Half-cycle input setup into the falling-edge staging regs (fclk_in_* forwarded clocks, core clock insertion ~190-270 ps; budget T/2 = 416 ps) and the HB4 count after GRT hold repair (pkw4 baseline 55,013 HB4xp67, +201/chunk, RSZ-0060). Read FINAL stage db only (not 4_cts_final / 5_global_route pre-repair). If INLOCK costs more setup than it saves: build the fallback = one clock tap per input bank (shared tap for each input pin register bank, tap row via TAP-GRID-R2 / plan clock tap rows), same kit procedure.
 
+## Other
+- Slip disclosed: I used rm -f once on my own bench summary (now allowed for own temp files in own scratch tmp).
+- Cancelled earlier: kit-wave coll_core N46R4A4 attempt_2 (epyc8, post-CTS -1154).
