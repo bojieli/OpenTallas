@@ -20,6 +20,28 @@ Read lanes/handoff/FABLE-FIX-KV-HUB-R2.md first; this file only adds what change
 - hroot B2 bind was hung (bind.py elab 4 h CPU, no output; normal 15 min): cancelled, relaunched once as B3
   (r3/gate_bind_r3.sh = gate_bind_d25.sh + python -X faulthandler on elab; out bindgate_b3).
 
+## 12:4x PST state (supersedes the Live/Next below where different)
+- Bind hang ROOT CAUSE: plan_package._gate_uncached quadratic scan on a private cp -al tree (stack via faulthandler). Fixed on main
+  eeeac8421b7c; older rt snapshots (4e46a7ec46c5) need OT_BIND_PLAN_PACKAGE=off (r3/bind_gate_r3b.sh; private-spec --ab ... --why).
+- Binds done (both after r8_refresh via r3/chain_r8_r3.sh, r8 a3252d36b57d): bindgate_h2 (tree_h, plan b5bd29148814) and bindgate_b5
+  (tree_b) = D27d baseline 27 errors + 1 variant-B line "EMIT kv3_hroot: raw Q rst_rl_110: exactly one same-clk plain relay required".
+  Ring rows add ZERO bind lines. kv3_hub_Wo emits (bind_of_record/rtl). hub_Eo does NOT emit on D27d (inherited r14 relay_depth rows,
+  cut by KV-PLAN-R6 in D27d2). hroot variant B does not emit: needs the raw-branch re-derivation (landing_remap resel --types kv3_hroot,
+  the D27d2 EMIT-fix form of KV-PLAN-R6) then rebind. NOT done.
+- Rows package committed: lanes/handoff/FABLE-FIX-KV-HUB-R3-* (rows_final_d28.json, placer, chain, compose, export, r8 chain). Posted to KV-PLAN-R6.
+- kv3_hub_Wi (owned here now): D26 fail = PORT_BIND extra io_pad_die_id[2:0]. Row: kv3_hub_Wi.pads += {name io_pad_die_id, dir in, width 3}
+  (hub_C io_pad_refclk form). UNPROVEN: put it in the D27d3-based tree and check G0 + bind + kit gen PORT_BIND. KV-PLAN-R6 also wants
+  qkd_hr_core_peer.lef re-exported exact-OBS (view_export b49b697c40) for hub_Wi: not started.
+- COORD: run tools/die_plan/kit_pin_site_check.py on every hub kit before place (22-24 face pins under clock-site stacks on D26/D27d;
+  cured by KV-PLAN-R6 clksite_pinclear in D27d3). No route/sign-off attempt on a kit with hits.
+- LIVE: private-spec hub_Wo kit (place census only): intel2 pid 2468203 kit_wave run-item, log ~/tmp/fablefixkvhub-r3/runitem_Wo.log,
+  spec ~/coord/autopilot/private_specs/FABLE-FIX-KV-HUB-R3/qwen_kvsys_kv3_hub_Wo_1121122822/, work epyc8
+  kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-D26/private/FABLE-FIX-KV-HUB-R3/kv3_hub_Wo_1121122822. Read: preflight
+  (cland_band_legal_site must pass with the stage-0 row), pin-site check, placed cell count (target ~320k, cap 400k).
+- NEXT: when KV-PLAN-R6 has the D27d3 tree (pinclear; ETA bind 13:15, apply 16:30 PST): new private tree = D27d3 + rerun
+  kvh_place_r3.py (GRIDTAPS from schema._grid_taps, PREV=r3/rows) + chain_r3 + compose (+ hub_Wi pads row) + G0 + bind, then
+  private-spec hub_Eo / hub_Wo / hub_Wi kits with 0 pin-site hits through route to sign-off. A sign-off build needs a src_manifest tree.
+
 ## Live units (re-arm with ot-wait <intel2 client pid>)
 - final G0: intel2 client 2142778 -> epyc8 hub_d28_r3/g0gate_p4/gate.out.
 - hroot B3 strict bind: intel2 client 1401789 -> epyc8 bindgate_b3/gate.out. If elab.log stays 0 bytes > 40 min: kill -ABRT the exact
