@@ -91,3 +91,4 @@ FLOW-OBS-GCELL-1121	stood-down	FLOW-OBS-GCELL-R2	2026-11-21	09:02 PST | handoff 
 FLOW-CLKGRT-1121	stood-down	FLOW-CLKGRT-R2	2026-11-21	09:02 PST | 5 GRT A/B arms on epyc8 left running; --rt pushed 6eeda31903; clock-first hook prepared unpushed in epyc10 lane clone
 FABLE-FIX-S81-COLROM-R2	stood-down	FABLE-FIX-S81-COLROM-R3	2026-11-21	09:03 PST
 FAM-KV-IOPC	stood-down	FAM-KV-IOPC-R2	2026-11-21	09:17 PST | context; io_cor_v1 route unit oth-ubuntu-2072529-1795271645 running; pc PDN-0006 root cause + export recipe in handoff
+FABLE-CLOSURE-0910	stood-down	none	2026-11-21	09:22 PST | 09:27 PST | 2-hourly review done; report lanes/FABLE-CLOSURE-STRATEGY.md b9ecdd6c8e2; no jobs; COORD reads it, next round is a new FABLE-CLOSURE lane
