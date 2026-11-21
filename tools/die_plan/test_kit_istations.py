@@ -603,3 +603,18 @@ def test_relay_sites_index_key_sites_the_aliased_last_stage(tmp_path):
     assert got[r"u_bound.u_k.x$_DFF_P_"] == (2.0, 2.0)                        # placed by its own key: r[2] never re-sites it
     assert r"u_bound.u_h.s0$_DFF_P_" not in got and r"u_bound.u_h.s1$_DFF_P_" not in got   # r[0] fans to two flops: no stage
     assert "RELAY-IDX: 1 keys" in out and "plan keys unmatched: 2 of 6" in out
+
+
+def test_counted_receiver_delay_preserves_payload_and_epoch_sites():
+    import kit_istations as K
+
+    text = (_packed_txt(8, 6).split("    ot_dp_dly", 1)[0]
+            + "    ot_dp_dly_cnt #(.W(9), .DMAX(6)) u_lpad_a "
+              "(.clk(clk), .strap_cnt(strap_r8pad_lane_a), .d({a_eb, a_b}), .q(a_lane_pad_q));\n"
+              "    assign {a_eq, a_q} = a_lane_pad_q;\nendmodule\n")
+    bus = dict(name="a", dir="in", width=8)
+    packed = K.packed_input_delay("T", bus, text, 8, 2)
+    assert packed["master"] == "ot_dp_dly_cnt"
+    assert packed["stage_registers"] == [f"u_lpad_a.r[{i}]" for i in range(6)]
+    with pytest.raises(ValueError, match="expected payload and epoch"):
+        K.packed_input_delay("T", bus, text.replace("{a_eq, a_q}", "{a_q, a_eq}"), 8, 2)

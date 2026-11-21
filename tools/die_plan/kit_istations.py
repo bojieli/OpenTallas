@@ -83,8 +83,25 @@ def packed_input_delay(tn,bus,txt,width,stages):
     if bus['dir']!='in':raise ValueError(f'{tn}.{name}: packed receiver delay on non-input bus')
     hits=list(re.finditer(r'\bot_dp_dly\s*#\(\s*\.W\((\d+)\)\s*,\s*\.D\((\d+)\)\s*\)\s+'
                          +re.escape(inst)+r'\s*\(([^;]*)\);',code,re.S))
-    if len(hits)!=1:raise ValueError(f'{tn}.{name}: unsupported or duplicate packed receiver delay')
-    w,d=map(int,hits[0].group(1,2))
+    counted = []
+    if "ot_dp_dly_cnt" in code:
+        from r8_strap_lec import banks_of
+
+        counted = [bank for bank in banks_of(code) if bank["inst"] == inst]
+    if len(hits) + len(counted) != 1:
+        raise ValueError(f'{tn}.{name}: unsupported or duplicate packed receiver delay')
+    if counted:
+        bank, = counted
+        master = 'ot_dp_dly_cnt'
+        w, d = bank["W"], bank["DMAX"]
+        alias = f"assign {{{name}_eq, {name}_q}} = {bank['q']};"
+        if bank["site"] != f"strap_r8pad_lane_{name}" or code.count(alias) != 1:
+            raise ValueError(f'{tn}.{name}: counted delay does not drive the expected payload and epoch')
+        pins = dict(clk='clk', d=bank["d"], q=bank["q"])
+    else:
+        master = 'ot_dp_dly'
+        w, d = map(int, hits[0].group(1, 2))
+        pins = dict(re.findall(r'\.(clk|d|q)\s*\(([^()]*)\)', hits[0].group(3)))
     # D above the planned site count is fine: the die latency table priced D cycles, the plan pins the first `stages`
     # registers and the placer keeps the rest (KW-FIX-27: QC v4 nb_i00 D9/7, nb_i22 D3/2).
     # DIE-HBM-91-KCLS 11-08 (class l, COORD default (A)): D BELOW the planned count is the bound, priced latency too
@@ -93,15 +110,17 @@ def packed_input_delay(tn,bus,txt,width,stages):
     if w!=width+1 or d<=0:raise ValueError(f'{tn}.{name}: packed delay W{w}/D{d} != payload+epoch {width+1}/planned {stages}')
     if re.search(r'\b(?:u_ist_'+re.escape(name)+r'_\d+|u_b(?:in|out)_'+re.escape(name)+r'_pad\d+)\s*\(',code):
         raise ValueError(f'{tn}.{name}: mixed packed/individual station forms; regenerate native source')
-    pins=dict(re.findall(r'\.(clk|d|q)\s*\(([^()]*)\)',hits[0].group(3)))
     pins={k:re.sub(r'\s+','',v) for k,v in pins.items()}
     face=re.search(r'\bot_dp_ste?\s*#\(\.W\('+str(width)+r'\)\)\s+u_bin_'+re.escape(name)+r'\s*\(([^;]*)\);',code,re.S)
     facepins=dict(re.findall(r'\.(q|eq)\s*\(([^()]*)\)',face.group(1))) if face else {}
     expected={'clk':'clk','d':'{'+facepins.get('eq','?')+','+facepins.get('q','?')+'}',
-              'q':'{'+name+'_eq,'+name+'_q}'}
+              'q': bank["q"] if counted else '{'+name+'_eq,'+name+'_q}'}
     if pins!=expected:raise ValueError(f'{tn}.{name}: packed delay does not preserve exact face epoch/data connection: {pins}')
-    return dict(instance=inst,master='ot_dp_dly',width=w,depth=d,pins=pins,
-                stage_registers=[f'{inst}.r[{j}]' for j in range(d)])
+    result = dict(instance=inst, master=master, width=w, depth=d, pins=pins,
+                  stage_registers=[f'{inst}.r[{j}]' for j in range(d)])
+    if counted:
+        result["alias"] = alias
+    return result
 
 
 def packed_exact_geometry(tn, bus, txt, entry, packed, width, exact):
@@ -115,7 +134,9 @@ def packed_exact_geometry(tn, bus, txt, entry, packed, width, exact):
     from kit_assembly import _masked_rtl
     code = _masked_rtl(txt)
     inst = re.escape(packed['instance'])
-    code, count = re.subn(r'\bot_dp_dly\s*#\([^;]*?\)\s+' + inst + r'\s*\([^;]*\);', '', code)
+    code, count = re.subn(r'\b' + re.escape(packed["master"]) + r'\s*#\([^;]*?\)\s+' + inst + r'\s*\([^;]*\);', '', code)
+    if packed.get("alias"):
+        code = code.replace(packed["alias"], "")
     if count != 1:
         raise ValueError(f'{tn}.{bus}: cannot isolate the actual packed instance for epoch proof')
     epoch = gen_rtl.sv_id(bus) + '_eq'
@@ -1403,7 +1424,8 @@ def core_pin_stations(tn, t, txt, man, tcl, rep, plan_dir=None, pins=None):
             for ln in txt.split("\n"):      # every reader must now be a core chain
                 if (re.search(rf"\b{re.escape(q)}(?:\[\d+\]|(?![\w$\[]))", ln)
                         and not re.search(rf"\bu_ist_{re.escape(n)}__|\bu_bin_{re.escape(n)}(_pad\d+)?\s*\(", ln)
-                        and not (packed and re.search(rf"\b{re.escape(packed['instance'])}\s*\(", ln))
+                        and not (packed and (ln.strip() == packed.get("alias")
+                                             or re.search(rf"\b{re.escape(packed['instance'])}\s*\(", ln)))
                         and not re.match(r"^\s*(wire|reg|logic)\b", ln)):
                     raise SystemExit(f"kit_istations: {tn} {bus}: {q} still read outside the core chains: {ln.strip()[:120]}")
         else:
@@ -1917,8 +1939,8 @@ def main(argv):
                 pattern='*'+packed['instance']+f'[./]r\\[{j}\\]\\[*'
                 anyg='*'+packed['instance']+'[./]*'
                 if j == packed['depth'] - 1:
-                    # the last stage drives the output port: Yosys calls it <inst>.q[b] (GENBUG-1)
-                    alias='*'+packed['instance']+'[./]q\\[*'
+                    # A fixed delay exports its last register as q[b]. A counted delay exports a mux output.
+                    alias='*'+packed['instance']+'[./]q\\[*' if packed["master"] == "ot_dp_dly" else pattern
                     tcl.append(f'is_place_alt {{{pattern}}} {{{alias}}} {{{anyg}}} {x} {y} ist:{bus}')
                 else:
                     tcl.append(f'is_place_alt {{{pattern}}} {{{pattern}}} {{{anyg}}} {x} {y} ist:{bus}')

@@ -69,3 +69,25 @@ def test_lec_bank_parse_structure_and_harness():
     assert "assign q0 = d0;" in h and "4'd0" in h
     h = L.harness("T", bs, {"strap_r8pad_u_x": 9}, {"strap_r8pad_u_x": 9}, "v1")
     assert "ot_dp_dly #(.W(2), .D(9))" in h and "wire [3:0] t0 = 4'd9;" in h
+
+
+def test_one_receive_pad_bank_for_asymmetric_lane_counts():
+    binder = bind.Binder.__new__(bind.Binder)
+    name = "x_su_l0_i"
+    strap = f"strap_r8pad_lane_{name}"
+    binder.types = {"ctl": {"count_straps": [{"name": strap, "width": 4}]}}
+    binder.in_bus = {
+        "east": [{"iname": name, "lane": "east_data", "cycles": 8, "width": 456}],
+        "west": [{"iname": name, "lane": "west_data", "cycles": 7, "width": 456}],
+    }
+
+    binder.bind_lane_counts({"ctl": ["east", "west"]})
+    assert binder.lane_count_pads == {
+        ("east", name): (strap, 6),
+        ("west", name): (strap, 6),
+    }
+    assert [bind.lane_pad(binder.in_bus[p][0]) for p in ("east", "west")] == [6, 5]
+
+    binder.types["ctl"].clear()
+    binder.bind_lane_counts({"ctl": ["east", "west"]})
+    assert binder.lane_count_pads == {}

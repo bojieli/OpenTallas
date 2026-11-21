@@ -2210,7 +2210,17 @@ class Binder:
         obus = sorted((L["oname"], ("plan", L["width"]) if L.get("plan") else tuple((nm(it[1]), it[2], it[3]) if it[0] == "leaf" else
                                          ("fwd", it[1]["iname"], it[2]) for it in L["items"]))
                       for L in self.out_bus[p])
-        ibus = sorted((L["iname"], L["width"], lane_pad(L)) for L in self.in_bus[p])     # the source is outside the module
+        ibus = []
+        for L in self.in_bus[p]:
+            name = L["iname"]
+            pad = lane_pad(L)
+            count = getattr(self, "lane_count_pads", {}).get((p, name))
+            if count:
+                site, span = count
+                inst_vals[("r8pad", site)] = pad
+                pad = span
+            ibus.append((name, L["width"], pad))
+        ibus.sort()
         ft = sorted((h["ibus"], h["obus"], L["width"], h["stations"]) for L, h in self.ft_bus[p])
         sig = dict(leaves=leaves, conns=conns, obus=obus, ibus=ibus, ft=ft,
                    clocks=tuple(sorted(self.cport(p, d) for d in self.clk_dom[p])))
@@ -3111,6 +3121,9 @@ class Binder:
                                                                for m in merged if m["type"] == tn))
 
     def r8_pad_width(self, tn, site=None):
+        width = self.lane_count_width(tn, site)
+        if width is not None:
+            return width
         import r8 as R8
         capacity = R8.strap_pad_capacity(getattr(self, "types", {}).get(tn, {}))
         record = getattr(self, "r8_sites", {}).get(tn, {}).get(site)
@@ -3250,6 +3263,38 @@ class Binder:
         for p in parts:
             self.intra_dly[p] = used.get(p, set())
 
+    def lane_count_width(self, tn, site):
+        for row in getattr(self, "types", {}).get(tn, {}).get("count_straps", ()):
+            if row["name"] == site and site.startswith("strap_r8pad_lane_"):
+                return int(row["width"])
+        return None
+
+    def bind_lane_counts(self, by_type):
+        """A declared lane-count pin shares one receive pad bank across instances of a type."""
+        prefix = "strap_r8pad_lane_"
+        self.lane_count_pads = {}
+        self.lane_count_sites = defaultdict(dict)
+        for tn, ps in by_type.items():
+            for row in self.types[tn].get("count_straps", ()):
+                site = row["name"]
+                if not site.startswith(prefix):
+                    continue
+                name = site.removeprefix(prefix)
+                members = []
+                for part in ps:
+                    links = [L for L in self.in_bus[part] if L["iname"] == name and L.get("lane") and not L.get("spine")]
+                    if len(links) != 1:
+                        raise BindError(f"lane-count strap {part}.{site}: expected one inbound plan lane for {name}")
+                    members.append((part, lane_pad(links[0])))
+                span = max(1, max(pad for _, pad in members))
+                width = self.lane_count_width(tn, site)
+                if span >= 1 << width:
+                    raise BindError(f"lane-count strap {tn}.{site}: depth {span} exceeds {width}-bit count")
+                self.lane_count_pads.update({(part, name): (site, span) for part, _ in members})
+                pads = dict(members)
+                self.lane_count_sites[tn][site] = dict(base=0, span=span, pads=pads,
+                                                      width=links[0]["width"] + 1, used=sorted(set(pads.values())))
+
     def check_types(self):
         self.tsig, self.tvals, self.tparams = {}, {}, {}
         split_more = []
@@ -3257,6 +3302,7 @@ class Binder:
         for p in self.members:
             by_type[self.parts[p]["type"]].append(p)
         self.by_type = by_type
+        self.bind_lane_counts(by_type)
         if self.ab.get("land_r8_strap_pads"):
             self.r8_strap_sites(by_type)
         if self.ab.get("land_inner_strap_pads"):
@@ -4137,14 +4183,24 @@ class Binder:
                 body += hb
                 din, dea = f"{w}[{W - 1}:0]", f"{w}[{W}]"
             pad = lane_pad(L)
-            if pad > 0:
+            count = getattr(self, "lane_count_pads", {}).get((p, n))
+            if pad > 0 or count:
                 # the latency table's pad (R8 groups / replica depth): reset-less stages after the in-boundary flop,
                 # data and epoch together, so the lane lands at its table cycles
                 decl.append(f"    wire [{W - 1}:0] {n}_b;\n    wire {n}_eb;")
                 body.append(f"    ot_dp_st #(.W({W})) u_bin_{n} (.clk(clk), .rst_n(rst_n), .d({din}), .ea({dea}), "
                             f".q({n}_b), .eq({n}_eb));")
-                body.append(f"    ot_dp_dly #(.W({W + 1}), .D({pad})) u_lpad_{n} (.clk(clk), .d({{{n}_eb, {n}_b}}), "
-                            f".q({{{n}_eq, {n}_q}}));  // lane pad: latency table {L['cycles']} cycles")
+                if count:
+                    site, span = count
+                    cw = r8_ports[site]["width"]
+                    param = f", .CW({cw})" if cw != 4 else ""
+                    decl.append(f"    wire [{W}:0] {n}_lane_pad_q;")
+                    body.append(f"    ot_dp_dly_cnt #(.W({W + 1}), .DMAX({span}){param}) u_lpad_{n} (.clk(clk), "
+                                f".strap_cnt({site}), .d({{{n}_eb, {n}_b}}), .q({n}_lane_pad_q));")
+                    body.append(f"    assign {{{n}_eq, {n}_q}} = {n}_lane_pad_q;")
+                else:
+                    body.append(f"    ot_dp_dly #(.W({W + 1}), .D({pad})) u_lpad_{n} (.clk(clk), .d({{{n}_eb, {n}_b}}), "
+                                f".q({{{n}_eq, {n}_q}}));  // lane pad: latency table {L['cycles']} cycles")
                 continue
             body.append(f"    ot_dp_st #(.W({W})) u_bin_{n} (.clk(clk), .rst_n(rst_n), .d({din}), .ea({dea}), "
                         f".q({n}_q), .eq({n}_eq));")
@@ -5713,7 +5769,7 @@ def cmd_bind(a):
     except ValueError as exc:
         B.errors.append(f"POSITION_BANK {exc}")
     B.check_types()
-    if getattr(B, "r8sp", None) or getattr(B, "isp", None):
+    if getattr(B, "r8sp", None) or getattr(B, "isp", None) or B.lane_count_pads:
         # OWNER 10-28 R8 strap pads: the strap-count bank master (rtl/common, LEC'd per used constant)
         B.extra_lib.append(str(Path(B.base).resolve() / "rtl/common/ot_dp_dly_cnt.sv"))
     if B.ab.get("land_pad_tree"):
@@ -5793,12 +5849,16 @@ def cmd_bind(a):
         # KW-FIX-24: the split leaves have no source; bind_verify stubs them from this record (interface as emitted)
         import bind_core_split
         rep["core_split_ifaces"] = bind_core_split.emitted_ifaces(B.F.cells, B.ab["core_splits"])
-    if getattr(B, "r8_sites", None):
-        rep["r8_strap_sites"] = dict(types=len(B.r8_sites), sites=sum(len(v) for v in B.r8_sites.values()),
-                                     bits=sum(x["width"] for v in B.r8_sites.values() for x in v.values()),
-                                     used_constants=sorted({(x["width"], x["span"], c) for v in B.r8_sites.values()
+    r8_sites = getattr(B, "r8_sites", {})
+    if B.lane_count_sites:
+        r8_sites = {tn: {**r8_sites.get(tn, {}), **B.lane_count_sites.get(tn, {})}
+                    for tn in r8_sites.keys() | B.lane_count_sites.keys()}
+    if r8_sites:
+        rep["r8_strap_sites"] = dict(types=len(r8_sites), sites=sum(len(v) for v in r8_sites.values()),
+                                     bits=sum(x["width"] for v in r8_sites.values() for x in v.values()),
+                                     used_constants=sorted({(x["width"], x["span"], c) for v in r8_sites.values()
                                                             for x in v.values() for c in x["used"]}),
-                                     list=B.r8_sites)
+                                     list=r8_sites)
     rep["bound_groups"] = getattr(B, "bound_group_records", {})
     if getattr(B, "inner_uniform_stats", None):
         rep["inner_uniform"] = B.inner_uniform_stats
