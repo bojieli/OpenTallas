@@ -125,3 +125,4 @@ NOTE: every W/*.py / *.sh named here lives on epyc9 in W; the session scratchpad
 - Incident 20:16-20:18: the session scratchpad on localhost is shared by all lanes; my handoff.md there was replaced by FLOW-NOADV-R4's and
   I committed two wrong copies of this file, then appended to their scratch file. Both repaired (their file back to its 7 lines 20:18).
   My local files now live in scratchpad/fable-fix-qc-cb/.
+- Correction 21:05: W/src HEAD 9fbc898cd1 already equals W/link_sites.py (sha256 7549bd5f861d62c1); only the unit test is missing before a push.
