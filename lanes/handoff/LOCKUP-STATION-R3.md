@@ -10,3 +10,6 @@ Read lanes/handoff/LOCKUP-STATION-R2.md for the form + baselines.
 - Baselines: t39 xtap 14,251 / hold cells 47,483 / TT -354.63 tns -16.4k; QC xtap 3,039 / hold cells 48,100 / TT -1.82.
 - Rows HELD (S81-J6-ASSEMBLY-R2, J7 after 13:00, QC-PLAN-R8, KV-PLAN-R4/D28) until a proof is no worse than baseline on TNS and hold.
 - Cleanup (ot-delete): proof3_t39, proof5_t39, qc_sle_ctl, proof4 after read.
+
+## Note 11-21
+- proof6 + QC2 started on main 38faab8511: only the R2 restore (u_fl_/u_lk_nk_ names, clock_taps + hop_latch_leaf) is active, NOT the name-free latch_restore.tcl of e88352084d (LATCH-SWAP-0045). On reading: count DFFLQx4/DFFHQx4 in 4_cts odb (expect 0 u_fl_nl swaps; any other swap = uncovered).
