@@ -47,6 +47,9 @@ def gen_new(tmp_path_factory):
     if missing:
         raise FileNotFoundError("missing source fixture inputs: " + " ".join(missing))
     out = tmp_path_factory.mktemp("gen")
+    # This fixture checks leaf closure and parent strap ties. Use counted
+    # reset so the unrelated archived LEP reset geometry is outside the test.
+    raw["reset"].update(release="counted", start="none")
     files = gen_rtl.write_rtl(raw, out, str(ROOT), list(types), plan_path=PLAN)
     return raw, out, files
 
