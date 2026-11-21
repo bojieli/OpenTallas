@@ -99,6 +99,7 @@ def check(P,sidecar=None):
             if (pn,name) in opened:continue          # declared open START launch output (proved in _start_tree_check)
             if st is not None and name==START_PIN_OUT and n>=1:continue   # one launch pin, fanned out at the die top
             if n==0 and name in _tie_unused_ok(P.types[p["type"]]):continue   # CLAND-TIE-2: declared tieable child / floating monitor output
+            if n==0 and name in ROLE_STRAP_OPEN and P.types[p["type"]].get("landing_role_strap") is True:continue
             if n!=1:errors.append(f"{pn}.{name}: infrastructure pin used {n} times (no absent-child ties)")
     obs=net.get("root_observer",{})
     if obs.get("part") not in P.parts or not all(obs.get(k) for k in ("module","fault_port","ready_port")):
@@ -127,6 +128,10 @@ def check(P,sidecar=None):
 # compose report and die check FAIL on any error).
 START_PIN_IN="cland_tstart_in"     # == clock_landings.START_PIN_IN == count_align_bind.START_PIN_IN
 START_PIN_OUT="cland_tstart_out"   # == clock_landings.START_PIN_OUT
+# UNIFY-TOOLS ROLE-STRAP (class_merge): one type serves the origin and the relay copies of a region; strap_ca_relay
+# selects the start.  clock_landings ties the unread start input of each copy to 1'b0 (origin: cland_rstart_in;
+# relay: cland_tstart_in) and a copy without a relay_tx leaves cland_rstart_out open, so these may be used 0 times.
+ROLE_STRAP_OPEN=frozenset((START_PIN_IN,"cland_rstart_in","cland_rstart_out"))
 RAW_RESET_PIN_OUT="cland_raw_reset_out"
 START_FORM="die_start_stages"
 _NET={START_PIN_IN:re.compile(r"^pst_\w+$"),START_PIN_OUT:re.compile(r"^rs_\w+$"), RAW_RESET_PIN_OUT:re.compile(r"^rraw_\w+$")}

@@ -324,9 +324,12 @@ def resite_slots(plan, keys, snap=True):
 def raise_cycles(plan, pads, unplaced):
     """fallback for a (type, bus) no free slot can level (its only hop is itself a class type or a shared type, e.g. QC
     slw_fw x_ctl_p1_i through slw_stm): level UP instead -- every instance lane whose pad is below the bus maximum gets
-    +cycles (and +pad) so all land the same receiver pad (OWNER: +cycles pre-approved).  -> [{lane, add}]"""
+    +cycles so all land the same receiver pad (OWNER: +cycles pre-approved).  The add goes on the lane's fixed_cycles
+    (and the table row's cycles / natural / fixed), so G0's latency check (table == schema lane_latency) still holds;
+    the bind turns the extra fixed cycles into receiver pad stages.  -> [{lane, add}]"""
     paths = lane_paths(plan)
     lat = plan.get("latency", {}).get("lanes", {})
+    lanes = {ln["id"]: ln for ln in plan.get("lanes", [])}
     out = []
     for tn, b in sorted({(u["type"], u["bus"]) for u in unplaced}):
         vals = {q: v.get(b, 0) for q, v in pads[tn].items()}
@@ -335,8 +338,13 @@ def raise_cycles(plan, pads, unplaced):
             lid = paths[(q, b)][0]
             if v < M and lid in lat:
                 row = lat[lid]
-                row["cycles"] = int(row["cycles"]) + (M - v)
-                row["pad"] = int(row.get("pad", 0)) + (M - v)
+                d = M - v
+                row["cycles"] = int(row["cycles"]) + d
+                for k in ("natural", "fixed"):
+                    if k in row:
+                        row[k] = int(row[k]) + d
+                if lid in lanes:
+                    lanes[lid]["fixed_cycles"] = int(lanes[lid].get("fixed_cycles", 0)) + d
                 out.append(dict(type=tn, bus=b, lane=lid, add=M - v))
     return out
 

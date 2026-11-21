@@ -116,8 +116,13 @@ def test_raise_cycles_levels_up_the_lower_instances(tmp_path):
     pp, op, rp = tmp_path / "p.json", tmp_path / "o.json", tmp_path / "r.json"
     pp.write_text(json.dumps(plan))
     assert PH.main([str(pp), str(bd), str(op), "--raise-cycles", "--report", str(rp)]) == 0
-    lat = json.loads(op.read_text())["latency"]["lanes"]
+    out = json.loads(op.read_text())
+    lat = out["latency"]["lanes"]
     assert lat["L0"]["cycles"] == 12 and lat["L1"]["cycles"] == 15 and lat["L2"]["cycles"] == 15
+    # UNIFY-TOOLS-R3: the add is a lane fixed cycle, so G0 (table == lane_latency) still agrees
+    fx = {ln["id"]: int(ln.get("fixed_cycles", 0)) for ln in out["lanes"]}
+    f0 = {ln["id"]: int(ln.get("fixed_cycles", 0)) for ln in plan["lanes"]}
+    assert [fx[k] - f0[k] for k in ("L0", "L1", "L2")] == [0, 3, 3] and lat["L1"]["natural"] == 11
     assert json.loads(rp.read_text())["raised_cycles"] == [dict(type="ctl", bus="d_i", lane="L1", add=3),
                                                            dict(type="ctl", bus="d_i", lane="L2", add=3)]
 

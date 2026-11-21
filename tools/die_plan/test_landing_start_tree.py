@@ -175,3 +175,18 @@ def test_registered_launch_fans_out_to_direct_child_and_stage():
     # Opening that actively driven launch is still invalid.
     p.clock["landing_network"]["start_tree"]["open"].append(dict(part="lnc", pin=OUT))
     assert any("also used by a landing_network edge" in x for x in LC.check(p)["errors"])
+
+
+def test_role_strap_type_may_leave_start_pins_unused():
+    """UNIFY-TOOLS-R3: a landing_role_strap type's unread start pins (tied 1'b0 / open by clock_landings) are not
+    absent-child ties; the same pins on a plain type still fail."""
+    P = _plan()
+    for t in P.types.values():
+        t["clock"]["landing_contract"]["pins"] += [_pin("cland_rstart_in", "in"), _pin("cland_rstart_out", "out")]
+    plain = LC.check(P)["errors"]
+    assert any("cland_rstart_in" in e for e in plain) and any("cland_rstart_out" in e for e in plain)
+    for t in P.types.values():
+        t["landing_role_strap"] = True
+    rs = LC.check(P)["errors"]
+    assert rs and all("cland_rstart" not in e and IN not in e for e in rs)   # only the launch-out pins stay strict
+    assert all(OUT in e for e in rs)
