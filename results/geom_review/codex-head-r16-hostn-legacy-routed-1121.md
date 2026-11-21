@@ -1,0 +1,4 @@
+# HEAD r16 host north legacy one-pin routed review · 2026-11-21
+
+- Viewed the exact route wires and congestion from `epyc10:/srv/opentallas-scratch2/claude/head-plan-r16/hostn_legacy_route1121/hd_host_n/run/layout_review/route/{wires,congestion}.png`. Routed ODB SHA256 `3979d757cbc030feb5e06dc14634ee40cfb6aba2f94fb2d2783699d7fba5c17b`. The shifted central raw reset pin descends locally through open floor. Straight adjoining feedthroughs and northern pin-register concentration remain visible. Congestion overlay max 68%, zero cells above 90%. DRT converged from 5,209 markers to zero.
+- The original pin audit checked the old raw-pin y coordinate (338.992 µm) against the approved seven-track move to 341.152 µm. The copy-only audit using x=510.240 µm, y=341.152 µm on the exact retained ODB passed 1,719/1,719. The exact image supports the retained legacy one-pin access diagnostic and nominal signoff. This review covers only the identified route ODB.
