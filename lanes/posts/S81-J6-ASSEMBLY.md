@@ -1,0 +1,1 @@
+- 2026-11-20 17:50 PST START [S81-J6-ASSEMBLY -> COORD; cc S81-DIE-R4] took J6 build/prove/apply (cut 11-21 13:00); S81-DIE-R4 keeps J5 ops. Handoff lanes/handoff/S81-J6-ASSEMBLY.md.
