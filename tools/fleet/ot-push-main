@@ -9,13 +9,19 @@ tests of the touched files (touched test_*.py, plus test_<stem>*.py next to a to
 Non-fast-forward (someone pushed first): fetch, rebase, retry (up to --max, default 8); the tests rerun only when the new upstream
 commits touched files this push touches.  A rebase conflict aborts the rebase (clone unchanged) and exits 3: resolve by hand,
 `git rebase origin/main`, then run again.  Failing tests exit 4 and push nothing.  Exit 0 = main contains your commits.
+PUSH-FIX-2300: (1) a lane clone is a sparse worktree, so before testing the clone's cone is auto-widened (git sparse-checkout add, never
+a full checkout) to the repo paths the selected tests name, and again for any tracked path a failing run reports missing, then the run
+repeats (max 4 rounds); (2) after a rebase onto a moved main only the tests whose touched file (or the test file itself) overlaps the
+moved files re-run, none when nothing overlaps; (3) the default --test-timeout is 3000 s scaled by host load (load1/ncpu, 1x..3x).
 Lane line: bash+python3 -I ot-push-main, nothing else (no branch, gate record, READY or APPROVED line).
 origin is the lane mirror on the hub: it relays the push to GitHub before accepting it, so a GitHub refusal is reported here."""
 import argparse
 import os
+import re
 import shlex
 import subprocess as S
 import sys
+import threading
 from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)))     # python3 -I drops the script dir from sys.path
@@ -59,18 +65,125 @@ def select_tests(files, root="."):
     return found
 
 
-def run_tests(tests, timeout):
+def default_timeout(base=3000, load=None, ncpu=None):
+    """test timeout in s: base x clamp(load1/ncpu, 1, 3)"""
+    try:
+        load = os.getloadavg()[0] if load is None else load
+        ncpu = (os.cpu_count() or 1) if ncpu is None else ncpu
+    except OSError:
+        return base
+    return int(base * min(3.0, max(1.0, load / max(1, ncpu))))
+
+
+_TOK = re.compile(r"/?[\w.+@%-]+(?:/[\w.+@%-]+)+")
+
+
+def sparse_on():
+    return out("config", "--get", "core.sparseCheckout") == "true"
+
+
+def widen_for(text, root="."):
+    """auto-widen the sparse cone: every repo path named in `text` (test source or failure output) that is tracked in HEAD but
+    absent on disk -> `git sparse-checkout add` of its directory (the path itself when it is a tracked dir).  -> [dirs added]"""
+    if not sparse_on():
+        return []
+    root = os.path.abspath(root)
+    cand = set()
+    for tok in _TOK.findall(text):
+        t = tok
+        if t.startswith(root + "/"):
+            t = t[len(root) + 1:]
+        t = t.strip("/.")
+        if not t or t.startswith(("..", "/")):
+            continue
+        parts = t.split("/")
+        for n in range(len(parts), 0, -1):          # longest tracked prefix
+            cand.add("/".join(parts[:n]))
+    if not cand:
+        return []
+    cl = sorted(cand)
+    r = S.run(["git", "cat-file", "--batch-check"], input="".join(f"HEAD:{c}\n" for c in cl), capture_output=True, text=True)
+    kinds = {}
+    for c, line in zip(cl, r.stdout.splitlines()):
+        f = line.split()
+        if len(f) >= 2 and f[1] in ("tree", "blob"):
+            kinds[c] = f[1]
+    add = set()
+    for c, k in kinds.items():
+        d = c if k == "tree" else os.path.dirname(c)
+        if not d:
+            continue
+        # only the deepest tracked prefix of a token counts (a shorter one is its parent)
+        if any(o != c and o.startswith(c + "/") for o in kinds):
+            continue
+        if os.path.exists(os.path.join(root, c)):
+            continue
+        add.add(d)
+    add = sorted(add)
+    if add:
+        r = git("sparse-checkout", "add", *add)
+        if r.returncode:
+            print("ot-push-main: sparse-checkout add failed: " + (r.stderr or r.stdout).strip()[-200:])
+            return []
+        print("ot-push-main: widened sparse cone (+" + " ".join(add) + ")")
+    return add
+
+
+def test_sources(tests):
+    txt = []
+    for t in tests:
+        try:
+            txt.append(Path(t).read_text(errors="replace"))
+        except OSError:
+            pass
+    return "\n".join(txt)
+
+
+def run_tests_once(cmd, timeout):
+    """-> (rc, output); streams the output; 124 on timeout"""
+    pr = S.Popen(cmd, stdout=S.PIPE, stderr=S.STDOUT, text=True, errors="replace")
+    hit = []
+    tm = threading.Timer(timeout, lambda: (hit.append(1), pr.kill()))
+    tm.start()
+    buf = []
+    try:
+        for line in pr.stdout:
+            sys.stdout.write(line); buf.append(line)
+        pr.wait()
+    finally:
+        tm.cancel()
+    sys.stdout.flush()
+    if hit:
+        print(f"ot-push-main: tests timed out after {timeout} s")
+        return 124, "".join(buf)
+    return pr.returncode, "".join(buf)
+
+
+def run_tests(tests, timeout, rounds=4):
     py = VENV_PY if os.access(VENV_PY, os.X_OK) else sys.executable
     if S.run([py, "-c", "import pytest"], capture_output=True).returncode:
         print("ot-push-main: no pytest here; tests SKIPPED (run them where pytest exists)")
         return 0
+    widen_for(test_sources(tests))
     cmd = [py, "-m", "pytest", "-q", "-x", "-p", "no:cacheprovider", *tests]
-    print("ot-push-main: " + shlex.join(cmd[2:]))
-    try:
-        return S.run(cmd, timeout=timeout).returncode
-    except S.TimeoutExpired:
-        print(f"ot-push-main: tests timed out after {timeout} s")
-        return 124
+    for n in range(1, rounds + 1):
+        print("ot-push-main: " + shlex.join(cmd[2:]))
+        rc, o = run_tests_once(cmd, timeout)
+        if rc == 0 or rc == 124 or n == rounds:
+            return rc
+        if not widen_for(o):
+            return rc
+        print(f"ot-push-main: cone widened after failure; re-running (round {n + 1}/{rounds})")
+    return rc
+
+
+def affected_tests(tests, files, moved):
+    """after a rebase onto moved main: the tests whose own file moved or that select for a touched file that moved"""
+    mv = set(moved)
+    hot = {t for t in tests if t in mv}
+    for f in set(files) & mv:
+        hot.update(select_tests([f]))
+    return [t for t in tests if t in hot]
 
 
 def main():
@@ -78,8 +191,10 @@ def main():
     ap.add_argument("--no-test", action="store_true")
     ap.add_argument("--dry-run", action="store_true", help="rebase + test, no push")
     ap.add_argument("--max", type=int, default=8)
-    ap.add_argument("--test-timeout", type=int, default=900)
+    ap.add_argument("--test-timeout", type=int, default=None, help="s; default 3000 scaled by host load")
     a = ap.parse_args()
+    if a.test_timeout is None:
+        a.test_timeout = default_timeout()
     top = out("rev-parse", "--show-toplevel")
     if not top:
         print("ot-push-main: not in a git clone"); return 2
@@ -107,17 +222,24 @@ def main():
         if not files:
             print("ot-push-main: no file differs from main; nothing to push"); return 0
         moved = set(out("diff", "--name-only", f"{old_base}..{base}").split()) if old_base != base else set()
-        need = tested_files is None or bool(moved & (set(files) | set(tested_files)))
-        if need and not a.no_test:
-            tests = select_tests(files)
-            tested_files = tests
+        first = tested_files is None
+        if not a.no_test:
+            if first:
+                tests = select_tests(files)
+            else:      # rebased onto a moved main: re-run only what the moved files can affect (none when nothing overlaps)
+                tests = affected_tests(tested_files, files, moved)
+                if tests:
+                    print(f"ot-push-main: main moved; re-running {len(tests)} affected of {len(tested_files)} test file(s)")
+                else:
+                    print("ot-push-main: main moved but no moved file overlaps the pushed files or their tests; tests not re-run")
+            if first:
+                tested_files = tests
             if tests:
                 rc = run_tests(tests, a.test_timeout)
                 if rc:
                     print(f"ot-push-main: TESTS FAILED rc={rc}; nothing pushed"); return 4
-            else:
+            elif first:
                 print(f"ot-push-main: no test file selects for {len(files)} touched file(s); pushing")
-                tested_files = []
         if a.dry_run:
             print(f"ot-push-main: dry run ok; would push {out('rev-parse', 'HEAD')[:11]} onto main {base[:11]}"); return 0
         p = git("push", "origin", "HEAD:refs/heads/main", timeout=1800)
