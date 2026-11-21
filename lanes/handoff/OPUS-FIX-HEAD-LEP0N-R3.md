@@ -47,3 +47,17 @@ Build with HEAD settings: r16 spec gen_env + OT_GPL_SPARSE_OVERFLOW=0 OT_GPL_OVE
   signed_store.py stage --host rtx-pro --dest ~/signed-export-1114/head --die s81_head --key hd_lep0N).
 - HEAD plan owner: LANE-STATUS chain HEAD-PLAN-R16 -> R2 -> this lane, so rows for the next HEAD event are held here
   (shelf or column macro rows + late-meta RTL once proven). COORD to name a HEAD-PLAN lane if a separate owner is wanted.
+
+## UPDATE 11-21 04:1x PST (COORD ruling executed)
+- CANCELLED (exact units, cmdline-checked, ot-heavy-stop --unit; autopilot cancel-dir records for r8b/r11b):
+  r8b oth-ubuntu-284665-1795150612, r11b oth-ubuntu-1976972-1795190565 (epyc10), lep_p3 oth-ubuntu-578440-1795013599 (epyc9).
+  Logs + reports kept: epyc10 /srv/opentallas-scratch2/claude/opus-fix-head-lep0n-r3/cancelled_ref/{r8b,r11b}; epyc9 same/lep_p3.
+- Column A/B: plan delta built (epyc10 .../opus-fix-head-lep0n-r3/col1121: lep_col.py, work/plan.json, run_col.sh = Codex's
+  reset remap -> gen v2 -> preflight -> strict bind chain). BLOCKED at reset remap: reset_tree/taps.explicit_tap_sites
+  "explicit tap clk_t87 violates outline/halo/tap spacing". The r16 type has 247 frozen explicit taps spread over the band
+  (rows at y ~558, ~602, ~645 W, ~669 E); the column rects cover 78 of them (8.64 clear). Only the upper (y > 760) and
+  lower (y < 550) band strips are tap-free, which is exactly where Codex's ten-bank shelf moved the TX banks. So the column
+  form needs a tap re-derive (move the 78 taps into streets + re-price their tap_offset rows on the die clock tree, as R2
+  did for new56) = a HEAD plan-event row, not a private A/B. Shelf stays the only feasible private form.
+- Shelf kit (unit oth-ubuntu-1632910-1795258813) in 3_3 global place at 04:1x; waiter armed; compare placed RUDY/GRT-50
+  east band vs r11b (cancelled_ref/r11b/reports congestion-*.rpt) when 3_place lands.
