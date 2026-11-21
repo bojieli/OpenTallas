@@ -66,3 +66,12 @@ Logs: intel2 ~/opus-fix-head-serdes-r4-logs/. R3 lane dirs stay as listed in FAB
   CTS->GRT split (q_split/split.txt on epyc9 .../opus-fix-head-serdes-r4): wire RC dominates (mean -59 data, -8 skew);
   encoder launch latency +44 on clk_t20 leaves (posted to FLOW-LEAFREP-1121); no hop > 405 um.
 - sdr2d detailed route running (chain; intel2 ~/opus-fix-head-serdes-r4-logs/sdr2d_route_e9.otrun.log). sdr2e in route on epyc7.
+
+## STOOD DOWN 07:4x PST (COORD: HEAD 25/26 signed, hd_serdes is a deferred re-sign; no successor needed now)
+- Lever 4 rows sent to FABLE-FIX-HEAD-LEP0N (post 658f13fb52): tap_grt_pre true; tap_group u_enc:clk_t20,u_ptx:clk_t14.
+- Stop list (COORD): no more hold-repair budget on sdr2d; never quote slack from stage .rpt files (5_global_route.rpt is pre-repair);
+  never chain run_kit.sh route onto a finished GRT (route goal rewrites 4_cts.odb / re-runs GRT).
+- Left running, not watched by me: sdr2d route job on epyc9 (unit oth-ubuntu-3513796-1795271147, otrun-tolerant-swine-4223) (re-running GRT, hold-only; chain intel2 pid 4140767 log
+  ~/opus-fix-head-serdes-r4-logs/sdr2d_route_e9.otrun.log); sdr2e snap A/B in route on epyc7 (log sdr2e_route_e7.otrun.log)
+  sdr2e unit oth-ubuntu-3951418-1795264633 (otrun-tolerant-swine-541137) -> reader: FLOW-OBS-GCELL-1121 / FLOW-GRT-RESID (does the lattice snap clear DRT-0255 at the coll_i0 ring?).
+- Signed views exported: none from this lane.
