@@ -143,3 +143,18 @@ All relaunch after the 405 reach override (lever 1) lands for D8i.
 - epyc10 s81-die-r4-donors/<d>/j6_delta_<d>.json for vp_sr, rom, r1_frame, t31; f0_q green in the R3 gate_f0_q.
 - vp_sr open items: real sites for the +1 ho station on 79 types (placeholder co-sited); compiler cycle table must add the SR VP cycles (kv_leaf t1/t3/t4/t5 included).
 - r1_frame needs main 8e9cdd615c (schema sites) in the J6 tools.
+
+## 11-20 18:xx SPLIT: J6 -> S81-J6-ASSEMBLY (handoff post 3fc2fac5). S81-DIE-R4 = J5 operations only.
+J5 live: event 224567138ab, src kw45/src_s81_pin_3c913dbdfb23_d8j5_1117_work, bind ..._bind_11201213.
+Open J5 operations:
+1. Post-apply bind rerun: postbind-s81-1120135739 on intel1 at 160 GB (log intel2 ~/.local/state/ot-postbind/). If GREEN, run publish_apply.py adopt-bind. If not, diagnose.
+2. Leaf representatives (released, kit_wave b07c9f34): t2 t10 t52 (1226 changed), t39 (1278 changed), t25__cl55642d17 (1226 unchanged clones), t56 (1356), t8, t28, t44__clf6cf8492. kv_leaf rep t1 is running.
+   Leaf t7 is held: it is a monitor-pin type, 429 um.
+   After each rep GRT is read at iteration 10 (judge on GRT overflow, not post-place WNS), release that class siblings from hold_items via kit_wave_edit --unset.
+   Class lists: rerun the outline x station-change grouping (J5 vs D8i internal_stations).
+3. Reset-cap check: confirm one of t2/t10/t52 clears gen without the reset-identity refusal (fix fa09197057). Post the result to COORD + FLOW-NOADV-R3.
+4. svc_rs MPL-0020 watch on the 12 J5 svc_rs rows at floorplan_macro. Hit -> SVC-R2 successor. Clean -> close as fixed by J5.
+5. Holds (kit_wave cfb64614): route_hold_items + hold_items on 29 monitor-pin types, seqhost__*, lepe/lepw LP__*; no route or retry until J6.
+   Also held: col_h9_r1/r2 (J6 masters) and the leaf siblings.
+6. Slew re-pin done (die_gen_env OT_PLACE_MAX_TRANSITION=320, 9dcb613f). No release or cancel from post-place WNS when the worst slew is over 1 ns.
+Rules: cd / first; posts via bin/post.sh; kit_wave via kit_wave_edit; cancel only by exact unit; never cancel kits that can still sign.
