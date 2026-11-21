@@ -1,4 +1,5 @@
 """FLOW-NOADV-R3 11-20 (owner rule, FLEET-WATCH-1630): PLACE-SETUP-STOP, the kit ends after detail place when TT setup WNS < -300 ps."""
+import subprocess
 import sys
 from pathlib import Path
 
@@ -58,3 +59,31 @@ def test_run_script_measures_place_odb_and_classifier_names_the_class():
     cls, why = KW.classify("place", why_line)
     assert cls == "PLAN" and "PLACE-SETUP-STOP" in why
     assert KW.typed_class(cls, "place", why_line) == "design:place_setup_stop"
+
+
+
+def test_postplace_attribution_selects_complete_worst_group():
+    source = (HERE / "tt_setup_repair.tcl").read_text()
+    proc = "proc ot_postplace_worst_report " + source.split("proc ot_postplace_worst_report ", 1)[1].split("\n}\n", 1)[0] + "\n}\n"
+    script = proc + """
+lassign [ot_postplace_worst_report {
+Startpoint: async_source
+Endpoint: async_sink
+Path Group: asynchronous
+ 0.0  0.0 ^ async_site/Y (DFF)
+ -6400.25 slack (VIOLATED)
+
+Startpoint: real_source
+Endpoint: real_sink
+Path Group: clk
+ 0.0  0.0 ^ real_site/Y (DFF)
+ -187714.01 slack (VIOLATED)
+}] slack path
+puts $slack
+puts [join $path \\n]
+"""
+    result = subprocess.run(["tclsh"], input=script, text=True, capture_output=True, check=True)
+    assert result.stderr == ""
+    assert result.stdout.splitlines()[0] == "-187714.01"
+    assert "Startpoint: real_source" in result.stdout and "Endpoint: real_sink" in result.stdout
+    assert "async" not in result.stdout

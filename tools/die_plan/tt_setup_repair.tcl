@@ -102,23 +102,45 @@ proc ot_tt_wns {tag} {
   puts [format "OT_TT_SETUP_REPAIR %s TT setup wns %.2f tns %.2f" $tag $w $t]
   return [list $w $t]
 }
+# report_checks emits one path per group. Keep the whole minimum-slack path
+# together so a different group's endpoints or coordinates cannot leak in.
+proc ot_postplace_worst_report {report} {
+  set path {}; set best {}; set best_slack {}
+  foreach line [split $report "\n"] {
+    if {[regexp {^\s*Startpoint:} $line]} { set path [list $line]; continue }
+    if {$path eq ""} continue
+    lappend path $line
+    if {![regexp {^\s*([-+0-9.eE]+)\s+slack \((?:MET|VIOLATED)\)} $line -> slack]} continue
+    if {[string is double -strict $slack] && ($best eq "" || $slack < $best_slack)} {
+      set best $path
+      set best_slack $slack
+    }
+    set path {}
+  }
+  return [list $best_slack $best]
+}
 # r268 (FABLE-FIX-HEAD-TYPES, hd_serdes sd2): OT_TT_SETUP_MEASURE=1 only reads the TT setup wns/tns of ODB in this same frame and exits;
 # the run_kit step uses it on the WRITTEN repaired DB (a fresh session = what every later reader sees) before keeping it.
 if {[info exists ::env(OT_TT_SETUP_MEASURE)] && $::env(OT_TT_SETUP_MEASURE) eq "1"} {
-  ot_tt_wns measure
+  lassign [ot_tt_wns measure] ot_pw_wns
   # FLOW-NOADV-R3 11-20 (PLACE-SETUP-STOP): OT_POSTPLACE_WORST=1 also names the worst path's start / end and its longest hop (um, manhattan between
   # consecutive instances of the path); informational, never fatal
   if {$ot_postplace} {
     if {[catch {
       sta::redirect_string_begin
       report_checks -path_delay max -group_path_count 1 -format full
-      set ot_pw_txt [sta::redirect_string_end]
+      lassign [ot_postplace_worst_report [sta::redirect_string_end]] ot_pw_slack ot_pw_path
+      if {$ot_pw_path eq "" || abs($ot_pw_slack - $ot_pw_wns) > 0.02} {
+        error "reported path slack $ot_pw_slack does not identify measured WNS $ot_pw_wns"
+      }
+      set ot_pw_txt [join $ot_pw_path "\n"]
       set ot_pw_s "?"; set ot_pw_e "?"
       regexp {Startpoint:\s+(\S+)} $ot_pw_txt -> ot_pw_s
       regexp {Endpoint:\s+(\S+)} $ot_pw_txt -> ot_pw_e
       set ot_pw_blk [ord::get_db_block]
       set ot_pw_prev ""; set ot_pw_hop 0.0
-      foreach ln [split $ot_pw_txt "\n"] {
+      foreach ln $ot_pw_path {
+        if {[string match "*data arrival time*" $ln]} break
         if {![regexp {^\s*[-0-9.]+\s+[-0-9.]+\s+[\^v]\s+(\S+)/\S+\s+\(} $ln -> ot_pw_i]} continue
         set ot_pw_inst [$ot_pw_blk findInst $ot_pw_i]
         if {$ot_pw_inst eq "NULL"} continue
