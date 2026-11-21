@@ -19,3 +19,10 @@ tp__bk_sel__s_7N_LP 47->52; xtier__bk_sel__s_4S_C 67->69; xtier__bk_sel__seqhost
 (Plan fixed_cycles: cb/ca/xtier_i0 3, idx_i0 12, tp_i0 11, xtier_i1 11, tl_o0 10, tp_o0/o1 16, xtier_o0 5, xtier_o1 10, flt_o0 13; files w/lane_deltas_r5.json.)
 Plus L4 (RTL on main): loop lane +4, t_o +1 (RO 8), fault +3, dst/lpe +3, core reset release +6. J6: vmux recompile from these LAT_*, then token sim.
 Placement + hop scan: place_r4c running.
+
+## PLACED RESULT chain_r4c (place_r4c rc 0, geom_r4c, hop300_r4c.json in /srv/opentallas-scratch2/claude/s81-bksel-r5/w)
+r2r max 1,202.6 um (R3 1,318), 2 captures > 405, 304 > 300; STATION_FAMILIES_OVER 0 (no bus / station / face / landing-start / hub family over 300 any more; R3 had 2,714 > 300).
+Of the 304: ~297 = die reset tree u_rrl_* at the bound 380-um pitch (J3 bind, not this type's rows). Remaining non-reset families (7 captures):
+- u_rs.rq -> u_core.rs1 705 um (1): rs1 (dsdv_idx_l20s.sv:1197, resets dst/lpe/lp_q) sits at (2161,1086) by the u_tx N edge, its reset rq at (2170,389). Needs RTL: a reset relay stage between rq and rs0/rs1 (dsdv_bk_rrd form, ~3 stages), not a row.
+- u_dsp.g_r sd -> cd 372, u_dsp.dst -> u_ist_{tl,tp}_o*_0 363-368, u_ids.cp -> u_dsp.sd 337-340: dst/lpe/wf unsited at (2298,1086) vs ist_0 at x 1926-2121: relay_sites for u_core.u_dsp.dst/lpe/wf at ~(2060,1085) and the g_r chain on the ids.cp -> dst path (next iteration, rows only).
+Plan for J6 = plan_r4c.json parts: rows_face_r5.json (3,671 relay_sites + 12 internal_stations + lane fixed_cycles), rows_stn_ro8.json (R4 dir), rows_l4.json (R4 dir), rows_start_r5.json (clock.landing_writer_start), lane_deltas_r5.json.
