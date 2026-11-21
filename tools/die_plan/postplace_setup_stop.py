@@ -6,7 +6,8 @@ placed DB (tt_setup_repair.tcl OT_TT_SETUP_MEASURE=1, OT_POSTPLACE_WORST=1) and 
 
   python3 -I postplace_setup_stop.py --log /work/postplace_setup.log --stop -300 --marker /work/FAIL_POSTCTS --json /work/place_setup_stop.json
 
-exit 6 and one marker line   FAIL_POSTPLACE PLACE-SETUP-STOP wns <ps> ps < <stop> ps (TT, post-place) start=<pin> end=<pin> hop_um=<um> ...
+exit 6 and one marker line   FAIL_POSTPLACE PLACE-SETUP-STOP wns <ps> ps < <stop> ps (TT, post-place) start=<pin> end=<pin> hop_um=<um>
+path_um=<um> span_um=<um> stages=<n> ...  (hop_um = longest single cell-to-cell hop, path_um = summed hops, span_um = first -> last cell)
 (the kit-wave classifier reads it as class PLACE-SETUP-STOP, a plan item for the die owner's next plan event); exit 0 otherwise.  The place
 ODB, reports and logs stay in the kit.  A log with no measurement never stops the flow.  Exempt rows never get the step (gen_phys
 postplace_stop_ps): hold-only failures (setup is the only thing measured), lane proofs (OT_LANE / OT_PRIVATE_KIT), ECO rows (OT_ECO),
@@ -21,7 +22,7 @@ import re
 import sys
 
 WNS_RE = re.compile(r"OT_TT_SETUP_REPAIR\s+measure\s+TT setup wns\s+(-?[0-9.]+(?:[eE][-+]?[0-9]+)?)")
-WORST_RE = re.compile(r"OT_POSTPLACE_WORST\s+start=(\S+)\s+end=(\S+)\s+hop_um=(\S+)")
+WORST_RE = re.compile(r"OT_POSTPLACE_WORST\s+start=(\S+)\s+end=(\S+)\s+hop_um=(\S+)(?:\s+path_um=(\S+)\s+span_um=(\S+)\s+stages=(\d+))?")
 RECOV_RE = re.compile(r"OT_POSTPLACE_RECOVERY\s+wns\s+(-?[0-9.]+(?:[eE][-+]?[0-9]+)?)\s+start=(\S+)\s+end=(\S+)")
 
 
@@ -30,9 +31,11 @@ def read_log(text):
     m = WNS_RE.findall(text)
     w = WORST_RE.findall(text)
     rv = RECOV_RE.findall(text)
-    out = dict(wns=float(m[-1]) if m else None, start="?", end="?", hop_um=None, recovery_wns=None, recovery_start=None, recovery_end=None)
+    out = dict(wns=float(m[-1]) if m else None, start="?", end="?", hop_um=None, path_um=None, span_um=None, stages=None, recovery_wns=None, recovery_start=None, recovery_end=None)
     if w:
         out.update(start=w[-1][0], end=w[-1][1], hop_um=None if w[-1][2] in ("?", "nan") else float(w[-1][2]))
+        if w[-1][5]:
+            out.update(path_um=float(w[-1][3]), span_um=float(w[-1][4]), stages=int(w[-1][5]))
     if rv:
         out.update(recovery_wns=float(rv[-1][0]), recovery_start=rv[-1][1], recovery_end=rv[-1][2])
     return out
@@ -45,6 +48,9 @@ def decide(text, stop_ps):
     if r["wns"] is None or not r["wns"] < float(stop_ps):
         return False, "", r
     hop = "?" if r["hop_um"] is None else f"{r['hop_um']:.1f}"
+    # FABLE-FIX-S81-STROBE 11-21: hop_um is the longest single cell-to-cell hop; the path length says whether distance is the cause
+    if r["path_um"] is not None:
+        hop += f" path_um={r['path_um']:.1f} span_um={r['span_um']:.1f} stages={r['stages']}"
     line = (f"FAIL_POSTPLACE PLACE-SETUP-STOP wns {r['wns']:.2f} ps < {float(stop_ps):.0f} ps (TT, post-place; routing cannot close it) "
             f"start={r['start']} end={r['end']} hop_um={hop}; place ODB, reports and logs kept (plan item for the die owner)")
     return True, line, r

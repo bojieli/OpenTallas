@@ -185,3 +185,23 @@ def test_postplace_keeps_a_clock_with_a_buffer_or_flop_sink_ideal():
     r = subprocess.run([TCLSH], input=_pp_stub(nets, ""), text=True, capture_output=True, check=True)
     assert "PROPAGATED" not in r.stdout and "OT_POSTPLACE_CLOCKS propagated 0" in r.stdout
     assert "OT_POSTPLACE_RECOVERY wns none" in r.stdout
+
+
+def test_path_length_span_and_stage_count_reach_the_marker(tmp_path):
+    """FABLE-FIX-S81-STROBE 11-21: S81 serdes t16 START wavefront: hop 115.9 um but 2.8 mm / 27 repeaters in one cycle (-1252 ps)."""
+    log = tmp_path / "l"
+    log.write_text("OT_TT_SETUP_REPAIR measure TT setup wns -1252.45 tns -68858.48\n"
+                   "OT_POSTPLACE_WORST start=u_o/s2 end=u_r/q hop_um=115.9 path_um=2901.3 span_um=2837.2 stages=34\n")
+    marker, js = tmp_path / "m", tmp_path / "j"
+    assert PS.main(["--log", str(log), "--stop", "-300", "--marker", str(marker), "--json", str(js)]) == 6
+    line = marker.read_text().strip()
+    assert "hop_um=115.9 path_um=2901.3 span_um=2837.2 stages=34;" in line
+    import json
+    d = json.loads(js.read_text())
+    assert d["path_um"] == 2901.3 and d["span_um"] == 2837.2 and d["stages"] == 34 and d["hop_um"] == 115.9
+    import kit_wave as KW
+    assert KW.classify("place", line)[0] == "PLAN"
+    old = PS.read_log(LOG % "-412.30")                                   # logs of older kits keep reading
+    assert old["hop_um"] == 412.6 and old["path_um"] is None and old["stages"] is None
+    src = (HERE / "tt_setup_repair.tcl").read_text()
+    assert "path_um=%.1f span_um=%.1f stages=%d" in src

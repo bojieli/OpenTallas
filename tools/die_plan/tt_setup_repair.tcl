@@ -195,7 +195,10 @@ if {[info exists ::env(OT_TT_SETUP_MEASURE)] && $::env(OT_TT_SETUP_MEASURE) eq "
       regexp {Startpoint:\s+(\S+)} $ot_pw_txt -> ot_pw_s
       regexp {Endpoint:\s+(\S+)} $ot_pw_txt -> ot_pw_e
       set ot_pw_blk [ord::get_db_block]
-      set ot_pw_prev ""; set ot_pw_hop 0.0
+      # FABLE-FIX-S81-STROBE 11-21: hop_um is only the longest cell-to-cell hop; a START / reset wavefront carried by 11 to 27 resizer
+      # repeaters read hop 116-175 um on S81 serdes t16 / slice t18 / t29 while the path ran 1.7 to 2.8 mm in one cycle.  path_um = the
+      # summed hops, span_um = first -> last instance, stages = instances on the path (all informational).
+      set ot_pw_prev ""; set ot_pw_hop 0.0; set ot_pw_len 0.0; set ot_pw_n 0; set ot_pw_first ""
       foreach ln $ot_pw_path {
         if {[string match "*data arrival time*" $ln]} break
         if {![regexp {^\s*[-0-9.]+\s+[-0-9.]+\s+[\^v]\s+(\S+)/\S+\s+\(} $ln -> ot_pw_i]} continue
@@ -206,10 +209,17 @@ if {[info exists ::env(OT_TT_SETUP_MEASURE)] && $::env(OT_TT_SETUP_MEASURE) eq "
           lassign $ot_pw_pxy ot_pw_px ot_pw_py
           set ot_pw_d [expr {(abs($ot_pw_x - $ot_pw_px) + abs($ot_pw_y - $ot_pw_py)) / double([$ot_pw_blk getDbUnitsPerMicron])}]
           if {$ot_pw_d > $ot_pw_hop} { set ot_pw_hop $ot_pw_d }
+          set ot_pw_len [expr {$ot_pw_len + $ot_pw_d}]
         }
+        if {$ot_pw_prev ne $ot_pw_i} { incr ot_pw_n }
+        if {$ot_pw_first eq ""} { set ot_pw_first [list $ot_pw_x $ot_pw_y] }
         set ot_pw_prev $ot_pw_i; set ot_pw_pxy [list $ot_pw_x $ot_pw_y]
       }
-      puts [format "OT_POSTPLACE_WORST start=%s end=%s hop_um=%.1f" $ot_pw_s $ot_pw_e $ot_pw_hop]
+      set ot_pw_span 0.0
+      if {$ot_pw_first ne "" && $ot_pw_prev ne ""} {
+        set ot_pw_span [expr {(abs([lindex $ot_pw_pxy 0] - [lindex $ot_pw_first 0]) + abs([lindex $ot_pw_pxy 1] - [lindex $ot_pw_first 1])) / double([$ot_pw_blk getDbUnitsPerMicron])}]
+      }
+      puts [format "OT_POSTPLACE_WORST start=%s end=%s hop_um=%.1f path_um=%.1f span_um=%.1f stages=%d" $ot_pw_s $ot_pw_e $ot_pw_hop $ot_pw_len $ot_pw_span $ot_pw_n]
     } ot_pw_err]} { puts "OT_POSTPLACE_WORST start=? end=? hop_um=? (worst path read failed: $ot_pw_err)" }
   }
   exit 0
