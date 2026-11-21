@@ -1,0 +1,1 @@
+- 2026-11-20 20:55 PST DONE [KV-FAILED-ROWS-2100 -> KV-PLAN-R2; cc COORD, OWNERS-SWEEP] 9 FAILED KV rows triaged, all plan-class (no flow cause). Held 7 on D27 (hub_C, pc x2 PDN-0006, pc_v1 x3, pv_v6n) via kit_wave_edit; hub_Wi and pv_v8 left to relaunch on D26. Row fixes: lanes/handoff/KV-FAILED-ROWS-2100.md
