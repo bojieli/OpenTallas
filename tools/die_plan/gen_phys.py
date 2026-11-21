@@ -38,6 +38,12 @@ from schema import DIE_PART
 
 
 
+def _grt_cong_iters():
+    """FLOW-FIX-0100: GRT congestion iterations per round for generated kits (default 10; 0 or 30 = OpenROAD default, no flag)"""
+    v = os.environ.get("OT_GRT_CONG_ITERS", "10").strip()
+    return int(v) if v.isdigit() else 10
+
+
 def write_cap_budget(P, tn, kd):
     """First-attempt R-CAP input; hard-core internals never become movable cells.
 
@@ -7351,8 +7357,12 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # KW-FIX-8 11-04 (COORD 16:5x, S81 GRT-0116 near misses): opt-in per row through wave item_env, off by default.
            # GRT overflow is not a sign-off gate; with this flag the kit continues to detail route and routed DRC decides.
            # The first two arguments are the ORFS GLOBAL_ROUTE_ARGS default, which this variable replaces.
-           *(["export GLOBAL_ROUTE_ARGS = -congestion_report_iter_step 5 -verbose -allow_congestion"]
-             if os.environ.get("OT_GRT_ALLOW_CONGESTION") == "1" else []),
+           # FLOW-FIX-0100 (FABLE-FLOW-2350 f): congestion iterations per GRT round 30 -> 10 (66 jobs sat 5 h+ in 17-19 min iterations; a round was up to 9.5 h).
+           # OT_GRT_CONG_ITERS=<n> at generation overrides; 30 (OpenROAD default) or 0 keeps the old line (only the allow-congestion form emits GLOBAL_ROUTE_ARGS).
+           *(["export GLOBAL_ROUTE_ARGS = -congestion_report_iter_step 5 -verbose"
+              + (" -allow_congestion" if os.environ.get("OT_GRT_ALLOW_CONGESTION") == "1" else "")
+              + (f" -congestion_iterations {_grt_cong_iters()}" if _grt_cong_iters() not in (0, 30) else "")]
+             if os.environ.get("OT_GRT_ALLOW_CONGESTION") == "1" or _grt_cong_iters() not in (0, 30) else []),
            # KW-FIX-8 11-04 (COORD GRT loop ruling): opt-in per row through wave item_env, off by default.  TritonCTS by
            # default sets CTS_NDR_0 on part of the clock tree (260 of 2462 clock nets on s81sl_leaf t32); GRT then drops it
            # net by net and restarts its 30 iterations each time.  CTS_ARGS replaces the ORFS argument list, so this is

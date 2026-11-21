@@ -303,3 +303,51 @@ def test_noconverge_reaches_the_autopilot_and_wave_as_plan_design_grt_flat_overf
     assert (st, cls) == ("FAIL", "PLAN") and "design:grt_flat_overflow" in msg
     assert KW.typed_class("PLAN", "route", msg) == "design:grt_flat_overflow"
     assert "OT_GRT_NOCONVERGE" in (ROOT / "physical/common_flow/grt183_make.sh").read_text()
+
+
+# ---------------------------------------------------------------------------------------------------- FLOW-FIX-0100 (f)
+def test_round_wall_budget_is_noconverge_evidence_only_when_the_round_is_flat():
+    c = dict(C, OT_GRT_ROUND_WALL_S=3600)
+    h = [[5, 100, 60000], [10, 200, 58000], [5, 300, 59000]]          # round 2 started at t=200 (end of round 1), best 59000 (no 20 % gain)
+    assert R.round_wall_decide(h, 200 + 3599, c) is None
+    d = R.round_wall_decide(h, 200 + 3600, c)
+    assert d and d["kind"] == "round_wall" and d["tail"] == [58000, 59000]
+    line = R.noconverge_line(d)
+    assert line.startswith("OT_GRT_NOCONVERGE stage=grt class=GRT_NOCONVERGE") and "round wall budget 3600" in line
+    assert R.round_wall_decide([[5, 100, 60000], [10, 200, 58000], [5, 300, 20000]], 99999, c) is None      # falling fast: kept
+    assert R.round_wall_decide(h, 99999, dict(c, OT_GRT_ROUND_WALL_S=0)) is None
+    assert R.round_wall_decide(h[:2], 99999, c) is None                                                      # round 1 has no baseline
+
+
+def rt_table(rows):
+    out = ["   Iter   | Removed | Resized | Inserted | Cloned |  Pin  |   Area   |    WNS   |   StTNS    |   EnTNS    |  Viol  |  Worst  "]
+    for i, (w, t, v) in enumerate(rows):
+        out.append("%8d* |       0 |       2 |        0 |      0 |     0 |    +0.0%% | %.3f | %.1f | %.1f | %6d | u_x/D" % (i, w, t, t, v))
+    return out
+
+
+def test_rt_no_progress_stops_after_two_flat_passes():
+    c = dict(C, OT_FF_RT_ROWS=10)
+    flat = [(-185.3, -100800.4, 1081)] * 30
+    assert R.rt_decide(R.rt_rows(rt_table(flat)), c)["kind"] == "repair_timing"
+    assert R.rt_decide(R.rt_rows(rt_table(flat[:29])), c) is None                       # only 2 full passes: baseline + 1
+    gain = [(-185.3, -100800.4, 1081)] * 10 + [(-185.3, -90000.0, 1000)] * 10 + [(-185.3, -90000.0, 1000)] * 10
+    assert R.rt_decide(R.rt_rows(rt_table(gain)), c) is None                            # pass 2 gained 10 % TNS, only one flat pass after
+    ok = [(-5.0, -50.0, 3)] * 10 + [(0.0, 0.0, 0)] * 20
+    assert R.rt_decide(R.rt_rows(rt_table(ok)), c) is None                              # met
+    assert R.rt_decide(R.rt_rows(rt_table(flat)), dict(c, OT_FF_RT=0)) is None
+    line = R.noconverge_line(R.rt_decide(R.rt_rows(rt_table(flat)), c))
+    assert "repair_timing no progress" in line and line.startswith("OT_GRT_NOCONVERGE")
+    # only the last table counts (a new header resets)
+    assert R.rt_decide(R.rt_rows(rt_table(flat) + rt_table(flat[:5])), c) is None
+
+
+def test_judge_stops_a_grt_log_with_a_flat_repair_timing_table(tmp_path):
+    k = tmp_path / "w"
+    lg = k / "run/logs/asap7/t/base"
+    lg.mkdir(parents=True)
+    (k / "run/reports/asap7/t/base").mkdir(parents=True)
+    (lg / "5_1_grt.tmp.log").write_text("\n".join(rt_table([(-185.3, -100800.4, 1081)] * 300)) + "\n")
+    out = R.judge(str(k), 0, None, env={}, settle_s=0)
+    assert len(out) == 1 and "repair_timing no progress" in out[0]
+    assert R.judge(str(k), 0, None, env={"OT_FF_RT": "0"}, settle_s=0) == []

@@ -43,6 +43,10 @@ DEFAULTS = {
     "OT_FF_HOLD": 1, "OT_FF_HOLD_CAPS": 0,
     # MEM-RECLAIM-2200 (OWNER 11-20, flat-congestion case of the unsignable-job rule): (d) NOCONVERGE, see below
     "OT_FF_NOCONV": 1, "OT_FF_NOCONV_RESTARTS": 2, "OT_FF_NOCONV_MIN_GAIN_PCT": 20,
+    # FLOW-FIX-0100 (FABLE-FLOW-2350 f): per-round wall budget (seconds, 0 = off; with 10 iterations a round is ~3 h on S81 leaf / KV hgi at 17-19 min each)
+    # and the repair_timing no-progress stop (a pass = OT_FF_RT_ROWS table rows; OT_FF_RT_PASSES consecutive passes with < OT_FF_RT_MIN_GAIN_PCT WNS and TNS gain)
+    "OT_GRT_ROUND_WALL_S": 14400,
+    "OT_FF_RT": 1, "OT_FF_RT_ROWS": 100, "OT_FF_RT_PASSES": 2, "OT_FF_RT_MIN_GAIN_PCT": 5,
 }
 
 ITER_RE = re.compile(r"\[INFO GRT-0102\] Start extra iteration (\d+)/(\d+)")
@@ -242,11 +246,98 @@ def noconverge_decide(hist, c):
     return None
 
 
+def _round_spans(hist):
+    """congestion snapshots -> [[best total, first mtime, last mtime], ...] per round, oldest first (same round split as congestion_rounds)"""
+    out, prev = [], None
+    for idx, mt, tot in sorted(hist, key=lambda h: (h[1], h[0])):
+        if prev is None or idx <= prev:
+            out.append([tot, mt, mt])
+        else:
+            out[-1][0] = min(out[-1][0], tot)
+            out[-1][2] = mt
+        prev = idx
+    return out
+
+
+def round_wall_decide(hist, now, c):
+    """FLOW-FIX-0100 (FABLE-FLOW-2350 f): per-round wall budget as NOCONVERGE evidence.  The open round started when the previous round's last
+    snapshot was written; when it has run OT_GRT_ROUND_WALL_S (0 = off) and its best overflow so far is not OT_FF_NOCONV_MIN_GAIN_PCT below the
+    previous completed round, the round is flat evidence and the stage stops.  A round that is falling fast is never cut.  -> None or the stop record"""
+    wall = c.get("OT_GRT_ROUND_WALL_S", 0)
+    if not c["OT_FF_NOCONV"] or wall <= 0:
+        return None
+    sp = _round_spans(hist)
+    if len(sp) < 2 or sp[-2][0] <= 0:
+        return None
+    prev, cur = sp[-2], sp[-1]
+    age = now - prev[2]
+    pct = c["OT_FF_NOCONV_MIN_GAIN_PCT"]
+    if age >= wall and cur[0] > prev[0] * (1 - pct / 100.0):
+        return {"rule": "NOCONVERGE", "kind": "round_wall", "wall_s": wall, "age_s": int(age), "min_gain_pct": pct, "tail": [prev[0], cur[0]]}
+    return None
+
+
+RT_HEAD_RE = re.compile(r"^\s*Iter\s*\|\s*Removed\s*\|")
+RT_ROW_RE = re.compile(r"^\s*(\d+)\*?\s*\|(?:[^|]*\|){6}\s*(-?[\d.]+)\s*\|\s*(-?[\d.]+)\s*\|\s*(-?[\d.]+)\s*\|\s*(\d+)\s*\|")
+
+
+def rt_rows(lines):
+    """repair_timing setup table rows of the LAST table in a log -> [(wns, tns, viol)]  (columns Iter|Removed|Resized|Inserted|Cloned|Pin|Area|WNS|StTNS|EnTNS|Viol|Worst)"""
+    rows = []
+    for ln in lines:
+        if RT_HEAD_RE.match(ln):
+            rows = []
+            continue
+        m = RT_ROW_RE.match(ln)
+        if m:
+            rows.append((float(m[2]), float(m[3]), int(m[5])))
+    return rows
+
+
+def _gain_pct(old, new):
+    """improvement of a slack-like value (higher = better) in percent of |old|; 0 when old is already >= 0"""
+    if old >= 0:
+        return 0.0
+    return 100.0 * (new - old) / abs(old)
+
+
+def rt_decide(rows, c):
+    """FLOW-FIX-0100 (FABLE-FLOW-2350 f): repair_timing no-progress stop.  Rows are cut into passes of OT_FF_RT_ROWS rows; a pass gains when its best WNS or
+    best TNS is >= OT_FF_RT_MIN_GAIN_PCT better than the best before it.  OT_FF_RT_PASSES (2) consecutive passes without a gain after the first
+    (baseline) pass stop the stage.  A met endpoint (WNS and TNS >= 0) never stops.  -> None or the stop record"""
+    if not c["OT_FF_RT"]:
+        return None
+    n, k, pct = max(1, c["OT_FF_RT_ROWS"]), c["OT_FF_RT_PASSES"], c["OT_FF_RT_MIN_GAIN_PCT"]
+    blocks = [rows[i:i + n] for i in range(0, len(rows) - len(rows) % n, n)]
+    if len(blocks) < k + 1:
+        return None
+    bw, bt = max(r[0] for r in blocks[0]), max(r[1] for r in blocks[0])
+    flat, last = 0, None
+    for b in blocks[1:]:
+        w, t = max(r[0] for r in b), max(r[1] for r in b)
+        gw, gt = _gain_pct(bw, w), _gain_pct(bt, t)
+        flat = 0 if (gw >= pct or gt >= pct) else flat + 1
+        last = {"wns": w, "tns": t, "viol": min(r[2] for r in b)}
+        bw, bt = max(bw, w), max(bt, t)
+    if flat >= k and (bw < 0 or bt < 0):
+        return {"rule": "NOCONVERGE", "kind": "repair_timing", "passes": k, "rows_per_pass": n, "min_gain_pct": pct,
+                "wns": bw, "tns": bt, "viol": last["viol"] if last else None}
+    return None
+
+
 def noconverge_line(d, stamp=True):
+    stp = time.strftime(" %Y-%m-%d %H:%M:%S", time.gmtime()) if stamp else ""
+    if d.get("kind") == "round_wall":
+        return ("OT_GRT_NOCONVERGE stage=grt class=GRT_NOCONVERGE: GRT round wall budget %d s exceeded (open round %d s old) with round-best overflow %s "
+                "(< %g%% gain); stopping the stage (FLOW-FIX-0100, design:grt_flat_overflow)%s"
+                % (d["wall_s"], d["age_s"], " -> ".join(str(v) for v in d["tail"]), d["min_gain_pct"], stp))
+    if d.get("kind") == "repair_timing":
+        return ("OT_GRT_NOCONVERGE stage=grt class=GRT_NOCONVERGE: repair_timing no progress, %d consecutive passes of %d rows gained less than %g%% "
+                "WNS/TNS (best WNS %s TNS %s, %s violating endpoints); stopping the stage (FLOW-FIX-0100, design:grt_flat_overflow)%s"
+                % (d["passes"], d["rows_per_pass"], d["min_gain_pct"], d["wns"], d["tns"], d["viol"], stp))
     return ("OT_GRT_NOCONVERGE stage=grt class=GRT_NOCONVERGE: %d consecutive GRT restarts each gained less than %g%% of the round-best overflow "
             "(best per round %s, %d completed rounds); stopping the stage (MEM-RECLAIM-2200, design:grt_flat_overflow)%s"
-            % (d["restarts"], d["min_gain_pct"], " -> ".join(str(v) for v in d["tail"]), d["rounds"],
-               time.strftime(" %Y-%m-%d %H:%M:%S", time.gmtime()) if stamp else ""))
+            % (d["restarts"], d["min_gain_pct"], " -> ".join(str(v) for v in d["tail"]), d["rounds"], stp))
 
 
 def _noconv_history(rp, t0, state_path, settle_s):
@@ -373,9 +464,16 @@ def judge(work, t0, state_path=None, env=None, settle_s=None, now=None):
             return [drt_line(d)]
     # (d) GRT restarts with no overflow gain (OWNER 11-20); an overflow value alone, or elapsed time, never stops GRT (OWNER 11-14)
     if c["OT_FF_NOCONV"] and grt:
-        d = noconverge_decide(_noconv_history(rp, t0, state_path, settle_s), c)
+        hist = _noconv_history(rp, t0, state_path, settle_s)
+        d = noconverge_decide(hist, c) or round_wall_decide(hist, time.time() if now is None else now, c)
         if d:
             return [noconverge_line(d)]
+        # FLOW-FIX-0100: repair_timing no-progress (setup tables of this run's GRT logs)
+        if c["OT_FF_RT"]:
+            for p in sorted(grt):
+                d = rt_decide(rt_rows(_read_lines(p)), c)
+                if d:
+                    return [noconverge_line(d)]
     return []
 
 
