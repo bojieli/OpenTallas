@@ -188,3 +188,4 @@
   STOOD-DOWN-OWNER by owner: BUILD-SETTINGS-AUDIT-1900 56, CORE-PIN-RELAY-R2 49, KV-PLAN-R2 5, FABLE-FIX-QC-CB 3, QC-PLAN-R7 2, LOCKUP-STATION-1130 2, OPUS-FIX-KV-PV-R3 1, S81-LEAF-CLASS-1730 1 (S81 85, KV 19, QC 15); needs reassignment to live lanes.
   S81 STALE held-for-plan-event: 16 (4 new). QC: 1 STALE cancelled old. KV real: 2 FAILED-NO-RELAUNCH + 15 held + 1 cancelled WAIT-BIND, old.
   HEAD: none flagged.
+- 2026-11-20 21:51 PST CORRECTION to 21:50 sweep: STOOD-DOWN-OWNER rows are 119 (S81 85, KV 19, QC 15), not 138; 35 other flagged rows; total 154 of 483.
