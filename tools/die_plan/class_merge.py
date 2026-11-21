@@ -22,14 +22,27 @@ tree, reader / writer start, bands: U2/U4/U6).  What may differ between members,
     is delivered late by the whole chain (LANE_ASBUILT UNPRICED_KIT_STATIONS).  Report rows: kit_priced.
     --reprice-from PRE_PLAN applies only this step to an already merged PLAN (instance types taken from PRE_PLAN).
 
+  - feed-through superset (--ft-superset, UNIFY-TOOLS-R3): the class row carries the UNION of the members' ft slots
+    and becomes a superset type (partition_types[].superset; FABLE-SUPERSET-0415 U5).  Slot names are STABLE: every
+    slot keeps its own name when the representative owns it or no other pin set in the class uses it; a member slot
+    whose name another pin set also uses becomes <name>_c<sha1(pins)[:6]> (stable: a function of its pins only).
+    Slots with the same pins (faces, width, windows, layers, order, turnaround) are one physical slot: they collapse
+    to the representative's slot, else to the smallest member name.  Only renamed / collapsed slots' ports and
+    per-slot landing pins (fclk_in_<slot>_i, cland_fstart_in_<slot>_i, fclk_out_<slot>_o, cland_fstart_out_<slot>_o)
+    and their landing edges are re-pointed; the class row gains the landing pins of its added slots.  Copies of one
+    pin set with different station counts take the deepest copy; the lanes through a shallower copy get +delta in
+    their latency rows (ft_stations_raised; +cycles pre-approved; re-derive R8 and rebind after).  Every instance names the class slots it does not bind (neither
+    end used by a port) in partitions[].spare_ends.  Report: ft_superset {added, collapsed, spare, overlaps}, where
+    overlaps lists class slot ends on one face whose windows and layers intersect (class_window_solve resolves them).
+
 Refused (exit 2, nothing written): a member child site the representative lacks, a different outline or bus / ft pin
-table, a member with data landing pins the representative lacks.  Per-type die tables keyed by a member type name
+table (ft only without --ft-superset), a member with data landing pins the representative lacks.  Per-type die tables keyed by a member type name
 (clock.tap_window / tap_offset, reset.in_sites, sidecar collector.types) are dropped; the representative's stay.
 
     class_merge.py PLAN SIDECAR OUT_PLAN OUT_SIDECAR --rep TYPE (--members T1,T2,.. | --stem STEM) [--report R.json]
     class_merge.py PLAN SIDECAR OUT_PLAN OUT_SIDECAR --reprice-from PRE_PLAN [--report R.json]
 """
-import argparse, collections, copy, json, re, sys
+import argparse, collections, copy, hashlib, json, re, sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -217,7 +230,172 @@ def late_by_kit(row, fixed, n, m):
     return base + n + pad + (0 if pad else m) - cyc
 
 
-def merge(plan, side, rep, members, role_strap=False):
+FT_PINS = ("in_face", "out_face", "width", "turnaround", "in_window_um", "out_window_um", "layer", "layers", "order",
+           "in_layers", "out_layers", "in_order", "out_order")
+FT_COUNT = ("stations_in",)
+
+
+def ft_pin_key(s):
+    """the pin interface of an ft slot (what a neighbour abuts); equal keys = one physical slot"""
+    return json.dumps({k: s.get(k) for k in FT_PINS}, sort_keys=True)
+
+
+def _ft_ends(s):
+    lay = lambda side: set(s.get(f"{side}_layers") or s.get("layers") or ([s["layer"]] if s.get("layer") else []))
+    return [(s["in_face"], s.get("in_window_um"), lay("in")), (s["out_face"], s.get("out_window_um"), lay("out"))]
+
+
+def ft_overlaps(slots):
+    """[(slot a, slot b, face)] class slot ends on one face whose windows and layer sets intersect"""
+    out = []
+    for i, a in enumerate(slots):
+        for b in slots[i + 1:]:
+            for fa, wa, la in _ft_ends(a):
+                for fb, wb, lb in _ft_ends(b):
+                    if fa == fb and wa and wb and max(wa[0], wb[0]) < min(wa[1], wb[1]) and (la & lb or not la or not lb):
+                        out.append([a["name"], b["name"], fa])
+    return out
+
+
+SLOT_PIN = re.compile(r"^(fclk_in|cland_fstart_in|fclk_out|cland_fstart_out)_(.+)_(i|o)$")
+
+
+def ft_class_name(name, key):
+    """stable class name of a member slot whose own name is used by another pin set in the class"""
+    return f"{name}_c{hashlib.sha1(key.encode()).hexdigest()[:6]}"
+
+
+def slot_pins(lc, slots):
+    """{pin name: slot} of a landing contract's per-ft-slot landing pins (fclk_in_<slot>_i, cland_fstart_out_<slot>_o..)"""
+    out = {}
+    for pin in lc.get("pins", []):
+        m = SLOT_PIN.match(pin["name"])
+        if m and m.group(2) in slots:
+            out[pin["name"]] = m.group(2)
+    return out
+
+
+def ft_superset_plan(P, rep, members, rep_out):
+    """-> dict(union=[class slots], ren={member: {old slot: class slot}}, pins={member: {old pin: class pin}},
+    carry=[landing pin rows the class row gains]); refusals go to rep_out["refused"].
+    Naming (stable, agreed with S81-LEAF-CLASS): a slot keeps its own name when the representative owns that name or
+    no other pin set in the class uses it; otherwise it is <name>_c<sha1(pins)[:6]>.  Same pins = one slot."""
+    cand = collections.defaultdict(list)            # pin key -> [(is_member, name, type, slot)]
+    for tn in [rep] + members:
+        for sl in P[tn].get("ft_slots", []):
+            cand[ft_pin_key(sl)].append((tn != rep, sl["name"], tn, sl))
+    keys_of = collections.defaultdict(set)
+    for key, cs in cand.items():
+        for c in cs:
+            keys_of[c[1]].add(key)
+    rep_names = {sl["name"] for sl in P[rep].get("ft_slots", [])}
+    union, ren, taken, raise_ = [], {m: {} for m in members}, {}, {}
+    st = lambda sl: int(sl.get("stations", 1))
+    for key, cs in sorted(cand.items(), key=lambda kv: min((c[0], c[1]) for c in kv[1])):
+        cs.sort(key=lambda c: (c[0], c[1]))
+        keep = cs[0]
+        name = keep[1] if (not keep[0] and keep[1] in rep_names) or len(keys_of[keep[1]]) == 1 \
+            else ft_class_name(keep[1], key)
+        row = max(cs, key=lambda c: (st(c[3]), -c[0]))[3]     # the deepest copy: same pins, most stations
+        for is_m, old, tn, sl in cs:
+            if any(json.dumps(sl.get(f)) != json.dumps(row.get(f)) for f in FT_COUNT):
+                rep_out["refused"].append(f"{tn}: ft slot {old} has the pins of class slot {name} but other "
+                                          f"stations_in")
+            if is_m and old != name:
+                ren[tn][old] = name
+            if st(row) > st(sl):
+                raise_[(tn, old)] = st(row) - st(sl)
+        if name in taken:
+            rep_out["refused"].append(f"ft slot class name {name} names two pin sets ({taken[name]}, {keep[2]})")
+            continue
+        taken[name] = keep[2]
+        union.append(dict(copy.deepcopy(row), name=name))
+    # per-slot landing pins follow their slot: renamed with it; the class row gains those it lacks
+    rpins = {pin["name"] for pin in _lc(P[rep]).get("pins", [])}
+    pins, carry = {}, []
+    for m in members:
+        lc = _lc(P[m]); slots = {sl["name"] for sl in P[m].get("ft_slots", [])}
+        sp = slot_pins(lc, slots); pins[m] = {}
+        for pin in lc.get("pins", []):
+            if pin["name"] not in sp:
+                continue
+            g = SLOT_PIN.match(pin["name"])
+            new = f"{g.group(1)}_{ren[m].get(sp[pin['name']], sp[pin['name']])}_{g.group(3)}"
+            pins[m][pin["name"]] = new
+            if new not in rpins:
+                rpins.add(new); carry.append(dict(copy.deepcopy(pin), name=new))
+    return dict(union=union, ren=ren, pins=pins, carry=carry, raise_=raise_)
+
+
+def ft_superset_apply(plan, rep, members, fp, rep_out):
+    """write the class slots + their landing pins, re-point renamed / collapsed slots' ports and landing edges,
+    declare per-instance spare slots"""
+    union, ren, pins = fp["union"], fp["ren"], fp["pins"]
+    P = plan["partition_types"]; R = P[rep]
+    if fp["carry"]:
+        R.setdefault("clock", {}).setdefault("landing_contract", {}).setdefault("pins", []).extend(fp["carry"])
+    pt0 = {p["name"]: p["type"] for p in plan["partitions"]}
+    # same pins, fewer stations: the instance's lanes through that slot take the class station count (+cycles,
+    # OWNER pre-approved); their latency rows move with it (schema lane_natural counts slot stations)
+    lat = plan.get("latency", {}).get("lanes", {})
+    port_lane = {pid: ln["id"] for ln in plan.get("lanes", []) for pid in ln.get("ports", [])}
+    raised = []
+    for pr in plan.get("ports", []):
+        e = pr.get("dst") or {}
+        b = e.get("bus", "")
+        d = fp["raise_"].get((pt0.get(e.get("part")), b[:-2])) if b.endswith("_i") else None
+        lid = port_lane.get(pr.get("id"))
+        if d and lid:
+            row = lat.get(lid)
+            if row is not None:
+                for k in ("cycles", "natural", "stations"):
+                    if k in row:
+                        row[k] = int(row[k]) + d
+            raised.append(dict(lane=lid, part=e["part"], slot=b[:-2], add=d))
+    rep_out["ft_stations_raised"] = raised
+    edges = 0
+    for e in (plan.get("clock") or {}).get("landing_network", {}).get("edges", []):
+        for side in ("src", "dst"):
+            x = e.get(side) or {}
+            r = pins.get(pt0.get(x.get("part")))
+            if r and x.get("bus") in r and r[x["bus"]] != x["bus"]:
+                x["bus"] = r[x["bus"]]; edges += 1
+    before = {s["name"] for s in R.get("ft_slots", [])}
+    R["ft_slots"] = union
+    if not R.get("superset"):
+        R["superset"] = True
+    part_type = {p["name"]: p["type"] for p in plan["partitions"]}
+    used = collections.defaultdict(set); repointed = 0
+    for pr in plan.get("ports", []):
+        for side in ("src", "dst"):
+            e = pr.get(side) or {}
+            r = ren.get(part_type.get(e.get("part")))
+            if r:
+                for sfx in ("_i", "_o"):
+                    b = e.get("bus", "")
+                    if b.endswith(sfx) and b[:-2] in r:
+                        e["bus"] = r[b[:-2]] + sfx; repointed += 1
+            used[e.get("part")].add(e.get("bus"))
+    spare = {}
+    for p in plan["partitions"]:
+        if p["type"] not in members and p["type"] != rep:
+            continue
+        r = ren.get(p["type"], {})
+        old = [r.get(n, n) for n in p.get("spare_ends", [])]
+        add = [s["name"] for s in union if not ({s["name"] + "_i", s["name"] + "_o"} & used[p["name"]])
+               and s["name"] not in old]
+        if add or old:
+            p["spare_ends"] = sorted(set(old) | set(add))
+        if add:
+            spare[p["name"]] = add
+    rep_out["ft_superset"] = dict(
+        slots=len(union), added=sorted({s["name"] for s in union} - before),
+        collapsed={m: r for m, r in ren.items() if r}, repointed_port_ends=repointed, spare=spare,
+        landing_pins_added=[q["name"] for q in fp["carry"]], landing_edges_repointed=edges,
+        overlaps=ft_overlaps(union))
+
+
+def merge(plan, side, rep, members, role_strap=False, ft_superset=False):
     P = plan["partition_types"]
     if rep not in P:
         raise MergeError(f"representative {rep} is not a plan type")
@@ -227,14 +405,18 @@ def merge(plan, side, rep, members, role_strap=False):
         raise MergeError(f"member types not in the plan: {missing}")
     R = P[rep]; rlc = _lc(R); rkeys = child_keys(rlc); rindex = {k: i for i, k in rkeys.items()}
     rep_out = dict(rep=rep, members=members, refused=[], moved={}, edges=dict(plan=0, sidecar=0), dropped=[])
+    fp = ft_superset_plan(P, rep, members, rep_out) if ft_superset else None
     # ---- refusals first: nothing is written when any member is not a copy of the class row
     for m in members:
         t = P[m]
         for f in MUST_EQUAL:
+            if f == "ft_slots" and ft_superset:
+                continue
             if json.dumps(t.get(f), sort_keys=True) != json.dumps(R.get(f), sort_keys=True):
                 rep_out["refused"].append(f"{m}: {f} differs from the representative")
         mlc = _lc(t)
-        extra = data_landing_pins(mlc) - data_landing_pins(rlc) - (set(ROLE_PINS) if role_strap else set())
+        extra = data_landing_pins(mlc) - data_landing_pins(rlc) - (set(ROLE_PINS) if role_strap else set()) \
+            - (set(fp["pins"][m]) if fp else set())
         if extra:
             rep_out["refused"].append(f"{m}: data landing pins not on the representative: {sorted(extra)[:6]}")
         for i, key in child_keys(mlc).items():
@@ -250,6 +432,8 @@ def merge(plan, side, rep, members, role_strap=False):
         role_pins_union(P, rep, members, rep_out)
     if rep_out["refused"]:
         return rep_out
+    if ft_superset:
+        ft_superset_apply(plan, rep, members, fp, rep_out)
     # ---- class row: every representative child is tieable; seam children get a use strap pin
     if rkeys:
         tie = [dict(index=i, seam=k[1]) for i, k in sorted(rkeys.items())]
@@ -313,6 +497,8 @@ def main(argv=None):
     g.add_argument("--members"); g.add_argument("--stem")
     ap.add_argument("--role-strap", action="store_true",
                     help="allow origin and relay copies in the class (landing_role_strap, strap_ca_relay)")
+    ap.add_argument("--ft-superset", action="store_true",
+                    help="class row = union of the members' ft slots (stable names, superset type, spare_ends)")
     ap.add_argument("--report")
     a = ap.parse_args(argv)
     plan = json.loads(Path(a.plan).read_text()); side = json.loads(Path(a.side).read_text())
@@ -339,7 +525,7 @@ def main(argv=None):
     members = (a.members.split(",") if a.members else
                sorted(k for k in plan["partition_types"] if k.split("__")[0] == a.stem))
     try:
-        rep = merge(plan, side, a.rep, members, role_strap=a.role_strap)
+        rep = merge(plan, side, a.rep, members, role_strap=a.role_strap, ft_superset=a.ft_superset)
     except MergeError as exc:
         print(f"CLASS-MERGE ERROR {exc}", file=sys.stderr); return 2
     if a.report:

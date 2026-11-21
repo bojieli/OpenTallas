@@ -1,5 +1,5 @@
 """UNIFY-TOOLS class_merge: a class of types becomes ONE type; monitor children tieable and re-indexed by site."""
-import copy, json, sys
+import collections, copy, json, sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -203,3 +203,113 @@ def test_kit_pricing_skips_lane_that_never_priced_its_chain_and_reprice_cli(tmp_
                     str(tmp_path / "os.json"), "--reprice-from", str(tmp_path / "pre.json")]) == 0
     out = json.loads((tmp_path / "o.json").read_text())
     assert out["latency"]["lanes"]["ln_p1"]["cycles"] == 7 and out["latency"]["lanes"]["ln_p2"]["cycles"] == 7
+
+
+def _ft(name, face_y, stations=2, in_face="W", out_face="E"):
+    return dict(name=name, in_face=in_face, out_face=out_face, width=4, stations=stations,
+                in_window_um=[face_y, face_y + 6.0], out_window_um=[face_y, face_y + 6.0], layers=["M5"])
+
+
+def _ft_plan():
+    """rep has slot a; m1 has a's pins under another name (dup) plus its own x; m2 has its own y.  Ports bind p1.dup,
+    p1.x and p2.y; p0 binds a."""
+    plan, side = _plan()
+    T = plan["partition_types"]
+    T["ctl__rep"]["ft_slots"] = [_ft("a", 100.0)]
+    T["ctl__m1"]["ft_slots"] = [_ft("xft__ctl__m1__dup", 100.0), _ft("xft__ctl__m1__x", 200.0)]
+    T["ctl__m2"]["ft_slots"] = [_ft("xft__ctl__m2__y", 300.0)]
+    T["ctl__m1"]["clock"]["landing_contract"]["collector_children"] = []
+    T["ctl__m1"]["clock"]["landing_contract"]["pins"] = _pins([])
+    plan["clock"]["landing_network"]["edges"] = []
+    side["collector"]["edges"] = []
+    pr = lambda i, sp, sb, dp, db: dict(id=f"pt{i}", src=dict(part=sp, bus=sb), dst=dict(part=dp, bus=db), width=4)
+    plan["ports"] = [pr(0, "kid", "o0", "p0", "a_i"), pr(1, "p0", "a_o", "kid", "i0"),
+                     pr(2, "kid", "o1", "p1", "xft__ctl__m1__dup_i"), pr(3, "p1", "xft__ctl__m1__dup_o", "kid", "i1"),
+                     pr(4, "kid", "o2", "p1", "xft__ctl__m1__x_i"), pr(5, "p1", "xft__ctl__m1__x_o", "kid", "i2"),
+                     pr(6, "kid", "o3", "p2", "xft__ctl__m2__y_i"), pr(7, "p2", "xft__ctl__m2__y_o", "kid", "i3")]
+    return plan, side
+
+
+def test_ft_superset_union_keeps_stable_names_and_declares_spares():
+    """UNIFY-TOOLS-R3 (COORD): the class row carries the union of the members' ft slots under their own names"""
+    plan, side = _ft_plan()
+    assert any("ft_slots differs" in r for r in CM.merge(*_ft_plan(), "ctl__rep", ["ctl__m1", "ctl__m2"])["refused"])
+    rep = CM.merge(plan, side, "ctl__rep", ["ctl__m1", "ctl__m2"], ft_superset=True)
+    assert rep["refused"] == []
+    R = plan["partition_types"]["ctl__rep"]
+    assert R["superset"] is True
+    assert [s["name"] for s in R["ft_slots"]] == ["a", "xft__ctl__m1__x", "xft__ctl__m2__y"]
+    fs = rep["ft_superset"]
+    assert fs["added"] == ["xft__ctl__m1__x", "xft__ctl__m2__y"] and fs["overlaps"] == []
+    assert fs["collapsed"] == {"ctl__m1": {"xft__ctl__m1__dup": "a"}} and fs["repointed_port_ends"] == 2
+    buses = {(e["part"], e["bus"]) for p in plan["ports"] for e in (p["src"], p["dst"])}
+    assert ("p1", "a_i") in buses and ("p1", "a_o") in buses and ("p1", "xft__ctl__m1__x_i") in buses
+    sp = {p["name"]: p.get("spare_ends") for p in plan["partitions"]}
+    assert sp == {"p0": ["xft__ctl__m1__x", "xft__ctl__m2__y"], "p1": ["xft__ctl__m2__y"],
+                  "p2": ["a", "xft__ctl__m1__x"], "kid": None}
+    # a spare end is bound by no port (schema.spare_end_errors rule)
+    use = collections.defaultdict(list)
+    for p in plan["ports"]:
+        for e in (p["src"], p["dst"]):
+            use[(e["part"], e["bus"])].append(p["id"])
+    assert all(not use[(pn, n + sfx)] for pn, ns in sp.items() for n in (ns or []) for sfx in ("_i", "_o"))
+
+
+def test_ft_superset_refuses_station_mismatch_reports_overlaps(tmp_path):
+    plan, side = _ft_plan()
+    plan, side = _ft_plan()
+    plan["partition_types"]["ctl__m1"]["ft_slots"][0]["stations"] = 3               # a's pins, one more station
+    plan["lanes"] = [dict(id="L1", ports=["pt2", "pt3"]), dict(id="L0", ports=["pt0", "pt1"])]
+    plan["latency"] = dict(lanes={k: dict(cycles=10, natural=10, stations=4, pad=0) for k in ("L0", "L1")})
+    r = CM.merge(plan, side, "ctl__rep", ["ctl__m1", "ctl__m2"], ft_superset=True)
+    assert r["refused"] == [] and plan["partition_types"]["ctl__rep"]["ft_slots"][0]["stations"] == 3
+    # the rep's own copy (p0, 2 stations) is the shallower one: its lane L0 gets +1; p1's L1 already had 3
+    assert r["ft_stations_raised"] == [dict(lane="L0", part="p0", slot="a", add=1)]
+    assert plan["latency"]["lanes"]["L0"]["cycles"] == 11 and plan["latency"]["lanes"]["L1"]["cycles"] == 10
+    # overlap report + CLI flag
+    plan, side = _ft_plan()
+    plan["partition_types"]["ctl__m2"]["ft_slots"] = [_ft("xft__ctl__m2__y", 103.0)]
+    pp, sp_, op, os_, rp = (tmp_path / n for n in ("p.json", "s.json", "o.json", "os.json", "r.json"))
+    pp.write_text(json.dumps(plan)); sp_.write_text(json.dumps(side))
+    assert CM.main([str(pp), str(sp_), str(op), str(os_), "--rep", "ctl__rep", "--members", "ctl__m1,ctl__m2",
+                    "--ft-superset", "--report", str(rp)]) == 0
+    ov = json.loads(rp.read_text())["ft_superset"]["overlaps"]
+    assert ["a", "xft__ctl__m2__y", "W"] in ov and ["a", "xft__ctl__m2__y", "E"] in ov
+
+
+def test_ft_superset_clashing_local_names_get_stable_class_names():
+    """S81 leaf types name their slots ft0..ftN per type: a member ft0 with other pins than the rep's ft0 becomes
+    ft0_c<pinhash>, its per-slot landing pins and landing edges follow, the class row gains those pins"""
+    plan, side = _ft_plan()
+    T = plan["partition_types"]
+    T["ctl__rep"]["ft_slots"] = [_ft("ft0", 100.0)]
+    T["ctl__m2"]["ft_slots"] = [_ft("ft0", 300.0)]
+    T["ctl__m2"]["clock"]["landing_contract"]["pins"] += [
+        dict(name="fclk_in_ft0_i", dir="in", kind="clk", layer="M5", xy_um=[0.024, 301.0]),
+        dict(name="cland_fstart_out_ft0_o", dir="out", kind="ctl", layer="M5", xy_um=[1226.8, 301.0])]
+    plan["clock"]["landing_network"]["edges"] = [dict(id="fe", src=dict(part="kid", bus="x"),
+                                                      dst=dict(part="p2", bus="fclk_in_ft0_i"))]
+    for p in plan["ports"]:
+        for e in (p["src"], p["dst"]):
+            if e["part"] == "p0":
+                e["bus"] = e["bus"].replace("a_", "ft0_")
+            if e["part"] == "p2":
+                e["bus"] = e["bus"].replace("xft__ctl__m2__y_", "ft0_")
+    T["ctl__m1"]["ft_slots"] = [_ft("xft__ctl__m1__dup", 100.0), _ft("xft__ctl__m1__x", 200.0)]
+    key = CM.ft_pin_key(_ft("ft0", 300.0))
+    cn = CM.ft_class_name("ft0", key)
+    assert cn.startswith("ft0_c") and cn == CM.ft_class_name("ft0", key)
+    two = copy.deepcopy((plan, side))
+    rep = CM.merge(plan, side, "ctl__rep", ["ctl__m1", "ctl__m2"], ft_superset=True)
+    assert rep["refused"] == []
+    names = [s["name"] for s in plan["partition_types"]["ctl__rep"]["ft_slots"]]
+    assert names == ["ft0", cn, "xft__ctl__m1__x"]
+    assert {(e["part"], e["bus"]) for p in plan["ports"] for e in (p["src"], p["dst"]) if e["part"] == "p2"} == \
+        {("p2", cn + "_i"), ("p2", cn + "_o")}
+    pins = {q["name"] for q in plan["partition_types"]["ctl__rep"]["clock"]["landing_contract"]["pins"]}
+    assert {f"fclk_in_{cn}_i", f"cland_fstart_out_{cn}_o"} <= pins
+    assert plan["clock"]["landing_network"]["edges"][0]["dst"]["bus"] == f"fclk_in_{cn}_i"
+    assert rep["ft_superset"]["landing_edges_repointed"] == 1
+    # stable: member order does not change the class names
+    rep2 = CM.merge(*two, "ctl__rep", ["ctl__m2", "ctl__m1"], ft_superset=True)
+    assert [s["name"] for s in two[0]["partition_types"]["ctl__rep"]["ft_slots"]] == names and rep2["refused"] == []
