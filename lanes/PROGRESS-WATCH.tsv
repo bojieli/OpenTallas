@@ -115,3 +115,4 @@ time	die	class	state	posted	text
 2026-11-20 17:40:22	s81_head	STUCK-STATE	alert	yes	STUCK-STATE s81_head: 1 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. hd_mesh, 2026-11-20 11:28)
 2026-11-20 18:50:47	qwen_compute	NO-PROGRESS	alert	yes	NO-PROGRESS qwen_compute: 3 eligible rows, 0 KIT-WAVE LAUNCH for 67 min (last 17:43); no DIE-OFF / NO-LAUNCH line
 2026-11-20 18:50:47	s81_head	NO-PROGRESS	alert	yes	NO-PROGRESS s81_head: 16 eligible rows, 0 KIT-WAVE LAUNCH for 60 min (last 17:50); no DIE-OFF / NO-LAUNCH line
+2026-11-20 19:41:18	s81	NO-ADVANCE	alert	yes	NO-ADVANCE s81: 1 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (ot_s81sl_leaf__t28 x2@kit_rtl)
