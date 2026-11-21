@@ -41,3 +41,21 @@ and kit_wave.json dies.s81_head die_gen_env + item_env.hd_lep0N.
   transport bench fails 211/329. That lane re-plans START on e5c13, re-binds K, emits the provider. It coordinates the HEAD plan change with
   this lane; plan shas above were posted to it. Its rows + the lep0N rows go in the same HEAD event (lep0N rows re-bound on its base);
   regenerate the lep0N proof on its base if it touches hd_lep0N START/K pins or relay sites. This also covers the earlier COORD START-provider item.
+
+## UPDATE 11-21 ~07:25 PST (supersedes the kit list above)
+- col_we FAILED the band dry pass at 3_3 (59 min in): 3 native stage bands do not fit (mlwd_h2, mlwd_h3, rop_half1). Cause: LEP-BANDFIX-1 moves only
+  rects < 50 % free and accepts 60 %-free sites, so ~70 of 141 stage bands of the column plan still straddle SRAM columns.
+- LEP-BANDFIX-2 (F/bandfix2.py; F/col_bf2/{plan_reset.json,bandfix2.json,bandfix2.log}): undo BANDFIX-1, every band < 98 % macro-free to the nearest
+  macro-free site -> 74 of 141 bands move, median 75 um, max 528 um, 7 over 150 um. That scrambles the stage data flow. COLUMN FORM PARKED: not
+  launched. It needs the bands re-derived with their banks (plan work), only worth it if the shelf GRT still shows the east band congested.
+- SHELF = main path. shelf_we oth-ubuntu-1587841-1795268678 PASSED the dry pass (78,023 FIRM cells), in global place (movable util 2.0 %:
+  routability-driven GPL off, timing-driven kept). It has NO OT_TAP_GRT_PRE (as the wave): use it for the early placed TT / GRT congestion read.
+- shelf_tg = sign-off candidate proof: same plan + gen env OT_GEN_TAP_GRT_PRE=1 (config OT_TAP_GRT_PRE=1 + OT_PINREG_PAD=1; COORD / FABLE-PD-HEAD-0700).
+  Pipe oth-ubuntu-3859648-1795273702 (hub shelf_tg_pipe.otrun.log); on WE_PIPE_PASS launch its kit as in "In flight" (F/shelf_tg/gen/...).
+- BEFORE GRT on either kit (FABLE-PD-HEAD-0700 lever 6, estimator only): on the post-CTS DB list every *_tb* pad-chain net and tap pin pair against
+  reserved_sites.tcl M1-M7 strips (chain cells on both sides of a strip that holds the tap pin; guide length > 10x pin HPWL at GRT). Read GRT/CTS
+  numbers from the final stage DB only, never 5_global_route.rpt / 4_cts_final.rpt.
+- HEAD event rows carried here (assembled on HEAD-START-R16's base sha; strict bind + LATCHECK + G0):
+  hd_lep0N: shelf macro form + LEP-BANDFIX-1 3 rects (plan_reset 394f7f1a6760), clock.tap_grt_pre true, late-meta RTL (R4-3). Column rows R4-2 (tap moves) dropped unless column returns.
+  hd_serdes (from OPUS-FIX-HEAD-SERDES-R4, stood down): clock.tap_grt_pre true; tap groups u_enc:clk_t20, u_ptx:clk_t14; OT_S81_KP4_SYN_SCOPY define + OT_KEEP_WIRES ot_s81_kp4_dsyn:S_u once sdr2d proves.
+  START hops hd_st_k5 1,676 um / hd_st_m 1,261 um: proposed to HEAD-START-R16 as owner (posted 07:1x; inputs opus-fix-head-lep0n-r3/startfix); no reply yet. If it declines, they are relay rows here.
