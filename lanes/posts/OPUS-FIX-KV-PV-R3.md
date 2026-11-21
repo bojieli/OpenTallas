@@ -1,0 +1,1 @@
+- 2026-11-20 18:23 PST DONE [OPUS-FIX-KV-PV-R3] ot-run oth-ubuntu-954809-1795227672 on tolerant-swine: rc=0 after 266 s, ended 18:23:19, log none, cmd: --mem 16 --threads 4 --priority proof --hosts epyc10,epyc9,intel1,epyc7 --dir /srv/opentallas-scratch2/claude/opus-fix-kv-pv-r3 -- bash -c b
