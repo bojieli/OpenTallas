@@ -9,3 +9,7 @@ Verdict: FAIL for route on this geometry. The read-only flow proof moves to the 
 ## Private clock-first-only variant 1121123820
 
 Reviewed exact placed layout and density on epyc8 scratch2 under `claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-D26/private/FLOW-CLKGRT-R2/kv3_hg_v1p2_1121123820/gen/kv3_hg_v1p2/run/layout_review/place/`. The lower and upper core columns again meet at the narrow central street. The central stacked elements have dense placement on their sides and ends, with concentrated density in the east-west crossing and along the left inward turn. Automatic local density is 1.385. The route option cannot move the macro or untangle this traffic. **FAIL** for manual route approval.
+
+## Private clock-first and resistance-aware variant 1121130355
+
+Reviewed exact density on epyc7 scratch2 under `claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-D26/private/FLOW-CLKGRT-R2/kv3_hg_v1p2_1121130355/gen/kv3_hg_v1p2/run/layout_review/place/density.png`. The central strip is nearly full between the facing middle macro columns, its southern exits remain pinched, and the left-hand turn remains concentrated. **FAIL** for manual route approval.
