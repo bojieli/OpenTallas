@@ -628,9 +628,8 @@
     "kv3_hroot": "KW-FIX-42 03:05 COORD NEWFAIL: GRT congestion (d2a1629e48b0); owner decides the form, no unchanged relaunch | DIE-KV-97 02:24 KEEP running | RELEASED KW-FIX-42 11-09 04:38: plan_zb6 geometry (SD macro origin [6.48,58.32] + E/S pin spread; hroot S-face pin spread), COORD 04:4x"
    },
    "hosts": [
-    "epyc8",
-    "epyc10",
-    "epyc7"
+    "epyc7",
+    "epyc10"
    ],
    "gen_hosts": [
     "epyc7",
@@ -639,9 +638,8 @@
     "epyc2"
    ],
    "place_prefer": [
-    "epyc8",
-    "epyc10",
-    "epyc7"
+    "epyc7",
+    "epyc10"
    ],
    "item_env": {
     "kv3_phy": {
@@ -5926,7 +5924,8 @@
     "kv3_hgi_v8@6:fix=5294e088f553",
     "kv3_sys_c@7:fix=5294e088f553",
     "kv3_hg_v1p3@2:fix=kvplanr5-d26ctl-unshared",
-    "kv3_hg_v1p4@3:fix=kvplanr5-d26ctl-unshared"
+    "kv3_hg_v1p4@3:fix=kvplanr5-d26ctl-unshared",
+    "kv3_hg_v1@1:fix=55256552eef2"
    ]
   },
   "s81": {
