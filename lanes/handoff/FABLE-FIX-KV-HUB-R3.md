@@ -20,6 +20,42 @@ Read lanes/handoff/FABLE-FIX-KV-HUB-R2.md first; this file only adds what change
 - hroot B2 bind was hung (bind.py elab 4 h CPU, no output; normal 15 min): cancelled, relaunched once as B3
   (r3/gate_bind_r3.sh = gate_bind_d25.sh + python -X faulthandler on elab; out bindgate_b3).
 
+## STAND-DOWN 12:5x PST (context limit). Successor FABLE-FIX-KV-HUB-R4. Read THIS block first; nothing was cancelled.
+### Live unit (the only one running)
+- D27d2 chain: unit oth-ubuntu-1514022-1795293368 on epyc8, intel2 client 2530245, script epyc8 fable-fix-kv-hub/r3/chain_h2_r3.sh,
+  log intel2 ~/tmp/fablefixkvhub-r3/chain_h2.log, out epyc8 fable-fix-kv-hub/hub_h2/ (plans/, rows/, g0gate/gate.out, bindgate/gate.out).
+  Steps in ONE unit: tree_h2 = cp -al of KV-PLAN-R6 D27d2 tree (kv-plan-r3/d27c/tree, plan a39def2ca080, strict bind 0 errors) + views/pins
+  -> kvh_place_r3 (done: same hops, Wo ft2_i 287, Eo ft30_i 300, ft31_i 373) -> landing_remap resel -> collector_reattach -> hard_ring_wreg
+  -> compose2.py (row fields + hub_Wo stage-0 row if still at [986.461,829.3] + kv3_hub_Wi pads io_pad_die_id) -> G0 (~25 min)
+  -> strict bind + LATCHECK via r3/bind_gate_r3b.sh (~1.5 h, OT_BIND_PLAN_PACKAGE=off). The chain stops (exit 5) if G0 is not PASS.
+  Watcher: timeout 21000 ssh -n -o ControlPath=none intel2 'export OT_LANE=FABLE-FIX-KV-HUB-R4; ot-wait 2530245 --poll 120; tail -25 ~/tmp/fablefixkvhub-r3/chain_h2.log | cut -c1-400'
+  Read: RC_S1/RC_S2, CHAIN_DONE plan sha, RC_G0, then hub_h2/bindgate/gate.out RC_BIND / BIND_ERRORS (expect 0; R8_STALE -> r3/chain_r8_r3.sh
+  form: r8_refresh on tree_h2 then rebind). Final rows of this base: hub_h2/rows_final_d28.json -> post to KV-PLAN-R6.
+### Finished binds (D27d base, evidence only; no kit possible from them: kit_wave run-item needs a bind of record with 0 errors)
+- hub rings bindgate_h2 (tree_h, plan b5bd29148814): D27d baseline 27 errors + 1 hroot variant-B line; ring rows add 0 lines; hub_Wo emits.
+- hroot bindgate_b5 (tree_b, plan 9ec33fa3c347, variant B): same 28; the extra is "EMIT kv3_hroot: raw Q rst_rl_110: exactly one same-clk plain
+  relay required". Variant B needs landing_remap --resets resel --types kv3_hroot (KV-PLAN-R6 12:27 ROOT-CAUSE post: OLD=D26 plan, NEW=own
+  plan, last step before bind) and must be rebased on a39def2ca080 (or D27d3). NOT done. hroot kit b1 never built.
+- private-spec hub_Wo item on tree_h (spec .../qwen_kvsys_kv3_hub_Wo_1121122822): FAIL at stage bind ("BIND errors 28"), ended; no place ran.
+### Type state
+- kv3_hub_Eo / kv3_hub_Wo: 450k placed, over cap. Fix = 9 hard ring cores per type (rows + 5 SIGNED re-frozen masters + views, see below),
+  expected ~320k placed. NO place census yet. Wave: KV-PLAN-R6 parked retries and holds hub_Eo; D26 hub_Wo fails kit preflight
+  (cland_band_legal_site, stage-0 row in my rows). Optional step 2 (W540 delay line hard core) only if the census needs it.
+- kv3_hub_Wi (owned here): KV-D26 FAIL_PREFLOOR port_bind, extra io_pad_die_id[2:0]. Row in compose2.py (pads += io_pad_die_id in 3),
+  first proof = this chain's G0 + bind, then private-spec hub_Wi kit gen PORT_BIND. KV-PLAN-R6 also asks a qkd_hr_core_peer.lef exact-OBS
+  re-export (view_export b49b697c40) as a D28 row: not started.
+- kv3_hub_Ei: no rows (reserved-row wall fixed in D26+ plans); a route is running under FLOW-OPS-1000 in the wave, not mine.
+- kv3_hub_C: not my rows (FAM-KV-HUBC-SYSC; fix 9 window rows never started here). Dependency: FLOW-OBS-GCELL-R2 12:14 FINDING - qkd_ahub
+  ck[0..6] and qkd_kvs_ctl ck are interior 0.048 M5 clock pins under a full M1-M7 blanket OBS (no access point, DRT-0073 at GRT). Any
+  hub_C kit needs access windows in those two views from FLOW-OBS-GCELL-R2 / the view owner first; do not launch hub_C route before that.
+### Pin in clock site (COORD 11-21)
+- tools/die_plan/kit_pin_site_check.py KIT (main a137683011): hub_Eo/Wo/Wi have 22-24 face pins inside clock-site OBS on D26, D27d, D27d2
+  = guaranteed route shorts. Cure = KV-PLAN-R6 clksite_pinclear -> D27d3 (bind start ~13:30, apply ~16:30-17:00 PST). Run the check on every
+  hub kit after gen and before place. A tree_h2 (D27d2) kit will have hits: use it for a PLACE CENSUS only, never route/sign-off.
+  For a signable kit: rerun chain_h2_r3.sh form on the D27d3 tree (BASE_SHA=<d27d3 sha>, new T/O names; pinclear moves clock sites so the
+  placer must rerun), then private-spec kits (--tree, --plan, --bind-out, --src-manifest off, --host epyc8, --rt <tree rt>; rt older than
+  main eeeac8421b7c needs --ab OT_BIND_PLAN_PACKAGE=off --why ...). A sign-off build needs a src_manifest tree or KV-PLAN-R6 carrying the rows.
+
 ## 12:4x PST state (supersedes the Live/Next below where different)
 - Bind hang ROOT CAUSE: plan_package._gate_uncached quadratic scan on a private cp -al tree (stack via faulthandler). Fixed on main
   eeeac8421b7c; older rt snapshots (4e46a7ec46c5) need OT_BIND_PLAN_PACKAGE=off (r3/bind_gate_r3b.sh; private-spec --ab ... --why).
