@@ -76,3 +76,5 @@ Written 2026-11-21 06:2x PST. Posts lanes/posts/OPUS-FIX-KV-PV-R5.md. Hub dir in
 - 13:05 PST: cancelled D26 v4n@1 (-338) / v5n@1 (-805). Push of split_bind_routes waits for FLOW-STRIPBODY step 1 (a69922840c577478e) on main + rebase; if 8d passes first: post READY and wait.
 
 - PUSHED split_bind_routes fix main @3a68739125 (14:xx PST). Step 3 type_split held (stack on STRIPBODY step 1 or SVC-R8 port fix, first to land). tree5 type_split.py = lane-clone tsplit branch + istation-rows-move fix (not yet in any clone commit; diff vs split28/type_split.tree5_r5b.py).
+
+- Committed (not pushed) station-rows-move-with-core fix: epyc7 lane clone /srv/opentallas-scratch2/claude/opus-fix-kv-pv-r4/repo branch claude/opus-fix-kv-pv-r5-tsplit (on 3a132dd5b5), + test_core_move_carries_its_internal_station_rows; test_type_split all pass. Step 3 held (stack on STRIPBODY step 1 or SVC-R8 port fix; push from an epyc8/epyc10 clone, not epyc7).
