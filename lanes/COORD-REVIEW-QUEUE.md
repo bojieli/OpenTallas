@@ -15466,3 +15466,4 @@ FAIL_POSTCTS final GRT released TT/FF policy (grt_policy.json)) job a87e884a6f73
   All other routing rows are at -300 or better and keep running.
   (b) Fresh-gen retry: only phy__t1 (not J6-superseded, no J5 row). retry phy__t1@5 + stage_resume_off phy__t1 (kit_wave ccb981881e6), plus struct-force once on block 849bb9166cae, because the J5 block equals the cancelled D8i block. Skipped as J6-superseded / J5 row present: c1x t9 (slice C D=3; J5 a1 ROUTE-HELD), kv_leaf t5 (held, J5 row routing), slice_station t18 (held, J5 row ROUTE-HELD).
   (c) The 19 ROUTE-HELD rows stay held for J6. The 405 reach override on J5 is untouched.
+- 2026-11-20 21:11 PST DIED [head-plan-r16] ot-push-main otpush-civil-redfish-1201410 on civil-redfish: rc=4 after 20 s, ended 05:11:01, log none, cmd: ot-push-main 
