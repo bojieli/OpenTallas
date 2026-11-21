@@ -6234,7 +6234,7 @@
     "ot_s81sl_leaf__t74@5": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x)",
     "seqhost__t1@5": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x)",
     "serdes__t13@1": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x) [old-src attempt stopped 15:0x]",
-    "serdes__t14@4": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x)",
+    "serdes__t14@4": "INFRA FAIL-CLASS a2e8efcde6 E2BIG at flow_files_refresh (old rt), fixed main 257642da66; FAM-S81-SERDES-R6",
     "serdes__t16@2": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x) [old-src attempt stopped 15:0x]",
     "serdes__t3@2": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x)",
     "serdes__t4@2": "S81-J6-ASSEMBLY-R4 11-21 08:0x: fix=a0fc9811a19 class CTS pre_cts serdes_cohorts_env unfit light-root groups (reset_cohort_model.py union kept a part without its light root); wave tools a9ed808a98d5 carry it. Struct stop released only after FAM-S81-SERDES-R4 private t4 kit s81_serdes__t4_1121074458 ends (no duplicate).",
@@ -7214,7 +7214,8 @@
     "svc_lo_dsdv_svc_rs__t1@7": "FLOW-FIX: S81-KITRTL-NETMAP-1118 main c2c35717a15 (t56 kit_ln_copies), 6f3e1709216 (svc apply_kit resolved bound path); verified on the d8t bind (svc closure 4 steps pass, t56 kit-rtl completes)",
     "svc_lo_dsdv_svc_rs__t3@7": "FLOW-FIX: S81-KITRTL-NETMAP-1118 main c2c35717a15 (t56 kit_ln_copies), 6f3e1709216 (svc apply_kit resolved bound path); verified on the d8t bind (svc closure 4 steps pass, t56 kit-rtl completes)",
     "svc_lo_dsdv_svc_rs__t6@7": "FLOW-FIX: S81-KITRTL-NETMAP-1118 main c2c35717a15 (t56 kit_ln_copies), 6f3e1709216 (svc apply_kit resolved bound path); verified on the d8t bind (svc closure 4 steps pass, t56 kit-rtl completes)",
-    "__batch_s81colflow_lpbbspec_1330": "2 LP rows FAIL gen macro_param_blackboxes no RTL header for ot_s81_mu72_lnland_nst -> 2 tree files declare it -> fixed 831cbc90e8d (header from the core spec.json sources, portfix178), in rt/current; S81-COL-FLOW-1118 per COORD"
+    "__batch_s81colflow_lpbbspec_1330": "2 LP rows FAIL gen macro_param_blackboxes no RTL header for ot_s81_mu72_lnland_nst -> 2 tree files declare it -> fixed 831cbc90e8d (header from the core spec.json sources, portfix178), in rt/current; S81-COL-FLOW-1118 per COORD",
+    "serdes__t12@3": "INFRA FAIL-CLASS a2e8efcde6 E2BIG at flow_files_refresh (old rt), fixed main 257642da66; FAM-S81-SERDES-R6"
    },
    "place_spill": true,
    "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
@@ -37370,7 +37371,9 @@
     "serdes__t14@2",
     "slice_station__t29__clc7772371@7:fix=4f638b4e9f8d",
     "slice_station__t45@8:fix=4f638b4e9f8d",
-    "slice_station__t6__cl0755c26e@7:fix=4f638b4e9f8d"
+    "slice_station__t6__cl0755c26e@7:fix=4f638b4e9f8d",
+    "serdes__t12@3:fix=257642da66",
+    "serdes__t14@4:fix=257642da66"
    ],
    "bound_trees": [
     {
