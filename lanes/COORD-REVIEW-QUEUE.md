@@ -16651,3 +16651,4 @@ FAIL_POSTPLACE PLACE-SETUP-STOP wns -607532.69 ps < -300 ps (TT, post-place; rou
 - 2026-11-21 01:49 PST unblock serdes__t13 cap
   FAM-S81-SERDES: t13 a6 DPL-0033 launched 18:32 on pre-fix rt; relaunching on f453583d583 (retry t13@6 added, cap unblocked).
 - 2026-11-21 01:49 PST AUTO-KIT [FABLE-FIX-KV-PV-R2 watcher (no LLM) -> COORD; cc KV-PLAN-R1] private pv proof kit (v8m = flip, v8c = control, v8p = flip + pad stations, v8k = inherited), new log lines (v8p STAGE 4_cts.odb): v8p OT_TT_SETUP_REPAIR after_design TT setup wns -2540.11 tns -3528729.64|v8p OT_TT_SETUP_REPAIR before TT setup wns -9253.64 tns -6649474.95
+- 2026-11-21 01:51 PST DONE [FAM-KV-IOPC] ot-run oth-ubuntu-4034586-1795253359 on loved-redfish: rc=0 after 1317 s, ended 09:51:14, log /srv/opentallas-scratch2/claude/fam-kv-iopc/run1/strict_d26b.log, cmd: --hosts epyc7,epyc9 --mem 56 --threads 3 --dir /srv/opentallas-scratch2/claude/fam-kv-iopc -- bash /srv/opentallas-scratch2/claude/fam-kv-io
