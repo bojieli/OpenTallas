@@ -1,3 +1,106 @@
+# FABLE-CLOSURE-STRATEGY 2026-11-20 17:35 PST (lane FABLE-CLOSURE-1730, the 17:30 round): the held S81 rows at -600 to -1,015 are fixes that are on main but not in the J5 source tree, plus landing-monitor pins that J5 moved up to 2,900 um from their monitor
+
+Reviewer: FABLE-CLOSURE-1730 (Fable). Read-only: no job launched, cancelled or patched; no STA run, no DB opened.
+Gate: DRC 0, routed TT >= -42 ps at 833 ps, internal FF hold >= 0, LEC, bind + LATCHECK. Hop cap 300 um. No die or outline growth. Nothing below is a new gate or hold.
+Marking: **V** = I opened the file or ran the read this round. **R** = reported by the named lane. **I** = inferred. **P** = proposal.
+Delta on 15:15. Its levers and stop list stand. Scripts: `scratchpad/r1730/ps.py` (worst path per group, buffer / gate / wire split), `mon.py`, `monc.py` (monitor seat against its pins), result `monc.tsv`.
+
+## 0. Headline
+
+1. **None of the held S81 rows at -600 to -1,015 is set by slew, a reset leg or a missing lockup (V).** They are three other mechanisms (section 1): a proven RTL fix that the pinned J5 source tree does not carry (seqhost; lepe / lepw LP), landing-monitor pins that J5 placed far from the monitor (iqf, slice_station t36, seqhost second group), and one form S start leg (slice_station t6).
+2. **J5 regression, new (V): the `cland_dn_ready_* / cland_dn_fault_*` pins are no longer at their monitor.** slice_station t36: pin (1329, 1224), monitor seat (31, 465), 2,057 um; the same type on event 3fa87b84b18 has 31 um. Of 79 J5 types with a monitor and a generated kit, 29 are over 300 um and 17 over 500 um. Most of these have not reached place yet and will be held the same way.
+3. **The family lever after slew, reset and lockup is adoption, not a new construction rule.** What is proven on main is not what the wave builds: S81 source pin 3c913dbdfb23 (hwin file dated 11-16), KV tools 413 commits behind main, HEAD 904 behind (R, TOOLS-LAG posts 16:30). Each event has to carry the proven source and re-pin tools.
+4. **KV hub_Eo (-747) is a class neither reset tool covers (V):** a reset forward from a face register into a hard-core reset pin. `reset_leg_plan` skips macro sinks since 73717f6992; `fwd_reach` checks declared stations only.
+
+## 1. What sets the worst path on each held row
+
+Source (V): `3_detailed_place.rpt` of each held kit, placed, ideal clock, worst path per group. Delay split = buffers / logic gates / wire, in ps.
+
+| Kit (event) | WNS | Worst path | Split | Mechanism |
+|---|---|---|---|---|
+| S81 seqhost t1 (J5) | -1,015, TNS -2.0 M | `u_win.pe[4][1]` -> `u_win.mu_c[22]` | 19 buf 669 / 19 gates 986 / wire 166; no slew over 163 | logic depth in `dsdv_mu_hwin`. A |
+| same, second group | -625 | port `cland_dn_ready_1` -> `u_cland_monitor_1/u_ring.s_d` | 13 buf 604 / 1 gate / wire 463 | monitor pin 1,726 um from seat. B |
+| S81 iqf t1 (J5) | -1,040 (`fclk_in_cland_dn_0`), -730 (`clk`) | port `cland_dn_fault_0` -> `u_cland_monitor_0 ... u_wcc/m`; `u_rrl_17_t` -> `u_cland_monitor_0/align_c` | 17 buf 817 / wire 624; 16 buf 790 / wire 636 | monitor pin 2,337 um from seat. B |
+| S81 slice_station t36 (J5) | -766, -724 | port `cland_dn_fault_0` -> monitor ring; `u_rrl_268_t` -> monitor `oh[3]` | 15 buf 718 / wire 553; 14 buf 693 / wire 563 | monitor pin 2,057 um from seat. B |
+| S81 slice_station t6 (J5) | -424 | `u_rrl_168` -> `cland_fstart_ft3_o` | 11 buf 561 / wire 520 | form S of 15:15; no monitor in this type |
+| S81 lepe_mu_LP t2, lepe_nh_mus_LP t1, lepw_mu_LP t2 (J5) | -590, -630, -660; TNS -197 k to -505 k | SRAM `g_rx[1] ... u_rx_mem.g_bank[*].u_m/rd_out` -> `u_u_lep.u.rid[*]` | 13 to 14 buf 641 to 675 / SRAM + 4 gates 418 to 424 / wire 338 to 383 | unregistered memory read fanned over the type (rid class). A |
+| KV hub_Eo a3 (D25e3) | -747 | `u_bin_i_host_die_rst_n/q` -> core `u_astk_EN` pin `g_phys_fault_u_fault__rst_n[0]` | 23 buf 844 / wire 442 | reset forward into a hard-core pin, no stage. C |
+| KV hub_Wo a9 | -1,040 | `u_bin_i_astk_WN ... ep_zo/eq` -> `u_u_efault.fault` | 37 buf 1,143 / wire 539 | efault one-cycle reduce (PD-KV-1500) |
+| KV sys_c a7 | -987 | `u_bin_i_serdes_E_tx_up/q` -> `u_bout_o_dcal_dob/q[2]` | 29 buf 1,094 / wire 642 | L356 stations on the wrong bus (KV-PLAN-R2) |
+| QC sle_ctl padE0 a3 (A4) | -528 | `u_lpad_x_fw_p2_i.q[74]` -> core `u_u_ctl/cmd_q[108]` | 8 buf 403 / wire 382; one wire 117 ps at slew 371 | pad to core pin distance; `u_ctl` move (PD-QC) |
+
+**A. Source lag (seqhost, lepe / lepw LP).**
+- seqhost. The path is the same on three events: D8i attempt 16 -900, b05c -969 (CTS -946), J5 -1,015 (V). Floorplan WNS with zero wire is already -218 (V), so no placement, slew or relay row closes it. The fix exists: main 8e20268b5d83 (11-19, FABLE-FIX-S81-SEQHOST), a 0-cycle restructure of `dsdv_mu_hwin` with `keep_hierarchy`; gate depth into u_win flops 30 -> 13, u_win ends under 0 at CTS 4,895 -> 778 (R). The J5 tree file `kw45/src_s81_pin_3c913dbdfb23_d8j5_1117_work/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv` is dated 11-16, sha1 c312e4ec, with 0 `keep_hierarchy` (V, epyc8 and epyc9; same sha in the J5 kit `rtl/`). What stays after adoption (R): mu_c 134 ends at -997 and mu_rc 43 at -966, a reach class with a row in `FABLE-FIX-S81-SEQHOST-reach-row.json` (+2 / +1 source stations, mu_c / mu_rc seated at the core).
+- lepe / lepw LP. The reset proof moved the reset path to +212 and left WNS at -652 because this path was always the kit WNS. It is the rid class that RIP1 removed in proof6 (post-CTS -530 -> -404, R). The J5 kit `rtl/ot_s81sl_slice_lep.sv` has the `OT_S81SL_LEP_RIP1` branch and no define in `config.mk` (V). This is the owner rule "registered memory reads" not applied; leaf SRAMREG (0 of 75 types in the J5 base, R) is the same lever.
+
+**B. Landing-monitor pins (J5).** `landing_placement.tcl` seats `u_cland_monitor_N` FIRM where it sat before; `io.tcl` places the pins from `landing_contract.pins[].xy_um` (`landing_contract.io_tcl`, V). On J5 the two disagree:
+
+| Type | Monitor seat | `cland_dn_fault` pin | Manhattan um |
+|---|---|---|---|
+| slice_station t36, event 3fa87b84b18 | (31, 465) | (2, 467) | 31 |
+| slice_station t36, J5 | (31, 465) | (1329, 1224) | 2,057 |
+| iqf t1, J5 | (185, 31) | (1329, 1224) | 2,337 |
+| seqhost t1, J5 | (185, 31) / (906, 31) | (848, 3) / (1441, 1224) | 692 / 1,728 |
+
+- Census (V, `monc.py` on the newest gen dir of every J5 item on six hosts): 79 types with a monitor, 29 over 300 um, 17 over 500 um: svc_hi pvso_entry t1 / t2 2,901 / 2,904; svc_hi svc_rs t5 2,877; c1x_C t4 2,361; iqf t1 and lepw_mu_C t1 2,337; slice_station t36 2,057; seqhost 1,728; kv_leaf t2 1,610; slice_station t18 1,251; c1x_C t10 and col_h10_r1 pv69c7e9a6 1,163; c1x_C t1 895; serdes t3 619; svc_rs t2 529; col_h10_r2 cl8b686b3e 513. Between 300 and 500: leaf t7, c1x_C t3 / t5, iq_C t1, kv512_C t1, kv_leaf t3 / t4 / t5, gunit, col_h9_r0_p4 x2, col_h10_r2 clac068e56, lepw_mus_C t1.
+- Cause (I): J5 is the existing-clock form with no `start_tree.provider`; its bind was accepted with 84 `cland_mon_*` hops up to 5,005 um and 0 relays (R, S81-DIE-R4 12:05). The pin went to the new die-side source edge and the seat did not follow. Two types share the exact pin (1329, 1224).
+- The forwarded clock of the ring enters at the same pin, so part of the port-path number returns after CTS. The `u_rrl -> monitor` paths at -724 / -730 in group `clk` do not.
+- Fix (P): one rule in the landing contract: a monitor and its `cland_dn_*` pins are one site. Seat the monitor ring at the pin (the old form), and let J6 item 9 (die reset + monitor relays, e9af887233) deliver the hop on the die side. Where the monitor must stay (it also reads local taps), add in-kit stages on the two scalar pins and the forwarded clock at 300 um; scalar bits, flops in the tens.
+- First check, no build: `monc.py` on the J6 private bind kits. 0 types over 300 um.
+
+**C. Reset forward into a hard-core pin (KV hub_Eo; also lepe land D > 4).** `u_bin_i_host_die_rst_n` is a data lane ending on a core reset pin about 1,400 um away (23 buffers). Form R re-taps soft sub-instances and now skips macros; the right row for a macro reset pin is the KIT-RD-1 sink `relay_depth` (D = ceil(L / 300) - 1) that form L already writes for `u_u_land.rst_n`. The schema cap of 4 is too low: lepe nh_mus land needs 337 um per hop at D 4 (R).
+
+Side reading: on KV hub_Wo / hub_Eo / sys_c 15 to 30 `fclk_in_*` groups sit at -42 to -242 with 5 to 7 gates and 1 to 3 buffers (V). That is the ideal-clock reading of a landing input (PD-KV-1500 section 3), not a path class. Sort held rows on the `clk` and `asynchronous` groups, or on buffer count.
+
+## 2. Next family lever
+
+1. **Adoption per event (new).** S81 J6: `dsdv_mu_hwin.sv` at 8e20268b5d83 with `native_hwin_calendar.py`; `OT_S81SL_LEP_RIP1` + rows 1 to 4 on the four LP lep types; SRAMREG into the base. KV D27 and the next HEAD event: tools re-pin after a proof gen (r708 missing on both, R). Check per event: one diff of the event tree against main for every file named in a FIX lane's PUSHED post since the pin.
+2. **Landing infrastructure pins at their consumer** (section 1 B).
+3. **Reset generator completed:** macro reset pins by sink `relay_depth`; cap 4 -> 8 for reset sink rows; `--stage-sites` default if lepe r2 confirms (r1 bunched k0_1..3 at one spot, R); split of replicated relays with copy radius over 300 um (lepe `g_reset_balanced`, 454 / 687 um, R). After slew, the worst path of leaf t60 (CTS -493, `lpad_leafdn -> crr_vsw / vp rr.rst_n`) and QC cbf (-296, `rrl_500`) is this class (R, CORE-LIB-LIMITS 17:05).
+4. Lockup stays third: no J6 lockup row before proof2 (latches on the launch flop's leaf, ends-only) shows an "after" line. At my read proof2 was at place, WNS -305 (V).
+
+## 3. Rows per event
+
+- **J6 (S81, cut 11-21 13:00), in this order:** 1 source adoption: hwin + seqhost reach row; RIP1 + lepe rows 1 to 4; reset rows from the tool, not hand item 6 (5 types at -590 to -1,015 cannot sign without it). 2 monitor pin rule with item 9 (29 types). 3 col masters routed with the latch on the launch leaf (120 types). 4 leaf: reset-leg rows from the tool on every leaf type (t60's worst after slew), SRAMREG, per-lane spread rows; the leaf class floorplan only if its strict bind is 0 by the cut, else J7. 5 slice C finish leg D = 3 and taps (11 types). 6 slice_station / col `u_rrl -> cland_fstart` stages (form S).
+- **V1 (QC, cut 09:30):** 1 fabric strict 0 (q3: TYPE_SPLIT x4, SC_X3 open). 2 `reset.inst_taps` on every cb* type from main >= 73717f6992 (drop the `u_t30` row). 3 st_a `rs_s0` / `rs_s1` on one occupancy map (11 types, a global-place stop). 4 sle_ctl `u_ctl` move, and a sink `relay_depth` D 1 on `x_fw_p2 -> u_ctl/cmd_q` if the moved estimate stays under -42. 5 pad hoist + merged-class rows (ph6). 6 su_c `x_sc_o` 3 stations.
+- **D27 (KV, cut 11-21 20:00):** 1 efault staged form (4459f7ee18; 29 types). 2 sys_c: stations on `o_dcal_dob[2]` at 300 um, and the six 405-era rows re-sited. 3 core reset pin rows on hub_Eo / hub_Wo `host.*` forwards (section 1 C) + `reset.inst_taps` on pv / sys_c / hub_Wo. 4 pv: pad depth on the owner-response lines, see lever 6. 5 hgi_v1 collector leg stage. 6 tools re-pin; hub_C view re-freeze.
+
+## 4. Levers, ranked by impact
+
+| # | Lever | Evidence | Root cause | Fix | Owner |
+|---|---|---|---|---|---|
+| 1 | Adopt proven source into J6 | seqhost -1,015 on 3 events, zero-wire -218; lepe x3 -590 to -660; J5 tree hwin sha c312e4ec of 11-16; RIP1 define absent (V) | wave tree is pinned; a push to main reaches no kit until an event takes it | section 2 item 1; diff check per event | S81-DIE-R4 (J6), with OPUS-FIX-S81-LEPE |
+| 2 | Monitor pins at the monitor | 29 of 79 J5 types over 300 um, 17 over 500; t36 31 -> 2,057 um; -625 to -1,040 at place (V) | J5 existing-clock form moved the pin, seat unchanged | section 1 B; `monc.py` check on the J6 bind | S81-DIE-R4 + RESET-RELAY-GEN successor (`reach_relay_plan`, landing contract) |
+| 3 | Reset generator: macro pins, cap 8, stage sites, relay split | hub_Eo -747 (V); lepe land 337 um / hop at D 4; t60 CTS -493, cbf -296 after slew (R) | macro sinks skipped; cap 4; `relay_mid` does not spread | section 2 item 3 | RESET-RELAY-GEN-1530 successor; rows to the three die owners |
+| 4 | S81 col masters | 120 types on 2 builds, none routed (R) | synth host admission; latch form not yet proven | route both on the launch-leaf latch form after proof2 | S81-DIE-R4, LOCKUP-STATION-1130 |
+| 5 | KV D27 status and forward stages | hub_Wo -1,040, sys_c -987, hub_Eo -747 (V); efault form and hop check on main (R) | one-cycle die-crossing wires | section 3 D27 rows 1 to 3 | KV-PLAN-R2 |
+| 6 | KV pv pad depth | v8p `dly_spread` max hop 1,485 -> 1,228 um, chains over 300 um 7,163 -> 5,807, fail 32 (R, watcher 16:20) | `pad_min_stations` cuts segments, it adds no stages: D 7 to 11 over 3.1 to 3.6 mm is 330 to 510 um per stage (I) | raise D on the astk owner-response and vport pad lines to ceil(L / 300), +cycles; first name the 1,228 um chain and its D | FABLE-FIX-KV-PV-R2 -> KV-PLAN-R2 |
+| 7 | HEAD hd_lep0N: price the 56 default taps on the r14 form | 56 of 251 tap ports at default [-169.8, 0], 16,035 sinks; cross-tap flop ends 13,428 -> 2,171 without the modelled window (R); tr1 insertion 2,365 ps (R) | kit SDC window, not the tree | build with the 56 taps priced and core taps at pin + 553; tr2 root trunk only as second arm | FABLE-FIX-HEAD-LEP0N, HEAD-R14 |
+| 8 | QC V1 fabric + st_a + sle_ctl | 11 st_a global-place stops; sle_ctl -428 to -528 (V) | PD-QC-1600 | section 3 V1 | QC-PLAN-R5, UNIFY-TOOLS-R3 |
+
+## 5. Stop list (15:15 stands; plus)
+
+- No route, repair, retry or new row on the J5 seqhost and lepe / lepw LP kits. Their source cannot meet -42 (seqhost fails at zero wire).
+- No new RTL work on `dsdv_mu_hwin`, and no station row for u_win, before the 8e20268b5d83 form is in the tree and read.
+- No slew, reset-leg or lockup reading of iqf, slice_station t36 or any of the 29 types before the monitor pin distance is read. No relaunch from place of those types "for the slew limit".
+- No ranking of held rows by an `fclk_in_*` group at place unless the path has 10 or more buffers.
+- No hand reset row (lepe item 6); no re-tap of a macro reset pin by its centre; no reset sink row silently cut at D 4.
+- No J6 lockup row before the proof2 "after" line; no col master route on the midpoint latch.
+- No D27 pv row from `pad_min_stations` alone; v8p still has 5,807 chains over 300 um.
+- No HEAD sign-off on a 2.4 ns root insertion.
+- No FIX lane counted as landed on its PUSHED post. Landed means the event tree file matches.
+
+## 6. Not checked
+
+- Whether main HEAD still carries the 8e20268b5d83 hwin form (I read the J5 tree and kit only), and its GRT TT: kit2 / kit3 were never read after CTS.
+- Who placed the J5 monitor pins and whether J6 item 9 (e9af887233) already moves them: the cause in 1 B is inferred from two files and the bind note. The census read one gen dir per item; 45 items have no monitor or no gen dir on the six hosts.
+- How much of the port-to-monitor number returns after CTS. No J5 kit with a far pin has a CTS report.
+- All paths are placed, ideal clock, worst per group. End counts per class were not read; TNS is the only size measure.
+- kv512_C t1 (-997 at place, in the census) and lepw_mus_LP t2: path not read.
+- hub_Eo: whether the core registers `rst_n` internally. The pv arithmetic in lever 6 and the 1,228 um chain: not read from the kit.
+- reset r2 proofs (cbx, lepe) had no place report at 17:2x; pv r1 pending. HEAD lever 7 is taken from the lane's own census, no build exists.
+- KV D26 R3c gate, QC q3, t7 GRT iteration 10, leaf class floorplan: no result when read.
+
 # FABLE-CLOSURE-STRATEGY 2026-11-20 15:35 PST (lane FABLE-CLOSURE-1515, the 15:15 round): a late reset or start leg is the worst placed path class on three dies; the lockup proof moved the port classes through the clock taps; two proofs that later rows wait on are not running
 
 Reviewer: FABLE-CLOSURE-1515 (Fable). Read-only: no job launched, cancelled or patched; no STA run, no DB opened.
