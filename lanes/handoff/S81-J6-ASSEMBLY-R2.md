@@ -27,3 +27,10 @@ Apply order at or before 11-21 13:00 PST: C3d, else C3c, else C1n (never plain C
 - C1n gate still in bind (unit oth-ubuntu-152516-1795245393).
 - Apply order: C3g, C3i, C1n.
 - Token compile: helper agent working out the bound-mode compile on rt f453583d5830 in epyc10 s81-j6/tokc/.
+
+## 01:4x state
+- C1n GREEN (unit oth-ubuntu-152516-1795245393 exit 0): bind 0, LATCHECK 873/873, G0 0 new, PRE PASS. Fallback.
+- C3g/C3i try1: dead-input fix held; bind 7 errors = HARD_CORE_PARAM_ALL NO_RECORD on svc H8 cores (prov_1119 views have no config.mk). Fix: 10 registry entries from the svc lane's ksrc tools copy (epyc9 fable-fix-s81-svc-r2/ksrc, sources h259 build config.mk) added to each tree's tools/die_plan/hard_core_built_params.json by rows/reprove40svc/hcp_hook.sh (also listed as HOOK in J6_DELTAS.txt). Try1 logs/gates moved to *_try1.
+- Gates rerun (ELAB reused): C3g oth-ubuntu-4066259-1795254291, C3i oth-ubuntu-4066377-1795254291 (one of each; read logs/gate_candC3g.log / _candC3i.log).
+- Token compile: helper prepared epyc10 s81-j6/tokc (run_tokc.sh ROOT OUT, bound-data mode on rt f453583d5830; needs structural_tops/ in the bind out; root_c3g). Launch: ot-run --mem 24 --threads 8 --hosts epyc10 -- bash tokc/run_tokc.sh tokc/root_c3g tokc/out_c3g once C3g bind is green.
+- Pack decision: C3g green -> j6_pack.sh candC3g; else C3i; else C1n by 07:30 PST.
