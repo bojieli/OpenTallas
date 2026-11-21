@@ -549,6 +549,34 @@ if {[info exists ff_full_targets]} {
     ff_reserve_explicit [expr {round($x*$ff_dbu)}] [expr {round($y*$ff_dbu)}] [expr {round($w*$ff_dbu)}] [expr {round($h*$ff_dbu)}]
   }
 }
+# FF-CORE-BOX (FABLE-FIX-S81-LEAF-R4 11-21; S81 leaf t44 / t39 vp block, GRT overflow 59 k with 61 % inside lane core boxes):
+# ff_put_near took any free station-grid cell, also one under a placed hard core.  A 1,0xx-flop bank whose plan site sat in
+# or beside a lane core was made FIRM on the core and the legaliser then pushed it into the 11 to 28 um gaps around it.
+# A station-grid cell that touches a placed block (+ OT_FF_CORE_HALO_UM, default 1.08 um) is never a site: the spiral flows
+# round the core and the bank stays on one side.  OT_FF_CORE_SKIP=0 gives the old behaviour.  ff_core_hit is pure (tclsh test).
+proc ff_core_hit {boxes x y w h} {
+  foreach b $boxes {
+    lassign $b a bb c d
+    if {$x < $c && $a < $x + $w && $y < $d && $bb < $y + $h} { return 1 }
+  }
+  return 0
+}
+proc ff_core_boxes_of {rects halo} {
+  set out {}
+  foreach r $rects { lassign $r a b c d; lappend out [list [expr {$a - $halo}] [expr {$b - $halo}] [expr {$c + $halo}] [expr {$d + $halo}]] }
+  return $out
+}
+set ff_core_boxes {}
+if {![info exists ::env(OT_FF_CORE_SKIP)] || $::env(OT_FF_CORE_SKIP) ne "0"} {
+  set ff_cb_rects {}
+  foreach ff_cb_i [$ff_blk getInsts] {
+    if {![[$ff_cb_i getMaster] isBlock] || [$ff_cb_i getPlacementStatus] in {NONE UNPLACED}} continue
+    set ff_cb_b [$ff_cb_i getBBox]
+    lappend ff_cb_rects [list [$ff_cb_b xMin] [$ff_cb_b yMin] [$ff_cb_b xMax] [$ff_cb_b yMax]]
+  }
+  set ff_core_boxes [ff_core_boxes_of $ff_cb_rects [expr {round(([info exists ::env(OT_FF_CORE_HALO_UM)] ? $::env(OT_FF_CORE_HALO_UM) : 1.08) * $ff_dbu)}]]
+  puts "OT_FACE_FLOPS core boxes: [llength $ff_core_boxes] placed blocks are closed to the station grid (FF-CORE-BOX)"
+}
 # DRT0255 (FABLE-PD-DRT-1350 fix 3, opt-in OT_PG_PAIR_ROW_KEEPOUT=1): the landing-ring / ft-station / face-flop sites come from ff_put_near;
 # a std row under an M6 PG pair (pair + min spacing) makes the cell's straight hop run in a gcell row with 0-1 DRT-legal M6 tracks
 # (class A).  The pair rows are skipped, so a one-row hop is never a pair row; cells move by at most 2-3 rows, no plan event.
@@ -591,7 +619,8 @@ proc ff_pair_row_blocked {r} {
 proc ff_put_near {f x y} {
   # nearest free (column, row) cell of the global station grid around (x, y), spiral search
   global ff_gocc ff_x0 ff_y0 ff_x1 ff_y1 ff_rh ff_sw ff_cpitch ff_orient
-  global ff_ns_stride ff_ns_inset ff_dbu
+  global ff_ns_stride ff_ns_inset ff_dbu ff_core_boxes
+  if {![info exists ff_core_boxes]} { set ff_core_boxes {} }
   set nsface ""
   if {($ff_ns_stride > 1 || $ff_ns_inset > 0) && min(abs($y-$ff_y0),abs($ff_y1-$y)) <= 10*$ff_dbu} {
     set nsface [expr {abs($y-$ff_y0) < abs($ff_y1-$y) ? "S" : "N"}]
@@ -619,6 +648,7 @@ proc ff_put_near {f x y} {
         set cx [expr {$ff_x0+$c*$ff_cpitch}];set cy [expr {$ff_y0+$r*$ff_rh}]
         if {abs($x-($cx+$w/2))+abs($y-($cy+$ff_rh/2))>27*$ff_dbu} continue
         if {[llength [info commands ff_hits_explicit]] && [ff_hits_explicit $cx $cy $w [[$f getMaster] getHeight]]} continue
+        if {[llength $ff_core_boxes] && [ff_core_hit $ff_core_boxes $cx $cy $w $ff_rh]} { dict set ff_gocc "$c,$r" 1; continue }
         dict set ff_gocc "$c,$r" 1
         if {[$f getPlacementStatus] eq "FIRM"} { $f setPlacementStatus PLACED }
         if {[dict exists $ff_orient $cy]} { $f setOrient [dict get $ff_orient $cy] }
@@ -641,6 +671,7 @@ proc ff_put_near {f x y} {
         if {$c < 0 || $r < 0 || $c > $cmax || $r > $rmax || [dict exists $ff_gocc "$c,$r"] || [ff_pair_row_blocked $r]} continue
         set cx [expr {$ff_x0 + $c * $ff_cpitch}]; set cy [expr {$ff_y0 + $r * $ff_rh}]
         if {[ff_hits_explicit $cx $cy $w [[$f getMaster] getHeight]]} continue
+        if {[llength $ff_core_boxes] && [ff_core_hit $ff_core_boxes $cx $cy $w $ff_rh]} { dict set ff_gocc "$c,$r" 1; continue }
         dict set ff_gocc "$c,$r" 1
         if {[$f getPlacementStatus] eq "FIRM"} { $f setPlacementStatus PLACED }
     if {[dict exists $ff_orient $cy]} { $f setOrient [dict get $ff_orient $cy] }

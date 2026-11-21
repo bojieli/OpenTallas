@@ -217,3 +217,70 @@ def test_refused_quad_keeps_its_old_rows_and_no_row_gets_longer():
         assert max(H._hops(e)) <= max(400.0, max(H._hops(e0))) + 1e-6    # no row of the type is longer than before
     sited = {x["quad"] for x in r if x["result"] == "sited"}
     assert not (sited & refused)                                         # a quad is sited whole or not at all
+
+
+# ---- BANK FOOTPRINT (FABLE-FIX-S81-LEAF-R4 11-21): a site is a bank of flops, not a point ----
+def test_bank_rad_matches_the_measured_bank_sizes():
+    assert H.bank_rad(1) == 0 and H.bank_rad(257) == 11 and H.bank_rad(1025) == 23
+    # 1,025 flops: about 100 x 12 um on the 2.16 x 0.27 um station grid (measured in t44 3_place.odb: about 95 x 12)
+    assert 95 < 2 * H.bank_rad(1025) * H.CP < 105 and 11 < 2 * H.bank_rad(1025) * H.RH < 13.5
+
+
+def test_seat_bank_free_field_is_clean():
+    f = H.seat_bank((500.0, 500.0), 1025, [], [1000.0, 1000.0])
+    assert f["ok"] and f["R"] == f["R0"] == 23 and f["split"] == []
+
+
+def test_seat_bank_in_a_narrow_gap_between_two_cores_is_a_pile_up():
+    B = [("a", 0.0, 0.0, 100.0, 114.0), ("b", 110.8, 0.0, 210.8, 114.0)]
+    f = H.seat_bank((105.4, 57.0), 1025, B, [400.0, 400.0])
+    assert f["fit"] and f["pile"] and f["spill"] > H.FP_SPILL
+    assert H.clear((105.4, 57.0), B) > 4.32          # the POINT test alone passes this site at min-clear 4.32
+
+
+def test_seat_bank_astride_a_core_is_split():
+    B = [("ln", 100.0, 0.0, 120.0, 50.0)]
+    f = H.seat_bank((110.0, 51.6), 1025, B, [400.0, 400.0])
+    assert f["split"] == ["ln"] and not f["ok"]
+    assert (lambda g: g["ok"] and not g["pile"])(H.seat_bank((110.0, 80.0), 1025, B, [400.0, 400.0]))     # clear of the core by more than the bank height
+
+
+def test_seat_bank_goes_round_an_earlier_bank_and_the_outline():
+    a = H.seat_bank((200.0, 200.0), 1025, [], [400.0, 400.0])
+    b = H.seat_bank((200.0, 200.0), 1025, [], [400.0, 400.0], occ=[a["bbox_um"]])
+    assert b["R"] > a["R"]
+    edge = H.seat_bank((1.0, 1.0), 1025, [], [400.0, 400.0])
+    assert edge["fit"] and edge["bbox_um"][0] >= 0 and edge["bbox_um"][1] >= 0 and edge["R"] > a["R"]
+
+
+def test_check_counts_bad_per_lane_banks_at_gs0():
+    """GS 0 has no shared bank; the per-lane banks (3 stages a lane, stage 2 beside the lane in the 11-um column gap) are
+    seated and counted: split banks make the type OVER, pile-ups are reported"""
+    r = H.check(plan(), r"t99", 0)["ot_s81sl_leaf__t99"]
+    assert r["banks"] == 0 and r["lane_banks_fp_bad"] and all(b["flops"] == 523 for b in r["lane_banks_fp_bad"])
+    assert r["banks_fp_bad"] + r["banks_pile_up"] >= 8
+    assert (r["verdict"] == "OVER") == (r["banks_fp_bad"] > 0)
+
+
+def test_sites_rows_carry_the_footprint_and_shared_banks_are_clean():
+    P = plan()
+    rows = H.sites(P, r"t99", 2, 4.32)
+    assert all(r["fp_ok"] and not r["fp_pile"] and r["fp_split"] == [] and r["flops"] == 523 for r in rows)
+    r = H.check(P, r"t99", 2)["ot_s81sl_leaf__t99"]
+    assert all(b["fp_ok"] for b in r["bank_sites"])
+
+
+def test_banks_on_one_spot_stack_through_the_grid():
+    g = {}
+    a = H.seat_bank((200.0, 200.0), 1025, [], [400.0, 400.0], grid=g)
+    b = H.seat_bank((200.0, 200.0), 1025, [], [400.0, 400.0], grid=g)
+    c = H.seat_bank((200.0, 200.0), 1025, [], [400.0, 400.0], grid=g)
+    assert a["R"] == 23 and b["R"] > 30 and c["R"] > b["R"] and a["ok"]
+    assert sum(hi - lo + 1 for iv in g.values() for lo, hi in iv) >= 3 * 1025
+
+
+def test_one_bank_against_a_core_face_or_in_a_28um_channel_is_not_a_pile_up():
+    face = H.seat_bank((100.0, 208.64), 1025, [("a", 0.0, 0.0, 200.0, 200.0)], [400.0, 400.0])
+    assert face["ok"] and not face["pile"] and face["spill"] <= 1.6
+    chan = H.seat_bank((114.0, 200.0), 1025, [("a", 0.0, 0.0, 100.0, 400.0), ("b", 128.08, 0.0, 228.0, 400.0)], [400.0, 400.0])
+    assert chan["ok"] and not chan["pile"] and 1.5 < chan["spill"] < H.FP_SPILL
