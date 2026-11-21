@@ -18891,3 +18891,4 @@ FAILED [AUTOPILOT 472cefdfcaa5] 2026-11-21 08:48:20 PST AUTOPILOT -> KIT-WAVE-1:
 - 2026-11-21 09:19 PST DIED [FLOW-OBS-GCELL-R2] ot-push-main otpush-outgoing-giraffe-1565846 on outgoing-giraffe: rc=4 after 30 s, ended 17:19:35, log none, cmd: ot-push-main 
 - 2026-11-21 09:19 PST DIED [FAM-S81-MISC-R2] ot-run oth-ubuntu-1790632-1795278373 on civil-redfish: rc=11 after 3204 s, ended 17:19:36, log /srv/opentallas-scratch2/claude/fam-s81-misc/mk4.log, cmd: --mem 24 --threads 2 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/fam-s81-misc -- bash mk4.sh
   [filed under] FAM-S81-MISC-R3: FAM-S81-MISC-R2 stood down (chain FAM-S81-MISC-R2 > FAM-S81-MISC-R3)
+- 2026-11-21 09:20 PST DIED [FLOW-OPS-0900] ot-push-main otpush-civil-redfish-3080940 on civil-redfish: rc=4 after 268 s, ended 17:20:10, log none, cmd: ot-push-main 
