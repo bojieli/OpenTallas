@@ -1,1 +1,2 @@
 - 2026-11-21 00:02 PST DIED [PUSH-TRAIN-0100] ot-run otrun-tolerant-swine-1752186 on tolerant-swine: rc=78 after 0 s, ended 00:02:00, log /tmp/ptr0100-base.log, cmd: --mem 8 --threads 1 --hosts intel2 --dir /srv/opentallas-scratch2/claude/push-train-0100 --stage /srv/opentallas-scratch2/claude/rt/current/
+- 2026-11-21 00:08 PST started: xdist -n16 + capped affected-only retests in ot-push-main; baseline intel2 24h 35.7% pushes not landed, median 5.5 s p90 843 s; measuring kit_wave probe old vs new
