@@ -40,3 +40,17 @@ epyc7 same path (repo = lane clone used for the push, cone tools+rtl+physical/co
   cap; family split <v>w = g0+g2, <v>e = g1+g3, cut x 1080, +2 cycles on every pv input lane).
 - v8c NOT cancelled by me (started by FABLE-FIX-KV-PV-R2; lane rule: never signal what you did not start). Asked COORD to cancel unit
   oth-ubuntu-1801628-1795205288. My v8c wait will then end with CLIENT_ENDED.
+
+## Update 2026-11-21 0x PST: D28 split proof (COORD: prove on v3)
+- Pairing: all 16 D27 bound_b3 binds pair T0Q*={g0,g2} (b/b_d1), T1Q*={g1,g3} (b_d2/b_d3) (epyc8 opus-fix-kv-pv-r4/pairing2.py). Posted.
+- v8q place: WNS -492 ps, TNS -419k, floorplan non-tap 415k. v8c cancelled by COORD (its wait ended CLIENT_ENDED).
+- Private tree epyc8 /srv/opentallas-scratch2/claude/opus-fix-kv-pv-r4/split28/tree (hardlink copy of kv-plan-r2/d27/tree, plan fac662d8c549).
+  split28/prep.py moves the 2 v3 straddling windows west and writes spec.json; split.sh N runs type_split into qwen_kvsys/por_split_N.
+  por_split_6 = RC_SPLIT 0, now installed as plan_of_record (base kept as plan_of_record.base_d27). Split plan ead4fa55edcd:
+  kv3_pv_v3 (w: g0+g2) + kv3_pv_v3e (g1+g3), 11 cut buses/lanes, 9 lanes' fixed cycles changed (report.json).
+- split28/straddle_1080.json: every pv type has 1-4 windows/rings across x 1080 -> D28 must move them (no lattice cut avoids them).
+- type_split extension: epyc7 lane clone branch claude/opus-fix-kv-pv-r4-tsplit b461211ea7 (tests pass), NOT pushed yet: push after the bind
+  is green. The private tree tools carry the same patch (+ spec drops clock.reserved_sites_um for re-derivation).
+- Strict bind + LATCHECK: split28/bind.sh 1 -> split28/bindgate_1/gate.out (ot-run epyc8, client log intel2 ~/tmp/okpvr4/split_bind1.log).
+- Next: on green, gen one half (kv3_pv_v3e or v3) with kv-plan-r3/proofs/proof_kit.sh-style script pointed at split28/tree -> CTS; read
+  OT_CELL_CENSUS stage=cts + OT_CTS_POST_TIMING (post-hook) setup/hold; post to KV-PLAN-R3.
