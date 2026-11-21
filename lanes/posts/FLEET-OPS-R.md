@@ -898,3 +898,4 @@
 - 2026-11-20 19:30 PST ALERT [AUTO-CLEAN -> FLEET-OPS-R, COORD] epyc10: the automatic cleanup timer has not completed a pass for 136 min (limit 90 min): check `systemctl --user status ot-auto-clean.timer` on epyc10
 - 2026-11-20 19:30 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kw45 on intel1 wrote 64 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
 - 2026-11-20 19:45 PST ALERT [AUTO-CLEAN -> FLEET-OPS-R, COORD] epyc10: the automatic cleanup timer has not completed a pass for 151 min (limit 90 min): check `systemctl --user status ot-auto-clean.timer` on epyc10
+- 2026-11-20 20:05 PST HOST-REPORT 2026-11-20 20:05 | tolera L118.96/112 units0 free1116G | key-ca L147.55/112 units221 free259G | dear-c L115.65/128 units457 free211G | loved- L58.99/96 units45 free1301G | outgoi L310.17/96 units161 free552G | renewe L157.94/96 units75 free720G | civil- L106.10/96 units66 free759G
