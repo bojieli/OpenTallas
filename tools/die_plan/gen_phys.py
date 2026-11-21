@@ -4940,7 +4940,25 @@ def stack_rects(tn, r):
     return out
 
 
-def route_obstruction_lines(items, pins_by_layer=None):
+# FLOW-GRT-RESID 11-21 (COORD, OPUS-FIX-HEAD-SERDES-R4: hd_serdes sdr2c, all 1,263 reserved obstructions off the track grid, DRT-0255 on the one free M4 track below a column):
+# the site rectangle is a cell window grown by --margin-um 0.25, so its edges fall anywhere between tracks and leave a sliver track partly under the obstruction.
+# Outer edges of a reserved rect snap OUTWARD to the lattice midway between tracks (every track is then fully covered or fully free): layer -> (pitch, track
+# offset), the plan make_tracks of tools/die_plan/gen.py.  M1 / M2 stay (cell-internal, M2 rows irregular); escape-column edges are interior and are not touched.
+RESERVED_TRACKS = {"M3": (0.036, 0.009), "M4": (0.048, 0.024), "M5": (0.048, 0.024), "M6": (0.064, 0.032), "M7": (0.064, 0.032), "M8": (0.08, 0.04), "M9": (0.08, 0.04)}
+
+
+def snap_out(v, layer, hi):
+    """v (um) snapped outward (down for a low edge, up for a high edge) to the lattice off + (k + 1/2) * pitch of the layer's tracks; no table entry keeps v"""
+    import math
+    if layer not in RESERVED_TRACKS:
+        return v
+    pitch, off = RESERVED_TRACKS[layer]
+    k = (v - off) / pitch - 0.5
+    k = math.ceil(k - 1e-9) if hi else math.floor(k + 1e-9)
+    return round(off + (k + 0.5) * pitch, 6)
+
+
+def route_obstruction_lines(items, pins_by_layer=None, snap=False):
     """CLKSITE-RESERVE-1115: M1-M7 routing obstructions over the reserved die clock-tree cell sites, so the type's own
     routing keeps the site metal-free (the die cell's M1 pins and via stack to M8 need it).  items [(rect, [layers])] or
     [(rect, [layers], tap_escape)].  pins_by_layer {layer: [(xlo, ylo, xhi, yhi)]}: the type's own interior tap pins;
@@ -4954,7 +4972,12 @@ def route_obstruction_lines(items, pins_by_layer=None):
             ncol += k
             for a, b, c, d in pieces:
                 # site edges keep the legacy :g bytes (same edge as the other layers); only column edges are derived
-                a, b, c, d = (f"{v:g}" if v in (x0, y0, x1, y1) else _um_exact(v) for v in (a, b, c, d))
+                if snap:      # outer edges to the track lattice
+                    a, b, c, d = (snap_out(a, ln, False) if a == x0 else a, snap_out(b, ln, False) if b == y0 else b,
+                                  snap_out(c, ln, True) if c == x1 else c, snap_out(d, ln, True) if d == y1 else d)
+                    a, b, c, d = (_um_exact(v) for v in (a, b, c, d))
+                else:
+                    a, b, c, d = (f"{v:g}" if v in (x0, y0, x1, y1) else _um_exact(v) for v in (a, b, c, d))
                 q = f"[expr {{round({a}*$rs_u)}}] [expr {{round({b}*$rs_u)}}] [expr {{round({c}*$rs_u)}}] [expr {{round({d}*$rs_u)}}]"
                 out.append(f"odb::dbObstruction_create $rs_b [[ord::get_db_tech] findLayer {ln}] {q}")
                 n += 1
@@ -5034,7 +5057,7 @@ def reserved_sites_tcl(P, tn):
         pre = "\n".join(["# Generated (gen_phys reserved_sites_um): die clock-tree cell sites, permanent hard blockages.",
                           *head, "source /work/keepout_phys.tcl", "set rs_hard {}", *create(hard, "rs_hard"),
                           "ot_clear_keepout_physical $rs_b $rs_rects reserved_die_clock_tree",
-                          *route_obstruction_lines(hard_route, tap_rects),
+                          *route_obstruction_lines(hard_route, tap_rects, snap=os.environ.get("OT_RESERVED_SNAP", "1") != "0"),
                           *([f'puts "OT_RESERVED_SITES edge_pad_sites: {npad} route-obstructed sites padded E/W in placement"'] if npad else []),
                           # landing_placement.tcl packs ring/status cells around these (opt-in variable, default unset)
                           "set ::cland_avoid_rects $rs_rects",
