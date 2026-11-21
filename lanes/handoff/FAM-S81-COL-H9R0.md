@@ -14,3 +14,9 @@ Family: S81 col_h9_r0_p1..p6 (~60 unsigned). R3 keeps col_h9_r1/r2 + shared J7 c
 ## Next
 1. Waiter on the 4 DRT jobs; on sign-off of any: export, credit, hand row/settings to S81-J6-ASSEMBLY-R2 (J7) and relaunch siblings.
 2. If a rep fails: read the post-route reports; hold <0 after ECO -> structural hold; setup -> stations.
+## seg405 structural rows (FABLE-PD-S81-0440 item 6; COORD 04:5x) - 05:0x
+- Generator intel1 /srv/opentallas-scratch2/claude/fam-s81-col-h9r0/mkdepth405.py IN OUT ROWS [TYPE_RE]: every col_h9_r0 relay_depth row to D >= ceil(path/405)-1 (review metric path/(D+1)); RLYBR far-branch sinks of one xa_K/xb_K copy (bs0.i_x*, t1.x*i) share one D; cc_K_0 >= that D. Then FAM-S81-COL-R3 mkxalign.py (TYPE_RE ^col_h9_r0_) re-aligns bs1 (D = cc - x).
+- On J5: 300 rows / 60 types (bs0.i_x0/i_x1 1->2 x36, t1.xai/xbi 1->2 x60, y_cc_1_0 1->2 x60, y_x2_2_0 2->3 x48) + 72 xalign rows (bs1 i_x0/i_x1 D2, 36 types). rows_d405_j5.json, rows_xalign_d405_j5.json, plan_d405x_j5.json (sha 3fb28438).
+- ORDER for J7: after R3 relay rows and R3 xalign; run mkdepth405 then mkxalign on the J7 base (do not take R3's J5 h9_r0 xalign rows verbatim: cc D changes).
+- Gate: tree src1 (J5 src + rt f3db2d0e628f tools, as R3 src5), bind.sh = strict --all-gaps bind + LATCHECK + G0 (check.py, base vs new) via ot-run intel1 (bind_otrun.log; queued for memory 04:57). Hub chain intel2 fam-s81-col-h9r0/chain.sh -> kit_wave run-item wave/spec.json (rep pva4376595, spec from the live J5 a3 spec, src_manifest off) -> place/geom. Then route via run_kit.sh GOAL=route.
+- Not covered: xo0..3 port->port bus (placed hops 600-756 um on the rep, 580-630 on p1 pv697f40c9) is not a relay_depth row; next delta if the rep route misses.
