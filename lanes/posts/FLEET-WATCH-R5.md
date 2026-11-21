@@ -1,2 +1,3 @@
 - 2026-11-21 04:41 PST DIED [FLEET-WATCH-R5] ot-push-main otpush-dear-crayfish-1057725 on dear-crayfish: rc=4 after 267 s, ended 04:41:33, log /tmp/fw5-push.log, cmd: ot-push-main 
 - 2026-11-21 04:50 PST DONE [FLEET-WATCH-R5] ot-push-main otpush-dear-crayfish-1223729 on dear-crayfish: rc=0 after 283 s, ended 04:50:00, log /tmp/fw5-push2.log, cmd: ot-push-main 
+- 2026-11-21 04:50 PST reclaim fix + cancel-rows 900 s lock wait PUSHED to main @d629bdc540 (gate failure was test_kit_wave_grt_arm stub not reading stdin script; stub fixed, code unchanged). Waiting for rt/current to promote (still a5603de7c56b on all hosts); E9 poll /tmp/w8.sh still running (E9 ~159 GiB). epyc4 ssh: host key verification failed from localhost.
