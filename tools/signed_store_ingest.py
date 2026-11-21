@@ -30,6 +30,8 @@ def relto(path):
     the real path while the store paths name ~/coord; relative_to raised after the first host's entries were written and aborted the commit)"""
     return os.path.relpath(os.path.realpath(str(path)), os.path.realpath(str(COORD)))
 WINDOW_H = float(os.environ.get('OT_INGEST_WINDOW_H', 96))
+CHUNK_BYTES = float(os.environ.get('OT_INGEST_CHUNK_GB', 3)) * 1e9     # FLOW-CANARY-1121: new bytes per archive pass
+DEADLINE_S = float(os.environ.get('OT_INGEST_DEADLINE_S', 2600))        # stop starting passes before the 3000 s unit cap
 RATE = float(os.environ.get('OT_INGEST_MBPS', 40)) * 1e6
 HOST_TOOL = '~/.local/share/ot-autoclean-auto/ot-autoclean.py'
 LOCK = pathlib.Path.home() / '.local/state/fleet-viz/signed_store_ingest.lock'
@@ -194,7 +196,7 @@ def metadata_only(files):
     return [f for f in files if not DB_FILE.search(f[0])]
 
 
-def archive_host(h, cands, fails):
+def archive_host(h, cands, fails, max_bytes=None):
     """-> {path: {file: sha}} for the records whose every file is on the archive and equal to the host copy"""
     try:
         tool = host_tool(h)
@@ -206,17 +208,33 @@ def archive_host(h, cands, fails):
         o = json.loads(ln)
         if 'files' in o: o['files'] = metadata_only(o['files'])
         P[o['path']] = o
-    files = {}
+    files, recfiles = {}, {}
     for c in cands:
         o = P.get(c[0]['path'])
         if not o or 'files' not in o:
             fails.append([h, c[0]['path'], 'probe', (o or {}).get('err', 'no answer')]); continue
-        files.update({f[0]: f[1] for f in o['files']})
+        recfiles[c[0]['path']] = {f[0]: f[1] for f in o['files']}
+        files.update(recfiles[c[0]['path']])
     if not files: return {}, P
     base = ss.ARCHIVE_ROOT + '/' + h
     lst = '\n'.join(sorted(files)) + '\n'
     hash_ = 'nice -n 10 python3 -I %s hash --base %s' % (HOST_TOOL, shlex.quote(base))
     a0 = json.loads(run(AGI + [hash_], lst, 3600).stdout)
+    if max_bytes and len(recfiles) > 1:
+        # FLOW-CANARY-1121 (COORD): one epyc2 pass of 84 records / 23 GB outlived the 3000 s unit cap every hour from 11-20 05:51, so no record of
+        # any later host (epyc7/8/9/10) entered the store for 27 h.  Take the records smallest-first up to max_bytes of NEW bytes (at least
+        # one); the rest stay unselected and the caller loops / the next run takes them.
+        need = {p: sum(s for f, s in fs.items() if a0.get(f) is None) for p, fs in recfiles.items()}
+        keep, tot = {}, 0
+        for p in sorted(recfiles, key=lambda p: (need[p], p)):
+            if keep and tot + need[p] > max_bytes: break
+            keep[p] = recfiles[p]; tot += need[p]
+        if len(keep) < len(recfiles):
+            say(h, 'chunk: %d of %d records, %.2f GB new of %.2f GB' % (len(keep), len(recfiles), tot / 1e9, sum(need.values()) / 1e9))
+        recfiles = keep
+        files = {f: s for fs in keep.values() for f, s in fs.items()}
+        P = {p: o for p, o in P.items() if p in keep or p not in need}
+        lst = '\n'.join(sorted(files)) + '\n'
     todo = [p for p in sorted(files) if a0.get(p) is None]
     say(h, 'files', len(files), '%.2f GB' % (sum(files.values()) / 1e9), 'to send', len(todo))
     if todo and not stream(h, base, todo):
@@ -412,10 +430,10 @@ def main():
     for v in sel.values():
         byh[v[0]['scan_host']].append(v)
     if not dry:
-        for h in ORDER:
-            if not byh.get(h): continue
+        for h in ORDER * 8:                              # one pass per chunk; a host with more than CHUNK_BYTES comes round again
+            if not byh.get(h) or time.time() - t0 > DEADLINE_S: continue
             try:
-                sha, P = archive_host(h, byh[h], fails)
+                sha, P = archive_host(h, byh[h], fails, CHUNK_BYTES)
             except Exception as e:                      # one host's archive step never aborts the other hosts' records
                 fails.append([h, '*', 'archive step: %s: %s' % (type(e).__name__, str(e)[:160])]); say(h, 'ARCHIVE STEP FAILED', type(e).__name__, str(e)[:160]); continue
             for v in byh[h]:
@@ -429,6 +447,7 @@ def main():
                                      aliases={r['path']: ['%s:%s' % (x['scan_host'], x['path']) for x in v]})
                 except Exception as e:
                     fails.append([h, r['path'], 'ingest', str(e)[:200]])
+            byh[h] = [v for v in byh[h] if not (P.get(v[0]['path']) or {}).get('files')]   # processed (ingested or failed) this pass
             # COUNT-ARCHIVE-2 11-09: commit after every host, so a pass stopped at its time cap keeps what it ingested
             # (the 01:23 pass was killed at 40 min with 84 entries written and none committed)
             fresh = new[committed:]
