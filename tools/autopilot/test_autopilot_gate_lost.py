@@ -73,3 +73,17 @@ def test_postplace_setup_stop_precedes_missing_cts_gate(tmp_path):
     cls, kind, why = A.classify(c, {"exit": 6})
     assert (cls, kind, why) == ("STRUCTURAL", "place-setup-stop", stop)
     assert KW.queue_class({"status": "DONE-STRUCTURAL", "kind": kind, "reasons": why}) == ("place", "FAIL", "PLAN", stop)
+
+
+
+def test_postplace_setup_stop_in_fresh_route_log(tmp_path):
+    stop = "FAIL_POSTPLACE PLACE-SETUP-STOP wns -48290.74 ps < -300 ps"
+    k = kit_with_marker(tmp_path)
+    (k / "FAIL_POSTCTS").unlink()
+    runlog = k / "run_route.log"
+    runlog.write_text("make: Nothing to be done for 'place'.\n" + stop + "\n")
+    c = probe(k, time.time() - 600)
+    assert A.classify(c, {"exit": 6}) == ("STRUCTURAL", "place-setup-stop", stop)
+    old = time.time() - 7200
+    os.utime(runlog, (old, old))
+    assert "place_setup_stop" not in probe(k, time.time() - 600)

@@ -745,20 +745,26 @@ if so:
                 + "; STA-only re-sign on the signed child libs owed (KW-PROV-1)")
             s_.update(verdict="LOCAL_PASS_NEEDS_PARENT", local_verdict="SIGNED", release_qualified=False,
                       reasons=list(s_.get("reasons") or []) + [why[:400]])
+place_stop_re = re.compile(r"(?m)^FAIL_POSTPLACE PLACE-SETUP-STOP\b[^\n]*")
 for f in ("FAIL_PREFLOOR", "FAIL_POSTPLACE", "FAIL_POSTCTS", "FAIL_route"):
     p = os.path.join(K, f)
     if os.path.isfile(p) and since <= os.path.getmtime(p) <= until:
         text = rd(p)
         out[f] = text[-400:].strip()
         if f in ("FAIL_POSTPLACE", "FAIL_POSTCTS"):
-            stop = re.search(r"(?m)^FAIL_POSTPLACE PLACE-SETUP-STOP\b[^\n]*", text)
+            stop = place_stop_re.search(text)
             if stop:
                 out["place_setup_stop"] = stop.group()[:400]
 logs = sorted(glob.glob(os.path.join(K, "run", "logs", "asap7", "*", "base", "*.log")), key=os.path.getmtime)
 out["last_log"] = os.path.basename(logs[-1]) if logs else ""
 out["last_log_mtime"] = os.path.getmtime(logs[-1]) if logs else 0
 txt = "\n".join(rd(p, 200000) for p in logs if os.path.getmtime(p) >= since)
-runlog = rd(os.path.join(K, "run_%s.log" % goal), 400000)
+runlog_path = os.path.join(K, "run_%s.log" % goal)
+runlog = rd(runlog_path, 400000)
+if not out.get("place_setup_stop") and os.path.isfile(runlog_path) and since <= os.path.getmtime(runlog_path) <= until:
+    stop = place_stop_re.search(runlog)
+    if stop:
+        out["place_setup_stop"] = stop.group()[:400]
 alltxt = txt + "\n" + runlog
 out["runlog_tail"] = runlog[-600:]
 # HOLD-FLOW-R 11-16 (closure lever 4, WARNING ONLY, never a verdict): the CTS hold-buffer count of this run against the kit's

@@ -254,3 +254,10 @@ def test_cap_applies_to_rows_that_already_ran_many_attempts():
     ev = RS.record(st, D, I, 17, "gen", "FLOW", "KeyError: q (q.py)", t=1, event="E1", attempts_hint=17)
     assert ev and ev["event"] == RS.CAP_STATE and "17 failed attempts" in ev["why"]
     assert RS.record({}, D, I, 3, "gen", "FLOW", "KeyError: q (q.py)", t=1, event="E1", attempts_hint=3) is None
+
+
+
+def test_make_sigterm_without_oom_does_not_raise_memory():
+    assert not RS.is_oom("FLOW", "route-make-fail: make: *** [target] Error 241")
+    assert RS.is_oom("INFRA", "earlyoom SIGTERM on epyc9")
+    assert RS.is_oom("INFRA", "make: *** [target] Error 247")
