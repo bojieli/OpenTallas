@@ -6,3 +6,7 @@ Succeeds FABLE-FIX-S81-SVC-R3. Nothing changed, nothing pushed.
 - MPL-0020: no J5 row has reached 2_2_floorplan_macro. Predecessor waiter pid 3318246 posts J5-MPL-RESULT.
 - Siblings: release only after representative passes GRT.
 - Export on SIGN-OFF: AGIdock /archive + rtx-pro ~/signed-export-1114 with INDEX row (signed_store.py).
+
+## COORD ruling 18:5x
+- J5 svc_rs COUNTS (any-plan sign-off; only D8i svc mem_ar is do-not-count). No further ask.
+- Reset legs f02ccd50eb likely not in J5 pin (older tree); ADOPT-CENSUS-1800 checking. Do NOT rerun for it; J6 brings them. Keep waiting on ot-wait 4054260 (intel1).
