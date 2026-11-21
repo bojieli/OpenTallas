@@ -38,3 +38,4 @@ My local waiters die with this session: RE-ARM on every unit below.
   POST-hook CTS setup +141.35, hold -78.3; pre-GRT hold -69.3 port_in only (limit -240), setup +106.7; in GRT.
 - c1x_C census 6 yosys jobs epyc10 $W/census/t{1,5,6,7,8,10}/stats.json (running 1 h+); -> strip/body sizes to S81-J6-ASSEMBLY-R3.
 - t6 attempt_46: not live anywhere (posted). R1 benches/t9 epyc10 clients cancelled (never admitted).
+- census DONE: totals posted (t1 335k, t5 329k, t6 352k, t7 332k, t8 363k, t10 341k generic); per-module strip/body split still to compute.
