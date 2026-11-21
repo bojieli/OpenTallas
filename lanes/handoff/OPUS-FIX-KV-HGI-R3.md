@@ -9,6 +9,10 @@ Lane dirs: epyc7/epyc9 /srv/opentallas-scratch2/claude/fable-fix-kv-hgi (b8, b8d
 - ft26 reseat GRT epyc9 oth-ubuntu-3222492-1795259200 (Codex-launched, kit ft26_middle_0/gen_ft26_raw_reseat/kv3_hgi_v8,
   log intel2 ~/tmp/fablefixkvhgi/ft26_raw_reseat_grt.log): ft26 banks moved to the middle corridor, 0 added cycles. Pilot to GRT.
 
+- relayfit A/B (R3, 03:5x): copy of the ft26 reseat kit + OT_RELAY_MID_FIT=1, OT_RELAY_MID_MAX_HOP_UM=300 (config.mk tail),
+  epyc9 ft26_middle_0/gen_ft26_relayfit, client pid 3947845 on intel2 (HELD for epyc9 disk-ETA at launch), log
+  ~/tmp/fablefixkvhgi/ft26_relayfit_grt.log. Read: grep OT_RELAY_MID_FIT 3_3_place_gp.log (where hst3_g went), then congestion-N.rpt.
+
 ## Measured (R3, b8 congestion-10 + 4_cts.odb; scripts epyc7 fable-fix-kv-hgi/sc/r3_*.py|tcl, data rb/b8/)
 - The 49,891 is NOT at the ectl_Q landing core's pin face. Hot zone = the head2_e6/e7 street (x 302.4-388.8) at its south mouth
   y 1000-1060: vertical, gcell cap ~20 vs use 23-26. Cut y=1030 through the street: 5,313 nets (2,190 at y 1060-1200).
