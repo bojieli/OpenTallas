@@ -67,3 +67,12 @@ J5 live: event 224567138ab, src kw45/src_s81_pin_3c913dbdfb23_d8j5_1117_work, bi
   - ot-run --cancel ended lo t2, t5, t6.
   - The other 5 were relaunched by KW_SSH_RETRY (flow bug, posted), then stopped with kit_wave.py cancel-rows --old-plans-only (5 struct stops on D8i blocks).
 - Lesson: to stop a wave place stage, use kit_wave.py cancel-rows (dry run first), not ot-run --cancel.
+
+## 20:0x update
+- 6829d05470 (region auto-extend + inherit, PLACE-SETUP-STOP) is in rt/current 2aad63e13db8 on all 6 gen hosts. The 6 serdes watchers were retired by exact PID.
+- Kit patches after the place stage starts do NOT take effect: the sealed ot-job copy-back overwrites them. t14 a2 failed DPL-0033 that way.
+- Relaunch is the normal wave path: R-MINIMAL gives 1 automatic retry on the new tools sha.
+- NEXT:
+  - Confirm the first new-rt serdes kit (t4 a11, gen 19:46 on epyc10) logs OT_PLACE_REGION_EXTEND/INHERIT and passes DPL.
+  - If any serdes row fails DPL-0033 again on the new rt, add item@attempt to /dies/s81/retry only after reading why the auto-extend did not cover it (else -> FLOW-NOADV-R4).
+- serdes__t3 stays held until J6 (monitor pin).
