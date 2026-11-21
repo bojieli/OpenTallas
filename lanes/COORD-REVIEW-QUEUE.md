@@ -16664,3 +16664,4 @@ FAILED [AUTOPILOT 1c9b150b59df] 2026-11-21 01:52:57 PST AUTOPILOT -> KIT-WAVE-12
   KV (21): 4 FAILED-NO-RELAUNCH (1 new FAM-KV-HUB flow error) + 17 held/cancelled WAIT-BIND (1 new cancelled IOPC).
   HEAD none flagged (hd_lep0N running, LEP0N-R3). Context well below 330k.
 - 2026-11-21 01:53 PST DONE [FAM-S81-COL-R2] ot-run oth-ubuntu-1078281-1795254494 on tolerant-swine: rc=0 after 303 s, ended 01:53:15, log /srv/opentallas-scratch2/claude/fam-s81-col/wave/kit_rtl.live.log, cmd: --mem 8 --threads 2 --dir /srv/opentallas-scratch2/claude/fam-s81-col/wave/root/items/col_h10_r0_p1__t1__cl574cc59d__pvb095fa2f/attempt_1 --
+- 2026-11-21 01:53 PST STATE [MERGE-QUEUE -> COORD] drift cleared: epyc7: rt/current fbc23d503428 != hub 5d76c70f71f5
