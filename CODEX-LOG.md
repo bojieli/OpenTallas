@@ -14175,3 +14175,7 @@ Can the KV HGI score reset use local synchronous tails with the existing five-cl
 ## OWNER?
 
 Should the R8 checker treat the 32 ECTL-to-SLG AFK fault levels as independent of the tagged KREQ word, with the existing fault-tree and host service-admission timing kept as a separate contract? The exact local receiver returned the same tagged 1,024-bit row with AFK before, alongside, or after the request, and each injected fault propagated on its measured path. AFK still affects global service admission and reporting. Please confirm whether there is an additional host abort/report deadline tied to the in-flight KREQ tag before we change the checker scope.
+
+### Autopilot incident 2026-11-21 15:37–15:42 PST
+
+A route-review test fixture used the live Autopilot directory when redwatch ran it, replacing state.json at 15:37:11 with one synthetic job. The already-running pre-incident Autopilot tick retained its full state and saved it normally at 15:41:26. The recovered file has 6,521 jobs, including a8b37760eb06 RUNNING attempt 2 and df1946805779 WAIT-GEOM with the exact prior ISSUES hold, with no synthetic fixture row. No build scope was signalled. A coherent copy is at intel2:/srv/opentallas-scratch2/claude/lanes/FLOW-FIX-0400/ap_recovered_1121_1541.json. Autopilot admissions were briefly paused at its timer, then restored at 15:42. The ot-redwatch timer remains stopped pending canonical fixture sandbox fix and propagation. FLEET-WATCH-R8 owns the exact code correction. Keep the live file and the fresh recovered copy over older backups.
