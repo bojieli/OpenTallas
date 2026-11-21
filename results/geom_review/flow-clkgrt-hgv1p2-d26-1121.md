@@ -1,0 +1,7 @@
+# Clock-first comparison, KV D26 kv3_hg_v1p2
+
+I inspected the exact placed control overlay for official attempt 3. The main vertical channel is heavily used near the middle macro crossings. The overlay has interior clock taps positioned above macro outlines, and many sinks remain attached to a few corridor taps. The retained scan has eleven taps over macros, a maximum tap load of 10,009, 9,082 long register hops, and 387 collapsed relay pairs.
+
+Image: epyc7, /srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-D26/items/kv3_hg_v1p2/attempt_3/geom/auto_geom.png.
+
+Verdict: FAIL for route on this geometry. The read-only flow proof moves to the separately reviewed HEAD hd_spn checkpoint. Read the exact layouts of the two inherited place arms before any route decision.
