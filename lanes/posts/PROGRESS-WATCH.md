@@ -108,3 +108,4 @@
 - 2026-11-20 16:39 PST ALERT SELF-STOP s81: 2 job(s) stopped by the wave 354 s after its own SUBMIT (latest col_h10_r2__t1__clac068e56@1 at 16:29:18: superseded by attempt 17 of the same item)
 - 2026-11-20 16:39 PST ALERT STUCK-STATE s81_head: 1 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. hd_mesh, 2026-11-20 11:28)
 - 2026-11-20 16:49 PST ALERT SELF-STOP qwen_compute: 1 job(s) stopped by the wave 1220 s after its own SUBMIT (latest sle_fe_v1__cl8210183c@5 at 16:42:47: superseded by attempt 6 of the same item)
+- 2026-11-20 16:59 PST ALERT NO-PROGRESS s81_head: 17 eligible rows, 0 KIT-WAVE LAUNCH for 556 min (last 07:43); NO-LAUNCH x56
