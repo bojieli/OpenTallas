@@ -85,3 +85,8 @@ J5 live: event 224567138ab, src kw45/src_s81_pin_3c913dbdfb23_d8j5_1117_work, bi
 - RELEASE: once the RESET-RELAY-GEN-R3 legal-site fix is on main and in rt/current, run kit_wave_edit --unset /dies/s81/hold_items/<key> for both, plus any listed later.
   - Then confirm one clears kit_rtl.
 - Waiters (local tasks): t4 a11 place (t4wait.sh), GRT/PSS post tail, RESET-RELAY-GEN-R3 post tail.
+
+## 21:0x
+- ResetError fix confirmed: t28 a8 and c1x_C t6 a4 pass kit_rtl on rt 1c1857d4d157 (9cf14ee057). Holds were released at 62bd111a903. Recurrence watcher: intel2 rerr_watch.sh, PID 1453083, lists failures after 20:25.
+- Took over from R4: dsdv_slice_kv512_C__t1, iqf__t1, slice_station__t36. They stay held because J6 supersedes them (monitor-pin MON_UM 332 / 2337 / 2057 um).
+- lepe LP (lepe_mu_LP__t2, lepe_nh_mus_LP__t1) stay held: the J5 kit has no OT_S81SL_LEP_RIP1 define. This is a source item for J6, not reset reach. Reasons recorded in kit_wave ab19af0d49c.
