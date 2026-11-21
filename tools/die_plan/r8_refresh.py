@@ -45,7 +45,10 @@ def main(argv=None):
     ap.add_argument("--root", default=".", help="tree root the asbuilt paths are relative to (default: cwd)")
     ap.add_argument("--pin-pre"); ap.add_argument("--pin-extra")
     A = ap.parse_args(argv)
-    cmd = [sys.executable, "-I", str(HERE / "land_r8_derive.py"), "derive", A.plan, A.bus_groups, "--like", A.table, "--out", A.table]
+    tool = next((t for t in (HERE / "land_r8_derive.py", Path.cwd() / "tools/die_plan/land_r8_derive.py") if t.is_file()), None)
+    if tool is None:      # a copied r8_refresh.py outside tools/die_plan (QC b12 11-21): derive from the launch tree (cwd)
+        print("R8_REFRESH FAIL no land_r8_derive.py next to this tool or under ./tools/die_plan"); return 2
+    cmd = [sys.executable, "-I", str(tool), "derive", A.plan, A.bus_groups, "--like", A.table, "--out", A.table]
     if A.pin_pre:
         cmd += ["--pin-pre", A.pin_pre] + (["--pin-extra", A.pin_extra] if A.pin_extra is not None else [])
     r = subprocess.run(cmd, capture_output=True, text=True)

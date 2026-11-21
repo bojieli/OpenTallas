@@ -42,3 +42,27 @@ def test_main_derive_failure_propagates(tmp_path, monkeypatch):
     monkeypatch.setattr(RR.subprocess, "run", lambda *a, **k: R())
     ab = tmp_path / "ab.json"; ab.write_text("{}")
     assert RR.main(["p", "bg", str(tmp_path / "t.json"), "--asbuilt", str(ab)]) == 3
+
+
+def test_main_finds_derive_under_cwd_when_copied(tmp_path, monkeypatch):
+    import importlib.util
+    import shutil
+    d = tmp_path / "copy"; d.mkdir(); shutil.copy(RR.__file__, d / "r8_refresh.py")
+    root = tmp_path / "tree"; (root / "tools/die_plan").mkdir(parents=True)
+    (root / "tools/die_plan/land_r8_derive.py").write_text("")
+    spec = importlib.util.spec_from_file_location("rr_copy", d / "r8_refresh.py"); m = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(m)
+    seen = {}
+
+    class R:
+        returncode, stdout, stderr = 0, "", ""
+
+    def run(cmd, **k):
+        seen["cmd"] = cmd
+        return R()
+    monkeypatch.setattr(m.subprocess, "run", run)
+    table = tmp_path / "t.json"; table.write_text(json.dumps(dict(members=[])))
+    ab = tmp_path / "ab.json"; ab.write_text("{}")
+    monkeypatch.chdir(root)
+    assert m.main(["p", "bg", str(table), "--asbuilt", str(ab)]) == 0
+    assert seen["cmd"][2] == str(root / "tools/die_plan/land_r8_derive.py")
