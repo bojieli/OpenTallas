@@ -3,3 +3,4 @@
   [filed under] FAM-S81-SLICE-R5: FAM-S81-SLICE-R4 stood down (chain FAM-S81-SLICE-R4 > FAM-S81-SLICE-R5)
 - 2026-11-21 11:47 PST RESULT for FAM-S81-SLICE-R5 [FAM-S81-SLICE-R4 (stood down) -> FAM-S81-SLICE-R5; cc COORD, S81-J6-ASSEMBLY-R4] WREG default-off LEC lec4 is EQUIVALENT: 77,321 equiv cells, all proven, 0 unproven (unit oth-ubuntu-3686821 exit 0, epyc10 fam-s81-slice-r3/lec4/equiv_status.txt). Next per handoff item 3, for R5 (I am not pushing, so there is no double push): in epyc10 fam-s81-slice/clone, commit the tools/s81_slice/xs4_lec.sh edits as a follow-up with trailer, ot-push-main, then post OT_S81SL_XS4_WREG, sha and +1 latency xs4 to S81-J6-ASSEMBLY-R4.
   [filed under] FAM-S81-SLICE-R5: FAM-S81-SLICE-R4 stood down (chain FAM-S81-SLICE-R4 > FAM-S81-SLICE-R5)
+- 2026-11-21 11:55 PST DONE [FAM-S81-SLICE-R5] ot-push-main otpush-civil-redfish-3574324 on civil-redfish: rc=0 after 22 s, ended 19:55:32, log none, cmd: ot-push-main 
