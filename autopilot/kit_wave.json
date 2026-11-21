@@ -51133,7 +51133,7 @@
     "s29q103S4Q9N3"
    ],
    "src_manifest_hash": "05adcac27458cd62776d04c70bfd3fe5c68d0586cb8f651e65a02906cfc18d0c",
-   "tools_sha": "65f3f85d7c5fa1027622d43ef759816131b43e01",
+   "tools_sha": "b6934d7751d6335b6aab61d45e03f77b06b70fea",
    "only_items_prev_qcpin": [
     "cbf_q01",
     "cbf_q01_s2",
@@ -51567,7 +51567,9 @@
    "gen_host_min_free_gb": {
     "epyc9": 250,
     "intel1": 250
-   }
+   },
+   "tools_sha_prev_qcr11": "65f3f85d7c5fa1027622d43ef759816131b43e01",
+   "note_tools_sha_qcr11": "QC-PLAN-R11 2026-11-21 11:5x PST (COORD ruling 1, runtime move approved): die tools pin 65f3f85d7c5f (V1) -> b6934d7751d6 (rt/current, manifest; contains 3ed87c352a, 4f638b4e9f, f56d99cf55, 8d1cff9b1b, a0fc9811a19, 289287760f, 3fba1b4bc0). Runtime-only: kit stages already run the scheduler rt per launch (V2 launches 11:28/11:34 recorded tools_sha c2047d41ccdf / a13768301176, both carry the flow fixes); this pin moves the tool_skew reference, the apply/precheck pin and rt-prune protection. Running kits untouched. Revert: tools_sha = tools_sha_prev_qcr11."
   },
   "hbm": {
    "enabled": true,
