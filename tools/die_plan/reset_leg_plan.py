@@ -22,8 +22,15 @@ reset tree (reset_tree.py) already bounds relay-to-relay hops; the legs it does 
           spreads u_y_xd_* stages between their now fixed ends (--stage-sites seats them on the line instead).  A
           replicated relay (REGIONS copies) seats each copy at its own fanout, the synchroniser at the copies' centre.  When the relay is tree fed, form R moves its instance to the tap
           nearest the seated relay instead (0 cycles).
-  split   a group whose own fanout radius is over --reach cannot close from one point: listed (REGIONS / split by
-          quadrant is the fix, not done here).
+          COORD 11-21: the relay is walked as a TREE bottom-up; a flop whose targets no one point reaches is SPLIT into one
+          copy per k_cover cluster (relay_split, register duplication, 0 cycles); the entry chain is equal-depth stages
+          (straight to the entry centre, then one branch per entry copy).  Flattened bound relays (u_u_vp_u_rr) and crr
+          relay flops (u_u_crr_vsw) are groups too.  Stage sites are written by default (relay_mid left them bunched).
+  form F  a reset FORWARD: a relay-stage register (ot_dp_dly / ot_dp_st / crr bit) that carries a reset and feeds a local
+          relay, a crr flop or a hard-macro reset pin (geom_dump MR pin XY; KV hub_Eo face register -> core reset pin,
+          S81 leaf t60 u_lpad_leafdn_i0.q[0] -> u_u_crr_vsw).  Same tree rule on that one flop, entry stages as a
+          relay_depth sink row on the BITS of its own input port -- only when every bound use of the bit is a reset use.
+  split   a first synchroniser stage fed by a top-level pin is never split (listed).
 
   python3 -I reset_leg_plan.py PLAN TYPE BOUND_SV GEOM OUT_PLAN REPORT.json [--reach 300] [--local-taps]
           [--stage-sites [--stage-key FMT]] [--no-sites]
@@ -50,6 +57,10 @@ REACH_UM = 300.0
 MAX_D = 16                        # schema relay_depth.D maximum (COORD 11-21: reset release legs may take > 4 stages;
                                   # rst_n is held >= 64 clocks, owner 10-29, so the release depth is free)
 LOCAL = re.compile(r"^(?P<g>(?:.*?[./])?(?:u_rstr|u_rr|u_rst_relay\w*|u_rrelay\w*|g_rsreg(?:\[\d+\])?|rst_q))(?=[./\[$]|$)")
+# a flattened bound-level relay instance (S81 leaf u_u_vp_u_rr) and a clock-landing reset relay flop (u_u_crr_vsw)
+FLAT_LOCAL = re.compile(r"^(?P<g>u_\w*?_(?:u_rstr|u_rr|u_rst_relay\w*|u_rrelay\w*))(?=[./\[$]|$)")
+RELAY_FLOP = re.compile(r"^(?P<g>(?:u_\w*?)?u_crr\w*)(?=[./])")
+DATA_RELAY_MOD = re.compile(r"^(?:ot_dp_dly|ot_dp_dly_keep|ot_dp_st|ot_s81sl_crr)$")
 TREE_CELL = re.compile(r"^(?:u_rrl_\d+|u_srl_\d+|u_rst_root|u_rst_in|u_rsync_t\d+|u_cland_reset\w*)(?:[./_]|$)")
 # kit-rtl stage flop name: kit_relay_depth.apply instance {base}_{s} (ot_dp_dly, base u_y_xd_<sid>_<port>_k<row>); Yosys names
 # its flop <inst>.q (seen on the S81 lepe_nh_mus_LP t1 proof netlist: u_y_xd_u_u_land_rst_n_k0_0.q$_DFF_P_)
@@ -116,6 +127,13 @@ class Geo:
         self.D = D
         self.name = {c: key(v[6]) for c, v in D.cells.items()}
         self.kind = {c: v[0] for c, v in D.cells.items()}
+        self.mrst = getattr(D, "extra", {}).get("macro_rst_xy", {})
+
+    def sxy(self, c):
+        """a sink's XY: a hard macro's reset pins (geom_dump MR) when dumped, else the cell centre"""
+        if self.kind.get(c) == "M" and self.mrst.get(c):
+            return centre(self.mrst[c])
+        return self.xy(c)
 
     def xy(self, c):
         v = self.D.cells[c]
@@ -214,7 +232,91 @@ def local_groups(G):
         m = LOCAL.match(nm)
         if m and re.search(r"[./]", m.group("g")):
             gs[m.group("g")].append(c)
+            continue
+        m = FLAT_LOCAL.match(nm) or RELAY_FLOP.match(nm)
+        if m:
+            gs[m.group("g")].append(c)
     return dict(gs)
+
+
+def _widths(sv):
+    w = {}
+    for m in re.finditer(r"^\s*(?:input|output)?\s*(?:wire|reg|logic)\s*(?:\[\s*(\d+)\s*:\s*(\d+)\s*\])?\s*([A-Za-z_]\w*)\s*[;,]",
+                         sv, re.M):
+        w[m.group(3)] = abs(int(m.group(1)) - int(m.group(2))) + 1 if m.group(1) else 1
+    return w
+
+
+def bit_of(expr, b, W):
+    """the wire bit (name or name[i]) that bit b of a connection expression carries; None when not resolvable"""
+    e = expr.replace(" ", "")
+    if e.startswith("{") and e.endswith("}"):
+        for it in reversed(e[1:-1].split(",")):
+            n = _item_w(it, W)
+            if n is None:
+                return None
+            if b < n:
+                return bit_of(it, b, W)
+            b -= n
+        return None
+    m = re.fullmatch(r"([A-Za-z_]\w*)\[(\d+):(\d+)\]", e)
+    if m:
+        return f"{m.group(1)}[{min(int(m.group(2)), int(m.group(3))) + b}]"
+    if re.fullmatch(r"[A-Za-z_]\w*\[\d+\]", e):
+        return e if b == 0 else None
+    if re.fullmatch(r"[A-Za-z_]\w*", e):
+        return (f"{e}[{b}]" if W.get(e, 1) > 1 else e) if b < W.get(e, 1) else None
+    return None
+
+
+def _item_w(it, W):
+    m = re.fullmatch(r"([A-Za-z_]\w*)\[(\d+):(\d+)\]", it)
+    if m:
+        return abs(int(m.group(2)) - int(m.group(3))) + 1
+    if re.fullmatch(r"[A-Za-z_]\w*\[\d+\]", it):
+        return 1
+    return W.get(it) if re.fullmatch(r"[A-Za-z_]\w*", it) else None
+
+
+def fwd_entry(sv, key):
+    """(instance, input port, bits, wire bit) of the relay-stage flop `key` (<inst>.q[b] / <inst>/q of an ot_dp_dly /
+    ot_dp_st / crr instance in the bound module); None when the flop is not such a stage"""
+    m = re.fullmatch(r"(?P<i>[A-Za-z_][\w$]*)[./](?P<p>q)(?:\[(?P<b>\d+)\])?", key)
+    if not m:
+        return None
+    c = RC._calls(sv).get(m.group("i"))
+    if c is None or not DATA_RELAY_MOD.match(c["module"]) or "d" not in c["ports"] or "q" not in c["ports"]:
+        return None
+    b = int(m.group("b") or 0)
+    W = _widths(sv)
+    wb = bit_of(c["ports"]["q"][0], b, W)
+    dw = _item_w(c["ports"]["d"][0].replace(" ", ""), W) if not c["ports"]["d"][0].strip().startswith("{") else \
+        sum(_item_w(x, W) or 0 for x in c["ports"]["d"][0].replace(" ", "")[1:-1].split(","))
+    return m.group("i"), "d", ([b, b] if (dw or 1) > 1 else None), wb
+
+
+RESET_USE = (r"negedge\s+{t}\b", r"if\s*\(\s*!\s*{t}\s*\)", r"\.\w*(?:rst|reset)\w*\s*\(\s*{t}\s*\)",
+             r"assign\s+\w+\s*=\s*!\s*{t}\s*;", r"^\s*(?:wire|reg|logic)\b")
+RELAY_NAME = re.compile(r"crr|rly|_rr\b|rstr|rst_relay|rrelay")
+
+
+def reset_only(sv, tok):
+    """True when every use of the wire bit `tok` in the bound module is a reset use (async reset edge / test, a reset
+    port, an inverted reset copy, or the d of a reset relay instance): staging it moves reset release only"""
+    if not tok:
+        return False
+    t = re.escape(tok) + r"(?![\w\[])"
+    relay_d = sum(1 for i, c in RC._calls(sv).items() for p, (e, _a, _b) in c["ports"].items()
+                  if p == "d" and e.replace(" ", "") == tok and RELAY_NAME.search(c["module"] + " " + i))
+    n = ok = 0
+    for line in sv.splitlines():
+        k = len(re.findall(t, line))
+        if not k:
+            continue
+        n += k
+        if any(re.search(p.format(t=t), line) for p in RESET_USE):
+            ok += k
+    return n > 0 and ok + relay_d >= n
 
 
 def port_into(sv, inst, G, src_cells):
@@ -231,7 +333,7 @@ def port_into(sv, inst, G, src_cells):
     return hit[0] if len(hit) == 1 else None
 
 
-def type_delta(tn, t, sv, D, reach=REACH_UM, local_taps=False, sites=True, stage_key=STAGE_KEY, stage_sites=False):
+def type_delta(tn, t, sv, D, reach=REACH_UM, local_taps=False, sites=True, stage_key=STAGE_KEY, stage_sites=True):
     """mutates plan type dict t; -> report"""
     G = Geo(D)
     rep = dict(type=tn, reach_um=reach, inst_taps=[], local=[], relay_depth=[], needs_local_tap=[], split=[],
@@ -248,13 +350,15 @@ def type_delta(tn, t, sv, D, reach=REACH_UM, local_taps=False, sites=True, stage
     # duplication (same D / clock / reset nets), so every sink keeps the same release depth and cycle, 0 cycles.  A flop fed
     # by a top-level pin (an asynchronous source: a first synchroniser stage) is never split.  The group's entry leg
     # (its source -> its entry flop copies) on a signal-register source gets a relay_depth sink row of D stages.
-    for g, cells in sorted(local_groups(G).items()):
+    drv_pos = {}                                     # sink cell -> XY of the (copy of the) relay flop that now drives it
+
+    def relay_tree(g, cells, form, entry=None):
         cs = set(cells)
         fo = {c: G.fanout([c]) for c in cells}
         ext = {c: fo[c] - cs for c in cells}
         kids = {c: fo[c] & cs - {c} for c in cells}
         if not any(ext.values()):
-            continue
+            return
         par = defaultdict(set)
         for c in cells:
             for k_ in kids[c]:
@@ -271,22 +375,25 @@ def type_delta(tn, t, sv, D, reach=REACH_UM, local_taps=False, sites=True, stage
         srcs = G.sources(entries or cells)
         tree_fed = any(r[0] == "i" and TREE_CELL.match(G.name[r[1]]) for r in srcs)
         sp = [G.pxy(r) for r in srcs]
+        fed_moved = [drv_pos[c] for c in (entries or cells) if c in drv_pos]
+        if fed_moved:                            # its source (a reset forward) was seated / split first: from its copies
+            sp = sorted(set(fed_moved))
         S = centre(sp) if sp else None
         here = centre([G.xy(c) for c in cells])
         fan = set().union(*ext.values())
-        e = dict(group=g, flops=len(cells), fanout=len(fan), at=[round(v, 1) for v in here],
+        e = dict(group=g, form=form, flops=len(cells), fanout=len(fan), at=[round(v, 1) for v in here],
                  centre=[round(v, 1) for v in centre([G.xy(c) for c in fan])], tree_fed=tree_fed,
                  source=[round(v, 1) for v in S] if S else None)
         copies, over_b, over_a, splits, pend = {}, 0, 0, [], []
         for c in sorted(cells, key=lambda c: (hgt[c], G.name[c])):
             tg = {}
             for s in sorted(ext[c]):
-                tg.setdefault(G.name[s], seated.get(s) or G.xy(s))
+                tg.setdefault(G.name[s], seated.get(s) or G.sxy(s))
             for k_ in sorted(kids[c]):
                 for kk, xy in copies.get(k_, ()):
                     tg[kk] = xy
             me = G.xy(c)
-            orig = [G.xy(s) for s in ext[c] | kids[c]]
+            orig = [G.sxy(s) for s in ext[c] | kids[c]]
             if orig and max(l1(me, p) for p in orig) > reach:
                 over_b += 1
             if not tg:
@@ -312,8 +419,8 @@ def type_delta(tn, t, sv, D, reach=REACH_UM, local_taps=False, sites=True, stage
                                                        for n, j in enumerate(order) if n]))
         # entry leg: source -> entry flop copies
         ent = [xy for c in (entries or cells) for _k, xy in copies[c]]
-        in_now = max((l1(G.xy(c), p) for c in (entries or cells) for p in sp), default=0.0)
-        over_b += in_now > reach and not tree_fed
+        in_now = max((l1(G.xy(c), G.pxy(r)) for c in (entries or cells) for r in srcs), default=0.0)
+        over_b += in_now > reach and not tree_fed and not fed_moved     # a forward's leg is counted by its form F row
         in_after = max((l1(q, p) for q in ent for p in sp), default=0.0)
         moved = {k: xy for c in cells for k, xy in copies[c] if k != G.name[c] or l1(xy, G.xy(c)) > 1e-6}
         e.update(copies=sum(len(v) for v in copies.values()), split_flops=len(splits), in_leg_um=round(in_now, 1))
@@ -329,9 +436,13 @@ def type_delta(tn, t, sv, D, reach=REACH_UM, local_taps=False, sites=True, stage
         Lb = max(0, math.ceil(r_e / reach - 1e-9) - 1) if multi else 0
         Ds = max(0, math.ceil(l1(S, P) / reach - 1e-9) - 1) if (S is not None and P is not None) else 0
         Dn = Ds + (1 + Lb if multi else 0)
+        bits = None
         if not tree_fed and S is not None and moved and Dn > 0 and in_after > reach:
-            inst = top_inst(g)
-            port = port_into(sv, inst, G, [r[1] for r in srcs if r[0] == "i"])
+            if entry:
+                inst, port, bits = entry
+            else:
+                inst = top_inst(g)
+                port = port_into(sv, inst, G, [r[1] for r in srcs if r[0] == "i"])
             if port is None:
                 e["relay_depth"] = "unresolved port"
             elif Dn > MAX_D:
@@ -339,8 +450,10 @@ def type_delta(tn, t, sv, D, reach=REACH_UM, local_taps=False, sites=True, stage
             else:
                 k = len(rd_rows)
                 row = dict(inst=inst, port=port, side="sink", D=Dn, path_um=round(in_after, 1),
-                           note=f"RESET-RELAY-GEN-1530 form L: {g} fed from {e['source']}, seated at its fanout"
+                           note=f"RESET-RELAY-GEN-1530 form {form}: {g} fed from {e['source']}, seated at its fanout"
                                 + (f", stage at the entry centre + {Lb} branch level(s) x {len(ent)}" if multi else ""))
+                if bits:
+                    row["bits"] = bits
                 rd_rows.append(row)
                 rep["relay_depth"].append(dict(row, over_cap=False))
                 skey = [stage_key.format(sid=sv_id(inst), port=port, k=k, s=s_) for s_ in range(Dn)]
@@ -370,8 +483,13 @@ def type_delta(tn, t, sv, D, reach=REACH_UM, local_taps=False, sites=True, stage
         over_a += in_after > reach + 1e-6 and not tree_fed
         rep["legs_over_before"] += over_b
         rep["legs_over_after"] += over_a
+        for c in cells:                          # who drives each outside sink now (form L reads it for forwards)
+            cl_ = next((x for x in splits if x["flop"] == G.name[c]), None)
+            idx = {k_: n + 1 for n, x in enumerate(cl_["clones"]) for k_ in x["sinks"]} if cl_ else {}
+            for s in ext[c]:
+                drv_pos[s] = copies[c][idx.get(G.name[s], 0)][1]
         if not moved:
-            continue
+            return
         for c in cells:
             if copies[c][0][0] in moved:
                 seated[c] = copies[c][0][1]
@@ -381,6 +499,29 @@ def type_delta(tn, t, sv, D, reach=REACH_UM, local_taps=False, sites=True, stage
         rs_split.extend(splits + pend[::-1])
         e.update(seated=len(moved), in_leg_after_um=round(in_after, 1), legs_over_before=over_b, legs_over_after=over_a)
         rep["local"].append(e)
+
+    # ---- form F: reset FORWARDS.  A signal register that carries a reset (an S81 lane-pad bit leafdn_i0_q[0], a KV face
+    # register into a hard-core reset pin) and drives a local relay, a crr relay flop or a hard-macro reset pin: the same
+    # tree rule on that one flop (seat at its fanout, split per cluster), its entry chain as relay_depth stages on the bits
+    # of its own input port -- only when every use of that bit is a reset use (reset_only), else seated / split only.
+    lg = local_groups(G)
+    in_g = {c for cs_ in lg.values() for c in cs_}
+    cand = set()
+    probe = [cs_ for cs_ in lg.values()] + [[c] for c in G.mrst]
+    for cs_ in probe:
+        for r in G.sources(cs_):
+            c = r[1] if r[0] == "i" else None
+            if c is not None and G.kind.get(c) == "S" and c not in in_g and not TREE_CELL.match(G.name[c]) \
+                    and not G.name[c].startswith("u_y_xd_"):
+                cand.add(c)
+    for c in sorted(cand, key=lambda c: G.name[c]):
+        fe = fwd_entry(sv, G.name[c])
+        if fe is None or not reset_only(sv, fe[3]):
+            continue                             # not a reset-only relay stage: a data register keeps its placement
+        relay_tree(G.name[c], [c], "F", entry=fe[:3])
+    # ---- form L: module-local relays (and crr relay flops), after the forwards that feed them
+    for g, cells in sorted(lg.items()):
+        relay_tree(g, cells, "L")
     # ---- form R: tree-fed instances / banks
     taps = tap_cells(G, sv)
     txy = {i: G.xy(c) for i, c in taps.items()}
@@ -480,9 +621,10 @@ def main(argv=None):
     ap.add_argument("--local-taps", action="store_true", help="also write reset.local_taps_um for instances no tap reaches")
     ap.add_argument("--no-sites", action="store_true", help="no relay_sites rows (rows only)")
     ap.add_argument("--stage-key", default=STAGE_KEY)
-    ap.add_argument("--stage-sites", action="store_true",
-                    help="also site the relay_depth stages on the source -> relay line (default: relay_mid.tcl spreads u_y_xd_* "
-                         "stages between their fixed ends)")
+    ap.add_argument("--stage-sites", action="store_true", default=True,
+                    help="site the relay_depth stages evenly on the source -> relay line (default since 11-21: relay_mid.tcl "
+                         "left lepe stages bunched)")
+    ap.add_argument("--no-stage-sites", dest="stage_sites", action="store_false")
     a = ap.parse_args(argv)
     import geom_rules
     rb = Path(a.plan).read_bytes()

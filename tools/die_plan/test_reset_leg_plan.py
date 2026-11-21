@@ -359,3 +359,108 @@ def test_kit_istations_emits_relay_split():
                 {"flop": "u_a.r", "clones": [{"name": "u_a.r__rs1", "sinks": ["a b"]}]}):
         with pytest.raises(SystemExit):
             KI.relay_sites_only_tcl("t", {"relay_sites": {}, "relay_split": [bad]})
+
+
+# ---- COORD 11-21 (FABLE-CLOSURE-1730, CORE-LIB-LIMITS-1330 lever 4): reset forwards (form F), flattened relays, crr relay
+# flops, hard-macro reset pins, stage sites by default
+FWD_BOUND = """module dp_f (
+    input  wire clk,
+    input  wire [1:0] dn_i
+);
+    wire [1:0] dn_b;
+    wire dn_eb;
+    wire [1:0] dn_q;
+    wire dn_eq;
+    wire w_vsw_q;
+    wire w_inv;
+    ot_dp_st #(.W(2)) u_bin_dn (.clk(clk), .rst_n(1'b1), .d(dn_i), .ea(1'b0), .q(dn_b), .eq(dn_eb));
+    ot_dp_dly #(.W(3), .D(1)) u_lpad_dn (.clk(clk), .d({dn_eb, dn_b}), .q({dn_eq, dn_q}));
+    ot_s81sl_crr u_u_crr_vsw (
+        .clk(clk),
+        .d(dn_q[0]),
+        .q(w_vsw_q)
+    );
+    ot_rst_relay u_u_vp_u_rr (
+        .clk(clk),
+        .rst_n_in(dn_q[0]),
+        .rst_n(w_rr)
+    );
+    assign w_inv = !dn_q[0];
+    hard_core u_hc (
+        .clk(clk),
+        .rst_n(dn_q[1]),
+        .d(dn_b)
+    );
+    assign y = dn_q[1] & w_vsw_q;
+endmodule
+"""
+
+
+def fwd_design(tmp):
+    cells = [
+        ("S", "u_bound.u_bin_dn.q[0]$_DFF_P_", 995, 500),                    # 0 face station
+        ("S", "u_bound.u_lpad_dn.q[0]$_DFF_P_", 990, 500),                   # 1 the reset bit at the face
+        ("S", "u_bound.u_u_crr_vsw/q$_DFF_P_", 100, 500),                    # 2 crr relay 890 um away
+        ("S", "u_bound.u_u_vp_u_rr.rst_n[0]$_DFF_PN0_", 150, 520),           # 3 flattened bound relay
+        ("S", "u_bound.u_u_vp.a$_DFF_PN0_", 120, 540),                       # 4 vp logic
+        ("S", "u_bound.u_u_x.b$_DFF_P_", 80, 480),                           # 5 crr load
+        ("S", "u_bound.u_bin_dn.q[1]$_DFF_P_", 995, 510),                    # 6
+        ("S", "u_bound.u_lpad_dn.q[1]$_DFF_P_", 990, 510),                   # 7 data + core reset (not reset-only)
+        ("M", "u_bound.u_hc", 400, 100),                                      # 8 hard core, reset pin far from its centre
+    ]
+    nets = [("b0", "i0", ["i1"]), ("q0", "i1", ["i2", "i3"]), ("rr", "i3", ["i4"]), ("vsw", "i2", ["i5"]),
+            ("b1", "i6", ["i7"]), ("q1", "i7", ["i8"])]
+    D = dump(tmp, cells, nets)
+    return D
+
+
+def test_reset_only_and_bit_of():
+    W = RLP._widths(FWD_BOUND)
+    assert RLP.bit_of("{dn_eq, dn_q}", 0, W) == "dn_q[0]" and RLP.bit_of("{dn_eq, dn_q}", 2, W) == "dn_eq"
+    assert RLP.reset_only(FWD_BOUND, "dn_q[0]")                 # crr .d, relay rst_n_in, inverted copy
+    assert not RLP.reset_only(FWD_BOUND, "dn_q[1]")             # also used as data (y = dn_q[1] & ...)
+    assert RLP.fwd_entry(FWD_BOUND, "u_lpad_dn.q[0]") == ("u_lpad_dn", "d", [0, 0], "dn_q[0]")
+    assert RLP.fwd_entry(FWD_BOUND, "u_u_vp.a") is None
+
+
+def test_reset_forward_lane_pad_bit(tmp_path):
+    D = fwd_design(tmp_path)
+    t = plan_type()
+    rep = RLP.type_delta("f", t, FWD_BOUND, D, reach=300)
+    rows = {(r["inst"], r["port"]): r for r in t["relay_depth"]}
+    # the reset bit moves to its fanout (crr + vp relay ~850 um W of the face); its own input bit is staged from the face
+    r = rows[("u_lpad_dn", "d")]
+    assert r["bits"] == [0, 0] and r["D"] >= 2 and "form F" in r["note"]
+    x, y = t["relay_sites"]["u_lpad_dn.q[0]"]
+    assert x < 300
+    st = sorted(k for k in t["relay_sites"] if k.startswith("u_y_xd_u_lpad_dn_d_k"))
+    assert len(st) == r["D"]                                     # stage sites by default, spread on the leg
+    pts = [(995.0, 500.0)] + [tuple(t["relay_sites"][k]) for k in st] + [(x, y)]
+    assert max(RLP.l1(a, b) for a, b in zip(pts, pts[1:])) <= 300 + 1e-6
+    # bit 1 also carries data: untouched (no row, no site)
+    assert ("u_lpad_dn", "d") in rows and all(rr.get("bits") != [1, 1] for rr in t["relay_depth"])
+    assert "u_lpad_dn.q[1]" not in t["relay_sites"]
+    assert any(e["form"] == "F" for e in rep["local"]) and rep["legs_over_after"] == 0
+    # KIT-RD-1 stages bit 0 of the concatenated pad input
+    btxt, rec = KRD.apply(FWD_BOUND, "f", t["relay_depth"], lambda i: "u_" + RLP.sv_id(i), RLP.sv_id)
+    assert rec["applied"] == len(t["relay_depth"])
+    assert "assign rdk_u_lpad_dn_d_k0_in = {dn_eb, dn_b};" in btxt
+
+
+def test_flat_relay_and_crr_are_groups(tmp_path):
+    D = fwd_design(tmp_path)
+    G = RLP.Geo(D)
+    gs = RLP.local_groups(G)
+    assert "u_u_vp_u_rr" in gs and "u_u_crr_vsw" in gs
+
+
+def test_macro_reset_pin_xy(tmp_path):
+    cells = [("S", "u_bound.u_f.q$_DFF_P_", 0, 0), ("M", "u_bound.u_hc", 500, 500)]
+    p = tmp_path / "g.tsv"
+    lines = ["D\t0\t0\t1000\t1000"]
+    for i, (k, nm, x, y) in enumerate(cells):
+        lines.append(f"C\t{i}\t{k}\tDFF\t{x - 0.5}\t{y - 0.5}\t{x + 0.5}\t{y + 0.5}\t{nm}")
+    lines += ["MR\t1\t20\t30", "N\tSIGNAL\ti0\ti1"]
+    p.write_text("\n".join(lines) + "\n")
+    G = RLP.Geo(geom_rules.Design(str(p)))
+    assert G.sxy(1) == (20.0, 30.0) and G.sxy(0) == G.xy(0)

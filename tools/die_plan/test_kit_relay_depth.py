@@ -92,7 +92,6 @@ def test_rows_the_bind_already_emitted_are_left_alone():
     ({"inst": "u_lep", "port": "v", "D": 1}, "row u_lep.v (source side, D 1) is not in the bound module"),
     ({"inst": "u_lnl9", "port": "k_li_r", "side": "sink", "D": 1}, "row u_lnl9.k_li_r: sink instance u_u_lnl9 is not in"),
     ({"inst": "u_lnl0", "port": "k_zz", "side": "sink", "D": 1}, "row u_lnl0.k_zz: u_u_lnl0 has no connection .k_zz"),
-    ({"inst": "u_lnl0", "port": "k_x", "side": "sink", "D": 1}, "row u_lnl0.k_x: connection .k_x({w_u_lep_v[0], w_u_lep_li0_r[0]}) is not a plain"),
     ({"inst": "u_lnl0", "port": "k_v", "side": "sink", "bits": [2, 4], "D": 1}, "row u_lnl0.k_v: bits [2, 4] outside the 4-bit"),
 ])
 def test_rows_it_cannot_apply_are_refused_by_name(row, why):
@@ -119,3 +118,10 @@ def test_relay_branch_copies_must_be_bound():
         KRD.check_branch(BOUND, "t", rows, leaf)
     src = (Path(__file__).resolve().parent / "bind.py").read_text()
     assert "kit_relay_depth.check_branch(btxt, tn, t.get(\"relay_branch\")" in src
+
+
+def test_concatenation_of_plain_items_is_staged():
+    # RESET-RELAY-GEN-1530 11-21: {a[0], b[0]} (an S81 lane pad .d({eb, b})) is a stageable connection: bits of it get stages
+    txt, rec = run([{"inst": "u_lnl0", "port": "k_x", "side": "sink", "bits": [0, 0], "D": 2}])
+    assert rec["applied"] == 1 and rec["rows"][0]["bits"] == [0, 0]
+    assert "assign rdk_u_lnl0_k_x_k0_in = {w_u_lep_v[0], w_u_lep_li0_r[0]};" in txt

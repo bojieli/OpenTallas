@@ -1035,8 +1035,11 @@ RING_KEY = re.compile(r"(^|[./])u_cland_")
 RELAY_SPLIT_TCL = r"""# RESET-RELAY-GEN-1530 11-21 plan relay_split (opt-in partition_types[].relay_split, written by reset_leg_plan.py from the
 # newest placed kit): a relay flop whose sinks no one site reaches is DUPLICATED, one copy per sink cluster: the copy takes
 # the same D / clock / reset nets (register duplication, function and release cycle unchanged, 0 cycles) and the listed
-# sink pins move from the flop's output net to the copy's.  Rows run in order (a row may list copies made by an earlier
-# row as sinks).  The copy of flop key K is named K__rs<n>, so its plan relay_sites key seats it (rs_place_all, next).
+# sink pins move from the flop's output net to the copy's.  The output net is the end of the flop's single-load BUF / INV
+# chain (ASAP7 maps an active-low relay to DFFASRHQN + INV: the sinks hang on the INV output); the chain is copied with
+# the flop.  Flop keys resolve over flip-flops only (as rs_place_all), sink keys over flops first, then any instance (a
+# hard core).  Rows run in order (a row may list copies made by an earlier row as sinks).  The copy of flop key K is
+# named K__rs<n>, so its plan relay_sites key seats it (rs_place_all, next).
 proc rs_key {nm} {
   set k [string map {\\ {}} $nm]
   regsub {\$_[A-Za-z0-9_]*$} $k {} k
@@ -1044,52 +1047,79 @@ proc rs_key {nm} {
 }
 proc rs_split_all {rows} {
   global ff_blk is_miss
-  set by [dict create]; set dup [dict create]
+  set by [dict create]; set dup [dict create]; set byf [dict create]; set dupf [dict create]
   foreach i [$ff_blk getInsts] {
+    set isff [string match "*DFF*" [[$i getMaster] getName]]
     set k [rs_key [$i getName]]
     foreach c [lsort -unique [list $k [regsub {^[^./]*[./]} $k {}]]] {
       set a [string map {/ .} $c]
       if {[dict exists $by $a]} { dict set dup $a 1 } else { dict set by $a $i }
+      if {$isff} { if {[dict exists $byf $a]} { dict set dupf $a 1 } else { dict set byf $a $i } }
     }
   }
   set nc 0; set nm 0; set miss {}
   foreach row $rows {
     lassign $row fk clones
     set fa [string map {/ .} $fk]
-    if {![dict exists $by $fa] || [dict exists $dup $fa]} { lappend miss "flop:$fk"; continue }
-    set f [dict get $by $fa]
-    set qn ""; set qm ""
+    if {![dict exists $byf $fa] || [dict exists $dupf $fa]} { lappend miss "flop:$fk"; continue }
+    set f [dict get $byf $fa]
+    set n0 ""; set qm ""
     foreach it [$f getITerms] {
-      if {[$it isOutputSignal] && [$it getNet] ne "NULL" && [$it getNet] ne ""} { set qn [$it getNet]; set qm [[$it getMTerm] getName]; break }
+      if {[$it isOutputSignal] && [$it getNet] ne "NULL" && [$it getNet] ne ""} { set n0 [$it getNet]; set qm [[$it getMTerm] getName]; break }
     }
-    if {$qn eq ""} { lappend miss "q:$fk"; continue }
+    if {$n0 eq ""} { lappend miss "q:$fk"; continue }
+    # single-load BUF / INV chain after the flop (<= 4 cells): the sinks hang on its last net
+    set chain {}; set qn $n0
+    for {set h 0} {$h < 4} {incr h} {
+      set ld {}
+      foreach it [$qn getITerms] { if {![$it isOutputSignal]} { lappend ld $it } }
+      if {[llength $ld] != 1 || [llength [$qn getBTerms]]} break
+      set ci [[lindex $ld 0] getInst]
+      if {![regexp {^(BUF|INV|HB)} [[$ci getMaster] getName]]} break
+      set on ""
+      foreach it [$ci getITerms] { if {[$it isOutputSignal] && [$it getNet] ne "NULL" && [$it getNet] ne ""} { set on [$it getNet] } }
+      if {$on eq ""} break
+      lappend chain [list $ci [[lindex $ld 0] getMTerm]]
+      set qn $on
+    }
     set raw [$f getName]
     foreach cl $clones {
       lassign $cl ck sinks
       set suf [string range $ck [string length $fk] end]
       if {[regexp {^(.*?)(\$_[A-Za-z0-9_]*)$} $raw -> b t]} { set cn "$b$suf$t" } else { set cn "$raw$suf" }
-      set ci [odb::dbInst_create $ff_blk [$f getMaster] $cn]
-      if {$ci eq "NULL" || $ci eq ""} { lappend miss "clone:$ck"; continue }
+      set cf [odb::dbInst_create $ff_blk [$f getMaster] $cn]
+      if {$cf eq "NULL" || $cf eq ""} { lappend miss "clone:$ck"; continue }
       foreach it [$f getITerms] {
         if {[$it isOutputSignal]} continue
         set st [[$it getMTerm] getSigType]
         if {$st eq "POWER" || $st eq "GROUND"} continue
         set n2 [$it getNet]; if {$n2 eq "NULL" || $n2 eq ""} continue
-        [$ci findITerm [[$it getMTerm] getName]] connect $n2
+        [$cf findITerm [[$it getMTerm] getName]] connect $n2
       }
-      set cq [odb::dbNet_create $ff_blk [format "ot_rss_%05d_q" $nc]]
-      [$ci findITerm $qm] connect $cq
+      set cur [odb::dbNet_create $ff_blk [format "ot_rss_%05d_q" $nc]]
+      [$cf findITerm $qm] connect $cur
       set loc [$f getLocation]
-      $ci setLocation [lindex $loc 0] [lindex $loc 1]
-      $ci setPlacementStatus PLACED
-      foreach c [lsort -unique [list [string map {/ .} $ck] [string map {/ .} [regsub {^[^./]*[./]} [rs_key $cn] {}]]]] { dict set by $c $ci }
+      foreach ce [list $cf] { $ce setLocation [lindex $loc 0] [lindex $loc 1]; $ce setPlacementStatus PLACED }
+      set j 0
+      foreach lk $chain {
+        lassign $lk ci imt
+        set cc [odb::dbInst_create $ff_blk [$ci getMaster] [format "ot_rss_%05d_c%d" $nc $j]]
+        [$cc findITerm [$imt getName]] connect $cur
+        set cur [odb::dbNet_create $ff_blk [format "ot_rss_%05d_n%d" $nc $j]]
+        foreach it [$ci getITerms] { if {[$it isOutputSignal]} { [$cc findITerm [[$it getMTerm] getName]] connect $cur } }
+        $cc setLocation [lindex $loc 0] [lindex $loc 1]; $cc setPlacementStatus PLACED
+        incr j
+      }
+      foreach c [lsort -unique [list [string map {/ .} $ck] [string map {/ .} [regsub {^[^./]*[./]} [rs_key $cn] {}]]]] {
+        dict set by $c $cf; dict set byf $c $cf
+      }
       incr nc
       foreach sk $sinks {
         set sa [string map {/ .} $sk]
-        if {![dict exists $by $sa] || [dict exists $dup $sa]} { lappend miss "sink:$sk"; continue }
-        set s [dict get $by $sa]; set hit 0
+        if {[dict exists $byf $sa] && ![dict exists $dupf $sa]} { set s [dict get $byf $sa] } elseif {[dict exists $by $sa] && ![dict exists $dup $sa]} { set s [dict get $by $sa] } else { lappend miss "sink:$sk"; continue }
+        set hit 0
         foreach it [$s getITerms] {
-          if {![$it isOutputSignal] && [$it getNet] eq $qn} { $it disconnect; $it connect $cq; set hit 1 }
+          if {![$it isOutputSignal] && [$it getNet] eq $qn} { $it disconnect; $it connect $cur; set hit 1 }
         }
         if {$hit} { incr nm } else { lappend miss "pin:$sk" }
       }

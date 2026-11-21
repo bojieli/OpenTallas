@@ -41,6 +41,10 @@ def _inst_span(btxt, iname):
 def _width(btxt, expr):
     """bit width of a plain connection expression, None when it is not a wire / bit / slice of a declared wire."""
     e = expr.strip()
+    if e.startswith("{") and e.endswith("}") and "{" not in e[1:-1]:
+        # RESET-RELAY-GEN-1530 11-21: {a, b[3:0], c[2]} of plain items (an S81 lane pad .d({eb, b}))
+        ws = [_width(btxt, x) for x in e[1:-1].split(",")]
+        return sum(ws) if ws and None not in ws else None
     m = re.fullmatch(r"([A-Za-z_]\w*)\s*\[\s*(\d+)\s*\]", e)
     if m:
         return 1

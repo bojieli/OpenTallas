@@ -59,6 +59,14 @@ foreach i [$gd_b getInsts] {
       set axy [$it getAvgXY]
       if {[lindex $axy 0]} { puts $gd_o "MC\t[$i getId]\t[gd_f [lindex $axy 1]]\t[gd_f [lindex $axy 2]]"; break }
     }
+    # RESET-RELAY-GEN-1530 11-21: connected reset-named input pins of a hard macro (MR id x y): a reset forward ends here
+    foreach it [$i getITerms] {
+      set mt [$it getMTerm]
+      if {[$it isOutputSignal] || [$it getNet] eq "NULL" || [$it getNet] eq ""} { continue }
+      if {![regexp -nocase {(^|_)(rst|reset|arst|srst)|rst_?n|resetn} [$mt getName]]} { continue }
+      set axy [$it getAvgXY]
+      if {[lindex $axy 0]} { puts $gd_o "MR\t[$i getId]\t[gd_f [lindex $axy 1]]\t[gd_f [lindex $axy 2]]" }
+    }
   }
 }
 set k 0
