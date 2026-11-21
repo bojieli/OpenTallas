@@ -64,3 +64,15 @@ receipt reach_cap_um. That needs a COORD ruling. The 300 re-solve stays on the n
    preflight reset_tree_coherence must pass.
 6. Apply. Relaunch only types whose published wrapper changed (cohort DIFF list); 17 types expect identical trees.
 7. FABLE-PD-HEAD-2040 reviews R15 in parallel: take its levers when they are posted.
+
+## Update and stand-down (HEAD-PLAN-R15 -> HEAD-PLAN-R16)
+- r15d result (form d, cap 405): GEN_RTL FAIL `hd_lep0N landing_local_resets.k9: consumer depth 7 != copy depth 5 (raw rst_rl_482)`.
+  The old name still exists at another depth, so the generator does not re-derive it. G0 4921 errors, START-tree class now
+  `raw reset export pin source differs from declaration` (export rows were fixed, but the published wrappers / pins are still
+  r13r because the gen failed before republish) plus `infrastructure pin used N times` on tE*/tW*/sp* rst_start_raw_N.
+  Expect both to clear once the gen passes and republish runs. If they stay, they are the next fix.
+- r15e = s1b.py with landing_local_resets also re-picked by identity (same depth, nearest site), cap 405, then gates15e.sh
+  (TAG r15e). RUNNING, left for R16: ot-run unit oth-ubuntu-393909-1795236208 on epyc10, client pid 1898167 on intel2,
+  log intel2 ~/head-plan-r15/gates15e.otrun.log. Outputs: L/plan/p3_cap405.{json,log,receipt.json} (rewritten by r15e),
+  L/bindrun/r15egen, L/bindrun/r15e, L/g0_r15e(.log), gen error at L/bindrun/r15egen/src/results/head_bind/r15egen/gen_rtl.log.
+  My waiters are stopped. FABLE-PD-HEAD-2040 levers go to HEAD-PLAN-R16.
