@@ -293,6 +293,53 @@ proc ::ot_tt_chunk {mg extra n} {
   }
 }
 proc ::ot_tt_measure {} { return [list [sta::worst_slack -max] ""] }
+# FAM-KV-IOPC-R3 11-21 (KV-032 class, DPL-0033 at 5_3_fillcell): repair_timing resizes FIRM cells IN PLACE (SizeUpMove) and the
+# detailed_placement below never moves a FIRM cell, so an upsized FIRM cell that grew into its FIRM neighbour stays overlapped through
+# route; only the route-stage check_placement sees it.  kv3_io_cor_v1 (11-21): the GRT-RC pass upsized the FIRM ring flop
+# u_cland_ft5_i/u_ring.dch[1].sd_c[81] DFFLQNx1 -> x2 (+1 site) onto sd_c[219] (wns -10.35 -> +8.24), 1 overlap, FAIL_route.
+# The 3_5 CLAND_RELEASE_GROWN scan (gen_phys) does the same job before place DPL only.  Here: the FIRM std cells are recorded before
+# the repair; a FIRM cell whose master got WIDER and now overlaps another fixed cell in its row goes to PLACED for this DPL only (DPL
+# moves it to the nearest free site) and back to FIRM after it.  Every other cell is untouched; a legal kit is unchanged.
+proc ::ot_firm_widths {blk} {
+  set w [dict create]
+  foreach i [$blk getInsts] {
+    if {[$i getPlacementStatus] ne "FIRM"} continue
+    set m [$i getMaster]
+    if {[$m isBlock]} continue
+    dict set w [$i getName] [$m getWidth]
+  }
+  return $w
+}
+proc ::ot_firm_grown_release {blk before} {
+  set rows [dict create]
+  foreach i [$blk getInsts] {
+    if {[$i getPlacementStatus] ni {FIRM LOCKED FIXED COVER}} continue
+    if {[[$i getMaster] isBlock]} continue
+    set b [$i getBBox]
+    dict lappend rows [$b yMin] [list [$b xMin] [$b xMax] $i]
+  }
+  set rel [dict create]
+  dict for {y l} $rows {
+    set px -1; set pi ""
+    foreach e [lsort -integer -index 0 $l] {
+      lassign $e x0 x1 i
+      if {$pi ne "" && $x0 < $px} {
+        foreach c [list $i $pi] {
+          set n [$c getName]
+          if {[$c getPlacementStatus] eq "FIRM" && [dict exists $before $n] && [[$c getMaster] getWidth] > [dict get $before $n]} { dict set rel $n $c }
+        }
+      }
+      if {$x1 > $px} { set px $x1; set pi $i }
+    }
+  }
+  dict for {n c} $rel { $c setPlacementStatus PLACED }
+  puts "OT_FIRM_GROWN released [dict size $rel] FIRM cells the repair upsized in place onto a fixed neighbour, for DPL[expr {[dict size $rel] ? ": [lrange [dict keys $rel] 0 4]" : ""}]"
+  return [dict values $rel]
+}
+proc ::ot_firm_grown_refirm {cells} {
+  foreach c $cells { $c setPlacementStatus FIRM }
+  if {[llength $cells]} { puts "OT_FIRM_GROWN re-FIRMed [llength $cells] cells after DPL" }
+}
 lassign [ot_tt_wns before] w0 t0
 set mg 0; if {[info exists ::env(OT_TT_SETUP_MARGIN)] && $::env(OT_TT_SETUP_MARGIN) ne ""} { set mg $::env(OT_TT_SETUP_MARGIN) }
 set extra {}; if {[info exists ::env(OT_TT_SETUP_ARGS)]} { set extra $::env(OT_TT_SETUP_ARGS) }
@@ -313,9 +360,12 @@ if {$w0 < $mg || $ot_tt_design} {
   # -skip_buffer_removal unless the caller's OT_TT_SETUP_ARGS already says so
   if {$ot_tt_rc eq "grt" && [lsearch -exact $extra -skip_buffer_removal] < 0} { lappend extra -skip_buffer_removal }
   set ot_tt_total 4000; if {[info exists ::env(OT_MAX_ITERATIONS)] && [string is integer -strict $::env(OT_MAX_ITERATIONS)]} { set ot_tt_total $::env(OT_MAX_ITERATIONS) }
+  set ot_fw [::ot_firm_widths [ord::get_db_block]]
   ot_bounded_repair tt_setup_repair [list ::ot_tt_chunk $mg $extra] ::ot_tt_measure $ot_tt_total
   if {[catch {
+    set ot_fg [::ot_firm_grown_release [ord::get_db_block] $ot_fw]
     detailed_placement
+    ::ot_firm_grown_refirm $ot_fg
     if {$ot_tt_rc eq "grt"} {
       global_route -end_incremental -allow_congestion
       ot_grt_pg_replay_end
