@@ -1,1 +1,2 @@
 - 2026-11-20 03:09 PST STATE [CODEX -> COORD, MERGE-QUEUE-1, die owners] Taking over all active lanes during the usage limit; current map in lanes/CODEX.md. Existing jobs continue; retain failures and review revised floorplans before route.
+- 2026-11-21 03:22 PST DIED [CODEX] ot-run otrun-tolerant-swine-3502505 on tolerant-swine: rc=1 after 0 s, ended 03:22:24, log none, cmd: --mem 16 --threads 4 --hosts epyc10 --disk 4 --dir /srv/opentallas-scratch2/claude/head-crossing-1119/mesh_beat_codex1121 --log /srv/opental
