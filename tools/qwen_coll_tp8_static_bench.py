@@ -27,6 +27,7 @@ import hdc_golden as G  # noqa: E402
 from qwen_coll_tp8_bench import rand_f32  # noqa: E402
 
 ND, LANES, SL, GC = 8, 16, 23, 8
+REDUCE_EXTRA = 0   # OT_TP8S_XRPIPE: one added stage after the cross fold (reduce output only)
 SRC = [ROOT / p for p in (
     "rtl/hdc/ot_hdc_prefix.sv", "rtl/hdc/ot_hdc_fastfp.sv", "rtl/hdc/ot_hdc_fp32_add_lat.sv",
     "rtl/rom/ot_coll_fold_slice.sv", "rtl/rom/ot_coll_rst_leaf.sv",
@@ -67,7 +68,7 @@ def word_events(mode, c, n, lu, ls):
         slots = [c + 1 + w for w in range(n)]
         b = [c + lu + 4 + w for w in range(n)]
         wr = [x + SL + 2 for x in b]
-        out = [c + 2 * lu + 2 * SL + ls + 12 + w for w in range(n)]
+        out = [c + 2 * lu + 2 * SL + ls + 12 + w + REDUCE_EXTRA for w in range(n)]
         hold = []
     else:
         slots = [c + 1 + GC * i for i in range(n)]
@@ -176,6 +177,9 @@ def main():
     ap.add_argument("--qfd", action="store_true", help="bench the die-name master qfd_io_collective_static")
     ap.add_argument("--sring-io-regs", action="store_true", help="register the S-ring's RAM inputs and outputs")
     ap.add_argument("--output-pipe", action="store_true", help="price the ODPRE stage at one added cycle")
+    ap.add_argument("--input-lockup", action="store_true", help="OT_TP8S_INLOCK: falling-edge staging of every input pin register (0 cycles)")
+    ap.add_argument("--ring-wd-reg", action="store_true", help="OT_TP8S_RRWD: R ring write-data register (0 cycles)")
+    ap.add_argument("--xr-pipe", action="store_true", help="OT_TP8S_XRPIPE: stage after the cross fold (+1 cycle, reduce only)")
     a = ap.parse_args()
     a.out = a.out.resolve()
     a.out.mkdir(parents=True, exist_ok=True)
@@ -187,6 +191,14 @@ def main():
     defines = ("OT_TP8S_SRDREG", "OT_TP8S_SWDREG") if a.sring_io_regs else ()
     if a.output_pipe:
         defines += ("OT_TP8S_ODPRE",)
+    if a.input_lockup:
+        defines += ("OT_TP8S_INLOCK",)
+    if a.ring_wd_reg:
+        defines += ("OT_TP8S_RRWD",)
+    global REDUCE_EXTRA
+    if a.xr_pipe:
+        defines += ("OT_TP8S_XRPIPE",)
+        REDUCE_EXTRA = 1
     exe = build(a.out, a.latu, a.lats, a.xu, a.xs, a.mutant_define, a.qfd, defines)
     bad, records = [], []
     for i, (name, nmsg, words, mk, kind, extra) in enumerate(cases):

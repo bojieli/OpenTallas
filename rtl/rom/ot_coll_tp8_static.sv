@@ -136,12 +136,29 @@ module ot_coll_tp8_static #(
 
     // ---------------- A: producer pins, check, P send, P ring write ----------------
     reg iv_q; reg [PW-1:0] ir_q;
+`ifdef OT_TP8S_INLOCK
+    reg iv_n;
+    always @(negedge clk or negedge rs_p) if (!rs_p) iv_n <= 1'b0; else iv_n <= in_valid;
+    wire iv_x = iv_n;
+`else
+    wire iv_x = in_valid;
+`endif
     reg ta_v, ta_m, ta_l, ta_p; reg [TAGW-1:0] ta_t;
+`ifdef OT_TP8S_INLOCK
+    // FAM-QC-COLL (d): launch-side lockup. The pin data are first captured on the falling edge (half a cycle after the
+    // neighbour's launch), then re-timed to the rising edge: the same word in the same cycle (0 cycles), but the pin
+    // hold check is against the opposite edge (T/2 margin), so no input hold buffers are bought on the 3,604 input
+    // ports (pkw4: 55,013 HB4 pads, setup -82 -> -425).
+    reg [PW-1:0] ir_n;
+    always @(negedge clk) ir_n <= {in_tag, in_mode, in_last, in_data};
+    always @(posedge clk) ir_q <= ir_n;
+`else
     always @(posedge clk) ir_q <= {in_tag, in_mode, in_last, in_data};
+`endif
     always @(posedge clk or negedge rs_p)
         if (!rs_p) begin iv_q <= 1'b0; ta_v <= 1'b0; ta_m <= 1'b0; ta_l <= 1'b0; ta_p <= 1'b0; ta_t <= 0; end
         else begin
-            iv_q <= in_valid;
+            iv_q <= iv_x;
             ta_v <= slot; ta_m <= s_mode; ta_l <= (rem == 16'd1); ta_p <= sidx[0]; ta_t <= s_tag;
         end
     wire a_bad = (iv_q != ta_v) || (ta_v && iv_q && (ir_q[FW +: TAGW + 2] != {ta_t, ta_m, ta_l}));
@@ -316,9 +333,21 @@ module ot_coll_tp8_static #(
     // ---------------- D: SerDes receive (pins), check, cross fold / gather output ----------------
     reg [2:0] srv_q; reg [PW-1:0] srr_q [0:2];
     generate for (gj = 0; gj < 3; gj = gj + 1) begin : g_sri
+`ifdef OT_TP8S_INLOCK
+        reg [PW-1:0] srr_n;
+        always @(negedge clk) srr_n <= sr_rec[gj*PW +: PW];
+        always @(posedge clk) srr_q[gj] <= srr_n;
+`else
         always @(posedge clk) srr_q[gj] <= sr_rec[gj*PW +: PW];
+`endif
     end endgenerate
+`ifdef OT_TP8S_INLOCK
+    reg [2:0] srv_n;
+    always @(negedge clk or negedge rs_s) if (!rs_s) srv_n <= 3'b0; else srv_n <= sr_valid;
+    always @(posedge clk or negedge rs_s) if (!rs_s) srv_q <= 3'b0; else srv_q <= srv_n;
+`else
     always @(posedge clk or negedge rs_s) if (!rs_s) srv_q <= 3'b0; else srv_q <= sr_valid;
+`endif
     // a token is meaningful only once the ring has been written LS + 1 cycles after reset (ring power-up content)
     reg [9:0] warm;
     always @(posedge clk or negedge rs_s) if (!rs_s) warm <= 0; else if (warm != 10'(LS + 3)) warm <= warm + 10'd1;
@@ -370,7 +399,11 @@ module ot_coll_tp8_static #(
                                                                                               : srr_q[2][FW-1:0];
     wire gd_v = td_v && td_m;
     // reduce token D -> E (SL + 1 edges): {v, own, last}
+`ifdef OT_TP8S_XRPIPE
+    localparam integer DDE = SL + 2;      // FAM-QC-COLL (c): one more stage after the cross fold (reduce only, +1 cycle)
+`else
     localparam integer DDE = SL + 1;
+`endif
     reg [3*DDE-1:0] tde;
     always @(posedge clk or negedge rs_r) if (!rs_r) tde <= 0;
         else tde <= {tde[3*(DDE-1)-1:0], td_v && !td_m, td_od, td_l};
@@ -378,8 +411,15 @@ module ot_coll_tp8_static #(
 
     // ---------------- E: cross-fold result, R ring write, UCIe R send ----------------
     reg [FW-1:0] xr_q; reg xe_q;
+`ifdef OT_TP8S_XRPIPE
+    reg [FW-1:0] xs_q; reg xe0_q;
+    always @(posedge clk) begin xs_q <= xs_sum; xr_q <= xs_q; end
+    always @(posedge clk or negedge rs_r) if (!rs_r) begin xe0_q <= 1'b0; xe_q <= 1'b0; end
+        else begin xe0_q <= |(xs_e & xs_v); xe_q <= xe0_q; end
+`else
     always @(posedge clk) xr_q <= xs_sum;
     always @(posedge clk or negedge rs_r) if (!rs_r) xe_q <= 1'b0; else xe_q <= |(xs_e & xs_v);
+`endif
     wire e_own = te_v && te_o;
     reg urv_q; reg [RW-1:0] urr_q;
     always @(posedge clk) urr_q <= {xe_q, te_l, xr_q};
@@ -395,7 +435,12 @@ module ot_coll_tp8_static #(
 `else
     localparam integer ROFF = LU + 2;
 `endif
-    ot_coll_static_ring #(.OFF(ROFF)) u_rring (.clk(clk), .mem_ck(CCLK ? {clk_mem[8:7],clk_mem[8:7]} : {4{clk}}), .rs_n(rs_r), .wd({{(PW-RW){1'b0}}, xe_q, te_l, xr_q}), .rd(rr_rd));
+`ifdef OT_TP8S_RRWD
+    localparam integer RRW_REG = 1;
+`else
+    localparam integer RRW_REG = 0;
+`endif
+    ot_coll_static_ring #(.OFF(ROFF), .WREG(RRW_REG)) u_rring (.clk(clk), .mem_ck(CCLK ? {clk_mem[8:7],clk_mem[8:7]} : {4{clk}}), .rs_n(rs_r), .wd({{(PW-RW){1'b0}}, xe_q, te_l, xr_q}), .rd(rr_rd));
     // token E -> F (LU + 2 edges): {v, own, last}
     localparam integer DEF = LU + 2;
     reg [3*DEF-1:0] tef;
@@ -405,8 +450,16 @@ module ot_coll_tp8_static #(
 
     // ---------------- F: peer result pins, merge, output ----------------
     reg drv_q; reg [RW-1:0] drr_q;
+`ifdef OT_TP8S_INLOCK
+    reg [RW-1:0] drr_n; reg drv_n;
+    always @(negedge clk) drr_n <= dr_rec;
+    always @(negedge clk or negedge rs_r) if (!rs_r) drv_n <= 1'b0; else drv_n <= dr_valid;
+    always @(posedge clk) drr_q <= drr_n;
+    always @(posedge clk or negedge rs_r) if (!rs_r) drv_q <= 1'b0; else drv_q <= drv_n;
+`else
     always @(posedge clk) drr_q <= dr_rec;
     always @(posedge clk or negedge rs_r) if (!rs_r) drv_q <= 1'b0; else drv_q <= dr_valid;
+`endif
     wire f_lnk = (drv_q != (tf_v && !tf_o));
     wire f_mdx = tf_v && !tf_o && drv_q && (drr_q[FW] != tf_l);
     wire [NS-1:0] tfv_r, tfo_r;
@@ -465,7 +518,7 @@ endmodule
 // Fixed-offset delay ring: written unconditionally every cycle at the free-running index, read OFF cycles later
 // (rd valid OFF cycles after wd).  Depth = 32 * B >= OFF, B banks of the 32 x 546 1R1W macro; the read bank
 // select is registered with the macro's registered read.
-module ot_coll_static_ring #(parameter integer OFF = 20) (
+module ot_coll_static_ring #(parameter integer OFF = 20, parameter integer WREG = 0) (
     input  wire         clk,
     input wire [3:0] mem_ck,
     input  wire         rs_n,
@@ -481,8 +534,18 @@ module ot_coll_static_ring #(parameter integer OFF = 20) (
     wire [546*B-1:0] rdb;
     genvar b;
     generate for (b = 0; b < B; b = b + 1) begin : g_b
+        if (WREG != 0) begin : g_wr
+            // FAM-QC-COLL (c): write data / address / enable registered on the macro's own clock (one flop stage per
+            // bank next to the pins); the write lands one cycle later, the read is issued OFF - 1 >= 2 cycles after the
+            // original write slot, so rd carries the same word in the same cycle (0 cycles).
+            reg [545:0] wd_q; reg [4:0] wa_q; reg we_q;
+            always @(posedge mem_ck[b]) begin wd_q <= wd; wa_q <= wa[4:0]; we_q <= (B == 1) ? 1'b1 : (wa[AW-1:5] == b); end
+            ot_sram_1r1w_32x546_m1 u_m (.clk(mem_ck[b]), .r_ce_in(1'b1), .r_addr_in(ra[4:0]), .rd_out(rdb[b*546 +: 546]),
+                .w_ce_in(we_q), .w_addr_in(wa_q), .wd_in(wd_q), .w_mask_in({546{1'b1}}));
+        end else begin : g_nw
         ot_sram_1r1w_32x546_m1 u_m (.clk(mem_ck[b]), .r_ce_in(1'b1), .r_addr_in(ra[4:0]), .rd_out(rdb[b*546 +: 546]),
             .w_ce_in((B == 1) ? 1'b1 : (wa[AW-1:5] == b)), .w_addr_in(wa[4:0]), .wd_in(wd), .w_mask_in({546{1'b1}}));
+        end
     end endgenerate
     generate if (B == 1) begin : g_one
         assign rd = rdb;
