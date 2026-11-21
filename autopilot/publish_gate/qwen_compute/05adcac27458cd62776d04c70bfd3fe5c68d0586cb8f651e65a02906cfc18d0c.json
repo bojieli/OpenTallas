@@ -1,0 +1,75 @@
+{
+ "advisory": [
+  "contained",
+  "hashes",
+  "pre_g0",
+  "schema"
+ ],
+ "checks": {
+  "contained": {
+   "verdict": "FAIL",
+   "why": "no PG_STATIC line (rc 1): ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<string>\", line 387, in run_static\n    bp = check_bound_params(tree, bind_out)\n  File \"<string>\", line 338, in check_bound_params\n    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / \"die_plan\"))\n                                ^^^^^^^^\nNameError: name '__file__' is not defined. Did you mean: '__name__'?\n"
+  },
+  "dry_gen": {
+   "dir": "/home/ubuntu/.local/state/publish-gate/qwen_compute/05adcac27458/sle_st_a_v2__pv4242de79",
+   "gen_host": "epyc8",
+   "item": "sle_st_a_v2__pv4242de79",
+   "kind": "type",
+   "origin": "/home/ubuntu/.local/state/publish-gate/qwen_compute/05adcac27458/sle_st_a_v2__pv4242de79/published_gen_origin.json",
+   "origin_sha256": "7bce23d0888e4aec9771e5a7a6c1c56545a6b365b2e5647c93981e84df13c032",
+   "preflight_fail_advisory": null,
+   "proof_kind": "published-gen",
+   "rc": 0,
+   "result": "DRY-PASS",
+   "result_sha256": "c5c4de630d309243857fce3b7f3542951ee60b1dee6138cc8617188583469f34",
+   "spec_sha256": "d50545070d12e3cfba8bbae41d142ca2e0c31c9b438d387d35a9754c22e533b9",
+   "spec_src": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v2r10",
+   "stage": "preflight",
+   "unit_log_sha256": "398729186eea547331313c13f2d63a7c2bfc685306e1da7f82a31f60c48dcfe0",
+   "verdict": "PASS"
+  },
+  "hashes": {
+   "verdict": "FAIL",
+   "why": "no PG_STATIC line (rc 1): ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<string>\", line 387, in run_static\n    bp = check_bound_params(tree, bind_out)\n  File \"<string>\", line 338, in check_bound_params\n    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / \"die_plan\"))\n                                ^^^^^^^^\nNameError: name '__file__' is not defined. Did you mean: '__name__'?\n"
+  },
+  "pre_g0": {
+   "verdict": "FAIL",
+   "why": "no PG_STATIC line (rc 1): ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<string>\", line 387, in run_static\n    bp = check_bound_params(tree, bind_out)\n  File \"<string>\", line 338, in check_bound_params\n    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / \"die_plan\"))\n                                ^^^^^^^^\nNameError: name '__file__' is not defined. Did you mean: '__name__'?\n"
+  },
+  "schema": {
+   "verdict": "FAIL",
+   "why": "no PG_STATIC line (rc 1): ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<string>\", line 387, in run_static\n    bp = check_bound_params(tree, bind_out)\n  File \"<string>\", line 338, in check_bound_params\n    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / \"die_plan\"))\n                                ^^^^^^^^\nNameError: name '__file__' is not defined. Did you mean: '__name__'?\n"
+  }
+ },
+ "die": "qwen_compute",
+ "foreign_tree_scan": {
+  "asbuilts": [
+   "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v2r10_bind_1121102346/asbuilt_manifest_injected.json"
+  ],
+  "bind_out": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v2r10_bind_1121102346",
+  "files": [
+   "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v2r10/physical/die_plan/qwen_compute/qc_start_1106/runtime/zz_sidecar_n46r4_final_preview.json",
+   "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v2r10_bind_1121102346/bind.f",
+   "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v2r10_bind_1121102346/asbuilt_manifest_injected.json"
+  ]
+ },
+ "gate_s": 4051.2,
+ "hosts": [
+  "epyc8",
+  "epyc2",
+  "epyc10",
+  "epyc7"
+ ],
+ "item": "sle_st_a_v2__pv4242de79",
+ "manifest_hash": "05adcac27458cd62776d04c70bfd3fe5c68d0586cb8f651e65a02906cfc18d0c",
+ "plan": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v2r10/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9n46r4_final_preview.json",
+ "plan_sha256": "7f9f8260349fddf6f8f3b46e027ee1a313d3fc8301ea5aa779ba1fab219f3494",
+ "rows_proofs": [
+  "physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9n2b.rows_proof.json"
+ ],
+ "schema": "opentallas.publish_gate.v1",
+ "static_s": 1515.9,
+ "t": 1795288470.138187,
+ "tree": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v2r10",
+ "verdict": "FAIL"
+}
