@@ -7439,6 +7439,9 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # (clock.local_window_ps; insertion_tol_ps stays the kit SDC seam-hold budget), padding step <= 10 ps
            f"export OT_TAP_WINDOW_PS = {float(P.clock.get('local_window_ps', 20.0)):g}",
            f"export OT_TAP_TOL_PS = {float(P.clock.get('local_tol_ps', 10.0)):g}",
+           # CORE-DIRECT (FABLE-FIX-KV-HGI 11-20, opt-in): tap_balance.tcl never pads an early core tap whose port is inside
+           # the outline of the core it clocks (plan clock.core_tap_direct, or the gen environment OT_TAP_CORE_DIRECT=1)
+           *(["export OT_TAP_CORE_DIRECT = 1"] if tap_core_direct(P.clock) else []),
            f"export OT_TAP_PITCH_UM = {S.tap_pitch(P, tn):g}",
            *_density_cfg(t),
            # CP2: hard-core internal clock latency (core_latency.txt: inst pin ps tap) for tap_balance.tcl's effective
@@ -8410,6 +8413,24 @@ def place_max_fanout(die=None):
     if not v.isdigit() or not 2 <= int(v) <= 1000:
         raise ValueError(f"OT_PLACE_MAX_FANOUT must be an integer 2..1000, got {v!r}")
     return int(v)
+
+
+def tap_core_direct(clock=None):
+    """CORE-DIRECT (FABLE-FIX-KV-HGI 11-20): True when the kit's tap_balance.tcl must not pad a direct core tap.
+    An early core tap (clock.core_taps, port clk_c<k>) of the KV head cores is a die-spine port at the core centre, right
+    over the core's M5 clock pin.  tap_balance.tcl pads every tap more than local_tol_ps (10) under the plan insertion with
+    BUFx4 cells seeded at the tap port; inside a 216-um core they legalise outside it, so one "18 ps" stage is a wire out
+    of the core and back: kv3_hgi_v1 kR clk_c13 effective 230 -> 312 ps at placement RC, and at GRT RC the core pin sat
+    381 ps (FF) behind its port: 5,105 head-core front pins failed hold to -277.6 ps and the core outputs lost the same
+    time in setup.  With the rule on, such a tap keeps its direct connection (shortfall logged as OT_TAP_CORE_DIRECT).
+    Opt-in, so no bound kit changes: plan clock.core_tap_direct true, or OT_TAP_CORE_DIRECT=1 in the gen environment
+    (kit_wave die_gen_env); OT_TAP_CORE_DIRECT=0 forces it off."""
+    v = os.environ.get("OT_TAP_CORE_DIRECT", "").strip()
+    if v not in ("", "0", "1"):
+        raise ValueError(f"OT_TAP_CORE_DIRECT must be 0 or 1, got {v!r}")
+    if v:
+        return v == "1"
+    return bool((clock or {}).get("core_tap_direct", False))
 
 
 def place_max_transition(die=None):

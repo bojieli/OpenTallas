@@ -27,6 +27,37 @@ set tb_target [expr {[info exists ::env(OT_TAP_TARGET_PS)] ? $::env(OT_TAP_TARGE
 set tb_win [expr {[info exists ::env(OT_TAP_WINDOW_PS)] ? $::env(OT_TAP_WINDOW_PS) : 40.0}]
 set tb_tol [expr {[info exists ::env(OT_TAP_TOL_PS)] ? $::env(OT_TAP_TOL_PS) : 15.0}]
 set tb_ronly [expr {[info exists ::env(OT_TAP_REPORT_ONLY)] && $::env(OT_TAP_REPORT_ONLY)}]
+# CORE-DIRECT (FABLE-FIX-KV-HGI 11-20, opt-in OT_TAP_CORE_DIRECT=1): an early core tap (clk_c<k>, core pins only) whose port
+# lands INSIDE the outline of the hard core it clocks is a direct via-stack tap: port and core clock pin are a few um
+# apart.  The delay chain below is seeded at the tap port, and the legalizer can only put it outside the core, so one
+# BUFx4 "stage" is a wire out of the core and back (kv3_hgi_v1 kR: clk_c13 effective 230 -> 312 ps at placement RC for a
+# 20 ps shortfall; at GRT RC the core pin sat 381 ps FF behind its port and 5,105 head-core front pins failed hold to
+# -277.6 ps, core-out setup TT -310).  Such a tap is never padded: a shortfall up to OT_TAP_CORE_DIRECT_MAX_PS (60) is
+# accepted with an OT_TAP_CORE_DIRECT line, a larger one is a WARN for the plan (core tap early shift / insertion_ps).
+# Unset / 0: the pre-CORE-DIRECT loop byte for byte.
+set tb_cdirect [expr {[info exists ::env(OT_TAP_CORE_DIRECT)] && $::env(OT_TAP_CORE_DIRECT) eq "1"}]
+set tb_cdmax [expr {[info exists ::env(OT_TAP_CORE_DIRECT_MAX_PS)] ? $::env(OT_TAP_CORE_DIRECT_MAX_PS) : 60.0}]
+set tb_coreonly {}
+# the hard core (BLOCK) whose outline holds the tap port bt, when every sink of the tap is a clock pin of that core; else ""
+proc tb_direct_core {n bt} {
+  global tb_cores
+  set bb [$bt getBBox]
+  set x [expr {([$bb xMin] + [$bb xMax]) / 2}]; set y [expr {([$bb yMin] + [$bb yMax]) / 2}]
+  set owner ""
+  foreach c $tb_cores {
+    lassign $c p tap a L
+    if {$tap ne $n} continue
+    set it [[ord::get_db_block] findITerm $p]
+    if {$it eq "NULL" || $it eq ""} { return "" }
+    set i [$it getInst]
+    if {![[$i getMaster] isBlock]} { return "" }
+    if {$owner ne "" && $owner ne [$i getName]} { return "" }
+    set b [$i getBBox]
+    if {!($x > [$b xMin] && $x < [$b xMax] && $y > [$b yMin] && $y < [$b yMax])} { return "" }
+    set owner [$i getName]
+  }
+  return $owner
+}
 set tb_grt [expr {[info exists ::env(OT_TAP_EST)] && $::env(OT_TAP_EST) eq "grt"}]
 set tb_tag [expr {[info exists ::env(OT_TAP_TAG)] ? $::env(OT_TAP_TAG) : ""}]
 # netlist edits: GRT mode keeps the global routes current (ORFS post-GRT repair pattern)
@@ -140,8 +171,9 @@ proc tb_rise {pin {buffer_output 0}} {
   return [ot_cf_wire $pin $clock]
 }
 proc tb_measure {{est 1}} {
-  global tb_blk tb_clat tb_cores tb_port_re tb_port tb_clock tb_grt
+  global tb_blk tb_clat tb_cores tb_port_re tb_port tb_clock tb_grt tb_coreonly
   set tb_cores {}
+  set tb_coreonly {}
   set_propagated_clock [all_clocks]
   if {$est} { if {$tb_grt} { estimate_parasitics -global_routing } else { estimate_parasitics -placement } }
   ot_cf_refresh
@@ -177,6 +209,7 @@ proc tb_measure {{est 1}} {
     } elseif {$ck} {
       # a tap of core pins only (an early core tap): its statistics are the effective arrivals
       dict set res $n [list [expr {$cs / $ck}] $cmn $cmx $ck $bt]
+      dict set tb_coreonly $n 1
     }
   }
   if {![dict size $res]} {
@@ -383,6 +416,10 @@ for {set it 0} {$it < 4} {incr it} {
   dict for {n v} $m {
     set d [expr {min($tgt - [lindex $v 0], $tb_target + $tb_win - [lindex $v 2])}]
     if {$d <= $tb_tol} continue
+    if {$tb_cdirect && [dict exists $tb_coreonly $n] && [set tb_dc [tb_direct_core $n [lindex $v 4]]] ne ""} {
+      puts "OT_TAP_CORE_DIRECT $n port inside $tb_dc: effective [format %.0f [lindex $v 0]] ps, [format %.0f $d] ps under target [format %.0f $tgt]: not padded (a delay cell must leave the core)[expr {$d > $tb_cdmax ? " WARN over [format %.0f $tb_cdmax] ps: lower the core tap early shift in the plan" : ""}]"
+      continue
+    }
     set todo 1
     # ~18 ps per BUFx4 stage on a short local net; insert 3/4 of the estimate per pass and re-measure
     set nb [expr {max(1, int(round($d / 18.0 * 0.75)))}]
