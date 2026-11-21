@@ -1,0 +1,442 @@
+{
+ "schema": "fam_s81_slice.strip_body_rows.v1",
+ "lane": "FAM-S81-SLICE-R4",
+ "event": "J8",
+ "for": "S81-J6-ASSEMBLY-R4; cc FAM-S81-LEPE-3, COORD",
+ "status": "PROPOSAL rows: schema-valid on main 0bbfaccf01; the __strip/__body kit emit (bind/gen split event) is not built yet, so the key is carried and checked by G0 (WARN only) and kits build unsplit until it lands",
+ "base_plan": "J6 r1 plan_h2_2249 44be6051",
+ "ops": [
+  {
+   "op": "set",
+   "path": [
+    "partition_types",
+    "dsdv_slice_c1x_C__t1",
+    "strip_body"
+   ],
+   "value": {
+    "band_um": 130,
+    "faces": [
+     "S",
+     "W",
+     "N",
+     "E"
+    ],
+    "halo_um": 5,
+    "cutouts": {
+     "hard_cores": true,
+     "extra_um": [],
+     "note": "xg SRAM macros (u_xg u_mem x24, u_em x6) are not hard_cores; add their placed bboxes here from the J8 base kit before bind, as LEPE-3 does"
+    },
+    "strip": {
+     "suffix": "__strip",
+     "members": [
+      "u_cland_*",
+      "u_ist_*",
+      "u_ft_*",
+      "u_bin_*",
+      "u_bout_*",
+      "u_lpad_*",
+      "u_rrl_*"
+     ],
+     "note": "perimeter infrastructure: landings, ft / internal stations, ring CA, relays (~150k mapped)"
+    },
+    "body": {
+     "suffix": "__body",
+     "members": [],
+     "note": "everything else: xr, eg, cap, flt, mk, eng/norm_finish, xstop, memory cores, xg (~185k mapped)"
+    },
+    "crossing": {
+     "cycles": 0,
+     "registered": "both_sides",
+     "note": "landing chains are one register per bit: the strip boundary is a chain end"
+    },
+    "trigger": "nontap cells > 400k at place (t6 503k CTS, t9 481k place)",
+    "note": "split B, FAM-S81-SLICE-J7-c1xC-rows.json; schema main 0bbfaccf01"
+   }
+  },
+  {
+   "op": "set",
+   "path": [
+    "partition_types",
+    "dsdv_slice_c1x_C__t3",
+    "strip_body"
+   ],
+   "value": {
+    "band_um": 130,
+    "faces": [
+     "S",
+     "W",
+     "N",
+     "E"
+    ],
+    "halo_um": 5,
+    "cutouts": {
+     "hard_cores": true,
+     "extra_um": [],
+     "note": "xg SRAM macros (u_xg u_mem x24, u_em x6) are not hard_cores; add their placed bboxes here from the J8 base kit before bind, as LEPE-3 does"
+    },
+    "strip": {
+     "suffix": "__strip",
+     "members": [
+      "u_cland_*",
+      "u_ist_*",
+      "u_ft_*",
+      "u_bin_*",
+      "u_bout_*",
+      "u_lpad_*",
+      "u_rrl_*"
+     ],
+     "note": "perimeter infrastructure: landings, ft / internal stations, ring CA, relays (~150k mapped)"
+    },
+    "body": {
+     "suffix": "__body",
+     "members": [],
+     "note": "everything else: xr, eg, cap, flt, mk, eng/norm_finish, xstop, memory cores, xg (~185k mapped)"
+    },
+    "crossing": {
+     "cycles": 0,
+     "registered": "both_sides",
+     "note": "landing chains are one register per bit: the strip boundary is a chain end"
+    },
+    "trigger": "nontap cells > 400k at place (t6 503k CTS, t9 481k place)",
+    "note": "split B, FAM-S81-SLICE-J7-c1xC-rows.json; schema main 0bbfaccf01"
+   }
+  },
+  {
+   "op": "set",
+   "path": [
+    "partition_types",
+    "dsdv_slice_c1x_C__t4",
+    "strip_body"
+   ],
+   "value": {
+    "band_um": 130,
+    "faces": [
+     "S",
+     "W",
+     "N",
+     "E"
+    ],
+    "halo_um": 5,
+    "cutouts": {
+     "hard_cores": true,
+     "extra_um": [],
+     "note": "xg SRAM macros (u_xg u_mem x24, u_em x6) are not hard_cores; add their placed bboxes here from the J8 base kit before bind, as LEPE-3 does"
+    },
+    "strip": {
+     "suffix": "__strip",
+     "members": [
+      "u_cland_*",
+      "u_ist_*",
+      "u_ft_*",
+      "u_bin_*",
+      "u_bout_*",
+      "u_lpad_*",
+      "u_rrl_*"
+     ],
+     "note": "perimeter infrastructure: landings, ft / internal stations, ring CA, relays (~150k mapped)"
+    },
+    "body": {
+     "suffix": "__body",
+     "members": [],
+     "note": "everything else: xr, eg, cap, flt, mk, eng/norm_finish, xstop, memory cores, xg (~185k mapped)"
+    },
+    "crossing": {
+     "cycles": 0,
+     "registered": "both_sides",
+     "note": "landing chains are one register per bit: the strip boundary is a chain end"
+    },
+    "trigger": "nontap cells > 400k at place (t6 503k CTS, t9 481k place)",
+    "note": "split B, FAM-S81-SLICE-J7-c1xC-rows.json; schema main 0bbfaccf01"
+   }
+  },
+  {
+   "op": "set",
+   "path": [
+    "partition_types",
+    "dsdv_slice_c1x_C__t5",
+    "strip_body"
+   ],
+   "value": {
+    "band_um": 130,
+    "faces": [
+     "S",
+     "W",
+     "N",
+     "E"
+    ],
+    "halo_um": 5,
+    "cutouts": {
+     "hard_cores": true,
+     "extra_um": [],
+     "note": "xg SRAM macros (u_xg u_mem x24, u_em x6) are not hard_cores; add their placed bboxes here from the J8 base kit before bind, as LEPE-3 does"
+    },
+    "strip": {
+     "suffix": "__strip",
+     "members": [
+      "u_cland_*",
+      "u_ist_*",
+      "u_ft_*",
+      "u_bin_*",
+      "u_bout_*",
+      "u_lpad_*",
+      "u_rrl_*"
+     ],
+     "note": "perimeter infrastructure: landings, ft / internal stations, ring CA, relays (~150k mapped)"
+    },
+    "body": {
+     "suffix": "__body",
+     "members": [],
+     "note": "everything else: xr, eg, cap, flt, mk, eng/norm_finish, xstop, memory cores, xg (~185k mapped)"
+    },
+    "crossing": {
+     "cycles": 0,
+     "registered": "both_sides",
+     "note": "landing chains are one register per bit: the strip boundary is a chain end"
+    },
+    "trigger": "nontap cells > 400k at place (t6 503k CTS, t9 481k place)",
+    "note": "split B, FAM-S81-SLICE-J7-c1xC-rows.json; schema main 0bbfaccf01"
+   }
+  },
+  {
+   "op": "set",
+   "path": [
+    "partition_types",
+    "dsdv_slice_c1x_C__t6",
+    "strip_body"
+   ],
+   "value": {
+    "band_um": 130,
+    "faces": [
+     "S",
+     "W",
+     "N",
+     "E"
+    ],
+    "halo_um": 5,
+    "cutouts": {
+     "hard_cores": true,
+     "extra_um": [],
+     "note": "xg SRAM macros (u_xg u_mem x24, u_em x6) are not hard_cores; add their placed bboxes here from the J8 base kit before bind, as LEPE-3 does"
+    },
+    "strip": {
+     "suffix": "__strip",
+     "members": [
+      "u_cland_*",
+      "u_ist_*",
+      "u_ft_*",
+      "u_bin_*",
+      "u_bout_*",
+      "u_lpad_*",
+      "u_rrl_*"
+     ],
+     "note": "perimeter infrastructure: landings, ft / internal stations, ring CA, relays (~150k mapped)"
+    },
+    "body": {
+     "suffix": "__body",
+     "members": [],
+     "note": "everything else: xr, eg, cap, flt, mk, eng/norm_finish, xstop, memory cores, xg (~185k mapped)"
+    },
+    "crossing": {
+     "cycles": 0,
+     "registered": "both_sides",
+     "note": "landing chains are one register per bit: the strip boundary is a chain end"
+    },
+    "trigger": "nontap cells > 400k at place (t6 503k CTS, t9 481k place)",
+    "note": "split B, FAM-S81-SLICE-J7-c1xC-rows.json; schema main 0bbfaccf01"
+   }
+  },
+  {
+   "op": "set",
+   "path": [
+    "partition_types",
+    "dsdv_slice_c1x_C__t7",
+    "strip_body"
+   ],
+   "value": {
+    "band_um": 130,
+    "faces": [
+     "S",
+     "W",
+     "N",
+     "E"
+    ],
+    "halo_um": 5,
+    "cutouts": {
+     "hard_cores": true,
+     "extra_um": [],
+     "note": "xg SRAM macros (u_xg u_mem x24, u_em x6) are not hard_cores; add their placed bboxes here from the J8 base kit before bind, as LEPE-3 does"
+    },
+    "strip": {
+     "suffix": "__strip",
+     "members": [
+      "u_cland_*",
+      "u_ist_*",
+      "u_ft_*",
+      "u_bin_*",
+      "u_bout_*",
+      "u_lpad_*",
+      "u_rrl_*"
+     ],
+     "note": "perimeter infrastructure: landings, ft / internal stations, ring CA, relays (~150k mapped)"
+    },
+    "body": {
+     "suffix": "__body",
+     "members": [],
+     "note": "everything else: xr, eg, cap, flt, mk, eng/norm_finish, xstop, memory cores, xg (~185k mapped)"
+    },
+    "crossing": {
+     "cycles": 0,
+     "registered": "both_sides",
+     "note": "landing chains are one register per bit: the strip boundary is a chain end"
+    },
+    "trigger": "nontap cells > 400k at place (t6 503k CTS, t9 481k place)",
+    "note": "split B, FAM-S81-SLICE-J7-c1xC-rows.json; schema main 0bbfaccf01"
+   }
+  },
+  {
+   "op": "set",
+   "path": [
+    "partition_types",
+    "dsdv_slice_c1x_C__t8",
+    "strip_body"
+   ],
+   "value": {
+    "band_um": 130,
+    "faces": [
+     "S",
+     "W",
+     "N",
+     "E"
+    ],
+    "halo_um": 5,
+    "cutouts": {
+     "hard_cores": true,
+     "extra_um": [],
+     "note": "xg SRAM macros (u_xg u_mem x24, u_em x6) are not hard_cores; add their placed bboxes here from the J8 base kit before bind, as LEPE-3 does"
+    },
+    "strip": {
+     "suffix": "__strip",
+     "members": [
+      "u_cland_*",
+      "u_ist_*",
+      "u_ft_*",
+      "u_bin_*",
+      "u_bout_*",
+      "u_lpad_*",
+      "u_rrl_*"
+     ],
+     "note": "perimeter infrastructure: landings, ft / internal stations, ring CA, relays (~150k mapped)"
+    },
+    "body": {
+     "suffix": "__body",
+     "members": [],
+     "note": "everything else: xr, eg, cap, flt, mk, eng/norm_finish, xstop, memory cores, xg (~185k mapped)"
+    },
+    "crossing": {
+     "cycles": 0,
+     "registered": "both_sides",
+     "note": "landing chains are one register per bit: the strip boundary is a chain end"
+    },
+    "trigger": "nontap cells > 400k at place (t6 503k CTS, t9 481k place)",
+    "note": "split B, FAM-S81-SLICE-J7-c1xC-rows.json; schema main 0bbfaccf01"
+   }
+  },
+  {
+   "op": "set",
+   "path": [
+    "partition_types",
+    "dsdv_slice_c1x_C__t9",
+    "strip_body"
+   ],
+   "value": {
+    "band_um": 130,
+    "faces": [
+     "S",
+     "W",
+     "N",
+     "E"
+    ],
+    "halo_um": 5,
+    "cutouts": {
+     "hard_cores": true,
+     "extra_um": [],
+     "note": "xg SRAM macros (u_xg u_mem x24, u_em x6) are not hard_cores; add their placed bboxes here from the J8 base kit before bind, as LEPE-3 does"
+    },
+    "strip": {
+     "suffix": "__strip",
+     "members": [
+      "u_cland_*",
+      "u_ist_*",
+      "u_ft_*",
+      "u_bin_*",
+      "u_bout_*",
+      "u_lpad_*",
+      "u_rrl_*"
+     ],
+     "note": "perimeter infrastructure: landings, ft / internal stations, ring CA, relays (~150k mapped)"
+    },
+    "body": {
+     "suffix": "__body",
+     "members": [],
+     "note": "everything else: xr, eg, cap, flt, mk, eng/norm_finish, xstop, memory cores, xg (~185k mapped)"
+    },
+    "crossing": {
+     "cycles": 0,
+     "registered": "both_sides",
+     "note": "landing chains are one register per bit: the strip boundary is a chain end"
+    },
+    "trigger": "nontap cells > 400k at place (t6 503k CTS, t9 481k place)",
+    "note": "split B, FAM-S81-SLICE-J7-c1xC-rows.json; schema main 0bbfaccf01"
+   }
+  },
+  {
+   "op": "set",
+   "path": [
+    "partition_types",
+    "dsdv_slice_c1x_C__t10",
+    "strip_body"
+   ],
+   "value": {
+    "band_um": 130,
+    "faces": [
+     "S",
+     "W",
+     "N",
+     "E"
+    ],
+    "halo_um": 5,
+    "cutouts": {
+     "hard_cores": true,
+     "extra_um": [],
+     "note": "xg SRAM macros (u_xg u_mem x24, u_em x6) are not hard_cores; add their placed bboxes here from the J8 base kit before bind, as LEPE-3 does"
+    },
+    "strip": {
+     "suffix": "__strip",
+     "members": [
+      "u_cland_*",
+      "u_ist_*",
+      "u_ft_*",
+      "u_bin_*",
+      "u_bout_*",
+      "u_lpad_*",
+      "u_rrl_*"
+     ],
+     "note": "perimeter infrastructure: landings, ft / internal stations, ring CA, relays (~150k mapped)"
+    },
+    "body": {
+     "suffix": "__body",
+     "members": [],
+     "note": "everything else: xr, eg, cap, flt, mk, eng/norm_finish, xstop, memory cores, xg (~185k mapped)"
+    },
+    "crossing": {
+     "cycles": 0,
+     "registered": "both_sides",
+     "note": "landing chains are one register per bit: the strip boundary is a chain end"
+    },
+    "trigger": "nontap cells > 400k at place (t6 503k CTS, t9 481k place)",
+    "note": "split B, FAM-S81-SLICE-J7-c1xC-rows.json; schema main 0bbfaccf01"
+   }
+  }
+ ]
+}
