@@ -4,6 +4,30 @@ Written 2026-11-20 12:3x PST. Posts lanes/posts/FABLE-FIX-KV-PV-R2.md. Lane dir 
 (repo = lane clone of main, tools/ = scripts, out/ = dumps, por_<tag>/ = private plan dirs, kit/<tag>/ = private kits).
 Hub logs and chains: intel2 ~/tmp/ffkpvr2 (chain_r2.sh TAG LABEL, chain_<tag>.log, kit_<tag>.log, watch_r2.sh posts AUTO-KIT lines).
 
+## STAND-DOWN 2026-11-20 18:1x PST (read first; FABLE-FIX-KV-PV-R2 stopped on COORD order, successor takes the kits to sign-off)
+State of the three private kits (epyc7, crit, goal route, 64 GB / 16 thr; clients on intel2, logs ~/tmp/ffkpvr2/kit_<tag>.log):
+- v8m (flip + station 300 + split rows): in CTS since about 15:5x PST.  dly_spread max_hop 1,404 um, fail 70.
+- v8c (control, no flip): in CTS.  max_hop 1,404 um, fail 66.
+- v8p (v8m + pad_min_stations 16): 3_place.odb written about 17:0x PST, in CTS.  dly_spread: astk worst hop 801 -> 356 um
+  (stages 10 -> 12 groups, ideal 220), chains over 300 um 5,807 (v8m 6,151), fail 70 -> 32, BUT max_hop still 1,228 um.
+NOT DONE when I stopped:
+- The 1,228-um hop of v8p is NOT identified.  The census is queued, not run: intel2 chain ~/tmp/ffkpvr2/chain_hops.sh v8p
+  (PID 4135070 at 17:12) waits for memory on epyc7 (admits 0 GB since about 17:05), log hops_v8p.log.  When it runs it writes
+  epyc7 out/v8p_hops.tsv and intel2 ~/tmp/ffkpvr2/hops_v8p.txt (an7.py summary, hops over 450 um by class, direct distance).
+  Read the top classes: a class at 1,2xx um that is not a tail copy and not u_pd<N>_ (for example u_d<N>_* T/Q relay lines,
+  D 17 / 18, 3 segments today, or a first hop from a cland / bin source into a line) is the next row.  If it is a u_d<N>_ line,
+  widen PAD_RE in kit_dly_lockup.py to those names (same rule); if it is a source -> first stage hop, it is a bind stage count.
+- No CTS setup read, no GRT iteration 5, no sign-off, no export.  Nothing is proved.  No row was sent as READY.
+Rows as they stand for KV D27 (owner of the event: KV-PLAN-R2; cut 11-21 20:00):
+- ROW A (candidate, unproved): flip of the upper near pair, rows script (no options) -> 64 cores on 16 types.
+  Take it only if v8m is cleaner than v8c at GRT iteration 5 on the upper strip / pin edge tiles.
+- ROW B (tool on main 5aa3d06462, partly shown): budgets.r_dly_lockup.kv3_pv.pad_min_stations 16
+  (rows script --pad-min-stations 16).  Shown: astk hop 801 -> 356 um at dly_spread.  Not shown: CTS setup.
+- ROW C (open): whatever the 1,228-um hop needs.
+- ROW D (proposal only, needs the bind): ft0 leg out of the centre street.
+Watcher: intel2 watch_r2.sh (PID 1223454 at start) posts AUTO-KIT lines for v8m / v8c / v8p / v8k incl. GRT_IT5_OVERFLOW.
+Inherited to-do still open: v8j CpuShares back to 1024 when it routes / fails (epyc10).
+
 ## Update 2026-11-20 16:1x PST (read first; supersedes the 'NOT pushed' and watcher lines below)
 - pad_min_stations is ON MAIN: ddb2501006 (kit_dly_lockup / gen_phys / schema.py / tests) + 5aa3d06462 (die_plan.schema.json),
   ot-push-main PUSHED main @5aa3d0646265.  Absent key = unchanged kit.  Lane clone is on main again (no local edits).
