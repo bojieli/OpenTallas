@@ -108,3 +108,4 @@ J5 live: event 224567138ab, src kw45/src_s81_pin_3c913dbdfb23_d8j5_1117_work, bi
 - 23:0x SWEEP: serdes t12@8 + t1 clfe1f0815@7 relaunched (old rt, no region lines; kit_wave e156f0ee180). col_h10 p4 a11 not in gate -> J6 STRUCTURAL row ROM negedge pval -> qbank e_r half-cycle (+1 reg). t4 a13 = first region-fix test.
 - 23:00 c1x_C t1 a13 / t6 a46 LEFT to finish (cancel-rows --attempt not landed by 23:00).
 - 23:3x serdes cone refusal: main 124d829f45f OT_PLACE_REGION_DROP (unseparable cone -> no region). Waiter drop_relaunch.sh retries t2@4 t14@5 t15cla3d@4 t15cla21@5 t1clb45@5 t4@13 once rt/current carries it. Then read DPL/CTS.
+- 08:0x HANDED serdes place reads -> FAM-S81-SERDES, proof7/7b -> FAM-S81-LEPE (my waiters stopped; jobs running). I keep wave health, ResetError (rerr_watch 2399884), PLACE-SETUP-STOP (pss_watch), leaf GRT reads (grt_watch), cancels under the rule. c1x t6 a46 / t1 a13 cancelled (cancel_exact.py).
