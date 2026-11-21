@@ -37,6 +37,9 @@ class Auto(unittest.TestCase):
         self.assertEqual(AVR.decide(info(-61, macro=("nonoverlapping bands",)))[0], "ACCEPT")
         self.assertEqual(AVR.decide(info(-61, dp=("[INFO DPL-0311] Found 0 overlaps between adjacent cells.",)))[0], "ACCEPT")
         self.assertEqual(AVR.decide(info(-61, dp=("[ERROR] Found 3 overlaps between adjacent cells.",)))[0], "ILLEGAL")
+        # the detailed-placement legalizer prints "Illegal" in table headers and retry notes: not a failure
+        self.assertEqual(AVR.decide(info(-61, dp=("|      Total |  Illegal |", "Using old diamond search for 199 remaining illegal cells.",
+                                                  "Total Placement Failures:          0")))[0], "ACCEPT")
         d = info(-61); d["rpt"] = None
         self.assertEqual(AVR.decide(d)[0], "NODATA")
 
@@ -59,6 +62,21 @@ class Auto(unittest.TestCase):
         cnt2 = AVR.auto_review_pass({}, st, lambda c, r: True, lambda r: r["kit"], info_fn=lambda k: infos[k],
                                     coord=coord, commit=False)
         self.assertEqual(sum(cnt2.values()), 0)
+
+    def test_owner_routing(self):
+        self.assertEqual(AVR.owner_for("qwen_kvsys", "kv3_hub_Wo", "SETUP"), "KV-PLAN-R2")
+        self.assertEqual(AVR.owner_for("qwen_kvsys", "kv3_pv_v2", "SLEW-LIMITED"), "CORE-LIB-LIMITS-1330+FABLE-FIX-KV-PV-R2")
+        self.assertEqual(AVR.owner_for("qwen_compute", "cbf", "SLEW-LIMITED"), "CORE-LIB-LIMITS-1330")
+        self.assertEqual(AVR.owner_for("s81", "t1", "SETUP"), "S81-DIE-R4")
+        self.assertEqual(AVR.owner_for("s81", "t1", "SETUP", {"dies": {"s81": {"auto_visual_review_owner": "X"}}}), "X")
+        coord = Path(tempfile.mkdtemp()); (coord / "lanes").mkdir()
+        old = "qwen_kvsys\tkv3_sys_c\t7\tSETUP\tr\t-987\t158\th:/k"
+        (coord / "lanes" / AVR.HELD_TSV).write_text("hdr\n" + old + "\n")
+        AVR._publish(coord, [], [])
+        AVR._publish(coord, [], ["s81\tt\t1\tSETUP\tr\t-1\t2\th:/k\tS81-DIE-R4"])
+        rows = (coord / "lanes" / AVR.HELD_TSV).read_text().splitlines()
+        self.assertEqual(rows[0], AVR.HELD_HEAD.strip())
+        self.assertTrue(any(r.endswith("KV-PLAN-R2") for r in rows))
 
     def test_die_skip_pattern(self):
         st = {"items": {"s81|kv3_hgi_v3|1": {"die": "s81", "item": "kv3_hgi_v3", "attempt": 1, "status": "ROUTE-HELD",

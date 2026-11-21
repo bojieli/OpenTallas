@@ -26,6 +26,18 @@ from pathlib import Path
 SETUP_FLOOR_PS = -300.0
 SLEW_LIMIT_PS = 1000.0
 HELD_TSV = "AUTO-REVIEW-HELD.tsv"
+HELD_HEAD = "die\ttype\tattempt\tclass\treason\twns_ps\tworst_slew_ps\tkit\towner\n"
+# default die owners for a row that is held (override per die: kit_wave.json dies.<die>.auto_visual_review_owner)
+DIE_OWNER = {"qwen_kvsys": "KV-PLAN-R2", "qwen_compute": "QC-PLAN-R5", "s81": "S81-DIE-R4"}
+SLEW_OWNER = "CORE-LIB-LIMITS-1330"
+
+
+def owner_for(die, item, cls, cfg=None):
+    """who gets a held row: slew-limited -> CORE-LIB-LIMITS-1330 (KV pv rows also FABLE-FIX-KV-PV-R2); else the die owner"""
+    own = (((cfg or {}).get("dies") or {}).get(die) or {}).get("auto_visual_review_owner") or DIE_OWNER.get(die, "COORD")
+    if cls == "SLEW-LIMITED":
+        return SLEW_OWNER + ("+FABLE-FIX-KV-PV-R2" if die == "qwen_kvsys" and str(item).startswith("kv3_pv") else "")
+    return own
 
 # runs on the kit host: python3 -I - <kit dir> < REMOTE_SCRIPT ; prints one JSON line
 REMOTE_SCRIPT = r'''
@@ -70,7 +82,7 @@ for key, pat in (("dp", "3_5_place_dp.log"), ("macro", "2_2_floorplan_macro.log"
         out[key] = None
         continue
     out[key] = [l.strip()[:160] for l in t.splitlines()
-                if re.search(r"(?<!non)overlap|illegal|unplaced|Total Placement Failures", l, re.I)][:6]
+                if re.search(r"(?<!non)overlap|unplaced|Total Placement Failures|Found \d+ overlaps", l, re.I)][:6]
 f = glob.glob(os.path.join(run, "reports/asap7/*/base/3_detailed_place.rpt"))
 out["rpt"] = rd(f[0]) if f else None
 print(json.dumps(out))
@@ -158,7 +170,7 @@ def decide(info):
         if re.search(r"Found 0 overlaps", l):
             continue
         if (re.search(r"Total Placement Failures:\s+[1-9]", l) or re.search(r"Found [1-9]\d* overlaps", l)
-                or (re.search(r"(?<!non)overlap|illegal|unplaced", l, re.I) and "OT_" not in l and "Found" not in l)):
+                or (re.search(r"(?<!non)overlap|unplaced", l, re.I) and "OT_" not in l and "Found" not in l)):
             illegal.append(l[:80])
     if illegal:
         return "ILLEGAL", "; ".join(illegal[:3]), facts
@@ -233,7 +245,8 @@ def auto_review_pass(cfg, st, review_before_route, review_kit_location, hold_tex
         else:
             held.append("\t".join([rec["die"], rec["item"], str(rec.get("attempt")), cls, reason,
                                    "" if facts.get("wns") is None else f"{facts['wns']:.0f}",
-                                   "" if facts.get("worst_slew") is None else f"{facts['worst_slew']:.0f}", kit]))
+                                   "" if facts.get("worst_slew") is None else f"{facts['worst_slew']:.0f}", kit,
+                                   owner_for(rec["die"], rec["item"], cls, cfg)]))
     if commit and (lines or held):
         _publish(coord, lines, held)
     if log and (lines or held):
@@ -249,10 +262,13 @@ def _publish(coord, lines, held):
         files.append("lanes/GEOM-REVIEW.md")
     if held:
         p = coord / "lanes" / HELD_TSV
-        head = "die\ttype\tattempt\tclass\treason\twns_ps\tworst_slew_ps\tkit\n"
+        head = HELD_HEAD
         rows = {}
         for ln in (p.read_text().splitlines()[1:] if p.exists() else []):
-            rows["\t".join(ln.split("\t")[:3])] = ln
+            f = ln.split("\t")
+            if len(f) == 8:          # older row without an owner column
+                ln = "\t".join(f + [owner_for(f[0], f[1], f[3])])
+            rows["\t".join(f[:3])] = ln
         for ln in held:                  # one row per die/type/attempt: a re-review replaces it
             rows["\t".join(ln.split("\t")[:3])] = ln
         p.write_text(head + "\n".join(rows[k] for k in sorted(rows)) + "\n")
