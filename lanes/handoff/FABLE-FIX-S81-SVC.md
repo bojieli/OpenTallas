@@ -1,40 +1,49 @@
 # FABLE-FIX-S81-SVC handoff (started 2026-11-20 23:20 PST; newest state first)
 
-Owner of the S81 svc family (16 types: svc_hi rs t1-t6, pvso_entry t1-t2, svc_lo rs t1-t7, rs_w t1). Succeeds S81-SVC-R4 / FABLE-FIX-S81-SVC-R3 / -R2
-(read those for the H8 bind history). Nothing pushed to main. Nothing signed, nothing exported.
+Owner of the S81 svc family (16 types: svc_hi rs t1-t6, pvso_entry t1-t2, svc_lo rs t1-t7, rs_w t1). Succeeds S81-SVC-R4 / FABLE-FIX-S81-SVC-R3 / -R2.
+Nothing pushed to main. Nothing signed, nothing exported.
 
-## State 11-21 00:10 PST
-1. MPL-0020: CLOSED for the current plan. All 11 svc macro_place fails of the last 24 h are event 465cb9fe2d3 (D8i) rows (one older: 3fa87b84b18).
-   Cause (R3, confirmed): D8i bound RTL reads wq rd[255:0] zero-padded, synthesis drops wq macro g_m[2]. Not geometry.
-   J5 224567138ab: hi rs t4 / t5 / t6, lo rs_w t1, pvso_entry t2 passed 2_2_floorplan_macro with 0 MPL-0020 (t4: 148 macros fixed).
-   The other J5 svc rows were still in synth / 2_1 at 23:30; all read rd[340:0].
-2. REAL BLOCKER: the J5 svc rows are the flat H16 body (72 hard cores + SRAMs, 3.4-4.9 M std cells; hi rs t4 native_cell_count 3,397,389).
-   No svc row has ever finished the place stage (about 100 attempts, 9 events). Measured 23:30: hi rs t6 3_1 GPL diverging (overflow 0.2246 at
-   iter 600, then HPWL x7.5, overflow 0.36 at iter 2050; OT_GPL_HPWL_RATIO 1.3 will fail it); pvso_entry t2 3_3 overflow stalls 0.46, routability
-   congestion 1.5, virtual WNS -2.6 ns; lo rs_w t1 GPL utilisation 68 % vs density 0.5. I cancelled nothing; S81-DIE-R5 owns J5 ops.
-   Do not expect a J5 svc sign-off. The wave representative svc_hi_dsdv_svc_rs__t4 a2 (intel1 unit oth-ubuntu-4054260-1795225734) is left running.
-3. FIX = J6 H8 form, already in J6 candC3c / candC3d (epyc10 s81-j6/rows/svc/j6_delta_svc.json: 16 partition types replaced, hard providers
-   sml_fold2 / smd_fold2 / merge_h4 / tr_x / smc / smr / idx_hslice_fp with prov_1119 signed views; manifest ops; reprove39). J6 needs no more rows from this lane.
-   Earlier estimates of the H8 soft shell: hi rs 555-614k cells, lo 732-819k, pvso 732k (not re-measured in a real synth).
-4. RUNNING: unattended private H8 proof chain, epyc10 `/srv/opentallas-scratch2/claude/fable-fix-s81-svc-1121/` (chain.sh PID 618307, log chain.log, 12 h cap):
-   waits for `^BIND_RC=0` in s81-j6/logs/gate_candC3d.log (else gate_candC3c.log) -> ot-run prep.py (fresh_kit partition on the J6 tree, bind
-   plan_of_record/native_bind/out, wave gen env + gen args, clock landing h2_2249/landed_sidecar_j6_rom_h8.json) -> run_kit.sh place 48 8 ->
-   run_kit.sh route 64 8. Posts `H8-PROOF chain` lines under this lane at each step. Output kit `kit_hi4_<tree>/gen/svc_hi_dsdv_svc_rs__t4`.
-   Private: not counted, not published. The chain does NOT run signoff.py / export.
-   Untested assumptions: (a) the wave after J6 uses landed_sidecar_j6_rom_h8.json as --clock-landing (J5 used plan_of_record/sidecar_new.json);
-   (b) fresh_kit's --trial / --util 0.4 gen flags equal the wave kit for a partition type; (c) no assembly_contracts needed (wave spec has none).
-   If prep fails on (a), rerun `prep.py <tree> svc_hi_dsdv_svc_rs__t4 <new out name>` with the other sidecar (edit GARGS; output dir must not exist).
+## ORDER CHANGE (COORD 11-20 23:45, from FABLE-CLOSURE): split svc into types of 400k cells or fewer
+No outline growth, cuts at natural hierarchy boundaries, registered crossings (+cycles pre-approved). Census by hierarchy first; prove one
+split half to sign-off; family rows go to J7 (not J6).
+
+## State 11-21 00:25 PST
+A. CENSUS RUNNING: epyc9 `/srv/opentallas-scratch2/claude/fable-fix-s81-svc-1121/census/` (mkcensus.py, census.sh; 3 ot-run jobs, clients
+   2565092 hi rs t4, 2565093 lo rs t7, 2565094 pvso_entry t1). Hierarchical mapped yosys synth (no flatten) of the H8 bound type RTL from
+   the svc-green bind epyc9 fable-fix-s81-svc-r3/bind_r8c; hard cores black-boxed by name, SRAMs read from their _tt.lib. census.sh
+   retries when a module is missing from bind.f (adds the defining file from ksrc/rtl to <type>.extra). Result = `<type>.hier.txt`
+   (`stat -top`: cells per module including submodules) and `<type>.json`. Marker `CENSUS_RC=0 <type>` in `<type>.otrun.log`.
+   The bound top is already dissolved: its direct children are the natural units (dsdv_svc_sx, dsdv_svc_rs_up, dsdv_svc_sot, dsdv_svc_p_source,
+   dsdv_svc_mem_la, dsdv_sm_gw, dsfd_svc_pc x2, attn_staging x2, relays, landings); instance names keep the path (u_u_rsv_NN_u_u_att_...),
+   so sum the top-level cells by the `_u_att_` prefix to get the S_att share.
+B. THE CUT ALREADY EXISTS ON MAIN (not used by any plan): `rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att_cut.sv`, opt-in `-DOT_SVC_ATTCUT`
+   (HARD-S81-SVC-1 11-13, commit 52dc675ba9, lock-step bench tools/s81_dv/svc_rs/run_att_cut.sh, CUTMUT 1/2 caught). dsdv_svc_att sits
+   behind a registered boundary: dn stream in +1, every lane to the slice +1 (2 edges end to end); the 2 dsfd_svc_pc page-cache lanes are not
+   registered and belong to the att part. Earlier estimate (SVC-BAND-3, epyc7 s81-cores-2/svc/plan_delta/DELTA_README.txt): S_att about
+   261-269k, S_rs about 179k synthesised with providers hard; placed 555-819k for the unsplit H8 shell. Not built, never bound.
+   So the J7 svc rows are: per svc type two partition types (S_att = part prefix ...u_att with its hard cores hcore / merge_h4 / tr_x and
+   the att SRAMs; S_rs = the rest with sml / smd / smc / smr / sx_hrow), the two rectangles tiling the present outline (no growth),
+   define OT_SVC_ATTCUT, pin-cycle deltas in +1 / out +1 on the att lanes, seam pins + clock / reset rows for both halves, dead-input
+   re-proof under the new define set, die top unchanged (cut is inside the type). lo types probably need a third part (IRG / ctrl:
+   32 idx_hslice_fp + dsfd_ctrl_rg3 + eng taps) - decide from the lo rs t7 census. NONE of these rows are written yet.
+C. MPL-0020: closed, D8i-only (see post 11-20 23:32). J5 svc rows are the flat H16 body (3.4-4.9 M cells), never finished place; J6 C3c/C3d
+   carries the unsplit H8 form for all 16 types (0 overlap, 0 out of outline, min channel 8.64 um, outlines = J5; post 23:41).
+D. RUNNING: private unsplit-H8 proof chain epyc10 `/srv/opentallas-scratch2/claude/fable-fix-s81-svc-1121/chain.sh` PID 618307 (log chain.log,
+   12 h cap): waits for `^BIND_RC=0` in s81-j6/logs/gate_candC3d.log (else C3c) -> prep.py (fresh_kit on the J6 tree + wave gen env/args)
+   -> run_kit.sh place 48 8 -> route 64 8; posts `H8-PROOF chain` lines. It measures the unsplit H8 shell (real cell count, place); it is
+   not the split proof. Untested: clock-landing sidecar choice (h2_2249/landed_sidecar_j6_rom_h8.json), --trial/--util flags.
+   Stop it (kill exact PID 618307 after a cmdline check; ot-run --cancel its unit) if COORD does not want the unsplit evidence.
 
 ## Next steps
-- Read the chain posts. Place result: check cells (native_cell_count.json), 2_2 MPL lines, 3_3 GPL convergence, 3_5 DPL, then post-hook CTS only.
-- If place + GRT pass: sign-off with the kit's signoff flow (DRC 0, TT setup >= -42 ps, internal FF hold >= 0, LEC), then export to AGIdock /archive +
-  rtx-pro ~/signed-export-1114 with an INDEX row (~/.local/bin/signed_store.py) ONLY if COORD agrees a private-kit sign-off is exportable; otherwise
-  the countable sign-off is the wave row after the J6 apply.
-- If the H8 hi shell fails GPL / congestion: send the measured cause to S81-J6-ASSEMBLY-R2 (J7 rows): next cuts in order were landing rings -> cland
-  ring macros (129k), attn_tr_x, bind_native glue (S81-SVC-SPLIT handoff).
-- After the J6 apply: watch the 16 wave svc rows on the new event; lo types (98 hard cores, 732-819k shell) are the worst case, not hi t4.
+1. Read the census: per type, top-level children sorted by cells; S_att vs S_rs sums; confirm each half <= 400k mapped (placed is about
+   1.3-1.5x synth on svc: 261k synth may place near 400k, so check the att half first; if over, move the 4 attn_tr_x bands or the landing
+   rings out as the next cut).
+2. Write the split plan delta on the J6 tree form (plan_delta.py format, see epyc10 s81-j6/rows/svc/j6_delta_svc.json) for ONE type first
+   (svc_hi_dsdv_svc_rs__t4): two partition types, seam at a macro channel; private strict bind + LATCHECK; fresh_kit proof kit of the S_rs
+   half (smaller) to sign-off (DRC 0, TT >= -42 ps, internal FF hold >= 0, LEC); export.
+3. Give S81-J6-ASSEMBLY-R2 the 16-type family rows for J7.
 
 ## Files
-- epyc10 `/srv/opentallas-scratch2/claude/fable-fix-s81-svc-1121/` (prep.py, chain.sh, chain.log; later prep_*.log, place_*.log, route_*.log, kit_hi4_*).
-- Predecessor dirs (read only): epyc9 fable-fix-s81-svc-r2 (ksrc, bind_r7/8), fable-fix-s81-svc-r3 (bind_r8c).
-- Predecessor waiter still alive: intel2 PID 3327226 rep_waiter.sh (posts REP-ROW under FABLE-FIX-S81-SVC-R3).
+- epyc9 fable-fix-s81-svc-1121/census/ (census), epyc10 fable-fix-s81-svc-1121/ (chain, prep.py).
+- Predecessors (read only): epyc9 fable-fix-s81-svc-r2 (ksrc private source, wt lane clone with FETCH_HEAD = attcut branch), -r3 (bind_r8c).
+- Old 11-19 text of this file: lanes/handoff/FABLE-FIX-S81-SVC-1119-archive.md.
