@@ -16,3 +16,9 @@ Family: S81 col_h9_r0_p1..p6 (~60 unsigned). Predecessor history: lanes/handoff/
 - Cleanup: l1tmp/ (hardlink copy of src2 plan dir used for mkplan2 pins lookup) -> ot-delete once bind3 is done.
 - 05:3x COORD: lever 1 (RDX + ROM pval generator) owned by FABLE-FIX-S81-COLROM. Posted bind3/chain3 as a test-case offer; await its answer (use as test case / drop). Keep seg405/xalign/xo rows (ours).
 - 05:4x COORD ruling on xo +3: accepted if bind2 LATCHECK passes (strict, depth-aligned, no LAT diff on the xo lane); no wait on TOKEN-1121. If LATCHECK flags the xo lane, post the exact row to COORD. Keep bind3 until COLROM answers.
+## 05:4x COORD WAVE-ENV ruling (d442c09bb6e) applied
+- Old chain2 (1585663) and chain3 (2215689) stopped by exact PID (both were in their bind wait loop; no kit made). Binds untouched.
+- wave/spec.json + wave3/spec.json: gen_env += OT_NATIVE_RESET_SCOPE=selected, OT_GEN_M8_GRANT=1 (item_env cl9f71e63d / cl9f71e63d__pv* of the J5 wave; rest already = die_gen_env J5 + item_env), dry_gen=true.
+- New hub chainb.sh N WAVEDIR: wait bindN -> run-item (dry_gen: kit_rtl/gen/lint/preflight) -> diff config.mk (normalized, path basenames) + kit_effective_env.json + flow_tag vs J5 wave kit (epyc10 kw43-wave-1109n .../attempt_3/gen; ref copy wave_ref_config.mk) -> on match: ot-run run_kit.sh K route 64 16 on intel1 (G/route_otrun.log); on diff: post ENVDIFF, stop.
+- Running: chainb2 pid 2665583 (chainb2.log, bind2/wave), chainb3 pid 2665584 (chainb3.log, bind3/wave3).
+- COLROM 05:36: own generator gen_colrom_rows.py (epyc10 fable-fix-s81-colrom), own rep col_h10_r1; says R3 gen_rdx_rows emits wrong u_rN_ names on 6 sub-families. My bind3 used mkplan2 (per-type, plan inst names); strict bind will show. Bind3 kept until COLROM answers on it.
