@@ -21,6 +21,20 @@ def test_libs_come_from_the_signoff_receipt_and_std_cells_split_off(tmp_path):
     assert len(allp) == 2 and std == [allp[0]]
 
 
+def test_kit_local_nomcap_libs_count_as_std_cells(tmp_path):
+    """t49 11-21: a receipt with /work/nomcap/ INVBUF+SEQ copies must keep them in the std list (HB4 lives in INVBUF)"""
+    p = tmp_path / "libraries.json"
+    p.write_text(json.dumps({"libraries": [
+        {"path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz", "sha256": "a"},
+        {"path": "/work/nomcap/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz", "sha256": "b"},
+        {"path": "/work/nomcap/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib.gz", "sha256": "c"},
+        {"path": "/nomcap/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib.gz", "sha256": "d"},
+        {"path": "/work/macros/ot_phy_tt.lib", "sha256": "e"}]}))
+    allp, std = H.libs_from_receipt(p)
+    assert len(allp) == 5
+    assert std == allp[:4]
+    assert any("INVBUF" in x for x in std) and "/work/macros/ot_phy_tt.lib" not in std
+
 def test_session_patch_adds_the_dump_once_per_corner_and_refuses_a_foreign_session():
     s = "a\n" + H.MARK + "\nb\n"
     ff, tt = H.patch_session(s, "ff"), H.patch_session(s, "tt")

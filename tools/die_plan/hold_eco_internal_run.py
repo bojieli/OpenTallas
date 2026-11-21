@@ -137,8 +137,11 @@ def libs_from_receipt(path):
     libs = [x["path"] for x in json.loads(Path(path).read_text())["libraries"]]
     if not libs:
         raise SystemExit("empty library list in %s" % path)
-    # NOMCAP-1118 r708: /nomcap/ = the sign-off's nominal-clock-pin-cap copies of the stock INVBUF/SEQ libraries
-    return libs, [x for x in libs if x.startswith(("/OpenROAD-flow-scripts/", "/nomcap/"))]
+    # NOMCAP-1118 r708: /nomcap/ = the sign-off's nominal-clock-pin-cap copies of the stock INVBUF/SEQ libraries.
+    # A kit-local sign-off writes those copies inside the kit (/work/nomcap/, the kit is mounted at /work in every container
+    # of this tool): they are the same standard cells (INVBUF holds HB4), so they belong to the std list too (t49 11-21:
+    # dropping them left 0 HB4 masters, "HB4 source is not unique").
+    return libs, [x for x in libs if x.startswith(("/OpenROAD-flow-scripts/", "/nomcap/", "/work/nomcap/"))]
 
 
 def nomcap_mount(cmd_sh):
