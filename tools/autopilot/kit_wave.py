@@ -13565,6 +13565,12 @@ def so_same_input(cfg, die, r, rec):
             a_, b_ = now.get("pc"), ip.get("pc")
             if not ((fam == "flow" or stage == "kit_snap") and a_ and b_ and all(a_.get(k) == b_.get(k) for k in ("block", "src", "snapshot", "bind_context", "views"))):   # kit_snap (KIT_INPUT_MISSING) snapshots the original kit files: the merged overlay is not its input either
                 return False
+        gf = guard_files_for(why)
+        if gf and ip.get("rf") and now.get("rf"):
+            # FLOW-NOADV-0915: a known deterministic guard refusal: only a change of the guard-deciding files (or the stage env, below) releases it
+            if any(now["rf"].get(f) != ip["rf"].get(f) for f in gf):
+                return False
+            return stage_env(now.get("env"), stage, why) == stage_env(ip.get("env"), stage, why)
         sg_now, sg_old = ((now.get("stg") or {}).get(stage), (ip.get("stg") or {}).get(stage)) if fam == "flow" else (None, None)      # gen / bind / kit stages: their closure digest is already exact
         if sg_now and sg_old:
             if sg_now != sg_old:
@@ -13623,6 +13629,39 @@ def stage_tools_digests(root=None):
     return out
 
 
+# FLOW-NOADV-0915 (FABLE-FLOW-1000 class 3): a deterministic guard refusal at gen is released by a change of the files that DECIDE it, not by any change of the gen closure
+# digest (stage_tools_digests['gen'] moves with every unrelated main merge: seqhost__t1 attempt 13 -> 14 had an identical noenv hash and only that digest differed, 12 attempts in 6 h).
+GUARD_FILES = (
+    (re.compile(r"differs from captured bound reset identity"),
+     ("tools/die_plan/gen_phys.py", "tools/die_plan/reset_tree.py", "tools/die_plan/bound_reset_contract.py", "tools/die_plan/cbc_rules.py",
+      "tools/die_plan/clock_landings.py", "tools/die_plan/gen_rtl.py")),
+)
+_GUARD = {}
+
+
+def guard_files_for(why):
+    """the files that decide a known guard refusal text (() for any other text)"""
+    for rx, files in GUARD_FILES:
+        if rx.search(str(why or "")):
+            return files
+    return ()
+
+
+def guard_digests(root=None):
+    """{relative path: content digest} of every guard-deciding file; cached per process and tree like the family digests"""
+    root = Path(root) if root else Path(__file__).resolve().parents[2]
+    k = str(root)
+    if k not in _GUARD:
+        out = {}
+        for rel in sorted({f for _, fs in GUARD_FILES for f in fs}):
+            try:
+                out[rel] = hashlib.sha1((root / rel).read_bytes()).hexdigest()[:16]
+            except OSError:
+                out[rel] = "missing"
+        _GUARD[k] = out
+    return _GUARD[k]
+
+
 def exec_family_digests(root=None):
     """the content digest of the tool files each stage family executes (stage_family).  Cached per process and tree"""
     root = Path(root) if root else Path(__file__).resolve().parents[2]
@@ -13673,7 +13712,7 @@ def input_parts(cfg, die, item, block_sha=None):
             families = dict(families, gen=pin, bind=pin, kit=pin)
             stages = {**stages, **dict.fromkeys((*BIND_STAGES, "gen"), pin)}
         return {"v": 2, "noenv": hashlib.sha1(json.dumps(body, sort_keys=True, default=str).encode()).hexdigest()[:20],
-                "env": env, "fam": families, "stg": stages, "pc": pc}
+                "env": env, "fam": families, "stg": stages, "pc": pc, "rf": guard_digests()}
     except Exception:
         return {}
 

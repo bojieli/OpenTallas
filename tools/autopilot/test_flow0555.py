@@ -929,3 +929,26 @@ def test_bind_probe_marks_a_type_stale_when_the_bound_module_predates_the_plan_r
     r = _sp.run([_sys.executable, "-I", "-", _j.dumps(a)], input=KW.PROBE_BIND, capture_output=True, text=True, env=dict(os.environ))
     out = _j.loads([l for l in r.stdout.splitlines() if l.startswith("AP_JSON ")][-1][8:])
     assert out["stale"] == ["ta"] and "ta" in out["relay"] and "tb" not in out["relay"], out
+
+
+def test_guard_refusal_is_released_only_by_the_guard_files_not_by_gen_closure_churn(monkeypatch):
+    """FLOW-NOADV-0915: seqhost__t1 attempt 13 -> 14: identical noenv hash, only stg['gen'] moved (unrelated main merge) and the deterministic guard refusal relaunched 12 times in 6 h"""
+    why = "gen phys: ERROR type t: physical collector_tree differs from captured bound reset identity; preserve original IDs/edges/coordinates"
+    gf = KW.guard_files_for(why)
+    assert gf and "tools/die_plan/gen_phys.py" in gf and KW.guard_files_for("some other text") == ()
+    rf = {f: "A" for f in gf}
+    old = {"v": 2, "noenv": "N", "env": {}, "fam": {"gen": "F1"}, "stg": {"gen": "G1"}, "pc": {}, "rf": rf}
+    rec = {"status": "FAIL", "class": "PLAN", "stage": "gen", "reason": why, "input_parts": old}
+    cfg = {"dies": {"d": {}}}
+    def now(**kw):
+        n = dict(old, **kw)
+        monkeypatch.setattr(KW, "input_parts", lambda *a, **k: n)
+        return KW.so_same_input(cfg, "d", {"item": "i"}, rec)
+    assert now() is True
+    assert now(fam={"gen": "F2"}, stg={"gen": "G2"}) is True                      # unrelated gen closure churn: still the same input
+    assert now(rf=dict(rf, **{"tools/die_plan/gen_phys.py": "B"})) is False       # the guard code changed: relaunch
+    assert now(noenv="N2") is False                                               # the plan / bind inputs changed: relaunch
+    rec["class"] = "UNCLASSIFIED"
+    assert now(stg={"gen": "G2"}) is True                                         # the class label is no part of the key
+    rec["input_parts"] = {k: v for k, v in old.items() if k != "rf"}              # an attempt stamped before the guard digests: old whole-stage compare
+    assert now(fam={"gen": "F2"}, stg={"gen": "G2"}) is False
