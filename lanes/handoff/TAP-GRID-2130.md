@@ -40,3 +40,11 @@ Read: grep OT_CTS_POST_TIMING / OT_TAP_BALANCE done / OT_TAP_CONVERGE / OT_TAP_I
 - t60_conv / t60_convR: epyc10, queued on memory (civil-redfish admits 0 GB).
 - KV pv v8c: epyc7 unit oth-ubuntu-2457635-1795240628 (v8c_conv/kv3_pv_v8), admitted; the baseline CTS hooks took 6.6 h.
 - Convergence: OT_TAP_CONVERGE in tap_balance.tcl (bounded passes, learned stage price, pad at the load centre, verify line). Not yet proven on any kit.
+
+## Update 11-21 06:4x UTC (22:4x PST)
+- Main shas: 02ceee2474 (A + B), 054ac247c4 (BAD: written on a stale copy, dropped CORE-DIRECT 1b57af8f34), 47295f4adc (CORE-DIRECT restored + converge fix). Alert posted.
+- col_A proof r1 (load-centre pad form) REGRESSED: clk_c* core-only taps 343 -> 800 ps, setup -15.39 -> -277.45, hold -130.24 -> -117.68; s6/s9 443/445 OK (were 422/421).
+  OT_TAP_CONVERGE OPEN 54 taps/pins off. Form withdrawn. Fix in 47295f4adc: core-only clk_c* taps are not padded at the port; the core pass pads their early pins at the pin.
+  Taps above target (clk_t13 549 ...) need raise_ps (t60_convR tests it).
+- Re-proof r2: epyc9 colA_conv2 unit oth-ubuntu-3904285-1795242111. KV v8c r2: epyc7 v8c_conv/kv3_pv_v8 (otrun2.log; r1 unit 2457635 cancelled by me, bad form). t60 x2 queued on epyc10 (patched to the r2 form before start).
+- Rows: none posted. J6 gets a row only if a proof shows setup and hold no worse than baseline before 11-21 13:00.
