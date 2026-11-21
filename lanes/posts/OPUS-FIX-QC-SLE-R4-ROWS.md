@@ -1,0 +1,1 @@
+- 2026-11-21 05:40 PST DONE [OPUS-FIX-QC-SLE-R4-ROWS] ot-run oth-ubuntu-845613-1795268174 on loved-redfish: rc=0 after 280 s, ended 13:40:52, log /srv/opentallas-scratch2/claude/opus-fix-qc-sle-r4-rows/probe/sul1a.run, cmd: --mem 16 --threads 1 --hosts epyc7 --dir /srv/opentallas-scratch2/claude/opus-fix-qc-sle-r4-rows/probe -- bash /srv/opentallas-scratch2/clau
