@@ -95,6 +95,18 @@ class BoundR8(unittest.TestCase):
         self.m['types']['T']['strap_r8pad_y']['width'] = 6; self.kr['bound_only_pins'][1]['width'] = 6; self.save()
         with self.assertRaises(ValueError): declared(self.d/'kit_rtl.json', 5)
 
+    def test_strap_narrower_than_the_type_maximum_is_the_binds_own_width(self):
+        # D27d2 kv3_pc_v3: r8_strap_pad_max 63 -> type width 6; bind.r8_pad_width gives hsl3_fi 5 bits (span 25)
+        self.kr['bound_only_pins'] = [dict(port='strap_r8pad_x', dir='input', width=5), dict(port='strap_r8pad_y', dir='input', width=6)]
+        self.m['types']['T'] = {'strap_r8pad_x': dict(width=5, kind='r8pad_strap'), 'strap_r8pad_y': dict(width=6, kind='r8pad_strap')}
+        self.m['instances']['a'] = {'strap_r8pad_x': dict(width=5, value=21, kind='r8pad_strap'), 'strap_r8pad_y': dict(width=6, value=40, kind='r8pad_strap')}
+        self.audit = dict(verdict='PASS', checked_bits=11, errors=[]); self.save()
+        self.assertEqual(declared(self.d/'kit_rtl.json', 6), [dict(name='strap_r8pad_x', width=5), dict(name='strap_r8pad_y', width=6)])
+        with self.assertRaises(ValueError): declared(self.d/'kit_rtl.json', 5)     # 6 bits over a 5-bit type maximum
+        self.m['types']['T']['strap_r8pad_x']['width'] = 7; self.kr['bound_only_pins'][0]['width'] = 7
+        self.m['instances']['a']['strap_r8pad_x']['width'] = 7; self.save()
+        with self.assertRaises(ValueError): declared(self.d/'kit_rtl.json', 6)
+
     def test_strap_free_legacy_without_manifest(self):
         self.kr['bound_only_pins'] = []; self.save()
         (self.d/'bind_parent_id_straps.json').unlink()

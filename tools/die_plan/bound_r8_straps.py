@@ -132,8 +132,10 @@ def declared(kit_rtl_json, width=4):
             continue
         # KV-PCV3-R8 11-16: each strap carries its OWN bind width, 4 (default) or the type's strap_pad_width when a
         # bus of that type needs more (kv3_pc_v3: hsl3_fi 5 bits, slg_vreq 4 bits); `width` is the type maximum.
+        # FAM-KV-IOPC-R3 11-21: bind.r8_pad_width gives max(4, span.bit_length()) per site, so any width 4..type maximum is
+        # the bind's own (D27d2 kv3_pc_v3, r8_strap_pad_max 63 -> type width 6: hsl3_fi 5, slg_x_tep 6, others 4; gen refused 5).
         w = row.get('width')
-        if w not in (4, width) or not re.fullmatch(r'strap_r8pad_[A-Za-z0-9_]+', name) or ports.get(name) != ('input', w):
+        if type(w) is not int or not 4 <= w <= max(4, width) or not re.fullmatch(r'strap_r8pad_[A-Za-z0-9_]+', name) or ports.get(name) != ('input', w):
             raise ValueError(f'invalid bound R8 count declaration: {name}')
         audit = read_bind_json(kit_rtl_json, kr, 'bind_r8pad_strap_audit.json')
         if audit.get('verdict') != 'PASS' or audit.get('errors') or audit.get('checked_bits', 0) < w:
