@@ -172,3 +172,4 @@
 - 2026-11-21 12:59 PST ALERT NO-PROGRESS s81_head: 17 eligible rows, 0 KIT-WAVE LAUNCH for 317 min (last 07:41); no DIE-OFF / NO-LAUNCH line
 - 2026-11-21 13:09 PST ALERT STUCK-STATE qwen_compute: 1 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. tt_ctlm, 2026-11-21 12:06)
 - 2026-11-21 13:39 PST ALERT STUCK-STATE s81: 33 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. bk_sel__t2, 2026-11-21 04:14)
+- 2026-11-21 13:49 PST ALERT NO-PROGRESS qwen_compute: 3 eligible rows, 0 KIT-WAVE LAUNCH for 123 min (last 11:46); no DIE-OFF / NO-LAUNCH line
