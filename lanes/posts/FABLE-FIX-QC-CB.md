@@ -18,3 +18,4 @@
   cbn_q01__cldd6ea846.txt cbn_q01__cldd6ea846: legs over 300 um 5 -> 0; inst_taps 5, local relays seated 0, relay_depth rows 0 (+0 reset cycles), needs_local_tap 0, relay_split flops 0 (+0 copies), unsplit 0
   cbn_q11__cl5cc92dfe.txt cbn_q11__cl5cc92dfe: legs over 300 um 5 -> 1; inst_taps 4, local relays seated 0, relay_depth rows 0 (+0 reset cycles), needs_local_tap 1, relay_split flops 0 (+0 copies), unsplit 0
   cbx_q10__cl94a12200_h.txt cbx_q10__cl94a12200_h: legs over 300 um 4 -> 0; inst_taps 4, local relays seated 0, relay_depth rows 0 (+0 reset cycles), needs_local_tap 0, relay_split flops 0 (+0 copies), unsplit 0
+- 2026-11-21 02:40 PST DIED [FABLE-FIX-QC-CB] ot-run oth-ubuntu-2457486-1795257616 on tolerant-swine: rc=1 after 4 s, ended 02:40:18, log /home/ubuntu/codex-qc-cb-fixed-rows-r2-1121.log, cmd: --hosts epyc9 --mem 12 --threads 2 --dir /srv/opentallas-scratch2/claude/fable-fix-qc-cb --stage /srv/opentallas-scratch2/claude/qc-plan-r8/
