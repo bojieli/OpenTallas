@@ -291,7 +291,8 @@
     "kv3_pv_v6n": "KV-FAILED-ROWS-2100 11-20: OT_CLAND no legal row/site in the reserved band for u_bound.u_cla.. (pinslot already read from spec cland_pinslot, so band geometry). Plan fix = D27 pv re-site row (OPUS-FIX-KV-PV-R4 / FABLE-FIX-KV-PV-R2). Lift = delete this key when D27 is applied.",
     "kv3_hgi": "KV-D25e3 retained e50e0f9be689 geometry fails and exact corrected post-place TT -349.66 ps below -300. Hold new picks until D26 or changed geometry review.",
     "kv3_hgi_v7": "KV-D25e3 attempt 5 repeats captured collector_tree reset identity mismatch at gen. Hold new picks until coherent D26 bind.",
-    "kv3_pv_v1n": "KV-D25e3 attempt 7 repeats captured collector_tree reset identity mismatch at gen. Hold new picks until coherent D26 bind."
+    "kv3_pv_v1n": "KV-D25e3 attempt 7 repeats captured collector_tree reset identity mismatch at gen. Hold new picks until coherent D26 bind.",
+    "kv3_hgi_v6": "KV-D25e3 v6 a4 failed captured collector_tree reset identity; a5 admitted with unchanged gen fail key ed0f0a2ea1f07192. Hold new picks until coherent D26 bind."
    },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave",
    "retry_fix": {
@@ -5871,7 +5872,8 @@
     "items": [
      "kv3_hgi",
      "kv3_hgi_v7",
-     "kv3_pv_v1n"
+     "kv3_pv_v1n",
+     "kv3_hgi_v6"
     ]
    }
   },
