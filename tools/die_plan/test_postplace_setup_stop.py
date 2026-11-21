@@ -109,7 +109,7 @@ def test_recovery_is_reported_but_never_stops_the_kit(tmp_path):
     assert PS.read_log(log.read_text())["recovery_wns"] is None
 
 
-def _pp_stub(nets, recovery_report, path_rows="", db_stubs=""):
+def _pp_stub(nets, recovery_report, path_rows="", db_stubs="", odb="stub.odb"):
     """tclsh frame for tt_setup_repair.tcl with OT_POSTPLACE_WORST=1: clocks clk (std-cell tree) and fclk_in_a (port -> macro pin)."""
     return f"""
 namespace eval sta {{}}
@@ -129,7 +129,7 @@ rename source actual_source
 proc source {{path}} {{ if {{[file tail $path] eq "tt_setup_repair.tcl"}} {{ uplevel 1 [list actual_source $path] }} }}
 proc read_liberty {{args}} {{}}
 proc read_db {{args}} {{}}
-proc read_sdc {{args}} {{}}
+proc read_sdc {{sdc}} {{ puts "SDC $sdc" }}
 proc all_clocks {{}} {{ return {{clk fclk_in_a vclk}} }}
 proc get_property {{obj property}} {{ return [dict get {{clk clk_port fclk_in_a fclk_in_a_port vclk {{}}}} $obj] }}
 proc get_full_name {{o}} {{ return $o }}
@@ -157,7 +157,7 @@ proc unknown {{cmd args}} {{
 {db_stubs}
 set ::env(OT_POSTPLACE_WORST) 1
 set ::env(OT_TT_SETUP_MEASURE) 1
-set ::env(ODB) stub.odb
+set ::env(ODB) {{{odb}}}
 source {{{HERE / 'tt_setup_repair.tcl'}}}
 """
 
@@ -186,6 +186,20 @@ def test_postplace_keeps_a_clock_with_a_buffer_or_flop_sink_ideal():
     r = subprocess.run([TCLSH], input=_pp_stub(nets, ""), text=True, capture_output=True, check=True)
     assert "PROPAGATED" not in r.stdout and "OT_POSTPLACE_CLOCKS propagated 0" in r.stdout
     assert "OT_POSTPLACE_RECOVERY wns none" in r.stdout
+
+
+@pytest.mark.skipif(not TCLSH, reason="tclsh")
+def test_postplace_reads_the_placed_checkpoint_sdc(tmp_path):
+    odb = tmp_path / "3_place.odb"
+    sdc = odb.with_suffix(".sdc")
+
+    r = subprocess.run([TCLSH], input=_pp_stub("", "", odb=odb), text=True, capture_output=True, check=True)
+    assert "SDC /work/constraint.sdc" in r.stdout
+
+    sdc.write_text("create_clock -period 833 clk\n")
+    r = subprocess.run([TCLSH], input=_pp_stub("", "", odb=odb), text=True, capture_output=True, check=True)
+    assert f"SDC {sdc}" in r.stdout
+    assert "SDC /work/constraint.sdc" not in r.stdout
 
 
 @pytest.mark.skipif(not TCLSH, reason="tclsh")
