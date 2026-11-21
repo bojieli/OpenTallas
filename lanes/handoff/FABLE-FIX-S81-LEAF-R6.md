@@ -21,3 +21,14 @@ Paths on epyc10 under R6 = /srv/opentallas-scratch2/claude/fable-fix-s81-leaf-r6
 - If the J7 base moved past v5 (v6 exists): compare the leaf types of the new plan with v5 (R6/tmp/r6_cmp.py pattern); equal = the delta applies as is, else re-run r6_rg5.sh with K= the new tree and the gate.
 - Not re-solved by a tool: landing_contract.collector_tree relay records (6,058) and 9 reset_tree_anchor records under moved cores; the bind judges them. If the bind refuses on resets: reset_anchor.record / fstart_reset_delta.py on the bound tree, then bind again.
 - Held types t6, t40__clf8bbdae1 need their own fix (t6: no 2-D path; t40: relay u_u_lf3_u_ve_u_crr_s/q in u_ve.u_s, hop 402.6).
+
+## Gate history (11-21, all epyc10 R6; each = one ot-run job, plan priority)
+- d5 (77 types): bind refused t21 explicit tap under a lane -> t21, t25__cl431c660f, t37 held (frozen explicit tap tables; check gate on main 00ff12f70a).
+- d6 / rg6 (74): bind refused lane dn_s_1S_L2 fixed_cycles -> assembly lanefix.py (2 lanes: dn_s_1S_L2 2->3, dn_s_6S_L1 8->9; the grown leafdn_i0 groups of t12 / t58).
+- d6 / rg7 (74 + lanefix): bind ran to the end, 12 errors on 5 types: t41 t51 t56 t7 landing_local_resets depth != copy depth (the reset tree is re-made under the moved lanes; RESET_ANCHOR finds no same-depth relay) and t43 LF_CS_DEPTH ver plan 2 / bound 1 (grown ver groups). Log R6/d6/bind.log lines 7282-7300. The other 69 types bound clean.
+- LIVE: rg8 (69 types = 74 minus those 5; script R6/r6_rg8.sh; client log R6/d8.otrun.log; plan R6/rg8/plan_d.json sha 6e2a8d8d8465; netlist R6/rg8/die_b178_lfcs_d.v; tree R6/d6/src reused with the rg8 plan + netlist; out R6/d8/bind; logs R6/d8/elab.log bind.log lat.log latcmp.out; ends D8_DONE). Pass = ELAB_OK, BIND_RC=0, LATCHECK 873/873.
+- When green: build the rows file with R6/tmp/r6_mkdelta.py pointed at rg8 (sed /rg5/ -> /rg8/; ADD the 4 lanefix ops of rg8/lanefix_delta.json, the script asserts top-level equality so relax that for lanes / latency), check the J7 base still equals ec6693a0 on the leaf types (v6 exists), post rows + netlist + gate logs to S81-J6-ASSEMBLY-R4.
+- Second set (J8): t6, t40__clf8bbdae1 (geometry); t21, t25__cl431c660f, t37 (explicit tap re-solve); t41, t51, t56, t7 (local resets: fstart_reset_delta.py on a bound tree of the re-grid plan, then bind again); t43 (ver growth: why the bound RTL stays at 1).
+
+## t39 kit
+- K = epyc10 /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/dc92652f0d5/private/FABLE-FIX-S81-LEAF-R6/ot_s81sl_leaf__t39_1121083024/gen/ot_s81sl_leaf__t39 (run_kit.sh is one level up). Place done, geom PASS, FF-CORE-BOX active. Route stage (CTS + GRT) running: unit oth-ubuntu-243015-1795284663, client log K/otrun_route.log. Wait: ot-wait --kit K --stage grt. Read GRT from 5_1_grt.odb. Then finish / sign-off gates; a sign-off build must be rebuilt from a src_manifest tree (this proof is on the J6 base).
