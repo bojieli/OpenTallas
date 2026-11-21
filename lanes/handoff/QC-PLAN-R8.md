@@ -89,3 +89,7 @@
 - Re-sign: 6 N_PAD reps in only_items (ddaf212d693); add the 6 siblings after the reps sign.
 - V1 fixes on main (77440fa43c land_slots share_trunk, 2bdea13bb1 ft_spread) need a wave tool refresh to re-GEN slw_hc3 pv x2 and
   slw_st_a_v2__clf4365a62 (FAM-QC-HCST retried slw_hc3 at 7d30ba435f7).
+- OPEN for V2 (not sealed; COORD/FAM-QC-FEFW 02:xx): 13 C-plan types carry multi-station ft slots without regs_um, so ft_spread
+  does not site them (free-placed stations): sle_hc0 x3, sle_hc1__cl7d360508, sle_st_b_v1 x2, sle_st_b_v2 x3, slw_hc0, slw_hc1 x2,
+  slw_st_b_v1. Ask FAM-QC-FEFW for the regs_um rows (or generate on the ft slot polylines, <=300 um legs, 0 cycles: station count
+  unchanged), fold them into c5/p_final4 -> rebind (bind_v2.sh loop) before G0; if they miss V2 seal, carry to V3.
