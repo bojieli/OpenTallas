@@ -5876,6 +5876,9 @@
      "kv3_pv_v1n",
      "kv3_hgi_v6"
     ]
+   },
+   "gen_host_min_free_gb": {
+    "epyc9": 250
    }
   },
   "s81": {
@@ -37291,7 +37294,8 @@
    "tools_refresh_bind_cmd": "mkdir -p {out}/o && OT_HEAVY_PRIO=die ot-heavy --mem 96 -- bash -c 'python3 -I -B tools/die_plan/bind.py elab {plan} --asbuilt {asbuilt} --out {out}/o --strict --mem 96 > {out}/elab.log 2>&1 && python3 -I -B tools/die_plan/bind.py bind {plan} --asbuilt {asbuilt} --out {out}/o --strict > {out}/bind.log 2>&1'",
    "tools_refresh_bind_sub": "o",
    "gen_host_min_free_gb": {
-    "intel1": 150
+    "intel1": 150,
+    "epyc9": 250
    },
    "retry": [
     "slice_station__t24__cl66b71008@21",
@@ -40470,7 +40474,10 @@
    },
    "auto_visual_review_skip": [
     "*"
-   ]
+   ],
+   "gen_host_min_free_gb": {
+    "epyc9": 250
+   }
   },
   "qwen_compute": {
    "enabled": true,
@@ -51517,7 +51524,10 @@
     "sle_hc2__cl9c4c4509__clf60c5152__pv0d63d22b",
     "slw_hc3__clccfc3e6b__pv39aac7a1",
     "slw_hc3__cld86a7ad4__pv6c2c33ed"
-   ]
+   ],
+   "gen_host_min_free_gb": {
+    "epyc9": 250
+   }
   },
   "hbm": {
    "enabled": true,
@@ -68614,7 +68624,10 @@
    "prev_gen_hosts_fleetopsr1117c": [
     "epyc10",
     "epyc2"
-   ]
+   ],
+   "gen_host_min_free_gb": {
+    "epyc9": 250
+   }
   }
  },
  "place_prefer": [
