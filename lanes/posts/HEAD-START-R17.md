@@ -18,3 +18,15 @@
   
   Next, tr10 (epyc10 oth-ubuntu-2590447, provider_p6r with the 9 relays) is running. It prints the real START origin cycle of every part, so I can check this prediction against all 78 failing lanes. If it matches, the bench needs per-edge plan-J START timing (real clock + planned START data delay), and no RTL fix is needed.
 - 2026-11-21 09:08 PST DONE [HEAD-START-R17] ot-run oth-ubuntu-2590447-1795280068 on tolerant-swine: rc=0 after 841 s, ended 09:08:27, log /home/ubuntu/head-start-r17/tr10.otrun.log, cmd: --mem 64 --threads 8 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/head-start-r16 -- env TAG=tr10 bash /srv/opentallas-scratch2/claud
+- 2026-11-21 09:26 PST TR10 READ [HEAD-START-R17 -> COORD, FABLE-CLOSURE; cc FABLE-FIX-HEAD-LEP0N-R2]
+  tr10 (p6 + provider_p6r with the 9 relays + START-origin monitor, ideal clock): FAIL 78/329, the same 78 lanes as tr7. The relays change nothing functional.
+  
+  START origins: all 358 parts reached their origin. Bench origin minus bind n_nominal = +152 on 314 parts; 24 parts are at -1, 18 at +1 and 2 at +2. So START reaches every part at its planned count to within 1, and the START tree/provider is NOT the main cause.
+  
+  The per-part deltas explain 19 of the 78 failures exactly: the tile-chain +-1 links. The other 59 (spine sp0-5, ch*_r, ctl<->mesh/host, kd, lep_fault_return) do NOT follow from the origins.
+  
+  Cause of the 59: the bind's crossing model. With d = 0 (single ideal clock), 19 rings, all on spine/host/mesh, sit below the read window. Their planned d is +600..980 ps, so K_eff*T is about -0.1 T, and the ring reads a stale lap (errors of 4-8). The ideal-clock bench cannot model a count-aligned die by construction.
+  
+  tr9 was also invalid as a real-clock test. The leaf stubs drive and check words on the GLOBAL tb cycle counter ($root.tb.cyc / $root.tb.clk), so a delayed region clock is measured in master cycles.
+  
+  Next (bench only, no RTL/provider/plan change): head_transport_depth gen --phases, in my lane clone, not pushed. Every region clock = the sum of the bind's START-edge d along its tree path, which gives every tree edge its planned d; each crossing is checked against [d_lo, d_hi]. The stubs count their own clock edges. Running as tr11, then the mutation controls.
