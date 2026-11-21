@@ -633,6 +633,22 @@ def role_strap(plan, tn):
     return v
 
 
+def seam_relay_parts(ca, plan, landed):
+    """START relays with a physical seam edge and an active landing origin."""
+    roles = ca.get("parts") or {}
+    result = set()
+    for edge in plan.get("clock", {}).get("landing_network", {}).get("edges", []):
+        dst = edge["dst"]
+        part = dst["part"]
+        if edge.get("id") != f"cland_relay__{part}" or dst["bus"] != "cland_rstart_in":
+            continue
+        src = edge["src"]["part"]
+        role = roles.get(part, {})
+        if src in landed and role.get("role") == "relay" and role.get("src") == src:
+            result.add(part)
+    return result
+
+
 def strap_ties(ca, plan):
     """count-aligned bind table (annotate_table()["count_aligned"]) + die plan -> per-type strap declarations and the
     per-instance tie VALUES (the single source the parent ties, the tie-value audit and the LEC variants use).
@@ -666,6 +682,7 @@ def strap_ties(ca, plan):
     cparts = ca.get("parts")
     role = {}
     landed = set(inst_bus) | {ports[pid]["src"]["part"] for pid in ca["ports"]}
+    landed.update(seam_relay_parts(ca, plan, landed))
     for q in sorted(landed):
         if cparts is not None:
             pi = cparts.get(q)

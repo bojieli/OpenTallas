@@ -1471,9 +1471,13 @@ class Landings:
             for pn, pi in ca["parts"].items():
                 if pn in self.parts and frames.get(pi["region"]) != self.region[pn]:
                     raise LandingError(f"count frame clock mismatch for {pn}")
+        import count_align_bind as CAB
+        active = {pn for pn in self.parts if _ca_in(self, pn) or _ca_out(self, pn)}
+        active.update(CAB.seam_relay_parts(ca, self.plan, active))
         for pn in self.parts:
-            # CA-MIXED-1: only partitions with a count-aligned crossing hold count frames (ring-only ones keep none)
-            if _ca_in(self, pn) or _ca_out(self, pn):
+            # Ring-only partitions stay outside the count frame. A physical
+            # split START receiver inherits its origin even without a data ring.
+            if pn in active:
                 frame = ca["parts"][pn]["region"] if frames is not None else self.region[pn]
                 regs[frame].append(pn)
         cparts = ca.get("parts")
@@ -1832,7 +1836,7 @@ class Landings:
                 raise LandingError(f"{tn}: landing_writer_start branches must name output rings of the type")
         collector_info=self.collector["types"][key] if self.collector else None
         active_collector=collector_info and collector_info["mask"]["active"]
-        if not mask["inputs"] and not mask["outputs"] and not active_collector:
+        if not mask["inputs"] and not mask["outputs"] and not active_collector and key not in self.ca_type:
             if self.types[key].get('clock', {}).get('landing_origin_clock_port') is not None:
                 raise LandingError(f'{tn}: landing_origin_clock_port needs active dedicated START origin hardware')
             self.emitted_types.add(tn)
