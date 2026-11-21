@@ -1,0 +1,3 @@
+# QC SU L1 retained placement
+
+2026-11-21 03:10 PST. Reviewed actual place layout for qwen_compute R6V1 sle_su_l1__cl5ea486db attempt_4, AP 59fae698fc6e. The source kit is epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R6V1/items/sle_su_l1__cl5ea486db/attempt_4/gen/sle_su_l1__cl5ea486db. Exact image in run/layout_review/place/layout.png. Four aligned SU hard lanes occupy the west column. The east-side bus channel and the middle routing street are open with a concentrated center group and several buffers near hard-lane edges. Corrected ideal-clock TT pre-CTS read and copy-only CTS if the existing threshold passes. Inspect the CTS result before further stages.
