@@ -923,7 +923,10 @@ def hop_latch_leaf_lines(kd, spec, ft=False):
     # LOCKUP-STATION-R2 (t39 proof: same_tap ends 41 -> 238 with latches): a latch whose launch and every capture land on
     # one tap in the tap solve is removed (a wire, as lec.py proves it), so only cross-tap hops keep one
     # (opt-in with a clock.zl_lockup spec: ft-only types keep every planned latch)
-    st = [] if not spec or spec.get("same_tap") == "keep" else [
+    # OPT-IN (LOCKUP-STATION-R3): bypass + max_um only for a spec with auto: true or same_tap: "bypass"; every other spec and
+    # every ft-only type keeps its form (51ab145ab6 had made bypass the default for any zl_lockup spec)
+    on = bool(spec) and (spec.get("auto") is True or spec.get("same_tap") == "bypass") and spec.get("same_tap") != "keep"
+    st = [] if not on else [
         "# LOCKUP-STATION-R2: same-tap hop latches bypassed at the tap solve (latches only where the two ends differ)",
         "export OT_HOP_LATCH_SAME_TAP = bypass",
         # LOCKUP-STATION-R2: no latch on a hop longer than max_um (default 200): its T/2 latch -> capture leg fails setup

@@ -310,6 +310,9 @@ def test_hop_latch_leaf_lines_and_hooks(tmp_path):
     assert gen_phys.hop_latch_leaf_lines(tmp_path, {"netlist": ["=x"], "leaf": False}) == []
     assert gen_phys.hop_latch_leaf_lines(tmp_path, {"netlist": ["=x"]})[-1] == "export OT_HOP_LATCH_LEAF = 1"
     assert (tmp_path / "hop_latch_leaf.tcl").exists()
+    # opt-in: a spec without auto / same_tap: bypass keeps the pre-R2 form
+    assert not any("SAME_TAP" in x or "MAX_UM" in x for x in gen_phys.hop_latch_leaf_lines(tmp_path, {"netlist": ["=x"]}))
+    assert any("SAME_TAP" in x for x in gen_phys.hop_latch_leaf_lines(tmp_path, {"netlist": ["=x"], "same_tap": "bypass"}))
     here = Path(__file__).resolve().parent
     ct = (here / "clock_taps.tcl").read_text()
     assert "OT_HOP_LATCH_LEAF" in ct and "/work/hop_latch_leaf.tsv" in ct and "$ct_cit disconnect; incr ct_hl; continue" in ct
