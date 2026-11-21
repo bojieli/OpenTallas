@@ -179,3 +179,8 @@
   QC (QC-PLAN-R7): 16 STALE held/cancelled (1 new: slw_su_c__cl92142dac); the unclassified place error cleared.
   KV: 9 FAILED-NO-RELAUNCH WAIT-BIND (1 new: kv3_io_cor_v1 detail route error) + 10 held/cancelled WAIT-BIND (1 new: kv3_sys_c placed, route held).
   HEAD none flagged.
+- 2026-11-20 20:50 PST 20:50 sweep (19:50 mapping; HEAD-PLAN-R16, CORE-PIN-RELAY-R2 live; R15/1930/LOCKUP-1130/KV-PV-R3/FLEET-WATCH-1630 not used as owners): 483 rows, 32 flagged (was 37), 0 UNOWNED, 0 DEAD-OWNER.
+  S81: 12 STALE held-for-plan-event rows, 11 new, all owned (S81-DIE-R4/R5, S81-J6-ASSEMBLY, RESET-RELAY-GEN-R2): leaf cl0cd90c0e pvcb7f0079, slice kv512_C t1, iqf t1, slice_station t36, iq_C t1, seqhost t1, 4 lepe/lepw LP rows, col_h10_r1 cl95b37463.
+  QC (QC-PLAN-R7): only 1 STALE cancelled-superseded left; 15 held rows cleared.
+  KV (KV-PLAN-R2): 9 FAILED-NO-RELAUNCH + 9 held/cancelled WAIT-BIND, all old, none new.
+  HEAD: hd_lep0N running, not flagged.
