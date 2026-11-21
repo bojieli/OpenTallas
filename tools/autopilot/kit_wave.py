@@ -3816,6 +3816,9 @@ RULES = [
     ("FLOW", r"^kit_snap$", r"KIT-SNAP[^\n]*", "kit snapshot could not be built, copied or verified"),
     # DIE-HBM-97 11-10 (COORD): before INFRA and the PLAN geometry rules.  The capped unconverged placement is the cause;
     # the DPL-0038 / utilisation / OOM / watchdog lines after it are its consequence, so it wins whatever surrounds it.
+    # FLOW-OPS-0900 11-21: the in-kit floorplan cell cap stop (native_cell_cap.tcl CELL-CAP) is a measured size verdict on this type: STRUCTURAL, so note_fail_key
+    # writes the block stop and the same block never relaunches; the next plan block re-measures at floorplan (minutes, not a 5-7 h run).
+    ("STRUCTURAL", None, r"OT_CELL_CAP STOP stage=floorplan[^\n]*", "CELL-CAP: over the 400k run cap at floorplan (measured): split the type"),
     ("STRUCTURAL", r"^place$", lambda s: gpl_cap_noconverge(s),
      "gpl-noconverge: global placement stopped at the per-pass Nesterov iteration cap unconverged"),
     # KIT-TRIAGE-1 11-01: gen raises when a plan landing band has no rect / placement FAIL (S81 svc_* on e8cbe5f6c70;
@@ -11641,15 +11644,39 @@ def tool_skew_refuse(AP, cfg, st, die):
 STRUCT_VERDICTS = ("EXHAUSTED", "GEOMETRY", "REDESIGN", "FABLE-STOP", "STRUCTURAL")
 
 
+# FLOW-OPS-0900 11-21 (FABLE-FLOW-0745 class a: OPUS-FIX-KV-PV-R5 cancelled 11 unsplit pv kits on KV-D25e3 with cancel-rows; every plan event gives a type a new block sha
+# (its pins / stations / taps move), so the wave relaunched the same unsplit types on KV-D26 15 min later).  An OWNER stop (cancel-rows, struct-stop) now CARRIES: key
+# "<die>|<item>|carry", it matches every plan block of that type on every event, and it stands until a lane lifts it (struct-lift) -- the measurement that justified it is
+# not re-taken by a plan event.  A carried stop is per item NAME, so a split that renames the type (pv_v1 -> pv_v1_s0/s1) launches the new types by itself.
+# --per-block keeps the old block-keyed stop (a verdict on one geometry).  Classifier STRUCTURAL stops stay block-keyed (the next block is a new measurement).
+CARRY_TAG = "carry"
+
+
+def carry_key(die, item):
+    return f"{die}|{item}|{CARRY_TAG}"
+
+
 def struct_stop_for(st, die, item, block_sha):
-    """-> (key, entry) of the structural stop that names this die / item / plan block, else (None, None)"""
-    if not block_sha:
-        return None, None
-    b12 = str(block_sha)[:12]
-    for k, e in (st.get("struct_stops") or {}).items():
-        if e.get("die") == die and e.get("block") == b12 and fnmatch.fnmatchcase(str(item), str(e.get("item"))):
+    """-> (key, entry) of the structural stop that names this die / item / plan block (a carried stop names every block of the item), else (None, None)"""
+    stops = st.get("struct_stops") or {}
+    if block_sha:
+        b12 = str(block_sha)[:12]
+        for k, e in stops.items():
+            if not e.get("carry") and e.get("die") == die and e.get("block") == b12 and fnmatch.fnmatchcase(str(item), str(e.get("item"))):
+                return k, e
+    for k, e in stops.items():
+        if e.get("carry") and e.get("die") == die and fnmatch.fnmatchcase(str(item), str(e.get("item"))):
             return k, e
     return None, None
+
+
+def owner_stop_entry(die, item, b12, verdict, owner, why, carry, event=None):
+    """-> (key, entry) of an owner structural stop: carried (all blocks of the item) or block-keyed (--per-block)"""
+    e = {"die": die, "item": item, "block": b12, "verdict": verdict, "owner": owner, "why": why, "ts": time.time(), "force_once": False}
+    if carry:
+        e.update(carry=True, event=event or "")
+        return carry_key(die, item), e
+    return f"{die}|{item}|b{b12}", e
 
 
 def struct_stop_from_fail(cfg, st, rec, stage, why):
@@ -11682,6 +11709,11 @@ def struct_stop_gate(AP, cfg, st, die, item, block_sha, consume=False):
             e["forced_n"] = int(e.get("forced_n") or 0) + 1
             AP.log(f"KIT-WAVE STRUCT-FORCE {die}/{item} block {e.get('block')}: one launch released by {e.get('forced_by') or 'a lane'}; the stop stands again after it")
         return ""
+    if e.get("carry"):
+        b12 = str(block_sha or "")[:12] or "?"
+        return (f"LAUNCH-HELD STRUCT-CARRIED {e.get('verdict')} [owner {e.get('owner') or die_owner(cfg, die)[0]}]: {str(e.get('why'))[:160]} (stopped on plan block "
+                f"{e.get('block') or '?'}{' @' + str(e.get('event')) if e.get('event') else ''}, carried to block {b12}: the stop follows the type across plan events; "
+                f"lifted only by `kit_wave.py struct-lift --die {die} --item {e.get('item')}`, or one launch by `kit_wave.py struct-force`)")
     return (f"STRUCT-STOP {e.get('verdict')} [owner {e.get('owner') or die_owner(cfg, die)[0]}]: {str(e.get('why'))[:160]} (plan block {e.get('block')}; "
             f"released by a changed block, or one launch by `kit_wave.py struct-force`)")
 
@@ -11693,7 +11725,7 @@ def on_old_plan(cfg, die, r):
     return bool(cur) and bool(rp) and rp != cur
 
 
-def cancel_rows_core(AP, cfg, st, die, item_glob, why, owner, verdict, jobs, dry=False, old_plans_only=False, event=None, attempt=None, cls="STRUCT-STOP"):
+def cancel_rows_core(AP, cfg, st, die, item_glob, why, owner, verdict, jobs, dry=False, old_plans_only=False, event=None, attempt=None, cls="STRUCT-STOP", carry=True):
     """COORD 11-18 (cbx_q10 / col_h9_r1): place the structural stop for the plan block of every live row of die/item_glob FIRST (a CANCELLED row relaunches by itself under stops_off), then cancel
     each live row through the wave's own API (grt_arm_cancel: exact wave unit + PLACE client, the running route job's unit or the withdrawal of an unstarted queue row, exact container names
     under the attempt root; run data kept).  -> (stops placed, [(key, item, attempt, status)] cancelled)"""
@@ -11705,10 +11737,10 @@ def cancel_rows_core(AP, cfg, st, die, item_glob, why, owner, verdict, jobs, dry
     done = []
     for k, r in live:
         b12 = str(r.get("block_sha") or "")[:12]
-        if b12 and not dry:
-            key = f"{die}|{r['item']}|b{b12}"
+        if (b12 or carry) and not dry:
+            key, ent = owner_stop_entry(die, r["item"], b12, verdict, owner, why, carry, r.get("event"))
             if key not in st.setdefault("struct_stops", {}):
-                st["struct_stops"][key] = {"die": die, "item": r["item"], "block": b12, "verdict": verdict, "owner": owner, "why": why, "ts": time.time(), "force_once": False}
+                st["struct_stops"][key] = ent
                 stops += 1
     for k, r in live:
         done.append((k, r["item"], r.get("attempt"), r.get("status")))
@@ -11745,7 +11777,7 @@ def close_queue_job(AP, rec, why):
 CANCEL_LOCK_WAIT_S = 900
 
 
-def cancel_rows_phased(AP, cfg, ap_dir, die, item_glob, why, owner, verdict, dry=False, old_plans_only=False, lock=None, no_stop=False, event=None, attempt=None, cls="STRUCT-STOP"):
+def cancel_rows_phased(AP, cfg, ap_dir, die, item_glob, why, owner, verdict, dry=False, old_plans_only=False, lock=None, no_stop=False, event=None, attempt=None, cls="STRUCT-STOP", carry=True):
     """FABLE-FLOW-1950 (L): cancel-rows held kit_wave.lock 17:58-18:47 (seven wave steps skipped, nothing launched for 71 min) because the unit / container stops ran under it.
     Now: (1) lock only to read the state and place the structural stops; (2) stops, withdrawals and container stops OUTSIDE the lock, on copies of the rows;
     (3) lock again only to write the results into the CURRENT state (CAS: a row whose attempt or live status changed meanwhile is left alone); then the queue jobs are closed (M).
@@ -11769,9 +11801,9 @@ def cancel_rows_phased(AP, cfg, ap_dir, die, item_glob, why, owner, verdict, dry
             for k, r in sorted((st.get("items") or {}).items()):
                 if not no_stop and any(k == d[0] for d in done):          # --no-stop: a plain operator cancel (the rows relaunch by themselves, no structural stop)
                     b12 = str(r.get("block_sha") or "")[:12]
-                    key = f"{die}|{r['item']}|b{b12}"
-                    if b12 and key not in st.setdefault("struct_stops", {}):
-                        st["struct_stops"][key] = {"die": die, "item": r["item"], "block": b12, "verdict": verdict, "owner": owner, "why": why, "ts": time.time(), "force_once": False}
+                    key, ent = owner_stop_entry(die, r["item"], b12, verdict, owner, why, carry, r.get("event"))
+                    if (b12 or carry) and key not in st.setdefault("struct_stops", {}):
+                        st["struct_stops"][key] = ent
                         stops += 1
             save_state(st, ap_dir)
         work = {k: copy.deepcopy(st["items"][k]) for k, _i, _a, _s in done}
@@ -11909,7 +11941,14 @@ def struct_cmd(a):
         stops = st.setdefault("struct_stops", {})
         if a.cmd == "struct-list":
             for k, e in sorted(stops.items()):
-                print(k, e.get("verdict"), e.get("owner"), "force_once" if e.get("force_once") else "", str(e.get("why"))[:100])
+                print(k, e.get("verdict"), e.get("owner"), "CARRIED" if e.get("carry") else "", "force_once" if e.get("force_once") else "", str(e.get("why"))[:100])
+            return 0
+        if a.cmd == "struct-lift":                       # FLOW-OPS-0900: the explicit lift of a carried owner stop (the only way it ends)
+            gone = [k for k, e in stops.items() if e.get("carry") and e.get("die") == a.die and fnmatch.fnmatchcase(str(e.get("item")), a.item)]
+            for k in gone:
+                stops.pop(k)
+            save_state(st, ap_dir)
+            print(f"struct-lift: {len(gone)} carried stop(s) of {a.die}/{a.item} lifted" + (f" by {a.owner}" if a.owner else "") + "".join(f"\n  {k}" for k in gone))
             return 0
         rows = [r for r in (st.get("items") or {}).values() if r.get("die") == a.die and fnmatch.fnmatchcase(str(r.get("item")), a.item) and r.get("block_sha")]
         cfg = load_config(Path(a.config).read_text()) if getattr(a, "config", None) else None
@@ -11922,8 +11961,20 @@ def struct_cmd(a):
                 if (cur is None or r.get("event") == cur) and (not getattr(a, "old_plans_only", False) or on_old_plan(cfg or {}, a.die, r)):
                     blocks[(r["item"], str(r["block_sha"])[:12])] = r["item"]
         n = 0
+        carry = a.cmd == "struct-stop" and not getattr(a, "per_block", False)
+        if carry:                                        # FLOW-OPS-0900: one carried stop per item (all blocks, all events); an item with no row yet is stopped by name / glob
+            for item in (sorted({i for i, _b in blocks}) or [a.item]):
+                b12 = next((b for i, b in sorted(blocks) if i == item), "")
+                key, ent = owner_stop_entry(a.die, item, b12, a.verdict, a.owner, a.why, True, cur)
+                stops[key] = ent
+                n += 1
+            save_state(st, ap_dir)
+            print(f"{a.cmd}: {n} carried stop(s) of {a.die}/{a.item} (every plan block; lift with struct-lift)")
+            return 0
         for (item, b12) in sorted(blocks):
             key = f"{a.die}|{item}|b{b12}"
+            if a.cmd == "struct-force" and carry_key(a.die, item) in stops:
+                key = carry_key(a.die, item)
             if a.cmd == "struct-stop":
                 stops[key] = {"die": a.die, "item": item, "block": b12, "verdict": a.verdict, "owner": a.owner, "why": a.why, "ts": time.time(), "force_once": False}
                 n += 1
@@ -18150,10 +18201,11 @@ def main(argv=None):
     cr_.add_argument("--verdict", default="STRUCTURAL", choices=STRUCT_VERDICTS); cr_.add_argument("--why", required=True)
     cr_.add_argument("--config"); cr_.add_argument("--ap-dir"); cr_.add_argument("--dry-run", action="store_true")
     cr_.add_argument("--no-stop", action="store_true", help="plain operator cancel: no struct stop is placed, the rows relaunch by themselves")
+    cr_.add_argument("--per-block", action="store_true", help="FLOW-OPS-0900: stop only these plan blocks (old behaviour); default = a CARRIED stop on the type, every event, until struct-lift")
     cr_.add_argument("--event", default=None, help="only rows of this event (item names are shared by events)"); cr_.add_argument("--attempt", default=None)
     cr_.add_argument("--cls", default="STRUCT-STOP", choices=CLASSES + ("STRUCT-STOP",), help="class written on the cancelled rows (NOPROG: PLAN, so the die owner gets a plan row)")
     cr_.add_argument("--old-plans-only", action="store_true", help="skip rows launched on the die current plan of record (rows on the applied plan must run)")
-    for _nm in ("struct-stop", "struct-force", "struct-release", "struct-list"):
+    for _nm in ("struct-stop", "struct-force", "struct-release", "struct-list", "struct-lift"):
         sp_ = sub.add_parser(_nm, help="COORD FLOW-1400 (3): structural verdict stops keyed by plan block (state struct_stops)")
         sp_.add_argument("--ap-dir"); sp_.add_argument("--config", help="kit_wave.json (needed to pick the current event for --block current)")
         if _nm != "struct-list":
@@ -18162,6 +18214,7 @@ def main(argv=None):
             sp_.add_argument("--owner", default="", help="the lane that owns the verdict"); sp_.add_argument("--verdict", default="STRUCTURAL", choices=STRUCT_VERDICTS)
             sp_.add_argument("--why", default="")
             sp_.add_argument("--old-plans-only", action="store_true", help="--block current: only blocks of rows launched on a plan other than the die current plan of record")
+            sp_.add_argument("--per-block", action="store_true", help="struct-stop: stop only the named plan block(s); default = a CARRIED stop on the type (every block / event) until struct-lift")
     rd_ = sub.add_parser("reap-dead", help="KW-FIX-46: dry-run list of rows the REAP-DEAD sweep would reap (read-only)")
     rd_.add_argument("--config", help="kit_wave.json file instead of coord/state autopilot/kit_wave.json")
     rd_.add_argument("--minutes", type=float, default=REAP_DEAD_MIN)
@@ -18233,7 +18286,7 @@ def main(argv=None):
             print("cancel-rows: the state file is empty or missing here; run this on the hub (intel2) or pass --ap-dir")
             return 2
         try:
-            stops, done, skipped = cancel_rows_phased(AP, cfg, ap_dir, a.die, a.item, a.why, a.owner, a.verdict, dry=a.dry_run, old_plans_only=a.old_plans_only, no_stop=a.no_stop, event=a.event, attempt=a.attempt, cls=a.cls)
+            stops, done, skipped = cancel_rows_phased(AP, cfg, ap_dir, a.die, a.item, a.why, a.owner, a.verdict, dry=a.dry_run, old_plans_only=a.old_plans_only, no_stop=a.no_stop, event=a.event, attempt=a.attempt, cls=a.cls, carry=not a.per_block)
         except RuntimeError as e:
             print(f"cancel-rows: {e}; nothing done")
             return 1

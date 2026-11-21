@@ -76,10 +76,10 @@ def test_native_cell_cap_tcl_stops_over_the_limit_and_honours_a_waiver(tmp_path)
     ok = run_tcl(399_999, tmp=tmp_path)
     assert "DONE_OK" in ok.stdout and ok.returncode == 0, ok.stderr
     bad = run_tcl(400_001, tmp=tmp_path)
-    assert bad.returncode == 0 and "DONE_OK" in bad.stdout and "cell cap removed" in bad.stdout   # KV-HUBPV-1118: report only
-    w = run_tcl(400_001, env={"OT_CELL_WAIVER": "r590"}, tmp=tmp_path)
-    assert "DONE_OK" in w.stdout
-    assert run_tcl(400_001, env={"OT_CELL_WAIVER": "please"}, tmp=tmp_path).returncode == 0
+    assert bad.returncode != 0 and "DONE_OK" not in bad.stdout and "OT_CELL_CAP STOP stage=floorplan" in bad.stdout   # FLOW-OPS-0900: CELL-CAP stops at floorplan
+    w = run_tcl(400_001, env={"OT_CELL_WAIVER": "r703"}, tmp=tmp_path)
+    assert w.returncode != 0                                                    # the stops_off ruling waiver is not an opt-out of the measured cap
+    assert run_tcl(400_001, env={"OT_CELL_CAP_STOP": "0"}, tmp=tmp_path).returncode == 0
 
 
 def test_enqueue_refuses_over_the_limit_unless_waived(monkeypatch):
