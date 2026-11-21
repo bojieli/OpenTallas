@@ -132,3 +132,26 @@ def test_repo_ledger_parses():
             "s81-prefix-d98908b665", "schema-8e9cdd615c"} <= ids
     assert any(r["id"].startswith("lockup") for r in rows)
     assert all(r["kind"] in ("commit", "define", "key") for r in rows)
+
+
+def test_ledger_carries_dly_repair_and_slew_hook(tmp_path):
+    """BUILD-SETTINGS-AUDIT-1900 (COORD): f2e64e5d3b (dly_spread DLY-REPAIR-1) and 3098d89a95 (PLACE-SLEW hooks) are ledger rows,
+    and check_commit tells a tree with the pre-fix hook (MISSING) from one with the fixed hook (CARRIED)"""
+    rows = {r["id"]: r for r in AD.read_ledger(AD.LEDGER)}
+    for rid, sha in (("dly-repair-f2e64e5d3b", "f2e64e5d3b"), ("place-slew-hook-3098d89a95", "3098d89a95")):
+        assert rows[rid]["kind"] == "commit" and rows[rid]["sha"] == sha and rows[rid]["die"] == "*"
+    repo = HERE.parents[1]
+    import pytest
+    if subprocess.run(["git", "-C", str(repo), "cat-file", "-e", "f2e64e5d3b^{commit}"]).returncode \
+            or subprocess.run(["git", "-C", str(repo), "cat-file", "-e", "3098d89a95^{commit}"]).returncode:
+        pytest.skip("fix commits not in this clone")
+    for rid, sha in (("dly-repair-f2e64e5d3b", "f2e64e5d3b"), ("place-slew-hook-3098d89a95", "3098d89a95")):
+        files = [p for p, st in AD.fix_files(str(repo), AD.rev(str(repo), sha)) if st != "D"]
+        assert "tools/die_plan/dly_spread.tcl" in files
+        for ref, want in ((sha + "^", "MISSING"), (sha, "CARRIED")):
+            tree = tmp_path / f"{rid}_{want}"
+            for p in files:
+                (tree / p).parent.mkdir(parents=True, exist_ok=True)
+                (tree / p).write_text(g(repo, "show", f"{ref}:{p}") + "\n")
+            v = AD.check_commit(str(repo), rows[rid], tree, "HEAD", ["tools/die_plan"], [])
+            assert v["verdict"] == want, (rid, ref, v)

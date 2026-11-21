@@ -19,3 +19,5 @@ lockup-leaf-ae58c0fd97	commit	ae58c0fd97	*	*		LOCKUP-STATION-1130: hop latches o
 lockup-dly-ddb2501006	commit	ddb2501006	*	*		kit_dly_lockup: pad_min_stations (sparse pad lines get a station per transport hop)
 bksel-tkr-40458a43e1	commit	40458a43e1	s81	bk_sel*		S81 bksel_c TKR: u_c takes from a registered new-fault flop (0 cycles, under OT_BKSEL_A3P); COORD 11-20: J6 must carry it
 bksel-l4-define	define	pending	s81	bk_sel__*	OT_BKSEL_L4	OPUS-FIX-S81-BKSEL-R4: 4 RTL link stages + hard-core reset relays; COORD 11-20: J6 must carry it (sha column filled when pushed)
+dly-repair-f2e64e5d3b	commit	f2e64e5d3b	*	*		DLY-REPAIR-1: dly_spread hop ends from the run's own 0/1 (no next-run overwrite of a shared anchor), no straight route through a core, repair moved nets (KV pv pad-trunk latches 1.8 mm wrong way, 1228 um hop without it)
+place-slew-hook-3098d89a95	commit	3098d89a95	*	*		PLACE-SLEW default-on in the hooks (dly_spread.tcl, gp_noconverge_gate.tcl): unset OT_PLACE_MAX_TRANSITION = 320 ps
