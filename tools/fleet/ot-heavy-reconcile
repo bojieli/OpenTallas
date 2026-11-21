@@ -175,17 +175,45 @@ def sh(*a):
 # DOCKERTO-1400 (FLEET-WATCH-1400, COORD 15:2x: epyc7 stopped admitting): `docker inspect` of a container whose stop is wedged in dockerd never returns.  This pass called it with no timeout (and a bulk call
 # blocks on its worst id), so one hung container hung the whole reconcile and every admission behind it; later passes piled up more hung inspects.  Every docker call here runs under coreutils
 # `timeout -k 2` (the client dies, not just the Python wait), and a bulk inspect that times out is redone one container at a time, skipping the ones that do not answer.
-DOCKER_TIMEOUT_S, DOCKER_ONE_S = 20, 8
+DOCKER_TIMEOUT_S, DOCKER_ONE_S = 10, 8
+# DOCKERBREAKER-1630 (COORD: epyc7 admission blocked ~25 min after the timeouts landed): every admission (ot-heavy --gate under the admit lock) and every cron pass called docker itself, so with a wedged
+# dockerd each of N waiters held the admission lock for the whole timeout in turn and nobody was admitted.  A docker call that times out writes D/docker.broken; for DOCKER_BREAKER_S every later docker call in
+# ANY process answers "timed out" at once (no wait under the lock), then one call probes again; a call that works removes the file.
+DOCKER_BREAKER_S = 60
+BREAKER = f"{D}/docker.broken"
 
 
-def docker_cmd(*a, t=None):
-    """-> (rc, stdout); rc 124 = timed out, 127 = no docker"""
+def breaker_open(now=None, path=None):
+    try:
+        return ((now or time.time()) - os.path.getmtime(path or BREAKER)) < DOCKER_BREAKER_S
+    except OSError:
+        return False
+
+
+BREAKER_RC = 125
+
+
+def docker_cmd(*a, t=None, force=False):
+    """-> (rc, stdout); rc 124 = timed out, 125 = the breaker is open (nothing was run), 127 = no docker"""
     t = DOCKER_TIMEOUT_S if t is None else t
+    if not force and breaker_open():
+        return BREAKER_RC, ""
     try:
         r = subprocess.run(["timeout", "-k", "2", str(t), "docker", *a], capture_output=True, text=True, timeout=t + 10)
-        return r.returncode, r.stdout
+        rc, out = r.returncode, r.stdout
+    except subprocess.TimeoutExpired:
+        rc, out = 124, ""
     except (OSError, subprocess.SubprocessError):
         return 127, ""
+    try:
+        if rc == 124:
+            open(BREAKER, "a").close()
+            os.utime(BREAKER)
+        elif rc == 0 and os.path.exists(BREAKER):
+            os.unlink(BREAKER)
+    except OSError:
+        pass
+    return rc, out
 
 
 def docker_inspect_all(ids):
@@ -193,6 +221,8 @@ def docker_inspect_all(ids):
     if not ids:
         return []
     rc, out = docker_cmd("inspect", *ids)
+    if rc == BREAKER_RC:
+        return []                      # DOCKERBREAKER-1630: dockerd is known wedged; no per-container retry burst under the lock
     if rc == 0:
         try:
             got = json.loads(out)
@@ -203,7 +233,7 @@ def docker_inspect_all(ids):
     from concurrent.futures import ThreadPoolExecutor
 
     def one(i):
-        rc1, o1 = docker_cmd("inspect", i, t=DOCKER_ONE_S)   # read at call time
+        rc1, o1 = docker_cmd("inspect", i, t=DOCKER_ONE_S, force=True)   # read at call time
         try:
             return json.loads(o1)[0] if rc1 == 0 else None
         except (ValueError, IndexError, TypeError):

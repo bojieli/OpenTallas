@@ -1,10 +1,15 @@
 """DOCKERTO-1400: the reconcile never waits on a docker call that hangs; one wedged container is skipped, the rest still answer."""
-import importlib.machinery, importlib.util, json, os, pathlib, stat, tempfile, time
+import importlib.machinery, importlib.util, json, os, pathlib, pytest, stat, tempfile, time
 
 P = str(pathlib.Path(__file__).with_name("ot-heavy-reconcile"))
 loader = importlib.machinery.SourceFileLoader("recon_dockerto", P)
 M = importlib.util.module_from_spec(importlib.util.spec_from_loader("recon_dockerto", loader))
 loader.exec_module(M)
+
+
+@pytest.fixture(autouse=True)
+def _own_breaker(tmp_path, monkeypatch):
+    monkeypatch.setattr(M, "BREAKER", str(tmp_path / "docker.broken"))      # DOCKERBREAKER-1630: never the host's real breaker file
 
 
 def fake_docker(d, hang_id):
