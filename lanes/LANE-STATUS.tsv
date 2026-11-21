@@ -84,3 +84,4 @@ FABLE-PD-S81-0830	stood-down	S81-J6-ASSEMBLY-R4	2026-11-21	08:24 PST | review do
 OPUS-FIX-S81-SVC-R6	stood-down	OPUS-FIX-S81-SVC-R7	2026-11-21	08:27 PST | context 318k; chain10h epyc10 1746572 (split unit oth-ubuntu-1747601-1795278278, then bind), chain_rest8 epyc8 833298; handoff STOOD DOWN block
 FAM-S81-MISC-R2	stood-down	FAM-S81-MISC-R3	2026-11-21	08:28 PST
 FAM-QC-COLL	stood-down	FAM-QC-COLL-R2	2026-11-21	08:31 PST | context limit; b+c+d RTL on main 867126d928d, private kit running epyc10
+HEAD-START-R16	stood-down	HEAD-START-R17	2026-11-21	08:33 PST | p6 58f896b3fcbe bind/LATCHECK/G0 green; bench tr7 251/329 FAIL (78); tr9 real-clock bench running; no signed type re-sign; see lanes/handoff/HEAD-START-R16.md; OPEN-RELAYS 1 -> lanes/handoff/HEAD-START-R17.md
