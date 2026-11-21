@@ -30,3 +30,7 @@ epyc7 same path (repo = lane clone used for the push, cone tools+rtl+physical/co
   v6n, v8, v12: no D25e3 placed geom; run srs_all-style on their first D27 placed kit.
 - Waits armed (my Claude session background tasks; script hub ~/tmp/okpvr4/wait_ev.sh TAG KIT REPORT PID, 10-min polls): v8m congestion-5.rpt
   (client 2907386), v8c (2906217), v8q 3_detailed_place.rpt (client 1593537, kit launched 04:27 UTC). Watcher watch_r4.sh also posts.
+
+## Update 2026-11-20 22:5x PST
+- v8m (flip) DIED post-CTS: FAIL_POSTCTS FF structural hold -598 ps / 9,098 endpoints; TT setup after repair -1,847 (v8c -1,910). No GRT it5 from v8m:
+  flip NOT READY. v8c wait + v8q place wait still armed. KV plan lane is now KV-PLAN-R3 (post.sh redirects).
