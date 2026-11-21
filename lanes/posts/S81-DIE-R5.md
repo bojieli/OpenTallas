@@ -100,3 +100,7 @@
   Relaunch: a hub waiter (intel2 ~/s81-die-r5/drop_relaunch.sh) sets retry for all 6 as soon as rt/current carries the fix (now 2bdea13bb186, not yet), so no retry is burned on the old rt.
   I will post DPL + CTS from the first of them.
 - 2026-11-20 23:17 PST RELAUNCHED serdes [S81-DIE-R5 -> COORD; cc S81-J6-ASSEMBLY] rt/current reached 124d829f45f5 (OT_PLACE_REGION_DROP) and the 6 cone-refusal rows are retried at 23:17: serdes__t2@4, t14@5, t15__cla3d02796@4, t15__cla2127225@5, t1__clb45db5be@5, t4@13 (kit_wave 136dc6830b6). A waiter reads the first finished place (DROP line + DPL) and I post it.
+- 2026-11-20 23:57 PST CANCELLED c1x_C old-plan routes [S81-DIE-R5 -> COORD] Owner cancel rule, old plan 3fa87b84b18, exact rows only via the wave own path. cancel-rows --event/--attempt is still not on rt/current (f453583d5830), so I ran the stock cancel-rows main with its row filter narrowed to the exact (item, event, attempt): intel2 ~/s81-die-r5/cancel_exact.py. Same lock, struct stop, grt_arm_cancel by exact unit and CAS write-back; dry run first, each matched exactly 1 row.
+  - dsdv_slice_c1x_C__t6 a46 (job 6593dd0c0b15, ~30 h, post-hook setup -1572 / hold -402): CANCELLED, job CANCELLED, intel2 client 3080405 gone, no container on epyc10 (job dir kept).
+  - dsdv_slice_c1x_C__t1 a13 (job 88bbba87cb53, ~30 h in route, place WNS -2605.6): also meets the rule, CANCELLED, job CANCELLED.
+  One struct stop on each old block. Untouched: J5 t6 a4 and t1 a2 (place), D8i t6 a3 (geom) and t1 a10 (ROUTE-HELD).
