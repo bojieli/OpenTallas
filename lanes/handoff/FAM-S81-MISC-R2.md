@@ -14,3 +14,5 @@ Work dir epyc10 /srv/opentallas-scratch2/claude/fam-s81-misc/ (scripts there; al
 - Tool fix 4ad784e4086 on main; needs a fresh J6-bound gen on current rt once J6 applies (not started).
 ## iqf/seqhost/eng: unchanged (see FAM-S81-MISC.md).
 ## Waiters: all die with this lane - re-arm: gate_misc4 (grep J6_GATE_DONE in gate_misc4.log).
+
+## Running units handed to successor: otrun-civil-redfish-1789426 (mk4.sh -> gate misc4, log mk4.log/gate_misc4.log), otrun-civil-redfish-486470 (gate misc3, gate_misc3.log)
