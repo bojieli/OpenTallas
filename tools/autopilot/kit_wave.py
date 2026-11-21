@@ -16759,6 +16759,25 @@ def log_hold_releases(AP, ap_dir, entries, text, reset=False, summary_total=None
     return new
 
 
+def pin_tags_step(AP, cfg, st):
+    """FLOW-OPS-0900 11-21 (FABLE-FLOW-0745 class e): when a die's src_sha (its pin) changes, AP.ensure_pin_tag cuts a flow release tag at
+    it unless a tag already carries its flow manifest.  Once per adopted pin (st pin_tag_seen); kit_wave.json "auto_flow_tag": false stops it."""
+    if cfg.get("auto_flow_tag") is False or not hasattr(AP, "ensure_pin_tag"):
+        return []
+    seen = st.setdefault("pin_tag_seen", {})
+    out = []
+    for die, d in sorted((cfg.get("dies") or {}).items()):
+        sha = str((d or {}).get("src_sha") or "")
+        if not sha or seen.get(die) == sha or (d or {}).get("auto_flow_tag") is False:
+            continue
+        tag, why = AP.ensure_pin_tag(die, sha)
+        if tag:
+            seen[die] = sha
+        AP.log(f"KIT-WAVE PIN-TAG {die} {sha[:12]}: {why} {tag or ''}".rstrip())
+        out.append((die, tag, why))
+    return out
+
+
 def _step(AP, ap_dir):
     if not scheduler_current(AP):
         return reload_step(AP, ap_dir)
@@ -16824,6 +16843,10 @@ def _step(AP, ap_dir):
                 AP.log(f"KIT-WAVE TREE-SWITCH {_die}: tree {_tree} ready on all gen hosts, switched {', '.join(_ch)}")
     except Exception as e:                               # unknown cells / proofs = still held
         AP.log(f"KIT-WAVE hold recompile skipped: {type(e).__name__}: {e}")
+    try:
+        pin_tags_step(AP, cfg, st)                       # FLOW-OPS-0900: a flow release tag at pin adoption (count once)
+    except Exception as e:                               # tagging never stops the wave
+        AP.log(f"KIT-WAVE PIN-TAG skipped: {type(e).__name__}: {e}")
     try:
         cfg["_mem_x"] = {}
         for k, v in (st.get("repeat_ledger") or {}).items():          # keyed die|item (the ledger key is die|item@event: the largest factor of any event)

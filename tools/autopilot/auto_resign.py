@@ -314,6 +314,13 @@ def judge(c, p, ctx, it):
     why = credited(ctx["cache"], c["die"], names)
     if why:
         return "SKIP", "already credited: " + why
+    # FLOW-OPS-0900 11-21 (class e): a wave result whose src flow manifest equals a released tag's is promoted by the autopilot
+    # (retry_unversioned) and counted once; signing the same DB again on the newest tag was the double sign-off
+    carried = ctx.get("carried")
+    if carried and c.get("source") == "wave" and c.get("src"):
+        t = carried(c["src"], c["die"])
+        if t:
+            return "SKIP", "counted once: src flow manifest equals tag %s (no second sign-off)" % t
     why = revoked_hit(ctx["revoked"], c["host"], p.get("kit"), p.get("netlist_sha"))
     if why:
         return "SKIP", "COUNT-REVOKED " + why
@@ -1087,7 +1094,7 @@ def read_ctx(AP, ap_dir):
         return tool_key(memo[tag]) if memo[tag] else "NO-TOOLS"
     return dict(holds=holds, cache=cache, revoked=AP.read_coord(REVOKED), retired=AP.read_coord(RETIRED),
                 tag=lambda die: next(iter(AP.flow_tags(die)), None), tool_key=key, shas=memo,
-                build_commit=build_commit_of(AP)), ""
+                build_commit=build_commit_of(AP), carried=getattr(AP, "flow_carried", None)), ""
 
 
 def _step(AP, ap_dir):

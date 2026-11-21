@@ -203,13 +203,12 @@ class TestGates(TickBase):
         self.assertEqual(len((Path(self.tmp.name) / "unversioned.tsv").read_text().splitlines()), 2)
         self.ap.resolve_provenance = lambda src, flow="", die=None: {"src_commit": "0123456789ab" + "0" * 28,
                                                            "flow_tag": "flow-20261026-a"}
-        # WF-1 11-14 (b35cf6424f): promoting unversioned records is OFF by default (COUNT-FRICTION-1 credits them
-        # directly); the old promotion path runs only with AP_RETRY_UNVERSIONED=1
-        (j,) = self.tick().values()
+        # FLOW-OPS-0900 11-21: promotion is ON again (provenance is a cached manifest lookup); AP_RETRY_UNVERSIONED=0 stops it
+        with mock.patch.dict(os.environ, {"AP_RETRY_UNVERSIONED": "0"}):
+            (j,) = self.tick().values()
         self.assertEqual(j["status"], "SIGNED-UNVERSIONED")
         self.assertFalse((Path(self.tmp.name) / "signed.tsv").exists())
-        with mock.patch.dict(os.environ, {"AP_RETRY_UNVERSIONED": "1"}):
-            (j,) = self.tick().values()
+        (j,) = self.tick().values()
         self.assertEqual(j["status"], "ARCHIVED")
         head, row = (Path(self.tmp.name) / "signed.tsv").read_text().splitlines()
         self.assertTrue(head.endswith("src_commit\tflow_tag"))
@@ -276,6 +275,7 @@ class TestProvenanceGit(unittest.TestCase):
         self.flow2 = g("rev-parse", "HEAD")
         self._repo, self._watch = self.ap.REPO, self.ap.flow_watch
         self.ap.REPO = self.repo
+        self.ap.FLOW_MANIFEST_CACHE = self.repo / ".fm-cache.json"     # FLOW-OPS-0900: never the live autopilot cache
         self.ap.flow_watch = lambda: ["tools/die_plan/signoff.py"]
 
     def tearDown(self):

@@ -2644,6 +2644,205 @@ def apply_legacy(j):
     return True
 
 
+def flow_path_watched(p, watch, exclude, own):
+    """the flow fingerprint predicate shared by flow_changes (diff) and flow_manifest (content): watched, not excluded, and not
+    another die's plan tree"""
+    return (any(fnmatch.fnmatch(p, w) for w in watch) and not any(fnmatch.fnmatch(p, x) for x in exclude)
+            and not (own is not None and p.startswith(PLAN_ROOT) and p[len(PLAN_ROOT):].split("/", 1)[0] not in own))
+
+
+# FLOW-OPS-0900 11-21 (FABLE-FLOW-0745 class e, "sign-offs are counted once"): a result is credited when the FLOW MANIFEST of its source
+# commit (sha256 over path + mode + blob of every watched flow file, the same predicate as flow_changes) equals the manifest of ANY flow
+# release tag covering its die -- content, not ancestry, and not only the 30 newest tags.  Before this, 31 S81 / QC results of 11-20 / 11-21
+# built on the die pins eb1e73448bd0 / 3c913dbdfb23 were filed SIGNED-UNVERSIONED although flow-20261113-lp-qc / -mt-s81 sit ON those very
+# commits: 945 tags cut on 11-17 pushed them out of the FLOW_TAGS_CHECKED window, and AUTO-RESIGN then signed the same DB a second time.
+# Manifests of commits never change, so they are cached on disk (FLOW_MANIFEST_CACHE) across ticks.
+FLOW_MANIFEST_CACHE = AP_DIR / "flow_manifest_cache.json"
+_FM = {"memo": None, "dirty": False}
+try:
+    import threading as _fm_threading
+    _FM_LOCK = _fm_threading.Lock()
+except Exception:                                        # pragma: no cover
+    _FM_LOCK = None
+
+
+def _fm_memo():
+    if _FM["memo"] is None:
+        try:
+            _FM["memo"] = json.loads(Path(FLOW_MANIFEST_CACHE).read_text())
+        except (OSError, ValueError):
+            _FM["memo"] = {}
+    return _FM["memo"]
+
+
+def flow_manifest_save():
+    """write the manifest cache when it grew (best effort: a lost cache only costs one recompute)"""
+    if not _FM["dirty"]:
+        return
+    try:
+        t = Path(str(FLOW_MANIFEST_CACHE) + ".tmp")
+        t.write_text(json.dumps(_fm_memo()))
+        os.replace(t, FLOW_MANIFEST_CACHE)
+        _FM["dirty"] = False
+    except OSError:
+        pass
+
+
+def flow_watch_roots(watch):
+    """pathspec roots of the watch globs (ls-tree reads only these trees); '' = the whole tree"""
+    roots = set()
+    for w in watch:
+        head = re.split(r"[*?\[]", w, maxsplit=1)[0]
+        if head != w:
+            head = head.rsplit("/", 1)[0] if "/" in head else ""
+        if not head:
+            return []
+        roots.add(head.rstrip("/"))
+    return sorted(roots)
+
+
+def manifest_of_lstree(text, watch, exclude, own):
+    """sha256 of the sorted 'path mode type blob' lines of `git ls-tree -r -z` output that the flow watches (pure: tests use it)"""
+    lines = []
+    for ent in (text or "").split("\0"):
+        meta, _, path = ent.partition("\t")
+        if path and flow_path_watched(path, watch, exclude, own):
+            lines.append(path + " " + meta)
+    return hashlib.sha256("\n".join(sorted(lines)).encode()).hexdigest()
+
+
+def flow_manifest(commit, die=None):
+    """flow manifest sha of a full commit sha for `die` (None: unknown / unreadable; never guessed)"""
+    watch = flow_watch()
+    if not watch or not commit:
+        return None
+    exclude = flow_exclude()
+    own = flow_plans().get(CANARY_DIE.get(die, die)) if die else None
+    key = "%s|%s|%s" % (commit, "*" if own is None else ",".join(sorted(own)),
+                        hashlib.sha1(json.dumps([watch, exclude]).encode()).hexdigest()[:12])
+    memo = _fm_memo()
+    if key in memo:
+        return memo[key]
+    rc, out, _ = sh(["git", "-C", str(REPO), "ls-tree", "-r", "-z", "--full-tree", commit, "--", *flow_watch_roots(watch)], timeout=120)
+    if rc:
+        return None
+    m = manifest_of_lstree(out, watch, exclude, own)
+    if _FM_LOCK:
+        with _FM_LOCK:
+            memo[key] = m
+            _FM["dirty"] = True
+    else:
+        memo[key] = m
+        _FM["dirty"] = True
+    return m
+
+
+def _flow_tag_commits():
+    """{tag: peeled commit sha} for every flow release tag on origin (one for-each-ref per tick)"""
+    if "tag_commits" not in CLOSURE:
+        _all_flow_tags()
+        rc, out, _ = sh(["git", "-C", str(REPO), "for-each-ref", "--format=%(refname:short) %(objectname) %(*objectname)",
+                         "refs/tags/flow-*"], timeout=60)
+        got = {}
+        for line in (out.splitlines() if rc == 0 else []):
+            f = line.split()
+            if len(f) >= 2:
+                got[f[0]] = f[2] if len(f) > 2 and f[2] else f[1]
+        CLOSURE["tag_commits"] = got
+    return CLOSURE["tag_commits"]
+
+
+def manifest_tag(full, die=None):
+    """-> (tag, manifest) of the newest flow release tag covering `die` whose flow manifest equals the commit's, ('', manifest) when
+    none does, (None, None) when the commit's manifest is unreadable"""
+    mine = flow_manifest(full, die)
+    if not mine:
+        return None, None
+    commits = _flow_tag_commits()
+    try:
+        for t, _ in _all_flow_tags():                    # newest first, ALL tags (no FLOW_TAGS_CHECKED window)
+            if not tag_covers(t, die) or not commits.get(t):
+                continue
+            if commits[t] == full or flow_manifest(commits[t], die) == mine:
+                return t, mine
+        return "", mine
+    finally:
+        flow_manifest_save()
+
+
+def flow_carried(src, die=None):
+    """the flow release tag that carries src's flow by manifest, '' when none / unknown (AUTO-RESIGN: never sign a carried result twice)"""
+    try:
+        p = resolve_provenance(src, "", die)
+    except Exception:
+        return ""
+    return "" if p.get("error") else (p.get("flow_tag") or "")
+
+
+def flow_tag_suffix(n):
+    """0 -> a, 25 -> z, 26 -> aa, ... (the suffix sequence of flow-YYYYMMDD-<suffix>[-die] tags)"""
+    out = ""
+    n += 1
+    while n:
+        n, r = divmod(n - 1, 26)
+        out = chr(97 + r) + out
+    return out
+
+
+def next_flow_tag_name(day, taken, dietag):
+    """the first flow-<day>-<suffix>-<dietag> whose suffix no tag of that day uses yet (suffixes are shared by the dies of one release)"""
+    used = set()
+    for t in taken:
+        m = re.match(r"^flow-%s-([a-z]+)(?:-|$)" % re.escape(day), t)
+        if m:
+            used.add(m.group(1))
+    n = 0
+    while flow_tag_suffix(n) in used:
+        n += 1
+    return "flow-%s-%s-%s" % (day, flow_tag_suffix(n), dietag)
+
+
+AUTO_FLOW_TAG_STOP = AP_DIR / "auto_flow_tag.stop"
+
+
+def ensure_pin_tag(die, sha, day=None):
+    """FLOW-OPS-0900 11-21 (FABLE-FLOW-0745 class e): at pin adoption the die's src commit gets a flow release tag unless one already
+    carries its flow manifest, so no result built on the pin waits for a hand-cut tag or a second sign-off.  -> (tag | None, why).
+    Stop: AP_DIR/auto_flow_tag.stop (or kit_wave.json "auto_flow_tag": false, read by the caller)."""
+    dietag = DIE_FLOW_TAG.get(die)
+    if not dietag or not re.fullmatch(r"[0-9a-f]{7,40}", str(sha or "")):
+        return None, "no die tag or no src sha"
+    if AUTO_FLOW_TAG_STOP.exists():
+        return None, "stopped by %s" % AUTO_FLOW_TAG_STOP
+    rc, out, _ = sh(["git", "-C", str(REPO), "rev-parse", "-q", "--verify", sha + "^{commit}"], timeout=60)
+    if rc or not out.strip():
+        sh(["git", "-C", str(REPO), "fetch", "-q", "origin", "main"], timeout=300)
+        rc, out, _ = sh(["git", "-C", str(REPO), "rev-parse", "-q", "--verify", sha + "^{commit}"], timeout=60)
+    if rc or not out.strip():
+        return None, "src %s not on the hub repo" % sha[:12]
+    full = out.strip().split()[0]
+    t, mine = manifest_tag(full, die)
+    if t:
+        return t, "carried"
+    if not mine:
+        return None, "flow manifest unreadable"
+    name = next_flow_tag_name(day or time.strftime("%Y%m%d"), [x for x, _ in _all_flow_tags()], dietag)
+    if DRY:
+        return None, "would cut " + name
+    rc, _, err = sh(["git", "-C", str(REPO), "tag", "-a", name, full, "-m",
+                     "auto flow release at pin adoption: %s src %s flow manifest %s (FLOW-OPS-0900)" % (die, full[:12], mine[:16])], timeout=60)
+    if rc:
+        return None, "tag failed: " + (err or "")[:200]
+    rc, _, err = sh(["git", "-C", str(REPO), "push", "-q", "origin", "refs/tags/" + name], timeout=300)
+    if rc:
+        sh(["git", "-C", str(REPO), "tag", "-d", name], timeout=60)
+        return None, "tag push failed: " + (err or "")[:200]
+    for k in ("all_tags", "tag_commits"):
+        CLOSURE.pop(k, None)
+    log(f"FLOW-TAG {name} cut at pin adoption: {die} src {full[:12]} manifest {mine[:16]}")
+    return name, "cut"
+
+
 def flow_changes(tag, full, watch, exclude, own):
     """Memoize identical flow comparisons within this tick, keyed by resolved commits."""
     rc, out, _ = sh(["git", "-C", str(REPO), "rev-parse", "-q", "--verify", tag + "^{commit}"], timeout=60)
@@ -2656,9 +2855,7 @@ def flow_changes(tag, full, watch, exclude, own):
         rc, out, _ = sh(["git", "-C", str(REPO), "diff", "--no-renames", "--name-only", tag_sha, full], timeout=120)
         if rc:
             return rc, []                         # transport/Git failures remain retryable
-        changed = tuple(p for p in out.splitlines() if any(fnmatch.fnmatch(p, w) for w in watch)
-                        and not any(fnmatch.fnmatch(p, x) for x in exclude)
-                        and not (own is not None and p.startswith(PLAN_ROOT) and p[len(PLAN_ROOT):].split("/", 1)[0] not in own))
+        changed = tuple(p for p in out.splitlines() if flow_path_watched(p, watch, exclude, own))
         cache[key] = changed
     return 0, list(cache[key])
 
@@ -2687,6 +2884,13 @@ def resolve_provenance(src, flow="", die=None):
         if flow in flow_tags():
             return {"src_commit": full, "flow_tag": "", "error": f"flow tag {flow} does not cover die {die}"}
         return {"src_commit": full, "flow_tag": "", "error": f"flow tag {flow} not found on origin"}
+    if not flow:                                         # FLOW-OPS-0900: by flow manifest over every tag covering the die
+        t, mine = manifest_tag(full, die)
+        if t:
+            return {"src_commit": full, "flow_tag": t, "flow_manifest": mine}
+        if mine:
+            return {"src_commit": full, "flow_tag": "", "flow_manifest": mine,
+                    "error": "no flow release tag carries this commit's flow" + ("" if tags else " (no flow-* tag on origin yet)")}
     for t in ([flow] if flow else tags):
         rc, changed = flow_changes(t, full, watch, exclude, own)
         if rc:
@@ -2830,12 +3034,17 @@ def resign_carry(j, cache=None, probe=None, budget=None):
     return None
 
 
+RETRY_UNVERSIONED_MAX = 12                              # promotions per tick (each writes PROVENANCE.json on its archive host)
+RETRY_UNVERSIONED_S = 180
+
+
 def retry_unversioned(st):
     """an archived SIGNED-UNVERSIONED run is promoted once a flow release tag carries exactly its flow, or (KW-FIX-4
     11-03) once a valid RE-SIGN of its same routed DB on a released flow tag exists (resign_carry)"""
     # WF-1 11-14 (#4): resolve_provenance (git rev-parse / fetch / flow-tag diffs) is per (src, flow, die), not per job, and its
     # git calls are independent: resolve each distinct key once, on a small thread pool, then walk the jobs
     from concurrent.futures import ThreadPoolExecutor
+    t0 = time.time()
     keys = sorted({(j["src"], j.get("flow", ""), j.get("die")) for j in st["jobs"].values()
                    if j.get("status") == "SIGNED-UNVERSIONED" and j.get("archive")}, key=str)
     provs = {}
@@ -2847,9 +3056,13 @@ def retry_unversioned(st):
                 return k, {"src_commit": "", "flow_tag": "", "error": f"{type(e).__name__}: {e}"[:200]}
         with ThreadPoolExecutor(max_workers=6) as ex:
             provs = dict(ex.map(_one, keys))
+    done_n = 0
     for j in st["jobs"].values():
         if j.get("status") != "SIGNED-UNVERSIONED" or not j.get("archive"):
             continue
+        if done_n >= RETRY_UNVERSIONED_MAX or time.time() - t0 > RETRY_UNVERSIONED_S:
+            log(f"RETRY-UNVERSIONED budget used ({done_n} promoted, {time.time() - t0:.0f} s): rest next tick")
+            break
         prov = dict(provs[(j["src"], j.get("flow", ""), j.get("die"))])
         if prov.get("error"):
             j["prov_error"] = prov["error"]
@@ -2871,6 +3084,7 @@ def retry_unversioned(st):
             log(f"PROVENANCE write failed {j['id']}: {w['error'][:200]}; retry next tick")
             continue
         record_signed(st, j, host, j.get("signoff") or {})
+        done_n += 1
         log(f"PROMOTE {j['id']} {j['die']}/{j['type']}: SIGNED-UNVERSIONED -> signed.tsv (src {j['src_commit'][:12]}, "
             f"flow {j['flow_tag']}" + (f" via RE-SIGN {j['resign_carry']['host']}:{j['resign_carry']['record']}"
                                        if j.get("resign_carry") else "") + ")")
@@ -3916,7 +4130,9 @@ def tick(args):
     # WF-1 11-14 (COORD/OWNER: the commit / flow-tag tie is removed from counting; COUNT-FRICTION-1 credits SIGNED-UNVERSIONED
     # directly): promoting unversioned records only to get provenance cost 476 s of a 1033 s tick, so it is OFF by default.
     # AP_RETRY_UNVERSIONED=1 (or the marker autopilot/RETRY-UNVERSIONED) turns it back on.
-    if os.environ.get("AP_RETRY_UNVERSIONED") == "1" or (AP_DIR / "RETRY-UNVERSIONED").exists():
+    # FLOW-OPS-0900 11-21: provenance is now a cached manifest lookup (no per-tag diffs), so the promotion runs every tick again, bounded
+    # by RETRY_UNVERSIONED_MAX promotions and RETRY_UNVERSIONED_S seconds; AP_RETRY_UNVERSIONED=0 or the marker NO-RETRY-UNVERSIONED stops it.
+    if os.environ.get("AP_RETRY_UNVERSIONED", "1") != "0" and not (AP_DIR / "NO-RETRY-UNVERSIONED").exists():
         retry_unversioned(st)
     _rp("retry_unversioned", _t)
     _mark("reviews_retry")
