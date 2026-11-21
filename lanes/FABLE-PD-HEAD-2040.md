@@ -1,3 +1,103 @@
+# FABLE-PD-HEAD-2040 (11-20 21:1x PST): structural review of HEAD plan event R15 (owner lane HEAD-PLAN-R15)
+
+Read-only review, run in parallel with the R15 bind. Nothing cancelled, nothing signalled, no kit touched.
+Reviewed: lane dir epyc10 `/srv/opentallas-scratch2/claude/head-plan-r15` (plans p2 435776381eaa = cap-300 re-pick, p2c 2d88d20dccee =
+405 no re-pick, p3_cap405 92bcfc338f0a as copied 21:0x = form d), base r13r NOMCAP eccfe487c232 (tools 385f61b5), pinned tools rt
+ec4936598992. My outputs: epyc10 `/srv/opentallas-scratch2/claude/fable-pd-head-r15rev/out` (one ot-run unit
+oth-ubuntu-435460-1795236274: plan_geom_census x5, event_census x4, event_adopt_diff; plus one reset-tree dump new_trees_405.json).
+The 11-19 review of r10 follows below, unchanged.
+
+## Verdict
+R15 as composed does NOT fix the reset wavefront class on every writer, and no variant has passed GEN yet (a, c, d all GEN_RTL FAIL).
+The 405 scope is the right scope for this event, but the cap is only one of two solver inputs that moved: at 405 the main tools
+still build a different reset tree on 11 of 26 types (10 of them signed). R15 should bind the r13r trees, not re-pick names.
+
+## Root causes, with evidence
+RC1. START / export / local-reset rows name generated relays by build index (rst_rl_<k>), and the pinned tools renumber and move them.
+  - Form c (405, no re-pick), bindrun/r15c gen_rtl.log: hd_ctl now passes, next writer fails:
+    `hd_host_n.ad_o: writer START raw reset rst_rl_13 has no registered wavefront driver`. G0 r15c: 4393 errors, all
+    `rst_start_raw_N: raw reset export source instance/net/xy differs from actual reset tree`; R-REACH-5 dangling raw names:
+    hd_spn_end 205, hd_st_turn 14, hd_host_n 9, hd_tile 4, hd_lep0N 1, hd_st_m 1.
+  - Form a2 (300), bindrun/r15gen: `hd_ctl: landing_local_resets.k0: consumer u_cland_fstart_lepk_o0 reset cland_start_raw depth 4 !=
+    copy depth 3 (raw rst_rl_132): release edge would move`; G0 5749 errors.
+  - Form d (405 + identity re-pick, s1b.py), bindrun/r15dgen: START stages and exports are remapped, local resets are not:
+    `hd_lep0N: landing_local_resets.k9: consumer u_cland_sin_agg_coll_i2_1 reset cland_reset_lepk_i0 depth 7 != copy depth 5 (raw rst_rl_482)`.
+    Three reference classes exist (reader/writer START stages, reset_start_raw_exports, landing_local_resets); d covers two.
+RC2. The main solver is not replay-compatible with the bound trees even at 405. Same plan (p2c), old tools vs rt, cap 405
+  (old_trees.json vs out/new_trees_405.json, identity = depth + site + role): 15 types identical, 11 differ:
+  hd_tile 239 -> 265 relays, depth 4 -> 5, 171 sites gone / 197 new (gated rst_n_t1 moves depth 4 -> 5: release edge moves);
+  hd_lep0N 1431 -> 1405 (56 gone / 30 new); hd_spn_end 452 -> 444; hd_st_turn 268 -> 278; hd_st_m 40 -> 54; hd_host_n 53 -> 57;
+  hd_st_str 149 -> 151; hd_mesh_e 14 -> 18; hd_spn_eshim_rx 37 -> 31; hd_spn_eshim_tx 20 -> 18; hd_turn_b 22 -> 22 (12 sites moved).
+  The handoff attributes all of it to legal relay sites (42eeacf87f, pushed 19:08 PST, one hour before the pin). That is not shown:
+  hd_mesh_e and hd_st_turn only GAIN relays, which a stricter site test alone does not explain; 6 commits touched reset_tree.py since
+  385f61b5 (42eeacf87f, e9af887233 R-REACH-1 die/monitor relays, aced0fb210, 4ed355582d, 4ba88d2284, b7b2095a50). Not bisected.
+RC3. HEAD carries no bound reset authority: 0 of 26 published wrappers have a .reset_tree.json receipt, 0 of 26 types serialise
+  collector_tree, only 4 types had a reset_tree_anchor in r13r. So neither bound_reset_contract (kit gen) nor reset_anchor (bind) can
+  hold the tree, and the bound cap exists only as an env value. This is the same class as the 11-20 default-change incident.
+RC4. The censuses cannot see any of this. event_census r13r -> R15 reports REGRESS 0 for all four variants (c405, p3_405, c300, p2_300)
+  while every variant fails GEN: RESET_ROWS counts plan rows only (hd_tile 9/9, hd_lep0N 26/26), and RESET_UM, UNREG_READS, MON_UM,
+  DEFINES_KIT are UNMEASURED without kits (102 of 182 rows). Reset legs and unregistered reads are therefore unmeasured, not clean.
+
+## (1) Scope: 405 vs 300
+405 is right for R15: owner 11-20 (defaults come from the bound plan) and "signed types relaunch only when their netlist changes".
+Cost of 300 (plan/p3_cap300.log): relays 5,357 -> 7,531 (+41 %), depth deeper on 24 of 26 types (hd_tile 4 -> 7, hd_spn 7 -> 10,
+hd_serdes 7 -> 11, hd_lep0N 7 -> 10), all 26 wrappers change so all 25 signed types relaunch, 13 types fail closed in the remap
+(no same-depth relay within 405 um, up to 1,246 um), and the die START tree (exports, local resets, START dates) must be re-dated.
+But 405 must be recorded as plan/receipt authority (reach_cap_um), and it is not sufficient alone (RC2).
+
+## (2) Census results (R15 compose vs r13r)
+- plan_geom_census: R15 rows are byte-identical to r13r in every variant. 11 hops over 300 um on 4 types, none fixed by R15:
+  hd_spn be_i 850.5 and bw_i 706.4 (566 bits each), x_o 339.9, b_i 339.8; hd_spn_end be_i 850.5, bw_i 706.4;
+  hd_tile line -> u_ad1 573.1 (128 bits), flt_h -> flt_x 420.7, ten_q 398.2, x_q 341.5 (512 bits); hd_lep0N coll_i3 367.6 (514 bits).
+  Unregistered reads: UNMEASURED on 6 memory types (hd_mesh 110 macros, hd_host_w 55, hd_lep0N 45, hd_host_e 19, hd_ctl 4, hd_serdes 2).
+- event_census: only change seen is hd_serdes DEFINES (+OT_S81_RM_STAGED, OT_S81_KP4_ENC_LA, OT_S81HD_SERDES_RLEAF); REGRESS 0 (see RC4).
+- event_adopt_diff: 881 LAG, 17 BOTH, 25 CURRENT; ledger 11 MISSING + 1 DIVERGED in the base, all carried by taking main's tools.
+- G0 (lane runs): r13r baseline 0 errors; r15 5749, r15c 4393; r15d not reached. R-REACH warnings unchanged: hd_ctl ring reset fan
+  752 um and 8 face buses 2,863 bits up to 362 um from the consumer; hd_serdes ring reset 653 um; hd_lep0N 8 forwarded clocks on a far tap.
+
+## (3) Tap table
+Safe for signed types: clock.tap_offset.per_port_ps holds one type only, hd_lep0N (195 -> 251 rows), and hd_lep0N is the unsigned type.
+No other type's plan slice changes from it. Two notes: the drift is not a uniform 25 ps but mean -3.9, sd 24.9, range -79.9..+63.6
+(port clk +16.6 -> -16.5), and the priced window widens from 150 ps (-100.6..+49.2) to 229 ps (-116.1..+113.3): the table is now
+truthful and it shows a die clock delivery spread that hd_lep0N must absorb in hold.
+What does relaunch signed types is RC2, not the table: form d changes 10 signed wrappers, and gates15.sh republishes every cohort DIFF type.
+
+## (4) Types most likely to fail on R15
+1. hd_lep0N: unsigned; 229 ps tap window; late cores (flop -> core -389 ps, 2,290 ends); GRT overflow 50,446 at round 10 on the epyc10 kit
+   (NOPROG 19:30-20:15); blocks GEN in form d (k9); its tree changes, so neither r14 nor tr2s would be the R15 netlist.
+2. hd_tile: largest remap (depth 4 -> 5, max move 378 um), 4 hops over 300; its last valid private TT was -52.16 before the ring fixes.
+3. hd_serdes: must rebuild (defines); sdr2c lacks the R15 START parent rows, so sdr2c is not the R15 netlist; GRT overflow 1,428 without -allow_congestion.
+4. hd_spn_end: 58 START + 14 export remaps, 205 dangling names in form c, two hops of 850 / 706 um.
+5. hd_host_n: first writer to fail in form c; 300-um tree needs 644 um moves.
+6. hd_st_turn / hd_st_m: trees grow (268 -> 278, 40 -> 54) with 18 / 3 START remaps.
+
+## Ranked fix list (owner HEAD-PLAN-R15 unless named)
+F1. Bisect RC2 before anything else: dump the 405 trees of hd_mesh_e, hd_st_turn, hd_tile with rt reset_tree.py at each of the 6 commits
+    (1 min each, s1b.py dump). Name the commit(s) per type.
+F2. Bind the trees instead of re-picking: R15 = r13r trees on all 25 signed types. Either (a) a plan-recorded site rule + cap for bound
+    plans (reset.reach_cap_um 405 and the pre-42eeacf87f site test, scoped like bound_reset_hop_cap; tools change by RESET-RELAY-GEN-R3 /
+    FLOW-NOADV-R3), or (b) emit .reset_tree.json receipts for the 26 published wrappers from old_trees.json and let gen.py rtl install them
+    as it does in gen_phys. Acceptance: cohort DIFF = {hd_serdes, hd_lep0N} only, G0 0 errors, 0 R-REACH-5 rows.
+F3. Put the cap in the plan or receipt, not only in die_gen_env OT_RESET_HOP_CAP_UM.
+F4. With F2, make the R15 hd_lep0N rows equal the tr2s source (r14 delta + all251) so a tr2s or r14 sign-off is the R15 netlist; same for
+    hd_serdes vs sdr2c (carry the Codex START rows only if sdr2c does not sign).
+F5. If F2 cannot land by the apply time: form d may go only with landing_local_resets remapped too, one proof kit of hd_tile through GRT TT
+    first, and each DIFF signed type listed with its netlist reason before republish.
+F6. Census (PRECHECK / ADOPT-CENSUS owner): add solved reset depth, relay count and site identity per type to event_census, and run it with
+    --prev-kits so RESET_UM / UNREG_READS are measured.
+F7. Next event: 300-um re-solve with a die START re-date, and the 11 data hops (hd_spn be_i/bw_i first).
+
+## Stop list
+S1. Do not apply R15 at cap 300 (25 signed relaunches, START re-date).
+S2. Do not let gates15.sh auto-republish DIFF types that are signed.
+S3. Do not relaunch any signed type for the tap table.
+S4. Do not relaunch hd_tile on the depth-5 tree without a proof kit.
+S5. Do not ship 405 as an env-only setting.
+S6. Do not read event_census REGRESS 0 as "reset unchanged".
+S7. Do not touch r14, tr2s or sdr2c; any of them signing still counts.
+
+---
+
 # FABLE-PD-HEAD-2040: HEAD die physical-design review (r10, hd_tile setup, die intra hold, hd_serdes)
 
 2026-11-19 21:01 PST. Reviewer lane, read-only. Plan reviewed: `head_rp21z20NF15f_r10` (published 20:54 while this review ran; snapshot `s81_head_r10_s0`, private tree epyc10 `/srv/opentallas-scratch2/claude/head-crossing-1119/tree_r10`). Findings against r10 are therefore inputs to the next event (called r11 below).
