@@ -1006,3 +1006,4 @@
 - 2026-11-21 15:10 PST DISK-RATE epyc2 /srv/opentallas-scratch2: free 100 GB, falling 43 GB/h, floor 50 GB in 1.2 h (state 2, was 0) LSOF+L1 holders: none (>=10 MB) on /srv/opentallas-scratch2 AUTO-RETIRE rc 0: ; deleted 0,  (cron disk_rate.py; read-only)
 - 2026-11-21 15:20 PST DISK-RATE epyc8 /srv/opentallas-scratch2: free 153 GB, falling 22 GB/h, floor 50 GB in 4.6 h (state 1, was 0) LSOF+L1 holders: none (>=10 MB) on /srv/opentallas-scratch2 (cron disk_rate.py; read-only)
 - 2026-11-21 15:27 PST ALERT [FLEET-OPS-R -> COORD] lane quota: harvest-eco-2350 on intel1 wrote 58 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
+- 2026-11-21 15:40 PST DISK-RATE epyc9 /srv/opentallas-scratch2: free 203 GB, falling 51 GB/h, floor 50 GB in 3.0 h (state 1, was 0) LSOF+L1 holders: none (>=10 MB) on /srv/opentallas-scratch2 (cron disk_rate.py; read-only)
