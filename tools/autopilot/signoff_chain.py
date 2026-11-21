@@ -242,6 +242,24 @@ def stage_signoff_tool(kit, bundle=None, source=None):
                 continue
             os.replace(f, t)
             names.append(f.name)
+        # Legacy kits lack the generator's native nominal libraries. The
+        # sign-off bundle carries their replacements in a subdirectory.
+        nominal = tmp / "nomcap_libs"
+        target = kit / "nomcap_libs"
+        if (nominal / "MANIFEST.json").is_file() and not (kit / "nomcap" / "MANIFEST.json").is_file():
+            if not target.exists() and not target.is_symlink():
+                os.replace(nominal, target)
+                names.append(nominal.name)
+            elif target.is_dir() and not target.is_symlink():
+                # Complete an interrupted copy with the manifest published last.
+                for member in sorted(nominal.iterdir(), key=lambda p: (p.name == "MANIFEST.json", p.name)):
+                    if not member.is_file():
+                        continue
+                    existing = target / member.name
+                    if existing.is_file() and existing.read_bytes() == member.read_bytes():
+                        continue
+                    os.replace(member, existing)
+                    names.append(str(existing.relative_to(kit)))
         rec = {"t": time.strftime("%Y-%m-%d %H:%M:%S %Z"), "source": str(src), "label": label, "signoff_py": _sha(kit / "signoff.py"),
                "kit_copy_was": old, "replaced": names}
         with open(kit / "signoff_tool.jsonl", "a") as fh:
