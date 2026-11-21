@@ -162,3 +162,7 @@ Rules: cd / first; posts via bin/post.sh; kit_wave via kit_wave_edit; cancel onl
 ## 11-20 18:4x
 - Reset-cap fix confirmed: leaf t10 cleared gen (place), t2 in resume_fp, t52 in gen_lint.
 - serdes t3/t4 DPL-0033 at detail_place (J5). Repro on epyc7 s81-die-r4-dpl/serdes__t4 (place.out); waiter armed. Plan cause -> S81-J6-ASSEMBLY + serdes lane; flow cause -> fix + relaunch t4.
+
+## 11-20 19:0x CLAND band
+- col_h9_r0_p3 cl0cd90c0e family: J5 reset relay rst_rl_137 seated in the u_ha/u_hb macro channel. Handed to J6 (plan/tool).
+- Family held: hold_items col_h9_r0_p3__t1__cl0cd90c0e__*. Not shared with KV (KV cell is cland_ft9).
