@@ -50,7 +50,10 @@ TABLE_ROW = re.compile(r"^\s*(\d+|final)\*?\s*\|(.*)$")       # repair_timing ro
 DRT_ITER = re.compile(r"DRT-0199\]\s+Number of violations = (\d+)")
 DRT_PCT = re.compile(r"Completing \d+% with (\d+) violations")
 GRT_TOTAL = re.compile(r"^Total\s+\d+\s+\d+\s+[\d.]+%\s+(\d+)\s*/\s*(\d+)\s*/\s*(\d+)")
-NOISE = re.compile(r"GRT-0102|GRT-0273|RSZ-0104|^\s*$")
+# MEM-RECLAIM-2200 (FABLE-FLOW-2200 class 10): the STAGE-CAP keep/skip line (stage_odb_cap.log, every few minutes, 148 jobs) and heartbeat lines are the
+# harness talking, not the flow: they are never progress (the watchdog called every such job PROGRESSING, 0.0 h since the last event)
+NOISE = re.compile(r"GRT-0102|GRT-0273|RSZ-0104|STAGE-CAP|WATCHER (?:replaced|would)|heartbeat|^\s*$", re.I)
+NOT_FLOW_LOG = re.compile(r"stage_odb_cap|heartbeat", re.I)     # whole log files that only carry such lines
 METRIC_COLS = ["Remaining", "Violations", "Viol", "TNS"]     # priority; TNS is taken as |TNS|
 
 
@@ -597,20 +600,22 @@ def candidate_logs(work, mounts, cname, started):
     """the newest log that is not older than the container: ORFS stage tmp logs first, else the kit's own step logs
     (LEC containers: the lec logs)"""
     cands = []
+    _glob = glob.glob
+    glob_ = lambda pat: [p for p in _glob(pat) if not NOT_FLOW_LOG.search(os.path.basename(p))]
     if work:
-        cands += glob.glob(f"{work}/run/logs/*/*/*/*.log")        # *.tmp.log = the running OpenROAD stage; yosys writes its *.log directly
+        cands += glob_(f"{work}/run/logs/*/*/*/*.log")        # *.tmp.log = the running OpenROAD stage; yosys writes its *.log directly
     if cname.endswith("-lec"):
         for root in {work} | {m["Source"] for m in mounts}:
             if root:
-                cands += glob.glob(f"{root}/*lec*.log") + glob.glob(f"{root}/*/*lec*.log") + glob.glob(f"{root}/lec/*.log")
+                cands += glob_(f"{root}/*lec*.log") + glob_(f"{root}/*/*lec*.log") + glob_(f"{root}/lec/*.log")
     else:
         if work:        # a kit step's own log (pregrt_ff_hold.log, hold_gate.log ...); run_*.log is the aggregate runner stdout: fallback only
-            cands += [p for p in glob.glob(f"{work}/*.log") + glob.glob(f"{work}/run/*.log") if not os.path.basename(p).startswith("run_")]
+            cands += [p for p in glob_(f"{work}/*.log") + glob_(f"{work}/run/*.log") if not os.path.basename(p).startswith("run_")]
         if not cands and work:
-            cands += glob.glob(f"{work}/run_*.log")
+            cands += glob_(f"{work}/run_*.log")
         if not cands:
             for m in mounts:
-                cands += glob.glob(f"{m['Source']}/*.log") + glob.glob(f"{m['Source']}/*/*.log")
+                cands += glob_(f"{m['Source']}/*.log") + glob_(f"{m['Source']}/*/*.log")
     out = []
     for p in cands:
         try:

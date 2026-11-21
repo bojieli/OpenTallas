@@ -294,3 +294,30 @@ def test_sh_keeps_a_docker_failure_for_the_loud_line(monkeypatch):
     assert nw.sh("docker", "ps", "-q") == "" and "Cannot connect" in nw.DOCKER_ERR[0]
     del nw.DOCKER_ERR[:]
     assert nw.sh("echo", "x") == "" and not nw.DOCKER_ERR       # a non-docker failure is not a docker error
+
+
+def test_stage_cap_and_heartbeat_lines_are_not_progress(tmp_path):
+    # MEM-RECLAIM-2200 (FABLE-FLOW-2200 class 10): the STAGE-CAP keep line every few minutes made 148 jobs PROGRESSING with 0.0 h since the last event
+    cap = "2026-11-21 05:51:50 STAGE-CAP keep /srv/x/5_1_grt.odb: busy\n"
+    text = "[INFO GRT-0096] start\nsome real news\n" + cap * 50 + "WATCHER replaced pid 12 -> 13 x.sh\nheartbeat ok\n"
+    res = nw.extract("other", text)
+    assert res["n"] == 54 and res["growth_idx"] == 1                      # the last meaningful line is the real news
+    v, why, _ = nw.judge(res, anchors_for(res["n"], 30, 0.0), NOW)
+    assert v == "NO-PROGRESS", (v, why)
+    # the log file that only carries those lines is never the job's log
+    work = tmp_path / "w"
+    (work / "run/logs/asap7/d/base").mkdir(parents=True)
+    stage = work / "run/logs/asap7/d/base/5_2_route.tmp.log"
+    stage.write_text("x\n")
+    cap_log = work / "stage_odb_cap.log"
+    cap_log.write_text(cap)
+    hb = work / "kit_heartbeat.log"
+    hb.write_text("beat\n")
+    os.utime(stage, (NOW, NOW))
+    os.utime(cap_log, (NOW + 500, NOW + 500))
+    os.utime(hb, (NOW + 600, NOW + 600))
+    log, mt = nw.candidate_logs(str(work), [], "dpkit-x", NOW - 100)
+    assert log == str(stage) and mt == NOW
+    cap_log.unlink(); hb.unlink(); stage.unlink()
+    cap_log.write_text(cap)
+    assert nw.candidate_logs(str(work), [], "dpkit-x", NOW - 100) == (None, 0)       # only the harness log: no flow log (NO-DATA), never PROGRESSING
