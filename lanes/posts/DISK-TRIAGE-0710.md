@@ -1,0 +1,1 @@
+- 2026-11-21 07:13 PST epyc9 15:09-15:11Z: no deleted-but-open files, no long-running git, no cp/rsync of trees; scratch2 free 136->148 GB (rising, normal build churn; docker 4.6 GB reclaimable only). Nothing else found; nothing deleted or killed by me (intel2 git log pid was already exiting when checked). Standing down.
