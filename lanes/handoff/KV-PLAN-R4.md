@@ -3,10 +3,12 @@
 Read lanes/handoff/KV-PLAN-R3.md first (all sections still hold). Dirs: intel2 ~/tmp/kvplanr4 (own), ~/tmp/kvplanr3 (inherited chain).
 Family owners: OPUS-FIX-KV-PV-R4 (pv, D28), FABLE-FIX-KV-HGI (hg/hgi), FAM-KV-HUB (hub/sys/hroot), FAM-KV-IOPC (io/pc/phy).
 
-## Live
-1. D26 R3f: bind GREEN; chain stopped at seal verify (FAM-KV-IOPC cp -al copies tree_d26/tree_d26b on epyc7). Resume: intel2
-   ~/tmp/kvplanr4/resume_d26.sh (log apply_d26_resume.out): unshare cp -a -> seal -> publish_apply -> post-apply -> APPLIED.
-   After APPLIED: ot-delete epyc7 kw45/src_kv_pin_eb1e73448bd0_hg14_a9f605cb_tbbcc7f0_d26.linked_r4 (old link names only).
+## Live (CURRENT 2026-11-21 03:5x PST, after Codex 02:18-03:4x cover)
+1. D26: unshared, sealed, replicated 6 hosts, RC_GUARD 0. Candidate needs kv-d23-compose8/d26/reviewed_materialization.json (epyc7)
+   = PASS on a kv3_hub_Wi kit-rtl/gen pilot vs portable bind kw45/..._d26_bind_d26_portable_1121 (keys: manifest_hash, verdict, bind_out,
+   type, bind_gate, kit_rtl, gen, geometry_review, tools_sha 40-hex with rt/<sha12>/tools/die_plan/bind.py having bound_primitives).
+   Chain (intel2 pids): portable bind 2533045 -> stage 2763292 -> pilots hgi_v8 2860124, hub_Wi 3103499 (rt 00f30808b21e).
+   Then: intel2 ~/tmp/kvplanr4/apply_d26_after_materialization.sh -> APPLIED. Old link names: ot-delete epyc7 kw45/..._d26.linked_r4 after.
 2. D27c (19af3841ef74): the 7 types are strap-pad sites (OWNER 10-28, land_r8_strap_pads), types_conflicting 0 with --strap-pads, same as D26.
    Real fault was kv_r8_pin pinning 39 slg<-kvs_emb members (replica_unequal 7). r8pin3 (epyc8 kv-plan-r4/d27c/pin3.py: der2 + pvw-only pin)
    installed as tree r8_ev 04c53e682495; r4b bind then refused the 52 KV-102 pvw pins (R8_STALE 30 pvw) -> plain bind derivation
