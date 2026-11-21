@@ -25,3 +25,4 @@
   import json;d=json.load(open('/srv/opentallas-scratch2/claude/fam-s81-col-r4/wave_rb/root/items/col_h9_r1__t1__cl49d7a23e__pv047ea3b3/attempt_1/result.json'));print(d.get('stage'),d.get('verdict'),str(d.get('error',''))[:200])
   ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch2/claude/fam-s81-col-r4/wave_rb/root/items/col_h9_r1__t1__cl49d7a23e__pv047ea3b3/attempt_1/result.json' (/srv/opentallas-scratch2/claude/fam-s81-col-r4/wave_rb/root/items/col_h9_r1__t1__cl49d7a23e__pv047ea3b3/attempt_1)
+- 2026-11-21 08:11 PST DONE [FAM-S81-COL-R4] ot-push-main otpush-civil-redfish-1352582 on civil-redfish: rc=0 after 21 s, ended 16:11:21, log none, cmd: ot-push-main 
