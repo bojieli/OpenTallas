@@ -5627,9 +5627,49 @@ def _bind_through_landings(a):
     return raw, out, B, yjs, input_topology
 
 
+R8_FAIL_FAST_PREFIXES = ("R8_STALE", "R8_UNCOVERED", "R8_TABLE")
+
+
+def r8_fail_fast(a, raw, out, B):
+    """R8-FAIL-FAST 11-20 (COORD, KV D26 R3e: a 2 h strict bind ended on 30 R8_STALE only, because a compose step moved 12 lanes
+    +2 cycles and nobody re-derived r8_ev.json).  The R8 table is read in the bind head (align_landings) and no later step can
+    clear an R8 error, so a STRICT bind whose head already holds R8_STALE / R8_UNCOVERED / R8_TABLE stops right there: it writes
+    OUT/bus_groups.json and the table derived from it (OUT/r8_derived.json, the options of the current table, as `r8-prepass`),
+    a bind_report.json carrying the head errors (a gate reading BIND_ERRORS sees them, never a stale report), prints the table
+    diff and returns 1.  Install the derived table (after checking it) and bind once more.  --r8-keep-going (or
+    OT_BIND_R8_KEEP_GOING=1) restores the full run.  -> None when the bind continues."""
+    if not getattr(a, "strict", False) or getattr(a, "r8_keep_going", False) or os.environ.get("OT_BIND_R8_KEEP_GOING") == "1":
+        return None
+    r8err = [e for e in B.errors if e.startswith(R8_FAIL_FAST_PREFIXES)]
+    if not r8err:
+        return None
+    bg = B.bus_groups()
+    (out / "bus_groups.json").write_text(json.dumps(bg, indent=0))
+    st = getattr(B, "pad_stats", {}) or {}
+    ff = dict(head_r8_errors=len(r8err), other_head_errors=len(B.errors) - len(r8err), derived=None)
+    if st.get("mode") == "r8" and st.get("table"):
+        import land_r8_derive as DR
+        old_t = json.loads(Path(st["table"]).read_text())
+        text, _sm = DR.derive(raw, bg, DR.options(old_t))
+        target = out / "r8_derived.json"
+        DR.write_atomic(target, text)
+        d = DR.diff(old_t, json.loads(text))
+        ff.update(r8_table=str(st["table"]), derived=str(target), members_old=d["members_old"], members_new=d["members_new"],
+                  changed=d["changed"], added=d["added"], removed=d["removed"], equal=d["equal"])
+    (out / "bind_report.json").write_text(json.dumps(dict(errors=B.errors, n_errors=len(B.errors), r8_fail_fast=ff,
+                                                          crossings=None, crossing_bits=None), indent=1) + "\n")
+    print("R8_FAIL_FAST " + json.dumps(ff))
+    for e in B.errors[:30]:
+        print("  ", e)
+    return 1
+
+
 def cmd_bind(a):
     import kit_topology
     raw, out, B, yjs, input_topology = _bind_through_landings(a)
+    stop = r8_fail_fast(a, raw, out, B)
+    if stop is not None:
+        return stop
     B.uniform_inner()
     B.regen_params()
     try:
@@ -7392,6 +7432,8 @@ def main(argv=None):
         s.add_argument("--r8-out", help="r8-prepass: where to write the derived land_r8 table (default OUT/r8_derived.json)")
         s.add_argument("--mem", type=int, default=32)
         s.add_argument("--strict", action="store_true")
+        s.add_argument("--r8-keep-going", action="store_true",
+                       help="strict bind: do not stop after the head on R8_STALE / R8_UNCOVERED / R8_TABLE (R8-FAIL-FAST)")
         s.add_argument("--all-gaps", action="store_true",
                        help="report every EMIT plan/source gap (core reset leaf, parent ID, glue) in one run instead of "
                             "stopping at the first; no new checks; the bound top is not emitted while gaps remain")

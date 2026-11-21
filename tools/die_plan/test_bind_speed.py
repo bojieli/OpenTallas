@@ -193,3 +193,48 @@ def test_r8_prepass_derives_the_table_the_full_bind_needs(tmp_path):
     out2 = tmp_path / "o2"
     assert TB.run(plan, out2, "elab", "bind") == 0, TB.report(out2)["errors"][:5]
     assert not [e for e in TB.report(out2)["errors"] if e.startswith("R8_STALE")]
+
+
+# ------------------------------------------------------------------ R8-FAIL-FAST: a strict bind stops after the head on a stale R8 table
+def test_strict_bind_stops_after_head_on_stale_r8_table(tmp_path):
+    import test_bind as TB
+    if not TB.HAVE_YOSYS:
+        pytest.skip("no Yosys")
+    import bind
+    import r8 as R8
+    out0 = tmp_path / "o0"
+    assert TB.run(TB.plan_copy(tmp_path, "die_plan_lanes.json", TB._split_d0), out0, "elab", "bind") == 0
+    bg = json.loads((out0 / "bus_groups.json").read_text())
+
+    def edit(p):
+        TB._split_d0(p)
+        p["asbuilt"]["land_align"] = "r8"
+    plan = TB.plan_copy(tmp_path, "die_plan_lanes.json", edit)
+    good, _ = R8.write_pads(json.loads(plan.read_text()), bg, tmp_path / "r8")
+    fresh = good.read_text()
+    stale = json.loads(fresh)
+    for m in stale["members"]:
+        m["bound"] += 2                                     # lane cycles moved after the table was made (KV D26 R3e)
+    good.write_text(json.dumps(stale))
+    out = tmp_path / "o"
+    assert bind.main(["elab", str(plan), "--out", str(out), "--mem", "4"]) == 0
+    (out / "bind_report.json").write_text(json.dumps({"errors": []}))   # a stale report of an earlier bind
+    assert bind.main(["bind", str(plan), "--out", str(out), "--mem", "4", "--strict"]) == 1
+    rep = json.loads((out / "bind_report.json").read_text())
+    assert rep["errors"] and all(e.startswith(bind.R8_FAIL_FAST_PREFIXES) for e in rep["errors"])
+    ff = rep["r8_fail_fast"]
+    assert ff["head_r8_errors"] == len(rep["errors"]) and ff["other_head_errors"] == 0 and ff["changed"] > 0
+    assert (out / "bus_groups.json").is_file() and not list((out / "rtl").glob("*_bound_top.sv"))   # stopped before emit
+    derived = json.loads((out / "r8_derived.json").read_text())
+    assert [m["bound"] for m in derived["members"]] == [m["bound"] for m in json.loads(fresh)["members"]]
+    # non-strict binds and --r8-keep-going keep the full run (the old behaviour): the report is the full one
+    out2 = tmp_path / "o2"
+    assert bind.main(["elab", str(plan), "--out", str(out2), "--mem", "4"]) == 0
+    assert bind.main(["bind", str(plan), "--out", str(out2), "--mem", "4", "--strict", "--r8-keep-going"]) == 1
+    rep2 = json.loads((out2 / "bind_report.json").read_text())
+    assert "r8_fail_fast" not in rep2 and any(e.startswith("R8_STALE") for e in rep2["errors"])
+    # the derived table binds clean in ONE more strict bind
+    good.write_text((out / "r8_derived.json").read_text())
+    out3 = tmp_path / "o3"
+    assert TB.run(plan, out3, "elab", "bind") == 0, TB.report(out3)["errors"][:5]
+    assert not [e for e in TB.report(out3)["errors"] if e.startswith("R8_STALE")]
