@@ -90,3 +90,9 @@ J5 live: event 224567138ab, src kw45/src_s81_pin_3c913dbdfb23_d8j5_1117_work, bi
 - ResetError fix confirmed: t28 a8 and c1x_C t6 a4 pass kit_rtl on rt 1c1857d4d157 (9cf14ee057). Holds were released at 62bd111a903. Recurrence watcher: intel2 rerr_watch.sh, PID 1453083, lists failures after 20:25.
 - Took over from R4: dsdv_slice_kv512_C__t1, iqf__t1, slice_station__t36. They stay held because J6 supersedes them (monitor-pin MON_UM 332 / 2337 / 2057 um).
 - lepe LP (lepe_mu_LP__t2, lepe_nh_mus_LP__t1) stay held: the J5 kit has no OT_S81SL_LEP_RIP1 define. This is a source item for J6, not reset reach. Reasons recorded in kit_wave ab19af0d49c.
+
+## 21:3x update
+- ResetError after fix: NOT a tools pin. tools_sha=j5tree only feeds tools-lag; launches use scheduler rt (spec.json tools_rt). All 6 post-fix fails launched 19:46-20:18 on rt ec4936598992/15883a07066a/cca022294010 (reset_tree 7fcd8f33c3, no fix). Retries on c0feb4c70e4c/a06e2ecc71b6/48d49db1490b (fixed). 0 RUNNING pre-gen rows on unfixed rt. No re-pin, no hold. Posted CAUSE.
+- rerr_watch v2 (intel2 PID 2399884, 10 h): tags STALE-RT vs RECUR; RECUR posts ALERT. Local wake task covers LIST/ALERT/GRT-READ/PSS.
+- BSA item 4: cancelled (cancel-rows --old-plans-only) c1x_C t9 a16, kv_leaf t5 a1 (b05c), phy__t1 a5, slice_station t18 a15. phy__t1 fresh-gen: retry phy__t1@5 + stage_resume_off + struct-force once (kit_wave ccb981881e6). c1x_C t1 a13 / t6 a46 NOT cancelled: item glob would also hit live D8i rows; asked COORD.
+- t4 waiter now targets a13 (t4wait2.sh).
