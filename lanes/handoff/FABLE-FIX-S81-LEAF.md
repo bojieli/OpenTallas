@@ -25,3 +25,22 @@ J5 t39 kit + reset_leg_plan rows (same-edge stages) + OT_TAP_PAIR_UM 200 / OVERF
 - CFX private tree and a t39 kit from it; then route to sign-off, LEC, AUTO-EXPORT. Not started.
 - Tap ports for the hig bank (TAP-GRID-2130): no reply; p1 only tests pair sharing.
 - Waiter helper B/w.sh; background jobs post DONE / DIED under OT_LANE.
+
+## STAND-DOWN 2026-11-20 23:02 PST (COORD: context limit; a Fable successor carries t39 to sign-off)
+Rulings since the section above: J6 takes CFX (S81-J6-ASSEMBLY does the elaboration and bind itself), the relay-key delta and an FSTART row. TAP-GRID-2130 stood down; TAP-GRID-R2 is its successor. The "asked J6 / unanswered" lines above are closed by this.
+
+Live units on epyc7 (ot-run clients detached with nohup, OT_LANE set, so each posts DONE / DIED to lanes/posts/FABLE-FIX-S81-LEAF.md by itself):
+- p1: oth-ubuntu-2178345-1795239930, client PID 2177400, B/p1, goal route. In CTS (4_1_cts.tmp.log) at 23:01, no FAIL marker. NOT read at post-hook yet.
+- p2: oth-ubuntu-3896596-1795243414, client PID 3894799, B/p2, goal route. In global place at 23:01. Only read so far: 'OT_RELAY_SITES placed 25 flops FIRM (plan keys unmatched: 0 of 25)'.
+- CFX bench: oth-ubuntu-2404029-1795240504, client PID 2402371, B/cfx/out/summary.log: 6 of 20 runs done (no-define form: 5 PASS, control FAIL as it must). The XR / SRAMREG / XR+SRAMREG variants are unread; J6 should see them before it binds with the define.
+- Control: J5 wave row t39 a3 (not mine), epyc7 ot-jobs/ot_s81sl_leaf__t39-route-loved-redfish-1218124-1795237605.
+Waiting: `ot-wait <unit>` on epyc7; `bash B/w.sh 170` blocks until p1 / p2 / a3 change stage; `bash B/rd.sh <kit dir>` prints the post-hook read (OT_CTS_POST_TIMING, worst max / min paths, hold gate, pregrt classes). My session waiters end with this session; the units do not depend on them.
+
+Rows path: intel2 /srv/opentallas-scratch2/claude/fable-fix-s81-leaf-rows-1120 (j6_delta_leaf_relay_sites_keys.json, relay_sites_keyfix.py, reports, reset_legs_PROVISIONAL/), plus lanes/handoff/S81-VP-CFX-ROWS.json.
+
+Successor, in order:
+1. Read p1 and p2 at post-hook CTS against a3 (-73.73 / -50.61 after TT repair; hold 4,660 ends). p2 answers what the key rename alone does; p1 the reset legs + 200 um tap pairing (its two known defects are listed above).
+2. t39 cannot reach -42 from p1 or p2: neither has CFX or an FSTART fix. The sign-off kit must come from the J6 tree once it carries CFX + key delta + FSTART row. Then route, DRC 0, TT >= -42, FF hold >= 0, LEC, AUTO-EXPORT to AGIdock and rtx-pro.
+3. Run relay_sites_keyfix.py on the J6 bind rtl for the 11 leaf types I could not check.
+4. Tap ports for the vp hig bank (clk_t6): take p1's hold class counts to TAP-GRID-R2.
+5. Cleanup when the proofs end: B/leg/j5odb, B/whatif, B/rows9, sib dirs on epyc7 / epyc9 (ot-delete only).
