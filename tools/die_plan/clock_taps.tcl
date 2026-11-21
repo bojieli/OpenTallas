@@ -670,12 +670,29 @@ if {[llength $ct_taps] >= 2} {
         if {[dict exists $done $it]} continue
         set fn [lindex $tf 0]
         if {![dict exists $ej $fn]} continue
+        if {$ct_span > 0} {
+          set ct_inpts [ct_span_pts [list $it]]
+          if {![ct_span_fits [dict get $ct_sbox $fn] $ct_inpts $ct_span]} {
+            incr ct_span_refused
+            continue
+          }
+        }
         set l [dict get $ej $fn]
-        # cheapest ejection of F whose receiving tap still has room
+        # Earlier moves in this batch may have enlarged either receiving box.
+        # Recheck against the live box before choosing or rewiring an ejection.
         set k -1
         for {set i 0} {$i < [llength $l]} {incr i} {
           set rn [lindex $l $i 2 0]
-          if {[llength [dict get $ct_by $rn]] < $ct_cap} { set k $i; break }
+          if {[llength [dict get $ct_by $rn]] >= $ct_cap} continue
+          if {$ct_span > 0} {
+            set ct_outpts [ct_span_pts [list [lindex $l $i 1]]]
+            if {![ct_span_fits [dict get $ct_sbox $rn] $ct_outpts $ct_span]} {
+              incr ct_span_refused
+              continue
+            }
+          }
+          set k $i
+          break
         }
         if {$k < 0} { dict unset ej $fn; continue }
         lassign [lindex $l $k] rd it2 tr; set rn [lindex $tr 0]
@@ -686,8 +703,8 @@ if {[llength $ct_taps] >= 2} {
         dict set ct_by $rn [concat [dict get $ct_by $rn] [list $it2]]
         dict set ct_by $on [lsearch -all -inline -not -exact [dict get $ct_by $on] $it]
         if {$ct_span > 0} {
-          dict set ct_sbox $rn [ct_span_grow [dict get $ct_sbox $rn] [ct_span_pts [list $it2]]]
-          dict set ct_sbox $fn [ct_span_grow [dict get $ct_sbox $fn] [ct_span_pts [list $it]]]
+          dict set ct_sbox $rn [ct_span_grow [dict get $ct_sbox $rn] $ct_outpts]
+          dict set ct_sbox $fn [ct_span_grow [dict get $ct_sbox $fn] $ct_inpts]
         }
         dict set done $it 1
         incr nch
