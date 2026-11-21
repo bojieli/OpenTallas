@@ -117,3 +117,4 @@
 - 2026-11-20 19:51 PST ALERT NO-PROGRESS s81_head: 16 eligible rows, 0 KIT-WAVE LAUNCH for 120 min (last 17:50); no DIE-OFF / NO-LAUNCH line
 - 2026-11-20 20:42 PST ALERT NO-ADVANCE s81: 3 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (ot_s81sl_leaf__t28 x6@kit_rtl, serdes__t1__clb45db5be x2@gen, serdes__t14 x2@gen)
 - 2026-11-20 21:42 PST ALERT NO-PROGRESS s81_head: 16 eligible rows, 0 KIT-WAVE LAUNCH for 66 min (last 20:36); no DIE-OFF / NO-LAUNCH line
+- 2026-11-20 22:02 PST ALERT NO-ADVANCE s81: 4 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (ot_s81sl_leaf__t28 x6@kit_rtl, serdes__t1__clb45db5be x2@gen, serdes__t14 x2@gen)
