@@ -7439,7 +7439,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     cfg += FFM.install(t,kd,macros,kit_core_area(t),Path(root) if root else Path(__file__).resolve().parents[2])
     cfg += install_gp_noconverge_gate(kd, cfg, P.name)
     cfg += install_place_regions(kd, P.types[tn].get("place_regions"))
-    cfg += gpl_sparse_overflow_cfg(P.name)
+    cfg += gpl_sparse_overflow_cfg(P.name, tn)
     if skip_ir:
         # opt-in gen.py phys --skip-kit-ir (CODEX-LOG 10-24 root practice): ORFS 6_report's per-kit PDNSim (PSM) IR
         # analysis is skipped (station405: it pushed 6_report past 36 GB, exit 247); PG geometry is unchanged and IR
@@ -8227,7 +8227,7 @@ def install_gp_noconverge_gate(kd, cfg, die=None):
          f"export OT_PLACE_MAX_TRANSITION = {mt:g}"] if (mt := place_max_transition(die)) else [])
 
 
-def gpl_sparse_overflow(die=None):
+def gpl_sparse_overflow(die=None, tn=None):
     """SPARSE EXIT (FABLE-FIX-S81-STRIP 11-16): the gen environment's OT_GPL_SPARSE_OVERFLOW (0 = off, else a number in
     (0, 1)) -> the Nesterov exit overflow of a sparse kit (face_flops.tcl OT_GPL_GUARD rule 3), else 0.25 on the S81 die
     and off elsewhere.  S81 strip leaves (movable util < 1 %): the phase from overflow 0.25 to the 0.10 default moved the
@@ -8244,12 +8244,20 @@ def gpl_sparse_overflow(die=None):
         return r or None
     # FLOW-NOADV-R2 11-20 (FABLE-FIX-HEAD-SERDES-R2): the S81 die by EXACT name.  The prefix test also matched s81_head, so every HEAD
     # kit (hd_serdes: signed sd9g3 kit -1316 ps / GRT overflow 1428 with the exit) stopped global place at overflow 0.25 / 0.29
-    return 0.25 if str(die or "") == "s81" else None
+    # FLOW-NOADV-R3 11-20 (COORD, FABLE-FIX-HEAD-SERDES-R2): the default is for the S81 STRIP LEAVES it was measured on (t47 / t75 / t8fix),
+    # not every S81 type.  Archived signed slice_station kits (5 types with and without it, same cores): place WNS -128 ps mean with the
+    # exit (-110 vs +117 on t8, 38 vs 128 on t42, 23 vs 129 on t40), wire +5 %, CTS WNS -19 ps; 5 of 13 with it have negative place WNS
+    # against 1 of 32 without.  An explicit OT_GPL_SPARSE_OVERFLOW above still applies to any die and type.  tn=None keeps the die rule.
+    if str(die or "") != "s81":
+        return None
+    if tn is not None and not str(tn).startswith("ot_s81sl_leaf"):
+        return None
+    return 0.25
 
 
-def gpl_sparse_overflow_cfg(die=None):
+def gpl_sparse_overflow_cfg(die=None, tn=None):
     """config.mk lines of the sparse exit (none when it is off)."""
-    v = gpl_sparse_overflow(die)
+    v = gpl_sparse_overflow(die, tn)
     return [f"# SPARSE EXIT (FABLE-FIX-S81-STRIP): a sparse kit leaves global placement at overflow {v:g}, before the die-scale drift",
             f"export OT_GPL_SPARSE_OVERFLOW = {v:g}"] if v else []
 
