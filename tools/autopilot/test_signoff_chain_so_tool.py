@@ -27,3 +27,27 @@ def test_stage_signoff_tool_opt_out(tmp_path, capsys):
     assert SC.stage_signoff_tool(tmp_path, source=HERE.parent / "die_plan") is None
     assert (tmp_path / "signoff.py").read_text() == "# kit\n"
     assert "SIGNOFF_TOOL KIT copy kept" in capsys.readouterr().out
+
+
+def test_legacy_route_kit_receives_nominal_bundle(tmp_path):
+    kit = tmp_path / "legacy"
+    kit.mkdir()
+    source = HERE.parent / "die_plan"
+    expected = source / "nomcap_libs"
+    record = SC.stage_signoff_tool(kit, source=source)
+    assert "nomcap_libs" in record["replaced"]
+    for path in expected.iterdir():
+        assert (kit / "nomcap_libs" / path.name).read_bytes() == path.read_bytes()
+    assert SC.stage_signoff_tool(kit, source=source)["replaced"] == []
+
+
+def test_native_nominal_libraries_are_preserved(tmp_path):
+    kit = tmp_path / "native"
+    native = kit / "nomcap"
+    native.mkdir(parents=True)
+    manifest = native / "MANIFEST.json"
+    manifest.write_text("kit-pinned manifest")
+    record = SC.stage_signoff_tool(kit, source=HERE.parent / "die_plan")
+    assert record
+    assert manifest.read_text() == "kit-pinned manifest"
+    assert not (kit / "nomcap_libs").exists()
