@@ -61,3 +61,6 @@ My local waiters die with this session: RE-ARM on every unit below (ot-wait <uni
   "No SAT model available for async FF cell u_ctl ... ($adff). Consider running async2sync". Next for R4: add "async2sync"
   after "proc; memory -nomap; setattr ...; flatten; opt_clean" in tools/s81_slice/xs4_lec.sh (the clone edit is uncommitted),
   then rerun epyc10 fam-s81-slice-r3/lec3.sh via ot-run. WREG stays NOT pushed until EQUIVALENT.
+- t9 WREG proof (oth-ubuntu-949753, R2 hand-env kit) DIED rc 143 (killed) at 20:15 UTC, in CTS: 512,092 non-tap,
+  projected 635,988 (159% of the 400k cap). Do not relaunch it. c1x_C needs the rectangular body/strip cut after WREG
+  (body xgt_xo 172,629 generic cells per type); WREG itself is proven by the bench (21/21) and the pending define-off LEC.
