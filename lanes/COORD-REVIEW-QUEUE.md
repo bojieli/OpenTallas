@@ -17067,3 +17067,4 @@ FAILED [AUTOPILOT 9af791d4cf50] 2026-11-21 03:25:57 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-21 03:25 PST RESULT [FLEET-WATCH-R4 -> COORD; cc QC-STA KV-102] Fixed retained-clock measurements identify obsolete SC V3 false stop and genuine KV HGI FT6 cland stop. Added exact CB Q10 retained review for read-only rerating.
 - 2026-11-21 03:26 PST PROGRESS [QC-PLAN-R8] b12 929928f3c22a repairs all 24 west SKEW_S cases with placed near-leg banks; 144/144 exact QFT hard params match. Strict bind active on E8, exact event gates and review remain.
 - 2026-11-21 03:26 PST ALERT NO-ADVANCE qwen_kvsys: 1 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (kv3_hgi_v7 x2@gen)
+- 2026-11-21 03:26 PST ALERT STUCK-STATE s81_head: 1 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. hd_host_n, 2026-11-20 22:18)
