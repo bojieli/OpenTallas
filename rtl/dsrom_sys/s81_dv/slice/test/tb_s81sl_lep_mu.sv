@@ -44,10 +44,17 @@ module tb_s81sl_lep_mu #(parameter integer NB = 80, parameter integer S = 700, p
 `else
     localparam integer TB_RIP = 0;
 `endif
-    wire [31:0] a_rt_raw; reg [31:0] a_rt_d1; always @(posedge clk) a_rt_d1 <= a_rt_raw; assign a_rt = (TB_RIP == 0) ? a_rt_raw : a_rt_d1;
-    wire [31:0] b_rt_raw; reg [31:0] b_rt_d1; always @(posedge clk) b_rt_d1 <= b_rt_raw; assign b_rt = (TB_RIP == 0) ? b_rt_raw : b_rt_d1;
-    wire [31:0] p_rt_raw; reg [31:0] p_rt_d1; always @(posedge clk) p_rt_d1 <= p_rt_raw; assign p_rt = (TB_RIP == 0) ? p_rt_raw : p_rt_d1;
-    initial if (TB_RIP > 1) begin $display("FAIL lep: bench models RIP 0 / 1 only"); $finish; end
+    // RIP N: mu_rt is delayed by N edges in the bench consumer model (FAM-S81-LEPE 11-21: N > 1 modelled, was 0 / 1 only)
+    wire [31:0] a_rt_raw, b_rt_raw, p_rt_raw;
+    reg [31:0] a_rt_s [0:3], b_rt_s [0:3], p_rt_s [0:3]; integer rts_k;
+    always @(posedge clk) begin
+        a_rt_s[0] <= a_rt_raw; b_rt_s[0] <= b_rt_raw; p_rt_s[0] <= p_rt_raw;
+        for (rts_k = 1; rts_k < 4; rts_k = rts_k + 1) begin a_rt_s[rts_k] <= a_rt_s[rts_k-1]; b_rt_s[rts_k] <= b_rt_s[rts_k-1]; p_rt_s[rts_k] <= p_rt_s[rts_k-1]; end
+    end
+    assign a_rt = (TB_RIP == 0) ? a_rt_raw : a_rt_s[TB_RIP-1];
+    assign b_rt = (TB_RIP == 0) ? b_rt_raw : b_rt_s[TB_RIP-1];
+    assign p_rt = (TB_RIP == 0) ? p_rt_raw : p_rt_s[TB_RIP-1];
+    initial if (TB_RIP > 4) begin $display("FAIL lep: bench models RIP 0..4 only"); $finish; end
 
     wire [3:0] plv, plr, piv, pir; wire [4*553-1:0] pld, pid; wire [11:0] pf; wire [3:0] prxv;
     wire [4*512-1:0] ptx, prx; wire [7:0] pst; wire [4*513-1:0] ppa; wire [3:0] pta;
@@ -106,7 +113,12 @@ module tb_s81sl_lep_mu #(parameter integer NB = 80, parameter integer S = 700, p
     // ------------------------------------------------------------------ single-user reference RP -> RA (pre-MU tops)
     wire [1:0] rplv, rplr, rpiv, rpir, rprxv, ralv, ralr, raiv, rair, rarxv; wire [2*553-1:0] rpld, rpid, rald, raid;
     wire [5:0] rpfl, rafl; wire [1023:0] rptx, rprx, ratx, rarx; wire [3:0] rpst, rast;
-    reg [1103:0] rp_rod [0:3]; wire [1103:0] rp_rox = (P_IN_PIPE != 0) ? rp_rod[P_IN_PIPE - 1] : rp_ro;
+`ifdef OT_S81SL_LEP_ROS
+    localparam integer TB_ROS = (P_IN_PIPE != 0) ? `OT_S81SL_LEP_ROS : 0;   // FAM-S81-LEPE 11-21: ROS extra face stages on P's ro
+`else
+    localparam integer TB_ROS = 0;
+`endif
+    reg [1103:0] rp_rod [0:3]; wire [1103:0] rp_rox = (P_IN_PIPE != 0) ? rp_rod[P_IN_PIPE - 1 + TB_ROS] : rp_ro;
     always @(posedge clk) begin rp_rod[0] <= rp_ro; rp_rod[1] <= rp_rod[0]; rp_rod[2] <= rp_rod[1]; rp_rod[3] <= rp_rod[2]; end
     ot_s81sl_lep_nh lrp (.clk(clk), .rst_n(rst_n), .ro(rp_rox), .ri(rp_ri),
         .lo0_v(rplv[0]), .lo0_r(rplr[0]), .lo0_d(rpld[0 +: 553]), .lo1_v(rplv[1]), .lo1_r(rplr[1]), .lo1_d(rpld[553 +: 553]),

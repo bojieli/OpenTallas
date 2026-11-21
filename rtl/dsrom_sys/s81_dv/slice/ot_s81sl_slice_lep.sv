@@ -152,6 +152,20 @@
 `ifndef OT_S81SL_LEP_CRP
 `define OT_S81SL_LEP_CRP 0
 `endif
+// FAM-S81-LEPE 11-21 ROS: extra input face stages (see g_inpipe).  Bare selectors OT_S81SL_LEP_ROS2 / ROS3 for a per-type profile.
+`ifdef OT_S81SL_LEP_ROS2
+`ifndef OT_S81SL_LEP_ROS
+`define OT_S81SL_LEP_ROS 2
+`endif
+`endif
+`ifdef OT_S81SL_LEP_ROS3
+`ifndef OT_S81SL_LEP_ROS
+`define OT_S81SL_LEP_ROS 3
+`endif
+`endif
+`ifndef OT_S81SL_LEP_ROS
+`define OT_S81SL_LEP_ROS 0
+`endif
 module ot_s81sl_cr_relay #(parameter integer N = 0) (input wire clk, input wire rst_n, input wire d, output wire q);
     generate if (N == 0) begin : g_wire
         assign q = d;
@@ -180,6 +194,7 @@ module ot_s81sl_lep_core #(
     parameter integer IDX_EN = 0,      // 1 (S81/H4 10-24): index rank-tree frames tl -> link, link -> ca / cb (see g_itx)
     parameter integer WREP = `OT_S81SL_LEP_WREP, // TX tag-window state replicas (1 = the one master), see the note above the module
     parameter integer RIP = `OT_S81SL_LEP_RIP,   // relay stages on the ring output ri only (0 = none; mu_rt not delayed), see the note above the module
+    parameter integer ROS = `OT_S81SL_LEP_ROS,   // extra input face stages on ro / t_host / t_kd / mu_c (0 = none), see g_inpipe
     parameter integer CRP = `OT_S81SL_LEP_CRP, // credit-return relay stages (0..2), see the note above the module
     parameter integer IN_PIPE = 0      // 1 (LEPCAP 10-19): one registered face stage on ro / t_host / t_kd / mu_c (+1 edge on
                                        // each, same relative timing); ro[0] / t_kd[53] re-fanned by 6 KEPT copies <= 28 loads
@@ -287,12 +302,35 @@ module ot_s81sl_lep_core #(
     generate if (IN_PIPE != 0) begin : g_inpipe
       reg [1103:0] rop; reg [76:0] thp; reg [53:0] tkp; reg [33:0] mcp;
       always @(posedge clk) begin rop <= ro; thp <= t_host; tkp <= t_kd; mcp <= mu_c; end
-      assign ro_x = rop; assign th_x = thp; assign tk_x = tkp; assign mc_x = mcp;
+      // ROS (FAM-S81-LEPE 11-21, VISUAL-0030 cause 1): ROS extra face stages on ALL FOUR input ports and on every valid copy, so
+      // the ports still move together (+ROS edges, nothing realigned).  rop sits at the face pin; the logic that reads roq is up
+      // to 1.4 mm away, each stage is one placed leg.  Default 0 = unchanged.  Needs IN_PIPE 1 and no tree frames (IDX_EN 0).
+      if (ROS == 0) begin : g_r0
+        assign ro_x = rop; assign th_x = thp; assign tk_x = tkp; assign mc_x = mcp;
+      end else begin : g_rs
+        (* keep = "true" *) reg [1103:0] ros_r [0:ROS-1]; (* keep = "true" *) reg [76:0] ths_r [0:ROS-1];
+        (* keep = "true" *) reg [53:0] tks_r [0:ROS-1]; (* keep = "true" *) reg [33:0] mcs_r [0:ROS-1];
+        integer rs_k;
+        always @(posedge clk) for (rs_k = 0; rs_k < ROS; rs_k = rs_k + 1) begin
+          ros_r[rs_k] <= (rs_k == 0) ? rop : ros_r[rs_k-1]; ths_r[rs_k] <= (rs_k == 0) ? thp : ths_r[rs_k-1];
+          tks_r[rs_k] <= (rs_k == 0) ? tkp : tks_r[rs_k-1]; mcs_r[rs_k] <= (rs_k == 0) ? mcp : mcs_r[rs_k-1];
+        end
+        assign ro_x = ros_r[ROS-1]; assign th_x = ths_r[ROS-1]; assign tk_x = tks_r[ROS-1]; assign mc_x = mcs_r[ROS-1];
+      end
       for (genvar vc = 0; vc < NVC; vc = vc + 1) begin : g_vc
-        if (VSKEW != 0 && vc == NVC - 1) begin : g_skew assign rvx[vc] = ro[0]; end   // MUTANT: one copy group skips the stage
-        else begin : g_rv (* keep=1 *) ot_s81sl_lep_vcopy u_rv (.clk(clk), .d(ro[0]), .q(rvx[vc])); end
-        if (HOST_EN != 0) begin : g_kv (* keep=1 *) ot_s81sl_lep_vcopy u_kv (.clk(clk), .d(t_kd[53]), .q(kvx[vc])); end
-        else begin : g_nkv assign kvx[vc] = 1'b0; end                  // HOST_EN 0: t_kd unread
+        wire rv1, kv1;
+        if (VSKEW != 0 && vc == NVC - 1) begin : g_skew assign rv1 = ro[0]; end   // MUTANT: one copy group skips the stage
+        else begin : g_rv (* keep=1 *) ot_s81sl_lep_vcopy u_rv (.clk(clk), .d(ro[0]), .q(rv1)); end
+        if (HOST_EN != 0) begin : g_kv (* keep=1 *) ot_s81sl_lep_vcopy u_kv (.clk(clk), .d(t_kd[53]), .q(kv1)); end
+        else begin : g_nkv assign kv1 = 1'b0; end                  // HOST_EN 0: t_kd unread
+        if (ROS == 0) begin : g_v0 assign rvx[vc] = rv1; assign kvx[vc] = kv1; end
+        else begin : g_vs
+          (* keep = "true" *) reg [ROS-1:0] rvs, kvs; integer vs_k;
+          always @(posedge clk) for (vs_k = 0; vs_k < ROS; vs_k = vs_k + 1) begin
+            rvs[vs_k] <= (vs_k == 0) ? rv1 : rvs[vs_k-1]; kvs[vs_k] <= (vs_k == 0) ? kv1 : kvs[vs_k-1];
+          end
+          assign rvx[vc] = rvs[ROS-1]; assign kvx[vc] = kvs[ROS-1];
+        end
       end
     end else begin : g_noinpipe
       assign ro_x = ro; assign th_x = t_host; assign tk_x = t_kd; assign mc_x = mu_c;

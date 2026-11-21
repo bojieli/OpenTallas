@@ -30,8 +30,10 @@ module tb_s81sl_lep_hab #(parameter integer N = 400, parameter integer SEED = 3,
 `else
     localparam integer TB_RIP = 0;
 `endif
-    wire [31:0] a_rt_raw; reg [31:0] a_rt_d1; always @(posedge clk) a_rt_d1 <= a_rt_raw; assign a_rt = (TB_RIP == 0) ? a_rt_raw : a_rt_d1;
-    initial if (TB_RIP > 1) begin $display("FAIL lep: bench models RIP 0 / 1 only"); $finish; end
+    wire [31:0] a_rt_raw; reg [31:0] a_rt_s [0:3]; integer rts_k;   // RIP N (FAM-S81-LEPE 11-21)
+    always @(posedge clk) begin a_rt_s[0] <= a_rt_raw; for (rts_k = 1; rts_k < 4; rts_k = rts_k + 1) a_rt_s[rts_k] <= a_rt_s[rts_k-1]; end
+    assign a_rt = (TB_RIP == 0) ? a_rt_raw : a_rt_s[TB_RIP-1];
+    initial if (TB_RIP > 4) begin $display("FAIL lep: bench models RIP 0..4 only"); $finish; end
 
     reg [76:0] t_host = 0; reg [53:0] t_kd = 0; wire [514:0] f_host; wire [3:0] f_lf; wire [52:0] f_ks;
     wire [3:0] alv, alr, aiv, air; wire [4*553-1:0] ald, aid; wire [11:0] af; wire [3:0] arxv;
