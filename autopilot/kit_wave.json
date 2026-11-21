@@ -283,7 +283,9 @@
     "kv3_hgi": "KV-D25e3 retained e50e0f9be689 geometry fails and exact corrected post-place TT -349.66 ps below -300. Hold new picks until D26 or changed geometry review.",
     "kv3_hgi_v7": "KV-D25e3 attempt 5 repeats captured collector_tree reset identity mismatch at gen. Hold new picks until coherent D26 bind.",
     "kv3_pv_v1n": "KV-D25e3 attempt 7 repeats captured collector_tree reset identity mismatch at gen. Hold new picks until coherent D26 bind.",
-    "kv3_hgi_v6": "KV-D25e3 v6 a4 failed captured collector_tree reset identity; a5 admitted with unchanged gen fail key ed0f0a2ea1f07192. Hold new picks until coherent D26 bind."
+    "kv3_hgi_v6": "KV-D25e3 v6 a4 failed captured collector_tree reset identity; a5 admitted with unchanged gen fail key ed0f0a2ea1f07192. Hold new picks until coherent D26 bind.",
+    "kv3_hub_Wi": "KV-PLAN-R5 11-21 08:1x (COORD): D26 a1 FAIL_PREFLOOR port_bind: 3 extra netlist bits io_pad_die_id[0..2] (bound_only ID strap port) not in the plan pins. Fix = the hub_Wo preflight / plan pin row (FABLE-FIX-KV-HUB-R2), carried in the next KV event. Lift = delete this key when that event is applied.",
+    "kv3_pc_v3": "KV-PLAN-R5 11-21 08:1x (COORD): D26 a1 place PDN-0006 VSS on M5 blocked by M6/M7 obstructions over u_bound.u_kvpc0 (core OBS vs parent PG grid; same class as kv3_pc__cl254f2e73/cl5a95b461). Fix = plan PG straps or kvpc0 OBS window (FAM-KV-IOPC). Unchanged relaunch fails the same way. Lift = delete when the fix lands."
    },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave",
    "retry_fix": {
