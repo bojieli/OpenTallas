@@ -1,4 +1,4 @@
-# FABLE-FIX-S81-COLROM handoff (started 11-21 05:2x PST; updated 06:1x)
+# FABLE-FIX-S81-COLROM handoff (started 11-21 05:2x PST; updated 08:2x, STOOD DOWN)
 Owns lever 1 of FABLE-CLOSURE-0600: S81 col ROM-input stage (216 col types). Took it from FAM-S81-COL-R3 (05:24 handoff post).
 Work dir: epyc10 /srv/opentallas-scratch2/claude/fable-fix-s81-colrom (M). Hub dir: intel2 same path (H).
 
@@ -23,6 +23,19 @@ Work dir: epyc10 /srv/opentallas-scratch2/claude/fable-fix-s81-colrom (M). Hub d
 - cfg ROM rd_out -> seq q: ROM clk->q 529 + 259 wire: -47. With the stage at the ROM face: about +240, then 400 um in a full cycle.
 - ROM pval -> bn (output half, FAM-S81-COL-H10 owns the proof): ROM q lands 137 ps after the edge; the stage only works if its
   clock is about 160 ps late. Watch this path first in the rep read.
+
+## STATE at stand-down 11-21 08:2x PST (successor FABLE-FIX-S81-COLROM-R2)
+- Rows file: epyc10 M/gen_c3g/colrom_delta.json sha256 a10c16b82a769b8368e5c6eb5ca0b984ffa1847aaf9e810a43e38c5aa3c648bf
+  (base candC3g; plan M/gen_c3g/plan.json sha afdf78f00117fa845b83aab1686f579a14c1dc7d76e3a3be69a34785d59e1da7; sidecars M/gen_c3g/sidecars/).
+  Generator also in hub lanes/handoff/FABLE-FIX-S81-COLROM-gen_colrom_rows.py.
+- Gate unit oth-ubuntu-1452049-1795268387 (epyc10, RUNNING, in G0 since 07:50 PST): ELAB_RC 0, BIND_RC 0 (strict, errors 0, all 216
+  col types), LATCHECK PASS 873/873, lane diff vs candC3g 0. G0 vs candC3g not finished: read M/gate1/g0cmp.out (new errors).
+  Hub log H/gate1_otrun.log. Internal-pipe sink bits 1,697,287, digest f2241abfe0fb224f (TOKEN-1121).
+- Hub chain H/chain1.sh (intel2, setsid, log H/chain1.log, RUNNING, waits for the gate unit to end): posts GATE PASS, runs
+  kit_wave run-item H/wave1/spec.json, writes H/wave1/config.diff, posts REP KIT. It does not route.
+- Rep kit path (not generated yet): hub work H/wave1/root/items/col_h10_r1__t1__cld01bb4ae/attempt_1; kit on epyc10 at
+  <that path>/gen/col_h10_r1__t1__cld01bb4ae. Not started: route, sign-off, second rep (col_h9_r0_p2).
+- A local waiter of the old session watched chain1.log only; R2 must arm its own.
 
 ## Proof in flight (rep col_h10_r1__t1__cld01bb4ae)
 - Tree M/tree1 = cp -al of s81-j6/candJ7RDX + gen_c3g plan + sidecars (mktree1.sh). Tools rt 2ddb19c08ba6 (M/rt, H/rt).
