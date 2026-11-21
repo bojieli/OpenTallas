@@ -274,11 +274,29 @@ module ot_coll_tp8_static #(
     assign sx_peer_slot = sxp_q;
     wire [SEW-1:0] s_rd;
     genvar gm;
+`ifdef OT_TP8S_SRDREG
+    // QC-PLAN-R7 V2 (FABLE-PD-QC-1840 row 4, OWNER: registered memory reads): the S ring read is issued one cycle earlier
+    // (cc - LS: the word written LS >= 2 cycles before; read-before-write macro) and its output is registered on the
+    // macro's own clock, so s_rd carries the same word in the same cycle as the unregistered form (0 added cycles) while
+    // the macro clk->Q drives one flop instead of the gather / fold select cones (coll_core g_sring[*].u_m -> out_data).
+    initial if (LS < 2) $error("ot_coll_tp8_static: OT_TP8S_SRDREG needs LS >= 2");
+    wire [SEW-1:0] s_rd_m;
+    generate for (gm = 0; gm < SEW / 128; gm = gm + 1) begin : g_sring
+        ot_sram_1r1w_512x128_m4_r2c2 u_m (.clk(CCLK ? clk_mem[2+gm] : clk), .r_ce_in(1'b1), .r_addr_in(cc - 9'(LS)),
+            .rd_out(s_rd_m[gm*128 +: 128]), .w_ce_in(1'b1), .w_addr_in(cc), .wd_in(s_wd[gm*128 +: 128]),
+            .w_mask_in({128{1'b1}}), .rr_en(2'b0), .rr_addr(14'b0), .cr_en(2'b0), .cr_sel(14'b0));
+        wire s_ck = CCLK ? clk_mem[2+gm] : clk;
+        reg [127:0] s_rd_q;
+        always @(posedge s_ck) s_rd_q <= s_rd_m[gm*128 +: 128];
+        assign s_rd[gm*128 +: 128] = s_rd_q;
+    end endgenerate
+`else
     generate for (gm = 0; gm < SEW / 128; gm = gm + 1) begin : g_sring
         ot_sram_1r1w_512x128_m4_r2c2 u_m (.clk(CCLK ? clk_mem[2+gm] : clk), .r_ce_in(1'b1), .r_addr_in(cc - 9'(LS + 1)),
             .rd_out(s_rd[gm*128 +: 128]), .w_ce_in(1'b1), .w_addr_in(cc), .wd_in(s_wd[gm*128 +: 128]),
             .w_mask_in({128{1'b1}}), .rr_en(2'b0), .rr_addr(14'b0), .cr_en(2'b0), .cr_sel(14'b0));
     end endgenerate
+`endif
 
     // ---------------- D: SerDes receive (pins), check, cross fold / gather output ----------------
     reg [2:0] srv_q; reg [PW-1:0] srr_q [0:2];
