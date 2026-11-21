@@ -15,3 +15,12 @@ Dirs: epyc10 + intel2 /srv/opentallas-scratch2/claude/fam-s81-col-h10-r2 ; prede
 - until ssh intel2 grep -q CHAIN_DONE .../fam-s81-col-h10-r2/{chainP,chainCP,chainC}.log
 ## Next
 1. cld01bb4ae sign-off -> export or class read. 2. Proof A place/geom -> private route -> A/B. 3. Proof C place + relay_mid coverage -> post (FAM-S81-COL-R4, COORD).
+
+## STAND-DOWN 11-21 ~08:0x PST (context ~296k) -> successor FAM-S81-COL-H10-R3
+Running units at stand-down (leave alone; re-arm waiters):
+- Rep cld01bb4ae J5 route, autopilot ap 0c4abfb40abd (intel1 ot-jobs col_h10_r1__t1__cld01bb4ae-route-key-cardinal-1989934-1795229931/work), DRT. Waiter: until ssh intel2 grep -q AP_RC ~/coord/autopilot/jobs/0c4abfb40abd/a1.log. Then read signoff/signoff.json checks + tt/ep_tt.tsv. Pass gates -> standard export. Expect a GRT->sign-off gap like pv1619ecc6 (-46.8 -> -99.8). COORD 07:45: no setup ECO on RDX / ROM-pval classes (J7 rows fix them); only a small hold ECO after J7.
+- Proof A: hub intel2 PID 1528411 chainP.sh (log fam-s81-col-h10-r2/chainP.log) -> run-item fam-s81-col-h10/waveP/spec.json. Gen unit oth-ubuntu-34003-1795274519 (epyc10). Then place + geom on epyc10. After a PASS: private route = ot-run on epyc10 `bash <work>/gen/run_kit.sh <work>/gen/<T> route 48 8` (work = waveP/root/items/<T>/attempt_1), then A/B against J5 pv1619ecc6 (TT -99.8; 7 bn e_r endpoints at -81.7 are the ROM-PVAL class proof A targets).
+- Proof C: hub PID 1588147 chainCP.sh (log chainCP.log) -> run-item fam-s81-col-h10-r2/waveCP/spec.json. Gen unit oth-ubuntu-158539-1795274757 (epyc10). The chain prints relay_mid coverage (OT_HOOK_COVERAGE / OT_RELAY_MID_FIT lines) at place. Post the result to FAM-S81-COL-R4 and COORD.
+- Waiters: until ssh intel2 grep -q CHAIN_DONE /srv/opentallas-scratch2/claude/fam-s81-col-h10-r2/{chainP,chainCP}.log
+Cleanup when done (ot-delete): epyc10 fam-s81-col-h10-r2/{srcx2,bindx2,srcC} after J7 takes the rows; the old waveC dir (refused hand spec); epyc10 fam-s81-col-h10/src1 + bind2 after proof A.
+Open asks: J6-ASSEMBLY-R3 to release the u_cf MX row (probe posted 07:5x); FABLE-FIX-S81-COLROM: the u_sN/qN cfg7 q-input endpoints (pv1619 worst, ROM c11_3 -> s11 q3).
