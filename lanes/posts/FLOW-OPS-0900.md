@@ -1,0 +1,1 @@
+- 2026-11-21 07:57 PST START: FLOW-OPS-0900 takes over KIT-OPS-5 + FLOW-HEALTH-1 flow fixes from FABLE-FLOW-0745 (1d0416de7c9): struct stop by type + CELL-CAP, count by manifest sha, UNSIGNABLE acts, ot-run drain refusal, empty --dir/hand kit refusal, OPEN-RELAYS at stand-down, fail key cause text. Lane clones on epyc10.
