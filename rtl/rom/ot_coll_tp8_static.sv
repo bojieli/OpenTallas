@@ -279,13 +279,28 @@ module ot_coll_tp8_static #(
     // (cc - LS: the word written LS >= 2 cycles before; read-before-write macro) and its output is registered on the
     // macro's own clock, so s_rd carries the same word in the same cycle as the unregistered form (0 added cycles) while
     // the macro clk->Q drives one flop instead of the gather / fold select cones (coll_core g_sring[*].u_m -> out_data).
+`ifdef OT_TP8S_SWDREG
+    initial if (LS < 3) $error("ot_coll_tp8_static: OT_TP8S_SWDREG needs LS >= 3");
+`else
     initial if (LS < 2) $error("ot_coll_tp8_static: OT_TP8S_SRDREG needs LS >= 2");
+`endif
     wire [SEW-1:0] s_rd_m;
     generate for (gm = 0; gm < SEW / 128; gm = gm + 1) begin : g_sring
-        ot_sram_1r1w_512x128_m4_r2c2 u_m (.clk(CCLK ? clk_mem[2+gm] : clk), .r_ce_in(1'b1), .r_addr_in(cc - 9'(LS)),
+        wire s_ck = CCLK ? clk_mem[2+gm] : clk;
+`ifdef OT_TP8S_SWDREG
+        // FAM-QC-COLL row set (a): write-data register at the SRAM pin edge (g_wd mux -> sring wd_in, -218 ps / 80 ends).
+        // The write lands one cycle later (data and address both delayed 1); with LS >= 3 the read still follows the
+        // write, so s_rd carries the same word in the same cycle (0 added cycles).
+        reg [127:0] s_wd_q; reg [8:0] s_wa_q;
+        always @(posedge s_ck) begin s_wd_q <= s_wd[gm*128 +: 128]; s_wa_q <= cc; end
+        ot_sram_1r1w_512x128_m4_r2c2 u_m (.clk(s_ck), .r_ce_in(1'b1), .r_addr_in(cc - 9'(LS)),
+            .rd_out(s_rd_m[gm*128 +: 128]), .w_ce_in(1'b1), .w_addr_in(s_wa_q), .wd_in(s_wd_q),
+            .w_mask_in({128{1'b1}}), .rr_en(2'b0), .rr_addr(14'b0), .cr_en(2'b0), .cr_sel(14'b0));
+`else
+        ot_sram_1r1w_512x128_m4_r2c2 u_m (.clk(s_ck), .r_ce_in(1'b1), .r_addr_in(cc - 9'(LS)),
             .rd_out(s_rd_m[gm*128 +: 128]), .w_ce_in(1'b1), .w_addr_in(cc), .wd_in(s_wd[gm*128 +: 128]),
             .w_mask_in({128{1'b1}}), .rr_en(2'b0), .rr_addr(14'b0), .cr_en(2'b0), .cr_sel(14'b0));
-        wire s_ck = CCLK ? clk_mem[2+gm] : clk;
+`endif
         reg [127:0] s_rd_q;
         always @(posedge s_ck) s_rd_q <= s_rd_m[gm*128 +: 128];
         assign s_rd[gm*128 +: 128] = s_rd_q;
@@ -404,6 +419,25 @@ module ot_coll_tp8_static #(
     wire          rf_e = tf_o ? rr_rd[FW+1] : drr_q[FW+1];
     wire o_conf = tf_v && gd_v;
     reg ov_q, ol_q, oe_q; reg [2:0] or_q; reg [FW-1:0] od_q; integer kq;
+`ifdef OT_TP8S_ODPRE
+    // FAM-QC-COLL row set (b): pre-mux register stage. g_out (gather word) and rf_d (reduce word) are registered next
+    // to their sources, the select / last / rank / err / valid follow one cycle later: every out_* is +1 cycle
+    // (uniform, so gather and reduce keep their relative schedule; +1 cycle pre-approved). Cuts the
+    // rdq -> g_out/rf_d -> od_q cone (1.2 ns, 3 long wire repeaters) in two.
+    reg [FW-1:0] gq_q, rq_q; reg [NS-1:0] tfv_q; reg tfv1_q, ol1_q, oe1_q; reg [2:0] or1_q; reg ov1_q;
+    always @(posedge clk) begin
+        gq_q <= g_out; rq_q <= rf_d; tfv_q <= tfv_r;
+        ol1_q <= tf_v ? tf_l : (td_l && td_od && td_r == 2'd3);
+        or1_q <= tf_v ? 3'd0 : {td_od, td_r};
+        oe1_q <= tf_v ? rf_e : 1'b0;
+    end
+    always @(posedge clk or negedge rs_r) if (!rs_r) ov1_q <= 1'b0; else ov1_q <= tf_v || gd_v;
+    always @(posedge clk) begin
+        for (kq = 0; kq < NS; kq = kq + 1) od_q[kq*128 +: 128] <= tfv_q[kq] ? rq_q[kq*128 +: 128] : gq_q[kq*128 +: 128];
+        ol_q <= ol1_q; or_q <= or1_q; oe_q <= oe1_q;
+    end
+    always @(posedge clk or negedge rs_r) if (!rs_r) ov_q <= 1'b0; else ov_q <= ov1_q;
+`else
     always @(posedge clk) begin
         for (kq = 0; kq < NS; kq = kq + 1) od_q[kq*128 +: 128] <= tfv_r[kq] ? rf_d[kq*128 +: 128] : g_out[kq*128 +: 128];
         ol_q <= tf_v ? tf_l : (td_l && td_od && td_r == 2'd3);
@@ -411,6 +445,7 @@ module ot_coll_tp8_static #(
         oe_q <= tf_v ? rf_e : 1'b0;
     end
     always @(posedge clk or negedge rs_r) if (!rs_r) ov_q <= 1'b0; else ov_q <= tf_v || gd_v;
+`endif
     assign out_valid = ov_q; assign out_data = od_q; assign out_last = ol_q; assign out_rank = or_q; assign out_err = oe_q;
 
     // ---------------- sticky faults (checks never reschedule) ----------------

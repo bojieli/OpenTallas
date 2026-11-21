@@ -78,8 +78,8 @@ def word_events(mode, c, n, lu, ls):
     return slots, b, wr, out, hold
 
 
-def schedule(modes, nwords, lu, ls, start=40, reserve=True, shared_ucie=False):
-    """Greedy static scheduler: earliest command cycle per message with no resource collision."""
+def schedule(modes, nwords, lu, ls, start=40, reserve=True, shared_ucie=False, output_pipeline_cycles=0):
+    """Schedule command and link slots, then price stages after the final output mux."""
     used_w, used_o, used_b, used_h = set(), set(), set(), set()
     used_u = set()
     prog, last_slot = [], start - 1
@@ -102,8 +102,8 @@ def schedule(modes, nwords, lu, ls, start=40, reserve=True, shared_ucie=False):
         used_w.update(wr); used_o.update(out); used_b.update(b); used_h.update(hold)
         if shared_ucie: used_u.update(p_events | r_events)
         last_slot = slots[-1]
-        prog.append(dict(msg=m, mode=mode, words=n, cmd_cycle=c, first_slot=slots[0], first_out=out[0],
-                         last_out=out[-1]))
+        prog.append(dict(msg=m, mode=mode, words=n, cmd_cycle=c, first_slot=slots[0], first_out=out[0] + output_pipeline_cycles,
+                         last_out=out[-1] + output_pipeline_cycles))
     return prog
 
 
@@ -140,8 +140,11 @@ def vectors(path: Path, nwords, prog, seed, big=False):
     (path / "cmd.hex").write_text("".join(lines))
 
 
-def build(out: Path, lu: int, ls: int, xu: int, xs: int, define: str | None, qfd: bool = False) -> Path:
-    obj = out / f"obj_u{lu}_s{ls}_xu{xu}_xs{xs}{'_qfd' if qfd else ''}{('_' + define) if define else ''}"
+def build(out: Path, lu: int, ls: int, xu: int, xs: int, define: str | None, qfd: bool = False,
+          physical_defines: tuple[str, ...] = ()) -> Path:
+    defines = (*physical_defines, define) if define else physical_defines
+    suffix = "".join(f"_{item}" for item in defines)
+    obj = out / f"obj_u{lu}_s{ls}_xu{xu}_xs{xs}{'_qfd' if qfd else ''}{suffix}"
     h = out / "harness.cpp"
     h.write_text('#include "Vtb_coll_tp8_static.h"\n#include "verilated.h"\n'
                  "int main(int argc, char** argv) { Verilated::commandArgs(argc, argv);\n"
@@ -150,7 +153,7 @@ def build(out: Path, lu: int, ls: int, xu: int, xs: int, define: str | None, qfd
                  "  t->final(); delete t; return 0; }\n")
     cmd = ["verilator", "--cc", "--exe", "--build", "-O2", "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED", "-Wno-BLKSEQ",
            "-Wno-TIMESCALEMOD", "--top-module", "tb_coll_tp8_static", f"-GLATU={lu}", f"-GLATS={ls}", f"-GXU={xu}",
-           f"-GXS={xs}", "-Mdir", str(obj)] + ([f"+define+{define}"] if define else []) + [str(s) for s in SRC] + \
+           f"-GXS={xs}", "-Mdir", str(obj)] + [f"+define+{item}" for item in defines] + [str(s) for s in SRC] + \
           [str(h), "-CFLAGS", "-O1", "-j", "16"]
     if qfd:
         cmd += ["+define+OT_TP8S_QFD", f"+define+OT_QFDS_LU={lu}", f"+define+OT_QFDS_LS={ls}"]
@@ -171,6 +174,8 @@ def main():
     ap.add_argument("--mutant-define", default=None)
     ap.add_argument("--only", default=None)
     ap.add_argument("--qfd", action="store_true", help="bench the die-name master qfd_io_collective_static")
+    ap.add_argument("--sring-io-regs", action="store_true", help="register the S-ring's RAM inputs and outputs")
+    ap.add_argument("--output-pipe", action="store_true", help="price the ODPRE stage at one added cycle")
     a = ap.parse_args()
     a.out = a.out.resolve()
     a.out.mkdir(parents=True, exist_ok=True)
@@ -179,7 +184,10 @@ def main():
         cases = [c for c in cases if re.search(a.only, c[0])]
     if a.xu or a.xs:   # link-latency negative control: one positive shape, every die must flag the link schedule
         cases = [("link_longer_than_compiled", 4, 8, "m", "link", {})]
-    exe = build(a.out, a.latu, a.lats, a.xu, a.xs, a.mutant_define, a.qfd)
+    defines = ("OT_TP8S_SRDREG", "OT_TP8S_SWDREG") if a.sring_io_regs else ()
+    if a.output_pipe:
+        defines += ("OT_TP8S_ODPRE",)
+    exe = build(a.out, a.latu, a.lats, a.xu, a.xs, a.mutant_define, a.qfd, defines)
     bad, records = [], []
     for i, (name, nmsg, words, mk, kind, extra) in enumerate(cases):
         rng = np.random.default_rng(100 + i)
@@ -188,7 +196,8 @@ def main():
         else:
             modes = {"r": [0] * nmsg, "g": [1] * nmsg, "m": [int(x) for x in rng.integers(0, 2, nmsg)]}[mk]
             nw = [words] * nmsg
-        prog = schedule(modes, nw, a.latu, a.lats, reserve=(kind != "conf"))
+        prog = schedule(modes, nw, a.latu, a.lats, reserve=(kind != "conf"),
+                        output_pipeline_cycles=int(a.output_pipe))
         vec = a.out / f"vec_{name}"
         vectors(vec, nw, prog, 1000 + i, big=(kind == "inject_big"))
         args = [str(exe), f"+VEC={vec}", f"+NMSG={nmsg}"] + [f"+{k}={v}" for k, v in extra.items()]
@@ -211,6 +220,7 @@ def main():
     (a.out / "record.json").write_text(json.dumps(dict(
         schema="opentallas.qwen.tp8.collective.static.v1", ranks=ND, lanes=LANES, latu=a.latu, lats=a.lats,
         xu=a.xu, xs=a.xs, die_name_master=a.qfd, slice_latency=SL, gather_cadence=GC, mutant=a.mutant_define, production=a.production,
+        physical_defines=defines, output_pipeline_cycles=int(a.output_pipe),
         cycle_span="first compiled input slot to last compiled output slot (inclusive); every output checked at its exact "
                    "compiled cycle",
         mechanism="no credits/ready/backpressure: compiled command + fixed-offset rings; checks are fault-only",
