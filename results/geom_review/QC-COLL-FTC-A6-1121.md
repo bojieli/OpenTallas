@@ -1,0 +1,3 @@
+# QC coll_ftc R6V1 attempt 6 placed geometry
+
+2026-11-21 03:23 PST. Viewed epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R6V1/items/coll_ftc/attempt_6/geom/auto_geom.png. Outline is 786.2 × 1080.0 µm, no hard cores, global-route diagnostic overflow zero. The west landing for tl_st_wi_i has a horizontal band around y=913 µm and its forwarding entry carries 4,455 register endpoints. The corresponding band contains the historical A4 DRT-0255 access box near x=166–170, y=913–917 µm. Fresh attempt shows placement, and detailed access still needs the actual guides or DRT result. Inherited AP independently submitted the route. Review verdict ISSUES because dense local access and clock distribution remain open.
