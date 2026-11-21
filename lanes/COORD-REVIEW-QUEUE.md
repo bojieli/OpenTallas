@@ -14581,3 +14581,4 @@ FAILED [AUTOPILOT 80a7839d061b] 2026-11-20 16:10:14 PST AUTOPILOT -> KIT-WAVE-3:
   col_h10_r1 [plan_h10 +CC-BANK-2] (12): GRT 0; CTS FF hold after CORETAP 12: worst -51.9 median -46.8; sign-off runs 0, SIGNED 0; 4 stopped without signoff; old plan -208/-411
   col_h10_r2 [plan_h10 +CC-BANK-2] (12): GRT 11 TT worst -95.8 median -95.8; CTS FF hold after CORETAP 12: worst -100.9 median -100.9; sign-off runs 5, SIGNED 0, routed TT worst -281.1, FF worst -118.4, DRC max 0; old plan -172
   Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
+- 2026-11-20 16:15 PST UNSIGNABLE watchdog (report mode; cancels only after the report hour 60 min from the first list): 3 job(s) over 3 h with post-CTS setup < -300 ps: epyc10 kv3_pv_v1n -1268 ps 6.8 h 6.1 GB; epyc7 cbn_q01 -688 ps 4.2 h 3.7 GB; epyc7 kv3_pc_v3 -1492 ps 4.3 h 5.6 GB
