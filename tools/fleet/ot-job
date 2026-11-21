@@ -574,6 +574,54 @@ def run_sealed(spec, meta, J, store, tag, cmd, maps, staged, work_at, bwrap):
     return finish(spec, meta, J, store, tag, rc)
 
 
+FAIL_LOGS_MAX_BYTES = int(os.environ.get("OT_JOB_FAIL_LOGS_MAX_MB", "64")) << 20
+FAIL_LOGS_KEEP_S = 14 * 86400
+FAIL_LOG_DIRS = ("logs", "reports")
+FAIL_LOG_SKIP_EXT = (".odb", ".def", ".gds", ".oas", ".v", ".sdf", ".spef", ".vcd", ".fst", ".gz", ".zst", ".tar")
+
+
+def keep_failed_logs(J, name, tag, rc, dest_root=None, max_bytes=None):
+    """FAILLOGS-1630 (COORD: S81 serdes__t4 failed DPL-0033 and its log went with the job dir when the output was published; the cause cost a rerun): when the command failed (rc != 0) the logs/ and reports/
+    directories of its work dir (any depth <= 6, small text files, <= OT_JOB_FAIL_LOGS_MAX_MB in all, no databases) are copied to <jobs root>/../ot-job-failed-logs/<name>-<tag>/ before the job dir is deleted.
+    Entries older than 14 days are pruned there.  -> the destination dir, or '' when nothing was kept"""
+    if rc == 0:
+        return ""
+    work = os.path.join(J, "work")
+    dest_root = dest_root or os.path.join(os.path.dirname(os.path.dirname(J.rstrip("/"))), "ot-job-failed-logs")
+    budget = FAIL_LOGS_MAX_BYTES if max_bytes is None else max_bytes
+    dest = os.path.join(dest_root, f"{name}-{tag}")
+    n = 0
+    try:
+        for cur, dirs, files in os.walk(work):
+            depth = cur[len(work):].count(os.sep)
+            if depth > 6:
+                dirs[:] = []
+                continue
+            if os.path.basename(cur) not in FAIL_LOG_DIRS and not any(c in FAIL_LOG_DIRS for c in os.path.relpath(cur, work).split(os.sep)):
+                continue
+            for f in files:
+                src = os.path.join(cur, f)
+                if f.lower().endswith(FAIL_LOG_SKIP_EXT) or os.path.islink(src):
+                    continue
+                size = os.path.getsize(src)
+                if size > budget:
+                    continue
+                out = os.path.join(dest, os.path.relpath(src, work))
+                os.makedirs(os.path.dirname(out), exist_ok=True)
+                shutil.copyfile(src, out)
+                budget -= size
+                n += 1
+        if os.path.isdir(dest_root):
+            now = time.time()
+            for e in os.listdir(dest_root):
+                q = os.path.join(dest_root, e)
+                if q != dest and now - os.path.getmtime(q) > FAIL_LOGS_KEEP_S and os.path.isdir(q) and not os.path.islink(q):
+                    shutil.rmtree(q, ignore_errors=True)
+    except OSError as e:
+        say(f"failed-stage logs not fully kept: {e}")
+    return dest if n else ""
+
+
 def finish(spec, meta, J, store, tag, rc):
     try:
         return _finish(spec, meta, J, store, tag, rc)
@@ -632,6 +680,10 @@ def _finish(spec, meta, J, store, tag, rc):
                 json.dump(result, fh, indent=1, sort_keys=True)
         except OSError as e:
             errors.append(f"return copy: {e}")
+    kept = keep_failed_logs(J, spec["name"], tag, rc)
+    if kept:
+        result["failed_logs"] = kept
+        say(f"rc {rc}: logs/ and reports/ of the failed stage kept in {kept}")
     with open(os.path.join(J, ".ot-job", "result.json"), "w") as fh:
         json.dump(result, fh, indent=1, sort_keys=True)
     S.unref(store, "job-" + tag)
