@@ -123,3 +123,4 @@ time	die	class	state	posted	text
 2026-11-20 22:02:41	s81	NO-ADVANCE	alert	yes	NO-ADVANCE s81: 4 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (ot_s81sl_leaf__t28 x6@kit_rtl, serdes__t1__clb45db5be x2@gen, serdes__t14 x2@gen)
 2026-11-20 22:32:59	qwen_compute	NO-ADVANCE	alert	yes	NO-ADVANCE qwen_compute: 2 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (sle_st_a_v1__cl989804f6__cled3c1d7b x2@kit_topology, slw_hc3__cld86a7ad4__pvfd488b8f x2@gen)
 2026-11-20 23:03:18	s81	NO-ADVANCE	alert	yes	NO-ADVANCE s81: 6 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (ot_s81sl_leaf__t28 x6@kit_rtl, serdes__t1__clb45db5be x2@place, serdes__t14 x2@place)
+2026-11-20 23:23:37	s81_head	STUCK-STATE	alert	yes	STUCK-STATE s81_head: 1 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. hd_host_n, 2026-11-20 22:18)
