@@ -17422,3 +17422,8 @@ FAILED [AUTOPILOT 48b4d4c902dd] 2026-11-21 04:39:51 PST AUTOPILOT -> KIT-WAVE-3:
   NO-PROGRESS epyc8 opentallas-scratch2 svc_lo_dsdv_svc_rs__t7.C.yosys stage 8.3 h job 8.3 h: no new meaningful log line for 8.3 h; last: Warning: Replacing memory \arr with list of registers. See /srv/opentallas-scratch2/claude/s81-svc-s
   NO-PROGRESS epyc8 opentallas-scratch2 svc_hi_dsdv_svc_pvso_entry__t1.C.yosys stage 8.3 h job 8.3 h: no new meaningful log line for 8.0 h; last: Warning: Replacing memory \arr with list of registers. See /srv/opentallas-scratch2/claude/s81-svc-s
   NO-PROGRESS epyc8 opentallas-scratch2 svc_hi_dsdv_svc_rs__t4.C.yosys stage 8.3 h job 8.3 h: no new meaningful log line for 8.3 h; last: Warning: Replacing memory \arr with list of registers. See /srv/opentallas-scratch2/claude/s81-svc-s
+- 2026-11-21 04:52 PST OWNERS-SWEEP hourly (col split H9R0/H10/R3, SLICE-R2, MISC-R2, KV-HUB-R2, LEP0N-R4): 491 rows, 53 flagged, 0 UNOWNED/DEAD-OWNER, CBC-FALLBACK rows 0; failed_disposition kept.
+  S81 13 (was 38): 11 new STALE cancelled-superseded col rows (H9R0 9, H10 2) + 2 old STALE held H9R0; all S81 FAILED/leaf/serdes/slice held rows cleared.
+  FAILED-NO-RELAUNCH 9, all KV: 9 DELIBERATE (HOLD posts 03:52 by HGI/HUB lanes; IOPC 23:54 census; pv D28; pv_v8 on cancel list), 0 ORPHANED.
+  QC 14: 5 STALE held CB, 4 STALE cancelled, 3 new WAIT-VISUAL HCST (+2 STALE cancelled counted); KV 26 WAIT-BIND: 9 FAILED + 17 held/cancelled.
+  HEAD none flagged (LEP0N-R4). Note: CANCEL-SWEEP-0450 has no post file; cancels matched via CANCEL-GRT-FLAT/UNSIGNABLE tsv only.

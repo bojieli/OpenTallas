@@ -226,3 +226,8 @@
   S81: 29 STALE held-for-plan-event, all old; QC: 5 STALE held CB + 4 STALE cancelled (2 new: FEFW, QC-PLAN-R9); KV: 17 held/cancelled WAIT-BIND (2 new cancelled HGI-R3).
   HEAD none flagged (hd_lep0N, LEP0N-R3).
 - 2026-11-21 03:51 PST CORRECTION: KV held/cancelled WAIT-BIND rows are 19 (not 17); totals S81 38, QC 9, KV 28 = 75.
+- 2026-11-21 04:52 PST OWNERS-SWEEP hourly (col split H9R0/H10/R3, SLICE-R2, MISC-R2, KV-HUB-R2, LEP0N-R4): 491 rows, 53 flagged, 0 UNOWNED/DEAD-OWNER, CBC-FALLBACK rows 0; failed_disposition kept.
+  S81 13 (was 38): 11 new STALE cancelled-superseded col rows (H9R0 9, H10 2) + 2 old STALE held H9R0; all S81 FAILED/leaf/serdes/slice held rows cleared.
+  FAILED-NO-RELAUNCH 9, all KV: 9 DELIBERATE (HOLD posts 03:52 by HGI/HUB lanes; IOPC 23:54 census; pv D28; pv_v8 on cancel list), 0 ORPHANED.
+  QC 14: 5 STALE held CB, 4 STALE cancelled, 3 new WAIT-VISUAL HCST (+2 STALE cancelled counted); KV 26 WAIT-BIND: 9 FAILED + 17 held/cancelled.
+  HEAD none flagged (LEP0N-R4). Note: CANCEL-SWEEP-0450 has no post file; cancels matched via CANCEL-GRT-FLAT/UNSIGNABLE tsv only.
