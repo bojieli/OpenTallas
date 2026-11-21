@@ -75,3 +75,62 @@ def test_schema_accepts_tap_cap_cascade():
     assert '"tap_cap_cascade": {"type": "boolean"}' in src
     gp = (Path(__file__).resolve().parent / 'gen_phys.py').read_text()
     assert 'get("tap_cap_cascade") and not tap_grid_cfg(t)' in gp
+
+# Keep the original mock unchanged for its one-dimensional cap tests. The
+# cascade span cases place the selected registers on opposite sides of a tap.
+XY = r'''
+rename instp instp_x
+proc instp {name m args} {
+    if {$m eq "getLocation" && [info exists ::Y($name)]} {
+        return [list $::X($name) $::Y($name)]
+    }
+    return [instp_x $name $m {*}$args]
+}
+proc ffxy {name x y} {
+    ff $name $x
+    set ::Y($name) $y
+}
+'''
+
+
+def test_cascade_rechecks_receiving_tap_span_after_each_ejection(tmp_path):
+    body = XY + r'''
+addtap clk 0; addtap clk_t1 500; addtap clk_t2 1000
+fills a 8 230
+fills bmid 4 500
+ffxy b_up 510 120
+ffxy b_down 510 -120
+fills c 2 1000
+'''
+    env = r'''
+set ::env(OT_TAP_MAX_SINKS) 6
+set ::env(OT_TAP_REASSIGN_UM) 650
+set ::env(OT_TAP_SPAN_UM) 650
+set ::env(OT_TAP_CAP_CASCADE) 1
+'''
+    out, nets, js = run(tmp_path, body, env)
+    assert js['sinks'] == {'clk': 6, 'clk_t1': 6, 'clk_t2': 4}
+    assert 'CAP_CASCADE 2 ejection chains' in out
+    assert sum(nets[n] == 'n_clk_t2' for n in ('b_up', 'b_down')) == 1
+    assert sum(v == 'n_clk_t2' for n, v in nets.items() if n.startswith('bmid')) == 1
+
+
+def test_cascade_rechecks_full_neighbour_span_after_each_incoming_sink(tmp_path):
+    body = XY + r'''
+addtap clk 0; addtap clk_t1 500; addtap clk_t2 800
+fills a 6 0
+ffxy a_up 240 90
+ffxy a_down 240 -90
+fills b 6 500
+fills c 2 800
+'''
+    env = r'''
+set ::env(OT_TAP_MAX_SINKS) 6
+set ::env(OT_TAP_REASSIGN_UM) 410
+set ::env(OT_TAP_SPAN_UM) 370
+set ::env(OT_TAP_CAP_CASCADE) 1
+'''
+    out, nets, js = run(tmp_path, body, env)
+    assert js['sinks'] == {'clk': 7, 'clk_t1': 6, 'clk_t2': 3}
+    assert 'CAP_CASCADE 1 ejection chains' in out
+    assert sum(nets[n] == 'n_clk_t1' for n in ('a_up', 'a_down')) == 1
