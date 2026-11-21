@@ -47,7 +47,7 @@ LW = 114.48
 COL_GAP = 28.08
 ROW_GAP = 25.92
 STRIP = 43.2
-OBS_GAP = 12.96        # lane to a non-lane core (SRAM / vn / vq body)
+OBS_GAP = 12.96        # lane to a non-lane core (SRAM / vn / vq body; H.boxes: hard cores + the content macros of a kv leaf)
 EDGE = 4.32
 BAND_GAP = 8.64        # lane to a clock landing band (the J5 t44 kit placed its bands with a lane 8.3 um away)
 HOP = 405.0
@@ -611,7 +611,11 @@ def check_type(tn, t, gs=0):
                bank_spill_max_um=round(spill[0][0], 1) if spill else 0, bank_spill_top=spill[:4],
                corridor=(lambda r: {k: r.get(k) for k in ("verdict", "banks_inside_core", "banks", "worst_ratio")})(H.check({"partition_types": {tn: t}}, ".", gs).get(tn, {})))
     rep["lanes_on_band"] = on_band
-    rep["pass"] = (not on_band and st_in == 0 and rl_in == 0 and start_in == 0 and rep["lane_gaps_under"] == 0 and worst <= HOP + 1e-6)
+    # CORE-BOX: a lane on any other placed macro (hard core or content macro) is the KITFIT-OVERLAP the pre-bind gate refuses
+    rep["lanes_on_core"] = sorted({a[0] if H.LN.search(a[0]) else b[0] for i, a in enumerate(B) for b in B[i + 1:]
+                                   if bool(H.LN.search(a[0])) != bool(H.LN.search(b[0]))
+                                   and a[1] < b[3] - 1e-6 and b[1] < a[3] - 1e-6 and a[2] < b[4] - 1e-6 and b[2] < a[4] - 1e-6})
+    rep["pass"] = (not on_band and not rep["lanes_on_core"] and st_in == 0 and rl_in == 0 and start_in == 0 and rep["lane_gaps_under"] == 0 and worst <= HOP + 1e-6)
     rep["bank_spill_advisory"] = "OK" if rep["bank_spill_max_um"] <= SPILL_MAX else "PILE-UP"      # estimator, not calibrated against a kit yet
     return rep
 

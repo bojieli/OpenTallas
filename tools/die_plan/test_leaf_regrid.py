@@ -180,3 +180,39 @@ def test_hop_fix_resites_then_grows():
     assert [g["capture"] for g in rep["grown"]] == ["u_lf.u_vq"] and not rep["left"]
     rep2 = R.fix_hops(t, before)                                                     # rows inside 405 are left alone
     assert not rep2["resited"] and not rep2["grown"]
+
+
+def kv_plan():
+    """a kv leaf: the plan of plan() plus one content macro (u_bound vp memory, contents[] with a lef) in the slot columns"""
+    P = plan()
+    t = P["partition_types"][TN]
+    S, _ = R.find_slots(t)
+    x, y = sorted(S["slots"])[len(S["slots"]) // 2]
+    t["contents"] = [dict(inst="u_lf", module="m"),
+                     dict(inst="u_bound.u_u_vp_u_b0", module="mem", lef="m.lef", origin_um=[x + 20.0, y + 30.0], outline_um=[169.368, 29.16], orient="R0")]
+    return P, (x + 20.0, y + 30.0, x + 20.0 + 169.368, y + 30.0 + 29.16)
+
+
+def test_content_macros_are_core_boxes():
+    """S81-LEAF-REGRID CORE-BOX: kv_leaf t5 ln_11 was moved onto u_bound.u_u_vp_u_b0 / b1 (KITFIT-OVERLAP at the pre-bind
+    gate): the re-grid read hard_cores only."""
+    P, box = kv_plan()
+    t = P["partition_types"][TN]
+    free, _ = R.find_slots(plan()["partition_types"][TN])
+    assert any(_hit(s, box, 0.0) for s in free["slots"])                 # mutant: without the macro a slot stands on it
+    assert "u_bound.u_u_vp_u_b0" in [b[0] for b in H.boxes(t)] and "u_bound.u_u_vp_u_b0" in [b[0] for b in R.obox(t)]
+    S, err = R.find_slots(t)
+    assert err is None and S["slots"] and not any(_hit(s, box, R.OBS_GAP - 1e-6) for s in S["slots"])
+    S2, _ = R.find_slots_2d(t, 16)
+    assert not any(_hit(s, box, R.OBS_GAP - 1e-6) for s in S2["slots"])
+    r = R.regrid_type(TN, t, P, R.COL_GAP, R.ROW_GAP, R.STRIP)
+    assert r["result"] == "moved", r
+    R.seat(t)
+    c = R.check_type(TN, t)
+    assert c["lanes_on_core"] == [] and c["sites_in_core"] == 0
+    assert not any(_hit(tuple(b[1:3]), box, 0.0) for b in R.lbox(t))
+    # the check refuses a lane put back on the macro
+    ln = next(h for h in t["hard_cores"] if H.LN.search(h["inst"]))
+    ln["origin_um"] = [box[0] - 30.0, box[1] - 40.0]
+    c = R.check_type(TN, t)
+    assert c["lanes_on_core"] == [ln["inst"]] and not c["pass"]

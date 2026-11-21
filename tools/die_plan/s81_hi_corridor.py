@@ -307,6 +307,15 @@ def boxes(t):
             w, hh = hh, w
         x, y = h["origin_um"]
         out.append((h["inst"], x, y, x + w, y + hh))
+    # S81-LEAF-REGRID CORE-BOX (11-21, the 73-type delta was refused by KITFIT-OVERLAP: kv_leaf t5 lane ln_11 moved onto
+    # u_bound.u_u_vp_u_b0 / b1): the kit also places macros that are not hard_cores (contents[] with a lef: the four
+    # u_bound vn / vp / vq memories of a kv leaf).  They are core boxes for every slot, path, bank site and check here,
+    # at the box the kit places (placement_obstacles.placement_boxes, the G0 / tap-rule footprints).
+    from placement_obstacles import placement_boxes      # the script directory is on sys.path (cbc_rules import above)
+    have = {b[0] for b in out} | {h.get("physical_inst") for h in t["hard_cores"]}
+    for name, (x0, y0, x1, y1) in sorted(placement_boxes(t).items()):
+        if name not in have:
+            out.append((name, x0, y0, x1, y1))
     return out
 
 
