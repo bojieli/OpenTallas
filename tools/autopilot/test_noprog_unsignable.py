@@ -1,4 +1,4 @@
-"""FLEET-WATCH-1015: UNSIGNABLE rule of the no-progress watchdog (job > 3 h, measured post-CTS setup < -300 ps), report hour first, cancel only by ot-run --cancel <exact unit>."""
+"""FLEET-WATCH-1015 / FLOW-OPS-0900: UNSIGNABLE rule of the no-progress watchdog (job > 3 h, measured unable to sign), NOTICE to the owning lane, cancel 30 min later by ot-run --cancel <exact unit> unless KEEP."""
 import json, os, sys, types
 sys.path.insert(0, os.path.dirname(__file__))
 import noprog_watchdog as nw
@@ -44,44 +44,113 @@ def test_never_proofs_ecos_plan_jobs_lec_or_hbm():
     assert ev(-900, ident="dpkit-second_core-7") is not None                    # 'eco' inside a word is not an ECO
 
 
-def row(unit="oth-ubuntu-1-2", host="epyc9", key="c1|/k1", verdict=nw.UNSIGNABLE):
-    return {"unit": unit, "host": host, "key": key, "verdict": verdict, "type": "t1", "kit": "/s/runs/s81/kit-wave/s81/3fa87b/items/t1/gen/t1", "why": "4_1_cts.json cts__timing__setup__ws -700.00 ps",
-            "gb": 48.0, "setup_ps": -700.0, "age_h": 12.0}
+def row(unit="oth-ubuntu-1-2", host="epyc9", key="c1|/k1", verdict=nw.UNSIGNABLE, lane="", type_="t1", ident=""):
+    return {"unit": unit, "host": host, "key": key, "verdict": verdict, "type": type_, "kit": "/s/runs/s81/kit-wave/s81/3fa87b/items/t1/gen/t1", "why": "4_1_cts.json cts__timing__setup__ws -700.00 ps",
+            "gb": 48.0, "setup_ps": -700.0, "age_h": 12.0, "lane": lane, "container": "dpkit-" + type_ + "-1", "ident": ident or ("dpkit-" + type_ + "-1"), "prio": "", "kind": "grt"}
 
 
 def coord(tmp_path, monkeypatch):
-    (tmp_path / "bin").mkdir(); (tmp_path / "lanes").mkdir()
+    (tmp_path / "bin").mkdir(); (tmp_path / "lanes").mkdir(); (tmp_path / "lanes/posts").mkdir()
     (tmp_path / "bin/post.sh").write_text("#!/bin/bash\necho \"$1|$2\" >> " + str(tmp_path / "posted") + "\n")
-    monkeypatch.setattr(nw, "COORD", str(tmp_path)); monkeypatch.delenv("NOPROG_UNSIGNABLE_MODE", raising=False)
+    monkeypatch.setattr(nw, "COORD", str(tmp_path)); monkeypatch.delenv("NOPROG_UNSIGNABLE_ACT", raising=False)
+    monkeypatch.setenv("NOPROG_UNSIGNABLE_MODE", "report")       # the 11-20 drop-in: no longer read (FLOW-OPS-0900)
 
 
-def test_report_hour_then_cancel_by_exact_unit(tmp_path, monkeypatch):
+def posted(tmp_path):
+    p = tmp_path / "posted"
+    return p.read_text().splitlines() if p.exists() else []
+
+
+def test_notice_to_owning_lane_then_cancel_after_30_min_by_exact_unit(tmp_path, monkeypatch):
     coord(tmp_path, monkeypatch)
     calls, seen = [], {}
     cancel = lambda u: (calls.append(u), (0, "containers stopped: dpkit-t1-1"))[1]
-    mode, cand, done = nw.unsignable_pass([row()], seen, NOW, cancel=cancel)
-    assert mode == "report" and len(cand) == 1 and done == [] and calls == []
-    assert (tmp_path / "posted").read_text().startswith("FLEET-WATCH-1015|UNSIGNABLE watchdog (report mode") and "epyc9 t1 -700 ps" in (tmp_path / "posted").read_text()
-    mode, _c, done = nw.unsignable_pass([row()], seen, NOW + 1800, cancel=cancel)                  # half an hour: still report only
-    assert mode == "report" and calls == []
-    assert (tmp_path / "posted").read_text().count("\n") == 1                                      # the list is not re-posted every tick
-    mode, _c, done = nw.unsignable_pass([row()], seen, NOW + 3601, cancel=cancel)
+    mode, cand, done = nw.unsignable_pass([row(lane="FAM-S81-COL")], seen, NOW, cancel=cancel)
+    assert mode == "act" and len(cand) == 1 and done == [] and calls == []
+    p = posted(tmp_path)
+    assert len(p) == 1 and p[0].startswith("FLEET-WATCH-1015|NOTICE [FLEET-WATCH-1015 -> FAM-S81-COL]") and "oth-ubuntu-1-2" in p[0] and "KEEP <unit>" in p[0]
+    nw.unsignable_pass([row(lane="FAM-S81-COL")], seen, NOW + 1700, cancel=cancel)
+    assert calls == [] and len(posted(tmp_path)) == 1                                           # inside the 30 min: nothing, no re-post
+    _m, _c, done = nw.unsignable_pass([row(lane="FAM-S81-COL")], seen, NOW + 1801, cancel=cancel)
     assert calls == ["oth-ubuntu-1-2"] and done[0]["unit"] == "oth-ubuntu-1-2"
     tsv = (tmp_path / "lanes/CANCEL-UNSIGNABLE-1120.tsv").read_text().splitlines()
-    assert len(tsv) == 1 and tsv[0].split("\t")[:3] == ["oth-ubuntu-1-2", "epyc9", "t1"] and "s81 3fa87b" in tsv[0] and "ot-run --cancel oth-ubuntu-1-2 rc=0" in tsv[0] and tsv[0].split("\t")[5] == "48.0"
+    assert len(tsv) == 1 and tsv[0].split("\t")[:3] == ["oth-ubuntu-1-2", "epyc9", "t1"] and "NOTICE to FAM-S81-COL" in tsv[0] and "ot-run --cancel oth-ubuntu-1-2 rc=0" in tsv[0]
+    assert posted(tmp_path)[-1].startswith("FLEET-WATCH-1015|CANCELLED [FLEET-WATCH-1015 -> FAM-S81-COL]")
+    nw.unsignable_pass([row(lane="FAM-S81-COL")], seen, NOW + 4000, cancel=cancel)
+    assert calls == ["oth-ubuntu-1-2"]                                                          # once only
 
 
-def test_act_mode_skips_siblings_young_listings_and_unitless_rows(tmp_path, monkeypatch):
+def test_keep_post_stops_the_cancel(tmp_path, monkeypatch):
     coord(tmp_path, monkeypatch)
-    monkeypatch.setenv("NOPROG_UNSIGNABLE_MODE", "act")
-    calls = []
+    calls, seen = [], {}
     cancel = lambda u: (calls.append(u), (0, "ok"))[1]
-    seen = {"unsig_listed": {"epyc9|c1|/k1": NOW - 2000, "epyc9|c3|/k3": NOW - 2000}}
-    rows = [row(), row(unit="oth-ubuntu-9-9", key="c2|/k2", verdict="PROGRESS"), row(unit="oth-ubuntu-9-9", key="c2b|/k2b"),     # a healthy sibling blocks the unit
-            row(unit="oth-ubuntu-5-5", key="young|/k5"),                                                                       # listed this tick
-            row(unit=None, key="c3|/k3")]                                                                                      # no scope: nothing to cancel by unit
-    mode, _c, done = nw.unsignable_pass(rows, seen, NOW, cancel=cancel)
-    assert mode == "act" and calls == ["oth-ubuntu-1-2"] and len(done) == 1
+    nw.unsignable_pass([row(lane="L1")], seen, NOW, cancel=cancel)
+    (tmp_path / "lanes/posts/L1.md").write_text("- 2026-11-21 09:10 PST KEEP oth-ubuntu-1-2 setup recovering in my A/B\n")
+    nw.unsignable_pass([row(lane="L1")], seen, NOW + 3600, cancel=cancel)
+    assert calls == []
+
+
+def test_first_listed_time_survives_a_changing_list(tmp_path, monkeypatch):
+    coord(tmp_path, monkeypatch)
+    calls, seen = [], {}
+    cancel = lambda u: (calls.append(u), (0, "ok"))[1]
+    nw.unsignable_pass([row()], seen, NOW, cancel=cancel)
+    nw.unsignable_pass([row(unit="oth-ubuntu-7-7", key="c7|/k7")], seen, NOW + 900, cancel=cancel)    # list changed, the first unit missing this tick
+    assert seen["unsig_units"]["epyc9|oth-ubuntu-1-2"]["first"] == NOW
+    nw.unsignable_pass([row(), row(unit="oth-ubuntu-7-7", key="c7|/k7")], seen, NOW + 1900, cancel=cancel)
+    assert calls == ["oth-ubuntu-1-2"]                                                          # 7-7 was noticed at +900: not yet
+
+
+def test_decide_only_jobs_are_posted_for_a_decision_and_never_cancelled(tmp_path, monkeypatch):
+    coord(tmp_path, monkeypatch)
+    calls, seen = [], {}
+    cancel = lambda u: (calls.append(u), (0, "ok"))[1]
+    rows = [row(unit="oth-a-1-1", type_="ot_s81sl_leaf__t11", key="a|/a"), row(unit="oth-b-2-2", type_="slw_su_c__cl92142dac", key="b|/b"),
+            row(unit="oth-c-3-3", type_="ot_s81sl_leaf__t110", key="c|/c")]
+    for t in (NOW, NOW + 2000, NOW + 9000):
+        nw.unsignable_pass(rows, seen, t, cancel=cancel)
+    assert calls == ["oth-c-3-3"]                                                               # t110 is not t11
+    p = "\n".join(posted(tmp_path))
+    assert "DECISION [FLEET-WATCH-1015 -> FABLE-FIX-S81-LEAF-R5]" in p and "DECISION [FLEET-WATCH-1015 -> QC-PLAN-R10]" in p
+    assert p.count("DECISION") == 2                                                             # once each
+
+
+def test_off_switch_file_reports_only(tmp_path, monkeypatch):
+    coord(tmp_path, monkeypatch)
+    (tmp_path / "lanes/UNSIGNABLE-WATCHDOG.off").write_text("COORD: paused\n")
+    calls, seen = [], {}
+    cancel = lambda u: (calls.append(u), (0, "ok"))[1]
+    for t in (NOW, NOW + 4000):
+        mode, _c, _d = nw.unsignable_pass([row()], seen, t, cancel=cancel)
+    assert mode == "report" and calls == [] and len(posted(tmp_path)) == 1 and "report mode" in posted(tmp_path)[0]
+
+
+def test_siblings_and_unitless_rows_block_and_functional_bug_counts(tmp_path, monkeypatch):
+    coord(tmp_path, monkeypatch)
+    calls, seen = [], {}
+    cancel = lambda u: (calls.append(u), (0, "ok"))[1]
+    (tmp_path / "lanes/UNSIGNABLE-FUNCTIONAL.tsv").write_text("oth-ubuntu-4-4\tLATCHECK lane latency error 3 cycles\n")
+    rows = [row(unit="oth-ubuntu-9-9", key="c2|/k2", verdict="PROGRESS"), row(unit="oth-ubuntu-9-9", key="c2b|/k2b"),
+            row(unit=None, key="c3|/k3"), row(unit="oth-ubuntu-4-4", key="f|/f", verdict="PROGRESS")]
+    for t in (NOW, NOW + 1801):
+        nw.unsignable_pass(rows, seen, t, cancel=cancel)
+    assert calls == ["oth-ubuntu-4-4"]
+
+
+def test_flat_repair_below_gate_and_exemptions():
+    assert "FLAT" in nw.unsignable_evidence("dpkit-t1-1", "", "grt", 4.0, (-120.0, "/k/5_1_grt.tmp.log", "flat"))
+    assert nw.unsignable_evidence("dpkit-t1-1", "", "grt", 4.0, (-120.0, "/k/5_1_grt.log", "")) is None       # final, above -300: a lane may still fix it
+    assert nw.unsignable_evidence("dpkit-t1-1", "", "grt", 4.0, (-30.0, "/k/5_1_grt.tmp.log", "flat")) is None  # inside the gate
+    for ident in ("/srv/x/kit-wave/s81/E/private/LANE/t1_1/gen", "dpkit-t1_hold_eco-1", "/srv/a/qc-hold-0030-kits/t1", "/srv/a/holdfix/t1"):
+        assert nw.unsignable_evidence(ident, "", "grt", 9.0, (-900.0, "/k/x")) is None, ident
+    assert nw.unsignable_evidence("dpkit-threshold-1", "", "grt", 9.0, (-900.0, "/k/x"))                      # 'hold' inside a word
+
+
+def test_grt_flat_two_rounds_on_lane_jobs():
+    r = {"age_h": 5.0, "kind": "grt", "ident": "dpkit-t1-1", "prio": "", "verdict": nw.GRT_LABEL, "why": "NO-PROGRESS: overflow has not fallen across 2 consecutive rounds (9 9 9)"}
+    assert "2 consecutive rounds" in nw.grt_unsignable_evidence(r)
+    assert nw.grt_unsignable_evidence(dict(r, age_h=2.0)) is None and nw.grt_unsignable_evidence(dict(r, why="DESIGN-FAIL: overflow 2000 at round 10")) is None
+    assert nw.grt_unsignable_evidence(dict(r, verdict="PROGRESS", grt_flat="overflow 9 at iteration 5 -> 9 at iteration 10")) .startswith("GRT overflow flat")
 
 
 def test_cancel_goes_through_ot_run_cancel_with_the_exact_unit():
@@ -93,7 +162,7 @@ def test_cancel_goes_through_ot_run_cancel_with_the_exact_unit():
 
 
 def test_unsignable_is_not_a_host_cancel_verdict():
-    assert nw.UNSIGNABLE not in nw.BAD_VERDICTS            # a host scan never cancels it; only the hub, after the report hour
+    assert nw.UNSIGNABLE not in nw.BAD_VERDICTS            # a host scan never cancels it; only the hub, after NOTICE + 30 min
 
 
 def tree(d, name, text, mtime):
@@ -146,3 +215,11 @@ def test_a_repair_still_improving_or_a_newer_hold_pass_is_unmeasured_not_the_sta
 def test_a_resumed_job_is_unmeasured_until_it_reports(tmp_path):
     cts(tmp_path, -900.0, NOW - 40000)
     assert nw.latest_setup([str(tmp_path)], NOW - 3600) is None                                # the container started after the files were written
+
+
+def test_owner_from_the_tree_path_when_the_unit_has_no_lane(tmp_path, monkeypatch):
+    coord(tmp_path, monkeypatch)
+    (tmp_path / "lanes/posts/FABLE-FIX-S81-SVC-1121.md").write_text("")
+    r = row()
+    r["kit"] = "/srv/opentallas-scratch2/claude/fable-fix-s81-svc-1121/kits/t1/gen"
+    assert nw.owner_of([r]) == "FABLE-FIX-S81-SVC-1121" and nw.owner_of([row()]) == "COORD" and nw.owner_of([row(lane="L9")]) == "L9"

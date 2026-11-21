@@ -341,7 +341,14 @@ B64 = re.compile(r"[A-Za-z0-9+/=]{60,}")
 UNSIGNABLE = "UNSIGNABLE"
 UNSIGNABLE_SETUP_PS = -300.0
 UNSIGNABLE_MIN_AGE_H = 3.0
-UNSIGNABLE_REPORT_ONLY_S = 3600       # the hub lists (and posts) for one hour before it cancels anything
+UNSIGNABLE_REPORT_ONLY_S = 3600       # legacy (pre FLOW-OPS-0900); the notice flow below replaced the report hour
+GATE_SETUP_PS = -42.0
+UNSIGNABLE_GRACE_S = 1800             # FLOW-OPS-0900 (owner 11-21): NOTICE to the owning lane, cancel 30 min later unless the lane posted KEEP <unit>
+UNSIGNABLE_FORGET_S = 6 * 3600        # a unit not seen for 6 h is forgotten; a short gap in the list keeps its first-listed time
+PRIVATE_RE = re.compile(r"/private/")
+HOLD_ONLY_RE = re.compile(r"(?i)(?:^|[/_\-.])hold(?:[_-]?only|[_-]?fix|[_-]?eco|[_-]?gate)?(?:$|[/_\-.0-9])")
+# never auto-cancelled: posted to the named lane for a decision (COORD 11-21 FLOW-OPS-0900 brief); lanes/UNSIGNABLE-DECIDE.tsv (regex<TAB>lane) adds more
+DECIDE_ONLY = ((r"ot_s81sl_leaf__t11(?![0-9])", "FABLE-FIX-S81-LEAF-R5"), (r"(?:^|[^A-Za-z0-9])slw_su_c(?![A-Za-z0-9])", "QC-PLAN-R10"))
 ECO_RE = re.compile(r"(?i)(?:^|[/_\-.])eco(?:$|[/_\-.0-9])")
 PROOF_RE = re.compile(r"(?i)(?:^|[/_\-.])proofs?(?:$|[/_\-.0-9])")
 UNSIG_GLOBS = ("run/logs/*/*/*/4_1_cts.json", "gen/*/run/logs/*/*/*/4_1_cts.json", "logs/*/*/*/4_1_cts.json", "*/4_1_cts.json", "4_1_cts.json")
@@ -388,7 +395,12 @@ FLAT_ROWS, FLAT_TAIL, FLAT_FRAC = 20, 10, 0.01
 
 
 def setup_table_wns(text):
-    """-> WNS (ps) of the LAST setup repair_timing table of a log (header with WNS and StTNS; hold tables and repair_design are never read), else None.  A table still being written counts only
+    """-> WNS of the last setup repair table (see setup_table_state)"""
+    return setup_table_state(text)[0]
+
+
+def setup_table_state(text):
+    """-> (wns, how) with how 'final' | 'flat' | None.  WNS (ps) of the LAST setup repair_timing table of a log (header with WNS and StTNS; hold tables and repair_design are never read), else None.  A table still being written counts only
     when it is FLAT (>= FLAT_ROWS rows, the last FLAT_TAIL rows within FLAT_FRAC of the value); otherwise the job is still repairing and the number is not final -> None."""
     last = None
     for t in parse_tables(text.splitlines()):
@@ -400,16 +412,22 @@ def setup_table_wns(text):
         if not vals:
             continue
         if t["final"]:
-            last = vals[-1]
+            last = (vals[-1], "final")
         elif len(vals) >= FLAT_ROWS and (max(vals[-FLAT_TAIL:]) - min(vals[-FLAT_TAIL:])) <= FLAT_FRAC * abs(vals[-1]):
-            last = vals[-1]
+            last = (vals[-1], "flat")
         else:
             last = None            # still improving: a number that is not the stage result
-    return last
+    return last or (None, None)
 
 
 def latest_setup(dirs, started):
-    """COORD 11-20 (FABLE-FLOW-1200: cancels on the post-CTS number while GRT repair had moved one job to -0.494 ps): the NEWEST setup number THIS job wrote (mtime >= its container start - 60 s, so a resumed
+    """-> (ws_ps, source path) or None; see latest_setup_ex"""
+    r = latest_setup_ex(dirs, started)
+    return r[:2] if r else None
+
+
+def latest_setup_ex(dirs, started):
+    """-> (ws_ps, source path, how) or None, how = 'flat' when the number is a setup repair table that went flat while still running (FLOW-OPS-0900: owner 'flat repair' rule).  COORD 11-20 (FABLE-FLOW-1200: cancels on the post-CTS number while GRT repair had moved one job to -0.494 ps): the NEWEST setup number THIS job wrote (mtime >= its container start - 60 s, so a resumed
     run is unmeasured until it reports): stage jsons (cts / globalroute / detailedroute), OT_TT_SETUP_* logs (last wns), the last finished or flat setup repair table of a 5_* stage log.  A newer stage
     file of the job that yields no setup number (repair still improving, hold pass) makes the job UNMEASURED.  -> (ws_ps, source path) or None."""
     cands, newest_unread = [], 0.0
@@ -431,7 +449,7 @@ def latest_setup(dirs, started):
                     newest_unread = max(newest_unread, mt); continue
                 v = next((j[f"{k}__timing__setup__ws"] for k in STAGE_JSON_KEYS if isinstance(j.get(f"{k}__timing__setup__ws"), (int, float)) and not isinstance(j.get(f"{k}__timing__setup__ws"), bool)), None)
                 if v is not None:
-                    cands.append((mt, float(v), p))
+                    cands.append((mt, float(v), p, ""))
         for g in TT_LOG_GLOBS:
             for p in glob.glob(os.path.join(d, g)):
                 mt = fresh(p)
@@ -440,7 +458,7 @@ def latest_setup(dirs, started):
                 ms = TT_WNS_RE.findall(read_text(p))
                 if ms:
                     a, b = ms[-1]
-                    cands.append((mt, float(b or a), p))
+                    cands.append((mt, float(b or a), p, ""))
                 else:
                     newest_unread = max(newest_unread, mt)
         for g in SETUP_LOG_GLOBS:
@@ -448,26 +466,59 @@ def latest_setup(dirs, started):
                 mt = fresh(p)
                 if mt is None:
                     continue
-                v = setup_table_wns(read_text(p))
+                v, how = setup_table_state(read_text(p))
                 if v is None:
                     newest_unread = max(newest_unread, mt)
                 else:
-                    cands.append((mt, v, p))
+                    cands.append((mt, v, p, how if how == "flat" else ""))
     if not cands:
         return None
-    mt, v, p = max(cands)
+    mt, v, p, how = max(cands)
     if newest_unread > mt:
         return None                      # a newer stage file carries no setup number yet: unmeasured, never the stale one
-    return v, p
+    return v, p, how
+
+
+def unsignable_exempt(ident, prio, kind):
+    """-> reason the job is never judged UNSIGNABLE, else ''.  Pure.  Proofs (--priority proof/plan, proof by name, private-spec kits under /private/), ECOs, hold-only jobs, LEC, HBM."""
+    if prio in ("plan", "proof"):
+        return f"priority {prio}"
+    if kind == "lec":
+        return "LEC"
+    if ECO_RE.search(ident):
+        return "ECO"
+    if PROOF_RE.search(ident) or PRIVATE_RE.search(ident):
+        return "proof / private kit"
+    if HOLD_ONLY_RE.search(ident):
+        return "hold-only job"
+    if is_hbm(ident):
+        return "HBM (parked)"
+    return ""
 
 
 def unsignable_evidence(ident, prio, kind, age_h, setup):
-    """-> evidence text when the rule applies, else None.  Pure."""
-    if setup is None or age_h <= UNSIGNABLE_MIN_AGE_H or setup[0] >= UNSIGNABLE_SETUP_PS:
+    """-> evidence text when the rule applies, else None.  Pure.  setup = (ws, path[, how]); how 'flat' = a setup repair table that stopped improving.
+    Fires on setup < -300 ps, or on a FLAT repair still worse than the -42 ps gate (owner 11-20 'flat repair'), only after 3 h."""
+    if setup is None or age_h <= UNSIGNABLE_MIN_AGE_H or unsignable_exempt(ident, prio, kind):
         return None
-    if prio in ("plan", "proof") or kind == "lec" or ECO_RE.search(ident) or PROOF_RE.search(ident) or is_hbm(ident):
+    how = setup[2] if len(setup) > 2 else ""
+    if setup[0] < UNSIGNABLE_SETUP_PS:
+        return f"{os.path.basename(setup[1])} latest setup WNS {setup[0]:.2f} ps (< {UNSIGNABLE_SETUP_PS:.0f}, gate TT >= -42); job age {age_h} h > {UNSIGNABLE_MIN_AGE_H:g} h"
+    if how == "flat" and setup[0] < GATE_SETUP_PS:
+        return f"{os.path.basename(setup[1])} setup repair FLAT at WNS {setup[0]:.2f} ps (gate TT >= {GATE_SETUP_PS:.0f}, repair no longer improving); job age {age_h} h > {UNSIGNABLE_MIN_AGE_H:g} h"
+    return None
+
+
+def grt_unsignable_evidence(row):
+    """GRT overflow flat over 2 rounds (the NOPROG GRT label 'not fallen across 2 consecutive rounds' or grt_flat) on a job > 3 h that the wave's GRT-FLAT pass does not take (lane jobs).  Pure."""
+    if row.get("age_h", 0) <= UNSIGNABLE_MIN_AGE_H or row.get("kind") != "grt" or unsignable_exempt(row.get("ident", ""), row.get("prio", ""), row.get("kind", "")):
         return None
-    return f"{os.path.basename(setup[1])} latest setup WNS {setup[0]:.2f} ps (< {UNSIGNABLE_SETUP_PS:.0f}, gate TT >= -42); job age {age_h} h > {UNSIGNABLE_MIN_AGE_H:g} h"
+    why = str(row.get("why") or "")
+    if row.get("grt_flat"):
+        return f"GRT overflow flat: {row['grt_flat']}; job age {row['age_h']} h"
+    if row.get("verdict") == GRT_LABEL and "2 consecutive rounds" in why:
+        return f"GRT {why}; {row.get('detail') or ''}; job age {row['age_h']} h"
+    return None
 
 
 def is_plan(env_prio, text):
@@ -805,12 +856,14 @@ def scan(now=None, act=False, probe_s=4):
         row["ident"] = ident[:400]
         if row["verdict"] not in ("KEEP", "EXCLUDED") and row["age_h"] > UNSIGNABLE_MIN_AGE_H:
             # a 4_1_cts.json under the kit / work dir written by THIS container; the verdict is only a label here (the HUB cancels, host scans never do)
-            ms = latest_setup([kit, work], started)
+            ms = latest_setup_ex([kit, work], started)
             ev = unsignable_evidence(ident, prio, kind, row["age_h"], ms)
             if ms:
                 row["setup_ps"] = ms[0]
+            if not ev and lane and grt_flat_exempt(dict(row, ident=ident)).startswith("OT_LANE"):
+                ev = grt_unsignable_evidence(dict(row, ident=ident, prio=prio))      # wave kits: grt_flat_pass cancels them through cancel-rows
             if ev and row["verdict"] not in BAD_VERDICTS:
-                row.update(verdict=UNSIGNABLE, why=ev, action="UNSIGNABLE (hub cancels after the report hour)")
+                row.update(verdict=UNSIGNABLE, why=ev, action="UNSIGNABLE (hub: NOTICE to the owning lane, cancel 30 min later unless KEEP)")
         rows.append(row)
     time.sleep(max(0.0, probe_s - (time.time() - t_probe)))
     t1 = time.time()
@@ -989,13 +1042,13 @@ def plan_of(kit):
     return f"{m.group(1)} {m.group(2)}" if m else "-"
 
 
-def unsignable_mode(seen, now):
-    """report | act.  NOPROG_UNSIGNABLE_MODE=report|act forces it; auto (default): report for UNSIGNABLE_REPORT_ONLY_S after the first pass AND only once the list was posted."""
-    forced = os.environ.get("NOPROG_UNSIGNABLE_MODE", "auto")
-    if forced in ("report", "act"):
-        return forced
-    first = seen.setdefault("unsig_first", now)
-    return "act" if seen.get("unsig_posted") and now - first >= UNSIGNABLE_REPORT_ONLY_S else "report"
+def unsignable_mode(seen=None, now=None):
+    """act | report.  FLOW-OPS-0900 (owner 11-21: 'the UNSIGNABLE watchdog acts'): act by default.  The off switch is a COORD file, lanes/UNSIGNABLE-WATCHDOG.off
+    (one line why; coord-commit.sh), or NOPROG_UNSIGNABLE_ACT=report.  The old NOPROG_UNSIGNABLE_MODE=report (11-20 drop-in, set while the cancel read stale post-CTS numbers and had no
+    owner notice) governed the report-hour path this replaced and is no longer read: every cancel now has a NOTICE to the owning lane and a 30 min KEEP window first."""
+    if os.environ.get("NOPROG_UNSIGNABLE_ACT") == "report" or os.path.exists(os.path.join(COORD, "lanes/UNSIGNABLE-WATCHDOG.off")):
+        return "report"
+    return "act"
 
 
 def ot_run_cancel(unit, run=subprocess.run):
@@ -1006,49 +1059,173 @@ def ot_run_cancel(unit, run=subprocess.run):
     return r.returncode, (lines[-1][:200] if lines else "no output")
 
 
-def unsignable_pass(rows, seen, now, post=True, cancel=ot_run_cancel):
-    """HUB half of the rule.  rows = every host's rows.  Lists UNSIGNABLE jobs (first time: posts the list, starts the report hour), and in act mode cancels every unit whose containers are ALL
-    UNSIGNABLE and that has been listed >= MIN_REPORT_AGE_S.  Appends the evidence rows to lanes/CANCEL-UNSIGNABLE-1120.tsv.  -> (mode, listed rows, cancelled [dict])"""
-    cand = [r for r in rows if r["verdict"] == UNSIGNABLE]
-    listed = seen.setdefault("unsig_listed", {})
-    keys = {f"{r['host']}|{r['key']}" for r in cand}
-    for k in keys:
-        listed.setdefault(k, now)
-    for k in list(listed):
-        if k not in keys:
-            del listed[k]
-    mode = unsignable_mode(seen, now)
-    stamp = time.strftime("%Y-%m-%d %H:%M PST", time.localtime(now))
-    if cand and post and (not seen.get("unsig_posted") or set(keys) - set(seen.get("unsig_posted_keys", []))):
-        txt = (f"UNSIGNABLE watchdog ({mode} mode; cancels only after the report hour {UNSIGNABLE_REPORT_ONLY_S // 60} min from the first list): {len(cand)} job(s) over {UNSIGNABLE_MIN_AGE_H:g} h with post-CTS setup < "
-               f"{UNSIGNABLE_SETUP_PS:.0f} ps: " + "; ".join(f"{r['host']} {r['type']} {r['setup_ps']:.0f} ps {r['age_h']} h {r['gb']} GB" for r in cand[:60]))
+KEEP_POST_RE = re.compile(r"\bKEEP\s+(oth-[A-Za-z0-9_.-]+)")
+
+
+def keep_posts(coord=None):
+    """-> {unit} named by a 'KEEP <unit>' line in any lanes/posts/*.md (or lanes/NOPROG-KEEP.tsv)"""
+    coord = coord or COORD
+    out = set()
+    for p in glob.glob(os.path.join(coord, "lanes/posts/*.md")) + [os.path.join(coord, "lanes/NOPROG-KEEP.tsv")]:
         try:
-            subprocess.run(["bash", os.path.join(COORD, "bin/post.sh"), os.environ.get("NOPROG_POST_LANE", "FLEET-WATCH-1015"), txt], capture_output=True, text=True, timeout=300)
-            seen["unsig_posted"] = seen.get("unsig_posted") or now
-            seen["unsig_posted_keys"] = sorted(set(seen.get("unsig_posted_keys", [])) | keys)
-        except (subprocess.SubprocessError, OSError):
+            out.update(KEEP_POST_RE.findall(read_text(p)))
+        except OSError:
             pass
-    done = []
-    if mode == "act":
-        units = {}
-        for r in rows:
-            if r.get("unit"):
-                units.setdefault((r["host"], r["unit"]), []).append(r)
-        for (h, u), rs in sorted(units.items()):
-            if not all(r["verdict"] == UNSIGNABLE and now - listed.get(f"{r['host']}|{r['key']}", now) >= MIN_REPORT_AGE_S for r in rs):
-                continue
-            rc, line = cancel(u)
-            first = rs[0]
-            rec = {"t": now, "unit": u, "host": h, "type": first["type"], "plan": plan_of(first["kit"]), "evidence": first["why"], "freed_gb": round(sum(r["gb"] for r in rs), 1),
-                   "class": "UNSIGNABLE-SETUP", "cancel_method": f"ot-run --cancel {u} rc={rc}: {line}"}
-            done.append(rec)
-            seen.setdefault("unsig_cancelled", []).append(f"{h}|{u}")
-        if done:
-            path = os.path.join(COORD, "lanes/CANCEL-UNSIGNABLE-1120.tsv")
-            with open(path, "a") as f:
-                for d in done:
-                    f.write("\t".join(str(d[k]).replace("\t", " ").replace("\n", " ") for k in ("unit", "host", "type", "plan", "evidence", "freed_gb", "class", "cancel_method")) + "\n")
-    return mode, cand, done
+    return out
+
+
+def decide_only(ident, coord=None):
+    """-> lane that decides this job (never auto-cancelled), else ''"""
+    pats = list(DECIDE_ONLY)
+    for l in read_lines(os.path.join(coord or COORD, "lanes/UNSIGNABLE-DECIDE.tsv")):
+        f = l.split("\t")
+        if len(f) >= 2 and not l.startswith("#"):
+            pats.append((f[0], f[1].strip()))
+    for pat, lane in pats:
+        try:
+            if re.search(pat, ident or ""):
+                return lane
+        except re.error:
+            continue
+    return ""
+
+
+def functional_bugs(coord=None):
+    """lanes/UNSIGNABLE-FUNCTIONAL.tsv: <unit, kit or type substring><TAB><evidence>[<TAB>lane] = a lane-declared functional bug (owner rule: a job with a functional bug cannot sign)."""
+    out = []
+    for l in read_lines(os.path.join(coord or COORD, "lanes/UNSIGNABLE-FUNCTIONAL.tsv")):
+        f = l.split("\t")
+        if len(f) >= 2 and f[0].strip() and not l.startswith("#"):
+            out.append((f[0].strip(), f[1].strip()))
+    return out
+
+
+LANE_DIR_RE = re.compile(r"/srv/opentallas-scratch\d*/claude/([A-Za-z0-9][A-Za-z0-9._-]*)/")
+
+
+def lane_from_path(path, coord=None):
+    """-> the lane whose post file matches the lane dir of a /srv/opentallas-scratch*/claude/<lane>/ path (case folded), else ''"""
+    m = LANE_DIR_RE.search(path or "")
+    if not m:
+        return ""
+    want = m.group(1).lower()
+    try:
+        for f in os.listdir(os.path.join(coord or COORD, "lanes/posts")):
+            if f.endswith(".md") and f[:-3].lower() == want:
+                return f[:-3]
+    except OSError:
+        pass
+    return ""
+
+
+def owner_of(rs):
+    """the job's OT_LANE, else the lane of its tree / kit path (most units carry no OT_LANE), else COORD (wave jobs)"""
+    return (next((r["lane"] for r in rs if r.get("lane")), "") or next((l for r in rs for l in [lane_from_path(r.get("kit") or ""), lane_from_path(r.get("ident") or "")] if l), "")
+            or "COORD")
+
+
+def _post(lane_from, txt):
+    try:
+        subprocess.run(["bash", os.path.join(COORD, "bin/post.sh"), lane_from, txt], capture_output=True, text=True, timeout=300)
+        return True
+    except (subprocess.SubprocessError, OSError):
+        return False
+
+
+def unsignable_pass(rows, seen, now, post=True, cancel=ot_run_cancel):
+    """HUB half of the rule (FLOW-OPS-0900, owner 11-21).  Per unit (host|unit) whose containers are ALL unsignable (UNSIGNABLE verdict, or a lane-declared functional bug on a job > 3 h):
+      1. first listed: state keeps the first-listed time per unit (survives a changing list; forgotten only when unseen 6 h);
+      2. NOTICE post to the owning lane (the job's OT_LANE, COORD for wave jobs) with the exact unit, evidence and the cancel time;
+         units matched by DECIDE_ONLY / lanes/UNSIGNABLE-DECIDE.tsv get a DECISION post to the named lane instead and are never cancelled here;
+      3. >= 30 min after the NOTICE, unless a post says 'KEEP <unit>': ot-run --cancel <unit>, evidence row in lanes/CANCEL-UNSIGNABLE-1120.tsv, CANCELLED post to the owner.
+    -> (mode, candidate rows, cancelled [dict])"""
+    mode = unsignable_mode()
+    poster = os.environ.get("NOPROG_POST_LANE", "FLEET-WATCH-1015")
+    stamp = time.strftime("%Y-%m-%d %H:%M PST", time.localtime(now))
+    fb = functional_bugs()
+    units = {}
+    for r in rows:
+        if r.get("unit"):
+            units.setdefault((r["host"], r["unit"]), []).append(r)
+    cand = []
+    for (h, u), rs in units.items():
+        fev = ""
+        for m, e in fb:
+            if any(m in " ".join([u, r.get("type", ""), r.get("kit") or "", r.get("ident", "")]) for r in rs):
+                fev = f"functional bug declared in lanes/UNSIGNABLE-FUNCTIONAL.tsv: {e}"
+        if fev:
+            ok = all(r.get("age_h", 0) > UNSIGNABLE_MIN_AGE_H and r.get("verdict") not in ("KEEP", "EXCLUDED") and not unsignable_exempt(r.get("ident", ""), r.get("prio", ""), r.get("kind", "")) for r in rs)
+            if ok:
+                for r in rs:
+                    r.update(verdict=UNSIGNABLE, why=fev)
+        if all(r["verdict"] == UNSIGNABLE for r in rs):
+            cand.append(((h, u), rs))
+    st = seen.setdefault("unsig_units", {})
+    for (h, u), rs in cand:
+        e = st.setdefault(f"{h}|{u}", {"first": now})
+        e.update(last=now, type=rs[0].get("type", ""), evidence=rs[0].get("why", ""), owner=owner_of(rs))
+    for k in list(st):
+        if now - st[k].get("last", now) > UNSIGNABLE_FORGET_S:
+            del st[k]
+    keeps = keep_posts()
+    notices, decisions, done = {}, {}, []
+    for (h, u), rs in sorted(cand):
+        k = f"{h}|{u}"
+        e = st[k]
+        if e.get("done"):
+            continue
+        ident = " ".join([rs[0].get("container", ""), rs[0].get("ident", ""), rs[0].get("kit") or ""])
+        dl = decide_only(ident)
+        line = f"{h} {u} {rs[0].get('type', '')} ({e['evidence'][:160]}; {sum(r.get('gb', 0) for r in rs):.0f} GB, listed since {time.strftime('%H:%M', time.localtime(e['first']))})"
+        if dl:
+            if not e.get("decision_posted"):
+                decisions.setdefault(dl, []).append(line)
+                e["decision_posted"] = now
+            continue
+        if u in keeps:
+            e["kept"] = e.get("kept") or now
+            continue
+        if not e.get("notice"):
+            if mode == "act" and post:
+                notices.setdefault(e["owner"], []).append(line)
+                e["notice"] = now
+            elif not e.get("reported"):
+                notices.setdefault(e["owner"], []).append(line)
+                e["reported"] = now
+            continue
+        if mode != "act" or now - e["notice"] < UNSIGNABLE_GRACE_S:
+            continue
+        rc, out = cancel(u)
+        first = rs[0]
+        rec = {"t": now, "unit": u, "host": h, "type": first["type"], "plan": plan_of(first.get("kit")), "evidence": f"{first['why']}; NOTICE to {e['owner']} {time.strftime('%H:%M', time.localtime(e['notice']))}, no KEEP in 30 min",
+               "freed_gb": round(sum(r.get("gb", 0) for r in rs), 1), "class": "UNSIGNABLE-SETUP" if "setup" in first["why"] else "UNSIGNABLE", "cancel_method": f"ot-run --cancel {u} rc={rc}: {out}",
+               "owner": e["owner"]}
+        done.append(rec)
+        e["done"] = now
+        seen.setdefault("unsig_cancelled", []).append(k)
+    if post:
+        for owner, ls in sorted(notices.items()):
+            if mode == "act":
+                txt = (f"NOTICE [{poster} -> {owner}] UNSIGNABLE watchdog (owner rule 11-20, >3 h and measured unable to sign): {len(ls)} job(s): " + "; ".join(ls[:40])
+                       + f". Each is cancelled by ot-run --cancel <unit> {UNSIGNABLE_GRACE_S // 60} min after this post unless {owner} posts 'KEEP <unit> <why>' (bash ~/coord/bin/post.sh {owner} \"KEEP oth-... why\").")
+            else:
+                txt = f"STATE [{poster} -> {owner}] UNSIGNABLE watchdog (report mode, lanes/UNSIGNABLE-WATCHDOG.off): {len(ls)} job(s) would be noticed: " + "; ".join(ls[:40])
+            _post(poster, txt)
+        for dl, ls in sorted(decisions.items()):
+            _post(poster, f"DECISION [{poster} -> {dl}] UNSIGNABLE watchdog: {len(ls)} job(s) measured unable to sign that the watchdog never cancels by itself (decide-only list): " + "; ".join(ls[:40])
+                  + f". {dl}: decide; cancel with ot-run --cancel <unit> yourself, or post 'KEEP <unit> <why>'.")
+        by_owner = {}
+        for d in done:
+            by_owner.setdefault(d["owner"], []).append(d)
+        for owner, ds in sorted(by_owner.items()):
+            _post(poster, f"CANCELLED [{poster} -> {owner}] UNSIGNABLE watchdog cancelled {len(ds)} job(s) after NOTICE + 30 min without KEEP: "
+                  + "; ".join(f"{d['host']} {d['unit']} {d['type']} ({d['evidence'][:120]}; {d['cancel_method'][-80:]})" for d in ds) + ". Evidence lanes/CANCEL-UNSIGNABLE-1120.tsv; kit dirs kept.")
+    if done:
+        path = os.path.join(COORD, "lanes/CANCEL-UNSIGNABLE-1120.tsv")
+        with open(path, "a") as f:
+            for d in done:
+                f.write("\t".join(str(d[k]).replace("\t", " ").replace("\n", " ") for k in ("unit", "host", "type", "plan", "evidence", "freed_gb", "class", "cancel_method")) + "\n")
+    return mode, [r for _k, rs in cand for r in rs], done
 
 
 # ---------------------------------------------------------------- GRT flat overflow (FLEET-WATCH-2000, owner rule 11-20)
