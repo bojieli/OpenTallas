@@ -1,0 +1,5 @@
+# S81 SerDes t3 J5 a1 region-release trial
+
+I viewed the retained layout and density from epyc10:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/224567138ab/items/serdes__t3/gen/serdes__t3/run/layout_review/place/{layout,density}.png. The two PMAs span the north. The isolated encoder box below the PMAs lies at (1470.582, 830.520) to (1529.442, 889.650) µm, with a localized density peak. Pad and station rows on the east and west, the lower hard macros, and the clock and reset entries stay in their inherited locations. Releasing the isolated encoder fence lets the legalizer use the existing clear area around it.
+
+The actual a1 detail-placement log reports 171 final site-alignment errors, three overlaps and zero wrong-region cells. The isolated encoder region holds 5,925 members. The trial removes that one physical region in a read-only replay from the retained post-resize ODB and runs the inherited face release and DPL. PASS-COND for this bounded placement experiment. The original remains a failed placement and full routing requires the corrected geometry and a new review.
