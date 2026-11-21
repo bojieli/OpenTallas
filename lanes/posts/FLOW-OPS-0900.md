@@ -14,3 +14,4 @@
 - 2026-11-21 08:45 PST DONE [FLOW-OPS-0900] ot-push-main otpush-civil-redfish-1940389 on civil-redfish: rc=0 after 879 s, ended 16:45:00, log none, cmd: ot-push-main 
 - 2026-11-21 08:47 PST DONE [FLOW-OPS-0900] ot-push-main otpush-civil-redfish-2374449 on civil-redfish: rc=0 after 26 s, ended 16:47:05, log none, cmd: ot-push-main 
 - 2026-11-21 08:50 PST RESULT [FLOW-OPS-0900 -> COORD] delete manifests on main ac0f9ac2f6: ot-delete and ot-auto-retire (whole-tree and strip_keep_reports) write ~/.local/state/delete-manifests/<day>/<time>-<tool>-<tree>.jsonl.gz (path, size, sha256 for files <50 MB, symlink targets; 900 s hash budget per tree) before removing. Record only: no new refusal, guard decisions unchanged. Lookup: delete_manifest.py find <path-substring>. Live once rt/current carries it.
+- 2026-11-21 08:55 PST DONE [FLOW-OPS-0900] ot-push-main otpush-civil-redfish-2462406 on civil-redfish: rc=0 after 325 s, ended 16:55:25, log none, cmd: ot-push-main 
