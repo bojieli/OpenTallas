@@ -1,0 +1,91 @@
+{
+ "schema": "opentallas.plan_rows.v1",
+ "owner": "FAM-S81-SERDES",
+ "event": "J7",
+ "for": "S81-J6-ASSEMBLY-R2",
+ "status": "PROPOSAL rows (11-21 04:xx PST): measured census, estimates for outlines, NOT bound, NOT gated. Cut is a no-growth module split: no cell, register or cycle is added.",
+ "representative": "serdes__t4 (attempt_15, 407,738 placed cells, over the 400k cap; floorplan census nontap 349,483, projected 817k with maxwire repair)",
+ "census": {
+  "method": "serdes__t4 a15 run/results/asap7/dp_serdes__t4/base/1_2_yosys.v (epyc7 attempt_15/gen/serdes__t4). Flat netlist; every comb cell attributed by the named FFs whose fanin cone it feeds (cone.py). 250k top-level + 121k cells in landing/ist/cas submodule instances (356,875 incl. submodules per synth_stat).",
+  "groups_ff_plus_exclusive_comb": {
+   "u_dec (ot_s81_kp4_dec_native_flat_lp)": {"ff": 11606, "comb": 119662, "total": 131268},
+   "u_enc (ot_s81_kp4_enc)": {"ff": 5926, "comb": 66715, "total": 72641},
+   "u_rm (ot_s81_rate_match)": {"ff": 4709, "comb": 13521, "total": 18230},
+   "ring dch x9 + ring control": {"ff": 2060, "comb": 4799, "total": 6859},
+   "u_txl (ot_pl_pad W=545)": {"ff": 2725, "comb": 2725, "total": 5450},
+   "u_lpad_coll_i0 (ot_dp_dly)": {"ff": 2560, "comb": 2048, "total": 4608},
+   "u_rxf_q": {"ff": 545, "comb": 0, "total": 545},
+   "rest (reset tree, locksafe, tags, fault)": {"total_approx": 1000}
+  },
+  "shared_multi_group_comb": 147,
+  "sibling_note": "FABLE-CLOSURE reports 10 of 11 serdes types over 400k; all are built from ot_pdie_serdes[_col] with the same u_enc / u_dec, so the same two cores apply. Sibling census is not run; each type needs a one-line kit census before bind."
+ },
+ "rows": [
+  {
+   "type": "serdes__t4",
+   "path": "hard_cores[core=s81_kp4_dec]",
+   "set": {
+    "core": "s81_kp4_dec",
+    "module": "ot_s81_kp4_dec_native_flat_lp (instance u_bound.u_core.u_dec; col form) / ot_s81_kp4_dec (plain form)",
+    "count": 1,
+    "cells_est": 131268,
+    "clock": "pma_rck (rx region), reset rn_r",
+    "ports_in": "p_d[544:0] (545, from u_rxf_q FFs in the shell, FF on the source side)",
+    "ports_out": "q_d[543:0] + q_v (to u_rm.w_d, the gray FIFO write FFs in the shell, FF on the sink side; 513 bits cross u_dec -> u_rm by cone census)",
+    "outline_um_est": [780, 920],
+    "outline_basis": "131k cells x 1.92 um2/cell = 251k um2 at util 0.35; refine from the built core kit"
+   },
+   "cycles": {"added": 0},
+   "class": "serdes-split-dec",
+   "status": "SIZED, measured census; core kit not built",
+   "evidence": "cone census: core.u_rxf_q -> core.u_dec 545 source FFs; core.u_dec -> core.u_rm 513 source FFs; every crossing net starts at an FF and ends at an FF, so both sides of the cut are registered and no register is added."
+  },
+  {
+   "type": "serdes__t4",
+   "path": "hard_cores[core=s81_kp4_enc]",
+   "set": {
+    "core": "s81_kp4_enc",
+    "module": "ot_s81_kp4_enc (instance u_bound.u_core.u_enc)",
+    "count": 1,
+    "cells_est": 72641,
+    "clock": "clk (tx region), reset rn_t",
+    "ports_in": "tx_d[511:0] + tx_v (from u_lpad_coll_i0 FFs in the shell; 512 source FFs)",
+    "ports_out": "p_d[544:0] (545 encoder p_d FFs inside the core, to u_txl pad FFs in the shell; 545 source FFs cross u_enc -> u_txl)",
+    "outline_um_est": [560, 710],
+    "outline_basis": "72.6k cells x 1.92 um2/cell = 139k um2 at util 0.35"
+   },
+   "cycles": {"added": 0},
+   "class": "serdes-split-enc",
+   "status": "SIZED, measured census; core kit not built",
+   "evidence": "cone census: bound.u_lpad_coll_i0 -> core.u_enc 512; core.u_enc -> core.u_txl 545. The u_enc.d0 -> p_d internal hops (984 / 914 um in SERDES-TXPIPE and j5-tx-rows) become core-internal, placed in a 560 x 710 um box instead of the die."
+  },
+  {
+   "type": "serdes__t4",
+   "path": "shell",
+   "set": {
+    "shell_cells_est": "357k - 131k - 73k = ~153k mapped (+ ~20 percent repair buffers = ~185k), under the 400k cap",
+    "shell_keeps": ["u_rxf_q", "u_rm (rate match, 18k)", "u_txl", "u_lpad_coll_i0", "ring dch x9", "landing / ist / cas stations (121k in submodules)", "reset tree", "locksafe"],
+    "reset": "each core gets its own reset entry pin from the shell reset tree (rn_t for enc, rn_r for dec); relay depth unchanged"
+   },
+   "class": "serdes-split-shell",
+   "status": "ESTIMATE",
+   "evidence": "357k total incl. submodules (synth_stat design hierarchy) minus the two cores."
+  }
+ ],
+ "no_growth": "No die or outline growth. The two cores are carved out of the existing t4 shell; shell shrinks by ~57 percent of its cells. No register, relay or cycle is added: the cut sits on existing FF -> FF 545-bit bundles (rxf_q -> dec, enc -> txl, dec -> rm). Bundle widths 545 / 545 / 513 / 512 pins per core boundary.",
+ "alternatives": {
+  "dec_only": "Cut only u_dec (131k): shell 226k + buffers ~270k, still one core; use if enc pin budget is tight.",
+  "no_cut_bundle_form": "Cut at u_dec -> u_rm (513) only separates 18k; not enough alone."
+ },
+ "proof_plan": [
+  "1. Build both core kits with the normal mkmacro / gen.py path (physical/ref_tile style, as s81svc_h16_*) on a build host via ot-run, <400k each (dec 131k, enc 73k); read post-hook CTS (cts_read.py), setup TT >= -42, FF hold 0, DRC 0.",
+  "2. Private bind (strict) + LATCHECK on serdes__t4 with the two hard_cores rows; the lane latency must be unchanged (0 added cycles).",
+  "3. Shell kit: one build via kit_wave on current rt, census must read <400k (nontap).",
+  "4. Equivalence: core module is the unmodified RTL module; LEC via the standard post-route LEC. No RTL edit besides declaring the two instances as hard cores."
+ ],
+ "risks": [
+  "545-bit cross-core buses must be routed shell-to-core: need pin windows on abutting faces; channel width not priced.",
+  "Each core needs a clock tap window (clk for enc, pma_rck for dec); post-hook CTS balance across core/shell is the closure risk (insertion 2175 ps at rck face flops in the t14 read).",
+  "Run the false post-place stop fix first: serdes rows on rt f453583d583 report -385..-404 ns PLACE-SETUP-STOP, false, fixed in eda19506a55."
+ ]
+}
