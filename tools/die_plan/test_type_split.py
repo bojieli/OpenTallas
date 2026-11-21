@@ -620,3 +620,69 @@ def test_x_split_windows_use_the_piece_frame_and_share_cut_geometry():
     assert plan.port_geom_from(seam, "src") == plan.port_geom_from(seam, "dst") == expected
     assert plan.geom_to_die("h", plan._type_geom("h", "north"))[1] == [10, 30]
     assert ts.T[0]["ft_slots"][0]["in_window_um"] == [10, 20]
+
+
+def test_forwarded_clock_sources_read_the_unmoved_base_taps(monkeypatch):
+    """OPUS-FIX-KV-PV-R5 11-21 (split 11): core_moves rewrite self.raw before the split, and a moved core changes the
+    density tap grid, so the base pin's clk_t171 was looked up in the MOVED grid ('is not a tap of the base type').
+    The old tap names come from the plan as written (raw_premove); the new taps from the split output."""
+    from types import SimpleNamespace
+    import schema as S
+    import taps as TP
+    monkeypatch.setattr(S, "Plan", lambda raw, path: SimpleNamespace(raw=raw))
+    monkeypatch.setattr(S, "tap_grid", lambda P, tn: list(P.raw["grid"][tn]))
+    monkeypatch.setattr(TP, "_clear_density_cache", lambda: None)
+    ev = TS.Event.__new__(TS.Event)
+    ev.plan_path, ev.rep = None, {}
+    ev.raw_premove = {"grid": {"T": [("clk_t171", 30.0, 900.0)]}}
+    ev.raw = {"grid": {"T": [("clk_t170", 30.0, 900.0)]}}          # after the core move: the name is gone
+    ev.out = {"grid": {"T": [("clk_t1", 40.0, 880.0)]},
+              "partition_types": {"T": {"clock": {"landing_contract": {"pins": [
+                  dict(name="fclk_out_ft0_o", source_clock_port="clk_t171")]}}}}}
+    cut = TS.Cut("x", [600.0], 1400.0)
+    base = dict(clock=dict(tap_mode="density", landing_contract=dict(pins=[dict(name="fclk_out_ft0_o",
+                                                                                source_clock_port="clk_t171")])))
+    ev.ts = {"T": SimpleNamespace(t=base, cut=cut, tnames=["T"])}
+    ev._forwarded_clock_sources()
+    assert ev.out["partition_types"]["T"]["clock"]["landing_contract"]["pins"][0]["source_clock_port"] == "clk_t1"
+    del ev.raw_premove                     # the old behaviour (moved grid) fails closed, as split 11 did
+    ev.out["partition_types"]["T"]["clock"]["landing_contract"]["pins"][0]["source_clock_port"] = "clk_t171"
+    with pytest.raises(TS.SplitError, match="clk_t171 is not a tap of the base type"):
+        ev._forwarded_clock_sources()
+
+
+class _RK:
+    """the slice of TypeSplit that _relay_keys reads (OPUS-FIX-KV-PV-R4 11-21)"""
+    def __init__(self):
+        self.tn, self.n = "t", 2
+        self.cut = TS.Cut("x", [1080.0], 2160.0)
+        self.T = [dict(hard_cores=[{}]), dict(hard_cores=[{}])]
+        self.rep = {}
+        self.bus_piece = {"i_a": 1}
+        self.t = dict(
+            relay_depth=[dict(inst="pv_u_g0_j", port="sf", side="sink", D=1), dict(inst="pv_u_g3_j", port="sf", side="sink", D=2)],
+            relay_polylines=[dict(group_re="u_y_xd_T1Q0_y_[0-9]+$", polyline_um=[[2066.0, 794.0], [1667.0, 794.0]]),
+                             dict(group_re="u_y_xd_T0Q0_y_[0-9]+$", polyline_um=[[1426.0, 794.0], [580.0, 794.0]])],
+            relay_sites={"u_bin_i_a.q[0]": [1100.0, 10.0], "u_bin_i_a.q[1]": [20.0, 10.0], "u_x.q": [30.0, 5.0], "u_y.q": [2000.0, 5.0]},
+            reset_replicate=[dict(form="rsync", driver="u_rs_ri_pv_u_g0_j_rst_n", copy_depth=4)])
+
+    def _local_piece_of(self, inst):
+        return 0 if ("_g0_" in inst or "T0Q" in inst) else 1
+
+
+def test_relay_keys_follow_core_bus_and_position():
+    s = _RK()
+    TS.TypeSplit._relay_keys(s)
+    T = s.T
+    assert [r["inst"] for r in T[0]["relay_depth"]] == ["pv_u_g0_j"] and [r["D"] for r in T[1]["relay_depth"]] == [2]
+    # a polyline inside its piece is shifted; one that leaves its piece is dropped and reported
+    assert T[1]["relay_polylines"][0]["polyline_um"] == [[986.0, 794.0], [587.0, 794.0]] and "relay_polylines" not in T[0]
+    assert s.rep["relay_keys"]["polylines_dropped"] == ["u_y_xd_T0Q0_y_[0-9]+$"]
+    # u_bin_<bus> sites follow the bus piece (off-piece ones dropped); others go by position
+    assert T[1]["relay_sites"] == {"u_bin_i_a.q[0]": [20.0, 10.0], "u_y.q": [920.0, 5.0]}
+    assert T[0]["relay_sites"] == {"u_x.q": [30.0, 5.0]} and s.rep["relay_keys"]["sites_dropped"] == 1
+    # reset_replicate: every piece with cores, driver generalised to a regex, optional
+    rr = [x["reset_replicate"][0] for x in T]
+    assert all(r["optional"] and r["driver_re"] == r"u_rs_ri_pv_u_g\d+_j_rst_n" and "driver" not in r for r in rr)
+    import re
+    assert re.fullmatch(rr[1]["driver_re"], "u_rs_ri_pv_u_g1_j_rst_n")
