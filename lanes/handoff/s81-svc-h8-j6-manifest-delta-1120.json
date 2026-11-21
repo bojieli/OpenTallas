@@ -26,8 +26,8 @@
     9
    ],
    "value": "0",
-   "proof": "UNVERIFIED: literal reported by R5b bind_tied.json; source line not reviewed",
-   "note": "FABLE-FIX-S81-SVC-R2 11-20 J6 svc H8: generated from the R5b bind; review the source before adoption",
+   "proof": "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg3.sv",
+   "note": "FABLE-FIX-S81-SVC-R3 11-20 source review: u_h1 .ra(c_row), c_row = {2'b00, c_it[32:29], c_it[28:25]} (line 795): row address zero-extended to 10 b",
    "paths": [
     "^u_irg_\\d+(\\.u_rg3)?\\.g_land\\[0\\]\\.u_h1$",
     "^u_irg_\\d+(\\.u_rg3)?\\.g_land\\[1\\]\\.u_h1$",
@@ -55,8 +55,8 @@
     0
    ],
    "value": "1",
-   "proof": "UNVERIFIED: literal reported by R5b bind_tied.json; source line not reviewed",
-   "note": "FABLE-FIX-S81-SVC-R2 11-20 J6 svc H8: generated from the R5b bind; review the source before adoption",
+   "proof": "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg3.sv",
+   "note": "FABLE-FIX-S81-SVC-R3 11-20 source review: u_mq .re(1'b1) (line 955): free-running metadata delay memory",
    "paths": [
     "^u_irg_\\d+(\\.u_rg3)?\\.u_mq$"
    ]
@@ -79,8 +79,8 @@
     9
    ],
    "value": "0",
-   "proof": "UNVERIFIED: literal reported by R5b bind_tied.json; source line not reviewed",
-   "note": "FABLE-FIX-S81-SVC-R2 11-20 J6 svc H8: generated from the R5b bind; review the source before adoption",
+   "proof": "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg3.sv",
+   "note": "FABLE-FIX-S81-SVC-R3 11-20 source review: g_lm u_mem .wa(10'(lf_wn[LFW-1:0])) (line 316): LFW-bit pointer zero-extended to 10 b",
    "paths": [
     "^u_irg_\\d+(\\.u_rg3)?\\.g_lm\\[0\\]\\.u_mem$",
     "^u_irg_\\d+(\\.u_rg3)?\\.g_lm\\[1\\]\\.u_mem$"
@@ -104,8 +104,8 @@
     255
    ],
    "value": "0",
-   "proof": "UNVERIFIED: literal reported by R5b bind_tied.json; source line not reviewed",
-   "note": "FABLE-FIX-S81-SVC-R2 11-20 J6 svc H8: generated from the R5b bind; review the source before adoption",
+   "proof": "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg3.sv",
+   "note": "FABLE-FIX-S81-SVC-R3 11-20 source review: u_mq wd {(256-MW-1){0}, k_v, k_it} MW=22 -> [23,255]; u_iq {(256-IW){0}, ipd} IW=35 -> [35,255]; u_sq {(256-SW){0}, ...} SW=MW+17=39 -> [39,255] (lines 823, 956, 980)",
    "paths": [
     "^u_irg_\\d+(\\.u_rg3)?\\.u_mq$"
    ]
@@ -128,8 +128,8 @@
     255
    ],
    "value": "0",
-   "proof": "UNVERIFIED: literal reported by R5b bind_tied.json; source line not reviewed",
-   "note": "FABLE-FIX-S81-SVC-R2 11-20 J6 svc H8: generated from the R5b bind; review the source before adoption",
+   "proof": "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg3.sv",
+   "note": "FABLE-FIX-S81-SVC-R3 11-20 source review: u_mq wd {(256-MW-1){0}, k_v, k_it} MW=22 -> [23,255]; u_iq {(256-IW){0}, ipd} IW=35 -> [35,255]; u_sq {(256-SW){0}, ...} SW=MW+17=39 -> [39,255] (lines 823, 956, 980)",
    "paths": [
     "^u_irg_\\d+(\\.u_rg3)?\\.u_iq$"
    ]
@@ -152,8 +152,8 @@
     255
    ],
    "value": "0",
-   "proof": "UNVERIFIED: literal reported by R5b bind_tied.json; source line not reviewed",
-   "note": "FABLE-FIX-S81-SVC-R2 11-20 J6 svc H8: generated from the R5b bind; review the source before adoption",
+   "proof": "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg3.sv",
+   "note": "FABLE-FIX-S81-SVC-R3 11-20 source review: u_mq wd {(256-MW-1){0}, k_v, k_it} MW=22 -> [23,255]; u_iq {(256-IW){0}, ipd} IW=35 -> [35,255]; u_sq {(256-SW){0}, ...} SW=MW+17=39 -> [39,255] (lines 823, 956, 980)",
    "paths": [
     "^u_irg_\\d+(\\.u_rg3)?\\.u_sq$"
    ]
@@ -176,8 +176,8 @@
     0
    ],
    "value": "1",
-   "proof": "UNVERIFIED: literal reported by R5b bind_tied.json; source line not reviewed",
-   "note": "FABLE-FIX-S81-SVC-R2 11-20 J6 svc H8: generated from the R5b bind; review the source before adoption",
+   "proof": "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg3.sv",
+   "note": "FABLE-FIX-S81-SVC-R3 11-20 source review: u_mq .we(1'b1) (line 955)",
    "paths": [
     "^u_irg_\\d+(\\.u_rg3)?\\.u_mq$"
    ]
@@ -262,8 +262,8 @@
     34
    ],
    "value": "0",
-   "proof": "UNVERIFIED: literal reported by R5b bind_tied.json; source line not reviewed",
-   "note": "FABLE-FIX-S81-SVC-R2 11-20 J6 svc H8: generated from the R5b bind; review the source before adoption",
+   "proof": "rtl/dsrom_sys/s81_svc/ot_s81_svc_attn_s.sv + bound RTL",
+   "note": "FABLE-FIX-S81-SVC-R3 11-20 source review: u_lnt is W=16+NL=20, u_mc is W=8 (lines 1206, 1262). The bound RTL connects a 35-b concatenation {{15{1'b0}}, tag_q[34:15]} / {{27{1'b0}}, tag_q[7:0]} to the 20-b / 8-b port, so the declared bits are zero padding above the port width (bind emit pads to the widest ot_hdc_v41x_dly, W=35 u_tag); truncated, no function",
    "paths": [
     "^u_rsv_\\d+\\.u\\.u\\.u_att\\.u_eng\\.u_lnt$",
     "^u_rsv_\\d+\\.u\\.u_att\\.u_eng\\.u_lnt$"
@@ -295,8 +295,8 @@
     34
    ],
    "value": "0",
-   "proof": "UNVERIFIED: literal reported by R5b bind_tied.json; source line not reviewed",
-   "note": "FABLE-FIX-S81-SVC-R2 11-20 J6 svc H8: generated from the R5b bind; review the source before adoption",
+   "proof": "rtl/dsrom_sys/s81_svc/ot_s81_svc_attn_s.sv + bound RTL",
+   "note": "FABLE-FIX-S81-SVC-R3 11-20 source review: u_lnt is W=16+NL=20, u_mc is W=8 (lines 1206, 1262). The bound RTL connects a 35-b concatenation {{15{1'b0}}, tag_q[34:15]} / {{27{1'b0}}, tag_q[7:0]} to the 20-b / 8-b port, so the declared bits are zero padding above the port width (bind emit pads to the widest ot_hdc_v41x_dly, W=35 u_tag); truncated, no function",
    "paths": [
     "^u_rsv_\\d+\\.u\\.u\\.u_att\\.u_eng\\.u_mc$",
     "^u_rsv_\\d+\\.u\\.u_att\\.u_eng\\.u_mc$"
@@ -328,8 +328,8 @@
     0
    ],
    "value": "0",
-   "proof": "UNVERIFIED: literal reported by R5b bind_tied.json; source line not reviewed",
-   "note": "FABLE-FIX-S81-SVC-R2 11-20 J6 svc H8: generated from the R5b bind; review the source before adoption",
+   "proof": "rtl/dsrom_sys/s81_dv/su_sm/ot_s81_su_smh_fold2.sv",
+   "note": "FABLE-FIX-S81-SVC-R3 11-20 source review: u_smd .cfg_p(2'(pp)), pp = 0..3 (line 85): per-instance position strap, g_p[0]=00 g_p[1]=01 g_p[2]=10 g_p[3]=11",
    "paths": [
     "^u_rsv_\\d+\\.u\\.u\\.u_sms\\.u_smh\\.g_p\\[2\\]\\.u_smd$",
     "^u_rsv_\\d+\\.u\\.u_sms\\.u_smh\\.g_p\\[2\\]\\.u_smd$"
@@ -361,8 +361,8 @@
     0
    ],
    "value": "1",
-   "proof": "UNVERIFIED: literal reported by R5b bind_tied.json; source line not reviewed",
-   "note": "FABLE-FIX-S81-SVC-R2 11-20 J6 svc H8: generated from the R5b bind; review the source before adoption",
+   "proof": "rtl/dsrom_sys/s81_dv/su_sm/ot_s81_su_smh_fold2.sv",
+   "note": "FABLE-FIX-S81-SVC-R3 11-20 source review: u_smd .cfg_p(2'(pp)), pp = 0..3 (line 85): per-instance position strap, g_p[0]=00 g_p[1]=01 g_p[2]=10 g_p[3]=11",
    "paths": [
     "^u_rsv_\\d+\\.u\\.u\\.u_sms\\.u_smh\\.g_p\\[1\\]\\.u_smd$",
     "^u_rsv_\\d+\\.u\\.u_sms\\.u_smh\\.g_p\\[1\\]\\.u_smd$"
@@ -394,8 +394,8 @@
     1
    ],
    "value": "0",
-   "proof": "UNVERIFIED: literal reported by R5b bind_tied.json; source line not reviewed",
-   "note": "FABLE-FIX-S81-SVC-R2 11-20 J6 svc H8: generated from the R5b bind; review the source before adoption",
+   "proof": "rtl/dsrom_sys/s81_dv/su_sm/ot_s81_su_smh_fold2.sv",
+   "note": "FABLE-FIX-S81-SVC-R3 11-20 source review: u_smd .cfg_p(2'(pp)), pp = 0..3 (line 85): per-instance position strap, g_p[0]=00 g_p[1]=01 g_p[2]=10 g_p[3]=11",
    "paths": [
     "^u_rsv_\\d+\\.u\\.u\\.u_sms\\.u_smh\\.g_p\\[0\\]\\.u_smd$",
     "^u_rsv_\\d+\\.u\\.u_sms\\.u_smh\\.g_p\\[0\\]\\.u_smd$"
@@ -427,8 +427,8 @@
     1
    ],
    "value": "1",
-   "proof": "UNVERIFIED: literal reported by R5b bind_tied.json; source line not reviewed",
-   "note": "FABLE-FIX-S81-SVC-R2 11-20 J6 svc H8: generated from the R5b bind; review the source before adoption",
+   "proof": "rtl/dsrom_sys/s81_dv/su_sm/ot_s81_su_smh_fold2.sv",
+   "note": "FABLE-FIX-S81-SVC-R3 11-20 source review: u_smd .cfg_p(2'(pp)), pp = 0..3 (line 85): per-instance position strap, g_p[0]=00 g_p[1]=01 g_p[2]=10 g_p[3]=11",
    "paths": [
     "^u_rsv_\\d+\\.u\\.u\\.u_sms\\.u_smh\\.g_p\\[3\\]\\.u_smd$",
     "^u_rsv_\\d+\\.u\\.u_sms\\.u_smh\\.g_p\\[3\\]\\.u_smd$"
@@ -460,8 +460,8 @@
     1
    ],
    "value": "0",
-   "proof": "UNVERIFIED: literal reported by R5b bind_tied.json; source line not reviewed",
-   "note": "FABLE-FIX-S81-SVC-R2 11-20 J6 svc H8: generated from the R5b bind; review the source before adoption",
+   "proof": "rtl/dsrom_sys/s81_dv/su_sm/ot_s81_su_smh_fold2.sv",
+   "note": "FABLE-FIX-S81-SVC-R3 11-20 source review: u_smd .cfg_p(2'(pp)), pp = 0..3 (line 85): per-instance position strap, g_p[0]=00 g_p[1]=01 g_p[2]=10 g_p[3]=11",
    "paths": [
     "^u_rsv_\\d+\\.u\\.u\\.u_sms\\.u_smh\\.g_p\\[1\\]\\.u_smd$",
     "^u_rsv_\\d+\\.u\\.u_sms\\.u_smh\\.g_p\\[1\\]\\.u_smd$"
@@ -493,8 +493,8 @@
     1
    ],
    "value": "1",
-   "proof": "UNVERIFIED: literal reported by R5b bind_tied.json; source line not reviewed",
-   "note": "FABLE-FIX-S81-SVC-R2 11-20 J6 svc H8: generated from the R5b bind; review the source before adoption",
+   "proof": "rtl/dsrom_sys/s81_dv/su_sm/ot_s81_su_smh_fold2.sv",
+   "note": "FABLE-FIX-S81-SVC-R3 11-20 source review: u_smd .cfg_p(2'(pp)), pp = 0..3 (line 85): per-instance position strap, g_p[0]=00 g_p[1]=01 g_p[2]=10 g_p[3]=11",
    "paths": [
     "^u_rsv_\\d+\\.u\\.u\\.u_sms\\.u_smh\\.g_p\\[2\\]\\.u_smd$",
     "^u_rsv_\\d+\\.u\\.u_sms\\.u_smh\\.g_p\\[2\\]\\.u_smd$"
@@ -526,8 +526,8 @@
     0
    ],
    "value": "0",
-   "proof": "UNVERIFIED: literal reported by R5b bind_tied.json; source line not reviewed",
-   "note": "FABLE-FIX-S81-SVC-R2 11-20 J6 svc H8: generated from the R5b bind; review the source before adoption",
+   "proof": "rtl/dsrom_sys/s81_dv/su_sm/ot_s81_su_smh_fold2.sv",
+   "note": "FABLE-FIX-S81-SVC-R3 11-20 source review: u_sml .sk_en(ln==0) (line 59): only lane 0 enabled, per-instance strap",
    "paths": [
     "^u_rsv_\\d+\\.u\\.u\\.u_sms\\.u_smh\\.g_l\\[1\\]\\.u_sml$",
     "^u_rsv_\\d+\\.u\\.u\\.u_sms\\.u_smh\\.g_l\\[2\\]\\.u_sml$",
@@ -571,8 +571,8 @@
     0
    ],
    "value": "1",
-   "proof": "UNVERIFIED: literal reported by R5b bind_tied.json; source line not reviewed",
-   "note": "FABLE-FIX-S81-SVC-R2 11-20 J6 svc H8: generated from the R5b bind; review the source before adoption",
+   "proof": "rtl/dsrom_sys/s81_dv/su_sm/ot_s81_su_smh_fold2.sv",
+   "note": "FABLE-FIX-S81-SVC-R3 11-20 source review: u_sml .sk_en(ln==0) (line 59): only lane 0 enabled, per-instance strap",
    "paths": [
     "^u_rsv_\\d+\\.u\\.u\\.u_sms\\.u_smh\\.g_l\\[0\\]\\.u_sml$",
     "^u_rsv_\\d+\\.u\\.u_sms\\.u_smh\\.g_l\\[0\\]\\.u_sml$"
@@ -713,39 +713,8 @@
  ],
  "tied_bits_checked": 1881,
  "tied_bits_not_covered": 0,
- "unverified_classes": [
-  [
-   "dsdv_idx_rg2_m1k",
-   "ra"
-  ],
-  [
-   "dsdv_idx_rg2_m1k",
-   "re"
-  ],
-  [
-   "dsdv_idx_rg2_m1k",
-   "wa"
-  ],
-  [
-   "dsdv_idx_rg2_m1k",
-   "wd"
-  ],
-  [
-   "dsdv_idx_rg2_m1k",
-   "we"
-  ],
-  [
-   "ot_hdc_v41x_dly",
-   "d"
-  ],
-  [
-   "ot_s81_su_smd_fold2",
-   "cfg_p"
-  ],
-  [
-   "ot_s81_su_sml_fold2",
-   "sk_en"
-  ]
- ],
- "note": "Rows cover the tied bits R5b saw. After the dissolve, u_irg_00..06 expose the same hslice / ksadd / m1k pins; the u_irg rows are typed for all 8 svc_lo types with a path regex that accepts both hierarchies. Not validated by a bind yet."
+ "unverified_classes": [],
+ "note": "Rows cover the tied bits R5b saw. After the dissolve, u_irg_00..06 expose the same hslice / ksadd / m1k pins; the u_irg rows are typed for all 8 svc_lo types with a path regex that accepts both hierarchies. Not validated by a bind yet.",
+ "validated_by": "R8c 2026-11-20 18:22 PST: r5b plan + manifest r8 (this delta), R7 ELAB reused; strict --all-gaps bind 18 errors, 0 on svc, 0 TIED (bind_tied.json empty), all 18 HARD_CORE_PARAM_ALL on non-svc cores missing in the private source; LATCHECK PASS 873/873 lanes; epyc9 /srv/opentallas-scratch2/claude/fable-fix-s81-svc-r3/bind_r8c",
+ "lane_review": "FABLE-FIX-S81-SVC-R3"
 }
