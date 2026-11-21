@@ -14087,3 +14087,12 @@ Superseded QC packed-only source 8a7ef3 and private 28-file gate remain historic
 - S81 H8 registry 421234a3750 and shared CTS proc scope 5294e088f55 landed. Both S81 and KV legacy CTS crashes traced to the same scope error. S81 RD_EXTRA recovered to a local SIGNED result, archive export in progress.
 - Reviewed exact C3g/C3i/C1n layouts. Deferred three inherited straight 515-bit FT reversals to a zero-cycle J7 donor with measured planar pin improvement. Current J6 gates continue.
 - QC b9 failed after R8 refresh on asymmetric n_a/n_b tile-link depths, aborting the following hard-core fixups. QC lane is composing a V2 candidate with known-good CB cycle topology while carrying compatible improvements.
+
+## Takeover milestones 2026-11-21 02:58 PST
+- cfg7 RD_EXTRA signed and exported on both stores. Formal hard view and recipe on main 00a9cc7750a8. Future J7 consumption has a measured compensated +1 path proof and needs the combined-frame bind/model.
+- S81 J6 C3g/C3i strict bind and LATCHECK passed. G0/PRE running. Selected pack is armed separately from apply. Explicit exact-kit review and disabled auto acceptance are staged for J6.
+- J7 COL order v2 schema failure diagnosed and retained. V3 carries all nine matched die/type changes. Exact pictured geometry has three near-zero reversals. G0 v3 running on epyc10.
+- HEAD false setup, nominal bundle intake, corrective host_n layout and write-data class continued. hd_ctl retained route DRC 0 and FF 0, TT -72.42. SerDes sdr2d one-tap CTS TT -45.88, FF repair still due. Host_n fixed-form legal placement TT -16.83, GRT admitted.
+- QC b10 in strict bind using V1 CB transport plus compatible V2 rows. Independent true ST setup path is half-cycle lander, not the async reset path originally attributed. Corrected TT gate replays recovered four retained QC shapes into CTS only.
+- KV D26 replicas verified. Existing apply is explicitly held on exact portable bind and representative kit materialization. Lockcell source fix merged, diagnostic full GEN passed. D27/D28 private gates continue.
+- Shared classifier now recognizes marker, route-log and exact sealed client-log stops. E7 cleanup unit fix deployed after pass completed. Qwen C1 native 91-edge boot and S81 real CAP FIN passed; full token passes remain in progress.

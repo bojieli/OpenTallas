@@ -1,0 +1,5 @@
+# S81 J7 collective feedthrough pin order
+
+Viewed epyc10:/srv/opentallas-scratch2/claude/s81-j6/reviews_codex_1121/j7_coll_ft_order.png. The figure pairs the incoming and outgoing plan pin locations for all 515 positions in t28/ft3, t38/ft6 and t51/ft2. The original ordering converges near the centre and reverses across the strip. The candidate leaves the physical track sets intact and orders the bit identities across each face. Each crossing falls from 99.98% to 0.02% inversions and from 30,670.8 to 7,836.9 bit-µm of lateral span.
+
+Verdict PASS-COND for the ordering geometry. The v2 donor failed schema validation because it changed the global port without changing the local declarations. Preserve that failure. Use j7_coll_ft_order_delta_v3.json from the picture directory (SHA-256 fc763d2a07c995d46a7ec2b53a4a489b71c4366303f6f8037f5db7921dce9eda). All nine edits guard their original records and keep the two type declarations and the die port consistent, including on mirrored instances. Widths, faces, physical tracks, and declared lane cycles stay constant. New G0, strict bind, LATCHECK and the exact affected kit reviews remain open.
