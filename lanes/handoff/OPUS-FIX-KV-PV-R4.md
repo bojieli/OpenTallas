@@ -97,3 +97,9 @@ epyc7 same path (repo = lane clone used for the push, cone tools+rtl+physical/co
 ### Shared-tree warning
 Codex ran split 8-10 + bind 3 + G0 in split28 under this lane name 02:2x-03:3x. Bind 3 (RED, sink x 2143.8) was likely corrupted by
 my plan_of_record swap mid-run. Never swap plan_of_record while another bind or G0 is using the tree: check `ps` for split28 first.
+- UPDATE: chain11 unit oth-ubuntu-1403789-1795268325 ENDED rc 1 at COMPOSE (nothing installed; tree plan_of_record is still the split 10 copy,
+  plan 086a50a08e27, with its bind-4 bind_of_record). Error: "type_split: FAIL kv3_pv_v3: pin fclk_out_ft0_o source_clock_port clk_t171
+  is not a tap of the base type". The only change from Codex's compose10 is the ring core move cl_i_vport_E_N_vo_d2 -> (967.68, 241.92).
+  Codex hit this same class in split 10 (por_split_10_basetap_attempt) and solved it in compose10_with_separate_base.py. Read that script's
+  handling of clk_t171 / base taps first. Leftover dirs por_split_11_input / por_split_11_composed: remove with ot-delete, or reuse a new number.
+  Then rerun chain11.sh (make it take fresh dir names), or apply the ring move another way.
