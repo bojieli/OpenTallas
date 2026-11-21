@@ -1,0 +1,30 @@
+{
+  "event": "QC V3 intake row 1",
+  "base": "s29q103S4Q9N46R6V2:7f9f8260349f",
+  "tool_branch": "claude/qc-plan-r12-lane-pad-1121",
+  "tool_sha": "1460575e75424d78f85175f9615c618cb8ae8833",
+  "row": {
+    "op": "append",
+    "path": "partition_types.sle_ctl__cla4f6f12f.count_straps",
+    "value": {
+      "name": "strap_r8pad_lane_x_su_l0_i",
+      "width": 4,
+      "layer": "M5",
+      "sites_um": [[626.424, 639.36], [630.744, 639.36], [635.016, 639.36], [639.384, 639.36]]
+    }
+  },
+  "proof": {
+    "strict_witness": "epyc7:/srv/opentallas-scratch2/claude/qc-plan-r12/ctl_strap/asym/bind_r1",
+    "kit_rtl": "epyc7:/srv/opentallas-scratch2/claude/qc-plan-r12/ctl_strap/asym/ctl_kit_r1",
+    "errors": 0,
+    "lane_latcheck": "1921/1921",
+    "one_partition_module": true,
+    "width_with_epoch": 457,
+    "east_counts": [6, 6, 6, 6, 6, 6],
+    "west_counts": [5, 5, 5, 5, 5, 5],
+    "canonical_gate": "104/104 on d6f543f8005",
+    "execution": "exact 1,024-word lockstep at hard-wired counts 0/5/6, wrong count failed every word",
+    "plan_delta": "Only the strap row on V2. Preserve the V2 West dates; the asymmetric B19 witness has 12 earlier lane dates and is not the adoption plan."
+  },
+  "route": "Pending exact V3 GEN, G0 and reviewed placement. Apply must use an exact event with review_before_route all_items and required."
+}

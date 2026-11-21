@@ -1,0 +1,23 @@
+{
+  "event": "QC V3 intake row 2a",
+  "base": "s29q103S4Q9N46R6V2:7f9f8260349f",
+  "rows": {
+    "asbuilt.land_pad_tail_split.r8_keep": true,
+    "budgets.r_r8_core_seat": ["slw_st_a", "sle_st_a"]
+  },
+  "proof": {
+    "bind": "epyc8:/srv/opentallas-scratch2/claude/FABLE-FIX-QC-STRAP-R2/b1",
+    "strict_errors": 0,
+    "lane_latcheck": "1921/1921",
+    "measured_type": "slw_st_a_v2__cl9f076a5c",
+    "physical_scope": "Intel1 copied exact p1 3_place; post-hook CTS without hold repair",
+    "cts_log": "intel1:/srv/opentallas-scratch2/claude/qc-plan-r12/cts_pair/slw_st_a_v2__cl9f076a5c.client.log",
+    "seated": 332,
+    "eligible": 528,
+    "need_stage": 0,
+    "tt_setup_slack_ps": -12.25,
+    "tt_setup_tns_ps": -12.25,
+    "added_cycles": 0
+  },
+  "scope": "Combine with the btab plan rows. Hold new routes until exact placement review."
+}
