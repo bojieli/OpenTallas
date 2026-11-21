@@ -144,8 +144,12 @@ def marker_sweep(fails, cache=None):
     return add
 
 
+T_START = time.time()
+HARD_S = float(os.environ.get("OT_INGEST_HARD_S", 2850))   # FLOW-CANARY-R2 11-21: one epyc2 chunk (35k files) hung 17 min past DEADLINE_S, the unit hit its 3000 s cap and last.json was never written: every step now stops at HARD_S
+
+
 def run(cmd, inp=None, timeout=3600):
-    return subprocess.run(cmd, input=inp, capture_output=True, text=True, timeout=timeout)
+    return subprocess.run(cmd, input=inp, capture_output=True, text=True, timeout=min(timeout, max(30.0, T_START + HARD_S - time.time())))
 
 
 def stream(host, base, todo):
@@ -158,6 +162,8 @@ def stream(host, base, todo):
                           stdin=subprocess.PIPE)
     t0, sent = time.time(), 0
     while True:
+        if time.time() > T_START + HARD_S:
+            p1.kill(); p2.kill(); p1.wait(); p2.wait(); return False
         b = p1.stdout.read(1 << 20)
         if not b: break
         p2.stdin.write(b); sent += len(b)
