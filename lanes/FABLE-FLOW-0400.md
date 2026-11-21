@@ -51,10 +51,10 @@ Fleet base: 310 running units (V), so 620 unit-hours in the window.
 
 ### (b) A newer attempt of the same item stops the older live one (NEW evidence)
 
-- Count and trend (V): 62 since 11-20 12:00. By hour block: 12-13 h 6, 15-17 h 37, 18-20 h 14, 01-02 h 6. Stopped units:
-  47 `kw-` wave units (gen and place, 19 of them with a live `kwp-` place service) and 9 `ap-` queue jobs in route. Ages
+- Count and trend (V): 62 since 11-20 12:00. By hour block: 12-13 h 6, 15-17 h 37, 18-20 h 13, 01-02 h 6. Stopped units:
+  53 `kw-` wave units (gen and place, 22 of them with a live `kwp-` place service) and 9 `ap-` queue jobs in route. Ages
   0.1 to 7.3 h (svc_lo_dsdv_svc_rs__t6@1 7.3 h; c1x_C__t6@4 4.8 h; svc_lo t5@2 4.1 h; slw_st_b_v1@9 4.0 h in route).
-- What launched the newer attempt while the older was live (V, the item's lines in the hour before each stop):
+- What launched the newer attempt while the older was live (I, approximate tally of the item's lines in the hour before each stop):
   RESTAGE / RETRY-HOST about 25, INFRA-FREE-RETRY after an outside `ot-run --cancel` 8, HUNG-WATCH CANCEL 5, FLOW-REGEN 6,
   RELAUNCH-ON-FIX 2, no visible trigger 12.
 - Example chain (V), s81 dsdv_slice_c1x_C__t8: 01:03 attempt 3 is cancelled from outside while waiting in geom_run and gets
