@@ -313,3 +313,39 @@ def test_ft_superset_clashing_local_names_get_stable_class_names():
     # stable: member order does not change the class names
     rep2 = CM.merge(*two, "ctl__rep", ["ctl__m2", "ctl__m1"], ft_superset=True)
     assert [s["name"] for s in two[0]["partition_types"]["ctl__rep"]["ft_slots"]] == names and rep2["refused"] == []
+def test_type_name_lists_and_sidecar_type_tables_follow_the_representative():
+    """S81-LEAF-CLASS-1730: reset.relay_lockup.types and sidecar count_aligned.start_pins.type_pins name member types"""
+    plan, side = _plan()
+    for t in ("ctl__m1", "ctl__m2"):
+        plan["partition_types"][t]["clock"]["landing_contract"]["collector_children"] = []
+        plan["partition_types"][t]["clock"]["landing_contract"]["pins"] = _pins([])
+    plan["clock"]["landing_network"]["edges"] = []
+    side["collector"]["edges"] = []
+    plan["reset"]["relay_lockup"] = dict(types=["ctl__rep", "ctl__m1", "other"])
+    side["count_aligned"]["start_pins"] = dict(type_pins={"ctl__rep": ["a"], "ctl__m2": ["b"], "other": ["c"]})
+    rep = CM.merge(plan, side, "ctl__rep", ["ctl__m1", "ctl__m2"])
+    assert not rep["refused"]
+    assert plan["reset"]["relay_lockup"]["types"] == ["ctl__rep", "other"]
+    assert set(side["count_aligned"]["start_pins"]["type_pins"]) == {"ctl__rep", "other"}
+
+
+def test_type_name_list_without_the_representative_refuses():
+    plan, side = _plan()
+    plan["reset"]["relay_lockup"] = dict(types=["ctl__m1"])
+    rep = CM.merge(plan, side, "ctl__rep", ["ctl__m1", "ctl__m2"])
+    assert any("relay_lockup" in r for r in rep["refused"])
+
+
+def test_child_union_adds_member_sites_to_the_representative():
+    """S81-LEAF-CLASS-1730 --child-union: a member child site the representative lacks becomes a new class child"""
+    plan, side = _plan()
+    D = (900.0, 1330.592)
+    plan["partition_types"]["ctl__m2"] = _type("ctl__m2", [(0, D)])
+    assert CM.merge(copy.deepcopy(plan), copy.deepcopy(side), "ctl__rep", ["ctl__m1", "ctl__m2"])["refused"]
+    rep = CM.merge(plan, side, "ctl__rep", ["ctl__m1", "ctl__m2"], child_union=True)
+    assert not rep["refused"]
+    assert rep["children_added"] == [dict(member="ctl__m2", child=0, index=3, xy_um=list(D), seam=True)]
+    lc = plan["partition_types"]["ctl__rep"]["clock"]["landing_contract"]
+    assert [c["index"] for c in lc["tieable_children"]] == [0, 1, 2, 3]
+    names = {p["name"] for p in lc["pins"]}
+    assert {"cland_dn_ready_3", "cland_dn_fault_3", "fclk_in_cland_dn_3"} <= names

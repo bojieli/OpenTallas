@@ -111,6 +111,9 @@ def free_site_on_line(pins, pin, outline, tries=16, clear_um=1.0):
     return None
 
 
+ROLE_SITE_TOL_UM = 1.0     # S81-LEAF-CLASS-1730: one role pin site within a track pair is the class row's site
+
+
 def role_pins_union(P, rep, members, rep_out):
     """ROLE-STRAP class row: the representative takes every origin / relay start pin a member has (same name, site and
     layer as on that member), the union of the count straps (max width) plus strap_ca_relay, and landing_role_strap."""
@@ -125,7 +128,9 @@ def role_pins_union(P, rep, members, rep_out):
             if n not in ROLE_PINS:
                 continue
             if n in have:
-                if (have[n].get("layer"), src_site.get(n, have[n].get("xy_um"))) != (pin.get("layer"), pin.get("xy_um")):
+                a, b = src_site.get(n, have[n].get("xy_um")), pin.get("xy_um")
+                if have[n].get("layer") != pin.get("layer") or a is None or b is None or \
+                        max(abs(float(x) - float(y)) for x, y in zip(a, b)) > ROLE_SITE_TOL_UM:
                     rep_out["refused"].append(f"{m}: role pin {n} at another site than the class row's")
                 continue
             key = (pin.get("layer"), tuple(round(float(v), 3) for v in pin.get("xy_um", [])))
@@ -163,6 +168,21 @@ def names_used(x, names):
             yield from names_used(v, names)
     elif isinstance(x, str) and x in names:
         yield x
+
+
+def type_name_lists(x, names, path=""):
+    """(path, [str]) of every list of strings outside partition_types / partitions that names one of `names`"""
+    if isinstance(x, dict):
+        for k, v in x.items():
+            if path == "" and k in ("partition_types", "partitions", "ports", "lanes"):
+                continue
+            yield from type_name_lists(v, names, f"{path}/{k}")
+    elif isinstance(x, list):
+        if x and all(isinstance(v, str) for v in x) and set(x) & names:
+            yield path, x
+        else:
+            for i, v in enumerate(x):
+                yield from type_name_lists(v, names, f"{path}[{i}]")
 
 
 ROLE_PINS = ("cland_rstart_in", "cland_rstart_out", "cland_tstart_in", "cland_tstart_out")
@@ -395,7 +415,46 @@ def ft_superset_apply(plan, rep, members, fp, rep_out):
         overlaps=ft_overlaps(union))
 
 
-def merge(plan, side, rep, members, role_strap=False, ft_superset=False):
+def child_union_rows(P, side, rep, members, rep_out):
+    """--child-union (S81-LEAF-CLASS-1730, FABLE-SUPERSET-0415 U1): the representative takes every member collector
+    child site it lacks (key xy, seam, occurrence; xy in the representative frame) as a new child index with the
+    member's ready / fault / forwarded-clock pins, monitor band and edge clock; the class row then makes every child
+    tieable (merge below) and each instance ties the ones it does not use."""
+    R = P[rep]; rlc = _lc(R)
+    have = set(child_keys(rlc).values())
+    rmask = ((side.get("collector") or {}).get("types") or {}).get(rep, {}).get("mask")
+    added = []
+    for m in members:
+        mt = P[m]; mlc = _lc(mt)
+        pins = {p["name"]: p for p in mlc.get("pins", [])}
+        rows = {int(c["index"]): c for c in mlc.get("collector_children") or []}
+        for i, key in child_keys(mlc).items():
+            if key in have:
+                continue
+            n = 1 + max([int(c["index"]) for c in rlc.get("collector_children") or []] + [-1])
+            row = copy.deepcopy(rows[i])
+            row.update(index=n, ready=f"cland_dn_ready_{n}", fault=f"cland_dn_fault_{n}", part=None)
+            rlc.setdefault("collector_children", []).append(row)
+            for stem in ("cland_dn_ready", "cland_dn_fault", "fclk_in_cland_dn"):
+                if f"{stem}_{i}" in pins:
+                    q = copy.deepcopy(pins[f"{stem}_{i}"]); q["name"] = f"{stem}_{n}"
+                    rlc.setdefault("pins", []).append(q)
+            b = (mlc.get("bands") or {}).get(f"monitor_{i}")
+            if b is not None:
+                b = copy.deepcopy(b); b["instance"] = f"u_cland_monitor_{n}"
+                rlc.setdefault("bands", {})[f"monitor_{n}"] = b
+            for e in (mt.get("clock") or {}).get("edge_clocks", []):
+                if e.get("port") == f"fclk_in_cland_dn_{i}":
+                    e2 = copy.deepcopy(e); e2["port"] = f"fclk_in_cland_dn_{n}"
+                    R.setdefault("clock", {}).setdefault("edge_clocks", []).append(e2)
+            if isinstance(rmask, dict):
+                rmask.setdefault("children", []).append(dict(xy_um=list(key[0]), seam=key[1]))
+            have.add(key)
+            added.append(dict(member=m, child=i, index=n, xy_um=list(key[0]), seam=key[1]))
+    rep_out["children_added"] = added
+
+
+def merge(plan, side, rep, members, role_strap=False, ft_superset=False, child_union=False):
     P = plan["partition_types"]
     if rep not in P:
         raise MergeError(f"representative {rep} is not a plan type")
@@ -406,6 +465,9 @@ def merge(plan, side, rep, members, role_strap=False, ft_superset=False):
     R = P[rep]; rlc = _lc(R); rkeys = child_keys(rlc); rindex = {k: i for i, k in rkeys.items()}
     rep_out = dict(rep=rep, members=members, refused=[], moved={}, edges=dict(plan=0, sidecar=0), dropped=[])
     fp = ft_superset_plan(P, rep, members, rep_out) if ft_superset else None
+    if child_union:
+        child_union_rows(P, side, rep, members, rep_out)
+        rkeys = child_keys(rlc); rindex = {k: i for i, k in rkeys.items()}
     # ---- refusals first: nothing is written when any member is not a copy of the class row
     for m in members:
         t = P[m]
@@ -423,6 +485,11 @@ def merge(plan, side, rep, members, role_strap=False, ft_superset=False):
             if key not in rindex:
                 rep_out["refused"].append(f"{m}: collector child {i} at {list(key[0])} seam={key[1]} is not a "
                                           f"representative child site")
+    for path, lst in type_name_lists(plan, set(members) | {rep}):
+        names = set(lst)
+        if names & set(members) and rep not in names:
+            rep_out["refused"].append(f"type list {path} names member(s) {sorted(names & set(members))[:3]} "
+                                      f"but not the representative")
     parts = [p for p in plan["partitions"] if p["type"] in members or p["type"] == rep]
     roles = {landing_role(side, p["name"]) for p in parts}
     if len(roles) > 1 and not role_strap:
@@ -470,6 +537,9 @@ def merge(plan, side, rep, members, role_strap=False, ft_superset=False):
                 rdepth[p["name"]] = rep_depth
     rep_out["kit_priced"] = price_out_stations(plan, before)
     # ---- drop per-type die tables of the member types (the representative's apply to every instance)
+    # S81-LEAF-CLASS-1730: also type-name lists (plan reset.relay_lockup.types) and every sidecar table keyed by type
+    # (count_aligned.start_pins.type_pins): a list keeps the representative; a list that names a member but not the
+    # representative means the class differs there -> refused before anything is written (checked above).
     def drop(d, path):
         if isinstance(d, dict):
             for k in list(d):
@@ -477,8 +547,15 @@ def merge(plan, side, rep, members, role_strap=False, ft_superset=False):
                     d.pop(k); rep_out["dropped"].append(f"{path}/{k}")
                 else:
                     drop(d[k], f"{path}/{k}")
+        elif isinstance(d, list):
+            if any(isinstance(x, str) and x in members for x in d):
+                d[:] = [x for x in d if not (isinstance(x, str) and x in members)]
+                rep_out["dropped"].append(f"{path}[members]")
+            for i, x in enumerate(d):
+                drop(x, f"{path}[{i}]")
     drop({k: v for k, v in plan.items() if k not in ("partition_types", "partitions")}, "")
-    drop(coll.get("types", {}), "/sidecar/collector/types")
+    drop({k: v for k, v in side.items() if k != "collector"}, "/sidecar")
+    drop({k: v for k, v in coll.items() if k not in ("parts", "base_type_by_part", "edges")}, "/sidecar/collector")
     for m in members:
         del P[m]
     left = sorted(set(names_used(plan, set(members))) | set(names_used(side, set(members))))
@@ -497,6 +574,8 @@ def main(argv=None):
     g.add_argument("--members"); g.add_argument("--stem")
     ap.add_argument("--role-strap", action="store_true",
                     help="allow origin and relay copies in the class (landing_role_strap, strap_ca_relay)")
+    ap.add_argument("--child-union", action="store_true",
+                    help="the representative takes every member collector child site it lacks (U1 union)")
     ap.add_argument("--ft-superset", action="store_true",
                     help="class row = union of the members' ft slots (stable names, superset type, spare_ends)")
     ap.add_argument("--report")
@@ -525,7 +604,7 @@ def main(argv=None):
     members = (a.members.split(",") if a.members else
                sorted(k for k in plan["partition_types"] if k.split("__")[0] == a.stem))
     try:
-        rep = merge(plan, side, a.rep, members, role_strap=a.role_strap, ft_superset=a.ft_superset)
+        rep = merge(plan, side, a.rep, members, role_strap=a.role_strap, ft_superset=a.ft_superset, child_union=a.child_union)
     except MergeError as exc:
         print(f"CLASS-MERGE ERROR {exc}", file=sys.stderr); return 2
     if a.report:

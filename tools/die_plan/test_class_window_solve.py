@@ -74,3 +74,102 @@ def test_column_mode_order_decides_the_winner():
     report = C.solve(raw, ["mid", "src"], column=True)
     assert ("src", "x_o") in [(d["type"], d["bus"]) for d in report["moved"]]
     assert report["conflicts"] == [] and report["mismatches_after"] == 0
+
+
+# ---- S81-LEAF-CLASS-1730: joint class floorplan
+def _bus(name, d, face, win):
+    return dict(name=name, dir=d, width=4, kind="data", face=face, window_um=list(win), layers=["M7", "M5"])
+
+
+def _ft(name, fi, fo, wi, wo):
+    return dict(name=name, width=4, in_face=fi, out_face=fo, in_window_um=list(wi), out_window_um=list(wo),
+                layers=["M7", "M5"], order="lsb_low", stations=2, regs_um=[[0, 0], [0, 0]])
+
+
+def _shift_column(orient_l1="R0"):
+    """C (source) under L0 (class member m1: own dn + one pass slot) under L1 (class member m2: own dn only).
+    The lane to L1 passes L0's slot: L0.ft0_o (N) abuts L1.own (S), so the class needs the shift form."""
+    T = {"src": dict(outline_um=[100.0, 100.0], buses=[_bus("o0", "out", "N", (10, 20)), _bus("o1", "out", "N", (60, 70))]),
+         "m1": dict(outline_um=[100.0, 100.0], buses=[_bus("dn", "in", "S", (60, 70))],
+                    ft_slots=[_ft("ft0", "S", "N", (10, 20), (10, 20))]),
+         "m2": dict(outline_um=[100.0, 100.0], buses=[_bus("dn", "in", "S", (40, 50))], ft_slots=[])}
+    parts = [dict(name="C", type="src", origin_um=[0.0, 0.0]), dict(name="L0", type="m1", origin_um=[0.0, 100.0]),
+             dict(name="L1", type="m2", origin_um=[0.0, 200.0], orient=orient_l1)]
+    ports = [dict(id="a", src=dict(part="C", bus="o0"), dst=dict(part="L0", bus="ft0_i"), width=4),
+             dict(id="b", src=dict(part="L0", bus="ft0_o"), dst=dict(part="L1", bus="dn"), width=4),
+             dict(id="c", src=dict(part="C", bus="o1"), dst=dict(part="L0", bus="dn"), width=4)]
+    return dict(partition_types=T, partitions=parts, ports=ports)
+
+
+def _die(raw, part, bus):
+    P = {p["name"]: p for p in raw["partitions"]}[part]
+    t = raw["partition_types"][P["type"]]
+    for b in t["buses"]:
+        if b["name"] == bus:
+            face, win = b["face"], b["window_um"]
+    for s in t.get("ft_slots", []):
+        for e, fk, wk in (("_i", "in_face", "in_window_um"), ("_o", "out_face", "out_window_um")):
+            if s["name"] + e == bus:
+                face, win = s[fk], s[wk]
+    o = P.get("orient", "R0")
+    a, b = win
+    if face in "NS" and o in ("MY", "R180"):
+        a, b = 100.0 - b, 100.0 - a
+    return C.oface(face, o), [round(P["origin_um"][0] + a, 6), round(P["origin_um"][0] + b, 6)]
+
+
+def test_class_floorplan_shift_form_joins_class_ports_without_overlap():
+    raw = _shift_column()
+    rep = C.class_floorplan(raw, [("cls", "m1", [("m1", "R0"), ("m2", "R0")])])
+    T = raw["partition_types"]
+    assert rep["class_class_ports"] == 1
+    assert T["m1"]["buses"] == T["m2"]["buses"]                      # one own window for the class
+    (fo, wo), (fi, wi) = _die(raw, "L0", "ft0_o"), _die(raw, "L1", "dn")
+    assert fo == "N" and fi == "S" and wo == wi                       # the class-class port meets on one window
+    s_face = sorted([T["m1"]["buses"][0]["window_um"], T["m1"]["ft_slots"][0]["in_window_um"]])
+    assert s_face[0][1] + 1.2 <= s_face[1][0] + 1e-6                 # no overlap on the S face
+    assert T["m1"]["ft_slots"][0]["name"] == "ft0"                    # member slot names kept (class_merge renames)
+
+
+def test_class_floorplan_mirrored_instance_takes_the_mirror_order():
+    raw = _shift_column(orient_l1="MY")
+    C.class_floorplan(raw, [("cls", "m1", [("m1", "R0"), ("m2", "R0")])])
+    assert _die(raw, "L0", "ft0_o")[1] == _die(raw, "L1", "dn")[1]
+    T = raw["partition_types"]
+    assert T["m1"]["ft_slots"][0].get("out_order", T["m1"]["ft_slots"][0]["order"]) != T["m1"]["buses"][0]["order"]
+
+
+def test_class_floorplan_refuses_different_own_buses():
+    raw = _shift_column()
+    raw["partition_types"]["m2"]["buses"][0]["width"] = 5
+    try:
+        C.class_floorplan(raw, [("cls", "m1", [("m1", "R0"), ("m2", "R0")])])
+    except ValueError as e:
+        assert "own buses" in str(e)
+    else:
+        raise AssertionError("expected a refusal")
+
+
+def test_exact_classes_split_on_face_capacity():
+    raw = _shift_column()
+    T = raw["partition_types"]
+    T["m2"]["ft_slots"] = [_ft("ft0", "S", "N", (10, 20), (10, 20))]
+    T["m2"]["ft_slots"][0]["width"] = 300                             # a 300-bit lane only m2 carries
+    subs = C.exact_classes(raw, [("m1", "R0"), ("m2", "R0")], face_cap_pins_um=3.6, bit_cap=4500)
+    assert len(subs) == 1
+    subs = C.exact_classes(raw, [("m1", "R0"), ("m2", "R0")], face_cap_pins_um=3.6, bit_cap=200)
+    assert sorted(len(s) for s in subs) == [1, 1]
+
+
+def test_cli_classes_mode(tmp_path):
+    raw = _shift_column()
+    tiny = json.loads((HERE / "examples/tiny_plan.json").read_text())
+    raw.update({k: v for k, v in tiny.items() if k not in raw})
+    (tmp_path / "p.json").write_text(json.dumps(raw))
+    (tmp_path / "c.json").write_text(json.dumps([dict(cls="cls", rep="m1", members=[["m1", "R0"], ["m2", "R0"]])]))
+    rc = C.main([str(tmp_path / "p.json"), "--classes", str(tmp_path / "c.json"), "--out", str(tmp_path / "o.json"),
+                 "--report", str(tmp_path / "r.json")])
+    out = json.loads((tmp_path / "o.json").read_text())
+    assert out["partition_types"]["m1"]["buses"] == out["partition_types"]["m2"]["buses"]
+    assert json.loads((tmp_path / "r.json").read_text())["class_floorplan"]["class_class_ports"] == 1
+    assert rc in (0, 1)

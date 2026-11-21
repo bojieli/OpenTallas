@@ -98,6 +98,8 @@ def set_type_end(t, bus, tf, win, lays, order):
     if c is None:
         raise KeyError(f"{bus} not on type")
     old = dict(face=c.get(k["face"]), window_um=c.get(k["win"]))
+    if old["face"] == tf and old["window_um"]:          # S81-LEAF-CLASS-1730: per-end landing pins follow the window
+        _follow_landing(t, {bus: (tf, sorted(old["window_um"]))}, {bus: (tf, sorted(win))})
     c[k["face"]], c[k["win"]] = tf, list(win)
     if "lay_shared" in k:          # ft slot: per-end keys only where they differ from the shared ones
         if list(c.get(k["lay_shared"]) or []) != list(lays):
@@ -247,10 +249,582 @@ def window_overlaps(raw, types):
     return out
 
 
+# ---------------------------------------------------------------------------------------------------------------------
+# S81-LEAF-CLASS-1730: class floorplan (pin / ft-window half of FABLE-SUPERSET-0415 U5/U6, OWNER 11-20 no growth).
+#
+# class_merge.py needs every member of a class to carry the representative's pin table (buses + ft_slots) before it
+# re-types the instances.  Leaf members do not: each has its own ft slots (the lanes it passes) at its own windows.
+# class_floorplan() builds ONE class pin table and moves every member onto it:
+#   - slots: the exact-width union of the members' ft slots in the representative frame (key in_face, out_face, width;
+#     multiplicity = the member maximum).  A lane only uses a slot of its own width (schema: port width == bus width),
+#     so a class whose union does not fit its faces must be split first (exact_classes()).
+#   - assignment: every member slot takes one class slot of its key; chosen by search so that every port between two
+#     class instances joins the same die-frame window on both ends (the shift form of section 2.1 item 1 falls out:
+#     a lane passing one class tile into the next lands on the next one's own or slot window).
+#   - windows: the class ends tied by those ports form equality groups (union-find with the x / y flip of each
+#     instance); groups are packed first-fit on the class faces, so no two class windows overlap.  The outline is
+#     unchanged.  Window length per (face axis, width, layers) = the longest member window of that width.
+#   - every class instance gets orient q = p * t (t = member frame -> representative frame), its port ends renamed to
+#     the class slot names, and partitions[].spare_ends = the class slots it does not use (superset key on the type).
+#   - solve() then re-pins the non-class neighbours onto the class windows (their slots may become Z form).
+# ---------------------------------------------------------------------------------------------------------------------
+import collections as _col
+import copy as _copy
+import itertools as _it
+import re as _re
+
+ORIENTS = ("R0", "MX", "MY", "R180")
+FLIPS = {"R0": "", "MX": "NS", "MY": "EW", "R180": "NSEW"}
+
+
+def omul(a, b):
+    """product in the (abelian) orient group R0 / MX / MY / R180"""
+    fa, fb = set(FLIPS[a]), set(FLIPS[b])
+    f = fa ^ fb
+    return {frozenset(): "R0", frozenset("NS"): "MX", frozenset("EW"): "MY", frozenset("NSEW"): "R180"}[frozenset(f)]
+
+
+def oface(face, t):
+    return S.OPP[face] if face in FLIPS[t] else face
+
+
+def _ends_of_type(t):
+    """member ends of one type: own buses and ft slots, as raw dicts"""
+    return list(t.get("buses", [])), list(t.get("ft_slots", []))
+
+
+def _win_len(win):
+    return round(abs(float(win[1]) - float(win[0])), 6)
+
+
+def exact_classes(raw, members, face_cap_pins_um=3.6, bit_cap=4500):
+    """split one class (members [(type, t)]) into exact-width sub-classes whose slot union fits every face at
+    face_cap_pins_um pins per um and carries <= bit_cap ft bits.  Greedy, largest member first, least added bits."""
+    T = raw["partition_types"]
+
+    def prof(tn, t):
+        c = _col.Counter()
+        for s in T[tn].get("ft_slots", []):
+            c[(oface(s["in_face"], t), oface(s["out_face"], t), int(s["width"]))] += 1
+        return c
+
+    def union(ps):
+        u = _col.Counter()
+        for p in ps:
+            for k, n in p.items():
+                u[k] = max(u[k], n)
+        return u
+
+    def cost(u, tn, t):
+        w, h = T[tn]["outline_um"]
+        face = _col.Counter()
+        for (a, b, wd), n in u.items():
+            face[a] += wd * n
+            face[b] += wd * n
+        for b in T[tn].get("buses", []):
+            face[oface(b["face"], t)] += int(b["width"])
+        L = dict(N=w, S=w, E=h, W=h)
+        bits = sum(wd * n for (_a, _b, wd), n in u.items())
+        return bits <= bit_cap and all(face[k] <= face_cap_pins_um * L[k] for k in face), bits
+
+    groups = []
+    for tn, t in sorted(members, key=lambda m: (-sum(s["width"] for s in T[m[0]].get("ft_slots", [])), m[0])):
+        p = prof(tn, t)
+        best = None
+        for gi, g in enumerate(groups):
+            ok, b = cost(union(g["p"] + [p]), tn, t)
+            if ok:
+                inc = b - cost(union(g["p"]), tn, t)[1]
+                if best is None or inc < best[0]:
+                    best = (inc, gi)
+        if best is None:
+            groups.append(dict(m=[(tn, t)], p=[p]))
+        else:
+            groups[best[1]]["m"].append((tn, t))
+            groups[best[1]]["p"].append(p)
+    return [g["m"] for g in groups]
+
+
+class _UF:
+    """union-find over class ends with an affine relation start(v) = s * start(root) + c (s = +-1)"""
+
+    def __init__(self):
+        self.par, self.rel = {}, {}
+
+    def find(self, v):
+        if v not in self.par:
+            self.par[v], self.rel[v] = v, (1, 0.0)
+            return v, 1, 0.0
+        if self.par[v] == v:
+            return v, 1, 0.0
+        r, s0, c0 = self.find(self.par[v])
+        s1, c1 = self.rel[v]              # v = s1 * par + c1 ; par = s0 * r + c0
+        s, c = s1 * s0, s1 * c0 + c1
+        self.par[v], self.rel[v] = r, (s, c)
+        return r, s, c
+
+    def union(self, a, b, s, c, tol=1e-3):
+        """impose start(b) = s * start(a) + c; False when that contradicts what is already known"""
+        ra, sa, ca = self.find(a)
+        rb, sb, cb = self.find(b)
+        # b = sb*rb + cb ; a = sa*ra + ca ; want sb*rb + cb = s*(sa*ra + ca) + c
+        if ra == rb:
+            return sb == s * sa and abs(cb - (s * ca + c)) <= tol
+        # rb = (s*sa*ra + s*ca + c - cb) / sb  (sb = +-1)
+        self.par[rb] = ra
+        self.rel[rb] = (s * sa * sb, (s * ca + c - cb) * sb)
+        return True
+
+    def copy(self):
+        u = _UF()
+        u.par, u.rel = dict(self.par), dict(self.rel)
+        return u
+
+
+FACE_LAYERS = dict(NS=["M7", "M5"], EW=["M6", "M4"])    # S81 leaf face pin layers when a slot declares none
+
+
+def _axis(face):
+    return "NS" if face in "NS" else "EW"
+
+
+def class_floorplan(raw, classes, gap_um=1.2, margin_um=6.144, max_tries=500000):
+    """Joint class floorplan of every class in `classes` = [(class_id, rep, [(type, t)])] (members incl. the
+    representative, t = member frame -> representative frame).  Ports between instances of ANY two of these classes
+    are solved together (whole column / slice region in one pass).  Edits raw in place (pin tables, orients, port ends,
+    spare_ends, superset keys) and returns a report; raises ValueError when no assignment / packing exists (raw is
+    then unchanged)."""
+    T = raw["partition_types"]
+    tcls, tt = {}, {}
+    for cid, rep, members in classes:
+        if rep not in dict(members):
+            raise ValueError(f"class {cid}: representative {rep} is not a member")
+        for tn, t in members:
+            if tn in tcls:
+                raise ValueError(f"type {tn} in two classes ({tcls[tn]}, {cid})")
+            tcls[tn], tt[tn] = cid, t
+    C = {}                                   # cid -> class data
+    lens = {}
+    mslots = {}
+    for cid, rep, members in classes:
+        R = T[rep]
+        w, h = R["outline_um"]
+        own = None
+        for tn, t in members:
+            if T[tn]["outline_um"] != R["outline_um"]:
+                raise ValueError(f"class {cid}: {tn} outline {T[tn]['outline_um']} != {R['outline_um']}")
+            o = sorted((b["name"], b["dir"], int(b["width"]), oface(b["face"], t)) for b in T[tn].get("buses", []))
+            if own is None:
+                own = o
+            elif o != own:
+                raise ValueError(f"class {cid}: {tn} own buses {o} differ from {own} in the class frame")
+        count, lays = _col.Counter(), {}
+        for tn, t in members:
+            rows = []
+            for s in T[tn].get("ft_slots", []):
+                fi, fo = oface(s["in_face"], t), oface(s["out_face"], t)
+                k = (fi, fo, int(s["width"]))
+                li = list(s.get("in_layers") or s.get("layers") or FACE_LAYERS[_axis(fi)])
+                lo = list(s.get("out_layers") or s.get("layers") or FACE_LAYERS[_axis(fo)])
+                rows.append((s["name"], k, int(s.get("stations", 1))))
+                for face, win, ly in ((fi, s.get("in_window_um"), li), (fo, s.get("out_window_um"), lo)):
+                    lk = (_axis(face), k[2], tuple(ly))
+                    lens[lk] = max(lens.get(lk, 0.0), _win_len(win))
+                lays.setdefault((k, "i"), li)
+                lays.setdefault((k, "o"), lo)
+            for k, n in _col.Counter(r[1] for r in rows).items():
+                count[k] = max(count[k], n)
+            mslots[tn] = rows
+        for b in R.get("buses", []):
+            lk = (_axis(b["face"]), int(b["width"]), tuple(b["layers"]))
+            lens[lk] = max(lens.get(lk, 0.0), _win_len(b["window_um"]))
+        rt = dict(members)[rep]
+        own_rows = {b["name"]: dict(face=oface(b["face"], rt), width=int(b["width"]), layers=list(b["layers"]),
+                                    row=b) for b in R.get("buses", [])}
+        keys = sorted(count)
+        cname, i = {}, 0
+        for k in keys:
+            for j in range(count[k]):
+                cname[(k, j)] = f"ft{i}"
+                i += 1
+        C[cid] = dict(rep=rep, members=members, w=w, h=h, line=dict(N=w, S=w, E=h, W=h), own=own_rows,
+                      count=count, lays=lays, keys=keys, cname=cname)
+
+    def var_geom(v):
+        """(face, length) of a class end v = (cid, 'own', name) | (cid, 'slot', key, j, 'i'|'o')"""
+        c = C[v[0]]
+        if v[1] == "own":
+            o = c["own"][v[2]]
+            return o["face"], lens[(_axis(o["face"]), o["width"], tuple(o["layers"]))]
+        _cid, _s, k, _j, e = v
+        face = k[0] if e == "i" else k[1]
+        return face, lens[(_axis(face), k[2], tuple(c["lays"][(k, e)]))]
+
+    parts = {p["name"]: p for p in raw["partitions"]}
+    inst = {}
+    for pn, p in parts.items():
+        if p["type"] in tcls:
+            inst[pn] = dict(cls=tcls[p["type"]], type=p["type"], q=omul(p.get("orient", "R0"), tt[p["type"]]),
+                            origin=p["origin_um"])
+
+    def die_rel(pn, face):
+        """(s, base): die coordinate along `face` of rep-frame coordinate x is base + s * x"""
+        d = inst[pn]
+        c = C[d["cls"]]
+        ox, oy = d["origin"]
+        if face in "EW":
+            return (-1, oy + c["h"]) if d["q"] in ("MX", "R180") else (1, oy)
+        return (-1, ox + c["w"]) if d["q"] in ("MY", "R180") else (1, ox)
+
+    cports = []
+    for pr in raw["ports"]:
+        if pr["src"]["part"] in inst and pr["dst"]["part"] in inst:
+            if pr.get("segments"):
+                raise ValueError(f"multi-window port {pr['id']} between class instances")
+            cports.append(pr)
+
+    def end_var(pn, bus, assign):
+        d = inst[pn]
+        if bus in C[d["cls"]]["own"]:
+            return (d["cls"], "own", bus)
+        for sn, k, _st in mslots[d["type"]]:
+            for e in ("i", "o"):
+                if bus == f"{sn}_{e}":
+                    a = assign.get(d["type"])
+                    return None if a is None else (d["cls"], "slot", k, a[sn], e)
+        raise ValueError(f"{pn}.{bus} is neither an own bus nor an ft slot end of {d['type']}")
+
+    why = {}
+
+    def impose(uf, pr, assign):
+        va = end_var(pr["src"]["part"], pr["src"]["bus"], assign)
+        vb = end_var(pr["dst"]["part"], pr["dst"]["bus"], assign)
+        if va is None or vb is None:
+            return True
+        fa, la = var_geom(va)
+        fb, lb = var_geom(vb)
+        if oface(fa, inst[pr["src"]["part"]]["q"]) != S.OPP[oface(fb, inst[pr["dst"]["part"]]["q"])]:
+            why[pr["id"]] = "faces do not abut"
+            return False
+        if abs(la - lb) > 1e-6:
+            why[pr["id"]] = f"window lengths {la} vs {lb}"
+            return False
+        sa, ca = die_rel(pr["src"]["part"], fa)
+        sb, cb = die_rel(pr["dst"]["part"], fb)
+        ka = ca if sa > 0 else ca - la             # die start = s * x + k
+        kb = cb if sb > 0 else cb - lb
+        ok = uf.union(va, vb, sb * sa, sb * (ka - kb))
+        if not ok:
+            why[pr["id"]] = "window equality contradicts another port"
+        return ok
+
+    allv = []
+    for cid, c in C.items():
+        allv += [(cid, "own", n) for n in c["own"]]
+        allv += [(cid, "slot", k, j, e) for k in c["keys"] for j in range(c["count"][k]) for e in "io"]
+    maxline = max(max(c["line"].values()) for c in C.values())
+
+    def groups_ok(uf):
+        by = _col.defaultdict(list)
+        for v in allv:
+            if v in uf.par:
+                r, sg, c0 = uf.find(v)
+                face, ln = var_geom(v)
+                by[(r, v[0], face, sg)].append((c0, c0 + ln))
+        for ivs in by.values():
+            ivs.sort()
+            for (a1, b1), (a2, _b2) in zip(ivs, ivs[1:]):
+                if a2 < b1 + gap_um - 1e-6:
+                    return False
+            if ivs[-1][1] - ivs[0][0] > maxline - 2 * margin_um:
+                return False
+        return True
+
+    deg = _col.Counter()
+    for pr in cports:
+        deg[inst[pr["src"]["part"]]["type"]] += 1
+        deg[inst[pr["dst"]["part"]]["type"]] += 1
+    order = sorted(tcls, key=lambda tn: (-deg[tn], tn))
+    ports_of = _col.defaultdict(list)
+    for pr in cports:
+        ports_of[inst[pr["src"]["part"]]["type"]].append(pr)
+        ports_of[inst[pr["dst"]["part"]]["type"]].append(pr)
+
+    def choices(tn):
+        c = C[tcls[tn]]
+        byk = _col.defaultdict(list)
+        for sn, k, _st in mslots[tn]:
+            byk[k].append(sn)
+        per = [[dict(zip(sns, perm)) for perm in _it.permutations(range(c["count"][k]), len(sns))]
+               for k, sns in sorted(byk.items())]
+        for combo in (_it.product(*per) if per else [()]):
+            d = {}
+            for x in combo:
+                d.update(x)
+            yield d
+
+    tries = [0]
+    deepest = [0, None]
+
+    def search(ix, uf, assign):
+        if ix == len(order):
+            return uf, assign
+        tn = order[ix]
+        for ch in choices(tn):
+            tries[0] += 1
+            if tries[0] > max_tries:
+                return None
+            a2 = dict(assign)
+            a2[tn] = ch
+            u2 = uf.copy()
+            bad = None
+            for pr in ports_of[tn]:
+                ends = {inst[pr["src"]["part"]]["type"], inst[pr["dst"]["part"]]["type"]}
+                if ends <= set(a2) and not impose(u2, pr, a2):
+                    bad = pr["id"]
+                    break
+            if bad is None and not groups_ok(u2):
+                bad = "overlap"
+            if bad is not None:
+                if ix >= deepest[0]:
+                    deepest[0], deepest[1] = ix, (tn, bad, why.get(bad))
+                continue
+            r = search(ix + 1, u2, a2)
+            if r is not None:
+                return r
+        return None
+
+    uf0 = _UF()
+    for pr in cports:
+        va = end_var(pr["src"]["part"], pr["src"]["bus"], {})
+        vb = end_var(pr["dst"]["part"], pr["dst"]["bus"], {})
+        if va and vb and not impose(uf0, pr, {}):
+            raise ValueError(f"own-bus port {pr['id']} cannot meet on one window: {why.get(pr['id'])}")
+    res = search(0, uf0, {})
+    if res is None:
+        raise ValueError(f"no slot assignment joins every class-class port on one window ({tries[0]} tries; "
+                         f"deepest failure at type {deepest[1]})")
+    uf, assign = res
+    # ---- pack equality groups, one line per (class, face)
+    groups = _col.defaultdict(list)
+    for v in allv:
+        r, s, c0 = uf.find(v)
+        groups[r].append((v, s, c0))
+    placed = _col.defaultdict(list)
+    pos = {}
+
+    def fits(cid, face, a, b):
+        if a < margin_um - 1e-6 or b > C[cid]["line"][face] - margin_um + 1e-6:
+            return False
+        return all(b + gap_um <= x + 1e-6 or a >= y + gap_um - 1e-6 for x, y in placed[(cid, face)])
+
+    def try_root(g, u):
+        iv = []
+        for v, s, c0 in g:
+            face, ln = var_geom(v)
+            a = s * u + c0
+            iv.append((v[0], face, a, a + ln))
+        for i1, (c1, f1, a1, b1) in enumerate(iv):
+            if not fits(c1, f1, a1, b1):
+                return None
+            for c2, f2, a2, b2 in iv[i1 + 1:]:
+                if (c1, f1) == (c2, f2) and not (b1 + gap_um <= a2 + 1e-6 or a1 >= b2 + gap_um - 1e-6):
+                    return None
+        return iv
+
+    gl = sorted(groups.values(), key=lambda g: (-len(g), -max(var_geom(v)[1] for v, _s, _c in g), str(g[0][0])))
+    for g in gl:
+        cands = set()
+        for v, s, c0 in g:
+            face, ln = var_geom(v)
+            L = C[v[0]]["line"][face]
+            pl = placed[(v[0], face)]
+            for st in [margin_um, L - margin_um - ln] + [y + gap_um for _x, y in pl] + [x - gap_um - ln for x, _y in pl]:
+                cands.add(round((st - c0) * s, 6))
+        hit = None
+        for u in sorted(cands):
+            hit = try_root(g, u)
+            if hit is not None:
+                break
+        if hit is None:
+            raise ValueError(f"faces full: cannot place group {[x[0] for x in g][:6]}")
+        for (v, s, _c0), (cid, face, a, b) in zip(g, hit):
+            placed[(cid, face)].append((a, b))
+            pos[v] = (face, [round(a, 6), round(b, 6)], s)
+
+    def order_of(v):
+        return "lsb_low" if pos[v][2] > 0 else "lsb_high"
+
+    # ---- write the class windows onto every member (representative frame), keeping each member's own slot names:
+    # class_merge --ft-superset then collapses the now-equal pin sets to one class slot each and re-points ports,
+    # per-slot landing pins and landing edges (stable naming, UNIFY-TOOLS-R3 b8ab33d192d).
+    report = dict(classes=[], class_class_ports=len(cports), tries=tries[0])
+    moved_pins = 0
+    for cid, c in C.items():
+        geo = {}
+        for k in c["keys"]:
+            for j in range(c["count"][k]):
+                vi, vo = (cid, "slot", k, j, "i"), (cid, "slot", k, j, "o")
+                g = dict(width=k[2], in_face=pos[vi][0], out_face=pos[vo][0], in_window_um=pos[vi][1],
+                         out_window_um=pos[vo][1], layers=list(c["lays"][(k, "i")]), order=order_of(vi))
+                if order_of(vo) != g["order"]:
+                    g["out_order"] = order_of(vo)
+                if list(c["lays"][(k, "o")]) != g["layers"]:
+                    g["out_layers"] = list(c["lays"][(k, "o")])
+                geo[(k, j)] = g
+        for tn, t in c["members"]:
+            row = T[tn]
+            old_ends = _end_table(row, t, c["w"], c["h"])          # in the representative frame
+            _frame_landing(row, t, c["w"], c["h"])
+            for b in row.get("buses", []):
+                v = (cid, "own", b["name"])
+                b["face"], b["window_um"], b["order"] = pos[v][0], pos[v][1], order_of(v)
+            new_slots = []
+            for sl in row.get("ft_slots", []):
+                k = next(k for sn, k, _st in mslots[tn] if sn == sl["name"])
+                ns = {x: y for x, y in sl.items() if x not in FT_GEOM}
+                ns.update(_copy.deepcopy(geo[(k, assign[tn][sl["name"]])]))
+                ns["regs_um"] = _straight_regs(ns, c["w"], c["h"], int(ns.get("stations", 1)))
+                ns.pop("bit_sites_um", None)
+                new_slots.append(ns)
+            row["ft_slots"] = new_slots
+            moved_pins += _follow_landing(row, old_ends, _end_table(row, "R0", c["w"], c["h"]))
+        names = {(k, j): f"{k[0]}>{k[1]}:{k[2]}#{j}" for k in c["keys"] for j in range(c["count"][k])}
+        report["classes"].append(dict(cls=cid, rep=c["rep"], members=[m for m, _t in c["members"]],
+                                      instances=sorted(pn for pn, d in inst.items() if d["cls"] == cid),
+                                      slots=sum(c["count"].values()),
+                                      ft_bits=sum(k[2] * n for k, n in c["count"].items()),
+                                      assignment={tn: {sn: names[(k, assign[tn][sn])] for sn, k, _st in mslots[tn]}
+                                                  for tn, _t in c["members"]}))
+    for pn, d in inst.items():
+        parts[pn]["orient"] = d["q"]
+    report.update(landing_pins_moved=moved_pins, orients={pn: d["q"] for pn, d in inst.items()})
+    return report
+
+
+FT_GEOM = ("in_face", "out_face", "in_window_um", "out_window_um", "layers", "in_layers", "out_layers", "order",
+           "in_order", "out_order", "regs_um", "bit_sites_um", "width")
+
+
+def _flip_xy(xy, t, w, h):
+    x, y = xy
+    if "EW" in FLIPS[t] or t == "R180":
+        x = w - x
+    if t in ("MX", "R180"):
+        y = h - y
+    return [round(x, 6), round(y, 6)]
+
+
+def _end_table(row, t, w, h):
+    """{end bus name: (face, window)} of a type's own buses and ft slot ends, mapped by orient t (outline w x h)"""
+    def m(face, win, axis_len):
+        face2 = oface(face, t)
+        a, b = sorted(float(v) for v in win)
+        flip = (face in "NS" and t in ("MY", "R180")) or (face in "EW" and t in ("MX", "R180"))
+        return face2, ([axis_len - b, axis_len - a] if flip else [a, b])
+    out = {}
+    for b in row.get("buses", []):
+        if "window_um" in b:
+            out[b["name"]] = m(b["face"], b["window_um"], w if b["face"] in "NS" else h)
+    for s in row.get("ft_slots", []):
+        for e, fk, wk in (("_i", "in_face", "in_window_um"), ("_o", "out_face", "out_window_um")):
+            if wk in s:
+                out[s["name"] + e] = m(s[fk], s[wk], w if s[fk] in "NS" else h)
+    return out
+
+
+def _frame_landing(row, t, w, h):
+    """member frame -> representative frame for the landing contract points and edge clock taps"""
+    if t == "R0":
+        return
+    ck = row.get("clock") or {}
+    lc = ck.get("landing_contract") or {}
+    for p in lc.get("pins", []):
+        if "xy_um" in p:
+            p["xy_um"] = _flip_xy(p["xy_um"], t, w, h)
+    for ch in lc.get("collector_children", []):
+        if "xy_um" in ch:
+            ch["xy_um"] = _flip_xy(ch["xy_um"], t, w, h)
+    for e in ck.get("edge_clocks", []):
+        if "tap_um" in e:
+            e["tap_um"] = _flip_xy(e["tap_um"], t, w, h)
+
+
+ROLE_FOLLOW = ("cland_tstart_in", "cland_tstart_out", "cland_rstart_in", "cland_rstart_out")
+ROLE_NEAR_UM = 20.0
+LAND_PIN = _re.compile(r"^(fclk_in|cland_fstart_in|fclk_out|cland_fstart_out)_(.+)$")
+
+
+def _follow_landing(row, old, new):
+    """move the per-end landing pins (fclk_in_<end>, cland_fstart_in_<end>, fclk_out_<end>, cland_fstart_out_<end>) and
+    their edge clock taps with their end's window: same offset from the window centre, same face.  -> pins moved"""
+    ck = row.get("clock") or {}
+    lc = ck.get("landing_contract") or {}
+    n = 0
+
+    def shift(xy, end):
+        if end not in old or end not in new or old[end] == new[end]:
+            return None
+        (f0, w0), (f1, w1) = old[end], new[end]
+        if f0 != f1:
+            return None
+        d = (w1[0] + w1[1]) / 2.0 - (w0[0] + w0[1]) / 2.0
+        x, y = xy
+        return [round(x + d, 6), y] if f1 in "NS" else [x, round(y + d, 6)]
+
+    moves = []
+    for p in lc.get("pins", []):
+        m = LAND_PIN.match(p["name"])
+        if m and "xy_um" in p:
+            xy = shift(p["xy_um"], m.group(2))
+            if xy:
+                moves.append((list(p["xy_um"]), xy))
+                p["xy_um"] = xy
+                n += 1
+    # a count-aligned start / role pin sits beside the landing pins of the lane it starts with: it follows the
+    # nearest moved landing pin on its own face line (within ROLE_NEAR_UM)
+    for p in lc.get("pins", []):
+        if p["name"] in ROLE_FOLLOW and "xy_um" in p and moves:
+            x, y = p["xy_um"]
+            best = None
+            for (ox, oy), (nx, ny) in moves:
+                if abs(oy - y) < 1e-3 and abs(ox - x) <= ROLE_NEAR_UM:
+                    d = abs(ox - x)
+                    if best is None or d < best[0]:
+                        best = (d, [round(x + nx - ox, 6), y])
+                elif abs(ox - x) < 1e-3 and abs(oy - y) <= ROLE_NEAR_UM:
+                    d = abs(oy - y)
+                    if best is None or d < best[0]:
+                        best = (d, [x, round(y + ny - oy, 6)])
+            if best:
+                p["xy_um"] = best[1]
+                n += 1
+    for e in ck.get("edge_clocks", []):
+        m = LAND_PIN.match(e.get("port", ""))
+        if m and "tap_um" in e:
+            xy = shift(e["tap_um"], m.group(2))
+            if xy:
+                e["tap_um"] = xy
+    return n
+
+
+def _straight_regs(sl, w, h, n):
+    """provisional station points on the straight / L / Z path between the window centres (type frame); the
+    corridor siting (ft_corridor.py) replaces them with legal per-bit sites"""
+    def pt(face, win):
+        c = (win[0] + win[1]) / 2.0
+        return {"N": (c, h), "S": (c, 0.0), "E": (w, c), "W": (0.0, c)}[face]
+    a, b = pt(sl["in_face"], sl["in_window_um"]), pt(sl["out_face"], sl["out_window_um"])
+    return [[round(a[0] + (b[0] - a[0]) * (j + 0.5) / n, 3), round(a[1] + (b[1] - a[1]) * (j + 0.5) / n, 3)]
+            for j in range(n)]
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("plan")
-    ap.add_argument("--anchors", required=True, help="comma list of superset class types whose windows are kept")
+    ap.add_argument("--anchors", help="comma list of superset class types whose windows are kept")
+    ap.add_argument("--classes", help="JSON [{cls, rep, members: [[type, orient member->rep], ...]}]: lay the class "
+                                      "windows out jointly (class_floorplan) first; every class type is then an anchor")
     ap.add_argument("--parts-re", help="only ports whose two partitions both match (e.g. one slice column)")
     ap.add_argument("--out", required=True)
     ap.add_argument("--report")
@@ -259,13 +833,27 @@ def main(argv=None):
                          "anchor end takes a stronger one's window instead of a conflict")
     a = ap.parse_args(argv)
     raw = json.loads(Path(a.plan).read_text())
-    anchors = [x for x in a.anchors.split(",") if x]
+    anchors = [x for x in (a.anchors or "").split(",") if x]
+    fp = None
+    if a.classes:
+        cls = [(c["cls"], c["rep"], [tuple(m) for m in c["members"]]) for c in json.loads(Path(a.classes).read_text())]
+        try:
+            fp = class_floorplan(raw, cls)
+        except ValueError as e:
+            print(f"class_window_solve: class floorplan refused: {e}", file=sys.stderr)
+            return 2
+        anchors += [t for _c, _r, m in cls for t, _o in m if t not in anchors]
+    if not anchors:
+        print("class_window_solve: --anchors or --classes is required", file=sys.stderr)
+        return 2
     miss = [x for x in anchors if x not in raw["partition_types"]]
     if miss:
         print(f"class_window_solve: unknown anchor types {miss}", file=sys.stderr)
         return 2
     rep = solve(raw, anchors, a.parts_re, column=a.column)
     Path(a.out).write_text(json.dumps(raw, indent=1) + "\n")
+    if fp is not None:
+        rep["class_floorplan"] = fp
     if a.report:
         Path(a.report).write_text(json.dumps(rep, indent=1) + "\n")
     print(f"class_window_solve: {len(rep['moved'])} windows moved on {len(rep['types_touched']) - len(anchors)} types, "
