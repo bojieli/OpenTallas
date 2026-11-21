@@ -1,0 +1,21 @@
+{
+ "schema": "opentallas.s81.j6_donor_delta.v1",
+ "lane": "FAM-S81-LEPE-3",
+ "event": "J7 (cut 11-21 20:00 PST, apply 11-22 04:15)",
+ "for": "S81-J6-ASSEMBLY-R4",
+ "types_changed": ["dsdv_slice_lepe_mu_LP__t2"],
+ "base_note": "relay_depth append on dsdv_slice_lepe_mu_LP__t2; independent of every other J7 row on this type (J7 v6 gen35 has u_land/u_lnl* rows only, no u_bout_* row). Any base from J5/C1n/J7 v2 works.",
+ "ops": [
+  {"op": "add", "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_depth/-",
+   "value": {"inst": "u_bout_unit_o0", "port": "d", "side": "sink", "D": 1, "bits": [0, 603], "stages_existing": 0,
+             "note": "FAM-S81-LEPE-3 LO-1 (proof10): whole unit_o0 frame {f_ks 53, f_host 515, mu_rt 32, f_lf 4} -> seqhost face +1 relay stage, lane unit__s_7N_LP__seqhost 87 -> 88 cycles (declared). proof9 post-hook CTS: RX bank / rx pair_b -> lep f_host[*] -292 ps (f_host regs pulled to the S face beside u_bout_unit_o0, 600-700 um from the RX banks, ~500 ps wire). proof10 = proof9 + this row: post-hook setup -64.5 / tns -0.87 ns, f_host class gone.",
+             "path_um": 640}}
+ ],
+ "siting": "relay_mid default (stage along the RX-bank -> u_bout_unit_o0 path) is the intent. Measured proof10 FIRM site of all 604 stage flops: centroid (332.4, 161.7), x 285-376, y 159-164 (midpoint of RX-bank centroid (538.1, 318.0) and each bout flop). If G0/relay_mid leaves the stage at a path end, add relay_sites {<bound stage inst>.q: [332.4, 161.7]}.",
+ "latency": "+1 cycle on lane unit__s_7N_LP__seqhost (87 -> 88); cycles pre-approved; data, valid and the other frame fields move together (whole bus), so no alignment change inside the frame. LATCHECK / token compile must take the +1.",
+ "evidence": {
+  "proof9": "epyc10 /srv/opentallas-scratch2/claude/fam-lepe/p9 (unit oth-ubuntu-3984214-1795274017) 4_cts_post_hook.rpt setup_ws -292.10 tns -32785",
+  "proof10": "epyc7 /srv/opentallas-scratch2/claude/fam-lepe/p10 (unit oth-ubuntu-993373-1795281610) 4_cts_post_hook.rpt setup_ws -64.47 tns -869.8; kit = J6 wave kit dc92652f0d5/a2 copy, config.mk + run_kit.sh byte-identical",
+  "caveat": "proof9/10 also carry the LEPE-2 private overlays (lep ROS3/RIP3 RTL, rx[2] banks moved beside rx[1]/rx[3], li<N>_d/_v D1 relays, FIRM ro/ri/li/status/wrep sites) that J7 does NOT carry (J7 LP t2 = RIP1, no ROS). This row stands alone: on the J7 form the same f_host wire exists (f_host is read from the RX banks and consumed at the S face), so it removes that class there too; the other overlays are the J8 package after the routed read."
+ }
+}
