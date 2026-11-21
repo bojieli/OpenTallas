@@ -106,3 +106,5 @@ latch -> capture legs across far taps; consider latch at capture side for long h
   (station_rule apply rows + --seams) and seams_<die>.json for s81 (2,622 latch hops, 383 seam types / 2,134 buses),
   qwen_compute (85 / 133 / 1,644), qwen_kvsys (4 / 56 / 2,006), s81_head (192 / 26 / 86). Plans: D8i h2_2249, KV D25e3, QC A4, HEAD r11b.
 - main 3e831b7084: apply --seams, OT_HOP_LATCH_LEAF also for clock.ft_hop_lockup types.
+
+- proof1 (proof_t39) pregrt AFTER: hold_cells 22,160 (baseline 47,483), wns -128.33 on 1,211 ends (port_in 1,210 left at -128.33; baseline 1,142 left at -33.54), cross_tap 1 left -26.39, setup_wns -471.15 (baseline -341.05), 26,238 s (baseline 6,732).
