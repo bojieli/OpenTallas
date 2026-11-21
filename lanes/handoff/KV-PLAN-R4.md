@@ -33,6 +33,10 @@ Family owners: OPUS-FIX-KV-PV-R4 (pv, D28), FABLE-FIX-KV-HGI (hg/hgi), FAM-KV-HU
   (gen_d27_after_r4d.sh pattern, Codex; needs a gen_proof script for D27d) and apply D27 after D26.
 - 7 strap-pad types (hg_v1, hg_v1p3, pc x2, pc_v1 x3, pc_v3) are OWNER 10-28 strap sites: --strap-pads types_conflicting 0. Not a blocker.
 
+- D27d RESULT 05:23: compose plan 07a462a13e91 asbuilt 118905421f0a (HOP 662/22 types, event_census REGRESS 0); G0 GREEN; strict bind rc1
+  = 30 R8_STALE kvs_ctl.dcfg__age_vport_* -> vport_E*.cfg_age (bound 32/47 vs table 31). NEXT (R5): r8_refresh.py on bindgate_d27d bus_groups
+  (tree bind_of_record), rebind (run_gate_d27c.sh bind d27c/bindgate_d27d2).
+
 ## 3. D28 = pv split (OPUS-FIX-KV-PV-R4) + everything pv moved out of D27: r0 re-site, r7, r13 relay_depth, pv parts of r2/r3/r6, pv column-law
   regen (pvx_regen), RESET-RELAY-GEN-R3 pv bank_taps re-emitted two-pass on the split plan, hub_Eo/Wo/sys_c pass2 re-run on D27 plan. hub_C split
   may come from FAM-KV-HUB.
