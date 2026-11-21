@@ -2392,9 +2392,10 @@ def test_sealed_drt_progress_stop_takes_precedence_over_worker_kill():
         assert ap.classify(probe, client)[:2] == ("CRASH", "infra-oom")
 
 
-def test_queued_wave_route_rechecks_exact_review_before_admission(monkeypatch):
+def test_queued_wave_route_rechecks_exact_review_before_admission(monkeypatch, tmp_path):
     import autopilot as ap
 
+    monkeypatch.setattr(ap, "AP_DIR", tmp_path / "autopilot")
     r, = ap.parse_queue("\t".join(ROW)).values()
     assert not r["error"]
     r["geom_ref"] = "AUTO-GEOM KIT-WAVE E /geom/auto_geom.json"
@@ -2412,6 +2413,8 @@ def test_queued_wave_route_rechecks_exact_review_before_admission(monkeypatch):
     j = state["jobs"][r["id"]]
     assert j["status"] == "WAIT-GEOM"
     assert "unit" not in j
+    saved = json.loads((tmp_path / "autopilot/state.json").read_text())
+    assert saved["jobs"][r["id"]]["status"] == "WAIT-GEOM"
 
     j.update(status="RUNNING", unit="already-submitted", kind="infra-notrun")
     assert ap.admit_new(state, {r["id"]: r}) == 0
