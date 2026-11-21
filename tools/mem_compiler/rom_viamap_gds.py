@@ -29,7 +29,15 @@ never held in memory):
            only the SREFs) for a later stream merge.  Rows of another macro (element cores) are counted, not stamped: their
            ROMs sit inside the core layout.
 
-Geometry (macro-local, rom_gen orientation: physical column c at x, row r at y):
+Pass --via-grid to use explicit, signed-LEF-bound drain coordinates from the
+base layout. The "opentallas.rom-via-grid.v1" JSON contains "lef_sha256",
+integer "dbu_per_um" and a "banks" array. Each bank defines "row_start",
+"col_start", "row_axis" ("x" or "y") and "rows_dbu"/"cols_dbu" coordinate
+lists in logical address and column order. Axis lists may descend or have
+unequal spacing to represent mirrored arrays and access bands. The grid
+covers every logical bit, and all bank geometry is macro-local.
+
+Preview geometry (macro-local, rom_gen orientation: physical column c at x, row r at y):
 V1 centre = origin + (c*col_pitch + col_pitch/2, r*row_pitch + row_pitch/2),
 18 nm square on GDS layer 21/0.  The array origin inside the macro is not fixed
 by the abstract (LEF has no array); it defaults to (decoder_width, 0) of the
@@ -47,6 +55,7 @@ import math
 import re
 import struct
 import sys
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, BinaryIO, Callable, Iterator
 
@@ -111,8 +120,96 @@ def strname(payload: bytes) -> str:
 # macro geometry and via map
 # ---------------------------------------------------------------------------
 
+@dataclass
+class ViaBank:
+    row_start: int
+    col_start: int
+    row_x: bool
+    rows: list[int]
+    cols: list[int]
+    row_indices: dict[int, int]
+    col_indices: dict[int, int]
+
+    @property
+    def row_stop(self) -> int:
+        return self.row_start + len(self.rows)
+
+    @property
+    def col_stop(self) -> int:
+        return self.col_start + len(self.cols)
+
+
+class ViaGrid:
+    def __init__(self, path: Path, lef_sha: str, shape: tuple[int, int], outline_um: tuple[float, float]) -> None:
+        raw = path.read_bytes()
+        grid = json.loads(raw)
+        self.sha256 = hashlib.sha256(raw).hexdigest()
+        self.lef_sha256 = lef_sha
+        if grid["schema"] != "opentallas.rom-via-grid.v1" or grid["lef_sha256"] != lef_sha:
+            raise ValueError(f"{path}: VIA1 grid schema or LEF SHA-256 differs")
+        self.dbu = grid["dbu_per_um"]
+        if type(self.dbu) is not int or self.dbu <= 0 or self.dbu % 1000:
+            raise ValueError(f"{path}: VIA1 grid DBU per micron must be a positive multiple of 1000")
+        half = 9 * (self.dbu // 1000)
+        self.banks: list[ViaBank] = []
+        boxes = []
+        rows, cols = shape
+        for entry in grid["banks"]:
+            row_axis = entry["row_axis"]
+            starts = (entry["row_start"], entry["col_start"])
+            axes = (entry["rows_dbu"], entry["cols_dbu"])
+            if row_axis not in ("x", "y") or any(type(v) is not int or v < 0 for v in starts):
+                raise ValueError(f"{path}: invalid VIA1 bank axes or first logical indices")
+            for axis in axes:
+                if not axis or any(type(v) is not int for v in axis):
+                    raise ValueError(f"{path}: VIA1 grid coordinates must be nonempty integer lists")
+                steps = [b - a for a, b in zip(axis, axis[1:])]
+                if not (all(step >= 2 * half for step in steps) or all(step <= -2 * half for step in steps)):
+                    raise ValueError(f"{path}: VIA1 grid axis must be strictly ordered with room for each cut")
+            bank = ViaBank(*starts, row_axis == "x", *axes,
+                           *({v: i + start for i, v in enumerate(axis)} for start, axis in zip(starts, axes)))
+            if bank.row_stop > rows or bank.col_stop > cols:
+                raise ValueError(f"{path}: VIA1 bank exceeds the logical shape")
+            xs, ys = axes if bank.row_x else axes[::-1]
+            box = (min(xs) - half, min(ys) - half, max(xs) + half, max(ys) + half)
+            if min(box[:2]) < 0 or any(v > length * self.dbu for v, length in zip(box[2:], outline_um)):
+                raise ValueError(f"{path}: VIA1 bank exceeds the macro outline")
+            if any(box[0] < x1 and x0 < box[2] and box[1] < y1 and y0 < box[3] for x0, y0, x1, y1 in boxes):
+                raise ValueError(f"{path}: VIA1 bank boxes overlap")
+            boxes.append(box)
+            self.banks.append(bank)
+        self.by_row = [[b for b in self.banks if b.row_start <= r < b.row_stop] for r in range(rows)]
+        for banks in self.by_row:
+            stop = 0
+            banks.sort(key=lambda b: b.col_start)
+            for bank in banks:
+                if bank.col_start != stop:
+                    break
+                stop = bank.col_stop
+            else:
+                if stop == cols:
+                    continue
+            raise ValueError(f"{path}: VIA1 banks must cover every logical cell exactly once")
+
+    def centre(self, row: int, col: int) -> tuple[float, float]:
+        bank = next(b for b in self.by_row[row] if b.col_start <= col < b.col_stop)
+        r, c = bank.rows[row - bank.row_start] / self.dbu, bank.cols[col - bank.col_start] / self.dbu
+        return (r, c) if bank.row_x else (c, r)
+
+    def cell(self, x_um: float, y_um: float) -> tuple[int, int]:
+        x, y = round(x_um * self.dbu), round(y_um * self.dbu)
+        if abs(x - x_um * self.dbu) < 1e-5 and abs(y - y_um * self.dbu) < 1e-5:
+            for bank in self.banks:
+                r, c = (x, y) if bank.row_x else (y, x)
+                row, col = bank.row_indices.get(r), bank.col_indices.get(c)
+                if row is not None and col is not None:
+                    return row, col
+        raise ValueError(f"via at ({x_um},{y_um}) um is not on a programming drain")
+
+
 class Macro:
-    def __init__(self, sheet_path: Path, array_origin_um: tuple[float, float] | None = None) -> None:
+    def __init__(self, sheet_path: Path, array_origin_um: tuple[float, float] | None = None,
+                 via_grid: Path | None = None) -> None:
         s = json.loads(sheet_path.read_text())
         sp, a = s["spec"], s["area"]
         self.name, self.words, self.bits, self.mux = sp["name"], sp["words"], sp["bits"], sp["mux"]
@@ -121,12 +218,39 @@ class Macro:
         self.w, self.h = a["macro_width_um"], a["macro_height_um"]
         self.origin = array_origin_um or (a["decoder_width_um"], 0.0)
         self.origin_assumed = array_origin_um is None
+        self.grid = None
+        if via_grid is not None:
+            if array_origin_um is not None:
+                raise ValueError("specify VIA1 grid coordinates or an array origin")
+            lef = sheet_path.with_name(self.name + ".lef")
+            lef_sha = hashlib.sha256(lef.read_bytes()).hexdigest()
+            if s["views"].get(lef.name) != lef_sha:
+                raise ValueError(f"{lef}: LEF SHA-256 differs from the datasheet")
+            self.grid = ViaGrid(via_grid, lef_sha, (self.rows, self.cols), (self.w, self.h))
+            self.origin_assumed = False
+
+    def geometry_info(self) -> dict[str, Any]:
+        if self.grid is not None:
+            return {"array_origin_um": None, "array_origin_assumed": False, "via_grid_sha256": self.grid.sha256,
+                    "via_grid_lef_sha256": self.grid.lef_sha256}
+        return {"array_origin_um": list(self.origin), "array_origin_assumed": self.origin_assumed}
+
+    def grid_dbu(self, dbu: float | None) -> float:
+        if self.grid is None:
+            return 1000.0 if dbu is None else dbu
+        if dbu is not None and not math.isclose(dbu, self.grid.dbu, rel_tol=0, abs_tol=1e-8):
+            raise ValueError(f"GDS DBU per micron {dbu} differs from VIA1 grid {self.grid.dbu}")
+        return self.grid.dbu
 
     def centre_um(self, row: int, col: int) -> tuple[float, float]:
+        if self.grid is not None:
+            return self.grid.centre(row, col)
         return (self.origin[0] + col * self.col_pitch + self.col_pitch / 2,
                 self.origin[1] + row * self.row_pitch + self.row_pitch / 2)
 
     def cell_of(self, x_um: float, y_um: float) -> tuple[int, int]:
+        if self.grid is not None:
+            return self.grid.cell(x_um, y_um)
         c = (x_um - self.origin[0]) / self.col_pitch - 0.5
         r = (y_um - self.origin[1]) / self.row_pitch - 0.5
         if abs(c - round(c)) > 0.01 or abs(r - round(r)) > 0.01:
@@ -152,6 +276,7 @@ def via_cells(rows: list[int]) -> Iterator[tuple[int, int]]:
 
 
 def structure_bytes(name: str, m: Macro, rows: list[int], dbu_per_um: float) -> bytes:
+    dbu_per_um = m.grid_dbu(dbu_per_um)
     half = V_SZ_NM / 2000.0
     out = [rec(BGNSTR, 2, i2(*([1970, 1, 1, 0, 0, 0] * 2))), rec(STRNAME, 6, name.encode())]
     for r, c in via_cells(rows):
@@ -175,7 +300,8 @@ def overlay_name(m: Macro, rows: list[int]) -> str:
     return f"{m.name}__VIA1_{h}"
 
 
-def write_overlay(m: Macro, viamap: Path, out: Path, dbu_per_um: float = 1000.0) -> str:
+def write_overlay(m: Macro, viamap: Path, out: Path, dbu_per_um: float | None = None) -> str:
+    dbu_per_um = m.grid_dbu(dbu_per_um)
     rows = read_viamap(viamap, m)
     name = overlay_name(m, rows)
     out.write_bytes(lib_header(dbu_per_um, name) + structure_bytes(name, m, rows, dbu_per_um) + rec(ENDLIB, 0))
@@ -234,9 +360,10 @@ def iter_structures(path: Path, collect_rects: Callable[[str], bool], top: str |
 
 
 def decode_rects(m: Macro, rects: list[tuple[int, int, int, int]], dbu: float) -> list[int]:
+    dbu = m.grid_dbu(dbu)
     rows = [0] * m.rows
     size = V_SZ_NM / 1000.0
-    tolerance = 2.0 / dbu
+    tolerance = (0.5 if m.grid is not None else 2.0) / dbu
     for x0, y0, x1, y1 in rects:
         if any(abs(side / dbu - size) > tolerance for side in (x1 - x0, y1 - y0)):
             raise ValueError("via rectangle has the wrong size")
@@ -378,8 +505,9 @@ def empty_stream(out: Path, top: str, dbu_per_um: float = 1000.0) -> None:
 
 
 def merge_map(die: Path | None, top: str, rommap: Path, m: Macro, viamap_dir: Path, out: Path, parts: list[str] | None = None,
-              allow_missing: bool = False, dbu_per_um: float = 1000.0) -> dict[str, Any]:
+              allow_missing: bool = False, dbu_per_um: float | None = None) -> dict[str, Any]:
     imgs, placed, info = map_inputs(rommap, viamap_dir, m, parts, allow_missing)
+    dbu_per_um = m.grid_dbu(dbu_per_um)
     src = die
     if src is None:
         src = out.with_suffix(out.suffix + ".empty")
@@ -417,10 +545,18 @@ def merge_placed(die: Path, top: str, m: Macro, imgs: dict[str, list[int]], plac
     seen: set[str] = set()
     cur = None
     top_seen = False
-    with open(die, "rb") as f, open(out, "wb") as o:
+    if m.grid is not None:
+        with die.open("rb") as src:
+            for rt, _, payload in read_records(src):
+                if rt == UNITS:
+                    m.grid_dbu(1.0 / real8_dec(payload[:8]))
+                    break
+            else:
+                raise ValueError(f"{die}: no GDS UNITS record")
+    with die.open("rb") as f, out.open("wb") as o:
         for rt, dt, p in read_records(f):
             if rt == UNITS:
-                dbu = 1.0 / real8_dec(p[:8])
+                dbu = m.grid_dbu(1.0 / real8_dec(p[:8]))
             if rt == STRNAME:
                 cur = strname(p)
                 seen.add(cur)
@@ -445,7 +581,7 @@ def merge_placed(die: Path, top: str, m: Macro, imgs: dict[str, list[int]], plac
     if not top_seen:
         raise ValueError(f"top structure {top} not in {die}")
     return {"instances_merged": len(names), "unique_images": len(uniq), "def_instances_unused_in_manifest": len(unused),
-            "dbu_per_um": dbu, "array_origin_um": list(m.origin), "array_origin_assumed": m.origin_assumed}
+            "dbu_per_um": dbu, **m.geometry_info()}
 
 
 def verify(die: Path, top: str, def_path: Path, m: Macro, manifest: Path, viamap_dir: Path) -> dict[str, Any]:
@@ -465,6 +601,7 @@ def verify_placed(die: Path, top: str, m: Macro, imgs: dict[str, list[int]], pla
     by_pos = {}
     for name, dbu, rects, refs in iter_structures(die, is_overlay, top):
         if name == top:
+            dbu = m.grid_dbu(dbu)
             placements = {}
             for inst, (x, y, orient) in placed.items():
                 ox, oy, refl, ang = sref_origin(m, x, y, orient)
@@ -510,12 +647,14 @@ def main() -> int:
     for n in ("overlay", "merge", "verify", "readback", "merge-map", "verify-map"):
         s = sub.add_parser(n)
         s.add_argument("--macro", type=Path, required=True, help="macro datasheet JSON from rom_gen compile")
-        s.add_argument("--array-origin-um", type=float, nargs=2, default=None)
+        geometry = s.add_mutually_exclusive_group()
+        geometry.add_argument("--array-origin-um", type=float, nargs=2)
+        geometry.add_argument("--via-grid", type=Path, help="explicit programming drain coordinates bound to the macro LEF")
         if n in ("overlay", "readback"):
             s.add_argument("--viamap", type=Path, required=True)
         if n == "overlay":
             s.add_argument("--out", type=Path, required=True)
-            s.add_argument("--dbu-per-um", type=float, default=1000.0)
+            s.add_argument("--dbu-per-um", type=float)
         if n == "readback":
             s.add_argument("--gds", type=Path, required=True)
         if n in ("merge", "verify"):
@@ -535,9 +674,9 @@ def main() -> int:
             s.add_argument("--allow-missing", action="store_true", help="skip (and count) ROMs with no via map file")
         if n == "merge-map":
             s.add_argument("--out", type=Path, required=True)
-            s.add_argument("--dbu-per-um", type=float, default=1000.0)
+            s.add_argument("--dbu-per-um", type=float)
     a = ap.parse_args()
-    m = Macro(a.macro, tuple(a.array_origin_um) if a.array_origin_um else None)
+    m = Macro(a.macro, tuple(a.array_origin_um) if a.array_origin_um else None, a.via_grid)
     if a.cmd == "overlay":
         print(write_overlay(m, a.viamap, a.out, a.dbu_per_um))
         return 0
