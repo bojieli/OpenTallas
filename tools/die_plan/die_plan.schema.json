@@ -6362,6 +6362,46 @@
        }
       }
      },
+     "reset_pin_relay": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "inst",
+        "D"
+       ],
+       "properties": {
+        "inst": {
+         "type": "string",
+         "minLength": 1
+        },
+        "ports": {
+         "type": "array",
+         "items": {
+          "type": "string"
+         }
+        },
+        "D": {
+         "type": "integer",
+         "minimum": 1,
+         "maximum": 16
+        },
+        "path_um": {
+         "type": "number"
+        },
+        "hop_um": {
+         "type": "number"
+        },
+        "src": {
+         "type": "string"
+        },
+        "note": {
+         "type": "string"
+        }
+       }
+      }
+     },
      "relay_split": {
       "type": "array",
       "items": {
