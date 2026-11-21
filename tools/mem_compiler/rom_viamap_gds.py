@@ -48,7 +48,7 @@ import re
 import struct
 import sys
 from pathlib import Path
-from typing import Any, BinaryIO, Iterator
+from typing import Any, BinaryIO, Callable, Iterator
 
 V1_LAYER, V1_DT = 21, 0
 V_SZ_NM = 18.0
@@ -186,48 +186,61 @@ def write_overlay(m: Macro, viamap: Path, out: Path, dbu_per_um: float = 1000.0)
 # read back
 # ---------------------------------------------------------------------------
 
-def read_structures(path: Path) -> tuple[float, dict[str, dict[str, Any]]]:
-    """dbu_per_um and {struct: {"rects": [(x0,y0,x1,y1)], "srefs": [(name, x, y, reflect, angle)]}} (layer 21/0 only)."""
+def iter_structures(path: Path, collect_rects: Callable[[str], bool], top: str | None = None):
+    """Yield each selected structure's VIA1 rectangles or the top's SREFs, then release its geometry."""
     dbu = 0.0
-    structs: dict[str, dict[str, Any]] = {}
-    cur: dict[str, Any] | None = None
-    el: dict[str, Any] = {}
-    with open(path, "rb") as f:
-        for rt, _dt, p in read_records(f):
+    name = None
+    want_rects = False
+    rects = []
+    refs = []
+    element = None
+    with path.open("rb") as f:
+        for rt, _dt, payload in read_records(f):
             if rt == UNITS:
-                dbu = 1.0 / real8_dec(p[:8])
+                dbu = 1.0 / real8_dec(payload[:8])
             elif rt == STRNAME:
-                cur = structs.setdefault(strname(p), {"rects": [], "srefs": []})
+                name = strname(payload)
+                want_rects = collect_rects(name)
+                rects, refs = [], []
+            elif rt == ENDSTR:
+                if want_rects or name == top:
+                    yield name, dbu, rects, refs
+                name = None
+                want_rects = False
             elif rt in (BOUNDARY, SREF):
-                el = {"t": rt, "refl": False, "angle": 0.0}
-            elif rt == LAYER:
-                el["layer"] = struct.unpack(">h", p)[0]
-            elif rt == DATATYPE:
-                el["dt"] = struct.unpack(">h", p)[0]
-            elif rt == SNAME:
-                el["sname"] = strname(p)
-            elif rt == STRANS:
-                el["refl"] = bool(struct.unpack(">H", p[:2])[0] & 0x8000)
-            elif rt == ANGLE:
-                el["angle"] = real8_dec(p[:8])
-            elif rt == XY:
-                el["xy"] = struct.unpack(f">{len(p) // 4}i", p)
-            elif rt == ENDEL and cur is not None:
-                if el["t"] == BOUNDARY and (el.get("layer"), el.get("dt")) == (V1_LAYER, V1_DT):
-                    xs, ys = el["xy"][0::2], el["xy"][1::2]
-                    cur["rects"].append((min(xs), min(ys), max(xs), max(ys)))
-                elif el["t"] == SREF:
-                    cur["srefs"].append((el["sname"], el["xy"][0], el["xy"][1], el["refl"], el["angle"]))
-    return dbu, structs
+                selected = (rt == BOUNDARY and want_rects) or (rt == SREF and top is not None and name == top)
+                element = {"kind": rt, "refl": False, "angle": 0.0} if selected else None
+            elif element is not None:
+                if rt == LAYER:
+                    element["layer"] = struct.unpack(">h", payload)[0]
+                elif rt == DATATYPE:
+                    element["dt"] = struct.unpack(">h", payload)[0]
+                elif rt == SNAME:
+                    element["sname"] = strname(payload)
+                elif rt == STRANS:
+                    element["refl"] = bool(struct.unpack(">H", payload[:2])[0] & 0x8000)
+                elif rt == ANGLE:
+                    element["angle"] = real8_dec(payload[:8])
+                elif rt == XY:
+                    element["xy"] = struct.unpack(f">{len(payload) // 4}i", payload)
+                elif rt == ENDEL:
+                    if element["kind"] == BOUNDARY and (element.get("layer"), element.get("dt")) == (V1_LAYER, V1_DT):
+                        xs, ys = element["xy"][0::2], element["xy"][1::2]
+                        rects.append((min(xs), min(ys), max(xs), max(ys)))
+                    elif element["kind"] == SREF:
+                        x, y = element["xy"]
+                        refs.append((element["sname"], x, y, element["refl"], element["angle"]))
+                    element = None
 
 
-def decode_rects(m: Macro, rects: list[tuple[int, int, int, int]], dbu: float,
-                 to_local=lambda x, y: (x, y)) -> list[int]:
+def decode_rects(m: Macro, rects: list[tuple[int, int, int, int]], dbu: float) -> list[int]:
     rows = [0] * m.rows
+    size = V_SZ_NM / 1000.0
+    tolerance = 2.0 / dbu
     for x0, y0, x1, y1 in rects:
-        if abs((x1 - x0) / dbu - V_SZ_NM / 1000.0) > 2.0 / dbu:
+        if any(abs(side / dbu - size) > tolerance for side in (x1 - x0, y1 - y0)):
             raise ValueError("via rectangle has the wrong size")
-        x, y = to_local((x0 + x1) / 2 / dbu, (y0 + y1) / 2 / dbu)
+        x, y = (x0 + x1) / 2 / dbu, (y0 + y1) / 2 / dbu
         r, c = m.cell_of(x, y)
         if not (0 <= r < m.rows and 0 <= c < m.cols) or (rows[r] >> c) & 1:
             raise ValueError(f"via at row {r} col {c} out of range or duplicated")
@@ -236,11 +249,16 @@ def decode_rects(m: Macro, rects: list[tuple[int, int, int, int]], dbu: float,
 
 
 def readback_overlay(m: Macro, gds: Path) -> list[int]:
-    dbu, st = read_structures(gds)
-    names = [n for n, s in st.items() if s["rects"]]
-    if len(names) != 1:
-        raise ValueError(f"expected one overlay structure, found {names}")
-    return decode_rects(m, st[names[0]]["rects"], dbu)
+    result = None
+    for name, dbu, rects, _ in iter_structures(gds, lambda _: True):
+        if rects or name.startswith(m.name + "__VIA1_"):
+            if result is not None:
+                raise ValueError("expected one overlay structure, found multiple")
+            result = decode_rects(m, rects, dbu)
+        del rects
+    if result is None:
+        raise ValueError("expected one overlay structure, found none")
+    return result
 
 
 # ---------------------------------------------------------------------------
@@ -259,12 +277,6 @@ def apply(refl: bool, angle: int, x: float, y: float) -> tuple[float, float]:
         y = -y
     a = math.radians(angle)
     return x * math.cos(a) - y * math.sin(a), x * math.sin(a) + y * math.cos(a)
-
-
-def inverse(refl: bool, angle: int, x: float, y: float) -> tuple[float, float]:
-    a = math.radians(-angle)
-    x, y = x * math.cos(a) - y * math.sin(a), x * math.sin(a) + y * math.cos(a)
-    return (x, -y) if refl else (x, y)
 
 
 def parse_def(path: Path, macro: str) -> tuple[float, dict[str, tuple[float, float, str]]]:
@@ -444,37 +456,49 @@ def verify(die: Path, top: str, def_path: Path, m: Macro, manifest: Path, viamap
 
 
 def verify_placed(die: Path, top: str, m: Macro, imgs: dict[str, list[int]], placed: dict[str, tuple[float, float, str]]) -> dict[str, Any]:
-    dbu, st = read_structures(die)
-    if top not in st:
-        raise ValueError(f"top {top} not in {die}")
-    by_pos: dict[tuple[int, int], tuple[str, bool, int]] = {}
-    for nm, x, y, refl, ang in st[top]["srefs"]:
-        if nm in st and (st[nm]["rects"] or nm.startswith(m.name + "__VIA1_")):      # an all-zero image is an overlay with no via
-            by_pos[(x, y)] = (nm, refl, int(round(ang)))
-    bad, checked = [], 0
-    for inst, (x, y, orient) in sorted(placed.items()):
-        ox, oy, refl, ang = sref_origin(m, x, y, orient)
-        key = (round(ox * dbu), round(oy * dbu))
-        got = by_pos.get(key)
-        if got is None or got[1] != refl or got[2] != ang:
-            bad.append((inst, "no SREF with the expected origin/orientation"))
-            continue
-        ox_um, oy_um = key[0] / dbu, key[1] / dbu
+    overlay_prefix = m.name + "__VIA1_"
+    def is_overlay(name: str) -> bool:
+        return name.startswith(overlay_prefix)
 
-        def to_local(lx: float, ly: float) -> tuple[float, float]:
-            # overlay coordinates -> die coordinates through the SREF actually in the stream,
-            # -> macro-local coordinates through the placement the DEF demands
-            fx, fy = apply(got[1], got[2], lx, ly)
-            ax, ay = fx + ox_um, fy + oy_um
-            return inverse(refl, ang, ax - ox_um, ay - oy_um)
-        try:
-            rows = decode_rects(m, st[got[0]]["rects"], dbu, to_local)
-        except ValueError as e:
-            bad.append((inst, str(e)))
+    masks: dict[str, list[int] | str] = {}
+    placements = None
+    by_pos = {}
+    for name, dbu, rects, refs in iter_structures(die, is_overlay, top):
+        if name == top:
+            placements = {}
+            for inst, (x, y, orient) in placed.items():
+                ox, oy, refl, ang = sref_origin(m, x, y, orient)
+                placements[inst] = ((round(ox * dbu), round(oy * dbu)), refl, ang)
+            for nm, x, y, refl, angle in refs:
+                if is_overlay(nm):
+                    by_pos.setdefault((x, y), []).append((nm, refl, angle))
+        if is_overlay(name):
+            if name in masks:
+                raise ValueError(f"duplicate overlay structure {name}")
+            try:
+                masks[name] = decode_rects(m, rects, dbu)
+            except ValueError as exc:
+                masks[name] = str(exc)
+        # Drop this rectangle list before the iterator reads the next structure.
+        del rects
+    if placements is None:
+        raise ValueError(f"top {top} not in {die}")
+    bad, checked = [], 0
+    for inst, (xy, refl, ang) in sorted(placements.items()):
+        refs = by_pos.get(xy, [])
+        if len(refs) != 1 or refs[0][1] != refl or not math.isclose(refs[0][2], ang, abs_tol=1e-9):
+            bad.append((inst, "expected exactly one SREF with the correct origin/orientation"))
+            continue
+        decoded = masks.get(refs[0][0])
+        if decoded is None:
+            bad.append((inst, "referenced overlay structure is missing"))
+            continue
+        if isinstance(decoded, str):
+            bad.append((inst, decoded))
             continue
         checked += 1
-        if rows != imgs[inst]:
-            diff = sum(bin(a ^ b).count("1") for a, b in zip(rows, imgs[inst]))
+        if decoded != imgs[inst]:
+            diff = sum((a ^ b).bit_count() for a, b in zip(decoded, imgs[inst]))
             bad.append((inst, f"{diff} via(s) differ from the hex"))
     return {"verdict": "PASS" if not bad and checked == len(placed) and placed else "FAIL",
             "instances_checked": checked, "instances_placed": len(placed), "failures": bad[:10]}

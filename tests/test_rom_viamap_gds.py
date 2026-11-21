@@ -232,3 +232,37 @@ def test_all_zero_image_verifies(rom, tmp_path):
     out = tmp_path / "z.gds"
     assert vg.merge_map(None, "DIE", rm, m, vm, out)["unique_images"] == 2
     assert vg.verify_map(out, "DIE", rm, m, vm)["verdict"] == "PASS"
+
+
+
+def test_dark_macro_gds_reads_back_all_zeroes(rom, tmp_path):
+    _, sheet, _, _ = rom
+    macro = vg.Macro(sheet)
+    vm = tmp_path / "dark.viamap.hex"
+    vm.write_text("0\n" * macro.rows)
+    gds = tmp_path / "dark.gds"
+    vg.write_overlay(macro, vm, gds)
+    assert vg.readback_overlay(macro, gds) == [0] * macro.rows
+
+
+def test_verify_rejects_duplicate_programming_references(rom, tmp_path):
+    macro, _, df, gds, _ = merged(rom, tmp_path)
+    rewritten = tmp_path / "duplicate.gds"
+    records = []
+    captured = None
+    with gds.open("rb") as stream:
+        for rt, dt, payload in vg.read_records(stream):
+            raw = vg.rec(rt, dt, payload)
+            records.append(raw)
+            if rt == vg.SREF and captured is None:
+                captured = [raw]
+            elif isinstance(captured, list):
+                captured.append(raw)
+                if rt == vg.ENDEL:
+                    records.extend(captured)
+                    captured = True
+    assert captured is True
+    rewritten.write_bytes(b"".join(records))
+    result = vg.verify(rewritten, "TOP", df, macro, rom[2], rom[0] / "vm")
+    assert result["verdict"] == "FAIL"
+    assert "exactly one SREF" in result["failures"][0][1]
