@@ -315,6 +315,79 @@ class ExactAbstractAfterFinalize(unittest.TestCase):
             self.assertFalse((out / f"t{ve.EXACT_LEF_SUFFIX}").exists())
 
 
+# PDN-0006 (pc core views 11-19): merged M6/M7 OBS over the M5 PG stripes; the exact abstract keeps thin wires only
+PG_HEAD = """VERSION 5.8 ;
+MACRO t
+  SIZE 20 BY 20 ;
+""" + "".join(f"""  PIN {n}
+    DIRECTION INOUT ;
+    USE {u} ;
+    PORT
+      LAYER M5 ;
+        RECT  {x0:.3f} 0 {x0 + 0.12:.3f} 20 ;
+        RECT  {x0 + 8.64:.3f} 0 {x0 + 8.76:.3f} 20 ;
+    END
+  END {n}
+""" for n, u, x0 in (("VDD", "POWER", 2.0), ("VSS", "GROUND", 6.32))) + """  OBS
+    LAYER M6 ;
+"""
+PG_MERGED_OBS = "     RECT  0 2 20 12 ;\n  END\nEND t\n"          # 50 % of every stripe under M6 OBS
+PG_EXACT_OBS = "     RECT  0 2 20 2.024 ;\n     RECT  0 8 20 8.024 ;\n  END\nEND t\n"   # two real min-width wires
+PG_BLANKET_OBS = "     RECT  0 0 20 20 ;\n  END\nEND t\n"
+
+
+class PgCrossing(unittest.TestCase):
+    def test_merged_obs_fails_exact_and_blanket_pass(self):
+        bad = ve.pg_crossing_report(PG_HEAD + PG_MERGED_OBS)
+        self.assertEqual(bad["verdict"], "FAIL")
+        self.assertAlmostEqual(bad["nets"]["VDD"]["blocked_frac"], 0.5)
+        self.assertEqual(ve.pg_crossing_report(PG_HEAD + PG_EXACT_OBS)["verdict"], "PASS")
+        self.assertEqual(ve.pg_crossing_report(PG_HEAD + PG_BLANKET_OBS)["verdict"], "BLANKET")
+        self.assertEqual(ve.pg_crossing_report(LEF_HEAD + EXACT_OBS)["nets"], {})   # no M5 PG pins: nothing to keep
+
+    def test_dead_stripe_fails_below_the_share(self):
+        # one stripe of four fully covered: share 25 % (not over), but that stripe has no crossing window left
+        rep = ve.pg_crossing_report(PG_HEAD + "     RECT  1.9 0 2.2 20 ;\n  END\nEND t\n")
+        self.assertEqual((rep["verdict"], rep["nets"]["VDD"]["dead_stripes"]), ("FAIL", 1))
+
+    def run_choose(self, default_obs, exact_obs, env=None):
+        calls = []
+        with tempfile.TemporaryDirectory() as d:
+            out = Path(d)
+            (out / "t.lef").write_text(PG_HEAD + default_obs)
+
+            def fake_run(cmd, **kw):
+                calls.append(cmd)
+                (out / f"t{ve.EXACT_LEF_SUFFIX}").write_text(PG_HEAD + exact_obs)
+                return subprocess.CompletedProcess(cmd, 0, "", "")
+            real, ve.subprocess.run = ve.subprocess.run, fake_run
+            old = {k: os.environ.get(k) for k in (env or {})}
+            os.environ.update(env or {})
+            try:
+                rec = ve.choose_abstract(out, "t", out, "img")
+            finally:
+                ve.subprocess.run = real
+                for k, v in old.items():
+                    os.environ.pop(k) if v is None else os.environ.__setitem__(k, v)
+            return rec, (out / "t.lef").read_text(), calls
+
+    def test_pg_blocking_default_takes_exact(self):
+        rec, lef, calls = self.run_choose(PG_MERGED_OBS, PG_EXACT_OBS)
+        self.assertEqual((rec["mode"], rec["default_pg_crossing"]["verdict"], rec["pg_crossing"]["verdict"], len(calls)),
+                         ("exact_pg", "FAIL", "PASS", 1))
+        self.assertNotIn("0 2 20 12", lef)
+
+    def test_clean_default_kept_and_forced_exact(self):
+        rec, lef, calls = self.run_choose(PG_EXACT_OBS, PG_EXACT_OBS)
+        self.assertEqual((rec["mode"], rec["pg_crossing"]["verdict"], calls), ("default", "PASS", []))
+        rec, lef, calls = self.run_choose(PG_EXACT_OBS, PG_EXACT_OBS, env={"OT_VIEW_EXACT_OBS": "1"})
+        self.assertEqual((rec["mode"], len(calls)), ("exact_forced", 1))
+
+    def test_exact_no_better_records_fail(self):
+        rec, lef, calls = self.run_choose(PG_MERGED_OBS, PG_MERGED_OBS)
+        self.assertEqual((rec["mode"], rec["pg_crossing"]["verdict"]), ("default", "FAIL"))
+
+
 @unittest.skipUnless(os.environ.get("OT_VIEW_EXPORT_ORFS") and shutil.which("docker"),
                      "set OT_VIEW_EXPORT_ORFS / OT_VIEW_EXPORT_NAME to a closed loop route on this host")
 class ReexportMatchesVerdict(unittest.TestCase):

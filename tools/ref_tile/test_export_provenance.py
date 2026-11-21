@@ -95,6 +95,29 @@ class ExportProvenanceTest(unittest.TestCase):
                 self.assertEqual((out/'demo.lef').read_text(), LEF)
                 self.assertFalse(json.loads((out/'abstract.json').read_text())['ok'])
 
+    def test_transform_obs_over_pg_crossing_fails(self):
+        # FABLE-CLOSURE-0910 lever 7: a finalize transform (via shadow, pocket closing) that covers the M5 PG stripes
+        # with M6 OBS is refused even when child_lint passes
+        pg = LEF.replace("  OBS\n", "  PIN VDD\n    DIRECTION INOUT ;\n    USE POWER ;\n    PORT\n      LAYER M5 ;\n"
+                         "        RECT 5 0 5.12 10 ;\n    END\n  END VDD\n  OBS\n")
+        self.lef.write_text(pg)
+        ep.write_json(self.out / 'abstract.json', dict(self.manifest, files={'demo.lef': ep.sha(self.lef)}))
+        helper = self.fake_helper("t = pathlib.Path(sys.argv[1]).read_text()\n"
+                                  "pathlib.Path(sys.argv[2]).write_text(t.replace('  END\\nEND demo', "
+                                  "'    LAYER M6 ;\\n      RECT 0 0 10 8 ;\\n  END\\nEND demo'))\n")
+        result = self.run_export(helper)
+        self.assertEqual(result['verdict'], 'FAIL')
+        self.assertIn('PG crossing preflight FAIL', result['fails'][0])
+        self.assertEqual(self.lef.read_text(), pg)
+        self.assertEqual(self.run_export_fresh(pg)['verdict'], 'PASS')
+
+    def run_export_fresh(self, text):
+        with tempfile.TemporaryDirectory() as d:
+            out = Path(d)
+            (out / 'demo.lef').write_text(text)
+            ep.write_json(out / 'abstract.json', dict(self.manifest, files={'demo.lef': ep.sha(out / 'demo.lef')}))
+            return ep.finalize(out, 'demo', self.helper, self.lint)
+
     def test_lint_failure_no_final_publication(self):
         self.lint.lint.return_value = {'verdict': 'FAIL', 'fails': ['PG fixture']}
         result = self.run_export()

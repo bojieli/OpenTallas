@@ -77,6 +77,18 @@ def strip_grant_high_obs(text, top_metal=5):
     return ''.join(out), removed
 
 
+def pg_crossing(text):
+    """view_export.pg_crossing_report of a LEF text, or None when view_export is not in this tree"""
+    import importlib.util
+    path = Path(__file__).resolve().parents[1] / 'tt_views' / 'view_export.py'
+    if not path.is_file():
+        return None
+    spec = importlib.util.spec_from_file_location('ot_view_export_pgc', path)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod.pg_crossing_report(text)
+
+
 def finalize(out, top, helper, lint_module, lint_kwargs=None, transform=True):
     """Preserve raw exporter record, validate candidate, then publish final LEF/hash atomically.
 
@@ -135,6 +147,15 @@ def finalize(out, top, helper, lint_module, lint_kwargs=None, transform=True):
         else:
             candidate.write_bytes(raw.read_bytes())
         receipt['invariants'] = check_invariants(raw.read_text(), candidate.read_text(), lint_module.parse_lef)
+        # PG CROSSING PREFLIGHT (FABLE-CLOSURE-0910 lever 7, PDN-0006): every published core view -- default, exact,
+        # windowed, and whatever this transform added (pin stubs, pocket closing, via shadow) -- keeps the parent's
+        # M5-M6/M7 PG crossings; one rule, tools/tt_views/view_export.py pg_crossing_report
+        pgc = pg_crossing(candidate.read_text())
+        if pgc is not None:
+            receipt['pg_crossing'] = {k: pgc[k] for k in ('verdict', 'pair', 'block_max', 'fails')}
+            receipt['pg_crossing']['nets'] = {n: v['blocked_frac'] for n, v in pgc['nets'].items()}
+            if pgc['verdict'] == 'FAIL':
+                raise ValueError('PG crossing preflight FAIL (PDN-0006 class): ' + '; '.join(pgc['fails'][:3]))
         lint = lint_module.lint(str(candidate), str(out), **(lint_kwargs or {}))
         write_json(out / 'child_lint.json', lint)
         receipt['child_lint'] = lint

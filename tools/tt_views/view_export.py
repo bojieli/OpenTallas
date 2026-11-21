@@ -45,6 +45,7 @@ import argparse
 import hashlib
 import importlib.util
 import json
+import os
 import re
 import subprocess
 import tempfile
@@ -559,15 +560,162 @@ def pin_access_violations(text):
         return None
 
 
+# PG CROSSING PREFLIGHT (PDN-0006, FAM-KV-IOPC-R2 2026-11-21; FABLE-CLOSURE-0910 lever 7 "one core-view exporter").
+# The parent drops its M6 straps onto a core's M5 PG pin stripes (pdn.tcl core_pg_M5, M5-M6 vias).  The 11-19 pc core
+# views (qkd_kvs_pcc / pcf) were published with write_abstract_lef's default obstruction closing: merged M6 OBS blocks
+# (13,460 um2 vs 1,368 um2 of real wires on the 11-17 exact-shape view) sat over the M5 PG stripes, and every pc kit
+# failed PDN-0006 (VSS on M5 blocked) while the 11-17 view placed with 3.9 % VSS blocked (PDN-0007 warning only).
+# choose_abstract checked only signal pin access, so the PG-blocking abstract was published.  The finalize transform
+# (abstract_pin_stub: pin stubs, pocket closing, via shadow) also ADDS OBS; this check is the one rule every export
+# (default, exact, windowed, finalized) has to pass: per PG net, the share of its lower-layer PG pin length covered by
+# upper-layer OBS / signal pins <= OT_VIEW_PG_BLOCK_MAX (default 0.25), and no stripe without a free window >=
+# PG_MIN_WINDOW_UM.  Layers: OT_VIEW_PG_CROSS LOWER:UPPER[+UPPER] (default M5:M6+M7, the union of
+# the via-stack layers PDN-0006 names: "VSS on M5 is blocked by obstructions on M6, M7").  Measured: 11-19 pcc view M5 under
+# M6+M7 OBS 0.30-0.46 (PDN-0006 ERROR on every pc kit); views that place with PDN-0007 warnings: pcc exact 11-21
+# re-export (D27b, OBS-SYNC-1) 0.06-0.09 (pdngen 3.9 %), kv3_pv_pair 0.05-0.07 (3.3 %), kv3_head_eighth 0.13-0.14 (7.7 %).
+# The 0.25 default sits between the largest share that places and the smallest that fails.  A view without PG pins on the lower layer passes.
+PG_CROSS_DEFAULT = "M5:M6+M7"
+PG_BLOCK_MAX_DEFAULT = 0.25
+PG_MIN_WINDOW_UM = 0.5
+_PG_RECT = re.compile(r"RECT\s+(?:MASK\s+\d+\s+)?([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)")
+
+
+def _pg_layer_shapes(text, lower, upper):
+    """({pg net: [(x0, y0, x1, y1)] on LOWER}, [blocker rects on the UPPER layer set: OBS + signal pin shapes])"""
+    upper = set(upper)
+    pg, block = {}, []
+    m = re.search(r"\n[ \t]*OBS[ \t]*(?=\n)", text)
+    head, obs = (text[:m.start()], text[m.start():]) if m else (text, "")
+    for pm in re.finditer(r"(?ms)^\s*PIN\s+(\S+)\s*$(.*?)^\s*END\s+\1\s*$", head):
+        body = pm.group(2)
+        is_pg = bool(re.search(r"\bUSE\s+(?:POWER|GROUND)\s*;", body))
+        lay = None
+        for line in body.split("\n"):
+            lm = re.match(r"\s*LAYER\s+(\S+)\s*;", line)
+            if lm:
+                lay = lm.group(1)
+                continue
+            rm = _PG_RECT.search(line)
+            if not rm or (lay != lower and lay not in upper):
+                continue
+            x0, y0, x1, y1 = map(float, rm.groups())
+            r = (min(x0, x1), min(y0, y1), max(x0, x1), max(y0, y1))
+            if is_pg and lay == lower:
+                pg.setdefault(pm.group(1), []).append(r)
+            elif not is_pg and lay in upper:
+                block.append(r)
+    lay = None
+    for line in obs.split("\n"):
+        lm = re.match(r"\s*LAYER\s+(\S+)", line)
+        if lm:
+            lay = lm.group(1)
+            continue
+        if lay not in upper:
+            continue
+        rm = _PG_RECT.search(line)
+        if rm:
+            x0, y0, x1, y1 = map(float, rm.groups())
+            block.append((min(x0, x1), min(y0, y1), max(x0, x1), max(y0, y1)))
+    return pg, block
+
+
+def pg_crossing_report(text, pair=None, block_max=None, min_window_um=PG_MIN_WINDOW_UM):
+    """the PG crossing preflight on one LEF text -> dict(verdict PASS|FAIL, pair, nets{...}, fails[...])"""
+    pair = pair or os.environ.get("OT_VIEW_PG_CROSS") or PG_CROSS_DEFAULT
+    block_max = float(os.environ.get("OT_VIEW_PG_BLOCK_MAX") or PG_BLOCK_MAX_DEFAULT) if block_max is None else block_max
+    lower, up = pair.split(":")
+    upper = "+".join(up.split("+"))
+    pg, block = _pg_layer_shapes(text, lower, up.split("+"))
+    size = re.search(r"\bSIZE\s+([\d.]+)\s+BY\s+([\d.]+)\s*;", text)
+    if size and pg and any((b[2] - b[0]) * (b[3] - b[1]) >= 0.95 * float(size.group(1)) * float(size.group(2))
+                           for b in block):
+        # BLANKET view (one OBS rect over >= 95 % of the macro: qkd_kvs_ctl 100 %, qkd_ahub 98 %, ref_tile pv_pair):
+        # no crossing exists to keep, the parent meets the PG pins on LOWER by abutment; its own form, never a FAIL
+        return dict(schema="opentallas.view.pg_crossing.v1", pair=pair, block_max=block_max, min_window_um=min_window_um,
+                    upper_blockers=len(block), verdict="BLANKET", nets={}, fails=[])
+    BIN = 2.0
+    idx = {}
+    for b in block:
+        for k in range(int(b[0] // BIN), int(b[2] // BIN) + 1):
+            idx.setdefault(k, []).append(b)
+    nets, fails = {}, []
+    for net, rects in sorted(pg.items()):
+        tot = blk = 0.0
+        dead = []
+        for r in rects:
+            vertical = (r[3] - r[1]) >= (r[2] - r[0])
+            lo, hi = (r[1], r[3]) if vertical else (r[0], r[2])
+            cands = {b for k in range(int(r[0] // BIN), int(r[2] // BIN) + 1) for b in idx.get(k, ())}
+            iv = []
+            for b in cands:
+                if b[0] < r[2] and r[0] < b[2] and b[1] < r[3] and r[1] < b[3]:
+                    iv.append((max(lo, b[1] if vertical else b[0]), min(hi, b[3] if vertical else b[2])))
+            iv.sort()
+            covered, best, cur = 0.0, 0.0, lo
+            for a, e in iv:
+                if a > cur:
+                    best = max(best, a - cur)
+                if e > cur:
+                    covered += e - max(a, cur)
+                    cur = e
+            best = max(best, hi - cur)
+            tot += hi - lo
+            blk += covered
+            if best < min_window_um:
+                dead.append([round(v, 3) for v in r])
+        frac = blk / tot if tot else 0.0
+        nets[net] = dict(stripes=len(rects), length_um=round(tot, 3), blocked_um=round(blk, 3),
+                         blocked_frac=round(frac, 4), dead_stripes=len(dead), dead_examples=dead[:4])
+        if frac > block_max:
+            fails.append(f"{net}: {frac:.1%} of its {lower} PG pin length under {upper} OBS (max {block_max:.0%})")
+        if dead:
+            fails.append(f"{net}: {len(dead)} {lower} PG stripes without a free {upper} window >= {min_window_um:g} um "
+                         f"(e.g. {dead[0]})")
+    return dict(schema="opentallas.view.pg_crossing.v1", pair=pair, block_max=block_max, min_window_um=min_window_um,
+                upper_blockers=len(block), verdict="FAIL" if fails else "PASS", nets=nets, fails=fails)
+
+
+def pg_crossing_published(text):
+    """pg_crossing_report of the LEF as finalize will publish it (abstract_pin_stub.process: pin stubs, pocket closing,
+    via shadow) AND raw; the worse of the two (FAIL if either fails)"""
+    raw = pg_crossing_report(text)
+    mod = _aps()
+    if mod is None or not hasattr(mod, "process") or not re.search(r"\n[ \t]*OBS[ \t]*(?=\n)", text):
+        return raw
+    try:
+        fin = pg_crossing_report(mod.process(text)[0])
+    except Exception:  # noqa: BLE001 - no finalize step: judge the raw text
+        return raw
+    out = dict(fin, raw_verdict=raw["verdict"], raw_fails=raw["fails"])
+    if raw["verdict"] == "FAIL":
+        out["verdict"] = "FAIL"
+    return out
+
+def pg_brief(rep):
+    """the record form of a pg_crossing_report (no per-stripe examples)"""
+    return dict(verdict=rep["verdict"], pair=rep["pair"], block_max=rep["block_max"],
+                nets={n: v["blocked_frac"] for n, v in rep["nets"].items()},
+                dead_stripes=sum(v["dead_stripes"] for v in rep["nets"].values()), fails=rep["fails"][:4],
+                raw_verdict=rep.get("raw_verdict", rep["verdict"]))
+
+
 def choose_abstract(out, name, base, image, mounts=()):
-    """publish the exact-shape abstract instead of the default one when only the default one blocks pin access (the
-    exact one is written by an extra session only then); returns the decision record (always removes the side file)"""
+    """publish the exact-shape abstract instead of the default one when the default one blocks signal pin access or
+    fails the PG crossing preflight (pg_crossing_published), or when OT_VIEW_EXACT_OBS=1 asks for it (the exact one is
+    written by an extra session only then); returns the decision record (always removes the side file).  The record's
+    pg_crossing is the preflight of the LEF this export publishes; main() fails the export when it is FAIL."""
     lef, exact = out / f"{name}.lef", out / f"{name}{EXACT_LEF_SUFFIX}"
     if not lef.is_file():
         return dict(mode="default", why="no abstract written")
-    bad = pin_access_violations(lef.read_text(errors="replace"))
-    rec = dict(mode="default", default_pin_access_violations=None if bad is None else len(bad))
-    if not bad:
+    text = lef.read_text(errors="replace")
+    bad = pin_access_violations(text)
+    pg = pg_crossing_published(text)
+    force = os.environ.get("OT_VIEW_EXACT_OBS") == "1"
+    pg_bad = pg["verdict"] == "FAIL"
+    rec = dict(mode="default", default_pin_access_violations=None if bad is None else len(bad),
+               default_pg_crossing=pg_brief(pg))
+    if not bad and not pg_bad and not force:
+        rec["pg_crossing"] = rec["default_pg_crossing"]
         return rec
     tcl = out / "export_exact_abstract.tcl"
     tcl.write_text(f"read_db /base/6_final.odb\nwrite_abstract_lef -bloat_factor 0 /out/{exact.name}\nexit\n")
@@ -576,11 +724,29 @@ def choose_abstract(out, name, base, image, mounts=()):
     p = subprocess.run(cmd, capture_output=True, text=True)
     (out / "export_exact_abstract.log").write_text(p.stdout + p.stderr)
     rec.update(exact_returncode=p.returncode, exact_command=cmd)
+    nb = len(bad) if bad else 0
     try:
         if p.returncode == 0 and exact.is_file():
             with exact.open(errors="replace") as f:
                 n_rects = sum(1 for l in f if "RECT" in l)
             rec["exact_rects"] = n_rects
+            if pg_bad or force:
+                # PDN-0006 (pc core views 11-19): the PG crossing decides; the exact abstract is the real metal
+                xt = exact.read_text(errors="replace")
+                pg_x = pg_crossing_published(xt)
+                bad_x = pin_access_violations(xt) if n_rects <= EXACT_FULL_MAX_RECTS else None
+                rec.update(exact_pg_crossing=pg_brief(pg_x),
+                           exact_pin_access_violations=None if bad_x is None else len(bad_x))
+                if pg_x["verdict"] != "FAIL" and (bad_x is None or len(bad_x) <= nb):
+                    rec.update(mode="exact_pg" if pg_bad else "exact_forced", default_sha256=sha(lef),
+                               exact_sha256=sha(exact),
+                               why=("OT_VIEW_EXACT_OBS=1" if not pg_bad else
+                                    "default (closing-bloat) abstract fails the PG crossing preflight: "
+                                    + "; ".join(pg["fails"][:2])) + f"; exact-shape abstract PG {pg_x['verdict']}")
+                    exact.replace(lef)
+                    return rec
+            if not bad:
+                return rec
             bad_x = pin_access_violations(exact.read_text(errors="replace")) if n_rects <= EXACT_FULL_MAX_RECTS else None
             rec["exact_pin_access_violations"] = None if bad_x is None else len(bad_x)
             if bad_x is None or len(bad_x) >= len(bad):
@@ -606,8 +772,9 @@ def choose_abstract(out, name, base, image, mounts=()):
                 exact.replace(lef)
     finally:
         exact.unlink(missing_ok=True)
+        if lef.is_file():
+            rec["pg_crossing"] = pg_brief(pg_crossing_published(lef.read_text(errors="replace")))
     return rec
-
 
 PF_ENV_RE = re.compile(r"set ::env\(OT_PF_MACRO_LIBS\) \[list ([^\]]*)\]\s*$")
 
@@ -1055,11 +1222,15 @@ def main():
             corner['done'] = False
     rec["abstract"] = choose_abstract(out, a.name, base, a.image) if "ss" in a.corners.split(",") else \
         dict(mode="default", why="no SS pass: abstract not written by this export")
-    if rec["abstract"]["mode"] in ("exact", "exact_windows"):
+    if rec["abstract"]["mode"] in ("exact", "exact_windows", "exact_pg", "exact_forced"):
         print(f"VIEW_EXPORT exact-shape abstract published: {rec['abstract']['why']}")
+    pgx = rec["abstract"].get("pg_crossing") or {}
+    if pgx.get("verdict") == "FAIL":
+        print("VIEW_EXPORT PG_CROSSING FAIL (PDN-0006 class): " + "; ".join(pgx.get("fails", [])))
     rec["files"] = {f.name: sha(f) for f in sorted(out.iterdir()) if f.suffix in (".lef", ".lib")}
     want = [f"{a.name}.lef"] + [f"{a.name}_{c}.lib" for c in ("ss", "ff", "tt")]
     rec["ok"] = all(v.get("done") for v in rec["corners"].values()) and all(w in rec["files"] for w in want)
+    rec["ok"] = rec["ok"] and pgx.get("verdict") != "FAIL"
     # CHECKED = the TT setup and FF hold of this export session were both compared with a sign-off verdict
     chk = (rec.get("verdict") or {}).get("check") or {}
     rec["checked"] = all(chk.get(c, {}).get("ok") for c in ("tt", "ff"))
@@ -1094,6 +1265,8 @@ def main():
     print(json.dumps({k: rec[k] for k in ("name", "ok", "checked", "files")}))
     if not all(rec["corners"][c]["done"] for c in a.corners.split(",")):
         raise SystemExit(1)
+    if pgx.get("verdict") == "FAIL":
+        raise SystemExit(6)
     raise SystemExit(5 if unchecked and a.require_check else 0)
 
 
