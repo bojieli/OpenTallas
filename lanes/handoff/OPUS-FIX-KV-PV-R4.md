@@ -60,3 +60,40 @@ epyc7 same path (repo = lane clone used for the push, cone tools+rtl+physical/co
 - Split #2 strict failed RC_BIND 2, missing cut-only path L2267 stalled nine old lanes. Base-bind census PASS 28 transit rows, 8 intra, zero unplaced. Split #3 adds 28 lanes, plan f5fc6017c718, strict/LATCHECK epyc8 oth-ubuntu-2186169-1795256714, split28/bindgate_3/gate.out. Earlier compose8 launch RC1 was just missing exact bind output in the private base package; resumed against original D27 bind_of_record.
 - Full cut inspection flagged cl_i_vport_E_N_vo at 0.43 μm from its new west-piece E boundary. Split9 fixes the macro clearance by moving unchanged core from x993.6 to x976.32 (17.71 μm channel). New candidate split28/tree/physical/die_plan/qwen_kvsys/por_split_9. Split #3 remains diagnostic for the nine missing lanes; proceed with split9 only after controlled bind and visual review. Cut remains 9,131 bits/39 ports over 1,521 μm using M4/M6 pin pairs. Keep tail-trunk site repair f2e64e5d3b in the eventual physical kit; exact prior PV v2 detour was the stale dly_spread helper.
 - v8m flip FAIL -598 FF, v8p flip+pad FAIL -554.47 FF (10,953 endpoints), v8c control cancelled per prior ruling. D28 remains the structural fix and uses no flip.
+
+## STAND-DOWN 2026-11-21 ~06:xx PST (read first; successor OPUS-FIX-KV-PV-R5)
+### In flight
+- chain11 (epyc8, ot-run from intel2, lane OPUS-FIX-KV-PV-R4; client log intel2 ~/tmp/okpvr4/chain11.log):
+  split28/chain11.sh = compose11.py (Codex split 10 + ring cl_i_vport_E_N_vo_d2 moved to (967.68, 241.92) so it sits in w with its
+  N 989-1039 bus window) -> por_split_11_composed -> COPY installed as tree plan_of_record (old one kept as por_split_10_installed)
+  -> r8_ev.json = bindgate_4/r8pin2.json (re-derived on the split) -> bind.sh 5 = strict bind + LATCHECK + BPC -> split28/bindgate_5/gate.out.
+  Re-arm: `ssh intel2 'ot-wait <unit>'` (unit: `grep oth- ~/tmp/okpvr4/chain11.log`), or read bindgate_5/gate.out when ALL_DONE appears.
+- Accept rule: diff bind_report errors vs the base with `python3 -I split28/errdiff.py split28/basebind/bind_report.json
+  <tree POR>/bind_of_record/bind_report.json`. The 45 base errors (30 R8_STALE hub_Wo astk, 14 EMIT, 1 PARAM_REGEN) are inherited from
+  D27b6 (KV-PLAN fixes them in D27c); new = 0 means the split is bind-clean.
+### Next (brief items)
+1. On bind 5 new=0: gen + CTS of the w half kv3_pv_v3 via split28/proof_kit.sh kv3_pv_v3 cts (ot-run on epyc8, --priority proof, OT_LANE).
+   Read OT_CELL_CENSUS stage=cts + OT_CTS_POST_TIMING (post-hook) setup/hold; post to KV-PLAN-R5 (KV-PLAN-R3/R4 stood down).
+   G0 cell budget (split 9/10): v3 275k place / 157k synth, v3e 269k / 155k, both TARGET.
+2. After placement: station_route_spread on the placed w half (FABLE-VISUAL-0030 cause 1, the 2,411 um owner_response_data bundle).
+3. Push the type_split extension: epyc7 lane clone /srv/opentallas-scratch2/claude/opus-fix-kv-pv-r4/repo, branch
+   claude/opus-fix-kv-pv-r4-tsplit b461211ea7 (relay keys, collector_root_xy, wavefront_min_depth, column-swap core moves; tests pass)
+   via ot-push-main once bind 5 is clean. Also add: a fail-closed check that a landing ring core sits in its bus piece.
+### D28 pv rows / rules learned (for KV-PLAN-R5)
+- Form: <v> (keep name, w = g0+g2) + <v>e (g1+g3), cut x 1080, g1<->g2 column swap (core_moves; final-position overlap check).
+- Pairing confirmed on all 16 binds (T0Q*={0,2}, T1Q*={1,3}).
+- Needs census (type_split census on a base bind_latency) + lane_reference (split_lane_reference_export.py on the base) or the bind fails.
+- Port windows and rings across x 1080 on every pv type: split28/straddle_1080.json. Moved windows must not overlap their neighbours
+  (G0 abutment + face density errors); Codex split 10 shows the right shifts for v3 (L2279/L2393 mine, plus L2289/L2366 west).
+- START relay tx pin cland_rstart_out must sit next to the cut (v3: (993.6, 756)), or the cland_relay hop is 545 um.
+- Reset: RESET-RELAY-GEN-R3 two-pass rows for pv_v3/v3n/v7 are sign-off-capable (hop 290/282/269 um, 0 unplaced, tap_check clean),
+  and are re-derived on the split plan (D28).
+- clock.reserved_sites_um is dropped by the split for re-derivation.
+### Cancels (owner rule >3 h + over cap)
+- Cancelled: v8f oth-ubuntu-4168642-1795149806 and v8g oth-ubuntu-1559719-1795153886 (epyc10; 539k at CTS, -13,454 / -1,223 ps,
+  structural: unbuffered pad-trunk stage hop), v8q oth-ubuntu-197469-1795235234 (epyc7; 415k at floorplan, place -492). Watcher
+  watch_r4.sh stopped. kv3_pv_v8 disposition posted: HOLD, carried by the D28 split.
+- Remaining (not mine): 11 autopilot ot-job wave kits on epyc8 (10) + epyc9 (1), units oth-ubuntu-37xxxxx/2835944-179524883x.
+### Shared-tree warning
+Codex ran split 8-10 + bind 3 + G0 in split28 under this lane name 02:2x-03:3x. Bind 3 (RED, sink x 2143.8) was likely corrupted by
+my plan_of_record swap mid-run. Never swap plan_of_record while another bind or G0 is using the tree: check `ps` for split28 first.
