@@ -14,8 +14,9 @@ Opt-in asbuilt key (absent = byte-identical bind output):
         "depth": 4,                         optional: minimum D (a computed need above it wins)
         "sites": "<json>" | {..}            optional: {type: {cell: {"at_um": [x, y], "src_um": {bus: [x, y]}}}}
         "avoid_macros": true                optional (default false): station sites off the type's placed macros and
-                                            probe blockages (ft_seam_fix.macro_boxes; off_macro, 2 um gap), D grown
-                                            until every ACTUAL hop src -> stages -> at is <= reach_um (D + 8 at most)
+                                            probe blockages (ft_seam_fix.macro_boxes; off_macro, 2 um gap) on the
+                                            x-first L path, else the y-first one (per chain); D grown until every
+                                            ACTUAL hop src -> stages -> at is <= reach_um (D + 8 at most)
     }
 
 Per staged cell, every eq bit i (an {"epoch": bus} entry; any other entry kind is an error) has a source point src_i (the
@@ -144,10 +145,33 @@ def need(dist, reach):
     return max(0, int(math.ceil(dist / reach - 1e-9)) - 1)
 
 
-def stage_sites(src, at, D):
-    """D station sites on the x-first path src -> at, stage k (0-based) at (k + 1) / (D + 1) of the run"""
+def path_point_y(a, b, s):
+    """the point at Manhattan run s from a on the y-first L path a -> (a.x, b.y) -> b"""
+    p = path_point((a[1], a[0]), (b[1], b[0]), s)
+    return (p[1], p[0])
+
+
+def stage_sites(src, at, D, yfirst=False):
+    """D station sites on the x-first (yfirst: y-first) path src -> at, stage k (0-based) at (k + 1) / (D + 1) of the run"""
     L = md(src, at)
-    return [[round(c, 3) for c in path_point(src, at, L * (k + 1) / (D + 1))] for k in range(D)]
+    f = path_point_y if yfirst else path_point
+    return [[round(c, 3) for c in f(src, at, L * (k + 1) / (D + 1))] for k in range(D)]
+
+
+def off_macro_chain(boxes, src, at, D, reach):
+    """avoid_macros sites of one chain at depth D: the x-first L path, else the y-first one (the first whose off-macro
+    sites keep every hop <= reach; else the one with the smaller worst hop) -> (regs, yfirst, hop) or None"""
+    best = None
+    for yf in (False, True):
+        regs = [off_macro(boxes, p) for p in stage_sites(src, at, D, yf)]
+        if any(r is None for r in regs):
+            continue
+        h = chain_hop(src, regs, at)
+        if h <= reach + 1e-6:
+            return regs, yf, h
+        if best is None or h < best[2]:
+            best = (regs, yf, h)
+    return best
 
 
 def off_macro(boxes, xy, gap=2.0):
@@ -224,19 +248,22 @@ def plan_cell(cfg, tn, inst, cell, src_of, type_sites=None, boxes=None):
     moved = None
     if boxes is not None and D:          # avoid_macros: off-macro sites, D grown until every actual hop <= reach
         for Dt in range(D, D + 9):
-            regs = {b: [off_macro(boxes, s) for s in stage_sites(chains[b]["src_um"], at, Dt)] for b in order}
-            if any(r is None for v in regs.values() for r in v):
+            got = {b: off_macro_chain(boxes, chains[b]["src_um"], at, Dt, cfg["reach"]) for b in order}
+            if any(g is None for g in got.values()):
                 continue
-            if max(chain_hop(chains[b]["src_um"], regs[b], at) for b in order) <= cfg["reach"] + 1e-6:
+            if max(g[2] for g in got.values()) <= cfg["reach"] + 1e-6:
+                regs = {b: g[0] for b, g in got.items()}
                 break
         else:
             raise ValueError(f"{KEY} {tn}.{inst}: no off-macro station sites with every hop <= {cfg['reach']} um "
                              f"for depth {D}..{D + 8}")
-        moved = sum(1 for b in order for r, s in zip(regs[b], stage_sites(chains[b]["src_um"], at, Dt))
+        moved = sum(1 for b in order for r, s in zip(regs[b], stage_sites(chains[b]["src_um"], at, Dt, got[b][1]))
                     if r != [round(c, 3) for c in s])
         D = Dt
         for b in order:
             chains[b]["regs_um"] = regs[b]
+            if got[b][1]:
+                chains[b]["yfirst"] = True
         hop = max(chain_hop(chains[b]["src_um"], chains[b]["regs_um"], at) for b in order)
     else:
         hop = 0.0

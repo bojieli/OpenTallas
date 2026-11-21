@@ -156,6 +156,14 @@ def test_avoid_macros_off_box_and_depth_grows():
     regs = p4["chains"][0]["regs_um"]
     assert p4["depth"] == 3 and p4["age_new"] == 10 and p4["max_hop_um"] <= 300
     assert not any(b[0] < x < b[2] and b[1] < y < b[3] for x, y in regs for b in box)
+    # a long macro across the x-first path: the chain takes the y-first L path, D unchanged
+    src2 = {"a": (0, 0)}.get
+    wall = [(100.0, -400.0, 800.0, 10.0)]
+    p5 = ES.plan_cell(cfg(), "t", "u_efault", cell(["a"]), src2, {"u_efault": {"at_um": [900, 300]}}, wall)
+    ch = p5["chains"][0]
+    assert p5["depth"] == 3 and ch.get("yfirst") is True and p5["max_hop_um"] <= 300
+    assert not any(b[0] < x < b[2] and b[1] < y < b[3] for x, y in ch["regs_um"] for b in wall)
+    assert ES.path_point_y((0, 0), (100, -50), 30) == (0, -30) and ES.path_point_y((0, 0), (100, -50), 80) == (30, -50)
     # no off-macro answer within D + 8: fail closed
     with pytest.raises(ValueError, match="no off-macro station sites"):
         ES.plan_cell(cfg(), "t", "u_efault", cell(["a"]), src, row, [(-10.0, -500.0, 890.0, 500.0)])
