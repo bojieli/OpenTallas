@@ -16577,3 +16577,4 @@ FAIL_POSTPLACE PLACE-SETUP-STOP wns -118531.53 ps < -300 ps (TT, post-place; rou
 - 2026-11-21 01:29 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kw45 on intel1 wrote 62 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
 - 2026-11-21 01:29 PST ALERT [FLEET-OPS-R -> COORD] lane quota: tap-grid-r2 on intel1 wrote 57 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
 - 2026-11-21 01:30 PST DIED [FAM-S81-LEPE] ot-run otrun-renewed-glider-824509 on renewed-glider: rc=78 after 2 s, ended 09:30:03, log /srv/opentallas-scratch2/claude/fable-lepe/fam-sta7b/sta.run.log, cmd: --mem 40 --threads 4 --hosts epyc9 --dir . -- bash sta.sh
+- 2026-11-21 01:30 PST GRT-FLAT watchdog cancelled 1 wave attempt(s) (class PLAN design:grt_flat_overflow): s81/col_h9_r0_p5__t1__pv5c8f2166@4 17.5 GB
