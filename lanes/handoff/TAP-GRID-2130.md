@@ -52,3 +52,9 @@ Read: grep OT_CTS_POST_TIMING / OT_TAP_BALANCE done / OT_TAP_CONVERGE / OT_TAP_I
 ## Relaunch lines (r1 -> r2)
 - colA_conv (r1): failed because the load-centre pad placed the chain of each core-only clk_c* tap inside/around its hard core: clk_c* 343 -> 800 ps, setup -15.39 -> -277.45, 54 taps/pins off target. r2 colA_conv2 (epyc9 oth-ubuntu-3904285-1795242111): no load-centre pad; core-only clk_c* taps skip the port pad and the core pass pads each early pin in front of the pin, with a stage price learned per pin.
 - v8c_conv (r1, epyc7 oth-ubuntu-2457635-1795240628): did not fail on its own. I cancelled it at CTS (exit 137) because it ran the same withdrawn load-centre form. r2 (epyc7 oth-ubuntu-3155521-1795241969, otrun2.log): same change as colA_conv2. Baseline: tap means 229..983 ps, 15/24 core pins off target.
+
+## colA_conv2 result (06:40 UTC), against the col_A baseline
+- setup -15.39 / TNS -475.8 -> -21.82 / -907.6 (worse); hold -130.24 / -76,994 -> -98.14 / -76,087 (better); tap mean spread 138 -> 120; in-tap skew median 42.9 / max 191, unchanged.
+- u_u_s6 / u_u_s9 422 / 421 -> 444 / 443 OK (the COORD case is fixed). 7 core pins outside +/-20 (baseline 6); clk_c11 521, clk_c7 529 are late; clk_t taps up to 486 are late (raise_ps 0).
+- OT_TAP_CONVERGE OPEN: 42 taps/pins still off target after 8 passes. Verdict MIXED, so no J6 / V2 rows. Next: find why clk_c7/c11 end late (ETAP re-hang?), and read t60_convR (raise 100) and v8c r2.
+- Successor: read t60_conv / t60_convR (epyc10, queued) and v8c r2 (epyc7 oth-ubuntu-3155521-1795241969) with the same greps; in-tap skew needs the pitch / bank taps (new ports, regenerated kit), which converge cannot fix.
