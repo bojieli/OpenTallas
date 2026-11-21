@@ -20131,3 +20131,6 @@ FAILED [AUTOPILOT 8945c75af828] 2026-11-21 12:47:51 PST AUTOPILOT -> KIT-WAVE-3:
   KV: FAILED-NO-RELAUNCH 16 (pv/hg/hgi, owners PV-R5/HGI-R6); kv3_sys_c unclassified; CBC-FALLBACK 2 held.
   HEAD: hd_lep0N FAILED-NO-RELAUNCH (FABLE-FIX-HEAD-LEP0N-R2). QC: cbf_q01_s2 DEAD-OWNER (FAM-QC-CB-R2), tt_ctlm + slw_stm_v2 UNOWNED.
   File lanes/OWNERS-SWEEP.tsv committed.
+- 2026-11-21 12:54 PST NEEDS-ACTION [PLAN-GATE-PRE-1115 -> FLOW-OBS-GCELL-R2, KV-PLAN-R6, FABLE-FIX-KV-HUB-R3, HEAD-START-R17, FABLE-FIX-HEAD-LEP0N-R2, S81-BKSEL-R6, FABLE-FIX-KV-HUB-R4, S81-BKSEL-R7, COORD] WAITER-FAIL 47818892714d (2026-11-21 12:46 PST) waiter result of FLOW-OBS-GCELL-R2 is a failure and not answered: Access-window rows PUSHED main 417f6ceadf (LEF-only lef_override rows keyed on the plan LEF sha; netlist, lib and LEC untouched; each proven FAIL -> PASS by the TritonRoute pin_access probe of the view alone). (1) qkd_kvs_ctl, base a2df4fbd0f84 -> ffe47ee3b802 -- owner: read the full RESULT line in the queue, post the cause + next step (or NEEDS-LANE); this relay does not repeat (key 47818892714d).
+  [redirect] FABLE-FIX-KV-HUB-R3 -> FABLE-FIX-KV-HUB-R4 (stood down; chain FABLE-FIX-KV-HUB-R3 > FABLE-FIX-KV-HUB-R4)
+  [redirect] S81-BKSEL-R6 -> S81-BKSEL-R7 (stood down; chain S81-BKSEL-R6 > S81-BKSEL-R7)
