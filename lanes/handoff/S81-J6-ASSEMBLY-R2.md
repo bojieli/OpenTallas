@@ -19,3 +19,11 @@ Apply order at or before 11-21 13:00 PST: C3d, else C3c, else C1n (never plain C
 - j6_apply.sh PACK_OUT: hold_j6.py rep-first holds (lifts J5-only until-J6 holds, keeps rst_rl_137), publish_apply apply --pilot-item dsdv_slice_lepe_mu_LP__t2.
 - After apply: first bound-type gen on scheduler rt -> check config.mk defines (RIP1 on lepe LP t2, CFX + SRAMREG on leaf t39) -> kit_wave_edit /dies/s81/tools_sha = that rt sha, hardlink copy in s81-j6/rtpin/.
 - Reps: col_h9_r2__t1__cl774acf45__pv11b6518d, col_h9_r1__t1__cl49d7a23e__pv047ea3b3, ot_s81sl_leaf__t39, serdes__t4, slice_station__t36, dsdv_slice_lepe_mu_LP__t2.
+
+## 00:2x state (11-21)
+- C3c gate FAILED at bind: stale dead-input defines. Cause: svc H8 proof reprove_svc_h8_bind_source_1120.json (38 defines) had no matching re-proof (reprove39/40 used the pre-H8 generic instances.json and the SRAM .v instead of the _bb.v header). C3d/C3f gates cancelled by exact unit (same refusal, verified with dead_inputs._reproof_matches).
+- Fix: rows/reprove40svc/ (proof.json sha c781731e, run.sh = svc40b.sh: instance lines from the proof's 36 declarations, prefer copy without the SRAM .v): MATCH True, ProvenDead OK.
+- C3g = C3f + reprove40svc: gate unit oth-ubuntu-1461686-1795248288 (preferred). C3i = C3d + reprove40svc: unit oth-ubuntu-1497655-1795248407 (fallback). candC3e/candC3h = failed composes (C3h: git index.lock race of two parallel adopt2 runs in the shared clone; compose one at a time), delete later via ot-delete. scratch_svc40 = cp -al of candC3f for the reprove.
+- C1n gate still in bind (unit oth-ubuntu-152516-1795245393).
+- Apply order: C3g, C3i, C1n.
+- Token compile: helper agent working out the bound-mode compile on rt f453583d5830 in epyc10 s81-j6/tokc/.
