@@ -27,3 +27,17 @@ Gates: regression census vs J5 (monitor pin dist, hops, reset legs); private str
 - Donor deltas (plan_delta.py format) epyc10 s81-die-r4-donors/<d>/j6_delta_<d>.json: rom 60 types, vp_sr 79 (+manifest define/reproof), r1_frame 1
   (needs schema 8e9cdd615c: in rt), t31 1. f0_q: J5 dir plan_j5_f0_q_date_private.json / gate_f0_q.
 - epyc8 j6_lockup: hop.tcl client cancelled (input ODB deleted), 2 echo-LEC waiters killed (PIDs 95864/96446); r1 midpoint masters not routed (stop list).
+
+## 11-20 19:55 state
+- Gates A (tools control) and B (rtl adoption): strict bind 0, LATCHECK 0, LAT diff vs J5 0; G0/PRE pending in logs/gateA|B.log.
+- mk_cand.sh TREE LIST (epyc10 s81-j6/): mk_tree + adopt2 (ADOPT-DIFF LAG carry, BOTH via decisions.tsv) + ROM sidecars + FILE lines + merge_deltas.py
+  (refuses same-path/ancestor conflicts) + manifest ops (list union when two deltas set one key, e.g. /defines). SKIP_TREE=1 resumes, RT=<sha> overrides.
+  census_c.sh TREE = plan_geom_census + event_adopt_diff + event_census vs J5.
+- candC1 (rt 1ddefd55818e; cand/c1.list: rom r1_frame t31 f0_q lepe slicec serdes-noregion, 195 ops; plan 2dcd5fad): census HOP 9761/384, RESET_LEG 522/82,
+  CORE_WIRE 1254/63; ADOPT-DIFF LAG 0, ledger missing bksel-l4-define only; EVENT-CENSUS REGRESS 0. gate C1 RUNNING (logs/gateC1.log).
+- candC2 (rt 42eeacf87f79; cand/c2.list = C1 + vp_sr (rows/vp_sr, real sites) + svc H8 (rows/svc, needs ELAB) + item9 (rows/item9 /clock /reset);
+  460 ops, dry merge clean): c2chain.sh = compose -> census -> ot-run [elab.sh + gate.sh C2]. logs/mk_candC2.log, census_candC2.log, gateC2.log.
+- Pending rows: CBC300 (rows/cbc300, fork running), iq_C + eng registered reads (rows/iqc_eng, fork running), monitor-home rows (S81-MONITOR-PIN-1745),
+  bk_sel (OPUS-FIX-S81-BKSEL-R4), core-pin relays own-tap form only (CORE-PIN-RELAY-1930), reset legs (reset_leg_plan on the J6 bind, alternate edge from
+  RESET-RELAY-GEN-R2), lockup (S81-DIE-R5). Dropped: seqhost u_win region (no member count), slicec finish (bind risk; next compose).
+- Apply: reuse intel2 s81-die-r4-hub j5_chain2.sh / j5_apply3.sh; set kit_wave tools_sha to the J6 rt sha via kit_wave_edit after one bound-type proof gen.
