@@ -5,3 +5,6 @@
 - 2026-11-21 00:12 PST DONE [PUSH-TRAIN-0100] ot-push-main otpush-tolerant-swine-2367023 on tolerant-swine: rc=0 after 1 s, ended 00:12:26, log none, cmd: ot-push-main 
 - 2026-11-21 00:12 PST DIED [PUSH-TRAIN-0100] ot-push-main otpush-tolerant-swine-2368035 on tolerant-swine: rc=3 after 0 s, ended 00:12:26, log none, cmd: ot-push-main 
 - 2026-11-21 00:12 PST DIED [PUSH-TRAIN-0100] ot-push-main otpush-tolerant-swine-2368913 on tolerant-swine: rc=2 after 0 s, ended 00:12:27, log none, cmd: ot-push-main 
+- 2026-11-21 00:12 PST DIED [PUSH-TRAIN-0100] ot-push-main otpush-tolerant-swine-2369111 on tolerant-swine: rc=4 after 1 s, ended 00:12:28, log none, cmd: ot-push-main 
+- 2026-11-21 00:12 PST DONE [PUSH-TRAIN-0100] ot-push-main otpush-tolerant-swine-2370384 on tolerant-swine: rc=0 after 1 s, ended 00:12:29, log none, cmd: ot-push-main 
+- 2026-11-21 00:12 PST DONE [PUSH-TRAIN-0100] ot-push-main otpush-tolerant-swine-2371880 on tolerant-swine: rc=0 after 1 s, ended 00:12:30, log none, cmd: ot-push-main 
