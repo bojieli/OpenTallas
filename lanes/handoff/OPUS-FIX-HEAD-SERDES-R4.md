@@ -51,3 +51,10 @@ Logs: intel2 ~/opus-fix-head-serdes-r4-logs/. R3 lane dirs stay as listed in FAB
   to reserved_sites obstructions on M3-M9, then grt_pre_nonport.tcl). Goal route, ot-run log sdr2e_route_e7.otrun.log (queued on epyc7 memory).
   Purpose: DRT-0255 proof only (sdr2c GRT TT was -103, not a sign-off candidate).
 - Rows sent to OPUS-FIX-HEAD-LEP0N-R3: START reset relay stages hd_st_k5 rr_t54 (1676 um) and hd_st_m rr_t8 (1261 um) to <= 405 um.
+
+## 04:3x PST COORD priority correction: HEAD 25/26 signed on the current plan (only hd_lep0N unsigned)
+- hd_serdes / host_e / host_n are deferred re-signs: run last, spare capacity only. NO new builds from this lane.
+- Let finish and read: sdr2d GRT -> route (chain_sdr2d.sh), host_e GRT -> route (chain_hoste.sh), sdr2e (3rd launch, hook
+  wrapped in uplevel #0 after try2 failed on global scope). If sdr2e fails again: do NOT regenerate (dropped by COORD).
+- sdr2e try1 exit 12 (RESYNTH-GUARD: config.mk newer than 1_2_yosys.v; fixed by touch -r), try2 exit 2 (hook proc scope).
+- Then stand down; help OPUS-FIX-HEAD-LEP0N-R4 only if asked.
