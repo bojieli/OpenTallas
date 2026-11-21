@@ -107,6 +107,7 @@ proc design {latched pfx} {
  proc blk {method args} { if {$method eq "findBTerm"} { return [expr {[lindex $args 0] eq {tx_o[0]} ? "bto" : "NULL"}] }; return [dict get $::props(blk) $method] }
 }
 set ff_blk blk; set ff_dbu 1000; set ff_out stdout
+set ot_ff_t0 [clock milliseconds]; set ot_ff_tl $ot_ff_t0
 '''
 
 
