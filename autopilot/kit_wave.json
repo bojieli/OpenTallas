@@ -5914,7 +5914,8 @@
      "kv3_pv_v1n",
      "kv3_hgi_v6"
     ],
-    "all_items": true
+    "all_items": true,
+    "required": true
    },
    "gen_host_min_free_gb": {
     "epyc9": 250,
@@ -38266,7 +38267,8 @@
      "svc_lo_dsdv_svc_rs__t6",
      "svc_lo_dsdv_svc_rs__t7",
      "svc_lo_dsdv_svc_rs_w__t1"
-    ]
+    ],
+    "required": true
    }
   },
   "s81_head": {
@@ -40522,7 +40524,8 @@
    "breaker_fix": "OWNER r703 removed all class breakers (stops_off not in code yet): probe window reopened for every open class of this die, COORD 11-18",
    "review_before_route": {
     "event": "head_rp21z20NF15f_r16",
-    "all_items": true
+    "all_items": true,
+    "required": true
    },
    "auto_visual_review_skip": [
     "*"
@@ -51547,7 +51550,8 @@
    ],
    "review_before_route": {
     "event": "s29q103S4Q9N46R6V2",
-    "all_items": true
+    "all_items": true,
+    "required": true
    },
    "auto_visual_review_skip": [
     "*"
