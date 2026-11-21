@@ -534,18 +534,22 @@ module ot_coll_static_ring #(parameter integer OFF = 20, parameter integer WREG 
     wire [546*B-1:0] rdb;
     genvar b;
     generate for (b = 0; b < B; b = b + 1) begin : g_b
+        // FAM-QC-COLL-R2: the macro stays at g_b[b].u_m with or without WREG (plans and macro placement name that path;
+        // a g_wr/g_nw level made MPL-0020 "Couldn't find a macro" on every coll_core kit). Only the write-pin drivers differ.
+        wire [545:0] wd_m; wire [4:0] wa_m; wire we_m;
+        wire we_d = (B == 1) ? 1'b1 : (wa[AW-1:5] == b);
         if (WREG != 0) begin : g_wr
             // FAM-QC-COLL (c): write data / address / enable registered on the macro's own clock (one flop stage per
             // bank next to the pins); the write lands one cycle later, the read is issued OFF - 1 >= 2 cycles after the
             // original write slot, so rd carries the same word in the same cycle (0 cycles).
             reg [545:0] wd_q; reg [4:0] wa_q; reg we_q;
-            always @(posedge mem_ck[b]) begin wd_q <= wd; wa_q <= wa[4:0]; we_q <= (B == 1) ? 1'b1 : (wa[AW-1:5] == b); end
-            ot_sram_1r1w_32x546_m1 u_m (.clk(mem_ck[b]), .r_ce_in(1'b1), .r_addr_in(ra[4:0]), .rd_out(rdb[b*546 +: 546]),
-                .w_ce_in(we_q), .w_addr_in(wa_q), .wd_in(wd_q), .w_mask_in({546{1'b1}}));
+            always @(posedge mem_ck[b]) begin wd_q <= wd; wa_q <= wa[4:0]; we_q <= we_d; end
+            assign wd_m = wd_q; assign wa_m = wa_q; assign we_m = we_q;
         end else begin : g_nw
-        ot_sram_1r1w_32x546_m1 u_m (.clk(mem_ck[b]), .r_ce_in(1'b1), .r_addr_in(ra[4:0]), .rd_out(rdb[b*546 +: 546]),
-            .w_ce_in((B == 1) ? 1'b1 : (wa[AW-1:5] == b)), .w_addr_in(wa[4:0]), .wd_in(wd), .w_mask_in({546{1'b1}}));
+            assign wd_m = wd; assign wa_m = wa[4:0]; assign we_m = we_d;
         end
+        ot_sram_1r1w_32x546_m1 u_m (.clk(mem_ck[b]), .r_ce_in(1'b1), .r_addr_in(ra[4:0]), .rd_out(rdb[b*546 +: 546]),
+            .w_ce_in(we_m), .w_addr_in(wa_m), .wd_in(wd_m), .w_mask_in({546{1'b1}}));
     end endgenerate
     generate if (B == 1) begin : g_one
         assign rd = rdb;
