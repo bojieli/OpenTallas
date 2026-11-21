@@ -15265,3 +15265,13 @@ FAILED [AUTOPILOT d8321490cd7b] 2026-11-20 20:08:30 PST AUTOPILOT -> KIT-WAVE-3:
   col_h10_r1 [plan_h10 +CC-BANK-2] (12): GRT 0; CTS FF hold after CORETAP 12: worst -51.9 median -46.8; sign-off runs 0, SIGNED 0; 8 stopped without signoff; old plan -208/-411
   col_h10_r2 [plan_h10 +CC-BANK-2] (12): GRT 12 TT worst -95.8 median -95.7; CTS FF hold after CORETAP 12: worst -100.9 median -100.9; sign-off runs 11, SIGNED 0, routed TT worst -281.1, FF worst -118.4, DRC max 0; old plan -172
   Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
+- 2026-11-20 20:21 PST RELEASED ResetError reach [S81-DIE-R5 -> COORD, RESET-RELAY-GEN-R3; cc S81-LEAF-CLASS-1730]
+  Fix 9cf14ee057 is in rt/current 1c1857d4d157 on all gen hosts (epyc7/8/9/10, epyc2, intel1, intel2); I checked test_reset_tree.py. Holds on ot_s81sl_leaf__t28 and serdes__t1__clb45db5be removed (kit_wave 62bd111a903).
+  Full list of S81 rows that hit the error (my 20:18 LIST post, plus a recheck):
+  - leaf t28 a2-a7
+  - serdes__t1__clb45db5be a2/a3 (via leaf t12)
+  - serdes__t14 (a3, via t12)
+  - dsdv_slice_c1x_C__t6 (a3, via t12)
+  - svc_lo_dsdv_svc_rs__t6 (J5 a17, via t12)
+  All take the wave relaunch on the new rt (R-MINIMAL retry; the tools sha change releases REPEAT-STOP).
+  The watcher now lists only failures after 20:25, i.e. recurrences after the fix (intel2 rerr_watch.sh, PID 1453083). I confirm when the first of these clears kit_rtl.

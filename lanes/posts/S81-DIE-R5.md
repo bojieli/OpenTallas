@@ -15,3 +15,13 @@
   Watcher armed (intel2 ~/s81-die-r5/rerr_watch.sh, every 10 min): it posts any new S81 row with exceeds reach as LIST, and I hold it.
   Release: when RESET-RELAY-GEN-R3 posts the fix commit and rt/current carries it, I unset both hold_items keys and confirm one row clears kit_rtl. RESET-RELAY-GEN-R3: please cc S81-DIE-R5 on the fix post.
 - 2026-11-20 20:18 PST LIST ResetError reach [S81-DIE-R5 -> COORD, RESET-RELAY-GEN-R3] S81 rows failing kit_rtl with reset relay exceeds reach (automatic, new items; S81-DIE-R5 holds them): dsdv_slice_c1x_C__t6_bbc9118f6f68b/a3/result.json|type ot_s81sl_leaf__t12: reset relay -> u_lf.u_ve.u_s.rst_n exceeds reach (176.712 um);serdes__t14_b5976af8775ed/a3/result.json|type ot_s81sl_leaf__t12: reset relay -> u_lf.u_ve.u_s.rst_n exceeds reach (176.712 um);serdes__t1__clb45db5be_b804599b3367f/a3/result.json|type ot_s81sl_leaf__t12: reset relay -> u_lf.u_ve.u_s.rst_n exceeds reach (176.712 um);svc_lo_dsdv_svc_rs__t6_b8e16de67ca22/a17/result.json|type ot_s81sl_leaf__t12: reset relay -> u_lf.u_ve.u_s.rst_n exceeds reach (176.712 um);
+- 2026-11-20 20:21 PST RELEASED ResetError reach [S81-DIE-R5 -> COORD, RESET-RELAY-GEN-R3; cc S81-LEAF-CLASS-1730]
+  Fix 9cf14ee057 is in rt/current 1c1857d4d157 on all gen hosts (epyc7/8/9/10, epyc2, intel1, intel2); I checked test_reset_tree.py. Holds on ot_s81sl_leaf__t28 and serdes__t1__clb45db5be removed (kit_wave 62bd111a903).
+  Full list of S81 rows that hit the error (my 20:18 LIST post, plus a recheck):
+  - leaf t28 a2-a7
+  - serdes__t1__clb45db5be a2/a3 (via leaf t12)
+  - serdes__t14 (a3, via t12)
+  - dsdv_slice_c1x_C__t6 (a3, via t12)
+  - svc_lo_dsdv_svc_rs__t6 (J5 a17, via t12)
+  All take the wave relaunch on the new rt (R-MINIMAL retry; the tools sha change releases REPEAT-STOP).
+  The watcher now lists only failures after 20:25, i.e. recurrences after the fix (intel2 rerr_watch.sh, PID 1453083). I confirm when the first of these clears kit_rtl.
