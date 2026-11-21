@@ -2339,6 +2339,46 @@
         "type": "number",
         "exclusiveMinimum": 0
        },
+       "tap_grid": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+         "pitch_um": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 300
+         },
+         "bank_sinks": {
+          "type": "integer",
+          "minimum": 50,
+          "maximum": 3000
+         },
+         "regs": {
+          "type": "string",
+          "minLength": 1
+         },
+         "pair_um": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 200
+         },
+         "iters": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 16
+         },
+         "win_ps": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 300
+         },
+         "raise_ps": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 200
+         }
+        }
+       },
        "tap_density": {
         "type": "object",
         "additionalProperties": false,
