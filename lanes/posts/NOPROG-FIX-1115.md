@@ -370,3 +370,8 @@
   NO-PROGRESS epyc9 coll_core 5_1_grt stage 12.7 h job 21.2 h: repair_Viol best 910 last 910 rows 267 window-gain 0.0%; stagnant 6.4 h; last event 0.1 h ago, log write 0.0 h ago (2246 lines)
   NO-PROGRESS epyc10 native59 pregrt_ff_hold stage 12.3 h job 17.0 h: no new meaningful log line for 10.2 h; last: 0 |       0 |       0 |            0 |    +0.0% |   5.000 |   0.000 | u_bound.u_pd5_emb_code_q_388.q
   NO-PROGRESS epyc7 serdes__t13 lec stage 6.5 h job 6.5 h: LEC last file/log write 6.5 h ago
+- 2026-11-20 16:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-20 16:52 PST: 346 running jobs, PROGRESSING 338, SLOW 4, NO-PROGRESS 4 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc2 col_h10_r2__t1__cl1f5d6c2a__pvf1512c16 5_2_route stage 25.7 h job 29.7 h: drt_violations best 20 last 20 rows 53 window-gain 0.0%; stagnant 8.7 h; last event 3.2 h ago, log write 0.2 h ago (3373 lines)
+  NO-PROGRESS epyc9 coll_core 5_1_grt stage 13.7 h job 22.2 h: repair_Viol best 910 last 910 rows 296 window-gain 0.0%; stagnant 7.4 h; last event 0.1 h ago, log write 0.0 h ago (2275 lines)
+  NO-PROGRESS epyc10 native59 pregrt_ff_hold stage 13.3 h job 18.0 h: no new meaningful log line for 11.2 h; last: 0 |       0 |       0 |            0 |    +0.0% |   5.000 |   0.000 | u_bound.u_pd5_emb_code_q_388.q
+  NO-PROGRESS epyc7 serdes__t13 lec stage 7.5 h job 7.5 h: LEC last file/log write 7.5 h ago
