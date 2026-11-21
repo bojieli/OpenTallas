@@ -26,6 +26,19 @@ Lane dirs: epyc7/epyc9 /srv/opentallas-scratch2/claude/fable-fix-kv-hgi (b8, b8d
   OT_RELAY_MID_FIT=1 (station takes a spot on its line where the whole cluster + 20 um clears every halo; max hop 405,
   set OT_RELAY_MID_MAX_HOP_UM=300) or a plan relay site for hst3_g north of e7 (open band y 1218-1451).
 
+## Lever 8: kt station registers out of the head cores (COORD 05:2x; FAM-KV-HUB-R2 proposal, built here) - private proof
+- Row generator lanes/handoff/OPUS-FIX-KV-HGI-R3-kst_resite.py (report -kst_report.json). For every kv3_hg* type, each
+  internal_stations row core:u_headN_eK.kp_o -> core:u_headN_e0.u_kt__kp_in with regs inside a hard core is re-sited on its own
+  from->to line into the column streets (cores + 9.72 um clear), lateral jog only when the line has no fit (hg head1_e6 only:
+  x 646.9), station count kept (uniform kt depth, 0 added cycles); relay_sites at the old reg coordinates move with the row.
+- On D27d (07a462a13e91): 19 types, 76 rows, 10,336 relay_sites moved, 0 left inside cores, max hop 355.3 um (hg) / 330.5 (hgi),
+  plan 152d6c878972. Example hgi_v8 head2_e6 row: (194.4, 745.9 / 489.6) -> (194.4, 670.7 / 563.8), hops 256 -> 331.
+- Private tree epyc8 /srv/opentallas-scratch2/claude/opus-fix-kv-hgi-r3/tree = symlink skeleton of kv-plan-r3/d27c/tree with a
+  private plan_of_record (no cp -al); launch_r3 on the FAM-KV-HUB-R2 rtp_a5603de7c56b. Gates (priority plan, epyc8):
+  G0 oth-ubuntu-1244622-1795267991 -> g0gate_r3/gate.out; strict bind + LATCHECK oth-ubuntu-1244823-1795267991 -> bindgate_r3/gate.out.
+  Logs intel2 ~/tmp/opusfixkvhgir3/{g0,bind}_r3.log. Waiters armed.
+- After green: rows to KV-PLAN-R5 for D28 (re-run the generator on the D28 base); then a private hgi_v1 kit to GRT it10.
+
 ## Decisions pending
 - core_tap_direct key: from b8 vs b8d at GRT (STATE 21:30 steps 1-3 of the Fable handoff). Not decided yet.
 - D26 apply: not APPLIED at 03:3x (Codex: intercepted at hub_Wi bind). hg gen-on-D26 check waits on it.
