@@ -56,3 +56,7 @@ R4 list, plus epyc10 R/t39/src_e (unused first tree, live J6 base), R/f2, R/tmp;
 - Cause (not fixed): leaf_regrid find_slots keeps lanes off the plan hard_cores, landing bands and ft sites, but does not know the u_bound cores (vp b0 / b1) the kit places at kit offsets; leaf_regrid check and the corridor check do not see them either. So "73 pass both" is not yet "73 bind": run tools/die_plan/plan_gate_pre.py check --tree d72/src_p --plan physical/die_plan/s81/plan_h2_2249.json to list every type (the gate stopped the run; only kv_leaf t5 is known), add those boxes as keep-outs in leaf_regrid, re-run apply + lane-sites. FAM-S81-MISC-R2 also re-sites kv_leaf t5: take theirs or drop t5 from the delta.
 - t39 was not refused by this gate (its elaboration passed plan_gate_pre on the rg1 block; the lane positions are the same in rg3).
 - Not relaunched. d72/bind holds no elaboration.
+
+## UPDATE 16:29 UTC: t39 strict bind + LATCHECK PASSED; no job of this lane is running
+- Unit oth-ubuntu-490537-1795275556 exit 0: BIND_RC=0 on plan sha 3d52a7ab2d70 (rg3 t39 block, GS 0 word), LATCHECK 873/873 PASS, delta {} (0 latency change). Bound t39 RTL: 16 per-lane hi stage instances at each of stages 0, 1, 2 (g_ln_N_u_cst_hi_gd_s_0..2), no shared g_hig stage. Bind out epyc10 fable-fix-s81-leaf-r5/t39/bind, tree t39/src_b (rt b1bb664d56f5).
+- NEXT for R6: the private kit (recipe above), with rt b1bb664d56f5 for private-spec and run-item.
