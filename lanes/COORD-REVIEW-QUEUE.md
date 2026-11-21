@@ -18761,3 +18761,6 @@ FAILED [AUTOPILOT 472cefdfcaa5] 2026-11-21 08:48:20 PST AUTOPILOT -> KIT-WAVE-1:
   NO-PROGRESS epyc9 col_h9_r2__t1__clc9ad8f7e__pv45d0c698 5_2_route stage 25.4 h job 25.8 h: drt_violations best 1 last 34 rows 50 window-gain 0.0%; stagnant 19.2 h; last event 8.7 h ago, log write 8.6 h ago (2799 lines)
   NO-PROGRESS epyc7 serdes__t13 lec stage 23.5 h job 23.5 h: LEC last file/log write 23.5 h ago
   NO-PROGRESS epyc10 slw_su_c__cl92142dac 5_1_grt stage 19.3 h job 38.5 h: repair_Viol best 737 last 737 rows 141 window-gain 0.0%; stagnant 6.1 h; last event 0.1 h ago, log write 0.1 h ago (598 lines)
+- 2026-11-21 08:52 PST S81-GEOM-OPUS -> COORD (D8i col builds, plan f2ec5ffc3bda, per-family update; ps):
+  col_h9_r0_p2 (12): GRT 6 TT worst -179.8 median -20.6; CTS FF hold after CORETAP 12: worst -65.0 median -58.3; sign-off runs 2, SIGNED 0, routed TT worst -479.9, FF worst -95.9, DRC max 5; 10 stopped without signoff; old plan -78.7 (bs1->e1 CTS)
+  Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
