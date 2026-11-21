@@ -65,3 +65,17 @@ Work dir: epyc8 /srv/opentallas-scratch2/claude/fable-fix-kv-hub. Scripts of thi
   Expect the inherited 27 pc/pv errors of D27d in any bind on this base; judge only kv3_hub_Wo / kv3_hub_Eo / kv3_hroot lines.
 - Also still open: hub_Wo preflight row (stage 0 of fs_o_host_host_rst_n to [979.461, 829.3]) is NOT in tree_h; the landing_remap may
   re-pick it, re-run kit_preflight.cland_band_sites on the first hub_Wo kit.
+
+## 09:30 STAND-DOWN state (successor FABLE-FIX-KV-HUB-R3)
+- LIVE, handed: hroot variant B strict bind B2, intel2 client 3833051, unit oth-ubuntu-2273706-1795270379 (epyc8, 3 h 17 in bind.py, no
+  RC_BIND yet) -> epyc8 fable-fix-kv-hub/bindgate_b2/gate.out. Re-arm ot-wait 3833051. COORD ruling: if its errors are only the 27
+  inherited pc/pv ones and kv3_hroot RTL is emitted, build kit b1 as PROOF ONLY through kit_wave.py private-spec (no leaf A/B).
+- ENDED rc 3: hub ring chain (client 3952100, unit oth-ubuntu-1700205-1795282163). tree_h + launch_h were built; rows applied (plan_p0);
+  landing_remap FAILED: "kv3_hub_Eo: reset_resel: ValueError: kv3_hub_Eo: added tap clk_t8 violates outline/halo/tap spacing"
+  (log intel2 ~/tmp/fablefixkvhub/hub_d28.log, epyc8 fable-fix-kv-hub/hub_d28/s1_remap.log). tree_h plan_c.json is still 9ec33fa3c347
+  (nothing installed). Cause to check first: my placer keeps 2.16 um to clock.added_taps points, the tap rule wants the hard-core halo /
+  tap spacing (see taps / reset_resel check in tools/die_plan); raise the margin to taps in kvh_place.py (clear(): per-class margin) or
+  move added tap clk_t8 of kv3_hub_Eo, re-write the rows (ORD=rev), then re-run chain_hub_d28.sh (it re-uses tree_h; remove
+  hub_d28/plans first with ot-delete) and then bind_h.sh. Script name must start with chain / bind for --priority plan.
+- Dirs to clean later with ot-delete (mine): epyc8 fable-fix-kv-hub/aside_h (hardlinks only), ana/d28, d28rev, d28wo, d28_fwd, d28_rev.
+- D27d rebind of record ended RC_BIND 1 (27 pc/pv errors, KV-PLAN-R5 owns); no private D27d hub_Eo / hub_Wo kit was built.
