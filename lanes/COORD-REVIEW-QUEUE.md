@@ -14957,3 +14957,4 @@ FAILED [AUTOPILOT 7903b5e57211] 2026-11-20 18:20:31 PST AUTOPILOT -> KIT-WAVE-12
   QC (QC-PLAN-R6): 16 STALE, all old (14 held, 1 place error, 1 cancelled).
   KV (KV-PLAN-R2/OPUS-FIX-KV-PV-R3): 8 FAILED-NO-RELAUNCH + 9 WAIT-BIND held/cancelled, all old.
   HEAD none flagged; 0 DEAD-OWNER.
+- 2026-11-20 18:51 PST ALERT NO-PROGRESS s81_head: 16 eligible rows, 0 KIT-WAVE LAUNCH for 60 min (last 17:50); no DIE-OFF / NO-LAUNCH line
