@@ -462,6 +462,7 @@ def test_split_inline_memory_and_typed_proof_follow_pieces():
                 "outline_um": [100.0, 100.0],
                 "verilog_defines": ["V0"],
                 "port_buf_at_pin": True,
+                "ft_track_frac": 0.35,
                 "dead_inputs": [{"module": "sx", "ports": {"a": [[0, 2]]}}],
                 "contents": [{"inst": "u_mem", "origin_um": [5.0, 75.0],
                               "outline_um": [10.0, 10.0]}],
@@ -475,6 +476,7 @@ def test_split_inline_memory_and_typed_proof_follow_pieces():
     assert high["dead_inputs"] == raw["partition_types"]["T"]["dead_inputs"]
     assert "dead_inputs" not in low
     assert low["port_buf_at_pin"] and high["port_buf_at_pin"]
+    assert low["ft_track_frac"] == high["ft_track_frac"] == 0.35
     assert low["verilog_defines"] == high["verilog_defines"] == ["V0"]
     with pytest.raises(TS.SplitError, match="dead-input proof for sx needs a piece"):
         TS.TypeSplit(_Ev(raw, {**spec, "dead_input_pieces": {}}), "T").split()

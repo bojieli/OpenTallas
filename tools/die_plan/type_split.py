@@ -394,7 +394,7 @@ class TypeSplit:
         handled = {"outline_um", "buses", "ft_slots", "clock", "reset", "contents", "hard_cores", "internal_stations",
                    "count_straps", "module", "note", "hard", "face_pins_per_um", "face_budget_g2", "core_pg_connect",
                    "landing_control_status_copy", "reset_spine_pins", "pads", "reach_homes", "cells", "landing_base_type",
-                   "verilog_defines", "port_buf_at_pin", "face_layers", "dead_inputs"}
+                   "verilog_defines", "port_buf_at_pin", "face_layers", "dead_inputs", "ft_track_frac"}
         unknown = set(t) - handled
         if unknown:
             raise SplitError(f"{self.tn}: unhandled type keys {sorted(unknown)} (extend type_split.py)")
@@ -405,7 +405,7 @@ class TypeSplit:
             T[i]["outline_um"] = o
             T[i]["hard"] = False
             for k in ("face_pins_per_um", "face_budget_g2", "landing_base_type",
-                      "verilog_defines", "port_buf_at_pin", "face_layers"):
+                      "verilog_defines", "port_buf_at_pin", "face_layers", "ft_track_frac"):
                 if k in t:
                     T[i][k] = copy.deepcopy(t[k])
             T[i]["note"] = (f"{self.ev.tag}: piece {i} of {self.tn} ({'xy'[cut.ax]} {cut.lo(i)}..{cut.hi(i)} of the "
