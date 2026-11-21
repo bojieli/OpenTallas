@@ -37,7 +37,7 @@ def _consts(defines):
             'import lower_vpx as V, leaf_transport as T, dv_layer_compile as D, dv_price as P, norm_nx as N, xtier_land as X\n'
             'print(json.dumps(dict(lo=V.LO_AFTER_CTL, period=V.beat_period(), lo_local=T.LO_LOCAL, xfin=D.XFIN,'
             ' finish=P.FINISH_SEQ_EXTRA, leaf=P.LEAF_PARTIAL_EXTRA, scale=P.LEAF_SCALE_EXTRA, eng=P.ENG_SLICE_EST["eng.hh"],'
-            ' nx=N.NX_AFTER_LAST_NORMR, normr=D.BEAT["go_to_partial_normr"], form=X.form())))')
+            ' nx=N.NX_AFTER_LAST_NORMR, normr=D.BEAT["go_to_partial_normr"], beat=D.BEAT, form=X.form())))')
     env = _env(PYTHONDONTWRITEBYTECODE='1')
     if defines is not None:
         env['OT_S81_SELECTED_DEFINES'] = ','.join(defines)
@@ -185,3 +185,48 @@ def test_vp_sr_slice_override_is_refused(tmp_path):
     sl.write_text(t.replace('ot_s81sl_vp #(', 'ot_s81sl_vp #(.SR(1), ', 1))
     with pytest.raises(ValueError, match='overrides u_vp SR'):
         XT.vp_sr_edges(KVT, root=tmp_path)
+
+
+# ------------------------------------------------------------------------------------------------ vp CFX (J6 hc_post)
+CFD = KVT + ('OT_S81SL_VP_CFX',)
+
+
+def test_vp_cfx_follows_the_cfx_define():
+    assert XT.vp_cfx_edges(KVT) == 0
+    assert XT.vp_cfx_edges(CFD) == 1
+
+
+def test_vp_cfx_moves_the_post_write_back_and_nothing_else():
+    """CFX 1 = the hc_post write-back one edge later, every other vp output in the same cycle: only the POST -> last hw
+    date takes +1; CFX 0 keeps the measured 63"""
+    a, b = _consts(KVT), _consts(CFD)
+    assert a['beat']['post_cmd_to_last_hw'] == 63 and b['beat']['post_cmd_to_last_hw'] == 64
+    assert {k: v for k, v in b['beat'].items() if k != 'post_cmd_to_last_hw'} == \
+        {k: v for k, v in a['beat'].items() if k != 'post_cmd_to_last_hw'}
+    for k in ('lo', 'lo_local', 'xfin', 'finish', 'leaf', 'scale', 'nx', 'normr', 'eng', 'period'):
+        assert b[k] == a[k], k
+
+
+def test_vp_cfx_with_sramreg_adds_both():
+    c = _consts(SRD + ('OT_S81SL_VP_CFX',))
+    assert c['beat']['post_cmd_to_last_hw'] == 65
+
+
+def test_vp_cfx_slice_override_and_missing_param_are_refused(tmp_path):
+    for rel in (XT.SLICE, XT.VP, XT.XRT, XT.XR):
+        d = tmp_path / rel
+        d.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy(ROOT / rel, d)
+    sl = tmp_path / XT.SLICE
+    t = sl.read_text()
+    sl.write_text(t.replace('ot_s81sl_vp #(', 'ot_s81sl_vp #(.CFX(1), ', 1))
+    with pytest.raises(ValueError, match='overrides u_vp CFX'):
+        XT.vp_cfx_edges(KVT, root=tmp_path)
+    sl.write_text(t)
+    vp = tmp_path / XT.VP
+    v = vp.read_text()
+    vp.write_text(v.replace('    parameter integer CFX = `OT_S81SL_VP_CFX_DEFAULT,', '', 1))
+    XT._vp_cfx.cache_clear(); XT._file.cache_clear()
+    assert XT.vp_cfx_edges(KVT, root=tmp_path) == 0
+    with pytest.raises(ValueError, match='no CFX parameter'):
+        XT.vp_cfx_edges(CFD, root=tmp_path)

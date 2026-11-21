@@ -80,6 +80,10 @@ BEAT = dict(go_to_partial=112, go_to_partial_normr=117, rstd_to_y0=18, rstd_to_x
 VP_SR = XTIER.vp_sr_edges()
 for _k in ('go_to_partial', 'go_to_partial_normr', 'rstd_to_y0', 'rstd_to_xq', 'post_cmd_to_last_hw'):
     BEAT[_k] += VP_SR
+# J6 CFX (S81-J6-ASSEMBLY 11-21): ot_s81sl_vp CFX 1 (OT_S81SL_VP_CFX) moves the hc_post write-back (hw_*) one edge and
+# nothing else (xtier_land.vp_cfx_edges): POST command -> last hw takes +VP_CFX.  CFX 0 = the measured value exactly.
+VP_CFX = XTIER.vp_cfx_edges()
+BEAT['post_cmd_to_last_hw'] += VP_CFX
 # dv_price.py (S81-DV measured): beat partial -> xfin DL 4 + collector 5; xfin last partial -> rstd 234 (tb_s81dv_xfin16);
 # rstd -> XQ complete at the ring stop 59 + 4 * 4 (last leaf) + DL 4.
 # FORM-NF 11-05: the 16-slice measurement is first rstd 243, last rstd 261 (SS33-TOK xf old/new).

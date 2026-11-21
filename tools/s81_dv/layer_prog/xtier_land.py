@@ -376,5 +376,39 @@ def vp_sr_edges(defines=None, root=None):
     d = selected_defines() if defines is None else frozenset(defines)
     return _vp_sr(str(root or rtl_root()), d, os.environ.get('OT_S81_SELECTED_ASBUILT_MANIFEST'))
 
+
+
+# ------------------------------------------------------------------------------------------------ vp CFX (hc_post write-back)
+# S81-VP-CFX (FABLE-FIX-S81-LEAF 11-19 / 11-20, main e828eac088 + tree overlay s81_vp_cfx_overlay.py b651bffd011): ot_s81sl_vp
+# CFX 1 writes cf register to register; contract (ot_s81sl_vp.sv header, lock-step bench legal / dense / HQX: PASS, CFX 0
+# control FAIL on the write-backs): the hc_post write-back (hw_v / hw_j / hw_hf / hw_d of a lane result) exactly one clk
+# later, every other vp output in the same cycle.  The parent pays the edge on the POST write-back only.
+@functools.lru_cache(maxsize=None)
+def _vp_cfx(root, defines, manifest=None):
+    _, _, smods, _ = _file(root, SLICE, defines, manifest)
+    inst = re.findall(r'\bot_s81sl_vp\s*(#\s*\((?:[^()]|\([^()]*\))*\))?\s*u_vp\s*\(', smods['ot_s81sl_leaf'])
+    if len(inst) != 1:
+        raise ValueError(f'ot_s81sl_leaf instantiates u_vp {len(inst)} times (expected 1)')
+    if re.search(r'\.CFX\s*\(', inst[0]):
+        raise ValueError('ot_s81sl_leaf overrides u_vp CFX: extend xtier_land.vp_cfx_edges')
+    _, macros, vmods, _ = _file(root, VP, defines, manifest)
+    prm = _params(vmods['ot_s81sl_vp'])
+    if 'CFX' not in prm:
+        if 'OT_S81SL_VP_CFX' in defines:
+            raise ValueError('OT_S81SL_VP_CFX selected but ot_s81sl_vp has no CFX parameter (tree overlay missing)')
+        return 0
+    cfx = _int(prm['CFX'])
+    if cfx not in (0, 1):
+        raise ValueError(f'ot_s81sl_vp CFX {cfx} unresolved (macro OT_S81SL_VP_CFX_DEFAULT={macros.get("OT_S81SL_VP_CFX_DEFAULT")})')
+    return cfx
+
+
+def vp_cfx_edges(defines=None, root=None):
+    """edges ot_s81sl_vp CFX adds on the hc_post write-back (hw_v / hw_j / hw_hf / hw_d of a lane result), 0 or 1:
+    OT_S81SL_VP_CFX in the selected defines sets CFX 1 (die-wide: every leaf type binds the one vp).  The compiler adds
+    it to the POST write-back date (dv_layer_compile.BEAT post_cmd_to_last_hw); every other vp output keeps its cycle."""
+    d = selected_defines() if defines is None else frozenset(defines)
+    return _vp_cfx(str(root or rtl_root()), d, os.environ.get('OT_S81_SELECTED_ASBUILT_MANIFEST'))
+
 if __name__ == '__main__':
     print(json.dumps(form(), indent=1))

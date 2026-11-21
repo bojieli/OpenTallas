@@ -16,7 +16,7 @@ import sys
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent))
-from dv_layer_compile import Die, ctl_path
+from dv_layer_compile import Die, ctl_path, BEAT
 from layer_prog.final_ffn import transfers, broadcasts, verify_moves
 from layer_prog.lower_vpx import send_cfg, _vp
 
@@ -262,8 +262,8 @@ def model(root):
                                               'combined448..464 through every peer RDOUT and own POST',
                                               'scratch480..488 for every stage read/write',
                                               'pre1008 and post1009 through all320 POST completions']),
-                ages=dict(vs13_pin_edges=75,post_pin_edges=63,actual_peer_post_arrival=None,
-                          expression='POST_final = last qualified peer RD write + CTL-to-VP pin age + 63',
+                ages=dict(vs13_pin_edges=75,post_pin_edges=BEAT['post_cmd_to_last_hw'],actual_peer_post_arrival=None,
+                          expression=f"POST_final = last qualified peer RD write + CTL-to-VP pin age + {BEAT['post_cmd_to_last_hw']}",
                           candidate_v_extension_edges=None,
                           pair_stream_rate_pairs_per_cycle=1,
                           bandwidth_only_cycle_lower_bound=max(max(vpairs.values()),max(horizontal.values()),
