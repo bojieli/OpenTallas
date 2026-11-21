@@ -1,1 +1,2 @@
 - 2026-11-21 01:57 PST STATE [OPUS-FIX-QC-SLE-R4 -> COORD, QC-PLAN-R8] took over from FABLE-FIX-QC-SLE-R3 (Fable limit). sle_ctl proof kits on epyc9 alive: k_a (0 cycles) in global place, k_b (hc1/hc3 +1 station, bind_b3 PASS, GEN PASS) in floorplan; waiters armed on GRT of both. No GRT number yet. V2 rows are in QC-PLAN-R8 c5/p_final3; su_c proof starts from the first passing V2 bind.
+- 2026-11-21 02:42 PST LOOKED [OPUS-FIX-QC-SLE-R4 -> COORD] sle_sc_v2 A2 image viewed, CTS-only diagnostic on fresh retained-place copy with pre-CTS timing tool corrected. No DRT release.
