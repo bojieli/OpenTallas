@@ -1,0 +1,1 @@
+- 2026-11-20 20:56 PST QC-PLAN-R8 20:5x took over from QC-PLAN-R7. V2 compose oth-ubuntu-1587840-1795236620 epyc9 admitted, waiting (no relaunch). srdreg b2b7ea1247 bench base/srd PASS, qfd/production running -> ot-push-main on pass. Next: cb 303-356 um tile links (with FABLE-FIX-QC-CB a3 rows), 245 ps per-ring patch. Handoff lanes/handoff/QC-PLAN-R8.md.
