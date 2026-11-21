@@ -494,6 +494,7 @@ def test_single_mode_passes():
     assert E.passes(k, m(tt=-3), 10) == ["t10"]                               # TT setup only
     assert E.passes(k, m(drv_tt=4), 10) == ["t10"]                            # TT slew only
     assert E.passes(k, m(ff=-2), 10) == ["b10"]
+    assert E.passes(k, dict(m(tt=-36.33, ff=-47.97, drv_tt=9, drv_ff=3), min_hold_only=True), 10) == ["b10"]
     assert E.passes(k, m(tt=-1, drv_ff=3), 10) == ["t10", "b10"]
     assert E.passes(k, m(drc=3), 10) == ["b10"]
     assert E.passes(k, m(), 10) == ["b10"]
