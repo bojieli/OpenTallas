@@ -52,7 +52,8 @@
 //   first frame word leaves xw_d 5 edges after the beat's pin edge (pin, SRAM write, read, output register, lx, relay).
 // ---- physical structure -----------------------------------------------------------------------------------------------
 //   Kept (ot_v41_kreg) copies of every wide select: the BF write rotation per macro and half, the q / BF read-mux selects
-//   per 32 / 64-b slice; 8 reset-relay regions.  Floorplan: tools/ref_tile/specs_s81slice/s81sl_xs.json.
+//   per 32 / 64-b slice; 8 reset-relay regions.  OT_S81SL_XS_WCOPY (opt-in): also the write data / mask family and
+//   beat-half selects, per macro and half (no cycle change).  Floorplan: tools/ref_tile/specs_s81slice/s81sl_xs.json.
 // ---------------------------------------------------------------------------------------------------------------------
 // ROM image names (INSTANCE, read from +OT_ROM_DIR) exist only in simulation; the hard macro has no parameters.
 `ifdef SYNTHESIS
@@ -214,8 +215,21 @@ module ot_s81sl_xs #(parameter INSTANCE = "") (
             wire qh = M[1];
             assign mw_e[gs][gm] = v && (f || (g[2] == M[2] && g[0] == M[0]));
             assign mw_a[gs][gm] = f ? {wpar_b, u} : {wpar_q, qrow};
+`ifdef OT_S81SL_XS_WCOPY
+            // S81-J6 (FABLE-CLOSURE-1930 lever 4, iq_C): the family / beat-half selects of the write data mux and mask are
+            // kept per-macro, per-half copies of {g_fam, g_idx[0]}, captured from the pins on the same edge as gf_q / gi_q
+            // (as u_ur0 / u_ur1).  Without it the one gf_q[gs] flop drives 8 x 512 mux / mask loads (iq_C t1 J5 place:
+            // 53 buffers, -1,432 ps into u_mem w_mask_in).  Same values on every edge; no cycle moves.
+            wire [1:0] fg0, fg1;                           // {fam, idx[0]} for the low / high 128-b half
+            ot_v41_kreg #(.W(2)) u_wf0 (.clk(clk), .arst_n(1'b1), .d({g_fam[gs], g_idx[7*gs]}), .q(fg0));
+            ot_v41_kreg #(.W(2)) u_wf1 (.clk(clk), .arst_n(1'b1), .d({g_fam[gs], g_idx[7*gs]}), .q(fg1));
+            wire [255:0] dq = qh ? {d[521:266]} : d[255:0];
+            assign mw_d[gs][gm] = {fg1[1] ? cb : dq[255:128], fg0[1] ? cb : dq[127:0]};
+            assign mw_m[gs][gm] = {{128{!fg1[1] || fg1[0]}}, {128{!fg0[1] || !fg0[0]}}};
+`else
             assign mw_d[gs][gm] = f ? {cb, cb} : (qh ? {d[521:266]} : d[255:0]);
             assign mw_m[gs][gm] = f ? (g[0] ? {{128{1'b1}}, 128'd0} : {128'd0, {128{1'b1}}}) : {256{1'b1}};
+`endif
         end
     end endgenerate
 
