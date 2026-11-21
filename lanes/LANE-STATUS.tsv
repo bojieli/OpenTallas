@@ -115,3 +115,4 @@ OPUS-FIX-KV-HGI-R5	stood-down	OPUS-FIX-KV-HGI-R6	2026-11-21	12:26 PST | context;
 FABLE-FIX-KV-HUB-R3	stood-down	FABLE-FIX-KV-HUB-R4	2026-11-21	12:37 PST | context limit; D27d2 chain unit live, see handoff STAND-DOWN block
 FAM-QC-COLL-R2	stood-down	FAM-QC-COLL-R3	2026-11-21	12:44 PST
 FLOW-OBS-GCELL-R2	stood-down	none	2026-11-21	12:49 PST | HEAD-START-R17 reads the v2 hd_host_e proof + he_epc M7 DRC check; new flow items -> FLOW-OPS-1300; qkd_ahub -> FABLE-FIX-KV-HUB-R4; idx_tx rst -> S81-BKSEL-R7
+QC-PLAN-R11	stood-down	QC-PLAN-R12	2026-11-21	12:53 PST | context limit. Handoff lanes/handoff/QC-PLAN-R11.md: wave rt already current (c2047/a1376/31c7 >= aaa1dcff0349; pin reverted to 65f3f), v3t tools-only bind PASS (strict 0, LATCHECK 1921/1921) with post-bind G0 running, sites helper running (qc-plan-r11/sites), sle_ctl read + reset census done (no reset stations), V3 row inventory with gate states. STRAP-R2 p1 seats 332/528, 0 need station, CTS pending.
