@@ -24,3 +24,4 @@
 - 2026-11-20 16:03 PST DONE [WAITER-STD-1600] ot-push-main otpush-tolerant-swine-3489878 on tolerant-swine: rc=0 after 151 s, ended 16:03:13, log none, cmd: ot-push-main 
 - 2026-11-20 16:04 PST DONE [WAITER-STD-1600] ot-push-main otpush-tolerant-swine-3644174 on tolerant-swine: rc=0 after 28 s, ended 16:04:53, log none, cmd: ot-push-main 
 - 2026-11-20 16:08 PST DIED [WAITER-STD-1600] ot-run otrun-tolerant-swine-3821666 on tolerant-swine: rc=78 after 1 s, ended 16:08:33, log /srv/opentallas-scratch2/claude/WAITER-STD-1600/e2e.log, cmd: --mem 1 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/WAITER-STD-1600 -- bash -c sleep 3; exit 3
+- 2026-11-20 16:10 PST DONE [WAITER-STD-1600] ot-push-main otpush-tolerant-swine-3865739 on tolerant-swine: rc=0 after 46 s, ended 16:10:13, log none, cmd: ot-push-main 
