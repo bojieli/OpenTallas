@@ -20,3 +20,4 @@
   [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
 - 2026-11-21 12:45 PST CANARY s81_head @ b9735df11e: FAIL failing lec,signoff (NO-REGRESSION within tolerance of baseline canary-run-info /srv/opentallas-scratch2/claude/flow-canary/runs/s81_head_b6934d775_1121_114528_208707); CANARY hbm_sram @ b9735df11e: FAIL failing vclk_basis,signoff (NO-REGRESSION within tolerance of baseline canary-run-info /srv/opentallas-scratch2/claude/flow-canary/runs/hbm_sram_a13768301_1121_113029_361276); CANARY qwen_compute @ d032c72040: FAIL failing lec (INFO this run set the baseline (canary-run-info); non-gating)
   [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
+- 2026-11-21 12:51 PST DONE [FLOW-CANARY-R2] ot-push-main otpush-tolerant-swine-3440121 on tolerant-swine: rc=0 after 18 s, ended 12:51:02, log none, cmd: ot-push-main 
