@@ -231,3 +231,4 @@
   FAILED-NO-RELAUNCH 9, all KV: 9 DELIBERATE (HOLD posts 03:52 by HGI/HUB lanes; IOPC 23:54 census; pv D28; pv_v8 on cancel list), 0 ORPHANED.
   QC 14: 5 STALE held CB, 4 STALE cancelled, 3 new WAIT-VISUAL HCST (+2 STALE cancelled counted); KV 26 WAIT-BIND: 9 FAILED + 17 held/cancelled.
   HEAD none flagged (LEP0N-R4). Note: CANCEL-SWEEP-0450 has no post file; cancels matched via CANCEL-GRT-FLAT/UNSIGNABLE tsv only.
+- 2026-11-21 04:53 PST CORRECTION: counts are S81 13, QC 12 (5 STALE held CB + 4 STALE cancelled + 3 WAIT-VISUAL HCST), KV 28 (9 FAILED + 19 held/cancelled) = 53.
