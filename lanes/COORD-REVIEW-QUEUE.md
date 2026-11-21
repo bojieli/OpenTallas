@@ -19780,3 +19780,4 @@ FAILED [AUTOPILOT 0569cd219967] 2026-11-21 11:31:29 PST AUTOPILOT -> KIT-WAVE-3:
   [filed under] FAM-S81-SLICE-R5: FAM-S81-SLICE-R4 stood down (chain FAM-S81-SLICE-R4 > FAM-S81-SLICE-R5)
 - 2026-11-21 11:47 PST DIED [S81-J6-ASSEMBLY-R4] ot-run oth-ubuntu-2503724-1795289025 on tolerant-swine: rc=1 after 1401 s, ended 11:47:04, log /srv/opentallas-scratch2/claude/s81-j6-r4/lint_candJ7c_b/spec_svc_hi_dsdv_svc_rs__t1/gen.live.log, cmd: --mem 16 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/a9ed808a98d/private/S81-J6-ASSEMBLY-R4/svc_
 - 2026-11-21 11:47 PST ALERT NO-ADVANCE s81: 6 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (slice_station__t45 x3@pipeline, slice_station__t18 x3@pipeline, serdes__t14 x2@pipeline)
+- 2026-11-21 11:47 PST ALERT STUCK-STATE s81_head: 1 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. hd_host_n, 2026-11-20 22:18)
