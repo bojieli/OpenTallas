@@ -17,20 +17,20 @@ The two private lever-1 pilots used the same fixed endpoints for the 15 station 
 
 For xo1, the compact group shares stages across a 1649.970 µm endpoint envelope. Four 405 µm legs provide only 1620 µm. Allow for an additional stage or a split bank before claiming 405 µm for the whole group. The measured endpoint envelopes for xo2 and xo3 are 1718.550 and 1786.860 µm.
 
-The es_p0 chain connects two u_bn0.d_st pins to u_t0.e0. The maximum pin envelope is 1219.350 µm at the frozen placements. A diagnostic candidate shifts u_t0 left 17.28 µm to (1270.188, 293.580) and seats the two existing stages at (598.968, 456.300) and (1002.888, 456.300), with 10 µm margin outside the standard macro halo. Predicted centroid hops are 395.694, 403.920 and 402.167 µm. The t0 move is specific to es_p0 and needs review of t0's other incident paths and actual physical integration.
+The es_p0 chain connects two u_bn0.d_st pins to u_t0.e0. The maximum pin envelope is 1219.350 µm at the frozen placements. A diagnostic candidate shifts u_t0 left 17.28 µm to (1270.188, 293.580) and seats the two existing stages at (598.968, 456.300) and (1002.888, 456.300), with 10 µm margin outside the standard macro halo. The exact ODB replay produces seated group-centroid hops of 394.776, 403.920 and 403.084 µm and zero FIRM overlaps at the two stage seats. The two groups use 27 sites of horizontal pitch because the 24-site legacy pitch overlaps the 1.404 µm DFF footprints by 0.108 µm. Strict coverage advances from 106 to 108 fitted groups and retains the other 13 over-depth groups. The t0 move is specific to es_p0 and needs review of t0's other incident paths and actual physical integration.
 
 ## Adjacent fitted stations
 
-The FIT branch tests a candidate center against its nominal neighboring stage centers. The actual adjacent stages can choose different off-line points. On exact 3_2 replay, 7 of 59 chains with every stage reported fitted have actual center-to-center hops above 405 µm, up to 522.725 µm. A joint search on the fixed macro and endpoint geometry found candidates for all seven chains with the original depth and 20 µm channel margin. Worst predicted centroid hop is 403.812 µm. The plot shows these seats against the actual macro rectangles and was visually inspected. Stage choices remain a geometry diagnostic until prepared in a new kit and reviewed with its actual placed, routed, and timed results.
+The FIT branch tests a candidate center against its nominal neighboring stage centers. The actual adjacent stages can choose different off-line points. On exact 3_2 replay, 7 of 59 chains with every stage reported fitted have actual center-to-center hops above 405 µm, up to 522.725 µm. A joint search on the fixed macro and endpoint geometry found candidates for all seven chains with the original depth and 20 µm channel margin. The exact OpenDB replay applied all 29 proposed seats and verified the normal Tcl footprint check at 20 µm. Worst actual group-centroid hop is 403.812 µm. The plot shows these seats against the actual macro rectangles and was visually inspected. Stage choices remain a geometry diagnostic until prepared in a new kit and reviewed with its actual placed, routed, and timed results.
 
-| Chain head | Original maximum hop (µm) | Candidate maximum (µm) |
+| Chain head | Original maximum hop (µm) | Seated maximum (µm) |
 | --- | ---: | ---: |
-| u_y_xb_1_bs0_0 | 522.725 | 397.440 |
-| u_y_xa_1_bs0_0 | 521.185 | 397.440 |
-| u_y_cc_1_s0_0 | 496.156 | 397.440 |
-| u_y_rt_2a_0 | 464.993 | 403.189 |
+| u_y_xb_1_bs0_0 | 522.725 | 398.080 |
+| u_y_xa_1_bs0_0 | 521.185 | 397.583 |
+| u_y_cc_1_s0_0 | 496.156 | 397.602 |
+| u_y_rt_2a_0 | 464.993 | 403.648 |
 | u_y_rt_8b_0 | 457.399 | 403.812 |
 | u_y_rt_6b_0 | 426.877 | 403.002 |
 | u_y_rt_6a_0 | 417.594 | 397.440 |
 
-Artifacts on intel1 are under /srv/opentallas-scratch2/claude/fam-s81-col/relay-mid-diagnosis-indexed-1121. The endpoint rows are produced by endpoints.py from probe.log. The adjacent-leg audit is station_leg_audit.py. joint.log contains the full trial site table and relay-joint-fit.png is the reviewed overlay. The exact shifted and joint placement replays use sibling directories relay-mid-es-p0-1121 and relay-mid-joint-actual-1121. The inherited kits and candidates remain independent.
+Artifacts on intel1 are under /srv/opentallas-scratch2/claude/fam-s81-col/relay-mid-diagnosis-indexed-1121. The endpoint rows are produced by endpoints.py from probe.log. The adjacent-leg audit is station_leg_audit.py. joint.log contains the full trial site table and relay-joint-fit.png is the reviewed overlay. The exact shifted and joint placement replays use sibling directories relay-mid-es-p0-1121 and relay-mid-joint-actual-1121. The exact joint seat table is joint_seats in relay-mid-joint-actual-1121/relay_mid_probe.tcl. The Fable-indexed and frozen baseline replays produced byte-identical face and relay seat tables and took approximately 60 s and 667 s respectively.
