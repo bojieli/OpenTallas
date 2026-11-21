@@ -3,34 +3,30 @@ import json
 import os
 import subprocess
 import tempfile
-import time
 import unittest
+from datetime import datetime, timezone
 from pathlib import Path
 
 import autopilot as AP            # noqa: E402
 import kit_wave as KW             # noqa: E402
 
-_TMP = tempfile.TemporaryDirectory()
-SIGNALS = Path(_TMP.name) / "signals.log"
-
+CANCEL_AT = 1_700_000_000
 KIT = "/srv/x/kit-wave/items/t1/a3/gen/t1"
 
 
 class PlaceCancel(unittest.TestCase):
     def setUp(self):
-        self._old_sig, AP.OT_RUN_SIGNALS = AP.OT_RUN_SIGNALS, SIGNALS      # the module constant is read at import: other tests may import autopilot first
         self.d = tempfile.TemporaryDirectory()
+        self.addCleanup(self.d.cleanup)
         self.rec = {"dir": self.d.name}
-        (Path(self.d.name) / "place_service.json").write_text(json.dumps({"kit": KIT, "started": time.time() - 600}))
-        SIGNALS.write_text("")
-
-    def tearDown(self):
-        AP.OT_RUN_SIGNALS = self._old_sig
-        self.d.cleanup()
+        self.signals = Path(self.d.name) / "signals.log"
+        self.addCleanup(setattr, AP, "OT_RUN_SIGNALS", AP.OT_RUN_SIGNALS)
+        AP.OT_RUN_SIGNALS = self.signals
+        (Path(self.d.name) / "place_service.json").write_text(json.dumps({"kit": KIT, "started": CANCEL_AT - 600}))
 
     def sig(self, kit, off=0, sender="ot-run --cancel"):
-        ts = time.strftime("%Y-%m-%dT%H:%M:%S%z", time.gmtime(time.time() - off))
-        with open(SIGNALS, "a") as f:
+        ts = datetime.fromtimestamp(CANCEL_AT - off, timezone.utc).strftime("%Y-%m-%dT%H:%M:%S%z")
+        with self.signals.open("a") as f:
             f.write(f"{ts} signal 15 from pid 1 ({sender} 'kwp'): ot-run pid 9 dir {kit}: x\n")
 
     def test_cancel_in_signals_log_is_found(self):
