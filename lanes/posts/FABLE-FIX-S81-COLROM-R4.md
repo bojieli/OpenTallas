@@ -1,0 +1,2 @@
+- 2026-11-21 10:36 PST DIED [FABLE-FIX-S81-COLROM-R3] ot-run oth-ubuntu-1549570-1795283695 on tolerant-swine: rc=3 after 2496 s, ended 10:36:27, log /srv/opentallas-scratch2/claude/fable-fix-s81-colrom-r3/chain_otrun.log, cmd: --mem 108 --threads 8 --disk 150 --priority plan --plan-job bind --hosts epyc7 --dir /srv/opentallas-scratch2/claude/fable-fix-s81-colrom-r3
+  [filed under] FABLE-FIX-S81-COLROM-R4: FABLE-FIX-S81-COLROM-R3 stood down (chain FABLE-FIX-S81-COLROM-R3 > FABLE-FIX-S81-COLROM-R4)
