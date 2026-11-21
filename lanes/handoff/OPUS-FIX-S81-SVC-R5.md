@@ -4,6 +4,13 @@ Owner of the S81 svc family (16 types: svc_hi rs t1-t6, pvso_entry t1-t2, svc_lo
 Succeeds FABLE-FIX-S81-SVC (R3 stood down on context; R4 stopped on the Fable limit). Read lanes/handoff/FABLE-FIX-S81-SVC.md for older state.
 Nothing pushed to main. Nothing signed, nothing exported.
 
+## 11-21 05:0x PST split re-compose 1 failed -> chain10d
+- chain10c split: "type_split: FAIL map u_rsv_09: whole split partition svc_9 (needs a piece)" with the hi4 land-SRAM manifest
+  (its map_file = bind/inputs/map_b178.json, not split-aware). Codex's spec manifest asbuilt_census_r5.json uses map_census_r5.json.
+- New manifest tree/asbuilt_svc_r5_hi4_split_map.json = hi4 land-SRAM manifest + map_file map_census_r5.json (copied into tree root).
+- chain10d.sh PID 393326 (epyc10): same steps as chain10c with that manifest (split -> elab -> strict bind -> LATCHECK -> att kit).
+  Logs split.log / STATE (old: split1.*, STATE.split1). Posts still append chain10c.log.
+
 ## 11-21 04:5x PST bind2 SIDECAR_STALE -> re-compose the split (chain10c)
 - bind2 (unit oth-ubuntu-3453123-1795263056): ELAB_RC=0, BIND_RC=2 "clock landing SIDECAR_STALE: sidecar collector.types lacks
   svc_hi_dsdv_svc_rs__t4_att". Cause: Codex's x_epoch compose (2494448) stopped right after plan_c.json: x_epoch has NO eW_sidecar.json,
