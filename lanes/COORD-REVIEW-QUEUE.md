@@ -18658,3 +18658,4 @@ FAILED [AUTOPILOT de40cf1697f8] 2026-11-21 08:29:58 PST AUTOPILOT -> KIT-WAVE-12
   [filed under] OPUS-FIX-S81-SVC-R7: OPUS-FIX-S81-SVC-R6 stood down (chain OPUS-FIX-S81-SVC-R6 > OPUS-FIX-S81-SVC-R7)
 - 2026-11-21 08:30 PST STATUS [OPUS-FIX-S81-SVC-R6 -> COORD] hi4 x_epoch split re-composed with its own sidecar + manifest (Codex 2494448 had stopped after plan_c.json; bind 2 failed SIDECAR_STALE on __t4_att). Running elab -> strict bind -> LATCHECK on epyc10.
   [filed under] OPUS-FIX-S81-SVC-R7: OPUS-FIX-S81-SVC-R6 stood down (chain OPUS-FIX-S81-SVC-R6 > OPUS-FIX-S81-SVC-R7)
+- 2026-11-21 08:30 PST DONE [FLOW-CLKGRT-1121] ot-run oth-ubuntu-782052-1795278103 on tolerant-swine: rc=0 after 548 s, ended 08:30:49, log /home/ubuntu/tmp/clkgrt_clkonly.out, cmd: --mem 40 --threads 8 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/flow-clkgrt-1121 --stage /srv/opentallas-scratch2/claude/flow-clkgr
