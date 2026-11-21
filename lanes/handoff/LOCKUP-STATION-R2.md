@@ -22,3 +22,9 @@ post rows to S81-J6-ASSEMBLY / QC-PLAN-R7 / KV-PLAN-R2 ONLY after a proof whose 
   Baseline (same work dir pregrt_ff_hold.log): before cross_tap 3,039 / same_tap 199 / port_in 2; hold_cells 48,100; TT -1.82 / -1.82.
 - Open: seam port latches cost -22k setup on t39 (u_fl_po -> ft*_o); if proof4 TNS still > baseline, drop seams on ports whose
   baseline setup slack < T/2 or keep seams off. KV: no kit proof yet (no CTS kit on D26/D27).
+
+## Update (COORD after 22:xx)
+- COORD accepted: proof4 leaf form is not proof1 (latches parked through tap solve + CTS, then on the launch flop leaf net).
+- proof4 CTS: 28,649 netlist latches -> 6,281 bypassed same tap, 16,240 bypassed far (>200 um), 8,943 kept, all hung on launch leaf.
+- scope bug fixed (ct_hl_drop took ct_hlmax via global; clock_taps is sourced in a proc) -> clone a8f34806c0 (amended, unpushed); proof4 resumed from cts (resume.json).
+- Targets now: S81-J6-ASSEMBLY, QC-PLAN-R8 (was R7), KV-PLAN-R3 (was R2). KV: any lockup form goes to D28 after a proof (D27c dropped r5 rows).
