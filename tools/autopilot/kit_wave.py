@@ -8349,6 +8349,22 @@ def private_rt_fields(sha, root=None, rt_root=None):
     return {"tools_rt": d, "tools_sha": full}
 
 
+def private_tree_link_refusal(src, tree):
+    """FLOW-OPS-0900 (COORD ruling for S81-J6-ASSEMBLY-R4): '' unless --tree lies outside the die source tree's parent dir AND shares inodes with
+    it (a `delta-apply --link` lane tree: it blocked the S81 J6 apply).  Stat-only, first 5000 files; a tree not readable here is not judged."""
+    if not (os.path.isdir(tree) and os.path.isdir(src)):
+        return ""
+    if os.path.dirname(os.path.realpath(tree).rstrip("/")) == os.path.dirname(os.path.realpath(src).rstrip("/")):
+        return ""
+    import src_manifest as SM
+    sh = SM.inodes_shared_with(tree, src)
+    if not sh:
+        return ""
+    return (f"private-spec --tree {tree} is outside the die tree's parent dir {os.path.dirname(os.path.realpath(src))} and shares inodes with the "
+            f"source of record {src} ({len(sh)}+ hardlinked files, e.g. {sh[0]}): rebuild it as a real copy (src_manifest.py delta-apply now copies "
+            f"instead of linking there) or put it next to the base tree")
+
+
 def private_spec(cfg, die, item, hub, plan=None, tree=None, overlays=(), ab=(), why="", lane="", work=None, kind="type", src_sha=None,
                  host=None, bind_out=None, src_manifest=None, rt=None):
     """FLOW-PROC-A (FABLE-FLOW-0800 class a): the spec of a PRIVATE kit of die/item = the item's wave spec computed NOW (spec_for + rt tools,
@@ -8377,6 +8393,9 @@ def private_spec(cfg, die, item, hub, plan=None, tree=None, overlays=(), ab=(), 
     derived = []
     if tree and os.path.abspath(tree).rstrip("/") != str(sp["src"]).rstrip("/"):
         old, new = str(sp["src"]), os.path.abspath(tree)
+        why = private_tree_link_refusal(old, new)
+        if why:
+            raise ValueError(why)
         for k, v in list(sp["gen_env"].items()):
             nv, ch = _swap_prefix(v, old, new)
             if ch:

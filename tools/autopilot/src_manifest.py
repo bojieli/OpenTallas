@@ -736,6 +736,38 @@ def link_tree(src, dst):
             os.makedirs(os.path.join(d, x), exist_ok=True)
 
 
+def link_outside_base(old_tree, out):
+    """FLOW-OPS-0900 (COORD ruling for S81-J6-ASSEMBLY-R4): '' when a --link output sits in the base tree's own parent dir, else the reason.
+    A linked lane tree elsewhere shares inodes with the source of record (and blocked the S81 J6 apply)."""
+    base_parent = os.path.dirname(os.path.realpath(old_tree).rstrip("/"))
+    out_parent = os.path.dirname(os.path.realpath(os.path.abspath(out)).rstrip("/"))
+    if out_parent == base_parent:
+        return ""
+    return f"--link output {out} is outside the base tree's parent dir {base_parent}"
+
+
+def inodes_shared_with(tree, base, limit=5000):
+    """-> [(relpath)] files of TREE that are the same inode as the file at the same path in BASE (stat-only; first LIMIT files)"""
+    out, n = [], 0
+    for dp, dn, fn in os.walk(tree):
+        for f in fn:
+            p = os.path.join(dp, f)
+            n += 1
+            if n > limit:
+                return out
+            try:
+                st = os.lstat(p)
+                if not stat.S_ISREG(st.st_mode) or st.st_nlink < 2:
+                    continue
+                rel = os.path.relpath(p, tree)
+                bs = os.lstat(os.path.join(base, rel))
+                if (bs.st_ino, bs.st_dev) == (st.st_ino, st.st_dev):
+                    out.append(rel)
+            except OSError:
+                continue
+    return out
+
+
 def delta_apply(pack, old_tree, out, link=False, expect=""):
     """out = a real copy (cp -a, fresh inodes, never links) of old_tree + the pack; new manifest = old manifest with the changed paths;
     nothing is trusted: the caller runs publish (full verify) afterwards."""
@@ -747,10 +779,16 @@ def delta_apply(pack, old_tree, out, link=False, expect=""):
         raise SystemExit(f"refuse: {out} exists")
     tmp = out + ".building"
     shutil.rmtree(tmp, ignore_errors=True)
+    verify_after = bool(link)
+    if link:
+        why = link_outside_base(old_tree, out)
+        if why:                                                  # never hardlink a tree outside the base's dir: a real copy instead
+            print(f"delta-apply: {why}: making a REAL copy (cp -a --reflink=auto, no hardlinks) so it shares no inodes with the source of record", flush=True)
+            link = False
     if link:
         link_tree(old_tree, tmp)
     else:
-        subprocess.run(["cp", "-a", "--reflink=never", old_tree, tmp], check=True)
+        subprocess.run(["cp", "-a", "--reflink=auto" if verify_after else "--reflink=never", old_tree, tmp], check=True)
     for dp, dn, fn in os.walk(tmp):
         os.chmod(dp, os.lstat(dp).st_mode | stat.S_IWUSR)
     files = dict(m["files"])
@@ -786,7 +824,7 @@ def delta_apply(pack, old_tree, out, link=False, expect=""):
         f.write(nm["manifest_hash"] + "\n")
     if link:
         write_link_base(tmp, old_tree)                          # old_tree's own .link-base (chained link) was hardlinked in: replace it
-    if expect or link:                                           # (4) hash equality BEFORE the tree can be published or applied
+    if expect or link or verify_after:                           # (4) hash equality BEFORE the tree can be published or applied
         errs, _info = verify(tmp, expect=expect, full=True)
         if errs:
             for dp, dn, fn in os.walk(tmp):                      # directories only: a file chmod would reach the shared inode in the base
