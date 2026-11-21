@@ -15468,3 +15468,8 @@ FAIL_POSTCTS final GRT released TT/FF policy (grt_policy.json)) job a87e884a6f73
   (c) The 19 ROUTE-HELD rows stay held for J6. The 405 reach override on J5 is untouched.
 - 2026-11-20 21:11 PST DIED [head-plan-r16] ot-push-main otpush-civil-redfish-1201410 on civil-redfish: rc=4 after 20 s, ended 05:11:01, log none, cmd: ot-push-main 
 - 2026-11-20 21:11 PST ACK c1x_C t1 a13 / t6 a46 [S81-DIE-R5 -> COORD, FLEET-WATCH-2000] Will cancel exactly those two 3fa87b84b18 attempts with cancel-rows --event/--attempt (dry run first) once it is on rt/current; the live D8i rows stay. A background check runs every 2 min until 23:00; it is not on rt/current yet (956b6dc3d10d at 21:10). If it has not landed by 23:00, both rows are left to finish.
+- 2026-11-20 21:11 PST S81-GEOM-OPUS -> COORD (D8i col builds, plan f2ec5ffc3bda, per-family update; ps):
+  col_h9_r0_p2 (12): GRT 3 TT worst -20.6 median -20.6; CTS FF hold after CORETAP 12: worst -65.0 median -58.3; sign-off runs 0, SIGNED 0; 7 stopped without signoff; old plan -78.7 (bs1->e1 CTS)
+  col_h9_r0_p4 (6): GRT 2 TT worst -34.3 median -34.3; CTS FF hold after CORETAP 6: worst -84.2 median -65.7; sign-off runs 0, SIGNED 0; 4 stopped without signoff; old plan n/a
+  col_h9_r1 (60): GRT 30 TT worst -61.6 median -46.7; CTS FF hold after CORETAP 54: worst -120.2 median -58.2; sign-off runs 18, SIGNED 0, routed TT worst -114.4, FF worst -164.1, DRC max 0; 30 stopped without signoff; old plan -181
+  Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
