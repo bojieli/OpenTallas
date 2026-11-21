@@ -11,6 +11,10 @@ sent verbatim to a host by tools/autopilot/failfast_scan.py (read-only dry run o
 Rules (config key, default; env wins over `export KEY = value` in the kit's config.mk; OT_FAILFAST=0 turns all off):
   (a) [GRT overflow / no-progress rule DELETED 11-14, OWNER: delete the conservative limits; GRT is not stopped for overflow or elapsed wall time;
       grt183_make.sh's optional OT_GRT_POST_MAX_S threshold is advisory logging only.]
+  (d) NOCONVERGE        OT_FF_NOCONV=1  OT_FF_NOCONV_RESTARTS=2  OT_FF_NOCONV_MIN_GAIN_PCT=20     (MEM-RECLAIM-2200, OWNER 11-20 flat-congestion case)
+      GRT restarts its 30-iteration congestion loop (rounds); 28 jobs sat 3-9 rounds, 12-60 h, at flat overflow.  Stop when 2 consecutive
+      restarts each lowered the round-best overflow (congestion-N.rpt totals) by less than 20 %.  Measured, not a time or level limit;
+      an open round is never judged.  Class line OT_GRT_NOCONVERGE, wave class PLAN design:grt_flat_overflow (no retry).
   (b) DRT_NO_PROGRESS   OT_FF_DRT=1  OT_FF_DRT_ITER=20  OT_FF_DRT_MAX_VIOL=10000  OT_FF_DRT_MIN_DROP_PCT=5  OT_FF_DRT_WINDOW=3
       From completed iteration OT_FF_DRT_ITER: stop when the violation count is above OT_FF_DRT_MAX_VIOL and over the last
       OT_FF_DRT_WINDOW iterations it fell by less than OT_FF_DRT_MIN_DROP_PCT % per iteration (compound: v_last >
@@ -37,6 +41,8 @@ DEFAULTS = {
     # FLOW-FIX-2045 (LONG-RUN-0300: KV kv3_io_cor 38 h in detail_route, iteration 51, violations bobbing around 250, no cap): (b2) DRT_STALL, below the 10000-violation floor of (b)
     "OT_FF_DRT_STALL": 1, "OT_FF_DRT_STALL_ITER": 40, "OT_FF_DRT_STALL_WINDOW": 12, "OT_FF_DRT_STALL_MIN_DROP_PCT": 1,
     "OT_FF_HOLD": 1, "OT_FF_HOLD_CAPS": 0,
+    # MEM-RECLAIM-2200 (OWNER 11-20, flat-congestion case of the unsignable-job rule): (d) NOCONVERGE, see below
+    "OT_FF_NOCONV": 1, "OT_FF_NOCONV_RESTARTS": 2, "OT_FF_NOCONV_MIN_GAIN_PCT": 20,
 }
 
 ITER_RE = re.compile(r"\[INFO GRT-0102\] Start extra iteration (\d+)/(\d+)")
@@ -204,6 +210,70 @@ def drt_line(d, stamp=True):
                " -> ".join(str(v) for v in d["tail"]), time.strftime(" %Y-%m-%d %H:%M:%S", time.gmtime()) if stamp else ""))
 
 
+# ------------------------------------------------------------------------------------------------ (d) GRT restarts without gain
+def congestion_rounds(hist):
+    """[[idx, mtime, total], ...] (the congestion-<idx>.rpt snapshots this run has written, any order) -> [best total of each round, oldest first].
+    A new round starts when the report index does not increase in time order (OpenROAD restarts at extra iteration 1/N; the report files are
+    overwritten by index, so only the history kept by judge() shows the earlier rounds)."""
+    out, prev = [], None
+    for idx, _mt, tot in sorted(hist, key=lambda h: (h[1], h[0])):
+        if prev is None or idx <= prev:
+            out.append(tot)
+        else:
+            out[-1] = min(out[-1], tot)
+        prev = idx
+    return out
+
+
+def noconverge_decide(hist, c):
+    """(d) MEM-RECLAIM-2200 (OWNER 11-20: cancel a job measured unable to route; flat congestion across restarts is measured, not a time limit).
+    The restart loop of GRT ('extra iteration' rounds) stops after OT_FF_NOCONV_RESTARTS (2) consecutive restarts that each lowered the best
+    overflow of the round by less than OT_FF_NOCONV_MIN_GAIN_PCT (20 %) against the round before.  Needs RESTARTS + 1 completed rounds (the
+    open last round is not judged), so a round that is still falling is never cut.  -> None or the stop record"""
+    if not c["OT_FF_NOCONV"]:
+        return None
+    k, pct = c["OT_FF_NOCONV_RESTARTS"], c["OT_FF_NOCONV_MIN_GAIN_PCT"]
+    rounds = congestion_rounds(hist)[:-1]            # completed rounds only
+    if len(rounds) < k + 1 or rounds[-1] <= 0:
+        return None
+    tail = rounds[-(k + 1):]
+    if all(tail[i] > tail[i - 1] * (1 - pct / 100.0) for i in range(1, len(tail))):
+        return {"rule": "NOCONVERGE", "restarts": k, "min_gain_pct": pct, "rounds": len(rounds), "tail": tail}
+    return None
+
+
+def noconverge_line(d, stamp=True):
+    return ("OT_GRT_NOCONVERGE stage=grt class=GRT_NOCONVERGE: %d consecutive GRT restarts each gained less than %g%% of the round-best overflow "
+            "(best per round %s, %d completed rounds); stopping the stage (MEM-RECLAIM-2200, design:grt_flat_overflow)%s"
+            % (d["restarts"], d["min_gain_pct"], " -> ".join(str(v) for v in d["tail"]), d["rounds"],
+               time.strftime(" %Y-%m-%d %H:%M:%S", time.gmtime()) if stamp else ""))
+
+
+def _noconv_history(rp, t0, state_path, settle_s):
+    """the persisted congestion snapshots of this run plus the new settled ones -> list; written back to state_path"""
+    st = {}
+    if state_path:
+        try:
+            st = json.load(open(state_path))
+        except (OSError, ValueError):
+            st = {}
+    seen = {(h[0], h[1]) for h in st.get("cong", [])}
+    for n, mt, p in reports_now(rp, t0, settle_s):
+        if (n, mt) not in seen:
+            try:
+                st.setdefault("cong", []).append([n, mt, parse_report(open(p, errors="replace").read())["total"]])
+            except OSError:
+                continue
+    if state_path and st.get("cong"):
+        try:
+            with open(state_path + ".tmp", "w") as f:
+                json.dump(st, f)
+            os.replace(state_path + ".tmp", state_path)
+        except OSError:
+            pass
+    return st.get("cong", [])
+
+
 # ------------------------------------------------------------------------------------------------ (c) hold
 def hold_decide(caps, stall, c, config_text=""):
     if not c["OT_FF_HOLD"] or advisory(config_text):
@@ -301,7 +371,12 @@ def judge(work, t0, state_path=None, env=None, settle_s=None, now=None):
         d = drt_decide(s["drt"], c)
         if d:
             return [drt_line(d)]
-    return []   # no GRT rule: GRT is never stopped on overflow (OWNER 11-14, rule deleted)
+    # (d) GRT restarts with no overflow gain (OWNER 11-20); an overflow value alone, or elapsed time, never stops GRT (OWNER 11-14)
+    if c["OT_FF_NOCONV"] and grt:
+        d = noconverge_decide(_noconv_history(rp, t0, state_path, settle_s), c)
+        if d:
+            return [noconverge_line(d)]
+    return []
 
 
 def main(argv=None):

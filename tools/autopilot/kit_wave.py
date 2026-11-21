@@ -6963,6 +6963,7 @@ _TYPED = (("stopped", re.compile(r"interrupted \(signal 15|terminated by signal 
                                r"Could not resolve hostname|ot-run: NOT (?:RUN|COMPLETED)|no host qualifies|kex_exchange_identification|"
                                r"Connection (?:reset|closed) by", re.I)),
           ("design:place_setup_stop", re.compile(r"FAIL_POSTPLACE PLACE-SETUP-STOP")),
+          ("design:grt_flat_overflow", re.compile(r"OT_GRT_NOCONVERGE")),      # MEM-RECLAIM-2200: PLAN, REPEAT-STOP holds it
           ("design:station_overlap", re.compile(r"kit_istations:[^\n]*station rows \S+ and \S+ claim overlapping sites")),
           ("sdc_lint", re.compile(r"SdcLintError|sdc_lint", re.I)),
           ("stale_view", re.compile(r"STALE-CORE-VIEW|stale (?:closed )?view|view .*(?:stale|does not match)", re.I)),
@@ -15064,6 +15065,8 @@ def queue_class(j):
             # Annotate old timeout failures without rewriting their stored verdict
             # or retrying the same stale kit: source/wrapper refresh is required.
             return stage, "FAIL", "FLOW", f"{kind}: retired flow timeout; {why}"
+        if kind == "grt-noconverge":
+            return stage, "FAIL", "PLAN", f"{kind}: design:grt_flat_overflow {why}"     # MEM-RECLAIM-2200 (OWNER 11-20): flat congestion across restarts
         if kind in ("preflight", "cell-cap", "diagnostic-overrun"):
             return stage, "FAIL", ("FLOW" if kind == "diagnostic-overrun" else "PLAN"), f"{kind}: {why}"
         if kind in ("grt-overflow", "grt-no-progress", "drt-no-progress", "drt-nopath") or (fails & ROUTING_FAILS) or drc:

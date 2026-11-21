@@ -808,6 +808,7 @@ if marker:
 pat = {"hold_structural": r"OT_HOLD_STRUCTURAL[^\n]*", "congestion": r"GRT-0116[^\n]*|[Rr]outing congestion too high[^\n]*|OT_GRT_CONGESTED_FAIL[^\n]*",
        # FAILFAST-1 11-11: failfast_rules.py progress stops (GRT / DRT no progress); a hold stop prints OT_HOLD_STRUCTURAL
        "grt_no_progress": r"OT_GRT_NO_PROGRESS[^\n]*", "drt_no_progress": r"OT_DRT_NO_PROGRESS[^\n]*",
+       "grt_noconverge": r"OT_GRT_NOCONVERGE[^\n]*",
        "grt_timecap": r"OT_GRT_TIMECAP[^\n]*",
        "segfault": r"Segmentation fault[^\n]*|Signal 11 received[^\n]*|SIGSEGV[^\n]*|core dumped[^\n]*",
        "oom": r"Error 137[^\n]*|\] Error 24[17][^\n]*|\bKilled\b[^\n]*|[Oo]ut of memory[^\n]*|std::bad_alloc[^\n]*|OOMKilled[^\n]*",
@@ -1268,6 +1269,9 @@ def classify(c, client):
     if c.get("grt_no_progress"):
         # FAILFAST-1 11-11: class GRT_NO_PROGRESS (kit-wave class ROUTING; the line carries rounds, trend, last overflow per layer)
         return "STRUCTURAL", "grt-no-progress", c["grt_no_progress"]
+    if c.get("grt_noconverge"):
+        # MEM-RECLAIM-2200 (OWNER 11-20): GRT restarts with no overflow gain; kit-wave class PLAN design:grt_flat_overflow
+        return "STRUCTURAL", "grt-noconverge", c["grt_noconverge"]
     if c.get("drt_no_progress"):
         return "STRUCTURAL", "drt-no-progress", c["drt_no_progress"]
     if c.get("congestion"):

@@ -266,6 +266,8 @@ ff_check() {   # sets gstop, prints the class line
   # WF-1 11-14 (OWNER: delete the conservative limits; gunit g2 / bksel m7 were killed with exit 21 mid-repair): a hold-structural line
   # (hold repair over N h / stalled / buffer cap) is only LOGGED now; the stage is never stopped for it.  DRT no-progress still stops.
   case "$line" in OT_DRT_NO_PROGRESS*) gstop=drt_no_progress; return 0;; esac
+  # MEM-RECLAIM-2200 (OWNER 11-20): 2 consecutive GRT restarts with < 20 % round-best overflow gain = measured unable to route; stop, no re-run
+  case "$line" in OT_GRT_NOCONVERGE*) gstop=noconverge; return 0;; esac
   [ -n "${ff_hold_logged:-}" ] || { echo "OT_HOLD_STRUCTURAL_LOGGED: not a stop (no cap, WF-1 11-14); the stage continues"; ff_hold_logged=1; }
   return 1
 }

@@ -232,3 +232,74 @@ def test_drt_stall_stops_a_bobbing_route_below_the_10000_floor():
     assert R.drt_decide(drt([3000] * 39 + [0] * 5), C) is None                       # converged to zero
     slow = [2000 - 15 * i for i in range(55)]                                         # 15 per iteration: a new best by > 1 % inside every window of 12
     assert R.drt_decide(drt(slow), C) is None
+
+
+# ---------------------------------------------------------------------------------------------------- (d) GRT restarts without gain
+def hist(*rounds, start=1000.0):
+    """[[idx, mtime, total]] for rounds [[totals at idx 5, 10, ...], ...] in time order"""
+    out, t = [], start
+    for r in rounds:
+        for k, v in enumerate(r):
+            t += 100
+            out.append([5 * (k + 1), t, v])
+    return out
+
+
+def test_noconverge_stops_after_two_restarts_without_gain():
+    # OWNER 11-20 / MEM-RECLAIM-2200: t7-like job: 3 completed rounds at 60k -> 58k -> 59k, the 4th just started
+    h = hist([82000, 60000, 58000], [80000, 59000, 58500], [81000, 60000, 59000], [82000])
+    assert R.congestion_rounds(h) == [58000, 58500, 59000, 82000]
+    d = R.noconverge_decide(h, C)
+    assert d and d["tail"] == [58000, 58500, 59000] and d["restarts"] == 2
+    line = R.noconverge_line(d)
+    assert line.startswith("OT_GRT_NOCONVERGE stage=grt class=GRT_NOCONVERGE") and "58000 -> 58500 -> 59000" in line
+
+
+def test_noconverge_keeps_a_round_that_still_gains_or_is_open():
+    assert R.noconverge_decide(hist([60000, 50000], [60000, 49000], [70000]), C) is None            # only 2 completed rounds
+    h = hist([60000, 50000], [60000, 49000], [60000, 30000], [70000])                               # last restart gained 39 %
+    assert R.noconverge_decide(h, C) is None
+    h = hist([60000, 30000], [60000, 29000], [60000, 28000], [70000])                               # first restart gained 50 %, last two flat: stop
+    assert R.noconverge_decide(h, C)["tail"] == [30000, 29000, 28000]
+    assert R.noconverge_decide(hist([5, 0], [5, 0], [5, 0], [7]), C) is None                        # routed (0 overflow) is not a stop
+    assert R.noconverge_decide(hist([50, 40], [50, 40], [50, 40], [9]), dict(C, OT_FF_NOCONV=0)) is None
+    assert R.noconverge_decide([], C) is None
+
+
+def test_judge_keeps_history_in_the_state_file_and_stops_the_run(tmp_path):
+    k = tmp_path / "w"
+    lg, rp = k / "run/logs/asap7/t/base", k / "run/reports/asap7/t/base"
+    lg.mkdir(parents=True)
+    rp.mkdir(parents=True)
+    (lg / "5_1_grt.tmp.log").write_text(log_iters(10, 10, 10, 3))
+    st = str(tmp_path / "state.json")
+    now = time.time()
+    # a round per call: the report file of an index is overwritten by the next round (only the persisted history keeps the earlier ones)
+    for r, (a, b) in enumerate([(60000, 58000), (59500, 58500), (60500, 59000), (70000, None)]):
+        for n, v in ((5, a), (10, b)):
+            if v is not None:
+                p = rp / ("congestion-%d.rpt" % n)
+                p.write_text(rep(v))
+                t = now - 3000 + r * 600 + n
+                os.utime(p, (t, t))
+        out = R.judge(str(k), now - 4000, st, env={}, settle_s=0, now=now)
+        assert out == [] or r == 3, (r, out)
+    assert len(out) == 1 and out[0].startswith("OT_GRT_NOCONVERGE") and "58000 -> 58500 -> 59000" in out[0]
+    assert R.judge(str(k), now - 4000, st, env={"OT_FF_NOCONV": "0"}, settle_s=0, now=now) == []
+
+
+def test_noconverge_reaches_the_autopilot_and_wave_as_plan_design_grt_flat_overflow():
+    import autopilot as AP
+    import kit_wave as KW
+    import re
+    line = R.noconverge_line({"restarts": 2, "min_gain_pct": 20, "rounds": 3, "tail": [3, 3, 3]})
+    assert AP.classify({"grt_noconverge": line}, {"exit": 21}) == ("STRUCTURAL", "grt-noconverge", line)
+    src = AP.PROBE_CLASSIFY
+    i = src.index("pat = {")
+    j = src.index("}", src.index('"orfs_error"', i)) + 1
+    pat = eval(src[i + len("pat = "):j], {})
+    assert re.search(pat["grt_noconverge"], "x\n" + line + "\n").group(0) == line
+    stage, st, cls, msg = KW.queue_class({"status": "DONE-STRUCTURAL", "kind": "grt-noconverge", "reasons": line, "signoff": None})
+    assert (st, cls) == ("FAIL", "PLAN") and "design:grt_flat_overflow" in msg
+    assert KW.typed_class("PLAN", "route", msg) == "design:grt_flat_overflow"
+    assert "OT_GRT_NOCONVERGE" in (ROOT / "physical/common_flow/grt183_make.sh").read_text()
