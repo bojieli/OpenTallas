@@ -105,3 +105,4 @@
 - 2026-11-20 15:58 PST ALERT NO-PROGRESS s81_head: 17 eligible rows, 0 KIT-WAVE LAUNCH for 495 min (last 07:43); NO-LAUNCH x51
 - 2026-11-20 15:58 PST ALERT NO-ADVANCE qwen_compute: 14 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (slw_su_l0__cl1a1c1f8f x7@gen, sle_su_l1__cl5ea486db x7@gen, sle_su_l0__cl7a55c676 x6@gen)
 - 2026-11-20 16:18 PST ALERT NO-ADVANCE qwen_kvsys: 4 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (kv3_hub_C x8@gen, kv3_pc_v1__cl7f648944 x7@kit_topology, kv3_pc_v1__cl4ea58a5c x5@kit_topology)
+- 2026-11-20 16:39 PST ALERT SELF-STOP s81: 2 job(s) stopped by the wave 354 s after its own SUBMIT (latest col_h10_r2__t1__clac068e56@1 at 16:29:18: superseded by attempt 17 of the same item)
