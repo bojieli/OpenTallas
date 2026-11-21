@@ -216,7 +216,21 @@ def marker_kit_rtl(marker):
     return dict(legacy, **(marker.get("kit_rtl") or {})) | ((marker.get("config") or {}).get("kit_rtl") or {})
 
 
-def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=False, TC=None, rt=None, keep_gen_hosts=False, PG=None, optimistic=None, host_verify=None, verify_retained_bind=None):
+FLEET_KEYS = ("gen_hosts", "gen_host", "gen_host_min_free_gb", "gen_disk_min_gb", "host_requires", "restage_max_per_tick", "restage_min_wait_s", "restage_place_waiters", "place_prefer", "hosts", "host_share")
+
+
+def _free_gb(host):
+    """scratch2 free GiB on a host (ssh df), None when unknown"""
+    import subprocess
+    try:
+        r = subprocess.run(["ssh", "-o", "BatchMode=yes", "-o", "ControlPath=none", "-o", "ConnectTimeout=15", host, "df -BG --output=avail /srv/opentallas-scratch2 | tail -1 | tr -dc 0-9"],
+                           capture_output=True, text=True, timeout=60, stdin=subprocess.DEVNULL)
+        return int(r.stdout.strip()) if r.returncode == 0 and r.stdout.strip() else None
+    except Exception:
+        return None
+
+
+def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=False, TC=None, rt=None, keep_gen_hosts=False, PG=None, optimistic=None, host_verify=None, verify_retained_bind=None, free_probe=None):
     """optimistic (COORD 11-18, OWNER "build all types directly from the latest plan"; candidate key optimistic: true or --optimistic): the publish gate record,
     the normal source guard and the smoke flag are ADVISORY (logged in the receipt as warnings, never a refusal) and no pilot hold is added (every type of the
     plan launches at once) unless --pilot-item names one.  Strict bind + LATCHECK, run in parallel by the lane, are the only blocking plan checks: a failure
@@ -319,7 +333,17 @@ def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=
             pilot = pilot_item or HR.pilot_item_for(cfg, die, d)
             if not pilot:
                 raise SystemExit("PILOT: no pilot item for die %s (--pilot-item ITEM, die.pilot_item, or --no-pilot); nothing applied" % die)
+        # FLEET-WATCH-R5 11-21 (FABLE-FLOW-0800 class c: the KV D26 / S81 J6 applies put intel1 + epyc9 back into gen_hosts, 5 kits sat at admit 0 for up to 77 min): fleet keys are not plan keys.
+        # The die's CURRENT values survive the apply (APPLY-KEPT line in the warnings when the candidate carried another value)
+        _fleet = {k: json.loads(json.dumps(d[k])) for k in FLEET_KEYS if k in d}
+        _cand_fleet = {k: mc[k] for k in FLEET_KEYS if k in mc and k not in ("gen_hosts", "gen_host")}
         HR._deep_set(d, mc)
+        for _k, _v in _fleet.items():
+            if _k in ("gen_hosts", "gen_host"):
+                continue
+            if d.get(_k) != _v:
+                warnings.append(f"APPLY-KEPT {_k}: the candidate value is ignored, the die keeps {json.dumps(_v)[:120]}")
+                d[_k] = _v
         # FABLE-FLOW-2200: keep the CURRENT tree and ONE rollback (the tree just replaced); the rollback of the previous switch is now two versions back
         # and becomes superseded (retired whole through the guard by retire_superseded.py)
         sup = d.setdefault("superseded_trees", [])
@@ -337,6 +361,13 @@ def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=
         # FABLE-FLOW-0555 A: the replaced tree with its bind joins dies.<die>.bound_trees (newest first, 4 kept): the wave launches a BIND-STALE row on it
         if old_bt.get("src") and old_bt["src"] != tree and old_bt["kit_rtl"].get("bind_out"):
             d["bound_trees"] = ([old_bt] + [b for b in (d.get("bound_trees") or []) if b.get("src") != old_bt["src"] and b.get("src") != tree])[:4]
+        # FLEET-WATCH-R5: a host under its own admit cap (dies.<die>.gen_host_min_free_gb) is not (re)added by an apply while another host stays
+        _caps = d.get("gen_host_min_free_gb") or {}
+        _low = [h for h in hosts if _caps.get(h) and (free_probe or _free_gb)(h) is not None and (free_probe or _free_gb)(h) < int(_caps[h])]
+        if _low and len([h for h in hosts if h not in _low]) >= 1:
+            warnings.append(f"APPLY-KEPT gen_hosts: {', '.join(_low)} under the admit cap, not added")
+            hosts = [h for h in hosts if h not in _low]
+        d.pop("event_pending", None)           # FLEET-WATCH-R5 (class d): the apply landed, new launches for this die are released
         d.update(src=tree, src_manifest=True, src_manifest_hash=want, plan=marker["plan"], plan_sha256=marker["plan_sha256"], gen_hosts=hosts,
                  gen_host=mc.get("gen_host") or (d.get("gen_host") if keep and d.get("gen_host") in hosts else hosts[0]),
                  cancel_superseded=False)

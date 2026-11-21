@@ -5280,6 +5280,13 @@ def gen_hosts(cfg, die, item=None):
     # ot-run status row is no gen host while another stays (queued_host_bad); no status at all = nothing known, nothing dropped
     _stt, _hub = cfg.get("_otrun_status") or {}, cfg.get("_hub") or ""
     res = [h for h in res if not queued_host_bad(_stt, h, _hub)] or res
+    # FLEET-WATCH-R5 11-21 (FABLE-FLOW-0800 class c): a host under its own admit cap (dies.<die>.gen_host_min_free_gb, scratch GB from the ot-run status) is no gen host, whatever the list says, while another stays
+    _caps = d.get("gen_host_min_free_gb") or {}
+    if _caps:
+        def _under(h):
+            v = _stt.get("localhost" if h == _hub else h)
+            return bool(_caps.get(h)) and bool(v) and v.get("scratch_gb") is not None and int(v["scratch_gb"]) < int(_caps[h])
+        res = [h for h in res if not _under(h)] or res
     # KIT-OPS-4 11-14 (COORD): the free INFRA retry of an earlyoom / signal kill leaves the host that killed it while another stays
     av = (cfg.get("_avoid_host") or {}).get((die, item)) if item else None
     return [h for h in res if h != av] or res if av else res
@@ -11660,10 +11667,35 @@ def dedup_owner_not_a_verdict(orec):
     return str(orec.get("class") or "") == "INFRA" or str(orec.get("q_class") or "") == "INFRA"
 
 
+EVENT_PENDING_MAX_S = 3600
+
+
+def event_pending_wait(AP, cfg, st, die, now=None):
+    """FLEET-WATCH-R5 11-21 (FABLE-FLOW-0800 class d: 6 kits launched 7-13 min before their own lane's plan apply): dies.<die>.event_pending = {event, since} is set when a lane's apply gate starts and
+    cleared by the apply.  While set (cap EVENT_PENDING_MAX_S, then it expires with a log line) no NEW launch starts for the die; running kits are untouched.  True = hold this launch"""
+    ep = ((cfg.get("dies") or {}).get(die) or {}).get("event_pending")
+    if not isinstance(ep, dict) or not ep.get("event"):
+        return False
+    now = time.time() if now is None else now
+    age = now - float(ep.get("since") or 0)
+    seen = st.setdefault("event_pending_log", {})
+    if age >= EVENT_PENDING_MAX_S:
+        if seen.get(die) != "expired:" + str(ep["event"]):
+            seen[die] = "expired:" + str(ep["event"])
+            AP.log(f"KIT-WAVE LAUNCH-WAIT-EVENT {die}: event_pending {ep['event']} expired after {int(age // 60)} min; launches resume")
+        return False
+    if seen.get(die) != "wait:" + str(ep["event"]):
+        seen[die] = "wait:" + str(ep["event"])
+        AP.log(f"KIT-WAVE LAUNCH-WAIT-EVENT {die}: apply of {ep['event']} pending since {int(age // 60)} min; no new launch for the die until it lands (max {EVENT_PENDING_MAX_S // 60} min)")
+    return True
+
+
 def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
     if not scheduler_current(AP):
         return None
     if hub_launch_held(cfg, die, r.get("item")):          # WAVE-FLOW-R 11-17: the hub floor holds hub writers only
+        return None
+    if event_pending_wait(AP, cfg, st, die):              # FLEET-WATCH-R5 (FABLE-FLOW-0800 class d)
         return None
     if tool_skew_refuse(AP, cfg, st, die):
         return None
