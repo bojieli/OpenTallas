@@ -1,0 +1,34 @@
+{
+ "lane": "S81-BKSEL-R6",
+ "to": "S81-J6-ASSEMBLY-R4",
+ "for": "J7 (row cut 11-21 20:00 PST)",
+ "type": "bk_sel__t2",
+ "made": "2026-11-21 PST",
+ "evidence": {
+  "chain_r6_unit": "oth-ubuntu-1218164-1795269234 rc 0 (hub log ~/s81-bksel-r5/chain_r6.otrun.log)",
+  "bind": "ELAB_RC 0, BIND_RC 0 strict, LATCHECK PASS 873/873 (as-bound pricing), PRE_PASS; G0 skipped (private)",
+  "place": "PLACE_RC 0; AP_PLACED_SCAN OK groups_need_station 0 groups_over_405um 0; R2R_MAX 1202.58 (u_rrl_11 -> u_cland_fstart_flt_o0, boot-only landing-writer start, unchanged since R4); STATION_FAMILIES_OVER 0",
+  "hops_over_300": "every family launched from the die reset tree u_rrl_* / u_rst_in (380-um bound pitch, J3) except u_ids.vr[] -> u_ids.lo[] 3 captures 303.4 um (COORD: no row). R5 left-overs gone: ids.cp -> dsp.sd/sl 436 um, dsp.wf -> fsp.r[0] 307 um.",
+  "rtl": "main 4e2b8ec778 (keep edit c6c79db984: (* keep *) dsdv_bk_dsp sd/sl, no function change; proof ok SUCCESS, mutw/muts/mutr FAIL, bench a3p/l4 PASS, l4rrdm FAIL wanted, VMTX vbase+vl4 PASS, BKSEL_L4 PASS)"
+ },
+ "files_epyc7": {
+  "dir": "/srv/opentallas-scratch2/claude/s81-bksel-r5/w",
+  "plan_r6.json": "84af570fcb860d8e (sha256 prefix) = full composed S81 plan as bound by chain_r6",
+  "rows_face_r5.json": "109f28c530b422b1: 3,671 relay_sites + 12 internal_stations + 12 lane_cycle_deltas (replace R3 face rows)",
+  "rows_l5.json": "292c0d1f1178461d: 2,035 relay_sites (u_dsp / RSD rows; replaces rows_l4)",
+  "rows_start_r5.json": "4f5ea4bfc4bdaaea: clock.landing_writer_start flt_o0 W 5",
+  "rows_stn_ro8.json": "a56c8e0aa96a3f87 at /srv/opentallas-scratch2/claude/opus-fix-s81-bksel-r4/rows_stn_ro8.json (replaces R3 u_core.u_sel.u_stn_[csol].* rows)",
+  "lane_deltas_r5.json": "dc9bd1ee29c4d936: fixed_cycles old/new/shift per lane",
+  "lane_totals_r6.json": "3ad1c2840de52873: LATCHECK table for the 12 bk_sel lanes",
+  "compose": "chain_r6.sh python block: R3 plan - R3 face rows - R3 u_stn_* + face_r5 + stn_ro8 + l5 (= 45,974 relay_sites) ; internal_stations := face_r5 ; lane fixed_cycles + latency.lanes fixed/natural/cycles shifted by face_r5 deltas ; clock.landing_writer_start := rows_start_r5 ; verilog_defines += OT_BKSEL_L4 (requires OT_BKQ_ECO3 + OT_BKSEL_A3P)"
+ },
+ "rtl_on_main": ["OT_BKSEL_L4 48d49db149", "MLK overlay fix 956b6dc3d1", "OT_BKSEL_RSD 090fa6664c", "keep 4e2b8ec778"],
+ "lane_totals_bind_measured": {
+  "ca__s_0N_LP__bk_sel": 57, "cb__s_0N_LP__bk_sel": 56, "xtier__s_4S_C__bk_sel": 61, "idx__svc_14__bk_sel": 111,
+  "tp__s_7N_LP__bk_sel": 43, "xtier__seqhost__bk_sel": 109, "tl__bk_sel__s_0N_LP": 67, "tp__bk_sel__s_7S_LP": 87,
+  "tp__bk_sel__s_7N_LP": 52, "xtier__bk_sel__s_4S_C": 69, "xtier__bk_sel__seqhost": 114, "flt__bk_sel__gunit": 17
+ },
+ "lane_totals_note": "R3 -> R6: ca 55->57, cb 54->56, xtier_i0 59->61, idx 107->111, tp_i0 39->43, xtier_i1 104->109, tl_o0 63->67 (R5 handoff said 66; the ST1 move adds +1, as R5 warned), tp_o0 82->87, tp_o1 47->52, xtier_o0 67->69, xtier_o1 111->114, flt_o0 12->17. All delta 0 vs bind_plan_cycles.",
+ "compiler_token_sim": "vmux recompile from the totals above plus L4 internal: loop +4, t_o +1 (RO 8), fault +3, dst/lpe load +3, core reset release +6; boot only: dst/lpe/lp_q[0] release +5 (RSD), flt_o0 landing start W 5",
+ "next": "private wave-env sign-off kit of bk_sel__t2 on this bind is routing (unit oth-ubuntu-3423615-1795275718); sign-off result follows"
+}
