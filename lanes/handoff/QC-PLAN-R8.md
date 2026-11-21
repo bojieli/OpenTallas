@@ -52,3 +52,14 @@
   Next: bind b3 (c2 + r8_v2a) -> re-site cb with b3 bound RTL (BOUND=staged b3/bind/rtl; u_y_xd relay names) -> c3 -> b4 final + LATCHECK + G0.
 - Re-sign: 6 N_PAD split reps added to dies.qwen_compute.only_items (coord ddaf212d693): *__pvcaa93304, *__pve289215f, *__pv97423966,
   *__pvcf529cc9, slw_hc3__clccfc3e6b__pvcca9ff41, slw_hc3__cld86a7ad4__pvfd488b8f. Siblings after reps sign.
+
+## 11-21 ~00:xx state (R=epyc9 /srv/opentallas-scratch2/claude/qc-plan-r8/v2b; read this first)
+- Main fixes pushed: a4ae603e36 link_sites no u_pc_* sites; 77440fa43c land_slots share_trunk (V1 slw_hc3 pv gen);
+  2bdea13bb1 ft_spread avoids exact station banks (V1 slw_st_a_v2__clf4365a62 place); 758e5d6cbd bind relay_depth stages BEFORE
+  the NK pipe (+chain hook single placer). V1 rows of those 3 types need re-GEN on tools >= 2bdea13bb1 (wave tool snapshot).
+- V2 bind blockers found + fixed on the plan side (compose tail final_v2.sh: post_fix.py + clk_remap.py):
+  relay_depth leaf name u_t_2_2; sle_su_c r8_strap_pad_max 31 (pads 17); land_r8_extra zz_extra_*_0 rebound (extra_rebound.py,
+  install via bind_v2.sh env EXTRA0); forwarded clock pins follow V1 tap position (sle_ctl clk_t267 gone, coll_ftc renumbered);
+  PARAM_REGEN W5 S = na_i00 +2 vs nb_i00 +3/+4 row imbalance -> siting min-stations na_i00=8 nb_i00=11, na_i22=4 (uniform deltas).
+- R8: r8_v2c.json (qc_r8_pinned derive); rebinding after c4 needs a fresh derive + extra rebound.
+- Running: compose c4 (balanced stations) -> final_v2 -> bind on rt/758e5d6cbd3e.
