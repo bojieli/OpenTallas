@@ -74,6 +74,12 @@ BKSEL_TRANSIT = 5                   # S81-RF1 11-03 (DIE-S81-51/RF-D, S81-062): 
 # pre-NORMR bt_base: 111 / 18 / 47.)  The bench's proven command spacing HLOAD -> GAIN 40, GAIN -> NORM 20 is kept.
 BEAT = dict(go_to_partial=112, go_to_partial_normr=117, rstd_to_y0=18, rstd_to_xq=59, post_cmd_to_last_hw=63,
             hload_slot=40, gain_slot=20)
+# J6 SRAMREG (S81-J6-ASSEMBLY 11-21): ot_s81sl_vp SR 1 (OT_S81SL_VP_SRAMREG) moves every vp output except hr_* one edge
+# (DIE-S81-85 lock-step receipt, xtier_land.vp_sr_edges): the five vp-output dates above take +VP_SR; the slots (HLOAD ->
+# GAIN 40, GAIN -> NORM 20) are command spacing and stay.  SR 0 = the measured values exactly.
+VP_SR = XTIER.vp_sr_edges()
+for _k in ('go_to_partial', 'go_to_partial_normr', 'rstd_to_y0', 'rstd_to_xq', 'post_cmd_to_last_hw'):
+    BEAT[_k] += VP_SR
 # dv_price.py (S81-DV measured): beat partial -> xfin DL 4 + collector 5; xfin last partial -> rstd 234 (tb_s81dv_xfin16);
 # rstd -> XQ complete at the ring stop 59 + 4 * 4 (last leaf) + DL 4.
 # FORM-NF 11-05: the 16-slice measurement is first rstd 243, last rstd 261 (SS33-TOK xf old/new).

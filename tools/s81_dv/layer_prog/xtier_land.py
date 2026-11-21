@@ -344,5 +344,37 @@ def face_edges(face, defines=None, root=None):
     return f['face_edges'][face]
 
 
+
+# ------------------------------------------------------------------------------------------------ vp SR (leaf-store register)
+VP = 'rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv'
+# DIE-S81-85 (5b6e5209951, results/die_s81_85_vp_sramreg_1109): lock-step bench ot_s81sl_vp SR1(t + 1) == SR0(t) on every
+# vp output except the vn read request hr_* (so hq is unchanged): legal streams PASS, mutant / shift-0 FAIL.  The parent
+# pays the edge on the vp ops ("compiler pin-cycle table: vp read / NORM / SU-forward latency + 1", ot_s81sl_vp.sv header).
+VP_SR_RECEIPT = 'results/die_s81_85_vp_sramreg_1109/summary.log'
+
+
+@functools.lru_cache(maxsize=None)
+def _vp_sr(root, defines, manifest=None):
+    _, _, smods, _ = _file(root, SLICE, defines, manifest)
+    inst = re.findall(r'\bot_s81sl_vp\s*(#\s*\((?:[^()]|\([^()]*\))*\))?\s*u_vp\s*\(', smods['ot_s81sl_leaf'])
+    if len(inst) != 1:
+        raise ValueError(f'ot_s81sl_leaf instantiates u_vp {len(inst)} times (expected 1)')
+    if re.search(r'\.SR\s*\(', inst[0]):
+        raise ValueError('ot_s81sl_leaf overrides u_vp SR: extend xtier_land.vp_sr_edges')
+    _, macros, vmods, _ = _file(root, VP, defines, manifest)
+    sr = _int(_params(vmods['ot_s81sl_vp'])['SR'])
+    if sr not in (0, 1):
+        raise ValueError(f'ot_s81sl_vp SR {sr} unresolved (macro OT_S81SL_VP_SR_DEFAULT={macros.get("OT_S81SL_VP_SR_DEFAULT")})')
+    return sr
+
+
+def vp_sr_edges(defines=None, root=None):
+    """edges ot_s81sl_vp SR adds on every vp output except hr_* (0 or 1): OT_S81SL_VP_SRAMREG in the selected defines
+    sets SR 1 (J6 leaf SRAMREG: every leaf type of the die binds the one vp, so the value is die-wide).  The compiler
+    adds it to the measured vp beat dates (dv_layer_compile.BEAT), the RDOUT lo send (lower_vpx.LO_AFTER_CTL) and the
+    SU forward (kv_program_builder)."""
+    d = selected_defines() if defines is None else frozenset(defines)
+    return _vp_sr(str(root or rtl_root()), d, os.environ.get('OT_S81_SELECTED_ASBUILT_MANIFEST'))
+
 if __name__ == '__main__':
     print(json.dumps(form(), indent=1))

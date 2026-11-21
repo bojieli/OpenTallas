@@ -104,7 +104,7 @@ def rd_beat(src, hops, dst_mask, leaf, row, pairs, data, kind=K_RD):
 # ring-landing form (RING_LAND 1) moves them and xtier_land refuses it until re-measured.
 CFG_AT = 4
 LO_AFTER_CTL_XR = 15
-LO_AFTER_CTL = LO_AFTER_CTL_XR + _XT.face_edges('lo')
+LO_AFTER_CTL = LO_AFTER_CTL_XR + _XT.face_edges('lo') + _XT.vp_sr_edges()   # J6: vp SR moves the RDOUT lo send +1
 LO_PACK = 1
 SEND_AFTER_GO = 3
 RX_WR_AFTER_PIN = 6          # RD beat on the slice pin -> rstop pin + delivery flops (2) -> xr pin flop (1) -> XR7 stage 1

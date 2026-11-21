@@ -30,7 +30,7 @@ import math
 from pathlib import Path
 import sys
 sys.path.insert(0,str(Path(__file__).resolve().parent.parent))
-from dv_layer_compile import Die, ctl_path
+from dv_layer_compile import Die, ctl_path, VP_SR
 
 DONE=dict(KV=1130,GK=1025,CN=1218,IK=1058,CP=390)
 UNIT_RECEIPTS={
@@ -97,7 +97,8 @@ def derive_profile(die,binding,transport_receipt,unit_receipt):
     cp=ctl_path(die,'u_s_3N')
     # ctl_path events include RSTOP2. Qualified XRT raw CTL pin->c_v is5;
     # then DL relay, VP pin sample1, SU forward1, KV pin sample1.
-    offset=cp['edges']-2+transport['component_edges']['CTL_pin_to_c_v']+dl+3
+    # J6: vp SR (OT_S81SL_VP_SRAMREG) moves the SU forward one edge (xtier_land.vp_sr_edges)
+    offset=cp['edges']-2+transport['component_edges']['CTL_pin_to_c_v']+dl+3+VP_SR
     return dict(capture_offset=offset,leaf_downrelay=dl,ctl_path=cp,hard_rq=hard_rq,
         source_receipt=str(unit_receipt),source_receipt_sha256=sha(unit_receipt),
         native_commit_source_sha256=NATIVE_COMMIT_SOURCE,
@@ -106,7 +107,7 @@ def derive_profile(die,binding,transport_receipt,unit_receipt):
         last_read_completion_bound=dict(KV=80,CN=80,IK=80,GK=72,CP=378),
         native_write_commit_after_done=1,native_read_ready_after_done=2,
         convention='sampled posedges; finish_edges in SUKV bench counts first capture, so done_age=finish_edges-1',
-        derivation=['capture_offset=ctl_path.edges-RSTOP2+XRT5+DL+VP/KV3',
+        derivation=['capture_offset=ctl_path.edges-RSTOP2+XRT5+DL+VP/KV3+VP_SR',
           'norm drain1024: first x_wv after capture+1028, VP captures+1029, SRAM commits+1030',
           'CP64 outputs at period4: first x_wv=done-1-4*63; native commit adds2',
           'last x_wv=done-1; VP captures at done; read-before-write SRAM commits done+1, new read at done+2',

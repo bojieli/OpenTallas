@@ -149,3 +149,39 @@ def test_selected_manifest_resolves_x_tier_source_without_legacy_path(tmp_path, 
     selected.write_text('module unrelated; endmodule\n')
     with pytest.raises(ValueError, match='missing/ambiguous'):
         XT._selected_path(tmp_path, XT.SLICE, str(manifest))
+
+
+# ------------------------------------------------------------------------------------------------ vp SR (J6 SRAMREG)
+SRD = KVT + ('OT_S81SL_VP_SRAMREG',)
+
+
+def test_vp_sr_follows_the_sramreg_define():
+    assert XT.vp_sr_edges(KVT) == 0
+    assert XT.vp_sr_edges(SRD) == 1
+    assert subprocess.run(['git', '-C', str(ROOT), 'cat-file', '-e', 'HEAD:' + XT.VP_SR_RECEIPT]).returncode == 0
+
+
+def test_vp_sr_moves_the_vp_output_dates_and_nothing_else():
+    """SR 1 = every vp output except hr one edge later (DIE-S81-85 lock-step): the compiler's vp-output dates take +1,
+    the x-tier form (CTL / RD / landing) is unchanged; SR 0 keeps every measured value"""
+    a, b = _consts(KVT), _consts(SRD)
+    assert b['normr'] == a['normr'] + 1 and b['lo'] == a['lo'] + 1 and b['lo_local'] == a['lo_local'] + 1
+    assert b['xfin']['rstd_to_xq_ring'] == a['xfin']['rstd_to_xq_ring'] + 1
+    assert b['leaf'] == a['leaf'] + 1 and b['scale'] == a['scale'] + 1 and b['nx'] == a['nx'] + 1
+    assert b['finish'] == a['finish'] and b['xfin']['collector'] == a['xfin']['collector']
+    assert {k: v for k, v in b['form'].items() if k != 'defines'} == {k: v for k, v in a['form'].items() if k != 'defines'}
+    assert a['normr'] == 117 and a['lo'] == 16          # the measured SR 0 receipts stay exact
+
+
+def test_vp_sr_slice_override_is_refused(tmp_path):
+    """a slice that sets u_vp SR by instance override is not read silently"""
+    for rel in (XT.SLICE, XT.VP, XT.XRT, XT.XR):
+        d = tmp_path / rel
+        d.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy(ROOT / rel, d)
+    sl = tmp_path / XT.SLICE
+    t = sl.read_text()
+    assert t.count('ot_s81sl_vp #(') == 1
+    sl.write_text(t.replace('ot_s81sl_vp #(', 'ot_s81sl_vp #(.SR(1), ', 1))
+    with pytest.raises(ValueError, match='overrides u_vp SR'):
+        XT.vp_sr_edges(KVT, root=tmp_path)
