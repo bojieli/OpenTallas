@@ -1,0 +1,2 @@
+- 2026-11-21 07:37 PST DIED [FAM-S81-SLICE-R3] ot-run oth-ubuntu-369050-1795275213 on civil-redfish: rc=11 after 264 s, ended 15:37:55, log /srv/opentallas-scratch2/claude/fam-s81-slice-r3/bindtree.log, cmd: --mem 160 --threads 8 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/fam-s81-slice-r3 -- bash /srv/opentallas-scratch2/claude/fam-s81-
+  [filed under] FAM-S81-SLICE-R4: FAM-S81-SLICE-R3 stood down (chain FAM-S81-SLICE-R3 > FAM-S81-SLICE-R4)
