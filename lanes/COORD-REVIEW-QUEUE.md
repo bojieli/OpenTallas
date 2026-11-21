@@ -14952,3 +14952,8 @@ FAILED [AUTOPILOT 7903b5e57211] 2026-11-20 18:20:31 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-20 18:49 PST DONE [QC-PLAN-R6] ot-run oth-ubuntu-2524036-1795227905 on renewed-glider: rc=0 after 1459 s, ended 02:49:22, log /srv/opentallas-scratch2/claude/qc-plan-r6/v1/b_n4.log, cmd: --mem 24 --threads 1 --plan-job bind --hosts epyc9 --dir /srv/opentallas-scratch2/claude/qc-plan-r6/v1 -- env PCS_REPORT=/srv/opentallas-scr
 - 2026-11-20 18:50 PST DIED [flow-noadv-r2] ot-push-main otpush-tolerant-swine-3519679 on tolerant-swine: rc=4 after 578 s, ended 18:50:19, log /srv/opentallas-scratch2/claude/flow-noadv-r2/push-r3e.log, cmd: ot-push-main 
 - 2026-11-20 18:50 PST ALERT NO-PROGRESS qwen_compute: 3 eligible rows, 0 KIT-WAVE LAUNCH for 67 min (last 17:43); no DIE-OFF / NO-LAUNCH line
+- 2026-11-20 18:50 PST 18:50 sweep (17:50 mapping + SVC-R4, BKSEL-R4, KV-PV-R3, RESET-RELAY-GEN-R2, serdes t3/t4): 495 rows, 36 flagged (was 35); PLACE-SETUP-STOP rows 0.
+  S81 new: col_h9_r0_p3__t1__cl0cd90c0e__pv8d734760 FAILED CLAND ring band UNOWNED; ...__pvcb7f0079 same class FAILED-NO-RELAUNCH. serdes__t4 cleared.
+  QC (QC-PLAN-R6): 16 STALE, all old (14 held, 1 place error, 1 cancelled).
+  KV (KV-PLAN-R2/OPUS-FIX-KV-PV-R3): 8 FAILED-NO-RELAUNCH + 9 WAIT-BIND held/cancelled, all old.
+  HEAD none flagged; 0 DEAD-OWNER.

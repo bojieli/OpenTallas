@@ -169,3 +169,8 @@
   QC (QC-PLAN-R6): 14 held-by-die-owner STALE (formerly global_place failures), 1 place error UNCLASSIFIED STALE, 1 cancelled STALE; all old.
   KV (KV-PLAN-R2): 9 FAILED-NO-RELAUNCH (PDN-0006 x2, CLAND, bind stale, input missing, flow errors) + 9 held/cancelled WAIT-BIND; all old.
   HEAD none flagged.
+- 2026-11-20 18:50 PST 18:50 sweep (17:50 mapping + SVC-R4, BKSEL-R4, KV-PV-R3, RESET-RELAY-GEN-R2, serdes t3/t4): 495 rows, 36 flagged (was 35); PLACE-SETUP-STOP rows 0.
+  S81 new: col_h9_r0_p3__t1__cl0cd90c0e__pv8d734760 FAILED CLAND ring band UNOWNED; ...__pvcb7f0079 same class FAILED-NO-RELAUNCH. serdes__t4 cleared.
+  QC (QC-PLAN-R6): 16 STALE, all old (14 held, 1 place error, 1 cancelled).
+  KV (KV-PLAN-R2/OPUS-FIX-KV-PV-R3): 8 FAILED-NO-RELAUNCH + 9 WAIT-BIND held/cancelled, all old.
+  HEAD none flagged; 0 DEAD-OWNER.
