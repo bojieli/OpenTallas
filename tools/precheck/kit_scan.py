@@ -129,21 +129,29 @@ def run_placed(kit, odb, out_json, mem_gb=14):
 
 
 SCAN_VERSION = 3
-LEG_RULE = "pin-centroid-half-cycle-1120"   # summaries of another rule are re-summarised from the stored raw scan
+LEG_RULE = "pin-centroid-half-cycle-core-detour-1121"   # summaries of another rule are re-summarised from the stored raw scan
 
 
 def summarise_placed(kit, ph, reach=CBC.REACH_UM_PER_HOP):
-    """legs over reach by class (cbc_rules.classify_leg: core / channel / logic; strap/tie legs excluded)"""
+    """legs over reach by class (cbc_rules.classify_leg: core / channel / logic; strap/tie legs excluded); a core leg is
+    measured at its detour length around the hard cores (cbc_rules.detour_um, COORD 11-21), not its straight length"""
     legs, by_class = [], collections.Counter()
     half_cycle_count = 0
     for r in ph.get("legs", []):
         half_cycle = len(r) > 7 and r[7]
         limit = min(reach, HALF_UM) if half_cycle else reach
+        c = CBC.classify_leg(r[2], r[3], r[5], r[6], ph.get("macros") or [])
+        if c == "core":             # COORD 11-21: a core-crossing leg counts at its detour length around the cores
+            L = CBC.detour_um(r[5], r[6], ph.get("macros") or [], cap=max(limit, r[0]) * 4)
+            if L <= limit:
+                continue
+            by_class[c] += 1
+            legs.append([round(min(L, 1e9), 1)] + list(r[1:7]) + [c])
+            continue
         if r[0] <= limit:
             continue
-        c = CBC.classify_leg(r[2], r[3], r[5], r[6], ph.get("macros") or [])
         by_class[c] += 1
-        if c in ("strap", "core"):
+        if c == "strap":
             continue
         if half_cycle:
             half_cycle_count += 1

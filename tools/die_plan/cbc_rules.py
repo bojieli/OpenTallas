@@ -206,16 +206,88 @@ def classify_leg(launch, capture, la, lb, macro_rects):
     return "logic"
 
 
-def reach_leg(leg, macro_rects=(), reach=REACH_UM_PER_HOP):
-    """COORD 11-19 05:55 (FABLE-CLOSURE-STRATEGY stop list): the reach estimator counts a placed leg only when its
-    PIN-TO-PIN straight Manhattan distance (placed_hops leg [straight, acc, launch, capture, pin, la, lb]: macro ends sit at
-    the macro pin) is over the reach, it does not span a hard core, and it is no strap / tie leg; a channel leg (a block
-    port end: a buffered register-to-pin leg) is counted only over REACH_BUFFERED_UM.  -> its class, or None (not counted)"""
-    if leg[0] <= reach:
-        return None
+_EPS = 0.01
+
+
+def _out_of(p, rects):
+    """(point, extra_um): a pin end inside a hard core (a macro pin sits on or just inside its outline) leaves by the
+    nearest outline side; extra_um is that walk (0 when p is outside every core)"""
+    x, y = p
+    for x0, y0, x1, y1 in rects:
+        if x0 < x < x1 and y0 < y < y1:
+            d, q = min((x - x0, (x0, y)), (x1 - x, (x1, y)), (y - y0, (x, y0)), (y1 - y, (x, y1)))
+            return q, d
+    return (x, y), 0.0
+
+
+def detour_um(a, b, macro_rects, cap=None):
+    """COORD 11-21 (FAM-S81-COL-R4): shortest rectilinear path a -> b that stays outside every hard-core body (rect
+    interiors; abutting cores are one body, a shared edge is not a channel).  Exact on the Hanan grid of the end points and
+    the core edges.  cap: search only paths <= cap (window = bbox(a, b) grown by (cap - straight) / 2) and return
+    float('inf') when none is that short.  A pin end inside its own core walks out by the nearest side first."""
+    import heapq
+    rects = [tuple(map(float, r[:4])) for r in macro_rects or []]
+    a = (float(a[0]), float(a[1])); b = (float(b[0]), float(b[1]))
+    grown = [(x0 - _EPS, y0 - _EPS, x1 + _EPS, y1 + _EPS) for x0, y0, x1, y1 in rects]
+    a, ea = _out_of(a, grown); b, eb = _out_of(b, grown)
+    straight = abs(a[0] - b[0]) + abs(a[1] - b[1])
+    if cap is not None:
+        m = max(0.0, (cap - ea - eb - straight) / 2.0)
+        wx0, wx1 = min(a[0], b[0]) - m, max(a[0], b[0]) + m
+        wy0, wy1 = min(a[1], b[1]) - m, max(a[1], b[1]) + m
+        grown = [r for r in grown if r[0] < wx1 and r[2] > wx0 and r[1] < wy1 and r[3] > wy0]
+    def inside(x, y):
+        return any(x0 < x < x1 and y0 < y < y1 for x0, y0, x1, y1 in grown)
+    if not _l_paths_blocked(a, b, grown):
+        return straight + ea + eb
+    xs = sorted({a[0], b[0]} | {v for r in grown for v in (r[0], r[2])})
+    ys = sorted({a[1], b[1]} | {v for r in grown for v in (r[1], r[3])})
+    if cap is not None:
+        xs = [x for x in xs if wx0 <= x <= wx1] or xs
+        ys = [y for y in ys if wy0 <= y <= wy1] or ys
+    ix = {x: i for i, x in enumerate(xs)}; iy = {y: j for j, y in enumerate(ys)}
+    src, dst = (ix[a[0]], iy[a[1]]), (ix[b[0]], iy[b[1]])
+    best = {src: 0.0}; pq = [(0.0, src)]
+    while pq:
+        d, (i, j) = heapq.heappop(pq)
+        if (i, j) == dst:
+            return d + ea + eb
+        if d > best.get((i, j), float("inf")) or (cap is not None and d + ea + eb > cap):
+            continue
+        for di, dj in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+            ni, nj = i + di, j + dj
+            if not (0 <= ni < len(xs) and 0 <= nj < len(ys)):
+                continue
+            mx, my = (xs[i] + xs[ni]) / 2.0, (ys[j] + ys[nj]) / 2.0
+            if inside(mx, my) or inside(xs[ni], ys[nj]) and (ni, nj) != dst:
+                continue
+            nd = d + abs(xs[ni] - xs[i]) + abs(ys[nj] - ys[j])
+            if nd < best.get((ni, nj), float("inf")):
+                best[(ni, nj)] = nd; heapq.heappush(pq, (nd, (ni, nj)))
+    return float("inf")
+
+
+def reach_leg_um(leg, macro_rects=(), reach=REACH_UM_PER_HOP, routed_um=None):
+    """-> (class, length_um) of a counted placed leg, or None.  COORD 11-21 ruling (replaces the 11-19 'not over a core'
+    exclusion): a leg whose every Manhattan route crosses a hard core ('core') is measured at its detour length around
+    the cores (detour_um), or at routed_um when the routed length is known, not at its straight length, and counts when
+    that is over the reach.  Other legs keep the 11-19 rule: PIN-TO-PIN straight Manhattan distance (placed_hops leg
+    [straight, acc, launch, capture, pin, la, lb]: macro ends sit at the macro pin) over the reach, no strap / tie leg, a
+    channel leg (a block port end: a buffered register-to-pin leg) only over REACH_BUFFERED_UM."""
     c = classify_leg(leg[2], leg[3], leg[5], leg[6], list(macro_rects or []))
-    if c in ("strap", "core"):
+    if c == "strap":
+        return None
+    if c == "core":
+        L = float(routed_um) if routed_um is not None else detour_um(leg[5], leg[6], macro_rects, cap=max(reach, leg[0]) * 4)
+        return (c, L) if L > reach else None
+    if leg[0] <= reach:
         return None
     if c == "channel" and leg[0] <= REACH_BUFFERED_UM:
         return None
-    return c
+    return c, float(leg[0])
+
+
+def reach_leg(leg, macro_rects=(), reach=REACH_UM_PER_HOP, routed_um=None):
+    """class of a counted placed leg (reach_leg_um), or None (not counted)"""
+    r = reach_leg_um(leg, macro_rects, reach, routed_um)
+    return r[0] if r else None

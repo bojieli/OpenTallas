@@ -33,7 +33,7 @@ EMISSION (COORD 11-19 05:55, FABLE-CLOSURE-STRATEGY stop list): whole-type auto-
 (QC sle_ctl -98 -> -183, leaf t27 relay -407 vs -230) while single-bus relay and re-aim fixes worked.  So the three rules
 above only FIND candidates; a fix is written to the plan only for a NAMED bus / relay (--fix TYPE:NAME, NAME = relay leaf,
 copy source, bus name or conn) that a MEASURED placed leg supports (--legs TYPE=placed_hops.json from a kit scan: a leg
-counted by cbc_rules.reach_leg -- pin-to-pin over the reach, not over a core, not strap / tie -- that launches or captures
+counted by cbc_rules.reach_leg -- pin-to-pin over the reach (a core-crossing leg at its detour length, COORD 11-21), not strap / tie -- that launches or captures
 at that relay / bus).  There is no whole-type mode: without --fix nothing is written, every candidate is reported.
 
 usage: relay_branch.py PLAN.json TYPE_RE BOUND_DIR [--fix TYPE:NAME ...] [--legs TYPE=PLACED.json ...] [--plan-dir DIR] [--limit 405] [--out-plan OUT.json] [--report REP.json]
@@ -782,15 +782,16 @@ def trunk_rows(plan, tn, text, plan_dir=None, limit=LIMIT, halo=5.0):
 
 
 def measured_legs(path, macros=None):
-    """counted legs (cbc_rules.reach_leg) of a placed_hops scan JSON: [(straight, launch, capture, class)]"""
+    """counted legs (cbc_rules.reach_leg_um) of a placed_hops scan JSON: [(length, launch, capture, class)]; length = straight,
+    or the detour around the hard cores for a core leg (COORD 11-21)"""
     import cbc_rules as RULES
     ph = json.loads(Path(path).read_text())
     mac = ph.get("macros") or [] if macros is None else macros
     out = []
     for r in ph.get("legs", []):
-        c = RULES.reach_leg(r, mac)
-        if c:
-            out.append((r[0], str(r[2]), str(r[3]), c))
+        m = RULES.reach_leg_um(r, mac)
+        if m:
+            out.append((m[1], str(r[2]), str(r[3]), m[0]))
     return out
 
 

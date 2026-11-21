@@ -263,7 +263,7 @@ def test_reach_leg_pin_to_pin_no_core_no_strap():
     # COORD 11-19 05:55: count only pin-to-pin legs over the reach that do not span a core and are no strap / tie
     import cbc_rules as R
     core = [[100, -50, 400, 50]]
-    assert R.reach_leg([500, 500, "u_a.q", "u_b.d", "D", [0, 0], [500, 0]], core) is None           # over a core
+    assert R.reach_leg([500, 500, "u_a.q", "u_b.d", "D", [0, 0], [500, 0]], core) == "core"         # detour 600 > reach
     assert R.reach_leg([500, 500, "u_a.q", "u_b.d", "D", [0, 100], [500, 100]], core) == "logic"
     assert R.reach_leg([500, 500, "u_tie_x.q", "u_b.d", "D", [0, 100], [500, 100]], core) is None   # strap / tie
     assert R.reach_leg([500, 500, "port:x_i", "u_b.d", "D", [0, 100], [500, 100]], core) is None    # channel <= 550
@@ -277,7 +277,7 @@ def test_kit_scan_counts_reach_legs_only():
                                                   [500, 500, "u_a.q", "u_c.d", "D", [0, 100], [500, 100]],
                                                   [500, 500, "u_strap_id.q", "u_c.d", "D", [0, 100], [500, 100]]])
     s = KS.summarise_placed(Path("/nonexistent/kit"), ph)
-    assert s["legs_over"] == 1 and s["by_class"] == {"core": 1, "logic": 1, "strap": 1} and s["leg_rule"] == KS.LEG_RULE
+    assert s["legs_over"] == 2 and s["by_class"] == {"core": 1, "logic": 1, "strap": 1} and s["leg_rule"] == KS.LEG_RULE
 
 
 def test_reach_face_bus_uses_worst_bit_of_the_window():
@@ -300,3 +300,25 @@ def test_reach_face_bus_uses_worst_bit_of_the_window():
     # a chain whose end is not on the bus face (an inner launch) keeps its own coordinates
     t["internal_stations"] = [{"conn": "bus:f_o0", "from_um": [300.0, 700.0], "regs_um": [[120.0, 900.0]], "to_um": [300.0, 1000.0]}]
     assert PC.reach_findings(t, 405, margin=1.0) == []
+
+
+def test_core_leg_measured_at_detour_length():
+    """COORD 11-21 (FAM-S81-COL-R4): a placed leg that crosses a hard core is measured at its detour around the core
+    (shortest path outside core bodies), or at the routed length when known, never at its straight length"""
+    import cbc_rules as R
+    core = [[100, -50, 400, 50]]
+    assert abs(R.detour_um([0, 0], [500, 0], core) - 600.0) < 0.1                  # over the top: 500 + 2 x 50
+    assert abs(R.detour_um([0, 100], [500, 100], core) - 500.0) < 0.1              # clear of the core: straight
+    assert abs(R.detour_um([0, -20], [500, 30], core) - 590.0) < 0.1               # over the top: 70 up + 500 + 20 down
+    # 250 straight, but the core forces 350: counted at the detour (the old rule dropped every core leg)
+    c, L = R.reach_leg_um([250, 250, "u_a.q", "u_b.d", "D", [0, 0], [250, 0]], [[100, -50, 200, 50]], reach=300)
+    assert c == "core" and abs(L - 350.0) < 0.1
+    assert R.reach_leg([250, 250, "u_a.q", "u_b.d", "D", [0, 0], [250, 0]], [[100, -50, 200, 50]], reach=300, routed_um=290) is None
+    # two abutting cores are one body: no path along the shared edge
+    two = [[100, -50, 200, 0], [100, 0, 200, 50]]
+    assert abs(R.detour_um([0, 0], [300, 0], two) - 400.0) < 0.1
+    # a macro pin just inside its own core walks out by the nearest side
+    assert abs(R.detour_um([100.5, 0], [500, 0], [[100, -50, 400, 50]]) - 500.5) < 0.2
+    # cap: a detour longer than the cap is reported as inf (the window search stops there)
+    assert R.detour_um([0, 0], [500, 0], [[100, -400, 400, 400]], cap=600) == float("inf")
+    assert abs(R.detour_um([0, 0], [500, 0], [[100, -400, 400, 400]]) - 1300.0) < 0.1
