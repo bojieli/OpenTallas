@@ -1,0 +1,1 @@
+- 2026-11-20 23:50 PST DIED [FAM-KV-IOPC] ot-run oth-ubuntu-3150691-1795247429 on outgoing-giraffe: rc=2 after 9 s, ended 07:50:36, log /srv/opentallas-scratch2/claude/fam-kv-iopc/run1/otrun.log, cmd: --hosts epyc8,epyc7,epyc9 --mem 64 --threads 8 --dir /srv/opentallas-scratch2/claude/fam-kv-iopc -- bash /srv/opentallas-scratch2/claude/fam
