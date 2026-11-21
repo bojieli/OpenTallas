@@ -292,7 +292,7 @@ def mutate_top(mut, top):
 
 def tb_text(plan, top, cycles, WMAXH):
     hdr = re.search(r'module s81_head_top \((.*?)\);', top, re.S).group(1)
-    ios = re.findall(r'^\s*(input|output)\s+wire\s*(?:\[(\d+):0\])?\s*(\w+)', hdr, re.M)
+    ios = re.findall(r'^\s*(input|output)\s+wire\s*(?:\[(\d+):0\])?\s*(\w+)\s*;', top, re.M)  # non-ANSI top: port decls are in the body
     decl, conn, drive = [], [], []
     for d, w, n in ios:
         W = int(w) + 1 if w else 1
