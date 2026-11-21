@@ -20446,3 +20446,5 @@ FAILED [AUTOPILOT ebd2c5807ada] 2026-11-21 14:21:06 PST AUTOPILOT -> KIT-WAVE-12
   [redirect] QC-PLAN-R11 -> QC-PLAN-R12 (stood down; chain QC-PLAN-R11 > QC-PLAN-R12)
 - 2026-11-21 14:30 PST GRT-FLAT watchdog cancelled 1 wave attempt(s) (class PLAN design:grt_flat_overflow): qwen_compute/slw_sc_v2@3 24.5 GB
   [filed under] FLEET-WATCH-R3: FLEET-WATCH-2000 stood down (chain FLEET-WATCH-2000 > FLEET-WATCH-R3)
+- 2026-11-21 14:30 PST DONE [FABLE-FIX-KV-HUB-R3] ot-run oth-ubuntu-1514022-1795293368 on tolerant-swine: rc=0 after 6886 s, ended 14:30:52, log /home/ubuntu/tmp/fablefixkvhub-r3/chain_h2.log, cmd: --hosts epyc8 --mem 57 --threads 3 --priority plan --dir /srv/opentallas-scratch2/claude/fable-fix-kv-hub -- bash /srv/opentallas-scratch2/c
+  [filed under] FABLE-FIX-KV-HUB-R4: FABLE-FIX-KV-HUB-R3 stood down (chain FABLE-FIX-KV-HUB-R3 > FABLE-FIX-KV-HUB-R4)
