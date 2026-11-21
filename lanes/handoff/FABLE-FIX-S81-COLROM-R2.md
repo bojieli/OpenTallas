@@ -22,3 +22,22 @@ Dirs: epyc10 M=/srv/opentallas-scratch2/claude/fable-fix-s81-colrom, hub H = sam
    (kw45 src_s81_pin_3c913dbdfb23_d8j6_1117_work, bind ..._bind_11210316; needs RDX view/RTL/define/registry + dead-input re-proof like j7_post.sh).
    Use kit_wave.py private-spec (the old hand spec H/wave1/spec.json is not allowed any more). No job of this lane is running.
 3. In the rep read first: ROM pval -> bn output stage (needs ~160 ps late clock; if not, add a pipeline stage, no skew).
+
+## UPDATE 09:5x PST: COORD ruled option 2 (sequencer go guard). STAND-DOWN at context limit -> FABLE-FIX-S81-COLROM-R3
+- Guard RTL: epyc10 M/guard/ot_s81_cfg7_seq.sv (= tree1 seq + GO GUARD block before ld_ok in ot_s81_cfg7_seq_local): with PQ, PINREG and RD_EXTRA
+  the load is held (existing pend path) for GG = 13 edges after the sequencer's own go (stale window is 10 edges at lc_i with the stage, +3 margin);
+  negative control +define+OT_S81_CFG7_MUT_NOGUARD. No port or parameter change. RD_EXTRA=0 / PQ=0 unchanged.
+- Bench with the guard (M/bench1/run_guard.sh, SEQ=M/guard/ot_s81_cfg7_seq.sv; out M/bench1/out_guard, hub log M/bench2_otrun.log): spacing 1..12, 14, 20,
+  30, 150 and serial all PASS (0 faults in A and B, same records +1 cycle); mutants FAIL: stage on cfg only, ef tied free, NOGUARD at spacing 9
+  (NOGUARD passes at 10, as before).
+## Next (R3), in order; J7 row cut 20:00 PST, else J8
+1. rtl/v41die/test/tb_ot_s81_cfg7_seq.sv + run_cfg7_seq_gate.sh: the lockstep reference loader has no guard; give the reference the same 13-edge hold
+   (RDX1 mode only) and add the NOGUARD mutant, or the standard gate fails on a cfg_go within 13 edges of go. Not done.
+2. tree2 = cp -al tree1 + guard RTL (copy+mv, the seq file is hardlinked with s81-j6/candJ7RDX); the dead-input re-proof reprove41_cfg7_rdx was made
+   on the old RTL: re-run it as s81-j6/j7/j7_post.sh does. Then gate (M/gate1.sh TREE OUT = elab + strict bind + LATCHECK + G0 vs candC3g, ot-run
+   --plan-job bind --priority plan --hosts epyc10).
+3. Re-harden the cfg7 RDX view (FAM-S81-COL-R2 kit epyc7 fam-s81-col/rdxkit_anchor/ot_s81_cfg7_seq_rdx; standard path, LEC, export), new view dir +
+   hard_core_built_params entry + signed_view_sha_s81.json sha (the 7be441f9 entry is for the OLD view) + generator repoint (gen_colrom_rows.py view path).
+4. Hand delta + guard RTL + new view to S81-J6-ASSEMBLY-R4. Push RTL/bench to main via ot-push-main from a lane clone (bench files: M/bench1).
+5. Rep kit: needs the J7 clock-landing sidecar from R4 (asked 09:1x, no answer read yet); private-spec only.
+No job of this lane is running.
