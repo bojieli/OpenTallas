@@ -1,0 +1,1 @@
+- 2026-11-20 20:50 PST took over from HEAD-PLAN-R15. r15e (form d + local-reset remap, plan 92bcfc338f0a) GEN_RTL FAIL: hd_tile landing_local_resets.tile_geo_0 depth 5 != copy 4 (rst_rl_145) = Fable RC2 (main tree deepens hd_tile at 405). r15e G0 still running, left alone. Next: Fable lever 1, bind r13r reset trees (receipts), acceptance cohort DIFF = {hd_serdes, hd_lep0N}.
