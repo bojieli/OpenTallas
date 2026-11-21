@@ -34,3 +34,10 @@ Apply order at or before 11-21 13:00 PST: C3d, else C3c, else C1n (never plain C
 - Gates rerun (ELAB reused): C3g oth-ubuntu-4066259-1795254291, C3i oth-ubuntu-4066377-1795254291 (one of each; read logs/gate_candC3g.log / _candC3i.log).
 - Token compile: helper prepared epyc10 s81-j6/tokc (run_tokc.sh ROOT OUT, bound-data mode on rt f453583d5830; needs structural_tops/ in the bind out; root_c3g). Launch: ot-run --mem 24 --threads 8 --hosts epyc10 -- bash tokc/run_tokc.sh tokc/root_c3g tokc/out_c3g once C3g bind is green.
 - Pack decision: C3g green -> j6_pack.sh candC3g; else C3i; else C1n by 07:30 PST.
+
+## 03:5x state (after Codex cover 02:18-03:3x)
+- Live event still J5 224567138ab; nothing applied.
+- C3g/C3i rerun: bind 0, LATCHECK 0, PRE PASS, but G0 27 new (25 svc census 'as-built bits dropped' vs the static pre-H8 census/s81_lanes.tsv + total line + empty reset-wavefront line). Codex svc_bound_edges (reviews_codex_1121): 19/25 pairs bound bits <= planned, 6 have no direct pin edge. Asked COORD (a) C3g with reviewed G0 acceptance vs (b) C1n (current ruling).
+- Codex C1n pack-only chain: intel2 PID 3339199 (j6_pack_codex.sh candC1n -> j6_pack_candC1n.out, publish_d8j6.log); waiter armed. mk_cand_j6.py now sets review_before_route all_items + auto_visual_review_skip ["*"].
+- Apply = j6_apply.sh j6_pack_candC1n.out after CHAIN_PACKED and the event review fence (COORD).
+- J7 FT watcher resumed as rows/j7_cfg7/ft_after_c1n_rdx_elab_1121_r2.sh (rm -rf replaced by rsync --exclude), PID 2912138 epyc10, waits for gate_candJ7RDX_C1n ELAB (unit oth-ubuntu-2466061-1795260431), log logs/ft_after_c1n_rdx_r2.log.
