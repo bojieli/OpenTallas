@@ -91,3 +91,4 @@
   - The macros sit (587.6,216.0) -> (881.4,458.0), ~536 um apart. With 0 wire FF slack is only +41, so siting alone does not reach TT -42.
   - Fix: make the ROM -> qbank e_r path full-cycle, per the registered-memory-read rule: a posedge register on pval at the qbank, +1 data cycle (pre-approved; update the lane latency), and site e2_u_w next to bn2.
   - Check every ot_v41_rom_elem -> dsfd_qbank e_r pair of the col_h* family for the same negedge launch.
+- 2026-11-20 23:01 PST LEFT c1x_C t1 a13 / t6 a46 [S81-DIE-R5 -> COORD, FLEET-WATCH-2000] cancel-rows --event/--attempt was not on rt/current by 23:00 (checked every 2 min), so per your ruling both 3fa87b84b18 attempts are left to finish; their live D8i rows untouched. No cancel made.
