@@ -2505,6 +2505,35 @@ def kit_lec_receipts(kit):
     return out
 
 
+LATCH_CELL_RE = re.compile(rb"^\s*(DLLx\d|DHLx\d|DFF[HL]Qx4)_ASAP7_75t_[A-Z]+\s")
+
+
+def latch_cell_counts(path):
+    """{'latch': DLL + DHL cells, 'swap_flop': DFFLQx4 + DFFHQx4 cells} of a gate netlist (instance lines only)."""
+    n = dict(latch=0, swap_flop=0)
+    op = gzip.open if str(path).endswith(".gz") else open
+    with op(path, "rb") as f:
+        for ln in f:
+            m = LATCH_CELL_RE.match(ln)
+            if m:
+                n["swap_flop" if m.group(1).startswith(b"DFF") else "latch"] += 1
+    return n
+
+
+def latch_swap_check(disc):
+    """LATCH-SWAP-0045 (COORD 11-21): the OpenROAD resizer may swap a DLL / DHL latch for the same-pin DFFLQx4 / DFFHQx4 FLOP
+    (S81 t39 proof4: 988 lockup latches at 3_4_place_resized), a logic change.  Synthesis never maps those x4 Q flops, so the
+    routed netlist (6_final.v) holding more of them than the synthesized netlist is a FAIL (functional), whatever its timing.
+    latch_restore.tcl swaps them back after every repair pass; this is the backstop after route and after any routed ECO."""
+    syn, fin = disc.get("synth"), disc.get("final_v")
+    if not syn or not fin or not Path(syn).is_file() or not Path(fin).is_file():
+        return dict(verdict="NOT RUN", reason="no synthesized and routed (6_final.v) netlist pair")
+    s, f = latch_cell_counts(syn), latch_cell_counts(fin)
+    v = "FAIL" if f["swap_flop"] > s["swap_flop"] else "PASS"
+    return dict(verdict=v, synth=s, final=f, synth_netlist=Path(syn).name, final_netlist=Path(fin).name,
+                reason=None if v == "PASS" else f"{f['swap_flop'] - s['swap_flop']} latch(es) swapped for DFFLQx4/DFFHQx4 flops")
+
+
 def evaluate(rec, insertion_target=None):
     """fills rec['checks'] and rec['verdict'] / rec['reasons'] from rec['corners'] + record checks."""
     C = rec.get("corners", {})
@@ -2698,6 +2727,9 @@ def evaluate(rec, insertion_target=None):
         if FPC is not None:
             fr = FPC.check(Path(fv).read_text(errors="replace"))
             put("fwd_pads", fr["verdict"], **{k: v for k, v in fr.items() if k != "verdict"})
+    ls = rec.get("latch_swap")
+    if ls is not None:                        # LATCH-SWAP-0045: blocking once measured (NOT RUN = no routed .v)
+        put("latch_swap", ls["verdict"], **{k: v for k, v in ls.items() if k != "verdict"})
     reasons = []
     fm = rec.get("ft_interface")
     if fm is not None:                        # 12.2a1 declared ft arcs (only kits with ft_ports.json)
@@ -2718,7 +2750,8 @@ def evaluate(rec, insertion_target=None):
         put("timing_modes", tm.get("verdict", "NOT RUN"), **{k: v for k, v in tm.items() if k != "verdict"})
     for k in BLOCKING + (("macro_libs",) if "macro_libs" in ch else ()) + (("ft_interface",) if "ft_interface" in ch else ()) + \
             (("lec_superset",) if "lec_superset" in ch else ()) + (("timing_modes",) if "timing_modes" in ch else ()) + \
-            (("netlist_alias",) if "netlist_alias" in ch else ()) + (("fwd_pads",) if "fwd_pads" in ch else ()):
+            (("netlist_alias",) if "netlist_alias" in ch else ()) + (("fwd_pads",) if "fwd_pads" in ch else ()) + \
+            (("latch_swap",) if ch.get("latch_swap", {}).get("verdict") in ("PASS", "FAIL") else ()):
         v = ch[k]["verdict"]
         if v != "PASS":
             reasons.append(f"{k}: {v}" + _detail(k, ch[k]))
@@ -2946,6 +2979,7 @@ def cmd_run(a):
     rec["sdc_lint"] = run_sdc_lint(disc, ports, mpol) if ports else dict(verdict="NOT RUN", reason="no STA session finished")
     rec["face_guard"] = run_face_guard(disc, (ports or {}).get("clock_ports", ()), out / "tt" / "libraries.json")
     rec["route"] = route_counts(disc)
+    rec["latch_swap"] = latch_swap_check(disc)
     evaluate(rec, a.insertion_target)
     band = insertion_band_record(disc["kit"]) if disc.get("kit") else None   # KW-FIX-4/BAND: information for die STA, not a reason
     if band is not None:
