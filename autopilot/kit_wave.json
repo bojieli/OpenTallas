@@ -642,7 +642,6 @@
    "gen_hosts": [
     "epyc8",
     "epyc10",
-    "intel1",
     "epyc2",
     "epyc7"
    ],
@@ -5877,7 +5876,8 @@
     ]
    },
    "gen_host_min_free_gb": {
-    "epyc9": 250
+    "epyc9": 250,
+    "intel1": 250
    }
   },
   "s81": {
@@ -37291,7 +37291,7 @@
    "tools_refresh_bind_cmd": "mkdir -p {out}/o && OT_HEAVY_PRIO=die ot-heavy --mem 96 -- bash -c 'python3 -I -B tools/die_plan/bind.py elab {plan} --asbuilt {asbuilt} --out {out}/o --strict --mem 96 > {out}/elab.log 2>&1 && python3 -I -B tools/die_plan/bind.py bind {plan} --asbuilt {asbuilt} --out {out}/o --strict > {out}/bind.log 2>&1'",
    "tools_refresh_bind_sub": "o",
    "gen_host_min_free_gb": {
-    "intel1": 150,
+    "intel1": 250,
     "epyc9": 250
    },
    "retry": [
@@ -41328,7 +41328,6 @@
    "gen_hosts": [
     "epyc8",
     "epyc2",
-    "intel1",
     "epyc10",
     "epyc7"
    ],
@@ -51521,7 +51520,8 @@
     "slw_hc3__cld86a7ad4__pv6c2c33ed"
    ],
    "gen_host_min_free_gb": {
-    "epyc9": 250
+    "epyc9": 250,
+    "intel1": 250
    }
   },
   "hbm": {
@@ -68621,7 +68621,8 @@
     "epyc2"
    ],
    "gen_host_min_free_gb": {
-    "epyc9": 250
+    "epyc9": 250,
+    "intel1": 250
    }
   }
  },
