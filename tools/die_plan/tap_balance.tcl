@@ -27,6 +27,37 @@ set tb_target [expr {[info exists ::env(OT_TAP_TARGET_PS)] ? $::env(OT_TAP_TARGE
 set tb_win [expr {[info exists ::env(OT_TAP_WINDOW_PS)] ? $::env(OT_TAP_WINDOW_PS) : 40.0}]
 set tb_tol [expr {[info exists ::env(OT_TAP_TOL_PS)] ? $::env(OT_TAP_TOL_PS) : 15.0}]
 set tb_ronly [expr {[info exists ::env(OT_TAP_REPORT_ONLY)] && $::env(OT_TAP_REPORT_ONLY)}]
+# CORE-DIRECT (FABLE-FIX-KV-HGI 11-20, opt-in OT_TAP_CORE_DIRECT=1): an early core tap (clk_c<k>, core pins only) whose port
+# lands INSIDE the outline of the hard core it clocks is a direct via-stack tap: port and core clock pin are a few um
+# apart.  The delay chain below is seeded at the tap port, and the legalizer can only put it outside the core, so one
+# BUFx4 "stage" is a wire out of the core and back (kv3_hgi_v1 kR: clk_c13 effective 230 -> 312 ps at placement RC for a
+# 20 ps shortfall; at GRT RC the core pin sat 381 ps FF behind its port and 5,105 head-core front pins failed hold to
+# -277.6 ps, core-out setup TT -310).  Such a tap is never padded: a shortfall up to OT_TAP_CORE_DIRECT_MAX_PS (60) is
+# accepted with an OT_TAP_CORE_DIRECT line, a larger one is a WARN for the plan (core tap early shift / insertion_ps).
+# Unset / 0: the pre-CORE-DIRECT loop byte for byte.
+set tb_cdirect [expr {[info exists ::env(OT_TAP_CORE_DIRECT)] && $::env(OT_TAP_CORE_DIRECT) eq "1"}]
+set tb_cdmax [expr {[info exists ::env(OT_TAP_CORE_DIRECT_MAX_PS)] ? $::env(OT_TAP_CORE_DIRECT_MAX_PS) : 60.0}]
+set tb_coreonly {}
+# the hard core (BLOCK) whose outline holds the tap port bt, when every sink of the tap is a clock pin of that core; else ""
+proc tb_direct_core {n bt} {
+  global tb_cores
+  set bb [$bt getBBox]
+  set x [expr {([$bb xMin] + [$bb xMax]) / 2}]; set y [expr {([$bb yMin] + [$bb yMax]) / 2}]
+  set owner ""
+  foreach c $tb_cores {
+    lassign $c p tap a L
+    if {$tap ne $n} continue
+    set it [[ord::get_db_block] findITerm $p]
+    if {$it eq "NULL" || $it eq ""} { return "" }
+    set i [$it getInst]
+    if {![[$i getMaster] isBlock]} { return "" }
+    if {$owner ne "" && $owner ne [$i getName]} { return "" }
+    set b [$i getBBox]
+    if {!($x > [$b xMin] && $x < [$b xMax] && $y > [$b yMin] && $y < [$b yMax])} { return "" }
+    set owner [$i getName]
+  }
+  return $owner
+}
 set tb_grt [expr {[info exists ::env(OT_TAP_EST)] && $::env(OT_TAP_EST) eq "grt"}]
 set tb_tag [expr {[info exists ::env(OT_TAP_TAG)] ? $::env(OT_TAP_TAG) : ""}]
 # netlist edits: GRT mode keeps the global routes current (ORFS post-GRT repair pattern)
@@ -140,8 +171,9 @@ proc tb_rise {pin {buffer_output 0}} {
   return [ot_cf_wire $pin $clock]
 }
 proc tb_measure {{est 1}} {
-  global tb_blk tb_clat tb_cores tb_port_re tb_port tb_clock tb_grt
+  global tb_blk tb_clat tb_cores tb_port_re tb_port tb_clock tb_grt tb_coreonly
   set tb_cores {}
+  set tb_coreonly {}
   set_propagated_clock [all_clocks]
   if {$est} { if {$tb_grt} { estimate_parasitics -global_routing } else { estimate_parasitics -placement } }
   ot_cf_refresh
@@ -177,6 +209,7 @@ proc tb_measure {{est 1}} {
     } elseif {$ck} {
       # a tap of core pins only (an early core tap): its statistics are the effective arrivals
       dict set res $n [list [expr {$cs / $ck}] $cmn $cmx $ck $bt]
+      dict set tb_coreonly $n 1
     }
   }
   if {![dict size $res]} {
@@ -376,7 +409,7 @@ set tb_cwin [expr {$tb_conv ? ([info exists ::env(OT_TAP_CONVERGE_WIN_PS)] ? $::
 set tb_raise [expr {$tb_conv && [info exists ::env(OT_TAP_CONVERGE_RAISE_PS)] ? $::env(OT_TAP_CONVERGE_RAISE_PS) : 0.0}]
 set tb_price {}; set tb_prev {}
 proc tb_tap_pass {it} {
-  global tb_blk tb_master tb_target tb_win tb_tol tb_tag tb_grt tb_added tgt tb_conv tb_cwin tb_raise tb_price tb_prev
+  global tb_blk tb_master tb_target tb_win tb_tol tb_tag tb_grt tb_added tgt tb_conv tb_cwin tb_raise tb_price tb_prev tb_coreonly
   set m [tb_measure]
   set longest 0.0
   dict for {n v} $m { set longest [expr {max($longest, [lindex $v 0])}] }
@@ -417,9 +450,13 @@ proc tb_tap_pass {it} {
       set d [expr {min($tgt - [lindex $v 0], $tb_target + $tb_win - [lindex $v 2])}]
     }
     if {$d <= $tb_tol} continue
-    # converge: a core-only early tap (clk_c<k>) is not padded at its port (a port-side pad drives the whole port -> core wire:
-    # KV pv v8c 82 ps a stage, clk_c14 209 -> 373 against 250); the core pass pads in front of the pin instead (short net)
-    if {$tb_conv && [string match clk_c* $n]} continue
+    if {$tb_cdirect && [dict exists $tb_coreonly $n] && [set tb_dc [tb_direct_core $n [lindex $v 4]]] ne ""} {
+      puts "OT_TAP_CORE_DIRECT $n port inside $tb_dc: effective [format %.0f [lindex $v 0]] ps, [format %.0f $d] ps under target [format %.0f $tgt]: not padded (a delay cell must leave the core)[expr {$d > $tb_cdmax ? " WARN over [format %.0f $tb_cdmax] ps: lower the core tap early shift in the plan" : ""}]"
+      continue
+    }
+    # TAP-GRID-2130 converge: a core-only early tap (clk_c<k>) is not padded at its port (a port-side pad drives the whole port -> core
+    # wire: KV pv v8c 82 ps a stage, clk_c14 209 -> 373 against 250); the core pass pads in front of the pin instead (short net)
+    if {$tb_conv && [string match clk_c* $n] && [dict exists $tb_coreonly $n]} continue
     set todo 1
     # ~18 ps per BUFx4 stage on a short local net; insert 3/4 of the estimate per pass and re-measure
     if {$tb_conv && [dict exists $tb_price $n]} {
@@ -499,15 +536,15 @@ if {[dict size $tb_clat]} {
       # skipped for good, so its 3/4 first estimate was never topped up (col_h9_r2 s11 / s14 from clk_c8 / clk_c12 at
       # -215 ps: 10 stages delivered 243 of 394 ps, pin 28 instead of 179, core 150 ps early).  Only the tap's own
       # planned core pins are balanced with the taps above; an ETAP-hung pin stays in this pass.
-      if {$tb_conv && [string match clk_c* $tap] && $tgt - ($a + $L) > $tb_tol} {
+      if {$tb_conv && [string match clk_c* $tap] && [dict exists $tb_coreonly $tap] && $tgt - ($a + $L) > $tb_tol} {
         # TAP-GRID-2130 converge: an early pin of a core-only tap is padded in front of the pin (the tap pass skips these taps)
         set d [expr {$tgt - ($a + $L)}]
         set it [[ord::get_db_block] findITerm $p]
         if {$it eq "NULL" || $it eq ""} continue
         set nb [expr {[dict exists $tb_cprice $p] ? max(1, int(floor($d / [dict get $tb_cprice $p] + 0.25))) : max(1, int(round($d / $tb_cstage * 0.75)))}]
         dict set tb_cprev $p [list [expr {$a + $L}] $nb]
-        lassign [tb_outside $it] x y
-        incr tb_added [tb_hang $it [$it getNet] $nb "[regsub -all {[^A-Za-z0-9_]} $p _]_cc${tb_tag}${ci}" $x $y]
+        lassign [tb_outside $it] ccx ccy
+        incr tb_added [tb_hang $it [$it getNet] $nb "[regsub -all {[^A-Za-z0-9_]} $p _]_cc${tb_tag}${ci}" $ccx $ccy]
         set todo 1
         continue
       }
