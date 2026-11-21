@@ -63,3 +63,29 @@
   PARAM_REGEN W5 S = na_i00 +2 vs nb_i00 +3/+4 row imbalance -> siting min-stations na_i00=8 nb_i00=11, na_i22=4 (uniform deltas).
 - R8: r8_v2c.json (qc_r8_pinned derive); rebinding after c4 needs a fresh derive + extra rebound.
 - Running: compose c4 (balanced stations) -> final_v2 -> bind on rt/758e5d6cbd3e.
+
+## 11-21 ~02:xx HANDOFF for QC-PLAN-R9 (read this first; R=epyc9 /srv/opentallas-scratch2/claude/qc-plan-r8/v2b)
+- LIVE: bind b9 = epyc9 unit oth-ubuntu-1464365-1795255189 (log R/b9.out, out R/b9/). Plan R/c5/p_final4.json, side R/c5/side_v2.json
+  (= c1), rt 639df6b7b265. bind_v2.sh loops bind -> R8_STALE -> r8_refresh.py (main 5d76c70f71) -> re-bind (<=3); final tables
+  copied to R/b9/r8_final.json + extra_final_{0,1}.json. After rc 0 it runs LATCHECK (latcheck.json/tsv).
+- If b9 still fails: PARAM_REGEN W5 S (fabric tree row balance) and HARD_CORE_PARAM_WRAP/ALL (sle_st_a HI_PAD/SKEW, sle_sc HARD_PINREG)
+  were seen on b7 while R8 was stale; both are outputs of coll_regen (qc_fabric_transport + sc_hard_params), so expect them to clear
+  with the fresh table. If PARAM_REGEN persists: compare per-type na_*/nb_* lane deltas (R/c5/rep_lanes.json changed) - they must be
+  equal at each tree join (siting min-stations in R/sites_v2b.sh).
+- Pipeline (all in R): compose_v2b.sh OUT (RESET3=1 R3 overlay, sites_v2b.sh, apply_lanes, R7 c345, hop300, lat_fix, tile_contract,
+  schema, census) -> final_v2.sh IN OUT LAUNCH (post_fix, fam_rows, clk_remap) -> sle_apply.py (FABLE-FIX-QC-SLE-R3 rows, bumps
+  latency.lanes AND lanes[].fixed_cycles) -> clk_remap again (sle_ctl core move) -> bind_v2.sh (EXTRA0=R/extra_v2_0.json).
+  c5/p_final4 = c5 + sle rows + clk_remap + fixed_cycles fix (b8 refused FIXEDCYC: lanes[].fixed_cycles not bumped).
+- Rows carried: cb a3/link_sites (no u_pc sites) + R8 new rows + balanced na/nb (na_i00=8 nb_i00=11 na_i22=4) + q11 relay_depth
+  u_t_2_2.t_out D1 (+1 declared cycle, stage before NK pipe, main 758e5d6cbd) + lever 6 tile contract (65 taps 818.1/658.07) +
+  RESET-RELAY-GEN-R3 cb reset rows (incl cbf_q00__cl1b5a6458 inst_taps) + FAM-QC-CB cbn_q11__cl5cc92dfe reset.local_taps_um +
+  sle_ctl rows_v2b + su_c s2 x3 + slw_su_c__cl19bb38ef s3 (+1 on 3 lanes) + sle_su_c r8_strap_pad_max 31 + fclk clk_remap.
+  place_precheck on c4/p_final: 0 findings.
+- NEXT after bind+LATCHECK PASS: G0 (qc-plan-r6/v1/g0.sh pattern), plan_geom_census + event_adopt_diff + event_census
+  (qc-plan-r7/census_v1.sh pattern), proof kits (R/proof_gen_v2.sh TYPE BIND_DIR; one per changed family class to CTS/GRT, die
+  priority, read CTS post-hook), then pack/seal/apply as V1; on apply release 11 cb hold_items (R7 65f9eaf04c5/8cd505347e7) + the 3 fe
+  holds (76a934188b0/56a3cbdebf0/678d61ae6c4) + cbn_q00__cldbcda913 via kit_wave_edit. Family lanes now own types (FAM-QC-CB/COLL/HCST,
+  FABLE-FIX-QC-SLE): assemble their rows.
+- Re-sign: 6 N_PAD reps in only_items (ddaf212d693); add the 6 siblings after the reps sign.
+- V1 fixes on main (77440fa43c land_slots share_trunk, 2bdea13bb1 ft_spread) need a wave tool refresh to re-GEN slw_hc3 pv x2 and
+  slw_st_a_v2__clf4365a62 (FAM-QC-HCST retried slw_hc3 at 7d30ba435f7).
