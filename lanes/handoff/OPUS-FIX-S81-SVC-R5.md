@@ -4,6 +4,28 @@ Owner of the S81 svc family (16 types: svc_hi rs t1-t6, pvso_entry t1-t2, svc_lo
 Succeeds FABLE-FIX-S81-SVC (R3 stood down on context; R4 stopped on the Fable limit). Read lanes/handoff/FABLE-FIX-S81-SVC.md for older state.
 Nothing pushed to main. Nothing signed, nothing exported.
 
+## STOOD DOWN 11-21 05:1x PST (context ~319k). Successor: OPUS-FIX-S81-SVC-R6 (COORD starts it). READ THIS BLOCK FIRST.
+LIVE (leave running):
+- chain10d: epyc10 PID 393326, script /srv/opentallas-scratch2/claude/opus-fix-s81-svc-r5/bind_hi4x/chain10d.sh, out chain10d.out,
+  posts also appended to bind_hi4x/chain10c.log. Result file: /srv/opentallas-scratch2/claude/opus-fix-s81-svc-r5/bind_hi4x/STATE
+  ("rc=.. SPLIT_BAD" | "rc=N BIND_RC=.. LATCHECK_RC=.. ELAB_RC=.."); kit stage result: bind_hi4x/KSTATE ("place rc=N" / "route rc=N" / PREP_BAD).
+  Steps: type_split of spec bind_hi4x/spec_x_epoch_r5.json (manifest tree/asbuilt_svc_r5_hi4_split_map.json) -> tree/physical/die_plan/s81/split_hi4x
+  -> ot-run epyc10 elab -> strict bind --all-gaps -> LATCHECK (bind_out3; logs split.log, elab3.log, bind3.log, latcheck.log)
+  -> on "rc=0 BIND_RC=0 LATCHECK_RC=0": prep.py (fresh_kit of svc_hi_dsdv_svc_rs__t4_att) -> run_kit place -> route (kit_att/, place.log, route.log).
+- Arithmetic benches (gate ADOPTION/EXPORT, not the build; COORD: a bench FAIL cancels the kit): epyc9 PIDs 2295988
+  (run_att_mem.sh OT_SVC_ATT_LAND_SRAM, ROWX=1, 25k cycles, seeds 1 5; out opus-fix-s81-svc-r5/land-eq/att) and 2412579 (land-eq/prog2.sh,
+  programme gold-vs-candidate lockstep seeds 1 3; out land-eq/prog2). Still compiling at stand-down. Read PASS/FAIL from their ot-run output
+  / land-eq/{att,prog2}/build.log + run output; if FAIL: ot-run --cancel the kit units named in bind_hi4x/place.log|route.log, kill 393326 after a cmdline check.
+RE-ARM WAITERS (Bash run_in_background=true, from the successor session):
+  W1 (chain10d STATE):
+  cd / && R=/srv/opentallas-scratch2/claude/opus-fix-s81-svc-r5/bind_hi4x; while true; do s=$(timeout 60 ssh -n -o ControlPath=none epyc10 "cat $R/STATE 2>/dev/null; kill -0 393326 2>/dev/null && echo chain_live" 2>/dev/null); echo "$s" | grep -q "rc=\|_BAD" && { echo "$(date +%H:%M) $s"; break; }; echo "$s" | grep -q chain_live || { echo "$(date +%H:%M) chain10d gone, no STATE: $s"; break; }; sleep 300; done
+  W2 (benches):
+  cd / && while true; do out=$(timeout 60 ssh -n -o ControlPath=none epyc9 'for p in 2295988 2412579; do kill -0 $p 2>/dev/null && echo "$p live"; done' 2>/dev/null); n=$(echo "$out" | grep -c live); [ "$n" -lt 2 ] && { echo "$(date +%H:%M) live: $out"; break; }; sleep 300; done
+  After W1 fires with a green STATE, re-arm W1 on KSTATE (same loop, cat $R/KSTATE, match "route rc=\|_BAD\|place rc=[1-9]").
+STILL OWED: sign-off read of the att part after route (DRC 0, TT >= -42, FF hold >= 0, LEC), export once benches PASS, kit of the rest part,
+  16-type J7 rows for S81-J6-ASSEMBLY-R2 (split spec + latency rows split_hi4x/latency_rows.json; provisional +1 existing traversal, +2 on 11 new lanes).
+HOLD: kit_wave dies.s81.hold_items["svc_*"] stays until J7 split rows are on the plan of record. Unsplit cancel ACCEPTED by COORD.
+
 ## 11-21 05:0x PST split re-compose 1 failed -> chain10d
 - chain10c split: "type_split: FAIL map u_rsv_09: whole split partition svc_9 (needs a piece)" with the hi4 land-SRAM manifest
   (its map_file = bind/inputs/map_b178.json, not split-aware). Codex's spec manifest asbuilt_census_r5.json uses map_census_r5.json.
