@@ -57,3 +57,7 @@ Written 2026-11-21 06:2x PST. Posts lanes/posts/OPUS-FIX-KV-PV-R5.md. Hub dir in
 ## Update 2026-11-21 ~11:5x PST
 - chain15 probe bind 8b (split 14) crashed again: native stations pv_S_3.o_vport_W_N_vqN_p: expected one outgoing lane (cut lane L2420 carries 0 bits; prefill/_route packs cut bits into the lowest-id w->e cut lane with room, ties by lane id). Plan rows/ports are consistent. Debug bind split28/dbg_ns.sh (ot-run oth-ubuntu-2686426-1795285970, log split28/dbg_ns/log, DBG_BAD/DBG_OUT lines) lists every empty native-station lane + which lanes carry the vport bits. Fix next, then re-run chain14.sh (R3/R4 -> bind 9 -> refresh -> bind 10).
 - v12 split rows sent to KV-PLAN-R6 (D28-rows doc, kv3_pv_v12 section). 11 carried struct stops placed. qkd_pv_fin_s8_pin shown SIGNED (posted).
+
+## Update 2026-11-21 ~12:5x PST
+- Debug bind: 5 empty cut legs on pv_S_3 (o_vport_W_N_vqN_p, o_pvw__u_sN_j_fault_p, _fault_d2_p, _y_valid_p, _y_valid_d2_p): split_bind_routes.prefill routed their bits by lane-id tie-break onto the lower-id wide cut lane L2418 o_vport_E_N_vo_p. Fix (tree5 tools/die_plan/split_bind_routes.py, orig saved split28/split_bind_routes.tree5_orig.py): try the cut leg named <oname>_p / <oname>_p_N first, then the old rule. Needs a test + push with the type_split branch.
+- chain16.sh (ot-run oth-ubuntu-2991986-1795287087, log intel2 ~/tmp/okpvr5/chain16.log): probe bind 8c -> chain14 (R3/R4 -> bind 9 -> ONE r8_refresh -> bind 10 + lfh).
