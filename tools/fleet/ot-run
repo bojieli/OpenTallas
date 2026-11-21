@@ -844,6 +844,7 @@ def load1(r):
 # localhost is in the pool as the least loaded "normal host minus reserve" and took a gate whose record copy to the hub then failed
 GATE_RE = re.compile(r"(?:^|[\s/])ot-gate-remote(?:\s|$)")
 GATE_NO_HOSTS = ("localhost", "intel2")
+GATE_WORKSPACE = "/srv/opentallas-scratch2/claude/mq-gate"  # ot-gate-remote clone and worktree root
 
 
 def gate_like(cmd):
@@ -872,6 +873,11 @@ def gate_hosts(cmd, hosts):
         return hosts
     kept = [h for h in hosts if h not in GATE_NO_HOSTS]
     return kept or hosts
+
+
+def gate_workdir(cmd, d):
+    """Probe a bare remote gate against the volume holding its worktrees."""
+    return GATE_WORKSPACE if d is None and gate_like(cmd) else d
 
 
 def die_like(cmd, d):
@@ -2017,6 +2023,8 @@ def main():
             HOSTS[:] = _dk                 # keeps `pinned = hosts is not HOSTS` false for an unpinned job
         else:
             hosts = _dk
+    # A bare gate still has no established lane for drain admission, but its disk probe has a real target.
+    d = gate_workdir(cmd, d)
     if os.environ.get("OT_RUN_PRIO_ENV") is None and die_like(cmd, d):
         os.environ["OT_RUN_PRIO_ENV"] = "OT_HEAVY_PRIO=die "
         print("ot-run: die-level command (DIE_RE): --priority die", file=sys.stderr)
