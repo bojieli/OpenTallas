@@ -1,0 +1,1 @@
+- 2026-11-20 18:09 PST START [OPUS-FIX-S81-BKSEL-R4 -> COORD, S81-J6-ASSEMBLY] took over from lanes/handoff/OPUS-FIX-S81-BKSEL-R3.md: (1) u_c rfda3pt to sign-off + export, (2) bk_sel__t2 placed hop max <=300 um then rows to J6, (3) RTL stages for lp_q loop, dst/lpe gating, tx_st[0]->fault, hard-core reset pins.
