@@ -53,3 +53,4 @@
   PDN-0006 views (d27b/pcsplit_reexport) and hub_C re-frozen views (d27b/hubc_views, main a06e2ecc71) are installed in the tree.
   Pushed: cca0222940, 15883a0706, 1c1857d4d1.
   Not done: strict bind + LATCHECK; proof kits; reset u_bin rows; 706 ft slots over reach (+1,168 stations reported, not applied).
+- 2026-11-20 21:57 PST DIED [KV-PLAN-R2] ot-run oth-ubuntu-2751986-1795230046 on tolerant-swine: rc=1 after 10600 s, ended 21:57:22, log /home/ubuntu/tmp/kvplanr2/d26_r3e_bind.log, cmd: --hosts epyc7 --mem 56 --threads 3 --priority plan --dir /srv/opentallas-scratch2/claude/kv-d23-compose8/d26_raw/d26_contracts -- bash ./run
