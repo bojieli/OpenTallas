@@ -52,3 +52,5 @@ Next for R3:
 3. Route read: final stage db only (post-repair/post-hook); gates DRC 0, TT >= -42, FF hold >= 0, bind+LATCHECK, LEC.
 Evidence: bind1/bind2 GREEN (LATCHECK 873/873 delta {}), G0 0 new vs J5 (87 inherited). xo placed read posted to R4 (D3 hops <= 352; D2 stays stopped).
 Waiters on rtx-pro scratchpad (h9wait/h9ans/h9j7b) die with this lane; R3 re-arms its own.
+- NOTE: hub intel2 chainb.sh pid 2770520 (chainb2) is still alive only because its ssh (pid 848474) to epyc8 holds the session of the setsid/nohup route client 3322281; its remaining steps are just the ROUTE post + CHAIN_DONE. Leave it; it exits when the route client exits. Do not kill the ssh while the route runs.
+- stand-down.sh ran 09:3x (pushed 978e36a2), --handed oth-ubuntu-3506838-1795272809, otrun-outgoing-giraffe-3322281, 3322281.
