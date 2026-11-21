@@ -53,3 +53,7 @@ My local waiters die with this session: RE-ARM on every unit below (ot-wait <uni
   src_s81_pin_3c913dbdfb23_d8j6_1117_work_bind_11210316 into /srv/opentallas-scratch2/claude/fam-s81-slice-r3/trees/
   src_s81_j6_t37reach1_bind (reach1 changes no RTL, so the elab is the same; or run bind.py elab). Then rerun bindtree.sh
   minus its publish line (already published).
+- t49 ECO pass 2 (oth-ubuntu-3969870, own first sign-off) ENDED rc 3, the same insert failure. The fresh receipt also lists
+  INVBUF/SEQ as /work/nomcap/... ; hold_eco_internal_run.py libs_from_receipt keeps only /OpenROAD-flow-scripts/ and /nomcap/
+  prefixes, so HB4 (INVBUF lib) is never read. This is a tool bug: accept /work/nomcap/ (map to the kit mount) in
+  libs_from_receipt. Fix it on main, then rerun epyc8 fam-s81-slice-r3/t49_eco2.sh. NOT run again by R3.
