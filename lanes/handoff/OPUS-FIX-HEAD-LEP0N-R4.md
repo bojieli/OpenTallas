@@ -36,3 +36,18 @@ Event = strict bind + LATCHECK + G0, then apply.
 
 ## Reported
 - 04:2x BUG to FLEET-WATCH-R4: ot-run --cancel reached only stale clients (r8b/r11b/lep_p3 units), containers kept running.
+
+## UPDATE 11-21 ~06:xx PST
+- Shelf kit 1632910 FAILED 3_3 exit 2 = plan geometry stop (OT_CLAND band FAIL: txwd_l1b0/b1 rects under moved g_tx[2] bank4,
+  0 free). Not GPL / placement-setup / tool. Env diff vs r11b: intended r16 changes only.
+- Fix LEP-BANDFIX-1 (epyc10 .../opus-fix-head-lep0n-r3/bandfix.py PLAN OUT REP [radius_steps] [target]): rects < 50 % free slide
+  same-size to nearest site >= target free (shelf 0.8: 3 rects, max 15.7 um; column 0.6 r420: 52 rects, median 49, max 148 um).
+- Pipelines (run_bf.sh NAME: gen -> preflight -> strict bind/LATCHECK -> G0) memory-queued on epyc10:
+  hub ~/opus-fix-head-lep0n-r4/{shelf_bf,col_bf}_pipe.otrun.log. NEXT: on BF_PIPE_PASS launch
+  ot-run --mem 48 --threads 12 --hosts epyc10 --dir D/NAME/gen -- bash D/NAME/gen/run_kit.sh D/NAME/gen/hd_lep0N route 48 12
+  (ot-run needs --stage for scripts outside --dir; first launch was REFUSED by ISOLATION step 3).
+- Column v1 kit (gen3) never started (client stopped while memory-queued); superseded by col_bf.
+- START rows: reach_rules fix --rules 1 = raw re-points only (k5 32, m 5), rr_t54/rr_t8 hops gone; landing_local_resets left
+  (k5 87 over 405, m 1 at 410). Re-pointing local resets to rst_n leaf taps gives 'missing' raws (they need rst_rl relays):
+  open row for the reset owner. Files startfix/{fix_plan.json,fix_report.json,after.tsv}; fix2_plan.json is INVALID, do not use.
+- Split TX LEC FAILED (19 unproven equiv, lane1/2 RX valid/credit) - backup only, not chased.
