@@ -2,3 +2,17 @@
 - 2026-11-20 16:30 PST rt/current already 0b7c9148c706 on intel2 intel1 epyc2 epyc7 epyc8 epyc9 epyc10 since 16:29 (merge-queue SYNC after my push): AUTOSTAGE, TREESYNC, STARTCANARY, CANCELMARK all present in every host copy. Will report launches/h for the next full hour (17:00-18:00).
 - 2026-11-20 18:00 PST Launches 17:00-18:00 PST (rt refresh live since 16:29): 44 KIT-WAVE LAUNCH lines. Before: hour 14 36, hour 15 31 (hour 13 181 was the J5 apply).
 - 2026-11-20 18:17 PST Landed RELOAD/MULTIHOST-SPILL/OLDWAIT, STOPPED-OUTSIDE, FAILLOGS, DOCKERBREAKER; all 7 hosts on rt ef71d9d33716. epyc8 queue NOT drained: 30 waiters/1.9 TB, oldest 18.4 h, all hosts admit 0 GB, pre-16:29 waiters keep old code. epyc7 block was admit-lock starvation (timeouts were installed), now a 60 s cross-process docker breaker. intel1 scratch2 202 GB -11 GB/h: cleanup runs, growth is live event kits (details in handoff).
+- 2026-11-20 18:33 PST BUILD-TIME 48h (read-only; 984 kit attempts on epyc2/7/8/9/10 + intel1, stage logs + kit_wave_state). Median/p90 minutes.
+  s81: launch>gen_done 41/130, wait for place start 20/263, synth 1/17, floorplan 2/8, gp 21/48, resize 3/8, dp 7/18, cts 17/55, grt 57/153, route 304/531. launch>place done 137/455, launch>CTS done 215/473.
+  qwen_compute: 41/113, wait 49/227, synth 1/9, fp 7/21, gp 35/56, resize 9/15, dp 11/16, cts 51/119, grt 99/306, route 271/538. place done 193/454, CTS done 254/926.
+  qwen_kvsys: 35/68, wait 11/16, fp 40/89, gp 69/173, resize 32/84, dp 43/84, cts 164/391, grt 50/567. place done 303/411, CTS done 769/1313 (n=4).
+  s81_head: 6/493, wait 5/82, gp 18/78, dp 3/9, cts 6/23, grt 16/76, route 113/255. place done 102/599, CTS done n=2.
+  First place WNS = dp end (above); median dp WNS -158 ps, CTS WNS -128 ps. LEC not measured (log times unusable).
+  Slowest stages by total hours: gp 531 h (940 runs), route 344 h (80 runs, median 5.1 h), grt 258 h, floorplan 220 h, synth 197 h, dp 189 h.
+  Dominant: cell count (corr with time gp 0.70, resize 0.70, dp 0.65, cts 0.87; gp median 7 min under 100k cells, 35 min over 250k; cts 2 min vs 40 min). grt corr 0.21: iterations, not size. Retries are NOT it: 1.02 attempts per item, 93 earlyoom/infra-oom resubmits in 48 h. Not measurable from logs: waiting for memory mid-run.
+  Where 10-20 h comes from: the p90 tail is queue + gen (113-130 min launch>gen_done, 227-263 min wait before place), not compute. All 7 hosts admit 0 GB at 18:16, load 3x cores. Row-hours spent in rows later CANCELLED: s81 9.5k, qc 5.3k, head 1.4k, kv 1.6k in 48 h (592 SUPERSEDED, 103 enqueue-on-superseded).
+  Median CPU use in stage: gp 1.3 cores, resize 1.1, dp 1.1, cts 1.5, grt 1.9; kits reserve 2-8 threads, committed threads 600-700 vs 96-128 cores.
+  LEVERS (estimates):
+  1. Do not enqueue or wait on rows of a superseded plan; cancel at supersede, not after the wait. Frees admission slots; p90 wait 4.4 h -> ~3 h: saves 1-2 h at p90 per kit.
+  2. Thread reservation = measured use (gp/dp/resize 2, cts 2, grt 2-3): more concurrent kits per host; p90 queue 4.4 h -> ~3 h (est. 30% more kits per host): saves ~1-1.5 h at p90, 20-30 min median.
+  3. Stop cts/grt/route on kits whose place WNS is under -300 ps (310 of 866 attempts; 40 still ran cts/grt/route = 114 h in 48 h): ~114 h per 48 h of fleet compute freed, which feeds levers 1-2; per-kit saving 3-6 h on those kits.
