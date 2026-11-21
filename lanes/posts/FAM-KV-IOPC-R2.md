@@ -1,0 +1,2 @@
+- 2026-11-21 11:06 PST DIED [FAM-KV-IOPC] ot-run oth-ubuntu-2072529-1795271645 on loved-redfish: rc=2 after 16363 s, ended 19:06:47, log /srv/opentallas-scratch2/claude/fam-kv-iopc/run1/proof_A_route.log, cmd: --hosts epyc7 --mem 64 --threads 8 --dir /srv/opentallas-scratch2/claude/fam-kv-iopc -- bash /srv/opentallas-scratch2/claude/fam-kv-iopc/pro
+  [filed under] FAM-KV-IOPC-R2: FAM-KV-IOPC stood down (chain FAM-KV-IOPC > FAM-KV-IOPC-R2)
