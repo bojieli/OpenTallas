@@ -14,3 +14,4 @@
 - 2026-11-21 01:04 PST GRT-FLAT watchdog cancelled 2 wave attempt(s) (class PLAN design:grt_flat_overflow): s81/col_h9_r0_p5__t1__pvbca8d846@2 17.6 GB; s81/ot_s81sl_leaf__t39@3 18.8 GB
 - 2026-11-21 01:30 PST GRT-FLAT watchdog cancelled 1 wave attempt(s) (class PLAN design:grt_flat_overflow): s81/col_h9_r0_p5__t1__pv5c8f2166@4 17.5 GB
 - 2026-11-21 01:46 PST GRT-FLAT watchdog cancelled 1 wave attempt(s) (class PLAN design:grt_flat_overflow): qwen_compute/cbf_q11@3 25.7 GB
+- 2026-11-21 02:30 PST GRT-FLAT watchdog cancelled 1 wave attempt(s) (class PLAN design:grt_flat_overflow): s81/col_h9_r0_p3__t1__cl8ce97bcb__pvc11684b5@2 17.9 GB
