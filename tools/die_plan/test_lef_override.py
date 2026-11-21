@@ -1,6 +1,7 @@
 import hashlib
 import json
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -26,6 +27,23 @@ def test_base_match_takes_corrected_same_name(tmp_path, monkeypatch):
     d, p = setup(tmp_path, monkeypatch)
     got = L.select(str(p), Path)
     assert got == str(d / "m.lef") and Path(got).name == "m.lef"
+
+
+def test_type_macros_uses_design_root_for_override_and_cache(tmp_path, monkeypatch):
+    import gen_phys
+
+    corrected, base = setup(tmp_path, monkeypatch)
+    other_root = tmp_path / "other"
+    (other_root / "v").mkdir(parents=True)
+    relative_lef = str(base.relative_to(tmp_path))
+    (other_root / relative_lef).write_text("DIFFERENT VIEW\n")
+    monkeypatch.setattr(gen_phys, "_VIEW_LEF", {})
+    monkeypatch.delenv("OT_SIGNED_VIEW_SHA", raising=False)
+    core = {"inst": "u_m", "module": "m", "lef": relative_lef, "origin_um": [0, 0]}
+    plan = SimpleNamespace(types={"t": {"hard_cores": [core]}})
+
+    assert gen_phys.type_macros(plan, "t", other_root)[0][2] == relative_lef
+    assert gen_phys.type_macros(plan, "t", tmp_path)[0][2] == str(corrected / "m.lef")
 
 
 def test_other_view_of_the_module_is_left_alone(tmp_path, monkeypatch):

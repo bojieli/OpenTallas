@@ -21,7 +21,7 @@ def fixture(tmp_path, monkeypatch):
         (out/'ot_dp_cells.sv').write_text('')
         return []
     monkeypatch.setattr(GR, 'write_rtl', emit)
-    monkeypatch.setattr(GP, 'type_macros', lambda p,t:[('u_core','phy','phy.lef','phy_tt.lib',0,0,'R0')])
+    monkeypatch.setattr(GP, 'type_macros', lambda p,t,root=None:[('u_core','phy','phy.lef','phy_tt.lib',0,0,'R0')])
     seen=[]
     def kit(p,t,out,*a,**kw):
         seen.append((t,p.types[t]['hard'])); return out/t
@@ -52,6 +52,6 @@ def test_unbound_or_unknown_refused(tmp_path,monkeypatch,kwargs,match):
 
 def test_no_macro_refused(tmp_path,monkeypatch):
     raw,fl,_=fixture(tmp_path,monkeypatch)
-    monkeypatch.setattr(GP,'type_macros',lambda p,t:[])
+    monkeypatch.setattr(GP,'type_macros',lambda p,t,root=None:[])
     with pytest.raises(GR.GenError,match='placed macro'):
         GP.write_phys(raw,tmp_path/'bad',types=['mid'],kit_rtl={'mid':str(fl)},hard_wrappers=['mid'],trial=True)
