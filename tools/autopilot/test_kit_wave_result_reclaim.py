@@ -17,6 +17,8 @@ class AP:
 
     def sh(self, cmd, timeout=0, input=None):
         self.cmds.append(cmd)
+        if input:                        # FLEET-WATCH-R4: the reclaim script goes in on stdin (never in a cmdline)
+            self.cmds.append(input)
         return 0, self.out, ""
 
 

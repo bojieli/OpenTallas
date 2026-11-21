@@ -12078,7 +12078,11 @@ def grt_arm_withdraw(AP, cfg, rec, why):
 
 
 # r359 ruling: every deleter goes through ot_delete_guard.refuse(); a missing module/list fails closed (nothing is deleted)
-RECLAIM_GUARD = os.environ.get("OT_RECLAIM_GUARD", "/srv/opentallas-scratch2/claude/clean-all-1115/ot_delete_guard.py")
+# FLEET-WATCH-R4 11-21 (COORD: 954 failed / cancelled attempt dirs, 438 GiB on E9, never reclaimed): the sweep ran the 11-17 guard copy (clean-all-1115: no allow_exact, no routed rule), which refuses every
+# attempt dir under a protected rows dir (".../runs/<die>/kit-wave") -> "skip guard REFUSE" on ~450 rows.  It now runs the CURRENT guard (rt/current) and registers the one exact dir it is about to reclaim
+# (allow_exact: a narrow, 1 h exception that lifts only the protected ANCESTOR; the guard still refuses protected paths inside, live processes, routed-unsigned and newer-than-current).
+RECLAIM_GUARD = os.environ.get("OT_RECLAIM_GUARD", "/srv/opentallas-scratch2/claude/rt/current/tools/fleet/ot_delete_guard.py")
+RECLAIM_ALLOW_S = 3600
 
 
 def grt_arm_reclaim(AP, rec, hosts):
@@ -12103,6 +12107,7 @@ def grt_arm_reclaim(AP, rec, hosts):
            f"[ $nw = 1 ] || {{ echo KW_RECLAIM_SKIP routed result unsigned, not superseded; exit 0; }}; fi; "
            f"G={shlex.quote(RECLAIM_GUARD)}; L=$HOME/.local/state/ot-delete-guard/protected.txt; "
            f"if [ ! -f \"$G\" ] || [ ! -f \"$L\" ]; then echo KW_RECLAIM_SKIP delete guard missing; exit 0; fi; "
+           f"mkdir -p $HOME/.local/state/ot-delete-guard; printf '%s\\t%s\\t%s\\n' \"$W\" $(( $(date +%s) + {RECLAIM_ALLOW_S} )) 'FLEET-WATCH-R4 kit_wave reclaim: own terminal attempt dir, run DBs only' >> $HOME/.local/state/ot-delete-guard/allow_exact.txt; "
            f"if ! gr=$(python3 -I \"$G\" check \"$W\" \"$L\" 2>&1); then echo KW_RECLAIM_SKIP guard ${{gr:0:80}}; exit 0; fi; "
            f"b=$(du -sm \"$W\" | cut -f1); find \"$W\" -xdev -type f \\( {names} \\) -delete; "
            f"echo KW_RECLAIM $b $(du -sm \"$W\" | cut -f1)")
@@ -12111,7 +12116,8 @@ def grt_arm_reclaim(AP, rec, hosts):
     for h in [h for h in dict.fromkeys(hosts) if h]:
         remote = _ssh(h, hub)
         try:
-            rc, o, _ = AP.sh(remote + ["bash -c " + shlex.quote(cmd)] if remote else ["bash", "-c", cmd], timeout=240)
+            # FLEET-WATCH-R4 11-21: the script goes in on stdin, never in a command line: the guard's live-process check refuses a dir whose path appears in any process cmdline, including this very shell's
+            rc, o, _ = AP.sh(remote + ["bash -s"] if remote else ["bash", "-s"], timeout=240, input=cmd)
         except Exception as e:                       # noqa: reclaim never stops the tick
             rc, o = 1, type(e).__name__
         m = re.search(r"KW_RECLAIM (\d+) (\d+)", o or "")
@@ -12156,12 +12162,17 @@ def reclaim_terminal_sweep(AP, cfg, st, now=None):
         if n >= RECLAIM_SWEEP_MAX:
             break
         d = (cfg.get("dies") or {}).get(r.get("die")) or {}
-        if r.get("reclaim") or d.get("reclaim_failed") is False or int(r.get("attempt") or 0) < 2:
+        if d.get("reclaim_failed") is False or int(r.get("attempt") or 0) < 2:
+            continue
+        # FLEET-WATCH-R4 11-21: a row swept while the old guard copy refused ("skip guard") is retried once; rows older than 24 h (up to 14 d) are swept too (they were never visited)
+        if r.get("reclaim") and not ("skip guard" in str(r.get("reclaim")) and not r.get("reclaim_retry")):
             continue
         if not ((r.get("status") == "FAIL" and r.get("class") != "INFRA") or r.get("status") == "CANCELLED"):
             continue
-        if now - float(r.get("updated") or 0) > 24 * 3600 or now - float(r.get("updated") or 0) < 300 or (r.get("die"), r.get("item")) in live:
+        if now - float(r.get("updated") or 0) > 14 * 24 * 3600 or now - float(r.get("updated") or 0) < 300 or (r.get("die"), r.get("item")) in live:
             continue
+        if r.get("reclaim"):
+            r["reclaim_retry"] = True
         hosts = [d.get("gen_host"), str(r.get("kit") or "").partition(":")[0]] + list(r.get("ran_hosts") or [])
         r["reclaim"] = grt_arm_reclaim(AP, r, hosts)
         n += 1

@@ -7,7 +7,7 @@ class AP:
     HUB_NAME = "localhost"
     @staticmethod
     def sh(argv, timeout=0, input=None):
-        p = subprocess.run(argv, capture_output=True, text=True)
+        p = subprocess.run(argv, capture_output=True, text=True, input=input)
         return p.returncode, p.stdout + p.stderr, ""
 
 
