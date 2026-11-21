@@ -1,0 +1,5 @@
+- 2026-11-20 23:44 PST ROUTE-REACH-0020 (11-20): unsigned current-plan types vs detail routing (5_2_route log/odb), kit-wave kits on 7 hosts, any plan (lane private kits NOT scanned; cleaned kits show none). Table: lanes/ROUTE-REACH-0020.tsv.
+  S81 350 unsigned: 324 NEVER routed (GRT 157, place 95, gen only 52, floorplan 9, none 9, CTS 2); 26 reached route: 17 finished, 9 route; after: DRC 12, rest gate-detail not captured. Stops mostly superseded events, WAIT-VISUAL / SKIP-HELD route holds, 47 route attempts still RUNNING, WAIT-BIND/kit_topology refusals.
+  HEAD 1 unsigned: place only, running, never routed.
+  QC 92 unsigned: 47 never routed (GRT 28, place 10, none 6, gen 2, CTS 1); 45 reached route (35 finished): DRC 13, setup 4, hold 4 (LEC none seen), others gate-detail not captured. Never-routed causes: 14 route RUNNING, 11 WAIT-VISUAL holds, 6 no kit-wave row, superseded events.
+  KV 50 unsigned: 48 NEVER routed (place 31, GRT 10, CTS 6, gen 1); 2 reached route, both DRC/infra-oom. Causes: 21 WAIT-VISUAL holds, 7 gen_lint, 7 route RUNNING, kit_topology ValueError, PDN-0006 VSS on M5.
