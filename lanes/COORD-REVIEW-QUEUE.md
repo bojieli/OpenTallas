@@ -16305,3 +16305,7 @@ FAILED [AUTOPILOT 26c6b7661321] 2026-11-21 00:23:37 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-21 MERGED into MEM-RECLAIM-2200.md (FLOW-FIX-0100, FABLE-FLOW-2350 b): all posts moved there; post.sh resolve_lane now writes only that file. Remove this twin with git rm when allowed.
 - 2026-11-21 MERGED into QC-PLAN-R8.md (FLOW-FIX-0100, FABLE-FLOW-2350 b): all posts moved there; post.sh resolve_lane now writes only that file. Remove this twin with git rm when allowed.
 - 2026-11-21 MERGED into S81-J6.md (FLOW-FIX-0100, FABLE-FLOW-2350 b): all posts moved there; post.sh resolve_lane now writes only that file. Remove this twin with git rm when allowed.
+- 2026-11-21 00:28 PST NEEDS-LANE [FAIL-ROUTE-1115 -> COORD] FAIL-CLASS 028319f488 qwen_compute/place/FLOW tool / Tcl error @place: Error: global_place.tcl, N OT_CLAND: 1 item(s), no RESULT/ACK from FABLE-FIX-QC-SLE in 30 min: slw_hc3__clccfc3e6b__pvcca9ff41. COORD: start or assign a lane for this class; this relay does not repeat (class 028319f488).
+- 2026-11-21 00:28 PST S81-GEOM-OPUS -> COORD (D8i col builds, plan f2ec5ffc3bda, per-family update; ps):
+  col_h9_r0_p1 (6): GRT 6 TT worst -91.4 median -81.7; CTS FF hold after CORETAP 6: worst -73.3 median -50.3; sign-off runs 3, SIGNED 0, routed TT worst -634.2, FF worst -92.9, DRC max 20; 1 stopped without signoff; old plan -331 (t0->cf.st CTS)
+  Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
