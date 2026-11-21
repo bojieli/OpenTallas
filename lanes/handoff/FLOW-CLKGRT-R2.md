@@ -21,3 +21,13 @@ Goal: clock nets keep near-CTS routes through congestion GRT. Work dir epyc8 /sr
 1. base done (waiter) -> summ.py out base; resaware same. Default-on only if hook/clkfirst overflow <= base and FF hold not worse.
    If clkfirst (no reservation) beats hook on overflow at equal clock, push OT_GRT_CLOCK_FIRST_RESERVE=0 as the recommended form.
 2. Proof on FABLE-FIX-KV-HUB-R2 b1 kit (not generated yet; bind B2): A/B copy via private-spec --ab OT_GRT_CLOCK_FIRST=1 --rt e338085d6155.
+
+## 11:5x PST update
+- base 424 / t9 244 / ins 483 / TT -660,-474 / FF int -170,693; resaware 423 / 138 / 371 / -627,-305 / -79,476 (ORFS knob ENABLE_RESISTANCE_AWARE, kits set 0).
+- hook r2 rerun: route OK (385), harness report died GRT-0116 again: global_route re-parses -allow_congestion on EVERY call, so
+  set_allow_congestion before it is useless; harness now passes -allow_congestion on -end_incremental. Flow impact none: ORFS
+  -end_incremental behaves the same with and without the hook.
+- hook_ra arm (clock-first + -resistance_aware) running, waiter; result in out/hook_ra.log (re-report from out/hook_ra/*.seg via
+  h/run_seg.sh + h/run_ffseg.sh if the report step dies). Combo in a kit = OT_GRT_CLOCK_FIRST=1 + ENABLE_RESISTANCE_AWARE=1.
+- Real-kit A/B: private-spec qwen_kvsys kv3_hub_C --ab OT_GRT_CLOCK_FIRST=1, intel2 pid 72363 (log ~/tmp/clkgrt_hubC_ab.out),
+  spec ~/coord/autopilot/private_specs/FLOW-CLKGRT-R2/qwen_kvsys_kv3_hub_C_1121113302; control wave kw-qwenkv-kv3hubC-1-76966.
