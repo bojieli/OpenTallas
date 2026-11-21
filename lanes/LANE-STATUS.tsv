@@ -109,3 +109,4 @@ FAM-S81-LEPE-3	stood-down	FAM-S81-LEPE-4	2026-11-21	11:26 PST | context budget; 
 OPUS-FIX-QC-SLE-R4-SC	stood-down	FAM-S81-COL-H10-R3	2026-11-21	sle_sc_v1 cl115da35f signed (ECO); view fix handed to FAM-S81-COL-H10-R3
 FAM-S81-SLICE-R4	stood-down	FAM-S81-SLICE-R5	2026-11-21	11:38 PST | context; handoff lanes/handoff/FAM-S81-SLICE-R4.md
 OPUS-FIX-QC-SLE-R4	stood-down	QC-SLE-R5	2026-11-21	11:42 PST | context 309k; variant C + k_b2 + sc routed LEC handed, nothing cancelled
+FLOW-OPS-1000	stood-down	none	2026-11-21	11:58 PST | done: FABLE-FLOW-1000 items 1-9 + COORD adds on main (last 5933bab6c9); COORD reads the work; open: hub WAITS.tsv rollup cron, epyc4 git shim (host key)
