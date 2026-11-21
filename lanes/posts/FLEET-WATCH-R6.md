@@ -17,3 +17,4 @@
 - 2026-11-21 11:17 PST HOURLY free space 11:17 epyc9=145 intel1=146 (restore at >=250 GiB; caps 250 on epyc9/intel1)
 - 2026-11-21 12:18 PST HOURLY free space 12:18 epyc9=163 intel1=168 (restore at >=250 GiB; caps 250 on epyc9/intel1)
 - 2026-11-21 13:19 PST HOURLY free space 13:19 epyc9=205 intel1=187 (restore at >=250 GiB; caps 250 on epyc9/intel1)
+- 2026-11-21 14:20 PST HOURLY free space 14:20 epyc9=234 intel1=189 (restore at >=250 GiB; caps 250 on epyc9/intel1)
