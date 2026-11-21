@@ -59,3 +59,18 @@ and kit_wave.json dies.s81_head die_gen_env + item_env.hd_lep0N.
   hd_lep0N: shelf macro form + LEP-BANDFIX-1 3 rects (plan_reset 394f7f1a6760), clock.tap_grt_pre true, late-meta RTL (R4-3). Column rows R4-2 (tap moves) dropped unless column returns.
   hd_serdes (from OPUS-FIX-HEAD-SERDES-R4, stood down): clock.tap_grt_pre true; tap groups u_enc:clk_t20, u_ptx:clk_t14; OT_S81_KP4_SYN_SCOPY define + OT_KEEP_WIRES ot_s81_kp4_dsyn:S_u once sdr2d proves.
   START hops hd_st_k5 1,676 um / hd_st_m 1,261 um: proposed to HEAD-START-R16 as owner (posted 07:1x; inputs opus-fix-head-lep0n-r3/startfix); no reply yet. If it declines, they are relay rows here.
+
+## R2 TAKEOVER 11-21 08:1x PST (lane FABLE-FIX-HEAD-LEP0N-R2, successor Fable; supersedes the lists above where they differ)
+- Units: shelf_we oth-ubuntu-1587841-1795268678 (CTS since 07:45), shelf_tg oth-ubuntu-21834-1795274496 (global place since 07:45). ot-run clients on intel2.
+  Waiter form (from any host): ssh intel2 'ot-wait --kit F/NAME/gen/gen/hd_lep0N --host epyc10 --stage cts|grt|route|finish --also UNIT --timeout 28000'.
+- strip_check: F/tmp/sc_test/run_sc.sh DIR [ODB] (docker openroad -python, via ot-run --mem 12 --threads 2; DIR needs strip_check.py + reserved_sites.tcl + the odb).
+  TESTED on hd_serdes sdr2d 4_cts.odb: flags exactly the measured crossing nets (clk_t4 n0,n1,n2,n4,n5; clk_t5 n1,n2). Detour estimate is 30-50 um
+  short of the GRT guide. Rely on cell-to-cell pair flags; PIN->d0 and bare both_sides flags are advisory.
+  For a kit: copy 4_cts.odb is NOT needed; mount the kit dir read-only is not supported by run_sc.sh (it writes strip_check.json into DIR) -> copy
+  strip_check.py is already in F; use a tmp DIR with hardlink/copy of the odb + reserved_sites.tcl.
+- HEAD EVENT e1 (assembled, gates GREEN, NOT applied): F/event1/{compose_ev.py,run_ev.sh}, out F/event1/e1 (prep, bind, receipt, g0).
+  Plan 79ac2973400d on HEAD-START-R16 p6 58f896b3fcbe / sidecar facc71b93198. Rows: hd_lep0N type (shelf + BANDFIX-1 + tap_grt_pre), hd_serdes
+  tap_grt_pre + tap_group (u_enc:clk_t20, u_ptx:clk_t14). Held out: late-meta RTL R4-3, hd_serdes SCOPY define/KEEP_WIRES, column rows.
+  Apply waits on R16 transport bench on p6 + the hd_lep0N proof. START hops k5/m: none on the applied plan (R16 07:49), no rows.
+  Re-base: edit the three sha guards in run_ev.sh, run with a new TAG (ot-run --priority plan --plan-job bind --mem 32 --threads 8 --hosts epyc10 --dir F).
+- Sign-off provenance: the proof kits are private (src_manifest off); the signed build must come from the HEAD event manifest tree.
