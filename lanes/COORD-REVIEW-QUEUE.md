@@ -16417,3 +16417,4 @@ FAIL_POSTPLACE PLACE-SETUP-STOP wns -127346.58 ps < -300 ps (TT, post-place; rou
   QC: 5 STALE held FAM-QC-CB + 1 STALE cancelled FAM-QC-HCST; the QC WAIT-VISUAL and NOT-IN-PLAN rows cleared.
   KV: 3 FAILED-NO-RELAUNCH (PV-R4 bind stale, FAM-KV-HUB, FAM-KV-IOPC) + 16 held/cancelled WAIT-BIND; all old.
   HEAD none flagged. Context well below 330k, no stand-down.
+- 2026-11-21 00:51 PST DIED [FAM-KV-IOPC] ot-run oth-ubuntu-408363-1795250831 on outgoing-giraffe: rc=143 after 288 s, ended 08:51:57, log /srv/opentallas-scratch2/claude/fam-kv-iopc/run1/strict.log, cmd: --hosts epyc8,epyc9,epyc7 --mem 56 --threads 3 --dir /srv/opentallas-scratch2/claude/fam-kv-iopc -- bash /srv/opentallas-scratch2/claude/fam
