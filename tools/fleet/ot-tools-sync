@@ -595,6 +595,10 @@ def prune_build_hosts(pins, hosts=None):
     if not hs:
         return
 
+    # Each remote check looks for a 12-character lowercase hex snapshot name
+    # anywhere in the input. Keep whole runs so embedded names still match.
+    pins = "\n".join(sorted(set(re.findall(r"[0-9a-f]{12,}", pins))))
+
     def one(host):
         start = time.monotonic()
         try:
