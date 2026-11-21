@@ -331,3 +331,21 @@ class RepointEnv(unittest.TestCase):
         d2 = {"die_gen_env": {"OT_SIGNED_VIEW_SHA": "/k/old/physical/sv.json"}}
         with self.assertRaises(SystemExit):
             A.repoint_gen_env(d2, "/k/old", "/k/new", exists=lambda p: False)
+
+
+def test_non_sha_tools_pin_is_refused_at_apply(tmp_path):
+    """FLOW-NOADV-R3 11-20: tools_sha must be a real rt sha with a manifest (S81 carried the literal j5tree)"""
+    import pytest
+    import apply_reviewed_tree_marker as ARM
+    rt = tmp_path / "rt"
+    rt.mkdir()
+    (rt / "6a81626d915b.manifest.json").write_text("{}")
+    ARM.check_tools_pin({}, str(rt))                                            # no pin in the marker: unchanged
+    ARM.check_tools_pin({"tools_sha": "6a81626d915b"}, str(rt))                 # 12 hex with its manifest
+    ARM.check_tools_pin({"tools_sha": "6a81626d915b" + "0" * 28}, str(rt))      # a full sha resolves by its 12-char prefix
+    for bad in ("j5tree", "", "main", "6a81626", "6A81626D915B", 123):
+        with pytest.raises(SystemExit, match="not a real rt sha"):
+            ARM.check_tools_pin({"tools_sha": bad}, str(rt))
+    with pytest.raises(SystemExit, match="no manifest"):
+        ARM.check_tools_pin({"tools_sha": "deadbeef0000"}, str(rt))
+    ARM.check_tools_pin({"tools_sha": "deadbeef0000"}, str(tmp_path / "no-rt-root"))   # a host without the rt root cannot judge the manifest

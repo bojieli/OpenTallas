@@ -12,7 +12,7 @@ exactly those hosts, and the apply refuses when gen_hosts changed between that g
 The pilot item is --pilot-item, else die.pilot_item, else the smallest item of the die's hold_event_items; none resolvable = refuse
 (--no-pilot is the explicit opt-out; the output then says PILOT NONE)."""
 import os
-import argparse, fcntl, json, os, sys, time
+import argparse, fcntl, json, os, re, sys, time
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -187,6 +187,24 @@ def repoint_gen_env(d, old_tree, new_tree, exists=os.path.exists):
     return done
 
 
+RT_ROOT = "/srv/opentallas-scratch2/claude/rt"
+
+
+def check_tools_pin(mc, rt_root=RT_ROOT):
+    """FLOW-NOADV-R3 11-20 (COORD / FABLE-FLOW-1800): a die tools pin is a real rt sha (12-40 hex) with rt/<sha>.manifest.json, never a label
+    like `j5tree` (tools-lag cannot be measured against it).  Refuses at apply; no tools_sha in the marker = unchanged.  The manifest is
+    required when this host holds the rt root."""
+    pin = (mc or {}).get("tools_sha")
+    if pin is None:
+        return
+    if not (isinstance(pin, str) and re.fullmatch(r"[0-9a-f]{12,40}", pin)):
+        raise SystemExit(f"APPLY REFUSED: tools_sha {pin!r} is not a real rt sha (12-40 hex); pin the rt/<sha> the die tools came from (nothing switched)")
+    if os.path.isdir(rt_root):
+        import glob
+        if not glob.glob(os.path.join(rt_root, pin[:12] + "*.manifest.json")):
+            raise SystemExit(f"APPLY REFUSED: tools_sha {pin} has no manifest {rt_root}/{pin[:12]}*.manifest.json (nothing switched)")
+
+
 def marker_event_of(mc, d):
     return mc.get("event") or d.get("event")
 
@@ -219,6 +237,7 @@ def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=
         assert isinstance(all_items, bool), "review_before_route all_items must be boolean"
         assert isinstance(items, list) and all(isinstance(it, str) and it and not any(c in it for c in "*?[") for it in items), "review_before_route requires exact item names"
         assert items or all_items, "review_before_route requires exact item names or all_items"
+    check_tools_pin(mc)
     kr = marker_kit_rtl(marker)
     if kr:
         mc["kit_rtl"] = kr

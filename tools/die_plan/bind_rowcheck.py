@@ -76,7 +76,11 @@ def find_ref_tools(explicit=None):
     cands = [None if explicit == "auto" else explicit, os.environ.get("OT_RT_CURRENT")] + [f"/srv/opentallas-scratch{n}/claude/rt/current" for n in ("2", "", "3")]
     for c in cands:
         if c and (Path(c) / "tools" / "die_plan").is_dir():
-            return Path(c)
+            # FLOW-NOADV-R3 11-20: rt/current moves during a long gate; the first resolution is the sha directory, pinned in $OT_RT_CURRENT
+            real = Path(os.path.realpath(c))
+            if explicit == "auto" or c == os.environ.get("OT_RT_CURRENT") or Path(c).name == "current":
+                os.environ.setdefault("OT_RT_CURRENT", str(real))
+            return real
     return None
 
 

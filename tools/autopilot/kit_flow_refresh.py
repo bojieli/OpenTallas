@@ -31,7 +31,7 @@ import socket
 import sys
 import time
 
-RT = os.environ.get("OT_RT_CURRENT", "/srv/opentallas-scratch2/claude/rt/current")
+RT = os.path.realpath(os.environ.get("OT_RT_CURRENT", "/srv/opentallas-scratch2/claude/rt/current"))   # FLOW-NOADV-R3: pinned sha dir
 INDEX = "tools/.flow_blobs.json"
 DIRS = ("tools/die_plan", "physical/common_flow")
 EXT = (".tcl", ".py", ".sh")

@@ -79,7 +79,7 @@ print("AP_JSON " + json.dumps(out))
 
 # PRECHECK-1119 (owner 11-19): after each apply the static pre-build estimator (tools/precheck) runs in the background on
 # the die's first gen host and posts its family summary to the applying lane.  It never blocks (owner r703/r704).
-PRECHECK_RT = "/srv/opentallas-scratch2/claude/rt/current"
+PRECHECK_RT = os.path.realpath(os.environ.get("OT_RT_CURRENT") or "/srv/opentallas-scratch2/claude/rt/current")   # FLOW-NOADV-R3: the sha dir at import, not a moving link
 
 
 def precheck_argv(obj, res, lane, now=None):
