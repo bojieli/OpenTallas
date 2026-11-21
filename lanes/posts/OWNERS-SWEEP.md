@@ -189,3 +189,7 @@
   S81 STALE held-for-plan-event: 16 (4 new). QC: 1 STALE cancelled old. KV real: 2 FAILED-NO-RELAUNCH + 15 held + 1 cancelled WAIT-BIND, old.
   HEAD: none flagged.
 - 2026-11-20 21:51 PST CORRECTION to 21:50 sweep: STOOD-DOWN-OWNER rows are 119 (S81 85, KV 19, QC 15), not 138; 35 other flagged rows; total 154 of 483.
+- 2026-11-20 21:53 PST 21:55 CORRECTED 21:50 sweep: mapping fixed (review/audit/tool lanes never own; default die lane S81-DIE-R5 / leaf FABLE-FIX-S81-LEAF / QC-PLAN-R8 / KV-PLAN-R3 / HEAD-PLAN-R16; stood-down -> successor). 483 rows, 37 flagged, 0 STOOD-DOWN-OWNER, 0 UNOWNED, 0 DEAD-OWNER.
+  Primary-owner remaps: BUILD-SETTINGS-AUDIT-1900 and CORE-PIN-RELAY-R2 rows -> S81-DIE-R5 (83) or core-lib lane; KIT-WAVE(auto)/UNIFY-TOOLS-R3/PRECHECK QC rows -> QC-PLAN-R8; blank-owner S81 leaf rows -> FABLE-FIX-S81-LEAF (56). lanes/LANE-STATUS.tsv not yet present, built-in successor table used.
+  S81: 16 STALE held-for-plan-event, all old, owned. QC: 1 STALE cancelled. KV: 2 FAILED-NO-RELAUNCH + 15 held + 2 placed/held + 1 cancelled WAIT-BIND, KV-PLAN-R3.
+  HEAD: none flagged.
