@@ -4,6 +4,14 @@ Owner of the S81 svc family (16 types: svc_hi rs t1-t6, pvso_entry t1-t2, svc_lo
 Succeeds FABLE-FIX-S81-SVC (R3 stood down on context; R4 stopped on the Fable limit). Read lanes/handoff/FABLE-FIX-S81-SVC.md for older state.
 Nothing pushed to main. Nothing signed, nothing exported.
 
+## 11-21 04:1x PST MOVED TO epyc10 (COORD: epyc9 admission disk-held ~160 GiB < 250)
+- Killed my epyc9 chains 246949 / 290179 (cmdline checked; both were still in their wait loops, no ot-run started).
+- ONE chain now: epyc10 opus-fix-s81-svc-r5/bind_hi4x/chain10.sh PID 3148782 (log chain10.log, STATE, KSTATE): polls epyc9 PID 3968457 ->
+  checks epyc9 elab_r5_hi4_local svc_width_gate PASS -> rsync (no --delete) epyc9 split-hi4/elab_tree_r5/ -> epyc10 bind_hi4x/tree/ ->
+  adds x_epoch plan_c.json (from epyc10 split-hi4-band-test/x_epoch) as plan_svc_hi4_x_epoch_split.json -> ot-run epyc10 strict bind
+  --all-gaps + LATCHECK -> on green: prep.py fresh_kit of svc_hi_dsdv_svc_rs__t4_att -> place -> route goal (epyc10).
+- The epyc9 bind_hi4x/{chain.sh,kit_chain.sh} sections above are superseded (scripts left, not running).
+
 ## 11-21 04:0x PST (COORD: build in parallel; benches gate adoption/export only; a bench FAIL cancels the kit)
 - E9 3370152 (global old-H8 ELAB, land SRAM manifest) ended PASS: split-hi4/elab_r5_retry/asbuilt.json, svc_width_gate PASS.
 - CHAIN epyc9 opus-fix-s81-svc-r5/bind_hi4x/chain.sh PID 246949: waits PID 3968457 (hi4 scoped ELAB) -> needs svc_width_gate PASS ->
