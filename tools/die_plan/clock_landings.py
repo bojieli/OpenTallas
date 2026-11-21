@@ -3391,12 +3391,19 @@ class Landings:
             # is no longer a same-D copy after an explicit writer branch.
             cfg = self.types[tn].get("clock", {}).get("landing_writer_start") or {}
             copies, stages = [], []
+            # R-REACH-1 share_trunk: stage 0 of a branch whose first stage equals another branchs is that branchs
+            # one kept relay (_writer_start_rtl names it after reader_start_owners), so declare the emitted owner
+            # instance once instead of a per-branch name the RTL never built.
+            owners = reader_start_owners(cfg) if cfg.get("share_trunk") else {}
             for b in sorted(_cam(self, tn)["outputs"]):
                 if b not in cfg.get("branches", {}):
                     copies.append(f"u_cland_fstart_{b}")
                 elif not cfg.get("reuse_relay_origin", False):
                     # Samples the same input, but on its own local raw reset and feeding the next relay: not a copy.
-                    stages.append(f"u_cland_writer_start_{ident(b)}_0")
+                    ob = (owners.get(b) or [b])[0]
+                    name = f"u_cland_writer_start_{ident(ob)}_0"
+                    if name not in stages:
+                        stages.append(name)
             if self.tstart and self.tstart["type_pins"].get(tn, {}).get(START_PIN_OUT):
                 copies.append("u_cland_tstart_o")
             if copies:

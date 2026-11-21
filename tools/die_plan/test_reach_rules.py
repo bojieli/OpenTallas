@@ -3,6 +3,7 @@ in the generator / placement, and the G0 hook.
     python3 -m pytest -q tools/die_plan/test_reach_rules.py"""
 import copy
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -430,3 +431,33 @@ def test_reach_pairs_is_a_plan_schema_key():
     assert schema.validate(bad)
     bad["partition_types"]["mid"]["reach_pairs"] = [{"name": "x_xo", "from": "x_q", "to": "y", "via": 1}]
     assert schema.validate(bad)
+
+
+def test_land_slots_writer_share_trunk_names_emitted_stage_owner():
+    """QC-PLAN-R8 (s29q103S4Q9N46R6V1 slw_hc3 gen refusal): with landing_writer_start.share_trunk on a
+    landing_relay_start_copy relay type, x_hc2_o reuses x_ctl_o stages 0-3 (one kept relay each) and only builds its
+    own last stage, so land_slots must declare the emitted owner u_cland_writer_start_x_ctl_o_0 once, never the
+    u_cland_writer_start_x_hc2_o_0 the RTL never built."""
+    st = lambda last: dict(stages=[dict(xy_um=[float(x), 0.0], raw_reset="rst_n_t0") for x in (1, 2, 3, 4, last)])
+    cfg = dict(depth=5, share_trunk=True, branches=dict(x_ctl_o=st(5), x_hc2_o=st(6)))
+    plan = {"partition_types": {"T": {"landing_relay_start_copy": True, "clock": {"landing_writer_start": cfg}}}}
+    L = CL.Landings.__new__(CL.Landings)
+    L.types, L.plan, L.strap, L.ca, L.tstart, L.dataflow = plan["partition_types"], plan, True, True, None, False
+    L.ca_type = {"T": {"role": ("relay", "origin", 2), "rings": {}}}
+    L.by_type = {"T": {"inputs": (), "outputs": ("x_ctl_o", "x_hc2_o")}}
+    L.reset_placements = {"T": {}}
+    body, logic = "    ot_dp_rrelay u_r0 (.clk(clk), .d(x), .q(rst_n_t0));\n", []
+    for bus in ("x_ctl_o", "x_hc2_o"):
+        L._writer_start_rtl("T", bus, "", body, logic)
+    built = set(re.findall(r"ot_dp_landing_relay (\w+) ", "\n".join(logic)))
+    assert len(built) == 6 and "u_cland_writer_start_x_hc2_o_4" in built and "u_cland_writer_start_x_hc2_o_0" not in built
+    rs = L.land_slots("T")["buses"]["cland_rstart_in"]
+    assert rs["stages"] == ["u_cland_writer_start_x_ctl_o_0"] and set(rs["stages"]) <= built
+    # diverging first stage: each branch owns its stage 0 (declared per branch, as before sharing)
+    cfg["branches"]["x_hc2_o"]["stages"][0]["xy_um"] = [9.0, 0.0]
+    assert L.land_slots("T")["buses"]["cland_rstart_in"]["stages"] == [
+        "u_cland_writer_start_x_ctl_o_0", "u_cland_writer_start_x_hc2_o_0"]
+    cfg.pop("share_trunk")
+    cfg["branches"]["x_hc2_o"]["stages"][0]["xy_um"] = [1.0, 0.0]
+    assert L.land_slots("T")["buses"]["cland_rstart_in"]["stages"] == [
+        "u_cland_writer_start_x_ctl_o_0", "u_cland_writer_start_x_hc2_o_0"]
