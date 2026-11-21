@@ -1,0 +1,222 @@
+{
+ "schema": "reset_relay_gen_1530.rows.v1",
+ "tool": "tools/die_plan/reset_leg_plan.py (main 73717f6992)",
+ "note": "per-type plan delta keys read from the newest placed kit + its bound module; tap indices are that bind's tree taps: re-run the tool on the event bind",
+ "sources": {
+  "cbx_q10__cl94a12200": "QC s29q103S4Q9N46C epyc9 kit",
+  "kv3_pv_v2": "KV-D25e3 attempt_4 epyc7 kit",
+  "dsdv_slice_lepe_mu_LP__t2": "S81 b05c98f7919 epyc2 kit",
+  "dsdv_slice_lepe_nh_mus_LP__t1": "S81 b05c98f7919 epyc2 kit"
+ },
+ "for_lane": {
+  "cbx_q10__cl94a12200": "QC-PLAN-R5 V1",
+  "kv3_pv_v2": "KV-PLAN-R2 D27",
+  "dsdv_slice_lepe_mu_LP__t2": "S81-DIE-R4 J6",
+  "dsdv_slice_lepe_nh_mus_LP__t1": "S81-DIE-R4 J6"
+ },
+ "types": {
+  "cbx_q10__cl94a12200": {
+   "reset": {
+    "inst_taps": [
+     {
+      "tap": 11,
+      "sinks": [
+       "u_u_fab_u_x_3_0"
+      ]
+     },
+     {
+      "tap": 15,
+      "sinks": [
+       "u_u_fab_u_x_2_0"
+      ]
+     },
+     {
+      "tap": 62,
+      "sinks": [
+       "u_u_fab_u_x_2_1"
+      ]
+     },
+     {
+      "tap": 70,
+      "sinks": [
+       "u_u_fab_u_x_3_1"
+      ]
+     }
+    ]
+   }
+  },
+  "kv3_pv_v2": {
+   "reset": {
+    "inst_taps": [
+     {
+      "tap": 9,
+      "sinks": [
+       "u_bin_i_pvw__u_TNQN_N_rN_b_d1"
+      ]
+     },
+     {
+      "tap": 27,
+      "sinks": [
+       "u_bin_i_pvw__u_TNQN_N_rN_b_d2",
+       "u_bin_i_pvw__u_TNQN_N_rN_b_d3"
+      ]
+     },
+     {
+      "tap": 31,
+      "sinks": [
+       "u_bin_i_vport_W_N_vo_d3"
+      ]
+     },
+     {
+      "tap": 33,
+      "sinks": [
+       "u_bin_i_vport_E_N_vo_d3"
+      ]
+     },
+     {
+      "tap": 41,
+      "sinks": [
+       "u_bin_i_pvw__u_TNQN_N_rN_b"
+      ]
+     },
+     {
+      "tap": 149,
+      "sinks": [
+       "u_bin_i_vport_E_N_vo"
+      ]
+     },
+     {
+      "tap": 153,
+      "sinks": [
+       "u_bin_i_vport_E_N_vo_d1"
+      ]
+     },
+     {
+      "tap": 157,
+      "sinks": [
+       "u_bin_i_vport_E_N_vo_d2",
+       "u_bin_i_vport_W_N_vo_d1"
+      ]
+     },
+     {
+      "tap": 167,
+      "sinks": [
+       "u_bin_i_vport_W_N_vo",
+       "u_bin_i_vport_W_N_vo_d2"
+      ]
+     },
+     {
+      "tap": 211,
+      "sinks": [
+       "u_ft_ft17_o_6"
+      ]
+     }
+    ]
+   }
+  },
+  "dsdv_slice_lepe_mu_LP__t2": {
+   "reset": {
+    "inst_taps": [
+     {
+      "tap": 37,
+      "sinks": [
+       "u_bin_unit_i0"
+      ]
+     }
+    ]
+   },
+   "relay_depth": [
+    {
+     "inst": "u_u_land",
+     "port": "rst_n",
+     "side": "sink",
+     "D": 4,
+     "path_um": 1462.3,
+     "note": "RESET-RELAY-GEN-1530 form L: u_u_land.u_rstr fed from [1436.7, 6.9], seated at its fanout"
+    }
+   ],
+   "relay_sites": {
+    "u_u_land.u_rstr.rst_n": [
+     212.207,
+     244.715
+    ],
+    "u_u_land.u_rstr.sync_q[0]": [
+     212.207,
+     244.715
+    ],
+    "u_u_land.u_rstr.sync_q[1]": [
+     212.207,
+     244.715
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_local[1].local_r": [
+     754.434,
+     513.324
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_local[2].local_r": [
+     581.58,
+     383.454
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_local[3].local_r": [
+     480.384,
+     544.104
+    ]
+   }
+  },
+  "dsdv_slice_lepe_nh_mus_LP__t1": {
+   "reset": {
+    "inst_taps": [
+     {
+      "tap": 2,
+      "sinks": [
+       "u_bin_coll_i0"
+      ]
+     },
+     {
+      "tap": 42,
+      "sinks": [
+       "u_bin_coll_i1"
+      ]
+     },
+     {
+      "tap": 52,
+      "sinks": [
+       "u_bin_unit_i0"
+      ]
+     }
+    ]
+   },
+   "relay_depth": [
+    {
+     "inst": "u_u_land",
+     "port": "rst_n",
+     "side": "sink",
+     "D": 4,
+     "path_um": 1684.5,
+     "note": "RESET-RELAY-GEN-1530 form L: u_u_land.u_rstr fed from [1436.6, 6.1], seated at its fanout"
+    }
+   ],
+   "relay_sites": {
+    "u_u_land.u_rstr.rst_n": [
+     544.117,
+     798.106
+    ],
+    "u_u_land.u_rstr.sync_q[0]": [
+     544.117,
+     798.106
+    ],
+    "u_u_land.u_rstr.sync_q[1]": [
+     544.117,
+     798.106
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_local[0].local_r": [
+     327.308,
+     593.905
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_local[2].local_r": [
+     910.656,
+     501.66
+    ]
+   }
+  }
+ }
+}
