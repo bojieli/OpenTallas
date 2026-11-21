@@ -1,1 +1,2 @@
 - 2026-11-21 10:27 PST DONE [FLOW-OPS-1000] ot-push-main otpush-loved-redfish-2171425 on loved-redfish: rc=0 after 0 s, ended 18:27:51, log none, cmd: ot-push-main --help
+- 2026-11-21 10:38 PST DIED [FLOW-OPS-1000] ot-push-main otpush-loved-redfish-2174597 on loved-redfish: rc=4 after 652 s, ended 18:38:57, log none, cmd: ot-push-main 
