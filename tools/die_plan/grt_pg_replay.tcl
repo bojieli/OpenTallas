@@ -34,10 +34,15 @@ proc ot_grt_pg_replay_begin {{kit ""}} {
   foreach {key helper add} {
     OT_PG_CELL_KEEPOUT pg_cell_keepout.tcl ot_pgcko_add
     OT_PG_TRACK_TRUTH pg_track_truth.tcl ot_pgtt_add
+    OT_OBS_GCELL_CAP obs_gcell_cap.tcl ot_obsgc_add
     OT_PGCAP pg_pair_cap.tcl ot_pgcap_add
   } {
-    if {![info exists ::env($key)] || $::env($key) ne "1"} continue
     set path [file join $kit $helper]
+    # FLOW-OBS-GCELL-1121: the obstruction sliver cap is default on (not a config.mk key); kits generated before it
+    # have no helper and keep their old replay
+    if {$key eq "OT_OBS_GCELL_CAP"} {
+      if {([info exists ::env($key)] && $::env($key) eq "0") || ![file exists $path]} continue
+    } elseif {![info exists ::env($key)] || $::env($key) ne "1"} continue
     if {![file exists $path]} { error "OT_GRT_PG_REPLAY $key=1 but helper missing: $path" }
     source $path
     $add

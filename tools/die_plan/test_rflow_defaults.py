@@ -111,7 +111,9 @@ def test_pg_track_truth_hooks_are_grt_only():
     pre = (HERE / "grt_pre.tcl").read_text()
     post = (HERE / "grt_post.tcl").read_text()
     tcl = (HERE / "pg_track_truth.tcl").read_text()
-    # added last in the PRE hook, gated on the kit variable; removed first in the POST hook (before 5_1_grt.odb)
+    # added last in the PRE hook (only the GRT-internal, DB-unchanged FLOW-OBS-GCELL-1121 capacity cut may follow, since it
+    # counts the PG-truth guards), gated on the kit variable; removed first in the POST hook (before 5_1_grt.odb)
+    pre = pre.split("# FLOW-OBS-GCELL-1121")[0] if "ot_obsgc_add" in pre.rstrip().splitlines()[-1] else pre
     assert pre.rstrip().endswith("pg_track_truth.tcl]; ot_pgtt_add\n}") and '$::env(OT_PG_TRACK_TRUTH) eq "1"' in pre
     assert post.index("ot_pgtt_remove") < post.index("if {[info exists ::env(OT_TAP_GRT_MODE)]")
     assert "dbObstruction_create" in tcl and "dbObstruction_destroy" in tcl

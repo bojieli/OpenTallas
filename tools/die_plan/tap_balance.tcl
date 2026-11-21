@@ -408,6 +408,47 @@ set tb_iters [expr {$tb_conv && [info exists ::env(OT_TAP_CONVERGE_ITERS)] ? int
 set tb_cwin [expr {$tb_conv ? ([info exists ::env(OT_TAP_CONVERGE_WIN_PS)] ? $::env(OT_TAP_CONVERGE_WIN_PS) : $tb_win + 60.0) : $tb_win}]
 set tb_raise [expr {$tb_conv && [info exists ::env(OT_TAP_CONVERGE_RAISE_PS)] ? $::env(OT_TAP_CONVERGE_RAISE_PS) : 0.0}]
 set tb_price {}; set tb_prev {}
+# FLOW-OBS-GCELL-1121 (FABLE-PD-HEAD-0700, HEAD sdr2d clk_t4/t5): a tap port inside a reserved M1-M7 strip (die clock-site
+# obstruction, (1214.19,16.2)-(1330.88,18.36), 116.7 um long) seeded its delay chain at the port, inside the placement
+# blockage; the legalizer put the cells on both sides of the strip and 7 chain nets detoured 80-143 um around its ends on
+# M8+ (+91..+112 ps capture insertion).  The seed moves out of the strip, to the side of the tap's sink centroid, past the
+# clock-halo rows (OT_CLK_OBS_HALO_ROWS + 1), so the whole chain legalizes on one side.  A port outside every M1 obstruction
+# (or OT_TAP_SEED_SIDE=0) keeps the port seed byte for byte.
+proc tb_seed_side {bt tree x y} {
+  global tb_blk
+  if {[info exists ::env(OT_TAP_SEED_SIDE)] && $::env(OT_TAP_SEED_SIDE) eq "0"} { return [list $x $y] }
+  set hit ""
+  foreach o [$tb_blk getObstructions] {
+    set b [$o getBBox]; set L [$b getTechLayer]
+    if {$L eq "NULL" || [$L getName] ne "M1"} continue
+    if {$x >= [$b xMin] && $x <= [$b xMax] && $y >= [$b yMin] && $y <= [$b yMax]} { set hit [list [$b xMin] [$b yMin] [$b xMax] [$b yMax]]; break }
+  }
+  if {$hit eq ""} { return [list $x $y] }
+  lassign $hit ox0 oy0 ox1 oy1
+  set sx 0.0; set sy 0.0; set ns 0
+  foreach t [$tree getITerms] { set ib [$t getInst]; set bb [$ib getBBox]; set sx [expr {$sx + ([$bb xMin] + [$bb xMax]) / 2.0}]; set sy [expr {$sy + ([$bb yMin] + [$bb yMax]) / 2.0}]; incr ns }
+  if {$ns == 0} { return [list $x $y] }
+  set cx [expr {$sx / $ns}]; set cy [expr {$sy / $ns}]
+  set rows [$tb_blk getRows]
+  set rh [expr {[llength $rows] ? [[[lindex $rows 0] getSite] getHeight] : 270}]
+  set hr [expr {[info exists ::env(OT_CLK_OBS_HALO_ROWS)] ? $::env(OT_CLK_OBS_HALO_ROWS) : 1}]
+  set gap [expr {($hr + 1) * $rh}]
+  set core [$tb_blk getCoreArea]
+  if {($ox1 - $ox0) >= ($oy1 - $oy0)} {
+    # long in x: above or below; x stays on the port, clamped into the strip span
+    set up [expr {$cy >= ($oy0 + $oy1) / 2.0}]
+    set ny [expr {$up ? $oy1 + $gap : $oy0 - $gap - $rh}]
+    if {$ny < [$core yMin] || $ny + $rh > [$core yMax]} { set up [expr {!$up}]; set ny [expr {$up ? $oy1 + $gap : $oy0 - $gap - $rh}] }
+    set nx [expr {int(max($ox0, min($ox1, $x)))}]
+    puts "OT_TAP_SEED_SIDE [$bt getName] port in M1 strip ($ox0,$oy0)-($ox1,$oy1): chain seed [expr {$up ? {above} : {below}}] at y $ny (sink centroid y [format %.0f $cy], $ns sinks)"
+    return [list $nx [expr {int($ny)}]]
+  }
+  set rt [expr {$cx >= ($ox0 + $ox1) / 2.0}]
+  set nx [expr {$rt ? $ox1 + 10 * 54 : $ox0 - 10 * 54 - 2000}]
+  if {$nx < [$core xMin] || $nx > [$core xMax]} { set rt [expr {!$rt}]; set nx [expr {$rt ? $ox1 + 10 * 54 : $ox0 - 10 * 54 - 2000}] }
+  puts "OT_TAP_SEED_SIDE [$bt getName] port in M1 strip ($ox0,$oy0)-($ox1,$oy1): chain seed [expr {$rt ? {east} : {west}}] at x $nx (sink centroid x [format %.0f $cx], $ns sinks)"
+  return [list [expr {int($nx)}] [expr {int(max($oy0, min($oy1, $y)))}]]
+}
 proc tb_tap_pass {it} {
   global tb_blk tb_master tb_target tb_win tb_tol tb_tag tb_grt tb_added tgt tb_conv tb_cwin tb_raise tb_price tb_prev tb_coreonly
   global tb_cdirect tb_cdmax
@@ -475,6 +516,7 @@ proc tb_tap_pass {it} {
     set tree [odb::dbNet_create $tb_blk "${n}_tb${tb_tag}${it}_tree"]
     $tree setSigType CLOCK
     foreach t [$root getITerms] { $t disconnect; $t connect $tree }
+    lassign [tb_seed_side $bt $tree $x $y] x y
     set prev $root
     for {set b 0} {$b < $nb} {incr b} {
       set inst [odb::dbInst_create $tb_blk $tb_master "${n}_tb${tb_tag}${it}_d$b"]

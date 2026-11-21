@@ -49,13 +49,14 @@ if {[info exists ::env(OT_HOP_LATCH_CAPTURE_TAP)] && [string trim $::env(OT_HOP_
 if {[info exists ::env(OT_PG_CELL_KEEPOUT)] && $::env(OT_PG_CELL_KEEPOUT) eq "1" && [file exists [file join $gp_dir pg_cell_keepout.tcl]]} {
   source [file join $gp_dir pg_cell_keepout.tcl]; ot_pgcko_add
 }
-# FLOW-OBS-GCELL-1121 (DRT-0255 on a partly obstructed gcell, HEAD hd_host_e / hd_serdes sdr2c): GRT capacity 0 on every
-# gcell a routing obstruction (M2-M7) cuts across its tracks to fewer than 3 DRT-legal tracks (obs_gcell_cap.tcl, GRT-only
-# region adjustment, no DB change; OT_OBS_GCELL_CAP=0 off).  Before PG-track-truth, so only the kit's own obstructions count.
-if {[file exists [file join $gp_dir obs_gcell_cap.tcl]]} { source [file join $gp_dir obs_gcell_cap.tcl]; ot_obsgc_add }
 # FLOW-PGCAP-1 11-13 PG-TRACK-TRUTH (default on for the R-FLOW kit classes, OT_PG_TRACK_TRUTH=1): temporary GRT
 # obstructions over the spacing-illegal tracks of every PG stripe, so GRT capacity = DRT-legal tracks (DRT-0255 class);
 # grt_post.tcl removes them before 5_1_grt.odb is written.  Last, so every earlier hook sees the kit unchanged.
 if {[info exists ::env(OT_PG_TRACK_TRUTH)] && $::env(OT_PG_TRACK_TRUTH) eq "1"} {
   source [file join [file dirname [file normalize [info script]]] pg_track_truth.tcl]; ot_pgtt_add
 }
+# FLOW-OBS-GCELL-1121 (DRT-0255 on a partly obstructed gcell, HEAD hd_host_e / hd_serdes sdr2c): GRT capacity 0 on every
+# gcell a routing obstruction or block-master OBS (M2-M7) cuts across its tracks to fewer than 3 DRT-legal tracks (wide-metal
+# spacing; PG wires and the PG-track-truth guards above count as blockers).  obs_gcell_cap.tcl, GRT-only region adjustment,
+# no DB change, replayed by grt_pg_replay.tcl in fresh incremental-GRT sessions; OT_OBS_GCELL_CAP=0 off.
+if {[file exists [file join $gp_dir obs_gcell_cap.tcl]]} { source [file join $gp_dir obs_gcell_cap.tcl]; ot_obsgc_add }
