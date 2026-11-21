@@ -10,3 +10,4 @@
   [filed under] TAP-GRID-R3: TAP-GRID-R2 stood down (chain TAP-GRID-R2 > TAP-GRID-R3)
 - 2026-11-21 07:22 PST DONE [TAP-GRID-R3] ot-push-main otpush-civil-redfish-39098 on civil-redfish: rc=0 after 0 s, ended 15:22:05, log none, cmd: ot-push-main --help
 - 2026-11-21 07:23 PST DONE [TAP-GRID-R3] ot-push-main otpush-civil-redfish-45069 on civil-redfish: rc=0 after 78 s, ended 15:23:29, log none, cmd: ot-push-main 
+- 2026-11-21 07:25 PST DONE [TAP-GRID-R3] ot-run oth-ubuntu-8030-1795274464 on tolerant-swine: rc=0 after 240 s, ended 07:25:02, log /srv/opentallas-scratch2/claude/tap-grid-r3/colpilot_ps/kit_rtl.live.log, cmd: --mem 8 --threads 2 --dir /srv/opentallas-scratch2/claude/tap-grid-r3/colpilot_ps/root/items/col_h9_r0_p3__t1__cl8ce97bcb__pv625eef47/attemp
