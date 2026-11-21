@@ -63,3 +63,16 @@ No route/repair of hub_Wo / sys_c; no route of D25e3 hgi kits; no kR late-repair
   __cl7f648944: kit_istations fail-closed "i_ectl_Q_N_kf: packed exact banks do not also move face registers" (plan has both a packed
   exact bank row and a face-register move on that bus) -> D27 plan row (drop one form) or tool support. kv3_hub_Wi: D25e3 a13 place
   client ended 06:25 (SRAM row class, fixed in D26) -> no relaunch; next build is the D26 kit.
+
+## Update 18:3x (KV-PLAN-R2)
+- D26 R3c live unit oth-ubuntu-139507-1795223156 (epyc7; client intel2 pid 1232556; log ~/tmp/kvplanr2/d26_r3c_gate.log): PRECHECK/PRE/G0 0,
+  ELAB 0, strict bind since 17:47. Gate tools = rt/bbcc7f022a8e copied into the candidate (immune to rt/current moves).
+- APPLY: intel2 ~/tmp/kvplanr2/apply_d26.sh (out ~/tmp/kvplanr2/apply_d26.out). Checks R3c BIND/LATCHECK green, mv candidate on epyc7 to
+  kw45/src_kv_pin_eb1e73448bd0_hg14_3c057267_tbbcc7f0_d26, G0 on final path (ot-run epyc7), seal_rep_d24.sh d26 from epyc7 (replicate
+  epyc8,9,10,intel1,epyc2, link-from D25e3), guard_d23.py, mk_candidate_g0.py from cand_d25e3.json, +OT_PLACE_MAX_TRANSITION=320, tools_sha
+  bbcc7f022a8e, publish_apply apply --expect-source D25e3 --expect-event KV-D25e3 --lane KV-PLAN-R2 (post-apply bind runs itself).
+  After RC_APPLY 0: kit_wave_edit delete dies.qwen_kvsys.hold_items for the 8 hg types; drop auto_visual_review_skip ["kv3_hgi*"]; then
+  source_gate_r3 ot-delete on epyc8.
+- D27 private: epyc8 kv-plan-r2/d27 (compose_d27.sh, rows/, tree/), plan 3d152d53d5b5, G0 PASS; bind+LATCHECK unit oth-ubuntu-2031059-1795226238
+  (epyc8, results d27/bindgate/gate.out). Open D27 items: (d) reset reach = kit re-point read; (f) pc_v1 third bank; (g) pcsplit views M6/M7 PG
+  pins; (h) hub_C 6 cland view rebuild; sys_c o_dcal_flt/tks; 879 405-era rows die-wide. D27 must be recomposed on the applied D26 tree for the 11-21 cut.
