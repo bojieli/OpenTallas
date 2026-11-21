@@ -7,3 +7,5 @@
 - 2026-11-21 01:23 PST STAND-DOWN: of the 10 cancelled geom rows 7 relaunched RUNNING at next attempt, 3 RETRY-INFRA awaiting relaunch (col_h9_r0_p3 pv13474472, dsdv c1x_C t4, qwen cbx_q10 a12), none FAIL, none HELD. epyc2 admits 20 GB, no waiters left. KW_REPIN 30-min path not yet fired; handoff lists the check.
 - 2026-11-21 06:19 PST GRT-FLAT watchdog cancelled 5 wave attempt(s) (class PLAN design:grt_flat_overflow): qwen_compute/sle_st_a_v1__cl989804f6__cl18eece69@4 11.2 GB; qwen_compute/sle_st_a_v1__cl989804f6__cled3c1d7b@6 14.6 GB; qwen_compute/sle_st_a_v2__pv30dda31f__pvd2ec7769@4 14.9 GB; qwen_compute/sle_st_a_v2__pv4242de79@4 14.7 GB; qwen_kvsys/kv3_hub_Ei@4 31.0 GB
   [filed under] FLEET-WATCH-R3: FLEET-WATCH-2000 stood down (chain FLEET-WATCH-2000 > FLEET-WATCH-R3)
+- 2026-11-21 06:46 PST GRT-FLAT watchdog cancelled 2 wave attempt(s) (class PLAN design:grt_flat_overflow): qwen_compute/slw_st_a_v1__clfc5867a6__pvdf8e5ca4@3 14.8 GB; s81_head/hd_host_w@2 6.9 GB
+  [filed under] FLEET-WATCH-R3: FLEET-WATCH-2000 stood down (chain FLEET-WATCH-2000 > FLEET-WATCH-R3)
