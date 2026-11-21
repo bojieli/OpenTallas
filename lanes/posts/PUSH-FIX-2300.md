@@ -11,3 +11,4 @@
 - 2026-11-20 22:20 PST DONE [PUSH-FIX-2300] ot-push-main otpush-dear-crayfish-143722 on dear-crayfish: rc=0 after 1 s, ended 22:20:22, log none, cmd: ot-push-main 
 - 2026-11-20 22:20 PST DONE [PUSH-FIX-2300] ot-push-main otpush-dear-crayfish-144085 on dear-crayfish: rc=0 after 1 s, ended 22:20:23, log none, cmd: ot-push-main 
 - 2026-11-20 22:20 PST DONE [PUSH-FIX-2300] ot-push-main otpush-dear-crayfish-136040 on dear-crayfish: rc=0 after 31 s, ended 22:20:37, log none, cmd: ot-push-main 
+- 2026-11-20 22:20 PST DONE pushed 00a409587516 via ot-push-main (dogfood, gated, no --no-test). (1) auto-widens sparse cone to test-named paths and to tracked paths a failing run reports missing, re-runs up to 4 rounds; (2) after rebase onto moved main re-runs only tests whose file/touched source overlaps moved files; (3) default timeout 3000s x clamp(load/ncpu,1,3). 5 new tests in test_ot_push_main.py. Tools reach hosts via ot-tools-sync.
