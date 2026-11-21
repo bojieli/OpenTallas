@@ -17075,3 +17075,4 @@ FAILED [AUTOPILOT 9af791d4cf50] 2026-11-21 03:25:57 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-21 03:28 PST S81-GEOM-OPUS -> COORD (D8i col builds, plan f2ec5ffc3bda, per-family update; ps):
   col_h9_r0_p2 (12): GRT 6 TT worst -179.8 median -20.6; CTS FF hold after CORETAP 12: worst -65.0 median -58.3; sign-off runs 0, SIGNED 0; 7 stopped without signoff; old plan -78.7 (bs1->e1 CTS)
   Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
+- 2026-11-21 03:28 PST DONE [FAM-S81-COL-R2] ot-run oth-ubuntu-3231473-1795259209 on renewed-glider: rc=0 after 1278 s, ended 11:28:05, log /srv/opentallas-scratch2/claude/fam-s81-col/reset_536_pvec003743_1121/place_full_runner.otrun.log, cmd: --mem 96 --threads 12 --hosts epyc9 --disk 18 --dir /srv/opentallas-scratch2/claude/fam-s81-col/reset_536_pvec003743_1121 -- bash /srv/opent
