@@ -59,3 +59,13 @@ KV-D26 failures (kit_wave state): CELL-CAP v12 (499k floorplan), v7; OT_CLAND "n
 | v12, v7 | CELL-CAP | > 400k | split rows (v12 section above; v7 same form, straddle_1080.json) |
 v8 (D26 a3 running) and v6 (a4 tool error: ssh argument list too long) are not band failures.
 Proof: the v3 private split (bind 8c running) is the only bound one; each other type needs its own split bind before kit gen (KV-PLAN-R6 D28 apply).
+
+## Clock-site pin class (COORD 11-21, FAM-KV-IOPC-R2 checker tools/die_plan/kit_pin_site_check.py, main a137683011)
+- D26 pv kits carry 20-55 face pins inside reserved die clock-site M1-M7 OBS rects at seams (each one a guaranteed DRT short).
+  The generator fix belongs to KV-PLAN-R6 (D27d2/D28): face pin bits and the die clock site must sit apart at each seam.
+- Split rule 11: when the split re-derives the landing rings, the cut-face pins and the reserved clock sites per half, no
+  face pin's own-layer shape may overlap a reserved_sites obstruction rect. That includes the new cut faces at x 1080, where
+  both halves get fresh pins and fresh sites.
+- Gate: after dry gen of each split half kit (and before place), run
+  `python3 -I tools/die_plan/kit_pin_site_check.py <kit>` from main. Exit 1 = do not place; the fix goes back to the plan
+  (move the pin bits or the site), never a kit-side OBS carve.
