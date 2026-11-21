@@ -20,3 +20,4 @@
   [filed under] FAM-S81-SLICE-R3: FAM-S81-SLICE-R2 stood down (chain FAM-S81-SLICE-R2 > FAM-S81-SLICE-R3)
 - 2026-11-21 07:23 PST WREG default-off LEC rerun failed on the script (keep_hierarchy blocks flatten -> equiv_make refuses processes), not on equivalence. Fix noted in handoff for FAM-S81-SLICE-R3 (unset keep_hierarchy before flatten + memory -nomap). WREG 13fbc4181e stays unpushed until EQUIVALENT.
   [filed under] FAM-S81-SLICE-R3: FAM-S81-SLICE-R2 stood down (chain FAM-S81-SLICE-R2 > FAM-S81-SLICE-R3)
+- 2026-11-21 07:28 PST DIED [FAM-S81-SLICE-R3] ot-run oth-ubuntu-3936290-1795274837 on outgoing-giraffe: rc=3 after 66 s, ended 15:28:22, log /srv/opentallas-scratch2/claude/fam-s81-slice-r3/t49_eco.log, cmd: --mem 48 --threads 8 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/fam-s81-slice-r3 -- bash /srv/opentallas-scratch2/claude/fam-s81-sl
