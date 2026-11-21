@@ -29,6 +29,14 @@ if [ "$cur" != "$B" ]; then
   exit 1
 fi
 msg="$1"; shift
+# FLOW-PROC-B 11-21: a commit that names lanes/LANE-STATUS.tsv must leave it schema-clean (tools/lane_status.py --check); only bin/stand-down.sh writes stood-down rows.
+for _f in "$@"; do
+  if [ "$_f" = "lanes/LANE-STATUS.tsv" ] && [ -f "$C/tools/lane_status.py" ]; then
+    if ! _lsb=$(python3 -I "$C/tools/lane_status.py" --check "$C/lanes/LANE-STATUS.tsv" 2>&1); then
+      echo "FAILED lanes/LANE-STATUS.tsv fails the schema (use bin/stand-down.sh LANE SUCCESSOR): $_lsb" | head -8 | tee /dev/stderr; exit 1
+    fi
+  fi
+done
 now() { date +%s.%N; }
 T0=$(now)
 TLOG=${COORD_COMMIT_TLOG:-$HOME/.local/state/coord-commit-times.log}
