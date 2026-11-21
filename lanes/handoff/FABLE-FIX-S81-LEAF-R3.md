@@ -1,7 +1,8 @@
 # FABLE-FIX-S81-LEAF-R3 handoff (Fable; succeeds OPUS-FIX-S81-LEAF-R3 2026-11-21 05:24 PST; owns ot_s81sl_leaf__t*, proof type t44__clf6cf8492)
 
 Read order: this file, lanes/posts/FABLE-FIX-S81-LEAF-R3.md, lanes/handoff/OPUS-FIX-S81-LEAF-R3.md (lever2 paths), FABLE-PD-S81-0440 C3.
-NOTHING IS SIGNED. State 2026-11-21 ~06:25 PST.
+NOTHING IS SIGNED. State 2026-11-21 ~07:05 PST. STOOD DOWN on context -> successor FABLE-FIX-S81-LEAF-R4 needed.
+Re-arm first: (1) epyc7: while kill -0 4191487 (B bind client; unit oth-ubuntu-761898-1795267913), then tail lever2/rtB2.otrun.log; (2) intel2: kit A chain PID 2876997, wait on "route start|NO_PLACE|CHAIN_DONE" in /srv/opentallas-scratch2/claude/fable-fix-s81-leaf-r3x/w44rtA/chain.log (at 07:0x it was in gen on epyc7).
 
 ## Diagnosis (measured; posts 05:4x and 06:0x)
 - Cause of the vp block overflow = lane-column placement + bank siting, not pin access.
@@ -28,17 +29,16 @@ NOTHING IS SIGNED. State 2026-11-21 ~06:25 PST.
 - Kit A / B: sum of the congestion: field of congestion-10.rpt (and whether the report is capped at 20,000 entries); baseline 58.9 k to 60.2 k; target < 1,000. Then run d1.py on the kit dir (where the overflow sits) and a geom_dump of 3_place.odb + d2.py (bank positions, utilisation).
 - If B < 1,000: let it route; sign-off gates; then the generator.
 
-## Generator (open; promised to FABLE-PD-S81-0440 C3, J7 Layer C; J7 cut 11-22 04:15)
-tools/die_plan/leaf_regrid.py, lane clone epyc10 /srv/opentallas-scratch2/claude/fable-fix-s81-leaf-r3x/repo (main b8c28cb918, cone tools + physical/common_flow). J7 base plan: epyc10 /srv/opentallas-scratch2/claude/s81-j6/candC1n_pf/physical/die_plan/s81/plan_h2_2249.json (ask S81-J6-ASSEMBLY-R3 for the composed J7 base).
-Survey of that base (epyc10 fable-fix-s81-leaf-r3x/sv.out): 75 leaf + 4 kv_leaf types with cores, 75 distinct floorplans; every type has 8 to 34 lane gaps under 25.92 um (min 2.2 to 19.4); estimator OVER on 74 of 79; lanes are on the W side on about 30 types and the E side on about 45.
-Steps per type (generalise lever2/l2_plan_ft_safe.py, which has fixed t44 columns):
-1. Lane slots: columns parallel to the vn hi pin face (from_um of the hi rows), column gap 28.08, row gap >= 25.92, on the 4.32 grid, clear of non-lane cores and ft bit sites / ft regs; 16 nearest slots; Hungarian by displacement.
-2. s81_hi_corridor.move_lanes (rigid riding records), then per-lane hi / ho sites on the strip + row-gap path (GS 0).
-3. istation_clear.py, leaf_slot_clear.py, seat (sites within 8.64 um of a core edge pushed out; the R3 seat script was inline and is not on disk: rewrite).
-4. Re-solve on the moved cores: vp_sr stations, reach_rules.py fix --rules 1 (start stages), taps (s81_hi_corridor.clear_added_taps / tap rule), fstart_reset_delta.py (reset anchors), with bind tools == gen tools.
-5. Checks per type, all must pass: 0 register sites inside a core; every bank footprint (bits x 0.58 um2 at the station comb) fits the free channel area around its site; min facing lane gap >= 25.92; every hop <= 405; strip cut load (lanes beyond the cut x 257 bits) under the strip V tracks.
-6. GS 0 for the family needs LF_CS_HI_GS / LF_CS_HO_GS 0 on every leaf word of die_b178_lfcs.v; stage_lfcs_netlist.py full restage refuses on the kv_leaf XR mask (R3 edited one word by copy+mv): fix the tool or add --update HI_GS,HO_GS.
-Also wanted on main: ff_put_near must skip station-grid cells under hard-core boxes; `sites` must test the bank footprint.
+## Generator: tools/die_plan/leaf_regrid.py, WIP, NOT on main
+- Lane clone epyc10 /srv/opentallas-scratch2/claude/fable-fix-s81-leaf-r3x/repo, branch fable-fix-s81-leaf-r3-regrid, commit 878c4d76b4 (base main b8c28cb918). Copy: rtx-pro scratchpad leafr3/leaf_regrid.py. No tests yet, not pushed.
+- Commands: slots / apply / check (see the docstring). apply = lane slots in columns parallel to the vn face on the lane side (col gap 28.08, row gap >= 25.92, 12.96 to non-lane cores, clear of ft sites, strip >= 43.2 with the slack added), Hungarian by displacement, s81_hi_corridor.move_lanes, per-lane hi / ho sites at equal arc on face -> strip -> row gap -> pin (GS 0 form), seat (8.64 um off every core). A type that is refused keeps its rows.
+- Run on the J7 base (epyc10 s81-j6/candC1n_pf plan_h2_2249.json; outputs fable-fix-s81-leaf-r3x/plan_regrid_c1n.json sha bf90a3f4d034..., regrid_c1n.json, apply.out, slots.out, sv.out): 79 types with cores (75 leaf + 4 kv_leaf).
+  - 39 moved; on all 39: 0 station / relay / start sites inside a core, lane-lane gap >= 28.08, t44__clf6cf8492 gets 16 slots on the same 3 columns R3 drew by hand (4.32 / 146.88 / 289.44).
+  - 26 of the 39 pass every hard gate. 13 fail only on a non-hi/ho row hop over 405 (407 to 509 um: t17 t21 t24__cl2456157b t33 t37 t43 t44 x2 t51 t60 t68 t71 t73): rows that ride a lane; istation_clear.py --grow / a +1 station is the next step for them.
+  - 2 refused on the hi hop (t1 425.5, t4 463.2): need +1 hi stage (s81_hi_corridor sites --add-stage logic).
+  - 38 refused for slots: only 2 columns fit beside the vn face and they hold 7 to 15 slots (list in slots.out). They need the 2-D form: slots north / south of vn (or a third column over the strip side), with the path going round the vn corner. NOT WRITTEN.
+- bank_spill is an ADVISORY estimator (flops per 4.32 cell at half the station comb, spread to free cells); it says PILE-UP (50 to 80 um) on 36 of 39 and is not calibrated: calibrate on kit B's 3_place.odb dump (d2.py bank extents) before using it as a gate.
+- Still to do: (a) 2-D slots; (b) +1 stage for the hop refusals; (c) driver that runs apply -> istation_clear -> leaf_slot_clear -> vp_sr re-solve -> reach_rules.py fix --rules 1 -> taps -> fstart_reset_delta.py -> check, with bind tools == gen tools; (d) tests + ot-push-main; (e) GS 0 restage of die_b178_lfcs.v for every leaf word (stage_lfcs_netlist.py refuses on the kv_leaf XR mask; R3 edited one word by copy+mv); (f) ff_put_near must skip station-grid cells under core boxes, and s81_hi_corridor `sites` must test the bank footprint; (g) rows to S81-J6-ASSEMBLY-R3 with the exact base plan (J7 Layer C), only after t44 proves in a kit.
 
 ## Other rows (unchanged from R3)
 - Keys + reset legs: J7 material. FSTART local resets: Codex donor epyc10 s81-j6/rows/j7_leaf_local_reset (52 types). CFX bench passes on 4 define sets.
