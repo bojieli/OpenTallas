@@ -36,3 +36,32 @@ Work dir: epyc8 /srv/opentallas-scratch2/claude/fable-fix-kv-hub. Scripts of thi
   (--plan, --tree tree_b, --bind-out, --src-manifest off, --host epyc8, --lane); gen_b.sh only as fallback. Diff config.mk vs the D26 wave kit.
 - Leaf-balance A/B (OT_CLK_LEAF_GRT_BAL=1, main 36f47f8037) SKIPPED: private-spec has no tool overlay and tree_b is on rt 4e46a7ec46c5.
   Never hand-copy a tcl into a kit. FLOW-CLKGRT-1121 (clock-first GRT) shares kit b1; post the kit path to it after gen.
+
+## 09:4x D28 size rows for hub_Eo / hub_Wo (COORD task from FABLE-PD-KV-0840) -- DESIGN DONE, PROOF RUNNING
+- Measured (hub_Eo D25e3 attempt_4 netlist, epyc9): 381,852 synth cells -> 450,499 placed (x1.18). Blocks: ft landing rings 114.5k,
+  unnamed flat comb 94k, delay lines u_d75/u_d15 seq fan_aq 48.6k flops, ft stations 47.7k, seq xs 11k, other rings ~40k.
+  Only the 2 kv3_astk cores are hard today. The 11-18 KV-HUBWO-SPLIT rows (11 cores) were never applied (D23 EMIT on the reset tree,
+  lane KV-HUBWO-RESET died at its second bind).
+- Form = hub_C form (already live in the plan): the 9 landing rings with W >= 250 become hard child ring cores, 0 added cycles,
+  per type 111,015 cells out: 381.9k -> ~271k synth -> ~320k placed (20 % under 400k). No outline change, no split of the type.
+  Masters, all SIGNED (signoff.json verdict): kv_cland_w1119_ew_86ca8 x2, w300_ew_ebc75 x2, w268_ns_6081a x2, w257_ew_aee53,
+  w292_ns_abd47 x2 (the ew twin w292_ew_abd47 never signed: intel1 run died at place 11-14; ns has the same params).
+  Kits: intel1 / epyc2 / epyc10 cland-macro-1/rk/<master>. The bound rings carry NARROW=1 at type level; a hard ring binds with its
+  param_wrap params (hub_C precedent).
+- Second step only if the placed census of the first kit says so: delay lines u_d75 (Eo) / u_d81 (Wo) W540 as an ot_dp_dly hard core
+  (param_wrap supports it; master unsigned) -> another ~40k.
+- Rows: lanes/handoff/FABLE-FIX-KV-HUB-R2-rows_kv3_hub_{Wo,Eo}_d28.json (schema kv_hubc_split_rows.v1), writer
+  FABLE-FIX-KV-HUB-R2-kvh_place.py (ORD=rev). Placement on the D27d plan: x on 1.728 um, y on 8.64 um (track / row lcm), minimum worst
+  pin-to-core hop, clear by 2.16 um of ft bit sites, station regs, internal stations, relay sites, taps, reset sites, START / raw stages,
+  reserved clock rows, other landing bands, hard-core halo 4.32. Worst pin-to-core hop 280 um (Wo ft2_i), 284 um (Eo ft30_i); the soft
+  bands were 232..402 um.
+- NOT in the rows yet (hub_C rows carry them; the D28 applier must add): track_offset_um, pins_file, lef / lib of the 5 masters into a
+  tree views dir (kvd23_hubc_views form), reset_net.
+- Proof chain = KV-HUBWO-RESET chain, script FABLE-FIX-KV-HUB-R2-hub_d28.sh (epyc8 fable-fix-kv-hub/hub_d28.sh): tree_h = hardlink copy
+  of tree_b (plan 9ec33fa3c347 = D27d + hroot variant B) + rows -> landing_remap resel (both types) -> collector_reattach --sidecar ->
+  hard_ring_wreg.py (kv-hubwo-reset/) -> G0. LIVE: intel2 client 3910929, log ~/tmp/fablefixkvhub/hub_d28.log, out epyc8
+  fable-fix-kv-hub/hub_d28/. Then: ot-run --hosts epyc8 --mem 56 --threads 3 --priority plan --dir W -- bash W/bind_h.sh W/bindgate_h
+  (about 3 h), then kv_start_corridor_event.py raw --bind-rtl on tree_h and a second bind if raw branches changed (KV-HUBWO-RESET steps).
+  Expect the inherited 27 pc/pv errors of D27d in any bind on this base; judge only kv3_hub_Wo / kv3_hub_Eo / kv3_hroot lines.
+- Also still open: hub_Wo preflight row (stage 0 of fs_o_host_host_rst_n to [979.461, 829.3]) is NOT in tree_h; the landing_remap may
+  re-pick it, re-run kit_preflight.cland_band_sites on the first hub_Wo kit.
