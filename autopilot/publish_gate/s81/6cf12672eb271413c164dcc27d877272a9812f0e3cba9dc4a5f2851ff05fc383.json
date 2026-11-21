@@ -1,0 +1,75 @@
+{
+ "advisory": [
+  "contained",
+  "hashes",
+  "pre_g0",
+  "schema"
+ ],
+ "checks": {
+  "contained": {
+   "verdict": "FAIL",
+   "why": "no PG_STATIC line (rc 1): ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<string>\", line 387, in run_static\n    bp = check_bound_params(tree, bind_out)\n  File \"<string>\", line 338, in check_bound_params\n    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / \"die_plan\"))\n                                ^^^^^^^^\nNameError: name '__file__' is not defined. Did you mean: '__name__'?\n"
+  },
+  "dry_gen": {
+   "dir": "/home/ubuntu/.local/state/publish-gate/s81/6cf12672eb27/dsdv_slice_lepe_mu_LP__t2",
+   "gen_host": "epyc8",
+   "item": "dsdv_slice_lepe_mu_LP__t2",
+   "kind": "type",
+   "origin": "/home/ubuntu/.local/state/publish-gate/s81/6cf12672eb27/dsdv_slice_lepe_mu_LP__t2/published_gen_origin.json",
+   "origin_sha256": "93842e46c0af0e9885e2c3d02c51f110ca5d3a1c7c9ebf1e284f24390bfc9924",
+   "preflight_fail_advisory": null,
+   "proof_kind": "published-gen",
+   "rc": 0,
+   "result": "DRY-PASS",
+   "result_sha256": "c26ec736949862a81501a99d316fd5707dfc5b75467111040305ded002c62be2",
+   "spec_sha256": "6205ea1ed79a92a0faad0dc9951a10340b0aae8ec114db56915d56626cf9dd18",
+   "spec_src": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8j6_1117_work",
+   "stage": "preflight",
+   "unit_log_sha256": "759549cb0ae2943a3406e539275f0dc4f6f074f2bf8b4c7df0c254d225169e2b",
+   "verdict": "PASS"
+  },
+  "hashes": {
+   "verdict": "FAIL",
+   "why": "no PG_STATIC line (rc 1): ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<string>\", line 387, in run_static\n    bp = check_bound_params(tree, bind_out)\n  File \"<string>\", line 338, in check_bound_params\n    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / \"die_plan\"))\n                                ^^^^^^^^\nNameError: name '__file__' is not defined. Did you mean: '__name__'?\n"
+  },
+  "pre_g0": {
+   "verdict": "FAIL",
+   "why": "no PG_STATIC line (rc 1): ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<string>\", line 387, in run_static\n    bp = check_bound_params(tree, bind_out)\n  File \"<string>\", line 338, in check_bound_params\n    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / \"die_plan\"))\n                                ^^^^^^^^\nNameError: name '__file__' is not defined. Did you mean: '__name__'?\n"
+  },
+  "schema": {
+   "verdict": "FAIL",
+   "why": "no PG_STATIC line (rc 1): ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<string>\", line 387, in run_static\n    bp = check_bound_params(tree, bind_out)\n  File \"<string>\", line 338, in check_bound_params\n    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / \"die_plan\"))\n                                ^^^^^^^^\nNameError: name '__file__' is not defined. Did you mean: '__name__'?\n"
+  }
+ },
+ "die": "s81",
+ "foreign_tree_scan": {
+  "asbuilts": [
+   "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8j6_1117_work_bind_11210316/asbuilt_manifest_injected.json"
+  ],
+  "bind_out": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8j6_1117_work_bind_11210316",
+  "files": [
+   "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8j6_1117_work/physical/die_plan/s81/plan_of_record/sidecar_new.json",
+   "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8j6_1117_work_bind_11210316/bind.f",
+   "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8j6_1117_work_bind_11210316/asbuilt_manifest_injected.json"
+  ]
+ },
+ "gate_s": 1934.8,
+ "hosts": [
+  "epyc8",
+  "epyc2",
+  "epyc9",
+  "epyc10",
+  "intel1",
+  "epyc7"
+ ],
+ "item": "dsdv_slice_lepe_mu_LP__t2",
+ "manifest_hash": "6cf12672eb271413c164dcc27d877272a9812f0e3cba9dc4a5f2851ff05fc383",
+ "plan": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8j6_1117_work/physical/die_plan/s81/plan_h2_2249.json",
+ "plan_sha256": "44be605129cbcbb6ad0a85aac4e5343f537f1f84ffd8e3c096e59969c0b29e65",
+ "rows_proofs": [],
+ "schema": "opentallas.publish_gate.v1",
+ "static_s": 1782.0,
+ "t": 1795263154.3336167,
+ "tree": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8j6_1117_work",
+ "verdict": "FAIL"
+}
