@@ -6542,7 +6542,7 @@
     "dsdv_slice_iq_C__t1@5": "KW-FIX-17 16:1x COORD 16:0x (c): PLACE waiter sat on the intel1 load cap since 14:47 (non-crit); client + host waiter stopped by exact pid (never admitted, no run), row in lanes/NEAR-COUNT.tsv -> relaunch with --priority die --crit; kit inputs unchanged",
     "dsdv_slice_kv512_C__t1@4": "KW-FIX-17 16:1x COORD 16:0x (c): PLACE waiter sat on the intel1 load cap since 14:47 (non-crit); client + host waiter stopped by exact pid (never admitted, no run), row in lanes/NEAR-COUNT.tsv -> relaunch with --priority die --crit; kit inputs unchanged",
     "serdes__t13@10": "KW-FIX-17 16:3x: S81 tag flow-20261106-i-s81 7baaf601bbe carries bmpbound 996af5d741a (u_bound.u_core.u_dec.u_chn mapping, I138 'u_core neither an instance nor a generate' preflight class); COORD 16:0x (a) relaunch within 30 min of the tag",
-    "serdes__t14@2": "KW-FIX-17 16:3x: S81 tag flow-20261106-i-s81 7baaf601bbe carries bmpbound 996af5d741a (u_bound.u_core.u_dec.u_chn mapping, I138 'u_core neither an instance nor a generate' preflight class); COORD 16:0x (a) relaunch within 30 min of the tag",
+    "serdes__t14@2": "INFRA (FAM-S81-SERDES-R5 per COORD 11-21 10:3x): attempt 2 kw-s81-serdest14-2-83815 died at stage pipeline on a kit-store snap push timeout epyc10 -> epyc7 (flock push-epyc7.lock, timeout 2400) after kit_rtl_closure 0; not a design result. Same event a9ed808a98d / tools 3ed87c352aca (contains a0fc9811a19). epyc7 admits 0 GB now: ot-run admission places it on another allowed host.",
     "serdes__t15__cla2127225@12": "KW-FIX-17 16:3x: S81 tag flow-20261106-i-s81 7baaf601bbe carries bmpbound 996af5d741a (u_bound.u_core.u_dec.u_chn mapping, I138 'u_core neither an instance nor a generate' preflight class); COORD 16:0x (a) relaunch within 30 min of the tag",
     "serdes__t15__cla3d02796@5": "KW-FIX-17 16:3x: S81 tag flow-20261106-i-s81 7baaf601bbe carries bmpbound 996af5d741a (u_bound.u_core.u_dec.u_chn mapping, I138 'u_core neither an instance nor a generate' preflight class); COORD 16:0x (a) relaunch within 30 min of the tag",
     "serdes__t16@5": "KW-FIX-17 16:3x: S81 tag flow-20261106-i-s81 7baaf601bbe carries bmpbound 996af5d741a (u_bound.u_core.u_dec.u_chn mapping, I138 'u_core neither an instance nor a generate' preflight class); COORD 16:0x (a) relaunch within 30 min of the tag",
@@ -37364,7 +37364,8 @@
     "serdes__t12@9:fix=eda19506a55",
     "serdes__t2@5:fix=eda19506a55",
     "serdes__t16@17:fix=5294e088f55",
-    "serdes__t14@6:fix=eda19506a55"
+    "serdes__t14@6:fix=eda19506a55",
+    "serdes__t14@2"
    ],
    "bound_trees": [
     {
