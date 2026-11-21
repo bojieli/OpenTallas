@@ -1,0 +1,68 @@
+# OPUS-FIX-S81-BKSEL-R3 (11-20): bk_sel__t2 J6 rows + u_c A3P view
+
+Lane dirs: epyc7 `/srv/opentallas-scratch2/claude/opus-fix-s81-bksel-r3` (all work); hub `~/opus-fix-s81-bksel-r3` (ot-run client logs).
+Lane clone: epyc7 lane dir `repo`, branch claude/opus-fix-s81-bksel-r3 (TKR commit 3ba3029de4, pushed as main 40458a43e16).
+Predecessor: lanes/handoff/FABLE-FIX-S81-BKSEL-R2.md. J6 consumer: S81-J6-ASSEMBLY.
+
+## u_c (dsdv_bksel_c) A3P view
+- Old kit rfda3p (FABLE lane dir ucore/dsdv_bksel_c_rfda3p) CANNOT sign. Its TT -46.64 / 212 ep is NOT on output ports
+  (vd ports +103.8). It is internal: u_c.flt[1] -> |flt_new -> take -> lpop -> lq[l][e]. The routed-STA census
+  (census/census_tt.txt) shows all 212 come from flt; the next startpoint is ts_r at -12.1. Its run_kit is wedged in
+  `docker run` after the container ended (unit oth-ubuntu-2237101-1795198176). Left alone.
+- Fix TKR (0 cycles): dsfd_selt_c parameter TKR 1 keeps |(flt & ~flt_rep) in a flop (fblk). dsdv_bksel_c passes TKR;
+  dsdv_bk_sel sets .TKR(1) only under OT_BKQ_ECO3 + OT_BKSEL_A3P (literal params). On main as 40458a43e16.
+  Proof: proof_tkr/ (yosys sat -tempinduct: invariant SUCCESS; mutant OT_RFD_MUT_TKR FAIL). The bk bench passes eco3/a3p,
+  but it has no fault traffic, so the mutant also passes there; the proof is the evidence.
+- New kit ucore/dsdv_bksel_c_rfda3pt (recipe recipes_a3pt.json, kit_hash 2d372d08b57505de): unit
+  oth-ubuntu-1875375-1795217442 on epyc7, run_kit finish 48 16. LEC EQUIVALENT 31,697/31,697. In GRT at 18:0x.
+- Next: read signoff/signoff.json (gate: DRC 0, TT >= -42, FF hold >= 0). Then export the view as
+  cores/views/bksel_c_a3pt_1120 (LEF, tt/ff lib, built params incl. TKR 1), archive it like dsdv_bksel_q__fx6_hei3_1116,
+  and add the row hard_cores u_bk_sel.u_sel.u_c lef/lib -> that view. If TT still misses, the census shows the next class
+  (ts_r -12) is well inside the gate, so it is not expected to.
+
+## bk_sel__t2 rows (type-local; apply on the J6 base)
+1. A3P station sites: rows_stn.json (rows_stn.py): relay_sites, 38,852 keys u_core.u_sel.u_stn_{c,s,o,l}.g_r.r[j][b] / .q[b].
+   Every stage sits on a grid-routed path around the cores. Designed max hop 318.6 um (q0 t_o detour; < 405); the rest
+   are <= 276 um. 0 cycles, no bind change. Proven placed: OT_RELAY_SITES placed 38852 FIRM, 0 unmatched (pilot_r3a).
+2. Face-bus / hub rows: rows_face.json (rows_face.py, made by a helper): 3,671 hub relay_sites (u_vm.r/o, u_bin_ca/cb/xtier_i0,
+   u_rs, u_rn, vn, fq), 12 bus internal_stations (71 FIRM stations), 12 lanes fixed_cycles 0 -> +1..+11, latency.lanes
+   fixed/natural/cycles raised by the same amounts. COMPILER RISK: the six vmux inputs change latency by different amounts,
+   so the schedule must be recompiled from the new LAT_* and re-run through the token sim. A variant rows_face_ugmx.json
+   (u_g MX) needs a PINBAND/G0 check and recomputed u_stn_l sites, so it is not used.
+3. Reset anchors: no plan row needed (FIRM-sited flops take the nearest equal-depth reset tap). The hard-core reset pins
+   (rst_n_t22, 1.0-1.65 mm to the quarters) need RTL or bind work.
+4. Not fixable by rows; these need RTL: the u_tx.lo -> lp_q -> u_vm loop (~1.2 mm, 1 register), dst/lpe gating (~1.4 mm),
+   tx_st[0] -> fault (~740 um), u_g.vo_s -> u_tx.vo (~400 um R0).
+Private proof of all rows: tree_r3b plan 7b1686b24b02 (J3 j3src + BK-PLACE/A3P rows + TKR RTL + rows 1-2). Result: ELAB 0,
+strict BIND 0 errors (398 partitions, 873 crossings), LATCHECK 873/873 PASS, G0 2 errors (the baseline count), PRE PASS
+(build_r3b, hub log build_r3b.otrun.log).
+
+## In flight (epyc7; clients on the hub, logs in ~/opus-fix-s81-bksel-r3)
+- ucore_a3pt.otrun.log: u_c kit rfda3pt to sign-off (unit oth-ubuntu-1875375-1795217442).
+- geom_r3a.otrun.log: geometry dump + AUTO-GEOM of the relay_sites-only placement (pilot_r3a 3_place.odb), out geom_r3a/.
+  Waiting for epyc7 memory.
+- gen_r3b.otrun.log: bk_sel__t2 GEN on the full-row bind (pilot_r3b). Waiting for epyc7 memory.
+  Next: run pilot_r3b/bk_sel__t2/gen/run_kit.sh <kit> place 48 16, then geom_check.sh, then the hop scan
+  (python3 -I /srv/opentallas-scratch2/claude/fable-fix-s81-bksel-r2/r2r.py geom.tsv 300 70), then GRT TT.
+- No placed hop maximum is measured yet. The last measured is 2,591 um (R2 form, no sites).
+
+## Next
+1. Read geom_r3a (stations sited) and the pilot_r3b placement; post r2r max / count by family.
+2. Send rows 1-2 (+ the u_c view row once signed, + main 40458a43e16) to S81-J6-ASSEMBLY as one rows file.
+   Flag the LAT_* compile/token-sim requirement of row 2.
+3. Stray: epyc7 lane dir stray/ holds 2 tiny .ys files I wrote by mistake into ~ (moved, not deleted).
+- Plan inputs that exist only in the snapshot (511 paths: macro LEF/lib/bb, clock sink_bins ...) are absolute paths into the
+  sealed snapshot (L/prep/source_plan.json sha f4d3c7da72d8; relative form L/plan/plan_tr2_rel.json).
+- GEN PASS on main 3553de9af815 = HEAD tools re-pin proof at gen level (gen log L/gen_tr2.otrun.log). Kit L/tr2/gen/hd_lep0N:
+  no OT_GPL_SPARSE_OVERFLOW / GPL -overflow (r14 had 0.25), 0 default [-169.8, 0] tap lines, OT_SIGNOFF_SDC_SHA f96f844aa8bf983b.
+- RUNNING: ot-run unit oth-ubuntu-519406-1795227351 on epyc10 (client pid in L/tr2.otrun.pid, log L/tr2.otrun.log),
+  run_kit.sh GOAL=route (synth -> sign-off), --priority die --mem 96 --threads 16. epyc7 had ~160 GB free with tr1/tr1b, so epyc10.
+
+## Next
+1. ot-wait the unit; read FF hold before repair (expect far fewer than r14's 25.8k ends), pre-GRT hold cells, GRT TT, sign-off.
+2. If signed: export to AGIdock + rtx-pro ~/signed-export-1114 (as other HEAD types), post with gen sha 3553de9af815.
+3. If it fails on the flop->core class (late lep_pair cores, kit leg ~142 ps + ETM 607 vs 553): the structural fix is die
+   delivery of clk_c0..c3 earlier by the kit leg, or the core clock pin at the port; lockups (LOCKUP-STATION-1130) only if a
+   large flop-pair class remains.
+4. tr1 (GRT) and tr1b (CTS read) in the Fable dir: reads only; neither is a sign-off form.
+5. Note: I removed an empty partial L/tr2/rtl with rm -rf once (my own failed output); use ot-delete only.
