@@ -547,6 +547,25 @@ def seat(t, clr=SEAT):
     return moved
 
 
+def explicit_tap_refusal(t):
+    """EXPLICIT TAPS (J7 gate 11-21: bind refused t21 `explicit tap clk_t3 violates outline/halo/tap spacing`): a type
+    with a frozen explicit tap table (clock.tap_mode explicit) keeps its taps where they are; a lane moved onto one is
+    refused by the bind's own rule (taps.explicit_tap_sites, never re-legalized).  -> the bind's message, or None."""
+    ck = t.get("clock") or {}
+    if ck.get("tap_mode") != "explicit" or not ck.get("taps"):
+        return None
+    import taps
+
+    class _P:
+        types = {"_": t}
+        budgets = {}
+    try:
+        taps.explicit_tap_sites(_P, "_")
+    except ValueError as e:
+        return str(e)
+    return None
+
+
 def check_type(tn, t, gs=0):
     B = H.boxes(t); L = lbox(t); W, Ht = t["outline_um"]
     inn = lambda p: [b[0] for b in B if b[1] < p[0] < b[3] and b[2] < p[1] < b[4]]      # noqa: E731
@@ -636,7 +655,8 @@ def check_type(tn, t, gs=0):
     rep["lanes_on_core"] = sorted({a[0] if H.LN.search(a[0]) else b[0] for i, a in enumerate(B) for b in B[i + 1:]
                                    if bool(H.LN.search(a[0])) != bool(H.LN.search(b[0]))
                                    and a[1] < b[3] - 1e-6 and b[1] < a[3] - 1e-6 and a[2] < b[4] - 1e-6 and b[2] < a[4] - 1e-6})
-    rep["pass"] = (not on_band and not rep["lanes_on_core"] and st_in == 0 and rl_in == 0 and start_in == 0 and rep["lane_gaps_under"] == 0 and worst <= HOP + 1e-6)
+    rep["explicit_tap_refused"] = explicit_tap_refusal(t)
+    rep["pass"] = (not on_band and not rep["lanes_on_core"] and not rep["explicit_tap_refused"] and st_in == 0 and rl_in == 0 and start_in == 0 and rep["lane_gaps_under"] == 0 and worst <= HOP + 1e-6)
     rep["bank_spill_advisory"] = "OK" if rep["bank_spill_max_um"] <= SPILL_MAX else "PILE-UP"      # estimator, not calibrated against a kit yet
     return rep
 

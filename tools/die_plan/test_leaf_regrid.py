@@ -235,3 +235,19 @@ def test_clock_sites_inside_a_core_are_seated_and_counted():
     assert st[1]["xy_um"] == beside and st[0]["raw_reset"] == "r"            # a site beside the core keeps its place
     for p in (st[0]["xy_um"], t["clock"]["landing_local_resets"][0]["xy_um"]):
         assert H.clear(p, H.boxes(t)) >= R.SEAT - 1e-6 and R.md(p, inside) < 80.0
+
+
+def test_explicit_tap_table_under_a_lane_fails_the_check():
+    """J7 gate 11-21: t21 / t25 / t37 carry frozen explicit tap tables; 27 taps stood under the moved lanes and the bind
+    refused the plan after a 35-min elaboration.  The check now asks the bind's own rule."""
+    P = plan()
+    t = P["partition_types"][TN]
+    ln = next(h for h in t["hard_cores"] if H.LN.search(h["inst"]))
+    x, y = ln["origin_um"]
+    t["clock"] = dict(tap_mode="explicit", taps=[dict(name="clk", xy=[50.0, 50.0]), dict(name="clk_t1", xy=[x + 40.0, y + 40.0])])
+    c = R.check_type(TN, t)
+    assert "clk_t1 violates" in c["explicit_tap_refused"] and not c["pass"]
+    t["clock"]["taps"][1]["xy"] = [50.0, 150.0]
+    assert R.check_type(TN, t)["explicit_tap_refused"] is None
+    t["clock"]["tap_mode"] = "grid+explicit"; t["clock"]["taps"][1]["xy"] = [x + 40.0, y + 40.0]
+    assert R.check_type(TN, t)["explicit_tap_refused"] is None                 # only a frozen explicit table is judged here
