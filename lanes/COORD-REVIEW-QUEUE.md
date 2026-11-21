@@ -14658,3 +14658,8 @@ make: *** [Makefile:585: /work/run/results/asap7/dp_kv3_pv_v1n/base/5_1_grt.odb]
 - 2026-11-20 16:49 PST ALERT SELF-STOP qwen_compute: 1 job(s) stopped by the wave 1220 s after its own SUBMIT (latest sle_fe_v1__cl8210183c@5 at 16:42:47: superseded by attempt 6 of the same item)
 - 2026-11-20 16:50 PST DISK-RATE epyc2 /srv/opentallas-scratch2: free 211 GB, falling 31 GB/h, floor 50 GB in 5.2 h (cron disk_rate.py; read-only)
 - 2026-11-20 16:50 PST DISK-RATE epyc2 /srv/opentallas-scratch: free 485 GB, falling 80 GB/h, floor 50 GB in 5.4 h (cron disk_rate.py; read-only)
+- 2026-11-20 16:51 PST 16:50 sweep (15:50 mapping + t2/t10/t52, reset-reach, AUTO-REVIEW-HELD owner column): 495 rows, 35 flagged (was 37), 0 DEAD-OWNER.
+  S81: 1 new UNOWNED placed/route-held seqhost__t1; the 3 prior UNOWNED (lepe_nh_mus_LP t1, eng t1, iqf t1) cleared or mapped.
+  QC (QC-PLAN-R5): 14 FAILED-NO-RELAUNCH global_place/place (13 STALE, old) + sle_su_l1 flow error old; new STALE cancelled sle_hc0__cl929603c0__cl38badc56.
+  KV (KV-PLAN-R2): 8 FAILED-NO-RELAUNCH (new: kv3_pc_v1__cl4ea58a5c flow error) + 8 held WAIT-BIND, all else old.
+  HEAD none flagged; reset-reach types (cbx_q10, kv3_pv_v2, lepe mu_LP t2/nh_mus t1) owned by RESET-RELAY-GEN-1530.
