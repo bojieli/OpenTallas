@@ -52,3 +52,11 @@ Work dir: epyc10 /srv/opentallas-scratch2/claude/fable-fix-s81-colrom (M). Hub d
 3. Second rep: one col_h9_r0_p2 (u_r0_ prefix form).
 4. Open: the rom_in stage delays cfg_v/go one edge; bank_free/sh_free -> seq ef return is unchanged (loop +1). TOKEN-1121 must
    compile with the declared cycles; no bench of the loader loop with the stage exists yet.
+
+## After stand-down, 08:27 PST (last read by the old session)
+- Gate unit ended: G0 errors 35, inherited 35, NEW 0 against candC3g. So bind + LATCHECK + G0 all pass on tree1.
+- chain1.sh ended (CHAIN_DONE): kit_wave run-item reached stage gen and gen FAILED (KW_STAGE_RC gen 1) at 08:25; no config.mk, NO_PLACE.
+  The cause is not read. Read H/wave1/run_item.log and the gen log under H/wave1/root/items/col_h10_r1__t1__cld01bb4ae/attempt_1
+  (candidates: signed_view_sha_s81.json has no ot_s81_cfg7_seq_rdx_1121 entry; tools rt 2ddb19c08ba6 vs wave 39d243610bd2).
+  H/wave1/config.diff is one-sided (wave kit only) and says nothing yet.
+- No job of this lane is running now.
