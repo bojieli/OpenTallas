@@ -1,106 +1,126 @@
-# FABLE-PD-S81-1100 (2026-11-20 10:55 PST): structural review of S81 plan event J5; ranked fixes for J6 (cut 11-21 14:00)
+# FABLE-PD-S81-1100 (2026-11-21 11:05 PST): col_h9_r0 detail-route result and lepe_mu_LP proof9 hold / setup
 
-Reviewer: FABLE-PD-S81-1100 (Fable). Read-only: no job launched, cancelled or patched. This file replaces the 11-17 report of the same lane name (in git history).
-Marking: **V** = I read the file or computed the number this round. **R** = reported by the named lane. **I** = inferred. **P** = proposal.
-Plans read (V): J5 repair plan `913a7026b922` (epyc10 `kw45/s81_j5_existing_clock_r4_1120/local_fstart_inputs/plan_r4_fstart_r11_serdes_iq_native.json`, 395 types) against the live D8i plan (`kw45/src_s81_pin_3c913dbdfb23_d8i_1117_work/.../plan_h2_2249.json`). Scripts: scratchpad `an1.py`, `an2.py`, `an3.py` (plan JSON only; hops are Manhattan from -> regs -> to; no placed DB, no STA).
-J5 state at 10:44 (V): repaired strict bind running, 0 EMIT, 0 ERROR in `gate_r5_repair/bind.log`; LATCHECK / G0 / PRE not started.
+Reviewer: FABLE-PD-S81-1100 (Fable). Read-only. Nothing built, cancelled, patched or signalled. Four light odb reads via ot-run on epyc10 (units 1309131, 1446778, 1577818 and one failed 1385970), about 2 min each.
+Marking: **V** = I read or computed it this round. **R** = reported by the named lane. **I** = inferred.
+Earlier reviews stand: FABLE-PD-S81-0830, FABLE-CLOSURE-STRATEGY b9ecdd6c8e2. Scripts and logs: `epyc10 /srv/opentallas-scratch2/claude/fable-pd-s81-1100/tmp/` (drcbin.py, probe.py, probe2.py, probe3.py, probe4.py and their logs).
 
 ## 0. Verdict
 
-1. I found no functional error in J5. Nothing here is a reason to stop the apply.
-2. J5 is a 300 um event for reset only. Data stations are still drawn at 405 um, and on the leaf J5 makes both the hop count and the congestion bands worse.
-3. The leaf form-C bank rows in J5 put the station flops on the GRT hot tiles. J5 leaf kits of the changed types should run as one representative per band first, not as a wave.
-4. The col hold class (CTS FF hold -45 to -100 ps) is measured on col_h9_r0 and col_h10 too. J6 gives the lockup only to the two r1 / r2 masters; 96 col types get nothing.
+1. **The col_h9_r0 rep was not congested. The watchdog cancelled a run that was converging (V).** Job 0d6487d7a8c6 finished DRT iteration 0 at 151,954 after 3 h 46 min, and iteration 1 had fallen to 60,258 at 70 % when it was stopped. The watchdog reads only the end-of-iteration count, so it saw one number.
+2. **Two different things are left on the four kits, and neither is a global-route capacity problem (V).** Global route ends with 0 overflow at 14.5 % usage on all of them.
+   - **Hard-core pin shorts on M5, on every kit that converged.** p2 class cl9f71e63d ends DRT with 20 (17 M5 + 3 M3, all against `u_r0_u_cf`). p3 is at 15 at 10:52 PST (M5 against `u_cf` and `u_t0` at iteration 15). This blocks DRC 0 on every col type that carries `dsfd_cfifo_crs4`, in both orientations.
+   - **One class, cl0045af7b, is stuck at 28,640** (iterations 5 to 8: 30,561, 29,838, 29,440, 28,640). 27,106 of its violations sit in one strip 130 um x 15 um under the south face of ROM pair `e2`.
+3. **Same mechanism as the 216-type J7 risk? In part (I).** The M5 pin shorts are type-wide and will be on J7 kits unless the cfifo view changes. The stuck strip is a class-specific crowding of xo relay stations, not the reach problem; but the reach fix (more stations per chain) feeds the same corridors, so it needs one check per class. The J7 xo D3 rep is no worse than the class that routed.
+4. **lepe proof9 is the wrong kit to judge.** proof10 reads -64.5 post-hook (R). The 11,314 hold endpoints are a tap problem: tap means span 236 to 380 ps against a 250 target, 7,954 short pairs stay across taps, and `OT_TAP_RESET_AFFINITY` is not set. The single worst endpoint (`rov_r[41]`) has its clock pin on a non-clock net.
 
-## 1. What the data says
+## 1. Event 1: col_h9_r0 detail route
 
-### 1.1 Hops over 300 um
-| Item | D8i | J5 | Note |
+### 1.1 DRT trends (V, from each job's `5_2_route` log)
+
+| Job | Kit | Host | Iteration ends | State 10:55 PST |
+|---|---|---|---|---|
+| 0d6487d7a8c6 | p2 cl9f71e63d pva4376595 (rep) | intel1 | 151,954; iter 1 at 70 %: 60,258 | cancelled 09:15 |
+| 64e24c10ad78 | p2 cl9f71e63d pv11b73b67 | epyc10 | ... 26, 24, 22, 20 at iteration 64 | DRT done, 7 h 07 min. Sign-off: DRC 20, TT -205.74, hold -12.48. In ECO |
+| 4e4323c4d5b1 | p3 cl8ce97bcb pvd2159f4a | epyc10 | 196,822; 37,186; 25,984; 1,234; 207; 135; ... 34; 15 | still iterating, 15 left at 10:52 |
+| 3283f16cae2b | p2 cl0045af7b pva2793873 | epyc10 | 211,425; 69,258; 54,269; 33,830; 31,406; 30,561; 29,838; 29,440; 28,640 | iteration 9, flat |
+
+- The rep's iteration 0 took 3 h 46 min on intel1 (load 140 on 112 cores) against 2 h 04 min for the same design size on epyc10. It was slow, not stuck.
+- The rep's iteration-0 table: 136k of 152k violations on M1 to M4 and V2 to V4 (M2 short 19,239, M4 eolKeepOut 16,720). That is the normal first-pass shape; the two siblings start at 197k and 211k and one of them ends at 20.
+- Global route on the rep: resources 191.5M, demand 27.8M, 14.53 %, congestion 0 / 0 / 0 after 14 extra iterations. The band y 1220 to 1260 reported at 09:56 is in `congestion-5.rpt`, an intermediate report; it is gone at the end. Of the 27,106 located violations of the stuck sibling, 26,999 are in the strip of 1.2 and 79 at y 870; none is near y 1220.
+
+### 1.2 The stuck class: xo stations and the bus repeater row in one face strip (V)
+
+Kit pva2793873, DRC report at iteration 5 (27,106 records):
+
+- 26,999 records lie in y 620 to 635, x 210 to 345. Types: M2 short 5,447, M4 eolKeepOut 4,244, M4 short 3,068, M2 eolKeepOut 2,385.
+- Nets named in them: `u_bout_xo_o*/net*` 16,392, `u_r0_u_y_xo*_*.o[*]` 11,684.
+- The strip is the first three cell rows under `u_e2_u_w` / `u_e2_u_e` (ROM pair, south face y 635.05). `u_bs2` is below at y 566 to 592.
+- Cells in x 200 to 350, y 615 to 640 (3,750 um2): 1,585 BUFx12f of the `u_bout_xo_o` wire chain, 873 INVx4, 636 DFFASRHQN of the xo relays with 635 TIEHI, 600 BUFx10, 303 BUFx12.
+- Row y 625: utilisation 85 to 96 % over about 100 um, 240 to 300 signal pins per 25 um2 bin.
+- All four last-stage xo stations sit side by side in that strip: xo3_1 x 257 to 301, xo2_1 296 to 341, xo1_1 337 to 382, xo0_1 375 to 421, all y 622 to 631. All four first-stage stations sit side by side under `e3` at x 855 to 962, y 622 to 634.
+
+The class that routed (pv11b73b67, cl9f71e63d), same box: 872 BUFx12f, no INVx4, no relay flops; row y 625 at 0 to 44 %. Its xo chains split two and two: xo0 / xo1 last stage at x 407 to 485 in the same strip, xo2 / xo3 along the north (y 1141 to 1147).
+
+Macro placement differs between the two classes on `e3` (y 648 against 635), `bn3`, `s4`, `t2` and `t2_payload` (V, diff of `macro_place.tcl`). That is what sends all four slices down one corridor in cl0045af7b.
+
+Cause: `OT_RELAY_MID` places each station as a compact cluster on its source-sink line. Four parallel chains share one line, so four clusters land in the same three rows, on top of the bus's own repeater chain. `OT_RELAY_MID_FIT` is on but fitted 12 of 105 stations and none of the xo ones (V, `3_3_place_gp.log`). It is a pin-density failure in a three-row strip, not a track-capacity one.
+
+Not the cause here (V): obstruction-adjacent sliver gcells (GRT uses no capacity it lacks; `obs_gcell_cap` f56d99cf55 would change nothing, as R3 also found), reserved strips, clock-landing bands (p3 has 280 dense bins in its `u_cland_xo_i` rings and still converged to 15).
+
+### 1.3 The residue on every converged kit: M5 shorts at hard-core pins (V)
+
+- pv11b73b67 final: 17 M5 shorts at x 1157 to 1296, y 659 to 670 and 3 M3 shorts at y 606.8, all `inst:u_r0_u_cf` against a signal net. `u_cf` is MX at (1131.9, 604.8), 280.8 x 69.1, so the M5 shorts are 4 to 14 um inside its north edge and the M3 ones 2 um inside its south edge.
+- pvd2159f4a at iteration 15 (42 records): 31 M5 shorts on `u_cf` (R0 here, y 608 to 620, plus two at y 656 and 664) and 8 records at (1188.9, 253.6 / 259.7) where one net shorts `u_t0`, an obstruction and VSS on M4 / M5.
+- The cfifo LEF has its `xl*` and `rd` pins on M5 at the R0 south edge (24 nm x 84 nm) and M5 OBS over the body.
+- This is the class FAM-S81-COL-H10-R2 counted as 26 M5 shorts and OPUS-FIX-QC-SLE-R4-SC's via shadow (1980f8126c) is reported to cover (R). That commit was not on main at 07:36 and I found no later post that it landed. b49b697c40 (PG crossing preflight) is on main and gates it (R).
+
+So a col kit that routes cleanly still ends at 15 to 20 violations. ECO passes cannot remove a short against a macro body.
+
+### 1.4 J7 exposure (V unless marked)
+
+Dense-bin count on placed DBs (5 um bins with utilisation >= 0.85 and >= 240 signal pins; `probe2.py`, `4_cts.odb`):
+
+| Kit | Bins | xo stations in dense clusters |
+|---|---|---|
+| pva2793873 (stuck) | 77 | 28 bins in four clusters at y 600 to 635 |
+| pv11b73b67 (routed to 20) | 76 | 6 bins at (950, 500), 3 at (1150, 1100) |
+| J7-form rep, xo D3, private kit pva4376595 | 69 | 5 bins at (1200, 550) |
+| p3 pvd2159f4a (routed to 15) | 280 | none; all in clock-landing rings |
+
+- The D3 rep's last xo stations are at x 93 to 181 under `e2_u_w` (two) and y 1142 (two): the same two-and-two split as the class that routed. Its GRT ends at 14.63 %, 0 overflow.
+- My probe matched only the first and last station of each chain by name, so the three middle D3 stations per chain are not located.
+- The total count does not separate the stuck kit from the routed one (77 against 76); what does is four stations of parallel chains plus the repeater row in one strip.
+- Not measured: how many of the 216 types take the cl0045af7b corridor on the J7 plan.
+- The reach recount (685k legs over 405 by detour length, R) is a length measure. Its fix adds stations, and each added station of a 276-bit chain is one more cluster on the same line. That is the coupling to watch; it is not the cause of today's stall.
+
+## 2. Event 2: lepe_mu_LP t2 proof9
+
+### 2.1 Setup (V for proof9, R for proof10)
+
+- proof9 post-hook: -292.10, TNS -32.8 ns. The five worst paths start at `g_rx[*]` RX memory banks or `pair_b` and end at `f_host[*]`.
+- After the pre-GRT hold repair the kit reads setup -423.28 (`pregrt_ff_hold.log`). That number is what the UNSIGNABLE watchdog listed at 10:30.
+- proof10 (+1 relay stage on `unit_o0`, lane 87 to 88 cycles) reads -64.5 / TNS -0.87 ns post-hook (R, 10:43). The stage is the right fix and is pre-approved.
+
+### 2.2 Hold (V)
+
+`pregrt_ff_hold.log`: 12,840 endpoints, worst -166.91. By class: cross-tap 8,350 (worst -166.91), input ports 3,726 (-159.57), same-tap 251 (-26.96), output ports 513 (-14.10). `repair_timing` found 11,314 and inserted 11,074 buffers, then 78 more.
+
+- **Tap spread.** `OT_TAP_BALANCE done: tap mean insertion 236..380 ps (spread 144, target 250)`. Balance only adds delay, so the three late taps stay late: root tap `clk` mean 349 (max 394, exactly 1,000 sinks), `clk_t65` 352 (skew 94), `clk_t8` 380 (max 421). The other 68 register taps are at 252 to 313.
+- **Pairs across taps.** `OT_TAP_PAIR` ends with 7,954 cross-tap short pairs after moving 114 clock pins; 27 taps were over the 1,000 cap at start and 54 components were frozen as oversized.
+- **Reset last stage.** 1,012 `g_reset_balanced.u_rstr.g_local[*].local_r` flops on 54 taps drive 7,368 async pins; 2,194 of those (30 %) are on a different tap than their `local_r` (`probe3.py`). Median distance 7 um, 90th percentile 112 um, maximum 684 um. `OT_TAP_RESET_AFFINITY` is not in `config.mk`; `tap_reset_affinity.tcl` in the kit does exactly this move.
+- **The worst endpoint is a one-off.** `g_frame_local.g_slice[41].rov_r` has its CLK pin on a plain `net*` net, the only register in the design that does (`probe4.py`). Its capture clock is 360.06 against a launch of 198.53 on `clk_t28`, which with removal 42.42 and uncertainty 25 gives -163.86. The other `rov_r` flops are on ordinary taps (t69 22, t44 14, t46 11).
+- The next removal paths (-123, `g_tx[2].g_safe_write` slice 47) also capture at 359; I did not identify their tap.
+
+Padding 11,074 buffers into paths is what moved setup from -292 to -423. The cause is clock structure, so the fix is on the clock side.
+
+## 3. Ranked fixes
+
+| # | Fix | Owner | Evidence |
 |---|---|---|---|
-| `die.reach_um`, `budgets.ft_station_max_um`, `core_internal_reach_um` | 405 | 405 | no `cbc` key in the plan (V) |
-| Reset collector trees: `reach_um` / worst hop | 405 / 380-388 | 300 / 275 (seqhost 296, serdes 287; leaf 180 / 155) | 0 trees over 300 (V) |
-| `internal_stations` rows with a leg over 300 | 5,408 of 24,788 | 8,064 of 24,814 | 327 of 395 types; max 404.9 (V) |
-| ... of which leaf | 4,335 | 7,125 | register-to-register legs over 300: 1,991 -> 3,190 of 31,832 (V) |
-| `ft_slots` station-to-station legs over 300 | 3,279 of 5,140 | 3,279 of 5,140 | leaf 1,830, slice_station 847, svc 161; unchanged (V) |
-| Legs over the 405 check | 1 | 1 | `dsdv_slice_iq_C__t1` `bus:leafdn_o0` legs 296 / 416 (V) |
-| `relay_polylines` over 300 | 1,020 | 1,020 | col_h9_r1 only, max 405 (V) |
+| 1 | Re-export `dsfd_cfifo_crs4` (and check the `u_t0` master) with the via-shadow OBS, and put the view into the J7 kit inputs before col kits route. It changes no row, so the 20:00 row cut does not bind it; the 04:15 apply does. Accept on one routed col kit ending at 0 against `u_cf` | OPUS-FIX-QC-SLE-R4-SC (land 1980f8126c on b49b697c40), FAM-S81-COL-H10-R3 (view + proof), S81-J6-ASSEMBLY-R4 (pick-up) | 1.3 |
+| 2 | Watchdog: count progress inside an iteration (`Completing N% with V`) and require two finished iterations inside the window before a no-progress cancel | COORD to assign (autopilot watchdog) | 1.1 |
+| 3 | xo stations: stagger the stations of parallel chains along the shared line by one cluster length plus 20 um, keep them off the row that carries the bus repeaters, and put the xo groups through `OT_RELAY_MID_FIT`. Prove on a cl0045af7b kit | FAM-S81-COL-H9R0-R3 | 1.2 |
+| 4 | Before the J7 col wave: one placed read per col class with `probe2.py`; flag any strip where three or more stations of different chains sit within 150 um in the same three rows. List which J7 types take the cl0045af7b macro positions (`e3` y 648) | FAM-S81-COL-R4 (h9_r1 / r2 and the census), FAM-S81-COL-H10-R3 (h10), S81-J6-ASSEMBLY-R4 | 1.4 |
+| 5 | Relay-branch and depth rows for J7: keep them, but count stations per corridor in the row generator's report, since each is a 276-bit cluster | FAM-S81-COL-R4, S81-J6-ASSEMBLY-R4 | 1.4 |
+| 6 | lepe: proof10 is the lead. Add to it, as one A/B overlay on the wave env: `OT_TAP_RESET_AFFINITY=1`; find why `rov_r[41]` CLK is on `net*` and put it back on its tap | FAM-S81-LEPE-3 | 2.2 |
+| 7 | lepe late taps: split or re-seat root tap `clk` (1,000 sinks at the cap, mean 349), `clk_t8` and `clk_t65` so every tap reaches the 250 target, or raise the target to the slowest tap. Then re-read the cross-tap class before any hold repair | FAM-S81-LEPE-3 | 2.2 |
+| 8 | lepe J7 / J8 rows: the `unit_o0` relay row after proof10's routed read, as the lane plans | FAM-S81-LEPE-3, S81-J6-ASSEMBLY-R4 | 2.1 |
 
-Rows by family in J5 with a leg over 300 (V): col_h9_r1 180 / 480, col_h9_r0 276 / 450 (D8i 426), kv_leaf 108 / 204, c1x_C 88 / 117, col_h9_r2 60 / 120, col_h10 132 / 204, serdes 11 / 22, iq_C 10 / 11, kv512_C 11 / 12.
-Limit of this count: it is plan geometry. The reach estimator does not count core-spanning legs and counts channel legs only over 550 um (`cbc_rules.reach_leg`); I did not classify the legs.
+## 4. Stop list
 
-### 1.2 Reset / clock taps / hold at 833 ps
-- Reset trees are re-solved at 300 on every type with a tree (V). Depth rises (col 6-8 -> 8-10, bk_sel 8 -> 14, leaf up to 19, svc 16); all far under the 64-cycle boot hold.
-- `reset.relay_lockup` (negedge relay types) is the same 184-type list in D8i and J5 (V). It was derived from the plain-relay hop hold estimate at the 380 um hop. The hop is now 275 um, about 68 ps less wire at 0.65 ps/um (I). The list was not re-derived.
-- 38 col trees changed form (V): D8i trees read `relay_lockup: negedge` on col_h9_r1 (9), col_h9_r2 (16), col_h9_r0_p2 (12), col_h10_r0_p1 (6), col_h10_r2 (4), none of them in the die list; the J5 trees of those families read `null` (6, 11, 12, 6, 3). Either the D8i trees were stale or J5 turns negedge reset relays into plain ones on shorter hops. The two J6 masters are in this set.
-- The plan has no data lockup anywhere: no `lockup` / `latch` key outside the reset tree, no `ZL` define (V). The `bin -> lpad` latch exists only in the two private J6 masters (R, S81-DIE-R4).
-- Clock taps: J5 adds 617 taps on five slice C types (c1x 464 -> 963 over 9 types, iq 59 -> 177) and 90 on col_h9_r0 / h10_r0_p1; leaf stays at 5,294 (V). Slice C keeps `tap_max_sinks` 1500; the row file reports max load 1,289 on c1x_C__t1 against the 1,000 cap, 993-998 on the other four (R, OPUS-FIX-S81-SLICEC rows). c1x t3 / t4 / t5 / t7 / t10 got depth rows but no tap rows.
-- Measured hold on D8i col kits (R, S81-GEOM-OPUS 10:05; V on `~/s81-geom-opus-d8i-watch/cur.sorted`): col_h9_r0 26 kits with a CTS FF hold value, -47.3 to -88.4 ps, 0 signed; col_h10_r0_p1 -52.3; col_h10_r1 -46.8 median; col_h10_r2 -94.7 median, routed FF -118.4; col_h9_r1 -76.8 median, routed FF -164.1.
+1. No relaunch of the J5 rep pva4376595: it would not sign (TT -74, R) and its class result is already known from pv11b73b67.
+2. No plan change to the ft0 pin band or the `frame_int` rank for the y 1220 to 1260 band: it is an intermediate GRT report, not a DRT result.
+3. No `obs_gcell_cap` or GRT adjustment as the col_h9_r0 fix.
+4. 3283f16cae2b (pva2793873): stop at the next check rather than at iteration 12. Four iterations gained 6 % and the cause is placement. Its DRC report and placed DB are the evidence for fix 3; keep the kit dir. Owner call: FAM-S81-COL-H9R0-R3.
+5. No further ECO passes on pv11b73b67 for DRC: the 20 are macro-body shorts, and TT is -205.74.
+6. No KEEP for proof9 against the UNSIGNABLE notice of 10:30: proof10 supersedes it. Copy `pregrt_ff_hold.log` and the post-hook report first.
+7. No hold-buffer repair on lepe as the fix for the cross-tap class, and no post-CTS setup repair on top of it.
+8. No J7 col volume routing before the cfifo view of fix 1 is in the kit inputs.
 
-### 1.3 Leaf congestion bands: J5 does not address them, it loads them
-J5 changes `internal_stations` on 62 of 75 leaf types (form-C bank sites, S81-LEAF-HI-ROWS-J5). Station bits per type are unchanged; the number of distinct station sites in the family drops from 13,878 to 7,339 (V). Station bits per 100 um tile on the 20 GRT-TRIAGE kits (V):
+## 5. Not checked
 
-| Type | GRT top zone (overflow) | Peak tile D8i | Peak tile J5 | Band bits D8i -> J5 |
-|---|---|---|---|---|
-| t7 | 300,700 (32,087) | 400,700: 4,190 | 300,700: 21,442 | W 3,961 -> 1,572 |
-| t34 | 1000,300 (16,094) | 900,400: 6,240 | 1000,300: 17,260 | E 24,745 -> 38,316 |
-| t39 | 1000,400 (29,297) | 1000,500: 7,570 | 1000,400: 13,076 | E 27,359 -> 33,865 |
-| t43 | 900,300 (11,694) | 1100,300: 5,186 | 1100,300: 13,332 | E 15,723 -> 19,378 |
-| t65 | 1100,700 (19,048) | 1000,600: 5,232 | 1000,700: 12,814 | E 16,986 -> 31,646 |
-| t35 | 200,500 (4,581) | 100,600: 4,447 | 300,400: 10,456 | W 11,716 -> 22,193 |
-| t33 | 1200,700 (5,036) | 1100,400: 3,926 | 1100,400: 9,681 | E 14,721 -> 26,748 |
-| t46 | 1200,700 (6,534) | 1200,1000: 4,424 | 1100,700: 8,630 | E 11,790 -> 23,024 |
-| t66 | 1100,700 (14,320) | 1100,1000: 3,941 | 1100,700: 8,630 | E 14,745 -> 18,391 |
-| t9 | 1100,400 (19,707) | 1100,400: 6,242 | 1100,400: 9,148 | E 22,185 -> 24,460 |
-| t22 | 1100,700 (28,043) | 1100,700: 7,186 | 1100,700: 9,282 | E 23,412 -> 27,596 |
-| t61 | 1100,900 (17,496) | 1100,900: 8,506 | 1100,900: 9,548 | E 9,956 -> 12,044 |
-| t41 | 200,600 (15,903) | 300,800: 6,662 | 300,600: 8,892 | W 15,696 -> 15,696 |
-| t4, t5 | 400,500 / 300,300 | 2,328 / 3,923 | 2,856 / 4,446 | W +1,559 / +1,308 |
-| t44 x2, t53, t54 x2 | 300-400,400 / 200,400 | unchanged | unchanged | no J5 row |
-
-On 7 types the J5 peak tile is the GRT top tile, on the rest it is within one or two tiles. East band bits rise on 9 of 9 east types. This is the plan-side measurement of the 2-4x that S81-DIE-R4 modelled. 26 `plus_one_stage` types take +1 cycle and still carry hops to 398 um (V, row file). No GRT of form C has finished (R).
-
-### 1.4 Slice C, serdes TX, SRAMREG
-- Slice C: J5 = relay depth 6 -> 8 (iq 10), the taps above, `relay_mid_half_types`. Station geometry is untouched: c1x 191 of 230 register-to-register legs over 300, iq 24 of 27, kv512_C 24 of 26 (V). kv512_C has no J5 row; its price is +5 / +3 stages, 8,840 flops, 56 taps against 40 (R, OPUS-FIX-S81-SLICEC 08:41). c1x t9 / t10 and iq t1 stay do-not-count.
-- Serdes TX: the `coll_i0` stations are in on all 11 types, 512 b, hops 177-290 um (V), and the four defines (TXL4, AMOK_PIPE, RM_WPL8, RM_LOCAL_EMPTY8). Not proven on a kit (R). The `coll_o0` rows on the same 11 types are drawn at 334-401 um (t12 4 x 398, t15 3 x 397, t3 3 x 372, t4 6 x 338) (V). RX legs of 544-1,163 um have no row (R).
-- SRAMREG: 0 of 75 leaf types carry `OT_S81SL_VP_SRAMREG` in 913a7026 (V). The 75 rows exist (`s81_r5_rows_j5.json`, basis plan_j4f) and run as the vp_sr donor tree. The 16 svc types are not covered (mem_ar SYNC 0; RDPIPE bench pending, R). So J5 as bound does not register the leaf-store reads.
-
-### 1.5 col_h9_r0 (60 types, not in J6)
-J5 re-stages the face buses (V): `frame_int_o0` 5 x 377 -> 5 x 335 + 208, `frame_int_i0` 3 x 384 -> 267 + 3 x 295, p6 `xo_i0` 388 / 384 -> 177 / 297 / 297, p6 `frame_int_i0` 403 / 406 / 402 -> 282 + 3 x 310. Still over 300: `frame_int_o0` 335 (328 on p6), the core leg `u_r0.u_s0.st -> u_r0.u_t0` 348 / 389 / 331 (2 rows per type, unchanged), p6 `ret_o0` 310. p6 has no landing contract and no reset tree in the plan, yet all 12 p6 types are in the negedge relay list (V). Hold: section 1.2. Sweep rows p1 / p3 / p6: flow and infra classes (R, S81-DIE-R4 09:52); no plan cause found here.
-
-## 2. Fixes for J6, ranked (integration owner S81-DIE-R4 for all)
-
-| # | Fix | Evidence | Row owner | First check |
-|---|---|---|---|---|
-| 1 | Leaf: replace the J5 form-C bank rows with the per-lane spread rows (`S81-LEAF-SPREAD-J6.json`, GS 0, hops <= 295) on the band types, and add rows for t44 x2 / t53 / t54 x2 | 1.3 | S81-DIE-R4 | t39 `tree_SP` against `tree_Cc` on epyc9: overflow at GRT iteration 10 |
-| 2 | Col hold: the `bin -> lpad` lockup in the two masters (already planned), and the same form for col_h9_r0 (60) and col_h10 (36) | 1.2: every measured r0 / h10 kit at -47 to -100 ps, 0 signed | S81-DIE-R4, FABLE-FIX-S81-COL | read the hold ends of one r0 kit in route (`col_h9_r0_p2__t1__cl0045af7b__pv6882e5ea`, epyc7): same cross-tap pair or not |
-| 3 | Reset relay form at the 275 um hop: re-derive the negedge list; settle negedge or plain on the 38 col trees before the masters route | 1.2 | S81-DIE-R4 | relay cell (`ot_dp_rrelay_nl` or plain) in the J5 bound RTL of one col_h9_r2 and one col_h9_r0_p2 type; `nl_est` at 275 |
-| 4 | Data hops to 300 where it costs a station, in this order: serdes `coll_o0` (11 types, +1 to +2 stations), col_h9_r0 `frame_int_o0` 335 -> 6 legs and the `st -> t0` core leg (+1), c1x_C / iq_C stations (incl. the 416 leg), kv512_C +5 / +3 | 1.1, 1.4, 1.5 | FABLE-FIX-S81-SERDES-0600, S81-DIE-R4, OPUS-FIX-S81-SLICEC | pin3 placed scan on one kit per family: seat the first rank, then stage only what is still over |
-| 5 | Slice C taps: tap rows for c1x t3 / t4 / t5 / t7 / t10; split the 1,289-sink tap on c1x t1 | 1.2 | OPUS-FIX-S81-SLICEC | register dumps for t3 / t5 (no placed DB yet) |
-| 6 | Registered reads: leaf SRAMREG (75 rows) if the vp_sr donor is not green for J5; svc RDPIPE define in manifest + 16 rows before the svc strict bind | 1.4 | CBC-ALL-0200 rows -> S81-DIE-R4; FABLE-FIX-S81-SVC-R2 | SRAMREG adds one per-lane output station: prove it on the same kit as fix 1 |
-| 7 | bk_sel__t2 A3P rows (`rows_bk_a3p.json` 53956fe8b195) once the u_c A3P view is signed; face-bus stations after the private placed form | bench PASS 10:37, hops <= 283 (R) | FABLE-FIX-S81-BKSEL-R2 | u_c A3P sign-off (epyc7), private GEN on intel1 |
-| 8 | svc H8 package: t7 R9 die hop 378 -> 300, 43 landing bands at 301-403 (plan shows pin-to-band hops to 402.8 on svc_hi rs t1, V) | R, FABLE-FIX-S81-SVC-R2 | FABLE-FIX-S81-SVC-R2 | R6 strict chain, then one hi rs t4 kit to sign-off |
-
-Not for J6 (P): the ft_slot station pitch (3,279 legs at 301-405). It changes lane latency on every type; it needs its own event. slice_station__t41 needs no row: J5 carries its START stages (R, BKSEL-R2); it needs a private place + GRT on the J5 bound out.
-
-## 3. Stop list
-
-- No leaf wave on J5 for the 62 changed leaf types before one form-C GRT is read at iteration 10. One representative per band first (t39 east, t7 west).
-- No cancel of the D8i leaf kits marked KEEP (t22, t33, t46, t7) for J5; they can still sign on the old plan.
-- No leaf GRT relaunch on more iterations alone.
-- No reading of J5 as the 300 um event for data. Reset trees are at 300; stations are at 405.
-- No route of a J6 col master before its reset relay form is confirmed in bound RTL and the `bin -> lpad` latch is in.
-- No 120-kit col wave before both masters route.
-- No hold-buffer ECO rounds on col_h9_r0 / col_h10 before the hold ends of one kit are read.
-- No count of c1x t9 / t10, iq t1 or the svc types on D8i or J5.
-- No SRAMREG and form-C bank rows together on a leaf without a kit that carries both.
-- No ft_slot station re-pitch inside J6.
-- No J3 apply, no cw9a / cw9b forms (unchanged).
-
-## 4. Not checked
-
-- No placed DB, GRT report or STA was opened for J5; no J5 kit exists yet. Section 1.3 is station flop density from the plan, a demand proxy.
-- Leg class (core / channel / logic) of the legs over 300; the count that the reach estimator would report is lower than 8,064.
-- Whether the 38 col trees lose the negedge relay in bound RTL, and whether a 275 um plain relay hop has negative hold: inferred from the plan fields only.
-- Whether the col_h9_r0 hold ends are the `bin -> lpad` pair.
-- START broadcast hops (taken from BKSEL-R2 for t41 only); tap sink counts (the plan does not hold them); the J5 bound out (bind not finished).
-- The S81-LEAF-SPREAD-J6 rows themselves; the 11 EMIT repairs; LATCHECK cycle deltas of J5.
+- Where the rep's own violations were: its DRC reports went with the job dir. The location evidence is from the two siblings.
+- Whether via shadow removes all 17 to 31 shorts on these kits: reported by the view lane, not run by me.
+- The three middle D3 xo stations per chain, and any class other than the four kits above.
+- Which tap captures the -123 `g_tx[2]` removal paths, and why the launch insertion reads 198 in the hold scene against 252 to 313 in the tap table (I assume corner scaling).
+- proof10's own hold classes: epyc7 is in a disk stall and I read only the lane's post.
