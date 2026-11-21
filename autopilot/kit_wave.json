@@ -5878,7 +5878,13 @@
    "gen_host_min_free_gb": {
     "epyc9": 250,
     "intel1": 250
-   }
+   },
+   "retry": [
+    "kv3_hgi_v3@6:fix=5294e088f553",
+    "kv3_hgi_v5@6:fix=5294e088f553",
+    "kv3_hgi_v8@6:fix=5294e088f553",
+    "kv3_sys_c@7:fix=5294e088f553"
+   ]
   },
   "s81": {
    "enabled": true,
