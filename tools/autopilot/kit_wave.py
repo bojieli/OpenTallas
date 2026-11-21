@@ -8245,24 +8245,46 @@ def env_provenance_decl(sp, spec_path, ap_dir=None):
             "lane": (pv or {}).get("lane", ""), "tools_sha": sp.get("tools_sha") or "", "rt_declared": (pv or {}).get("rt") or None}
 
 
-def private_spec_stale(sp, cfg=None):
+def private_spec_stale(sp, cfg=None, loader=None):
     """'' when the private spec's recorded wave env equals the item's wave env NOW (die config of record), else the refusal text.
-    No readable die config here (not on the hub) -> '' (run_kit.sh still checks env against the recorded wave env)."""
+    FLOW-OPS-0900 (COORD 11-21: FAM-QC-COLL on epyc10 skipped this check on KeyError 'qwen_compute'): FAIL CLOSED.  The die config is looked up
+    in the local committed config first and, when that text has no such die / item (a partial or other checkout), in the hub's committed
+    config; when neither yields the die's wave env the check refuses (the text says why) instead of passing silently.
+    loader(hub_only: bool) -> config text (tests)."""
     pv = sp.get("private") or {}
-    try:
-        if cfg is None:
+    die, item = sp.get("die"), sp.get("item")
+    if not die or not item:
+        return "private spec staleness not checkable: the spec names no die / item; run `kit_wave.py private-spec DIE ITEM ...` again"
+    errs = []
+    cfgs = [cfg] if cfg is not None else []
+    if cfg is None:
+        if loader is None:
             sys.path.insert(0, str(Path(__file__).resolve().parent))
             import autopilot as AP
-            cfg = load_config(private_config_text(AP, sp.get("hub")))
-        now = wave_gen_env(cfg, sp["die"], sp["item"])
-    except Exception as e:                               # noqa: BLE001 - no config: the kit-side check still runs
-        print(f"ENV-PROVENANCE NOTE: private spec staleness not checked ({type(e).__name__}: {e})", flush=True)
-        return ""
+            loader = lambda hub_only: private_config_text(AP, sp.get("hub"), read=(lambda _AP: "") if hub_only else None)
+        for hub_only in (False, True):
+            try:
+                cfgs.append(load_config(loader(hub_only)))
+            except Exception as e:                       # noqa: BLE001
+                errs.append(f"{'hub' if hub_only else 'local'} config: {type(e).__name__}: {e}")
+    now = None
+    for c in cfgs:
+        if die not in ((c or {}).get("dies") or {}):
+            errs.append(f"config has no die {die!r} (dies: {', '.join(sorted(((c or {}).get('dies') or {}))) or 'none'})")
+            continue
+        try:
+            now = wave_gen_env(c, die, item)
+            break
+        except Exception as e:                           # noqa: BLE001
+            errs.append(f"wave env of {die}/{item}: {type(e).__name__}: {e}")
+    if now is None:
+        return ("private spec staleness not checked, refused (fail closed): " + "; ".join(errs[:4])
+                + f"; the die config of record must be readable here or from the hub ({sp.get('hub') or PRIVATE_HUB})")
     import env_provenance as EP
     diff = EP.env_diff(pv.get("wave_env"), now)
     if diff:
-        return (f"stale private spec: the wave env of {sp['die']}/{sp['item']} changed since private-spec on {len(diff)} key(s) "
-                f"({', '.join(diff[:10])}); run `kit_wave.py private-spec {sp['die']} {sp['item']} ...` again")
+        return (f"stale private spec: the wave env of {die}/{item} changed since private-spec on {len(diff)} key(s) "
+                f"({', '.join(diff[:10])}); run `kit_wave.py private-spec {die} {item} ...` again")
     return ""
 
 
