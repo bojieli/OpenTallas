@@ -963,3 +963,4 @@
 - 2026-11-21 07:10 PST DISK-RATE epyc9 /srv/opentallas-scratch2: free 157 GB, falling 35 GB/h, floor 50 GB in 3.1 h (cron disk_rate.py; read-only)
 - 2026-11-21 07:10 PST STATE tools sync recovered after 26 min (rt/current b1bb664d56f5)
 - 2026-11-21 07:10 PST DISK-RATE epyc10 /srv/opentallas-scratch2: free 512 GB, falling 77 GB/h, floor 50 GB in 6.0 h (cron disk_rate.py; read-only)
+- 2026-11-21 07:30 PST DISK-RATE intel1 /srv/opentallas-scratch2: free 135 GB, falling 30 GB/h, floor 50 GB in 2.9 h (cron disk_rate.py; read-only)
