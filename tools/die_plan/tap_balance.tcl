@@ -410,6 +410,7 @@ set tb_raise [expr {$tb_conv && [info exists ::env(OT_TAP_CONVERGE_RAISE_PS)] ? 
 set tb_price {}; set tb_prev {}
 proc tb_tap_pass {it} {
   global tb_blk tb_master tb_target tb_win tb_tol tb_tag tb_grt tb_added tgt tb_conv tb_cwin tb_raise tb_price tb_prev tb_coreonly
+  global tb_cdirect tb_cdmax
   set m [tb_measure]
   set longest 0.0
   dict for {n v} $m { set longest [expr {max($longest, [lindex $v 0])}] }
