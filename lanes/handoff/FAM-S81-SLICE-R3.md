@@ -57,3 +57,7 @@ My local waiters die with this session: RE-ARM on every unit below (ot-wait <uni
   INVBUF/SEQ as /work/nomcap/... ; hold_eco_internal_run.py libs_from_receipt keeps only /OpenROAD-flow-scripts/ and /nomcap/
   prefixes, so HB4 (INVBUF lib) is never read. This is a tool bug: accept /work/nomcap/ (map to the kit mount) in
   libs_from_receipt. Fix it on main, then rerun epyc8 fam-s81-slice-r3/t49_eco2.sh. NOT run again by R3.
+- WREG LEC rerun (oth-ubuntu-124525) ENDED rc 1, again a script limit and not a mismatch: 77,321 unproven $equiv cells, then
+  "No SAT model available for async FF cell u_ctl ... ($adff). Consider running async2sync". Next for R4: add "async2sync"
+  after "proc; memory -nomap; setattr ...; flatten; opt_clean" in tools/s81_slice/xs4_lec.sh (the clone edit is uncommitted),
+  then rerun epyc10 fam-s81-slice-r3/lec3.sh via ot-run. WREG stays NOT pushed until EQUIVALENT.
