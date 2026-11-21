@@ -25,7 +25,7 @@ SRCS="rtl/lib/ot_rst_relay_tree3.sv rtl/lib/ot_sram_oldread_wreg.sv rtl/lib/ot_s
  physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v
  physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
  $SL/ot_s81sl_slice_lep.sv $SL/dsdv_mu_land.sv"
-D="+define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2"
+D="+define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2 ${OT_LEP_BENCH_DEFS:-}"   # OT_LEP_BENCH_DEFS: extra +define+ args (per-type profile selectors)
 one() { n=$1; top=$2; tb=$3; exp=$4; re=$5; shift 5
   $V --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-lint -Wno-style +incdir+$L $D "$@" \
     --top-module $top -Mdir $O/$n $SRCS $SL/test/$tb --build-jobs ${J:-4} -MAKEFLAGS "OPT_FAST=-O1 OPT_SLOW=-O0 OPT_GLOBAL=-O0" \

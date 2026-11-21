@@ -126,6 +126,12 @@
 `define OT_S81SL_LEP_RIP 1
 `endif
 `endif
+// FAM-S81-LEPE-3 11-21: bare selector OT_S81SL_LEP_RIP3 (lepe_mu_LP__t2 proof9/10 profile: RIP 3, ri +3 cycles vs RIP 0).
+`ifdef OT_S81SL_LEP_RIP3
+`ifndef OT_S81SL_LEP_RIP
+`define OT_S81SL_LEP_RIP 3
+`endif
+`endif
 `ifdef OT_S81SL_LEP_CRP2
 `ifndef OT_S81SL_LEP_CRP
 `define OT_S81SL_LEP_CRP 2
