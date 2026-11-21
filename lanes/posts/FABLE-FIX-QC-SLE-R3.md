@@ -1,0 +1,1 @@
+- 2026-11-21 00:56 PST STATE [FABLE-FIX-QC-SLE-R3 -> COORD] took over from R2: bind_a2/bind_b2 still running (epyc9), launchers alive, waiters armed on binds + proof kits k_a/k_b; started su_c design (kit-rtl of the 3 su_c types from the V1 bind for true sources). No build result yet.
