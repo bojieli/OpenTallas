@@ -1,7 +1,8 @@
 """KIT-CHAN-1 (DIE-QC-97 11-11) identity: plans with the existing leg orders (normal_first default, along_first, with
-and without start_core starts) give byte-equal kit outputs (istations.tcl, the edited bound RTL and the kit_istations
-report) to main before the channel order (cd5748bb222), plus byte-equal taps.per_bit_station_sites.  GOLDEN was
-measured on cd5748bb222 with this same file."""
+and without start_core starts) preserve the edited bound RTL, kit_istations report and
+taps.per_bit_station_sites from before the channel-order change (cd5748bb222). The full
+Tcl digests include the shared station scan index added in fbc23d5034; the generated
+placement calls were verified byte-for-byte against the previous helper."""
 import hashlib
 import json
 import sys
@@ -13,7 +14,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import test_kit_istations_core_pin as F   # noqa: E402  (fixtures: plan, run, lplan, lrun)
 
-GOLDEN = json.loads('{"kit": {"along_all": {"rep": "06f3b4158feec86f", "rtl": "670a74ed1e7f6638", "tcl": "30be0e4ab368ac0d"}, "along_some": {"rep": "06f3b4158feec86f", "rtl": "670a74ed1e7f6638", "tcl": "b268bce649abd292"}, "normal": {"rep": "06f3b4158feec86f", "rtl": "670a74ed1e7f6638", "tcl": "5485327033045574"}, "start_along": {"rep": "65b61b210531356f", "rtl": "658ecf79365751d1", "tcl": "c96a0b5351964a4b"}, "start_normal": {"rep": "65b61b210531356f", "rtl": "658ecf79365751d1", "tcl": "7493e7ae2e3b8a81"}}, "taps": {"along_all": "4f67ac81dda8d86d", "along_some": "51f0c0fc8965da72", "normal": "fb23b2faa1f930e8", "start_along": "362613a23e847c26", "start_normal": "387284cb2f817dcd"}}')
+GOLDEN = json.loads('{"kit": {"along_all": {"rep": "06f3b4158feec86f", "rtl": "670a74ed1e7f6638", "tcl": "97a99742afd7c7dc"}, "along_some": {"rep": "06f3b4158feec86f", "rtl": "670a74ed1e7f6638", "tcl": "1d0f795ebc616420"}, "normal": {"rep": "06f3b4158feec86f", "rtl": "670a74ed1e7f6638", "tcl": "1b1513bc5d9b55f2"}, "start_along": {"rep": "65b61b210531356f", "rtl": "658ecf79365751d1", "tcl": "0f7843be8a8975bd"}, "start_normal": {"rep": "65b61b210531356f", "rtl": "658ecf79365751d1", "tcl": "839b14446b1130f6"}}, "taps": {"along_all": "4f67ac81dda8d86d", "along_some": "51f0c0fc8965da72", "normal": "fb23b2faa1f930e8", "start_along": "362613a23e847c26", "start_normal": "387284cb2f817dcd"}}')
 
 
 def _h(b):
