@@ -1376,18 +1376,23 @@ def parse_client_log(text, *, unit=None, started=0):
     if m:
         o["ap_rc"] = int(m[-1])
         o.setdefault("exit", o["ap_rc"])
-    if unit and o.get("ap_rc") == o.get("exit") == 6 and o.get("ran_on"):
-        # A sealed job can publish its logs without copying the marker or run log into the producer kit.
-        # Only the current AP unit's completed receipt can recover that structural verdict.
+    rc = o.get("ap_rc")
+    if unit and rc is not None and rc == o.get("exit") and o.get("ran_on"):
+        # A completed receipt names where sealed or spilled artifacts were returned.
+        # Scope it to the current AP attempt before trusting markers or return targets.
         starts = list(re.finditer(r"(?m)^AP_START (\d+) (\S+)$", text))
         if starts:
             start = starts[-1]
             tail = text[start.end():]
-            if start[2] == unit and int(start[1]) >= float(started or 0) - 120 and tail.rstrip().endswith("\nAP_RC=6"):
-                stop = re.search(r"(?m)^FAIL_POSTPLACE PLACE-SETUP-STOP wns -?\d+(?:\.\d+)? ps < -?\d+(?:\.\d+)? ps[^\n]*"
-                                 r"(?=\n[\s\S]*^ot-run: RAN on [^\n]+ exit 6$)", tail)
-                if stop:
-                    o["place_setup_stop"] = stop.group()[:400]
+            if start[2] == unit and int(start[1]) >= float(started or 0) - 120 and tail.rstrip().endswith(f"\nAP_RC={rc}"):
+                if KW.SEALED_COPY_BACK.search(tail) or KW.SPILL_COPY_BACK.search(tail):
+                    o["return_hosts"] = [h for h in KW.copy_back_hosts(tail, None, HUB_NAME) if h]
+                if rc == 6:
+                    # A sealed job can publish its logs without returning the marker or the run log to the probe host.
+                    stop = re.search(r"(?m)^FAIL_POSTPLACE PLACE-SETUP-STOP wns -?\d+(?:\.\d+)? ps < -?\d+(?:\.\d+)? ps[^\n]*"
+                                     r"(?=\n[\s\S]*^ot-run: RAN on [^\n]+ exit 6$)", tail)
+                    if stop:
+                        o["place_setup_stop"] = stop.group()[:400]
     if o.get("ap_rc") == o.get("exit") == 98 and o.get("ran_on"):
         root_pattern = r"(/srv/opentallas-scratch[^/\s:]*/claude/ot-jobs/[A-Za-z0-9_.-]+)"
         sealed = re.findall(r"^ot-job: SEALED " + root_pattern + r":", text, re.M)
@@ -2279,6 +2284,7 @@ def submit(st, j, attempt_note=""):
     if launch_unit(unit, logf, argv):
         j.pop("client_done_at", None)
         j.update(attempts=n, unit=unit, client_log=str(logf), started=time.time())
+        j.pop("return_hosts", None)
         set_status(st, j, "RUNNING", f"attempt {n} {attempt_note}".strip())
         log(f"SUBMIT {j['id']} {j['die']}/{j['type']} {j['kit']} goal {j['goal']} --mem {mem} attempt {n} "
             f"{attempt_note} (src {j['src']}, geom {j['geom']} {j['geom_ref']})")
@@ -3056,18 +3062,25 @@ def admit_after_wave(st, budget):
 
 def probe_job(j):
     """classify-probe on the kit host, falling back to the host ot-run ran it on"""
-    hosts = [j["host"]] + ([j["ran_on"]] if j.get("ran_on") and ssh_host(j["ran_on"]) != ssh_host(j["host"]) else [])
-    best = None
-    for h in hosts:
+    returned = j.get("return_hosts") or []
+    hosts = [*returned, j["host"]]
+    ran_on = j.get("ran_on")
+    if ran_on and ssh_host(ran_on) != ssh_host(j["host"]):
+        hosts.append(ran_on)
+    best = returned_probe = None
+    for h in dict.fromkeys(hosts):
         c = rpy(h, PROBE_CLASSIFY, {"kit": j["path"], "since": j.get("started", 0), "goal": j["goal"]})
         if c.get("error"):
             continue
         c["probe_host"] = h
-        if c.get("signoff") or c.get("last_log_mtime", 0) >= j.get("started", 0) or best is None:
+        if c.get("signoff"):
+            return c
+        fresh = c.get("last_log_mtime", 0) >= j.get("started", 0)
+        if h in returned and returned_probe is None and c.get("exists") and (fresh or c.get("place_setup_stop")):
+            returned_probe = c
+        if fresh or best is None:
             best = c
-            if c.get("signoff"):
-                break
-    return best
+    return returned_probe if returned_probe is not None else best
 
 
 ORPHAN_DEAD_S = 600
@@ -3143,6 +3156,8 @@ def poll_running(st):
         client = parse_client_log(text, unit=j.get("unit"), started=j.get("started"))
         if client.get("ran_on"):
             j["ran_on"] = client["ran_on"]
+        if client.get("return_hosts"):
+            j["return_hosts"] = client["return_hosts"]
         if not client.get("cancelled"):
             sig = signals_cancel(j) or marked_cancel(j) or signals_external(j)
             if sig:
