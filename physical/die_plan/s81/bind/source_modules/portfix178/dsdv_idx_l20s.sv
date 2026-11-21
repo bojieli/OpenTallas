@@ -13,6 +13,10 @@
 //          window is a sticky fault (dwf, fault ring), proof proof_l4 (no dwf -> tl_o/tpn_o/tps_o/lp_q equal the DSP 0 form).
 //   RO 8   quarter -> control t_o stations 7 -> 8 (placed R3a: u_stn_o q0 detour 2,525 um, 8 hops measured 322.5 um ->
 //          9 hops of 281 um); +1 edge on t_o only (dsdv_bksel_c XDX uses RC / RS / QRX, not RO: the signed u_c view is kept).
+//   RSD 5  (S81-BKSEL-R5 11-21) dst / lpe / lp_q[0] reset rs1: rs0 / rs1r (the 2-flop landing of rst_n) stay at the u_rs reset, rs1 =
+//          5 more plain relay flops (dsdv_bk_rrd) to the dst / lpe / lp_q[0] site 1,205 um away (placed R4 chain: rq -> rs1 705 um).
+//          Release (and assert) +5 edges on those three control regs only: dst / lpe are 0 in reset and their first load is a CTL
+//          beat far after release (rst_n held >= 64 clocks).  RSD 0 = as built.
 //   FSP 3  fault feeder: tx_st[0] | dwf -> 3 stages -> fq (u_tx N edge -> fq 973 um -> 4 hops of 243 um); sticky, +3 edges.
 `ifdef OT_BKSEL_L4
 `ifndef OT_BKSEL_RO
@@ -30,6 +34,9 @@
 `ifndef OT_BKSEL_FSP
 `define OT_BKSEL_FSP 3
 `endif
+`ifndef OT_BKSEL_RSD
+`define OT_BKSEL_RSD 5
+`endif
 `endif
 `ifndef OT_BKSEL_RRD
 `define OT_BKSEL_RRD 0
@@ -42,6 +49,9 @@
 `endif
 `ifndef OT_BKSEL_FSP
 `define OT_BKSEL_FSP 0
+`endif
+`ifndef OT_BKSEL_RSD
+`define OT_BKSEL_RSD 0
 `endif
 // S81-BKSEL-O 11-16: dsdv_idx_tx_n32 / txm_n32 / txm_grp spliced from rtl/dsrom_sys/s81_dv/idx/dsdv_idx_l20s.sv (the signed vb form:
 // declares FACE/MLK/LKL/PDC; SPLIT 0 = signed); u_tx passes the full signed parameter set. Other modules unchanged (frozen cohort).
@@ -1194,8 +1204,10 @@ module dsdv_bk_sel_vmtx #(
         assign vo_n = sel_vo_n; assign fault = fq;
     end endgenerate
     // ---- TX destination (control state only is reset: 2-flop landing of rst_n)
-    reg rs0, rs1;
-    always @(posedge clk or negedge rst_n) if (!rst_n) begin rs0 <= 1'b0; rs1 <= 1'b0; end else begin rs0 <= 1'b1; rs1 <= rs0; end
+    reg rs0, rs1r; wire rs1;
+    always @(posedge clk or negedge rst_n) if (!rst_n) begin rs0 <= 1'b0; rs1r <= 1'b0; end else begin rs0 <= 1'b1; rs1r <= rs0; end
+    // S81-BKSEL-R5 (OT_BKSEL_L4 RSD): plain relay flops from the landing flop to the dst / lpe / lp_q[0] site (RSD 0 = rs1 = rs1r, as built)
+    dsdv_bk_rrd #(.D(`OT_BKSEL_RSD)) u_rst_relay_dsp (.ck(clk), .d(rs1r), .q(rs1));
     wire octl = vo_s[0] && vo_s[3:1] == 3'd0 && vo_s[28:21] == 8'h5C && vo_s[31:29] == 3'd2;
     wire [1:0] dst; wire lpe;
     // OPUS-FIX-S81-BKSEL-R4 (OT_BKSEL_L4 DSP): the decoded CTL fields reach dst / lpe through DSP stages (DSP 0 = as built)

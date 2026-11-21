@@ -51,5 +51,13 @@ class OverlayParams(unittest.TestCase):
     def test_txm_has_mlk(self):
         self.assertIn('MLK', params_of(strip((D / 'dsdv_idx_tree.sv').read_text()))['dsdv_idx_txm'])
 
+    def test_rsd_relay_defaults(self):
+        """S81-BKSEL-R5: OT_BKSEL_RSD = 5 under OT_BKSEL_L4 (dst / lpe / lp_q[0] reset relay), 0 (as built) otherwise; rs1 comes from the relay."""
+        t = (D / 'dsdv_idx_l20s.sv').read_text()
+        a = t.index('`ifdef OT_BKSEL_L4'); b = t.index('`endif\n`ifndef OT_BKSEL_RRD', a)
+        self.assertIn('`define OT_BKSEL_RSD 5', t[a:b])
+        self.assertIn('`define OT_BKSEL_RSD 0', t[b:])
+        self.assertIn('dsdv_bk_rrd #(.D(`OT_BKSEL_RSD)) u_rst_relay_dsp (.ck(clk), .d(rs1r), .q(rs1));', t)
+
 if __name__ == '__main__':
     unittest.main()
