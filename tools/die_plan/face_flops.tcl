@@ -10,6 +10,16 @@
 # ft_stations.txt (slot k in_face out_face [x y ...]).
 # ORFS sources hooks inside a proc: run at global scope so the helper procs below can use `global`
 uplevel #0 {
+# FLOW-FIX-0100 (COORD: face_flops.tcl took 1582 s on an S81 leaf kit before global placement): OT_FF_TIME lines with wall seconds per section.
+# Print-only; placement and every other output are unchanged.  OT_FF_TIME=0 silences it.
+set ot_ff_t0 [clock milliseconds]; set ot_ff_tl $ot_ff_t0
+proc ot_ff_tick {label} {
+  global ot_ff_t0 ot_ff_tl
+  if {[info exists ::env(OT_FF_TIME)] && $::env(OT_FF_TIME) eq "0"} return
+  set n [clock milliseconds]
+  puts [format "OT_FF_TIME %-22s +%.1f s (total %.1f s)" $label [expr {($n - $ot_ff_tl) / 1000.0}] [expr {($n - $ot_ff_t0) / 1000.0}]]
+  set ot_ff_tl $n
+}
 set ff_blk [ord::get_db_block]
 set ff_dbu [[ord::get_db_tech] getDbUnitsPerMicron]
 set ff_core [$ff_blk getCoreArea]
@@ -212,6 +222,7 @@ set ff_interior_dbu [expr {round(([info exists ::env(OT_FF_INTERIOR_UM)] ? $::en
 set ff_interior {}
 set ff_out [open $::env(RESULTS_DIR)/ot_face_flops.txt w]
 set ff_chain_f [open $::env(RESULTS_DIR)/ot_face_chain.txt w]; set ff_nchain 0
+ot_ff_tick setup_and_walkers
 # inputs first: a 1-station ft slot's only flop registers its input face
 foreach pass {INPUT OUTPUT} {
   foreach bt [$ff_blk getBTerms] {
@@ -303,6 +314,7 @@ foreach pass {INPUT OUTPUT} {
     }
   }
 }
+ot_ff_tick face_pin_passes
 # ---- ft stations j >= 1 (R3)
 proc ff_zroute {ax ay bx by fin fout} {
   if {abs($ax - $bx) < 1 || abs($ay - $by) < 1} { return [list $ax $ay $bx $by] }
@@ -640,6 +652,7 @@ proc ff_put_near {f x y} {
   }
   return ""
 }
+ot_ff_tick explicit_reserve_and_landed
 # interior pin registers (DIE-KV-60, see ff_interior_dbu): nearest free station-grid cell to the pin
 set ff_nint 0
 if {![info exists ff_interior]} { set ff_interior {} }
@@ -886,6 +899,7 @@ foreach i [dict values $::ff_hl_seen] {
 if {[llength $ff_hl_map]} { puts "OT_FACE_FLOPS hop latches: $ff_hl_mapped at their per-hop fraction (OT_HOP_LATCH_FRAC_MAP, [expr {[llength $ff_hl_map] / 2}] items)" }
 if {($ff_hl || $ff_hl_miss) && $ff_hl_frac eq ""} { puts "OT_FACE_FLOPS hop latches: $ff_hl ft hop lockup latches FIRM at their hop midpoints ($ff_hl_miss without both stations)" }
 if {($ff_hl || $ff_hl_miss) && $ff_hl_frac ne ""} { puts "OT_FACE_FLOPS hop latches: $ff_hl ft hop lockup latches FIRM at launch + $ff_hl_frac of their hops (OT_HOP_LATCH_FRAC; $ff_hl_miss without both stations)" }
+ot_ff_tick ft_stations_and_hop_latches
 close $ff_out
 close $ff_chain_f; if {$ff_nchain} { puts "OT_FACE_CHAIN pinned $ff_nchain face-chain cells" }
 puts "OT_FACE_FLOPS placed $ff_n pin registers FIRM at their faces ($ff_miss signal ports without a flop within 2 buffers; $ff_ndup cells duplicated for output ports sharing a merged flop); $ff_st ft stations j>=1 FIRM on their routes ($ff_st_miss missing)"
@@ -893,19 +907,25 @@ if {$ff_lst} { puts "OT_FACE_FLOPS landed ft slots: $ff_lst stations s0..s<k-1> 
 if {$ff_lane_bits} { puts "OT_FT_LANE [expr {[ff_lane_on] ? "on" : "off (OT_FT_LANE=0)"}]: $ff_lane_bits slot bits, max placed station hop [format %.1f $ff_lane_max] um, $ff_lane_n405 hops > 405 um (plan reach)" }
 # KV-G3 10-24: FIRM plan internal stations + plan-cell sites of a bound kit (tools/die_plan/kit_istations.py)
 if {[file exists /work/istations.tcl]} { source /work/istations.tcl }
+ot_ff_tick hook_istations
 # OWNER RESET RULE 10-24: FIRM reset entry stage + synchronous relay tree (tools/die_plan/reset_tree.py, kit_rsync)
 if {[file exists /work/reset_tree.tcl]} { source /work/reset_tree.tcl }
+ot_ff_tick hook_reset_tree
 # per-tap reset synchronisers (gen_rtl ot_dp_rsync_s<N>): place them at their taps, re-point FIRM flops (reset_taps.tcl)
 if {[file exists /work/reset_taps.tcl]} { source /work/reset_taps.tcl }
+ot_ff_tick hook_reset_taps
 }
 # S81-P8 10-23: soft relay stations on their source-sink lines (kits with hard cores; gen_phys copies relay_mid.tcl)
 if {[file exists /work/relay_mid.tcl] && [info exists ::env(OT_RELAY_MID_RE)]} { source /work/relay_mid.tcl }
+ot_ff_tick hook_relay_mid
 # S81-TYPES-5 11-07 NARROW-GUTTER class: hard placement blockages over macro gaps < OT_GUTTER_BLOCK_UM (opt-in, gutter_block.tcl)
 if {[file exists /work/gutter_block.tcl] && [info exists ::env(OT_GUTTER_BLOCK_UM)]} { source /work/gutter_block.tcl }
 # DIE-HEAD-69 11-05: core-output landing flops at their hard-core pins (kits with hard cores; gen_phys copies it)
 if {[file exists /work/core_out_land.tcl]} { source /work/core_out_land.tcl }
+ot_ff_tick hook_core_out_land
 # PLACE-REGION 11-19 (lever 5, plan key partition_types.<type>.place_regions): one placement region per named logic cone
 if {[file exists /work/place_regions_data.tcl] && [file exists /work/place_regions.tcl]} { source /work/place_regions_data.tcl; source /work/place_regions.tcl }
+ot_ff_tick hook_place_regions
 # DIE-HBM-92 11-08: optional FT polarity placement (OT_FT_POLARITY_LOCAL=1); before the GPL guard, which stays last
 if {[file exists /work/ft_polarity_local.tcl]} {source /work/ft_polarity_local.tcl}
 # VSN6-B 11-11 S7: loud non-tap cell census against the 400k run cap (cell_census.tcl, ADVISORY)
