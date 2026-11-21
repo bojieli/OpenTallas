@@ -16468,3 +16468,4 @@ FAILED [AUTOPILOT 7a9cff621685] 2026-11-21 00:54:44 PST AUTOPILOT -> KIT-WAVE-12
   col_h9_r0_p1 (6): GRT 6 TT worst -91.4 median -81.7; CTS FF hold after CORETAP 6: worst -73.3 median -50.3; sign-off runs 5, SIGNED 0, routed TT worst -634.2, FF worst -92.9, DRC max 20; 1 stopped without signoff; old plan -331 (t0->cf.st CTS)
   col_h9_r0_p2 (12): GRT 4 TT worst -20.6 median -20.6; CTS FF hold after CORETAP 12: worst -65.0 median -58.3; sign-off runs 0, SIGNED 0; 7 stopped without signoff; old plan -78.7 (bs1->e1 CTS)
   Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
+- 2026-11-21 01:01 PST DONE [rrgen-r2] ot-push-main otpush-civil-redfish-2792471 on civil-redfish: rc=0 after 29 s, ended 09:01:11, log /srv/opentallas-scratch2/claude/rrgen-r3/push6.log, cmd: ot-push-main 
