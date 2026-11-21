@@ -4604,6 +4604,30 @@ def spec_retired(cfg, sp):
     return retired_src_hit(cfg, [sp.get("src"), sp.get("plan")] + abs_paths(sp.get("kit_rtl") or {}))
 
 
+def _host_drain():
+    """tools/fleet/host_drain.py (FLOW-OPS-0900 fix 4), or None on an old rt"""
+    try:
+        sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "fleet"))
+        import host_drain
+        return host_drain
+    except ImportError:
+        return None
+
+
+def draining_hosts(caps, stt, hub=""):
+    """{host} whose scratch free GB (ot-run status) is under its admit cap: die caps merged with the fleet caps of host_drain.load_caps()"""
+    HD = _host_drain()
+    if HD is None:
+        return set()
+    allc = dict(HD.load_caps())
+    for h, v in (caps or {}).items():
+        try:
+            allc[h] = max(int(allc.get(h) or 0), int(v))
+        except (TypeError, ValueError):
+            pass
+    return set(HD.draining_from_status(allc, stt, hub))
+
+
 def drop_capped_hosts(hosts, caps, stt, hub=""):
     """FLEET-WATCH-R5 11-21 (KV sys_c D26 place went to intel1 under its 250 GB admit cap: the launch spec froze `hosts` while gen_hosts still listed it): drop the hosts whose ot-run
     scratch_gb is under their gen_host_min_free_gb cap while another host stays.  caps {host: GB}, stt = parse_otrun_status rows."""
@@ -5305,12 +5329,9 @@ def gen_hosts(cfg, die, item=None):
     _stt, _hub = cfg.get("_otrun_status") or {}, cfg.get("_hub") or ""
     res = [h for h in res if not queued_host_bad(_stt, h, _hub)] or res
     # FLEET-WATCH-R5 11-21 (FABLE-FLOW-0800 class c): a host under its own admit cap (dies.<die>.gen_host_min_free_gb, scratch GB from the ot-run status) is no gen host, whatever the list says, while another stays
-    _caps = d.get("gen_host_min_free_gb") or {}
-    if _caps:
-        def _under(h):
-            v = _stt.get("localhost" if h == _hub else h)
-            return bool(_caps.get(h)) and bool(v) and v.get("scratch_gb") is not None and int(v["scratch_gb"]) < int(_caps[h])
-        res = [h for h in res if not _under(h)] or res
+    # FLOW-OPS-0900 fix 4: the one drain filter (host_drain.py: die caps + fleet caps); a gen host list of ONLY draining hosts keeps them (ot-run then refuses the new dir)
+    _dr = draining_hosts(d.get("gen_host_min_free_gb") or {}, _stt, _hub)
+    res = [h for h in res if h not in _dr] or res
     # KIT-OPS-4 11-14 (COORD): the free INFRA retry of an earlyoom / signal kill leaves the host that killed it while another stays
     av = (cfg.get("_avoid_host") or {}).get((die, item)) if item else None
     return [h for h in res if h != av] or res if av else res
@@ -7535,6 +7556,8 @@ def repick_queued_waits(AP, cfg, st, notices, jobs=None, now=None):
         host = AP.ssh_host(j.get("host") or "") if hasattr(AP, "ssh_host") else (j.get("host") or "")
         host = "localhost" if host == hub else host
         why = queued_host_bad(stt, host, hub)
+        if not why and host in draining_hosts(d.get("gen_host_min_free_gb") or {}, stt, hub):
+            why = f"{host} is draining (scratch under its admit cap; FLOW-OPS-0900 fix 4)"
         if not why:
             # COORD 11-19 (FLOW-1803 3: 75 of 624 threads idle while epyc8/9 refused work): a queued wait on a host AT OR OVER its cores moves when another gen host of the die is under its cores
             v_ = stt.get("localhost" if host == hub else host) or {}
@@ -8398,6 +8421,16 @@ def private_spec_cmd(a):
     cfg = load_config(txt)
     cfg["_hub"] = hub
     lane = a.lane or os.environ.get("OT_LANE", "")
+    if a.host:                                           # FLOW-OPS-0900 fix 4: no private kit is placed on a draining host
+        try:
+            _p = subprocess.run([OT_RUN, "--status"], capture_output=True, text=True, timeout=180)
+            _dr = draining_hosts(((cfg.get("dies") or {}).get(a.die) or {}).get("gen_host_min_free_gb") or {}, parse_otrun_status(_p.stdout if _p.returncode == 0 else ""), hub)
+        except Exception:
+            _dr = set()
+        if a.host in _dr:
+            print(f"private-spec: --host {a.host} is DRAINING (scratch free under its admit cap, dies.<die>.gen_host_min_free_gb); pick another --host "
+                  f"(gen hosts: {', '.join(h for h in gen_hosts(cfg, a.die, a.item) if h not in _dr)})", file=sys.stderr)
+            return 2
     try:
         sp = private_spec(cfg, a.die, a.item, hub, plan=a.plan, tree=a.tree, overlays=a.overlay, ab=a.ab, why=a.why, lane=lane,
                           work=a.work, kind=a.kind, src_sha=a.src_sha, host=a.host, bind_out=a.bind_out, src_manifest=a.src_manifest,
@@ -8523,8 +8556,25 @@ def run_item(spec_path):
         run("env_provenance", remote(f"if [ -f {q(K)}/env_provenance.py ]; then python3 -I {q(K)}/env_provenance.py write {q(K)} --b64 {b64}; "
                                      f"else echo 'ENV-PROVENANCE SKIPPED: {T}: no env_provenance.py in the kit (rt older than FLOW-PROC-A)'; fi"), idempotent=True)
 
+    _drc = {}
+
+    def stage_drain():
+        """FLOW-OPS-0900 fix 4: draining hosts now (ot-run status + the spec's host_caps + fleet caps), read once per run"""
+        if "v" not in _drc:
+            try:
+                _p = subprocess.run([sp["ot_run"], "--status"], capture_output=True, text=True, timeout=180)
+                _drc["v"] = draining_hosts(sp.get("host_caps") or {}, parse_otrun_status(_p.stdout if _p.returncode == 0 else ""), hub)
+            except Exception:
+                _drc["v"] = set()
+        return _drc["v"]
+
     def otrun(mem, thr, d, cmd, hosts, allow_hub=False, roam=True):  # ot-run names the hub itself 'localhost'
         hosts = target_hosts(hosts, hub, allow_hub)       # KW-FIX-45 11-12: only the place stage may target the hub (capped by ot-run), never gen
+        _dr = stage_drain()
+        if _dr:                                           # FLOW-OPS-0900 fix 4: a draining host only where this kit already lives (the gen host G)
+            hosts = [h for h in hosts if h not in _dr or h == G]
+        if not hosts:
+            raise RuntimeError(f"heavy stage refused: every target host is draining ({', '.join(sorted(_dr))}) and none holds this kit")
         if not hosts:
             raise RuntimeError("heavy stage refused: every target host is the hub (KW-FIX-45 hub guard)")
         argv = [sp["ot_run"], "--mem", str(mem), "--threads", str(thr), "--dir", d, "--hosts", ",".join(hosts)] \
@@ -9241,7 +9291,7 @@ def run_item(spec_path):
                 res["place_receipt"] = rcpt
             return after_place(K, *resume_verify(rs, rc, txt))
         # a resumed kit's run/ holds hardlinks into the previous attempt on G: it PLACEs on G only (a relay would copy GBs)
-        for h in ([] if rs else [h for h in sp["hosts"] if h not in (G, hub, "localhost")]):
+        for h in ([] if rs else [h for h in sp["hosts"] if h not in (G, hub, "localhost") and h not in stage_drain()]):     # FLOW-OPS-0900 fix 4: no relay copy onto a draining host
             cp = (f"ssh -o BatchMode=yes -o ControlPath=none {h} mkdir -p {q(W)}/gen && "
                   f"rsync -a --delete {SSHE} {q(W)}/gen/ {h}:{q(W)}/gen/")
             rc, txt = run(f"sync_{h}", ["bash", "-c", cp], idempotent=True)
@@ -9249,12 +9299,8 @@ def run_item(spec_path):
                 return fail(f"sync_{h}", txt)
         m, t = sp["place_mem_gb"], sp["place_threads"]
         phosts = [G] if rs else sp["hosts"]
-        if sp.get("host_caps") and not rs:      # FLEET-WATCH-R5: the spec's frozen host list is re-checked against the admit caps at place time
-            try:
-                _p = subprocess.run([sp["ot_run"], "--status"], capture_output=True, text=True, timeout=120)
-                phosts = drop_capped_hosts(phosts, sp["host_caps"], parse_otrun_status(_p.stdout if _p.returncode == 0 else ""), hub)
-            except Exception:
-                pass
+        if not rs:      # FLEET-WATCH-R5 / FLOW-OPS-0900 fix 4: the spec's frozen host list (die `hosts`, e.g. intel1 on KV-D26) is re-checked against the drain state, no fall-back to
+            phosts = [h for h in phosts if h not in stage_drain()] or [G]      # the capped list: only the gen host, where the kit already is
         pref = [h for h in sp.get("place_prefer") or [] if h in phosts]
         if pref and not rs:                                             # COORD 10-30 01:2x: PLACE on epyc2 first while it has headroom
             p = subprocess.run([sp["ot_run"], "--status"], capture_output=True, text=True, timeout=120)

@@ -244,6 +244,15 @@ def miss_size(so):
 HOST_OVERLOAD_X = 2.0
 
 
+def host_draining(status, host):
+    """FLOW-OPS-0900 fix 4: the DB host's scratch is under its admit cap (host_drain.py): the re-sign / ECO goes to the staged any-host form, never pinned there"""
+    try:
+        import kit_wave as _KW
+        return host in _KW.draining_hosts({}, status or {}, "")
+    except Exception:
+        return False
+
+
 def host_overloaded(status, host):
     """the host runs over 2x its cores (load / cores from ot-run --status); unknown = not overloaded"""
     v = (status or {}).get("localhost" if host in ("localhost", "") else host) or {}
@@ -1030,7 +1039,8 @@ def try_eco(AP, c, ctx, it, cid, ap_dir, eco_running, notices):
     mem = it.get("eco_mem", WAVE_ECO_MEM_GB if c.get("source") == "wave-eco" else ECO_MEM_GB)
     unit = "ae-%s-a%d" % (cid, n)
     logf = Path(ap_dir) / "auto_resign_jobs" / (unit + ".log")
-    anyhost = wave_eco and (AP.ssh_host(c["host"]) == "localhost" or host_overloaded(getattr(AP, "_otrun_status_cache", None) or otrun_status(AP), c["host"]))   # never pinned to the hub
+    _stt = getattr(AP, "_otrun_status_cache", None) or otrun_status(AP)
+    anyhost = (wave_eco and (AP.ssh_host(c["host"]) == "localhost" or host_overloaded(_stt, c["host"]))) or host_draining(_stt, c["host"])   # never pinned to the hub or a draining host
     if not AP.launch_unit(unit, logf, eco_argv(AP, c, e, d, out, mem, anyhost)):
         it.update(status="WAIT", why="systemd-run failed")
         return False
@@ -1215,7 +1225,7 @@ def launch(AP, c, p, ctx, it, plan, cid, ap_dir):
     mem = it.get("mem", MEM_GB)
     unit = "ar-%s-a%d" % (cid, n)
     logf = Path(ap_dir) / "auto_resign_jobs" / (unit + ".log")
-    anyhost = bool(it.get("anyhost"))
+    anyhost = bool(it.get("anyhost")) or host_draining(getattr(AP, "_otrun_status_cache", None) or otrun_status(AP), c["host"])   # FLOW-OPS-0900 fix 4 (ar-fc71b26d7642 on intel1)
     if anyhost:                                        # ARHOST_1111: the output dir exists so ot-run can stage it
         h = AP.ssh_host(c["host"])
         if AP.sh(["ssh", "-o", "BatchMode=yes", "-o", "ControlPath=none", h, "mkdir -p %s" % shlex.quote(out)], timeout=60)[0]:

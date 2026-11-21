@@ -1211,8 +1211,14 @@ def status(hosts):
                    + (f" root {r['rootfs_pct']}%" if "rootfs_pct" in r else "")
                    + (f" scratch {r['scratch_disk_gb']} GB" if "scratch_disk" in r else "")
                    + (f" ONLY --dir on scratch2 (a job without one: {rootref})" if rootref else ""))
+    try:
+        import host_drain as HD     # FLOW-OPS-0900 fix 4: the drain state is shown, and a draining host is no next-job choice
+        _dr = HD.draining(HD.load_caps(), {h: (r or {}).get("scratch_disk_gb") for h, r in res.items()})
+    except Exception:
+        _dr = {}
+    out = [x + (f" DRAINING ({_dr[x.split()[0]][0]} of {_dr[x.split()[0]][1]} GB, new job dirs refused)" if x.split()[0] in _dr else "") for x in out]
     live = {h: r for h, r in res.items() if h not in held and r and not r.get("error") and r.get("ncpu")
-            and r["disk_gb"] >= 20 and physically_capable(r, 32) and not host_refusal(r)}
+            and r["disk_gb"] >= 20 and physically_capable(r, 32) and not host_refusal(r) and h not in _dr}
     # STATUSGUARD_1111 (KW-FIX-44, COORD 11-11 20:0x): the next-job choice applies the same DISK GUARD as --pick for a
     # job without a scratch2 --dir (the status probe of a dir-aware host reports as for a scratch2 job, so epyc2 at
     # 144 GB root free < 150 showed "next job -> epyc2" while --pick refused it); the scratch2-dir choice is shown apart
@@ -1223,6 +1229,51 @@ def status(hosts):
     if best2 and best2 != best:
         next_job += f" | with --dir on scratch2 -> {best2}" + (" (would queue)" if queue2 else "")
     print("ot-run status: " + " | ".join(out) + next_job)
+
+
+def drain_state(hosts):
+    """FLOW-OPS-0900 fix 4: (host_drain module or None, {host: (free, cap)}) for the hosts with an admit cap, probed now"""
+    try:
+        import host_drain as HD
+    except ImportError:
+        return None, {}
+    caps = HD.load_caps()
+    cand = [h for h in hosts if HD.cap_of(caps, h)]
+    if not cand:
+        return HD, {}
+    with cf.ThreadPoolExecutor(len(cand)) as ex:
+        res = dict(ex.map(lambda h: probe(h, STATUS_DIR if dir_aware(h) else None), cand))
+    return HD, HD.draining(caps, {h: (res.get(h) or {}).get("scratch_disk_gb") for h in cand})
+
+
+def dir_has_data(host, d):
+    """the job's --dir exists and is not empty on host (a draining host keeps running its existing work)"""
+    q = shlex.quote(d)
+    c = f"test -d {q} && [ -n \"$(ls -A {q} 2>/dev/null | head -1)\" ]"
+    try:
+        r = subprocess.run(["bash", "-c", c], capture_output=True, timeout=30) if host == "localhost" else ssh_sh(host, c, timeout=30)
+        return r.returncode == 0
+    except (OSError, subprocess.SubprocessError):
+        return False
+
+
+def drain_hosts(hosts, d, job, held=None):
+    """FLOW-OPS-0900 fix 4: drop draining hosts (scratch free under the admit cap, host_drain.py) from this job's hosts, except where its --dir already
+    holds data (a sealed --job or a job-root dir never does).  Every host draining -> NOT-RUN with the drain state and the hosts to use.  -> hosts (same object when unchanged)"""
+    HD, dr = drain_state(hosts)
+    if not HD or not dr:
+        return hosts
+    exist = bool(d) and not job and not str(d).startswith(JOB_ROOT)
+    kept, dropped = HD.filter_hosts(hosts, dr, keep=lambda h: exist and dir_has_data(h, d))
+    for h in kept:
+        if h in dr:
+            print(f"ot-run: DRAIN: {HD.describe({h: dr[h]})}: --dir {d} already holds data there, the job may run there", file=sys.stderr)
+    if not dropped:
+        return hosts
+    print(f"ot-run: DRAIN: {HD.describe({h: dr[h] for h in dropped})}: not used for this job (new job dir)", file=sys.stderr)
+    if not kept:
+        not_run(HD.refusal(hosts, dr, [h for h in HOSTS if h != "localhost" and h not in (held or {})]))
+    return kept
 
 
 SIGS = (signal.SIGTERM, signal.SIGINT, signal.SIGHUP)
@@ -1954,6 +2005,13 @@ def main():
                   f"edit {HELD_FILE} to release", file=sys.stderr)
             not_run(f"every requested host is held ({'; '.join(f'{h}: {held[h]}' for h in hosts)}); edit {HELD_FILE} to release")
         hosts = kept
+    # FLOW-OPS-0900 fix 4 (FABLE-FLOW-0745 c: 10 lane jobs pinned to the draining intel1 / epyc9): a host under its admit cap takes no new job dir
+    _dk = drain_hosts(hosts, d, job, held)
+    if _dk is not hosts:
+        if hosts is HOSTS:
+            HOSTS[:] = _dk                 # keeps `pinned = hosts is not HOSTS` false for an unpinned job
+        else:
+            hosts = _dk
     if os.environ.get("OT_RUN_PRIO_ENV") is None and die_like(cmd, d):
         os.environ["OT_RUN_PRIO_ENV"] = "OT_HEAVY_PRIO=die "
         print("ot-run: die-level command (DIE_RE): --priority die", file=sys.stderr)
