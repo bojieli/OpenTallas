@@ -124,3 +124,4 @@
 - 2026-11-20 23:33 PST ALERT NO-PROGRESS s81_head: 17 eligible rows, 0 KIT-WAVE LAUNCH for 60 min (last 22:33); no DIE-OFF / NO-LAUNCH line
 - 2026-11-21 00:04 PST ALERT NO-ADVANCE qwen_compute: 2 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (slw_hc3__clccfc3e6b__pvcca9ff41 x2@place, slw_hc3__cld86a7ad4__pvfd488b8f x2@gen)
 - 2026-11-21 00:24 PST ALERT STUCK-STATE s81_head: 1 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. hd_host_n, 2026-11-20 22:18)
+- 2026-11-21 00:44 PST ALERT NO-PROGRESS s81_head: 17 eligible rows, 0 KIT-WAVE LAUNCH for 66 min (last 23:38); no DIE-OFF / NO-LAUNCH line
