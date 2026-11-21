@@ -146,7 +146,6 @@ class PastGeom(unittest.TestCase):
 
 class SshRetry(unittest.TestCase):
     def test_transport_drop_retried_design_error_not(self):
-        import subprocess
         calls = []
 
         class P:
@@ -154,13 +153,18 @@ class SshRetry(unittest.TestCase):
                 self.returncode, self.stdout, self.stderr = rc, out, ""
 
         def fake_run(argv, **kw):
-            calls.append(argv)
-            n = len(calls)
-            if n == 1:                                                     # mkdir: sshd drops the connection
-                return P(255, "kex_exchange_identification: read: Connection reset by peer")
-            if n == 2:
+            if "ckj()" in argv[-1]:
+                calls.append("abs_inputs")
                 return P(0, "")
-            if n == 3:                                                     # gen: ot-run never admitted on intel1
+            if "mkdir -p /w/items/t/logs" in argv[-1]:
+                calls.append("mkdir")
+                if calls.count("mkdir") == 1:
+                    return P(255, "kex_exchange_identification: read: Connection reset by peer")
+                return P(0, "")
+            self.assertEqual(argv[0], "/bin/ot-run")
+            self.assertIn("tools/die_plan/gen.py phys", argv[-1])
+            calls.append("gen")
+            if calls.count("gen") == 1:
                 return P(1, "ot-run: NOT RUN: no host qualifies (intel1: SSH probe exit 255: Connection reset)")
             return P(1, "ValueError: type t: macros have LEF but no timing liberty: u (m)\not-run: RAN on intel1 (unit u): exit 1")
         with tempfile.TemporaryDirectory() as d:
@@ -169,14 +173,12 @@ class SshRetry(unittest.TestCase):
                     "hosts": ["intel1"], "place_prefer": [], "place_mem_gb": 48, "place_threads": 8, "geom_mem_gb": 24,
                     "gen_mem_gb": 16, "bind_mem_gb": 24, "ot_run": "/bin/ot-run", "start_delay_s": 0}
             (Path(d) / "spec.json").write_text(json.dumps(spec))
-            old_run, old_sleep = KW.subprocess.run, KW.time.sleep
-            KW.subprocess.run, KW.time.sleep = fake_run, lambda s: None
-            try:
+            with mock.patch.object(KW.subprocess, "run", side_effect=fake_run), \
+                 mock.patch.object(KW.time, "sleep"), \
+                 mock.patch.object(KW, "repick_stage_hosts", side_effect=lambda spec: spec):
                 self.assertEqual(KW.run_item(str(Path(d) / "spec.json")), 1)
-            finally:
-                KW.subprocess.run, KW.time.sleep = old_run, old_sleep
             res = json.loads((Path(d) / "result.json").read_text())
-            self.assertEqual(len(calls), 4)                                  # mkdir x2, gen x2, no third gen try
+            self.assertEqual(calls, ["abs_inputs", "mkdir", "mkdir", "gen", "gen"])
             self.assertEqual(res["stage"], "gen")
             self.assertIn("KW_SSH_RETRY", (Path(d) / "mkdir.log").read_text())
             self.assertEqual(KW.classify(res["stage"], res["errors"] + "\n" + res["tail"])[0], "PLAN")
