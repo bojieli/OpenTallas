@@ -18162,3 +18162,5 @@ FAILED [AUTOPILOT 4f3aa728480f] 2026-11-21 07:02:35 PST AUTOPILOT -> KIT-WAVE-5:
 - 2026-11-21 07:10 PST STATE tools sync recovered after 26 min (rt/current b1bb664d56f5)
 - 2026-11-21 07:10 PST DIED [FAM-S81-LEPE-3] ot-run oth-ubuntu-3163850-1795272168 on civil-redfish: rc=2 after 1666 s, ended 15:10:32, log /srv/opentallas-scratch2/claude/fam-lepe/p9/run9.log, cmd: --mem 72 --threads 16 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/fam-lepe/p9 -- bash /srv/opentallas-scratch2/claude/fam-lepe/p9/r
 - 2026-11-21 07:10 PST DISK-RATE epyc10 /srv/opentallas-scratch2: free 512 GB, falling 77 GB/h, floor 50 GB in 6.0 h (cron disk_rate.py; read-only)
+- 2026-11-21 07:10 PST DONE [FAM-S81-SLICE] ot-run oth-ubuntu-344587-1795255611 on civil-redfish: rc=0 after 18228 s, ended 15:10:38, log /srv/opentallas-scratch2/claude/fam-s81-slice/t36_run.log, cmd: --mem 56 --threads 16 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/fam-s81-slice -- bash /srv/opentallas-scratch2/claude/fam-s81-sli
+  [filed under] FAM-S81-SLICE-R3: FAM-S81-SLICE stood down (chain FAM-S81-SLICE > FAM-S81-SLICE-R2 > FAM-S81-SLICE-R3)
