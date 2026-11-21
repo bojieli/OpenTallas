@@ -394,7 +394,8 @@ class TypeSplit:
         handled = {"outline_um", "buses", "ft_slots", "clock", "reset", "contents", "hard_cores", "internal_stations",
                    "count_straps", "module", "note", "hard", "face_pins_per_um", "face_budget_g2", "core_pg_connect",
                    "landing_control_status_copy", "reset_spine_pins", "pads", "reach_homes", "cells", "landing_base_type",
-                   "verilog_defines", "port_buf_at_pin", "face_layers", "dead_inputs", "ft_track_frac"}
+                   "verilog_defines", "port_buf_at_pin", "face_layers", "dead_inputs", "ft_track_frac",
+                   "relay_depth", "relay_polylines", "relay_sites", "reset_replicate"}
         unknown = set(t) - handled
         if unknown:
             raise SplitError(f"{self.tn}: unhandled type keys {sorted(unknown)} (extend type_split.py)")
@@ -457,6 +458,7 @@ class TypeSplit:
         self._reset()
         self._reset_spine_pins()
         self._count_straps()
+        self._relay_keys()
         if t.get("reach_homes"):
             raise SplitError(f"{self.tn}: reach_homes present (drop them before the split; re-derive after)")
         if "pads" in t:
@@ -1115,6 +1117,51 @@ class TypeSplit:
                                                                      n=len(r["regs_um"]), end=r["launch"])))
         return True
 
+    def _relay_keys(self):
+        """D27-era relay keys (OPUS-FIX-KV-PV-R4 11-21): relay_depth rows follow their core instance (content rules);
+        relay_polylines follow their group (content rules on group_re), shifted, dropped when a point leaves the piece;
+        relay_sites follow their bus (u_bin_/u_bout_<bus>) else their position, shifted, dropped when off-piece;
+        reset_replicate rows go to every piece with hard cores as driver_re (digits generalised) + optional."""
+        t, cut, T = self.t, self.cut, self.T
+        rep = self.rep.setdefault("relay_keys", dict(relay_depth=[0] * self.n, polylines=[0] * self.n, polylines_dropped=[],
+                                                     sites=[0] * self.n, sites_dropped=0, reset_replicate=[]))
+        for row in t.get("relay_depth") or []:
+            i = self._local_piece_of(row["inst"])
+            T[i].setdefault("relay_depth", []).append(copy.deepcopy(row))
+            rep["relay_depth"][i] += 1
+        for row in t.get("relay_polylines") or []:
+            i = self._local_piece_of(row["group_re"])
+            pts = row["polyline_um"]
+            if not all(cut.lo(i) - EPS <= p[cut.ax] <= cut.hi(i) + EPS for p in pts):
+                rep["polylines_dropped"].append(row["group_re"])
+                continue
+            rr = copy.deepcopy(row)
+            rr["polyline_um"] = [cut.sh(p, i) for p in pts]
+            T[i].setdefault("relay_polylines", []).append(rr)
+            rep["polylines"][i] += 1
+        for k, v in sorted((t.get("relay_sites") or {}).items()):
+            head = k.split(".")[0]
+            bus = head[len("u_bin_"):] if head.startswith("u_bin_") else head[len("u_bout_"):] if head.startswith("u_bout_") else None
+            if bus is not None and bus in self.bus_piece:
+                i = self.bus_piece[bus]
+            else:
+                i = cut.ppiece(v, f"{self.tn} relay site {k}")
+            if not (cut.lo(i) - EPS <= v[cut.ax] <= cut.hi(i) + EPS):
+                rep["sites_dropped"] += 1
+                continue
+            T[i].setdefault("relay_sites", {})[k] = cut.sh(v, i)
+            rep["sites"][i] += 1
+        for row in t.get("reset_replicate") or []:
+            for i in range(self.n):
+                if not T[i].get("hard_cores"):
+                    continue
+                rr = copy.deepcopy(row)
+                if "driver" in rr:
+                    rr["driver_re"] = re.sub(r"\\d\+|[0-9]+", r"\\d+", re.escape(rr.pop("driver")))
+                rr["optional"] = True
+                T[i].setdefault("reset_replicate", []).append(rr)
+                rep["reset_replicate"].append(dict(piece=i, driver_re=rr["driver_re"]))
+
     def _local_piece_of(self, inst):
         """piece of a type-local content instance (content rows, then the spec content rules)"""
         if inst in self.content_piece:
@@ -1339,7 +1386,7 @@ class TypeSplit:
             return
         cut, T = self.cut, self.T
         known = {"pins", "bands", "base_type", "registered_monitor", "physical_qualified", "collector_tree",
-                 "collector_root_node", "collector_local_sources", "collector_children", "forwarded_clock_only_inputs"}
+                 "collector_root_node", "collector_local_sources", "collector_children", "forwarded_clock_only_inputs", "collector_root_xy"}
         unk = set(lc) - known
         if unk:
             raise SplitError(f"{self.tn}: unhandled landing_contract keys {sorted(unk)}")
@@ -1351,6 +1398,11 @@ class TypeSplit:
             d["pins"], d["bands"] = [], {}
             d["collector_local_sources"], d["collector_children"] = [], []
             d["collector_tree"] = copy.deepcopy(lc.get("collector_tree"))     # republished after the split
+            if "collector_root_xy" in lc:      # the up-link site: kept (shifted) in the piece that holds it, else dropped
+                if cut.ppiece(lc["collector_root_xy"]) == i:
+                    d["collector_root_xy"] = cut.sh(lc["collector_root_xy"], i)
+                else:
+                    d.pop("collector_root_xy", None)
             T[i]["clock"]["landing_contract"] = d
             L.append(d)
         self.band_clip = []
@@ -1571,7 +1623,7 @@ class TypeSplit:
         rs = t.get("reset")
         if rs is None:
             return
-        unk = set(rs) - {"tap_um", "sync_stages", "start_role", "local_taps_um", "obstacle_model"}
+        unk = set(rs) - {"tap_um", "sync_stages", "start_role", "local_taps_um", "obstacle_model", "wavefront_min_depth"}
         if unk:
             raise SplitError(f"{self.tn}: unhandled reset keys {sorted(unk)}")
         for i in range(self.n):
@@ -1843,6 +1895,9 @@ class Event:
         fam = spec["family"]
         if len(set(fam)) != len(fam):
             raise SplitError("family lists a type twice")
+        # OPUS-FIX-KV-PV-R5 11-21: base forwarded-clock pins name taps of the base plan AS WRITTEN; a core move changes the
+        # density tap grid (split 11: 'clk_t171 is not a tap of the base type' after moving ring cl_i_vport_E_N_vo_d2)
+        self.raw_premove = json.loads(json.dumps(self.raw))
         self._core_moves()
         lat = spec.get("lattice_um")
         if lat is None:
@@ -1912,6 +1967,7 @@ class Event:
 
             before = {nm for nm, p in points(t) if any(inside(p, box(h)) for h in cores.values())}
             mv = moves.get(tn, {})
+            moved_now = []
             for inst, org in mv.items():
                 h = cores.get(inst)
                 if h is None:
@@ -1940,19 +1996,69 @@ class Event:
                 b = box(h)
                 if b[0] < -EPS or b[1] < -EPS or b[2] > W + EPS or b[3] > H + EPS:
                     raise SplitError(f"core_moves: {tn} {inst} box {b} leaves the outline")
-                for o in cores.values():
-                    if o is not h:
-                        ob = box(o)
-                        if b[0] < ob[2] - EPS and ob[0] < b[2] - EPS and b[1] < ob[3] - EPS and ob[1] < b[3] - EPS:
-                            raise SplitError(f"core_moves: {tn} {inst} box overlaps core {o['inst']}")
+                moved_now.append(h)
                 ntap = 0
                 for tp in (t.get("clock") or {}).get("taps", []):
                     if tp["name"].startswith(inst + "."):
                         tp["xy"] = [rnd(tp["xy"][0] + d[0]), rnd(tp["xy"][1] + d[1])]
                         ntap += 1
+                # an internal-station row launched / captured at this core ('core <inst>.<pin>') moves its end with the core;
+                # its regs are re-spaced (same count = same cycles) on the x-then-y L path between the new ends
+                # (OPUS-FIX-KV-PV-R5 11-21: kv3_pv_v3 g1<->g2 swap left o_pvw__u_sN_j_y_valid rows at the old g1_j side,
+                # so the split cut an empty leg and the bind stopped in native stations)
+                nrow = 0
+                for r in t.get("internal_stations", []):
+                    ends = [k for k, side in (("from_um", "launch"), ("to_um", "capture"))
+                            if str(r.get(side, "")).startswith(f"core {inst}.")]
+                    if not ends:
+                        continue
+                    for k in ends:
+                        r[k] = [rnd(r[k][0] + d[0]), rnd(r[k][1] + d[1])]
+                    n = len(r.get("regs_um") or [])
+                    if n:
+                        # same count (= cycles), evenly spaced on the first legal polyline between the new ends: x-then-y,
+                        # y-then-x, then Z paths through a column / row every 21.6 um; no reg inside a hard-core box
+                        a0, b0 = r["from_um"], r["to_um"]
+                        cands = [[a0, [b0[0], a0[1]], b0], [a0, [a0[0], b0[1]], b0]]
+                        for kk in range(int(max(W, H) / 21.6) + 1):
+                            m = kk * 21.6
+                            if m <= W:
+                                cands.append([a0, [m, a0[1]], [m, b0[1]], b0])
+                            if m <= H:
+                                cands.append([a0, [a0[0], m], [b0[0], m], b0])
+                        regs = None
+                        for wp in sorted(cands, key=lambda w: sum(abs(u[0] - v[0]) + abs(u[1] - v[1]) for u, v in zip(w, w[1:]))):
+                            segs = list(zip(wp, wp[1:]))
+                            tot = sum(abs(u[0] - v[0]) + abs(u[1] - v[1]) for u, v in segs)
+                            got = []
+                            for j in range(1, n + 1):
+                                u = tot * j / (n + 1)
+                                for s0, s1 in segs:
+                                    ln = abs(s1[0] - s0[0]) + abs(s1[1] - s0[1])
+                                    if u <= ln + EPS:
+                                        fr = u / ln if ln else 0.0
+                                        got.append([rnd(s0[0] + (s1[0] - s0[0]) * fr), rnd(s0[1] + (s1[1] - s0[1]) * fr)])
+                                        break
+                                    u -= ln
+                            if len(got) == n and not any(inside(q, box(o)) for q in got for o in cores.values()):
+                                regs = got
+                                break
+                        if regs is None:
+                            raise SplitError(f"core_moves: {tn} {r['conn']}: no legal polyline for {n} regs after moving {inst}")
+                        r["regs_um"] = regs
+                    r["note"] = (r.get("note", "") + f" | {self.tag}: end(s) {ends} moved with core {inst} by {d}"
+                                 + (f", {n} regs re-spaced" if n else ""))
+                    nrow += 1
                 h["note"] = (h.get("note", "") + f" | {self.tag}: moved {old} -> {h['origin_um']} (no re-shape)")
-                rec.append(dict(type=tn, core=inst, old=old, new=h["origin_um"], shift=d, taps_moved=ntap,
+                rec.append(dict(type=tn, core=inst, old=old, new=h["origin_um"], shift=d, taps_moved=ntap, istation_rows_moved=nrow,
                                 pin_layers=sorted(layers)))
+            for h in moved_now:          # overlap on the FINAL positions (a column swap moves through occupied boxes)
+                b = box(h)
+                for o in cores.values():
+                    if o is not h:
+                        ob = box(o)
+                        if b[0] < ob[2] - EPS and ob[0] < b[2] - EPS and b[1] < ob[3] - EPS and ob[1] < b[3] - EPS:
+                            raise SplitError(f"core_moves: {tn} {h['inst']} box overlaps core {o['inst']}")
             slots = {f["name"]: f for f in t.get("ft_slots", [])}
             for sn, regs in (smoves.get(tn) or {}).items():
                 f = slots.get(sn)
@@ -3184,7 +3290,7 @@ class Event:
         import taps as TP
         TP._CACHE.clear()
         TP._clear_density_cache()
-        Pb = S.Plan(json.loads(json.dumps(self.raw)), self.plan_path)
+        Pb = S.Plan(json.loads(json.dumps(getattr(self, "raw_premove", self.raw))), self.plan_path)
         P = S.Plan(json.loads(json.dumps(self.out)), self.plan_path)
         self.rep["forwarded_clock_sources"] = self._remap_clock_sources(
             todo, lambda tn: S.tap_grid(Pb, tn), lambda tn: S.tap_grid(P, tn))
