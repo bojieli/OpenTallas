@@ -5,3 +5,4 @@
 - 2026-11-20 19:49 PST DONE [lanes] ot-push-main otpush-tolerant-swine-701254 on tolerant-swine: rc=0 after 27 s, ended 19:49:21, log /tmp/bsa1900_push2.log, cmd: ot-push-main 
 - 2026-11-20 20:12 PST DONE [lanes] ot-push-main otpush-tolerant-swine-912718 on tolerant-swine: rc=0 after 903 s, ended 20:12:52, log /tmp/bsa1900_push3.log, cmd: ot-push-main 
 - 2026-11-21 00:10 PST DONE [lanes] ot-push-main otpush-tolerant-swine-2289462 on tolerant-swine: rc=0 after 0 s, ended 00:10:57, log none, cmd: ot-push-main --help
+- 2026-11-21 05:16 PST DIED [lanes] ot-push-main otpush-outgoing-giraffe-859657 on outgoing-giraffe: rc=4 after 3 s, ended 13:16:45, log none, cmd: ot-push-main 
