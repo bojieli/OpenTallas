@@ -215,3 +215,8 @@
   KV (21): 4 FAILED-NO-RELAUNCH (1 new FAM-KV-HUB flow error) + 17 held/cancelled WAIT-BIND (1 new cancelled IOPC).
   HEAD none flagged (hd_lep0N running, LEP0N-R3). Context well below 330k.
 - 2026-11-21 01:54 PST CORRECTION 01:50: S81 new FAILED-NO-RELAUNCH rows are 4 (FAM-S81-SERDES 2, OPUS-FIX-S81-LEAF-R3 1 stale, S81-BKSEL-R5 1), not 5; totals S81 34, QC 6, KV 21 = 61.
+- 2026-11-21 03:39 PST 03:50 RESUME sweep (family mapping unchanged; Codex-started units already sit under family lanes, no extra owners needed): 495 rows, 72 flagged on spec flags (+84 rows carry the tool CBC-FALLBACK info flag only, S81 leaf/svc), 0 UNOWNED/DEAD-OWNER.
+  S81: 9 FAILED-NO-RELAUNCH (5 new: COL-R2 x3, SERDES, LEAF-R3 CBC) + 28 STALE held-for-plan-event, all old.
+  QC: 5 STALE held CB + 2 STALE cancelled + 1 STALE signed-count-pending (SLE-R4, new).
+  KV: 9 FAILED-NO-RELAUNCH (5 new: PDN-0006 IOPC, HGI-R3 x3, PV-R4) + 17 held/cancelled WAIT-BIND.
+  HEAD none flagged. Context well below 330k.
