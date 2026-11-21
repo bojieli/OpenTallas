@@ -7171,8 +7171,12 @@ def cmd_kit_rtl(a):
         [rebase(x) for x in rep.get("extra_lib", [])] + [rebase(x) for x in bindf_prefer(out, base)]
     E.validate_preferred_files(prefer)
     idx = E.module_index(ab0.get("rtl_roots", ["rtl"]), [rebase(x) for x in ab0.get("files", [])] + [rebase(x) for x in rep.get("extra_lib", [])], base)
+    # Generated bind cells are carried by the kit's bind_cells.sv, not by the
+    # source-tree leaf index. In particular ot_dp_lk appears in D26 lockup kits.
+    bind_cells = (out / "rtl" / "bind_cells.sv").read_text()
+    bound_primitives = set(re.findall(r"^\s*module\s+(\w+)", bind_cells, re.M))
     leafm = sorted(set(re.findall(r"^\s+(\w+)\s+(?:#\(.*?\)\s+)?u_\w+\s*\(", btxt, re.M)) -
-                   set(re.findall(r"^module\s+(\w+)", btxt, re.M)) -
+                   set(re.findall(r"^module\s+(\w+)", btxt, re.M)) - bound_primitives -
                    {"ot_dp_st", "ot_dp_dly", "ot_dp_dly_keep", "ot_dp_or", "ot_dp_and", "ot_dp_rsync", "ot_reset_sync", "ot_dp_rrelay", "ot_dp_rrelay_nl", "ot_dp_rgate", "ot_dp_rsync_s2", "ot_dp_rsync_s3", "ot_dp_lockq", "ot_dp_rtail"})
     if spb_geometry:
         leafm = [name for name in leafm if name != 'ot_hbm_spb0_regs']
