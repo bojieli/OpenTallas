@@ -138,3 +138,8 @@ All relaunch after the 405 reach override (lever 1) lands for D8i.
 ## 11-20 17:5x FABLE-CLOSURE-1730
 - Holds applied (cfb64614): 32 route_hold_items + hold_items patterns: 29 monitor-pin types (scratchpad mon29.txt), seqhost__*, lepe/lepw LP. Leaf t7 is now held.
 - J6 order: 1 source adoption (main proven source, hwin 8e20268b5d83 + seqhost reach row, RIP1 define, lepe rows 1-4); 2 monitor pin rows (S81-MONITOR-PIN-1745) + item 9; 3 col masters + latch; 4 leaf reset legs (tool) + SRAMREG + spread; slice C finish leg D=3. Re-pin tools to rt/current after a proof gen.
+
+## 11-20 18:xx J6 donors GREEN
+- epyc10 s81-die-r4-donors/<d>/j6_delta_<d>.json for vp_sr, rom, r1_frame, t31; f0_q green in the R3 gate_f0_q.
+- vp_sr open items: real sites for the +1 ho station on 79 types (placeholder co-sited); compiler cycle table must add the SR VP cycles (kv_leaf t1/t3/t4/t5 included).
+- r1_frame needs main 8e9cdd615c (schema sites) in the J6 tools.
