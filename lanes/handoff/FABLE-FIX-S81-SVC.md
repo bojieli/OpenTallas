@@ -3,6 +3,19 @@
 Owner of the S81 svc family (16 types: svc_hi rs t1-t6, pvso_entry t1-t2, svc_lo rs t1-t7, rs_w t1). Succeeds S81-SVC-R4 / FABLE-FIX-S81-SVC-R3 / -R2.
 Nothing pushed to main. Nothing signed, nothing exported.
 
+## STOOD DOWN 11-21 01:35 PST (context budget). Successor: assigned by COORD (none running). Read this block first.
+- Census NOT finished. All 3 jobs are alive on epyc9 (ot-run clients 2565092 hi rs t4, 3777274 lo rs t7, 2565094 pvso_entry t1). hi rs t4 and
+  pvso t1 have sat 40+ min in the synth abc step on ONE module, `ot_bind_native_4c805a5536bda0930879099e` = instance g_u_rsv_NN_u_u_att_land
+  (the u_att landing glue: 374 word-level cells, 428k wire bits). It may take hours or not end. If it has not moved by about 04:00: cancel
+  those units (ot-run --cancel <unit from <type>.otrun.log>), add `blackbox ot_bind_native_4c805a5536bda0930879099e` to the blackbox list in
+  mkcensus.py (count that module on its own from bind_r8c/rtl/native_glue/<name>.json, or with `synth -noabc`), relaunch census.sh.
+- Unattended poster epyc9 PID 541106 (census/cpost.sh, 16 h cap) posts a `CENSUS` line per type when its job ends (runs census/rd.py;
+  rd.py is untested on real output: check its S_att sum against `<type>.hier.txt`).
+- Posts of this lane to read: 11-20 23:32 (MPL closed, J5 flat bodies), 23:41 (H8 static geometry), 11-21 00:0x ACK, 01:2x SPLIT PROPOSAL for J7.
+- Unsplit-H8 proof chain epyc10 PID 618307 still waits; J6 gate candC3c ended BIND_RC=2 (stale dead-input defines) and candC3d exited 143, so
+  it will most likely end at its 12 h cap with one post. Harmless; kill the exact PID after a cmdline check if not wanted.
+- Not done: split plan rows (none written), split half build / sign-off / export, J7 family rows. Section B below is the design to start from.
+
 ## ORDER CHANGE (COORD 11-20 23:45, from FABLE-CLOSURE): split svc into types of 400k cells or fewer
 No outline growth, cuts at natural hierarchy boundaries, registered crossings (+cycles pre-approved). Census by hierarchy first; prove one
 split half to sign-off; family rows go to J7 (not J6).
