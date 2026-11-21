@@ -23,6 +23,8 @@ PLAN_DIE = {'s81': 's81', 's81_head': 's81_head', 'results': 's81_head', 'qwen_c
 # (pattern on class+reason, short label); first match wins
 FAIL_MAP = [
     (r'signed off but no flow release tag', 're-sign (flow tag)'),
+    # RSZ-CRASH-2200 11-20 (COORD): a crashed repair_timing (RSZ-0074, kit kept the unrepaired DB) is infra, never a timing result
+    (r'RSZ-0074|tt_setup_repair_fallback|OT_TT_SETUP_REPAIR (?:FAIL|FALLBACK)', 'INFRA[rsz_crash]'),
     # KW-FIX-32 11-07 (COORD 17:42 (4), KV-TYPES-3 ASK 2): rows stopped from outside (ruling, operator, infra exit 137)
     # are not design results; they were other flow error
     (r'infra-stopped|exit 137|exit-137|[Ss]topped by ruling|Operator stopped|controller stopped|stopped from outside|stopped_by', 'stopped (ruling/infra)'),

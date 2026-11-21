@@ -32,3 +32,10 @@ def test_default_cli_writes_nothing_and_rejects_unknown_flags(tmp_path):
     r = subprocess.run([sys.executable, "-I", os.path.join(os.path.dirname(os.path.abspath(__file__)), "failure_breakdown.py"), "--bogus"],
                        capture_output=True, text=True)
     assert r.returncode != 0 and "usage" in r.stderr
+
+
+def test_rsz0074_fallback_is_infra_not_timing():
+    r = {'status': 'FAILED', 'class': 'TIMING', 'reason': 'routed-not-signed: TT -50 ps; OT_TT_SETUP_REPAIR FAIL class=tt_setup_repair_fallback RSZ-0074'}
+    assert FB.label(r) == 'INFRA[rsz_crash]'
+    r['reason'] = 'routed-not-signed: TT -50 ps'
+    assert FB.label(r) == 'timing after route'
