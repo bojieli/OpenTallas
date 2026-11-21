@@ -440,9 +440,12 @@ def lec_stage(kit):
     if not result:
         return st(None, "no pre-place or routed LEC receipt")
     netlist = routed_netlist(kit)
-    named = result.get("netlist")
-    if (netlist is None or not isinstance(named, str) or not named
-            or Path(named).resolve() != netlist.resolve()
+    reported = result.get("netlist")
+    named = Path(reported) if isinstance(reported, str) and reported else None
+    if named is not None and named.is_relative_to("/work"):
+        # LEC runs with the exact kit mounted at /work inside the container.
+        named = kit / named.relative_to("/work")
+    if (netlist is None or named is None or named.resolve() != netlist.resolve()
             or proof.stat().st_mtime_ns < netlist.stat().st_mtime_ns):
         return st(False, "routed LEC receipt does not match the current final netlist")
     all_shown = (result.get("superset_vec") or {}).get("all_shown") is True

@@ -404,6 +404,9 @@ def test_routed_canary_lec_requires_exact_final_netlist_and_all_shown(tmp_path):
     result = {"verdict": "EQUIVALENT", "netlist": str(final), "superset_vec": {"all_shown": True}}
     proof.write_text(json.dumps(result))
     assert C.lec_stage(tmp_path)["verdict"] == "PASS"
+    result["netlist"] = str(Path("/work") / final.relative_to(tmp_path))
+    proof.write_text(json.dumps(result))
+    assert C.lec_stage(tmp_path)["verdict"] == "PASS"
     result["superset_vec"]["all_shown"] = False
     proof.write_text(json.dumps(result))
     assert C.lec_stage(tmp_path)["verdict"] == "FAIL"
