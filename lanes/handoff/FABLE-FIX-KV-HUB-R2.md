@@ -30,3 +30,9 @@ Work dir: epyc8 /srv/opentallas-scratch2/claude/fable-fix-kv-hub. Scripts of thi
    R8_STALE on B2: r8_refresh as kv-plan-r3/d27c/r8_refresh_d27d.sh on tree_b, rebind.
 2. D27d green: private hub_Eo kit (and hub_Wo only with the row above) with the wave env, unless the KV-PLAN-R5 apply relaunches them.
 3. Fix 9 (hub_C / sys_c window rows) still not started.
+
+## 07:4x COORD rulings
+- hroot kit b1 = variant B control only. Build it with rt/current tools/autopilot/kit_wave.py private-spec kv/qwen_kvsys kv3_hroot
+  (--plan, --tree tree_b, --bind-out, --src-manifest off, --host epyc8, --lane); gen_b.sh only as fallback. Diff config.mk vs the D26 wave kit.
+- Leaf-balance A/B (OT_CLK_LEAF_GRT_BAL=1, main 36f47f8037) SKIPPED: private-spec has no tool overlay and tree_b is on rt 4e46a7ec46c5.
+  Never hand-copy a tcl into a kit. FLOW-CLKGRT-1121 (clock-first GRT) shares kit b1; post the kit path to it after gen.
