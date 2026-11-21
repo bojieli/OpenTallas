@@ -724,12 +724,14 @@ def main() -> int:
     p.add_argument("--ecc", choices=("none", "secded"), default="none")
     p.add_argument("--instance-prefix", required=True)
     p.add_argument("--out", type=Path, required=True)
-    g = sub.add_parser("gds", help="the content mask of ONE image: its VIA1 programming overlay as GDS (rom_viamap_gds.py)")
+    g = sub.add_parser("gds", help="standalone VIA1 content mask or a full programmed macro GDS")
     g.add_argument("--macro", type=Path, required=True, help="the macro's datasheet JSON")
     g.add_argument("--viamap", type=Path, required=True, help="<INSTANCE>.viamap.hex")
     g.add_argument("--out", type=Path, required=True)
     g.add_argument("--dbu-per-um", type=float)
     g.add_argument("--via-grid", type=Path, help="explicit programming drain coordinates bound to the macro LEF")
+    g.add_argument("--base-gds", type=Path, help="unprogrammed base GDS with SHA-256 in --via-grid")
+    g.add_argument("--base-top", help="base GDS top structure name, default is the macro name")
     v = sub.add_parser("verify", help="per-content functional/LEC check: via maps against the weight image")
     v.add_argument("--manifest", type=Path, required=True, help="<prefix>.personalisation.json")
     v.add_argument("--image", type=Path, default=None, help="the content file (default: the manifest's)")
@@ -757,6 +759,13 @@ def main() -> int:
     if args.cmd == "gds":
         import rom_viamap_gds as VG
         m = VG.Macro(args.macro, via_grid=args.via_grid)
+        if args.base_top and not args.base_gds:
+            g.error("--base-top requires --base-gds")
+        if args.base_gds:
+            m.grid_dbu(args.dbu_per_um)
+            result = VG.program_macro(args.base_gds, args.base_top or m.name, m, args.viamap, args.out)
+            print(json.dumps(dict(result, gds=str(args.out), layer=[VG.V1_LAYER, VG.V1_DT])))
+            return 0
         name = VG.write_overlay(m, args.viamap, args.out, args.dbu_per_um)
         ok = VG.readback_overlay(m, args.out) == VG.read_viamap(args.viamap, m)       # the stream is read back before it is reported
         print(json.dumps({"structure": name, "gds": str(args.out), "layer": [VG.V1_LAYER, VG.V1_DT], "readback": "PASS" if ok else "FAIL",
