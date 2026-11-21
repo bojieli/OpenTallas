@@ -44,6 +44,18 @@ def test_launch_refused_when_in_flight_plus_new_exceeds_free_minus_150():
     assert KW.disk_cap_refusal(dict(c, disk_cap=False), st, "s", 20) == ""
 
 
+def test_enqueued_terminal_receipts_release_only_the_disk_budget():
+    c = cfg(20.0, gen_hosts=["h1"])
+    c["_otrun_status"]["h1"]["scratch_gb"] = 225
+    statuses = ("QUEUED", "WAIT-VISUAL", "RUNNING", "FAIL", "SIGNED", "CANCELLED", "WITHDRAWN", "TRIAL-SIGNED")
+    st = {"items": {q: {"status": "ENQUEUED", "q_status": q, "gen_host": "h1", "item_disk_gb": 20}
+                    for q in statuses}}
+    assert KW.inflight_disk_gb(st, "h1") == 60
+    assert len(st["items"]) == len(statuses)
+    assert KW.disk_cap_refusal(c, st, "s", 15) == ""
+    assert KW.disk_cap_refusal(c, st, "s", 16).startswith("disk cap:")
+
+
 def test_launch_safe_waits_without_a_row_and_logs_once(monkeypatch):
     logs, launched = [], []
 
@@ -82,8 +94,9 @@ def test_terminal_sweep_reaps_failed_and_cancelled_once(monkeypatch):
     st = {"items": {"1": row("f", "FAIL", "FLOW"), "2": row("c", "CANCELLED", "SUPERSEDED"), "3": row("i", "FAIL", "INFRA"),
                     "4": row("a1", "FAIL", "FLOW", att=1), "5": row("fresh", "FAIL", "FLOW", upd=now - 10),
                     "6": row("live", "FAIL", "FLOW"), "7": {"die": "s", "item": "live", "status": "RUNNING"},
-                    "8": row("old", "FAIL", "FLOW", upd=now - 90000)}}
-    assert KW.reclaim_terminal_sweep(AP, c, st, now=now) == 2
-    assert sorted(calls) == ["c", "f"]
+                    "8": row("old", "FAIL", "FLOW", upd=now - 90000),
+                    "9": row("expired", "FAIL", "FLOW", upd=now - 15 * 24 * 3600)}}
+    assert KW.reclaim_terminal_sweep(AP, c, st, now=now) == 3
+    assert sorted(calls) == ["c", "f", "old"]
     assert KW.reclaim_terminal_sweep(AP, c, st, now=now) == 0                 # each row once
     assert KW.reclaim_terminal_sweep(AP, dict(c, reclaim_failed=False), {"items": {"1": row("z", "FAIL", "FLOW")}}, now=now) == 0
