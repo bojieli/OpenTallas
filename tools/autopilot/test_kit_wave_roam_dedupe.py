@@ -41,7 +41,7 @@ def test_the_lock_is_per_snapshot_and_destination_and_on_the_source_host():
     ops = R.Ops(lambda h, c: (calls.append((h, c)), (1 if "test -f" in c and "flock" not in c else 0, ""))[1])
     ops.ensure_snap("epyc10", "epyc7", "/s/snaps/" + "b" * 40, lambda d: "true")
     host, cmd = calls[-1]
-    assert host == "epyc10" and "flock -w 7200" in cmd and ".push-epyc7.lock" in cmd and "rsync -a --exclude .verified" in cmd
+    assert host == "epyc10" and f"flock -w {R.SNAP_LOCK_WAIT_S}" in cmd and ".push-epyc7.lock" in cmd and "rsync -a --partial --exclude .verified" in cmd
 
 
 

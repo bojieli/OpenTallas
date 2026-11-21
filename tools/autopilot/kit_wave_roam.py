@@ -18,12 +18,20 @@ import time
 RAN_RE = re.compile(r"(?m)^ot-run: RAN on ([^\s:]+)")
 MAX_MB = 3000
 COPY_TIMEOUT_S = 2400
+SNAP_LOCK_WAIT_S = 600       # FLOW-OPS-1000: wait this long for another kit's copy of the same snapshot, then drop the host for this stage
+COPY_TRIES = 2               # rsync -a into the same dir resumes: a second try copies only what the first did not finish
 
 
 class Ops:
     """host access: size_mb(host, path), copy(src_host, dst_host, path) -> rc, text (path/ -> path/ with --delete)"""
     def __init__(self, ssh_run):
-        self.sh = ssh_run                              # sh(host, cmd) -> (rc, text)
+        self.sh = ssh_run                              # sh(host, cmd[, timeout]) -> (rc, text)
+
+    def _sh(self, host, cmd, timeout):
+        try:
+            return self.sh(host, cmd, timeout=timeout)
+        except TypeError:                              # a runner without a timeout argument (tests, older callers)
+            return self.sh(host, cmd)
 
     def size_mb(self, host, path):
         rc, txt = self.sh(host, f"du -sm {path} | cut -f1")
@@ -51,12 +59,17 @@ class Ops:
         if rc == 0:
             return 0, ""
         lock = f"{sd}.push-{dst}.lock"
+        # FLOW-OPS-1000 (COORD: S81 serdes__t14 a2 died AP_RC=1 when this copy epyc10 -> epyc7 outlived the 600 s ssh timeout of its caller):
+        # rsync --partial into the same dir, COPY_TRIES tries (each resumes the last), the caller's timeout covers lock wait + copy, and a copy that
+        # still fails returns rc != 0, which drops dst for this stage (Roamer.before); the attempt itself never ends on a copy.
+        rs = f"rsync -a --partial --exclude .verified --exclude .used -e '{self.SSH}' {sd}/ {dst}:{sd}/"
         body = (f"{self.SSH} {dst} test -f {sd}/.verified && exit 0; "
                 f"{self.SSH} {dst} mkdir -p {sd} && "
-                f"rsync -a --exclude .verified --exclude .used -e '{self.SSH}' {sd}/ {dst}:{sd}/ && "
+                f"{{ {' || '.join([rs] * COPY_TRIES)}; }} && "
                 f"{self.SSH} {dst} {shlex.quote(verify_cmd(sd))}")
         # COPY-TIMEOUT-1119: the copy runs under `timeout -k 30 COPY_TIMEOUT_S` (own process group: on expiry the bash, its rsync and its ssh are all killed), so a timed-out copy cannot keep running after its row gave up
-        return self.sh(src, f"flock -w 7200 {shlex.quote(lock)} timeout -k 30 {COPY_TIMEOUT_S} bash -c {shlex.quote(body)}")
+        return self._sh(src, f"flock -w {SNAP_LOCK_WAIT_S} {shlex.quote(lock)} timeout -k 30 {COPY_TIMEOUT_S} bash -c {shlex.quote(body)}",
+                        SNAP_LOCK_WAIT_S + COPY_TIMEOUT_S + 120)
 
 
 class RoamArgv(list):
@@ -87,13 +100,16 @@ class Roamer:
             return [self.G]
         ok = [self.G]
         for h in self.others:
-            rc, txt = self.ops.copy(self.G, h, self.W)
-            if rc == 0:                    # the stage may only be offered to a host that holds the kit's snapshots (no pinning)
-                for sd in self.snaps:
-                    rc, txt = self.ops.ensure_snap(self.G, h, sd, self.snap_verify)
-                    if rc:
-                        txt = f"snapshot {sd[-40:]}: {txt}"
-                        break
+            try:                           # FLOW-OPS-1000: any copy error (timeout, ssh) drops the host, never the attempt
+                rc, txt = self.ops.copy(self.G, h, self.W)
+                if rc == 0:                # the stage may only be offered to a host that holds the kit's snapshots (no pinning)
+                    for sd in self.snaps:
+                        rc, txt = self.ops.ensure_snap(self.G, h, sd, self.snap_verify)
+                        if rc:
+                            txt = f"snapshot {sd[-40:]}: {txt}"
+                            break
+            except Exception as e:         # noqa: BLE001
+                rc, txt = 125, f"{type(e).__name__}: {e}"
             if rc == 0:
                 ok.append(h)
             else:

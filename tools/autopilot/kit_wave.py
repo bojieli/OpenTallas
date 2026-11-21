@@ -8620,10 +8620,14 @@ def run_item(spec_path):
     K = f"{W}/gen/{T}"                                   # gen.py phys --out W/gen: kit W/gen/T, runner W/gen/run_kit.sh
     logs = []
 
-    def roam_sh(host, cmd):                              # WAVE-BALANCE-1: (rc, text) of one command on a fleet host
+    def roam_sh(host, cmd, timeout=600):                 # WAVE-BALANCE-1: (rc, text) of one command on a fleet host
         a = _ssh(host, hub)
-        p = subprocess.run((a + [cmd]) if a else ["bash", "-c", cmd], stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-                           text=True, timeout=600)
+        try:
+            p = subprocess.run((a + [cmd]) if a else ["bash", "-c", cmd], stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                               text=True, timeout=timeout)
+        except subprocess.TimeoutExpired as e:           # FLOW-OPS-1000 (S81 serdes__t14 a2 AP_RC=1): a slow copy drops that host, never ends the attempt
+            out = e.stdout.decode(errors="replace") if isinstance(e.stdout, bytes) else (e.stdout or "")
+            return 124, out + f"\nKW_ROAM timeout after {timeout} s on {host}"
         return p.returncode, p.stdout or ""
 
     roamer = ROAM.Roamer(ROAM.Ops(roam_sh), W, G, sp.get("roam_hosts") or [], hub_names=("localhost", hub),

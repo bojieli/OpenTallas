@@ -2068,6 +2068,7 @@ def main():
     die = "OT_HEAVY_PRIO=die" in os.environ.get("OT_RUN_PRIO_ENV", "")
     disk = disk if disk is not None else (DIE_DISK_GB if die else 20)
     say = lambda m: print(m, file=sys.stderr, flush=True)
+    eta_stage_tried = False
     while True:
         if not first and not pinned:    # v9 RE-PLACE: hosts added / held / released since this client started count now
             ch = reload_conf()
@@ -2085,6 +2086,22 @@ def main():
                 not_run("disk-ETA hold: " + "; ".join(f"{h}: {w}" for h, w in eta_held.items()))
             if first:
                 say("ot-run: HOLD: no new admission until the scratch fall rate allows it; re-placing every %d s" % REQUEUE_S)
+            # FLOW-OPS-1000 (FABLE-FLOW-1000 d: 4 lanes waited 20-60 min behind epyc10's disk-ETA hold while epyc7 had 429-529 GB free): after
+            # ETA_STAGE_AFTER_S the job's --dir (or its --stage paths) is staged to a host that admits it now, through the existing spill /
+            # AUTOSTAGE path (same path there, marked copy, outputs copied back).  The hold itself is unchanged: nothing is written to the full disk.
+            if d and not pick and ETA_STAGE_AFTER_S >= 0 and _el >= ETA_STAGE_AFTER_S and not eta_stage_tried:
+                eta_stage_tried = True
+                src = next((h for h in eta_held if h in raw), next(iter(eta_held)))
+                plan, why, permanent = spill_plan(src, d, cmd, mem, threads, die, disk, held, say, now=T_START + max(AUTOSTAGE_AFTER_S, 0) + _el)
+                if plan:
+                    say(f"ot-run: ETA-STAGE: {', '.join(eta_held)} on disk-ETA hold for {_el:.0f} s; staging to {plan[0]} ({plan[2]:.1f} GB)")
+                    log_signal(f"ot-run ETA-STAGE moved dir {d} from {src} to {plan[0]} after {_el:.0f} s disk-ETA hold")
+                    left = None if max_wait is None else max(1, int(max_wait - (time.time() - t0)))
+                    rc = spill_run(src, *plan, mem, cmd, d, left, say, disk=disk)
+                    if rc is not None:
+                        sys.exit(rc)
+                else:
+                    say(f"ot-run: ETA-STAGE not possible ({why[:200]}); the job keeps waiting for the hold to lift")
             time.sleep(REQUEUE_S if max_wait is None else max(1, min(REQUEUE_S, max_wait - _el)))
             first = False
             continue
@@ -2660,6 +2677,7 @@ def spill_dest_rows(h, roots, bases):
     return rows
 
 
+ETA_STAGE_AFTER_S = int(os.environ.get("OT_RUN_ETA_STAGE_AFTER_S", "600"))   # FLOW-OPS-1000: a disk-ETA held --dir job is staged elsewhere after this wait (-1 off)
 AUTOSTAGE_AFTER_S = int(os.environ.get("OT_RUN_AUTOSTAGE_AFTER_S", "300"))   # AUTOSTAGE-1630: a --dir job that cannot spill as a lane root stages its --dir after this wait
 AUTOSTAGE_WHY = ("OT_RUN_SPILL_MAX", "lane references keep growing", "lanes referenced", "absolute symlink out of the lane", "command uses ../")
 T_START = float(os.environ.get("OT_RUN_T0") or time.time())
