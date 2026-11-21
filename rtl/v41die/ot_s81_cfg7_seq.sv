@@ -1,4 +1,10 @@
 `timescale 1ns/1ps
+// FAM-S81-COL: the die masters ot_s81_cfg7_seq / ot_s81_cfg7_seq_bf take RD_EXTRA from +define+OT_S81_CFG7_RDX (plan manifest define) when the frame instantiates them without it
+`ifdef OT_S81_CFG7_RDX
+`define OT_S81_CFG7_RDX_V 1
+`else
+`define OT_S81_CFG7_RDX_V 0
+`endif
 // ---------------------------------------------------------------------------
 // ot_s81_cfg7_seq_local: per-pair configuration sequencer of the DS-ROM S81 die (CLAUDE S81-DIE, 2026-10-06).
 //
@@ -364,7 +370,7 @@ module ot_s81_cfg7_seq #(
     parameter integer PQ = 0,
     parameter integer LAYOUT = 0,
     parameter integer PINREG = 0,
-    parameter integer RD_EXTRA = 0,
+    parameter integer RD_EXTRA = `OT_S81_CFG7_RDX_V,
     parameter integer CW = 3 * NSEG + 1,
     parameter integer AW = $clog2(CW << PHW)
 ) (
@@ -390,7 +396,7 @@ module ot_s81_cfg7_seq_bf #(
     parameter integer NROM = 7,
     parameter integer LAYOUT = 0,
     parameter integer PINREG = 0,
-    parameter integer RD_EXTRA = 0
+    parameter integer RD_EXTRA = `OT_S81_CFG7_RDX_V
 ) (
     input  wire [0:0]          clk,
     input  wire [0:0]          rst_n,
