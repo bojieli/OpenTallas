@@ -41,3 +41,13 @@ Logs: intel2 ~/opus-fix-head-serdes-r4-logs/. R3 lane dirs stay as listed in FAB
   southern EPC feedthrough check.
 - Draft claude/head-start-reach-export-1121 (epyc10 R3 repo, uncommitted reach_rules.py + test): real r16 reach report
   running (base vs draft, rules 5) epyc10 .../opus-fix-head-serdes-r4/reach/{base,draft}.{log,json,tsv}.
+
+## 04:1x PST (COORD corrections: visual/access reviews never block; FLOW-GRT-RESID snap; plan owner now OPUS-FIX-HEAD-LEP0N-R3)
+- Chains on intel2 ~/opus-fix-head-serdes-r4-logs: chain_sdr2d.sh (pid 4140767) and chain_hoste.sh (pid 4140766) ot-wait the GRT
+  unit, then launch route (goal route) on the same kit; logs chain_*.log, sdr2d_route_e9.otrun.log, host_e_route.otrun.log.
+  Reviews (south coll_i0 access; east aisle / south EPC ft) run in parallel, never hold the route.
+- A/B sdr2e (epyc7 /srv/opentallas-scratch2/claude/opus-fix-head-serdes-r4/sdr2e/gen): cp -a of sdr2c kit from 4_cts, 5_* moved
+  to hd_serdes/pre-ab; PRE_GLOBAL_ROUTE override -> resnap_pre_grt.tcl (OT_RESERVED_SNAP 42fa174c180 lattice applied in the DB
+  to reserved_sites obstructions on M3-M9, then grt_pre_nonport.tcl). Goal route, ot-run log sdr2e_route_e7.otrun.log (queued on epyc7 memory).
+  Purpose: DRT-0255 proof only (sdr2c GRT TT was -103, not a sign-off candidate).
+- Rows sent to OPUS-FIX-HEAD-LEP0N-R3: START reset relay stages hd_st_k5 rr_t54 (1676 um) and hd_st_m rr_t8 (1261 um) to <= 405 um.
