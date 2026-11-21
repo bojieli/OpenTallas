@@ -231,6 +231,17 @@ def _relay_mid_fit(budgets, tn):
     return tn is not None and (tn in on or tn.split("__")[0] in on)
 
 
+def _relay_mid_fit_chain(budgets, tn):
+    """FAM-S81-COL-R3 11-21 (relay_mid.tcl FIT CHAIN: each stage's previous leg measured from the previous stage's actual seat,
+    so a chain reported fitted has every actual hop within the cap), opt-in, absent = unchanged kits: GEN env
+    OT_RELAY_MID_FIT_CHAIN=1 (kit-wave item_env), plan-wide budgets.relay_mid_fit_chain, or per type
+    budgets.relay_mid_fit_chain_types (types or unsplit base names)."""
+    if os.environ.get("OT_RELAY_MID_FIT_CHAIN") == "1" or budgets.get("relay_mid_fit_chain"):
+        return True
+    on = list(budgets.get("relay_mid_fit_chain_types") or [])
+    return tn is not None and (tn in on or tn.split("__")[0] in on)
+
+
 def _relay_mid_re(budgets, tn):
     """FABLE-FIX-KV-HG 11-18: the relay-station name regex of relay_mid.tcl (group = first capture), in order: GEN env
     OT_RELAY_MID_RE (kit-wave item_env: a pilot or a class batch needs no plan event), per type
@@ -7606,6 +7617,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # S81-TYPES-5 11-07 (opt-in plan budgets, absent = unchanged kits): relay clusters fit outside narrow
            # channels (relay_mid.tcl FIT) and macro gaps < gutter_block_um get placement blockages (gutter_block.tcl)
            *(["export OT_RELAY_MID_FIT = 1"] if macros and (_relay_mid_fit(P.budgets, tn) or _core_pin_relay(P.budgets, tn)) else []),
+           *(["export OT_RELAY_MID_FIT_CHAIN = 1"] if macros and _relay_mid_fit_chain(P.budgets, tn) else []),
            *(["export OT_FT_POLARITY_LOCAL = 1"] if _ft_polarity_local(P.budgets, tn) else []),
            *([f"export OT_RELAY_FALLBACK_MAX_FRAC = {_relay_fallback_max_frac(P.budgets, tn):g}"]
              if macros and _relay_mid_fit(P.budgets, tn) and _relay_fallback_max_frac(P.budgets, tn) is not None else []),

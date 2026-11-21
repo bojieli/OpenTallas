@@ -515,10 +515,13 @@ dict for {g inf} $rm_info {
     lappend rm_polybad [format "%s:%.0fum/%dhops" $g [expr {(abs($bx - $ax) + abs($by - $ay)) / $rm_dbu}] [expr {$n + 1}]]
   }
   set j 0
+  set rm_pc ""
   foreach c $chain {
     incr j
     dict set rm_station $c [list [expr {int($ax + ($bx - $ax) * ($rm_w0 + $j - 1) / $rm_W)}] [expr {int($ay + ($by - $ay) * ($rm_w0 + $j - 1) / $rm_W)}]]
     dict set rm_seg $c [list $ax $ay $bx $by $j $n $rm_w0 $rm_W]
+    if {$rm_pc ne ""} { dict set rm_prev $c $rm_pc }
+    set rm_pc $c
   }
 }
 # place: nearest point outside every halo (rings of 2.16 um), compact cluster, clusters at one spot stack upward
@@ -549,6 +552,15 @@ proc rm_fits {x y w h} {
   return 1
 }
 set rm_nfit 0; set rm_nold 0; set rm_nofit {}; set rm_ndepth 0; set rm_depth {}
+# FIT CHAIN (FAM-S81-COL-R3 11-21; opt-in OT_RELAY_MID_FIT_CHAIN=1, unset = byte-identical): FIT tested a stage against the
+# NOMINAL line points of its neighbours, while the neighbour itself may have taken an off-line spot, so a chain reported
+# fully fitted could seat actual hops over the cap (col_h10_r0_p1 J5: 7 of 59 fitted chains, 417.6 to 522.7 um, Codex
+# handoff/codex_fam_col_relay_mid_20261121.md).  With CHAIN the previous leg is measured from the previous stage's ACTUAL
+# seat (stages are visited in chain order), and the last leg ends on the fixed sink, so every leg of a fitted chain is
+# within OT_RELAY_MID_MAX_HOP_UM; a stage that cannot then fit is an honest NOFIT (depth / seats), never a silent long hop.
+set rm_fit_chain [expr {[info exists ::env(OT_RELAY_MID_FIT_CHAIN)] && $::env(OT_RELAY_MID_FIT_CHAIN) eq "1"}]
+set rm_seat [dict create]
+if {![info exists rm_prev]} { set rm_prev [dict create] }
 dict for {g st} $rm_station {
   lassign $st x y
   set rm_done 0
@@ -564,6 +576,9 @@ dict for {g st} $rm_station {
     # previous / next point of the chain on the line (source and sink for a single stage)
     set px [expr {$ax + ($bx - $ax) * $rm_fp}]; set py [expr {$ay + ($by - $ay) * $rm_fp}]
     set qx [expr {$ax + ($bx - $ax) * $rm_fq}]; set qy [expr {$ay + ($by - $ay) * $rm_fq}]
+    if {$rm_fit_chain && [dict exists $rm_prev $g] && [dict exists $rm_seat [dict get $rm_prev $g]]} {
+      lassign [dict get $rm_seat [dict get $rm_prev $g]] px py
+    }
     set f0 [expr {($rm_fw0 + $j - 1) / $rm_fW}]
     set len [expr {abs($bx - $ax) + abs($by - $ay)}]
     set steps [expr {max(1, int($len / $rm_step))}]
@@ -597,6 +612,7 @@ dict for {g st} $rm_station {
     if {$best ne {}} {
       lassign $best x y how
       set rm_done 1; incr rm_nfit
+      if {$rm_fit_chain} { dict set rm_seat $g [list $x [expr {$y + $fh / 2}]] }
       puts "OT_RELAY_MID_FIT $g $how [expr {$x / double($rm_dbu)}] [expr {$y / double($rm_dbu)}] footprint [expr {$fw / double($rm_dbu)}]x[expr {$fh / double($rm_dbu)}] um margin [expr {$rm_used / double($rm_dbu)}] um"
     } else {
       incr rm_nold
