@@ -1574,7 +1574,9 @@ foreach spec $cland_groups {
  if {!$coll && $tag eq "literal-local-reset" && [info exists ::env(OT_LAND_RESERVE)] && $::env(OT_LAND_RESERVE) eq "1"} { cland_avoid_rings $prefix {cland_put_grow $i $rect $tag literal-reset}; incr hit; continue }
  if {$coll} { cland_put_collector $i $rect $tag } elseif {$tag eq "local-reset"} { cland_avoid_rings $prefix {cland_put_grow $i $rect $tag local-reset} } elseif {[string match {reader-start:*} $tag] || [string match {writer-start:*} $tag] || [string match {writer-face:*} $tag]} { cland_avoid_rings $prefix {cland_put_start $i $rect $tag} } else { cland_put $i $rect $tag };incr hit
  }
- if {!$hit} { error "OT_CLAND no mapped cells found under $prefix" }
+ # FAM-QC-HCST: an origin-home group names u_cland_rstart_rx, whose Q is unread under landing_relay_start_copy + share_trunk,
+ # so synthesis may have removed the flop on binds made before its keep: nothing to home, not an error.
+ if {!$hit && $tag ne "origin-home"} { error "OT_CLAND no mapped cells found under $prefix" }
  } cland_err cland_opts]
  if {$cland_rc == 0 || $cland_rc == 4} continue
  if {$cland_rc == 1 && [string match {OT_CLAND no legal*} $cland_err]} {
