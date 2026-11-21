@@ -82,8 +82,20 @@ print("AP_JSON " + json.dumps(out))
 PRECHECK_RT = os.path.realpath(os.environ.get("OT_RT_CURRENT") or "/srv/opentallas-scratch2/claude/rt/current")   # FLOW-NOADV-R3: the sha dir at import, not a moving link
 
 
-def precheck_argv(obj, res, lane, now=None):
-    """the background precheck launch (ssh + systemd-run on the first gen host), or None when the candidate names no plan/tree/host"""
+def prev_event_of(live, die):
+    """ADOPT-CENSUS-1800: the previous event of the die (the live config BEFORE the switch) for EVENT-CENSUS"""
+    live = live or {}
+    if not live.get("plan"):
+        return {}
+    kr = ""
+    if live.get("work_root") and live.get("event"):
+        kr = str(Path(live["work_root"]) / die / str(live["event"]) / "items")
+    return dict(plan=live["plan"], src=live.get("src") or "", event=live.get("event") or "", kit_root=kr)
+
+
+def precheck_argv(obj, res, lane, now=None, prev=None, tools_sha=""):
+    """the background precheck launch (ssh + systemd-run on the first gen host), or None when the candidate names no plan/tree/host.
+    ADOPT-CENSUS-1800: the same unit runs ABS-CENSUS, ADOPT-DIFF and, given the previous event, EVENT-CENSUS"""
     m = obj.get("marker", obj)
     mc = m.get("config") or {}
     hosts = list(res.get("gen_hosts") or mc.get("gen_hosts") or m.get("hosts") or [])
@@ -96,7 +108,21 @@ def precheck_argv(obj, res, lane, now=None):
     return ["timeout", "60", "ssh", "-n", "-o", "ControlPath=none", hosts[0], "systemd-run", "--user", "--unit", unit, "--collect", "--quiet",
             "--nice=15", "python3", "-I", PRECHECK_RT + "/tools/precheck/precheck_hook.py", "--die", str(die), "--plan", plan,
             "--tools", str(Path(tree) / "tools/die_plan"), "--event", str(res.get("event")), "--owner", lane,
-            "--kit-hosts", ",".join(hosts)]
+            "--kit-hosts", ",".join(hosts)] + census_args(prev, plan, tools_sha)
+
+
+def census_args(prev, plan, tools_sha=""):
+    p = prev or {}
+    out = []
+    if p.get("plan") and p["plan"] != plan:
+        out += ["--prev-plan", p["plan"], "--prev-event", str(p.get("event") or "")]
+        if p.get("src"):
+            out += ["--prev-tools", str(Path(p["src"]) / "tools/die_plan")]
+        if p.get("kit_root"):
+            out += ["--prev-kits", p["kit_root"]]
+    if tools_sha:
+        out += ["--tools-sha", str(tools_sha)]
+    return out
 
 
 def candidate_bind_args(obj):
@@ -581,6 +607,8 @@ def cmd_apply(a, run=subprocess.run, apply_fn=None, commit_fn=None):
         if ok is False:
             raise SelectedBindVerificationError
 
+    die0 = a.die if getattr(a, "die", "") else (obj.get("die") or (obj.get("marker") or obj).get("die") or "")
+    prev = prev_event_of(live_die_cfg(C, die0), die0) if die0 else {}       # ADOPT-CENSUS-1800: read BEFORE the switch
     t0 = time.time()
     try:
         kwargs = {}
@@ -614,7 +642,8 @@ def cmd_apply(a, run=subprocess.run, apply_fn=None, commit_fn=None):
     res["advisory_gate"] = gate
     pc = "off"
     if not getattr(a, "no_precheck", False):
-        pa = precheck_argv(obj, res, a.lane)
+        live_new = live_die_cfg(C, res.get("applied") or die0) if commit_fn is None else {}
+        pa = precheck_argv(obj, res, a.lane, prev=prev, tools_sha=(live_new or {}).get("tools_sha") or "")
         if pa:
             try:
                 r = run(pa, capture_output=True, text=True, timeout=120)
