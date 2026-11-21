@@ -1,3 +1,76 @@
+# FABLE-CLOSURE-STRATEGY 2026-11-20 19:35 PST (lane FABLE-CLOSURE-1930, the 19:30 round): today's set fixes the placed wire classes; the wall behind it is the clock. After CTS on the last S81 event the worst related pair is a kit flop against a hard-core clock pin at 540 to 690 ps, every kit has negative hold, and S81 global placement gets one timing pass, on the start placement
+
+Reviewer: FABLE-CLOSURE-1930 (Fable). Read-only: nothing launched, cancelled, signalled or patched; no STA run, no DB opened. Six log / report scans (grep-level, nice 19) on epyc2, epyc7, epyc8, epyc9, epyc10, intel1.
+Gate: DRC 0, routed TT >= -42 ps at 833 ps, internal FF hold >= 0, LEC, bind + LATCHECK. Hop cap 300 um. No die or outline growth. Nothing below is a new gate or hold.
+Marking: **V** = I read the file or computed the number this round. **R** = reported by the named lane. **I** = inferred. **P** = proposal.
+Delta on 17:30, FABLE-PD-S81 / QC / KV-1840 and FABLE-FLOW-1800. Their levers and stop lists stand; I do not repeat them.
+Scripts and outputs: localhost scratchpad `r1930/` (`gpl.py`, `cts.py`, `skw.py`, `wp.py`, `*_<host>.tsv`). Newest kit per type and event, kits written in the last 3 days.
+
+## 0. Headline
+
+1. **Is today's set enough to pass place at -42? For the wire classes, mostly yes; it is not the limit (V).** No J5 kit is past CTS, so the only S81 clock evidence is the event before it (b05c98f7919, 89 kits past CTS). There: 12 of 89 at -42 or better at CTS, median -261; clock skew of the worst related pair median 576 ps, over 208 ps on 80 kits; hold negative on 90 of 90, median worst -321, median 5,391 hold ends (2.0 % of instances). Nothing in today's set (300 um stations, core-pin relays, reset legs, slew 320, legal sites) changes a clock arrival.
+2. **New (V): on S81 the worst setup-related clock pair after CTS is a kit flop launching into a hard-core clock pin on 65 of 90 kits, median 590 ps.** Example, five col families, same construct: `u_d15_u_r0_u_cf_rs_r15` (source latency 319 to 380) -> `u_u_r0_u_e2_u_w/clk` (printed target 221.41, the same constant on every kit), 540 to 591 ps. QC N46C: 34 of 78 kits, median 380; cb tiles 690 (`u_lk_nk_* DLATCH -> u_t02/ck`, `u_st.tap_d -> u_t30/ck`). CORE-PIN-RELAY-1930 seats more registers of exactly this kind.
+3. **New (V): S81 global placement runs one timing-driven pass, at iteration 0 or 1, on 63 of 76 J5 kits (73 of 76 get one pass only).** The kits end at overflow 0.2, so the second reweight pass (at 0.20) never fires. QC and KV end at 0.1 and get both passes.
+4. **The sparse exit is a HEAD-only lever (V).** J5: 0 of 76 kits exit above 0.21 (max 0.1999), though `config.mk` carries the key. HEAD NF15f: 18 of 21 exit at 0.25. S81 3fa87b84b18: 24 of 76. QC and KV: none.
+5. **Calibration (V): HEAD signed 25 of 26 from CTS-stage numbers of -129 setup / -350 hold / skew 173 (NF15f, 18 kits).** So CTS-stage hold of that size has closed by repair (I: I did not match each signed view to this event). The S81 gap to HEAD is the setup median (-261 against -129) and the skew (576 against 173).
+
+## 1. Checks of the dispatched items against the data
+
+| Dispatched item | What the scans say (V) | Verdict |
+|---|---|---|
+| 300 um hop census (9,807 / 510 / 1,032) | After CTS on the 405 plan the worst hold pair is a zero-logic stage pair with different tap source latency (-40 against 0): `u_ft_ft1_o_2 -> _3` -129, `u_d11_11_Y_r13_s1 -> r13` -186, `u_rrl_160 -> u_rrl_161` -156. Capture clock 150 to 190 ps after launch (I, from arrival and CRPR lines). | 300 um adds about a third more stage pairs of this form. The census needs a second column: stage pairs whose two flops take different taps. |
+| Core-pin relays (CORE-PIN-RELAY-1930) | headline 2 | Fixes the wire. The relay -> pin hop then has 833 - 540..590 = about 240 to 290 ps before clk-to-q and wire (I, if the lib arcs do not absorb the early pin). Must carry the clock rule of lever 1. |
+| Reset relays, legal sites | Worst hold path is relay -> relay or relay -> landing flop on 27 of 90 b05c kits (name classes, rough). Form L / M / N adds D up to 8 stages and split copies. | Every added stage is a zero-logic pair. Needs lever 2 before volume. |
+| serdes DPL-0033 | PD-S81-1840 addendum: 683 / 638 failing cells all in the ring outside the region box (R). J5 serdes GPL exits at 0.2, not sparse (V). | Agree. Not a sparse-exit or HPWL problem on S81. |
+| hd_serdes sparse exit | headline 4 | Do not carry `OT_GPL_SPARSE_OVERFLOW 0` to S81 / QC / KV as a fix; it changes nothing there. HEAD only. |
+| KV u_bin single-tap reset | PV-R3 19:12: kv3_pv_v8 legs over 300 um 10 -> 0 with 7 `inst_taps` rows (R). | Agree. Per-bind rows; the class fix in the bind is still open. |
+| QC cb macro crossing | cb rows also carry the 690 ps tile `ck` pair (headline 2); cbf_q11 a2 +66 setup, hold -71 after CTS (R). | Sites alone will not sign cb; the tile clock pair is second. |
+| PLACE-SETUP-STOP | Post-place WNS is ideal clock. Class L (-296) recovered to +45 / +66 at CTS (R); the core-pin pair goes the other way (appears only at CTS). | Keep it on buffer-count classes only. It cannot see lever 1. |
+| KV pv pad trunk | PV-R3 19:12: the 1,228 um hop is the lockup latch moved off its hop by a `dly_spread.tcl` older than f2e64e5d3b (R, measured on stage ODBs). | The fix is a tools re-pin for D27, not a plan row. |
+
+## 2. Levers, ranked by closure impact
+
+| # | Lever | Measured evidence | Root cause | Fix | Owner |
+|---|---|---|---|---|---|
+| 1 | **Clock of the registers at a hard-core pin** | S81 b05c: 65 of 90 kits, worst pair flop -> core clock pin, median 590 ps. S81 3fa87: 41 of 67 (29 + 12 core -> flop), median 664. QC N46C 37 of 78, median 380, cb tile 690. KV D25d 4 of 6, median 325. HEAD r3 `f_rx -> u_epc/clk` 447 (V). | The core pin is fed early (core contract), the register beside it sits a full kit tree later (S81 tap insertion p50 462 ps, R TAP-INSERTION). Launch late into an early capture costs setup; the return direction (core out -> register) costs hold by the same amount (I). | P: one rule for every core-pin register (`u_y_*`, `u_cf_rs_*`, `*_Y_r*`, pad `u_pd*`, lockup `u_lk_nk_*`): it takes the tap of the core clock pin it serves, as its own shallow sink group seated at the pin, with a latency target = the core pin arrival + the core's lib insertion. Where the pair still exceeds about 250 ps, the generator adds one relay stage on that pin (+1 cycle, pre-approved) instead of repair. First check, no build: per type, from one b05c `4_cts_final.rpt`, count setup ends on core pins and hold ends from core outputs; read whether the core lib setup arc is negative by the same 221 ps. | CORE-PIN-RELAY-1930 (rule + check); S81-J6-ASSEMBLY, QC-PLAN-R7 (cb tile `ck`), KV-PLAN-R2 for rows |
+| 2 | **Hold by construction on stage chains** | b05c: hold < 0 on 90 of 90 kits after CTS, median 5,391 ends, max 17,859; worst pairs are station -> station, relay -> relay, station -> output port. QC N46C 78 of 78, median 3,126 ends, -124. t39 lockup proof: cross-tap ends 14,281 -> 3,221 but port and same-tap ends rose (15:15, R). | Consecutive zero-logic stages take the nearest tap; taps differ by 150 to 190 ps. 300 um stations, reset stages and core-pin relays all add such pairs. No lane in the J6 list owns the lockup rows since LOCKUP-STATION-1130 went quiet. | P: (a) station chains: the generator gives the launch-side latch to each stage pair whose flops are on different taps, from the bind, and `tap_resolve` runs after it with the latch pins counted (15:15 lever 3). (b) reset chains: alternate-edge stages (every second relay on the falling edge). No cell added, hold margin half a period, reset release grows by half a cycle per stage (`rst_n` holds 64 clocks). Check setup per hop <= 416 - tap spread. (c) output ports: the seam latch of 15:15 item 4; 26 of 90 worst hold paths are station -> output port against the 450 ps virtual clock. | S81-DIE-R5 takes the lockup rows (new owner); RESET-RELAY-GEN-R2 for (b); S81-J6-ASSEMBLY carries both |
+| 3 | **S81 global placement timing passes** | headline 3. Example col_h9_r0_p6 (J5): pass at iteration 1, overflow 0.389, virtual repair inserts 42,484 buffers on the start placement; HPWL 9.36e6 -> 9.40e6 by the exit at iteration 356; no second pass. Movable utilisation median 0.43 %. | The reweight thresholds are 0.64 and 0.20. A sparse type starts under 0.64, and S81 stops at 0.2. So net weights come from a placement where the cells still overlap. | P, flow only: on S81 set the end overflow to 0.1 as QC / KV, or move the passes (for example 0.30 and 0.22). A/B on one col_h9_r0 kit at -29 to -55 (place only, about 10 min of GPL): compare `3_detailed_place.rpt` WNS and legs over 300 um. If it moves the col core-pin legs under -42, apply by default at gen. | FLOW-NOADV-R3; A/B by S81-DIE-R5 |
+| 4 | **S81 residual place classes with no row** | PD-S81-1840 section 3 (R): slice_station START scalar -237 to -885 (3 types), iq_C memory fan-out -1,432 (53 buffers), gunit core to core 1.4 mm -2,341, eng `u_h1` read -165, kv512_C -997 held. | Not in any J6 delta. | START: pipeline the one-bit broadcast as a reset form (same tool, form S). iq_C: registered read + bank-local copy. gunit: core-pin relay with D by distance (lever 1 rule applies). eng: registered read. | RESET-RELAY-GEN-R2 (START); S81-J6-ASSEMBLY (iq_C, eng); CORE-PIN-RELAY-1930 (gunit) |
+| 5 | **KV D27: gen on current tools, and one CTS proof per class** | KV has 1 CTS result on D25e3 and 6 on D25d (4 under -300, hold median -424, 10,729 ends) (V). pv long hop = stale `dly_spread` (R). 20 held rows have no CTS. | KV tools 431 commits behind (TOOLS-LAG, V); no clock evidence on the current plan at all. | Re-pin D27 tools to main (carries f2e64e5d3b, slew 320, form M / N). Before volume: one private kit each of pv, hub, hgi, sys_c to CTS, read with `skw.py` classes (core-pin pair, cross-tap stage pairs). | KV-PLAN-R2; OPUS-FIX-KV-PV-R3 (pv proof v8q) |
+| 6 | **QC cb: tile clock pair with the tile-link sites** | cb tile `ck` pairs 690 ps on cbn_q01__cld9ff4c40 and cbx_q10__cl94a12200_h (V); best cb rows +45 / +66 setup, hold -71 / -74 after CTS (R). QC N46C overall: 28 of 78 at -42 or better at CTS, skew median 237, p90 699 (V). | The tile `ck` is 425 to 451 ps early against the fabric flops; the p90 of QC skew is this class. | In V2 with the tile-link rows: `u_pc_nk` / `u_lk_nk` / `u_st.tap_d` registers on the tile's tap (lever 1 rule). cbf_q11 a2 and cbn_q01 a1 (hold -71 / -74) are left to finish. | QC-PLAN-R7 |
+| 7 | **GRT congestion on S81 col after CTS** | b05c: 8 kits have a final congestion table, 8 with overflow, median 32,085, max 62,624 (col_h10_r0_p1: 14.2 % usage, 54,921, GRT error) (V). Sample is the kits that wrote a table. | 11:20: hold repair adds 9 to 14 % cells on these families (R). Levers 1 and 2 remove the cause of most hold cells. | No GRT work before levers 1 and 2 are in a J6 col master; then read overflow on the two masters at iteration 10. | S81-DIE-R5 |
+| 8 | **HEAD hd_lep0N tr2** | tr2 gen on main, 0 default tap lines, sparse exit off (R). NF15f r8b: skew median 340, hd_host_e `-> u_epc/clk` 337 to 447 (V). | as 17:30 lever 7 | Read tr2 at CTS with the same two classes; hd_serdes sdr2c to sign-off. | OPUS-FIX-HEAD-LEP0N-R2, FABLE-FIX-HEAD-SERDES-R2 |
+
+## 3. Is the set enough for J6 / V2 / D27, by stage
+
+| Stage | S81 J6 | QC V2 | KV D27 |
+|---|---|---|---|
+| Place at -42 | Yes for col (the 7 col_h9_r0 types at -29 to -55, col_h10 after core-pin relays) and slice_station; no for the lever 4 families and bk_sel until L4 RTL lands (I from R) | Yes outside cb, sle_ctl, coll_core (PD-QC-1840) | Unknown: pv needs the tools re-pin first; sys_c after its rows; no placed D27 kit exists |
+| CTS setup | Missing: lever 1. Expect the b05c picture (median -261) on any type with core-pin registers | Missing on cb only (690 ps pair); the rest is near HEAD's signed level | No data (lever 5) |
+| Hold | Missing: lever 2. More stage pairs than b05c, which had 5,391 ends median | 3,126 ends median, -124: repairable, as HEAD shows | D25d 10,729 ends median: not repairable in 3 passes without lockup rows |
+| Congestion | Follows hold cells (lever 7) | not read | not read |
+
+## 4. Stop list (17:30 and the three 18:40 lists stand; plus)
+
+- No volume launch of J6 col types on core-pin relay rows whose registers take the nearest kit tap. One master to CTS first, read the flop -> core `clk` pair.
+- No more reset stages, splits or relay depth as plain same-edge flops on the nearest tap in volume; each is a new hold pair.
+- No reading of a place pass at -42 as "the type closes". On b05c, 12 of 89 held -42 at CTS.
+- No `OT_GPL_SPARSE_OVERFLOW 0` rollout on S81 / QC / KV; no HPWL comparison as a serdes DPL-0033 argument.
+- No hold-buffer pass as the plan for station -> station or relay -> relay ends, and no GRT tuning on col before the hold cell count falls.
+- No KV D27 pv plan row for the 1,228 um hop; no D27 volume before one CTS read per class.
+- No route release of QC cb rows on tile-link sites alone.
+- No claim from this section that the 540 to 690 ps pair is all real loss before the lib-arc check of lever 1 is read.
+
+## 5. Not checked
+
+- Whether the core lib constraint arcs already absorb the early pin (the 221.41 constant looks like a contract value). If they do, the real loss on lever 1 is the register's tree insertion only (320 to 380 ps), still over half of the hop budget. Endpoint counts on core pins were not read: the scan is the worst pair and worst path per kit.
+- The hold and setup path classes of section 1 come from name patterns on one worst path per kit; counts are rough. The hold skew section is not printed in these reports.
+- Lever 3: no A/B exists; that timing weights from the start placement cost slack is inferred. 26 QC kits print no timing pass (not sparse); not read why.
+- No J5, A4 or D25e3 kit past CTS was available (QC A4: 2, KV D25e3: 1), so every clock number is from the previous event or plan.
+- GRT: 8 kits only, selected by having a table. No DRC class was read this round.
+- J6 treeC, V2 and D27 composes were not opened. HEAD tr2 and sdr2c results not written when read.
+- Proofs pending at 19:20: lepe r4, leaf t60 CTS, hub_Eo form M, pv_v2 r1 (RESET-RELAY-GEN-R2); bk_sel pilot_r3b; lockup proof2 "after" line (no post since 15:15).
+
 # FABLE-CLOSURE-STRATEGY 2026-11-20 17:35 PST (lane FABLE-CLOSURE-1730, the 17:30 round): the held S81 rows at -600 to -1,015 are fixes that are on main but not in the J5 source tree, plus landing-monitor pins that J5 moved up to 2,900 um from their monitor
 
 Reviewer: FABLE-CLOSURE-1730 (Fable). Read-only: no job launched, cancelled or patched; no STA run, no DB opened.
