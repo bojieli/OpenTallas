@@ -119,3 +119,26 @@ def test_probe_prefers_fresh_copy_back_evidence(monkeypatch):
     assert A.probe_job(job)["probe_host"] == "epyc7"
     paths["epyc7"] = {"error": "host unavailable"}
     assert A.probe_job(job)["probe_host"] == "epyc9"
+
+
+
+def test_current_place_pass_overrides_copied_failure_marker(tmp_path):
+    stop = "FAIL_POSTPLACE PLACE-SETUP-STOP wns -94428.62 ps < -300 ps"
+    k = kit_with_marker(tmp_path, marker=stop)
+    runlog = k / "run_route.log"
+    runlog.write_text("OT_POSTPLACE_SETUP_STOP pass\n[ERROR DPL-0033] later legalizer failure\n")
+    c = probe(k, time.time() - 600)
+    assert "place_setup_stop" not in c
+    assert "FAIL_POSTCTS" not in c
+    assert A.classify(c, {"exit": 2})[:2] == ("CRASH", "flow-error")
+    (k / "FAIL_POSTCTS").write_text(stop + "\nFF structural hold gate: WNS -100 ps")
+    (k / "postcts_gate_tt.json").write_text('{"verdict": "FAIL"}')
+    (k / "postcts_gate_TT.log").write_text("post-CTS hold WNS -100 FAIL\n")
+    c = probe(k, time.time() - 600)
+    assert A.classify(c, {"exit": 4})[:2] == ("STRUCTURAL", "post-cts-hold")
+
+
+def test_new_place_receipt_overrides_marker_when_route_log_was_not_returned(tmp_path):
+    k = kit_with_marker(tmp_path, marker="FAIL_POSTPLACE PLACE-SETUP-STOP wns -94428.62 ps < -300 ps")
+    (k / "place_setup_stop.json").write_text('{"stopped": false, "wns": -197.86}')
+    assert "place_setup_stop" not in probe(k, time.time() - 600)

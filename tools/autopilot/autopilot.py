@@ -746,25 +746,44 @@ if so:
             s_.update(verdict="LOCAL_PASS_NEEDS_PARENT", local_verdict="SIGNED", release_qualified=False,
                       reasons=list(s_.get("reasons") or []) + [why[:400]])
 place_stop_re = re.compile(r"(?m)^FAIL_POSTPLACE PLACE-SETUP-STOP\b[^\n]*")
+place_markers = {}
 for f in ("FAIL_PREFLOOR", "FAIL_POSTPLACE", "FAIL_POSTCTS", "FAIL_route"):
     p = os.path.join(K, f)
     if os.path.isfile(p) and since <= os.path.getmtime(p) <= until:
         text = rd(p)
         out[f] = text[-400:].strip()
-        if f in ("FAIL_POSTPLACE", "FAIL_POSTCTS"):
-            stop = place_stop_re.search(text)
-            if stop:
-                out["place_setup_stop"] = stop.group()[:400]
+        if f in ("FAIL_POSTPLACE", "FAIL_POSTCTS") and (stop := place_stop_re.search(text)):
+            place_markers[f] = (text, os.path.getmtime(p))
+            out["place_setup_stop"] = stop.group()[:400]
 logs = sorted(glob.glob(os.path.join(K, "run", "logs", "asap7", "*", "base", "*.log")), key=os.path.getmtime)
 out["last_log"] = os.path.basename(logs[-1]) if logs else ""
 out["last_log_mtime"] = os.path.getmtime(logs[-1]) if logs else 0
 txt = "\n".join(rd(p, 200000) for p in logs if os.path.getmtime(p) >= since)
 runlog_path = os.path.join(K, "run_%s.log" % goal)
 runlog = rd(runlog_path, 400000)
-if not out.get("place_setup_stop") and os.path.isfile(runlog_path) and since <= os.path.getmtime(runlog_path) <= until:
-    stop = place_stop_re.search(runlog)
-    if stop:
-        out["place_setup_stop"] = stop.group()[:400]
+# Seal and copy-back can carry an older marker. The current route log or a
+# newer explicit placement receipt wins over that copied file.
+place_pass = False
+current = []
+if os.path.isfile(runlog_path) and since <= os.path.getmtime(runlog_path) <= until:
+    current = re.findall(r"(?m)^(?:FAIL_POSTPLACE PLACE-SETUP-STOP\b[^\n]*|OT_POSTPLACE_SETUP_STOP (?:pass|no measurement)\b[^\n]*)", runlog)
+    if current:
+        place_pass = current[-1].startswith("OT_POSTPLACE_SETUP_STOP ")
+        if not place_pass:
+            out["place_setup_stop"] = current[-1][:400]
+if place_markers and not place_pass and not current:
+    receipt = os.path.join(K, "place_setup_stop.json")
+    past_markers = max(stamp for _, stamp in place_markers.values())
+    if os.path.isfile(receipt) and max(since, past_markers) <= os.path.getmtime(receipt) <= until:
+        place_pass = (jl(receipt) or {}).get("stopped") is False
+if place_pass:
+    out.pop("place_setup_stop", None)
+    for f, (text, _) in place_markers.items():
+        remaining = place_stop_re.sub("", text).strip()
+        if remaining:
+            out[f] = remaining[-400:]
+        else:
+            out.pop(f, None)
 alltxt = txt + "\n" + runlog
 out["runlog_tail"] = runlog[-600:]
 # HOLD-FLOW-R 11-16 (closure lever 4, WARNING ONLY, never a verdict): the CTS hold-buffer count of this run against the kit's
