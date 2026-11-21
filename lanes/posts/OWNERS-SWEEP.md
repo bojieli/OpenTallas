@@ -248,3 +248,8 @@
   QC 16 STALE (5 held CB-R2, 6 cancelled, 3 signed-count-pending new); KV 1 cancelled WAIT-BIND.
   Lanes with no post <2h: FABLE-FIX-HEAD-LEP0N-R2 (no post file, owns hd_lep0N, running, not flagged), FAM-QC-HCST, OPUS-FIX-QC-SLE-R4.
 - 2026-11-21 07:51 PST CORRECTION 08:50: S81 cancelled-superseded rows are 37 (COL-H9R0 14, SVC-R6 12, COL-H10 7, LEAF-R5 2, SLICE-R4 1, BKSEL 1), S81 total 41; the FAILED-NO-RELAUNCH count is 4 in total (the QC HCST failed row is one of the 3 deliberate/QC ones, not an extra).
+- 2026-11-21 08:53 PST 0900 sweep: 488 rows (S81/HEAD/QC/KV, HBM skipped); tool flagged 156, 147 are signed-count-pending 4 / held-for-plan-event 92 / cancelled-superseded 51 (counts only); 9 real flags.
+  Real KV 5: FAILED-NO-RELAUNCH 3 (kv3_hg_v1, kv3_hgi_v8, kv3_hub_Wo), FAILED other flow error 2 just now (kv3_hg_v1p3, kv3_hg_v1p4); owners alive (FAIL-ROUTE-1115 posted 08:48).
+  Real QC 4: FAILED-NO-RELAUNCH 3 (cbn_q01__clab6e67f2 also STALE 5.2h, sle_ctl__cla4f6f12f, slw_st_a_v2__clf4365a62), CBC-FALLBACK running 1 (slw_st_a_v2__cl9f076a5c); owners alive.
+  S81 0 real flags, HEAD 0 rows, UNOWNED 0, DEAD-OWNER 0 (all S81 UNOWNED 74 / DEAD-OWNER 15 / STALE rows are held or cancelled). Successor lanes (11 listed) already in agent_ids.
+  Details lanes/OWNERS-SWEEP.tsv
