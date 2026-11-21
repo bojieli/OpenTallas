@@ -1,0 +1,5 @@
+# Candidate decoder with three transport stages in the shell
+
+The exact generated kit is epyc7:/srv/opentallas-scratch2/claude/fam-s81-serdes-r6-push/physical/ref_tile/s81fam_kp4_dec_front3. I viewed [the generated outline and pin ranges](s81-serdes-dec-front3-gen.png) from its `floorplan.json` and source spec. The northern data face and new nine-bit AM group occupy separate windows, with AM between valid and the clock pin. The southern output face stays clear. Inside the core, the nested dmem, dchn and cmem retain the prior diagonal shape and 5.4 µm halos. The dchn site is track-aligned in the generator but warns against the 43.2 µm ideal lattice, an inherited view constraint to check at floorplan/PG. Cell fill awaits synthesis.
+
+PASS-COND for private floorplan smoke on a non-draining host. Existing shell-to-decoder placement must be reconsidered with the actual emitted pin map, and runtime DPL, clocks, FF hold and TT setup remain open. Full decoder miter exercised 336 edge comparisons and 160 valid decoded words across two reset epochs with zero cycle drift. Small boundary miter independently detected both one-cycle-short mutants.
