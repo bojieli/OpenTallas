@@ -9,13 +9,12 @@ Family owners: OPUS-FIX-KV-PV-R4 (pv, D28), FABLE-FIX-KV-HGI (hg/hgi), FAM-KV-HU
    type, bind_gate, kit_rtl, gen, geometry_review, tools_sha 40-hex with rt/<sha12>/tools/die_plan/bind.py having bound_primitives).
    Chain (intel2 pids): portable bind 2533045 -> stage 2763292 -> pilots hgi_v8 2860124, hub_Wi 3103499 (rt 00f30808b21e).
    Then: intel2 ~/tmp/kvplanr4/apply_d26_after_materialization.sh -> APPLIED. Old link names: ot-delete epyc7 kw45/..._d26.linked_r4 after.
-2. D27c (19af3841ef74): the 7 types are strap-pad sites (OWNER 10-28, land_r8_strap_pads), types_conflicting 0 with --strap-pads, same as D26.
-   Real fault was kv_r8_pin pinning 39 slg<-kvs_emb members (replica_unequal 7). r8pin3 (epyc8 kv-plan-r4/d27c/pin3.py: der2 + pvw-only pin)
-   installed as tree r8_ev 04c53e682495; r4b bind then refused the 52 KV-102 pvw pins (R8_STALE 30 pvw) -> plain bind derivation
-   installed as r8_ev fd3ad69fe8f4; rebind d27c/bindgate_d27c_r4c (unit oth-ubuntu-892191-1795252140, G0 r4b GREEN on 041f43f27d63). + io_cor_v1 41 bank_taps (FAM-KV-IOPC br1, 0 cycles) -> plan 041f43f27d63.
-   Gates: G0 oth-ubuntu-3405347-1795248031 -> d27c/g0gate_d27c_r4b, bind oth-ubuntu-3405350-1795248031 -> d27c/bindgate_d27c_r4b (logs intel2 ~/tmp/kvplanr4). Watch for PARAM_REGEN AHUB ap0 [3,5] + EMIT reset relay errors (seen on D27b6 old tools).
+2. D27d (supersedes D27c): D27c minus pv rows (pv column-law extras broke: pv_col_pads_ffkpv extras-only members stale, needs pvx_regen
+   = pv family) + io_cor_v1 bank_taps. Compose epyc8 kv-plan-r4/d27d/compose_d27d.sh (rows copy with pv skips), tree = kv-plan-r3/d27c/tree
+   (D27c plan saved kv-plan-r4/d27c/plan_c.041f43f27d63.json). Chain intel2 ~/tmp/kvplanr4/d27d_chain.sh (out d27d_chain.out) -> gates
+   d27c/g0gate_d27d + bindgate_d27d. r8 start 432f40a0b542. If R8_STALE: rt/current tools/die_plan/r8_refresh.py (chmod u+w inputs dir, back a-w).
 3. Proofs: D27b6 bind = R8_STALE 30 + PARAM_REGEN 1 + EMIT 14 (old tools) -> not usable. Launch the R3 section-3 proof set from the D27c R4 bind when green.
-4. D28 pv split after D27 applies; hub_C split may join from FAM-KV-HUB. Reset: RESET-RELAY-GEN-R3 re-emits pv bank_taps two-pass on the
+4. D28 pv split after D27 applies, carrying the D27c pv rows r0/r7/r13 + pv r2/r3/r6 + pvx_regen column law; hub_C split may join from FAM-KV-HUB. Reset: RESET-RELAY-GEN-R3 re-emits pv bank_taps two-pass on the
    D28 split plan (pass2 on epyc10 rrgen-r3/kv3 is D26-based, not foldable); hub_Eo/Wo/sys_c pass2 to be re-run on D27c for D28.
 5. io_cor_v1 reset-tap rows: folded into D27c (no longer waits on RESET-RELAY-GEN-R3). Other 14 RESET-R3 types still wait.
 
