@@ -14,6 +14,11 @@ last line: {"end": true, "files": n, "bytes": total, "hashed": n, "truncated": b
 Hashing stops after OT_DELETE_MANIFEST_HASH_S seconds (default 900) per tree; the rest is still listed with size.
 This is a record only: it never refuses, never raises, and a failure to write it never changes what is deleted (owner: no new restrictive rule).
 OT_DELETE_MANIFEST_DIR overrides the directory; without it, trees outside /srv are not recorded (test temp dirs).
+INPUT TARBALL (FLOW-OPS-1000, FABLE-FLOW-1000 h): the BYTES of the small generated inputs go with the record, so a lane file a later plan step reads
+(ring_declared.json) can be restored: every regular file of an input kind (INPUT_EXT: json tsv tcl sdc py sv v vh md sh mk txt yaml cfg csv) under
+OT_DELETE_INPUT_MAX_MB (default 5) is packed into <manifest stem>.inputs.tar.gz beside the manifest, up to OT_DELETE_INPUT_TOTAL_MB (200) per tree and
+inside the hash budget; the end line names it ("inputs_tar", "inputs_n").  Tool outputs (odb def spef gds log) are never packed.  Restore:
+tar -xzf <tarball> -C <tree>.  A record only, like the manifest: a failure to pack never changes what is deleted.
 CLI: delete_manifest.py find PATH_SUBSTRING [DAYS]   -> manifest lines naming it (to find which deleted tree held a file)
 """
 import gzip
@@ -26,6 +31,7 @@ import sys
 import time
 
 SCHEMA = "opentallas.delete_manifest/1"
+INPUT_EXT = {".json", ".tsv", ".tcl", ".sdc", ".py", ".sv", ".v", ".vh", ".md", ".sh", ".mk", ".txt", ".yaml", ".yml", ".cfg", ".csv"}
 
 
 def root_dir():
@@ -57,6 +63,9 @@ def write(tree, tool, sha_max_mb=None, budget_s=None, exclude=()):
         t0 = time.time()
         n = total = hashed = 0
         truncated = False
+        in_max = int(float(os.environ.get("OT_DELETE_INPUT_MAX_MB", "5")) * 2**20)
+        in_total = int(float(os.environ.get("OT_DELETE_INPUT_TOTAL_MB", "200")) * 2**20)
+        small, small_b = [], 0
         with gzip.open(tmp, "wt") as fh:
             fh.write(json.dumps({"schema": SCHEMA, "tree": tree, "tool": tool, "host": socket.gethostname().split(".")[0],
                                  "lane": os.environ.get("OT_LANE", ""), "time": time.strftime("%F %T %Z"),
@@ -86,6 +95,10 @@ def write(tree, tool, sha_max_mb=None, budget_s=None, exclude=()):
                     n += 1
                     total += st.st_size
                     rec = {"p": rel, "size": st.st_size}
+                    if (os.path.splitext(x)[1].lower() in INPUT_EXT and st.st_size <= in_max and small_b + st.st_size <= in_total
+                            and __import__("stat").S_ISREG(st.st_mode)):
+                        small.append((p, rel))
+                        small_b += st.st_size
                     if st.st_size >= sha_max:
                         rec.update(sha256=None, why="large")
                     elif time.time() - t0 > budget:
@@ -98,12 +111,43 @@ def write(tree, tool, sha_max_mb=None, budget_s=None, exclude=()):
                         except OSError:
                             rec.update(sha256=None, why="unreadable")
                     fh.write(json.dumps(rec) + "\n")
-            fh.write(json.dumps({"end": True, "files": n, "bytes": total, "hashed": hashed, "truncated": truncated}) + "\n")
+            tar_path, tar_n = _pack_inputs(out, small, t0, budget)
+            fh.write(json.dumps({"end": True, "files": n, "bytes": total, "hashed": hashed, "truncated": truncated,
+                                 "inputs_tar": tar_path, "inputs_n": tar_n}) + "\n")
         os.replace(tmp, out)
         return out
     except Exception as e:                       # noqa: BLE001 - a record, never a stop
         print(f"delete_manifest: not written for {tree}: {type(e).__name__}: {e}", file=sys.stderr)
         return None
+
+
+def _pack_inputs(out, small, t0, budget):
+    """-> (tarball path or None, files packed): the small input files of the tree, inside what is left of the hash budget (+120 s)"""
+    if not small:
+        return None, 0
+    import tarfile
+    dst = out[:-len(".jsonl.gz")] + ".inputs.tar.gz"
+    tmp = dst + f".tmp{os.getpid()}"
+    k = 0
+    try:
+        with tarfile.open(tmp, "w:gz") as tf:
+            for p, rel in small:
+                if time.time() - t0 > budget + 120:
+                    break
+                try:
+                    tf.add(p, arcname=rel, recursive=False)
+                    k += 1
+                except OSError:
+                    continue
+        os.replace(tmp, dst)
+        return dst, k
+    except Exception as e:                       # noqa: BLE001 - a record, never a stop
+        print(f"delete_manifest: inputs not packed: {type(e).__name__}: {e}", file=sys.stderr)
+        try:
+            os.unlink(tmp)
+        except OSError:
+            pass
+        return None, 0
 
 
 def find(sub, days=30):
