@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """ot-wait <unit|name|pid> [--timeout S] [--poll S] [--cmdline TEXT] [--dir DIR]     (WAITER-STD-1600, 2026-11-20)
+ot-wait --kit KITDIR --stage floorplan|place|cts|grt|route|finish [--host H] [--also NAME] [--timeout S] [--poll S]     (KIT-STAGE mode, FLOW-PROC-B 11-21)
 Wait for an ot-run job or an ot-push-main push, then print its status and exit with it.  Never `pgrep -f`: a pgrep waiter matches itself.
 
   <name>   a status file name (otrun-<host>-<pid>, otpush-<host>-<pid>) in $OT_STATUS_DIR (default ~/.local/state/ot-status)
@@ -11,11 +12,19 @@ Exit status: the job's own rc when a status file has it; 0 is returned only for 
   66  nothing found for the target (never a silent success)       2  usage / refused (--cmdline mismatch)
   70  a process ended and left no status (rc unknown)             71  the client died without writing a status (killed; treated as DIED)
   124 --timeout reached, job still running
+KIT-STAGE mode: waits on the kit's stage RESULT, never on a log line.  A grep loop on run_place.log hangs forever on a route-goal kit (run_kit.sh GOAL=route writes
+  run_route.log) and misses a rewritten log.  The stage is reached when its ODB exists in KITDIR/run/results/asap7/*/base/ (floorplan 2_floorplan.odb, place 3_place.odb,
+  cts 4_cts.odb, grt 5_1_grt.odb, route 5_route.odb or 5_2_route.odb, finish 6_final.odb); the kit failed when KITDIR/FAIL_* exists first (FAIL_PREFLOOR, FAIL_POSTCTS, FAIL_route ...).
+  Output: DONE rc=0 kit=... stage=... marker=...  |  DIED rc=1 kit=... stage=... fail=FAIL_xxx: <first line>.  --host H checks KITDIR on H over ssh (default: this host).
+  --also NAME (an otrun-<host>-<pid> record or oth- unit on THIS host): if that ot-run ended (done, or its client died) and the stage ODB is absent, the wait ends
+  DIED with the job's rc, so a killed or finished-early job never leaves a waiter hanging.  Exit: 0 reached, 1 failed (FAIL_*), the job's rc / 71 for --also, 124 timeout.
+  Example:  ot-wait --kit /srv/opentallas-scratch2/claude/x/kit --host epyc10 --stage place --also oth-ubuntu-123-456 --timeout 28800 > place.wait &
 Usage in a lane:  ot-wait otrun-$(hostname)-$PID > $LANE/wait.out &        or    ot-run ... & ; ot-wait $!
 --cmdline TEXT: refuse unless the target pid's /proc cmdline contains TEXT (guards against waiting on a pid someone else now owns)."""
 import argparse
 import json
 import os
+import subprocess
 import sys
 import time
 
@@ -123,14 +132,96 @@ def wait_pid(pid, a):
         time.sleep(a.poll)
 
 
+STAGE_ODB = {"floorplan": ["2_floorplan.odb"], "place": ["3_place.odb"], "cts": ["4_cts.odb"], "grt": ["5_1_grt.odb"],
+             "route": ["5_route.odb", "5_2_route.odb"], "finish": ["6_final.odb"]}
+
+
+def kit_probe(kit, stage, host=""):
+    """-> ("done", marker) | ("fail", "FAIL_x: first line") | ("wait", "") | ("error", why).  Stage ODB wins over a FAIL_ file."""
+    import glob
+    import shlex
+    if host and host != S.host():
+        pats = " ".join(shlex.quote(f"{kit}/run/results/asap7/*/base/{o}") for o in STAGE_ODB[stage])
+        sh = (f'for f in {pats}; do if ls $f >/dev/null 2>&1; then echo "done $(ls $f | head -1)"; exit 0; fi; done; '
+              f'for f in {shlex.quote(kit)}/FAIL_*; do [ -f "$f" ] && {{ echo "fail $(basename $f): $(head -c 200 $f | head -1)"; exit 0; }}; done; '
+              f'[ -d {shlex.quote(kit)} ] && echo wait || echo error kit dir missing')
+        try:
+            r = subprocess.run(["ssh", "-o", "BatchMode=yes", "-o", "ControlPath=none", "-o", "ConnectTimeout=15", host, sh],
+                               capture_output=True, text=True, timeout=60)
+        except (OSError, subprocess.TimeoutExpired) as e:
+            return ("wait", f"ssh {host}: {e}")             # a flaky link is not a verdict
+        if r.returncode != 0 and not r.stdout.strip():
+            return ("wait", f"ssh {host} rc={r.returncode}")
+        w, _, rest = r.stdout.strip().partition(" ")
+        return (w if w in ("done", "fail", "wait", "error") else "wait", rest)
+    if not os.path.isdir(kit):
+        return ("error", "kit dir missing")
+    for o in STAGE_ODB[stage]:
+        for f in sorted(glob.glob(os.path.join(kit, "run/results/asap7/*/base", o))):
+            return ("done", f)
+    for f in sorted(glob.glob(os.path.join(kit, "FAIL_*"))):
+        try:
+            first = open(f, errors="replace").readline().strip()[:200]
+        except OSError:
+            first = ""
+        return ("fail", f"{os.path.basename(f)}: {first}")
+    return ("wait", "")
+
+
+def wait_kit(a):
+    if a.stage not in STAGE_ODB:
+        print(f"ot-wait: --stage must be one of {', '.join(STAGE_ODB)}", file=sys.stderr)
+        return 2
+    kit = a.kit.rstrip("/")
+    t0 = time.time()
+    while True:
+        st, info = kit_probe(kit, a.stage, a.host)
+        if st == "done":
+            print(f"DONE rc=0 kit={kit} stage={a.stage} marker={info}", flush=True)
+            return 0
+        if st == "fail":
+            print(f"DIED rc=1 kit={kit} stage={a.stage} fail={info}", flush=True)
+            return 1
+        if st == "error":
+            print(f"ot-wait: {info}: {kit} on {a.host or S.host()}; refusing to guess", file=sys.stderr)
+            return 66
+        if a.also:
+            rec, path = find(a.also, a.dir)
+            if rec is None:
+                print(f"ot-wait: --also {a.also!r}: no status record on this host", file=sys.stderr)
+                return 66
+            if rec.get("state") == "done" or not alive(rec):
+                # the ODB may land just before the client exits: look once more before calling it
+                st, info = kit_probe(kit, a.stage, a.host)
+                if st == "done":
+                    print(f"DONE rc=0 kit={kit} stage={a.stage} marker={info}", flush=True)
+                    return 0
+                rc = rec.get("rc")
+                print(f"DIED rc={rc if rc is not None else 'unknown'} kit={kit} stage={a.stage} unit={rec.get('unit') or rec.get('name')} "
+                      f"(job ended, no {a.stage} result{'; ' + info if info else ''})", flush=True)
+                return rc if isinstance(rc, int) and rc != 0 else 71
+        if a.timeout and time.time() - t0 >= a.timeout:
+            print(f"ot-wait: timeout after {a.timeout} s, kit {kit} has not reached {a.stage}", flush=True)
+            return 124
+        time.sleep(a.poll)
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("target")
+    ap.add_argument("target", nargs="?", default="")
+    ap.add_argument("--kit", default="")
+    ap.add_argument("--stage", default="")
+    ap.add_argument("--host", default="")
+    ap.add_argument("--also", default="")
     ap.add_argument("--timeout", type=float, default=0)
     ap.add_argument("--poll", type=float, default=5)
     ap.add_argument("--cmdline", default="")
     ap.add_argument("--dir", default="")
     a = ap.parse_args(argv)
+    if a.kit:
+        return wait_kit(a)
+    if not a.target:
+        ap.error("a target (unit|name|pid) or --kit KITDIR --stage STAGE is required")
     if a.target.isdigit():
         rec, _ = find(a.target, a.dir)
         cur = S.pid_start(int(a.target))

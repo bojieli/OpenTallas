@@ -191,3 +191,36 @@ def test_command_not_found_127_is_carried_not_zero(tmp_path):
     rec_file(tmp_path, "otrun-h-127", rc=127, unit="oth-nf")
     p = wait(tmp_path, "otrun-h-127")
     assert p.returncode == 127 and p.stdout.startswith("DIED rc=127")
+
+
+def kit_wait(tmp, *args, **kw):
+    return wait(tmp, "--kit", *args, **kw)
+
+
+def test_kit_stage_done_by_odb_not_log(tmp_path):
+    kit = tmp_path / "kit"
+    (kit / "run/results/asap7/dp_x/base").mkdir(parents=True)
+    (kit / "run_route.log").write_text("route running\n")          # a route-goal kit: no run_place.log at all
+    (kit / "run/results/asap7/dp_x/base/3_place.odb").write_text("odb")
+    p = kit_wait(tmp_path, str(kit), "--stage", "place")
+    assert p.returncode == 0 and p.stdout.startswith("DONE rc=0 kit=") and "3_place.odb" in p.stdout
+    p = kit_wait(tmp_path, str(kit), "--stage", "cts", "--timeout", "1", "--poll", "0.2")
+    assert p.returncode == 124
+
+
+def test_kit_stage_fail_marker_and_missing_dir(tmp_path):
+    kit = tmp_path / "kit"
+    kit.mkdir()
+    (kit / "FAIL_POSTCTS").write_text("FAIL_POSTCTS FF structural hold gate: x\n")
+    p = kit_wait(tmp_path, str(kit), "--stage", "route")
+    assert p.returncode == 1 and "DIED rc=1" in p.stdout and "FAIL_POSTCTS" in p.stdout
+    p = kit_wait(tmp_path, str(tmp_path / "nope"), "--stage", "place")
+    assert p.returncode == 66
+
+
+def test_kit_stage_also_ended_job_is_died(tmp_path):
+    kit = tmp_path / "kit"
+    kit.mkdir()
+    rec_file(tmp_path, "otrun-h-9", rc=143, unit="oth-zz")
+    p = kit_wait(tmp_path, str(kit), "--stage", "place", "--also", "otrun-h-9")
+    assert p.returncode == 143 and "DIED rc=143" in p.stdout and "no place result" in p.stdout
