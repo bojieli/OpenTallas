@@ -2,7 +2,9 @@
 """ot-delete TREE... : the one way to delete a whole tree under /srv/opentallas-scratch* (FLEET-OPS-R, COORD 11-17).
 Wraps ot_delete_guard.refuse(): a tree the guard refuses (protected by kit_wave.json / markers / receipts, a live process under it, a symlink,
 a partial delete inside a source tree) is SKIPPED, not an error (exit 0, 'SKIP <path>: <reason>').  An allowed tree is removed whole
-(directories made writable first, never files: a hardlinked file shares its inode with the base tree) and df before/after is printed.  --dry lists what would go.  Needs the guard list
+(directories made writable first, never files: a hardlinked file shares its inode with the base tree) and df before/after is printed.
+A single regular FILE goes the same way (FLOW-OPS-1000, COORD 11-21: lanes stranded stray files in shared dirs): same guard, same manifest,
+then unlink.  A symlink, socket, fifo or device is SKIPPED.  --dry lists what would go.  Needs the guard list
 fleet-ops-r/protected_struct.txt or OT_GUARD_LIST (fail-closed: no list = every source tree is skipped)."""
 import importlib.util, os, shutil, subprocess, sys
 
@@ -55,6 +57,8 @@ def main(argv, guard=None, rmtree=None):
         t = os.path.abspath(t)
         if not os.path.lexists(t):
             print("SKIP %s: does not exist" % t); continue
+        if not os.path.islink(t) and not os.path.isdir(t) and not os.path.isfile(t):
+            print("SKIP %s: not a directory or regular file" % t); continue
         why = g.refuse(t, protected) if protected is not None else g.refuse(t)
         if why:
             print("SKIP %s: %s" % (t, why)); continue
@@ -65,7 +69,10 @@ def main(argv, guard=None, rmtree=None):
         if mf:
             print("MANIFEST %s -> %s" % (t, mf))
         try:
-            rm(t)
+            if os.path.isfile(t) and not os.path.islink(t):
+                os.unlink(t)                  # a single regular file: the guard and the manifest above apply as for a tree
+            else:
+                rm(t)
         except OSError as e:
             print("FAILED %s: %s" % (t, e)); rc = 1; continue
         print("DELETED %s  df before %.1f GB after %.1f GB" % (t, before / 2**30, avail(os.path.dirname(t)) / 2**30))

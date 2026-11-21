@@ -46,6 +46,18 @@ class Cap(unittest.TestCase):
         rc, out = run([a], FakeGuard({}), boom)
         self.assertEqual(rc, 1); self.assertIn("FAILED", out)
 
+    def test_single_regular_file_same_guard(self):
+        """FLOW-OPS-1000: a lane's stray file in a shared dir goes through the guard + manifest, then unlink; a refused one stays"""
+        d = tempfile.mkdtemp(); f = os.path.join(d, "stray.json"); k = os.path.join(d, "keep.json")
+        for p in (f, k):
+            open(p, "w").write("{}")
+        rc, out = run([f, k], FakeGuard({"keep.json": "protected (kit_wave.json)"}), lambda t: self.fail("rmtree on a file"))
+        self.assertEqual(rc, 0); self.assertFalse(os.path.exists(f)); self.assertTrue(os.path.exists(k))
+        self.assertIn("DELETED %s" % f, out); self.assertIn("SKIP %s: protected" % k, out)
+        fifo = os.path.join(d, "p"); os.mkfifo(fifo)
+        rc, out = run([fifo], FakeGuard({}), lambda t: self.fail("fifo"))
+        self.assertIn("not a directory or regular file", out); self.assertTrue(os.path.exists(fifo))
+
     def test_real_delete_of_readonly_tree(self):
         d = tempfile.mkdtemp(); a = os.path.join(d, "t"); os.makedirs(os.path.join(a, "sub")); open(os.path.join(a, "sub", "f"), "w").close()
         os.chmod(os.path.join(a, "sub"), 0o555)
