@@ -17,3 +17,18 @@ Written 2026-11-21 06:2x PST. Posts lanes/posts/OPUS-FIX-KV-PV-R5.md. Hub dir in
 ## Cancels (06:01-06:04 PST, kit_wave cancel-rows, struct stop, cls PLAN)
 - v1@4 639k/-1103, v2@4 691k/-359, v2n@6 745k/-860, v3@5 489k/-758, v3n@12 472k/-683, v4n@4 456k/-333.
 - Left: v4 432k/-345, v5 381k/-915, v5n 422k/-639, v7 394k/-665 (epyc8), v12 445k/-633 (epyc9) - floorplan cells under 450k.
+
+## Update 2026-11-21 08:5x PST (read first)
+- bind 5 aborted (results/ + physical/ref_tile symlinks failed bind's in-repo manifest check); tree5 now has real copies (symlinks kept as
+  results.symlink_r5 / physical/ref_tile.symlink_r5, delete later with ot-delete). chain12b = bind 7 on split 12: 47 errors, R8_UNCOVERED 0,
+  new vs base 33: 30 R8_STALE pvw_0__u_ctl col_fault/col_valid, PARAM_REGEN pair image (run_mu833.sh on the split bind), R8_STRAP_PAD +
+  TYPE_SPLIT kv3_pc_v3 hsl3.fi (pad 29 > 26). No refresh was run (chain stops on non-R8 new rows).
+- COORD ruling (FABLE-FIX-KV-PV-1121 stood down): R1-R5 into the split before any w gen. compose13.py = split 12 + R1 SELREP32 + R2
+  (vport_E -> e). tree5 type_split.py = lane clone version (old one saved split28/type_split.tree5_r5a.py).
+- chain13.sh (oth-ubuntu-864313-1795278391): installs split 13 (split 12 kept as por_split_12_installed), probe bind 8 -> bindgate_8
+  (errdiff.txt, lfh_kv3_pv_v3*.txt = /srv/opentallas-scratch2/claude/fable-fix-kv-pv-1121/tools/leaf_first_hop.py).
+- Next: R3 rows (lanes with vport leaf bits: regs re-stationed on from_um -> leaf anchor -> to_um at <= 300 um; plan rows for u_bout buses
+  without one), R4 relay_sites at the anchor, R5 = leaf_first_hop 0/0; then ONE r8_refresh + bind 9 (+ pair image run_mu833.sh) ->
+  w-half gen with wave_w/spec.json (dry_gen) -> config.mk diff -> route.
+- 11 D25e3 pv route kits all cancelled (see post 07:34). KV-D26 pv rows: re-measure at 3_4 (place jobs epyc8/epyc9/epyc2 ot-jobs
+  kv3_pv*-place-*), cancel >3 h AND measured setup < -300 via kit_wave cancel-rows --event KV-D26 --attempt N.
