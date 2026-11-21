@@ -320,10 +320,12 @@ def test_rsync_lockups_group_by_connected_hard_core():
     pos = {"u_pvg0_p0": (0, 0), "u_pvg0_p1": (400, 0), "u_pvg3_p2": (800, 0)}
     spec = {**RS_SPEC[0], "lockup_regions": True}
 
-    _, old = RR.apply(txt, RS_SPEC, pos)
+    old, old_report = RR.apply(txt, RS_SPEC, pos)
     new, report = RR.apply(txt, [spec], pos)
-    assert old[0]["loads_per_region"]["rest"] == 3
-    assert report[0]["loads_per_region"] == {"rest": 1, "u_pvg0_p0": 2, "u_pvg0_p1": 2, "u_pvg3_p2": 2}
+    assert re.search(r"u_lk_nk_short_a .*\.d\(glue_rst\)", old)
+    assert re.search(r"u_lk_nk_short_b .*\.d\(rs_ri_pv_rst_n_r0\[0\]\)", old)
+    assert report[0]["loads"] == old_report[0]["loads"]
+    assert report[0]["loads_per_region"] == {"rest": 0, "u_pvg0_p0": 2, "u_pvg0_p1": 2, "u_pvg3_p2": 2}
     assert report[0]["depth"] == 6 and report[0]["copy_depth"] == 4
     assert re.search(r"u_lk_nk_short_a .*\.d\(glue_rst_rs_ri_pv_rst_n_r1\)", new)
     assert re.search(r"u_lk_nk_short_b .*\.d\(rs_ri_pv_rst_n_r2\[0\]\)", new)
