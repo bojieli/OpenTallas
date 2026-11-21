@@ -43,3 +43,6 @@ Base plan: lanes/handoff/KV-PLAN-R2.md (sections 1-4 + stop list still hold).
   the lane ends): strict bind stops after the head on R8 errors and writes OUT/r8_derived.json. D27c sub-agent puts it in the D27c tree tools.
 - D27b run-6 bind (proof source, kv-plan-r3/d27b6gate) likely R8_STALE too; if R8_STALE is its only error, launch the proof kits anyway
   (private, info only) — chain.sh stops on non-green, so launch by hand with proofs/proof_kit.sh <type> <cts|grt>. Add kv3_pc_v3 proof.
+- Owned now (KV-FAILED-ROWS-2100 done -> KV-PLAN-R3): hub_C, pc__cl254f2e73, pc__cl5a95b461, pc_v1 x3, pv_v6n holds (lift at D27 apply).
+- io_cor_v1 a11 = PLACE-SETUP-STOP via reset relays u_rrl_63..68 stacked at (639.4,10.6) -> ft16 stations 2 mm away (reset-reach row in D27c).
+- hub_Wi + pv_v8 identity: confirm on first D26 gens. pv_v8 574k cells: D28 split (OPUS-FIX-KV-PV-R4); no D27 volume on v8.
