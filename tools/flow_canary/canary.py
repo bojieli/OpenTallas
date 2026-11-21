@@ -38,9 +38,16 @@ OT_RUN = "~/.local/bin/ot-run"
 # FLOW-21 CANSTALL 11-01: canaries gate the twice-daily flow tags (owner 12.9e); under the 1.5 x nproc load cap
 # (LOADCAP_1101) they waited 3.5 h behind volume kits at load 380.  --crit bypasses the load cap only (memory admission
 # unchanged) and gives the same CPU weight as token sims / die GRT.  OT_CANARY_CRIT=0 restores the default weight.
-# FLOW-CANARY-1121 (COORD): canary jobs run on the epyc build hosts only (never the hub); OT_CANARY_HOSTS overrides, "" = no pin.
-HOSTS = os.environ.get("OT_CANARY_HOSTS", "epyc7,epyc8,epyc2")
-PIN = f"--hosts {HOSTS} " if HOSTS else ""
+# FLOW-CANARY-1121: OT_CANARY_HOSTS=a,b pins one host per canary (round robin); default no pin.
+HOSTS = os.environ.get("OT_CANARY_HOSTS", "")   # default unpinned: a pinned ot-run needs --dir on that host ("no host qualifies"); the hub-local run dir spills by itself
+HOST_LIST = [h for h in HOSTS.split(",") if h]
+
+
+def pin_for(n):
+    """one host per canary (ot-run spills a staged job only off a SINGLE pinned host; a list leaves it on the hub when the hub admits)"""
+    return f"--hosts {HOST_LIST[n % len(HOST_LIST)]} " if HOST_LIST else ""
+
+
 CRIT = "" if os.environ.get("OT_CANARY_CRIT", "1") == "0" else "--crit "
 # A face register is required on every partition port except the clock / async reset inputs.  Unlike
 # tools/die_plan/face_guard.SKIP_RE this does NOT skip rst_o_* / start_o_* (reset wavefront outs are registered relays).
@@ -614,7 +621,8 @@ def cmd_submit(a):
         return 2
     sha = git_head(src)
     stamp = time.strftime("%m%d_%H%M%S") + f"_{time.time_ns() % 1000000:06d}"
-    for die in dies:
+    for n, die in enumerate(dies):
+        PIN = pin_for(n)
         c = specs[die]
         # FLOW-CANARY-1121: a canary whose recorded input snapshot is gone (flow-canary/inputs/* was lost with epyc1/epyc4) is
         # skipped, not run: it could only fail on "CANARY_INPUTS missing" and would sit as a permanent FAIL reference.
@@ -674,7 +682,7 @@ def cmd_submit(a):
                                       '\necho "CANARY_FLOW_RC $?"\n')
         # ot-run ISOLATION step 3 (enforced since 11-10): the generation job names the source snapshot and any input snapshot, so it
         # declares them with --stage (every die was REFUSED, exit 96, when the canary restarted 11-21).
-        stage = f"--stage {src} " + (f"--stage {kv['inputs']} " if kv.get("inputs") else "")
+        stage = f"--stage {src} --stage {run} " + (f"--stage {kv['inputs']} " if kv.get("inputs") else "")
         launch = (f"{OT_RUN} {CRIT}{PIN}--mem {c['mem_gb']} --threads {kv['cpus']} --dir {run} {stage}-- bash {run}/job.sh; "
                   f"if [ -f {run}/GENERATED ]; then {prepare_runtime}"
                   f"cp {run}/route.sh {run}/gen/route_canary.sh; "
