@@ -10,3 +10,8 @@ Family: unsigned QC coll types = coll_core, coll_ftc (coll_ft cl78c7b300/cla4a25
 - FAIL `coll_ftc` N46R4A4 attempt 5: after +32.8 ps TT through GRT, DRT-0255 could not escape ring select net `u_bound.u_cland_tl_st_wi_i/u_ring.dch[10].u_dsel/net158717` at x166.44–170.43, y912.57–916.56 µm. Original run logs preserved at epyc2 scratch3 `ot-job-failed-logs/coll_ftc-route-dear-crayfish-1204101-1795228109`. Fresh V1 attempt 6 is in GPL on epyc2 `oth-ubuntu-1674772-1795255290`. Compare ring pin/guide access there before any shape release. No identical reroute launched.
 - `coll_core` pkw4 was still in setup repair, recurring best TT about -82 ps and 221 endpoints. Output pipeline remains a separate +1 candidate until geometry and routed timing support it.
 
+
+## 2026-11-21 02:50 PST Codex notes
+- Source/model branch `claude/fam-qc-coll-1121 @c6c55f5c722b6998d9a828398e942ea028f08fee` pushed from existing lane clone. Exact QFD production 4/4 PASS, zero word mismatches; rank-swap mutant rejected with 40 mismatches and no extra words. Exact remote gate GREEN 1/1 (static gate, no selected tests, main e75e9f9ab9e), record intel2 `~/merge-queue/gates/c6c55f5c722b6998d9a828398e942ea028f08fee.json`.
+- Proposed `odpre_b10_plan.json` and `odpre_b10_cycles.json` in epyc9 `fam-qc-coll` price data/rank/valid 18→19 and err/last 17→18. The optional write-side SRAM register costs zero interface cycles. Plan and geometry remain staged ahead of private bind/route proof.
+
