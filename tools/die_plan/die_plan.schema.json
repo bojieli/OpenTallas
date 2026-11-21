@@ -9375,6 +9375,40 @@
       "maximum": 1
      }
     },
+    "core_pin_relay": {
+     "oneOf": [
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "object",
+       "additionalProperties": false,
+       "properties": {
+        "re": {
+         "type": "string",
+         "minLength": 1
+        },
+        "w": {
+         "type": "number",
+         "exclusiveMinimum": 0,
+         "maximum": 1
+        },
+        "hop_um": {
+         "type": "number",
+         "exclusiveMinimum": 0
+        }
+       }
+      }
+     ]
+    },
+    "core_pin_relay_types": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "type": "string",
+      "minLength": 1
+     }
+    },
     "gutter_block_um": {
      "type": "number",
      "exclusiveMinimum": 0

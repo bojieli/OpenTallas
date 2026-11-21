@@ -20,6 +20,15 @@
 # stage j sits at (w0 + j - 1) / (w0 + n - 1 + wl) of the path (both 1 = the old j / (n + 1)).  Value: `RE[=W];RE[=W]..`,
 # W the hop weight of a matching core (default 0.5; the smallest matching W wins), the weights of relay_depth.HALF_FACE.  c1x_C t9: xr.x_scale (negedge OLAT) -> 2 stages -> egg.scale, 923 um: hops 185 / 369 / 369 um, was
 # 308 x 3 with 308 um in T/2; egg.g -> 2 stages -> xr.eg_d (both ends half): 206 / 412 / 206.
+# PIN (CORE-PIN-RELAY-1930 11-21, FABLE-PD-S81-1840 section 4 lever P; opt-in, unset = byte-identical): a relay chain stage
+# next to a hard core sits AT that core's pin, so no core pin drives a long wire (S81 J5: 42 % of the placed legs over
+# 300 um were core pin <-> u_y_* relay legs; col_h9_r1 u_y_xa_4_0.o -> u_t4 516 um).  OT_RELAY_MID_PIN = `RE[=W];..` on
+# hard-core instance names (W = the hop share of the pin hop, default 0.1 = 30 um of a 300-um hop); OT_RELAY_MID_PIN_HOP_UM
+# (default 300) caps the inner hop.  Per chain the weights are tried in the order both ends at the pin, source end only,
+# sink end only, none; the first whose full hop L / (w0 + n - 1 + wl) is within the cap wins, so an existing chain is only
+# RE-SEATED, never stretched past the cap (a chain with too few stages keeps its old points until relay_depth.py --pin-w
+# adds the stages).  HALF weights stay the lower bound (min).  The stations keep the kit tap they had: the core ETM setup
+# arcs already absorb the early core clock pin (col_h9_r1 u_e6_u_w go_tag setup -361 ps against clk_c8 early 215 ps).
 uplevel #0 {
 proc rm_half_list {v} {
   set r {}
@@ -37,6 +46,18 @@ proc rm_half_w {lst name} {
 set rm_half_src [rm_half_list [expr {[info exists ::env(OT_RELAY_MID_HALF_SRC_RE)] ? $::env(OT_RELAY_MID_HALF_SRC_RE) : ""}]]
 set rm_half_sink [rm_half_list [expr {[info exists ::env(OT_RELAY_MID_HALF_SINK_RE)] ? $::env(OT_RELAY_MID_HALF_SINK_RE) : ""}]]
 set rm_half {}
+proc rm_pin_list {v} {
+  set r {}
+  foreach e [split $v ";"] {
+    if {$e eq ""} continue
+    if {[regexp {^(.*)=([0-9.]+)$} $e -> re w]} { lappend r [list $re $w] } else { lappend r [list $e 0.1] }
+  }
+  return $r
+}
+set rm_pin [rm_pin_list [expr {[info exists ::env(OT_RELAY_MID_PIN)] ? $::env(OT_RELAY_MID_PIN) : ""}]]
+set rm_pin_hop [expr {([info exists ::env(OT_RELAY_MID_PIN_HOP_UM)] ? $::env(OT_RELAY_MID_PIN_HOP_UM) : 300.0)}]
+set rm_pinw {}
+set rm_pin_n [dict create both 0 src 0 sink 0 none 0]
 set rm_blk [ord::get_db_block]
 set rm_dbu [[ord::get_db_tech] getDbUnitsPerMicron]
 set rm_re $::env(OT_RELAY_MID_RE)
@@ -132,24 +153,27 @@ proc rm_loads {net depth} {
 # per group: fixed source / sink centroids, source / sink groups, soft (X) endpoints
 set rm_info {}
 dict for {g insts} $rm_grp {
-  set sp {}; set sg {}; set kp {}; set kg {}; set soft 0; set hs 1.0; set hk 1.0
+  set sp {}; set sg {}; set kp {}; set kg {}; set soft 0; set hs 1.0; set hk 1.0; set ps 1.0; set pk 1.0
   foreach i $insts {
     foreach d [rm_sig $i INPUT] {
       if {[[$d getMTerm] getName] ne "D"} continue
       foreach e [rm_drv [$d getNet] 0] {
         if {$rm_half_src ne {} && [lindex $e 0] eq "P" && [llength $e] > 3} { set hs [expr {min($hs, [rm_half_w $rm_half_src [lindex $e 3]])}] }
+        if {$rm_pin ne {} && [lindex $e 0] eq "P" && [llength $e] > 3} { set ps [expr {min($ps, [rm_half_w $rm_pin [lindex $e 3]])}] }
         switch [lindex $e 0] { P { lappend sp [lrange $e 1 2] } G { if {[lindex $e 1] ne $g} { dict set sg [lindex $e 1] 1 } } default { incr soft } }
       }
     }
     foreach q [rm_sig $i OUTPUT] {
       foreach e [rm_loads [$q getNet] 0] {
         if {$rm_half_sink ne {} && [lindex $e 0] eq "P" && [llength $e] > 3} { set hk [expr {min($hk, [rm_half_w $rm_half_sink [lindex $e 3]])}] }
+        if {$rm_pin ne {} && [lindex $e 0] eq "P" && [llength $e] > 3} { set pk [expr {min($pk, [rm_half_w $rm_pin [lindex $e 3]])}] }
         switch [lindex $e 0] { P { lappend kp [lrange $e 1 2] } G { if {[lindex $e 1] ne $g} { dict set kg [lindex $e 1] 1 } } default { incr soft } }
       }
     }
   }
   dict set rm_info $g [list $sp [dict keys $sg] $kp [dict keys $kg] $soft]
   dict set rm_half $g [list $hs $hk]
+  dict set rm_pinw $g [list $ps $pk]
 }
 proc rm_cent {pts} {
   set x 0; set y 0
@@ -418,6 +442,23 @@ dict for {g inf} $rm_info {
   set rm_w0 [lindex [dict get $rm_half $g] 0]
   set rm_wl [expr {$rm_den == $n ? 0.0 : [lindex [dict get $rm_half [lindex $chain end]] 1]}]
   set rm_W [expr {$rm_w0 + $n - 1 + $rm_wl}]
+  # PIN: re-seat the chain ends at their hard-core pins when the inner hop stays within the cap (header)
+  if {$rm_pin ne {}} {
+    set rm_pw0 [expr {min($rm_w0, [lindex [dict get $rm_pinw $g] 0])}]
+    set rm_pwl [expr {$rm_den == $n ? $rm_wl : min($rm_wl, [lindex [dict get $rm_pinw [lindex $chain end]] 1])}]
+    if {$rm_pw0 != $rm_w0 || $rm_pwl != $rm_wl} {
+      set rm_L [expr {abs($bx - $ax) + abs($by - $ay)}]
+      if {$rm_poly} { set rm_pp [rm_polyline $g $ax $ay $bx $by]; if {$rm_pp ne {}} { set rm_L [lindex $rm_pp end] } }
+      set rm_form none
+      foreach {f a b} [list both $rm_pw0 $rm_pwl src $rm_pw0 $rm_wl sink $rm_w0 $rm_pwl] {
+        if {$a == $rm_w0 && $b == $rm_wl} continue
+        set W_ [expr {$a + $n - 1 + $b}]
+        if {$W_ > 0 && $rm_L / $W_ <= $rm_pin_hop * $rm_dbu} { set rm_form $f; set rm_w0 $a; set rm_wl $b; set rm_W $W_; break }
+      }
+      dict incr rm_pin_n $rm_form
+      puts "OT_RELAY_MID_PIN chain [lindex $chain 0]..[lindex $chain end] ($n stations, [format %.0f [expr {$rm_L / double($rm_dbu)}]] um): $rm_form at the core pin, first hop x$rm_w0 last hop x$rm_wl"
+    }
+  }
   if {$rm_w0 != 1.0 || ($rm_wl != 1.0 && $rm_den != $n)} {
     puts "OT_RELAY_MID_HALF chain [lindex $chain 0]..[lindex $chain end] ($n stations): first hop x$rm_w0 last hop x$rm_wl, full hop [expr {(abs($bx - $ax) + abs($by - $ay)) / $rm_W / $rm_dbu}] um"
   }
@@ -590,5 +631,6 @@ if {$rm_fit} {
 if {[info exists ::env(OT_RELAY_POLY_FAIL)] && $::env(OT_RELAY_POLY_FAIL) eq "1" && [llength $rm_polybad] > 0} {
   error "OT_RELAY_POLY relay_mid: [llength $rm_polybad] relay chain(s) with a hop > 405 um (relay_depth rows missing?): [join [lrange $rm_polybad 0 11] { }]"
 }
+if {$rm_pin ne {}} { puts "OT_RELAY_MID_PIN seated chains: both ends [dict get $rm_pin_n both], source end [dict get $rm_pin_n src], sink end [dict get $rm_pin_n sink], none (too few stages for the [format %g $rm_pin_hop]-um cap: relay_depth.py --pin-w rows) [dict get $rm_pin_n none]" }
 puts "OT_RELAY_MID placed $rm_n relay flops of [dict size $rm_station] stations ([dict size $rm_grp] relay groups) FIRM on their source-sink lines"
 }

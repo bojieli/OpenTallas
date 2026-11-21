@@ -99,6 +99,28 @@ def stations_needed(length, limit, w0=1.0, wl=1.0):
     return max(0, math.ceil(length / limit + 1.0 - w0 - wl - 1e-9))
 
 
+def pin_weight(plan, tn, cli=None):
+    """CORE-PIN-RELAY-1930: the core-pin hop share of a type (relay_mid.tcl PIN: the first / last stage sits at the core pin,
+    w x limit from it), None = the midpoint model.  --pin-w wins; else plan budgets.core_pin_relay (true / {"w"}) or
+    budgets.core_pin_relay_types (types or unsplit base names) -> w (default 0.1 = 30 of 300 um)."""
+    if cli is not None:
+        return float(cli)
+    b = (plan or {}).get("budgets") or {}
+    v = b.get("core_pin_relay")
+    per = list(b.get("core_pin_relay_types") or [])
+    if v or tn in per or tn.split("__")[0] in per:
+        return float(v.get("w", 0.1)) if isinstance(v, dict) else 0.1
+    return None
+
+
+def pin_stations(length, limit, w0, wl, pin_w):
+    """stations with both core-pin ends seated (pin_w each, HALF weights kept as the lower bound) on a path over the limit;
+    a path within the limit needs no stage (a short core-to-core wire is a hop)"""
+    if pin_w is None or length == float("inf") or length <= limit:
+        return stations_needed(length, limit, w0, wl)
+    return stations_needed(length, limit, min(w0, pin_w), min(wl, pin_w))
+
+
 def _align_group(src_mod, src_port):
     """index of the aligned group (source module, port) belongs to, None when it is in none"""
     for i, (a, b) in enumerate(ALIGN_GROUP):
@@ -187,10 +209,13 @@ class Router:
         return float("inf")
 
 
-def type_rows(plan, tn, text, repo=None, plan_dir=None, limit=LIMIT, netlist=None, macro_paths=None):
-    """-> (relay_depth rows, report dict) for one type"""
+def type_rows(plan, tn, text, repo=None, plan_dir=None, limit=LIMIT, netlist=None, macro_paths=None, pin_w=None):
+    """-> (relay_depth rows, report dict) for one type.  pin_w (CORE-PIN-RELAY-1930): stations for chains whose ends sit at
+    the core pins (pin_stations), so relay_mid.tcl PIN can seat both ends within the hop limit"""
     import core_conns_from_bind as CC
     t = plan["partition_types"][tn]
+    if pin_w is None:
+        pin_w = pin_weight(plan, tn)          # CORE-PIN-RELAY-1930: the plan key reaches cbc_pass callers too
     res = CC.trace(plan, tn, text, repo)
     n_netlist = 0
     if netlist:
@@ -285,8 +310,8 @@ def type_rows(plan, tn, text, repo=None, plan_dir=None, limit=LIMIT, netlist=Non
                                         reason="fixed-latency loop (cfg ROM read, Engram norm -> gate) over the reach: move "
                                                "the cores (core placement), a pipeline stage here is a functional error"))
                 continue
-        need = stations_needed(worst, limit, _half_w(hcs[src_core].get("module", ""), src_port, "out"),
-                               _half_w(hcs[p["core"]].get("module", ""), p["port"], "in"))
+        need = pin_stations(worst, limit, _half_w(hcs[src_core].get("module", ""), src_port, "out"),
+                            _half_w(hcs[p["core"]].get("module", ""), p["port"], "in"), pin_w)
         extra = need - int(p["stages_existing"])
         if extra <= 0:
             continue
@@ -437,6 +462,8 @@ def main(argv):
     ap.add_argument("--limit", type=float, default=LIMIT)
     ap.add_argument("--out-plan")
     ap.add_argument("--report")
+    ap.add_argument("--pin-w", type=float, help="CORE-PIN-RELAY-1930: seat both chain ends at their core pins (hop share, "
+                                                 "e.g. 0.1); default from plan budgets.core_pin_relay(_types), else midpoint")
     ap.add_argument("--netlist-dir", help="DIR/<type>/1_2_yosys.v (+ bound_macro_paths.json) of each type's kit: adds the "
                                           "core-to-core paths of cores nested in a kept wrapper (core_conns_from_netlist)")
     a = ap.parse_args(argv[1:])
@@ -453,8 +480,9 @@ def main(argv):
             continue
         t = plan["partition_types"][tn]
         # identical geometry + identical bound text -> identical rows (pv variants of one cl)
+        pw = pin_weight(plan, tn, a.pin_w)
         geo = json.dumps([[h["inst"], h.get("origin_um"), h.get("orient"), h.get("module")] for h in t.get("hard_cores", [])]) + \
-            str(hash(f.read_text()))
+            str(hash(f.read_text())) + repr(pw)
         if geo in cache:
             rows, rep = cache[geo]
             rep = dict(rep, type=tn, reused=True)
@@ -463,7 +491,7 @@ def main(argv):
             mp = nl.parent / "bound_macro_paths.json" if nl else None
             rows, rep = type_rows(plan, tn, f.read_text(), a.repo, plan_dir, a.limit,
                                   netlist=nl.read_text() if nl and nl.is_file() else None,
-                                  macro_paths=json.loads(mp.read_text()) if mp and mp.is_file() else None)
+                                  macro_paths=json.loads(mp.read_text()) if mp and mp.is_file() else None, pin_w=pw)
             cache[geo] = (rows, rep)
         if a.out_plan and rows:
             t["relay_depth"] = [dict(r) for r in rows]

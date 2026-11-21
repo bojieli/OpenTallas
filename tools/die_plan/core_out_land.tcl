@@ -11,8 +11,13 @@
 # OPT-IN (estimate first): runs only with OT_CORE_OUT_LAND=1 in the kit config.mk, which gen_phys writes when the GEN
 # environment sets OT_CORE_OUT_LAND=1 (wave item_env, per row) or the plan lists the type in budgets.core_out_land_types.
 # Measured reach: hd_tile 333 flops (flt_q[0] 789 -> 168 um), hd_lep0N 5359 (not yet timed): so no default-on yet.
+# IN side (CORE-PIN-RELAY-1930 11-21, OT_CORE_IN_LAND=1, written by gen_phys with the plan key core_pin_relay; unset =
+# byte-identical): the mirror pair.  A flop whose Q reaches exactly ONE leaf load through <= 4 BUF/INV/HB, a hard-core INPUT
+# pin, and that is not FIRM / LOCKED, sits FIRM next to that pin (same free-point search).  Its D side keeps its GPL place.
 uplevel #0 {
-if {[info exists ::env(OT_CORE_OUT_LAND)] && $::env(OT_CORE_OUT_LAND) eq "1"} {
+set col_on_out [expr {[info exists ::env(OT_CORE_OUT_LAND)] && $::env(OT_CORE_OUT_LAND) eq "1"}]
+set col_on_in [expr {[info exists ::env(OT_CORE_IN_LAND)] && $::env(OT_CORE_IN_LAND) eq "1"}]
+if {$col_on_out || $col_on_in} {
 set col_blk [ord::get_db_block]
 set col_dbu [[ord::get_db_tech] getDbUnitsPerMicron]
 set col_core [$col_blk getCoreArea]
@@ -65,7 +70,30 @@ set col_out [open $::env(RESULTS_DIR)/ot_core_out_land.txt w]
 set col_occ {}
 set col_n 0; set col_skip 0
 set col_step [expr {int(2.16 * $col_dbu)}]
+# nearest free row slot next to (px, py) outside every halo; {} when none (shared by the OUT and IN sides)
+proc col_seat {f px py} {
+  global col_x0 col_y0 col_sw col_rh col_occ col_step col_orient
+  set w [[$f getMaster] getWidth]
+  set best {}
+  for {set r 0} {$r < 400 && $best eq {}} {incr r} {
+    set dd [expr {$r * $col_step}]
+    foreach {dx dy} [list 0 0 0 $dd 0 -$dd $dd 0 -$dd 0 $dd $dd -$dd $dd $dd -$dd -$dd -$dd] {
+      set cx [expr {$col_x0 + (($px + $dx - $col_x0) / $col_sw) * $col_sw}]
+      set cy [expr {$col_y0 + (($py + $dy - $col_y0) / $col_rh) * $col_rh}]
+      if {[dict exists $col_occ "$cx,$cy"] || ![col_free $cx $cy $w]} continue
+      set best [list $cx $cy]; break
+    }
+  }
+  if {$best eq {}} { return {} }
+  lassign $best cx cy
+  for {set k -24} {$k <= 36} {incr k} { dict set col_occ "[expr {$cx + $k * $col_sw}],$cy" 1 }
+  $f setLocation $cx $cy
+  if {[dict exists $col_orient $cy]} { $f setOrient [dict get $col_orient $cy] }
+  $f setPlacementStatus FIRM
+  return $best
+}
 foreach i [$col_blk getInsts] {
+  if {!$col_on_out} break
   if {![[$i getMaster] isBlock]} continue
   foreach it [$i getITerms] {
     if {![$it isOutputSignal]} continue
@@ -119,6 +147,45 @@ foreach i [$col_blk getInsts] {
   }
 }
 close $col_out
-puts "OT_CORE_OUT_LAND placed $col_n core-output landing flops FIRM at their hard-core pins ($col_skip single-load pins left to GPL: flop fan-out > 1 or no free site)"
+if {$col_on_out} { puts "OT_CORE_OUT_LAND placed $col_n core-output landing flops FIRM at their hard-core pins ($col_skip single-load pins left to GPL: flop fan-out > 1 or no free site)" }
+if {$col_on_in} {
+  # IN side: every soft DFF, its Q leaf loads through <= 4 BUF/INV/HB; exactly one, a hard-core input pin
+  set cil_n 0; set cil_skip 0
+  # same release list as the OUT side (face_flops_release.tcl releases ot_core_out_land.txt to PLACED before DPL)
+  set cil_out [open $::env(RESULTS_DIR)/ot_core_out_land.txt a]
+  foreach f [$col_blk getInsts] {
+    set m [$f getMaster]
+    if {[$m isBlock] || ![string match "*DFF*" [$m getName]]} continue
+    if {[$f getPlacementStatus] in {FIRM LOCKED COVER}} continue
+    set leaves {}
+    foreach it [$f getITerms] {
+      if {![$it isOutputSignal] || [$it getNet] eq "NULL"} continue
+      set front [list [list [$it getNet] 0]]; set seen {}
+      while {[llength $front] && [llength $leaves] < 2} {
+        lassign [lindex $front 0] nt d; set front [lrange $front 1 end]
+        if {[dict exists $seen $nt]} continue
+        dict set seen $nt 1
+        if {[llength [$nt getBTerms]]} { lappend leaves PORT }
+        foreach s [$nt getITerms] {
+          if {![$s isInputSignal]} continue
+          set g [$s getInst]
+          if {$d < 4 && ![[$g getMaster] isBlock] && [col_isbuf $g]} {
+            foreach o [$g getITerms] { if {[$o isOutputSignal] && [$o getNet] ne "NULL"} { lappend front [list [$o getNet] [expr {$d + 1}]] } }
+          } else { lappend leaves $s }
+        }
+      }
+    }
+    if {[llength $leaves] != 1 || [lindex $leaves 0] eq "PORT"} continue
+    set s [lindex $leaves 0]
+    if {![[[$s getInst] getMaster] isBlock]} continue
+    lassign [$s getAvgXY] ok px py
+    if {!$ok} { set b [[$s getInst] getBBox]; set px [expr {([$b xMin]+[$b xMax])/2}]; set py [expr {([$b yMin]+[$b yMax])/2}] }
+    if {[col_seat $f $px $py] eq {}} { incr cil_skip; continue }
+    puts $cil_out [$f getName]
+    incr cil_n
+  }
+  close $cil_out
+  puts "OT_CORE_IN_LAND placed $cil_n core-input driver flops FIRM at their hard-core pins ($cil_skip without a free site)"
+}
 }
 }

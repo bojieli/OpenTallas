@@ -67,7 +67,7 @@ def test_schema_validates_rows():
     import jsonschema
     node = schema.SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["relay_depth"]
     jsonschema.validate([{"inst": "u_y_a_0", "D": 2, "path_um": 700.5, "stages_existing": 1}], node)
-    for bad in ([{"inst": "u_y_a_0", "D": 5}], [{"inst": "u_y_a_0"}], [{"D": 1}], [{"inst": "x", "D": 1, "zz": 1}]):
+    for bad in ([{"inst": "u_y_a_0", "D": 17}], [{"inst": "u_y_a_0"}], [{"D": 1}], [{"inst": "x", "D": 1, "zz": 1}]):
         with pytest.raises(jsonschema.ValidationError):
             jsonschema.validate(bad, node)
 

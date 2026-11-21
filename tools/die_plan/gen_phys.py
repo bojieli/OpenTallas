@@ -289,6 +289,47 @@ def _relay_mid_half_exports(budgets, tn):
            ([f"export OT_RELAY_MID_HALF_SINK_RE = {mk(sink)}"] if sink else [])
 
 
+CORE_PIN_W = 0.1              # CORE-PIN-RELAY-1930: hop share of a pin hop (30 um of the 300-um generator hop)
+
+
+def _core_pin_relay(budgets, tn):
+    """CORE-PIN-RELAY-1930 (FABLE-PD-S81-1840 section 4 lever P, all dies; opt-in, absent = byte-identical kits): seat the
+    registers next to every hard-core signal pin AT the pin.  On: GEN env OT_CORE_PIN_RELAY (1 = every hard core, or a regex
+    on core instance names; item_env, so a pilot needs no plan event), per type budgets.core_pin_relay_types (types or
+    unsplit base names), or plan-wide budgets.core_pin_relay (true, or {"re", "w", "hop_um"}).
+    -> None, or dict(re, w, hop_um): relay_mid.tcl PIN (OT_RELAY_MID_PIN = re=w, OT_RELAY_MID_PIN_HOP_UM) + FIT (the cluster
+    footprint outside every halo) and core_out_land.tcl (a single-load landing flop at its output pin, in and out)."""
+    v = budgets.get("core_pin_relay")
+    e = os.environ.get("OT_CORE_PIN_RELAY")
+    on = bool(e) or bool(v)
+    per = list(budgets.get("core_pin_relay_types") or [])
+    if not on and not (tn is not None and (tn in per or tn.split("__")[0] in per)):
+        return None
+    cfg = dict(v) if isinstance(v, dict) else {}
+    r = e if e and e != "1" else cfg.get("re", ".")
+    if any(c.isspace() or c == ";" for c in r):
+        raise ValueError(f"core_pin_relay re must hold no white space or ';': {r!r}")
+    re.compile(r)
+    w = float(cfg.get("w", CORE_PIN_W))
+    if not 0 < w <= 1:
+        raise ValueError(f"core_pin_relay w must be in (0, 1]: {w!r}")
+    hop = float(cfg.get("hop_um", _CBC_REACH_UM()))
+    return dict(re=r, w=w, hop_um=hop)
+
+
+def _CBC_REACH_UM():
+    import cbc_rules
+    return cbc_rules.REACH_UM_PER_HOP
+
+
+def _core_pin_relay_exports(budgets, tn):
+    c = _core_pin_relay(budgets, tn)
+    if not c:
+        return []
+    return [f"export OT_RELAY_MID_PIN = {c['re'].replace('$', '$$')}={c['w']:g}",
+            f"export OT_RELAY_MID_PIN_HOP_UM = {c['hop_um']:g}", "export OT_CORE_IN_LAND = 1"]
+
+
 def _relay_mid_soft_frac(budgets, tn):
     """FABLE-FIX-KV-HG 11-18 (relay_mid.tcl OT_RELAY_MID_SOFT_FRAC, default 0.02 in the script): GEN env OT_RELAY_MID_SOFT_FRAC
     (item_env), per type budgets.relay_mid_soft_frac_types {type or unsplit base name: fraction}, plan-wide
@@ -7393,11 +7434,13 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            *([f"export OT_RELAY_MID_RE = {_relay_mid_re(P.budgets, tn)}"] if macros else []),
            *(["export OT_RELAY_MID_TAIL = 1"] if macros and _relay_mid_tail(P.budgets, tn) else []),
            *(_relay_mid_half_exports(P.budgets, tn) if macros else []),
+           # CORE-PIN-RELAY-1930: relay stages and landing flops seated at their hard-core pins (opt-in, gen_phys._core_pin_relay)
+           *(_core_pin_relay_exports(P.budgets, tn) if macros else []),
            *([f"export OT_RELAY_MID_SOFT_FRAC = {_relay_mid_soft_frac(P.budgets, tn):g}"]
              if macros and _relay_mid_soft_frac(P.budgets, tn) is not None else []),
            # S81-TYPES-5 11-07 (opt-in plan budgets, absent = unchanged kits): relay clusters fit outside narrow
            # channels (relay_mid.tcl FIT) and macro gaps < gutter_block_um get placement blockages (gutter_block.tcl)
-           *(["export OT_RELAY_MID_FIT = 1"] if macros and _relay_mid_fit(P.budgets, tn) else []),
+           *(["export OT_RELAY_MID_FIT = 1"] if macros and (_relay_mid_fit(P.budgets, tn) or _core_pin_relay(P.budgets, tn)) else []),
            *(["export OT_FT_POLARITY_LOCAL = 1"] if _ft_polarity_local(P.budgets, tn) else []),
            *([f"export OT_RELAY_FALLBACK_MAX_FRAC = {_relay_fallback_max_frac(P.budgets, tn):g}"]
              if macros and _relay_mid_fit(P.budgets, tn) and _relay_fallback_max_frac(P.budgets, tn) is not None else []),
@@ -7410,7 +7453,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
              if macros and _gutter_block_um(P.budgets, tn) and _gutter_block_min_span_um(P.budgets) else []),
            # DIE-HEAD-69 11-05: core_out_land.tcl opt-in (GEN env OT_CORE_OUT_LAND=1 via wave item_env, or plan budgets list)
            *(["export OT_CORE_OUT_LAND = 1"] if macros and (os.environ.get("OT_CORE_OUT_LAND") == "1"
-                                                       or tn in (P.budgets.get("core_out_land_types") or ())) else []),
+                                                       or tn in (P.budgets.get("core_out_land_types") or ())
+                                                       or _core_pin_relay(P.budgets, tn)) else []),
            # PATH-QC-A0N59 10-25: macro kits had no BC_LIB_FILES, so the post-CTS FF hold gate stopped NOT RUN
            # ("hold gate: BC_LIB_FILES missing", native59).  Per-corner gate/sign-off lists only (implementation
            # corner unchanged): std cells of the corner + each macro's sibling corner view copied into macros/.
