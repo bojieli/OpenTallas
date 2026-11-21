@@ -1,0 +1,578 @@
+{
+ "schema": "s81-svc-j7.rows.v1",
+ "lane": "OPUS-FIX-S81-SVC-R6",
+ "for": "S81-J6-ASSEMBLY-R3 event J7",
+ "base_plan": "/srv/opentallas-scratch2/claude/opus-fix-s81-svc-r5/split-hi4-band-test/plan_svc_hi4_x_epoch.json md5 5edd95605fca4e082319daebf62485cc (H8 bind source r5b + Codex hi4 x_epoch form)",
+ "form": {
+  "axis": "x",
+  "cut_um": 570.24,
+  "parts": [
+   {
+    "suffix": ""
+   },
+   {
+    "suffix": "_att"
+   }
+  ],
+  "keep": 0,
+  "contents_rx": ".*(?:[.]u_att(?:[._].*)?|_u_att_.*|[.]g_pc(?:\\[.*)?)",
+  "land": "12 x ot_sram_1r1w_160x256_m1_r0c0 writer banks (4 lanes x 3) seated with the stage2 macros, 0 local cycles"
+ },
+ "rtl": {
+  "defines": [
+   "OT_SVC_ATT_LAND_SRAM",
+   "OT_SVC_ATTCUT"
+  ],
+  "candidate": "claude/s81-svc-r5-land-sram-1121 @9bd318e90366",
+  "attcut_cost": "+1/+1 on the att cut lanes"
+ },
+ "sizes_cells": {
+  "svc_hi_dsdv_svc_rs__t4": {
+   "att": 175000,
+   "rest": 137000,
+   "total": 311612
+  },
+  "svc_lo_dsdv_svc_rs__t7": {
+   "att": 174000,
+   "rest": 180000,
+   "total": 353936
+  },
+  "note": "yosys census, land + pmem black-boxed; both pieces < 400k for hi and lo"
+ },
+ "gating": "adoption gated on epyc9 benches 2295988 (ATT land SRAM) + 2412579 (programme lockstep) PASS and on the hi4 private strict bind + LATCHECK (bind_hi4x chain10e)",
+ "composed": [
+  "svc_hi_dsdv_svc_rs__t4"
+ ],
+ "blockers": {
+  "port_windows": "The x seam at 570.24 cuts a die N/S port window on 14 of 16 types (all but hi rs t4, lo rs t4). Single-window shifts fail (faces full). Face repack (windows moved to one side of the seam, both ends together) fits on svc_12/13 (lo t6/hi t5 hbm), svc_14/15 (lo t7/hi t6 attn, hbmrd), svc_1 N, svc_2 S; does NOT fit on the hi-lo shared faces of svc 0/1, 2/3, 4/5, 6/7, 10/11 (1374-1417 um of windows in 1408 um of room): needs window compression (pin density up to cut_pins_per_um 8) or a die pin re-plan.",
+  "lo_pack": "All 8 svc_lo types: rs piece macro fraction 0.75 at 570.24 wide (54 hard + 18 memories); every shelf/NFDH/flip variant overflows (rs top 3127.68 > 2980.8). Lo needs another form (y cut, 3-way, or fewer rs boxes); no growth allowed.",
+  "ft_seats": "hi t1 / hi t6: 1104-bit FT chains (ft0/ft1) find no seat chain with hops <= 405 next to the packed rs boxes; needs FT corridor reserve in the pack."
+ },
+ "proven_geometry": [
+  "svc_hi_dsdv_svc_pvso_entry__t2",
+  "svc_hi_dsdv_svc_rs__t5"
+ ],
+ "types": {
+  "svc_hi_dsdv_svc_pvso_entry__t1": {
+   "gen_status": "FAIL",
+   "pack_error": "AssertionError: BAND_WINDOW_STRADDLES_CUT attn_i3 359.755-659.873",
+   "port_window_blocks": [
+    {
+     "face": "S",
+     "straddling": [
+      "attn__svc_4__svc_5__0"
+     ],
+     "windows_um": 1415.1,
+     "room_um": 1408.4,
+     "repack_fits": false
+    }
+   ],
+   "status": "BLOCKED"
+  },
+  "svc_hi_dsdv_svc_pvso_entry__t2": {
+   "gen_status": "OK",
+   "pack": {
+    "rs": {
+     "boxes": 163,
+     "macro_fraction": 0.3579,
+     "last_y_um": 1977.492
+    },
+    "att": {
+     "boxes": 127,
+     "macro_fraction": 0.7047,
+     "last_y_um": 2859.84
+    }
+   },
+   "variant": {
+    "rs_gap": 17.28,
+    "flip": [
+     "att"
+    ],
+    "dense": []
+   },
+   "ft": {},
+   "geometry": "package/geom/svc_hi_dsdv_svc_pvso_entry__t2.json",
+   "port_window_blocks": [
+    {
+     "face": "S",
+     "straddling": [
+      "hbm__svc_11__svc_10__0"
+     ],
+     "windows_um": 1417.2,
+     "room_um": 1408.4,
+     "repack_fits": false
+    }
+   ],
+   "status": "BLOCKED"
+  },
+  "svc_hi_dsdv_svc_rs__t1": {
+   "gen_status": "FAIL",
+   "pack_error": "AssertionError: FT_NO_SEAT ft0 station 1 near 140.0,2448.5",
+   "port_window_blocks": [
+    {
+     "face": "N",
+     "straddling": [
+      "rt_W0_out_1__6"
+     ],
+     "windows_um": 709.9,
+     "room_um": 1408.4,
+     "repack_fits": true
+    },
+    {
+     "face": "S",
+     "straddling": [
+      "rsv__svc_0__svc_1__0"
+     ],
+     "windows_um": 1373.8,
+     "room_um": 1408.4,
+     "repack_fits": false
+    }
+   ],
+   "status": "BLOCKED"
+  },
+  "svc_hi_dsdv_svc_rs__t2": {
+   "gen_status": "FAIL",
+   "pack_error": "AssertionError: BAND_WINDOW_STRADDLES_CUT attn_i1 359.755-659.873",
+   "port_window_blocks": [
+    {
+     "face": "S",
+     "straddling": [
+      "attn__svc_2__svc_3__0"
+     ],
+     "windows_um": 1415.1,
+     "room_um": 1408.4,
+     "repack_fits": false
+    }
+   ],
+   "status": "BLOCKED"
+  },
+  "svc_hi_dsdv_svc_rs__t3": {
+   "gen_status": "FAIL",
+   "pack_error": "AssertionError: BAND_WINDOW_STRADDLES_CUT attn_i1 359.755-659.873",
+   "port_window_blocks": [
+    {
+     "face": "S",
+     "straddling": [
+      "attn__svc_6__svc_7__0"
+     ],
+     "windows_um": 1415.1,
+     "room_um": 1408.4,
+     "repack_fits": false
+    }
+   ],
+   "status": "BLOCKED"
+  },
+  "svc_hi_dsdv_svc_rs__t4": {
+   "gen_status": "OK",
+   "status": "COMPOSED",
+   "split": "package/hi4 (type_split split of spec_x_epoch, chain10e epyc10)",
+   "latency_rows": [
+    {
+     "id": "S81-SVC-J7-hi4-r5-census:attn__svc_11__svc_5",
+     "lane": "attn__svc_11__svc_5",
+     "parameter": "LAT_ATTN__SVC_11__SVC_5",
+     "added_cycles": 1,
+     "clock": "clk_core (833 ps)",
+     "relative_to": "/srv/opentallas-scratch2/claude/opus-fix-s81-svc-r5/split-hi4-band-test/plan_svc_hi4_x_epoch.json md5 5edd95605fca4e082319daebf62485cc attn__svc_11__svc_5 18 cycles",
+     "cycles": [
+      18,
+      19
+     ],
+     "kind": "SPLIT",
+     "why": "cut boundary registers / split internal stations"
+    },
+    {
+     "id": "S81-SVC-J7-hi4-r5-census:attn__svc_5__svc_11",
+     "lane": "attn__svc_5__svc_11",
+     "parameter": "LAT_ATTN__SVC_5__SVC_11",
+     "added_cycles": 1,
+     "clock": "clk_core (833 ps)",
+     "relative_to": "/srv/opentallas-scratch2/claude/opus-fix-s81-svc-r5/split-hi4-band-test/plan_svc_hi4_x_epoch.json md5 5edd95605fca4e082319daebf62485cc attn__svc_5__svc_11 19 cycles",
+     "cycles": [
+      19,
+      20
+     ],
+     "kind": "SPLIT",
+     "why": "cut boundary registers / split internal stations"
+    },
+    {
+     "id": "S81-SVC-J7-hi4-r5-census:L1",
+     "lane": "L1",
+     "parameter": "LAT_L1",
+     "kind": "SPLIT",
+     "added_cycles": 2,
+     "clock": "clk_core (833 ps)",
+     "relative_to": "new cut lane (absent in the base plan): its whole latency is added on the paths it carries",
+     "cycles": [
+      0,
+      2
+     ],
+     "why": "S81-SVC-J7-hi4-r5-census: cut route sink attn_i0 piece 1 -> 0"
+    },
+    {
+     "id": "S81-SVC-J7-hi4-r5-census:L2",
+     "lane": "L2",
+     "parameter": "LAT_L2",
+     "kind": "SPLIT",
+     "added_cycles": 2,
+     "clock": "clk_core (833 ps)",
+     "relative_to": "new cut lane (absent in the base plan): its whole latency is added on the paths it carries",
+     "cycles": [
+      0,
+      2
+     ],
+     "why": "S81-SVC-J7-hi4-r5-census: cut route leaf attn_o0 piece 0 -> 1"
+    },
+    {
+     "id": "S81-SVC-J7-hi4-r5-census:L3",
+     "lane": "L3",
+     "parameter": "LAT_L3",
+     "kind": "SPLIT",
+     "added_cycles": 2,
+     "clock": "clk_core (833 ps)",
+     "relative_to": "new cut lane (absent in the base plan): its whole latency is added on the paths it carries",
+     "cycles": [
+      0,
+      2
+     ],
+     "why": "S81-SVC-J7-hi4-r5-census: cut route leaf attn_o1 piece 0 -> 1"
+    },
+    {
+     "id": "S81-SVC-J7-hi4-r5-census:L4",
+     "lane": "L4",
+     "parameter": "LAT_L4",
+     "kind": "SPLIT",
+     "added_cycles": 2,
+     "clock": "clk_core (833 ps)",
+     "relative_to": "new cut lane (absent in the base plan): its whole latency is added on the paths it carries",
+     "cycles": [
+      0,
+      2
+     ],
+     "why": "S81-SVC-J7-hi4-r5-census: cut route leaf attnh_o0 piece 0 -> 1"
+    },
+    {
+     "id": "S81-SVC-J7-hi4-r5-census:L5",
+     "lane": "L5",
+     "parameter": "LAT_L5",
+     "kind": "SPLIT",
+     "added_cycles": 2,
+     "clock": "clk_core (833 ps)",
+     "relative_to": "new cut lane (absent in the base plan): its whole latency is added on the paths it carries",
+     "cycles": [
+      0,
+      2
+     ],
+     "why": "S81-SVC-J7-hi4-r5-census: cut route sink rsv_i0 piece 1 -> 0"
+    },
+    {
+     "id": "S81-SVC-J7-hi4-r5-census:L6",
+     "lane": "L6",
+     "parameter": "LAT_L6",
+     "kind": "SPLIT",
+     "added_cycles": 2,
+     "clock": "clk_core (833 ps)",
+     "relative_to": "new cut lane (absent in the base plan): its whole latency is added on the paths it carries",
+     "cycles": [
+      0,
+      2
+     ],
+     "why": "S81-SVC-J7-hi4-r5-census: cut route leaf vid_o0 piece 0 -> 1"
+    },
+    {
+     "id": "S81-SVC-J7-hi4-r5-census:L7",
+     "lane": "L7",
+     "parameter": "LAT_L7",
+     "kind": "SPLIT",
+     "added_cycles": 2,
+     "clock": "clk_core (833 ps)",
+     "relative_to": "new cut lane (absent in the base plan): its whole latency is added on the paths it carries",
+     "cycles": [
+      0,
+      2
+     ],
+     "why": "S81-SVC-J7-hi4-r5-census: cut route leaf rinv_rsv_09 -> u_rsv_09 piece 0 -> 1"
+    },
+    {
+     "id": "S81-SVC-J7-hi4-r5-census:L8",
+     "lane": "L8",
+     "parameter": "LAT_L8",
+     "kind": "SPLIT",
+     "added_cycles": 2,
+     "clock": "clk_core (833 ps)",
+     "relative_to": "new cut lane (absent in the base plan): its whole latency is added on the paths it carries",
+     "cycles": [
+      0,
+      2
+     ],
+     "why": "S81-SVC-J7-hi4-r5-census: cut route leaf u_rsv_09 -> u_rsv_09 piece 0 -> 1"
+    },
+    {
+     "id": "S81-SVC-J7-hi4-r5-census:L9",
+     "lane": "L9",
+     "parameter": "LAT_L9",
+     "kind": "SPLIT",
+     "added_cycles": 2,
+     "clock": "clk_core (833 ps)",
+     "relative_to": "new cut lane (absent in the base plan): its whole latency is added on the paths it carries",
+     "cycles": [
+      0,
+      2
+     ],
+     "why": "S81-SVC-J7-hi4-r5-census: cut route leaf u_rsv_09 -> u_rsv_09 piece 0 -> 1"
+    },
+    {
+     "id": "S81-SVC-J7-hi4-r5-census:L10",
+     "lane": "L10",
+     "parameter": "LAT_L10",
+     "kind": "SPLIT",
+     "added_cycles": 2,
+     "clock": "clk_core (833 ps)",
+     "relative_to": "new cut lane (absent in the base plan): its whole latency is added on the paths it carries",
+     "cycles": [
+      0,
+      2
+     ],
+     "why": "S81-SVC-J7-hi4-r5-census: cut route leaf u_rsv_09 -> u_rsv_09 piece 1 -> 0"
+    },
+    {
+     "id": "S81-SVC-J7-hi4-r5-census:L11",
+     "lane": "L11",
+     "parameter": "LAT_L11",
+     "kind": "SPLIT",
+     "added_cycles": 2,
+     "clock": "clk_core (833 ps)",
+     "relative_to": "new cut lane (absent in the base plan): its whole latency is added on the paths it carries",
+     "cycles": [
+      0,
+      2
+     ],
+     "why": "S81-SVC-J7-hi4-r5-census: cut route leaf u_rsv_09 -> u_rsv_09 piece 1 -> 0"
+    }
+   ]
+  },
+  "svc_hi_dsdv_svc_rs__t5": {
+   "gen_status": "OK",
+   "pack": {
+    "rs": {
+     "boxes": 27,
+     "macro_fraction": 0.3121,
+     "last_y_um": 2842.56
+    },
+    "att": {
+     "boxes": 127,
+     "macro_fraction": 0.7047,
+     "last_y_um": 2859.84
+    }
+   },
+   "variant": {
+    "rs_gap": 17.28,
+    "flip": [
+     "rs",
+     "att"
+    ],
+    "dense": []
+   },
+   "ft": {
+    "ft0": {
+     "stations": 11,
+     "width": 276,
+     "max_hop_um": 397.258,
+     "moved_um": 501.1
+    },
+    "ft1": {
+     "stations": 9,
+     "width": 276,
+     "max_hop_um": 399.6,
+     "moved_um": 706.3
+    },
+    "ft2": {
+     "stations": 11,
+     "width": 276,
+     "max_hop_um": 401.728,
+     "moved_um": 794.9
+    },
+    "ft3": {
+     "stations": 11,
+     "width": 276,
+     "max_hop_um": 397.44,
+     "moved_um": 229.0
+    }
+   },
+   "geometry": "package/geom/svc_hi_dsdv_svc_rs__t5.json",
+   "port_window_blocks": [
+    {
+     "face": "S",
+     "straddling": [
+      "hbm__svc_13__svc_12__0"
+     ],
+     "windows_um": 794.0,
+     "room_um": 1408.4,
+     "repack_fits": true
+    }
+   ],
+   "status": "BLOCKED"
+  },
+  "svc_hi_dsdv_svc_rs__t6": {
+   "gen_status": "FAIL",
+   "pack_error": "AssertionError: FT_NO_SEAT ft1 station 2 near 25.9,2384.6",
+   "port_window_blocks": [
+    {
+     "face": "N",
+     "straddling": [
+      "rt_E0_in_1__3"
+     ],
+     "windows_um": 645.0,
+     "room_um": 1408.4,
+     "repack_fits": true
+    },
+    {
+     "face": "S",
+     "straddling": [
+      "attn__svc_14__svc_15__0"
+     ],
+     "windows_um": 900.1,
+     "room_um": 1408.4,
+     "repack_fits": true
+    }
+   ],
+   "status": "BLOCKED"
+  },
+  "svc_lo_dsdv_svc_rs__t1": {
+   "gen_status": "FAIL",
+   "pack_error": "AssertionError: PACK_OVERFLOW att_top 2859.84 rs_top 3127.68 > H 2980.8",
+   "port_window_blocks": [
+    {
+     "face": "N",
+     "straddling": [
+      "attn__svc_2__svc_3__0"
+     ],
+     "windows_um": 1415.1,
+     "room_um": 1408.4,
+     "repack_fits": false
+    },
+    {
+     "face": "S",
+     "straddling": [
+      "hbmrd__phy_hbm__svc_0__0"
+     ],
+     "windows_um": 1081.6,
+     "room_um": 1408.4,
+     "repack_fits": true
+    }
+   ],
+   "status": "BLOCKED"
+  },
+  "svc_lo_dsdv_svc_rs__t2": {
+   "gen_status": "FAIL",
+   "pack_error": "AssertionError: PACK_OVERFLOW att_top 2859.84 rs_top 3127.68 > H 2980.8",
+   "port_window_blocks": [
+    {
+     "face": "N",
+     "straddling": [
+      "attn__svc_4__svc_5__0"
+     ],
+     "windows_um": 1415.1,
+     "room_um": 1408.4,
+     "repack_fits": false
+    }
+   ],
+   "status": "BLOCKED"
+  },
+  "svc_lo_dsdv_svc_rs__t3": {
+   "gen_status": "FAIL",
+   "pack_error": "AssertionError: PACK_OVERFLOW att_top 2859.84 rs_top 3127.68 > H 2980.8",
+   "port_window_blocks": [
+    {
+     "face": "N",
+     "straddling": [
+      "attn__svc_6__svc_7__0"
+     ],
+     "windows_um": 1415.1,
+     "room_um": 1408.4,
+     "repack_fits": false
+    }
+   ],
+   "status": "BLOCKED"
+  },
+  "svc_lo_dsdv_svc_rs__t4": {
+   "gen_status": "FAIL",
+   "pack_error": "AssertionError: PACK_OVERFLOW att_top 2859.84 rs_top 3127.68 > H 2980.8",
+   "port_window_blocks": [],
+   "status": "BLOCKED"
+  },
+  "svc_lo_dsdv_svc_rs__t5": {
+   "gen_status": "FAIL",
+   "pack_error": "AssertionError: PACK_OVERFLOW att_top 2859.84 rs_top 3127.68 > H 2980.8",
+   "port_window_blocks": [
+    {
+     "face": "N",
+     "straddling": [
+      "hbm__svc_11__svc_10__0"
+     ],
+     "windows_um": 1417.2,
+     "room_um": 1408.4,
+     "repack_fits": false
+    }
+   ],
+   "status": "BLOCKED"
+  },
+  "svc_lo_dsdv_svc_rs__t6": {
+   "gen_status": "FAIL",
+   "pack_error": "AssertionError: PACK_OVERFLOW att_top 2859.84 rs_top 3127.68 > H 2980.8",
+   "port_window_blocks": [
+    {
+     "face": "N",
+     "straddling": [
+      "hbm__svc_13__svc_12__0"
+     ],
+     "windows_um": 794.0,
+     "room_um": 1408.4,
+     "repack_fits": true
+    }
+   ],
+   "status": "BLOCKED"
+  },
+  "svc_lo_dsdv_svc_rs__t7": {
+   "gen_status": "FAIL",
+   "pack_error": "AssertionError: PACK_OVERFLOW att_top 2859.84 rs_top 3127.68 > H 2980.8",
+   "port_window_blocks": [
+    {
+     "face": "N",
+     "straddling": [
+      "attn__svc_14__svc_15__0"
+     ],
+     "windows_um": 900.1,
+     "room_um": 1408.4,
+     "repack_fits": true
+    },
+    {
+     "face": "S",
+     "straddling": [
+      "hbmrd__phy_hbm__svc_14__1"
+     ],
+     "windows_um": 872.7,
+     "room_um": 1408.4,
+     "repack_fits": true
+    }
+   ],
+   "status": "BLOCKED"
+  },
+  "svc_lo_dsdv_svc_rs_w__t1": {
+   "gen_status": "FAIL",
+   "pack_error": "AssertionError: PACK_OVERFLOW att_top 2859.84 rs_top 3127.68 > H 2980.8",
+   "port_window_blocks": [
+    {
+     "face": "N",
+     "straddling": [
+      "rsv__svc_0__svc_1__0"
+     ],
+     "windows_um": 1373.8,
+     "room_um": 1408.4,
+     "repack_fits": false
+    }
+   ],
+   "status": "BLOCKED"
+  }
+ }
+}
