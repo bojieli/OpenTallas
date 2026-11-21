@@ -1,0 +1,911 @@
+{
+ "schema": "OPUS-FIX-KV-PV-R3 STATION-ROUTE-SPREAD fault bundle-mate rows (tool main c8876644a5, --conn 'vport_[EW]_N_f(_d1)?$')",
+ "note": "read on each type's KV-D25e3 placed geom; regs_um order as the plan; replace the matching internal_stations rows (conn) of the D27 plan, or re-run the tool on the D27 newest placed kit. Added stations = added cycles (gen.py latency + LATCHECK).",
+ "types": {
+  "kv3_pv_v1": {
+   "type": "kv3_pv_v1",
+   "source_kit": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-D25e3/items/kv3_pv_v1/attempt_4",
+   "internal_stations_changed": [
+    {
+     "conn": "bus:o_vport_E_N_f",
+     "from_um": [
+      1297.148,
+      570.645
+     ],
+     "to_um": [
+      2154.276,
+      250.965
+     ],
+     "regs_um": [
+      [
+       1461.419,
+       570.0
+      ],
+      [
+       1630.631,
+       570.0
+      ],
+      [
+       1799.842,
+       570.0
+      ],
+      [
+       1969.054,
+       570.0
+      ],
+      [
+       2138.266,
+       570.0
+      ],
+      [
+       2155.0,
+       417.523
+      ]
+     ],
+     "bits": 1,
+     "launch": "leaf (R8 bundle mate)",
+     "capture": "face bus o_vport_E_N_f",
+     "note": "KV-HG-OPUS PV stages 11-18: R8 bundle mate (same sink leaf + src part as a stationed lane): 6 FIRM station(s) next to the face, +6 cycle(s), no long path | STATION-ROUTE-SPREAD: 6 -> 6 station(s) on the placed route 1184 um driver -> sink, hop 1062 -> 169 um (+0 cycle(s))"
+    },
+    {
+     "conn": "bus:o_vport_E_N_f_d1",
+     "from_um": [
+      281.839,
+      474.12
+     ],
+     "to_um": [
+      15.417,
+      4.995
+     ],
+     "regs_um": [
+      [
+       123.184,
+       535.0
+      ],
+      [
+       5.0,
+       433.649
+      ],
+      [
+       5.0,
+       214.113
+      ]
+     ],
+     "bits": 1,
+     "launch": "leaf (R8 bundle mate)",
+     "capture": "face bus o_vport_E_N_f_d1",
+     "note": "KV-HG-OPUS PV stages 11-18: R8 bundle mate (same sink leaf + src part as a stationed lane): 3 FIRM station(s) next to the face, +3 cycle(s), no long path | STATION-ROUTE-SPREAD: 3 -> 3 station(s) on the placed route 878 um driver -> sink, hop 686 -> 220 um (+0 cycle(s))"
+    },
+    {
+     "conn": "bus:o_vport_W_N_f",
+     "from_um": [
+      15.106,
+      476.145
+     ],
+     "to_um": [
+      18.279,
+      6.615
+     ],
+     "regs_um": [
+      [
+       5.0,
+       319.722
+      ],
+      [
+       5.0,
+       153.193
+      ]
+     ],
+     "bits": 1,
+     "launch": "leaf (R8 bundle mate)",
+     "capture": "face bus o_vport_W_N_f",
+     "note": "KV-HG-OPUS PV stages 11-18: R8 bundle mate (same sink leaf + src part as a stationed lane): 2 FIRM station(s) next to the face, +2 cycle(s), no long path | STATION-ROUTE-SPREAD: 2 -> 2 station(s) on the placed route 500 um driver -> sink, hop 438 -> 167 um (+0 cycle(s))"
+    },
+    {
+     "conn": "bus:o_vport_W_N_f_d1",
+     "from_um": [
+      16.294,
+      582.12
+     ],
+     "to_um": [
+      5.589,
+      250.83
+     ],
+     "regs_um": [
+      [
+       5.0,
+       420.998
+      ]
+     ],
+     "bits": 1,
+     "launch": "leaf (R8 bundle mate)",
+     "capture": "face bus o_vport_W_N_f_d1",
+     "note": "KV-HG-OPUS PV stages 11-18: R8 bundle mate (same sink leaf + src part as a stationed lane): 1 FIRM station(s) next to the face, +1 cycle(s), no long path | STATION-ROUTE-SPREAD: 1 -> 1 station(s) on the placed route 345 um driver -> sink, hop 335 -> 172 um (+0 cycle(s))"
+    }
+   ]
+  },
+  "kv3_pv_v1n": {
+   "type": "kv3_pv_v1n",
+   "source_kit": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-D25e3/items/kv3_pv_v1n/attempt_4",
+   "internal_stations_changed": [
+    {
+     "conn": "bus:o_vport_E_N_f",
+     "from_um": [
+      1455.233,
+      673.11
+     ],
+     "to_um": [
+      2154.195,
+      250.695
+     ],
+     "regs_um": [
+      [
+       1614.109,
+       675.0
+      ],
+      [
+       1755.0,
+       654.659
+      ],
+      [
+       1755.0,
+       493.427
+      ],
+      [
+       1755.0,
+       332.195
+      ],
+      [
+       1834.036,
+       250.0
+      ],
+      [
+       1995.268,
+       250.0
+      ]
+     ],
+     "bits": 1,
+     "launch": "leaf (R8 bundle mate)",
+     "capture": "face bus o_vport_E_N_f",
+     "note": "KV-HG-OPUS PV stages 11-18: R8 bundle mate (same sink leaf + src part as a stationed lane): 6 FIRM station(s) next to the face, +6 cycle(s), no long path | STATION-ROUTE-SPREAD: 6 -> 6 station(s) on the placed route 1129 um driver -> sink, hop 1007 -> 161 um (+0 cycle(s))"
+    },
+    {
+     "conn": "bus:o_vport_E_N_f_d1",
+     "from_um": [
+      439.925,
+      577.53
+     ],
+     "to_um": [
+      15.201,
+      4.995
+     ],
+     "regs_um": [
+      [
+       405.0,
+       366.858
+      ],
+      [
+       405.0,
+       116.17
+      ],
+      [
+       265.482,
+       5.0
+      ]
+     ],
+     "bits": 1,
+     "launch": "leaf (R8 bundle mate)",
+     "capture": "face bus o_vport_E_N_f_d1",
+     "note": "KV-HG-OPUS PV stages 11-18: R8 bundle mate (same sink leaf + src part as a stationed lane): 3 FIRM station(s) next to the face, +3 cycle(s), no long path | STATION-ROUTE-SPREAD: 3 -> 3 station(s) on the placed route 1003 um driver -> sink, hop 948 -> 251 um (+0 cycle(s))"
+    },
+    {
+     "conn": "bus:o_vport_W_N_f",
+     "from_um": [
+      38.245,
+      418.095
+     ],
+     "to_um": [
+      18.9,
+      6.075
+     ],
+     "regs_um": [
+      [
+       5.0,
+       299.375
+      ],
+      [
+       5.0,
+       143.6
+      ]
+     ],
+     "bits": 1,
+     "launch": "leaf (R8 bundle mate)",
+     "capture": "face bus o_vport_W_N_f",
+     "note": "KV-HG-OPUS PV stages 11-18: R8 bundle mate (same sink leaf + src part as a stationed lane): 2 FIRM station(s) next to the face, +2 cycle(s), no long path | STATION-ROUTE-SPREAD: 2 -> 2 station(s) on the placed route 467 um driver -> sink, hop 398 -> 156 um (+0 cycle(s))"
+    }
+   ]
+  },
+  "kv3_pv_v3": {
+   "type": "kv3_pv_v3",
+   "source_kit": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-D25e3/items/kv3_pv_v3/attempt_5",
+   "internal_stations_changed": [
+    {
+     "conn": "bus:o_vport_E_N_f",
+     "from_um": [
+      1602.383,
+      570.375
+     ],
+     "to_um": [
+      2153.871,
+      250.56
+     ],
+     "regs_um": [
+      [
+       1600.0,
+       396.868
+      ],
+      [
+       1629.021,
+       250.0
+      ],
+      [
+       1804.91,
+       250.0
+      ],
+      [
+       1980.8,
+       250.0
+      ]
+     ],
+     "bits": 1,
+     "launch": "leaf (R8 bundle mate)",
+     "capture": "face bus o_vport_E_N_f",
+     "note": "KV-HG-OPUS PV stages 11-18: R8 bundle mate (same sink leaf + src part as a stationed lane): 4 FIRM station(s) next to the face, +4 cycle(s), no long path | KV-HG-OPUS D22s: station(s) moved off a clock keepout / reserved site / core halo | STATION-ROUTE-SPREAD: 4 -> 4 station(s) on the placed route 879 um driver -> sink, hop 796 -> 176 um (+0 cycle(s))"
+    },
+    {
+     "conn": "bus:o_vport_E_N_f_d1",
+     "from_um": [
+      1638.698,
+      495.585
+     ],
+     "to_um": [
+      2149.605,
+      4.86
+     ],
+     "regs_um": [
+      [
+       1640.0,
+       329.817
+      ],
+      [
+       1640.0,
+       162.747
+      ],
+      [
+       1649.324,
+       5.0
+      ],
+      [
+       1816.394,
+       5.0
+      ],
+      [
+       1983.465,
+       5.0
+      ]
+     ],
+     "bits": 1,
+     "launch": "leaf (R8 bundle mate)",
+     "capture": "face bus o_vport_E_N_f_d1",
+     "note": "KV-HG-OPUS PV stages 11-18: R8 bundle mate (same sink leaf + src part as a stationed lane): 5 FIRM station(s) next to the face, +5 cycle(s), no long path | STATION-ROUTE-SPREAD: 5 -> 5 station(s) on the placed route 1002 um driver -> sink, hop 909 -> 167 um (+0 cycle(s))"
+    },
+    {
+     "conn": "bus:o_vport_W_N_f",
+     "from_um": [
+      1620.261,
+      385.785
+     ],
+     "to_um": [
+      2150.685,
+      5.4
+     ],
+     "regs_um": [
+      [
+       1620.0,
+       255.742
+      ],
+      [
+       1620.0,
+       125.437
+      ],
+      [
+       1629.867,
+       5.0
+      ],
+      [
+       1760.172,
+       5.0
+      ],
+      [
+       1890.476,
+       5.0
+      ],
+      [
+       2020.781,
+       5.0
+      ]
+     ],
+     "bits": 1,
+     "launch": "leaf (R8 bundle mate)",
+     "capture": "face bus o_vport_W_N_f",
+     "note": "KV-HG-OPUS PV stages 11-18: R8 bundle mate (same sink leaf + src part as a stationed lane): 6 FIRM station(s) next to the face, +6 cycle(s), no long path | STATION-ROUTE-SPREAD: 6 -> 6 station(s) on the placed route 912 um driver -> sink, hop 797 -> 130 um (+0 cycle(s))"
+    },
+    {
+     "conn": "bus:o_vport_W_N_f_d1",
+     "from_um": [
+      331.034,
+      514.755
+     ],
+     "to_um": [
+      5.319,
+      250.83
+     ],
+     "regs_um": [
+      [
+       193.172,
+       535.0
+      ],
+      [
+       35.065,
+       535.0
+      ],
+      [
+       5.0,
+       406.958
+      ]
+     ],
+     "bits": 1,
+     "launch": "leaf (R8 bundle mate)",
+     "capture": "face bus o_vport_W_N_f_d1",
+     "note": "KV-HG-OPUS PV stages 11-18: R8 bundle mate (same sink leaf + src part as a stationed lane): 3 FIRM station(s) next to the face, +3 cycle(s), no long path | STATION-ROUTE-SPREAD: 3 -> 3 station(s) on the placed route 632 um driver -> sink, hop 536 -> 158 um (+0 cycle(s))"
+    }
+   ]
+  },
+  "kv3_pv_v3n": {
+   "type": "kv3_pv_v3n",
+   "source_kit": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-D25e3/items/kv3_pv_v3n/attempt_12",
+   "internal_stations_changed": [
+    {
+     "conn": "bus:o_vport_E_N_f",
+     "from_um": [
+      1591.367,
+      630.72
+     ],
+     "to_um": [
+      2154.06,
+      250.695
+     ],
+     "regs_um": [
+      [
+       1590.0,
+       442.342
+      ],
+      [
+       1590.0,
+       252.598
+      ],
+      [
+       1777.146,
+       250.0
+      ],
+      [
+       1966.891,
+       250.0
+      ]
+     ],
+     "bits": 1,
+     "launch": "leaf (R8 bundle mate)",
+     "capture": "face bus o_vport_E_N_f",
+     "note": "KV-HG-OPUS PV stages 11-18: R8 bundle mate (same sink leaf + src part as a stationed lane): 4 FIRM station(s) next to the face, +4 cycle(s), no long path | KV-HG-OPUS D22s: station(s) moved off a clock keepout / reserved site / core halo | STATION-ROUTE-SPREAD: 4 -> 4 station(s) on the placed route 949 um driver -> sink, hop 867 -> 190 um (+0 cycle(s))"
+    },
+    {
+     "conn": "bus:o_vport_E_N_f_d1",
+     "from_um": [
+      1627.736,
+      555.525
+     ],
+     "to_um": [
+      2149.605,
+      4.86
+     ],
+     "regs_um": [
+      [
+       1630.0,
+       378.902
+      ],
+      [
+       1630.0,
+       200.015
+      ],
+      [
+       1630.0,
+       21.127
+      ],
+      [
+       1792.76,
+       5.0
+      ],
+      [
+       1971.648,
+       5.0
+      ]
+     ],
+     "bits": 1,
+     "launch": "leaf (R8 bundle mate)",
+     "capture": "face bus o_vport_E_N_f_d1",
+     "note": "KV-HG-OPUS PV stages 11-18: R8 bundle mate (same sink leaf + src part as a stationed lane): 5 FIRM station(s) next to the face, +5 cycle(s), no long path | STATION-ROUTE-SPREAD: 5 -> 5 station(s) on the placed route 1073 um driver -> sink, hop 979 -> 179 um (+0 cycle(s))"
+    },
+    {
+     "conn": "bus:o_vport_W_N_f",
+     "from_um": [
+      1381.793,
+      522.045
+     ],
+     "to_um": [
+      2150.685,
+      5.4
+     ],
+     "regs_um": [
+      [
+       1553.229,
+       535.0
+      ],
+      [
+       1741.205,
+       535.0
+      ],
+      [
+       1755.0,
+       360.819
+      ],
+      [
+       1755.0,
+       172.843
+      ],
+      [
+       1775.133,
+       5.0
+      ],
+      [
+       1963.109,
+       5.0
+      ]
+     ],
+     "bits": 1,
+     "launch": "leaf (R8 bundle mate)",
+     "capture": "face bus o_vport_W_N_f",
+     "note": "KV-HG-OPUS PV stages 11-18: R8 bundle mate (same sink leaf + src part as a stationed lane): 6 FIRM station(s) next to the face, +6 cycle(s), no long path | STATION-ROUTE-SPREAD: 6 -> 6 station(s) on the placed route 1316 um driver -> sink, hop 1171 -> 188 um (+0 cycle(s))"
+    },
+    {
+     "conn": "bus:o_vport_W_N_f_d1",
+     "from_um": [
+      335.488,
+      588.06
+     ],
+     "to_um": [
+      5.94,
+      250.965
+     ],
+     "regs_um": [
+      [
+       168.845,
+       590.0
+      ],
+      [
+       5.0,
+       585.262
+      ],
+      [
+       5.0,
+       416.678
+      ]
+     ],
+     "bits": 1,
+     "launch": "leaf (R8 bundle mate)",
+     "capture": "face bus o_vport_W_N_f_d1",
+     "note": "KV-HG-OPUS PV stages 11-18: R8 bundle mate (same sink leaf + src part as a stationed lane): 3 FIRM station(s) next to the face, +3 cycle(s), no long path | STATION-ROUTE-SPREAD: 3 -> 3 station(s) on the placed route 674 um driver -> sink, hop 615 -> 169 um (+0 cycle(s))"
+    }
+   ]
+  },
+  "kv3_pv_v5": {
+   "type": "kv3_pv_v5",
+   "source_kit": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-D25e3/items/kv3_pv_v5/attempt_4",
+   "internal_stations_changed": [
+    {
+     "conn": "bus:o_vport_E_N_f",
+     "from_um": [
+      1486.093,
+      651.375
+     ],
+     "to_um": [
+      2154.411,
+      250.56
+     ],
+     "regs_um": [
+      [
+       1635.905,
+       650.0
+      ],
+      [
+       1755.0,
+       615.721
+      ],
+      [
+       1755.0,
+       462.347
+      ],
+      [
+       1755.0,
+       308.973
+      ],
+      [
+       1849.401,
+       250.0
+      ],
+      [
+       2002.775,
+       250.0
+      ]
+     ],
+     "bits": 1,
+     "launch": "leaf (R8 bundle mate)",
+     "capture": "face bus o_vport_E_N_f",
+     "note": "KV-HG-OPUS PV stages 11-18: R8 bundle mate (same sink leaf + src part as a stationed lane): 6 FIRM station(s) next to the face, +6 cycle(s), no long path | STATION-ROUTE-SPREAD: 6 -> 6 station(s) on the placed route 1074 um driver -> sink, hop 955 -> 153 um (+0 cycle(s))"
+    },
+    {
+     "conn": "bus:o_vport_E_N_f_d1",
+     "from_um": [
+      1539.932,
+      555.525
+     ],
+     "to_um": [
+      2151.414,
+      4.86
+     ],
+     "regs_um": [
+      [
+       1832.443,
+       555.0
+      ],
+      [
+       2125.48,
+       555.0
+      ],
+      [
+       2155.0,
+       291.483
+      ]
+     ],
+     "bits": 1,
+     "launch": "leaf (R8 bundle mate)",
+     "capture": "face bus o_vport_E_N_f_d1",
+     "note": "KV-HG-OPUS PV stages 11-18: R8 bundle mate (same sink leaf + src part as a stationed lane): 3 FIRM station(s) next to the face, +3 cycle(s), no long path | STATION-ROUTE-SPREAD: 3 -> 3 station(s) on the placed route 1172 um driver -> sink, hop 1106 -> 293 um (+0 cycle(s))"
+    },
+    {
+     "conn": "bus:o_vport_W_N_f",
+     "from_um": [
+      1365.647,
+      291.06
+     ],
+     "to_um": [
+      2154.006,
+      4.86
+     ],
+     "regs_um": [
+      [
+       1542.934,
+       290.0
+      ],
+      [
+       1722.574,
+       290.0
+      ],
+      [
+       1902.214,
+       290.0
+      ],
+      [
+       2081.854,
+       290.0
+      ],
+      [
+       2155.0,
+       183.506
+      ]
+     ],
+     "bits": 1,
+     "launch": "leaf (R8 bundle mate)",
+     "capture": "face bus o_vport_W_N_f",
+     "note": "KV-HG-OPUS PV stages 11-18: R8 bundle mate (same sink leaf + src part as a stationed lane): 5 FIRM station(s) next to the face, +5 cycle(s), no long path | STATION-ROUTE-SPREAD: 5 -> 5 station(s) on the placed route 1078 um driver -> sink, hop 977 -> 180 um (+0 cycle(s))"
+    },
+    {
+     "conn": "bus:o_vport_W_N_f_d1",
+     "from_um": [
+      299.66,
+      366.795
+     ],
+     "to_um": [
+      6.183,
+      250.83
+     ],
+     "regs_um": [
+      [
+       135.061,
+       325.0
+      ]
+     ],
+     "bits": 1,
+     "launch": "leaf (R8 bundle mate)",
+     "capture": "face bus o_vport_W_N_f_d1",
+     "note": "KV-HG-OPUS PV stages 11-18: R8 bundle mate (same sink leaf + src part as a stationed lane): 1 FIRM station(s) next to the face, +1 cycle(s), no long path | STATION-ROUTE-SPREAD: 1 -> 1 station(s) on the placed route 414 um driver -> sink, hop 396 -> 207 um (+0 cycle(s))"
+    }
+   ]
+  },
+  "kv3_pv_v5n": {
+   "type": "kv3_pv_v5n",
+   "source_kit": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-D25e3/items/kv3_pv_v5n/attempt_9",
+   "internal_stations_changed": [
+    {
+     "conn": "bus:o_vport_E_N_f",
+     "from_um": [
+      1323.553,
+      571.05
+     ],
+     "to_um": [
+      2154.033,
+      250.56
+     ],
+     "regs_um": [
+      [
+       1487.364,
+       570.0
+      ],
+      [
+       1652.225,
+       570.0
+      ],
+      [
+       1817.085,
+       570.0
+      ],
+      [
+       1981.946,
+       570.0
+      ],
+      [
+       2146.806,
+       570.0
+      ],
+      [
+       2155.0,
+       413.333
+      ]
+     ],
+     "bits": 1,
+     "launch": "leaf (R8 bundle mate)",
+     "capture": "face bus o_vport_E_N_f",
+     "note": "KV-HG-OPUS PV stages 11-18: R8 bundle mate (same sink leaf + src part as a stationed lane): 6 FIRM station(s) next to the face, +6 cycle(s), no long path | STATION-ROUTE-SPREAD: 6 -> 6 station(s) on the placed route 1154 um driver -> sink, hop 1036 -> 165 um (+0 cycle(s))"
+    },
+    {
+     "conn": "bus:o_vport_E_N_f_d1",
+     "from_um": [
+      1378.714,
+      475.605
+     ],
+     "to_um": [
+      2151.441,
+      4.86
+     ],
+     "regs_um": [
+      [
+       1593.772,
+       535.0
+      ],
+      [
+       1868.224,
+       535.0
+      ],
+      [
+       2142.676,
+       535.0
+      ],
+      [
+       2155.0,
+       272.871
+      ]
+     ],
+     "bits": 1,
+     "launch": "leaf (R8 bundle mate)",
+     "capture": "face bus o_vport_E_N_f_d1",
+     "note": "KV-HG-OPUS PV stages 11-18: R8 bundle mate (same sink leaf + src part as a stationed lane): 3 FIRM station(s) next to the face, +3 cycle(s), no long path | STATION-ROUTE-SPREAD: 3 -> 4 station(s) on the placed route 1372 um driver -> sink, hop 1186 -> 274 um (+1 cycle(s))"
+    },
+    {
+     "conn": "bus:o_vport_W_N_f",
+     "from_um": [
+      1358.788,
+      228.69
+     ],
+     "to_um": [
+      2153.952,
+      4.86
+     ],
+     "regs_um": [
+      [
+       1519.763,
+       245.0
+      ],
+      [
+       1695.0,
+       242.952
+      ],
+      [
+       1695.0,
+       65.667
+      ],
+      [
+       1806.618,
+       0.0
+      ],
+      [
+       1983.903,
+       0.0
+      ]
+     ],
+     "bits": 1,
+     "launch": "leaf (R8 bundle mate)",
+     "capture": "face bus o_vport_W_N_f",
+     "note": "KV-HG-OPUS PV stages 11-18: R8 bundle mate (same sink leaf + src part as a stationed lane): 5 FIRM station(s) next to the face, +5 cycle(s), no long path | STATION-ROUTE-SPREAD: 5 -> 5 station(s) on the placed route 1064 um driver -> sink, hop 922 -> 177 um (+0 cycle(s))"
+    },
+    {
+     "conn": "bus:o_vport_W_N_f_d1",
+     "from_um": [
+      292.397,
+      304.425
+     ],
+     "to_um": [
+      5.589,
+      250.83
+     ],
+     "regs_um": [
+      [
+       120.776,
+       310.0
+      ]
+     ],
+     "bits": 1,
+     "launch": "leaf (R8 bundle mate)",
+     "capture": "face bus o_vport_W_N_f_d1",
+     "note": "KV-HG-OPUS PV stages 11-18: R8 bundle mate (same sink leaf + src part as a stationed lane): 1 FIRM station(s) next to the face, +1 cycle(s), no long path | STATION-ROUTE-SPREAD: 1 -> 1 station(s) on the placed route 354 um driver -> sink, hop 327 -> 177 um (+0 cycle(s))"
+    }
+   ]
+  },
+  "kv3_pv_v7": {
+   "type": "kv3_pv_v7",
+   "source_kit": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-D25e3/items/kv3_pv_v7/attempt_3",
+   "internal_stations_changed": [
+    {
+     "conn": "bus:o_vport_E_N_f",
+     "from_um": [
+      1584.373,
+      443.745
+     ],
+     "to_um": [
+      2153.979,
+      306.855
+     ],
+     "regs_um": [
+      [
+       1591.07,
+       310.0
+      ],
+      [
+       1734.021,
+       310.0
+      ],
+      [
+       1876.973,
+       310.0
+      ],
+      [
+       2019.925,
+       310.0
+      ]
+     ],
+     "bits": 1,
+     "launch": "leaf (R8 bundle mate)",
+     "capture": "face bus o_vport_E_N_f",
+     "note": "KV-HG-OPUS PV stages 11-18: R8 bundle mate (same sink leaf + src part as a stationed lane): 4 FIRM station(s) next to the face, +4 cycle(s), no long path | KV-HG-OPUS D22s: station(s) moved off a clock keepout / reserved site / core halo | STATION-ROUTE-SPREAD: 4 -> 4 station(s) on the placed route 715 um driver -> sink, hop 631 -> 143 um (+0 cycle(s))"
+    },
+    {
+     "conn": "bus:o_vport_E_N_f_d1",
+     "from_um": [
+      1620.526,
+      320.625
+     ],
+     "to_um": [
+      2149.605,
+      4.725
+     ],
+     "regs_um": [
+      [
+       1620.0,
+       109.446
+      ],
+      [
+       1727.259,
+       5.0
+      ],
+      [
+       1938.965,
+       5.0
+      ]
+     ],
+     "bits": 1,
+     "launch": "leaf (R8 bundle mate)",
+     "capture": "face bus o_vport_E_N_f_d1",
+     "note": "KV-HG-OPUS PV stages 11-18: R8 bundle mate (same sink leaf + src part as a stationed lane): 3 FIRM station(s) next to the face, +3 cycle(s), no long path | STATION-ROUTE-SPREAD: 3 -> 3 station(s) on the placed route 847 um driver -> sink, hop 792 -> 212 um (+0 cycle(s))"
+    },
+    {
+     "conn": "bus:o_vport_W_N_f",
+     "from_um": [
+      1350.122,
+      252.045
+     ],
+     "to_um": [
+      2149.605,
+      5.4
+     ],
+     "regs_um": [
+      [
+       1609.824,
+       250.0
+      ],
+      [
+       1755.0,
+       133.186
+      ],
+      [
+       1888.805,
+       5.0
+      ]
+     ],
+     "bits": 1,
+     "launch": "leaf (R8 bundle mate)",
+     "capture": "face bus o_vport_W_N_f",
+     "note": "KV-HG-OPUS PV stages 11-18: R8 bundle mate (same sink leaf + src part as a stationed lane): 2 FIRM station(s) next to the face, +2 cycle(s), no long path | STATION-ROUTE-SPREAD: 2 -> 3 station(s) on the placed route 1048 um driver -> sink, hop 1014 -> 262 um (+1 cycle(s))"
+    },
+    {
+     "conn": "bus:o_vport_W_N_f_d1",
+     "from_um": [
+      284.891,
+      385.425
+     ],
+     "to_um": [
+      6.237,
+      306.72
+     ],
+     "regs_um": [
+      [
+       163.789,
+       325.0
+      ]
+     ],
+     "bits": 1,
+     "launch": "leaf (R8 bundle mate)",
+     "capture": "face bus o_vport_W_N_f_d1",
+     "note": "KV-HG-OPUS PV stages 11-18: R8 bundle mate (same sink leaf + src part as a stationed lane): 1 FIRM station(s) next to the face, +1 cycle(s), no long path | STATION-ROUTE-SPREAD: 1 -> 1 station(s) on the placed route 363 um driver -> sink, hop 344 -> 182 um (+0 cycle(s))"
+    }
+   ]
+  }
+ }
+}
