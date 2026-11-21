@@ -1,0 +1,1 @@
+- 2026-11-20 23:52 PST DIED [FAM-S81-COL] ot-run oth-ubuntu-2352409-1795247524 on key-cardinal: rc=1 after 9 s, ended 23:52:11, log none, cmd: --mem 8 --threads 1 --hosts intel1 --dir /srv/opentallas-scratch2/claude/fam-s81-col -- bash trace1.sh
