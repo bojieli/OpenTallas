@@ -160,6 +160,16 @@
  },
  "validation": {
   "c1n_check": "plan_h2_2249 relay_depth in candC1n has 8 rows per c1x_C type (class A xr<->eg and eg scale/eps only); NO rows for xr->xg ci_b/is_d or xg->xf: R-ST1a/b/c still to add and need path_um measured from placed DB (t9 CTS xy on epyc7) and equal depth per aligned bundle (ci_b/ci_dir/is_d/is_v).",
-  "strict_gate": "NOT RUN: a bound delta needs (a) relay rows with measured path_um and (b) for the split new partition_types for strip/body (outline, pins, hard_cores, buses, clock landing, ft_slots) which is a plan-event-sized change; a strict bind on the C1n tree took >1 h of epyc10 time. Next: relay rows (a) as a delta on a copy of candC1n through gate.sh."
+  "strict_gate": "NOT RUN: a bound delta needs (a) relay rows with measured path_um and (b) for the split new partition_types for strip/body (outline, pins, hard_cores, buses, clock landing, ft_slots) which is a plan-event-sized change; a strict bind on the C1n tree took >1 h of epyc10 time. Next: relay rows (a) as a delta on a copy of candC1n through gate.sh.",
+  "relay_row_delta": {
+   "result": "EMPTY at plan level (11-21 05:xx)",
+   "evidence": "istation_respace --limit 405 --report 405 on candC1n plan, c1x_C t1,t3-t10 + iq_C t1: rows 0, stage adds 0 (log fam-s81-slice/c1xC_resp.log). Plan internal_stations max hop 397.6 um (t1 296.6); only iq_C t1 has a 416.1 hop. relay_depth already 8 rows/type, all aligned. A strict bind on the unchanged plan would just repeat the green C1n gate, so I cancelled it (my unit oth-ubuntu-3326480).",
+   "why": "the failing hops are SOFT flop -> core pin at placed distance: xg.u_s gd_b -> 24 SRAM u_mem/wd_i (2,113 paths), xf u_x dl_d/id -> finish f_d (1,603), d#_Y relay -> xr lo_d (631), xg.u_r g_d -> xr dl_e (283), xr -> leafdn stations (class C). None is a plan row: relay_depth.py is core-to-core, istation_respace is plan stations.",
+   "real_fix": [
+    "RTL registered write-data stage at the SRAM bank pins for xg gd_b -> u_mem wd_i (+1 cycle, define-gated, in ot_s81sl_xs4)",
+    "RTL delivery stage per finish core in ot_s81dv_xfin (SLICEC-0045 R4b)",
+    "CBC300 station pass / placement hint for the soft flops; strip split removes ~150k cells competing for the same area"
+   ]
+  }
  }
 }
