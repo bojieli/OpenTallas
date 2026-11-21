@@ -1,3 +1,93 @@
+# FABLE-CLOSURE-STRATEGY 2026-11-20 21:20 PST (lane FABLE-CLOSURE-2130, the 21:30 round): the "clock wall" of 19:30 was read before the tap balance. After the hooks S81 taps sit within about 60 ps of each other; what is left is skew inside a tap, long unstationed nets, and three real core-clock errors (KV hgi pad detour, QC cb tile insertion, none on S81)
+
+Reviewer: FABLE-CLOSURE-2130 (Fable). Read-only: nothing launched, cancelled, signalled or patched. No STA job used (the one allowed was not needed). One grep-level scan (nice 19) of `4_1_cts.log` + `4_cts_final.rpt` on epyc2/7/8/9/10 and intel1, kits of the last 3 days: 252 kits with both readings (S81 118, QC 121, HEAD 13, KV 0).
+Gate: DRC 0, TT >= -42 ps at 833 ps, internal FF hold >= 0, LEC, bind + LATCHECK. Hop cap 300 um. No die or outline growth. Nothing below is a new gate or hold.
+Marking: **V** = I read the file or computed the number this round. **R** = reported by the named lane. **I** = inferred. **P** = proposal.
+Scripts and outputs: localhost scratchpad `r2130/` (`scan.sh`, `an.py`, `scan_<host>.txt`). Count now (failure_breakdown 21:10, V): S81 44/394 types signed, QC 33/125, KV 6/56, HEAD 25/26.
+
+## 0. Headline
+
+1. **`4_cts_final.rpt` is written before the POST_CTS hooks (tap balance); the CTS log says so itself (V).** Every clock number of the 19:30 round (skew median 576, 12 of 89 at -42) and the t60 "240 ps intra-type skew" come from that pre-hook report. The DB that goes on to repair and route is the post-hook one.
+
+| Kits (V) | n | setup pre-hook, median | setup post-hook, median | at -42 or better pre -> post | hold_ws post-hook, median (all ends, ports included) |
+|---|---|---|---|---|---|
+| S81 b05c98f7919 | 88 | -260.5 | -199.6 | 12 -> 19 | -102 |
+| S81 3fa87b84b18 | 24 | -161.1 | -18.6 | 6 -> 16 | -91 |
+| QC N46C | 81 | -66.0 | +4.9 | 29 -> 58 | -122 |
+| HEAD NF15f r8b | 6 | -236.3 | -105.5 | 0 -> 2 | -192 |
+
+2. **The t60 case (V).** `u_rst_in` (clk_t57) -> `u_rrl_167` (clk_t60), hold -158.8, is in `4_cts_final.rpt`: raw trees, clk_t57 3 buffers = 67 ps (148 sinks), clk_t60 8 buffers + one wire repeater = 307 ps (1,000 sinks). Raw tap insertion on this kit runs 46 to 471 ps over 68 taps. After tap_balance: clk_t57 456 (426-489), clk_t60 438 (427-489); final 490.5 / 488.7. The post-hook report has no such path in its 70 worst min paths; kit hold_ws is -57.2, an input port end (`ft1_i[115] -> u_ft_ft1_o_0`); the worst internal reset min path is +11. Estimate for the root hop after balance: about -10 to +55 (I).
+3. **Lever 1 of 19:30 is withdrawn as a clock lever (V + R).** CORE-PIN-RELAY measured flop -> core setup +134.7 / hold +54.9 and core -> flop +291.2 / +52.5 on col_h9_r1; the 590 to 690 ps pair is |source| + target arithmetic. It stays as a wire lever only (pin seats, main 2c832b890d1). The 19:30 stop item "no J6 col volume with relay registers on the nearest tap" is withdrawn.
+4. **Three core clock errors are real, each with its own cause:** KV hgi pad detour (381 ps, 14 of 16 pins, R; b8d with the direct tap ends CTS at FF hold -86.3 / 1,049 ends, V, control b8 not finished), QC cb tile late by 163 ps (lib insertion 818 against contract 733 plus an SDC override, R), nothing on S81 col (core taps 447-468 against 450, R).
+5. **Lockup is the right hold form for one class only:** zero-logic pairs on different taps that are under 200 um apart and cannot share a tap. It is wrong on 250-400 um hops, on launch taps, on same-tap pairs, into hard cores, and as a blanket seam form (section 3).
+
+## 1. What dominates intra-type clock insertion skew, and the structural fix at 833 ps
+
+Before the hooks: tree depth, set by sinks per tap and by the span of the tap's sink box. t60 (V): 54 of 68 taps have a sink box over 300 um (W+H, max 859); three taps keep 4,549 / 4,742 / 1,602 sinks against a cap of 1,000 ("no tap with room within 200 um"). This raw skew (hundreds of ps) is already removed by tap_balance and must not be fixed twice.
+
+After the hooks, three residues, largest first (V, S81 118 kits):
+
+| Residue | Size | Cause |
+|---|---|---|
+| Skew inside one tap | worst tap median 107 ps, p90 267; over 100 on 65 of 118 kits (QC 45 of 120, HEAD 7 of 13) | sink box over 300 um and taps over the cap; t60 clk_t36 (1,602 sinks) 119 ps, the rest 50 to 75 |
+| Taps left under the target | target - earliest tap mean: median 52, p90 148; over 30 on 98 of 118 | tap_balance stops after 2 passes with BUFx4 steps; tolerance is 10 |
+| Taps over the target | latest tap mean - target: median 28, p90 152; over 30 on 53 of 118 (QC 68 of 120, median 57) | raw tree already above 450 (t60 clk_t9 471 -> 526); padding cannot shorten it |
+| Tap window in the SDC | 10 to 99 ps early, per port | die delivery, measured; not a kit error |
+
+Only 7 of 118 S81 kits have tap spread <= 40 and in-tap skew <= 80. Kits with spread <= 60 and in-tap <= 90 (29 kits) have post-hook setup median -26; the other 89 have -163 (correlation, I).
+
+Structural fix, period untouched (P):
+1. **Tap grid by sink box.** On every type with an `OT_TAP_SPAN` or over-cap WARN: `clock.tap_pitch_um` 400 -> 300, and each dense bank over 1,000 sinks gets its own taps (the tool already prints the pitch it needs). Superset pinouts are approved; no outline change. Target: every tap <= 1,000 sinks, sink box <= 300 um, in-tap skew <= 60.
+2. **tap_balance converges.** A third pass with a finer cell so every tap mean is inside the 10 ps tolerance, and a per-kit target = max(450, latest raw tap) so no tap is left late. One tools change.
+3. **Zero-logic pairs under 200 um share a tap** (`OT_TAP_PAIR_UM` 60 -> 200 inside the cap; t60 leaves 546 cross-tap short pairs today). The latch is the fallback, not the first form.
+4. What is then left across taps is window + 25 ps uncertainty against clk-to-q plus hop wire: 300-350 um hops are at mean -25 on 1,565 ends (R), a few hold cells.
+
+## 2. Levers, ranked by types unblocked
+
+| # | Lever | Types | Measured evidence | Root cause | Fix | Owner |
+|---|---|---|---|---|---|---|
+| 1 | **Stations by length on the long nets that set S81 setup** | S81 about 350 unsigned (leaf, col, slice), KV 50, QC cb 17 | Post-hook S81 b05c median -200 with balanced taps (V). t60 worst: `u_rrl_546 -> cland_fstart_ft1_o` -222.6, then core `u_vsw -> u_vs` -191 x4 (V). t39 worst: `u_lpad_leafdn_i0.q[594]` -> 14 BUFx16f, about 1 ns -> `u_crr_rxsb`, -424 baseline, -490 proof2 (R). | Unstationed reach: start legs (form S), pad bank -> far core, core -> core. Not clock, not latch. | Rows from the tools on the J6 bind: `relay_depth --pin-w 0.1` for core ends (573 rows / +1,255 stages on 32 col types, R), a sink `relay_depth` row on `lpad_leafdn -> u_crr_rxsb` (D = ceil(L/300) - 1, +3 to +4 cycles, I), form S on every `u_rrl -> cland_fstart`. Pin relays keep the kit tap. | S81-J6-ASSEMBLY (rows), CORE-PIN-RELAY-R2 (core ends), RESET-RELAY-GEN-R3 (form S); KV-PLAN-R3, QC-PLAN-R8 same forms |
+| 2 | **Clock read after the hooks** | every type with a clock verdict; 4 S81 types have rows from the wrong report | Section 0 table. `root_entry_scan` read 110 `4_cts_final.rpt`: t60 239, t73 621, t68 389, kv_leaf t5 746 are raw-tree numbers (V for t60, I for the other three). | Scans and auto rules read the pre-hook report. | `root_entry_scan`, the CTS class scans and PRECHECK read `OT_CTS_POST_TIMING`, `OT_TAP_INSERTION` and `4_cts_post_hook.rpt`. Re-run the root rule there; keep the key `reset.root_entry_negedge`, default absent. Core-pin slack A/B read on `4_cts.odb`. | RESET-RELAY-GEN-R3, CORE-PIN-RELAY-R2 |
+| 3 | **Tap grid and tap_balance convergence** (section 1) | S81 65 of 118 kits over 100 ps in a tap; QC 45 of 120; HEAD hd_lep0N | Section 1 table. | Taps too wide or too full; balance stops short. | Section 1 fixes 1 to 3. First proof: t60 and one col master with pitch 300, read `OT_TAP_INSERTION skew_ps` and hold ends at pregrt. | S81-DIE-R5 (plan tap rows, proof), QC-PLAN-R8; tap_balance change by FABLE-FIX-KV-HGI (same file) |
+| 4 | **Hold form per pair class** (section 3) | S81 leaf / lepe families, HEAD hd_lep0N; not QC (0 cross-tap hold ends on slw_fe_v2, R) | proof1: hold cells 47,483 -> 22,160 but hold -128 on 1,211 port-in ends and setup -471 (baseline -341). proof2: cross-tap 14,251 -> 6,603, port-out 1,884 -> 5, TNS -16.4k -> -133.7k; 4,257 latch -> capture ends carry -227k, 3,738 of them on 250-400 um hops (R). | proof1: 26,592 latch pins pushed launch taps over cap (clk_t6 15,062 sinks). proof2: the latch sits at the launch flop, so the whole hop runs in half a period. | Section 3 table. Rows only after proof4 shows TNS no worse than baseline. | LOCKUP-STATION-R2 |
+| 5 | **KV head-core tap direct** | KV hg / hgi 19 types | kR: core pin 381 ps after its port, FF hold -277.6 on 5,105 ends, TT -310 (R). Probe: port -> pad BUFx4 input 101 ps of wire at slew 320, + 52 cell (V). b8d: FF hold -86.3 / 1,049 ends at CTS (V). | tap_balance pads a core tap 13 ps under target with a buffer that can only legalise outside the 216 um core. | `OT_TAP_CORE_DIRECT=1` (49c46f1e15) on the 19 types; push after b8 gives the control number. Then drop `clock.core_input_lockup` on hg / hgi if hold closes: it costs half a period into the core. | FABLE-FIX-KV-HGI; KV-PLAN-R3 for D27 |
+| 6 | **QC cb tile clock contract** | QC cb 17 types | cbn_q01: tile effective 404-413 against target 250, +163 ps on all 4 cores; lib insertion 818, `core_taps` 733; `constraint.sdc` l206-207 sets -425.1 / -404.9 over the -483.25 contract (R). QC taps over target: median 57 (V). | Contract value 85 ps short, and an SDC override on top. | `core_taps` insertion 818 for qfd_tile_nk_a0c and no override; read `OT_TAP_CORE` on proof p1 (effective within 20 of target). With the a3 tile-link rows in V2. | QC-PLAN-R8 |
+| 7 | **Frozen seats and trees follow what they serve** | S81 63 types (70 monitors); HEAD 11 types, 10 of them signed | J5: reset rewire moved 103 of 398 monitor parents and their pins; `band_fixed_um` kept the seats; up to 2,905 um (R). HEAD R15: trees differ on 11 of 26 types from one site-rule commit, bisected to 42eeacf87f (R). | A frozen artefact is copied without a check against the thing it is tied to. | S81: `monitor-home` as the last J6 plan step, MONITOR-PIN precheck 0. HEAD: `reset.reach_cap_um` 405 + `reset.relay_site_rule` in the plan, cohort DIFF = {hd_serdes, hd_lep0N}. | S81-J6-ASSEMBLY, HEAD-PLAN-R16 |
+| 8 | **S81 global placement timing pass** | S81 col / leaf (63 of 76 J5 kits, 19:30) | No A/B result: the 8 variants were still waiting for admission at 21:1x (V). | as 19:30 lever 3 | Keep as A/B only; apply at gen only if place WNS gains and HPWL <= 1.1x. | GPL-TD-AB |
+
+## 3. Which hold form where
+
+| Pair class | Form | Evidence |
+|---|---|---|
+| Zero-logic pair, ends on one tap | nothing; the tap solve drops the latch | same-tap ends 41 of 17,372 on t39 (R) |
+| Zero-logic pair, different taps, under 200 um | 1 same tap (section 1 fix 3); 2 launch-side latch hung on the launch flop's leaf | proof2: only 231 such latch ends, at -10 to -80 (R) |
+| Zero-logic hop, 200 to 400 um | no latch; hold cells | latch costs -227k TNS; baseline hold mean -25 (R) |
+| Reset relay chain | falling-edge relay (`reset.relay_lockup`), existing | leaf t1 / t56 / t72 legs 4-6 -> 0 (R) |
+| Output port seam | sender-side latch only on buses whose baseline setup slack exceeds half a period | port-out 1,884 -> 5, but 394 seam ends cost -22k (R) |
+| Input port | no kit latch; the seam contract (`in_min`) and the sender | port-in 1,167 -> 1,912 in proof2, 1,210 left at -128 in proof1 (R) |
+| Flop -> hard-core input | align the core clock (levers 5, 6); no latch | lockup = launch at the falling edge into the core |
+| Insertion skew between two trees | CTS balance (section 1); never a pipeline stage, never the period | a stage adds data delay on the capture side only |
+
+## 4. Stop list (17:30, 18:40 and 19:30 lists stand except where named)
+
+- No clock verdict from `4_cts_final.rpt` or from a `report_clock_skew` pair. 19:30 headline 1 and 2 and its lever 1 clock rule are superseded by this section.
+- No `reset.root_entry_negedge` rows from the auto rule (t60, t73, t68, kv_leaf t5) before it is re-read after the hooks.
+- No pin relay or core-pin register on a core early tap. col_C may finish; it carries no rows.
+- No lockup rows to J6 / V2 / D27 before proof4. No latch on hops over 200 um, on same-tap pairs, on launch taps (proof1 form), or in front of a hard core.
+- No pipeline stage as a hold fix; no hold-buffer pass on KV head-core fronts; no route of held hgi kits on a padded core tap.
+- No QC cb route release before the tile insertion contract is corrected.
+- No frozen seat, band or reset tree carried into an event without the pin / tree check of lever 7.
+- No GPL setting change on S81 before the A/B reads.
+
+## 5. Not checked
+
+- hold_ws in the table includes port ends; I did not split classes after the hooks on the fleet. Internal FF hold is known on t60 only.
+- Which hook gives the setup gain (tap balance or the others) was not separated.
+- The root-hop estimate of headline 2 is arithmetic; the t60 re-proof was still queued.
+- KV: no kit of the last 3 days carries both readings. b8 (control) and the col A / B / C slack A/B were not finished; proof4 and the QC sle_ctl lockup proof not read.
+- The reach of `lpad_leafdn -> u_crr_rxsb` (about 1 ns of repeaters) was not measured in um; the +3 to +4 cycles is inferred.
+- Section 1 fixes 1 to 3 have no proof kit yet.
+
 # FABLE-CLOSURE-STRATEGY 2026-11-20 19:35 PST (lane FABLE-CLOSURE-1930, the 19:30 round): today's set fixes the placed wire classes; the wall behind it is the clock. After CTS on the last S81 event the worst related pair is a kit flop against a hard-core clock pin at 540 to 690 ps, every kit has negative hold, and S81 global placement gets one timing pass, on the start placement
 
 Reviewer: FABLE-CLOSURE-1930 (Fable). Read-only: nothing launched, cancelled, signalled or patched; no STA run, no DB opened. Six log / report scans (grep-level, nice 19) on epyc2, epyc7, epyc8, epyc9, epyc10, intel1.
