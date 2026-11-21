@@ -9,6 +9,17 @@ import importlib.util, os, shutil, subprocess, sys
 HERE = os.path.dirname(os.path.realpath(__file__))
 
 
+def manifest(t):
+    """FLOW-OPS-0900: per-file record of the tree before it goes (tools/fleet/delete_manifest.py); a record only, never a stop"""
+    try:
+        sp = importlib.util.spec_from_file_location("delete_manifest", os.path.join(HERE, "delete_manifest.py"))
+        m = importlib.util.module_from_spec(sp); sp.loader.exec_module(m)
+        return m.write(t, "ot-delete")
+    except Exception as e:                    # noqa: BLE001
+        print("ot-delete: manifest not written for %s: %s" % (t, e), file=sys.stderr)
+        return None
+
+
 def load_guard():
     for c in (os.path.join(HERE, "ot_delete_guard.py"), os.environ.get("OT_DELETE_GUARD", "")):
         if c and os.path.isfile(c):
@@ -50,6 +61,9 @@ def main(argv, guard=None, rmtree=None):
         before = avail(t)
         if dry:
             print("WOULD-DELETE %s" % t); continue
+        mf = manifest(t)
+        if mf:
+            print("MANIFEST %s -> %s" % (t, mf))
         try:
             rm(t)
         except OSError as e:

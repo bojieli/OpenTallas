@@ -427,6 +427,7 @@ def run(root, cfg, texts, ids, refuse, log, target_gb, apply=False, delete=None,
             rec["result"] = "WOULD-DELETE"
         else:
             b = free()
+            rec["manifest"] = manifest(t)
             (delete or (lambda p: (os.system("find " + p + " -type d -exec chmod u+w {} +"), shutil.rmtree(p, ignore_errors=True))))(t)
             rec.update(result="DELETED" if not os.path.exists(t) else "FAILED", free_before=round(b, 1), free_after=round(free(), 1))
         log(rec); res.append(rec)
@@ -544,6 +545,7 @@ def run_lanes(claude, ids, refuse, log, target_gb, apply=False, delete=None, fre
             rec["result"] = "WOULD-DELETE"; gone.append(p)
         else:
             b = free()
+            rec["manifest"] = manifest(p)
             (delete or (lambda q: (os.system("find " + q + " -type d -exec chmod u+w {} +"), shutil.rmtree(q, ignore_errors=True))))(p)
             rec.update(result="DELETED" if not os.path.exists(p) else "FAILED", free_before=round(b, 1), free_after=round(free(), 1))
             if rec["result"] == "DELETED": gone.append(p)
@@ -653,6 +655,18 @@ def attempt_candidates(claude, cfg, state, refs, now=None, quiet_s=ATTEMPT_QUIET
     return [(p, why) for p, why in out if p not in keep and p not in keep_latest]
 
 
+def manifest(p, exclude=()):
+    """FLOW-OPS-0900 (COORD 11-21: epyc2 11-18 removed fable-pd-head-clk with a later HEAD bind input and kept no file list): per-file record of a
+    tree before it is deleted (delete_manifest.py, ~/.local/state/delete-manifests).  A record only: never refuses, never raises."""
+    try:
+        here = os.path.dirname(os.path.realpath(__file__))
+        sp = importlib.util.spec_from_file_location("delete_manifest", os.path.join(here, "delete_manifest.py"))
+        m = importlib.util.module_from_spec(sp); sp.loader.exec_module(m)
+        return m.write(p, "ot-auto-retire", exclude=exclude)
+    except Exception:                         # noqa: BLE001
+        return None
+
+
 KEEP_NAMES = ("reports", "logs", "REPORTS-KEPT.txt")      # COORD 11-18: reports/ (and bind inputs, via the guard's protected list) survive a cleanup
 
 
@@ -664,6 +678,7 @@ def strip_keep_reports(p, rm=None):
     rm = rm or (lambda q: shutil.rmtree(q, ignore_errors=True))
     names = os.listdir(p)
     keep = [n for n in names if n in KEEP_NAMES]
+    manifest(p, exclude=tuple(keep))
     if not keep:
         os.system("find " + shlex_quote(p) + " -type d -exec chmod u+w {} +")
         rm(p)
