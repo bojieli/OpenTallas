@@ -64,7 +64,9 @@ class IssuesReject(unittest.TestCase):
         self.assertEqual(K.geom_verdicts()[("qwen_kvsys", "kv3_sys_c")], (12, "ISSUES-ACCEPT"))   # not read as ISSUES
 
     def test_no_verdict_waits_visual(self):
-        self.assertTrue(K.visual_hold(self.cfg, self.rec()).startswith("WAIT-VISUAL"))
+        rec = self.rec()      # FLEET-WATCH-R5 11-21: a pending verdict is advisory (owner: visual review never blocks route)
+        self.assertIsNone(K.visual_hold(self.cfg, rec))
+        self.assertTrue(rec["visual_pending"].startswith("WAIT-VISUAL (advisory)"))
 
     def test_queue_drops_rejected_rows(self):
         st = {"items": {"a": self.rec(), "b": dict(self.rec(), item="kv3_pc_v3", attempt=3)}}

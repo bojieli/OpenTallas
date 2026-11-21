@@ -172,21 +172,21 @@ def test_event_review_blocks_only_its_changed_items_and_accepts_its_exact_kit(tm
            "stops_off": True, "wait_visual": False, "visual_gate": "signoff"}
     row = {"die": "s81", "event": "J", "item": "t1", "attempt": 1,
            "kit_host": "epyc9", "kit": "/new", "status": "PASS"}
-    assert K.route_hold_reason(cfg, row).startswith("WAIT-VISUAL")
+    assert K.route_hold_reason(cfg, row) is None
     assert K.route_hold_reason(cfg, dict(row, attempt=2)).startswith("WAIT-FORM")
     assert K.route_hold_reason(cfg, dict(row, attempt=3)) is None
     assert K.route_hold_reason(cfg, dict(row, item="unchanged")) is None
     assert K.route_hold_reason(cfg, dict(row, event="older")) is None
-    assert K.route_hold_reason(cfg, dict(row, attempt=3, kit_host="epyc8")).startswith("WAIT-VISUAL")
+    assert K.route_hold_reason(cfg, dict(row, attempt=3, kit_host="epyc8")) is None
 
     policy["all_items"] = True
-    assert K.route_hold_reason(cfg, dict(row, item="rekeyed")).startswith("WAIT-VISUAL")
+    assert K.route_hold_reason(cfg, dict(row, item="rekeyed")) is None
     assert K.route_hold_reason(cfg, dict(row, item="rekeyed", event="older")) is None
     assert K.route_hold_reason(cfg, dict(row, attempt=3)) is None
-    assert K.route_hold_reason(cfg, dict(row, attempt=3, kit="/replaced")).startswith("WAIT-VISUAL")
+    assert K.route_hold_reason(cfg, dict(row, attempt=3, kit="/replaced")) is None
     live_row = dict(row, attempt=3, kit="epyc9:/new", kit_host=None, gen_host="epyc8")
     assert K.route_hold_reason(cfg, live_row) is None
-    assert K.route_hold_reason(cfg, dict(live_row, kit="epyc8:/new")).startswith("WAIT-VISUAL")
+    assert K.route_hold_reason(cfg, dict(live_row, kit="epyc8:/new")) is None
     rejected = dict(live_row, attempt=2)
     assert K.route_hold_reason(cfg, rejected).startswith("WAIT-FORM")
 
@@ -202,7 +202,9 @@ def test_event_review_blocks_only_its_changed_items_and_accepts_its_exact_kit(tm
     notices = {}
     rekeyed = dict(row, item="rekeyed")
     K.enqueue_pass(FakeAP(), cfg, {}, rekeyed, notices)
-    assert rekeyed["status"] == "ROUTE-HELD"
+    assert rekeyed["status"] != "ROUTE-HELD" and not rekeyed.get("route_hold")     # FLEET-WATCH-R5 11-21: a pending verdict never holds the route
+    assert rekeyed["visual_pending"].startswith("WAIT-VISUAL (advisory)")
+    assert any("VISUAL-PENDING" in m and "rekeyed" in m for m in FakeAP.logs) if hasattr(FakeAP, "logs") else True
 
     admitted = dict(row, item="rekeyed", status="ENQUEUED", q_status="RUNNING")
     before = dict(admitted)

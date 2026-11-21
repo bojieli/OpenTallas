@@ -81,8 +81,10 @@ class VisualSignoff(unittest.TestCase):
     # ---- route: no hold without a verdict in signoff mode, hold in route mode
     def test_signoff_mode_routes_without_verdict(self):
         self.assertIsNone(K.visual_hold(self.cfg, self.rec()))
-        self.assertTrue(K.visual_hold(dict(self.cfg, visual_gate="route"), self.rec()).startswith("WAIT-VISUAL"))
-        self.assertTrue(K.visual_hold({k: v for k, v in self.cfg.items() if k != "visual_gate"}, self.rec()).startswith("WAIT-VISUAL"))
+        r1 = self.rec()      # FLEET-WATCH-R5 11-21: route mode keeps the pending verdict advisory, never a hold
+        self.assertIsNone(K.visual_hold(dict(self.cfg, visual_gate="route"), r1))
+        self.assertTrue(r1["visual_pending"].startswith("WAIT-VISUAL (advisory)"))
+        self.assertIsNone(K.visual_hold({k: v for k, v in self.cfg.items() if k != "visual_gate"}, self.rec()))
 
     def test_signoff_mode_bad_still_wait_form(self):
         self.verdict("BAD")

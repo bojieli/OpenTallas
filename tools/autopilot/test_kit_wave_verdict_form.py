@@ -69,20 +69,26 @@ class VerdictFormTest(unittest.TestCase):
     def test_reused_number_other_form_waits_for_review(self):
         self.verdict("BAD")
         self.hold(self.build(TS - 3600))
-        h = self.hold(self.build(TS + 48000, dict(SPEC, core_kit="ck2")))
-        self.assertTrue(h.startswith("WAIT-VISUAL") and "earlier build" in h, h)
+        rec = self.build(TS + 48000, dict(SPEC, core_kit="ck2"))
+        self.assertIsNone(self.hold(rec))      # FLEET-WATCH-R5 11-21: advisory, never a route hold
+        h = rec["visual_pending"]
+        self.assertTrue(h.startswith("WAIT-VISUAL (advisory)") and "earlier build" in h, h)
 
     def test_accept_not_inherited_by_other_form(self):
         self.verdict("GOOD")
         self.assertIsNone(self.hold(self.build(TS - 3600)))
-        self.assertTrue(self.hold(self.build(TS + 48000, dict(SPEC, core_kit="ck2"))).startswith("WAIT-VISUAL"))
+        rec = self.build(TS + 48000, dict(SPEC, core_kit="ck2"))
+        self.assertIsNone(self.hold(rec))
+        self.assertTrue(rec["visual_pending"].startswith("WAIT-VISUAL (advisory)"))
 
     def test_unbound_older_verdict_waits_for_review(self):
         self.verdict("BAD")                                                 # the rated build was never seen by the wave
-        self.assertTrue(self.hold(self.build(TS + 48000)).startswith("WAIT-VISUAL"))
+        rec = self.build(TS + 48000)
+        self.assertIsNone(self.hold(rec))
+        self.assertTrue(rec["visual_pending"].startswith("WAIT-VISUAL (advisory)"))
 
     def test_no_verdict_still_waits(self):
-        self.assertTrue(self.hold(self.build(TS)).startswith("WAIT-VISUAL"))
+        self.assertIsNone(self.hold(self.build(TS)))      # FLEET-WATCH-R5 11-21: advisory, routes
 
     def test_form_wait_uses_bound_form(self):
         self.verdict("BAD")

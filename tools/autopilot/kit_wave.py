@@ -14849,14 +14849,16 @@ def visual_hold(cfg, rec):
     vk = (rec["die"], rec["item"], int(rec.get("attempt") or 0))
     v = visual_verdicts().get(vk)
     if v is not None and not verdict_applies(cfg, rec, (_VISUAL_CACHE.get("ts") or {}).get(vk)):
-        return (f"WAIT-VISUAL: place done; the {v} verdict on attempt {vk[2]} rated an earlier build of another or unknown "
-                "form (KW-FIX-46 verdict binding), so this build needs its own verdict GOOD / OK / ISSUES-ACCEPT in "
-                "lanes/GEOM-REVIEW.md")
+        rec["visual_pending"] = (f"WAIT-VISUAL (advisory): place done; the {v} verdict on attempt {vk[2]} rated an earlier build of another or unknown "
+                                 "form (KW-FIX-46 verdict binding), so this build needs its own verdict GOOD / OK / ISSUES-ACCEPT in "
+                                 "lanes/GEOM-REVIEW.md")
+        return None                      # FLEET-WATCH-R5 11-21: advisory, route proceeds
     if v in VISUAL_ACCEPT:
         return None
     if v in VISUAL_REJECT:
         return f"WAIT-FORM: visual verdict {v} for this attempt; the type relaunches when its form fingerprint changes"
-    return "WAIT-VISUAL: place done, needs a visual verdict GOOD / OK / ISSUES-ACCEPT in lanes/GEOM-REVIEW.md for this attempt" + (f" (now {v})" if v else "")
+    rec["visual_pending"] = "WAIT-VISUAL (advisory): place done, a visual verdict GOOD / OK / ISSUES-ACCEPT in lanes/GEOM-REVIEW.md is pending for this attempt" + (f" (now {v})" if v else "")
+    return None                          # FLEET-WATCH-R5 11-21: pending = advisory, route proceeds
 
 
 def visual_gate_t0(cfg):
@@ -14930,6 +14932,8 @@ def visual_queue_publish(cfg, st):
             h = VISUAL_SIGNOFF + ": routed, verdict needed before SIGNED counts"
         elif rec.get("status") == "ROUTE-HELD" and h.startswith("WAIT-VISUAL"):
             pass
+        elif rec.get("status") == "ENQUEUED" and rec.get("visual_pending") and rec.get("q_status") not in ("FAIL", "CANCELLED", "SIGNED"):
+            h = "WAIT-VISUAL-ADVISORY: routed anyway, verdict pending"       # FLEET-WATCH-R5 11-21: the GEOM queue stays as an advisory list
         else:
             continue
         kit = review_kit_location(rec)
@@ -14990,7 +14994,8 @@ def route_hold_reason(cfg, rec):
         if verdict in VISUAL_REJECT:
             return f"WAIT-FORM: exact kit {kit} visual verdict {verdict}; rebuild on a changed form"
         if verdict not in VISUAL_ACCEPT:
-            return f"WAIT-VISUAL: record a GEOM VERDICT for this attempt with kit={kit or '<host:/kit/path>'}"
+            # FLEET-WATCH-R5 11-21 (COORD, owner rule "visual review never blocks route or sign-off"): a pending verdict is advisory; enqueue_pass logs it, the GEOM queue lists it, the row routes
+            rec["visual_pending"] = f"WAIT-VISUAL (advisory): record a GEOM VERDICT for this attempt with kit={kit or '<host:/kit/path>'}"
     if FG.stops_off_die(cfg, rec.get("die")):      # OWNER 11-18 (hbm excluded): owner-review route holds (route_hold_items, WAIT-VISUAL / WAIT-FORM) hold nothing; visual review is advisory
         return None
     d = (cfg.get("dies") or {}).get(rec["die"]) or {}
@@ -15097,6 +15102,10 @@ def enqueue_pass(AP, cfg, st, rec, notices):
         return
     if rec.pop("route_hold", None):
         rec.update(status="PASS", reason="", updated=time.time())
+    if rec.get("visual_pending"):        # FLEET-WATCH-R5: advisory only; logged once per row and text
+        if rec.get("visual_pending_logged") != rec["visual_pending"]:
+            AP.log(f"KIT-WAVE VISUAL-PENDING {rec['die']}/{rec['item']}@{rec.get('attempt')}: {rec['visual_pending']} (routes anyway)")
+            rec["visual_pending_logged"] = rec["visual_pending"]
     d = cfg["dies"][rec["die"]]
     # The result belongs to its immutable launch spec, even if the config
     # changes while PLACE runs. Never relabel an old physical result.
