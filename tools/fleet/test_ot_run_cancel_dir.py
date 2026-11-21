@@ -35,6 +35,7 @@ def load_autopilot(log):
 class CancelDir(unittest.TestCase):
     def setUp(self):
         self.t = tempfile.mkdtemp(prefix="cdir")
+        self.kit = KIT.replace("q_x", f"q_x_{Path(self.t).name}")
         self.log = os.path.join(self.t, "signals.log")
         self.m = load_otrun(self.log)
         self.procs = []
@@ -45,25 +46,25 @@ class CancelDir(unittest.TestCase):
             p.wait()
 
     def test_writes_the_line_the_autopilot_accepts(self):
-        self.assertEqual(self.m.cancel_dir(f"epyc8:{KIT}", "KW-FIX-45 pilot relaunch"), 0)
+        self.assertEqual(self.m.cancel_dir(f"epyc8:{self.kit}", "KW-FIX-45 pilot relaunch"), 0)
         line = open(self.log).read().strip()
         self.assertIn("ot-run --cancel", line)
-        self.assertIn(f" dir {KIT}: ", line)
+        self.assertIn(f" dir {self.kit}: ", line)
         ap = load_autopilot(self.log)
-        got = ap.signals_cancel({"path": KIT, "started": time.time() - 3600})
+        got = ap.signals_cancel({"path": self.kit, "started": time.time() - 3600})
         self.assertIsNotNone(got, line)
         self.assertIn("signal 15 from", got)
 
     def test_job_started_after_the_record_is_not_cancelled(self):
-        self.m.cancel_dir(KIT, "old")
+        self.m.cancel_dir(self.kit, "old")
         ap = load_autopilot(self.log)
-        self.assertIsNone(ap.signals_cancel({"path": KIT, "started": time.time() + 3600}))   # a later attempt
+        self.assertIsNone(ap.signals_cancel({"path": self.kit, "started": time.time() + 3600}))   # a later attempt
 
     def test_other_kit_paths_are_not_cancelled(self):
-        self.m.cancel_dir(KIT, "x")
+        self.m.cancel_dir(self.kit, "x")
         ap = load_autopilot(self.log)
-        self.assertIsNone(ap.signals_cancel({"path": KIT + "_b", "started": time.time() - 3600}))
-        self.assertIsNone(ap.signals_cancel({"path": KIT.replace("attempt_2", "attempt_3"), "started": time.time() - 3600}))
+        self.assertIsNone(ap.signals_cancel({"path": self.kit + "_b", "started": time.time() - 3600}))
+        self.assertIsNone(ap.signals_cancel({"path": self.kit.replace("attempt_2", "attempt_3"), "started": time.time() - 3600}))
 
     def test_refuses_while_a_live_client_has_that_dir(self):
         bindir = os.path.join(self.t, "bin")
@@ -72,19 +73,19 @@ class CancelDir(unittest.TestCase):
         with open(fake, "w") as f:
             f.write("#!/usr/bin/env python3\nimport time\ntime.sleep(30)\n")
         os.chmod(fake, 0o755)
-        self.procs.append(subprocess.Popen([fake, "--mem", "1", "--dir", KIT, "--", "true"]))
+        self.procs.append(subprocess.Popen([fake, "--mem", "1", "--dir", self.kit, "--", "true"]))
         time.sleep(0.5)
-        self.assertEqual(self.m.cancel_dir(KIT, "x"), 2)
+        self.assertEqual(self.m.cancel_dir(self.kit, "x"), 2)
         self.assertFalse(os.path.exists(self.log))                       # nothing written
 
     def test_a_multiline_parent_command_still_makes_one_accepted_line(self):
         # found live 16:07: the invoking ssh command held a heredoc, the record was split over two lines and signals_cancel() never matched
         self.m.sender = lambda pid: f"pid {pid} (bash -c python3 - <<EOF\nimport json\nprint('x')\nEOF\nmore; parent 1 (sshd))"
-        self.assertEqual(self.m.cancel_dir(KIT, "multi-line parent"), 0)
+        self.assertEqual(self.m.cancel_dir(self.kit, "multi-line parent"), 0)
         lines = open(self.log).read().splitlines()
         self.assertEqual(len(lines), 1, lines)
         ap = load_autopilot(self.log)
-        self.assertIsNotNone(ap.signals_cancel({"path": KIT, "started": time.time() - 3600}))
+        self.assertIsNotNone(ap.signals_cancel({"path": self.kit, "started": time.time() - 3600}))
 
     def test_relative_path_is_refused(self):
         self.assertEqual(self.m.cancel_dir("q_x/attempt_2", "x"), 2)
@@ -92,11 +93,11 @@ class CancelDir(unittest.TestCase):
 
     def test_cli_entry(self):
         env = dict(os.environ, HOME=self.t)
-        r = subprocess.run([sys.executable, "-I", str(HERE / "ot-run"), "--cancel-dir", KIT, "--reason", "cli test"],
+        r = subprocess.run([sys.executable, "-I", str(HERE / "ot-run"), "--cancel-dir", self.kit, "--reason", "cli test"],
                            capture_output=True, text=True, env=env)
         self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
         self.assertIn("wrote the cancel record", r.stdout)
-        self.assertIn(f" dir {KIT}: cli test", open(os.path.join(self.t, ".local/state/ot-run/signals.log")).read())
+        self.assertIn(f" dir {self.kit}: cli test", open(os.path.join(self.t, ".local/state/ot-run/signals.log")).read())
 
 
 if __name__ == "__main__":
