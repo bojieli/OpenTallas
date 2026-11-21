@@ -3856,6 +3856,10 @@ RULES = [
     ("PLAN", r"^geom$", r"FAIL", "AUTO-GEOM rule FAIL (geometry)"),
     ("PLAN", r"^kit_topology$", r"KIT_TOPOLOGY_(?:BIND_STALE|CONTEXT|REGENERATE|SOURCE)",
      "native source stage/reset realization differs: regenerate the canonical bind/kit"),
+    # FLOW-NOADV-R3 11-20 (COORD): kit_istations refuses two station rows that claim the same flop site (ec16babe0d): a plan/station-row
+    # defect (the QC A4 st_a rows), not a flow error; typed design:station_overlap so REPEAT-STOP holds it and the sweep routes it to the plan owner.
+    ("PLAN", r"^kit_topology$", r"kit_istations:[^\n]*station rows \S+ and \S+ claim overlapping sites",
+     "station rows claim overlapping sites: fix the station row plan (one site per flop across rows)"),
     ("PLAN", r"^gen$", r"(?m)^gen phys: ERROR type [^:\s]+: physical collector_tree differs from captured bound reset identity\b",
      "bound reset identity differs from the effective plan/generator: regenerate a coherent bind and kit"),
     # KW-FIX-45 11-12 (OWNER ruling via COORD: "if the job relies on any data or files that do not belong to its job folder,
@@ -6932,6 +6936,7 @@ _TYPED = (("stopped", re.compile(r"interrupted \(signal 15|terminated by signal 
                                r"Connection timed out|Operation timed out|ssh transport|SSH probe exit 255|Host key verification failed|"
                                r"Could not resolve hostname|ot-run: NOT (?:RUN|COMPLETED)|no host qualifies|kex_exchange_identification|"
                                r"Connection (?:reset|closed) by", re.I)),
+          ("design:station_overlap", re.compile(r"kit_istations:[^\n]*station rows \S+ and \S+ claim overlapping sites")),
           ("sdc_lint", re.compile(r"SdcLintError|sdc_lint", re.I)),
           ("stale_view", re.compile(r"STALE-CORE-VIEW|stale (?:closed )?view|view .*(?:stale|does not match)", re.I)),
           ("missing_input", re.compile(r"KIT_INPUT_MISSING|INFRA-VIEW-MISSING|HDL source missing|source missing|not found by the probe|"

@@ -523,6 +523,15 @@ class FirstRealClassWins(unittest.TestCase):
     """KW43-77 11-10: a NOT RUN try retried by a try that RAN is superseded; the ran try's failure class decides, also
     when reclassify / auto-rejudge re-reads the whole stored stage log"""
 
+    def test_station_row_overlap_is_a_plan_class(self):
+        text = ("kit_istations: sle_st_a_v1__cl989804f6__cled3c1d7b: station rows bus:rs_s0 and bus:rs_s1 claim overlapping sites "
+                "(233.28, 522.72) / (233.28, 522.72) (20 overlaps); one site per flop across rows")
+        cls, why = KW.classify("kit_topology", text)
+        self.assertEqual(cls, "PLAN")
+        self.assertIn("overlapping sites", why)
+        self.assertEqual(KW.typed_class(cls, "kit_topology", text), "design:station_overlap")
+        self.assertEqual(KW.typed_class("FLOW", "kit_topology", "Traceback ... other"), "design:kit_topology")
+
     def test_refused_try_then_ran_try_is_the_ran_class(self):
         cls, why = KW.classify("place", REFUSED_THEN_RAN)
         self.assertEqual(cls, "FLOW")

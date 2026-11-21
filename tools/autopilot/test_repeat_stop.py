@@ -173,3 +173,19 @@ def test_repeat_stop_refuses_with_stops_off_and_releases_on_a_new_input(monkeypa
     monkeypatch.setattr(KW, "rt_tools_fields", lambda c, d, root=None: {"tools_sha": "rt2"})
     cur2 = KW.repeat_inputs_now(cfg, st2, D, I, "b1")
     assert cur2["tools"] == "rt2" and RS.gate(st2, D, I, cur2)[2].startswith("inputs:tools")
+
+
+def test_station_row_overlap_plan_class_is_blocked_at_the_third():
+    """FLOW-NOADV-R3 11-20: kit_istations cross-row site overlap (QC A4 st_a) is PLAN[design:station_overlap]; REPEAT-STOP holds it at the third"""
+    line = ("kit_istations: sle_st_a_v1__cl989804f6__cled3c1d7b: station rows bus:rs_s0 and bus:rs_s1 claim overlapping sites "
+            "(233.28, 522.72) / (233.28, 522.72) (%d overlaps); one site per flop across rows")
+    st, evs = {}, []
+    for n in range(1, 5):
+        cls, why = KW.classify("kit_topology", line % (20 + n))                  # the overlap count changes: still one cause
+        assert cls == "PLAN" and KW.typed_class(cls, "kit_topology", line % 20) == "design:station_overlap"
+        full = f"{why} @kit_topology: {line % (20 + n)}"
+        evs.append(RS.record(st, "qwen_compute", "sle_st_a_v1__cl989804f6__cled3c1d7b", n, "kit_topology", cls, full,
+                             inputs={"block": "b1"}, t=1000 + n * 3600))
+    assert [bool(e) for e in evs] == [False, False, True, False]
+    assert evs[2]["event"] == "BLOCKED-REPEAT"
+    assert RS.gate(st, "qwen_compute", "sle_st_a_v1__cl989804f6__cled3c1d7b", {"block": "b1"})[0] is True
