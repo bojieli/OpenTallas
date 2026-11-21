@@ -18,3 +18,12 @@
 - On bind PASS: G0 + census read, proof kits to GRT (die priority, CTS post-hook), geometry to GEOM-REVIEW, then pack (pack_b12.py pattern) / seal / apply.
 - On apply: release 11 cb hold_items (65f9eaf04c5, 8cd505347e7) + 3 fe (76a934188b0/56a3cbdebf0/678d61ae6c4) + cbn_q00__cldbcda913 via kit_wave_edit.
 - Re-sign: add 6 N_PAD siblings after the 6 reps sign. Lockup rows held (LOCKUP-STATION-R3). FAM-QC-COLL ODPRE rows staged (not proven to GRT) -> V3.
+
+## 04:4x state (supersedes 03:5x "Choice")
+- b13 (R8 unit) + b14 (R9) both strict RC 1 with the SAME 3 errors after a working R8 refresh (6 west dvs rs_s members 24->25):
+  TYPE_SPLIT sle_hc0__cl929603c0__cl4baa7c9c__pv1c2f9baa (E3 xhead3 N_PAD 3 S_PAD 1 vs E4 N_PAD 3), TYPE_SPLIT slw_hc0__cl4f54b7a3
+  (W0 N_PAD 3 vs W1-W5 N_PAD 3 S_PAD 1), EMIT clock landing (follows the splits). QFT/PARAM_REGEN/hard-core clean. b14's 12 ft sites add no error.
+- Fix = R6 V1 pattern: non-strict bind (nsbind.sh) -> param_class_split.py (plan + sidecar) -> strict bind with PCS_REPORT (clones replace base in
+  asbuilt internal_stations_types; bind_b15.sh = bind_b13.sh + that step). +2 types (one clone per new value set) to sign.
+- LIVE: epyc8 /srv/opentallas-scratch2/claude/qc-plan-r9/chain_b15.sh (pid 67275, log chain_b15.log): nsbind b14 -> pcs (b15in/) -> strict b15
+  (b15.out) -> G0 + census (event s29q103S4Q9N46R6V2b15) -> 7 proof GENs (b15/post_bind, b15/proof_gen). b13/b14 chains ended (no G0).
