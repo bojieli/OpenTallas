@@ -311,3 +311,6 @@ kit-ops-5-curplan-1114 @4c696027e0ef RED (branch alone fails test_kit_wave_compo
 
 ## CODEX continuation 2026-11-20 16:56 PST
 - b19047a5c88 Redwatch GREEN163 plus a pre-existing GPL gate test that expected no config lines after the resize hook. Test-only 181ddd5da4dad9caf82cd222b9e5fed9fc06e4bd checks the live 320 ps slew default and preserves the fanout and hook checks. Full focused PASS23, canonical GREEN1/1 on 40458a43e16 (E7 oth-ubuntu-3844278-1795222127 exit 0), landed 74c92c4741a, merged-main GREEN1 and runtime all six OK. No pending approvals.
+
+## CODEX continuation 2026-11-20 17:35 PST
+- Owner ec16babe0df implements a broader exact-bank cross-row overlap guard at GEN and plan pre-check. 3553de9af81 maps the refusal to PLAN[design:station_overlap]. Both exact Redwatch GREEN (31 and 164 files), current 3553 runtime synchronized six hosts. QC 8a7ef3 private packed-only branch is historical unless a distinct uncovered case is shown. ec16 and bbcc changed kit_istations.py since its private gate, so do not publish that old receipt. COORD and QC informed.
