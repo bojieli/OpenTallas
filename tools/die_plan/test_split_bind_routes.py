@@ -177,3 +177,22 @@ def test_production_build_buses_optin_preserves_payload_then_multicasts(monkeypa
     original={x["id"]:x for x in fixed.links if x["id"]in {"L0","L1"}}
     assert [(fixed.F.cells[ci].path,pn,bit)for ci,pn,bit in original["L0"]["carried"]]==[("a","q",i)for i in range(2)]
     assert [(fixed.F.cells[ci].path,pn,bit)for ci,pn,bit in original["L1"]["carried"]]==[("b","q",i)for i in range(2)]
+
+
+def test_reference_lane_uses_its_own_bus_cut_leg_before_a_lower_id_wide_cut_lane():
+    """OPUS-FIX-KV-PV-R5 11-21 (kv3_pv_v3 split bind: 'native stations pv_S_3.o_vport_W_N_vqN_p: expected one outgoing
+    lane'): with the lane-id tie-break alone the payload rode a lower-id wide cut lane and the bus's own cut leg (the
+    split's station cut <oname>_p) stayed empty.  The own leg is tried first; a lane without one keeps the old route."""
+    b=Toy()
+    wide=lane("cut_0wide","A0","A1",8);b.lanes.append(wide);b.byid[wide["id"]]=wide
+    b.out["A0"]=sorted(b.out["A0"]+[wide],key=lambda x:x["id"])
+    for x in b.lanes:x["oname"]="o_other"
+    b.byid["L0"]["oname"]="o_bus";b.byid["cut_A"]["oname"]="o_bus_p"
+    b.prefill(b.reference())
+    assert list(b.byid["cut_A"]["carried"])==[b.key("a",i)for i in range(2)]
+    assert not wide["carried"] and wide["left"]==8
+    # no own leg: the old shortest / lowest-id cut route
+    c=Toy();w2=lane("cut_0wide","A0","A1",8);c.lanes.append(w2);c.byid[w2["id"]]=w2
+    c.out["A0"]=sorted(c.out["A0"]+[w2],key=lambda x:x["id"])
+    c.prefill(c.reference())
+    assert list(w2["carried"])==[c.key("a",i)for i in range(2)] and not c.byid["cut_A"]["carried"]

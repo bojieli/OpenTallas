@@ -9,6 +9,7 @@ are the exporters responsibility; this helper independently checks cell shape,
 parameters, identity, output pin bounds and old/new partition membership.
 """
 from collections import ChainMap, defaultdict
+import re
 import hashlib
 import json
 
@@ -144,8 +145,16 @@ def prefill(b, reference, allL, put, recv, holders, out_of, heapq):
             actions=[];blocked=None
             for key in keys:
                 if L["src"] in available[key]:continue
-                path=b._route(available[key],L["src"],[key],vout,heapq,
-                              only=lambda x,g=group:x["id"] not in seen and x["src"] in g and x["dst"] in g)
+                # OPUS-FIX-KV-PV-R5 11-21: the cut leg named for this lane's own bus (<oname>_p, <oname>_p_N: the split's
+                # station cut of that bus) is tried first; the lane-id tie-break alone put kv3_pv_v3 o_vport_W_N_vqN /
+                # sN_j_fault / y_valid bits on a lower-id wide cut lane (o_vport_E_N_vo_p) and left their own legs empty
+                # (native stations 'expected one outgoing lane').
+                own=lambda x,g=group,o=L.get("oname",""):(x["id"] not in seen and x["src"] in g and x["dst"] in g and
+                                                          bool(o) and re.fullmatch(re.escape(o)+r"_p(_\d+)?",x.get("oname","")) is not None)
+                path=b._route(available[key],L["src"],[key],vout,heapq,only=own)
+                if path is None:
+                    path=b._route(available[key],L["src"],[key],vout,heapq,
+                                  only=lambda x,g=group:x["id"] not in seen and x["src"] in g and x["dst"] in g)
                 if path is None:
                     blocked=f"no cut-only path for {b.F.cells[key[0]].path}.{key[1]}[{key[2]}] to {L['src']}";break
                 for x in path:
