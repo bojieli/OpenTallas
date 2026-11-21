@@ -76,3 +76,14 @@ No route/repair of hub_Wo / sys_c; no route of D25e3 hgi kits; no kR late-repair
 - D27 private: epyc8 kv-plan-r2/d27 (compose_d27.sh, rows/, tree/), plan 3d152d53d5b5, G0 PASS; bind+LATCHECK unit oth-ubuntu-2031059-1795226238
   (epyc8, results d27/bindgate/gate.out). Open D27 items: (d) reset reach = kit re-point read; (f) pc_v1 third bank; (g) pcsplit views M6/M7 PG
   pins; (h) hub_C 6 cland view rebuild; sys_c o_dcal_flt/tks; 879 405-era rows die-wide. D27 must be recomposed on the applied D26 tree for the 11-21 cut.
+
+## Update 19:2x (KV-PLAN-R2) -- supersedes the R3c/R3d lines above
+- R3c bind refused (L415 tN cycles); R3d (tN+eN +2, f81cafc24d3a) would be refused again (no eN station row) -> cancelled. R3e = compose_r3d.sh
+  (R3 + kv-plan-r2/n3_cycles.py: 12 tN lanes 8->10, eN unchanged), plan a9f605cb1acf, tools rt/bbcc7f022a8e in the candidate
+  (epyc7 d26_contracts/source_gate_r3b). Gates epyc7 plan prio: G0 oth-ubuntu-2752101-1795230047 (gate_g0_d26.sh = d25 + --skip TOOLSTALE,
+  out normal_g0_r3e), bind+LATCHECK oth-ubuntu-2751986-1795230046 (out normal_gates_r3e). Logs intel2 ~/tmp/kvplanr2/d26_r3e_{g0,bind}.log.
+  Static replay kv-plan-r2/replay_native.py: R3e = D25f2 baseline 44 superset rows, no new.
+- Apply when bind green: intel2 bash ~/tmp/kvplanr2/apply_d26.sh (retargeted to R3e, final path ..._hg14_a9f605cb_tbbcc7f0_d26). Then lift 8 hg holds,
+  drop kv3_hgi* visual skip, ot-delete source_gate_r3 (epyc8) and the moved r3c_spent_die_plan_* copies.
+- D27: sub-agent re-basing on R3e + FABLE-PD-KV-1840 rows (efault 29 types + fault-out hop, pc_v1 third bank 24 lanes 2->3, PDN merged-obstruction
+  re-export, hub_C 6 view re-freeze, hgi_v1 collector row) + plan_geom_census toward 0, private G0/bind under kv-plan-r2/d27.
