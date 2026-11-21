@@ -1952,6 +1952,9 @@ def stage_admission_tools(source_chain=None, source_tools=None, root=None):
         kr = Path(__file__).with_name("kit_resume.py")           # FLOW-FIX-2045: the ALWAYS list creates it in a kit that lacks it (in-place restart resume)
         if kr.is_file():
             payload[Path("__flow__/kit_resume.py")] = kr.read_bytes()
+        ep = Path(__file__).with_name("env_provenance.py")       # FLOW-PROC-A: the ALWAYS list creates it in a kit that lacks it (ENV-PROVENANCE check)
+        if ep.is_file():
+            payload[Path("__flow__/env_provenance.py")] = ep.read_bytes()
         for cf in sorted((tools.parents[1] / "physical/common_flow").glob("*")):
             if cf.is_file() and cf.suffix in (".tcl", ".py", ".sh"):
                 payload[Path("__flow__/common_flow") / cf.name] = cf.read_bytes()

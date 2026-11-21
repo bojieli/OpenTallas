@@ -222,6 +222,7 @@ ALWAYS = (("kit", "stage_odb_cap.py", "tools/die_plan/stage_odb_cap.py"),
           ("kit", "failfast_rules.py", "physical/common_flow/failfast_rules.py"),      # DRT_STALL rule (the judge is run from the kit copy at each poll of the NEXT route stage)
           ("kit+", "repair_bound.tcl", "physical/common_flow/repair_bound.tcl"),      # post-GRT repair_timing_helper chunk + stall + wall-time bound, hooked below
           ("kit+", "kit_resume.py", "tools/autopilot/kit_resume.py"),                 # in-place restart: run_kit.sh calls it (auto resume)
+          ("kit+", "env_provenance.py", "tools/autopilot/env_provenance.py"),         # FLOW-PROC-A: run_kit.sh ENV-PROVENANCE check before place
           ("kit+", "kit_reports.py", "tools/die_plan/kit_reports.py"))      # "kit+" = created when missing, so legacy kits get the helper the refreshed run_kit.sh calls
 
 

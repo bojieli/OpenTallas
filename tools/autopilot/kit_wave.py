@@ -55,6 +55,7 @@ Per tick (autopilot.py tick calls step() after admit_new; off unless the config 
     kit_wave.py run-item SPEC.json                          one item pipeline (run by the tick inside a unit)
 """
 import argparse
+import base64
 import collections
 import hashlib
 import fnmatch
@@ -4651,6 +4652,13 @@ def item_gen_tools_manifest(d, item):
     return ""
 
 
+def wave_gen_env(cfg, die, item):
+    """the gen env a wave attempt of die/item gets now: die flow_tag -> OT_FLOW_TAG, die_gen_env + item_env (validated), stops_off cell waiver.
+    spec_for and private-spec / run-item's ENV-PROVENANCE use this one function (FLOW-PROC-A)"""
+    d = cfg["dies"][die]
+    return stops_off_cell_env(cfg, die, ({"OT_FLOW_TAG": str(d["flow_tag"])} if d.get("flow_tag") else {}) | item_env(d, item))
+
+
 def spec_for(cfg, die, item, hub, parent=None, kind="type"):
     d = cfg["dies"][die]
     root = f"{opt(cfg, die, 'work_root')}/{die}/{d['event']}"
@@ -4691,7 +4699,7 @@ def spec_for(cfg, die, item, hub, parent=None, kind="type"):
             # (e.g. OT_IO_HOLD=sender_min, a die-owner input-hold contract ruling on one type; plan clock.io_hold wins)
             # KW-FIX-30 11-07 (COORD 15:01 (b)): die option flow_tag -> OT_FLOW_TAG in the gen env (gen.py phys writes K/flow_tag,
             # run_kit.sh passes it to the GRT clock gate); an item_env OT_FLOW_TAG wins.  Unset = as before.
-            "gen_env": stops_off_cell_env(cfg, die, ({"OT_FLOW_TAG": str(d["flow_tag"])} if d.get("flow_tag") else {}) | item_env(d, item)),
+            "gen_env": wave_gen_env(cfg, die, item),
             "gen_args": list(d.get("gen_args") or []) + list((d.get("type_args") or {}).get(item) or [])
                         + (["--hard-wrappers", item] if item in (d.get("hard_wrappers") or []) else []),
             # default --contract; an explicit [] (die config) = the plain kit preflight the autopilot submit runs
@@ -8178,6 +8186,144 @@ def repick_stage_hosts(sp, cfg_path=None):
     return sp
 
 
+# ------------------------------------------------------------------------------------------------ FLOW-PROC-A: private-spec + ENV-PROVENANCE
+def env_provenance_decl(sp, spec_path, ap_dir=None):
+    """the ENV-PROVENANCE declaration run-item writes into the kit (env_provenance.py write): a wave attempt (spec under AP_DIR/kit_wave),
+    a private-spec output (sp['private']) or 'unregistered' (any other copied spec.json: run_kit.sh refuses its place)"""
+    pv = sp.get("private") if isinstance(sp.get("private"), dict) else None
+    try:
+        under = Path(spec_path).resolve().is_relative_to((Path(ap_dir or AP_DIR) / "kit_wave").resolve())
+    except (OSError, ValueError):
+        under = False
+    src = "private-spec" if pv else ("wave" if under else "unregistered")
+    env = dict(sp.get("gen_env") or {})
+    try:
+        spec_sha = hashlib.sha256(Path(spec_path).read_bytes()).hexdigest()
+    except OSError:
+        spec_sha = ""
+    return {"source": src, "die": sp.get("die"), "item": sp.get("item"), "event": sp.get("event"), "spec": str(spec_path), "spec_sha256": spec_sha,
+            "env": env, "wave_env": dict(pv.get("wave_env") or {}) if pv else env, "plan_derived": list((pv or {}).get("plan_derived") or []),
+            "ab": sp.get("env_ab") or None, "flow_tag": env.get("OT_FLOW_TAG", ""), "gen_args": list(sp.get("gen_args") or []),
+            "wave_gen_args": list((pv or {}).get("wave_gen_args") or sp.get("gen_args") or []), "plan": sp.get("plan"), "src": sp.get("src"),
+            "lane": (pv or {}).get("lane", "")}
+
+
+def private_spec_stale(sp, cfg=None):
+    """'' when the private spec's recorded wave env equals the item's wave env NOW (die config of record), else the refusal text.
+    No readable die config here (not on the hub) -> '' (run_kit.sh still checks env against the recorded wave env)."""
+    pv = sp.get("private") or {}
+    try:
+        if cfg is None:
+            sys.path.insert(0, str(Path(__file__).resolve().parent))
+            import autopilot as AP
+            cfg = load_config(read_config_text(AP))
+        now = wave_gen_env(cfg, sp["die"], sp["item"])
+    except Exception as e:                               # noqa: BLE001 - no config: the kit-side check still runs
+        print(f"ENV-PROVENANCE NOTE: private spec staleness not checked ({type(e).__name__}: {e})", flush=True)
+        return ""
+    import env_provenance as EP
+    diff = EP.env_diff(pv.get("wave_env"), now)
+    if diff:
+        return (f"stale private spec: the wave env of {sp['die']}/{sp['item']} changed since private-spec on {len(diff)} key(s) "
+                f"({', '.join(diff[:10])}); run `kit_wave.py private-spec {sp['die']} {sp['item']} ...` again")
+    return ""
+
+
+def _swap_prefix(v, old, new):
+    """a path value (str / list / dict) under the old tree -> the same path under the new tree; -> (value, changed)"""
+    if isinstance(v, str):
+        o = old.rstrip("/")
+        if v == o or v.startswith(o + "/"):
+            return new.rstrip("/") + v[len(o):], True
+        if (" " + o + "/") in (" " + v):
+            return v.replace(o + "/", new.rstrip("/") + "/"), True
+        return v, False
+    if isinstance(v, list):
+        out = [_swap_prefix(x, old, new) for x in v]
+        return [x for x, _ in out], any(c for _, c in out)
+    if isinstance(v, dict):
+        out = {k: _swap_prefix(x, old, new) for k, x in v.items()}
+        return {k: x for k, (x, _) in out.items()}, any(c for _, c in out.values())
+    return v, False
+
+
+def private_spec(cfg, die, item, hub, plan=None, tree=None, overlays=(), ab=(), why="", lane="", work=None, kind="type", src_sha=None):
+    """FLOW-PROC-A (FABLE-FLOW-0800 class a): the spec of a PRIVATE kit of die/item = the item's wave spec computed NOW (spec_for + rt tools,
+    the same functions launch() uses: env, gen args, flow_tag), with only plan, tree and overlay replaced.  Env values and kit_rtl / gen_args paths
+    under the die tree are rewritten to the private tree (those env keys are plan_derived).  ab = ["KEY=VAL" | "KEY=" (unset)] is the deliberate A/B
+    opt-out: it must give why, and run_kit.sh's ENV-PROVENANCE allows exactly those keys to differ.  -> spec dict (raises ValueError on bad input)"""
+    if die not in (cfg.get("dies") or {}):
+        raise ValueError(f"die {die!r} is not in the wave config")
+    sp = spec_for(cfg, die, item, hub, kind=kind)
+    if not sp.get("gen_tools_manifest_sha"):
+        sp.update(rt_tools_fields(cfg, die))
+    wave = {"env": dict(sp["gen_env"]), "gen_args": list(sp["gen_args"]), "plan": sp["plan"], "src": sp["src"], "kit_rtl": copy.deepcopy(sp.get("kit_rtl") or {})}
+    derived = []
+    if tree and os.path.abspath(tree).rstrip("/") != str(sp["src"]).rstrip("/"):
+        old, new = str(sp["src"]), os.path.abspath(tree)
+        for k, v in list(sp["gen_env"].items()):
+            nv, ch = _swap_prefix(v, old, new)
+            if ch:
+                sp["gen_env"][k] = nv
+                derived.append(k)
+        sp["gen_args"], _ = _swap_prefix(sp["gen_args"], old, new)
+        sp["kit_rtl"], _ = _swap_prefix(sp.get("kit_rtl") or {}, old, new)
+        if str(sp.get("plan") or "").startswith(old.rstrip("/") + "/") and not plan:
+            sp["plan"], _ = _swap_prefix(sp["plan"], old, new)
+        sp.update(src=new, src_sha=src_sha or "", src_manifest_hash="", queue_src="")
+    if plan:
+        sp["plan"] = os.path.abspath(plan)
+    ov = [o for o in (overlays or []) if o]
+    if len(ov) > 1:
+        raise ValueError("one --overlay per kit (the spec carries one positions-only type_overlay)")
+    if ov:
+        sp["type_overlay"], sp["type_overlay_sha"] = os.path.abspath(ov[0]), overlay_sha(os.path.abspath(ov[0]))
+    keys = []
+    for kv in ab or ():
+        k, eq, v = str(kv).partition("=")
+        if not eq or not ENV_KEY_RE.fullmatch(k):
+            raise ValueError(f"--ab {kv!r}: KEY=VALUE with an OT_* key (KEY= unsets it)")
+        if v == "":
+            sp["gen_env"].pop(k, None)
+        else:
+            sp["gen_env"][k] = v
+        keys.append(k)
+    if keys and not str(why or "").strip():
+        raise ValueError("--ab needs --why: a deliberate A/B env experiment names its reason")
+    if keys:
+        sp["env_ab"] = {"keys": sorted(set(keys)), "why": str(why).strip()}
+    stamp = time.strftime("%m%d%H%M%S")
+    sp["work"] = work or f"{sp['root']}/private/{re.sub(r'[^A-Za-z0-9_.-]', '_', lane or 'lane')}/{item}_{stamp}"
+    sp["private"] = {"of": f"{die}/{item}", "lane": lane, "created": now_s(), "wave_env": wave["env"],
+                     "wave_env_sha": hashlib.sha256(json.dumps(wave["env"], sort_keys=True).encode()).hexdigest()[:16],
+                     "wave_gen_args": wave["gen_args"], "wave_plan": wave["plan"], "wave_src": wave["src"], "plan_derived": sorted(derived)}
+    return sp
+
+
+def private_spec_cmd(a):
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import autopilot as AP
+    import env_provenance as EP
+    cfg = load_config(Path(a.config).read_text() if a.config else read_config_text(AP))
+    cfg["_hub"] = AP.HUB_NAME
+    lane = a.lane or os.environ.get("OT_LANE", "")
+    try:
+        sp = private_spec(cfg, a.die, a.item, AP.HUB_NAME, plan=a.plan, tree=a.tree, overlays=a.overlay, ab=a.ab, why=a.why, lane=lane,
+                          work=a.work, kind=a.kind, src_sha=a.src_sha)
+    except ValueError as e:
+        print(f"private-spec: {e}", file=sys.stderr)
+        return 2
+    out = Path(a.out or (AP_DIR / "private_specs" / re.sub(r"[^A-Za-z0-9_.-]", "_", lane or "lane") / f"{a.die}_{a.item}_{time.strftime('%m%d%H%M%S')}"))
+    out.mkdir(parents=True, exist_ok=True)
+    (out / "spec.json").write_text(json.dumps(sp, indent=1))
+    diff = EP.env_diff(sp["private"]["wave_env"], sp["gen_env"])
+    print(f"private-spec {a.die}/{a.item}: {out / 'spec.json'}  env=wave" + (f"+{len(diff)}({','.join(diff)})" if diff else "")
+          + f"  plan {sp['plan']}  tree {sp['src']}" + (f"  overlay {sp['type_overlay']}" if sp.get("type_overlay") else "")
+          + f"  work {sp['gen_host']}:{sp['work']}")
+    print(f"build: python3 -I {Path(__file__).resolve()} run-item {out / 'spec.json'}   (result.json next to the spec; run_kit.sh checks ENV-PROVENANCE before place)")
+    return 0
+
+
 def run_item(spec_path):
     """the per-item pipeline; prints KW_STAGE lines, writes result.json next to SPEC (never raises)"""
     spec_bytes = Path(spec_path).read_bytes()
@@ -8275,6 +8421,14 @@ def run_item(spec_path):
                    f"elif [ -f {q(_kfp)} ]; then python3 -I {q(_kfp)} --kit {q(K)} --stage {q(stage)} --rt {q(tsrc)} "
                    f"--sha {q(sp.get('tools_sha') or '')} --die-src {q(src)}; else echo 'KIT_FLOW_REFRESH SKIPPED: stage {stage}: '{q(_kfr)}' missing on this host'; fi"),
             idempotent=True)
+
+    def env_provenance_record(K):
+        """FLOW-PROC-A (ENV-PROVENANCE): K/kit_env_provenance.json, written right before place: the env this kit was generated with and the wave
+        env it must equal (run_kit.sh refuses place on an undeclared difference).  A kit without env_provenance.py (old rt) is noted, not stopped."""
+        decl = env_provenance_decl(sp, spec_path)
+        b64 = base64.b64encode(json.dumps(decl, sort_keys=True, default=str).encode()).decode()
+        run("env_provenance", remote(f"if [ -f {q(K)}/env_provenance.py ]; then python3 -I {q(K)}/env_provenance.py write {q(K)} --b64 {b64}; "
+                                     f"else echo 'ENV-PROVENANCE SKIPPED: {T}: no env_provenance.py in the kit (rt older than FLOW-PROC-A)'; fi"), idempotent=True)
 
     def otrun(mem, thr, d, cmd, hosts, allow_hub=False, roam=True):  # ot-run names the hub itself 'localhost'
         hosts = target_hosts(hosts, hub, allow_hub)       # KW-FIX-45 11-12: only the place stage may target the hub (capped by ot-run), never gen
@@ -8539,6 +8693,10 @@ def run_item(spec_path):
             return after_place(svc["kit"], rc, txt)
         finally:
             run("resume_release", remote(kr_cmd(f"release {q(svc['kit'])}")), idempotent=True)
+    if sp.get("private"):                                # FLOW-PROC-A ENV-PROVENANCE: a private spec built from an older die config is refused before gen
+        why = private_spec_stale(sp)
+        if why:
+            return fail("private_spec", "ENV-PROVENANCE " + why)
     if sp.get("work_alt_lane"):                          # KW-FIX-38: fresh attempt on the host's scratch2 (best effort)
         run("work_alt", idempotent=True, argv=remote(work_alt_cmd(W, sp["work_alt_lane"])))
     rc, txt = run("mkdir", idempotent=True, argv=remote(f"mkdir -p {q(W)}/logs {q(sp['root'])} && rm -rf {q(W)}/gen {q(W)}/rtl {q(W)}/geom"))
@@ -8956,6 +9114,7 @@ def run_item(spec_path):
         # FABLE-FLOW-1000 A (TOOLS-DECOUPLE): the kit (fresh gen, or a relaunch that restored items/<item>/gen) gets the current flow
         # scripts of this attempt's rt tools before PLACE: verbatim copies of older main versions are replaced (KIT/flow_refresh.jsonl).
         flow_refresh("place")
+        env_provenance_record(K)
         asy = False
         if sp.get("place_async", True) and G in sp["hosts"] + ["localhost", hub]:
             _, at = run("place_mode", idempotent=True, argv=remote(
@@ -17788,6 +17947,19 @@ def main(argv=None):
     s_.add_argument("--dry-run", action="store_true")
     r = sub.add_parser("run-item")
     r.add_argument("spec")
+    ps_ = sub.add_parser("private-spec", help="FLOW-PROC-A: a private kit spec = the item's wave spec now (env, gen args, flow_tag); only plan / tree / overlay differ")
+    ps_.add_argument("die"); ps_.add_argument("item")
+    ps_.add_argument("--plan", help="private plan of record (default: the wave plan)")
+    ps_.add_argument("--tree", help="private source tree (default: the die src); env / kit_rtl paths under the die tree follow it")
+    ps_.add_argument("--src-sha", default=None, help="commit of --tree (recorded)")
+    ps_.add_argument("--overlay", action="append", default=[], help="positions-only type overlay (type_overlay.py); one per kit")
+    ps_.add_argument("--ab", action="append", default=[], metavar="KEY=VAL", help="deliberate A/B env change (KEY= unsets); needs --why")
+    ps_.add_argument("--why", default="", help="reason of the A/B env change")
+    ps_.add_argument("--lane", default="", help="owner lane (default $OT_LANE)")
+    ps_.add_argument("--work", help="work dir on the gen host (default <work_root>/<die>/<event>/private/<lane>/<item>_<stamp>)")
+    ps_.add_argument("--out", help="dir for spec.json (default AP_DIR/private_specs/<lane>/<die>_<item>_<stamp>)")
+    ps_.add_argument("--kind", default="type")
+    ps_.add_argument("--config", help="kit_wave.json file instead of the hub autopilot/kit_wave.json")
     rc_ = sub.add_parser("reclassify", help="recompute class/reason of FAIL records from their stored stage logs "
                                             "with the current RULES (dry run unless --write)")
     rc_.add_argument("--write", action="store_true", help="update the state + kit_wave_stages.tsv (under kit_wave.lock)")
@@ -17834,6 +18006,8 @@ def main(argv=None):
         return prov_resign_run(a.spec)
     if a.cmd == "reclassify":
         return cmd_reclassify(a)
+    if a.cmd == "private-spec":
+        return private_spec_cmd(a)
     if a.cmd == "run-item":
         try:
             return run_item(a.spec)

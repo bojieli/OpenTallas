@@ -8668,6 +8668,14 @@ fi
 # STAGE-ODB-GUARD (FLOW-FIX-2045, FABLE-PD-HEAD-2040): older STAGE-CAP watchers deleted 2_x / 3_x / 4_1 ODBs that make lists as prerequisites; say so when this run starts on such a kit  # KWRS-BEGIN
 [ ! -f "$K/stage_odb_cap.py" ] || python3 -I "$K/stage_odb_cap.py" --guard "$K" --need 5_1_grt.odb >&2 || exit 13
 # KWRS-END
+# ENV-PROVENANCE block (FLOW-PROC-A 11-21, FABLE-FLOW-0800 a: 7+ private kits ran on hand-written env subsets): before place, the kit's gen env  # KWRS-BEGIN
+# must be its wave env (K/kit_env_provenance.json, written by kit_wave.py run-item; private kits come from kit_wave.py private-spec) up to
+# plan-derived keys and the spec's declared A/B keys.  A refusal check only (exit 14, FAIL_PREFLOOR ENV-PROVENANCE); a placed kit only warns.
+if [ "$GOAL" != synth ] && [ -f "$K/env_provenance.py" ]; then
+  EPV=$(python3 -I "$K/env_provenance.py" check "$K" 2>&1); EPR=$?; echo "$EPV" >&2
+  if [ $EPR = 14 ]; then echo "FAIL_PREFLOOR $(echo "$EPV" | grep -m1 'ENV-PROVENANCE FAIL' | cut -c1-500)" | tee -a "$K/FAIL_PREFLOOR"; exit 14; fi
+fi
+# KWRS-END
 if [ -f "$K/signed_parent_source.json" ]; then
   if [ "$GOAL" = synth ] && [ "${OT_SIGNED_PARENT_PREP_SYNTH:-0}" = 1 ]; then
     [ -f "$K/signed_parent_synth_prep.sh" ] || { echo 'HELD: missing explicit SYNTH-only PREP helper'; exit 78; }
