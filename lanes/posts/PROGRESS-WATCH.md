@@ -129,3 +129,4 @@
 - 2026-11-21 01:35 PST ALERT SELF-STOP s81: 1 job(s) stopped by the wave 988 s after its own SUBMIT (latest dsdv_slice_c1x_C__t8@3 at 01:34:25: superseded by attempt 4 of the same item)
 - 2026-11-21 02:25 PST ALERT STUCK-STATE s81_head: 1 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. hd_host_n, 2026-11-20 22:18)
 - 2026-11-21 02:46 PST ALERT NO-ADVANCE s81: 1 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (col_h9_r0_p1__t1__pv697f40c9 x2@gen)
+- 2026-11-21 03:26 PST ALERT NO-ADVANCE qwen_kvsys: 1 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (kv3_hgi_v7 x2@gen)
