@@ -1,3 +1,129 @@
+# FABLE-CLOSURE-STRATEGY 2026-11-20 23:45 PST (lane FABLE-CLOSURE-0010, the 00:10 round): the S81 column wall is one falling-edge ROM loop that needs about 1,020 ps in 833; the cell cap blocks five more families than KV pv, and S81 svc types are 3.3 to 5.1 M cells
+
+Reviewer: FABLE-CLOSURE-0010 (Fable). Read-only: nothing cancelled, signalled, patched or launched except one ot-run census (section 6). Scope: technical physical design, S81 / HEAD / QC / KV.
+Gate: DRC 0, TT >= -42 ps at 833 ps, internal FF hold >= 0, LEC, bind + LATCHECK. No die or outline growth. Nothing below is a new gate or hold.
+Marking: **V** = I read the file or computed the number this round. **R** = reported by the named lane. **I** = inferred. **P** = proposal.
+Clock and setup numbers are post-hook (`4_cts_post_hook.rpt`, `OT_CTS_POST_TIMING`) or GRT (`5_global_route.rpt`).
+Data (V): grep-level scan (nice 19) of every kit with a `cell_census.jsonl` younger than 120 h on epyc2/7/8/9/10 and intel1: 1,637 kits, 460 types (S81 258, QC 130, KV 46, HEAD 26). Per kit: census stages, `timing_type` classes of every macro liberty, worst max paths whose launch and capture are on opposite clock edges, route-stage error lines. Scripts and raw output: localhost scratchpad `c10/` (`scan.sh`, `scan2.sh`, `scan3.sh`, `an*.py`, `scan*_<host>.txt`).
+Count (failure_breakdown 23:11, V): S81 44/394 types signed, QC 33/125, KV 6/56, HEAD 25/26.
+
+## 0. Headline
+
+1. **Every S81 column type carries a hard ROM that works on the falling clock edge, and the loop through it does not fit one period (V).** The split ROM halves `ot_v41_rom_elem_q_qxpq_w10_gb_hw / _he` (plan event 3a92e86c4c8, 11-06, "OLAT/IFN are half-cycle forms, PIN CYCLES 0") have 586 `setup_falling` input arcs and 68 `falling_edge` output arcs; the unsplit `_gb` view had only rising arcs. They are in all 148 column types the scan saw (col_h9 r0_p1..p6, r1, r2; col_h10): the 216-type col family. Of 116 col kits with a CTS read, 88 (66 of 83 types) have a negative path into or out of a ROM half among their worst paths. This is the "core to core" class of FABLE-PD-S81-2340 section 2 and the col_h10 p4 row of S81-DIE-R5.
+2. **The cell cap is not a KV pv problem only (V).** Section 2: S81 svc 12 types at 3.3 to 5.1 M cells; KV hub_C / hub_Wo / hub_Eo; S81 slice C 16 types at 430 to 530 k after CTS; S81 serdes 11 types; QC has 48 types measured between 400 and 506 k after GRT (inside the largest closed run, 517 k, with no margin).
+3. **The serdes "cone" failure was the region tool, and it is closed (V).** Section 3.
+4. **Two 21:30 levers were measured and lost (R, read V):** tap pairing at 200 um (leaf t39 p1: setup -73.7 -> -259.7) and the tap_balance convergence pass (col_A: setup -15.4 -> -21.8, hold -130 -> -98). Section 1.
+
+## 1. (a) The 21:30 levers: measured, withdrawn, open
+
+| 21:30 lever | State 23:40 | Evidence |
+|---|---|---|
+| 1 Stations by length on S81 long nets | **Partly in J6 C3** (relay-site keys 47 + 9 leaf types, FSTART rows, CFX on 75 leaf types; R S81-J6-ASSEMBLY 23:04, FABLE-FIX-S81-LEAF-R2 23:05). Core-end `relay_depth --pin-w` rows: not built, owner lane stood down. | J5 t39 a3 control: -73.7 at CTS, -50.6 after TT repair; worst = vp `dodd -> cf` (CFX) and `u_rrl -> cland_fstart` (FSTART) (R) |
+| 1b Reset-leg rows + tap pair 200 (leaf proof p1) | **Measured, loses. Withdraw the pair pass.** | p1 against a3: setup -259.7 / TNS -54,012 (a3 -73.7 / -1,278); hold -85.4 (a3 -75.1); tap spread 103 (a3 63). The pair pass moved 2,111 clock pins and left clk_t20 at 998 sinks, insertion 584, in-tap skew 183 (R) |
+| 2 Clock read after the hooks | **Done.** | main 02ceee2474: `4_cts_final.rpt` is post-hook, `cts_read.py` for older kits (R) |
+| 3 Tap grid and tap_balance convergence | **Convergence: mixed, no rows. Load-centre pad form withdrawn. Bank taps: unproven.** | colA_conv r1: core-only taps 343 -> 800 ps, setup -15 -> -277. r2: setup -15.4 -> -21.8, hold -130.2 -> -98.1, 42 taps / pins still off target after 8 passes. t39 bank-tap proof (55 -> 98 taps): its private bind died rc 11 at 23:04 (R) |
+| 4 Hold form per pair class (lockup) | **Open.** proof4 at CTS: 28,649 netlist latches -> 8,943 kept (6,281 same-tap and 16,240 far ones bypassed). No timing read yet (R) | - |
+| 5 KV head-core tap direct | **Closed at CTS, not yet through GRT.** | b8 / b8d: FF hold -83 on 1,040 ends, all port-in; TT +2.45; no head-core end (R) |
+| 6 QC cb tile clock contract | **In the V2 compose, unproven.** 65 core taps 733 -> 818, 65 SDC overrides removed (R). Proof p1 died at global place (ODB-0359, FIRM `u_pc_nk`), fixed on main a4ae603e36 (R) | - |
+| 7 Frozen seats and trees | **Done.** S81 monitor-home: 70 seats, 0 over 300 um. HEAD r16 applied: 26/26 trees equal (R) | - |
+| 8 S81 global placement timing A/B | **No result.** First variant reached its hooks at 22:44 (R) | - |
+| 19:30 lever 1 (core-pin relay as a clock lever) | Withdrawn at 21:30; stays withdrawn | flop -> core setup never negative (+125 to +157, R) |
+| KV pv tap flip (v8m) | **Out.** FF hold -598 on 9,098 ends, TT -1,847 after repair (control -1,910) (R) | superseded by the pv split |
+
+## 2. (b) Types over the 400 k run cap
+
+Measured growth floorplan -> CTS, per die (V, kits with both): S81 median 1.56 (p90 2.09), QC 1.33, KV 1.35, HEAD 1.19. Small types grow most; x1.43 is only used where a family has no later stage.
+
+| Die | Family (types) | Non-tap cells at floorplan | Measured later (max) | Estimate | Verdict |
+|---|---|---|---|---|---|
+| S81 | **svc_lo rs t1-t5, svc_hi rs t1 / t2 / t4 / t5 / t6, svc_hi pvso_entry t1 / t2 (12 seen)** | 3.30 M (pvso_entry t2, live kit); FLAGS-CELLCHECK 11-18 to 11-20: 3.38 to 5.10 M | none: pvso_entry t2 has been in global placement since 20:36; the rs representative is expected to spend about 7 h in synthesis (R) | 8 to 13 x the cap | **cannot run as one type** |
+| KV | **pv (16)** | 315 to 489 k | v5 602 k placed; v8 574 k at CTS (R) | 460 to 700 k | split posted (D28) |
+| KV | **hub_C** | 788 k (old trial event, 99 h; no count on D25e3: it fails at gen) | - | > 1 M | over at floorplan; no split posted |
+| KV | **hub_Wo, hub_Eo** | 396 k, 382-387 k | Eo 463 k at CTS (x1.21), setup -614 | Wo about 480 k at CTS | in the 400-517 k band before GRT |
+| KV | hub_Ei, pc_v1, pc_v3 | 288 k, 245 k, 262 k | pc_v1 415 k at GRT (x1.69); pc_v3 354 k at CTS | Ei 350-410 k | band edge |
+| S81 | **slice C: c1x_C (9), iq_C, c3x_C, kv512_C, lepe / lepw _C (4) = 16** | 298 to 367 k | c1x_C t1 318 -> 460 k at CTS; t6 339 -> 503 k at CTS (x1.45-1.48) | 430 to 530 k at CTS, more after GRT | **all over 400 k; iq_C and c1x_C t8 over 517 k at CTS** |
+| S81 | **serdes (11)** | 296 to 391 k | t15 452 k at CTS; t1 431 k, t14 367 k at GRT (x1.24-1.39) | 367 to 515 k | 10 of 11 over 400 k; t3 at the 517 k edge |
+| S81 | kv_leaf t1 / t3 / t4 | 281 to 315 k | t5 260 -> 301 k at CTS | 330 to 400 k | under, close |
+| S81 | leaf, col, slice_station | leaf max 269 k (t8), col max 193 k | leaf t75 197 -> 300 k placed; col 71 -> 171 k at GRT | t8 about 400 k | under |
+| QC | st_b (13), fw (10), sc (9), hc0 / hc1 (13), stm (11), fe (9), su_c (3) | 187 to 398 k | 48 types measured over 400 k; max 506 k (slw_st_b_v2__pvc2ec5bfb, GRT), 503 k (slw_fw_v1__cl51d45468, 276 k at floorplan: x1.82) | - | inside 517 k, no margin |
+| HEAD | hd_lep0N | 288-293 k | 346-357 k at CTS | about 400 k at GRT | under |
+
+svc composition (V, `synth_stat.txt` of pvso_entry t2): 4.43 M cells at synthesis: 908 k BUFx2, 729 k INVx1, 579 k DFFHQN flops, the rest logic; 64 attention cores and 220 SRAMs are already hard. 37 % of the cells are buffers and inverters present at synthesis.
+
+## 3. (c) Falling-edge macro class and (d) the serdes cone failure
+
+**(c) Liberty scan (V), all macro views in the 1,637 kits:**
+
+| Macro view | Launch arcs | Capture arcs | Types | Negative opposite-edge paths seen |
+|---|---|---|---|---|
+| `ot_v41_rom_elem_q_qxpq_w10_gb_hw / _he` | 68 falling | 586 falling, 19 rising | 148 col types | qbank_S -> ROM: 69 kits / 52 types, worst -100 (CTS). seq `go_tag` -> ROM: 40 kits / 26 types, worst -233, median -77 (CTS). ROM -> qbank_N: 25 kits / 22 types, worst -96, median -64 (GRT) |
+| `ot_s81sl_xrt1 / xrt3` | 3,116 / 3,629 falling | 4,373 / 5,419 falling | 20 slice C types | `u_lp_u_xr -> u_lp_u_eg_u_gg` -2,568 at CTS on 2 c1x_C kits (unrepaired stage; class present) |
+| `ot_s81sl_egg / egn`, `ot_s81dv_eng_finish / norm_finish` | 34-98 falling | rising | 20 slice C types | none in the worst-path lists |
+| `dsdv_bksel_c / bksel_q`, `dsdv_bk_g` | 635 / 1,219 falling; bk_g rising | bk_g 947 falling | bk_sel | `g_q[0].u_q -> u_sel.u_c` -5,300 at CTS (1 kit) |
+| `dsdv_gunit_l1c / l4`, `dsdv_eng_rr_h0 / h1` | falling | rising | gunit, eng | none listed |
+| QC, KV, HEAD | none | only the `*_cland_*` landing rings (capture on the forwarded clock's falling edge, by design) | - | - |
+
+So the class is S81 only: col (216 types), slice C (16), bk_sel (2), eng, gunit.
+
+**The col loop in numbers (V, two J5 kits of col_h10_r0_p4; arithmetic I).** Let P be the time the falling edge reaches the ROM clock pin.
+- Into the ROM: qbank_S clock 188, clock-to-out 384, wire 146 -> arrives 718; required P + 354 (liberty setup, negative). Needs P >= 363. Kit pv07945c1e has P = 263: slack -100.
+- Out of the ROM: `pval` at P + 622, wire 126; qbank_N requires 1,023. Needs P <= 275. Kit pv5b623e07 (a11) has P = 360: slack -85.6.
+- The two bounds are 88 ps apart the wrong way: no core tap value closes both. The loop needs about 1,020 ps and has 833. Which side fails depends on where the tap lands (263 against 360 on two kits of one type), which is why the class looked like core-tap noise.
+- A register on the ROM **output** only (the S81-DIE-R5 row, `pval -> qbank e_r` +1 reg) leaves P in [363, about 358]: still empty.
+- A register on the ROM **inputs**, seated at the ROM pin face on the kit tap, makes the input bound P >= about -100; with the output bound P <= 275 the window is about 375 ps wide. +1 cycle on the ROM read lanes.
+
+**(d) serdes.** Cause (V, `tools/die_plan/place_regions_cone.tcl`): the region fix of 6829d05470 extended the `serdes_tx_encoder` group by the "cone" of its 5,925 flops and refused when that exceeded 8 x the members. `ot_pr_cone` walks both the drivers and the loads of every cell it visits, so it returns the connected combinational component (through every net of up to 256 pins), not a cone; on serdes that is over 47,400 cells. Six J5 serdes rows stopped at global placement between 22:04 and 23:17 (t2, t14, t15 x2, t1__clb45db5be, t4 a13). Closed at 23:15 (R S81-DIE-R5): rt 124d829f45f5 turns the refusal into `OT_PLACE_REGION_DROP` (no region), the form that passed DPL on the t4 repro (5,925 cells released, no DPL-0033); the six rows were retried at 23:17; J6 C1d / C2d carry no serdes region. Open: no timing read exists for the region-less encoder, and serdes is in the cap band (section 2).
+
+## 4. (e) What still blocks QC and KV
+
+**QC (33/125).** At CTS, post-hook, QC is mostly inside the gate (V, newest kits per family): st_b median +41 (13 of 16 at -42 or better), stm +22, fe +36, cb 0 (13 of 21), st_a +5 (14 of 24), sc -13, hc0 -32. What is left:
+1. cb (17 types): GRT insertion gate fails on 6 kits and tile links over 300 um; the contract fix (21:30 lever 6) and the q11 `u_t22.t_out` +1 stage are in V2, unproven.
+2. st_a: 14 kits stopped by the pre-route setup triage and 12 by the post-place stop; `slw_st_a_v2__clf4365a62` lane-pad bank on an ft station (tool fix 2bdea13bb1, R).
+3. su_c (3 types): -213 at CTS, and `DRT-0073 No access point` for the `qfd_dv_s8x_vmr` core `ck` pin on 3 kits (pin access, not timing).
+4. `RSZ-0060 Max buffer count reached` in GRT repair on fe, su_l1, cbx kits; DRT-0255 on 4 cb kits.
+5. Cap band: 48 types at 400 to 506 k after GRT. V2 raises 576 lanes (sum 2,029 cycles, R): each added stage is flops on types with no cell margin.
+`do-5_1_grt Error 247` (18 QC kits, 5 KV) is a kill of the GRT process (cancel or guard), not a routing or timing class.
+
+**KV (6/56).** 50 unsigned types in 8 families (FABLE-PD-KV-2230 stands):
+1. pv 16: over the cap; D28 split. No D27 row closes one.
+2. hub 5: hub_C over the cap at floorplan, Wo / Eo in the band, Eo -614 at CTS; reset banks need the two-pass tap rows.
+3. hgi 11 / hg 8: hgi closes at CTS; 4 of 4 kits that reached GRT ended with the 247 kill; hg has no placed evidence. The hgi / hroot port-in hold (-83 on 160-1,091 ends; hroot -227 on 7,857) is the sender contract (`clock.ring_hold.sender_ps`, R).
+4. pc 6: pc_v3 -1,492 at CTS, no row; pc_v1 415 k at GRT.
+5. io_cor_v1: reset relays stacked 2 mm from the ft16 stations (R).
+
+## 5. Levers, ranked by types unblocked
+
+| # | Lever | Types | Measured evidence | Root cause | Fix (P) | Owner |
+|---|---|---|---|---|---|---|
+| 1 | **Input-side stage in front of the falling-edge ROM halves** | S81 col 216 (negative on 66 of 83 types with a CTS read) | Section 3 loop numbers; seq -> ROM median -77, qbank_S -> ROM worst -100, ROM -> qbank_N median -64 at GRT | Half-cycle ROM forms kept at 0 pin cycles (11-06); loop needs about 1,020 ps | `relay_depth` D +1 on every ROM input bus (`xs_q0` from qbank_S, `go_tag` and the other cfg7_seq legs), relay at the ROM pin face on the kit tap; +1 cycle on the ROM read lanes (bind, LATCHECK). Then one core-tap value for `u_e*_u_w / u_e` that puts P near 180 (window -100..275). Proof: one col_h10_r0_p4 and one col_h9_r1 kit to GRT, read both directions. Fallback if the proof fails: re-harden hw / he with full-cycle forms (2 cores, +1 to +2 cycles). | S81-J6-ASSEMBLY (rows; J6 if before the cut, else J7), RESET-RELAY-GEN-R3 or a CORE-PIN-RELAY successor (`--pin-w` tool), S81-DIE-R5 (proof) |
+| 2 | **J6 C3 leaf content: CFX + relay-site keys + FSTART** | S81 leaf 75 (+ kv_leaf 5) | t39 control -50.6 after TT repair; the two worst classes are exactly these rows (R) | fixes on main not in the J5 tree; unseated relays | Already in C3. Sign-off kit from the J6 tree only; no leaf verdict from p1 / p2 | S81-J6-ASSEMBLY, FABLE-FIX-S81-LEAF-R2 |
+| 3 | **Cell cap, families that cannot run** | S81 svc 12; KV pv 16 + hub_C 1 | Section 2 | type = one flat run of 3.3-5.1 M (svc) or 0.46-1.1 M (KV) | KV: D28 split as posted; add hub_C to D28 (same read: group the cores by output relays, cut on the broadcast inputs). svc: first a count by hierarchy of where the 1.64 M buffers and inverters come from, then split each type into parts under 280 k at floorplan or harden the repeated row as a core; no svc kit can sign before that | KV-PLAN-R3 + OPUS-FIX-KV-PV-R4; S81-SVC-R4 (census, split proposal), S81-J6-ASSEMBLY (J7 event) |
+| 4 | **Cell cap, families in the 400-530 k band** | S81 slice C 16, serdes 11; KV hub_Wo / Eo; QC 48 | Section 2 | growth x1.2-1.8 after floorplan (stations, hold cells, repair) | Read c1x_C t6 (503 k at CTS, attempt a46 still running) and one serdes at GRT as the family proofs. Types projected over 517 k at CTS (iq_C, c1x_C t8, serdes t3): split or shed stages before volume. QC: estimate V2 added cells per type before the bind (`cap_estimate.py`), as an estimate, not a gate | S81-DIE-R5, S81-J6-ASSEMBLY; QC-PLAN-R8; PRECHECK-1119 (estimate per event) |
+| 5 | **Same falling-edge class on slice C and bk_sel** | slice C 16, bk_sel 2 | `xrt1 -> eg_gg` -2,568, `bksel q -> c` -5,300 at CTS | full falling-edge cores (xrt1 / xrt3) and falling launch (bksel) into rising capture | Apply the lever 1 read per core pair: compute the P window from the two worst directions before choosing a stage side | S81-BKSEL-R5, S81-DIE-R5 |
+| 6 | **Bank taps only (tap grid without pairing or convergence)** | S81 leaf / col kits with in-tap skew over 100 (65 of 118 at 21:30) | pair 200 and convergence both lost or were mixed (section 1); t39 clk_t6 still 6,000 sinks | taps over the cap; the cheap passes move sinks into full taps | Keep only the density solve (t39 55 -> 98 taps) on a regenerated kit; rows after its post-hook read is no worse than a3 on setup and hold | TAP-GRID-R2 |
+| 7 | **KV hgi / hg through GRT, sender contract for port-in hold** | KV hgi 11, hg 8, hroot 1 | hgi CTS +1 to +2 TT; port-in -83 / -227 | no kit has finished GRT; placeholder `sender_ps -385` | b8 / b8d as the GRT read; measured `sender_ps_types` rows in D27; hg_v1 rep at apply | FABLE-FIX-KV-HGI, KV-PLAN-R3 |
+| 8 | **QC cb contract + su_c core pin access** | QC cb 17, su_c 3 | section 4 | tile insertion 85 ps short; `vmr` core `ck` pin without an access point | V2 as composed, proof re-generated on V2 rows; su_c: move the core by one track or cut the M5 obstruction at the `ck` pin, then re-read | QC-PLAN-R8 |
+
+## 6. Stop list (earlier lists stand except where named)
+
+- No output-side-only register on ROM `pval`. No col sign-off expectation from J6 volume without the lever 1 row: launch representatives, read both ROM directions.
+- No `OT_TAP_PAIR_UM 200` rows and no load-centre pad form (both measured worse). 21:30 section 1 fix 3 is withdrawn.
+- No svc volume: every svc kit is a 3.3-5.1 M-cell run. I cancelled nothing; whether the running svc kits stop is COORD's call.
+- No KV pv, hub_C or hub_Wo volume before the split; no D27 row closes them.
+- No serdes region re-added, and no reading of the "8 x members" count as evidence about the encoder: it counts a connected component.
+- No V2 stage or pad adds on QC st_b / fw / sc types without a cell estimate.
+- No `Error 247` row read as GRT overflow or timing.
+- Lockup rows wait for proof4; no latch on hops over 200 um (21:30 stands).
+
+## 7. Not checked
+
+- My one ot-run census (unit oth-ubuntu-2155252-1795246454, epyc2, `fable-closure-0010/svc_census.py`: svc cells by hierarchy prefix) matched 0 netlist lines: a parser error of mine. The svc numbers above come from the kit's `cell_census.jsonl` and `synth_stat.txt`, not from it. The count by hierarchy is still to do.
+- The ROM P window uses one path per direction from two kits of one type; I did not read the hw / he core RTL forms (IFN, OLAT) or check lane cycles for the +1 stage. Whether J6 C3 can still take the row before 13:00 is not assessed.
+- Worst-path lists hold the worst 40-70 paths per kit: a type without a listed ROM path is not proven clean. 120 col_h9_r1 / r2 types have no J5 kit; their evidence is from D8i / b05c kits.
+- hub_C has no cell count on the current plan. Slice C and serdes have no GRT count on J5. QC cell counts mix events N3 to N46R6V1.
+- xrt1 and bksel paths were read at CTS before repair only. st_a triage paths and the su_c pin geometry were not opened.
+- The serdes retries of 23:17, proof4, the t39 bank-tap proof, b8 / b8d GRT and the GPL A/B had no result at 23:40.
+
 # FABLE-CLOSURE-STRATEGY 2026-11-20 21:20 PST (lane FABLE-CLOSURE-2130, the 21:30 round): the "clock wall" of 19:30 was read before the tap balance. After the hooks S81 taps sit within about 60 ps of each other; what is left is skew inside a tap, long unstationed nets, and three real core-clock errors (KV hgi pad detour, QC cb tile insertion, none on S81)
 
 Reviewer: FABLE-CLOSURE-2130 (Fable). Read-only: nothing launched, cancelled, signalled or patched. No STA job used (the one allowed was not needed). One grep-level scan (nice 19) of `4_1_cts.log` + `4_cts_final.rpt` on epyc2/7/8/9/10 and intel1, kits of the last 3 days: 252 kits with both readings (S81 118, QC 121, HEAD 13, KV 0).
