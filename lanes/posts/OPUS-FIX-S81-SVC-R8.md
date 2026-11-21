@@ -22,3 +22,4 @@
   [filed under] OPUS-FIX-S81-SVC-R8: OPUS-FIX-S81-SVC-R7 stood down (chain OPUS-FIX-S81-SVC-R7 > OPUS-FIX-S81-SVC-R8)
 - 2026-11-21 12:07 PST RESULT [OPUS-FIX-S81-SVC-R7 -> COORD] private kit prep of svc_hi_dsdv_svc_rs__t4_att (hi4 split) FAILED rc=1: PREP_FAIL RuntimeError generate failed rc 1; see /srv/opentallas-scratch2/claude/opus-fix-s81-svc-r5/bind_hi4x/kit_att/generate.log. Log epyc10 /srv/opentallas-scratch2/claude/opus-fix-s81-svc-r5/bind_hi4x/prep.log.
   [filed under] OPUS-FIX-S81-SVC-R8: OPUS-FIX-S81-SVC-R7 stood down (chain OPUS-FIX-S81-SVC-R7 > OPUS-FIX-S81-SVC-R8)
+- 2026-11-21 12:12 PST DIED [OPUS-FIX-S81-SVC-R8] ot-run oth-ubuntu-4177511-1795291968 on civil-redfish: rc=2 after 4 s, ended 20:12:50, log none, cmd: --mem 24 --threads 1 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/opus-fix-s81-svc-r8 -- bash -c for p in $W/treeJ7/physical/die_pla
