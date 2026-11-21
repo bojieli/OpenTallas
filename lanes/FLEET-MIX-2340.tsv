@@ -299,3 +299,13 @@ intel2	prd-eco_20261120_182729_483429-i1t-3309803		workdir:ot-jobs	eco_prd				ec
 intel2	prd-eco_20261120_162140_2433056-i1-3186007		workdir:ot-jobs	eco_prd				eco_20261120_162140_2433056-i1	drt	1.83	0.36	7.5	7.99	8	112.0	9.8	21.1	1			tt_setup_measure_grt:-12.35/-28.57	2.15	0	1		0	->			32.1	0.7	no_baseline	no done-stage baseline today (stage elapsed 0.4 h)		
 intel2	prd-fin-3320689		workdir:ot-jobs	eco_prd				fin	final	0.24	0.43	2.0	1.18	8	48.0	8.6	14.3	1			tt_setup_measure_grt:-56.03/-1019.61	-6.27	0	1		0	->			5.8	4.4	no_baseline	no done-stage baseline today (stage elapsed 0.4 h)		
 intel2	prd-fin-190176		workdir:ot-jobs	eco_prd				fin	final	0.14	0.32	7.1	1.11	8	48.0	6.9	12.1	1			tt_setup_measure_grt:4.98/0.00	31.56	0	1		0	->			5.8	3.3	no_baseline	no done-stage baseline today (stage elapsed 0.3 h)		
+
+# CANCELLED 11-21 00:2x-00:31 PST (batch 1, rule: age>3h, post-repair TT measure < -300; unit via ot-run --cancel, 3 unlabeled by exact ot-job PID). Columns: host	container	unit	age_h	mem_limit_gb	rss_gb	peak_rss_gb	evidence	stage_at_cancel
+epyc10	dpkit-ot_s81sl_leaf__t13-2319777		16.2	72.0	18.8	18.8	tt_setup_measure:-511.48/-148394.08	grt
+epyc10	dpkit-ot_s81sl_leaf__t43-3632683	oth-ubuntu-3582489-1795225602	6.49	72.0	19.4	19.4	tt_setup_measure:-410.37/-92221.40	grt
+epyc7	dpkit-cbn_q01__cld9ff4c40-1136289	oth-ubuntu-1113478-1795203863	12.54	72.0	37.6	38.4	tt_setup_measure:-687.56/-132884.94	grt
+epyc7	dpkit-cbn_q01__clab6e67f2-24246	oth-ubuntu-4060-1795234815	3.96	48.0	2.4	13.4	tt_setup_measure:-349.08/-89115.04	cts
+intel1	dpkit-ot_s81sl_leaf__t17-3543298		15.57	162.0	18.4	18.5	tt_setup_measure:-361.85/-4702.55	grt
+intel1	dpkit-kv3_hgi-3506865		15.58	108.0	18.7	18.7	tt_setup_measure:-312.49/-7595.53	grt
+intel1	dpkit-kv3_pc_v3-3350496	oth-ubuntu-3331162-1795232532	4.59	108.0	20.3	20.4	tt_setup_measure:-1497.85/-423175.04	grt
+intel2	dpkit-ot_s81sl_leaf__t75-2211324	oth-ubuntu-2199790-1795216169	9.14	48.0	20.9	21.2	tt_setup_measure:-466.10/-111209.94	grt
