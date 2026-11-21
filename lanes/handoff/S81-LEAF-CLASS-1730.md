@@ -23,3 +23,16 @@ Inputs: UNIFY-TOOLS-R2/R3 handoffs; R2 rows epyc9 /srv/opentallas-scratch2/claud
   cland_fstart_*). spare_ft.declared() refuses a spare slot with a landing role ("needs its own dormant protocol").
   So superset classes need a dormant landing protocol (use strap masking ring ready/fault, fclk/fstart tied 0) in
   clock_landings emit + bind tie audit + spare_ft. Not on main. Equal-profile classes need no spare: 8 groups, 18 types -> 8 builds.
+- 20:5x Rebased on b8ab33d192d (--ft-superset, COORD slot-naming ruling). class_floorplan now keeps member slot names and
+  lets class_merge --ft-superset collapse equal pin sets (no ft0..N renaming); per-end landing pins + cland_tstart pins follow
+  their window; landing contract mapped to rep frame. class_merge --child-union adds missing member collector child sites
+  (the 11 missing sites); role pin site tolerance 1 um. Members with own-landed leafdn/leafup vs not, and cland_tstart site,
+  split into separate sub-classes (fixes the 23 leafup/leafdn members). t53__clb66fa5cb kept own row (tstart on another site).
+- J5 result: 13 classes, 0 conflicts, 0 overlaps, mismatches 479 -> 0; chained class_merge --ft-superset --child-union
+  --role-strap: 0 refusals on all 13; 34 member types folded (leaf types 75 -> 41; 34 builds replaced). +1 cycle on 6 kit-priced lanes.
+- PUSHED main f1a929e38f2 + 0d5c6f35990 (class_window_solve --classes CLI, class_floorplan, exact_classes; class_merge
+  --child-union; 25 tests). Reproduce: W/drv.py (EXCLUDE=ot_s81sl_leaf__t53__clb66fa5cb) -> p_all.json.cli_classes.json;
+  class_window_solve.py plan_j5.json --classes ... ; W/merge_all.sh -> W/m1/plan_13.json side_13.json.
+- Private strict bind + LATCHECK + G0 running: W/bind_class.sh via ot-run (epyc10) -> W/gate_cls, W/bind_class.out.
+- Open: dormant landing protocol for landed spare slots (Finding 3) still not on main; spare_ends rows in the class plan rely on
+  --ft-superset spare_ends handling.
