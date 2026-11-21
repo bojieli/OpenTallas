@@ -1601,8 +1601,19 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["r
         "properties": {"inst": {"type": "string", "minLength": 1}, "port": {"type": "string"},
                        "side": {"enum": ["source", "sink"]},     # sink = a direct core-to-core wire (no relay on it)
                        "bits": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "integer", "minimum": 0}},
-                       "D": {"type": "integer", "minimum": 1, "maximum": 4}, "path_um": {"type": "number"},
+                       # RESET-RELAY-GEN-1530 11-21 (COORD): up to 16 (a reset release leg; rst_n held >= 64 clocks)
+                       "D": {"type": "integer", "minimum": 1, "maximum": 16}, "path_um": {"type": "number"},
                        "stages_existing": {"type": "integer", "minimum": 0}, "note": {"type": "string"}}}}
+# RESET-RELAY-GEN-1530 11-21 (COORD): register duplication of a relay flop whose sinks no one site reaches
+# (reset_leg_plan.py k_cover clusters; kit_istations RELAY_SPLIT_TCL; 0 cycles).  Copies are named <flop>__rs<n> and are
+# seated by relay_sites; rows run in order, so a row may list copies of an earlier row as sinks.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["relay_split"] = {
+    "type": "array", "items": {"type": "object", "additionalProperties": False, "required": ["flop", "clones"],
+        "properties": {"flop": {"type": "string", "minLength": 1}, "note": {"type": "string"},
+                       "clones": {"type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": False,
+                           "required": ["name", "sinks"], "properties": {
+                               "name": {"type": "string", "pattern": "__rs[0-9]+$"},
+                               "sinks": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}}}}}}}
 # S81-RLYBR-1 11-19 (COORD family class, relay_branch.py): per-branch copies of a relay whose sinks fit no common reach box
 # (bind.py, 0 added stages per copy; far branches also carry relay_depth sink rows)
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["relay_branch"] = {

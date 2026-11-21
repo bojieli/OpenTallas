@@ -1032,6 +1032,98 @@ def core_stations(t, txt, apply, htree, tcl, rep, source_sha=None, native_manife
 RING_KEY = re.compile(r"(^|[./])u_cland_")
 
 
+RELAY_SPLIT_TCL = r"""# RESET-RELAY-GEN-1530 11-21 plan relay_split (opt-in partition_types[].relay_split, written by reset_leg_plan.py from the
+# newest placed kit): a relay flop whose sinks no one site reaches is DUPLICATED, one copy per sink cluster: the copy takes
+# the same D / clock / reset nets (register duplication, function and release cycle unchanged, 0 cycles) and the listed
+# sink pins move from the flop's output net to the copy's.  Rows run in order (a row may list copies made by an earlier
+# row as sinks).  The copy of flop key K is named K__rs<n>, so its plan relay_sites key seats it (rs_place_all, next).
+proc rs_key {nm} {
+  set k [string map {\\ {}} $nm]
+  regsub {\$_[A-Za-z0-9_]*$} $k {} k
+  return $k
+}
+proc rs_split_all {rows} {
+  global ff_blk is_miss
+  set by [dict create]; set dup [dict create]
+  foreach i [$ff_blk getInsts] {
+    set k [rs_key [$i getName]]
+    foreach c [lsort -unique [list $k [regsub {^[^./]*[./]} $k {}]]] {
+      set a [string map {/ .} $c]
+      if {[dict exists $by $a]} { dict set dup $a 1 } else { dict set by $a $i }
+    }
+  }
+  set nc 0; set nm 0; set miss {}
+  foreach row $rows {
+    lassign $row fk clones
+    set fa [string map {/ .} $fk]
+    if {![dict exists $by $fa] || [dict exists $dup $fa]} { lappend miss "flop:$fk"; continue }
+    set f [dict get $by $fa]
+    set qn ""; set qm ""
+    foreach it [$f getITerms] {
+      if {[$it isOutputSignal] && [$it getNet] ne "NULL" && [$it getNet] ne ""} { set qn [$it getNet]; set qm [[$it getMTerm] getName]; break }
+    }
+    if {$qn eq ""} { lappend miss "q:$fk"; continue }
+    set raw [$f getName]
+    foreach cl $clones {
+      lassign $cl ck sinks
+      set suf [string range $ck [string length $fk] end]
+      if {[regexp {^(.*?)(\$_[A-Za-z0-9_]*)$} $raw -> b t]} { set cn "$b$suf$t" } else { set cn "$raw$suf" }
+      set ci [odb::dbInst_create $ff_blk [$f getMaster] $cn]
+      if {$ci eq "NULL" || $ci eq ""} { lappend miss "clone:$ck"; continue }
+      foreach it [$f getITerms] {
+        if {[$it isOutputSignal]} continue
+        set st [[$it getMTerm] getSigType]
+        if {$st eq "POWER" || $st eq "GROUND"} continue
+        set n2 [$it getNet]; if {$n2 eq "NULL" || $n2 eq ""} continue
+        [$ci findITerm [[$it getMTerm] getName]] connect $n2
+      }
+      set cq [odb::dbNet_create $ff_blk [format "ot_rss_%05d_q" $nc]]
+      [$ci findITerm $qm] connect $cq
+      set loc [$f getLocation]
+      $ci setLocation [lindex $loc 0] [lindex $loc 1]
+      $ci setPlacementStatus PLACED
+      foreach c [lsort -unique [list [string map {/ .} $ck] [string map {/ .} [regsub {^[^./]*[./]} [rs_key $cn] {}]]]] { dict set by $c $ci }
+      incr nc
+      foreach sk $sinks {
+        set sa [string map {/ .} $sk]
+        if {![dict exists $by $sa] || [dict exists $dup $sa]} { lappend miss "sink:$sk"; continue }
+        set s [dict get $by $sa]; set hit 0
+        foreach it [$s getITerms] {
+          if {![$it isOutputSignal] && [$it getNet] eq $qn} { $it disconnect; $it connect $cq; set hit 1 }
+        }
+        if {$hit} { incr nm } else { lappend miss "pin:$sk" }
+      }
+    }
+  }
+  puts "OT_RELAY_SPLIT [llength $rows] flops, $nc copies, $nm sink pins moved (missing: [llength $miss] [lrange $miss 0 7])"
+  if {[llength $miss]} { lappend is_miss "relay_split:[llength $miss]" }
+}
+"""
+
+
+def _split_call(rows):
+    def b(x):
+        return "{" + x + "}"
+    return "rs_split_all [list " + " ".join(
+        b(b(r["flop"]) + " " + b(" ".join(b(b(c["name"]) + " " + b(" ".join(b(s) for s in c["sinks"]))) for c in r["clones"])))
+        for r in rows) + "]"
+
+
+def _check_split(tn, rows):
+    bad = re.compile(r"[{}\\\s]")
+    if not isinstance(rows, list):
+        raise SystemExit(f"kit_istations: {tn}: relay_split must be a list")
+    for r in rows:
+        f = r.get("flop") if isinstance(r, dict) else None
+        if not isinstance(f, str) or not f or bad.search(f) or not isinstance(r.get("clones"), list) or not r["clones"]:
+            raise SystemExit(f"kit_istations: {tn}: relay_split row {r!r}: needs flop and clones")
+        for c in r["clones"]:
+            n, ss = c.get("name"), c.get("sinks")
+            if not (isinstance(n, str) and re.fullmatch(re.escape(f) + r"__rs\d+", n)) or not ss or \
+                    not all(isinstance(x, str) and x and not bad.search(x) for x in ss):
+                raise SystemExit(f"kit_istations: {tn}: relay_split[{f}] clone {c!r}: name {f}__rs<n> and sink keys")
+
+
 def _relay_dict(rs):
     return "rs_place_all [dict create " + " ".join(f"{{{k}}} {{{v[0]:g} {v[1]:g}}}" for k, v in sorted(rs.items())) + "]"
 
@@ -1094,13 +1186,16 @@ def macro_cross_lines(tn, t):
 def relay_sites_lines(tn, t):
     """plan relay_sites -> istations.tcl lines (RELAY_TCL + rs_place_all of the non-ring keys); [] when absent"""
     rs = t.get("relay_sites") or {}
-    if not rs:
+    sp = t.get("relay_split") or []
+    if not rs and not sp:
         return []
     for k, v in rs.items():
         if not (isinstance(v, list) and len(v) == 2 and all(isinstance(a, (int, float)) for a in v)):
             raise SystemExit(f"kit_istations: {tn}: relay_sites[{k}] must be [x_um, y_um]")
+    _check_split(tn, sp)
     pre = {k: v for k, v in rs.items() if not RING_KEY.search(k)}
-    return [RELAY_TCL] + ([_relay_dict(pre)] if pre else [])
+    # RESET-RELAY-GEN-1530: the copies exist before rs_place_all seats them (relay_sites keys K__rs<n>)
+    return [RELAY_TCL] + ([RELAY_SPLIT_TCL, _split_call(sp)] if sp else []) + ([_relay_dict(pre)] if pre else [])
 
 
 def relay_sites_post_tcl(tn, t):
@@ -1912,7 +2007,9 @@ def main(argv):
     rs = relay_sites_lines(tn, t)
     if rs:
         tcl.extend(rs)
-        man["kit_relay_sites"] = len(t["relay_sites"])       # not a station entry: receipts list stations only
+        man["kit_relay_sites"] = len(t.get("relay_sites") or {})
+        if t.get("relay_split"):
+            man["kit_relay_split"] = sum(len(r["clones"]) for r in t["relay_split"])       # not a station entry: receipts list stations only
     tcl += macro_cross_lines(tn, t)
     tcl.append("close $is_fh\nputs \"OT_ISTATIONS placed $is_n flops FIRM (missing: [llength $is_miss] $is_miss)\"\nis_coverage_gate")
     from kit_epoch_observability import inspect as epoch_inspect

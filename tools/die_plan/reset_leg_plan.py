@@ -47,7 +47,8 @@ import reset_consumers as RC  # noqa: E402
 import reset_port_relays as PR  # noqa: E402
 
 REACH_UM = 300.0
-MAX_D = 4                         # schema relay_depth.D maximum
+MAX_D = 16                        # schema relay_depth.D maximum (COORD 11-21: reset release legs may take > 4 stages;
+                                  # rst_n is held >= 64 clocks, owner 10-29, so the release depth is free)
 LOCAL = re.compile(r"^(?P<g>(?:.*?[./])?(?:u_rstr|u_rr|u_rst_relay\w*|u_rrelay\w*|g_rsreg(?:\[\d+\])?|rst_q))(?=[./\[$]|$)")
 TREE_CELL = re.compile(r"^(?:u_rrl_\d+|u_srl_\d+|u_rst_root|u_rst_in|u_rsync_t\d+|u_cland_reset\w*)(?:[./_]|$)")
 # kit-rtl stage flop name: kit_relay_depth.apply instance {base}_{s} (ot_dp_dly, base u_y_xd_<sid>_<port>_k<row>); Yosys names
@@ -69,6 +70,28 @@ def centre(pts):
     vs = [p[0] - p[1] for p in pts]
     u, v = (min(us) + max(us)) / 2, (min(vs) + max(vs)) / 2
     return ((u + v) / 2, (u - v) / 2)
+
+
+def k_cover(items, reach):
+    """[(key, xy)] -> clusters, each within `reach` (L1) of its own minimax centre.  In u = x + y, v = x - y an L1 ball is a
+    square of side 2 * reach: strips of width 2 * reach in u, each cut greedily in v (deterministic, no seeds)"""
+    side = 2 * reach
+    uv = sorted(((xy[0] + xy[1], xy[0] - xy[1], k, xy) for k, xy in items))
+    out, i = [], 0
+    while i < len(uv):
+        j = i
+        while j < len(uv) and uv[j][0] <= uv[i][0] + side + 1e-9:
+            j += 1
+        strip = sorted(uv[i:j], key=lambda r: (r[1], r[2]))
+        m = 0
+        while m < len(strip):
+            n = m
+            while n < len(strip) and strip[n][1] <= strip[m][1] + side + 1e-9:
+                n += 1
+            out.append([(r[2], r[3]) for r in strip[m:n]])
+            m = n
+        i = j
+    return out
 
 
 def sv_id(s):
@@ -216,78 +239,147 @@ def type_delta(tn, t, sv, D, reach=REACH_UM, local_taps=False, sites=True, stage
     seated = {}                                      # cell id -> new xy (form L seats)
     rs_sites = {}
     rd_rows = list(t.get("relay_depth") or [])
-    # ---- form L: module-local relays.  Each relay flop that drives sinks outside the group (a REGIONS copy, or the one
-    # last stage) is seated at the L1 centre of ITS OWN fanout; the inner stages (synchroniser) at the centre of the
-    # copies they feed.  A flop whose own leg is already <= reach keeps its placement.
+    rs_split = []
+    # ---- form L: module-local relays (u_rstr / u_rr / g_rsreg / rst_q ...), as the tree of relay flops they are.
+    # Bottom-up (flops that drive outside sinks first, their drivers next): each flop's targets are its outside sinks plus
+    # the copies of the relay flops it drives.  Targets within --reach of one point: the flop is seated at their L1 centre
+    # (kept where it is when its leg is already <= reach).  Targets that no one point reaches: the flop is SPLIT into k
+    # copies (relay_split), one per L1 cluster of radius <= reach (k_cover), each seated at its cluster centre: register
+    # duplication (same D / clock / reset nets), so every sink keeps the same release depth and cycle, 0 cycles.  A flop fed
+    # by a top-level pin (an asynchronous source: a first synchroniser stage) is never split.  The group's entry leg
+    # (its source -> its entry flop copies) on a signal-register source gets a relay_depth sink row of D stages.
     for g, cells in sorted(local_groups(G).items()):
         cs = set(cells)
-        own = {c: G.fanout([c]) - cs for c in cells}
-        fan = set().union(*own.values())
-        if not fan:
+        fo = {c: G.fanout([c]) for c in cells}
+        ext = {c: fo[c] - cs for c in cells}
+        kids = {c: fo[c] & cs - {c} for c in cells}
+        if not any(ext.values()):
             continue
-        fp = [G.xy(c) for c in fan]
-        C = centre(fp)
-        here = centre([G.xy(c) for c in cells])
-        srcs = G.sources(cells)
+        par = defaultdict(set)
+        for c in cells:
+            for k_ in kids[c]:
+                par[k_].add(c)
+        hgt = {}
+
+        def height(c, path=()):
+            if c not in hgt:
+                hgt[c] = 0 if c in path else 1 + max((height(k_, path + (c,)) for k_ in kids[c] if k_ not in path), default=-1)
+            return hgt[c]
+        for c in cells:
+            height(c)
+        entries = [c for c in cells if not par.get(c)]
+        srcs = G.sources(entries or cells)
         tree_fed = any(r[0] == "i" and TREE_CELL.match(G.name[r[1]]) for r in srcs)
         sp = [G.pxy(r) for r in srcs]
         S = centre(sp) if sp else None
-        leg = {c: max(l1(G.xy(c), G.xy(f)) for f in own[c]) for c in cells if own[c]}
-        out_now = max(leg.values())
-        inner = [c for c in cells if not own[c]]
-        in_now = max((l1(G.xy(c), p) for c in (inner or cells) for p in sp), default=0.0)
-        new, rad = {}, {}
-        for c, L in leg.items():
-            fc = [G.xy(f) for f in own[c]]
-            cc = centre(fc)
-            rad[c] = max(l1(cc, p) for p in fc)
-            if L > reach:
-                new[c] = cc
-        # a single-copy relay moves whole (its synchroniser goes with the last stage, the input leg is then staged); a
-        # replicated relay (REGIONS / tree copies) moves only its copies: its inner stages are a tree of their own
-        single = len(leg) == 1
-        if single and inner and (new or in_now > reach):
-            Ci = centre([new.get(c, G.xy(c)) for c in leg])
-            for c in inner:
-                new[c] = Ci
-        radius = max(rad.values())
-        e = dict(group=g, flops=len(cells), copies=len(leg), fanout=len(fan), at=[round(v, 1) for v in here],
-                 centre=[round(v, 1) for v in C], copy_radius_um=round(radius, 1), out_leg_um=round(out_now, 1),
-                 in_leg_um=round(in_now, 1), tree_fed=tree_fed, source=[round(v, 1) for v in S] if S else None)
-        rep["legs_over_before"] += (out_now > reach) + (in_now > reach)
-        if radius > reach:
-            rep["split"].append(dict(group=g, copy_radius_um=round(radius, 1), copies=len(leg), fanout=len(fan)))
-        if not new:
-            continue
-        for c, xy in new.items():
-            seated[c] = xy
-            if sites:
-                rs_sites[G.name[c]] = [round(xy[0], 3), round(xy[1], 3)]
-        entry = [new.get(c, G.xy(c)) for c in (inner or list(leg))]
-        in_after = max((l1(q, p) for q in entry for p in sp), default=0.0)
-        if single and not tree_fed and S is not None and in_after > reach:
+        here = centre([G.xy(c) for c in cells])
+        fan = set().union(*ext.values())
+        e = dict(group=g, flops=len(cells), fanout=len(fan), at=[round(v, 1) for v in here],
+                 centre=[round(v, 1) for v in centre([G.xy(c) for c in fan])], tree_fed=tree_fed,
+                 source=[round(v, 1) for v in S] if S else None)
+        copies, over_b, over_a, splits, pend = {}, 0, 0, [], []
+        for c in sorted(cells, key=lambda c: (hgt[c], G.name[c])):
+            tg = {}
+            for s in sorted(ext[c]):
+                tg.setdefault(G.name[s], seated.get(s) or G.xy(s))
+            for k_ in sorted(kids[c]):
+                for kk, xy in copies.get(k_, ()):
+                    tg[kk] = xy
+            me = G.xy(c)
+            orig = [G.xy(s) for s in ext[c] | kids[c]]
+            if orig and max(l1(me, p) for p in orig) > reach:
+                over_b += 1
+            if not tg:
+                copies[c] = [(G.name[c], me)]
+                continue
+            pts = list(tg.values())
+            C = centre(pts)
+            if max(l1(C, p) for p in pts) <= reach + 1e-6:
+                copies[c] = [(G.name[c], me)] if max(l1(me, p) for p in pts) <= reach else [(G.name[c], C)]
+                over_a += max(l1(copies[c][0][1], p) for p in pts) > reach + 1e-6
+                continue
+            if c in entries and any(r[0] == "p" for r in srcs):
+                copies[c] = [(G.name[c], C)]
+                over_a += 1
+                rep["split"].append(dict(group=g, flop=G.name[c], unsplit="fed by a top-level pin (first synchroniser stage)"))
+                continue
+            cl = k_cover(sorted(tg.items()), reach)
+            cc = [centre([xy for _k, xy in q]) for q in cl]
+            j0 = min(range(len(cl)), key=lambda j: (l1(me, cc[j]), j))
+            order = [j0] + [j for j in range(len(cl)) if j != j0]
+            copies[c] = [(G.name[c] if n == 0 else f"{G.name[c]}__rs{n}", cc[j]) for n, j in enumerate(order)]
+            splits.append(dict(flop=G.name[c], clones=[dict(name=f"{G.name[c]}__rs{n}", sinks=[k for k, _xy in cl[j]])
+                                                       for n, j in enumerate(order) if n]))
+        # entry leg: source -> entry flop copies
+        ent = [xy for c in (entries or cells) for _k, xy in copies[c]]
+        in_now = max((l1(G.xy(c), p) for c in (entries or cells) for p in sp), default=0.0)
+        over_b += in_now > reach and not tree_fed
+        in_after = max((l1(q, p) for q in ent for p in sp), default=0.0)
+        moved = {k: xy for c in cells for k, xy in copies[c] if k != G.name[c] or l1(xy, G.xy(c)) > 1e-6}
+        e.update(copies=sum(len(v) for v in copies.values()), split_flops=len(splits), in_leg_um=round(in_now, 1))
+        # the entry chain (signal-register source S -> the entry flop copies), all relay_depth stages of one sink row:
+        #   Ds straight stages S -> P (P = L1 centre of the entry copies); with more than one entry copy one stage AT P, and
+        #   when the copies spread over --reach from P, Lb branch levels: copy n of each level sits on the line P -> entry
+        #   copy n (relay_split copies of the stage), so every entry copy sees the same stage count (equal release cycle)
+        nodes0 = [(k_, xy) for c in (entries or cells) for k_, xy in copies[c]]
+        ent = [xy for _k, xy in nodes0]
+        P = centre(ent) if ent else None
+        multi = len(ent) > 1
+        r_e = max((l1(P, q) for q in ent), default=0.0)
+        Lb = max(0, math.ceil(r_e / reach - 1e-9) - 1) if multi else 0
+        Ds = max(0, math.ceil(l1(S, P) / reach - 1e-9) - 1) if (S is not None and P is not None) else 0
+        Dn = Ds + (1 + Lb if multi else 0)
+        if not tree_fed and S is not None and moved and Dn > 0 and in_after > reach:
             inst = top_inst(g)
             port = port_into(sv, inst, G, [r[1] for r in srcs if r[0] == "i"])
-            Dn = math.ceil(in_after / reach - 1e-9) - 1
             if port is None:
                 e["relay_depth"] = "unresolved port"
+            elif Dn > MAX_D:
+                e["relay_depth"] = f"needs D {Dn} > {MAX_D}"
             else:
                 k = len(rd_rows)
-                row = dict(inst=inst, port=port, side="sink", D=min(Dn, MAX_D), path_um=round(in_after, 1),
-                           note=f"RESET-RELAY-GEN-1530 form L: {g} fed from {e['source']}, seated at its fanout")
+                row = dict(inst=inst, port=port, side="sink", D=Dn, path_um=round(in_after, 1),
+                           note=f"RESET-RELAY-GEN-1530 form L: {g} fed from {e['source']}, seated at its fanout"
+                                + (f", stage at the entry centre + {Lb} branch level(s) x {len(ent)}" if multi else ""))
                 rd_rows.append(row)
-                rep["relay_depth"].append(dict(row, over_cap=Dn > MAX_D))
-                if stage_sites:
-                    T = centre(entry)
-                    for s_ in range(row["D"]):
-                        f = (s_ + 1) / (row["D"] + 1)
-                        p = (S[0] + (T[0] - S[0]) * f, S[1] + (T[1] - S[1]) * f)
-                        rs_sites[stage_key.format(sid=sv_id(inst), port=port, k=k, s=s_)] = [round(p[0], 3), round(p[1], 3)]
-                in_after = in_after / (row["D"] + 1)
-        out_after = max(l1(new.get(c, G.xy(c)), G.xy(f)) for c in leg for f in own[c])
-        e.update(seated=len(new), in_leg_after_um=round(in_after, 1), out_leg_after_um=round(out_after, 1))
-        rep["legs_over_after"] += (out_after > reach) + (in_after > reach and not tree_fed)
-        e["form"] = "single" if single else "replicated (copies only)"
+                rep["relay_depth"].append(dict(row, over_cap=False))
+                skey = [stage_key.format(sid=sv_id(inst), port=port, k=k, s=s_) for s_ in range(Dn)]
+                if stage_sites or multi:
+                    for s_ in range(Ds):
+                        f = (s_ + 1) / (Ds + 1)
+                        rs_sites[skey[s_]] = [round(S[0] + (P[0] - S[0]) * f, 3), round(S[1] + (P[1] - S[1]) * f, 3)]
+                hops = [l1(S, P) / (Ds + 1)] if Ds or not multi else [l1(S, P)]
+                if multi:
+                    rs_sites[skey[Ds]] = [round(P[0], 3), round(P[1], 3)]
+                    prev = [P] * len(ent)
+                    for li in range(1, Lb + 1):
+                        s_ = Ds + li
+                        names = [skey[s_] if n == 0 else f"{skey[s_]}__rs{n}" for n in range(len(ent))]
+                        pos = [(P[0] + (q[0] - P[0]) * li / (Lb + 1), P[1] + (q[1] - P[1]) * li / (Lb + 1)) for q in ent]
+                        for nm, xy in zip(names, pos):
+                            rs_sites[nm] = [round(xy[0], 3), round(xy[1], 3)]
+                        hops += [l1(a_, b_) for a_, b_ in zip(prev, pos)]
+                        prev = pos
+                        # copy n drives copy n of the next level (or entry copy n after the last level)
+                        nxt = ([f"{skey[s_ + 1]}__rs{n}" if n else skey[s_ + 1] for n in range(len(ent))] if li < Lb
+                               else [k_ for k_, _xy in nodes0])
+                        pend.append(dict(flop=skey[s_], clones=[dict(name=names[n], sinks=[nxt[n]])
+                                                                for n in range(1, len(ent))]))
+                    hops += [l1(a_, b_) for a_, b_ in zip(prev, ent)]
+                in_after = max(hops)
+        over_a += in_after > reach + 1e-6 and not tree_fed
+        rep["legs_over_before"] += over_b
+        rep["legs_over_after"] += over_a
+        if not moved:
+            continue
+        for c in cells:
+            if copies[c][0][0] in moved:
+                seated[c] = copies[c][0][1]
+        if sites:
+            for k_, xy in moved.items():
+                rs_sites[k_] = [round(xy[0], 3), round(xy[1], 3)]
+        rs_split.extend(splits + pend[::-1])
+        e.update(seated=len(moved), in_leg_after_um=round(in_after, 1), legs_over_before=over_b, legs_over_after=over_a)
         rep["local"].append(e)
     # ---- form R: tree-fed instances / banks
     taps = tap_cells(G, sv)
@@ -361,6 +453,10 @@ def type_delta(tn, t, sv, D, reach=REACH_UM, local_taps=False, sites=True, stage
         merged = dict(t.get("relay_sites") or {})
         merged.update(rs_sites)
         t["relay_sites"] = dict(sorted(merged.items()))
+    if rs_split:
+        have = [r for r in (t.get("relay_split") or []) if r["flop"] not in {x["flop"] for x in rs_split}]
+        t["relay_split"] = have + rs_split
+    rep["relay_split"] = rs_split
     rep["relay_sites"] = len(rs_sites)
     rep["added_reset_cycles"] = max((r["D"] for r in rep["relay_depth"]), default=0)
     return rep
@@ -398,7 +494,8 @@ def main(argv=None):
     Path(a.report).write_text(json.dumps(rep, indent=1) + "\n")
     print(f"{a.type}: legs over {a.reach:g} um {rep['legs_over_before']} -> {rep['legs_over_after']}; inst_taps "
           f"{len(rep['inst_taps'])}, local relays seated {len(rep['local'])}, relay_depth rows {len(rep['relay_depth'])} "
-          f"(+{rep['added_reset_cycles']} reset cycles), needs_local_tap {len(rep['needs_local_tap'])}, split {len(rep['split'])}")
+          f"(+{rep['added_reset_cycles']} reset cycles), needs_local_tap {len(rep['needs_local_tap'])}, relay_split flops "
+          f"{len(rep['relay_split'])} (+{sum(len(r['clones']) for r in rep['relay_split'])} copies), unsplit {len(rep['split'])}")
     return 0
 
 

@@ -107,7 +107,7 @@ def test_form_r_and_l(tmp_path):
     assert all(r["sinks"] != ["u_u_fab_u_x_1"] for r in t["reset"]["inst_taps"])
     # form L: u_rstr seated at the land centre, D stages on u_u_land.rst_n over the ~1,000 um leg, sites on the line
     loc = rep["local"][0]
-    assert loc["group"] == "u_u_land.u_rstr" and not loc["tree_fed"] and loc["out_leg_um"] > 800
+    assert loc["group"] == "u_u_land.u_rstr" and not loc["tree_fed"] and loc["legs_over_before"] == 1
     c = loc["centre"]
     assert abs(c[0] - 160) < 1 and abs(c[1] - 310) < 1
     for k in ("u_u_land.u_rstr.sync_q[0]", "u_u_land.u_rstr.sync_q[1]", "u_u_land.u_rstr.rst_n"):
@@ -194,7 +194,7 @@ def test_cli_keeps_plan_style(tmp_path):
 
 
 def test_replicated_relay_seats_each_copy(tmp_path):
-    """a REGIONS relay: each far copy at its own fanout; its inner stages and input leg are left alone"""
+    """a REGIONS relay: each far copy at its own fanout; an inner stage that then spans over reach is split"""
     cells = [
         ("S", "u_bound.u_rrl_1/q$_DFF_P_", 500, 500),
         ("S", "u_bound.pad_rst_q_reg$_DFF_P_", 510, 500),
@@ -211,13 +211,23 @@ def test_replicated_relay_seats_each_copy(tmp_path):
     t = plan_type()
     rep = RLP.type_delta("x", t, BOUND, D, reach=300)
     (e,) = rep["local"]
-    assert e["copies"] == 2 and e["seated"] == 2
     rs = t["relay_sites"]
     assert rs["u_u_land.u_rstr.relay_q[0][0]"] == [100.0, 100.0]
-    assert rs["u_u_land.u_rstr.relay_q[0][1]"] == [710.0, 690.0]           # L1 centre of (900, 900) and (520, 480)
-    assert "u_u_land.u_rstr.sync_q[1]" not in rs                           # inner stage of a replicated relay stays
-    assert not any(k.startswith("u_y_xd_") for k in rs)
-    assert not t.get("relay_depth")                                        # source within reach of the synchroniser
+    # COORD 11-21: copy 1 feeds (900, 900) and (520, 480), 800 um apart: it is split (register duplication, 0 cycles); the
+    # near sink keeps the original (seated at it), the far one gets copy __rs1 at its site
+    sp = {r["flop"]: r for r in t["relay_split"]}
+    (c1,) = sp["u_u_land.u_rstr.relay_q[0][1]"]["clones"]
+    assert c1 == dict(name="u_u_land.u_rstr.relay_q[0][1]__rs1", sinks=["u_u_land.b"]) and rs[c1["name"]] == [900.0, 900.0]
+    assert rs["u_u_land.u_rstr.relay_q[0][1]"] == [520.0, 480.0]              # the original: at its own cluster (c)
+    # the synchroniser then feeds copies 1,600 um apart: split too, and listed after the row whose copy it drives
+    assert list(sp)[:2] == ["u_u_land.u_rstr.relay_q[0][1]", "u_u_land.u_rstr.sync_q[1]"]
+    # then the entry-chain branch stages, deepest first (each drives one synchroniser copy)
+    assert all(k.startswith("u_y_xd_u_u_land_rst_n_k0_") for k in list(sp)[2:])
+    assert [int(k.split("_")[-1][0]) for k in list(sp)[2:]] == sorted((int(k.split("_")[-1][0]) for k in list(sp)[2:]), reverse=True)
+    assert e["copies"] == 6 and e["split_flops"] == 2
+    # its source (510, 500) is then over reach from the far copy: equal-depth stages, every hop within reach
+    (row,) = t["relay_depth"]
+    assert row["inst"] == "u_u_land" and rep["legs_over_after"] == 0
 
 
 def test_hard_core_sinks_are_not_retapped(tmp_path):
@@ -228,3 +238,124 @@ def test_hard_core_sinks_are_not_retapped(tmp_path):
     t = plan_type()
     rep = RLP.type_delta("x", t, BOUND, D, reach=300)
     assert not rep["inst_taps"] and "inst_taps" not in t.get("reset", {})
+
+
+# ---- COORD 11-21: relay split (k_cover register duplication) and relay_depth D > 4
+SPLIT_BOUND = """module dp_y (
+    input  wire clk,
+    input  wire [3:0] d_i
+);
+    wire lp_q;
+    lep_m u_u_lep (
+        .clk(clk),
+        .rst_n(lp_q),
+        .d(d_i)
+    );
+endmodule
+"""
+
+
+def split_design(tmp):
+    g = "u_bound.u_u_lep.u.u_rstr"
+    cells = [
+        ("S", "u_bound.u_lpad.q[0]$_DFF_P_", 500, 20),                       # 0 signal-register source (S face)
+        ("S", f"{g}.root_r$_DFF_PN0_", 500, 30),                             # 1 entry (fed by a flop: may split)
+        ("S", f"{g}.g_group[0].group_r$_DFF_PN0_", 500, 40),                 # 2
+        ("S", f"{g}.g_local[0].local_r$_DFF_PN0_", 500, 50),                 # 3 drives two far corners
+        ("S", f"{g}.g_local[1].local_r$_DFF_PN0_", 500, 60),                 # 4 drives the NW corner
+        ("S", "u_bound.u_u_lep.u.a[0]$_DFF_PN0_", 50, 50),                   # 5
+        ("S", "u_bound.u_u_lep.u.a[1]$_DFF_PN0_", 70, 60),                   # 6
+        ("S", "u_bound.u_u_lep.u.b[0]$_DFF_PN0_", 950, 950),                 # 7
+        ("S", "u_bound.u_u_lep.u.b[1]$_DFF_PN0_", 930, 940),                 # 8
+        ("S", "u_bound.u_u_lep.u.c[0]$_DFF_PN0_", 50, 950),                  # 9
+        ("S", "u_bound.u_u_lep.u.c[1]$_DFF_PN0_", 60, 930),                  # 10
+    ]
+    nets = [("lp_q", "i0", ["i1"]), ("root", "i1", ["i2"]), ("grp", "i2", ["i3", "i4"]),
+            ("rr0", "i3", ["i5", "i6", "i7", "i8"]), ("rr1", "i4", ["i9", "i10"])]
+    return dump(tmp, cells, nets)
+
+
+def test_k_cover_radius():
+    import random
+    rnd = random.Random(7)
+    pts = [(f"p{i}", (rnd.uniform(0, 1500), rnd.uniform(0, 900))) for i in range(400)]
+    cl = RLP.k_cover(pts, 300)
+    assert sorted(k for q in cl for k, _ in q) == sorted(k for k, _ in pts)
+    for q in cl:
+        C = RLP.centre([xy for _k, xy in q])
+        assert max(RLP.l1(C, xy) for _k, xy in q) <= 300 + 1e-6
+    assert len(RLP.k_cover(pts[:1], 300)) == 1
+
+
+def test_replicated_relay_is_split_and_staged(tmp_path):
+    D = split_design(tmp_path)
+    t = plan_type()
+    rep = RLP.type_delta("y", t, SPLIT_BOUND, D, reach=300)
+    g = "u_u_lep.u.u_rstr"
+    rows = {r["flop"]: r for r in t["relay_split"]}
+    # local_r[0] feeds the SW and NE corners: one copy per corner, each seated within reach of its sinks
+    l0 = rows[f"{g}.g_local[0].local_r"]["clones"]
+    assert len(l0) == 1 and l0[0]["name"] == f"{g}.g_local[0].local_r__rs1"
+    # the group and root flops split above their copies; every hop of the built tree is within reach
+    assert f"{g}.g_group[0].group_r" in rows and f"{g}.root_r" in rows
+    (row,) = t["relay_depth"]
+    assert row["inst"] == "u_u_lep" and row["port"] == "rst_n" and row["side"] == "sink"
+    # the stage chain: straight stages to P, a stage at P, branch levels to the root copies (equal stage count per copy)
+    st = [k for k in t["relay_sites"] if k.startswith("u_y_xd_u_u_lep_rst_n_k0_")]
+    assert len([k for k in st if "__rs" not in k]) == row["D"]
+    assert rep["legs_over_after"] == 0 and rep["legs_over_before"] == 2   # the two local_r legs
+    assert all(r["flop"] in rows for r in t["relay_split"])
+    # split rows run deepest first: a row's sinks exist (original flops or copies made by an EARLIER row)
+    made = set()
+    for r in t["relay_split"]:
+        for cl in r["clones"]:
+            for s in cl["sinks"]:
+                assert "__rs" not in s or s in made, (r["flop"], s)
+            made.add(cl["name"])
+    # each split copy is within reach of its own sinks
+    for r in t["relay_split"]:
+        for cl in r["clones"]:
+            if cl["name"] in t["relay_sites"]:
+                c = t["relay_sites"][cl["name"]]
+                for s in cl["sinks"]:
+                    p = t["relay_sites"].get(s)
+                    if p:
+                        assert RLP.l1(c, p) <= 300 + 1e-6
+
+
+def test_top_pin_fed_entry_is_not_split(tmp_path):
+    g = "u_bound.u_u_lep.u.u_rstr"
+    cells = [("S", f"{g}.sync_q[0]$_DFF_PN0_", 500, 30),
+             ("S", "u_bound.u_u_lep.u.a[0]$_DFF_PN0_", 50, 50), ("S", "u_bound.u_u_lep.u.b[0]$_DFF_PN0_", 950, 950)]
+    D = dump(tmp_path, cells, [("arst_n", "p0", ["i0"]), ("q", "i0", ["i1", "i2"])], pins=[(0, "arst_n", 500, 0)])
+    t = plan_type()
+    rep = RLP.type_delta("y", t, SPLIT_BOUND, D, reach=300)
+    assert "relay_split" not in t
+    assert rep["split"] and rep["split"][0]["unsplit"].startswith("fed by a top-level pin")
+
+
+def test_relay_depth_over_four_stages(tmp_path):
+    D = dump(tmp_path, *cells_nets())
+    t = plan_type()
+    rep = RLP.type_delta("x", t, BOUND, D, reach=120, stage_sites=True)
+    (row,) = [r for r in t["relay_depth"] if r["inst"] == "u_u_land"]
+    assert row["D"] > 4 and not rep["relay_depth"][0]["over_cap"]
+    import schema
+    sch = schema.SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]
+    assert sch["relay_depth"]["items"]["properties"]["D"]["maximum"] >= row["D"]
+    assert "relay_split" in sch
+
+
+def test_kit_istations_emits_relay_split():
+    import kit_istations as KI
+    t = {"relay_sites": {"u_a.r__rs1": [10.0, 20.0], "u_a.r": [1.0, 2.0]},
+         "relay_split": [{"flop": "u_a.r", "clones": [{"name": "u_a.r__rs1", "sinks": ["u_b.x[0]", "u_b.x[1]"]}]}]}
+    tcl = KI.relay_sites_only_tcl("t", t)
+    assert "proc rs_split_all" in tcl
+    assert "rs_split_all [list {{u_a.r} {{{u_a.r__rs1} {{u_b.x[0]} {u_b.x[1]}}}}}]" in tcl
+    assert tcl.index("rs_split_all [list") < tcl.index("rs_place_all [dict")
+    for bad in ({"flop": "u_a.r", "clones": [{"name": "u_c.r__rs1", "sinks": ["s"]}]},
+                {"flop": "u_a.r", "clones": [{"name": "u_a.r__rs1", "sinks": []}]},
+                {"flop": "u_a.r", "clones": [{"name": "u_a.r__rs1", "sinks": ["a b"]}]}):
+        with pytest.raises(SystemExit):
+            KI.relay_sites_only_tcl("t", {"relay_sites": {}, "relay_split": [bad]})
