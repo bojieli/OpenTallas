@@ -4002,6 +4002,10 @@ ADMISSION = re.compile(r"^\s*(?:ot-run: (?:\S+\s+admits\b|-> |waiting\b|queued\b
                        # KIT-OPS-5 11-15 (FABLE-TRIAGE-S81 class 2): a line that labels itself "(advisory)" (e.g. gen TAP-RADIUS-TARGET ... (advisory),
                        # which classed col_h10_r0_p1 pvd7af8531 as INFRA @gen) is information, never the item's error
                        r"[^\n]*\(advisory\)\s*$|"
+                       # BUILD-SETTINGS-AUDIT-1900 11-20: same for a line that labels itself "(info...: not blocking...)" (taps.py
+                       # TAP-LIMIT-INFO, landing_collector COLLECTOR-REACH-INFO): 8 S81 rows read 'INFRA @gen: TAP-LIMIT-INFO ...'
+                       # (leaf t7 / kv_leaf t1 13:57, a cancelled gen unit), the info line hid the real end of the log
+                       r"[^\n]*\(info\b[^()\n]*\bnot blocking\b[^()\n]*\)\s*$|"
                        # KW-FIX-8 11-04: the kill of the pre-route LEC beside a stopped flow; its exit 137 read as INFRA and
                        # relaunched 9 KV rows on the same PDN-0006 / OT_CLAND error.  The flow's own error decides.
                        # KW-FIX-24 11-06: a pre-route LEC killed by a signal (docker stop / OOM) is no verdict either
