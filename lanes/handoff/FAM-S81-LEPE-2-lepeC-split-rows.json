@@ -21,6 +21,6 @@
   {"id": "LC-G1", "what": "geometry precondition (open, the same as c1x_C 'W band vs core origins')", "detail": "xg SRAM stack bbox starts at x 43.2 / y 51.9 (24 x ot_sram_1r1w_128x256_m1_r2c2 at 43..475 x 52..724; ROMs 492..582 x 52..936; 128x64 at 596..630 x 52..589), so the W and S 130 um bands cover xg macros. Fix by core MOVE only (allowed): shift the xg macro block +90 um in x and y (it has room: the xf row starts at x 467, cap at y 760), or use 45 um strip depth on the W/S faces where the macros sit. G0 must check that no strip region covers a hard core."},
   {"id": "LC-F1", "what": "fallback if the body is still > 400k after strip-out", "detail": "harden u_xg (ot_s81sl_xgt_xo) as S-XG1 in FAM-S81-SLICE (xs4 | rstopt_xo cut, registered both sides, +1 cycle declared). Not needed by this arithmetic (body ~265k)."}
  ],
- "next": "S81-J6-ASSEMBLY-R3: carry LC-S1 in the same strip/body schema as c1x_C split B; FAM-S81-LEPE-2 builds the body or strip kit once the schema binds. lepe_mu_LP t2 (the representative) is 266k at CTS and needs no split.",
+ "next": "S81-J6-ASSEMBLY-R3: carry LC-S1 in the same strip/body schema as c1x_C split B; FAM-S81-LEPE-2 builds the body or strip kit once the schema binds. lepe_mu_LP t2 (the representative) is 241k nontap at CTS (projected 297k) and needs no split.",
  "scripts": "epyc10 /srv/opentallas-scratch2/claude/fam-lepe/split_C/{cone_lepe2.py, cone_C2.txt, pcen.py, band.py, C_place.tsv}"
 }
