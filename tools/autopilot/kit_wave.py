@@ -1629,6 +1629,81 @@ def cell_big_note(AP, cfg, st):
             seen.pop(die, None)
 
 
+# FLOW-OPS-0900 11-21 (COORD ruling: CELL-CAP is a report, r703): the floorplan CELL-CAP report of a kit (native_cell_cap.tcl "OT_CELL_CAP REPORT" in the stage live
+# log while the kit runs, or the worker's KW_CELL_CAP_REPORT line in unit.log after place) is posted ONCE per die|type to the owning lane and the die plan lane:
+# the type must be split.  Live logs are read incrementally (byte offset per row), so a tick reads only what was appended.
+CELL_CAP_PLAN_LANES = {"s81": "S81-J6-ASSEMBLY-R4", "qwen_compute": "QC-PLAN-R10", "qwen_kvsys": "KV-PLAN-R3"}   # die option cell_cap_plan_lane overrides
+CELL_CAP_RE = re.compile(r"OT_CELL_CAP REPORT stage=floorplan: ([^\n]{0,300})|KW_CELL_CAP_REPORT \S+ (\{[^\n]{0,600}\})")
+CELL_CAP_READ_MAX = 4 << 20
+
+
+def cell_cap_plan_lane(cfg, die):
+    d = (cfg.get("dies") or {}).get(die) or {}
+    return str(d.get("cell_cap_plan_lane") or CELL_CAP_PLAN_LANES.get(die) or f"{die} plan owner")
+
+
+def _cell_cap_scan(path, off):
+    """-> (new offset, cause text or '') reading path from byte off (at most CELL_CAP_READ_MAX per call)"""
+    try:
+        with open(path, "rb") as f:
+            f.seek(0, os.SEEK_END)
+            end = f.tell()
+            if end < off:
+                off = 0                                  # rewritten log
+            f.seek(off)
+            data = f.read(CELL_CAP_READ_MAX).decode("utf-8", "replace")
+            new = off + len(data.encode("utf-8", "replace"))
+    except OSError:
+        return off, ""
+    m = CELL_CAP_RE.search(data)
+    if not m:
+        return new, ""
+    if m.group(1):
+        return new, m.group(1).strip()
+    try:
+        return new, str(json.loads(m.group(2)).get("why") or "over the cell cap")
+    except ValueError:
+        return new, "over the cell cap"
+
+
+def cell_cap_report_step(AP, cfg, st, now=None):
+    """one CELL-CAP post per die|type (state cell_cap_reports); -> number of posts this tick"""
+    now = time.time() if now is None else now
+    seen = st.setdefault("cell_cap_reports", {})
+    offs = st.setdefault("cell_cap_offsets", {})
+    n = 0
+    for key, rec in (st.get("items") or {}).items():
+        tk = f"{rec.get('die')}|{rec.get('item')}"
+        if tk in seen:
+            continue
+        if rec.get("status") != "RUNNING" and now - float(rec.get("updated") or 0) > 3 * 3600:
+            offs.pop(key, None)
+            continue
+        jd = Path(str(rec.get("dir") or ""))
+        o = offs.setdefault(key, {})
+        why = ""
+        for nm in ("unit.log", f"{rec.get('stage') or 'place'}.live.log", "place.live.log"):
+            o[nm], w = _cell_cap_scan(jd / nm, int(o.get(nm) or 0))
+            why = why or w
+        if not why:
+            continue
+        die, item = rec.get("die"), rec.get("item")
+        owner = die_owner(cfg, die, item=item)[0]
+        plan = cell_cap_plan_lane(cfg, die)
+        seen[tk] = {"ts": now, "attempt": rec.get("attempt"), "event": rec.get("event"), "why": why[:300], "owner": owner, "plan_lane": plan}
+        offs.pop(key, None)
+        AP.log(f"KIT-WAVE CELL-CAP {die}/{item}@{rec.get('attempt')} ({rec.get('event')}): {why[:200]} -> posted to {owner}, {plan}")
+        if not AP.DRY:
+            AP.coord_append("lanes/posts/KIT-WAVE.md",
+                            f"- {now_s()} CELL-CAP [KIT-WAVE -> {owner}; cc {plan}] {die}/{item}@{rec.get('attempt')} on {rec.get('event')}: floorplan count {why[:220]}. "
+                            f"The type must be split (OpenROAD closes <= ~400k cells per run, largest closed 517k); report only, the kit keeps running (r703). "
+                            f"One post per type; unit {rec.get('unit')}")
+        n += 1
+    for k in [k for k in offs if k not in (st.get("items") or {})]:
+        offs.pop(k, None)
+    return n
+
+
 def plan_entry_block(d, item, kind=None):
     """plan-entry kit preflight from the plan probe flags; hard_wrappers opt a hard type back in"""
     if item in (d.get("_identity_holds") or {}):
@@ -3816,8 +3891,8 @@ RULES = [
     ("FLOW", r"^kit_snap$", r"KIT-SNAP[^\n]*", "kit snapshot could not be built, copied or verified"),
     # DIE-HBM-97 11-10 (COORD): before INFRA and the PLAN geometry rules.  The capped unconverged placement is the cause;
     # the DPL-0038 / utilisation / OOM / watchdog lines after it are its consequence, so it wins whatever surrounds it.
-    # FLOW-OPS-0900 11-21: the in-kit floorplan cell cap stop (native_cell_cap.tcl CELL-CAP) is a measured size verdict on this type: STRUCTURAL, so note_fail_key
-    # writes the block stop and the same block never relaunches; the next plan block re-measures at floorplan (minutes, not a 5-7 h run).
+    # FLOW-OPS-0900 11-21: the OPT-IN (OT_CELL_CAP_STOP=1) floorplan cell cap stop is a measured size verdict: STRUCTURAL (block stop).  The default CELL-CAP
+    # REPORT line is not an error and matches nothing here.
     ("STRUCTURAL", None, r"OT_CELL_CAP STOP stage=floorplan[^\n]*", "CELL-CAP: over the 400k run cap at floorplan (measured): split the type"),
     ("STRUCTURAL", r"^place$", lambda s: gpl_cap_noconverge(s),
      "gpl-noconverge: global placement stopped at the per-pass Nesterov iteration cap unconverged"),
@@ -8677,6 +8752,7 @@ def run_item(spec_path):
                  f"ls {q(K)}/run/layout_review/*.png {q(K)}/run/layout_review/*/*.png 2>/dev/null | head -1 | sed 's/^.*$/LAYOUT_PNG/'; "
                  f"cat {q(K)}/FAIL_* 2>/dev/null | head -5; "
                  f"if [ -f {q(K)}/native_cell_count.json ]; then sed 's/^/NATIVE_CELL_COUNT /' {q(K)}/native_cell_count.json; fi; "
+                 f"if [ -f {q(K)}/CELL_CAP_REPORT.json ]; then sed 's/^/CELL_CAP_REPORT /' {q(K)}/CELL_CAP_REPORT.json; fi; "
                  f"grep -h -i -E 'Number of cells|Chip area' {q(K)}/run/reports/asap7/*/base/synth_stat.txt 2>/dev/null | head -2; "
                  # DIE-HBM-97 11-10: GPL-1010 cap lines for classify() (gpl-noconverge); the stage tail does not reach them
                  f"for f in {q(K)}/run/logs/asap7/*/base/3_3_place_gp*.log; do [ -f \"$f\" ] && {GPL_PROBE_AWK} \"$f\"; "
@@ -8692,6 +8768,9 @@ def run_item(spec_path):
                     print(f"KW_KIT_HOST {T}: 3_place.odb found on {_alt}, not on {kh} (sealed copy-back record)", flush=True)
                     kh, ptxt, odb = _alt, _p2, _o2
                     break
+        _ccr = re.search(r"(?m)^CELL_CAP_REPORT (\{[^\n]+\})$", ptxt)
+        if _ccr:                             # FLOW-OPS-0900: the floorplan CELL-CAP report reaches unit.log; cell_cap_report_step posts it once per type
+            print(f"KW_CELL_CAP_REPORT {T} {_ccr.group(1)}", flush=True)
         cells = re.search(r"Number of cells:?\s+(\d+)", ptxt)
         res["cells"] = int(cells.group(1)) if cells else None
         native = re.search(r"(?m)^NATIVE_CELL_COUNT (\{[^\n]+\})$", ptxt)
@@ -16990,6 +17069,10 @@ def _step(AP, ap_dir):
         cell_big_note(AP, cfg, st)
     except Exception as _e:
         AP.log(f"KIT-WAVE CELL-BIG note skipped: {type(_e).__name__}: {_e}")
+    try:
+        cell_cap_report_step(AP, cfg, st)                  # FLOW-OPS-0900: CELL-CAP report, one post per die|type
+    except Exception as _e:
+        AP.log(f"KIT-WAVE CELL-CAP report skipped: {type(_e).__name__}: {_e}")
     try:
         close_removed_key_classes(AP, cfg, st)
     except Exception as _e:

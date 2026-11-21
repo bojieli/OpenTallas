@@ -74,6 +74,51 @@ def test_struct_stop_cli_carries_and_struct_lift_is_the_only_release(tmp_path):
     assert KW.struct_stop_for(KW.load_state(tmp_path), "qwen_kvsys", "kv3_pv_v1", "Z" * 32) == (None, None)
 
 
-def test_floorplan_cell_cap_stop_is_structural():
-    text = "OT_CELL_CAP STOP stage=floorplan: actual standard cells 456123 above the 400000 run cap: split the type\nmake: *** [floorplan] Error 1"
-    assert KW.classify("floorplan", text)[0] == "STRUCTURAL"
+def test_floorplan_cell_cap_report_is_not_a_class_only_the_opt_in_stop_is():
+    rep = "OT_CELL_CAP REPORT stage=floorplan: actual standard cells 456123 above the 400000 run cap: the type must be split\nmake: *** [floorplan] Error 1"
+    assert KW.classify("floorplan", rep)[0] != "STRUCTURAL"
+    stop = "OT_CELL_CAP STOP stage=floorplan: actual standard cells 456123 above the 400000 run cap (OT_CELL_CAP_STOP=1)\nmake: *** [floorplan] Error 1"
+    assert KW.classify("floorplan", stop)[0] == "STRUCTURAL"
+
+
+class _AP:
+    DRY = False
+
+    def __init__(self):
+        self.logs, self.app = [], []
+
+    def log(self, m):
+        self.logs.append(m)
+
+    def coord_append(self, rel, line):
+        self.app.append((rel, line))
+
+
+def test_cell_cap_report_posts_once_per_type_to_owner_and_plan_lane(tmp_path):
+    d1, d2 = tmp_path / "a1", tmp_path / "a2"
+    d1.mkdir(); d2.mkdir()
+    (d1 / "place.live.log").write_text("x\nOT_CELL_CAP REPORT stage=floorplan: actual standard cells 456123 above the 400000 run cap: the type must be split\n")
+    (d2 / "unit.log").write_text('KW_CELL_CAP_REPORT kv3_pv_v1 {"schema":"opentallas.cell_cap_report.v1","why":"actual standard cells 456123 above the 400000 run cap"}\n')
+    cfg = {"dies": {"qwen_kvsys": {"die_owner": "OPUS-FIX-KV-PV-R5"}}}
+    st = {"items": {"k1": dict(_row("kv3_pv_v1", "A" * 32, "KV-D26"), dir=str(d1), stage="place", unit="u1"),
+                    "k2": dict(_row("kv3_pv_v1", "B" * 32, "KV-D26", attempt=2), dir=str(d2), stage="place", unit="u2")}}
+    ap = _AP()
+    assert KW.cell_cap_report_step(ap, cfg, st) == 1
+    assert KW.cell_cap_report_step(ap, cfg, st) == 0                       # once per die|type, not per tick or attempt
+    rel, line = ap.app[0]
+    assert rel == "lanes/posts/KIT-WAVE.md" and "CELL-CAP [KIT-WAVE -> OPUS-FIX-KV-PV-R5; cc KV-PLAN-R3]" in line and "456123" in line and "split" in line
+    assert len(ap.app) == 1
+
+
+def test_cell_cap_report_reads_only_appended_bytes(tmp_path):
+    d = tmp_path / "a1"; d.mkdir()
+    log = d / "place.live.log"
+    log.write_text("floorplan start\n")
+    st = {"items": {"k": dict(_row("hub_c", "A" * 32, "KV-D26"), dir=str(d), stage="place")}}
+    ap = _AP()
+    assert KW.cell_cap_report_step(ap, {"dies": {}}, st) == 0
+    off = st["cell_cap_offsets"]["k"]["place.live.log"]
+    assert off == len("floorplan start\n")
+    with open(log, "a") as f:
+        f.write("OT_CELL_CAP REPORT stage=floorplan: projected movable cells 709000 above 517000\n")
+    assert KW.cell_cap_report_step(ap, {"dies": {}}, st) == 1 and "cc qwen_kvsys plan owner" not in ap.app[0][1]

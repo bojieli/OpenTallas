@@ -27,7 +27,7 @@ set ot_cap_receipt [open /work/native_cell_count.json w]
 puts $ot_cap_receipt [format {{"schema":"opentallas.native_cell_count.v1","stage":"pre_floorplan","stdcells":%d,"macros":%d,"limit":%d}} $ot_cap_std $ot_cap_macros $ot_cap_limit]
 close $ot_cap_receipt
 puts "OT_NATIVE_CELL_CAP actual_std=$ot_cap_std macros=$ot_cap_macros limit=$ot_cap_limit"
-# KV-HUBPV-1118 11-18 (COORD FABLE-FLOW-1750 G, OWNER 11-14 remove cell caps): the in-kit stop was DELETED here (FLOW-OPS-0900 11-21: the CELL-CAP stop below is back, at floorplan).  Six KV types (hub_C 709k, pv_v3 432k ...) died here
+# KV-HUBPV-1118 11-18 (COORD FABLE-FLOW-1750 G, OWNER 11-14 remove cell caps): the in-kit stop was DELETED here (FLOW-OPS-0900 11-21: CELL-CAP below REPORTS at floorplan; stop only with OT_CELL_CAP_STOP=1).  Six KV types (hub_C 709k, pv_v3 432k ...) died here
 # with r576 at the place stage although the wave already lets them through; the count is only reported (the receipt above keeps the number).
 if {$ot_cap_std > $ot_cap_split} {
  puts "OT_NATIVE_CELL_CAP info: actual standard cell count $ot_cap_std above $ot_cap_split (cell cap removed, not stopped)"
@@ -65,31 +65,32 @@ if {![catch {
     }
   }
 }
-# CELL-CAP (FLOW-OPS-0900 11-21, FABLE-FLOW-0745 class a; owner rule "OpenROAD closes <= ~400k cells per run, largest closed 517k: split oversized types
-# rather than retry them"): an over-cap kit STOPS HERE, at floorplan, instead of running 5-7 h to a setup verdict a lane cancels by hand (11 KV pv kits,
-# 456k-769k cells @place, -333..-1103 ps).  Over = the measured synthesized standard cells above 400000, or the projected movable count above 517000 (no run
-# above it ever closed; the projection is +-25 %, so it alone stops only past the largest closed run).  Not stopped: a declared native limit (capacity probe:
-# it stops only above its own declared limit), or env OT_CELL_CAP_STOP=0 (die_gen_env / item_env opt-out).  The r703 OT_CELL_WAIVER does not opt out.
-set ot_cap_stop_on 1
-if {[info exists ::env(OT_CELL_CAP_STOP)] && [string trim $::env(OT_CELL_CAP_STOP)] eq "0"} { set ot_cap_stop_on 0 }
-set ot_cap_stop ""
-if {$ot_cap_stop_on} {
-  if {[info exists ::ot_native_cell_limit]} {
-    if {$ot_cap_std > int($::ot_native_cell_limit)} { set ot_cap_stop "actual standard cells $ot_cap_std above the declared native limit [expr {int($::ot_native_cell_limit)}]" }
-  } elseif {$ot_cap_std > $ot_cap_split} {
-    set ot_cap_stop "actual standard cells $ot_cap_std above the $ot_cap_split run cap"
-  } elseif {[info exists ot_cap_proj] && $ot_cap_proj > 517000} {
-    set ot_cap_stop "projected movable cells $ot_cap_proj above 517000 (largest closed run; synthesized $ot_cap_std)"
-  }
+# CELL-CAP (FLOW-OPS-0900 11-21, FABLE-FLOW-0745 class a; owner rule "OpenROAD closes <= ~400k cells per run, largest closed 517k: split oversized types").
+# COORD ruling 11-21 (r703, all safety stops removed): a REPORT by default, never a stop.  Over = the measured synthesized standard cells above 400000, or the
+# projected movable count above 517000 (no run above it ever closed; the projection is +-25 %).  A declared native limit (capacity probe) is over only above
+# its own limit.  The report writes /work/CELL_CAP_REPORT.json and one "OT_CELL_CAP REPORT" line; the wave posts it once per die|type to the owning lane and
+# the die plan lane (kit_wave.cell_cap_report_step).  Opt-in stop: env OT_CELL_CAP_STOP=1 (die_gen_env / item_env) errors here at floorplan.
+set ot_cap_stop_on 0
+if {[info exists ::env(OT_CELL_CAP_STOP)] && [string trim $::env(OT_CELL_CAP_STOP)] eq "1"} { set ot_cap_stop_on 1 }
+set ot_cap_over ""
+if {[info exists ::ot_native_cell_limit]} {
+  if {$ot_cap_std > int($::ot_native_cell_limit)} { set ot_cap_over "actual standard cells $ot_cap_std above the declared native limit [expr {int($::ot_native_cell_limit)}]" }
+} elseif {$ot_cap_std > $ot_cap_split} {
+  set ot_cap_over "actual standard cells $ot_cap_std above the $ot_cap_split run cap"
+} elseif {[info exists ot_cap_proj] && $ot_cap_proj > 517000} {
+  set ot_cap_over "projected movable cells $ot_cap_proj above 517000 (largest closed run; synthesized $ot_cap_std)"
 }
-if {$ot_cap_stop ne ""} {
+if {$ot_cap_over ne ""} {
   catch {
-    set ot_cap_sf [open /work/CELL_CAP_STOP.json w]
-    puts $ot_cap_sf [format {{"schema":"opentallas.cell_cap_stop.v1","stage":"floorplan","stdcells":%d,"why":"%s"}} $ot_cap_std $ot_cap_stop]
+    set ot_cap_sf [open /work/CELL_CAP_REPORT.json w]
+    puts $ot_cap_sf [format {{"schema":"opentallas.cell_cap_report.v1","stage":"floorplan","stdcells":%d,"stop":%d,"why":"%s"}} $ot_cap_std $ot_cap_stop_on $ot_cap_over]
     close $ot_cap_sf
   }
-  puts "OT_CELL_CAP STOP stage=floorplan: $ot_cap_stop: split the type (registered boundaries) or harden logic into cores; opt-out OT_CELL_CAP_STOP=0"
-  error "OT_CELL_CAP STOP stage=floorplan: $ot_cap_stop"
+  puts "OT_CELL_CAP REPORT stage=floorplan: $ot_cap_over: the type must be split (registered boundaries) or logic hardened into cores"
+  if {$ot_cap_stop_on} {
+    puts "OT_CELL_CAP STOP stage=floorplan: $ot_cap_over (OT_CELL_CAP_STOP=1)"
+    error "OT_CELL_CAP STOP stage=floorplan: $ot_cap_over"
+  }
 }
-unset -nocomplain ot_cap_stop ot_cap_stop_on ot_cap_sf
+unset -nocomplain ot_cap_over ot_cap_stop_on ot_cap_sf
 unset -nocomplain ot_cap_std ot_cap_macros ot_cap_i ot_cap_receipt ot_cap_limit ot_cap_blk ot_cap_pins ot_cap_b ot_cap_die ot_cap_dbu ot_cap_hp ot_cap_err ot_cap_proj ot_cap_parts ot_cap_msg
