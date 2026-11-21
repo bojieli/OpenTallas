@@ -11,6 +11,10 @@ lane="$1"; text="$2"; shift 2 || { echo "usage: post.sh LANE TEXT [files]" >&2; 
 [[ "$lane" =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]] || { echo "bad lane name: $lane" >&2; exit 2; }
 [ -n "$text" ] || { echo "empty post" >&2; exit 2; }
 mkdir -p "$C/lanes/posts"
+# FLOW-FIX-0100 (FABLE-FLOW-2350 b): one resolve_lane() with case folding (tools/post_redirect.py --resolve): a lowercase twin of an existing lane file is the same lane
+if [ -f "$C/tools/post_redirect.py" ]; then
+  canon=$(python3 -I "$C/tools/post_redirect.py" --resolve "$lane" "$C" 2>/dev/null) && [[ "$canon" =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]] && lane="$canon"
+fi
 f="lanes/posts/$lane.md"
 # FLOW-HEALTH-1 11-15 (FABLE-FLOW-1000 class 10: 48 wrong stamps): the stamp is always the America/Los_Angeles clock.  A hand-written
 # leading "- YYYY-MM-DD HH:MM [TZ]" that is more than 10 min off that clock is replaced; bin/pst prints the stamp.

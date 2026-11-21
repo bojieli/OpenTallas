@@ -61,5 +61,20 @@ class RedirectTests(unittest.TestCase):
             self.assertIn("[T -> A, C]", (Path(d) / "lanes/posts/T.md").read_text())
 
 
+class ResolveLaneTests(unittest.TestCase):
+    """FLOW-FIX-0100 (FABLE-FLOW-2350 b): one case-folded resolver"""
+    def test_status_case_folded_and_chain(self):
+        self.assertEqual(pr.resolve_lane("a", ST), "A")
+        self.assertEqual(pr.resolve("a", ST), ["B", "C"])
+
+    def test_existing_posts_file_prefers_non_lowercase_twin(self):
+        with tempfile.TemporaryDirectory() as d:
+            for n in ("FLOW-X-R2.md", "flow-x-r2.md", "mq1.md"):
+                Path(d, n).write_text("")
+            self.assertEqual(pr.resolve_lane("flow-x-r2", {}, d), "FLOW-X-R2")
+            self.assertEqual(pr.resolve_lane("MQ1", {}, d), "mq1")
+            self.assertEqual(pr.resolve_lane("brand-new", {}, d), "brand-new")
+
+
 if __name__ == "__main__":
     unittest.main()

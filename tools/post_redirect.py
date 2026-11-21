@@ -4,6 +4,7 @@
 lanes/LANE-STATUS.tsv columns: lane, status (live|stood-down), successor, updated.
 CLI: post_redirect.py [COORD_DIR] < text  -> rewritten text on stdout, REDIRECTED notes on stderr.
 """
+import os
 import re
 import sys
 from pathlib import Path
@@ -26,8 +27,31 @@ def load_status(coord):
     return out
 
 
+def resolve_lane(name, status, posts_dir=None):
+    """FLOW-FIX-0100 (FABLE-FLOW-2350 b): the ONE lane-name resolver.  Case-folded: the canonical spelling of `name` is, in order, a LANE-STATUS lane,
+    an existing posts/<lane>.md file with the same folded name (a spelling that is not all lowercase first), else `name` as typed.
+    post.sh (file name), ot-run / ot-wait DONE-DIED posts (they call post.sh) and the successor chain below all use it, so mixed-case twins of one
+    lane cannot exist."""
+    cf = name.casefold()
+    if name in status:
+        return name
+    for k in status:
+        if k.casefold() == cf:
+            return k
+    if posts_dir:
+        try:
+            names = [f[:-3] for f in os.listdir(posts_dir) if f.endswith(".md") and f[:-3].casefold() == cf]
+        except OSError:
+            names = []
+        names.sort(key=lambda n: (n == n.lower(), n))
+        if names:
+            return names[0]
+    return name
+
+
 def resolve(lane, status, limit=10):
     """Follow stood-down chain; returns list of successors (may be empty)."""
+    lane = resolve_lane(lane, status)
     chain, seen = [], {lane}
     cur = lane
     for _ in range(limit):
@@ -73,6 +97,10 @@ def rewrite(text, status):
 
 
 if __name__ == "__main__":
+    if len(sys.argv) >= 3 and sys.argv[1] == "--resolve":          # post_redirect.py --resolve NAME [COORD_DIR] -> canonical lane name
+        _c = sys.argv[3] if len(sys.argv) > 3 else "/home/ubuntu/coord"
+        print(resolve_lane(sys.argv[2], load_status(_c), os.path.join(_c, "lanes", "posts")))
+        sys.exit(0)
     coord = sys.argv[1] if len(sys.argv) > 1 else "/home/ubuntu/coord"
     t = sys.stdin.read()
     nl = t.endswith("\n")

@@ -1,1 +1,1 @@
-- 2026-11-20 22:55 PST DONE [fable-fix-s81-leaf-r3] ot-push-main otpush-loved-redfish-16776 on loved-redfish: rc=0 after 0 s, ended 06:55:37, log none, cmd: ot-push-main --help
+- 2026-11-21 MERGED into FABLE-FIX-S81-LEAF-R3.md (FLOW-FIX-0100, FABLE-FLOW-2350 b): all posts moved there; post.sh resolve_lane now writes only that file. Remove this twin with git rm when allowed.

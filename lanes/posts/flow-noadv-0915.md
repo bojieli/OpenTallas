@@ -1,5 +1,1 @@
-- 2026-11-20 17:16 PST DIED [flow-noadv-0915] ot-push-main otpush-tolerant-swine-1503338 on tolerant-swine: rc=3 after 12 s, ended 17:16:50, log none, cmd: ot-push-main 
-- 2026-11-20 17:33 PST DIED [flow-noadv-0915] ot-push-main otpush-tolerant-swine-1605581 on tolerant-swine: rc=4 after 735 s, ended 17:33:18, log none, cmd: ot-push-main 
-- 2026-11-20 17:46 PST DIED [flow-noadv-0915] ot-push-main otpush-tolerant-swine-1895603 on tolerant-swine: rc=4 after 758 s, ended 17:46:48, log /srv/opentallas-scratch2/claude/flow-noadv-0915.push.log, cmd: ot-push-main 
-- 2026-11-20 18:00 PST DIED [flow-noadv-0915] ot-push-main otpush-tolerant-swine-2245600 on tolerant-swine: rc=4 after 766 s, ended 18:00:15, log /srv/opentallas-scratch2/claude/flow-noadv-0915.push2.log, cmd: ot-push-main 
-- 2026-11-20 18:16 PST DONE [flow-noadv-0915] ot-push-main otpush-tolerant-swine-2549940 on tolerant-swine: rc=0 after 899 s, ended 18:16:26, log /srv/opentallas-scratch2/claude/flow-noadv-0915.push3.log, cmd: ot-push-main 
+- 2026-11-21 MERGED into FLOW-NOADV-0915.md (FLOW-FIX-0100, FABLE-FLOW-2350 b): all posts moved there; post.sh resolve_lane now writes only that file. Remove this twin with git rm when allowed.

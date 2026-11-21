@@ -1,3 +1,1 @@
-- 2026-11-20 22:18 PST DONE [qc-plan-r8] ot-push-main otpush-renewed-glider-3822043 on renewed-glider: rc=0 after 25 s, ended 06:17:59, log none, cmd: ot-push-main 
-- 2026-11-20 22:59 PST DONE [qc-plan-r8] ot-push-main otpush-renewed-glider-754093 on renewed-glider: rc=0 after 0 s, ended 06:59:58, log none, cmd: ot-push-main --help
-- 2026-11-20 23:10 PST DONE [qc-plan-r8] ot-push-main otpush-renewed-glider-1020814 on renewed-glider: rc=0 after 24 s, ended 07:10:05, log none, cmd: ot-push-main 
+- 2026-11-21 MERGED into QC-PLAN-R8.md (FLOW-FIX-0100, FABLE-FLOW-2350 b): all posts moved there; post.sh resolve_lane now writes only that file. Remove this twin with git rm when allowed.

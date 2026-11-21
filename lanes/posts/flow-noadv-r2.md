@@ -1,10 +1,1 @@
-- 2026-11-20 16:13 PST DONE [flow-noadv-r2] ot-push-main otpush-tolerant-swine-4031364 on tolerant-swine: rc=0 after 0 s, ended 16:13:21, log none, cmd: ot-push-main --help
-- 2026-11-20 16:22 PST DONE [flow-noadv-r2] ot-push-main otpush-tolerant-swine-125807 on tolerant-swine: rc=0 after 18 s, ended 16:22:21, log /srv/opentallas-scratch2/claude/flow-noadv-r2/push-r3.log, cmd: ot-push-main 
-- 2026-11-20 16:32 PST DONE [flow-noadv-r2] ot-push-main otpush-tolerant-swine-448384 on tolerant-swine: rc=0 after 78 s, ended 16:32:21, log /srv/opentallas-scratch2/claude/flow-noadv-r2/push-r3b.log, cmd: ot-push-main 
-- 2026-11-20 17:26 PST DONE [flow-noadv-r2] ot-push-main otpush-tolerant-swine-1386454 on tolerant-swine: rc=0 after 884 s, ended 17:26:08, log /srv/opentallas-scratch2/claude/flow-noadv-r2/push-r3c.log, cmd: ot-push-main 
-- 2026-11-20 18:03 PST DONE [flow-noadv-r2] ot-push-main otpush-tolerant-swine-2573352 on tolerant-swine: rc=0 after 72 s, ended 18:03:29, log /srv/opentallas-scratch2/claude/flow-noadv-r2/push-r3d.log, cmd: ot-push-main 
-- 2026-11-20 18:50 PST DIED [flow-noadv-r2] ot-push-main otpush-tolerant-swine-3519679 on tolerant-swine: rc=4 after 578 s, ended 18:50:19, log /srv/opentallas-scratch2/claude/flow-noadv-r2/push-r3e.log, cmd: ot-push-main 
-- 2026-11-20 19:10 PST DIED [flow-noadv-r2] ot-push-main otpush-tolerant-swine-3815896 on tolerant-swine: rc=3 after 843 s, ended 19:10:34, log /srv/opentallas-scratch2/claude/flow-noadv-r2/push-r3f.log, cmd: ot-push-main 
-- 2026-11-20 19:27 PST DONE [flow-noadv-r2] ot-push-main otpush-tolerant-swine-4125684 on tolerant-swine: rc=0 after 919 s, ended 19:27:12, log /srv/opentallas-scratch2/claude/flow-noadv-r2/push-r3g.log, cmd: ot-push-main 
-- 2026-11-20 20:33 PST DIED [flow-noadv-r2] ot-push-main otpush-tolerant-swine-1436184 on tolerant-swine: rc=4 after 788 s, ended 20:33:11, log /srv/opentallas-scratch2/claude/flow-noadv-r2/push-r4.log, cmd: ot-push-main 
-- 2026-11-20 20:50 PST DONE [flow-noadv-r2] ot-push-main otpush-tolerant-swine-1759256 on tolerant-swine: rc=0 after 893 s, ended 20:50:24, log /srv/opentallas-scratch2/claude/flow-noadv-r2/push-r4b.log, cmd: ot-push-main 
+- 2026-11-21 MERGED into FLOW-NOADV-R2.md (FLOW-FIX-0100, FABLE-FLOW-2350 b): all posts moved there; post.sh resolve_lane now writes only that file. Remove this twin with git rm when allowed.
