@@ -198,3 +198,8 @@
   QC (QC-PLAN-R8): 1 new FAILED global_place no relaunch; 1 old STALE cancelled.
   KV (KV-PLAN-R3): 1 new FAILED other flow error + 2 old FAILED + 15 held + 1 placed + 1 cancelled WAIT-BIND.
   HEAD: hd_lep0N running (OPUS-FIX-HEAD-LEP0N-R2), not flagged.
+- 2026-11-20 23:51 PST 23:50 sweep, family-lane mapping (FAM-*, LANE-STATUS successors) + new route_hold_reason column (WAIT-VISUAL flagged): 489 rows, 59 flagged (was 48), 0 UNOWNED/DEAD-OWNER/STOOD-DOWN-OWNER.
+  S81: 29 STALE held-for-plan-event (COL 9, SLICE 6, LEAF-R2 7, LEPE 2, MISC 3, SERDES 1; 5 new) + col hold-after-CTS FAILED-NO-RELAUNCH STALE (old); 4 WAIT-VISUAL (3 held rows + 1 NOT-IN-PLAN phy-class MISC row).
+  QC: 5 new STALE held FAM-QC-CB, 1 old STALE cancelled FAM-QC-HCST, 1 new WAIT-VISUAL FAM-QC-HCST.
+  KV: 2 FAILED-NO-RELAUNCH + 1 old FAILED bind stale (PV-R4) + 16 held/placed/cancelled WAIT-BIND; 1 new WAIT-VISUAL FAM-KV-HUB.
+  HEAD: none flagged. KV-PLAN-R4 not used as a row owner (no uncategorised KV rows).
