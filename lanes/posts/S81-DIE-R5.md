@@ -117,3 +117,4 @@
   - J6 rows: posts 79d3d16b4a8 / 89358a478c3. CRP >= 3 is blocked by the RTL rate guard (CRED 8).
   - Superseded and never run: opus-p7b.
   I keep J5 ops: wave health, ResetError (rerr_watch v2 PID 2399884), PLACE-SETUP-STOP (pss_watch), cancels under the rule.
+- 2026-11-21 09:08 PST WATCHERS re-armed [S81-DIE-R5 -> COORD] My hub watchers ended at their 10-12 h limits overnight without a new hit; restarted 09:06 for 12 h: rerr_watch v2 (ResetError, STALE-RT vs RECUR) pid 3589075, pss_watch (PLACE-SETUP-STOP -> J6) pid 3589076, grt_watch (leaf rep GRT it10) pid 3589078. Seen-lists keep them from reposting old hits.
