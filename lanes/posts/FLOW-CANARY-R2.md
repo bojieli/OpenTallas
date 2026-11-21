@@ -16,3 +16,5 @@
 - 2026-11-21 12:15 PST DIED [FLOW-CANARY-R2] ot-run oth-ubuntu-1524558-1795292124 on tolerant-swine: rc=5 after 5 s, ended 12:15:25, log none, cmd: --mem 4 --threads 2 --dir /srv/opentallas-scratch2/claude/FLOW-CANARY-R2/clone -- env PYTHONPATH=/srv/opentallas-scratch2/claude/FLOW-CANARY
 - 2026-11-21 12:15 PST CANARY s81_head @ b6934d7751: FAIL failing lec,signoff (REGRESSION signoff hold_ff_wns -20.85 -> -68.1 -47.25 ps (tol -10))
   [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
+- 2026-11-21 12:30 PST CANARY s81_cl @ b9735df11e: FAIL failing sdc_lint,selrange,synth,lec,face_guard,face_cover (NO-BASELINE no baseline for s81_cl/slice_station__t24__cl66b71008 and this run cannot set one: no metric measured (flow stopped before GRT)); CANARY s81_head_cl @ b9735df11e: FAIL failing lint,sdc_lint,selrange,synth,lec,face_guard (NO-BASELINE no baseline for s81_head_cl/hd_turn_a and this run cannot set one: no metric measured (flow stopped before GRT))
+  [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
