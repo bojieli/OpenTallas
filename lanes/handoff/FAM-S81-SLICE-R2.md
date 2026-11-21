@@ -40,3 +40,4 @@ My local waiters die with this session: RE-ARM on every unit below.
 - t6 attempt_46: not live anywhere (posted). R1 benches/t9 epyc10 clients cancelled (never admitted).
 - census DONE: totals posted (t1 335k, t5 329k, t6 352k, t7 332k, t8 363k, t10 341k generic); per-module strip/body split still to compute.
 - t37 gate GREEN (bind 0, LATCHECK 0, G0 87 inh/0 new, PRE 0): tree $L/candC1n_t37, gate $L/gates/candC1n_t37. Next: kit with wave env, route to sign-off.
+- t36 GRT DONE (unit 344587 exit 0): overflow 0 all layers, TT setup +78.94, FF hold -79.1 (pre route repair), legacy gate PASS. Next: route+finish to sign-off; sign-off build from src_manifest tree with wave env.
