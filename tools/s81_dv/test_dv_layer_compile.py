@@ -7,6 +7,7 @@
    commands, one command per engine per edge, exactly one KIT and one END, END after every done), host boot stream =
    length + BEGIN + 3 PW words a row + SEAL + templates, CTL templates <= 128, the op schedule reproduces the committed
    p4l layer price (results/rtl/s81_layer_tput_1018/layer_price_p4l.json), manifest hashes match the files.
+   These compile cases resolve GU timings from "physical/die_plan/s81/cores/legacy/recipes.json".
    python3 tools/s81_dv/test_dv_layer_compile.py            (exit 0 = PASS)
 """
 import hashlib
