@@ -20670,3 +20670,4 @@ FAILED [AUTOPILOT 7faf2763c343] 2026-11-21 15:31:00 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-21 15:32 PST KIT-WAVE [qwen_compute] -> QC die owner (DIE-QC-103): 1 event(s): slw_su_c__cl19bb38ef route FAIL INFRA (infra-orphan: client lost, kit logs idle 9.9 h) job 7faf2763c343
 - 2026-11-21 15:33 PST GRT-FLAT watchdog cancelled 1 wave attempt(s) (class PLAN design:grt_flat_overflow): qwen_compute/slw_su_c__cl19bb38ef@3 30.9 GB
   [filed under] FLEET-WATCH-R3: FLEET-WATCH-2000 stood down (chain FLEET-WATCH-2000 > FLEET-WATCH-R3)
+- 2026-11-21 15:33 PST DIED [FAM-S81-COL-H10-R3] ot-run oth-ubuntu-2275263-1795279334 on civil-redfish: rc=21 after 24650 s, ended 23:33:01, log /srv/opentallas-scratch2/claude/fam-s81-col-h10-r3/routeA2_otrun.log, cmd: --mem 48 --threads 8 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/fam-s81-col-h10/waveP/root/items/col_h10_r2__t1__cl99efd374__pv161
