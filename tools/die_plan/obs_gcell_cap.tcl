@@ -50,11 +50,26 @@ proc ot_obsgc_plan {srcd blkd tracksd pinsd clrd gc minfree} {
     set pins {}; if {[dict exists $pinsd $ln]} { set pins [dict get $pinsd $ln] }
     set blk $srcs; if {[dict exists $blkd $ln]} { set blk [concat $srcs [dict get $blkd $ln]] }
     array unset seen; array unset bk; array unset pg
-    set cut {}
-    # bucket blockers by along gcell index (a candidate only tests the rects of its own column); pins by gcell
+    set cut {}; set edges {}; set candidate_rows {}
+    foreach o $srcs {
+      lassign $o al0 ac0 al1 ac1
+      set rows {}
+      if {$ac0 % $gc != 0} { lappend rows [expr {$ac0 / $gc}] }
+      if {$ac1 % $gc != 0 && [expr {$ac1 / $gc}] ni $rows} { lappend rows [expr {$ac1 / $gc}] }
+      lappend edges [list [expr {$al0 / $gc}] [expr {($al1 - 1) / $gc}] $rows]
+      lappend candidate_rows {*}$rows
+    }
+    set candidate_rows [lsort -integer -unique $candidate_rows]
+    # Long PG stripes span many along cells but only a few across rows. Bucket by across row and include the
+    # blocker's clearance so a stripe can still block tracks in the next row. Along overlap is checked below.
     foreach q $blk {
-      lassign $q p0 c0 p1 c1
-      for {set i [expr {$p0 / $gc}]} {$i <= ($p1 - 1) / $gc} {incr i} { lappend bk($i) $q }
+      lassign $q p0 c0 p1 c1 qc
+      if {$qc eq ""} { set qc $clr }
+      set low [expr {($c0 - $qc + 1) / $gc}]
+      set high [expr {($c1 + $qc - 1) / $gc}]
+      set first [expr {[lsearch -sorted -integer -bisect $candidate_rows [expr {$low - 1}]] + 1}]
+      set last [lsearch -sorted -integer -bisect $candidate_rows $high]
+      foreach r [lrange $candidate_rows $first $last] { lappend bk($r) $q }
     }
     foreach p $pins {
       lassign $p p0 c0 p1 c1
@@ -62,19 +77,16 @@ proc ot_obsgc_plan {srcd blkd tracksd pinsd clrd gc minfree} {
         for {set r [expr {$c0 / $gc}]} {$r <= ($c1 - 1) / $gc} {incr r} { set pg($i,$r) 1 }
       }
     }
-    foreach o $srcs {
-      lassign $o al0 ac0 al1 ac1
-      set i0 [expr {$al0 / $gc}]; set i1 [expr {($al1 - 1) / $gc}]
-      set rows {}
-      if {$ac0 % $gc != 0} { lappend rows [expr {$ac0 / $gc}] }
-      if {$ac1 % $gc != 0 && [expr {$ac1 / $gc}] ni $rows} { lappend rows [expr {$ac1 / $gc}] }
+    foreach edge $edges {
+      lassign $edge i0 i1 rows
       foreach r $rows {
         set lo [expr {$r * $gc}]; set hi [expr {($r + 1) * $gc}]
+        set blockers [expr {[info exists bk($r)] ? $bk($r) : {}}]
         for {set i $i0} {$i <= $i1} {incr i} {
           if {[info exists seen($i,$r)]} continue
           set seen($i,$r) 1; incr ncand
           if {[info exists pg($i,$r)]} { incr nexempt; continue }
-          if {[ot_obsgc_free $tracks $lo $hi [expr {$i * $gc}] [expr {($i + 1) * $gc}] $bk($i) $clr] < $minfree} {
+          if {[ot_obsgc_free $tracks $lo $hi [expr {$i * $gc}] [expr {($i + 1) * $gc}] $blockers $clr] < $minfree} {
             lappend cut [list $r $i]
           }
         }
