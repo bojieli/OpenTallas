@@ -79,7 +79,7 @@ PAD_RE = re.compile(r"u_pd\d+_")
 
 
 def apply(txt, seg=8, inst_re=DEFAULT_RE, cores=(), core_re=None, guard=None, tail_groups=0, core_types=(), unchain=True,
-          pad_min_stations=0):
+          pad_min_stations=0, inst_seg=None):
     if seg < 1:
         raise LkError("seg must be >= 1")
     mod = re.search(r"\bmodule\s+\w+\s*(#\((?:[^()]|\([^()]*\))*\))?\s*\(", txt)
@@ -166,15 +166,18 @@ def apply(txt, seg=8, inst_re=DEFAULT_RE, cores=(), core_re=None, guard=None, ta
         decl.append(f"    wire [{w - 1}:0] {fresh(n)};")
         return n
 
+    limits = inst_seg or {}
     nsplit = nseg = 0
     for name, x in sel.items():
         W, base = x["W"], x["base"]
-        seg_x = seg
+        seg_x = min(seg, limits.get(name, seg))
         if pad_min_stations > 0 and not x["tail"] and PAD_RE.match(name):
-            seg_x = min(seg, max(1, x["D"] // pad_min_stations))
+            seg_x = min(seg_x, max(1, x["D"] // pad_min_stations))
         sizes = seg_sizes(x["D"], seg_x)
         if x["tail"]:
             g = x["D"] if tail_groups <= 0 else min(x["D"], tail_groups)
+            if name in limits:
+                g = max(g, math.ceil(x["D"] / seg_x))
             sizes = [x["D"] // g + (1 if j < x["D"] % g else 0) for j in range(g)]
         d0 = x["d"]
         if x["in"]:
@@ -227,8 +230,9 @@ def apply(txt, seg=8, inst_re=DEFAULT_RE, cores=(), core_re=None, guard=None, ta
     return txt[:hdr_end] + body, lat, stats
 
 
-def apply_kit(rtl_dir, seg=8, tail_groups=0, core_types=(), cores=(), unchain=True, pad_min_stations=0):
+def apply_kit(rtl_dir, seg=8, tail_groups=0, core_types=(), cores=(), unchain=True, pad_min_stations=0, inst_seg=None):
     """gen_phys entry (budgets.r_dly_lockup): the post-pass on every staged *_bound.sv of the kit that instantiates a delay cell.
+    inst_seg gives smaller segment limits for exact bound instance names, retaining the type default for all other lines.
     Returns {file: stats}; writes each file in place (tmp + rename)."""
     out = {}
     for f in sorted(Path(rtl_dir).glob("*_bound.sv")):
@@ -236,7 +240,7 @@ def apply_kit(rtl_dir, seg=8, tail_groups=0, core_types=(), cores=(), unchain=Tr
         if "ot_dp_dly" not in src:
             continue
         txt, lat, stats = apply(src, seg=seg, tail_groups=tail_groups, core_types=core_types, cores=cores, unchain=unchain,
-                                pad_min_stations=pad_min_stations)
+                                pad_min_stations=pad_min_stations, inst_seg=inst_seg)
         if txt != src:
             tmp = f.with_name(f.name + ".dlk_tmp")
             tmp.write_text(txt)

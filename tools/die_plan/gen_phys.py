@@ -1001,6 +1001,8 @@ def dly_lockup_cfg(budgets, tn):
     out = dict(seg=int(c.get("seg", 8)), tail_groups=int(c.get("tail_groups", 0)))
     if c.get("pad_min_stations"):          # absent / 0 = the form as first built (same call, same kit)
         out["pad_min_stations"] = int(c["pad_min_stations"])
+    if c.get("inst_seg"):
+        out["inst_seg"] = dict(c["inst_seg"])
     return out
 
 

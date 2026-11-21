@@ -304,3 +304,12 @@ endmodule
     (tmp_path / "tb.v").write_text(tb)
     subprocess.run(["iverilog", "-g2012", "-o", str(tmp_path / "s"), str(tmp_path / "a.v"), str(tmp_path / "b.v"), str(tmp_path / "tb.v")], check=True)
     assert "SAME" in subprocess.run(["vvp", str(tmp_path / "s")], capture_output=True, text=True, check=True).stdout
+
+
+def test_exact_instance_segment_limit_keeps_other_lines_on_default():
+    text, _, stats = run(inst_seg={"u_d17_w": 2})
+    d17 = re.findall(r"\.D\((\d+)\)\) u_d17_w_sg\d+ ", text)
+    peer = re.findall(r"\.D\((\d+)\)\) u_pd20_x_0_t_25_sg\d+ ", text)
+    assert list(map(int, d17)) == [2] * 8 + [1]
+    assert list(map(int, peer)) == [7, 7, 6]
+    assert stats["stages"] == run()[2]["stages"]
