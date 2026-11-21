@@ -1,0 +1,4 @@
+# Qwen Compute V2 collective placement reviews
+
+- coll_ftc attempt 1, epyc8, event s29q103S4Q9N46R6V2. Viewed the exact item geom/auto_geom.png. The 4,455-sink tl_st_wi_i clock and register band remains concentrated near y=913 µm, crossing the historical DRT-0255 access box. The farthest driver-to-sink reach is about 1,479 µm. The diagnostic GRT overflow was zero. The band and clock reach need a site or clock fix before route release.
+- coll_core private pkit7, epyc10:/srv/opentallas-scratch2/claude/fam-qc-coll/pkit7/gen/coll_core/run/layout_review/place/layout.png. Viewed the exact placed result. The NW fold macros still occupy the west edge and central approach. The measured near-edge channel is 4.3 µm and the place log reports 51% area use; the image marks a saturated central group. Keep this useful synthesis and placement evidence and carry the V3 macro and ring-row repair to the next build.
