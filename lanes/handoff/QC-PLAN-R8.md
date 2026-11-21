@@ -117,3 +117,7 @@
 - QC-PLAN-R8 waiter (background) armed on that unit; R9 re-arm: ot-wait oth-ubuntu-3244624-1795260219 on epyc8.
 - Still open for V2: FAM-QC-FEFW ft regs_um (13 types, see above); release list on apply (11 cb + 3 fe + cbn_q00__cldbcda913 holds);
   re-sign siblings after the 6 reps sign. Six omitted R6V1 HC types restored by Codex (d68...); slw_sc_v1__cl63e5a7a2 signed+exported.
+- 11-21 ~04:xx: b12 ended BIND_RC 1 with R8_STALE 30 ONLY (QFT/hard-core clean): its loop could not refresh (copied r8_refresh.py,
+  derive rc 2). Relaunched as b13 = epyc8 unit oth-ubuntu-3618703-1795261366 (v2b_host/bind_b13.sh = bind_b12.sh with RR -> rt/7ff721a00978
+  r8_refresh.py; inputs v2b_host/in13/ = b12 plan 929928f3c22a + side + r8_final + extra_final_0). Log v2b_host/b13.out. NOTE: the Codex
+  LAT/G0/proof GEN chain was armed on b12, not b13; R9 must re-arm it on b13 (or run LATCHECK/G0 by hand after b13 rc 0).
