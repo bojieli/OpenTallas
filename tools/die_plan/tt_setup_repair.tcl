@@ -34,12 +34,18 @@ foreach f [ot_tt_libs] {
   read_liberty $f
 }
 read_db $::env(ODB)
-read_sdc /work/constraint.sdc
+set ot_postplace [expr {[info exists ::env(OT_POSTPLACE_WORST)] && $::env(OT_POSTPLACE_WORST) eq "1"}]
+set ot_tt_sdc /work/constraint.sdc
+if {$ot_postplace} {
+  # Pre-CTS placement removes the ideal-clock tap window. Read the SDC written alongside this checkpoint.
+  set ot_pp_sdc [file rootname $::env(ODB)].sdc
+  if {[file isfile $ot_pp_sdc] && [file size $ot_pp_sdc] > 0} { set ot_tt_sdc $ot_pp_sdc }
+}
+read_sdc $ot_tt_sdc
 set virt {}; set real {}
 foreach c [all_clocks] { if {![llength [get_property $c sources]]} { lappend virt $c } else { lappend real $c } }
 if {[llength $virt] != 1} { error "tt_setup_repair: expected exactly one source-less virtual IO clock" }
 if {[info exists ::env(OT_VCLK_TT)]} { set_clock_latency -source $::env(OT_VCLK_TT) $virt }
-set ot_postplace [expr {[info exists ::env(OT_POSTPLACE_WORST)] && $::env(OT_POSTPLACE_WORST) eq "1"}]
 # Pre-CTS data uses placement RC, but the unbuilt clock network must stay
 # ideal, as in detailed place. CTS and GRT still use propagated clocks.
 if {!$ot_postplace} { set_propagated_clock $real }
