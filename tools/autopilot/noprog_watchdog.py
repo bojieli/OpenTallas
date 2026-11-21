@@ -138,6 +138,12 @@ def extract(kind, text):
         pct = [i for i, ln in enumerate(lines) if DRT_PCT.search(ln)]
         if pct:
             res["growth_idx"] = pct[-1]
+        # FLOW-OPS-1000 (FABLE-PD-S81-1100 #2: col_h9_r0 rep 0d6487d7a8c6 was cancelled at 60,258 violations, 70 % through iteration 1,
+        # down from the iteration-0 total 151,954, because only DRT-0199 totals were read): the `Completing N% with V violations` counts
+        # of the ACTIVE iteration (after the last completed total) are kept, so judge() can see a count still falling inside it
+        last = ser[-1][0] if ser else None
+        if last is not None:
+            res["active"] = [(i, float(DRT_PCT.search(lines[i]).group(1))) for i in pct if i > last]
         return res
     if kind in ("grt", "other"):
         tbls = parse_tables(lines)
@@ -237,6 +243,17 @@ def judge(res, anchors, now, window=WINDOW_S, improve=MIN_IMPROVE, exact=False):
             return "NO-PROGRESS", f"no new {res['name']} row in {window / 3600:g} h", detail
         if rb <= bb * (1 - improve):
             return "PROGRESS", f"{res['name']} improved {100 * (1 - rb / bb):.1f} % in window", detail
+        act = res.get("active") or []
+        if act:
+            # an iteration >= 1 in flight whose own count has fallen below the best completed total, or is still falling in the window:
+            # never NO-PROGRESS (the next DRT-0199 total will carry it)
+            apts = [(interp_time(i, anchors), v) for i, v in act]
+            arec = [v for t, v in apts if t > now - window]
+            if apts[-1][1] <= best_all * (1 - improve):
+                return "PROGRESS", (f"{res['name']}: active iteration at {apts[-1][1]:g} < best completed total {best_all:g} "
+                                    f"(in-iteration DRT progress)"), detail
+            if len(arec) >= 2 and arec[-1] <= max(arec) * (1 - improve):
+                return "PROGRESS", f"{res['name']}: falling inside the active iteration ({max(arec):g} -> {arec[-1]:g})", detail
         return "NO-PROGRESS", f"{res['name']} best {rb:g} vs {bb:g} before window: < {100 * improve:.0f} % in {window / 3600:g} h", detail
     gi = res["growth_idx"]
     if gi < 0:
