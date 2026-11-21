@@ -105,7 +105,8 @@ def relay_um(P, tn=None):
     die = float(P.reset.get("relay_um", SLEW_SAFE_RELAY_UM if P.reset.get("relay_rule") == "slew_safe" else REACH_UM))
     if P.reset.get("relay_rule") == "slew_safe":
         die = min(die, SLEW_SAFE_RELAY_UM)
-    cap = _CBC.reset_hop_cap_um()        # CBC rule 4 (OWNER 11-20): every reset hop <= 300 um by default, any plan value
+    cap = _CBC.reset_hop_cap_um(plan=P)  # CBC rule 4 (OWNER 11-20): every reset hop <= 300 um by default, any plan value;
+    #                                      a bound plan's own reset.reach_cap_um (BOUND-PLAN-CAP) wins over default and env
     if tn is None:
         return min(die, cap)
     t = (P.types.get(tn) or {}).get("reset") or {}
@@ -310,6 +311,28 @@ ROW_UM = 0.27           # one ASAP7 std-cell row (stack direction y)
 CELL_W_UM = 1.08        # a relay flop (DFFHQN, 20 tracks): the free run along the row must hold it
 
 
+_SITE_RULE = []        # BOUND-SITE-RULE (HEAD-PLAN-R16 11-20): stack of plan reset.relay_site_rule values in force
+
+
+class site_rule:
+    """BOUND-SITE-RULE (HEAD-PLAN-R16 11-20, FABLE-PD-HEAD-2040 RC2): the relay site test a plan's trees were BOUND with.
+    plan reset.relay_site_rule "interior" = the pre-42eeacf87f strict-interior test (a site is free when it is inside box_out
+    and in no grown blockage's interior); absent / "legal" = the legal-site test of 42eeacf87f.  Bisect 11-20 (HEAD r13r
+    rows, cap 405, 14 tool snapshots 385f61b5..ec4936598992): 42eeacf87f alone re-solves 11 of 26 HEAD trees (hd_tile depth
+    4 -> 5, 10 signed types), every other commit 0.  A bound plan keeps its sites; new binds get the legal-site rule."""
+
+    def __init__(self, P):
+        self.rule = ((getattr(P, "reset", None) or {}).get("relay_site_rule") or "legal")
+
+    def __enter__(self):
+        _SITE_RULE.append(self.rule)
+        return self
+
+    def __exit__(self, *exc):
+        _SITE_RULE.pop()
+        return False
+
+
 def _free(p, boxes, box_out):
     """a LEGAL relay site: inside box_out, outside every (grown) blockage, and with a free row-high run (ROW_UM, y) and a
     free cell-wide run (CELL_W_UM, x) through it.  RESET-RELAY-GEN-R2 11-21 (S81-DIE-R4, col_h9_r0_p3 cl0cd90c0e): rst_rl_137
@@ -323,6 +346,8 @@ def _free(p, boxes, box_out):
     eps = 1e-9
     if not (x0-eps <= x <= x1+eps and y0-eps <= y <= y1+eps):
         return False
+    if _SITE_RULE and _SITE_RULE[-1] == "interior":
+        return not any(a+eps < x < c-eps and b+eps < y < d-eps for a, b, c, d in boxes)
     ylo, yhi, xlo, xhi = y0, y1, x0, x1
     for a, b, c, d in boxes:
         in_x, in_y = a+eps < x < c-eps, b+eps < y < d-eps
@@ -1156,6 +1181,11 @@ def _type_tree(P, tn, depth, reach):
 
 
 def _type_tree0(P, tn, depth, reach):
+    with site_rule(P):
+        return _type_tree00(P, tn, depth, reach)
+
+
+def _type_tree00(P, tn, depth, reach):
     cache = P.__dict__.setdefault("_reset_tree_cache", {})
     if ("topo", tn, reach) not in cache:
         t = P.types[tn]
@@ -2047,35 +2077,40 @@ def _wf_type_tree(P, tn):
     cache = P.__dict__.setdefault("_reset_tree_cache", {})
     key = ("wf_tree", tn)
     if key not in cache:
-        t = P.types[tn]
-        w, h = t["outline_um"]
-        taps = consumer_taps(P, tn)
-        outs = out_pins(P, tn)
-        core_rst = core_reset_targets(P, tn)
-        pts = list(taps) + [(f"o{k}", x, y) for k, (_, x, y) in enumerate(outs)]
-        for k, c in enumerate(core_rst):
-            c["tap"] = len(pts)
-            pts.append((f"core_rst{k}", *c["xy"]))
-        cs = column_spec(P, tn)
-        column = None
-        if cs and cs["at"] is not None:
-            ent = tuple(in_pin(P, tn))
-            far = [s["xy"] for s in face_sites(P, tn)[:2] if _man(s["xy"], ent) > 1.0]
-            used = {(round(x, 3), round(y, 3)) for _, x, y in outs}
-            column = dict(axis=cs["axis"], band=cs["band"],
-                          end=far[0] if far and (round(far[0][0], 3), round(far[0][1], 3)) in used else None)
-        topo = topology(pts, in_pin(P, tn), reach=relay_um(P, tn), boxes=blockages(t),
-                        box_out=(CLEAR_UM, CLEAR_UM, w - CLEAR_UM, h - CLEAR_UM), walls=walls(P, tn),
-                        avoid_cores=bool(P.reset.get("relay_avoid_cores")), column=column)
-        T = assign(topo, wavefront_min_depth(t), pad_spread=bool(P.reset.get("relay_pad_spread")), boxes=blockages(t),
-                   box_out=(CLEAR_UM, CLEAR_UM, w-CLEAR_UM, h-CLEAR_UM), walls=walls(P, tn),
-                   site_names=t.get("reset_relay_names") == "site")
-        T = resite_type(P, tn, T)
-        T.update(n_clock_taps=len(_taps(P, tn)), n_reset_consumers=len(taps),
-                 local_reset_taps=bool(t.get("reset", {}).get("local_taps_um")), outs=[[x, y] for _, x, y in outs], core_resets=core_rst)
-        cache[key] = T
+        with site_rule(P):
+            cache[key] = _wf_type_tree0(P, tn)
     import copy
     return copy.deepcopy(cache[key])
+
+
+def _wf_type_tree0(P, tn):
+    t = P.types[tn]
+    w, h = t["outline_um"]
+    taps = consumer_taps(P, tn)
+    outs = out_pins(P, tn)
+    core_rst = core_reset_targets(P, tn)
+    pts = list(taps) + [(f"o{k}", x, y) for k, (_, x, y) in enumerate(outs)]
+    for k, c in enumerate(core_rst):
+        c["tap"] = len(pts)
+        pts.append((f"core_rst{k}", *c["xy"]))
+    cs = column_spec(P, tn)
+    column = None
+    if cs and cs["at"] is not None:
+        ent = tuple(in_pin(P, tn))
+        far = [s["xy"] for s in face_sites(P, tn)[:2] if _man(s["xy"], ent) > 1.0]
+        used = {(round(x, 3), round(y, 3)) for _, x, y in outs}
+        column = dict(axis=cs["axis"], band=cs["band"],
+                      end=far[0] if far and (round(far[0][0], 3), round(far[0][1], 3)) in used else None)
+    topo = topology(pts, in_pin(P, tn), reach=relay_um(P, tn), boxes=blockages(t),
+                    box_out=(CLEAR_UM, CLEAR_UM, w - CLEAR_UM, h - CLEAR_UM), walls=walls(P, tn),
+                    avoid_cores=bool(P.reset.get("relay_avoid_cores")), column=column)
+    T = assign(topo, wavefront_min_depth(t), pad_spread=bool(P.reset.get("relay_pad_spread")), boxes=blockages(t),
+               box_out=(CLEAR_UM, CLEAR_UM, w-CLEAR_UM, h-CLEAR_UM), walls=walls(P, tn),
+               site_names=t.get("reset_relay_names") == "site")
+    T = resite_type(P, tn, T)
+    T.update(n_clock_taps=len(_taps(P, tn)), n_reset_consumers=len(taps),
+             local_reset_taps=bool(t.get("reset", {}).get("local_taps_um")), outs=[[x, y] for _, x, y in outs], core_resets=core_rst)
+    return T
 
 
 # ---------------------------------------------------------------- R-REACH-1 die reset relays (S81-DIE-R4 11-20)

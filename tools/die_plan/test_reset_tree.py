@@ -451,3 +451,36 @@ def test_core_pin_relay_site_farther_than_margin_but_within_reach(monkeypatch):
         else:
             with pytest.raises(RT.ResetError, match="exceeds reach"):
                 RT.core_reset_targets(P, "fa")
+
+
+def test_bound_site_rule_interior_keeps_the_pre_legal_site_test():
+    """BOUND-SITE-RULE (HEAD-PLAN-R16 11-20): a plan bound before 42eeacf87f records reset.relay_site_rule "interior" and keeps
+    its sites (the strict-interior test); absent / "legal" = the legal-site test.  The scope pops on exit."""
+    from types import SimpleNamespace
+    c = RT.CLEAR_UM
+    boxes = [(a - c, b - c, e + c, d + c) for a, b, e, d in ((86, 993.6, 328, 1088.6), (86, 1097.3, 328, 1200.0))]
+    box_out, sliver = (0.0, 0.0, 600.0, 2000.0), (219.58, 1092.96)
+    assert not RT._free(sliver, boxes, box_out)
+    with RT.site_rule(SimpleNamespace(reset={"relay_site_rule": "interior"})):
+        assert RT._free(sliver, boxes, box_out)
+        assert not RT._free((200.0, 1050.0), boxes, box_out)          # inside a grown core: never free
+        with RT.site_rule(SimpleNamespace(reset={})):
+            assert not RT._free(sliver, boxes, box_out)
+    assert not RT._free(sliver, boxes, box_out)
+
+
+def test_bound_plan_cap_wins_over_default_and_env(monkeypatch):
+    """BOUND-PLAN-CAP (HEAD-PLAN-R16 11-20): reset.reach_cap_um is plan authority for the reset hop cap: it wins over the tool
+    default and OT_RESET_HOP_CAP_UM; a receipt cap (bound_reset_hop_cap) still wins over it; absent = default / env."""
+    from types import SimpleNamespace
+    import cbc_rules
+    P = SimpleNamespace(reset={"reach_cap_um": 405.0}, types={})
+    monkeypatch.delenv("OT_RESET_HOP_CAP_UM", raising=False)
+    assert RT.relay_um(P) == 405.0
+    monkeypatch.setenv("OT_RESET_HOP_CAP_UM", "300")
+    assert RT.relay_um(P) == 405.0
+    with cbc_rules.bound_reset_hop_cap(350.0):
+        assert RT.relay_um(P) == 350.0
+    assert RT.relay_um(SimpleNamespace(reset={}, types={})) == 300.0
+    assert cbc_rules.plan_reset_hop_cap({"reset": {"reach_cap_um": 405}}) == 405.0
+    assert cbc_rules.plan_reset_hop_cap({"reset": {}}) is None and cbc_rules.plan_reset_hop_cap(None) is None

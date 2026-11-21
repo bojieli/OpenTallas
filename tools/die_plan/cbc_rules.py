@@ -94,12 +94,37 @@ class bound_reset_hop_cap:
         return False
 
 
-def reset_hop_cap_um(die=None):
+def plan_reset_hop_cap(plan):
+    """BOUND-PLAN-CAP (HEAD-PLAN-R16 11-20, FABLE-PD-HEAD-2040 F3): the reset hop cap a die plan's trees were BOUND with,
+    recorded in the plan as reset.reach_cap_um (plan authority, not an env value).  plan = a Plan, its raw dict, its reset
+    section or a plan path; None when the plan records no cap (then the tool default / env apply, i.e. new binds)."""
+    import json as _json
+    from pathlib import Path as _Path
+    if plan is None:
+        return None
+    if isinstance(plan, (str, _Path)):
+        try:
+            plan = _json.loads(_Path(plan).read_text())
+        except (OSError, ValueError):
+            return None
+    rs = getattr(plan, "reset", None)
+    if rs is None and isinstance(plan, dict):
+        rs = plan.get("reset") if "reset" in plan or "partition_types" in plan else plan
+    v = (rs or {}).get("reach_cap_um") if isinstance(rs, dict) else None
+    if isinstance(v, (int, float)) and not isinstance(v, bool) and v > 0:
+        return float(v)
+    return None
+
+
+def reset_hop_cap_um(die=None, plan=None):
     """the reset hop cap (um) every reset generator applies by default (die reserved for a die-scoped override); inside
-    bound_reset_hop_cap() the bound tree's own cap"""
+    bound_reset_hop_cap() the bound tree's own cap; else the plan's recorded reset.reach_cap_um (plan_reset_hop_cap)"""
     import os
     if _BOUND_CAP:
         return _BOUND_CAP[-1]
+    pc = plan_reset_hop_cap(plan)
+    if pc is not None:
+        return pc
     v = os.environ.get("OT_RESET_HOP_CAP_UM")
     try:
         return float(v) if v else RESET_HOP_CAP_UM

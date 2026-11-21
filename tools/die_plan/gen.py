@@ -226,6 +226,12 @@ def main(argv=None):
     a5.add_argument("--out", required=True)
     a5.add_argument("--planned-phy-pg", action="store_true", help="PLANNED prototype only: split CORE VDD and expose VDDPHY from explicitly mapped die_io/PHY domains")
     a = ap.parse_args(argv)
+    import cbc_rules
+    with cbc_rules.bound_reset_hop_cap(cbc_rules.plan_reset_hop_cap(getattr(a, "plan", None))):
+        return _run(a)
+
+
+def _run(a):
     if a.cmd == "mockview":
         import gen_phys
         raw = S.load(a.plan)

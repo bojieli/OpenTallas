@@ -8847,6 +8847,16 @@
     "relay_avoid_cores": {
      "type": "boolean"
     },
+    "reach_cap_um": {
+     "type": "number",
+     "exclusiveMinimum": 0
+    },
+    "relay_site_rule": {
+     "enum": [
+      "legal",
+      "interior"
+     ]
+    },
     "relay_resite_crossing": {
      "type": "boolean"
     },

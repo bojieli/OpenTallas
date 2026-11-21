@@ -1373,6 +1373,10 @@ SCHEMA = {
             # ALL hard cores / macro leaves of the type, not only outside the walls (G2 kv3_pc: rrl_13 -> rrl_14
             # through kvpc0 gave 1272 M3 overflow)
             "relay_avoid_cores": {"type": "boolean"},
+            # BOUND-PLAN-CAP / BOUND-SITE-RULE (HEAD-PLAN-R16 11-20, FABLE-PD-HEAD-2040 F2/F3): the reset hop cap (um) and the
+            # relay site test this plan's reset trees were BOUND with, as plan authority (cbc_rules.plan_reset_hop_cap,
+            # reset_tree.site_rule).  Absent = tool default (300 um, legal sites: new binds).  "interior" = pre-42eeacf87f test.
+            "reach_cap_um": _pos, "relay_site_rule": {"enum": ["legal", "interior"]},
             # DQ85-SUL0 11-06 (opt-in, default false = pre-11-06 trees; the QC plan sets it, COORD 19:2x): a relay hop with no L route outside
             # every grown blockage moves the free relays of its chain onto an obstacle-avoiding route
             # (reset_tree.resite_crossing).  relay_resite_skip_types: types kept byte-identical (signed off).
