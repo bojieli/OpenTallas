@@ -73,6 +73,8 @@ def test_judge_wave_private_ab_and_hand_built(tmp_path):
     # no record: refused outside a kit-wave root, a legacy wave kit passes
     assert EP.judge(None, None, kit_path="/srv/s/claude/lanes/hd_lep0N/shelf_bf")[0] is False
     assert EP.judge(None, None, kit_path="/srv/s/runs/s81/kit-wave/s81/E/items/t1/gen/t1")[0] is True
+    # a flow canary reference kit (FLOW-CANARY-1121) is a flow test, not a design proof
+    assert EP.judge(None, None, kit_path="/srv/s/claude/flow-canary/runs/s81_3ed_1121/gen/slice_station__t12")[0] is True
     # a copied spec.json run with run-item outside the wave state dir is 'unregistered'
     wave = KW.spec_for(c, D, I, "intel2")
     rec_u = decl(wave, tmp_path / "spec.json")

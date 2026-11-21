@@ -42,4 +42,4 @@ def test_started_or_logless_client_stays_live(tmp_path):
 
 def test_canary_launch_uses_crit():
     src = Path(__file__).with_name('canary.py').read_text()
-    assert src.count('{OT_RUN} {CRIT}--mem') == 2
+    assert src.count('{OT_RUN} {CRIT}{PIN}--mem') == 2

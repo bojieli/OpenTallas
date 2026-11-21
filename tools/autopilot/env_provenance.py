@@ -64,6 +64,8 @@ def judge(rec, config_text, placed=False, kit_path=""):
     if not rec:
         if "/kit-wave/" in kit_path + "/":
             return True, ["ENV-PROVENANCE NOTE: legacy wave kit with no kit_env_provenance.json (generated before ENV-PROVENANCE)"]
+        if "/flow-canary/runs/" in kit_path + "/":     # FLOW-CANARY-1121: a flow canary regenerates a reference kit with main's generator to test the flow itself, never a design proof
+            return True, ["ENV-PROVENANCE NOTE: flow canary reference kit (tools/flow_canary), not a design proof"]
         why = ("ENV-PROVENANCE FAIL: no kit_env_provenance.json and the kit is not a kit-wave attempt (hand-built kit?): build private kits with "
                "`kit_wave.py private-spec DIE ITEM [--plan P] [--tree T] [--overlay O]` + `kit_wave.py run-item SPEC`")
         return _soft(placed, [why])
