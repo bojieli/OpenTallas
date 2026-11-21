@@ -18,3 +18,13 @@ Local waiters die with this session: a successor must RE-ARM on every unit below
 - t49 hold ECO pass 2: epyc8 oth-ubuntu-3969870-1795274939, log $E8/t49_eco2.log (base ot-jobs slice_station__t49-route-outgoing-giraffe-4139840).
 - t9 WREG hand-env GRT (evidence only): epyc8 oth-ubuntu-949753-1795267285. Next t9 iteration via kit_wave private-spec.
 - Lever 6: $R3/lever6.sh (reach_rules check/fix --rules 1 on all slice_station types, J6r1 plan) -> $R3/lever6/. Rows to S81-J6-ASSEMBLY-R4 for J7.
+
+## Updates 11-21 08:50
+- t37 J6r1 FSTART tree bind GREEN (bind 0 errors, LATCHECK 0 diff of 873). run-item: systemd unit fam-s81-slice-r4-t37-runitem on intel2,
+  spec ~/coord/autopilot/private_specs/FAM-S81-SLICE-R4/s81_slice_station__t37_1121083246/. Then route to sign-off.
+- t49: hold_eco tool fixed on main 8d49c7a932 (/work/nomcap libs). ECO rerun epyc8 $E8/t49_eco3 (log t49_eco3.log), tools from
+  $E8/clone_hei (detached at 8d49c7a932, do not touch while it runs). Past insert; in incremental route/sign-off.
+- Lever 6 private gate: epyc10 $R3/gate_l6.sh -> gate_l6.log (tree trees/src_s81_j6r1_l6, 25 types rows lever6/j7_lever6_slice_rows.json).
+- strip_body schema PUSHED main 0bbfaccf01 (tools/die_plan/strip_body.py). c1x_C rows: lanes/handoff/FAM-S81-SLICE-c1xC-strip-body-J8-rows.json.
+  Open: xg SRAM extra_um bboxes for c1x_C; the __strip/__body kit emit (split event) is not built.
+- clone for schema work: epyc8 $E8/clone_sb (branch claude/fam-s81-slice-r4-strip-body2, pushed).
