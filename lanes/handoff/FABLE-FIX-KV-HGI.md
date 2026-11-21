@@ -134,3 +134,38 @@ Watch on b8d: FF hold OUT OF the cores drops by the same 71 ps (worst +15 on e0,
 
 Stop items (FABLE-CLOSURE-2130): no hold-buffer pass on KV head-core fronts; no route of held hgi kits on a padded core tap.
 D27 rows now go to KV-PLAN-R3 (successor of R2): lanes/handoff/FABLE-FIX-KV-HGI-r7_hg_census300.py, not gated.
+
+## STAND-DOWN 2026-11-21 01:25 PST: this lane is past its context budget; R2 takes over from here (read this section first)
+
+Done and on record:
+- Rule on main 1b57af8f34 (opt-in OT_TAP_CORE_DIRECT=1 / plan clock.core_tap_direct). Conditional key posted to the KV plan
+  lane: D27c/D28 takes it only if the b8d GRT read shows head-core hold better than b8 and setup out of the cores no worse.
+- GRT memory posted: dead hgi_v2 cle a3 peaked 19.3 GB, SIGKILL at 4 h 19 min in GRT extra iteration 10/30, no OOM trace
+  found, killer NOT identified (FLOW-NOADV-R3 asked for the host guard record of 2026-11-21 03:01 UTC on epyc7).
+- D27 hg/hgi census rows: lanes/handoff/FABLE-FIX-KV-HGI-r7_hg_census300.py (+ -r7.json), not gated.
+
+In flight at 01:24 (both alive, about 4 h in, past the point where hgi_v2 was killed):
+- b8  GRT epyc7 oth-ubuntu-1682127-1795238641, container dpkit-kv3_hgi_v8-1682797, GRT extra iteration 11/30
+- b8d GRT epyc7 oth-ubuntu-1682133-1795238641, container dpkit-kv3_hgi_v8-1683577, GRT extra iteration 12/30
+  cap 64 GiB each, peak 11 GB at 21:50. No 5_1_grt.odb yet. Two congestion reports each under run/reports/.../base.
+  Do not cancel them for the pin-face work below: they are the only core-tap A/B at GRT RC. Read steps: STATE 21:30, 1-3.
+  Caveat for that read: with 49,891 overflow the GRT RC of b8 is a congested estimate; compare b8 against b8d only.
+
+NOT STARTED (COORD trigger 01:1x), in order:
+1. hgi_v8 GRT overflow 49,891, all at the pin face of the ectl_Q landing core (read lanes/FABLE-VISUAL-0030.md section
+   "hgi v8"; kit = b8). Facts I have for it, not yet analysed: landing core u_cland_i_ectl_Q_N_tN, master
+   kv_cland_w1560_ew_0433f, 1,560 bits, placed at (25.9, 1097.3) R0 on v8; on hgi_v1 its outputs q[j] are on the E face at
+   y 1100.5 + 0.192 j (1,560 pins on about 300 um of one face); v8 tN station row internal_stations[16] has one reg at
+   (133, 1270.08) and to_um (133, 935); on hgi_v1 the ft2 slot runs 1,056 bits north in the same middle gap (x 355).
+   Options named by COORD: spread the pins along a longer face, move or rotate the core, keep stations off its face,
+   widen the channel. First step: classify the b8 congestion-N.rpt by zone (epyc9 fable-kv-hg0/sc/zones.py, capmap.py) and
+   check which of the first station bank / bin rank sits in front of the E face. Then one private kit to GRT 0 and sign-off.
+   No evidence yet for any of the four options: do not pick one from this note.
+2. Confirm the 19 hg/hgi types gen on D26 once applied (the KV plan lane lifts the 8 hg hold_items and the kv3_hgi* visual
+   skip). Not checked: whether D26 has applied; whether the R3e bound RTL has u_cland_collect_rst_n_t34 on monitor_1.
+3. Rows to KV-PLAN-R4 for D27c or D28: the pin-face row from step 1, the core tap key if the GRT read passes, r7 rows.
+4. Proof kit from the applied D26 tree to sign-off, then export to AGIdock + rtx-pro ~/signed-export-1114. Nothing is
+   signed off or exported by this lane.
+
+Leftovers: epyc10 fable-fix-kv-hgi/{b8,b8d} are unused copies (remove with ot-delete). Lane clone epyc7 fable-fix-kv-hgi/wt
+is on main (nothing unpushed). Private plan root epyc8 fable-fix-kv-hgi/root7 links into kv-plan-r2/d27/tree (read only).
