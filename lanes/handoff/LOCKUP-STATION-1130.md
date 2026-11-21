@@ -92,3 +92,17 @@ Baseline pre-repair end list: meas/sta/base_cts.odb.open_before.tsv. Seams rows:
 Next (lever 2): generator applies rows by default from plan (ft_hop_lockup + zl_lockup ports) with leaf mode for every lockup type;
 post rows to S81-J6-ASSEMBLY, QC-PLAN-R7, KV-PLAN-R2. Open problem: cross_tap ws worse (-335) and TT tns 8x: find the classes (likely
 latch -> capture legs across far taps; consider latch at capture side for long hops = clock.ft_hop_lockup.tap capture / latch_frac).
+
+## STAND-DOWN (COORD: LOCKUP-STATION-R2 owns lever 2)
+- proof2 STA (epyc7 meas/sta/p2_cts.odb.log, 4_cts_pre_tt, placement RC): worst setup -489.52 is NOT a latch path:
+  u_lpad_leafdn_i0.q[594] (clk_t2 leaf, 375 ps) -> ~1 ns repeater chain (14 BUFx16f wires) -> u_u_lf1_u_crr_rxsb/q on clk_t18
+  (source latency -208 = tap window): a long-reach net present in the baseline (-424 pre-TT). Next groups -348.9 / -310.1 same launch.
+  After TT keep: wns -294.11 (baseline -354.63) tns -133.7k (baseline -16.4k): the TNS gap is the open item (latch T/2 legs;
+  get report_checks -group_path_count on the latch -> capture class from the TT-repaired 4_cts.odb).
+- proof2 pregrt: before cross_tap 6,603 ws -335.53 / port_out 5 / port_in 1,912 -44.69 / same_tap 70; repair was at +5 ps
+  at last look, after line + hold_cells + GRT it5/it10 not yet read (gen/ot_s81sl_leaf__t39/pregrt_ff_hold.log, run_grt.log).
+- proof_t39 (proof1) pregrt still running (-31 ps at last look).
+- Published (intel2 /srv/opentallas-scratch2/claude/lockup-station-1130-rows/): plan_lockup_<die>.json + receipt_lockup_<die>.json
+  (station_rule apply rows + --seams) and seams_<die>.json for s81 (2,622 latch hops, 383 seam types / 2,134 buses),
+  qwen_compute (85 / 133 / 1,644), qwen_kvsys (4 / 56 / 2,006), s81_head (192 / 26 / 86). Plans: D8i h2_2249, KV D25e3, QC A4, HEAD r11b.
+- main 3e831b7084: apply --seams, OT_HOP_LATCH_LEAF also for clock.ft_hop_lockup types.
