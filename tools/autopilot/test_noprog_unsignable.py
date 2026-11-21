@@ -223,3 +223,22 @@ def test_owner_from_the_tree_path_when_the_unit_has_no_lane(tmp_path, monkeypatc
     r = row()
     r["kit"] = "/srv/opentallas-scratch2/claude/fable-fix-s81-svc-1121/kits/t1/gen"
     assert nw.owner_of([r]) == "FABLE-FIX-S81-SVC-1121" and nw.owner_of([row()]) == "COORD" and nw.owner_of([row(lane="L9")]) == "L9"
+
+
+def test_unsignable_cancel_writes_the_cancel_mark_before_the_cancel(tmp_path, monkeypatch):
+    """FLOW-OPS-1300 (FABLE-FLOW-1240 b): the explicit terminal reason autopilot.marked_cancel reads (no more CRASH 143 -> OOM resubmit)"""
+    coord(tmp_path, monkeypatch)
+    order, seen = [], {}
+    marks = tmp_path / "autopilot/cancel_marks.tsv"
+    def cancel(u):
+        order.append(marks.exists())
+        return 0, "ok"
+    nw.unsignable_pass([row()], seen, NOW, cancel=cancel)
+    nw.unsignable_pass([row()], seen, NOW + 1801, cancel=cancel)
+    assert order == [True]
+    f = marks.read_text().splitlines()[0].split("\t")
+    assert f[1] == "/s/runs/s81/kit-wave/s81/3fa87b/items/t1/gen/t1" and f[2] == "UNSIGNABLE watchdog" and f[3].startswith("CANCEL-UNSIGNABLE: ") and "-700.00" in f[3]
+    import autopilot as AP
+    j = {"path": "/s/runs/s81/kit-wave/s81/3fa87b/items/t1/gen/t1", "started": NOW - 3600}
+    got = AP.marked_cancel(j, now=NOW + 1900, marks=str(marks), actions=str(tmp_path / "none.tsv"))
+    assert got and "CANCEL-UNSIGNABLE" in got and "not an OOM" in got

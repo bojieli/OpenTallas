@@ -37,5 +37,7 @@ def test_load_caps_hub_file_then_cache(tmp_path, monkeypatch):
     calls = []
     fetch = lambda: (calls.append(1), json.dumps(CFG))[1]
     assert HD.load_caps(now=1000, fetch=fetch) == {"intel1": 250, "epyc9": 300}
-    assert HD.load_caps(now=1100, fetch=fetch) == {"intel1": 250, "epyc9": 300} and len(calls) == 1      # cached
+    assert HD.load_caps(now=1030, fetch=fetch) == {"intel1": 250, "epyc9": 300} and len(calls) == 1      # cached
+    assert HD.CACHE_S <= 60                                                                              # FLOW-OPS-1300 (d): an undrain is seen within a minute
+    assert HD.load_caps(now=1100, fetch=fetch) == {"intel1": 250, "epyc9": 300} and len(calls) == 2      # 100 s later: fetched again
     assert HD.load_caps(now=5000, fetch=lambda: "") == {"intel1": 250, "epyc9": 300}                    # fetch failed: stale cache

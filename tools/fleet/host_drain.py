@@ -14,7 +14,7 @@ import json, os, subprocess, time
 HUB = os.environ.get("OT_HUB_NAME", "intel2")
 KIT_WAVE_JSON = os.path.expanduser(os.environ.get("OT_KIT_WAVE_JSON", "~/coord/autopilot/kit_wave.json"))
 CACHE = os.path.expanduser(os.environ.get("OT_DRAIN_CACHE", "~/.cache/ot-run/drain_caps.json"))
-CACHE_S = 600
+CACHE_S = int(os.environ.get("OT_DRAIN_CACHE_S", "60"))   # FLOW-OPS-1300 (FABLE-FLOW-1240 d): was 600 s, an undrain took up to 10 min to be seen off the hub
 REMOTE_PY = ("import json,os;c=json.load(open(os.path.expanduser('~/coord/autopilot/kit_wave.json')));"
              "print(json.dumps({'dies':{k:{'gen_host_min_free_gb':(v or {}).get('gen_host_min_free_gb') or {}} for k,v in (c.get('dies') or {}).items()},'host_drain':c.get('host_drain') or {}}))")
 

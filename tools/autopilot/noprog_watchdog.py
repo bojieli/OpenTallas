@@ -1149,6 +1149,24 @@ def _post(lane_from, txt):
         return False
 
 
+def write_cancel_marks(kits, who, why, now):
+    """FLOW-OPS-1300 (FABLE-FLOW-1240 b): the explicit terminal reason of a watchdog cancel, written BEFORE the cancel to autopilot/cancel_marks.tsv (t, kit dir, who, why).
+    autopilot.marked_cancel() reads it when the job ends rc 143, so the queue job is CANCELLED with 'CANCEL-UNSIGNABLE: <evidence>' and kit_wave.follow_queue stops that
+    plan block -- a bare 143 with no record had been classed CRASH infra-stopped, read as an OOM and resubmitted with place memory x1.5.  -> lines written"""
+    path = os.path.join(COORD, "autopilot", "cancel_marks.tsv")
+    clean = lambda x: str(x).replace("\t", " ").replace("\n", " ")
+    lines = [f"{now:.0f}\t{k.rstrip('/')}\t{clean(who)}\t{clean(why)[:300]}\n" for k in dict.fromkeys(k for k in kits if k)]
+    if not lines:
+        return 0
+    try:
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        with open(path, "a") as f:
+            f.writelines(lines)
+    except OSError:
+        return 0
+    return len(lines)
+
+
 def unsignable_pass(rows, seen, now, post=True, cancel=ot_run_cancel):
     """HUB half of the rule (FLOW-OPS-0900, owner 11-21).  Per unit (host|unit) whose containers are ALL unsignable (UNSIGNABLE verdict, or a lane-declared functional bug on a job > 3 h):
       1. first listed: state keeps the first-listed time per unit (survives a changing list; forgotten only when unseen 6 h);
@@ -1212,8 +1230,9 @@ def unsignable_pass(rows, seen, now, post=True, cancel=ot_run_cancel):
             continue
         if mode != "act" or now - e["notice"] < UNSIGNABLE_GRACE_S:
             continue
-        rc, out = cancel(u)
         first = rs[0]
+        write_cancel_marks([r.get("kit") for r in rs], "UNSIGNABLE watchdog", f"CANCEL-UNSIGNABLE: {first.get('why', '')}", now)
+        rc, out = cancel(u)
         rec = {"t": now, "unit": u, "host": h, "type": first["type"], "plan": plan_of(first.get("kit")), "evidence": f"{first['why']}; NOTICE to {e['owner']} {time.strftime('%H:%M', time.localtime(e['notice']))}, no KEEP in 30 min",
                "freed_gb": round(sum(r.get("gb", 0) for r in rs), 1), "class": "UNSIGNABLE-SETUP" if "setup" in first["why"] else "UNSIGNABLE", "cancel_method": f"ot-run --cancel {u} rc={rc}: {out}",
                "owner": e["owner"]}

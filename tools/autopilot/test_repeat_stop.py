@@ -261,3 +261,18 @@ def test_make_sigterm_without_oom_does_not_raise_memory():
     assert not RS.is_oom("FLOW", "route-make-fail: make: *** [target] Error 241")
     assert RS.is_oom("INFRA", "earlyoom SIGTERM on epyc9")
     assert RS.is_oom("INFRA", "make: *** [target] Error 247")
+
+
+def test_a_cancel_or_outside_stop_is_never_an_oom():
+    """FLOW-OPS-1300 (FABLE-FLOW-1240 b): s81 lepe_mu_LP__t2 / QC cbf_q11, cancelled UNSIGNABLE, came back as 'OOM kill, place memory x1.5'"""
+    stop = "infra-stopped: exit 143, no OOM line in the run logs: stopped from outside"
+    assert not RS.is_oom("INFRA", stop)
+    assert not RS.is_oom("INFRA", "CANCEL-UNSIGNABLE: tt_setup_keep.log latest setup WNS -423 ps; exit 143")
+    assert not RS.is_oom("INFRA", "exit 143: stopped by the hub WATCHDOG (2026-11-21 11:0): SUPERSEDED")
+    assert not RS.is_oom("INFRA", "cancelled by UNSIGNABLE watchdog at 2026-11-21 11:46:19 (not an OOM kill): CANCEL-UNSIGNABLE: x")
+    assert RS.is_oom("INFRA", "infra-oom: oom_kill of openroad on epyc8")
+    assert RS.is_oom("INFRA", "stopped from outside; make: *** [place] Error 247")         # real kill evidence still wins
+    st = {}
+    assert RS.record(st, "s81", "lepe_t2", 2, "route", "INFRA", stop, t=1) is None or \
+        RS.record(st, "s81", "lepe_t2", 2, "route", "INFRA", stop, t=1).get("event") != "OOM-RESUBMIT"
+    assert RS.mem_x(st, "s81", "lepe_t2") == 1.0

@@ -55,8 +55,20 @@ def led(st):
     return st.setdefault("repeat_ledger", {})
 
 
+# FLOW-OPS-1300 (FABLE-FLOW-1240 b): "exit 143, no OOM line in the run logs: stopped from outside" matched \bOOM\b, so every watchdog / COORD cancel of a
+# measured-unsignable kit (s81 lepe_mu_LP__t2 at -891 / -423 ps, QC cbf_q11 at -675 ps) became "OOM kill, resubmit with place memory x1.5".  A negated mention is
+# not evidence; a stop from outside or an explicit CANCEL-<reason> is never an OOM unless the text also carries real kernel / guard kill evidence.
+OOM_NEG_RE = re.compile(r"\bno (?:OOM|oom-kill|memory) (?:line|evidence|kill|marker)s?\b[^;|:]*|\bnot an? OOM(?: kill)?\b", re.I)
+OOM_HARD_RE = re.compile(r"infra-oom|earlyoom|oom-kill|oom_kill|OOMKilled|Out of memory|Error 247|INFRA_KILLED|GUARD SIGKILL", re.I)
+STOPPED_RE = re.compile(r"infra-stopped|stopped from outside|CANCEL-[A-Z]+|watchdog-(?:stopped|superseded)|stopped by the hub WATCHDOG|cancelled by ", re.I)
+
+
 def is_oom(cls, why):
-    return bool(OOM_RE.search(str(why or "")))
+    """a real OOM: kernel / earlyoom / plan-guard kill evidence (Error 247, oom_kill, infra-oom ...).  A bare 143, an outside stop or a cancel record is not one."""
+    t = OOM_NEG_RE.sub(" ", str(why or ""))
+    if STOPPED_RE.search(t) and not OOM_HARD_RE.search(t):
+        return False
+    return bool(OOM_RE.search(t))
 
 
 def fingerprint(stage, cls, why):
@@ -119,13 +131,19 @@ def record(st, die, item, attempt, stage, cls, why, inputs=None, t=None, ok=Fals
     tot = e.get("tot")
     if not isinstance(tot, dict) or tot.get("event") != (event or ""):
         tot = e["tot"] = {"event": event or "", "n": []}
-    if attempt not in tot["n"]:
+    if attempt not in tot["n"] and not is_tool_fault(stage, cls):
         tot["n"].append(attempt)
     n_tot = max(len(tot["n"]), int(attempts_hint or 0))      # a row that already ran many attempts before the cap existed counts by its attempt number
     if n_tot >= TOTAL_CAP and not e["state"]:
         return _block(e, CAP_STATE, "cap|%d attempts" % n_tot, e["att"][-1],
                       why=f"{n_tot} failed attempts in plan event {event or '?'} ({cause_summary(e, tot['n'], event, n_tot)}): PLAN item for the owner")
     return ev
+
+
+def is_tool_fault(stage, cls):
+    """FLOW-OPS-1300 (FABLE-FLOW-1240 a): a FLOW / INFRA failure at stage `pipeline` is a traceback in the hub's own kit_wave code (E2BIG 'Argument list too long: ssh',
+    snapshot copy timeouts): no design content, so it never counts in TOTAL_CAP (6 rows were capped as owner PLAN items by a hub tool fault)"""
+    return (str(stage or "").split() or [""])[0] == "pipeline" and str(cls or "").split("[")[0] in ("FLOW", "INFRA", "INFRA-SSH")
 
 
 def cause_summary(e, attempts, event, n_tot=0):
@@ -222,6 +240,13 @@ def gate(st, die, item, current_inputs, unblocks=(), event=None):
         if event and (e.get("tot") or {}).get("event") != event:
             release(e, "plan event changed")
             return False, "", "event"
+        # FLOW-OPS-1300 (a): a cap whose only cause is a hub tool fault at `pipeline` is dropped once the runtime changed (the relaunch runs the current rt)
+        old_t = (e.get("inputs") or {}).get("tools")
+        new_t = (current_inputs or {}).get("tools")
+        if re.search(r"\bone cause: pipeline\|", str(e.get("why") or "")) and old_t and new_t and old_t != new_t:
+            release(e, "tool-fault cap, runtime changed")
+            e["tot"] = {}
+            return False, "", "tools:pipeline-cap"
         return True, f"{CAP_STATE}:{fp} ({e.get('why')}); released only by a new plan event or an `unblock {item} cap` line", ""
     old = e.get("inputs") or {}
     if e.get("plan_input"):                      # a tools / runtime hash cannot fix a plan-input cause

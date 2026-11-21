@@ -3930,7 +3930,7 @@ RULES = [
      "infra (docker rc 125: container not created)"),
     # WF-1 11-14 (OWNER "remove process frictions"; EXPERT-REVIEW-6 #2): a unit stopped from outside (systemd / operator signal
     # 15, "cancellation requested") and a host disk floor refusal have no design content: INFRA (own resubmit, never counted)
-    ("INFRA", None, r"ot-run: interrupted \(signal 15|cancellation requested on|stopped by operator|"
+    ("INFRA", None, r"ot-run: interrupted \(signal 15|cancellation requested on|stopped by operator|INFRA DRAIN-WAIT|"
                     r"below the (?:gen |scratch |root )?disk floor|scratch floor|disk floor",
      "infra (unit stopped from outside / disk floor wait: no design result)"),
     # OOMKILL_1114 (OWNER 11-14 19:00, Fable fix 3): a host OOM victim (earlyoom SIGTERM -> make 'Error 241', SIGKILL -> 'Error 247', rc 137 / 143, 'exit -15') is booked
@@ -8720,23 +8720,33 @@ def run_item(spec_path):
 
     _drc = {}
 
-    def stage_drain():
-        """FLOW-OPS-0900 fix 4: draining hosts now (ot-run status + the spec's host_caps + fleet caps), read once per run"""
-        if "v" not in _drc:
+    def stage_drain(fresh=False):
+        """FLOW-OPS-0900 fix 4: draining hosts now (ot-run status + the spec's host_caps + fleet caps).  FLOW-OPS-1300 (FABLE-FLOW-1240 d): was read ONCE per run, so a
+        unit that saw a 6-min drain acted on it 40 min later (s81 slice_station__t45 a9); now re-read after DRAIN_TTL_S, and fresh=True forces a new read"""
+        if fresh or "v" not in _drc or time.time() - _drc.get("t", 0) > DRAIN_TTL_S:
             try:
                 _p = subprocess.run([sp["ot_run"], "--status"], capture_output=True, text=True, timeout=180)
                 _drc["v"] = draining_hosts(sp.get("host_caps") or {}, parse_otrun_status(_p.stdout if _p.returncode == 0 else ""), hub)
             except Exception:
                 _drc["v"] = set()
+            _drc["t"] = time.time()
         return _drc["v"]
 
     def otrun(mem, thr, d, cmd, hosts, allow_hub=False, roam=True):  # ot-run names the hub itself 'localhost'
         hosts = target_hosts(hosts, hub, allow_hub)       # KW-FIX-45 11-12: only the place stage may target the hub (capped by ot-run), never gen
+        _all = list(hosts)
         _dr = stage_drain()
         if _dr:                                           # FLOW-OPS-0900 fix 4: a draining host only where this kit already lives (the gen host G)
-            hosts = [h for h in hosts if h not in _dr or h == G]
-        if not hosts:
-            raise RuntimeError(f"heavy stage refused: every target host is draining ({', '.join(sorted(_dr))}) and none holds this kit")
+            hosts = [h for h in _all if h not in _dr or h == G]
+        _w = 0
+        while _all and not hosts and _w < DRAIN_WAIT_N:   # FLOW-OPS-1300 (d): every host draining -> wait with a fresh read, never act on a stale drain
+            _w += 1
+            time.sleep(DRAIN_WAIT_S)
+            _dr = stage_drain(fresh=True)
+            hosts = [h for h in _all if h not in _dr or h == G]
+        if _all and not hosts:
+            raise RuntimeError(f"INFRA DRAIN-WAIT: heavy stage refused: every target host is draining ({', '.join(sorted(_dr))}) after {_w} fresh re-reads "
+                               f"{DRAIN_WAIT_S // 60} min apart, and none holds this kit")
         if not hosts:
             raise RuntimeError("heavy stage refused: every target host is the hub (KW-FIX-45 hub guard)")
         argv = [sp["ot_run"], "--mem", str(mem), "--threads", str(thr), "--dir", d, "--hosts", ",".join(hosts)] \
@@ -11609,6 +11619,14 @@ def cause_key(rec):
     return f"{rec.get('q_class') or rec.get('class') or '?'}|{rec.get('stage') or '?'}|{re.sub(r'[0-9]+', 'N', head)[:80]}"
 
 
+def attempt_rt_sha(prev):
+    """the tools_sha (rt) the attempt was launched on: its spec.json, else ''"""
+    try:
+        return str(json.loads((Path(prev["dir"]) / "spec.json").read_text()).get("tools_sha") or "")
+    except (OSError, ValueError, KeyError, TypeError):
+        return ""
+
+
 def cause_cap_held(cfg, st, die, prev, now=None):
     """FLOW-FIX-0400: the second automatic relaunch of the same failure cause on the same plan block is refused (CAUSE_RETRY_CAP = 1); a named fix= retry key resets the count and a changed plan block is
     another key.  Counts are in state cause_retries[die|item|block|cause].  -> '' (go ahead, count taken) or the hold text"""
@@ -11620,6 +11638,15 @@ def cause_cap_held(cfg, st, die, prev, now=None):
     item = prev.get("item")
     led = st.setdefault("cause_retries", {})
     k = f"{die}|{item}|{str(prev.get('block_sha') or '')[:12]}|{ck}"
+    if RS.is_tool_fault(prev.get("stage"), prev.get("q_class") or prev.get("class")):
+        # FLOW-OPS-1300 (FABLE-FLOW-1240 a): a hub tool fault at `pipeline` is keyed by the runtime the attempt ran; a relaunch on a newer rt (the fix) is a new key, so
+        # the 6 pre-fix E2BIG units relaunch on rt/current instead of holding CAUSE-CAP for the owner.  The same fault twice on ONE rt still caps.
+        _art = attempt_rt_sha(prev)[:12]
+        k += "|rt" + _art
+        cur = str((scheduler_rt()[1] or ""))[:12]
+        if cur and _art and cur != _art:
+            led.pop(k, None)
+            return ""
     if retry_fix_named(cfg, die, prev):
         led.pop(k, None)
         return ""
@@ -14125,6 +14152,9 @@ def guard_why(hit, why):
             f"(plan job running, MemAvailable < 5 percent; kills.log): not a design result, free retry on another host | {why}")[:600]
 
 
+DRAIN_TTL_S = int(os.environ.get("KW_DRAIN_TTL_S", "60"))        # FLOW-OPS-1300 (d): a unit's drain read is at most this old
+DRAIN_WAIT_N = int(os.environ.get("KW_DRAIN_WAIT_N", "3"))       # fresh re-reads before an all-draining refusal
+DRAIN_WAIT_S = int(os.environ.get("KW_DRAIN_WAIT_S", "600"))
 TOOL_INFRA_RE = re.compile(r"python exception|plan-schema|tool or source skew|Traceback|ModuleNotFoundError|AttributeError|ImportError")
 
 
@@ -15939,6 +15969,20 @@ TIMING_FAILS = {"setup_tt", "hold_ff", "drv", "clock", "setup", "hold"}
 FLOW_FAILS = {"pg", "sdc_lint", "unconstrained"}
 
 
+CANCEL_TAG_RE = re.compile(r"\bCANCEL-(UNSIGNABLE|SUPERSEDED)\b")
+
+
+def cancel_tag(text):
+    """FLOW-OPS-1300: the explicit terminal reason of a cancelled job: CANCEL-UNSIGNABLE (cancel mark / cancel --why) or CANCEL-SUPERSEDED (watchdog SUPERSEDED stop), else ''"""
+    t = str(text or "")
+    m = CANCEL_TAG_RE.search(t)
+    if m:
+        return m.group(0)
+    if re.search(r"watchdog-superseded|stopped by the hub WATCHDOG[^:]*: SUPERSEDED", t):
+        return "CANCEL-SUPERSEDED"
+    return ""
+
+
 def queue_class(j):
     """autopilot job -> (stage, status, class, reason).  class '' = not a failure (running / waiting / signed)"""
     stt = str(j.get("status") or "")
@@ -15960,6 +16004,11 @@ def queue_class(j):
         # and the wave relaunched (20 items, 60 relaunches on 11-15).
         return "count", "SIGNED", "", ("signed off (R-MINIMAL), archived " + str(j.get("archive", "")) +
                                        "; flow tag pending (bookkeeping, terminal): " + str(j.get("prov_error") or "")[:160])
+    # FLOW-OPS-1300 (FABLE-FLOW-1240 b): a job stopped with an explicit terminal reason (CANCEL-UNSIGNABLE from the UNSIGNABLE watchdog's cancel mark, a hub
+    # WATCHDOG SUPERSEDED stop) is a CANCELLED attempt carrying that reason, never a CRASH -> INFRA / OOM resubmit
+    _ct = cancel_tag(" ".join(str(x) for x in (j.get("reasons"), kind)))
+    if _ct and (stt == "CANCELLED" or stt == "DONE-CRASH"):
+        return "queue", "CANCELLED", "", f"{_ct}: {why}"[:300]
     if stt in ("RUNNING", "") or stt.startswith("WAIT-") or stt in ("ORPHAN", "TRIAL-SIGNED", "WITHDRAWN", "CANCELLED"):
         return ("route" if stt == "RUNNING" else "queue"), (stt or "QUEUED"), "", str((j.get("history") or [[0, 0, ""]])[-1][-1])[:200]
     if stt == "REJECTED":
@@ -16041,10 +16090,22 @@ def follow_queue(st, ap_dir, notices, stops=None):
             # wave row becomes CANCELLED (class QUEUE-CANCELLED) so a retry entry item@attempt relaunches it (select()
             # relaunches a CANCELLED row only when its retry entry names the attempt; resume_source allows a re-gen of a
             # CANCELLED attempt)
-            rec.update(status="CANCELLED", **{"class": "QUEUE-CANCELLED"}, updated=time.time(),
+            _ct = cancel_tag(why)
+            rec.update(status="CANCELLED", **{"class": _ct or "QUEUE-CANCELLED"}, updated=time.time(),
                        reason=f"queue job {j.get('id')} cancelled: {str(why)[:160]}")
-            notices.setdefault(rec["die"], []).append(f"{rec['item']} queue job {j.get('id')} CANCELLED -> row CANCELLED "
-                                                      f"(retry {rec['item']}@{rec.get('attempt')} relaunches)")
+            if _ct == "CANCEL-UNSIGNABLE":
+                # FLOW-OPS-1300 (FABLE-FLOW-1240 b): measured unable to sign -> a block-keyed structural stop, so no relaunch of the same plan block (a new
+                # plan block releases it; struct-force for one launch).  The measured evidence stays on the row.
+                b12 = str(rec.get("block_sha") or "")[:12]
+                if b12:
+                    st.setdefault("struct_stops", {}).setdefault(f"{rec['die']}|{rec['item']}|b{b12}", {
+                        "die": rec["die"], "item": rec["item"], "block": b12, "verdict": "STRUCTURAL", "owner": rec.get("owner") or "die-owner", "force_once": False,
+                        "ts": time.time(), "auto": True, "why": f"{_ct} @attempt {rec.get('attempt')}: {str(why)[:160]}"})
+                notices.setdefault(rec["die"], []).append(f"{rec['item']} queue job {j.get('id')} {_ct} -> row CANCELLED, plan block {b12 or '?'} stopped "
+                                                          f"(relaunches only on a changed plan block or struct-force)")
+            else:
+                notices.setdefault(rec["die"], []).append(f"{rec['item']} queue job {j.get('id')} CANCELLED{' ' + _ct if _ct else ''} -> row CANCELLED "
+                                                          f"(retry {rec['item']}@{rec.get('attempt')} relaunches)")
             if stops is not None:                    # FAILFAST-1 11-12: the cancel also stops the container (step() does it, once)
                 stops.append((rec, attempt_root(rec)))
             n += 1
