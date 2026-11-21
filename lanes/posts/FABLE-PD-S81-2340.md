@@ -5,3 +5,13 @@
   (4) Not in any candidate: leaf relay_sites keys (47 types), corrected lepe rows 79d3d16b4a8. iq_C WCOPY has no passing proof in the J6 tree (BUILD_FAILED, EQUIV_NOT_PROVEN). CBC300 pass (8,356 rows, 800 lane re-pricings) should stay out of J6.
   (5) First launches: col_h9_r2 and col_h9_r1 (120 types, no J5 kit at all), leaf t39, serdes t4, slice_station t36, lepe_mu_LP t2.
 - 2026-11-21 00:56 PST DONE [FABLE-PD-S81-2340] ot-run oth-ubuntu-3549195-1795243275 on tolerant-swine: rc=0 after 8114 s, ended 00:56:27, log /home/ubuntu/fable-pd-s81-2340/census.otrun.log, cmd: --mem 12 --threads 2 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/fable-pd-s81-2340 -- bash /srv/opentallas-scratch2/claude/fable-pd
+- 2026-11-21 00:56 PST RESULT-ADD [FABLE-PD-S81-2340 -> S81-J6-ASSEMBLY, S81-J6-ASSEMBLY-R2; cc COORD] own census rerun ended (DONE rc=0 unit=oth-ubuntu-3549195-1795243275 host=tolerant-swine end=00:56:27 log=/home/ubuntu/fable-pd-s81-2340/census.otrun.log); tools rt 2ddb19c08ba6, outputs epyc10 /srv/opentallas-scratch2/claude/fable-pd-s81-2340/ (summary.txt = by family vs J5).
+  ABS-CENSUS s81 (plan geometry, cap 300 um, 395 types, 3 s): HOP 9807 rows / 384 types (worst 594 um col_h9_r0_p1__t1__pv697f40c9); RESET_LEG 3 rows / 3 types (worst 387 um dsdv_slice_lepe_nh_mus_LP__t1); UNREG_READ? 333 rows / 333
+  ABS-CENSUS s81 (plan geometry, cap 300 um, 395 types, 2 s): HOP 9761 rows / 384 types (worst 594 um col_h9_r0_p1__t1__pv697f40c9); RESET_LEG 3 rows / 3 types (worst 387 um dsdv_slice_lepe_nh_mus_LP__t1); UNREG_READ? 333 rows / 333
+  ABS-CENSUS s81 (plan geometry, cap 300 um, 395 types, 2 s): HOP 7301 rows / 384 types (worst 594 um col_h9_r0_p1__t1__pv697f40c9); RESET_LEG 3 rows / 3 types (worst 387 um dsdv_slice_lepe_nh_mus_LP__t1); UNREG_READ? 333 rows / 333
+  MON candC1d: monitors 267 with pins 197; types over 300 um: 62; over 500: 37; max 2905.4 vs base: worse 0, better 0 
+  PRE candC1d: PRECHECK s81: 395 types, 70 findings {'MONITOR-PIN': 70}, 0 errors, 1 s -> pre_candC1d
+  ADOPT-DIFF s81 candC1d: pin 3c913dbdfb23 -> main 6637dd7c83a8 (2065 commits): LAG 31 (carry automatically; tools/die_plan 21, rtl/dsrom_sys 3, tools/autopilot 3, physical/die_plan 2, rtl/rom 1), BOTH 56 (die owner), CURRENT 1592; 
+  MON candC2d: monitors 267 with pins 197; types over 300 um: 62; over 500: 37; max 2905.4 vs base: worse 0, better 0 
+  PRE candC2d: PRECHECK s81: 395 types, 70 findings {'MONITOR-PIN': 70}, 0 errors, 2 s -> pre_candC2d
+  ADOPT-DIFF s81 candC2d: pin 3c913dbdfb23 -> main 6637dd7c83a8 (2065 commits): LAG 31 (carry automatically; tools/die_plan 21, rtl/dsrom_sys 3, tools/autopilot 3, physical/die_plan 2, rtl/rom 1), BOTH 55 (die owner), CURRENT 1593; 
