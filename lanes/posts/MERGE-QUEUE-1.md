@@ -41,3 +41,4 @@
 - 2026-11-20 14:11 PST Queue pending-time alert fix fb2e0 landed 81b1dbc after GREEN2/2. Redwatch corrected stale R-FLOW placement-slew fixture. QC packed crossing guard remains privately gated pending exact source ruling.
 - 2026-11-20 16:06 PST Face guard fixture 7a4afe landed cf166e after canonical GREEN. Main schema companion cleared transient Redwatch RED3.
 - 2026-11-20 16:33 PST HBM reset manifest gate closure da0d landed 4d179 after canonical GREEN and clean main Redwatch; source fixture only.
+- 2026-11-20 16:57 PST GPL placement slew fixture 181ddd landed 74c92c after canonical GREEN; runtime all six and merged-main Redwatch green.

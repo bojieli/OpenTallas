@@ -308,3 +308,6 @@ kit-ops-5-curplan-1114 @4c696027e0ef RED (branch alone fails test_kit_wave_compo
 ## CODEX continuation 2026-11-20 16:33 PST
 - S81 e9af8872335 transient Redwatch RED3 was intermediate generated schema; adjacent f02ccd50ebd carries generated JSON and current parity passes. That generator scored GREEN133 with one matched sparse HBM reset fixture baseline.
 - HBM fixture cumulative da0d210f8d0818771cb54d7636727ff47ea6a2e9 reports each missing actual manifest source with the existing gate recognition marker. Local actual source closure PASS6. Predecessor e5fa matched baseline because one generic header was not recognized. Exact successor canonical GREEN1/1 without baseline on 0b7c9148c70, E7 oth-ubuntu-3187918-1795220615 exit 0, through adaptive checkout of six real source directories. Landed 4d1792b85e2 and merged-main Redwatch GREEN1/1; six hosts individually sync OK.
+
+## CODEX continuation 2026-11-20 16:56 PST
+- b19047a5c88 Redwatch GREEN163 plus a pre-existing GPL gate test that expected no config lines after the resize hook. Test-only 181ddd5da4dad9caf82cd222b9e5fed9fc06e4bd checks the live 320 ps slew default and preserves the fanout and hook checks. Full focused PASS23, canonical GREEN1/1 on 40458a43e16 (E7 oth-ubuntu-3844278-1795222127 exit 0), landed 74c92c4741a, merged-main GREEN1 and runtime all six OK. No pending approvals.
