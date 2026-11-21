@@ -1,0 +1,3 @@
+# SerDes decoder j6c final review
+
+I viewed the wires and congestion render from the actual `6_final.odb` at epyc8:/srv/opentallas-scratch2/claude/fam-s81-serdes-build/dec_j6c/layout_review/{wires,congestion}.png. The northern data face enters the SRAM and syndrome logic near the northwest, then passes beside the center dchn to the lower-right output SRAM and southern output face. The diagonal channel has continuous routed connectivity. The upper-left and center shoulders reach high local track use, and the central M7 clock corridor remains distinct. The actual final DRT and antenna reports are empty. PASS-COND for terminal TT/FF STA and routed LEC. Final timing, exact equivalence and export must still clear their gates.
