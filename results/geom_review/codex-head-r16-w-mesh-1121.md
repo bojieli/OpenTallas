@@ -6,3 +6,9 @@ Viewed actual placed layout and density from each exact retained attempt.
 - Mesh attempt 2, `epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave/s81_head/head_rp21z20NF15f_r16/items/hd_mesh/attempt_2/gen/hd_mesh/run/layout_review/place/{layout,density}.png`. Six repeated bank rows leave visible east-west channels. The north shelf is a separate I/O bundle. The relevant west output bank has a load choke at the lower west edge and several isolated east sites. The lane-B output beat cohort reports 456/512 bits over 405 µm with a 675 µm maximum. The 18-bit adjacent wordline cohort also reaches 627 µm. Both cohorts need geometry work before an additional route. ISSUES.
 
 The already admitted AP work may complete and provide timing/congestion measurements for those fixes.
+
+## Existing beat registers, 2026-11-21 03:22 PST
+
+Viewed mesh proposal epyc10:/srv/opentallas-scratch2/claude/head-crossing-1119/mesh_beat_codex1121/proposed_beat_sites.png. A fixed-anchor model placed 606 existing flops in the macro aisles with a 6.48 µm halo and did not move output registers or change cycles. Mesh lane B west-bound maximum drops from 675.4 to 397.06 µm, 456 to 0 over 405 µm. Lane A north-bound drops from 492.8 to 403.60 µm, 150 to 0 over 405 µm. Nearby macro and pin accesses still need a placed scan before timing or routing work. PASS for isolated DPL and geometry only.
+
+The host west equivalent leaves 320 output wires over 405 µm and reaches 464.43 µm. The current D-side terminals keep too much of the cohort east of the macro banks. No further placement from that proposal. Work on the upstream payload cone or a matched beat handoff.
