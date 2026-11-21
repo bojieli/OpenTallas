@@ -52,3 +52,6 @@ Proofs:
 - Cleanup when convenient (ot-delete): proof3_t39, proof5_t39, qc_sle_ctl (cancelled), proof4 after read.
 Rows: still HELD for S81-J6-ASSEMBLY, QC-PLAN-R8, KV-PLAN-R3 (KV -> D28) until a proof is no worse than baseline on TNS and hold.
 Seams: drop from the form (cost -57.7k setup on t39); port_out hold then stays at baseline.
+
+## QC2 result (read at stand-down)
+- qc_sle_ctl2 pre-repair: cross_tap 1,728 ws -68.71 (base 3,039 / -63.65), same_tap 472 ws -19.90 (base 199), port_in 2; TT after keep -133.98 / tns -3,980 (base -1.82 / -1.82) = FAIL on setup and same_tap. 87,819 latches -> 37,483 same-tap + 33,345 far bypassed, 16,981 kept. Run continues (hold repair / GRT); successor: read hold_cells (base 48,100), latch->capture setup classes (sta cls.tcl pattern), why same_tap rose (launch->latch legs?).
