@@ -392,3 +392,8 @@
 - 2026-11-20 20:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-20 20:52 PST: 348 running jobs, PROGRESSING 338, SLOW 8, NO-PROGRESS 2 (advisory, no cancel); table lanes/NOPROG.tsv
   NO-PROGRESS epyc9 col_h10_r2__t1__cl99efd374__pv4c1f67ff 5_2_route stage 28.0 h job 31.0 h: drt_violations best 20 last 20 rows 53 window-gain 0.0%; stagnant 9.0 h; last event 1.8 h ago, log write 1.3 h ago (3375 lines)
   NO-PROGRESS epyc7 serdes__t13 lec stage 11.5 h job 11.5 h: LEC last file/log write 11.5 h ago
+- 2026-11-20 21:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-20 21:52 PST: 332 running jobs, PROGRESSING 323, SLOW 5, NO-PROGRESS 4 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc9 col_h10_r2__t1__cl99efd374__pv4c1f67ff 5_2_route stage 29.0 h job 32.0 h: drt_violations best 20 last 20 rows 53 window-gain 0.0%; stagnant 10.0 h; last event 0.6 h ago, log write 0.6 h ago (3381 lines)
+  NO-PROGRESS epyc9 col_h9_r2__t1__clc9ad8f7e__pv45d0c698 5_2_route stage 14.4 h job 14.8 h: drt_violations best 1 last 42 rows 44 window-gain 0.0%; stagnant 8.2 h; last event 3.5 h ago, log write 3.3 h ago (2524 lines)
+  NO-PROGRESS epyc7 serdes__t13 lec stage 12.5 h job 12.5 h: LEC last file/log write 12.5 h ago
+  NO-PROGRESS epyc9 coll_core 5_1_grt stage 12.5 h job 22.0 h: repair_Viol best 221 last 221 rows 141 window-gain 0.0%; stagnant 6.0 h; last event 0.1 h ago, log write 0.0 h ago (2113 lines)
