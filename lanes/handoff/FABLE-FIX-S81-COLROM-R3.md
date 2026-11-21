@@ -33,3 +33,16 @@ What S81-J6-ASSEMBLY-R4 needs for colrom a10c16b8 by 20:00: (a) guard RTL rtl/v4
   RDX_LIB -> .../ot_s81_cfg7_seq_rdxg_1121/ot_s81_cfg7_seq_tt.lib (rerun epyc10 fable-fix-s81-colrom/run_gen.sh on the J7 base), (d) dead-input
   re-proof under the guard RTL (j7_post.sh form; R/r3_reprove.sh). Bench evidence: standard lockstep gate + loop bench (R2) green with the guard.
   The R2 "held out until ROM handshake bench PASS" condition is met by the guard bench (spacing 1..150 PASS, mutants FAIL).
+
+## UPDATE 11:1x PST: STAND-DOWN at context limit -> FABLE-FIX-S81-COLROM-R4
+DONE: kit3 (epyc8 R/rdxkit3) SIGNED. New view ot_s81_cfg7_seq_rdxg_1121: TT +303.0 (old 350.17), FF internal hold 0, ff sdc_wns_min -11.82 (old -14.52),
+  LEC EQUIVALENT, pin audit 433/433, clock mean TT 258.72 / FF 194.12 (old 259.49 / 194.76); tt.lib sha256 e93af8bb5a36cc79...,
+  signoff sha 7a93e566379aab22.... PUSHED main 93ad08b4406 (lane commit 1836612934): guard RTL, tb ref guard, fill2 rx1_mut_noguard, tb_colrom_loop.sv,
+  tools/s81/colrom_loop_bench.sh, view dir, HCP entry (lib_contains ot_s81_cfg7_seq_rdxg_1121/).
+  Generator repointed: epyc10 fable-fix-s81-colrom/gen_colrom_rows.py RDX_LIB -> rdxg_1121 (old copy gen_colrom_rows.rdx1121.py); rerun run_gen.sh on the J7 base.
+  signed_view_sha_s81.json entry for J7: ot_s81_cfg7_seq _tt.lib = e93af8bb5a36cc796e19ecf424eacf196cbe51d6588d63fc9c37410661e868a7.
+HANDED UNIT: oth-ubuntu-1549570-1795283695 (epyc7, R/r3_chain.sh; tree2a building slowly; then reprove, tree2, gate2 = step 2 private gate on the OLD
+  rdx_1121 view + guard RTL). R4: read R/gate2 output (PROVEN_DEAD, BIND_RC, LATCHECK vs candC3g/tree1, G0 new 0, VERIFY_RC); then one more tree with the
+  rdxg view (overlay: view dir + HCP + signed_view_sha + regenerated plan) is the clean final proof, or let S81-J6-ASSEMBLY-R4 gate it inside J7.
+Dead dirs to ot-delete: epyc7 R/rdxkit (docker stall), epyc8 R/rdxkit, R/rdxkit2, R/view/*.part; after gate2: R/tree2a, R/ov1.
+Step 5 (rep kit) not started: needs R4's J7 clock-landing sidecar from candJ7c; then read ROM pval output stage first (~160 ps late clock -> add stage, no skew).
