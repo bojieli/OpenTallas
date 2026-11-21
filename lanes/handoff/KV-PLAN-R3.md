@@ -18,3 +18,12 @@ Base plan: lanes/handoff/KV-PLAN-R2.md (sections 1-4 + stop list still hold).
 - KV-PLAN-R3 sub-agent composes D27c in epyc8 kv-plan-r3/d27c: + pv re-site rows, hg census300, RESET-R3 u_bin(/u_bout), io_cor ft11_o/ft13_o,
   KV-FAILED-ROWS-2100 (hub_C views + provenance, pc PDN merged-obstruction, pc_v1 kf 3rd bank + drop face move, pv_v6n band),
   OT_TAP_CORE_DIRECT only if b8d wins. Census/adopt_diff/event_census before bind; one CTS proof per class before volume.
+
+## 21:5x update (COORD via FABLE-PD-KV-2230, binding)
+- KV-PLAN-R3 is the only D27 composer; R2 D27 sub-agent stood down. D27c drops r5 lockup rows; adds pc_v3 rows, hub_Eo core reset row,
+  hroot port-in hold structural row, 150 pv relay_depth legs as stations. bank_taps only after RESET-RELAY-GEN-R3 2 passes + tap-id check.
+- Stops: no pv volume before a post-hook tap spread < 100 ps (TAP-GRID-2130); no hgi route volume before one clean GRT.
+- D27b run-6 (plan fac662d8c549) G0/bind were cancelled 21:51 by the R2 stand-down; relaunched by KV-PLAN-R3 on epyc8:
+  G0 oth-ubuntu-1186799-1795240343, bind oth-ubuntu-1186789-1795240343, out epyc8 kv-plan-r3/d27b6gate/{g0,bind}.
+  epyc8 kv-plan-r3/proofs/chain.sh (log chain.log) launches the private proofs on green: pv_v2, pc__cl254f2e73, pc_v1__cl23f6a148,
+  hub_Wo, sys_c, hroot -> CTS; hg_v1, hgi_v8 -> GRT. One CTS read per family before D27 volume.
