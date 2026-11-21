@@ -1,0 +1,495 @@
+# ROUTE-REACH-0020 11-20: unsigned current-plan types; attempts = kit-wave gen dirs found on 7 hosts (any plan; lane private kits not scanned); stage from run/logs+results (route = 5_2_route log/odb exists). Cleaned kits show none.
+die	type	attempts	furthest_current_plan	furthest_any_plan	last_failure_class	hosts
+HEAD	hd_lep0N	306	place	place	place | RUNNING place 	epyc10,epyc7,epyc8,epyc9,intel1
+KV	kv3_hg	216	place	place	gen/RTL | FAIL gen_lint RTL hierarchy / undriven / multi-driven at gen (GEN_LINT) @gen_lin	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+KV	kv3_hg_v1	432	place	place	RETRY-INFRA | RETRY-INFRA gen restaged: unstarted ot-run waiter (intel1 -> epyc7) (KW-FIX-4)	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+KV	kv3_hg_v1p2	194	place	place	gen/RTL | FAIL gen_lint RTL hierarchy / undriven / multi-driven at gen (GEN_LINT) @gen_lin	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+KV	kv3_hg_v1p3	218	place	place	gen/RTL | FAIL gen_lint RTL hierarchy / undriven / multi-driven at gen (GEN_LINT) @gen_lin	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+KV	kv3_hg_v1p4	230	place	place	gen/RTL | FAIL gen_lint RTL hierarchy / undriven / multi-driven at gen (GEN_LINT) @gen_lin	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+KV	kv3_hg_v1p5	232	place	place	gen/RTL | FAIL gen_lint RTL hierarchy / undriven / multi-driven at gen (GEN_LINT) @gen_lin	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+KV	kv3_hg_v1p6	170	place	place	gen/RTL | FAIL gen_lint RTL hierarchy / undriven / multi-driven at gen (GEN_LINT) @gen_lin	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+KV	kv3_hg_v3	188	place	place	gen/RTL | FAIL gen_lint RTL hierarchy / undriven / multi-driven at gen (GEN_LINT) @gen_lin	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+KV	kv3_hgi	94	GRT	GRT	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+KV	kv3_hgi_v1__cl141fc26e	32	place	GRT	hold | ROUTE-HELD geom ROUTE hold: WAIT-VISUAL: record a GEOM VERDICT for this attempt 	epyc10,epyc2,epyc8
+KV	kv3_hgi_v1__cl42bc8b12	35	place	GRT	GRT/route | RUNNING route attempt 1	epyc10,epyc2,intel1,intel2
+KV	kv3_hgi_v2__cl2862d491	46	place	place	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc7,intel1
+KV	kv3_hgi_v2__cle0015330	80	GRT	GRT	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc7,epyc8,intel1
+KV	kv3_hgi_v3	100	place	place	hold | ROUTE-HELD geom ROUTE hold: WAIT-VISUAL: record a GEOM VERDICT for this attempt 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+KV	kv3_hgi_v4	178	GRT	GRT	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+KV	kv3_hgi_v5	144	place	place	hold | ROUTE-HELD geom ROUTE hold: WAIT-VISUAL: record a GEOM VERDICT for this attempt 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+KV	kv3_hgi_v6	168	place	place	hold | ROUTE-HELD geom ROUTE hold: WAIT-VISUAL: record a GEOM VERDICT for this attempt 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+KV	kv3_hgi_v7	142	place	GRT	hold | ROUTE-HELD geom ROUTE hold: WAIT-VISUAL: record a GEOM VERDICT for this attempt 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+KV	kv3_hgi_v8	164	place	place	hold | ROUTE-HELD geom ROUTE hold: WAIT-VISUAL: record a GEOM VERDICT for this attempt 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+KV	kv3_hroot	101	GRT	GRT	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+KV	kv3_hub_C	56	gen	place	FAIL | FAIL gen KIT_NOT_SELF_CONTAINED: kit recipe must copy the file into the kit at s	epyc10,epyc2,epyc7,epyc8,epyc9
+KV	kv3_hub_Ei	139	place	place	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+KV	kv3_hub_Eo	78	CTS	CTS	hold | ROUTE-HELD geom ROUTE hold: WAIT-VISUAL: record a GEOM VERDICT for this attempt 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+KV	kv3_hub_Wi	48	gen	gen	place | FAIL place macro not declared in the plan type @place: Error: synth_odb.tcl, 4 O	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+KV	kv3_hub_Wo	92	place	CTS	hold | ROUTE-HELD geom ROUTE hold: WAIT-VISUAL: record a GEOM VERDICT for this attempt 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+KV	kv3_io_cor	68	place	route	DRC	epyc10,epyc2,epyc7,epyc9,intel1
+KV	kv3_io_cor_v1	108	route	route	DRC	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+KV	kv3_pc__cl254f2e73	61	floorplan	place	place | FAIL place plan geometry / site @place: [ERROR PDN-0006] VSS on M5 is blocked by	epyc10,epyc2,epyc7,epyc9,intel1,intel2
+KV	kv3_pc__cl5a95b461	54	floorplan	place	place | FAIL place plan geometry / site @place: [ERROR PDN-0006] VSS on M5 is blocked by	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+KV	kv3_pc_v1__cl23f6a148	38	none	place	FAIL | FAIL kit_topology tool / Tcl error @kit_topology: ValueError: kv3_pc_v1__cl23f6a	epyc10,epyc2,epyc7,epyc9
+KV	kv3_pc_v1__cl4ea58a5c	28	none	CTS	FAIL | FAIL kit_topology tool / Tcl error @kit_topology: ValueError: kv3_pc_v1__cl4ea58	epyc2,epyc9
+KV	kv3_pc_v1__cl7f648944	52	none	GRT	FAIL | FAIL kit_topology tool / Tcl error @kit_topology: ValueError: kv3_pc_v1__cl7f648	epyc10,epyc2,epyc7,intel1
+KV	kv3_pc_v3	84	GRT	GRT	geom/visual hold | CANCELLED gen SUPERSEDED: FAIL on event kvgeom6 (die is on KV-HG6); was: infra (	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+KV	kv3_pv	106	gen	CTS	place | RUNNING place 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+KV	kv3_pv_v1	137	place	place	hold | ROUTE-HELD geom ROUTE hold: WAIT-VISUAL: record a GEOM VERDICT for this attempt 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+KV	kv3_pv_v12	194	place	place	hold | ROUTE-HELD geom ROUTE hold: WAIT-VISUAL: record a GEOM VERDICT for this attempt 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+KV	kv3_pv_v1n	107	place	place	hold | ROUTE-HELD geom ROUTE hold: WAIT-VISUAL: record a GEOM VERDICT for this attempt 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+KV	kv3_pv_v2	135	place	place	hold | ROUTE-HELD geom ROUTE hold: WAIT-VISUAL: record a GEOM VERDICT for this attempt 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+KV	kv3_pv_v2n	159	place	place	hold | ROUTE-HELD geom ROUTE hold: WAIT-VISUAL: record a GEOM VERDICT for this attempt 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+KV	kv3_pv_v3	164	place	place	hold | ROUTE-HELD geom ROUTE hold: WAIT-VISUAL: record a GEOM VERDICT for this attempt 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+KV	kv3_pv_v3n	112	place	place	hold | ROUTE-HELD geom ROUTE hold: WAIT-VISUAL: record a GEOM VERDICT for this attempt 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+KV	kv3_pv_v4	78	place	place	hold | ROUTE-HELD geom ROUTE hold: WAIT-VISUAL: record a GEOM VERDICT for this attempt 	epyc10,epyc2,epyc7,epyc8,epyc9
+KV	kv3_pv_v4n	116	place	place	hold | ROUTE-HELD geom ROUTE hold: WAIT-VISUAL: record a GEOM VERDICT for this attempt 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+KV	kv3_pv_v5	134	place	CTS	hold | ROUTE-HELD geom ROUTE hold: WAIT-VISUAL: record a GEOM VERDICT for this attempt 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+KV	kv3_pv_v5n	116	place	place	hold | ROUTE-HELD geom ROUTE hold: WAIT-VISUAL: record a GEOM VERDICT for this attempt 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+KV	kv3_pv_v6	110	gen	place	CTS | CANCELLED place SUPERSEDED: FAIL on event KV-D25e (die is on KV-D25e3); was: clo	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+KV	kv3_pv_v6n	106	place	place	CTS | FAIL place clock-landing band too small or blocked (band plan, or tool: this kit	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+KV	kv3_pv_v7	138	place	place	hold | ROUTE-HELD geom ROUTE hold: WAIT-VISUAL: record a GEOM VERDICT for this attempt 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+KV	kv3_pv_v8	165	none	CTS	LEC | FAIL gen bound reset identity differs from the effective plan/generator: regener	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+KV	kv3_sys_c	100	place	GRT	hold | ROUTE-HELD geom ROUTE hold: WAIT-VISUAL: record a GEOM VERDICT for this attempt 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+QC	cbf_q00__cl1b5a6458	88	place	GRT	hold | ROUTE-HELD geom ROUTE hold: WAIT-VISUAL: record a GEOM VERDICT for this attempt 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+QC	cbf_q00__cl870de686	190	place	GRT	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+QC	cbf_q00_s2	88	place	place	hold | ROUTE-HELD geom ROUTE hold: WAIT-VISUAL: record a GEOM VERDICT for this attempt 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+QC	cbf_q01	96	place	route	DRC	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+QC	cbf_q01_s2	170	place	GRT	hold | ROUTE-HELD geom ROUTE hold: WAIT-VISUAL: record a GEOM VERDICT for this attempt 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+QC	cbf_q11	96	place	GRT	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc7,epyc9,intel1
+QC	cbn_q00__cl622f65d2	148	place	GRT	hold | ROUTE-HELD geom ROUTE hold: WAIT-VISUAL: record a GEOM VERDICT for this attempt 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+QC	cbn_q00__cld7bf7197	206	place	GRT	hold | ROUTE-HELD geom ROUTE hold: WAIT-VISUAL: record a GEOM VERDICT for this attempt 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+QC	cbn_q00__cldbcda913	68	place	GRT	geom/visual hold | CANCELLED geom SUPERSEDED: event s29q103S4Q9N46C is not current (s29q103S4Q9N46R	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+QC	cbn_q01__clab6e67f2	250	place	GRT	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+QC	cbn_q01__cld9ff4c40	197	place	GRT	hold | ROUTE-HELD geom ROUTE hold: WAIT-VISUAL: record a GEOM VERDICT for this attempt 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+QC	cbn_q01__cldd6ea846	182	place	GRT	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+QC	cbn_q11__cl49ae4555	150	place	GRT	hold | ROUTE-HELD geom ROUTE hold: WAIT-VISUAL: record a GEOM VERDICT for this attempt 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+QC	cbn_q11__cl5cc92dfe	65	place	GRT	hold | ROUTE-HELD geom ROUTE hold: WAIT-VISUAL: record a GEOM VERDICT for this attempt 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+QC	cbx_q10__cl89936551	164	place	GRT	hold | ROUTE-HELD geom ROUTE hold: WAIT-VISUAL: record a GEOM VERDICT for this attempt 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+QC	cbx_q10__cl89936551_h	196	place	route	DRC	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+QC	cbx_q10__cl94a12200_h	190	place	GRT	geom/visual hold | CANCELLED geom SUPERSEDED: event s29q103S4Q9N46C is not current (s29q103S4Q9N46R	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+QC	coll_core	34	place	place	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+QC	coll_ftc	182	place	finished	not signed(gates n/a)	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+QC	glue	154	place	GRT	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+QC	native59	90	place	CTS	geom/visual hold | CANCELLED geom SUPERSEDED: event s29q103S4Q9N46C is not current (s29q103S4Q9N46R	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+QC	sle_ctl__cla4f6f12f	272	place	place	place | RUNNING place 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+QC	sle_fe_v1__cl8210183c	192	place	finished	not signed(gates n/a)	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+QC	sle_fw_v1__cl9d029624	64	place	GRT	GRT/route | RUNNING route attempt 1	epyc2,epyc7,epyc8,epyc9,intel1
+QC	sle_fw_v1__clf58b4dfb	102	place	GRT	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+QC	sle_fw_v2__cl6740750e	192	place	place	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+QC	sle_fw_v2__cl69f5e854	132	place	place	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+QC	sle_hc0__cl929603c0__cl38badc56	112	none	finished	not signed(gates n/a)	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+QC	sle_hc0__cl929603c0__cl4baa7c9c__pv1c2f9baa	0	none	none	no kit-wave row | 	
+QC	sle_hc0__cl929603c0__cl4baa7c9c__pvcaa93304	30	place	place	running | QUEUED queue queue row not yet read by the autopilot	epyc10,epyc2,epyc7,epyc9,intel1
+QC	sle_hc1__cl22c1ff36__pve230954c	0	none	none	no kit-wave row | 	
+QC	sle_hc1__cl22c1ff36__pve289215f	63	gen	gen	place | RUNNING place 	epyc10,epyc2,epyc7,epyc9,intel1,intel2
+QC	sle_hc1__cl7d360508__pv77c16c8a	0	none	none	no kit-wave row | 	
+QC	sle_hc1__cl7d360508__pv97423966	30	gen	gen	place | RUNNING place 	epyc10,epyc2,epyc7,epyc9,intel1
+QC	sle_hc2__cl9c4c4509__clf60c5152__pv0d63d22b	0	none	none	no kit-wave row | 	
+QC	sle_hc2__cl9c4c4509__clf60c5152__pvcf529cc9	30	place	place	running | QUEUED queue queue row not yet read by the autopilot	epyc10,epyc2,epyc7,epyc9,intel1
+QC	sle_sc_v1__cl115da35f	122	place	finished	DRC	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+QC	sle_sc_v1__cl7479a5ec	166	place	finished	not signed(gates n/a)	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+QC	sle_sc_v2	196	place	finished	not signed(gates n/a)	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+QC	sle_sc_v3	136	place	finished	not signed(gates n/a)	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+QC	sle_st_a_v1__cl67389ecd	205	place	finished	DRC+setup+hold	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+QC	sle_st_a_v1__cl989804f6__cl18eece69	176	place	GRT	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+QC	sle_st_a_v1__cl989804f6__cled3c1d7b	224	place	finished	DRC+setup+hold	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+QC	sle_st_a_v2__pv30dda31f__pv88773f93	212	place	finished	DRC	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+QC	sle_st_a_v2__pv30dda31f__pvd2ec7769	156	place	finished	DRC	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+QC	sle_st_a_v2__pv4242de79	548	place	finished	DRC	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+QC	sle_st_b_v1__pvc5a85fd4__pv38472fb8	114	GRT	finished	other	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+QC	sle_st_b_v1__pvc5a85fd4__pv7b7fafb4	143	none	finished	not signed(gates n/a)	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+QC	sle_st_b_v2__cl14c98df5__pv41c959f3	144	place	finished	not signed(gates n/a)	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+QC	sle_st_b_v2__cl14c98df5__pvcd986c42	134	place	finished	not signed(gates n/a)	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+QC	sle_st_b_v2__clfde1249e	173	place	finished	not signed(gates n/a)	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+QC	sle_stm_v1__cl27746664	80	GRT	route	no-signoff-record	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+QC	sle_stm_v1__clbe630b9c	104	place	GRT	geom/visual hold | CANCELLED geom SUPERSEDED: retired; event s29q103S4Q9N46C is not current (s29q10	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+QC	sle_stm_v2__cl55be2264	108	GRT	GRT	place | RUNNING place 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+QC	sle_stm_v2__cl7b3062fa	78	place	GRT	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+QC	sle_su_c	225	place	GRT	GRT/route | RUNNING route attempt 1 PROVISIONAL[qfd_dv_s8x_btab:routed,qfd_dv_s8x_prog:route	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+QC	sle_su_l1__cl5ea486db	276	place	finished	not signed(gates n/a)	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+QC	slw_fe_v1__cl95cd1d0c	134	place	route	no-signoff-record	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+QC	slw_fe_v1__clfe325744__cldb4efe33	100	place	finished	not signed(gates n/a)	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+QC	slw_fe_v2__clf110fab2	124	place	finished	not signed(gates n/a)	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+QC	slw_fw_v1__clf51c11d8__cl592e3d37	333	place	route	no-signoff-record	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+QC	slw_fw_v2__cl8537f156	172	place	finished	not signed(gates n/a)	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+QC	slw_fw_v2__cl8f84514c	136	place	route	no-signoff-record	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+QC	slw_fw_v3	136	place	place	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+QC	slw_hc0__cl1bc59e1c	78	place	finished	not signed(gates n/a)	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+QC	slw_hc0__cl4f54b7a3	138	GRT	finished	not signed(gates n/a)	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+QC	slw_hc1__cl68f9248e__cl144ee7b3	110	place	finished	not signed(gates n/a)	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+QC	slw_hc2__cla3497502__cl16607c7a	126	GRT	finished	not signed(gates n/a)	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+QC	slw_hc3__clccfc3e6b__pv39aac7a1	0	none	none	no kit-wave row | 	
+QC	slw_hc3__clccfc3e6b__pvcca9ff41	36	place	place	place | FAIL place tool / Tcl error @place: Error: global_place.tcl, 5 OT_CLAND no mappe	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+QC	slw_hc3__cld86a7ad4__pv6c2c33ed	0	none	none	no kit-wave row | 	
+QC	slw_hc3__cld86a7ad4__pvfd488b8f	75	place	place	running | RUNNING  	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+QC	slw_sc_v1__cl63e5a7a2	245	place	finished	not signed(gates n/a)	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+QC	slw_sc_v1__cl64543eaf__cl4590432d	118	place	finished	not signed(gates n/a)	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+QC	slw_sc_v1__cl64543eaf__cl5e017c6f	126	place	finished	not signed(gates n/a)	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+QC	slw_sc_v2	211	place	finished	not signed(gates n/a)	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+QC	slw_st_a_v1__clb036e152	100	place	route	DRC	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+QC	slw_st_a_v1__clfc5867a6__pvdf8e5ca4	165	place	finished	DRC+setup+hold	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+QC	slw_st_a_v1__clfc5867a6__pvf82a6c28	152	place	finished	DRC+setup+hold	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+QC	slw_st_a_v2__cl9f076a5c	254	place	GRT	hold | ROUTE-HELD geom ROUTE hold: WAIT-VISUAL: record a GEOM VERDICT for this attempt 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+QC	slw_st_a_v2__clf4365a62	205	place	GRT	running | RUNNING  	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+QC	slw_st_b_v1__cl6357f1cc__pv6ace3e48	64	place	finished	not signed(gates n/a)	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+QC	slw_st_b_v1__cle6023ec2	152	place	GRT	place | RUNNING place 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+QC	slw_st_b_v2__pva66d0f22__pv3d7bec84	90	place	finished	not signed(gates n/a)	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+QC	slw_st_b_v2__pva66d0f22__pvb80e2003	120	place	finished	other	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+QC	slw_stm_v2__cl1ca9c415	106	place	route	no-signoff-record	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+QC	slw_stm_v2__cl9beb65e6	136	place	finished	not signed(gates n/a)	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+QC	slw_su_c__cl19bb38ef	160	place	GRT	hold | ROUTE-HELD geom ROUTE hold: WAIT-VISUAL: record a GEOM VERDICT for this attempt 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+QC	slw_su_c__cl92142dac	240	place	GRT	GRT/route | RUNNING route attempt 1 PROVISIONAL[qfd_dv_s8x_btab:routed,qfd_dv_s8x_prog:route	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+QC	slw_su_l1__cla2a78701	160	place	route	DRC	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+QC	slw_su_l1__clcc9d0155	151	place	route	DRC	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+QC	tt_ctlm	166	place	GRT	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+S81	bk_sel__t2	257	place	GRT	hold | ROUTE-HELD geom ROUTE hold: WAIT-VISUAL: record a GEOM VERDICT for this attempt 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+S81	col_h10_r0_p1__t1__cl574cc59d__pv3d0d4d97	130	place	GRT	geom/visual hold | RUNNING geom 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+S81	col_h10_r0_p1__t1__cl574cc59d__pv67036687	136	place	GRT	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	col_h10_r0_p1__t1__cl574cc59d__pvb095fa2f	58	place	place	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc7,epyc9,intel1
+S81	col_h10_r0_p1__t1__cl574cc59d__pvd7af8531	10	none	gen	geom/visual hold | CANCELLED geom SUPERSEDED: event 3fa87b84b18 is not current (b4bb6a8b1e9); relau	epyc10
+S81	col_h10_r0_p1__t1__cl574cc59d__pvf60ac9dc	16	none	GRT	gen/RTL | CANCELLED kit_topology WAIT-BIND: kit_topology refused this bind for the row alt	epyc10,epyc2
+S81	col_h10_r0_p1__t1__cl911743eb	108	place	GRT	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	col_h10_r0_p4__t1__pv07945c1e	117	place	GRT	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+S81	col_h10_r0_p4__t1__pv5b623e07	101	GRT	GRT	hold | FAIL route post-cts-hold: FAIL_POSTCTS FAIL_POSTCTS SETUP_TRIAGE pre-route setup	epyc10,epyc2,epyc8,epyc9,intel1,intel2
+S81	col_h10_r0_p4__t1__pvc9270d09	0	none	none	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	
+S81	col_h10_r0_p4__t1__pvcc166a6d	84	GRT	GRT	place | RUNNING place 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	col_h10_r0_p4__t1__pvd11cc58b	0	none	none	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	
+S81	col_h10_r0_p4__t1__pvd8c0565f	0	none	none	geom/visual hold | CANCELLED geom SUPERSEDED: event 3fa87b84b18 is not current (b4bb6a8b1e9); relau	
+S81	col_h10_r1__t1__cl95b37463__pv0713a75a	120	place	GRT	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	col_h10_r1__t1__cl95b37463__pv1a6ec9c2	76	place	place	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	col_h10_r1__t1__cl95b37463__pv69c7e9a6	142	gen	GRT	RETRY-INFRA | RETRY-INFRA preflight restaged: unstarted ot-run waiter (epyc2 -> epyc10) (KW-FI	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+S81	col_h10_r1__t1__cl95b37463__pv6a7ae122	28	none	place	geom/visual hold | CANCELLED geom queue job ade516575ba0 cancelled: cancelled: ot-run: interrupted 	epyc10,epyc2,epyc7,epyc8
+S81	col_h10_r1__t1__cl95b37463__pv74ebbc00	10	none	GRT	geom/visual hold | CANCELLED geom SUPERSEDED: event 3fa87b84b18 is not current (b05c98f7919); relau	epyc7
+S81	col_h10_r1__t1__cl95b37463__pv799da6f8	36	none	GRT	geom/visual hold | CANCELLED geom queue job 8318656bfb8d cancelled: cancelled: ot-run: interrupted 	epyc10,epyc2,epyc8
+S81	col_h10_r1__t1__cl95b37463__pv86f5e3b9	59	GRT	GRT	running | RUNNING  	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+S81	col_h10_r1__t1__cl95b37463__pva3a8bfd1	93	place	GRT	geom/visual hold | RUNNING geom 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+S81	col_h10_r1__t1__cl95b37463__pvce76611c	76	place	place	geom/visual hold | RUNNING geom 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	col_h10_r1__t1__cl95b37463__pve28d14fa	10	none	GRT	geom/visual hold | CANCELLED geom SUPERSEDED: event 3fa87b84b18 is not current (b05c98f7919); relau	epyc7
+S81	col_h10_r1__t1__cl95b37463__pvf724da2a	30	none	GRT	geom/visual hold | CANCELLED geom queue job b53756b04963 cancelled: cancelled: ot-run: interrupted 	epyc10,epyc2,epyc8
+S81	col_h10_r1__t1__cld01bb4ae	154	place	GRT	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	col_h10_r2__t1__cl1f5d6c2a__pv0c1de895	233	place	finished	not signed(gates n/a)	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+S81	col_h10_r2__t1__cl1f5d6c2a__pv16277ca6	14	none	GRT	geom/visual hold | CANCELLED geom SUPERSEDED: event 3fa87b84b18 is not current (224567138ab); relau	epyc10,epyc8
+S81	col_h10_r2__t1__cl1f5d6c2a__pv418d3dc0	198	GRT	route	no-signoff-record	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	col_h10_r2__t1__cl1f5d6c2a__pvcd889288	15	none	gen	geom/visual hold | CANCELLED geom SUPERSEDED: event 3fa87b84b18 is not current (224567138ab); relau	epyc10,intel2
+S81	col_h10_r2__t1__cl1f5d6c2a__pvec003743	145	place	place	hold | ROUTE-HELD geom ROUTE hold: WAIT-VISUAL: record a GEOM VERDICT for this attempt 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+S81	col_h10_r2__t1__cl1f5d6c2a__pvf1512c16	112	none	GRT	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc8,epyc9,intel1
+S81	col_h10_r2__t1__cl8b686b3e	123	place	route	no-signoff-record	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+S81	col_h10_r2__t1__cl99efd374__pv1619ecc6	153	place	route	no-signoff-record	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+S81	col_h10_r2__t1__cl99efd374__pv4c1f67ff	14	none	GRT	GRT/route | CANCELLED geom STRUCT-STOP STRUCTURAL [owner MEM-RECLAIM-2200]: PLAN design:grt_	epyc10,epyc8
+S81	col_h10_r2__t1__cl99efd374__pv7a8a5452	10	none	gen	gen/RTL | CANCELLED kit_topology SUPERSEDED: FAIL on event 3fa87b84b18 (die is on b4bb6a8b	epyc10
+S81	col_h10_r2__t1__cl99efd374__pv9ae398c2	14	none	GRT	geom/visual hold | CANCELLED geom SUPERSEDED: event 3fa87b84b18 is not current (b4bb6a8b1e9); relau	epyc10,epyc8
+S81	col_h10_r2__t1__clac068e56	118	place	place	hold | ROUTE-HELD geom ROUTE hold: SKIP-HELD: item held (col_h10_r2__t1__clac068e56): S	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	col_h9_r0_p1__t1__pv697f40c9	72	place	GRT	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	col_h9_r0_p1__t1__pv8c197f8e	60	place	place	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	col_h9_r0_p1__t1__pva2e3974f	58	place	place	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc7,epyc9,intel1
+S81	col_h9_r0_p1__t1__pvb3e2a60a	0	none	none	geom/visual hold | CANCELLED geom SUPERSEDED: event 3fa87b84b18 is not current (b05c98f7919); relau	
+S81	col_h9_r0_p1__t1__pvb49c16c8	58	place	place	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc7,epyc9,intel1
+S81	col_h9_r0_p1__t1__pvf9acce4c	112	place	GRT	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	col_h9_r0_p2__t1__cl0045af7b__pv622a6f97	164	CTS	GRT	running | RUNNING gen 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	col_h9_r0_p2__t1__cl0045af7b__pv6882e5ea	28	none	place	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	epyc10,epyc2,epyc8,intel1
+S81	col_h9_r0_p2__t1__cl0045af7b__pva2793873	138	place	GRT	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	col_h9_r0_p2__t1__cl0045af7b__pvd86cb19a	20	none	GRT	gen/RTL | CANCELLED kit_topology SUPERSEDED: FAIL on event 3fa87b84b18 (die is on b4bb6a8b	epyc10,epyc2,epyc7
+S81	col_h9_r0_p2__t1__cl0045af7b__pve183b536	10	none	place	gen/RTL | CANCELLED kit_topology SUPERSEDED: FAIL on event 3fa87b84b18 (die is on b4bb6a8b	epyc9
+S81	col_h9_r0_p2__t1__cl9f71e63d__pv11b73b67	115	place	GRT	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+S81	col_h9_r0_p2__t1__cl9f71e63d__pv2744f675	32	place	place	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc8,epyc9,intel1
+S81	col_h9_r0_p2__t1__cl9f71e63d__pv291547b4	8	none	place	gen/RTL | CANCELLED kit_topology WAIT-BIND: kit_topology refused this bind for the row alt	epyc8
+S81	col_h9_r0_p2__t1__cl9f71e63d__pv5752c4ff	139	place	GRT	geom/visual hold | CANCELLED geom SUPERSEDED: retired; event b05c98f7919 is not current (224567138a	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+S81	col_h9_r0_p2__t1__cl9f71e63d__pva4376595	82	place	GRT	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	col_h9_r0_p2__t1__cl9f71e63d__pvabc9823e	10	none	gen	gen/RTL | CANCELLED kit_topology WAIT-BIND: kit_topology refused this bind for the row alt	epyc9
+S81	col_h9_r0_p2__t1__cl9f71e63d__pvef55eb84	0	none	none	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	
+S81	col_h9_r0_p3__t1__cl0cd90c0e__pv110cabb8	78	place	GRT	geom/visual hold | CANCELLED geom SUPERSEDED: retired; event b05c98f7919 is not current (224567138a	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	col_h9_r0_p3__t1__cl0cd90c0e__pv13474472	89	place	GRT	geom/visual hold | RUNNING geom 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+S81	col_h9_r0_p3__t1__cl0cd90c0e__pv4cfde03b	10	none	gen	gen/RTL | CANCELLED kit_topology WAIT-BIND: kit_topology refused this bind for the row alt	epyc7
+S81	col_h9_r0_p3__t1__cl0cd90c0e__pv5b02e93b	48	place	place	hold | ROUTE-HELD geom ROUTE hold: SKIP-HELD: item held (col_h9_r0_p3__t1__cl0cd90c0e__	epyc10,epyc2,epyc7,epyc9,intel1
+S81	col_h9_r0_p3__t1__cl0cd90c0e__pv8d734760	48	place	place	CTS | FAIL place clock-landing band too small or blocked (band plan, or tool: this kit	epyc10,epyc2,epyc7,epyc9,intel1
+S81	col_h9_r0_p3__t1__cl0cd90c0e__pvcb7f0079	34	place	place	CTS | FAIL place clock-landing band too small or blocked (band plan, or tool: this kit	epyc10,epyc2,epyc7,epyc9,intel1
+S81	col_h9_r0_p3__t1__cl31d0dc4b	110	place	GRT	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	col_h9_r0_p3__t1__cl8ce97bcb__pv1489a898	98	place	GRT	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	col_h9_r0_p3__t1__cl8ce97bcb__pv625eef47	58	place	place	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc7,epyc9,intel1
+S81	col_h9_r0_p3__t1__cl8ce97bcb__pvc11684b5	88	place	GRT	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	col_h9_r0_p3__t1__cl8ce97bcb__pvcd8810ba	10	none	place	gen/RTL | CANCELLED kit_topology WAIT-BIND: kit_topology refused this bind for the row alt	epyc7
+S81	col_h9_r0_p3__t1__cl8ce97bcb__pvd2159f4a	98	place	route	no-signoff-record	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	col_h9_r0_p4__t1__cl8ef405e8__pv70731479	134	place	GRT	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	col_h9_r0_p4__t1__cl8ef405e8__pv775e5cef	0	none	none	cancelled | CANCELLED pipeline SUPERSEDED: FAIL on event 3fa87b84b18 (die is on b4bb6a8b1e9)	
+S81	col_h9_r0_p4__t1__cl8ef405e8__pv89bf360c	66	place	GRT	hold | ROUTE-HELD geom ROUTE hold: SKIP-HELD: item held (col_h9_r0_p4__t1__cl8ef405e8__	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	col_h9_r0_p4__t1__cl8ef405e8__pv91095415	8	none	place	cancelled | CANCELLED pipeline SUPERSEDED: FAIL on event 3fa87b84b18 (die is on b4bb6a8b1e9)	epyc8
+S81	col_h9_r0_p4__t1__clcb2fbfe8__pv3544fb31	126	place	GRT	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	col_h9_r0_p4__t1__clcb2fbfe8__pvec137455	66	place	GRT	hold | ROUTE-HELD geom ROUTE hold: SKIP-HELD: item held (col_h9_r0_p4__t1__clcb2fbfe8__	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	col_h9_r0_p5__t1__pv35382794	120	place	GRT	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc8,epyc9,intel1
+S81	col_h9_r0_p5__t1__pv5c8f2166	85	place	place	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc7,epyc9,intel1,intel2
+S81	col_h9_r0_p5__t1__pv8995e794	10	none	gen	gen/RTL | CANCELLED kit_topology WAIT-BIND: kit_topology refused this bind for the row alt	intel1
+S81	col_h9_r0_p5__t1__pvb22875c0	12	none	place	cancelled | CANCELLED pipeline SUPERSEDED: FAIL on event 3fa87b84b18 (die is on b4bb6a8b1e9)	epyc2,epyc7
+S81	col_h9_r0_p5__t1__pvbca8d846	58	place	GRT	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc7,epyc9,intel1
+S81	col_h9_r0_p5__t1__pvc1b82625	115	place	GRT	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+S81	col_h9_r0_p5__t1__pvc6e5797f	32	place	place	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc8,epyc9,intel1
+S81	col_h9_r0_p5__t1__pvc93af856	10	none	gen	gen/RTL | CANCELLED kit_topology WAIT-BIND: kit_topology refused this bind for the row alt	epyc7
+S81	col_h9_r0_p5__t1__pveda1ecc9	24	place	place	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc9,intel1
+S81	col_h9_r0_p5__t1__pvee6f8140	10	none	gen	gen/RTL | CANCELLED kit_topology WAIT-BIND: kit_topology refused this bind for the row alt	intel1
+S81	col_h9_r0_p5__t1__pvf71da13a	0	none	none	cancelled | CANCELLED pipeline SUPERSEDED: FAIL on event 3fa87b84b18 (die is on b4bb6a8b1e9)	
+S81	col_h9_r0_p5__t1__pvf731e6ec	18	none	GRT	gen/RTL | CANCELLED kit_topology WAIT-BIND: kit_topology refused this bind for the row alt	epyc10,epyc2,epyc8
+S81	col_h9_r0_p6__t1__pv0012ba28	139	GRT	route	DRC	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+S81	col_h9_r0_p6__t1__pv082a7609	10	none	place	cancelled | CANCELLED pipeline SUPERSEDED: FAIL on event 3fa87b84b18 (die is on b4bb6a8b1e9)	epyc7,epyc8
+S81	col_h9_r0_p6__t1__pv6398a5b7	12	none	gen	gen/RTL | CANCELLED kit_topology WAIT-BIND: kit_topology refused this bind for the row alt	epyc7
+S81	col_h9_r0_p6__t1__pv7808008f	12	none	gen	cancelled | CANCELLED pipeline SUPERSEDED: FAIL on event 3fa87b84b18 (die is on b4bb6a8b1e9)	epyc7,epyc9
+S81	col_h9_r0_p6__t1__pv8241ebb8	2	none	gen	cancelled | CANCELLED pipeline SUPERSEDED: FAIL on event 3fa87b84b18 (die is on b4bb6a8b1e9)	epyc7
+S81	col_h9_r0_p6__t1__pv87853a7e	12	none	gen	gen/RTL | CANCELLED kit_topology WAIT-BIND: kit_topology refused this bind for the row alt	epyc7
+S81	col_h9_r0_p6__t1__pv8d617470	16	none	GRT	cancelled | CANCELLED pipeline SUPERSEDED: FAIL on event 3fa87b84b18 (die is on b4bb6a8b1e9)	epyc10,epyc2,epyc7
+S81	col_h9_r0_p6__t1__pv9da72aa7	12	none	gen	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	epyc7,epyc9
+S81	col_h9_r0_p6__t1__pvb38a9d6c	15	none	gen	gen/RTL | CANCELLED kit_topology WAIT-BIND: kit_topology refused this bind for the row alt	epyc7,epyc8,intel2
+S81	col_h9_r0_p6__t1__pvbdbd69f2	12	none	gen	gen/RTL | CANCELLED kit_topology WAIT-BIND: kit_topology refused this bind for the row alt	epyc7
+S81	col_h9_r0_p6__t1__pvde240d6d	12	none	gen	gen/RTL | CANCELLED kit_topology WAIT-BIND: kit_topology refused this bind for the row alt	epyc7,epyc9
+S81	col_h9_r0_p6__t1__pvea45abf3	2	none	gen	gen/RTL | CANCELLED kit_topology WAIT-BIND: kit_topology refused this bind for the row alt	epyc7
+S81	col_h9_r1__t1__cl49d7a23e__pv047ea3b3	58	none	finished	not signed(gates n/a)	epyc10,epyc2,epyc8,epyc9,intel1
+S81	col_h9_r1__t1__cl49d7a23e__pv0a45e191	5	none	gen	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	intel2
+S81	col_h9_r1__t1__cl49d7a23e__pv0bab1162	10	none	GRT	cancelled | CANCELLED pipeline SUPERSEDED: FAIL on event 3fa87b84b18 (die is on b4bb6a8b1e9)	epyc7
+S81	col_h9_r1__t1__cl49d7a23e__pv0bdbc3f3	40	none	GRT	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	col_h9_r1__t1__cl49d7a23e__pv11c696bc	32	none	GRT	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	epyc10,epyc7,epyc8,epyc9
+S81	col_h9_r1__t1__cl49d7a23e__pv11dcdcd2	22	none	finished	not signed(gates n/a)	epyc10,epyc2,epyc7
+S81	col_h9_r1__t1__cl49d7a23e__pv152ea348	32	none	GRT	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	epyc10,epyc7,epyc8,epyc9
+S81	col_h9_r1__t1__cl49d7a23e__pv15cef3f7	10	none	GRT	cancelled | CANCELLED pipeline SUPERSEDED: FAIL on event 3fa87b84b18 (die is on b4bb6a8b1e9)	epyc9
+S81	col_h9_r1__t1__cl49d7a23e__pv1c15776f	0	none	none	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	
+S81	col_h9_r1__t1__cl49d7a23e__pv2cabd9a9	10	none	GRT	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	epyc9
+S81	col_h9_r1__t1__cl49d7a23e__pv2ec9c8a9	38	none	GRT	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	epyc10,epyc7,epyc8,epyc9,intel1
+S81	col_h9_r1__t1__cl49d7a23e__pv2f96c04f	94	none	route	no-signoff-record	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	col_h9_r1__t1__cl49d7a23e__pv36da905c	72	none	route	no-signoff-record	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	col_h9_r1__t1__cl49d7a23e__pv3a0a8b60	10	none	GRT	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	epyc9
+S81	col_h9_r1__t1__cl49d7a23e__pv4108910d	40	none	GRT	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	epyc10,epyc7,epyc8,epyc9,intel1
+S81	col_h9_r1__t1__cl49d7a23e__pv4593e8e5	40	none	GRT	geom/visual hold | CANCELLED geom SUPERSEDED: event 3fa87b84b18 is not current (b4bb6a8b1e9); relau	epyc10,epyc7,epyc8,epyc9,intel1
+S81	col_h9_r1__t1__cl49d7a23e__pv461b5256	37	none	GRT	cancelled | CANCELLED pipeline SUPERSEDED: FAIL on event 3fa87b84b18 (die is on b4bb6a8b1e9)	epyc10,epyc7,epyc8,epyc9,intel2
+S81	col_h9_r1__t1__cl49d7a23e__pv47efee8f	13	none	GRT	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	epyc10,intel2
+S81	col_h9_r1__t1__cl49d7a23e__pv49636389	43	none	GRT	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	epyc10,epyc7,epyc8,epyc9,intel1,intel2
+S81	col_h9_r1__t1__cl49d7a23e__pv49f0ba38	43	none	GRT	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	epyc10,epyc7,epyc8,epyc9,intel1,intel2
+S81	col_h9_r1__t1__cl49d7a23e__pv4bd36c74	28	none	GRT	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc7,epyc9
+S81	col_h9_r1__t1__cl49d7a23e__pv4ef1b59c	38	none	GRT	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	epyc10,epyc7,epyc8,epyc9,intel1
+S81	col_h9_r1__t1__cl49d7a23e__pv534ef85e	10	none	GRT	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	epyc7
+S81	col_h9_r1__t1__cl49d7a23e__pv58f6356d	10	none	GRT	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	epyc10
+S81	col_h9_r1__t1__cl49d7a23e__pv5bdf9f51	40	none	GRT	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	epyc10,epyc7,epyc8,epyc9,intel1
+S81	col_h9_r1__t1__cl49d7a23e__pv5ffbfb8b	38	none	GRT	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	epyc10,epyc7,epyc8,epyc9,intel1
+S81	col_h9_r1__t1__cl49d7a23e__pv62bca836	10	none	GRT	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	epyc7
+S81	col_h9_r1__t1__cl49d7a23e__pv637e5d47	43	none	GRT	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	epyc10,epyc7,epyc8,epyc9,intel1,intel2
+S81	col_h9_r1__t1__cl49d7a23e__pv6c1e320a	10	none	GRT	cancelled | CANCELLED pipeline SUPERSEDED: FAIL on event 3fa87b84b18 (die is on b4bb6a8b1e9)	epyc7
+S81	col_h9_r1__t1__cl49d7a23e__pv70f04488	0	none	none	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	
+S81	col_h9_r1__t1__cl49d7a23e__pv7466df46	10	none	GRT	cancelled | CANCELLED pipeline SUPERSEDED: FAIL on event 3fa87b84b18 (die is on b4bb6a8b1e9)	epyc9
+S81	col_h9_r1__t1__cl49d7a23e__pv87d52780	8	none	gen	geom/visual hold | CANCELLED geom SUPERSEDED: event 3fa87b84b18 is not current (b4bb6a8b1e9); relau	epyc8
+S81	col_h9_r1__t1__cl49d7a23e__pv88891f20	15	none	gen	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	epyc7,intel2
+S81	col_h9_r1__t1__cl49d7a23e__pv8aaf8508	10	none	GRT	geom/visual hold | CANCELLED geom SUPERSEDED: event 3fa87b84b18 is not current (b4bb6a8b1e9); relau	epyc9
+S81	col_h9_r1__t1__cl49d7a23e__pv8ea75ee5	15	none	gen	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	epyc7,intel2
+S81	col_h9_r1__t1__cl49d7a23e__pv9a5bd576	10	none	GRT	cancelled | CANCELLED pipeline SUPERSEDED: FAIL on event 3fa87b84b18 (die is on b4bb6a8b1e9)	intel1
+S81	col_h9_r1__t1__cl49d7a23e__pv9c5966b7	10	none	GRT	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	epyc9
+S81	col_h9_r1__t1__cl49d7a23e__pva2370bfd	62	none	GRT	cancelled | CANCELLED gen SUPERSEDED: RETRY-INFRA row of event 465cb9fe2d3; the die is on 22	epyc10,epyc2,epyc8,epyc9,intel1
+S81	col_h9_r1__t1__cl49d7a23e__pva7e46565	10	none	GRT	cancelled | CANCELLED pipeline SUPERSEDED: FAIL on event 3fa87b84b18 (die is on b4bb6a8b1e9)	epyc9
+S81	col_h9_r1__t1__cl49d7a23e__pvac06e607	8	none	gen	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	epyc8
+S81	col_h9_r1__t1__cl49d7a23e__pvadb6c679	10	none	GRT	cancelled | CANCELLED pipeline SUPERSEDED: FAIL on event 3fa87b84b18 (die is on b4bb6a8b1e9)	epyc7
+S81	col_h9_r1__t1__cl49d7a23e__pvadbd1880	10	none	GRT	cancelled | CANCELLED pipeline SUPERSEDED: FAIL on event 3fa87b84b18 (die is on b4bb6a8b1e9)	intel1
+S81	col_h9_r1__t1__cl49d7a23e__pvafa6f454	14	none	GRT	cancelled | CANCELLED pipeline SUPERSEDED: FAIL on event 3fa87b84b18 (die is on b4bb6a8b1e9)	epyc10,epyc2
+S81	col_h9_r1__t1__cl49d7a23e__pvb2dac3cf	10	none	GRT	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	epyc10
+S81	col_h9_r1__t1__cl49d7a23e__pvbb600efe	10	none	GRT	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	epyc10
+S81	col_h9_r1__t1__cl49d7a23e__pvc22584f3	10	none	GRT	geom/visual hold | CANCELLED geom SUPERSEDED: event 3fa87b84b18 is not current (b4bb6a8b1e9); relau	intel1
+S81	col_h9_r1__t1__cl49d7a23e__pvc25aad1b	40	none	GRT	cancelled | CANCELLED pipeline SUPERSEDED: FAIL on event 3fa87b84b18 (die is on b4bb6a8b1e9)	epyc10,epyc7,epyc8,epyc9,intel1
+S81	col_h9_r1__t1__cl49d7a23e__pvc382fb14	40	none	GRT	cancelled | CANCELLED pipeline SUPERSEDED: FAIL on event 3fa87b84b18 (die is on b4bb6a8b1e9)	epyc10,epyc7,epyc8,epyc9,intel1
+S81	col_h9_r1__t1__cl49d7a23e__pvcb813ee7	40	none	GRT	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	epyc10,epyc7,epyc8,epyc9,intel1
+S81	col_h9_r1__t1__cl49d7a23e__pve273b259	10	none	GRT	cancelled | CANCELLED pipeline SUPERSEDED: FAIL on event 3fa87b84b18 (die is on b4bb6a8b1e9)	epyc7
+S81	col_h9_r1__t1__cl49d7a23e__pve3f8a86c	40	none	GRT	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	epyc10,epyc7,epyc8,epyc9,intel1
+S81	col_h9_r1__t1__cl49d7a23e__pvebe696ff	40	none	GRT	cancelled | CANCELLED pipeline SUPERSEDED: FAIL on event 3fa87b84b18 (die is on b4bb6a8b1e9)	epyc10,epyc7,epyc8,epyc9,intel1
+S81	col_h9_r1__t1__cl49d7a23e__pvf0f1ccb2	38	none	gen	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	epyc10,epyc7,epyc8,epyc9,intel1
+S81	col_h9_r1__t1__cl49d7a23e__pvfed9fee6	40	none	GRT	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	epyc10,epyc7,epyc8,epyc9,intel1
+S81	col_h9_r1__t1__clf32cde8d__pv387d6579	10	none	place	cancelled | CANCELLED pipeline SUPERSEDED: FAIL on event 3fa87b84b18 (die is on b4bb6a8b1e9)	epyc7
+S81	col_h9_r1__t1__clf32cde8d__pv3b9ba75c	38	none	GRT	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	epyc10,epyc7,epyc8,epyc9,intel1
+S81	col_h9_r1__t1__clf32cde8d__pv48cfde67	10	none	place	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	epyc7
+S81	col_h9_r1__t1__clf32cde8d__pv63f488e9	40	none	GRT	cancelled | CANCELLED pipeline SUPERSEDED: FAIL on event 3fa87b84b18 (die is on b4bb6a8b1e9)	epyc10,epyc7,epyc8,epyc9,intel1
+S81	col_h9_r1__t1__clf32cde8d__pvd9381c1d	40	none	GRT	cancelled | CANCELLED pipeline SUPERSEDED: FAIL on event 3fa87b84b18 (die is on b4bb6a8b1e9)	epyc10,epyc7,epyc8,epyc9,intel1
+S81	col_h9_r1__t1__clf32cde8d__pvee46d7b8	8	none	gen	cancelled | CANCELLED pipeline SUPERSEDED: FAIL on event 3fa87b84b18 (die is on b4bb6a8b1e9)	epyc8
+S81	col_h9_r2__t1__cl774acf45__pv858fb2ba	40	none	GRT	cancelled | CANCELLED gen SUPERSEDED: RETRY-INFRA row of event 465cb9fe2d3; the die is on 22	epyc10,epyc2,epyc8,epyc9,intel1
+S81	col_h9_r2__t1__cl774acf45__pve3ab90e7	18	none	GRT	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	epyc9,intel1
+S81	col_h9_r2__t1__cl774acf45__pvea45273b	40	none	finished	not signed(gates n/a)	epyc10,epyc2,epyc8,epyc9,intel1
+S81	col_h9_r2__t1__cl774acf45__pvf8d9f9e5	18	none	GRT	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	epyc7,epyc9
+S81	col_h9_r2__t1__cl87f3ff59	85	none	GRT	hold | ROUTE-HELD geom ROUTE hold: SKIP-HELD: item held (col_h9_r2__*): S81-DIE-R4 11-2	epyc10,epyc2,epyc8,epyc9,intel1,intel2
+S81	col_h9_r2__t1__clb8d86cd5__pv6a2b031b	52	none	route	no-signoff-record	epyc10,epyc2,epyc8,epyc9,intel1
+S81	col_h9_r2__t1__clb8d86cd5__pv8d57997d	10	none	place	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	epyc9
+S81	col_h9_r2__t1__clb8d86cd5__pv982ec12c	10	none	GRT	geom/visual hold | CANCELLED geom SUPERSEDED: event 3fa87b84b18 is not current (465cb9fe2d3); relau	epyc10
+S81	col_h9_r2__t1__clb8d86cd5__pvb2cd22a7	10	none	finished	DRC	epyc10
+S81	col_h9_r2__t1__clb8d86cd5__pvf0595d0f	4	none	finished	DRC	epyc8
+S81	col_h9_r2__t1__clb8d86cd5__pvf1445dce	10	none	GRT	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	intel1
+S81	col_h9_r2__t1__clc9ad8f7e__pv45d0c698	70	none	finished	not signed(gates n/a)	epyc10,epyc2,epyc8,epyc9,intel1
+S81	col_h9_r2__t1__clc9ad8f7e__pv81a5dbf4	46	none	route	no-signoff-record	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	col_h9_r2__t1__clc9ad8f7e__pvcf44b14c	10	none	GRT	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	epyc7
+S81	col_h9_r2__t1__clc9ad8f7e__pvf079625b	10	none	GRT	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	epyc7
+S81	col_h9_r2__t1__clc9ad8f7e__pvfef7c177	10	none	GRT	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	epyc7
+S81	col_h9_r2__t1__clce45cab5__pv06a1adf6	138	none	finished	DRC	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	col_h9_r2__t1__clce45cab5__pv09b9967e	45	none	GRT	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+S81	col_h9_r2__t1__clce45cab5__pv14626557	24	none	place	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc7
+S81	col_h9_r2__t1__clce45cab5__pv1aac64f0	12	none	GRT	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	epyc10,epyc7
+S81	col_h9_r2__t1__clce45cab5__pv22267ca0	42	none	finished	DRC	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	col_h9_r2__t1__clce45cab5__pv2833ee2b	34	none	finished	DRC	epyc10,epyc2,epyc7,epyc9,intel1
+S81	col_h9_r2__t1__clce45cab5__pv2f87774f	12	none	GRT	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	epyc7,intel1
+S81	col_h9_r2__t1__clce45cab5__pv31e47bd5	46	none	finished	DRC	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	col_h9_r2__t1__clce45cab5__pv37074264	42	none	finished	DRC	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	col_h9_r2__t1__clce45cab5__pv40e9fb5a	4	none	gen	geom/visual hold | CANCELLED geom SUPERSEDED: event 3fa87b84b18 is not current (224567138ab); relau	epyc7,epyc8
+S81	col_h9_r2__t1__clce45cab5__pv467913cc	42	none	finished	DRC	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	col_h9_r2__t1__clce45cab5__pv4754d912	14	none	GRT	geom/visual hold | CANCELLED geom SUPERSEDED: event 3fa87b84b18 is not current (224567138ab); relau	epyc10,epyc7,epyc9
+S81	col_h9_r2__t1__clce45cab5__pv4937edd4	2	none	gen	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	epyc7
+S81	col_h9_r2__t1__clce45cab5__pv6827937d	14	none	place	geom/visual hold | CANCELLED geom SUPERSEDED: event 3fa87b84b18 is not current (465cb9fe2d3); relau	epyc2,epyc7,intel1
+S81	col_h9_r2__t1__clce45cab5__pv7b8853b5	10	none	place	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	epyc7,epyc8
+S81	col_h9_r2__t1__clce45cab5__pv7c30fd4e	12	none	gen	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	epyc7
+S81	col_h9_r2__t1__clce45cab5__pv843b0fff	2	none	gen	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	epyc7
+S81	col_h9_r2__t1__clce45cab5__pv8b5a5980	2	none	gen	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	epyc7
+S81	col_h9_r2__t1__clce45cab5__pv9a22736e	12	none	gen	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	epyc7
+S81	col_h9_r2__t1__clce45cab5__pv9cc104a8	2	none	gen	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	epyc7
+S81	col_h9_r2__t1__clce45cab5__pv9e92407b	2	none	gen	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	epyc7
+S81	col_h9_r2__t1__clce45cab5__pva119e808	12	none	gen	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	epyc7
+S81	col_h9_r2__t1__clce45cab5__pva8c07948	2	none	gen	gen/RTL | CANCELLED kit_topology SUPERSEDED: FAIL on event 3fa87b84b18 (die is on b4bb6a8b	epyc7
+S81	col_h9_r2__t1__clce45cab5__pvaa9a1324	2	none	gen	gen/RTL | CANCELLED kit_topology SUPERSEDED: FAIL on event 3fa87b84b18 (die is on b4bb6a8b	epyc7
+S81	col_h9_r2__t1__clce45cab5__pvb11188eb	12	none	place	gen/RTL | CANCELLED kit_topology SUPERSEDED: FAIL on event 3fa87b84b18 (die is on b4bb6a8b	epyc7
+S81	col_h9_r2__t1__clce45cab5__pvb3258867	10	none	gen	gen/RTL | CANCELLED kit_topology SUPERSEDED: FAIL on event 3fa87b84b18 (die is on b4bb6a8b	epyc7,epyc8
+S81	col_h9_r2__t1__clce45cab5__pvb3f647ea	12	none	GRT	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	epyc7,epyc9
+S81	col_h9_r2__t1__clce45cab5__pvb6ec679e	2	none	gen	gen/RTL | CANCELLED kit_topology SUPERSEDED: FAIL on event 3fa87b84b18 (die is on b4bb6a8b	epyc7
+S81	col_h9_r2__t1__clce45cab5__pvb7e88dd2	32	none	finished	DRC	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	col_h9_r2__t1__clce45cab5__pvc6132d1e	7	none	gen	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	epyc7,intel2
+S81	col_h9_r2__t1__clce45cab5__pvcd1d9f5f	14	none	place	geom/visual hold | CANCELLED geom SUPERSEDED: event 3fa87b84b18 is not current (465cb9fe2d3); relau	epyc2,epyc7
+S81	col_h9_r2__t1__clce45cab5__pvd2454d1a	32	none	finished	DRC	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	col_h9_r2__t1__clce45cab5__pvd60e699f	12	none	place	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	epyc7,epyc9
+S81	col_h9_r2__t1__clce45cab5__pvdc7d4221	112	none	finished	DRC	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	col_h9_r2__t1__clce45cab5__pve0486b40	4	none	GRT	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	epyc7,intel1
+S81	col_h9_r2__t1__clce45cab5__pve0bffaf8	12	none	place	geom/visual hold | CANCELLED geom SUPERSEDED: event 3fa87b84b18 is not current (b4bb6a8b1e9); relau	epyc7
+S81	col_h9_r2__t1__clce45cab5__pve171243a	15	none	GRT	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	epyc10,epyc7,intel2
+S81	col_h9_r2__t1__clce45cab5__pvf390b1f5	4	none	gen	geom/visual hold | CANCELLED geom SUPERSEDED: event 3fa87b84b18 is not current (465cb9fe2d3); relau	epyc2,epyc7
+S81	col_h9_r2__t1__clce45cab5__pvf57acd2b	12	none	gen	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	epyc7,epyc9
+S81	col_h9_r2__t1__clce45cab5__pvf9c773d5	2	none	gen	geom/visual hold | CANCELLED geom SUPERSEDED: event 3fa87b84b18 is not current (b4bb6a8b1e9); relau	epyc7
+S81	col_h9_r2__t1__clce45cab5__pvfb42a1ad	12	none	place	geom/visual hold | CANCELLED geom enqueue pending on a superseded plan block (plan_current=no); not	epyc7
+S81	col_h9_r2__t1__clce45cab5__pvfd79e8b6	12	none	place	geom/visual hold | CANCELLED geom SUPERSEDED: event 3fa87b84b18 is not current (465cb9fe2d3); relau	epyc2,epyc7,epyc8
+S81	dsdv_slice_c1x_C__t1	173	gen	place	hold | ROUTE-HELD geom ROUTE hold: SKIP-HELD: item held (dsdv_slice_c1x_C__t1): S81-DIE	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+S81	dsdv_slice_c1x_C__t10	84	gen	place	hold | ROUTE-HELD geom ROUTE hold: SKIP-HELD: item held (dsdv_slice_c1x_C__t10): S81-DI	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	dsdv_slice_c1x_C__t3	56	gen	GRT	hold | ROUTE-HELD geom ROUTE hold: SKIP-HELD: item held (dsdv_slice_c1x_C__t3): S81-DIE	epyc10,epyc2,epyc8,epyc9,intel1
+S81	dsdv_slice_c1x_C__t4	56	place	place	hold | ROUTE-HELD geom ROUTE hold: SKIP-HELD: item held (dsdv_slice_c1x_C__t4): S81-DIE	epyc10,epyc2,epyc8,epyc9,intel1
+S81	dsdv_slice_c1x_C__t5	68	gen	gen	place | RUNNING place 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	dsdv_slice_c1x_C__t6	238	gen	place	place | RUNNING place 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+S81	dsdv_slice_c1x_C__t7	96	gen	place	GRT/route | CANCELLED geom SUPERSEDED: ROUTE-HELD on event 465cb9fe2d3 (die is on 224567138a	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	dsdv_slice_c1x_C__t8	72	gen	place	place | RUNNING place 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	dsdv_slice_c1x_C__t9	72	place	place	hold | ROUTE-HELD geom ROUTE hold: WAIT-VISUAL: record a GEOM VERDICT for this attempt 	epyc10,epyc2,epyc8,epyc9,intel1
+S81	dsdv_slice_c3x_C__t1	54	place	place	hold | ROUTE-HELD geom ROUTE hold: WAIT-VISUAL: record a GEOM VERDICT for this attempt 	epyc10,epyc2,epyc8,epyc9,intel1
+S81	dsdv_slice_iq_C__t1	54	place	place	hold | ROUTE-HELD geom ROUTE hold: SKIP-HELD: item held (dsdv_slice_iq_C__t1): S81-DIE-	epyc10,epyc2,epyc8,epyc9,intel1
+S81	dsdv_slice_kv512_C__t1	54	place	place	hold | ROUTE-HELD geom ROUTE hold: WAIT-VISUAL: record a GEOM VERDICT for this attempt 	epyc10,epyc2,epyc8,epyc9,intel1
+S81	dsdv_slice_lepe_mu_C__t1	54	place	place	hold | ROUTE-HELD geom ROUTE hold: WAIT-VISUAL: record a GEOM VERDICT for this attempt 	epyc10,epyc2,epyc8,epyc9,intel1
+S81	dsdv_slice_lepe_mu_LP__t2	66	place	GRT	hold | ROUTE-HELD geom ROUTE hold: WAIT-VISUAL: record a GEOM VERDICT for this attempt 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	dsdv_slice_lepe_nh_mus_C__t1	54	place	place	hold | ROUTE-HELD geom ROUTE hold: WAIT-VISUAL: record a GEOM VERDICT for this attempt 	epyc10,epyc2,epyc8,epyc9,intel1
+S81	dsdv_slice_lepe_nh_mus_LP__t1	52	place	GRT	hold | ROUTE-HELD geom ROUTE hold: WAIT-VISUAL: record a GEOM VERDICT for this attempt 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	dsdv_slice_lepw_mu_C__t1	80	place	place	hold | ROUTE-HELD geom ROUTE hold: SKIP-HELD: item held (dsdv_slice_lepw_mu_C__t1): S81	epyc10,epyc2,epyc8,epyc9,intel1
+S81	dsdv_slice_lepw_mu_LP__t2	62	place	GRT	hold | ROUTE-HELD geom ROUTE hold: WAIT-VISUAL: record a GEOM VERDICT for this attempt 	epyc10,epyc2,epyc8,epyc9,intel1
+S81	dsdv_slice_lepw_mus_C__t1	62	place	place	hold | ROUTE-HELD geom ROUTE hold: SKIP-HELD: item held (dsdv_slice_lepw_mus_C__t1): S8	epyc10,epyc2,epyc8,epyc9,intel1
+S81	dsdv_slice_lepw_mus_LP__t2	30	none	GRT	gen/RTL | RETRY-INFRA kit_rtl_closure restaged: unstarted ot-run waiter (epyc7 -> intel1) 	epyc10,epyc2,epyc8,epyc9
+S81	eng__t1	102	place	GRT	GRT/route | CANCELLED geom SUPERSEDED: ROUTE-HELD on event 465cb9fe2d3 (die is on 224567138a	epyc10,epyc2,epyc8,epyc9,intel1
+S81	gunit__t1	96	place	GRT	hold | ROUTE-HELD geom ROUTE hold: SKIP-HELD: item held (gunit__t1): S81-DIE-R4 11-20 C	epyc10,epyc2,epyc8,epyc9,intel1
+S81	iqf__t1	48	place	place	hold | ROUTE-HELD geom ROUTE hold: WAIT-VISUAL: record a GEOM VERDICT for this attempt 	epyc10,epyc2,epyc8,epyc9,intel1
+S81	ot_s81sl_kv_leaf__t1	54	place	place	geom/visual hold | RUNNING geom 	epyc10,epyc2,epyc7,epyc9,intel1
+S81	ot_s81sl_kv_leaf__t2	98	gen	gen	place | RUNNING place 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+S81	ot_s81sl_kv_leaf__t3	75	place	place	hold | ROUTE-HELD geom ROUTE hold: SKIP-HELD: item held (ot_s81sl_kv_leaf__t3): S81-DIE	epyc10,epyc2,epyc8,epyc9,intel1,intel2
+S81	ot_s81sl_kv_leaf__t4	66	place	place	hold | ROUTE-HELD geom ROUTE hold: SKIP-HELD: item held (ot_s81sl_kv_leaf__t4): S81-DIE	epyc10,epyc2,epyc8,epyc9,intel1
+S81	ot_s81sl_kv_leaf__t5	56	place	GRT	setup | CANCELLED geom STRUCT-STOP STRUCTURAL [owner S81-DIE-R5]: COORD ruling 11-20 21:	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	ot_s81sl_leaf__t1	30	none	place	hold | ROUTE-HELD geom ROUTE hold: WAIT-VISUAL: record a GEOM VERDICT for this attempt 	epyc10,epyc2,epyc8,epyc9
+S81	ot_s81sl_leaf__t10	30	place	GRT	hold | ROUTE-HELD geom ROUTE hold: SKIP-HELD: item held (ot_s81sl_leaf__t10): S81-DIE-R	epyc10,epyc2,epyc7,epyc8,intel1
+S81	ot_s81sl_leaf__t11	44	none	GRT	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc8,epyc9,intel1
+S81	ot_s81sl_leaf__t12	30	none	place	hold | ROUTE-HELD geom ROUTE hold: SKIP-HELD: item held (ot_s81sl_leaf__t12): S81-DIE-R	epyc10,epyc2,epyc8,epyc9
+S81	ot_s81sl_leaf__t13	6	none	GRT	GRT/route | RUNNING route attempt 1	epyc10
+S81	ot_s81sl_leaf__t14	73	none	GRT	hold | ROUTE-HELD geom ROUTE hold: SKIP-HELD: item held (ot_s81sl_leaf__t14): S81-DIE-R	epyc10,epyc2,epyc8,epyc9,intel2
+S81	ot_s81sl_leaf__t15	40	none	GRT	hold | ROUTE-HELD geom ROUTE hold: SKIP-HELD: item held (ot_s81sl_leaf__t15): S81-DIE-R	epyc10,epyc2,epyc8,epyc9
+S81	ot_s81sl_leaf__t16	43	none	GRT	hold | ROUTE-HELD geom ROUTE hold: SKIP-HELD: item held (ot_s81sl_leaf__t16): S81-DIE-R	epyc10,epyc2,epyc8,epyc9,intel2
+S81	ot_s81sl_leaf__t17	146	none	GRT	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	ot_s81sl_leaf__t2	30	place	GRT	hold | ROUTE-HELD geom ROUTE hold: SKIP-HELD: item held (ot_s81sl_leaf__t2): S81-DIE-R4	epyc10,epyc2,epyc7,intel1
+S81	ot_s81sl_leaf__t21	30	none	place	hold | ROUTE-HELD geom ROUTE hold: WAIT-VISUAL: record a GEOM VERDICT for this attempt 	epyc10,epyc2,epyc8,epyc9
+S81	ot_s81sl_leaf__t22	8	none	place	GRT/route | CANCELLED geom STRUCT-STOP STRUCTURAL [owner MEM-RECLAIM-2200]: PLAN design:grt_	epyc2,epyc7
+S81	ot_s81sl_leaf__t23	24	none	place	gen/RTL | CANCELLED gen_lint SUPERSEDED: RETRY-INFRA row of event 465cb9fe2d3; the die is 	epyc10,epyc2,epyc8,epyc9
+S81	ot_s81sl_leaf__t24__cl2456157b	48	none	place	hold | ROUTE-HELD geom ROUTE hold: SKIP-HELD: item held (ot_s81sl_leaf__t24__cl2456157b	epyc10,epyc2,epyc8,epyc9,intel1
+S81	ot_s81sl_leaf__t24__cl81374cd8	56	none	GRT	place | CANCELLED place SUPERSEDED: FAIL on event 465cb9fe2d3 (die is on 224567138ab); w	epyc10,epyc2,epyc8,epyc9
+S81	ot_s81sl_leaf__t25__cl431c660f	36	none	GRT	hold | ROUTE-HELD geom ROUTE hold: SKIP-HELD: item held (ot_s81sl_leaf__t25__cl431c660f	epyc10,epyc2,epyc9,intel1
+S81	ot_s81sl_leaf__t25__cl55642d17	106	place	GRT	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	ot_s81sl_leaf__t26	24	none	place	hold | ROUTE-HELD geom ROUTE hold: WAIT-VISUAL: record a GEOM VERDICT for this attempt 	epyc2,epyc7,epyc8,intel1
+S81	ot_s81sl_leaf__t27	16	none	GRT	GRT/route | CANCELLED geom STRUCT-STOP STRUCTURAL [owner MEM-RECLAIM-2200]: PLAN design:grt_	epyc10,epyc7,epyc8
+S81	ot_s81sl_leaf__t28	122	place	CTS	hold | ROUTE-HELD geom ROUTE hold: WAIT-VISUAL: record a GEOM VERDICT for this attempt 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+S81	ot_s81sl_leaf__t29	6	none	GRT	GRT/route | CANCELLED geom STRUCT-STOP STRUCTURAL [owner MEM-RECLAIM-2200]: PLAN design:grt_	epyc10
+S81	ot_s81sl_leaf__t3	33	none	gen	place | CANCELLED place SUPERSEDED: RETRY-INFRA row of event 465cb9fe2d3; the die is on 	epyc2,epyc8,epyc9,intel2
+S81	ot_s81sl_leaf__t30	70	none	GRT	geom/visual hold | CANCELLED geom SUPERSEDED: event b05c98f7919 is not current (224567138ab); relau	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	ot_s81sl_leaf__t31	80	place	GRT	hold | ROUTE-HELD geom ROUTE hold: WAIT-VISUAL: record a GEOM VERDICT for this attempt 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	ot_s81sl_leaf__t32	34	none	GRT	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc7,epyc8
+S81	ot_s81sl_leaf__t33	42	none	place	GRT/route | CANCELLED geom STRUCT-STOP STRUCTURAL [owner MEM-RECLAIM-2200]: PLAN design:grt_	epyc10,epyc2,epyc8,epyc9,intel1
+S81	ot_s81sl_leaf__t34	36	none	place	hold | ROUTE-HELD geom ROUTE hold: SKIP-HELD: item held (ot_s81sl_leaf__t34): S81-DIE-R	epyc10,epyc2,epyc8,epyc9
+S81	ot_s81sl_leaf__t35	30	none	GRT	hold | ROUTE-HELD geom ROUTE hold: SKIP-HELD: item held (ot_s81sl_leaf__t35): S81-DIE-R	epyc10,epyc2,epyc8,epyc9
+S81	ot_s81sl_leaf__t36	26	none	place	geom/visual hold | CANCELLED geom SUPERSEDED: event 465cb9fe2d3 is not current (224567138ab); relau	epyc2,epyc7,epyc8
+S81	ot_s81sl_leaf__t37	49	none	place	place | CANCELLED place SUPERSEDED: FAIL on event 465cb9fe2d3 (die is on 224567138ab); w	epyc10,epyc2,epyc7,epyc8,epyc9,intel2
+S81	ot_s81sl_leaf__t38	33	none	place	hold | ROUTE-HELD geom ROUTE hold: SKIP-HELD: item held (ot_s81sl_leaf__t38): S81-DIE-R	epyc10,epyc2,epyc8,epyc9,intel2
+S81	ot_s81sl_leaf__t39	60	place	place	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	ot_s81sl_leaf__t4	24	none	place	hold | ROUTE-HELD geom ROUTE hold: SKIP-HELD: item held (ot_s81sl_leaf__t4): S81-DIE-R4	epyc10,epyc2,epyc8,epyc9
+S81	ot_s81sl_leaf__t40__cl86ea32b3	30	none	place	gen/RTL | CANCELLED gen_lint SUPERSEDED: RETRY-INFRA row of event 465cb9fe2d3; the die is 	epyc10,epyc2,epyc8,epyc9
+S81	ot_s81sl_leaf__t40__cl86ea32b3__sid5S	80	none	place	GRT/route | CANCELLED geom STRUCT-STOP STRUCTURAL [owner MEM-RECLAIM-2200]: PLAN design:grt_	epyc10,epyc2,epyc8,epyc9,intel1
+S81	ot_s81sl_leaf__t40__clf8bbdae1	32	none	GRT	place | CANCELLED place SUPERSEDED: RETRY-INFRA row of event 465cb9fe2d3; the die is on 	epyc10,epyc2,epyc8,intel1
+S81	ot_s81sl_leaf__t41	6	none	GRT	GRT/route | CANCELLED geom STRUCT-STOP STRUCTURAL [owner MEM-RECLAIM-2200]: PLAN design:grt_	epyc8
+S81	ot_s81sl_leaf__t42	40	none	place	place | CANCELLED place SUPERSEDED: FAIL on event 465cb9fe2d3 (die is on 224567138ab); w	epyc10,epyc2,epyc7,epyc8,epyc9
+S81	ot_s81sl_leaf__t43	46	none	GRT	geom/visual hold | CANCELLED geom queue job 19e91c71a864 cancelled: cancelled: ot-run: interrupted 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	ot_s81sl_leaf__t44__clf4ea6d4b	50	none	GRT	hold | ROUTE-HELD geom ROUTE hold: SKIP-HELD: item held (ot_s81sl_leaf__t44__clf4ea6d4b	epyc10,epyc2,epyc8,epyc9,intel1
+S81	ot_s81sl_leaf__t44__clf6cf8492	48	place	GRT	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc7,intel1
+S81	ot_s81sl_leaf__t45	18	none	GRT	geom/visual hold | CANCELLED geom SUPERSEDED: retired; event 3fa87b84b18 is not current (b05c98f791	epyc8,intel1
+S81	ot_s81sl_leaf__t46	24	none	place	GRT/route | CANCELLED geom STRUCT-STOP STRUCTURAL [owner MEM-RECLAIM-2200]: PLAN design:grt_	epyc10,epyc2,epyc8,epyc9
+S81	ot_s81sl_leaf__t47	45	none	place	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc8,epyc9,intel1,intel2
+S81	ot_s81sl_leaf__t5	40	none	GRT	hold | ROUTE-HELD geom ROUTE hold: SKIP-HELD: item held (ot_s81sl_leaf__t5): S81-DIE-R4	epyc10,epyc2,epyc8,epyc9
+S81	ot_s81sl_leaf__t50	52	none	place	hold | ROUTE-HELD geom ROUTE hold: WAIT-VISUAL: record a GEOM VERDICT for this attempt 	epyc10,epyc2,epyc8,epyc9,intel2
+S81	ot_s81sl_leaf__t51	30	none	place	place | CANCELLED place SUPERSEDED: FAIL on event 465cb9fe2d3 (die is on 224567138ab); w	epyc10,epyc2,epyc8,epyc9
+S81	ot_s81sl_leaf__t52	70	place	GRT	hold | ROUTE-HELD geom ROUTE hold: WAIT-VISUAL: record a GEOM VERDICT for this attempt 	epyc10,epyc2,epyc7,epyc8,intel1
+S81	ot_s81sl_leaf__t53__cl958451dd	28	none	GRT	GRT/route | CANCELLED geom STRUCT-STOP STRUCTURAL [owner MEM-RECLAIM-2200]: PLAN design:grt_	epyc10,epyc2,epyc7,intel1
+S81	ot_s81sl_leaf__t53__clb66fa5cb	26	none	GRT	GRT/route | CANCELLED geom STRUCT-STOP STRUCTURAL [owner MEM-RECLAIM-2200]: PLAN design:grt_	epyc10,epyc2,epyc8,intel1
+S81	ot_s81sl_leaf__t54__cl501e5681	52	none	GRT	GRT/route | CANCELLED geom STRUCT-STOP STRUCTURAL [owner MEM-RECLAIM-2200]: PLAN design:grt_	epyc10,epyc2,epyc8,epyc9,intel1
+S81	ot_s81sl_leaf__t54__cl706d9749	50	none	GRT	hold | ROUTE-HELD geom ROUTE hold: SKIP-HELD: item held (ot_s81sl_leaf__t54__cl706d9749	epyc10,epyc2,epyc8,epyc9,intel1
+S81	ot_s81sl_leaf__t55	38	none	GRT	GRT/route | RUNNING route attempt 1	epyc2,epyc7,epyc8,intel1
+S81	ot_s81sl_leaf__t56	64	place	place	hold | ROUTE-HELD geom ROUTE hold: SKIP-HELD: item held (ot_s81sl_leaf__t56): S81-DIE-R	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	ot_s81sl_leaf__t57	61	none	GRT	hold | ROUTE-HELD geom ROUTE hold: SKIP-HELD: item held (ot_s81sl_leaf__t57): S81-DIE-R	epyc10,epyc2,epyc7,epyc8,epyc9,intel2
+S81	ot_s81sl_leaf__t58	34	none	GRT	hold | ROUTE-HELD geom ROUTE hold: SKIP-HELD: item held (ot_s81sl_leaf__t58): S81-DIE-R	epyc10,epyc7,epyc8,epyc9,intel1
+S81	ot_s81sl_leaf__t59	30	none	place	hold | ROUTE-HELD geom ROUTE hold: SKIP-HELD: item held (ot_s81sl_leaf__t59): S81-DIE-R	epyc10,epyc2,epyc8,epyc9
+S81	ot_s81sl_leaf__t6	24	none	place	cancelled | CANCELLED gen SUPERSEDED: RETRY-INFRA row of event 465cb9fe2d3; the die is on 22	epyc10,epyc8,epyc9
+S81	ot_s81sl_leaf__t60	48	none	place	hold | ROUTE-HELD geom ROUTE hold: WAIT-VISUAL: record a GEOM VERDICT for this attempt 	epyc10,epyc2,epyc7,epyc8,epyc9
+S81	ot_s81sl_leaf__t61	30	none	place	GRT/route | CANCELLED geom STRUCT-STOP STRUCTURAL [owner MEM-RECLAIM-2200]: PLAN design:grt_	epyc10,epyc2,epyc8,epyc9
+S81	ot_s81sl_leaf__t62	62	none	place	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc8,epyc9,intel1
+S81	ot_s81sl_leaf__t65	30	none	place	hold | ROUTE-HELD geom ROUTE hold: SKIP-HELD: item held (ot_s81sl_leaf__t65): S81-DIE-R	epyc10,epyc2,epyc8,epyc9
+S81	ot_s81sl_leaf__t66	51	none	GRT	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc8,epyc9,intel1,intel2
+S81	ot_s81sl_leaf__t67	34	none	place	hold | ROUTE-HELD geom ROUTE hold: SKIP-HELD: item held (ot_s81sl_leaf__t67): S81-DIE-R	epyc10,epyc2,epyc8,epyc9,intel1
+S81	ot_s81sl_leaf__t68	40	none	GRT	geom/visual hold | CANCELLED geom SUPERSEDED: event 465cb9fe2d3 is not current (224567138ab); relau	epyc10,epyc2,epyc8,epyc9
+S81	ot_s81sl_leaf__t69	40	none	GRT	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	ot_s81sl_leaf__t7	52	place	place	GRT/route | CANCELLED geom STRUCT-STOP STRUCTURAL [owner MEM-RECLAIM-2200]: PLAN design:grt_	epyc10,epyc2,epyc8,epyc9,intel1
+S81	ot_s81sl_leaf__t70	47	none	place	hold | ROUTE-HELD geom ROUTE hold: SKIP-HELD: item held (ot_s81sl_leaf__t70): S81-DIE-R	epyc10,epyc2,epyc8,epyc9,intel2
+S81	ot_s81sl_leaf__t71	6	none	GRT	geom/visual hold | CANCELLED geom SUPERSEDED: event b05c98f7919 is not current (224567138ab); relau	epyc8
+S81	ot_s81sl_leaf__t72	39	none	place	hold | ROUTE-HELD geom ROUTE hold: WAIT-VISUAL: record a GEOM VERDICT for this attempt 	epyc10,epyc2,epyc8,epyc9,intel2
+S81	ot_s81sl_leaf__t73	18	none	GRT	geom/visual hold | CANCELLED geom SUPERSEDED: retired; event 3fa87b84b18 is not current (b05c98f791	epyc7,epyc8,intel1,intel2
+S81	ot_s81sl_leaf__t74	30	none	place	hold | ROUTE-HELD geom ROUTE hold: SKIP-HELD: item held (ot_s81sl_leaf__t74): S81-DIE-R	epyc10,epyc2,epyc8,epyc9
+S81	ot_s81sl_leaf__t75	8	none	CTS	GRT/route | RUNNING route attempt 1	epyc8,intel2
+S81	ot_s81sl_leaf__t8	70	place	place	hold | ROUTE-HELD geom ROUTE hold: SKIP-HELD: item held (ot_s81sl_leaf__t8): S81-DIE-R4	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	ot_s81sl_leaf__t9	16	none	GRT	geom/visual hold | CANCELLED geom queue job 19fe83d80cb0 cancelled: cancelled: ot-run: interrupted 	epyc8,intel1
+S81	seqhost__t1	54	place	GRT	hold | ROUTE-HELD geom ROUTE hold: WAIT-VISUAL: record a GEOM VERDICT for this attempt 	epyc10,epyc2,epyc8,epyc9,intel1
+S81	serdes__t12	116	place	GRT	running | RUNNING gen 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	serdes__t13	86	gen	floorplan	place | CANCELLED place superseded by attempt 6 of the same item: its units, containers 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	serdes__t14	100	place	GRT	place | FAIL place tool / Tcl error @place: Error: global_place.tcl, 5 cone has more tha	epyc10,epyc2,epyc7,epyc9,intel1
+S81	serdes__t15__cla2127225	109	place	place	place | FAIL place tool / Tcl error @place: Error: global_place.tcl, 5 cone has more tha	epyc10,epyc2,epyc7,epyc9,intel1,intel2
+S81	serdes__t15__cla3d02796	78	place	GRT	place | FAIL place tool / Tcl error @place: Error: global_place.tcl, 5 cone has more tha	epyc10,epyc2,epyc7,epyc9,intel1
+S81	serdes__t16	72	place	place	hold | ROUTE-HELD geom ROUTE hold: WAIT-VISUAL: record a GEOM VERDICT for this attempt 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	serdes__t1__clb45db5be	125	place	GRT	place | FAIL place tool / Tcl error @place: Error: global_place.tcl, 5 cone has more tha	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+S81	serdes__t1__clfe1f0815	81	place	place	place | FAIL place plan geometry / site @place: Error: detail_place.tcl, 46 DPL-0033	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+S81	serdes__t2	90	place	place	running | RUNNING  	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	serdes__t3	54	place	place	place | FAIL place plan geometry / site @place: Error: detail_place.tcl, 46 DPL-0033	epyc10,epyc2,epyc8,epyc9,intel1
+S81	serdes__t4	118	place	place	running | RUNNING  	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	slice_station__t36	64	place	place	geom/visual hold | CANCELLED geom SUPERSEDED: retired; event b05c98f7919 is not current (224567138a	epyc10,epyc2,epyc9,intel1
+S81	slice_station__t43	84	place	finished	other	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	slice_station__t51	84	GRT	GRT	running | RUNNING gen 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	slice_station__t52	64	place	GRT	GRT/route | RUNNING route attempt 1	epyc10,epyc2,epyc9,intel1
+S81	svc_hi_dsdv_svc_pvso_entry__t1	59	floorplan	floorplan	cancelled | CANCELLED kit_topology superseded by attempt 24 of the same item: its units, con	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+S81	svc_hi_dsdv_svc_pvso_entry__t2	48	gen	floorplan	place | CANCELLED place SUPERSEDED: FAIL on event 465cb9fe2d3 (die is on 224567138ab); w	epyc10,epyc2,epyc8,epyc9,intel1
+S81	svc_hi_dsdv_svc_rs__t1	48	gen	floorplan	place | CANCELLED place SUPERSEDED: FAIL on event 465cb9fe2d3 (die is on 224567138ab); w	epyc10,epyc2,epyc8,epyc9,intel1
+S81	svc_hi_dsdv_svc_rs__t2	74	gen	gen	place | CANCELLED place STRUCT-STOP STRUCTURAL [owner S81-DIE-R5]: COORD ruling 11-20 19	epyc10,epyc2,epyc8,epyc9,intel1
+S81	svc_hi_dsdv_svc_rs__t3	78	gen	floorplan	place | RUNNING place 	epyc10,epyc2,epyc8,epyc9,intel1
+S81	svc_hi_dsdv_svc_rs__t4	84	gen	floorplan	place | RUNNING place 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	svc_hi_dsdv_svc_rs__t5	62	gen	floorplan	place | CANCELLED place SUPERSEDED: FAIL on event 465cb9fe2d3 (die is on 224567138ab); w	epyc10,epyc2,epyc8,epyc9,intel1
+S81	svc_hi_dsdv_svc_rs__t6	48	gen	gen	place | CANCELLED place STRUCT-STOP STRUCTURAL [owner S81-DIE-R5]: COORD ruling 11-20 19	epyc10,epyc2,epyc8,epyc9,intel1
+S81	svc_lo_dsdv_svc_rs__t1	68	gen	gen	cancelled | CANCELLED gen superseded by attempt 17 of the same item: its units, containers a	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	svc_lo_dsdv_svc_rs__t2	80	gen	gen	place | RUNNING place 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	svc_lo_dsdv_svc_rs__t3	58	gen	gen	place | CANCELLED place STRUCT-STOP STRUCTURAL [owner S81-DIE-R5]: COORD ruling 11-20 19	epyc10,epyc2,epyc9,intel1
+S81	svc_lo_dsdv_svc_rs__t4	50	gen	floorplan	place | CANCELLED place SUPERSEDED: FAIL on event 465cb9fe2d3 (die is on 224567138ab); w	epyc10,epyc2,epyc8,epyc9,intel1
+S81	svc_lo_dsdv_svc_rs__t5	122	gen	floorplan	place | RUNNING place 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1,intel2
+S81	svc_lo_dsdv_svc_rs__t6	84	gen	gen	place | RUNNING place 	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	svc_lo_dsdv_svc_rs__t7	44	gen	gen	place | CANCELLED place STRUCT-STOP STRUCTURAL [owner S81-DIE-R5]: COORD ruling 11-20 19	epyc10,epyc2,epyc7,epyc8,epyc9,intel1
+S81	svc_lo_dsdv_svc_rs_w__t1	42	gen	gen	place | CANCELLED place STRUCT-STOP STRUCTURAL [owner S81-DIE-R5]: COORD ruling 11-20 19	epyc10,epyc2,epyc8,epyc9,intel1
