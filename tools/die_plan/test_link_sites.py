@@ -115,3 +115,34 @@ def test_seg1_writes_lockup_budget(tmp_path):
     # stage names follow the segment split (kit_dly_lockup <inst>_sg<j>)
     assert all(f"u_d0_link_sg{j}.q[0]" in sites for j in range(3))
     assert not any(k.startswith("u_d0_link.") for k in sites)
+
+
+def _pc_legs(rep):
+    return [d for d, a, b in rep["all_legs"] if "u_pc_nk" in a and "u_tb" in b or "u_pc_nk" in b and "u_tb" in a]
+
+
+def test_pc_slack0_identical(tmp_path):
+    plan, sv, root = _fixture(tmp_path)
+    a = _run(tmp_path, plan, sv, root, "p_def")
+    b = _run(tmp_path, plan, sv, root, "p_0", "--pc-slack", "0")
+    assert a[2] == b[2] and a[3] == b[3]
+    sites = a[0]["partition_types"][TYPE]["relay_sites"]
+    assert all(990.0 <= sites[f"u_pc_nk.q[{i}]"][0] < 1000.0 for i in range(8))
+    assert _pc_legs(a[1]) and all(d == 8.0 for d in _pc_legs(a[1]))
+
+
+def test_pc_slack_shortens_long_link(tmp_path):
+    plan, sv, root = _fixture(tmp_path)
+    sv.write_text(SV.replace(".D(3)) u_d0_link", ".D(1)) u_d0_link"))   # 1 stage: ~845 um cannot meet the cap with pc AT the pin
+    _o0, rep0, _a, _b = _run(tmp_path, plan, sv, root, "l0")
+    assert rep0["worst_leg_um"] > 300.0
+    S = 300.0
+    out, rep, _a, _b = _run(tmp_path, plan, sv, root, "l1", "--pc-slack", str(S))
+    assert rep["worst_leg_um"] < rep0["worst_leg_um"]
+    sites = out["partition_types"][TYPE]["relay_sites"]
+    for i in range(8):
+        x, y = sites[f"u_pc_nk.q[{i}]"]
+        assert abs(x - 1000.0) + abs(y - (196.0 + i)) <= S + 15.0, (i, x, y)
+    legs = _pc_legs(rep)
+    assert legs and max(legs) > 8.0
+    assert all(d <= S + 1.0 for d in legs)

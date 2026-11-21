@@ -250,6 +250,7 @@ class Node:
 
 GEO = None
 HINT = {}
+PC_SLACK = 0.0      # --pc-slack: a core-pin pipe register may sit up to this far (L1 um) from its pin (0 = AT the pin)
 
 
 def row_layout(e, bus, geo, W, H, cap, nmin, shadows):
@@ -480,8 +481,9 @@ def build(t, sv, pins_roots, seg):
     for a, b in list(edges):
         na, nb = nodes[a], nodes[b]
         if nb.kind == "pin" and na.kind == "dly" and len(chains.get(na.meta["inst"], [])) == 1 and re.match(r"u_pc_", na.meta["inst"]):
-            na.fixed, na.pos, na.kind = True, nb.pos, "pc"
+            na.fixed, na.pos, na.kind = PC_SLACK <= 0, nb.pos, "pc"
             na.meta["pin"] = b
+            na.meta["pin_xy"] = nb.pos
     used = {k for e in edges for k in e}
     for k in [k for k in nodes if k not in used]:
         del nodes[k]
@@ -541,7 +543,9 @@ def solve(nodes, edges, geo, sweeps=40):
             pos[k] = nb[0] if nb else (geo.die[2] / 2, geo.die[3] / 2)
 
     def cost(k, p):
-        ws = [geo.dist(p, anchor(pos[x])) + nodes[x].half * (nodes[x].kind == "pin") for x in adj[k]]
+        if nodes[k].kind == "pc" and L1(p, nodes[k].meta["pin_xy"]) > PC_SLACK:
+            return (1e9, 1e9)                     # --pc-slack: never further than PC_SLACK from its pin
+        ws = [geo.dist(p, anchor(pos[x])) + nodes[x].half * (nodes[x].kind == "pin" and nodes[k].kind != "pc") for x in adj[k]]
         return (max(ws), sum(ws)) if ws else (0.0, 0.0)
     mov = [k for k, n in nodes.items() if not n.fixed]
     for _s in range(sweeps):
@@ -576,7 +580,7 @@ def solve(nodes, edges, geo, sweeps=40):
             d = L1(pos[a], pos[b])                    # a row is measured the way the census does
         d += sum(nodes[x].half for x in (a, b) if nodes[x].kind == "pin" and nodes[a if x == b else b].kind != "pc")
         if nodes[a].kind == "pc" and nodes[b].kind == "pin":
-            d = 8.0
+            d = max(8.0, round(L1(pos[a], nodes[a].meta["pin_xy"]), 1))
         legs.append((round(d, 1), a, b))
     return pos, legs
 
@@ -603,7 +607,11 @@ def main():
     ap.add_argument("--no-grow", action="store_true")
     ap.add_argument("--max-add", type=int, default=6)
     ap.add_argument("--min-stations", action="append", default=[], metavar="BUS=N", help="a bus row gets at least N stations (class balance)")
+    ap.add_argument("--pc-slack", type=float, default=0.0, help="core-pin pipe registers u_pc_* may sit up to this L1 distance (um) "
+                    "from their pin instead of AT it (0 cycles; for a tile link whose stages cannot reach the pin within the cap)")
     A = ap.parse_args()
+    global PC_SLACK
+    PC_SLACK = A.pc_slack
     raw = json.loads(Path(A.plan).read_text())
     t = raw["partition_types"][A.type]
     sv = Path(A.sv).read_text()
@@ -705,6 +713,9 @@ def main():
             for b in bits_of(n.meta["inst"], n.meta["W"]):
                 q = pn.meta["pins"].get(b)
                 q = out_of(c, q, 3.0) if q else pn.pos
+                if PC_SLACK > 0:                      # the bank moved off its pin by (dx, dy): every bit keeps its pin offset
+                    dx, dy = p[0] - n.meta["pin_xy"][0], p[1] - n.meta["pin_xy"][1]
+                    q = geo.push_free((q[0] + dx, q[1] + dy))
                 sites[f"{n.meta['inst']}.q[{b}]"] = [round(q[0], 3), round(q[1], 3)]
         elif n.kind == "cnt":
             for s in range(n.meta["dmax"]):
