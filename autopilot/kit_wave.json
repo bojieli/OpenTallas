@@ -274,7 +274,6 @@
    "live_claim_h": 0.25,
    "pilot_mode": "queue",
    "hold_items": {
-    "kv3_hub_C": "KV-FAILED-ROWS-2100 11-20: KIT_NOT_SELF_CONTAINED, the 6 kvd23_hubc_views in the D25e3/D25f2 source carry no provenance.json (sources gone); FAILed 3x. Plan fix = D27 re-freeze of the 6 views (CLAND-MACRO-1 form). Lift = delete this key when D27 is applied.",
     "kv3_pc__cl254f2e73": "KV-FAILED-ROWS-2100 11-20: PDN-0006 VSS M5 blocked by M6/M7 obstructions over u_bound.u_kvpc0 (plan PG geometry, kv_pcsplit_views_1119). Unchanged relaunch fails the same; plan fix = D27 row (merged-obstruction re-export). Lift = delete this key when D27 is applied.",
     "kv3_pc__cl5a95b461": "KV-FAILED-ROWS-2100 11-20: PDN-0006 VSS M5 blocked by M6/M7 obstructions over u_bound.u_kvpc0 (plan PG geometry, kv_pcsplit_views_1119). Unchanged relaunch fails the same; plan fix = D27 row (merged-obstruction re-export). Lift = delete this key when D27 is applied.",
     "kv3_pc_v1__cl23f6a148": "KV-FAILED-ROWS-2100 11-20: kit_topology: i_ectl_Q_N_kf carries packed exact banks AND a face-register move (plan carries both forms on one bus); FAILed 3x. Plan fix = D27 pc_v1 row (third bank, drop face move). Lift = delete this key when D27 is applied.",
