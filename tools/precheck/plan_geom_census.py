@@ -137,7 +137,7 @@ def reset_findings(t, die_dir, cap=CAP_UM):
         L, D = row.get("path_um"), int(row.get("D") or 0)
         if isinstance(L, (int, float)) and L / (D + 1) > cap:
             out.append((round(L / (D + 1), 1), f"reset relay_depth {row.get('inst')}.{row.get('port')} path {L} um D {D} (leg {L / (D + 1):.0f})"))
-    seats = [tuple(v) for v in (t.get("relay_sites") or {}).values() if isinstance(v, (list, tuple)) and len(v) >= 2]
+    seats = [tuple(v[:2]) for k, v in (t.get("relay_sites") or {}).items() if RST.search(str(k)) and isinstance(v, (list, tuple)) and len(v) >= 2]
     seats += [tuple(v[:2]) if isinstance(v, (list, tuple)) else tuple((v.get("xy_um") or [])[:2]) for v in r.get("local_taps_um") or []
               if (isinstance(v, (list, tuple)) and len(v) >= 2) or (isinstance(v, dict) and v.get("xy_um"))]
     if seats:
@@ -340,6 +340,64 @@ def kit_type(name):
     return re.split(r"-(?:route|place|grt|cts|finish|sta)-", Path(name).name)[0]
 
 
+def segments(t):
+    """[(a, b)] every planned station hop of the type (the points precheck.reach_findings measures)"""
+    sys.path.insert(0, str(HERE))
+    try:
+        import precheck as PC
+    finally:
+        sys.path.pop(0)
+    w, h = t.get("outline_um") or (0, 0)
+    buses = {b.get("name"): b for b in t.get("buses") or []}
+    out = []
+    for e in t.get("internal_stations") or []:
+        if not e.get("from_um") or not e.get("to_um"):
+            continue
+        pts = [tuple(e["from_um"])] + [tuple(r) for r in (e.get("regs_um") or [])] + [tuple(e["to_um"])]
+        conn = e.get("conn", "")
+        bus = buses.get(conn[4:]) if conn.startswith("bus:") else None
+        if bus and bus.get("face") in ("N", "S", "E", "W") and bus.get("window_um") and len(pts) >= 2:
+            if bus.get("dir") == "in" and PC.on_face(bus["face"], pts[0], w, h):
+                pts[0] = PC.face_end_worst(bus["face"], bus["window_um"], w, h, pts[1])
+            elif bus.get("dir") == "out" and PC.on_face(bus["face"], pts[-1], w, h):
+                pts[-1] = PC.face_end_worst(bus["face"], bus["window_um"], w, h, pts[-2])
+        out += list(zip(pts, pts[1:]))
+    for s_ in t.get("ft_slots") or []:
+        regs, k = s_.get("regs_um") or [], int(s_.get("stations", 1) or 1)
+        if not (s_.get("in_face") and s_.get("out_face") and s_.get("in_window_um") and s_.get("out_window_um")) or len(regs) < k - 1:
+            continue
+        mid = [tuple(r) for r in regs[-(k - 1):]] if k > 1 else []
+        a = PC.face_point(s_["in_face"], s_["in_window_um"], w, h, mid[0] if mid else None)
+        b = PC.face_point(s_["out_face"], s_["out_window_um"], w, h, mid[-1] if mid else None)
+        pts = [a] + mid + [b]
+        out += list(zip(pts, pts[1:]))
+    return out
+
+
+def measured_legs(rec, classes=("logic", "channel")):
+    """[(a_xy, b_xy, um)] the example leg of each register class pair of a kit_scan PLACED record"""
+    out = []
+    for p in rec.get("pairs") or []:
+        if len(p) >= 6 and p[5] in classes and isinstance(p[4], list) and len(p[4]) >= 4:
+            a, b = p[4][2], p[4][3]
+            if isinstance(a, list) and isinstance(b, list):
+                out.append((tuple(a), tuple(b), float(p[3])))
+    return out
+
+
+def match_hops(segs, legs, radius=60.0):
+    """per measured leg: the planned hop whose two ends both lie within radius of the leg's ends (either order) -> (leg um, plan um)"""
+    out = []
+    for a, b, um in legs:
+        best = None
+        for p, q in segs:
+            d = min(man(a, p) + man(b, q), man(a, q) + man(b, p))
+            if d <= 2 * radius and (best is None or d < best[0]):
+                best = (d, man(p, q))
+        out.append((um, best[1] if best else None))
+    return out
+
+
 def calib(plan, tools, placed, cap=CAP_UM):
     _raw, T = EC.load_plan(plan, tools)
     rows = []
@@ -354,15 +412,25 @@ def calib(plan, tools, placed, cap=CAP_UM):
         if rec.get("status") not in (None, "OK", "ok") and not rec.get("pairs"):
             continue
         est = max([v for v, _ in EC.hops_list(T[tn], 0.0)] or [0.0])
-        rows.append((tn, est, placed_worst(rec), Path(f).name))
+        rows.append((tn, est, placed_worst(rec), Path(f).name, match_hops(segments(T[tn]), measured_legs(rec))))
     tp = sum(1 for r in rows if r[1] > cap and r[2] > cap)
     fp = sum(1 for r in rows if r[1] > cap and r[2] <= cap)
     fn = sum(1 for r in rows if r[1] <= cap and r[2] > cap)
     tn_ = sum(1 for r in rows if r[1] <= cap and r[2] <= cap)
     ratios = sorted(r[2] / r[1] for r in rows if r[1] > 0 and r[2] > 0)
     med = ratios[len(ratios) // 2] if ratios else None
-    return rows, dict(kits=len(rows), tp=tp, fp=fp, fn=fn, tn=tn_, precision=round(tp / (tp + fp), 3) if tp + fp else None,
-                      recall=round(tp / (tp + fn), 3) if tp + fn else None, median_measured_over_est=round(med, 3) if med else None)
+    hops = [m for r in rows for m in r[4]]
+    matched = [(um, est) for um, est in hops if est is not None]
+    hr = sorted(um / est for um, est in matched if est > 0)
+    flagged = sum(1 for um, est in matched if um > cap and est > cap)
+    return rows, dict(kits=len(rows), type_level=dict(tp=tp, fp=fp, fn=fn, tn=tn_, precision=round(tp / (tp + fp), 3) if tp + fp else None,
+                                                      recall=round(tp / (tp + fn), 3) if tp + fn else None,
+                                                      median_measured_worst_over_plan_worst=round(med, 3) if med else None),
+                      hop_level=dict(measured_legs_over=len(hops), matched_to_a_planned_hop=len(matched),
+                                     hit_rate_matched_and_flagged=round(flagged / len(matched), 3) if matched else None,
+                                     median_measured_over_plan=round(hr[len(hr) // 2], 3) if hr else None,
+                                     p10_p90=[round(hr[len(hr) // 10], 3), round(hr[(9 * len(hr)) // 10], 3)] if len(hr) >= 10 else None,
+                                     unmatched_share=round(1 - len(matched) / len(hops), 3) if hops else None))
 
 
 def main(argv=None):
@@ -392,8 +460,8 @@ def main(argv=None):
     o.mkdir(parents=True, exist_ok=True)
     with open(o / "CALIB.tsv", "w") as f:
         f.write("type\test_worst_hop_um\tmeasured_worst_leg_um\tkit\n")
-        for tn, e, m, k in rows:
-            f.write(f"{tn}\t{e:.1f}\t{m:.1f}\t{k}\n")
+        for tn, e, m, k, hm in rows:
+            f.write(f"{tn}\t{e:.1f}\t{m:.1f}\t{k}\t" + " ".join(f"{um:.0f}/{'-' if est is None else round(est)}" for um, est in hm) + "\n")
     (o / "calib.json").write_text(json.dumps(s, indent=1))
     print(f"CALIB {len(rows)} placed kits: " + json.dumps(s))
     return 0

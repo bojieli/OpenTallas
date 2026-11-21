@@ -9,7 +9,7 @@ rip1-rtl-319f91aaf1	commit	319f91aaf1	s81	dsdv_slice_lep*		S81 lep bare-name def
 rip1-define	define	319f91aaf1	s81	dsdv_slice_lepe_*_LP__*,dsdv_slice_lepw_*_LP__*	OT_S81SL_LEP_RIP1	registered ring read (rid class, proof6 post-CTS -530 -> -404); J5 had the branch, no define
 slew-25fc65d0cb1	commit	25fc65d0cb1	*	*		PLACE-SLEW 11-20: OT_PLACE_MAX_TRANSITION 320 is the gen default on every die
 reset-legs-f02ccd50eb	commit	f02ccd50eb	*	*		RESET-RELAY-GEN-1530: reset_leg_plan.py, reset legs over the hop cap
-reset-cap-ecd0239bd5	commit	ecd0239bd5	*	*		bound reset cap: tree.reach_um is the per-type reach, not the cap
+reset-cap-fa09197057	commit	fa09197057	*	*		bound reset cap: tree.reach_um is the per-type reach, not the cap (main sha of the ecd0239bd5 push)
 s81-prefix-d98908b665	commit	d98908b665	*	*		GPL sparse-exit / GPL overflow apply to the S81 die by exact name, not the s81 prefix
 schema-8e9cdd615c	commit	8e9cdd615c	*	*		schema: internal_stations[].sites="float" (WIDE-FLOAT-1)
 lockup-rule-c00314fc08	commit	c00314fc08	*	*		station_rule: one die-agnostic station rule + plan clock.zl_lockup (LOCKUP tools)
@@ -17,3 +17,5 @@ lockup-netlist-887cb2d06a	commit	887cb2d06a	*	*		LOCKUP-STATION-1130: post-synth
 lockup-lec-63a15840d2	commit	63a15840d2	*	*		LOCKUP-STATION-1130: LEC lockup after black-box outputs; rising-edge flops only
 lockup-leaf-ae58c0fd97	commit	ae58c0fd97	*	*		LOCKUP-STATION-1130: hop latches on the launch leaf; ends-only and seam latches
 lockup-dly-ddb2501006	commit	ddb2501006	*	*		kit_dly_lockup: pad_min_stations (sparse pad lines get a station per transport hop)
+bksel-tkr-40458a43e1	commit	40458a43e1	s81	bk_sel*		S81 bksel_c TKR: u_c takes from a registered new-fault flop (0 cycles, under OT_BKSEL_A3P); COORD 11-20: J6 must carry it
+bksel-l4-define	define	pending	s81	bk_sel__*	OT_BKSEL_L4	OPUS-FIX-S81-BKSEL-R4: 4 RTL link stages + hard-core reset relays; COORD 11-20: J6 must carry it (sha column filled when pushed)

@@ -46,7 +46,8 @@ HOP_UM = 300.0
 STEP_UM = 1.0
 REGREAD_RE = r"(?:SRAMREG|RDREG|READREG|_RIP\d+)$"
 HOLD_TAG = "EVENT-CENSUS"
-METRICS = ("MON_UM", "HOPS_300", "DEFINES", "UNREG_READS", "RESET_UM", "RESET_ROWS")
+METRICS = ("MON_UM", "HOPS_300", "DEFINES", "DEFINES_KIT", "UNREG_READS", "RESET_UM", "RESET_ROWS")
+IGNORED_DEFINES = {"SYNTHESIS"}     # every config.mk sets it
 
 
 def load_plan(plan, tools):
@@ -209,10 +210,10 @@ def type_metrics(t, kit=None, regread=REGREAD_RE):
     m["MON_UM"] = (mon, md)
     n, worst, hd = hops_300(t)
     m["HOPS_300"] = (n, f"worst {worst:.0f} um: {hd}" if n else "")
-    defs = set(str(x) for x in t.get("verilog_defines") or [])
-    if kit:
-        defs |= kit_defines(kit)
-    m["DEFINES"] = (sorted(defs), "config.mk + plan" if kit else "plan")
+    pdefs = set(str(x) for x in t.get("verilog_defines") or [])
+    defs = pdefs | (kit_defines(kit) if kit else set())
+    m["DEFINES"] = (sorted(pdefs - IGNORED_DEFINES), "plan")
+    m["DEFINES_KIT"] = (sorted(defs - IGNORED_DEFINES) if kit else None, "config.mk + plan")
     if kit:
         c, names = unreg_reads(kit, defs, regread)
         m["UNREG_READS"] = (c, ", ".join(names))
@@ -251,7 +252,7 @@ def compare(metric, pv, nv):
         if nv < pv:
             return "REGRESS", f"reset leg rows {pv} -> {nv}"
         return "OK", ""
-    if metric == "DEFINES":
+    if metric in ("DEFINES", "DEFINES_KIT"):
         lost = sorted(set(pv) - set(nv))
         if lost:
             return "REGRESS", "lost " + ", ".join(lost)

@@ -104,7 +104,7 @@ def test_abs_core_wire_and_pins(tmp_path):
     t["internal_stations"] = [{"conn": "core:u_a.q|core:u_b.d", "regs_um": [[400, 0]]}]
     assert PG.core_wire_findings(t, tmp_path, conns) == []          # a station row registers the port
     assert PG.pin_abs(cores[2], 10, 5) == (110, 15)                  # MX flips y
-    t["relay_sites"] = {"u_r.q": [900, 900]}
+    t["relay_sites"] = {"u_rst_relay.q": [900, 900], "u_lpad_dn.q[0]": [20, 20]}
     r = PG.reset_findings(t, tmp_path)
     assert len(r) == 3 and all("reset pin" in d for _v, d in r)
 
@@ -136,3 +136,23 @@ def test_hook_steps_skip_cleanly():
     assert H.event_census(a, Path("/nonexistent")) == ""          # re-apply of the same plan
     assert H.adopt_diff(a, Path("/nonexistent")) == ""
     assert H.tree_of("/t1/tools/die_plan") == Path("/t1")
+
+
+def test_hop_level_calibration_match():
+    t = {"outline_um": [1000, 1000], "buses": [], "ft_slots": [],
+         "internal_stations": [{"conn": "core:a.x|core:b.y", "from_um": [0, 0], "regs_um": [[250, 0]], "to_um": [600, 0]}]}
+    segs = PG.segments(t)
+    assert segs == [((0, 0), (250, 0)), ((250, 0), (600, 0))]
+    legs = PG.measured_legs({"pairs": [["u_a/q", "u_b/q", 4, 420.0, ["i", "j", [255, 10], [590, 20]], "logic"],
+                                       ["u_c/q", "u_d/q", 1, 500.0, ["i", "j", [900, 900], [400, 900]], "logic"]]})
+    m = PG.match_hops(segs, legs)
+    assert m == [(420.0, 350.0), (500.0, None)]
+
+
+def test_kit_defines_do_not_count_as_a_plan_loss(tmp_path):
+    g = tmp_path / "gen/x__t1"
+    g.mkdir(parents=True)
+    (g / "config.mk").write_text("export VERILOG_DEFINES = -DSYNTHESIS -DOT_A\n")
+    _rows, held = EC.census({"x__t1": mon_type((2, 467), defines=["OT_A"])}, {"x__t1": mon_type((2, 467), defines=["OT_A"])},
+                            {"x__t1": str(g)}, {})
+    assert held == {}            # prev side read a kit, new side has none: SYNTHESIS / kit-only defines are not "lost"

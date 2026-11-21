@@ -128,7 +128,7 @@ def test_label_pin_is_refused(tmp_path):
 def test_repo_ledger_parses():
     rows = AD.read_ledger(AD.LEDGER)
     ids = {r["id"] for r in rows}
-    assert {"hwin-8e20268b5d83", "rip1-define", "slew-25fc65d0cb1", "reset-legs-f02ccd50eb", "reset-cap-ecd0239bd5",
+    assert {"hwin-8e20268b5d83", "rip1-define", "slew-25fc65d0cb1", "reset-legs-f02ccd50eb", "reset-cap-fa09197057",
             "s81-prefix-d98908b665", "schema-8e9cdd615c"} <= ids
     assert any(r["id"].startswith("lockup") for r in rows)
     assert all(r["kind"] in ("commit", "define", "key") for r in rows)
