@@ -23,3 +23,4 @@
 - 2026-11-21 01:15 PST UNSIGNABLE watchdog (report mode; cancels only after the report hour 60 min from the first list): 2 job(s) over 3 h with post-CTS setup < -300 ps: epyc10 hd_lep0N -455 ps 5.9 h 3.4 GB; epyc10 tt_ctlm -352 ps 7.2 h 8.0 GB
 - 2026-11-21 02:00 PST UNSIGNABLE watchdog (report mode; cancels only after the report hour 60 min from the first list): 1 job(s) over 3 h with post-CTS setup < -300 ps: epyc2 kv3_hroot -478 ps 20.5 h 25.0 GB
 - 2026-11-21 04:45 PST UNSIGNABLE watchdog (report mode; cancels only after the report hour 60 min from the first list): 1 job(s) over 3 h with post-CTS setup < -300 ps: epyc10 slw_su_c -504 ps 34.3 h 28.6 GB
+- 2026-11-21 05:30 PST UNSIGNABLE watchdog (report mode; cancels only after the report hour 60 min from the first list): 2 job(s) over 3 h with post-CTS setup < -300 ps: epyc10 ot_s81sl_leaf__t11 -2893 ps 21.6 h 23.3 GB; epyc10 slw_su_c -504 ps 35.1 h 28.6 GB
