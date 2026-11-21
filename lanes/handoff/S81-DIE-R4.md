@@ -134,3 +134,7 @@ All relaunch after the 405 reach override (lever 1) lands for D8i.
 ## 11-20 16:4x FLOW-NOADV-R3
 - Leaf t2/t10/t52 reset-identity refusal cause: 9172a65b43 read per-type reach 180 as the cap. Fix pushed fa09197057, in rt 81c8692c1cdf.
 - At the leaf release, include t2/t10/t52; add retry keys if REPEAT-STOP holds them (check kit_wave struct-list / repeat stops); confirm one clears gen and post it.
+
+## 11-20 17:5x FABLE-CLOSURE-1730
+- Holds applied (cfb64614): 32 route_hold_items + hold_items patterns: 29 monitor-pin types (scratchpad mon29.txt), seqhost__*, lepe/lepw LP. Leaf t7 is now held.
+- J6 order: 1 source adoption (main proven source, hwin 8e20268b5d83 + seqhost reach row, RIP1 define, lepe rows 1-4); 2 monitor pin rows (S81-MONITOR-PIN-1745) + item 9; 3 col masters + latch; 4 leaf reset legs (tool) + SRAMREG + spread; slice C finish leg D=3. Re-pin tools to rt/current after a proof gen.
