@@ -1,14 +1,32 @@
-# FAM-KV-IOPC-R2 handoff (11-21 10:2x PST)
-Work dir epyc7 /srv/opentallas-scratch2/claude/fam-kv-iopc-r2 (repo = lane clone, tmp/, views_d27b/ = the 4 D27b exact-OBS pc views, tree_pc = cp -al of D26 src kw45/src_kv_pin_eb1e73448bd0_hg14_a9f605cb_tbbcc7f0_d26 with those 4 LEFs swapped; source tree untouched).
-Predecessor dirs: epyc7 /srv/opentallas-scratch2/claude/fam-kv-iopc (proof_A, tree_d26, gate_d26*, scripts).
+# FLOW-STRIPBODY-1121 handoff (Opus 5.5, started 11-21 ~16:4x PST) -- ACTIVE
+Goal: strip/body split buildable end to end (lepe_mu_C t1, c1x_C t1..t10; COORD: one schema for KV hub_Eo/Wo, pv too).
+L=epyc10 /srv/opentallas-scratch2/claude/flow-stripbody-1121 (lane clone $L/lc, branch claude/flow-stripbody-1121, NOT pushed yet).
 
-## Running
-- io_cor_v1 variant A route: unit oth-ubuntu-2072529-1795271645 epyc7 (run_kit.sh proof_A/gen/kv3_io_cor_v1 route). GRT final TT +8.24/tns 0, GRT hold guard +38.5. Read signoff/FAIL_* when done. Proof tree is not src_manifest: if it signs, hand the 41 bank_taps rows (fam-kv-iopc/br2) to KV-PLAN-R6 for the D27/D28 sign-off build.
-- pc_v3 place proof (PDN-0006 fix): private spec ~/coord/autopilot/private_specs/FAM-KV-IOPC-R2/qwen_kvsys_kv3_pc_v3_1121101204 (run_item.log there; work epyc7 kw43-wave-1109/.../KV-D26/private/FAM-KV-IOPC-R2/kv3_pc_v3_1121101204). Check 2_4_floorplan_pdn.log: PDN-0006 gone? Known later risks: tap density (TAP-GRID-R4), efault -1,492 path (D27 r6 efault_stage).
+## Form (decided, posted 17:4x)
+Notched strip cannot be a kit (ORFS block = rectangle, die partitions tile). strip_body key -> `strip_body.py spec` -> type_split
+one-axis split: face strips = full-length rectangles, depth = band clipped to nearest hard core / plan-sited content macro (+halo),
+floored to 8.64 lattice; body = keep piece (names, origin, START). Pieces <type>__strip_<face>; kit_wave piece_base() inherits base env.
+lepe_mu_C t1 (J6r1): y cuts 43.2 / 1183.68; W/E infra stays in body.
 
-## PDN-0006 facts
-- KV-PLAN-R2 re-exported pcc/pcf/h_head_p 11-21 04:37 (abstract_detail.py splice: M1-M5 blanket, M6/M7 exact) into the D27b tree; D27c/d inherit. D26 kits still carry the 11-19 views (pcc f964552bdfe8).
-- M5 PG share under M6+M7 OBS: 11-19 views 0.30-0.46; D27b views 0.06-0.10; pv_pair 0.05-0.07 (pdngen 3.3 %), head_eighth 0.13-0.14 (7.7 %). qkd_hr_core_peer (kvd23_hr_views_1118) 0.51: at risk.
+## Code (lane clone, uncommitted until bind green)
+strip_body.py (split_axis_plan, split_spec, spec CLI, contents cutouts, members_by_face), schema.py (+dump), type_split.py
+(clip_windows, explicit tap mode, band_reshape, monitor slide, strapless_pieces, carry_short_fixed, whole_map_to_keep,
+relay_depth to body, core taps follow their core = COORD svc hi4 defect), kit_wave.py (piece_base); tests in test_strip_body,
+test_type_split, autopilot/test_kit_wave_strip_piece.
 
-## Tool (lever 7)
-- commit 6944a8b367 (ot-push-main): view_export.pg_crossing_report / pg_crossing_published, choose_abstract exact_pg / OT_VIEW_EXACT_OBS=1, view_export exit 6 on PG FAIL, export_provenance.finalize gate after every transform. Env OT_VIEW_PG_CROSS (M5:M6+M7), OT_VIEW_PG_BLOCK_MAX (0.25).
+## Proof
+- split OK: $L/split2 (report.json: 2 windows clipped 5.56 pins/um, 16 cut lanes, latency rows latency_rows.json).
+- tree kw45/src_s81_pin_3c913dbdfb23_d8j6r1_1117_work_stripbody1121 (linked child of J6r1, published f67cf6a6).
+- strict bind + LATCHECK: ot-run unit oth-ubuntu-319614-1795284804 epyc10, $L/bind_job.sh, logs $L/bind1.log, latcheck1.*
+Next: on green -> ot-push-main, then rt private-spec s81 <piece> --tree <tree> --plan <tree>/physical/die_plan/s81/stripbody_lepeC/plan_c.json
+--bind-out $L/bind1 for strip_S, body, strip_N; run-item to floorplan; cell counts.
+
+## Update after stand-down (hook arm unit oth-ubuntu-1261313-1795279984 ended rc 1)
+- Clock-first route itself COMPLETED: phase 1 158 s, whole two-phase route 4783 s (base arm still at iteration ~15 then).
+- Then the harness's start/end_incremental usage report died GRT-0116: grt::read_segments resets allow-congestion. Fixed in the
+  epyc10 lane clone (hook re-arms ::grt::set_allow_congestion 1 after the merge); kits with grt_allow_cong.tcl were already covered.
+  The clkfirst arm will die the same way at its report step: its segments (out/clkfirst_p1.seg, clkfirst_p2.seg, clkfirst.seg)
+  survive. R2: add `grt::set_allow_congestion 1` before the report in h/arm.tcl, rerun hook (fixed tcl to <W>/h/), compare with base.
+
+## E2BIG (11-21 10:4x)
+- main 4f638b4e9f: kit_wave run_item one ssh per FLOW_REFRESH_FILES entry; 8 rows released via retry keys (kit_wave.json d3b9b01082), 6 already relaunched by the wave. test_flow2045.py sealed-job test fails independently on main (posted FLOW-NOADV-R3).
