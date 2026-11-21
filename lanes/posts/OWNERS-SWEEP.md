@@ -220,3 +220,4 @@
   QC: 5 STALE held CB + 2 STALE cancelled + 1 STALE signed-count-pending (SLE-R4, new).
   KV: 9 FAILED-NO-RELAUNCH (5 new: PDN-0006 IOPC, HGI-R3 x3, PV-R4) + 17 held/cancelled WAIT-BIND.
   HEAD none flagged. Context well below 330k.
+- 2026-11-21 03:40 PST CORRECTION 03:50: S81 STALE held-for-plan-event rows are 29 (not 28); S81 38 + QC 8 + KV 26 = 72 flagged.
