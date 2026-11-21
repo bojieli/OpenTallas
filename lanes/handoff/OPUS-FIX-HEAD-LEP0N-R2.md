@@ -84,3 +84,14 @@ strict BIND 0 errors (398 partitions, 873 crossings), LATCHECK 873/873 PASS, G0 
   GRT TT, signoff.json. On SIGNED: autoclean archive ingests to AGIdock (signed_store); rtx-pro copy with
   `signed_store.py stage --host rtx-pro --dest ~/signed-export-1114/head --die s81_head --key hd_lep0N` (or export_view.py
   as KV lanes did). If r14 signs off first, r14 wins; tr2s then is a second sign-off of the same type.
+
+## UPDATE 11-21 01:2x PST
+- COORD: HEAD-PLAN-R15 owns the tools re-pin event and the tap-table re-derive. HEAD r16 is applied (snapshot s81_head_r16_s0,
+  rt 745c8f11e429) and the wave runs hd_lep0N on r16. Whichever of tr2s or the r16 row signs off first counts; cancel the
+  other only after that. This lane and FABLE-FIX-HEAD-SERDES-R2 own the HEAD types.
+- tr2s at CTS: FF hold gate PASS -225.84 on 5,948 ends (r14 -388.93 on 25,803). TT after placement-RC repair -454.73 /
+  tns -140,389 (r14 -171.65 / -1,364). Stock GPL area +21.13%. Next read: post-GRT TT. If it is still < -300, cancel the
+  exact unit with `ot-run --cancel oth-ubuntu-1990134-1795230761` and record the evidence (owner rule).
+- FABLE-VISUAL-0030 (sec. 4, hd_lep0N): 420k cells and 49 m cores in a 330 um band, RUDY over 100 %, 6,410 station flops
+  in slits under 20 um, 9,376 hops over 300 um. Adopted for the next private iteration (plan delta not written yet):
+  m cores in two rows with 40 um streets (use the ~100 um N-S street), stations in the N-S street, band split (422k > 400k).
