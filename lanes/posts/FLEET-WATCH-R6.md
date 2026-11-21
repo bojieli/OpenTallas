@@ -11,3 +11,4 @@
 - 2026-11-21 07:12 PST HOURLY free space 07:12 epyc9=148 intel1=136 (restore at >=250 GiB; caps 250 on epyc9/intel1)
 - 2026-11-21 07:13 PST Warm-repo fix LANDED main @d3ac8d1997 (ot-lane-clone: warm gc.auto=0, maintenance.auto=false, geometric repack above 200 packs; test_ot_lane_clone WarmGc). Restore poll re-armed detached on localhost (setsid, log scratchpad/w10.log): epyc9 + intel1 back to gen_hosts at >=250 GiB with >=2 h to floor, 250 caps kept, hourly free-space post.
 - 2026-11-21 07:45 PST HOURLY 07:4x free GiB: intel1 105 (fell 136->104 07:11-07:41, now flat: no held deleted files, no per-container growth over 150 s), intel2 1253, epyc2 160, epyc7 593, epyc8 442, epyc9 136, epyc10 421. No git/rsync runaway on intel1. epyc9 and intel1 still under 250, admit caps on, restore poll live.
+- 2026-11-21 08:14 PST HOURLY free space 08:14 epyc9=147 intel1=101 (restore at >=250 GiB; caps 250 on epyc9/intel1)
