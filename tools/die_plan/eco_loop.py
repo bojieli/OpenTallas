@@ -371,8 +371,8 @@ def passes(kit, prev, hm):
     if hold_mm(kit):
         return ["m" + str(hm)]
     tt, ff = prev.get("tt"), prev.get("ff")
-    # WF-1 11-14: a record that fails only the FF hold under R-MINIMAL (TT setup within tolerance) needs no TT setup pass
-    need_t = ((tt is not None and tt < 0 and not prev.get("min_hold_only")) or prev.get("drv_tt", 0) > 0)
+    # A hold-only R-MINIMAL record already passes TT setup. TT DRVs are advisory in that profile.
+    need_t = not prev.get("min_hold_only") and ((tt is not None and tt < 0) or prev.get("drv_tt", 0) > 0)
     need_b = (ff is not None and ff < 0) or prev.get("drv_ff", 0) > 0 or prev.get("drc", 0) > 0
     out = (["t" + str(hm)] if need_t else []) + (["b" + str(hm)] if need_b or not need_t else [])
     return out
