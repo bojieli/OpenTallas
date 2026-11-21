@@ -46,6 +46,35 @@ foreach pr_row $::ot_place_regions {
     set pr_a [expr {$pr_a + [$pr_m getWidth]*[$pr_m getHeight]/$pr_dbu/$pr_dbu}]
   }
   if {![llength $pr_grp]} { error "OT_PLACE_REGION $pr_name: inst_re '$pr_re' matches no movable standard cell" }
+  # FLOW-NOADV-R3 11-20 (FABLE-PD-S81-1840): members must cover at least half of the cells of their logic cone.  S81 serdes_tx_encoder: 5,926 member
+  # flops against 5,975 gates of the same cone outside the group = DPL-0033 on every J5 serdes.  Under half: the cone's combinational cells join the group
+  # (OT_PLACE_REGION_EXTEND); a cone more than 8 x the members is not separable and the kit stops here.
+  if {[file exists /work/place_regions_cone.tcl]} {
+    source /work/place_regions_cone.tcl
+    if {![llength [info procs ot_pr_nbrs_in]]} {
+      proc ot_pr_nbrs_in {i} { set o {}; foreach it [$i getITerms] { if {![$it isInputSignal]} continue; set n [$it getNet]; if {$n eq "NULL" || [$n getSigType] ne "SIGNAL" || [llength [$n getITerms]] > 256} continue; foreach t [$n getITerms] { if {[$t isOutputSignal]} { lappend o [$t getInst] } } }; return $o }
+      proc ot_pr_nbrs_out {i} { set o {}; foreach it [$i getITerms] { if {![$it isOutputSignal]} continue; set n [$it getNet]; if {$n eq "NULL" || [$n getSigType] ne "SIGNAL" || [llength [$n getITerms]] > 256} continue; foreach t [$n getITerms] { if {[$t isInputSignal]} { lappend o [$t getInst] } } }; return $o }
+      proc ot_pr_is_cand {i} {
+        global ot_pr_taken
+        if {[info exists ot_pr_taken($i)]} { return 0 }
+        set m [$i getMaster]
+        if {[$m isBlock] || [$m isSequential] || [$i getPlacementStatus] in {FIRM LOCKED COVER}} { return 0 }
+        return 1
+      }
+    }
+    foreach pr_t $pr_grp { set ot_pr_taken($pr_t) 1 }
+    set pr_extra [ot_pr_cone $pr_grp ot_pr_nbrs_in ot_pr_nbrs_out ot_pr_is_cand 8]
+    set pr_cov [ot_pr_coverage [llength $pr_grp] [llength $pr_extra]]
+    if {$pr_cov < 0.5} {
+      foreach pr_e $pr_extra {
+        lappend pr_grp $pr_e; set ot_pr_taken($pr_e) 1
+        set pr_em [$pr_e getMaster]; set pr_a [expr {$pr_a + [$pr_em getWidth]*[$pr_em getHeight]/$pr_dbu/$pr_dbu}]
+      }
+      puts [format "OT_PLACE_REGION_EXTEND %s: members cover %.3f of the cone (%d members, %d cone cells) < 0.5: the cone's combinational cells joined the group (%d cells)" $pr_name $pr_cov [expr {[llength $pr_grp]-[llength $pr_extra]}] [llength $pr_extra] [llength $pr_grp]]
+    } else {
+      puts [format "OT_PLACE_REGION_COVERAGE %s: members cover %.3f of the cone (%d members, %d cone cells outside the region group)" $pr_name $pr_cov [llength $pr_grp] [llength $pr_extra]]
+    }
+  }
   if {$pr_x ne "" && $pr_y ne ""} { set pr_how plan
   } elseif {$pr_near ne ""} {
     if {!$pr_k} { error "OT_PLACE_REGION $pr_name: near_re '$pr_near' matches no instance" }

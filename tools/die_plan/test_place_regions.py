@@ -24,6 +24,7 @@ def test_kit_gets_data_and_hook(tmp_path):
     assert "set ::ot_place_regions {" in data
     assert r"  {core {(^|[./])u_core\.} 0.55 {} {} {u_core\.u_gi\.g_op}}" in data
     assert r"  {rows {u_x\.(tt_pw|dh_prog)\[} 0.55 550 955.5 {}}" in data
+    assert (tmp_path / "place_regions_cone.tcl").is_file() and (tmp_path / "place_regions_inherit.tcl").is_file()
     hook = (tmp_path / "place_regions.tcl").read_text()
     assert "dbRegion_create" in hook and "OT_PLACE_REGION" in hook
     assert hook == (Path(gen_phys.__file__).resolve().parent / "place_regions.tcl").read_text()
@@ -60,3 +61,48 @@ def test_region_box_is_snapped_to_the_placement_grid():
     assert "getSite" in hook and "$pr_sw) * $pr_sw" in hook and "$pr_rh) * $pr_rh" in hook
     assert "odb::dbBox_create $pr_r $pr_bx0 $pr_by0 $pr_bx1 $pr_by1" in hook
     assert "int($pr_x0*$pr_dbu)}] [expr {int($pr_y0*$pr_dbu)}]" not in hook      # the unsnapped box is gone
+
+
+import shutil  # noqa: E402
+import subprocess  # noqa: E402
+
+HERE = Path(gen_phys.__file__).resolve().parent
+
+
+def _tcl(body):
+    if not shutil.which("tclsh"):
+        pytest.skip("tclsh unavailable")
+    r = subprocess.run(["tclsh"], input=f"source {HERE / 'place_regions_cone.tcl'}\n" + body, text=True, capture_output=True, timeout=60)
+    assert r.returncode == 0, r.stderr
+    return r.stdout.strip()
+
+
+# a synthetic netlist: flops f0..f2 (members) fed by gates g0..g3 and feeding g4; g5 hangs on a flop of another cone (stops at it)
+NET = """
+array set drv {f0 {g0 g1} f1 {g1 g2} f2 {g3} g0 {} g1 {} g2 {} g3 {g0} g4 {f0} g5 {x9}}
+array set ld  {f0 {g4} f1 {} f2 {} g0 {f0 g3} g1 {f0 f1} g2 {f1} g3 {f2} g4 {} g5 {} x9 {g5}}
+proc nin {i} { global drv; if {[info exists drv($i)]} { return $drv($i) } else { return {} } }
+proc nout {i} { global ld; if {[info exists ld($i)]} { return $ld($i) } else { return {} } }
+proc cand {i} { return [expr {[string index $i 0] eq "g"}] }
+"""
+
+
+def test_cone_adds_the_combinational_cells_around_the_members_and_stops_at_flops():
+    out = _tcl(NET + 'puts [lsort [ot_pr_cone {f0 f1 f2} nin nout cand 8]]')
+    assert out == "g0 g1 g2 g3 g4"                                     # g5 belongs to another cone (reached only through x9, not a candidate)
+
+
+def test_coverage_under_half_is_detected_and_a_runaway_cone_is_refused():
+    assert _tcl('puts [ot_pr_coverage 5926 5975]') == "0.49626996891689974" or float(_tcl('puts [ot_pr_coverage 5926 5975]')) < 0.5
+    assert float(_tcl('puts [ot_pr_coverage 5 5]')) == 0.5 and float(_tcl('puts [ot_pr_coverage 9 1]')) == 0.9
+    out = _tcl(NET + 'if {[catch {ot_pr_cone {f0 f1 f2} nin nout cand 1} e]} { puts "REFUSED $e" } else { puts OK }')
+    assert out.startswith("REFUSED") and "not separable" in out
+
+
+def test_kit_hooks_are_wired():
+    t = (HERE / "place_regions.tcl").read_text()
+    assert "OT_PLACE_REGION_EXTEND" in t and "ot_pr_cone" in t and "< 0.5" in t
+    f = (HERE / "face_flops_release.tcl").read_text()
+    assert "place_regions_inherit.tcl" in f and "place_regions_data.tcl" in f
+    i = (HERE / "place_regions_inherit.tcl").read_text()
+    assert "addInst" in i and "OT_PLACE_REGION_INHERIT" in i and "BUF|INV|HB|DLY" in i

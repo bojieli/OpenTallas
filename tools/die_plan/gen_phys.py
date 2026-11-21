@@ -8205,7 +8205,8 @@ def install_place_regions(kd, regions):
     if not text:
         return []
     (Path(kd) / "place_regions_data.tcl").write_text(text)
-    shutil.copyfile(Path(__file__).resolve().parent / "place_regions.tcl", Path(kd) / "place_regions.tcl")
+    for _f in ("place_regions.tcl", "place_regions_cone.tcl", "place_regions_inherit.tcl"):
+        shutil.copyfile(Path(__file__).resolve().parent / _f, Path(kd) / _f)
     return [f"# PLACE-REGION (lever 5): {len(regions)} placement region(s) from the plan: " + ", ".join(r["name"] for r in regions)]
 
 
