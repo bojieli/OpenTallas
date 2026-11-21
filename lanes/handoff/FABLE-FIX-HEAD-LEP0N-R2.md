@@ -83,3 +83,48 @@ and kit_wave.json dies.s81_head die_gen_env + item_env.hd_lep0N.
   14,943 sliver gcells). Pushes when the v2 proof DRT is clean. If a kit dies at DRT with 0255: do NOT rebuild; resume from its CTS DB (4_cts.odb) with the
   fixed tools via kit_wave.py private-spec ... --rt <fixed sha> (GRT re-runs with the cap). Its tap_balance strip seeding also targets the reserved-strip
   detour strip_check.py measures: compare strip_check flags before/after.
+
+## STAND-DOWN STATE 11-21 13:4x PST (for FABLE-FIX-HEAD-LEP0N-R3; supersedes everything above where it differs)
+F = epyc10 /srv/opentallas-scratch2/claude/fable-fix-head-lep0n-env ; hub logs intel2 ~/fable-fix-head-lep0n/ ; OT_LANE for new work = R3.
+
+### 1. HEAD event e1 was SPLIT (COORD): e1a (mine, approved to apply) + e1b (HEAD-START-R17 START re-plan, later, on top of e1a)
+- e1a = applied r16 p5 1a7d319a9ba6 (sidecar 6fcd1d3dfc43 unchanged, tools 745c8f11e429) + hd_lep0N shelf type (shelf macros, LEP-BANDFIX-1 3 rects,
+  7 private reset-start exports, clock.tap_grt_pre) + hd_serdes clock.tap_grt_pre + tap_group (u_enc:clk_t20, u_ptx:clk_t14). Plan 00b2abf6e7a6.
+  Gates GREEN (F/event1/e1a: schema 0, strict bind, cohort 26/26, LATCHECK 329/329, receipt, G0 0). Scripts F/event1/{compose_ev2.py,run_ev2.sh,run_e1a.sh}.
+- DONE: candidate tree F/event1/tree/s81_head_r17a_s0, pack F/event1/pack_r17a (15 add, 0 delete), live_tree.py apply (F/event1/live.sh, hub log
+  live_r17a.otrun.log): the LIVE HEAD tree on epyc10 + epyc9 now holds e1a and snapshot /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r17a_s0
+  exists on epyc10, epyc9, epyc7 (replicated), manifest ef50794c86fd. Candidate: intel2 ~/fable-fix-head-lep0n/cand_r17a.json (event head_rp21z20NF15f_r17a,
+  config gen_host epyc9, gen_hosts [epyc9, epyc10]; epyc7 is a current gen host and is kept by the marker's replication step).
+- NOT DONE: the wave is NOT switched. kit_wave.json s81_head still = r16_s0 / head_rp21z20NF15f_r16.
+- PUBLISH GATE: run 1 (gen-host epyc10) held 20 min on the epyc10 disk floor -> stopped (my 3 PIDs). Run 2 (--gen-host epyc9) FAILED in 2 min, not a design
+  result: "AssertionError: --gen-host epyc9 is not a gen host of the die ['epyc10','epyc7']" (record committed as FAIL). Run 3 RUNNING: --gen-host epyc7
+  --static-host epyc7, pid in ~/fable-fix-head-lep0n/pgate_r17a_e7.pid, log pgate_r17a_e7.log, record autopilot/publish_gate/s81_head/ef50794c86fd...json.
+  Read: the JSON line in the log (verdict + checks). r16 itself applied with the gate FAIL on "contained" as ADVISORY (--optimistic); the same inherited
+  "contained" FAIL (plan names snap r4_s0 sink bins) is expected here and is advisory. Any OTHER failing check (schema, pre_g0, hashes, dry_gen): fix first.
+- THEN the marker (on intel2, COORD ruling: apply as head_rp21z20NF15f_r17a; gen hosts epyc7 kept + epyc9 added, epyc10 secondary; epyc10 is DRAINED):
+    RT=/srv/opentallas-scratch2/claude/rt/current/tools/autopilot
+    python3 -I $RT/apply_reviewed_tree_marker.py --candidate ~/fable-fix-head-lep0n/cand_r17a.json \
+      --expect-source /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r16_s0 --expect-event head_rp21z20NF15f_r16 --optimistic --no-pilot
+  Do NOT pass --keep-gen-hosts (it would keep [epyc10, epyc7] and drop epyc9). Check the result JSON gen_hosts and the APPLY-KEPT warnings; if epyc10 comes
+  out primary ask FLEET-WATCH to reorder. Then post to COORD + HEAD-START-R17 (re-base p6 delta on plan 00b2abf6e7a6 = e1b; its delta is disjoint from mine).
+- R17 never answered my agent message (12:2x) nor the hub ask; COORD waived after 30 min: no R17 process and no reader of live_s81_head on epyc10/9/7.
+- Held OUT of e1a: late-meta RTL R4-3 (not needed: shelf form has TT setup +22 after CTS; the wave row's -679 PLACE-SETUP-STOP is the 2x2 form),
+  hd_serdes SCOPY define / KEEP_WIRES, column rows. No core tap move (COORD agreed: hops 287/204/172/115 um, all within 405; my 370-524 figure was wrong).
+- Wave row hd_lep0N: BLOCKED-REPEAT (3x PLACE-SETUP-STOP -679 on the r16 2x2 form); e1a unblocks it by plan change. No retries before the apply.
+
+### 2. Proof kits (both on epyc10, GOAL=route, private, src_manifest off -> a signed build must come from the e1a manifest tree = the wave row)
+- shelf_we: unit oth-ubuntu-1587841-1795268678, kit F/shelf_we/gen/gen/hd_lep0N. CTS 10:04: post-hook setup +22.00, hold -117.55; non-tap 357,856.
+  Pre-GRT FF hold pass 1: 5,661 buffers -> +5.00 (non-tap 363,650 = 90.9 % of 400k). Pass 2 (35,332 margin ends) was running at 11:2x: READ its
+  buffer count in KIT/pregrt_ff_hold.log (RSZ-0032) and OT_CELL_CENSUS; over 400k -> the lever is a TYPE SPLIT (COORD), not more repair. Then GRT.
+- shelf_tg (tap_grt_pre + pinreg pad): unit oth-ubuntu-21834-1795274496, kit F/shelf_tg/gen/gen/hd_lep0N. CTS DB byte-identical to shelf_we
+  (sha 41b9a3e432f5). Was in 4_2_tapbal_grt at 11:52.
+- Strip check (both, same DB): 59 chain pairs cross a reserved strip on 21 taps; prediction at GRT without the pre-pass: clk_t66 ~+200 ps, clk_t64 ~+135,
+  t49/t67/t60/t65 +45..60. Check against 5_1_grt.odb (never 5_global_route.rpt). JSON F/tmp/sc_we/strip_check.json; runner F/tmp/sc_test/run_sc.sh DIR.
+- DRT-0255 / sliver gcells: neither kit has fix b62f5f340c (FLOW-OBS-GCELL-R2 posts the main sha when pushed). If a kit dies at DRT with 0255: resume from
+  its 4_cts.odb with the fixed tools via kit_wave.py private-spec --rt, no full rebuild.
+- epyc10 scratch is DRAINED (about 100 GB free, falling): new ot-run jobs there are held. The kits already run; watch them for ENOSPC.
+- Waiters: mine die with this session. RE-ARM FIRST (from any host):
+    ssh intel2 'ot-wait --kit F/shelf_we/gen/gen/hd_lep0N --host epyc10 --stage grt --also oth-ubuntu-1587841-1795268678 --timeout 27000'
+    ssh intel2 'ot-wait --kit F/shelf_tg/gen/gen/hd_lep0N --host epyc10 --stage grt --also oth-ubuntu-21834-1795274496 --timeout 27000'
+  then route / finish the same way. Sign-off gates: DRC 0, TT >= -42, FF internal hold >= 0, LEC; export AGIdock + rtx-pro.
+- col_we deleted (ot-delete). F/col_bf2 keeps the BANDFIX-2 column plan files (column form parked).
