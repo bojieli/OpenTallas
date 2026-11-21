@@ -37,3 +37,9 @@ STATUS: NOT RELEASED. Rule: rows go to a die lane only after a proof no worse th
 - Measured on the cl67434795 baseline (epyc7 lockup-station-r3/sta): cross-tap hold ends 2,950 (2,949 violating), same_tap 199; setup slack of the cross-tap ends is > 600 ps (QC hops short), so the +50 ps leg-slack filter removes 0 ends; the restriction is exact ends only: 2,918 latched ends (qc_spec_ends.json; QC2 used 87,819 latches, 16,981 kept).
 - Options: (a) rebuild the baseline plan folder from kw45/snap_qwen_compute/qwen_compute_n46_s0 (9.9 GB real copy + plan_r3.json) and run private-spec from it; needs the wave plan file name + gen_args of that event; (b) re-measure on sle_ctl__cla4f6f12f (needs its baseline kit through CTS first). I take (a) unless COORD names (b).
 - Lockups are a hold lever only: S81 proof6 TT -291 is still far from -42.
+
+## Baseline order (COORD 11-21 ~11:30)
+1. QC-SLE-R5 relaunch of sle_ctl__cla4f6f12f (gated on STRAP 33d25422f0 reaching main): use its 4_cts_pre_tt.odb + kit dir + plan folder when it posts to lanes/posts/QC-SLE-R5.md.
+2. If not at CTS by 14:00 PST: same-plan A/B on R4's variant C (plan r4a/p_r4c.json 2655d5d53eb7, bind_c4, wave env, spec ~/coord/autopilot/private_specs/OPUS-FIX-QC-SLE-R4/qwen_compute_sle_ctl__cla4f6f12f_11211107*, host epyc8): its CTS DB = baseline; my run = same plan + clock.zl_lockup row (same_tap bypass, max_um 200, exact ends from its hold census), private-spec --rt current main, real-copy plan folder (nlink 1).
+3. Last resort: own b20 baseline via private-spec.
+Waiter bj81ktxos (14:00 / R5 post) armed; proof6 bnpczh23l and QC2 b539dukuj armed.
