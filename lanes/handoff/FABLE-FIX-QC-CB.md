@@ -131,3 +131,8 @@ NOTE: every W/*.py / *.sh named here lives on epyc9 in W; the session scratchpad
 - QC-PLAN-R8 owns the proof kit epyc9 /srv/opentallas-scratch2/claude/fable-fix-qc-cb/proof/p1 (left running, untouched) and folds the a3 rows into V2.
 - link_sites.py clone path: epyc9 /srv/opentallas-scratch2/claude/fable-fix-qc-cb/src (git worktree, branch fable-fix-qc-cb, HEAD 9fbc898cd1, file tools/die_plan/link_sites.py; not pushed, no unit test). Same file: /srv/opentallas-scratch2/claude/fable-fix-qc-cb/link_sites.py.
 - My waiters: none left alive (checked localhost + epyc9 by cmdline); nothing killed, nothing cancelled.
+
+## p1 RESULT 21:56 PST (after stand-down): FAILED at global place, not running
+- unit oth-ubuntu-1691144-1795236854 exit 2 at 3_3_place_gp: [ERROR ODB-0359] Attempt to change the origin of FIRM instance u_bound.u_pc_nk_u_t_0_0_n_a.q[0] (global_place.tcl).
+- Keys matched: OT_RELAY_SITES placed 38542 flops FIRM, 276 of 38818 unmatched; OT_ISTATIONS placed 13898.
+- Reading (not verified): a later kit hook moves the u_pc_nk pipe registers (core_input_anchor / core_input_chain class) and my relay_sites made them FIRM first. Likely fix: do not write u_pc_* keys (delete the kind == pc branch in link_sites.py main, keep the node fixed at the pin for the solver), re-run run_all.sh, re-GEN, relaunch. The a3 rows carry those u_pc_* keys on all 17 types: do NOT bind them into V2 as they are.
