@@ -14171,3 +14171,7 @@ S81 SVC J8. May we use a north-side Att horizontal seam for svc_1, svc_3 and svc
 ## OWNER?
 
 Can the KV HGI score reset use local synchronous tails with the existing five-clock release and a three-clock later assertion at the sinks, provided the spine is held low for at least 64 running clocks? D26 993295117977 measured about −450 ps recovery from the raw input to an async tail after GRT and stopped at −738.66 ps TT setup. The private candidate keeps asynchronous assertion at the input synchronizer and tests the exact sink assertion difference. Current die settings remain in force pending this contract.
+
+## OWNER?
+
+Should the R8 checker treat the 32 ECTL-to-SLG AFK fault levels as independent of the tagged KREQ word, with the existing fault-tree and host service-admission timing kept as a separate contract? The exact local receiver returned the same tagged 1,024-bit row with AFK before, alongside, or after the request, and each injected fault propagated on its measured path. AFK still affects global service admission and reporting. Please confirm whether there is an additional host abort/report deadline tied to the in-flight KREQ tag before we change the checker scope.
