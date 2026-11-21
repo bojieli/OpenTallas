@@ -15567,3 +15567,4 @@ FAILED [AUTOPILOT 9efe1f228450] 2026-11-20 21:36:24 PST AUTOPILOT -> KIT-WAVE-3:
   - P8 left out. Its R3 placement died at global_place: FIRM station g_tx[0].g_address[16].credit_r[2] moved > 4 um from (624,800). That is a site-legality re-site, not a quick fix.
   - Expected limit: 23 credit groups still have a hop > 300 um (max 489.8 um). Escaping the boxes does not shorten them; only the P8 bank form or more credit stages would. So 7b fixes the reset class (item6) and site legality, not the credit span.
   Launch: ot-run --mem 96 --threads 16 --hosts epyc9 --dir .../opus-p7b -- bash build.sh grt. I hold it until proof7 reads out or you want both in flight.
+- 2026-11-20 21:37 PST DONE [unify-tools-r3] ot-push-main otpush-renewed-glider-2833750 on renewed-glider: rc=0 after 47 s, ended 05:37:55, log none, cmd: ot-push-main 
