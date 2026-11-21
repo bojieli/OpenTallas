@@ -28,3 +28,5 @@ State (2026-11-20 ~14:30 PST):
   cbf: place WNS -1532 -> -299, clk -296, MACRO_CROSS 535 -> 0; CTS was running at handoff; worst = reset rrl_500 (RESET-RELAY-GEN-1530).
 - Relaunch request posted to S81-DIE-R4 (leaf t57/t60/t72/t1/t56, kv_leaf t1/t4, from place). Per FABLE-CLOSURE-1515, QC cb kits are NOT relaunched for this lever.
 - Open: read the cbf 4_cts_final.rpt when it lands; confirm the relaunched kits show the PLACE-SLEW line in 3_4.
+
+- cbf CTS: WNS -212.61 (cland serdes_tx ring), clk -71.33, TNS -1,316, async +569. Lane done; open items: relaunches by S81-DIE-R4; lever 4 (class C reset/cland relay) for t60/t72/t56/t1.
