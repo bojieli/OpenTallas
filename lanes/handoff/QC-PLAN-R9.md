@@ -27,3 +27,4 @@
   asbuilt internal_stations_types; bind_b15.sh = bind_b13.sh + that step). +2 types (one clone per new value set) to sign.
 - LIVE: epyc8 /srv/opentallas-scratch2/claude/qc-plan-r9/chain_b15.sh (pid 67275, log chain_b15.log): nsbind b14 -> pcs (b15in/) -> strict b15
   (b15.out) -> G0 + census (event s29q103S4Q9N46R6V2b15) -> 7 proof GENs (b15/post_bind, b15/proof_gen). b13/b14 chains ended (no G0).
+- 05:0x: first chain_b15 stopped: the non-strict bind also stops on EMIT, so no bound top for param_class_split. Wrapper qc-plan-r9/pcs_from_typesplit.py feeds bind_report.type_splits groups to the tool (same clone_name/apply_plan/apply_side). Check: sle_hc0..pv1c2f9baa -> __pv6e886d59 (E3) + __pv48712631 (E4); slw_hc0__cl4f54b7a3 -> __pvde134a90 (W0,W4) + __pvd0aa3ddc (W1,W3,W5). LIVE chain_b15b.sh pid 428301 (log chain_b15b.log).
