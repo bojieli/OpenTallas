@@ -22,7 +22,7 @@ SRC+=(rtl/hdc/v41x/ot_s81c_attn_hcore.sv rtl/hdc/v41x/ot_s81c_attn_hcore_h8.sv r
 M=physical/asap7_memory_macros_v2
 "$VL" --binary --top-module tb_svc_att_mem -Mdir "$O/obj" -j 16 -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN \
   --unroll-count 16 --unroll-limit 131072 -CFLAGS -O1 -I"$D" -DOT_SVC_ALLQ -DOT_SVC_H8 -DOT_SVC_H8_REUSE_RT2 -DOT_ATTN_HCORE \
-  -DOT_S81C_HCORE_CTLA -DOT_S81C_HCORE_RST_TIMED -DSU_SMU_T -DOT_SVC_MEM_COV -GNCYC=$NCYC \
+  -DOT_S81C_HCORE_CTLA -DOT_S81C_HCORE_RST_TIMED -DSU_SMU_T -DOT_SVC_MEM_COV -GNCYC=$NCYC -GROWX=${ROWX:-0} \
   "${RS_DEF[@]}" "$O/src/dsdv_svc_att_f.sv" "$O/src/dsdv_svc_att_m.sv" "$O/src/dsdv_svc_att_mm.sv" \
   rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_mem_ar.sv rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_mem_la.sv rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_mem_lr.sv \
   $M/ot_sram_1r1w_32x128_m1_r0c0/ot_sram_1r1w_32x128_m1_r0c0.v $M/ot_sram_1r1w_160x256_m1_r0c0/ot_sram_1r1w_160x256_m1_r0c0.v \

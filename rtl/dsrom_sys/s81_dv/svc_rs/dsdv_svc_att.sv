@@ -178,7 +178,11 @@ module dsdv_svc_att #(
     output wire [H*132+19:0]    l_d,              // {row 16, mask 4, NL x H FP32 scores, NL x H flags}
     // P.V words (owner slices): word 0 {1, 0, pv_c 8, flags 64}, words 1..4 tile j's 16 heads x FP32
     output reg                  pv_ov,
+`ifdef OT_SVC_ATT_LAND_SRAM
+    output wire [512:0]         pv_od,
+`else
     output reg  [512:0]         pv_od,
+`endif
     // SM head (SMJ frames)
     output reg                  sm_st,
     output reg  [3:0]           sm_kind,
@@ -490,7 +494,9 @@ module dsdv_svc_att #(
     end
 
     // ------------------------------------------------------------------ landing (slot-addressed: no overflow)
+`ifndef OT_SVC_ATT_LAND_SRAM
     reg [255:0] land [0:TR-1];
+`endif
     reg [TR-1:0] pres;
     reg [1023:0] wsc;                                // window scales, 128 slots x 8
     reg [3:0] spres;
@@ -562,9 +568,13 @@ module dsdv_svc_att #(
 `else
     reg [D*16-1:0] eq_w;
 `endif
-    reg ekv_v; reg [NL-1:0] ekv_m, kc_m; reg [NL*265-1:0] ekv_w, kc_w;
+    reg ekv_v; reg [NL-1:0] ekv_m, kc_m; reg [NL*265-1:0] ekv_w;
+`ifndef OT_SVC_ATT_LAND_SRAM
+    reg [NL*265-1:0] kc_w;
+`endif
     wire ej_ready, eq_ready, kv_ready;
     reg [NL-1:0] rel_bad;
+`ifndef OT_SVC_ATT_LAND_SRAM
     // row word at release
     function automatic [264:0] rowword(input integer row, input [255:0] l, input [1023:0] sc, input [7:0] wc,
                                        input [20:0] wf, input need);
@@ -574,6 +584,7 @@ module dsdv_svc_att #(
             rowword = {1'b0, sc[8*sl +: 8], l};
         end else rowword = need ? {1'b1, 120'd0, l[143:0]} : {1'b1, 264'd0};
     endfunction
+`endif
     // ------------------------------------------------------------------ S81-ROWX held-row list + export job state
     localparam integer XW = $clog2(XN);
     reg [9:0] x_rk [0:XN-1];                         // ranks of the rows this die / stack holds, rank order
@@ -590,17 +601,75 @@ module dsdv_svc_att #(
     wire x_v0 = RX && x_em && (x_ro ? x_ov0 : 9'(x_k0) < 9'(x_n)), x_v1 = RX && x_em && (x_ro ? x_ov1 : 9'(x_k1) < 9'(x_n));
     wire [9:0] x_r0 = x_ro ? x_o0[9:0] : x_rk[x_k0[XW-1:0]], x_r1 = x_ro ? x_o1[9:0] : x_rk[x_k1[XW-1:0]];
     wire [9:0] x_s0 = 10'(wcount) + x_r0, x_s1 = 10'(wcount) + x_r1;
-    // the land row read ports 0 / 1 are shared with the export (the engine program never runs during an export:
-    // fault 25 / 27), so the export adds no landing read port
+    // Read ports 0 / 1 are shared with the export; simultaneous engine
+    // and export schedules still raise faults 25 / 27.
+`ifdef OT_SVC_ATT_LAND_SRAM
+    wire [2:0] land_we;
+    wire [29:0] land_wa;
+    wire [767:0] land_wd;
+    wire [NL*12-1:0] land_ra;
+    wire [NL*256-1:0] lrd;
+    for (genvar pc = 0; pc < 2; pc = pc + 1) begin : g_land_pc
+        wire [16:0] tg = qr_tag[17*pc +: 17];
+        wire [11:0] offset = 12'(tg[13:10]) * 12'd144;
+        wire [3:0] beat = qr_beat[4*pc +: 4];
+        wire is_win = tg[16:15] == 2'd0;
+        wire is_sel = tg[16:15] == 2'd2;
+        wire [255:0] data = qr_data[256*pc +: 256];
+        wire [511:0] pair_data = {data, hold[pc]};
+        assign land_we[pc] = qrv[pc] && (is_win || (is_sel && ((beat == 4'd0 &&
+                                   32'(offset[7:0]) + 144 <= 256) || beat == 4'd1)));
+        assign land_wa[10*pc +: 10] = is_win ? {2'd0, tg[7:0]} : 10'(wcount) + tg[9:0];
+        wire [143:0] sel_data = beat == 4'd0 ? 144'(data >> offset[7:0]) :
+                                144'(pair_data >> offset[7:0]);
+        assign land_wd[256*pc +: 256] = is_win ? data : {112'd0, sel_data};
+    end
+    assign land_we[2] = rw_v;
+    assign land_wa[20 +: 10] = rw_slot;
+    assign land_wd[512 +: 256] = {112'd0, rw_bits};
+
+    reg [NL-1:0] land_window, land_need;
+    reg [NL*8-1:0] land_scale;
+    reg [NL-1:0] land_window_q, land_need_q;
+    reg [NL*8-1:0] land_scale_q;
+    always @(posedge clk) begin
+        land_window_q <= land_window;
+        land_need_q <= land_need;
+        land_scale_q <= land_scale;
+    end
+    for (genvar r = 0; r < NL; r = r + 1) begin : g_land_row
+        wire [11:0] eng_row = (12'(rc) - 12'd1) * 12'd4 + 12'(r);
+        assign land_ra[12*r +: 12] = (RX && x_em && r == 0) ? {2'b00, x_s0} :
+                                     (RX && x_em && r == 1) ? {2'b00, x_s1} : eng_row;
+        // The macro's registered read replaces the old data capture.
+        // Word-format qualifiers are registered on that same edge.
+        assign ekv_w[265*r +: 265] = !ekv_m[r] ? 265'd0 :
+            land_window_q[r] ? {1'b0, land_scale_q[8*r +: 8], lrd[256*r +: 256]} :
+            land_need_q[r] ? {1'b1, 120'd0, lrd[256*r +: 144]} : {1'b1, 264'd0};
+    end
+`ifdef OT_SVC_ATT_LAND_SRAM_MUT
+    localparam bit LAND_MUT = 1'b1;
+`else
+    localparam bit LAND_MUT = 1'b0;
+`endif
+    dsdv_svc_land_mem #(.ROWX(RX), .MUT(LAND_MUT)) u_land_mem (
+        .clk(clk), .we(land_we), .wa(land_wa), .wd(land_wd), .ra(land_ra), .rd(lrd));
+`else
     reg [255:0] lrd [0:NL-1];
+`endif
     integer j;
     integer row; reg need, ok;
     always @(*) begin
-        kc_w = '0; kc_m = '0; rel_bad = '0; row = 0; need = 1'b0; ok = 1'b0;
+        kc_m = '0; rel_bad = '0; row = 0; need = 1'b0; ok = 1'b0;
+`ifdef OT_SVC_ATT_LAND_SRAM
+        land_window = '0; land_need = '0; land_scale = '0;
+`else
+        kc_w = '0;
         for (j = 0; j < NL; j = j + 1) begin
             row = 4 * (32'(rc) - 1) + j;
             lrd[j] = land[(RX && x_em && j == 0) ? 32'(x_s0) : (RX && x_em && j == 1) ? 32'(x_s1) : row];
         end
+`endif
         for (j = 0; j < NL; j = j + 1) begin
             row = 4 * (32'(rc) - 1) + j; need = 1'b0; ok = 1'b0;
             if (row < 32'(tjob)) begin
@@ -611,7 +680,13 @@ module dsdv_svc_att #(
                 need = (row < 32'(wcount)) || sel_held[row - 32'(wcount)] || tile[3:2] == st_r;
 `endif
                 ok = pres[row] && (row >= 32'(wcount) || spres[7'(wfirst[6:0] + 7'(row)) >> 5]);
+`ifdef OT_SVC_ATT_LAND_SRAM
+                land_window[j] = row < 32'(wcount);
+                land_need[j] = need;
+                land_scale[8*j +: 8] = wsc[8*7'(wfirst[6:0] + 7'(row)) +: 8];
+`else
                 kc_w[265*j +: 265] = rowword(row, lrd[j], wsc, wcount, wfirst, need);
+`endif
                 rel_bad[j] = need && !ok;
             end
         end
@@ -725,10 +800,37 @@ module dsdv_svc_att #(
     // H8 native collector identity: bit32 is pass head base; 63:33 stay zero.
     // H16 retains all64 logical flag bits and its original header bytes.
     wire [63:0] pv_header_flags = P2 ? {31'd0, hb_p, 32'(pb[NT*H-1:0])} : 64'(pb[NT*H-1:0]);
+`ifdef OT_SVC_ATT_LAND_SRAM
+    reg export_word_q, export_head_q;
+    reg [3:0] export_tile_q;
+    reg [1:0] export_valid_q;
+    reg [9:0] export_rank0_q, export_rank1_q;
+    reg [512:0] pv_saved;
+    wire [512:0] pv_export = {export_head_q,
+        xhalf(export_valid_q[1], export_tile_q, export_rank1_q, lrd[256 +: 144]),
+        xhalf(export_valid_q[0], export_tile_q, export_rank0_q, lrd[0 +: 144])};
+    assign pv_od = export_word_q ? pv_export : pv_saved;
+    always @(posedge clk) begin
+        export_word_q <= !dr_on && RX && x_em;
+        if (!dr_on && RX && x_em) begin
+            export_head_q <= x5 == 3'd0;
+            export_tile_q <= tile;
+            export_valid_q <= {x_v1, x_v0};
+            export_rank0_q <= x_q0;
+            export_rank1_q <= x_q1;
+        end
+        if (dr_on)
+            pv_saved <= (p_i == 0) ? {1'b1, pv_provenance, pb[PVB-1 -: 8], pv_header_flags} :
+                {1'b0, 512'(pb[NT*H + 32'(p_i - 1)*H*32 +: H*32])};
+        else if (export_word_q)
+            pv_saved <= pv_export; // retain the last export across idle cycles
+    end
+`else
     always @(posedge clk) if (dr_on)
         pv_od <= (p_i == 0) ? {1'b1, pv_provenance, pb[PVB-1 -: 8], pv_header_flags} : {1'b0, 512'(pb[NT*H + 32'(p_i - 1)*H*32 +: H*32])};
         else if (RX && x_em)
         pv_od <= {x5 == 3'd0, xhalf(x_v1, tile, x_q1, lrd[1][143:0]), xhalf(x_v0, tile, x_q0, lrd[0][143:0])};
+`endif
 
 `ifdef OT_SVC_ATT_MEM_MACRO
     // ------------------------------------------------------------------ DIE-S81-85 form A (3) (11-09): sw / wq / qmem as
@@ -853,22 +955,28 @@ module dsdv_svc_att #(
             reg [16:0] tg; reg [11:0] o144; reg [511:0] two; reg [9:0] slot;
             tg = qr_tag[17*k +: 17];
             case (tg[16:15])
+`ifndef OT_SVC_ATT_LAND_SRAM
                 2'd0: land[tg[7:0]] <= qr_data[256*k +: 256];
+`endif
                 2'd1: wsc[256 * {tg[1], tg[0]} +: 256] <= qr_data[256*k +: 256];
                 2'd2: begin
                     o144 = 12'(tg[13:10]) * 12'd144;
                     two = {qr_data[256*k +: 256], hold[k]};
                     slot = 10'(wcount) + tg[9:0];
+`ifndef OT_SVC_ATT_LAND_SRAM
                     if (32'(o144[7:0]) + 144 <= 256 && qr_beat[4*k +: 4] == 4'd0)
                         land[slot] <= {112'd0, 144'(qr_data[256*k +: 256] >> o144[7:0])};
                     else if (qr_beat[4*k +: 4] == 4'd1)
                         land[slot] <= {112'd0, 144'(two >> o144[7:0])};
+`endif
                     if (qr_beat[4*k +: 4] == 4'd0) hold[k] <= qr_data[256*k +: 256];
                 end
                 default: ;
             endcase
         end
+`ifndef OT_SVC_ATT_LAND_SRAM
         if (rw_v) land[rw_slot] <= {112'd0, rw_bits};
+`endif
         // S81-ROWX held list: every row this die / stack holds, in the scanner's rank order
         if (RX && sw_step && sw_i < sw_nc && g_own && 32'(x_n) < XN) x_rk[x_n[XW-1:0]] <= s_rank;
         // fetch FIFO push
@@ -895,7 +1003,10 @@ module dsdv_svc_att #(
         eq_w <= qmem[4'(rc - 10'd1)];
 `endif
 `endif
-        ekv_w <= kc_w; ekv_m <= kc_m;
+`ifndef OT_SVC_ATT_LAND_SRAM
+        ekv_w <= kc_w;
+`endif
+        ekv_m <= kc_m;
         // PC request flops
 `ifndef OT_S81_SVC_WQ_RDREG
         for (k = 0; k < 2; k = k + 1) qrq[341*k +: 341] <= nv[k] ? nreq[k] : '0;

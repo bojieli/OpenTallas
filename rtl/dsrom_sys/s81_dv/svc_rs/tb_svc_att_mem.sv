@@ -7,6 +7,7 @@
 // converted memories comes from -DOT_SVC_MEM_COV (MEM_COV lines of the m / mm instances).
 module tb_svc_att_mem;
     parameter integer NCYC = 200000;
+    parameter integer ROWX = 0;
     integer SEED = 1;
     localparam integer H = 8;
     reg clk = 0; always #0.5 clk = ~clk;
@@ -67,9 +68,9 @@ module tb_svc_att_mem;
     `ATT_WIRES(f)
     `ATT_WIRES(m)
     `ATT_WIRES(mm)
-    dsdv_svc_att_f  #(.H(H), .SRAM_MACRO(1), .PV_IDENTITY(1)) u_f  (`ATT_PORTS(f));
-    dsdv_svc_att_m  #(.H(H), .SRAM_MACRO(1), .PV_IDENTITY(1)) u_m  (`ATT_PORTS(m));
-    dsdv_svc_att_mm #(.H(H), .SRAM_MACRO(1), .PV_IDENTITY(1)) u_mm (`ATT_PORTS(mm));
+    dsdv_svc_att_f  #(.H(H), .SRAM_MACRO(1), .PV_IDENTITY(1), .ROWX(ROWX)) u_f  (`ATT_PORTS(f));
+    dsdv_svc_att_m  #(.H(H), .SRAM_MACRO(1), .PV_IDENTITY(1), .ROWX(ROWX)) u_m  (`ATT_PORTS(m));
+    dsdv_svc_att_mm #(.H(H), .SRAM_MACRO(1), .PV_IDENTITY(1), .ROWX(ROWX)) u_mm (`ATT_PORTS(mm));
     initial begin if ($value$plusargs("seed=%d", SEED)) ; rng = 32'h9E37_79B9 ^ SEED; end
     integer nf = 0, nsel = 0, nq = 0;
     always @(posedge clk) begin

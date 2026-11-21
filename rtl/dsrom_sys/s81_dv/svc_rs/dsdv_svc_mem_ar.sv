@@ -110,3 +110,68 @@ module dsdv_svc_wq_capture (
         end
     end
 endmodule
+
+// Read-first S81 landing store. Each writer has private SRAMs; a narrow
+// live-value table selects the most recent writer. Replicate read columns
+// so ROWX can retrieve two distinct addresses in the same bank on one edge.
+module dsdv_svc_land_mem #(
+    parameter bit ROWX = 1,
+    parameter bit MUT = 0
+)(
+    input  wire                clk,
+    input  wire [2:0]          we,
+    input  wire [29:0]         wa,
+    input  wire [767:0]        wd,
+    input  wire [47:0]         ra,
+    output wire [1023:0]       rd
+);
+    localparam integer ROWS_PER_BANK = 160;
+    localparam integer WORDS = 4 * ROWS_PER_BANK;
+
+    wire [255:0] bank_rd [0:3][0:3];
+    for (genvar b = 0; b < 4; b = b + 1) begin : g_bank
+        reg [1:0] writer [0:ROWS_PER_BANK-1];
+        wire [2:0] bank_we;
+        for (genvar w = 0; w < 3; w = w + 1) begin : g_wsel
+            assign bank_we[w] = we[w] && 32'(wa[10*w +: 10]) < WORDS && wa[10*w +: 2] == 2'(b);
+        end
+        always @(posedge clk) begin
+            // Match nonblocking write order in the flop reference: ROWS,
+            // then PC1, then PC0 in descending priority on the same row.
+            for (integer i = 0; i < 3; i = i + 1) begin
+                integer w;
+                w = MUT ? (2 - i) : i;
+                if (bank_we[w])
+                    writer[wa[10*w + 2 +: 8]] <= 2'(w);
+            end
+        end
+        for (genvar r = 0; r < 4; r = r + 1) begin : g_read
+            if ((ROWX && r < 2) || r == b) begin : g_replica
+                wire bank_re = 32'(ra[12*r +: 12]) < WORDS && ra[12*r +: 2] == 2'(b);
+                wire [7:0] ra_row = ra[12*r + 2 +: 8];
+                reg [1:0] rd_writer;
+                reg rd_valid;
+                wire [255:0] src_rd [0:2];
+                always @(posedge clk) begin
+                    rd_valid <= bank_re;
+                    if (bank_re)
+                        rd_writer <= writer[ra_row];
+                end
+                for (genvar w = 0; w < 3; w = w + 1) begin : g_writer
+                    ot_sram_1r1w_160x256_m1_r0c0 u_mem (
+                        .clk(clk), .r_ce_in(bank_re), .r_addr_in(ra_row), .rd_out(src_rd[w]),
+                        .w_ce_in(bank_we[w]), .w_addr_in(wa[10*w + 2 +: 8]), .wd_in(wd[256*w +: 256]),
+                        .w_mask_in({256{1'b1}}));
+                end
+                assign bank_rd[r][b] = rd_valid ? src_rd[rd_writer] : 256'd0;
+            end else begin : g_absent
+                assign bank_rd[r][b] = 256'd0;
+            end
+        end
+    end
+    // Each selected bank drives one captured word. The remaining banks
+    // supply zero; no extra capture or hold edge is introduced.
+    for (genvar r = 0; r < 4; r = r + 1) begin : g_res
+        assign rd[256*r +: 256] = bank_rd[r][0] | bank_rd[r][1] | bank_rd[r][2] | bank_rd[r][3];
+    end
+endmodule

@@ -18119,3 +18119,40 @@ def s81_serdes_xface_retime_model(replicas=1):
                 data_scope="unchanged 512b payload/544b PMA; existing SRAM ports remain overlapped and active",
                 reset_scope="new data banks unreset; existing training must qualify first valid frame after reset",
                 evidence="results/uarch/s81_serdes_xface_retime_1117/model.json")
+
+
+def s81_svc_landing_split_model(rowx=True, att_cut=True):
+    """Size the service landing store at the existing row and export capture edge."""
+    clock_ps = 833
+    depth, bits, banks, writers = 640, 256, 4, 3
+    # ROWX readers 0/1 each cover every bank. Engine readers 2/3 remain
+    # fixed to their banks, including a malformed export/GO overlap.
+    read_banks = (banks, banks, 1, 1) if rowx else (1,) * banks
+    macro_count = writers * sum(read_banks)
+    att_seam_in = 1 + 512 + 1 + 291
+    att_seam_out = 1 + (8 * 132 + 20) + 1 + 513 + 1 + 4 + 8 + 1 + 1 + 3 + 512
+    att_seam_out += 1 + 10 + 1 + 8 + 2 + 2 + 1 + 32 + 3 * 16 + 2 + 1 + 1
+    return dict(
+        schema="opentallas.s81-svc-landing-split.v1",
+        clock_ps=clock_ps,
+        rowx=rowx,
+        local_added_cycles=0,
+        seam_input_cycles=int(att_cut),
+        seam_output_cycles=int(att_cut),
+        stream_added_ps=2 * int(att_cut) * clock_ps,
+        seam_bits_per_cycle=dict(down=att_seam_in, up=att_seam_out),
+        MACs_per_cycle_delta=0,
+        landing_row_bits=bits, landing_rows=depth,
+        peak_write_bytes_per_cycle=(bits // 8, bits // 8, 144 // 8),
+        engine_read_bytes_per_cycle=4 * bits // 8,
+        rowx_read_bytes_per_cycle=2 * 144 // 8 if rowx else 0,
+        macro_rows=depth // banks, macro_bits=bits, macro_count=macro_count,
+        macro_outline_um=(92.040, 39.432),
+        macro_body_um2=macro_count * 92.040 * 39.432,
+        writer_table_bits=2 * depth,
+        read_bank_copies=read_banks,
+        requested_data_bits_at_macro_pins_per_cycle=2 * bits * macro_count,
+        minimum_adjacent_macro_gap_um=8.64,
+        calendar="Keep the engine row capture and ROWX export cadence; compose the separate ATTCUT seams into the service/token schedule.",
+        scope="Projection; confirm legal macro sites, channel tracks, TT/FF and sustained production cadence on the split kit.",
+    )
