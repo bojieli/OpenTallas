@@ -41,3 +41,14 @@
 - b_s3 (rt 22a689dfc092) / b_n3 (rt/current) on p_h.json running.
 - (h) coll_ftc: no row on purpose. The 20 pins are land-ring hold_mux captures that the land ring check rejects as "cone deeper than 6
   cells" (BUF chain + INV + OA21 after place repair). A pin register on 20 bits of a ring bus would skew the bus.
+
+## UPDATE ~19:35 PST (latest)
+- V1 plan = V/p_h.json (sha aeae20148627), sidecar V/side_e.json, runtime pinned rt/65f3f85d7c5f (explicit sha; rt/current moved to
+  5099d315bab1 mid-run). Old rt 22a689dfc092 cannot carry reset.inst_taps (SCHEMA-UNKNOWN-KEY), so V1 = re-pin.
+- b_n3 strict: only R8_STALE 30 (rs +1 / hc2 +2) -> R8 re-derived: b_n3/launch/tools/die_plan/qc_r8_pinned.sh derive -> V/r8_v1a.json
+  (48 members changed, only rsn/rsf/b_hw_ctl_hc2 lanes). b_n4 = strict with R8=r8_v1a.json (launch_bind.sh honours env R8) running.
+- G0 on b_n3/launch (same plan): PASS 0 errors, 530 warnings, 128 types (V/g0_n3/g0_report.json).
+- Next: n4 strict 0 -> LATCHECK (in script, V/b_n4/latcheck.json) -> proof gen of one bound type on rt/65f3f85d7c5f -> apply
+  (publish_apply pattern intel2 ~/qc-plan-r3/apply_n46r4_a4.sh, R8 table r8_v1a.json, PCS clones in asbuilt internal_stations_types,
+  kit_wave qwen_compute tools_sha -> full sha of 65f3f85d7c5f with manifest, tools_refresh false), lift PACKED-BANK / STATION-KNEE /
+  CORE-CONTRACT holds via kit_wave_edit, post.
