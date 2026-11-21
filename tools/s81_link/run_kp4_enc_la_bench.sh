@@ -12,7 +12,13 @@ cp "$S"/ot_s81_kp4_enc.sv "$S"/ot_s81_kp4_common.sv "$S"/ot_s81_gf1024.svh "$S"/
    "$S"/tb_kp4_enc_la.sv src/
 # REF = a define-off ot_s81_kp4_enc.sv (default: origin/main of REPO)
 { if [ -n "${REF:-}" ]; then cat "$REF"; else git -C "$REPO" show origin/main:rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv; fi; } \
-    | sed 's/^module ot_s81_kp4_enc /module ot_s81_kp4_enc_ref /' > src/ot_s81_kp4_enc_ref.sv
+    | sed -e 's/^module ot_s81_kp4_enc /module ot_s81_kp4_enc_ref /' \
+          -e 's/OT_S81_KP4_ENC_LA/OT_S81_KP4_ENC_LA_REFOFF/g' -e 's/RCKRF_MUT_LA_LANE/RCKRF_MUT_LA_LANE_REFOFF/g' \
+    > src/ot_s81_kp4_enc_ref.sv
+# FAM-S81-SERDES-R6 11-21: main enc.sv itself carries the LA ifdefs, so the REF copy must not see the global
+# -DOT_S81_KP4_ENC_LA (or the mutant defines): its macros are renamed, REF is always the define-off form.  Before this the
+# bench compared LA against LA and both mutants PASSED (vacuous); with it the mutants FAIL as expected.
+grep -q OT_S81_KP4_ENC_LA_REFOFF src/ot_s81_kp4_enc_ref.sv || { echo "ref define-off rename failed"; exit 2; }
 grep -q "module ot_s81_kp4_enc_ref" src/ot_s81_kp4_enc_ref.sv || { echo "ref rename failed"; exit 2; }
 MUTPOW=1 python3 -I "$REPO/tools/s81_link/gen_kp4_enc_la.py" src > gen_mut.log || exit 2
 mkdir -p regen && python3 -I "$REPO/tools/s81_link/gen_kp4_enc_la.py" "$W/regen" > gen.log || exit 2
