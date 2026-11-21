@@ -632,7 +632,8 @@ module qfd_sys_face_lctx3_core #(
     // Same value: the carry into byte k is every lower byte all ones (tools/qwen_split/sysface32/prove_inc_bytes.sh).
     (* keep *) wire [2:0] tcyc_b1 = {&tcyc[23:16], &tcyc[15:8], &tcyc[7:0]};
     (* keep *) wire [3:1] tcyc_c  = {&tcyc_b1[2:0], &tcyc_b1[1:0], tcyc_b1[0]};
-    wire [31:0] tcyc_inc = {tcyc[31:24] + {7'd0, tcyc_c[3]}, tcyc[23:16] + {7'd0, tcyc_c[2]},
+    // Keep the increment out of the record-driven start/clear logic cone.
+    (* keep *) wire [31:0] tcyc_inc = {tcyc[31:24] + {7'd0, tcyc_c[3]}, tcyc[23:16] + {7'd0, tcyc_c[2]},
                             tcyc[15:8] + {7'd0, tcyc_c[1]}, tcyc[7:0] + 8'd1};
     (* keep *) wire [1:0] pos_b1 = {&pos[15:8], &pos[7:0]};
     (* keep *) wire [2:1] pos_c  = {&pos_b1, pos_b1[0]};
