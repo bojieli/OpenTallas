@@ -35,3 +35,11 @@ Client logs (localhost scratchpad): eco_5e017c6f.log, eco_4590432d.log, eco_sle_
 ## Next
 - Read eco_loop.json for the 3 units. Check hold FF internal >= 0, TT >= -42, DRC 0, LEC. Post the result per item.
 - After COORD/owner releases the 67 redundant rows: remove them from PROTECTED-DBS via coord-commit.sh, then ot-delete (paths are in the TSV, status REDUNDANT).
+
+## Resume 11-21 03:4x (after Codex cover 02:18-03:32)
+- Codex: slw_sc_v1__cl63e5a7a2 signed and exported (record 5f0e1ef62288), so the slw_sc_v1 type is now signed. Codex's FF-only ECO source is 6bdf1bab525. Its unit oth-ubuntu-2497471-1795257869 (slw_sc_v1 cl5e017c6f, harvest-eco-2350/<type>/eco_ff_only_1121/eco1) is in GRT/DRT. I adopted it with a waiter only; no relaunch, no cancel.
+- My 3 eco1 units (1639700 / 1642612 / 1644165) are still alive at ~4.2 h, but stuck in the t10 TT-only setup pass. No log line since 00:22-00:48, one core at 100%, ~30 GB each. This is the same stall the 3 earlier attempts hit. Not cancelled: ECOs are exempt from the >3 h rule, and the stall alone does not prove they cannot sign. Recommend COORD cancel them once the FF-only runs pass t10's equivalent point.
+- New FF-only ECOs (rt 6bdf1bab525e eco_loop, same args, out <type>/eco_ff_only_1121/eco1):
+  - slw_sc_v1 cl4590432d: oth-ubuntu-73053-1795261246
+  - sle_sc_v3: oth-ubuntu-75790-1795261248
+- Waiters armed: the 5 ot-run clients (run_in_background) and ot-wait on 2497471. Sign-off (hold FF internal >= 0, TT >= -42, DRC 0, LEC) is read from eco_loop.json best. ot-auto-export picks up any SIGNED result.
