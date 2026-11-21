@@ -66,3 +66,21 @@ strict BIND 0 errors (398 partitions, 873 crossings), LATCHECK 873/873 PASS, G0 
    large flop-pair class remains.
 4. tr1 (GRT) and tr1b (CTS read) in the Fable dir: reads only; neither is a sign-off form.
 5. Note: I removed an empty partial L/tr2/rtl with rm -rf once (my own failed output); use ot-delete only.
+
+## UPDATE 11-20 19:3x PST (supersedes "RUNNING" above)
+- tr2 (main-tools kit) DIED at FAIL_PREFLOOR kit_preflight: reset_tree_coherence (main gen's reset_tree.tcl keys vs the
+  snapshot-staged RTL wrapper, e.g. u_rrl_24 key rst_n_t17 vs RTL q rst_n_t51; u_srl_* q MISSING). Retrying with main's own
+  RTL export (L/rtlmain.sh, cone widened with physical/asap7_memory_macros*) fails in main's bootstrap gen:
+  "clock landing: hd_ctl.a_tx_o: writer START raw reset rst_rl_22 has no registered wavefront driver".
+  => HEAD tools re-pin proof FAILS on the r13r NOMCAP plan: main gen refuses the plan (hd_ctl START reset rule) and its
+  reset tree does not match the published r13r RTL. Needs a HEAD plan event (HEAD-R14 / COORD), not a lep0N kit fix.
+- tr2s = SIGN-OFF CANDIDATE: same plan L/prep/source_plan.json (f4d3c7da72d8) generated with the SNAPSHOT tools
+  (manifest 6d3c0e3e43d9) and OT_GPL_SPARSE_OVERFLOW=0 OT_GPL_OVERFLOW=0 (explicit env = d98908b665 behaviour: no
+  sparse exit; config.mk has no sparse/overflow lines). 0 default tap lines; clk_t191..t246 priced.
+  OT_SIGNOFF_SDC_SHA b6b795a7245aee53. KIT_PREFLIGHT PASS. RUNNING ot-run unit oth-ubuntu-1990134-1795230761 on epyc10
+  (client pid L/tr2s.otrun.pid, log L/tr2s.otrun.log), GOAL=route (synth -> sign-off), die priority, 96 GB / 16 thr.
+  OT_LANE=OPUS-FIX-HEAD-LEP0N-R2 set: ot-run posts DONE/DIED.
+- Next: read kit L/tr2s/gen/hd_lep0N hold_gate.log / pregrt_ff_hold.log (r14: -388.93 on 25,803 FF ends before repair),
+  GRT TT, signoff.json. On SIGNED: autoclean archive ingests to AGIdock (signed_store); rtx-pro copy with
+  `signed_store.py stage --host rtx-pro --dest ~/signed-export-1114/head --die s81_head --key hd_lep0N` (or export_view.py
+  as KV lanes did). If r14 signs off first, r14 wins; tr2s then is a second sign-off of the same type.
