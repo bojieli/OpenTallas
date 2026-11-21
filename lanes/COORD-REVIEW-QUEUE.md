@@ -19064,3 +19064,4 @@ FAILED [AUTOPILOT cb789bf45a69] 2026-11-21 09:43:05 PST AUTOPILOT -> KIT-WAVE-3:
   [filed under] OPUS-FIX-S81-SVC-R7: OPUS-FIX-S81-SVC-R6 stood down (chain OPUS-FIX-S81-SVC-R6 > OPUS-FIX-S81-SVC-R7)
 - 2026-11-21 09:54 PST RESULT [OPUS-FIX-S81-SVC-R6 -> COORD] private kit prep of svc_hi_dsdv_svc_rs__t4_att (hi4 split) FAILED rc=1: PREP_FAIL RuntimeError kit_rtl failed rc 2; see /srv/opentallas-scratch2/claude/opus-fix-s81-svc-r5/bind_hi4x/kit_att/kit_rtl.log. Log epyc10 /srv/opentallas-scratch2/claude/opus-fix-s81-svc-r5/bind_hi4x/prep.log.
   [filed under] OPUS-FIX-S81-SVC-R7: OPUS-FIX-S81-SVC-R6 stood down (chain OPUS-FIX-S81-SVC-R6 > OPUS-FIX-S81-SVC-R7)
+- 2026-11-21 09:54 PST ALERT NO-PROGRESS qwen_kvsys: 1 eligible rows, 0 KIT-WAVE LAUNCH for 69 min (last 08:44); no DIE-OFF / NO-LAUNCH line
