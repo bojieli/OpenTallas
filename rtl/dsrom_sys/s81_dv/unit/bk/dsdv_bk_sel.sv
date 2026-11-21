@@ -10,6 +10,50 @@
 // glue -> quarter links <= 1,613 / 1,590 / 2,265 / 1,602 um pin to pin, every hop <= 283 um).  The control core dsdv_bksel_c MUST be
 // hardened with the same macro (XDX = 1 + ceil((RC + RS + QRX) / 2) = 7 with the eco3 QRX 1); quarters unchanged (DMX 0).
 // Listed before OT_BKSEL_A2P, so A3P wins when both are set; explicit OT_BKSEL_* defines win over both.  Inert when undefined.
+// OPUS-FIX-S81-BKSEL-R4 11-20 (bk_sel__t2 300-um hop cap, links no plan row can fix): OT_BKSEL_L4 = ONE bare macro for
+// the four RTL link stage sets (inert unless defined; explicit OT_BKSEL_* defines win; defined in dsdv_bk_sel.sv AND
+// portfix178/dsdv_idx_l20s.sv so file order never matters):
+//   RRD 6  hard-core reset relays: every hard core (u_q[0..3], u_c, u_g, u_tx) takes rst_n through its OWN 6-flop relay
+//          (dsdv_bk_rrd, plain flops like the ot_dp_rrelay tree): equal depth for all 7 cores, reset release +6 cycles for
+//          the cores only (rst_n held >= 64 clocks, owner 10-29); legs tap t22 -> core pin 172-1,934 um -> hops <= 276 um.
+//   LPS 4  loop-back lane u_tx.lo -> lp_q -> u_vm.i_l: +4 reset-less stages after lp_q (valid bit reset), loop 1,204 um
+//          -> 5 hops of 241 um; the loop-back beat reaches u_vm 4 edges later (vmux schedule LAT_L +4, compiler).
+//   DSP 3  TX destination decode: octl/dst/lpe decoded at u_g.vo_s, carried 3 stages to dst/lpe at the u_tx N-edge
+//          gate (1,380 um -> 5 hops of 276 um).  dst/lpe change 3 edges later; the first lo beat of a job is >= 4 edges
+//          after its CTL (n32 slot grid CTL + 1 + DLY, FACE 2 +3), so routing is unchanged; a lo beat inside the 3-edge
+//          window is a sticky fault (dwf, fault ring), proof proof_l4 (no dwf -> tl_o/tpn_o/tps_o/lp_q equal the DSP 0 form).
+//   RO 8   quarter -> control t_o stations 7 -> 8 (placed R3a: u_stn_o q0 detour 2,525 um, 8 hops measured 322.5 um ->
+//          9 hops of 281 um); +1 edge on t_o only (dsdv_bksel_c XDX uses RC / RS / QRX, not RO: the signed u_c view is kept).
+//   FSP 3  fault feeder: tx_st[0] | dwf -> 3 stages -> fq (u_tx N edge -> fq 973 um -> 4 hops of 243 um); sticky, +3 edges.
+`ifdef OT_BKSEL_L4
+`ifndef OT_BKSEL_RO
+`define OT_BKSEL_RO 8
+`endif
+`ifndef OT_BKSEL_RRD
+`define OT_BKSEL_RRD 6
+`endif
+`ifndef OT_BKSEL_LPS
+`define OT_BKSEL_LPS 4
+`endif
+`ifndef OT_BKSEL_DSP
+`define OT_BKSEL_DSP 3
+`endif
+`ifndef OT_BKSEL_FSP
+`define OT_BKSEL_FSP 3
+`endif
+`endif
+`ifndef OT_BKSEL_RRD
+`define OT_BKSEL_RRD 0
+`endif
+`ifndef OT_BKSEL_LPS
+`define OT_BKSEL_LPS 0
+`endif
+`ifndef OT_BKSEL_DSP
+`define OT_BKSEL_DSP 0
+`endif
+`ifndef OT_BKSEL_FSP
+`define OT_BKSEL_FSP 0
+`endif
 `ifdef OT_BKSEL_A3P
 `ifndef OT_BKSEL_RC
 `define OT_BKSEL_RC 5
@@ -132,11 +176,16 @@ module dsdv_bk_sel #(
     dsdv_bk_g #(.V(V), .MUT(MUT), .RF(7)) u_g (
 `endif
 `endif
-        .clk(clk), .rst_n(rst_n), .tap_k({tap_k[7:3], tap_k[0]}), .sink_k({sink_k[7:3], sink_k[0]}), .ik(ik), .ek(ek), .uid(uid), .eg_n(eg_n),
+        .clk(clk), .rst_n(rst_g), .tap_k({tap_k[7:3], tap_k[0]}), .sink_k({sink_k[7:3], sink_k[0]}), .ik(ik), .ek(ek), .uid(uid), .eg_n(eg_n),
         .vi_s(vi_s_r), .vo_s(vo_s), .vi_n(vi_n_r), .vo_n(vo_n), .ln0(l0), .ln1(l1), .ln2(l2), .ln3(l3), .vd(vd), .fault(fault));
     wire [4*515-1:0] ln = {l3, l2, l1, l0};
     wire [4*CB-1:0] tc; wire [3:0] tcr; wire [4*SB-1:0] fs; wire [4*OB-1:0] fo;
     genvar g;
+    // OPUS-FIX-S81-BKSEL-R4 (OT_BKSEL_L4 RRD): one reset relay per hard core (RRD 0 = rst_n, as built).
+    // OT_BKSEL_MUT_RRD (bench mutant only): quarter 0 is never released.
+    wire [3:0] rst_q; wire rst_c, rst_g;
+    dsdv_bk_rrd #(.D(`OT_BKSEL_RRD)) u_rst_relay_c (.ck(clk), .d(rst_n), .q(rst_c));
+    dsdv_bk_rrd #(.D(`OT_BKSEL_RRD)) u_rst_relay_g (.ck(clk), .d(rst_n), .q(rst_g));
     // S81-A2 plan stations (dsdv_bksel_c.sv header): *_q = quarter side, *_c = control side
     wire [4*CB-1:0] tc_q; wire [3:0] tcr_q; wire [4*SB-1:0] fs_c; wire [4*OB-1:0] fo_c; wire [4*515-1:0] ln_q;
     dsdv_bk_stn #(.W(4*CB + 4), .D(`OT_BKSEL_RC)) u_stn_c (.ck(clk), .d({tc, tcr}), .q({tc_q, tcr_q}));
@@ -144,11 +193,18 @@ module dsdv_bk_sel #(
     dsdv_bk_stn #(.W(4*OB), .D(`OT_BKSEL_RO)) u_stn_o (.ck(clk), .d(fo), .q(fo_c));
     dsdv_bk_stn #(.W(4*515), .D(`OT_BKSEL_RLN)) u_stn_l (.ck(clk), .d(ln), .q(ln_q));
     generate for (g = 0; g < 4; g = g + 1) begin : g_q       // quarter 0 SW, 1 SE, 2 NW, 3 NE
+        wire rq;
+        dsdv_bk_rrd #(.D(`OT_BKSEL_RRD)) u_rst_relay_q (.ck(clk), .d(rst_n), .q(rq));
+`ifdef OT_BKSEL_MUT_RRD
+        assign rst_q[g] = (g == 0) ? 1'b0 : rq;
+`else
+        assign rst_q[g] = rq;
+`endif
 `ifdef OT_BKQ_ECO3
-        dsdv_bksel_q #(.OLL(2), .RFH(2), .HLAT(1)) u_q (.ck(clk), .rst(rst_n), .lane(ln_q[515 * g +: 515]), .f_c(tc_q[CB * g +: CB]),
+        dsdv_bksel_q #(.OLL(2), .RFH(2), .HLAT(1)) u_q (.ck(clk), .rst(rst_q[g]), .lane(ln_q[515 * g +: 515]), .f_c(tc_q[CB * g +: CB]),
             .f_cr(tcr_q[g]), .t_s(fs[SB * g +: SB]), .t_o(fo[OB * g +: OB]));
 `else
-        dsdv_bksel_q u_q (.ck(clk), .rst(rst_n), .lane(ln_q[515 * g +: 515]), .f_c(tc_q[CB * g +: CB]), .f_cr(tcr_q[g]),
+        dsdv_bksel_q u_q (.ck(clk), .rst(rst_q[g]), .lane(ln_q[515 * g +: 515]), .f_c(tc_q[CB * g +: CB]), .f_cr(tcr_q[g]),
             .t_s(fs[SB * g +: SB]), .t_o(fo[OB * g +: OB]));
 `endif
     end endgenerate
@@ -157,16 +213,16 @@ module dsdv_bk_sel #(
     // the hardened 4) and HCPARAM-ALL allowlisted the core.  OT_BKQ_ECO3 adds QRX 1 (the re-signed QRX view).
 `ifdef OT_BKQ_ECO3
 `ifdef OT_BKQ_QRX_MUT
-    dsdv_bksel_c #(.OLL(2), .SELOH(1), .RNF(1), .LQH(1)) u_c (.ck(clk), .rst(rst_n),
+    dsdv_bksel_c #(.OLL(2), .SELOH(1), .RNF(1), .LQH(1)) u_c (.ck(clk), .rst(rst_c),
 `elsif OT_BKSEL_A3P
     // OPUS-FIX-S81-BKSEL-R3 11-20: the A3P control view (bksel_c rfda3pt) is hardened with TKR 1 (take from the registered
     // new-fault flag, 0 cycles; rfda3p TT -46.64 on flt -> take -> lq).  Literal parameters (hard_core_param_all.py).
-    dsdv_bksel_c #(.OLL(2), .SELOH(1), .RNF(1), .LQH(1), .QRX(1), .TKR(1)) u_c (.ck(clk), .rst(rst_n),
+    dsdv_bksel_c #(.OLL(2), .SELOH(1), .RNF(1), .LQH(1), .QRX(1), .TKR(1)) u_c (.ck(clk), .rst(rst_c),
 `else
-    dsdv_bksel_c #(.OLL(2), .SELOH(1), .RNF(1), .LQH(1), .QRX(1)) u_c (.ck(clk), .rst(rst_n),
+    dsdv_bksel_c #(.OLL(2), .SELOH(1), .RNF(1), .LQH(1), .QRX(1)) u_c (.ck(clk), .rst(rst_c),
 `endif
 `else
-    dsdv_bksel_c #(.OLL(2), .SELOH(1), .RNF(1), .LQH(1)) u_c (.ck(clk), .rst(rst_n),
+    dsdv_bksel_c #(.OLL(2), .SELOH(1), .RNF(1), .LQH(1)) u_c (.ck(clk), .rst(rst_c),
 `endif
         .f_s_s(fs_c[0 +: 2*SB]), .f_s_n(fs_c[2*SB +: 2*SB]), .f_o_s(fo_c[0 +: 2*OB]), .f_o_n(fo_c[2*OB +: 2*OB]),
         .t_c_s(tc[0 +: 2*CB]), .t_c_n(tc[2*CB +: 2*CB]), .t_cr_s(tcr[1:0]), .t_cr_n(tcr[3:2]), .vd(vd));
@@ -181,6 +237,18 @@ module dsdv_bk_stn #(parameter integer W = 1, parameter integer D = 0) (input wi
         reg [W-1:0] r [0:D-1];
         integer i;
         always @(posedge ck) begin r[0] <= d; for (i = 1; i < D; i = i + 1) r[i] <= r[i-1]; end
+        assign q = r[D-1];
+    end endgenerate
+endmodule
+
+// OPUS-FIX-S81-BKSEL-R4 11-20: D-flop reset relay (plain flops, as the ot_dp_rrelay reset tree; D = 0: wire).  Each stage is a
+// relay_sites row of the type, so a hard-core reset pin is <= 300 um from its last stage.  Release (and assert) +D edges.
+module dsdv_bk_rrd #(parameter integer D = 0) (input wire ck, input wire d, output wire q);
+    generate if (D == 0) begin : g_w
+        assign q = d;
+    end else begin : g_r
+        (* keep = "true" *) reg [D-1:0] r;
+        always @(posedge ck) r <= (D == 1) ? d : {r[(D > 1 ? D - 2 : 0):0], d};
         assign q = r[D-1];
     end endgenerate
 endmodule

@@ -16,6 +16,12 @@
 // glue -> quarter links <= 1,613 / 1,590 / 2,265 / 1,602 um pin to pin, every hop <= 283 um).  The control core dsdv_bksel_c MUST be
 // hardened with the same macro (XDX = 1 + ceil((RC + RS + QRX) / 2) = 7 with the eco3 QRX 1); quarters unchanged (DMX 0).
 // Listed before OT_BKSEL_A2P, so A3P wins when both are set; explicit OT_BKSEL_* defines win over both.  Inert when undefined.
+// OPUS-FIX-S81-BKSEL-R4 11-20: OT_BKSEL_L4 sets RO 8 (t_o stations only; this core's XDX does not use RO), so file order never matters.
+`ifdef OT_BKSEL_L4
+`ifndef OT_BKSEL_RO
+`define OT_BKSEL_RO 8
+`endif
+`endif
 `ifdef OT_BKSEL_A3P
 `ifndef OT_BKSEL_RC
 `define OT_BKSEL_RC 5

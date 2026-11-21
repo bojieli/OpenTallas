@@ -1,4 +1,48 @@
 `timescale 1ns/1ps
+// OPUS-FIX-S81-BKSEL-R4 11-20 (bk_sel__t2 300-um hop cap, links no plan row can fix): OT_BKSEL_L4 = ONE bare macro for
+// the four RTL link stage sets (inert unless defined; explicit OT_BKSEL_* defines win; defined in dsdv_bk_sel.sv AND
+// portfix178/dsdv_idx_l20s.sv so file order never matters):
+//   RRD 6  hard-core reset relays: every hard core (u_q[0..3], u_c, u_g, u_tx) takes rst_n through its OWN 6-flop relay
+//          (dsdv_bk_rrd, plain flops like the ot_dp_rrelay tree): equal depth for all 7 cores, reset release +6 cycles for
+//          the cores only (rst_n held >= 64 clocks, owner 10-29); legs tap t22 -> core pin 172-1,934 um -> hops <= 276 um.
+//   LPS 4  loop-back lane u_tx.lo -> lp_q -> u_vm.i_l: +4 reset-less stages after lp_q (valid bit reset), loop 1,204 um
+//          -> 5 hops of 241 um; the loop-back beat reaches u_vm 4 edges later (vmux schedule LAT_L +4, compiler).
+//   DSP 3  TX destination decode: octl/dst/lpe decoded at u_g.vo_s, carried 3 stages to dst/lpe at the u_tx N-edge
+//          gate (1,380 um -> 5 hops of 276 um).  dst/lpe change 3 edges later; the first lo beat of a job is >= 4 edges
+//          after its CTL (n32 slot grid CTL + 1 + DLY, FACE 2 +3), so routing is unchanged; a lo beat inside the 3-edge
+//          window is a sticky fault (dwf, fault ring), proof proof_l4 (no dwf -> tl_o/tpn_o/tps_o/lp_q equal the DSP 0 form).
+//   RO 8   quarter -> control t_o stations 7 -> 8 (placed R3a: u_stn_o q0 detour 2,525 um, 8 hops measured 322.5 um ->
+//          9 hops of 281 um); +1 edge on t_o only (dsdv_bksel_c XDX uses RC / RS / QRX, not RO: the signed u_c view is kept).
+//   FSP 3  fault feeder: tx_st[0] | dwf -> 3 stages -> fq (u_tx N edge -> fq 973 um -> 4 hops of 243 um); sticky, +3 edges.
+`ifdef OT_BKSEL_L4
+`ifndef OT_BKSEL_RO
+`define OT_BKSEL_RO 8
+`endif
+`ifndef OT_BKSEL_RRD
+`define OT_BKSEL_RRD 6
+`endif
+`ifndef OT_BKSEL_LPS
+`define OT_BKSEL_LPS 4
+`endif
+`ifndef OT_BKSEL_DSP
+`define OT_BKSEL_DSP 3
+`endif
+`ifndef OT_BKSEL_FSP
+`define OT_BKSEL_FSP 3
+`endif
+`endif
+`ifndef OT_BKSEL_RRD
+`define OT_BKSEL_RRD 0
+`endif
+`ifndef OT_BKSEL_LPS
+`define OT_BKSEL_LPS 0
+`endif
+`ifndef OT_BKSEL_DSP
+`define OT_BKSEL_DSP 0
+`endif
+`ifndef OT_BKSEL_FSP
+`define OT_BKSEL_FSP 0
+`endif
 // S81-BKSEL-O 11-16: dsdv_idx_tx_n32 / txm_n32 / txm_grp spliced from rtl/dsrom_sys/s81_dv/idx/dsdv_idx_l20s.sv (the signed vb form:
 // declares FACE/MLK/LKL/PDC; SPLIT 0 = signed); u_tx passes the full signed parameter set. Other modules unchanged (frozen cohort).
 // ---------------------------------------------------------------------------------------------------------------------
@@ -1118,15 +1162,19 @@ module dsdv_bk_sel_vmtx #(
     wire [V-1:0] vi_m, lo;
     wire [V-1:0] sel_vo_n; wire sel_f;
     reg  [V-1:0] lp_q;
+    wire [V-1:0] lp_d; wire rst_tx, dwf, txf;   // OPUS-FIX-S81-BKSEL-R4 (OT_BKSEL_L4) stage nets
     dsdv_idx_vmux6 #(.V(V), .MUT(VM_MUT)) u_vm (.ck(clk), .rst(rst_n), .i_r(vi_s), .i_s(vi_idx), .i_a(ca), .i_b(cb),
-        .i_n(tpn_i), .i_l(lp_q), .o(vi_m), .fault(vm_fault));
+        .i_n(tpn_i), .i_l(lp_d), .o(vi_m), .fault(vm_fault));
     dsdv_bk_sel #(.V(V), .MUT(MUT)) u_sel (.clk(clk), .rst_n(rst_n), .tap_k(tap_k), .sink_k(sink_k), .ik(ik), .ek(ek),
         .uid(uid), .eg_n(eg_n), .vi_s(vi_m), .vo_n(sel_vo_n), .vi_n(vi_n), .vo_s(vo_s), .fault(sel_f));
     dsdv_idx_tx_n32 #(.V(V), .IK(4), .EK(5), .UID(8'h5C), .SRAM_MACRO(TX_SRAM), .MUT(TX_MUT),
         // S81-BKSEL-O 11-16 (HCPARAM-ALL): the signed vb core view was built with this set (view config.mk VERILOG_TOP_PARAMS);
         // FACE 2 = lo/st +3 ck edges vs FACE 0 (+1 FACE 1 face flops, +2 FACE 2 re-timed face rows); PDC/WDC/SCS/RHP 0 cycles.
         .D(8192), .IB(64), .RDL(1), .WDL(1), .WDC(1), .SCS(1), .RIL(1), .RHP(1), .FACE(2), .LKL(0), .MLK(0), .PDC(1)) u_tx (
-        .ck(clk), .rst(rst_n), .vi(vi_m), .vo(vo_s), .lo(lo), .st(tx_st));
+        .ck(clk), .rst(rst_tx), .vi(vi_m), .vo(vo_s), .lo(lo), .st(tx_st));
+    // OPUS-FIX-S81-BKSEL-R4 (OT_BKSEL_L4): u_tx reset relay (RRD), fault feeder stages (FSP) on tx_st[0] | dwf
+    dsdv_bk_rrd #(.D(`OT_BKSEL_RRD)) u_rst_relay_tx (.ck(clk), .d(rst_n), .q(rst_tx));
+    dsdv_bk_fsp #(.D(`OT_BKSEL_FSP)) u_fsp (.ck(clk), .rn(rst_n), .d(tx_st[0] | dwf), .q(txf));
     generate if (SELE != 0) begin : g_sel
         wire [V-1:0] eo; wire ef;
         dsdv_bk_selids #(.V(V), .EK(5), .UID(8'h5C), .MUT(SEL_MUT)) u_ids (.ck(clk), .rst(rst_n), .vo(vo_s), .o(eo), .fault(ef));
@@ -1136,23 +1184,23 @@ module dsdv_bk_sel_vmtx #(
             else begin
                 vn[0] <= sel_vo_n[0] | eo[0];
                 if (eo[0] && sel_vo_n != {V{1'b0}}) mf <= 1'b1;               // relay beat on a busy rung slot
-                fq <= fq | sel_f | ef | mf | vm_fault | tx_st[0];
+                fq <= fq | sel_f | ef | mf | vm_fault | txf;
             end
         always @(posedge clk) vn[V-1:1] <= sel_vo_n[V-1:1] | eo[V-1:1];
         assign vo_n = vn; assign fault = fq;
     end else begin : g_nosel
         reg fq;
-        always @(posedge clk or negedge rst_n) if (!rst_n) fq <= 1'b0; else fq <= fq | sel_f | vm_fault | tx_st[0];
+        always @(posedge clk or negedge rst_n) if (!rst_n) fq <= 1'b0; else fq <= fq | sel_f | vm_fault | txf;
         assign vo_n = sel_vo_n; assign fault = fq;
     end endgenerate
     // ---- TX destination (control state only is reset: 2-flop landing of rst_n)
     reg rs0, rs1;
     always @(posedge clk or negedge rst_n) if (!rst_n) begin rs0 <= 1'b0; rs1 <= 1'b0; end else begin rs0 <= 1'b1; rs1 <= rs0; end
     wire octl = vo_s[0] && vo_s[3:1] == 3'd0 && vo_s[28:21] == 8'h5C && vo_s[31:29] == 3'd2;
-    reg [1:0] dst; reg lpe;
-    always @(posedge clk or negedge rs1)
-        if (!rs1) begin dst <= 2'd0; lpe <= 1'b0; end
-        else if (octl) begin dst <= (IDX_MUT == 1) ? 2'd0 : vo_s[21+101 -: 2]; lpe <= vo_s[21+102]; end
+    wire [1:0] dst; wire lpe;
+    // OPUS-FIX-S81-BKSEL-R4 (OT_BKSEL_L4 DSP): the decoded CTL fields reach dst / lpe through DSP stages (DSP 0 = as built)
+    dsdv_bk_dsp #(.D(`OT_BKSEL_DSP)) u_dsp (.ck(clk), .rn(rst_n), .rs1(rs1), .octl(octl),
+        .fd((IDX_MUT == 1) ? 2'd0 : vo_s[21+101 -: 2]), .fl(vo_s[21+102]), .lo_v(lo[0]), .dst(dst), .lpe(lpe), .wf(dwf));
     // ---- outputs: data = lo, valid gated by DST; the loop-back beat (registered, lane 3) -> vmux i_l
     always @(posedge clk or negedge rs1) if (!rs1) lp_q[0] <= 1'b0; else lp_q[0] <= lo[0] && lpe;
     // The selector's HDR binds each input lane to a quarter.  The local copy
@@ -1161,11 +1209,83 @@ module dsdv_bk_sel_vmtx #(
     wire [V-1:0] loop_word;
     dsdv_idx_loop_lane3 #(.V(V), .MUT(IDX_MUT)) u_loop_word (.i(lo), .o(loop_word));
     always @(posedge clk) lp_q[V-1:1] <= loop_word[V-1:1];
+    // OPUS-FIX-S81-BKSEL-R4 (OT_BKSEL_L4 LPS): loop-back lane stages lp_q -> u_vm.i_l (LPS 0 = lp_q, as built)
+    dsdv_bk_lpd #(.W(V), .D(`OT_BKSEL_LPS)) u_lpd (.ck(clk), .rn(rst_n), .d(lp_q), .q(lp_d));
     assign tl_o  = {lo[V-1:1], lo[0] && dst == 2'd0};
     assign tpn_o = {lo[V-1:1], lo[0] && dst == 2'd1};
     assign tps_o = {lo[V-1:1], lo[0] && dst == 2'd2};
 endmodule
 
+
+// OPUS-FIX-S81-BKSEL-R4 11-20 (OT_BKSEL_L4): link stage helpers of dsdv_bk_sel_vmtx (D = 0: the as-built logic exactly).
+// dsdv_bk_lpd: D lane stages, data reset-less, valid bit 0 reset (rn).
+module dsdv_bk_lpd #(parameter integer W = 276, parameter integer D = 0) (input wire ck, input wire rn, input wire [W-1:0] d,
+                                                                       output wire [W-1:0] q);
+    generate if (D == 0) begin : g_w
+        assign q = d;
+    end else begin : g_r
+        reg [W-1:0] r [0:D-1];
+        integer i;
+        always @(posedge ck or negedge rn)
+            if (!rn) for (i = 0; i < D; i = i + 1) r[i][0] <= 1'b0;
+            else begin r[0][0] <= d[0]; for (i = 1; i < D; i = i + 1) r[i][0] <= r[i-1][0]; end
+        always @(posedge ck) begin r[0][W-1:1] <= d[W-1:1]; for (i = 1; i < D; i = i + 1) r[i][W-1:1] <= r[i-1][W-1:1]; end
+        assign q = r[D-1];
+    end endgenerate
+endmodule
+
+// dsdv_bk_fsp: D sticky-fault feeder stages (reset rn); D = 0: wire.
+module dsdv_bk_fsp #(parameter integer D = 0) (input wire ck, input wire rn, input wire d, output wire q);
+    generate if (D == 0) begin : g_w
+        assign q = d;
+    end else begin : g_r
+        reg [D-1:0] r;
+        always @(posedge ck or negedge rn)
+            if (!rn) r <= {D{1'b0}};
+            else r <= (D == 1) ? d : {r[(D > 1 ? D - 2 : 0):0], d};
+        assign q = r[D-1];
+    end endgenerate
+endmodule
+
+// dsdv_bk_dsp: TX destination register (dst / lpe, reset rs1, load on octl).  D = 0: the as-built dst / lpe.  D > 0: the
+// decoded CTL (octl valid on rn, fields fd / fl reset-less) crosses D stages first, so dst / lpe load D edges later.
+// wf (sticky, rn): a lo beat (lo_v) in one of the D cycles where the as-built form would already route by the NEW
+// destination: at the edge after dst loads, h holds exactly those D lo samples (wf is set <= D + 1 edges after the beat).
+// OT_BKSEL_MUT_DSPW (proof mutant only): wf never set.
+module dsdv_bk_dsp #(parameter integer D = 0) (input wire ck, input wire rn, input wire rs1, input wire octl,
+                                              input wire [1:0] fd, input wire fl, input wire lo_v,
+                                              output reg [1:0] dst, output reg lpe, output wire wf);
+    wire cv; wire [1:0] cd; wire cl;
+    generate if (D == 0) begin : g_w
+        assign cv = octl; assign cd = fd; assign cl = fl; assign wf = 1'b0;
+    end else begin : g_r
+        reg [D-1:0] v; reg [1:0] sd [0:D-1]; reg [D-1:0] sl; reg wq;
+        integer i;
+        always @(posedge ck or negedge rn)
+            if (!rn) v <= {D{1'b0}};
+            else v <= (D == 1) ? octl : {v[(D > 1 ? D - 2 : 0):0], octl};
+        always @(posedge ck) begin
+            sd[0] <= fd; sl[0] <= fl;
+            for (i = 1; i < D; i = i + 1) begin sd[i] <= sd[i-1]; sl[i] <= sl[i-1]; end
+        end
+        assign cv = v[D-1]; assign cd = sd[D-1]; assign cl = sl[D-1];
+        reg [D-1:0] h; reg cvd;            // lo_v sampled at the last D edges; cv one edge later (all inputs of wq registered)
+        always @(posedge ck or negedge rn)
+            if (!rn) begin h <= {D{1'b0}}; cvd <= 1'b0; end
+            else begin h <= (D == 1) ? lo_v : {h[(D > 1 ? D - 2 : 0):0], lo_v}; cvd <= cv; end
+        always @(posedge ck or negedge rn)
+            if (!rn) wq <= 1'b0;
+`ifdef OT_BKSEL_MUT_DSPW
+            else wq <= 1'b0;
+`else
+            else if (cvd && (|h)) wq <= 1'b1;
+`endif
+        assign wf = wq;
+    end endgenerate
+    always @(posedge ck or negedge rs1)
+        if (!rs1) begin dst <= 2'd0; lpe <= 1'b0; end
+        else if (cv) begin dst <= cd; lpe <= cl; end
+endmodule
 
 module dsdv_idx_vmux6 #(
     parameter integer V = 276,
