@@ -20,3 +20,13 @@ Task: resizer latch -> flop swap (LOCKUP-STATION-R2 t39 proof4) as a possible fu
   gen_phys latch_restore_hook_lines chains it after the kit's own POST_FLOORPLAN/POST_RESIZE/POST_CTS/POST_GLOBAL_ROUTE hook;
   signoff.py latch_swap check (6_final.v DFF[HL]Qx4 > synth -> blocking FAIL; NOT RUN does not block); test_latch_swap.py (6 pass).
   Not covered: core-kit generators outside gen_phys (gen_core_kit_kv, S81/QC/HBM core run_kit) -> only the signoff.py backstop.
+
+## Update 11-21 01:0x (DONE)
+- Exposure: 7 hosts 208,952 routed netlists (6_final.v / 5_route.v): 0 with any DFF[HL]Qx4.  signed-store: all 1,241 signed / local-pass
+  records with a 6_final.v, scanned in the AGIdock archive: 0 (0 missing).  t39 proof4 (GOAL=grt, no routed .v) is the only swap seen.
+  => no signed type carries a latch->flop swap; nothing to revoke, no FUNCTIONAL post.  Note: 1,186 signed records hold no routed LEC
+  receipt in their archive, so routed LEC is NOT a universal backstop; signoff.py latch_swap now is.
+- Fix on main e88352084d (ae39f0a78d4 + follow-up): rt/current on all 7 hosts carries latch_restore.tcl (checked 00:20).
+  CTS/GRT restore lives inside cts_post.tcl / grt_post.tcl (before pg_connect); POST_FLOORPLAN / POST_RESIZE via gen_phys.
+- Open: core kits that override POST_GLOBAL_ROUTE (core_flow grt_post_core.tcl) or do not use gen_phys hooks get only the signoff
+  backstop; LOCKUP-STATION-R2 asked to confirm on its next proof.
