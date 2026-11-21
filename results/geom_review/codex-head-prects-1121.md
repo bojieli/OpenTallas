@@ -23,3 +23,5 @@ Exact placed images viewed during the HEAD takeover. The TT placement-stop fix u
 - Host east follow-up. The detailed ideal-clock report shows the reported −199.81 ps WNS on the virtual launch to `u_cland_origin/sf` falling-edge boundary path. The 1,074.7 µm mark is a separate recovery path with +479.84 ps. PASS for a private CTS diagnostic on the exact inspected retained placement. The east macro channel remains a routing concern.
 
 - SerDes sdr2d actual post-CTS layout and density viewed under `epyc9:/srv/opentallas-scratch2/claude/fable-fix-head-serdes-r3/sdr2d_cts_ideal/cts_probe/{layout,density}.png`. One encoder tree binds all 11,321 sinks at `clk_t20`, max spread 28.4 ps. The macro aisle remains clear. The landing at the decoder edge and the south I/O channel are still the concentration points. PASS for private TT/FF repair and a global-route diagnostic on that checkpoint. Review actual pin access and congestion before DRT.
+
+- LEP tap-safe follow-up. Exact emitted private kit preflight PASS, macro track snaps at most 0.54 µm on inherited RX and landing rows. Proposal review permits a place-only diagnostic. Review actual placement before CTS/GRT.

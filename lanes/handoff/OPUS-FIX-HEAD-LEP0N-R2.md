@@ -115,3 +115,8 @@ strict BIND 0 errors (398 partitions, 873 crossings), LATCHECK 873/873 PASS, G0 
   (4) Carry the tr2s tap pricing (L/plan/new56_rows.json; re-derive on the split pieces).
   (5) Gen with HEAD settings only: no OT_GPL_SPARSE_OVERFLOW / GPL -overflow, i.e. main tools or explicit env 0.
   (6) Private bind + LATCHECK, then the kit.
+
+## CODEX 2026-11-21 03:0x PST
+
+- R16 private ten-TX-bank shelf keeps all 251 frozen clock taps, four signed pair shapes and die-facing pins. The older 45-bank proposal collided with the frozen clk_t28 halo and was retired. The ten-bank model reviewed under `results/geom_review/codex-head-prects-1121.md` moves 37 local anchors by at most 21.6 µm. Reset remap keeps 7 edges, 5 exports at identical coordinates and at most 357.87 µm per resulting stage against bound 405. First raw wrapper lacked the proper START driver and was regenerated with a remapped per-type plan.
+- GEN and preflight now PASS on private plan 42fd64227556, exact emitted source bundle 34 files. E10 work `/srv/opentallas-scratch2/claude/opus-fix-head-lep0n-r2/shelf1121/reset_remapped_v2`, job `oth-ubuntu-1386343-1795258318`, hub `~/head-plan-r16/lep_shelf_remapped_gen_v2.otrun.log`. Place-only diagnostic before a built-image review. Gather true setup paths and congestion to decide if the larger LEP split is still required. Existing wave runs untouched.
