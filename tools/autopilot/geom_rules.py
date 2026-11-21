@@ -102,6 +102,8 @@ def load(path, extra=None):
                 ex.setdefault("macro_clk_xy", {})[int(f[1])] = (float(f[2]), float(f[3]))
             elif t == "MR":               # hard-macro reset-pin XY (geom_dump.tcl, RESET-RELAY-GEN-1530): reset forward legs
                 ex.setdefault("macro_rst_xy", {}).setdefault(int(f[1]), []).append((float(f[2]), float(f[3])))
+                if len(f) > 4:                # 5th field (11-21): the pin name, for nested hard-core rows
+                    ex.setdefault("macro_rst_pin", {}).setdefault(int(f[1]), []).append((f[4], float(f[2]), float(f[3])))
             elif t == "C":
                 cells[int(f[1])] = (f[2], f[3], float(f[4]), float(f[5]), float(f[6]), float(f[7]), f[8] if len(f) > 8 else "")
             elif t == "N":

@@ -1604,6 +1604,15 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["r
                        # RESET-RELAY-GEN-1530 11-21 (COORD): up to 16 (a reset release leg; rst_n held >= 64 clocks)
                        "D": {"type": "integer", "minimum": 1, "maximum": 16}, "path_um": {"type": "number"},
                        "stages_existing": {"type": "integer", "minimum": 0}, "note": {"type": "string"}}}}
+# RESET-RELAY-GEN-R2 11-21 (COORD, OPUS-FIX-S81-BKSEL-R4): reset stages on the reset pins of a hard core NESTED below a bound
+# instance (u_core.u_sel.g_q[0].u_q): the bound text has no call to stage, so these are NOT relay_depth rows (bind would
+# refuse them); rows {inst (path below the bound module), ports, D, path_um, src, pins}; sites are relay_sites keys.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["reset_pin_relay"] = {
+    "type": "array", "items": {"type": "object", "additionalProperties": False, "required": ["inst", "D"],
+        "properties": {"inst": {"type": "string", "minLength": 1},
+                       "ports": {"type": "array", "items": {"type": "string"}},
+                       "D": {"type": "integer", "minimum": 1, "maximum": 16}, "path_um": {"type": "number"},
+                       "hop_um": {"type": "number"}, "src": {"type": "string"}, "note": {"type": "string"}}}}
 # RESET-RELAY-GEN-1530 11-21 (COORD): register duplication of a relay flop whose sinks no one site reaches
 # (reset_leg_plan.py k_cover clusters; kit_istations RELAY_SPLIT_TCL; 0 cycles).  Copies are named <flop>__rs<n> and are
 # seated by relay_sites; rows run in order, so a row may list copies of an earlier row as sinks.

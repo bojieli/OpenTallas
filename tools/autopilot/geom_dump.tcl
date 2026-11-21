@@ -65,7 +65,7 @@ foreach i [$gd_b getInsts] {
       if {[$it isOutputSignal] || [$it getNet] eq "NULL" || [$it getNet] eq ""} { continue }
       if {![regexp -nocase {(^|_)(rst|reset|arst|srst)|rst_?n|resetn} [$mt getName]]} { continue }
       set axy [$it getAvgXY]
-      if {[lindex $axy 0]} { puts $gd_o "MR\t[$i getId]\t[gd_f [lindex $axy 1]]\t[gd_f [lindex $axy 2]]" }
+      if {[lindex $axy 0]} { puts $gd_o "MR\t[$i getId]\t[gd_f [lindex $axy 1]]\t[gd_f [lindex $axy 2]]\t[$mt getName]" }
     }
   }
 }

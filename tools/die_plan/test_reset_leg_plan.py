@@ -484,3 +484,48 @@ def test_forward_into_hard_core_reset_pin(tmp_path):
     assert max(RLP.l1(a, b) for a, b in zip(pts, pts[1:])) <= 300 + 1e-6
     assert "u_lpad_dn.q[1]" not in t["relay_sites"]           # the data register is not moved
     assert any(e["form"] == "M" for e in rep["local"])
+
+
+def nested_design(tmp, far=1900.0):
+    """bk_sel shape: reset tap flop at (2000, 400), hard cores NESTED below u_core (u_core.u_sel.g_q[0].u_q, .u_c, u_tx),
+    one core far away (reset pins `far` um to the W), one near; MR rows carry the pin name"""
+    cells = [
+        ("S", "u_bound.u_rrl_1/q$_DFF_P_", 2000, 400),                              # 0 tap
+        ("M", "u_bound.u_core.u_sel.g_q\\[0\\].u_q", 100, 100),                   # 1 far core
+        ("M", "u_bound.u_core.u_sel.u_c", 2000, 350),                               # 2 near core
+        ("M", "u_bound.u_core.u_tx", 1000, 600),                                    # 3 mid core, 2 levels shallower
+        ("M", "u_bound.u_other.u_hc", 1990, 380),                                   # 4 another group, near
+    ]
+    nets = [("rst", "i0", ["i1", "i2", "i3", "i4"])]
+    D = dump(tmp, cells, nets)
+    p = tmp / "geom.tsv"
+    p.write_text(p.read_text() + f"MR\t1\t{2000 - far}\t140\trst\nMR\t2\t2050\t340\trst_n\nMR\t3\t1200\t640\trst\n"
+                 "MR\t4\t2000\t390\trst\n")
+    return geom_rules.Design(str(p))
+
+
+def test_nested_hard_core_reset_pins(tmp_path):
+    """form N: a hard core below a bound instance (any depth) gets D stages on its reset pins, sited on the line; the cores
+    of one top-level group all get the largest D (they release together); a near group is untouched; row in
+    reset_pin_relay, NOT relay_depth (bind would refuse a row with no bound call)"""
+    D = nested_design(tmp_path)
+    t = plan_type()
+    rep = RLP.type_delta("n", t, FWD_BOUND, D, reach=300)
+    rows = {r["inst"]: r for r in t["reset_pin_relay"]}
+    assert set(rows) == {"u_core.u_sel.g_q[0].u_q", "u_core.u_sel.u_c", "u_core.u_tx"}   # u_other.u_hc: leg <= 300
+    L = abs(2000 - 100) + abs(400 - 140)
+    Dn = -(-L // 300) - 1
+    assert {r["D"] for r in rows.values()} == {Dn} and Dn >= 6
+    assert rows["u_core.u_sel.u_c"]["ports"] == ["rst_n"] and rows["u_core.u_sel.g_q[0].u_q"]["ports"] == ["rst"]
+    assert not t.get("relay_depth")
+    r = rows["u_core.u_sel.g_q[0].u_q"]
+    pts = [(2000.0, 400.0)] + [tuple(t["relay_sites"][RLP.NESTED_KEY.format(inst=r["inst"], port="rst", s=s)])
+                               for s in range(Dn)] + [(100.0, 140.0)]
+    assert max(RLP.l1(a, b) for a, b in zip(pts, pts[1:])) <= 300 + 1e-6 and r["hop_um"] <= 300
+    assert rep["legs_over_before"] == 2 and rep["legs_over_after"] == 0 and rep["added_reset_cycles"] == Dn
+
+
+def test_nested_rows_in_schema():
+    import schema
+    props = schema.SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]
+    assert "reset_pin_relay" in props

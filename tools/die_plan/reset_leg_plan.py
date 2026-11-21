@@ -65,6 +65,9 @@ TREE_CELL = re.compile(r"^(?:u_rrl_\d+|u_srl_\d+|u_rst_root|u_rst_in|u_rsync_t\d
 # kit-rtl stage flop name: kit_relay_depth.apply instance {base}_{s} (ot_dp_dly, base u_y_xd_<sid>_<port>_k<row>); Yosys names
 # its flop <inst>.q (seen on the S81 lepe_nh_mus_LP t1 proof netlist: u_y_xd_u_u_land_rst_n_k0_0.q$_DFF_P_)
 STAGE_KEY = "u_y_xd_{sid}_{port}_k{k}_{s}.q"
+# stage flop of a reset_pin_relay row (hard core nested below the bound instance; the RTL stage is a 1-bit ot_dp_dly chain
+# named u_rst_pin_relay_<port> inside the module that holds the core, Yosys flop <inst>.u_rst_pin_relay_<port>.g_r.r[s])
+NESTED_KEY = "{inst}.u_rst_pin_relay_{port}.g_r.r[{s}]"
 
 
 class LegError(ValueError):
@@ -128,6 +131,7 @@ class Geo:
         self.name = {c: key(v[6]) for c, v in D.cells.items()}
         self.kind = {c: v[0] for c, v in D.cells.items()}
         self.mrst = getattr(D, "extra", {}).get("macro_rst_xy", {})
+        self.mrp = getattr(D, "extra", {}).get("macro_rst_pin", {})
 
     def sxy(self, c):
         """a sink's XY: a hard macro's reset pins (geom_dump MR) when dumped, else the cell centre"""
@@ -553,10 +557,13 @@ def type_delta(tn, t, sv, D, reach=REACH_UM, local_taps=False, sites=True, stage
     # that wire gets a relay_depth sink row of D = ceil(L / reach) - 1 stages, sited evenly on the line (reset release
     # only: the other sinks of the bit, e.g. an outward forward lane, keep their latency).
     cl_ = calls(sv)
+    nested = []
     for m in sorted(G.mrst):
         inst = G.name[m]
         c = cl_.get(inst)
         if c is None:
+            if re.search(r"[./]", inst):             # form N: a hard core nested below a bound instance (any depth)
+                nested.append(m)
             continue
         rports = {p: e.replace(" ", "") for p, (e, _a, _b) in c["ports"].items() if re.search(r"rst|reset", p, re.I)}
         if not rports:
@@ -606,6 +613,67 @@ def type_delta(tn, t, sv, D, reach=REACH_UM, local_taps=False, sites=True, stage
             rep["legs_over_after"] += after > reach + 1e-6
             e.update(in_leg_after_um=round(after, 1), ports=ports, D=Dn)
             rep["local"].append(e)
+    # ---- form N: hard cores NESTED below a bound instance (bk_sel u_core.u_sel.g_q[0].u_q, ...; reset pins 1.0-1.65 mm from the
+    # tap).  The leg is the reset source flop (its placed copy / seat) -> every reset-named pin of the core (geom_dump MR);
+    # D = ceil(L / reach) - 1, raised until every hop incl. last stage -> each pin is <= reach.  Cores that share a top-level
+    # instance get the SAME D (the largest): a nested core group must release together (OPUS-FIX-S81-BKSEL-R4: all 7 +6).
+    # Rows go to t.reset_pin_relay (bind has no call to stage: the RTL stage is the consumer's, as in OT_BKSEL_L4 RRD) and
+    # the stage sites to relay_sites under nested_key.
+    nrows = []
+    for m in nested:
+        inst = G.name[m]
+        pins = G.mrst[m]
+        T = centre(pins)
+        best = None
+        for r in sorted(G.sources([m])):
+            if r[0] != "i" or G.kind.get(r[1]) != "S":
+                continue
+            src = drv_pos.get(m) or seated.get(r[1]) or G.xy(r[1])
+            L = max(l1(src, q) for q in pins)
+            if best is None or L > best[0]:
+                best = (L, src, r[1])
+        if best is not None:
+            nrows.append((m, inst, pins, T) + best)
+    over_grp = {top_inst(x[1]) for x in nrows if x[4] > reach}
+    nrows = [x for x in nrows if top_inst(x[1]) in over_grp]     # a group with one long leg: every core gets the stages
+    rep["legs_over_before"] += sum(x[4] > reach for x in nrows)
+    if nrows:
+        def worst_n(src, T, pins, D_):
+            last_ = (src[0] + (T[0] - src[0]) * D_ / (D_ + 1), src[1] + (T[1] - src[1]) * D_ / (D_ + 1))
+            return max([l1(src, T) / (D_ + 1)] + [l1(last_, q) for q in pins])
+        need = {}
+        for m, inst, pins, T, L, src, sc in nrows:
+            Dn = max(1, math.ceil(L / reach - 1e-9) - 1) if L > reach else 1
+            while worst_n(src, T, pins, Dn) > reach + 1e-6 and Dn <= MAX_D:
+                Dn += 1
+            need[m] = Dn
+        grp = defaultdict(int)
+        for m, inst, *_ in nrows:
+            grp[top_inst(inst)] = max(grp[top_inst(inst)], need[m])
+        prows = []
+        for m, inst, pins, T, L, src, sc in nrows:
+            Dn = min(grp[top_inst(inst)], MAX_D)
+            ports = sorted({p for p, _x, _y in G.mrp.get(m, [])}) or ["rst_n"]
+            after = worst_n(src, T, pins, Dn)
+            e = dict(group=inst, form="N", flops=Dn * len(ports), fanout=len(pins), at=[round(v, 1) for v in src],
+                     centre=[round(v, 1) for v in T], tree_fed=False, source=[round(v, 1) for v in src], in_leg_um=round(L, 1),
+                     in_leg_after_um=round(after, 1), ports=ports, D=Dn, D_own=need[m], src=G.name[sc])
+            if need[m] > MAX_D:
+                e["relay_depth"] = f"needs D {need[m]} > {MAX_D}"
+            rep["legs_over_after"] += after > reach + 1e-6
+            rep["local"].append(e)
+            prows.append(dict(inst=inst, ports=ports, D=Dn, path_um=round(L, 1), hop_um=round(after, 1), src=G.name[sc],
+                              note=f"RESET-RELAY-GEN-R2 form N: {G.name[sc]} -> hard-core reset pins of {inst}"))
+            if sites and stage_sites:
+                for port in ports:
+                    for s_ in range(Dn):
+                        f = (s_ + 1) / (Dn + 1)
+                        rs_sites[NESTED_KEY.format(inst=inst, port=port, s=s_)] = [
+                            round(src[0] + (T[0] - src[0]) * f, 3), round(src[1] + (T[1] - src[1]) * f, 3)]
+        have = [r for r in (t.get("reset_pin_relay") or []) if r["inst"] not in {x["inst"] for x in prows}]
+        t["reset_pin_relay"] = have + prows
+        rep["reset_pin_relay"] = prows
+        rep["added_reset_cycles_nested"] = max(r["D"] for r in prows)
     # ---- form R: tree-fed instances / banks
     taps = tap_cells(G, sv)
     txy = {i: G.xy(c) for i, c in taps.items()}
@@ -683,7 +751,7 @@ def type_delta(tn, t, sv, D, reach=REACH_UM, local_taps=False, sites=True, stage
         t["relay_split"] = have + rs_split
     rep["relay_split"] = rs_split
     rep["relay_sites"] = len(rs_sites)
-    rep["added_reset_cycles"] = max((r["D"] for r in rep["relay_depth"]), default=0)
+    rep["added_reset_cycles"] = max([r["D"] for r in rep["relay_depth"]] + [rep.get("added_reset_cycles_nested", 0)], default=0)
     return rep
 
 
