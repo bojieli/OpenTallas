@@ -389,3 +389,6 @@
   NO-PROGRESS epyc9 col_h10_r2__t1__cl99efd374__pv4c1f67ff 5_2_route stage 27.0 h job 30.0 h: drt_violations best 20 last 20 rows 53 window-gain 0.0%; stagnant 8.0 h; last event 0.8 h ago, log write 0.3 h ago (3375 lines)
   NO-PROGRESS epyc10 native59 pregrt_ff_hold stage 16.3 h job 21.0 h: no new meaningful log line for 14.2 h; last: 0 |       0 |       0 |            0 |    +0.0% |   5.000 |   0.000 | u_bound.u_pd5_emb_code_q_388.q
   NO-PROGRESS epyc7 serdes__t13 lec stage 10.5 h job 10.5 h: LEC last file/log write 10.5 h ago
+- 2026-11-20 20:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-20 20:52 PST: 348 running jobs, PROGRESSING 338, SLOW 8, NO-PROGRESS 2 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc9 col_h10_r2__t1__cl99efd374__pv4c1f67ff 5_2_route stage 28.0 h job 31.0 h: drt_violations best 20 last 20 rows 53 window-gain 0.0%; stagnant 9.0 h; last event 1.8 h ago, log write 1.3 h ago (3375 lines)
+  NO-PROGRESS epyc7 serdes__t13 lec stage 11.5 h job 11.5 h: LEC last file/log write 11.5 h ago
