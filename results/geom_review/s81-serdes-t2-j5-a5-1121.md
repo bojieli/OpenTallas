@@ -1,0 +1,5 @@
+# S81 SerDes t2 J5 a5 placement review
+
+Viewed `geom/auto_geom.png` and `gen/serdes__t2/run/layout_review/place/{layout,density}.png` in epyc8:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/224567138ab/items/serdes__t2/attempt_5. AUTO-GEOM preview overflow 0 and DPL legal. The north PMAs span about 78% of the tile width. The bottom decoder and memory cluster feeds an east bank through a narrow row of logic. The broad interval below the PMAs has low density, while the decoder and RM cluster remains concentrated near the bottom macro channel. The actual shortest-distance clock overlay has a 915.52 µm leg and an assigned driver leg of 3,494.95 µm. AUTO-GEOM reports 1,137.89 µm R2R p90, 3,303 R2R failures and 91 collapsed relays.
+
+Visual verdict FAIL for another route of this placement. Use actual placed-hop classes to revise relay paths and physical clock entry, then review the corrected geometry. The earlier J5 geometry-advisory auto-enqueue 351b074608e2 was already active on epyc7 in unit oth-ubuntu-288320-1795254547 when checked and has been left intact for comparison.

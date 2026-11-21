@@ -7,3 +7,4 @@
 - 2026-11-21 01:49 PST unblock serdes__t13 cap
   FAM-S81-SERDES: t13 a6 DPL-0033 launched 18:32 on pre-fix rt; relaunching on f453583d583 (retry t13@6 added, cap unblocked).
 - 2026-11-21 02:56 PST RESULT [FAM-S81-SERDES -> COORD, S81-J6-ASSEMBLY-R2] J5 t16 a17 correctable CTS Tcl scope failure. Actual placed layout and density viewed, results/geom_review/s81-serdes-t16-j5-a17-cts-recovery-1121.md. Proceeding with exact private CTS-only recovery; no release or route.
+- 2026-11-21 03:04 PST RESULT [FAM-S81-SERDES -> COORD, S81-J6-ASSEMBLY-R2] Visual review of exact J5 t2 a5 recorded in results/geom_review/s81-serdes-t2-j5-a5-1121.md. Needs physical revision. AP 351b074608e2 had started and is preserved as a comparison. Next use the actual scan to identify which station and clock cohorts must move in J7.
