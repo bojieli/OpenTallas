@@ -20492,3 +20492,4 @@ FAILED [AUTOPILOT ebd2c5807ada] 2026-11-21 14:21:06 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-21 14:40 PST DIED [FAM-QC-COLL-R2] ot-run otrun-tolerant-swine-1420515 on tolerant-swine: rc=78 after 2 s, ended 14:40:15, log /srv/opentallas-scratch2/claude/fam-qc-coll/pspec7/geom.live.log, cmd: --mem 24 --threads 4 --dir /srv/opentallas-scratch2/claude/fam-qc-coll/pkit7 --hosts epyc10 -- bash -c [ -f /srv/opentallas-scratch2/claude/
   [filed under] FAM-QC-COLL-R3: FAM-QC-COLL-R2 stood down (chain FAM-QC-COLL-R2 > FAM-QC-COLL-R3)
 - 2026-11-21 14:40 PST DISK-RATE epyc7 /srv/opentallas-scratch2: free 188 GB, falling 136 GB/h, floor 50 GB in 1.0 h (state 2, was 1) LSOF+L1 holders: none (>=10 MB) on /srv/opentallas-scratch2 AUTO-RETIRE rc 0: ; deleted 0,  (cron disk_rate.py; read-only)
+- 2026-11-21 14:40 PST ALERT STUCK-STATE s81: 36 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. bk_sel__t2, 2026-11-21 04:14)
