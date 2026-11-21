@@ -86,6 +86,7 @@ def main(argv=None):
     ap.add_argument("--no-adopt-diff", action="store_true")
     ap.add_argument("--no-census", action="store_true")
     ap.add_argument("--no-census-hold", action="store_true")
+    ap.add_argument("--no-place", action="store_true", help="skip PLACE-PRECHECK (place_precheck.py: knee / explicit-site overlap / macro fit)")
     a = ap.parse_args(argv)
     out = Path(a.out_root) / f"{a.die}_{a.event}_{time.strftime('%m%d%H%M')}"
     out.mkdir(parents=True, exist_ok=True)
@@ -98,7 +99,8 @@ def main(argv=None):
                "bash ~/coord/bin/post.sh PRECHECK-1119 " + _sq(text)]
         r = subprocess.run(cmd, capture_output=True, text=True)
         print("POST", r.returncode, (r.stdout or r.stderr)[-200:])
-    for name, fn in (("ABS-CENSUS", abs_census), ("ADOPT-DIFF", adopt_diff), ("EVENT-CENSUS", event_census)):
+    for name, fn in (("ABS-CENSUS", abs_census), ("ADOPT-DIFF", adopt_diff), ("EVENT-CENSUS", event_census),
+                     ("PLACE-PRECHECK", place_check)):
         try:
             line = fn(a, out)
         except Exception as e:  # noqa: BLE001 -- an estimator never fails the hook
@@ -116,6 +118,24 @@ RT_HUB = "/srv/opentallas-scratch2/claude/rt/current"
 def post_line(a, text):
     cmd = ["timeout", "600", "ssh", "-n", "-o", "ControlPath=none", a.post_host, "bash ~/coord/bin/post.sh PRECHECK-1119 " + _sq(text[:3000])]
     return subprocess.run(cmd, capture_output=True, text=True)
+
+
+def place_check(a, out):
+    """PLACE-PRECHECK-2330: the place-stage guards (station knee, exact-bank overlap, macro fit) for every type of the plan, report only"""
+    if a.no_place:
+        return ""
+    import os
+    sys.path.insert(0, str(HERE.parent / "die_plan"))
+    try:
+        import place_precheck as PP
+    finally:
+        sys.path.pop(0)
+    names, res = PP.run_plan(a.plan, None, min(8, os.cpu_count() or 1))
+    fs = [dict(f, type=t, mode="plan") for t in names for f in res[t]]
+    o = out / "place_precheck"
+    o.mkdir(exist_ok=True)
+    PP.write_report(fs, str(o))
+    return PP.summary(fs, len(names), f"{a.die} event {a.event}") + f" Rows {o}/place_precheck.tsv"
 
 
 def tree_of(tools):
