@@ -1,0 +1,8 @@
+# FLOW-OBS-GCELL-R2 handoff (2026-11-21, successor of FLOW-OBS-GCELL-1121; read lanes/handoff/FLOW-OBS-GCELL-1121.md first)
+- PUSHED main f56d99cf55 (+ d82b01ed77) = lane commits b62f5f340c / e44fcd0731 rebased. rt/current dd507bc8ba2a carries tools/die_plan/obs_gcell_cap.tcl.
+  Kits generated BEFORE that rt have no helper: grt_pre / replay skip it (not in kit_wave FLOW_REFRESH_FILES). Exposed kits must be regenerated.
+- Push note: tests pass serially; test_gen_phys_pg_island_cut::test_kit_byte_identical_without_cut failed once under xdist (stn_pin_keepout.tcl diff) and passes serially + on clean main: flaky under xdist, not this change. The sparse clone needed physical/die_plan/s81/reset_contract (test_rflow_defaults).
+- v2 proof hd_host_e (epyc8 oth-ubuntu-3833325-1795274502): tt_setup_repair_grt.log shows OT_GRT_PG_REPLAY restored ... OT_OBS_GCELL_CAP + OT_OBS_GCELL line (23,986 cut); GRT overflow 0; DRT 0 DRT-0255, iteration 12+ (73 viol at last read). Final 5_1_grt.odb read (q: epyc8 /srv/opentallas-scratch2/claude/flow-obs-gcell-r2/q): TT WNS -35.76 (1 endpoint, ep_v -> u_epc macro), FF hold min -78.6 at GRT (pre-route ECO; 416 ends <0 in report, internal worst -30.48 lr_d0->lr_d2). Deferred re-sign type, no gate claim.
+- Exposure list: lanes/OBS-GCELL-EXPOSURE-1121.tsv (43 KV + 5 HEAD types; S81/QC/HBM wave kits carry no reserved route OBS).
+- Open: EPC M7 pin-edge EOL class (v1: 29 DRC at u_epc top edge y 60.67) posted to FABLE-FIX-HEAD-LEP0N-R2; tap seed-side CTS A/B on sdr2d unproven; route goal must not rewrite 4_cts.odb when 5_1_grt.odb exists (not started).
+- Waiters (rtx-pro session): v2 poll on epyc8 pid 3833325; sdr2e (epyc7 oth-ubuntu-3951418-1795264633) and sdr2d (epyc9 oth-ubuntu-3513796-1795271147) ot-wait on intel2.
