@@ -96,3 +96,9 @@ J5 live: event 224567138ab, src kw45/src_s81_pin_3c913dbdfb23_d8j5_1117_work, bi
 - rerr_watch v2 (intel2 PID 2399884, 10 h): tags STALE-RT vs RECUR; RECUR posts ALERT. Local wake task covers LIST/ALERT/GRT-READ/PSS.
 - BSA item 4: cancelled (cancel-rows --old-plans-only) c1x_C t9 a16, kv_leaf t5 a1 (b05c), phy__t1 a5, slice_station t18 a15. phy__t1 fresh-gen: retry phy__t1@5 + stage_resume_off + struct-force once (kit_wave ccb981881e6). c1x_C t1 a13 / t6 a46 NOT cancelled: item glob would also hit live D8i rows; asked COORD.
 - t4 waiter now targets a13 (t4wait2.sh).
+
+## 21:5x lepe LP adopted (from FABLE/OPUS-FIX-S81-LEPE)
+- proof6/r2 ended 13:56: hold met (+4.59), setup -153.94, GRT TT repair RSZ-0074 crash. No wait needed.
+- proof7 = epyc9 fable-lepe/opus-p7-r2 prepped kit per spec, launched to GRT (ot-run client 2671956, run_grt.log). Wait: local task ot-wait + post-hook read. Lane geom review FAIL (advisory).
+- J6 rows posted (79d3d16b4a8): item6 corrected to D4 Manhattan (285.8 um hops), item5, P8 TX credit form, lnl3 k_li_d class, cross_tap lockup derive.
+- c1x_C t1 a13 / t6 a46: cancel only those attempts once cancel-rows --event/--attempt is on rt/current; leave if not by 23:00 (waiter armed).
