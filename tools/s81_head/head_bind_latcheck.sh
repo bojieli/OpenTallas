@@ -27,7 +27,9 @@ test ! -e "$R" || { echo "REFUSE $R exists"; exit 3; }
 for f in source_plan.json source_sidecar.json; do test -s "$PREP/$f" || { echo "MISSING $PREP/$f"; exit 2; }; done
 test -d "$PREP/published" || { echo "MISSING $PREP/published"; exit 2; }
 mkdir -p "$D"
-for d in $(ls -A "$SRC"); do [ "$d" = results ] || cp -al "$SRC/$d" "$D/"; done
+# FLOW-OPS-1000 (FABLE-FLOW-1000 c): a sealed published tree (.src-manifest.json) is copied, never hardlinked into a private run
+LNK=-al; [ -e "$SRC/.src-manifest.json" ] && LNK="-a --reflink=auto"
+for d in $(ls -A "$SRC"); do [ "$d" = results ] || cp $LNK "$SRC/$d" "$D/"; done
 for f in tools/die_plan/gen_lane_latcheck.py tools/die_plan/lane_asbuilt_latency.py tools/die_plan/core_latency.py \
          tools/die_plan/count_frame.py tools/die_plan/port_bind_gate.py tools/s81_head/head_die_portbind.py tools/s81_head/head_module_check.py \
          tools/s81_head/head_gen_cohort.py; do

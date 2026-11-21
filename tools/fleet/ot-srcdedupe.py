@@ -174,6 +174,8 @@ def refusal(tree, live, mounted, mentioned, min_idle_h, now):
         return "symlink"
     if os.path.lexists(tree + "/.ot-srcdedupe-skip"):
         return "skip-marker"
+    if os.path.lexists(tree + "/.src-manifest.json"):     # FLOW-OPS-1000 (FABLE-FLOW-1000 c): a sealed published tree never shares an inode with a lane tree
+        return "sealed"
     if tree in live:
         return "live-process"
     if tree in mounted:

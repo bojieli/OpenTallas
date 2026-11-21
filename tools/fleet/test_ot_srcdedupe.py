@@ -280,3 +280,9 @@ def test_other_process_naming_the_tree_is_live(tmp_path):
     finally:
         p.kill()
         p.wait()
+
+
+def test_sealed_published_tree_refused(tmp_path):
+    t = tmp_path / "src_pub"; t.mkdir()
+    (t / ".src-manifest.json").write_text("{}")
+    assert D.refusal(str(t), set(), set(), set(), 0, 0) == "sealed"
