@@ -12,3 +12,10 @@
 ## Next
 - If bind 0 + LATCHECK + G0 no new vs V1: proof GENs -> proof kits (private-spec, wave env) to GRT -> kit_wave_edit event-pending qwen_compute <event> -> pack/seal/apply.
 - FAM-QC-COLL coll_core (b) ODPRE + (c) R-ring wd / xr_q regs + (d) input-hold lockup: not proven (pkw4 final -255 ps) -> V3.
+
+## 07:5x state (supersedes 07:0x LIVE line)
+- b17 (epyc7): strict RC1 = TYPE_SPLIT sle_ctl__cla4f6f12f 4 variants + EMIT; static G0 (g0c/b17) 13 new vs V1: geometry 8 (st_b v2 x_su_l0_ctl x3,
+  native59 x5: ft_spread sites still on macros), latency 5 (su_vmw_ctl_E* pad fits no site). hops 12 + x_hc1_st_b fixed by R9 ctl_fix.
+- Cause: R7 fix-7 x_su_l0_ctl bumps non-uniform per slice + su_l1 fixed 5->10 -> per-slice pads 2/4/3/4/1/4 at shared sle_ctl x_su_l0_i / sle_su_l0 x_ctl_o.
+- b18 = b17 plan_ctl + compose_b18.py (14 slots -> V1 stations: x_su_l0_ctl on 8 st_b + sle_fe_v1__cl8210183c, native59 x5). Pad check 0 conflicts (E pad 4, W 3).
+  LIVE epyc7 qc-plan-r9/chain_b18.sh (log chain_b18.log, bind b18.out, dir b18/, static G0 g0c/b18). Reverted rows -> V3 (with R9's 9 + 12 ENDPOINT_REACH).
