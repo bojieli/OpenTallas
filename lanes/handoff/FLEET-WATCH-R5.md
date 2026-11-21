@@ -1,0 +1,17 @@
+# FLEET-WATCH-R5 handoff (succeeds FLEET-WATCH-R4; written 2026-11-21 ~05:00 PST at ~320k context)
+## Landed / pushed (main)
+- 18ff3f60c2 reps-first over-400k (SIBLING-BIG, family_reps, big_reps_first) + INFRA rows inherit no older class hold, hold_items -> HOLD-ITEM.
+- 3471769729 ot-run --cancel stops sealed container by exact kit dir (stop_by_path), test_ot_run_cancel_by_dir.py.
+- IN FLIGHT: ot-push-main of the reclaim fix (clone epyc2:/srv/opentallas-scratch2/claude/fleet-watch-r4, branch fw5, task b49ouknjh). Check main contains "kit_wave reclaim: use the current delete guard".
+## E9 438 GiB finding (root cause, FIXED in the push above)
+- kit_wave.grt_arm_reclaim ran RECLAIM_GUARD = clean-all-1115/ot_delete_guard.py (11-17 copy: no allow_exact, no routed rule); every attempt dir under a protected rows dir (.../runs/<die>/kit-wave, in protected.txt) was refused: "skip guard REFUSE: protected ..." on ~450 rows (epyc8 298, epyc9 109, epyc10 44); also sweep only visited rows updated <24 h and never retried.
+- Fix: RECLAIM_GUARD -> rt/current/tools/fleet/ot_delete_guard.py; the cmd writes ONE exact allow_exact line (1 h) for the attempt dir after own-dir/signoff/routed checks; script on stdin (guard live-process check refuses a path in any cmdline); retry once rows marked "skip guard"; window 24 h -> 14 d. Guard unchanged (r709).
+- TODO R5: after rt/current has the sha, check KIT-WAVE RECLAIM-SWEEP lines; sweep is RECLAIM_SWEEP_MAX=12 per tick (~450 rows = hours). E9 is ~153 GiB free, target 250: re-df epyc9; candidates file epyc9:/tmp/cand_sz.txt (954 dirs, 438 GiB). Do NOT delete outside this path; ot-delete refuses kit-wave trees by design.
+- E9 restore poll /tmp/w8.sh (bash task bn01q48pj) applies e9-new-admit-restore-1121.json via kit_wave_edit at >=250 GiB + 2 h; it died/finished? re-arm if not running. Lane-dir scan (b7xmcyxh9, top dirs newest-file age + guard) result not read yet.
+## Other
+- kit_wave.lock holder = autopilot.py tick (pid 234333, ~2.5+ min per tick, ticks nearly back to back): cancel-rows with 60 s lock wait starves; report to COORD (not yet posted): suggest cancel-rows wait >= 10 min or queue the request.
+- kv_leaf__t2 rows cancelled (yosys 12-16 h); FAM-S81-MISC should split; cancel-rows REDESIGN PLAN class placed.
+- REPIN: no KW_REPIN line seen yet (30-min path unfired). intel1 scratch2 ~158 GB, falling from many new job dirs; no single >100 MB writer.
+- col_h9_r0_p3 pv13474472 and dsdv c1x_C t4 are on deliberate hold_items (left held).
+- Misread-OOM class already fixed by Codex (8db2fc6, 9abebc, 4b01160b00). Supersede-kill report was NOT A BUG.
+- Rules: NEVER rm; ot-delete only; cancel via ot-run --cancel; push via ot-push-main; use ot-delete guard as is.
