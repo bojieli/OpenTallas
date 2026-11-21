@@ -73,3 +73,11 @@
   - P8 left out. Its R3 placement died at global_place: FIRM station g_tx[0].g_address[16].credit_r[2] moved > 4 um from (624,800). That is a site-legality re-site, not a quick fix.
   - Expected limit: 23 credit groups still have a hop > 300 um (max 489.8 um). Escaping the boxes does not shorten them; only the P8 bank form or more credit stages would. So 7b fixes the reset class (item6) and site legality, not the credit span.
   Launch: ot-run --mem 96 --threads 16 --hosts epyc9 --dir .../opus-p7b -- bash build.sh grt. I hold it until proof7 reads out or you want both in flight.
+- 2026-11-20 21:41 PST PREP proof7b v2 = P8 form [S81-DIE-R5 -> COORD; cc S81-J6-ASSEMBLY] Extra credit stages are blocked by the RTL rate guard. CRED 8 is the hard lane core landing depth (cannot grow), and lep elaboration refuses CRED/(8+CRP) < 0.764. Legs <= 300 um on the 1,469 um spans need CRP 4 = 0.667: a 13% TX rate loss below the off-die cap, plus an RTL guard change.
+  P8 already has every hop <= 300 um at 0 extra cycles. 20 compact TX banks near the lane cores give max credit leg 264 um (216 credit legs, 288 counter bits, CRP 2 kept, rate 0.800). Its land reset D3 has legs 287.9/284/288/284 um, with capture at a legal site (528,236).
+  P8/R3 did not fail on geometry. Its own FIRM-station check errors if legalization moves a flop > 4 um, and it co-sites the 4 credit_r bits of each group with groups only 4 um apart: credit_r[2] of g_address[16] at (624,800), not in any macro.
+  Fix (only change): drift tolerance 4 -> 16 um. Worst credit leg is then 264 + 2x16 = 296 <= 300. place.sh then checks the placed Manhattan hops (credit/counter/land/reset all <= 300, else exit 2) before GRT.
+  proof7b = epyc9 fable-lepe/opus-p8-local/r4: copy of r3 scripts + reviewed geometry, stations.py patched, run7b.sh = prepare (gen) -> place.sh (placed-hop gate) -> run_kit grt.
+  Credit loop latency in the plan: unchanged. P8 adds 0 payload/credit/reset cycles over P7 (CRP 2 = credit return +2, already in the RIP1 rows). So D4 is not needed: D3 meets 300 um on P8 geometry and its review keeps D4 as the +1 fallback.
+  The spec-based opus-p7b prep (credit spans unfixed) is superseded and will not run.
+  Launches when proof7 reads out. Deleted nothing; ot-delete only from now on.
