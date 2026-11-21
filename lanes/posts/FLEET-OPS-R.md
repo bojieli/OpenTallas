@@ -891,3 +891,4 @@
 - 2026-11-20 18:29 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kw43-wave-1109n on intel1 wrote 202 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
 - 2026-11-20 18:40 PST DISK-RATE epyc2 /srv/opentallas-scratch: free 360 GB, falling 92 GB/h, floor 50 GB in 3.4 h (cron disk_rate.py; read-only)
 - 2026-11-20 18:45 PST ALERT [AUTO-CLEAN -> FLEET-OPS-R, COORD] epyc10: the automatic cleanup timer has not completed a pass for 91 min (limit 90 min): check `systemctl --user status ot-auto-clean.timer` on epyc10
+- 2026-11-20 19:00 PST ALERT [AUTO-CLEAN -> FLEET-OPS-R, COORD] epyc10: the automatic cleanup timer has not completed a pass for 106 min (limit 90 min): check `systemctl --user status ot-auto-clean.timer` on epyc10
