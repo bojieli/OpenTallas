@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """POST-ROUTE-2200: redirect posts addressed to stood-down lanes to their successor chain.
 
-lanes/LANE-STATUS.tsv columns: lane, status (live|stood-down), successor, updated.
-CLI: post_redirect.py [COORD_DIR] < text  -> rewritten text on stdout, REDIRECTED notes on stderr.
+lanes/LANE-STATUS.tsv columns: lane, status (live|stood-down|done), successor, updated, note (schema: tools/lane_status.py; written only by bin/stand-down.sh).
+CLI: post_redirect.py [COORD_DIR] < text  -> rewritten text on stdout (header gets the live successor, a "[redirect]" line is appended), REDIRECTED notes on stderr.
+     post_redirect.py --resolve NAME [COORD_DIR]  -> canonical lane spelling
+     post_redirect.py --live NAME [COORD_DIR]     -> TAB: live lane at the end of NAME's stood-down chain (NAME itself when live/unknown/none) and the chain "A > B > C"
 """
 import os
 import re
@@ -21,7 +23,12 @@ def load_status(coord):
             if not ln.strip() or ln.startswith("#") or ln.startswith("lane\t"):
                 continue
             f = ln.split("\t") + ["", "", "", ""]
-            out[f[0]] = (f[1], f[2], f[3])
+            # FLOW-PROC-B: tolerant read (a hand-typed row must still redirect): the status is its first word, the successor its first lane-name token;
+            # "none" / an unparsable successor means nobody inherits.
+            st = f[1].split()[0] if f[1].split() else ""
+            m = NAME.match(f[2].strip())
+            succ = m.group(0) if m and m.group(0) != "none" else ""
+            out[f[0]] = (st, succ, f[3])
     except OSError:
         pass
     return out
@@ -64,6 +71,13 @@ def resolve(lane, status, limit=10):
     return chain
 
 
+def live_lane(name, status):
+    """-> (live lane at the end of the stood-down chain, chain text); the lane itself when it is live, unknown, or stood down with no successor."""
+    chain = resolve(name, status)
+    base = resolve_lane(name, status)
+    return (chain[-1] if chain else base), " > ".join([base] + chain)
+
+
 def addressees(text):
     m = HDR.search(text.split("\n", 1)[0])
     if not m:
@@ -101,6 +115,10 @@ if __name__ == "__main__":
         _c = sys.argv[3] if len(sys.argv) > 3 else "/home/ubuntu/coord"
         print(resolve_lane(sys.argv[2], load_status(_c), os.path.join(_c, "lanes", "posts")))
         sys.exit(0)
+    if len(sys.argv) >= 3 and sys.argv[1] == "--live":
+        _c = sys.argv[3] if len(sys.argv) > 3 else "/home/ubuntu/coord"
+        print("%s\t%s" % live_lane(sys.argv[2], load_status(_c)))
+        sys.exit(0)
     coord = sys.argv[1] if len(sys.argv) > 1 else "/home/ubuntu/coord"
     t = sys.stdin.read()
     nl = t.endswith("\n")
@@ -112,4 +130,6 @@ if __name__ == "__main__":
         print("post_redirect: skipped (%s)" % e, file=sys.stderr)
     for n in notes:
         print(n, file=sys.stderr)
+    if notes:                                   # FLOW-PROC-B: the post itself says it was redirected
+        new = new + "\n" + "\n".join("  [redirect] " + n[len("REDIRECTED "):] for n in notes)
     sys.stdout.write(new + ("\n" if nl else ""))

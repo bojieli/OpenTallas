@@ -15,6 +15,16 @@ mkdir -p "$C/lanes/posts"
 if [ -f "$C/tools/post_redirect.py" ]; then
   canon=$(python3 -I "$C/tools/post_redirect.py" --resolve "$lane" "$C" 2>/dev/null) && [[ "$canon" =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]] && lane="$canon"
 fi
+# FLOW-PROC-B 11-21 (FABLE-FLOW-0800 class b): a post filed under a stood-down lane (ot-run DONE/DIED lines carry the launching lane's name, hand-written
+# handoff lines "after stand-down") goes to the live end of its successor chain, with a [filed under] line naming the chain.  POST_NO_RESOLVE=1 keeps the name.
+via=""
+if [ -f "$C/tools/post_redirect.py" ] && [ "${POST_NO_RESOLVE:-0}" != 1 ]; then
+  lv=$(python3 -I "$C/tools/post_redirect.py" --live "$lane" "$C" 2>/dev/null) || lv=""
+  live=${lv%%$'\t'*}; chainx=${lv#*$'\t'}
+  if [[ "$live" =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]] && [ "$live" != "$lane" ]; then
+    via="  [filed under] $live: $lane stood down (chain $chainx)"; lane="$live"
+  fi
+fi
 f="lanes/posts/$lane.md"
 # FLOW-HEALTH-1 11-15 (FABLE-FLOW-1000 class 10: 48 wrong stamps): the stamp is always the America/Los_Angeles clock.  A hand-written
 # leading "- YYYY-MM-DD HH:MM [TZ]" that is more than 10 min off that clock is replaced; bin/pst prints the stamp.
@@ -37,6 +47,7 @@ if [ -f "$C/tools/post_redirect.py" ]; then
   [ -s /tmp/post-redirect.$$.err ] && cat /tmp/post-redirect.$$.err >&2
   rm -f /tmp/post-redirect.$$.err
 fi
+[ -z "$via" ] || text=$(printf '%s\n%s\n' "$text" "$via")
 # first line as is, later lines indented (so the view keeps them in this post's block)
 body=$(printf '%s\n' "$text" | awk 'NR==1{print; next} {sub(/^[ \t]*/, "  "); print}')
 printf '%s\n' "$body" >> "$C/$f"
