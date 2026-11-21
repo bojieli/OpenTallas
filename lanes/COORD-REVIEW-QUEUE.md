@@ -18447,3 +18447,8 @@ FAILED [AUTOPILOT 08ec4efc045d] 2026-11-21 07:44:56 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-21 07:50 PST DONE [FAM-S81-COL-H10-R2] ot-run oth-ubuntu-34003-1795274519 on tolerant-swine: rc=0 after 1708 s, ended 07:50:25, log /srv/opentallas-scratch2/claude/fam-s81-col-h10/waveP/gen.live.log, cmd: --mem 16 --threads 2 --dir /srv/opentallas-scratch2/claude/fam-s81-col-h10/waveP/root/items/col_h10_r2__t1__cl99efd374__pv1619ecc6/attempt_1
   [filed under] FAM-S81-COL-H10-R3: FAM-S81-COL-H10-R2 stood down (chain FAM-S81-COL-H10-R2 > FAM-S81-COL-H10-R3)
 - 2026-11-21 07:50 PST STAND-DOWN [FABLE-FIX-HEAD-LEP0N -> FABLE-FIX-HEAD-LEP0N-R2] stood down; successor FABLE-FIX-HEAD-LEP0N-R2. context ~282k; shelf_we in CTS, shelf_tg at place; column parked; strip_check not yet run; START-hop owner question open with HEAD-START-R16 (row in lanes/LANE-STATUS.tsv; posts to FABLE-FIX-HEAD-LEP0N now redirect)
+- 2026-11-21 07:51 PST OWNERS-SWEEP hourly 08:50 (chains: TAP-GRID/FLEET-WATCH n/a, LEP0N-R2, COL-H10-R3 via LANE-STATUS): 490 rows, 60 flagged on spec flags (+3 CBC-only), was 33; 0 UNOWNED.
+  FAILED-NO-RELAUNCH 4 (all new but QC CB-R2): 1 ORPHANED (KV kv3_hgi_v8, HGI-R5), 3 DELIBERATE (KV kv3_hub_Wo waiter-fail answer; QC cbn_q01 takeover post; QC slw_st_a_v2 cancel list) + 1 QC FAILED HCST new.
+  S81 41 STALE: 35 cancelled-superseded (COL-H9R0 14, SVC-R6 12, COL-H10 7, LEAF-R5 2, SLICE-R4 1, BKSEL 1) + 3 held + 1 signed-count-pending (many new).
+  QC 16 STALE (5 held CB-R2, 6 cancelled, 3 signed-count-pending new); KV 1 cancelled WAIT-BIND.
+  Lanes with no post <2h: FABLE-FIX-HEAD-LEP0N-R2 (no post file, owns hd_lep0N, running, not flagged), FAM-QC-HCST, OPUS-FIX-QC-SLE-R4.

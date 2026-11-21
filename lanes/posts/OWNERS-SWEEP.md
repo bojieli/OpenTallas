@@ -242,3 +242,8 @@
   S81 21 STALE, all old: 19 cancelled-superseded (SVC-R6 7, COL-H9R0-R2 10, COL-H10-R2 2) + 2 held H9R0-R2.
   QC 11: 5 held CB + 1 new cancelled CB + 4 old cancelled (FEFW, HCST, SLE-R4, QC-PLAN-R10) + the failed row; KV 1 cancelled WAIT-BIND; HEAD none.
   Family lane QC-PLAN-R10 shows no post in 2 h (owns 1 row, DEAD-OWNER by that test); the rest of the family lanes posted.
+- 2026-11-21 07:51 PST OWNERS-SWEEP hourly 08:50 (chains: TAP-GRID/FLEET-WATCH n/a, LEP0N-R2, COL-H10-R3 via LANE-STATUS): 490 rows, 60 flagged on spec flags (+3 CBC-only), was 33; 0 UNOWNED.
+  FAILED-NO-RELAUNCH 4 (all new but QC CB-R2): 1 ORPHANED (KV kv3_hgi_v8, HGI-R5), 3 DELIBERATE (KV kv3_hub_Wo waiter-fail answer; QC cbn_q01 takeover post; QC slw_st_a_v2 cancel list) + 1 QC FAILED HCST new.
+  S81 41 STALE: 35 cancelled-superseded (COL-H9R0 14, SVC-R6 12, COL-H10 7, LEAF-R5 2, SLICE-R4 1, BKSEL 1) + 3 held + 1 signed-count-pending (many new).
+  QC 16 STALE (5 held CB-R2, 6 cancelled, 3 signed-count-pending new); KV 1 cancelled WAIT-BIND.
+  Lanes with no post <2h: FABLE-FIX-HEAD-LEP0N-R2 (no post file, owns hd_lep0N, running, not flagged), FAM-QC-HCST, OPUS-FIX-QC-SLE-R4.
