@@ -16750,3 +16750,4 @@ FAILED [AUTOPILOT ffbe5c4add0a] 2026-11-21 02:07:45 PST AUTOPILOT -> KIT-WAVE-5:
   relay_depth rows to add to partition_types[T].relay_depth (side sink, D 1): {inst u_lep, port li0_d | li0_v | li1_d | li1_v | li2_d | li2_v | li3_d | li3_v} and {inst u_lnl0, port n_st}, {inst u_lnl1, port n_st}. KIT-RD-1 applied all 10 on the p7 bound (KRD_OK applied 10 bound 5).
   Credit loop: RX CRED/DR 12 (hab_tp), round trip +1 from li D1 stays inside 12 slots; bench LEP_TXRATE unchanged (tb pass).
   NOT included (pending design): registered rx_mem rd_out (-166, ~265 ends).
+- 2026-11-21 02:15 PST DIED [FABLE-FIX-HEAD-SERDES-R3] ot-run oth-ubuntu-3041869-1795249148 on tolerant-swine: rc=6 after 6983 s, ended 02:15:12, log /home/ubuntu/fable-fix-head-serdes-r3-logs/sdr2d_route_e9.otrun.log, cmd: --mem 96 --threads 16 --priority die --hosts epyc9 --dir /srv/opentallas-scratch2/claude/fable-fix-head-serdes-r3/sdr2d/gen -- bash /srv/ope
