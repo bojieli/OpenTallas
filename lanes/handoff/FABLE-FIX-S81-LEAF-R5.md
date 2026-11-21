@@ -50,3 +50,9 @@ All paths on epyc10 under R = /srv/opentallas-scratch2/claude/fable-fix-s81-leaf
 
 ## Cleanup (ot-delete only; hardlink trees: delete the tree, never follow links)
 R4 list, plus epyc10 R/t39/src_e (unused first tree, live J6 base), R/f2, R/tmp; intel2 fable-fix-s81-leaf-r5/t39spec/s1 (stale spec). Keep R/t39/src_p, src_b, bind and R/d72 until the proofs end.
+
+## UPDATE 16:11 UTC (after stand-down): 73-type elaboration REFUSED, only the t39 bind is still running
+- Unit oth-ubuntu-1307137-1795277353 ended exit 10 after 2 min, before Yosys: bind plan_gate_pre FAIL KITFIT-OVERLAP on ot_s81sl_kv_leaf__t5: moved lane u_lf.u_vp.g_ln[11].u_l (placed 289.548,324.036-404.028,438.516) overlaps u_bound.u_u_vp_u_b0 (84.35 x 7.536 um) and u_bound.u_u_vp_u_b1 (84.35 x 29.16 um) at their kit offsets. Log epyc10 fable-fix-s81-leaf-r5/d72/elab.log.
+- Cause (not fixed): leaf_regrid find_slots keeps lanes off the plan hard_cores, landing bands and ft sites, but does not know the u_bound cores (vp b0 / b1) the kit places at kit offsets; leaf_regrid check and the corridor check do not see them either. So "73 pass both" is not yet "73 bind": run tools/die_plan/plan_gate_pre.py check --tree d72/src_p --plan physical/die_plan/s81/plan_h2_2249.json to list every type (the gate stopped the run; only kv_leaf t5 is known), add those boxes as keep-outs in leaf_regrid, re-run apply + lane-sites. FAM-S81-MISC-R2 also re-sites kv_leaf t5: take theirs or drop t5 from the delta.
+- t39 was not refused by this gate (its elaboration passed plan_gate_pre on the rg1 block; the lane positions are the same in rg3).
+- Not relaunched. d72/bind holds no elaboration.
