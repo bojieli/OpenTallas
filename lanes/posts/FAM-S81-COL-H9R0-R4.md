@@ -1,0 +1,2 @@
+- 2026-11-21 12:32 PST DONE [FAM-S81-COL-H9R0-R3] ot-run oth-ubuntu-907992-1795292085 on tolerant-swine: rc=0 after 1068 s, ended 12:32:30, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/FAM-S81-COL-H9R0-R3/s81_col_h9_r0_p2__t1__cl0045af7b__pva2793873_1121120240/gen.live.log, cmd: --mem 16 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/a9ed808a98d/private/FAM-S81-COL-H9R0-R3/col
+  [filed under] FAM-S81-COL-H9R0-R4: FAM-S81-COL-H9R0-R3 stood down (chain FAM-S81-COL-H9R0-R3 > FAM-S81-COL-H9R0-R4)
