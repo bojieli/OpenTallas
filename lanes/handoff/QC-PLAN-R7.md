@@ -30,3 +30,11 @@
   W/r7   fix 7 300 um pass, non-cb chains (knee300.tsv need_limit) + routed rows + ft slots.
 - CORE-PIN-RELAY-1930 rows: not posted yet at 19:5x; fold in when posted.
 - Then: plan_geom_census on the compose, strict bind (V1 bind_v1.sh pattern, NO_OVERLAY=1), LATCHECK, G0, proof GENs, pack/seal/apply like V1.
+
+## Count change on V1 (COORD Q 20:1x; answered in post 5be26ce888)
+- 6 signed hc bases split by N_PAD (pcs_e.json) lost their count. Signed with N_PAD 0 (default): sle_hc1__cl22c1ff36, sle_hc2__cl9c4c4509__clf60c5152,
+  slw_hc3__clccfc3e6b, slw_hc3__cld86a7ad4 -> all 8 clones are netlist changes, re-sign last. Signed with N_PAD(1): sle_hc0__cl929603c0__cl4baa7c9c,
+  sle_hc1__cl7d360508 -> clones __pvcaa93304 / __pv97423966 should INHERIT; proof running in epyc9 /srv/opentallas-scratch2/claude/qc-plan-r7/inherit
+  (kit gen + synth + tools/fleet/netlist_inherit.py prove -> row in ~/coord/autopilot/inherit_members.tsv).
+- Every other plan type with a signed record is counted, except sle_hc0__cl929603c0__cl38badc56 and slw_sc_v2 (pending archive, unrelated to V1).
+- N46C cbn_q00__cldbcda913 a1 route re-run (intel1, started 18:59, class A, CTS -1107): cancel candidate at >3 h (~22:00) via ot-run --cancel <exact unit>, record evidence.
