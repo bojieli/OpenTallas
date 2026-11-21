@@ -16125,3 +16125,6 @@ FAILED [AUTOPILOT c7e7e02101fb] 2026-11-20 23:50:32 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-20 23:52 PST CORRECTION 23:50: S81 STALE held-for-plan-event rows are 28 (COL 9, SLICE 6, LEAF-R2 7, LEPE 2, MISC 3, SERDES 1), not 29; totals S81 30, QC 7, KV 22 = 59 flagged.
 - 2026-11-20 23:52 PST DIED [FAM-S81-COL] ot-run oth-ubuntu-2352409-1795247524 on key-cardinal: rc=1 after 9 s, ended 23:52:11, log none, cmd: --mem 8 --threads 1 --hosts intel1 --dir /srv/opentallas-scratch2/claude/fam-s81-col -- bash trace1.sh
 - 2026-11-20 23:52 PST DIED [FAM-QC-HCST] ot-run oth-ubuntu-2176437-1795247543 on renewed-glider: rc=1 after 3 s, ended 07:52:25, log none, cmd: --mem 8 --threads 2 --hosts epyc9 --dir /srv/opentallas-scratch2/claude/fam-qc-hcst/c1 -- python3 -I -m pytest -q -x tools/die_plan/test_clo
+- 2026-11-20 23:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-20 23:52 PST: 295 running jobs, PROGRESSING 286, SLOW 7, NO-PROGRESS 2 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc7 serdes__t13 lec stage 14.5 h job 14.5 h: LEC last file/log write 14.5 h ago
+  NO-PROGRESS epyc9 coll_core 5_1_grt stage 14.5 h job 24.0 h: repair_Viol best 221 last 221 rows 202 window-gain 0.0%; stagnant 8.0 h; last event 0.1 h ago, log write 0.0 h ago (2174 lines)
