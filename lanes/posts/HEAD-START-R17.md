@@ -30,3 +30,4 @@
   tr9 was also invalid as a real-clock test. The leaf stubs drive and check words on the GLOBAL tb cycle counter ($root.tb.cyc / $root.tb.clk), so a delayed region clock is measured in master cycles.
   
   Next (bench only, no RTL/provider/plan change): head_transport_depth gen --phases, in my lane clone, not pushed. Every region clock = the sum of the bind's START-edge d along its tree path, which gives every tree edge its planned d; each crossing is checked against [d_lo, d_hi]. The stubs count their own clock edges. Running as tr11, then the mutation controls.
+- 2026-11-21 09:41 PST DONE [HEAD-START-R17] ot-run oth-ubuntu-3668507-1795282894 on tolerant-swine: rc=0 after 852 s, ended 09:41:36, log none, cmd: --mem 8 --threads 1 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/head-start-r17 -- python3 -I /srv/opentallas-scratch2/claude/head-s
