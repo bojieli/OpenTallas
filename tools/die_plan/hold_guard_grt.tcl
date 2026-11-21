@@ -24,6 +24,26 @@ if {[llength [info procs ::repair_timing_helper]] && ![llength [info procs ::ot_
     set n -1; catch { set n [sta::endpoint_violation_count min] }
     return [list $w $t $n]
   }
+  # FLOW-GRT-RESID 11-21 (COORD, FAM-KV-HUB hroot: the FF-only GRT step repaired setup in the FF overlay for hours, flat at -478 on a path that met TT at +176.84; FF setup is
+  # not a gate).  The FF-only session (OT_VCLK_CORNER=ff, run after the TT GRT pass that already repaired setup) is the HOLD repair: its setup half is ADVISORY.
+  # OT_FF_SETUP_MODE = skip (default: the setup repair of that session is not run, one OT_FF_SETUP_ADVISORY line) | cap (run it with -max_passes OT_FF_SETUP_MAX_PASSES,
+  # default 100) | full (old behaviour).  Outside the ff session nothing changes.  The slack is still reported; sign-off reads TT setup.
+  proc ::ot_ffs_mode {} {
+    if {![info exists ::env(OT_VCLK_CORNER)] || $::env(OT_VCLK_CORNER) ne "ff"} { return full }
+    if {[info exists ::env(OT_FF_SETUP_MODE)] && $::env(OT_FF_SETUP_MODE) in {skip cap full}} { return $::env(OT_FF_SETUP_MODE) }
+    return skip
+  }
+  # -> {run extra-args}: run 0/1, extra args for the setup call
+  proc ::ot_ffs_plan {} {
+    set m [::ot_ffs_mode]
+    if {$m eq "skip"} { puts "OT_FF_SETUP_ADVISORY: FF-only session, setup repair skipped (TT setup was repaired by the TT pass; FF setup is not a gate; OT_FF_SETUP_MODE=full restores it)"; return [list 0 {}] }
+    if {$m eq "cap"} {
+      set n 100; if {[info exists ::env(OT_FF_SETUP_MAX_PASSES)] && [string is integer -strict $::env(OT_FF_SETUP_MAX_PASSES)]} { set n $::env(OT_FF_SETUP_MAX_PASSES) }
+      puts "OT_FF_SETUP_ADVISORY: FF-only session, setup repair capped at -max_passes $n"
+      return [list 1 [list -max_passes $n]]
+    }
+    return [list 1 {}]
+  }
   proc ::ot_hg_strip {args_in flag {val 0}} {
     set out {}
     for {set i 0} {$i < [llength $args_in]} {incr i} {
@@ -35,11 +55,18 @@ if {[llength [info procs ::repair_timing_helper]] && ![llength [info procs ::ot_
   proc ::repair_timing_helper {args} {
     set has_s [expr {[lsearch -exact $args -setup] >= 0}]
     set has_h [expr {[lsearch -exact $args -hold] >= 0}]
-    if {$has_s && !$has_h} { return [::ot_hg_rth_orig {*}$args] }
+    if {$has_s && !$has_h} {
+      lassign [::ot_ffs_plan] ffs_run ffs_x
+      if {!$ffs_run} { return }
+      return [::ot_hg_rth_orig {*}$args {*}$ffs_x]
+    }
     set tot 20.0
     set j [lsearch -exact $args -max_buffer_percent]; if {$j >= 0} { set tot [lindex $args [expr {$j + 1}]] }
     set base [::ot_hg_strip [::ot_hg_strip [::ot_hg_strip $args -setup] -hold] -max_buffer_percent 1]
-    if {!$has_h || $has_s} { ::ot_hg_rth_orig {*}$base -setup -max_buffer_percent $tot }
+    if {!$has_h || $has_s} {
+      lassign [::ot_ffs_plan] ffs_run ffs_x
+      if {$ffs_run} { ::ot_hg_rth_orig {*}$base -setup -max_buffer_percent $tot {*}$ffs_x }
+    }
     set hm [::ot_hg_num HOLD_SLACK_MARGIN 0.0]
     set j [lsearch -exact $args -hold_margin]; if {$j >= 0} { set hm [lindex $args [expr {$j + 1}]] }
     if {[catch {set prev [::ot_hg_stats]} msg]} {

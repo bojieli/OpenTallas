@@ -179,3 +179,37 @@ def test_setup_only_and_opt_outs_leave_the_sdc_alone():
     assert "false_path" not in sdclog(run("20.0", env={"OT_GRT_PORT_HOLD_INCLUDE": "1", "OT_GRT_PORT_HOLD_PORTS": "1"}))       # the explicit port opt-in
     assert "false_path" in sdclog(run("20.0", env={"OT_GRT_PORT_HOLD_INCLUDE": "1"}))                                          # a stale INCLUDE alone (kit made before 11-18 lever 3) is ignored
     assert "false_path" not in sdclog(run("20.0", preamble="set ::ot_grt_nonport_installed native\n"))      # the nonport adapter already scopes it
+
+
+# FLOW-GRT-RESID 11-21: the FF-only GRT session (OT_VCLK_CORNER=ff) treats the setup half of repair_timing as advisory
+def test_ff_session_skips_setup_repair_by_default():
+    out = run("20.0", {"OT_VCLK_CORNER": "ff"})
+    c = calls(out)
+    assert c and all("-setup" not in x for x in c) and all("-hold" in x for x in c)     # hold chunks only
+    assert out.count("OT_FF_SETUP_ADVISORY") == 1 and "setup repair skipped" in out
+
+
+def test_ff_session_cap_mode_and_full_mode():
+    out = run("20.0", {"OT_VCLK_CORNER": "ff", "OT_FF_SETUP_MODE": "cap", "OT_FF_SETUP_MAX_PASSES": "7"})
+    first = calls(out)[0]
+    assert "-setup" in first and first[first.index("-max_passes") + 1] == "7"
+    out = run("20.0", {"OT_VCLK_CORNER": "ff", "OT_FF_SETUP_MODE": "full"})
+    assert "-setup" in calls(out)[0] and "-max_passes" not in calls(out)[0] and "OT_FF_SETUP_ADVISORY" not in out
+
+
+def test_tt_session_is_unchanged():
+    out = run("20.0")
+    assert "-setup" in calls(out)[0] and "OT_FF_SETUP_ADVISORY" not in out
+
+
+def test_ff_session_setup_only_call_is_skipped():
+    pre = "repair_timing_helper -setup_margin 0 -skip_last_gasp\n"
+    out = run("20.0", {"OT_VCLK_CORNER": "ff"}, preamble="")
+    assert out  # combined call covered above; a setup-only call:
+    src = MOCK.replace("[MODEL]", "20.0") % ("", GUARD)
+    src = src.replace("repair_timing_helper -setup_margin 0 -hold_margin 10 -repair_tns 100 -skip_last_gasp -max_buffer_percent 100 -verbose",
+                      "repair_timing_helper -setup -setup_margin 0 -verbose")
+    e = {k: v for k, v in os.environ.items() if not k.startswith("OT_HOLD")}
+    e["OT_VCLK_CORNER"] = "ff"
+    o = tcl(src, e)
+    assert "NCALLS 0" in o and "setup repair skipped" in o

@@ -296,19 +296,49 @@ watch_run() {
   done
   wait $pid; local r=$?; trap - TERM INT; return $r
 }
+pre_clean() { local Rc; Rc=$(ls -d "$W"/run/results/asap7/*/base 2>/dev/null | head -1); [ -z "$Rc" ] || rm -f "$Rc/5_1_grt.prerepair.odb" "$Rc/5_1_grt.prerepair.shapes"; }
 stall_clean() { local Rc; Rc=$(ls -d "$W"/run/results/asap7/*/base 2>/dev/null | head -1); [ -z "$Rc" ] || rm -f "$Rc/5_1_grt.stall_resume.odb" "$Rc/5_1_grt.stall_resume.shapes"; }
 watch_run "$@"; rc=$?
-if [ -n "$gstop" ]; then stall_clean; echo "OT_GRT_STOP $gstop: stage rc $rc -> 21 (no re-run)"; exit 21; fi
-[ "$rc" != 0 ] || { stall_clean; exit 0; }
+if [ -n "$gstop" ]; then stall_clean; pre_clean; echo "OT_GRT_STOP $gstop: stage rc $rc -> 21 (no re-run)"; exit 21; fi
+[ "$rc" != 0 ] || { stall_clean; pre_clean; exit 0; }
 R=$(ls -d "$W"/run/results/asap7/*/base 2>/dev/null | head -1)
 [ -n "$R" ] || exit "$rc"
 L=$(ls -d "$W"/run/logs/asap7/*/base 2>/dev/null | head -1)
 G=$L/5_1_grt.log
+# FLOW-GRT-RESID 11-21 (FABLE-CLOSURE-STRATEGY: 13 scanned kits sat past iteration 10 with <= 500 overflow in small spots, and detailed route usually takes such a
+# residual).  The round limit (10 iterations, FLOW-FIX-0100) ended the stage with GRT-0116.  When the last congestion report is <= OT_GRT_RESID_MAX (default 500; 0 or
+# 'export OT_GRT_RESID_MAX = 0' = off) and concentrated (failfast_rules.py resid: <= 3 bins or top-3 share >= 60 %), print the OT_GRT_RESID class line and run the stage once
+# more in a fresh wrapper with OT_GRT_ALLOW_CONGESTION=1 (the allow-congestion hook above: every global_route and repair keeps it on), so repair and DRT go on.  Marker
+# 5_1_grt.resid_allow.json = one such continue per kit; failfast_rules.py then judges a flat DRT of this kit on a short window (DRT_STALL, resid).  A larger or spread
+# overflow, or a kit already allowing congestion, keeps the stop it had (no change).
+RESID_MAX=${OT_GRT_RESID_MAX:-$(cfg_num OT_GRT_RESID_MAX 500)}
+if [ "$RESID_MAX" -gt 0 ] 2>/dev/null && [ -f "$FF" ] && [ ! -f "$R/5_1_grt.resid_allow.json" ] && [ "${OT_GRT_ALLOW_CONGESTION:-0}" != 1 ] \
+  && ! grep -Eq 'allow_congestion|OT_GRT_ALLOW_CONGESTION' "$W/config.mk" 2>/dev/null \
+  && grep -qs 'GRT-0116' "$G" "$L/5_1_grt.tmp.log" && [ -f "$R/4_cts.odb" ]; then
+  rline=$(OT_GRT_RESID_MAX=$RESID_MAX timeout 120 python3 -I "$FF" resid "$W" "$T0" 2>/dev/null | head -n 1)
+  if [ -n "$rline" ]; then
+    echo "$rline"
+    [ ! -f "$G" ] || cp -p "$G" "$G.resid_attempt1"
+    printf '{"schema": "opentallas.grt_resid.v1", "by": "grt183_make.sh", "rc_attempt1": %d, "resid_max": %d, "line": "%s"}\n' "$rc" "$RESID_MAX" "$(printf '%s' "$rline" | cut -c1-200 | tr -d '"\\')" > "$R/5_1_grt.resid_allow.json"
+    [ ! -f "$KWRS_DONE" ] || sed -i '/^do-grt$/d;/^do-5_1/d' "$KWRS_DONE"
+    echo "OT_GRT_RESID attempt 1 rc $rc: re-running once with -allow_congestion $(date -u '+%F %T')"
+    exec env OT_GRT_ALLOW_CONGESTION=1 bash "$0" "$@"
+  fi
+fi
 if [ "$rstall" = 1 ] && [ -f "$R/4_cts.odb" ] && [ ! -f "$R/5_1_grt.repair_nostall.json" ]; then
   stall_clean
   [ ! -f "$L/5_1_grt.tmp.log" ] || mv -f "$L/5_1_grt.tmp.log" "$L/5_1_grt.log.repair_attempt1"
   printf '{"schema": "opentallas.grt_repair_nostall.v1", "by": "grt183_make.sh", "rc_attempt1": %d, "flat_s": %d, "attempt1_log": "5_1_grt.log.repair_attempt1"}\n' "$rc" "$RSTALL" > "$R/5_1_grt.repair_nostall.json"
   [ ! -f "$KWRS_DONE" ] || sed -i '/^do-grt$/d;/^do-5_1/d' "$KWRS_DONE"
+  # FLOW-GRT-RESID 11-21: resume from the full-route design saved just before the stuck repair (5_1_grt.prerepair.odb of THIS run), not from the CTS result:
+  # the same swap as the GRT-STALL resume below (its hook-shape list renamed to stall_strip.shapes); only the stuck step is skipped (marker above).
+  if [ -f "$R/5_1_grt.prerepair.odb" ] && [ "$(stat -c %Y "$R/5_1_grt.prerepair.odb")" -ge "$T0" ] && [ ! -f "$R/5_1_grt.grt183_recovered.json" ]; then
+    if mv "$R/4_cts.odb" "$R/4_cts.pre_grt183.odb" && mv "$R/5_1_grt.prerepair.odb" "$R/4_cts.odb"; then
+      [ ! -f "$R/5_1_grt.prerepair.shapes" ] || mv -f "$R/5_1_grt.prerepair.shapes" "$R/5_1_grt.stall_strip.shapes"
+      trap restore EXIT
+      echo "OT_GRT_REPAIR_RESUME from the pre-repair full-route design (5_1_grt.prerepair.odb), skipping only the stuck repair_design"
+    else restore; fi
+  fi
   echo "OT_GRT_REPAIR_NO_PROGRESS attempt 1 rc $rc: re-running once in a fresh process with the post-GRT max-wire repair skipped (continue, not a failure) $(date -u '+%F %T')"
   "$@"; rc=$?
   echo "OT_GRT_REPAIR_NO_PROGRESS attempt 2 rc $rc $(date -u '+%F %T')"

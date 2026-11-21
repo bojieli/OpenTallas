@@ -46,6 +46,10 @@ DEFAULTS = {
     # FLOW-FIX-0100 (FABLE-FLOW-2350 f): per-round wall budget (seconds, 0 = off; with 10 iterations a round is ~3 h on S81 leaf / KV hgi at 17-19 min each)
     # and the repair_timing no-progress stop (a pass = OT_FF_RT_ROWS table rows; OT_FF_RT_PASSES consecutive passes with < OT_FF_RT_MIN_GAIN_PCT WNS and TNS gain)
     "OT_GRT_ROUND_WALL_S": 14400,
+    # FLOW-GRT-RESID (FABLE-CLOSURE-STRATEGY 11-21): at the GRT round limit a small, concentrated overflow (<= OT_GRT_RESID_MAX, 0 = off, in at most
+    # OT_GRT_RESID_BINS 43-um bins by the top-bin share rule) finishes with -allow_congestion and detailed route clears it; a flat DRT of such a kit stops
+    # after OT_FF_DRT_RESID_WINDOW iterations (from iteration OT_FF_DRT_RESID_ITER) instead of the 40 / 12 of the general DRT_STALL
+    "OT_GRT_RESID_MAX": 500, "OT_GRT_RESID_BINS": 3, "OT_FF_DRT_RESID_ITER": 10, "OT_FF_DRT_RESID_WINDOW": 6,
     "OT_FF_RT": 1, "OT_FF_RT_ROWS": 100, "OT_FF_RT_PASSES": 2, "OT_FF_RT_MIN_GAIN_PCT": 5,
 }
 
@@ -164,13 +168,15 @@ def report_cum(n, cum_now, cur, prev_len, round_len=30):
 
 
 # ------------------------------------------------------------------------------------------------ (b) DRT
-def drt_stall(series, c):
+def drt_stall(series, c, resid=False):
     """(b2) FLOW-FIX-2045: from completed iteration OT_FF_DRT_STALL_ITER (40), stop when the best violation count of the last OT_FF_DRT_STALL_WINDOW (12) iterations is not lower than the best before
     them by OT_FF_DRT_STALL_MIN_DROP_PCT (1 %): the route is bobbing, not converging, whatever the count.  A count of 0 ends the stage by itself.  -> None or the stop record"""
     if not c["OT_FF_DRT"] or not c.get("OT_FF_DRT_STALL"):
         return None
-    w, n = c["OT_FF_DRT_STALL_WINDOW"], len(series)
-    if n < max(c["OT_FF_DRT_STALL_ITER"], w + 1):
+    it, w, n = c["OT_FF_DRT_STALL_ITER"], c["OT_FF_DRT_STALL_WINDOW"], len(series)
+    if resid:      # FLOW-GRT-RESID: a kit that finished GRT with a residual stops on a short flat window
+        it, w = c["OT_FF_DRT_RESID_ITER"], c["OT_FF_DRT_RESID_WINDOW"]
+    if n < max(it, w + 1):
         return None
     best_before = min(v for _l, v in series[:-w])
     best_win = min(v for _l, v in series[-w:])
@@ -178,15 +184,15 @@ def drt_stall(series, c):
     if best_before <= 0 or best_win <= best_before * (1 - pct / 100.0):
         return None
     return {"rule": "DRT_STALL", "iteration": n, "violations": series[-1][1], "best": best_before, "window": w, "min_drop_pct": pct,
-            "tail": [v for _l, v in series[-w:]]}
+            "tail": [v for _l, v in series[-w:]], "resid": bool(resid)}
 
 
-def drt_decide(series, c):
-    """series [(label, violations)] of completed iterations -> None or the stop record"""
+def drt_decide(series, c, resid=False):
+    """series [(label, violations)] of completed iterations -> None or the stop record (resid: the GRT finished with the FLOW-GRT-RESID residual)"""
     if not c["OT_FF_DRT"]:
         return None
     d = _drt_floor(series, c)
-    return d or drt_stall(series, c)
+    return d or drt_stall(series, c, resid)
 
 
 def _drt_floor(series, c):
@@ -205,8 +211,9 @@ def _drt_floor(series, c):
 
 def drt_line(d, stamp=True):
     if d.get("rule") == "DRT_STALL":
-        return ("OT_DRT_NO_PROGRESS stage=route class=DRT_STALL: iteration %d has %d violations and none of the last %d iterations beat the earlier best %d by %g%%: %s; stopping the stage (FLOW-FIX-2045)%s"
+        return ("OT_DRT_NO_PROGRESS stage=route class=DRT_STALL: iteration %d has %d violations and none of the last %d iterations beat the earlier best %d by %g%%: %s; stopping the stage (%s)%s"
                 % (d["iteration"], d["violations"], d["window"], d["best"], d["min_drop_pct"], " ".join(str(v) for v in d["tail"]),
+                   "FLOW-GRT-RESID: GRT finished with a residual and detailed route stayed flat" if d.get("resid") else "FLOW-FIX-2045",
                    time.strftime(" %Y-%m-%d %H:%M:%S", time.gmtime()) if stamp else ""))
     return ("OT_DRT_NO_PROGRESS stage=route class=DRT_NO_PROGRESS: iteration %d has %d violations > %d and the last %d iterations fell "
             "%.1f%% in all (< %g%% per iteration): %s; stopping the stage (FAILFAST-1)%s"
@@ -365,6 +372,75 @@ def _noconv_history(rp, t0, state_path, settle_s):
     return st.get("cong", [])
 
 
+# ------------------------------------------------------------------------------------------------ FLOW-GRT-RESID
+BBOX_RE = re.compile(r"bbox\s*=\s*\(\s*(-?[\d.]+)\s*,\s*(-?[\d.]+)\s*\)\s*-\s*\(\s*(-?[\d.]+)\s*,\s*(-?[\d.]+)\s*\)")
+
+
+def report_bins(text, bin_um=43.0):
+    """congestion-<N>.rpt text -> {(bx, by): overflow} per 43-um bin of the violation bbox centre"""
+    out, cur = collections.Counter(), 0
+    for ln in text.splitlines():
+        m = CONG_RE.search(ln)
+        if m:
+            cur = int(m[1])
+            continue
+        m = BBOX_RE.search(ln)
+        if m and cur:
+            x, y = (float(m[1]) + float(m[3])) / 2, (float(m[2]) + float(m[4])) / 2
+            out[(int(x // bin_um), int(y // bin_um))] += cur
+            cur = 0
+    return out
+
+
+def resid_decide(text, c):
+    """FLOW-GRT-RESID: the congestion report of the last round at the cap -> None or {total, bins, top_share}.  Total overflow <= OT_GRT_RESID_MAX
+    (0 = off) and concentrated: the overflow lies in at most OT_GRT_RESID_BINS 43-um bins, or the top OT_GRT_RESID_BINS bins hold >= 60 % of it."""
+    mx = c.get("OT_GRT_RESID_MAX", 0)
+    if mx <= 0:
+        return None
+    total = parse_report(text)["total"]
+    if total <= 0 or total > mx:
+        return None
+    bins = report_bins(text)
+    if not bins:
+        return None
+    k = max(1, c.get("OT_GRT_RESID_BINS", 3))
+    top = sum(v for _b, v in bins.most_common(k))
+    share = top / float(sum(bins.values()))
+    if len(bins) > k and share < 0.6:
+        return None
+    return {"total": total, "bins": len(bins), "top_share": round(share, 2), "max": mx}
+
+
+def resid_line(d, stamp=True):
+    return ("OT_GRT_RESID stage=grt class=GRT_RESID: round limit with total overflow %d <= %d in %d bins (top-%d share %.0f%%); finishing GRT with -allow_congestion, "
+            "repair and detailed route continue (FLOW-GRT-RESID)%s"
+            % (d["total"], d["max"], d["bins"], 3, 100 * d["top_share"], time.strftime(" %Y-%m-%d %H:%M:%S", time.gmtime()) if stamp else ""))
+
+
+def resid_work(work, t0=0.0, env=None):
+    """kit work dir -> (decision or None) from the newest congestion report this run wrote"""
+    config_text = ""
+    try:
+        config_text = open(os.path.join(work, "config.mk"), errors="replace").read()
+    except OSError:
+        pass
+    c = config_values(env, config_text)
+    _lg, rp = _dirs(work)
+    reps = reports_now(rp, t0, -10 ** 9)      # the stage has ended: no settle wait
+    if not reps:
+        return None
+    try:
+        return resid_decide(open(reps[-1][2], errors="replace").read(), c)
+    except OSError:
+        return None
+
+
+def resid_marker(work):
+    """True when this kit finished GRT in residual mode (grt183_make.sh wrote 5_1_grt.resid_allow.json)"""
+    return bool(glob.glob(os.path.join(work, "run", "results", "asap7", "*", "base", "5_1_grt.resid_allow.json")))
+
+
 # ------------------------------------------------------------------------------------------------ (c) hold
 def hold_decide(caps, stall, c, config_text=""):
     if not c["OT_FF_HOLD"] or advisory(config_text):
@@ -457,9 +533,10 @@ def judge(work, t0, state_path=None, env=None, settle_s=None, now=None):
     if d:
         return [hold_line(d, stage)]
     # (b) DRT
+    resid = resid_marker(work)
     for p in sorted(drt):
         s = scan_lines(_read_lines(p))
-        d = drt_decide(s["drt"], c)
+        d = drt_decide(s["drt"], c, resid)
         if d:
             return [drt_line(d)]
     # (d) GRT restarts with no overflow gain (OWNER 11-20); an overflow value alone, or elapsed time, never stops GRT (OWNER 11-14)
@@ -484,6 +561,13 @@ def main(argv=None):
         for ln in judge(a[1], float(a[2]), a[3] if len(a) > 3 else None):
             print(ln)
         return 0
+    if len(a) >= 2 and a[0] == "resid":
+        # failfast_rules.py resid WORK [T0_EPOCH]: print the OT_GRT_RESID class line and exit 0 when the residual rule applies, else exit 1
+        d = resid_work(a[1], float(a[2]) if len(a) > 2 else 0.0)
+        if d:
+            print(resid_line(d))
+            return 0
+        return 1
     print(__doc__)
     return 2
 

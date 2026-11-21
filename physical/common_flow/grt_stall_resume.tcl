@@ -55,6 +55,36 @@ namespace eval ot_gstall {
     puts "OT_GRT_STALL_SAVED odb=$dir/5_1_grt.stall_resume.odb hook_shapes=[llength $hk]: fresh-process resume point if the incremental route stalls"
   }
 }
+# FLOW-GRT-RESID 11-21: pre-repair checkpoint for the no-progress continue path (grt183_make.sh REPAIR_NO_PROGRESS).  Called by grt_maxwire.tcl just before its post-GRT
+# repair_design; the saved design is the full-route result with the flow's own first repair_design done.  Same shapes list as save.  No save after any fresh-process resume.
+namespace eval ot_gstall {
+  proc save_pre {} {
+    set dir $::env(RESULTS_DIR)
+    if {([info exists ::env(OT_GRT_STALL_RESUME)] && $::env(OT_GRT_STALL_RESUME) eq "0") ||
+        [file exists $dir/5_1_grt.repair_nostall.json] || [file exists $dir/5_1_grt.grt183_recovered.json]} { return }
+    variable start; set seen {}; set hk {}
+    foreach {k o} [keys] {
+      dict incr seen $k
+      if {[dict get $seen $k] > ([dict exists $start $k] ? [dict get $start $k] : 0)} { lappend hk $k }
+    }
+    set f [open $dir/5_1_grt.prerepair.shapes w]; puts $f $hk; close $f
+    write_db $dir/5_1_grt.prerepair.odb
+    puts "OT_GRT_PREREPAIR_SAVED odb=$dir/5_1_grt.prerepair.odb hook_shapes=[llength $hk]: resume point if the post-GRT repair_design stalls"
+  }
+}
+# FLOW-GRT-RESID 11-21, OPT-IN (OT_GRT_RESUME_SKIP_ROUTE=1): in a resume run (stall_strip.shapes present) the first full global_route is skipped when the design
+# already carries route guides, so a resume costs the stuck step only.  Not default: unproven that the guides alone carry the incremental route state; proof kit first.
+if {[file exists $::env(RESULTS_DIR)/5_1_grt.stall_strip.shapes] && [info exists ::env(OT_GRT_RESUME_SKIP_ROUTE)] && $::env(OT_GRT_RESUME_SKIP_ROUTE) eq "1" &&
+    [llength [info commands ::global_route]] && ![llength [info commands ::ot_gstall_gr_orig]]} {
+  rename ::global_route ::ot_gstall_gr_orig
+  proc ::global_route {args} {
+    if {![info exists ::ot_gstall_skipped] && [lsearch -exact $args -start_incremental] < 0 && [lsearch -exact $args -end_incremental] < 0} {
+      set ng 0; catch { set ng [llength [[ord::get_db_block] getGuides]] }
+      if {$ng > 0} { set ::ot_gstall_skipped 1; puts "OT_GRT_RESUME_SKIP_ROUTE: $ng route guides in the resumed design, first full global_route skipped"; return }
+    }
+    return [uplevel 1 [linsert $args 0 ::ot_gstall_gr_orig]]
+  }
+}
 if {[llength [info commands repair_design_helper]] && ![llength [info commands ot_gstall_orig_repair_design_helper]]} {
   rename repair_design_helper ot_gstall_orig_repair_design_helper
   proc repair_design_helper {args} {

@@ -38,6 +38,9 @@ if {[info procs $ot_mw_target] ne "" && [info procs ot_orig_repair_design_helper
       puts "OT_MAXWIRE_PASS post skipped: no-progress stop in attempt 1 (5_1_grt.repair_nostall.json) or OT_MAXWIRE_POST_SKIP=1; full-route result kept, stage continues (max slew / cap DRV advisory)"
       return
     }
+    # FLOW-GRT-RESID 11-21 (COORD, FAM-KV-HUB: the flat-repair kill at 01:43 re-ran the whole GRT and lost 5.5 h): save the full-route design BEFORE this repair, so the
+    # grt183_make.sh no-progress continue path resumes from it and skips only this step (5_1_grt.prerepair.odb, see grt_stall_resume.tcl).
+    if {[llength [info commands ::ot_gstall::save_pre]]} { catch {::ot_gstall::save_pre} }
     puts "OT_MAXWIRE repair_design $args"
     set n0 [sta::network_leaf_instance_count]
     set t0 [clock seconds]
