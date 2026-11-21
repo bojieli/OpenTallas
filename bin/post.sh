@@ -27,6 +27,12 @@ case "$text" in
     fi;;
   *) text="- $PST $text";;
 esac
+# POST-ROUTE-2200 11-20: a post addressed [X -> Y] where Y is stood down (lanes/LANE-STATUS.tsv) also goes to Y's successor chain end.
+if [ -f "$C/tools/post_redirect.py" ]; then
+  text=$(printf '%s\n' "$text" | python3 -I "$C/tools/post_redirect.py" "$C" 2>/tmp/post-redirect.$$.err) || true
+  [ -s /tmp/post-redirect.$$.err ] && cat /tmp/post-redirect.$$.err >&2
+  rm -f /tmp/post-redirect.$$.err
+fi
 # first line as is, later lines indented (so the view keeps them in this post's block)
 body=$(printf '%s\n' "$text" | awk 'NR==1{print; next} {sub(/^[ \t]*/, "  "); print}')
 printf '%s\n' "$body" >> "$C/$f"
