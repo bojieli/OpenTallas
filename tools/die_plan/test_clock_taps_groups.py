@@ -13,6 +13,7 @@ MOCK = r'''
 namespace eval ord {}
 namespace eval odb {}
 proc ord::get_db_block {} {return blk}
+proc ord::get_db {} {return db}
 proc ord::get_db_tech {} {return tech}
 proc tech {m} {return 1}
 # ports: clk at x=0, clk_t1 at x=1000 (y=0)

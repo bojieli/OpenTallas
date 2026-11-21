@@ -548,6 +548,8 @@ if {[llength $ct_taps] >= 2} {
     dict set ct_by [lindex $tp 0] $l
   }
   set ct_moves 0
+  set ct_cascaded 0
+  set ct_cascade [expr {[info exists ::env(OT_TAP_CAP_CASCADE)] && $::env(OT_TAP_CAP_CASCADE) eq "1"}]
   set ct_stuck {}
   set ct_spilled {}
   set ct_spill [expr {[info exists ::env(OT_TAP_SPILL_UM)] ? $::env(OT_TAP_SPILL_UM) * $ct_dbu : 0}]
@@ -615,6 +617,86 @@ if {[llength $ct_taps] >= 2} {
         continue
       }
     }
+    if {![llength $cand] && $ct_cascade} {
+      # CT_CASCADE (TAP-GRID-R2 11-21, FABLE-VISUAL-0030 cause 5; opt-in OT_TAP_CAP_CASCADE=1, set by plan clock.tap_grid or
+      # clock.tap_cap_cascade): the one-hop pass above fills the near neighbours of a dense tap to the cap first, and then the
+      # dense tap keeps its excess because every tap in reach is full (KV pc_v3 clk_t4 10,960 / cap 1,200 beside clk_t2 46 and
+      # clk_t11 19).  An ejection chain frees room instead: a sink of the over-full tap moves to a FULL neighbour F in reach,
+      # and in the same step one sink of F moves on to a tap R with room in reach of THAT sink.  Each moved sink obeys the same
+      # reach (and sink region) rule as the one-hop pass; F stays at the cap; pinned sinks never move.
+      set ej {}
+      foreach tf $ct_taps {
+        set fn [lindex $tf 0]
+        if {$fn eq $on || [llength [dict get $ct_by $fn]] < $ct_cap} continue
+        set l {}
+        foreach it2 [dict get $ct_by $fn] {
+          if {[dict exists $ct_pinned $it2]} continue
+          lassign [[$it2 getInst] getLocation] x2 y2
+          set d02 [expr {abs($x2 - [lindex $tf 2]) + abs($y2 - [lindex $tf 3])}]
+          set rb ""; set rd 0
+          foreach tr $ct_taps {
+            set rn [lindex $tr 0]
+            if {$rn eq $on || $rn eq $fn || [llength [dict get $ct_by $rn]] >= $ct_cap} continue
+            set d [expr {abs($x2 - [lindex $tr 2]) + abs($y2 - [lindex $tr 3]) - $d02}]
+            if {[info exists ::env(OT_TAP_REASSIGN_UM)] && $d+$d02 > $ct_lim} continue
+            if {$ct_span > 0 && ![ct_span_fits [dict get $ct_sbox $rn] [list [list $x2 $y2]] $ct_span]} { incr ct_span_refused; continue }
+            if {$rb eq "" || $d < $rd} { set rb $tr; set rd $d }
+          }
+          if {$rb ne "" && $rd <= $ct_lim} { lappend l [list $rd $it2 $rb] }
+        }
+        if {[llength $l]} { dict set ej $fn [lsort -real -index 0 $l] }
+      }
+      set cin {}
+      if {[dict size $ej]} {
+        foreach it [dict get $ct_by $on] {
+          if {[dict exists $ct_pinned $it]} continue
+          lassign [[$it getInst] getLocation] x y
+          set d0 [expr {abs($x - [lindex $over 2]) + abs($y - [lindex $over 3])}]
+          foreach tf $ct_taps {
+            set fn [lindex $tf 0]
+            if {![dict exists $ej $fn]} continue
+            set d [expr {abs($x - [lindex $tf 2]) + abs($y - [lindex $tf 3]) - $d0}]
+            if {[info exists ::env(OT_TAP_REASSIGN_UM)] && $d+$d0 > $ct_lim} continue
+            if {$d > $ct_lim} continue
+            if {$ct_span > 0 && ![ct_span_fits [dict get $ct_sbox $fn] [list [list $x $y]] $ct_span]} { incr ct_span_refused; continue }
+            lappend cin [list [expr {$d + [lindex [dict get $ej $fn] 0 0]}] $it $tf]
+          }
+        }
+      }
+      set nch 0; set done {}
+      foreach c [lsort -real -index 0 $cin] {
+        if {$nch >= $excess} break
+        lassign $c cost it tf
+        if {[dict exists $done $it]} continue
+        set fn [lindex $tf 0]
+        if {![dict exists $ej $fn]} continue
+        set l [dict get $ej $fn]
+        # cheapest ejection of F whose receiving tap still has room
+        set k -1
+        for {set i 0} {$i < [llength $l]} {incr i} {
+          set rn [lindex $l $i 2 0]
+          if {[llength [dict get $ct_by $rn]] < $ct_cap} { set k $i; break }
+        }
+        if {$k < 0} { dict unset ej $fn; continue }
+        lassign [lindex $l $k] rd it2 tr; set rn [lindex $tr 0]
+        dict set ej $fn [lreplace $l $k $k]
+        $it2 disconnect; $it2 connect [lindex $tr 1]
+        $it disconnect; $it connect [lindex $tf 1]
+        dict set ct_by $fn [concat [lsearch -all -inline -not -exact [dict get $ct_by $fn] $it2] [list $it]]
+        dict set ct_by $rn [concat [dict get $ct_by $rn] [list $it2]]
+        dict set ct_by $on [lsearch -all -inline -not -exact [dict get $ct_by $on] $it]
+        if {$ct_span > 0} {
+          dict set ct_sbox $rn [ct_span_grow [dict get $ct_sbox $rn] [ct_span_pts [list $it2]]]
+          dict set ct_sbox $fn [ct_span_grow [dict get $ct_sbox $fn] [ct_span_pts [list $it]]]
+        }
+        dict set done $it 1
+        incr nch
+      }
+      if {$nch} {
+        incr ct_moves [expr {2 * $nch}]; incr ct_cascaded $nch
+        continue
+      }
+    }
     if {![llength $cand] && $ct_spill > $ct_maxx && $on ni $ct_spilled} {
       lappend ct_spilled $on
       puts "OT_CLOCK_TAPS $on over cap with no room within half a pitch: spill reach [format %.0f [expr {$ct_spill / $ct_dbu}]] um"
@@ -653,6 +735,12 @@ if {[llength $ct_taps] >= 2} {
   set l {}
   foreach tp $ct_taps { lappend l "[lindex $tp 0] [llength [dict get $ct_by [lindex $tp 0]]]" }
   puts "OT_CLOCK_TAPS cap $ct_cap sinks/tap: $ct_moves sinks re-assigned; per tap: [join $l {, }]"
+  if {$ct_cascade} { puts "OT_CLOCK_TAPS CAP_CASCADE $ct_cascaded ejection chains (over-full tap -> full neighbour -> tap with room)" }
+  # capacity: sinks the cap pass could move vs taps x cap (log only; a die that needs more taps needs bank taps, clock.tap_grid regs)
+  set ct_ns 0; dict for {k v} $ct_by { incr ct_ns [llength $v] }
+  if {$ct_ns > [llength $ct_taps] * $ct_cap} {
+    puts "OT_CLOCK_TAPS WARN CAPACITY $ct_ns movable sinks > [llength $ct_taps] taps x cap $ct_cap: no assignment fits the cap; needs >= [expr {($ct_ns + $ct_cap - 1) / $ct_cap}] taps (clock.tap_grid regs: bank taps from the placed sinks)"
+  }
   if {[info exists ct_grp]} {
     lassign [ct_follow] ct_fn ct_fmoved
     puts "OT_CLOCK_TAPS followers after cap pass: $ct_fmoved of $ct_fn re-hung on their sinks' tap"

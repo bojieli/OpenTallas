@@ -4189,6 +4189,7 @@ def tap_grid_exports(t):
     if not g:
         return []
     out = ["export OT_TAP_CONVERGE = 1", f"export OT_TAP_CONVERGE_ITERS = {int(g['iters'])}"]
+    out.append("export OT_TAP_CAP_CASCADE = 1")      # TAP-GRID-R2: cap pass ejection chains (clock_taps.tcl CT_CASCADE)
     if g.get("win_ps") is not None:
         out.append(f"export OT_TAP_CONVERGE_WIN_PS = {float(g['win_ps']):g}")
     if float(g["raise_ps"]) > 0:
@@ -4353,7 +4354,11 @@ def _tap_cap(t):
     _e = os.environ.get("OT_TAP_MAX_SINKS", "")
     if _e.isdigit() and int(_e) > 0:
         return int(_e)
-    return int(t.get("clock", {}).get("tap_max_sinks", 1500 if _density(t) else 3000))
+    cap = int(t.get("clock", {}).get("tap_max_sinks", 1500 if _density(t) else 3000))
+    # TAP-GRID-R2 11-21 (FABLE-VISUAL-0030 cause 5: col_h9_r1 t25/t1/t2 at the 3,000 default cap, median 324): with clock.tap_grid
+    # on, no tap carries more than bank_sinks (default 1000) unless clock.tap_max_sinks is lower.  No key: unchanged.
+    g = tap_grid_cfg(t)
+    return min(cap, int(g["bank_sinks"])) if g else cap
 
 
 def _density_cfg(t):
@@ -7696,6 +7701,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     cfg += tap_pair_affinity_exports(t)
     cfg += tap_span_exports(t)
     cfg += tap_grid_exports(t)          # TAP-GRID-2130, opt-in (clock.tap_grid)
+    if (t.get("clock") or {}).get("tap_cap_cascade") and not tap_grid_cfg(t):
+        cfg += ["export OT_TAP_CAP_CASCADE = 1"]   # TAP-GRID-R2 11-21, opt-in without the grid (clock.tap_cap_cascade)
     if t.get("clock", {}).get("tap_reset_affinity") is True:        # S81-SEAM-RST-1115, opt-in, clock pin only
         cfg.append("export OT_TAP_RESET_AFFINITY = 1")
     cfg += tap_post_merge_exports(t)

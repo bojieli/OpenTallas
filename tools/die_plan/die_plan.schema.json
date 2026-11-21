@@ -2412,6 +2412,9 @@
         "type": "number",
         "exclusiveMinimum": 0
        },
+       "tap_cap_cascade": {
+        "type": "boolean"
+       },
        "tap_skip_macro": {
         "type": "boolean"
        },

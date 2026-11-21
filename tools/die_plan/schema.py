@@ -770,6 +770,9 @@ SCHEMA = {
                         # KV-PC-DELTA-1115 (opt-in): second cap-pass reach (um) of clock_taps.tcl for a tap with no room within
                         # half a pitch; and no grid tap over a hard macro (the tap takes no sink, is dropped when empty)
                         "tap_spill_um": {"type": "number", "exclusiveMinimum": 0},
+                        # TAP-GRID-R2 11-21 (opt-in; on with tap_grid): clock_taps.tcl cap pass ejection chains (OT_TAP_CAP_CASCADE):
+                        # a sink of an over-full tap moves to a full neighbour that passes one sink on to a tap with room
+                        "tap_cap_cascade": {"type": "boolean"},
                         "tap_skip_macro": {"type": "boolean"},
                         # REACH-FIX-1 11-12 (reach_fix.py): the subset of sink_sites_um the tool added (kit flops the
                         # tap planner does not list: landing rings, ring reads, relays), so its check counts them once
