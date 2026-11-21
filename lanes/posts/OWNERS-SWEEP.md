@@ -260,3 +260,8 @@
   S81 STALE 36 cancelled-superseded col_h9_r0*/col_h10_r*/bk_sel: owners FAM-S81-COL-R5/H10-R3/H9R0-R3 alive; S81 DEAD-OWNER 2 (s81sl_leaf__t28, dsdv_slice_kv512_C__t1: S81-DIE-R5 silent).
   KV FAILED-NO-RELAUNCH 10: kv3_pv_* (CLAND ring band, over 400k) -> OPUS-FIX-KV-PV-R5/TAP-GRID-R3; kv3_hg*/hg_v1p5/v1p6 -> OPUS-FIX-KV-HGI-R5.
   HEAD 1 hd_lep0N running (FABLE-FIX-HEAD-LEP0N-R2); QC 70 all clean.
+- 2026-11-21 12:53 PST 1400 sweep: 469 unsigned rows S81/HEAD/QC/KV (HBM skipped); 296 HELD-EVENT (unflagged).
+  S81 flagged: STALE ~50 (superseded col/svc/leaf, owners FAM-S81-COL-*/OPUS-FIX-S81-SVC-R8), UNOWNED 9 (svc_hi 8 -> SVC-R8, s81sl_kv_leaf__t1), FAILED-NO-RELAUNCH serdes__t12.
+  KV: FAILED-NO-RELAUNCH 16 (pv/hg/hgi, owners PV-R5/HGI-R6); kv3_sys_c unclassified; CBC-FALLBACK 2 held.
+  HEAD: hd_lep0N FAILED-NO-RELAUNCH (FABLE-FIX-HEAD-LEP0N-R2). QC: cbf_q01_s2 DEAD-OWNER (FAM-QC-CB-R2), tt_ctlm + slw_stm_v2 UNOWNED.
+  File lanes/OWNERS-SWEEP.tsv committed.
