@@ -62,3 +62,21 @@ Predecessor dir (read-only, its bind A still writes there): epyc8 fam-kv-hub-r2.
 
 ## 06:2x
 - G0 B PASS: 0 errors, 2,544 warnings (A: 2,543), plan 9ec33fa3c347 (g0gate_b/gate.out). Strict bind B still running (client 2595642).
+
+## 06:3x-06:5x (COORD leftovers of FAM-KV-HUB-R2 + bind restart)
+- STALE R8: tree_b (and R2 tree) were copied before KV-PLAN-R5 refreshed r8 (r8_ev 432f40a0b542 -> a36184625de1, inputs
+  vport_w_pads_b5.json + pv_col_pads_ffkpv.json). The D27d bind on the old r8 gave 30 R8_STALE. Both private binds cancelled (rc 143):
+  bind A oth-ubuntu-645366-1795266158 (variant A dropped for good) and bind B oth-ubuntu-1351083-1795268233.
+  tree_b now has r8_ev a36184625de1 + the two inputs (copy + mv), bind_of_record reset from bind_of_record.d27d_linked
+  (old partial one = bind_of_record.b1_cancelled, ot-delete later). Plan unchanged 9ec33fa3c347.
+- LIVE: strict bind B2, intel2 client 3833051 -> epyc8 fable-fix-kv-hub/bindgate_b2/gate.out (started 06:2x, about 2 h).
+  gen_b.sh reads bindgate_b/gate.out: change that path to bindgate_b2 before running it.
+  If B2 shows R8_STALE again (my +12 lane-cycles could move the table): r8_refresh.py as kv-plan-r3/d27c/r8_refresh_d27d.sh on tree_b, rebind.
+- hub_Wo attempt_9 (D25e3) died at CTS = tool skew tb_cdirect (main 5294e088f553); WAITER-FAIL 855c54b1e8e0 answered (post e92ce874).
+  hub_Eo attempt_4 (D25e3) placed, local_density 1.385 advisory: not routed on D25e3.
+- The wave is on KV-D26 since 05:41 and already relaunched hub_Wo, hub_Eo, hub_Wi, sys_c, hroot there (wave env, current rt).
+  Background check armed on the D26 hub_Wo / hub_Eo kits (tb_cdirect declaration, flow_tag, env keys).
+- D27d: rebind of record epyc8 kv-plan-r3/d27c/bindgate_d27d_r5 (waiter armed). On green: private hub_Wo + hub_Eo kits on D27d with the
+  wave env (gen_b.sh form with TREE = d27c/tree and its bind; item_env for both = OT_GEN_M8_GRANT=1 only, no type_args), on epyc7/8/10,
+  unless the KV-PLAN-R5 D27d apply relaunches them in the wave first (check OWNERS.tsv rows before launching; no duplicates).
+- hub_Ei D25e3 attempt_4 route still running (client 55902, waiter armed): read GRT clock skew + TT; -433 is port_in, not internal hold.
