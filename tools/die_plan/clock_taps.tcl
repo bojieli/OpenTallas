@@ -842,6 +842,7 @@ proc ct_hl_bypass {li} {
   set loads {}
   foreach it [$qn getITerms] { if {[$it getInst] ne $li} { lappend loads $it } }
   foreach it $loads { $it disconnect; $it connect $dn }
+  catch {$li setDoNotTouch 0}
   odb::dbInst_destroy $li
   odb::dbNet_destroy $qn
   return 1
