@@ -34,3 +34,9 @@ epyc7 same path (repo = lane clone used for the push, cone tools+rtl+physical/co
 ## Update 2026-11-20 22:5x PST
 - v8m (flip) DIED post-CTS: FAIL_POSTCTS FF structural hold -598 ps / 9,098 endpoints; TT setup after repair -1,847 (v8c -1,910). No GRT it5 from v8m:
   flip NOT READY. v8c wait + v8q place wait still armed. KV plan lane is now KV-PLAN-R3 (post.sh redirects).
+
+## Update 2026-11-20 23:xx PST (COORD ruling)
+- Flip OUT of D27 (no measured gain). D28 structural fix posted: lanes/handoff/OPUS-FIX-KV-PV-R4-D28-split.md (every pv type over the 400k
+  cap; family split <v>w = g0+g2, <v>e = g1+g3, cut x 1080, +2 cycles on every pv input lane).
+- v8c NOT cancelled by me (started by FABLE-FIX-KV-PV-R2; lane rule: never signal what you did not start). Asked COORD to cancel unit
+  oth-ubuntu-1801628-1795205288. My v8c wait will then end with CLIENT_ENDED.
