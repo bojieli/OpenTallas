@@ -67,3 +67,16 @@ def test_auto_rule_applies_only_to_measured_firing_types():
     got = RS.apply(raw, {a: dict(launch_ps=67.34, capture_ps=306.74), b: dict(launch_ps=10, capture_ps=100), "nope": dict(launch_ps=0, capture_ps=999)})
     assert got == {a: 239.4} and raw["partition_types"][a]["reset"]["root_entry_negedge"] is True
     assert "root_entry_negedge" not in raw["partition_types"][b].get("reset", {})
+
+
+def test_post_hook_read_t60_absent_not_fire_and_fail_when_listed():
+    """FABLE-CLOSURE-2130: the raw 4_cts_final path (-158.8, 67 vs 307) is gone after the tap-balance hooks; ABSENT never fires"""
+    post = "Startpoint: a/q$_DFF_P_\nPath Type: min\n   11.14   slack (MET)\n\nStartpoint: b/q$_DFF_P_\nPath Type: min\n   23.22   slack (MET)\n"
+    r = RS.root_hop_status(post)
+    assert r == dict(status="ABSENT", above=23.22)
+    listed = T60_RPT.replace("-158.81   slack (VIOLATED)", "-158.81   slack (VIOLATED)")
+    r = RS.root_hop_status(listed)
+    assert r["status"] == "HOLD_FAIL" and r["slack"] == -158.81 and RS.fires(r["launch_ps"], r["capture_ps"])
+    met = T60_RPT.replace("-158.81   slack (VIOLATED)", "5.0   slack (MET)")
+    assert RS.root_hop_status(met)["status"] == "HOLD_MET"
+    assert str(RS.post_hook_path("x/base/4_cts_final.rpt")).endswith("x/base/4_cts_post_hook.rpt")

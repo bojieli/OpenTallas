@@ -6,10 +6,16 @@ a hold deficit of about the skew, and the launch-side lockup form (u_rst_in = ot
 needed.  Insertion per tap is a CTS result, not a plan number (a distance proxy predicts 4 % of the measured t60 skew), so the
 rule reads MEASURED launch/capture latencies:
 
-  python3 -I root_entry_scan.py report CTS_REPORT.rpt [...]          -> per report: type, launch_ps, capture_ps, skew, fires
+  python3 -I root_entry_scan.py report CTS_REPORT.rpt [...]          -> per report: status, launch_ps, capture_ps, skew, slack
   python3 -I root_entry_scan.py plan PLAN.json MEASURED.json OUT.json -> OUT = PLAN with reset.root_entry_negedge on every
                                                        eligible type of MEASURED {type: {launch_ps, capture_ps}} firing the rule
 Types without a measurement are never flagged (UNMEASURED, not 'no').
+
+POST-HOOK READ (FABLE-CLOSURE-2130, TAP-GRID-2130 canonical read): 4_cts_final.rpt shows the RAW tree depth before the tap-balance
+hooks (S81 t60: 67 vs 307 ps raw, 456/438 after balance).  The rule reads 4_cts_post_hook.rpt (a path to 4_cts_final.rpt is mapped
+to its sibling post-hook report) and fires only when the root-hop min path is PRESENT there with slack < 0 AND the latencies differ
+by more than 150 ps.  Not listed = ABSENT: its slack is better than the last listed min path (reported as `above <slack>`), never a
+fire.  A kit without a post-hook report is NOPOSTHOOK (not read).
 """
 import json
 import re
@@ -30,6 +36,31 @@ def root_hop_latencies(rpt):
         if len(ts) >= 2:
             return ts[0], ts[1]
     return None
+
+
+def post_hook_path(path):
+    """4_cts_final.rpt -> its sibling 4_cts_post_hook.rpt; any other path unchanged"""
+    p = Path(path)
+    return p.with_name("4_cts_post_hook.rpt") if p.name == "4_cts_final.rpt" else p
+
+
+def root_hop_status(rpt):
+    """dict(status, launch_ps, capture_ps, slack): status HOLD_FAIL (u_rst_in min path listed, slack < 0), HOLD_MET (listed, >= 0),
+    ABSENT (not among the listed min paths; `above` = slack of the last listed min path)."""
+    last = None
+    for blk in re.split(r"\n(?=Startpoint:)", rpt):
+        if "Path Type: min" not in blk:
+            continue
+        m = re.search(r"([-\d.]+)\s+slack \(", blk)
+        sl = float(m.group(1)) if m else None
+        if sl is not None:
+            last = sl
+        if not re.match(r"Startpoint: \S*u_rst_in\b", blk):
+            continue
+        ts = [float(x.group(1)) for x in _CLK.finditer(blk)]
+        if len(ts) >= 2 and sl is not None:
+            return dict(status="HOLD_FAIL" if sl < 0 else "HOLD_MET", launch_ps=ts[0], capture_ps=ts[1], slack=sl)
+    return dict(status="ABSENT", above=last)
 
 
 def fires(launch_ps, capture_ps, thresh=THRESH_PS):
@@ -56,9 +87,16 @@ def apply(raw, measured, thresh=THRESH_PS):
 def main(argv):
     if len(argv) >= 3 and argv[1] == "report":
         for f in argv[2:]:
-            lc = root_hop_latencies(Path(f).read_text())
-            if lc:
-                print(f"{f}\t{lc[0]}\t{lc[1]}\t{lc[1] - lc[0]:.1f}\t{'FIRES' if fires(*lc) else 'ok'}")
+            pf = post_hook_path(f)
+            if not pf.is_file():
+                print(f"NOPOSTHOOK\t{f}")
+                continue
+            r = root_hop_status(pf.read_text())
+            if r["status"] == "ABSENT":
+                print(f"ABSENT\tabove {r['above']}\t{pf}")
+            else:
+                sk = r["capture_ps"] - r["launch_ps"]
+                print(f"{r['status']}\t{r['launch_ps']}\t{r['capture_ps']}\t{sk:.1f}\t{r['slack']}\t{'FIRES' if r['status'] == 'HOLD_FAIL' and fires(r['launch_ps'], r['capture_ps']) else 'no'}\t{pf}")
         return 0
     if len(argv) == 5 and argv[1] == "plan":
         import fstart_reset_delta as F
