@@ -21,6 +21,18 @@ physical/die_plan/s81/cores/views/bksel_c_a3pt_1120/dsdv_bksel_c (export_view.py
   Other >300 in r3a = face buses/hub (no face rows in r3a) + die reset tree u_rrl_* at the bound 380-um pitch (J3 bind; J5+ reach 300).
 - place_r3b (R3 full-row form, RO 7, no L4): place + geom + hop scan, status otrun-tolerant-swine-1597712, log hub place_r3b.otrun.log,
   outputs $L/place_r3b.log, $L/geom_r3b/, $L/hop300_r3b.json. Measures the face-bus rows. READ IT.
+- place_r3b RESULT (21:58): r2r max 1,318 um (R2 form 2,591), 4 captures > 405, 2,714 > 300 ($L/hop300_r3b.json).
+  Families over 300 and the fix:
+  * u_cland_origin/s1 -> u_cland_fstart_flt_o0 1,318 (1 bit): landing START broadcast to the flt_o0 face; needs a
+    clock.landing_writer_start branch for flt_o0 (as t41 in J5) = plan row, NOT done.
+  * u_core.dst -> u_ist_{tl,tp}_o*_0 670-673: fixed by L4 DSP (pushed). u_rrl_256 -> g_q.u reset pins 1,257: fixed by L4 RRD.
+  * hub: u_rs.g_rsreg.rq -> u_rn.o 391 (276 b), u_vm.o -> u_rs.o 346, u_vm.r -> u_vm.o 324: R3 rows_face hub sites placed over
+    cap; re-site u_rs / u_rn / u_vm.o (rows_face.py anchors O and the u_rs mid point) or add one hub stage.
+  * face-bus station chains 302-368 (tl_o0 3->4 356, tp_o0/o1 10 -> u_bout 352, xtier_o0 347, xtier_o1 331/368, u_bin -> u_lpad
+    303-334, u_lpad -> u_vm.r 314-320): placed spread over the designed L/H; family fix = rows_face.py CAP 300 -> 270
+    (re-run, recompute the lane fixed_cycles deltas) or +1 station on each listed bus.
+  * u_stn_o 322.7: fixed by RO 8 + rows_stn_ro8 (designed 283.2).
+  * u_rrl_* -> u_rrl_* 380: the bound J3 die reset tree pitch, not a bk_sel row.
 - Final form = chain_r4b (below).
 
 ## 3. OT_BKSEL_L4 RTL -- PUSHED main 48d49db149 (21:1x)
