@@ -148,11 +148,34 @@ def tree_taps(sv):
     return taps
 
 
-def soft_rows(tn, t, sv, pos, reach, leaf_max, far=None):
+def plan_tree_taps(raw, tn):
+    """{tap index: (x, y)} of the reset tree the bind of RAW would emit for type tn (reset_tree.for_type; the same relays that drive
+    rst_n_t<i> in the bound RTL).  RESET-RELAY-GEN-R3 11-21 (FABLE-PD-KV-2230): the second pass of local_taps runs on THIS tree,
+    not on an old bound RTL, so new local taps have their final ids."""
+    import reset_tree as RT
+    import schema
+    T = RT.for_type(schema.Plan(raw), tn)
+    return {int(r["q"][len("rst_n_t"):]): (float(r["xy"][0]), float(r["xy"][1])) for r in T["relays"] if str(r["q"]).startswith("rst_n_t")}
+
+
+def check_bank_taps(tn, bank_taps, plan_taps, bound_taps=None, tol=0.5):
+    """problems: every bank_taps tap id must exist in the plan's tree (and, with bound_taps, sit at the same site: a stale id points at
+    another tap).  [] = ok"""
+    bad = []
+    for row in bank_taps or []:
+        i = row["tap"]
+        if i not in plan_taps:
+            bad.append(f"{tn}: bank_taps tap {i} not in the plan tree ({len(plan_taps)} taps)")
+        elif bound_taps is not None and (i not in bound_taps or man(bound_taps[i], plan_taps[i]) > tol):
+            bad.append(f"{tn}: bank_taps tap {i} STALE: bound RTL {bound_taps.get(i)} vs plan tree {plan_taps[i]}")
+    return bad
+
+
+def soft_rows(tn, t, sv, pos, reach, leaf_max, far=None, taps=None):
     """far: a list -> banks with no tree tap with room within reach are appended to it as (inst, xy) instead of raising
     (RESET-RELAY-GEN-R3: they need a reset.local_taps_um tap of the tree at the bank, see local_tap_sites)"""
     leaf = PR.LEAF.findall(sv)
-    taps = tree_taps(sv)
+    taps = taps or tree_taps(sv)
     if len(leaf) != 1 or not taps:
         raise DeltaError(f"{tn}: no generated reset-tree leaf alias / tap sites in the bound RTL")
     load, by_tap, rep, unplaced = {}, {}, [], []
@@ -254,7 +277,7 @@ def hard_rows(tn, t, sv, pos, reach, leaf_max, prefix="cbr"):
     return rows, sites, rep, unplaced, D
 
 
-def type_delta(tn, t, sv, pos=None, reach=REACH_UM, leaf_max=LEAF_MAX, local_taps=False):
+def type_delta(tn, t, sv, pos=None, reach=REACH_UM, leaf_max=LEAF_MAX, local_taps=False, taps=None):
     """mutates t; -> report dict (empty rows when nothing to do)"""
     pos = pos or {}
     if not banks_on_rst(sv):
@@ -269,7 +292,7 @@ def type_delta(tn, t, sv, pos=None, reach=REACH_UM, leaf_max=LEAF_MAX, local_tap
         return dict(form="port_relays", rows=rows, relay_sites=sites, detail=rep, unplaced=unplaced,
                     added_reset_cycles=D, flops=sum(r["depth"] for r in rows), reset_depth=rs.get("depth"))
     far = [] if local_taps else None
-    rows, rep, unplaced = soft_rows(tn, t, sv, pos, reach, leaf_max, far)
+    rows, rep, unplaced = soft_rows(tn, t, sv, pos, reach, leaf_max, far, taps)
     if rows:
         rs["bank_taps"] = (rs.get("bank_taps") or []) + rows
     lt = local_tap_sites(far, reach, leaf_max) if far else []
@@ -303,6 +326,9 @@ def main(argv=None):
     ap.add_argument("--positions")
     ap.add_argument("--local-taps", action="store_true",
                     help="banks with no tree tap within --reach-um get a reset.local_taps_um terminal at the bank (second pass seats them)")
+    ap.add_argument("--second-pass", action="store_true",
+                    help="PLAN already carries the first pass's reset.local_taps_um: seat every bank on the plan's own tree taps "
+                         "(reset_tree.for_type of PLAN; first-pass bank_taps rows of the type are replaced)")
     ap.add_argument("--pins", action="append", default=[], metavar="TYPE=pins.json",
                     help="bank positions of u_bin_/u_bout_<bus> from the pin centroid of that bus (kit pins.json); lower priority than --landing")
     ap.add_argument("--landing", action="append", default=[], metavar="TYPE=landing_placement.tcl",
@@ -326,7 +352,22 @@ def main(argv=None):
             k, _, f = spec.partition("=")
             if k == tn:
                 pos = {**landing_positions(Path(f).read_text()), **pos}
-        r = type_delta(tn, t, sv, pos, a.reach_um, a.leaf_max, a.local_taps)
+        ptaps = None
+        if a.second_pass:
+            ptaps = plan_tree_taps(raw, tn)
+            (t.get("reset") or {}).pop("bank_taps", None)
+        r = type_delta(tn, t, sv, pos, a.reach_um, a.leaf_max, a.local_taps and not a.second_pass, ptaps)
+        if r["form"] == "bank_taps":
+            try:
+                ref = ptaps or plan_tree_taps(raw, tn)
+            except Exception as e:                      # a plan the tree cannot be solved on (fragment): report, never hide
+                if a.second_pass:
+                    raise
+                ref, r["tap_check_skipped"] = None, f"{type(e).__name__}: {e}"
+            r["tap_check"] = [] if ref is None else check_bank_taps(tn, (t.get("reset") or {}).get("bank_taps"), ref,
+                                                                      None if a.second_pass else tree_taps(sv))
+            for line in r["tap_check"]:
+                print("TAP-CHECK " + line)
         rep[tn] = r
         print(f"{tn}: {r['form']} {len(r['rows'])} rows, +{r['added_reset_cycles']} reset cycles, {r['flops']} flops, "
               f"unplaced {len(r.get('unplaced') or [])}")

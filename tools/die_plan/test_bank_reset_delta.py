@@ -225,3 +225,20 @@ def test_far_bank_gets_local_tap_terminal_not_a_long_hop():
     assert rep["added_reset_cycles"] == 0 and rep["local_taps"] == [dict(xy=[500.0, 900.0], banks=["u_bout_b"])]
     assert tt["reset"]["local_taps_um"] == [[500.0, 900.0]]
     assert all("u_bout_b" not in r["sinks"] for r in rep["rows"]) and all(d["hop_um"] <= 300.0 for d in rep["detail"])
+
+
+def test_second_pass_uses_plan_taps_and_check_flags_missing_and_stale_ids():
+    """RESET-RELAY-GEN-R3 11-21 (FABLE-PD-KV-2230): pass 2 seats banks on the new plan's tree taps (override), and check_bank_taps
+    refuses tap ids absent from the plan tree and ids whose bound-RTL site differs (stale)"""
+    t = dict(outline_um=[1000.0, 1000.0], reset=dict(sync_stages=2),
+             buses=[dict(name="a", dir="in", width=3), dict(name="b", dir="out", width=3)])
+    pos = {"u_bin_a": (20.0, 20.0), "u_bout_b": (500.0, 900.0)}
+    taps = {0: (20.0, 20.0), 1: (970.0, 30.0), 2: (500.0, 900.0)}      # tap 2 = the local tap added by pass 1
+    rep = B.type_delta("s", t, SOFT, pos, reach=300.0, taps=taps)
+    got = {x["inst"]: x for x in rep["detail"]}
+    assert got["u_bout_b"]["tap"] == 2 and got["u_bout_b"]["hop_um"] == 0.0 and "u_bout_b" not in rep["unplaced"]
+    assert B.check_bank_taps("s", t["reset"]["bank_taps"], taps) == []
+    assert B.check_bank_taps("s", [dict(tap=7, sinks=["x"])], taps)[0].endswith("not in the plan tree (3 taps)")
+    stale = B.check_bank_taps("s", [dict(tap=2, sinks=["x"])], taps, bound_taps={2: (10.0, 10.0)})
+    assert len(stale) == 1 and "STALE" in stale[0]
+    assert B.check_bank_taps("s", [dict(tap=2, sinks=["x"])], taps, bound_taps=dict(taps)) == []
