@@ -1,0 +1,1 @@
+- 2026-11-21 08:23 PST DIED [FAM-QC-HCST-R2] ot-run oth-ubuntu-2172897-1795278186 on dear-crayfish: rc=127 after 5 s, ended 08:23:08, log none, cmd: --mem 24 --threads 2 --hosts epyc2 -- bash /srv/opentallas-scratch2/claude/FAM-QC-HCST-R2-rp.sh

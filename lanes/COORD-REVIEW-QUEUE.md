@@ -18602,3 +18602,4 @@ FAILED [AUTOPILOT e0859739aeaa] 2026-11-21 08:22:07 PST AUTOPILOT -> KIT-WAVE-12
   [filed under] S81-J6-ASSEMBLY-R4: S81-J6-ASSEMBLY-R2 stood down (chain S81-J6-ASSEMBLY-R2 > S81-J6-ASSEMBLY-R3 > S81-J6-ASSEMBLY-R4)
 - 2026-11-21 08:23 PST DONE [FABLE-FIX-S81-COLROM] ot-run oth-ubuntu-1452049-1795268387 on tolerant-swine: rc=0 after 9802 s, ended 08:23:07, log /srv/opentallas-scratch2/claude/fable-fix-s81-colrom/gate1_otrun.log, cmd: --mem 72 --threads 8 --plan-job bind --priority plan --hosts epyc10 --dir /srv/opentallas-scratch2/claude/fable-fix-s81-colrom -- bash /srv/
   [filed under] FABLE-FIX-S81-COLROM-R2: FABLE-FIX-S81-COLROM stood down (chain FABLE-FIX-S81-COLROM > FABLE-FIX-S81-COLROM-R2)
+- 2026-11-21 08:23 PST DIED [FAM-QC-HCST-R2] ot-run oth-ubuntu-2172897-1795278186 on dear-crayfish: rc=127 after 5 s, ended 08:23:08, log none, cmd: --mem 24 --threads 2 --hosts epyc2 -- bash /srv/opentallas-scratch2/claude/FAM-QC-HCST-R2-rp.sh
