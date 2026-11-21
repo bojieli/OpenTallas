@@ -136,3 +136,7 @@ NOTE: every W/*.py / *.sh named here lives on epyc9 in W; the session scratchpad
 - unit oth-ubuntu-1691144-1795236854 exit 2 at 3_3_place_gp: [ERROR ODB-0359] Attempt to change the origin of FIRM instance u_bound.u_pc_nk_u_t_0_0_n_a.q[0] (global_place.tcl).
 - Keys matched: OT_RELAY_SITES placed 38542 flops FIRM, 276 of 38818 unmatched; OT_ISTATIONS placed 13898.
 - Reading (not verified): a later kit hook moves the u_pc_nk pipe registers (core_input_anchor / core_input_chain class) and my relay_sites made them FIRM first. Likely fix: do not write u_pc_* keys (delete the kind == pc branch in link_sites.py main, keep the node fixed at the pin for the solver), re-run run_all.sh, re-GEN, relaunch. The a3 rows carry those u_pc_* keys on all 17 types: do NOT bind them into V2 as they are.
+## 2026-11-21 02:21 PST Codex notes
+- PASS candidate generation: `cbf_q00__cl1b5a6458` fp3 GEN RC 0 on epyc9 `oth-ubuntu-118033-1795251730`, 1,588 s. fp3 is a private row-plan diagnostic, while b9 carries canonical V2 reset and tile-clock contract.
+- FAIL p1: duplicate FIRM `u_pc_nk` sites from relay rows and the core input hook. Main `a4ae603e36` drops those sites by default. Reviewed fp3 to start a place-only probe of that interaction. V2 CB proof will take its strict-bound kit and include the updated tile-clock contract.
+
