@@ -8234,11 +8234,14 @@ def install_gp_noconverge_gate(kd, cfg, die=None):
 
 def postplace_stop_ps(env=None):
     """PLACE-SETUP-STOP (FLEET-WATCH-1630, owner rule 11-20): the TT setup WNS (ps) below which a kit ends after detail place, else None.
-    Default -300 (OT_POSTPLACE_SETUP_STOP_PS).  Exempt (None): OT_POSTPLACE_SETUP_STOP=0, lane proofs (OT_LANE set or OT_PRIVATE_KIT=1),
-    ECO rows (OT_ECO set), rows flagged keep_going (OT_KEEP_GOING=1).  Hold-only failures never trip it: only setup is measured."""
+    Default -300 (OT_POSTPLACE_SETUP_STOP_PS).  Only KIT-WAVE gens have it: run_item exports OT_KIT_WAVE=1 into the gen shell, so every kit a lane
+    runs by hand (private kits, lane proofs, with or without OT_LANE) is exempt.  Exempt wave rows: re-sign rows (the pick tag _resign, spec
+    resign, exported as OT_RESIGN=1) and rows flagged keep_going (item_env OT_KEEP_GOING=1); OT_POSTPLACE_SETUP_STOP=0 turns it off.  ECO rows
+    run after route (the queue chain), hold-only failures are never measured here (only setup is), so neither needs a key."""
     env = os.environ if env is None else env
-    if env.get("OT_POSTPLACE_SETUP_STOP", "").strip() == "0" or env.get("OT_LANE", "").strip() or env.get("OT_PRIVATE_KIT", "").strip() == "1" \
-            or env.get("OT_ECO", "").strip() not in ("", "0") or env.get("OT_KEEP_GOING", "").strip() == "1":
+    if env.get("OT_KIT_WAVE", "").strip() != "1" or env.get("OT_LANE", "").strip():
+        return None
+    if env.get("OT_POSTPLACE_SETUP_STOP", "").strip() == "0" or env.get("OT_RESIGN", "").strip() == "1" or env.get("OT_KEEP_GOING", "").strip() == "1":
         return None
     v = env.get("OT_POSTPLACE_SETUP_STOP_PS", "").strip()
     try:

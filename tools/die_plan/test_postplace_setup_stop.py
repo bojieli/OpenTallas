@@ -33,12 +33,21 @@ def test_at_or_above_the_stop_or_no_measurement_continues(tmp_path):
     assert PS.main(["--log", str(tmp_path / "missing"), "--stop", "-300"]) == 0
 
 
-def test_exemptions_and_default():
-    assert G.postplace_stop_ps({}) == -300.0
-    assert G.postplace_stop_ps({"OT_POSTPLACE_SETUP_STOP_PS": "-250"}) == -250.0
-    for env in ({"OT_POSTPLACE_SETUP_STOP": "0"}, {"OT_LANE": "FABLE-FIX-X"}, {"OT_PRIVATE_KIT": "1"}, {"OT_ECO": "1"}, {"OT_KEEP_GOING": "1"}):
-        assert G.postplace_stop_ps(env) is None, env
-    assert G.postplace_stop_ps({"OT_ECO": "0"}) == -300.0
+def test_only_kit_wave_gens_stop_and_exemptions():
+    W = {"OT_KIT_WAVE": "1"}
+    assert G.postplace_stop_ps(W) == -300.0
+    assert G.postplace_stop_ps(dict(W, OT_POSTPLACE_SETUP_STOP_PS="-250")) == -250.0
+    assert G.postplace_stop_ps({}) is None                                        # a kit run by hand (private kit, lane proof) is not a wave gen
+    assert G.postplace_stop_ps({"OT_LANE": "X"}) is None
+    for extra in ({"OT_POSTPLACE_SETUP_STOP": "0"}, {"OT_LANE": "FABLE-FIX-X"}, {"OT_RESIGN": "1"}, {"OT_KEEP_GOING": "1"}):
+        assert G.postplace_stop_ps(dict(W, **extra)) is None, extra
+    assert G.postplace_stop_ps(dict(W, OT_RESIGN="0")) == -300.0
+
+
+def test_wave_run_item_exports_the_wave_marker_and_resign_pick_is_tagged():
+    src = (HERE.parent / "autopilot" / "kit_wave.py").read_text()
+    assert 'genv += "export OT_KIT_WAVE=1; " + ("export OT_RESIGN=1; " if sp.get("resign") else "")' in src
+    assert 'sp["resign"] = True' in src and 'r.get("_resign")' in src
 
 
 def test_run_script_measures_place_odb_and_classifier_names_the_class():

@@ -8669,6 +8669,8 @@ def run_item(spec_path):
                if ps and re.fullmatch(r"[A-Za-z0-9_,]+", ps) else "PS=; ")
         rgp, rga = region_guide_cmd(sp, False)
         genv = "".join(f"export {k}={q(v)}; " for k, v in sorted((sp.get("gen_env") or {}).items()))
+        # FLOW-NOADV-R3 11-20: PLACE-SETUP-STOP applies to kit-wave gens only (shell exports, not part of the spec / input hashes); re-sign picks are exempt
+        genv += "export OT_KIT_WAVE=1; " + ("export OT_RESIGN=1; " if sp.get("resign") else "")
         gen = (f"cd {q(tsrc)} && {genv}{pin}{rgp}python3 tools/die_plan/gen.py phys {q(plan)} --out {q(W)}/gen --types {q(T)} "
                f"--rtl-root {q(src)} {kit_rtl_arg} $PS {' '.join(q(x) for x in sp['gen_args'])}{rga}{ov_arg}")
         if kit_rtl_arg:
@@ -11536,6 +11538,8 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
                                                   and v.get("item") == r["item"]]) + 1
     jd = Path(AP.AP_DIR) / "kit_wave" / re.sub(r"[^A-Za-z0-9_.-]", "_", key) / f"a{attempt}"
     sp = spec_for(cfg, die, r["item"], hub, r.get("parent_item") or prev.get("parent_item"), kind=r.get("kind") or "type")
+    if r.get("_resign"):
+        sp["resign"] = True          # FLOW-NOADV-R3: a superseded-signed re-sign pick (PLACE-SETUP-STOP exempt); not an input of any hash
     if not arm:
         _kh = killed_hosts(st, die, r["item"])
         if _kh:
