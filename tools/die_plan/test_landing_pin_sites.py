@@ -76,7 +76,10 @@ def test_overlap_on_one_track_is_separated():
 
 
 @pytest.mark.skipif(not QC.is_file(), reason="plan_qc52.json not in this checkout")
-def test_plan_qc52_has_no_duplicate_site_and_raw_is_as_read():
+def test_plan_qc52_has_no_duplicate_site_and_raw_is_as_read(monkeypatch):
+    # QC52 predates the 300 um reset cap. Keep its archived reset contract
+    # while checking landing pin separation and raw-plan preservation.
+    monkeypatch.setenv("OT_RESET_HOP_CAP_UM", "405")
     raw = json.loads(QC.read_text())
     keep = json.dumps(raw, sort_keys=True)
     P = S.Plan(raw, str(QC))
