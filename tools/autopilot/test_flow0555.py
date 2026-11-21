@@ -600,11 +600,13 @@ def test_plan_current_no_never_cancels_a_queued_or_running_job_under_stops_off()
 def test_explicit_retry_key_overrides_skip_same_input():
     P = {"v": 2, "noenv": "N1", "env": {}, "fam": {"gen": "F"}, "stg": {"gen": "G"}}
     st = {"items": {"a": {"die": "d", "item": "i", "attempt": "14", "status": "FAIL", "started": 2, "input_parts": P, "class": "FLOW"}}}
-    cfg = {"dies": {"d": {"retry": ["i@14", "i@2"]}}}
+    # FLOW-FIX-0100: a retry key names fix=<sha or row> (plain item@N only for INFRA failures)
+    cfg = KW.load_config('{"dies": {"d": {"retry": ["i@14:fix=r1", "i@2:fix=r1"]}}}')
     assert KW.explicit_retry_pending(cfg, st, "d", "i") is True                 # i@14 names the failed attempt: released
-    cfg = {"dies": {"d": {"retry": ["i@2"]}}}
+    assert KW.explicit_retry_pending(KW.load_config('{"dies": {"d": {"retry": ["i@14"]}}}'), st, "d", "i") is False      # no fix=, not INFRA
+    cfg = KW.load_config('{"dies": {"d": {"retry": ["i@2:fix=r1"]}}}')
     assert KW.explicit_retry_pending(cfg, st, "d", "i") is False                # stale key (consumed long ago)
-    cfg = {"dies": {"d": {"retry": ["i@15"]}}}
+    cfg = KW.load_config('{"dies": {"d": {"retry": ["i@15:fix=r1"]}}}')
     assert KW.explicit_retry_pending(cfg, st, "d", "i") is True                 # pre-release of the next attempt
     assert KW.explicit_retry_pending({"dies": {"d": {}}}, st, "d", "i") is False
 

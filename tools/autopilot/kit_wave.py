@@ -417,9 +417,32 @@ def load_config(text):
     except ValueError as e:
         return {"error": f"kit_wave.json unreadable: {e}", "dies": {}}
     cfg.setdefault("dies", {})
+    normalize_retry_fix(cfg)
     compile_hold_records(cfg)
     apply_hold_release_on(cfg)
     return cfg
+
+
+RETRY_FIX_RE = re.compile(r"^(?P<ia>[^@\s:]+@\d+):fix=(?P<fix>\S+)$")
+
+
+def normalize_retry_fix(cfg):
+    """FLOW-FIX-0100 (FABLE-FLOW-2350 d): a retry key is `item@N:fix=<sha or row>`.  Every consumer of dies.<die>.retry reads the plain `item@N`, so the
+    fix text moves into the in-memory die field `_retry_fix` {item@N: fix} and the list keeps the plain key.  A plain `item@N` has no fix and is
+    honoured only for an INFRA failure (retry_key_allowed)."""
+    for d in (cfg.get("dies") or {}).values():
+        if not isinstance(d, dict) or not isinstance(d.get("retry"), list):
+            continue
+        fx = d.setdefault("_retry_fix", {})
+        out = []
+        for ia in d["retry"]:
+            m = RETRY_FIX_RE.match(str(ia).strip())
+            if m:
+                fx[m["ia"]] = m["fix"]
+                ia = m["ia"]
+            if ia not in out:
+                out.append(ia)
+        d["retry"] = out
 
 
 _TREE_CACHE = {}
@@ -11410,12 +11433,29 @@ def struct_cmd(a):
         lk.close()
 
 
+def last_fail_is_infra(st, die, item):
+    """FLOW-FIX-0100: the item's latest attempt (by start time) ended as an INFRA failure (host kill / transport), which a retry key may relaunch without a fix"""
+    recs = [r for r in (st.get("items") or {}).values() if r.get("die") == die and r.get("item") == item]
+    if not recs:
+        return False
+    last = max(recs, key=lambda r: (float(r.get("started") or 0), int(r.get("attempt") or 0)))
+    return is_infra_fail(last)
+
+
+def retry_key_allowed(cfg, st, die, item, ia):
+    """FLOW-FIX-0100 (FABLE-FLOW-2350 d): item@N overrides the same-input skip only when it names fix=<sha or row> or the failed attempt is INFRA"""
+    d = (cfg.get("dies") or {}).get(die) or {}
+    return bool((d.get("_retry_fix") or {}).get(ia)) or last_fail_is_infra(st, die, item)
+
+
 def explicit_retry_pending(cfg, st, die, item):
     """True when dies.<die>.retry holds item@N with N >= the item's latest attempt number and the key is not consumed (retry_key_decision: release or pre-release)"""
     d = (cfg.get("dies") or {}).get(die) or {}
     for ia in d.get("retry") or []:
         it, _, n = str(ia).rpartition("@")
         if it != item or not n.isdigit():
+            continue
+        if not retry_key_allowed(cfg, st, die, item, ia):          # FLOW-FIX-0100: no fix= and not INFRA -> not an explicit relaunch request
             continue
         ok, _why = retry_key_decision(st, die, item, n)
         if ok is True:
@@ -11510,7 +11550,15 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
         if _so and explicit_retry_pending(cfg, st, die, r.get("item")):
             # COORD 11-19 (SONNET-FIX-QC: cbn_q11 retry rows listed in kit_wave.json never launched, SKIP-SAME-INPUT every tick): a lane / COORD retry key item@N that names the failed attempt (or the next one)
             # is an explicit relaunch request, not an automatic one: the input hash does not veto it (the key is consumed by the relaunch)
-            AP.log(f"KIT-WAVE RETRY-KEY-LAUNCH {die}/{r.get('item')}: explicit retry key in the die config overrides SKIP-SAME-INPUT")
+            _same_k = _fk_same(cfg, st, die, r)
+            if _same_k and not last_fail_is_infra(st, die, r.get("item")):
+                # FLOW-FIX-0100 (FABLE-FLOW-2350 d): the key names a fix but the launch digest (rt sha + plan + kit env) equals the failed attempt's: nothing changed, refuse and drop the key
+                st.setdefault("retry_refused", {})[f"{die}|{r.get('item')}"] = time.time()
+                log_hourly(AP, st, f"RSI|{die}|{r.get('item')}", f"KIT-WAVE RETRY-SAME-INPUT {die}/{r.get('item')}: retry key (fix={((cfg['dies'][die].get('_retry_fix') or {}))}) refused, input digest {str(_same_k)[:16]} equals the failed attempt's; key removed")
+                _d = cfg["dies"][die]
+                _d["retry"] = [x for x in (_d.get("retry") or []) if not str(x).startswith(f"{r.get('item')}@")]
+                return None
+            AP.log(f"KIT-WAVE RETRY-KEY-LAUNCH {die}/{r.get('item')}: explicit retry key (fix named or INFRA) in the die config overrides SKIP-SAME-INPUT")
         elif _so and (_rb or _fk_same(cfg, st, die, r)):            # OWNER 11-18 (r705 (2)): a relaunch is skipped ONLY on the full input hash of a failed attempt
             _same = _fk_same(cfg, st, die, r)
             if _same:
@@ -17241,6 +17289,7 @@ def fixes_release(AP, cfg, st, notices, rt_sha=None, now=None):
         d = (cfg.get("dies") or {}).get(die)
         if d is not None and ia not in d.setdefault("retry", []):
             d["retry"].append(ia)
+            d.setdefault("_retry_fix", {})[ia] = str(pend[k].get("sha"))           # FLOW-FIX-0100: Fixes-Items names the fix sha
             if not pend[k].get("logged"):
                 pend[k]["logged"] = now
                 AP.log(f"KIT-WAVE FIX-RELAUNCH {die}/{ia}: fix {pend[k].get('sha')} (Fixes-Items) is in rt {pend[k].get('rt')}; the FAILED row relaunches")
@@ -17263,6 +17312,7 @@ def release_pending(cfg, st, rows, merged, notices):
             seen[k] = now_s()
             notices.setdefault(r["die"], []).append(f"{r['retry']} retry released (fix {r['sha']} merged, {r['lane']})")
         rt = d.setdefault("retry", [])
+        d.setdefault("_retry_fix", {}).setdefault(r["retry"], r["sha"])          # FLOW-FIX-0100: a pending retry row names the merged fix sha
         if r["retry"] not in rt:
             rt.append(r["retry"])
 
