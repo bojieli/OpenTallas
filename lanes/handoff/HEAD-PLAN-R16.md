@@ -23,13 +23,20 @@ Proof (job A): plan p4 = p2c + {reach_cap_um 405, relay_site_rule interior}, pat
 (names, depth, sites). p2c without keys + env 405: 26/26 identical to ec4936598992 (no change for other dies / new binds).
 Plan `M/plan/p4.json` f15722674c75.
 
-## Running
-- r16a gates (`M/gates16.sh`, private hardlinked tree `M/tree/s81_head_r16_s0` with patched tools, plan p4, no env): receipt, gen-pass
-  bind + cohort; republish ONLY if cohort DIFF within {hd_serdes, hd_lep0N}, else STOP; strict bind + LATCHECK; G0.
-- unit tests job T.
+## Results
+- Tools on main 745c8f11e4 (pushed via ot-push-main, tests PASS); rt `/srv/opentallas-scratch2/claude/rt/745c8f11e429`.
+- r16a (private tree M/tree/s81_head_r16_s0, lane-clone tools, plan p4 f15722674c75, no env): GEN PASS, BIND PASS, gen-pass cohort
+  DIFF = hd_serdes only (defines; republished), strict cohort 26/26, LATCHECK 329/329, G0 0 errors (`M/g0_r16ab`). R15's G0
+  'receipt refused' row was a gate-script bug (receipt written outside the tree, relative paths broke): receipt now written in-tree.
+  R-REACH-5 warnings left: 4 rr_t<i> rows (hd_spn_end, hd_st_k5, hd_st_m, hd_st_str), unchanged trees/rows vs r13r; 0 rst_rl dangling.
+- r16b = final form: tree M/tree/s81_head_r16b_s0 (R15 tree + tools/{die_plan,autopilot,fleet,precheck} == rt 745c8f11e429),
+  plan p5 1a7d319a9ba6 = p4 + hd_lep0N coll_i3 stations re-spaced (1765,600)/(1765,320) -> (1765,700)/(1765,440): hops 267.6/260/182.4
+  (was 367.6), same 2 stations, 0 cycles. Pinned-rt trees of p5, no env: 26/26 == r13r. Gates: intel2 ~/head-plan-r16/r16b.otrun.log.
+- 300-um hops on signed types (hd_spn be_i/bw_i 850/706, x_o/b_i 340; hd_spn_end 850/706; hd_tile 573/421/398/342) NOT touched:
+  signed, station rows would change their netlists -> next event (Fable F7).
 
 ## Next
-1. r16a pass -> push tools (ot-push-main), re-pin rt, publish tree with the new pin, stage, apply; launch hd_serdes + hd_lep0N
-   (tell OPUS-FIX-HEAD-LEP0N-R2 / FABLE-FIX-HEAD-SERDES-R2; tr2s / sdr2c untouched).
-2. Station rows for the >300 hops on UNSIGNED types only (hd_lep0N coll_i3 368); hd_spn/hd_spn_end/hd_tile are signed -> next event.
-Stop list kept: no apply at 300, no auto-republish of signed DIFF types, no hd_tile relaunch on a depth-5 tree.
+1. r16b PASS -> pack (M/mkpack.py: live_s81_head -> r16b tree), live_tree.py apply --name s81_head_r16_s0 (epyc10,epyc9) with the
+   r11b candidate, publish_gate run, apply_reviewed_tree_marker. Expect only hd_serdes + hd_lep0N blocks to change.
+2. Launch hd_serdes + hd_lep0N on it; tell OPUS-FIX-HEAD-LEP0N-R2 / FABLE-FIX-HEAD-SERDES-R2 (tr2s / sdr2c untouched).
+Stop list kept: no apply at 300, no auto-republish of signed DIFF types, no hd_tile relaunch on a depth-5 tree (tree stays depth 4).
