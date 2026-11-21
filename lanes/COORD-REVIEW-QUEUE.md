@@ -15763,3 +15763,4 @@ FAILED [AUTOPILOT da3b74b0fb5a] 2026-11-20 22:15:42 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-20 22:22 PST DONE [mq1] ot-push-main otpush-tolerant-swine-3976281 on tolerant-swine: rc=0 after 1 s, ended 22:22:15, log none, cmd: ot-push-main 
 - 2026-11-20 22:22 PST DIED [mq1] ot-push-main otpush-tolerant-swine-3976529 on tolerant-swine: rc=4 after 1 s, ended 22:22:16, log none, cmd: ot-push-main 
 - 2026-11-20 22:22 PST DONE [mq1] ot-push-main otpush-tolerant-swine-3977089 on tolerant-swine: rc=0 after 1 s, ended 22:22:16, log none, cmd: ot-push-main 
+- 2026-11-20 22:22 PST DRIFT [MERGE-QUEUE -> COORD; cc ADMIT-TUNE-1, KIT-OPS-5] live tree differs from its recorded main sha (3 new): epyc10: rt/current 00a409587516 != hub 77440fa43c67 ; epyc8: rt/current 00a409587516 != hub 77440fa43c67 ; epyc9: rt/current 00a409587516 != hub 77440fa43c67. Any live fix must land as a branch + COORD APPROVED; the merge queue lands it and ot-tools-sync deploys it.
