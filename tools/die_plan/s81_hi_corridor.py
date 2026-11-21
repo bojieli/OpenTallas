@@ -28,7 +28,7 @@ both sides and the bus crosses the core twice (measured t28/t27 GRT hot gcells: 
   lane-sites PLAN --types RE --out PLAN_OUT [--gs N]   (S81-LANE-BANK) every per-lane bank (hi stage >= gs, every ho
         stage) gets ONE site whose footprint is clean: kit_istations seats the whole lane stage (about 1,046 flops) at
         the bits-weighted centroid of its rows, and rows that leave two vn cores put that centroid in a lane core
-        (t44 ln_0 stage 0 inside ln_9).  All rows of the lane stage take the site; hops <= max(LIMIT, before); a lane
+        (t44 ln_0 stage 0 inside ln_9).  All rows of the lane stage take the site; hops <= max(--lane-lim 400, before); a lane
         that cannot keep its hops keeps its old rows.  Counts, cycles, bits, pins unchanged.
         --add-stage (S81-HI-STAGE)          a type with refused rows: +1 per-lane hi stage on every hi row of that type
                                             (plan hi depth +1, +1 cycle, restage LF_CS_HI_D), then all hops <= 400.
@@ -205,8 +205,15 @@ def lane_banks(t, gs):
     return out
 
 
-def lane_sites(P, rex, gs, mincl, reach=160.0, tries=160):
-    """S81-LANE-BANK: one clean-footprint site per (class, lane, stage) bank; see the module docstring."""
+LANE_LIM = 400.0     # um per hop of a per-lane bank (CBC 405 on placed hops, 5 um site margin; leaf_regrid gates the same number)
+
+
+def lane_sites(P, rex, gs, mincl, reach=160.0, tries=160, lim_um=LANE_LIM, reach2=480.0):
+    """S81-LANE-BANK: one clean-footprint site per (class, lane, stage) bank; see the module docstring.
+    S81-LANE-BANK-ALL (COORD 11-21, rg2 kept the per-row sites on 428 lanes): the hop limit is the CBC hop (lim_um), not
+    the 295 um station planning hop: rows of one lane leave vn u_a and u_b up to 635 um apart, so ONE bank for the lane
+    stage cannot be within 295 um of both.  Candidates come from `reach` round the row centroid, then from `reach2`;
+    a candidate must leave every row able to finish (remaining stages x limit to its pin)."""
     rows = []
     for tn, t in matching(P, rex):
         B = boxes(t); OUT = t.get("outline_um")
@@ -222,7 +229,7 @@ def lane_sites(P, rex, gs, mincl, reach=160.0, tries=160):
         for (cls, cap), es in sorted(lane_rows(t).items()):
             keep = [([list(r) for r in e["regs_um"]], e.get("note")) for e in es]
             hop0 = max(max(_hops(e)) for e in es)
-            lim = max(LIMIT, hop0)
+            lim = max(lim_um, hop0)
             mine, bad = [], None
             j0 = gs if cls == "hi" else 0
             for j in range(j0, max(len(e["regs_um"]) for e in es)):
@@ -236,8 +243,14 @@ def lane_sites(P, rex, gs, mincl, reach=160.0, tries=160):
                         if len(e["regs_um"]) == j + 1:
                             w = max(w, md(p, e["to_um"]))
                     return w
-                cand = sorted((q for q in FP if md(q, c) <= reach), key=lambda q: md(q, c))
-                cand = [q for q in cand if hop(q) <= lim]
+                def ahead(p):          # every row can still reach its pin in its remaining stages
+                    return all(md(p, e["to_um"]) <= (len(e["regs_um"]) - j) * lim + 1e-6 for e in mem)
+                cand = []
+                for rch in (reach, reach2):
+                    cand = sorted((q for q in FP if md(q, c) <= rch), key=lambda q: md(q, c))
+                    cand = [q for q in cand if hop(q) <= lim and ahead(q)]
+                    if cand:
+                        break
                 best = None
                 for q in cand[:tries]:
                     f = seat_bank(q, n, B, OUT, occ + mine)
@@ -826,6 +839,7 @@ def main():
     ap.add_argument("--corridor", type=float, default=30.24)
     ap.add_argument("--min-clear", type=float, default=8.64)
     ap.add_argument("--out"); ap.add_argument("--json")
+    ap.add_argument("--lane-lim", type=float, default=LANE_LIM, help="lane-sites: hop limit of a per-lane bank (um)")
     ap.add_argument("--add-stage", action="store_true",
                     help="sites: a type with refused rows gets one more per-lane hi stage on every hi row (+1 cycle) and is sited again")
     a = ap.parse_args()
@@ -839,7 +853,7 @@ def main():
             json.dump(rep, open(a.json, "w"), indent=1)
         print("HI_CORRIDOR_CHECK", {v: sum(1 for r in rep.values() if r["verdict"] == v) for v in ("OK", "RISK", "OVER")})
     elif a.cmd == "lane-sites":
-        rows = lane_sites(P, a.types, a.gs, a.min_clear)
+        rows = lane_sites(P, a.types, a.gs, a.min_clear, lim_um=a.lane_lim)
         json.dump(P, open(a.out, "w"), indent=1)
         json.dump(rows, open(a.out + ".lane_sites.json", "w"), indent=1)
         bad = [r for r in rows if r["result"] != "sited"]

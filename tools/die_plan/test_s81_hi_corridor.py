@@ -314,18 +314,40 @@ def test_lane_bank_centroid_in_another_lane_is_found_and_lane_sites_fixes_it():
     hi = [e for e in t["internal_stations"] if e["capture"].endswith("g_ln[0].u_l")]
     assert hi[0]["regs_um"] == hi[1]["regs_um"]                       # one site for the whole lane stage
     assert H.clear(hi[0]["regs_um"][0], H.boxes(t)) >= 8.64
-    assert all(max(H._hops(e)) <= H.LIMIT for e in t["internal_stations"])
+    assert all(max(H._hops(e)) <= H.LANE_LIM for e in t["internal_stations"])
     assert [(e["bits"], len(e["regs_um"]), e["from_um"], e["to_um"]) for e in t["internal_stations"]] == \
            [(e["bits"], len(e["regs_um"]), e["from_um"], e["to_um"]) for e in t0["internal_stations"]]
     r = H.check(P, r"t98", 0)["ot_s81sl_leaf__t98"]
     assert r["banks_fp_bad"] == 0 and r["banks_pile_up"] == 0 and r["verdict"] == "OK"
 
 
-def test_lane_sites_refused_lane_keeps_its_rows(monkeypatch):
+def _far_two_vn_plan():
+    """S81-LANE-BANK-ALL: one lane fed from two vn cores 600 um apart (t11 ln_0 form): no single site is within 295 um of both"""
+    cores = [dict(inst="u_lf.u_vn.u_a", module="vn", origin_um=[500.0, 700.0], orient="R0", outline_um=[100.0, 100.0]),
+             dict(inst="u_lf.u_vn.u_b", module="vn", origin_um=[500.0, 100.0], orient="R0", outline_um=[100.0, 100.0]),
+             dict(inst="u_lf.u_vp.g_ln[0].u_l", module="ln", origin_um=[100.0, 393.0], orient="R0", outline_um=[L, L])]
+    st = [dict(bits=256, launch="core:u_lf.u_vn.u_a.hw_d", capture="u_lf.u_vp.g_ln[0].u_l", conn="x", from_um=[500.0, 750.0],
+               regs_um=[[450.0, 620.0], [300.0, 520.0]], to_um=[100.0 + L, 480.0], note=""),
+          dict(bits=256, launch="core:u_lf.u_vn.u_b.hw_d", capture="u_lf.u_vp.g_ln[0].u_l", conn="x", from_um=[500.0, 150.0],
+               regs_um=[[450.0, 280.0], [300.0, 380.0]], to_um=[100.0 + L, 420.0], note="")]
+    return {"partition_types": {"ot_s81sl_leaf__t97": dict(outline_um=[700.0, 900.0], hard_cores=cores, internal_stations=st)}}
+
+
+def test_lane_sites_uses_the_cbc_hop_so_a_lane_fed_from_two_far_vn_cores_is_sited():
+    P = _far_two_vn_plan()
+    rows = H.lane_sites(copy.deepcopy(P), r"t97", 0, 8.64, lim_um=295.0)       # the old planning hop: the lane kept its per-row sites
+    assert any(x.get("kept_old") for x in rows)
+    rows = H.lane_sites(P, r"t97", 0, 8.64)
+    assert rows and all(x["result"] == "sited" for x in rows)
+    es = P["partition_types"]["ot_s81sl_leaf__t97"]["internal_stations"]
+    assert es[0]["regs_um"] == es[1]["regs_um"]                                # one site per lane stage, both rows
+    assert all(max(H._hops(e)) <= H.LANE_LIM + 1e-6 for e in es)
+
+
+def test_lane_sites_refused_lane_keeps_its_rows():
     P = _two_vn_plan()
     before = copy.deepcopy(P)
-    monkeypatch.setattr(H, "LIMIT", 60.0)             # no point is within 60 um of both vn faces and the lane
-    rows = H.lane_sites(P, r"t98", 0, 8.64)
+    rows = H.lane_sites(P, r"t98", 0, 8.64, lim_um=60.0)   # no point is within 60 um of both vn faces and the lane
     assert any(x["result"].startswith("REFUSED") and x.get("kept_old") for x in rows)
     t, t0 = P["partition_types"]["ot_s81sl_leaf__t98"], before["partition_types"]["ot_s81sl_leaf__t98"]
     for e, e0 in zip(t["internal_stations"], t0["internal_stations"]):
