@@ -1,0 +1,30 @@
+{
+ "schema": "fam-qc-coll.rows.v1",
+ "set": "bcd",
+ "supersedes": ["FAM-QC-COLL-rows_a.json", "FAM-QC-COLL-rows_b.json"],
+ "status": "READY for QC-PLAN-R10 (V2); physical proof = private kit (manifest tree main 867126d928d + plan overlay, wave env) in flight",
+ "what": "six default-off defines on coll_core (all on main 867126d928d) + 2 face-codec stations + FABLE-VISUAL-0030 geometry items",
+ "why": "pkw4 final (GRT 20.9 h): read-reg class floor -82; GRT hold repair 55,013 HB4 pads pushed setup to -255 (TNS -27k, 916 ends) on xr_q (fold result), u_rring wd_in (R ring write), ir_q (input pins). ODPRE cuts rdq->out_data, XRPIPE cuts xr_q, RRWD cuts R-ring write, INLOCK makes input-pin hold opposite-edge so repair stops buying pads",
+ "rtl": "main 867126d928d (2ddb19c08b SRDREG, c6c55f5c72 SWDREG+ODPRE, 867126d928 INLOCK+RRWD+XRPIPE); bench qwen_coll_tp8_static_bench 13/13 per define and combined, plain and --qfd",
+ "rows": [
+  {"op": "append", "path": "partition_types.coll_core.verilog_defines", "value": "OT_TP8S_SRDREG"},
+  {"op": "append", "path": "partition_types.coll_core.verilog_defines", "value": "OT_TP8S_SWDREG"},
+  {"op": "append", "path": "partition_types.coll_core.verilog_defines", "value": "OT_TP8S_ODPRE"},
+  {"op": "append", "path": "partition_types.coll_core.verilog_defines", "value": "OT_TP8S_INLOCK"},
+  {"op": "append", "path": "partition_types.coll_core.verilog_defines", "value": "OT_TP8S_RRWD"},
+  {"op": "append", "path": "partition_types.coll_core.verilog_defines", "value": "OT_TP8S_XRPIPE"},
+  {"op": "append", "path": "partition_types.coll_core.internal_stations",
+   "value": {"conn": "u_ctl face codec (epoch_abort/fault/epo -> rx), each of face_0 and face_1", "hops": 3, "leg_um_max": 300,
+             "stations": 2, "cycles": 2, "bits": "status only (3 ends)", "sites": "derive at compose (link_sites), keep-clear of face u_tx.u_mem",
+             "note": "Fable CBC-QK-0130, +2 cycles on status bits (pre-approved)"}},
+  {"op": "note", "path": "lane.coll_core.fixed_cycles",
+   "value": "ODPRE +1 on out_valid/data/last/rank/err (uniform); XRPIPE +1 on the reduce path only; SRDREG/SWDREG/INLOCK/RRWD 0. Book via sync_fixed_cycles (b10 model: data/rank/valid 18->19, err/last 17->18, reduce +1 more)"}
+ ],
+ "fable_visual_0030": [
+  {"op": "stations_by_length", "value": "station rows by measured placed length on the 6,975 hops >300 um (max 1,446; centre (440,950) -> E face, NW corner -> W edge), one per 300 um (300 um hop cap), via link_sites at compose"},
+  {"op": "tap_share", "value": "srl/rrl relay chains (hold -390, 160 um) on ONE tap per chain (TAP-GRID-R2); 2-stage reset relay where the path is one cycle"},
+  {"op": "covered", "value": "u_fs detour of rdq->out_data (1,175 um for 439 um) is cut by ODPRE (register on the read side of u_fs)"},
+  {"op": "street", "value": "one 60 um street instead of two 25 um at x 215/350 (core move, shapes kept, no outline growth) for the 606 slit stations"}
+ ],
+ "fallback": "if the private kit shows INLOCK half-cycle input setup costs more than it saves: drop OT_TP8S_INLOCK, keep the rest, add one clock tap per input bank (structural hold)"
+}
