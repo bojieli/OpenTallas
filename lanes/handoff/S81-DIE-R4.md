@@ -166,3 +166,8 @@ Rules: cd / first; posts via bin/post.sh; kit_wave via kit_wave_edit; cancel onl
 ## 11-20 19:0x CLAND band
 - col_h9_r0_p3 cl0cd90c0e family: J5 reset relay rst_rl_137 seated in the u_ha/u_hb macro channel. Handed to J6 (plan/tool).
 - Family held: hold_items col_h9_r0_p3__t1__cl0cd90c0e__*. Not shared with KV (KV cell is cland_ft9).
+
+## 11-20 19:2x EVENT-CENSUS
+- 62 MON_UM types: all held now (kit_wave c4f1e07c added leaf t2/t10/t56/t8 and slice_station t14/t17/t20/t23).
+- Leaf reps now: t52, t39, t25__cl55642d17, t28, t44__clf6cf8492, t31 (new 1356 rep). t8 class has no rep.
+- Census tools: tools/precheck/event_census.py runs after every apply (holds key EVENT-CENSUS).
