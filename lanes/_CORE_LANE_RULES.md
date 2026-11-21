@@ -96,3 +96,6 @@ OWNER, verbatim: "real near misses should still use late stage fixes, but do not
 - One late-stage ECO iteration per routed form. If it does not sign off, no second iteration: GEOMETRY + REDESIGN, pin cycles first.
 - Near miss, COORD's working numbers: setup/hold worse by no more than 30 ps on no more than 100 endpoints, no more than 20 slew violations, DRC under 50, and the cause understood and local. Above that = large miss: no ECO. Port-only hold needs no ECO; it goes to the parent.
 - An iteration already running finishes and is read. Nothing starts after it.
+
+## WAITER-STD-1600 11-20: wait with ot-wait, never pgrep -f
+- Never wait with `while pgrep -f ...; do sleep; done`: the waiter matches itself and never ends (181 such shells on the fleet; the lepe proof7 exit 2 went unseen for 16 h). Run `export OT_LANE=<LANE>`, start ot-run (`&`) or ot-push-main, then `ot-wait otrun-$(hostname)-$!` (or `ot-wait <oth- unit>`, or `ot-wait <exact pid> --cmdline <text>`). It exits with the job rc (66 not found, 70 plain pid ended, 71 client killed, 124 timeout). ot-run and ot-push-main write ~/.local/state/ot-status/<name>.json and post DONE/DIED under your lane name themselves.
