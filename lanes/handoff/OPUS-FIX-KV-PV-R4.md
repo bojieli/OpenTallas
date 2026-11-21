@@ -23,3 +23,10 @@ epyc7 same path (repo = lane clone used for the push, cone tools+rtl+physical/co
 - u_bin reset rows: RESET-RELAY-GEN-R3 had not posted by 20:4x; fallback rows in the D27 file.
 - After D27 applies: station_route_spread on pv_v12's first placed D27 kit; one pv representative to CTS/route/sign-off, then siblings; export
   signed to AGIdock + rtx-pro ~/signed-export-1114. No sign-off or export from this lane yet.
+
+## Update 2026-11-20 20:4x PST (read first)
+- COORD ruled the 405-era re-site into D27: lanes/handoff/OPUS-FIX-KV-PV-R4-resite-rows.json (355 rows, 10 types, supersedes the R3 fault rows;
+  per-type hops before/after and +cycles in the post). Made by epyc7 opus-fix-kv-pv-r4/srs_all.sh + agg.py (outputs srs/*.rows.json, *.report.json).
+  v6n, v8, v12: no D25e3 placed geom; run srs_all-style on their first D27 placed kit.
+- Waits armed (my Claude session background tasks; script hub ~/tmp/okpvr4/wait_ev.sh TAG KIT REPORT PID, 10-min polls): v8m congestion-5.rpt
+  (client 2907386), v8c (2906217), v8q 3_detailed_place.rpt (client 1593537, kit launched 04:27 UTC). Watcher watch_r4.sh also posts.
