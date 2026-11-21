@@ -30,6 +30,7 @@ import hashlib
 import json
 import math
 import os
+import re
 import sys
 from pathlib import Path
 from threading import RLock
@@ -1566,18 +1567,33 @@ def _assign_py(xy, sinks, cap, max_extra_um, max_distance_um=None):
     return load, far, asg
 
 
-def bins_from_dump(dump, bin_um=10.8, origin=(0.0, 0.0)):
+TAP_ROOT_RE = re.compile(r"^clk(_t\d+)?$")   # the tap-tree roots (check.read_measured_sinks keeps the same set)
+
+
+def bins_from_dump(dump, bin_um=10.8, origin=(0.0, 0.0), tap_net=False):
     """{"bin_um", "bins": [[x, y, n]]} of the clocked registers (DFF* / ICG* / SDF* / DHL* / DLL* masters) of an odb
-    geometry dump ({"cells": [[name, x0, y0, x1, y1, master], ...]}), binned at bin_um, sites at the bin centres."""
+    geometry dump ({"cells": [[name, x0, y0, x1, y1, master], ...]}), binned at bin_um, sites at the bin centres.
+    tap_net (TAP-GRID-R3 11-21, COORD ruling): keep only registers whose netlist clock root (dump clock_root, from
+    tap_resolve --dump) is a tap-tree root clk / clk_t<i>; forwarded clocks (fclk_in_*), early core taps, edge clocks
+    and unresolved roots are left out and counted in excluded_roots.  The file then says basis "tap_net"."""
     import collections
-    c = collections.Counter()
-    for _, x0, y0, x1, y1, m in dump["cells"]:
-        if not any(k in m for k in ("DFF", "ICG", "SDF", "DHL", "DLL")):
+    roots = dump.get("clock_root")
+    if tap_net and (roots is None or len(roots) != len(dump["cells"])):
+        raise ValueError("bins --tap-net needs a dump with clock_root per cell (tap_resolve --dump from TAP-GRID-R3 on)")
+    c, ex = collections.Counter(), collections.Counter()
+    for k, (_, x0, y0, x1, y1, m) in enumerate(dump["cells"]):
+        if not any(q in m for q in ("DFF", "ICG", "SDF", "DHL", "DLL")):
+            continue
+        if tap_net and not TAP_ROOT_RE.match(roots[k]):
+            ex[re.sub(r"\d+", "N", roots[k]) if not roots[k].startswith("unresolved") else roots[k]] += 1
             continue
         cx, cy = (x0 + x1) / 2 - origin[0], (y0 + y1) / 2 - origin[1]
         c[(int(cx // bin_um), int(cy // bin_um))] += 1
-    return dict(bin_um=bin_um, n=sum(c.values()),
-                bins=[[round((i + 0.5) * bin_um, 3), round((j + 0.5) * bin_um, 3), n] for (i, j), n in sorted(c.items())])
+    out = dict(bin_um=bin_um, n=sum(c.values()),
+               bins=[[round((i + 0.5) * bin_um, 3), round((j + 0.5) * bin_um, 3), n] for (i, j), n in sorted(c.items())])
+    if tap_net:
+        out.update(basis="tap_net", excluded=sum(ex.values()), excluded_roots=dict(ex.most_common(40)))
+    return out
 
 
 def sink_taps(P, tn):
@@ -1650,10 +1666,13 @@ if __name__ == "__main__":
     ap.add_argument("dump", help="odb dump JSON (cells: [name, x0, y0, x1, y1, master]; outline: [x0, y0, x1, y1])")
     ap.add_argument("--bin-um", type=float, default=10.8)
     ap.add_argument("--src", default="", help="provenance note stored in the file")
+    ap.add_argument("--tap-net", action="store_true", help="TAP-GRID-R3: only registers on a tap-tree root net (clk / clk_t<i>) "
+                    "by the dump's netlist clock_root (basis tap_net)")
     ap.add_argument("-o", "--out", required=True)
     a = ap.parse_args()
     d = json.load(open(a.dump))
-    b = bins_from_dump(d, a.bin_um, tuple(d.get("outline", [0, 0])[:2]))
+    b = bins_from_dump(d, a.bin_um, tuple(d.get("outline", [0, 0])[:2]), tap_net=a.tap_net)
     b["src"] = a.src
     open(a.out, "w").write(json.dumps(b, separators=(",", ":")) + "\n")
-    print(f"{a.out}: {b['n']} registers in {len(b['bins'])} bins of {a.bin_um} um")
+    print(f"{a.out}: {b['n']} registers in {len(b['bins'])} bins of {a.bin_um} um"
+          + (f" (tap_net; {b['excluded']} off the tap nets: {b['excluded_roots']})" if a.tap_net else ""))

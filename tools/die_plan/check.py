@@ -1091,6 +1091,16 @@ def check_xtap_latency(P, R, max_msgs=20):
                 **st)
 
 
+def _bins_basis(P, ck):
+    """the sink_bins_file basis ("tap_net" = only registers on a tap-tree root net by the netlist, TAP-GRID-R3), "" if unread"""
+    import taps as TP
+    try:
+        _pp = getattr(P, "path", None)
+        return json.loads(TP.input_path(ck["sink_bins_file"], Path(_pp).parent if _pp else None).read_text()).get("basis", "")
+    except Exception:
+        return ""
+
+
 def tap_sink_loads(P):
     """XTAP-SWEEP-1 11-11 (COORD): per-tap clock sink counts from the PLAN, [(type, tap, sinks, cap)] + stats.
     Cap = gen_phys._tap_cap (clock.tap_max_sinks, else 3000 grid / 1500 density = the kit's OT_TAP_MAX_SINKS; the same
@@ -1103,7 +1113,8 @@ def tap_sink_loads(P):
     built is counted `uncomputable` (never guessed)."""
     import gen_phys
     import taps as TP
-    rows, stats = [], dict(types=0, computed=0, uncomputable=0, inventory_types=0, bound_types=0, taps=0, max_sinks=0)
+    rows, stats = [], dict(types=0, computed=0, uncomputable=0, inventory_types=0, bound_types=0, taps=0, max_sinks=0,
+                           tap_net_types=0)
     for tn in sorted(P.types):
         t = P.types[tn]
         stats["types"] += 1
@@ -1120,6 +1131,8 @@ def tap_sink_loads(P):
         stats["computed"] += 1
         ck = t.get("clock", {}) or {}
         stats["inventory_types" if (ck.get("sink_bins_file") or ck.get("sink_sites_um")) else "bound_types"] += 1
+        if ck.get("sink_bins_file") and _bins_basis(P, ck) == "tap_net":
+            stats["tap_net_types"] += 1
         cap = gen_phys._tap_cap(t)
         for (name, _x, _y), (n, _far) in zip(tp, loads):
             stats["taps"] += 1
@@ -1147,7 +1160,8 @@ def check_tap_sink_cap(P, R, max_msgs=20, severity="warn"):
     if over:
         R.warn("tap_sink_cap", f"[tapcap-count] {len(over)} taps over cap in {len(by)} types (max {st['max_sinks']} "
                f"sinks/tap; {st['computed']}/{st['types']} types computed, {st['uncomputable']} not computable; "
-               f"{st['inventory_types']} with a sink inventory, {st['bound_types']} planned face/ft sinks only = lower bound)")
+               f"{st['inventory_types']} with a sink inventory ({st['tap_net_types']} tap-net by netlist clock root, the rest "
+               f"unqualified: may hold registers of other clock nets), {st['bound_types']} planned face/ft sinks only = lower bound)")
     return dict(taps_over=len(over), types_over=len(by), worst=max((r[2] for r in over), default=0),
                 top_types=sorted(by.items(), key=lambda kv: -kv[1])[:5], **st)
 

@@ -28,7 +28,8 @@ and taps of a few sinks are allowed (--min-new, default 8 in this mode): far str
 spilling into a neighbour's region.  The report prints each tap's W + H and the count of taps still over the limit.
 
 Register dump: `openroad -python tap_resolve.py --dump` with env ODB, OUT (cells: [name, x0, y0, x1, y1, master],
-macros, outline; um), the format of taps.py bins.
+macros, outline; um), the format of taps.py bins.  clock_root[i] (TAP-GRID-R3) = the block input port whose net clocks
+cells[i], traced through buffers / inverters / ICGs (trace_root); `taps.py bins --tap-net` keeps only the tap-net ones.
 """
 import json, math, os, re, statistics as st, sys
 
@@ -37,13 +38,72 @@ STEP_UM = 2.16
 REG_PREFIX = ("DFF", "ICG", "SDF", "DHL", "DLL")
 
 
+CLOCK_PIN_NAMES = ("CLK", "CK", "CLKN", "GCLK_IN")
+ROOT_MAX_DEPTH = 64
+
+
+def trace_root(start, upstream, max_depth=ROOT_MAX_DEPTH):
+    """clock root of a register clock pin, following its net upstream (TAP-GRID-R3 11-21, COORD ruling: a tap's load is
+    the registers whose CK is on that tap's net, read from the netlist, never from a register's position).
+    upstream(node) -> ("port", name) when the node's net is driven by a block input port, ("next", node') to continue
+    through a single-clock-path driver (BUF / INV / clock buffer / ICG CLK input), ("stop", label) for anything else.
+    Returns the port name, or "unresolved:<label>" (a loop or depth over max_depth is "unresolved:depth")."""
+    node, seen = start, set()
+    for _ in range(max_depth):
+        if node in seen:
+            return "unresolved:loop"
+        seen.add(node)
+        kind, val = upstream(node)
+        if kind == "port":
+            return val
+        if kind == "stop":
+            return f"unresolved:{val}"
+        node = val
+    return "unresolved:depth"
+
+
+def _odb_clock_iterm(inst):
+    """the clock input ITerm of a register / latch / ICG (LEF USE CLOCK, else a CLOCK_PIN_NAMES name), or None"""
+    cand = None
+    for it in inst.getITerms():
+        mt = it.getMTerm()
+        if not it.isInputSignal():
+            continue
+        if mt.getSigType() == "CLOCK":
+            return it
+        if mt.getName() in CLOCK_PIN_NAMES and cand is None:
+            cand = it
+    return cand
+
+
+def _odb_upstream(iterm):
+    """trace_root upstream step on an odb input ITerm"""
+    net = iterm.getNet()
+    if net is None:
+        return ("stop", "no_net")
+    for bt in net.getBTerms():
+        if bt.getIoType() in ("INPUT", "INOUT"):
+            return ("port", bt.getName())
+    drv = [it for it in net.getITerms() if it.isOutputSignal()]
+    if len(drv) != 1:
+        return ("stop", f"drivers{len(drv)}")
+    inst = drv[0].getInst(); m = inst.getMaster().getName()
+    if m.startswith("ICG"):
+        ck = _odb_clock_iterm(inst)
+        return ("next", ck) if ck is not None else ("stop", m)
+    ins = [it for it in inst.getITerms() if it.isInputSignal()]
+    if len(ins) == 1 and not m.startswith(REG_PREFIX):
+        return ("next", ins[0])
+    return ("stop", m)
+
+
 def dump_odb(odb_path, out_path):
     import odb
     db = odb.dbDatabase.create()
     odb.read_db(db, odb_path)
     blk = db.getChip().getBlock()
     u = float(blk.getDbUnitsPerMicron())
-    cells, macros = [], []
+    cells, macros, roots = [], [], []
     for i in blk.getInsts():
         m = i.getMaster(); n = m.getName(); bb = i.getBBox()
         r = [i.getName(), bb.xMin() / u, bb.yMin() / u, bb.xMax() / u, bb.yMax() / u, n]
@@ -51,10 +111,15 @@ def dump_odb(odb_path, out_path):
             macros.append(r)
         elif n.startswith(REG_PREFIX):
             cells.append(r)
+            ck = _odb_clock_iterm(i)
+            roots.append(trace_root(ck, _odb_upstream) if ck is not None else "unresolved:no_clock_pin")
     d = blk.getDieArea()
-    json.dump({"outline": [d.xMin() / u, d.yMin() / u, d.xMax() / u, d.yMax() / u], "cells": cells, "macros": macros},
+    # clock_root[i] = the block input port clocking cells[i] (TAP-GRID-R3); readers of the 6-field cells rows are unchanged
+    json.dump({"outline": [d.xMin() / u, d.yMin() / u, d.xMax() / u, d.yMax() / u], "cells": cells, "macros": macros,
+               "clock_root": roots, "clock_root_basis": "odb CK net traced through BUF/INV/ICG to a block input port"},
               open(out_path, "w"))
-    print("TAP_RESOLVE_DUMP", len(cells), "registers", len(macros), "macros")
+    print("TAP_RESOLVE_DUMP", len(cells), "registers", len(macros), "macros", sum(1 for q in roots if q.startswith("unresolved")),
+          "unresolved clock roots")
 
 
 def parse_cts_log(text):
