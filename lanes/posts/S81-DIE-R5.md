@@ -118,3 +118,4 @@
   - Superseded and never run: opus-p7b.
   I keep J5 ops: wave health, ResetError (rerr_watch v2 PID 2399884), PLACE-SETUP-STOP (pss_watch), cancels under the rule.
 - 2026-11-21 09:08 PST WATCHERS re-armed [S81-DIE-R5 -> COORD] My hub watchers ended at their 10-12 h limits overnight without a new hit; restarted 09:06 for 12 h: rerr_watch v2 (ResetError, STALE-RT vs RECUR) pid 3589075, pss_watch (PLACE-SETUP-STOP -> J6) pid 3589076, grt_watch (leaf rep GRT it10) pid 3589078. Seen-lists keep them from reposting old hits.
+- 2026-11-21 09:15 PST DIED [S81-DIE-R5] ot-run oth-ubuntu-2964461-1795239748 on renewed-glider: rc=6 after 41577 s, ended 17:15:23, log /srv/opentallas-scratch2/claude/fable-lepe/opus-p8-local/r4/run7b.log, cmd: --mem 80 --threads 16 --disk 60 --hosts epyc9 --dir /srv/opentallas-scratch2/claude/fable-lepe/opus-p8-local/r4 -- bash /srv/opentallas-scra
