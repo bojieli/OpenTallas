@@ -116,7 +116,7 @@ def test_form_r_and_l(tmp_path):
     assert row["inst"] == "u_u_land" and row["port"] == "rst_n" and row["side"] == "sink"
     L = abs(995 - 160) + abs(10 - 310)
     assert row["D"] == -(-L // 300) - 1 == 3
-    st = [t["relay_sites"][f"u_y_xd_u_u_land_rst_n_k0_s{s}_q"] for s in range(3)]
+    st = [t["relay_sites"][f"u_y_xd_u_u_land_rst_n_k0_{s}.q"] for s in range(3)]
     hops = [abs(a[0] - b[0]) + abs(a[1] - b[1]) for a, b in zip([[995, 10]] + st, st + [c])]
     assert max(hops) <= 300
     assert rep["added_reset_cycles"] == 3 and rep["legs_over_after"] == 0 and rep["legs_over_before"] == 2
@@ -135,8 +135,8 @@ def test_kit_rtl_stages_the_row_and_bind_retaps(tmp_path):
     # KIT-RD-1 stages the form L row; the stage wires carry the names reset_leg_plan sites
     btxt, rec = KRD.apply(txt, "x", t["relay_depth"], lambda i: "u_" + RLP.sv_id(i), RLP.sv_id)
     assert rec["applied"] == 1
-    for s in range(3):
-        assert f"u_y_xd_u_u_land_rst_n_k0_s{s}_q" in btxt
+    for s in range(3):     # the sited key is <stage instance>.q (Yosys flop name of the ot_dp_dly stage)
+        assert f"ot_dp_dly #(.W(1), .D(1)) u_y_xd_u_u_land_rst_n_k0_{s} (" in btxt
 
 
 def test_apply_inst_taps_fail_closed():

@@ -50,8 +50,9 @@ REACH_UM = 300.0
 MAX_D = 4                         # schema relay_depth.D maximum
 LOCAL = re.compile(r"^(?P<g>(?:.*?[./])?(?:u_rstr|u_rr|u_rst_relay\w*|u_rrelay\w*|g_rsreg(?:\[\d+\])?|rst_q))(?=[./\[$]|$)")
 TREE_CELL = re.compile(r"^(?:u_rrl_\d+|u_srl_\d+|u_rst_root|u_rst_in|u_rsync_t\d+|u_cland_reset\w*)(?:[./_]|$)")
-# kit-rtl stage flop name (kit_relay_depth.apply: wire {base}_s{s}_q, base u_y_xd_<sid>_<port>_k<row>)
-STAGE_KEY = "u_y_xd_{sid}_{port}_k{k}_s{s}_q"
+# kit-rtl stage flop name: kit_relay_depth.apply instance {base}_{s} (ot_dp_dly, base u_y_xd_<sid>_<port>_k<row>); Yosys names
+# its flop <inst>.q (seen on the S81 lepe_nh_mus_LP t1 proof netlist: u_y_xd_u_u_land_rst_n_k0_0.q$_DFF_P_)
+STAGE_KEY = "u_y_xd_{sid}_{port}_k{k}_{s}.q"
 
 
 class LegError(ValueError):
