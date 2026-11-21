@@ -1271,7 +1271,9 @@ module dsdv_bk_dsp #(parameter integer D = 0) (input wire ck, input wire rn, inp
     generate if (D == 0) begin : g_w
         assign cv = octl; assign cd = fd; assign cl = fl; assign wf = 1'b0;
     end else begin : g_r
-        reg [D-1:0] v; reg [1:0] sd [0:D-1]; reg [D-1:0] sl; reg wq;
+        // S81-BKSEL-R5: keep sd / sl stage 0: without it yosys merges it with the u_ids.cp copy of the same vo_s bit (the placed R5 chain then
+        // had 3 hops, not 4, over the 1,022 um cp -> dst route)
+        reg [D-1:0] v; (* keep = "true" *) reg [1:0] sd [0:D-1]; (* keep = "true" *) reg [D-1:0] sl; reg wq;
         integer i;
         always @(posedge ck or negedge rn)
             if (!rn) v <= {D{1'b0}};
