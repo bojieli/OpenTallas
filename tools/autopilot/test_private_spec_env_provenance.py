@@ -161,3 +161,35 @@ def test_config_from_hub_when_not_local():
     txt = KW.private_config_text(None, "intel2", read=lambda AP: "", ssh=lambda argv, **k: (calls.append(argv), R())[1])
     assert txt == '{"dies": {}}' and calls[0][-2] == "intel2" and "show HEAD:autopilot/kit_wave.json" in calls[0][-1]
     assert KW.private_config_text(None, "intel2", read=lambda AP: '{"dies": {"x": {}}}', ssh=None) == '{"dies": {"x": {}}}'
+
+
+def _fake_rt(root, sha):
+    d = root / sha[:12]
+    (d / "tools" / "autopilot").mkdir(parents=True)
+    (d / "tools" / "autopilot" / "rt_launch_tree.sh").write_text("#\n")
+    (root / f"{sha[:12]}.manifest.json").write_text(json.dumps({"sha": sha}))
+    return d
+
+
+def test_private_rt_declared_and_recorded(tmp_path, monkeypatch):
+    sha = "36f47f8037" + "ab" * 15
+    d = _fake_rt(tmp_path, sha)
+    assert KW.private_rt_fields(sha[:12], rt_root=tmp_path) == {"tools_rt": str(d), "tools_sha": sha}
+    with pytest.raises(ValueError):
+        KW.private_rt_fields("zz", rt_root=tmp_path)
+    with pytest.raises(ValueError):
+        KW.private_rt_fields("0123456789ab", rt_root=tmp_path)
+    with pytest.raises(ValueError):                      # 12-hex dir of another commit
+        KW.private_rt_fields(sha[:12] + "ff", rt_root=tmp_path)
+    real = KW.private_rt_fields
+    monkeypatch.setattr(KW, "private_rt_fields", lambda s, **k: real(s, rt_root=tmp_path))
+    c = wave_cfg()
+    wave = KW.spec_for(c, D, I, "intel2")
+    sp = KW.private_spec(c, D, I, "intel2", rt=sha[:12], lane="FLOW-X")
+    assert sp["tools_rt"] == str(d) and sp["tools_sha"] == sha and "gen_tools_manifest_sha" not in sp
+    assert sp["private"]["rt"]["sha"] == sha and sp["private"]["rt"]["rt"] == str(d)
+    assert sp["gen_env"] == wave["gen_env"]              # --rt is no env change: ENV-PROVENANCE passes unchanged
+    rec = KW.env_provenance_decl(sp, tmp_path / "spec.json")
+    assert rec["tools_sha"] == sha and rec["rt_declared"]["sha"] == sha and rec["source"] == "private-spec"
+    assert EP.env_diff(rec["wave_env"], rec["env"]) == []
+    assert "rt" not in KW.private_spec(c, D, I, "intel2")["private"]

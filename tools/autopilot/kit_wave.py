@@ -8216,7 +8216,7 @@ def env_provenance_decl(sp, spec_path, ap_dir=None):
             "env": env, "wave_env": dict(pv.get("wave_env") or {}) if pv else env, "plan_derived": list((pv or {}).get("plan_derived") or []),
             "ab": sp.get("env_ab") or None, "flow_tag": env.get("OT_FLOW_TAG", ""), "gen_args": list(sp.get("gen_args") or []),
             "wave_gen_args": list((pv or {}).get("wave_gen_args") or sp.get("gen_args") or []), "plan": sp.get("plan"), "src": sp.get("src"),
-            "lane": (pv or {}).get("lane", "")}
+            "lane": (pv or {}).get("lane", ""), "tools_sha": sp.get("tools_sha") or "", "rt_declared": (pv or {}).get("rt") or None}
 
 
 def private_spec_stale(sp, cfg=None):
@@ -8280,8 +8280,29 @@ def private_config_text(AP, hub=None, read=None, ssh=None):
         return ""
 
 
+def private_rt_fields(sha, root=None, rt_root=None):
+    """FLOW-CLKGRT-1121 (COORD): private-spec --rt SHA = the declared rt/<sha12> snapshot whose tools/ + physical/common_flow this private
+    kit runs (gen, kit_rtl, every stage), instead of the scheduler's rt or the item's src-tree gen pin.  So an A/B of a new flow tcl runs on an
+    existing bind made on an older runtime: gen / kit_rtl use the bind's runtime, and the stage flow refresh (FLOW-FIX-2045, rt/current)
+    still brings the newer flow scripts.  The snapshot must exist on this host (the hub pushes it to the gen host's mirror).
+    -> {tools_rt, tools_sha}; raises ValueError on a bad / absent sha"""
+    sha = str(sha or "").strip().lower()
+    if not re.fullmatch(r"[0-9a-f]{12,40}", sha):
+        raise ValueError(f"--rt {sha!r}: a main commit sha (12-40 hex)")
+    if rt_root is None:
+        rt, _ = scheduler_rt(root)
+        rt_root = os.path.dirname(rt) if rt else os.path.dirname(os.path.realpath(RT_CURRENT))
+    d = os.path.join(str(rt_root), sha[:12])
+    if not os.path.isfile(os.path.join(d, "tools", "autopilot", "rt_launch_tree.sh")):
+        raise ValueError(f"--rt {sha}: no rt snapshot {d} on this host (ot-tools-sync materialize it first)")
+    _, full = scheduler_rt(d)
+    if not str(full or "").lower().startswith(sha):
+        raise ValueError(f"--rt {sha}: snapshot {d} is commit {full}")
+    return {"tools_rt": d, "tools_sha": full}
+
+
 def private_spec(cfg, die, item, hub, plan=None, tree=None, overlays=(), ab=(), why="", lane="", work=None, kind="type", src_sha=None,
-                 host=None, bind_out=None, src_manifest=None):
+                 host=None, bind_out=None, src_manifest=None, rt=None):
     """FLOW-PROC-A (FABLE-FLOW-0800 class a): the spec of a PRIVATE kit of die/item = the item's wave spec computed NOW (spec_for + rt tools,
     the same functions launch() uses: env, gen args, flow_tag), with only plan, tree and overlay replaced.  Env values and kit_rtl / gen_args paths
     under the die tree are rewritten to the private tree (those env keys are plan_derived).  ab = ["KEY=VAL" | "KEY=" (unset)] is the deliberate A/B
@@ -8298,6 +8319,12 @@ def private_spec(cfg, die, item, hub, plan=None, tree=None, overlays=(), ab=(), 
         sp["ot_run_note"] = f"hub ot_run override not on this host ({e}); {OT_RUN}"
     if not sp.get("gen_tools_manifest_sha"):
         sp.update(rt_tools_fields(cfg, die))
+    rt_decl = None
+    if rt:                                               # FLOW-CLKGRT-1121: --rt SHA (declared tools runtime; recorded, not an env key)
+        f = private_rt_fields(rt)
+        rt_decl = {"sha": f["tools_sha"], "rt": f["tools_rt"], "wave_tools_rt": sp.get("tools_rt") or "",
+                   "wave_tools_sha": sp.get("tools_sha") or "", "wave_gen_tools_manifest_sha": sp.pop("gen_tools_manifest_sha", "") or ""}
+        sp.update(f)
     wave = {"env": dict(sp["gen_env"]), "gen_args": list(sp["gen_args"]), "plan": sp["plan"], "src": sp["src"], "kit_rtl": copy.deepcopy(sp.get("kit_rtl") or {})}
     derived = []
     if tree and os.path.abspath(tree).rstrip("/") != str(sp["src"]).rstrip("/"):
@@ -8351,6 +8378,8 @@ def private_spec(cfg, die, item, hub, plan=None, tree=None, overlays=(), ab=(), 
     sp["private"] = {"of": f"{die}/{item}", "lane": lane, "created": now_s(), "wave_env": wave["env"],
                      "wave_env_sha": hashlib.sha256(json.dumps(wave["env"], sort_keys=True).encode()).hexdigest()[:16],
                      "wave_gen_args": wave["gen_args"], "wave_plan": wave["plan"], "wave_src": wave["src"], "plan_derived": sorted(derived)}
+    if rt_decl:
+        sp["private"]["rt"] = rt_decl
     return sp
 
 
@@ -8368,7 +8397,8 @@ def private_spec_cmd(a):
     lane = a.lane or os.environ.get("OT_LANE", "")
     try:
         sp = private_spec(cfg, a.die, a.item, hub, plan=a.plan, tree=a.tree, overlays=a.overlay, ab=a.ab, why=a.why, lane=lane,
-                          work=a.work, kind=a.kind, src_sha=a.src_sha, host=a.host, bind_out=a.bind_out, src_manifest=a.src_manifest)
+                          work=a.work, kind=a.kind, src_sha=a.src_sha, host=a.host, bind_out=a.bind_out, src_manifest=a.src_manifest,
+                          rt=a.rt)
     except ValueError as e:
         print(f"private-spec: {e}", file=sys.stderr)
         return 2
@@ -8378,6 +8408,7 @@ def private_spec_cmd(a):
     diff = EP.env_diff(sp["private"]["wave_env"], sp["gen_env"])
     print(f"private-spec {a.die}/{a.item}: {out / 'spec.json'}  env=wave" + (f"+{len(diff)}({','.join(diff)})" if diff else "")
           + f"  plan {sp['plan']}  tree {sp['src']}" + (f"  overlay {sp['type_overlay']}" if sp.get("type_overlay") else "")
+          + (f"  rt {sp['tools_sha'][:12]} (declared --rt)" if (sp.get("private") or {}).get("rt") else "")
           + f"  work {sp['gen_host']}:{sp['work']}")
     print(f"build: python3 -I {Path(__file__).resolve()} run-item {out / 'spec.json'}   (result.json next to the spec; run_kit.sh checks ENV-PROVENANCE before place)")
     return 0
@@ -18101,6 +18132,9 @@ def main(argv=None):
     ps_.add_argument("--src-manifest", choices=("on", "off"), help="off: no src tree manifest check (a private tree without .src-manifest.json)")
     ps_.add_argument("--hub", help="coord hub to read the config from when this host has none (default $OT_HUB_NAME or intel2)")
     ps_.add_argument("--config", help="kit_wave.json file instead of the hub autopilot/kit_wave.json")
+    ps_.add_argument("--rt", metavar="SHA", help="FLOW-CLKGRT-1121: declared tools runtime = rt/<sha12> snapshot for gen / kit_rtl / the launch tree (e.g. the "
+                                               "runtime the bind was made on), recorded in spec private.rt + kit_env_provenance.json; flow scripts are still "
+                                               "refreshed from rt/current at each stage (FLOW-FIX-2045), so new flow tcl reach the kit; env and ENV-PROVENANCE unchanged")
     rc_ = sub.add_parser("reclassify", help="recompute class/reason of FAIL records from their stored stage logs "
                                             "with the current RULES (dry run unless --write)")
     rc_.add_argument("--write", action="store_true", help="update the state + kit_wave_stages.tsv (under kit_wave.lock)")
