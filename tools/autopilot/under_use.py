@@ -70,6 +70,29 @@ def row_classes(items, cfg):
     return out
 
 
+# FLOW-OPS-0900 11-21 (COORD ruling on fix 2 (3), owner rule "superseded re-signs go last, on spare capacity only"): a launch gate class that
+# means a current-plan / plan-event row is waiting for admission.  Holds, running and failed rows are not waiting for capacity.
+WAITING_GATE_RE = re.compile(r"^gate:(?:disk_wait|q_(?:no_queue_status|none|queued|pending|enqueued|submitted|wait[\w-]*))$")
+
+
+def spare_admission(status_text, items, cfg, jobs=()):
+    """-> (spare, why): True only when the gen hosts have idle threads AND no current-plan kit-wave row and no autopilot queue row waits to be
+    admitted.  Unknown host status = not spare (the lowest-priority work waits)."""
+    hosts = host_idle(status_text)
+    if not hosts:
+        return False, "ot-run --status unreadable"
+    idle = sum(h["idle"] for h in hosts.values())
+    if idle <= 0:
+        return False, "0 idle threads on %d gen hosts" % len(hosts)
+    waiting = Counter(c for c in row_classes(items, cfg).values() if WAITING_GATE_RE.match(c))
+    if waiting:
+        return False, "%d current-plan row(s) wait for admission (%s)" % (sum(waiting.values()), ", ".join("%s=%d" % kv for kv in waiting.most_common(3)))
+    queued = sum(1 for j in (jobs or ()) if isinstance(j, dict) and j.get("status") is None)
+    if queued:
+        return False, "%d autopilot queue row(s) not yet submitted" % queued
+    return True, "%d idle threads, no row waiting" % idle
+
+
 def hold_counts(items, cfg):
     """-> Counter of 'kind' -> rows.  ENQUEUED rows of a die whose hold_items match = 'hold_items:<kind>'; ROUTE-HELD rows =
     'route_hold:<kind>'; any hold or reason text that names tree_switch / tree-switch is counted as 'tree_switch' instead."""

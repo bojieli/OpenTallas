@@ -95,10 +95,55 @@ class TestManifestCount(Base):
         taken = ["flow-20261121-a-qc", "flow-20261121-b-s81", "flow-20261120-c-qc"]
         self.assertEqual(self.ap.next_flow_tag_name("20261121", taken, "kv"), "flow-20261121-c-kv")
 
-    def test_pin_tag_cut_once(self):
+    def _c3(self):
         (self.repo / "tools/die_plan/signoff.py").write_text("v3\n")
         self.g("add", "."); self.g("commit", "-qm", "flow v3")
-        c3 = self.g("rev-parse", "HEAD")
+        return self.g("rev-parse", "HEAD")
+
+    def _canary(self, src, verdict="PASS", done=True, name="run1"):
+        d = Path(self.ap.CANARY_ROOT) / name
+        d.mkdir(parents=True)
+        (d / "canary_meta.json").write_text(json.dumps({"spec": {"die": "qwen_compute", "item": "ref"},
+                                                         "src": "/x/flow-canary/sources/" + src, "src_commit": src}))
+        if done:
+            (d / "canary.json").write_text(json.dumps({"src": src, "verdict": verdict}))
+
+    def test_no_canary_no_tag(self):
+        """COORD ruling 4: an auto-cut tag never skips the canary"""
+        c3 = self._c3()
+        self.ap.CANARY_ROOT = str(Path(self.tmp.name) / "canary")
+        tag, why = self.ap.ensure_pin_tag("qwen_compute", c3, day="20261121")
+        self.assertIsNone(tag)
+        self.assertIn("WAIT-CANARY no qwen_compute canary run", why)
+        self._canary(c3, done=False)
+        self.assertIn("canary running", self.ap.ensure_pin_tag("qwen_compute", c3, day="20261121")[1])
+        out = subprocess.run(["git", "--git-dir", str(self.origin), "tag"], capture_output=True, text=True).stdout.split()
+        self.assertNotIn("flow-20261121-a-qc", out)
+
+    def test_canary_gating_verdict(self):
+        import canary_gate as CG
+        c3 = self._c3()
+        self.ap.CANARY_ROOT = str(Path(self.tmp.name) / "canary")
+        self._canary(c3)
+        saved = CG.regression
+        try:
+            CG.regression = lambda run, root, repo, seed=True: ("REGRESSION", "slower")
+            ok, why = self.ap.canary_released(self.ap.flow_manifest(c3, "qwen_compute"), "qwen_compute")
+            self.assertFalse(ok)
+            self.assertIn("REGRESSION", why)
+            CG.regression = lambda run, root, repo, seed=True: ("NO-REGRESSION", "ok")
+            ok, why = self.ap.canary_released(self.ap.flow_manifest(c3, "qwen_compute"), "qwen_compute")
+            self.assertTrue(ok)
+            tag, why = self.ap.ensure_pin_tag("qwen_compute", c3, day="20261121")
+            self.assertEqual((tag, why), ("flow-20261121-a-qc", "cut"))
+            # a canary of ANOTHER flow never releases this one
+            self.assertFalse(self.ap.canary_released(self.ap.flow_manifest(self.c2, "qwen_compute"), "qwen_compute")[0])
+        finally:
+            CG.regression = saved
+
+    def test_pin_tag_cut_once(self):
+        c3 = self._c3()
+        self.ap.canary_released = lambda m, d: (True, "canary NO-REGRESSION (test)")
         p = self.ap.resolve_provenance("main@" + c3[:12], "", "qwen_compute")
         self.assertIn("no flow release tag", p["error"])
         tag, why = self.ap.ensure_pin_tag("qwen_compute", c3, day="20261121")
@@ -160,3 +205,42 @@ class TestResignCarried(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestSpareAdmission(unittest.TestCase):
+    """COORD ruling 3: re-sign promotion is the lowest priority, spare admission only"""
+    ST = "epyc2 admits 100 GB, load 10/128 threads 20/128 | epyc10 admits 50 GB, load 96/96 threads 96/96"
+
+    def test_spare(self):
+        import under_use as UU
+        cfg = {"dies": {"s81": {"event": "J6"}}}
+        run = {"a": {"die": "s81", "item": "t1", "status": "ENQUEUED", "event": "J6", "q_status": "RUNNING"}}
+        self.assertTrue(UU.spare_admission(self.ST, run, cfg)[0])
+        wait = dict(run, b={"die": "s81", "item": "t2", "status": "ENQUEUED", "event": "J6", "q_status": ""})
+        ok, why = UU.spare_admission(self.ST, wait, cfg)
+        self.assertFalse(ok)
+        self.assertIn("wait for admission", why)
+        old = {"b": {"die": "s81", "item": "t2", "status": "ENQUEUED", "event": "J5", "q_status": ""}}   # superseded event: not waiting
+        self.assertTrue(UU.spare_admission(self.ST, old, cfg)[0])
+        self.assertFalse(UU.spare_admission("epyc10 admits 50 GB, load 96/96", {}, cfg)[0])     # no idle thread
+        self.assertFalse(UU.spare_admission("", {}, cfg)[0])                                  # unknown = not spare
+        self.assertFalse(UU.spare_admission(self.ST, {}, cfg, [{"status": None}])[0])         # queue row not submitted
+
+    def test_tick_step_waits(self):
+        import autopilot
+        ap = importlib.reload(autopilot)
+        logs = []
+        saved = (ap.log, ap.retry_unversioned)
+        ap.log = logs.append
+        ran = []
+        ap.retry_unversioned = lambda st: ran.append(1)
+        try:
+            st = {"jobs": {"x": {"status": "SIGNED-UNVERSIONED", "archive": "h:/a"}}}
+            ok, why = ap.retry_unversioned_spare(st, status_text="epyc10 admits 50 GB, load 96/96")
+            self.assertFalse(ok)
+            self.assertEqual(ran, [])
+            ok, why = ap.retry_unversioned_spare(st, status_text=self.ST)
+            self.assertTrue(ok, why)
+            self.assertEqual(ran, [1])
+        finally:
+            ap.log, ap.retry_unversioned = saved

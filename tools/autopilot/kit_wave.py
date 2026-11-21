@@ -16825,7 +16825,10 @@ def pin_tags_step(AP, cfg, st):
         tag, why = AP.ensure_pin_tag(die, sha)
         if tag:
             seen[die] = sha
-        AP.log(f"KIT-WAVE PIN-TAG {die} {sha[:12]}: {why} {tag or ''}".rstrip())
+        last = st.setdefault("pin_tag_why", {})
+        if tag or last.get(die) != f"{sha}|{why}":       # a waiting pin (WAIT-CANARY) logs once per reason, not every tick
+            AP.log(f"KIT-WAVE PIN-TAG {die} {sha[:12]}: {why} {tag or ''}".rstrip())
+        last[die] = f"{sha}|{why}"
         out.append((die, tag, why))
     return out
 

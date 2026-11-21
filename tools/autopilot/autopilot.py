@@ -2809,6 +2809,34 @@ def next_flow_tag_name(day, taken, dietag):
 
 
 AUTO_FLOW_TAG_STOP = AP_DIR / "auto_flow_tag.stop"
+CANARY_ROOT = os.environ.get("AP_CANARY_ROOT", "/srv/opentallas-scratch2/claude/flow-canary/runs")
+
+
+def canary_released(manifest, die):
+    """FLOW-OPS-0900 11-21 (COORD ruling (4) on fix 2; owner-approved flow canary 10-25): an auto-cut flow tag is cut (so counts and is adopted)
+    only after a completed reference canary of the die (tools/flow_canary, the runs canary_gate reads) whose source commit has the SAME flow
+    manifest is released by the gating verdict (canary_gate.RELEASE: NO-REGRESSION / INFO).  -> (released, why).  No such run = not released;
+    the tag waits (start one with tools/flow_canary/canary.py submit --die D on a flow-canary/sources/<sha> snapshot, or the canary trigger)."""
+    import canary_gate as CG
+    cdie = CANARY_DIE.get(die, die)
+    try:
+        runs = CG._runs(CANARY_ROOT, cdie)
+    except Exception as e:
+        return False, f"canary runs unreadable ({type(e).__name__}: {e})"
+    pending = 0
+    for run in sorted(runs, key=lambda r: r["mtime"], reverse=True):
+        if not run.get("src") or flow_manifest(run["src"], die) != manifest:
+            continue
+        if not run.get("done"):
+            pending += 1
+            continue
+        verdict, why = CG.regression(run, CANARY_ROOT, REPO)
+        if verdict in CG.RELEASE:
+            return True, f"canary {verdict} {run['ref']}"
+        return False, f"canary {verdict} on this flow: {str(why)[:160]} ({run['run']})"
+    if pending:
+        return False, f"canary running on this flow ({pending} run(s) under {CANARY_ROOT})"
+    return False, f"no {cdie} canary run on this flow under {CANARY_ROOT}"
 
 
 def ensure_pin_tag(die, sha, day=None):
@@ -2832,6 +2860,9 @@ def ensure_pin_tag(die, sha, day=None):
         return t, "carried"
     if not mine:
         return None, "flow manifest unreadable"
+    ok, cwhy = canary_released(mine, die)              # COORD ruling (4): never skip the flow canary (owner 10-25)
+    if not ok:
+        return None, "WAIT-CANARY " + cwhy
     name = next_flow_tag_name(day or time.strftime("%Y%m%d"), [x for x, _ in _all_flow_tags()], dietag)
     if DRY:
         return None, "would cut " + name
@@ -3042,6 +3073,35 @@ def resign_carry(j, cache=None, probe=None, budget=None):
 
 RETRY_UNVERSIONED_MAX = 12                              # promotions per tick (each writes PROVENANCE.json on its archive host)
 RETRY_UNVERSIONED_S = 180
+
+
+def retry_unversioned_spare(st, status_text=None):
+    """FLOW-OPS-0900 11-21 (COORD ruling (3), owner: superseded re-signs go last, on spare capacity only): the SIGNED-UNVERSIONED promotion as
+    the tick's last step, only when under_use.spare_admission says the gen hosts have idle threads and no current-plan row or queue row waits.
+    Off: AP_RETRY_UNVERSIONED=0 or the marker NO-RETRY-UNVERSIONED.  -> (ran, why)"""
+    if os.environ.get("AP_RETRY_UNVERSIONED") == "0" or (AP_DIR / "NO-RETRY-UNVERSIONED").exists():
+        return False, "off"
+    if not any(j.get("status") == "SIGNED-UNVERSIONED" and j.get("archive") for j in st["jobs"].values()):
+        return False, "nothing to promote"
+    if status_text is None:
+        rc, out, _ = sh([OT_RUN, "--status"], timeout=120)
+        status_text = out if rc == 0 else ""
+    try:
+        items = json.loads((AP_DIR / "kit_wave_state.json").read_text()).get("items") or {}
+    except (OSError, ValueError):
+        items = {}
+    try:
+        cfg = json.loads((AP_DIR / "kit_wave.json").read_text())
+    except (OSError, ValueError):
+        cfg = {}
+    spare, why = UU.spare_admission(status_text, items, cfg, st["jobs"].values())
+    if not spare:
+        if CLOSURE.get("ru_why") != why:
+            log(f"RETRY-UNVERSIONED waits for spare admission: {why}")
+        CLOSURE["ru_why"] = why
+        return False, why
+    retry_unversioned(st)
+    return True, why
 
 
 def retry_unversioned(st):
@@ -4136,9 +4196,9 @@ def tick(args):
     # WF-1 11-14 (COORD/OWNER: the commit / flow-tag tie is removed from counting; COUNT-FRICTION-1 credits SIGNED-UNVERSIONED
     # directly): promoting unversioned records only to get provenance cost 476 s of a 1033 s tick, so it is OFF by default.
     # AP_RETRY_UNVERSIONED=1 (or the marker autopilot/RETRY-UNVERSIONED) turns it back on.
-    # FLOW-OPS-0900 11-21: provenance is now a cached manifest lookup (no per-tag diffs), so the promotion runs every tick again, bounded
-    # by RETRY_UNVERSIONED_MAX promotions and RETRY_UNVERSIONED_S seconds; AP_RETRY_UNVERSIONED=0 or the marker NO-RETRY-UNVERSIONED stops it.
-    if os.environ.get("AP_RETRY_UNVERSIONED", "1") != "0" and not (AP_DIR / "NO-RETRY-UNVERSIONED").exists():
+    # FLOW-OPS-0900 11-21 (COORD ruling (3) on fix 2): the promotion runs LAST in the tick (retry_unversioned_spare, after UNDER-USE), only when
+    # the gen hosts have spare admission; AP_RETRY_UNVERSIONED=1 (or the marker RETRY-UNVERSIONED) still forces it here, as before.
+    if os.environ.get("AP_RETRY_UNVERSIONED") == "1" or (AP_DIR / "RETRY-UNVERSIONED").exists():
         retry_unversioned(st)
     _rp("retry_unversioned", _t)
     _mark("reviews_retry")
@@ -4180,6 +4240,12 @@ def tick(args):
     _mark("loop_gaps")
     UU.step(sys.modules[__name__])                     # never raises; one UNDER-USE line (idle threads per host + top hold reasons)
     _mark("under_use")
+    try:
+        retry_unversioned_spare(st)                    # FLOW-OPS-0900: lowest priority, spare admission only
+        save_state(st)
+    except Exception as e:                             # a promotion pass must never stop the chain
+        log(f"RETRY-UNVERSIONED failed: {type(e).__name__}: {e}")
+    _mark("retry_unversioned_spare")
     tick_progress(AP_DIR, _t0, "done", done=True)
     log("TICK-TIMES total=%.0fs " % (time.time() - _t0) + " ".join(f"{k}={v}s" for k, v in _ph.items()))
     counts = {}

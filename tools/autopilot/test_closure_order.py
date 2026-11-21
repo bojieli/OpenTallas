@@ -203,12 +203,13 @@ class TestGates(TickBase):
         self.assertEqual(len((Path(self.tmp.name) / "unversioned.tsv").read_text().splitlines()), 2)
         self.ap.resolve_provenance = lambda src, flow="", die=None: {"src_commit": "0123456789ab" + "0" * 28,
                                                            "flow_tag": "flow-20261026-a"}
-        # FLOW-OPS-0900 11-21: promotion is ON again (provenance is a cached manifest lookup); AP_RETRY_UNVERSIONED=0 stops it
-        with mock.patch.dict(os.environ, {"AP_RETRY_UNVERSIONED": "0"}):
-            (j,) = self.tick().values()
+        # FLOW-OPS-0900 11-21 (COORD ruling 3): the promotion runs last in the tick and only on spare admission (no ot-run status here:
+        # not spare); AP_RETRY_UNVERSIONED=1 forces it
+        (j,) = self.tick().values()
         self.assertEqual(j["status"], "SIGNED-UNVERSIONED")
         self.assertFalse((Path(self.tmp.name) / "signed.tsv").exists())
-        (j,) = self.tick().values()
+        with mock.patch.dict(os.environ, {"AP_RETRY_UNVERSIONED": "1"}):
+            (j,) = self.tick().values()
         self.assertEqual(j["status"], "ARCHIVED")
         head, row = (Path(self.tmp.name) / "signed.tsv").read_text().splitlines()
         self.assertTrue(head.endswith("src_commit\tflow_tag"))
