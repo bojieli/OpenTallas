@@ -719,3 +719,27 @@ def test_core_move_carries_its_internal_station_rows(monkeypatch):
     assert not any(blk[0] < q[0] < blk[2] and blk[1] < q[1] < blk[3] for q in r["regs_um"])
     assert z["from_um"] == [10.0, 10.0] and z["regs_um"] == [[15.0, 10.0]]     # not core-bound: untouched
     assert ev.rep["core_moves"][0]["istation_rows_moved"] == 1
+
+
+def test_x_split_resolves_mirrored_type_native_port_window():
+    from types import SimpleNamespace
+
+    ts = TS.TypeSplit.__new__(TS.TypeSplit)
+    ts.tn = "S"
+    ts.cut = TS.Cut("x", [40], 100)
+    source = dict(name="s", type="S", origin_um=[100, 0], orient="MY")
+    dest = dict(name="r", type="R", origin_um=[100, 100], orient="MY")
+    port = dict(id="native", width=4, kind="data", face="N",
+                src=dict(part="s", bus="out"), dst=dict(part="r", bus="in"))
+    types = {
+        "S": dict(outline_um=[100, 100], buses=[
+            dict(name="out", dir="out", width=4, face="N", window_um=[65, 85], layers=["M7", "M5", "M3"])]),
+        "R": dict(outline_um=[100, 100], buses=[
+            dict(name="in", dir="in", width=4, face="S", window_um=[65, 85], layers=["M7", "M5", "M3"])]),
+    }
+    raw = {"die": {"name": "test", "outline_um": [200, 200], "reach_um": 405},
+           "partition_types": types, "partitions": [source, dest], "ports": [port], "lanes": []}
+    ts.ev = SimpleNamespace(raw=raw, plan_path=None)
+    assert ts._end_piece(port, source, "N") == 1
+    assert ts.ev._native_port_geometry.ports["native"]["window_um"] == [115, 135]
+    assert "window_um" not in port
