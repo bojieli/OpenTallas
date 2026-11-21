@@ -9318,7 +9318,12 @@ def run_item(spec_path):
         res["future_lec"] = lt
     # FLOW-FIX-2045: the STAGE-CAP watcher a kit runs is the stage_odb_cap.py gen copied from the die's PINNED snapshot (HEAD r11b: older than the fix), so every wave kit still deleted the early
     # stage ODBs and its route job re-ran floorplan + place.  The wave puts rt/current's copy into the kit (before the inputs are fingerprinted); a kit without the file is left alone.
-    run("flow_files_refresh", remote(flow_files_refresh_cmd(K, None if core else W)), idempotent=True)
+    # E2BIG-1121 (FAIL-CLASS a2e8efcde6, 9+ rows from ~10:1x): the files travel base64 inside the ONE ssh argument, and the
+    # whole set (run_kit.sh 55 kB + tt_setup_repair.tcl 22 kB + stage_odb_cap.py 19 kB) passed MAX_ARG_STRLEN (128 KiB)
+    # -> OSError Errno 7 Argument list too long: ssh.  One command per file (each well under the limit).
+    for _i, _ent in enumerate(FLOW_REFRESH_FILES):
+        run("flow_files_refresh" + (f"_{_i}" if _i else ""), remote(flow_files_refresh_cmd(K, None if core else W, [_ent])),
+            idempotent=True)
     # KW-RESUME-1: record the kit's gen-time inputs (K/.kw_inputs.json) before any gate writes into K; a later
     # relaunch fingerprints against this record.  Advisory: a failure only means the next relaunch uses the mtime rule.
     run("resume_inputs", remote(kr_cmd(f"inputs {q(K)}")), idempotent=True)
