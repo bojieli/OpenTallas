@@ -306,7 +306,15 @@ def blockages(t, clear=CLEAR_UM):
     return out
 
 
+ROW_UM = 0.27           # one ASAP7 std-cell row (stack direction y)
+CELL_W_UM = 1.08        # a relay flop (DFFHQN, 20 tracks): the free run along the row must hold it
+
+
 def _free(p, boxes, box_out):
+    """a LEGAL relay site: inside box_out, outside every (grown) blockage, and with a free row-high run (ROW_UM, y) and a
+    free cell-wide run (CELL_W_UM, x) through it.  RESET-RELAY-GEN-R2 11-21 (S81-DIE-R4, col_h9_r0_p3 cl0cd90c0e): rst_rl_137
+    sat at (219.6, 1093.0) in the 8.70 um channel between u_ha and u_hb; the blockages grown by CLEAR_UM = 4.32 leave a
+    0.06 um sliver, which the strict-interior test called free but holds no row, so OT_CLAND found no site."""
     x, y = p
     x0, y0, x1, y1 = box_out
     # Grown blockage faces are legal (the full CLEAR_UM is already included).
@@ -315,7 +323,22 @@ def _free(p, boxes, box_out):
     eps = 1e-9
     if not (x0-eps <= x <= x1+eps and y0-eps <= y <= y1+eps):
         return False
-    return not any(a+eps < x < c-eps and b+eps < y < d-eps for a, b, c, d in boxes)
+    ylo, yhi, xlo, xhi = y0, y1, x0, x1
+    for a, b, c, d in boxes:
+        in_x, in_y = a+eps < x < c-eps, b+eps < y < d-eps
+        if in_x and in_y:
+            return False
+        if in_x:                                  # a box above / below on this column bounds the y run
+            if b >= y - eps:
+                yhi = min(yhi, b)
+            elif d <= y + eps:
+                ylo = max(ylo, d)
+        if in_y:                                  # a box E / W on this row bounds the x run
+            if a >= x - eps:
+                xhi = min(xhi, a)
+            elif c <= x + eps:
+                xlo = max(xlo, c)
+    return yhi - ylo >= ROW_UM - eps and xhi - xlo >= CELL_W_UM - eps
 
 
 def _edge_ok(p, q, boxes):

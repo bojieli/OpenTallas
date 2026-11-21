@@ -371,6 +371,7 @@ def type_delta(tn, t, sv, D, reach=REACH_UM, local_taps=False, sites=True, stage
     rs_sites = {}
     rd_rows = list(t.get("relay_depth") or [])
     rs_split = []
+    chains = []                                      # (src, [site keys in order], pins) of form M / N stage lines
     # ---- form L: module-local relays (u_rstr / u_rr / g_rsreg / rst_q ...), as the tree of relay flops they are.
     # Bottom-up (flops that drive outside sinks first, their drivers next): each flop's targets are its outside sinks plus
     # the copies of the relay flops it drives.  Targets within --reach of one point: the flop is seated at their L1 centre
@@ -605,6 +606,7 @@ def type_delta(tn, t, sv, D, reach=REACH_UM, local_taps=False, sites=True, stage
                 rd_rows.append(row)
                 rep["relay_depth"].append(dict(row, over_cap=False))
                 if sites and stage_sites:
+                    chains.append((src, [stage_key.format(sid=sv_id(inst), port=port, k=k, s=s_) for s_ in range(Dn)], pins))
                     for s_ in range(Dn):
                         f = (s_ + 1) / (Dn + 1)
                         rs_sites[stage_key.format(sid=sv_id(inst), port=port, k=k, s=s_)] = [
@@ -666,6 +668,7 @@ def type_delta(tn, t, sv, D, reach=REACH_UM, local_taps=False, sites=True, stage
                               note=f"RESET-RELAY-GEN-R2 form N: {G.name[sc]} -> hard-core reset pins of {inst}"))
             if sites and stage_sites:
                 for port in ports:
+                    chains.append((src, [NESTED_KEY.format(inst=inst, port=port, s=s_) for s_ in range(Dn)], pins))
                     for s_ in range(Dn):
                         f = (s_ + 1) / (Dn + 1)
                         rs_sites[NESTED_KEY.format(inst=inst, port=port, s=s_)] = [
@@ -740,6 +743,11 @@ def type_delta(tn, t, sv, D, reach=REACH_UM, local_taps=False, sites=True, stage
             t.setdefault("reset", {})["local_taps_um"] = lt
     elif cons:
         rep["form_r_skipped"] = "no generated reset-tree leaf alias / no placed tap relay found"
+    # ---- legal sites (RESET-RELAY-GEN-R2 11-21, S81-DIE-R4 cl0cd90c0e): every relay / stage site is snapped to the nearest
+    # legal site (reset_tree._free: outside the hard cores grown by CLEAR_UM, with a row-high / cell-wide free run), then the
+    # form M / N stage lines are re-checked hop by hop
+    if rs_sites:
+        legalise(G, rs_sites, chains, reach, rep)
     if rd_rows != list(t.get("relay_depth") or []):
         t["relay_depth"] = rd_rows
     if rs_sites:
@@ -753,6 +761,33 @@ def type_delta(tn, t, sv, D, reach=REACH_UM, local_taps=False, sites=True, stage
     rep["relay_sites"] = len(rs_sites)
     rep["added_reset_cycles"] = max([r["D"] for r in rep["relay_depth"]] + [rep.get("added_reset_cycles_nested", 0)], default=0)
     return rep
+
+
+def legalise(G, rs_sites, chains, reach, rep):
+    import reset_tree as RT
+    c = RT.CLEAR_UM
+    boxes = [(v[2] - c, v[3] - c, v[4] + c, v[5] + c) for k_, v in G.D.cells.items() if v[0] == "M"]
+    die = getattr(G.D, "die", None)
+    rep["site_snaps"] = []
+    if not boxes or not die:
+        return
+    snapped = {}
+    for k_, p in sorted(rs_sites.items()):
+        q = RT.push_off((float(p[0]), float(p[1])), boxes, tuple(die))
+        if (round(q[0], 3), round(q[1], 3)) != (round(float(p[0]), 3), round(float(p[1]), 3)):
+            snapped[k_] = [round(q[0], 3), round(q[1], 3)]
+            rep["site_snaps"].append(dict(site=k_, was=[round(float(p[0]), 1), round(float(p[1]), 1)], now=snapped[k_],
+                                          moved_um=round(l1(p, q), 1)))
+    rs_sites.update(snapped)
+    for src, keys, pins in chains:
+        if not any(k_ in snapped for k_ in keys):
+            continue
+        pts = [src] + [tuple(rs_sites[k_]) for k_ in keys]
+        hop = max([l1(a, b) for a, b in zip(pts, pts[1:])] + [l1(pts[-1], q) for q in pins])
+        was = max([l1(a, b) for a, b in zip(pts, pts[1:])])
+        rep.setdefault("snap_hop_um", []).append(dict(first=keys[0], hop_um=round(hop, 1)))
+        if hop > reach + 1e-6:
+            rep["legs_over_after"] += 1
 
 
 def dumper(rb, raw):

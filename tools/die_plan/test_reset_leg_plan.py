@@ -499,7 +499,7 @@ def nested_design(tmp, far=1900.0):
     nets = [("rst", "i0", ["i1", "i2", "i3", "i4"])]
     D = dump(tmp, cells, nets)
     p = tmp / "geom.tsv"
-    p.write_text(p.read_text() + f"MR\t1\t{2000 - far}\t140\trst\nMR\t2\t2050\t340\trst_n\nMR\t3\t1200\t640\trst\n"
+    p.write_text(p.read_text().replace("D\t0\t0\t1000\t1000", "D\t0\t0\t3000\t3000", 1) + f"MR\t1\t{2000 - far}\t140\trst\nMR\t2\t2050\t340\trst_n\nMR\t3\t1200\t640\trst\n"
                  "MR\t4\t2000\t390\trst\n")
     return geom_rules.Design(str(p))
 
@@ -529,3 +529,26 @@ def test_nested_rows_in_schema():
     import schema
     props = schema.SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]
     assert "reset_pin_relay" in props
+
+
+def test_stage_site_over_a_hard_core_is_snapped_to_a_legal_site(tmp_path):
+    """a form N stage line that crosses another hard core: the stage site inside the (grown) core moves to the nearest legal
+    site and the hops are re-checked (reported in site_snaps / snap_hop_um)"""
+    cells = [
+        ("S", "u_bound.u_rrl_1/q$_DFF_P_", 1000, 100),                                    # 0 source
+        ("M", "u_bound.u_core.u_a", 100, 100),                                           # 1 target core, pins at (150, 100)
+        ("M", "u_bound.u_core.u_wall", 433, 100),                                        # 2 a core ON the line (stage 2 at x 433)
+    ]
+    D = dump(tmp_path, cells, [("rst", "i0", ["i1"])])
+    p = tmp_path / "geom.tsv"
+    lines = p.read_text().splitlines()
+    lines = [("C\t2\tM\tDFF\t413\t0\t453\t200\tu_bound.u_core.u_wall" if ln.startswith("C\t2\t") else ln) for ln in lines]
+    p.write_text("\n".join(lines) + "\nMR\t1\t150\t100\trst\n")
+    D = geom_rules.Design(str(p))
+    t = plan_type()
+    rep = RLP.type_delta("n", t, FWD_BOUND, D, reach=300)
+    c = 4.32
+    assert rep["site_snaps"], "a stage site fell inside the wall core"
+    for xy in t["relay_sites"].values():
+        assert not (413 - c < xy[0] < 453 + c and 0 - c < xy[1] < 200 + c)
+    assert all(h["hop_um"] >= 0 for h in rep["snap_hop_um"])

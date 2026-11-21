@@ -412,3 +412,20 @@ def test_cbc_rule4_reset_hop_cap_is_the_default(monkeypatch):
     assert RT.for_type(P, tn)["max_hop_um"] <= 300.0 + 1e-6
     monkeypatch.setenv("OT_RESET_HOP_CAP_UM", "405")
     assert RT.relay_um(P) == 405.0
+
+
+def test_relay_site_in_thin_macro_channel_is_not_legal():
+    """S81-DIE-R4 11-20: col_h9_r0_p3__t1__cl0cd90c0e, rst_rl_137 at (219.58, 1092.96) between u_ha (y 993.6-1088.6) and u_hb
+    (y 1097.3-), x 86-328: the 8.7 um channel minus 2 x CLEAR_UM (4.32) leaves 0.06 um, no row.  The site is refused and
+    push_off moves it to the nearest legal site (a row-high free run), outside every grown core."""
+    c = RT.CLEAR_UM
+    ha, hb = (86, 993.6, 328, 1088.6), (86, 1097.3, 328, 1200.0)
+    boxes = [(a - c, b - c, e + c, d + c) for a, b, e, d in (ha, hb)]
+    box_out = (0.0, 0.0, 600.0, 2000.0)
+    bad = (219.58, 1092.96)
+    assert not RT._free(bad, boxes, box_out)
+    q = RT.push_off(bad, boxes, box_out)
+    assert RT._free(q, boxes, box_out) and q != bad
+    assert not any(a < q[0] < e and b < q[1] < d for a, b, e, d in boxes)
+    wide = [(a - c, b - c, e + c, d + c) for a, b, e, d in (ha, (86, 1097.3 + 0.9, 328, 1200.0))]   # 9.6 um: one row fits
+    assert RT._free((219.58, 1092.95), wide, box_out)
