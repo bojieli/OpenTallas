@@ -61,3 +61,17 @@ Apply order at or before 11-21 13:00 PST: C3d, else C3c, else C1n (never plain C
 - candJ7RDX / _C1n / _C1n_FT: 360 = 192 HARD_CORE_PARAM_ALL (cfg7_seq RD_EXTRA die0/hard1 on col r0 types) + 168 EMIT relay_depth (139 rows no sink u_r1_u_eN_u_w.* on 168 types). RDX donor defect; rebuild as row adds after ROM pval (Fable order).
 - kit_wave: slice_station siblings released (45, ed4fcdd3); tools_sha pinned 39d243610bd2dae7... (86ace0e6).
 - Cleanup (ot-delete later): tokc/root_c1n, candC3e, candC3h, scratch_svc40.
+
+## 05:3x HANDOFF (context limit near; successor continues)
+Running, mine (do not duplicate):
+- epyc10 unit oth-ubuntu-228585-1795265796: candC1n_pf fresh ELAB + gate (logs/gate_candC1n_pf.log).
+- intel2 PID 1541034 s81-j6-r2-hub/j6r1_after_gate.sh -> runs j6r1_pack.sh candC1n_pf (out j6r1_pack_candC1n_pf.out, publish_d8j6r1.log). Pack refuses unless the gate is green (RAN exit 0, BIND_RC=0, LATCHECK_RC=0, G0 'new 0 ', PRE PASS, J6_GATE_DONE). It seals the bind and composes d8j6r1 on epyc8 (link-dest d8j6), then publishes, does out_install, commits event d8j6r1_1121 and writes lanes/handoff/S81_D8J6R1_source_candidate_1121.json + S81-D8J6R1-G0-BASELINE-1121.json.
+- epyc10 PID 300551 tokc/after_c1n_pf_tokc.sh: token compile on candC1n_pf after its gate -> logs/tokc_c1n_pf.log, out tokc/out_c1n_pf (TOKC_RC=).
+Next steps:
+1. After CHAIN_PACKED: check review_before_route all_items in the R1 candidate, then `cd s81-j6-r2-hub && OT_LANE=S81-J6-ASSEMBLY-R2 bash j6r1_apply.sh $PWD/j6r1_pack_candC1n_pf.out > j6r1_apply.out` (ABSOLUTE path to pack out). It keeps the current holds (restores the snapshot if the apply drops them). Then confirm the postbind strict + LATCHECK are green and post.
+2. If the gate fails: read candC1n_pf/elab.log and the gate log; the PORTFIX regen is svc_rs_faces.py --only-portfix --root <tree>.
+3. Post the token compile result.
+4. Release more siblings on spare capacity (kit_wave_edit hold_items; values starting 'S81-J6-ASSEMBLY-R2 11-21 J6 representatives first'). slice_station is already released.
+5. J7: follow FABLE-PD-S81-0440 section 5 order on base candC1n_pf. RDX donor must be rebuilt as row adds after ROM pval (it has 192 HARD_CORE_PARAM_ALL RD_EXTRA die0/hard1 on col r0 + 168 EMIT 139-row no-sink). Lanes per-key merge. kv_leaf t2 cut x=1684.80. c1x_C split B needs bound rectangular rows (strip is not one type). Target apply 11-22 04:15.
+Cleanup via ot-delete: s81-j6/tokc/root_c1n, candC3e, candC3h, scratch_svc40.
+Alert: epyc4 ssh host key changed (not touched).
