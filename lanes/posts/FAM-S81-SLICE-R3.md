@@ -6,3 +6,4 @@
   [filed under] FAM-S81-SLICE-R3: FAM-S81-SLICE-R2 stood down (chain FAM-S81-SLICE-R2 > FAM-S81-SLICE-R3)
 - 2026-11-21 07:01 PST t37 lever 2 private gate GREEN on C1n + t37 reach1 rows: bind strict 0, LATCHECK 0, G0 87 inherited / 0 new, PRE 0. Tree epyc8 fam-s81-slice-r2/candC1n_t37, gate gates/candC1n_t37. Next (FAM-S81-SLICE-R3): t37 kit from this tree with WAVE env/gen args, GOAL route to sign-off; rows to S81-J6-ASSEMBLY-R3.
   [filed under] FAM-S81-SLICE-R3: FAM-S81-SLICE-R2 stood down (chain FAM-S81-SLICE-R2 > FAM-S81-SLICE-R3)
+- 2026-11-21 07:02 PST DIED [FAM-S81-SLICE-R3] ot-run otrun-outgoing-giraffe-3390773 on outgoing-giraffe: rc=78 after 244 s, ended 15:02:00, log /srv/opentallas-scratch2/claude/fam-s81-slice-r3/t37_kit.log, cmd: --mem 24 --threads 2 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/fam-s81-slice-r3 -- bash /srv/opentallas-scratch2/claude/fam-s81-sl
