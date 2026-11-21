@@ -35,6 +35,26 @@ def plan(dest, ref, cone, warm=WARM, origin=ORIGIN):
               ["git", "-C", dest, "sparse-checkout", "init", "--cone"],
               ["git", "-C", dest, "sparse-checkout", "set", *cone],
               ["git", "-C", dest, "checkout", "-q"]]
+    steps += warm_gc_steps(warm)
+    return steps
+
+
+WARM_PACK_LIMIT = int(os.environ.get("OT_WARM_PACK_LIMIT", "200"))
+
+
+def warm_gc_steps(warm, limit=None):
+    """FLEET-WATCH-R6 11-21 (epyc8 + hub scratch2 to 51 / 15 GB): every lane worktree shares the warm object store, so each lazy blob fetch added a pack and git gc --auto
+    (autoPackLimit 50) rewrote a full 7-8 GB pack every few minutes on every host; a stray orphaned `git log -S` kept each replaced pack mapped (41 packs = 267 GB on epyc8,
+    170 on the hub).  The warm repo never auto-gcs (gc.auto=0, maintenance.auto=false, as ot-git-mirror does); small packs are merged by a geometric repack when there are more
+    than OT_WARM_PACK_LIMIT, which never rewrites the big base pack."""
+    limit = WARM_PACK_LIMIT if limit is None else limit
+    steps = [["git", "-C", warm, "config", "gc.auto", "0"], ["git", "-C", warm, "config", "maintenance.auto", "false"]]
+    try:
+        n = sum(1 for f in os.listdir(os.path.join(warm, "objects", "pack")) if f.endswith(".pack"))
+    except OSError:
+        n = 0
+    if n > limit:
+        steps.append(["git", "-C", warm, "repack", "-d", "-l", "--geometric=2"])
     return steps
 
 

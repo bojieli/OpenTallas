@@ -64,3 +64,17 @@ class Lane(unittest.TestCase):
         (w / "tools" / "f").write_text("2"); subprocess.run(g + ["commit", "-qam", "2"], cwd=w, check=True); subprocess.run(g + ["push", "-q", "origin", "main"], cwd=w, check=True)
         run(M.plan(str(d / "lane2"), "main", ["tools"], warm=warm, origin=str(o)))                    # the new plan fetches and clones anyway
         self.assertEqual((d / "lane2" / "tools" / "f").read_text(), "2")
+
+
+class WarmGc(unittest.TestCase):
+    def test_warm_repo_never_auto_gcs_and_merges_small_packs_geometrically(self):
+        w = tempfile.mkdtemp(); pk = os.path.join(w, "objects", "pack"); os.makedirs(pk)
+        s = M.warm_gc_steps(w, limit=3)
+        self.assertIn(["git", "-C", w, "config", "gc.auto", "0"], s); self.assertIn(["git", "-C", w, "config", "maintenance.auto", "false"], s)
+        self.assertFalse(any("repack" in x for x in s))
+        for i in range(4): open(os.path.join(pk, "pack-%d.pack" % i), "w").close()
+        s = M.warm_gc_steps(w, limit=3)
+        self.assertEqual(s[-1], ["git", "-C", w, "repack", "-d", "-l", "--geometric=2"])
+        self.assertFalse(any("gc" == x[3] if len(x) > 3 else False for x in s))       # never a full gc
+        p = M.plan("/srv/opentallas-scratch2/claude/l1", "main", ["tools"], warm=w, origin="o")
+        self.assertIn(["git", "-C", w, "config", "gc.auto", "0"], p)
