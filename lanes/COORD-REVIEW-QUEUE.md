@@ -18038,3 +18038,4 @@ FAILED [AUTOPILOT 4b544bf245c7] 2026-11-21 06:47:25 PST AUTOPILOT -> KIT-WAVE-12
   [filed under] FAM-S81-SERDES-R3: FAM-S81-SERDES-R2 stood down (chain FAM-S81-SERDES-R2 > FAM-S81-SERDES-R3)
 - 2026-11-21 06:47 PST DONE [FLOW-PROC-A] ot-push-main otpush-outgoing-giraffe-3008510 on outgoing-giraffe: rc=0 after 528 s, ended 14:47:51, log none, cmd: ot-push-main 
 - 2026-11-21 06:48 PST DIED [TAP-GRID-R2] ot-run otrun-tolerant-swine-684488 on tolerant-swine: rc=78 after 0 s, ended 06:48:08, log none, cmd: --mem 6 --threads 1 --disk 1 --hosts localhost --dir /srv/opentallas-scratch2/claude/tap-grid-r2 -- python3 -P -E kvplot_draw.py kvplot_data
+- 2026-11-21 06:48 PST DIED [FLOW-LEAFREP-1121] ot-run oth-ubuntu-4156426-1795272390 on tolerant-swine: rc=1 after 103 s, ended 06:48:12, log none, cmd: --mem 40 --threads 4 --hosts epyc2 --dir /srv/opentallas-scratch3/claude/flow-leafrep-1121/m --stage /srv/opentallas-scratch3/claude/flow-le
