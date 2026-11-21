@@ -19,3 +19,21 @@ if {[catch {
     sta::redirect_file_end
   }
 } cpr_err]} { puts "OT_CTS_POST_TIMING WARN report failed: $cpr_err" }
+# TAP-GRID-2130 (FABLE-CLOSURE-STRATEGY 21:30 lever 2, every die): make the POST-hook read the ONE canonical CTS read.  ORFS
+# report_metrics is re-run here, on the netlist that is written to 4_1_cts.odb, so 4_cts_final.rpt and the cts__timing__*
+# metrics of 4_1_cts.json (the last value of a key wins) are post-hook for every consumer (noprog watchdog, failure classes,
+# root_entry_scan, stuckscan, fleet_viz).  The pre-hook report is kept as 4_cts_final_prehook.rpt for forensics only (no clock
+# verdict from it).  The rewritten report carries the line OT_CTS_FINAL_POSTHOOK; readers of older kits use cts_read.py.
+# OT_CTS_FINAL_POSTHOOK=0 (config.mk) = off (old files).  Report only: no netlist change.
+if {(![info exists ::env(OT_CTS_FINAL_POSTHOOK)] || $::env(OT_CTS_FINAL_POSTHOOK) ne "0") && [llength [info procs ::report_metrics]]
+    && [info exists ::env(REPORTS_DIR)]} {
+  if {[catch {
+    set cpr_fin [file join $::env(REPORTS_DIR) 4_cts_final.rpt]
+    if {[file exists $cpr_fin]} { file rename -force $cpr_fin [file join $::env(REPORTS_DIR) 4_cts_final_prehook.rpt] }
+    ::report_metrics 4 "cts final"
+    set cpr_fh [open $cpr_fin a]
+    puts $cpr_fh "\nOT_CTS_FINAL_POSTHOOK report_metrics re-run after the POST_CTS hooks (pre-hook copy: 4_cts_final_prehook.rpt)"
+    close $cpr_fh
+    puts "OT_CTS_FINAL_POSTHOOK 4_cts_final.rpt + cts__timing metrics rewritten after the POST_CTS hooks (pre-hook copy 4_cts_final_prehook.rpt)"
+  } cpr_err2]} { puts "OT_CTS_FINAL_POSTHOOK WARN rewrite failed: $cpr_err2" }
+}

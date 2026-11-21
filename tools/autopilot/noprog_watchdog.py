@@ -326,6 +326,16 @@ PROOF_RE = re.compile(r"(?i)(?:^|[/_\-.])proofs?(?:$|[/_\-.0-9])")
 UNSIG_GLOBS = ("run/logs/*/*/*/4_1_cts.json", "gen/*/run/logs/*/*/*/4_1_cts.json", "logs/*/*/*/4_1_cts.json", "*/4_1_cts.json", "4_1_cts.json")
 
 
+def _posthook_setup(json_path):
+    """setup_ws of the LAST OT_CTS_POST_TIMING line of the 4_1_cts.log next to json_path, else None (TAP-GRID-2130)"""
+    try:
+        with open(os.path.join(os.path.dirname(json_path), "4_1_cts.log"), errors="replace") as f:
+            ms = re.findall(r"(?m)^OT_CTS_POST_TIMING setup_ws (-?[0-9.]+)", f.read())
+    except OSError:
+        return None
+    return float(ms[-1]) if ms else None
+
+
 def measured_setup(dirs, started):
     """-> (setup_ws_ps, path) from the newest 4_1_cts.json under any of dirs that THIS job wrote (mtime >= its container start - 60 s), else None.  Missing key / unparsable = None (unmeasured)."""
     best = None
@@ -337,6 +347,11 @@ def measured_setup(dirs, started):
                     if mt < started - 60 or (best and mt <= best[0]):
                         continue
                     v = json.load(open(p)).get("cts__timing__setup__ws")
+                    # TAP-GRID-2130: 4_1_cts.json cts__timing is PRE-hook on kits older than the post-hook rewrite; the
+                    # 4_1_cts.log OT_CTS_POST_TIMING line (tap-balanced DB) wins when present (die_plan/cts_read.py)
+                    pv = _posthook_setup(p)
+                    if pv is not None:
+                        v = pv
                 except (OSError, ValueError, AttributeError):
                     continue
                 if isinstance(v, (int, float)) and not isinstance(v, bool):

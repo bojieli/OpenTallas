@@ -393,7 +393,23 @@ if {$tb_ronly} {
   puts "OT_TAP_RC sink insertion [format %.0f $lo]..[format %.0f $hi] ps (partition skew [format %.0f [expr {$hi - $lo}]]; limit [format %.0f [expr {$tb_target + $tb_win}]])"
   if {[llength $tb_cores]} { tb_core_report $tb_target }
 } else {
-for {set it 0} {$it < 4} {incr it} {
+# TAP-GRID-2130 (FABLE-CLOSURE-STRATEGY 21:30 lever 3 + COORD 21:4x col_h9_r1 u_u_s6 core clock 422 against 450): OT_TAP_CONVERGE=1
+# (plan clock.tap_grid; unset = the old loop byte for byte) VERIFIES every tap and every hard-core pin on target after each
+# pass and iterates until all are inside OT_TAP_TOL_PS, bounded by OT_TAP_CONVERGE_ITERS passes (default 8): (1) the stage
+# price is learned per tap / per core pin from the previous pass (gain / stages; 18 ps a BUFx4 under-estimated the 2nd pass
+# and over-padded clk_c* by 6-11 ps on t60), so each later pass pads the measured remainder, not 3/4 of a guess; (2) the
+# latest-sink cap is target + OT_TAP_CONVERGE_WIN_PS (default the window + 60) instead of target + window, so a tap with a
+# wide in-tap spread is still moved to the target mean (t60: taps left 30-150 ps early); (3) OT_TAP_CONVERGE_RAISE_PS
+# (default 0) lifts the kit target to the latest raw tap mean, at most this much above the plan insertion, so no tap is left
+# late; (4) the tap pass runs again after the core pass, then one OT_TAP_CONVERGE line lists every tap / core pin still off
+# target (verification; advisory, never a stop).
+set tb_conv [expr {[info exists ::env(OT_TAP_CONVERGE)] && $::env(OT_TAP_CONVERGE) eq "1"}]
+set tb_iters [expr {$tb_conv && [info exists ::env(OT_TAP_CONVERGE_ITERS)] ? int($::env(OT_TAP_CONVERGE_ITERS)) : ($tb_conv ? 8 : 4)}]
+set tb_cwin [expr {$tb_conv ? ([info exists ::env(OT_TAP_CONVERGE_WIN_PS)] ? $::env(OT_TAP_CONVERGE_WIN_PS) : $tb_win + 60.0) : $tb_win}]
+set tb_raise [expr {$tb_conv && [info exists ::env(OT_TAP_CONVERGE_RAISE_PS)] ? $::env(OT_TAP_CONVERGE_RAISE_PS) : 0.0}]
+set tb_price {}; set tb_prev {}
+proc tb_tap_pass {it} {
+  global tb_blk tb_master tb_target tb_win tb_tol tb_tag tb_grt tb_added tgt tb_conv tb_cwin tb_raise tb_price tb_prev
   set m [tb_measure]
   set longest 0.0
   dict for {n v} $m { set longest [expr {max($longest, [lindex $v 0])}] }
@@ -409,12 +425,30 @@ for {set it 0} {$it < 4} {incr it} {
     } else {
       set tgt $tb_target
     }
+    if {$tb_conv && $tb_raise > 0} {
+      set tgt [expr {max($tgt, min($tb_target + $tb_raise, $longest))}]
+      puts "OT_TAP_CONVERGE target [format %.0f $tgt] ps (plan [format %.0f $tb_target], latest raw tap mean [format %.0f $longest], raise cap [format %.0f $tb_raise])"
+    }
+  }
+  if {$tb_conv} {
+    # learned stage price of every tap padded in the previous pass
+    dict for {n pv} $tb_prev {
+      if {![dict exists $m $n]} continue
+      lassign $pv m0 nb0
+      set g [expr {[lindex [dict get $m $n] 0] - $m0}]
+      if {$g > 1.0 && $nb0 > 0} { dict set tb_price $n [expr {$g / $nb0}] }
+    }
+    set tb_prev {}
   }
   puts "[tb_line "OT_TAP_BALANCE[expr {$tb_grt ? { GRT} : {}}] it$it target [format %.0f $tgt]:" $m]"
   set todo 0
   tb_begin
   dict for {n v} $m {
-    set d [expr {min($tgt - [lindex $v 0], $tb_target + $tb_win - [lindex $v 2])}]
+    if {$tb_conv} {
+      set d [expr {min($tgt - [lindex $v 0], $tgt + $tb_cwin - [lindex $v 2])}]
+    } else {
+      set d [expr {min($tgt - [lindex $v 0], $tb_target + $tb_win - [lindex $v 2])}]
+    }
     if {$d <= $tb_tol} continue
     if {$tb_cdirect && [dict exists $tb_coreonly $n] && [set tb_dc [tb_direct_core $n [lindex $v 4]]] ne ""} {
       puts "OT_TAP_CORE_DIRECT $n port inside $tb_dc: effective [format %.0f [lindex $v 0]] ps, [format %.0f $d] ps under target [format %.0f $tgt]: not padded (a delay cell must leave the core)[expr {$d > $tb_cdmax ? " WARN over [format %.0f $tb_cdmax] ps: lower the core tap early shift in the plan" : ""}]"
@@ -422,11 +456,25 @@ for {set it 0} {$it < 4} {incr it} {
     }
     set todo 1
     # ~18 ps per BUFx4 stage on a short local net; insert 3/4 of the estimate per pass and re-measure
-    set nb [expr {max(1, int(round($d / 18.0 * 0.75)))}]
+    if {$tb_conv && [dict exists $tb_price $n]} {
+      # converge: the measured remainder at this tap's own measured stage price (rounded down past a quarter stage: never overshoot by a stage)
+      set nb [expr {max(1, int(floor($d / [dict get $tb_price $n] + 0.25)))}]
+    } else {
+      set nb [expr {max(1, int(round($d / 18.0 * 0.75)))}]
+    }
+    if {$tb_conv} { dict set tb_prev $n [list [lindex $v 0] $nb] }
     set bt [lindex $v 4]
     set root [$bt getNet]
     set bb [$bt getBBox]
     set x [expr {([$bb xMin] + [$bb xMax]) / 2}]; set y [expr {([$bb yMin] + [$bb yMax]) / 2}]
+    if {$tb_conv} {
+      # converge (COORD 22:4x KV pv v8c: one BUFx4 pad at the PORT drove the whole port -> tree wire, 82 ps a stage on the
+      # single-sink core taps, clk_c14 209 -> 373 against 250): the chain sits at the centre of the root net's loads, so the
+      # port still drives the long wire and each pad stage drives a short net (the ~18 ps stage the estimate assumes)
+      set sx 0.0; set sy 0.0; set sk 0
+      foreach t [$root getITerms] { set ib [[$t getInst] getBBox]; set sx [expr {$sx + ([$ib xMin] + [$ib xMax]) / 2.0}]; set sy [expr {$sy + ([$ib yMin] + [$ib yMax]) / 2.0}]; incr sk }
+      if {$sk} { set x [expr {int($sx / $sk)}]; set y [expr {int($sy / $sk)}] }
+    }
     # the tree hangs off a new net; the chain runs tap port -> buf ... -> new net
     set tree [odb::dbNet_create $tb_blk "${n}_tb${tb_tag}${it}_tree"]
     $tree setSigType CLOCK
@@ -448,7 +496,10 @@ for {set it 0} {$it < 4} {incr it} {
     }
   }
   tb_end $todo
-  if {!$todo} break
+  return $todo
+}
+for {set it 0} {$it < $tb_iters} {incr it} {
+  if {![tb_tap_pass $it]} break
 }
 # CP2 core pass: every hard-core clock pin on a GRID tap whose effective arrival (pin + internal latency) misses the
 # target by > tol is re-hung: too late -> its own delay chain straight from the tap port (the earliest point of that
@@ -468,8 +519,20 @@ set tb_etap [expr {[info exists ::env(OT_TAP_CORE_ETAP)] && $::env(OT_TAP_CORE_E
 # again on the next pass, a late one cannot be re-hung.  ETAP off: 18 ps (pre-ETAP behaviour).
 set tb_cstage [expr {[info exists ::env(OT_TAP_CORE_STAGE_PS)] ? $::env(OT_TAP_CORE_STAGE_PS) : ($tb_etap ? 30.0 : 18.0)}]
 if {[dict size $tb_clat]} {
-  for {set ci 0} {$ci < 3} {incr ci} {
+  set tb_cprice {}; set tb_cprev {}
+  for {set ci 0} {$ci < ($tb_conv ? $tb_iters : 3)} {incr ci} {
     set m [tb_measure]
+    if {$tb_conv} {
+      # TAP-GRID-2130 converge: learned stage price of every core pin padded (too early) in the previous pass
+      foreach c $tb_cores {
+        lassign $c p tap a L
+        if {![dict exists $tb_cprev $p]} continue
+        lassign [dict get $tb_cprev $p] e0 nb0
+        set g [expr {$a + $L - $e0}]
+        if {$g > 1.0 && $nb0 > 0} { dict set tb_cprice $p [expr {$g / $nb0}] }
+      }
+      set tb_cprev {}
+    }
     set todo 0
     tb_begin
     foreach c $tb_cores {
@@ -546,6 +609,11 @@ if {[dict size $tb_clat]} {
         set src [$it getNet]
         set nb [expr {max(1, int(round($d / $tb_cstage * 0.75)))}]
       }
+      if {$tb_conv && $d > 0} {
+        # TAP-GRID-2130 converge: an early core pin is padded by the measured remainder at its own learned stage price
+        if {[dict exists $tb_cprice $p]} { set nb [expr {max(1, int(floor($d / [dict get $tb_cprice $p] + 0.25)))}] }
+        dict set tb_cprev $p [list [expr {$a + $L}] $nb]
+      }
       lassign [tb_outside $it] x y
       set tag "[regsub -all {[^A-Za-z0-9_]} $p _]_cb${tb_tag}${ci}"
       incr tb_added [tb_hang $it $src $nb $tag $x $y]
@@ -555,6 +623,17 @@ if {[dict size $tb_clat]} {
     tb_end $todo
     if {!$todo} break
   }
+}
+if {$tb_conv} {
+  # TAP-GRID-2130: the core pass moved pins of grid taps; verify the taps again and finish the remainder (bounded)
+  for {set it $tb_iters} {$it < 2 * $tb_iters} {incr it} {
+    if {![tb_tap_pass $it]} break
+  }
+  set m [tb_measure]
+  set tb_off {}
+  dict for {n v} $m { if {abs([lindex $v 0] - $tgt) > $tb_tol} { lappend tb_off "$n=[format %.0f [lindex $v 0]]" } }
+  foreach c $tb_cores { lassign $c p tap a L; if {abs($a + $L - $tgt) > $tb_tol} { lappend tb_off "$p=[format %.0f [expr {$a + $L}]]" } }
+  puts "OT_TAP_CONVERGE [expr {[llength $tb_off] ? {OPEN} : {DONE}}] target [format %.0f $tgt] tol [format %.0f $tb_tol]: [llength $tb_off] taps / core pins off target after [expr {$it}] tap passes (bound [expr {2 * $tb_iters}]): [lrange $tb_off 0 40]"
 }
 set m [tb_measure]
 set lo 1e9; set hi 0.0; set fail {}

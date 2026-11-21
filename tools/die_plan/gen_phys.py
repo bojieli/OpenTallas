@@ -4124,13 +4124,64 @@ def tap_span_exports(t):
     return [f"export OT_TAP_SPAN_UM = {v:g}"]
 
 
+TAP_GRID_DEFAULTS = dict(pitch_um=300.0, bank_sinks=1000, pair_um=200.0, iters=8, raise_ps=0.0)
+
+
+def tap_grid_cfg(t):
+    """TAP-GRID-2130 (FABLE-CLOSURE-STRATEGY 21:30 lever 3): plan clock.tap_grid -> resolved settings, or None (key absent = off)."""
+    g = (t.get("clock") or {}).get("tap_grid")
+    if g is None:
+        return None
+    out = dict(TAP_GRID_DEFAULTS, **g)
+    if not 0 < float(out["pitch_um"]) <= 300 or not 0 < float(out["pair_um"]) <= 200:
+        raise ValueError("clock.tap_grid pitch_um must be in (0, 300] and pair_um in (0, 200]")
+    return out
+
+
+def tap_grid_density(raw, plan_path, types=None):
+    """clock.tap_grid with regs on a table type (explicit / grid+explicit) and no clock.tap_density of its own -> the tap_density
+    solve (span = pitch_um, target = bank_sinks): every bank over bank_sinks and every tap box over the pitch gets its own taps
+    (appended, existing names kept).  Mutates raw (gen_phys deep-copies it first).  -> [type]"""
+    got = []
+    for tn, t in sorted((raw.get("partition_types") or {}).items()):
+        ck = t.get("clock") or {}
+        g = tap_grid_cfg(t)
+        if not g or not g.get("regs") or ck.get("tap_density") or (types and tn not in types):
+            continue
+        if ck.get("tap_mode") not in ("explicit", "grid+explicit"):
+            continue
+        ck["tap_density"] = {"regs": g["regs"], "span_um": float(g["pitch_um"]), "target": int(g["bank_sinks"])}
+        got.append(tn)
+    return got
+
+
+def tap_grid_exports(t):
+    """kit side of clock.tap_grid: the sink-box limit (OT_TAP_SPAN_UM = pitch, unless clock.tap_span_um / the env set it), the
+    cap (bank_sinks, unless clock.tap_max_sinks is lower) and tap_balance convergence (OT_TAP_CONVERGE*).  No key: no line."""
+    g = tap_grid_cfg(t)
+    if not g:
+        return []
+    out = ["export OT_TAP_CONVERGE = 1", f"export OT_TAP_CONVERGE_ITERS = {int(g['iters'])}"]
+    if g.get("win_ps") is not None:
+        out.append(f"export OT_TAP_CONVERGE_WIN_PS = {float(g['win_ps']):g}")
+    if float(g["raise_ps"]) > 0:
+        out.append(f"export OT_TAP_CONVERGE_RAISE_PS = {float(g['raise_ps']):g}")
+    if not os.environ.get("OT_TAP_SPAN_UM") and not (t.get("clock") or {}).get("tap_span_um"):
+        out.append(f"export OT_TAP_SPAN_UM = {float(g['pitch_um']):g}")
+    return out
+
+
 def tap_pair_affinity_exports(t):
     """QC-TYPES-6 11-07: default-off pre-CTS short-pair tap affinity (clock_taps.tcl -> tap_pair_affinity.tcl).
     Clock pins only; radius and group bounded by the declared tap radius and capacity."""
     clock = t.get("clock", {})
-    if "tap_pair_affinity" not in clock:
+    _tg = tap_grid_cfg(t)
+    if "tap_pair_affinity" not in clock and not _tg:
         return []
-    spec = clock["tap_pair_affinity"]
+    spec = dict(clock.get("tap_pair_affinity") or {})
+    if _tg:
+        # TAP-GRID-2130: short zero-logic pairs share a tap (pair_um 60 -> 200 inside the cap; t60 kept 546 cross-tap short pairs)
+        spec["pair_um"] = max(float(spec.get("pair_um", 60.)), float(_tg["pair_um"]))
     tap_r = float(clock.get("tap_radius_um", 200.))
     radius = float(spec.get("radius_um", tap_r))
     group = int(spec.get("max_group", 64))
@@ -7585,6 +7636,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     cfg += dly_lockup_exports(P.budgets, tn, t)
     cfg += tap_pair_affinity_exports(t)
     cfg += tap_span_exports(t)
+    cfg += tap_grid_exports(t)          # TAP-GRID-2130, opt-in (clock.tap_grid)
     if t.get("clock", {}).get("tap_reset_affinity") is True:        # S81-SEAM-RST-1115, opt-in, clock pin only
         cfg.append("export OT_TAP_RESET_AFFINITY = 1")
     cfg += tap_post_merge_exports(t)
@@ -9625,6 +9677,10 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
         raise SystemExit(MS.REFUSE)
     # OPUS-FIX-S81-SLICEC 11-20 (class B, tap density from the placed sink count): plan clock.tap_density types get the taps
     # their placed registers need (tap_resolve.apply_density) before anything is written; no key = unchanged kits
+    if any((t.get("clock") or {}).get("tap_grid", {}).get("regs") for t in (raw.get("partition_types") or {}).values()):
+        import copy
+        raw = copy.deepcopy(raw)
+        tap_grid_density(raw, plan_path, types)       # TAP-GRID-2130: clock.tap_grid regs -> the tap_density solve below
     if any((t.get("clock") or {}).get("tap_density") for t in (raw.get("partition_types") or {}).values()):
         import copy
         import tap_resolve

@@ -747,6 +747,19 @@ SCHEMA = {
                         # COORD 11-19 sink region rule (opt-in): W + H limit (um) of a tap's sink box; the kit's pair planner keeps
                         # every move inside it (OT_TAP_SPAN_UM) and clock_taps.tcl reports the as-built boxes against it
                         "tap_span_um": _pos,
+                        # TAP-GRID-2130 (FABLE-CLOSURE-STRATEGY 21:30 lever 3, opt-in, every die; gen_phys.tap_grid_*): the tap grid.
+                        # pitch_um (<= 300) = grid pitch of a grid-mode type and the sink-box (W + H) limit of every tap; regs = a
+                        # placed register dump (tap_resolve --dump): explicit / grid+explicit tables get own taps for every bank
+                        # over bank_sinks (the tap_density solve, existing taps keep names); pair_um = zero-logic pairs sharing a
+                        # tap (tap_pair_affinity); iters / win_ps / raise_ps = tap_balance converge bounds (OT_TAP_CONVERGE)
+                        "tap_grid": {"type": "object", "additionalProperties": False,
+                                     "properties": {"pitch_um": {"type": "number", "exclusiveMinimum": 0, "maximum": 300},
+                                                    "bank_sinks": {"type": "integer", "minimum": 50, "maximum": 3000},
+                                                    "regs": {"type": "string", "minLength": 1},
+                                                    "pair_um": {"type": "number", "exclusiveMinimum": 0, "maximum": 200},
+                                                    "iters": {"type": "integer", "minimum": 1, "maximum": 16},
+                                                    "win_ps": {"type": "number", "minimum": 0, "maximum": 300},
+                                                    "raise_ps": {"type": "number", "minimum": 0, "maximum": 200}}},
                         # OPUS-FIX-S81-SLICEC 11-20 (opt-in): taps from the PLACED sink count (tap_resolve.apply_density at gen
                         # phys: a register dump of the type, span / target of the solve; appended taps keep the table's names)
                         "tap_density": {"type": "object", "additionalProperties": False, "required": ["regs"],
@@ -2840,7 +2853,13 @@ class Plan:
 def tap_pitch(P, tn):
     """R4 revised: the type's tap GRID pitch (clock.tap_pitch_um, sized from the measured trees) else
     budgets.tap_pitch_um (400).  Also with added sink-anchored taps: the grid stays (CP1 r8 RULING)."""
-    return float(P.types[tn].get("clock", {}).get("tap_pitch_um", P.budgets.get("tap_pitch_um", 400.0)))
+    ck = P.types[tn].get("clock", {})
+    p = float(ck.get("tap_pitch_um", P.budgets.get("tap_pitch_um", 400.0)))
+    # TAP-GRID-2130: clock.tap_grid caps the GRID pitch of a grid-mode type (grid / grid+sinks).  Table types (explicit,
+    # grid+explicit, density) keep their grid and names: their pitch limit is the sink-box rule + own bank taps (gen_phys).
+    if ck.get("tap_grid") is not None and ck.get("tap_mode", "grid") in ("grid", "grid+sinks", "sinks"):
+        p = min(p, float(ck["tap_grid"].get("pitch_um", 300.0)))
+    return p
 
 
 def sink_tap_mode(t):
