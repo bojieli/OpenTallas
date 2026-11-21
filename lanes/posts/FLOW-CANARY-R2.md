@@ -1,0 +1,1 @@
+- 2026-11-21 10:37 PST DIED [FLOW-CANARY-R2] ot-run oth-ubuntu-2387032-1795286257 on tolerant-swine: rc=1 after 5 s, ended 10:37:38, log none, cmd: --mem 4 --threads 2 --dir /srv/opentallas-scratch2/claude/FLOW-CANARY-R2/clone -- python3 -I -m pytest -q tools/flow_canary/test_flow_canary
