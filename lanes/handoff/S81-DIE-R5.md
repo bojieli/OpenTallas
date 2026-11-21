@@ -107,3 +107,4 @@ J5 live: event 224567138ab, src kw45/src_s81_pin_3c913dbdfb23_d8j5_1117_work, bi
 - 22:3x proof7b LAUNCHED (COORD: do not hold): ot-run client 2963642 unit oth-ubuntu-2964461-1795239748, log r4/run7b.log. proof7 kept for comparison.
 - 23:0x SWEEP: serdes t12@8 + t1 clfe1f0815@7 relaunched (old rt, no region lines; kit_wave e156f0ee180). col_h10 p4 a11 not in gate -> J6 STRUCTURAL row ROM negedge pval -> qbank e_r half-cycle (+1 reg). t4 a13 = first region-fix test.
 - 23:00 c1x_C t1 a13 / t6 a46 LEFT to finish (cancel-rows --attempt not landed by 23:00).
+- 23:3x serdes cone refusal: main 124d829f45f OT_PLACE_REGION_DROP (unseparable cone -> no region). Waiter drop_relaunch.sh retries t2@4 t14@5 t15cla3d@4 t15cla21@5 t1clb45@5 t4@13 once rt/current carries it. Then read DPL/CTS.
