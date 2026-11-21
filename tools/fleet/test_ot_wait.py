@@ -148,7 +148,8 @@ def test_post_gating_and_text(tmp_path, monkeypatch):
     assert len(out.read_text().splitlines()) == 3
 
 
-def test_lane_from_dir():
+def test_lane_from_dir(monkeypatch):
+    monkeypatch.delenv("OT_LANE", raising=False)
     assert S.DIR_LANE.match("/srv/opentallas-scratch2/claude/FOO-1/ws/tools").group(1) == "FOO-1"
     assert S.lane_name("/srv/opentallas-scratch2/claude/rt/current/tools") == ""
     assert S.lane_name("/home/ubuntu") == ""
