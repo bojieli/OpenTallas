@@ -15,3 +15,4 @@
 - 2026-11-20 22:10 PST DIED [KV-PLAN-R3] ot-run oth-ubuntu-1440726-1795241406 on outgoing-giraffe: rc=4 after 4 s, ended 06:10:08, log none, cmd: --hosts epyc8 --mem 8 --threads 2 --dir /srv/opentallas-scratch2/claude/kv-plan-r3/wt/tools/die_plan -- python3 -m pytest -q -x test_bind_sp
 - 2026-11-20 22:13 PST DIED [KV-PLAN-R3] ot-push-main otpush-outgoing-giraffe-1486164 on outgoing-giraffe: rc=4 after 28 s, ended 06:13:32, log none, cmd: ot-push-main 
 - 2026-11-20 22:17 PST DONE [KV-PLAN-R3] ot-run oth-ubuntu-1186799-1795240343 on outgoing-giraffe: rc=0 after 1522 s, ended 06:17:42, log /srv/opentallas-scratch2/claude/kv-plan-r3/d27b6gate/g0.log, cmd: --hosts epyc8 --mem 56 --threads 3 --priority plan --dir /srv/opentallas-scratch2/claude/kv-plan-r2/d27b -- bash /srv/opentallas-scratch2/cl
+- 2026-11-20 22:23 PST DONE [KV-PLAN-R3] ot-push-main otpush-outgoing-giraffe-1547519 on outgoing-giraffe: rc=0 after 395 s, ended 06:23:59, log none, cmd: ot-push-main 
