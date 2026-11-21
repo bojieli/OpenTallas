@@ -187,7 +187,8 @@ class Guard(unittest.TestCase):
         self.assertEqual(M.guard_victim(procs), 2)              # not the 4 GB one, not adj 0 / -1000 (late stage, plan), not a non-build comm
         # FABLE-FLOW-1555 A: the biggest frees the most; equal sizes -> the youngest (highest adj)
         big_old = [(1, "openroad", 120, 130, 40.0), (2, "openroad", 790, 800, 2.0), (3, "openroad", 700, 710, 21.0)]
-        self.assertEqual(M.guard_victim(big_old), 1)
+        self.assertEqual(M.guard_victim(big_old), 3)            # FLEET-WATCH-2000: adj 120 = hours of sunk work, spared while a younger candidate exists
+        self.assertEqual(M.guard_victim([(1, "openroad", 75, 80, 18.8), (2, "openroad", 150, 160, 24.0)]), 2)   # only old ones left: the largest still goes (the rail stays)
         tie = [(1, "openroad", 300, 310, 8.0), (2, "openroad", 790, 800, 8.1), (3, "openroad", 100, 110, 8.0)]
         self.assertEqual(M.guard_victim(tie), 2)
         self.assertIsNone(M.guard_victim([(3, "openroad", 0, 30, 45.0)]))

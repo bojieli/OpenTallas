@@ -236,11 +236,18 @@ def guard_pct():
         return GUARD_PCT_DEFAULT
 
 
+GUARD_SUNK_ADJ = int(os.environ.get("OT_OOM_GUARD_SUNK_ADJ", "150"))
+
+
 def guard_victim(procs):
     """procs: [(pid, comm, adj, score, rss_gb)] -> the non-plan build process to kill first (adj in 1..800, highest oom_score = largest young one), or None"""
     cand = [x for x in procs if 0 < x[2] <= MAXMANAGED and x[1] in COMMS]
     # 11-18 (FABLE-FLOW-1555 A, COORD): the victim is the job whose kill FREES THE MOST memory (30 kills of 1-2 GB young openroad freed ~40 GB on epyc10 while 74 old jobs kept 939 GB);
     # the highest adj (youngest / earliest stage) is only the tie-break among equal sizes (RSS compared at 0.5 GB granularity), then oom_score.  adj 0 (late stage) and plan jobs stay excluded.
+    # FLEET-WATCH-2000 (COORD item 7): the guard SIGKILLed four KV hgi kits at 4 h 19 min in GRT (peak 19 GB, adj 75): the largest-RSS rule picks the biggest process whatever its sunk work, and the
+    # oldest GRT jobs are the big ones.  A process with adj <= GUARD_SUNK_ADJ has hours of sunk work (age credit, scaled GRT value): it is a victim only when no younger candidate is left.
+    young = [x for x in cand if x[2] > GUARD_SUNK_ADJ]
+    cand = young or cand
     return max(cand, key=lambda x: (round(x[4] * 2), x[2], x[3]))[0] if cand else None
 
 
