@@ -266,3 +266,69 @@ def test_verify_rejects_duplicate_programming_references(rom, tmp_path):
     result = vg.verify(rewritten, "TOP", df, macro, rom[2], rom[0] / "vm")
     assert result["verdict"] == "FAIL"
     assert "exactly one SREF" in result["failures"][0][1]
+
+
+def via_grid_doc(sheet):
+    import hashlib
+
+    return {
+        "schema": "opentallas.rom-via-grid.v1",
+        "lef_sha256": hashlib.sha256(sheet.with_suffix(".lef").read_bytes()).hexdigest(),
+        "dbu_per_um": 4000,
+        "banks": [
+            {
+                "row_start": 0, "col_start": 0, "row_axis": "x",
+                "rows_dbu": [400 + 432 * r for r in reversed(range(8))],
+                "cols_dbu": [200 + 216 * (c + c // 16) for c in range(64)],
+            },
+            {
+                "row_start": 0, "col_start": 64, "row_axis": "x",
+                "rows_dbu": [6000 + 432 * r for r in range(8)],
+                "cols_dbu": [200 + 216 * c for c in range(64)],
+            },
+        ],
+    }
+
+
+def test_via_grid_merges_mirrored_and_gapped_native_axes(rom, tmp_path):
+    d, sheet, man, _ = rom
+    grid = tmp_path / "drains.json"
+    grid.write_text(json.dumps(via_grid_doc(sheet)))
+    m = vg.Macro(sheet, via_grid=grid)
+    assert m.centre_um(0, 16) == pytest.approx(((400 + 432 * 7)/4000, (200 + 216 * 17)/4000))
+    assert m.cell_of(*m.centre_um(7, 100)) == (7, 100)
+    x, y = m.centre_um(0, 0)
+    with pytest.raises(ValueError, match="not on a programming drain"):
+        m.cell_of(x - 0.054, y)
+    out = tmp_path / "overlay.gds"
+    vg.write_overlay(m, d / "vm" / "u_rom0.viamap.hex", out)
+    assert vg.readback_overlay(m, out) == vg.read_viamap(d / "vm" / "u_rom0.viamap.hex", m)
+    with pytest.raises(ValueError, match="differs from VIA1 grid"):
+        vg.write_overlay(m, d / "vm" / "u_rom0.viamap.hex", out, 1000)
+
+    die, df, merged = tmp_path / "die.gds", tmp_path / "p.def", tmp_path / "placed.gds"
+    die_gds(die)
+    df.write_text(def_text(m, ORIENTS))
+    info = vg.merge(die, "TOP", df, m, man, d / "vm", merged)
+    assert info["array_origin_um"] is None and info["via_grid_sha256"] == m.grid.sha256
+    assert vg.verify(merged, "TOP", df, m, man, d / "vm")["instances_checked"] == 3
+
+
+@pytest.mark.parametrize("invalid,diagnosis", [
+    ("lef", "LEF SHA-256"),
+    ("logical_gap", "every logical cell"),
+    ("physical_overlap", "bank boxes overlap"),
+])
+def test_via_grid_rejects_wrong_abstract_or_invalid_coverage(rom, tmp_path, invalid, diagnosis):
+    _, sheet, _, _ = rom
+    doc = via_grid_doc(sheet)
+    if invalid == "lef":
+        doc["lef_sha256"] = "0" * 64
+    elif invalid == "logical_gap":
+        doc["banks"][1]["col_start"] -= 1
+    elif invalid == "physical_overlap":
+        doc["banks"][1]["rows_dbu"] = doc["banks"][0]["rows_dbu"]
+    grid = tmp_path / "bad.json"
+    grid.write_text(json.dumps(doc))
+    with pytest.raises(ValueError, match=diagnosis):
+        vg.Macro(sheet, via_grid=grid)

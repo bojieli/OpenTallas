@@ -728,7 +728,8 @@ def main() -> int:
     g.add_argument("--macro", type=Path, required=True, help="the macro's datasheet JSON")
     g.add_argument("--viamap", type=Path, required=True, help="<INSTANCE>.viamap.hex")
     g.add_argument("--out", type=Path, required=True)
-    g.add_argument("--dbu-per-um", type=float, default=1000.0)
+    g.add_argument("--dbu-per-um", type=float)
+    g.add_argument("--via-grid", type=Path, help="explicit programming drain coordinates bound to the macro LEF")
     v = sub.add_parser("verify", help="per-content functional/LEC check: via maps against the weight image")
     v.add_argument("--manifest", type=Path, required=True, help="<prefix>.personalisation.json")
     v.add_argument("--image", type=Path, default=None, help="the content file (default: the manifest's)")
@@ -755,11 +756,11 @@ def main() -> int:
         return 0 if res["verdict"] == "PASS" else 1
     if args.cmd == "gds":
         import rom_viamap_gds as VG
-        m = VG.Macro(args.macro)
+        m = VG.Macro(args.macro, via_grid=args.via_grid)
         name = VG.write_overlay(m, args.viamap, args.out, args.dbu_per_um)
         ok = VG.readback_overlay(m, args.out) == VG.read_viamap(args.viamap, m)       # the stream is read back before it is reported
         print(json.dumps({"structure": name, "gds": str(args.out), "layer": [VG.V1_LAYER, VG.V1_DT], "readback": "PASS" if ok else "FAIL",
-                          "array_origin_um": list(m.origin), "array_origin_assumed": m.origin_assumed}))
+                          **m.geometry_info()}))
         return 0 if ok else 1
     if args.cmd == "verify":
         res = verify_personalisation(args.manifest, args.image, args.macro)
