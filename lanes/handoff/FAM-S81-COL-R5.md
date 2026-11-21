@@ -2,7 +2,7 @@
 Scope: col_h9_r1 and col_h9_r2, plus the shared J7 col rows. h9_r0 = FAM-S81-COL-H9R0-R3. h10, FIT selector and hard-core view fix = FAM-S81-COL-H10-R3 (COORD dispatch 11-21). Work dir: /srv/opentallas-scratch2/claude/fam-s81-col-r5 (epyc8/9/10/2). The R4 proof dirs stay at fam-s81-col-r4.
 ## Done
 - SAFETY: on epyc8, src_rb shared 309,141 inodes with the J5 tree kw45/src_s81_pin_3c913dbdfb23_d8j6r1_1117_work. Each one is now a real copy. src_tc links only to src_rb (nlink 2, 0 files above 2). J5: verify --ro OK (files 328061) and links OK. Log: epyc8 fam-s81-col-r5/verify_j5_post.log.
-- Strays: ot-delete is tree-only, so files fail with Errno 20. epyc10 /tmp/claude_r4_j7rb*.json, src4x plan_j7v4_try.json and plan_j7v4_resite.json, and tc/col_h9_r0_*.json all remain (needs a file mode in ot-delete). The epyc10 src_rb/src_tc are protected by kit_wave.json refs.
+- Strays: all deleted 11-21 via rt/current ot-delete (file mode); posted CLEANUP DONE.
 - Ruling 2a (h9_r1 pv047ea3b3): rk/rank.py joins the placed_raw legs to the routed ep_tt.tsv of dear-crayfish (epyc2) kits pv047ea3b3-4010677 and pv4bd36c74-2843429. Only 127 legs in 5 groups fail: xa_4->t4/xai, xb_5->t5/xbi, xb_4->t4/xbi (all RLYBR already), and c5_6->s5/q6 and c7_6->s7/q6 (19 legs each, 410 um). Some fails come from no long leg: s5/s6/s7 q3, e5/6/7/9 xs_q0/xs_q1/cfg_d, bn6/e_r0; these need a path read. COORD: NO new station rows while FIT fits 0 (both h9_r1 kits fit 0/80).
 - Fix #4 per-class placed check: table posted to S81-J6-ASSEMBLY-R4 (posts 11-21 ~12:0x). Probe tool: fam-s81-col-r5/probe/probe_cls.py + runprobe.sh + runall.sh (docker, read-only). Flag: h10_r0_p4 xo strip (DRT 31). In J7 v7, 53 h9_r0 types have e3 at y 648. 13 classes have no placed DB.
 ## Running
@@ -11,3 +11,4 @@ Scope: col_h9_r1 and col_h9_r2, plus the shared J7 col rows. h9_r0 = FAM-S81-COL
 - After the J7 bind (apply 11-22 04:15) and the H10-R3 FIT fix: run one place+GRT private kit (kit_wave.py private-spec) per h9_r1/r2 class (7) and run the probe on each.
 - mkresite: after the J7 bind, read the longest bound reset hop on h9_r0_p1/p3/h9_r2. If the captured bound_native_reset bypassed it, write the bound_reset_placement overlay. The 146 residual reset hops (R4 rc/rrl_try.json) are held under the COORD station-row stop until FIT is fixed.
 - Carry the H10-R3 FIT and view fix to the h9_r1/r2 siblings once it is proven.
+- e3 y 648 flag (53 h9_r0 types) posted to S81-J6-ASSEMBLY-R4 + FAM-S81-COL-H9R0-R3.
