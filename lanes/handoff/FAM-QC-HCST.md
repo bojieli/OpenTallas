@@ -8,3 +8,8 @@ Family: QC sle_hc*/slw_hc*, sle_st*/slw_st*, sle_su*/slw_su*. FABLE-FIX-QC-SLE k
 ## Next
 - Rep to sign-off; then hand fix rows to QC-PLAN-R8 for V2; relaunch siblings (slw_hc3 other pv variants if any).
 - slw_st_a_v2__cl9f076a5c + slw_su_c__cl19bb38ef "placed, route held": check route-hold reason.
+
+## 2026-11-21 02:29 PST Codex notes
+- Applied feedthrough candidate: `epyc9:/srv/opentallas-scratch2/claude/qc-plan-r8/v2b/hcst_ft/ledger.json` reports 36 spread slots on 19 current HC/ST types, no added stations and every computed per-bit hop ≤300 µm. They ride b10.
+- 24 slots deferred. The 1,574-bit `b_hw_ctl_hc3` banks fan from opposing unequal windows and push central hops to 324 µm. The two-stage `x_fw_ctl_p2` slots land at 323 µm. Other misses are three each of `cws3` and `x_su_l0_ctl`. Physical window/column placement must improve before adding larger banks.
+

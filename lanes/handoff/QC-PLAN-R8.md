@@ -93,3 +93,9 @@
   does not site them (free-placed stations): sle_hc0 x3, sle_hc1__cl7d360508, sle_st_b_v1 x2, sle_st_b_v2 x3, slw_hc0, slw_hc1 x2,
   slw_st_b_v1. Ask FAM-QC-FEFW for the regs_um rows (or generate on the ft slot polylines, <=300 um legs, 0 cycles: station count
   unchanged), fold them into c5/p_final4 -> rebind (bind_v2.sh loop) before G0; if they miss V2 seal, carry to V3.
+
+## 2026-11-21 02:29 PST Codex notes
+- FAIL b9 strict bind RC 1, no LATCHECK. After R8 refresh (56 authoritative extra members rebound), b9 reported PARAM_REGEN W5/S plus 84 HARD_CORE_PARAM_WRAP and 9 HARD_CORE_PARAM_ALL. The parameter hook returns before applying both hard-core correction families when transport regen raises.
+- Read-only exact bus-group replay at epyc9 `v2b/b9_diag/groups.json` finds all 24 slice/sides unbalanced. W5/S same-column node `c16_W5_1.u_t_2_0` has n_a shift 0 and n_b +2: column pads cancel out algebraically. A direct per-leg compensation diagnostic at `b9_diag/join_cost.json` would add 2,028 parallel stage banks across 414 legs (336 intra, 78 crossings, max +14) before further optimization. Keep that full-depth prototype held and rederive compatible CB pad/latency rows jointly.
+- Started epyc9 b10 `oth-ubuntu-2117571-1795256843`: candidate `b10_plan.json` restores the V1 CB transport contribution on 576 lanes (2,256 cycles summed across bookkeeping rows), keeps CB reset/tile clock and all non-CB changes, and incorporates the 36 zero-cycle HC/ST FT sites. It begins from live V1 R8/extra tables and rebinds strictly. Plan `b10_plan.json` and logs `b10.out` are in the existing R8 lane directory. All CB rollout holds remain.
+

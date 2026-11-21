@@ -42,3 +42,8 @@ slw_fe_v1__clfe325744__cldb4efe33 itself is relay_bay form: MEASURED in 3_place.
 The 2061 um in FAIL_POSTPLACE is the longest hop between consecutive instances ON THE WORST PATH (tt_setup_repair.tcl OT_POSTPLACE_WORST), not rrl->eq: the path runs through reset-net buffers
 far away; WNS -187714 ps / TNS -2.0e9 on a reset net whose sinks (repointed ft/face flops of tap 74) span the die. Cause is the reset repoint/fanout of rst_n_t74 (RTL has 0 sinks on it, sinks are attached at place), not ft sites.
 No generator change pushed (nothing to fix; spreading no-regs_um slots would be a feature, owner QC-PLAN-R8 could add regs_um rows).
+
+## 2026-11-21 02:29 PST Codex notes
+- Last candidate remains epyc10 `oth-ubuntu-325482-1795255542`, `residual/i2r`. Hold ECO selected the one internal failing capture at -3.63 ps and inserted one delay cell, leaving 3,817 parent-only endpoints advisory. DRT/STA/LEC results pending.
+- The 02:12 rc127/1 were diagnostic tool calls; the subsequent placed geometry dump succeeded (`epyc9:/srv/opentallas-scratch2/claude/fam-qc-fefw/pos.out`, eq flop sites establish the 133 µm geometric leg). The failed 2 mm path is reset-buffer fanout; pursue partitioned reset distribution with actual sink partitions. No same-input reroute.
+

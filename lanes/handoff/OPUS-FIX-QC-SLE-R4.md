@@ -13,3 +13,7 @@ Waiter script (rtx-pro): /tmp/claude-1000/-home-ubuntu-OpenTallas/c228d9e1-f423-
 
 ## Waiters armed (this session; a successor must re-arm)
 k_a GRT/exit, k_b GRT/exit (wgrt.sh).
+
+## 2026-11-21 02:29 PST Codex notes
+- A and B are active. k_a entered post-GPL resizer (10,506 instances resized, 48,969 buffers), and k_b was in GPL. No completed GRT verdict. First su_c proof uses the earliest passing V2 bind. R3 rows remain in b10.
+

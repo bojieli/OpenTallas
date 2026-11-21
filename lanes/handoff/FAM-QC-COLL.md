@@ -4,3 +4,9 @@ Family: unsigned QC coll types = coll_core, coll_ftc (coll_ft cl78c7b300/cla4a25
 - Cancelled 23:5x: kit-wave coll_core s29q103S4Q9N46R4A4 attempt_2 (epyc8 oth-ubuntu-4190430-1795235565, 3 h 10, post-CTS -1154, no read register).
 - coll_ftc: epyc2 dpkit-coll_ftc-1206090 (5 h, detail route) kept.
 - Next: read pkw4 final GRT TT per class; if rdq->out_data class >= -42 hand row (registered reads + write-data register + 2 stations for u_ctl face codec) to QC-PLAN-R8 V2; else add out_data output register row.
+
+## 2026-11-21 02:29 PST Codex notes
+- PASS ODPRE latency-aware lockstep: 26/26 plain/QFD cases at +1 visible output cycle; both no-ODPRE controls fail at that schedule. PASS 8/8 corresponding production-shape cases. All input/write/link slots unchanged. epyc9 `fam-qc-coll/odpre_{lockstep,production}/record.json`. The tracked benchmark/model and default-off SWDREG/ODPRE candidate are staged in the existing lane clone. Fresh source QFD production and rank-mutant runs `codex_{production,mutant}.client.log` are active.
+- FAIL `coll_ftc` N46R4A4 attempt 5: after +32.8 ps TT through GRT, DRT-0255 could not escape ring select net `u_bound.u_cland_tl_st_wi_i/u_ring.dch[10].u_dsel/net158717` at x166.44–170.43, y912.57–916.56 µm. Original run logs preserved at epyc2 scratch3 `ot-job-failed-logs/coll_ftc-route-dear-crayfish-1204101-1795228109`. Fresh V1 attempt 6 is in GPL on epyc2 `oth-ubuntu-1674772-1795255290`. Compare ring pin/guide access there before any shape release. No identical reroute launched.
+- `coll_core` pkw4 was still in setup repair, recurring best TT about -82 ps and 221 endpoints. Output pipeline remains a separate +1 candidate until geometry and routed timing support it.
+
