@@ -39,3 +39,4 @@ My local waiters die with this session: RE-ARM on every unit below.
 - c1x_C census 6 yosys jobs epyc10 $W/census/t{1,5,6,7,8,10}/stats.json (running 1 h+); -> strip/body sizes to S81-J6-ASSEMBLY-R3.
 - t6 attempt_46: not live anywhere (posted). R1 benches/t9 epyc10 clients cancelled (never admitted).
 - census DONE: totals posted (t1 335k, t5 329k, t6 352k, t7 332k, t8 363k, t10 341k generic); per-module strip/body split still to compute.
+- t37 gate GREEN (bind 0, LATCHECK 0, G0 87 inh/0 new, PRE 0): tree $L/candC1n_t37, gate $L/gates/candC1n_t37. Next: kit with wave env, route to sign-off.
