@@ -458,7 +458,7 @@ def log(conf, msg):
 
 
 def status_rows(backend):
-    """-> {host: {"admit", "waiting_gb", "load", "ncpu", "capped", "held"}} from one ot-run --status, or None"""
+    """-> {host: {"admit", "waiting_gb", "load", "ncpu", "capped", "held", "draining"}} from one ot-run --status, or None"""
     try:
         p = subprocess.run([backend, "--status"], capture_output=True, text=True, timeout=120)
     except (OSError, subprocess.TimeoutExpired):
@@ -479,12 +479,12 @@ def status_rows(backend):
         w = re.search(r" waiters \d+:(\d+(?:\.\d+)?) GB", seg)
         out[h] = dict(admit=int(m.group(1)), waiting_gb=float(w.group(1)) if w else 0.0,
                       load=float(ld.group(1)) if ld else 0.0, ncpu=max(int(ld.group(2)), 1) if ld else 1,
-                      capped=" LOADCAP" in seg, held=False)
+                      capped=" LOADCAP" in seg, held=False, draining=" DRAINING (" in seg)
     return out
 
 
 def row_admits(r, mem):
-    return bool(r) and not r["held"] and not r["capped"] and r["admit"] - r["waiting_gb"] >= int(float(mem))
+    return bool(r) and not r["held"] and not r["capped"] and not r.get("draining") and r["admit"] - r["waiting_gb"] >= int(float(mem))
 
 
 def pick_host(rows, oks, mem):
@@ -513,7 +513,7 @@ def admits(backend, host, mem):
     # whose queued waiters already claim that memory (epyc7 09:2x: admits 104, waiters 45:1950 GB, load 186/96 ->
     # 12 sealed PLACE jobs pinned behind the queue).  Such a call runs unsealed, so ot-run can spill it.
     seg = (p.stdout or "")[m.start():].split(" | ", 1)[0]
-    if " LOADCAP" in seg:
+    if " LOADCAP" in seg or " DRAINING (" in seg:
         return False
     w = re.search(r" waiters \d+:(\d+(?:\.\d+)?) GB", seg)
     try:
@@ -696,7 +696,10 @@ def decide_gen(o, flags, cmd, gc, conf, passthru, check=None, exclude=()):
     backend = backend_of(conf)
     rows = status_rows(backend)
     if rows is not None:
-        free = {h: v for h, v in oks.items() if h not in exclude} or oks
+        free = {h: v for h, v in oks.items() if not rows.get(otrun_host(h), {}).get("draining")}
+        if not free:
+            return passthru, f"capacity: every sealed gen holder is draining ({','.join(oks)})"
+        free = {h: v for h, v in free.items() if h not in exclude} or free
         host = pick_host(rows, free, o["mem"])
         if host is None and conf.get("gen_capacity_passthru"):
             return passthru, f"capacity: none of {','.join(oks)} admits {o['mem']} GB now (gen unsealed)"
@@ -774,17 +777,17 @@ def decide(argv, conf, check=remote_ok, fetch=None, exclude=(), source=None):
     else:
         host = next(iter(srcs))
         kids = srcs[host]
-    rows, src = None, None
+    rows, src = status_rows(backend), None
     fetch = fetch or fetch_ok
     if (ac or pc and conf.get("place_fetch")) and conf.get("ap_fetch_hosts"):
         # KW-FIX-44 (COORD 13:0x): when no holder of K admits the job now, run it sealed on a ready host that does,
         # with every input fetched from the holder (ot-job tar fetch into its store), and copy K back after
-        rows = status_rows(backend)
         held = pick_host(rows, {h: kd for h, kd in oks.items() if h not in exclude}, o["mem"]) if rows is not None else None
         if held:                       # a holder of K admits it now: run there (the first configured host may not)
             host, kids = held, oks[held]
         elif rows is not None:
-            cand = [h for h in conf["ap_fetch_hosts"] if h not in oks and h not in exclude]
+            cand = [h for h in conf["ap_fetch_hosts"] if h not in oks and h not in exclude
+                    and not rows.get(otrun_host(h), {}).get("draining")]
             with cf.ThreadPoolExecutor(max(len(cand), 1)) as ex:
                 fr = dict(zip(cand, ex.map(lambda h: fetch(h, bundle, K), cand)))
             best = pick_host(rows, {h: kd for h, (okh, kd) in fr.items() if okh}, o["mem"])
@@ -794,7 +797,6 @@ def decide(argv, conf, check=remote_ok, fetch=None, exclude=(), source=None):
                     kids = [k for k in kids if k != "K_PRESENT"]
                     STAGE[:] = [None]
     if not src and conf.get("capacity_passthru", True):
-        rows = status_rows(backend)
         if rows is not None:
             best = pick_host(rows, {h: kd for h, kd in oks.items() if h not in exclude}, o["mem"])
             if best is None:
@@ -804,6 +806,8 @@ def decide(argv, conf, check=remote_ok, fetch=None, exclude=(), source=None):
         # COORD 08:1x capacity: a sealed job cannot SPILL; when K's host cannot admit it now, run it unsealed so
         # ot-run can spill it to a host that admits (epyc4).  Logged as PASS capacity; it is not an ISOLATE gap.
         return passthru, f"capacity: {host} does not admit {o['mem']} GB now (spill unsealed)"
+    if (rows or {}).get(otrun_host(host), {}).get("draining"):
+        return passthru, f"capacity: sealed execution host {host} is draining (spill unsealed)"
     if pc and conf.get("declare") in ("warn", "enforce"):
         refs = (conf.get("scan_of") or kit_refs)(src or host, K)        # on the host that HOLDS K
         if refs is None:
@@ -931,7 +935,7 @@ def run_sealed(argv, conf, orig):
         return rc
     K, stage = tg
     gaps = gaps_in("".join(buf), K)
-    if not gaps and stage == "gen" and rc not in (75, 96) and "ot-run: NOT RUN" not in "".join(buf[-50:]):
+    if not gaps and stage == "gen" and rc not in (75, 96) and not re.search(r"(?m)^(?:ot-run: NOT RUN|NOT-RUN)\b", "".join(buf[-50:])):
         gaps = [("(sealed gen rc %d)" % rc, (LAST_OUT[-1].strip() if LAST_OUT else "")[:300])]
     if not gaps:
         return rc
