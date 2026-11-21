@@ -156,7 +156,19 @@ def stream(host, base, todo, overwrite=False):
     """tar on the host, zstd through localhost, untar on the archive with --skip-old-files.  -> True when both ends exit 0"""
     p1 = subprocess.Popen(host_cmd(host, 'set -o pipefail; nice -n 15 tar -C / --null -T - -cf - | nice -n 15 zstd -q -T2 -3 -c'),
                           stdin=subprocess.PIPE, stdout=subprocess.PIPE)
-    p1.stdin.write(('\0'.join(todo) + '\0').encode()); p1.stdin.close()
+    import threading   # FLOW-CANARY-R2 11-21: the name list went in BEFORE the output was read; > 64 KB of paths (850+ files) deadlocked tar/zstd against this process (the epyc2 35k-file hang)
+
+    def _feed(data=('\0'.join(todo) + '\0').encode()):
+        try:
+            p1.stdin.write(data)
+        except OSError:
+            pass
+        finally:
+            try:
+                p1.stdin.close()
+            except OSError:
+                pass
+    threading.Thread(target=_feed, daemon=True).start()
     q = shlex.quote(base)
     p2 = subprocess.Popen(AGI + ['set -o pipefail; mkdir -p %s && zstd -q -d -c | tar -C %s %s -xf -' % (q, q, '--unlink-first' if overwrite else '--skip-old-files')],
                           stdin=subprocess.PIPE)
