@@ -10,5 +10,6 @@ Nice=10
 # 11-19: idle class starved the pass on epyc7 (IO PSI 60 percent, w_await 595 ms): the lock stayed held 43 min, no pass for 90 min
 IOSchedulingClass=best-effort
 IOSchedulingPriority=6
-TimeoutStartSec=1700
+# The scanner stops starting new candidates at its cooperative deadline. Let a guarded deletion finish and release the lock.
+TimeoutStartSec=infinity
 KillMode=process
