@@ -521,3 +521,29 @@ def test_named_h8_lanes_allow_numeric_split_lane_allocation():
     raw = {"lanes": [{"id": lane} for lane in mixed]}
     assert TS._lane_num(raw) == 11
     assert sorted(mixed, key=TS._lane_sort_key) == ["L2", "L11", *sorted(names)]
+
+
+def _sidecar_event(tmp_path, side):
+    ev = TS.Event.__new__(TS.Event)
+    ev.plan_dir, ev.spec, ev.rep, ev.tag = tmp_path, {}, {}, "test-side"
+    ev.ts = {"a": type("TS", (), {"tnames": ["a", "a_att"]})()}
+    ev.out, ev.ab_out = {"partition_types": {"a": {}, "a_att": {}}}, None
+    ev._census = lambda _out: {}
+    ev.side, ev.pc_out, ev.latency_rows = side, None, []
+    return ev
+
+
+def test_sidecar_tree_less_base_rows_are_carried(tmp_path):
+    """base sidecar rows without a tree (hard / tree-less types outside the split) do not fail the split"""
+    tree = {"root": [0, 0], "depth": 1, "relays": []}
+    side = {"collector": {"types": {"a": {"tree": tree}, "a_att": {"tree": tree}, "hard_x": {"tree": None}}}}
+    _sidecar_event(tmp_path, side).write(tmp_path / "o", "o")
+    out = json.loads((tmp_path / "o" / "eW_sidecar.json").read_text())
+    assert out["collector"]["types"]["hard_x"]["tree"] is None
+
+
+def test_sidecar_piece_row_without_tree_fails(tmp_path):
+    tree = {"root": [0, 0], "depth": 1, "relays": []}
+    side = {"collector": {"types": {"a": {"tree": tree}, "a_att": {"tree": None}}}}
+    with pytest.raises(TS.SplitError, match="a_att"):
+        _sidecar_event(tmp_path, side).write(tmp_path / "o", "o")

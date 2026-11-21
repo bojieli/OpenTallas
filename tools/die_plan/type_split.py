@@ -3458,9 +3458,14 @@ class Event:
         p.write_text(txt)
         md5["plan_c.json"] = hashlib.md5(txt.encode()).hexdigest()
         if self.side is not None:
-            for r in self.side.get("collector", {}).get("types", {}).values():
-                if r.get("tree") is None:
-                    raise SplitError("sidecar collector row without a tree")
+            # only the split pieces' rows are re-filled (_reset_trees); base rows that have no tree in the base sidecar
+            # (hard / tree-less types) are carried unchanged (OPUS-FIX-S81-SVC-R6 11-21: sidecar_svc_h8_1120 has 130 such
+            # rows, so every split of it failed here)
+            pieces = {nm for ts in self.ts.values() for nm in ts.tnames}
+            bad = sorted(n for n, r in self.side.get("collector", {}).get("types", {}).items()
+                         if n in pieces and r.get("tree") is None)
+            if bad:
+                raise SplitError(f"sidecar collector row without a tree: {bad[:5]}")
             txt = json.dumps(self.side, separators=(",", ":"))
             p = out / "eW_sidecar.json"
             if p.exists() or p.is_symlink():
