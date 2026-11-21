@@ -1,0 +1,2 @@
+- 2026-11-21 07:53 PST DONE [TAP-GRID-R3] ot-run oth-ubuntu-482569-1795275534 on civil-redfish: rc=0 after 851 s, ended 15:53:03, log /srv/opentallas-scratch2/claude/tap-grid-r3/kvtapnet/count2.log, cmd: --mem 12 --threads 1 --disk 1 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/tap-grid-r3 -- python3 -I -u /srv/opentallas-scratch2/cla
+  [filed under] TAP-GRID-R4: TAP-GRID-R3 stood down (chain TAP-GRID-R3 > TAP-GRID-R4)
