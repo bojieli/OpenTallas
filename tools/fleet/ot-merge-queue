@@ -119,7 +119,8 @@ WHOLE_TOPS = [x for x in os.environ.get("MQ_GATE_WHOLE_TOPS", "rtl").split(",") 
 # FLOW-HEALTH-1 11-16 (COORD): --needs names the script path: a host that does not hold /srv/.../mq-gate/ot-gate-remote (localhost, the hub) is skipped by
 # ot-run's NEEDS check instead of being picked (the clone of the intel2 mirror failed on localhost, exit 3) or refused for an undeclared script path
 GATE_SCRIPT = "/srv/opentallas-scratch2/claude/mq-gate/ot-gate-remote"
-GATE_REMOTE = os.environ.get("MQ_GATE_REMOTE", f"ot-run --mem 48 --threads 16 --hosts epyc2,epyc9 --needs {GATE_SCRIPT} --dir "
+# Candidate and failing-baseline worktrees can coexist; an expanded baseline checkout used about 45 GB on epyc8.
+GATE_REMOTE = os.environ.get("MQ_GATE_REMOTE", f"ot-run --mem 48 --threads 16 --disk 60 --hosts epyc2,epyc9 --needs {GATE_SCRIPT} --dir "
                              f"/srv/opentallas-scratch2/claude/mq-gate -- bash {GATE_SCRIPT} "
                              "{key} 16")                       # '' = gate on the hub
 GATE_REMOTE_TIMEOUT = int(os.environ.get("MQ_GATE_REMOTE_TIMEOUT", "1500"))   # 11-17: was 10800; ot-run re-placed one gate for 45 min
@@ -1327,6 +1328,11 @@ def gate_remote(it, full, base):
     if rec:
         return "GREEN", "remote " + rec
     last = [ln for ln in out.splitlines() if re.match(r"(GREEN|RED|INFRA)\b", ln)]
+    if r.returncode == 78 and not last:
+        # ot-run did not start the gate. Keep the request with placement when it reports a capacity hold.
+        refusal = next((ln for ln in reversed(out.splitlines()) if ln.startswith("NOT-RUN ")), None)
+        if refusal:
+            return "INFRA", f"remote gate admission deferred: {refusal[:1000]}"
     if r.returncode in (126, 127) or not last:
         log(f"{it['key']}: remote gate did not run (rc {r.returncode}: {out.strip()[-200:]}); gating on the hub")
         return None

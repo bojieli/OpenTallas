@@ -556,6 +556,18 @@ class EndToEnd(unittest.TestCase):
         self.assertIn("remote: 1 failing: test_z.py", (self.d / "mq/log").read_text())
         self.assertNotIn("MERGED", q.read_text())
 
+    def test_remote_admission_refusal_defers_without_hub_gate(self):
+        q = self.d / "coord/lanes/COORD-REVIEW-QUEUE.md"
+        q.write_text("- 2026-11-15 07:00 PST STATE [X -> COORD] nothing\n"
+                     f"- 2026-11-15 09:00 PST [COORD] COORD APPROVED: claude/good @{self.shas['good'][:10]}\n")
+        remote = "echo 'NOT-RUN disk-ETA hold: epyc2 leaves 45 GB < floor 50 GB' >&2; exit 78"
+        r = self.tick(env=dict(self.env, MQ_GATE_REMOTE=remote))
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        log = (self.d / "mq/log").read_text()
+        self.assertIn("remote gate admission deferred: NOT-RUN disk-ETA hold", log)
+        self.assertNotIn("gating on the hub", log)
+        self.assertNotIn("MERGED", q.read_text())
+
     def test_remote_runner_missing_gates_on_the_hub(self):
         q = self.d / "coord/lanes/COORD-REVIEW-QUEUE.md"
         q.write_text("- 2026-11-15 07:00 PST STATE [X -> COORD] nothing\n"
