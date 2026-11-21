@@ -18,6 +18,11 @@ class NativePinContractTest(unittest.TestCase):
  def test_offgrid_declared_geometry_is_not_rounded_into_approval(self):
   p=copy.deepcopy(PIN);p['native_rects'][0][2]=236.2325
   self.assertFalse(native_rects_match(p,[RECT],1000))
+ def test_fractional_dbu_anchor_preserves_exact_native_rectangles(self):
+  rects=[['M4',17.196,3.216,17.280,3.240],['M4',15.937,3.216,17.244,3.240]]
+  pin=dict(layer='M4',x=16.5905,y=3.228,native_rects=rects)
+  self.assertTrue(native_rects_match(pin,list(reversed(rects)),1000))
+  self.assertFalse(native_rects_match(dict(pin,x=15.9365),rects,1000))
  def test_metadata_emission_preserves_anchor_and_other_pins(self):
   with tempfile.TemporaryDirectory() as tmp:
    k=Path(tmp);other=dict(bus='data',bit=1,layer='M4',x=0,y=4,face='W')

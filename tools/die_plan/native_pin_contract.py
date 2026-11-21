@@ -31,7 +31,11 @@ def _rect(box, dbu):
 def anchor_in_rect(pin, box, dbu=None):
     try:
         layer,x0,y0,x1,y1 = _rect(box, dbu)
-        x,y = _coordinate(pin['x'], dbu),_coordinate(pin['y'], dbu)
+        # Logical anchors, such as rectangle midpoints, can be fractional DBU.
+        # Compare them exactly in the rectangle's units without moving any metal.
+        scale = Decimal(str(dbu)) if dbu is not None else Decimal(1)
+        x = _coordinate(pin['x'], None) * scale
+        y = _coordinate(pin['y'], None) * scale
         return layer == pin['layer'] and x0 <= x <= x1 and y0 <= y <= y1
     except (KeyError, TypeError, ValueError, InvalidOperation):
         return False
