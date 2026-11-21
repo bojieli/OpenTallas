@@ -355,3 +355,22 @@ def test_protected_dbs_registry_blocks_the_path_its_parents_and_children(tmp_pat
 def test_runner_fetches_and_passes_the_registry():
     r = (H / "ot-auto-retire-run.sh").read_text()
     assert "PROTECTED-DBS.txt" in r and "--protected-dbs" in r and "pdbs.txt" in r
+
+
+
+def test_retained_attempt_reports_are_not_scanned_or_reaped_again(tmp_path):
+    cfg, state = base(tmp_path)
+    root = tree(tmp_path)
+    attempt = tmp_path / "kw/runs/s81/kit-wave/s81/NEW/items/i2/attempt_1"
+    (attempt / "reports").mkdir()
+    (attempt / "reports" / "timing.rpt").write_text("keep")
+    AR.strip_keep_reports(str(attempt))
+    scanned = []
+
+    def mtime(path, cutoff):
+        scanned.append(path)
+        return OLD
+
+    assert "i2/attempt_1" not in names(AR.attempt_candidates(root, cfg, state, "", now=NOW, mtime=mtime))
+    assert scanned and str(attempt) not in scanned
+    assert (attempt / "reports" / "timing.rpt").read_text() == "keep"

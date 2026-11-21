@@ -394,7 +394,7 @@ def name_hit(path, posts):
     return any(re.search(re.escape(c) + r"(?![A-Za-z0-9_.-])", posts) for c in (path, os.path.basename(path)))
 
 
-def run(root, cfg, texts, ids, refuse, log, target_gb, apply=False, delete=None, free=None, posts="", live=None):
+def run(root, cfg, texts, ids, refuse, log, target_gb, apply=False, delete=None, free=None, posts="", live=None, deadline=None):
     texts = live_reference_texts(cfg, texts)
     free = free or (lambda: free_gb(root))
     if not os.path.isdir(root):                           # a host with no kw45 (the hub): nothing to retire, not an error
@@ -403,6 +403,9 @@ def run(root, cfg, texts, ids, refuse, log, target_gb, apply=False, delete=None,
     cand = select(names, cfg, texts, {n: os.lstat(os.path.join(root, n)).st_mtime for n in names}, root=root)
     res = []
     for n in cand:
+        if deadline and time.time() >= deadline:
+            res.append(dict(stop="deadline"))
+            break
         if free() >= target_gb:
             res.append(dict(stop="target", free=round(free(), 1))); break
         t = os.path.join(root, n)
@@ -591,6 +594,13 @@ def attempt_candidates(claude, cfg, state, refs, now=None, quiet_s=ATTEMPT_QUIET
     for p in sorted((globber or (lambda: glob.glob(os.path.join(claude, ATTEMPT_GLOB))))()):
         if not os.path.isdir(p) or os.path.islink(p):
             continue
+        try:
+            entries = os.listdir(p)
+        except OSError:
+            continue
+        # Once physical outputs are stripped, the retained reports and logs are permanent evidence.
+        if entries and all(name in KEEP_NAMES for name in entries):
+            continue
         parts = p.split("/runs/", 1)[1].split("/")           # <die>/kit-wave/<die>/<event>/items/<item>/attempt_N
         if len(parts) < 7:
             continue
@@ -687,6 +697,8 @@ def run_attempts(claude, cfg, state, refs, ids, g, prot, log, apply=False, delet
     """delete attempt_candidates through the guard.  The kit_wave work root (runs/<die>/kit-wave) is a protected ANCESTOR of every attempt, so each listed attempt gets an exact
     allow entry (1 h, written here, reason cites COORD 11-18): it skips protected ancestors only, never a protected path inside, a live process or the signed-store check."""
     free = free or (lambda: free_gb(claude)); res = []
+    if deadline and time.time() >= deadline:
+        return [dict(stop="deadline")]
     live = kw.pop("live", None)
     cands = attempt_candidates(claude, cfg, state, refs, now, **kw)
     exp = int((now or time.time()) + 3600)
@@ -763,7 +775,7 @@ def main(argv=None):
         deadline = time.time() + a.max_s if a.max_s else None
         posts = open(a.posts, errors="replace").read() if a.posts else ""
         live = LiveRefs(claude)
-        res = run(a.root, json.loads(cfgt), texts, ids, lambda t: g.refuse(t, prot), lambda r: lf.write(json.dumps(r) + "\n"), a.target, a.apply, posts=posts, live=live)
+        res = run(a.root, json.loads(cfgt), texts, ids, lambda t: g.refuse(t, prot), lambda r: lf.write(json.dumps(r) + "\n"), a.target, a.apply, posts=posts, live=live, deadline=deadline)
         if a.attempts:                                  # attempts first (the biggest, most certain dead weight), then idle lanes
             res += run_attempts(claude, json.loads(cfgt), json.loads(texts[1]), open(a.refs, errors="replace").read() if a.refs else "", ids, g, prot,
                                 lambda r: lf.write(json.dumps(r) + "\n"), a.apply, old_idle_h=a.idle_h, deadline=deadline, live=live)
