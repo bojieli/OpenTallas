@@ -1,13 +1,13 @@
 # TAP-GRID-2130 handoff (2026-11-20 22:xx PST)
 
 Owner of FABLE-CLOSURE-STRATEGY 21:30 lever 2 (tools half) and lever 3. Lane clone intel2 /srv/opentallas-scratch2/claude/lanes/TAP-GRID-2130.
-Commit 81cb7ca096 (push via ot-push-main started 22:xx, log intel2 /srv/opentallas-scratch2/claude/lanes/tg2130_push.log).
+Commits 950cad85e1 (A+B) + 3174d9aec4 (schema dump), rebased on main 504fcadebf; ot-push-main IN FLIGHT (3rd try; tries 1-3 stopped on a rebase conflict in root_entry_scan.py -> kept main version, which already reads 4_cts_post_hook.rpt; a sparse cone without rtl/; the schema json dump). Log intel2 /srv/opentallas-scratch2/claude/lanes/tg2130_push.log.
 
 ## A. Canonical CTS read (all dies)
 - cts_post_report.tcl now re-runs ORFS report_metrics after the POST_CTS hooks: 4_cts_final.rpt + 4_1_cts.json cts__timing are POST-hook
   for kits generated on main >= this commit (log line OT_CTS_FINAL_POSTHOOK; pre-hook copy 4_cts_final_prehook.rpt; OT_CTS_FINAL_POSTHOOK=0 off).
 - tools/die_plan/cts_read.py = the one reader for older kits (OT_CTS_POST_TIMING first, json only labelled prehook).
-- noprog_watchdog UNSIGNABLE reads the post-hook setup; root_entry_scan prints PREHOOK and skips a pre-hook 4_cts_final.rpt.
+- noprog_watchdog UNSIGNABLE reads the post-hook setup. root_entry_scan: main 504fcadebf already maps 4_cts_final.rpt to 4_cts_post_hook.rpt (my edit dropped).
 - Already post-hook: stuckscan (01c4b1e891), kit_scan / skew_calib / tap_insertion_report (OT_TAP_INSERTION lines), failure classes (gates run on the post-hook DB).
 - Test: tools/die_plan/test_tap_grid_2130.py.
 
@@ -34,3 +34,9 @@ Read: grep OT_CTS_POST_TIMING / OT_TAP_BALANCE done / OT_TAP_CONVERGE / OT_TAP_I
 
 ## Stop list
 - No clock verdict from a pre-hook 4_cts_final.rpt or a report_clock_skew pair. No pipeline stage as a hold fix. No tap-grid volume before the proof.
+
+## Status 23:xx
+- col_A proof: epyc9 unit oth-ubuntu-3224636-1795240447 (dir tap-grid-2130/colA_conv), converge tap passes it0..it2 done, running.
+- t60_conv / t60_convR: epyc10, queued on memory (civil-redfish admits 0 GB).
+- KV pv v8c: epyc7 unit oth-ubuntu-2457635-1795240628 (v8c_conv/kv3_pv_v8), admitted; the baseline CTS hooks took 6.6 h.
+- Convergence: OT_TAP_CONVERGE in tap_balance.tcl (bounded passes, learned stage price, pad at the load centre, verify line). Not yet proven on any kit.
