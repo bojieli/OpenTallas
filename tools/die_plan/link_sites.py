@@ -250,6 +250,8 @@ class Node:
 
 GEO = None
 HINT = {}
+PC_SITES = False    # --pc-sites: write relay_sites keys for the u_pc_* core-pin pipe registers (default off: the kit's core-input
+                    # hook seats them at the pin and a FIRM relay site makes global_place fail ODB-0359, QC cb proof p1 11-20)
 PC_SLACK = 0.0      # --pc-slack: a core-pin pipe register may sit up to this far (L1 um) from its pin (0 = AT the pin)
 
 
@@ -607,11 +609,15 @@ def main():
     ap.add_argument("--no-grow", action="store_true")
     ap.add_argument("--max-add", type=int, default=6)
     ap.add_argument("--min-stations", action="append", default=[], metavar="BUS=N", help="a bus row gets at least N stations (class balance)")
+    ap.add_argument("--pc-sites", action="store_true", help="also write relay_sites keys for the u_pc_* core-pin pipe registers "
+                    "(off by default: the kit core-input hook places them; a FIRM site there fails global_place ODB-0359)")
     ap.add_argument("--pc-slack", type=float, default=0.0, help="core-pin pipe registers u_pc_* may sit up to this L1 distance (um) "
                     "from their pin instead of AT it (0 cycles; for a tile link whose stages cannot reach the pin within the cap)")
     A = ap.parse_args()
-    global PC_SLACK
-    PC_SLACK = A.pc_slack
+    global PC_SLACK, PC_SITES
+    PC_SLACK, PC_SITES = A.pc_slack, A.pc_sites
+    if PC_SLACK > 0 and not PC_SITES:
+        ap.error("--pc-slack needs --pc-sites (without plan sites the kit hook seats u_pc_* AT the pin)")
     raw = json.loads(Path(A.plan).read_text())
     t = raw["partition_types"][A.type]
     sv = Path(A.sv).read_text()
@@ -707,7 +713,7 @@ def main():
         p = pos[k]
         if n.kind == "dly":
             put(n.meta["fam"], n.meta["two"], n.meta["inst"], n.meta["W"], p)
-        elif n.kind == "pc":
+        elif n.kind == "pc" and PC_SITES:
             pn = nodes[n.meta["pin"]]
             c = hc[pn.meta["core"]]
             for b in bits_of(n.meta["inst"], n.meta["W"]):
@@ -739,6 +745,8 @@ def main():
             grp[base].append(key)
         elif re.match(r"u_d\d+_", key) and (key.split(".")[0] in chains or re.sub(r"_sg\d+$", "", key.split(".")[0]) in chains):
             dropped += 1                           # re-keyed above (stage names follow the segment split)
+        elif re.match(r"u_pc_", key) and not PC_SITES:
+            dropped += 1                           # the kit hook is the single placer of the core-pin pipe registers
         else:
             sites.setdefault(key, old[key])
     for base, keys in grp.items():

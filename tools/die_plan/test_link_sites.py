@@ -74,7 +74,7 @@ def test_deterministic(tmp_path):
 
 def test_feasible_legs_within_cap(tmp_path):
     plan, sv, root = _fixture(tmp_path)
-    out, rep, _o, _r = _run(tmp_path, plan, sv, root, "f")
+    out, rep, _o, _r = _run(tmp_path, plan, sv, root, "f", "--pc-sites")
     assert rep["legs"] > 0 and rep["legs_over_cap"] == 0
     assert rep["worst_leg_um"] <= 300.0
     assert all(d <= 300.0 for d, _a, _b in rep["all_legs"])
@@ -123,8 +123,8 @@ def _pc_legs(rep):
 
 def test_pc_slack0_identical(tmp_path):
     plan, sv, root = _fixture(tmp_path)
-    a = _run(tmp_path, plan, sv, root, "p_def")
-    b = _run(tmp_path, plan, sv, root, "p_0", "--pc-slack", "0")
+    a = _run(tmp_path, plan, sv, root, "p_def", "--pc-sites")
+    b = _run(tmp_path, plan, sv, root, "p_0", "--pc-sites", "--pc-slack", "0")
     assert a[2] == b[2] and a[3] == b[3]
     sites = a[0]["partition_types"][TYPE]["relay_sites"]
     assert all(990.0 <= sites[f"u_pc_nk.q[{i}]"][0] < 1000.0 for i in range(8))
@@ -137,7 +137,7 @@ def test_pc_slack_shortens_long_link(tmp_path):
     _o0, rep0, _a, _b = _run(tmp_path, plan, sv, root, "l0")
     assert rep0["worst_leg_um"] > 300.0
     S = 300.0
-    out, rep, _a, _b = _run(tmp_path, plan, sv, root, "l1", "--pc-slack", str(S))
+    out, rep, _a, _b = _run(tmp_path, plan, sv, root, "l1", "--pc-sites", "--pc-slack", str(S))
     assert rep["worst_leg_um"] < rep0["worst_leg_um"]
     sites = out["partition_types"][TYPE]["relay_sites"]
     for i in range(8):
@@ -146,3 +146,15 @@ def test_pc_slack_shortens_long_link(tmp_path):
     legs = _pc_legs(rep)
     assert legs and max(legs) > 8.0
     assert all(d <= S + 1.0 for d in legs)
+
+
+def test_default_writes_no_pc_sites(tmp_path):
+    """QC cb proof p1 11-20: the kit core-input hook places u_pc_*; a FIRM plan site there fails global_place (ODB-0359)."""
+    plan, sv, root = _fixture(tmp_path)
+    raw = json.loads(plan.read_text())
+    raw["partition_types"][TYPE].setdefault("relay_sites", {})["u_pc_nk.q[0]"] = [1.0, 2.0]   # a stale key from an older row set
+    plan.write_text(json.dumps(raw))
+    out = _run(tmp_path, plan, sv, root, "nopc")[0]
+    assert not [k for k in out["partition_types"][TYPE]["relay_sites"] if k.startswith("u_pc_")]
+    with_pc = _run(tmp_path, plan, sv, root, "pc", "--pc-sites")[0]
+    assert [k for k in with_pc["partition_types"][TYPE]["relay_sites"] if k.startswith("u_pc_")]
