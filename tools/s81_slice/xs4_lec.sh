@@ -13,7 +13,7 @@ side() {  # name file
   for f in $SUP; do echo "read_verilog -sv -DSYNTHESIS -DDSFD_PQ_STATIC_X2 $C/$f"; done
   echo "read_verilog -sv -DSYNTHESIS -DDSFD_PQ_STATIC_X2 $2"
   echo "hierarchy -check -top ot_s81sl_xs4"
-  echo "proc; memory; flatten; opt_clean"
+  echo "proc; memory -nomap; setattr -mod -unset keep_hierarchy *; flatten; async2sync; opt_clean"
   echo "rename ot_s81sl_xs4 $1"
   echo "design -stash $1"
 }
