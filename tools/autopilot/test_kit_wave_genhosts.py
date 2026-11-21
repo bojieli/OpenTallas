@@ -340,7 +340,8 @@ def test_hold_only_when_no_gen_host_has_room():
     assert K.load_hold(c, "s81", "a") == "" and K.load_hold(c, "s81", "b") != ""
 
 
-def test_pick_least_loaded_host_with_room():
+def test_pick_least_loaded_host_with_room(monkeypatch):
+    monkeypatch.setattr(K._host_drain(), "load_caps", lambda: {})
     assert K.pick_gen_host(_loadcfg(["epyc2", "intel1", "epyc5"]), "s81", take=48) == "epyc5"
     assert K.pick_gen_host(_loadcfg(["epyc2", "intel1"]), "s81", take=48) == "intel1"
     assert K.pick_gen_host(_loadcfg(["epyc2", "epyc6"]), "s81") == "epyc2"            # no room anywhere: old score order
