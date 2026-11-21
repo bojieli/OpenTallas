@@ -38,3 +38,17 @@
 - Tap-grid rows: only from TAP-GRID-2130 after its proof. Note: 120/128 QC types use clock.tap_mode density (tap_pitch_um unused; levers are
   tap_radius_um / tap_target_sinks / tap_max_sinks / tap_span_um).
 - Proof p1 (fable-fix-qc-cb/proof/p1, cbn_q00__cl622f65d2) running on epyc9 since ~21:2x.
+
+## 22:1x state (R=epyc9 /srv/opentallas-scratch2/claude/qc-plan-r8/v2b)
+- 22:00 CANCELLED N46C cbn_q00__cldbcda913 a1 (intel1 oth-ubuntu-2003451-1795229956) at 3h00: pre-GRT setup -724.5, GRT repair -373.8 / TNS -15.4k.
+- p1 (FABLE proof) FAILED at GPL ODB-0359 (FIRM u_pc_nk from relay_sites vs kit core-input hook). Fix on main a4ae603e36: link_sites writes no u_pc_*
+  sites by default (--pc-sites opt-in; --pc-slack needs it). Consequence: q11 tile link u_t22.t_out (1233 um) needs +1 stage -> relay_depth row
+  {inst u_t22, port t_out, D 1} on cbn_q11 x2 + cbf_q11 (add_rows.py). p1 must be re-GEN'd with V2 rows (die priority, read post-hook).
+- Lever 6 in compose (tile_contract.py): 65 qfd_tile_nk_a0c core taps on 17 cb types 733.25/586 -> 818.1/658.07, 65 clk_cN per_port_ps rows removed.
+- lat_fix.py: r7_hop300 left latency.stations short of ft-slot stations (FIXEDCYC 231 lanes) -> fixed in compose.
+- Bind b1 refused FIXEDCYC; b2 (c1 + lat_fix) R8_STALE only (expected) -> R/r8_v2a.json dbbe6a24fce6 (qc_r8_pinned derive, 7892 members).
+  Bind confirms the mimic: b2 emits u_lpad_bc_i22 D2 exactly as the siting copy.
+- Pass-2 compose R/c2 running (oth-ubuntu-3463971-1795240983; RESET3=0 R7 rleg: RESET-RELAY-GEN-R3 qcleg.sh still queued on epyc10 since 20:2x).
+  Next: bind b3 (c2 + r8_v2a) -> re-site cb with b3 bound RTL (BOUND=staged b3/bind/rtl; u_y_xd relay names) -> c3 -> b4 final + LATCHECK + G0.
+- Re-sign: 6 N_PAD split reps added to dies.qwen_compute.only_items (coord ddaf212d693): *__pvcaa93304, *__pve289215f, *__pv97423966,
+  *__pvcf529cc9, slw_hc3__clccfc3e6b__pvcca9ff41, slw_hc3__cld86a7ad4__pvfd488b8f. Siblings after reps sign.
