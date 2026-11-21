@@ -6,3 +6,4 @@
 - 2026-11-21 02:04 PST DIED [FAM-S81-MISC] ot-run oth-ubuntu-1569981-1795255465 on renewed-glider: rc=127 after 5 s, ended 10:04:28, log none, cmd: --mem 24 --threads 2 --hosts epyc9 -- bash -c docker run --rm -v /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/22456
 - 2026-11-21 02:13 PST DONE [fam-s81-misc] ot-push-main otpush-civil-redfish-471120 on civil-redfish: rc=0 after 0 s, ended 10:13:30, log none, cmd: ot-push-main --help
 - 2026-11-21 02:14 PST DONE [FAM-S81-MISC] ot-push-main otpush-civil-redfish-472175 on civil-redfish: rc=0 after 35 s, ended 10:14:10, log none, cmd: ot-push-main 
+- 2026-11-21 03:09 PST DONE [FAM-S81-MISC] ot-run oth-ubuntu-102429-1795254918 on civil-redfish: rc=0 after 4471 s, ended 11:09:47, log /srv/opentallas-scratch2/claude/s81-j6/logs/gate_candMISC1b.log, cmd: --mem 108 --threads 8 --hosts epyc10 --priority plan --plan-job bind --dir /srv/opentallas-scratch2/claude/s81-j6 -- bash -c bash /srv/opent
