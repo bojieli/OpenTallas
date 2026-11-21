@@ -31,3 +31,13 @@ Goal: clock nets keep near-CTS routes through congestion GRT. Work dir epyc8 /sr
   h/run_seg.sh + h/run_ffseg.sh if the report step dies). Combo in a kit = OT_GRT_CLOCK_FIRST=1 + ENABLE_RESISTANCE_AWARE=1.
 - Real-kit A/B: private-spec qwen_kvsys kv3_hub_C --ab OT_GRT_CLOCK_FIRST=1, intel2 pid 72363 (log ~/tmp/clkgrt_hubC_ab.out),
   spec ~/coord/autopilot/private_specs/FLOW-CLKGRT-R2/qwen_kvsys_kv3_hub_C_1121113302; control wave kw-qwenkv-kv3hubC-1-76966.
+
+## 13:0x PST update
+- WINNER hook_ra = clock-first + resistance-aware: overflow 382 / t9 92 ps / max ins 331 / TT -609,-232 (TNS -27.5 ns vs base -23.5) /
+  FF int -60, 332 viol. Pushed opt-in main 79210da191: OT_GRT_CLOCK_FIRST_RES_AWARE=1 (with OT_GRT_CLOCK_FIRST=1).
+- hub_C private A/B failed at gen: rt a137 gen_phys needs kvd23_hubc_views/kv_cland_w549_ew_bf94f/provenance.json absent in D26 tree (tool skew).
+- Real-kit A/B NOW: kv3_hg_v1p2 private-spec --ab OT_GRT_CLOCK_FIRST=1 (clock-first only; RES_AWARE not in this kit), run-item intel2 pid 2574938,
+  log ~/tmp/clkgrt_hgv1p2_ab.out, kit epyc8 .../KV-D26/private/FLOW-CLKGRT-R2/kv3_hg_v1p2_1121123820/gen/kv3_hg_v1p2 (place 12:57 PST).
+  Control = wave kw-qwenkv-kv3hgv1p2-3-87352. Re-arm: ot-wait --kit <kit> --host epyc8 --stage grt --poll 300.
+  Compare from final 5_1_grt.odb: TT setup, FF hold, GRT overflow, clock tap spread. Then default switch (gen_phys default OT_GRT_CLOCK_FIRST=1)
+  only if no worse; RES_AWARE default needs its own real-kit run (TNS rose on hroot).
