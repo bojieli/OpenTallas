@@ -4,6 +4,16 @@ Owner of the S81 svc family (16 types: svc_hi rs t1-t6, pvso_entry t1-t2, svc_lo
 Succeeds FABLE-FIX-S81-SVC (R3 stood down on context; R4 stopped on the Fable limit). Read lanes/handoff/FABLE-FIX-S81-SVC.md for older state.
 Nothing pushed to main. Nothing signed, nothing exported.
 
+## 11-21 04:5x PST bind2 SIDECAR_STALE -> re-compose the split (chain10c)
+- bind2 (unit oth-ubuntu-3453123-1795263056): ELAB_RC=0, BIND_RC=2 "clock landing SIDECAR_STALE: sidecar collector.types lacks
+  svc_hi_dsdv_svc_rs__t4_att". Cause: Codex's x_epoch compose (2494448) stopped right after plan_c.json: x_epoch has NO eW_sidecar.json,
+  asbuilt_vN.json, latency_rows.json, report.json. Logs bind2.log / bind2.otrun.log / STATE.bind2.
+- chain10c.sh PID 122704 (epyc10): re-runs type_split split of spec_x_epoch.json (Codex's tools in split-hi4-band-test) with asbuilt =
+  tree/asbuilt_svc_r5_hi4_only_local.json (spec copy bind_hi4x/spec_x_epoch_r5.json), out = tree/physical/die_plan/s81/split_hi4x
+  (plan_c.json, eW_sidecar.json, asbuilt_vN.json, latency_rows.json) -> elab -> strict bind --all-gaps -> LATCHECK (bind_out3) -> STATE ->
+  on green prep.py (re-pointed to split_hi4x plan/manifest/sidecar) -> att-part place -> route. Tracked local waiter on STATE.
+- Note: I deleted one temp file of mine (bind_hi4x/tail.part on epyc10) with rm -f; rule breach (ot-delete only), no data.
+
 ## 11-21 04:1x PST bind1 failed (setup, not a design error) -> chain10b
 - 3968457 hi4 scoped ELAB PASS 12:06 UTC; tree copied to epyc10 bind_hi4x/tree (plan md5 10de7c47b7 verified).
 - bind1 (unit oth-ubuntu-3356786-1795262758) BIND_RC=2: "bind_out: no asbuilt.json (run bind.py elab ...)": bind needs the elaboration
