@@ -85,3 +85,26 @@ def test_import_from_clean_path():
     code = "import sys; sys.path=[p for p in sys.path if p not in ('', %r)]; sys.path.insert(0, %r); import ft_spread; " \
            "from tools.die_trial.legal_sites import RowAllocator" % (str(here.parents[1]), str(here))
     subprocess.run([_s.executable, "-c", code], check=True, cwd="/")
+
+
+def test_spread_type_keeps_exact_internal_station_banks_free(monkeypatch):
+    """QC-PLAN-R8 11-20 (QC V1 slw_st_a_v2__clf4365a62: u_lpad_rs_s1 exact bank site 406.08 432 under the spread
+    x_ctl_fw ft site): spread ft bit sites never overlap an internal_stations exact bank (bit_sites_um) footprint."""
+    s, a, b, regs = _slot()
+    pins = {("L1_i", i): tuple(p) for i, p in enumerate(a)} | {("L1_o", i): tuple(p) for i, p in enumerate(b)}
+    monkeypatch.setattr(FS, "_pins", lambda P, tn: pins)
+    t = dict(outline_um=[400.0, 400.0], ft_slots=[dict(s)])
+    free, led = FS.spread_type({}, "T", t)
+    assert led[0]["form"] == "spread", led
+    taken = [p for st in free[0]["bit_sites_um"] for p in st]
+    bank = [taken[10], taken[11], [taken[40][0] + .5, taken[40][1]]]      # exact bank sites under spread bits
+    t["internal_stations"] = [dict(conn="bus:rs", regs_um=[[0, 0]], bit_sites_um=[bank], bit_site_cell_um=list(FS.CELL))]
+    t["ft_slots"] = [dict(s)]
+    out, led = FS.spread_type({}, "T", t)
+    assert led[0]["form"] == "spread", led
+    cw, ch = FS.CELL
+    for st in out[0]["bit_sites_um"]:
+        for x, y in st:
+            for bx, by, bw, bh in FS.exact_station_sites(t):
+                assert not (x < bx + bw - 1e-6 and bx < x + cw - 1e-6 and y < by + bh - 1e-6 and by < y + ch - 1e-6)
+    assert FS.exact_station_sites({}) == [] and len(FS.exact_station_sites(t)) == 3

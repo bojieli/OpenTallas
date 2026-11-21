@@ -133,6 +133,24 @@ def _spread_slot(slot, a, b, regs, alloc, boxes, bounds, budget, max_proj):
     return sites, led
 
 
+def exact_station_sites(t):
+    """[(x, y, w, h)] lower-left cell footprints of the type's exact internal-station banks (internal_stations[]
+    bit_sites_um stages + face_bit_sites_um, realised by kit_istations is_packed_exact_banks).  QC-PLAN-R8 11-20 (QC V1
+    slw_st_a_v2__clf4365a62 place: "exact packed bank overlaps existing explicit reservation: u_lpad_rs_s1 406.08 432"):
+    face_flops reserves the spread ft sites first and istations then refuses every exact bank site under one, so the
+    spread treats those plan sites as occupied, as it already does for plan-explicit ft sites."""
+    out = []
+    for e in t.get("internal_stations", []) or []:
+        if not isinstance(e, dict):
+            continue
+        cw, ch = e.get("bit_site_cell_um") or CELL
+        stages = list(e.get("bit_sites_um") or []) + ([e["face_bit_sites_um"]] if e.get("face_bit_sites_um") else [])
+        for st in stages:
+            for xy in st:
+                out.append((float(xy[0]), float(xy[1]), float(cw), float(ch)))
+    return out
+
+
 def spread_type(P, tn, t, reach_um=REACH_UM, margin=.98):
     """-> (ft_slots for ft_bit_sites.table: spread slots carry generated bit_sites_um, others as in the plan, ledger)."""
     slots = list(t.get("ft_slots", []) or [])
@@ -151,6 +169,8 @@ def spread_type(P, tn, t, reach_um=REACH_UM, margin=.98):
             for st in s["bit_sites_um"]:
                 for x, y in st:
                     alloc.reserve_rectangle((x, y, x + cw, y + ch))
+    for x, y, cw, ch in exact_station_sites(t):     # exact internal-station banks are FIRM plan sites too
+        alloc.reserve_rectangle((x, y, x + cw, y + ch))
     budget = reach_um * margin - 2.0
     out = []
     done = {}
