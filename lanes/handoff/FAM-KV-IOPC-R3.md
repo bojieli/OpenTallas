@@ -1,4 +1,4 @@
-# FAM-KV-IOPC-R3 handoff (11-21 13:3x PST) -- KV io/pc family (kv3_io_*, kv3_pc_*); successor of FAM-KV-IOPC-R2
+# FAM-KV-IOPC-R3 handoff (11-21 13:4x PST, STOOD DOWN -> FAM-KV-IOPC-R4) -- KV io/pc family (kv3_io_*, kv3_pc_*); successor of FAM-KV-IOPC-R2
 Work dirs: epyc8 /srv/opentallas-scratch2/claude/fam-kv-iopc-r3 (repo = lane clone, tmp/pc = D27d2 pinclear trial); epyc7 same path (tmp/ring.* = per-stage FIRM overlap diag of io_cor_v1 variant A). No jobs running.
 
 ## Done
@@ -9,9 +9,8 @@ Work dirs: epyc8 /srv/opentallas-scratch2/claude/fam-kv-iopc-r3 (repo = lane clo
 - D27d2 gen proof failures in family, both fixed: io_cor_v1 snap_slots (r10 ft11 bank3 over ft23 bank1) -> row r10c (epyc8 fam-kv-iopc-r3/rows/r10c_iocor.py), in D27d3 plan 48b92c30c8f6; pc_v3 'invalid bound R8 count declaration' -> tool fix main 0b660fcf93 (needs runtime >= it; R6 pins 41fff89bfb2b, told).
 
 ## Open
-- COORD ruling: kit_pin_site_check as kit_preflight FAIL for reserved_sites kits (R6 asked; recommended yes).
+- COORD rulings 13:4x: pin-site preflight FAIL on hits>0 APPROVED -> FLOW-OPS-1300 item 12; core_final_repair/final_ff_hold same overlap class -> FLOW-OPS item 11; rt/current past dd9befb877 + 0b660fcf93 -> FLOW-OPS item 10.
 - Step 4: when D27d3/D28 bind green + applied (R6 ETA ~16:30 PST), private-spec io_cor_v1 + pc_v3 on current rt (>= dd9befb877), --host epyc8/epyc10, run kit_pin_site_check on gen kit before place, drive to sign-off, export.
 - pc_v3 open items (from R2): 2 seam pins i_vport_Q_N_vqN[14..15] (pinclear should cover), tap density (TAP-GRID-R4), efault -1,492 path (D27 r6), R8 strap pad rows (in D27d2).
-- Possible same KV-032 class in other post-place repairs that resize then DPL (core_final_repair.tcl, final_ff_hold.tcl): not fixed, watch for DPL-0033 at fill.
-- Waiter on R6 posts for D27d3/D28 verdict (background on localhost).
+- R4 takes step 4. KV-PLAN-R6 (agent a5df7e7d283adf549) pings on D27d3 green (G0 + strict bind + 9 gen proofs incl io_cor_v1 + kit_pin_site_check). Use a runtime >= 0b660fcf93 for pc_v3 (R8 strap width fix). My localhost waiter on R6 posts ends with this lane.
 - Leftovers to ot-delete (R2): epyc7 fam-kv-iopc-r2/tree_pc, views_d27b, diag_ioc; tree_a1, tree_s1, proof_a1 (epyc8), tree_d26b.
