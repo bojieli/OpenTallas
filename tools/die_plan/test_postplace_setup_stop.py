@@ -109,7 +109,7 @@ def test_recovery_is_reported_but_never_stops_the_kit(tmp_path):
     assert PS.read_log(log.read_text())["recovery_wns"] is None
 
 
-def _pp_stub(nets, recovery_report):
+def _pp_stub(nets, recovery_report, path_rows="", db_stubs=""):
     """tclsh frame for tt_setup_repair.tcl with OT_POSTPLACE_WORST=1: clocks clk (std-cell tree) and fclk_in_a (port -> macro pin)."""
     return f"""
 namespace eval sta {{}}
@@ -121,7 +121,7 @@ proc sta::redirect_string_begin {{}} {{ set ::rs {{}} }}
 proc sta::redirect_string_end {{}} {{ return $::rs }}
 proc report_checks {{args}} {{
   if {{[lsearch $args asynchronous] >= 0}} {{ append ::rs "{recovery_report}" ; return }}
-  append ::rs "Startpoint: d_src\\nEndpoint: d_end\\nPath Group: clk\\n -41.25 slack (VIOLATED)\\n"
+  append ::rs "Startpoint: d_src\\nEndpoint: d_end\\nPath Group: clk\\n{path_rows} -41.25 slack (VIOLATED)\\n"
 }}
 rename exec actual_exec
 proc exec {{args}} {{ return "TC_LIB_FILES = stub.lib" }}
@@ -154,6 +154,7 @@ proc unknown {{cmd args}} {{
   if {{[string match mst:* $cmd]}} {{ return [string match *macro* $cmd] }}
   error "unknown $cmd"
 }}
+{db_stubs}
 set ::env(OT_POSTPLACE_WORST) 1
 set ::env(OT_TT_SETUP_MEASURE) 1
 set ::env(ODB) stub.odb
@@ -186,6 +187,29 @@ def test_postplace_keeps_a_clock_with_a_buffer_or_flop_sink_ideal():
     assert "PROPAGATED" not in r.stdout and "OT_POSTPLACE_CLOCKS propagated 0" in r.stdout
     assert "OT_POSTPLACE_RECOVERY wns none" in r.stdout
 
+
+@pytest.mark.skipif(not TCLSH, reason="tclsh")
+def test_postplace_path_geometry_uses_buffer_pins_macro_pin_and_port():
+    rows = r""" 0.00 0.00 ^ input (in)\n 1.00 1.00 ^ u_buf/A (BUF)\n 2.00 3.00 ^ u_buf/Y (BUF)\n 3.00 6.00 ^ u_macro/d\[347\] (MACRO)\n 6.00 data arrival time\n"""
+    stubs = r"""
+rename blk clock_block
+proc blk {method args} {
+    set name [lindex $args 0]
+    if {$method eq "findITerm"} {
+        return [dict get {u_buf/A pin_a u_buf/Y pin_y {u_macro/d\[347\]} pin_d u_macro/d[347] NULL} $name]
+    }
+    if {$method eq "findBTerm" && $name eq "input"} { return port_d }
+    return [clock_block $method {*}$args]
+}
+proc pin_a {method} { return [dict get {getAvgXY {1 10000 0} getInst buffer} $method] }
+proc pin_y {method} { return [dict get {getAvgXY {1 20000 2000} getInst buffer} $method] }
+proc pin_d {method} { return [dict get {getAvgXY {1 100000 2000} getInst macro} $method] }
+proc port_d {method} { return [dict get {getBPins {pin} getBBox port_rect} $method] }
+proc port_rect {method} { return 0 }
+"""
+    r = subprocess.run([TCLSH], input=_pp_stub("", "", rows, stubs), text=True, capture_output=True, check=True)
+    d = PS.read_log(r.stdout)
+    assert (d["hop_um"], d["path_um"], d["span_um"], d["stages"]) == (80.0, 90.0, 102.0, 2)
 
 def test_path_length_span_and_stage_count_reach_the_marker(tmp_path):
     """FABLE-FIX-S81-STROBE 11-21: S81 serdes t16 START wavefront: hop 115.9 um but 2.8 mm / 27 repeaters in one cycle (-1252 ps)."""
