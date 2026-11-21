@@ -17,3 +17,4 @@
   - So origins drift with tree depth (ctl 35, lep0N 37), and every ring lane is off by delta_dst - delta_src.
   
   Next, tr10 (epyc10 oth-ubuntu-2590447, provider_p6r with the 9 relays) is running. It prints the real START origin cycle of every part, so I can check this prediction against all 78 failing lanes. If it matches, the bench needs per-edge plan-J START timing (real clock + planned START data delay), and no RTL fix is needed.
+- 2026-11-21 09:08 PST DONE [HEAD-START-R17] ot-run oth-ubuntu-2590447-1795280068 on tolerant-swine: rc=0 after 841 s, ended 09:08:27, log /home/ubuntu/head-start-r17/tr10.otrun.log, cmd: --mem 64 --threads 8 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/head-start-r16 -- env TAG=tr10 bash /srv/opentallas-scratch2/claud
