@@ -376,6 +376,7 @@ dict for {nm head} $ds_cand {
     }
     set wa 0; for {set k 1} {$k < [llength $P]} {incr k} { set wa [expr {max($wa, [ds_md [lindex $P [expr {$k-1}]] [lindex $P $k]])}] }
   }
+  lappend ::ds_fin [list $head $seq $tl]
   set ds_ha [expr {max($ds_ha, $wa)}]; if {$wa > $ds_min} { incr ds_oa }
   if {[info exists ::env(OT_DLY_SPREAD_DEBUG)] && [string match $::env(OT_DLY_SPREAD_DEBUG) $nm]} { puts "OT_DLY_SPREAD DEBUG [ds_clean $nm] stages $n loads [llength $tl] hops [format %.0f [expr {$wb/double($ds_dbu)}]] -> [format %.0f [expr {$wa/double($ds_dbu)}]] um" }
   set ideal [expr {(($wb <= $ds_min && !$haslk) ? [ds_md $src $T] : $rlen) / double((($wb > $ds_min && $ds_st > 0) || $haslk) ? $nhop : $n + 1)}]   ;# route length: a detour around a core is not a defect
@@ -385,6 +386,21 @@ dict for {nm head} $ds_cand {
     if {$wa > $ds_min && $r > $ds_ratio && $nmovable > 0} { incr ds_nfail; if {$ds_nfail <= 5} { puts "OT_DLY_SPREAD WORST [ds_clean [$head getName]] stages $n hop [format %.0f [expr {$wa/double($ds_dbu)}]] um ideal [format %.0f [expr {$ideal/double($ds_dbu)}]] um" } }
   }
 }
+# FINAL (OPUS-FIX-KV-PV-R4 11-20, report only): the hops above are measured when THAT chain is placed; a later chain can still
+# move its tail loads or its source (kv3_pv_v8 v8p: u_bin_i_pvw__u_ctl_cmd q[31] logged 1,228 um, its two loads are the heads of
+# pad trunk chains spread after it; placed hop 222 um).  This re-measures every chain on the final sites; the fail gate is unchanged.
+set fa 0; set fo 0; set fw ""; set fn 0
+foreach c $::ds_fin {
+  lassign $c head seq tl
+  lassign [ds_back $head] _ src _
+  if {$src eq {}} continue
+  set sx 0; set sy 0; foreach l $tl { lassign [ds_xy $l] x y; set sx [expr {$sx+$x}]; set sy [expr {$sy+$y}] }
+  set P [list $src]; foreach s $seq { lappend P [ds_ctr [$s getBBox]] }; lappend P [list [expr {$sx/[llength $tl]}] [expr {$sy/[llength $tl]}]]
+  set w 0; for {set k 1} {$k < [llength $P]} {incr k} { set w [expr {max($w, [ds_md [lindex $P [expr {$k-1}]] [lindex $P $k]])}] }
+  if {$w > $ds_min} { incr fo }
+  if {$w > $fa} { set fa $w; set fw [ds_clean [$head getName]]; set fn [llength $seq] }
+}
+puts "OT_DLY_SPREAD FINAL max_hop [format %.0f [expr {$fa/double($ds_dbu)}]] um on final sites (chains over [format %.0f [expr {$ds_min/double($ds_dbu)}]] um: $fo) worst $fw stages $fn"
 puts "OT_DLY_SPREAD NOROUTE $::ds_noroute chains / repeaters kept at their GPL sites (no clear route around the cores)"
 puts "OT_DLY_SPREAD REPFIX repeaters $ds_nrep moved onto their hop (detour > [format %.0f [expr {$ds_rdet/double($ds_dbu)}]] um)"
 puts "OT_DLY_SPREAD chains $ds_nch stages $ds_nst moved $ds_nmv skipped $ds_nskip max_hop [format %.0f [expr {$ds_hb/double($ds_dbu)}]] -> [format %.0f [expr {$ds_ha/double($ds_dbu)}]] um (chains over [format %.0f [expr {$ds_min/double($ds_dbu)}]] um: $ds_ob -> $ds_oa) worst/ideal [format %.2f $ds_wr] fail $ds_nfail"
@@ -393,7 +409,7 @@ if {$ds_nfail > 0 && (![info exists ::env(OT_DLY_SPREAD)] || $::env(OT_DLY_SPREA
   error "OT_DLY_SPREAD: $ds_nfail chains over ratio"
 }
 }
-set ::ds_moved [dict create]; set ::ds_noroute 0
+set ::ds_moved [dict create]; set ::ds_noroute 0; set ::ds_fin {}
 ds_main
 # DLY-REPAIR-1 (3): repair the signal nets of the moved cells (the place repair_design ran before this pass)
 proc ds_repair {} {

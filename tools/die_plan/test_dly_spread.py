@@ -419,3 +419,65 @@ def test_dly_repair_no_straight_fallback_and_switch():
     assert "set best [list $A $B]" not in tcl                       # DLY-REPAIR-1 (2): never a straight route through a core
     assert "if {$r eq {}} { return {} }" in tcl                      # a cached 'no route' stays 'no route'
     assert "OT_DLY_SPREAD_REPAIR" in tcl and "setDoNotTouch 0" in tcl
+
+
+def _netlist_final():
+    """F (OPUS-FIX-KV-PV-R4): src -> bin (plan-sited, FIRM) -> two loads, each the head of a 9-stage pipe to a far load: the bin is a
+    one-stage chain whose tail = those heads; it is measured before the pipes are spread (heads still at the far end)"""
+    w, body = ["a", "b"], []
+    body.append(f"  {FF} \\u_bound.u_bin_x/q[0]$_DFF_P_  (.CLK(clk), .D(a), .QN(b));")
+    body.append(f"  {FF} src (.CLK(clk), .D(1'b0), .QN(a));")
+    for t in ("P", "Q"):
+        d = "b"
+        for k in range(9):
+            o = f"{t}_o{k}"
+            w.append(o)
+            nm = "q" if k == 8 else f"g_reg.r[{k}]"
+            body.append(f"  {FF} \\u_bound.u_pd_{t}.{nm}$_DFF_P_  (.CLK(clk), .D({d}), .QN({o}));")
+            d = o
+        body.append(f"  {FF} ld{t} (.CLK(clk), .D({d}), .QN());")
+    v = ["module t(input wire clk, output wire y);"] + [f"  wire {x};" for x in w] + body + ["  assign y = 1'b0;\nendmodule\n"]
+    return "\n".join(v)
+
+
+TCL_FINAL = r"""
+set P /OpenROAD-flow-scripts/flow/platforms/asap7/lef
+read_lef $P/asap7_tech_1x_201209.lef
+read_lef $P/asap7sc7p5t_28_R_1x_220121a.lef
+read_verilog /w/t.v
+link_design t
+initialize_floorplan -die_area "0 0 3000 600" -core_area "5 5 2995 595" -site asap7sc7p5t
+set blk [ord::get_db_block]
+set u [[ord::get_db_tech] getDbUnitsPerMicron]
+proc put {i x y st} { global u; $i setLocation [expr {int($x*$u)}] [expr {int($y*$u)}]; $i setPlacementStatus $st }
+foreach i [$blk getInsts] {
+  set n [string map {\\ {}} [$i getName]]
+  if {$n eq "src"} { put $i 100 300 FIRM
+  } elseif {[string match "u_bound.u_bin_x*" $n]} { put $i 150 300 FIRM
+  } elseif {[string match ld* $n]} { put $i 2500 300 FIRM
+  } else { put $i 2450 300 PLACED }
+}
+set ::env(OT_DLY_SPREAD) warn
+source /w/dly_spread.tcl
+"""
+
+
+def test_dly_spread_final_line_remeasures_on_final_sites():
+    if not shutil.which("docker"):
+        pytest.skip("no docker")
+    with tempfile.TemporaryDirectory() as d:
+        (Path(d) / "t.v").write_text(_netlist_final())
+        (Path(d) / "t.tcl").write_text(TCL_FINAL)
+        shutil.copy(HERE / "dly_spread.tcl", d)
+        cmd = "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; openroad -exit /w/t.tcl; chmod -R a+rwX /w"
+        r = subprocess.run(["docker", "run", "--rm", "--memory=4g", "--memory-swap=4g", "-v", f"{d}:/w",
+                            "openroad/orfs:asap7lock", "bash", "-lc", cmd], capture_output=True, text=True, timeout=600)
+        if r.returncode and "Unable to find image" in r.stderr:
+            pytest.skip("image missing")
+        out = r.stdout
+        m = re.search(r"OT_DLY_SPREAD chains \d+ stages \d+ moved \d+ skipped \d+ max_hop \d+ -> (\d+) um", out)
+        f = re.search(r"OT_DLY_SPREAD FINAL max_hop (\d+) um on final sites \(chains over \d+ um: (\d+)\) worst (\S+) stages (\d+)", out)
+        assert m and f, out[-3000:]
+        # the in-pass number keeps the bin's stale hop (heads still at x 2450: ~2,300 um); on the final sites every hop is ~235 um
+        assert int(m.group(1)) > 2000, m.group(0)
+        assert int(f.group(1)) <= 300 and f.group(2) == "0", f.group(0)
