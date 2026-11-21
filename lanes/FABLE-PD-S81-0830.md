@@ -18,9 +18,11 @@ Tools: main a9ed808a98 (contains 8bc23a5a90) from my lane clone `epyc10 fable-pd
 | relay_depth rows with path / (D + 1) over 405 (V) | 385 (col_h10 85, col_h9_r0 300) | 144 (col_h10 0) | mkdepth405 works; the 144 left are the xo D3 rows, which carry `stages_existing: 2`, so 6 hops, max 370 |
 | precheck TAP-CAP, planned sinks per tap over 1,000 (V) | 32 types | 31 | unchanged: leaf t31 2,335, slice_station t45 1,936, serdes t3 1,373, t4 1,299 |
 | col `tap_max_sinks` (V) | 3,000 on 216 types | 3,000 on 216 | no J7 row |
-| G0 with tap-net sink inventory (8bc23a5a90) on v3 | - | running | unit 1064216; `fable-pd-s81-0830/g0v3`; see section 6 |
+| G0 with tap-net sink inventory (8bc23a5a90) on v3 | - | not obtained | my run (unit 1064216) crashed after 20 min in the census step: I passed the plan from `j7/v3/out`, outside a tree, so `census/s81_lanes.tsv` was not found. No tap-net or street numbers from me; read them from the candJ7c gate G0 |
 
-Limits of this review: plan-level only. No J7 kit is placed, so "placed-hop 405" is a plan read plus the lanes' placed reads (R). The J7b gate was still in strict bind at 08:02 (no bind verdict, no G0).
+**Addendum 08:20 PST: the J7b gate failed at strict bind (exit 11, 6 errors, V).** `landing_local_resets: bad or duplicate name` on leaf t23 (`fstart_1`), t70 (`fstart_1`), t72 (`fstart_3`), plus 3 follow-on `LF_CS_DEPTH ... no bound module file` on the same types. In the v3 plan these are the only 3 types with a duplicate name: same name, raw reset and consumers, sites 20 to 28 um apart (t23 x 1,420.5 and 1,440.7). The leaf local-reset delta and the C3g FSTART delta each add the row. v3 has the same rows, so it fails the same way. S81-J6-ASSEMBLY-R4 has the cause and is rebuilding (v4 / v5). No LF_CS_DEPTH on kv_leaf appeared, so the vp_sr delta itself binds on kv_leaf; item 2 stands for the t5 row only. LATCHECK, G0 and PRE were not reached.
+
+Limits of this review: plan-level only. No J7 kit is placed, so "placed-hop 405" is a plan read plus the lanes' placed reads (R). No J7 tree has a G0 or LATCHECK result yet.
 
 ## 1. Leaf re-grid (72 types, +1 ho on 11): will fail if stacked on J7 (V)
 
@@ -105,7 +107,7 @@ Limits of this review: plan-level only. No J7 kit is placed, so "placed-hop 405"
 - Tap caps: 31 types over 1,000 planned sinks per tap, unchanged; col still at 3,000 on 216 types. J7 has no tap row. slice_station t45 gets its strap row in J7 but keeps 5 taps at 1,600 to 1,936.
 - Inherited STATIONCORE on col: col_h10_r0_p1 ft2-ft5 (3 of 70 bit routes cross the ROM cores, 24 rows), col_h9_r0_p1 / p2 (24 rows).
 - lepe_mu_C t1: 5 of 39 station register sites and 1 of 50 taps lie inside placed xg macros at the current placement.
-- G0 on v3 with the tap-net inventory: result to be added here when unit 1064216 ends.
+- Tap sink caps per tap net and street / channel capacity under the added stations: not measured by me (G0 run failed, see section 0). The planned-sink estimate above is the only tap number here.
 
 ## 7. Ranked fix list
 
@@ -114,6 +116,7 @@ Limits of this review: plan-level only. No J7 kit is placed, so "placed-hop 405"
 | 1 | Keep the leaf re-grid out of J7 as a stacked delta. Regenerate on d245f293 as a SUPERSEDE with re-solved vp_sr / reach1 / keys / resets and define ops; prove with the core-overlay count = 0 | FABLE-FIX-S81-LEAF-R5 |
 | 2 | u_cf MX only together with the ret_o0 / rs / stored-coordinate re-solve delta; otherwise pull the MX step from v3 | FAM-S81-COL-H10-R2, S81-J6-ASSEMBLY-R4 |
 | 3 | t5 v1f only with the kv_leaf `verilog_defines` op; read J7b bind for LF_CS_DEPTH on kv_leaf | FAM-S81-MISC-R2, S81-J6-ASSEMBLY-R4 |
+| 0 | Leaf local resets vs FSTART: take the local-reset delta as a replace per name on t23 / t70 / t72 (one row per name), rebuild, and check 0 duplicate names in the plan before the gate (`dup.py`) | S81-J6-ASSEMBLY-R4 |
 | 4 | Insert the h9_r1 / h9_r2 relay-branch rows between mkdepth405 and mkxalign and rebuild (candJ7c) | S81-J6-ASSEMBLY-R4, FAM-S81-COL-R4 |
 | 5 | lepe_mu_C: replace the +90 um move by 65 / 90 um strip depth; split rows to J8 with the c1x_C sub-tile schema | FAM-S81-LEPE-3, FAM-S81-SLICE-R4 |
 | 6 | Read ri / cc / st / x2 peers of u_cf on the routed pvcc166a6d before the MX re-solve is frozen | FAM-S81-COL-H10-R2 |
