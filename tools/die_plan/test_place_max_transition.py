@@ -12,18 +12,15 @@ sys.path.insert(0, str(HERE))
 import gen_phys  # noqa: E402
 
 
-def test_rflow_default_320(tmp_path, monkeypatch):
+def test_default_320_every_die(tmp_path, monkeypatch):
     monkeypatch.delenv("OT_PLACE_MAX_TRANSITION", raising=False)
-    monkeypatch.delenv("OT_RFLOW", raising=False)
-    for die in ("s81", "qwen_kvsys", "qwen_compute"):
-        assert "export OT_PLACE_MAX_TRANSITION = 320" in gen_phys.install_gp_noconverge_gate(tmp_path, [], die)
-    assert not any("OT_PLACE_MAX_TRANSITION" in c for c in gen_phys.install_gp_noconverge_gate(tmp_path, [], "hbm"))
-
-
-def test_off_without_rflow(tmp_path, monkeypatch):
-    monkeypatch.delenv("OT_PLACE_MAX_TRANSITION", raising=False)
-    monkeypatch.setenv("OT_RFLOW", "0")
-    assert not any("OT_PLACE_MAX_TRANSITION" in c for c in gen_phys.install_gp_noconverge_gate(tmp_path, [], "s81"))
+    for rf in (None, "0"):
+        if rf is None:
+            monkeypatch.delenv("OT_RFLOW", raising=False)
+        else:
+            monkeypatch.setenv("OT_RFLOW", rf)
+        for die in ("s81", "s81_head", "qwen_kvsys", "qwen_compute", "hbm", None):
+            assert "export OT_PLACE_MAX_TRANSITION = 320" in gen_phys.install_gp_noconverge_gate(tmp_path, [], die)
 
 
 def test_env_wins_and_zero_is_off(tmp_path, monkeypatch):

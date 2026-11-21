@@ -8312,7 +8312,7 @@ def place_max_fanout(die=None):
 def place_max_transition(die=None):
     """PLACE-SLEW (CORE-LIB-LIMITS-1330, FABLE-CLOSURE-1315 lever 1): the gen environment's OT_PLACE_MAX_TRANSITION (ps;
     0 = off, else 20..2000) -> set_max_transition on the design before the place repair_design (PRE_RESIZE hook), else
-    the R-FLOW default 320 for a die plan in RFLOW_DIES (off elsewhere).
+    320 on every die (COORD 11-20 after the legalized t60 proof: place WNS -1,123 -> -393, TNS -59,496 -> -14,087).
     The hard-core view libs are write_timing_model ETMs with no max_transition / max_capacitance, and OpenSTA checks a
     slew limit at the load pin from that pin's own library: a net whose loads are core input pins had no limit to
     violate, so repair_design left it as one wire (S81 leaf t60 u_vsw/o_f -> u_vs/sw_fi, 66 bits, 423 um: 5.0 ns slew,
@@ -8321,7 +8321,7 @@ def place_max_transition(die=None):
     write_sdc carries the limit to the later repair passes; sign-off reads the kit's own constraint.sdc (no gate change)."""
     v = os.environ.get("OT_PLACE_MAX_TRANSITION", "").strip()
     if not v:
-        return RFLOW["place_max_transition"] if rflow_on(die) else 0
+        return RFLOW["place_max_transition"]
     try:
         r = float(v)
     except ValueError:
