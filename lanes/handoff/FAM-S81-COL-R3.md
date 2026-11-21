@@ -1,16 +1,16 @@
-# FAM-S81-COL-R3 handoff (successor of FAM-S81-COL-R2; started 11-21 03:4x PST; updated 04:3x)
-## Goal
-One coherent J7 col row set (relay_depth adds + false-fit fix + Codex v3 FT delta fc763d2a07c9 + lever-7 pin-bank rows), proven on representative col_h10_r0_p1__t1__cl574cc59d__pvb095fa2f (strict bind + LATCHECK + G0 0 new, then kit to sign-off), handed to S81-J6-ASSEMBLY-R2 for J7.
-## Findings
-- relay_depth.py at 405 gives 0 rows on the rep: the 15 failing chains are not in core_conns trace (xo0-3 port->port feed-through x_i0_q -> u_bout_xo_o0; lpl_11/12 from frame_int_i0 pad; so/es/rr not traced). Rows hand-written (intel1 fam-s81-col-r3/mkplan3.py): lpl_11_r o D2, lpl_12_r o D1, y_es_p0_0 o D1, y_rr_1_0 o D1, y_so_1_0/so_3_0 o D1, y_xo0..3_0 o D2 (one 1104-bit bus -> equal D). Function: rr/lpl_11 = valid-tagged dsfd_rstg return; so/es/lpl_12 = sstn status OR inputs (no alignment). +15 cycles.
-- 7 false-fit chains = relay_mid FIT checked nominal neighbours. Flow fix: OT_RELAY_MID_FIT_CHAIN (opt-in; plan budgets.relay_mid_fit_chain[_types]) main 39d243610bd + schema 87f8bb96ef.
-- NOFIT census intel1 (J5 place logs): only col_h10_r0_p1 has depth fallbacks (15); other col families fb=0. Other hosts not yet censused (script scratch nofit.sh).
-- Codex v3 FT delta touches only slice types (no col type) -> no interaction with col rows.
-- Codex E8 2930371 = col_h9_r0_p1 pv697f40c9 three-moves place (not h10). Waiter on it.
-## Running
-- Proof C: tree intel1 fam-s81-col-r3/src3 (J5 + mkplan2 lever-1/RDX + mkplan3 + FIT CHAIN types=[rep]; tools rt f3db2d0e628f + patched relay_mid.tcl/gen_phys.py/schema.py copies). Strict bind+LAT on intel1 (bind_otrun.log); hub chain intel2 fam-s81-col-r3/chain3.sh -> kit_wave run-item spec fam-s81-col-r3/wave/spec.json (src_manifest off) to place; reads relay_mid coverage.
-## Next
-1. Bind/LAT result -> if LATCHECK fails on xo lane cycles, lanefix.py intended cycles.
-2. Place coverage 0 fallback -> CTS/route to sign-off (private), then rows as j6_donor_delta.v1 on J6 plan 44be605129cb for all col_h10_r0_p1 types -> S81-J6-ASSEMBLY-R2.
-3. lever-7 rows (FABLE-CLOSURE-STRATEGY row 7: N-strip ft bit sites two rows + frame_int_o bank beside window; xo_i pad two rows) not built yet.
-4. OWNERS-SWEEP 5 FAILED col rows: deliberate holds posted 03:5x.
+# FAM-S81-COL-R3 handoff (updated 11-21 04:5x PST)
+Scope after COORD split (04:4x): col_h9_r1 + col_h9_r2 (118 types held for J7) + shared J7 col rows. col_h9_r0_* -> FAM-S81-COL-H9R0, col_h10_* -> FAM-S81-COL-H10.
+Work dir intel1 /srv/opentallas-scratch2/claude/fam-s81-col-r3 (hub chains intel2 same path). Lane clone intel1 .../lane (branch claude/fam-s81-col-r3-fitchain, pushed).
+## Shared J7 col rows
+1. relay_mid depth rows (col_h10_r0_p1 only; other families fb=0 in J5 place logs): mkplan3.py (10 rows, +15 cycles; xo0-3 equal D2). -> H10 lane.
+2. False-fit (joint seats) = flow fix OT_RELAY_MID_FIT_CHAIN, main 39d243610bd + schema 87f8bb96ef; plan budgets.relay_mid_fit_chain[_types].
+3. XALIGN (TOKEN-1121 L02 e1 x1 vs go/cfg 2): RLYBR-1 keeps bsM on original xa/xb relay while cc_K_0 has relay_depth D. Generator mkxalign.py IN OUT ROWS -> 96 rows / 42 col types on J5 (xalign_rows_j5.json). Gate: bind4 (src4 = J5 + XALIGN) running intel1 bind4_otrun.log. After green: TOKEN-1121 regenerates L02 schedule from bind4; J7: run mkxalign.py on the J7 base plan.
+4. Codex v3 FT delta fc763d2a: only slice types, no col overlap -> pass through to J7 as is.
+5. lever-7 pin-bank rows (FABLE-CLOSURE-STRATEGY row 7): NOT built.
+## Proofs in flight
+- proof C (h10_r0_p1, handed to FAM-S81-COL-H10): src3, bind_otrun.log, hub chain3.sh/chain3.log (chain tied to my session; H10 lane re-run chain3.sh if it died).
+- h9_r1 rep col_h9_r1__t1__cl49d7a23e__pv047ea3b3: src5 = J5 + mkplan2 lever-1 ROM input (104) + RDX q (35) rows + XALIGN; bind5_otrun.log; hub chain5.sh (setsid) -> run-item wave5/spec.json (gen_env copied from h10 spec: diff vs h9_r1 kit_wave item_env before trusting a fail) -> posts result. Then CTS (R2 pattern: tg_cts.sh) and route to sign-off. NOTE RDX q rows need the signed RDX cfg7 view for a signable build; private proof only.
+- Codex E8 2930371 (h9_r0_p1 three moves) placed rc0, geom running -> FAM-S81-COL-H9R0.
+## Open
+- h9_r1/h9_r2 relay_mid: expected=0 groups (rows 1-2 do not touch them). Their J5 failure class = post-CTS setup triage (ROM go_tag half-cycle) -> lever-1 is the lever.
+- J6 C1n packed (event dc92652f0d5, plan 44be605129cb). After J6 apply: lanefix.py + strict bind of J7 delta; derive t4.xai/t5.xbi rows (relay_depth.py).
