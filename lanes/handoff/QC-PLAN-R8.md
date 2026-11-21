@@ -106,3 +106,14 @@
 - b11 b0ef0e919674 adds one 258-bit x_fe_o stage on slw_st_a_v2__cl9f076a5c, the shared type of W1 and W3. Pricing raises both ST_A→FE paths 29→30 and moves their control with payload. Production QFT replay passes all twelve slices and sets all eight NB_PAD rows to zero on both affected slices. epyc9 v2b/b10_diag/{regions2,reprice}.log.
 - b11 strict admitted epyc9 oth-ubuntu-3230280-1795259207, base R8 from b10. b11.out and watch_b11.log track strict/LATCHECK, then G0, event census and six proof GENs. No route auto. Adoption requires event-matched review_before_route all_items and disabled auto-accept for this die. Post exact actual geometry to GEOM-REVIEW.md before each route.
 - Exact QFT hard-master replay on b11 localized 24 additional mismatches to west SKEW_S (12 calculated vs all 11 in the hard views). b12 candidate 929928f3c22a keeps the views by adding one south-near rsn feedthrough hop in each of the six west FW paths. QFT replay then matches all 144 exact hard-station parameters. All 4 changed types have newly explicit stage sites and per-bit hop ceiling 256 µm. E8 v2b_host b12 strict oth-ubuntu-3244624-1795260219; b12.out, watch_b12.log, b12_plan.ledger.json. The E8 launch uses private hardlinked source snapshots and atomically replaces candidate inputs. E9 queue admission remained under storage pressure.
+
+## 11-21 RESUME handoff -> QC-PLAN-R9 (supersedes the b9 lines above)
+- Codex takeover (CODEX-LOG 02:18+): b9 failed after the R8 refresh on asymmetric n_a/n_b tile-link depths; Codex built b10..b12.
+  LIVE: b12 929928f3c22a (QFT 144/144 after W1/W3 NB + 24 west SKEW_S fixes), strict bind on epyc8 unit oth-ubuntu-3244624-1795260219,
+  log epyc8 /srv/opentallas-scratch2/claude/qc-plan-r8/v2b_host/b12.out; LAT/G0/proof GEN chain armed after it (Codex).
+- b12.out shows "R8_REFRESH FAIL derive rc 2": the copied r8_refresh.py in v2b_host could not find land_r8_derive.py. Fixed on main
+  7ff721a009 (looks under ./tools/die_plan of the launch). If b12 ends R8_STALE: re-run with r8_refresh.py from rt >= 7ff721a009
+  (or point RR at <launch>/tools/die_plan) - no plan change needed.
+- QC-PLAN-R8 waiter (background) armed on that unit; R9 re-arm: ot-wait oth-ubuntu-3244624-1795260219 on epyc8.
+- Still open for V2: FAM-QC-FEFW ft regs_um (13 types, see above); release list on apply (11 cb + 3 fe + cbn_q00__cldbcda913 holds);
+  re-sign siblings after the 6 reps sign. Six omitted R6V1 HC types restored by Codex (d68...); slw_sc_v1__cl63e5a7a2 signed+exported.
