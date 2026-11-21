@@ -8007,8 +8007,10 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
             mk = (kd / "config.mk").read_text()
             (kd / "config.mk").write_text(mk.rstrip("\n") + f"\nexport OT_DLY_SPREAD_STATION_UM = {st_um:g}\n")
     if core_input_place(P.raw, tn):
-        for f_ in ("core_input_anchor.tcl", "core_input_chain.tcl", "place_wire_ratio.tcl"):
+        for f_ in ("core_input_anchor.tcl", "core_input_chain.tcl", "place_wire_ratio.tcl", "core_input_q_reseat.tcl"):
             shutil.copyfile(Path(__file__).with_name(f_), kd / f_)
+        with (kd / "latch_restore_post_resize.tcl").open("a") as f_:
+            f_.write("source /work/core_input_q_reseat.tcl\n")
         with (kd / "face_flops.tcl").open("a") as f_:
             f_.write(CORE_INPUT_PLACE_ANCHOR)
         # the chain spread runs at PRE_RESIZE (after GPL, before repair_design buffers the new hops; pilot8 at
