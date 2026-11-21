@@ -304,7 +304,10 @@ def _gate_cache_put(key, res):
 def _gate_uncached(d, mode):
     bad = outside_entries(d) + [(r, "abs", w) for r, w in package_abs_problems(d)]
     if (Path(d) / "PACKAGE.json").exists():
-        bad += [(r, w) for r, w in verify(d) if not any(r == b[0] for b in bad)]
+        # FABLE-FIX-KV-HUB-R3 11-21: set lookup.  The any() scan was quadratic (verify rows x outside entries): a private cp -al KV tree
+        # with a stale PACKAGE.json (164k outside entries) spun 4 h here before elab (hroot B2 / B3 binds), in a warn-only gate.
+        seen = {b[0] for b in bad}
+        bad += [(r, w) for r, w in verify(d) if r not in seen]
         bad = [(b[0], b[1], b[2] if len(b) > 2 else "") for b in bad]
     if not bad:
         return True, ""
