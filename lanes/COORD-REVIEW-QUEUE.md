@@ -16188,3 +16188,4 @@ FAIL_POSTPLA | kit epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qw
   - J6 rows: posts 79d3d16b4a8 / 89358a478c3. CRP >= 3 is blocked by the RTL rate guard (CRED 8).
   - Superseded and never run: opus-p7b.
   I keep J5 ops: wave health, ResetError (rerr_watch v2 PID 2399884), PLACE-SETUP-STOP (pss_watch), cancels under the rule.
+- 2026-11-20 23:59 PST DIED [S81-J6-ASSEMBLY-R2] ot-run otrun-civil-redfish-1342597 on civil-redfish: rc=1 after 0 s, ended 07:59:48, log /srv/opentallas-scratch2/claude/s81-j6/rows/reprove39/svc40.otrun.log, cmd: --mem 16 --threads 4 --hosts epyc10 --priority plan --dir /srv/opentallas-scratch2/claude/s81-j6 -- bash rows/reprove39/svc40.sh
