@@ -54,6 +54,8 @@ HOP = 405.0
 SEAT = 8.64
 FLOP_UM2 = 0.5832       # one station flop on the 2.16 x 0.27 um station comb
 SPILL_MAX = 30.0        # um a bank may spread from its site before it is called a pile-up
+CLOCK_SITE_KEYS = ("landing_writer_start", "landing_reader_start", "landing_local_resets")
+SITE_KEYS = ("xy_um", "xy", "site_um", "um")
 md = lambda a, b: abs(a[0] - b[0]) + abs(a[1] - b[1])      # noqa: E731
 snap = lambda v: round(round(v / G) * G, 3)                  # noqa: E731
 
@@ -523,6 +525,25 @@ def seat(t, clr=SEAT):
             q = near(r)
             if q:
                 moved.append(dict(kind="internal_station", name=e["conn"][:90], old=list(r[:2]), new=list(q))); e["regs_um"][j] = [q[0], q[1]]
+    # CLOCK SITES (J7 base 11-21: 150 START relay stages, 1 local reset under the moved lanes of 79 types): a START
+    # relay stage or local reset relay INSIDE a core box goes to the nearest free grid point like a station register.
+    # Only a site inside a box moves (a site beside a core that did not move keeps its place); reach_rules check
+    # --rules 1 judges the START hops afterwards.
+    def walk(o, path):
+        if isinstance(o, dict):
+            for k, v in list(o.items()):
+                if k in SITE_KEYS and isinstance(v, list) and len(v) >= 2 and isinstance(v[0], (int, float)):
+                    if any(b_[1] < v[0] < b_[3] and b_[2] < v[1] < b_[4] for b_ in B):
+                        q = near(v)
+                        if q:
+                            moved.append(dict(kind="clock_site", name=path, old=list(v[:2]), new=list(q))); o[k] = [q[0], q[1]] + list(v[2:])
+                else:
+                    walk(v, f"{path}/{k}")
+        elif isinstance(o, list):
+            for i, v in enumerate(o):
+                walk(v, f"{path}[{i}]")
+    for key in CLOCK_SITE_KEYS:
+        walk((t.get("clock") or {}).get(key), key)
     return moved
 
 
@@ -533,12 +554,12 @@ def check_type(tn, t, gs=0):
     rl_in = sum(1 for v in (t.get("relay_sites") or {}).values() if isinstance(v, list) and len(v) >= 2 and isinstance(v[0], (int, float)) and inn(v))
     ck = t.get("clock") or {}
     start_in = 0
-    for key in ("landing_writer_start", "landing_reader_start", "landing_local_resets"):
+    for key in CLOCK_SITE_KEYS:
         def walk(o):
             n = 0
             if isinstance(o, dict):
                 for k, v in o.items():
-                    if k in ("xy", "site_um", "regs_um", "um") and isinstance(v, list):
+                    if k in SITE_KEYS + ("regs_um",) and isinstance(v, list) and v:      # xy_um is the key the START stages and local resets carry
                         for p in (v if v and isinstance(v[0], list) else [v]):
                             if len(p) >= 2 and isinstance(p[0], (int, float)) and inn(p):
                                 n += 1

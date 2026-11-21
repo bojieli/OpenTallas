@@ -216,3 +216,22 @@ def test_content_macros_are_core_boxes():
     ln["origin_um"] = [box[0] - 30.0, box[1] - 40.0]
     c = R.check_type(TN, t)
     assert c["lanes_on_core"] == [ln["inst"]] and not c["pass"]
+
+
+def test_clock_sites_inside_a_core_are_seated_and_counted():
+    """J7 base 11-21: START relay stages and local resets (key xy_um) stood under the moved lanes; check read other keys
+    (start_in_core 0 on 6,000 sites) and seat() left them."""
+    P = plan()
+    t = P["partition_types"][TN]
+    ln = next(h for h in t["hard_cores"] if H.LN.search(h["inst"]))
+    x, y = ln["origin_um"]
+    inside, beside = [x + 50.0, y + 60.0], [x - 3.0, y + 60.0]
+    t["clock"] = dict(landing_writer_start=dict(depth=2, branches=dict(ft0_o=dict(stages=[dict(xy_um=list(inside), raw_reset="r"), dict(xy_um=list(beside), raw_reset="r")]))),
+                      landing_local_resets=[dict(name="fstart_0", raw="rst_rl_1", xy_um=list(inside), consumers=["c"])])
+    assert R.check_type(TN, t)["start_in_core"] == 2
+    mv = [m for m in R.seat(t) if m["kind"] == "clock_site"]
+    assert len(mv) == 2 and R.check_type(TN, t)["start_in_core"] == 0
+    st = t["clock"]["landing_writer_start"]["branches"]["ft0_o"]["stages"]
+    assert st[1]["xy_um"] == beside and st[0]["raw_reset"] == "r"            # a site beside the core keeps its place
+    for p in (st[0]["xy_um"], t["clock"]["landing_local_resets"][0]["xy_um"]):
+        assert H.clear(p, H.boxes(t)) >= R.SEAT - 1e-6 and R.md(p, inside) < 80.0
