@@ -40,3 +40,26 @@ lanes/FABLE-PD-KV-1500.md (D27 rows 1-4 evidence, stop list). Lane dirs: epyc8 /
 
 ## Stop list (unchanged)
 No route/repair of hub_Wo / sys_c; no route of D25e3 hgi kits; no kR late-repair retry; no D26 claim for hub_Wo/sys_c/hgi_v1 collector.
+
+## Update 17:2x (KV-PLAN-R2)
+- R3b exit 1 at 16:5x: only the runtime pin `cmp cbc_rules.py` failed (rt moved to bbcc7f022a8e: FLOW-NOADV-R2 bound_reset_hop_cap +
+  R-REACH-1 die_relays, both opt-in). R3c = epyc7 d26_contracts/run_gate_r3c.sh: reuses the untouched R3b copy source_gate_r3b, pins
+  the current runtime by sha (logged), chmod -R u+w on the copied die_plan (first R3c try died: schema dump on read-only file; spent copy
+  moved to d26_contracts/r3c_spent_die_plan_*). Launched 17:0x from intel2 (ot-run epyc7 plan prio), log intel2 ~/tmp/kvplanr2/d26_r3c_gate.log.
+  Compose done, D26 R3c plan sha 3c057267a507 (KRSP_RT26 32 lanes 5->6). Outputs epyc7 d26_contracts/normal_g0_r3b, normal_gates_r3b.
+- APPLY RECIPE (from KV-D23-COMPOSE, intel2 ~/tmp/kvd23c): apply_d25.sh TAG EVENT (seal_rep_d24.sh -> seal_d24.py + src_manifest
+  verify/replicate, guard_d23.py, mk_candidate_g0.py, set_bind_dest.py, then rt tools/autopilot/publish_apply.py apply --candidate
+  --expect-source <live D25e3 tree> --expect-event KV-D25e3 --lane ...). Scripts assume build host epyc8 and the tree at its FINAL kw45
+  path (kw45/src_kv_pin_eb1e73448bd0_hg14_<plan8>_t<tools7>_d26) with W/<tag>/tree.txt + W/<tag>g0gate/gate.out. R3c candidate is on
+  epyc7 at a non-final path: mv it (same fs) to the final kw45 path, re-run G0 there (gate_g0_d25.sh), seal, replicate, candidate, apply.
+  Live: tree kw45/src_kv_pin_eb1e73448bd0_hg12_983443ee_ta2fb7e6_d25e3, event KV-D25e3.
+- At apply (COORD 16:3x): KV tools_sha -> current runtime (R3c ran on bbcc7f022a8e); prove one bound-type gen on it first; add
+  OT_PLACE_MAX_TRANSITION=320 to dies.qwen_kvsys.die_gen_env (kit_wave_edit), as S81.
+- Pushed: fwd_reach declared-hop check 65f3f85d7c (5 tests). Staged efault bind form 4459f7ee18 (asbuilt key efault_stage; needs a
+  sites file with src_um per eq source from the placed kit; AGE += D; 10 tests + RTL bench).
+- OWNERS-SWEEP 15:50 rows: kv3_hub_C gen fails: hard_landing.py reads provenance.json of kvd23_hubc_views/kv_cland_* (6 views carry
+  only lef/libs/signoff; source rk dirs kv-hubc-split are gone; D25f2 the same) -> re-freeze those 6 cland child views with provenance /
+  pins / clock_contract / landing_evidence (CLAND-MACRO-1 freeze form) = D27 row; no unchanged relaunch. kv3_pc_v1__cl4ea58a5c /
+  __cl7f648944: kit_istations fail-closed "i_ectl_Q_N_kf: packed exact banks do not also move face registers" (plan has both a packed
+  exact bank row and a face-register move on that bus) -> D27 plan row (drop one form) or tool support. kv3_hub_Wi: D25e3 a13 place
+  client ended 06:25 (SRAM row class, fixed in D26) -> no relaunch; next build is the D26 kit.
