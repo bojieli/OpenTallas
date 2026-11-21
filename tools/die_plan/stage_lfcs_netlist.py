@@ -15,6 +15,12 @@ per-lane HI stage XR adds in ot_s81sl_vp (CS_HI_E = CS_HI_D + XR); the source ge
 plan HI 3 stages source 2 / GS 2 and elaborates to 3, not 4.  The die instance's LF_VP_XR mask must agree with the
 contracts bit by bit (a mask bit with no contract refuses).
 
+S81-LEAF-REGRID (11-21): the rule is the same on the kv slice.  Leaves 1-4 of ot_s81sl_slice_w3 (types ot_s81sl_kv_leaf__*)
+are ot_s81sl_leaf instances whose u_vp reads LF_VP_XR[k] like any other leaf, so a kv leaf with hard cores takes a
+--vp-xr contract and the source gets HI_D = plan HI - 1 (the netlist of record: u_s_3N mask 5'b11111, plan hi 2, HI_D
+20'h11110; GS stays 0, per lane).  Only a leaf with no hard cores (the KV bank leaf, kv_leaf t2) has nothing to stage:
+its mask bit is not checked and a contract on it refuses.  Restaging the unchanged plan reproduces the record byte for byte.
+
 S81-LEAF-SWR (11-20): --update CLASS (repeatable, e.g. SWR_D) re-prices only those classes on an already staged netlist
 (the D8i bind dropped 5 SWR rows: plan 1-2 stages, staged LF_CS_SWR_D nibble 0); XR / group classes need a full stage."""
 import argparse
@@ -98,8 +104,6 @@ def leaf_depths(plan, tree_overrides=None, vp_xr=None):
         d = {x: want.get(c, 0) for x, c in CLS.items()}
         xr = vp_xr.get(p["type"], 0)
         plan_hi = d["HI_D"]
-        if xr and "kv_leaf" in p["type"]:
-            raise SystemExit(f"{p['name']}: VP_XR is an ordinary-leaf form (ot_s81sl_vp WRP); not on kv leaves")
         if xr:
             if d["HI_D"] < 1:
                 raise SystemExit(f"{p['name']}: effective HI depth must include the XR stage")
@@ -155,6 +159,8 @@ def stage(plan, net_text, rtl_root, tree_overrides=None, vp_xr=None):
             raise SystemExit(f"u_s_{s}: LF_VP_XR must be a literal five-bit mask (5'bxxxxx) to stage this slice")
         bits = int(mask.group(1), 2) if mask else 0
         for (part, k), typ in selected.items():
+            if (part, k) not in depths:      # a leaf with no hard cores (kv_leaf t2, the KV bank leaf): nothing is
+                continue                     # staged on it, its nibbles keep the module default, its mask bit is not priced
             if part == s and ((bits >> k) & 1) != vp_xr.get(typ, 0):
                 raise SystemExit(f"u_s_{s} leaf {k}: LF_VP_XR mask bit {(bits >> k) & 1} differs from the VP_XR contract "
                                  f"{vp_xr.get(typ, 0)} of {typ} (pass --vp-xr {typ}:1 for an XR leaf)")
