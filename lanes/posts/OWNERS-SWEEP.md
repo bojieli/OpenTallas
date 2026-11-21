@@ -209,3 +209,8 @@
   QC: 5 STALE held FAM-QC-CB + 1 STALE cancelled FAM-QC-HCST; the QC WAIT-VISUAL and NOT-IN-PLAN rows cleared.
   KV: 3 FAILED-NO-RELAUNCH (PV-R4 bind stale, FAM-KV-HUB, FAM-KV-IOPC) + 16 held/cancelled WAIT-BIND; all old.
   HEAD none flagged. Context well below 330k, no stand-down.
+- 2026-11-21 01:53 PST 01:50 sweep with Fable-limit renames (OPUS-FIX QC-SLE-R4, KV-HGI-R3, S81-SVC-R5, S81-LEAF-R3, HEAD-SERDES-R4/LEP0N-R3, FAM-S81-COL-R2, FAM-QC-FEFW): 489 rows, 61 flagged (was 54), 0 UNOWNED/DEAD-OWNER.
+  S81 (34): 5 new FAILED-NO-RELAUNCH (2 SERDES, LEAF-R3 stale, BKSEL-R5, ...) + old COL-R2 hold-after-CTS; 28 STALE held-for-plan-event (1 new SLICE), 3 WAIT-VISUAL.
+  QC (6): 5 STALE held FAM-QC-CB + 1 STALE cancelled HCST, all old; none on SLE-R4/FEFW.
+  KV (21): 4 FAILED-NO-RELAUNCH (1 new FAM-KV-HUB flow error) + 17 held/cancelled WAIT-BIND (1 new cancelled IOPC).
+  HEAD none flagged (hd_lep0N running, LEP0N-R3). Context well below 330k.
