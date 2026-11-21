@@ -28,3 +28,27 @@ post rows to S81-J6-ASSEMBLY / QC-PLAN-R7 / KV-PLAN-R2 ONLY after a proof whose 
 - proof4 CTS: 28,649 netlist latches -> 6,281 bypassed same tap, 16,240 bypassed far (>200 um), 8,943 kept, all hung on launch leaf.
 - scope bug fixed (ct_hl_drop took ct_hlmax via global; clock_taps is sourced in a proc) -> clone a8f34806c0 (amended, unpushed); proof4 resumed from cts (resume.json).
 - Targets now: S81-J6-ASSEMBLY, QC-PLAN-R8 (was R7), KV-PLAN-R3 (was R2). KV: any lockup form goes to D28 after a proof (D27c dropped r5 rows).
+
+## STAND-DOWN state (LOCKUP-STATION-R2, context ~340k) -- successor reads proof6 + QC2
+Code (lane clone intel1 /srv/opentallas-scratch2/claude/lockup-station-r2, ot-push-main in flight at stand-down; see post for sha):
+- a8f34806c0 auto form: clock.zl_lockup.<T>.{auto,exclude,same_tap,max_um}; zl_netlist "!re" excludes (reset relays, sram);
+  clock_taps.tcl ct_hl_drop/ct_hl_bypass: latch removed when launch+all captures same tap or capture > OT_HOP_LATCH_MAX_UM (gen default 200).
+- a9b2739489 dont_touch on netlist latches -> FAILED at synth (ODB-0369, proof5 dead) ; superseded by
+- b28bcec799 (rebased 263c6566f6) ot_latch_restore: clock_taps (pre hop-latch passes) + hop_latch_leaf (every POST_CTS call) swap any
+  u_fl_*/u_lk_nk_* DFFL* cell back to DLLx2 (resizer swapped 988 DLLx2 -> DFFLQx4 on t39 proof4 3_place; tested: 988 restored, 0 failed).
+  NOT covered: swaps by later GRT-stage repair (LATCH-SWAP-0045 owns flow-wide scan / final check).
+Proofs:
+- proof4 t39 (epyc7 .../lockup-station-r2/proof4_t39) cross-tap<200 + leaf + 9 seams: hold before xtap 9,055/-217 (base 14,251/-275),
+  same 24 (41), port_in 1,160 (1,167), port_out 6 (1,884); TT after keep -278.56 / -94.3k (base -354.63 / -16.4k) = FAIL.
+  STA (sta/p4_max.tsv): seams u_fl_po->ft*_o 690 ends -57.7k; 988 swapped flops on 250-630 um hops. Bypass counts: 6,281 same, 16,240 far, 8,943 kept.
+- proof5 = dead (dont_touch synth error).
+- proof6 t39 RUNNING (epyc7 /srv/opentallas-scratch2/claude/lockup-station-r2/proof6_t39, launch.sh, run.log, GOAL=grt): pristine RTL
+  (no seams) + auto + bypass 200 + leaf + latch restore. Read: 4_1_cts.log OT_LATCH_RESTORE / OT_CLOCK_TAPS bypass / OT_HOP_LATCH_LEAF;
+  pregrt_ff_hold.log class before/after + hold_cells; tt_setup_keep.log; post-hook STA via sta/run_p4.sh pattern (cls.tcl on 4_cts_pre_tt.odb).
+  S81 baseline (t39 b05c kit): pre-repair cross_tap 14,251 / port_out 1,884 / port_in 1,167 / same_tap 41; hold_cells 47,483; TT -354.63 / tns -16.4k.
+- QC2 sle_ctl__cl67434795 QUEUED (intel1 /srv/opentallas-scratch3/claude/lockup-station-r2/qc_sle_ctl2, launch.sh, run.log): job-kit
+  inputs + leaf + auto + bypass 200 + latch restore. Baseline (ot-jobs/sle_ctl__cl67434795-route-key-cardinal-4137646-1795153811/work):
+  pre-repair cross_tap 3,039 / same_tap 199 / port_in 2; hold_cells 48,100; TT -1.82 / -1.82.
+- Cleanup when convenient (ot-delete): proof3_t39, proof5_t39, qc_sle_ctl (cancelled), proof4 after read.
+Rows: still HELD for S81-J6-ASSEMBLY, QC-PLAN-R8, KV-PLAN-R3 (KV -> D28) until a proof is no worse than baseline on TNS and hold.
+Seams: drop from the form (cost -57.7k setup on t39); port_out hold then stays at baseline.
