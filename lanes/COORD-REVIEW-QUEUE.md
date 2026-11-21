@@ -15151,3 +15151,8 @@ FAILED [AUTOPILOT 4b120549d44b] 2026-11-20 19:50:50 PST AUTOPILOT -> KIT-WAVE-3:
   KV: 9 FAILED-NO-RELAUNCH WAIT-BIND (1 new: kv3_io_cor_v1 detail route error) + 10 held/cancelled WAIT-BIND (1 new: kv3_sys_c placed, route held).
   HEAD none flagged.
 - 2026-11-20 19:36 PST KNOWN-RED [MERGE-QUEUE -> PLACE-SETUP-STOP] main abc5db16299 ('PLACE-SETUP-STOP: end the kit after detail place when TT setup WNS < -300 ps') made test(s) red: 2 new failure(s) (not failing on main 803803f5300; still failing on a serial rerun of the branch): tools/die_plan/test_tt_setup_keep.py::test_run_kit_steps_gate_the_swap_on_the_keep_decision, tools/die_plan/test_tt_setup_repair.py::test_default_kit_has_no_tt_step_files. Not blocking anyone; fix on main (ot-push-main) or revert.
+- 2026-11-20 19:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-20 19:52 PST: 302 running jobs, PROGRESSING 290, SLOW 8, NO-PROGRESS 4 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc2 col_h10_r2__t1__cl1f5d6c2a__pvf1512c16 5_2_route stage 28.7 h job 32.7 h: drt_violations best 20 last 20 rows 53 window-gain 0.0%; stagnant 11.7 h; last event 1.0 h ago, log write 1.0 h ago (3381 lines)
+  NO-PROGRESS epyc9 col_h10_r2__t1__cl99efd374__pv4c1f67ff 5_2_route stage 27.0 h job 30.0 h: drt_violations best 20 last 20 rows 53 window-gain 0.0%; stagnant 8.0 h; last event 0.8 h ago, log write 0.3 h ago (3375 lines)
+  NO-PROGRESS epyc10 native59 pregrt_ff_hold stage 16.3 h job 21.0 h: no new meaningful log line for 14.2 h; last: 0 |       0 |       0 |            0 |    +0.0% |   5.000 |   0.000 | u_bound.u_pd5_emb_code_q_388.q
+  NO-PROGRESS epyc7 serdes__t13 lec stage 10.5 h job 10.5 h: LEC last file/log write 10.5 h ago
