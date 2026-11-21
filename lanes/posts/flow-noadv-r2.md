@@ -1,3 +1,4 @@
 - 2026-11-20 16:13 PST DONE [flow-noadv-r2] ot-push-main otpush-tolerant-swine-4031364 on tolerant-swine: rc=0 after 0 s, ended 16:13:21, log none, cmd: ot-push-main --help
 - 2026-11-20 16:22 PST DONE [flow-noadv-r2] ot-push-main otpush-tolerant-swine-125807 on tolerant-swine: rc=0 after 18 s, ended 16:22:21, log /srv/opentallas-scratch2/claude/flow-noadv-r2/push-r3.log, cmd: ot-push-main 
 - 2026-11-20 16:32 PST DONE [flow-noadv-r2] ot-push-main otpush-tolerant-swine-448384 on tolerant-swine: rc=0 after 78 s, ended 16:32:21, log /srv/opentallas-scratch2/claude/flow-noadv-r2/push-r3b.log, cmd: ot-push-main 
+- 2026-11-20 17:26 PST DONE [flow-noadv-r2] ot-push-main otpush-tolerant-swine-1386454 on tolerant-swine: rc=0 after 884 s, ended 17:26:08, log /srv/opentallas-scratch2/claude/flow-noadv-r2/push-r3c.log, cmd: ot-push-main 
