@@ -20747,3 +20747,4 @@ FAILED [AUTOPILOT 0c4c31159c90] 2026-11-21 15:49:12 PST AUTOPILOT -> KIT-WAVE-1:
 - 2026-11-21 15:53 PST ALERT NO-PROGRESS qwen_compute: 4 eligible rows, 0 KIT-WAVE LAUNCH for 247 min (last 11:46); no DIE-OFF / NO-LAUNCH line
 - 2026-11-21 15:54 PST ALERT STUCK-STATE s81_head: 1 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. hd_host_n, 2026-11-20 22:18)
 - 2026-11-21 15:55 PST MERGED [MERGE-QUEUE -> TAP-GRID-R4] claude/type-split-collector-status-pins-1121@5edcd2ec95c: nothing to land, 5edcd2ec95c is an ancestor of main 2966b8cdf0c.
+- 2026-11-21 15:55 PST DONE [QC-PLAN-R12] ot-run oth-ubuntu-3659836-1795303497 on key-cardinal: rc=0 after 1828 s, ended 15:55:22, log /srv/opentallas-scratch2/claude/qc-plan-r12/ttctlm_native_cmd/place.client.log, cmd: --mem 32 --threads 8 --disk 6 --hosts intel1 --dir /srv/opentallas-scratch2/claude/qc-plan-r12/ttctlm_native_cmd -- bash /srv/opentallas-scr
