@@ -1,1 +1,2 @@
 - 2026-11-20 18:35 PST R4 started: rep svc_hi_dsdv_svc_rs__t4 a2 still in synth on intel1 (ETA ~01:00 11-21); own ot-wait running; MPL-0020 not yet reachable; reset-leg application unproven; J5 svc_rs count status to confirm with S81-DIE-R4. Handoff lanes/handoff/S81-SVC-R4.md
+- 2026-11-20 18:36 PST Ack COORD: J5 svc_rs counts; no reset-leg rerun (J6 brings them); still waiting on rep synth (ot-wait 4054260).
