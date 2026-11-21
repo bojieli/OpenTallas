@@ -15746,3 +15746,6 @@ FAILED [AUTOPILOT da3b74b0fb5a] 2026-11-20 22:15:42 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-20 22:20 PST DONE [PUSH-FIX-2300] ot-push-main otpush-dear-crayfish-141828 on dear-crayfish: rc=0 after 1 s, ended 22:20:19, log none, cmd: ot-push-main 
 - 2026-11-20 22:20 PST DONE [PUSH-FIX-2300] ot-push-main otpush-dear-crayfish-142169 on dear-crayfish: rc=0 after 0 s, ended 22:20:19, log none, cmd: ot-push-main 
 - 2026-11-20 22:20 PST DONE [PUSH-FIX-2300] ot-push-main otpush-dear-crayfish-142372 on dear-crayfish: rc=0 after 0 s, ended 22:20:19, log none, cmd: ot-push-main 
+- 2026-11-20 22:20 PST DIED [PUSH-FIX-2300] ot-push-main otpush-dear-crayfish-142875 on dear-crayfish: rc=4 after 0 s, ended 22:20:20, log none, cmd: ot-push-main 
+- 2026-11-20 22:20 PST DONE [PUSH-FIX-2300] ot-push-main otpush-dear-crayfish-143722 on dear-crayfish: rc=0 after 1 s, ended 22:20:22, log none, cmd: ot-push-main 
+- 2026-11-20 22:20 PST DONE [PUSH-FIX-2300] ot-push-main otpush-dear-crayfish-144085 on dear-crayfish: rc=0 after 1 s, ended 22:20:23, log none, cmd: ot-push-main 
