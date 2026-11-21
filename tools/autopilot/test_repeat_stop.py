@@ -189,3 +189,68 @@ def test_station_row_overlap_plan_class_is_blocked_at_the_third():
     assert [bool(e) for e in evs] == [False, False, True, False]
     assert evs[2]["event"] == "BLOCKED-REPEAT"
     assert RS.gate(st, "qwen_compute", "sle_st_a_v1__cl989804f6__cled3c1d7b", {"block": "b1"})[0] is True
+
+
+def test_total_attempt_cap_stops_mixed_error_retries_per_event():
+    """FLOW-NOADV-R4: S81-DIE-R5 saw a D8i svc row reach 22 attempts of mixed errors (no 3 identical in a row): the 6th failed attempt of one plan event blocks."""
+    st = {}
+    whys = ["KeyError: a%d (gen_phys.py)", "infra-oom: earlyoom killed the place unit", "ValueError: b%d (kit_wave.py)"]
+    evs = [RS.record(st, D, I, n, "gen", "FLOW", whys[n % 3].replace("%d", str(n)), inputs={"block": "b1"}, t=n * 7200, event="E1") for n in range(1, 8)]
+    capped = [e for e in evs if e and e["event"] == RS.CAP_STATE]
+    assert len(capped) == 1 and evs[5] is capped[0] and "PLAN" in capped[0]["why"]
+    # an input change does not release a cap stop
+    assert RS.gate(st, D, I, {"block": "b2"}, event="E1")[0] is True
+    # a new plan event does, and the count starts again
+    assert RS.gate(st, D, I, {"block": "b2"}, event="E2") == (False, "", "")          # the ledger is keyed item@event: E2 starts clean
+    assert RS.state_of(st, D, I, "E2") == ("", "") and RS.state_of(st, D, I, "E1")[0] == RS.CAP_STATE
+    for n in range(8, 13):
+        assert RS.record(st, D, I, n, "gen", "FLOW", "%s: z (x.py)" % ("KeyError", "ValueError", "OSError", "TypeError", "IndexError")[n - 8], t=n * 7200, event="E2") is None
+    # an unblock line releases it too
+    st2 = {}
+    for n in range(1, 7):
+        RS.record(st2, D, I, n, "gen", "FLOW", "%s: k (x.py)" % ("KeyError", "ValueError", "OSError", "TypeError", "IndexError", "EOFError")[n - 1], t=n, event="E1")
+    assert RS.gate(st2, D, I, {}, unblocks=[(I, "*")], event="E1")[2] == "unblock"
+    # the same attempt number counts once
+    st3 = {}
+    for _ in range(9):
+        assert RS.record(st3, D, I, 1, "gen", "FLOW", "KeyError: q (x.py)", t=1, event="E1") is None
+
+
+def test_tool_mix_infra_error_identical_on_two_attempts_stops_and_survives_the_infra_release():
+    """FLOW-NOADV-R4 (COORD, leaf t28: 5 relaunches in 40 min of INFRA[tool_mix] ResetError at kit_rtl)"""
+    st = {}
+    why = "ResetError: reset identity differs (kit_rtl.py) tool skew"
+    a = RS.record(st, D, I, 1, "kit_rtl", "INFRA", why, inputs={"block": "b1"}, t=1, event="E1", ident_n=RS.TOOL_MIX_IDENT_N)
+    b = RS.record(st, D, I, 2, "kit_rtl", "INFRA", why, inputs={"block": "b1"}, t=2, event="E1", ident_n=RS.TOOL_MIX_IDENT_N)
+    assert a is None and b and b["event"] == "BLOCKED-REPEAT"
+    assert st["repeat_ledger"][RS.lkey(D, I, "E1")]["tool_mix"] is True
+    assert RS.gate(st, D, I, {"block": "b1"}, event="E1")[0] is True
+    assert RS.gate(st, D, I, {"block": "b2"}, event="E1")[0] is False           # an own-input change releases it
+    assert "tool_mix" not in st["repeat_ledger"][RS.lkey(D, I, "E1")]
+    # a different message does not stop at 2
+    st2 = {}
+    assert RS.record(st2, D, I, 1, "kit_rtl", "INFRA", "ResetError: a (x.py)", t=1, event="E1", ident_n=2) is None
+    assert RS.record(st2, D, I, 2, "kit_rtl", "INFRA", "KeyError: b (y.py)", t=2, event="E1", ident_n=2) is None
+
+
+def test_stops_and_counters_key_on_item_at_event():
+    """FABLE-FLOW-2000 (a): 69 live item names exist on more than one event; a stop on D8i must not hit J5, and the reverse"""
+    st = {}
+    for n in range(1, 4):
+        RS.record(st, D, I, n, "route", "CRASH", DRT % ("net1", 1, 2, 3, 4), inputs={"block": "b"}, t=n, event="D8i")
+    assert RS.gate(st, D, I, {"block": "b"}, event="D8i")[0] is True
+    assert RS.gate(st, D, I, {"block": "b"}, event="J5")[0] is False
+    assert RS.state_of(st, D, I, "J5") == ("", "") and RS.state_of(st, D, I, "D8i")[0] == "BLOCKED-REPEAT"
+    for n in range(1, 4):                                   # J5 counts its own attempts from zero
+        assert RS.record(st, D, I, n, "route", "CRASH", ("KeyError: a (a.py)", "OSError: b (b.py)", "ValueError: c (c.py)")[n - 1], t=n, event="J5") is None
+    # a legacy (die|item) stop recorded before the key carried the event still holds
+    st2 = {"repeat_ledger": {D + "|" + I: {"att": [], "state": "BLOCKED-REPEAT", "fp": "x|y|z", "inputs": {"block": "b"}, "why": "old"}}}
+    assert RS.gate(st2, D, I, {"block": "b"}, event="D8i")[0] is True
+
+
+def test_cap_applies_to_rows_that_already_ran_many_attempts():
+    """FABLE-FLOW-2000 (c): 78 live rows are at 10+ attempts (max 46): the next failure of such a row goes to its owner as PLAN, no ledger history needed"""
+    st = {}
+    ev = RS.record(st, D, I, 17, "gen", "FLOW", "KeyError: q (q.py)", t=1, event="E1", attempts_hint=17)
+    assert ev and ev["event"] == RS.CAP_STATE and "17 failed attempts" in ev["why"]
+    assert RS.record({}, D, I, 3, "gen", "FLOW", "KeyError: q (q.py)", t=1, event="E1", attempts_hint=3) is None

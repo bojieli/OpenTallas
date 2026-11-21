@@ -18,6 +18,9 @@ IDENT_N = 3                 # identical fingerprints in a row
 STALL_N = 6                 # attempts without a later stage ...
 STALL_WINDOW_S = 24 * 3600  # ... within this window
 OOM_FACTOR = 1.5
+TOTAL_CAP = 6               # FLOW-NOADV-R4: failed attempts per item per plan event, any mix of fingerprints / OOM; then the row goes to its owner as PLAN
+CAP_STATE = "BLOCKED-CAP"
+TOOL_MIX_IDENT_N = 2        # a deterministic tool_mix error (INFRA class too) repeating on 2 attempts is a stop, not an infra retry
 OOM_RE = re.compile(r"infra-oom|earlyoom|\bOOM\b|oom-kill|Out of memory|exit 137|rc[ =]+137|Error 24[17]", re.I)
 NET_RE = re.compile(r"\bnet\s+([A-Za-z0-9_./\[\]\\$:-]+)")
 BOX_RE = re.compile(r"routeBox\s*\(\s*(-?\d+)\s+(-?\d+)\s*\)\s*\(\s*(-?\d+)\s+(-?\d+)\s*\)")
@@ -25,6 +28,19 @@ GATE_RE = re.compile(r"(FAIL_POSTCTS\s+\w+|OT_POSTCTS_GATE\s+\w+\s+\([^)]*\)|SET
 ENDPT_RE = re.compile(r"(pinreg\s+\w+|worst endpoint[s]?:?\s*[\w./\[\]$-]+|endpoint group\s+[\w./-]+)")
 EXC_RE = re.compile(r"\b([A-Za-z_][\w.]*(?:Error|Exception))\b:?\s*(.{0,120})")
 FILE_RE = re.compile(r"([\w.-]+\.(?:py|sv|svh|v|tcl|json|sdc|lib|lef|def|odb|f|mk))\b")
+
+
+def lkey(die, item, event=None):
+    """ledger key: item@event (FABLE-FLOW-2000 a: 69 live item names exist on several events; a stop / counter / hold of one event never hits another)"""
+    return f"{die}|{item}@{event}" if event else f"{die}|{item}"
+
+
+def lookup(st, die, item, event=None):
+    """the item@event ledger row; a stop recorded before the key carried the event (legacy die|item) still holds until it is released"""
+    L = st.get("repeat_ledger") or {}
+    e = L.get(lkey(die, item, event))
+    old = L.get(lkey(die, item)) if event else None
+    return old if (not e or not e.get("state")) and old and old.get("state") else e
 
 
 def led(st):
@@ -79,11 +95,32 @@ def _best_rank(attempts, before=None):
     return max(ranks) if ranks else -1
 
 
-def record(st, die, item, attempt, stage, cls, why, inputs=None, t=None, ok=False):
+def record(st, die, item, attempt, stage, cls, why, inputs=None, t=None, ok=False, event=None, ident_n=None, attempts_hint=0):
+    """one attempt outcome -> event dict or None (see _record); plus the TOTAL_CAP stop: distinct failed attempts of one plan event, any mix of
+    fingerprints / OOM kills, block the row as a PLAN item for its owner (a repeat / stall verdict of the same attempt wins)."""
+    ev = _record(st, die, item, attempt, stage, cls, why, inputs=inputs, t=t, ok=ok, event=event, ident_n=ident_n)
+    if ev and ident_n and ev["event"] == "BLOCKED-REPEAT":
+        led(st)[lkey(die, item, event)]["tool_mix"] = True       # kit_wave's INFRA release keeps this stop: the error is deterministic, not a host fault
+    if ok or event is None:
+        return ev
+    e = led(st)[lkey(die, item, event)]
+    tot = e.get("tot")
+    if not isinstance(tot, dict) or tot.get("event") != (event or ""):
+        tot = e["tot"] = {"event": event or "", "n": []}
+    if attempt not in tot["n"]:
+        tot["n"].append(attempt)
+    n_tot = max(len(tot["n"]), int(attempts_hint or 0))      # a row that already ran many attempts before the cap existed counts by its attempt number
+    if n_tot >= TOTAL_CAP and not e["state"]:
+        return _block(e, CAP_STATE, "cap|%d attempts" % n_tot, e["att"][-1],
+                      why=f"{n_tot} failed attempts in plan event {event or '?'} (mixed errors): PLAN item for the owner")
+    return ev
+
+
+def _record(st, die, item, attempt, stage, cls, why, inputs=None, t=None, ok=False, event=None, ident_n=None):
     """one attempt outcome (ok=True: it got past its stage, e.g. ENQUEUE).  -> event dict or None:
     {'event': 'BLOCKED-REPEAT'|'STALLED'|'OOM-RESUBMIT', 'fp': ..., ...}.  An attempt is recorded once per (attempt, stage, fp)."""
     t = time.time() if t is None else t
-    key = f"{die}|{item}"
+    key = lkey(die, item, event)
     e = led(st).setdefault(key, {"att": [], "state": "", "mem_x": 1.0, "oom": 0})
     fp = "ok" if ok else fingerprint(stage, cls, why)
     rank = FG.stage_rank(str(stage or "").split()[0]) + (1 if ok else 0)
@@ -105,9 +142,10 @@ def record(st, die, item, attempt, stage, cls, why, inputs=None, t=None, ok=Fals
             e["mem_x"] = round(e["mem_x"] * OOM_FACTOR, 2)
             return {"event": "OOM-RESUBMIT", "fp": fp, "mem_x": e["mem_x"]}
         return None
-    tail = [ident(a["fp"]) if a["fp"] != "ok" else "ok" for a in e["att"][-IDENT_N:]]
-    if len(tail) == IDENT_N and len(set(tail)) == 1 and tail[0] != "ok":
-        return _block(e, "BLOCKED-REPEAT", fp, last, why=f"{IDENT_N} identical fingerprints in a row")
+    n_id = ident_n or IDENT_N
+    tail = [ident(a["fp"]) if a["fp"] != "ok" else "ok" for a in e["att"][-n_id:]]
+    if len(tail) == n_id and len(set(tail)) == 1 and tail[0] != "ok":
+        return _block(e, "BLOCKED-REPEAT", fp, last, why=f"{n_id} identical fingerprints in a row")
     win = [a for a in e["att"] if t - a["t"] <= STALL_WINDOW_S and not a["oom"]]
     if len(win) >= STALL_N:
         win = win[-STALL_N:]
@@ -123,15 +161,20 @@ def _block(e, state, fp, last, why):
     return {"event": state, "fp": fp, "why": why}
 
 
-def gate(st, die, item, current_inputs, unblocks=()):
+def gate(st, die, item, current_inputs, unblocks=(), event=None):
     """launch gate -> (blocked, why, released_by).  Released by a changed own input hash or a named `unblock <item> <fp>` line."""
-    e = (st.get("repeat_ledger") or {}).get(f"{die}|{item}")
+    e = lookup(st, die, item, event)
     if not e or not e.get("state"):
         return False, "", ""
     fp = e.get("fp", "")
     if (item, fp) in set(unblocks) or any(u[0] == item and (u[1] == "*" or fp.startswith(u[1])) for u in unblocks):
         release(e, "unblock line")
         return False, "", "unblock"
+    if e["state"] == CAP_STATE:                 # an input change does not release a cap stop: only a new plan event or an unblock line
+        if event and (e.get("tot") or {}).get("event") != event:
+            release(e, "plan event changed")
+            return False, "", "event"
+        return True, f"{CAP_STATE}:{fp} ({e.get('why')}); released only by a new plan event or an `unblock {item} cap` line", ""
     old = e.get("inputs") or {}
     changed = sorted(k for k, v in (current_inputs or {}).items() if k in old and old[k] != v)
     changed += sorted(k for k in (current_inputs or {}) if k not in old and old and (current_inputs or {}).get(k))
@@ -145,13 +188,16 @@ def release(e, why):
     e["released"], e["released_fp"] = why, e.get("fp", "")
     e["state"], e["fp"] = "", ""
     e["oom"] = 0
+    e.pop("tool_mix", None)
+    if why in ("plan event changed", "unblock line"):
+        e["tot"] = {}
     e["att"] = [a for a in e["att"]][-1:]          # the streak starts again; the last attempt stays for the stage-rank history
     if e["att"]:
         e["att"][0]["fp"] = "released"
 
 
-def mem_x(st, die, item):
-    e = (st.get("repeat_ledger") or {}).get(f"{die}|{item}") or {}
+def mem_x(st, die, item, event=None):
+    e = lookup(st, die, item, event) or {}
     return float(e.get("mem_x") or 1.0)
 
 
@@ -160,6 +206,6 @@ def parse_unblocks(text):
     return [(m.group(1), m.group(2)) for m in re.finditer(r"(?m)\bunblock\s+(\S+)\s+(\S+)", text or "")]
 
 
-def state_of(st, die, item):
-    e = (st.get("repeat_ledger") or {}).get(f"{die}|{item}") or {}
+def state_of(st, die, item, event=None):
+    e = lookup(st, die, item, event) or {}
     return (e.get("state") or "", e.get("fp") or "")

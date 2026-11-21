@@ -387,11 +387,23 @@ def place_retry_sh(inner, log):
     and has no 'ot-run: RAN on' (the command never started) is rerun up to SSH_RETRIES more times; rc in $rc."""
     lq = shlex.quote(log)
     return (f"for i in $(seq 0 {SSH_RETRIES}); do echo KW_PLACE_TRY $i; {inner}; rc=$?; [ $rc -eq 0 ] && break; "
+            f"[ $rc -eq 143 ] || [ $rc -eq 130 ] || [ $rc -eq 129 ] && break; "     # FLOW-NOADV-R4: a cancelled (signalled) client is final, never retried
             f"t=$(sed -n \"/^KW_PLACE_TRY $i\\$/,\\$p\" {lq}); "
             f"printf '%s' \"$t\" | grep -q 'ot-run: RAN on' && break; "
             f"printf '%s' \"$t\" | grep -q 'ot-run: NOT RUN' || break; [ $i -lt {SSH_RETRIES} ] || break; "
             f"echo \"KW_SSH_RETRY place try $((i+2)) (ot-run NOT RUN before the command ran)\"; "
             f"sleep $((20*(i+1)+RANDOM%20)); done")
+
+
+def place_cancelled(AP, rec):
+    """FLOW-NOADV-R4 (COORD, S81-DIE-R5: `ot-run --cancel` of a wave place stage was read as 'ot-run never started' and placement restarted from scratch
+    on 5 of 8 D8i svc_rs rows): the signals.log line of an explicit `ot-run --cancel` naming this attempt's place kit, at or after its service started
+    -> the line, else None.  A cancel is final: no retry, the row is CANCELLED."""
+    try:
+        svc = json.loads((Path(rec["dir"]) / "place_service.json").read_text())
+        return AP.signals_cancel({"path": svc["kit"], "started": float(svc.get("started") or 0)})
+    except (OSError, ValueError, KeyError, TypeError):
+        return None
 
 
 def now_s():
@@ -11490,7 +11502,7 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
                     AP.log(f"KIT-WAVE LAUNCH-HELD {die}/{r.get('item')}: kit identical to {_dr.get('owner')} whose attempt failed ({_sig}); waits for its owner to change (DEDUP terminal)")
                 return None
             (st.get("dedup_released") or {}).pop(f"{die}|{r.get('item')}", None)
-        _rb, _rwhy, _rrel = RS.gate(st, die, r.get("item"), repeat_inputs_now(cfg, st, die, r.get("item"), r.get("block_sha")), cfg.get("_unblocks") or ())
+        _rb, _rwhy, _rrel = RS.gate(st, die, r.get("item"), repeat_inputs_now(cfg, st, die, r.get("item"), r.get("block_sha")), cfg.get("_unblocks") or (), event=cfg["dies"][die].get("event"))
         if _rrel:
             AP.log(f"KIT-WAVE REPEAT-STOP RELEASE {die}/{r.get('item')}: {_rrel}")
         if _so and explicit_retry_pending(cfg, st, die, r.get("item")):
@@ -11506,8 +11518,9 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
         if _rb and _so and explicit_retry_pending(cfg, st, die, r.get("item")):
             log_hourly(AP, st, f"REPEAT|{die}|{r.get('item')}|rs", f"KIT-WAVE REPEAT {die}/{r.get('item')} [owner {die_owner(cfg, die)[0]}]: explicit retry key overrides the repeat stop ({str(_rwhy)[:200]})")
         elif _rb:                                                # FLOW-NOADV-R2 11-20 (COORD): REPEAT-STOP skips an unchanged relaunch after IDENT_N identical fails, also with stops_off: it is a stop on wasted work, not a design gate; released by a changed own input digest (plan block, src tree, failing-stage files, runtime tools sha) or an `unblock` line
-            if not (st.get("repeat_ledger") or {}).get(f"{die}|{r.get('item')}", {}).get("held_logged"):
-                st["repeat_ledger"][f"{die}|{r.get('item')}"]["held_logged"] = time.time()
+            _lr = RS.lookup(st, die, r.get("item"), cfg["dies"][die].get("event")) or {}
+            if not _lr.get("held_logged"):
+                _lr["held_logged"] = time.time()
                 AP.log(f"KIT-WAVE LAUNCH-HELD {die}/{r.get('item')}: {_rwhy[:260]}")
             return None
         _bl, _why, _chg = fail_key_gate(cfg, st, die, r.get("item"), r.get("block_sha"))
@@ -12656,7 +12669,7 @@ def release_infra_stops(AP, cfg, st):
     except Exception:
         pass
     for key, e in ((st.get("repeat_ledger") or {}).items()):
-        if not e.get("state") or str(key).split("|", 1)[0] == "hbm":
+        if not e.get("state") or str(key).split("|", 1)[0] == "hbm" or e.get("state") == RS.CAP_STATE or e.get("tool_mix"):
             continue
         last = (e.get("att") or [{}])[-1]
         if str(last.get("cls")) == "INFRA" or str(e.get("fp", "")).startswith(("pipeline|INFRA", "rt_tools|INFRA")) or "INFRA" in str(e.get("fp", ""))[:40]:
@@ -12981,6 +12994,12 @@ def _collect_body(AP, cfg, st, notices):
             notices.setdefault(rec["die"], []).append(f"{rec['item']}@{rec.get('attempt')} STOPPED-HELD ({_hold[:120]})")
             AP.log(f"KIT-WAVE STOPPED-HELD {rec['die']}/{rec['item']}@{rec.get('attempt')}: {_hold[:200]}")
             continue
+        _cx = place_cancelled(AP, rec) if (res.get("stage") or "") in ("place", "") or "KW_PLACE" in str(res.get("tail") or "") else None
+        if _cx:
+            rec.update(status="CANCELLED", **{"class": "QUEUE-CANCELLED"}, updated=time.time(), reason=f"place cancelled by ot-run --cancel (final, no retry): {_cx[:200]}")
+            notices.setdefault(rec["die"], []).append(f"{rec['item']}@{rec.get('attempt')} place CANCELLED by ot-run --cancel (final; retry {rec['item']}@{rec.get('attempt')} relaunches)")
+            AP.log(f"KIT-WAVE PLACE-CANCELLED {rec['die']}/{rec['item']}@{rec.get('attempt')}: {_cx[:160]}")
+            continue
         stage = res.get("stage") or ""
         cls, why = classify(stage, (res.get("errors") or "") + "\n" + (res.get("tail") or ""))
         if cls == "UNCLASSIFIED" and not res.get("class") and stage not in RESULT_ONLY_STAGES:
@@ -13086,6 +13105,14 @@ def _collect_body(AP, cfg, st, notices):
                     _b = st["src_breaker"][_bk]
                     AP.log(f"KIT-WAVE SRC-BREAKER OPEN {rec['die']}: {_b['n']} src_manifest failures on one snapshot within {SRC_BREAKER_WINDOW_S // 60} min ({_b['first'][:200]}); the die's rows on it stop "
                            f"launching until it verifies (re-checked every tick); rows are not blocked one by one")
+            elif (cls == "INFRA" and typed_class(cls, _stg or rec.get("stage"), why) == "tool_mix" and not is_host_fail(cls, why)
+                  and rec.get("stage_class") != "stopped" and rec.get("kill_kind") != "guard"):
+                # FLOW-NOADV-R4 (COORD, leaf t28: 5 relaunches in 40 min of one INFRA[tool_mix] ResetError at kit_rtl): a deterministic tool_mix error is no host
+                # fault; the same error text on 2 attempts with unchanged own inputs stops the row (REPEAT-STOP) and goes to its owner; the attempt cap counts it
+                _ev = None if bind_fail_active(cfg, rec["die"], rec["item"]) else RS.record(st, rec["die"], rec["item"], rec.get("attempt"), _stg or rec.get("stage") or "gen", cls, why,
+                                                                                         inputs=repeat_inputs(cfg, rec, why), event=rec.get("event"), ident_n=RS.TOOL_MIX_IDENT_N)
+                if _ev:
+                    repeat_event(AP, cfg, st, rec, _ev)
             elif cls != "INFRA" and not is_infra_fail(rec) and rec.get("stage_class") != "stopped" and rec.get("kill_kind") != "guard" and not (cls == "INFRA" and (NO_HOST.search(why or "") or _TRANSIENT_INFRA.search(why or "") or HOST_ENV_RE.search(why or ""))):     # INFRA counts: 56 S81 + 24 KV same-class fails never opened the breaker
                 FG.record_fail(st, rec["die"], rec["item"], cls, why, evidence=str(Path(rec.get("dir") or ".") / f"{_stg or 'result'}.log"),
                                legacy=bool(_stg in PRE_PR_STAGES or FG.pf_kind(_key)), stage=_stg,
@@ -13095,7 +13122,7 @@ def _collect_body(AP, cfg, st, notices):
                 note_class_cfg_keys(cfg, st, rec["die"], rec["item"])
                 note_fail_key(cfg, st, rec, cls, why)
                 if not is_host_fail(cls, why) or RS.is_oom(cls, why):          # REPEAT-STOP ledger: gen / kit / route outcomes, OOM kills
-                    _ev = None if bind_fail_active(cfg, rec["die"], rec["item"]) else RS.record(st, rec["die"], rec["item"], rec.get("attempt"), _stg or rec.get("stage") or "gen", cls, why, inputs=repeat_inputs(cfg, rec, why))
+                    _ev = None if bind_fail_active(cfg, rec["die"], rec["item"]) else RS.record(st, rec["die"], rec["item"], rec.get("attempt"), _stg or rec.get("stage") or "gen", cls, why, inputs=repeat_inputs(cfg, rec, why), event=rec.get("event"), attempts_hint=rec.get("attempt"))
                     if _ev:
                         repeat_event(AP, cfg, st, rec, _ev)
                 for _k, _line in FG.alert_lines(st, now_s()):          # the ALERT goes out when the class opens, not at the next launch gate
@@ -13993,7 +14020,7 @@ def repeat_inputs(cfg, rec, why):
 
 def repeat_inputs_now(cfg, st, die, item, block_sha=None):
     """the same keys as the ledger's stored inputs, recomputed now"""
-    e = (st.get("repeat_ledger") or {}).get(f"{die}|{item}") or {}
+    e = RS.lookup(st, die, item, (cfg.get("dies", {}).get(die) or {}).get("event")) or {}
     out = {}
     for k in (e.get("inputs") or {}):
         if k == "block":
@@ -14026,7 +14053,7 @@ def repeat_queue_outcomes(AP, cfg, st):
             elif bind_fail_active(cfg, rec["die"], rec["item"]):
                 continue                                 # FABLE-FLOW-1400 (3): a bind-fail cancel is not an OOM / design result
             elif not is_host_fail(cls, why) or RS.is_oom(cls, why):
-                ev = RS.record(st, rec["die"], rec["item"], rec.get("attempt"), stage, cls, why, inputs=repeat_inputs(cfg, rec, why))
+                ev = RS.record(st, rec["die"], rec["item"], rec.get("attempt"), stage, cls, why, inputs=repeat_inputs(cfg, rec, why), event=rec.get("event"), attempts_hint=rec.get("attempt"))
                 if ev:
                     repeat_event(AP, cfg, st, rec, ev)
         except Exception as e:
@@ -14039,7 +14066,7 @@ def repeat_event(AP, cfg, st, rec, ev):
     if ev["event"] == "OOM-RESUBMIT":
         AP.log(f"KIT-WAVE REPEAT-STOP {die}/{item}: OOM kill; the resubmit runs with place memory x{ev['mem_x']}")
         return
-    e = st["repeat_ledger"][f"{die}|{item}"]
+    e = st["repeat_ledger"][RS.lkey(die, item, rec.get("event"))]
     AP.log(f"KIT-WAVE REPEAT-STOP {die}/{item}: {ev['event']}:{ev['fp'][:140]} ({ev['why']})")
     if e.get("posted") == f"{ev['event']}|{ev['fp']}":
         return
@@ -14048,7 +14075,7 @@ def repeat_event(AP, cfg, st, rec, ev):
         owner = die_owner(cfg, die)[0]
     except Exception:
         owner = "COORD"
-    AP.coord_append("lanes/COORD-REVIEW-QUEUE.md", f"- {now_s()} NEEDS-ACTION [REPEAT-STOP -> {owner}, COORD] {die}/{item} {ev['event']}: {ev['why']}; fingerprint "
+    AP.coord_append("lanes/COORD-REVIEW-QUEUE.md", f"- {now_s()} NEEDS-ACTION [REPEAT-STOP -> {owner}, COORD]{' PLAN' if ev['event'] == RS.CAP_STATE else ''} {die}/{item} {ev['event']}: {ev['why']}; fingerprint "
                     f"{ev['fp'][:160]}; the wave launches it again only when one of its own inputs changes (plan block, the files its failing stage read) or a line "
                     f"`unblock {item} {ev['fp'].split('|')[0]}` (or `*`) names it")
 
@@ -16020,7 +16047,10 @@ def _step(AP, ap_dir):
     except Exception as e:                               # unknown cells / proofs = still held
         AP.log(f"KIT-WAVE hold recompile skipped: {type(e).__name__}: {e}")
     try:
-        cfg["_mem_x"] = {k: round(float(v.get("mem_x") or 1.0), 2) for k, v in (st.get("repeat_ledger") or {}).items() if float(v.get("mem_x") or 1.0) > 1.0}
+        cfg["_mem_x"] = {}
+        for k, v in (st.get("repeat_ledger") or {}).items():          # keyed die|item (the ledger key is die|item@event: the largest factor of any event)
+            if float(v.get("mem_x") or 1.0) > 1.0:
+                cfg["_mem_x"][k.split("@", 1)[0]] = max(cfg["_mem_x"].get(k.split("@", 1)[0], 1.0), round(float(v.get("mem_x") or 1.0), 2))
         cfg["_unblocks"] = RS.parse_unblocks(AP.read_coord("lanes/COORD-REVIEW-QUEUE.md") or "")
     except Exception as e:
         cfg["_unblocks"] = []

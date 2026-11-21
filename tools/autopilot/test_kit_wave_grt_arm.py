@@ -12,6 +12,19 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import kit_wave as KW  # noqa: E402
 
+_REAL_CURRENT = KW.scheduler_current
+
+
+def setUpModule():
+    """FLOW-NOADV-R4: launch() refuses while the scheduler files on disk differ from the code this process imported (scheduler_current).  A merge /
+    edit of kit_wave.py during a gate run made grt_arm_launches launch nothing (KeyError in test_class_stop); the module-level answer is pinned here."""
+    KW.scheduler_current = lambda AP: True
+
+
+def tearDownModule():
+    KW.scheduler_current = _REAL_CURRENT
+
+
 DIE, EV, ITEM, BLK = "qwen_compute", "ev1", "sle_hc1__cl22c1ff36", "ab" * 20
 
 
