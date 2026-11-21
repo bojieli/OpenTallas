@@ -6,3 +6,5 @@
   [filed under] FAM-S81-COL-R5: FAM-S81-COL-R4 stood down (chain FAM-S81-COL-R4 > FAM-S81-COL-R5)
 - 2026-11-21 11:07 PST DONE [FAM-S81-COL-R4] ot-run oth-ubuntu-3043720-1795287270 on tolerant-swine: rc=0 after 789 s, ended 11:07:37, log /srv/opentallas-scratch2/claude/fam-s81-col-r4/wave_tc_e8/preflight.live.log, cmd: --mem 8 --threads 2 --dir /srv/opentallas-scratch2/claude/fam-s81-col-r4/kits/tc_e8 --hosts epyc8 -- bash -c [ -f /srv/opentallas-scratch2/c
   [filed under] FAM-S81-COL-R5: FAM-S81-COL-R4 stood down (chain FAM-S81-COL-R4 > FAM-S81-COL-R5)
+- 2026-11-21 11:08 PST DONE [FAM-S81-COL-R4] ot-run oth-ubuntu-3052011-1795287294 on tolerant-swine: rc=0 after 810 s, ended 11:08:22, log /srv/opentallas-scratch2/claude/fam-s81-col-r4/wave_rb_e8/preflight.live.log, cmd: --mem 8 --threads 2 --dir /srv/opentallas-scratch2/claude/fam-s81-col-r4/kits/rb_e8 --hosts epyc8 -- bash -c [ -f /srv/opentallas-scratch2/c
+  [filed under] FAM-S81-COL-R5: FAM-S81-COL-R4 stood down (chain FAM-S81-COL-R4 > FAM-S81-COL-R5)
