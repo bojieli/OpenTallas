@@ -1,0 +1,1 @@
+- 2026-11-21 13:27 PST DONE [FAM-QC-COLL-R3] ot-run oth-ubuntu-2544399-1795296285 on outgoing-giraffe: rc=0 after 168 s, ended 21:27:31, log /srv/opentallas-scratch2/claude/fam-qc-coll/mktree_e8.log, cmd: --mem 4 --threads 1 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/fam-qc-coll -- bash /srv/opentallas-scratch2/claude/fam-qc-coll/mktr
