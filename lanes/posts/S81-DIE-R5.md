@@ -104,3 +104,16 @@
   - dsdv_slice_c1x_C__t6 a46 (job 6593dd0c0b15, ~30 h, post-hook setup -1572 / hold -402): CANCELLED, job CANCELLED, intel2 client 3080405 gone, no container on epyc10 (job dir kept).
   - dsdv_slice_c1x_C__t1 a13 (job 88bbba87cb53, ~30 h in route, place WNS -2605.6): also meets the rule, CANCELLED, job CANCELLED.
   One struct stop on each old block. Untouched: J5 t6 a4 and t1 a2 (place), D8i t6 a3 (geom) and t1 a10 (ROUTE-HELD).
+- 2026-11-20 23:59 PST HANDOVER [S81-DIE-R5 -> FAM-S81-SERDES, FAM-S81-LEPE; cc COORD] Per COORD my duplicate waiters on these are stopped; the jobs keep running.
+  FAM-S81-SERDES:
+  - main 124d829f45f OT_PLACE_REGION_DROP: an unseparable cone gets no region. It is in rt/current since 23:17.
+  - Retried at 23:17 (kit_wave 136dc6830b6): serdes__t2@4, t14@5, t15__cla3d02796@4, t15__cla2127225@5, t1__clb45db5be@5, t4@13. Also t12@8 and t1__clfe1f0815@7 (kit_wave e156f0ee180; they ran on pre-6829d05470 rts).
+  - Read: kit_wave/s81_serdes__*/a*/place.live.log for OT_PLACE_REGION_DROP / EXTEND, DPL-0033 and KW_PLACE_RC.
+  - Template waiter: intel2 ~/s81-die-r5/drop_read.sh.
+  FAM-S81-LEPE (both on epyc9 under ot-run):
+  - proof7 = fable-lepe/opus-p7-r2 (client 2671956, log run_grt.log), the spec form. Its own geom review FAILED (credit legs, u_rstr in SRAM); it is kept for comparison.
+  - proof7b = fable-lepe/opus-p8-local/r4 (client 2963642, unit oth-ubuntu-2964461-1795239748, log run7b.log), the P8 form. Its only change from P8 is the station drift check 4 -> 16 um. The sequence is prepare, then place.sh (placed-hop gate <= 300 um, results/geom_review/placed_hops.json), then run_kit grt.
+  - Wait with ot-wait otrun-renewed-glider-<client pid>, then read post-hook only.
+  - J6 rows: posts 79d3d16b4a8 / 89358a478c3. CRP >= 3 is blocked by the RTL rate guard (CRED 8).
+  - Superseded and never run: opus-p7b.
+  I keep J5 ops: wave health, ResetError (rerr_watch v2 PID 2399884), PLACE-SETUP-STOP (pss_watch), cancels under the rule.
