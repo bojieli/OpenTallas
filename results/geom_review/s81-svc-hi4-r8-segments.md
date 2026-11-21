@@ -1,0 +1,7 @@
+# S81 hi4 split geometry after segment repair
+
+Viewed `s81-svc-hi4-r8-segments.png` from the exact `plan_c_fx_seg.json` selected by both private kit preparations on epyc10. The 570.24 µm cut retains the total 1442.88 × 2747.52 µm footprint. S_rs contains 27 macro footprints, four landing reserves and 64 clock taps. S_att contains 127 footprints including the 12 landing SRAMs, three landing reserves and 96 taps. The new SRAMs are grouped beside their engine staging banks.
+
+The two FT directions have seated boundary registers and preserve their 563-bit payload/epoch groups. All 13 cut ports agree with both type frames. The 15 actual port segments have no seam overlap. Combined payload density is 13,409 / 2,747.52 = 4.88 pins/µm. L8_0 is the largest direction-local span and runs along closely spaced attention macro rows. Its capacity and the S_att tap groups need a placed clock and GRT read. Macro spacing and the south and west landing reserves look usable from the plan view.
+
+Verdict **PASS-COND** for the plan geometry. Generated kit review and its PDN and pin-access evidence remain required before route. This is the private J8 path. The earlier strict bind and LATCHECK are green for `plan_c_fx.json`. The two segment translations preserve its logical endpoints and cycle ledger. Shared splitter replay epyc10 unit 3017607 produces the port envelopes from the packed segments directly and passes its 13-port, 15-segment geometry check.
