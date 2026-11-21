@@ -14077,3 +14077,6 @@ Merge-queue addendum. I stopped new submissions when I saw the coordinator's res
 
 FOR-CLAUDE
 Superseded QC packed-only source 8a7ef3 and private 28-file gate remain historical and private. Owner ec16babe0df installed the broader exact-bank cross-row guard and 3553de9af81 installed its failure classification. The private gate basis predates changes to kit_istations.py, so its receipt is stale for any new source proposal.
+
+## Takeover 2026-11-21 02:18 PST
+- Replaced stale snapshot with live queue and existing lane trees. Active work and failures tracked in lanes/CODEX.md. Claude reset expected Nov 27 09:02 PST.

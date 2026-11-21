@@ -10329,3 +10329,10 @@ Owner confirms Claude limited until05:42; all existing workers resumed. Coverage
 - KV: D25e live; KV-D23-COMPOSE owns hub Wi missing SRAM macro row and pv_v6 blocked clock-landing band, plus all KV type/clock closure.
 - Token: Qwen and DeepSeek active; apply existing exactness and mutant controls. HBM parked per handoff; keep its evidence intact.
 - Shared: existing fleet/wave/cleanup/holds and cross-die physical/tool lanes continue. COORD owns canonical approvals, unresolved class routing and milestone log. Review floorplans before route; retain failed verdicts.
+
+## CODEX takeover 2026-11-21 02:18 PST
+- S81: J5 224567138ab live. J6 C1n bind 0, LAT 873/873, no new G0 finding; C3g/C3i on epyc10 (4066377/4066259), rerun against corrected svc registry. S81-J6-ASSEMBLY-R2 and family lanes own col macro overlap, SVC split, leaf/CTS, BKSEL and strips.
+- HEAD: r16 bind 0, LAT 329/329, G0 0. SerDes sdr2d post-place reset hop 699 um; LEP tr2s TT -454.73 ps; host-e repeat-stop. OPUS-FIX-HEAD and HEAD family worktrees continue.
+- QC: QC-PLAN-R8 V2 b9 epyc9 1464365-1795255189, second bind after R8 extra refresh (56 changed). Family lanes continue FE/FW resets, COLL, HC/ST and SLE/SU.
+- KV: D26 R3f gates green, unshared and resealed, replication/apply pending. D27c r4d bind in progress after 30 stale R8 extras fixed; PV D28 split proof separate. HGI congestion and IO/PC PG remain owned.
+- DeepSeek/Qwen token, cross-die CTS/reset, wave/holds, and merge queue each have active coverage. Fleet flow owns post-place STOP misclassification and retry waste. HBM remains parked by owner order.
