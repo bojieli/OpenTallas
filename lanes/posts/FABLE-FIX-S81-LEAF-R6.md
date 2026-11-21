@@ -3,3 +3,4 @@
 - 2026-11-21 08:20 PST DONE [fable-fix-s81-leaf-r5] ot-push-main otpush-civil-redfish-1608870 on civil-redfish: rc=0 after 0 s, ended 16:20:10, log none, cmd: ot-push-main -h
   [filed under] FABLE-FIX-S81-LEAF-R6: FABLE-FIX-S81-LEAF-R5 stood down (chain FABLE-FIX-S81-LEAF-R5 > FABLE-FIX-S81-LEAF-R6)
 - 2026-11-21 08:25 PST DIED [FABLE-FIX-S81-LEAF-R6] ot-push-main otpush-civil-redfish-1766835 on civil-redfish: rc=4 after 10 s, ended 16:25:39, log none, cmd: ot-push-main 
+- 2026-11-21 08:26 PST DONE [FABLE-FIX-S81-LEAF-R6] ot-push-main otpush-civil-redfish-1789439 on civil-redfish: rc=0 after 21 s, ended 16:26:33, log none, cmd: ot-push-main 
