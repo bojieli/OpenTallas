@@ -265,3 +265,15 @@ def test_face_cover_reads_kit_declared_clock_exports(tmp_path):
         "[get_ports fclk_out_o]\n")
     good = C.face_cover(tmp_path / "n.v", pins, clock_ports=ck)
     assert good["verdict"] == "PASS", good
+
+
+def test_identical_regression_at_three_shas_is_stale_baseline_not_regression(tmp_path):
+    B.verdict(mkrun(tmp_path, "r0", src="aaa111111111"), tmp_path)                       # sets the baseline
+    bad = dict(ins=(220.4, 183.4))
+    one = B.verdict(mkrun(tmp_path, "b1", src="bbb111111111", **bad), tmp_path)
+    assert one["verdict"] == "REGRESSION"                                               # one sha: a real regression
+    B.verdict(mkrun(tmp_path, "b2", src="ccc111111111", **bad), tmp_path)
+    three = B.verdict(mkrun(tmp_path, "b3", src="ddd111111111", **bad), tmp_path)
+    assert three["verdict"] == "STALE-BASELINE" and "re-baseline" in three["why"]
+    other = B.verdict(mkrun(tmp_path, "b4", src="eee111111111", ins=(210.0, 183.4)), tmp_path)   # different numbers
+    assert other["verdict"] == "REGRESSION"

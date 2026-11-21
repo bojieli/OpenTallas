@@ -419,6 +419,32 @@ def golden_ref(spec):
     return None
 
 
+STALE_SHAS = 3
+
+
+def identical_other_shas(root, m, bad):
+    """{src: run} of the other completed runs of m's die/item at a different source commit whose value of EVERY metric in bad (ctx, metric rows) equals m's"""
+    out = {}
+    try:
+        runs = sorted(glob.glob(str(Path(root) / "*")))
+    except Exception:
+        return out
+    for d in runs:
+        if str(d) == str(m.get("run")) or not (Path(d) / "canary.json").is_file() or (jload(Path(d) / "canary.json") or {}).get("die") != m.get("die"):
+            continue
+        try:
+            o = run_metrics(d)
+        except Exception:
+            continue
+        if o.get("item") != m.get("item") or not o.get("src") or o.get("src") == m.get("src") or o["src"] in out:
+            continue
+        if all(((o.get("contexts") or {}).get(r["ctx"]) or {}).get(r["metric"]) is not None
+               and ((o.get("contexts") or {}).get(r["ctx"]) or {}).get(r["metric"]) == ((m.get("contexts") or {}).get(r["ctx"]) or {}).get(r["metric"])
+               for r in bad):
+            out[o["src"]] = d
+    return out
+
+
 def verdict(run, root, spec=None, seed=True):
     """regression verdict of one COMPLETED canary run: dict(verdict, why, rows, notes, baseline)"""
     m = run_metrics(run)
@@ -445,6 +471,13 @@ def verdict(run, root, spec=None, seed=True):
     src = base.get("source") or {}
     if bad:
         why = "; ".join(f"{r['ctx']} {r['metric']} {r.get('base')} -> {r.get('cur')} {r['how']}" for r in bad[:4])
+        # FLOW-CANARY-R2 11-21 (COORD FABLE-FLOW-1240 f): the same numbers at >= STALE_SHAS other source commits are not a regression of any of
+        # them, the baseline no longer describes this flow.  An ERROR class (re-baseline with a reviewed baseline.py set --force), never a FAIL.
+        same = identical_other_shas(root, m, bad)
+        if len(same) >= STALE_SHAS - 1:
+            v = "STALE-BASELINE"
+            why = (f"STALE-BASELINE: identical {len(bad)} regressed metric(s) at {len(same) + 1} source commits "
+                   f"({', '.join(sorted(same)[:4])}); baseline {src.get('kind')} {src.get('run')} is stale, re-baseline. " + why)
     elif src.get("run") == m["run"]:
         # the run that set the baseline (its own contexts compare equal; a reference-run context still counts)
         v, why = "INFO", f"this run set the baseline ({src.get('kind')}{'' if seed else ', dry'}); non-gating"
