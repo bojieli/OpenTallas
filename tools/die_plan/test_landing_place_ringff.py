@@ -79,6 +79,8 @@ def test_lsb_high_bus_gets_reversed_ff_tag_only():
     assert "ring:i@1.8037+ff}" in LP.tcl(_PT({"i": dict(r, spread=1.8037, ring_place="ff")}, "lsb_low"), "t")
     # order only matters for flop-only placement: an "all" band stays the netlist-order tag
     assert "ring:i@1.8037}" in LP.tcl(_PT({"i": dict(r, spread=1.8037)}), "t")
+    # A measured local order can override the inherited FT slot order.
+    assert "ring:fx_i+ff}" in LP.tcl(_PT({"fx_i": dict(r, ring_place="ff", pinslot_order="lsb_low")}), "t")
     # ft-slot buses take in_order/out_order; an unknown bus defaults to lsb_low
     assert "ring:fx_i+ffr}" in LP.tcl(_PT({"fx_i": dict(r, ring_place="ff", instance="u_cland_fx_i")}), "t")
     assert "ring:fx_o+ff}" in LP.tcl(_PT({"fx_o": dict(r, ring_place="ff", instance="u_cland_fx_o")}), "t")
