@@ -4,3 +4,5 @@
   [filed under] FAM-S81-SLICE-R3: FAM-S81-SLICE-R2 stood down (chain FAM-S81-SLICE-R2 > FAM-S81-SLICE-R3)
 - 2026-11-21 06:58 PST t37 lever 2 private gate GREEN on C1n+t37 reach1 rows: BIND_RC 0 (strict, all gaps), LATCHECK_RC 0, G0 87 inherited / 0 new, PRE_RC 0. Tree epyc8 fam-s81-slice-r2/candC1n_t37 (bind out in its native_bind/out), gate out gates/candC1n_t37. Next (FAM-S81-SLICE-R3): t37 kit from this tree with the WAVE env/gen args, GOAL route to sign-off; then rows to S81-J6-ASSEMBLY-R3.
   [filed under] FAM-S81-SLICE-R3: FAM-S81-SLICE-R2 stood down (chain FAM-S81-SLICE-R2 > FAM-S81-SLICE-R3)
+- 2026-11-21 07:01 PST t37 lever 2 private gate GREEN on C1n + t37 reach1 rows: bind strict 0, LATCHECK 0, G0 87 inherited / 0 new, PRE 0. Tree epyc8 fam-s81-slice-r2/candC1n_t37, gate gates/candC1n_t37. Next (FAM-S81-SLICE-R3): t37 kit from this tree with WAVE env/gen args, GOAL route to sign-off; rows to S81-J6-ASSEMBLY-R3.
+  [filed under] FAM-S81-SLICE-R3: FAM-S81-SLICE-R2 stood down (chain FAM-S81-SLICE-R2 > FAM-S81-SLICE-R3)
