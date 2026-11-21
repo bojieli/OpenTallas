@@ -10,3 +10,6 @@ Representative dsdv_slice_lepe_mu_LP__t2. Plan rows go to S81-J6-ASSEMBLY-R3 (J7
 - If it signs: rows (K +3 ro/t_host/t_kd/mu_c, ri +2 vs J6, li +1, rx2 bank move, FIRM sites) to S81-J6-ASSEMBLY-R3; signed export needs a src_manifest rebuild or plan-lane carry.
 - lepe_mu_C t1 split rows (LC-S1 / LC-G1 xg +90 um) are with S81-J6-ASSEMBLY-R3; J7a (05:56) excludes Layer C/D splits; follow up they land in J7.
 - Old proofs 7/7b/8: evidence only, do not relaunch.
+## Update 11-21 ~08:45 PST
+- proof9 first launch died 3_3 GPL (p9_ros var collision in p9_body.tcl); fixed (p9_rosf), kit regenerated (old kit at p9/k_fail1_rosvar), relaunched oth-ubuntu-3984214-1795274017: OT_P9_SITES 10407 FIRM, now past 3_4 resize. Waiter: ot-wait on that unit.
+- lepe_mu_C t1: per COORD/FABLE-PD-S81-0830 s4, LC-G1 dropped, out of J7. J8 rows (c1x_C split_plan_B schema, notched strip = 130 um band minus block bbox + 5 um halo; s4 S65/W90 used macro centers and still covers 12 blocks) at lanes/handoff/FAM-S81-LEPE-3-lepeC-split-J8-rows.json; posted to S81-J6-ASSEMBLY-R4 + FAM-S81-SLICE-R4. Scripts epyc10 fam-lepe/split_C/{band2,notch}.py.
