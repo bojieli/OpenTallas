@@ -180,9 +180,11 @@ class Guard(unittest.TestCase):
             return SimpleNamespace(returncode=1 if host == "H2" else 0, stdout="", stderr="receipt")
 
         m.run = remote
-        m.prune_build_hosts("pinned-snapshot", hosts=["H1", "H2", "H3", "H3", "H4"])
+        pins = "wrapper /rt/1234567890ab/tool.py, full=0123456789abcdef, duplicate=1234567890ab"
+        m.prune_build_hosts(pins, hosts=["H1", "H2", "H3", "H3", "H4"])
         self.assertEqual(max(peaks), 3)
-        self.assertEqual(sorted(calls), [(host, "pinned-snapshot", 900) for host in ("H1", "H2", "H3", "H4")])
+        compact = "0123456789abcdef\n1234567890ab"
+        self.assertEqual(sorted(calls), [(host, compact, 900) for host in ("H1", "H2", "H3", "H4")])
         self.assertEqual({line.split()[0] for line in logs}, {"H1", "H2", "H3", "H4"})
         self.assertTrue(any(line.startswith("H2 prune") and "rc=1 receipt" in line for line in logs))
 
