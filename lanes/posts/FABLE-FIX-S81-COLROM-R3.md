@@ -1,0 +1,1 @@
+- 2026-11-21 09:24 PST DONE [FABLE-FIX-S81-COLROM-R3] ot-run oth-ubuntu-1028184-1795281713 on tolerant-swine: rc=0 after 167 s, ended 09:24:36, log /srv/opentallas-scratch2/claude/fable-fix-s81-colrom-r3/gate_cfg7_otrun.log, cmd: --mem 24 --threads 16 --hosts epyc7 --dir /srv/opentallas-scratch2/claude/fable-fix-s81-colrom-r3 -- bash /srv/opentallas-scratch2/claude/fa
