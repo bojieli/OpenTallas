@@ -325,3 +325,7 @@ kit-ops-5-curplan-1114 @4c696027e0ef RED (branch alone fails test_kit_wave_compo
 ## CODEX continuation 2026-11-20 19:44 PST
 - Reset-pin 302ea5e2258 Redwatch RED3 was generated-schema lag and adjacent 93b5c482240 scored GREEN25 after the dump.
 - PLACE-SETUP-STOP abc5db16299 Redwatch RED2: adjacent owner 2c6b834e2ef restored default private kit behavior by scoping the stop to wave, and test-only ff3046f57ad345e972a3dd7ea83383b4d15ba792 now checks the CTS and GRT measurement/keep predicate/ODB swap order independently of the additional post-place measurement. Focused three files PASS40, canonical GREEN1 E10 oth-ubuntu-2568188-1795232285 exit 0. Landed b685b9f6bd4 at 19:40 and synced all six.
+
+## CODEX continuation 2026-11-20 21:07 PST
+- Canonical pack guard crossed threshold and succeeded 2002 to 8 packs, MIDX rc0 at 20:48. E7 compact prune remains seconds in current runtime.
+- b340b6100ce wave cancel Redwatch GREEN165 with one serial-recovered timing/order flake. Test-only 9e019152ab9849ee9d27b30d7d0ef33d42bac241 uses a per-attempt signals log and deterministic UTC timestamps, preserving the cancellation and retry controls. Canonical GREEN1 E7 oth-ubuntu-1057157-1795237275 on 48d49db1490; landed 04bd3b8c661 at 21:05, merged-main Redwatch GREEN1. Runtime sync in progress.
