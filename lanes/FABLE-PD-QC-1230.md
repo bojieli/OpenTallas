@@ -1,3 +1,188 @@
+# FABLE-PD-QC-1230 2026-11-21 12:30 PST: structural review of QC plan event V2 (s29q103S4Q9N46R6V2, live tree qwen_compute_v2r10)
+
+Reviewer: FABLE-PD-QC-1230 (Fable). Read-only: nothing launched, cancelled, deleted or patched; no ot-run job. Technical PD only.
+The 2026-11-19 review that had this file name is kept unchanged below the line "PREVIOUS REVIEW".
+Marking: **V** = read or computed by me this round from the named file. **R** = reported by the named lane. **I** = my inference. **P** = proposal.
+Sources (V), all on epyc7 `/srv/opentallas-scratch2/claude/qc-plan-r9/`: `b20/tree/.../plan_of_record/zz_s29_qc103_s4q9n46r4_final_preview.json`
+(the b20 plan, 7f9f8260349f, 130 types / 377 partitions / 637 ft slots), `b20/post_bind/g0/g0_report.json` (PASS, 0 errors, 543 warnings),
+`b20/post_bind/event/EVENT-CENSUS.tsv`, `b20/proof_gen/*/gen/*` (8 GEN kits), `cells_census.tsv`, `v3rows/r8_straps_rows.md`;
+intel2 receipt `qwen_compute_atomic_apply_1795288459577088225.json`, `failure_breakdown.py` 11:55.
+Fix rules applied: 833 ps fixed; hold structural; setup by stations or pipeline stages; no die or outline growth; cores move or rotate only.
+
+## 0. Headline
+
+1. **The pin-in-reserved-clock-site class found on KV does not exist on QC (V).** The V2 plan has 0 `clock.reserved_sites_um` rows in 130 types
+   and no `die_islands_um`; no QC kit has a `reserved_sites.tcl` (8 of 8 V2 proof GEN kits, and the V1 and V2 wave run dirs on epyc7).
+   `kit_pin_site_check.py` (rt a13768301176) therefore reports `ERR ... reserved_sites.tcl` on every kit and can find nothing. QC forwards its
+   clock partition to partition (`clock.spine.feed.form = fwd`, `landing_network`), so there is no die clock cell inside a type. No action.
+2. **V2 is V1 plus rows; the reach debt is unchanged (V).** 43 ft slots in 40 types have span / stations over 405 um, 66 internal-station hops
+   are over 405 um, and 300 slots with 2 or more stations have no site at all. The 23 hop300 slots went back to V1 station counts.
+3. **One sle_ctl type serves 12 E and W slices only because a derived pad happens to be equal (V).** Three binds split the type before b20;
+   b20 fixed it by adding a 33rd station to a W chain. Every V3 station row on a su_l0 / su_l1 path can split it again.
+4. **st_a cannot sign on V2: neither the strap seat nor the btab fix is in the plan (V).** `budgets` has no `r_r8_core_seat` key. The btab read
+   needs the SRAM group 150 to 370 um north by the lanes' own slacks (I); the 345.6 um shift that collided was larger than needed.
+5. **9 of 19 types measured after GRT are over 400k cells, and the G0 estimate is about 56k low on the two hc types it can be compared on (V).**
+
+## 1. Structural risks in V2, with evidence
+
+### 1.1 sle_ctl E/W: one type held together by a coincidence
+- V: partitions `sl_E0..5_ctl` and `sl_W0..5_ctl` are all `sle_ctl__cla4f6f12f` (12 instances, 224,926 plan cells, G0 estimate 360,311 after resize).
+- V, plan `latency.lanes`: E `x_su_l0_ctl` lanes 30 to 31 cycles, 9 to 11 stations, landing 6 to 8, pad 3. W lanes 58 to 59 cycles, 37 to 38 stations,
+  landing 8, pad 4. E `x_su_l1_ctl` fixed 10, W fixed 9.
+- R (QC-PLAN-R10): b17 strict bind TYPE_SPLIT into 4 variants, b18r and b19 E vs W on `x_su_l0_i`. b20 passed after `slw_su_c` `x_su_l1_ctl`
+  went 32 -> 33 stations, the new stage "at the midpoint of a 40 um hop".
+- Risk (I): the bind pad on `x_su_l0_i` is (su_l1 group arrival - su_l0 stations and landing). It is equal on E and W by arithmetic, not by design.
+  The 12 ENDPOINT_REACH slots and the 23 reverted slots all sit on these paths, so V3 will move it.
+- Fix (P): carry the `x_su_l0_i` pad as a parent-tied count strap. The type already has 23 `count_straps` (for example `strap_ca_k_b_tw_data_i`,
+  6 bits), and the pad bank is the same `ot_dp_dly_cnt` form. E and W then differ only in a tied value, and su-path station rows are free.
+
+### 1.2 W-side lanes are 28 cycles longer than E, carried by dense station chains
+- V: `slw_su_c__cl19bb38ef` / `cl92142dac` (6 instances) `x_su_l1_ctl`: 33 stations x 456 bits = 15,048 flops, sited hops 20 um minimum, 38 um median.
+  `sle_su_c` on the same outline (1226.88 x 1399.68) and faces has 4 stations.
+- V: `slw_fe_v1` (3 types) and `slw_fe_v2` (2 types) `x_su_l0_ctl`: 34 to 35 stations, 15,504 to 15,960 flops, no `regs_um` (placer-free). `sle_fe` has 6.
+- V, G0 `xtap_latency`: 22 hops in `slw_su_c__cl19bb38ef` (at least 9 on `x_su_l1_ctl`, the rest on cws1, cws2, x_su_l0_stm) go between different tap ports,
+  window 235 ps against 50, no `clock.ft_hop_lockup`.
+- Risk (I): 32 zero-logic hops of 20 to 40 um, some across taps, are a hold class by construction, and one of these chains is now the E/W equaliser.
+- Not determined: what the 28 extra W cycles align to. Lane `natural` equals `cycles` (pad 0), so the stations themselves set the 58.
+- Fix (P), after 1.1: stations by distance only (3 to 4 on about 800 um, as on E), the remaining cycles as one same-tap `ot_dp_dly` at the landing.
+  Same lane cycles, no cross-tap zero-logic hop.
+
+### 1.3 Station and hop lengths against the 405 um cap
+- V, ft slots, span / stations (G0's own estimate: width, height or their mean by faces):
+  - over 405: 43 slots, 40 types, 12,657 bits (46,393 with instance counts). `x_fw_ctl_p2` 490 um, 2 stations, all 12 st_b types; `x_hc3_ctl` 665, 1 station,
+    7 hc2 types; `x_su_l1_stm` 657, 3 su_c types; `x_st_a_fe` 505 on 4 su_l0 / su_l1 types and 409 on 4 fw types; `x_fw_st_b` 409 on 5 fe types;
+    coll_ftm 4 slots 1,128 with 1 station; cbx_q10 `a22` 1,884 to 1,901 with 1 station; sle_ctl `x_hc1_st_b` 428.
+  - 300 to 405: 67 slots, 47 types, 31,521 bits. Inside the close-by-construction cap; they need sites, not stations.
+- V, sited `regs_um` hops: 0 over 405, 212 between 300 and 405 (st_a_v2 cws0 361, x_fw_ctl 370, b_hw_ctl_hc0 336; slw_sc_v1 311 on 7 slots; cbn_q01 320).
+- V, internal stations (5,592 hops): 66 over 405, 207 between 300 and 405. Over 405: cb `bc_i00` / `bc_i10` / `bc_i30` 611 to 637, `nb_i12` 411 to 418,
+  `y_o00` 413 (17 cb types); slw_stm (4 types) `flt_o` 548; sle_ctl `x_fw_p2_i` 432. G0 `routed_reach` has the same 60 rows; G0C marks 28 rows incomplete.
+- V: 300 slots in 62 types (107,171 bits) have 2 or more stations and neither `regs_um` nor bit sites. Largest: coll_ftc 26, sle_stm_v1 22, native59 21,
+  slw_stm_v2 20, sle_stm_v2 20, coll_ftm 18.
+
+### 1.4 The 23 hop300 slots reverted to V1
+- V, their state in V2:
+  - st_b `x_su_l0_ctl`: 3 stations, no sites, 327 um per hop, on 11 of 12 st_b types (`sle_st_b_v1__pvc5a85fd4__pv7b7fafb4` kept 5 sited stations at 196 um).
+  - `slw_st_b_v2` (3 types) `b_hw_ctl_hc3`: 4 stations, no sites, 1,574 bits. The other 9 st_b types have 5 stations with bit sites at 262 to 265 um.
+  - st_a_v1 (6 types) cws0: 5 stations, no sites. st_a_v2 (5 types) cws0: 4 sited stations at 361 um.
+  - `sle_fe_v1__cl8210183c` `x_su_l0_ctl`: 6 stations, no sites. native59: 21 site-less slots of 3 to 4 stations.
+- R (QC-PLAN-R9 / R10): the bumps failed G0 because `ft_spread` put the new sites on macros and the per-slice pads became 2 / 4 / 3 / 4 / 1 / 4.
+- Reading (I): the reverted slots are at 327 to 361 um, inside the 405 cap. They were short of sites, not of stations. Three of the 12 st_b types
+  (slw_st_b_v2) now differ from their 9 siblings on `b_hw_ctl_hc3`, which works against the family merge G0 asks for (29 near-duplicate groups, 91 types).
+
+### 1.5 Clock tap placement
+- V, G0 `tap_sink_cap`: 393 taps over the 1,000-sink cap in 106 types, largest 2,501 (`slw_st_a_v2__clf4365a62` clk_t129). coll_ft clk_t4 / t5: 2,264 / 2,182
+  sinks at radius 262 um against 200.
+- V, failure_breakdown 11:55: 3,251 measured taps in 34 types, 77 over 1,650 sinks, insertion max 493 ps (p50 268, p90 285), skew max 137.
+- V, G0 `timing_audit`: the early core tap declares 250 ps and measures 290.7 to 301.7 on 4 st_a types (over the 40 ps tolerance by 0.7 to 11.7).
+  219 core rows in 74 types have no measured clock depth; the LIB fallback would fail 93.
+- V, G0 R-REACH-4: 16 types have forwarded-clock outputs on a tap more than 405 um from the pin while another tap is 12 to 120 um away
+  (sle_ctl `fclk_out_b_hw_hc2_o` on clk_t255, nearest clk_t265 at 47 um; coll_core 11 outputs; slw_hc2 4 on the far root).
+
+### 1.6 Reset reach
+- V, G0 R-REACH-5 `edge_reach`: 66 raw reset hops over 405 um in 5 types: coll_ftc 52 (worst 1,190 um), sle_ctl 10 (1,422), coll_core 2 (1,217),
+  `cbn_q11__cl5cc92dfe` 1 (437), `slw_hc0__cl4f54b7a3__pvde134a90` 1 (424). `start_raw_net`: coll_ftc 7, sle_ctl 7, slw_hc0 3, coll_core 2 nets
+  are not in the plan's reset tree.
+- V, G0 R-REACH-6: 39 types have a ring reset whose loads span 486 to 1,259 um with one same-cycle copy; 4 of them (2 sle_hc2, 2 slw_hc2, 486 to 525 um) get none.
+- R: sle_stm_v2 `u_core.rst_n` on tap 0, leg 699 um; row 2b2dfe128b06 (tap 79, 190 um) is not in V2. cbf_q00 `inst_taps` t93 / t100 measure 525 / 506 um;
+  V2 carries those old rows (re-pick t77 / t76 gives 75 / 135).
+
+### 1.7 Pin faces and seams
+- Reserved-site class: none, see headline 1.
+- V, G0 R-REACH-3 `window_far`: 28 types have face buses more than 200 um from their consumer. cb `nb_i00` 514 bits x 1,938 to 1,964 um; sle_ctl 22 buses,
+  8,530 bits, about 28,585 face-net buffers by G0's estimate; glue 21 buses.
+- V, G0 `core_faces`: coll_core 8 core ports face away from their partner (`wd_in` 546 pins, 279 on the far side), sle_su_c 11, glue 7.
+  The face rule is unchecked on all st_b types (20 of 20 cores without connectivity), st_a_v2 (14 of 14), tt_ctlm, coll_n. sle_su_c and both slw_su_c have cores without a LEF.
+- V, G0 `street_die_leg`: 41 die-level lane stations (`rsn` / `rsf`) lie inside hard cores of su_l0 / su_l1 and cbn.
+
+### 1.8 Types over 400k cells
+- V, `cells_census.tsv`: 19 types have a post-GRT count, 9 are over 400k:
+
+| type | synth | post-GRT | growth |
+|---|---|---|---|
+| slw_st_b_v2__pvc2ec5bfb | 364,445 | 506,723 | 1.39 |
+| slw_sc_v1__cl63e5a7a2 | 273,484 | 486,060 | 1.78 |
+| slw_hc1__cl68f9248e__cl144ee7b3 | 365,110 | 482,222 | 1.32 |
+| slw_hc0__cl1bc59e1c | 343,544 | 459,853 | 1.34 |
+| slw_fw_v2__cl8f84514c | 254,839 | 453,801 | 1.78 |
+| sle_hc0__cl05696ed1 | 334,366 | 447,140 | 1.34 |
+| sle_stm_v1__cl27746664 | 262,717 | 424,813 | 1.62 |
+| sle_fe_v1__cl1cbb7497 | 242,816 | 408,932 | 1.68 |
+| slw_stm_v2__cl1ca9c415 | 273,205 | 405,251 | 1.48 |
+
+- V: 24 types are flagged NEAR_350K at synth (353k to 394k: 12 st_b, 12 hc); only 2 of them have a GRT number. At the measured 1.32 to 1.39 the other
+  22 land at 465k to 548k (I).
+- V: the G0 cell estimate gives hc0 `cl05696ed1` 390,617 and hc1 `cl144ee7b3` 426,323 at GRT; measured 447,140 and 482,222. It is about 56k low on both.
+- I: two different causes. fw / sc / stm / fe grow 1.48 to 1.78 from buffers (far windows, hold pads), so the cure is structural hold and window moves.
+  st_b and hc start at 365k to 394k and exceed the cap on normal growth, so they need a split or a type cut.
+- Not read: whether these 9 runs signed, died or were stopped.
+
+### 1.9 btab -> u_u_r3 at -124 ps (st_a, 11 types)
+- R (FABLE-FIX-QC-STRAP, a3 kit final `5_1_grt.odb`): `g_read[*].q -> u_u_r3/bt_q_p` -124.3 on 22 ends, 668 ps of wire over about 800 um.
+  Other slacks: g_read -> r0 +377, r1 +417, r2 +148; r0 `bt_word` -> SRAM +309; SRAM -> g_read +58 to +225.
+- V, V2 plan `slw_st_a_v2__cl9f076a5c` (622.08 x 1339.2): cores `u_r0` y 78 to 240, `u_r1` 406 to 568, `u_r2` 752 to 914, `u_r3` 1,089 to 1,251, x 233 to 430,
+  one master `sta_region_nb0_h15_n9_s11`. The four btab SRAMs (95 x 41) sit at y 285 to 490: two at x 449 to 544, two at x 207 to 371 under `u_r1`.
+  V2 did not move them.
+- I, from the lane's slacks at 0.835 ps/um (668 ps / 800 um): moving the SRAM group and `g_read` north by X um gives r3 -124 + 0.835 X, `bt_word` +309 - 0.835 X,
+  r0 +377 - 0.835 X. All three are at or above 0 for X between 149 and 370 um, and above the -42 gate from 99 um. The 345.6 um shift that collided was near the top
+  of that window.
+- Fix (P): a 1 x 4 SRAM column at x 449 to 544, y about 580 to 750 (X about 250), beside the r1 / r2 corridor. The corridor itself (reset tap 311,674; cws0
+  station 376,669.6) stays. The stations now in that column (ist 0 at 506,622; ist 4 / 5 at 438 to 455,727; about 165 relay sites) move into the vacated
+  y 285 to 490 block or the strip x 410 to 445. Fallback: +1 cycle on the bt read (BT_LAT is a core parameter, so every region-core master is re-hardened).
+- Not checked: the fit of the column against `cl_x_ctl_fw_i` (x 553 to 600, y 467 to 575, a 9 um slit today) and the re-sited hop lengths.
+
+### 1.10 R8 strap seats (main 289287760f)
+- R: 289287760f and 3fba1b4bc0 are on main (11:26). MERGE-QUEUE flagged 3 schema-key tests red on 289287760f at 11:23; 3fba1b4bc0 regenerates the schema.
+  I did not read whether main is green now.
+- V: the V2 plan `budgets` has no `r_r8_core_seat` key, so no V2 kit runs the seat pass. The a3 numbers (4 ends at -333.6, one merged flop driving
+  4 cores over 1,067 um; `rs_n_hi_p` -33.7 with a last stage 439 um from the pin) stand for every V2 st_a kit (I).
+- R: dry run 404 of 528 pins seated, 124 tails kept, chain hop max 250.6 um, 0 need a stage. No timing result. Private strict bind b1 ended rc 0 at 11:51; result not read by me.
+- Open (R): sle_ctl a5 -440.70 has not been read from the placed DB; sle_su_c has the same latent chain merge. The opt-in list covers st_a only.
+
+## 2. Ranked fix list for V3
+
+| # | Fix | Evidence | Types | Owner |
+|---|---|---|---|---|
+| 1 | sle_ctl: `x_su_l0_i` pad as a parent-tied count strap, so E and W can never split the type. Do it before any su-path station row | 1.1: 3 TYPE_SPLIT binds, fixed by a 33rd station | sle_ctl (12 instances); unblocks rows 2 and 3 | QC-SLE-R5 (RTL + bind proof), QC-PLAN-R11 (rows) |
+| 2 | st_a: `r8_keep` + `r_r8_core_seat` rows after the b1 proof reads, and the btab SRAM column 250 um north (1.9). Both are needed | -333.6 on 4 ends, -124.3 on 22 ends | st_a 11 | FABLE-FIX-QC-STRAP-R2 (seat proof on cl9f076a5c), FAM-QC-HCST-R2 (btab floorplan row + private kit), QC-PLAN-R11 |
+| 3 | Reach rows with sites: +1 station and `regs_um` on `x_fw_ctl_p2` (12 st_b), `x_hc3_ctl` (7 hc2), `x_su_l1_stm` (3 su_c), `x_st_a_fe` (8), `x_fw_st_b` (5), coll_ftm 4 slots, cbx `a22`. Every new station gets a site off the macros in the same row | 1.3: 43 slots over 405 | 40 | QC-PLAN-R11; FAM-QC-HCST-R2 (st_b, hc2), FAM-QC-FEFW-R2 (fe, fw), FAM-QC-COLL-R2 (coll_ftm), FAM-QC-CB-R2 (cbx) |
+| 4 | Cells: read the outcome of the 9 over-cap runs; split or cut st_b and hc (strip / body schema); for fw / sc / stm / fe remove the buffer causes (rows 6, 8) first. Correct the G0 estimate by the measured growth | 1.8: 9 of 19 over, 22 more projected 465k to 548k | st_b 12, hc 14, 5 others | QC-PLAN-R11 (census, split rows), FAM-QC-HCST-R2 (st_b, hc), FAM-QC-FEFW-R2, QC-SLE-R5 |
+| 5 | cb: re-picked `inst_taps` (cbf_q00 t24 / t25 / t77 / t76; same re-pick for cbn_q01 and siblings on placed positions), then +1 internal station on `bc_i00` / `bc_i10` / `bc_i30` (611 to 637) and `nb_i12`, `y_o00` (411 to 426) | 1.3, 1.6: 60 routed-reach rows; 525 / 506 um reset legs | cb 17 | FAM-QC-CB-R2 -> QC-PLAN-R11 |
+| 6 | Reset: `reach_rules.py fix --rules 1` on the 19 START nets outside the tree, relay rows for the 66 raw hops (coll_ftc 52, sle_ctl 10), stm `inst_taps` row 2b2dfe128b06, a second same-cycle copy where a ring reset spans over 810 um | 1.6 | coll_ftc, coll_core, sle_ctl, stm 2, about 20 ring types | FAM-QC-COLL-R2 (coll), QC-SLE-R5 (sle_ctl, stm), QC-PLAN-R11 (ring copies) |
+| 7 | Clock: `reach_rules.py fix --rules 4` (forwarded outputs onto the nearest tap, 0 cycles); split the taps over 1,650 sinks; early core tap declared at its measured depth (291 to 302) instead of 250 | 1.5: 16 types, 77 taps, 4 st_a types | 16 + 34 | QC-PLAN-R11; FAM-QC-HCST-R2 (st_a taps), FAM-QC-COLL-R2 (coll_ft t4 / t5) |
+| 8 | fw: +1 station on `x_sc_i` (rows already written); face windows of sle_ctl and cb moved toward their consumers where the bus keeps its seam partner | -49 to -84 routed (R); 1.7 window_far 28 types | fw 4; sle_ctl, cb | FAM-QC-FEFW-R2, QC-SLE-R5, FAM-QC-CB-R2 |
+| 9 | Sites for the reverted slots at V1 station counts: `regs_um` / bit sites for st_b `x_su_l0_ctl` (11 types), slw_st_b_v2 `b_hw_ctl_hc3` (copy the 9 siblings' 5 sited stations, +1 cycle on 3 types), st_a_v1 cws0, native59 | 1.4 | st_b 12, st_a_v1 6, native59 | QC-PLAN-R11, FAM-QC-HCST-R2 |
+| 10 | W chains: stations by distance, the rest of the cycles in one same-tap delay at the landing (after row 1); until then `ft_hop_lockup` on the 22 cross-tap hops of slw_su_c | 1.2 | slw_su_c 2, slw_fe 5 | QC-SLE-R5 (su_c), FAM-QC-FEFW-R2 (fe), QC-PLAN-R11 |
+| 11 | coll_core: the six defines as one row set after the pkit4 read; re-pin `wd_in` of `u_pring` / `u_rring` `g_b[1]` to face W | pkw4 -255 (R); 279 of 546 pins on the far side | coll_core, coll_ftc | FAM-QC-COLL-R2 |
+
+## 3. Stop list
+
+| # | Do not | Why |
+|---|---|---|
+| 1 | Run `kit_pin_site_check.py` as a QC gate, or add `reserved_sites_um` rows to QC | No reserved site exists on QC (headline 1) |
+| 2 | Re-add the 23 hop300 station bumps per slice | They are at 327 to 361 um, inside the cap; the bumps put sites on macros and split sle_ctl |
+| 3 | Add a su_l0 / su_l1 / su_c / sc / st_b station row before fix 1 lands, or fix the next E/W split with another station | 1.1, 1.2: the last one cost a 33rd station at a 20 um pitch |
+| 4 | Add a station without a site | 300 site-less slots already; b17 failed G0 on exactly this |
+| 5 | Shift the btab SRAMs by a full 345.6 um, or relaunch st_a with only one of the two fixes | Window is 149 to 370 um; -333.6 and -124.3 are separate paths |
+| 6 | Extend `r_r8_core_seat` beyond st_a before the cl9f076a5c proof has a routed timing result | The seat is a dry run only |
+| 7 | Relaunch st_b or hc types unchanged and expect them under the cap | Measured 447k to 507k; the estimate is 56k low |
+| 8 | Hold-buffer repair as the cure for the cross-tap station hops, or the general lockup form on QC | 22 hops at a 235 ps window; QC general lockup moved TT -1.82 -> -133.98 (R) |
+| 9 | More repair passes on straps or on cb reset legs of 500 um | Structural: merged chain, far tap |
+| 10 | Treat G0 PASS as reach closure | PASS is 0 errors with 60 routed-reach, 43 geometry and 92 reach warnings |
+
+## 4. Not checked
+
+- No placed or routed DB was opened this round. Every timing number is the named lane's (R).
+- Span / stations is G0's face-based estimate, not a pin-to-pin length; `die_hop_scan.py` was not run on V2.
+- Why W lanes carry 28 more cycles than E; whether the slw_fe chains were the same in the plan slw_fe_v1 cldb4efe33 signed on.
+- Which 6 st_a types R9 counted as reverted (st_a_v1 has 6 site-less cws0 slots, st_a_v2 has 5 sited ones).
+- Outcome of the 9 over-cap runs; the b1 strict bind result; whether main is green after 3fba1b4bc0.
+- The 41 `street_die_leg` warnings were counted, not interpreted.
+- The V2 wave: KIT-WAVE posted at 11:50 that TOOL-SKEW refused QC launches on the v2r10 tree (229 modules differ from main). Not a PD item; QC-PLAN-R11 has it.
+- Slips of mine: one temp file written to `/tmp` on intel2 (failure_breakdown output), removed with ot-delete; read-only `git log` on two files in `~/coord`.
+
+---
+PREVIOUS REVIEW (2026-11-19, unchanged)
+
 # FABLE-PD-QC-1230 2026-11-19 12:50 PST: QC coll_core wall, cbn_q11 stretch, st_a detours, N4.6f3 / N4.6e structure
 
 Reviewer: FABLE-PD-QC-1230 (Fable). Read-only: no job launched, killed or patched. Technical PD only.
