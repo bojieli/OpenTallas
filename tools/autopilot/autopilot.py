@@ -40,6 +40,7 @@ is skipped when the id is already in the file, ot-run clients run in their own t
 """
 import argparse
 import datetime
+import faulthandler
 import fcntl
 import fnmatch
 import hashlib
@@ -49,9 +50,11 @@ import math
 import os
 import re
 import shlex
+import signal
 import subprocess
 import sys
 import time
+import traceback
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -3454,6 +3457,9 @@ def poll_running(st):
     for j in list(st["jobs"].values()):
         if j.get("status") not in ("RUNNING", "ORPHAN"):
             continue
+        if phase_late():                               # FLOW-OPS-1000: over budget -> the rest are polled next tick
+            log(f"PHASE-OVERRUN poll_running: soft budget {phase_budget('poll_running'):.0f} s reached at job {j.get('id')}; remaining jobs next tick")
+            break
         if j.get("goal") in ("cts", "grt") and j.get("client_log"):
             try:
                 txt = Path(j["client_log"]).read_text(errors="replace")
@@ -4050,6 +4056,9 @@ def retry_pending(st):
     budget = MINIMAL_REJUDGE_PER_TICK
     _t = time.time()
     for j in list(st["jobs"].values()):
+        if phase_late():                               # FLOW-OPS-1000: over budget -> the rest next tick
+            log(f"PHASE-OVERRUN reviews_retry: soft budget {phase_budget('reviews_retry'):.0f} s reached in retry_pending at job {j.get('id')}; remaining jobs next tick")
+            break
         if budget > 0 and not DRY and minimal_rejudge_candidate(j) and not hub_procs(j["path"]):
             budget -= 1
             j["minimal_rejudged"] = time.time()
@@ -4100,6 +4109,82 @@ def retry_pending(st):
 
 
 # ------------------------------------------------------------------------------------------------ commands
+# FLOW-OPS-1000 (FABLE-FLOW-1000 a: one tick hung 50 min after poll_running, no stack, no alert).  Each tick phase has a wall budget.
+# Soft: the per-job loops of poll_running / retry_pending stop at a job boundary once over it (phase_late()).  Hard: SIGALRM at
+# PHASE_HARD_X x budget raises PhaseOverrun (a BaseException, so no inner `except Exception` swallows it): one PHASE-OVERRUN line with the
+# interrupted line, all-thread stacks into autopilot/tick_stack.log, and the tick goes on to the launch pass.  The kit-wave step (it launches
+# units) is never cut.  Budgets: AP_PHASE_BUDGET_<PHASE>=<s> overrides one, AP_PHASE_BUDGETS=0 turns the cut off (stacks still dumped).
+PHASE_BUDGET_S = {"load": 180, "geom": 240, "poll_running": 300, "reviews_retry": 240, "admit_new": 240, "wave_balance": 180,
+                  "auto_resign": 300, "loop_gaps": 200, "under_use": 90, "retry_unversioned_spare": 180}
+PHASE_HARD_X = 1.5
+# The hard SIGALRM cut only hits report-only phases: a phase that submits, launches, cancels or classifies (admit_new, the kit wave, wave_balance,
+# auto_resign, poll_running's finish(), retry_pending) is never interrupted mid-call; it stops at a job boundary (soft) and its stacks are dumped
+# by the tick-level dump every TICK_STACK_AFTER_S and on SIGTERM.
+PHASE_HARD = {"loop_gaps", "under_use", "retry_unversioned_spare"}
+TICK_STACK_AFTER_S = int(os.environ.get("AP_TICK_STACK_AFTER_S", "600"))   # all-thread stacks every 600 s while one tick runs
+PHASE = {"name": "", "deadline": 0.0}
+
+
+class PhaseOverrun(BaseException):
+    pass
+
+
+def phase_budget(name):
+    try:
+        return float(os.environ.get("AP_PHASE_BUDGET_" + name.upper(), PHASE_BUDGET_S.get(name, 0)))
+    except ValueError:
+        return float(PHASE_BUDGET_S.get(name, 0))
+
+
+def phase_late():
+    """True once the running phase is past its soft budget (checked by the per-job loops at a job boundary)"""
+    return bool(PHASE["deadline"]) and time.time() > PHASE["deadline"] and os.environ.get("AP_PHASE_BUDGETS", "1") != "0"
+
+
+def _dump_stacks(why):
+    try:
+        with open(AP_DIR / "tick_stack.log", "a") as f:
+            f.write(f"--- {now_s()} pid {os.getpid()} {why}\n")
+            f.flush()
+            faulthandler.dump_traceback(file=f, all_threads=True)
+    except OSError:
+        pass
+
+
+def run_phase(name, fn, *a, **k):
+    """run one tick phase under its budget; -> fn's result, or None when it was cut (PHASE-OVERRUN logged)"""
+    budget = phase_budget(name)
+    on = budget > 0 and os.environ.get("AP_PHASE_BUDGETS", "1") != "0"
+    t0 = time.time()
+    PHASE.update(name=name, deadline=(t0 + budget) if on else 0.0)
+
+    def _alarm(sig, frame):
+        raise PhaseOverrun(name)
+    old = None
+    if on and name in PHASE_HARD:
+        try:
+            old = signal.signal(signal.SIGALRM, _alarm)
+            signal.alarm(max(1, int(budget * PHASE_HARD_X)))
+        except ValueError:                             # not the main thread (tests): soft budget only
+            old = None
+    try:
+        return fn(*a, **k)
+    except PhaseOverrun:
+        where = [f for f in traceback.extract_tb(sys.exc_info()[2]) if f.name != "_alarm"]   # the line the alarm interrupted
+        at = (f"{Path(where[-1].filename).name}:{where[-1].lineno} {where[-1].name}" if where else "?")
+        log(f"PHASE-OVERRUN {name}: cut after {time.time() - t0:.0f} s (budget {budget:.0f} s, hard {budget * PHASE_HARD_X:.0f} s) at {at}; "
+            f"stacks in autopilot/tick_stack.log; the tick goes on to the launch pass")
+        _dump_stacks(f"PHASE-OVERRUN {name} at {at}")
+        return None
+    finally:
+        if old is not None:
+            signal.alarm(0)
+            signal.signal(signal.SIGALRM, old)
+        if time.time() - t0 > budget > 0 and on:
+            log(f"PHASE-SLOW {name}: {time.time() - t0:.0f} s over its {budget:.0f} s budget")
+        PHASE.update(name="", deadline=0.0)
+
+
 def tick_progress(ap_dir, t0, phase, done=False):
     """FLOW-1355 (2): .tick.progress = {start, phase, t, done}, rewritten at every phase mark; a tick killed by the service timeout leaves done=false"""
     try:
@@ -4116,7 +4201,7 @@ def tick_killed_check(ap_dir, now_start):
         return None
     if d.get("done") or float(d.get("start") or 0) >= now_start:
         return None
-    msg = "TICK-KILLED previous tick started %s was cut off in phase '%s' after %.0f s (killed by the service timeout or crashed; the launch pass may not have run)" % (
+    msg = "TICK-KILLED previous tick started %s was cut off in phase '%s' after %.0f s (killed by the service timeout or crashed; the launch pass may not have run; stacks: autopilot/tick_stack.log)" % (
         time.strftime("%H:%M:%S", time.localtime(float(d.get("start") or 0))), d.get("phase"), float(d.get("t") or 0) - float(d.get("start") or 0))
     log(msg)
     return msg
@@ -4154,13 +4239,37 @@ def tick(args):
     _t0 = time.time()
     _ph = {}                                           # WF-1 11-14: per-phase wall seconds, one TICK-TIMES line at the end
     tick_killed_check(AP_DIR, _t0)
+    # FLOW-OPS-1000: a hung or killed tick names its line: all-thread stacks on SIGTERM (systemd timeout) and every TICK_STACK_AFTER_S
+    _stk = None
+    try:
+        _stk = open(AP_DIR / "tick_stack.log", "a")
+        _stk.write(f"--- tick start {now_s()} pid {os.getpid()}\n")
+        _stk.flush()
+        faulthandler.register(signal.SIGTERM, file=_stk, all_threads=True, chain=True)
+        faulthandler.dump_traceback_later(TICK_STACK_AFTER_S, repeat=True, file=_stk)
+    except (OSError, ValueError, RuntimeError):
+        pass
 
     def _mark(name, _last=[time.time()]):
         n = time.time()
         _ph[name] = round(n - _last[0], 1)
         _last[0] = n
-        tick_progress(AP_DIR, _t0, name)
+        tick_progress(AP_DIR, _t0, "after " + name)     # the phase that hangs is the one AFTER the last mark
+    try:
+        return _tick_body(args, st=None, _t0=_t0, _ph=_ph, _mark=_mark)
+    finally:
+        try:
+            faulthandler.cancel_dump_traceback_later()
+            faulthandler.unregister(signal.SIGTERM)
+        except (ValueError, RuntimeError):
+            pass
+        if _stk:
+            _stk.close()
+
+
+def _tick_body(args, st, _t0, _ph, _mark):
     st = load_state()
+    PHASE.update(name="load", deadline=time.time() + phase_budget("load"))
     try:
         check_pending_stops(st)
     except Exception as _e:                            # a result check never stops the tick
@@ -4176,22 +4285,27 @@ def tick(args):
     GEOM_TEXT = geom_text
     # Resolve explicit visual verdicts before promoting pending requests to measured checks.
     # Resolve again after prepare to apply a later reviewer FAIL on an AUTO-GEOM result.
-    resolve_geom(rows, geom_text)
-    AG.prepare(sys.modules[__name__], st, rows)
-    resolve_geom(rows, geom_text)
+    def _geom():
+        resolve_geom(rows, geom_text)
+        AG.prepare(sys.modules[__name__], st, rows)
+        resolve_geom(rows, geom_text)
+    run_phase("geom", _geom)
     _mark("geom")
     load_closure()
     apply_evac(st)
     instrument_poll()
-    poll_running(st)
+    run_phase("poll_running", poll_running, st)
     log(poll_times_line())
     _mark("poll_running")
+    def _reviews_retry():
+        _t = time.time()
+        poll_reviews(st)
+        _rp("poll_reviews", _t)
+        _t = time.time()
+        retry_pending(st)
+        _rp("retry_pending_total", _t)
+    run_phase("reviews_retry", _reviews_retry)
     _t = time.time()
-    poll_reviews(st)
-    _rp("poll_reviews", _t)
-    _t = time.time()
-    retry_pending(st)
-    _rp("retry_pending_total", _t)
     _t = time.time()
     # WF-1 11-14 (COORD/OWNER: the commit / flow-tag tie is removed from counting; COUNT-FRICTION-1 credits SIGNED-UNVERSIONED
     # directly): promoting unversioned records only to get provenance cost 476 s of a 1033 s tick, so it is OFF by default.
@@ -4203,12 +4317,12 @@ def tick(args):
     _rp("retry_unversioned", _t)
     _mark("reviews_retry")
     log("RETRY-PENDING-TIMES " + " ".join(f"{k}={v[0]}x/{v[1]:.0f}s" for k, v in RP_T.items()))
-    submitted = admit_new(st, rows)
+    submitted = run_phase("admit_new", admit_new, st, rows) or 0
     save_state(st)
     _mark("admit_new")
     if os.environ.get("AP_WAVE_BALANCE", "1") != "0":   # WAVE-BALANCE-1 11-11: inert unless kit_wave.json wave_balance.enabled
         try:
-            WB.step(sys.modules[__name__], st)
+            run_phase("wave_balance", WB.step, sys.modules[__name__], st)
             save_state(st)
         except Exception as e:                         # a balance pass must never stop the chain
             log(f"WAVE-BALANCE failed: {type(e).__name__}: {e}")
@@ -4228,20 +4342,20 @@ def tick(args):
     # put it back into the tick.
     if os.environ.get("AP_AUTO_RESIGN", "1") != "0" and not (AP_DIR / "AUX-RESIGN").exists():   # FLOW-29 owner 11-04: signed runs re-signed on the newest tag, no agent
         try:
-            AR.step(sys.modules[__name__])
+            run_phase("auto_resign", AR.step, sys.modules[__name__])
         except Exception as e:                         # a re-sign pass must never stop the chain
             log(f"AUTO-RESIGN failed: {type(e).__name__}: {e}")
     _mark("auto_resign")
     if not loop_gaps_off_tick():
         try:
-            write_loop_gaps(st, rows, geom_text)
+            run_phase("loop_gaps", write_loop_gaps, st, rows, geom_text)
         except Exception as e:                         # the gap report must never stop the chain
             log(f"LOOP-GAPS failed: {type(e).__name__}: {e}")
     _mark("loop_gaps")
-    UU.step(sys.modules[__name__])                     # never raises; one UNDER-USE line (idle threads per host + top hold reasons)
+    run_phase("under_use", UU.step, sys.modules[__name__])   # never raises; one UNDER-USE line (idle threads per host + top hold reasons)
     _mark("under_use")
     try:
-        retry_unversioned_spare(st)                    # FLOW-OPS-0900: lowest priority, spare admission only
+        run_phase("retry_unversioned_spare", retry_unversioned_spare, st)   # FLOW-OPS-0900: lowest priority, spare admission only
         save_state(st)
     except Exception as e:                             # a promotion pass must never stop the chain
         log(f"RETRY-UNVERSIONED failed: {type(e).__name__}: {e}")

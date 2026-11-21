@@ -100,5 +100,21 @@ class Rules(unittest.TestCase):
         self.assertTrue(P.dedup(f, {("s81", "NO-PROGRESS"): D(2026, 11, 19, 10, 30)}, now))
 
 
+class TickDead(unittest.TestCase):
+    def test_tick_dead_after_20_min_without_tick_times(self):
+        L = ["2026-11-21 08:47:57 PST AUTOPILOT: TICK-TIMES total=380s load=20s",
+             "2026-11-21 08:48:21 PST AUTOPILOT: POLL-TIMES probe_job=3x/2s"]
+        ev = P.parse_lines(L)
+        self.assertFalse([f for f in P.detect(ev, D(2026, 11, 21, 9, 5)) if f["cls"] == "TICK-DEAD"])
+        dead = [f for f in P.detect(ev, D(2026, 11, 21, 9, 10), {"tick_progress": "running tick started 08:47:57, last mark 'after poll_running'"})
+                if f["cls"] == "TICK-DEAD"]
+        self.assertEqual(len(dead), 1)
+        self.assertIn("08:47:57", dead[0]["text"])
+        self.assertIn("after poll_running", dead[0]["text"])
+
+    def test_no_tick_lines_at_all_is_not_an_alert(self):
+        self.assertFalse([f for f in P.detect([], D(2026, 11, 21, 9, 10)) if f["cls"] == "TICK-DEAD"])
+
+
 if __name__ == "__main__":
     unittest.main()

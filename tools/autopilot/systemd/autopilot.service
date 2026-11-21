@@ -12,4 +12,5 @@ Environment=AP_COORD=%h/coord
 ExecStartPre=-/bin/sh -c 'f=%h/OpenTallas/tools/autopilot/hub_git_sync.sh; [ -f "$f" ] || f=%h/bin/hub-git-sync.sh; exec /bin/bash "$f" coord'
 ExecStart=/bin/sh -c 'f=%h/OpenTallas/tools/autopilot/autopilot.py; [ -f "$f" ] || f=%h/.local/lib/autopilot/autopilot/autopilot.py; exec /usr/bin/python3 -I "$f" tick'
 Nice=10
-TimeoutStartSec=3000
+# FLOW-OPS-1000 (FABLE-FLOW-1000 a): 900 s; phases have budgets (PHASE-OVERRUN), SIGTERM dumps all stacks to autopilot/tick_stack.log
+TimeoutStartSec=900

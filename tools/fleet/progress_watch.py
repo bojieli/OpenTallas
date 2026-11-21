@@ -7,6 +7,7 @@ autopilot/kit_wave.json when present) and prints / posts one line per finding:
   SELF-STOP <die>     the wave REAPed a queue job within 30 min of its own SUBMIT or REAP-REVIVE of that same job
   NO-ADVANCE <die>    an item had 2+ FAIL attempts in 6 h and the later one did not reach a later stage
   STUCK-STATE <die>   current-plan rows CANCELLED/SUPERSEDED with no successor row for 60 min (needs the stages tsv)
+  TICK-DEAD           no autopilot TICK-TIMES line for 20 min (a hung or dead tick; FLOW-OPS-1000)
 
 A parked die (default hbm, plus kit_wave.json dies.<die>.parked) is reported as PARKED once a day, never alerted.
 Each alert is one `bash <coord>/bin/post.sh PROGRESS-WATCH "..."` line, at most one per die per class per hour, and a row in
@@ -31,6 +32,7 @@ NO_PROGRESS_MIN = 60
 SELF_STOP_MIN = 30
 NO_ADVANCE_H = 6
 STUCK_MIN = 60
+TICK_DEAD_MIN = 20          # FLOW-OPS-1000: no TICK-TIMES line for this long = the autopilot tick is dead or hung
 DEDUP_MIN = 60
 ACTIVE_LOOKBACK_H = 24
 PARKED_DEFAULT = ("hbm",)
@@ -51,7 +53,9 @@ def parse_lines(lines):
         if not m:
             continue
         t, rest = parse_time(m.group(1)), m.group(2)
-        if rest.startswith("KIT-WAVE LAUNCH "):
+        if rest.startswith("TICK-TIMES "):
+            ev.append({"t": t, "kind": "tick"})
+        elif rest.startswith("KIT-WAVE LAUNCH "):
             tok = rest.split()[2]
             if "/" in tok:
                 dg = re.search(r"event-key (\S+) plan (\S+)", rest)
@@ -112,6 +116,14 @@ def detect(events, now, state=None, parked=PARKED_DEFAULT):
     state = state or {}
     out = []
     ev = [e for e in events if e["t"] <= now]
+    # 0. TICK-DEAD (FLOW-OPS-1000, FABLE-FLOW-1000 a): ticks were seen in the window, and none finished for TICK_DEAD_MIN
+    ticks = [e["t"] for e in ev if e["kind"] == "tick"]
+    if ticks and now - ticks[-1] >= timedelta(minutes=TICK_DEAD_MIN):
+        prog = state.get("tick_progress") or ""
+        out.append({"die": "autopilot", "cls": "TICK-DEAD", "state": "alert",
+                    "text": f"[PROGRESS-WATCH -> COORD] TICK-DEAD: no autopilot TICK-TIMES line since {ticks[-1]:%H:%M:%S} "
+                            f"({(now - ticks[-1]).total_seconds() / 60:.0f} min; no launch or classify meanwhile){(' ' + prog) if prog else ''}. "
+                            f"Look: systemctl --user status autopilot.service; autopilot/tick_stack.log"})
     parked = set(parked) | set(state.get("parked", ()))
     last_launch, dies = {}, set(state.get("known", ()))
     for e in ev:
@@ -220,6 +232,13 @@ def detect(events, now, state=None, parked=PARKED_DEFAULT):
 def load_state(coord):
     ap = Path(coord) / "autopilot"
     st = {"parked": [], "known": [], "rows": [], "eligible": {}}
+    try:
+        tp = json.load(open(ap / ".tick.progress"))
+        if not tp.get("done"):
+            st["tick_progress"] = "running tick started %s, last mark '%s'" % (
+                datetime.fromtimestamp(float(tp.get("start") or 0)).strftime("%H:%M:%S"), tp.get("phase"))
+    except (OSError, ValueError, TypeError):
+        pass
     try:
         for die, v in (json.load(open(ap / "kit_wave.json")).get("dies") or {}).items():
             if isinstance(v, dict):
