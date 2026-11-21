@@ -95,12 +95,32 @@ def test_the_scan_sees_the_known_dependency_and_the_allow_list_is_live():
 
 
 def test_stn_pin_keepout_is_carried_by_every_kit_and_the_hook_prefers_it():
-    assert K.FILES["stn_pin_keepout.tcl"] == "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl"
+    common = REPO / "physical/common_flow/stn_pin_keepout.tcl"
+    assert K.FILES["stn_pin_keepout.tcl"] == "physical/common_flow/stn_pin_keepout.tcl"
+    assert common.is_file()
+    legacy = REPO / "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl"
+    if legacy.is_file():
+        assert legacy.read_bytes() == common.read_bytes()
     hook = REPO / "physical/hbm_accel_die_views/coll/rtl_ps/grt_drv_maxwire.tcl"
     if hook.is_file():                                                                     # absent in a sparse checkout; the gate has it
         text = hook.read_text()
         assert text.index("[file dirname [info script]] stn_pin_keepout.tcl") < text.index("/src/physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl")
         assert "OT_PK WARNING" in text
+
+
+def test_face_keepout_stages_without_bench_tree_or_git(tmp_path):
+    rt = tmp_path / "runtime"
+    kit = tmp_path / "kit"
+    kit.mkdir()
+    for rel in K.FILES.values():
+        src = REPO / rel
+        dest = rt / rel
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        dest.write_bytes(src.read_bytes())
+    names = K.stage(kit, repo=rt)
+    assert "stn_pin_keepout.tcl" in names
+    assert (kit / "stn_pin_keepout.tcl").read_bytes() == (REPO / K.FILES["stn_pin_keepout.tcl"]).read_bytes()
+    assert not (rt / "physical/hbm_accel_die_views").exists() and not (rt / ".git").exists()
 
 
 def test_a_helper_missing_from_the_checkout_is_read_from_git(tmp_path, monkeypatch):
