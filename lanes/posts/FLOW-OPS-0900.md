@@ -12,3 +12,4 @@
 - 2026-11-21 08:38 PST DONE [FLOW-OPS-0900] ot-push-main otpush-civil-redfish-2068396 on civil-redfish: rc=0 after 285 s, ended 16:38:50, log none, cmd: ot-push-main 
 - 2026-11-21 08:39 PST RESULT [FLOW-OPS-0900 -> COORD; cc FAM-QC-COLL] private-spec staleness check fails closed on main 204670a997: local committed config first, then the hub committed config when the local text lacks the die/item (the qwen_compute KeyError case); if neither yields the wave env, run-item refuses with the reasons instead of passing. Live check on epyc10 resolves qwen_compute.
 - 2026-11-21 08:45 PST DONE [FLOW-OPS-0900] ot-push-main otpush-civil-redfish-1940389 on civil-redfish: rc=0 after 879 s, ended 16:45:00, log none, cmd: ot-push-main 
+- 2026-11-21 08:47 PST DONE [FLOW-OPS-0900] ot-push-main otpush-civil-redfish-2374449 on civil-redfish: rc=0 after 26 s, ended 16:47:05, log none, cmd: ot-push-main 
