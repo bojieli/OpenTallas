@@ -232,3 +232,8 @@
   QC 14: 5 STALE held CB, 4 STALE cancelled, 3 new WAIT-VISUAL HCST (+2 STALE cancelled counted); KV 26 WAIT-BIND: 9 FAILED + 17 held/cancelled.
   HEAD none flagged (LEP0N-R4). Note: CANCEL-SWEEP-0450 has no post file; cancels matched via CANCEL-GRT-FLAT/UNSIGNABLE tsv only.
 - 2026-11-21 04:53 PST CORRECTION: counts are S81 13, QC 12 (5 STALE held CB + 4 STALE cancelled + 3 WAIT-VISUAL HCST), KV 28 (9 FAILED + 19 held/cancelled) = 53.
+- 2026-11-21 05:52 PST OWNERS-SWEEP hourly (refreshed lane map: COL-R4/H9R0-R2/H10-R2, SLICE-R3, SERDES-R3, LEPE-2, SVC-R6, KV-HGI-R4/PV-R5, FABLE-FIX KV-HUB/LEAF-R3/HEAD-LEP0N): 489 rows, 31 flagged (was 53), 0 UNOWNED/DEAD-OWNER, 0 FAILED-NO-RELAUNCH.
+  S81 21 STALE: 19 cancelled-superseded (SVC-R6 7 new, H9R0-R2 10 incl 1 new, H10-R2 2) + 2 held H9R0-R2; all FAILED/leaf/serdes/slice rows gone.
+  QC 9 STALE: 5 held FAM-QC-CB + 4 cancelled (FEFW, HCST, SLE-R4, QC-PLAN-R9); 3 WAIT-VISUAL HCST cleared.
+  KV 1 WAIT-BIND cancelled (PV-R5); the 27 held/failed KV rows no longer flagged. HEAD none.
+  FABLE-FIX-S81-COLROM owns lever work, not a row family, so no rows mapped to it.
