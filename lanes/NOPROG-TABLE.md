@@ -1,6 +1,6 @@
-# NOPROG-TABLE (NOPROG-WATCHDOG, generated 2026-11-21 14:00 PST)
+# NOPROG-TABLE (NOPROG-WATCHDOG, generated 2026-11-21 14:15 PST)
 
-Window 6 h, improvement >= 2 % from best. Verdict counts: {'UNSIGNABLE': 3, 'NO-PROGRESS': 1, 'GRT-LABEL': 33, 'YOUNG': 98, 'NO-DATA': 9, 'KEEP': 1, 'EXCLUDED': 5, 'PROGRESS': 27}. Hosts without report: none.
+Window 6 h, improvement >= 2 % from best. Verdict counts: {'UNSIGNABLE': 3, 'NO-PROGRESS': 1, 'GRT-LABEL': 33, 'YOUNG': 96, 'NO-DATA': 9, 'KEEP': 1, 'EXCLUDED': 5, 'PROGRESS': 29}. Hosts without report: none.
 
 | host | container | type | stage | age h | metric trend | verdict | action |
 |---|---|---|---|---|---|---|---|
@@ -38,9 +38,9 @@ Window 6 h, improvement >= 2 % from best. Verdict counts: {'UNSIGNABLE': 3, 'NO-
 | intel1 | dpkit-kv3_hgi_v1__cl42bc8b12-4108108 | kv3_hgi_v1 | 5_1_grt | 23.8 | grt rounds 6 overflow 5:17839 -> 10:13501 -> 15:11502 -> 20:10666 -> 25:8529 -> 30:5475 | GRT-LABEL: DESIGN-FAIL: GRT-0273 (clock NDR dropped under congestion) |  |
 | intel1 | dpkit-ot_s81sl_leaf__t25__cl55642d17-2427808 | ot_s81sl_leaf__t25 | 5_1_grt | 18.8 | grt rounds 4 overflow 5:36131 -> 10:30276 -> 15:24310 -> 20:22194 | GRT-LABEL: DESIGN-FAIL: GRT-0273 (clock NDR dropped under congestion) |  |
 | intel1 | dpkit-sle_ctl__cl67434795-7485 | sle_ctl | 5_1_grt | 40.1 | grt rounds 3 overflow 5:56283 -> 10:53405 -> 15:50242 | GRT-LABEL: DESIGN-FAIL: GRT-0273 (clock NDR dropped under congestion) |  |
-| intel2 | dpkit-kv3_hg_v1p6-2680076 | kv3_hg_v1p6 | 5_1_grt | 35.1 | grt rounds 3 overflow 5:59246 -> 10:46138 -> 15:53864 | GRT-LABEL: DESIGN-FAIL: GRT-0273 (clock NDR dropped under congestion) |  |
-| intel2 | dpkit-kv3_hg_v1p6-2680438 | kv3_hg_v1p6 | 5_1_grt | 35.1 | grt rounds 3 overflow 5:60515 -> 10:47029 -> 15:53055 | GRT-LABEL: DESIGN-FAIL: GRT-0273 (clock NDR dropped under congestion) |  |
-| intel2 | dpkit-kv3_hgi_v1__cl141fc26e-2426424 | kv3_hgi_v1 | 5_1_grt | 35.3 | grt rounds 6 overflow 5:12147 -> 10:10883 -> 15:9842 -> 20:9748 -> 25:30868 -> 30:14987 | GRT-LABEL: DESIGN-FAIL: GRT-0273 (clock NDR dropped under congestion) |  |
+| intel2 | dpkit-kv3_hg_v1p6-2680076 | kv3_hg_v1p6 | 5_1_grt | 35.4 | grt rounds 3 overflow 5:59246 -> 10:46138 -> 15:53864 | GRT-LABEL: DESIGN-FAIL: GRT-0273 (clock NDR dropped under congestion) |  |
+| intel2 | dpkit-kv3_hg_v1p6-2680438 | kv3_hg_v1p6 | 5_1_grt | 35.4 | grt rounds 3 overflow 5:60515 -> 10:47029 -> 15:53055 | GRT-LABEL: DESIGN-FAIL: GRT-0273 (clock NDR dropped under congestion) |  |
+| intel2 | dpkit-kv3_hgi_v1__cl141fc26e-2426424 | kv3_hgi_v1 | 5_1_grt | 35.6 | grt rounds 6 overflow 5:12147 -> 10:10883 -> 15:9842 -> 20:9748 -> 25:30868 -> 30:14987 | GRT-LABEL: DESIGN-FAIL: GRT-0273 (clock NDR dropped under congestion) |  |
 | epyc10 | dpkit-col_h10_r2__t1__cl99efd374__pv1619ecc6-2275786 | col_h10_r2__t1 | 5_2_route | 5.3 | drt_violations best 75691 last 75691 rows 1 | YOUNG: stage 1.0 h < 1 h |  |
 | epyc10 | dpkit-hd_lep0N-22377 | hd_lep0N | 4_2_tapbal_grt | 6.6 | last meaningful line 2.0 h ago (48/53 lines) | YOUNG: evidence 2.1 h < 7.5 h |  |
 | epyc10 | dpkit-slw_fw_v3-1328903 | slw_fw_v3 | 5_2_route | 11.2 | drt_violations best 95479 last 95479 rows 1 | YOUNG: evidence 1.8 h < 7.5 h |  |
@@ -142,12 +142,10 @@ Window 6 h, improvement >= 2 % from best. Verdict counts: {'UNSIGNABLE': 3, 'NO-
 | intel1 | prd-eco_20261120_192428_3309571-i2t-1252392 | eco_20261120_192428_3309571-i2t | 5_2_route | 1.7 | last meaningful line 0.1 h ago (271/272 lines) | YOUNG: evidence 1.3 h < 7.5 h |  |
 | intel1 | prd-eco_20261121_075836_1991905-i1t-1821063 | eco_20261121_075836_1991905-i1t | 5_2_route | 6.0 | drt_violations best 23424 last 23424 rows 2 | YOUNG: evidence 5.4 h < 7.5 h |  |
 | intel1 | prd-eco_20261121_082001_3216437-i1t-2148021 | eco_20261121_082001_3216437-i1t | 5_2_route | 5.6 | drt_violations best 18210 last 18210 rows 2 | YOUNG: evidence 5.0 h < 7.5 h |  |
-| intel2 | dpkit-coll_ftm-3655958 | coll_ftm | 5_2_route | 1.0 | last meaningful line 0.0 h ago (225/225 lines) | YOUNG: evidence 0.1 h < 7.5 h |  |
-| intel2 | dpkit-kv3_io_ft-1149261 | kv3_io_ft | 5_1_grt | 0.2 | last meaningful line 0.0 h ago (70/70 lines) | YOUNG: evidence 0.0 h < 7.5 h |  |
-| intel2 | dpkit-slice_station__t12-4094445 | slice_station__t12 | 5_2_route | 0.7 | drt_violations best 2715 last 2715 rows 1 | YOUNG: stage 0.3 h < 1 h |  |
-| intel2 | prd-eco_20261121_072804_212710-i1-2335895 | eco_20261121_072804_212710-i1 | 5_2_route | 1.6 | last meaningful line 0.1 h ago (258/259 lines) | YOUNG: evidence 0.8 h < 7.5 h |  |
-| intel2 | prd-eco_20261121_111944_190475-i1-3971139 | eco_20261121_111944_190475-i1 | 5_2_route | 2.6 | drt_violations best 7 last 7 rows 1 | YOUNG: evidence 1.7 h < 7.5 h |  |
-| intel2 | prd-eco_20261121_115902_173230-i1t-1237159 | eco_20261121_115902_173230-i1t | 5_2_route | 2.0 | last meaningful line 0.2 h ago (267/268 lines) | YOUNG: evidence 1.2 h < 7.5 h |  |
+| intel2 | dpkit-coll_ftm-3655958 | coll_ftm | 5_2_route | 1.2 | last meaningful line 0.1 h ago (232/233 lines) | YOUNG: evidence 0.4 h < 7.5 h |  |
+| intel2 | prd-eco_20261121_072804_212710-i1-2335895 | eco_20261121_072804_212710-i1 | 5_2_route | 1.8 | last meaningful line 0.1 h ago (262/263 lines) | YOUNG: evidence 1.1 h < 7.5 h |  |
+| intel2 | prd-eco_20261121_111944_190475-i1-3971139 | eco_20261121_111944_190475-i1 | 5_2_route | 2.9 | drt_violations best 7 last 7 rows 1 | YOUNG: evidence 1.9 h < 7.5 h |  |
+| intel2 | prd-eco_20261121_115902_173230-i1t-1237159 | eco_20261121_115902_173230-i1t | 5_2_route | 2.2 | last meaningful line 0.1 h ago (273/274 lines) | YOUNG: evidence 1.4 h < 7.5 h |  |
 | epyc9 | prd-eco_20261120_150342_478824-i1t-3224490 | eco_20261120_150342_478824-i1t | 5_2_route | 30.9 |  | KEEP: col_h9_r2__t1__clc9ad8f7e__pv45d0c698	S81-COL-INHERIT	representative (COORD 11-1 |  |
 | intel1 | prd-eco1-i1-100513 | eco1-i1 | 5_2_route | 10.3 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | intel1 | prd-eco1-i1-1617813 | eco1-i1 | 5_1_grt | 1.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
@@ -181,3 +179,5 @@ Window 6 h, improvement >= 2 % from best. Verdict counts: {'UNSIGNABLE': 3, 'NO-
 | epyc8 | prd-eco_20261121_214321_3818039-i1t-2911659 | eco_20261121_214321_3818039-i1t | 5_1_grt | 0.2 | grt_overflow best 0 last 0 rows 1 | PROGRESS: grt_overflow reached 0 |  |
 | intel1 | dpkit-col_h9_r0_p3__t1__cl8ce97bcb__pv1489a898-3784557 | col_h9_r0_p3__t1 | 5_2_route | 18.1 | drt_violations best 203629 last 203629 rows 1 | before-window best 203629, window best 203629 | PROGRESS: drt_violations: active iteration at 67848 < best completed total 203629 (in-iter |  |
 | intel1 | dpkit-sle_ctl__cl67434795-622153 | sle_ctl | pregrt_ff_hold | 12.5 | repair_TNS best 0 last 0 rows 1 | PROGRESS: repair_TNS reached 0 |  |
+| intel2 | dpkit-kv3_io_ft-1149261 | kv3_io_ft | 5_1_grt | 0.5 | repair_TNS best 0 last 0 rows 17 | PROGRESS: repair_TNS reached 0 |  |
+| intel2 | dpkit-slice_station__t12-4094445 | slice_station__t12 | 5_2_route | 1.0 | drt_violations best 0 last 0 rows 4 | PROGRESS: drt_violations reached 0 |  |
