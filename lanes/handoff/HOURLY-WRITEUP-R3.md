@@ -7,3 +7,5 @@ DRT scan script: scratchpad drt3.sh (find 5_2_route*.log mtime<180 min under cla
 Scratch watch: intel1 scratch2 free 193 -> 165 GB; cause S81 svc_hi_dsdv_svc_* place jobs (~21 GB each) plus 143 kit-wave attempt dirs; recheck df each hour. epyc7 host key changed (185.189.44.212), ssh refused.
 ## State 03:55
 count 493 any / 408 current (QC slw_sc_v1__cl63e5a7a2 signed 03:3x). Codex handback read. Resumed after COORD RESUME 03:3x. intel1 scratch2 189 GB free (recovered); epyc9 169 GB at 98%. DRT scan script scratchpad drt3.sh (run on intel1 intel2 epyc2 epyc4 epyc8 epyc9 epyc10; epyc7 ssh host key changed). Next row due 04:55.
+## State 04:15
+count 493/409, QC 35/125. COORD hourly 04:0x done (ot-run status, gen fail types posted). Next row ~04:55-05:05. GEOM note: epyc10 has no matplotlib, no auto_geom.png there; plot geom.tsv locally or pick items from other hosts.
