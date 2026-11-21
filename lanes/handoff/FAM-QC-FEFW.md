@@ -61,3 +61,9 @@ No generator change pushed (nothing to fix; spreading no-regs_um slots would be 
 - ECO residual on slw_fe_v1 cldb4efe33 (unit oth-ubuntu-325482-1795255542, epyc10) still running; waiter armed (task b9h6dyune); then sign-off + LEC + export.
 
 ## RULING d442c09bb6e noted (11-21): any private proof kit of this family must be generated with the exact effective env + gen args of the same type wave kit (OT_PGCAP + grt_pre hook, OT_PLACE_MAX_FANOUT, OT_CLAND_STRIP_DENS, OT_IO_HOLD, OT_SIGNED_VIEW_SHA, OT_GPL_SPARSE_UTIL, flow_tag) and config.mk must be diffed vs the wave kit before launch. FEFW has generated NO private kit so far: the residual hold ECO runs on the wave kit own ECO root (eco_20261120_185639_3224747/residual), same config.mk by construction.
+
+## 11-21 ~08:1x PST SIGNED: slw_fe_v1__clfe325744__cldb4efe33 (C plan kit, epyc10), residual hold ECO PASS
+eco_loop residual: internal FF hold -3.63/1 -> 0/0; sign-off verdict SIGNED (minimal profile: DRC 0, TT +51.92, internal hold 0, face_guard/sdc_lint PASS). legacy/local flags: legacy NOT SIGNED
+(boundary hold -119.2 = input-port seam, advisory NEEDS_PARENT: parent_qualification NEEDS_PARENT, release_qualified False, provisional views allowed). signoff.json:
+.../eco_20261120_185639_3224747/residual/i2r/signoff/signoff.json, record 5d5a4e3878dd25fe. AUTO_EXPORT queued (spool 5d5a4e3878dd25fe.json); AGIdock+rtx-pro export to be confirmed by the exporter, LEC = the exporter/signoff_chain routed LEC (not run by me).
+Carry to siblings: same final hold ECO (eco_loop.py residual) for routed builds with <=5 internal ends; setup hop rows (x_sc_i chains) are with QC-PLAN-R9.
