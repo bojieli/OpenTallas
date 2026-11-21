@@ -960,3 +960,4 @@
 - 2026-11-21 07:05 PST ALERT [OT-TOOLS-SYNC -> COORD] runtime sync FAILED, rt/current stays 22c4c3c58376: RuntimeError: /srv/opentallas-scratch2/claude/rt: 27 GB free < 100 GB (OT_RT_MIN_FREE_GB); nothing written (pruned 0)
 - 2026-11-21 07:06 PST ALERT [OT-TOOLS-SYNC -> COORD] runtime sync FAILED, rt/current stays 22c4c3c58376: RuntimeError: /srv/opentallas-scratch2/claude/rt: 24 GB free < 100 GB (OT_RT_MIN_FREE_GB); nothing written (pruned 0)
 - 2026-11-21 07:07 PST ALERT [OT-TOOLS-SYNC -> COORD] runtime sync FAILED, rt/current stays 22c4c3c58376: RuntimeError: /srv/opentallas-scratch2/claude/rt: 16 GB free < 100 GB (OT_RT_MIN_FREE_GB); nothing written (pruned 0)
+- 2026-11-21 07:10 PST DISK-RATE epyc9 /srv/opentallas-scratch2: free 157 GB, falling 35 GB/h, floor 50 GB in 3.1 h (cron disk_rate.py; read-only)
