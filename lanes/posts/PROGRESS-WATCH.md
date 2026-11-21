@@ -135,3 +135,4 @@
 - 2026-11-21 04:27 PST ALERT NO-ADVANCE qwen_kvsys: 2 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (kv3_hgi_v6 x2@gen, kv3_hgi_v7 x2@gen)
 - 2026-11-21 04:29 PST ALERT STUCK-STATE s81_head: 1 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. hd_host_n, 2026-11-20 22:18)
 - 2026-11-21 04:39 PST ALERT NO-PROGRESS qwen_kvsys: 1 eligible rows, 0 KIT-WAVE LAUNCH for 64 min (last 03:35); no DIE-OFF / NO-LAUNCH line
+- 2026-11-21 04:39 PST ALERT NO-PROGRESS s81_head: 17 eligible rows, 0 KIT-WAVE LAUNCH for 64 min (last 03:35); no DIE-OFF / NO-LAUNCH line
