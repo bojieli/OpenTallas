@@ -364,6 +364,28 @@ class TypeSplit:
         return out
 
     # -------------------------------------------------------------- the type split
+    def _core_tap_piece(self, tp):
+        """OPUS-FIX-S81-SVC-R7 11-21 (hi4 x_epoch split, kit_rtl 'core tap ... names no hard_cores[]' on the rest part):
+        a kind=core clock tap named <hard core inst>.<pin> goes to the piece of that core, not to the piece its xy falls
+        in, and its xy must lie on the core (a core moved by a repack without its tap fails closed here instead of
+        leaving a tap in a piece without the core)."""
+        name = tp.get("name", "")
+        inst = name.rsplit(".", 1)[0] if "." in name else name
+        cores = {h["inst"]: h for h in self.t.get("hard_cores", [])}
+        h = cores.get(inst) or cores.get(name)
+        if h is None:
+            if tp.get("kind") == "core":
+                raise SplitError(f"{self.tn}: core tap {name} names no hard core")
+            return None
+        (x, y), (w, hh) = h["origin_um"], h["outline_um"]
+        if str(h.get("orient", "R0")) in ("R90", "R270", "MXR90", "MYR90"):
+            w, hh = hh, w
+        tx, ty = (float(v) for v in tp["xy"][:2])
+        if not (x - 2.0 <= tx <= x + w + 2.0 and y - 2.0 <= ty <= y + hh + 2.0):
+            raise SplitError(f"{self.tn}: core tap {name} at {tp['xy']} is not on its core {inst} "
+                             f"({x}, {y}) + ({w}, {hh}); re-site the tap with the core before the split")
+        return self.core_piece(h)
+
     def split(self):
         t, cut, n = self.t, self.cut, self.n
         self.compute_bus_pieces()
@@ -400,7 +422,10 @@ class TypeSplit:
         for i in range(n):
             T[i]["buses"] = []
         for b in t.get("buses", []):
-            T[self.bp(b["name"])]["buses"].append(copy.deepcopy(b))
+            piece = self.bp(b["name"])
+            local = copy.deepcopy(b)
+            self._shift_piece_window(local, "face", "window_um", piece)
+            T[piece]["buses"].append(local)
         # hard cores
         for i in range(n):
             T[i]["hard_cores"] = []
@@ -465,6 +490,16 @@ class TypeSplit:
             if d:
                 raise SplitError(f"{self.tnames[i]}: duplicate bus names {d}")
         return T
+
+    def _shift_piece_window(self, end, face_key, window_key, piece):
+        """An inherited window on a face spanning pieces has a new local origin."""
+        if window_key not in end or end.get(face_key) in self.cut.axis_faces():
+            return
+        if end.get(face_key) not in ("N", "S", "E", "W"):
+            return
+        offset = self.cut.lo(piece)
+        if offset:
+            end[window_key] = [rnd(v - offset, 6) for v in end[window_key]]
 
     # -------------------------------------------------------------- ft slots
     def _ft_slots(self):
@@ -538,6 +573,8 @@ class TypeSplit:
             bs = f.get("bit_sites_um")
             if len(runs) == 1:
                 g = copy.deepcopy(f)
+                for end in ("in", "out"):
+                    self._shift_piece_window(g, f"{end}_face", f"{end}_window_um", si)
                 g["regs_um"] = [cut.sh(r, si) for r in regs]
                 if bs is not None:
                     g["bit_sites_um"] = [[cut.sh(p, si) for p in st] for st in bs]
@@ -566,6 +603,10 @@ class TypeSplit:
                     g["in_face"] = cut.low_face() if s > runs[j - 1][0] else cut.high_face()
                 if j < len(runs) - 1:
                     g["out_face"] = cut.high_face() if runs[j + 1][0] > s else cut.low_face()
+                if j == 0:
+                    self._shift_piece_window(g, "in_face", "in_window_um", s)
+                if j == len(runs) - 1:
+                    self._shift_piece_window(g, "out_face", "out_window_um", s)
                 g["regs_um"] = rr
                 g["stations"] = len(rr)
                 if sites is not None:
@@ -1204,7 +1245,9 @@ class TypeSplit:
                 c["tap_edge_y_um"] = e or [rnd(21.6 if i < self.n - 1 else h - 21.6)]
             c["taps"] = []
             for tp in ck.get("taps", []):
-                s = cut.ppiece(tp["xy"], f"{self.tn} core tap {tp['name']}")
+                s = self._core_tap_piece(tp) if tp.get("kind") == "core" else None
+                if s is None:
+                    s = cut.ppiece(tp["xy"], f"{self.tn} core tap {tp['name']}")
                 if s == i:
                     c["taps"].append(copy.deepcopy(tp) | {"xy": cut.sh(tp["xy"], i)})
             for k in ("sink_sites_um", "reach_fix_sinks"):
@@ -2254,6 +2297,20 @@ class Event:
             self.rep.setdefault("cut_stations_on_window", []).append(
                 dict(type=ts.tn, slot=r["slot"], piece=b, x_from=old, x_to=x, hops=[rnd(h1, 1), rnd(h2, 1)]))
 
+    def _set_ft_cut_geometry(self, ts, request, segs, layers):
+        """The packed cut window is the geometry of both new FT ends."""
+        window = [segs[0][0], segs[-1][1]]
+        seen = self.__dict__.setdefault("ft_window_set", {})
+        for stem, piece in (("out", request["a"]), ("in", request["b"])):
+            slot = next(f for f in ts.T[piece]["ft_slots"] if f["name"] == request["slot"])
+            key = (ts.tn, slot["name"], piece, stem)
+            if key in seen and seen[key] != window:
+                raise SplitError(f"{ts.tn}.{slot['name']}: inconsistent replica cut window for piece {piece}")
+            seen[key] = window
+            slot[f"{stem}_window_um"] = list(window)
+            slot[f"{stem}_layers"] = list(layers)
+            slot[f"{stem}_order"] = "lsb_low"
+
     def _build_cut_ports(self):
         raw = self.out
         import schema as S
@@ -2325,6 +2382,7 @@ class Event:
                 self.rep["ports_added"].append(pr["id"])
                 r["x_local"] = (segs[0][0] + segs[-1][1]) / 2
                 if r["kind_"] == "ft":
+                    self._set_ft_cut_geometry(ts, r, segs, layers)
                     self._ft_station_on_window(ts, r)
                 # station sites of new pass-through slots: the in-face station sits on its window
                 for sl, side in ((r.get("slot_b"), "in"), (r.get("slot_a"), "out")):
