@@ -1248,7 +1248,7 @@ def classify(c, client):
         return "CRASH", "infra-publish-return", client["publish_return"]["reason"]
     if c.get("FAIL_PREFLOOR"):
         return "STRUCTURAL", "preflight", "FAIL_PREFLOOR " + c["FAIL_PREFLOOR"]
-    stop = c.get("place_setup_stop")
+    stop = c.get("place_setup_stop") or client.get("place_setup_stop")
     if stop:
         return "STRUCTURAL", "place-setup-stop", stop
     if c.get("FAIL_route"):
@@ -1344,7 +1344,7 @@ def classify(c, client):
 INFRA_KINDS = ("infra-oom", "infra-lost", "infra-notrun", "infra-orphan", "infra-disk")
 
 
-def parse_client_log(text):
+def parse_client_log(text, *, unit=None, started=0):
     """ot-run client log (+ our AP_RC line) -> outcome dict"""
     o = {}
     for key, prefix in (("admission_tools_fail", "ADMISSION_TOOLS FAIL:"), ("preflight_fail", "KIT_PREFLIGHT FAIL")):
@@ -1376,6 +1376,18 @@ def parse_client_log(text):
     if m:
         o["ap_rc"] = int(m[-1])
         o.setdefault("exit", o["ap_rc"])
+    if unit and o.get("ap_rc") == o.get("exit") == 6 and o.get("ran_on"):
+        # A sealed job can publish its logs without copying the marker or run log into the producer kit.
+        # Only the current AP unit's completed receipt can recover that structural verdict.
+        starts = list(re.finditer(r"(?m)^AP_START (\d+) (\S+)$", text))
+        if starts:
+            start = starts[-1]
+            tail = text[start.end():]
+            if start[2] == unit and int(start[1]) >= float(started or 0) - 120 and tail.rstrip().endswith("\nAP_RC=6"):
+                stop = re.search(r"(?m)^FAIL_POSTPLACE PLACE-SETUP-STOP wns -?\d+(?:\.\d+)? ps < -?\d+(?:\.\d+)? ps[^\n]*"
+                                 r"(?=\n[\s\S]*^ot-run: RAN on [^\n]+ exit 6$)", tail)
+                if stop:
+                    o["place_setup_stop"] = stop.group()[:400]
     if o.get("ap_rc") == o.get("exit") == 98 and o.get("ran_on"):
         root_pattern = r"(/srv/opentallas-scratch[^/\s:]*/claude/ot-jobs/[A-Za-z0-9_.-]+)"
         sealed = re.findall(r"^ot-job: SEALED " + root_pattern + r":", text, re.M)
@@ -3128,7 +3140,7 @@ def poll_running(st):
             text = Path(j["client_log"]).read_text(errors="replace")
         except (OSError, KeyError):
             pass
-        client = parse_client_log(text)
+        client = parse_client_log(text, unit=j.get("unit"), started=j.get("started"))
         if client.get("ran_on"):
             j["ran_on"] = client["ran_on"]
         if not client.get("cancelled"):

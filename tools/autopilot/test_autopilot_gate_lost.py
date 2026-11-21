@@ -87,3 +87,19 @@ def test_postplace_setup_stop_in_fresh_route_log(tmp_path):
     old = time.time() - 7200
     os.utime(runlog, (old, old))
     assert "place_setup_stop" not in probe(k, time.time() - 600)
+
+
+
+def test_sealed_place_stop_requires_current_completed_client_log():
+    unit = "ap-3d8d9a0d2252-a1"
+    stop = "FAIL_POSTPLACE PLACE-SETUP-STOP wns -162224.15 ps < -300 ps (TT, post-place; routing cannot close it)"
+    log = (f"AP_START 1795252041 {unit}\n{stop}\n"
+           "ot-job: command exit 6\n"
+           "ot-run: RAN on localhost (unit oth-ubuntu-274016-1795252047): exit 6\n"
+           "ot-run-sealed: copy-back localhost -> epyc7 rc 0\nAP_RC=6\n")
+    client = A.parse_client_log(log, unit=unit, started=1795252040)
+    assert A.classify({}, client) == ("STRUCTURAL", "place-setup-stop", stop)
+    assert "place_setup_stop" not in A.parse_client_log(log, unit="ap-other-a1", started=1795252040)
+    assert "place_setup_stop" not in A.parse_client_log(log, unit=unit, started=1795252200)
+    assert "place_setup_stop" not in A.parse_client_log(log.replace("AP_RC=6", "AP_RC=2"), unit=unit)
+    assert "place_setup_stop" not in A.parse_client_log(log + f"AP_START 1795252241 {unit}\n", unit=unit)
