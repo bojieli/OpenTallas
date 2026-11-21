@@ -423,6 +423,7 @@ if {[info exists ::env(OT_RELAY_MID_DEBUG)] && $::env(OT_RELAY_MID_DEBUG) eq "1"
   }
 }
 set rm_polybad {}
+set rm_chainrec [dict create]
 dict for {g inf} $rm_info {
   lassign $inf sp sg kp kg soft
   # a few soft endpoints (<= 2% of the fixed ones: status / debug taps) do not move the station
@@ -450,6 +451,7 @@ dict for {g inf} $rm_info {
   lassign [rm_cent [lindex [dict get $rm_info [lindex $chain end]] 2]] bx by
   if {abs($bx - $ax) + abs($by - $ay) < $rm_min * $rm_dbu} continue
   set n [llength $chain]
+  dict set rm_chainrec [lindex $chain 0] [list $chain $ax $ay $bx $by]
   # OT_RELAY_POLY=1 (FIX-RELAYPOLY, R-COL-4): when the straight source-sink line crosses a hard macro (or a sub-12-um gap
   # between macros) the n stations are spread evenly along a polyline that avoids them, not on the line
   # OT_RELAY_MID_TAIL=1 (FABLE-FIX-KV-HG 11-18, opt-in, default off = byte-identical): a tail that broadcasts to fixed sinks spread
@@ -530,6 +532,88 @@ proc rm_free {x y} {
   if {$x < $rm_x0 || $y < $rm_y0 || $x > $rm_x1 || $y > $rm_y1} { return 0 }
   foreach m $rm_mac { lassign $m a b c d; if {$x > $a && $x < $c && $y > $b && $y < $d} { return 0 } }
   return 1
+}
+# STAGGER (FAM-S81-COL-H9R0-R3 11-21, FABLE-PD-S81-1100 fix 3; opt-in OT_RELAY_MID_STAGGER=1, unset = byte-identical): parallel
+# chains (same stage count, head source and tail sink centroids within OT_RELAY_MID_STAGGER_UM, default 80 um, e.g. the four
+# 276-bit slices xo0..xo3 of one 1104-bit bus) got the same line points, so their clusters landed side by side in the same
+# rows on top of the bus's own repeater chain (col_h9_r0_p2 cl0045af7b: 4 last-stage xo clusters + 1,585 BUFx12f in a
+# 130x15 um strip under ROM e2, DRT flat at 28,640).  With STAGGER chain i of a k-chain set is moved off the shared line
+# perpendicular to the local leg by (i - (k-1)/2) x (cluster depth + OT_RELAY_MID_STAGGER_GAP_UM, default 20), the same
+# offset at every stage so the inner hops keep their length; an offset that lands in a macro halo, leaves the core or makes
+# a hop over OT_RELAY_MID_MAX_HOP_UM is halved, then dropped (the stage keeps its line point).  Straight-line chains under
+# FIT are left to FIT (it re-solves the seat from the line).
+set rm_stag [expr {[info exists ::env(OT_RELAY_MID_STAGGER)] && $::env(OT_RELAY_MID_STAGGER) eq "1"}]
+if {$rm_stag} {
+  set rm_stag_tol [expr {([info exists ::env(OT_RELAY_MID_STAGGER_UM)] ? $::env(OT_RELAY_MID_STAGGER_UM) : 80.0) * $rm_dbu}]
+  set rm_stag_gap [expr {([info exists ::env(OT_RELAY_MID_STAGGER_GAP_UM)] ? $::env(OT_RELAY_MID_STAGGER_GAP_UM) : 20.0) * $rm_dbu}]
+  set rm_stag_hop [expr {([info exists ::env(OT_RELAY_MID_MAX_HOP_UM)] ? $::env(OT_RELAY_MID_MAX_HOP_UM) : 405.0) * $rm_dbu}]
+  set rm_stag_fit [expr {[info exists ::env(OT_RELAY_MID_FIT)] && $::env(OT_RELAY_MID_FIT) eq "1"}]
+  # sets of parallel chains: greedy over heads in name order
+  set rm_sets {}; set rm_inset [dict create]
+  foreach h [lsort [dict keys $rm_chainrec]] {
+    if {[dict exists $rm_inset $h]} continue
+    lassign [dict get $rm_chainrec $h] ch ax ay bx by
+    set s [list $h]; dict set rm_inset $h 1
+    foreach h2 [lsort [dict keys $rm_chainrec]] {
+      if {[dict exists $rm_inset $h2]} continue
+      lassign [dict get $rm_chainrec $h2] ch2 ax2 ay2 bx2 by2
+      if {[llength $ch2] != [llength $ch]} continue
+      if {abs($ax2 - $ax) + abs($ay2 - $ay) > $rm_stag_tol || abs($bx2 - $bx) + abs($by2 - $by) > $rm_stag_tol} continue
+      lappend s $h2; dict set rm_inset $h2 1
+    }
+    if {[llength $s] > 1} { lappend rm_sets $s }
+  }
+  set rm_stag_n 0; set rm_stag_half 0; set rm_stag_drop 0
+  foreach s $rm_sets {
+    set k [llength $s]
+    for {set i 0} {$i < $k} {incr i} {
+      set h [lindex $s $i]
+      lassign [dict get $rm_chainrec $h] ch ax ay bx by
+      set m [expr {$i - ($k - 1) / 2.0}]
+      if {$m == 0} continue
+      if {$rm_stag_fit && [dict exists $rm_seg $h]} continue
+      # the chain's line points, its ends and the perpendicular of each local leg (Manhattan: the minor axis of the leg)
+      set pts [list [list $ax $ay]]
+      foreach c $ch { lappend pts [dict get $rm_station $c] }
+      lappend pts [list $bx $by]
+      set new {}
+      set ok 0
+      foreach f [list 1.0 0.5] {
+        set new {}
+        set j 0
+        foreach c $ch {
+          incr j
+          lassign [lindex $pts [expr {$j - 1}]] x0 y0
+          lassign [lindex $pts [expr {$j + 1}]] x1 y1
+          set nc [llength [dict get $rm_grp $c]]
+          set ncol [expr {max(1, int(ceil(sqrt($nc * 4.0))))}]
+          set cw [expr {$ncol * $rm_sw * 24}]
+          set chh [expr {int(ceil(double($nc) / $ncol)) * $rm_rh}]
+          lassign [lindex $pts $j] x y
+          if {abs($x1 - $x0) >= abs($y1 - $y0)} {
+            set y [expr {int($y + $m * $f * ($chh + $rm_stag_gap))}]
+          } else {
+            set x [expr {int($x + $m * $f * ($cw + $rm_stag_gap))}]
+          }
+          lappend new [list $x $y]
+        }
+        set ok 1
+        set prev [list $ax $ay]
+        foreach p [concat $new [list [list $bx $by]]] {
+          if {abs([lindex $p 0] - [lindex $prev 0]) + abs([lindex $p 1] - [lindex $prev 1]) > $rm_stag_hop} { set ok 0; break }
+          set prev $p
+        }
+        if {$ok} { foreach p $new { if {![rm_free [lindex $p 0] [lindex $p 1]]} { set ok 0; break } } }
+        if {$ok} { if {$f < 1.0} { incr rm_stag_half }; break }
+      }
+      if {!$ok} { incr rm_stag_drop; puts "OT_RELAY_MID_STAGGER $h kept on the line (offset would cross a halo / the core edge / the hop cap)"; continue }
+      set j 0
+      foreach c $ch { dict set rm_station $c [lindex $new $j]; incr j }
+      incr rm_stag_n
+      puts "OT_RELAY_MID_STAGGER $h set [lindex $s 0] ([llength $ch] stations) offset [format %+.1f $m] x (depth + [expr {$rm_stag_gap / double($rm_dbu)}] um)"
+    }
+  }
+  puts "OT_RELAY_MID_STAGGER sets [llength $rm_sets] chains moved $rm_stag_n (halved $rm_stag_half) kept $rm_stag_drop"
 }
 set rm_out [open $::env(RESULTS_DIR)/ot_relay_mid.txt w]
 set rm_log [open $::env(RESULTS_DIR)/ot_relay_mid_stations.txt w]
