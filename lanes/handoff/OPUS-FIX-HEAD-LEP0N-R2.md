@@ -95,3 +95,23 @@ strict BIND 0 errors (398 partitions, 873 crossings), LATCHECK 873/873 PASS, G0 
 - FABLE-VISUAL-0030 (sec. 4, hd_lep0N): 420k cells and 49 m cores in a 330 um band, RUDY over 100 %, 6,410 station flops
   in slits under 20 um, 9,376 hops over 300 um. Adopted for the next private iteration (plan delta not written yet):
   m cores in two rows with 40 um streets (use the ~100 um N-S street), stations in the N-S street, band split (422k > 400k).
+
+## UPDATE 11-21 01:5x PST: tr2s cancelled, split iteration
+- tr2s CANCELLED on COORD's order (ot-run --cancel oth-ubuntu-1990134-1795230761, exit 143). Recorded result: with the
+  56 taps priced, FF hold before repair was -225.84 ps on 5,948 ends, and 1 end (-98.42) after 6,290 hold cells.
+  The build failed on setup: TT -454.73 / tns -140,389 with 526,717 instances. Area grew +21.13% with the early
+  global-place exit off. The 2 remaining dpkit-hd_lep0N containers on epyc10 belong to wave jobs, not this lane.
+- Split scoping, r16 plan 1a7d319a9ba6 (snapshot s81_head_r16_s0):
+  - Outline 1892.16 x 1408.32. Pair cores sit at x 69.12-846.72 and x 967.68-1745.28, y 17.28-509.76 and y 846.72-1339.2.
+    The band is y 510-847 and the N-S street is x 847-968.
+  - The type has one content, u_core (ot_s81hd_lep0N_noidx_core). Inside it are one engine ot_s81hd_lep_idx_nr
+    (4 lanes, the 40 tx/rx SRAMs), u_land (5 SRAMs), rst_fan and pipes.
+  - type_split.py moves whole contents, so the band split needs an RTL half-engine split first.
+- Plan:
+  (1) RTL on a lane branch: u_core_w (pp1, pp2, lanes 1/2) and u_core_e (pp0, pp3, lanes 0/3). Cut buses for the
+      shared credit/token/collector paths (+cycles); LEC + bench.
+  (2) type_split spec with the x cut at 907.2 um.
+  (3) The m cores in two rows with 40 um streets, and stations in the N-S street.
+  (4) Carry the tr2s tap pricing (L/plan/new56_rows.json; re-derive on the split pieces).
+  (5) Gen with HEAD settings only: no OT_GPL_SPARSE_OVERFLOW / GPL -overflow, i.e. main tools or explicit env 0.
+  (6) Private bind + LATCHECK, then the kit.
