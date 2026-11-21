@@ -91,7 +91,10 @@ endmodule
 // ===================================================================================================================
 module dsdv_idx_txm #(
     parameter integer D = 8192,
-    parameter bit SRAM_MACRO = 0
+    parameter bit SRAM_MACRO = 0,
+    // S81-BKSEL-R5 11-20: dsdv_idx_l20s (this overlay set) passes .MLK(MLK) to every txm; this overlay has no lockup form,
+    // so only the signed MLK = 0 is accepted (netlist unchanged).
+    parameter integer MLK = 0
 ) (
     input  wire                 ck,
     input  wire                 re,
@@ -102,6 +105,7 @@ module dsdv_idx_txm #(
     input  wire [255:0]         wd,
     input  wire [255:0]         wm
 );
+    initial if (MLK != 0) $fatal(1, "dsdv_idx_txm: this overlay has no MLK lockup form (MLK must be 0)");
     localparam integer AW = $clog2(D);
     generate if (SRAM_MACRO) begin : g_m
         localparam integer NB = D / 1024;
