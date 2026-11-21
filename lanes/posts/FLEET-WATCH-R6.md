@@ -13,3 +13,4 @@
 - 2026-11-21 07:45 PST HOURLY 07:4x free GiB: intel1 105 (fell 136->104 07:11-07:41, now flat: no held deleted files, no per-container growth over 150 s), intel2 1253, epyc2 160, epyc7 593, epyc8 442, epyc9 136, epyc10 421. No git/rsync runaway on intel1. epyc9 and intel1 still under 250, admit caps on, restore poll live.
 - 2026-11-21 08:14 PST HOURLY free space 08:14 epyc9=147 intel1=101 (restore at >=250 GiB; caps 250 on epyc9/intel1)
 - 2026-11-21 09:15 PST HOURLY free space 09:15 epyc9=126 intel1=120 (restore at >=250 GiB; caps 250 on epyc9/intel1)
+- 2026-11-21 10:16 PST HOURLY free space 10:16 epyc9=129 intel1=132 (restore at >=250 GiB; caps 250 on epyc9/intel1)
