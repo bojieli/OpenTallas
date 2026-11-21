@@ -26,3 +26,19 @@ Fix = R2 lever-1 OUTPUT half (ROM-PVAL): relay_depth sink D=1 on bnK e_r0 (u_w p
 - J7 rows owner is now S81-J6-ASSEMBLY-R3 (J6-R2 stood down).
 ## Rep plan
 pv1619ecc6 J5 DRT at 13 violations; FABLE read TT after repair -46.8 (u_s13/q6, RDX class). If the sign-off is within ~10 ps of -42 on that path -> final near-miss ECO. cld01bb4ae (-32.0) is the alternate rep.
+## STAND-DOWN 11-21 ~06:0x PST (context limit) -> successor FAM-S81-COL-H10-R2
+COORD 05:5x: OT_MAXWIRE_POST_SKIP drop -> S81-J6-ASSEMBLY-R3 (J7); name rule -> FABLE-FIX-S81-COLROM; final ECO on pv1619ecc6 OK if near -46.8.
+### Live units / processes (all mine unless noted)
+- Strict bind2 + LATCHECK: ot-run unit oth-ubuntu-1874109-1795265321 on intel1 (key-cardinal); log intel1 /srv/opentallas-scratch2/claude/fam-s81-col-h10/bind2_otrun.log (+ bind2.log, latcheck2.*). Pass = BIND_RC=0 and LATCHECK_RC=0. NOTE: bind.sh's failure branch greps bind.log (stale name); read bind2.log on failure.
+- Hub chain intel2: nohup bash /srv/opentallas-scratch2/claude/fam-s81-col-h10/chain.sh (log chain.log there). It waits for bind2, then runs kit_wave.py run-item wave/spec.json (rt 3553de9af815, J5 attempt_4 spec, src_manifest off, hosts intel1+epyc8), then prints RESULT. The work dir is wave/root/items/col_h10_r2__t1__cl99efd374__pv1619ecc6/attempt_1. Route afterwards is NOT automatic: run `bash <W>/gen/run_kit.sh <W>/gen/<T> route 48 8` via ot-run on the kit host (pattern of autopilot jobs).
+- Baseline rep (autopilot, not mine): col_h10_r2 pv1619ecc6 J5 route job ap 4dbbbc4cb44f (intel1 ot-jobs/col_h10_r2__t1__cl99efd374__pv1619ecc6-route-key-cardinal-3781851-*), DRT at 13 violations at 05:4x. Alt rep cld01bb4ae ap 0c4abfb40abd (intel1), -32.0 after repair.
+- Copies for the gap study: epyc8 /srv/opentallas-scratch2/claude/fam-s81-col-h10/gap_pvcc166a6d (~2.6 GB, delete via ot-delete when done). Partial cancelled bind dir intel1 fam-s81-col-h10/bind/ (delete via ot-delete).
+### Re-arm waiters
+- `until ssh intel2 grep -q AP_RC ~/coord/autopilot/jobs/4dbbbc4cb44f/a1.log; do sleep 240; done` (same for 0c4abfb40abd); then read sign-off: <ot-job work>/signoff/tt/ep_tt.tsv + signoff.json.
+- `until ssh intel1 grep -q "^ot-run: RAN" /srv/opentallas-scratch2/claude/fam-s81-col-h10/bind2_otrun.log; do sleep 240; done`
+- `until ssh intel2 grep -qE "CHAIN_DONE|BIND_FAIL" /srv/opentallas-scratch2/claude/fam-s81-col-h10/chain.log; do sleep 300; done`
+### Successor TODO (in order)
+1. pv1619ecc6 sign-off: if TT is within ~10 ps of -42 on the u_s13/q6 (RDX) path, apply a final near-miss ECO (COORD-approved) and re-sign. Otherwise use cld01bb4ae (-32) as the rep. Any J5 sign-off counts.
+2. WRITE the t2_payload branch-copy row (COORD asked; not written yet). On col_h10_r0_p4 (all 6 types, u_r0 prefix), relay u_r0_u_y_x2_2_0 has its last stage serving u_r0_u_e1.xb_data (623,760) and u_r0_u_t2_payload.i (1040,916), 573 um apart, and no relay_depth row exists. Add a relay_branch entry in the S81-RLYBR-1 format (see the existing u_r0_u_y_xa_1_0 entry in the same type: copies [{name u_r0_u_y_x2_2_t2p_0, sinks [u_r0_u_t2_payload], D 1, path_um}] + kept [u_r0_u_e1]), or a +1 sink stage at u_r0_u_t2_payload.i with its site at ~(1000,880). Check the same span on r0_p1 (u_y_x2_3_0) and on col_h9_r0. Prove it with strict bind + LATCHECK, then add it to the J7 rows for S81-J6-ASSEMBLY-R3.
+3. Proof A result: place/geom, then private route, A/B against the J5 baseline (ROM-PVAL e_r rows).
+4. Lever 6 row: u_r0.u_cf R0 -> MX on 12 col_h10_r0_p1/p4 types (regenerate the u_cf-pin station sites), to J7.
