@@ -1,9 +1,9 @@
 {
  "die": "qwen_compute",
- "tree": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_n46r4_a4",
- "manifest_hash": "b4d7f328b637c5c47a037d8d25e73f393263e0af4c31e49c35f72e3360dd1036",
- "src_manifest_sha": "b4d7f328b637c5c47a037d8d25e73f393263e0af4c31e49c35f72e3360dd1036",
- "tools_sha": "22a689dfc0920ece6e219df61e309db9d2ed17e9",
+ "tree": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v1r6",
+ "manifest_hash": "80e4b0c40e09d87d0cfded09fb60dae4f130a2d0e5be7ad1f8dea0c62a65ee96",
+ "src_manifest_sha": "80e4b0c40e09d87d0cfded09fb60dae4f130a2d0e5be7ad1f8dea0c62a65ee96",
+ "tools_sha": "65f3f85d7c5fa1027622d43ef759816131b43e01",
  "hosts": [
   "epyc10",
   "epyc2",
@@ -13,12 +13,12 @@
   "intel1"
  ],
  "smoke": "PASS",
- "smoke_detail": "Exact QC local300/global405 primary A4: 0-error full G0, 377 instances / 133 named types, 1921/1921 strict-bound lane dates and six full native representative GEN passes. All-route review gate. Representative actual placement and independent sealed strict bind required before activation.",
- "plan": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_n46r4_a4/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9n46r4_final_preview.json",
- "plan_sha256": "2c1e1ca6626233c84366473e4ac38cce5b4153b15c08c6b042f8571adb852be5",
- "asbuilt": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_n46r4_a4/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_n46r4_final_preview.json",
- "asbuilt_sha256": "0afc0170b6f9cb13745a28b64fd6fe97b34dd7d1d9350ab7ace2a1b6f663191e",
- "sidecar": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_n46r4_a4/physical/die_plan/qwen_compute/qc_start_1106/runtime/zz_sidecar_n46r4_final_preview.json",
+ "smoke_detail": "V1 = QC-PLAN-R6 p_h (plan aeae20148627, sidecar ca4e6ecf84bb, R8 ea47052e4cdc) on UNIFY-TOOLS-R3 ph8 base, runtime PINNED rt/65f3f85d7c5f (tools_refresh false): st_a two-stage rs banks (11 types, 0 overlaps, +1 cycle), sle_ctl__cla4f6f12f b_hw_hc2_o 4->6, su_c x_sc_o 3, su_l parent_budget taps (12), sle_hc0 N_PAD param split (6 bases -> 12 clones), reset inst_taps on 6 cb types (legs >300 25->1). Strict bind b_n4: 0 errors; LATCHECK 1921/1921 PASS (+1 cyc 24 rs lanes, +2 cyc 12 hc2 ctl lanes); G0 PASS 0 errors / 530 warnings / 128 types; proof GEN PROOF_GEN_RC 0 on sle_st_a_v2__pv4242de79 and cbx_q10__cl89936551 (PLACE_MAX_TRANSITION 320). Route review only on the 10 class-A cb types (FABLE-PD-QC-1840 stop list), also held in hold_items until V2.",
+ "plan": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v1r6/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9n46r4_final_preview.json",
+ "plan_sha256": "aeae201486278deeda39471ba160e3b4fe02318a30e0953249010855ce9be9e0",
+ "asbuilt": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v1r6/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_n46r4_final_preview.json",
+ "asbuilt_sha256": "cf0f2400edbc7f2116af25239b62816789f9ef8e292baa63753e66e3777bda48",
+ "sidecar": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v1r6/physical/die_plan/qwen_compute/qc_start_1106/runtime/zz_sidecar_n46r4_final_preview.json",
  "die_gen_env": {
   "OT_PLACE_MAX_FANOUT": "64",
   "OT_GRT_NONPORT_HOLD": "1",
@@ -36,7 +36,7 @@
   "OT_GPL_SPARSE_UTIL": "0.10"
  },
  "config": {
-  "event": "s29q103S4Q9N46R4A4",
+  "event": "s29q103S4Q9N46R6V1",
   "plan_event": "s29q103S4Q9N1B",
   "gen_hosts": [
    "epyc9",
@@ -53,12 +53,12 @@
    "--max-wire-um",
    "120",
    "--clock-landing",
-   "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_n46r4_a4/physical/die_plan/qwen_compute/qc_start_1106/runtime/zz_sidecar_n46r4_final_preview.json"
+   "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v1r6/physical/die_plan/qwen_compute/qc_start_1106/runtime/zz_sidecar_n46r4_final_preview.json"
   ],
   "kit_rtl": {
    "mode": "bind",
-   "asbuilt": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_n46r4_a4/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_n46r4_final_preview.json",
-   "bind_out": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_n46r4_a4_bind_1120085722"
+   "asbuilt": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v1r6/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_n46r4_final_preview.json",
+   "bind_out": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v1r6_bind_1120193410"
   },
   "cancel_superseded": false,
   "planned_events": [
@@ -75,9 +75,22 @@
    "s29q103S4Q9N3"
   ],
   "review_before_route": {
-   "event": "s29q103S4Q9N46R4A4",
-   "all_items": true
-  }
+   "event": "s29q103S4Q9N46R6V1",
+   "items": [
+    "cbf_q00__cl1b5a6458",
+    "cbf_q00_s2",
+    "cbf_q01_s2",
+    "cbn_q00__cl622f65d2",
+    "cbn_q00__cld7bf7197",
+    "cbn_q00__cldbcda913",
+    "cbn_q01__cld9ff4c40",
+    "cbn_q11__cl49ae4555",
+    "cbn_q11__cl5cc92dfe",
+    "cbx_q10__cl89936551"
+   ]
+  },
+  "tools_sha": "65f3f85d7c5fa1027622d43ef759816131b43e01",
+  "tools_refresh": false
  },
  "rows_proofs": [
   "physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9n2b.rows_proof.json"
@@ -88,14 +101,14 @@
   "receipt": "/srv/opentallas-scratch2/claude/kw45/qcbind_pin_eb1e73448bd0_s4q9n4/bind_s29q103S4Q9N43BQ/RELOCATED.json"
  },
  "live_tree": {
-  "snapshot": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_n46r4_a4",
-  "made": "2026-11-20 08:55:45 PST",
+  "snapshot": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v1r6",
+  "made": "2026-11-20 19:24:10 PST",
   "tool": "live_tree.py (TOOLS-DECOUPLE phase 2)"
  },
- "sidecar_sha256": "ae2d3fc9ec9df309e25f8d68d2b73df842532901ef8a58b0cb04d4f0557c6dfb",
- "bind_out": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_n46r4_a4_bind_1120085722",
+ "sidecar_sha256": "ca4e6ecf84bb853faff758a6ade5145bb54f408f4d7a951c82b450b03568df97",
+ "bind_out": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v1r6_bind_1120193410",
  "optimistic": true,
- "_path": "cand_qc_n46r4_a4_bound.json",
+ "_path": "cand_v1_bound.json",
  "status": "ADOPTED reviewed tuple",
  "written_by": "root-authorized lane atomic apply"
 }
