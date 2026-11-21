@@ -17765,3 +17765,4 @@ FAILED [AUTOPILOT 115b1b26b599] 2026-11-21 05:52:19 PST AUTOPILOT -> KIT-WAVE-12
   QC 9 STALE: 5 held FAM-QC-CB + 4 cancelled (FEFW, HCST, SLE-R4, QC-PLAN-R9); 3 WAIT-VISUAL HCST cleared.
   KV 1 WAIT-BIND cancelled (PV-R5); the 27 held/failed KV rows no longer flagged. HEAD none.
   FABLE-FIX-S81-COLROM owns lever work, not a row family, so no rows mapped to it.
+- 2026-11-21 05:52 PST DONE [FAM-S81-COL-R3] ot-run oth-ubuntu-1830114-1795265238 on key-cardinal: rc=0 after 3905 s, ended 05:52:22, log /srv/opentallas-scratch2/claude/fam-s81-col-r3/bind4_otrun.log, cmd: --mem 48 --threads 4 --plan-job bind --priority plan --hosts intel1 --dir /srv/opentallas-scratch2/claude/fam-s81-col-r3 -- bash /srv/openta
