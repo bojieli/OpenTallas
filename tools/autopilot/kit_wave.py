@@ -307,6 +307,51 @@ print("SELFCONT_COUNT %d BAD %d" % (len(seen), bad))
 # NOT_RUN_FREE_MAX bounds the free tries of one row, then the budget is charged as before (a permanent tool fault still ends).
 NOT_RUN_LINE = re.compile(r"(?m)^NOT-RUN\b|^\s*(?:ot-run|ot-heavy|ot-job): NOT RUN\b|^\s*(?:usage|Usage): ot-run\b|ot-run: unknown option|ot-run: unrecognized")
 NOT_RUN_FREE_MAX = 8
+# FLOW-OPS-1300 item 9: ot-run's own NOT-RUN lines (disk-ETA hold, no host with --dir has N GB, KW_PLACE_RC=78 = ot-run EX_CONFIG refusal) and a restaged unstarted waiter
+INFRA_RETRY_RE = re.compile(r"(?m)^NOT-RUN\b[^\n]*|ot-run: NOT RUN: no host with --dir has[^\n]*|NOT-RUN disk-ETA hold[^\n]*|^KW_PLACE_RC=78\b|restaged: unstarted ot-run waiter[^\n]*")
+INFRA_RETRY_BACKOFF_S = (900, 1800, 3600)
+
+
+def infra_retry_kind(rec):
+    """-> 'not-run' | 'restage' | '' for a FAIL row whose attempt never started its heavy command (FLOW-OPS-1300 item 9)"""
+    if rec.get("status") != "FAIL":
+        return ""
+    d = Path(rec.get("dir") or "/nonexistent")
+    txt = str(rec.get("reason") or "")
+    for f in ("place.log", f"{rec.get('stage') or 'place'}.log"):
+        try:
+            txt += "\n" + "\n".join((d / f).read_text(errors="replace").splitlines()[-40:])
+        except OSError:
+            pass
+    ms = list(INFRA_RETRY_RE.finditer(txt))
+    if ms and "ot-run: RAN on" not in txt[ms[-1].end():]:
+        return "not-run"
+    if int(rec.get("restage_n") or 0) > 0 and not (d / "result.json").exists():
+        return "restage"                      # moved between hosts while unstarted, its stopped unit then read as a failure
+    return ""
+
+
+def infra_retry_sweep(AP, cfg, st, now=None, write=True):
+    """FLOW-OPS-1300 item 9: every current-event FAIL row whose attempt never started (NOT-RUN / restage) -> RETRY-INFRA, not charged (infra_base +1), paced by an
+    exponential backoff (no_host_at + INFRA_RETRY_BACKOFF_S[n]); NOT_RUN_FREE_MAX free requeues per row.  -> [(key, kind)]"""
+    now = time.time() if now is None else now
+    out = []
+    for key, r in (st.get("items") or {}).items():
+        d = (cfg.get("dies") or {}).get(r.get("die")) or {}
+        if d.get("event") and r.get("event") and str(r.get("event")) != str(d.get("event")):
+            continue
+        kind = infra_retry_kind(r)
+        n = int(r.get("notrun_free") or 0)
+        if not kind or n >= NOT_RUN_FREE_MAX or r.get("blocked"):
+            continue
+        out.append((key, kind))
+        if write:
+            back = INFRA_RETRY_BACKOFF_S[min(n, len(INFRA_RETRY_BACKOFF_S) - 1)]
+            r.update(status="RETRY-INFRA", **{"class": "INFRA"}, infra_base=int(r.get("infra_base") or 0) + 1, notrun_free=n + 1,
+                     no_host_at=now - NO_HOST_RETRY_S + back, updated=now, infra_retry=kind,
+                     reason=f"INFRA-RETRY ({kind}: the command never started; requeued in {back // 60} min, not an attempt): {str(r.get('reason') or '')[:200]}")
+            AP.log(f"KIT-WAVE INFRA-RETRY {r.get('die')}/{r.get('item')}@{r.get('attempt')} ({kind}): requeued, backoff {back // 60} min, free requeue {n + 1}/{NOT_RUN_FREE_MAX}")
+    return out
 
 
 def tool_not_run(text):
@@ -3864,6 +3909,10 @@ HOST_ENV_RE = re.compile(r"No such image|Unable to find image|image not found|pu
 
 RULES = [
     ("INFRA", None, lambda s: (HOST_ENV_RE.search(s).group(0) if HOST_ENV_RE.search(s) else None), "host environment (image / PDK / docker tool missing, disk full): retry on another host"),
+    # FLOW-OPS-1300 item 9 (COORD, QC slw_fw_v3 KW_PLACE_RC=78 'NOT-RUN disk-ETA hold', slw_stm_v2__cl9beb65e6 'no host with --dir has 60 GB'): ot-run refused to START the
+    # command (no ot-run: RAN on line): INFRA-RETRY, requeued with backoff and not counted (free_not_run / infra_retry_sweep)
+    ("INFRA", None, lambda s: (INFRA_RETRY_RE.search(s).group(0) if INFRA_RETRY_RE.search(s) and "ot-run: RAN on" not in s else None),
+     "INFRA-RETRY (ot-run NOT-RUN: the command never started; requeued with backoff, not an attempt)"),
     ("INFRA", r"^geom_tools$", r"KW_GEOM_TOOLS", "geometry tool closure could not be staged on the checkpoint host"),
     # KITRTL-FAIL-1115: a die src tree's own (older) bind.py lacks a flag the wave passes: tool skew, one stable reason
     ("FLOW", r"^kit_rtl$", r"bind\.py: error: unrecognized arguments", "kit_rtl tool skew (the die src tree's bind.py predates a wave flag; the wave falls back to the scheduler's bind.py)"),
@@ -17107,6 +17156,7 @@ def _step(AP, ap_dir):
         AP.log(f"KIT-WAVE TYPE-TEMPLATE credit step skipped: {type(e).__name__}: {e}")
     try:
         name_stuck_retry_infra(AP, cfg, st)
+        infra_retry_sweep(AP, cfg, st)               # FLOW-OPS-1300 item 9: NOT-RUN / restage FAILs requeue themselves
         retire_superseded_rows(AP, cfg, st)
         adopt_rows_tick(AP, cfg, st)
         import pending_actions as _PA2
@@ -18523,6 +18573,8 @@ def main(argv=None):
             sp_.add_argument("--why", default="")
             sp_.add_argument("--old-plans-only", action="store_true", help="--block current: only blocks of rows launched on a plan other than the die current plan of record")
             sp_.add_argument("--per-block", action="store_true", help="struct-stop: stop only the named plan block(s); default = a CARRIED stop on the type (every block / event) until struct-lift")
+    irs_ = sub.add_parser("infra-retry-sweep", help="FLOW-OPS-1300 item 9: list (or --write: requeue, under kit_wave.lock) current-event FAIL rows whose attempt never started (NOT-RUN / restage)")
+    irs_.add_argument("--write", action="store_true"); irs_.add_argument("--ap-dir"); irs_.add_argument("--config")
     rd_ = sub.add_parser("reap-dead", help="KW-FIX-46: dry-run list of rows the REAP-DEAD sweep would reap (read-only)")
     rd_.add_argument("--config", help="kit_wave.json file instead of coord/state autopilot/kit_wave.json")
     rd_.add_argument("--minutes", type=float, default=REAP_DEAD_MIN)
@@ -18603,6 +18655,27 @@ def main(argv=None):
         for k in skipped:
             print("CANCEL-SKIPPED (row changed while the stops ran)", k)
         print(f"cancel-rows: {len(done)} live row(s), {stops} new struct stop(s)" + (" (dry run)" if a.dry_run else ""))
+        return 0
+    if a.cmd == "infra-retry-sweep":
+        ap_dir = Path(a.ap_dir or AP_DIR)
+        cfg = load_config(Path(a.config).read_text() if a.config else read_config_text(AP))
+        AP.DRY = not a.write
+        lk = lock_take(ap_dir / "kit_wave.lock", wait_s=CANCEL_LOCK_WAIT_S) if a.write else None
+        if a.write and lk is None:
+            print("infra-retry-sweep: kit_wave.lock busy; nothing done")
+            return 1
+        try:
+            st = load_state(ap_dir)
+            got = infra_retry_sweep(AP, cfg, st, write=a.write)
+            if a.write:
+                save_state(st, ap_dir)
+        finally:
+            if lk:
+                lk.close()
+        import collections as _c
+        for k, kind in got:
+            print(("REQUEUED" if a.write else "WOULD-REQUEUE") + f"\t{kind}\t{k}")
+        print("infra-retry-sweep:", len(got), dict(_c.Counter((k.split("|")[0], kd) for k, kd in got)))
         return 0
     if a.cmd == "reap-dead":
         AP.DRY = True
