@@ -126,3 +126,8 @@ NOTE: every W/*.py / *.sh named here lives on epyc9 in W; the session scratchpad
   I committed two wrong copies of this file, then appended to their scratch file. Both repaired (their file back to its 7 lines 20:18).
   My local files now live in scratchpad/fable-fix-qc-cb/.
 - Correction 21:05: W/src HEAD 9fbc898cd1 already equals W/link_sites.py (sha256 7549bd5f861d62c1); only the unit test is missing before a push.
+
+## STAND-DOWN (COORD order): FABLE-FIX-QC-CB is closed
+- QC-PLAN-R8 owns the proof kit epyc9 /srv/opentallas-scratch2/claude/fable-fix-qc-cb/proof/p1 (left running, untouched) and folds the a3 rows into V2.
+- link_sites.py clone path: epyc9 /srv/opentallas-scratch2/claude/fable-fix-qc-cb/src (git worktree, branch fable-fix-qc-cb, HEAD 9fbc898cd1, file tools/die_plan/link_sites.py; not pushed, no unit test). Same file: /srv/opentallas-scratch2/claude/fable-fix-qc-cb/link_sites.py.
+- My waiters: none left alive (checked localhost + epyc9 by cmdline); nothing killed, nothing cancelled.
