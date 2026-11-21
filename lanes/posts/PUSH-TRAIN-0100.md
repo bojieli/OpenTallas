@@ -1,0 +1,1 @@
+- 2026-11-21 00:02 PST DIED [PUSH-TRAIN-0100] ot-run otrun-tolerant-swine-1752186 on tolerant-swine: rc=78 after 0 s, ended 00:02:00, log /tmp/ptr0100-base.log, cmd: --mem 8 --threads 1 --hosts intel2 --dir /srv/opentallas-scratch2/claude/push-train-0100 --stage /srv/opentallas-scratch2/claude/rt/current/
