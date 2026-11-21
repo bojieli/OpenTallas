@@ -264,7 +264,11 @@ module dsfd_selt_c #(
     // 1 = landing FIFO count as a rotating one-hot register (1 flop per count value; 0 cycles, same count every edge,
     // wraps as the binary lc does): lv / write selects come straight from flops.  0 = binary decode of lc.
     parameter integer LQH = 0,
-    parameter integer XDX = 0                // extra control <-> quarter edges each way (QIO quarter tiles: 1)
+    parameter integer XDX = 0,               // extra control <-> quarter edges each way (QIO quarter tiles: 1)
+    // TKR (OPUS-FIX-S81-BKSEL-R3 11-20, bksel_c rfda3p TT -46.64 / 212 ep: flt -> |flt_new -> take -> lpop -> lq[][]):
+    // 1 = the new-fault flag |(flt & ~flt_rep) held in its own flop (fblk, loaded with the same expression of the
+    // next-state flt / flt_rep), so take starts from a flop; 0 cycles, same value every edge.  0 = as built.
+    parameter integer TKR = 0
 ) (
     input  wire [0:0]                ck,
     input  wire [0:0]                rst,
@@ -431,6 +435,8 @@ module dsfd_selt_c #(
     reg  [$clog2(PACE+1)-1:0] pc;
     wire       slot = (pc == 0);
     wire [4:0] flt_new = flt & ~flt_rep;
+    reg        fblk;                         // TKR: == |flt_new on every edge (unloaded and removed when TKR = 0)
+    wire       fna = (TKR != 0) ? fblk : |flt_new;
     reg  [1:0] ts;                           // the tile serving quarter cq
     always @(*) begin
         ts = cq;
@@ -447,7 +453,7 @@ module dsfd_selt_c #(
     wire [1:0] tsel = ts_u;
 `endif
     wire [DW-1:0] hd = lq[tsel][0];
-    wire take = slot && !(|flt_new) && rep_pend == 0 && !done_pend && lv[tsel];
+    wire take = slot && !fna && rep_pend == 0 && !done_pend && lv[tsel];
     always @(*) begin lpop = {Q{1'b0}}; if (take) lpop[tsel] = 1'b1; end
     wire hd_last = hd[DW-1];
     wire [15:0] hd_ninf = hd[DW-2 -: 16];
@@ -460,7 +466,7 @@ module dsfd_selt_c #(
             seg_open <= 1'b0; seg_k <= {KW{1'b0}}; seg_tag <= 8'd0; flt <= 5'd0; e_coll <= 1'b0; e_kt <= 1'b0;
             k_r <= {KW{1'b0}}; kld_r <= 1'b0; qs <= {2'd3, 2'd2, 2'd1, 2'd0};
             ovf_seen <= 1'b0; rep_pend <= 2'd0; rep_n <= 1'b0; cq <= 2'd0; done_pend <= 1'b1; cnt <= 10'd0; cnt_add <= 5'd0;
-            flt_rep <= 5'd0; pc <= 0; o_v <= 1'b0; o_d <= 512'd0;
+            flt_rep <= 5'd0; pc <= 0; o_v <= 1'b0; o_d <= 512'd0; fblk <= 1'b0;
         end else begin
             kld_r <= |s_acc;
             if (|s_acc) k_r <= seg_k;
@@ -478,8 +484,14 @@ module dsfd_selt_c #(
                 seg_open <= op; seg_k <= kk; seg_tag <= tt;
             end
             begin : fl
-                reg [2:0] lf; lf = lflt[2:0] | lflt[5:3] | lflt[8:6] | lflt[11:9];
-                flt <= flt | {1'b0, lf[2], e_kt, lf[1] | e_coll, lf[0]};
+                reg [2:0] lf; reg [4:0] fn; lf = lflt[2:0] | lflt[5:3] | lflt[8:6] | lflt[11:9];
+                fn = flt | {1'b0, lf[2], e_kt, lf[1] | e_coll, lf[0]};
+                flt <= fn;
+`ifdef OT_RFD_MUT_TKR   // bench mutant: the flag misses the reported-fault mask (a reported fault keeps blocking)
+                fblk <= |fn;
+`else
+                fblk <= |(fn & ~((slot && fna) ? flt : flt_rep));   // next flt & ~next flt_rep
+`endif
             end
             if (ovf) ovf_seen <= 1'b1;
             pc <= (pc == PACE - 1) ? 0 : pc + 1'b1;
@@ -487,7 +499,7 @@ module dsfd_selt_c #(
             if (MRG_PIPE != 0) begin cnt <= cnt + {5'd0, cnt_add}; cnt_add <= 5'd0; end
             if (rep_req) rep_pend <= rep_pend + 1'b1;
             if (slot) begin
-                if (|flt_new) begin
+                if (fna) begin
                     o_v <= 1'b1; o_d <= {4'd5, seg_tag, 484'd0, flt, 11'd0};
                     flt_rep <= flt;
                 end else if (rep_pend != 0 && &s_ready) begin

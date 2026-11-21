@@ -158,6 +158,10 @@ module dsdv_bk_sel #(
 `ifdef OT_BKQ_ECO3
 `ifdef OT_BKQ_QRX_MUT
     dsdv_bksel_c #(.OLL(2), .SELOH(1), .RNF(1), .LQH(1)) u_c (.ck(clk), .rst(rst_n),
+`elsif OT_BKSEL_A3P
+    // OPUS-FIX-S81-BKSEL-R3 11-20: the A3P control view (bksel_c rfda3pt) is hardened with TKR 1 (take from the registered
+    // new-fault flag, 0 cycles; rfda3p TT -46.64 on flt -> take -> lq).  Literal parameters (hard_core_param_all.py).
+    dsdv_bksel_c #(.OLL(2), .SELOH(1), .RNF(1), .LQH(1), .QRX(1), .TKR(1)) u_c (.ck(clk), .rst(rst_n),
 `else
     dsdv_bksel_c #(.OLL(2), .SELOH(1), .RNF(1), .LQH(1), .QRX(1)) u_c (.ck(clk), .rst(rst_n),
 `endif
