@@ -130,3 +130,4 @@ time	die	class	state	posted	text
 2026-11-21 00:44:44	s81_head	NO-PROGRESS	alert	yes	NO-PROGRESS s81_head: 17 eligible rows, 0 KIT-WAVE LAUNCH for 66 min (last 23:38); no DIE-OFF / NO-LAUNCH line
 2026-11-21 01:25:03	s81_head	STUCK-STATE	alert	yes	STUCK-STATE s81_head: 1 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. hd_host_n, 2026-11-20 22:18)
 2026-11-21 01:35:17	s81	SELF-STOP	alert	yes	SELF-STOP s81: 1 job(s) stopped by the wave 988 s after its own SUBMIT (latest dsdv_slice_c1x_C__t8@3 at 01:34:25: superseded by attempt 4 of the same item)
+2026-11-21 02:25:40	s81_head	STUCK-STATE	alert	yes	STUCK-STATE s81_head: 1 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. hd_host_n, 2026-11-20 22:18)
