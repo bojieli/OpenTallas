@@ -1,0 +1,1 @@
+- 2026-11-20 19:47 PST step1 done: S81 gpl end overflow 0.2 is deliberate (gen_phys.gpl_overflow, 0.1 gave HPWL x1.6-2.4 on sparse strips); default reweight list {64 20} so the 0.20 pass never fires; keep 0.25. A/B queued on epyc10 (col_h9_r0_p1__t1__pvb49c16c8 + leaf t10 x base/e10/rw4/rw3), waiting memory admission.
