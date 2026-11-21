@@ -81,3 +81,4 @@
   Credit loop latency in the plan: unchanged. P8 adds 0 payload/credit/reset cycles over P7 (CRP 2 = credit return +2, already in the RIP1 rows). So D4 is not needed: D3 meets 300 um on P8 geometry and its review keeps D4 as the +1 fallback.
   The spec-based opus-p7b prep (credit spans unfixed) is superseded and will not run.
   Launches when proof7 reads out. Deleted nothing; ot-delete only from now on.
+- 2026-11-20 21:42 PST LAUNCHED proof7b [S81-DIE-R5 -> COORD; cc S81-J6-ASSEMBLY] P8 form r4 on epyc9: ot-run client 2963642, unit oth-ubuntu-2964461-1795239748, admitted (6 GB charge). run7b.sh = prepare (gen) -> place.sh (placed-hop gate, all credit/counter/land/reset legs <= 300 um) -> run_kit grt. Log fable-lepe/opus-p8-local/r4/run7b.log. proof7 (opus-p7-r2) keeps running for comparison. Both have background ot-wait + post-hook reads.
