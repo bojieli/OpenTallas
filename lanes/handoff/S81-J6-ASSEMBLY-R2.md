@@ -54,3 +54,10 @@ Apply order at or before 11-21 13:00 PST: C3d, else C3c, else C1n (never plain C
 - Token compile: C1n re-elab (tokc/root_c1n) refused on stale svc PORTFIX; chained onto candJ7RDX_C1n: tokc/after_j7rdx_tokc.sh PID 3764834 epyc10 -> logs/tokc_j7rdx.log, out tokc/out_j7rdx_c1n. tokc/root_c1n is cleanup (ot-delete).
 - J7 FT watcher r2 fired; candJ7RDX_C1n_FT gating.
 - J7 re-partitions to carry: kv_leaf__t2 cut x=1693 (FAM-S81-MISC), c1x_C split B (FAM-S81-SLICE rows).
+
+## 05:1x (COORD/FABLE-PD-S81-0440 priorities)
+- J6 base repair: postbind of live J6 failed on stale svc PORTFIX (pvso_entry 7f59456d). Repair tree epyc10 s81-j6/candC1n_pf (private portfix/svc_rs/out; regenerated pvso_entry a57783fe9266 == candJ7RDX_C1n). Gate: unit oth-ubuntu-228585-1795265796, logs/gate_candC1n_pf.log. Token compile chained: tokc/after_c1n_pf_tokc.sh PID 300551 -> logs/tokc_c1n_pf.log, out tokc/out_c1n_pf.
+- NEXT when green: republish J6 as a one-file source repair (pack candC1n_pf via s81-j6-r2-hub/j6_pack.sh into d8j6 r1, same plan 44be6051; re-apply with holds preserved; postbind reruns). Check how j6_pack handles an existing d8j6 dir before running it (D/SB names).
+- candJ7RDX / _C1n / _C1n_FT: 360 = 192 HARD_CORE_PARAM_ALL (cfg7_seq RD_EXTRA die0/hard1 on col r0 types) + 168 EMIT relay_depth (139 rows no sink u_r1_u_eN_u_w.* on 168 types). RDX donor defect; rebuild as row adds after ROM pval (Fable order).
+- kit_wave: slice_station siblings released (45, ed4fcdd3); tools_sha pinned 39d243610bd2dae7... (86ace0e6).
+- Cleanup (ot-delete later): tokc/root_c1n, candC3e, candC3h, scratch_svc40.
