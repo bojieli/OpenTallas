@@ -11,7 +11,9 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent.parent
-ECO = ROOT / "physical/die_plan/qwen_kvsys/cores/harden/eco"
+# mk_eco.sh also uses the runner, corners, and pin audit beside eco/.
+HARDEN = ROOT / "physical/die_plan/qwen_kvsys/cores/harden"
+ECO = HARDEN / "eco"
 sys.path[:0] = [str(HERE), str(HERE.parent / "die_plan")]
 import baseline as B  # noqa: E402
 import canary as C  # noqa: E402
