@@ -2507,7 +2507,34 @@ def spill_dest_rows(h, roots, bases):
     return rows
 
 
-def spill_plan(src, d, cmd, mem, threads, die, disk, held, say, max_ratio=None):
+AUTOSTAGE_AFTER_S = int(os.environ.get("OT_RUN_AUTOSTAGE_AFTER_S", "300"))   # AUTOSTAGE-1630: a --dir job that cannot spill as a lane root stages its --dir after this wait
+AUTOSTAGE_WHY = ("OT_RUN_SPILL_MAX", "lane references keep growing", "lanes referenced", "absolute symlink out of the lane", "command uses ../")
+T_START = time.time()
+
+
+def autostage_ok(why, permanent):
+    """a permanent lane-root refusal that staging --dir alone can cure (too big, too many lanes, symlink out, ../ above the lane)"""
+    return bool(permanent and why and any(k in why for k in AUTOSTAGE_WHY))
+
+
+def spill_plan(src, d, cmd, mem, threads, die, disk, held, say, max_ratio=None, now=None):
+    """AUTOSTAGE-1630 (FABLE-FLOW-1600 class 2: lane jobs started with --dir and no --stage were pinned to a full host for 2 h): when the lane-root spill is refused for a reason
+    that staging only --dir cures, and the waiter has waited AUTOSTAGE_AFTER_S, --dir itself becomes the --stage path and the plan is made again.  Without --dir nothing changes."""
+    plan = _spill_plan(src, d, cmd, mem, threads, die, disk, held, say, max_ratio)
+    if plan[0] or STAGE or not d or AUTOSTAGE_AFTER_S < 0 or not autostage_ok(plan[1], plan[2]):
+        return plan
+    if ((now if now is not None else time.time()) - T_START) < AUTOSTAGE_AFTER_S:
+        return plan[0], plan[1] + f" (--dir will be staged alone after {AUTOSTAGE_AFTER_S} s)", False
+    STAGE.append(os.path.normpath(d))
+    plan2 = _spill_plan(src, d, cmd, mem, threads, die, disk, held, say, max_ratio)
+    if plan2[0]:
+        say(f"ot-run: AUTOSTAGE: lane-root spill refused ({plan[1][:100]}); staging --dir {d} alone")
+        return plan2
+    STAGE.clear()
+    return plan[0], f"{plan[1]}; staging --dir alone also refused: {plan2[1]}", plan[2]
+
+
+def _spill_plan(src, d, cmd, mem, threads, die, disk, held, say, max_ratio=None):
     """-> ((dst, roots, size_gb), "", False) or (None, reason, permanent).  The roots are --dir's lane root plus every
     scratch lane the command or the lane's scripts name (closed under that relation, <= 4 lanes)"""
     if STAGE:                    # v14 STAGE: exactly the caller's paths, no lane-root closure
