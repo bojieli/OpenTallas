@@ -20,3 +20,18 @@ COORD rulings 07:1x: kt depth stays 2; no ectl (320,900) station unless a PLACED
 - bind26b green -> private-spec qwen_kvsys kv3_hgi_v1__cl141fc26e --tree W/launch26 --bind-out W/tree26/.../bind_of_record --host epyc7
   --src-manifest off (rt/current a9ed808a98d5 has these flags), run-item, run to route; measure placed ectl hops; sign-off gates.
 - Rows to KV-PLAN-R5 once bound: hgi kst rows + hgi_v8 taps (plan_r5d26), hg kst rows (plan_r5d26hg), core-tap key after b8/b8d.
+
+## UPDATE 09:3x PST
+- G0 PASS 0 errors on launch26 (cd8a718931c0) and launch26hg (f45864b2605a). Strict bind launch26: 14 EMIT reset-relay errors = KV-PLAN-R5 07:47
+  D27d hidden set (pc/pv untouched types too) + BIND_SRC_OUTSIDE (symlink skeleton; add --allow-src-root if rerun). No new error from my rows.
+  bindgate26hg (chain client 1959795) still running -> expect the same.
+- Rows handed: epyc7 W/ana/hgi_r5_rows.json (8d11aee89567, 40 rows / 19 types) posted PLAN-ROWS 09:2x to KV-PLAN-R5.
+- OT_LAND_RESERVE=1 for kv3_hg x8: kit_wave_edit 55256552eef2. Wave relaunches then FAIL src_manifest: D26 tree kvd23_hubc_views rebuilt in place
+  08:07 by FAM-KV-HUBC-SYSC -> every D26 wave relaunch fails SRC_MANIFEST (posted 09:0x to COORD/KV-PLAN-R5; theirs to fix).
+- Private kits (run-item on intel2, logs ~/tmp/opusfixkvhgir5/v1kit_runitem.log, v8kit_runitem.log; waiters wait_v1kit/wait_v8kit.out):
+  hgi_v1 spec private_specs/OPUS-FIX-KV-HGI-R5/qwen_kvsys_kv3_hgi_v1__cl141fc26e_1121092028 pid 3802294, work epyc7 W/v1kit;
+  hgi_v8 spec .../qwen_kvsys_kv3_hgi_v8_1121092637 pid 3917205, work W/v8kit (plan W/ana/plan_r5d26v8.json, fs_ft11_o stage fix).
+  Both use the wave D26 bind (station counts unchanged -> RTL unchanged) and src_manifest off.
+- To do in the kits: after place, measure hgi_v1 i_ectl_Q_N_tN placed hops (q -> hst2_g/hst3_g); add a station only if > 405.
+  e0 self kt row (G0 routed 439, Manhattan 223) pre-existing on all heads: check placed. GRT: read final 5_1_grt.odb only.
+- Generator: W/kst_xstreet_v3.py (soft halo; added_taps 'note' no longer written - schema refuses it).
