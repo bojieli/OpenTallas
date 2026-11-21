@@ -404,3 +404,6 @@
 - 2026-11-20 23:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-20 23:52 PST: 295 running jobs, PROGRESSING 286, SLOW 7, NO-PROGRESS 2 (advisory, no cancel); table lanes/NOPROG.tsv
   NO-PROGRESS epyc7 serdes__t13 lec stage 14.5 h job 14.5 h: LEC last file/log write 14.5 h ago
   NO-PROGRESS epyc9 coll_core 5_1_grt stage 14.5 h job 24.0 h: repair_Viol best 221 last 221 rows 202 window-gain 0.0%; stagnant 8.0 h; last event 0.1 h ago, log write 0.0 h ago (2174 lines)
+- 2026-11-21 00:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-21 00:52 PST: 308 running jobs, PROGRESSING 292, SLOW 14, NO-PROGRESS 2 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc7 serdes__t13 lec stage 15.5 h job 15.5 h: LEC last file/log write 15.5 h ago
+  NO-PROGRESS epyc9 coll_core 5_1_grt stage 15.5 h job 25.0 h: repair_Viol best 221 last 221 rows 230 window-gain 0.0%; stagnant 9.0 h; last event 0.1 h ago, log write 0.0 h ago (2202 lines)
