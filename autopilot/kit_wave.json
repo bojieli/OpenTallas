@@ -288,7 +288,10 @@
     "kv3_pc_v1__cl23f6a148": "KV-FAILED-ROWS-2100 11-20: kit_topology: i_ectl_Q_N_kf carries packed exact banks AND a face-register move (plan carries both forms on one bus); FAILed 3x. Plan fix = D27 pc_v1 row (third bank, drop face move). Lift = delete this key when D27 is applied.",
     "kv3_pc_v1__cl4ea58a5c": "KV-FAILED-ROWS-2100 11-20: kit_topology: i_ectl_Q_N_kf carries packed exact banks AND a face-register move (plan carries both forms on one bus); FAILed 3x. Plan fix = D27 pc_v1 row (third bank, drop face move). Lift = delete this key when D27 is applied.",
     "kv3_pc_v1__cl7f648944": "KV-FAILED-ROWS-2100 11-20: kit_topology: i_ectl_Q_N_kf carries packed exact banks AND a face-register move (plan carries both forms on one bus); FAILed 3x. Plan fix = D27 pc_v1 row (third bank, drop face move). Lift = delete this key when D27 is applied.",
-    "kv3_pv_v6n": "KV-FAILED-ROWS-2100 11-20: OT_CLAND no legal row/site in the reserved band for u_bound.u_cla.. (pinslot already read from spec cland_pinslot, so band geometry). Plan fix = D27 pv re-site row (OPUS-FIX-KV-PV-R4 / FABLE-FIX-KV-PV-R2). Lift = delete this key when D27 is applied."
+    "kv3_pv_v6n": "KV-FAILED-ROWS-2100 11-20: OT_CLAND no legal row/site in the reserved band for u_bound.u_cla.. (pinslot already read from spec cland_pinslot, so band geometry). Plan fix = D27 pv re-site row (OPUS-FIX-KV-PV-R4 / FABLE-FIX-KV-PV-R2). Lift = delete this key when D27 is applied.",
+    "kv3_hgi": "KV-D25e3 retained e50e0f9be689 geometry fails and exact corrected post-place TT -349.66 ps below -300. Hold new picks until D26 or changed geometry review.",
+    "kv3_hgi_v7": "KV-D25e3 attempt 5 repeats captured collector_tree reset identity mismatch at gen. Hold new picks until coherent D26 bind.",
+    "kv3_pv_v1n": "KV-D25e3 attempt 7 repeats captured collector_tree reset identity mismatch at gen. Hold new picks until coherent D26 bind."
    },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave",
    "retry_fix": {
@@ -5860,8 +5863,17 @@
     "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg12_983443ee_ta2fb7e6_d25e3_postbind_1120045907"
    ],
    "auto_visual_review_skip": [
-    "kv3_hgi*"
-   ]
+    "kv3_hgi*",
+    "kv3_pv_v1n"
+   ],
+   "review_before_route": {
+    "event": "KV-D25e3",
+    "items": [
+     "kv3_hgi",
+     "kv3_hgi_v7",
+     "kv3_pv_v1n"
+    ]
+   }
   },
   "s81": {
    "enabled": true,
