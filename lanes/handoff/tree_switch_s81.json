@@ -1,20 +1,23 @@
 {
- "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8j5_1117_work/physical/die_plan/s81/plan_of_record/native_bind/asbuilt_run.json",
+ "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8j6_1117_work/physical/die_plan/s81/plan_of_record/native_bind/asbuilt_run.json",
  "asbuilt_sha256": "72bb2fb32c7795c8913c3e89cd4efb63cdf00c143e34b5d9f4b472fc9b7623bf",
- "bind_out": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8j5_1117_work_bind_11201213",
+ "bind_out": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8j6_1117_work_bind_11210316",
  "bind_passed": true,
- "bind_run": "epyc10:/srv/opentallas-scratch2/claude/kw45/s81_j5_existing_clock_r4_1120/rehome_input/gate_r5_repair (strict bind+LAT+G0+PRE green before publish; sealed /srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8j5_1117_work_bind_11201213)",
+ "bind_run": "epyc10:/srv/opentallas-scratch2/claude/s81-j6/gates/candC1n (strict --all-gaps bind + LATCHECK + G0 0 new + PRE green before publish; sealed /srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8j6_1117_work_bind_11210316)",
  "bind_types": 395,
  "config": {
+  "auto_visual_review_skip": [
+   "*"
+  ],
   "cancel_superseded": false,
-  "event": "224567138ab",
+  "event": "dc92652f0d5",
   "gen_args": [
    "--hold-ff-margin",
    "0",
    "--max-wire-um",
    "100",
    "--clock-landing",
-   "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8j5_1117_work/physical/die_plan/s81/plan_of_record/sidecar_new.json"
+   "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8j6_1117_work/physical/die_plan/s81/plan_of_record/sidecar_new.json"
   ],
   "gen_host": "epyc8",
   "gen_hosts": [
@@ -22,18 +25,20 @@
    "epyc2",
    "epyc9",
    "epyc10",
-   "intel1"
+   "intel1",
+   "epyc7"
   ],
   "kit_rtl": {
-   "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8j5_1117_work/physical/die_plan/s81/plan_of_record/native_bind/asbuilt_run.json",
-   "bind_out": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8j5_1117_work_bind_11201213",
+   "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8j6_1117_work/physical/die_plan/s81/plan_of_record/native_bind/asbuilt_run.json",
+   "bind_out": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8j6_1117_work_bind_11210316",
    "mode": "bind",
-   "note": "S81-DIE-R4 2026-11-20 event J5 on c75b12bc6707 (base D8i d7462b520b09), bind src_s81_pin_3c913dbdfb23_d8j5_1117_work_bind_11201213. Revert: rollback_tree D8i"
+   "note": "S81-J6-ASSEMBLY-R2 2026-11-21 event J6 (candC1n) on 6cf12672eb27 (base J5 c75b12bc6707), bind src_s81_pin_3c913dbdfb23_d8j6_1117_work_bind_11210316. Revert: rollback_tree J5"
   },
-  "plan_event": "J5",
+  "plan_event": "J6",
   "queue_src": "main@3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6",
   "review_before_route": {
-   "event": "224567138ab",
+   "all_items": true,
+   "event": "dc92652f0d5",
    "items": [
     "bk_sel__t2",
     "col_h10_r0_p1__t1__cl574cc59d__pv3d0d4d97",
@@ -432,8 +437,7 @@
     "svc_lo_dsdv_svc_rs_w__t1"
    ]
   },
-  "src_sha": "3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6",
-  "tools_sha": "j5tree"
+  "src_sha": "3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6"
  },
  "die": "s81",
  "die_gen_env": {
@@ -451,39 +455,38 @@
   "OT_PLACE_MAX_FANOUT": "64",
   "OT_PREGRT_FF_HOLD_AUTO": "-1",
   "OT_S81_VPW_BANK": "1",
-  "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8j5_1117_work/physical/die_plan/s81/plan_inputs/signed_view_sha_s81.json",
+  "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8j6_1117_work/physical/die_plan/s81/plan_inputs/signed_view_sha_s81.json",
   "OT_TT_SETUP_REPAIR": "both"
  },
- "event": "224567138ab",
+ "event": "dc92652f0d5",
  "g0_baseline": {
-  "path": "/home/ubuntu/coord/lanes/handoff/S81-D8J5-G0-BASELINE-1120.json",
-  "sha256": "3257f0a4e81891640c060580aafe3228719a5b901ed208593bd0475929695f26"
+  "path": "/home/ubuntu/coord/lanes/handoff/S81-D8J6-G0-BASELINE-1121.json",
+  "sha256": "f2a4d38276840e3756db9b04d4f2a5d9108ea6414831df6c4b82b27f2d51905f"
  },
  "hosts": [
   "epyc8",
   "epyc2",
   "epyc9",
   "epyc10",
-  "intel1"
+  "intel1",
+  "epyc7"
  ],
  "keep_gen_hosts": true,
- "latcheck": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8j5_1117_work/physical/die_plan/s81/plan_of_record/latcheck.json",
+ "latcheck": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8j6_1117_work/physical/die_plan/s81/plan_of_record/latcheck.json",
  "latcheck_passed": 873,
- "manifest_hash": "c75b12bc6707b35adb9ad60800c3cb5fd2b788788164117ad39f0238c4c9d0d2",
+ "manifest_hash": "6cf12672eb271413c164dcc27d877272a9812f0e3cba9dc4a5f2851ff05fc383",
  "physical_qualified": false,
- "plan": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8j5_1117_work/physical/die_plan/s81/plan_h2_2249.json",
- "plan_event": "J5",
- "plan_sha256": "913a7026b922a4a70df8ca037a629a04a7b6706896234e159c1cadcf55fa1204",
+ "plan": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8j6_1117_work/physical/die_plan/s81/plan_h2_2249.json",
+ "plan_event": "J6",
+ "plan_sha256": "44be605129cbcbb6ad0a85aac4e5343f537f1f84ffd8e3c096e59969c0b29e65",
  "preserve_holds": "All inherited holds preserved (strip-leaf s81-strip-gpl-d5, col waves, SerDes, t37 station-start); event key kept 3fa87b84b18 per FABLE-PLAN-S81-B6gF2s5f s7 (only plan_event changes), so no event-term carry",
- "sidecar": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8j5_1117_work/physical/die_plan/s81/plan_of_record/sidecar_new.json",
- "sidecar_sha256": "0aab3486f37f0942a9f5b59a6ca2288d49414e008d29e6885e7be541439d5a5b",
+ "sidecar": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8j6_1117_work/physical/die_plan/s81/plan_of_record/sidecar_new.json",
+ "sidecar_sha256": "289cc9810fcb42c1082b452841e1d0f7efb50ce0d46d6886ea76497c7a78ff88",
  "smoke": "PASS",
  "source_causal_bound_qualified": false,
- "src_manifest_sha": "c75b12bc6707b35adb9ad60800c3cb5fd2b788788164117ad39f0238c4c9d0d2",
+ "src_manifest_sha": "6cf12672eb271413c164dcc27d877272a9812f0e3cba9dc4a5f2851ff05fc383",
  "src_sha": "3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6",
  "status": "ADOPTED reviewed tuple",
- "tools_note": "tools = the J5 tree's own tools/ (main defaults incl. CBC reach 300), published in manifest c75b12bc6707",
- "tools_sha": "j5tree",
- "tree": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8j5_1117_work",
+ "tree": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8j6_1117_work",
  "written_by": "root-authorized lane atomic apply"
 }
