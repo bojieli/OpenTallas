@@ -1,2 +1,3 @@
 - 2026-11-21 07:57 PST START: FLOW-OPS-0900 takes over KIT-OPS-5 + FLOW-HEALTH-1 flow fixes from FABLE-FLOW-0745 (1d0416de7c9): struct stop by type + CELL-CAP, count by manifest sha, UNSIGNABLE acts, ot-run drain refusal, empty --dir/hand kit refusal, OPEN-RELAYS at stand-down, fail key cause text. Lane clones on epyc10.
 - 2026-11-21 08:07 PST DIED [FLOW-OPS-0900] ot-push-main otpush-civil-redfish-1214763 on civil-redfish: rc=4 after 48 s, ended 16:07:16, log none, cmd: ot-push-main 
+- 2026-11-21 08:08 PST DONE [FLOW-OPS-0900] ot-push-main otpush-civil-redfish-1281367 on civil-redfish: rc=0 after 17 s, ended 16:08:49, log none, cmd: ot-push-main 
