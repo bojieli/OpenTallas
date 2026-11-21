@@ -1,0 +1,1 @@
+- 2026-11-21 04:03 PST R2 up. t5 variants v1/v2/v3 still chaining on epyc10 (v1 ~25 min in), t2 part-B census3 yosys running; waiters armed. Will report variant G0 result and gate count.
