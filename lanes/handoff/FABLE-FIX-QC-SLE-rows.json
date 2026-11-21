@@ -1,0 +1,16 @@
+{
+ "lane": "FABLE-FIX-QC-SLE", "die": "qwen_compute", "base_plan": "s29q103S4Q9N46R6V1 (zz_s29_qc103_s4q9n46r4_final_preview.json in snap qwen_compute_v1r6)",
+ "checked_with": "lanes/handoff/FABLE-FIX-QC-SLE-ev.py only (kit is_knee_site model); NOT run through compose / G0 / bind / GEN",
+ "rows_zero_cycle": [
+  {"type": "sle_ctl__cla4f6f12f", "internal_station": "bus:b_hw_hc1_o", "set": {"leaf_um": [265.0, 318.0]}, "was": {"leaf_um": [440.0, 400.0]},
+   "effect": "per-bit sites inside u_tap 2526 -> 0; kit worst hop 313.1 -> 260.4 um; stations 4 unchanged"},
+  {"type": "sle_ctl__cla4f6f12f", "internal_station": "bus:b_hw_hc2_o", "set": {"leaf_um": [307.521, 300.0]}, "was": {"leaf_um": [307.521, 328.4]},
+   "effect": "530 stage-0 sites leave the u_tap S edge; row 37 um under the u_ctl S pins (was 8.6); worst hop 268.5 unchanged; stage 3 still 646 sites in u_ctl"}
+ ],
+ "open_for_overflow_0": [
+  "move hard core u_tap origin_um [164.172, 328.332] -> [34.572, 328.332] (138-um tap-ctl channel instead of the 8.64-um slit with 879 facing pins) + dependent tap rows",
+  "b_hw_hc2_o stage 3 (646 sites in u_ctl) and b_tw_data_st_a_o (737 + 749 sites in u_ctl / u_tap): +1 station two-knee route or core-edge slide",
+  "ft cws1 [412.0249, 327.242] and cws2 [662.3524, 335.882] last stations, u_lpad_x_fw_p2_i.q (626.443, 334.8): >= 30 um off the core pin faces",
+  "same class by census: sle_su_c, slw_su_c__cl92142dac, slw_su_c__cl19bb38ef, slw_st_a_v2__cl9f076a5c"
+ ]
+}

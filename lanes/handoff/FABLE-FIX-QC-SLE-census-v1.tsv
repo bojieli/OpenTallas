@@ -1,0 +1,37 @@
+type	chains	sites	in_core	in_landing	worst_hop	detail
+sle_ctl__cla4f6f12f	9	28787	4696	660	337	b_tw_data_st_a_o:1478@u_ctl+u_tap x_st_b_o:30@u_ctl b_hw_hc1_o:2524@u_tap b_hw_hc2_o:644@u_ctl b_hw_hc3_o:20@u_tap
+sle_sc_v1__cl115da35f	2	218	0	0	333	
+sle_sc_v1__cl7479a5ec	2	218	0	0	333	
+sle_sc_v2	2	218	0	0	333	
+sle_sc_v3	2	267	0	0	333	
+sle_st_a_v1__cl67389ecd	1	518	0	0	376	
+sle_st_a_v1__cl989804f6__cl18eece69	1	518	0	0	376	
+sle_st_a_v1__cl989804f6__cled3c1d7b	1	518	0	0	376	
+sle_st_a_v2__pv30dda31f__pv88773f93	1	518	0	217	376	
+sle_st_a_v2__pv30dda31f__pvd2ec7769	1	518	0	217	376	
+sle_st_a_v2__pv4242de79	1	518	0	217	376	
+sle_st_b_v1__pv0e7b1dcc	1	514	0	0	335	
+sle_st_b_v1__pvc5a85fd4__pv38472fb8	1	514	0	0	335	
+sle_st_b_v1__pvc5a85fd4__pv7b7fafb4	1	514	0	0	335	
+sle_st_b_v2__cl14c98df5__pv41c959f3	1	514	0	0	335	
+sle_st_b_v2__cl14c98df5__pvcd986c42	1	514	0	0	335	
+sle_st_b_v2__clfde1249e	1	514	0	0	335	
+sle_su_c	5	7443	4359	0	359	x_su_l0_o:1236@u_suvm_u_vm8q_u_vb+u_suvm_u_vm8q_u_vc x_su_l0_p1_o:2206@u_suvm_u_vm8q_u_bt+u_suvm_u_vm8q_u_ch+u_suvm_u_vm8q_u_pg x_su_l1_p1_o:765@u_suvm_u_vm8q_u_ch x_ctl_o:94@u_suvm_u_vm8q_u_pg x_sc_o:58@u_red_u_core
+slw_sc_v1__cl63e5a7a2	2	218	0	0	363	
+slw_sc_v1__cl64543eaf__cl4590432d	2	218	0	0	363	
+slw_sc_v1__cl64543eaf__cl5e017c6f	2	218	0	0	363	
+slw_sc_v2	2	218	0	0	364	
+slw_sc_v3	2	218	0	0	364	
+slw_st_a_v1__clb036e152	1	518	0	0	376	
+slw_st_a_v1__clfc5867a6__pvdf8e5ca4	1	518	0	0	376	
+slw_st_a_v1__clfc5867a6__pvf82a6c28	1	518	0	0	376	
+slw_st_a_v2__cl9f076a5c	3	1824	920	217	376	x_st_b_o:460@u_r2 x_st_b_o:460@u_r2
+slw_st_a_v2__clf4365a62	1	518	0	217	376	
+slw_st_b_v1__cl6357f1cc__pv6ace3e48	1	514	0	0	335	
+slw_st_b_v1__cl6357f1cc__pvffd43fdc	1	514	0	0	335	
+slw_st_b_v1__cle6023ec2	1	514	0	0	335	
+slw_st_b_v2__pva66d0f22__pv3d7bec84	1	514	0	0	335	
+slw_st_b_v2__pva66d0f22__pvb80e2003	1	514	0	0	335	
+slw_st_b_v2__pvc2ec5bfb	1	514	0	0	335	
+slw_su_c__cl19bb38ef	5	5912	3978	0	336	x_su_l0_o:1152@u_suvm_u_vm8q_u_cl x_su_l0_p1_o:1258@u_suvm_u_vm8q_u_bt+u_suvm_u_vm8q_u_ch x_su_l1_p1_o:1322@u_suvm_u_vm8q_u_pg x_ctl_o:188@u_suvm_u_su8+u_suvm_u_vm8q_u_pg x_sc_o:58@u_red_u_core
+slw_su_c__cl92142dac	5	5912	4830	0	365	x_su_l0_o:1534@u_suvm_u_vm8q_u_vb+u_suvm_u_vm8q_u_vc x_su_l0_p1_o:1866@u_suvm_u_vm8q_u_bt+u_suvm_u_vm8q_u_ch+u_suvm_u_vm8q_u_pg x_su_l1_p1_o:1278@u_suvm_u_su8+u_suvm_u_vm8q_u_pg x_ctl_o:94@u_suvm_u_vm8q_u_pg x_sc_o:58@u_red_u_core
