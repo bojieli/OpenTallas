@@ -1,0 +1,1 @@
+- 2026-11-20 18:23 PST DONE [RESET-RELAY-GEN-R2] ot-run oth-ubuntu-938463-1795227624 on dear-crayfish: rc=0 after 171 s, ended 18:23:12, log /srv/opentallas-scratch2/claude/rrgen-r2/gd_t72.log, cmd: --mem 40 --threads 2 --dir /srv/opentallas-scratch2/claude/rrgen-r2 --hosts epyc2 -- bash /srv/opentallas-scratch2/claude/rrgen-r2/gdump.sh 
