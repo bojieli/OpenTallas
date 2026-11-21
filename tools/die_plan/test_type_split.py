@@ -563,3 +563,60 @@ def test_sidecar_part_region_declares_every_piece():
         pass  # later sidecar steps need a full plan; the declaration is written first
     assert ev.side["part_region"]["svc_9_att"] == "svc_9"
     assert ev.side["regions"][0]["parts"] == ["svc_9", "svc_9_att"]
+
+
+def _core_tap_split(taps):
+    ts = TS.TypeSplit.__new__(TS.TypeSplit)
+    ts.tn = "t"
+    ts.cut = TS.Cut("x", [570.24], 1442.88)
+    ts.t = {"hard_cores": [{"inst": "u_a.u_c", "origin_um": [578.88, 86.4], "outline_um": [157.68, 259.2]}]}
+    return [ts._core_tap_piece(tp) for tp in taps]
+
+
+def test_core_tap_follows_its_core_not_its_xy():
+    # OPUS-FIX-S81-SVC-R7 11-21: a core tap goes to its core's piece; a plain tap (no core) keeps the xy rule (None)
+    assert _core_tap_split([{"kind": "core", "name": "u_a.u_c.clk", "xy": [657.708, 86.64]},
+                            {"name": "u_other.clk", "xy": [10.0, 10.0]}]) == [1, None]
+
+
+def test_core_tap_off_its_core_fails_closed():
+    # the hi4 x_epoch repack moved the core to x 578.88 but left its tap at x 113.388 (rest piece)
+    with pytest.raises(TS.SplitError, match="not on its core"):
+        _core_tap_split([{"kind": "core", "name": "u_a.u_c.clk", "xy": [113.388, 34.8]}])
+
+
+def test_core_tap_requires_known_owner():
+    with pytest.raises(TS.SplitError, match="names no hard core"):
+        _core_tap_split([{"kind": "core", "name": "u_missing.clk", "xy": [10.0, 10.0]}])
+
+
+def test_x_split_windows_use_the_piece_frame_and_share_cut_geometry():
+    import schema
+
+    ts = TS.TypeSplit.__new__(TS.TypeSplit)
+    ts.tn = "S"
+    ts.cut = TS.Cut("x", [50], 100)
+    north = dict(name="north", face="N", window_um=[70, 90], layers=["M5", "M7"])
+    ts._shift_piece_window(north, "face", "window_um", 1)
+    assert north["window_um"] == [20, 40]
+
+    ts.T = [
+        dict(outline_um=[50, 100], ft_slots=[dict(name="ft", out_face="E", out_window_um=[40, 50],
+                                                in_window_um=[10, 20], layers=["M6", "M4"])]),
+        dict(outline_um=[50, 100], buses=[north],
+             ft_slots=[dict(name="ft", in_face="W", in_window_um=[10, 20], layers=["M6", "M4"])]),
+    ]
+    ev = TS.Event.__new__(TS.Event)
+    ev._set_ft_cut_geometry(ts, dict(slot="ft", a=0, b=1), [(21.6, 30.24, 16)], ["M4", "M6"])
+    plan = schema.Plan({
+        "die": {"name": "test", "outline_um": [120, 120], "reach_um": 405},
+        "partition_types": {"lo": ts.T[0], "hi": ts.T[1]},
+        "partitions": [{"name": "l", "type": "lo", "origin_um": [50, 0], "orient": "MY"},
+                       {"name": "h", "type": "hi", "origin_um": [0, 0], "orient": "MY"}],
+        "ports": [], "lanes": [],
+    })
+    seam = dict(src=dict(part="l", bus="ft_o"), dst=dict(part="h", bus="ft_i"))
+    expected = ("W", [21.6, 30.24], ["M4", "M6"], "lsb_low")
+    assert plan.port_geom_from(seam, "src") == plan.port_geom_from(seam, "dst") == expected
+    assert plan.geom_to_die("h", plan._type_geom("h", "north"))[1] == [10, 30]
+    assert ts.T[0]["ft_slots"][0]["in_window_um"] == [10, 20]
