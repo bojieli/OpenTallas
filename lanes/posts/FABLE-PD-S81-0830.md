@@ -1,0 +1,1 @@
+- 2026-11-21 07:40 PST STARTED J7 structural review (read/analyse only). Reviewing J7 plan 07c4124c (candJ7b) vs J6 base 44be6051 (candC1n_pf); static precheck/place_precheck/station_lint diff job on epyc10. Report lanes/FABLE-PD-S81-0830.md.
