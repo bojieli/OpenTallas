@@ -1,0 +1,4 @@
+# S81-BKSEL-R5 (11-21 05:1x UTC): succeeds OPUS-FIX-S81-BKSEL-R4
+Lane clone epyc7 /srv/opentallas-scratch2/claude/s81-bksel-r5/repo (branch detached at main 48d49db149 + local fix). R4 lane dir (still the work dir): /srv/opentallas-scratch2/claude/opus-fix-s81-bksel-r4.
+- build_r4 (otrun-tolerant-swine-3540756) + place_r3b (otrun-tolerant-swine-1597712): running; waiters armed on intel2 (ot-wait). The build_r4 waiter launches chain_r4b.sh (ot-run epyc7, log hub ~/s81-bksel-r5/chain_r4b.otrun.log) only on rc 0.
+- vmtx MLK cause: portfix178/dsdv_idx_tree.sv dsdv_idx_txm (stale overlay) had no MLK parameter while portfix178/dsdv_idx_l20s.sv passes .MLK(MLK) (verilator PINNOTFOUND). Fix: MLK param (only 0 accepted, netlist unchanged) + test physical/die_plan/s81/bind/test_overlay_params.py (fails before, passes after). Bench rerun: hub ~/s81-bksel-r5/bench_vm.otrun.log.
