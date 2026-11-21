@@ -15030,3 +15030,4 @@ FAILED [AUTOPILOT 765f509cc648] 2026-11-20 19:03:56 PST AUTOPILOT -> KIT-WAVE-3:
   listed cells with a u_enc net among first 4 nets: 410
   bins over box +-10um: row area 4895 um2, fixed std 11, movable 2368, util 0.49
 - 2026-11-20 19:08 PST DONE [rrgen-r2] ot-push-main otpush-civil-redfish-1889334 on civil-redfish: rc=0 after 33 s, ended 03:08:50, log none, cmd: ot-push-main 
+- 2026-11-20 19:09 PST DIED [S81-J6-ASSEMBLY] ot-run oth-ubuntu-552840-1795227417 on civil-redfish: rc=1 after 3142 s, ended 03:09:17, log /srv/opentallas-scratch2/claude/s81-j6/rows/item9/otrun.log, cmd: --mem 32 --threads 2 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/s81-j6 -- bash /srv/opentallas-scratch2/claude/s81-j6/rows/item9/r
