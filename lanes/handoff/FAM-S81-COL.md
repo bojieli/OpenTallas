@@ -33,3 +33,6 @@ ROM-face inputs 535 ends (worst -96.6; lever 1), t4.xai/t5.xbi lane-FIFO hop 68 
 2. Re-harden the seq (RD_EXTRA=1, same pins/outline) via the core kit flow; sign the view; patch view-source; hand rows to S81-J6-ASSEMBLY-R2 for J7.
 3. Ask J6-R2 for the tok/s number.
 4. Fix B rows for the >250 um pairs; then carry the proven fix to the 120 types without a J5 kit.
+## 11-21 01:3x UPDATE (after stand-down)
+- Proof A: strict bind + LATCHECK PASSED (09:28 UTC, tree intel1 fam-s81-col/src2, bind out fam-s81-col/bind). kit_wave run-item then FAILED at stage src_manifest (rc 1, KW_STAGE_RC src_manifest 1; hub fam-s81-col/wave/run_item.log): the tool now requires build tree = git archive of a main sha + listed overlay files (sha256 checked) and rejects hardlinked writable trees (class 4/5 rule). Fix for the successor: put the J5 plan + RD/ROM rows in as an overlay on a git-archive tree (spec fields src_manifest / src_manifest_hash / src_overlay), or run the kit steps by hand (bind.py kit-rtl, gen.py phys, run_kit.sh place, tg_cts.sh) from the bind out. No CTS read exists yet.
+- Proof B (v2) will hit the same src_manifest refusal when its bind ends; chain v2/chain.log.
