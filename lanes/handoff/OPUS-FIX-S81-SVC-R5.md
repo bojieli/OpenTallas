@@ -4,6 +4,15 @@ Owner of the S81 svc family (16 types: svc_hi rs t1-t6, pvso_entry t1-t2, svc_lo
 Succeeds FABLE-FIX-S81-SVC (R3 stood down on context; R4 stopped on the Fable limit). Read lanes/handoff/FABLE-FIX-S81-SVC.md for older state.
 Nothing pushed to main. Nothing signed, nothing exported.
 
+## POST-STAND-DOWN 11-21 05:1x PST: chain10d ENDED (not live any more) -- R6 start here
+- chain10d split failed 13:10 UTC: "type_split: FAIL sidecar collector row without a tree" (bind_hi4x/split.log; STATE file absent).
+  This is the same point where Codex's x_epoch compose 2494448 stopped (it wrote plan_c.json, then raised in the sidecar write, so
+  eW_sidecar.json / asbuilt_vN.json were never written). The map problem is fixed (split_map manifest got past it).
+- Root cause to fix next: tools/die_plan/type_split.py (Codex copy in split-hi4-band-test/tools) _sidecar(): a collector type row of the
+  input sidecar (split-hi4-band-test/inputs/bind/inputs/sidecar_svc_h8_1120.json) has tree None after the split; probably the new
+  __t4_att piece (or a relay piece) gets a collector type entry without a tree. Fix in a lane clone, re-run chain10d.sh (it is re-runnable;
+  move split.log / chain outputs aside first). W1 waiter is NOT needed until a new chain runs; W2 (benches) still applies.
+
 ## STOOD DOWN 11-21 05:1x PST (context ~319k). Successor: OPUS-FIX-S81-SVC-R6 (COORD starts it). READ THIS BLOCK FIRST.
 LIVE (leave running):
 - chain10d: epyc10 PID 393326, script /srv/opentallas-scratch2/claude/opus-fix-s81-svc-r5/bind_hi4x/chain10d.sh, out chain10d.out,
