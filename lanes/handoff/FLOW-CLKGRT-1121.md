@@ -27,3 +27,27 @@ Next: on green -> ot-push-main, then rt private-spec s81 <piece> --tree <tree> -
   epyc10 lane clone (hook re-arms ::grt::set_allow_congestion 1 after the merge); kits with grt_allow_cong.tcl were already covered.
   The clkfirst arm will die the same way at its report step: its segments (out/clkfirst_p1.seg, clkfirst_p2.seg, clkfirst.seg)
   survive. R2: add `grt::set_allow_congestion 1` before the report in h/arm.tcl, rerun hook (fixed tcl to <W>/h/), compare with base.
+
+## E2BIG (11-21 10:4x)
+- main 4f638b4e9f: kit_wave run_item one ssh per FLOW_REFRESH_FILES entry; 8 rows released via retry keys (kit_wave.json d3b9b01082), 6 already relaunched by the wave. test_flow2045.py sealed-job test fails independently on main (posted FLOW-NOADV-R3).
+
+## Updates 11-21 11:05
+- t36 SIGNABLE: place PASS (215k), route chain running epyc10: ot-run of $R3/t36s_route.sh (log t36s_route.log; signoff_chain rt a9ed808a98d5).
+- t37 SIGNABLE: place PASS (160k, r2r advisory 3 pairs 1057 um), route chain running epyc10: $R3/t37s_route.sh (log t37s_route.log, rt 58ecd8429ce9).
+- WREG LEC: lec3 FAILED on script (async FF). async2sync added to $W/clone/tools/s81_slice/xs4_lec.sh (uncommitted mod on top of aad23432b3).
+  Rerun lec4: $R3/lec4.sh -> $R3/lec4/, log lec4.otrun.log. On EQUIVALENT: commit the xs4_lec.sh change as follow-up (trailer), ot-push-main from $W/clone.
+- Lever 6 gate GREEN (bind 0, LAT 0 diff, G0 87 = inherited); gate tree ot-deleted. Rows posted to S81-J6-ASSEMBLY-R4.
+- Hardlinks broken in trees/src_s81_j6r1_t37fstart (+_bind); DONE posted. Old J6 tree src_s81_j6_t37reach1 (+_bind) superseded, still hardlinked to d8j6 (not r1): can be ot-deleted.
+- t49 ECO3: incremental DRT ~90% of pass 1 at 11:05 (epyc8).
+
+## RESULTS (all 4 arms ended; h/summ.py out base clkfirst resaware nondr; GRT RC, pre-repair, hroot a5 4_cts_pre_tt copy)
+| arm | overflow H/V/total | WL um | GRT time | leaf p99 / >215um | worst tap spread | max ins | TT ws | FF internal hold ws / viol |
+| base | 10/3/424 | 4.017M | 2:22 | 195.5 / 8 | t9 244, t23 213 | 483 | -659.9 | -169.6 / 693 |
+| resaware (-resistance_aware -res_aware_nets_percentage 0) | 11/3/423 | 4.017M | 2:24 | 195.5 / 8 (same 2D) | t9 138, t40 87 | 371 | -627.2 | -78.7 / 476 |
+| nondr | 10/4/385 | 3.967M | 1:25 | 187 / 9 | t18 366, t9 266 | 655 | -644.2 | -177.1 / 759 |
+| clkfirst (no reservation) | 6/3/336 (phase 2) | 3.864M | 0:04+1:09 | 152.2 / 3 | not measured (GRT-0116 at report) | - | - | - |
+- resaware: same 2D routes, better layer assignment: t9 spread 244->138, max insertion 483->371, FF internal hold -170->-79,
+  violators 693->476, overflow unchanged. clkfirst: shorter clock (leaf p99 196->152), lower overflow 424->336 (phase-2 only, clock
+  usage not added), half the GRT time; timing still unmeasured.
+- Recommended next (R2): measure clkfirst/hook timing (fix GRT-0116 re-arm), then A/B hook+resaware combined; winner opt-in.
+  nondr loses (spread/hold worse): drop it.
