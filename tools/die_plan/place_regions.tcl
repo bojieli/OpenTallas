@@ -48,7 +48,7 @@ foreach pr_row $::ot_place_regions {
   if {![llength $pr_grp]} { error "OT_PLACE_REGION $pr_name: inst_re '$pr_re' matches no movable standard cell" }
   # FLOW-NOADV-R3 11-20 (FABLE-PD-S81-1840): members must cover at least half of the cells of their logic cone.  S81 serdes_tx_encoder: 5,926 member
   # flops against 5,975 gates of the same cone outside the group = DPL-0033 on every J5 serdes.  Under half: the cone's combinational cells join the group
-  # (OT_PLACE_REGION_EXTEND); a cone more than 8 x the members is not separable and the kit stops here.
+  # (OT_PLACE_REGION_EXTEND); a cone more than 8 x the members is not separable: that region is dropped (OT_PLACE_REGION_DROP).
   if {[file exists /work/place_regions_cone.tcl]} {
     source /work/place_regions_cone.tcl
     if {![llength [info procs ot_pr_nbrs_in]]} {
@@ -63,7 +63,15 @@ foreach pr_row $::ot_place_regions {
       }
     }
     foreach pr_t $pr_grp { set ot_pr_taken($pr_t) 1 }
-    set pr_extra [ot_pr_cone $pr_grp ot_pr_nbrs_in ot_pr_nbrs_out ot_pr_is_cand 8]
+    # S81-DIE-R5 11-20 (COORD; J6 C1d/C2d drop the serdes regions, FABLE-PD-S81-2340): a cone that is not separable (> 8 x the members)
+    # gets NO region, loudly: its members place with the design (no group, no box).  The refusal stopped every J5 serdes at global place
+    # (serdes_tx_encoder: > 47,400 cone cells for 5,925 members); the region-less form passed DPL on serdes t4 and is what J6 builds.
+    if {[catch {ot_pr_cone $pr_grp ot_pr_nbrs_in ot_pr_nbrs_out ot_pr_is_cand 8} pr_extra]} {
+      if {![string match "cone has more than*" $pr_extra]} { error $pr_extra $::errorInfo }
+      foreach pr_t $pr_grp { unset -nocomplain ot_pr_taken($pr_t) }
+      puts "OT_PLACE_REGION_DROP $pr_name: $pr_extra ([llength $pr_grp] members): no region for this cone, its cells place with the design"
+      continue
+    }
     set pr_cov [ot_pr_coverage [llength $pr_grp] [llength $pr_extra]]
     if {$pr_cov < 0.5} {
       foreach pr_e $pr_extra {

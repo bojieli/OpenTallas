@@ -106,3 +106,12 @@ def test_kit_hooks_are_wired():
     assert "place_regions_inherit.tcl" in f and "place_regions_data.tcl" in f
     i = (HERE / "place_regions_inherit.tcl").read_text()
     assert "addInst" in i and "OT_PLACE_REGION_INHERIT" in i and "BUF|INV|HB|DLY" in i
+
+
+def test_unseparable_cone_drops_its_region_instead_of_stopping_the_kit():
+    t = (HERE / "place_regions.tcl").read_text()
+    assert "catch {ot_pr_cone" in t and "OT_PLACE_REGION_DROP" in t
+    i = t.index("puts \"OT_PLACE_REGION_DROP"); assert "continue" in t[i:i + 200]
+    assert t.index("catch {ot_pr_cone") < t.index("odb::dbRegion_create")
+    # only the separability refusal is caught; any other cone error still stops the kit
+    assert 'string match "cone has more than*"' in t and "error $pr_extra" in t
