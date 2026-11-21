@@ -47,3 +47,4 @@
 - 2026-11-20 19:00 PST S81 compiler smoke recipe declaration 66fb landed 1ddefd, clean Redwatch and six-host sync. Compact remote prunes now complete on E7 in 3s.
 - 2026-11-20 19:44 PST TT setup keep test ff3046 landed b685b9f, canonical GREEN and fleet sync complete. Adjacent owner source restored private-kit default.
 - 2026-11-20 21:07 PST Wave place-cancel test isolation 9e019 landed 04bd3b8 with clean gate and merged-main Redwatch.
+- 2026-11-20 21:32 PST Archived QC52 and HEAD nested bind test baselines fixed by separate GREEN fixtures; both landed, no plan/reset source edits.
