@@ -1433,6 +1433,32 @@ def marked_cancel(j, now=None, marks=None, actions=None):
     return None
 
 
+def signals_external(j, now=None):
+    """STOPPED-OUTSIDE-1630 (FABLE-FLOW-1800 item 5): the ot-run client of this job's dir was sent a SIGTERM/SIGHUP/SIGINT/SIGKILL by something else (systemd user manager, a lane's kill, a
+    reboot) at or after this attempt started: signals.log has `signal N from <sender> -> ot-run pid P host H tag T WAITING|RUNNING dir <path>`.  That is an outside stop, never memory: the row is
+    CANCELLED (no resubmit with --mem x1.5).  An earlyoom sender keeps its own path (EARLYOOM-RESUBMIT).  -> the log line or None"""
+    path = str(j.get("path") or "").rstrip("/")
+    if not path:
+        return None
+    try:
+        lines = OT_RUN_SIGNALS.read_text(errors="replace").splitlines()
+    except OSError:
+        return None
+    since = float(j.get("started", 0)) - 60
+    now = now or time.time()
+    pat = re.compile(r" signal (?:1|2|9|15) from .* -> ot-run pid \d+ .*\bdir " + re.escape(path) + r"(?::|\s|$)")
+    for line in reversed(lines[-5000:]):
+        if "earlyoom" in line.lower() or not pat.search(line):
+            continue
+        try:
+            t = datetime.datetime.strptime(line.split(" ", 1)[0], "%Y-%m-%dT%H:%M:%S%z").timestamp()
+        except ValueError:
+            continue
+        if since <= t <= now + 60:
+            return line[:300]
+    return None
+
+
 def signals_cancel(j):
     """the ot-run signals.log line recording an explicit `ot-run --cancel` of this job's client (signal from an
     `ot-run --cancel` sender to the ot-run whose --dir is the job's kit, at or after this attempt started), or None"""
@@ -3086,7 +3112,7 @@ def poll_running(st):
         if client.get("ran_on"):
             j["ran_on"] = client["ran_on"]
         if not client.get("cancelled"):
-            sig = signals_cancel(j) or marked_cancel(j)
+            sig = signals_cancel(j) or marked_cancel(j) or signals_external(j)
             if sig:
                 client["cancelled"] = sig
         if client.get("cancelled"):
