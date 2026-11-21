@@ -1521,12 +1521,22 @@ class TypeSplit:
                 bb["rects_um"] = [cut.shr(x, s) for x in bb["rects_um"] if cut.rect_piece(x, f"{self.tn} band {bus}") == s]
             L[s]["bands"][bus] = bb
         self.rep["band_clip"] = self.band_clip
+
+        def shift_status_pins(row, piece, label):
+            if "status_pins_xy_um" in row:
+                sites = row["status_pins_xy_um"]
+                for site in sites:
+                    if not cut.lo(piece) - EPS <= site[cut.ax] <= cut.hi(piece) + EPS:
+                        raise SplitError(f"{self.tn}: collector {label} status pin {site} outside piece {piece}")
+                row["status_pins_xy_um"] = [cut.sh(site, piece) for site in sites]
+
         for src in lc.get("collector_local_sources", []):
             s = self.bp(src["name"])
             q = copy.deepcopy(src)
             for k in ("xy_um", "pin_xy_um"):
                 if k in q:
                     q[k] = cut.sh(q[k], s)
+            shift_status_pins(q, s, src["name"])
             if "band" in q:
                 q["band"] = copy.deepcopy(L[s]["bands"].get(src["name"], q["band"]))
             L[s]["collector_local_sources"].append(q)
@@ -1536,6 +1546,7 @@ class TypeSplit:
             s = cut.ppiece(ch["xy_um"], f"{self.tn} collector child {ch['part']}")
             q = copy.deepcopy(ch)
             q["xy_um"] = cut.sh(ch["xy_um"], s)
+            shift_status_pins(q, s, ch["part"])
             old = int(ch["index"])
             q["index"] = idx[s]
             q["ready"], q["fault"] = f"cland_dn_ready_{idx[s]}", f"cland_dn_fault_{idx[s]}"

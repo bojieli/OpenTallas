@@ -118,6 +118,36 @@ def test_landing_network_relay_edges_name_the_tx_pin_of_their_side():
         dict(part="p", bus="cland_rstart_out")]
 
 
+@pytest.mark.parametrize("foreign_pin", [False, True])
+def test_landing_collector_status_pins_use_the_owner_piece_frame(foreign_pin):
+    ts = TS.TypeSplit.__new__(TS.TypeSplit)
+    ts.tn, ts.tnames, ts.n, ts.keep = "PV", ("PV", "PVe"), 2, 0
+    ts.cut, ts.W, ts.H = TS.Cut("x", [1080.0], 2160.0), 2160.0, 1520.64
+    ts.T, ts.rep = [{"clock": {}} for _ in range(2)], {}
+    ts.bp = lambda _bus: 1
+    pin_x = 1079.0 if foreign_pin else 2151.36
+    source = dict(name="ft10_i", xy_um=[2151.36, 12.96],
+                  pin_xy_um=[2130.6764, 0], status_pins_xy_um=[[pin_x, 12.96], [2149.2, 16.0]])
+    child = dict(part="PV_child", index=7, xy_um=[1520, 22],
+                 status_pins_xy_um=[[1518, 20], [1522, 22]])
+    contract = dict(collector_local_sources=[source], collector_children=[child])
+    if foreign_pin:
+        with pytest.raises(TS.SplitError, match="collector ft10_i status pin .* outside piece 1"):
+            ts._landing_contract(contract)
+        return
+    ts._landing_contract(contract)
+    east = ts.T[1]["clock"]["landing_contract"]
+    assert east["collector_local_sources"][0]["status_pins_xy_um"] == [[1071.36, 12.96], [1069.2, 16.0]]
+    assert east["collector_children"][0]["status_pins_xy_um"] == [[438.0, 20.0], [442.0, 22.0]]
+    assert source["status_pins_xy_um"][0] == [2151.36, 12.96]
+    assert child["status_pins_xy_um"][0] == [1518, 20]
+    TS.Event._attach(None, "PVe", east, {"relays": [
+        {"q": "rst_n_t3", "xy": [1073.0, 20.0]}, {"q": "rst_n_t4", "xy": [440.0, 22.0]},
+    ]}, 405)
+    assert east["collector_local_sources"][0]["node"] == "rst_n_t3"
+    assert east["collector_children"][0]["node"] == "rst_n_t4"
+
+
 class _Ev:
     def __init__(self, raw, spec):
         self.raw, self.spec, self.tag = raw, spec, "T"
