@@ -40,3 +40,22 @@
   opus-fix-qc-sle-r4-rows/l2_rows.json 7b909920c732 + l7_rows.json a0fe0cfcd8b4 (apply_rows.py cb5fb63c579f; l7 needs R8 re-derive); FAM-QC-CB-R2
   fam-qc-cb-r2/p1/plan_b16_rp.json (cbf_q00 inst_taps t24/t25/t77/t76; needs bind); FAM-QC-HCST-R2 clf4365a62 face-home (copy cl9f076a5c floorplan);
   FAM-QC-COLL-R2 six defines; 0840 sec 4 items 1/5/8/9 (27 >405 rows, 212 re-legs, taps by region); cells from census.
+
+## 11:0x FINAL: V2 APPLIED (event s29q103S4Q9N46R6V2, receipt lanes/handoff/qwen_compute_atomic_apply_1795288459577088225.json)
+- b20 (epyc7 qc-plan-r9/b20, plan 7f9f8260349f): strict 0, LATCHECK 1921/1921, post-bind G0 PASS 0 (0 new vs V1), census rc 0, 8/8 PROOF_GEN_RC 0 (b20/proof_gen/*).
+- Pack epyc7 qc-plan-r9/pack_v2 (pack_b20.py; copy intel2 ~/qc-plan-r10/pack_v2), live tree qwen_compute_v2r10 manifest 05adcac27458 on 6 hosts.
+- Seal intel2 ~/qc-plan-r10/seal_v2.sh (rt/current bind_first on epyc7): qwen_compute_v2r10_bind_1121102346 on 6 hosts, 130/130 match.
+- Candidate cand_v2_bound.json: tools_sha = V1 65f3f85d7c5f (639df has no rt manifest -> APPLY REFUSED; bind/G0 tools 639df are packed in the tree),
+  review_before_route removed (empty items refused). All 14 "Release: V2 apply" hold_items lifted (555768c2433); hold_items now {}.
+- Not done: proof KITS (private-spec from the V2 wave plan/bind on the 8 GEN types, to GRT, CTS post-hook) - R11 / family lanes; publish_gate PASS record (advisory).
+## For R11 (V3, event 11-22)
+- Base = V2 live plan (qwen_compute_v2r10). Rows: list in 10:0x section + FABLE-PD-QC-0840 sec 4 + cells_census.tsv.
+- R8 straps (QC-PLAN-R10-R8S, epyc7 qc-plan-r9/v3rows/r8_straps_rows.{json,md}, mkrows.py): strap pins are ID-only and already tied (rule B done);
+  failing u_r8b_* registers are functional R8 stages; cause = yosys merges the 4 st_a rs_n_c chains into r0's (one reg drives 4 cores ~1 mm).
+  Rows R8S-1 (enable) + R8S-2 (160 st_a sites, legs <= 131 um) need tool change R8S-T1 (bind.py / bind_pad_tail_split.py no-merge option) -> FLOW lane
+  or FABLE-FIX-QC-STRAP; sle_ctl a5 -440.70 path must be read from 3_place.odb (epyc8) first (OPUS-FIX-QC-SLE-R4). sle_su_c has the same latent merge.
+- W su_c/sc crossing slots: sle_ctl binds one variant only while E/W x_su_l0_i pads match. W su_l1 crosses slw_su_c (x_su_l1_ctl now 33) and slw_sc_*
+  (x_su_l1_ctl 7); E su_l1 crosses sle_su_c (4) + sle_sc_* (7/8). Any V3 station change on su_l0/su_l1 paths must keep (su_l1 arrival - su_l0 st/landing)
+  equal E vs W (check with qc-plan-r9/r10_ctlpad.py-style calc + bind lane_pad), else TYPE_SPLIT sle_ctl. Do not re-add the 23 reverted hop300 slots per slice.
+- Cleanup (R10's own, ot-delete): epyc7 qc-plan-r9/{b17,b18,b18r,b19} bind dirs (~59 GB each), epyc7 qc-plan-r8/v2b_host partial copy (b12/b13...).
+- bind_b18.sh RR = own copy qc-plan-r9/rr_tools (rt/7ff721a00978 reaped).
