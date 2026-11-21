@@ -1,0 +1,1 @@
+- 2026-11-20 22:57 PST DONE [TAP-GRID-R2] ot-run oth-ubuntu-662139-1795244101 on key-cardinal: rc=0 after 173 s, ended 22:57:52, log /srv/opentallas-scratch2/claude/tap-grid-r2/t39/mkplan.log, cmd: --mem 24 --threads 1 --hosts intel1 --dir /srv/opentallas-scratch2/claude/tap-grid-r2/t39 -- python3 -I /srv/opentallas-scratch2/claude/tap-
