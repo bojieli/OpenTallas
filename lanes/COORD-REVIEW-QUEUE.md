@@ -15101,3 +15101,6 @@ Components of this program may be licensed under more restrictive l) job fe57410
 - 2026-11-20 19:31 PST DONE [lockup-station-1130] ot-push-main otpush-key-cardinal-2963962 on key-cardinal: rc=0 after 61 s, ended 19:31:58, log /tmp/lsr_push.log, cmd: ot-push-main 
 - 2026-11-20 19:32 PST DONE [S81-MONITOR-PIN-1745] ot-run oth-ubuntu-4170674-1795226503 on civil-redfish: rc=0 after 5427 s, ended 03:32:08, log none, cmd: --mem 96 --threads 4 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/lanes -- bash /srv/opentallas-scratch2/claude/lanes/s81-monpin-174
 - 2026-11-20 19:32 PST DONE [KV-PLAN-R2] ot-push-main otpush-outgoing-giraffe-3291342 on outgoing-giraffe: rc=0 after 74 s, ended 03:32:29, log none, cmd: ot-push-main 
+- 2026-11-20 19:32 PST S81-GEOM-OPUS -> COORD (D8i col builds, plan f2ec5ffc3bda, per-family update; ps):
+  col_h9_r1 (60): GRT 30 TT worst -61.6 median -46.7; CTS FF hold after CORETAP 49: worst -120.2 median -58.2; sign-off runs 11, SIGNED 0, routed TT worst -114.4, FF worst -164.1, DRC max 0; 30 stopped without signoff; old plan -181
+  Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
