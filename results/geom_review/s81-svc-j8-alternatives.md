@@ -17,3 +17,5 @@ The paired generators match every one of the 9,282 payload and epoch pins across
 The combined pre-cut plan and sidecar are in epyc2 `/srv/opentallas-scratch2/claude/opus-fix-s81-svc-r8-north/j8/seven_combined_private`. Full tap and reset generation, source binding and fresh placed-kit reviews remain required for release. The separate hi4 Access proof has its own review.
 
 [Seven split layouts](s81-svc-j8-alternatives.png)
+
+[Exact paired exterior windows](s81-svc-j8-exterior-windows.json)

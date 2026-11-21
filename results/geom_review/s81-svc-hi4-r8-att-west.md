@@ -5,3 +5,5 @@
 The upper and lower die windows, assigned pin tracks, clock taps, reset sites and feedthrough sites retain their earlier geometry. The plan delta affects only these fourteen x origins. The original full kit generation, lint and grouped placement views are in epyc10 /srv/opentallas-scratch2/claude/opus-fix-s81-svc-r8/kitgrid_att. Move and image proof is in epyc2 /srv/opentallas-scratch2/claude/opus-fix-s81-svc-r8-north/hi4_kit_readonly/att_access_review (units 3164493, 3294720, 3329135). Final fresh GEN and actual placed-kit review are still required before route.
 
 [West access before and after](s81-svc-hi4-r8-att-west.png)
+
+[Exact fourteen macro origin updates](s81-svc-hi4-r8-att-west-delta.json)

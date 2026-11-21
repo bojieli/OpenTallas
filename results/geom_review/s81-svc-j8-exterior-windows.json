@@ -1,0 +1,303 @@
+[
+  {
+    "lane": "rt_W0_out_1__6",
+    "svc": {
+      "part": "svc_1",
+      "bus": "ft8_o",
+      "face": "N",
+      "old": [
+        561.6,
+        578.66
+      ],
+      "new": [
+        561.388,
+        578.448
+      ]
+    },
+    "die": {
+      "face": "N",
+      "old": [
+        11059.2,
+        11076.26
+      ],
+      "new": [
+        11058.988,
+        11076.048
+      ],
+      "has_segments": false
+    },
+    "peer": {
+      "bus": "ft9_i",
+      "part": "s_0S_x13",
+      "type": "slice_station__t8",
+      "type_instances": 1,
+      "face": "S",
+      "old": [
+        561.6,
+        578.66
+      ],
+      "new": [
+        561.388,
+        578.448
+      ]
+    }
+  },
+  {
+    "lane": "attn__svc_5__svc_4__0",
+    "svc": {
+      "part": "svc_5",
+      "bus": "attn_o3",
+      "face": "S",
+      "old": [
+        6.144,
+        357.619
+      ],
+      "new": [
+        2.333,
+        353.808
+      ]
+    },
+    "die": {
+      "face": "S",
+      "old": [
+        13691.904,
+        14043.379
+      ],
+      "new": [
+        13688.093,
+        14039.568
+      ],
+      "has_segments": false
+    },
+    "peer": {
+      "bus": "attn_i1",
+      "part": "svc_4",
+      "type": "svc_lo_dsdv_svc_rs__t2",
+      "type_instances": 1,
+      "face": "N",
+      "old": [
+        6.144,
+        357.619
+      ],
+      "new": [
+        2.333,
+        353.808
+      ]
+    }
+  },
+  {
+    "lane": "attn__svc_7__svc_6__0",
+    "svc": {
+      "part": "svc_7",
+      "bus": "attn_o1",
+      "face": "S",
+      "old": [
+        6.144,
+        357.619
+      ],
+      "new": [
+        2.333,
+        353.808
+      ]
+    },
+    "die": {
+      "face": "S",
+      "old": [
+        15134.784,
+        15486.259
+      ],
+      "new": [
+        15130.973,
+        15482.448
+      ],
+      "has_segments": false
+    },
+    "peer": {
+      "bus": "attn_i0",
+      "part": "svc_6",
+      "type": "svc_lo_dsdv_svc_rs__t3",
+      "type_instances": 1,
+      "face": "N",
+      "old": [
+        6.144,
+        357.619
+      ],
+      "new": [
+        2.333,
+        353.808
+      ]
+    }
+  },
+  {
+    "lane": "attn__svc_11__svc_10__0",
+    "svc": {
+      "part": "svc_11",
+      "bus": "attn_o3",
+      "face": "S",
+      "old": [
+        6.144,
+        466.871
+      ],
+      "new": [
+        5.401,
+        466.128
+      ]
+    },
+    "die": {
+      "face": "S",
+      "old": [
+        18990.409,
+        19451.136
+      ],
+      "new": [
+        18991.152,
+        19451.879
+      ],
+      "has_segments": false
+    },
+    "peer": {
+      "bus": "attn_i1",
+      "part": "svc_10",
+      "type": "svc_lo_dsdv_svc_rs__t5",
+      "type_instances": 1,
+      "face": "N",
+      "old": [
+        6.144,
+        466.871
+      ],
+      "new": [
+        5.401,
+        466.128
+      ]
+    }
+  },
+  {
+    "lane": "rt_E0_out_0__5",
+    "svc": {
+      "part": "svc_15",
+      "bus": "ft7_o",
+      "face": "N",
+      "old": [
+        604.608,
+        621.668
+      ],
+      "new": [
+        604.588,
+        621.648
+      ]
+    },
+    "die": {
+      "face": "N",
+      "old": [
+        21721.372,
+        21738.432
+      ],
+      "new": [
+        21721.392,
+        21738.452
+      ],
+      "has_segments": false
+    },
+    "peer": {
+      "bus": "ft9_i",
+      "part": "s_7S_x05",
+      "type": "slice_station__t22",
+      "type_instances": 1,
+      "face": "S",
+      "old": [
+        604.608,
+        621.668
+      ],
+      "new": [
+        604.588,
+        621.648
+      ]
+    }
+  },
+  {
+    "lane": "attn__svc_15__svc_14__0",
+    "svc": {
+      "part": "svc_15",
+      "bus": "attn_o1",
+      "face": "S",
+      "old": [
+        6.144,
+        338.36
+      ],
+      "new": [
+        4.896,
+        337.112
+      ]
+    },
+    "die": {
+      "face": "S",
+      "old": [
+        22004.68,
+        22336.896
+      ],
+      "new": [
+        22005.928,
+        22338.144
+      ],
+      "has_segments": false
+    },
+    "peer": {
+      "bus": "attn_i0",
+      "part": "svc_14",
+      "type": "svc_lo_dsdv_svc_rs__t7",
+      "type_instances": 1,
+      "face": "N",
+      "old": [
+        6.144,
+        338.36
+      ],
+      "new": [
+        4.896,
+        337.112
+      ]
+    }
+  },
+  {
+    "lane": "attn__svc_14__svc_15__0",
+    "svc": {
+      "part": "svc_15",
+      "bus": "attn_i1",
+      "face": "S",
+      "old": [
+        340.496,
+        624.168
+      ],
+      "new": [
+        337.976,
+        621.648
+      ]
+    },
+    "die": {
+      "face": "N",
+      "old": [
+        21718.872,
+        22002.544
+      ],
+      "new": [
+        21721.392,
+        22005.064
+      ],
+      "has_segments": false
+    },
+    "peer": {
+      "bus": "attn_o0",
+      "part": "svc_14",
+      "type": "svc_lo_dsdv_svc_rs__t7",
+      "type_instances": 1,
+      "face": "N",
+      "old": [
+        340.496,
+        624.168
+      ],
+      "new": [
+        337.976,
+        621.648
+      ]
+    }
+  }
+]
