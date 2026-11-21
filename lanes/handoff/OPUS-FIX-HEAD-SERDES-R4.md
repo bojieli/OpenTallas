@@ -28,3 +28,8 @@ Logs: intel2 ~/opus-fix-head-serdes-r4-logs/. R3 lane dirs stay as listed in FAB
 - Background waiter on sdr2d 4_1_cts.odb (then check OT_CLOCK_TAPS GROUPS / OT_TAP_INSERTION clk_t20, ~11.3k sinks, target 450).
 - Next on sdr2d GRT: census (R3 q12.sh / an.py / an2.py in epyc7 .../fable-fix-head-serdes-r3) -> if DRT-0255 recurs: local ECO
   of the boxed cell from 5_1_grt; if encoder still misses on logic: OT_S81_KP4_ENC_PPCYC (+1 TX ck, LATENCY post owed).
+
+## CODEX notes · 2026-11-21 02:3x PST
+
+- sdr2d inherited route stopped before CTS. On the same 3_place ODB the old helper measured TT −54,999.33 ps and the corrected ideal pre-CTS clock model measured −211.25 ps. The −300 ps threshold, exact TT constraints and placement data RC are unchanged. Other exact ODB pairs were host_e −36,424.13 → −199.81, host_w −48,290.74 → −203.39, and mesh −94,428.62 → −197.86 ps. Logs `intel2:~/opus-fix-head-serdes-r4-logs/postplace_*ab*.otrun.log`. Source `e073ba9eca0` canonical GREEN 6/6 and merged to `eda19506a55`.
+- After [geometry review](../../results/geom_review/codex-head-prects-1121.md), CTS-only on an independent copy admitted epyc9 `oth-ubuntu-2092004-1795256792`, log `intel2:~/opus-fix-head-serdes-r4-logs/sdr2d_cts_ideal.otrun.log`. The runner reused synth and exact placement via Make targets. TT placement gate passed. Clock-group census found 11,321 encoder sinks on clk_t20, 0 split groups. Read insertion and TT/FF next. Clock cap advisory is real. No route request.

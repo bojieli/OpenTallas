@@ -51,3 +51,8 @@ Plan `M/plan/p4.json` f15722674c75.
 1. DONE 22:24: wave launched hd_serdes, hd_lep0N (+ hd_mesh, hd_host_e, hd_host_w: r13r base blocks) on r16. tr2s / sdr2c untouched.
 2. Signed >300-um hops (hd_spn be_i/bw_i 850/706, hd_spn_end 850/706, hd_tile 573/421/398/342) + 300-um reset re-solve: next event.
 3. Clean the contained finding (copy r4_s0 sink bins into the tree, rewrite plan paths) in the next event.
+
+## CODEX notes · 2026-11-21 02:3x PST
+
+- Current r16 retains host_n block f93cdf712eb2 from r11b. The older counted block 2f3bd02994c0 differs. r11b a16 retained DRT 3, all Rect Only on pin rst_start_raw_0 M7 at x 510.20–510.28, y 339.176–339.240. The emitted pin is centered at (510.240, 338.992), and DRT markers start exactly at its upper end. It also hit the legacy nominal bundle refusal at sign-off. Repeat ledger STALLED. No same-input retry.
+- Reuse the existing PG down-access rule that closed the same M7 pin class on hd_st_n3_turn. `hd_host_n.pg_pin_rule=true` private r16 kit GEN admitted epyc10 `oth-ubuntu-945511-1795257249`, scratch `/srv/opentallas-scratch2/claude/head-plan-r16/host_n_pg`, hub log `~/head-plan-r16/host_n_pg.otrun.log`. Review emitted pin and placement before a new route. Prior timing comparator with DRC 3 was TT +37.96, FF −137.31 with core hold 0, so qualify boundary hold independently.
