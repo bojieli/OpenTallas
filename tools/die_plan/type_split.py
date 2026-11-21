@@ -302,7 +302,17 @@ class TypeSplit:
         ox, oy = p["origin_um"]
         flip = o in (("MX", "R180") if self.cut.ax == 1 else ("MY", "R180"))
         org = oy if self.cut.ax == 1 else ox
-        win = segment or pr["window_um"]
+        win = segment or pr.get("window_um")
+        if win is None:
+            # Mirrored M3 edges intentionally use their type-frame geometry.
+            # Resolve the same die window as the pin generator, without
+            # publishing one that would switch their pin placement mode.
+            import schema
+            if not hasattr(self.ev, "_native_port_geometry"):
+                self.ev._native_port_geometry = schema.Plan(copy.deepcopy(self.ev.raw), self.ev.plan_path)
+            win = self.ev._native_port_geometry.ports[pr["id"]].get("window_um")
+            if win is None:
+                raise SplitError(f"{self.tn}: port {pr['id']} has no pin window")
         L = self.cut.L
         loc = [(org + L - v) if flip else (v - org) for v in win]
         return self.cut.piece(min(loc), max(loc), f"{self.tn} port {pr['id']} window")
