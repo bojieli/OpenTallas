@@ -27,7 +27,7 @@ lane clone epyc9 /srv/opentallas-scratch2/claude/unify-tools-r3 (cone tools, rtl
   runtime 22a689dfc092's landing_contract predates b837420ef3d (launch tools are read-only hard links: overlay by
   cp to a temp name + mv, never cp onto the link).  plan sha 7d99c48f81db, side 0d6db57a664d, R8 e08c45dffa3a.
   Row file (463 leaf changes vs provider27): W/ph8/rows_ph8_vs_provider27.json (W/plan_row_merge.py delta).
-  Sent to QC-PLAN-R6 (V1 assembler after R5) as V1 base proposal.
+  COORD: ph8 IS the V1 base; QC-PLAN-R6 is the only builder. I answer its ph8 questions.
   G0 runs the runtime 22a689dfc092 launch with main's landing_contract.py copied in.
 - Bind recipe: `ot-run --mem 24 --threads 1 --plan-job bind --hosts epyc9 --dir W -- env R8_TABLE=W/r8/r8_ph6.json bash
   W/bind_core_r3.sh PLAN SIDE 22a689dfc092 OUTDIR /srv/opentallas-scratch2/claude/unify-tools-r2-work/overlay/schema_preview.py`,
@@ -50,6 +50,9 @@ and on R5 publishing b_hw_hc2_o at 6 stations (compose on top of that file).
    is not meaningful (members are re-typed to the rep, not inherited); rebuild the kit from ph8/bind_r3 if V1 adopts ph8.
 2. Fold the stm relay re-site into class_merge (moved landing pins -> re-relay monitor groups) with a test.
 3. Compose on R5 once its plan carries b_hw_hc2_o 6 and its errors clear.
-4. S81 leaf class: LEFT by COORD; needs a class floorplan with feed-through superset windows first.
+4. S81 leaf class: S81-LEAF-CLASS-1730 owns the floorplan; I support it (findings + extension points posted:
+   class_merge MUST_EQUAL ft_slots refusal -> ft-superset mode in merge(); class_window_solve --column after it).
+   Do not build S81 rows; fix tool bugs it reports.
+- Rule: never rm -rf, even on a wrong path; delete only via ot-delete.
 - Merge survey W/try/merge_survey.json: 14 stems merge as-is; rest refused on collector child sites / ft_slots / outline.
 - W/plan_row_merge.py is private (3-way leaf merge), not on main.
