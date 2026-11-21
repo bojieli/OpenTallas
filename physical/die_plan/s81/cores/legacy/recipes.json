@@ -123,7 +123,8 @@
   "core_margin": 1.08,
   "io_hold": "sender_min"
  },
- "ot_s81_cfg7_seq": {
+ "ot_s81_cfg7_seq_rdx": {"plan_module": "ot_s81_cfg7_seq", "ref_tile": "physical/ref_tile/s81coll_cfg7_seq_rdx_pr", "core_margin": 1.08},
+  "ot_s81_cfg7_seq": {
   "ref_tile": "physical/ref_tile/s81coll_cfg7_seq_pr",
   "core_margin": 1.08
  },
