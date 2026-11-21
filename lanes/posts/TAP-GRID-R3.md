@@ -1,1 +1,3 @@
 - 2026-11-21 06:55 PST t39 r3 (clk_t98, epyc10): run-item ended without 3_place.odb (hub /srv/opentallas-scratch2/claude/tap-grid-r2/t39/wave3e/result.json); chain3e stopped
+- 2026-11-21 07:04 PST DONE [TAP-GRID-R2] ot-run oth-ubuntu-3320976-1795272438 on tolerant-swine: rc=0 after 1054 s, ended 07:04:49, log /srv/opentallas-scratch2/claude/tap-grid-r2/colpilot/wave/gen.live.log, cmd: --mem 16 --threads 2 --dir /srv/opentallas-scratch2/claude/tap-grid-r2/colpilot/wave/root/items/col_h9_r0_p3__t1__cl8ce97bcb__pv625eef47/att
+  [filed under] TAP-GRID-R3: TAP-GRID-R2 stood down (chain TAP-GRID-R2 > TAP-GRID-R3)
