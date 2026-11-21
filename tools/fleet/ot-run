@@ -1337,6 +1337,22 @@ def stop_started(targets, run=subprocess.run, path=None, fleet=()):
     return stopped
 
 
+def stop_by_path(paths, run=None, fleet=()):
+    """FLEET-WATCH-R4 11-21 (FABLE-FLOW-0400 b: LEP0N-R3 needed ot-heavy-stop --unit for r8b / r11b / lep_p3): the container of a job is found by the kit dir it mounts (-v <dir>:/work),
+    whatever client started it.  A --cancel that matched only STALE clients (a re-launched waiter of the same --dir) or no client at all never reached the sealed container whose own client had
+    died.  Runs container_stop_cmd with a tag that matches nothing and the exact dir on every fleet host.  -> [(host, confirmation line)]"""
+    run = run or subprocess.run
+    out = []
+    for pth in dict.fromkeys(x for x in paths if x and str(x).startswith("/srv/")):
+        for h in fleet:
+            r = _host_run(run, h, container_stop_cmd("otrun-none-0-", pth))
+            line = ((r.stdout or r.stderr).strip().splitlines() or ["no output"])[-1][:200]
+            if "none" not in line:
+                print(f"ot-run --cancel: {h}: exact kit dir {pth}: " + line)
+                out.append((h, line))
+    return out
+
+
 def cancel_unit(sub, run=None, fleet=None):
     run = run or subprocess.run
     """CANCEL-LABEL-1120 (FLEET-WATCH-1015, FABLE-FLOW-1000 class 4: 3 of 31 cancels had no ot-run client): a job with no local client is cancelled by its EXACT unit (oth-...) or client tag prefix
@@ -1373,6 +1389,11 @@ def cancel(sub, all_dirs):
     hit = {p: v for p, v in clients().items() if sub in " ".join(v[0])}
     if not hit and sub.startswith(("oth-", "otrun-")):
         return cancel_unit(sub)
+    if not hit and sub.startswith("/srv/"):             # no client left (died / stale): the exact kit dir still names the container it mounts
+        got = stop_by_path([sub], fleet=list(HOSTS))
+        if got:
+            log_signal(f"--cancel {sub!r} (no client) by pid {os.getpid()} parent {sender(os.getppid())}: containers of the exact dir stopped on {[h for h, _l in got]}")
+            return 0 if not any("STILL RUNNING" in l for _h, l in got) else 3
     dirs = sorted({str(v[1]) for v in hit.values()})
     for p, (rest, d) in sorted(hit.items()):
         print(f"ot-run --cancel: pid {p} dir {d}: {' '.join(rest)[:200]}")
@@ -1396,6 +1417,7 @@ def cancel(sub, all_dirs):
     if not os.environ.get("OT_RUN_CANCEL_KEEP_STARTED"):
         try:
             stop_started(stop_targets(hit, sub, [h for h in HOSTS if h != "localhost"]), path=sub if sub.startswith("/srv/") else None, fleet=list(HOSTS))
+            stop_by_path([sub] if sub.startswith("/srv/") else [d for d in dirs if d.startswith("/srv/")], fleet=list(HOSTS))   # FLEET-WATCH-R4: the client's own --dir names the container too
         except Exception as e:                 # the cancel itself already happened
             print(f"ot-run --cancel: stopping started jobs failed: {type(e).__name__}: {e}")
     log_signal(f"--cancel {sub!r} by pid {os.getpid()} parent {sender(os.getppid())}: {sorted(hit)}")
