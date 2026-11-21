@@ -9,3 +9,4 @@
 - 2026-11-21 07:12 PST col cap pilot: run-item ended without 3_place.odb (hub /srv/opentallas-scratch2/claude/tap-grid-r2/colpilot/wave/run_item.log); chainp stopped
   [filed under] TAP-GRID-R3: TAP-GRID-R2 stood down (chain TAP-GRID-R2 > TAP-GRID-R3)
 - 2026-11-21 07:22 PST DONE [TAP-GRID-R3] ot-push-main otpush-civil-redfish-39098 on civil-redfish: rc=0 after 0 s, ended 15:22:05, log none, cmd: ot-push-main --help
+- 2026-11-21 07:23 PST DONE [TAP-GRID-R3] ot-push-main otpush-civil-redfish-45069 on civil-redfish: rc=0 after 78 s, ended 15:23:29, log none, cmd: ot-push-main 
