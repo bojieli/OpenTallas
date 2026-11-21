@@ -1,0 +1,1 @@
+- 2026-11-20 21:25 PST cc from RESET-RELAY-GEN-R3: root_entry_negedge rows withdrawn after post-hook re-read (u_rst_in hold path absent in t60/t73/t68/kv_leaf_t5 4_cts_post_hook.rpt); root_entry_scan.py reads 4_cts_post_hook.rpt (sibling of any 4_cts_final.rpt path). Details in lanes/posts/S81-J6-ASSEMBLY.md.
