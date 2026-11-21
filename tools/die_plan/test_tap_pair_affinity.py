@@ -11,16 +11,17 @@ TCLSH = shutil.which('tclsh')
 pytestmark = pytest.mark.skipif(TCLSH is None, reason='tclsh not installed')
 
 
-def run(regs, pairs, taps, load=None, cap=100, radius=10**6, limit=64, passes=20, merge=0, shift=0, grow=0, span=0):
+def run(regs, pairs, taps, load=None, cap=100, radius=10**6, limit=64, passes=20, merge=0, shift=0, grow=0, span=0, span_seed=None):
     """regs {name: (x, y, tap)}; pairs [(a, b)]; taps {tap: (x, y)} -> ({name: tap}, passes)."""
     load = load or {k: sum(1 for r in regs.values() if r[2] == k) for k in taps}
     r = ' '.join(f'{{{n}}} {{opaque {x} {y} {tp}}}' for n, (x, y, tp) in regs.items())
     p = ' '.join(f'{{{e[2] if len(e) > 2 else 1} {e[0]} {e[1]}}}' for e in pairs)
     tx = ' '.join(f'{k} {{{x} {y}}}' for k, (x, y) in taps.items())
     ld = ' '.join(f'{k} {v}' for k, v in load.items())
+    seed = ' '.join(f'{tap} {{{x0} {y0} {x1} {y1}}}' for tap, (x0, y0, x1, y1) in (span_seed or {}).items())
     script = (f'source {{{PLAN}}}\n'
               f'set res [::ot_tap_pair::plan [dict create {r}] [list {p}] [dict create {tx}] [dict create {ld}] '
-              f'{cap} {radius} {limit} {passes} {merge} {shift} {grow} {span}]\n'
+              f'{cap} {radius} {limit} {passes} {merge} {shift} {grow} {span} [dict create {seed}]]\n'
               'dict for {n row} [dict get $res regs] {puts "REG $n [lindex $row 3]"}\n'
               'puts "PASSES [dict get $res passes]"\n')
     res = subprocess.run([TCLSH], input=script, capture_output=True, text=True, check=True)
@@ -482,6 +483,17 @@ def test_span_rule_lets_an_over_limit_tap_take_sinks_inside_its_box_only():
     pairs = [('a0', 'in'), ('a1', 'out'), ('k', 'k2')]
     lab, _ = run(regs, pairs, taps, span=300)
     assert lab['in'] == 't0' and lab['out'] == 't1'         # inside the existing 500-wide box: no growth; outside it: refused
+
+
+def test_span_rule_includes_fixed_sinks_outside_the_pair_graph():
+    regs = {'a0': (0, 0, 't0'), 'a1': (10, 0, 't0'), 'b': (20, 0, 't1')}
+    pairs = [('a0', 'a1'), ('a1', 'b')]
+    fixed_boxes = {'t0': (-290, 0, -290, 0), 't1': (310, 0, 310, 0)}
+
+    unseeded, _ = run(regs, pairs, CHAIN_TAPS, span=300)
+    assert cross(unseeded, pairs) == 0
+    guarded, _ = run(regs, pairs, CHAIN_TAPS, span=300, span_seed=fixed_boxes)
+    assert guarded == {'a0': 't0', 'a1': 't0', 'b': 't1'}
 
 
 def test_span_export_and_schema_key_are_opt_in():
