@@ -255,3 +255,8 @@
   Details lanes/OWNERS-SWEEP.tsv
 - 2026-11-21 09:56 PST 0950 sweep: 487 rows (S81/HEAD/QC/KV; HBM skipped), lanes/OWNERS-SWEEP.tsv. After family-lane coverage: 0 S81 UNOWNED/DEAD-OWNER (113 rows covered by live FAM-S81-COL-H10-R3/H9R0-R3/SLICE-R4/MISC-R3, FAM-QC-CB-R2). KV: 7 FAILED-NO-RELAUNCH (kv3_hg_v1,v1p3,v1p4,hgi_v8,hub_Wo,pv_v2n,pv_v8), 2 UNCLASSIFIED, 2 CBC-FALLBACK (kv3_hub_Wi, kv3_pc_v3). QC: 3 FAILED-NO-RELAUNCH (cbn_q01__clab6e67f2, sle_ctl__cla4f6f12f, slw_st_a_v2__clf4365a62), 2 UNOWNED (sle_stm_v2__cl7b3062fa, slw_hc2__cla3497502__cl16607c7a). HEAD clean. KV core qkd_pv_fin_s8_pin superseded, unowned.
 - 2026-11-21 10:53 PST 11-21 10:55 sweep: 484 rows S81/HEAD/QC/KV (HBM skipped). Family post-pass cleared UNOWNED/DEAD-OWNER on 139 rows (98 S81 UNOWNED + 30 S81 + 11 QC DEAD-OWNER) via live family lanes. Remaining: KV FAILED-NO-RELAUNCH 10 (hg_v1,v1p2,v1p5,v1p6, pv_v12,v2,v2n,v3,v4,v7), QC FAILED-NO-RELAUNCH 2, CBC-FALLBACK KV 2/QC 2. STALE>3h: S81 49, QC 26 (mostly held/cancelled/signed count pending). Unowned 0, dead-owner 0 after post-pass.
+- 2026-11-21 11:56 PST OWNERS-SWEEP 12:00: 469 unsigned rows (S81 348, QC 70, KV 50, HEAD 1); 286 HELD-EVENT (J7), not flagged.
+  S81 UNOWNED 28 non-held (svc_lo/svc_hi_dsdv_svc*, dsdv_slice_c3x/lepe, s81sl_leaf t52): all cancelled-superseded, stale 6-10 h; closest lane S81-DIE-R5.
+  S81 STALE 36 cancelled-superseded col_h9_r0*/col_h10_r*/bk_sel: owners FAM-S81-COL-R5/H10-R3/H9R0-R3 alive; S81 DEAD-OWNER 2 (s81sl_leaf__t28, dsdv_slice_kv512_C__t1: S81-DIE-R5 silent).
+  KV FAILED-NO-RELAUNCH 10: kv3_pv_* (CLAND ring band, over 400k) -> OPUS-FIX-KV-PV-R5/TAP-GRID-R3; kv3_hg*/hg_v1p5/v1p6 -> OPUS-FIX-KV-HGI-R5.
+  HEAD 1 hd_lep0N running (FABLE-FIX-HEAD-LEP0N-R2); QC 70 all clean.
