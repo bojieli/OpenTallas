@@ -31,3 +31,4 @@
 - 2026-11-21 12:07 PST DONE [FAM-S81-COL-H10-R3] ot-push-main otpush-civil-redfish-4003149 on civil-redfish: rc=0 after 50 s, ended 20:07:31, log none, cmd: ot-push-main 
 - 2026-11-21 12:12 PST DONE [fam-s81-col-h10-r3] ot-push-main otpush-civil-redfish-4159711 on civil-redfish: rc=0 after 0 s, ended 20:12:10, log none, cmd: ot-push-main --help
 - 2026-11-21 12:13 PST DONE [fam-s81-col-h10-r3] ot-push-main otpush-civil-redfish-4178597 on civil-redfish: rc=0 after 47 s, ended 20:13:37, log none, cmd: ot-push-main 
+- 2026-11-21 12:21 PST DONE [FAM-S81-COL-H10-R3] ot-run oth-ubuntu-161735-1795284511 on civil-redfish: rc=0 after 8001 s, ended 20:21:49, log /srv/opentallas-scratch2/claude/fam-s81-col-h10-r3/gateRa_otrun.log, cmd: --mem 48 --threads 4 --plan-job bind --priority plan --hosts epyc10 --dir /srv/opentallas-scratch2/claude/fam-s81-col-h10-r3 -- bash /srv/op
