@@ -130,3 +130,7 @@ All relaunch after the 405 reach override (lever 1) lands for D8i.
 ## 11-20 16:2x
 - Slew re-pin applied (kit_wave 9dcb613f): die_gen_env OT_PLACE_MAX_TRANSITION=320.
 - ROM donor proof GREEN (bind 0, G0 0 new over J5, PRE 0). vp_sr, r1_frame and t31 binds are running slow on epyc10.
+
+## 11-20 16:4x FLOW-NOADV-R3
+- Leaf t2/t10/t52 reset-identity refusal cause: 9172a65b43 read per-type reach 180 as the cap. Fix pushed fa09197057, in rt 81c8692c1cdf.
+- At the leaf release, include t2/t10/t52; add retry keys if REPEAT-STOP holds them (check kit_wave struct-list / repeat stops); confirm one clears gen and post it.
