@@ -205,3 +205,23 @@ def test_resel_keeps_non_tree_raw_branch_original_and_reports_it(monkeypatch, tm
     assert got["stages"][-1]["original"] == "cland_reset_ft0_i"
     assert json.loads(rc.read_text())["resets"][0]["kept"] == [["landing_raw_branches.0.stages.2", "cland_reset_ft0_i"]]
     assert "kept T: landing_raw_branches.0.stages.2 = cland_reset_ft0_i" in capsys.readouterr().out
+
+
+
+def test_unreferenced_tap_does_not_take_a_needed_nearby_site():
+    old = _g(("clk_t112", (1020, 1503), {(1, 1)}),
+             ("clk_t130", (1030, 1503), {(2, 2)}))
+    new = _g(("clk_t131", (1029, 1503), {(2, 2)}),
+             ("clk_t108", (600, 1503), {(3, 3)}))
+    assert LR.match_taps(old, new, 305, need={"clk_t112"}) == {
+        "clk_t112": ("clk_t131", 9, 0)
+    }
+
+
+def test_does_not_rewrite_added_tap_declarations():
+    old, new = _plan("rst_rl_60", "clk_t218"), _plan("rst_rl_60", "clk_t218")
+    ck = new["partition_types"]["T"]["clock"]
+    ck["added_taps"] = [{"name": "clk_t218", "xy": [1, 1]}, {"name": "clk_t777", "xy": [2, 2]}]
+    _run(old, new)
+    assert [r["name"] for r in ck["added_taps"]] == ["clk_t218", "clk_t777"]
+    assert ck["landing_contract"]["pins"][0]["source_clock_port"] == "clk_t219"

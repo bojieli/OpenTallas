@@ -29,7 +29,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import reset_anchor as RA  # noqa: E402
 
 TAP = re.compile(r"^clk_t\d+$")
-SKIP_KEYS = ("taps",)           # explicit tap tables are plan-named, never generated
+SKIP_KEYS = ("taps", "added_taps")  # declarations, not tap references
 
 
 class RemapError(ValueError):
@@ -42,7 +42,7 @@ def _d(a, b):
 
 def tap_refs(t):
     """[(container, key)] of every generated density tap name 'clk_t<i>' the type's clock section references
-    (landing_contract source_clock_port etc.); clock.taps[] rows are definitions, not references."""
+    (landing_contract source_clock_port etc.); clock.taps[] and clock.added_taps[] define taps."""
     out = []
 
     def walk(o):
@@ -64,6 +64,8 @@ def match_taps(old, new, tol_um, need=None):
     successor within tol_um."""
     cand = []
     for on, (oxy, og) in old.items():
+        if need is not None and on not in need:
+            continue
         for nn, (nxy, ng) in new.items():
             ov = len(og & ng)
             cand.append((-ov, _d(oxy, nxy), on, nn, ov))
