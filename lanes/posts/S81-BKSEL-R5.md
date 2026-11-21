@@ -1,1 +1,2 @@
 - 2026-11-20 21:05 PST STARTED [S81-BKSEL-R5 -> COORD] took over from R4: waiters armed on build_r4/place_r3b (chain_r4b auto-launches on rc 0); vmtx MLK cause = stale portfix178 dsdv_idx_txm lacks MLK param vs l20s .MLK; fix + test in lane clone, bench rerun running. Handoff lanes/handoff/S81-BKSEL-R5.md
+- 2026-11-20 21:08 PST DONE [S81-BKSEL-R5] ot-push-main otpush-loved-redfish-1249960 on loved-redfish: rc=0 after 28 s, ended 05:08:14, log none, cmd: ot-push-main 

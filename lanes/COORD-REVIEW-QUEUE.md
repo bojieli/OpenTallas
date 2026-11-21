@@ -15440,3 +15440,4 @@ FAIL_POSTCTS final GRT released TT/FF policy (grt_policy.json)) job a87e884a6f73
 - 2026-11-20 21:07 PST DONE [qc-plan-r8-ftb] ot-push-main otpush-renewed-glider-2024503 on renewed-glider: rc=0 after 65 s, ended 05:07:33, log none, cmd: ot-push-main 
 - 2026-11-20 21:07 PST Wave place-cancel test isolation 9e019 landed 04bd3b8 with clean gate and merged-main Redwatch.
 - 2026-11-20 21:08 PST DONE [HEAD-PLAN-R16] ot-run oth-ubuntu-892910-1795237260 on tolerant-swine: rc=0 after 434 s, ended 21:08:01, log /home/ubuntu/head-plan-r16/gates16a.otrun.log, cmd: --mem 48 --threads 4 --hosts epyc10 --priority die --dir /srv/opentallas-scratch2/claude/head-plan-r16 -- bash /srv/opentallas-scratch2/clau
+- 2026-11-20 21:08 PST DONE [S81-BKSEL-R5] ot-push-main otpush-loved-redfish-1249960 on loved-redfish: rc=0 after 28 s, ended 05:08:14, log none, cmd: ot-push-main 
