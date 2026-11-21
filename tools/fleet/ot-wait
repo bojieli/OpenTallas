@@ -20,7 +20,14 @@ KIT-STAGE mode: waits on the kit's stage RESULT, never on a log line.  A grep lo
   DIED with the job's rc, so a killed or finished-early job never leaves a waiter hanging.  Exit: 0 reached, 1 failed (FAIL_*), the job's rc / 71 for --also, 124 timeout.
   Example:  ot-wait --kit /srv/opentallas-scratch2/claude/x/kit --host epyc10 --stage place --also oth-ubuntu-123-456 --timeout 28800 > place.wait &
 Usage in a lane:  ot-wait otrun-$(hostname)-$PID > $LANE/wait.out &        or    ot-run ... & ; ot-wait $!
---cmdline TEXT: refuse unless the target pid's /proc cmdline contains TEXT (guards against waiting on a pid someone else now owns)."""
+--cmdline TEXT: refuse unless the target pid's /proc cmdline contains TEXT (guards against waiting on a pid someone else now owns).
+DIGEST mode (FLOW-OPS-1000, FABLE-FLOW-1000 i: one wake per job end, so lanes woke many times an hour and re-read raw logs):
+  ot-wait --digest T1 T2 ... [--every MIN] [--timeout S]   one waiter for many targets (names, oth- units, pids).  It returns ONCE: when every target
+  ended, or at the first --every boundary (default 30 min) after at least one target ended, with one line per target (DONE/DIED/ENDED ... or RUNNING)
+  and a last line REMAINING <targets still running> (re-arm with exactly those).  Exit: 0 all ended rc 0; the first non-zero rc among the ended;
+  75 = some ended rc 0, others still running (re-arm REMAINING); 124 timeout with none ended.
+LEDGER: every ot-wait exit appends one line to ~/.local/state/ot-wait/waits.tsv (OT_WAIT_LEDGER overrides): time, host, lane (OT_LANE), mode, targets,
+  rc, waited s, timeout yes/no, ended n of m.  A record only, so a review can count waits, timeouts and wake-ups without a result."""
 import argparse
 import json
 import os
@@ -206,6 +213,80 @@ def wait_kit(a):
         time.sleep(a.poll)
 
 
+def ledger(mode, targets, rc, t0, ended=None, total=None):
+    """one line per ot-wait exit (a record only; never fails the wait)"""
+    try:
+        p = os.environ.get("OT_WAIT_LEDGER") or os.path.expanduser("~/.local/state/ot-wait/waits.tsv")
+        os.makedirs(os.path.dirname(p), exist_ok=True)
+        new = not os.path.exists(p)
+        with open(p, "a") as f:
+            if new:
+                f.write("time\thost\tlane\tmode\ttargets\trc\twaited_s\ttimeout\tended\n")
+            f.write("\t".join([time.strftime("%F %T"), S.host(), os.environ.get("OT_LANE", "") or "-", mode, ",".join(targets)[:400], str(rc),
+                                "%.0f" % (time.time() - t0), "yes" if rc == 124 else "no",
+                                "-" if ended is None else f"{ended}/{total}"]) + "\n")
+    except OSError:
+        pass
+
+
+def probe(target, a, memo):
+    """non-blocking state of one digest target -> (ended, rc, line).  memo keeps the first-seen pid identity."""
+    if target.isdigit() and target not in memo:
+        rec, _ = find(target, a.dir)
+        memo[target] = ("pid", S.pid_start(int(target)), S.cmdline(int(target))) if rec is None else ("rec", None, None)
+    if target.isdigit() and memo[target][0] == "pid":
+        _, st, cl = memo[target]
+        cur = S.pid_start(int(target))
+        if st is not None and cur == st and S.cmdline(int(target)) == cl:
+            return False, None, f"RUNNING pid={target}"
+        rec, _ = find(target, a.dir)
+        if rec is not None and rec.get("state") == "done" and (st is None or rec.get("pid_start") == st):
+            rc = rec.get("rc")
+            return True, (rc if isinstance(rc, int) else 71), line("DONE" if rc == 0 else "DIED", rec)
+        return True, 70, f"ENDED rc=unknown pid={target}"
+    rec, path = find(target, a.dir)
+    if rec is None:
+        return True, 66, f"MISSING {target}: no status record"
+    if rec.get("state") == "done":
+        rc = rec.get("rc")
+        return True, (rc if isinstance(rc, int) else 71), line("DONE" if rc == 0 else "DIED", rec)
+    if not alive(rec):
+        try:
+            rec = json.load(open(path))
+        except (OSError, ValueError):
+            pass
+        if rec.get("state") == "done":
+            rc = rec.get("rc")
+            return True, (rc if isinstance(rc, int) else 71), line("DONE" if rc == 0 else "DIED", rec)
+        return True, 71, line("DIED", rec) + " (client gone, no exit status written: killed)"
+    return False, None, f"RUNNING {rec.get('unit') or rec.get('name') or target}"
+
+
+def wait_digest(targets, a, now=time.time, sleep=time.sleep):
+    t0 = now()
+    every = max(1.0, float(a.every)) * 60
+    memo, done = {}, {}
+    while True:
+        for t in targets:
+            if t in done:
+                continue
+            ended, rc, ln = probe(t, a, memo)
+            if ended:
+                done[t] = (rc, ln)
+        el = now() - t0
+        remaining = [t for t in targets if t not in done]
+        boundary = done and int(el // every) > int((el - a.poll) // every) if el >= every else False
+        timed_out = a.timeout and el >= a.timeout
+        if not remaining or boundary or timed_out:
+            for t in targets:
+                print(done[t][1] if t in done else probe(t, a, memo)[2], flush=True)
+            print("REMAINING " + (" ".join(remaining) if remaining else "-"), flush=True)
+            bad = [rc for rc, _ in done.values() if rc != 0]
+            rc = bad[0] if bad else (0 if not remaining else (75 if done else 124))
+            return rc, len(done)
+        sleep(a.poll)
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("target", nargs="?", default="")
@@ -217,11 +298,26 @@ def main(argv=None):
     ap.add_argument("--poll", type=float, default=5)
     ap.add_argument("--cmdline", default="")
     ap.add_argument("--dir", default="")
+    ap.add_argument("--digest", nargs="+", default=None, help="one waiter for many targets; returns once (see DIGEST mode)")
+    ap.add_argument("--every", type=float, default=30, help="--digest: minutes between wakes (default 30)")
     a = ap.parse_args(argv)
+    t0 = time.time()
+    if a.digest:
+        tg = ([a.target] if a.target else []) + a.digest
+        rc, n = wait_digest(tg, a)
+        ledger("digest", tg, rc, t0, n, len(tg))
+        return rc
+    rc = _main(a)
+    ledger("kit" if a.kit else ("pid" if a.target.isdigit() else "status"), [a.kit + ":" + a.stage] if a.kit else [a.target], rc, t0)
+    return rc
+
+
+def _main(a):
     if a.kit:
         return wait_kit(a)
     if not a.target:
-        ap.error("a target (unit|name|pid) or --kit KITDIR --stage STAGE is required")
+        print("ot-wait: a target (unit|name|pid), --digest T..., or --kit KITDIR --stage STAGE is required", file=sys.stderr)
+        return 2
     if a.target.isdigit():
         rec, _ = find(a.target, a.dir)
         cur = S.pid_start(int(a.target))
