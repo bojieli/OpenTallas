@@ -112,11 +112,19 @@ def apply(btxt, tn, rows, leaf_id, sv_id):
         decl.append(f"    wire [{W - 1}:0] {wout};")
         body.append(f"    assign {win} = {expr.strip()};")
         prev = f"{win}[{hi}:{lo}]"
+        lk = bool(r.get("lockup"))
         for s in range(D):
             q = f"{base}_s{s}_q"
             decl.append(f"    wire [{n - 1}:0] {q};")
-            body.append(f"    ot_dp_dly #(.W({n}), .D(1)) {base}_{s} (.clk(clk), .d({prev}), .q({q}));  "
+            qf = f"{base}_s{s}_f" if lk else q
+            if lk:
+                decl.append(f"    wire [{n - 1}:0] {qf};")
+            body.append(f"    ot_dp_dly #(.W({n}), .D(1)) {base}_{s} (.clk(clk), .d({prev}), .q({qf}));  "
                         f"// relay_depth (kit-rtl): stage {s + 1}/{D} DECLARED on bits {lo}..{hi}")
+            if lk:                  # FABLE-CLOSURE-1930: lockup latch after the stage (0 cycles, T/2 hold margin across taps)
+                body.append(f"    ot_dp_lk #(.W({n})) u_lk_xd_{sid}_{port}_k{k}_{s} (.clk(clk), .d({qf}), .q({q}));  "
+                            f"// relay_depth lockup latch")
+                rec["needs_cells"] = ["ot_dp_lk"]
             prev = q
         body.append(f"    assign {wout}[{hi}:{lo}] = {prev};")
         if hi < W - 1:

@@ -362,7 +362,7 @@ def port_into(sv, inst, G, src_cells):
     return hit[0] if len(hit) == 1 else None
 
 
-def type_delta(tn, t, sv, D, reach=REACH_UM, local_taps=False, sites=True, stage_key=STAGE_KEY, stage_sites=True):
+def type_delta(tn, t, sv, D, reach=REACH_UM, local_taps=False, sites=True, stage_key=STAGE_KEY, stage_sites=True, lockup=True):
     """mutates plan type dict t; -> report"""
     G = Geo(D)
     rep = dict(type=tn, reach_um=reach, inst_taps=[], local=[], relay_depth=[], needs_local_tap=[], split=[],
@@ -485,6 +485,7 @@ def type_delta(tn, t, sv, D, reach=REACH_UM, local_taps=False, sites=True, stage
                                 + (f", stage at the entry centre + {Lb} branch level(s) x {len(ent)}" if multi else ""))
                 if bits:
                     row["bits"] = bits
+                row.update(lockup=True) if lockup else None
                 rd_rows.append(row)
                 rep["relay_depth"].append(dict(row, over_cap=False))
                 skey = [stage_key.format(sid=sv_id(inst), port=port, k=k, s=s_) for s_ in range(Dn)]
@@ -603,6 +604,7 @@ def type_delta(tn, t, sv, D, reach=REACH_UM, local_taps=False, sites=True, stage
                 k = len(rd_rows)
                 row = dict(inst=inst, port=port, side="sink", D=Dn, path_um=round(L, 1),
                            note=f"RESET-RELAY-GEN-1530 form M: {G.name[r[1]]} -> hard-core reset pin {inst}.{port}")
+                row.update(lockup=True) if lockup else None
                 rd_rows.append(row)
                 rep["relay_depth"].append(dict(row, over_cap=False))
                 if sites and stage_sites:
@@ -664,7 +666,7 @@ def type_delta(tn, t, sv, D, reach=REACH_UM, local_taps=False, sites=True, stage
                 e["relay_depth"] = f"needs D {need[m]} > {MAX_D}"
             rep["legs_over_after"] += after > reach + 1e-6
             rep["local"].append(e)
-            prows.append(dict(inst=inst, ports=ports, D=Dn, path_um=round(L, 1), hop_um=round(after, 1), src=G.name[sc],
+            prows.append(dict(inst=inst, ports=ports, D=Dn, path_um=round(L, 1), hop_um=round(after, 1), src=G.name[sc], **({"lockup": True} if lockup else {}),
                               note=f"RESET-RELAY-GEN-R2 form N: {G.name[sc]} -> hard-core reset pins of {inst}"))
             if sites and stage_sites:
                 for port in ports:
@@ -808,6 +810,8 @@ def main(argv=None):
     ap.add_argument("--local-taps", action="store_true", help="also write reset.local_taps_um for instances no tap reaches")
     ap.add_argument("--no-sites", action="store_true", help="no relay_sites rows (rows only)")
     ap.add_argument("--stage-key", default=STAGE_KEY)
+    ap.add_argument("--no-lockup", dest="lockup", action="store_false",
+                    help="same-edge stages (default since 11-21: a lockup latch after every stage; FABLE-CLOSURE-1930)")
     ap.add_argument("--stage-sites", action="store_true", default=True,
                     help="site the relay_depth stages evenly on the source -> relay line (default since 11-21: relay_mid.tcl "
                          "left lepe stages bunched)")
@@ -818,7 +822,7 @@ def main(argv=None):
     raw = json.loads(rb)
     t = raw["partition_types"][a.type]
     rep = type_delta(a.type, t, Path(a.bound_sv).read_text(), geom_rules.Design(a.geom), a.reach, a.local_taps,
-                     not a.no_sites, a.stage_key, a.stage_sites)
+                     not a.no_sites, a.stage_key, a.stage_sites, a.lockup)
     Path(a.out_plan).write_text(dumper(rb, raw)(raw))
     Path(a.report).write_text(json.dumps(rep, indent=1) + "\n")
     print(f"{a.type}: legs over {a.reach:g} um {rep['legs_over_before']} -> {rep['legs_over_after']}; inst_taps "

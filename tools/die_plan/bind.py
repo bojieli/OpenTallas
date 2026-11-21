@@ -937,6 +937,13 @@ def relay_depth_map(plan, tn):
     return out
 
 
+def relay_depth_lockup(plan, tn, inst, port):
+    """a relay_depth sink row on (inst, port) carries lockup: true (RESET-RELAY-GEN-R2 11-21, FABLE-CLOSURE-1930)"""
+    t = ((plan or {}).get("partition_types") or {}).get(tn) or {}
+    return any(row.get("side") == "sink" and row.get("lockup") and sv_id(row["inst"]) == inst and row.get("port", "i") == port
+               for row in t.get("relay_depth") or [])
+
+
 def relay_depth_sink_map(plan, tn):
     """relay_depth rows with "side": "sink" (a DIRECT core-to-core wire, no relay on it): {(sink leaf name, input port):
     [(D, lo, hi)]} -- D new relay-named stages (u_y_xd_*) in front of those bits of the sink's input port, whatever drives them.
@@ -3478,7 +3485,9 @@ class Binder:
             if missing:
                 raise BindError(f"wavefront reset carriers lack bound partitions: {sorted(missing)[:10]}")
             (out.parent / "bind_reset.json").write_text(json.dumps(W, indent=1))
-        if ((self.plan.get("clock") or {}).get("ft_hop_lockup") or (self.plan.get("clock") or {}).get("core_input_lockup")) \
+        if (((self.plan.get("clock") or {}).get("ft_hop_lockup") or (self.plan.get("clock") or {}).get("core_input_lockup"))
+                or any(r.get("lockup") for t_ in (self.plan.get("partition_types") or {}).values()
+                       for r in t_.get("relay_depth") or [])) \
                 and "module ot_dp_lk " not in cells:
             cells += "\n" + ft_hop_lockup_cell()
         if self.ab.get(TS.KEY) is not None and f"module {TS.KEEP_MODULE} " not in cells:
@@ -4984,10 +4993,18 @@ class Binder:
                                     qn = lp if last else short_id(f"{lp}_s{s_}", 100)
                                     if not last:
                                         decl.append(f"    wire [{len(idx) - 1}:0] {qn};")
+                                    lk_ = relay_depth_lockup(self.plan, tn, sv_id(r), pn)
+                                    qf_ = short_id(f"{lp}_s{s_}_f", 100) if lk_ else qn
+                                    if lk_:
+                                        decl.append(f"    wire [{len(idx) - 1}:0] {qf_};")
                                     body.append(f"    ot_dp_dly #(.W({len(idx)}), .D(1)) "
                                                 f"{short_id('u_y_xd_' + sv_id(r) + '_' + pn + '_' + str(k_) + '_' + str(s_), 100)} "
-                                                f"(.clk(clk), .d({prev}), .q({qn}));  "
+                                                f"(.clk(clk), .d({prev}), .q({qf_}));  "
                                                 f"// relay_depth: stage {s_ + 1}/{depth} DECLARED on bits {idx[0]}..{idx[-1]}")
+                                    if lk_:
+                                        body.append(f"    ot_dp_lk #(.W({len(idx)})) "
+                                                    f"{short_id('u_lk_xd_' + sv_id(r) + '_' + pn + '_' + str(k_) + '_' + str(s_), 100)} "
+                                                    f"(.clk(clk), .d({qf_}), .q({qn}));  // relay_depth lockup latch")
                                     prev = qn
                             else:
                                 body.append(f"    ot_dp_dly #(.W({len(idx)}), .D({depth})) "
@@ -7152,6 +7169,10 @@ def cmd_kit_rtl(a):
     rs = Path(__file__).resolve().parent.parent.parent / "rtl" / "lib" / "ot_reset_sync.sv"
     kit_srcs = [kd / f"{mod}.sv"] + pkgs + [bfile, (out / "rtl" / "bind_cells.sv").resolve()] + \
         [f for f in files if f.name != "bind_cells.sv"]
+    if kit_rd_rep and "ot_dp_lk" in (kit_rd_rep.get("needs_cells") or []) \
+            and "module ot_dp_lk " not in (out / "rtl" / "bind_cells.sv").read_text():
+        (kd / "ot_dp_lk_cell.sv").write_text(ft_hop_lockup_cell())     # kit-rtl lockup stages: the cell the bind did not emit
+        kit_srcs.append(kd / "ot_dp_lk_cell.sv")
     if kit_rd_rep:      # KIT-RD-1: which relay_depth rows the bind carried and which kit-rtl staged (cycles DECLARED)
         (kd / "kit_relay_depth.json").write_text(json.dumps(kit_rd_rep, indent=1) + "\n")
     if kit_ln_rep:      # S81-LNB-1: the generated copy modules + the receipt (cycles_changed 0)

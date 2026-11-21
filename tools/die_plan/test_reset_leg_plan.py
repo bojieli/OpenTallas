@@ -552,3 +552,25 @@ def test_stage_site_over_a_hard_core_is_snapped_to_a_legal_site(tmp_path):
     for xy in t["relay_sites"].values():
         assert not (413 - c < xy[0] < 453 + c and 0 - c < xy[1] < 200 + c)
     assert all(h["hop_um"] >= 0 for h in rep["snap_hop_um"])
+
+
+def test_stage_rows_carry_a_lockup_latch_by_default(tmp_path):
+    """FABLE-CLOSURE-1930 lever 2: same-edge reset stages across clock taps are zero-logic hold pairs; the rows the tool emits
+    carry lockup: true (kit-rtl / bind add an ot_dp_lk negative-level latch after every stage, 0 cycles); --no-lockup = same edge"""
+    D = fwd_design(tmp_path)
+    p = tmp_path / "geom.tsv"
+    p.write_text(p.read_text() + "MR\t8\t300\t20\n")
+    D = geom_rules.Design(str(p))
+    t = plan_type()
+    RLP.type_delta("f", t, FWD_BOUND, D, reach=300)
+    rows = [r for r in t["relay_depth"] if r["inst"] == "u_hc"]
+    assert rows and all(r["lockup"] is True for r in t["relay_depth"])
+    t2 = plan_type()
+    RLP.type_delta("f", t2, FWD_BOUND, D, reach=300, lockup=False)
+    assert not any("lockup" in r for r in t2["relay_depth"])
+    btxt, rec = KRD.apply(FWD_BOUND, "f", t["relay_depth"], lambda i: "u_" + RLP.sv_id(i), RLP.sv_id)
+    n_stage = sum(r["D"] for r in rec["rows"] if r["how"] == "kit-rtl")
+    assert btxt.count("ot_dp_lk #(") == n_stage > 0 and rec["needs_cells"] == ["ot_dp_lk"]
+    assert "u_lk_xd_" in btxt
+    btxt2, rec2 = KRD.apply(FWD_BOUND, "f", t2["relay_depth"], lambda i: "u_" + RLP.sv_id(i), RLP.sv_id)
+    assert "ot_dp_lk" not in btxt2 and "needs_cells" not in rec2
