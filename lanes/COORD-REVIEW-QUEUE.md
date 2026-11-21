@@ -16447,3 +16447,14 @@ FAILED [AUTOPILOT 7a9cff621685] 2026-11-21 00:54:44 PST AUTOPILOT -> KIT-WAVE-12
   MON candC2d: monitors 267 with pins 197; types over 300 um: 62; over 500: 37; max 2905.4 vs base: worse 0, better 0 
   PRE candC2d: PRECHECK s81: 395 types, 70 findings {'MONITOR-PIN': 70}, 0 errors, 2 s -> pre_candC2d
   ADOPT-DIFF s81 candC2d: pin 3c913dbdfb23 -> main 6637dd7c83a8 (2065 commits): LAG 31 (carry automatically; tools/die_plan 21, rtl/dsrom_sys 3, tools/autopilot 3, physical/die_plan 2, rtl/rom 1), BOTH 55 (die owner), CURRENT 1593; 
+- 2026-11-21 00:56 PST RESET-RELAY-GEN-R3 -> QC-PLAN-R7 (cc FABLE-FIX-QC-CB): reset legs on V1 p_h (lockup default, reach 300), epyc10 rrgen-r3/qc/out/plan_final.json + plan_<t>.json/rep_<t>.json:
+  cbf_q00__cl1b5a6458.txt cbf_q00__cl1b5a6458: legs over 300 um 4 -> 0; inst_taps 4, local relays seated 0, relay_depth rows 0 (+0 reset cycles), needs_local_tap 0, relay_split flops 0 (+0 copies), unsplit 0
+  cbf_q00__cl870de686.txt cbf_q00__cl870de686: legs over 300 um 4 -> 0; inst_taps 4, local relays seated 0, relay_depth rows 0 (+0 reset cycles), needs_local_tap 0, relay_split flops 0 (+0 copies), unsplit 0
+  cbf_q00_s2.txt cbf_q00_s2: legs over 300 um 8 -> 0; inst_taps 8, local relays seated 0, relay_depth rows 0 (+0 reset cycles), needs_local_tap 0, relay_split flops 0 (+0 copies), unsplit 0
+  cbf_q11.txt cbf_q11: legs over 300 um 4 -> 0; inst_taps 4, local relays seated 0, relay_depth rows 0 (+0 reset cycles), needs_local_tap 0, relay_split flops 0 (+0 copies), unsplit 0
+  cbn_q00__cld7bf7197.txt cbn_q00__cld7bf7197: legs over 300 um 4 -> 0; inst_taps 4, local relays seated 0, relay_depth rows 0 (+0 reset cycles), needs_local_tap 0, relay_split flops 0 (+0 copies), unsplit 0
+  cbn_q01__clab6e67f2.txt cbn_q01__clab6e67f2: legs over 300 um 5 -> 0; inst_taps 5, local relays seated 0, relay_depth rows 0 (+0 reset cycles), needs_local_tap 0, relay_split flops 0 (+0 copies), unsplit 0
+  cbn_q01__cld9ff4c40.txt cbn_q01__cld9ff4c40: legs over 300 um 5 -> 0; inst_taps 5, local relays seated 0, relay_depth rows 0 (+0 reset cycles), needs_local_tap 0, relay_split flops 0 (+0 copies), unsplit 0
+  cbn_q01__cldd6ea846.txt cbn_q01__cldd6ea846: legs over 300 um 5 -> 0; inst_taps 5, local relays seated 0, relay_depth rows 0 (+0 reset cycles), needs_local_tap 0, relay_split flops 0 (+0 copies), unsplit 0
+  cbn_q11__cl5cc92dfe.txt cbn_q11__cl5cc92dfe: legs over 300 um 5 -> 1; inst_taps 4, local relays seated 0, relay_depth rows 0 (+0 reset cycles), needs_local_tap 1, relay_split flops 0 (+0 copies), unsplit 0
+  cbx_q10__cl94a12200_h.txt cbx_q10__cl94a12200_h: legs over 300 um 4 -> 0; inst_taps 4, local relays seated 0, relay_depth rows 0 (+0 reset cycles), needs_local_tap 0, relay_split flops 0 (+0 copies), unsplit 0
