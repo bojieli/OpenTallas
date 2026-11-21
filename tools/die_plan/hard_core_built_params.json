@@ -859,6 +859,159 @@
     "91bf0827f206c31d7d6175e4e35a24111248144b3cf41d4c40a6921a7dfb00e0"
    ],
    "source": "KV-D23-COMPOSE 11-18 (hub_C pvfin pair, KV-D23-HUBC rows): signed s8pin2 (signoff.json verdict SIGNED 2026-11-14T07:01Z, design opentallas_qkd_pv_fin_s8_pin_asap7_ref_s8pin2; INDEX.tsv odb sha256 in records; both archives qwen_kvsys/qkd_pv_fin_s8_pin). The kit host is retired, so params come from the design itself: the top module qkd_pv_fin_s8_pin has NO parameters (fixed profile ADD_LAT 7 MUL_LAT 6 SKEW 1 MUT 0 NL 8 IN_STAGE 1 inside rtl/qwen_sys/split_20261014/qkd_pv_fin_s8_pin_physical_model.sv; the signed 6_final.v top is the unmangled `module qkd_pv_fin_s8_pin (`), so it can only have been built with {}"
+  },
+  {
+   "module": "ot_s81_su_sml_fold2",
+   "die": "s81",
+   "lib_contains": "physical/die_plan/s81/cores/svc/prov_1119/ot_s81_su_sml_fold2/",
+   "source": "/srv/opentallas-scratch2/claude/s81-svc-split-1119/build/sml_h259/work/orfs/config.mk",
+   "params": {
+    "NVMAX": "40",
+    "LM": "5",
+    "LA": "4",
+    "MUT": "0"
+   },
+   "records": [
+    "f0ac84449f65e5c6806d98edb435d24bf8c2d86aa54dc6d48f94b17eb4e4281e",
+    "255d4bfeb61f14ac4e78b0f7302ab14131d28d9db4a6d9d3c8c2c54e94d36fc3"
+   ]
+  },
+  {
+   "module": "ot_s81_svc_merge_h4",
+   "die": "s81",
+   "lib_contains": "physical/die_plan/s81/cores/svc/prov_1119/ot_s81_svc_merge_h4/",
+   "source": "/srv/opentallas-scratch2/claude/s81-svc-split-1119/build/h4_h259/work/orfs/config.mk",
+   "params": {
+    "DPT": "8",
+    "MLEV": "5",
+    "FPL": "5",
+    "F12": "1"
+   },
+   "records": [
+    "c8cfc06e90782d277bbea0423601d64c59b276bec7b9f1eb9c38e97356f7f513",
+    "3b2d833317662638109adf3cddef7de5081528d3fc64f08e3242c86c65db7e48"
+   ]
+  },
+  {
+   "module": "ot_s81_su_smd_fold2",
+   "die": "s81",
+   "lib_contains": "physical/die_plan/s81/cores/svc/prov_1119/ot_s81_su_smd_fold2/",
+   "source": "/srv/opentallas-scratch2/claude/s81-svc-split-1119/build/smd_h259/work/orfs/config.mk",
+   "params": {
+    "LPH": "16",
+    "TAIL": "64",
+    "LM": "5",
+    "LA": "4",
+    "STALEDEN": "0"
+   },
+   "records": [
+    "98444b5e9a39d93d78da7983869e52ea3d5bc633a47fb8102db367a1717043a1",
+    "829af68d4e29dbb5b71eb2eff31fee34b76f6649a53ea463e4cb64002848efae"
+   ]
+  },
+  {
+   "module": "ot_hdc_v41x_attn_tr_x",
+   "die": "s81",
+   "lib_contains": "physical/die_plan/s81/cores/svc/prov_1119/ot_hdc_v41x_attn_tr_x_xoff0/",
+   "source": "/srv/opentallas-scratch2/claude/s81-svc-split-1119/build/trx_xoff0_h259/work/orfs/config.mk",
+   "params": {
+    "TD": "32",
+    "DPT": "8",
+    "NL": "4",
+    "XOFF": "0"
+   },
+   "records": [
+    "a039b127dee6c52c335befc851efcf2d653336325f4a97c9154865bce3d367af",
+    "3b40a7b27eab331924f790f18d3694d74402f744051aa0b499a29470a746dc01"
+   ]
+  },
+  {
+   "module": "ot_hdc_v41x_attn_tr_x",
+   "die": "s81",
+   "lib_contains": "physical/die_plan/s81/cores/svc/prov_1119/ot_hdc_v41x_attn_tr_x_xoff8/",
+   "source": "/srv/opentallas-scratch2/claude/s81-svc-split-1119/build/trx_xoff8_h259/work/orfs/config.mk",
+   "params": {
+    "TD": "32",
+    "DPT": "8",
+    "NL": "4",
+    "XOFF": "8"
+   },
+   "records": [
+    "29eceea95aaf4a7fa53a90148e422c5b2ed07bb38584ba2fc689236afd198e24",
+    "20e303fa4c990140b5c4d2c1a87de8ae6ded9b0e40d4a4f3c2d679c0db90dfa6"
+   ]
+  },
+  {
+   "module": "ot_hdc_v41x_attn_tr_x",
+   "die": "s81",
+   "lib_contains": "physical/die_plan/s81/cores/svc/prov_1119/ot_hdc_v41x_attn_tr_x_xoff16/",
+   "source": "/srv/opentallas-scratch2/claude/s81-svc-split-1119/build/trx_xoff16_h259/work/orfs/config.mk",
+   "params": {
+    "TD": "32",
+    "DPT": "8",
+    "NL": "4",
+    "XOFF": "16"
+   },
+   "records": [
+    "66b30ed74cec020ccc61ce26e92d0653386e88198fd5470d236074f783b8056f",
+    "bdc0ce0524d3e3ae6467c0c5a6619b9f606268596c237f48a2ddd59a78204717"
+   ]
+  },
+  {
+   "module": "ot_hdc_v41x_attn_tr_x",
+   "die": "s81",
+   "lib_contains": "physical/die_plan/s81/cores/svc/prov_1119/ot_hdc_v41x_attn_tr_x_xoff24/",
+   "source": "/srv/opentallas-scratch2/claude/s81-svc-split-1119/build/trx_xoff24_h259/work/orfs/config.mk",
+   "params": {
+    "TD": "32",
+    "DPT": "8",
+    "NL": "4",
+    "XOFF": "24"
+   },
+   "records": [
+    "5cbba67b6a526e7bc1420da7e5d457c5763de158167544befa9ccc30919329fa",
+    "f47bc44ab2845263814c2c03bb95f5ea60cf68f3420e01cfcc55ea18b7b4a781"
+   ]
+  },
+  {
+   "module": "ot_s81_su_smc",
+   "die": "s81",
+   "lib_contains": "physical/die_plan/s81/cores/svc/prov_1119/ot_s81_su_smc/",
+   "source": "/srv/opentallas-scratch2/claude/s81-svc-split-1119/build/smc_h259/work/orfs/config.mk",
+   "params": {
+    "LPH": "16",
+    "LA": "4"
+   },
+   "records": [
+    "aa3b2995bf2afc6a87bd0a25ad090116dc45fb7721cbbe279e681cec5c931815",
+    "12756aabea9b30d334ad39ff8d41a379d09844f9782cdddd47e05d9e94507b96"
+   ]
+  },
+  {
+   "module": "ot_s81_su_smr",
+   "die": "s81",
+   "lib_contains": "physical/die_plan/s81/cores/svc/prov_1119/ot_s81_su_smr/",
+   "source": "/srv/opentallas-scratch2/claude/s81-svc-split-1119/build/smr_h259/work/orfs/config.mk",
+   "params": {
+    "LPH": "16",
+    "LA": "4",
+    "LTMAX": "6"
+   },
+   "records": [
+    "4ef4fd91c42f8241fdc2862cfb09625e0a1715308c319a31a207d44e59c85363",
+    "df58ed913aa457b1a7009b1aeb099ee99d703d29e53e1ab8c82abb681d95f2ba"
+   ]
+  },
+  {
+   "module": "ot_s81_svc_idx_hslice_fp",
+   "die": "s81",
+   "lib_contains": "physical/die_plan/s81/cores/svc/prov_1119/ot_s81_svc_idx_hslice_fp/",
+   "source": "/srv/opentallas-scratch2/claude/s81-svc-split-1119/build/irg_hsfp_mm3b/work/orfs/config.mk",
+   "params": {},
+   "records": [
+    "91d0a94bb1f3cabccd00a842c8c706a2129a168bbf4c8f64c024b2af16e327b3",
+    "cf9fed877950860a006a9b7745a9d461cf1e0bfa484f362f61e38fde975f4fac"
+   ]
   }
  ]
 }
