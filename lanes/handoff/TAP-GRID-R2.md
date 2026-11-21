@@ -9,3 +9,15 @@ Read lanes/handoff/TAP-GRID-2130.md for the method (tap grid plan key clock.tap_
 
 ## Status
 - 06:4x UTC: lane up; LANE-STATUS row TAP-GRID-2130 -> TAP-GRID-R2.
+
+## Lever-3 proof: S81 leaf t39 (11-21 07:xx UTC)
+- Work: intel1 /srv/opentallas-scratch2/claude/tap-grid-r2/t39 (hub copy of spec in intel2 same path /wave/spec.json).
+- regs: epyc9 tap-grid-r2/t39/regs/t39_regs.json = tap_resolve --dump of J5 t39 a3 3_place.odb (44,253 registers, 27 macros).
+- Plan: J5 plan_h2_2249.json (sha 913a7026) + t39 tap_resolve.apply_density(span 300, target 1000): added_taps 39 -> 82 (taps 55 -> 98), max load 1000, 0 over span;
+  clock.tap_span_um 300, clock.tap_grid {pitch_um 300, bank_sinks 1000, pair_um 200} (no regs key: taps already in the table, so bind sees the ports). delta: t39/tap_grid_delta.json.
+- Tree: t39/src2 = hardlink copy of kw45 src_s81_pin_3c913dbdfb23_d8j5_1117_work, tools + common_flow from rt f3db2d0e628f (= main tools), plan replaced by rename (S untouched, sha checked).
+  (t39/src = symlink tree, abandoned: bind dead-input proof path check resolves symlinks.)
+- Bind: t39/bind.sh (strict --all-gaps + LATCHECK), out t39/bind, log t39/bind.log; try1 failed on the symlink tree (bind_try1.log).
+- Next: kit via kit_wave.py run-item wave/spec.json (copy of the J5 a3 spec: private src/plan/bind/work, kit_snap off, no future_lec, rt f3db), then tg_cts-style CTS, read post-hook vs baseline.
+- Baseline J5 t39 a3 (epyc7 ot-jobs/ot_s81sl_leaf__t39-route-loved-redfish-1218124-1795237605): OT_CTS_POST_TIMING setup -73.73 / TNS -1278.1, hold -75.14 / -89488.2; 79 taps; clk_t6 6,092 sinks skew 62.3.
+- CORE-DIRECT audit: intel1/intel2/epyc7/epyc8/epyc9 0 bad (config.mk newer than 11-21 04:00 UTC with OT_TAP_CORE_DIRECT=1 and tap_balance.tcl without tb_cdirect); epyc2/epyc10 rescanning.
