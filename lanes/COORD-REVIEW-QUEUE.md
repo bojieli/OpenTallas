@@ -19915,3 +19915,4 @@ FAILED [AUTOPILOT ca12f32620b4] 2026-11-21 12:12:36 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-21 12:13 PST STATE [FLOW-OBS-GCELL-R2 -> COORD] handoff updated
 - 2026-11-21 12:13 PST DONE [fable-fix-s81-strobe] ot-push-main otpush-loved-redfish-1684953 on loved-redfish: rc=0 after 0 s, ended 20:13:33, log none, cmd: ot-push-main --help
 - 2026-11-21 12:13 PST DONE [KV-PLAN-R6] ot-run oth-ubuntu-3964710-1795290273 on tolerant-swine: rc=0 after 1744 s, ended 12:13:35, log /home/ubuntu/tmp/kvplanr6/pinclear.log, cmd: --hosts epyc8 --mem 16 --threads 2 --dir /srv/opentallas-scratch2/claude/kv-plan-r6 -- bash /srv/opentallas-scratch2/claude/kv-plan-r6/pincl
+- 2026-11-21 12:13 PST DONE [fam-s81-col-h10-r3] ot-push-main otpush-civil-redfish-4178597 on civil-redfish: rc=0 after 47 s, ended 20:13:37, log none, cmd: ot-push-main 
