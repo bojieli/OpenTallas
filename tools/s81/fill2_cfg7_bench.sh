@@ -4,7 +4,7 @@
 # bench / failing-mutant pair of the die masters ot_s81_cfg7_seq (PQ 1, as the die binds it) and ot_s81_cfg7_seq_bf (PQ 0).
 # modes: pq1 | bf (expect PASS) ; mut_tag (PQ 1 go_tag mutant) | mut_bank_bf (unregistered bank select, BF) (expect FAIL)
 # PINREG 1 (every pin registered, LAYOUT 1): pr_pq1 | pr_pq0 | pr_bf (PASS); pr_mut_prdl | pr_mut_tag | pr_mut_nofault | pr_mut_rstrel (FAIL)
-# RD_EXTRA 1 (+1 q stage, PINREG 1): rx1_pq1 | rx1_pq0 | rx1_bf (PASS); rx1_mut_prdl | rx1_mut_tag (FAIL)
+# RD_EXTRA 1 (+1 q stage, PINREG 1): rx1_pq1 | rx1_pq0 | rx1_bf (PASS); rx1_mut_prdl | rx1_mut_tag | rx1_mut_noguard (FAIL)
 # LAYOUT 1 (interleaved 7-macro layout, DUT + macro models): il7_pq1 | il7_pq0 | il7_bf (PASS); il7_mut_tag | il7_mut_stride | il7_mut_bank_bf (FAIL)
 set -u
 export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH
@@ -32,6 +32,7 @@ case $M in
   rx1_bf) A="-GPQ=0 +define+TB_CFG7_BF +define+TB_CFG7_IL7 +define+TB_CFG7_PINREG +define+TB_CFG7_RDX1" ;;
   rx1_mut_prdl) A="-GPQ=1 +define+TB_CFG7_IL7 +define+TB_CFG7_PINREG +define+TB_CFG7_RDX1 +define+OT_S81_CFG7_MUT_PRDL" ;;
   rx1_mut_tag) A="-GPQ=1 +define+TB_CFG7_IL7 +define+TB_CFG7_PINREG +define+TB_CFG7_RDX1 +define+OT_S81_CFG7_MUT_TAG" ;;
+  rx1_mut_noguard) A="-GPQ=1 +define+TB_CFG7_IL7 +define+TB_CFG7_PINREG +define+TB_CFG7_RDX1 +define+OT_S81_CFG7_MUT_NOGUARD" ;;
   pr_mut_nofault) A="-GPQ=1 +define+TB_CFG7_IL7 +define+TB_CFG7_PINREG +define+OT_S81_CFG7_MUT_NOFAULT" ;;
   *) echo "unknown mode $M"; exit 2 ;;
 esac

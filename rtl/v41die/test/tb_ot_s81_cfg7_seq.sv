@@ -34,6 +34,12 @@ module tb_ot_s81_cfg7_seq;
     localparam integer LAYOUT = 0;
 `endif
     localparam integer PHW = 10, CW = 25, NW = CW << PHW;
+    // GO GUARD (FABLE-FIX-S81-COLROM-R3 2026-11-21): at PQ 1 + PINREG 1 + RD_EXTRA 1 the DUT holds a load (pend) for 13 edges after
+    // its own go (the element ef read back is stale for 10 edges, +3 margin).  The reference gets the same hold: its e_sh_free /
+    // e_bank_free read 0 while the reference-side guard count runs (13 edges after r_go), so the lockstep models the guard; the
+    // directed loops wait TGG more edges so every phase load is held by it and then completes.  Negative control
+    // +define+OT_S81_CFG7_MUT_NOGUARD (DUT without the guard) must FAIL.  TGG = 0 (every other mode): unchanged stimulus/reference.
+    localparam integer TGG = (PQ != 0 && PINREG != 0 && RDX != 0) ? 13 : 0;
     reg clk = 0;
     always #0.416667 clk = ~clk;
     reg rst_n = 0, cfg_go = 0, go = 0;
@@ -66,7 +72,14 @@ module tb_ot_s81_cfg7_seq;
     wire r_cgo = PINREG ? i_cgo : cfg_go, r_go = PINREG ? i_go : go;
     wire [PHW-1:0] r_ph = PINREG ? i_ph : phase;
     wire [2:0] r_np = PINREG ? i_np : np;
-    wire [1:0] r_ef = PINREG ? i_ef : ef;
+    wire [1:0] r_ef0 = PINREG ? i_ef : ef;
+    reg [3:0] rgg = 0;
+    always @(posedge clk or negedge rst_d)
+        if (!rst_d) rgg <= 4'd0;
+        else if (r_go) rgg <= 4'(TGG);
+        else if (rgg != 4'd0) rgg <= rgg - 4'd1;
+    wire rgg_ok = (TGG == 0) || (rgg == 4'd0 && !r_go);
+    wire [1:0] r_ef = rgg_ok ? r_ef0 : 2'b00;
     wire rv0, rge0, rbusy0, rfault0; wire [4:0] ra0; wire [47:0] rd0;
     ot_v41_pair_pq_ld_frontend #(.PHW(PHW), .PQ(PQ)) ref_ld (
         .clk(clk), .rst_n(rst_d), .cfg_go(r_cgo), .cfg_ph(r_ph), .cfg_np(r_np), .go(r_go), .e_sh_free(r_ef[0]),
@@ -187,7 +200,7 @@ module tb_ot_s81_cfg7_seq;
         for (int ph = 0; ph < (1 << PHW); ph++) begin
             oldr = reads;
             phase = PHW'(ph); np = 3'(ph); cfg_go = 1; tick(); cfg_go = 0;
-            repeat (29) tick();
+            repeat (29 + TGG) tick();
             if (reads - oldr != CW) $fatal(1, "phase %0d: %0d macro reads, expected %0d", ph, reads - oldr, CW);
             go = 1; tick(); go = 0; tick();
         end
@@ -198,7 +211,7 @@ module tb_ot_s81_cfg7_seq;
                 phase = PHW'(h * 5 + 3); np = 3'(h); ef = 2'(h % 3); cfg_go = 1; tick(); cfg_go = 0;
                 repeat (1 + (h * 7) % 40) tick();
                 ef = 2'b11;
-                repeat (30) tick();
+                repeat (30 + TGG) tick();
                 if (reads - oldr != CW) $fatal(1, "held load %0d: %0d macro reads, expected %0d", h, reads - oldr, CW);
                 go = 1; tick(); go = 0; tick();
             end

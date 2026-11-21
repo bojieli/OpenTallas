@@ -1027,6 +1027,21 @@
     "RD_EXTRA": 1
    },
    "source": "FAM-S81-COL-R2 signed cfg7 RD_EXTRA=1 release receipt (physical/die_plan/s81/cores/views/ot_s81_cfg7_seq_rdx_1121/receipt.json); S81 J7 RDX view"
+  },
+  {
+   "module": "ot_s81_cfg7_seq",
+   "die": "s81",
+   "lib_contains": "ot_s81_cfg7_seq_rdxg_1121/",
+   "records": [
+    "7a93e566379aab22685552923e6ac8fd2fdff3623350ef7970d93d0c9e3b3b51"
+   ],
+   "params": {
+    "PQ": 1,
+    "LAYOUT": 1,
+    "PINREG": 1,
+    "RD_EXTRA": 1
+   },
+   "source": "FABLE-FIX-S81-COLROM-R3 signed cfg7 RD_EXTRA=1 + go-guard view (physical/die_plan/s81/cores/views/ot_s81_cfg7_seq_rdxg_1121/receipt.json); supersedes ot_s81_cfg7_seq_rdx_1121 for J7"
   }
  ]
 }

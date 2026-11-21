@@ -1,0 +1,23 @@
+{
+ "schema": "opentallas.core_clock_contract.v1",
+ "view_lib_sha256": "e93af8bb5a36cc796e19ecf424eacf196cbe51d6588d63fc9c37410661e868a7",
+ "signed": true,
+ "signoff_source": "/srv/opentallas-scratch2/claude/fable-fix-s81-colrom-r3/view2/ot_s81_cfg7_seq_rdxg_1121.part/signoff.json",
+ "signoff_verdict": "SIGNED",
+ "pins": {
+  "clk[0]": {
+   "tt": {
+    "mean_ps": 258.72,
+    "n": 431,
+    "basis": "pin_register_mean",
+    "source": "/srv/opentallas-scratch2/claude/fable-fix-s81-colrom-r3/view2/ot_s81_cfg7_seq_rdxg_1121.part/signoff.json:clk[0]:tt:insertion_pinflops"
+   },
+   "ff": {
+    "mean_ps": 194.12,
+    "n": 431,
+    "basis": "pin_register_mean",
+    "source": "/srv/opentallas-scratch2/claude/fable-fix-s81-colrom-r3/view2/ot_s81_cfg7_seq_rdxg_1121.part/signoff.json:clk[0]:ff:insertion_pinflops"
+   }
+  }
+ }
+}

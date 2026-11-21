@@ -169,7 +169,25 @@ module ot_s81_cfg7_seq_local #(
     wire [PHW-1:0] pend_ph;
     wire [2:0]   pend_np;
     reg [1:0]   tag;
-    wire        ld_ok = (PQ == 0) || (ef_i[0] && ef_i[1]);
+    // GO GUARD (FABLE-FIX-S81-COLROM-R2 2026-11-21, COORD ruling): ef = {bank_free, sh_free} reaches ef_i 10 edges after the go that
+    // switches the element's tag bank is seen here (go -> DL -> out flop -> q-bank station 2 -> ROM-input stage 1 -> element go
+    // boundary / status flop -> ef pin flop; bench tb_colrom_loop: 9 without the ROM-input stage, 10 with it).  A broadcast inside
+    // that window read a stale "free" and loaded the live bank (element fault, wrong tags).  With RD_EXTRA the load is HELD (pend, the
+    // existing path) for GG = 13 edges after the sequencer's own go (window 10 + 3 margin), so the stale value is never used: safe by
+    // construction, no schedule assumption.  0 cycles when the calendar already keeps the spacing.  RD_EXTRA = 0 / PQ = 0: unchanged.
+    // Negative control +define+OT_S81_CFG7_MUT_NOGUARD (no guard) must fail tb_colrom_loop at spacing 9.
+`ifdef OT_S81_CFG7_MUT_NOGUARD
+    localparam integer GG = 0;
+`else
+    localparam integer GG = (PQ != 0 && PINREG != 0 && RD_EXTRA != 0) ? 13 : 0;
+`endif
+    reg [3:0]   gg;
+    always @(posedge clk[0] or negedge rst_c)
+        if (!rst_c) gg <= 4'd0;
+        else if (go) gg <= 4'(GG);
+        else if (gg != 4'd0) gg <= gg - 4'd1;
+    wire        gg_ok = (GG == 0) || (gg == 4'd0 && !go);
+    wire        ld_ok = (PQ == 0) || (ef_i[0] && ef_i[1] && gg_ok);
     wire        ld_start = (cfg_go && ld_ok) || (PQ != 0 && pend && !cfg_go && ld_ok);
     // pending phase / np (PQ only).  PQ 0 has no pending load (ld_ok = 1, so ld_start == cfg_go) and every consumer
     // of pend_ph / pend_np sits behind cfg_go ? cfg_* : pend_*, so they alias cfg_ph / cfg_np; the registers used to be
