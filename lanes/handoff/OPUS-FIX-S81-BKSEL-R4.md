@@ -51,8 +51,9 @@ Then post PUSHED to S81-J6-ASSEMBLY.
 
 ## 4. Private bind / final form
 - build_r4 ($L/mk_tree_r4.sh: tree_r4 = cp -al of R3 tree_r3b + L4 RTL WITHOUT RO 8 + plan_r4 = R3 plan + L4 + rows_l4): status
-  otrun-tolerant-swine-3540756, log hub build_r4.otrun.log, outputs $L/build_r4 (ELAB_RC=0 at 21:0x; BIND/G0/LATCHECK/PRE pending).
-- chain_r4b ($L/chain_r4b.sh, NOT LAUNCHED): launch after build_r4 ends: copies the final 3 RTL files into tree_r4, plan_r4b = R3 plan
+  otrun-tolerant-swine-3540756: DONE 22:0x: ELAB 0, strict BIND 0 errors (398 partitions, 873 crossings), LATCHECK 873/873 PASS,
+  G0 2 errors (= the S81 baseline), PRE PASS.
+- chain_r4b ($L/chain_r4b.sh) LAUNCHED 22:0x, status otrun-tolerant-swine-4044037, log hub ~/opus-fix-s81-bksel-r4/chain_r4b.otrun.log: copies the final 3 RTL files into tree_r4, plan_r4b = R3 plan
   + L4 + rows_l4 + rows_stn_ro8 (replaces R3 u_stn_* keys), rebuild, GEN (pilot_r4b), place, geom_r4b, hop300_r4b.json. Launch:
   ot-run --mem 160 --threads 16 --hosts epyc7 --dir $L --stage <R3>/tree_r3b --stage /srv/opentallas-scratch2/claude/fable-fix-s81-bksel-r2
   -- bash $L/chain_r4b.sh  (OT_LANE set). Target: placed max <= 300 for every family the rows cover.
