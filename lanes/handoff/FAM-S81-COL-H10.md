@@ -19,3 +19,10 @@ Fix = R2 lever-1 OUTPUT half (ROM-PVAL): relay_depth sink D=1 on bnK e_r0 (u_w p
 ## Next
 1. bind/LAT result; place/geom; route+signoff A vs B.
 2. If B signs: rows for every ROM-bank col_h10 type (mkplan_h10.py) as J7 rows -> S81-J6-ASSEMBLY-R2; rebuild from src_manifest tree for export.
+## FABLE-CLOSURE-0600 levers (answered 05:4x, post REPLY FABLE-CLOSURE-0600)
+- Lever 3 (pvcc166a6d -131 GRT -> -391 sign-off): net y_x2_2_0.o[347] is unbuffered at GRT and at final (INVx4 -> e1/xb_data + t2_payload/i, HPWL 615 um). The GRT estimate already showed 1.2 ns slew. Repair was skipped (OT_MAXWIRE_POST_SKIP=1 in the J5 spec, so DRV is advisory). The routed wire C is 1.5x the estimate (86 -> 130 fF), so wire delay goes 386 -> 830 ps. Same corner, TT. Evidence: epyc8 fam-s81-col-h10/gap_pvcc166a6d/sta_{grt,final}.log. mkdepth405 ^col_h10_ on J5: 90 rows / 24 types; mkxalign: 24 / 6 (intel1 fam-s81-col-h10/lev3/). The x2_2_0 sink-span (573 um) is NOT covered and needs a RLYBR branch for the t2_payload sink.
+- Lever 6: u_cf faces are inverted relative to their feeders. Row = u_r0.u_cf R0 -> MX on the 12 r0_p1 + r0_p4 types (precedent col_h9_r0_p2).
+- Lever 1: name rule as-built = netlist minus u_bound.u_ (r0: u_r0_u_eN_u_w; r1/r2: u_eN_u_w). R3 + J6-R3 generate the RDX rows.
+- J7 rows owner is now S81-J6-ASSEMBLY-R3 (J6-R2 stood down).
+## Rep plan
+pv1619ecc6 J5 DRT at 13 violations; FABLE read TT after repair -46.8 (u_s13/q6, RDX class). If the sign-off is within ~10 ps of -42 on that path -> final near-miss ECO. cld01bb4ae (-32.0) is the alternate rep.
