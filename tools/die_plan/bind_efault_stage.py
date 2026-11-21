@@ -13,6 +13,9 @@ Opt-in asbuilt key (absent = byte-identical bind output):
         "cells": ["u_efault"],              optional: the ot_dp_efault cells to stage (default: every one in the type)
         "depth": 4,                         optional: minimum D (a computed need above it wins)
         "sites": "<json>" | {..}            optional: {type: {cell: {"at_um": [x, y], "src_um": {bus: [x, y]}}}}
+        "avoid_macros": true                optional (default false): station sites off the type's placed macros and
+                                            probe blockages (ft_seam_fix.macro_boxes; off_macro, 2 um gap), D grown
+                                            until every ACTUAL hop src -> stages -> at is <= reach_um (D + 8 at most)
     }
 
 Per staged cell, every eq bit i (an {"epoch": bus} entry; any other entry kind is an error) has a source point src_i (the
@@ -45,7 +48,7 @@ from pathlib import Path
 
 KEY = "efault_stage"
 MODULE = "ot_dp_efault"
-KEYS = {"types", "reach_um", "cells", "depth", "sites"}
+KEYS = {"types", "reach_um", "cells", "depth", "sites", "avoid_macros"}
 
 
 def _num(v):
@@ -75,9 +78,12 @@ def config(ab, base=None):
     cells = c.get("cells")
     if cells is not None and (not isinstance(cells, list) or not cells or not all(isinstance(x, str) and x for x in cells)):
         raise ValueError(f"asbuilt.{KEY}: cells must be a non-empty list of plan cell names")
+    am = c.get("avoid_macros", False)
+    if not isinstance(am, bool):
+        raise ValueError(f"asbuilt.{KEY}: avoid_macros must be true or false")
     sites = load_sites(c["sites"], base) if "sites" in c else {}
     return dict(types=[re.compile(x) for x in c["types"]], reach=float(r), depth=d,
-                cells=None if cells is None else set(cells), sites=sites)
+                cells=None if cells is None else set(cells), sites=sites, avoid_macros=am)
 
 
 def load_sites(v, base):
@@ -144,7 +150,26 @@ def stage_sites(src, at, D):
     return [[round(c, 3) for c in path_point(src, at, L * (k + 1) / (D + 1))] for k in range(D)]
 
 
-def plan_cell(cfg, tn, inst, cell, src_of, type_sites=None):
+def off_macro(boxes, xy, gap=2.0):
+    """xy, or the nearest point gap um outside the box (x0, y0, x1, y1) whose interior holds it, 4 tries (the
+    ft_seam_fix.off_macro rule, centre-only stations); None when it stays inside a box"""
+    x, y = float(xy[0]), float(xy[1])
+    for _ in range(4):
+        hit = next((b for b in boxes if b[0] < x < b[2] and b[1] < y < b[3]), None)
+        if hit is None:
+            return [round(x, 3), round(y, 3)]
+        x0, y0, x1, y1 = hit
+        c = min(((x - x0 + gap, -1, 0), (x1 - x + gap, 1, 0), (y - y0 + gap, 0, -1), (y1 - y + gap, 0, 1)))
+        x, y = x + c[1] * c[0], y + c[2] * c[0]
+    return None
+
+
+def chain_hop(src, regs, at):
+    pts = [tuple(src)] + [tuple(r) for r in regs] + [tuple(at)]
+    return max(md(a, b) for a, b in zip(pts, pts[1:]))
+
+
+def plan_cell(cfg, tn, inst, cell, src_of, type_sites=None, boxes=None):
     """the staging of plan cell `inst` (an ot_dp_efault cell dict) of type tn: dict(depth, age_old, age_new, at_um,
     max_hop_um, chains [{bus, bits, src_um, dist_um, regs_um}]).  src_of(bus) -> (x, y) | None is the plan point of the
     in-boundary flop of the bus; type_sites the sites-file entry of the type ({cell: {at_um, src_um}}).  ValueError on
@@ -196,16 +221,37 @@ def plan_cell(cfg, tn, inst, cell, src_of, type_sites=None):
         c = chains[b]
         c["dist_um"] = round(md(c["src_um"], at), 3)
         D = max(D, need(c["dist_um"], cfg["reach"]))
-    hop = 0.0
-    for b in order:
-        c = chains[b]
-        c["regs_um"] = stage_sites(c["src_um"], at, D) if D else []
-        hop = max(hop, c["dist_um"] / (D + 1))
+    moved = None
+    if boxes is not None and D:          # avoid_macros: off-macro sites, D grown until every actual hop <= reach
+        for Dt in range(D, D + 9):
+            regs = {b: [off_macro(boxes, s) for s in stage_sites(chains[b]["src_um"], at, Dt)] for b in order}
+            if any(r is None for v in regs.values() for r in v):
+                continue
+            if max(chain_hop(chains[b]["src_um"], regs[b], at) for b in order) <= cfg["reach"] + 1e-6:
+                break
+        else:
+            raise ValueError(f"{KEY} {tn}.{inst}: no off-macro station sites with every hop <= {cfg['reach']} um "
+                             f"for depth {D}..{D + 8}")
+        moved = sum(1 for b in order for r, s in zip(regs[b], stage_sites(chains[b]["src_um"], at, Dt))
+                    if r != [round(c, 3) for c in s])
+        D = Dt
+        for b in order:
+            chains[b]["regs_um"] = regs[b]
+        hop = max(chain_hop(chains[b]["src_um"], chains[b]["regs_um"], at) for b in order)
+    else:
+        hop = 0.0
+        for b in order:
+            c = chains[b]
+            c["regs_um"] = stage_sites(c["src_um"], at, D) if D else []
+            hop = max(hop, c["dist_um"] / (D + 1))
     if hop > cfg["reach"] + 1e-6:          # cannot happen with the rule above: the guard keeps the law honest
         raise ValueError(f"{KEY} {tn}.{inst}: hop {hop:.1f} um > reach {cfg['reach']} um at depth {D}")
     age0 = int(age)
-    return dict(depth=D, age_old=age0, age_new=age0 + D, at_um=list(at), max_hop_um=round(hop, 3),
-                reach_um=cfg["reach"], chains=[chains[b] for b in order])
+    out = dict(depth=D, age_old=age0, age_new=age0 + D, at_um=list(at), max_hop_um=round(hop, 3),
+               reach_um=cfg["reach"], chains=[chains[b] for b in order])
+    if boxes is not None:
+        out["moved_off_macro"] = moved or 0
+    return out
 
 
 def site_rows(inst, regs):

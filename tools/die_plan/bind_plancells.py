@@ -348,8 +348,12 @@ class PlanCells:
             raise err(f"{ES.KEY} {tn}: sites entry must be {{cell: {{at_um, src_um}}}}")
         out, rec = {}, {}
         try:
+            boxes = None
+            if cfg.get("avoid_macros"):          # station sites off the type's placed macros / probe blockages
+                import ft_seam_fix as SF
+                boxes = [tuple(float(v) for v in b) for b in SF.macro_boxes(typ)]
             for inst in ES.staged_cells(cfg, t["cells"]):
-                plan = ES.plan_cell(cfg, pt, inst, t["cells"][inst], lambda b: TS.src_xy(typ, b), sites)
+                plan = ES.plan_cell(cfg, pt, inst, t["cells"][inst], lambda b: TS.src_xy(typ, b), sites, boxes)
                 row = dict({k: v for k, v in plan.items() if k != "chains"}, cells=0, flops=0, chains=[], sites={})
                 rec[inst] = row
                 D = plan["depth"]

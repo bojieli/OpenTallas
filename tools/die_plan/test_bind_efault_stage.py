@@ -134,6 +134,40 @@ def test_site_rows():
                                                                          "u_efs2_efault_3.q": [3.0, 4.0]}
 
 
+def test_avoid_macros_off_box_and_depth_grows():
+    """avoid_macros: a stage that falls in a macro box moves off it (2 um gap); D grows when the move breaks the reach"""
+    assert cfg()["avoid_macros"] is False and cfg(avoid_macros=True)["avoid_macros"] is True
+    with pytest.raises(ValueError):
+        cfg(avoid_macros=1)
+    src = {"a": (0, 0)}.get
+    row = {"u_efault": {"at_um": [900, 0]}}
+    p0 = ES.plan_cell(cfg(), "t", "u_efault", cell(["a"]), src, row)
+    assert p0["depth"] == 2 and p0["chains"][0]["regs_um"] == [[300.0, 0.0], [600.0, 0.0]] and "moved_off_macro" not in p0
+    # a small box round the first stage: it moves 3 um down (2 um gap), D stays 2, every hop still <= 300
+    r8 = {"u_efault": {"at_um": [800, 0]}}
+    small = [(260.0, -1.0, 270.0, 10.0)]
+    p1 = ES.plan_cell(cfg(), "t", "u_efault", cell(["a"]), src, r8, small)
+    regs = p1["chains"][0]["regs_um"]
+    assert p1["depth"] == 2 and p1["moved_off_macro"] == 1 and regs[0] == [266.667, -3.0] and regs[1] == [533.333, 0.0]
+    assert ES.chain_hop((0, 0), regs, (800, 0)) <= 300 and p1["max_hop_um"] <= 300
+    # a box the D-2 stage leaves sideways (300 -> 248: hop 352): D grows to 3, whose sites clear the box
+    box = [(250.0, -50.0, 350.0, 100.0)]
+    p4 = ES.plan_cell(cfg(), "t", "u_efault", cell(["a"]), src, row, box)
+    regs = p4["chains"][0]["regs_um"]
+    assert p4["depth"] == 3 and p4["age_new"] == 10 and p4["max_hop_um"] <= 300
+    assert not any(b[0] < x < b[2] and b[1] < y < b[3] for x, y in regs for b in box)
+    # no off-macro answer within D + 8: fail closed
+    with pytest.raises(ValueError, match="no off-macro station sites"):
+        ES.plan_cell(cfg(), "t", "u_efault", cell(["a"]), src, row, [(-10.0, -500.0, 890.0, 500.0)])
+    # no box hit: same sites as without, moved 0
+    p2 = ES.plan_cell(cfg(), "t", "u_efault", cell(["a"]), src, row, [(1000.0, 1000.0, 1100.0, 1100.0)])
+    assert p2["chains"][0]["regs_um"] == p0["chains"][0]["regs_um"] and p2["moved_off_macro"] == 0
+    # within reach: no stations, nothing moved
+    p3 = ES.plan_cell(cfg(), "t", "u_efault", cell(["a"]), src, {"u_efault": {"at_um": [100, 0]}}, box)
+    assert p3["depth"] == 0 and p3["moved_off_macro"] == 0
+    assert ES.off_macro(box, (300, 0)) is not None and ES.off_macro([], (1, 2)) == [1.0, 2.0]
+
+
 # ------------------------------------------------------------------------------------------------ end to end
 BUSES = ["d0_i", "d1_i", "f0_i", "f1_i"]
 SITES = {"ts": {"u_efault": {"src_um": {"d0_i": [0, 0], "d1_i": [1000, 0], "f1_i": [1000, 800]}}}}
