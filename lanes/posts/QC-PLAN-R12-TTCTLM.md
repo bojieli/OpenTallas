@@ -1,0 +1,1 @@
+- 2026-11-21 13:37 PST DONE [QC-PLAN-R12-TTCTLM] ot-run oth-ubuntu-4091307-1795296698 on tolerant-swine: rc=0 after 370 s, ended 13:37:42, log /srv/opentallas-scratch2/claude/qc-plan-r12-ttctlm/specs/A_rae/kit_rtl.live.log, cmd: --mem 8 --threads 2 --dir /srv/opentallas-scratch2/claude/qc-plan-r12/ttctlm/kitA_rae --hosts epyc7 -- bash -c [ -f /srv/opentallas-scratch2
