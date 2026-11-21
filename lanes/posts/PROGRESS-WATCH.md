@@ -163,3 +163,4 @@
 - 2026-11-21 11:37 PST ALERT STUCK-STATE s81: 29 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. bk_sel__t2, 2026-11-21 04:14)
 - 2026-11-21 11:47 PST ALERT NO-ADVANCE s81: 6 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (slice_station__t45 x3@pipeline, slice_station__t18 x3@pipeline, serdes__t14 x2@pipeline)
 - 2026-11-21 11:47 PST ALERT STUCK-STATE s81_head: 1 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. hd_host_n, 2026-11-20 22:18)
+- 2026-11-21 11:57 PST ALERT NO-PROGRESS s81_head: 17 eligible rows, 0 KIT-WAVE LAUNCH for 256 min (last 07:41); no DIE-OFF / NO-LAUNCH line
