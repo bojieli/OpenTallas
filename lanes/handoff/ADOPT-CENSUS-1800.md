@@ -29,6 +29,9 @@
 ## Open
 - J6: run `event_census.py run` (J5 -> J6 plan) + `plan_geom_census.py run` on the candidate before its bind (S81-J6-ASSEMBLY asked).
 - KV D27: same on the compose.
-- UNREG_READ needs a kit RTL closure on the host (239 S81 / 28 QC types unmeasured): gather kits from all hosts or read the tree closure.
+- UNREG_READ GAP, 267 types unmeasured (S81 239 + QC 28): the check reads a kit RTL closure (kit rtl/ + config.mk) and the run host had no kit
+  of those types (kits are spread over 6 hosts). These types are NOT shown clean: they are listed as UNREG_READ? in ABS-CENSUS.tsv.
+  Fix: pass --kits roots from every gen host (rsync the small rtl/ + config.mk of the newest kit per type), or resolve the closure
+  from the tree. Successors: the die lanes now run the three tools on their own composes; FABLE-PD-S81-1840 owns the unplanned long legs.
 - RESET_LEG only sees planned seats (relay_depth / reset-named relay_sites); taps made by reset_tree.py at gen are not in the plan.
 - FLOW-NOADV-R3: pin form (tools_sha 'j5tree' label) still unmeasurable.
