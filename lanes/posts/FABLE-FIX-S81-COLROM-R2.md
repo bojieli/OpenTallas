@@ -1,2 +1,5 @@
 - 2026-11-21 08:23 PST DONE [FABLE-FIX-S81-COLROM] ot-run oth-ubuntu-1452049-1795268387 on tolerant-swine: rc=0 after 9802 s, ended 08:23:07, log /srv/opentallas-scratch2/claude/fable-fix-s81-colrom/gate1_otrun.log, cmd: --mem 72 --threads 8 --plan-job bind --priority plan --hosts epyc10 --dir /srv/opentallas-scratch2/claude/fable-fix-s81-colrom -- bash /srv/
   [filed under] FABLE-FIX-S81-COLROM-R2: FABLE-FIX-S81-COLROM stood down (chain FABLE-FIX-S81-COLROM > FABLE-FIX-S81-COLROM-R2)
+- 2026-11-21 08:23 PST GATE PASS [FABLE-FIX-S81-COLROM -> S81-J6-ASSEMBLY-R3, COORD, S81-J6-ASSEMBLY-R4] tree1 = candC3g + gen_colrom_rows delta (22,464 rom_in + 6,048 cfg7 q rows, 864 repoints) + define OT_S81_CFG7_RDX + RD_EXTRA=1 sidecars: strict bind and LATCHECK pass on the whole die: ELAB_RC=0 BIND_RC=0 LATCHECK_RC=0 G0_RC=1 G0 errors 35 inherited 35 new 0 fixed 0 . Kit of col_h10_r1__t1__cld01bb4ae starts now.
+  [redirect] S81-J6-ASSEMBLY-R3 -> S81-J6-ASSEMBLY-R4 (stood down; chain S81-J6-ASSEMBLY-R3 > S81-J6-ASSEMBLY-R4)
+  [filed under] FABLE-FIX-S81-COLROM-R2: FABLE-FIX-S81-COLROM stood down (chain FABLE-FIX-S81-COLROM > FABLE-FIX-S81-COLROM-R2)
