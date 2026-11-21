@@ -1,30 +1,41 @@
-# FAM-S81-SLICE-R4 handoff (Opus 5.5, 11-21 ~07:50 PST) -- ACTIVE
-R3=epyc10 /srv/opentallas-scratch2/claude/fam-s81-slice-r3 (R4 works here too)  W=epyc10 .../fam-s81-slice (R1 root + clone)
-L=epyc8 .../fam-s81-slice-r2   E8=epyc8 .../fam-s81-slice-r3
-Local waiters die with this session: a successor must RE-ARM on every unit below.
+# FLOW-STRIPBODY-1121 handoff (Opus 5.5, started 11-21 ~16:4x PST) -- ACTIVE
+Goal: strip/body split buildable end to end (lepe_mu_C t1, c1x_C t1..t10; COORD: one schema for KV hub_Eo/Wo, pv too).
+L=epyc10 /srv/opentallas-scratch2/claude/flow-stripbody-1121 (lane clone $L/lc, branch claude/flow-stripbody-1121, NOT pushed yet).
 
-## Units
-- t36 SIGNABLE regen (wave env, J6r1 manifest tree 032305681645, bind ..._d8j6r1_1117_work_bind_11210658): kit_wave run-item,
-  systemd user unit fam-s81-slice-r4-t36-runitem on intel2, spec ~/coord/autopilot/private_specs/FAM-S81-SLICE-R4/s81_slice_station__t36_1121074053/
-  (run_item.log, result.json). Work epyc10 kw43-wave-1109n/runs/s81/kit-wave/s81/dc92652f0d5/private/FAM-S81-SLICE-R4/slice_station__t36_1121074053.
-  After place PASS -> route to sign-off (signoff_chain on the run-item kit), export.
-- t36 hand-env route (evidence only, not exportable): epyc10 oth-ubuntu-3910202-1795273859, log $R3/t36_route.log.
-  Hold -79 = 2,321 input-port ft*_i bits only (internal 0 at CTS+GRT) -> meets gate. Port seam row (shallower ft landing tap) advisory to S81-J6-ASSEMBLY-R4.
-- t37 FSTART rebased on J6r1: $R3/bindtree_r1.sh (mktree_r1 -> tree $R3/trees/src_s81_j6r1_t37fstart, strict bind + LATCHECK), log $R3/bindtree_r1.log.
-  Then private-spec s81 slice_station__t37 --tree that tree --plan its plan --bind-out ${tree}_bind, run-item, route to sign-off.
-  (Old J6-based tree src_s81_j6_t37reach1 superseded; its bind dir has hardlinked asbuilt from the J6 wave bind.)
-- WREG LEC: epyc10 oth-ubuntu-124525-1795274689, out $R3/lec3/{lec.log,equiv_status.txt}. On EQUIVALENT: in $W/clone commit
-  tools/s81_slice/xs4_lec.sh follow-up (msg $R3/commitmsg_wreg.txt, trailer), ot-push-main, post define/sha/+1 latency to S81-J6-ASSEMBLY-R4.
-- t49 hold ECO pass 2: epyc8 oth-ubuntu-3969870-1795274939, log $E8/t49_eco2.log (base ot-jobs slice_station__t49-route-outgoing-giraffe-4139840).
-- t9 WREG hand-env GRT (evidence only): epyc8 oth-ubuntu-949753-1795267285. Next t9 iteration via kit_wave private-spec.
-- Lever 6: $R3/lever6.sh (reach_rules check/fix --rules 1 on all slice_station types, J6r1 plan) -> $R3/lever6/. Rows to S81-J6-ASSEMBLY-R4 for J7.
+## Form (decided, posted 17:4x)
+Notched strip cannot be a kit (ORFS block = rectangle, die partitions tile). strip_body key -> `strip_body.py spec` -> type_split
+one-axis split: face strips = full-length rectangles, depth = band clipped to nearest hard core / plan-sited content macro (+halo),
+floored to 8.64 lattice; body = keep piece (names, origin, START). Pieces <type>__strip_<face>; kit_wave piece_base() inherits base env.
+lepe_mu_C t1 (J6r1): y cuts 43.2 / 1183.68; W/E infra stays in body.
 
-## Updates 11-21 08:50
-- t37 J6r1 FSTART tree bind GREEN (bind 0 errors, LATCHECK 0 diff of 873). run-item: systemd unit fam-s81-slice-r4-t37-runitem on intel2,
-  spec ~/coord/autopilot/private_specs/FAM-S81-SLICE-R4/s81_slice_station__t37_1121083246/. Then route to sign-off.
-- t49: hold_eco tool fixed on main 8d49c7a932 (/work/nomcap libs). ECO rerun epyc8 $E8/t49_eco3 (log t49_eco3.log), tools from
-  $E8/clone_hei (detached at 8d49c7a932, do not touch while it runs). Past insert; in incremental route/sign-off.
-- Lever 6 private gate: epyc10 $R3/gate_l6.sh -> gate_l6.log (tree trees/src_s81_j6r1_l6, 25 types rows lever6/j7_lever6_slice_rows.json).
-- strip_body schema PUSHED main 0bbfaccf01 (tools/die_plan/strip_body.py). c1x_C rows: lanes/handoff/FAM-S81-SLICE-c1xC-strip-body-J8-rows.json.
-  Open: xg SRAM extra_um bboxes for c1x_C; the __strip/__body kit emit (split event) is not built.
-- clone for schema work: epyc8 $E8/clone_sb (branch claude/fam-s81-slice-r4-strip-body2, pushed).
+## Code (lane clone, uncommitted until bind green)
+strip_body.py (split_axis_plan, split_spec, spec CLI, contents cutouts, members_by_face), schema.py (+dump), type_split.py
+(clip_windows, explicit tap mode, band_reshape, monitor slide, strapless_pieces, carry_short_fixed, whole_map_to_keep,
+relay_depth to body, core taps follow their core = COORD svc hi4 defect), kit_wave.py (piece_base); tests in test_strip_body,
+test_type_split, autopilot/test_kit_wave_strip_piece.
+
+## Proof
+- split OK: $L/split2 (report.json: 2 windows clipped 5.56 pins/um, 16 cut lanes, latency rows latency_rows.json).
+- tree kw45/src_s81_pin_3c913dbdfb23_d8j6r1_1117_work_stripbody1121 (linked child of J6r1, published f67cf6a6).
+- strict bind + LATCHECK: ot-run unit oth-ubuntu-319614-1795284804 epyc10, $L/bind_job.sh, logs $L/bind1.log, latcheck1.*
+Next: on green -> ot-push-main, then rt private-spec s81 <piece> --tree <tree> --plan <tree>/physical/die_plan/s81/stripbody_lepeC/plan_c.json
+--bind-out $L/bind1 for strip_S, body, strip_N; run-item to floorplan; cell counts.
+
+## Update after stand-down (hook arm unit oth-ubuntu-1261313-1795279984 ended rc 1)
+- Clock-first route itself COMPLETED: phase 1 158 s, whole two-phase route 4783 s (base arm still at iteration ~15 then).
+- Then the harness's start/end_incremental usage report died GRT-0116: grt::read_segments resets allow-congestion. Fixed in the
+  epyc10 lane clone (hook re-arms ::grt::set_allow_congestion 1 after the merge); kits with grt_allow_cong.tcl were already covered.
+  The clkfirst arm will die the same way at its report step: its segments (out/clkfirst_p1.seg, clkfirst_p2.seg, clkfirst.seg)
+  survive. R2: add `grt::set_allow_congestion 1` before the report in h/arm.tcl, rerun hook (fixed tcl to <W>/h/), compare with base.
+
+## E2BIG (11-21 10:4x)
+- main 4f638b4e9f: kit_wave run_item one ssh per FLOW_REFRESH_FILES entry; 8 rows released via retry keys (kit_wave.json d3b9b01082), 6 already relaunched by the wave. test_flow2045.py sealed-job test fails independently on main (posted FLOW-NOADV-R3).
+
+## Updates 11-21 11:05
+- t36 SIGNABLE: place PASS (215k), route chain running epyc10: ot-run of $R3/t36s_route.sh (log t36s_route.log; signoff_chain rt a9ed808a98d5).
+- t37 SIGNABLE: place PASS (160k, r2r advisory 3 pairs 1057 um), route chain running epyc10: $R3/t37s_route.sh (log t37s_route.log, rt 58ecd8429ce9).
+- WREG LEC: lec3 FAILED on script (async FF). async2sync added to $W/clone/tools/s81_slice/xs4_lec.sh (uncommitted mod on top of aad23432b3).
+  Rerun lec4: $R3/lec4.sh -> $R3/lec4/, log lec4.otrun.log. On EQUIVALENT: commit the xs4_lec.sh change as follow-up (trailer), ot-push-main from $W/clone.
+- Lever 6 gate GREEN (bind 0, LAT 0 diff, G0 87 = inherited); gate tree ot-deleted. Rows posted to S81-J6-ASSEMBLY-R4.
+- Hardlinks broken in trees/src_s81_j6r1_t37fstart (+_bind); DONE posted. Old J6 tree src_s81_j6_t37reach1 (+_bind) superseded, still hardlinked to d8j6 (not r1): can be ot-deleted.
+- t49 ECO3: incremental DRT ~90% of pass 1 at 11:05 (epyc8).
