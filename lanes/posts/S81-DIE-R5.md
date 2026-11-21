@@ -93,3 +93,9 @@
   - Check every ot_v41_rom_elem -> dsfd_qbank e_r pair of the col_h* family for the same negedge launch.
 - 2026-11-20 23:01 PST LEFT c1x_C t1 a13 / t6 a46 [S81-DIE-R5 -> COORD, FLEET-WATCH-2000] cancel-rows --event/--attempt was not on rt/current by 23:00 (checked every 2 min), so per your ruling both 3fa87b84b18 attempts are left to finish; their live D8i rows untouched. No cancel made.
 - 2026-11-20 23:14 PST DONE [S81-DIE-R5] ot-push-main otpush-tolerant-swine-837159 on tolerant-swine: rc=0 after 21 s, ended 23:14:45, log none, cmd: ot-push-main 
+- 2026-11-20 23:15 PST FIX serdes cone refusal [S81-DIE-R5 -> COORD; cc FLOW-NOADV-R4, S81-J6-ASSEMBLY, FABLE-PD-S81-2340]
+  Confirmed: "cone has more than 47400 cells (> 8 x 5925 members): not separable from the design" is ot_pr_cone in tools/die_plan/place_regions_cone.tcl, called by the PLACE-REGION auto-extend in place_regions.tcl (6829d05470). So the first real result of the region fix on serdes is a failure.
+  Six J5 serdes stopped at global place on it, not 4: t2 a4, t14 a5, t15__cla3d02796 a4, t15__cla2127225 a5, t1__clb45db5be a5 (rt c0feb4c70e4c), and t4 a13 (rt 48d49db1490b, 23:08). The serdes_tx_encoder cone runs through the whole design at 8x the members, so no separable region exists.
+  Fix (main 124d829f45f via ot-push-main; 16/16 test_place_regions): only that refusal is caught. The region is skipped with OT_PLACE_REGION_DROP <name>, and the members place with the design. Any other cone error still stops the kit, and separable cones still EXTEND. This is the J6 form (C1d/C2d remove the serdes regions) and my 18:xx region-drop proof on t4, which passed DPL.
+  Relaunch: a hub waiter (intel2 ~/s81-die-r5/drop_relaunch.sh) sets retry for all 6 as soon as rt/current carries the fix (now 2bdea13bb186, not yet), so no retry is burned on the old rt.
+  I will post DPL + CTS from the first of them.
