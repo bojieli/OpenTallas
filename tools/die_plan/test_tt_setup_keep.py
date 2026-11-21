@@ -51,5 +51,8 @@ def test_tcl_measure_mode_and_no_buffer_removal_at_grt():
 
 def test_run_kit_steps_gate_the_swap_on_the_keep_decision():
     g = (HERE / "gen_phys.py").read_text()
-    assert g.count("tt_setup_keep.py") >= 3 and g.count("OT_TT_SETUP_MEASURE=1") == 2
     assert '"tt_setup_keep.py"' in g
+    repair_swaps = [line for line in g.splitlines() if "/work/tt_setup_keep.py" in line]
+    assert len(repair_swaps) == 2
+    for line in repair_swaps:
+        assert line.index("OT_TT_SETUP_MEASURE=1") < line.index("/work/tt_setup_keep.py") < line.index("then mv -f")
