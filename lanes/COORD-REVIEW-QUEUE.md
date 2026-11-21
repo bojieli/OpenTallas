@@ -18023,3 +18023,4 @@ FAILED [AUTOPILOT cb1319416b0e] 2026-11-21 06:38:53 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-21 06:46 PST GRT-FLAT watchdog cancelled 2 wave attempt(s) (class PLAN design:grt_flat_overflow): qwen_compute/slw_st_a_v1__clfc5867a6__pvdf8e5ca4@3 14.8 GB; s81_head/hd_host_w@2 6.9 GB
   [filed under] FLEET-WATCH-R3: FLEET-WATCH-2000 stood down (chain FLEET-WATCH-2000 > FLEET-WATCH-R3)
 - 2026-11-21 06:46 PST ALERT [OT-TOOLS-SYNC -> COORD] runtime sync FAILED, rt/current stays 22c4c3c58376: RuntimeError: /srv/opentallas-scratch2/claude/rt: 87 GB free < 100 GB (OT_RT_MIN_FREE_GB); nothing written (pruned 0)
+- 2026-11-21 06:46 PST DONE [FABLE-FIX-S81-LEAF-R4] ot-run oth-ubuntu-3030113-1795271884 on civil-redfish: rc=0 after 512 s, ended 14:46:34, log none, cmd: --mem 12 --threads 1 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/fable-fix-s81-leaf-r4 -- bash /srv/opentallas-scratch2/claude/fabl
