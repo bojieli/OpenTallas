@@ -16656,3 +16656,4 @@ FAIL_POSTPLACE PLACE-SETUP-STOP wns -607532.69 ps < -300 ps (TT, post-place; rou
 - 2026-11-21 01:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-21 01:52 PST: 276 running jobs, PROGRESSING 265, SLOW 9, NO-PROGRESS 2 (advisory, no cancel); table lanes/NOPROG.tsv
   NO-PROGRESS epyc7 serdes__t13 lec stage 16.5 h job 16.5 h: LEC last file/log write 16.5 h ago
   NO-PROGRESS epyc9 coll_core 5_1_grt stage 16.5 h job 26.0 h: repair_Viol best 221 last 221 rows 259 window-gain 0.0%; stagnant 10.0 h; last event 0.1 h ago, log write 0.0 h ago (2231 lines)
+- 2026-11-21 01:52 PST DONE [S81-BKSEL-R5] ot-run oth-ubuntu-2978594-1795241574 on tolerant-swine: rc=0 after 13205 s, ended 01:52:54, log /home/ubuntu/s81-bksel-r5/chain_r4c.otrun.log, cmd: --mem 160 --threads 16 --hosts epyc7 --dir /srv/opentallas-scratch2/claude/s81-bksel-r5/w --stage /srv/opentallas-scratch2/claude/opus-fix-s
