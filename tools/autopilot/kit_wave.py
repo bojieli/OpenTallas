@@ -2073,6 +2073,14 @@ def item_key_matches(key, name):
     return key == "*" or key == name or name.startswith(key + "__") or (bool(re.search(r"[*?\[]", key)) and fnmatch.fnmatchcase(name, key))
 
 
+def env_key_applies(key, name):
+    """BUILD-SETTINGS-AUDIT-1900 11-20 (COORD): an item_env key applies to an item exactly as item_env_entry applies it -- the exact
+    name or an fnmatch glob, never the '<key>__...' base prefix that hold / only keys use (94 __pv / __pad variants silently missed
+    their parent's env while the drift check, matching by prefix, reported nothing)"""
+    key, name = str(key), str(name)
+    return key == name or (bool(re.search(r"[*?\[]", key)) and fnmatch.fnmatchcase(name, key))
+
+
 def plan_config_drift(d, names):
     """FLOW-R2 11-17 (COORD, S81 col after D6z): the plan names col_h9_r2__t1 while only_items / item_env / hold keys named the old suffixed
     variants, and the wave dropped the rows as 'outside configured only_items' without a word.  -> {only: [plan items no only_items entry covers],
@@ -2085,7 +2093,7 @@ def plan_config_drift(d, names):
     if isinstance(only, list):
         out["only"] = [n for n in names if not any(item_key_matches(o, n) for o in only)]
         out["only_unmatched"] = [o for o in only if not any(item_key_matches(o, n) for n in names)]
-    out["env"] = sorted(k for k in (d.get("item_env") or {}) if not any(item_key_matches(k, n) for n in names))
+    out["env"] = sorted(k for k in (d.get("item_env") or {}) if not any(env_key_applies(k, n) for n in names))
     keys = set(k for k in (d.get("hold_items") or {}))
     for rec in d.get("hold_records") or []:
         keys.update(str(x) for f in ("keys", "items", "patterns") for x in rec.get(f) or [])

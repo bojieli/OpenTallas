@@ -76,3 +76,16 @@ def test_hold_zero_match_counts_against_the_current_plan_not_state_rows():
     c.pop("_plan_item_names")
     HR.compile_holds(c)
     assert not [f for f in HR.audit(c) if f["code"] == "HOLD-ZERO-MATCH"]  # plan names unknown: old behavior
+
+
+def test_env_drift_uses_the_item_env_entry_rule():
+    """BUILD-SETTINGS-AUDIT-1900: a base item_env key whose only plan items are its __pv variants is reported (it applies to none of
+    them); a family glob that covers the variants is not, and the variant then inherits the parent env through it"""
+    d = {"item_env": {"col_a__t1": {"OT_GEN_M8_GRANT": "1"}, "col_b__t1": {"OT_GEN_M8_GRANT": "1"},
+                      "col_b__t1__pv*": {"OT_GEN_M8_GRANT": "1"}}}
+    names = ["col_a__t1__pv1", "col_b__t1__pv2"]
+    dr = KW.plan_config_drift(d, names)
+    assert dr["env"] == ["col_a__t1", "col_b__t1"]
+    assert KW.item_env_entry(d, "col_b__t1__pv2") == {"OT_GEN_M8_GRANT": "1"}
+    assert KW.item_env_entry(d, "col_a__t1__pv1") == {}
+    assert KW.env_key_applies("col_b__t1__pv*", "col_b__t1__pv2") and not KW.env_key_applies("col_a__t1", "col_a__t1__pv1")
