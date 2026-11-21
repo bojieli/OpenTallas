@@ -152,13 +152,13 @@ def run(cmd, inp=None, timeout=3600):
     return subprocess.run(cmd, input=inp, capture_output=True, text=True, timeout=min(timeout, max(30.0, T_START + HARD_S - time.time())))
 
 
-def stream(host, base, todo):
+def stream(host, base, todo, overwrite=False):
     """tar on the host, zstd through localhost, untar on the archive with --skip-old-files.  -> True when both ends exit 0"""
     p1 = subprocess.Popen(host_cmd(host, 'set -o pipefail; nice -n 15 tar -C / --null -T - -cf - | nice -n 15 zstd -q -T2 -3 -c'),
                           stdin=subprocess.PIPE, stdout=subprocess.PIPE)
     p1.stdin.write(('\0'.join(todo) + '\0').encode()); p1.stdin.close()
     q = shlex.quote(base)
-    p2 = subprocess.Popen(AGI + ['set -o pipefail; mkdir -p %s && zstd -q -d -c | tar -C %s --skip-old-files -xf -' % (q, q)],
+    p2 = subprocess.Popen(AGI + ['set -o pipefail; mkdir -p %s && zstd -q -d -c | tar -C %s %s -xf -' % (q, q, '--overwrite' if overwrite else '--skip-old-files')],
                           stdin=subprocess.PIPE)
     t0, sent = time.time(), 0
     while True:
@@ -245,6 +245,23 @@ def archive_host(h, cands, fails, max_bytes=None):
     say(h, 'files', len(files), '%.2f GB' % (sum(files.values()) / 1e9), 'to send', len(todo))
     if todo and not stream(h, base, todo):
         fails.append([h, '*', 'stream failed']); return {}, P
+    # FLOW-CANARY-R2 11-21 (COORD item e): a kit re-signed or rewritten in place after its first archive (same absolute path, new content: .kw_inputs.json,
+    # signoff.json, logs ...) leaves a STALE archive copy; --skip-old-files never replaced it, so every file of the record stayed "unverified" (intel1 4, intel2 75
+    # files) and 57 records never entered the store.  A stale copy is replaced only when NO store entry of this archive lists that path with the archive's sha
+    # (an entry that counts it keeps its bytes); then the host copy overwrites it and the verify below hashes both again.
+    have_ = [p for p in sorted(files) if a0.get(p) is not None]
+    if have_:
+        H0 = json.loads(run(host_cmd(h, 'nice -n 15 ionice -c2 -n7 python3 -I %s hash' % tool), '\n'.join(have_) + '\n', 7200).stdout)
+        diff_ = [p for p in have_ if H0.get(p) is not None and H0.get(p) != a0.get(p)]
+        if diff_:
+            ref = set()
+            for e in ss.read_manifest():
+                if e.get('archive') == ss.ARCHIVE_ROOT + '/' + h:
+                    ref.update((f[0], f[2]) for f in e.get('files', []) if len(f) > 2)
+            free = [p for p in diff_ if (p.lstrip('/'), a0[p][1]) not in ref and (p, a0[p][1]) not in ref]
+            say(h, 'stale archive copies', len(diff_), 'replaceable', len(free))
+            if free and not stream(h, base, free, overwrite=True):
+                fails.append([h, '*', 'stale-copy overwrite failed']); return {}, P
     A = json.loads(run(AGI + [hash_], lst, 7200).stdout)
     H = json.loads(run(host_cmd(h, 'nice -n 15 ionice -c2 -n7 python3 -I %s hash' % tool), lst, 7200).stdout)
     good = {p: A[p] for p in files if A.get(p) is not None and A.get(p) == H.get(p)}
