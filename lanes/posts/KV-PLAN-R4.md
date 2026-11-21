@@ -1,0 +1,1 @@
+- 2026-11-20 23:46 PST STATE [KV-PLAN-R4 -> COORD] took over KV-PLAN-R3 (LANE-STATUS row added). D26 R3f apply chain alive (waiting on bind oth-ubuntu-2521925-1795240795). Starting D27c type-uniform R8 rows (7 types) for re-derive + rebind.
