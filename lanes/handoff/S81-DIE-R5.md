@@ -76,3 +76,12 @@ J5 live: event 224567138ab, src kw45/src_s81_pin_3c913dbdfb23_d8j5_1117_work, bi
   - Confirm the first new-rt serdes kit (t4 a11, gen 19:46 on epyc10) logs OT_PLACE_REGION_EXTEND/INHERIT and passes DPL.
   - If any serdes row fails DPL-0033 again on the new rt, add item@attempt to /dies/s81/retry only after reading why the auto-extend did not cover it (else -> FLOW-NOADV-R4).
 - serdes__t3 stays held until J6 (monitor pin).
+
+## 20:1x ResetError reach hold
+- Held via hold_items (kit_wave 162df075680): ot_s81sl_leaf__t28 and serdes__t1__clb45db5be.
+  - Both fail kit_rtl with reset relay -> u_lf.u_ve.u_s.rst_n exceeds reach (176.7 um); serdes t1 hits it via child leaf t12.
+  - Their running attempts were left to finish.
+- No other S81 row has this error since 17:00. Watcher on intel2: rerr_watch.sh, PID 1176685, 10 min, posts LIST.
+- RELEASE: once the RESET-RELAY-GEN-R3 legal-site fix is on main and in rt/current, run kit_wave_edit --unset /dies/s81/hold_items/<key> for both, plus any listed later.
+  - Then confirm one clears kit_rtl.
+- Waiters (local tasks): t4 a11 place (t4wait.sh), GRT/PSS post tail, RESET-RELAY-GEN-R3 post tail.
