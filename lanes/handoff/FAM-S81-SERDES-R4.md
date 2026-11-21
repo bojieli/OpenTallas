@@ -18,3 +18,13 @@ Lane clone: epyc7 /srv/opentallas-scratch2/claude/fam-s81-serdes-core (clean, ma
 - t12/t14/t16: the offline cohort check is clean with both the old and the new model (epyc2 fam-s81-serdes-r4/cohort_offline). Rows left alone.
 - enc_j6a: routed LEC NOT EQUIVALENT (24 ch_q[448..471]) = the H0_SEQ_ONLY=0 constant-flop artifact; defines are at parity. DO NOT EXPORT. Synth-netlist LEC check: intel2 PID 3721361 (out enc_j6a/lec_kit/lec_synth).
 - main 87eed3536ba: split form u_enc = ot_s81_kp4_enc_core (H0_SEQ_ONLY=1); bench PASS / mut1 FAIL. New core kit s81fam_kp4_ench, build ench_j6a on epyc8, intel2 PID 3846312. Next: signoff.py -> lec.py (6_final.v) -> export only on EQUIVALENT. The hard_cores row for u_enc must name module ot_s81_kp4_enc_core.
+
+## STAND-DOWN 09:4x (COORD: context ~304k) -> FAM-S81-SERDES-R5. Units handed (do not cancel; re-arm your own waiters):
+| what | unit | intel2 client PID | next |
+|---|---|---|---|
+| ench_j6a enc core (kit s81fam_kp4_ench, epyc8; out fam-s81-serdes-build/ench_j6a{/,.log,.exit}) | oth-ubuntu-1624257-1795281812 | 3846312 | EXIT=0 -> signoff.py run --run-dir B/work/orfs --kit B/work/orfs --sdc B/signoff.sdc --name s81fam_kp4_ench --out B/signoff --corners tt,ff (as R3 did for enc_j6a); then lec.py on 6_final.v (kit RTL = common + enc + enc_core, -DSYNTHESIS, top ot_s81_kp4_enc_core); EQUIVALENT -> export s81/ot_s81_kp4_enc_core__fam_j6a_1121 |
+| enc_j6a synth-netlist LEC (diagnostic, step 2) | oth-ubuntu-932666-1795281391 | 3721361 | expect the same 24 ch_q differs -> confirms the synth fold; post it |
+| dec_j6c cluster dec core (epyc8) | oth-ubuntu-3823626-1795274482 | 1603457 | EXIT=0 -> signoff -> LEC -> export |
+| t4 private rep kit (spec autopilot/private_specs/FAM-S81-SERDES-R4/s81_serdes__t4_1121074458, tools a9ed808a98d5, epyc10) | run-item PID 2092058; place service kwp-1a8cfdd137714375d181 | 2092058 | at place since 08:23; post when it passes CTS (cohorts now fit); if run-item stops at geom PASS, route it (run_kit.sh GOAL=route) |
+| kit_wave rows t12/t14/t16 a1 (ENQUEUED route) | kw-s81-serdest12-1-66906 / 14-1-66906 / 16-1-66898 | - | cohorts clean; leave alone |
+Then: private strict bind + LATCHECK with u_dec (ot_s81_kp4_dec_lp_core) + u_enc (ot_s81_kp4_enc_core) hard cores (R3 Next 2), shell census, J7 rows for 11 types incl. core_pg_connect publish for u_dec and drop shell core_pg_M4/M5 grids.
