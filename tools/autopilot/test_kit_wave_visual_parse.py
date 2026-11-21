@@ -210,3 +210,25 @@ def test_event_review_blocks_only_its_changed_items_and_accepts_its_exact_kit(tm
     before = dict(admitted)
     K.enqueue_pass(None, cfg, {}, admitted, {})
     assert admitted == before
+
+
+def test_required_route_review_uses_exact_viewed_verdict(tmp_path, monkeypatch):
+    reviews = tmp_path / "coord" / "lanes" / "GEOM-REVIEW.md"
+    reviews.parent.mkdir(parents=True)
+    reviews.write_text(
+        "GEOM VERDICT [viewed] s81/t1 attempt_1: GOOD kit=epyc9:/older\n"
+        "GEOM VERDICT [AUTO-VISUAL-REVIEW viewed logs] s81/t1 attempt_1: GOOD kit=epyc9:/new\n"
+        "GEOM VERDICT [viewed actual placement] s81/t1 attempt_2: ISSUES kit=epyc9:/new\n"
+        "GEOM VERDICT [viewed actual placement] s81/t1 attempt_3: GOOD kit=epyc9:/new\n"
+    )
+    monkeypatch.setattr(K.Path, "home", lambda: tmp_path)
+    monkeypatch.setattr(K, "_VISUAL_CACHE", {"mtime": None, "v": {}})
+    policy = {"event": "J", "items": ["t1"], "required": True}
+    cfg = {"dies": {"s81": {"event": "J", "review_before_route": policy}},
+           "stops_off": True, "wait_visual": False}
+    row = {"die": "s81", "event": "J", "item": "t1", "attempt": 1, "kit": "epyc9:/new", "status": "PASS"}
+    assert K.route_hold_reason(cfg, row).startswith("WAIT-VISUAL")
+    assert K.route_hold_reason(cfg, dict(row, attempt=2)).startswith("WAIT-FORM")
+    assert K.route_hold_reason(cfg, dict(row, attempt=3)) is None
+    assert K.route_hold_reason(cfg, dict(row, event="older")) is None
+    assert K.route_hold_reason(cfg, dict(row, item="unchanged")) is None

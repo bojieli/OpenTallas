@@ -15453,12 +15453,12 @@ def visual_verdicts():
         if p.exists():
             break
     else:
-        _VISUAL_CACHE.update(mtime=None, v={}, ts={}, exact={}, unparsed=[])
+        _VISUAL_CACHE.update(mtime=None, v={}, ts={}, exact={}, viewed={}, unparsed=[])
         return {}
     try:
         mt = (str(p), p.stat().st_mtime)
         if _VISUAL_CACHE["mtime"] != mt:
-            v, ts, exact, bad = {}, {}, {}, []
+            v, ts, exact, viewed, bad = {}, {}, {}, {}, []
             for ln in p.read_text(errors="replace").splitlines():
                 r = parse_visual_line(ln)
                 if r == "UNPARSED":
@@ -15467,8 +15467,11 @@ def visual_verdicts():
                     v[r[:3]] = r[3]
                     ts[r[:3]] = verdict_line_ts(ln)
                     if kit := re.search(r"(?:^|\s)kit=([^\s`]+)", ln):
-                        exact[(*r[:3], kit[1])] = r[3]
-            _VISUAL_CACHE.update(mtime=mt, v=v, ts=ts, exact=exact, unparsed=bad)
+                        key = (*r[:3], kit[1])
+                        exact[key] = r[3]
+                        if "GEOM VERDICT [AUTO-VISUAL-REVIEW" not in ln:
+                            viewed[key] = r[3]
+            _VISUAL_CACHE.update(mtime=mt, v=v, ts=ts, exact=exact, viewed=viewed, unparsed=bad)
     except OSError:
         pass
     return _VISUAL_CACHE["v"]
@@ -15654,7 +15657,7 @@ def visual_queue_publish(cfg, st):
                 rec["updated"] = time.time()
                 continue
         if rec.get("status") == "ROUTE-HELD" and h.startswith("WAIT-VISUAL") and exact_policy:
-            verdict = exact_kit_visual_verdict(rec)
+            verdict = exact_kit_visual_verdict(rec, viewed_only=required_route_review(cfg, rec))
             if verdict in VISUAL_REJECT:
                 rec["route_hold"] = route_hold_reason(cfg, rec)
                 rec["updated"] = time.time()
@@ -15728,18 +15731,42 @@ def review_kit_location(rec):
     return f"{host}:{kit}" if host and kit.startswith("/") else ""
 
 
-def exact_kit_visual_verdict(rec):
+def required_route_review(cfg, rec):
+    """The die explicitly requires an exact placement verdict before dispatch."""
+    d = (cfg.get("dies") or {}).get(rec.get("die")) or {}
+    return ((d.get("review_before_route") or {}).get("required") is True
+            and review_before_route(cfg, rec))
+
+
+def exact_kit_visual_verdict(rec, viewed_only=False):
     kit = review_kit_location(rec)
     if not kit:
         return None
     visual_verdicts()
     key = (rec["die"], rec["item"], int(rec.get("attempt") or 0), kit)
-    return (_VISUAL_CACHE.get("exact") or {}).get(key)
+    index = "viewed" if viewed_only else "exact"
+    return (_VISUAL_CACHE.get(index) or {}).get(key)
+
+
+def required_route_hold(cfg, rec):
+    if not required_route_review(cfg, rec):
+        return None
+    kit = review_kit_location(rec)
+    verdict = exact_kit_visual_verdict(rec, viewed_only=True)
+    if verdict in VISUAL_REJECT:
+        return f"WAIT-FORM: exact kit {kit} visual verdict {verdict}; rebuild on a changed form"
+    if verdict not in VISUAL_ACCEPT:
+        return f"WAIT-VISUAL: view the placement and record a GEOM VERDICT with kit={kit or '<host:/kit/path>'}"
+    return None
 
 
 def route_hold_reason(cfg, rec):
     """An optional die-owned hold on new ROUTE submissions, never on an admitted unit."""
-    if review_before_route(cfg, rec):
+    if required_route_review(cfg, rec):
+        if why := required_route_hold(cfg, rec):
+            return why
+        rec.pop("visual_pending", None)
+    elif review_before_route(cfg, rec):
         kit = review_kit_location(rec)
         verdict = exact_kit_visual_verdict(rec)
         if verdict in VISUAL_REJECT:
