@@ -7976,6 +7976,11 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         if _tt in ("grt", "both") and os.environ.get("OT_HOLD_AFTER_TT", "").strip() == "1":     # HOLD-AFTER-TT 11-17: hold repair after the GRT TT setup repair
             shutil.copyfile(Path(__file__).with_name("hold_after_tt.sh"), kd / "hold_after_tt.sh")
             shutil.copyfile(Path(__file__).with_name("hold_after_tt_keep.py"), kd / "hold_after_tt_keep.py")
+    _pps = postplace_stop_ps()       # PLACE-SETUP-STOP: run_kit measures TT setup of 3_place.odb and stops below this (flag file read by run_kit.sh)
+    if _pps is not None:
+        for _f in ("tt_setup_repair.tcl", "postplace_setup_stop.py"):
+            shutil.copyfile(Path(__file__).with_name(_f), kd / _f)
+        (kd / "postplace_setup_stop.on").write_text(f"{_pps:g}\n")
     _mc = os.environ.get("OT_MERGE_CENSUS", "0").strip()
     if _mc in ("1", "warn"):
         shutil.copyfile(Path(__file__).with_name("merged_replica_census.py"), kd / "merged_replica_census.py")
@@ -8225,6 +8230,22 @@ def install_gp_noconverge_gate(kd, cfg, die=None):
          f"export OT_PLACE_MAX_FANOUT = {fo}"] if fo else []) + (
         [f"# PLACE-SLEW (CORE-LIB-LIMITS-1330): design max_transition for place repair; hard-core pins have no liberty limit",
          f"export OT_PLACE_MAX_TRANSITION = {mt:g}"] if (mt := place_max_transition(die)) else [])
+
+
+def postplace_stop_ps(env=None):
+    """PLACE-SETUP-STOP (FLEET-WATCH-1630, owner rule 11-20): the TT setup WNS (ps) below which a kit ends after detail place, else None.
+    Default -300 (OT_POSTPLACE_SETUP_STOP_PS).  Exempt (None): OT_POSTPLACE_SETUP_STOP=0, lane proofs (OT_LANE set or OT_PRIVATE_KIT=1),
+    ECO rows (OT_ECO set), rows flagged keep_going (OT_KEEP_GOING=1).  Hold-only failures never trip it: only setup is measured."""
+    env = os.environ if env is None else env
+    if env.get("OT_POSTPLACE_SETUP_STOP", "").strip() == "0" or env.get("OT_LANE", "").strip() or env.get("OT_PRIVATE_KIT", "").strip() == "1" \
+            or env.get("OT_ECO", "").strip() not in ("", "0") or env.get("OT_KEEP_GOING", "").strip() == "1":
+        return None
+    v = env.get("OT_POSTPLACE_SETUP_STOP_PS", "").strip()
+    try:
+        r = float(v) if v else -300.0
+    except ValueError:
+        raise ValueError(f"OT_POSTPLACE_SETUP_STOP_PS must be a number (ps), got {v!r}") from None
+    return r if r < 0 else None
 
 
 def gpl_sparse_overflow(die=None, tn=None):
@@ -8800,6 +8821,11 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
   if [ \$rc = 0 ] && [ -f /work/hop_census.on ] && { [ $GOAL = cts ] || [ $GOAL = grt ] || [ $GOAL = route ] || [ $GOAL = finish ]; }; then \$M place; rc=\$?; \
     if [ \$rc = 0 ]; then PO=\$(ls /work/run/results/asap7/*/base/3_place.odb 2>/dev/null | head -1); GATE=1 ODB=\$PO TAG='$NAME' OUT=/work/hop_census.json openroad -python -exit /work/hop_census.py > /work/hop_census.log 2>&1; hc=\$?; grep -h -E '^HOPSUM|^OT_HOP_CENSUS' /work/hop_census.log; \
       if [ \$hc != 0 ] && ! grep -q warn /work/hop_census.on; then echo 'FAIL_POSTPLACE hop census (GENBUG-5.2: zero-logic hops over reach / across a hard core, see hop_census.log)' | tee -a /work/FAIL_POSTCTS; rc=6; fi; fi; fi; \
+  if [ \$rc = 0 ] && [ -f /work/postplace_setup_stop.on ] && [ -f /work/postplace_setup_stop.py ] && { [ $GOAL = cts ] || [ $GOAL = grt ] || [ $GOAL = route ] || [ $GOAL = finish ]; }; then \$M place; rc=\$?; \
+    if [ \$rc = 0 ]; then PP3=\$(ls /work/run/results/asap7/*/base/3_place.odb 2>/dev/null | head -1); \
+      if [ -n \"\$PP3\" ]; then OT_TT_SETUP_MEASURE=1 OT_POSTPLACE_WORST=1 ODB=\"\$PP3\" openroad -exit /work/tt_setup_repair.tcl > /work/postplace_setup.log 2>&1; \
+        python3 -I /work/postplace_setup_stop.py --log /work/postplace_setup.log --stop \$(head -1 /work/postplace_setup_stop.on) --marker /work/FAIL_POSTCTS --json /work/place_setup_stop.json; ppr=\$?; \
+        if [ \$ppr = 6 ]; then rc=6; fi; fi; fi; fi; \
   if [ \$rc = 0 ] && { [ $GOAL = cts ] || [ $GOAL = grt ] || [ $GOAL = route ] || [ $GOAL = finish ]; }; then \
     \$M cts SKIP_CTS_REPAIR_TIMING=1; rc=\$?; \
     if [ \$rc = 0 ] && grep -Eq '^export OT_(TAP_GRT_PRE|PINREG_PAD) = 1' /work/config.mk; then TB=\$(ls /work/run/results/asap7/*/base/4_cts.odb 2>/dev/null | head -1); [ -z \"\$TB\" ] || cp -p \"\$TB\" /work/4_cts_pretapbal.odb; \

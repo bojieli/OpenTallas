@@ -3854,6 +3854,8 @@ RULES = [
     ("PLAN", None, r"is blocked|fails? closed|no legal site|DPL-0033|DPL-0036|not in plan|unknown (?:partition )?type|"
                    r"(?:ERROR|Error|error|FAIL)[^\n]*\boutline\b|utili[sz]ation .* exceeds|\[ERROR PDN-0\d+|Error:[^\n]*PDN-0\d+", "plan geometry / site"),   # FABLE-FLOW-2355: bare "outline" matched the info line "GRTM mode edge_outline image"
     ("PLAN", r"^geom$", r"FAIL", "AUTO-GEOM rule FAIL (geometry)"),
+    # FLOW-NOADV-R3 11-20 (owner rule 11-20, FLEET-WATCH-1630): the kit ended after detail place, TT setup WNS below -300 ps (postplace_setup_stop.py)
+    ("PLAN", None, r"FAIL_POSTPLACE PLACE-SETUP-STOP", "PLACE-SETUP-STOP: post-place TT setup below the stop, routing cannot close it (plan item for the die owner's next plan event)"),
     ("PLAN", r"^kit_topology$", r"KIT_TOPOLOGY_(?:BIND_STALE|CONTEXT|REGENERATE|SOURCE)",
      "native source stage/reset realization differs: regenerate the canonical bind/kit"),
     # FLOW-NOADV-R3 11-20 (COORD): kit_istations refuses two station rows that claim the same flop site (ec16babe0d): a plan/station-row
@@ -6936,6 +6938,7 @@ _TYPED = (("stopped", re.compile(r"interrupted \(signal 15|terminated by signal 
                                r"Connection timed out|Operation timed out|ssh transport|SSH probe exit 255|Host key verification failed|"
                                r"Could not resolve hostname|ot-run: NOT (?:RUN|COMPLETED)|no host qualifies|kex_exchange_identification|"
                                r"Connection (?:reset|closed) by", re.I)),
+          ("design:place_setup_stop", re.compile(r"FAIL_POSTPLACE PLACE-SETUP-STOP")),
           ("design:station_overlap", re.compile(r"kit_istations:[^\n]*station rows \S+ and \S+ claim overlapping sites")),
           ("sdc_lint", re.compile(r"SdcLintError|sdc_lint", re.I)),
           ("stale_view", re.compile(r"STALE-CORE-VIEW|stale (?:closed )?view|view .*(?:stale|does not match)", re.I)),

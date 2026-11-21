@@ -102,7 +102,35 @@ proc ot_tt_wns {tag} {
 # r268 (FABLE-FIX-HEAD-TYPES, hd_serdes sd2): OT_TT_SETUP_MEASURE=1 only reads the TT setup wns/tns of ODB in this same frame and exits;
 # the run_kit step uses it on the WRITTEN repaired DB (a fresh session = what every later reader sees) before keeping it.
 if {[info exists ::env(OT_TT_SETUP_MEASURE)] && $::env(OT_TT_SETUP_MEASURE) eq "1"} {
+  if {[info exists ::env(OT_POSTPLACE_WORST)] && $::env(OT_POSTPLACE_WORST) eq "1"} { ot_tt_est }   ;# a placed DB carries no parasitics: estimate them (placement RC) before reading the slack
   ot_tt_wns measure
+  # FLOW-NOADV-R3 11-20 (PLACE-SETUP-STOP): OT_POSTPLACE_WORST=1 also names the worst path's start / end and its longest hop (um, manhattan between
+  # consecutive instances of the path); informational, never fatal
+  if {[info exists ::env(OT_POSTPLACE_WORST)] && $::env(OT_POSTPLACE_WORST) eq "1"} {
+    if {[catch {
+      sta::redirect_string_begin
+      report_checks -path_delay max -group_path_count 1 -format full
+      set ot_pw_txt [sta::redirect_string_end]
+      set ot_pw_s "?"; set ot_pw_e "?"
+      regexp {Startpoint:\s+(\S+)} $ot_pw_txt -> ot_pw_s
+      regexp {Endpoint:\s+(\S+)} $ot_pw_txt -> ot_pw_e
+      set ot_pw_blk [ord::get_db_block]
+      set ot_pw_prev ""; set ot_pw_hop 0.0
+      foreach ln [split $ot_pw_txt "\n"] {
+        if {![regexp {^\s*[-0-9.]+\s+[-0-9.]+\s+[\^v]\s+(\S+)/\S+\s+\(} $ln -> ot_pw_i]} continue
+        set ot_pw_inst [$ot_pw_blk findInst $ot_pw_i]
+        if {$ot_pw_inst eq "NULL"} continue
+        lassign [$ot_pw_inst getLocation] ot_pw_x ot_pw_y
+        if {$ot_pw_prev ne "" && $ot_pw_prev ne $ot_pw_i} {
+          lassign $ot_pw_pxy ot_pw_px ot_pw_py
+          set ot_pw_d [expr {(abs($ot_pw_x - $ot_pw_px) + abs($ot_pw_y - $ot_pw_py)) / double([$ot_pw_blk getDbUnitsPerMicron])}]
+          if {$ot_pw_d > $ot_pw_hop} { set ot_pw_hop $ot_pw_d }
+        }
+        set ot_pw_prev $ot_pw_i; set ot_pw_pxy [list $ot_pw_x $ot_pw_y]
+      }
+      puts [format "OT_POSTPLACE_WORST start=%s end=%s hop_um=%.1f" $ot_pw_s $ot_pw_e $ot_pw_hop]
+    } ot_pw_err]} { puts "OT_POSTPLACE_WORST start=? end=? hop_um=? (worst path read failed: $ot_pw_err)" }
+  }
   exit 0
 }
 # FLOW-FIX-2045 (COORD lever 8, FABLE-CLOSURE: S81 lepe proof5 ran 9 h / 3,200 repair iterations flat at -270 and left no DB): the repair is run in chunks of OT_REPAIR_CHUNK iterations
