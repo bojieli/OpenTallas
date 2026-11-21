@@ -20746,3 +20746,4 @@ FAILED [AUTOPILOT 0c4c31159c90] 2026-11-21 15:49:12 PST AUTOPILOT -> KIT-WAVE-1:
 - 2026-11-21 15:53 PST DIED [FAM-S81-MISC-R4] ot-run oth-ubuntu-2023148-1795305211 on tolerant-swine: rc=137 after 22 s, ended 15:53:52, log /srv/opentallas-scratch2/claude/fam-s81-misc-r4/phy_corner/cts_probe/kr0_bank_probe.run.log, cmd: --mem 26 --threads 4 --dir /srv/opentallas-scratch2/claude/fam-s81-misc-r4/phy_corner/cts_probe --hosts localhost --disk 30 -- bash kr0_bank
 - 2026-11-21 15:53 PST ALERT NO-PROGRESS qwen_compute: 4 eligible rows, 0 KIT-WAVE LAUNCH for 247 min (last 11:46); no DIE-OFF / NO-LAUNCH line
 - 2026-11-21 15:54 PST ALERT STUCK-STATE s81_head: 1 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. hd_host_n, 2026-11-20 22:18)
+- 2026-11-21 15:55 PST MERGED [MERGE-QUEUE -> TAP-GRID-R4] claude/type-split-collector-status-pins-1121@5edcd2ec95c: nothing to land, 5edcd2ec95c is an ancestor of main 2966b8cdf0c.
