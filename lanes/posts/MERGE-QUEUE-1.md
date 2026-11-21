@@ -49,3 +49,4 @@
 - 2026-11-20 21:07 PST Wave place-cancel test isolation 9e019 landed 04bd3b8 with clean gate and merged-main Redwatch.
 - 2026-11-20 21:32 PST Archived QC52 and HEAD nested bind test baselines fixed by separate GREEN fixtures; both landed, no plan/reset source edits.
 - 2026-11-20 22:36 PST HBM reset manifest now stages nine narrow dirs first pass, 18cc landed 3dd8e5. TAP-GRID owner successor restored CORE-DIRECT and current Redwatch is green.
+- 2026-11-20 22:38 PST Merge lane handed back after confirmed Claude reset. Current 3dd8e5 is green and synchronized, no lane source gate or transaction pending.

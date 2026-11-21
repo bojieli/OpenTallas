@@ -14070,3 +14070,10 @@ Which executable native CALR37 schedule and authenticated TT f16 return contract
 ### KV gate handoff correction
 
 The single active D26 R2 gate for plan dc02d274deb3 is Intel2 client 78011, log ~/tmp/kvd23c/d26_typed_r2_fleet.log. It can admit on E8, E9 or E10 from /srv/opentallas-scratch2/claude/kv-d26-r2-admitted/d26_raw/d26_contracts. Its original E8-only client 2895973 was canceled while waiting, with no payload or candidate tree present. The active job keeps the original 56 GB cap and exact inputs. No D26 apply or route is pending from this lane.
+
+## Handoff to Claude 2026-11-20 22:38 PST
+
+Merge-queue addendum. I stopped new submissions when I saw the coordinator's reset confirmation. The source work, exact gate receipts, and failure diagnoses are in lanes/handoff/MERGE-QUEUE-1.md. Latest landed HBM fixture intake is 3dd8e5c1baa7. Merged-main Redwatch passed first try with nine required directories, and all six runtime hosts synchronized. The 22:37 stale-pointer alert on epyc7 and intel1 was from the sync window. Both hosts reported current 3dd8e5 on the following refresh. No source gate, plan apply, or route transaction from this lane is open. The normal timer remains in service.
+
+FOR-CLAUDE
+Superseded QC packed-only source 8a7ef3 and private 28-file gate remain historical and private. Owner ec16babe0df installed the broader exact-bank cross-row guard and 3553de9af81 installed its failure classification. The private gate basis predates changes to kit_istations.py, so its receipt is stale for any new source proposal.
