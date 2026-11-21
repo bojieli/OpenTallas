@@ -2712,7 +2712,9 @@ def name_stuck_retry_infra(AP, cfg, st, now=None, grace_s=1200):
             name = "SUPERSEDED"
             r.update(status="CANCELLED", **{"class": "SUPERSEDED"}, retry_stop=name, updated=now,
                      reason=f"SUPERSEDED: RETRY-INFRA row of event {r.get('event')}; the die is on {d.get('event')}")
-        elif FG.held_key(st, die, item):
+        elif any(__import__("fnmatch").fnmatchcase(item or "", pat) for pat in (d.get("hold_items") or {})):
+            name = "HOLD-ITEM"        # FLEET-WATCH-R4 11-21: a die hold_items entry (infra_relaunch_due honours it) is the stop, not an older flow class of the item
+        elif r.get("class") != "INFRA" and FG.held_key(st, die, item):      # an INFRA attempt (cancelled, no design result) inherits no older class hold (FLEET-WATCH-R4 11-21)
             name = "HELD:" + FG.held_key(st, die, item)[:60]
         elif fail_key_gate(cfg, st, die, item, r.get("block_sha"))[0]:
             name = "FAIL-KEY"
@@ -3235,6 +3237,9 @@ def family_plan(cfg, st, die, picks):
     ev = d.get("event")
     for k, members in fam.items():
         rep_row = max(members, key=lambda r: (fails.get(r["item"], 0), r["item"]))
+        _named = next((r for r in members if r["item"] == (d.get("family_reps") or {}).get(k)), None)
+        if _named is not None:                       # FLEET-WATCH-R4 11-21: a family lane's own representative (die config family_reps {family: item}) wins
+            rep_row = _named
         reps[k] = rep_row["item"]
         for r in members:
             if r is rep_row:
@@ -3247,8 +3252,25 @@ def family_plan(cfg, st, die, picks):
             for r in members:
                 if r is not rep_row:
                     held[r["item"]] = f"FAMILY-HOLD {k}: representative {rep_row['item']} failed ({last.get('class') or '?'} @{last.get('stage') or '?'}) on this plan; its siblings wait for the family fix"
+    # FLEET-WATCH-R4 11-21 (FABLE-FLOW-0200 b, OWNER "reps first"): a family with a type estimated over the 400k cell cap admits ONE representative; its siblings are held (SIBLING-BIG)
+    # until a representative of the family has PASSED (CTS-clean geom) on the current event.  A representative already running / queued (not a pick) holds every pick of the family.
+    # Die opt-out: big_reps_first false.
+    if d.get("big_reps_first") is not False:
+        _big = {t for t, f in (d.get("_plan_flags") or {}).items() if f == "split"}
+        _rows = list((st.get("items") or {}).values())
+        for k, members in fam.items():
+            _cur = [x for x in _rows if x.get("die") == die and str(x.get("event") or "") == str(ev or "") and family_of(die, x.get("item") or "") == k]
+            if not any(m["item"] in _big for m in members) and not any(x.get("item") in _big for x in _cur):
+                continue
+            if any(x.get("status") in ("PASS", "ROUTE-HELD") for x in _cur):
+                continue
+            _alive = [x for x in _cur if x.get("status") in ("RUNNING", "LAUNCHING", "ENQUEUED", "RETRY-INFRA") and x.get("item") not in {m["item"] for m in members}]
+            for r in members:
+                if (_alive or r["item"] != reps[k]) and r["item"] not in held:
+                    held[r["item"]] = (f"SIBLING-BIG {k}: representative {_alive[0]['item'] if _alive else reps[k]} (family has a type over {SPLIT_CELLS} cells) has not passed CTS yet; "
+                                       f"siblings wait")
     rep_set = set(reps.values())
-    ordered = [r for r in picks if r["item"] in rep_set] + [r for r in picks if r["item"] not in rep_set and r["item"] not in held]
+    ordered = [r for r in picks if r["item"] in rep_set and r["item"] not in held] + [r for r in picks if r["item"] not in rep_set and r["item"] not in held]
     meta = {"families": len(fam), "reps": sorted(rep_set), "siblings": len(sibs), "held": len(held)}
     return ordered, held, meta
 
