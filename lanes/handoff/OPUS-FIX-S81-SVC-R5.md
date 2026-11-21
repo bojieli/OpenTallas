@@ -14,7 +14,7 @@ MEASURED (epyc9 opus-fix-s81-svc-r5/census, yosys hierarchical synth, abc -D 833
 CODEX WORK TAKEN OVER (do not duplicate):
 - land SRAM candidate claude/s81-svc-r5-land-sram-1121 @9bd318e90366 (-DOT_SVC_ATT_LAND_SRAM); exact macro lockstep 12,000 checks,
   mutant caught at 341; needs the full arithmetic proof. Model land-split-model.json (12 macros no ROWX / 30 with ROWX, 0 local cycles).
-- E9 units (waiter epyc9 PID 4131162 -> opus-fix-s81-svc-r5/r5-waiters.log): 3968457 scoped ELAB (split-hi4/elab_r5_hi4_local.sh),
+- E9 units (PID waiter epyc9 4168427 -> opus-fix-s81-svc-r5/r5-waiters.log; ot-wait by unit name returns at once there): 3968457 scoped ELAB (split-hi4/elab_r5_hi4_local.sh),
   3370152 global old H8 ELAB (elab_r5_retry.sh), 2295988 full ATT bench (run_att_mem.sh ROWX=1 NCYC=25000 SEEDS 1 5, land-eq/att),
   2412579 programme bench (land-eq/prog2.sh).
 - E10 split compose 2494448 FINISHED (split-hi4-band-test/x_epoch: plan_c.json, census_map_split_0.json at 11:34 UTC).
