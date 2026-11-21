@@ -460,3 +460,6 @@
 - 2026-11-21 14:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-21 14:52 PST: 178 running jobs, PROGRESSING 166, SLOW 10, NO-PROGRESS 2 (advisory, no cancel); table lanes/NOPROG.tsv
   NO-PROGRESS epyc2 kit drt_TT stage 36.1 h job 36.1 h: drt_violations best 14534 last 14534 rows 2 window-gain 0.0%; stagnant 6.2 h; last event 1.8 h ago, log write 1.2 h ago (1497 lines)
   NO-PROGRESS epyc10 slw_su_c__cl92142dac 5_1_grt stage 25.3 h job 44.5 h: repair_Viol best 737 last 737 rows 309 window-gain 0.0%; stagnant 12.1 h; last event 0.0 h ago, log write 0.0 h ago (766 lines)
+- 2026-11-21 15:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-21 15:52 PST: 164 running jobs, PROGRESSING 154, SLOW 8, NO-PROGRESS 2 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc2 kit drt_TT stage 37.1 h job 37.1 h: drt_violations best 14534 last 14534 rows 2 window-gain 0.0%; stagnant 7.2 h; last event 2.0 h ago, log write 1.0 h ago (1499 lines)
+  NO-PROGRESS epyc10 slw_su_c__cl92142dac 5_1_grt stage 26.3 h job 45.5 h: repair_Viol best 737 last 737 rows 362 window-gain 0.0%; stagnant 13.1 h; last event 0.0 h ago, log write 0.0 h ago (819 lines)
