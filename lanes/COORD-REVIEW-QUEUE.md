@@ -16129,3 +16129,4 @@ FAILED [AUTOPILOT c7e7e02101fb] 2026-11-20 23:50:32 PST AUTOPILOT -> KIT-WAVE-12
   NO-PROGRESS epyc7 serdes__t13 lec stage 14.5 h job 14.5 h: LEC last file/log write 14.5 h ago
   NO-PROGRESS epyc9 coll_core 5_1_grt stage 14.5 h job 24.0 h: repair_Viol best 221 last 221 rows 202 window-gain 0.0%; stagnant 8.0 h; last event 0.1 h ago, log write 0.0 h ago (2174 lines)
 - 2026-11-20 23:52 PST DIED [FAM-QC-HCST] ot-run oth-ubuntu-2184280-1795247562 on renewed-glider: rc=4 after 4 s, ended 07:52:44, log none, cmd: --mem 8 --threads 2 --hosts epyc9 --dir /srv/opentallas-scratch2/claude/fam-qc-hcst/c1 -- /home/ubuntu/.local/bin/pytest -q -x -p no:cachepr
+- 2026-11-20 23:53 PST DIED [FAM-QC-HCST] ot-run oth-ubuntu-2200730-1795247587 on renewed-glider: rc=1 after 7 s, ended 07:53:12, log none, cmd: --mem 8 --threads 2 --hosts epyc9 --dir /srv/opentallas-scratch2/claude/fam-qc-hcst/c1 -- /home/ubuntu/.local/bin/pytest -q -x -p no:cachepr
