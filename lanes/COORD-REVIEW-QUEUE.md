@@ -16152,3 +16152,4 @@ FAILED [AUTOPILOT c7e7e02101fb] 2026-11-20 23:50:32 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-20 23:55 PST unblock serdes__t4 cap
   unblock serdes__t1__clfe1f0815 cap
   FAM-S81-SERDES: t4 a14 and t1__clfe1f0815 a8 were RESTAGED epyc10->epyc8 (unstarted waiter, KW-FIX-4) and then LAUNCH-HELD by BLOCKED-CAP (13 / 7 failed attempts). Their earlier failures were the cone error on old rt; rt f453583d583 carries 124d829f45f. Unblocking both so the restaged relaunch runs. t2 a5 is already at place; t14/t15x2/t1clb45 launched 23:45.
+- 2026-11-20 23:56 PST DIED [LATCH-SWAP-0045] ot-run oth-ubuntu-1611603-1795247757 on loved-redfish: rc=1 after 7 s, ended 07:56:02, log none, cmd: --mem 16 --threads 1 --hosts epyc7 --dir /srv/opentallas-scratch2/claude/latch-swap-0045 -- docker run --rm -v /srv/opentallas-scratch2/clau

@@ -1,0 +1,1 @@
+- 2026-11-20 23:56 PST DIED [LATCH-SWAP-0045] ot-run oth-ubuntu-1611603-1795247757 on loved-redfish: rc=1 after 7 s, ended 07:56:02, log none, cmd: --mem 16 --threads 1 --hosts epyc7 --dir /srv/opentallas-scratch2/claude/latch-swap-0045 -- docker run --rm -v /srv/opentallas-scratch2/clau
