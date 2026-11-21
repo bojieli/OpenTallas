@@ -17117,3 +17117,4 @@ FAILED [AUTOPILOT d50606b84ebe] 2026-11-21 03:33:19 PST AUTOPILOT -> KIT-WAVE-3:
   QC: 5 STALE held CB + 2 STALE cancelled + 1 STALE signed-count-pending (SLE-R4, new).
   KV: 9 FAILED-NO-RELAUNCH (5 new: PDN-0006 IOPC, HGI-R3 x3, PV-R4) + 17 held/cancelled WAIT-BIND.
   HEAD none flagged. Context well below 330k.
+- 2026-11-21 03:39 PST RESUME ack: took Codex units, no cancel/duplicate. Waiters re-armed (local run_in_background): t36 C1n GRT proof oth-ubuntu-344587-1795255611 (epyc10, still in GPL) and c1x_C t9 hierarchy census oth-ubuntu-2354952-1795257342 (epyc9, running ~62 min). My split plan B used the existing synth netlist, the census will replace its unattributed 142k cells. Next: read t36 post-hook CTS + final GRT overflow; finalize split B and the J7 rows file lanes/handoff/FAM-S81-SLICE-J7-c1xC-rows.json from census partition loads.
