@@ -1,2 +1,3 @@
 - 2026-11-21 04:03 PST R2 up. t5 variants v1/v2/v3 still chaining on epyc10 (v1 ~25 min in), t2 part-B census3 yosys running; waiters armed. Will report variant G0 result and gate count.
 - 2026-11-21 04:50 PST DONE [FAM-S81-MISC-R2] ot-run oth-ubuntu-4154811-1795265150 on civil-redfish: rc=0 after 2777 s, ended 12:50:44, log none, cmd: --mem 16 --threads 2 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/fam-s81-misc -- bash mk_gunit.sh
+- 2026-11-21 04:51 PST t2 cut correction (FABLE-PD-S81-0440 via COORD): use x=1684.80 (1693 was 1.1 um inside the ft2 window and off grid). Part A = west 0-1684.80, part B = east 1684.80-4328 (183-macro store). S81-J6-ASSEMBLY-R2: please use 1684.80 for the J7 re-partition. I will recheck 0 straddling macros at the new x.
