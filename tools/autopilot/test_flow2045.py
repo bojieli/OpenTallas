@@ -238,7 +238,7 @@ def test_kit_flow_refresh_always_replaces_the_listed_flow_files_at_every_stage(t
         (kit / n).write_text("# old copy of " + n + "\n")
     held = open(kit / "stage_odb_cap.py"); ino = (kit / "stage_odb_cap.py").stat().st_ino
     rec = KFR.refresh(str(kit), "route", rt=str(rt), index=str(tmp_path / "no_index.json"))
-    assert sorted(r["file"] for r in rec["replaced"] if r["from"] == "always") == ["hold_cap.tcl", "kit_reports.py", "kit_resume.py", "repair_bound.tcl", "run_kit.sh", "stage_odb_cap.py", "tt_setup_repair.tcl"]      # kit_reports.py is created in a legacy kit
+    assert sorted(r["file"] for r in rec["replaced"] if r["from"] == "always") == ["env_provenance.py", "hold_cap.tcl", "kit_reports.py", "kit_resume.py", "repair_bound.tcl", "run_kit.sh", "stage_odb_cap.py", "tt_setup_repair.tcl"]      # kit_reports.py is created in a legacy kit
     assert "EARLY_RULES" in (kit / "stage_odb_cap.py").read_text() and "ot_bounded_repair" in (kit / "hold_cap.tcl").read_text()
     assert "[ $GOAL = finish ]; }; then" in runner.read_text() and stat.S_IMODE(runner.stat().st_mode) == 0o755
     assert (kit / "stage_odb_cap.py").stat().st_ino != ino and held.read().startswith("# old copy")

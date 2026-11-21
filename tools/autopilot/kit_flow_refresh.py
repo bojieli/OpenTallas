@@ -290,7 +290,9 @@ def patch_grt_hook(kit, rec, dry=False):
     except OSError:
         return False
     ms = re.findall(r"(?m)^(?:override\s+)?export\s+PRE_GLOBAL_ROUTE_TCL\s*(?::=|=)\s*(/work/\S+\.tcl)\s*$", txt)
-    if not ms or not os.path.isfile(os.path.join(kit, "repair_bound.tcl")):
+    # all-or-nothing refresh (FLOW-PROC-A) stages its writes: a repair_bound.tcl this same refresh creates is not on disk yet, but it is in rec["replaced"]
+    staged = any(r.get("file") == "repair_bound.tcl" and r.get("from") == "always" for r in rec.get("replaced") or [])
+    if not ms or not (staged or os.path.isfile(os.path.join(kit, "repair_bound.tcl"))):
         return False
     p = os.path.join(kit, ms[-1][len("/work/"):])
     if os.path.islink(p) or not os.path.isfile(p):
