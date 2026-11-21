@@ -15530,3 +15530,4 @@ FAILED [AUTOPILOT 8c5a5243d467] 2026-11-20 21:21:41 PST AUTOPILOT -> KIT-WAVE-3:
   col_h10_r1 (12): GRT 0; CTS FF hold after CORETAP 11: worst -53.5 median -44.8; sign-off runs 0, SIGNED 0; 12 stopped without signoff; old plan -208/-411
   col_h10_r1 [plan_h10 +CC-BANK-2] (12): GRT 0; CTS FF hold after CORETAP 12: worst -51.9 median -46.8; sign-off runs 0, SIGNED 0; 11 stopped without signoff; old plan -208/-411
   Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
+- 2026-11-20 21:29 PST DONE [HEAD-PLAN-R16] ot-run oth-ubuntu-1560301-1795238565 on tolerant-swine: rc=0 after 420 s, ended 21:29:33, log /home/ubuntu/head-plan-r16/r16b.otrun.log, cmd: --mem 48 --threads 4 --hosts epyc10 --priority die --dir /srv/opentallas-scratch2/claude/head-plan-r16 -- bash /srv/opentallas-scratch2/clau
