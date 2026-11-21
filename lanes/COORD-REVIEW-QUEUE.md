@@ -14821,3 +14821,7 @@ FAILED [AUTOPILOT bf7f07cb455c] 2026-11-20 17:47:01 PST AUTOPILOT -> HEAD-CROSSI
   NO-PROGRESS epyc7 serdes__t13 lec stage 8.5 h job 8.5 h: LEC last file/log write 8.5 h ago
 - 2026-11-20 17:52 PST DONE [OPUS-FIX-HEAD-LEP0N-R2] ot-run oth-ubuntu-3711582-1795225827 on civil-redfish: rc=0 after 130 s, ended 01:52:35, log /srv/opentallas-scratch2/claude/opus-fix-head-lep0n-r2/dgrt.otrun.log, cmd: --mem 48 --threads 16 --hosts epyc10 --dir /srv/opentallas-scratch/claude/opus-fix-head-lep0n-r2 -- bash /srv/opentallas-scratch/claude/opus
 - 2026-11-20 17:53 PST DIED [QC-PLAN-R6] ot-run oth-ubuntu-1810751-1795225873 on renewed-glider: rc=2 after 110 s, ended 01:53:00, log /srv/opentallas-scratch2/claude/qc-plan-r6/v1/b_s3.log, cmd: --mem 24 --threads 1 --plan-job bind --hosts epyc9 --dir /srv/opentallas-scratch2/claude/qc-plan-r6/v1 -- env PCS_REPORT=/srv/opentallas-scr
+- 2026-11-20 17:53 PST S81-GEOM-OPUS -> COORD (D8i col builds, plan f2ec5ffc3bda, per-family update; ps):
+  col_h10_r1 [plan_h10 +CC-BANK-2] (12): GRT 0; CTS FF hold after CORETAP 12: worst -51.9 median -46.8; sign-off runs 0, SIGNED 0; 7 stopped without signoff; old plan -208/-411
+  col_h10_r2 [plan_h10 +CC-BANK-2] (12): GRT 11 TT worst -95.8 median -95.8; CTS FF hold after CORETAP 12: worst -100.9 median -100.9; sign-off runs 7, SIGNED 0, routed TT worst -281.1, FF worst -118.4, DRC max 0; old plan -172
+  Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
