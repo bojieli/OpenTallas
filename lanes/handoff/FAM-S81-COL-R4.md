@@ -1,4 +1,4 @@
-# FAM-S81-COL-R4 handoff (updated 2026-11-21 08:4x PST, Opus; successor of FAM-S81-COL-R3)
+# FAM-S81-COL-R4 handoff (updated 2026-11-21 09:1x PST, Opus; successor of FAM-S81-COL-R3)
 Scope: col_h9_r1 + col_h9_r2 (60 + 60 types on J5, held for J7) + shared J7 col rows. Lever 1 (RDX/ROM rows, OT_S81_CFG7_RDX) = FABLE-FIX-S81-COLROM (gen_colrom_rows.py, tree1). h9_r0 = FAM-S81-COL-H9R0-R2. h10 = FAM-S81-COL-H10. J7 = S81-J6-ASSEMBLY-R4.
 Work: epyc10 /srv/opentallas-scratch2/claude/fam-s81-col-r4 (all my jobs); intel1 fam-s81-col-r3 (R3 logs, bind4 out); epyc2 /srv/opentallas-scratch3/claude/fam-s81-col-r4 (net/hops reads).
 ## Done
@@ -12,8 +12,8 @@ Work: epyc10 /srv/opentallas-scratch2/claude/fam-s81-col-r4 (all my jobs); intel
 - Bank taps <=1000 (#8): tc/solve.py on J5 regs dumps (tap-grid-r2 colcap/regs): h9_r1 +9 taps (60 types), h9_r2 +7/+7 (17+43 types), all 0 over. Rows tc/rows_tc_r1.json, rows_tc_r2a.json, rows_tc_r2b.json. Re-solve on J7 placement for J7.
 - Private kits MUST come from `kit_wave.py private-spec` (copied spec.json fails ENV-PROVENANCE at place). rt f3db2d0e628f was pruned; use rt current.
 ## Running
-- chain_rb3.sh (hub, log chain_rb3.log): RLYBR rep private-spec kit wave_rb2 (work epyc10 kw43-wave-1109n/.../dc92652f0d5/private/FAM-S81-COL-R4/col_h9_r1..._1121081940) run-item -> route (ot-run epyc10/8/7) -> posts. Read t4/xai, t5/xbi, t4/cci at sign-off (final db).
-- bind_tc (epyc10 bind_tc_otrun.log; tree src_tc plan f04a482cf3ef = src_rb + bank taps) -> hub chain_tc.sh (log chain_tc.log): private-spec wave_tc -> run-item -> route -> posts. Compare CTS post-hook + TT/FF vs the RLYBR-only kit.
+- chain_rb3.sh (hub; place started 09:07 on service kwp-b2a4f9b6a51622a68cd1, log chain_rb3.log): RLYBR rep private-spec kit wave_rb2 (work epyc10 kw43-wave-1109n/.../dc92652f0d5/private/FAM-S81-COL-R4/col_h9_r1..._1121081940) run-item -> route (ot-run epyc10/8/7) -> posts. Read t4/xai, t5/xbi, t4/cci at sign-off (final db).
+- bind_tc retry 08:5x (epyc10 bind_tc_otrun.log; tree src_tc plan fabdd0ddd35f = src_rb + bank taps; first try refused by plan_gate_pre: J5 tree schema lacks clock.tap_cap_cascade and added_taps[].note, so both dropped in the proof plan like the TAP-GRID pilot; J7 rows keep cascade) -> hub chain_tc.sh (log chain_tc.log): private-spec wave_tc -> run-item -> route -> posts. Compare CTS post-hook + TT/FF vs the RLYBR-only kit.
 ## Next
 - Signable rep: stack RLYBR rows + bank taps on COLROM tree1 plan once its 216-type gate passes (gen_colrom_rows.py, hub lanes/handoff/FABLE-FIX-S81-COLROM-gen_colrom_rows.py).
 - h9_r2 x2_8 -> t8_payload (11 core legs) not covered by relay_branch; h9_r2 FF hold -25 (22) after setup.
