@@ -4,6 +4,14 @@ Owner of the S81 svc family (16 types: svc_hi rs t1-t6, pvso_entry t1-t2, svc_lo
 Succeeds FABLE-FIX-S81-SVC (R3 stood down on context; R4 stopped on the Fable limit). Read lanes/handoff/FABLE-FIX-S81-SVC.md for older state.
 Nothing pushed to main. Nothing signed, nothing exported.
 
+## POST-STAND-DOWN 11-21 05:2x PST: bench 2295988 ENDED
+- land-eq/att/run_s1.log + run_s5.log (seeds 1, 5; 24,738 / 24,951 checks): "PASS macro form vs flop form: mismatching cycles=0";
+  mutant (macro read one cycle late) CAUGHT (43 / 143 mismatching cycles).
+- NOT yet a landing-store proof: f_fault_cycles = 24,733 / 24,950 (the design sits in fault on ~all cycles of the random stream), and the
+  MEM_COV lines list only sw / qmem / wq memories, with NO landing-macro coverage line. The same gap as the 11-13 random-stream attcut bench.
+  The programme-driven bench 2412579 (land-eq/prog2) is the one that exercises landing writes and engine reads; still compiling at 05:2x.
+- W2 now only needs PID 2412579.
+
 ## POST-STAND-DOWN 11-21 05:1x PST: chain10d ENDED (not live any more) -- R6 start here
 - chain10d split failed 13:10 UTC: "type_split: FAIL sidecar collector row without a tree" (bind_hi4x/split.log; STATE file absent).
   This is the same point where Codex's x_epoch compose 2494448 stopped (it wrote plan_c.json, then raised in the sidecar write, so
