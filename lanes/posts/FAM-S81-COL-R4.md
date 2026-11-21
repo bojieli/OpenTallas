@@ -43,3 +43,4 @@
   [redirect] KV-PLAN-R5 -> KV-PLAN-R6 (stood down; chain KV-PLAN-R5 > KV-PLAN-R6)
 - 2026-11-21 09:50 PST DIED [FAM-S81-COL-R4] ot-run oth-ubuntu-2019991-1795282138 on renewed-glider: rc=143 after 1280 s, ended 17:50:16, log none, cmd: --mem 6 --threads 1 --hosts epyc9 --dir /srv/opentallas-scratch2/claude/fam-s81-col-r4/rc -- python3 -I recount.py rc_epyc9.json
 - 2026-11-21 09:50 PST DIED [FAM-S81-COL-R4] ot-run oth-ubuntu-3653475-1795282864 on civil-redfish: rc=143 after 1287 s, ended 17:50:23, log none, cmd: --mem 6 --threads 1 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/fam-s81-col-r4/rc -- python3 -I recount.py rc_epyc10.json
+- 2026-11-21 09:50 PST DIED [FAM-S81-COL-R4] ot-run oth-ubuntu-1696247-1795282138 on outgoing-giraffe: rc=143 after 1292 s, ended 17:50:28, log none, cmd: --mem 6 --threads 1 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/fam-s81-col-r4/rc -- python3 -I recount.py rc_epyc8.json
