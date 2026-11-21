@@ -1,1 +1,2 @@
 - 2026-11-21 07:54 PST DONE [flow-clkgrt-1121] ot-push-main otpush-civil-redfish-807135 on civil-redfish: rc=0 after 334 s, ended 15:54:13, log none, cmd: ot-push-main 
+- 2026-11-21 08:20 PST DIED [FLOW-CLKGRT-1121] ot-run oth-ubuntu-759986-1795278022 on tolerant-swine: rc=1 after 10 s, ended 08:20:30, log /home/ubuntu/tmp/clkgrt_clkonly.out, cmd: --mem 40 --threads 8 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/flow-clkgrt-1121 --stage /srv/opentallas-scratch2/claude/flow-clkgr
