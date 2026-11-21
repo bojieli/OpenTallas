@@ -15150,3 +15150,4 @@ FAILED [AUTOPILOT 4b120549d44b] 2026-11-20 19:50:50 PST AUTOPILOT -> KIT-WAVE-3:
   QC (QC-PLAN-R7): 16 STALE held/cancelled (1 new: slw_su_c__cl92142dac); the unclassified place error cleared.
   KV: 9 FAILED-NO-RELAUNCH WAIT-BIND (1 new: kv3_io_cor_v1 detail route error) + 10 held/cancelled WAIT-BIND (1 new: kv3_sys_c placed, route held).
   HEAD none flagged.
+- 2026-11-20 19:36 PST KNOWN-RED [MERGE-QUEUE -> PLACE-SETUP-STOP] main abc5db16299 ('PLACE-SETUP-STOP: end the kit after detail place when TT setup WNS < -300 ps') made test(s) red: 2 new failure(s) (not failing on main 803803f5300; still failing on a serial rerun of the branch): tools/die_plan/test_tt_setup_keep.py::test_run_kit_steps_gate_the_swap_on_the_keep_decision, tools/die_plan/test_tt_setup_repair.py::test_default_kit_has_no_tt_step_files. Not blocking anyone; fix on main (ot-push-main) or revert.
