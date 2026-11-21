@@ -279,6 +279,24 @@ def grt_rounds(report_dir):
     return sorted(out)
 
 
+GRT_FLAT_ITERS = 5            # FLEET-WATCH-2000: overflow not lower by MIN_IMPROVE over the last 5 extra iterations = flat
+
+
+def grt_flat(rounds, iters=GRT_FLAT_ITERS, improve=MIN_IMPROVE):
+    """-> detail string when the latest overflow is above 0 and has not fallen by `improve` over the last `iters` or more extra iterations (rounds are [(N, overflow)], N the extra iteration
+    number, a congestion report every 5), else ''.  A measurement of the rounds, not a time limit."""
+    if len(rounds) < 2 or rounds[-1][1] <= 0:
+        return ""
+    n, v = rounds[-1]
+    ref = [(m, w) for m, w in rounds[:-1] if n - m >= iters]
+    if not ref:
+        return ""
+    m, w = ref[-1]
+    if v >= w * (1 - improve):
+        return f"overflow {w} at iteration {m} -> {v} at iteration {n}: flat for {n - m} iterations"
+    return ""
+
+
 def judge_grt_rounds(rounds, log_text=""):
     """-> None | (verdict, why, detail, klass).  DESIGN-FAIL (GRT-CONGESTION): the first GRT-0273 (a clock NDR dropped under
     congestion), or the overflow at round >= 10 above GRT_STOP_OVF or still rising.  NO-PROGRESS: the overflow has not fallen
@@ -539,14 +557,18 @@ def proc_info(pid):
         return "", ""
 
 
-def proc_env_prio(pid):
+def proc_env(pid, key):
     try:
         for kv in open(f"/proc/{pid}/environ", "rb").read().split(b"\0"):
-            if kv.startswith(b"OT_HEAVY_PRIO="):
+            if kv.startswith(key.encode() + b"="):
                 return kv.split(b"=", 1)[1].decode()
     except OSError:
         pass
     return ""
+
+
+def proc_env_prio(pid):
+    return proc_env(pid, "OT_HEAVY_PRIO")
 
 
 def cgroup_dir(pid):
@@ -708,7 +730,7 @@ def scan(now=None, act=False, probe_s=4):
         mounts = [{"Source": m["Source"], "Destination": m["Destination"]} for m in c.get("Mounts", [])]
         work = work_dir(mounts)
         unit = pid2unit.get(owner_pid(name))
-        kit, prio, text = work, "", name
+        kit, prio, text, lane = work, "", name, ""
         if unit:
             for p in sc[unit]:
                 cmd, cwd = proc_info(p)
@@ -716,6 +738,7 @@ def scan(now=None, act=False, probe_s=4):
                 if "run_kit.sh" in cmd and kit == work and cwd and not cwd.rstrip("/").endswith("/ot-jobs"):
                     kit = cwd
                 prio = prio or proc_env_prio(p)
+                lane = lane or proc_env(p, "OT_LANE")
         th = re.search(r"NUM_CORES=(\d+)", " ".join(c["Config"].get("Cmd") or []))
         log, mt = candidate_logs(work, mounts, name, started)
         kind = stage_kind(log) if log else "other"
@@ -729,7 +752,7 @@ def scan(now=None, act=False, probe_s=4):
         cg, cpu_a = cg0[c["Id"]]
         row = {"host": hostname, "container": name, "unit": unit, "type": base_type(name), "kit": kit, "work": work,
                "log": log, "stage": stage, "kind": kind, "age_h": round((now - started) / 3600, 1),
-               "threads": int(th[1]) if th else 1, "gb": round(mem_gb(cg), 1), "prio": prio, "_cg": cg, "_cpu0": cpu_a}
+               "threads": int(th[1]) if th else 1, "gb": round(mem_gb(cg), 1), "prio": prio, "lane": lane, "_cg": cg, "_cpu0": cpu_a}
         ident = " ".join([name, kit or "", work or ""])
         k = keep_match(keep, ident)
         if k:
@@ -754,7 +777,9 @@ def scan(now=None, act=False, probe_s=4):
             special = None
             if kind == "grt" and log:
                 rdir = os.path.dirname(log).replace("/logs/", "/reports/")
-                special = judge_grt_rounds(grt_rounds(rdir), read_text(log) if os.path.isfile(log) else "")
+                rounds_ = grt_rounds(rdir)
+                row["grt_flat"] = grt_flat(rounds_)
+                special = judge_grt_rounds(rounds_, read_text(log) if os.path.isfile(log) else "")
                 if special:
                     # OWNER rule 11-14 deleted the GRT early stop: the round metric is a LABEL (class + trend + NEEDS-LANE), never a cancel
                     special = (GRT_LABEL, f"{special[0]}: {special[1]}", special[2], "GRT-CONGESTION")
@@ -945,6 +970,9 @@ def hub(now=None, post=True):
     umode, ucand, udone = unsignable_pass(rows, seen, now, post=post)
     if udone:
         files.append("lanes/CANCEL-UNSIGNABLE-1120.tsv")
+    gmode, gcand, gdone = grt_flat_pass(rows, seen, now, post=post)
+    if gdone:
+        files.append("lanes/CANCEL-GRT-FLAT.tsv")
     if qlines:
         with open(os.path.join(COORD, "lanes/COORD-REVIEW-QUEUE.md"), "a") as f:
             f.write("\n".join(qlines) + "\n")
@@ -1021,6 +1049,104 @@ def unsignable_pass(rows, seen, now, post=True, cancel=ot_run_cancel):
                 for d in done:
                     f.write("\t".join(str(d[k]).replace("\t", " ").replace("\n", " ") for k in ("unit", "host", "type", "plan", "evidence", "freed_gb", "class", "cancel_method")) + "\n")
     return mode, cand, done
+
+
+# ---------------------------------------------------------------- GRT flat overflow (FLEET-WATCH-2000, owner rule 11-20)
+# A wave kit running > 3 h at GRT whose overflow has been flat for >= 5 iterations, or that carries the NOPROG design-fail label (GRT-LABEL), cannot sign: it is cancelled through the
+# wave's own cancel path (kit_wave.py cancel-rows --event --attempt: the row becomes CANCELLED class PLAN with a structural stop, so the wave does not retry it; a bare ot-run --cancel was
+# relaunched as INFRA[stopped]) and recorded as class PLAN design:grt_flat_overflow for the die owner.  Exempt: OT_LANE jobs, private kits (not under kit-wave/<die>/<event>/items/<item>/attempt_N),
+# re-sign and ECO jobs.  Listed in an earlier pass (MIN_REPORT_AGE_S) first, like every cancel here.
+GRT_FLAT_CLASS = "design:grt_flat_overflow"
+GRT_FLAT_MIN_AGE_H = 3.0
+WAVE_KIT = re.compile(r"/kit-wave/([^/]+)/([^/]+)/items/([^/]+)/attempt_(\d+)")
+
+
+def wave_identity(kit):
+    """-> (die, event, item, attempt) of a wave kit path, else None"""
+    m = WAVE_KIT.search(kit or "")
+    return m.groups() if m else None
+
+
+def grt_flat_exempt(r):
+    ident = " ".join(str(r.get(k) or "") for k in ("container", "type", "kit", "work", "ident")).lower()
+    if r.get("lane"):
+        return "OT_LANE job (" + r["lane"] + ")"
+    if wave_identity(r.get("kit")) is None:
+        return "private kit (not a wave kit)"
+    if "resign" in ident or "re-sign" in ident:
+        return "re-sign"
+    if "eco_" in ident or "-eco" in ident or "/eco" in ident:
+        return "ECO"
+    return ""
+
+
+def grt_flat_candidate(r):
+    """-> evidence string or ''"""
+    if r.get("kind") != "grt" or r.get("age_h", 0) <= GRT_FLAT_MIN_AGE_H or grt_flat_exempt(r):
+        return ""
+    if r.get("grt_flat"):
+        return r["grt_flat"]
+    if r.get("verdict") == GRT_LABEL:
+        return "NOPROG label " + str(r.get("why") or "") + "; " + str(r.get("detail") or "")
+    return ""
+
+
+def wave_cancel_rows(ident, why, run=subprocess.run):
+    """the wave's own cancel path (hub only).  -> (rc, last output line)"""
+    die, event, item, attempt = ident
+    exe = os.path.join(os.path.dirname(os.path.abspath(__file__)), "kit_wave.py")
+    r = run([sys.executable, "-I", exe, "cancel-rows", "--die", die, "--item", item, "--event", event, "--attempt", attempt, "--owner", "die-owner",
+             "--verdict", "STRUCTURAL", "--cls", "PLAN", "--why", why], capture_output=True, text=True, timeout=900)
+    lines = ((r.stdout or "") + (r.stderr or "")).strip().splitlines()
+    return r.returncode, (lines[-1][:200] if lines else "no output")
+
+
+def grt_flat_pass(rows, seen, now, post=True, cancel=wave_cancel_rows):
+    """HUB: lists candidates (posts once per key) and, in act mode (NOPROG_GRTFLAT_MODE=report forces report), cancels each wave attempt whose containers were all listed >= MIN_REPORT_AGE_S ago.
+    Writes lanes/CANCEL-GRT-FLAT.tsv.  -> (mode, candidates, cancelled [dict])"""
+    cand = {}
+    for r in rows:
+        ev = grt_flat_candidate(r)
+        if ev:
+            cand[f"{r['host']}|{r['key']}"] = (r, ev)
+    listed = seen.setdefault("gf_listed", {})
+    for k in cand:
+        listed.setdefault(k, now)
+    for k in list(listed):
+        if k not in cand:
+            del listed[k]
+    mode = "report" if os.environ.get("NOPROG_GRTFLAT_MODE") == "report" else "act"
+    done = []
+    if mode == "act":
+        by_attempt = {}
+        for k, (r, ev) in cand.items():
+            by_attempt.setdefault(wave_identity(r["kit"]), []).append((k, r, ev))
+        for ident, items in sorted(by_attempt.items()):
+            if any(now - listed[k] < MIN_REPORT_AGE_S for k, _r, _e in items):
+                continue
+            # every container of the attempt's unit must be a candidate (a sibling still progressing keeps the unit)
+            units = {(r["host"], r["unit"]) for _k, r, _e in items if r.get("unit")}
+            sib = [x for x in rows if (x["host"], x.get("unit")) in units and f"{x['host']}|{x['key']}" not in cand]
+            if sib or seen.get("gf_cancelled", {}).get("|".join(ident)):
+                continue
+            first = items[0][1]
+            why = f"{GRT_FLAT_CLASS}: {items[0][2]}; job {first['age_h']} h at {first['stage']}; die owner: plan fix, no unchanged retry"
+            rc, line = cancel(ident, why)
+            seen.setdefault("gf_cancelled", {})["|".join(ident)] = now
+            done.append({"t": now, "die": ident[0], "event": ident[1], "item": ident[2], "attempt": ident[3], "host": first["host"], "evidence": why,
+                         "freed_gb": round(sum(r["gb"] for _k, r, _e in items), 1), "class": "PLAN " + GRT_FLAT_CLASS, "cancel_method": f"kit_wave cancel-rows rc={rc}: {line}"})
+    if done:
+        path = os.path.join(COORD, "lanes/CANCEL-GRT-FLAT.tsv")
+        with open(path, "a") as f:
+            for d in done:
+                f.write("\t".join(str(d[k]).replace("\t", " ").replace("\n", " ") for k in ("t", "die", "event", "item", "attempt", "host", "evidence", "freed_gb", "class", "cancel_method")) + "\n")
+    if done and post:
+        txt = f"GRT-FLAT watchdog cancelled {len(done)} wave attempt(s) (class PLAN {GRT_FLAT_CLASS}): " + "; ".join(f"{d['die']}/{d['item']}@{d['attempt']} {d['freed_gb']} GB" for d in done[:40])
+        try:
+            subprocess.run(["bash", os.path.join(COORD, "bin/post.sh"), os.environ.get("NOPROG_POST_LANE", "FLEET-WATCH-2000"), txt], capture_output=True, text=True, timeout=300)
+        except (subprocess.SubprocessError, OSError):
+            pass
+    return mode, [v for v in cand.values()], done
 
 
 def main(argv=None):

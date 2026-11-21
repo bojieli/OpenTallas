@@ -64,6 +64,19 @@ class Reload(unittest.TestCase):
         self.assertEqual(calls, [])
 
 
+class Pinned(unittest.TestCase):
+    RT = "/srv/opentallas-scratch2/claude/rt/aaaaaaaaaaaa/tools/fleet/ot-run"
+
+    def test_pinned_waiter_in_rt_gets_a_bounded_wait_so_it_reaches_the_reload_check(self):
+        self.assertEqual(m.pinned_cycle(None, real=self.RT), m.PINNED_CYCLE_S)
+        self.assertEqual(m.pinned_cycle(30, real=self.RT), 30)
+
+    def test_client_outside_rt_or_disabled_keeps_its_wait(self):
+        self.assertIsNone(m.pinned_cycle(None, real="/home/u/.local/lib/kw44/ot-run"))
+        with mock.patch.dict(os.environ, {"OT_RUN_NO_RELOAD": "1"}):
+            self.assertIsNone(m.pinned_cycle(None, real=self.RT))
+
+
 class Misc(unittest.TestCase):
     def test_multihost_list_spills_single_host_is_a_pin(self):
         with mock.patch.dict(os.environ, {}, clear=False):

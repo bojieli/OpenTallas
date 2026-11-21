@@ -98,7 +98,7 @@ EMERGENCY_HOLD_RE = re.compile(r"/claude/die-hbm-[^/]+/ab(?:/|$)")      # src_* 
 CTIME_GRACE = True          # a src_* copy keeps the source's old mtimes: its inode change time says when it landed
 EMERGENCY_ANC_RE = re.compile(r"/claude/die-hbm-[^/]+/ab/|/claude/[^/]+/src_[^/]+/")
 GRACE_S = 2 * 3600          # --aggressive (OWNER 11-12): the only age wait, after a job ends
-D_SKIP_LANES = {"autopilot", "ot-jobs", "explorer-2-work", "explorer-2", "restore-head", "signed-keep", "_ot_autoclean_ctl", "hub-coord"}
+D_SKIP_LANES = {"autopilot", "ot-jobs", "ot-job-failed-logs", "explorer-2-work", "explorer-2", "restore-head", "signed-keep", "_ot_autoclean_ctl", "hub-coord"}
 # LOCALHOST_1111: localhost holds lane and Codex trees outside the scratch roots (~/wt, ~/codex-*, ~/wt-codex-*,
 # ~/scratch-codex-*); `run --host localhost` scans them too (OWNER 11-06: finished runs in Codex trees are pruned on
 # localhost and fleet; 10-29: idle Codex worktrees > 12 h).  NEVER_TOUCH is refused on every host, by path and realpath.

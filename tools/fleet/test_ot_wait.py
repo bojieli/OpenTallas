@@ -183,3 +183,11 @@ def test_pid_wait_picks_up_record_written_late(tmp_path):
     out, _ = p.communicate(timeout=30)
     c.wait()
     assert p.returncode == 9 and out.startswith("DIED rc=9")
+
+
+def test_command_not_found_127_is_carried_not_zero(tmp_path):
+    """FLEET-WATCH-2000: a job whose command exits 127 is DIED rc=127 and ot-wait returns 127 (GPL-TD-AB read DONE rc=0 because ab.sh ended with
+    echo rc=? and a grep, so the script itself exited 0; the record and ot-wait carry the real exit status of whatever ot-run ran)."""
+    rec_file(tmp_path, "otrun-h-127", rc=127, unit="oth-nf")
+    p = wait(tmp_path, "otrun-h-127")
+    assert p.returncode == 127 and p.stdout.startswith("DIED rc=127")

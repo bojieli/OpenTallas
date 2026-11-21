@@ -11167,13 +11167,14 @@ def on_old_plan(cfg, die, r):
     return bool(cur) and bool(rp) and rp != cur
 
 
-def cancel_rows_core(AP, cfg, st, die, item_glob, why, owner, verdict, jobs, dry=False, old_plans_only=False):
+def cancel_rows_core(AP, cfg, st, die, item_glob, why, owner, verdict, jobs, dry=False, old_plans_only=False, event=None, attempt=None, cls="STRUCT-STOP"):
     """COORD 11-18 (cbx_q10 / col_h9_r1): place the structural stop for the plan block of every live row of die/item_glob FIRST (a CANCELLED row relaunches by itself under stops_off), then cancel
     each live row through the wave's own API (grt_arm_cancel: exact wave unit + PLACE client, the running route job's unit or the withdrawal of an unstarted queue row, exact container names
     under the attempt root; run data kept).  -> (stops placed, [(key, item, attempt, status)] cancelled)"""
     live = [(k, r) for k, r in sorted((st.get("items") or {}).items())
             if r.get("die") == die and fnmatch.fnmatchcase(str(r.get("item")), item_glob) and r.get("status") in ("RUNNING", "LAUNCHING", "ENQUEUED")
-            and (not old_plans_only or on_old_plan(cfg, die, r))]
+            and (not old_plans_only or on_old_plan(cfg, die, r))
+            and (not event or str(r.get("event")) == str(event)) and (not attempt or str(r.get("attempt")) == str(attempt))]   # FLEET-WATCH-2000: item names are shared by events; a caller may name one (event, attempt)
     stops, notices = 0, {}
     done = []
     for k, r in live:
@@ -11186,7 +11187,7 @@ def cancel_rows_core(AP, cfg, st, die, item_glob, why, owner, verdict, jobs, dry
     for k, r in live:
         done.append((k, r["item"], r.get("attempt"), r.get("status")))
         if not dry:
-            grt_arm_cancel(AP, cfg, r, f"STRUCT-STOP {verdict} [owner {owner}]: {why}", "STRUCT-STOP", jobs, notices, reclaim=False)
+            grt_arm_cancel(AP, cfg, r, f"STRUCT-STOP {verdict} [owner {owner}]: {why}", cls, jobs, notices, reclaim=False)
     return stops, done
 
 
@@ -11214,7 +11215,7 @@ def close_queue_job(AP, rec, why):
         return "queue job close failed: %r" % (e,)
 
 
-def cancel_rows_phased(AP, cfg, ap_dir, die, item_glob, why, owner, verdict, dry=False, old_plans_only=False, lock=None, no_stop=False):
+def cancel_rows_phased(AP, cfg, ap_dir, die, item_glob, why, owner, verdict, dry=False, old_plans_only=False, lock=None, no_stop=False, event=None, attempt=None, cls="STRUCT-STOP"):
     """FABLE-FLOW-1950 (L): cancel-rows held kit_wave.lock 17:58-18:47 (seven wave steps skipped, nothing launched for 71 min) because the unit / container stops ran under it.
     Now: (1) lock only to read the state and place the structural stops; (2) stops, withdrawals and container stops OUTSIDE the lock, on copies of the rows;
     (3) lock again only to write the results into the CURRENT state (CAS: a row whose attempt or live status changed meanwhile is left alone); then the queue jobs are closed (M).
@@ -11232,7 +11233,7 @@ def cancel_rows_phased(AP, cfg, ap_dir, die, item_glob, why, owner, verdict, dry
             jobs = json.loads((Path(ap_dir) / "state.json").read_text()).get("jobs") or {}
         except (OSError, ValueError):
             jobs = {}
-        stops, done = cancel_rows_core(AP, cfg, st, die, item_glob, why, owner, verdict, jobs, dry=True, old_plans_only=old_plans_only)
+        stops, done = cancel_rows_core(AP, cfg, st, die, item_glob, why, owner, verdict, jobs, dry=True, old_plans_only=old_plans_only, event=event, attempt=attempt)
         if not dry:
             stops = 0
             for k, r in sorted((st.get("items") or {}).items()):
@@ -11250,7 +11251,7 @@ def cancel_rows_phased(AP, cfg, ap_dir, die, item_glob, why, owner, verdict, dry
         return stops, done, []
     notices, results = {}, {}
     for k, r in work.items():
-        grt_arm_cancel(AP, cfg, r, (f"CANCEL [owner {owner}]: {why}" if no_stop else f"STRUCT-STOP {verdict} [owner {owner}]: {why}"), ("OPERATOR" if no_stop else "STRUCT-STOP"), jobs, notices, reclaim=False)
+        grt_arm_cancel(AP, cfg, r, (f"CANCEL [owner {owner}]: {why}" if no_stop else f"STRUCT-STOP {verdict} [owner {owner}]: {why}"), ("OPERATOR" if no_stop else cls), jobs, notices, reclaim=False)
         results[k] = r
     skipped = []
     lk = take()
@@ -17468,6 +17469,8 @@ def main(argv=None):
     cr_.add_argument("--verdict", default="STRUCTURAL", choices=STRUCT_VERDICTS); cr_.add_argument("--why", required=True)
     cr_.add_argument("--config"); cr_.add_argument("--ap-dir"); cr_.add_argument("--dry-run", action="store_true")
     cr_.add_argument("--no-stop", action="store_true", help="plain operator cancel: no struct stop is placed, the rows relaunch by themselves")
+    cr_.add_argument("--event", default=None, help="only rows of this event (item names are shared by events)"); cr_.add_argument("--attempt", default=None)
+    cr_.add_argument("--cls", default="STRUCT-STOP", choices=CLASSES + ("STRUCT-STOP",), help="class written on the cancelled rows (NOPROG: PLAN, so the die owner gets a plan row)")
     cr_.add_argument("--old-plans-only", action="store_true", help="skip rows launched on the die current plan of record (rows on the applied plan must run)")
     for _nm in ("struct-stop", "struct-force", "struct-release", "struct-list"):
         sp_ = sub.add_parser(_nm, help="COORD FLOW-1400 (3): structural verdict stops keyed by plan block (state struct_stops)")
@@ -17547,7 +17550,7 @@ def main(argv=None):
             print("cancel-rows: the state file is empty or missing here; run this on the hub (intel2) or pass --ap-dir")
             return 2
         try:
-            stops, done, skipped = cancel_rows_phased(AP, cfg, ap_dir, a.die, a.item, a.why, a.owner, a.verdict, dry=a.dry_run, old_plans_only=a.old_plans_only, no_stop=a.no_stop)
+            stops, done, skipped = cancel_rows_phased(AP, cfg, ap_dir, a.die, a.item, a.why, a.owner, a.verdict, dry=a.dry_run, old_plans_only=a.old_plans_only, no_stop=a.no_stop, event=a.event, attempt=a.attempt, cls=a.cls)
         except RuntimeError as e:
             print(f"cancel-rows: {e}; nothing done")
             return 1

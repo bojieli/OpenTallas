@@ -2103,6 +2103,8 @@ def main():
         # are not pinned, since the host table is re-read and memory may free up on a host that did not qualify before)
         if len(ok) > 1 or (spill and d) or not pinned:
             wait = REQUEUE_S if left is None else min(REQUEUE_S, left)
+        else:
+            wait = pinned_cycle(left)       # FLEET-WATCH-2000: a pinned single-host waiter waited unbounded inside ot-heavy and never reached the reload check below
         rc, ran = run(best, mem, cmd, d, wait, quiet_notrun=(wait != left), disk=disk)
         if not ran and LAST_RUN["connfail"] and conn_tries < len(SSH_RETRY_BACKOFF_S):
             b = SSH_RETRY_BACKOFF_S[conn_tries]
@@ -2344,6 +2346,18 @@ def reexec_if_runtime_changed(t0, argv=None, real=None, execv=None, env=None):
     print(f"ot-run: RELOAD: runtime {m.group(2)} -> {new}; re-exec", file=sys.stderr)
     (execv or os.execve)(sys.executable, [sys.executable, "-I", tool] + (ORIG_ARGV if argv is None else argv), e)
     return True
+
+
+PINNED_CYCLE_S = int(os.environ.get("OT_RUN_PINNED_CYCLE_S", "600"))
+
+
+def pinned_cycle(left, real=None):
+    """FLEET-WATCH-2000 (FABLE-FLOW-2000 class 4: 2 reloads against 18 runtime changes): the wait of a request pinned to one host (REBALANCE does not apply) is bounded by PINNED_CYCLE_S when this
+    client runs from an rt/<sha> tree, so the loop reaches reexec_if_runtime_changed and places the request again (the age for the queue order travels in OT_HEAVY_WAIT_SINCE, so nothing is
+    lost).  A client outside rt (the kw44 pinned launcher copies) keeps its pinned code on purpose and waits as before.  -> seconds or `left` (None = unbounded)"""
+    if not RT_RE.match(real or os.path.realpath(__file__)) or os.environ.get("OT_RUN_NO_RELOAD") or PINNED_CYCLE_S <= 0:
+        return left
+    return PINNED_CYCLE_S if left is None else min(PINNED_CYCLE_S, left)
 
 
 def multihost_spill(hosts_arg):
