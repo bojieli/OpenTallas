@@ -173,3 +173,14 @@ def test_cli_classes_mode(tmp_path):
     assert out["partition_types"]["m1"]["buses"] == out["partition_types"]["m2"]["buses"]
     assert json.loads((tmp_path / "r.json").read_text())["class_floorplan"]["class_class_ports"] == 1
     assert rc in (0, 1)
+
+
+def test_class_floorplan_drops_stale_bit_sites():
+    """the class window moves the slot: bit_sites_um and bit_site_cell_um go together (schema: cell needs sites)"""
+    raw = _shift_column()
+    s = raw["partition_types"]["m1"]["ft_slots"][0]
+    s["bit_sites_um"] = [[1.0, 1.0]] * 4
+    s["bit_site_cell_um"] = [0.4, 0.4]
+    C.class_floorplan(raw, [("cls", "m1", [("m1", "R0"), ("m2", "R0")])])
+    s = raw["partition_types"]["m1"]["ft_slots"][0]
+    assert "bit_sites_um" not in s and "bit_site_cell_um" not in s

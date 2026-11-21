@@ -685,7 +685,8 @@ def class_floorplan(raw, classes, gap_um=1.2, margin_um=6.144, max_tries=500000)
                 ns = {x: y for x, y in sl.items() if x not in FT_GEOM}
                 ns.update(_copy.deepcopy(geo[(k, assign[tn][sl["name"]])]))
                 ns["regs_um"] = _straight_regs(ns, c["w"], c["h"], int(ns.get("stations", 1)))
-                ns.pop("bit_sites_um", None)
+                ns.pop("bit_sites_um", None)          # the corridor siting re-sites the bits
+                ns.pop("bit_site_cell_um", None)
                 new_slots.append(ns)
             row["ft_slots"] = new_slots
             moved_pins += _follow_landing(row, old_ends, _end_table(row, "R0", c["w"], c["h"]))
