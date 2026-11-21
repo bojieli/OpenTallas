@@ -43,6 +43,40 @@ set ot_postplace [expr {[info exists ::env(OT_POSTPLACE_WORST)] && $::env(OT_POS
 # Pre-CTS data uses placement RC, but the unbuilt clock network must stay
 # ideal, as in detailed place. CTS and GRT still use propagated clocks.
 if {!$ot_postplace} { set_propagated_clock $real }
+# FLOW-PLACEMEAS-1121 (FABLE-PD-QC-0840 item 1): a clock born on an input port whose net goes straight to hard-macro clock pins
+# (QC fclk_in_* -> sta_cland_* fclk) has no tree for CTS to build.  On an IDEAL clock OpenSTA subtracts the macro's liberty
+# min/max_clock_tree_path (162.40 ps on sta_cland_w1574_e_s26) from the capture edge, so half-cycle landing inputs read -112.90 at
+# post-place against +39.12 propagated at post-hook CTS on the same bus (QC slw_st_a_v2__cl9f076a5c a3).  Such clocks are timed
+# propagated here: the pin edge is then the real port -> pin wire, which is what CTS / GRT / sign-off see.  Every other clock stays ideal.
+proc ot_postplace_port_macro_clocks {clocks} {
+  set blk [ord::get_db_block]
+  set out {}
+  foreach c $clocks {
+    set srcs [get_property $c sources]
+    if {![llength $srcs]} continue
+    set ok 1
+    foreach s $srcs {
+      set bt [$blk findBTerm [get_full_name $s]]
+      if {$bt eq "NULL" || $bt eq ""} { set ok 0; break }
+      set net [$bt getNet]
+      if {$net eq "NULL" || $net eq ""} { set ok 0; break }
+      set its [$net getITerms]
+      if {![llength $its]} { set ok 0; break }
+      foreach it $its { if {![[[$it getInst] getMaster] isBlock]} { set ok 0; break } }
+      if {!$ok} break
+    }
+    if {$ok} { lappend out $c }
+  }
+  return $out
+}
+if {$ot_postplace} {
+  if {[catch {
+    set ot_pp_pm [ot_postplace_port_macro_clocks $real]
+    if {[llength $ot_pp_pm]} { set_propagated_clock $ot_pp_pm }
+    set ot_pp_nm {}; foreach c $ot_pp_pm { lappend ot_pp_nm [get_name $c] }
+    puts "OT_POSTPLACE_CLOCKS propagated [llength $ot_pp_pm] port-direct macro clocks, ideal [expr {[llength $real] - [llength $ot_pp_pm]}]: [join $ot_pp_nm ,]"
+  } ot_pp_err]} { puts "OT_POSTPLACE_CLOCKS all ideal (port-direct macro clock read failed: $ot_pp_err)" }
+}
 if {[info exists ::env(LAYER_PARASITICS_FILE)] && [file exists $::env(LAYER_PARASITICS_FILE)]} { source $::env(LAYER_PARASITICS_FILE) } else { source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl }
 set ot_tt_rc placement; if {[info exists ::env(OT_TT_SETUP_RC)] && $::env(OT_TT_SETUP_RC) eq "grt"} { set ot_tt_rc grt }
 set ot_tt_cs 1.0
@@ -121,7 +155,30 @@ proc ot_postplace_worst_report {report} {
 }
 # r268 (FABLE-FIX-HEAD-TYPES, hd_serdes sd2): OT_TT_SETUP_MEASURE=1 only reads the TT setup wns/tns of ODB in this same frame and exits;
 # the run_kit step uses it on the WRITTEN repaired DB (a fresh session = what every later reader sees) before keeping it.
+# FLOW-PLACEMEAS-1121 (FABLE-PD-QC-0840 item 4): at post-place the reset nets are not buffered yet, so reset recovery / removal
+# (relay or local reset flop -> async pin) read -177 to -400k ps (QC x_fe_o: -176.66 placed, +551.17 post-hook CTS).  They are
+# reported on their own OT_POSTPLACE_RECOVERY line and taken out of the setup number the stop reads (and of its worst path).
+# CTS / GRT repair and sign-off still time them (the reset tree exists there).
+proc ot_postplace_recovery {} {
+  if {[catch {
+    sta::redirect_string_begin
+    set ot_rr_err [catch {report_checks -path_delay max -path_group asynchronous -group_path_count 1 -format full} ot_rr_msg]
+    set ot_rr_rep [sta::redirect_string_end]
+    if {$ot_rr_err} { error $ot_rr_msg }
+    lassign [ot_postplace_worst_report $ot_rr_rep] ot_rr_s ot_rr_p
+    if {$ot_rr_p eq ""} {
+      puts "OT_POSTPLACE_RECOVERY wns none (no recovery path)"
+    } else {
+      set ot_rr_t [join $ot_rr_p "\n"]; set ot_rr_a "?"; set ot_rr_b "?"
+      regexp {Startpoint:\s+(\S+)} $ot_rr_t -> ot_rr_a
+      regexp {Endpoint:\s+(\S+)} $ot_rr_t -> ot_rr_b
+      puts [format "OT_POSTPLACE_RECOVERY wns %.2f start=%s end=%s (reset recovery, reported only; not in the setup stop)" $ot_rr_s $ot_rr_a $ot_rr_b]
+    }
+  } err]} { puts "OT_POSTPLACE_RECOVERY wns ? (read failed: $err)" }
+  set ::sta_recovery_removal_checks_enabled 0
+}
 if {[info exists ::env(OT_TT_SETUP_MEASURE)] && $::env(OT_TT_SETUP_MEASURE) eq "1"} {
+  if {$ot_postplace} { ot_postplace_recovery }
   lassign [ot_tt_wns measure] ot_pw_wns
   # FLOW-NOADV-R3 11-20 (PLACE-SETUP-STOP): OT_POSTPLACE_WORST=1 also names the worst path's start / end and its longest hop (um, manhattan between
   # consecutive instances of the path); informational, never fatal

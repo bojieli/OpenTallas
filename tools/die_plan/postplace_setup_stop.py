@@ -10,7 +10,11 @@ exit 6 and one marker line   FAIL_POSTPLACE PLACE-SETUP-STOP wns <ps> ps < <stop
 (the kit-wave classifier reads it as class PLACE-SETUP-STOP, a plan item for the die owner's next plan event); exit 0 otherwise.  The place
 ODB, reports and logs stay in the kit.  A log with no measurement never stops the flow.  Exempt rows never get the step (gen_phys
 postplace_stop_ps): hold-only failures (setup is the only thing measured), lane proofs (OT_LANE / OT_PRIVATE_KIT), ECO rows (OT_ECO),
-rows flagged keep_going (OT_KEEP_GOING=1) and OT_POSTPLACE_SETUP_STOP=0."""
+rows flagged keep_going (OT_KEEP_GOING=1) and OT_POSTPLACE_SETUP_STOP=0.
+
+FLOW-PLACEMEAS-1121 (FABLE-PD-QC-0840 items 1 / 4): the measured number is data setup only.  Reset recovery / removal (unbuffered
+reset nets at place) is read from its own OT_POSTPLACE_RECOVERY line into the record (recovery_wns / recovery_start / recovery_end)
+and never stops the kit; port-direct macro clocks (fclk_in_* -> landing macro) are timed propagated in the tcl.  The -300 stop is unchanged."""
 import argparse
 import json
 import re
@@ -18,15 +22,19 @@ import sys
 
 WNS_RE = re.compile(r"OT_TT_SETUP_REPAIR\s+measure\s+TT setup wns\s+(-?[0-9.]+(?:[eE][-+]?[0-9]+)?)")
 WORST_RE = re.compile(r"OT_POSTPLACE_WORST\s+start=(\S+)\s+end=(\S+)\s+hop_um=(\S+)")
+RECOV_RE = re.compile(r"OT_POSTPLACE_RECOVERY\s+wns\s+(-?[0-9.]+(?:[eE][-+]?[0-9]+)?)\s+start=(\S+)\s+end=(\S+)")
 
 
 def read_log(text):
     """-> dict(wns, start, end, hop_um); wns None when the log has no measurement"""
     m = WNS_RE.findall(text)
     w = WORST_RE.findall(text)
-    out = dict(wns=float(m[-1]) if m else None, start="?", end="?", hop_um=None)
+    rv = RECOV_RE.findall(text)
+    out = dict(wns=float(m[-1]) if m else None, start="?", end="?", hop_um=None, recovery_wns=None, recovery_start=None, recovery_end=None)
     if w:
         out.update(start=w[-1][0], end=w[-1][1], hop_um=None if w[-1][2] in ("?", "nan") else float(w[-1][2]))
+    if rv:
+        out.update(recovery_wns=float(rv[-1][0]), recovery_start=rv[-1][1], recovery_end=rv[-1][2])
     return out
 
 
@@ -65,6 +73,9 @@ def main(argv=None):
                 f.write(line + "\n")
         return 6
     print("OT_POSTPLACE_SETUP_STOP pass" if rec["wns"] is not None else "OT_POSTPLACE_SETUP_STOP no measurement, flow continues")
+    if rec["recovery_wns"] is not None:
+        print(f"OT_POSTPLACE_RECOVERY reported wns {rec['recovery_wns']:.2f} ps start={rec['recovery_start']} end={rec['recovery_end']} "
+              "(reset recovery before the reset tree; not a setup stop)")
     return 0
 
 
