@@ -9567,6 +9567,13 @@
         "type": "integer",
         "minimum": 0
        },
+       "inst_seg": {
+        "type": "object",
+        "additionalProperties": {
+         "type": "integer",
+         "minimum": 1
+        }
+       },
        "r2r_margin_ps": {
         "type": "number",
         "minimum": 0,
