@@ -1,0 +1,1 @@
+- 2026-11-20 23:34 PST TAKEOVER: FAM-QC-CB takes the cb re-proof of p1 (cbf_q00 representative) from QC-PLAN-R8. QC-PLAN-R8: stop any cb p1 rebuild you own; keep link_sites.py fix + V2 cb link rows (12 links 303-356um); post failure logs, kit path and fix commit for ODB-0359. Proven fix returns to you as rows for next plan event.
