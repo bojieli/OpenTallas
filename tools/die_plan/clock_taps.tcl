@@ -787,6 +787,26 @@ set ct_hlu {}; set ct_hcap {}
 # without latch pins; hop_latch_leaf.tcl (POST_CTS) hangs each latch on its launch flop's leaf.
 set ct_hleaf [expr {[info exists ::env(OT_HOP_LATCH_LEAF)] && $::env(OT_HOP_LATCH_LEAF) eq "1"}]
 set ct_hlpark {}
+# LOCKUP-STATION-R2 (t39 proof4): the resizer may swap a hop lockup latch (DLLx*) for a DFFLQx* falling-edge FLOP with the
+# same pins (3_place: 988 of 28,649 u_fl_nl latches).  That is a function change LEC on 1_synth never sees, and the hop-latch
+# passes skip the cell.  ot_latch_restore puts every u_fl_* / u_lk_nk_* cell that is not a latch back on a DLLx2 of its Vt
+# (u_fx_* hop flops are flops by design and stay).  dont_touch is not used: ODB then refuses the CLK / D edits of CTS and repair.
+proc ct_latch_restore {tag} {
+  set blk [ord::get_db_block]; set db [ord::get_db]; set n 0; set miss 0
+  foreach i [$blk getInsts] {
+    set nm [$i getName]
+    if {![regexp {(^|[./])(u_fl_|u_lk_nk_)} $nm] || [regexp {(^|[./])u_fx_} $nm]} continue
+    set m [[$i getMaster] getName]
+    if {[regexp {^(DLL|DHL)} $m] || ![regexp {^DFFL} $m]} continue
+    set vt R; regexp {_75t_([RLS])$} $m -> vt
+    set nm2 ""
+    foreach lib [$db getLibs] { set c [$lib findMaster "DLLx2_ASAP7_75t_$vt"]; if {$c ne "NULL"} { set nm2 $c; break } }
+    if {$nm2 eq "" || [catch {$i swapMaster $nm2}]} { incr miss; continue }
+    incr n
+  }
+  puts "OT_LATCH_RESTORE $tag: $n lockup cell(s) swapped back from a flop to DLLx2, $miss failed"
+}
+ct_latch_restore clock_taps
 # LOCKUP-STATION-R2 (FABLE-CLOSURE-1930 lever 2; t39 proof 15:15: same_tap ends 41 -> 238): OT_HOP_LATCH_SAME_TAP=bypass removes
 # every traced hop latch whose launch flop and ALL its captures (Q through BUF/INV/HB to clocked registers only, no port,
 # no logic) sit on the same tap net after the assignment passes above: a latch there only costs setup.  The latch is a wire
@@ -842,7 +862,6 @@ proc ct_hl_bypass {li} {
   set loads {}
   foreach it [$qn getITerms] { if {[$it getInst] ne $li} { lappend loads $it } }
   foreach it $loads { $it disconnect; $it connect $dn }
-  catch {$li setDoNotTouch 0}
   odb::dbInst_destroy $li
   odb::dbNet_destroy $qn
   return 1

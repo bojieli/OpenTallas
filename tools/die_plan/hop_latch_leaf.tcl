@@ -8,12 +8,32 @@
 # balance, leaf repeat and every later stage then see the latch loads.  Unless OT_HOP_LATCH_LEAF_SITE=keep, a latch
 # placed more than OT_HOP_LATCH_LEAF_UM (default 20) from its launch flop moves next to it (the leaf wire stays short;
 # the hop wire is on the latch -> capture leg, inside its T/2 window); the next legalisation places it.
+# LOCKUP-STATION-R2 (t39 proof4): the resizer may swap a hop lockup latch (DLLx*) for a DFFLQx* falling-edge FLOP with the
+# same pins (3_place: 988 of 28,649 u_fl_nl latches).  That is a function change LEC on 1_synth never sees, and the hop-latch
+# passes skip the cell.  ot_latch_restore puts every u_fl_* / u_lk_nk_* cell that is not a latch back on a DLLx2 of its Vt
+# (u_fx_* hop flops are flops by design and stay).  dont_touch is not used: ODB then refuses the CLK / D edits of CTS and repair.
+proc ot_latch_restore {tag} {
+  set blk [ord::get_db_block]; set db [ord::get_db]; set n 0; set miss 0
+  foreach i [$blk getInsts] {
+    set nm [$i getName]
+    if {![regexp {(^|[./])(u_fl_|u_lk_nk_)} $nm] || [regexp {(^|[./])u_fx_} $nm]} continue
+    set m [[$i getMaster] getName]
+    if {[regexp {^(DLL|DHL)} $m] || ![regexp {^DFFL} $m]} continue
+    set vt R; regexp {_75t_([RLS])$} $m -> vt
+    set nm2 ""
+    foreach lib [$db getLibs] { set c [$lib findMaster "DLLx2_ASAP7_75t_$vt"]; if {$c ne "NULL"} { set nm2 $c; break } }
+    if {$nm2 eq "" || [catch {$i swapMaster $nm2}]} { incr miss; continue }
+    incr n
+  }
+  puts "OT_LATCH_RESTORE $tag: $n lockup cell(s) swapped back from a flop to DLLx2, $miss failed"
+}
 proc hll_clk {inst} {
   foreach it [$inst getITerms] { if {[[$it getMTerm] getName] in {CLK CK}} { return $it } }
   return ""
 }
 proc hop_latch_leaf {tag} {
   set f /work/hop_latch_leaf.tsv
+  ot_latch_restore leaf_$tag
   if {![file exists $f]} { puts "OT_HOP_LATCH_LEAF $tag: no $f"; return }
   set blk [ord::get_db_block]
   set dbu [[ord::get_db_tech] getDbUnitsPerMicron]

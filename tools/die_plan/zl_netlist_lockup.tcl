@@ -56,9 +56,6 @@ foreach zn_i [$zn_blk getInsts] {
   if {$zn_drv eq ""} { incr zn_skip; continue }
   while {[$zn_blk findInst "u_fl_nl_$zn_k"] ne "NULL"} { incr zn_k }
   set zn_l [odb::dbInst_create $zn_blk $zn_m "u_fl_nl_$zn_k"]
-  # LOCKUP-STATION-R2 (t39 proof4: the placement resizer swapped 988 of these DLLx2 for DFFLQx4, a falling-edge FLOP, which
-  # the hop-latch passes do not see and LEC on 1_synth never checks): the latch is dont_touch, sizes and function fixed
-  $zn_l setDoNotTouch 1
   set zn_q [odb::dbNet_create $zn_blk "fl_nl_$zn_k"]
   incr zn_k
   $zn_d disconnect
