@@ -49,8 +49,14 @@ def declared(raw, types=None):
                 names_at_clock += [r.get("port", "") for r in clock.get("edge_clocks", [])]
                 names_at_clock += [r["name"] for r in t.get("count_straps", [])]
                 sources = {r["name"] for r in contract.get("collector_local_sources", [])}
+                # UNIFY-TOOLS-R3 DORMANT: a landed class slot with its dormant strap (strap_ca_off_<n>_i) keeps its
+                # count-aligned ring pins; clock_landings masks the ring and ties its clock / start on this copy
+                dormant = {f"fclk_in_{n}_i", f"cland_fstart_in_{n}_i", f"fclk_out_{n}_o", f"cland_fstart_out_{n}_o",
+                           f"landing_ready_{n}_i", f"landing_fault_{n}_i", f"strap_ca_k_{n}_i", f"strap_ca_off_{n}_i"} \
+                    if f"strap_ca_off_{n}_i" in {r["name"] for r in t.get("count_straps", [])} else set()
                 if (ends.intersection(sources) or ends.intersection(contract.get("bands", {})) or
-                        any(pin.endswith(("_" + n + "_i", "_" + n + "_o")) for pin in names_at_clock)):
+                        any(pin.endswith(("_" + n + "_i", "_" + n + "_o")) and pin not in dormant
+                            for pin in names_at_clock)):
                     raise ValueError(f"{pn}.{n}: landing or clock role on declared spare FT")
                 if (raw.get("built_station_extra", {}).get(tn, {}).get(n) or
                         (ft_hop_lockup(raw, tn) and (S.ft_hop_xtap(raw, tn, n) or

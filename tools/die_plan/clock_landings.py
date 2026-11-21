@@ -886,6 +886,7 @@ RELAY_STAGES = 2
 # Strap inputs the strap-form origin declares SCALAR (`input wire strap_ca_efall`, no [0:0]); every other strap is a
 # vector.  gen_phys.strap_pin_sites names these pins without a bit index (FLOW-GEN-1 10-28, DIE-HEAD-9 bug 1).
 SCALAR_STRAPS = frozenset({"strap_ca_efall", "strap_ca_root", "strap_ca_relay"})
+DORMANT_PREFIX = "strap_ca_off_"   # == count_align_bind.DORMANT_PREFIX
 
 
 def ca_cycles(ca, pid):
@@ -1255,11 +1256,15 @@ class Landings:
         # All copies of a type must expose identical hardware. Re-plan a type
         # split rather than changing only the first bound replica's wrapper.
         masks = defaultdict(dict)
+        self._dormant_fill()
         for pn, p in self.parts.items():
+            ins = dict(self.ins[pn]); ins.update({b: self.type_row[p["type"]][b] for b in self.dormant_ins[pn]})
             form = tuple((b, r["module"], tuple(sorted(r["ring_params"].items())), tuple(sorted(r["ring_ports"].items())))
-                         for b, r in sorted(self.ins[pn].items()))
+                         for b, r in sorted(ins.items()))
             # CA-MIXED-1: which output buses forward a start (cland_fstart_out) is part of the type's hardware too
-            mask = (tuple(sorted(self.ins[pn])), tuple(sorted(self.outs[pn])), form, tuple(sorted(self.ca_outs[pn])))
+            outs = set(self.outs[pn]) | self.dormant_outs[pn]
+            mask = (tuple(sorted(ins)), tuple(sorted(outs)), form,
+                    tuple(sorted(set(self.ca_outs[pn]) | (self.dormant_outs[pn] & self.type_ca_outs[p["type"]]))))
             masks[p["type"]].setdefault(mask, []).append(pn)
         bad = {tn: list(ms.values()) for tn, ms in masks.items() if len(ms) > 1}
         if bad:
@@ -1274,7 +1279,7 @@ class Landings:
             mask = next(iter(ms))
             self.by_type[tn] = dict(inputs=mask[0], outputs=mask[1])
             pn0 = ms[mask][0]
-            self.ca_by_type[tn] = dict(inputs=tuple(sorted(self.ca_ins[pn0])), outputs=mask[3])
+            self.ca_by_type[tn] = dict(inputs=tuple(sorted(set(self.ca_ins[pn0]) | self.dormant_ins[pn0])), outputs=mask[3])
             if not require_geometry:
                 continue
             declared = {b["name"]: b for b in self.types[tn].get("buses", [])}
@@ -1351,6 +1356,27 @@ class Landings:
                     raise LandingError(f"clock landing {tn}: declare placed scalar {direction} pin {name}")
                 if not all(k in b for k in ("face", "window_um", "layers")):
                     raise LandingError(f"clock landing {tn}.{name}: missing physical pin geometry")
+
+    def _dormant_fill(self):
+        """UNIFY-TOOLS-R3 DORMANT: per copy, the landed buses of its type it leaves SPARE (partitions[].spare_ends) in
+        the count-aligned strap form: dormant_ins (receiver ring present, strap_ca_off_<b> = 1, fclk / fstart tied 0 at
+        the parent) and dormant_outs (forwarded clock / start outputs present, left open).  type_row[tn][b]: one landed
+        row per type bus (ring module / params are type hardware, identical on every copy that lands it)."""
+        import count_align_bind as CAB
+        self.type_row, type_outs, self.type_ca_outs = defaultdict(dict), defaultdict(set), defaultdict(set)
+        for pn, p in self.parts.items():
+            for b, r in sorted(self.ins[pn].items()):
+                self.type_row[p["type"]].setdefault(b, r)
+            type_outs[p["type"]] |= set(self.outs[pn])
+            self.type_ca_outs[p["type"]] |= set(self.ca_outs[pn])
+        self.dormant_ins, self.dormant_outs = defaultdict(set), defaultdict(set)
+        if not (self.ca and self.ca.get("strap_form")):
+            return
+        for pn, p in self.parts.items():
+            sp_in = CAB.dormant_ends(self.plan, p)
+            sp_out = {b[:-2] + "_o" for b in sp_in}
+            self.dormant_ins[pn] = {b for b in self.type_row[p["type"]] if b not in self.ins[pn] and b in sp_in}
+            self.dormant_outs[pn] = {b for b in type_outs[p["type"]] if b not in self.outs[pn] and b in sp_out}
 
     def _region_links(self, ports):
         """monitor="region": the composed plan's same-region status ports cland_mon_{ready,fault}__<pid> whose pid is a
@@ -1503,7 +1529,7 @@ class Landings:
                 if self.strap:
                     # strap form: K, PAD, EDGE_FALL, tree select and root/child are strap values, not type identity;
                     # only the relay pin list (rx in / tx out) still separates copies (residual TYPE_SPLIT)
-                    sig = (tuple(sorted(_ca_in(self, pn))), role[0] == "relay", tx)
+                    sig = (tuple(sorted(set(_ca_in(self, pn)) | self.dormant_ins.get(pn, set()))), role[0] == "relay", tx)
                     if self._role_strap(self.parts[pn]["type"]):
                         # UNIFY-TOOLS ROLE-STRAP: relay rx vs origin (and tx out present vs absent) is strap_ca_relay
                         sig = (sig[0],)
@@ -1922,10 +1948,9 @@ class Landings:
                     raise LandingError(f"{tn}.{b}: landing_writer_start needs an FSTART face flop (strap-form origin)")
                 else:
                     logic.append(f"    assign cland_fstart_out_{b} = cland_start;")
-        part = next(p for p, v in self.parts.items() if v["type"] == key)
         lite = self._ring_lite(tn, key, head, cat, cmask, status_copy)
         for b in mask["inputs"]:
-            r = self.ins[part][b]
+            r = self.type_row[key][b]
             # Plan width excludes the in-band epoch bit; physical binding has
             # the complete width+1 bundle, just like the original station.
             input_decl = re.search(r"input\s+wire\s*\[(\d+):0\]\s+" + re.escape(b) + r"\b", head)
@@ -2014,6 +2039,8 @@ class Landings:
                 if cat.get("straps"):
                     kw = cat["rings"][b]["kw"]
                     extra += [f"    input wire [{kw-1}:0] strap_ca_k_{b}"]
+                    if f"{DORMANT_PREFIX}{b}" in cat["straps"]:
+                        extra += [f"    input wire [0:0] {DORMANT_PREFIX}{b}"]
                     ring_mod = f"ot_dp_clk_landing_cas #(.W({{w}}), .DEPTH({cat['rings'][b]['depth']}))"
                     ring_rst = (f".t_rst_n(cland_fstart_in_{b}), .clk(clk), .rst_n({reader_start}), "
                                 f".strap_k(strap_ca_k_{b})")
@@ -2195,6 +2222,8 @@ class Landings:
             # Rename the local NET only: a `.name(` port reference on a child instance is the child's port, never
             # this wrapper's bus (gen_rtl wrappers bind leaves by name: `.lep_fault_i(lep_fault_i_q)`).
             body = re.sub(r"(?<![.\w])" + re.escape(b) + r"\b", landed, body)
+            if self.dataflow and cat and f"{DORMANT_PREFIX}{b}" in (cat.get("straps") or {}):
+                raise LandingError(f"{tn}.{b}: DORMANT rings are built for the collector / plain monitor forms, not dataflow")
             if self.dataflow:
                 # ring W+2: {fault, ready} of the sender's status ride the spare padded ring bits under the same
                 # forwarded write clock; no extra data cycle, no die-top status wire beside the bus.
@@ -2207,10 +2236,18 @@ class Landings:
                           f"    wire cland_ok_{b} = {ring}[{w}] && landing_ready_{b} && !landing_fault_{b};",
                           f"    wire cland_bad_{b} = landing_fault_{b} || (landing_ready_{b} && {ring}[{w+1}]);"]
                 continue
+            off = f"{DORMANT_PREFIX}{b}" if cat and f"{DORMANT_PREFIX}{b}" in (cat.get("straps") or {}) else None
+            st_r, st_f = (f"landing_ready_raw_{b}", f"landing_fault_raw_{b}") if off else (f"landing_ready_{b}", f"landing_fault_{b}")
             logic += [f"    wire [{w-1}:0] {landed};",
                       f"    {ring_mod.format(w=w)} u_cland_{b} (",
                       f"        .fclk(fclk_in_{b}), {ring_rst}, .d({b}), .q({landed}),",
-                      f"        .ready(landing_ready_{b}), .fault(landing_fault_{b}));"]
+                      f"        .ready({st_r}), .fault({st_f}));"]
+            if off:
+                # UNIFY-TOOLS-R3 DORMANT: a copy that leaves this slot spare masks its ring (ready 1, fault 0); 0 cycles,
+                # the landed copies (strap 0) see the ring status unchanged
+                logic += [f"    wire {st_r}, {st_f};",
+                          f"    assign landing_ready_{b} = {st_r} | {off}[0];",
+                          f"    assign landing_fault_{b} = {st_f} & ~{off}[0];"]
         if cat:
             logic += self._origin_rtl(tn, cat, ca_raw, body, extra, type_key=key, head=head)
             if self.tstart and self.tstart["type_pins"].get(key, {}).get(START_PIN_OUT):
@@ -3238,6 +3275,9 @@ class Landings:
             if self.dataflow:
                 for b in sorted(self.outs[pn]):
                     conn += [f"        .cland_up_ready_{b}({mon[(pn,b)]}_ready)", f"        .cland_up_fault_{b}({mon[(pn,b)]}_fault)"]
+            for b in sorted(self.dormant_ins.get(pn, ())):
+                # UNIFY-TOOLS-R3 DORMANT: the spare slot's ring sees no forwarded clock and no start (strap_ca_off = 1)
+                conn += [f"        .fclk_in_{b}(1'b0)", f"        .cland_fstart_in_{b}(1'b0)"]
             for b, r in sorted(self.ins[pn].items()):
                 i = index[(pn,b)]
                 conn += [f"        .fclk_in_{b}({fwd[(r['src'],r['src_bus'])]})"]

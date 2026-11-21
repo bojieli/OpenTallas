@@ -122,3 +122,23 @@ def test_kit_refuses_stale_or_incomplete_spare_ft_bind(tmp_path):
     assert bind.main(kit_args) != 0
     source.write_text(body.replace('output wire [8:0] y_o', 'output wire [7:0] y_o'))
     assert bind.main(kit_args) != 0
+
+
+def test_dormant_landed_slot_ring_pins_allowed_only_with_its_strap():
+    """UNIFY-TOOLS-R3 DORMANT: a landed class slot keeps its ring pins on a spare copy when the type declares its
+    dormant strap strap_ca_off_<slot>_i; without it the landing role still refuses"""
+    p = vehicle()
+    pins = [dict(name=n, dir=d, kind=k, layer="M5", xy_um=[1.0, 1.0]) for n, d, k in (
+        ("fclk_in_y_i", "in", "clock"), ("cland_fstart_in_y_i", "in", "ctl"), ("fclk_out_y_o", "out", "clock"),
+        ("cland_fstart_out_y_o", "out", "ctl"))]
+    p['partition_types']['tf']['clock'] = {'landing_contract': {'pins': pins}}
+    p['partition_types']['tf']['count_straps'] = [dict(name='strap_ca_k_y_i', width=6)]
+    with pytest.raises(ValueError, match='landing or clock role'):
+        spare_ft.declared(copy.deepcopy(p))
+    p['partition_types']['tf']['count_straps'].append(dict(name='strap_ca_off_y_i', width=1))
+    assert list(spare_ft.connections(spare_ft.declared(p)['F_unused'])) == [('y_i', "9'd0"), ('y_o', '')]
+    # other landing roles (bands, local collector sources) still refuse
+    q = copy.deepcopy(p)
+    q['partition_types']['tf']['clock']['landing_contract']['bands'] = {'y_i': {}}
+    with pytest.raises(ValueError):
+        spare_ft.declared(q)

@@ -546,6 +546,25 @@ def annotate_table(table, b, root_settle_cycles=64, strap_form=False, mixed=None
 #   strap_ca_relay          1 = relay rx copy (start = rx flop on cland_rstart_in), 0 = origin copy; the unused start pin
 #                           of each copy (cland_rstart_in on an origin, cland_tstart_in on a relay) is tied 0 at the parent
 STRAP_PREFIX = "strap_ca_"
+# UNIFY-TOOLS-R3 DORMANT (superset class copies): a type bus some copies land and a copy leaves SPARE (its ft slot named
+# in partitions[].spare_ends) is DORMANT on that copy instead of a landing-mask TYPE_SPLIT: the type keeps one ring per
+# landed bus, the copy ties strap_ca_k_<b> = 0 and strap_ca_off_<b> = 1 (the ring's ready / fault are masked to
+# ready 1 / fault 0 inside the type, clock_landings DORMANT), and the parent ties fclk_in_<b> / cland_fstart_in_<b> 0
+# (spare_ft ties the data input).  Copies that land the bus tie strap_ca_off_<b> = 0: the ring is unchanged.
+DORMANT_PREFIX = STRAP_PREFIX + "off_"
+
+
+def dormant_ends(plan, part):
+    """the ft slot INPUT buses a partition declares spare (partitions[].spare_ends: a slot name or its _i end)"""
+    t = plan["partition_types"].get(part["type"]) or {}
+    slots = {s["name"] for s in t.get("ft_slots", [])}
+    out = set()
+    for n in part.get("spare_ends") or []:
+        if n in slots:
+            out.add(n + "_i")
+        elif n.endswith("_i") and n[:-2] in slots:
+            out.add(n)
+    return out
 
 
 def strap_kw(depth):
@@ -684,15 +703,20 @@ def strap_ties(ca, plan):
     by_type = defaultdict(list)
     for q in landed:
         by_type[ptype[q]].append(q)
+    spare_in = {p["name"]: dormant_ends(plan, p) for p in plan["partitions"]}
     types, insts = {}, {}
     for tn, qs in sorted(by_type.items()):
         qs.sort()
         buses = sorted({b for q in qs for b in inst_bus.get(q, {})})
-        miss = [(q, b) for q in qs for b in buses if b not in inst_bus.get(q, {})]
+        dormant = {q: sorted(b for b in buses if b not in inst_bus.get(q, {}) and b in spare_in.get(q, ())) for q in qs}
+        miss = [(q, b) for q in qs for b in buses if b not in inst_bus.get(q, {}) and b not in dormant[q]]
         if miss:
-            raise BindError(f"strap ties: type {tn} copies land different buses (landing mask split first): {miss[:3]}")
-        depth = {b: max(inst_bus[q][b]["depth"] for q in qs) for b in buses}
+            raise BindError(f"strap ties: type {tn} copies land different buses (landing mask split first, or declare "
+                            f"the slot spare on the copy: DORMANT): {miss[:3]}")
+        dbuses = sorted({b for v in dormant.values() for b in v})
+        depth = {b: max(inst_bus[q][b]["depth"] for q in qs if b in inst_bus.get(q, {})) for b in buses}
         straps = {f"{STRAP_PREFIX}k_{b}": strap_kw(depth[b]) for b in buses}
+        straps.update({f"{DORMANT_PREFIX}{b}": 1 for b in dbuses})
         # origin class: relay rx / origin with or without tx relay -> a pin-list difference -> residual split
         cls = {q: (role[q]["kind"] == "relay", role[q]["tx"]) for q in qs}
         kinds = {role[q]["kind"] for q in qs}
@@ -723,7 +747,9 @@ def strap_ties(ca, plan):
             straps[f"{STRAP_PREFIX}relay"] = 1
         variants = {}
         for q in qs:
-            v = {f"{STRAP_PREFIX}k_{b}": strap_bits(inst_bus[q][b]["K"], straps[f"{STRAP_PREFIX}k_{b}"]) for b in buses}
+            v = {f"{STRAP_PREFIX}k_{b}": strap_bits(inst_bus[q][b]["K"], straps[f"{STRAP_PREFIX}k_{b}"])
+                 if b in inst_bus.get(q, {}) else 0 for b in buses}
+            v.update({f"{DORMANT_PREFIX}{b}": int(b in dormant[q]) for b in dbuses})
             rq = role[q]
             if has_child and rq["kind"] in ("root", "child"):
                 ch = rq["kind"] == "child"
@@ -734,15 +760,17 @@ def strap_ties(ca, plan):
                 if origin["root"]:
                     v[f"{STRAP_PREFIX}root"] = int(not ch)
             elif has_child:     # relay copy of a child-capable type (residual split): origin straps unused -> 0
-                v.update({k: 0 for k in straps if not k.startswith(f"{STRAP_PREFIX}k_")})
+                v.update({k: 0 for k in straps if not k.startswith((f"{STRAP_PREFIX}k_", DORMANT_PREFIX))})
             if rstrap:
                 v[f"{STRAP_PREFIX}relay"] = int(rq["kind"] == "relay")
             key = json.dumps([cls[q], sorted(v.items())])
             vi = variants.setdefault(key, len(variants))
             insts[q] = dict(type=tn, values=v, role=dict(rq), variant=vi,
-                            K={b: inst_bus[q][b]["K"] for b in buses})
+                            K={b: inst_bus[q][b]["K"] for b in buses if b in inst_bus.get(q, {})},
+                            **({"dormant": dormant[q]} if dormant[q] else {}))
         classes = sorted({cls[q] for q in qs})
         types[tn] = dict(instances=qs, buses={b: dict(depth=depth[b], kw=straps[f"{STRAP_PREFIX}k_{b}"]) for b in buses},
+                         **({"dormant_buses": dbuses} if dbuses else {}),
                          origin=origin, straps=straps, strap_bits=sum(straps.values()), variants=len(variants),
                          residual_split=[dict(relay_rx=a, relay_tx=b_, instances=[q for q in qs if cls[q] == (a, b_)])
                                          for a, b_ in classes] if len(classes) > 1 else [])

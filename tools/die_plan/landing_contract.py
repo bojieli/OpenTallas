@@ -20,6 +20,16 @@ def _tie_unused_ok(t):
     return set(tie)|uses|{"cland_up_ready","cland_up_fault","fclk_out_cland_up"} if tie else set()
 
 
+def _dormant_open(t,part):
+    """UNIFY-TOOLS-R3 DORMANT: the ring / forwarded pins of the landed class slots this copy declares spare
+    (partitions[].spare_ends) whose dormant strap strap_ca_off_<slot>_i the type declares: tied 0 / open at the parent."""
+    off={c["name"][len("strap_ca_off_"):-2] for c in t.get("count_straps",[]) if c["name"].startswith("strap_ca_off_")
+         and c["name"].endswith("_i")}
+    sp={n[:-2] if n.endswith(("_i","_o")) else n for n in part.get("spare_ends") or []}&off
+    return {f"{pin}_{n}_i" for n in sp for pin in ("fclk_in","cland_fstart_in")}|{
+        f"{pin}_{n}_o" for n in sp for pin in ("fclk_out","cland_fstart_out")}
+
+
 def check(P,sidecar=None):
     """sidecar: optional compose sidecar; with it a declared START tree must equal the sidecar's (see _start_tree_check)."""
     net=P.clock.get("landing_network")
@@ -100,6 +110,7 @@ def check(P,sidecar=None):
             if st is not None and name==START_PIN_OUT and n>=1:continue   # one launch pin, fanned out at the die top
             if n==0 and name in _tie_unused_ok(P.types[p["type"]]):continue   # CLAND-TIE-2: declared tieable child / floating monitor output
             if n==0 and name in ROLE_STRAP_OPEN and P.types[p["type"]].get("landing_role_strap") is True:continue
+            if n==0 and name in _dormant_open(P.types[p["type"]],p):continue   # UNIFY-TOOLS-R3 DORMANT spare slot
             if n!=1:errors.append(f"{pn}.{name}: infrastructure pin used {n} times (no absent-child ties)")
     obs=net.get("root_observer",{})
     if obs.get("part") not in P.parts or not all(obs.get(k) for k in ("module","fault_port","ready_port")):

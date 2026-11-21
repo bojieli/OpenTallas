@@ -347,6 +347,36 @@ def ft_superset_plan(P, rep, members, rep_out):
     return dict(union=union, ren=ren, pins=pins, carry=carry, raise_=raise_)
 
 
+DORMANT_PREFIX = "strap_ca_off_"
+
+
+def ft_count_straps(P, rep, members, ren, union, spare_slots):
+    """UNIFY-TOOLS-R3 DORMANT: the class row's count straps = union (max width) of every member's strap_ca_k_* (slot
+    buses renamed with their slot) + one strap_ca_off_<slot>_i [0:0] for each landed class slot (it has a K strap) that
+    some instance leaves spare: that copy's ring is dormant (count_align_bind / clock_landings DORMANT)."""
+    widths, notes = {}, {}
+    for tn in [rep] + members:
+        r = ren.get(tn, {})
+        for c in P[tn].get("count_straps", []):
+            n = c["name"]
+            if n.startswith("strap_ca_k_") and n.endswith("_i") and n[len("strap_ca_k_"):-2] in r:
+                n = f"strap_ca_k_{r[n[len('strap_ca_k_'):-2]]}_i"
+            widths[n] = max(widths.get(n, 0), int(c["width"]))
+            notes.setdefault(n, c.get("note"))
+    names = {sl["name"] for sl in union}
+    off = sorted(sl for sl in spare_slots if sl in names and f"strap_ca_k_{sl}_i" in widths)
+    for sl in off:
+        widths[f"{DORMANT_PREFIX}{sl}_i"] = 1
+        notes[f"{DORMANT_PREFIX}{sl}_i"] = "UNIFY-TOOLS-R3 DORMANT: 1 = this copy leaves the slot spare (ring masked, tied at the parent)"
+    out = []
+    for n in sorted(widths):
+        row = dict(name=n, width=widths[n])
+        if notes.get(n):
+            row["note"] = notes[n]
+        out.append(row)
+    return out, off
+
+
 def ft_superset_apply(plan, rep, members, fp, rep_out):
     """write the class slots + their landing pins, re-point renamed / collapsed slots' ports and landing edges,
     declare per-instance spare slots"""
@@ -408,10 +438,16 @@ def ft_superset_apply(plan, rep, members, fp, rep_out):
             p["spare_ends"] = sorted(set(old) | set(add))
         if add:
             spare[p["name"]] = add
+    spare_slots = {n for v in spare.values() for n in v} | {
+        n for p in plan["partitions"] if p["type"] in members or p["type"] == rep for n in p.get("spare_ends", [])}
+    if any(P[tn].get("count_straps") for tn in [rep] + members):
+        R["count_straps"], dormant = ft_count_straps(P, rep, members, ren, union, spare_slots)
+    else:
+        dormant = []
     rep_out["ft_superset"] = dict(
         slots=len(union), added=sorted({s["name"] for s in union} - before),
         collapsed={m: r for m, r in ren.items() if r}, repointed_port_ends=repointed, spare=spare,
-        landing_pins_added=[q["name"] for q in fp["carry"]], landing_edges_repointed=edges,
+        landing_pins_added=[q["name"] for q in fp["carry"]], landing_edges_repointed=edges, dormant_slots=dormant,
         overlaps=ft_overlaps(union))
 
 

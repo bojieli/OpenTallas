@@ -349,3 +349,22 @@ def test_child_union_adds_member_sites_to_the_representative():
     assert [c["index"] for c in lc["tieable_children"]] == [0, 1, 2, 3]
     names = {p["name"] for p in lc["pins"]}
     assert {"cland_dn_ready_3", "cland_dn_fault_3", "fclk_in_cland_dn_3"} <= names
+
+
+def test_ft_superset_unions_count_straps_and_declares_dormant_straps():
+    """UNIFY-TOOLS-R3 DORMANT: a landed member slot keeps its K strap on the class row; a landed class slot that an
+    instance leaves spare gets strap_ca_off_<slot>_i [0:0]"""
+    plan, side = _ft_plan()
+    T = plan["partition_types"]
+    T["ctl__rep"]["count_straps"] = [dict(name="strap_ca_k_a_i", width=5), dict(name="strap_ca_pad", width=1)]
+    T["ctl__m1"]["count_straps"] = [dict(name="strap_ca_k_xft__ctl__m1__dup_i", width=6),
+                                    dict(name="strap_ca_k_xft__ctl__m1__x_i", width=4)]
+    T["ctl__m2"]["count_straps"] = []
+    rep = CM.merge(plan, side, "ctl__rep", ["ctl__m1", "ctl__m2"], ft_superset=True)
+    assert rep["refused"] == []
+    cs = {c["name"]: c["width"] for c in T["ctl__rep"]["count_straps"]}
+    # dup collapsed into a: max(5, 6); x landed on p1 only -> spare on p0 / p2 -> dormant; a spare on p2 -> dormant;
+    # y has no K strap (not count-aligned) -> no dormant strap
+    assert cs == {"strap_ca_k_a_i": 6, "strap_ca_k_xft__ctl__m1__x_i": 4, "strap_ca_pad": 1,
+                  "strap_ca_off_a_i": 1, "strap_ca_off_xft__ctl__m1__x_i": 1}
+    assert rep["ft_superset"]["dormant_slots"] == ["a", "xft__ctl__m1__x"]

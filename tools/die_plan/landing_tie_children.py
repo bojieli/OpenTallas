@@ -44,6 +44,9 @@ def tie_connections(tieable, connected):
 ROLE_STRAP_TIES = {"cland_rstart_in": "1'b0", "cland_tstart_in": "1'b0"}
 
 
+DORMANT_PREFIX = "strap_ca_off_"   # == count_align_bind.DORMANT_PREFIX
+
+
 def landing_ties(types):
     """{type name: {port: literal}} from plan partition types (bind tie-off audit input)."""
     out = {}
@@ -52,6 +55,11 @@ def landing_ties(types):
         ports = tie_ports(lc.get("tieable_children"))
         if t.get("landing_role_strap") is True:
             ports = dict(ports, **ROLE_STRAP_TIES)
+        # UNIFY-TOOLS-R3 DORMANT: a copy that leaves a landed class slot spare ties that ring's forwarded clock and
+        # start 0 (its strap_ca_off_<b> = 1 masks the ring status, count_align_bind / clock_landings DORMANT)
+        dorm = [c["name"][len(DORMANT_PREFIX):] for c in t.get("count_straps", []) if c["name"].startswith(DORMANT_PREFIX)]
+        if dorm:
+            ports = dict(ports, **{f"{pin}_{b}": "1'b0" for b in dorm for pin in ("fclk_in", "cland_fstart_in")})
         if ports:
             out[tn] = ports
     return out

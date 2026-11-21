@@ -190,3 +190,16 @@ def test_role_strap_type_may_leave_start_pins_unused():
     rs = LC.check(P)["errors"]
     assert rs and all("cland_rstart" not in e and IN not in e for e in rs)   # only the launch-out pins stay strict
     assert all(OUT in e for e in rs)
+
+
+def test_dormant_spare_slot_pins_may_stay_unused():
+    """UNIFY-TOOLS-R3 DORMANT: a copy's spare landed class slot (dormant strap declared) leaves its ring pins unused"""
+    P = _plan()
+    t = P.types["t_lnc"]
+    t["clock"]["landing_contract"]["pins"] += [_pin("fclk_in_f_i", "in"), _pin("cland_fstart_out_f_o", "out")]
+    base = [e for e in LC.check(P)["errors"] if "_f_" in e]
+    assert len(base) == 4                                  # lnc + cp, two pins each
+    t["count_straps"] = [dict(name="strap_ca_off_f_i", width=1)]
+    P.parts["cp"]["spare_ends"] = ["f"]
+    left = [e for e in LC.check(P)["errors"] if "_f_" in e]
+    assert sorted(left) == sorted(e for e in base if e.startswith("lnc."))   # lnc lands nothing on f but is not spare
