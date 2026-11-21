@@ -252,6 +252,8 @@ proc nc_cluster {inst} { if {[regexp {^(.*)\.u_st\.} [string map {\\ {}} [$inst 
 proc nc_chain_one {pc {gate ""}} {
   global nc_blk nc_dbu nc_corefix nc_chains nc_moved nc_l0 nc_l1 nc_rc nc_hh_moved nc_hh_shared nc_hh_shared_moved
   # backward: hops {stage_inst bufs_on_its_D}, stages = movable fanout-1 zero-logic chain registers
+  # QC-PLAN-R8 11-20: u_y_xd_* = bind relay_depth stages in front of the pipe register (+1 DECLARED cycle each); this hook is
+  # their only placer (relay_mid.tcl leaves u_y_xd_ groups that feed u_pc_nk_ registers), so d<N> + xd stages split the leg evenly.
   set seq {}; set hopb {}; set cur $pc; set head ""
   while {[llength $seq] < 24} {
     set dp [nc_dpin $cur]; if {$dp eq ""} break
@@ -261,7 +263,7 @@ proc nc_chain_one {pc {gate ""}} {
     set di [$drv getInst]
     set nm [string map {\\ {}} [$di getName]]
     if {![[$di getMaster] isBlock] && [string match "DFF*" [[$di getMaster] getName]] && [nc_mov $di] \
-        && [regexp {(u_d[0-9]+_|u_lpad_|u_r8b_strap_|u_pd[0-9]+_)} $nm] && ![regexp {u_pc_nk_} $nm] \
+        && [regexp {(u_d[0-9]+_|u_lpad_|u_r8b_strap_|u_pd[0-9]+_|u_y_xd_)} $nm] && ![regexp {u_pc_nk_} $nm] \
         && ([nc_loads $di] == 1 || ($gate ne "" && [nc_loads_in_cluster $di [nc_cluster $pc]]))} {
       set seq [linsert $seq 0 $di]; set cur $di; continue
     }

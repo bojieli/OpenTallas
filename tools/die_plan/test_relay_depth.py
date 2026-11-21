@@ -296,3 +296,72 @@ def test_half_face_stations():
     assert w("ot_s81sl_egg", "in") == 1.0 and w("ot_s81sl_capc5r", "out") == 1.0
     assert RD.stations_needed(923.2, 405.0, 0.1, 1.0) == 3 and RD.stations_needed(724.9, 405.0, 0.1, 1.0) == 2
     assert RD.stations_needed(800.9, 405.0, 0.5, 0.5) == 2 and RD.stations_needed(float("inf"), 405.0) == 0
+
+
+def _lockup_vehicle(rows, **lk):
+    """vehicle() with clock.core_input_lockup on core_sink.i (the QC NK pipe register + latch on the sink port)"""
+    b, part = vehicle(rows)
+    b.plan.setdefault("clock", {})["core_input_lockup"] = dict(dict(modules={"core_sink": ["i"]}, all=True, pipe=1), **lk)
+    return b, part
+
+
+@pytest.mark.parametrize("latch", [True, False])
+@pytest.mark.parametrize("row", [{"inst": "u_y_rt_1", "D": 1}, {"inst": "u_sink", "port": "i", "side": "sink", "D": 1}])
+def test_relay_stage_goes_before_the_lockup_pipe(row, latch):
+    """QC-PLAN-R8 11-20 (cbf_q11 u_t_2_2.t_out -> d3 -> u_pc_nk_u_t_3_2_n_a, 1233 um): a relay_depth stage on a port that also
+    carries the core_input_lockup pipe sits BEFORE u_pc_nk (the pc register stays the last stage, FIRM at the pin); before the fix
+    the collapsed e ([pq] / [lk]) crashed with IndexError.  Declared per bit = relay D + npipe."""
+    b, part = _lockup_vehicle([row], **({} if latch else {"latch_except": {"core_sink": ["i"]}}))
+    text, _ = b.emit_type("src", part)
+    xd = re.search(r"ot_dp_dly #\(\.W\(3\), \.D\(1\)\) (u_y_xd_\w+) \(\.clk\(clk\), \.d\(([^)]*)\), \.q\((\w+)\)\);", text)
+    pc = re.search(r"ot_dp_dly #\(\.W\(3\), \.D\(1\)\) (u_pc_nk_\w+) \(\.clk\(clk\), \.d\(([^)]*)\), \.q\((\w+)\)\);", text)
+    assert xd and pc and text.index(xd.group(0)) < text.index(pc.group(0))
+    assert "w_u_y_rt_1_o" in xd.group(2)                                    # the relay stage reads the source wire
+    assert pc.group(2) == f"{xd.group(3)}[2:0]" or pc.group(2) == xd.group(3)  # the pipe register reads the relay stage
+    if latch:
+        lk = re.search(r"ot_dp_lk #\(\.W\(3\)\) u_lk_nk_\w+ \(\.clk\(clk\), \.d\((\w+)\), \.q\((\w+)\)\);", text)
+        assert lk and lk.group(1) == pc.group(3) and re.search(rf"\.i\({lk.group(2)}(\[2:0\])?\)", text)
+    else:
+        assert "u_lk_nk_" not in text and re.search(rf"\.i\({pc.group(3)}(\[2:0\])?\)", text)
+    assert "u_pc_lp_" not in text
+    rec = b.core_input_pipe
+    assert rec["x.u_sink.i"] == 1 and all(rec[f"x.u_sink.i[{k}]"] == 2 for k in range(3))
+
+
+def test_relay_stage_on_some_bits_of_a_lockup_port():
+    b, part = _lockup_vehicle([{"inst": "u_sink", "port": "i", "side": "sink", "bits": [0, 1], "D": 2}])
+    text, _ = b.emit_type("src", part)
+    st = re.findall(r"ot_dp_dly #\(\.W\(2\), \.D\(1\)\) (u_y_xd_\w+) ", text)
+    pc = re.search(r"(u_pc_nk_\w+) \(\.clk\(clk\), \.d\(([^)]*)\)", text)
+    assert len(st) == 2 and all(text.index(s) < text.index(pc.group(1)) for s in st)
+    assert "w_u_y_rt_1_o[2]" in pc.group(2)                                 # bit 2 goes straight into the pipe register
+    rec = b.core_input_pipe
+    assert rec["x.u_sink.i[0]"] == rec["x.u_sink.i[1]"] == 3 and "x.u_sink.i[2]" not in rec
+
+
+def test_lockup_port_without_relay_rows_unchanged():
+    """no relay_depth row: the lockup emission is the pre-fix text (pc then latch, no u_y_xd_)"""
+    b, part = _lockup_vehicle([])
+    text, _ = b.emit_type("src", part)
+    assert "u_y_xd_" not in text
+    assert re.search(r"u_pc_nk_u_sink_i \(\.clk\(clk\), \.d\(w_u_y_rt_1_o\[2:0\]\), \.q\(pq_u_sink_i\)\);", text)
+    assert re.search(r"u_lk_nk_u_sink_i \(\.clk\(clk\), \.d\(pq_u_sink_i\), \.q\(lk_u_sink_i\)\);", text)
+    assert b.core_input_pipe == {"x.u_sink.i": 1}
+
+
+def test_link_pipe_after_collapsed_lockup_expands_per_bit():
+    """generic collapse bug: a core_link_pipe on bits of a lockup port indexed e = [lk] (IndexError / whole bus on bit 0)"""
+    b, part = _lockup_vehicle([])
+    b.plan["clock"]["core_link_pipe"] = {"all": True, "modules": {"core_sink": {"i": {"D": 1, "bits": [1, 2]}}}}
+    text, _ = b.emit_type("src", part)
+    lp = re.search(r"u_pc_lp_\w+ \(\.clk\(clk\), \.d\(([^)]*)\), \.q\((\w+)\)\);", text)
+    assert lp and lp.group(1) == "lk_u_sink_i[2:1]"
+    assert re.search(rf"\.i\(\{{{lp.group(2)}\[1:0\], ?lk_u_sink_i\[0\]\}}\)", text)
+
+
+def test_chain_hook_takes_relay_stages_and_relay_mid_leaves_them():
+    d = Path(__file__).resolve().parent
+    chain = (d / "core_input_chain.tcl").read_text()
+    assert "u_pd[0-9]+_|u_y_xd_)} $nm]" in chain
+    rm = (d / "relay_mid.tcl").read_text()
+    assert "proc rm_feeds_pc" in rm and "dict unset rm_grp $g" in rm

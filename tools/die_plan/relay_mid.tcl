@@ -150,6 +150,36 @@ proc rm_loads {net depth} {
   }
   return $r
 }
+# QC-PLAN-R8 11-20: one placer per chain.  A relay_depth stage (u_y_xd_*) that bind put in front of a core_input_lockup pipe
+# register (u_pc_nk_*, FIRM at its NK pin by core_input_anchor.tcl) belongs to the zero-logic chain that core_input_chain.tcl
+# (PRE_RESIZE, after GPL) spreads evenly from the chain head to that register; relay_mid leaves such groups to it.
+proc rm_feeds_pc {net depth} {
+  if {$net eq "NULL" || $net eq ""} { return 0 }
+  foreach it [$net getITerms] {
+    if {[[$it getMTerm] getIoType] ne "INPUT"} continue
+    set inst [$it getInst]
+    if {[regexp {u_pc_nk_} [string map {\\ {}} [$inst getName]]]} { return 1 }
+    if {$depth < $::rm_depth && ![[$inst getMaster] isBlock] && [rm_isbuf $inst]} {
+      foreach o [rm_sig $inst OUTPUT] { if {[rm_feeds_pc [$o getNet] [expr {$depth + 1}]]} { return 1 } }
+    }
+  }
+  return 0
+}
+set rm_pc_owned 0
+foreach g [dict keys $rm_grp] {
+  set own 0
+  foreach i [dict get $rm_grp $g] {
+    if {![regexp {u_y_xd_} [string map {\\ {}} [$i getName]]]} break
+    foreach q [rm_sig $i OUTPUT] { if {[rm_feeds_pc [$q getNet] 0]} { set own 1; break } }
+    break
+  }
+  if {$own} {
+    incr rm_pc_owned [llength [dict get $rm_grp $g]]
+    foreach i [dict get $rm_grp $g] { dict unset rm_of [$i getName] }
+    dict unset rm_grp $g
+  }
+}
+if {$rm_pc_owned} { puts "OT_RELAY_MID left $rm_pc_owned u_y_xd_ flops feeding u_pc_nk_ registers to core_input_chain.tcl" }
 # per group: fixed source / sink centroids, source / sink groups, soft (X) endpoints
 set rm_info {}
 dict for {g insts} $rm_grp {
