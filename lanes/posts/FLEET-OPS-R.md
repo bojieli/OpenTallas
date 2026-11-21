@@ -908,3 +908,4 @@
 - 2026-11-21 00:05 PST HOST-REPORT 2026-11-21 00:05 | tolera L123.31/112 units0 free1211G | key-ca L159.13/112 units209 free213G | dear-c L123.82/128 units435 free267G | loved- L96.28/96 units71 free1089G | outgoi L61.87/96 units167 free539G | renewe L154.86/96 units85 free538G | civil- L87.25/96 units47 free727G
 - 2026-11-21 00:40 PST DISK-RATE epyc9 /srv/opentallas-scratch2: free 506 GB, falling 79 GB/h, floor 50 GB in 5.8 h (cron disk_rate.py; read-only)
 - 2026-11-21 01:05 PST HOST-REPORT 2026-11-21 01:05 | tolera L86.38/112 units0 free1075G | key-ca L98.06/112 units200 free181G | dear-c L170.22/128 units430 free268G | loved- L136.48/96 units74 free1057G | outgoi L193.90/96 units186 free521G | renewe L188.66/96 units94 free471G | civil- L65.57/96 units36 free717G
+- 2026-11-21 01:10 PST DISK-RATE intel1 /srv/opentallas-scratch2: free 201 GB, falling 29 GB/h, floor 50 GB in 5.3 h (cron disk_rate.py; read-only)
