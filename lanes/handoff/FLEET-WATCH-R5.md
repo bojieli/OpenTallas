@@ -19,3 +19,4 @@
 ## UPDATE 05:1x (R4 final)
 - ot-push-main of the reclaim fix FAILED: TESTS FAILED rc=2 (nothing pushed). A --dry-run diagnosis was started (task b6t6153da, output in R4 tasks dir); fix the failing/collection test in epyc2:/srv/opentallas-scratch2/claude/fleet-watch-r4 (branch fw5, commit on top of main) and push again. Reclaim fix is NOT on main.
 - Lane-dir scan result: /tmp/claude-1000/.../tasks/b7xmcyxh9.output (newest-file age + guard per top dir).
+- CONFIRMED 05:2x: the E9 restore poll (/tmp/w8.sh on localhost, task bn01q48pj) was KILLED (exit 143) and is NOT running. E9 admissions are not being restored automatically: re-arm it (apply e9-new-admit-restore-1121.json via kit_wave_edit at >=250 GiB free and >=2 h to 50 GiB) or restore by hand.
