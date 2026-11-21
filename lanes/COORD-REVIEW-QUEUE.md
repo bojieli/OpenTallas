@@ -14865,3 +14865,4 @@ FAILED [AUTOPILOT bf7f07cb455c] 2026-11-20 17:47:01 PST AUTOPILOT -> HEAD-CROSSI
   col_h10_r2 [plan_h10 +CC-BANK-2] (12): GRT 11 TT worst -95.8 median -95.8; CTS FF hold after CORETAP 12: worst -100.9 median -100.9; sign-off runs 10, SIGNED 0, routed TT worst -281.1, FF worst -118.4, DRC max 0; old plan -172
   col_h9_r1 (60): GRT 30 TT worst -61.6 median -46.7; CTS FF hold after CORETAP 49: worst -120.2 median -58.2; sign-off runs 8, SIGNED 0, routed TT worst -114.4, FF worst -164.1, DRC max 0; 30 stopped without signoff; old plan -181
   Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
+- 2026-11-20 18:10 PST Prune pin payload fix 29af landed f9ede45 after canonical GREEN4 and six-host sync; E7 prune completed in 34s after earlier stdin timeouts.

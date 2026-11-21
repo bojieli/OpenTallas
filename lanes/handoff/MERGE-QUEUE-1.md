@@ -314,3 +314,6 @@ kit-ops-5-curplan-1114 @4c696027e0ef RED (branch alone fails test_kit_wave_compo
 
 ## CODEX continuation 2026-11-20 17:35 PST
 - Owner ec16babe0df implements a broader exact-bank cross-row overlap guard at GEN and plan pre-check. 3553de9af81 maps the refusal to PLAN[design:station_overlap]. Both exact Redwatch GREEN (31 and 164 files), current 3553 runtime synchronized six hosts. QC 8a7ef3 private packed-only branch is historical unless a distinct uncovered case is shown. ec16 and bbcc changed kit_istations.py since its private gate, so do not publish that old receipt. COORD and QC informed.
+
+## CODEX continuation 2026-11-20 18:10 PST
+- E7 two runtime companion prune commands timed out after 300s. Read-only process inspection found remote prune waiting on fd0 pins before deletion; actual hub payload 445,768,853 bytes. Exact 29afaf8320cbfd7ec886d350c67f2afe5397e6db compacts to deduplicated whole hex runs (2,466,584 bytes measured), which preserve every old 12-digit lowercase snapshot substring match. Focused prune PASS7, canonical GREEN4/4 E10 oth-ubuntu-4044147-1795226354. Landed f9ede45fd9e and sync hook six hosts rc0, latest E7 prune 34s, other hosts 10–12s. Existing snapshot protection and concurrency intact.
