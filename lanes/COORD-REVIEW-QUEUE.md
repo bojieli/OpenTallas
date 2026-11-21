@@ -18022,3 +18022,4 @@ FAILED [AUTOPILOT cb1319416b0e] 2026-11-21 06:38:53 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-21 06:45 PST DIED [FLOW-LEAFREP-1121] ot-run oth-ubuntu-3856209-1795271734 on tolerant-swine: rc=2 after 617 s, ended 06:45:49, log /home/ubuntu/tmp/flowleafrep_h_new.out, cmd: --mem 60 --threads 4 --hosts epyc2 --dir /srv/opentallas-scratch3/claude/flow-leafrep-1121/m --stage /srv/opentallas-scratch3/claude/flow-le
 - 2026-11-21 06:46 PST GRT-FLAT watchdog cancelled 2 wave attempt(s) (class PLAN design:grt_flat_overflow): qwen_compute/slw_st_a_v1__clfc5867a6__pvdf8e5ca4@3 14.8 GB; s81_head/hd_host_w@2 6.9 GB
   [filed under] FLEET-WATCH-R3: FLEET-WATCH-2000 stood down (chain FLEET-WATCH-2000 > FLEET-WATCH-R3)
+- 2026-11-21 06:46 PST ALERT [OT-TOOLS-SYNC -> COORD] runtime sync FAILED, rt/current stays 22c4c3c58376: RuntimeError: /srv/opentallas-scratch2/claude/rt: 87 GB free < 100 GB (OT_RT_MIN_FREE_GB); nothing written (pruned 0)
