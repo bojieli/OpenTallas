@@ -411,6 +411,46 @@ def vclk_basis(kit, so):
               f"TT {routed['tt']:.1f} / FF {routed['ff']:.1f}", **info)
 
 
+def routed_netlist(kit):
+    paths = sorted(kit.glob("run/results/asap7/*/base/6_final.v"))
+    return paths[0] if len(paths) == 1 else None
+
+
+def cmd_prove_routed(a):
+    kit = Path(a.kit).resolve()
+    if (kit / "lec" / "lec.json").is_file():
+        return 0  # legacy runner already provided its pre-place proof
+    netlist = routed_netlist(kit)
+    if netlist is None:
+        return 0  # route must produce a unique final netlist before a proof can start
+    return subprocess.call(
+        [sys.executable, "-I", str(kit / "lec.py"), str(kit), "--netlist", str(netlist),
+         "--out", str(kit / "canary_lec"), "--mem", str(a.mem), "--jobs", str(a.jobs)],
+        env=dict(os.environ, OT_LEC_SUPERSET_VEC="1"),
+    )
+
+
+def lec_stage(kit):
+    legacy = jload(kit / "lec" / "lec.json")
+    if legacy:
+        return st(legacy.get("verdict") == "EQUIVALENT",
+                  f"{legacy.get('verdict')} {legacy.get('reason', '')}"[:200])
+    proof = kit / "canary_lec" / "lec.json"
+    result = jload(proof)
+    if not result:
+        return st(None, "no pre-place or routed LEC receipt")
+    netlist = routed_netlist(kit)
+    named = result.get("netlist")
+    if (netlist is None or not isinstance(named, str) or not named
+            or Path(named).resolve() != netlist.resolve()
+            or proof.stat().st_mtime_ns < netlist.stat().st_mtime_ns):
+        return st(False, "routed LEC receipt does not match the current final netlist")
+    all_shown = (result.get("superset_vec") or {}).get("all_shown") is True
+    verdict = result.get("verdict")
+    return st(verdict == "EQUIVALENT" and all_shown,
+              f"routed {verdict}, all_shown={all_shown}: {result.get('reason', '')}"[:200])
+
+
 def check_run(run, spec=None, die_plan_dir=None):
     run = Path(run)
     meta = jload(run / "canary_meta.json") or {}
@@ -442,9 +482,7 @@ def check_run(run, spec=None, die_plan_dir=None):
                                                                       f"{sr.get('verdict')} unwaived {sr.get('unwaived')}")
     ys = first(f"{base}/1_2_yosys.v") if base else None
     res["synth"] = st(bool(ys) or None, ys or "no 1_2_yosys.v")
-    lec = jload(kit / "lec" / "lec.json")
-    res["lec"] = st(None, "no lec/lec.json") if not lec else st(lec.get("verdict") == "EQUIVALENT",
-                                                                 f"{lec.get('verdict')} {lec.get('reason', '')}"[:200])
+    res["lec"] = lec_stage(kit)
     fg = jload(kit / "face_guard.json")
     res["face_guard"] = st(None, "no face_guard.json") if not fg else st(fg.get("verdict") == "PASS",
                                                                          f"{fg.get('verdict')} checked {fg.get('checked')}")
@@ -678,8 +716,13 @@ def cmd_submit(a):
                                f"cp -a {src}/physical/die_plan/qwen_kvsys/cores/harden/"
                                f"{{run_kit_kv.sh,corners.tcl,pin_audit_core.py}} "
                                f"{runtime_src}/physical/die_plan/qwen_kvsys/cores/harden/; ")
-        (run / "route.sh").write_text("#!/bin/bash\nset -u\n" + route +
-                                      '\necho "CANARY_FLOW_RC $?"\n')
+        route_script = "#!/bin/bash\nset -u\n" + route + '\necho "CANARY_FLOW_RC $?"\n'
+        if c.get("flow") == "type":
+            proof_cmd = ["python3", "-I", str(run / "gen/canary.py"), "prove-routed",
+                         "--kit", kit, "--mem", str(kv["mem"]), "--jobs", str(kv["cpus"])]
+            route_script += shlex.join(proof_cmd) + '\necho "CANARY_ROUTED_LEC_RC $?"\n'
+            prepare_runtime += f"cp {run}/canary.py {run}/gen/canary.py; "
+        (run / "route.sh").write_text(route_script)
         # ot-run ISOLATION step 3 (enforced since 11-10): the generation job names the source snapshot and any input snapshot, so it
         # declares them with --stage (every die was REFUSED, exit 96, when the canary restarted 11-21).
         stage = f"--stage {src} --stage {run} " + (f"--stage {kv['inputs']} " if kv.get("inputs") else "")
@@ -755,6 +798,10 @@ def main(argv=None):
     l.add_argument("--top", required=True)
     l.add_argument("--image", default=IMAGE)
     l.add_argument("--out", required=True)
+    p = sub.add_parser("prove-routed")
+    p.add_argument("--kit", required=True)
+    p.add_argument("--mem", type=int, required=True)
+    p.add_argument("--jobs", type=int, required=True)
     c = sub.add_parser("check")
     c.add_argument("--run", required=True)
     c.add_argument("--out")
@@ -763,7 +810,8 @@ def main(argv=None):
     m.add_argument("--root", default="/srv/opentallas-scratch2/claude/flow-canary/runs")
     sub.add_parser("list")
     a = ap.parse_args(argv)
-    return dict(submit=cmd_submit, lint=cmd_lint, check=cmd_check, summary=cmd_summary, list=cmd_list)[a.cmd](a)
+    return {"submit": cmd_submit, "lint": cmd_lint, "check": cmd_check,
+            "summary": cmd_summary, "list": cmd_list, "prove-routed": cmd_prove_routed}[a.cmd](a)
 
 
 if __name__ == "__main__":
