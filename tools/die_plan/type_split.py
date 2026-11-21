@@ -27,6 +27,7 @@ SPEC (JSON, paths relative to the repo root unless absolute):
                                       pieces on both sides of the keep piece each side gets its own START tx pin.
   contents {type: [[regex, piece]..]} content -> piece (fullmatch on inst, first rule wins); a content that is a member
                                       of a hard core (hard_core note "<x>: a + b + ...;") follows the core geometry
+  dead_input_pieces {type: {module: piece}}   assign typed dead-input proofs to the piece containing their module
   cut_lanes {type: [{from, to, stem, width}]}   generic leaf/forward cut lanes (census sizes them); legs and ft slots
                                       that cross a cut get their own cut buses automatically
   lane_reference                      optional: the split lane reference frozen from the BASE bind
@@ -370,7 +371,8 @@ class TypeSplit:
         T = [dict() for _ in range(n)]
         handled = {"outline_um", "buses", "ft_slots", "clock", "reset", "contents", "hard_cores", "internal_stations",
                    "count_straps", "module", "note", "hard", "face_pins_per_um", "face_budget_g2", "core_pg_connect",
-                   "landing_control_status_copy", "reset_spine_pins", "pads", "reach_homes", "cells", "landing_base_type"}
+                   "landing_control_status_copy", "reset_spine_pins", "pads", "reach_homes", "cells", "landing_base_type",
+                   "verilog_defines", "port_buf_at_pin", "face_layers", "dead_inputs"}
         unknown = set(t) - handled
         if unknown:
             raise SplitError(f"{self.tn}: unhandled type keys {sorted(unknown)} (extend type_split.py)")
@@ -380,11 +382,19 @@ class TypeSplit:
             o[cut.ax] = cut.ext(i)
             T[i]["outline_um"] = o
             T[i]["hard"] = False
-            for k in ("face_pins_per_um", "face_budget_g2", "landing_base_type"):       # retain semantic identity on every piece
+            for k in ("face_pins_per_um", "face_budget_g2", "landing_base_type",
+                      "verilog_defines", "port_buf_at_pin", "face_layers"):
                 if k in t:
                     T[i][k] = copy.deepcopy(t[k])
             T[i]["note"] = (f"{self.ev.tag}: piece {i} of {self.tn} ({'xy'[cut.ax]} {cut.lo(i)}..{cut.hi(i)} of the "
                             f"type frame, shifted by -{cut.lo(i)}) | " + t.get("note", ""))
+        proof_pieces = self.ev.spec.get("dead_input_pieces", {}).get(self.tn, {})
+        for proof in t.get("dead_inputs", []):
+            module = proof["module"]
+            i = proof_pieces.get(module)
+            if type(i) is not int or not 0 <= i < n:
+                raise SplitError(f"{self.tn}: dead-input proof for {module} needs a piece")
+            T[i].setdefault("dead_inputs", []).append(copy.deepcopy(proof))
         self.T = T
         # buses
         for i in range(n):
@@ -405,10 +415,15 @@ class TypeSplit:
         for c in t.get("contents", []):
             i = self.content_piece[c["inst"]]
             cc = copy.deepcopy(c)
-            for q in cc.get("physical_parts") or []:
+            # Inline SRAM geometry and explicit physical_parts are both
+            # expressed in the base type frame and must shift with the cut.
+            rects = [cc] if "origin_um" in cc and "outline_um" in cc else []
+            rects.extend(cc.get("physical_parts") or [])
+            for q in rects:
                 a = q["origin_um"][cut.ax]
-                if cut.piece(a, a + q["outline_um"][cut.ax], f"{self.tn} {q.get('physical_inst')}") != i:
-                    raise SplitError(f"{self.tn}: physical part {q.get('physical_inst')} lies outside piece {i}")
+                name = q.get("physical_inst", q.get("inst"))
+                if cut.piece(a, a + q["outline_um"][cut.ax], f"{self.tn} {name}") != i:
+                    raise SplitError(f"{self.tn}: physical part {name} lies outside piece {i}")
                 q["origin_um"] = cut.sh(q["origin_um"], i)
             T[i]["contents"].append(cc)
         self._ft_slots()
@@ -3588,15 +3603,19 @@ def census(spec, bind_dir):
     for k, v in sinks.items():
         if len(v) < 2 or not isinstance(v[1], str):
             continue
-        sc = v[1].split("[")[0].rsplit(".", 1)[0]
-        kc = k.split("[")[0].rsplit(".", 1)[0]
+        # A generated hierarchy may contain indices before the pin
+        # suffix (u.g_pc[0].u_pc.rq[5]). Drop only the terminal pin.
+        sc, sep, source_pin = v[1].rpartition(".")
+        if not sep:
+            sc = source_pin
+        kc = k.rsplit(".", 1)[0]
         sp, spc = piece(sc)
         kp, kpc = piece(kc)
         if kp in TS and sp == kp:
             if spc != kpc:
                 intra[(kp, sc.split(".")[0][:40], kc.split(".")[0][:40], spc, kpc)] += 1
-                source_pin = v[1].split("[")[0].rsplit(".", 1)[1]
-                intra_pins[(kp, sc.split(".")[0][:40], kc.split(".")[0][:40], spc, kpc, source_pin)] += 1
+                pin = source_pin.split("[", 1)[0]
+                intra_pins[(kp, sc.split(".")[0][:40], kc.split(".")[0][:40], spc, kpc, pin)] += 1
         elif kp in TS:
             buses = inbits.get((kp, v[1]))
             if not buses:

@@ -448,3 +448,64 @@ def test_density_piece_forwarded_clock_sources_follow_the_piece_taps():
     ev.rep = {}
     ev._forwarded_clock_sources()
     assert "forwarded_clock_sources" not in ev.rep
+
+
+def test_split_inline_memory_and_typed_proof_follow_pieces():
+    """Service SRAM rows carry their physical extent in the content itself."""
+    raw = {
+        "die": {"name": "fixture", "outline_um": [100.0, 100.0], "reach_um": 405.0},
+        "partitions": [{"name": "p", "type": "T", "origin_um": [0.0, 0.0]}],
+        "lanes": [],
+        "ports": [],
+        "partition_types": {
+            "T": {
+                "outline_um": [100.0, 100.0],
+                "verilog_defines": ["V0"],
+                "port_buf_at_pin": True,
+                "dead_inputs": [{"module": "sx", "ports": {"a": [[0, 2]]}}],
+                "contents": [{"inst": "u_mem", "origin_um": [5.0, 75.0],
+                              "outline_um": [10.0, 10.0]}],
+            },
+        },
+    }
+    spec = dict(axis="y", cuts_um=[50.0], parts=[{"suffix": ""}, {"suffix": "_r"}],
+                contents={"T": [["u_mem", 1]]}, dead_input_pieces={"T": {"sx": 1}})
+    low, high = TS.TypeSplit(_Ev(raw, spec), "T").split()
+    assert high["contents"][0]["origin_um"] == [5.0, 25.0]
+    assert high["dead_inputs"] == raw["partition_types"]["T"]["dead_inputs"]
+    assert "dead_inputs" not in low
+    assert low["port_buf_at_pin"] and high["port_buf_at_pin"]
+    assert low["verilog_defines"] == high["verilog_defines"] == ["V0"]
+    with pytest.raises(TS.SplitError, match="dead-input proof for sx needs a piece"):
+        TS.TypeSplit(_Ev(raw, {**spec, "dead_input_pieces": {}}), "T").split()
+
+
+def test_split_census_keeps_generated_instance_indices(tmp_path):
+    """PC page-cache leaves keep their full path while finding the owner."""
+    raw = {
+        "die": {"name": "fixture", "outline_um": [100.0, 100.0], "reach_um": 405.0},
+        "partitions": [{"name": "p", "type": "T", "origin_um": [0.0, 0.0]}],
+        "partition_types": {"T": {"outline_um": [100.0, 100.0],
+                                  "contents": [{"inst": "p_cache"}, {"inst": "p_rest"}]}},
+        "ports": [],
+        "lanes": [],
+    }
+    plan = tmp_path / "plan.json"
+    plan.write_text(json.dumps(raw))
+    manifest = tmp_path / "asbuilt.json"
+    manifest.write_text(json.dumps({"map": {"parts": {
+        "u": ["p", "p_rest"],
+        "u.g_pc[0].u_pc": ["p", "p_cache"],
+    }}}))
+    (tmp_path / "bind_latency.json").write_text('{"buses":[]}')
+    (tmp_path / "bind_sinks.json").write_text(json.dumps({
+        "u.g_drain[3].d[3]": ["pin", "u.g_pc[0].u_pc.rq[5]"],
+        "u.g_drain[3].v[0]": ["const", "0"],
+    }))
+    spec = dict(plan=str(plan), asbuilt=str(manifest), family=["T"], axis="y", cuts_um=[43.2],
+                parts=[{"suffix": ""}, {"suffix": "_r"}], contents={"T": [["p_cache", 0], ["p_rest", 1]]})
+    result = TS.census(spec, tmp_path)
+    assert result["unplaced"] == []
+    assert result["intra_pin_routes"] == [
+        {"hub": "p", "src": "u", "dst": "u", "frm": 0, "to": 1, "port": "rq", "bits": 1},
+    ]
