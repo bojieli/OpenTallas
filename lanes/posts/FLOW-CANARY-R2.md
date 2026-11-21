@@ -5,3 +5,5 @@
   [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
 - 2026-11-21 11:02 PST CANARY hbm @ d032c72040: FAIL failing vclk_basis,grt_gate,route,rcx,signoff (INFO this run set the baseline (canary-run-info); non-gating)
   [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
+- 2026-11-21 11:15 PST CANARY s81_head @ e338085d61: FAIL failing lec,signoff (REGRESSION signoff hold_ff_wns -20.85 -> -68.1 -47.25 ps (tol -10)); CANARY s81_head_cl @ 8d1cff9b1b: FAIL failing lint,sdc_lint,selrange,synth,lec,face_guard (NO-BASELINE no baseline for s81_head_cl/hd_turn_a and this run cannot set one: no metric measured (flow stopped before GRT)); CANARY s81_cl @ 8d1cff9b1b: FAIL failing sdc_lint,selrange,synth,lec,face_guard,face_cover (NO-BASELINE no baseline for s81_cl/slice_station__t24__cl66b71008 and this run cannot set one: no metric measured (flow stopped before GRT))
+  [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
