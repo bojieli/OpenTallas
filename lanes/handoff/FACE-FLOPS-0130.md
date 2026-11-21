@@ -6,5 +6,5 @@ Lane clone: epyc9 /srv/opentallas-scratch/claude/lanes/face-flops-0130 (sparse, 
 |---|---|
 | Profile (t9, old-gen kit) | base face_flops about 1221 s (kit log). Pre-fix OT_FF_TIME: istations dominant (915 is_place calls each scanning every inst, >15 min). After fix: istations 7-8 s, reset_tree 199 s (old-gen kit; current generator already has RTR-SCAN), reset_taps 8 s, relay_mid 4 s, rest under 1 s, total about 222 s |
 | Fix | kit_istations.py TCL_HEAD is_place: DFF list built once, per-literal index; is_dff_reset after clone creation. Test test_istation_scan_index.py (full scan vs indexed, same cells/order/miss) |
-| Equality check | base2 vs opt2 ot_face_flops.txt + post.def diff (running) |
-| Next | push via ot-push-main; regen kit on current generator to time reset_tree with RTR-SCAN |
+| Equality check | DONE: ot_face_flops, chain, relay_mid, post.def byte-identical (base2 vs opt2) |
+| Pushed | main fbc23d5034. Next: regen kit on current generator, time reset_tree (RTR-SCAN) |
