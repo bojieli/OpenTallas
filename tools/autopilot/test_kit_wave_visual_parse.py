@@ -232,3 +232,26 @@ def test_required_route_review_uses_exact_viewed_verdict(tmp_path, monkeypatch):
     assert K.route_hold_reason(cfg, dict(row, attempt=3)) is None
     assert K.route_hold_reason(cfg, dict(row, event="older")) is None
     assert K.route_hold_reason(cfg, dict(row, item="unchanged")) is None
+
+
+def test_enqueue_sample_reports_measurement_and_skips_completed_required_review():
+    class Journal:
+        def __init__(self):
+            self.lines = []
+
+        def coord_append(self, path, line):
+            assert path == "lanes/GEOM-REVIEW.md"
+            self.lines.append(line)
+
+        def log(self, message):
+            pass
+
+    ap = Journal()
+    row = {"die": "s81", "event": "J", "item": "t1", "attempt": 1, "kit": "epyc9:/new",
+           "geom_dir": "epyc9:/geom", "geom_verdict": "PASS-COND"}
+    cfg = {"geom_sample": 5, "dies": {"s81": {"event": "J"}}}
+    K._enqueue_finish(ap, cfg, {}, dict(row), {}, 0, "", "")
+    assert len(ap.lines) == 1 and "AUTO-GEOM FAIL (wave PASS-COND)" in ap.lines[0]
+    cfg["dies"]["s81"]["review_before_route"] = {"event": "J", "all_items": True, "required": True}
+    K._enqueue_finish(ap, cfg, {}, dict(row), {}, 0, "", "")
+    assert len(ap.lines) == 1
