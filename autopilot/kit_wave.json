@@ -51546,23 +51546,11 @@
     }
    ],
    "review_before_route": {
-    "event": "s29q103S4Q9N46R6V1",
-    "items": [
-     "sle_hc0__cl929603c0__cl4baa7c9c__pv1c2f9baa",
-     "sle_hc1__cl22c1ff36__pve230954c",
-     "sle_hc1__cl7d360508__pv77c16c8a",
-     "sle_hc2__cl9c4c4509__clf60c5152__pv0d63d22b",
-     "slw_hc3__clccfc3e6b__pv39aac7a1",
-     "slw_hc3__cld86a7ad4__pv6c2c33ed"
-    ]
+    "event": "s29q103S4Q9N46R6V2",
+    "all_items": true
    },
    "auto_visual_review_skip": [
-    "sle_hc0__cl929603c0__cl4baa7c9c__pv1c2f9baa",
-    "sle_hc1__cl22c1ff36__pve230954c",
-    "sle_hc1__cl7d360508__pv77c16c8a",
-    "sle_hc2__cl9c4c4509__clf60c5152__pv0d63d22b",
-    "slw_hc3__clccfc3e6b__pv39aac7a1",
-    "slw_hc3__cld86a7ad4__pv6c2c33ed"
+    "*"
    ],
    "gen_host_min_free_gb": {
     "epyc9": 250,
