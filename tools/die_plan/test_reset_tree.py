@@ -1,6 +1,7 @@
 """OWNER RESET RULE 10-24 (tools/die_plan/reset_tree.py): one root synchroniser per die region, synchronous relays every
 <= 405 um, equal depth to every tap.   python3 -m pytest -q tools/die_plan/test_reset_tree.py"""
 import copy
+import pytest
 import json
 import re
 import shutil
@@ -429,3 +430,24 @@ def test_relay_site_in_thin_macro_channel_is_not_legal():
     assert not any(a < q[0] < e and b < q[1] < d for a, b, e, d in boxes)
     wide = [(a - c, b - c, e + c, d + c) for a, b, e, d in (ha, (86, 1097.3 + 0.9, 328, 1200.0))]   # 9.6 um: one row fits
     assert RT._free((219.58, 1092.95), wide, box_out)
+
+def test_core_pin_relay_site_farther_than_margin_but_within_reach(monkeypatch):
+    """S81 leaf t28 (11-21 19:23): the legal-site rule moved the u_lf.u_ve.u_s.rst_n relay 176.76 um from the pin; the per-type
+    relay_um is 180, so the single pin hop is legal (the 25 um margin applies to tree hops), while > relay_um is still refused."""
+    import check
+    raw = piped(PAIR)
+    raw["partition_types"]["fa"]["reset"] = {"relay_um": 180.0, "sync_stages": 2}
+    raw["partition_types"]["fa"]["hard_cores"] = [dict(inst="u_lf.u_ve.u_s", module="m", outline_um=[50.0, 50.0], origin_um=[100.0, 100.0],
+                                                        orient="R0", pins_file="x_pins.json")]
+    P = schema.Plan(raw)
+    monkeypatch.setattr(check, "core_pins", lambda c, pd: [("rst_n", "M5", 1.0, 1.0)])
+    monkeypatch.setattr(RT, "pin_table_dir", lambda P, tn, c: None)
+    monkeypatch.setattr(RT, "blockages", lambda t, clear=RT.CLEAR_UM: [])
+    for dist, ok in ((176.76, True), (181.0, False)):
+        monkeypatch.setattr(RT, "push_off", lambda p, boxes, bo, step=2.16, d=dist: (p[0] + d, p[1]))
+        monkeypatch.setattr(RT, "_free", lambda p, boxes, bo: True)
+        if ok:
+            RT.core_reset_targets(P, "fa")
+        else:
+            with pytest.raises(RT.ResetError, match="exceeds reach"):
+                RT.core_reset_targets(P, "fa")

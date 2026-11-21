@@ -2009,7 +2009,9 @@ def core_reset_targets(P, tn):
             site = push_off(pin, boxes, (CLEAR_UM, CLEAR_UM, w-CLEAR_UM, h-CLEAR_UM))
             if not _free(site, boxes, (CLEAR_UM, CLEAR_UM, w-CLEAR_UM, h-CLEAR_UM)):
                 raise ResetError(f"type {tn}: no legal reset relay site for {c['inst']}.{name}")
-            if _man(pin, site) > relay_um(P, tn) - MARGIN_UM:
+            # LEGAL-SITE (42eeacf87f) follow-up: a legal site can sit farther from the pin than the old sliver site; the pin hop is
+            # one relay-output wire, so it may use the margin up to the type reach itself (relay_um), never beyond it.
+            if _man(pin, site) > relay_um(P, tn) + 1e-6:
                 raise ResetError(f"type {tn}: reset relay -> {c['inst']}.{name} exceeds reach ({_man(pin, site):g} um)")
             if domain_contract is not None:
                 roots={root for (inst,module,_),root in domain_contract['macro_pins'].items()
