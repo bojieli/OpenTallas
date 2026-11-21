@@ -111,6 +111,10 @@ def wait_pid(pid, a):
     while True:
         cur = S.pid_start(pid)
         if cur is None or cur != st or S.cmdline(pid) != cl:
+            rec, _ = find(str(pid), a.dir)          # the client may have written its record after we looked (race at start-up)
+            if rec is not None and rec.get("state") == "done" and rec.get("pid_start") == st:
+                print(line("DONE" if rec.get("rc") == 0 else "DIED", rec), flush=True)
+                return rec["rc"] if isinstance(rec.get("rc"), int) else 71
             print(f"ENDED rc=unknown pid={pid} cmd={cl[:140]} end={time.strftime('%H:%M:%S')}", flush=True)
             return 70
         if a.timeout and time.time() - t0 >= a.timeout:

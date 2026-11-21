@@ -170,3 +170,16 @@ def test_push_main_is_wrapped():
 def test_pytest_children_do_not_record(tmp_path, monkeypatch):
     monkeypatch.delenv("OT_STATUS_DIR", raising=False)
     assert S.begin("run", "x") is None and not S.should_post(dict(kind="push", lane="L", rc=1, t_start=0, t_end=1))
+
+
+def test_pid_wait_picks_up_record_written_late(tmp_path):
+    c = subprocess.Popen(["sleep", "2"])
+    # no record when ot-wait starts; the client writes one before it exits (start-up race of `ot-run ... & ot-wait $!`)
+    rec_file(tmp_path, f"otrun-{S.host()}-{c.pid}", pid=c.pid, pid_start=S.pid_start(c.pid), rc=9)
+    (tmp_path / f"otrun-{S.host()}-{c.pid}.json").rename(tmp_path / "late.json")
+    p = subprocess.Popen([sys.executable, "-I", WAIT, str(c.pid), "--poll", "0.2"], stdout=subprocess.PIPE, text=True, env=env(tmp_path))
+    time.sleep(0.5)
+    (tmp_path / "late.json").rename(tmp_path / f"otrun-{S.host()}-{c.pid}.json")
+    out, _ = p.communicate(timeout=30)
+    c.wait()
+    assert p.returncode == 9 and out.startswith("DIED rc=9")
