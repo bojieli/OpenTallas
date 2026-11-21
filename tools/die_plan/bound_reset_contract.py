@@ -11,18 +11,25 @@ def digest(value):
  value=json.loads(json.dumps(value))
  return hashlib.sha256(json.dumps(value,sort_keys=True,separators=(',',':')).encode()).hexdigest()
 
+LEGACY_CAPS=(405.0,300.0)   # hop caps in force before the receipt recorded its own (aced0fb210: 405 -> 300)
+
 def reach_cap_um(x):
-  """the reset hop cap (um) a bound tree was solved with: the receipt's reach_cap_um, else the captured tree's own reach_um
-  (receipts written before the field carry it in the tree).  None when neither is a positive number."""
+  """the reset hop cap (um) a bound tree was solved with: ONLY an explicit reach_cap_um (receipt, or the tree).  tree.reach_um is
+  the per-type reach (plan reach, e.g. 180), NOT the cap (FLOW-NOADV-R3: reading it as the cap made gen solve t2/t10 662 relays
+  instead of 643).  None for receipts written before the field: gen then probes LEGACY_CAPS against the captured tree."""
   x=x or {}
-  for v in (x.get('reach_cap_um'),x.get('reach_um'),(x.get('tree') or {}).get('reach_um')):
+  for v in (x.get('reach_cap_um'),(x.get('tree') or {}).get('reach_cap_um')):
     if isinstance(v,(int,float)) and not isinstance(v,bool) and v>0: return float(v)
   return None
+
+def _cap_in_force():
+  import cbc_rules
+  return float(cbc_rules.reset_hop_cap_um())
 
 def emitted(path,tn,tree,provenance=None):
  path=Path(path);tree=copy.deepcopy(tree)
  rec=dict(schema=SCHEMA,plan_type=tn,bound_module=path.stem,tree=tree,tree_sha256=digest(tree),
-          bound_rtl_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),reach_cap_um=reach_cap_um(tree),authority='tree used by this bound RTL emission',provenance=provenance)
+          bound_rtl_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),reach_cap_um=_cap_in_force(),authority='tree used by this bound RTL emission',provenance=provenance)
  path.with_suffix('.reset_tree.json').write_text(json.dumps(rec,indent=1)+'\n')
  import reset_tree as RT
  path.with_suffix('.reset_tree.tcl').write_text(RT.tcl_text(tree))

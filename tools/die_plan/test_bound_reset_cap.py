@@ -63,7 +63,7 @@ def test_gen_solves_a_bound_tree_with_its_bound_cap(die, monkeypatch, tmp_path):
         assert G._bound_reset_identity(RT.for_type(P, tn)) != G._bound_reset_identity(tree)
     except RT.ResetError:
         pass                                              # the 300 solve may not even fit the plan's depth contract
-    # with the receipt's cap (and with an old receipt that only has tree.reach_um) the captured tree is accepted
+    # with the receipt's cap (and with an old receipt without the field: legacy caps probed) the captured tree is accepted
     for src in (rec, {k: v for k, v in rec.items() if k != "reach_cap_um"}):
         P2 = copy.deepcopy(P)
         c = G.install_bound_native_reset(P2, tn, [f], source_contract=src)
@@ -83,7 +83,8 @@ def test_scope_nests_and_ignores_nothing():
 
 def test_reach_cap_reads_receipt_then_tree():
     assert BRC.reach_cap_um({"reach_cap_um": 405, "tree": {"reach_um": 300}}) == 405.0
-    assert BRC.reach_cap_um({"tree": {"reach_um": 300}}) == 300.0
+    assert BRC.reach_cap_um({"tree": {"reach_cap_um": 300}}) == 300.0
+    assert BRC.reach_cap_um({"tree": {"reach_um": 180}}) is None          # reach is not the cap
     assert BRC.reach_cap_um({"tree": {}}) is None and BRC.reach_cap_um(None) is None
 
 
@@ -100,3 +101,29 @@ def test_ring_fan_and_start_corridor_read_the_cap_at_call_time(monkeypatch):
         assert CL.reset_fan_clusters(home, groups)[2] == []
     assert len(CL.reset_fan_clusters(home, groups)[2]) == 1
     assert CBC.reset_hop_cap_um() == 300.0
+
+
+def test_per_type_reach_is_not_the_cap(monkeypatch, tmp_path):
+    """FLOW-NOADV-R3: t2/t10 receipts carry tree.reach_um 180 (per-type plan reach) bound under cap 405; gen read 180 as the cap and
+    solved 662 relays instead of 643.  The cap comes from the receipt field, or for old receipts from the legacy caps, never reach_um."""
+    import contextlib
+    P, tn, tree, f, rec = _bound(monkeypatch, tmp_path)
+    tree = dict(tree, reach_um=float(int(tree["max_hop_um"]) + 13))     # per-type reach (like t10: 180) below the 405 cap
+    other = dict(tree, relays=tree["relays"][:-1])                         # what any other cap solves
+    solve = lambda Pl, t: copy.deepcopy(tree) if CBC.reset_hop_cap_um() == 405.0 else copy.deepcopy(other)
+    monkeypatch.setattr(RT, "for_type", solve)
+    stale = dict(tree, relays=tree["relays"][:-1], depth=tree["depth"] + 1)
+    P.types[tn].setdefault("clock", {}).setdefault("landing_contract", {})["collector_tree"] = stale
+    _gen_default(monkeypatch)
+    old = {"schema": rec["schema"], "plan_type": tn, "bound_module": rec["bound_module"], "tree": tree,
+           "tree_sha256": BRC.digest(tree)}
+    assert BRC.reach_cap_um(old) is None
+    scope = contextlib.ExitStack()
+    c = G.install_bound_native_reset(copy.deepcopy(P), tn, [f], source_contract=old, cap_scope=scope)
+    assert c["entry_path"]
+    assert CBC.reset_hop_cap_um() == 405.0                                 # legacy probe found 405 and holds it for the type
+    scope.close()
+    assert CBC.reset_hop_cap_um() == 300.0
+    # emitted receipts record the cap in force, not the reach
+    monkeypatch.setenv("OT_RESET_HOP_CAP_UM", "405")
+    assert BRC.emitted(f, tn, tree)["reach_cap_um"] == 405.0

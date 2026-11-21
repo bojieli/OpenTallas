@@ -9117,7 +9117,7 @@ def install_collector_event(P, tn, lands, rtl_files, plan_tree=None):
     print(f"gen phys: type {tn}: collector placement from {src}, {len(expected)} collectors = bound RTL", flush=True)
 
 
-def install_bound_native_reset(P, tn, rtl_files, source_contract=None):
+def install_bound_native_reset(P, tn, rtl_files, source_contract=None, cap_scope=None):
     """Opt-in bound reset authority: verify the explicit tree against the ONE native hierarchy.
 
     Isolated physical plans do not define the native reset entry role. No guessed
@@ -9138,16 +9138,25 @@ def install_bound_native_reset(P, tn, rtl_files, source_contract=None):
             # solve is provably stale when the current solve IS the captured tree: the RTL is right, use its tree and say so.
             # Any other difference (bind from another plan, edited graph) still stops.
             solve_error = None
-            try:
-                # FLOW-NOADV-R2 11-20: solve with the cap the tree was BOUND with (receipt reach_cap_um / tree.reach_um), not the
-                # tool default or env; a default change (405 -> 300) then cannot refuse a live bind.
-                import cbc_rules as _CBC
-                with _CBC.bound_reset_hop_cap(BRC.reach_cap_um(source_contract) or BRC.reach_cap_um(tree)):
-                    solved = _bound_reset_identity(RT.for_type(P, tn))
-            except Exception as exc:
-                solved = None
-                solve_error = f"{type(exc).__name__}: {exc}"
+            solved = None
             captured = _bound_reset_identity(tree)
+            # FLOW-NOADV-R2/R3: solve with the cap the tree was BOUND with (receipt reach_cap_um), not the tool default or env.
+            # A receipt without the field (written before it) probes the caps that were ever in force and takes the one whose
+            # solve IS the captured tree; tree.reach_um is the per-type reach, never the cap.
+            import cbc_rules as _CBC
+            explicit = BRC.reach_cap_um(source_contract) or BRC.reach_cap_um(tree)
+            for cap in ([explicit] if explicit else list(BRC.LEGACY_CAPS) + [None]):
+                try:
+                    with _CBC.bound_reset_hop_cap(cap):
+                        solved = _bound_reset_identity(RT.for_type(P, tn))
+                    solve_error = None
+                except Exception as exc:
+                    solved = None
+                    solve_error = f"{type(exc).__name__}: {exc}"
+                if solved == captured:
+                    if cap_scope is not None and not explicit and cap:
+                        cap_scope.enter_context(_CBC.bound_reset_hop_cap(cap))
+                    break
             if solved != captured:
                 _report_bound_reset_mismatch(tn, captured, solved, solve_error)
                 raise gen_rtl.GenError(f"type {tn}: physical collector_tree differs from captured bound reset identity; preserve original IDs/edges/coordinates")
@@ -9604,7 +9613,7 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
         # DIE-S81-85: the plan collector_tree the bind walked, kept before a native reset install replaces it
         plan_ctree = json.loads(json.dumps(t.get("clock", {}).get("landing_contract", {}).get("collector_tree")))
         if tn in native_reset_types or captured_reset:
-            install_bound_native_reset(P, tn, mine, source_contract=captured_reset)
+            install_bound_native_reset(P, tn, mine, source_contract=captured_reset, cap_scope=_bound_cap_scope)
         if land_decl_only:
             install_collector_event(P, tn, lands, mine, plan_tree=plan_ctree)
         bumps = kit_bump_ports(P, tn, kit_rtl[tn]) if kit_rtl and tn in kit_rtl else None
