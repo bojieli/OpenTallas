@@ -1,0 +1,1 @@
+- 2026-11-21 02:08 PST DIED [OPUS-FIX-KV-HGI-R3] ot-run oth-ubuntu-778712-1795255667 on loved-redfish: rc=1 after 34 s, ended 10:08:20, log none, cmd: --mem 16 --threads 2 --hosts epyc7 --dir /srv/opentallas-scratch2/claude/fable-fix-kv-hgi -- bash sc/r3_coreconn.sh b8 kv3_hgi_v8 4_cts.odb 
