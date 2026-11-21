@@ -672,6 +672,17 @@ def build(base, detail, out, layers=None, source=None, exact=None, tech=None):
         new = post
         rep["kit_fallback"] = dict(pins=sorted(fb)[:200], count=len(fb), rounds=rounds, cut=frep)
     new, rep["pin_cover"] = pin_cover(new, lay)
+    # OPUS-FIX-QC-SLE-R4-SC 11-21 (abstract_pin_stub steps 3/4): own-conductor exit stubs shorter than the EOL keep-out are
+    # lengthened (qfd_dv_s5_sc2_leaf: 44 Lef58EolKeepOut on sle_sc_v1, flat 40 DRT iterations), and free metal under the
+    # replaced layer above's OBS is closed on the replaced layers (via shadow: S81 col u_cf V4/V5 stacks through M5 OBS)
+    sys.path.insert(0, str(HERE.parent / "hier_contract"))
+    import abstract_pin_stub as APS
+    h_, o_ = APS.split_lef("".join(new))
+    o_, eol = APS.eol_stubs(h_, o_)
+    h_, o_, sh = APS.shadow_lower(h_, o_, only=set(lay), mark=False)
+    rep["eol_stubs"] = len(eol or [])
+    rep["via_shadow"] = {l: len(v) for l, v in (sh or {}).items()}
+    new = (h_ + o_).splitlines(True)
     Path(out).write_text("".join(new))
     ok, probs = AD.check(base_lines, new, lay)
     problems += probs

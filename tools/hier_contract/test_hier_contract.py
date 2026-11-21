@@ -515,5 +515,54 @@ class HierSubmit(unittest.TestCase):
         self.assertEqual(hier_submit.check(self.spec(hier_lint=False), self.git(), "refuse")["verdict"], "SKIP")
 
 
+class ViaShadowEolStub(unittest.TestCase):
+    """OPUS-FIX-QC-SLE-R4-SC 11-21: abstract_pin_stub steps 3 (via shadow) and 4 (EOL stubs)"""
+
+    def obs(self, text):
+        import abstract_pin_stub as APS
+        return APS.obs_rects(APS.split_lef(text)[1])
+
+    def test_shadow_closes_free_m4_under_m5_obs_keeps_pin_window(self):
+        """S81 col u_cf: free M4 under a solid M5 OBS rect drew V4+V5 stacks through the M5 OBS (17 shorts)"""
+        import abstract_pin_stub as APS
+        t = lef(obs=[("M5", 4, 2, 16, 6), ("M3", 0, 0, 20, 10)], sig=(("a", "M4", 0.0, 4.0),))
+        head, ob = APS.split_lef(t)
+        head2, ob2, added = APS.shadow_lower(head, ob)
+        m4 = APS.obs_rects(ob2)["M4"]
+        self.assertTrue(any(r[0] <= 6 and r[2] >= 14 and r[1] <= 3 and r[3] >= 5 for r in m4), m4)
+        self.assertNotIn("M3", added)          # M3 is a blanket: the cascade stops there
+        keep = (0 - 0.096, 4 - 0.096, 0.192 + 0.096, 4.024 + 0.096)
+        self.assertFalse([r for r in m4 if APS._ov(r, keep)])
+        self.assertIn("# OT_OBS_SHADOW layers=M4", head2)
+        again = APS.shadow_lower(head2, ob2)
+        self.assertEqual(again[2]["M4"], [])    # idempotent
+        self.assertEqual(again[1], ob2)
+
+    def test_shadow_only_and_disable(self):
+        import abstract_pin_stub as APS, os
+        head, ob = APS.split_lef(lef(obs=[("M5", 4, 2, 16, 6)], sig=(("a", "M5", 5.0, 0.0),)))
+        h2, o2, added = APS.shadow_lower(head, ob, only={"M5"}, mark=False)
+        self.assertEqual((h2, o2), (head, ob))
+        os.environ["OT_OBS_SHADOW"] = "0"
+        try:
+            self.assertIsNone(APS.shadow_lower(head, ob)[2])
+        finally:
+            del os.environ["OT_OBS_SHADOW"]
+
+    def test_eol_stub_lengthened(self):
+        """qfd_dv_s5_sc2_leaf red_addr[1]: pin M5 0..0.084, own stub OBS 0.084..0.131 (< 0.048 forward ext) -> 0.144"""
+        import abstract_pin_stub as APS
+        t = ("VERSION 5.8 ;\nMACRO c\n  CLASS BLOCK ;\n  SIZE 10 BY 10 ;\n"
+             "  PIN x\n    DIRECTION INPUT ;\n    USE SIGNAL ;\n    PORT\n      LAYER M5 ;\n        RECT 1.288 0 1.312 0.084 ;\n    END\n  END x\n"
+             "  PIN y\n    DIRECTION INPUT ;\n    USE SIGNAL ;\n    PORT\n      LAYER M5 ;\n        RECT 2.288 0 2.312 0.084 ;\n    END\n  END y\n"
+             "  OBS\n    LAYER M5 ;\n      RECT 1.288 0.084 1.312 0.131 ;\n      RECT 2.288 0.084 2.312 0.131 ;\n"
+             "      RECT 2.288 0.131 2.312 5.0 ;\n  END\nEND c\nEND LIBRARY\n")
+        head, ob = APS.split_lef(t)
+        ob2, done = APS.eol_stubs(head, ob)
+        self.assertEqual([(d[0], d[3]) for d in done], [("x", (1.288, 0.084, 1.312, 0.144))])   # y continues: untouched
+        self.assertIn((1.288, 0.084, 1.312, 0.144), APS.obs_rects(ob2)["M5"])
+        self.assertEqual(APS.eol_stubs(head, ob2)[1], [])
+
+
 if __name__ == "__main__":
     unittest.main()

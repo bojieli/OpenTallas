@@ -14,6 +14,18 @@
    D = 32 routing pitches of the layer (2.048 um on M6); OT_OBS_CLOSE_UM=<um> overrides it, OT_OBS_CLOSE=0 disables the step.
    A closed LEF carries the comment line `# OT_OBS_CLOSED layer=M6 d_um=2.048 added=<n>` before OBS; child_lint (h)
    imports find_pockets() from this file and FAILs a marked LEF that still has a pocket.
+3. VIA SHADOW (OPUS-FIX-QC-SLE-R4-SC 2026-11-21, S81 col_h9_r0_p2 pv11b73b67: 17 M5 shorts, each the M5 pad of a
+   V4+V5 stack in the middle of a solid dsfd_cfifo_crs4 M5 OBS rect over FREE M4): a free spot on a layer below the
+   top OBS layer that has OBS directly above it is reachable only through that OBS, yet the parent GRT counts it as
+   capacity and DRT drops a via stack through the child's metal.  Every M2..top-1 layer gets OBS wherever the layer
+   above has OBS (top-down, so the shadow cascades), outside keep_um(layer) of signal pins on that layer and the one
+   above.  OT_OBS_SHADOW=0 disables it; marker `# OT_OBS_SHADOW layers=.. added=n`.
+4. EOL STUBS (same lane, QC sle_sc_v1 cl115da35f: 44 Lef58EolKeepOut, 2 per pin, on 22 qfd_dv_s5_sc2_leaf M5 face
+   pins): an OBS rect collinear with a signal pin's end, same width, abutting it and shorter than the layer's
+   LEF58_EOLKEEPOUT forward extension (asap7 M4/M5 0.048 um) is the pin's own conductor up to its first via; its far
+   corners sit in the CORNERONLY keep-out of the pin's line end, so every connected pin is a DRC that no route can
+   clear.  The stub is lengthened (away from the pin) to EOL_FWD_UM + one grid; TritonRoute probe of the view alone:
+   44 -> 0 (pin merged or stub lengthened), pin-access levers 145.  OT_OBS_EOLSTUB=0 disables it.
 Pure python (no numpy): the grid is scanned row by row with the bytes regex engine.
 """
 import os, re, sys, tempfile
@@ -333,12 +345,160 @@ def close_pockets(head, obs):
     return head, obs, rec
 
 
+SHADOW_RE = re.compile(r"\n[ \t]*# OT_OBS_SHADOW [^\n]*")
+EOL_FWD_UM = {"M4": 0.048, "M5": 0.048, "M6": 0.048, "M7": 0.048}   # asap7 LEF58_EOLKEEPOUT forward extension
+EOL_WIDTH_UM = {"M4": 0.025, "M5": 0.025, "M6": 0.05, "M7": 0.05}  # ... applies below this line-end width
+
+
+def _bucket(rects, cell=_iu(BUCKET_UM)):
+    idx = {}
+    for k, r in enumerate(rects):
+        for bx in range(r[0] // cell, r[2] // cell + 1):
+            for by in range(r[1] // cell, r[3] // cell + 1):
+                idx.setdefault((bx, by), []).append(k)
+    return idx, cell
+
+
+def _hits(idx, rects, r):
+    ix, cell = idx
+    ks = set()
+    for bx in range(r[0] // cell, r[2] // cell + 1):
+        for by in range(r[1] // cell, r[3] // cell + 1):
+            ks.update(ix.get((bx, by), ()))
+    return [rects[k] for k in sorted(ks) if _ov(r, rects[k])]
+
+
+def _append_obs(obs, layer, rects):
+    """add integer rects to the OBS block under `LAYER layer` (a new LAYER section when the layer has none)"""
+    if not rects:
+        return obs
+    new = [f"     RECT  {_um(a)} {_um(b)} {_um(c)} {_um(e)} ;" for a, b, c, e in rects]
+    lines = obs.split("\n")
+    for k, line in enumerate(lines):
+        if re.match(rf"\s*LAYER {re.escape(layer)} ;", line):
+            lines[k + 1:k + 1] = new
+            return "\n".join(lines)
+    for k, line in enumerate(lines):
+        if re.match(r"\s*OBS\s*$", line):
+            lines[k + 1:k + 1] = [f"    LAYER {layer} ;"] + new
+            return "\n".join(lines)
+    raise AssertionError("no OBS line")
+
+
+def shadow_lower(head, obs, only=None, mark=True):
+    """step 3; returns (head, obs, {layer: rects added}).  only: the layers that may receive OBS (porous_views: its replaced
+    layers, so everything else stays byte-identical); mark False: no marker line in the head (same reason)"""
+    if os.environ.get("OT_OBS_SHADOW", "1") == "0":
+        return head, obs, None
+    sig, _ = pin_rects(head)
+    by = obs_rects(obs)
+    top = top_obs_layer(by)
+    added = {}
+    if not top:
+        return head, obs, added
+    norm = lambda r: (min(r[0], r[2]), min(r[1], r[3]), max(r[0], r[2]), max(r[1], r[3]))
+    above = [norm(tuple(map(_iu, r))) for r in by[top]]
+    ms = re.search(r"SIZE\s+([\d.]+)\s+BY\s+([\d.]+)", head)
+    full = (_iu(float(ms.group(1))) * _iu(float(ms.group(2)))) if ms else 0
+    for n in range(int(top[1:]) - 1, 1, -1):
+        L, up = "M%d" % n, "M%d" % (n + 1)
+        own = [norm(tuple(map(_iu, r))) for r in by.get(L, [])]
+        if full and any((r[2] - r[0]) * (r[3] - r[1]) >= 0.9 * full for r in own):
+            break          # blanket layer (and everything below it in a kit view): nothing reachable to shadow
+        if only is not None and L not in only:
+            above = own
+            continue
+        oidx = _bucket(own)
+        p = _iu(keep_um(L))
+        keep = [(a - p, b - p, c + p, e + p) for rs in sig.values() for r in rs if r[0] in (L, up)
+                for a, b, c, e in [norm(tuple(map(_iu, r[1:])))]]
+        kidx = _bucket(keep)
+        add = []
+        for r in above:
+            hs = _hits(kidx, keep, r)
+            for q in (rect_minus(r, hs) if hs else [r]):
+                if not any(o[0] <= q[0] and o[1] <= q[1] and o[2] >= q[2] and o[3] >= q[3] for o in _hits(oidx, own, q)):
+                    add.append(q)   # (a piece already inside one own OBS rect is skipped: re-running adds nothing)
+        added[L] = add
+        obs = _append_obs(obs, L, add)
+        above = own + add
+    pm = re.search(r"# OT_OBS_SHADOW layers=(\S*) added=(\d+)", head)
+    if not mark or not (any(added.values()) or pm):
+        return head, obs, added
+    lays = set(pm.group(1).split(",")) - {""} if pm else set()
+    lays |= {l for l, v in added.items() if v}
+    tot = (int(pm.group(2)) if pm else 0) + sum(map(len, added.values()))
+    # always re-appended last, so a re-run (close_pockets re-appends its own marker first) gives identical bytes
+    head = SHADOW_RE.sub("", head) + "\n  # OT_OBS_SHADOW layers=%s added=%d" % (",".join(sorted(lays, key=lambda l: -int(l[1:]))), tot)
+    return head, obs, added
+
+
+def eol_stubs(head, obs):
+    """step 4; returns (obs, [(pin, layer, old rect, new rect)])"""
+    if os.environ.get("OT_OBS_EOLSTUB", "1") == "0":
+        return obs, None
+    sig, _ = pin_rects(head)
+    by = obs_rects(obs)
+    g = 120  # 12 nm past the keep-out (the probe-proven 0.144 end on qfd_dv_s5_sc2_leaf)
+    fix = {}
+    for pin, rs in sig.items():
+        for lay, *pr in rs:
+            if lay not in EOL_FWD_UM or lay not in by:
+                continue
+            a, b, c, e = map(_iu, (min(pr[0], pr[2]), min(pr[1], pr[3]), max(pr[0], pr[2]), max(pr[1], pr[3])))
+            fwd = _iu(EOL_FWD_UM[lay])
+            vert = (c - a) < (e - b)
+            if (c - a if vert else e - b) >= _iu(EOL_WIDTH_UM[lay]):
+                continue
+            for o in by[lay]:
+                x0, y0, x1, y1 = map(_iu, o)
+                if vert and (x0, x1) == (a, c):
+                    lo, hi, plo, phi = y0, y1, b, e
+                elif not vert and (y0, y1) == (b, e):
+                    lo, hi, plo, phi = x0, x1, a, c
+                else:
+                    continue
+                if not (0 < hi - lo < fwd):
+                    continue
+                if lo == phi:
+                    nlo, nhi = lo, phi + fwd + g
+                elif hi == plo:
+                    nlo, nhi = plo - fwd - g, hi
+                else:
+                    continue
+                cont = any(((_iu(q[0]), _iu(q[2])) == (a, c) if vert else (_iu(q[1]), _iu(q[3])) == (b, e))
+                           and (_iu(q[1] if vert else q[0]) == hi if lo == phi else _iu(q[3] if vert else q[2]) == lo)
+                           for q in by[lay] if q is not o)
+                if cont:
+                    continue
+                new = (a, nlo, c, nhi) if vert else (nlo, b, nhi, e)
+                fix[(lay, o)] = (pin, new)
+    if not fix:
+        return obs, []
+    out, cur, done = [], None, []
+    for line in obs.split("\n"):
+        m = re.match(r"\s*LAYER (\S+)", line)
+        if m:
+            cur = m.group(1)
+        mr = re.match(r"(\s*)" + _RECT, line)
+        if mr and cur:
+            key = (cur, tuple(map(float, mr.groups()[1:])))
+            if key in fix:
+                pin, (x0, y0, x1, y1) = fix.pop(key)
+                done.append((pin, cur, key[1], tuple(v / U for v in (x0, y0, x1, y1))))
+                line = f"{mr.group(1)}RECT  {_um(x0)} {_um(y0)} {_um(x1)} {_um(y1)} ;"
+        out.append(line)
+    return "\n".join(out), done
+
+
 def process(text):
     """(new LEF text, summary line)"""
     head, obs = split_lef(text)
     pins, _ = pin_rects(head)
     head, obs, moved = move_stubs(head, obs, pins)
     head, obs, rec = close_pockets(head, obs)
+    obs, eol = eol_stubs(head, obs)
+    head, obs, sh = shadow_lower(head, obs)
     msg = f"pinstub: {sum(map(len, moved.values()))} OBS rects moved into {len(moved)} pins: " + ", ".join(sorted(moved)[:12])
     if rec is None:
         msg += "; pockets: closing disabled (OT_OBS_CLOSE=0)"
@@ -346,6 +506,10 @@ def process(text):
         msg += "; pockets: no metal OBS layer"
     else:
         msg += f"; pockets: {len(rec['rects'])} OBS rects added on {rec['layer']} (gaps < {rec['d_um']:g} um between own-layer obstacles)"
+    if eol:
+        msg += f"; eol stubs: {len(eol)} own-conductor OBS stubs lengthened past the line-end keep-out"
+    if sh:
+        msg += "; via shadow: " + ", ".join(f"{l} +{len(v)}" for l, v in sh.items())
     return head + obs, msg
 
 
