@@ -130,3 +130,26 @@ def test_kv_slice_restage_reproduces_the_record(tmp_path):
     assert SN.stage(p, KV_BARE.replace("11111", "11110"), rtl, vp_xr=xr)[0] == out.replace("11111", "11110", 1)
     out0, _ = SN.stage(p, KV_BARE.replace("11111", "11101"), rtl, vp_xr={t: 1 for t in KV[2:]})
     assert ".LF_CS_HI_D(20'h11120)" in out0
+
+
+def test_sr_contract_prices_the_output_station(tmp_path):
+    """S81 J7 vp_sr: plan ho depth includes the SR output station (u_cst_ho D = CS_HO_D - CS_HO_GS + SRO), so source
+    HO_D = plan ho - 1; without the contract the restage of the J7 plan wrote ho + 1 on every leaf (elaborates plan + 1)."""
+    rtl = _rtl(tmp_path / "rtl", "ot_s81sl_slice_x", {"HO_D": "20'h22222", "HO_GS": "20'h22222"})
+    p = copy.deepcopy(PLAN)
+    lane = "u_lf.u_vp.g_ln[3].u_l"
+    p["partition_types"][T8]["internal_stations"].append(_st("core:u_lf.u_vn.u_a.hw_d", lane, 3))      # ho row
+    old, _ = SN.stage(p, NET, rtl)
+    assert ".LF_CS_HO_D(20'h20232)" in hi_line(old) and ".LF_CS_HO_GS(20'h20232)" in hi_line(old)
+    out, rep = SN.stage(p, NET, rtl, vp_sr={T8: 1})
+    assert ".LF_CS_HO_D(20'h20222)" in hi_line(out) and ".LF_CS_HO_GS(20'h20222)" in hi_line(out)
+    assert out.replace("20'h20222", "20'h20232") == old.replace("20'h20222", "20'h20232")       # nothing else moves
+    r = next(r for r in rep if r.get("type") == T8)
+    assert r["vp_sr"] == 1 and r["plan_ho_d"] == 3 and r["depths"]["HO_D"] == 2
+    gs0, _ = SN.stage(p, NET, rtl, {T8: {"HO_GS": 0}}, None, {T8: 1})
+    assert ".LF_CS_HO_D(20'h20222)" in hi_line(gs0) and ".LF_CS_HO_GS(20'h20202)" in hi_line(gs0)
+    with pytest.raises(SystemExit, match="must include the SR output station"):
+        q = copy.deepcopy(PLAN)
+        SN.leaf_depths(q, vp_sr={T8: 1})                              # no ho rows: SR station not priced
+    with pytest.raises(SystemExit, match="integer 0 or 1"):
+        SN.leaf_depths(p, vp_sr={T8: 2})

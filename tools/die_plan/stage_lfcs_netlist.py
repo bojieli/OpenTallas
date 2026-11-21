@@ -21,6 +21,11 @@ are ot_s81sl_leaf instances whose u_vp reads LF_VP_XR[k] like any other leaf, so
 20'h11110; GS stays 0, per lane).  Only a leaf with no hard cores (the KV bank leaf, kv_leaf t2) has nothing to stage:
 its mask bit is not checked and a contract on it refuses.  Restaging the unchanged plan reproduces the record byte for byte.
 
+VP_SR (S81 J7 vp_sr, 11-21): with --vp-sr TYPE:1 the plan's HO depth of that leaf is its EFFECTIVE depth and includes the
+one per-lane output station SR adds in ot_s81sl_vp (u_cst_ho D = CS_HO_D - CS_HO_GS + SRO); the source gets HO_D = plan
+HO - 1.  The J7 plan prices ho + 1 on every staged leaf against the same netlist of record; SR has no mask on the die
+instance (it is a define of the bound type), so the contract is explicit and the strict bind's LF_CS_DEPTH gate judges it.
+
 S81-LEAF-SWR (11-20): --update CLASS (repeatable, e.g. SWR_D) re-prices only those classes on an already staged netlist
 (the D8i bind dropped 5 SWR rows: plan 1-2 stages, staged LF_CS_SWR_D nibble 0); XR / group classes need a full stage."""
 import argparse
@@ -70,18 +75,22 @@ def module_defaults(rtl_root, mod):
     raise SystemExit(f"{mod}: no #(...) module header under {rtl_root}")
 
 
-def leaf_depths(plan, tree_overrides=None, vp_xr=None):
+def leaf_depths(plan, tree_overrides=None, vp_xr=None, vp_sr=None):
     """{(slice, k): {param: depth}}, report rows."""
     tree_overrides = tree_overrides or {}
     vp_xr = vp_xr or {}
+    vp_sr = vp_sr or {}
     PT = plan["partition_types"]
     known = {p["type"] for p in plan["partitions"] if LCD.LEAF_TYPE.match(p["type"])}
-    unknown = (set(tree_overrides) | set(vp_xr)) - known
+    unknown = (set(tree_overrides) | set(vp_xr) | set(vp_sr)) - known
     if unknown:
         raise SystemExit(f"unknown leaf tree override types: {sorted(unknown)}")
     for typ, value in vp_xr.items():
         if isinstance(value, bool) or not isinstance(value, int) or value not in (0, 1):
             raise SystemExit(f"{typ}: VP_XR contract must be integer 0 or 1")
+    for typ, value in vp_sr.items():
+        if isinstance(value, bool) or not isinstance(value, int) or value not in (0, 1):
+            raise SystemExit(f"{typ}: VP_SR contract must be integer 0 or 1")
     out, rep = {}, []
     for p in plan["partitions"]:
         if not LCD.LEAF_TYPE.match(p["type"]):
@@ -92,8 +101,8 @@ def leaf_depths(plan, tree_overrides=None, vp_xr=None):
         k = int(m.group(2))
         t = PT[p["type"]]
         if not t.get("hard_cores"):
-            if vp_xr.get(p["type"]):
-                raise SystemExit(f"{p['name']}: VP_XR contract on a leaf with no hard cores (no VP to stage)")
+            if vp_xr.get(p["type"]) or vp_sr.get(p["type"]):
+                raise SystemExit(f"{p['name']}: VP_XR / VP_SR contract on a leaf with no hard cores (no VP to stage)")
             rep.append(dict(part=p["name"], type=p["type"], skipped="no hard cores (no leaf chains)"))
             continue
         missing = LCD.unmapped_core_rows(t)
@@ -110,6 +119,13 @@ def leaf_depths(plan, tree_overrides=None, vp_xr=None):
             # The plan/native count includes XR's one per-lane HI stage.
             # LF_CS_HI_D prices only the source's pre-XR stages.
             d["HI_D"] -= xr
+        sr = vp_sr.get(p["type"], 0)
+        plan_ho = d["HO_D"]
+        if sr:
+            if d["HO_D"] < 1:
+                raise SystemExit(f"{p['name']}: effective HO depth must include the SR output station")
+            # ot_s81sl_vp SR 1: per-lane ho stations = CS_HO_D - CS_HO_GS + 1 (SRO); the plan / bound count includes it.
+            d["HO_D"] -= sr
         kv = "kv_leaf" in p["type"]          # DIE-S81-70 kv leaves: per-lane hi / ho stages (GS 0), as bound today
         d["HI_GS"], d["HO_GS"], d["H_G"] = (0, 0, 4) if kv else (d["HI_D"], d["HO_D"], 4)
         for param, value in tree_overrides.get(p["type"], {}).items():
@@ -122,13 +138,13 @@ def leaf_depths(plan, tree_overrides=None, vp_xr=None):
             raise SystemExit(f"{p['name']}: depth > 15 does not fit a nibble: {d}")
         out[(m.group(1), k)] = d
         rep.append(dict(part=p["name"], type=p["type"], slice="u_s_" + m.group(1), k=k, depths=d, disagree=dis,
-                        cs_rows=want.get("cs", 0), vp_xr=xr, plan_hi_d=plan_hi))
+                        cs_rows=want.get("cs", 0), vp_xr=xr, plan_hi_d=plan_hi, vp_sr=sr, plan_ho_d=plan_ho))
     return out, rep
 
 
-def stage(plan, net_text, rtl_root, tree_overrides=None, vp_xr=None):
+def stage(plan, net_text, rtl_root, tree_overrides=None, vp_xr=None, vp_sr=None):
     vp_xr = vp_xr or {}
-    depths, rep = leaf_depths(plan, tree_overrides, vp_xr)
+    depths, rep = leaf_depths(plan, tree_overrides, vp_xr, vp_sr)
     selected = {(PART.match(p["name"]).group(1), int(PART.match(p["name"]).group(2))): p["type"]
                 for p in plan["partitions"] if LCD.LEAF_TYPE.match(p["type"]) and PART.match(p["name"])}
     slices = sorted({s for s, _ in depths})
@@ -237,6 +253,9 @@ def main(argv=None):
     ap.add_argument("--ho-gs", action="append", default=[], metavar="TYPE:N")
     ap.add_argument("--vp-xr", action="append", default=[], metavar="TYPE:0|1",
                     help="explicit selective XR contract: plan effective HI depth includes XR; source depth excludes it")
+    ap.add_argument("--vp-sr", action="append", default=[], metavar="TYPE:0|1",
+                    help="explicit SR contract (ot_s81sl_vp SR 1, OT_S81SL_VP_SRAMREG): plan effective HO depth includes the SR "
+                         "output station; source HO_D excludes it")
     ap.add_argument("--update", action="append", default=[], metavar="CLASS",
                     help="re-price only these classes (e.g. SWR_D) on an already staged netlist; all else unchanged")
     a = ap.parse_args(argv)
@@ -270,7 +289,17 @@ def main(argv=None):
         if typ in xr or value not in (0, 1):
             ap.error(f"duplicate or invalid VP_XR contract {item!r}")
         xr[typ] = value
-    out, rep = stage(plan, Path(a.netlist).read_text(), a.rtl, overrides, xr)
+    sr = {}
+    for item in a.vp_sr:
+        try:
+            typ, value = item.rsplit(":", 1)
+            value = int(value)
+        except ValueError:
+            ap.error(f"invalid VP_SR contract {item!r}; expected TYPE:0|1")
+        if typ in sr or value not in (0, 1):
+            ap.error(f"duplicate or invalid VP_SR contract {item!r}")
+        sr[typ] = value
+    out, rep = stage(plan, Path(a.netlist).read_text(), a.rtl, overrides, xr, sr)
     Path(a.out).write_text(out)
     if a.report:
         Path(a.report).write_text(json.dumps(rep, indent=1) + "\n")
