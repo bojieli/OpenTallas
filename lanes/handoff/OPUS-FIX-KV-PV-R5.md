@@ -63,3 +63,5 @@ Written 2026-11-21 06:2x PST. Posts lanes/posts/OPUS-FIX-KV-PV-R5.md. Hub dir in
 - chain16.sh (ot-run oth-ubuntu-2991986-1795287087, log intel2 ~/tmp/okpvr5/chain16.log): probe bind 8c -> chain14 (R3/R4 -> bind 9 -> ONE r8_refresh -> bind 10 + lfh).
 
 - split_bind_routes fix committed (not pushed) in epyc7 lane clone /srv/opentallas-scratch2/claude/opus-fix-kv-pv-r4/repo branch claude/opus-fix-kv-pv-r5-sbr 502f9d7357 (on origin/main 257642da66, +test_reference_lane_uses_its_own_bus_cut_leg_before_a_lower_id_wide_cut_lane; test_split_bind_routes 15 pass, test_split_lane_reference_export pass). COORD: push via ot-push-main once bind 8c passes; I own split_bind_routes.py (posted to FLOW-STRIPBODY-1121 + OPUS-FIX-S81-SVC-R8). Sign-off builds use main, not tree5.
+
+- COORD: push NOT from epyc7 (docker stall). Push clone = epyc8 worktree /srv/opentallas-scratch2/claude/opus-fix-kv-pv-r4/repo8 (warm OpenTallas.git), branch claude/opus-fix-kv-pv-r5-sbr = origin/main + git am of 502f9d7357 (patch opus-fix-kv-pv-r4/sbr.patch). Push there after bind 8c passes.
