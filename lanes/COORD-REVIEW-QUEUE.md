@@ -15867,3 +15867,7 @@ FAILED [AUTOPILOT 634c299156fd] 2026-11-20 22:46:13 PST AUTOPILOT -> KIT-WAVE-3:
   QC (QC-PLAN-R8): 1 new FAILED global_place no relaunch; 1 old STALE cancelled.
   KV (KV-PLAN-R3): 1 new FAILED other flow error + 2 old FAILED + 15 held + 1 placed + 1 cancelled WAIT-BIND.
   HEAD: hd_lep0N running (OPUS-FIX-HEAD-LEP0N-R2), not flagged.
+- 2026-11-20 22:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-20 22:52 PST: 312 running jobs, PROGRESSING 301, SLOW 8, NO-PROGRESS 3 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc9 col_h9_r2__t1__clc9ad8f7e__pv45d0c698 5_2_route stage 15.4 h job 15.8 h: drt_violations best 1 last 42 rows 44 window-gain 0.0%; stagnant 9.2 h; last event 4.5 h ago, log write 4.3 h ago (2524 lines)
+  NO-PROGRESS epyc7 serdes__t13 lec stage 13.5 h job 13.5 h: LEC last file/log write 13.5 h ago
+  NO-PROGRESS epyc9 coll_core 5_1_grt stage 13.5 h job 23.0 h: repair_Viol best 221 last 221 rows 174 window-gain 0.0%; stagnant 7.0 h; last event 0.0 h ago, log write 0.0 h ago (2146 lines)
