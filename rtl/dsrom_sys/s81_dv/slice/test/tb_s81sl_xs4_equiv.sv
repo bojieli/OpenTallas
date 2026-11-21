@@ -25,9 +25,19 @@ module tb_s81sl_xs4_equiv (input wire clk);
     reg [2:0] g_v = 0, g_fam = 0; reg [20:0] g_idx = 0; reg [3071:0] g_d = 0; reg is_v = 0; reg [159:0] is_d = 0;
     reg r_rst_n = 1'b0;
     reg [2:0] r_gv = 0, r_gf = 0; reg [20:0] r_gi = 0; reg [3071:0] r_gd = 0; reg r_isv = 0; reg [159:0] r_isd = 0;
+`ifdef OT_S81SL_XS4_WREG
+    // FAM-S81-SLICE-R2: the WREG form declares +1 latency (xs4 with every input one edge later): two-edge reference relay
+    reg q_rst_n = 1'b0;
+    reg [2:0] q_gv = 0, q_gf = 0; reg [20:0] q_gi = 0; reg [3071:0] q_gd = 0; reg q_isv = 0; reg [159:0] q_isd = 0;
+    always @(posedge clk) begin
+        q_rst_n <= rst_n; q_gv <= g_v; q_gf <= g_fam; q_gi <= g_idx; q_gd <= g_d; q_isv <= is_v; q_isd <= is_d;
+        r_rst_n <= q_rst_n; r_gv <= q_gv; r_gf <= q_gf; r_gi <= q_gi; r_gd <= q_gd; r_isv <= q_isv; r_isd <= q_isd;
+    end
+`else
     always @(posedge clk) begin
         r_rst_n <= rst_n; r_gv <= g_v; r_gf <= g_fam; r_gi <= g_idx; r_gd <= g_d; r_isv <= is_v; r_isd <= is_d;
     end
+`endif
     wire a_xwv, a_f, b_xwv, b_f; wire [1100:0] a_xw, b_xw;
     ot_s81sl_xs_refm u_a (.clk(clk), .rst_n(r_rst_n), .g_v(r_gv), .g_fam(r_gf), .g_idx(r_gi), .g_d(r_gd),
         .is_v(r_isv), .is_d(r_isd), .xw_v(a_xwv), .xw_d(a_xw), .fault(a_f));

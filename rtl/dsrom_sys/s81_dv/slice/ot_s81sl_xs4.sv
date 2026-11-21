@@ -624,7 +624,29 @@ module ot_s81sl_xs4 #(parameter INSTANCE = "") (
 );
     // ------------------------------------------------------------------ reset
     wire [3:0] rst_e; wire [53:0] rst_l; wire [38:0] rst_k; wire [23:0] rst_x;
+`ifdef OT_S81SL_XS4_WREG
+    // WREG (FAM-S81-SLICE-R2 11-21): the leaf is xs4 with every input one edge later (+1 latency on xw_v / xw_d / fault),
+    // retimed so that the gather path's extra edge sits at the x-buffer / exponent macro pins (W stage) instead of in
+    // front of the capture.  Hence: rst_n and the issuer word get a plain input register; the gather capture valids
+    // keep the undelayed early reset (they now stand one edge before the rest); every pure gather level-B result gets a
+    // W register; issuer-state terms (buffer parity) are sampled at the W edge.
+    reg rst_n_p;
+    always @(posedge clk) rst_n_p <= rst_n;
+    wire [3:0] rst_ed;
+    ot_s81sl_xs4_rst u_rst (.clk(clk), .rst_n_in(rst_n_p), .rst_e(rst_ed), .rst_l(rst_l), .rst_k(rst_k), .rst_x(rst_x));
+    (* keep = "true", dont_touch = "true" *) reg gs0, gs1;
+    (* keep = "true", dont_touch = "true" *) reg [2:0] ge1;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin gs0 <= 1'b0; gs1 <= 1'b0; end
+        else begin gs0 <= 1'b1; gs1 <= gs0; end
+    always @(posedge clk) ge1 <= {3{gs1}};
+    assign rst_e = {rst_ed[3], ge1};
+    reg is_v_p; reg [159:0] is_d_p;
+    always @(posedge clk) begin is_v_p <= is_v; is_d_p <= is_d; end
+`else
     ot_s81sl_xs4_rst u_rst (.clk(clk), .rst_n_in(rst_n), .rst_e(rst_e), .rst_l(rst_l), .rst_k(rst_k), .rst_x(rst_x));
+    wire is_v_p = is_v; wire [159:0] is_d_p = is_d;
+`endif
     // l2 region map: 0-5 issuer, 6-27 table groups, 28-29 write-leaf parity replicas, 30 faults / lane / exp,
     // 31-47 calendar, 48 window-open copies, 49-53 spare
     wire [16:0] rg_cal = rst_l[47:31];
@@ -648,10 +670,10 @@ module ot_s81sl_xs4 #(parameter INSTANCE = "") (
     reg [3071:0] gd_a, gd_b;
     always @(posedge clk) begin gd_a <= g_d; gd_b <= gd_a; end
     (* keep = "true" *) reg [1:0] isv_a;
-    always @(posedge clk or negedge rst_e[3]) if (!rst_e[3]) isv_a <= 2'd0; else isv_a <= {2{is_v}};
+    always @(posedge clk or negedge rst_e[3]) if (!rst_e[3]) isv_a <= 2'd0; else isv_a <= {2{is_v_p}};
     reg [44:0] ip_a; reg ow_a; reg [7:0] of_a; reg [27:0] rv_a;
     always @(posedge clk) begin
-        ip_a <= {is_d[122:93], is_d[92], is_d[13:0]}; ow_a <= is_d[123]; of_a <= is_d[131:124]; rv_a <= is_d[159:132];
+        ip_a <= {is_d_p[122:93], is_d_p[92], is_d_p[13:0]}; ow_a <= is_d_p[123]; of_a <= is_d_p[131:124]; rv_a <= is_d_p[159:132];
     end
 
     // ================================================================== issuer (main's fixed per-slice delay line)
@@ -828,12 +850,14 @@ module ot_s81sl_xs4 #(parameter INSTANCE = "") (
             // one registered stage on the write port of every x buffer macro (we, wa, wd, mask together), so the macro pins
             // are driven by flops that sit at the macro and the long wire is a flop-to-flop hop.  Default off (the form
             // below is bit for bit the previous one).  +1 edge between the level-B write and the macro sample.
-            reg we_w; reg [6:0] wa_w; reg [255:0] wd_w, wm_w;
+            // R2: the parity bit of the address is buffer-parity (issuer) state, sampled at the W edge.
+            reg we_w; reg [6:0] wa_w; reg [255:0] wd_w, wm_w; reg f_b;
             wire [255:0] wm_c;
             for (gj = 0; gj < 8; gj = gj + 1) begin : g_mkc
                 assign wm_c[32*gj +: 32] = {32{gj < 4 ? mlo[gj] : mhi[gj - 4]}};
             end
-            always @(posedge clk) begin we_w <= we; wa_w <= wa; wd_w <= wd; wm_w <= wm_c; end
+            always @(posedge clk) f_b <= f;
+            always @(posedge clk) begin we_w <= we; wa_w <= {f_b ? wb_nx : wq_nx, wa[5:0]}; wd_w <= wd; wm_w <= wm_c; end
             assign mw_d[gs][gm] = wd_w; assign mw_m[gs][gm] = wm_w;
             assign mw_a[gs][gm] = wa_w; assign mw_e[gs][gm] = we_w;
 `else
@@ -853,14 +877,26 @@ module ot_s81sl_xs4 #(parameter INSTANCE = "") (
             reg [15:0] o;
             integer i;
             always @(posedge clk) for (i = 0; i < 16; i = i + 1) o[i] <= v && !f && g == 7'(16 * gc + i);
+`ifdef OT_S81SL_XS4_WREG
+            reg [15:0] o_w;
+            always @(posedge clk) o_w <= o;
+            assign ohq[gs][16*gc +: 16] = o_w;
+`else
             assign ohq[gs][16*gc +: 16] = o;
+`endif
         end
         for (gc = 0; gc < 5; gc = gc + 1) begin : g_b
             wire v = ga_v[gs][14 + gc], f = ga_f[gs][14 + gc]; wire [6:0] g = ga_g[gs][14 + gc];
             reg [15:0] o;
             integer i;
             always @(posedge clk) for (i = 0; i < 16; i = i + 1) o[i] <= v && f && g == 7'(16 * gc + i);
+`ifdef OT_S81SL_XS4_WREG
+            reg [15:0] o_w;
+            always @(posedge clk) o_w <= o;
+            assign ohb[gs][16*gc +: 16] = o_w;
+`else
             assign ohb[gs][16*gc +: 16] = o;
+`endif
         end
     end endgenerate
     // arrival tables in 22 groups of 8 beats: valid (2 parities) + first-writer source, own parity replica and window
@@ -925,7 +961,13 @@ module ot_s81sl_xs4 #(parameter INSTANCE = "") (
             e <= {v && !f && g < 7'd96 && g[2], v && !f && g < 7'd96 && !g[2]};
             a <= {wq_nx, g[6:3], g[1:0]};
         end
+`ifdef OT_S81SL_XS4_WREG
+        reg [1:0] e_w; reg [6:0] a_w;
+        always @(posedge clk) begin e_w <= e; a_w <= {wq_nx, a[5:0]}; end
+        assign ew[gs] = e_w; assign ea[gs] = a_w;
+`else
         assign ew[gs] = e; assign ea[gs] = a;
+`endif
     end endgenerate
     // range / duplicate write faults (copy 20 of every source)
     reg [2:0] wrng; reg wdup;
@@ -944,9 +986,15 @@ module ot_s81sl_xs4 #(parameter INSTANCE = "") (
         for (kh = 0; kh < 12; kh = kh + 1) whit = whit | hitq[kh];
         for (kh = 0; kh < 10; kh = kh + 1) whit = whit | hitb[kh];
     end
+`ifdef OT_S81SL_XS4_WREG
+    reg [2:0] wrng_w; reg wdup_w;
+    always @(posedge clk) begin wrng_w <= wrng; wdup_w <= wdup; end
+`else
+    wire [2:0] wrng_w = wrng; wire wdup_w = wdup;
+`endif
     reg wr_fault;
     always @(posedge clk or negedge rst_l[30])
-        if (!rst_l[30]) wr_fault <= 1'b0; else if ((|wrng) || wdup || (|whit)) wr_fault <= 1'b1;
+        if (!rst_l[30]) wr_fault <= 1'b0; else if ((|wrng_w) || wdup_w || (|whit)) wr_fault <= 1'b1;
 
     // ================================================================== read side
     // ---- stage 1 (stream head + 1): q from head copies 0-3 (lookups q0 c0 / q0 c1 / q1 c0 / q1 c1), 4 (rest);
@@ -1054,8 +1102,9 @@ module ot_s81sl_xs4 #(parameter INSTANCE = "") (
         end
         for (gc = 0; gc < 2; gc = gc + 1) begin : g_ex
 `ifdef OT_S81SL_XS4_WREG
-            reg ew_w; reg [6:0] ea_w; reg [19:0] ed_w;
-            always @(posedge clk) begin ew_w <= ew[gs][gc]; ea_w <= ea[gs]; ed_w <= {gd_b[1024*gs + 522 +: 10], gd_b[1024*gs + 256 +: 10]}; end
+            wire ew_w = ew[gs][gc]; wire [6:0] ea_w = ea[gs];   // already W-staged in g_ew
+            reg [19:0] ed_w;
+            always @(posedge clk) ed_w <= {gd_b[1024*gs + 522 +: 10], gd_b[1024*gs + 256 +: 10]};
             ot_sram_1r1w2c_128x64_m1 u_em (
                 .wclk(clk), .rclk(clk), .r_ce_in(gc == 0 ? er0ce : er1ce), .r_addr_in(gc == 0 ? er0a : er1a),
                 .rd_out(erd[gs][gc]), .w_ce_in(ew_w), .w_addr_in(ea_w),
