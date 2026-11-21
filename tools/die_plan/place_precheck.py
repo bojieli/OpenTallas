@@ -19,6 +19,9 @@ bound netlist); this tool re-evaluates it with the code or formula the kit uses,
   CONE     "cone has more than N cells: not separable"           plan + synth netlist    place_regions_cone.tcl ot_pr_cone
            (global_place; since 124d829 the region is DROPPED     (FIRM cells unknown      (--netlist; approximate: FIRM cells
            instead of stopping the kit: reported as CONE-DROP)    statically)              are not excluded)
+  STATIONCORE  (no kit message: station flops planned on a hard     plan (pins, leaf, n,    station_core.rows: the kit's per-bit
+           macro are moved by detailed placement, their routes     relay_sites, macros)    site model on EVERY station row
+           cross the macro on M6-M8 only; flat GRT overflow)
 Not static (reported by the kit only): PLACE-HPWL (needs the global placement), DPL-0033 (legaliser), infra kills.
 
 Modes
@@ -44,7 +47,7 @@ DBU = 4000                      # ASAP7 db units per um (face_flops ff_dbu)
 SITE_W, ROW_H = 0.054, 0.27     # kit site / row grid (um)
 CELL = (1.404, 0.27)            # ft_spread.CELL (bit-site footprint)
 KNEE_NEAR_UM = 6.0              # advisory band below the 403 um limit: the kit measures real BTerms, the plan the planned pins
-CLASSES = ("OVERLAP", "KNEE", "MACRO", "MPL0020", "CONE")
+CLASSES = ("OVERLAP", "KNEE", "MACRO", "STATIONCORE", "MPL0020", "CONE")
 
 
 def F(cls, key, msg, **kw):
@@ -224,6 +227,14 @@ def macro_plan(P, tn, t):
     return [F("MACRO", "kit_fit", s) for s in kit_fit.findings({tn: t}, core_margin=CORE_MARGIN_UM)]
 
 
+def station_core_plan(P, tn, t):
+    """STATION-CORE (FABLE-FIX-QC-SLE-R2 11-21): every station row (bus chains with no `core` key included) on the kit's per-bit
+    site model against every hard macro; the kit prints no message for it, the build ends in flat GRT overflow (QC sle_ctl)."""
+    import station_core as SC
+    return [F("STATIONCORE", r["conn"], SC.line(tn, r), sub=r["kind"], sites_in_macro=r["sites_in_macro"],
+              routes_crossing=r["routes_crossing"], macros=r["macros"]) for r in SC.report(P, tn)]
+
+
 _CACHE = {}
 
 
@@ -243,7 +254,7 @@ def check_type(args):
         raw, P = _load(plan_path)
         t = raw["partition_types"][tn]
         out = []
-        for fn in (overlap_plan, knee_plan, macro_plan):
+        for fn in (overlap_plan, knee_plan, macro_plan, station_core_plan):
             try:
                 out += fn(P, tn, t)
             except Exception as ex:

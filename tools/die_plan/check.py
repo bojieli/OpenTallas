@@ -1733,6 +1733,30 @@ def check_clock_branch_buffers(P, R):
     return out
 
 
+def check_station_core(P, R, max_msgs=60):
+    """STATION-CORE (advisory, FABLE-FIX-QC-SLE-R2 11-21, station_core.py): station sites inside / per-bit station routes over
+    a hard macro, for EVERY station row on the kit's site model (the core-chain gate in schema.check covers `core` rows only)."""
+    import station_core as SC
+    used = {p["type"] for p in P.parts.values()}
+    n = types = 0
+    for tn in sorted(P.types):
+        if tn not in used:
+            continue
+        try:
+            ls = SC.lines(P, tn)
+        except Exception as ex:      # advisory census: never stops G0
+            R.warn("station_core", f"type {tn}: census skipped ({type(ex).__name__}: {str(ex)[:120]})", type=tn)
+            continue
+        types += bool(ls)
+        for ln in ls:
+            n += 1
+            if n <= max_msgs:
+                R.warn("station_core", ln, type=tn)
+    if n > max_msgs:
+        R.warn("station_core", f"... {n - max_msgs} more station rows with sites in / routes over a hard macro")
+    return dict(rows=n, types=types)
+
+
 def check_reset(P, R):
     """OWNER RESET RULE 2026-10-24 (reset_tree.py): pipelined plans -- every type's equal-depth relay tree builds with
     hops <= reset.relay_um under the plan contract part_depth, the die region trees reach every partition; counted
@@ -3016,6 +3040,7 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
         for err in cland["errors"]:
             R.err("clock_landings", err)
     check_clock_reset(P, R)
+    summ["station_core"] = check_station_core(P, R)
     summ["clock_branch_buffers"] = check_clock_branch_buffers(P, R)
     summ["reset"] = check_reset(P, R)
     import pin_sites as PS          # HEAD-96 11-13: two different interior pins on one site = GRT-0080 at route
