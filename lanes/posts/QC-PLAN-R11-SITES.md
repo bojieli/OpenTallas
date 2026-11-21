@@ -1,0 +1,1 @@
+- 2026-11-21 12:44 PST DIED [QC-PLAN-R11-SITES] ot-run oth-ubuntu-2950493-1795293846 on loved-redfish: rc=1 after 5 s, ended 20:44:10, log /srv/opentallas-scratch2/claude/qc-plan-r11/sites/compose.log, cmd: --mem 16 --threads 1 --hosts epyc7 --dir /srv/opentallas-scratch2/claude/qc-plan-r11/sites -- python3 -I -B /srv/opentallas-scratch2/claude/
