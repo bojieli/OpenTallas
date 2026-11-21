@@ -285,7 +285,9 @@
     "kv3_pv_v1n": "KV-D25e3 attempt 7 repeats captured collector_tree reset identity mismatch at gen. Hold new picks until coherent D26 bind.",
     "kv3_hgi_v6": "KV-D25e3 v6 a4 failed captured collector_tree reset identity; a5 admitted with unchanged gen fail key ed0f0a2ea1f07192. Hold new picks until coherent D26 bind.",
     "kv3_hub_Wi": "KV-PLAN-R5 11-21 08:1x (COORD): D26 a1 FAIL_PREFLOOR port_bind: 3 extra netlist bits io_pad_die_id[0..2] (bound_only ID strap port) not in the plan pins. Fix = the hub_Wo preflight / plan pin row (FABLE-FIX-KV-HUB-R2), carried in the next KV event. Lift = delete this key when that event is applied.",
-    "kv3_pc_v3": "KV-PLAN-R5 11-21 08:1x (COORD): D26 a1 place PDN-0006 VSS on M5 blocked by M6/M7 obstructions over u_bound.u_kvpc0 (core OBS vs parent PG grid; same class as kv3_pc__cl254f2e73/cl5a95b461). Fix = plan PG straps or kvpc0 OBS window (FAM-KV-IOPC). Unchanged relaunch fails the same way. Lift = delete when the fix lands."
+    "kv3_pc_v3": "KV-PLAN-R5 11-21 08:1x (COORD): D26 a1 place PDN-0006 VSS on M5 blocked by M6/M7 obstructions over u_bound.u_kvpc0 (core OBS vs parent PG grid; same class as kv3_pc__cl254f2e73/cl5a95b461). Fix = plan PG straps or kvpc0 OBS window (FAM-KV-IOPC). Unchanged relaunch fails the same way. Lift = delete when the fix lands.",
+    "kv3_hgi_v8": "KV-PLAN-R6 11-21 11:4x (COORD lever 6, FABLE-CLOSURE-STRATEGY): no new D26 relaunch; running kits finish. Lift = delete this key when KV-D27d2/D28 is applied.",
+    "kv3_hub_Eo": "KV-PLAN-R6 11-21 11:4x (COORD lever 6, FABLE-CLOSURE-STRATEGY): no new D26 relaunch; running kits finish. Lift = delete this key when KV-D27d2/D28 is applied."
    },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave",
    "retry_fix": {
@@ -5918,7 +5920,8 @@
     "epyc9": 250,
     "intel1": 250
    },
-   "retry": [
+   "retry": [],
+   "retry_prev_kvr6_nod26": [
     "kv3_hgi_v3@6:fix=5294e088f553",
     "kv3_hgi_v5@6:fix=5294e088f553",
     "kv3_hgi_v8@6:fix=5294e088f553",
