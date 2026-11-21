@@ -14,3 +14,11 @@ Work: epyc10 /srv/opentallas-scratch2/claude/s81-j6 (gate.sh, mk_cand.sh, j7/), 
 - Gate: ot-run --mem 108 --threads 8 --hosts epyc10 --priority plan --plan-job bind --dir s81-j6 -- bash j7/chain_j7.sh candJ7c j7/J7c.list a9ed808a98d5 ; G0 must report tap-net sink inventory (8bc23a5a90, in a9ed) + street capacity.
 - HELD OUT (FABLE-PD-S81-0830 §8 + COORD): leaf re-grid (LEAF-R6 SUPERSEDE on d245f293 only with green gate), t5 v1f without kv_leaf define op, lepe_mu_C split / xg move, serdes enc/dec split + PG rows until bound, bk_sel until place read, xo D2, kv_leaf t2 cut, colrom a10c16b8 until ROM handshake bench PASS.
 - At J7 apply: kit_wave_edit event-pending s81 J7 when the apply gate starts; tools_sha stays >= a9ed808a98d5.
+
+## 11:3x update
+- J6 r1 APPLIED 08:5x (event a9ed808a98d, src d8j6r1, tools a9ed808a98d5, holds 343). Private binds unblocked.
+- candJ7c GATE GREEN (unit 2168821; bind 0, LAT 873/873, G0 1 new = reset-wavefront artefact, PRE PASS). Sidecar regenerated in j7_post.sh (sha 89199a4c...).
+- v6 = J7c + t5 no-stations rows (split: rest DELTA + landing_reader_start GEN set). v7 = v6 + GEN lepe10 (FAM-S81-LEPE-4 decides 19:00; drop the GEN if no). plan v7 355ae5b4.
+- Kit-gen lint: intel2 /srv/opentallas-scratch2/claude/s81-j6-r4/lint_fams.sh (dry_gen per family); first pass E2BIG (fixed main 4f638b4e9f); rerun SUF=_b -> lint_candJ7c_b/summary.txt. eng__t1 gen fails (dsdv_eng_rr_e LEF without lib), not a J7 row.
+- J7 apply: put col_* items on hold_items (held-until-view, owner FAM-S81-COL-H10-R3) until a fresh u_cf kit routes DRC 0. via-shadow 1980f8126c NOT in J7.
+- Pending row offers (bind-proven delta by 20:00 or J8): bk_sel R6 plan_r6 (BKSEL-R6), 22 h10_r0_p1 groups (COL-H10-R3), bank taps (COL-R4), svc hi4 (held: rest-part prep), COLROM-R4 ROM-input stage, SERDES-R6 CRC split.
