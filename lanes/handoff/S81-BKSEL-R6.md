@@ -24,3 +24,8 @@
 - Earlier tries kept, moved aside: kit_try1_rc11 (src-tree), kit_try2_rc13 ($RG literal), kit_try3_drt0073 (+route_try3.log, LEC exit 0 there).
 - Gates: DRC 0, TT setup >= -42, FF hold >= 0, LEC (lec/lec.json), bind+latency (chain_r6 LATCHECK). Post-hook CTS only; visual never blocks.
 - Provenance: private kit (tree not src_manifest). If it signs off, report to COORD; the J7 manifest tree carries the rows and the wave re-signs (the override is already on main).
+
+## UPDATE after stand-down (try 4 ended)
+- Try 4 oth-ubuntu-3077726 ENDED rc 0 (script) with ROUTE_RC=14 at preflight, no flow run: "FAIL_PREFLOOR ENV-PROVENANCE FAIL: no kit_env_provenance.json and the kit is not a kit-wave attempt (hand-built kit?): build private kits with kit_wave.py private-spec DIE ITEM [--plan P] [--tree T] [--overlay O] + kit_wave.py run-item SPEC". New guard in rt 8d1cff9b1bb6 (sk1.sh hand-assembled path is now refused).
+- The override itself is CONFIRMED in that gen: OT_LEF_OVERRIDE applied for dsdv_bksel_c (md5 ac84b194) and dsdv_bksel_q (md5 9ab5a4d1); kit lef_override.json written; ck RECTs 386.400..386.424 / 304.560..304.584. Config diff vs a14 identical to try 3.
+- R7 next: build the private kit with kit_wave.py private-spec s81 bk_sel__t2 --plan <tree_r6 plan_h2_2249.json> --tree /srv/opentallas-scratch2/claude/s81-bksel-r5/w/tree_r6 (bind = chain_r6 native_bind/out), then kit_wave.py run-item SPEC; goal route to sign-off. No live units of R6 remain; nothing to cancel. Kit dir W/kit (try 4) can be moved aside as kit_try4_envprov.
