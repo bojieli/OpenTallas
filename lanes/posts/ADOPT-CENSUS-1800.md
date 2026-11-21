@@ -1,1 +1,2 @@
 - 2026-11-20 18:33 PST DONE [ADOPT-CENSUS-1800] ot-run oth-ubuntu-2649290-1795228278 on renewed-glider: rc=0 after 156 s, ended 02:33:52, log /srv/opentallas-scratch2/claude/adopt-census-1800/ad9.log, cmd: --mem 8 --threads 1 --hosts epyc9 --dir /srv/opentallas-scratch2/claude/adopt-census-1800 -- bash /srv/opentallas-scratch2/claude/adopt-cens
+- 2026-11-20 18:38 PST DONE [ADOPT-CENSUS-1800] ot-push-main otpush-tolerant-swine-3456001 on tolerant-swine: rc=0 after 33 s, ended 18:38:41, log none, cmd: ot-push-main 
