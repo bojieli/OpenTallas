@@ -1,6 +1,24 @@
 # OPUS-FIX-S81-SVC-R6 handoff (started 2026-11-21 05:0x PST; newest first). Succeeds OPUS-FIX-S81-SVC-R5 (read its STOOD DOWN block).
 Nothing signed or exported. Pushed to main: d32d1a542d (type_split sidecar tree check), afc6f085e3 (type_split part_region), 625a0f6f0e (ATT land bench).
 
+
+## STOOD DOWN 11-21 08:3x PST (context ~318k). Successor: OPUS-FIX-S81-SVC-R7. READ THIS + the STATE block below.
+RUNNING (leave; re-arm waiters at once, Bash run_in_background loops):
+- chain10h epyc10 PID 1746572 (bind_hi4x/chain10h.sh, log chain10h.log, out chain10h.out). Now: split -> elab -> strict bind -> LATCHECK -> STATE.
+  W1: R=/srv/opentallas-scratch2/claude/opus-fix-s81-svc-r5/bind_hi4x; loop: ssh epyc10 "cat $R/STATE; kill -0 1746572 && echo chain_live" every 300 s
+  until STATE has rc=|_BAD (or chain gone). Green = "rc=0 BIND_RC=0 LATCHECK_RC=0" -> the chain itself runs prep.py (config.mk diff gate vs wave kit) ->
+  place -> route of svc_hi_dsdv_svc_rs__t4_att on epyc10; re-arm on $R/KSTATE (match "route rc=|_BAD|place rc=[1-9]").
+  Red: read bind_out3/bind_report.json errors (classify by prefix), diff inputs first; previous four failures were all setup class.
+  To re-run: mv STATE/split/elab3/bind3 logs + bind_out3 aside (suffix), copy chainNN.sh -> next with sed (see chain10h.sh line 2), nohup start.
+- chain_rest8 epyc8 PID 833298 (same path on epyc8 bind_hi4x/chain_rest8.sh, log rest8.log): polls epyc10 STATE every 300 s; green -> rsync
+  tree + bind_out3 -> prep_rest.py (copies epyc10 prep.py incl. the cfg diff gate) -> place -> route on epyc8. Result KSTATE_REST.
+  If STATE goes red it exits (NOBIND); after a re-run, mv KSTATE_REST aside and restart it (nohup, it waits for the new STATE).
+OPEN: if HARD_CORE_PARAM_ALL persists for legacy gunit l0r/l3/qbank_N, find how the J6 tree (s81-j6/candC1n_pf, gate.sh) resolves them (ref_tile specs
+  copied already). Never set OT_HCPARAM_ALL=0.
+AFTER ROUTE: sign-off read of both parts (DRC 0 route, TT setup >= -42, FF hold >= 0, LEC; final-stage reports only), then export both (benches PASS).
+J7: only hi4 rows handed (lanes/handoff/OPUS-FIX-S81-SVC-R6-J7-rows.json); watch S81-J6-ASSEMBLY-R3 / COORD replies on the 15 blocked types.
+Workers' dirs: epyc10 opus-fix-s81-svc-r6/j7rows/package, epyc8 opus-fix-s81-svc-r6/att-bench, lane clone epyc10 opus-fix-s81-svc-r6/lc.
+
 ## 11-21 08:2x PST STATE
 LIVE (leave running; waiters needed):
 - chain10h epyc10 PID 1746572: opus-fix-s81-svc-r5/bind_hi4x/chain10h.sh: split (spec plan = band-test plan_svc_hi4_x_epoch_ua.json, manifest
