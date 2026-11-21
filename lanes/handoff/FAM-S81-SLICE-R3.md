@@ -45,3 +45,11 @@ My local waiters die with this session: RE-ARM on every unit below (ot-wait <uni
 - epyc8 otrun-outgoing-giraffe-3968837 unit oth-ubuntu-3969870-1795274939 = t49 internal hold ECO pass (t49_eco2.sh)
 - epyc8 client PID 948431 unit oth-ubuntu-949753 = t9 WREG GRT (R2 record)
 - t37 run-item on the hardlink tree: EXITED (src_manifest FAIL); no run-item is live.
+
+## Late result (07:4x, after stand-down)
+- bindtree.sh (oth-ubuntu-369050) ENDED: the tree published fine (read-only, hash f375cabd), but the bind stopped with
+  "no asbuilt.json in <tree>_bind (run bind.py elab, or stage the packaged cached elaboration)". Next for R4: copy
+  asbuilt.json (+asbuilt_sources.json) from the wave J6 bind epyc10 /srv/opentallas-scratch2/claude/kw45/
+  src_s81_pin_3c913dbdfb23_d8j6_1117_work_bind_11210316 into /srv/opentallas-scratch2/claude/fam-s81-slice-r3/trees/
+  src_s81_j6_t37reach1_bind (reach1 changes no RTL, so the elab is the same; or run bind.py elab). Then rerun bindtree.sh
+  minus its publish line (already published).
