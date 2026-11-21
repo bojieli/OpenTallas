@@ -51,7 +51,8 @@
     "t9",
     "t10"
    ],
-   "functional": true
+   "functional": true,
+   "status": "ALREADY SATISFIED in J5/C1n plan_h2_2249 (checked 11-21): eg_c/eg_d/eg_v carry equal D on every c1x_C type (t9,t10: D3; t4: D2; t8: D4) and iq_C t1 eg D2 / cfg_d,cfg_v D3 equal. The D1/D2 mismatch was in plan_j3b only. No row needed."
   },
   {
    "id": "R-RD2",
@@ -61,7 +62,8 @@
    "types": [
     "dsdv_slice_iq_C__t1"
    ],
-   "functional": true
+   "functional": true,
+   "status": "ALREADY SATISFIED in J5/C1n plan_h2_2249 (checked 11-21): eg_c/eg_d/eg_v carry equal D on every c1x_C type (t9,t10: D3; t4: D2; t8: D4) and iq_C t1 eg D2 / cfg_d,cfg_v D3 equal. The D1/D2 mismatch was in plan_j3b only. No row needed."
   }
  ],
  "station_move_rows": [
@@ -99,7 +101,19 @@
    "cells_mapped": "~150k",
    "members": "u_cland_* (xring_i1, leafup_i3/i4, ft1/ft2, xtier_i0, ret_i0-2, monitor, reader_start*), u_ist_leafdn_o*, u_ft_ft*_o*, u_bin_*, u_bout_* (ot_dp_st / ot_dp_dly / ot_meso_ring_ca / ot_dp_landing_*)",
    "crossing": "landing chains are one register per bit already: strip boundary = chain ends, +0 cycles, registered both sides",
-   "region": "S edge strip ~110um x 1438um holds 97k of the cells (placed y<100um); N/E/W landings need extra strip regions on those faces, same tile, no growth"
+   "region": "four perimeter strip regions of the same tile, 130um deep: S 1440x130, W 130x~964, N 1440x130, E small (3.6k cells, may fold into S/N); plus interior slit stations re-sited into W/S rows (R-SL1). Strip total ~209k placed / ~150k mapped. Core shapes and die unchanged.",
+   "regions_measured_t9": {
+    "basis": "t9 placed CTS DB (epyc7 eps2_t9cts.xy): named infra cells (u_cland/u_ist/u_ft/u_bin/u_bout) 208,850 placed incl buffers = ~150k mapped",
+    "bands_130um": {
+     "S (y<130, 1440um long)": "85.9k (S 78.2k + SW 6.3k + SE 1.4k)",
+     "W (x<130, 1224um)": "40.2k (W 38.2k + NW 2.1k)",
+     "N (y>1094)": "22.3k",
+     "E (x>1310)": "3.6k",
+     "interior (leafdn stations in array slits)": "56.7k"
+    },
+    "perimeter_total": "152.2k of 208.9k placed = 73%; the interior 56.7k is the R-SL1 slit-station set and moves into the strip rows as well (all of it counts in the strip type)"
+   },
+   "open_geometry": "W band overlaps cores near x<150 (N-face window x80-150): needs the core-origin check in G0 (strip region may not cover a hard core)"
   },
   "body_type": {
    "name_suffix": "__body",
@@ -134,14 +148,18 @@
    ]
   },
   "open": [
-   "N/E/W landing strips (S strip is only 97k of ~150k)",
-   "plan partition_types sub-tile schema",
-   "t3/t10 etc census not run: arithmetic assumes strip ~150k for every C type"
+   "partition_types sub-tile schema + validation by die_plan (task 2)",
+   "per-type census t1/t5/t6/t7/t8/t10 running (units on epyc10, census/t*/stats.json)",
+   "W band vs core origins"
   ]
  },
  "evidence": {
   "census": "epyc9 /srv/opentallas-scratch2/claude/fable-fix-s81-slicec/t9_hier_census_1121/stats.json (unit oth-ubuntu-2354952-1795257342, exit 0, pre-map generic gates, design 348,443)",
   "synth_netlist": "epyc9 .../p1/dsdv_slice_c1x_C__t9/gen/dsdv_slice_c1x_C__t9/1_synth_odb.v (335,915 mapped cells)",
   "placed": "t9 place 480,720 nontap +120,945 tap; t3 477k; t6 503,146 nontap at CTS"
+ },
+ "validation": {
+  "c1n_check": "plan_h2_2249 relay_depth in candC1n has 8 rows per c1x_C type (class A xr<->eg and eg scale/eps only); NO rows for xr->xg ci_b/is_d or xg->xf: R-ST1a/b/c still to add and need path_um measured from placed DB (t9 CTS xy on epyc7) and equal depth per aligned bundle (ci_b/ci_dir/is_d/is_v).",
+  "strict_gate": "NOT RUN: a bound delta needs (a) relay rows with measured path_um and (b) for the split new partition_types for strip/body (outline, pins, hard_cores, buses, clock landing, ft_slots) which is a plan-event-sized change; a strict bind on the C1n tree took >1 h of epyc10 time. Next: relay rows (a) as a delta on a copy of candC1n through gate.sh."
  }
 }
