@@ -16327,3 +16327,12 @@ FAILED [AUTOPILOT 26c6b7661321] 2026-11-21 00:23:37 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-21 00:32 PST DIED [mq1] ot-push-main otpush-tolerant-swine-3314662 on tolerant-swine: rc=2 after 0 s, ended 00:32:09, log none, cmd: ot-push-main 
 - 2026-11-21 00:32 PST DONE [mq1] ot-push-main otpush-tolerant-swine-3314854 on tolerant-swine: rc=0 after 1 s, ended 00:32:10, log none, cmd: ot-push-main 
 - 2026-11-21 00:32 PST DONE [mq1] ot-push-main otpush-tolerant-swine-3314694 on tolerant-swine: rc=0 after 1 s, ended 00:32:10, log none, cmd: ot-push-main 
+- 2026-11-21 00:32 PST DONE [mq1] ot-push-main otpush-tolerant-swine-3314700 on tolerant-swine: rc=0 after 1 s, ended 00:32:10, log none, cmd: ot-push-main 
+- 2026-11-21 00:32 PST DONE [mq1] ot-push-main otpush-tolerant-swine-3315561 on tolerant-swine: rc=0 after 0 s, ended 00:32:10, log none, cmd: ot-push-main 
+- 2026-11-21 00:32 PST DIED [mq1] ot-push-main otpush-tolerant-swine-3315649 on tolerant-swine: rc=3 after 0 s, ended 00:32:11, log none, cmd: ot-push-main 
+- 2026-11-21 00:32 PST DONE [mq1] ot-push-main otpush-tolerant-swine-3315106 on tolerant-swine: rc=0 after 1 s, ended 00:32:11, log none, cmd: ot-push-main 
+- 2026-11-21 00:32 PST DIED [mq1] ot-push-main otpush-tolerant-swine-3315321 on tolerant-swine: rc=4 after 1 s, ended 00:32:11, log none, cmd: ot-push-main 
+- 2026-11-21 00:32 PST DONE [mq1] ot-push-main otpush-tolerant-swine-3316575 on tolerant-swine: rc=0 after 1 s, ended 00:32:12, log none, cmd: ot-push-main 
+- 2026-11-21 00:32 PST DIED [mq1] ot-push-main otpush-tolerant-swine-3316971 on tolerant-swine: rc=4 after 1 s, ended 00:32:13, log none, cmd: ot-push-main 
+- 2026-11-21 00:32 PST DONE [mq1] ot-push-main otpush-tolerant-swine-3316722 on tolerant-swine: rc=0 after 1 s, ended 00:32:13, log none, cmd: ot-push-main 
+- 2026-11-21 00:32 PST DONE [mq1] ot-push-main otpush-tolerant-swine-3316002 on tolerant-swine: rc=0 after 2 s, ended 00:32:13, log none, cmd: ot-push-main --dry-run
