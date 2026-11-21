@@ -29,3 +29,15 @@ Landed (all on rt/current of 7 hosts, ef71d9d33716):
 - DOCKERBREAKER-1630: epyc7's installed reconcile DID have the timeouts (symlink to rt/current). The 25 min block = lock starvation: each waiter's gate call held the admit lock for the docker timeout in turn. Now a timed-out docker call writes /var/tmp/ot-heavy/docker.broken and every docker call on the host answers at once for 60 s; success removes it. Timeout 20 -> 10 s.
 Open: 23+ waiters started before 16:29 run the old ot-run and never reload (epyc8 30 waiters / 1.9 TB, oldest 18.4 h at 18:16); all 7 hosts admit 0 GB now, so nothing could move anyway. Lane jobs re-submit by their owners.
 intel1 scratch2: 202 GB, -11 GB/h. Cleanup timer runs (ot-auto-clean 30 min, ot-auto-retire); refusals are policy (hub post <24 h, protected kit_wave src). Growth = live event kits: kw43-wave-1109n 1.35 TB (s81 b05c98f7919 282 GB, 3fa87b84b18 174 GB; qc S29..N46C 228 GB, N3 161 GB). Nothing deletable by the rules; at this rate floor in ~9 h. COORD: retire old-event kit dirs 3fa87b84b18 / qc N3 if those events are done, or lower intel1 admission.
+
+## FINAL STATE at stand-down (11-20 ~20:10 PST, FLEET-WATCH-1630 to FLEET-WATCH-2000)
+Waiters: none left (all fw1630 scripts on epyc7/epyc9/intel2 exited; checked by ps, nothing to stop). Clones fleet-watch-1400/1400b/1400c deleted; my clone epyc7 /srv/opentallas-scratch2/claude/fleet-watch-1630 is idle and deletable via ot-delete.
+Done: s81_head r11b_s0 tree on epyc7 verified (receipt PASS, hash 73f4bb9a...), s81_head gen_hosts = epyc9 epyc10 epyc7. s81, qwen_kvsys, qwen_compute gen_hosts include epyc7.
+Landed on main (rt/current ef71d9d33716 on 7 hosts): AUTOSTAGE, TREESYNC, ISOLATE (ReapRetry), RELOAD/MULTIHOST-SPILL/OLDWAIT, STOPPED-OUTSIDE, FAILLOGS, DOCKERBREAKER. Items 1 (canary, CANCELLED, earlyoom) landed by 1400.
+Findings to carry:
+- Thread/load gates are OFF on all hosts (LOAD_GATE/LOAD_CAP/THREAD_CAP_FACTOR=0); memory is the binding resource (24 h: 0 load waits, 8033 memory waits). Do not change thread reservations.
+- Build time (48 h, 984 attempts): launch>place done median/p90 min s81 137/455, qc 193/454, kv 303/411, head 102/599; tail = queue (wait before place p90 227-263 min) + gen, not compute. Lever 3 (stop cts/grt/route when place WNS < -300 ps) is with FLOW-NOADV-R3; lever 1 (do not queue superseded rows) is with the owner (conflicts with never cancel old-plan kits).
+- intel1 disk: nothing deletable under COORD's rules (HARVEST 98 GB protected, 250 GB named in hub posts, 9 signed attempts exported and verified in rtx-pro INDEX but guard-protected as kit_wave bind/prov refs). Free 202 GB at -11 GB/h at 18:10; re-check.
+- epyc8 queue 30 waiters / 1.9 TB, oldest 18 h: old waiters keep old ot-run (no reload); lane jobs need resubmission by owners.
+- Tool lag/skew: kvsys 413, head 904 commits (pins a2fb7e625dd8 / 385f61b5582a, no manifest on any host), s81 tools_sha is the literal j5tree. Pins not touched; HEAD/KV owners re-pin at next event.
+- Open: AGIdock does not resolve from any host here; its copies are taken from INDEX status.
