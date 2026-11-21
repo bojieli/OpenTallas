@@ -13,3 +13,8 @@ Family: QC sle_hc*/slw_hc*, sle_st*/slw_st*, sle_su*/slw_su*. FABLE-FIX-QC-SLE k
 - Applied feedthrough candidate: `epyc9:/srv/opentallas-scratch2/claude/qc-plan-r8/v2b/hcst_ft/ledger.json` reports 36 spread slots on 19 current HC/ST types, no added stations and every computed per-bit hop ≤300 µm. They ride b10.
 - 24 slots deferred. The 1,574-bit `b_hw_ctl_hc3` banks fan from opposing unequal windows and push central hops to 324 µm. The two-stage `x_fw_ctl_p2` slots land at 323 µm. Other misses are three each of `cws3` and `x_su_l0_ctl`. Physical window/column placement must improve before adding larger banks.
 
+
+## 2026-11-21 02:37 PST Codex notes
+- The follow-up exact planner recovered 12 of the 24 deferred slots at the same station count. All nine 1,574-bit `b_hw_ctl_hc3` banks pass when each bit takes its own jog (roughly 267–277 µm per hop), and three `cws3` slots reach 290.8 µm. Exact per-type delta files and measurements are in `v2b/hcst_ft_followup` on epyc9. Keep them out of active b10 pending a subsequent bounded rebind and image review.
+- The other 12 have a mathematical endpoint-distance lower bound above 300 µm per existing hop. Nine `x_fw_ctl_p2` need at least three hops and three `x_su_l0_ctl` at least four unless their pin windows move. Reprice those explicit cycles or change windows with both ends aligned.
+
