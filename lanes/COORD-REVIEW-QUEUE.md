@@ -14690,3 +14690,4 @@ make: *** [Makefile:585: /work/run/results/asap7/dp_kv3_pv_v1n/base/5_1_grt.odb]
   col_h10_r0_p1 (6): GRT 0; CTS FF hold after CORETAP 6: worst -52.3 median -49.9; sign-off runs 0, SIGNED 0; 4 stopped without signoff; old plan -481
   col_h10_r1 [plan_h10 +CC-BANK-2] (12): GRT 0; CTS FF hold after CORETAP 10: worst -51.9 median -46.8; sign-off runs 0, SIGNED 0; 4 stopped without signoff; old plan -208/-411
   Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
+- 2026-11-20 17:05 PST HOST-REPORT 2026-11-20 17:05 | tolera L143.82/112 units0 free1109G | key-ca L129.79/112 units203 free241G | dear-c L159.52/128 units459 free199G | loved- L186.33/96 units100 free1380G | outgoi L346.68/96 units165 free554G | renewe L200.21/96 units83 free712G | civil- L125.07/96 units43 free893G
