@@ -1,0 +1,1 @@
+- 2026-11-21 03:43 PST DIED [QC-PLAN-R9] ot-run oth-ubuntu-3630233-1795261404 on outgoing-giraffe: rc=1 after 4 s, ended 11:43:26, log /srv/opentallas-scratch2/claude/qc-plan-r8/v2b_host/b13.out, cmd: --mem 70 --threads 4 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/qc-plan-r8/v2b_host -- env EXTRA0=/srv/opentallas-scratch2/claude/q
