@@ -1,0 +1,9 @@
+{"lane": "FAM-QC-CB-R2", "made": "2026-11-21 07:45 PST", "to": "QC-PLAN-R10",
+ "why": "RRGEN-R3 cbf_q00 inst_taps t93/t100 were picked on A4 geometry; with the R8 cb link_sites rows (in V2) the fp3 placement puts u_u_fab_u_x_0_1 at ~(74,2036) and x_1_1 at ~(673,2030): legs 525/506 um (QC-PLAN-R9-LEAFLEG, epyc8 lanes/ll-out/cbf_q00_fp3pos.json). The -394 ps fp3 path ends at x_0_1. Taps re-picked to the nearest equal-depth tap in the V1/b17/b18 numbering (consumer_sites_um index == tap). 0 cycles, 0 flops. kit-rtl re-applies inst_taps from the plan (bind.py RESET-RELAY-GEN-1530, apply_inst_taps moves a sink from any tree net), so the rows take effect without a rebind.",
+ "rows": {"partition_types": {"cbf_q00__cl1b5a6458": {"reset": {"inst_taps": [
+   {"tap": 24, "sinks": ["u_u_fab_u_x_0_0"]},
+   {"tap": 25, "sinks": ["u_u_fab_u_x_1_0"]},
+   {"tap": 77, "sinks": ["u_u_fab_u_x_0_1"]},
+   {"tap": 76, "sinks": ["u_u_fab_u_x_1_1"]}]}}}},
+ "legs_um_fp3_positions_worst_point": {"x_0_0/t24": 101.8, "x_1_0/t25": 78.2, "x_0_1/t77": 74.8, "x_1_1/t76": 134.6},
+ "checked_unchanged": {"cbn_q01__clab6e67f2": "b17 rows t30/t31/t105/t107 measured on V1 attempt_17 placed flops (all 1080 per station, worst point): 193/198/248/155 um, all < 300; keep. Its -369 attempt_17 was V1 without rows."}}
