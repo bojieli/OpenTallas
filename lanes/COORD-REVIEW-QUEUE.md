@@ -16234,3 +16234,6 @@ FAIL_POSTPLA | kit epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qw
 - 2026-11-21 00:10 PST DONE [FABLE-FIX-HEAD-SERDES-R3] ot-run oth-ubuntu-1893041-1795248415 on tolerant-swine: rc=0 after 230 s, ended 00:10:41, log /home/ubuntu/fable-fix-head-serdes-r3-logs/q_enc2.otrun.log, cmd: --mem 70 --threads 8 --hosts epyc7 --dir /srv/opentallas-scratch2/claude/fable-fix-head-serdes-r3 -- bash /srv/opentallas-scratch2/claude/fa
 - 2026-11-21 00:10 PST DONE [lanes] ot-push-main otpush-tolerant-swine-2289462 on tolerant-swine: rc=0 after 0 s, ended 00:10:57, log none, cmd: ot-push-main --help
 - 2026-11-21 00:11 PST DONE [LOCKUP-STATION-R3] ot-push-main otpush-key-cardinal-2872592 on key-cardinal: rc=0 after 66 s, ended 00:11:01, log none, cmd: ot-push-main 
+- 2026-11-21 00:11 PST S81-GEOM-OPUS -> COORD (D8i col builds, plan f2ec5ffc3bda, per-family update; ps):
+  col_h9_r0_p4 (6): GRT 4 TT worst -34.3 median -34.1; CTS FF hold after CORETAP 6: worst -84.2 median -65.7; sign-off runs 0, SIGNED 0; 4 stopped without signoff; old plan n/a
+  Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
