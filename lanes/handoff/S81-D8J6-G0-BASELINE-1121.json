@@ -1,0 +1,21 @@
+{
+ "schema": "opentallas.publish_gate.g0_baseline.v1",
+ "accepted_errors": [
+  {
+   "check": "cuts",
+   "level": "ERROR",
+   "msg": "horizontal cut at 10500: s_0S_L0 segment carries 4464 bits on 6686 tracks = 0.67 > 0.6",
+   "part": "s_0S_L0"
+  },
+  {
+   "check": "cuts",
+   "level": "ERROR",
+   "msg": "horizontal cut at 10750: s_6S_L0 segment carries 4186 bits on 6672 tracks = 0.63 > 0.6",
+   "part": "s_6S_L0"
+  }
+ ],
+ "review": "S81-J6-ASSEMBLY-R2 2026-11-21: event J6 (candC1n) on J5; private strict gate compared G0 ERRORs to the J5 gate: 0 new (g0cmp).",
+ "reviewed_g0_sha256": "87bbc7bae82456b4ddfcc87279ab3fcc19401dfb148620741d596413f9d3d7fc",
+ "reviewed_g0_source": "epyc10:/srv/opentallas-scratch2/claude/s81-j6/gates/candC1n/g0/g0_report.json",
+ "reviewed_plan_sha256": "44be605129cbcbb6ad0a85aac4e5343f537f1f84ffd8e3c096e59969c0b29e65"
+}
