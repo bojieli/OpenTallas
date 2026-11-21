@@ -1,0 +1,1 @@
+- 2026-11-21 00:38 PST DIED [FACE-FLOPS-0130] ot-run otrun-renewed-glider-3646251 on renewed-glider: rc=1 after 0 s, ended 08:38:58, log /srv/opentallas-scratch2/claude/lanes/ff0130-base.log, cmd: --mem 40 --threads 4 --priority plan --hosts epyc9 --dir /srv/opentallas-scratch/claude/lanes/face-flops-0130 -- bash /srv/opentallas-scratc
