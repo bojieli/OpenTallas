@@ -14,6 +14,8 @@
 # the spot on its source-sink line (nearest to the j/(n+1) point) where the WHOLE cluster footprint plus
 # OT_RELAY_MID_CHAN_UM (default 20) clears every macro halo, with both legs (previous / next point of the chain)
 # <= OT_RELAY_MID_MAX_HOP_UM (default 405); then the same on rings around the midpoint; else the old fallback (logged).
+# FIT POLY (11-21): with OT_RELAY_POLY=1 a chain whose line crosses a hard core is a FIT group too, searched along its
+# polyline (legs = detour length); OT_RELAY_MID_FIT_POLY=0 = the old straight-line-only FIT.
 # HALF (OPUS-FIX-S81-SLICEC 11-20, S81 slice C class A/C; opt-in, unset = byte-identical): a hop that starts at a hard-core
 # output launched on the falling edge (OT_RELAY_MID_HALF_SRC_RE, regex on the core instance name) or ends at a core input
 # that lands on the falling edge (OT_RELAY_MID_HALF_SINK_RE) has part of a cycle, so it gets that share of a full hop:
@@ -411,6 +413,10 @@ if {$rm_poly} {
 }
 set rm_station {}
 set rm_seg {}
+# FIT POLY (see the polyline branch below): on whenever FIT is, OT_RELAY_MID_FIT_POLY=0 = the old straight-line-only FIT
+set rm_fit_poly [expr {[info exists ::env(OT_RELAY_MID_FIT)] && $::env(OT_RELAY_MID_FIT) eq "1" && !([info exists ::env(OT_RELAY_MID_FIT_POLY)] && $::env(OT_RELAY_MID_FIT_POLY) eq "0")}]
+# STAGGER offset per FIT stage {dx dy} (DBU): FIT seats a staggered stage on its line shifted by it
+set rm_soff [dict create]
 # OT_RELAY_MID_SOFT_FRAC (FABLE-FIX-KV-HG 11-18, default 0.02 = unchanged): the share of soft (GPL-placed) endpoints a group may
 # have next to its fixed ones.  KV hst2_g: 1,543 fixed lane-pad sources + 32 soft pd1 pad-chain bits = 2.07 %, so the whole
 # g/t1/t2 chain of head 2 was left to GPL while the head 3 chain (16 soft bits) was placed.
@@ -504,9 +510,20 @@ dict for {g inf} $rm_info {
       lappend rm_polybad [format "%s:%.0fum/%dhops" $g [expr {$rm_tot / $rm_dbu}] $rm_tn]
     }
     set j 0
+    set rm_pc ""
     foreach c $chain {
       incr j
       dict set rm_station $c [rm_along $rm_pts [expr {$rm_tot * ($rm_w0 + $j - 1) / $rm_W}]]
+      # FIT POLY (FAM-S81-COL-H10-R3 11-21, FABLE-CLOSURE-STRATEGY lever 2 fix 1): a polyline stage is a FIT group too (the
+      # 9th field = the polyline: FIT slides the cluster along the detour, not the macro-crossing diagonal).  Before this,
+      # only straight-line stages were recorded, so with OT_RELAY_POLY=1 every col chain that crosses a hard core (all 157
+      # stations / 90 chains of col_h10_r0_p1 pvb095fa2f) was invisible to FIT: "fitted 0", coverage touched=0 expected=0.
+      # OT_RELAY_MID_FIT_POLY=0 restores that (byte-identical placement).
+      if {$rm_fit_poly} {
+        dict set rm_seg $c [list $ax $ay $bx $by $j $n $rm_w0 $rm_W $rm_pts]
+        if {$rm_pc ne ""} { dict set rm_prev $c $rm_pc }
+        set rm_pc $c
+      }
     }
     puts "OT_RELAY_POLY chain [lindex $chain 0]..[lindex $chain end] ($n stations): path [expr {$rm_tot / $rm_dbu}] um, hop [expr {$rm_tot / $rm_dbu / $rm_tn}] um"
     continue
@@ -540,8 +557,10 @@ proc rm_free {x y} {
 # 130x15 um strip under ROM e2, DRT flat at 28,640).  With STAGGER chain i of a k-chain set is moved off the shared line
 # perpendicular to the local leg by (i - (k-1)/2) x (cluster depth + OT_RELAY_MID_STAGGER_GAP_UM, default 20), the same
 # offset at every stage so the inner hops keep their length; an offset that lands in a macro halo, leaves the core or makes
-# a hop over OT_RELAY_MID_MAX_HOP_UM is halved, then dropped (the stage keeps its line point).  Straight-line chains under
-# FIT are left to FIT (it re-solves the seat from the line).
+# a hop over OT_RELAY_MID_MAX_HOP_UM is halved, then dropped (the stage keeps its line point).  A chain FIT seats (straight
+# or, FIT POLY, polyline) keeps its offset as rm_soff: FIT then searches its line shifted by it (the footprint test is
+# FIT's, so the halo test here is skipped), so parallel FIT chains no longer collapse onto one seat (FAM-S81-COL-H10-R3
+# 11-21; before, FIT chains were not staggered at all).
 set rm_stag [expr {[info exists ::env(OT_RELAY_MID_STAGGER)] && $::env(OT_RELAY_MID_STAGGER) eq "1"}]
 if {$rm_stag} {
   set rm_stag_tol [expr {([info exists ::env(OT_RELAY_MID_STAGGER_UM)] ? $::env(OT_RELAY_MID_STAGGER_UM) : 80.0) * $rm_dbu}]
@@ -571,7 +590,7 @@ if {$rm_stag} {
       lassign [dict get $rm_chainrec $h] ch ax ay bx by
       set m [expr {$i - ($k - 1) / 2.0}]
       if {$m == 0} continue
-      if {$rm_stag_fit && [dict exists $rm_seg $h]} continue
+      set rm_sfit [expr {$rm_stag_fit && [dict exists $rm_seg $h]}]
       # the chain's line points, its ends and the perpendicular of each local leg (Manhattan: the minor axis of the leg)
       set pts [list [list $ax $ay]]
       foreach c $ch { lappend pts [dict get $rm_station $c] }
@@ -603,12 +622,18 @@ if {$rm_stag} {
           if {abs([lindex $p 0] - [lindex $prev 0]) + abs([lindex $p 1] - [lindex $prev 1]) > $rm_stag_hop} { set ok 0; break }
           set prev $p
         }
-        if {$ok} { foreach p $new { if {![rm_free [lindex $p 0] [lindex $p 1]]} { set ok 0; break } } }
+        if {$ok && !$rm_sfit} { foreach p $new { if {![rm_free [lindex $p 0] [lindex $p 1]]} { set ok 0; break } } }
         if {$ok} { if {$f < 1.0} { incr rm_stag_half }; break }
       }
       if {!$ok} { incr rm_stag_drop; puts "OT_RELAY_MID_STAGGER $h kept on the line (offset would cross a halo / the core edge / the hop cap)"; continue }
       set j 0
-      foreach c $ch { dict set rm_station $c [lindex $new $j]; incr j }
+      foreach c $ch {
+        if {$rm_sfit} {
+          lassign [dict get $rm_station $c] x y
+          dict set rm_soff $c [list [expr {[lindex $new $j 0] - $x}] [expr {[lindex $new $j 1] - $y}]]
+        }
+        dict set rm_station $c [lindex $new $j]; incr j
+      }
       incr rm_stag_n
       puts "OT_RELAY_MID_STAGGER $h set [lindex $s 0] ([llength $ch] stations) offset [format %+.1f $m] x (depth + [expr {$rm_stag_gap / double($rm_dbu)}] um)"
     }
@@ -626,16 +651,26 @@ set rm_chan0 $rm_chan
 set rm_hop [expr {([info exists ::env(OT_RELAY_MID_MAX_HOP_UM)] ? $::env(OT_RELAY_MID_MAX_HOP_UM) : 405.0) * $rm_dbu}]
 # footprint {x0 y0 x1 y1} of a cluster centred on x, bottom at y, clear of every halo by rm_chan and inside the core
 proc rm_fits {x y w h} {
-  global rm_mac rm_x0 rm_y0 rm_x1 rm_y1 rm_chan
+  global rm_mac rm_x0 rm_y0 rm_x1 rm_y1 rm_chan rm_fseat rm_fsgap
   set fx0 [expr {$x - $w / 2}]; set fx1 [expr {$x + $w / 2}]; set fy0 $y; set fy1 [expr {$y + $h}]
   if {$fx0 < $rm_x0 || $fy0 < $rm_y0 || $fx1 > $rm_x1 || $fy1 > $rm_y1} { return 0 }
   foreach m $rm_mac {
     lassign $m a b c d
     if {$fx1 > $a - $rm_chan && $fx0 < $c + $rm_chan && $fy1 > $b - $rm_chan && $fy0 < $d + $rm_chan} { return 0 }
   }
+  # STAGGER + FIT: clusters FIT already seated are kept out by the stagger gap (empty list without STAGGER)
+  foreach m $rm_fseat {
+    lassign $m a b c d
+    if {$fx1 > $a - $rm_fsgap && $fx0 < $c + $rm_fsgap && $fy1 > $b - $rm_fsgap && $fy0 < $d + $rm_fsgap} { return 0 }
+  }
   return 1
 }
-set rm_nfit 0; set rm_nold 0; set rm_nofit {}; set rm_ndepth 0; set rm_depth {}
+# STAGGER + FIT (FAM-S81-COL-H10-R3 11-21): FIT tested only the macros, so two parallel chains fell back to the same free spot
+# and stacked (rm_stack) side by side again; with OT_RELAY_MID_STAGGER=1 every FIT seat is a keep-out of
+# OT_RELAY_MID_STAGGER_GAP_UM (default 20) for the FIT stations after it.  Unset STAGGER = the old test (byte-identical).
+set rm_fseat {}
+set rm_fsgap [expr {int(([info exists ::env(OT_RELAY_MID_STAGGER_GAP_UM)] ? $::env(OT_RELAY_MID_STAGGER_GAP_UM) : 20.0) * $rm_dbu)}]
+set rm_nfit 0; set rm_nold 0; set rm_nofit {}; set rm_ndepth 0; set rm_depth {}; set rm_npdepth 0; set rm_nfitp 0
 # FIT CHAIN (FAM-S81-COL-R3 11-21; opt-in OT_RELAY_MID_FIT_CHAIN=1, unset = byte-identical): FIT tested a stage against the
 # NOMINAL line points of its neighbours, while the neighbour itself may have taken an off-line spot, so a chain reported
 # fully fitted could seat actual hops over the cap (col_h10_r0_p1 J5: 7 of 59 fitted chains, 417.6 to 522.7 um, Codex
@@ -649,7 +684,9 @@ dict for {g st} $rm_station {
   lassign $st x y
   set rm_done 0
   if {$rm_fit && [dict exists $rm_seg $g]} {
-    lassign [dict get $rm_seg $g] ax ay bx by j n rm_fw0 rm_fW
+    lassign [dict get $rm_seg $g] ax ay bx by j n rm_fw0 rm_fW rm_fpts
+    # FIT POLY: a polyline stage's line is its polyline (rm_fpts, length = its last field); STAGGER: shifted by rm_soff
+    set rm_fo [expr {[dict exists $rm_soff $g] ? [dict get $rm_soff $g] : {0 0}}]
     # HALF: the chain points j - 1, j, j + 1 at the weighted fractions (1 / n + 1 = the even form)
     set rm_fp [expr {$j == 1 ? 0.0 : ($rm_fw0 + $j - 2) / $rm_fW}]
     set rm_fq [expr {$j == $n ? 1.0 : ($rm_fw0 + $j) / $rm_fW}]
@@ -658,13 +695,22 @@ dict for {g st} $rm_station {
     set fw [expr {$ncol0 * $rm_sw * 24}]
     set fh [expr {int(ceil(double($nc0) / $ncol0)) * $rm_rh}]
     # previous / next point of the chain on the line (source and sink for a single stage)
-    set px [expr {$ax + ($bx - $ax) * $rm_fp}]; set py [expr {$ay + ($by - $ay) * $rm_fp}]
-    set qx [expr {$ax + ($bx - $ax) * $rm_fq}]; set qy [expr {$ay + ($by - $ay) * $rm_fq}]
+    if {$rm_fpts ne {}} {
+      set len [lindex $rm_fpts end]
+      lassign [rm_along $rm_fpts [expr {$len * $rm_fp}]] px py
+      lassign [rm_along $rm_fpts [expr {$len * $rm_fq}]] qx qy
+    } else {
+      set px [expr {$ax + ($bx - $ax) * $rm_fp}]; set py [expr {$ay + ($by - $ay) * $rm_fp}]
+      set qx [expr {$ax + ($bx - $ax) * $rm_fq}]; set qy [expr {$ay + ($by - $ay) * $rm_fq}]
+      set len [expr {abs($bx - $ax) + abs($by - $ay)}]
+    }
+    # a leg along the polyline is as long as the detour, not the Manhattan chord (rm_ppath 1: the previous point is nominal)
+    set rm_ppath [expr {$rm_fpts ne {}}]
     if {$rm_fit_chain && [dict exists $rm_prev $g] && [dict exists $rm_seat [dict get $rm_prev $g]]} {
       lassign [dict get $rm_seat [dict get $rm_prev $g]] px py
+      set rm_ppath 0
     }
     set f0 [expr {($rm_fw0 + $j - 1) / $rm_fW}]
-    set len [expr {abs($bx - $ax) + abs($by - $ay)}]
     set steps [expr {max(1, int($len / $rm_step))}]
     set best {}; set bestd {}
     # graded margins: the full channel margin first, then half, then a quarter (never 0: a cluster narrower than a channel
@@ -674,7 +720,14 @@ dict for {g st} $rm_station {
     set rm_chan $rm_chan_try
     for {set s 0} {$s <= $steps} {incr s} {
       set f [expr {double($s) / $steps}]
-      set cx [expr {int($ax + ($bx - $ax) * $f)}]; set cy [expr {int($ay + ($by - $ay) * $f)}]
+      if {$rm_fpts ne {}} {
+        lassign [rm_along $rm_fpts [expr {$len * $f}]] cx cy
+        if {$rm_ppath && ($f - $rm_fp) * $len > $rm_hop} continue
+        if {($rm_fq - $f) * $len > $rm_hop} continue
+      } else {
+        set cx [expr {int($ax + ($bx - $ax) * $f)}]; set cy [expr {int($ay + ($by - $ay) * $f)}]
+      }
+      if {$rm_fo ne {0 0}} { set cx [expr {$cx + [lindex $rm_fo 0]}]; set cy [expr {$cy + [lindex $rm_fo 1]}] }
       set by0 [expr {$cy - $fh / 2}]
       if {abs($cx - $px) + abs($cy - $py) > $rm_hop || abs($cx - $qx) + abs($cy - $qy) > $rm_hop} continue
       if {![rm_fits $cx $by0 $fw $fh]} continue
@@ -696,6 +749,8 @@ dict for {g st} $rm_station {
     if {$best ne {}} {
       lassign $best x y how
       set rm_done 1; incr rm_nfit
+      if {$rm_fpts ne {}} { incr rm_nfitp }
+      if {$rm_stag} { lappend rm_fseat [list [expr {$x - $fw / 2}] $y [expr {$x + $fw / 2}] [expr {$y + $fh}]] }
       if {$rm_fit_chain} { dict set rm_seat $g [list $x [expr {$y + $fh / 2}]] }
       puts "OT_RELAY_MID_FIT $g $how [expr {$x / double($rm_dbu)}] [expr {$y / double($rm_dbu)}] footprint [expr {$fw / double($rm_dbu)}]x[expr {$fh / double($rm_dbu)}] um margin [expr {$rm_used / double($rm_dbu)}] um"
     } else {
@@ -705,7 +760,11 @@ dict for {g st} $rm_station {
       lappend rm_nofit [format "%s:%.0f" $g $rm_eh]
       # S81-COL-FLOW-1118 (COORD: col_h9_r0_p2 rt_4a_0 252 um / rt_4b_0 206 um failed place): an even hop within the reach is a
       # site-space miss; the fallback puts the station on its line point (or the nearest free site), so its hop stays ~ the even hop
-      if {$rm_eh * $rm_dbu > $rm_hop} { incr rm_ndepth; lappend rm_depth [format "%s:%.0f" $g $rm_eh] }
+      # FIT POLY: a polyline stage short of depth was never counted here (FIT did not see it); OT_RELAY_POLY_FAIL is its depth
+      # gate (rm_polybad), so it is reported as poly_depth_fallback= and does not trip OT_RELAY_FALLBACK_MAX_FRAC
+      if {$rm_eh * $rm_dbu > $rm_hop} {
+        if {$rm_fpts ne {}} { incr rm_npdepth } else { incr rm_ndepth; lappend rm_depth [format "%s:%.0f" $g $rm_eh] }
+      }
       puts "OT_RELAY_MID_FIT $g NOFIT (old nearest-free fallback) line [expr {$len / double($rm_dbu)}] um stages $n even hop [format %.1f $rm_eh] um"
     }
   }
@@ -743,14 +802,15 @@ dict for {g st} $rm_station {
   puts $rm_log "$g\t[expr {$x / double($rm_dbu)}]\t[expr {$y / double($rm_dbu)}]\t$nc"
 }
 close $rm_out; close $rm_log
+if {$rm_fit && $rm_fit_poly} { puts "OT_RELAY_MID_FIT_POLY $rm_nfitp of the fitted stations on polylines, $rm_npdepth polyline stage(s) short of depth on the fallback" }
 if {$rm_fit} { puts "OT_RELAY_MID_FIT fitted $rm_nfit stations, $rm_nold on the old fallback (chan [expr {$rm_chan / double($rm_dbu)}] um, hop [expr {$rm_hop / double($rm_dbu)}] um)" }
 # GENBUG-7 (11-15): coverage line for the FIT form; OT_RELAY_FALLBACK_MAX_FRAC=<f> (unset = advisory only) fails the hook when
 # more than that share of stations took the old nearest-free fallback (table proposal 0.05; 15 of 18 S81 col kits are above it today).
 if {$rm_fit} {
   set rm_cov [expr {$rm_nfit + $rm_nold}]
-  puts "OT_HOOK_COVERAGE hook=relay_mid touched=$rm_nfit expected=$rm_cov fallback=$rm_nold depth_fallback=$rm_ndepth advisory=[expr {![info exists ::env(OT_RELAY_FALLBACK_MAX_FRAC)]}]"
-  if {$rm_nold > $rm_ndepth} {
-    puts "OT_HOOK_COVERAGE WARN relay_mid: [expr {$rm_nold - $rm_ndepth}] site-space fallback(s), even hop within [expr {$rm_hop / double($rm_dbu)}] um (advisory): [join $rm_nofit { }]"
+  puts "OT_HOOK_COVERAGE hook=relay_mid touched=$rm_nfit expected=$rm_cov fallback=$rm_nold depth_fallback=$rm_ndepth poly_depth_fallback=$rm_npdepth advisory=[expr {![info exists ::env(OT_RELAY_FALLBACK_MAX_FRAC)]}]"
+  if {$rm_nold > $rm_ndepth + $rm_npdepth} {
+    puts "OT_HOOK_COVERAGE WARN relay_mid: [expr {$rm_nold - $rm_ndepth - $rm_npdepth}] site-space fallback(s), even hop within [expr {$rm_hop / double($rm_dbu)}] um (advisory): [join $rm_nofit { }]"
   }
   if {[info exists ::env(OT_RELAY_FALLBACK_MAX_FRAC)] && $rm_cov > 0 && double($rm_ndepth) / $rm_cov > $::env(OT_RELAY_FALLBACK_MAX_FRAC)} {
     error "OT_HOOK_COVERAGE relay_mid: $rm_ndepth of $rm_cov stations on the old fallback with an even hop over [expr {$rm_hop / double($rm_dbu)}] um (> $::env(OT_RELAY_FALLBACK_MAX_FRAC)); unfitted group:even_hop_um [join $rm_depth { }]"
