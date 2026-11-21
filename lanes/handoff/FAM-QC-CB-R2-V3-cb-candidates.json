@@ -1,0 +1,60 @@
+{
+  "lane": "FAM-QC-CB-R2",
+  "base": "7f9f8260349f",
+  "event": "s29q103S4Q9N46R6V2",
+  "status": "PENDING",
+  "artifact_root": "epyc7:/srv/opentallas-scratch2/claude/fam-qc-cb-r2",
+  "stop_list": "FABLE-PD-QC-1230 section 3. Added station candidates have modeled sites. Preserve the measured V2 t24/t25/t93/t100 taps. Use destination-specific sites and controls. Require native bind, actual placement and timing before adoption.",
+  "candidates": [
+    {
+      "plan": "paired_s2_v2_zero_egress.json",
+      "sha256": "46d9909ba7d7ec6cb566330165e52364bbfe675292857a9c919c13a1a8d5d89a",
+      "types": ["cbf_q00_s2", "cbn_q01"],
+      "keys": ["buses", "internal_stations", "relay_sites", "lanes.fixed_cycles", "latency.lanes", "R8", "CB16"],
+      "cycles": "One physical input station, three net CB16 banks removed, same 48 QFT roots and 96 region parameters. Existing outbound stage count.",
+      "model_um": {"bc_o01": 363.66, "bc_o11": 360.26},
+      "review": "s2_zero_egress_review.png",
+      "native": "paired_s2_zero_egress_native, epyc7 oth-ubuntu-2169476-1795303846",
+      "status": "PENDING native and physical timing"
+    },
+    {
+      "plan": "paired_q10_q11_form_r2.json",
+      "sha256": "f2e9f677c8190588b8900f236232ada161c5d74a40982c756b565c52d1ed2ade",
+      "types": ["cbx_q10__cl94a12200_h", "cbn_q11__cl5cc92dfe"],
+      "keys": ["relay_sites", "reset.inst_taps"],
+      "cycles": 0,
+      "model_um": {"bc_o31_registered_to_face": 296.42, "bc_i22_epoch": 313.56, "bc_i32_epoch": 259.99, "x_2_3_reset": 222.738},
+      "review": "paired_q10_q11_form_review.png",
+      "native": "paired_q10_q11_native_r2, epyc7 oth-ubuntu-2259371-1795304170",
+      "status": "PENDING native and physical timing"
+    },
+    {
+      "plan": "q00_cland_bc_i10_site_plan.json",
+      "sha256": "97433474b344ed509c5259c873c81507d3c9a2f7a51f90a05c12e46245a1157f",
+      "types": ["cbn_q00__cl622f65d2", "cbn_q00__cldbcda913"],
+      "keys": ["relay_sites", "internal_stations.regs_um"],
+      "cycles": 0,
+      "model_um": {"bc_i10": 379.116, "y_o00": 393.12},
+      "note": "Both actual placements have zero over-reach bc_i00 groups. Bci10 changes the existing landing pad and epoch bank sites. Y_o00 retains both stations.",
+      "status": "PENDING native and physical timing"
+    },
+    {
+      "plan": "q01_clab_gen_r2/launch/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9n46r4_final_preview.json",
+      "sha256": "11d62f3dbde1415bad3ffbeebf4d9f9c42c20a625fdfd5c291b75c72ea25de65",
+      "types": ["cbn_q01__clab6e67f2", "cbn_q01__cld9ff4c40"],
+      "keys": ["budgets.r_dly_lockup.<type>.inst_seg.u_d16_u_t_1_3_n_y"],
+      "source_main": "25e34125ff37",
+      "cycles": 0,
+      "model_um": 272.16,
+      "native": "clab6e67f2 GEN passed epyc7 oth-ubuntu-1670688-1795302225, exact 8x2 segments. Private place waits for eligible QC gen host.",
+      "status": "PENDING actual placement and timing"
+    }
+  ],
+  "broad_station_trial": {
+    "geometry": "v3_reach_cb_report.json",
+    "geometry_sha256": "1ca5dfb4722af81b16ab9d7109963310378a3ba9e1313c8dc1cae043a6d9d4ea",
+    "native_floor": "v3_reach_cb_native_floor.json",
+    "native_floor_sha256": "01a052759f8656c08e232912766495eaa1427abed4eb72e92c98dbf364a0fb88",
+    "status": "HOLD: added sites across 156 exact native lane members require additional delivered cycles on seven slices. Separate zero-cycle re-sites and exact scoped pad offsets before considering any aggregate."
+  }
+}
