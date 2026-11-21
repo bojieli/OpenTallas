@@ -2868,6 +2868,14 @@ class Event:
             for p in list(r["parts"]):
                 if p in self.pmap:
                     r["parts"] += [x for x in self.pmap[p] if x != p]
+        # the declared part -> region table (ca_region_table.py; bind refuses a partition missing from it): every piece
+        # sits in its base partition's region (OPUS-FIX-S81-SVC-R6 11-21: svc_9_att "not in the table part_region")
+        decl = sd.get("part_region")
+        if isinstance(decl, dict):
+            for base, names in self.pmap.items():
+                if base in decl:
+                    for x in names:
+                        decl.setdefault(x, decl[base])
         moved = 0
         relay = {}
         for base, names in self.pmap.items():

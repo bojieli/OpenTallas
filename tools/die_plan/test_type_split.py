@@ -547,3 +547,19 @@ def test_sidecar_piece_row_without_tree_fails(tmp_path):
     side = {"collector": {"types": {"a": {"tree": tree}, "a_att": {"tree": None}}}}
     with pytest.raises(TS.SplitError, match="a_att"):
         _sidecar_event(tmp_path, side).write(tmp_path / "o", "o")
+
+
+def test_sidecar_part_region_declares_every_piece():
+    ev = TS.Event.__new__(TS.Event)
+    ev.side = {"regions": [{"tag": "svc_9", "parts": ["svc_9"]}], "part_region": {"svc_9": "svc_9", "x": "r"},
+               "ports": []}
+    ev.pmap = {"svc_9": ["svc_9", "svc_9_att"]}
+    ev.ts = {"t": type("TS", (), {"keep": 0, "tnames": ["t", "t_att"]})()}
+    ev.raw_type = lambda base: "t"
+    ev.ports, ev.rep = {}, {}
+    try:
+        ev._sidecar()
+    except Exception:
+        pass  # later sidecar steps need a full plan; the declaration is written first
+    assert ev.side["part_region"]["svc_9_att"] == "svc_9"
+    assert ev.side["regions"][0]["parts"] == ["svc_9", "svc_9_att"]
