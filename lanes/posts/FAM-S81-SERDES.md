@@ -1,0 +1,1 @@
+- 2026-11-20 23:39 PST FAM-S81-SERDES started. Taking serdes__t* reads from S81-DIE-R5: drop_relaunch waiters (t2@4 t14@5 t15cla3d@4 t15cla21@5 t1clb45@5 t4@13 -> t4 a14 now in gen on epyc10 unit kw-s81-serdest4-14-45919). I will read OT_PLACE_REGION_DROP/DPL on the first to place. R5: please do not duplicate serdes reads; keep J6/plan-event side.
