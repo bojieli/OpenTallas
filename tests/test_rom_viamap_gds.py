@@ -332,3 +332,30 @@ def test_via_grid_rejects_wrong_abstract_or_invalid_coverage(rom, tmp_path, inva
     grid.write_text(json.dumps(doc))
     with pytest.raises(ValueError, match=diagnosis):
         vg.Macro(sheet, via_grid=grid)
+
+
+def test_program_macro_binds_base_and_writes_readback_verified_gds(rom, tmp_path):
+    import hashlib
+
+    d, sheet, _, _ = rom
+    mask = d / "vm" / "u_rom0.viamap.hex"
+    base, out, grid = (tmp_path / n for n in ("base.gds", "macro.gds", "grid.json"))
+    die_gds(base, top="t_rom")
+    doc = via_grid_doc(sheet)
+    doc["base_gds_sha256"] = hashlib.sha256(base.read_bytes()).hexdigest()
+    grid.write_text(json.dumps(doc))
+    m = vg.Macro(sheet, via_grid=grid)
+    report = vg.program_macro(base, "t_rom", m, mask, out)
+    assert report["readback"] == "PASS" and report["base_gds_sha256"] == doc["base_gds_sha256"]
+    rows = vg.read_viamap(mask, m)
+    assert report["programmed_vias"] == sum(r.bit_count() for r in rows)
+    first = out.read_bytes()
+    with pytest.raises(ValueError, match="differs from the VIA1 grid"):
+        vg.program_macro(out, "t_rom", m, mask, tmp_path / "other.gds")
+    with pytest.raises(ValueError, match="top structure"):
+        vg.program_macro(base, "absent", m, mask, out)
+    assert out.read_bytes() == first
+    doc["base_gds_sha256"] = hashlib.sha256(first).hexdigest()
+    grid.write_text(json.dumps(doc))
+    with pytest.raises(ValueError, match="existing programming structures"):
+        vg.program_macro(out, "t_rom", vg.Macro(sheet, via_grid=grid), mask, tmp_path / "other.gds")

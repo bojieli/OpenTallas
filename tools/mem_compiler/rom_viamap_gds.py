@@ -33,7 +33,8 @@ Pass --via-grid to use explicit, signed-LEF-bound drain coordinates from the
 base layout. The "opentallas.rom-via-grid.v1" JSON contains "lef_sha256",
 integer "dbu_per_um" and a "banks" array. Each bank defines "row_start",
 "col_start", "row_axis" ("x" or "y") and "rows_dbu"/"cols_dbu" coordinate
-lists in logical address and column order. Axis lists may descend or have
+lists in logical address and column order. For full macro assembly, include
+"base_gds_sha256" for the unprogrammed layout. Axis lists may descend or have
 unequal spacing to represent mirrored arrays and access bands. The grid
 covers every logical bit, and all bank geometry is macro-local.
 
@@ -55,6 +56,7 @@ import math
 import re
 import struct
 import sys
+import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, BinaryIO, Callable, Iterator
@@ -145,6 +147,9 @@ class ViaGrid:
         grid = json.loads(raw)
         self.sha256 = hashlib.sha256(raw).hexdigest()
         self.lef_sha256 = lef_sha
+        self.base_gds_sha256 = grid.get("base_gds_sha256")
+        if self.base_gds_sha256 is not None and not re.fullmatch(r"[0-9a-f]{64}", self.base_gds_sha256):
+            raise ValueError(f"{path}: invalid base GDS SHA-256")
         if grid["schema"] != "opentallas.rom-via-grid.v1" or grid["lef_sha256"] != lef_sha:
             raise ValueError(f"{path}: VIA1 grid schema or LEF SHA-256 differs")
         self.dbu = grid["dbu_per_um"]
@@ -582,6 +587,36 @@ def merge_placed(die: Path, top: str, m: Macro, imgs: dict[str, list[int]], plac
         raise ValueError(f"top structure {top} not in {die}")
     return {"instances_merged": len(names), "unique_images": len(uniq), "def_instances_unused_in_manifest": len(unused),
             "dbu_per_um": dbu, **m.geometry_info()}
+
+
+def program_macro(base: Path, top: str, m: Macro, viamap: Path, out: Path) -> dict[str, Any]:
+    """Apply one mask to the exact unprogrammed top and publish after readback."""
+    if m.grid is None or m.grid.base_gds_sha256 is None:
+        raise ValueError("full macro assembly needs a VIA1 grid with base_gds_sha256")
+    if base.resolve() == out.resolve():
+        raise ValueError("the programmed GDS path must differ from the base GDS path")
+    digest = hashlib.sha256()
+    with base.open("rb") as f:
+        for block in iter(lambda: f.read(1024 * 1024), b""):
+            digest.update(block)
+    if digest.hexdigest() != m.grid.base_gds_sha256:
+        raise ValueError(f"{base}: SHA-256 differs from the VIA1 grid's unprogrammed GDS")
+    overlay_prefix = m.name + "__VIA1_"
+    for name, _, _, refs in iter_structures(base, lambda n: n.startswith(overlay_prefix), top):
+        if name != top or any(ref[0].startswith(overlay_prefix) for ref in refs):
+            raise ValueError(f"{base}: found existing programming structures")
+    rows = read_viamap(viamap, m)
+    images = {m.name: rows}
+    placements = {m.name: (0.0, 0.0, "N")}
+    with tempfile.TemporaryDirectory(dir=out.parent) as work:
+        gds = Path(work) / out.name
+        info = merge_placed(base, top, m, images, placements, gds)
+        verify = verify_placed(gds, top, m, images, placements)
+        if verify["verdict"] != "PASS":
+            raise ValueError(f"programmed macro readback failed: {verify['failures']}")
+        gds.replace(out)
+    return dict(info, structure=overlay_name(m, rows), top=top, readback="PASS",
+                base_gds_sha256=m.grid.base_gds_sha256, programmed_vias=sum(row.bit_count() for row in rows))
 
 
 def verify(die: Path, top: str, def_path: Path, m: Macro, manifest: Path, viamap_dir: Path) -> dict[str, Any]:
