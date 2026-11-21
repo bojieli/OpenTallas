@@ -1,0 +1,1 @@
+- 2026-11-21 06:55 PST t39 r3 (clk_t98, epyc10): run-item ended without 3_place.odb (hub /srv/opentallas-scratch2/claude/tap-grid-r2/t39/wave3e/result.json); chain3e stopped
