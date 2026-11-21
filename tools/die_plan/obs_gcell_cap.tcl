@@ -25,10 +25,10 @@ proc ot_obsgc_env {name def} {
 # along span, obs {al0 ac0 al1 ac1 ?sp?} blocker rects of the layer (sp: the blocker's own width-based spacing, DRT treats an
 # obstruction as wide metal), clr = half width + min spacing (the default when a blocker carries no sp)
 proc ot_obsgc_free {tracks lo hi a0 a1 obs clr} {
+  set first [expr {[lsearch -sorted -integer -bisect $tracks [expr {$lo - 1}]] + 1}]
+  set last [lsearch -sorted -integer -bisect $tracks [expr {$hi - 1}]]
   set free 0
-  foreach t $tracks {
-    if {$t < $lo} continue
-    if {$t >= $hi} break
+  foreach t [lrange $tracks $first $last] {
     set blocked 0
     foreach q $obs {
       lassign $q p0 c0 p1 c1 qc
