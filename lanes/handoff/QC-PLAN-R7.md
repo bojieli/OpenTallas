@@ -34,7 +34,23 @@
 ## Count change on V1 (COORD Q 20:1x; answered in post 5be26ce888)
 - 6 signed hc bases split by N_PAD (pcs_e.json) lost their count. Signed with N_PAD 0 (default): sle_hc1__cl22c1ff36, sle_hc2__cl9c4c4509__clf60c5152,
   slw_hc3__clccfc3e6b, slw_hc3__cld86a7ad4 -> all 8 clones are netlist changes, re-sign last. Signed with N_PAD(1): sle_hc0__cl929603c0__cl4baa7c9c,
-  sle_hc1__cl7d360508 -> clones __pvcaa93304 / __pv97423966 should INHERIT; proof running in epyc9 /srv/opentallas-scratch2/claude/qc-plan-r7/inherit
-  (kit gen + synth + tools/fleet/netlist_inherit.py prove -> row in ~/coord/autopilot/inherit_members.tsv).
+  sle_hc1__cl7d360508 -> checked (epyc9 qc-plan-r7/inherit, kits PROOF_GEN_RC 0): NOT inheritable: V1 clones add top ports strap_r8pad_u_xh*_a_d/_cid
+  and change instance counts (698 vs 900, 2137 vs 697), and inherit_credit needs a current-plan rep. All 6 split bases = re-sign last (12 clones).
 - Every other plan type with a signed record is counted, except sle_hc0__cl929603c0__cl38badc56 and slw_sc_v2 (pending archive, unrelated to V1).
 - N46C cbn_q00__cldbcda913 a1 route re-run (intel1, started 18:59, class A, CTS -1107): cancel candidate at >3 h (~22:00) via ot-run --cancel <exact unit>, record evidence.
+
+## V2 row families (done 20:4x, epyc9 W=/srv/opentallas-scratch2/claude/qc-plan-r7/v2)
+- cb (W/cb: rleg7.sh + r7_cb.py): census HOP cb 63 -> 0; reset legs >300 36 -> 1 on 8 re-dumped types (cbn_q11__cl5cc92dfe local_taps_um added, tool
+  still counts needs_local_tap 1); bc_i00/10/30 1->4, nb_i12 3->5; 480 lanes +cycles. OPEN: 12 of 37 tile links 303-356 um (D=4 over 1013-1233 um;
+  chain depth intra_dly comes from bind -> needs bind/RTL D 5); cbf_q00_s2, cbf_q01, cbf_q01_s2, cbf_q11 are native RTL (no inst_taps / sites).
+- c345 (W/c345): row 5 st_a ctl copies 0 cyc, worst 506-524 -> 310-334 um (u_r3 branch needs +1 stage for 300; flop names unverified vs netlist);
+  row 3 cws1/cws2 at N face (0 conflicts) but the 245 ps input delay is a die-wide cbc_rules constant: geometry gives 195.3 ps (cws2) = margin -8 -> +41.7,
+  needs a tool patch (per-ring key); row 4 registered reads: defines OT_QC_SWREG (6 st_b types) + OT_TP8S_SRDREG (coll_core), 0 cycles; RTL commit
+  b2b7ea1247 on branch claude/qc-plan-r7-v2-srdreg in lane clone W/c345/clone, NOT pushed (bench 13/13; --qfd/--production run oth-ubuntu-564392-1795234394
+  was running). Push via ot-push-main before the V2 bind, else the defines are inert.
+- r7 (W/r7/r7_hop300.py): knee 523 -> 0 chains over 300; census HOP 510/89 -> 103/53 (63 cb, 40 non-cb that stations do not fix: wide pin window
+  end legs incl sle_ctl b_hw_hc1/hc2_o, st_a x_ctl_o 388; 14 per-bit-site rows); 217 ft slots ceil(L/300); 35 sited ft slots still >300 so
+  ft_station_max_um stays 405; 876 lanes +1..+8 cycles (worst sl_W*_su_c__x_su_c_su_l0 19 -> 27).
+- Compose: W/compose_v2.sh (ot-run, out W/compose_v2.out) -> W/compose/p_v2a.json + side_v2.json + census. Next: push srdreg RTL, strict bind
+  (bind_v1.sh pattern with new plan/side, R8 re-derive), LATCHECK, G0, proof GENs (one cbn_q00 kit to CTS for class A), pack/seal/apply as V1.
+- CORE-PIN-RELAY-1930 rows: not posted at 20:4x.
