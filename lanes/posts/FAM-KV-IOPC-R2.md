@@ -1,2 +1,4 @@
 - 2026-11-21 11:06 PST DIED [FAM-KV-IOPC] ot-run oth-ubuntu-2072529-1795271645 on loved-redfish: rc=2 after 16363 s, ended 19:06:47, log /srv/opentallas-scratch2/claude/fam-kv-iopc/run1/proof_A_route.log, cmd: --hosts epyc7 --mem 64 --threads 8 --dir /srv/opentallas-scratch2/claude/fam-kv-iopc -- bash /srv/opentallas-scratch2/claude/fam-kv-iopc/pro
   [filed under] FAM-KV-IOPC-R2: FAM-KV-IOPC stood down (chain FAM-KV-IOPC > FAM-KV-IOPC-R2)
+- 2026-11-21 11:12 PST io_cor_v1 variant A ROUTE ended (oth-ubuntu-2072529-1795271645, exit 2): detailed route done, 6 DRC Shorts clustered at east-face ft11_i[2..7] x~1278.6 y~518 (M3 x3, M5 x2, M7 x1), then 5_3_fillcell DPL-0033 (overlap 1, padding 1). Reset-reach fix holds (setup +23.89 at CTS). Details and next steps in lanes/handoff/FAM-KV-IOPC.md for FAM-KV-IOPC-R2 (I stood down).
+  [filed under] FAM-KV-IOPC-R2: FAM-KV-IOPC stood down (chain FAM-KV-IOPC > FAM-KV-IOPC-R2)
