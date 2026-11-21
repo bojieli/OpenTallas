@@ -72,7 +72,7 @@ What actually fails after CTS:
 
 | class | root cause | evidence |
 |---|---|---|
-| Giant-negative place stops (sle_hc0 pvcaa93304 -146,651; sle_hc2 pvcf529cc9 -131,708; slw_hc3 a4 -56,163; slw_fw_v1 cl592e3d37 a2 -226,252; sle_ctl a4 -359,026; coll_core a4 -241,057) | every start is a reset relay or local reset flop (`u_rl.rst_n[*]`, `u_rrl_*`, `r_rst_n`) into async pins: unbuffered reset net timed before CTS | V: 6 `postplace_setup.log`. R: same DB with ideal clocks +21.56 (Codex); rep a5 passes place on new tools |
+| Giant-negative place stops (sle_hc0 pvcaa93304 -146,651; sle_hc2 pvcf529cc9 -131,708; slw_hc3 a4 -56,163; slw_fw_v1 cl592e3d37 a2 -226,252; sle_ctl a4 -359,026; coll_core a4 -241,057) | every start is a reset relay or local reset flop (`u_rl.rst_n[*]`, `u_rrl_*`, `r_rst_n`) into async pins: unbuffered reset net timed before CTS | V: 5 `postplace_setup.log` (sle_hc0 pvcaa93304 not opened: no log left in its attempt dirs, R only). R: same DB with ideal clocks +21.56 (Codex); rep a5 passes place on new tools |
 | R8 pad / strap registers unsited | strap register far from the core pin it feeds and on a normal tap while the core is on an early tap (section 1.4); sle_ctl a5 worst -440.70 starts at `u_r8b_strap_r8pad_u_rp_chd_q_1/r[4][473]` -> `u_ist_x_su_c_p1_o_0` | V: 2 of the 3 post-tool-fix failures I opened |
 | sle_ctl core in the data path | `u_lpad_x_fw_p2_i.q[116]` -> core `u_u_tap` -598.68 at place (a5); plan first leg 432 um; b19 per-bit row still [432, 240, 276] | V |
 | sle_ctl auto-geom FAIL (a5) | fill 0.039, r2r 1,125 um on 2,542 captures, pin_reg_max 442.7, clock_tap_sinks 9,194 against cap 1,000, 2 clock cells on macros | V `auto_geom.json`. R: proof k_a2 (core-slit stations) GRT overflow 0 |
@@ -84,7 +84,7 @@ What actually fails after CTS:
 
 | test | b19 | change from b14 |
 |---|---|---|
-| hop <= 405 | **fails**: 27 routed internal rows (cb `bc_i00` / `bc_i10` / `bc_i30` 611 to 637 x 18 instances of rows, `nb_i12` 418, slw_stm `flt_o` 548) + sle_ctl `x_fw_p2_i` 432. ft slots 0 over 405. `ft_station_max_um` and `reset.hop_um` still 405 | 28 -> 27 |
+| hop <= 405 | **fails**: 27 routed internal rows (cb `bc_i00` / `bc_i10` / `bc_i30` legs 611 to 637, `nb_i12` 418, slw_stm `flt_o` 548) + sle_ctl `x_fw_p2_i` 432. ft slots 0 over 405. `ft_station_max_um` and `reset.hop_um` still 405 | 28 -> 27 |
 | hop <= 300 | routed internal rows 87 of 188 over; per-bit chains 9 of 923; sited ft slots 212 of 323 with a leg of 301 to 400 (slw_sc_v1 51, sle_sc_v1 32, sc_v2 / v3 59, st_a 19, su_c 14, su_l1 12); 75 last legs over 300 (max 363); 314 slots on 72 types have stations and no sites | same; 23 slots went back to V1 counts |
 | stations added vs V1 | internal: 529 rows +1 to +7; ft: 194 slots +1 / +2 | - |
 | taps | no change: radius 200 / cap 1,000 / density on 120 types; plan tap count differs from V1 on 0 types | same |
@@ -115,7 +115,7 @@ Verdict: apply V2 when it binds. It is a station-count event, not a 300 um plan 
 
 - No full-cycle capture, extra face register or station row on landing inputs. No band moves on the 10 face-home st_a types.
 - No stop, cancel, triage or plan row from a post-place number on an `fclk_in_*` group or on a path that starts at a reset relay, until fix 1 lands. Subtract the macro tree term (95 to 162 ps) when reading one.
-- Do not hold V2 or start a b20 to take in any row of section 4; they are V3 rows. Exception: none.
+- Do not hold V2 or start a b20 to take in any row of section 4; they are V3 rows.
 - No cb volume on taps 93 / 100; no relaunch of clf4365a62 unchanged after fix 1 without the floorplan row (it would run at -140 pre-repair).
 - coll_core: not ODPRE alone, and not INLOCK before the kit shows the half-cycle setup and the pad count. No private proof without the wave env.
 - Do not call V2 a 300 um or close-by-construction plan. Do not re-add the 23 reverted hop300 slots per slice: they must be uniform across the 12 sle_ctl instances.
