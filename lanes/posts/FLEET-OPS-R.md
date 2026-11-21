@@ -936,3 +936,4 @@
 - 2026-11-21 05:40 PST DISK-RATE intel1 /srv/opentallas-scratch2: free 133 GB, falling 19 GB/h, floor 50 GB in 4.4 h (cron disk_rate.py; read-only)
 - 2026-11-21 06:05 PST HOST-REPORT 2026-11-21 06:05 | tolera L91.13/112 units0 free203G | key-ca L93.23/112 units206 free127G | dear-c L160.81/128 units440 free175G | loved- L129.34/96 units58 free614G | outgoi L104.87/96 units173 free209G | renewe L138.06/96 units75 free182G | civil- L141.94/96 units49 free552G
 - 2026-11-21 06:20 PST DISK-RATE epyc2 /srv/opentallas-scratch2: free 183 GB, falling 24 GB/h, floor 50 GB in 5.5 h (cron disk_rate.py; read-only)
+- 2026-11-21 06:43 PST ALERT [OT-TOOLS-SYNC -> COORD] runtime sync FAILED, rt/current stays 22c4c3c58376: RuntimeError: /srv/opentallas-scratch2/claude/rt: 98 GB free < 100 GB (OT_RT_MIN_FREE_GB); nothing written (pruned 1)
