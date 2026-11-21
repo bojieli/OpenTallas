@@ -14657,3 +14657,4 @@ make: *** [Makefile:585: /work/run/results/asap7/dp_kv3_pv_v1n/base/5_1_grt.odb]
  | kit epyc10:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-D25d/items/kv3_pv_v1n/attempt_5/gen/kv3_pv_v1n src main@eb1e73448bd042684261a13c50cd0fb5ce21a513 | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
 - 2026-11-20 16:49 PST ALERT SELF-STOP qwen_compute: 1 job(s) stopped by the wave 1220 s after its own SUBMIT (latest sle_fe_v1__cl8210183c@5 at 16:42:47: superseded by attempt 6 of the same item)
 - 2026-11-20 16:50 PST DISK-RATE epyc2 /srv/opentallas-scratch2: free 211 GB, falling 31 GB/h, floor 50 GB in 5.2 h (cron disk_rate.py; read-only)
+- 2026-11-20 16:50 PST DISK-RATE epyc2 /srv/opentallas-scratch: free 485 GB, falling 80 GB/h, floor 50 GB in 5.4 h (cron disk_rate.py; read-only)
