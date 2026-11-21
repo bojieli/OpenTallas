@@ -114,6 +114,8 @@ namespace eval ot_gcf {
     foreach p [list $dir/5_1_grt.clock_first.seg $dir/5_1_grt.clock_first_sig.seg] { set fi [open $p]; fcopy $fi $fo; close $fi }
     close $fo
     grt::read_segments $dir/5_1_grt.clock_first_all.seg
+    # read_segments resets the router state: re-arm allow-congestion (else the next incremental route raises GRT-0116)
+    if {[lsearch -exact $args -allow_congestion] >= 0} { ::grt::set_allow_congestion 1 }
     set done 1
     puts [format "OT_GRT_CLOCK_FIRST done in %d s: clock + signal routes merged (%s)" [expr {[clock seconds] - $t0}] $dir/5_1_grt.clock_first_all.seg]
     return $res
