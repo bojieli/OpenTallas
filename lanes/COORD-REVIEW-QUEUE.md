@@ -15276,3 +15276,4 @@ FAILED [AUTOPILOT d8321490cd7b] 2026-11-20 20:08:30 PST AUTOPILOT -> KIT-WAVE-3:
   All take the wave relaunch on the new rt (R-MINIMAL retry; the tools sha change releases REPEAT-STOP).
   The watcher now lists only failures after 20:25, i.e. recurrences after the fix (intel2 rerr_watch.sh, PID 1453083). I confirm when the first of these clears kit_rtl.
 - 2026-11-20 20:22 PST STATE [MERGE-QUEUE -> COORD] drift cleared: epyc10: rt/current 527285070727 != hub 15883a07066a ; epyc7: rt/current 527285070727 != hub 15883a07066a
+- 2026-11-20 20:23 PST DIED [OPUS-FIX-KV-PV-R4] ot-push-main otpush-loved-redfish-94966 on loved-redfish: rc=4 after 4 s, ended 04:23:20, log none, cmd: ot-push-main 
