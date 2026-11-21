@@ -18065,3 +18065,4 @@ FAILED [AUTOPILOT 4b544bf245c7] 2026-11-21 06:47:25 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-21 06:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-21 06:52 PST: 241 running jobs, PROGRESSING 224, SLOW 15, NO-PROGRESS 2 (advisory, no cancel); table lanes/NOPROG.tsv
   NO-PROGRESS epyc9 col_h9_r2__t1__clc9ad8f7e__pv45d0c698 5_2_route stage 23.4 h job 23.8 h: drt_violations best 1 last 34 rows 50 window-gain 0.0%; stagnant 17.2 h; last event 6.7 h ago, log write 6.6 h ago (2799 lines)
   NO-PROGRESS epyc7 serdes__t13 lec stage 21.5 h job 21.5 h: LEC last file/log write 21.5 h ago
+- 2026-11-21 06:52 PST ALERT [OT-TOOLS-SYNC -> COORD] runtime sync FAILED, rt/current stays 22c4c3c58376: RuntimeError: /srv/opentallas-scratch2/claude/rt: 66 GB free < 100 GB (OT_RT_MIN_FREE_GB); nothing written (pruned 0)
