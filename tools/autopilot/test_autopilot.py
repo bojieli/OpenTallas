@@ -2136,7 +2136,9 @@ class TestCrashTriage1025(unittest.TestCase):
         c = self.classify_probe(log)
         self.assertNotIn("orfs_error", c)
         self.assertIn("RSZ-0060", c["caught_errors"][0])
-        self.assertEqual(self.ap.classify(c, {"exit": 2})[:2], ("CRASH", "infra-oom"))
+        self.assertIn("Error 241", c["sigterm"])
+        self.assertNotIn("oom", c)
+        self.assertEqual(self.ap.classify(c, {"exit": 2})[:2], ("CRASH", "flow-error"))
         c = self.classify_probe(log.replace("make[1]: *** [Makefile:560: do-5_1_grt] Error 241\n",
                                             "[ERROR DRT-0255] Maze Route cannot find path\n"))
         self.assertIn("DRT-0255", c["orfs_error"])

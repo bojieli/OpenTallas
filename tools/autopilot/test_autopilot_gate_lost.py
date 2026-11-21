@@ -1,4 +1,4 @@
-"""WF-1 11-14: a post-CTS gate that never wrote its record / log is infra (gate lost, resubmitted), never STRUCTURAL post-cts-hold."""
+"""Distinguish design stops, missing gate results and measured gate failures."""
 import json
 import os
 import subprocess
@@ -29,7 +29,10 @@ def test_missing_gate_json_and_log_is_gate_lost(tmp_path):
     c = probe(k, time.time() - 600)
     assert "postcts_gate_tt.json missing" in c.get("gate_lost", "")
     cls, kind, why = A.classify(c, {"exit": 1})
-    assert (cls, kind) == ("CRASH", "infra-oom") and "gate lost" in why and A.is_earlyoom_kill(why)
+    assert (cls, kind) == ("CRASH", "infra-gate-lost") and "gate lost" in why
+    assert kind not in A.INFRA_KINDS
+    assert not A.is_earlyoom_kill(why)
+    assert A.classify(dict(c, oom="make Error 137"), {"exit": 2})[:2] == ("CRASH", "infra-oom")
 
 
 def test_stale_gate_files_are_gate_lost(tmp_path):
@@ -57,3 +60,30 @@ def test_real_gate_verdict_stays_structural(tmp_path):
     c = probe(k, time.time() - 600)
     assert not c.get("gate_lost")
     assert A.classify(c, {"exit": 1})[:2] == ("STRUCTURAL", "post-cts-hold")
+
+
+def test_postplace_setup_stop_precedes_missing_cts_gate(tmp_path):
+    import kit_wave as KW
+
+    stop = "FAIL_POSTPLACE PLACE-SETUP-STOP wns -7704.00 ps < -300 ps (TT, post-place) start=u_rrl/Q end=u_ft/D"
+    k = kit_with_marker(tmp_path, marker=stop + "\n" + "trailing diagnostics " * 50)
+    c = probe(k, time.time() - 600)
+    assert c["place_setup_stop"] == stop
+    assert "gate_lost" not in c
+    cls, kind, why = A.classify(c, {"exit": 6})
+    assert (cls, kind, why) == ("STRUCTURAL", "place-setup-stop", stop)
+    assert KW.queue_class({"status": "DONE-STRUCTURAL", "kind": kind, "reasons": why}) == ("place", "FAIL", "PLAN", stop)
+
+
+
+def test_postplace_setup_stop_in_fresh_route_log(tmp_path):
+    stop = "FAIL_POSTPLACE PLACE-SETUP-STOP wns -48290.74 ps < -300 ps"
+    k = kit_with_marker(tmp_path)
+    (k / "FAIL_POSTCTS").unlink()
+    runlog = k / "run_route.log"
+    runlog.write_text("make: Nothing to be done for 'place'.\n" + stop + "\n")
+    c = probe(k, time.time() - 600)
+    assert A.classify(c, {"exit": 6}) == ("STRUCTURAL", "place-setup-stop", stop)
+    old = time.time() - 7200
+    os.utime(runlog, (old, old))
+    assert "place_setup_stop" not in probe(k, time.time() - 600)

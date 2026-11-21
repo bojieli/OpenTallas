@@ -745,15 +745,26 @@ if so:
                 + "; STA-only re-sign on the signed child libs owed (KW-PROV-1)")
             s_.update(verdict="LOCAL_PASS_NEEDS_PARENT", local_verdict="SIGNED", release_qualified=False,
                       reasons=list(s_.get("reasons") or []) + [why[:400]])
-for f in ("FAIL_PREFLOOR", "FAIL_POSTCTS", "FAIL_route"):
+place_stop_re = re.compile(r"(?m)^FAIL_POSTPLACE PLACE-SETUP-STOP\b[^\n]*")
+for f in ("FAIL_PREFLOOR", "FAIL_POSTPLACE", "FAIL_POSTCTS", "FAIL_route"):
     p = os.path.join(K, f)
-    if os.path.isfile(p) and os.path.getmtime(p) >= since:
-        out[f] = rd(p)[-400:].strip()
+    if os.path.isfile(p) and since <= os.path.getmtime(p) <= until:
+        text = rd(p)
+        out[f] = text[-400:].strip()
+        if f in ("FAIL_POSTPLACE", "FAIL_POSTCTS"):
+            stop = place_stop_re.search(text)
+            if stop:
+                out["place_setup_stop"] = stop.group()[:400]
 logs = sorted(glob.glob(os.path.join(K, "run", "logs", "asap7", "*", "base", "*.log")), key=os.path.getmtime)
 out["last_log"] = os.path.basename(logs[-1]) if logs else ""
 out["last_log_mtime"] = os.path.getmtime(logs[-1]) if logs else 0
 txt = "\n".join(rd(p, 200000) for p in logs if os.path.getmtime(p) >= since)
-runlog = rd(os.path.join(K, "run_%s.log" % goal), 400000)
+runlog_path = os.path.join(K, "run_%s.log" % goal)
+runlog = rd(runlog_path, 400000)
+if not out.get("place_setup_stop") and os.path.isfile(runlog_path) and since <= os.path.getmtime(runlog_path) <= until:
+    stop = place_stop_re.search(runlog)
+    if stop:
+        out["place_setup_stop"] = stop.group()[:400]
 alltxt = txt + "\n" + runlog
 out["runlog_tail"] = runlog[-600:]
 # HOLD-FLOW-R 11-16 (closure lever 4, WARNING ONLY, never a verdict): the CTS hold-buffer count of this run against the kit's
@@ -792,8 +803,8 @@ if ("TT global-routing insertion gate failed: PASS exit 1" in marker
         out["clock_source_error"] = m.group(0).strip()[:300]
 # WF-1 11-14 (COORD: sle_st_b_v1 a7 STRUCTURAL post-cts-hold, really the TT post-CTS gate process dying, OOM on a full host): a FAIL_POSTCTS
 # whose gate record postcts_gate_tt.json is missing or older than this run, or whose gate log is missing / older / has no verdict
-# line, did not judge anything: infra (gate lost), never a hold verdict.
-if marker:
+# line did not produce a hold verdict. A recorded post-place stop precedes the CTS gate.
+if marker and not out.get("place_setup_stop"):
     _lost = []
     if not os.path.isfile(p) or os.path.getmtime(p) < since:
         _lost.append("postcts_gate_tt.json " + ("missing" if not os.path.isfile(p) else "older than this run"))
@@ -811,7 +822,8 @@ pat = {"hold_structural": r"OT_HOLD_STRUCTURAL[^\n]*", "congestion": r"GRT-0116[
        "grt_noconverge": r"OT_GRT_NOCONVERGE[^\n]*",
        "grt_timecap": r"OT_GRT_TIMECAP[^\n]*",
        "segfault": r"Segmentation fault[^\n]*|Signal 11 received[^\n]*|SIGSEGV[^\n]*|core dumped[^\n]*",
-       "oom": r"Error 137[^\n]*|\] Error 24[17][^\n]*|\bKilled\b[^\n]*|[Oo]ut of memory[^\n]*|std::bad_alloc[^\n]*|OOMKilled[^\n]*",
+       "sigterm": r"\] Error 241\b[^\n]*",
+       "oom": r"Error 137[^\n]*|\] Error 247\b[^\n]*|\bKilled\b[^\n]*|[Oo]ut of memory[^\n]*|std::bad_alloc[^\n]*|OOMKilled[^\n]*",
        # design gates that print their verdict but write no FAIL_PREFLOOR/FAIL_POSTCTS marker (custom runners)
        "gate_fail": r"(?m)^(?:CORE_PREFLIGHT|KIT_PREFLIGHT|RP1_GATE|SDC_LINT|S6_GRT_GATE|OT_HOLD_GATE) FAIL\b[^\n]*",
        "orfs_error": r"\[ERROR [A-Z]+-\d+\][^\n]*"}
@@ -1236,16 +1248,19 @@ def classify(c, client):
         return "CRASH", "infra-publish-return", client["publish_return"]["reason"]
     if c.get("FAIL_PREFLOOR"):
         return "STRUCTURAL", "preflight", "FAIL_PREFLOOR " + c["FAIL_PREFLOOR"]
+    stop = c.get("place_setup_stop")
+    if stop:
+        return "STRUCTURAL", "place-setup-stop", stop
     if c.get("FAIL_route"):
         fr = c["FAIL_route"]
         if re.search(r"DRT-0255", fr):
             net = re.search(r"path of net (\S+)", fr)
             return "STRUCTURAL", "drt-nopath", f"DRT-NOPATH net {net.group(1) if net else '?'}: {fr[:260]}"
-        # COORD 11-19 (col_h9 r1/r2: host-guard SIGKILL in the GRT stage filed FAIL_route): a make Error 241/247 / rc 137 / 143 is the host killing the job (ot-oom-age guard, earlyoom), not a route
-        # failure: infra-oom, free resubmit.  The run-log probe (c["oom"]) or the failure text itself names it.
+        # Explicit memory evidence or SIGKILL (e.g. the host guard) permits a memory retry.
+        # Bare SIGTERM requires journal corroboration in finish().
         if c.get("oom"):
             return "CRASH", "infra-oom", c["oom"]
-        km = re.search(r"\] Error 24[17]\b[^\n]*|\brc[ =]+(?:137|143)\b[^\n]*", " ".join(str(x) for x in (fr, c.get("runlog_tail"), c.get("orfs_error"), client.get("msg")) if x))
+        km = re.search(r"\] Error 247\b[^\n]*|\brc[ =]+137\b[^\n]*", " ".join(str(x) for x in (fr, c.get("runlog_tail"), c.get("orfs_error"), client.get("msg")) if x))
         if km:
             return "CRASH", "infra-oom", km.group(0)[:300]
         return "CRASH", "route-make-fail", fr[:300]
@@ -1260,8 +1275,9 @@ def classify(c, client):
         # flow/source refresh; retrying the same broken gate cannot help.
         return "CRASH", "infra-clock-source", c["clock_source_error"]
     if c.get("FAIL_POSTCTS") and c.get("gate_lost") and not c.get("clock_source_error"):
-        # WF-1 11-14: the gate never produced a verdict (process killed, host out of memory): infra, resubmitted like an oom kill
-        return "CRASH", "infra-oom", f"post-CTS gate lost ({c['gate_lost']}); FAIL_POSTCTS {c['FAIL_POSTCTS'][:160]}"
+        if c.get("oom"):
+            return "CRASH", "infra-oom", c["oom"]
+        return "CRASH", "infra-gate-lost", f"post-CTS gate lost ({c['gate_lost']}); FAIL_POSTCTS {c['FAIL_POSTCTS'][:160]}"
     if c.get("FAIL_POSTCTS"):
         return "STRUCTURAL", "post-cts-hold", "FAIL_POSTCTS " + c["FAIL_POSTCTS"]
     if c.get("hold_structural"):
@@ -3176,8 +3192,8 @@ OOMKILL_MAX = 4
 
 
 def is_earlyoom_kill(reasons):
-    """WF-1 11-14: a job killed by the host low-memory killer (make 'Error 241' = 256-15, or an earlyoom-matched SIGTERM 143)"""
-    return bool(re.search(r"Error 241\b|earlyoom|post-CTS gate lost", str(reasons or "")))
+    """Whether finish attached a host journal match to an otherwise bare signal."""
+    return str(reasons or "").startswith("earlyoom SIGTERM on ")
 
 
 def earlyoom_kill_near(host, t, probe=None):
@@ -3210,13 +3226,15 @@ def retained_publish_negative(j, client, probe=None):
 
 
 def finish(st, j, c, client):
-    if client.get("exit") == 143 and not c.get("oom") and not client.get("watchdog") and not client.get("cancelled"):
-        try:                                             # WF-1 11-14: SIGTERM 143 with an earlyoom kill on the host within +-60 s is an OOM kill
+    sigterm = c.get("sigterm") or client.get("exit") == 143
+    if (sigterm and not c.get("oom") and not c.get("place_setup_stop")
+            and not client.get("watchdog") and not client.get("cancelled")):
+        try:
             _t = Path(j.get("client_log") or "").stat().st_mtime
         except OSError:
             _t = 0
         if _t and earlyoom_kill_near(j.get("ran_on") or j.get("host"), _t):
-            c = dict(c, oom=f"earlyoom SIGTERM on {j.get('ran_on') or j.get('host')} within {EARLYOOM_NEAR_S} s of the exit (client exit 143)")
+            c = dict(c, oom=f"earlyoom SIGTERM on {j.get('ran_on') or j.get('host')} within {EARLYOOM_NEAR_S} s of the exit")
     if client.get("exit") in (137, 143) and client.get("unit") and not c.get("oom"):
         w = watchdog_stop(client["unit"], j.get("started", 0))
         sj = "" if w else sealed_job_dir(j)
@@ -3272,11 +3290,13 @@ def finish(st, j, c, client):
             set_status(st, j, "CANCELLED", f"wave no longer wants it: {why[:200]}")
             return
         notrun = kind == "infra-notrun"
+        oom_attempts = int(j.get("oomkill_retries") or 0) + int(j.get("oom_retries") or 0)
         if notrun and j.get("notrun_retries", 0) < MAX_NOTRUN:
             j["notrun_retries"] = j.get("notrun_retries", 0) + 1
             submit(st, j, f"(resubmit: never admitted, {j['notrun_retries']}/{MAX_NOTRUN})")
             return
-        if kind == "infra-oom" and is_earlyoom_kill(reasons) and j.get("oomkill_retries", 0) < OOMKILL_MAX:
+        earlyoom = kind == "infra-oom" and is_earlyoom_kill(reasons)
+        if earlyoom and oom_attempts < OOMKILL_MAX:
             # WF-1 11-14: killed by the host's earlyoom, not by the job's own cap: resubmit from the run dir checkpoint without raising --mem
             j["oomkill_retries"] = j.get("oomkill_retries", 0) + 1
             j["infra_retry"] = True
@@ -3284,8 +3304,8 @@ def finish(st, j, c, client):
                 f"resumes the run dir, --mem {j['mem_gb']} unchanged")
             submit(st, j, f"(resubmit {j['oomkill_retries']}/{OOMKILL_MAX} after an earlyoom kill; resumes the run dir; --mem {j['mem_gb']})")
             return
-        if kind == "infra-oom" and j.get("oom_retries", 1 if j.get("infra_retry") else 0) < MAX_OOM_RESUBMITS:
-            j["oom_retries"] = j.get("oom_retries", 1 if j.get("infra_retry") else 0) + 1
+        if kind == "infra-oom" and not earlyoom and oom_attempts < MAX_OOM_RESUBMITS:
+            j["oom_retries"] = j.get("oom_retries", 0) + 1
             j["infra_retry"] = True
             j["mem_gb"] = min(512, int(j["mem_gb"] * 1.5 + 0.999))
             submit(st, j, f"(resubmit {j['oom_retries']}/{MAX_OOM_RESUBMITS} after infra-oom; resumes the run dir; "
@@ -3549,7 +3569,7 @@ def record_failure(st, j):
         # AUTOPILOT-SIGNOFF-2 (owner speed-up 10-27): stop the kit, tell the owning lane + COORD, delete the failed
         # run data at once (logs, reports, review bundle and receipts kept), never retry it blindly
         kind = j.get("kind", "")
-        nonphysical = (j.get("publish_return") or kind in ("preflight", "admission-tools", "proof-oom") or
+        nonphysical = (j.get("publish_return") or kind in ("preflight", "admission-tools", "proof-oom", "place-setup-stop") or
                        kind.startswith("infra-") or j.get("goal") in ("synth", "lec", "post", "proof"))
         if nonphysical:
             j.update(delete_pending=False, data_deleted=False,

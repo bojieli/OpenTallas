@@ -21,7 +21,7 @@ OOM_FACTOR = 1.5
 TOTAL_CAP = 6               # FLOW-NOADV-R4: failed attempts per item per plan event, any mix of fingerprints / OOM; then the row goes to its owner as PLAN
 CAP_STATE = "BLOCKED-CAP"
 TOOL_MIX_IDENT_N = 2        # a deterministic tool_mix error (INFRA class too) repeating on 2 attempts is a stop, not an infra retry
-OOM_RE = re.compile(r"infra-oom|earlyoom|\bOOM\b|oom-kill|Out of memory|exit 137|rc[ =]+137|Error 24[17]", re.I)
+OOM_RE = re.compile(r"infra-oom|earlyoom|\bOOM\b|oom-kill|Out of memory|exit 137|rc[ =]+137|Error 247", re.I)
 NET_RE = re.compile(r"\bnet\s+([A-Za-z0-9_./\[\]\\$:-]+)")
 BOX_RE = re.compile(r"routeBox\s*\(\s*(-?\d+)\s+(-?\d+)\s*\)\s*\(\s*(-?\d+)\s+(-?\d+)\s*\)")
 GATE_RE = re.compile(r"(FAIL_POSTCTS\s+\w+|OT_POSTCTS_GATE\s+\w+\s+\([^)]*\)|SETUP_TRIAGE|HOLD_STRUCTURAL)")

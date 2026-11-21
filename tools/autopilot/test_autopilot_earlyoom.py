@@ -1,4 +1,4 @@
-"""WF-1 11-14: make Error 241 / earlyoom-matched SIGTERM is an infra-oom kill, resubmitted without a --mem raise."""
+"""Only a journal-corroborated SIGTERM takes the earlyoom retry path."""
 import autopilot as A
 
 
@@ -6,19 +6,19 @@ def test_error_241_matches_the_oom_probe_pattern():
     import re
     pat = re.compile(A.PROBE_CLASSIFY and r"\] Error 24[17]\b")
     assert pat.search("make[1]: *** [Makefile:589: do-5_2_route] Error 241")
-    assert "Error 24[17]" in open(A.__file__).read()
+    assert '"sigterm":' in A.PROBE_CLASSIFY
 
 
 def test_is_earlyoom_kill():
-    assert A.is_earlyoom_kill("make[1]: *** [Makefile:589: do-5_2_route] Error 241")
+    assert not A.is_earlyoom_kill("make[1]: *** [Makefile:589: do-5_2_route] Error 241")
     assert A.is_earlyoom_kill("earlyoom SIGTERM on epyc9 within 60 s of the exit")
     assert not A.is_earlyoom_kill("Error 137 Killed")
 
 
-def test_classify_error_241_is_infra_oom():
-    c = {"oom": "] Error 241"}
+def test_classify_error_241_without_journal_is_a_route_failure():
+    c = {"FAIL_route": "make: *** [target] Error 241", "sigterm": "] Error 241"}
     cls, kind, why = A.classify(c, {"exit": 2})
-    assert (cls, kind) == ("CRASH", "infra-oom") and "241" in why
+    assert (cls, kind) == ("CRASH", "route-make-fail") and "241" in why
 
 
 def test_earlyoom_kill_near_uses_journal_count():
