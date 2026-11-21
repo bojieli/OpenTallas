@@ -9,3 +9,4 @@
   [filed under] FABLE-FIX-S81-LEAF-R6: FABLE-FIX-S81-LEAF-R5 stood down (chain FABLE-FIX-S81-LEAF-R5 > FABLE-FIX-S81-LEAF-R6)
 - 2026-11-21 08:29 PST RESULT t39 bind [FABLE-FIX-S81-LEAF-R5 (stood down) -> FABLE-FIX-S81-LEAF-R6, COORD] t39 strict bind + LATCHECK PASSED (oth-ubuntu-490537-1795275556, exit 0): BIND_RC=0 on plan 3d52a7ab2d70 (rg3 block + GS 0 word s_4S_L1), LATCHECK 873/873, 0 latency delta; bound RTL has 16 per-lane hi stages at each of stages 0-2 and no shared stage. No job of this lane is running. Next is the private kit (recipe in the handoff, rt b1bb664d56f5). Not a proof yet: no kit, no GRT number.
   [filed under] FABLE-FIX-S81-LEAF-R6: FABLE-FIX-S81-LEAF-R5 stood down (chain FABLE-FIX-S81-LEAF-R5 > FABLE-FIX-S81-LEAF-R6)
+- 2026-11-21 08:36 PST DONE [FABLE-FIX-S81-LEAF-R6] ot-push-main otpush-civil-redfish-2117028 on civil-redfish: rc=0 after 38 s, ended 16:36:28, log none, cmd: ot-push-main 
