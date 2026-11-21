@@ -126,7 +126,7 @@ def test_post_gating_and_text(tmp_path, monkeypatch):
     stub = tmp_path / "post.sh"
     out = tmp_path / "posted"
     stub.write_text(f'#!/bin/bash\necho "$1|$2" >> {out}\n')
-    monkeypatch.setenv("OT_POST_SH", str(stub)); monkeypatch.setenv("OT_STATUS_POST", "1")
+    monkeypatch.setenv("OT_STATUS_DIR", str(tmp_path)); monkeypatch.setenv("OT_POST_SH", str(stub)); monkeypatch.setenv("OT_STATUS_POST", "1")
     base = dict(kind="run", name="otrun-h-1", unit="oth-1", host="h", lane="WAITER-STD-1600", cmd="bash proof.sh", log="/l.log", t_start=1000, t_end=1500)
     monkeypatch.delenv("OT_LANE", raising=False)
     assert S.post(dict(base, rc=2)) is None                      # run job from a lane that did not name itself: no post
@@ -165,3 +165,8 @@ def test_ot_run_records_only_commands():
 def test_push_main_is_wrapped():
     src = (HERE / "ot-push-main").read_text()
     assert "run_recorded(\"push\"" in src and "sys.path.insert" in src
+
+
+def test_pytest_children_do_not_record(tmp_path, monkeypatch):
+    monkeypatch.delenv("OT_STATUS_DIR", raising=False)
+    assert S.begin("run", "x") is None and not S.should_post(dict(kind="push", lane="L", rc=1, t_start=0, t_end=1))

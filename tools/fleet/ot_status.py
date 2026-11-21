@@ -31,6 +31,8 @@ def status_dir():
 
 
 def enabled():
+    if os.environ.get("PYTEST_CURRENT_TEST") and not os.environ.get("OT_STATUS_DIR"):
+        return False                         # other tests that run ot-run / ot-push-main must not write records or post
     return os.environ.get("OT_STATUS", "1") != "0"
 
 
@@ -131,7 +133,7 @@ def post_text(rec):
 
 
 def should_post(rec):
-    if os.environ.get("OT_STATUS_POST", "1") == "0" or not rec.get("lane"):
+    if os.environ.get("OT_STATUS_POST", "1") == "0" or not rec.get("lane") or not enabled():
         return False
     if rec["kind"] == "run":
         if not os.environ.get("OT_LANE"):
