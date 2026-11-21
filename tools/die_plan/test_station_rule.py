@@ -348,3 +348,13 @@ endmodule
     r = subprocess.run(["iverilog", "-o", str(tmp_path / "s"), str(tmp_path / "a.v"), str(tmp_path / "tb.v")], capture_output=True, text=True)
     assert r.returncode == 0, r.stderr
     assert "OK" in subprocess.run(["vvp", str(tmp_path / "s")], capture_output=True, text=True).stdout
+
+
+def test_apply_seams_and_leaf_for_ft_lockup_types(tmp_path):
+    import gen_phys
+    raw = {"clock": {}, "partition_types": {"tA": {}, "tB": {}}, "die": {"x": 1}}
+    new, rec = SR.apply_rows(raw, [], seams={"tA": {"ports": ["o1", "o0"]}, "tB": {"ports": []}, "tZ": {"ports": ["q"]}})
+    assert new["clock"]["zl_lockup"] == {"tA": {"guard": None, "note": "LOCKUP-STATION-1130 station_rule.apply --seams",
+                                                "ports": ["o0", "o1"]}}
+    assert rec["seam_types"] == 1 and rec["seam_ports"] == 2 and raw["clock"] == {}
+    assert gen_phys.hop_latch_leaf_lines(tmp_path, None, ft=True)[-1] == "export OT_HOP_LATCH_LEAF = 1"

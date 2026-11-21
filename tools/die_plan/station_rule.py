@@ -428,7 +428,7 @@ def derive_spec(pairs, rtl_dir, type_name, min_pairs=1, guard=None, hold_ends=No
 
 
 # ------------------------------------------------------------------------------------------- apply (plan copy)
-def apply_rows(raw, rows, specs=None, sites=False, note=None):
+def apply_rows(raw, rows, specs=None, sites=False, note=None, seams=None):
     """plan copy with the rule's rows; asserts every other key byte-identical.  Station-count deltas are reported,
     never applied here (they change lane latency: the die owner's event prices them)."""
     new = copy.deepcopy(raw)
@@ -459,6 +459,17 @@ def apply_rows(raw, rows, specs=None, sites=False, note=None):
         for tn, sp in specs.items():
             zl[tn] = sp
         clk["zl_lockup"] = zl
+    # FABLE-CLOSURE-1930 lever 2: sender-side seam latch on every output bus abutted on all instances (seam_rows)
+    seam_types = []
+    for tn, r in sorted((seams or {}).items()):
+        if not r.get("ports") or tn not in new.get("partition_types", {}):
+            continue
+        zl = dict(clk.get("zl_lockup") or {})
+        sp = dict(zl.get(tn) or {"guard": None, "note": "LOCKUP-STATION-1130 station_rule.apply --seams"})
+        sp["ports"] = sorted(set(sp.get("ports", [])) | set(r["ports"]))
+        zl[tn] = sp
+        clk["zl_lockup"] = zl
+        seam_types.append(tn)
     moved = []
     if sites:
         for r in rows:
@@ -485,7 +496,8 @@ def apply_rows(raw, rows, specs=None, sites=False, note=None):
     rec = dict(tool="tools/die_plan/station_rule.py", lane="LOCKUP-STATION-1130", plan_in_sha256=_sha(raw),
                plan_out_sha256=_sha(new), latch_types=sorted(by_type),
                latch_hops=sum(len(v) for d in by_type.values() for v in d.values()),
-               zl_lockup_types=sorted(specs or {}), sited_slots=len(moved),
+               zl_lockup_types=sorted(set(specs or {}) | set(seam_types)), seam_types=len(seam_types),
+               seam_ports=sum(len((seams or {})[t]["ports"]) for t in seam_types), sited_slots=len(moved),
                cycles_needed=[dict(type=r["type"], slot=r["slot"], have=r["stations_have"], need=r["stations_need"])
                               for r in rows if r["delta_cycles"]])
     return new, rec
@@ -555,6 +567,7 @@ def main(argv=None):
     p.add_argument("--specs", nargs="*", default=[])
     p.add_argument("--sites", action="store_true")
     p.add_argument("--note")
+    p.add_argument("--seams", help="station_rule seams output: seam latch rows (clock.zl_lockup.<T>.ports)")
     x = ap.parse_args(argv)
     if x.cmd == "rows":
         import schema as S
@@ -584,7 +597,8 @@ def main(argv=None):
         tn, f = kv.split("=", 1)
         sp = json.loads(Path(f).read_text())
         specs[tn] = sp.get("spec", sp)
-    new, rec = apply_rows(raw, rows, specs, x.sites, x.note)
+    new, rec = apply_rows(raw, rows, specs, x.sites, x.note,
+                          json.loads(Path(x.seams).read_text()) if x.seams else None)
     Path(x.out).write_text(json.dumps(new, indent=1) + "\n")
     Path(x.receipt).write_text(json.dumps(rec, indent=1, sort_keys=True) + "\n")
     print(json.dumps({k: rec[k] for k in ("latch_hops", "sited_slots", "zl_lockup_types")}))
