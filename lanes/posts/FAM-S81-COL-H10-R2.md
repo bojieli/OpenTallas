@@ -4,3 +4,5 @@
   [filed under] FAM-S81-COL-H10-R2: FAM-S81-COL-H10 stood down (chain FAM-S81-COL-H10 > FAM-S81-COL-H10-R2)
 - 2026-11-21 06:32 PST DONE [FAM-S81-COL-H10] ot-run oth-ubuntu-105477-1795271255 on tolerant-swine: rc=0 after 297 s, ended 06:32:30, log /srv/opentallas-scratch2/claude/fam-s81-col-h10/wave/preflight.live.log, cmd: --mem 8 --threads 2 --dir /srv/opentallas-scratch2/claude/fam-s81-col-h10/wave/root/items/col_h10_r2__t1__cl99efd374__pv1619ecc6/attempt_1 -
   [filed under] FAM-S81-COL-H10-R2: FAM-S81-COL-H10 stood down (chain FAM-S81-COL-H10 > FAM-S81-COL-H10-R2)
+- 2026-11-21 06:37 PST DIED [FAM-S81-COL-H10] ot-run oth-ubuntu-2136724-1795271823 on tolerant-swine: rc=97 after 34 s, ended 06:37:04, log /srv/opentallas-scratch2/claude/fam-s81-col-h10/wave/place.live.log, cmd: --mem 72 --threads 8 --dir /srv/opentallas-scratch2/claude/fam-s81-col-h10/wave/root/items/col_h10_r2__t1__cl99efd374__pv1619ecc6/attempt_1/
+  [filed under] FAM-S81-COL-H10-R2: FAM-S81-COL-H10 stood down (chain FAM-S81-COL-H10 > FAM-S81-COL-H10-R2)
