@@ -1,0 +1,8 @@
+# FLOW-GRT-RESID handoff 2026-11-21 03:50 PST
+Pushed to main: da5faa46e64 (items 1-3 + FF setup + repair resume) and 42fa174c180 (reserved-obstruction snap). No ot-run units owned, nothing relaunched.
+1. GRT residual: grt183_make.sh, on GRT-0116 at the round limit, runs `failfast_rules.py resid` (total <= OT_GRT_RESID_MAX=500, <=3 43-um bins or top-3 share >= 60%); prints OT_GRT_RESID class line, writes 5_1_grt.resid_allow.json, re-execs the wrapper once with OT_GRT_ALLOW_CONGESTION=1. Costs one more GRT route (fresh process). Larger/spread overflow keeps the old stop.
+2. DRT: kits with the marker use DRT_STALL window 6 from iteration 10 (class line says FLOW-GRT-RESID).
+3. FF setup: hold_guard_grt.tcl, OT_VCLK_CORNER=ff session skips the setup half of repair_timing (OT_FF_SETUP_MODE=skip|cap|full, OT_FF_SETUP_MAX_PASSES). The FF mis-timing cause (OT_VCLK_FF 202.5 against on-die FF insertion) is a hypothesis, not verified on hroot logs.
+4. Repair stall: grt_maxwire.tcl saves 5_1_grt.prerepair.odb before the post-GRT repair; grt183_make.sh resumes from it (swap into 4_cts.odb), skipping only the stuck repair. Re-run still routes unless OT_GRT_RESUME_SKIP_ROUTE=1 (opt-in, unproven: needs a proof kit).
+5. Off-grid obstructions: gen_phys.route_obstruction_lines(snap=True) in reserved_sites_tcl, outward snap on M3-M9; OT_RESERVED_SNAP=0 off. Generality inferred from the generator (0.25 um margin on 0.054 um site windows), NOT sampled from other dies' DRT-0255 kits.
+First candidate: ot_s81sl_kv_leaf t5 route job on host renewed-glider (it 20, overflow 3, live). Others: col_h9_r0_p3 cl8ce97bcb (it 20, 11-13), slw_su_l1 cla2a78701 (it 30, 135).
