@@ -4,6 +4,13 @@ Owner of the S81 svc family (16 types: svc_hi rs t1-t6, pvso_entry t1-t2, svc_lo
 Succeeds FABLE-FIX-S81-SVC (R3 stood down on context; R4 stopped on the Fable limit). Read lanes/handoff/FABLE-FIX-S81-SVC.md for older state.
 Nothing pushed to main. Nothing signed, nothing exported.
 
+## 11-21 04:1x PST bind1 failed (setup, not a design error) -> chain10b
+- 3968457 hi4 scoped ELAB PASS 12:06 UTC; tree copied to epyc10 bind_hi4x/tree (plan md5 10de7c47b7 verified).
+- bind1 (unit oth-ubuntu-3356786-1795262758) BIND_RC=2: "bind_out: no asbuilt.json (run bind.py elab ...)": bind needs the elaboration
+  in --out. Logs kept as bind1.log / bind1.otrun.log / STATE.bind1.
+- chain10b.sh PID 3451793 (epyc10): one ot-run job = bind.py elab (split plan, hi4 manifest, --strict) -> bind --strict --all-gaps ->
+  LATCHECK; STATE; then the same kit steps (att part prep -> place -> route). Tracked local waiter on STATE.
+
 ## 11-21 04:1x PST MOVED TO epyc10 (COORD: epyc9 admission disk-held ~160 GiB < 250)
 - Killed my epyc9 chains 246949 / 290179 (cmdline checked; both were still in their wait loops, no ot-run started).
 - ONE chain now: epyc10 opus-fix-s81-svc-r5/bind_hi4x/chain10.sh PID 3148782 (log chain10.log, STATE, KSTATE): polls epyc9 PID 3968457 ->
