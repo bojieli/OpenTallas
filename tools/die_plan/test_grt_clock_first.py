@@ -49,5 +49,5 @@ def test_tcl_wraps_first_full_route_only():
     assert "grt::add_net_to_route" in t and len(re.findall(r"^\s*grt::read_segments", t, re.M)) == 2
     assert 'OT_GRT_CLOCK_FIRST) eq "1"' in t and "OT_GRT_CLOCK_FIRST_RESERVE" in t
     # the merge read_segments resets the router: allow-congestion is re-armed after it (else the next incremental route GRT-0116)
-    tail = t[t.rindex("grt::read_segments"):]
+    tail = t[t.rindex("grt::read_segments $dir/5_1_grt.clock_first_all.seg"):]
     assert "::grt::set_allow_congestion 1" in tail
