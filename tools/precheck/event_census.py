@@ -44,7 +44,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 HOP_UM = 300.0
 STEP_UM = 1.0
-REGREAD_RE = r"(?:SRAMREG|RDREG|READREG|_RIP\d+)$"
+REGREAD_RE = r"^(?!.*_MUT_)\w*(?:SRAMREG|RDREG|READREG|_RIP\d+)$"     # _MUT_ = a bench mutant, never a build selector
 HOLD_TAG = "EVENT-CENSUS"
 METRICS = ("MON_UM", "HOPS_300", "DEFINES", "DEFINES_KIT", "UNREG_READS", "RESET_UM", "RESET_ROWS")
 IGNORED_DEFINES = {"SYNTHESIS"}     # every config.mk sets it

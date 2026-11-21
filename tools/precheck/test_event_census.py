@@ -156,3 +156,10 @@ def test_kit_defines_do_not_count_as_a_plan_loss(tmp_path):
     _rows, held = EC.census({"x__t1": mon_type((2, 467), defines=["OT_A"])}, {"x__t1": mon_type((2, 467), defines=["OT_A"])},
                             {"x__t1": str(g)}, {})
     assert held == {}            # prev side read a kit, new side has none: SYNTHESIS / kit-only defines are not "lost"
+
+
+def test_mutant_selectors_are_not_read_registers():
+    import re
+    rx = re.compile(EC.REGREAD_RE)
+    assert rx.search("OT_S81SL_VP_SRAMREG") and rx.search("OT_S81SL_LEP_RIP1")
+    assert not rx.search("OT_S81SL_VP_MUT_SRAMREG")
