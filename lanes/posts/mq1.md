@@ -10,3 +10,12 @@
 - 2026-11-20 22:22 PST DIED [mq1] ot-push-main otpush-tolerant-swine-3976529 on tolerant-swine: rc=4 after 1 s, ended 22:22:16, log none, cmd: ot-push-main 
 - 2026-11-20 22:22 PST DONE [mq1] ot-push-main otpush-tolerant-swine-3977089 on tolerant-swine: rc=0 after 1 s, ended 22:22:16, log none, cmd: ot-push-main 
 - 2026-11-20 22:22 PST DONE [mq1] ot-push-main otpush-tolerant-swine-3976606 on tolerant-swine: rc=0 after 1 s, ended 22:22:16, log none, cmd: ot-push-main 
+- 2026-11-21 00:32 PST DIED [mq1] ot-push-main otpush-tolerant-swine-3314662 on tolerant-swine: rc=2 after 0 s, ended 00:32:09, log none, cmd: ot-push-main 
+- 2026-11-21 00:32 PST DONE [mq1] ot-push-main otpush-tolerant-swine-3314854 on tolerant-swine: rc=0 after 1 s, ended 00:32:10, log none, cmd: ot-push-main 
+- 2026-11-21 00:32 PST DONE [mq1] ot-push-main otpush-tolerant-swine-3314694 on tolerant-swine: rc=0 after 1 s, ended 00:32:10, log none, cmd: ot-push-main 
+- 2026-11-21 00:32 PST DONE [mq1] ot-push-main otpush-tolerant-swine-3314700 on tolerant-swine: rc=0 after 1 s, ended 00:32:10, log none, cmd: ot-push-main 
+- 2026-11-21 00:32 PST DONE [mq1] ot-push-main otpush-tolerant-swine-3315561 on tolerant-swine: rc=0 after 0 s, ended 00:32:10, log none, cmd: ot-push-main 
+- 2026-11-21 00:32 PST DIED [mq1] ot-push-main otpush-tolerant-swine-3315649 on tolerant-swine: rc=3 after 0 s, ended 00:32:11, log none, cmd: ot-push-main 
+- 2026-11-21 00:32 PST DONE [mq1] ot-push-main otpush-tolerant-swine-3315106 on tolerant-swine: rc=0 after 1 s, ended 00:32:11, log none, cmd: ot-push-main 
+- 2026-11-21 00:32 PST DIED [mq1] ot-push-main otpush-tolerant-swine-3315321 on tolerant-swine: rc=4 after 1 s, ended 00:32:11, log none, cmd: ot-push-main 
+- 2026-11-21 00:32 PST DONE [mq1] ot-push-main otpush-tolerant-swine-3316575 on tolerant-swine: rc=0 after 1 s, ended 00:32:12, log none, cmd: ot-push-main 
