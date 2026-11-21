@@ -193,3 +193,8 @@
   Primary-owner remaps: BUILD-SETTINGS-AUDIT-1900 and CORE-PIN-RELAY-R2 rows -> S81-DIE-R5 (83) or core-lib lane; KIT-WAVE(auto)/UNIFY-TOOLS-R3/PRECHECK QC rows -> QC-PLAN-R8; blank-owner S81 leaf rows -> FABLE-FIX-S81-LEAF (56). lanes/LANE-STATUS.tsv not yet present, built-in successor table used.
   S81: 16 STALE held-for-plan-event, all old, owned. QC: 1 STALE cancelled. KV: 2 FAILED-NO-RELAUNCH + 15 held + 2 placed/held + 1 cancelled WAIT-BIND, KV-PLAN-R3.
   HEAD: none flagged.
+- 2026-11-20 22:51 PST 22:50 sweep (LANE-STATUS successors, tool/review lanes never own, HEAD owners lep0N/serdes): 489 rows, 48 flagged (was 37), 0 STOOD-DOWN-OWNER, 0 UNOWNED, 0 DEAD-OWNER.
+  S81 new: 3 FAILED-NO-RELAUNCH (2 detail_place, 1 hold after CTS STALE) + 7 STALE held-for-plan-event; 16 old STALE held. Owners S81-DIE-R5/leaf/J6.
+  QC (QC-PLAN-R8): 1 new FAILED global_place no relaunch; 1 old STALE cancelled.
+  KV (KV-PLAN-R3): 1 new FAILED other flow error + 2 old FAILED + 15 held + 1 placed + 1 cancelled WAIT-BIND.
+  HEAD: hd_lep0N running (OPUS-FIX-HEAD-LEP0N-R2), not flagged.
