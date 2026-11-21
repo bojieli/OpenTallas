@@ -22,3 +22,4 @@
 - 2026-11-20 16:01 PST DIED [WAITER-STD-1600] ot-run otrun-tolerant-swine-3526272 on tolerant-swine: rc=1 after 0 s, ended 16:01:24, log none, cmd: --mem 1 --plan-job route -- true
 - 2026-11-20 16:01 PST DIED [WAITER-STD-1600] ot-run otrun-tolerant-swine-3526371 on tolerant-swine: rc=1 after 0 s, ended 16:01:24, log none, cmd: --mem 1 --priority plan -- bash run_kit.sh
 - 2026-11-20 16:03 PST DONE [WAITER-STD-1600] ot-push-main otpush-tolerant-swine-3489878 on tolerant-swine: rc=0 after 151 s, ended 16:03:13, log none, cmd: ot-push-main 
+- 2026-11-20 16:04 PST DONE [WAITER-STD-1600] ot-push-main otpush-tolerant-swine-3644174 on tolerant-swine: rc=0 after 28 s, ended 16:04:53, log none, cmd: ot-push-main 
