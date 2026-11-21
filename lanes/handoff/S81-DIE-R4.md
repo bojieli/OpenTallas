@@ -126,3 +126,7 @@ All relaunch after the 405 reach override (lever 1) lands for D8i.
 - The svc_rs MPL-0020 failures are all on D8i blocks (do-not-count, mostly SUPERSEDED). Cause: macro_place names macros in bound form (u_u_) and the netlist does not match.
 - A watcher reads the 12 J5 svc_rs rows at floorplan_macro.
 - If a J5 row hits MPL-0020: hand it to the FABLE-FIX-S81-SVC-R2 successor for J6. If clean: closed, fixed by J5.
+
+## 11-20 16:2x
+- Slew re-pin applied (kit_wave 9dcb613f): die_gen_env OT_PLACE_MAX_TRANSITION=320.
+- ROM donor proof GREEN (bind 0, G0 0 new over J5, PRE 0). vp_sr, r1_frame and t31 binds are running slow on epyc10.
