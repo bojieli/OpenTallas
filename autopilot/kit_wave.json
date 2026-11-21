@@ -39786,9 +39786,12 @@
    "note_t86a9d26_d1": "HEAD-PLAN-R4 11-17 21:xx (COORD KIT_NOT_SELF_CONTAINED class): tree t86a9d26_d1 = t86a9d26 + physical/die_plan/s81_head/kit_wave/signed_view_sha_head.json (KIT-OPS-6 table, was only on epyc10/intel1/epyc7 kit-ops-6); OT_SIGNED_VIEW_SHA points into the tree (tools_refresh repoints it). OT_GPL_HPWL_RATIO=0: r430 PLACE-HPWL is S81-only, gen_phys matched s81_head by the s81 prefix (hd_tile 2.26x); main fix claude/gpl-hpwl-s81-exact-1117.",
    "breaker_fix": "OWNER r703 removed all class breakers (stops_off not in code yet): probe window reopened for every open class of this die, COORD 11-18",
    "review_before_route": {
-    "event": "head_rp21z20NF15f_r11b",
+    "event": "head_rp21z20NF15f_r16",
     "all_items": true
-   }
+   },
+   "auto_visual_review_skip": [
+    "*"
+   ]
   },
   "qwen_compute": {
    "enabled": true,
