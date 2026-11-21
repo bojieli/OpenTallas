@@ -2206,7 +2206,8 @@ def _check(v, s, path, errs):
     ok = {"object": lambda x: isinstance(x, dict), "array": lambda x: isinstance(x, list),
           "string": lambda x: isinstance(x, str), "boolean": lambda x: isinstance(x, bool),
           "integer": lambda x: isinstance(x, int) and not isinstance(x, bool),
-          "number": lambda x: isinstance(x, (int, float)) and not isinstance(x, bool)}
+          "number": lambda x: isinstance(x, (int, float)) and not isinstance(x, bool),
+          "null": lambda x: x is None}          # clock.zl_lockup.<T>.guard ["string", "null"] (station_rule seams)
     if t and not any(ok[x](v) for x in (t if isinstance(t, list) else [t])):
         errs.append(f"{path}: expected {t}, got {type(v).__name__}")
         return
