@@ -11,3 +11,15 @@ Inputs: UNIFY-TOOLS-R2/R3 handoffs; R2 rows epyc9 /srv/opentallas-scratch2/claud
 
 ## Status
 - 17:10 started; reading data.
+- 17:45 Work: epyc10 /srv/opentallas-scratch2/claude/s81-leaf-class-1730-work (W); lane clone epyc10 .../s81-leaf-class-1730.
+  Base = J5 live plan (913a7026, kw45 d8j5 tree) + sidecar_new.json, not j4e (same 75 leaf types).
+- Finding 1 (width): schema needs port width == bus width, so a lane cannot ride a wider class slot. FABLE's 4,500-bit
+  classes bin lanes by capacity (571 in 668 etc). Exact-width union: F00 = 5,576 ft bits, N face 6,841 pins > 4.6/um.
+  -> exact-width sub-classes (class_window_solve.exact_classes, 3.6 pins/um, 4,500 bits): leaf 75 -> 35 builds (F00 -> 8+20, F03 -> 1+2).
+- Finding 2 (joint windows): class_window_solve.class_floorplan joint solver (union-find over class ends with x/y flips,
+  slot-assignment search, first-fit packing) on all 11 classes F00..F08 of J5: 166 class-class ports joined, 0 conflicts,
+  0 overlaps, then solve() re-pins neighbours: port geometry mismatches 525 -> 0. 15 s.
+- Finding 3 (BLOCKER for superset with spares): every S81 leaf ft lane is clock-landed at every tile (fclk_in/out_<slot>,
+  cland_fstart_*). spare_ft.declared() refuses a spare slot with a landing role ("needs its own dormant protocol").
+  So superset classes need a dormant landing protocol (use strap masking ring ready/fault, fclk/fstart tied 0) in
+  clock_landings emit + bind tie audit + spare_ft. Not on main. Equal-profile classes need no spare: 8 groups, 18 types -> 8 builds.
