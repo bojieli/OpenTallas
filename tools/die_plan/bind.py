@@ -6726,7 +6726,9 @@ def kit_native_station_geometry(out, bound_type, bound_text, kit):
         raise BindError(f"kit-rtl {bound_type}: native station geometry/RTL mismatch: "
                         f"missing {sorted(stations-set(declared))[:5]}, extra {sorted(set(declared)-stations)[:5]}")
     text = tcl.read_text()
-    missing = [name for name in sorted(stations) if not re.search(r"^\s*(?:is_place|is_bits)\s+[^\n]*?(?<![\w])" + re.escape(name) + r"(?![\w])", text, re.M)]
+    # KV-PLAN-R6 11-21: exact_bank_sites receipts are written as is_exact_bank {NAME} W {{x y} ...} fw fh tag idx
+    # (kit_istations.py); without it every exact-bank native station read as missing (kv3_sys_c o_dcal_dob).
+    missing = [name for name in sorted(stations) if not re.search(r"^\s*(?:is_place|is_bits|is_exact_bank)\s+[^\n]*?(?<![\w])" + re.escape(name) + r"(?![\w])", text, re.M)]
     if missing:
         raise BindError(f"kit-rtl {bound_type}: native station sites missing from istations.tcl: {missing[:5]}")
     for source_file, target_name in ((tcl, "istations.tcl"), (receipt, "native_station_receipt.json")):

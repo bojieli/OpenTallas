@@ -53,6 +53,27 @@ class NativeGeometry(unittest.TestCase):
             with self.assertRaisesRegex(bind.BindError, 'sites missing'):
                 bind.kit_native_station_geometry(root, 't', self.RTL, kit)
 
+    def test_exact_bank_station_sites_are_found(self):
+        rtl = 'module bound;\n ot_dp_st #(.W(3)) u_ist_o_dcal_dob_0 (.clk(clk), .d(d), .q(q));\nendmodule\n'
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            source = root / 'native_internal_stations' / 'kv3_sys_c'
+            source.mkdir(parents=True)
+            # verbatim kit_istations exact-bank form (D27d2 kv3_sys_c bind)
+            text = ('is_exact_bank {u_ist_o_dcal_dob_0} 3 {{54 199.8} {55.458 199.8} {1879.092 985.5} '
+                    '{56.916 199.8}} 1.404 0.27 ist:o_dcal_dob 0\n')
+            (source / 'istations.tcl').write_text(text)
+            (source / 'receipt.json').write_text(json.dumps(dict(entries=[dict(
+                conn='bus:o_dcal_dob', stations=['u_ist_o_dcal_dob_0'], exact_bank_sites=True)])))
+            (source / 'plan.json').write_text(json.dumps(dict(partition_types={})))
+            kit = root / 'kit'; kit.mkdir()
+            result = bind.kit_native_station_geometry(root, 'kv3_sys_c', rtl, kit)
+            self.assertEqual(result['stations'], 1)
+            (source / 'istations.tcl').write_text(
+                'is_exact_bank {u_ist_o_dcal_dob_01} 3 {{54 199.8}} 1.404 0.27 ist:x 0\n')
+            with self.assertRaisesRegex(bind.BindError, 'sites missing'):
+                bind.kit_native_station_geometry(root, 'kv3_sys_c', rtl, kit)
+
     def test_non_native_kit_stays_unchanged(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
