@@ -54,3 +54,4 @@
   Pushed: cca0222940, 15883a0706, 1c1857d4d1.
   Not done: strict bind + LATCHECK; proof kits; reset u_bin rows; 706 ft slots over reach (+1,168 stations reported, not applied).
 - 2026-11-20 21:57 PST DIED [KV-PLAN-R2] ot-run oth-ubuntu-2751986-1795230046 on tolerant-swine: rc=1 after 10600 s, ended 21:57:22, log /home/ubuntu/tmp/kvplanr2/d26_r3e_bind.log, cmd: --hosts epyc7 --mem 56 --threads 3 --priority plan --dir /srv/opentallas-scratch2/claude/kv-d23-compose8/d26_raw/d26_contracts -- bash ./run
+- 2026-11-21 00:55 PST RESET-RELAY-GEN-R3 relay_site_scan KV D26 (epyc10 rrgen-r3/scan_kv_d26.json): 56 types scanned (3 without a tree), 0 with illegal relay sites, 0 relays
