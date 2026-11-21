@@ -11532,10 +11532,13 @@ def item_disk_gb(cfg, die, item, replicas=1):
 
 
 def inflight_disk_gb(st, host):
-    """sum of the disk budgets (rec item_disk_gb) of the live attempts (RUNNING / LAUNCHING / ENQUEUED) generating on host"""
+    """Sum disk budgets of active generation and unresolved queue attempts on this host."""
     tot = 0.0
     for r in (st.get("items") or {}).values():
-        if r.get("status") in ("RUNNING", "LAUNCHING", "ENQUEUED") and r.get("gen_host") == host:
+        status = r.get("status")
+        if status == "ENQUEUED" and r.get("q_status") in ("FAIL", "SIGNED", "CANCELLED", "WITHDRAWN", "TRIAL-SIGNED"):
+            continue  # follow_queue retains ENQUEUED to keep terminal result evidence linked
+        if status in ("RUNNING", "LAUNCHING", "ENQUEUED") and r.get("gen_host") == host:
             tot += float(r.get("item_disk_gb") or 0)
     return tot
 
