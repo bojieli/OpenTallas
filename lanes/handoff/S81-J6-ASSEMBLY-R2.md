@@ -9,3 +9,13 @@ Apply order at or before 11-21 13:00 PST: C3d, else C3c, else C1n (never plain C
 - C3c gate: unit oth-ubuntu-207147-1795245549 (chain PID 177099), plan 7ea453a3. Census HOP 7,294, RESET_LEG 519, REGRESS 0.
 - C3d gate: unit oth-ubuntu-446307-1795246109 (chain PID 407736), plan 2ea6cd2f, manifest 143c3fea; 17 deltas 5,242 ops; defines 40, reproofs 5; CFX_OVERLAY_OK. Census = C3c.
 - Waiters: ot-wait on all three units (background, this lane).
+- C3f = C3d + LEAF-R2 key add-on (9 types) + leaf landing_writer_start reach1 (59 types): plan 12e223f3, manifest 143c3fea (= C3d); gate unit oth-ubuntu-949686-1795247137 (chain_r2.sh PID 891127). candC3e = failed compose (ADOPT_MAIN unset), unused; delete later via ot-delete.
+- chain_r2.sh = chain.sh with OT_LANE=S81-J6-ASSEMBLY-R2 and ADOPT_MAIN default a4fc295c2a05.
+- Apply order now: C3f, C3d, C3c, C1n (first green). Gates C3c/C3d were never queued: ELAB (docker yosys) runs before gate.sh, so gates/<cand> appears late.
+- Lever 1 (COORD 23:45): ROM input-stage rows do not exist (rom_pval is output-side). Will gate a replacement variant only if FAM-S81-COL hands a j6_donor_delta.v1 by 10:00 PST; else J7.
+
+## Apply kit (intel2 /srv/opentallas-scratch2/claude/s81-j6-r2-hub)
+- j6_pack.sh CAND: gate-log check -> reach 300 -> latcheck into tree -> seal bind -> compose epyc8 d8j6 (link-dest J5) -> bind replicas -> publish_onbase d8j6 on d8j5 (6 hosts incl epyc7) -> out_install verify -> event commit (mk_event_commit_j6.sh, clone epyc10 s81-j6-r2-clone) -> mk_cand_j6.py (lanes/handoff/S81_D8J6_source_candidate_1121.json + S81-D8J6-G0-BASELINE-1121.json; marker without tools_sha).
+- j6_apply.sh PACK_OUT: hold_j6.py rep-first holds (lifts J5-only until-J6 holds, keeps rst_rl_137), publish_apply apply --pilot-item dsdv_slice_lepe_mu_LP__t2.
+- After apply: first bound-type gen on scheduler rt -> check config.mk defines (RIP1 on lepe LP t2, CFX + SRAMREG on leaf t39) -> kit_wave_edit /dies/s81/tools_sha = that rt sha, hardlink copy in s81-j6/rtpin/.
+- Reps: col_h9_r2__t1__cl774acf45__pv11b6518d, col_h9_r1__t1__cl49d7a23e__pv047ea3b3, ot_s81sl_leaf__t39, serdes__t4, slice_station__t36, dsdv_slice_lepe_mu_LP__t2.
