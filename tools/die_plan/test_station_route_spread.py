@@ -88,3 +88,14 @@ def test_cli_keeps_plan_format(tmp_path):
     txt = out.read_text()
     assert "\n" not in txt[:-1] and json.loads(txt)["partition_types"]["T"]["internal_stations"][0]["regs_um"] != _plan()["partition_types"]["T"]["internal_stations"][0]["regs_um"]
     assert json.loads(rep.read_text())["rows"][0]["hop_after_um"] <= 300
+
+
+def test_cli_runs_isolated(tmp_path):
+    """python3 -I (no script dir on sys.path): the tool finds its die_plan siblings itself"""
+    import subprocess
+    g = _geom(tmp_path)
+    pl = tmp_path / "p.json"
+    pl.write_text(json.dumps(_plan()) + "\n")
+    r = subprocess.run([sys.executable, "-I", str(HERE / "station_route_spread.py"), str(pl), "T", str(g),
+                        str(tmp_path / "o.json"), str(tmp_path / "r.json")], capture_output=True, text=True)
+    assert r.returncode == 0, r.stderr

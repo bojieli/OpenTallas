@@ -28,6 +28,7 @@ import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(HERE.parent / "autopilot"))
 import geom_rules  # noqa: E402
 from reset_leg_plan import dumper  # noqa: E402  (byte-format-preserving plan writer)
