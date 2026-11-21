@@ -1,20 +1,1406 @@
 {
- "schema": "reset_relay_gen_1530.rows.v1",
- "tool": "tools/die_plan/reset_leg_plan.py (main 73717f6992)",
- "note": "per-type plan delta keys read from the newest placed kit + its bound module; tap indices are that bind's tree taps: re-run the tool on the event bind",
+ "schema": "reset_relay_gen_1530.rows.v2",
+ "tool": "tools/die_plan/reset_leg_plan.py (main 5099d315ba)",
+ "note": "plan delta keys per type from its newest placed / CTS kit + bound module; tap ids and split names belong to that bind: re-run the tool on the event bind",
  "sources": {
-  "cbx_q10__cl94a12200": "QC s29q103S4Q9N46C epyc9 kit",
-  "kv3_pv_v2": "KV-D25e3 attempt_4 epyc7 kit",
-  "dsdv_slice_lepe_mu_LP__t2": "S81 b05c98f7919 epyc2 kit",
-  "dsdv_slice_lepe_nh_mus_LP__t1": "S81 b05c98f7919 epyc2 kit"
+  "kv3_hub_Eo": "KV-D25e3 attempt_3 3_place (epyc7)",
+  "kv3_pv_v2": "KV-D25e3 attempt_4 place",
+  "cbx_q10__cl94a12200": "QC s29q103S4Q9N46C place",
+  "ot_s81sl_leaf__t60": "S81 CORE-LIB-LIMITS-1330 proof t60 4_cts",
+  "dsdv_slice_lepe_nh_mus_LP__t1": "S81 b05c98f7919 place",
+  "dsdv_slice_lepe_mu_LP__t2": "S81 b05c98f7919 place (tl copy, pre form M)"
  },
  "for_lane": {
-  "cbx_q10__cl94a12200": "QC-PLAN-R5 V1",
+  "kv3_hub_Eo": "KV-PLAN-R2 D27",
   "kv3_pv_v2": "KV-PLAN-R2 D27",
-  "dsdv_slice_lepe_mu_LP__t2": "S81-DIE-R4 J6",
-  "dsdv_slice_lepe_nh_mus_LP__t1": "S81-DIE-R4 J6"
+  "cbx_q10__cl94a12200": "QC-PLAN-R5 V1",
+  "ot_s81sl_leaf__t60": "S81-DIE-R4 J6",
+  "dsdv_slice_lepe_nh_mus_LP__t1": "S81-DIE-R4 J6",
+  "dsdv_slice_lepe_mu_LP__t2": "S81-DIE-R4 J6"
  },
  "types": {
+  "kv3_hub_Eo": {
+   "reset": {
+    "inst_taps": [
+     {
+      "tap": 0,
+      "sinks": [
+       "u_bin_i_ahub_am_EN",
+       "u_bin_i_ahub_am_ES"
+      ]
+     },
+     {
+      "tap": 27,
+      "sinks": [
+       "u_bin_i_astk_EN__u_strip_g_er_chain_u_er_g_owner_N__u_owner_fault"
+      ]
+     },
+     {
+      "tap": 43,
+      "sinks": [
+       "u_bin_i_seq__u_core_f_aqm_e",
+       "u_bin_i_seq__u_core_f_kc_e",
+       "u_bin_i_seq__u_core_s_qpop",
+       "u_bin_i_seq__u_core_x_v"
+      ]
+     },
+     {
+      "tap": 44,
+      "sinks": [
+       "u_bin_i_kvs_attn_acal_ES"
+      ]
+     },
+     {
+      "tap": 47,
+      "sinks": [
+       "u_bin_i_astk_EN__u_strip_u_strip_g_ep_N__u_ep_zo",
+       "u_bin_i_astk_ES__u_strip_g_er_chain_u_er_g_owner_N__u_owner_fault",
+       "u_bin_i_astk_ES__u_strip_u_strip_g_ep_N__u_ep_xo",
+       "u_bin_i_astk_ES__u_strip_u_strip_g_ep_N__u_ep_zo"
+      ]
+     },
+     {
+      "tap": 63,
+      "sinks": [
+       "u_bin_i_kvs_attn_prg",
+       "u_u_efault"
+      ]
+     },
+     {
+      "tap": 64,
+      "sinks": [
+       "u_bin_i_kc_EN_kf"
+      ]
+     },
+     {
+      "tap": 65,
+      "sinks": [
+       "u_bin_i_kvs_emb_px_tep",
+       "u_bin_i_kvs_emb_px_tok"
+      ]
+     },
+     {
+      "tap": 69,
+      "sinks": [
+       "u_bin_i_astk_EN__u_strip_u_strip_g_ep_N__u_ep_xo"
+      ]
+     },
+     {
+      "tap": 70,
+      "sinks": [
+       "u_bin_i_embgw_est",
+       "u_bin_i_host_boot_go",
+       "u_bin_i_host_die_rst_n",
+       "u_bin_i_host_hbm_rst_n",
+       "u_bin_i_kvs_attn_acal_EN"
+      ]
+     },
+     {
+      "tap": 76,
+      "sinks": [
+       "u_bin_i_host_host_rst_n"
+      ]
+     },
+     {
+      "tap": 77,
+      "sinks": [
+       "u_bin_i_kc_ES_kf"
+      ]
+     },
+     {
+      "tap": 83,
+      "sinks": [
+       "u_bin_i_seq__g_xs_N__u_xs_q_e",
+       "u_bin_i_seq__g_xs_N__u_xs_q_e_d1"
+      ]
+     }
+    ]
+   },
+   "relay_depth": [
+    {
+     "inst": "u_seq_g_fan_2_u_fan",
+     "port": "rst_n",
+     "side": "sink",
+     "D": 4,
+     "path_um": 1330.3,
+     "note": "RESET-RELAY-GEN-1530 form L: u_seq_g_fan_2_u_fan.u_rr fed from [161.6, 280.9], seated at its fanout"
+    },
+    {
+     "inst": "u_seq_g_fan_3_u_fan",
+     "port": "rst_n",
+     "side": "sink",
+     "D": 2,
+     "path_um": 650.8,
+     "note": "RESET-RELAY-GEN-1530 form L: u_seq_g_fan_3_u_fan.u_rr fed from [607.0, 910.1], seated at its fanout"
+    },
+    {
+     "inst": "u_astk_EN",
+     "port": "g_phys_fault_u_fault__rst_n",
+     "side": "sink",
+     "D": 8,
+     "path_um": 2220.8,
+     "note": "RESET-RELAY-GEN-1530 form M: u_bin_i_host_die_rst_n/q -> hard-core reset pin u_astk_EN.g_phys_fault_u_fault__rst_n"
+    },
+    {
+     "inst": "u_astk_ES",
+     "port": "g_phys_fault_u_fault__rst_n",
+     "side": "sink",
+     "D": 4,
+     "path_um": 1107.3,
+     "note": "RESET-RELAY-GEN-1530 form M: u_bin_i_host_die_rst_n/q -> hard-core reset pin u_astk_ES.g_phys_fault_u_fault__rst_n"
+    }
+   ],
+   "relay_sites": {
+    "u_seq_g_fan_2_u_fan.u_rr.sync_q[1]": [
+     607.041,
+     910.062
+    ],
+    "u_seq_g_fan_3_u_fan.u_rr.rst_n": [
+     1038.164,
+     1129.693
+    ],
+    "u_y_xd_u_astk_EN_g_phys_fault_u_fault__rst_n_k2_0.q": [
+     261.967,
+     421.276
+    ],
+    "u_y_xd_u_astk_EN_g_phys_fault_u_fault__rst_n_k2_1.q": [
+     362.365,
+     561.617
+    ],
+    "u_y_xd_u_astk_EN_g_phys_fault_u_fault__rst_n_k2_2.q": [
+     462.764,
+     701.958
+    ],
+    "u_y_xd_u_astk_EN_g_phys_fault_u_fault__rst_n_k2_3.q": [
+     563.163,
+     842.299
+    ],
+    "u_y_xd_u_astk_EN_g_phys_fault_u_fault__rst_n_k2_4.q": [
+     663.561,
+     982.64
+    ],
+    "u_y_xd_u_astk_EN_g_phys_fault_u_fault__rst_n_k2_5.q": [
+     763.96,
+     1122.981
+    ],
+    "u_y_xd_u_astk_EN_g_phys_fault_u_fault__rst_n_k2_6.q": [
+     864.359,
+     1263.322
+    ],
+    "u_y_xd_u_astk_EN_g_phys_fault_u_fault__rst_n_k2_7.q": [
+     964.757,
+     1403.663
+    ],
+    "u_y_xd_u_astk_ES_g_phys_fault_u_fault__rst_n_k3_0.q": [
+     342.286,
+     251.026
+    ],
+    "u_y_xd_u_astk_ES_g_phys_fault_u_fault__rst_n_k3_1.q": [
+     523.003,
+     221.116
+    ],
+    "u_y_xd_u_astk_ES_g_phys_fault_u_fault__rst_n_k3_2.q": [
+     703.721,
+     191.207
+    ],
+    "u_y_xd_u_astk_ES_g_phys_fault_u_fault__rst_n_k3_3.q": [
+     884.438,
+     161.297
+    ],
+    "u_y_xd_u_seq_g_fan_2_u_fan_rst_n_k0_0.q": [
+     299.592,
+     408.969
+    ],
+    "u_y_xd_u_seq_g_fan_2_u_fan_rst_n_k0_1.q": [
+     437.616,
+     537.003
+    ],
+    "u_y_xd_u_seq_g_fan_2_u_fan_rst_n_k0_2.q": [
+     575.64,
+     665.037
+    ],
+    "u_y_xd_u_seq_g_fan_2_u_fan_rst_n_k0_3.q": [
+     713.664,
+     793.071
+    ],
+    "u_y_xd_u_seq_g_fan_3_u_fan_rst_n_k1_0.q": [
+     750.749,
+     983.272
+    ],
+    "u_y_xd_u_seq_g_fan_3_u_fan_rst_n_k1_1.q": [
+     894.456,
+     1056.483
+    ]
+   }
+  },
+  "ot_s81sl_leaf__t60": {
+   "relay_depth": [
+    {
+     "inst": "u_lpad_leafdn_i0",
+     "port": "d",
+     "side": "sink",
+     "D": 5,
+     "path_um": 1435.4,
+     "note": "RESET-RELAY-GEN-1530 form F: u_lpad_leafdn_i0.q[0] fed from [637.7, 1274.0], seated at its fanout, stage at the entry centre + 2 branch level(s) x 8",
+     "bits": [
+      0,
+      0
+     ]
+    },
+    {
+     "inst": "u_u_vp_u_rr",
+     "port": "rst_n_in",
+     "side": "sink",
+     "D": 3,
+     "path_um": 837.5,
+     "note": "RESET-RELAY-GEN-1530 form L: u_u_vp_u_rr fed from [931.2, 633.6], seated at its fanout, stage at the entry centre + 1 branch level(s) x 3"
+    }
+   ],
+   "relay_sites": {
+    "u_lpad_leafdn_i0.q[0]": [
+     623.754,
+     963.63
+    ],
+    "u_lpad_leafdn_i0.q[0]__rs1": [
+     232.983,
+     586.44
+    ],
+    "u_lpad_leafdn_i0.q[0]__rs2": [
+     543.726,
+     406.62
+    ],
+    "u_lpad_leafdn_i0.q[0]__rs3": [
+     909.279,
+     255.825
+    ],
+    "u_lpad_leafdn_i0.q[0]__rs4": [
+     931.163,
+     633.596
+    ],
+    "u_lpad_leafdn_i0.q[0]__rs5": [
+     1190.214,
+     391.095
+    ],
+    "u_lpad_leafdn_i0.q[0]__rs6": [
+     1071.198,
+     1095.336
+    ],
+    "u_lpad_leafdn_i0.q[0]__rs7": [
+     1278.814,
+     780.233
+    ],
+    "u_u_vp_u_rr.rst_n[2]": [
+     987.444,
+     798.444
+    ],
+    "u_u_vp_u_rr.rst_n[3]": [
+     809.825,
+     730.606
+    ],
+    "u_u_vp_u_rr.sync_q[0]": [
+     980.444,
+     736.985
+    ],
+    "u_u_vp_u_rr.sync_q[0]__rs1": [
+     1188.756,
+     391.23
+    ],
+    "u_u_vp_u_rr.sync_q[0]__rs2": [
+     1304.856,
+     1097.415
+    ],
+    "u_u_vp_u_rr.sync_q[1]": [
+     907.187,
+     521.06
+    ],
+    "u_u_vp_u_rr.sync_q[1]__rs1": [
+     1188.756,
+     391.23
+    ],
+    "u_u_vp_u_rr.sync_q[1]__rs2": [
+     997.474,
+     1009.138
+    ],
+    "u_u_vp_u_rr.sync_q[1]__rs3": [
+     1237.41,
+     738.828
+    ],
+    "u_u_vp_u_rr.sync_q[1]__rs4": [
+     1304.856,
+     1097.415
+    ],
+    "u_y_xd_u_lpad_leafdn_i0_d_k0_0.q": [
+     711.128,
+     1061.021
+    ],
+    "u_y_xd_u_lpad_leafdn_i0_d_k0_1.q": [
+     784.516,
+     848.047
+    ],
+    "u_y_xd_u_lpad_leafdn_i0_d_k0_2.q": [
+     857.905,
+     635.074
+    ],
+    "u_y_xd_u_lpad_leafdn_i0_d_k0_3.q": [
+     779.854,
+     744.592
+    ],
+    "u_y_xd_u_lpad_leafdn_i0_d_k0_3.q__rs1": [
+     649.597,
+     618.862
+    ],
+    "u_y_xd_u_lpad_leafdn_i0_d_k0_3.q__rs2": [
+     753.178,
+     558.922
+    ],
+    "u_y_xd_u_lpad_leafdn_i0_d_k0_3.q__rs3": [
+     875.029,
+     508.657
+    ],
+    "u_y_xd_u_lpad_leafdn_i0_d_k0_3.q__rs4": [
+     882.324,
+     634.581
+    ],
+    "u_y_xd_u_lpad_leafdn_i0_d_k0_3.q__rs5": [
+     968.674,
+     553.747
+    ],
+    "u_y_xd_u_lpad_leafdn_i0_d_k0_3.q__rs6": [
+     929.002,
+     788.494
+    ],
+    "u_y_xd_u_lpad_leafdn_i0_d_k0_3.q__rs7": [
+     998.208,
+     683.46
+    ],
+    "u_y_xd_u_lpad_leafdn_i0_d_k0_4.q": [
+     701.804,
+     854.111
+    ],
+    "u_y_xd_u_lpad_leafdn_i0_d_k0_4.q__rs1": [
+     441.29,
+     602.651
+    ],
+    "u_y_xd_u_lpad_leafdn_i0_d_k0_4.q__rs2": [
+     648.452,
+     482.771
+    ],
+    "u_y_xd_u_lpad_leafdn_i0_d_k0_4.q__rs3": [
+     892.154,
+     382.241
+    ],
+    "u_y_xd_u_lpad_leafdn_i0_d_k0_4.q__rs4": [
+     906.743,
+     634.088
+    ],
+    "u_y_xd_u_lpad_leafdn_i0_d_k0_4.q__rs5": [
+     1079.444,
+     472.421
+    ],
+    "u_y_xd_u_lpad_leafdn_i0_d_k0_4.q__rs6": [
+     1000.1,
+     941.915
+    ],
+    "u_y_xd_u_lpad_leafdn_i0_d_k0_4.q__rs7": [
+     1138.511,
+     731.846
+    ],
+    "u_y_xd_u_u_vp_u_rr_rst_n_in_k1_0.q": [
+     1088.984,
+     688.959
+    ],
+    "u_y_xd_u_u_vp_u_rr_rst_n_in_k1_1.q": [
+     1246.806,
+     744.322
+    ],
+    "u_y_xd_u_u_vp_u_rr_rst_n_in_k1_2.q": [
+     1113.625,
+     740.654
+    ],
+    "u_y_xd_u_u_vp_u_rr_rst_n_in_k1_2.q__rs1": [
+     1217.781,
+     567.776
+    ],
+    "u_y_xd_u_u_vp_u_rr_rst_n_in_k1_2.q__rs2": [
+     1275.831,
+     920.869
+    ]
+   },
+   "relay_split": [
+    {
+     "flop": "u_lpad_leafdn_i0.q[0]",
+     "clones": [
+      {
+       "name": "u_lpad_leafdn_i0.q[0]__rs1",
+       "sinks": [
+        "u_u_ve_u_crr_m/q",
+        "g_u_cst_sw_gd_s_0_u_src_0fda65720a0b587f4af9_q",
+        "u_u_crr_vs/q",
+        "u_u_crr_vq/q",
+        "u_u_crr_rxsb/q"
+       ]
+      },
+      {
+       "name": "u_lpad_leafdn_i0.q[0]__rs2",
+       "sinks": [
+        "u_u_crr_rxsf/q",
+        "u_u_crr_vsw/q"
+       ]
+      },
+      {
+       "name": "u_lpad_leafdn_i0.q[0]__rs3",
+       "sinks": [
+        "u_u_vp_u_rr.relay_q[0][9]",
+        "u_u_vp_u_rr.rst_n[9]"
+       ]
+      },
+      {
+       "name": "u_lpad_leafdn_i0.q[0]__rs4",
+       "sinks": [
+        "g_u_cst_vni_gd_s_0_u_src_2f36f4826d56de0f1f6a_q[2]",
+        "g_u_cst_vni_gd_s_0_u_src_2f36f4826d56de0f1f6a_q[0]",
+        "g_u_cst_m_gd_s_1_u_src_0fda65720a0b587f4af9_q",
+        "g_u_cst_vni_gd_s_0_u_src_2f36f4826d56de0f1f6a_q[1]",
+        "g_u_cst_vni_gd_s_0_u_src_2f36f4826d56de0f1f6a_q[3]",
+        "u_u_vn_u_crr_a/q",
+        "u_u_vp_u_rr.relay_q[0][3]",
+        "u_u_vp_u_rr.rst_n[3]",
+        "u_u_vp_u_rr.relay_q[0][1]",
+        "u_u_vp_u_rr.rst_n[1]",
+        "u_u_vp_u_rr.rst_n[5]",
+        "u_u_vp_u_rr.relay_q[0][5]",
+        "u_u_vp_u_rr.rst_n[0]",
+        "u_u_vp_u_rr.relay_q[0][0]",
+        "u_u_vp_u_rr.sync_q[0]",
+        "u_u_vp_u_rr.sync_q[1]",
+        "u_u_vp_u_rr.relay_q[0][2]",
+        "u_u_vp_u_rr.rst_n[2]",
+        "u_u_vp_u_rr.relay_q[0][4]",
+        "u_u_vp_u_rr.rst_n[4]",
+        "u_u_vp_u_rr.rst_n[11]",
+        "u_u_vp_u_rr.relay_q[0][11]",
+        "u_u_vp_u_rr.relay_q[0][6]",
+        "u_u_vp_u_rr.rst_n[6]",
+        "u_u_vp_u_rr.relay_q[0][8]",
+        "u_u_vp_u_rr.rst_n[8]"
+       ]
+      },
+      {
+       "name": "u_lpad_leafdn_i0.q[0]__rs5",
+       "sinks": [
+        "u_u_vp_u_rr.relay_q[0][10]",
+        "u_u_vp_u_rr.rst_n[10]",
+        "u_u_vp_u_rr.relay_q[0][7]",
+        "u_u_vp_u_rr.rst_n[7]"
+       ]
+      },
+      {
+       "name": "u_lpad_leafdn_i0.q[0]__rs6",
+       "sinks": [
+        "u_u_vp_u_rr.rst_n[17]",
+        "u_u_vp_u_rr.relay_q[0][17]",
+        "u_u_vp_u_rr.relay_q[0][12]",
+        "u_u_vp_u_rr.relay_q[0][14]",
+        "u_u_vp_u_rr.rst_n[12]",
+        "u_u_vp_u_rr.rst_n[14]",
+        "u_u_vp_u_rr.relay_q[0][19]",
+        "u_u_vp_u_rr.relay_q[0][13]",
+        "u_u_vp_u_rr.rst_n[13]",
+        "u_u_vp_u_rr.rst_n[19]"
+       ]
+      },
+      {
+       "name": "u_lpad_leafdn_i0.q[0]__rs7",
+       "sinks": [
+        "u_u_vp_u_rr.relay_q[0][16]",
+        "u_u_vp_u_rr.rst_n[16]",
+        "u_u_vp_u_rr.relay_q[0][18]",
+        "u_u_vp_u_rr.rst_n[18]",
+        "u_u_vp_u_rr.rst_n[15]",
+        "u_u_vp_u_rr.relay_q[0][15]"
+       ]
+      }
+     ]
+    },
+    {
+     "flop": "u_y_xd_u_lpad_leafdn_i0_d_k0_4.q",
+     "clones": [
+      {
+       "name": "u_y_xd_u_lpad_leafdn_i0_d_k0_4.q__rs1",
+       "sinks": [
+        "u_lpad_leafdn_i0.q[0]__rs1"
+       ]
+      },
+      {
+       "name": "u_y_xd_u_lpad_leafdn_i0_d_k0_4.q__rs2",
+       "sinks": [
+        "u_lpad_leafdn_i0.q[0]__rs2"
+       ]
+      },
+      {
+       "name": "u_y_xd_u_lpad_leafdn_i0_d_k0_4.q__rs3",
+       "sinks": [
+        "u_lpad_leafdn_i0.q[0]__rs3"
+       ]
+      },
+      {
+       "name": "u_y_xd_u_lpad_leafdn_i0_d_k0_4.q__rs4",
+       "sinks": [
+        "u_lpad_leafdn_i0.q[0]__rs4"
+       ]
+      },
+      {
+       "name": "u_y_xd_u_lpad_leafdn_i0_d_k0_4.q__rs5",
+       "sinks": [
+        "u_lpad_leafdn_i0.q[0]__rs5"
+       ]
+      },
+      {
+       "name": "u_y_xd_u_lpad_leafdn_i0_d_k0_4.q__rs6",
+       "sinks": [
+        "u_lpad_leafdn_i0.q[0]__rs6"
+       ]
+      },
+      {
+       "name": "u_y_xd_u_lpad_leafdn_i0_d_k0_4.q__rs7",
+       "sinks": [
+        "u_lpad_leafdn_i0.q[0]__rs7"
+       ]
+      }
+     ]
+    },
+    {
+     "flop": "u_y_xd_u_lpad_leafdn_i0_d_k0_3.q",
+     "clones": [
+      {
+       "name": "u_y_xd_u_lpad_leafdn_i0_d_k0_3.q__rs1",
+       "sinks": [
+        "u_y_xd_u_lpad_leafdn_i0_d_k0_4.q__rs1"
+       ]
+      },
+      {
+       "name": "u_y_xd_u_lpad_leafdn_i0_d_k0_3.q__rs2",
+       "sinks": [
+        "u_y_xd_u_lpad_leafdn_i0_d_k0_4.q__rs2"
+       ]
+      },
+      {
+       "name": "u_y_xd_u_lpad_leafdn_i0_d_k0_3.q__rs3",
+       "sinks": [
+        "u_y_xd_u_lpad_leafdn_i0_d_k0_4.q__rs3"
+       ]
+      },
+      {
+       "name": "u_y_xd_u_lpad_leafdn_i0_d_k0_3.q__rs4",
+       "sinks": [
+        "u_y_xd_u_lpad_leafdn_i0_d_k0_4.q__rs4"
+       ]
+      },
+      {
+       "name": "u_y_xd_u_lpad_leafdn_i0_d_k0_3.q__rs5",
+       "sinks": [
+        "u_y_xd_u_lpad_leafdn_i0_d_k0_4.q__rs5"
+       ]
+      },
+      {
+       "name": "u_y_xd_u_lpad_leafdn_i0_d_k0_3.q__rs6",
+       "sinks": [
+        "u_y_xd_u_lpad_leafdn_i0_d_k0_4.q__rs6"
+       ]
+      },
+      {
+       "name": "u_y_xd_u_lpad_leafdn_i0_d_k0_3.q__rs7",
+       "sinks": [
+        "u_y_xd_u_lpad_leafdn_i0_d_k0_4.q__rs7"
+       ]
+      }
+     ]
+    },
+    {
+     "flop": "u_u_vp_u_rr.sync_q[1]",
+     "clones": [
+      {
+       "name": "u_u_vp_u_rr.sync_q[1]__rs1",
+       "sinks": [
+        "u_u_vp_u_rr.relay_q[0][10]",
+        "u_u_vp_u_rr.relay_q[0][7]"
+       ]
+      },
+      {
+       "name": "u_u_vp_u_rr.sync_q[1]__rs2",
+       "sinks": [
+        "u_u_vp_u_rr.relay_q[0][17]",
+        "u_u_vp_u_rr.relay_q[0][12]",
+        "u_u_vp_u_rr.relay_q[0][14]",
+        "u_u_vp_u_rr.relay_q[0][13]",
+        "u_u_vp_u_rr.relay_q[0][5]"
+       ]
+      },
+      {
+       "name": "u_u_vp_u_rr.sync_q[1]__rs3",
+       "sinks": [
+        "u_u_vp_u_rr.relay_q[0][16]",
+        "u_u_vp_u_rr.relay_q[0][18]",
+        "u_u_vp_u_rr.relay_q[0][6]",
+        "u_u_vp_u_rr.relay_q[0][8]",
+        "u_u_vp_u_rr.relay_q[0][15]"
+       ]
+      },
+      {
+       "name": "u_u_vp_u_rr.sync_q[1]__rs4",
+       "sinks": [
+        "u_u_vp_u_rr.relay_q[0][19]"
+       ]
+      }
+     ]
+    },
+    {
+     "flop": "u_u_vp_u_rr.sync_q[0]",
+     "clones": [
+      {
+       "name": "u_u_vp_u_rr.sync_q[0]__rs1",
+       "sinks": [
+        "u_u_vp_u_rr.sync_q[1]__rs1"
+       ]
+      },
+      {
+       "name": "u_u_vp_u_rr.sync_q[0]__rs2",
+       "sinks": [
+        "u_u_vp_u_rr.sync_q[1]__rs4"
+       ]
+      }
+     ]
+    },
+    {
+     "flop": "u_y_xd_u_u_vp_u_rr_rst_n_in_k1_2.q",
+     "clones": [
+      {
+       "name": "u_y_xd_u_u_vp_u_rr_rst_n_in_k1_2.q__rs1",
+       "sinks": [
+        "u_u_vp_u_rr.sync_q[0]__rs1"
+       ]
+      },
+      {
+       "name": "u_y_xd_u_u_vp_u_rr_rst_n_in_k1_2.q__rs2",
+       "sinks": [
+        "u_u_vp_u_rr.sync_q[0]__rs2"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  "dsdv_slice_lepe_nh_mus_LP__t1": {
+   "reset": {
+    "inst_taps": [
+     {
+      "tap": 2,
+      "sinks": [
+       "u_bin_coll_i0"
+      ]
+     },
+     {
+      "tap": 42,
+      "sinks": [
+       "u_bin_coll_i1"
+      ]
+     },
+     {
+      "tap": 52,
+      "sinks": [
+       "u_bin_unit_i0"
+      ]
+     }
+    ]
+   },
+   "relay_depth": [
+    {
+     "inst": "u_u_land",
+     "port": "rst_n",
+     "side": "sink",
+     "D": 5,
+     "path_um": 1684.5,
+     "note": "RESET-RELAY-GEN-1530 form L: u_u_land.u_rstr fed from [1436.6, 6.1], seated at its fanout"
+    },
+    {
+     "inst": "u_u_lep",
+     "port": "rst_n",
+     "side": "sink",
+     "D": 4,
+     "path_um": 1312.6,
+     "note": "RESET-RELAY-GEN-1530 form L: u_u_lep.u.g_reset_balanced.u_rstr fed from [385.6, 577.9], seated at its fanout, stage at the entry centre + 2 branch level(s) x 5"
+    }
+   ],
+   "relay_sites": {
+    "u_u_land.u_rstr.rst_n": [
+     544.117,
+     798.106
+    ],
+    "u_u_land.u_rstr.sync_q[0]": [
+     544.117,
+     798.106
+    ],
+    "u_u_land.u_rstr.sync_q[1]": [
+     544.117,
+     798.106
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[0].group_r": [
+     484.603,
+     643.997
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[0].group_r__rs1": [
+     1420.848,
+     300.645
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[10].group_r": [
+     239.423,
+     773.807
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[10].group_r__rs1": [
+     790.182,
+     781.785
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[12].group_r": [
+     1003.347,
+     767.205
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[12].group_r__rs1": [
+     242.825,
+     763.061
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[13].group_r": [
+     748.116,
+     732.267
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[13].group_r__rs1": [
+     1143.139,
+     765.841
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[14].group_r": [
+     643.626,
+     721.494
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[14].group_r__rs1": [
+     1029.848,
+     690.134
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[14].group_r__rs2": [
+     1139.184,
+     679.239
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[15].group_r": [
+     1130.382,
+     678.24
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[15].group_r__rs1": [
+     325.917,
+     668.79
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[16].group_r": [
+     925.047,
+     723.654
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[16].group_r__rs1": [
+     432.607,
+     654.061
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[17].group_r": [
+     493.951,
+     712.192
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[17].group_r__rs1": [
+     851.837,
+     292.046
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[17].group_r__rs2": [
+     1210.666,
+     245.038
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[17].group_r__rs3": [
+     1124.469,
+     688.23
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[18].group_r": [
+     558.738,
+     716.769
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[18].group_r__rs1": [
+     1050.827,
+     723.101
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[4].group_r": [
+     764.438,
+     760.171
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[4].group_r__rs1": [
+     1065.204,
+     815.67
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[6].group_r": [
+     792.315,
+     814.482
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[6].group_r__rs1": [
+     53.541,
+     729.027
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[7].group_r": [
+     820.989,
+     720.981
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[7].group_r__rs1": [
+     226.044,
+     724.842
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[8].group_r": [
+     1017.886,
+     714.541
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[8].group_r__rs1": [
+     56.214,
+     720.252
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[9].group_r": [
+     999.958,
+     725.962
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[9].group_r__rs1": [
+     204.538,
+     722.183
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_local[0].local_r": [
+     327.308,
+     593.905
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_local[2].local_r": [
+     569.592,
+     708.021
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_local[2].local_r__rs1": [
+     1420.848,
+     300.645
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.root_r": [
+     347.058,
+     723.735
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.root_r__rs1": [
+     851.837,
+     292.045
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.root_r__rs2": [
+     877.061,
+     773.719
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.root_r__rs3": [
+     1168.999,
+     468.065
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.root_r__rs4": [
+     1420.848,
+     300.645
+    ],
+    "u_y_xd_u_u_land_rst_n_k0_0.q": [
+     1287.821,
+     138.08
+    ],
+    "u_y_xd_u_u_land_rst_n_k0_1.q": [
+     1139.081,
+     270.086
+    ],
+    "u_y_xd_u_u_land_rst_n_k0_2.q": [
+     990.34,
+     402.091
+    ],
+    "u_y_xd_u_u_land_rst_n_k0_3.q": [
+     841.599,
+     534.096
+    ],
+    "u_y_xd_u_u_land_rst_n_k0_4.q": [
+     692.858,
+     666.101
+    ],
+    "u_y_xd_u_u_lep_rst_n_k1_0.q": [
+     634.756,
+     545.062
+    ],
+    "u_y_xd_u_u_lep_rst_n_k1_1.q": [
+     883.953,
+     512.19
+    ],
+    "u_y_xd_u_u_lep_rst_n_k1_2.q": [
+     704.988,
+     582.705
+    ],
+    "u_y_xd_u_u_lep_rst_n_k1_2.q__rs1": [
+     873.248,
+     438.809
+    ],
+    "u_y_xd_u_u_lep_rst_n_k1_2.q__rs2": [
+     881.656,
+     599.366
+    ],
+    "u_y_xd_u_u_lep_rst_n_k1_2.q__rs3": [
+     978.968,
+     497.482
+    ],
+    "u_y_xd_u_u_lep_rst_n_k1_2.q__rs4": [
+     1062.918,
+     441.675
+    ],
+    "u_y_xd_u_u_lep_rst_n_k1_3.q": [
+     526.023,
+     653.22
+    ],
+    "u_y_xd_u_u_lep_rst_n_k1_3.q__rs1": [
+     862.542,
+     365.427
+    ],
+    "u_y_xd_u_u_lep_rst_n_k1_3.q__rs2": [
+     879.358,
+     686.543
+    ],
+    "u_y_xd_u_u_lep_rst_n_k1_3.q__rs3": [
+     1073.983,
+     482.774
+    ],
+    "u_y_xd_u_u_lep_rst_n_k1_3.q__rs4": [
+     1241.883,
+     371.16
+    ]
+   },
+   "relay_split": [
+    {
+     "flop": "u_u_lep.u.g_reset_balanced.u_rstr.g_local[2].local_r",
+     "clones": [
+      {
+       "name": "u_u_lep.u.g_reset_balanced.u_rstr.g_local[2].local_r__rs1",
+       "sinks": [
+        "u_u_lep.u.riv"
+       ]
+      }
+     ]
+    },
+    {
+     "flop": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[0].group_r",
+     "clones": [
+      {
+       "name": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[0].group_r__rs1",
+       "sinks": [
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[2].local_r__rs1"
+       ]
+      }
+     ]
+    },
+    {
+     "flop": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[10].group_r",
+     "clones": [
+      {
+       "name": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[10].group_r__rs1",
+       "sinks": [
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[351].local_r"
+       ]
+      }
+     ]
+    },
+    {
+     "flop": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[12].group_r",
+     "clones": [
+      {
+       "name": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[12].group_r__rs1",
+       "sinks": [
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[389].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[390].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[397].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[399].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[400].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[398].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[391].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[401].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[392].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[395].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[396].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[404].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[394].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[403].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[393].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[402].local_r"
+       ]
+      }
+     ]
+    },
+    {
+     "flop": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[13].group_r",
+     "clones": [
+      {
+       "name": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[13].group_r__rs1",
+       "sinks": [
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[419].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[420].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[422].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[424].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[421].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[423].local_r"
+       ]
+      }
+     ]
+    },
+    {
+     "flop": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[14].group_r",
+     "clones": [
+      {
+       "name": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[14].group_r__rs1",
+       "sinks": [
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[475].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[476].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[474].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[473].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[472].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[478].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[477].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[479].local_r"
+       ]
+      },
+      {
+       "name": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[14].group_r__rs2",
+       "sinks": [
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[471].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[465].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[469].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[470].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[468].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[467].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[466].local_r"
+       ]
+      }
+     ]
+    },
+    {
+     "flop": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[15].group_r",
+     "clones": [
+      {
+       "name": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[15].group_r__rs1",
+       "sinks": [
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[510].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[511].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[501].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[499].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[505].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[500].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[495].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[504].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[494].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[497].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[496].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[498].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[508].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[503].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[506].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[507].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[509].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[502].local_r"
+       ]
+      }
+     ]
+    },
+    {
+     "flop": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[16].group_r",
+     "clones": [
+      {
+       "name": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[16].group_r__rs1",
+       "sinks": [
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[513].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[512].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[515].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[516].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[514].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[520].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[521].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[522].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[523].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[525].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[519].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[524].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[518].local_r"
+       ]
+      }
+     ]
+    },
+    {
+     "flop": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[17].group_r",
+     "clones": [
+      {
+       "name": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[17].group_r__rs1",
+       "sinks": [
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[572].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[565].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[566].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[557].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[556].local_r"
+       ]
+      },
+      {
+       "name": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[17].group_r__rs2",
+       "sinks": [
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[555].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[558].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[559].local_r"
+       ]
+      },
+      {
+       "name": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[17].group_r__rs3",
+       "sinks": [
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[547].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[546].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[544].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[545].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[548].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[549].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[561].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[553].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[552].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[560].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[554].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[551].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[550].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[562].local_r"
+       ]
+      }
+     ]
+    },
+    {
+     "flop": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[18].group_r",
+     "clones": [
+      {
+       "name": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[18].group_r__rs1",
+       "sinks": [
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[586].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[585].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[587].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[588].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[589].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[590].local_r"
+       ]
+      }
+     ]
+    },
+    {
+     "flop": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[4].group_r",
+     "clones": [
+      {
+       "name": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[4].group_r__rs1",
+       "sinks": [
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[132].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[136].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[134].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[143].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[140].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[142].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[141].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[139].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[138].local_r"
+       ]
+      }
+     ]
+    },
+    {
+     "flop": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[6].group_r",
+     "clones": [
+      {
+       "name": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[6].group_r__rs1",
+       "sinks": [
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[214].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[215].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[216].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[213].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[217].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[218].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[219].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[220].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[223].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[221].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[222].local_r"
+       ]
+      }
+     ]
+    },
+    {
+     "flop": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[7].group_r",
+     "clones": [
+      {
+       "name": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[7].group_r__rs1",
+       "sinks": [
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[226].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[227].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[224].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[225].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[228].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[232].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[229].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[230].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[231].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[236].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[235].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[234].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[233].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[238].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[237].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[240].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[239].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[244].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[243].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[241].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[242].local_r"
+       ]
+      }
+     ]
+    },
+    {
+     "flop": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[8].group_r",
+     "clones": [
+      {
+       "name": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[8].group_r__rs1",
+       "sinks": [
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[283].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[284].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[285].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[286].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[287].local_r"
+       ]
+      }
+     ]
+    },
+    {
+     "flop": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[9].group_r",
+     "clones": [
+      {
+       "name": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[9].group_r__rs1",
+       "sinks": [
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[319].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[288].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[289].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[290].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[291].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[293].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[294].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[292].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[295].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[296].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[297].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[298].local_r"
+       ]
+      }
+     ]
+    },
+    {
+     "flop": "u_u_lep.u.g_reset_balanced.u_rstr.root_r",
+     "clones": [
+      {
+       "name": "u_u_lep.u.g_reset_balanced.u_rstr.root_r__rs1",
+       "sinks": [
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_group[17].group_r__rs1"
+       ]
+      },
+      {
+       "name": "u_u_lep.u.g_reset_balanced.u_rstr.root_r__rs2",
+       "sinks": [
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_group[5].group_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_group[1].group_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_group[2].group_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_group[6].group_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_group[3].group_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_group[4].group_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_group[10].group_r__rs1",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_group[13].group_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_group[11].group_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_group[7].group_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_group[16].group_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_group[12].group_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_group[4].group_r__rs1",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_group[9].group_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_group[8].group_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_group[18].group_r__rs1",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_group[14].group_r__rs1",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_group[13].group_r__rs1"
+       ]
+      },
+      {
+       "name": "u_u_lep.u.g_reset_balanced.u_rstr.root_r__rs3",
+       "sinks": [
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_group[17].group_r__rs3",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_group[15].group_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_group[14].group_r__rs2",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_group[17].group_r__rs2"
+       ]
+      },
+      {
+       "name": "u_u_lep.u.g_reset_balanced.u_rstr.root_r__rs4",
+       "sinks": [
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_group[0].group_r__rs1"
+       ]
+      }
+     ]
+    },
+    {
+     "flop": "u_y_xd_u_u_lep_rst_n_k1_3.q",
+     "clones": [
+      {
+       "name": "u_y_xd_u_u_lep_rst_n_k1_3.q__rs1",
+       "sinks": [
+        "u_u_lep.u.g_reset_balanced.u_rstr.root_r__rs1"
+       ]
+      },
+      {
+       "name": "u_y_xd_u_u_lep_rst_n_k1_3.q__rs2",
+       "sinks": [
+        "u_u_lep.u.g_reset_balanced.u_rstr.root_r__rs2"
+       ]
+      },
+      {
+       "name": "u_y_xd_u_u_lep_rst_n_k1_3.q__rs3",
+       "sinks": [
+        "u_u_lep.u.g_reset_balanced.u_rstr.root_r__rs3"
+       ]
+      },
+      {
+       "name": "u_y_xd_u_u_lep_rst_n_k1_3.q__rs4",
+       "sinks": [
+        "u_u_lep.u.g_reset_balanced.u_rstr.root_r__rs4"
+       ]
+      }
+     ]
+    },
+    {
+     "flop": "u_y_xd_u_u_lep_rst_n_k1_2.q",
+     "clones": [
+      {
+       "name": "u_y_xd_u_u_lep_rst_n_k1_2.q__rs1",
+       "sinks": [
+        "u_y_xd_u_u_lep_rst_n_k1_3.q__rs1"
+       ]
+      },
+      {
+       "name": "u_y_xd_u_u_lep_rst_n_k1_2.q__rs2",
+       "sinks": [
+        "u_y_xd_u_u_lep_rst_n_k1_3.q__rs2"
+       ]
+      },
+      {
+       "name": "u_y_xd_u_u_lep_rst_n_k1_2.q__rs3",
+       "sinks": [
+        "u_y_xd_u_u_lep_rst_n_k1_3.q__rs3"
+       ]
+      },
+      {
+       "name": "u_y_xd_u_u_lep_rst_n_k1_2.q__rs4",
+       "sinks": [
+        "u_y_xd_u_u_lep_rst_n_k1_3.q__rs4"
+       ]
+      }
+     ]
+    }
+   ]
+  },
   "cbx_q10__cl94a12200": {
    "reset": {
     "inst_taps": [
@@ -127,15 +1513,39 @@
    },
    "relay_depth": [
     {
+     "inst": "u_bin_lepk_i0",
+     "port": "d",
+     "side": "sink",
+     "D": 2,
+     "path_um": 749.6,
+     "note": "RESET-RELAY-GEN-1530 form F: u_bin_lepk_i0/q[0] fed from [1442.8, 7.0], seated at its fanout",
+     "bits": [
+      0,
+      0
+     ]
+    },
+    {
      "inst": "u_u_land",
      "port": "rst_n",
      "side": "sink",
-     "D": 4,
-     "path_um": 1462.3,
-     "note": "RESET-RELAY-GEN-1530 form L: u_u_land.u_rstr fed from [1436.7, 6.9], seated at its fanout"
+     "D": 2,
+     "path_um": 718.7,
+     "note": "RESET-RELAY-GEN-1530 form L: u_u_land.u_rstr fed from [694.7, 8.5], seated at its fanout"
+    },
+    {
+     "inst": "u_u_lep",
+     "port": "rst_n",
+     "side": "sink",
+     "D": 3,
+     "path_um": 1009.4,
+     "note": "RESET-RELAY-GEN-1530 form L: u_u_lep.u.g_reset_balanced.u_rstr fed from [366.0, 531.0], seated at its fanout, stage at the entry centre + 1 branch level(s) x 5"
     }
    ],
    "relay_sites": {
+    "u_bin_lepk_i0/q[0]": [
+     694.656,
+     8.505
+    ],
     "u_u_land.u_rstr.rst_n": [
      212.207,
      244.715
@@ -147,76 +1557,918 @@
     "u_u_land.u_rstr.sync_q[1]": [
      212.207,
      244.715
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[0].group_r": [
+     579.339,
+     526.095
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[0].group_r__rs1": [
+     765.234,
+     260.685
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[11].group_r": [
+     245.916,
+     449.712
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[12].group_r": [
+     572.481,
+     486.351
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[12].group_r__rs1": [
+     1021.045,
+     479.723
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[13].group_r": [
+     1008.612,
+     463.914
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[13].group_r__rs1": [
+     169.155,
+     490.617
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[14].group_r": [
+     1107.783,
+     473.769
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[14].group_r__rs1": [
+     130.491,
+     431.082
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[15].group_r": [
+     532.17,
+     440.424
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[15].group_r__rs1": [
+     821.245,
+     422.159
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[15].group_r__rs2": [
+     934.996,
+     438.683
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[16].group_r": [
+     1105.137,
+     438.885
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[16].group_r__rs1": [
+     214.529,
+     438.466
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[17].group_r": [
+     1013.526,
+     428.733
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[17].group_r__rs1": [
+     219.55,
+     423.238
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[18].group_r": [
+     847.8,
+     398.493
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[18].group_r__rs1": [
+     305.262,
+     396.981
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[19].group_r": [
+     1048.882,
+     397.777
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[19].group_r__rs1": [
+     116.154,
+     396.927
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[20].group_r": [
+     1012.676,
+     384.709
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[20].group_r__rs1": [
+     284.998,
+     397.426
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[21].group_r": [
+     818.586,
+     323.325
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[21].group_r__rs1": [
+     214.772,
+     343.075
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[23].group_r": [
+     1029.226,
+     351.473
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[23].group_r__rs1": [
+     215.109,
+     359.964
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[24].group_r": [
+     927.517,
+     400.774
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[24].group_r__rs1": [
+     238.329,
+     370.602
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[24].group_r__rs2": [
+     1193.535,
+     334.773
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[26].group_r": [
+     225.558,
+     227.07
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[26].group_r__rs1": [
+     1132.852,
+     121.865
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[27].group_r": [
+     450.684,
+     188.244
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[27].group_r__rs1": [
+     925.168,
+     214.42
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[28].group_r": [
+     581.661,
+     333.045
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[28].group_r__rs1": [
+     1028.133,
+     244.485
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[28].group_r__rs2": [
+     1214.892,
+     291.411
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[29].group_r": [
+     624.956,
+     234.644
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[30].group_r": [
+     718.956,
+     405.0
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[30].group_r__rs1": [
+     203.337,
+     287.658
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[30].group_r__rs2": [
+     1047.789,
+     407.7
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[31].group_r": [
+     639.833,
+     396.941
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[31].group_r__rs1": [
+     103.666,
+     174.676
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[4].group_r": [
+     688.676,
+     301.361
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[6].group_r": [
+     546.588,
+     280.233
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_group[6].group_r__rs1": [
+     1199.637,
+     305.532
     ],
     "u_u_lep.u.g_reset_balanced.u_rstr.g_local[1].local_r": [
      754.434,
      513.324
     ],
     "u_u_lep.u.g_reset_balanced.u_rstr.g_local[2].local_r": [
-     581.58,
-     383.454
+     563.288,
+     401.746
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_local[2].local_r__rs1": [
+     765.234,
+     260.685
     ],
     "u_u_lep.u.g_reset_balanced.u_rstr.g_local[3].local_r": [
-     480.384,
-     544.104
-    ]
-   }
-  },
-  "dsdv_slice_lepe_nh_mus_LP__t1": {
-   "reset": {
-    "inst_taps": [
-     {
-      "tap": 2,
-      "sinks": [
-       "u_bin_coll_i0"
-      ]
-     },
-     {
-      "tap": 42,
-      "sinks": [
-       "u_bin_coll_i1"
-      ]
-     },
-     {
-      "tap": 52,
-      "sinks": [
-       "u_bin_unit_i0"
-      ]
-     }
+     632.043,
+     372.6
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_local[3].local_r__rs1": [
+     356.873,
+     509.828
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.g_local[3].local_r__rs2": [
+     724.923,
+     619.245
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.root_r": [
+     779.956,
+     427.781
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.root_r__rs1": [
+     263.0,
+     290.554
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.root_r__rs2": [
+     624.956,
+     234.644
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.root_r__rs3": [
+     1083.659,
+     239.288
+    ],
+    "u_u_lep.u.g_reset_balanced.u_rstr.root_r__rs4": [
+     1150.659,
+     404.271
+    ],
+    "u_y_xd_u_bin_lepk_i0_d_k0_0.q": [
+     1193.408,
+     7.507
+    ],
+    "u_y_xd_u_bin_lepk_i0_d_k0_1.q": [
+     944.032,
+     8.006
+    ],
+    "u_y_xd_u_u_land_rst_n_k1_0.q": [
+     533.84,
+     87.242
+    ],
+    "u_y_xd_u_u_land_rst_n_k1_1.q": [
+     373.023,
+     165.978
+    ],
+    "u_y_xd_u_u_lep_rst_n_k2_0.q": [
+     548.642,
+     426.936
+    ],
+    "u_y_xd_u_u_lep_rst_n_k2_1.q": [
+     731.325,
+     322.917
+    ],
+    "u_y_xd_u_u_lep_rst_n_k2_2.q": [
+     755.641,
+     375.349
+    ],
+    "u_y_xd_u_u_lep_rst_n_k2_2.q__rs1": [
+     497.163,
+     306.735
+    ],
+    "u_y_xd_u_u_lep_rst_n_k2_2.q__rs2": [
+     678.14,
+     278.78
+    ],
+    "u_y_xd_u_u_lep_rst_n_k2_2.q__rs3": [
+     907.492,
+     281.102
+    ],
+    "u_y_xd_u_u_lep_rst_n_k2_2.q__rs4": [
+     940.992,
+     363.594
     ]
    },
-   "relay_depth": [
+   "relay_split": [
     {
-     "inst": "u_u_land",
-     "port": "rst_n",
-     "side": "sink",
-     "D": 4,
-     "path_um": 1684.5,
-     "note": "RESET-RELAY-GEN-1530 form L: u_u_land.u_rstr fed from [1436.6, 6.1], seated at its fanout"
+     "flop": "u_u_lep.u.g_reset_balanced.u_rstr.g_local[2].local_r",
+     "clones": [
+      {
+       "name": "u_u_lep.u.g_reset_balanced.u_rstr.g_local[2].local_r__rs1",
+       "sinks": [
+        "u_u_lep.u.riv"
+       ]
+      }
+     ]
+    },
+    {
+     "flop": "u_u_lep.u.g_reset_balanced.u_rstr.g_local[3].local_r",
+     "clones": [
+      {
+       "name": "u_u_lep.u.g_reset_balanced.u_rstr.g_local[3].local_r__rs1",
+       "sinks": [
+        "u_u_lep.u.lfq[2]",
+        "u_u_lep.u.lfq[1]",
+        "u_u_lep.u.lfq[0]",
+        "u_u_lep.u.g_mf.mlfq",
+        "u_u_lep.u.g_itx.ib_r",
+        "u_u_lep.u.slq",
+        "u_u_lep.u.g_htx.he",
+        "u_u_lep.u.g_htx.pk_v"
+       ]
+      },
+      {
+       "name": "u_u_lep.u.g_reset_balanced.u_rstr.g_local[3].local_r__rs2",
+       "sinks": [
+        "u_u_lep.u.lfq[3]",
+        "u_u_lep.u.lfq[5]",
+        "u_u_lep.u.lfq[4]",
+        "u_u_lep.u.fault",
+        "u_u_lep.u.lfbq[1]",
+        "u_u_lep.u.lfbq[0]",
+        "u_u_lep.u.lfbq[2]",
+        "u_u_lep.u.lfbq[4]",
+        "u_u_lep.u.lfbq[3]",
+        "u_u_lep.u.lfbq[5]"
+       ]
+      }
+     ]
+    },
+    {
+     "flop": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[0].group_r",
+     "clones": [
+      {
+       "name": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[0].group_r__rs1",
+       "sinks": [
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[2].local_r__rs1"
+       ]
+      }
+     ]
+    },
+    {
+     "flop": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[12].group_r",
+     "clones": [
+      {
+       "name": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[12].group_r__rs1",
+       "sinks": [
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[412].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[408].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[409].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[406].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[411].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[407].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[410].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[405].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[413].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[414].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[415].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[401].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[404].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[403].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[402].local_r"
+       ]
+      }
+     ]
+    },
+    {
+     "flop": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[13].group_r",
+     "clones": [
+      {
+       "name": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[13].group_r__rs1",
+       "sinks": [
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[425].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[426].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[424].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[423].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[427].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[428].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[430].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[429].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[433].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[434].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[432].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[431].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[435].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[437].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[436].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[438].local_r"
+       ]
+      }
+     ]
+    },
+    {
+     "flop": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[14].group_r",
+     "clones": [
+      {
+       "name": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[14].group_r__rs1",
+       "sinks": [
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[463].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[465].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[461].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[464].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[466].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[462].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[460].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[459].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[470].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[467].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[469].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[468].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[473].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[471].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[474].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[472].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[479].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[478].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[476].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[477].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[475].local_r"
+       ]
+      }
+     ]
+    },
+    {
+     "flop": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[15].group_r",
+     "clones": [
+      {
+       "name": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[15].group_r__rs1",
+       "sinks": [
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[505].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[506].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[491].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[494].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[493].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[492].local_r"
+       ]
+      },
+      {
+       "name": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[15].group_r__rs2",
+       "sinks": [
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[502].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[499].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[501].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[500].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[511].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[507].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[509].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[508].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[510].local_r"
+       ]
+      }
+     ]
+    },
+    {
+     "flop": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[16].group_r",
+     "clones": [
+      {
+       "name": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[16].group_r__rs1",
+       "sinks": [
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[532].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[531].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[530].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[529].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[534].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[533].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[536].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[535].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[539].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[540].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[538].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[537].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[542].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[541].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[543].local_r"
+       ]
+      }
+     ]
+    },
+    {
+     "flop": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[17].group_r",
+     "clones": [
+      {
+       "name": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[17].group_r__rs1",
+       "sinks": [
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[570].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[572].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[571].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[569].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[567].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[568].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[565].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[566].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[575].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[573].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[574].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[544].local_r"
+       ]
+      }
+     ]
+    },
+    {
+     "flop": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[18].group_r",
+     "clones": [
+      {
+       "name": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[18].group_r__rs1",
+       "sinks": [
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[576].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[588].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[585].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[587].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[586].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[577].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[579].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[581].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[578].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[580].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[583].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[584].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[582].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[589].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[590].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[592].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[591].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[596].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[595].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[593].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[594].local_r"
+       ]
+      }
+     ]
+    },
+    {
+     "flop": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[19].group_r",
+     "clones": [
+      {
+       "name": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[19].group_r__rs1",
+       "sinks": [
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[637].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[638].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[635].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[636].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[639].local_r"
+       ]
+      }
+     ]
+    },
+    {
+     "flop": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[20].group_r",
+     "clones": [
+      {
+       "name": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[20].group_r__rs1",
+       "sinks": [
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[640].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[645].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[671].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[641].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[646].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[643].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[642].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[644].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[648].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[647].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[650].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[649].local_r"
+       ]
+      }
+     ]
+    },
+    {
+     "flop": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[21].group_r",
+     "clones": [
+      {
+       "name": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[21].group_r__rs1",
+       "sinks": [
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[678].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[677].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[676].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[675].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[674].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[673].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[672].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[679].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[680].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[682].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[681].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[685].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[689].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[690].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[687].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[686].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[688].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[683].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[684].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[693].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[691].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[692].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[694].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[699].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[700].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[701].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[702].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[695].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[696].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[698].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[697].local_r"
+       ]
+      }
+     ]
+    },
+    {
+     "flop": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[23].group_r",
+     "clones": [
+      {
+       "name": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[23].group_r__rs1",
+       "sinks": [
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[744].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[743].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[742].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[741].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[750].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[752].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[749].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[746].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[745].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[748].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[747].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[751].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[754].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[755].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[756].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[753].local_r"
+       ]
+      }
+     ]
+    },
+    {
+     "flop": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[24].group_r",
+     "clones": [
+      {
+       "name": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[24].group_r__rs1",
+       "sinks": [
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[777].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[778].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[779].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[780].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[781].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[782].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[783].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[784].local_r"
+       ]
+      },
+      {
+       "name": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[24].group_r__rs2",
+       "sinks": [
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[771].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[769].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[774].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[773].local_r"
+       ]
+      }
+     ]
+    },
+    {
+     "flop": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[26].group_r",
+     "clones": [
+      {
+       "name": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[26].group_r__rs1",
+       "sinks": [
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[832].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[835].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[845].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[834].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[837].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[838].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[840].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[839].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[836].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[841].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[844].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[842].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[843].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[833].local_r"
+       ]
+      }
+     ]
+    },
+    {
+     "flop": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[27].group_r",
+     "clones": [
+      {
+       "name": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[27].group_r__rs1",
+       "sinks": [
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[882].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[881].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[884].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[883].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[885].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[880].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[879].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[878].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[895].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[893].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[894].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[892].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[891].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[889].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[890].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[888].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[887].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[886].local_r"
+       ]
+      }
+     ]
+    },
+    {
+     "flop": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[28].group_r",
+     "clones": [
+      {
+       "name": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[28].group_r__rs1",
+       "sinks": [
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[898].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[900].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[899].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[901].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[897].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[896].local_r"
+       ]
+      },
+      {
+       "name": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[28].group_r__rs2",
+       "sinks": [
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[914].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[909].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[906].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[905].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[907].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[904].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[910].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[908].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[913].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[912].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[911].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[903].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[902].local_r"
+       ]
+      }
+     ]
+    },
+    {
+     "flop": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[30].group_r",
+     "clones": [
+      {
+       "name": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[30].group_r__rs1",
+       "sinks": [
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[965].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[964].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[966].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[967].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[968].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[969].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[986].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[987].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[988].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[991].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[990].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[989].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[970].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[962].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[960].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[961].local_r"
+       ]
+      },
+      {
+       "name": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[30].group_r__rs2",
+       "sinks": [
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[979].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[980].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[981].local_r"
+       ]
+      }
+     ]
+    },
+    {
+     "flop": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[31].group_r",
+     "clones": [
+      {
+       "name": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[31].group_r__rs1",
+       "sinks": [
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[996].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[997].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[992].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[1002].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[1006].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[998].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[1001].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[1000].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[1005].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[993].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[999].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[1004].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[994].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[1003].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[995].local_r"
+       ]
+      }
+     ]
+    },
+    {
+     "flop": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[6].group_r",
+     "clones": [
+      {
+       "name": "u_u_lep.u.g_reset_balanced.u_rstr.g_group[6].group_r__rs1",
+       "sinks": [
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[197].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[206].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[194].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[195].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[196].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[207].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[193].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[198].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[205].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[204].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[199].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[200].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[201].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[202].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[192].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[203].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[212].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[209].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[211].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[210].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[208].local_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_local[213].local_r"
+       ]
+      }
+     ]
+    },
+    {
+     "flop": "u_u_lep.u.g_reset_balanced.u_rstr.root_r",
+     "clones": [
+      {
+       "name": "u_u_lep.u.g_reset_balanced.u_rstr.root_r__rs1",
+       "sinks": [
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_group[13].group_r__rs1",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_group[14].group_r__rs1",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_group[19].group_r__rs1",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_group[16].group_r__rs1",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_group[11].group_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_group[17].group_r__rs1",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_group[23].group_r__rs1",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_group[24].group_r__rs1",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_group[21].group_r__rs1",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_group[20].group_r__rs1",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_group[18].group_r__rs1",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_group[30].group_r__rs1",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_group[31].group_r__rs1",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_group[26].group_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_group[2].group_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_group[10].group_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_group[7].group_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_group[3].group_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_group[8].group_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_group[27].group_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_group[6].group_r"
+       ]
+      },
+      {
+       "name": "u_u_lep.u.g_reset_balanced.u_rstr.root_r__rs2",
+       "sinks": [
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_group[29].group_r"
+       ]
+      },
+      {
+       "name": "u_u_lep.u.g_reset_balanced.u_rstr.root_r__rs3",
+       "sinks": [
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_group[23].group_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_group[22].group_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_group[27].group_r__rs1",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_group[5].group_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_group[28].group_r__rs1",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_group[6].group_r__rs1",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_group[28].group_r__rs2",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_group[26].group_r__rs1"
+       ]
+      },
+      {
+       "name": "u_u_lep.u.g_reset_balanced.u_rstr.root_r__rs4",
+       "sinks": [
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_group[14].group_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_group[16].group_r",
+        "u_u_lep.u.g_reset_balanced.u_rstr.g_group[24].group_r__rs2"
+       ]
+      }
+     ]
+    },
+    {
+     "flop": "u_y_xd_u_u_lep_rst_n_k2_2.q",
+     "clones": [
+      {
+       "name": "u_y_xd_u_u_lep_rst_n_k2_2.q__rs1",
+       "sinks": [
+        "u_u_lep.u.g_reset_balanced.u_rstr.root_r__rs1"
+       ]
+      },
+      {
+       "name": "u_y_xd_u_u_lep_rst_n_k2_2.q__rs2",
+       "sinks": [
+        "u_u_lep.u.g_reset_balanced.u_rstr.root_r__rs2"
+       ]
+      },
+      {
+       "name": "u_y_xd_u_u_lep_rst_n_k2_2.q__rs3",
+       "sinks": [
+        "u_u_lep.u.g_reset_balanced.u_rstr.root_r__rs3"
+       ]
+      },
+      {
+       "name": "u_y_xd_u_u_lep_rst_n_k2_2.q__rs4",
+       "sinks": [
+        "u_u_lep.u.g_reset_balanced.u_rstr.root_r__rs4"
+       ]
+      }
+     ]
     }
-   ],
-   "relay_sites": {
-    "u_u_land.u_rstr.rst_n": [
-     544.117,
-     798.106
-    ],
-    "u_u_land.u_rstr.sync_q[0]": [
-     544.117,
-     798.106
-    ],
-    "u_u_land.u_rstr.sync_q[1]": [
-     544.117,
-     798.106
-    ],
-    "u_u_lep.u.g_reset_balanced.u_rstr.g_local[0].local_r": [
-     327.308,
-     593.905
-    ],
-    "u_u_lep.u.g_reset_balanced.u_rstr.g_local[2].local_r": [
-     910.656,
-     501.66
-    ]
-   }
+   ]
   }
  }
 }
