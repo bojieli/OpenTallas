@@ -56,6 +56,41 @@ def test_tcl_is_syntactically_complete():
     assert out.stdout.strip() == "1"
 
 
+
+@pytest.mark.skipif(not TCLSH, reason="tclsh")
+@pytest.mark.parametrize("postplace", [False, True])
+def test_timing_measure_uses_stage_clock_model(postplace):
+    script = f"""
+namespace eval sta {{}}
+proc sta::worst_slack {{args}} {{ return -15.0 }}
+proc sta::total_negative_slack {{args}} {{ return -20.0 }}
+rename exec actual_exec
+proc exec {{args}} {{ return "TC_LIB_FILES = stub.lib" }}
+rename source actual_source
+proc source {{path}} {{
+  if {{[file tail $path] eq "tt_setup_repair.tcl"}} {{ uplevel 1 [list actual_source $path] }}
+}}
+proc read_liberty {{args}} {{}}
+proc read_db {{args}} {{}}
+proc read_sdc {{args}} {{}}
+proc all_clocks {{}} {{ return {{clk vclk}} }}
+proc get_property {{clock property}} {{ return [expr {{$clock eq "clk" ? "pin" : ""}}] }}
+proc set_clock_latency {{args}} {{}}
+proc set_propagated_clock {{clocks}} {{ puts "PROPAGATED $clocks" }}
+proc estimate_parasitics {{basis}} {{ puts "ESTIMATE $basis" }}
+unset -nocomplain ::env(OT_POSTPLACE_WORST) ::env(OT_TT_SETUP_RC)
+set ::env(OT_POSTPLACE_WORST) {int(postplace)}
+set ::env(OT_TT_SETUP_MEASURE) 1
+set ::env(ODB) stub.odb
+source {{{HERE / 'tt_setup_repair.tcl'}}}
+"""
+    result = subprocess.run([TCLSH], input=script, text=True, capture_output=True, check=True)
+    assert not result.stderr
+    assert "OT_TT_SETUP_REPAIR measure TT setup wns -15.00" in result.stdout
+    assert ("PROPAGATED clk" in result.stdout) is not postplace
+    assert result.stdout.count("ESTIMATE -placement") == 1
+
+
 def test_modes_cts_grt_both_write_the_mode_into_the_flag_file(tmp_path, monkeypatch):
     for env, want in (("1", "cts"), ("cts", "cts"), ("grt", "grt"), ("both", "both")):
         monkeypatch.setenv("OT_TT_SETUP_REPAIR", env)
