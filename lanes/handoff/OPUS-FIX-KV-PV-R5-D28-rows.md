@@ -48,3 +48,14 @@ Partition pv_N_7 (origin 4458.24, 13841.28, MX); outline 2160 x 1520.64 -> two 1
 Estimate: v3 floorplan ~490k -> halves 275k/269k place; v12 499k floorplan -> ~255-280k per half, under the 400k cap.
 Tool: type_split = main + claude/opus-fix-kv-pv-r5-tsplit (epyc7 lane clone, 3a132dd5b5; base taps read before core_moves) — pushing after
 my split bind is clean; FLOW-STRIPBODY-1121 also edits type_split.py (one commit owner rule: I rebase on theirs).
+
+## Lever 6 (FABLE-CLOSURE-STRATEGY via COORD 11-21): pv landing-band failures + over-cap -> split/landing rows for KV-PLAN-R6 (D27d2/D28)
+KV-D26 failures (kit_wave state): CELL-CAP v12 (499k floorplan), v7; OT_CLAND "no legal nonoverlapping row/site in reserved band":
+| type | failing landing flop | cause in the unsplit plan | D28 row |
+|---|---|---|---|
+| v2, v2n, v4 | u_cland_raw_fs_ft0_o_{0,1} | ft0 = 1,056-bit E->N feedthrough along y~1410, 8 stations x 2160 -> 464: crosses the cut and lands its whole width in one N band | split cuts ft0 at x 1080: e leg E face -> cut (cut lane), w leg cut -> N exit; the ft0 output landing ring + reserved_sites_um are re-derived per piece (type_split drops clock.reserved_sites_um / landing_* and re-derives); census route for the 1,056 bits |
+| v5 | u_cland_raw_fs_ft20_o_2 | ft20 1-bit S->N, x 1169 -> 592 (crosses the cut at y ~760) | same: two legs, N landing in w |
+| v3 | u_cland_raw_fs_o_vport_E_N_vo_d2_0 | ring cl_i_vport_E_N_vo_d2 at x 1088.64 straddles the cut / band | rule 4 (ring same half as its bus): -> (967.68, 241.92) w; done in my split 14 (binding) |
+| v12, v7 | CELL-CAP | > 400k | split rows (v12 section above; v7 same form, straddle_1080.json) |
+v8 (D26 a3 running) and v6 (a4 tool error: ssh argument list too long) are not band failures.
+Proof: the v3 private split (bind 8c running) is the only bound one; each other type needs its own split bind before kit gen (KV-PLAN-R6 D28 apply).
