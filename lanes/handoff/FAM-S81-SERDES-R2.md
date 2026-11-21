@@ -21,3 +21,8 @@ enc: tx_d 512 + tx_v in on S over 196.6 um (2.6 pins/um, M4/M5 balanced); p_d 54
 - Refine outlines from the built cores; census siblings: all 11 serdes types share outline 2885.76 x 1226.88, the same 13 defines and the same dchn hard core, so the same cut applies family-wide (one-line kit census each).
 - Hand proven rows to S81-J6-ASSEMBLY-R2 (J7); update the j7-split-rows json (outline_um_est 780x920 / 560x710 there is ~3x too big: dec 725.76x388.8, enc 216x216).
 - Watch the J6 rows: t4 a1 (rep) and t12/t14/t16 a1 at CTS (cohort check above).
+
+## 06:5x update
+- ENC enc_j6a DONE: routed DRC 0 / antenna 0; sign-off 833 ps TT -41.13 (PASS by 0.87 ps), FF hold -15.86 / 3 pins (internal reg2reg -1.81; input->reg -15.86 port), SS -404.71 advisory; 86,928 cells, util 0.277. Reports epyc8 /srv/opentallas-scratch2/claude/fam-s81-serdes-build/enc_j6a/{sta.log,corner_sta.json,physical.json}.
+- Internal hold ECO queued: epyc8 fam-s81-serdes-build/eco_enc.sh (hold_eco_internal_run.py), client intel2 PID 653243 (~/fam-s81-serdes-r2/eco_enc.client.log), out eco_enc_j6a/RESULT.json, exit 0 = SIGNED. HELD on epyc8 disk-ETA at 06:5x. If it signs: export the signed view (standard export to rtx-pro + AGIdock). If the -15.86 port path is judged internal by sign-off, the fix is the dec-RXB lesson (time ports at measured insertion), not more margin.
+- TT setup margin is 0.87 ps: if the ECO costs setup, next variant = PD 0.25 or a 237.6 outline (util is only 0.28, so wire length, not area, is the lever: check the worst TT path first).
