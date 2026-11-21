@@ -59,3 +59,11 @@ J5 live: event 224567138ab, src kw45/src_s81_pin_3c913dbdfb23_d8j5_1117_work, bi
 ## PLACE-SETUP-STOP
 - Commit 9777a724d9 is not in rt yet; 0 rows so far.
 - Watcher on intel2, PID 128762 (~/s81-die-r5/pss_watch.sh, 15 min, 12 h): posts new S81 rows to S81-J6-ASSEMBLY as PLAN-ROWS.
+
+## 19:5x update
+- serdes t4 fix 1 PROVEN. The repro passed DPL: region dropped (5,925 cells released), 0 cells in wrong regions, no DPL-0033.
+- NEXT for serdes: retire the 6 gen-host watchers (PIDs above) once the FLOW-NOADV-R3 region-coverage auto-extend lands on main (COORD ruling).
+- D8i svc_rs: all 8 stopped on COORD's ruling; J5 rows untouched.
+  - ot-run --cancel ended lo t2, t5, t6.
+  - The other 5 were relaunched by KW_SSH_RETRY (flow bug, posted), then stopped with kit_wave.py cancel-rows --old-plans-only (5 struct stops on D8i blocks).
+- Lesson: to stop a wave place stage, use kit_wave.py cancel-rows (dry run first), not ot-run --cancel.
