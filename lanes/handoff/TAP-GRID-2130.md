@@ -1,7 +1,7 @@
 # TAP-GRID-2130 handoff (2026-11-20 22:xx PST)
 
 Owner of FABLE-CLOSURE-STRATEGY 21:30 lever 2 (tools half) and lever 3. Lane clone intel2 /srv/opentallas-scratch2/claude/lanes/TAP-GRID-2130.
-Commits 950cad85e1 (A+B) + 3174d9aec4 (schema dump), rebased on main 504fcadebf; ot-push-main IN FLIGHT (3rd try; tries 1-3 stopped on a rebase conflict in root_entry_scan.py -> kept main version, which already reads 4_cts_post_hook.rpt; a sparse cone without rtl/; the schema json dump). Log intel2 /srv/opentallas-scratch2/claude/lanes/tg2130_push.log.
+Commits 950cad85e1 (A+B) + 3174d9aec4 (schema dump), rebased on main 504fcadebf; PUSHED main @02ceee2474 (3rd try; tries 1-3 stopped on a rebase conflict in root_entry_scan.py -> kept main version, which already reads 4_cts_post_hook.rpt; a sparse cone without rtl/; the schema json dump). Log intel2 /srv/opentallas-scratch2/claude/lanes/tg2130_push.log.
 
 ## A. Canonical CTS read (all dies)
 - cts_post_report.tcl now re-runs ORFS report_metrics after the POST_CTS hooks: 4_cts_final.rpt + 4_1_cts.json cts__timing are POST-hook
