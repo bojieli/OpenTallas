@@ -237,3 +237,8 @@
   QC 9 STALE: 5 held FAM-QC-CB + 4 cancelled (FEFW, HCST, SLE-R4, QC-PLAN-R9); 3 WAIT-VISUAL HCST cleared.
   KV 1 WAIT-BIND cancelled (PV-R5); the 27 held/failed KV rows no longer flagged. HEAD none.
   FABLE-FIX-S81-COLROM owns lever work, not a row family, so no rows mapped to it.
+- 2026-11-21 06:51 PST OWNERS-SWEEP hourly 07:50 (LANE-STATUS chains applied; QC-PLAN-R10, FABLE-FIX-KV-HUB-R2, S81-LEAF-R5, LEPE-3): 490 rows, 33 flagged (was 31), 0 UNOWNED, 0 CBC-FALLBACK.
+  FAILED-NO-RELAUNCH 1: QC cbn_q01__clab6e67f2 (FAM-QC-CB, STALE, new) ORPHANED, no deliberate hold/cancel post.
+  S81 21 STALE, all old: 19 cancelled-superseded (SVC-R6 7, COL-H9R0-R2 10, COL-H10-R2 2) + 2 held H9R0-R2.
+  QC 11: 5 held CB + 1 new cancelled CB + 4 old cancelled (FEFW, HCST, SLE-R4, QC-PLAN-R10) + the failed row; KV 1 cancelled WAIT-BIND; HEAD none.
+  Family lane QC-PLAN-R10 shows no post in 2 h (owns 1 row, DEAD-OWNER by that test); the rest of the family lanes posted.
