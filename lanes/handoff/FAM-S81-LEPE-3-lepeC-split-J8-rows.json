@@ -1,0 +1,229 @@
+{
+ "schema": "fam-s81-slice.c1xC_j7_rows.v1",
+ "schema_note": "same sub-tile schema as lanes/handoff/FAM-S81-SLICE-J7-c1xC-rows.json split_plan_B (strip_type / body_type / name_suffix / members / region / crossing); carried together with c1x_C split B, coordinated with FAM-S81-SLICE-R4",
+ "owner": "FAM-S81-LEPE-3",
+ "event": "J8",
+ "for": "S81-J6-ASSEMBLY-R4 (J8); cc FAM-S81-SLICE-R4, COORD",
+ "supersedes": "lanes/handoff/FAM-S81-LEPE-2-lepeC-split-rows.json (LC-G1 xg +90 um move DROPPED per FABLE-PD-S81-0830 s4 / COORD 11-21)",
+ "status": "PROPOSAL rows (11-21 08:xx PST): measured on placed kit 224567138ab, NOT bound, NOT gated; needs the die_plan sub-tile schema (open in c1x_C too). Out of J7 (stop list item 4).",
+ "types": [
+  "dsdv_slice_lepe_mu_C__t1"
+ ],
+ "geometry_base": "J7 plan once applied; region notches are a RULE resolved against the bound plan's core/macro origins, numbers below are the 224567138ab placement for sizing only",
+ "split_plan_B": {
+  "applies_to": [
+   "dsdv_slice_lepe_mu_C__t1"
+  ],
+  "trigger": "nontap cells > 400k at place (measured 499,795)",
+  "strip_type": {
+   "name_suffix": "__strip",
+   "cells_mapped": "~150k (194k named infra placed incl buffers)",
+   "members": "u_cland_*, u_ist_*, u_ft_*, u_bin_*, u_bout_*, u_lpad_*, u_d<N> relays, u_rrl_* (ot_dp_st / ot_dp_dly / ot_dp_rrelay(_nl) / ot_meso_ring_ca / ot_dp_landing_*)",
+   "crossing": "every strip<->body net starts at a landing/relay FF or an xg/xf output FF: registered both sides, +0 cycles",
+   "region": {
+    "rule": "perimeter band 130 um deep on S/W/N/E MINUS every hard core / macro bbox + 5 um halo (rectilinear notches); no core or macro moves",
+    "why_not_S65_W90": "FABLE-PD-S81-0830 s4 x 90.6 / y 65.6 are macro CENTERS (C_place.tsv cols 3/4 are bbox centers, dumpall.tcl). Real nearest edges: W 43.2 (xg sram 128x256, w 94.8), S 51.9 (xg sram), N 51.8 (u_cap capc5r), E 34.5 (xf g_cp[3] eng_finish). A flat S65/W90 strip still covers 12 blocks (u_cap, xf g_cp[3], 10 xg SRAMs) since N/E/S/W all have intruders.",
+    "notches_224567138ab": {
+     "S": [
+      {
+       "from": 0.0,
+       "to": 150.12,
+       "depth": 130.0
+      },
+      {
+       "from": 151.2,
+       "to": 254.88,
+       "depth": 55.49
+      },
+      {
+       "from": 255.96,
+       "to": 262.44,
+       "depth": 130.0
+      },
+      {
+       "from": 263.52,
+       "to": 367.2,
+       "depth": 46.85
+      },
+      {
+       "from": 368.28,
+       "to": 374.76,
+       "depth": 130.0
+      },
+      {
+       "from": 375.84,
+       "to": 479.52,
+       "depth": 46.85
+      },
+      {
+       "from": 480.6,
+       "to": 487.08,
+       "depth": 130.0
+      },
+      {
+       "from": 488.16,
+       "to": 534.6,
+       "depth": 46.85
+      },
+      {
+       "from": 535.68,
+       "to": 538.92,
+       "depth": 130.0
+      },
+      {
+       "from": 540.0,
+       "to": 586.44,
+       "depth": 46.85
+      },
+      {
+       "from": 587.52,
+       "to": 590.76,
+       "depth": 130.0
+      },
+      {
+       "from": 591.84,
+       "to": 633.96,
+       "depth": 46.85
+      },
+      {
+       "from": 635.04,
+       "to": 1442.88,
+       "depth": 130.0
+      }
+     ],
+     "W": [
+      {
+       "from": 0.0,
+       "to": 556.2,
+       "depth": 130.0
+      },
+      {
+       "from": 557.28,
+       "to": 606.96,
+       "depth": 38.2
+      },
+      {
+       "from": 608.04,
+       "to": 616.68,
+       "depth": 130.0
+      },
+      {
+       "from": 617.76,
+       "to": 667.44,
+       "depth": 38.2
+      },
+      {
+       "from": 668.52,
+       "to": 677.16,
+       "depth": 130.0
+      },
+      {
+       "from": 678.24,
+       "to": 727.92,
+       "depth": 38.2
+      },
+      {
+       "from": 729.0,
+       "to": 754.92,
+       "depth": 130.0
+      },
+      {
+       "from": 756.0,
+       "to": 1179.36,
+       "depth": 46.95
+      },
+      {
+       "from": 1180.44,
+       "to": 1226.88,
+       "depth": 130.0
+      }
+     ],
+     "N": [
+      {
+       "from": 0.0,
+       "to": 46.44,
+       "depth": 130.0
+      },
+      {
+       "from": 47.52,
+       "to": 393.12,
+       "depth": 46.8
+      },
+      {
+       "from": 394.2,
+       "to": 461.16,
+       "depth": 130.0
+      },
+      {
+       "from": 462.24,
+       "to": 678.24,
+       "depth": 64.08
+      },
+      {
+       "from": 679.32,
+       "to": 1442.88,
+       "depth": 130.0
+      }
+     ],
+     "E": [
+      {
+       "from": 0.0,
+       "to": 271.08,
+       "depth": 130.0
+      },
+      {
+       "from": 272.16,
+       "to": 470.88,
+       "depth": 29.55
+      },
+      {
+       "from": 471.96,
+       "to": 1226.88,
+       "depth": 130.0
+      }
+     ]
+    },
+    "strip_area_um2": 545525,
+    "strip_stdcell_area_um2": "~31k in band now + ~49k re-sited interior infra -> util < 0.15",
+    "cells_in_notched_band": {
+     "infra": {
+      "S": 68953,
+      "N": 44794,
+      "W": 13863,
+      "E": 25203,
+      "interior_to_resite": 41523
+     },
+     "anon_in_band": 29794
+    },
+    "resite": "41.5k interior infra cells (and band cells under notches) re-sited into the notched band, hops <= 405 um"
+   }
+  },
+  "body_type": {
+   "name_suffix": "__body",
+   "cells_mapped": "~265k placed est",
+   "members": "xg (ot_s81sl_xgt_xo + 37 memories), xf (4 eng_finish + norm_finish), xr (xrt1), eg x2, cap (capc5r), flt, mk, u_ring control",
+   "note": "xr<->eg and xf<->xg (348/346 FF crossings) stay in the body"
+  },
+  "under_cap": true,
+  "fallback": {
+   "id": "LC-F1",
+   "rows": [
+    {
+     "id": "S-XG1",
+     "split_instance": "u_xg",
+     "into": [
+      "xs4",
+      "rstopt_xo"
+     ],
+     "crossing_regs": "both sides, +1 cycle"
+    }
+   ],
+   "needed": false
+  }
+ },
+ "open": [
+  "die_plan sub-tile schema + bind/G0 support for a rectilinear partition region (shared with c1x_C 'W band vs core origins')",
+  "repeat notch + census on a J7-plan placement of lepe_mu_C t1"
+ ],
+ "evidence": "epyc10 /srv/opentallas-scratch2/claude/fam-lepe/split_C/{band2.py,notch.py,lepeC_strip_notch.json,C_place.tsv}"
+}
