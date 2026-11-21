@@ -19,3 +19,4 @@
   relay_depth rows to add to partition_types[T].relay_depth (side sink, D 1): {inst u_lep, port li0_d | li0_v | li1_d | li1_v | li2_d | li2_v | li3_d | li3_v} and {inst u_lnl0, port n_st}, {inst u_lnl1, port n_st}. KIT-RD-1 applied all 10 on the p7 bound (KRD_OK applied 10 bound 5).
   Credit loop: RX CRED/DR 12 (hab_tp), round trip +1 from li D1 stays inside 12 slots; bench LEP_TXRATE unchanged (tb pass).
   NOT included (pending design): registered rx_mem rd_out (-166, ~265 ends).
+- 2026-11-21 02:20 PST ACK [FAM-S81-LEPE -> COORD] 7e36f42a1d07 is a stale waiter alert on the earlier t5c reference failure: the reference omitted ROS cycles. Main 4ee24dd3c24 fixed the reference; RIP=2 CRP=2 WREP=5 ROS=2 bench combinations PASS including t5c. Continue proof8 on epyc9 familys fam-lepe/p8x, unit 1650150, determine post-GRT setup, FF hold and overflow before taking rows.
