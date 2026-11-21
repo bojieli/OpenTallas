@@ -14080,3 +14080,10 @@ Superseded QC packed-only source 8a7ef3 and private 28-file gate remain historic
 
 ## Takeover 2026-11-21 02:18 PST
 - Replaced stale snapshot with live queue and existing lane trees. Active work and failures tracked in lanes/CODEX.md. Claude reset expected Nov 27 09:02 PST.
+
+## Takeover milestones 2026-11-21 02:30 PST
+- Indexed-station Tcl Redwatch fixture repaired independently of production. Exact 086b2716b30 green and merged as ca62d31c293.
+- False pre-CTS setup stops isolated on three exact HEAD ODBs. e073ba9eca0 green 6/6 and merged as eda19506a55. Runtime synced on all six build hosts. Companion classification/retry fix remains in FLOW-FIX-0100.
+- S81 H8 registry 421234a3750 and shared CTS proc scope 5294e088f55 landed. Both S81 and KV legacy CTS crashes traced to the same scope error. S81 RD_EXTRA recovered to a local SIGNED result, archive export in progress.
+- Reviewed exact C3g/C3i/C1n layouts. Deferred three inherited straight 515-bit FT reversals to a zero-cycle J7 donor with measured planar pin improvement. Current J6 gates continue.
+- QC b9 failed after R8 refresh on asymmetric n_a/n_b tile-link depths, aborting the following hard-core fixups. QC lane is composing a V2 candidate with known-good CB cycle topology while carrying compatible improvements.
