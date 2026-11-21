@@ -1,24 +1,16 @@
-# FAM-KV-HUB handoff (Sonnet 5.5 lane, 11-20 PST night)
-Family: kv3_hub_{C,Ei,Eo,Wi,Wo}, kv3_hroot, kv3_sys_c, kv3_sys_SD_v1 (routed, hold<=30 ps per HARVEST-ECO-2350). Plan-event owner: KV-PLAN-R3 (D26/D27c/D28). hg/hgi/pv/pc belong to other lanes.
+# FAM-KV-HUB handoff 2 (Sonnet 5.5, 11-21 ~04:30 PST) -> successor FAM-KV-HUB-R2 (replaces handoff above)
+Family: kv3_hub_{C,Ei,Eo,Wi,Wo}, kv3_hroot, kv3_sys_c, kv3_sys_SD_v1. Plan owner KV-PLAN-R4 (D26/D27c/D28). Representative = kv3_hroot.
 
-## Census (OWNERS-SWEEP)
-- hub_Wi: FAILED gen/place (stale 16 h), fix rides D26 R3f (bind oth-ubuntu-2521925-1795240795 epyc7; d26_chain.sh auto-applies). Confirm on first D26 gen.
-- hub_Eo, hub_Wo, sys_c: placed, route held (geom) -> D27c rows (hub_Eo reset row, sys_c reach). D27c strict bind rc1 R8_STALE x30; being made type-uniform by KV-PLAN-R3.
-- hub_C: held, WAIT-BIND (views re-frozen CLAND-MACRO-1, rows in D27c).
-- hub_Ei: running route since 11-20 19:15.
-- hroot: REPRESENTATIVE. Running route, KV-D25d attempt_5, unit oth-ubuntu-2785028-1795181222 on epyc2 (dear-crayfish), work /srv/opentallas-scratch3/claude/ot-jobs/kv3_hroot-route-dear-crayfish-2828315-1795181254/work.
+## State (all measured, posts in lanes/posts/FAM-KV-HUB.md)
+- hroot KV-D25d attempt_5 ENDED rc 6: GRT TT setup_est -753.66 (PLAN-TRIAGE FAIL, no DRT). Worst real path u_bin_i_kvs_ctl_o_hroot_Q/q[927] -> u_kvs_hroot.u_rly.fan_c[143] -248 FF = unstationed S-pin-register -> cluster hops (4,427 > 300 um; FABLE-VISUAL-0030 sec 4). Port-in hold -303 = sender_ps placeholder, NEEDS_PARENT only.
+- D27c r2/r3 rows touch hroot only for o_host_hbm_rst_n and o_idhr_Q_y (epyc8 kv-plan-r3/d27c/out2/{r2,r3}.json); the i_kvs_ctl_o_hroot_Q / i_kvpc_Q_N_o_next / i_slg_Q_N_o_ctl internal hops have NO rows. These are the work.
+- Plan of record is plan_of_record/plan_c.json (NOT qwen_kvsys/die_plan.json, stale). It already has clock.ring_hold {sender_ps -385, sender_ps_types io_cor/io_cor_v1/sys_SD_v1 -50}. hub_C already has 19 hard cores (15 rings + pvfin pair); hub_C 210,883 generic cells shell (synth/hc), hub_Eo 227,520 (synth/eo): no split/ring rows needed.
+- hub_Wi / sys_c: deliberate holds posted (D26 hub_Wi pilot by KV-PLAN-R4; sys_c relaunch on D27c after r4d bind).
+- My live units: none. Waiters: none needed (hroot job ended).
 
-## hroot findings (read-only, no job touched)
-- GRT finished (5 h 30, 30 extra iterations): final congestion Max H 20 / V 7, total 2178, usage 2.86 pct; now in post-GRT repair/DPL (DPL converged 00:0x). Next: detail route, then signoff. Do not cancel: GRT overflow fell, setup not measured < -300.
-- Port-in hold -303 (post-hook): kit constraint.sdc lines 274-295 carry set_input_delay -min -385 on ring inputs (plan clock.ring_hold.sender_ps placeholder). signoff.py (KW-FIX-24, STD_MIN_START port/other/reg) classifies a hold miss started only at a non-clock input port as LOCAL_PASS_NEEDS_PARENT, so it does NOT block local sign-off of hroot; it becomes the parent die-level obligation. Fix remains structural/plan: measured sender_ps_types row (about -50 as io_cor/sys_SD_v1 have) for D27/D28, owner KV-PLAN-R3, after pc CTS fix measures the senders. Needs reg count = 0 and other = 0 in the hroot signoff to pass.
-- Watch at route end: STD_MIN_START other/reg must be 0; if reg > 0 treat as internal hold -> shared-tap/CTS balance, not buffers.
-
-## Next
-1. When the epyc2 unit ends: read signoff.json (DRC, TT setup >= -42, hold STD_MIN_START, LEC); if signed, carry (nothing to carry for sdc) and hand sender_ps row to KV-PLAN-R3 for D28.
-2. Siblings: take D26 (hub_Wi) and D27c (hub_Eo, hub_Wo, sys_c, hub_C) results from KV-PLAN-R3; no duplicate builds. sys_SD_v1 hold<=30 ECO lives in HARVEST-ECO-2350.
-3. Successor not needed yet; stand down text: lane has launched nothing.
-
-## CODEX notes 11-21 02:40 PST
-
-- hroot E2 route is still progressing in FF hold repair (-410.424 to -321.757 ps by iteration 20); no signed evidence. Preserve the unit. Hub_Eo D25e3 failed at CTS tb_cdirect scope, fixed upstream. Separate representative E10 form M/L removed the pathological -747 ps host reset and ended WNS -147.73 ps with FSTART now worst.
-- D28 review candidate evidence epyc7 fam-kv-hub/d28_corridors. Hub_Eo old geometry 0-cycle reseat takes ES fault 377.1->253.9 μm, EN ctl_ap 1229.7->413.5 μm. hroot Q ctl 371.2->337.7 μm. For hroot input i_kvpc_Q_N_o_next, 299 bin flops: only 171 fit both endpoints at 300 μm, 294 at 405 μm, five require more than a move on the old geometry. See hroot_ring_fit.json for per-bit evidence, re-evaluate on current placement. TAP-GRID-R2 tap delta epyc8 tap-grid-r2/hroot/d28-hroot-pending.json replaces 12 sparse west taps by five; before adoption regenerate clock reservations and raw START/collector tap references.
+## COORD order 04:3x (do it, private, in parallel with D28 rows)
+1. Private plan delta on the D27c base (epyc8 kv-plan-r3/d27c/tree, read-only; copy to my lane tree, tools = main with the BIND-GEN-TOOLSKEW check; bind and gen on the SAME rt): (a) station / relay_depth rows ceil(len/300)-1, every hop <= 405 um, on i_kvs_ctl_o_hroot_Q, i_kvpc_Q_N_o_next, i_slg_Q_N_o_ctl hops (hop geometry: epyc8 /srv/opentallas-scratch2/claude/fable-visual-0030/out/kv_hroot/geom.tsv + mirror 4_cts.odb; templates: rows/r13_pv_relay_depth.py, r2_fwd300.py, d27lib.py in d27c/rows); (b) drop the 12 sparse west taps (TAP-GRID-R2 form); (c) clock.ring_hold.sender_ps_types.kv3_hroot (measured min over drivers; -50 placeholder, +20 ps margin, FABLE-HARD-KV recipe).
+2. Private strict bind + LATCHECK + G0 (epyc7/8/10, NOT epyc9; ot-run, --priority plan only for bind*/g0*/latcheck* script names).
+3. hroot kit to route (run_kit.sh GOAL=route, --priority plan), ot-wait + run_in_background waiter, read post-hook GRT TT (4_cts_post_hook.rpt / tt_setup_measure_grt.log); sign-off gate TT >= -42, DRC 0, FF hold >= 0 (port-in only = LOCAL_PASS_NEEDS_PARENT), LEC.
+4. Same rows to KV-PLAN-R4 for D28 (post, cc COORD). Carry the proven fix to hub_Ei/Wo/Eo, sys_c.
+## Rules reminders: no git in owner checkouts (lane clone via ot-lane-clone: mine is epyc8 /srv/opentallas-scratch2/claude/fam-kv-hub/wt, tools cone only, branch claude/kv-hubc-split-1117 stale), ot-delete only, post via bin/post.sh FAM-KV-HUB-R2.
