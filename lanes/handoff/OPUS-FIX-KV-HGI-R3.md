@@ -10,7 +10,8 @@ Lane dirs: epyc7/epyc9 /srv/opentallas-scratch2/claude/fable-fix-kv-hgi (b8, b8d
   log intel2 ~/tmp/fablefixkvhgi/ft26_raw_reseat_grt.log): ft26 banks moved to the middle corridor, 0 added cycles. Pilot to GRT.
 
 - relayfit A/B (R3, 03:5x): copy of the ft26 reseat kit + OT_RELAY_MID_FIT=1, OT_RELAY_MID_MAX_HOP_UM=300 (config.mk tail),
-  epyc9 ft26_middle_0/gen_ft26_relayfit, client pid 3947845 on intel2 (HELD for epyc9 disk-ETA at launch), log
+  MOVED 04:1x (epyc9 disk hold): cancelled the queued client 3947845 (never admitted), kit copied (tar, no links) to
+  epyc7 + epyc10 ft26_middle_0/gen_ft26_relayfit, relaunched --hosts epyc7,epyc10 (queued on epyc10), intel2 client pid 42768, log
   ~/tmp/fablefixkvhgi/ft26_relayfit_grt.log. Read: grep OT_RELAY_MID_FIT 3_3_place_gp.log (where hst3_g went), then congestion-N.rpt.
 
 ## Measured (R3, b8 congestion-10 + 4_cts.odb; scripts epyc7 fable-fix-kv-hgi/sc/r3_*.py|tcl, data rb/b8/)
