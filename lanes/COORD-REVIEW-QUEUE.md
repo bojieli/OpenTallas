@@ -18073,3 +18073,4 @@ FAILED [AUTOPILOT 4b544bf245c7] 2026-11-21 06:47:25 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-21 06:53 PST t39 r3e (clk_t98, epyc10 tap-only control): run-item ended without 3_place.odb (hub /srv/opentallas-scratch2/claude/tap-grid-r2/t39/wave3e/result.json); chain3 stopped
 - 2026-11-21 06:53 PST DIED [OPUS-FIX-KV-HGI-R3] ot-run oth-ubuntu-1244823-1795267991 on tolerant-swine: rc=143 after 4826 s, ended 06:53:36, log /home/ubuntu/tmp/opusfixkvhgir3/bind_r3.log, cmd: --hosts epyc8 --mem 56 --threads 3 --priority plan --dir /srv/opentallas-scratch2/claude/opus-fix-kv-hgi-r3 -- bash /srv/opentallas-scratch2
   [filed under] OPUS-FIX-KV-HGI-R4: OPUS-FIX-KV-HGI-R3 stood down (chain OPUS-FIX-KV-HGI-R3 > OPUS-FIX-KV-HGI-R4)
+- 2026-11-21 06:54 PST DONE [FLEET-WATCH-R6] ot-push-main otpush-dear-crayfish-30589 on dear-crayfish: rc=0 after 325 s, ended 06:54:08, log /tmp/fw6-push1.log, cmd: ot-push-main 
