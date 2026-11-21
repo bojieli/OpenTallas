@@ -55,3 +55,15 @@ Read lanes/handoff/TAP-GRID-2130.md for the method (tap grid plan key clock.tap_
 - Span-box incremental refresh source 2182d2a6928 on claude/tap-grid-r2, same normal GREEN 25/25. The exact span cache refreshes changed bins before the next pass. 36-tap/18,000-sink synthetic replay produced identical assignments/logs/teardown verdict, 9.31 to 7.20 seconds. Candidate READY.
 - t39 actual 3_place prehook diagnostic readback, intel1 t39/new_sink_geom/clock_phase. Out-of-limit boxes 0 nearest -> 39 group/follow -> 71 cap/refollow -> 75 pair/final. Final tap t67 load 1,449, limit 1,000, W+H 538.1 um. Counterfactual restoring only reset clocks to nearest reduces over-span count 75 to 9 but has no STA qualification. Logic issue is outlying reset flops re-hung at their descendants, not the added tap geometry. Explicit terminal-only follower recipe probe in sibling terminal_followers limits regex to 122 unconsumed relay outputs of 737 and drops first-phase over-spans from 39 to 1; final physical timing TBD.
 - Terminal-only t39 exact geometry replay finished with 8/98 final boxes >300 um vs 75/98, max 355.2 vs 670.95 um. No span violations before the short-pair pass. t67 remaining 1,447 sinks are all one VP write-bank group pinned to clk_t67 by /work/vpw_bank_clock.tcl (906 XR, 224 SLR, 317 other). Extra nearby taps cannot take members without changing the clock cohort design. Looked at terminal-vs-control physical assignment plot, then launched same-checkpoint private CTS-only comparison, intel1 oth-ubuntu-2825559-1795258453. Timing and bind qualification remain pending.
+
+## 11-21 11:4x UTC (Claude resumed after Codex handback 03:32 PST)
+- Codex landed (lane name TAP-GRID-R2): e75e9f9ab9, cf5df768462 (tap span / pass), claude/tap-grid-r2 @930a4abd798 merged (main 9c0d61b2258; pair-plan span boxes seeded from fixed sinks; t39 replay 0/98 over 300, max 299.970).
+- t60 conv r2 / raise100: FAIL on FF hold (posted 02:18 PST); off J6/V2. KV v8c r2 still in CTS hooks (reader tgr2-read-v8c active).
+- t39 CTS proofs running on intel1, each with a hub reader that posts raw post-hook lines:
+  base new ports (chain2, attempt_1 kit) oth-ubuntu-2505215-1795257884 -> tgr2-read-t39base
+  cts_fixed_5294/kit oth-ubuntu-2231504-1795257312 -> tgr2-read-t39fixed
+  cts_terminal_followers/kit oth-ubuntu-2825559-1795258453 -> tgr2-read-t39follow
+  cts_terminal_pair_span_seeded/kit oth-ubuntu-3880037-1795260472 -> tgr2-read-t39seeded (Codex's current form)
+- t39 r3 submitted: src3 = src2 + clk_t98 (881.28, 635.04) for the t67 fixed VP writer overload (1465 / cap 1000; 541 other VP sinks within 145 um), tools rt 7ff721a00978 (cascade + span fixes).
+  Unit tgr2-t39-chain3 (hub), log t39/chain3.log: bind3 (intel1, t39/bind3.sh) -> run-item wave3/spec.json -> CTS -> post.
+- Baseline (J5 t39 a3 post-hook): setup -73.73 / TNS -1278.1, hold -75.14 / -89488.2. Rows only if a proof is no worse on setup and hold: S81-J6-ASSEMBLY-R2 before 13:00 PST else J7, FABLE-FIX-S81-LEAF-R2, QC-PLAN-R8 (V2), KV-PLAN-R4 (D28 halves).
