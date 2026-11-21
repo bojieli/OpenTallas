@@ -18,7 +18,7 @@
    V4+V5 stack in the middle of a solid dsfd_cfifo_crs4 M5 OBS rect over FREE M4): a free spot on a layer below the
    top OBS layer that has OBS directly above it is reachable only through that OBS, yet the parent GRT counts it as
    capacity and DRT drops a via stack through the child's metal.  Every M2..top-1 layer gets OBS wherever the layer
-   above has OBS (top-down, so the shadow cascades), outside keep_um(layer) of signal pins on that layer and the one
+   above has OBS (top-down to M4: M2/M3 keep the std-cell pin access beside the macro), outside keep_um(layer) of signal pins on that layer and the one
    above.  OT_OBS_SHADOW=0 disables it; marker `# OT_OBS_SHADOW layers=.. added=n`.
 4. EOL STUBS (same lane, QC sle_sc_v1 cl115da35f: 44 Lef58EolKeepOut, 2 per pin, on 22 qfd_dv_s5_sc2_leaf M5 face
    pins): an OBS rect collinear with a signal pin's end, same width, abutting it and shorter than the layer's
@@ -346,6 +346,9 @@ def close_pockets(head, obs):
 
 
 SHADOW_RE = re.compile(r"\n[ \t]*# OT_OBS_SHADOW [^\n]*")
+# M2/M3 carry the parent std-cell pin access next to a macro (col pv11b73b67: a shadow down to M2 left a DFF RESETN with
+# no access point, DRT-1231); the via-stack-through-OBS class is M4 under M5, so the shadow stops at M4
+SHADOW_MIN_LEVEL = 4
 EOL_FWD_UM = {"M4": 0.048, "M5": 0.048, "M6": 0.048, "M7": 0.048}   # asap7 LEF58_EOLKEEPOUT forward extension
 EOL_WIDTH_UM = {"M4": 0.025, "M5": 0.025, "M6": 0.05, "M7": 0.05}  # ... applies below this line-end width
 
@@ -400,7 +403,7 @@ def shadow_lower(head, obs, only=None, mark=True):
     above = [norm(tuple(map(_iu, r))) for r in by[top]]
     ms = re.search(r"SIZE\s+([\d.]+)\s+BY\s+([\d.]+)", head)
     full = (_iu(float(ms.group(1))) * _iu(float(ms.group(2)))) if ms else 0
-    for n in range(int(top[1:]) - 1, 1, -1):
+    for n in range(int(top[1:]) - 1, SHADOW_MIN_LEVEL - 1, -1):
         L, up = "M%d" % n, "M%d" % (n + 1)
         own = [norm(tuple(map(_iu, r))) for r in by.get(L, [])]
         if full and any((r[2] - r[0]) * (r[3] - r[1]) >= 0.9 * full for r in own):
