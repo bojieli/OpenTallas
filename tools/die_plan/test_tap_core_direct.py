@@ -110,3 +110,34 @@ def test_tcl_complete():
 def test_config_line(monkeypatch):
     src = (HERE / "gen_phys.py").read_text()
     assert re.search(r'\*\(\["export OT_TAP_CORE_DIRECT = 1"\] if tap_core_direct\(P\.clock\) else \[\]\),', src)
+
+
+@pytest.mark.skipif(shutil.which("tclsh") is None, reason="tclsh")
+@pytest.mark.parametrize("direct", [0, 1])
+def test_tap_pass_reads_direct_settings(tmp_path, direct):
+    setup = """
+proc tb_measure {} { return [dict create clk_c1 {100 100 100 1 bt_in}] }
+proc tb_line {tag stats} { return $tag }
+proc tb_begin {} {}
+proc tb_end {placed} { if {$placed} { error "unexpected padding" } }
+set tb_target 250
+set tb_win 40
+set tb_tol 15
+set tb_grt 0
+set tb_conv 1
+set tb_cwin 100
+set tb_raise 0
+set tb_price {}
+set tb_prev {}
+set tb_coreonly {clk_c1 1}
+set tb_cores {{coreA/clk clk_c1 0 238}}
+set tb_cdmax 60
+"""
+    drv = tmp_path / "tap_pass.tcl"
+    drv.write_text(
+        STUBS + "\n" + _proc("tb_direct_core") + "\n" + _proc("tb_tap_pass")
+        + "\n" + setup + f"\nset tb_cdirect {direct}\ntb_tap_pass 0\n"
+    )
+    out = subprocess.run(["tclsh", str(drv)], capture_output=True, text=True)
+    assert out.returncode == 0, out.stderr
+    assert ("WARN over 60 ps" in out.stdout) == bool(direct)
