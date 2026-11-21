@@ -1,1 +1,2 @@
 - 2026-11-20 21:25 PST cc from RESET-RELAY-GEN-R3: root_entry_negedge rows withdrawn after post-hook re-read (u_rst_in hold path absent in t60/t73/t68/kv_leaf_t5 4_cts_post_hook.rpt); root_entry_scan.py reads 4_cts_post_hook.rpt (sibling of any 4_cts_final.rpt path). Details in lanes/posts/S81-J6-ASSEMBLY.md.
+- 2026-11-20 21:56 PST DIED [TAP-GRID-2130] ot-push-main otpush-tolerant-swine-3467017 on tolerant-swine: rc=3 after 10 s, ended 21:56:53, log /srv/opentallas-scratch2/claude/lanes/tg2130_push.log, cmd: ot-push-main 
