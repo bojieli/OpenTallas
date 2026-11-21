@@ -36,3 +36,24 @@ Inputs: UNIFY-TOOLS-R2/R3 handoffs; R2 rows epyc9 /srv/opentallas-scratch2/claud
 - Private strict bind + LATCHECK + G0 running: W/bind_class.sh via ot-run (epyc10) -> W/gate_cls, W/bind_class.out.
 - Open: dormant landing protocol for landed spare slots (Finding 3) still not on main; spare_ends rows in the class plan rely on
   --ft-superset spare_ends handling.
+
+## 11-20 23:xx RESULT: J6 not green -> J7 rows (W = epyc10 /srv/opentallas-scratch2/claude/s81-leaf-class-1730-work)
+- Pushed main: f1a929e38f2 + 0d5c6f35990 (class_floorplan, exact_classes, --classes CLI, class_merge --child-union, 1 um role
+  site tolerance) and 5272850707 (drop bit_site_cell_um with bit_sites_um). 26 tests.
+- Plan: 13 classes, 0 conflicts/overlaps, mismatches 479 -> 0, class_merge 0 refusals: 34 leaf builds replaced (75 -> 41).
+  Without the 2 role-strap classes (J5 tools lack landing_role_strap): 11 classes, 23 replaced (75 -> 52), W/m2/plan_11.json.
+- Private strict binds (J5 tree 913a7026 cp -al, W/bind_class.sh):
+  #1 J5 tools: plan_gate_pre SCHEMA-UNKNOWN-KEY landing_role_strap.
+  #2 rt/current tools: reset relay reach on t10/t47 (control shows it too: J5-plan vs live-tool drift) + 127 bit_site_cell_um (fixed).
+  #3 J5 tools, 11 classes: BIND ERROR count_align_bind strap ties "type t11 copies land different buses (landing mask split
+     first)" - live tools refuse the same. G0 vs same-tools control: 731 new (clock_landings 355, geometry 137, hops 108,
+     stations 85, ft_s0_window 34, cuts 7, abutment 4).
+- J7 blockers, in order:
+  1 DORMANT LANDING (UNIFY-TOOLS-R3): copies of a class type with spare ft ends land different buses; count_align_bind
+    refuses it and spare_ft refuses landed spares. 9 of 11 classes have spares; only F01_0 (t22, 3 inst) and F01_1 (t10, 2 inst)
+    have none (3 builds).
+  2 STATION RE-SITE: moved windows keep provisional straight regs: run ft_s0_resite.py / ft_sites_unblock.py over every
+    type the floorplan or neighbour solve touched (42), then gen.py latency --inplace (geometry/hops/stations/ft_s0_window).
+  3 MIRROR PIN GRID: class windows on MY/R180 copies land 0.064 um off the track grid (t10/t11/t21/t22 abutment): snap
+    class windows so W - x stays on the track grid.
+  4 role strap needs live tools; J5 plan on live tools has reset-reach drift (t10/t47 176.76 um).
