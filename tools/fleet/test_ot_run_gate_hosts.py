@@ -18,5 +18,17 @@ class GateHosts(unittest.TestCase):
         self.assertEqual(R.gate_hosts(["python3", "-c", "1"], self.POOL), self.POOL)
         self.assertFalse(R.gate_like(["bash", "run_ot-gate-remote-notes.sh"]))        # a name that merely contains the string is not a gate
 
+    def test_bare_remote_gate_probes_the_installed_workspace(self):
+        cmd = ["ot-gate-remote", "claude/b@abcdef0"]
+        script = (HERE / "ot-gate-remote").read_text()
+        workspace = R.gate_workdir(cmd, None)
+        self.assertEqual(workspace, "/srv/opentallas-scratch2/claude/mq-gate")
+        self.assertIn(f"B={workspace}\n", script)
+
+    def test_explicit_workdir_and_unrelated_commands_keep_their_path(self):
+        cmd = ["ot-gate-remote", "claude/b@abcdef0"]
+        self.assertEqual(R.gate_workdir(cmd, "/explicit"), "/explicit")
+        self.assertIsNone(R.gate_workdir(["python3", "-c", "1"], None))
+
     def test_a_pin_that_names_only_forbidden_hosts_is_left_alone(self):
         self.assertEqual(R.gate_hosts(["ot-gate-remote", "x"], ["localhost"]), ["localhost"])
