@@ -101,6 +101,20 @@ def bank_xy(t, inst):
     return None
 
 
+_CLAND = re.compile(r"\{u_cland_(\S+)\s+\{([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)\}\s+ring:", re.M)
+
+
+def landing_positions(tcl):
+    """{u_bin_<bus>: (x, y)} from a kit landing_placement.tcl: the centre of the bus's landing-ring box(es)
+    (`{u_cland_<bus> {x0 y0 x1 y1} ring:<bus>...}`), the plan point of the in-boundary bank u_bin_<bus> (RESET-RELAY-GEN-R2
+    11-21, FABLE-PD-KV-1840: the placer puts u_bin next to its ring).  A bus with several rects: the mean of the centres."""
+    cs = {}
+    for m in _CLAND.finditer(tcl):
+        x0, y0, x1, y1 = (float(m.group(i)) for i in range(2, 6))
+        cs.setdefault(m.group(1), []).append(((x0 + x1) / 2, (y0 + y1) / 2))
+    return {"u_bin_" + b: (sum(c[0] for c in v) / len(v), sum(c[1] for c in v) / len(v)) for b, v in cs.items()}
+
+
 def banks_on_rst(sv):
     """[(inst, module)] of the banks whose rst_n pin is the type's rst_n net"""
     out = []
@@ -244,6 +258,8 @@ def main(argv=None):
     ap.add_argument("--reach-um", type=float, default=REACH_UM)
     ap.add_argument("--leaf-max", type=int, default=LEAF_MAX)
     ap.add_argument("--positions")
+    ap.add_argument("--landing", action="append", default=[], metavar="TYPE=landing_placement.tcl",
+                    help="bank positions of u_bin_<bus> from the landing-ring boxes of that type's kit (no placed DB)")
     a = ap.parse_args(argv)
     import fstart_reset_delta as F
     rb = Path(a.plan).read_bytes()
@@ -254,7 +270,12 @@ def main(argv=None):
     for tn in a.types.split(","):
         t = raw["partition_types"][tn]
         sv = bound_rtl(a.rtl_dir, tn, t).read_text()
-        r = type_delta(tn, t, sv, allpos.get(tn), a.reach_um, a.leaf_max)
+        pos = dict(allpos.get(tn) or {})
+        for spec in a.landing:
+            k, _, f = spec.partition("=")
+            if k == tn:
+                pos = {**landing_positions(Path(f).read_text()), **pos}
+        r = type_delta(tn, t, sv, pos, a.reach_um, a.leaf_max)
         rep[tn] = r
         print(f"{tn}: {r['form']} {len(r['rows'])} rows, +{r['added_reset_cycles']} reset cycles, {r['flops']} flops, "
               f"unplaced {len(r.get('unplaced') or [])}")

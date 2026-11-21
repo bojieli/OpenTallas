@@ -178,3 +178,21 @@ def test_bus_without_face_window_is_unplaced():
     del t["buses"][0]["face"]
     r = B.type_delta("s", t, SOFT)
     assert "u_bin_a" in r["unplaced"]
+
+
+def test_u_bin_nearest_tap_from_landing_ring_boxes():
+    """FABLE-PD-KV-1840: a KV bus sited per port (no face window) was `unplaced` and kept the leaf tap ~1,400 um away; its
+    position is the centre of its landing-ring box in the kit landing_placement.tcl: nearest tap, 0 cycles"""
+    tcl = "set cland_groups {\n  {u_cland_a {10.0 10.0 30.0 30.0} ring:a}\n  {u_cland_c {960.0 20.0 980.0 40.0} ring:c@1.4+ff}\n}\n"
+    pos = B.landing_positions(tcl)
+    assert pos == {"u_bin_a": (20.0, 20.0), "u_bin_c": (970.0, 30.0)}
+    t = dict(outline_um=[1000.0, 1000.0], reset=dict(sync_stages=2),
+             buses=[dict(name="a", dir="in", width=3), dict(name="c", dir="in", width=3), dict(name="b", dir="out", width=3)])
+    sv = SOFT.replace("    ot_dp_st #(.W(3)) u_bout_b", "    ot_dp_st #(.W(3)) u_bin_c (.clk(clk), .rst_n(rst_n), .d(a[2:0]), .ea(a[3]), .q(c_q), .eq(c_eq));\n"
+                      "    ot_dp_st #(.W(3)) u_bout_b")
+    rep = B.type_delta("s", t, sv, pos, reach=405.0)
+    assert rep["form"] == "bank_taps" and rep["added_reset_cycles"] == 0
+    got = {x["inst"]: x for x in rep["detail"]}
+    assert got["u_bin_a"]["tap"] == 0 and got["u_bin_c"]["tap"] == 1
+    assert got["u_bin_c"]["hop_um"] < got["u_bin_c"]["was_hop_um"]
+    assert "u_bout_b" in rep["unplaced"]
