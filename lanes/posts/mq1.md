@@ -7,3 +7,6 @@
 - 2026-11-20 22:22 PST DIED [mq1] ot-push-main otpush-tolerant-swine-3975840 on tolerant-swine: rc=4 after 1 s, ended 22:22:14, log none, cmd: ot-push-main 
 - 2026-11-20 22:22 PST DONE [mq1] ot-push-main otpush-tolerant-swine-3975835 on tolerant-swine: rc=0 after 1 s, ended 22:22:14, log none, cmd: ot-push-main 
 - 2026-11-20 22:22 PST DONE [mq1] ot-push-main otpush-tolerant-swine-3976281 on tolerant-swine: rc=0 after 1 s, ended 22:22:15, log none, cmd: ot-push-main 
+- 2026-11-20 22:22 PST DIED [mq1] ot-push-main otpush-tolerant-swine-3976529 on tolerant-swine: rc=4 after 1 s, ended 22:22:16, log none, cmd: ot-push-main 
+- 2026-11-20 22:22 PST DONE [mq1] ot-push-main otpush-tolerant-swine-3977089 on tolerant-swine: rc=0 after 1 s, ended 22:22:16, log none, cmd: ot-push-main 
+- 2026-11-20 22:22 PST DONE [mq1] ot-push-main otpush-tolerant-swine-3976606 on tolerant-swine: rc=0 after 1 s, ended 22:22:16, log none, cmd: ot-push-main 
